@@ -1,96 +1,108 @@
-Return-Path: <linux-pci+bounces-40559-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40557-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B39BEC3E891
-	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 06:43:29 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DAFEC3E882
+	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 06:40:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 740243AD153
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 05:43:28 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D8A3B4EA059
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 05:40:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B922520487E;
-	Fri,  7 Nov 2025 05:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9C3C21C16A;
+	Fri,  7 Nov 2025 05:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TuMf+jrW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F3EF50F;
-	Fri,  7 Nov 2025 05:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC871482E8;
+	Fri,  7 Nov 2025 05:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762494205; cv=none; b=SVmh+fIE/AZUhuAje2CxDl5o7ClTnbgHBSrU76wnAwvkrLUWhRNs9Uu39HM9VCVsE3uyku0RIa0lC25JyXde/Yllg1TpQiTZW6oKwkXmUQBRo1buoMOGY8+TrzC2Fs0m1+baWVLKUUaE3BZ7BH4PJyLdSBMDOokQbweenn3aWyM=
+	t=1762494022; cv=none; b=p84dhdmADrJQU5m2qshrmyupYdAPbBxk3ntWEBtprdBz1Ful2VhxVScRcOG4pudwFOf2jIpLytsFOvNB96z4yw+OrLOgtqnFE7MnkOalrmfatbhv4LNleJxSTBk1w65ML/BHZ+i4+SuNXc9yUE8u1PqxtspPSZWC6AHij0b7g6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762494205; c=relaxed/simple;
-	bh=rjcYOEIzpSd5gitYOoZZ4sIdSL+ADsW9OmULB+qwICE=;
+	s=arc-20240116; t=1762494022; c=relaxed/simple;
+	bh=ceGgv8K81IVqsAHEgTkbu6ASQqAG7y9+ejl8bi9wq80=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m7eCNXYoaXBSEAyJyS07H2IwgiPUGSi4iHhp1dbHSle3H4G0s4yF/GtRYuT2UohpCsOX2yL31gBIX2cyZIQt6pUqYDpeEkvSUfvAPMgTe7/6cV5mdZK5Se7RKkAYewsHSTfhK3A9jOKys43okFjOmnOR4XVZkfdMAsBYQw8iFHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 2FCBC20083CF;
-	Fri,  7 Nov 2025 06:35:49 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 18CF2469; Fri,  7 Nov 2025 06:35:49 +0100 (CET)
-Date: Fri, 7 Nov 2025 06:35:49 +0100
-From: Lukas Wunner <lukas@wunner.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=QOK/Y8InXrxfeRbEFKV5wadIcM4IzzvH0WvhKaEx483NCSB6bcsPBifNOQRwH2cBfAurBAm00p0N0OD7uCu+yHIjqjMiwOcylgAaXHbis5VZj9GO6/1ziZYzDyAF/DtZKcSDC3LMwPUIQJmjtVl04DHWZ3YdeTJmzbGRnuBfBi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TuMf+jrW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36899C4CEF8;
+	Fri,  7 Nov 2025 05:40:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762494022;
+	bh=ceGgv8K81IVqsAHEgTkbu6ASQqAG7y9+ejl8bi9wq80=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TuMf+jrWo2PHK9xSv9izysbZmqH9adQi6j+5C4WnVmhail9Rk8637uliSrOuoUSMs
+	 w5WqkphbBsnEaPJYNJs4vVh1DdiukiUTiRW9BHB7zUAFRerR/2zh+THjnsXniWVBXP
+	 IzKS4/tLjYagocanwtqYFh3VJfqFJ6GyO6cUEyQMZ5YKaBQ8DOwIuZ8kSVT2aDfoz4
+	 lZ3nUvicT+9F5s8e+dkD8TNqPMllRtUnOS1fLIW0RKBlAuQcu2KrV+KUrSvzWtiZ4T
+	 YzrFoHWagRwMbq1+q1Zm60IUf/5/QJlcW6a9ojM78vBVRGZGFtAMU1/5OrYad+/oxs
+	 FUMqOOAiNUO/w==
+Date: Fri, 7 Nov 2025 11:10:08 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Christian Zigotzky <chzigotzky@xenosoft.de>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	mad skateman <madskateman@gmail.com>,
-	"R . T . Dickinson" <rtd2@xtra.co.nz>,
-	Darren Stevens <darren@stevens-zone.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	luigi burdo <intermediadc@hotmail.com>, Al <al@datazap.net>,
-	Roland <rol7and@gmx.com>, Hongxing Zhu <hongxing.zhu@nxp.com>,
-	hypexed@yahoo.com.au, linuxppc-dev@lists.ozlabs.org,
-	debian-powerpc@lists.debian.org, linux-kernel@vger.kernel.org,
+Cc: linux-pci@vger.kernel.org, Christian Zigotzky <chzigotzky@xenosoft.de>, 
+	mad skateman <madskateman@gmail.com>, "R . T . Dickinson" <rtd2@xtra.co.nz>, 
+	Darren Stevens <darren@stevens-zone.net>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	Lukas Wunner <lukas@wunner.de>, luigi burdo <intermediadc@hotmail.com>, Al <al@datazap.net>, 
+	Roland <rol7and@gmx.com>, Hongxing Zhu <hongxing.zhu@nxp.com>, hypexed@yahoo.com.au, 
+	linuxppc-dev@lists.ozlabs.org, debian-powerpc@lists.debian.org, linux-kernel@vger.kernel.org, 
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 2/2] PCI/ASPM: Avoid L0s and L1 on Freescale Root Ports
-Message-ID: <aQ2FNfdDPUdA27rS@wunner.de>
+Subject: Re: [PATCH 0/2] PCI/ASPM: Allow quirks to avoid L0s and L1
+Message-ID: <ahhrvcqpwd3ilti5fzakaojzlkfqil6vscrqgpqt7hia3igszl@vykbk65y73fj>
 References: <20251106183643.1963801-1-helgaas@kernel.org>
- <20251106183643.1963801-3-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251106183643.1963801-3-helgaas@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251106183643.1963801-1-helgaas@kernel.org>
 
-On Thu, Nov 06, 2025 at 12:36:39PM -0600, Bjorn Helgaas wrote:
-> +++ b/drivers/pci/quirks.c
-> @@ -2525,6 +2525,18 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
->   */
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
->  
-> +/*
-> + * Remove ASPM L0s and L1 support from cached copy of Link Capabilities so
-> + * aspm.c won't try to enable them.
-> + */
-> +static void quirk_disable_aspm_l0s_l1_cap(struct pci_dev *dev)
-> +{
-> +	dev->lnkcap &= ~PCI_EXP_LNKCAP_ASPM_L0S;
-> +	dev->lnkcap &= ~PCI_EXP_LNKCAP_ASPM_L1;
-> +	pci_info(dev, "ASPM: L0s L1 removed from Link Capabilities to work around device defect\n");
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_FREESCALE, 0x0451, quirk_disable_aspm_l0s_l1_cap);
-> +
+On Thu, Nov 06, 2025 at 12:36:37PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> We enabled ASPM too aggressively in v6.18-rc1.  f3ac2ff14834 ("PCI/ASPM:
+> Enable all ClockPM and ASPM states for devicetree platforms") enabled ASPM
+> L0s, L1, and (if advertised) L1 PM Substates.
+> 
+> L1 PM Substates and Clock PM in particular are a problem because they
+> depend on CLKREQ# and sometimes device-specific configuration, and none of
+> this is discoverable in a generic way.
+> 
+> df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree platforms")
+> (v6.18-rc3) backed off and omitted Clock PM and L1 Substates.
+> 
+> L0s and L1 are generically discoverable, but some devices advertise them
+> even though they don't work correctly.  This series is a way to avoid L0s
+> and L1 in that case.
+> 
 
-Hm, I liked the nice generic pcie_aspm_disable_cap() helper that
-you had in this earlier version:
+Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+Tested-by: Manivannan Sadhasivam <mani@kernel.org> # T14s
 
-https://lore.kernel.org/all/20251105220925.GA1926619@bhelgaas/
+- Mani
 
-Thanks,
+> Bjorn Helgaas (2):
+>   PCI/ASPM: Cache Link Capabilities so quirks can override them
+>   PCI/ASPM: Avoid L0s and L1 on Freescale Root Ports
+> 
+>  drivers/pci/pcie/aspm.c | 42 ++++++++++++++++++++---------------------
+>  drivers/pci/probe.c     |  5 ++---
+>  drivers/pci/quirks.c    | 12 ++++++++++++
+>  include/linux/pci.h     |  1 +
+>  4 files changed, 36 insertions(+), 24 deletions(-)
+> 
+> -- 
+> 2.43.0
+> 
 
-Lukas
+-- 
+மணிவண்ணன் சதாசிவம்
 
