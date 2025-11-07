@@ -1,198 +1,213 @@
-Return-Path: <linux-pci+bounces-40577-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40578-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 385FBC3FD55
-	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 13:01:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66DD8C400AC
+	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 14:09:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2447E4E5987
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 12:01:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE450188C444
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 13:10:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09272326D6F;
-	Fri,  7 Nov 2025 12:01:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18C682BEC42;
+	Fri,  7 Nov 2025 13:09:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z+IUB+zl"
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="wiJdXsVg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9C51FF1B5
-	for <linux-pci@vger.kernel.org>; Fri,  7 Nov 2025 12:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9492BDC34;
+	Fri,  7 Nov 2025 13:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762516880; cv=none; b=uy87UiSRyqUavXlM3/9xhUzjh8RUniy3wdkbmYdGYXBuS1P7/Rq9AVg7B0F3gfdwa/tt1hRzY2DYlpX5SX1SQNFpEbyUA0dAqoBGsGIZNWjKDOFQSFkChnHjyyrx5U92a1By68y7g8t1WU1guzGNA142OYQyUIFErQ6QbnKXmwc=
+	t=1762520978; cv=none; b=M6PhUku/TcmChr2umLRseWfTA6rD4GNsLwCEMepdAgSN2RW13Poc3dti400F0cK00SPGC2qN/ctpAipzsp8mFZAqjmJij7NgSvNOAei36SQ7ZCQ+1h9VNC65Geqzm6cDRMykXdYdyOBbJBo8y0eAVrEUwnkS5x5nxsHcQFKleHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762516880; c=relaxed/simple;
-	bh=aJwdi7CY/I/v0UxGH70HKupUKGu5FXByJo7qSHCv0gs=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=mKniAPHxpW6BKK0IaE27zAiTvaKqIce61MbnV/dTuGa7N5HHoNtiqa4uGTMCE8T1PY/pw/uwxBTJkRnnXpCFQpaSuEkFek/EWL6SAw0oW6tKN26RKQPGboIiYhaSAkZUPJwtzuEL9dgeR+gRpUoBvYJrll0jB7sHgHClRkW2bgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z+IUB+zl; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762516879; x=1794052879;
-  h=date:from:to:cc:subject:message-id;
-  bh=aJwdi7CY/I/v0UxGH70HKupUKGu5FXByJo7qSHCv0gs=;
-  b=Z+IUB+zlzLdd1U3W9etduhdI+Cqwwvcg12KGF5kemtPYLwPolqIZjASI
-   MdAt2gg5FDFX3izdcCXo4ahEKuttt7YglhArmI44/nLCLY6pa/fUBTxWg
-   jjADTuoSSrlZMcxoKE2tkd1getIDCoN5IBRZtBt9g4zZxpUpqmIHu3x7t
-   ULc4VQ6qmHShqufYe6bXKt6Z3X3Ic59iTHQkGqJ6RKKoIqJrbuztVJz9i
-   XQ0eXjnBH1803cCt8YyjQiT3PMaoQ/n6kqnY9oBtpo8i+PWtHs6Kmkzyr
-   RX0wN0C+MilHcesM+iOiWDsnofXFt/yl99R5GWd6lyoRH+SoNI7gZYJH/
-   A==;
-X-CSE-ConnectionGUID: dEq+NqX8SeqKHsnLeErG4Q==
-X-CSE-MsgGUID: x7kJE+fISK6jCRBqEDcKkw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11605"; a="75778055"
-X-IronPort-AV: E=Sophos;i="6.19,286,1754982000"; 
-   d="scan'208";a="75778055"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2025 04:01:19 -0800
-X-CSE-ConnectionGUID: 2t0ubvFhR4u32rQ5gd0pAg==
-X-CSE-MsgGUID: MEfuVpRXTxuBouzQGpM05Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,286,1754982000"; 
-   d="scan'208";a="192283597"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 07 Nov 2025 04:01:17 -0800
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vHL9X-000V48-24;
-	Fri, 07 Nov 2025 12:01:15 +0000
-Date: Fri, 07 Nov 2025 20:00:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/ti] BUILD SUCCESS
- 041c2f0e34ba4823101bf307d6a6d41d98f5dac3
-Message-ID: <202511072022.JtuTa4yg-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1762520978; c=relaxed/simple;
+	bh=4Ddae25sqG738EaVw5RvrZNH1hBC2JAp7XDsKznyjlg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cA5avrOqk/mlzIGji5463E9M5vzen5Qu21R4at0YHqTB1kLJgkmaoZgalSD85ODiwQjB75YpvX07Xn8jwzagylBI6jU25K1OBrbuzsoGMBNtXoLlEXZlnbHvMreAEVFbHgZRNAg9jg3HpnNep4rRAzX20wZro/qDxu6A5e+3yKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=wiJdXsVg; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1762520960; x=1763125760; i=spasswolf@web.de;
+	bh=C8JSblNcI1zOZZ07ilFFhicMfhhYHjHHDyckzH5IIxQ=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=wiJdXsVg5xGXRmSRup6oB6Yu+BJVKbDkCrbfGndCkEnamI07ZSCQbTNq8koKbF3g
+	 e8UwEwUdveVS+rN1+Jke6MInZeB5r7ZXft/QctwM5ed/EAfX4L7vwjESTdSCbyfxA
+	 YHnB4NF4xs/unnpLI9OV98ZMqDU5PHUGFfDblV+x2aqobRXxBBHf3Mqm8MjRLYR/W
+	 8HamPKJimIoQ1DqOfp/p+73Gmn3O5eW7VlZ5GrEuqosPmT3ywD/DkSm++DLiLD8nA
+	 pT2pb+fOCNiV+5cnVj1DX8QFg9Sf/ObR8r5/A7ov0CJnBuRGKOLoDZhPgZV+7dEGD
+	 lMmzXdZKyr+udcpzxQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MkVwi-1vwPz732Ja-00jVXB; Fri, 07
+ Nov 2025 14:09:19 +0100
+Message-ID: <0cb75fae3a9cdb8dd82ca82348f4df919d34844d.camel@web.de>
+Subject: Re: [REGRESSION 00/04] Crash during resume of pcie bridge
+From: Bert Karwatzki <spasswolf@web.de>
+To: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>, Christian
+ =?ISO-8859-1?Q?K=F6nig?=
+	 <christian.koenig@amd.com>, linux-kernel@vger.kernel.org
+Cc: linux-next@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, "Rafael J . Wysocki"
+	 <rafael.j.wysocki@intel.com>, spasswolf@web.de
+Date: Fri, 07 Nov 2025 14:09:17 +0100
+In-Reply-To: <3772b8f5-6d1a-403e-ad27-99a711e78902@kernel.org>
+References: <20251006120944.7880-1-spasswolf@web.de>
+	 <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
+	 <4903e7c36adf377bcca289dbd3528055dc6cfb32.camel@web.de>
+	 <4a8302a0-209f-446a-9825-36cb267c1718@kernel.org>
+	 <25f36fa7-d1d6-4b81-a42f-64c445d6f065@amd.com>
+	 <1853e2af7f70cf726df278137b6d2d89d9d9dc82.camel@web.de>
+	 <f18bafacbd8316c9623658e2935f8fc3b276af64.camel@web.de>
+	 <26bf82303f661cdd34e4e8c16997e33eb21d1ee4.camel@web.de>
+	 <635b6cb19b5969bed7432dfd1cd651124e63aebb.camel@web.de>
+	 <18e472a0489ee5337465d5dc26685cebaf7c4f8d.camel@web.de>
+	 <3772b8f5-6d1a-403e-ad27-99a711e78902@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1-1+deb13u1 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:cwwvGof3jLSNg0rClU314UgVju483p/vCHF2hs6IGVaZu/tjpEv
+ XLagxUR8bhCzzajJaLzlAKYtzmaruWxVp4Gv1Uws9IWnKUJhmdCOJLVLKM3qUc+8Kx8hiDI
+ LN9PFB3l1bRaURgD8sYwx1QdB2z6xRj7N3kNcBSHQbRC1IxZamXN4E/p9kVNJX4FZPHPB3P
+ RvcbovRRut/r8NhgyCmwA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:I79Uwc4qfLM=;wmwGdeNP/11VC+9fY1jHMNQ9YD4
+ 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
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/ti
-branch HEAD: 041c2f0e34ba4823101bf307d6a6d41d98f5dac3  PCI: keystone: Add support to build as a loadable module
+Am Mittwoch, dem 05.11.2025 um 15:31 -0600 schrieb Mario Limonciello (AMD)=
+ (kernel.org):
+>=20
+> Once you're done with your bisect I'd be really interested if you can=20
+> still reproduce the splats and NULL pointer on the recovery path using=
+=20
+> amd-staging-drm-next.
+> >=20
 
-elapsed time: 1613m
+There are good news and bad news on this:
 
-configs tested: 105
-configs skipped: 2
+The good news: I found out that one can generate a large number of ACPI GP=
+P0 events
+and resumes by scrolling through a large pdf (1305 pages - Gravitation by =
+Wheeler, Misner and Thorne)
+using the arrow keys. This can generate these crashes quite fast.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The bad news: Using the method above I could generate these crashes in v6.=
+13 and v6.14,
+so all the previous bisecting was completely useless.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                         haps_hs_defconfig    gcc-15.1.0
-arc                   randconfig-001-20251107    gcc-8.5.0
-arc                   randconfig-002-20251107    gcc-9.5.0
-arm                               allnoconfig    clang-22
-arm                            qcom_defconfig    clang-22
-arm                   randconfig-001-20251107    clang-17
-arm                   randconfig-002-20251107    gcc-13.4.0
-arm                   randconfig-003-20251107    clang-22
-arm                   randconfig-004-20251107    gcc-8.5.0
-arm                        realview_defconfig    clang-16
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20251107    gcc-8.5.0
-arm64                 randconfig-002-20251107    clang-22
-arm64                 randconfig-003-20251107    gcc-8.5.0
-arm64                 randconfig-004-20251107    clang-22
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20251107    gcc-12.5.0
-csky                  randconfig-002-20251107    gcc-13.4.0
-hexagon                           allnoconfig    clang-22
-hexagon               randconfig-001-20251107    clang-22
-hexagon               randconfig-002-20251107    clang-22
-i386                              allnoconfig    gcc-14
-i386        buildonly-randconfig-001-20251107    clang-20
-i386        buildonly-randconfig-002-20251107    clang-20
-i386        buildonly-randconfig-003-20251107    gcc-13
-i386        buildonly-randconfig-004-20251107    gcc-14
-i386        buildonly-randconfig-005-20251107    clang-20
-i386        buildonly-randconfig-006-20251107    clang-20
-i386                  randconfig-001-20251107    clang-20
-i386                  randconfig-002-20251107    gcc-13
-i386                  randconfig-003-20251107    clang-20
-i386                  randconfig-004-20251107    clang-20
-i386                  randconfig-005-20251107    gcc-14
-i386                  randconfig-006-20251107    clang-20
-i386                  randconfig-011-20251107    gcc-14
-i386                  randconfig-014-20251107    gcc-14
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251107    gcc-15.1.0
-loongarch             randconfig-002-20251107    clang-19
-m68k                              allnoconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-m68k                       m5208evb_defconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251107    gcc-11.5.0
-nios2                 randconfig-002-20251107    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                generic-32bit_defconfig    gcc-15.1.0
-parisc                randconfig-001-20251107    gcc-8.5.0
-parisc                randconfig-002-20251107    gcc-12.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc               randconfig-001-20251107    clang-22
-powerpc               randconfig-002-20251107    clang-22
-powerpc64             randconfig-001-20251107    gcc-14.3.0
-powerpc64             randconfig-002-20251107    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20251106    clang-22
-riscv                 randconfig-002-20251106    gcc-12.5.0
-s390                              allnoconfig    clang-22
-s390                  randconfig-001-20251106    gcc-8.5.0
-s390                  randconfig-002-20251106    gcc-14.3.0
-sh                                allnoconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                          polaris_defconfig    gcc-15.1.0
-sh                    randconfig-001-20251106    gcc-11.5.0
-sh                    randconfig-002-20251106    gcc-13.4.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20251107    gcc-11.5.0
-sparc                 randconfig-002-20251107    gcc-15.1.0
-sparc64                          alldefconfig    gcc-15.1.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20251107    gcc-8.5.0
-sparc64               randconfig-002-20251107    gcc-9.5.0
-um                                allnoconfig    clang-22
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251107    clang-22
-um                    randconfig-002-20251107    clang-22
-um                           x86_64_defconfig    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64      buildonly-randconfig-003-20251107    gcc-14
-x86_64      buildonly-randconfig-005-20251107    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-071-20251107    clang-20
-x86_64                randconfig-072-20251107    gcc-14
-x86_64                randconfig-073-20251107    clang-20
-x86_64                randconfig-074-20251107    clang-20
-x86_64                randconfig-075-20251107    clang-20
-x86_64                randconfig-076-20251107    gcc-14
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20251107    gcc-10.5.0
-xtensa                randconfig-002-20251107    gcc-10.5.0
+Version v6.12 has not (yet, ...) crashed so I might be able to bisect betw=
+een v6.12 and v6.13.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Here's a short log of the recent tests and time to crash (with number of G=
+PP0 wakeup events and GPU resumes)
+
+Retest:
+6.14.0-stable		booted 18:11:24, 6.11.2025, crashed 18:45:30 (~34min, 588 G=
+PP0 events, 210 resumes)
+
+Retest:
+6.14.11-stable		booted 19:09:33, 6.11.2025, crashed 19:17:42 (~8min (new r=
+ecord!), 122 GPP0 events, 44 resumes)
+
+Testing (this was tested by the old method of starting evolution by script=
+):	=09
+v6.13			booted 23:46:21, 6.11.2025, GPU lost 4:38, 7.11.2025 (~5h, 760 GPP=
+0 events, 807 resumes) no crash
+
+Retest:
+v6.13			booted 9:12, 7.11.2025 crashed 11:25, 7.11.2025 (~1.25h, 351 GPP0 =
+events, 330 resumes)
+
+Testing:
+v6.12.52		booted 11:27, 7.11.2025 no crash after 1h, 735 GPP0 events, 301 =
+resumes
+
+Testing:
+v6.12			booted 13:00, 7.11.2025 no crash after 1h, 890 GPP0 events, 287 re=
+sumes
+
+
+Bert Karwatzki
 
