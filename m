@@ -1,216 +1,123 @@
-Return-Path: <linux-pci+bounces-40602-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40603-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2055C417D8
-	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 20:59:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73BBFC4194E
+	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 21:27:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D96AE4EE79A
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 19:59:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BF7023A3CA8
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 20:27:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C16D2339707;
-	Fri,  7 Nov 2025 19:59:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23EAD30C63B;
+	Fri,  7 Nov 2025 20:27:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V/UL/MF2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GnHfPvK9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E71224AF7;
-	Fri,  7 Nov 2025 19:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90012F531F;
+	Fri,  7 Nov 2025 20:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762545550; cv=none; b=F7OwPwiObkgcPqGe3pd06r/yBSuy0UVsRI0TvhH+wyKtOBC0GMcNBei/0LjkA+yze3V8Nw9Db3t5xC42a7ZtxnBWXHr1rqyjSMIMTAPQB427OwHW/Vtd8u/NVeJrHUfREoBN0PK1iGEgf3Vl2kKQUwqLrkaHtePU4mbcsVRtHWU=
+	t=1762547245; cv=none; b=WcOYnqBOuGpaPdElJyMhW07sw+Ub8jq39IYabUAJYP1/h/ddGiukazJlfnblRTHWqQpeeYpJ8kxvRrzl5YJSKrVxE+9PsWhXWlnxJ8n4M53aXnEYkpf3i8alxJ9wr5dbeKbcFQfx2jSOlN6Ki0wc2Wip3LPPEh4Y7uoP6WInGR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762545550; c=relaxed/simple;
-	bh=o6sCKaIr+Mcsm7DmCaTJx6MhTkgDqm5CM83QolZ5QBY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qOe3Kf9ECy15HZsqfzYBc8argxOv9pEdWPMXzZxBgq1xvzAQIxb+4jot7H1hUIHwC+vVPfzFyg6Ieme04jZufPCss9fG9ZRF4gylzjy+3hbfoDZ77DLsad0at6bf6pyB77hPbzypOQJP2CFMjj9Em36YOqCgNmEtxKUEgVporT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V/UL/MF2; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762545549; x=1794081549;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=o6sCKaIr+Mcsm7DmCaTJx6MhTkgDqm5CM83QolZ5QBY=;
-  b=V/UL/MF2Fk6EqDevXEbtY5iJx6iqZAJVzLiJit3mNWRoCCadPvcCWQd6
-   tgiAA9MpgdBt25EZxMn/S+6obswZx41rZGPa+B+xqlPFEkorfmpNcpGqW
-   4w+8FneJmpqkusOx2hIMXN2SRNCFptU5KpDBx3cfdN+z1TW5YmFJd4jGH
-   /T1jhYXwoATEs8mjW+YA/YniNLxB1DdTiTKC7QTSq6KiqE8R0Y9W4HNT4
-   uQVKSLxEYG3GyBYqeN/0OPjHMXC8K/GSveJi7eLbLb+EYuhHqch9Xu6Bf
-   ZESM21VD3pj9syOUx3oohSZmKKegWcmRO334kkiylNqMjDeL0Ernfttik
-   g==;
-X-CSE-ConnectionGUID: 4QJBB2sZS9OGEOmAas+YvQ==
-X-CSE-MsgGUID: p23x5m/TT5CTIAuNY1dUlQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11606"; a="64737458"
-X-IronPort-AV: E=Sophos;i="6.19,287,1754982000"; 
-   d="scan'208";a="64737458"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2025 11:59:08 -0800
-X-CSE-ConnectionGUID: WQraglFVTdSNTqRT+O0OdA==
-X-CSE-MsgGUID: vV07ZoEeSlaSEo5q+8IIjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,287,1754982000"; 
-   d="scan'208";a="187370899"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.111.112]) ([10.125.111.112])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2025 11:59:07 -0800
-Message-ID: <85fa077c-0c69-452b-9503-0cd7f3e1b363@intel.com>
-Date: Fri, 7 Nov 2025 12:59:05 -0700
+	s=arc-20240116; t=1762547245; c=relaxed/simple;
+	bh=VAySUlKP+gpY13ehfWvqZiKxHmLFx9bZKqh1eqOc7BU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XWfQiFDvUuzrfuAtmfw6YeXOu6dccPLdyQbBqmToanqMvIo9XEuSa1l/rA2grUzH31rEHOPaG0iX0ileDYsFak1wL9ebQUdcxBgi6sQjHL4J1G/dTzL13aCG1Ft2u7TLc97I+MxtiS8BvS2vTYYMcVZetl7phVdRQx0hfwv4lsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GnHfPvK9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 836D6C4CEF5;
+	Fri,  7 Nov 2025 20:27:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762547244;
+	bh=VAySUlKP+gpY13ehfWvqZiKxHmLFx9bZKqh1eqOc7BU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GnHfPvK9RlbGueuO2dIzOFloCGUIJO+4STJ9acaeZ4mwoNgCLVysGF3G1CD2dslTO
+	 J8xEeZg2TWQROLBRgu9cIRspJbvL0T9YEBkcbbcqYSRUqcnzE6UpSuE7s17MqR38od
+	 k1auiNEzsLsrcn/e5bmLAUXdt14ph1onYr5+m4OBZiUnSghRHlS5cz0wreim7qkvti
+	 AitNvNVxIXHxoXVVQZB1fuCmNeB+VUFl+qA0fr1ukYsVMffsErSLFPHEZkD3QhPl33
+	 mZVBp/M5pmVMtLNk4jfzBFQR0vtiXMXgOHw2XwWQXqRS2kcJr3JwuXFYWK3abcXYgE
+	 W34/n88w3YbCg==
+Date: Fri, 7 Nov 2025 22:27:18 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <skolothumtho@nvidia.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, iommu@lists.linux.dev,
+	linux-mm@kvack.org, linux-doc@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v7 05/11] PCI/P2PDMA: Document DMABUF model
+Message-ID: <20251107202718.GE15456@unreal>
+References: <20251106-dmabuf-vfio-v7-0-2503bf390699@nvidia.com>
+ <20251106-dmabuf-vfio-v7-5-2503bf390699@nvidia.com>
+ <135df7eb-9291-428b-9c86-d58c2e19e052@infradead.org>
+ <20251107160120.GD15456@unreal>
+ <0c265a9b-fdc5-40d7-845f-30910f1ac6ea@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6 v7] ACPI: extlog: Trace CPER CXL Protocol Error
- Section
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- linux-cxl@vger.kernel.org
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20251104182446.863422-1-fabio.m.de.francesco@linux.intel.com>
- <20251104182446.863422-7-fabio.m.de.francesco@linux.intel.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20251104182446.863422-7-fabio.m.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0c265a9b-fdc5-40d7-845f-30910f1ac6ea@infradead.org>
 
-
-
-On 11/4/25 11:22 AM, Fabio M. De Francesco wrote:
-> When Firmware First is enabled, BIOS handles errors first and then it
-> makes them available to the kernel via the Common Platform Error Record
-> (CPER) sections (UEFI 2.11 Appendix N.2.13). Linux parses the CPER
-> sections via one of two similar paths, either ELOG or GHES. The errors
-> managed by ELOG are signaled to the BIOS by the I/O Machine Check
-> Architecture (I/O MCA).
+On Fri, Nov 07, 2025 at 10:58:27AM -0800, Randy Dunlap wrote:
+> 	
 > 
-> Currently, ELOG and GHES show some inconsistencies in how they report to
-> userspace via trace events.
-> 
-> Therefore, make the two mentioned paths act similarly by tracing the CPER
-> CXL Protocol Error Section.
-> 
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+> On 11/7/25 8:01 AM, Leon Romanovsky wrote:
+> > On Thu, Nov 06, 2025 at 10:15:07PM -0800, Randy Dunlap wrote:
+> >>
+> >>
+> >> On 11/6/25 6:16 AM, Leon Romanovsky wrote:
+> >>> From: Jason Gunthorpe <jgg@nvidia.com>
+> >>>
+> >>> Reflect latest changes in p2p implementation to support DMABUF lifecycle.
+> >>>
+> >>> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> >>> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> >>> ---
+> >>>  Documentation/driver-api/pci/p2pdma.rst | 95 +++++++++++++++++++++++++--------
+> >>>  1 file changed, 72 insertions(+), 23 deletions(-)
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>> ---
->  drivers/acpi/Kconfig       |  1 +
->  drivers/acpi/acpi_extlog.c | 22 ++++++++++++++++++++++
->  drivers/cxl/core/ras.c     |  3 ++-
->  include/cxl/event.h        |  2 ++
->  4 files changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> index be02634f2320..c2ad24e77ddf 100644
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -498,6 +498,7 @@ config ACPI_EXTLOG
->  	select ACPI_APEI
->  	select ACPI_APEI_PCIEAER
->  	select UEFI_CPER
-> +	select CXL_BUS
->  	help
->  	  Certain usages such as Predictive Failure Analysis (PFA) require
->  	  more information about the error than what can be described in
-> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> index b3976ceb4ee4..e6fb25395984 100644
-> --- a/drivers/acpi/acpi_extlog.c
-> +++ b/drivers/acpi/acpi_extlog.c
-> @@ -12,6 +12,7 @@
->  #include <linux/ratelimit.h>
->  #include <linux/edac.h>
->  #include <linux/ras.h>
-> +#include <cxl/event.h>
->  #include <acpi/ghes.h>
->  #include <asm/cpu.h>
->  #include <asm/mce.h>
-> @@ -160,6 +161,21 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
->  	pci_dev_put(pdev);
->  }
->  
-> +static void
-> +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> +				int severity)
-> +{
-> +	struct cxl_cper_prot_err_work_data wd;
-> +
-> +	if (cxl_cper_sec_prot_err_valid(prot_err))
-> +		return;
-> +
-> +	if (cxl_cper_setup_prot_err_work_data(&wd, prot_err, severity))
-> +		return;
-> +
-> +	cxl_cper_handle_prot_err(&wd);
-> +}
-> +
->  static int extlog_print(struct notifier_block *nb, unsigned long val,
->  			void *data)
->  {
-> @@ -211,6 +227,12 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
->  			if (gdata->error_data_length >= sizeof(*mem))
->  				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
->  						       (u8)gdata->error_severity);
-> +		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
-> +			struct cxl_cper_sec_prot_err *prot_err =
-> +				acpi_hest_get_payload(gdata);
-> +
-> +			extlog_cxl_cper_handle_prot_err(prot_err,
-> +							gdata->error_severity);
->  		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
->  			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
->  
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index 2731ba3a0799..a90480d07c87 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -63,7 +63,7 @@ static int match_memdev_by_parent(struct device *dev, const void *uport)
->  	return 0;
->  }
->  
-> -static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
-> +void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
->  {
->  	unsigned int devfn = PCI_DEVFN(data->prot_err.agent_addr.device,
->  				       data->prot_err.agent_addr.function);
-> @@ -104,6 +104,7 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
->  	else
->  		cxl_cper_trace_uncorr_prot_err(cxlmd, data->ras_cap);
->  }
-> +EXPORT_SYMBOL_GPL(cxl_cper_handle_prot_err);
->  
->  static void cxl_cper_prot_err_work_fn(struct work_struct *work)
->  {
-> diff --git a/include/cxl/event.h b/include/cxl/event.h
-> index 94081aec597a..ff97fea718d2 100644
-> --- a/include/cxl/event.h
-> +++ b/include/cxl/event.h
-> @@ -340,4 +340,6 @@ cxl_cper_setup_prot_err_work_data(struct cxl_cper_prot_err_work_data *wd,
->  }
->  #endif
->  
-> +void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *wd);
-> +
->  #endif /* _LINUX_CXL_EVENT_H */
+<...>
 
+> >>> -The second issue is that to make use of existing interfaces in Linux,
+> >>> -memory that is used for P2P transactions needs to be backed by struct
+> >>> -pages. However, PCI BARs are not typically cache coherent so there are
+> >>> -a few corner case gotchas with these pages so developers need to
+> >>> -be careful about what they do with them.
+> >>> +For PCIe the routing of TLPs is well defined up until they reach a host bridge
+> >>
+> >> Define what TLP means?
+> > 
+> > In PCIe "world", TLP is very well-known and well-defined acronym, which
+> > means Transaction Layer Packet.
+> 
+> It's your choice (or Bjorn's). I'm just reviewing...
+
+Thanks a lot.
 
