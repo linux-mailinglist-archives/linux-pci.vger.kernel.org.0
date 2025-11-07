@@ -1,538 +1,216 @@
-Return-Path: <linux-pci+bounces-40601-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40602-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 094F4C41699
-	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 20:17:03 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2055C417D8
+	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 20:59:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A2631350710
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 19:17:00 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D96AE4EE79A
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 19:59:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F3CB1F3BA4;
-	Fri,  7 Nov 2025 19:16:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C16D2339707;
+	Fri,  7 Nov 2025 19:59:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="bzPXZYR0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V/UL/MF2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-io1-f65.google.com (mail-io1-f65.google.com [209.85.166.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FB3302750
-	for <linux-pci@vger.kernel.org>; Fri,  7 Nov 2025 19:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E71224AF7;
+	Fri,  7 Nov 2025 19:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762542975; cv=none; b=hW47ib7Y73mIHqoMH4NW1LSMSGp18Z4hq4SqbV6a5Tw4NnrddBz4c7nsE/I9k/Miek4RpyEaMIOZZo6YKhfoWyuQ7RvMXpvSNeOnlfPGW08JAT5/WQWy2W+IlzPOc6AaZ40MCSA1DohYPltr+DW39py/PfZR8WP59/Wxnj8Ni/0=
+	t=1762545550; cv=none; b=F7OwPwiObkgcPqGe3pd06r/yBSuy0UVsRI0TvhH+wyKtOBC0GMcNBei/0LjkA+yze3V8Nw9Db3t5xC42a7ZtxnBWXHr1rqyjSMIMTAPQB427OwHW/Vtd8u/NVeJrHUfREoBN0PK1iGEgf3Vl2kKQUwqLrkaHtePU4mbcsVRtHWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762542975; c=relaxed/simple;
-	bh=2ocZfsYLEyORGY2RIkS0+WK85kj+3iZiP/pJ0G668Pg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oz6wPya6HI6PpXeh6VD92EhPdzG3ghi94DoOcJylCs7LTKZ+jiFFd1wfHlwtKL2VBVPy77C4qfMOz9U36M7SjuPT0Azlg0fg+pYo7fzfwJDyOCpwZBUaNWJ3Yr53rd2mOC42dzGnkXfwuKPXS8lcMoBnxfDuLoC8lSpDVsph8Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=bzPXZYR0; arc=none smtp.client-ip=209.85.166.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-io1-f65.google.com with SMTP id ca18e2360f4ac-9483e51d774so39378939f.1
-        for <linux-pci@vger.kernel.org>; Fri, 07 Nov 2025 11:16:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1762542971; x=1763147771; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iPun3L1XgCMTeQ3bynZtUISWafgn6K8Gc9jGJeXkooo=;
-        b=bzPXZYR0ZtBcwNYInFHHDpNJJ5XVYLxo6kQWch+RrnvRQepL0xQTn2Z/2DgPgl/qDG
-         0qPQ61KJ5HcaXwtGZkrmNOnDitSgOnWL0YQBVSeMfR+86rZ2Rxstd3OPVRKzSPjJUxit
-         Gc03I8fNIr09mf6bXAasaALvPwm/qy3/bvDBV2li1PPQ7ezqKojp9wU1/SB74+dqYy8/
-         J1NPy8grMp/TAeHmUAfMSOoCMxhQ75Wu/wag4f3K2JKUzKldy7LBwhglJyeliI2HAHpP
-         fL2OiznQRJNgE/+3k6Ybx3TdhCkYvSMLdHrUc3Kuh5eopnbUPwscDPoA+1jy6VhtOHmK
-         40Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762542971; x=1763147771;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=iPun3L1XgCMTeQ3bynZtUISWafgn6K8Gc9jGJeXkooo=;
-        b=jjM3dhU32zcfz853ZC6tDhZMNAz7sqpU1SUKcON6JBVBG6zQk3qvz4FsQfrtHIbgE9
-         WW1s25YGRMamcsMpJ/ppHGmAgtpLNPGohG3P1B2UTLEQIp8bN740yf5gsvbXhc0W46j3
-         57rzmuLsvhT8jlx9nJ9TVpwxEqKZzz8v78yexEQHOh617kfU8s2uyLHpnUOZ59MnDj+J
-         ahk9lh/towcwxVTOOYxaT6VC//BTfiLbIiDqSR+a++DHdjqtFNUPJUqtRTCuxHmd2YBf
-         5dPtLCcA57KpCQpt+kr5weIkmvhuOUkcww60ZzlwFgyPD5jnDJBO/434W/3Jk8fZyf40
-         qOSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXihRhlh8JB6qL4NgRbGm4tPzomMiiQi3Y/vRBSho+ri+iHoKrNM7aSA7DHnpiLoSBSu6HRgNNxZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMJBOds+kJyTWJh+QLoDp3jDeKZkDEbXuZkqi1UOguCvwJdKPY
-	CcdpRj6Xf8X2rg4wXl5xLmHo9kkutHV45BHr+iXk5xmkreRV/8GHVU7yzp+ZJMPWgK4=
-X-Gm-Gg: ASbGncuYGW4alTqPPsMO1iMrefe72dClsI4GvMyGvH3D3fvFQQHkfaIvX0EbwKKnlf5
-	/+Md1BSiklJnfoafxZYIJVMowAuYj4ti4Xle5QJULRvBV7Vm5ag48kFBG9SQBFcgKgpuCA9NDzZ
-	zMxIDr964LkbxYgrDGJjN+6u8NgLLUS+E4NeoZPI7+dEQhxqPwZi19f/8ZRnYqUeCPM+pVmh7sB
-	T8P64CsBuJ9qoKiwYa2ezXaQ6oEAzJ66LcoZ/4P8qslSJZdA5sW+SycF/Mn29fkfsttoziDmuaH
-	KEhus9Ik0vlspmjL4QjO9sYrzvtkshjFU5BcagKfX/KZ9K7oJ+vcDNlAgub0CeugrxxlFZEq40S
-	VBnJAjI0ZLPL3i2L0mRcjV+ENT60lMIosLDIlwLu8Mh/dZyeefYaio7YPNsdIvrHCGWFDKJ2YTp
-	3tQdppAVUPhsh/JwPQPjYp9ubx//kSU5V2sIzZIHgSBb9vfbCl0k04Mg==
-X-Google-Smtp-Source: AGHT+IGMngpNxasxOy5qpZHmxuLQ2gLe+aaxDuhNRzXMHr19MIE/5vhXEQ0iOJURKXuoVE6ifTCzwg==
-X-Received: by 2002:a92:d806:0:b0:433:382a:b39 with SMTP id e9e14a558f8ab-43362990414mr28103945ab.4.1762542971194;
-        Fri, 07 Nov 2025 11:16:11 -0800 (PST)
-Received: from zippy.localdomain (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-94888c34c6asm118772939f.10.2025.11.07.11.16.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Nov 2025 11:16:10 -0800 (PST)
-From: Alex Elder <elder@riscstar.com>
-To: lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	mani@kernel.org,
-	robh@kernel.org,
-	bhelgaas@google.com
-Cc: dlan@gentoo.org,
-	aurelien@aurel32.net,
-	johannes@erdfelt.com,
-	p.zabel@pengutronix.de,
-	christian.bruel@foss.st.com,
-	thippeswamy.havalige@amd.com,
-	krishna.chundru@oss.qualcomm.com,
-	mayank.rana@oss.qualcomm.com,
-	qiang.yu@oss.qualcomm.com,
-	shradha.t@samsung.com,
-	inochiama@gmail.com,
-	guodong@riscstar.com,
-	linux-pci@vger.kernel.org,
-	spacemit@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 5/7] PCI: spacemit: Add SpacemiT PCIe host driver
-Date: Fri,  7 Nov 2025 13:15:54 -0600
-Message-ID: <20251107191557.1827677-6-elder@riscstar.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20251107191557.1827677-1-elder@riscstar.com>
-References: <20251107191557.1827677-1-elder@riscstar.com>
+	s=arc-20240116; t=1762545550; c=relaxed/simple;
+	bh=o6sCKaIr+Mcsm7DmCaTJx6MhTkgDqm5CM83QolZ5QBY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qOe3Kf9ECy15HZsqfzYBc8argxOv9pEdWPMXzZxBgq1xvzAQIxb+4jot7H1hUIHwC+vVPfzFyg6Ieme04jZufPCss9fG9ZRF4gylzjy+3hbfoDZ77DLsad0at6bf6pyB77hPbzypOQJP2CFMjj9Em36YOqCgNmEtxKUEgVporT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V/UL/MF2; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762545549; x=1794081549;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=o6sCKaIr+Mcsm7DmCaTJx6MhTkgDqm5CM83QolZ5QBY=;
+  b=V/UL/MF2Fk6EqDevXEbtY5iJx6iqZAJVzLiJit3mNWRoCCadPvcCWQd6
+   tgiAA9MpgdBt25EZxMn/S+6obswZx41rZGPa+B+xqlPFEkorfmpNcpGqW
+   4w+8FneJmpqkusOx2hIMXN2SRNCFptU5KpDBx3cfdN+z1TW5YmFJd4jGH
+   /T1jhYXwoATEs8mjW+YA/YniNLxB1DdTiTKC7QTSq6KiqE8R0Y9W4HNT4
+   uQVKSLxEYG3GyBYqeN/0OPjHMXC8K/GSveJi7eLbLb+EYuhHqch9Xu6Bf
+   ZESM21VD3pj9syOUx3oohSZmKKegWcmRO334kkiylNqMjDeL0Ernfttik
+   g==;
+X-CSE-ConnectionGUID: 4QJBB2sZS9OGEOmAas+YvQ==
+X-CSE-MsgGUID: p23x5m/TT5CTIAuNY1dUlQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11606"; a="64737458"
+X-IronPort-AV: E=Sophos;i="6.19,287,1754982000"; 
+   d="scan'208";a="64737458"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2025 11:59:08 -0800
+X-CSE-ConnectionGUID: WQraglFVTdSNTqRT+O0OdA==
+X-CSE-MsgGUID: vV07ZoEeSlaSEo5q+8IIjA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,287,1754982000"; 
+   d="scan'208";a="187370899"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.111.112]) ([10.125.111.112])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2025 11:59:07 -0800
+Message-ID: <85fa077c-0c69-452b-9503-0cd7f3e1b363@intel.com>
+Date: Fri, 7 Nov 2025 12:59:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/6 v7] ACPI: extlog: Trace CPER CXL Protocol Error
+ Section
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ linux-cxl@vger.kernel.org
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+ Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <20251104182446.863422-1-fabio.m.de.francesco@linux.intel.com>
+ <20251104182446.863422-7-fabio.m.de.francesco@linux.intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20251104182446.863422-7-fabio.m.de.francesco@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Introduce a driver for the PCIe host controller found in the SpacemiT
-K1 SoC.  The hardware is derived from the Synopsys DesignWare PCIe IP.
-The driver supports three PCIe ports that operate at PCIe gen2 transfer
-rates (5 GT/sec).  The first port uses a combo PHY, which may be
-configured for use for USB 3 instead.
 
-Signed-off-by: Alex Elder <elder@riscstar.com>
----
-v5: - Kconfig option now positioned based on vendor name sort
-    - Kconfig option description has been expanded a bit
-    - Kconfig option does not depend on PCI or OF 
-    - dw_pcie_readl_dbi() and dw_pcie_writel_dbi() are now used when
-      turning off ASPM L1
-    - In k1_pcie_phy_init():
-        - Vendor and device IDs are set earlier
-        - PERST# is now asserted separately
-        - phy_init() is now called later
-    - Getting and enabling the regulator is done in the controller
-      probe function, rather than relying on the root port driver
-      doing that
 
- drivers/pci/controller/dwc/Kconfig            |  13 +
- drivers/pci/controller/dwc/Makefile           |   1 +
- drivers/pci/controller/dwc/pcie-spacemit-k1.c | 353 ++++++++++++++++++
- 3 files changed, 367 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-spacemit-k1.c
+On 11/4/25 11:22 AM, Fabio M. De Francesco wrote:
+> When Firmware First is enabled, BIOS handles errors first and then it
+> makes them available to the kernel via the Common Platform Error Record
+> (CPER) sections (UEFI 2.11 Appendix N.2.13). Linux parses the CPER
+> sections via one of two similar paths, either ELOG or GHES. The errors
+> managed by ELOG are signaled to the BIOS by the I/O Machine Check
+> Architecture (I/O MCA).
+> 
+> Currently, ELOG and GHES show some inconsistencies in how they report to
+> userspace via trace events.
+> 
+> Therefore, make the two mentioned paths act similarly by tracing the CPER
+> CXL Protocol Error Section.
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 349d4657393c9..718bb54e943f6 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -416,6 +416,19 @@ config PCIE_SOPHGO_DW
- 	  Say Y here if you want PCIe host controller support on
- 	  Sophgo SoCs.
- 
-+config PCIE_SPACEMIT_K1
-+	tristate "SpacemiT K1 PCIe controller (host mode)"
-+	depends on ARCH_SPACEMIT || COMPILE_TEST
-+	depends on HAS_IOMEM
-+	select PCIE_DW_HOST
-+	select PCI_PWRCTRL_SLOT
-+	default ARCH_SPACEMIT
-+	help
-+	  Enables support for the DesignWare based PCIe controller in
-+	  the SpacemiT K1 SoC operating in host mode.  Three controllers
-+	  are available on the K1 SoC; the first of these shares a PHY
-+	  with a USB 3.0 host controller (one or the other can be used).
-+
- config PCIE_SPEAR13XX
- 	bool "STMicroelectronics SPEAr PCIe controller"
- 	depends on ARCH_SPEAR13XX || COMPILE_TEST
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index 7ae28f3b0fb39..662b0a219ddc4 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -31,6 +31,7 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
- obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
- obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
- obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
-+obj-$(CONFIG_PCIE_SPACEMIT_K1) += pcie-spacemit-k1.o
- obj-$(CONFIG_PCIE_STM32_HOST) += pcie-stm32.o
- obj-$(CONFIG_PCIE_STM32_EP) += pcie-stm32-ep.o
- 
-diff --git a/drivers/pci/controller/dwc/pcie-spacemit-k1.c b/drivers/pci/controller/dwc/pcie-spacemit-k1.c
-new file mode 100644
-index 0000000000000..fd428a39b83cd
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-spacemit-k1.c
-@@ -0,0 +1,353 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * SpacemiT K1 PCIe host driver
-+ *
-+ * Copyright (C) 2025 by RISCstar Solutions Corporation.  All rights reserved.
-+ * Copyright (c) 2023, spacemit Corporation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/gfp.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/types.h>
-+
-+#include "pcie-designware.h"
-+
-+#define PCI_VENDOR_ID_SPACEMIT		0x201f
-+#define PCI_DEVICE_ID_SPACEMIT_K1	0x0001
-+
-+/* Offsets and field definitions for link management registers */
-+#define K1_PHY_AHB_IRQ_EN			0x0000
-+#define PCIE_INTERRUPT_EN		BIT(0)
-+
-+#define K1_PHY_AHB_LINK_STS			0x0004
-+#define SMLH_LINK_UP			BIT(1)
-+#define RDLH_LINK_UP			BIT(12)
-+
-+#define INTR_ENABLE				0x0014
-+#define MSI_CTRL_INT			BIT(11)
-+
-+/* Some controls require APMU regmap access */
-+#define SYSCON_APMU			"spacemit,apmu"
-+
-+/* Offsets and field definitions for APMU registers */
-+#define PCIE_CLK_RESET_CONTROL			0x0000
-+#define LTSSM_EN			BIT(6)
-+#define PCIE_AUX_PWR_DET		BIT(9)
-+#define PCIE_RC_PERST			BIT(12)	/* 1: assert PERST# */
-+#define APP_HOLD_PHY_RST		BIT(30)
-+#define DEVICE_TYPE_RC			BIT(31)	/* 0: endpoint; 1: RC */
-+
-+#define PCIE_CONTROL_LOGIC			0x0004
-+#define PCIE_SOFT_RESET			BIT(0)
-+
-+struct k1_pcie {
-+	struct dw_pcie pci;
-+	struct phy *phy;
-+	void __iomem *link;
-+	struct regmap *pmu;	/* Errors ignored; MMIO-backed regmap */
-+	u32 pmu_off;
-+};
-+
-+#define to_k1_pcie(dw_pcie) \
-+		platform_get_drvdata(to_platform_device((dw_pcie)->dev))
-+
-+static void k1_pcie_toggle_soft_reset(struct k1_pcie *k1)
-+{
-+	u32 offset;
-+	u32 val;
-+
-+	/*
-+	 * Write, then read back to guarantee it has reached the device
-+	 * before we start the delay.
-+	 */
-+	offset = k1->pmu_off + PCIE_CONTROL_LOGIC;
-+	regmap_set_bits(k1->pmu, offset, PCIE_SOFT_RESET);
-+	regmap_read(k1->pmu, offset, &val);
-+
-+	mdelay(2);
-+
-+	regmap_clear_bits(k1->pmu, offset, PCIE_SOFT_RESET);
-+}
-+
-+/* Enable app clocks, deassert resets */
-+static int k1_pcie_enable_resources(struct k1_pcie *k1)
-+{
-+	struct dw_pcie *pci = &k1->pci;
-+	int ret;
-+
-+	ret = clk_bulk_prepare_enable(ARRAY_SIZE(pci->app_clks), pci->app_clks);
-+	if (ret)
-+		return ret;
-+
-+	ret = reset_control_bulk_deassert(ARRAY_SIZE(pci->app_rsts),
-+					  pci->app_rsts);
-+	if (ret)
-+		goto err_disable_clks;
-+
-+	return 0;
-+
-+err_disable_clks:
-+	clk_bulk_disable_unprepare(ARRAY_SIZE(pci->app_clks), pci->app_clks);
-+
-+	return ret;
-+}
-+
-+/* Assert resets, disable app clocks */
-+static void k1_pcie_disable_resources(struct k1_pcie *k1)
-+{
-+	struct dw_pcie *pci = &k1->pci;
-+
-+	reset_control_bulk_assert(ARRAY_SIZE(pci->app_rsts), pci->app_rsts);
-+	clk_bulk_disable_unprepare(ARRAY_SIZE(pci->app_clks), pci->app_clks);
-+}
-+
-+static int k1_pcie_init(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct k1_pcie *k1 = to_k1_pcie(pci);
-+	u32 reset_ctrl;
-+	u32 val;
-+	int ret;
-+
-+	k1_pcie_toggle_soft_reset(k1);
-+
-+	ret = k1_pcie_enable_resources(k1);
-+	if (ret)
-+		return ret;
-+
-+	/* Set the PCI vendor and device ID */
-+	dw_pcie_dbi_ro_wr_en(pci);
-+	dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, PCI_VENDOR_ID_SPACEMIT);
-+	dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, PCI_DEVICE_ID_SPACEMIT_K1);
-+	dw_pcie_dbi_ro_wr_dis(pci);
-+
-+	/*
-+	 * Start by asserting fundamental reset (drive PERST# low).  The
-+	 * PCI CEM spec says that PERST# should be deasserted at least
-+	 * 100ms after the power becomes stable, so we'll insert that
-+	 * delay first.  Write, then read it back to guarantee the write
-+	 * reaches the device before we start the delay.
-+	 */
-+	reset_ctrl = k1->pmu_off + PCIE_CLK_RESET_CONTROL;
-+	regmap_set_bits(k1->pmu, reset_ctrl, PCIE_RC_PERST);
-+	regmap_read(k1->pmu, reset_ctrl, &val);
-+	mdelay(PCIE_T_PVPERL_MS);
-+
-+	/*
-+	 * Put the controller in root complex mode, and indicate that
-+	 * Vaux (3.3v) is present.
-+	 */
-+	regmap_set_bits(k1->pmu, reset_ctrl, DEVICE_TYPE_RC | PCIE_AUX_PWR_DET);
-+
-+	ret = phy_init(k1->phy);
-+	if (ret) {
-+		k1_pcie_disable_resources(k1);
-+
-+		return ret;
-+	}
-+
-+	/* Finally deassert fundamental reset (drive PERST# high) */
-+	regmap_clear_bits(k1->pmu, reset_ctrl, PCIE_RC_PERST);
-+
-+	return 0;
-+}
-+
-+/* Disable ASPM L1 for now, until reported errors can be reproduced */
-+static void k1_pcie_post_init(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	u8 offset;
-+	u32 val;
-+
-+	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	offset += PCI_EXP_LNKCAP;
-+
-+	/* Turn off ASPM L1 for the link */
-+	dw_pcie_dbi_ro_wr_en(pci);
-+	val = dw_pcie_readl_dbi(pci, offset);
-+	val &= ~PCI_EXP_LNKCAP_ASPM_L1;
-+	dw_pcie_writel_dbi(pci, offset, val);
-+	dw_pcie_dbi_ro_wr_dis(pci);
-+}
-+
-+static void k1_pcie_deinit(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct k1_pcie *k1 = to_k1_pcie(pci);
-+
-+	/* Assert fundamental reset (drive PERST# low) */
-+	regmap_set_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
-+			PCIE_RC_PERST);
-+
-+	phy_exit(k1->phy);
-+
-+	k1_pcie_disable_resources(k1);
-+}
-+
-+static const struct dw_pcie_host_ops k1_pcie_host_ops = {
-+	.init		= k1_pcie_init,
-+	.post_init	= k1_pcie_post_init,
-+	.deinit		= k1_pcie_deinit,
-+};
-+
-+static bool k1_pcie_link_up(struct dw_pcie *pci)
-+{
-+	struct k1_pcie *k1 = to_k1_pcie(pci);
-+	u32 val;
-+
-+	val = readl_relaxed(k1->link + K1_PHY_AHB_LINK_STS);
-+
-+	return (val & RDLH_LINK_UP) && (val & SMLH_LINK_UP);
-+}
-+
-+static int k1_pcie_start_link(struct dw_pcie *pci)
-+{
-+	struct k1_pcie *k1 = to_k1_pcie(pci);
-+	u32 val;
-+
-+	/* Stop holding the PHY in reset, and enable link training */
-+	regmap_update_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
-+			   APP_HOLD_PHY_RST | LTSSM_EN, LTSSM_EN);
-+
-+	/* Enable the MSI interrupt */
-+	writel_relaxed(MSI_CTRL_INT, k1->link + INTR_ENABLE);
-+
-+	/* Top-level interrupt enable */
-+	val = readl_relaxed(k1->link + K1_PHY_AHB_IRQ_EN);
-+	val |= PCIE_INTERRUPT_EN;
-+	writel_relaxed(val, k1->link + K1_PHY_AHB_IRQ_EN);
-+
-+	return 0;
-+}
-+
-+static void k1_pcie_stop_link(struct dw_pcie *pci)
-+{
-+	struct k1_pcie *k1 = to_k1_pcie(pci);
-+	u32 val;
-+
-+	/* Disable interrupts */
-+	val = readl_relaxed(k1->link + K1_PHY_AHB_IRQ_EN);
-+	val &= ~PCIE_INTERRUPT_EN;
-+	writel_relaxed(val, k1->link + K1_PHY_AHB_IRQ_EN);
-+
-+	writel_relaxed(0, k1->link + INTR_ENABLE);
-+
-+	/* Disable the link and hold the PHY in reset */
-+	regmap_update_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
-+			   APP_HOLD_PHY_RST | LTSSM_EN, APP_HOLD_PHY_RST);
-+}
-+
-+static const struct dw_pcie_ops k1_pcie_ops = {
-+	.link_up	= k1_pcie_link_up,
-+	.start_link	= k1_pcie_start_link,
-+	.stop_link	= k1_pcie_stop_link,
-+};
-+
-+static int k1_pcie_parse_port(struct k1_pcie *k1)
-+{
-+	struct device *dev = k1->pci.dev;
-+	struct device_node *root_port;
-+	struct phy *phy;
-+
-+	/* We assume only one root port */
-+	root_port = of_get_next_available_child(dev_of_node(dev), NULL);
-+	if (!root_port)
-+		return -EINVAL;
-+
-+	phy = devm_of_phy_get(dev, root_port, NULL);
-+
-+	of_node_put(root_port);
-+
-+	if (IS_ERR(phy))
-+		return PTR_ERR(phy);
-+
-+	k1->phy = phy;
-+
-+	return 0;
-+}
-+
-+static int k1_pcie_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct k1_pcie *k1;
-+	int ret;
-+
-+	k1 = devm_kzalloc(dev, sizeof(*k1), GFP_KERNEL);
-+	if (!k1)
-+		return -ENOMEM;
-+
-+	k1->pmu = syscon_regmap_lookup_by_phandle_args(dev_of_node(dev),
-+						       SYSCON_APMU, 1,
-+						       &k1->pmu_off);
-+	if (IS_ERR(k1->pmu))
-+		return dev_err_probe(dev, PTR_ERR(k1->pmu),
-+				     "failed to lookup PMU registers\n");
-+
-+	k1->link = devm_platform_ioremap_resource_byname(pdev, "link");
-+	if (!k1->link)
-+		return dev_err_probe(dev, -ENOMEM,
-+				     "failed to map \"link\" registers\n");
-+
-+	k1->pci.dev = dev;
-+	k1->pci.ops = &k1_pcie_ops;
-+	dw_pcie_cap_set(&k1->pci, REQ_RES);
-+
-+	k1->pci.pp.ops = &k1_pcie_host_ops;
-+
-+	/* Hold the PHY in reset until we start the link */
-+	regmap_set_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
-+			APP_HOLD_PHY_RST);
-+
-+	ret = devm_regulator_get_enable(dev, "vpcie3v3");
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "failed to get \"vpcie3v3\" supply\n");
-+
-+	pm_runtime_set_active(dev);
-+	pm_runtime_no_callbacks(dev);
-+	devm_pm_runtime_enable(dev);
-+
-+	platform_set_drvdata(pdev, k1);
-+
-+	ret = k1_pcie_parse_port(k1);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to parse root port\n");
-+
-+	ret = dw_pcie_host_init(&k1->pci.pp);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to initialize host\n");
-+
-+	return 0;
-+}
-+
-+static void k1_pcie_remove(struct platform_device *pdev)
-+{
-+	struct k1_pcie *k1 = platform_get_drvdata(pdev);
-+
-+	dw_pcie_host_deinit(&k1->pci.pp);
-+}
-+
-+static const struct of_device_id k1_pcie_of_match_table[] = {
-+	{ .compatible = "spacemit,k1-pcie", },
-+	{ },
-+};
-+
-+static struct platform_driver k1_pcie_driver = {
-+	.probe	= k1_pcie_probe,
-+	.remove	= k1_pcie_remove,
-+	.driver = {
-+		.name			= "spacemit-k1-pcie",
-+		.of_match_table		= k1_pcie_of_match_table,
-+		.probe_type		= PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+};
-+module_platform_driver(k1_pcie_driver);
--- 
-2.48.1
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>> ---
+>  drivers/acpi/Kconfig       |  1 +
+>  drivers/acpi/acpi_extlog.c | 22 ++++++++++++++++++++++
+>  drivers/cxl/core/ras.c     |  3 ++-
+>  include/cxl/event.h        |  2 ++
+>  4 files changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> index be02634f2320..c2ad24e77ddf 100644
+> --- a/drivers/acpi/Kconfig
+> +++ b/drivers/acpi/Kconfig
+> @@ -498,6 +498,7 @@ config ACPI_EXTLOG
+>  	select ACPI_APEI
+>  	select ACPI_APEI_PCIEAER
+>  	select UEFI_CPER
+> +	select CXL_BUS
+>  	help
+>  	  Certain usages such as Predictive Failure Analysis (PFA) require
+>  	  more information about the error than what can be described in
+> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+> index b3976ceb4ee4..e6fb25395984 100644
+> --- a/drivers/acpi/acpi_extlog.c
+> +++ b/drivers/acpi/acpi_extlog.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/ratelimit.h>
+>  #include <linux/edac.h>
+>  #include <linux/ras.h>
+> +#include <cxl/event.h>
+>  #include <acpi/ghes.h>
+>  #include <asm/cpu.h>
+>  #include <asm/mce.h>
+> @@ -160,6 +161,21 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
+>  	pci_dev_put(pdev);
+>  }
+>  
+> +static void
+> +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
+> +				int severity)
+> +{
+> +	struct cxl_cper_prot_err_work_data wd;
+> +
+> +	if (cxl_cper_sec_prot_err_valid(prot_err))
+> +		return;
+> +
+> +	if (cxl_cper_setup_prot_err_work_data(&wd, prot_err, severity))
+> +		return;
+> +
+> +	cxl_cper_handle_prot_err(&wd);
+> +}
+> +
+>  static int extlog_print(struct notifier_block *nb, unsigned long val,
+>  			void *data)
+>  {
+> @@ -211,6 +227,12 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
+>  			if (gdata->error_data_length >= sizeof(*mem))
+>  				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
+>  						       (u8)gdata->error_severity);
+> +		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
+> +			struct cxl_cper_sec_prot_err *prot_err =
+> +				acpi_hest_get_payload(gdata);
+> +
+> +			extlog_cxl_cper_handle_prot_err(prot_err,
+> +							gdata->error_severity);
+>  		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
+>  			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
+>  
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index 2731ba3a0799..a90480d07c87 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -63,7 +63,7 @@ static int match_memdev_by_parent(struct device *dev, const void *uport)
+>  	return 0;
+>  }
+>  
+> -static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
+> +void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
+>  {
+>  	unsigned int devfn = PCI_DEVFN(data->prot_err.agent_addr.device,
+>  				       data->prot_err.agent_addr.function);
+> @@ -104,6 +104,7 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
+>  	else
+>  		cxl_cper_trace_uncorr_prot_err(cxlmd, data->ras_cap);
+>  }
+> +EXPORT_SYMBOL_GPL(cxl_cper_handle_prot_err);
+>  
+>  static void cxl_cper_prot_err_work_fn(struct work_struct *work)
+>  {
+> diff --git a/include/cxl/event.h b/include/cxl/event.h
+> index 94081aec597a..ff97fea718d2 100644
+> --- a/include/cxl/event.h
+> +++ b/include/cxl/event.h
+> @@ -340,4 +340,6 @@ cxl_cper_setup_prot_err_work_data(struct cxl_cper_prot_err_work_data *wd,
+>  }
+>  #endif
+>  
+> +void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *wd);
+> +
+>  #endif /* _LINUX_CXL_EVENT_H */
 
 
