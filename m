@@ -1,63 +1,78 @@
-Return-Path: <linux-pci+bounces-40585-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40586-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8419C40930
-	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 16:25:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 93EE5C40BA4
+	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 17:01:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 727EE423D95
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 15:25:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 369643A5BD0
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 16:01:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 522562C3258;
-	Fri,  7 Nov 2025 15:25:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDDE725291B;
+	Fri,  7 Nov 2025 16:01:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRF8DAfe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1OqoxtV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2997943AA6;
-	Fri,  7 Nov 2025 15:25:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9AE1DE8AE;
+	Fri,  7 Nov 2025 16:01:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762529149; cv=none; b=YGgsdp8YON6KnIruL6LYPFa9NXAM115Ao10DhpNoII3XpIF10uo/yXsm4Bc5dSpi2I7MCUK1ZKQpDpwZEN95mW/4eKzgzwuxANk4X8CwHq+awIZ10NYqi+s33vNEW2AOZhp8tHIo9GSnsrRzR5NUS0d/pSsQ5H1gWs/tNDMCAac=
+	t=1762531285; cv=none; b=X2o+jSgd/sEkieoSsHJLzPhtEZJslTg9vU1LCyApi0nN7B1kylXXrZ8DGo1QbrBpu1TWLBttzybEMyOcF8MmMvQBbQMqkkTHudXXTpme0M0U9l8Syy9o8rUKxxFlJ+KX/wYVeJHs+UMDC9cy/jtJlTOZxJ2X9h9r8Xuw1+w0Mlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762529149; c=relaxed/simple;
-	bh=02om1vHeyZwGMIMBSLhYVHI4vekhj/hDXVqaAGTaRb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=M/Bomj6AS3nZtlxeq4sn4kklEPgKWP+ug3ZRkhHgkB0HHku5kHh1k2tXlRxTjid4m1zqYeC9OEwB6aj2+fsKJV0NAAGJCRZcMsFyFex92rGXHnq64XkQfiCon5rVO0IiuEanfY2RsgjIfzN8SMW5Ak9Ryi/AK99JqBnkmT8pIoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRF8DAfe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D386C4CEF7;
-	Fri,  7 Nov 2025 15:25:48 +0000 (UTC)
+	s=arc-20240116; t=1762531285; c=relaxed/simple;
+	bh=SAXkSml11M5xQ5oAowfwGP1WfIbbhD9Zwsc1+gFtZVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gE5bBhg+qvsgoRdDnfV9IRjE9MFxMtgCa7aJ6jruVf1wiXM6knGj4pWj7db4h7VRxedWTkHsqJ8HDx+v61GFnJWcB5VidzFLNt6aIL0PER+l4gkoRPu6W16xFsoST5DW3QzpL8uMxANXyPq4oLSp6Jb+CqpZgpf4naH7//Q5Ngc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1OqoxtV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C30C3C4CEF8;
+	Fri,  7 Nov 2025 16:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762529148;
-	bh=02om1vHeyZwGMIMBSLhYVHI4vekhj/hDXVqaAGTaRb4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TRF8DAfeP1FRnLZkPGRCooI/SbGKUFf2sXqBTy73FxI/w3uLNiqGlPB+YtdbErEsa
-	 FHRT1EOCI6FKIbyMgcZ2/SXRLgCJYzp+WMYUOzVgogq2g3nwOpQbATUK0HyFPKZAOa
-	 ack/Hw+l6Q1CA7z0AEmf9VKR9RmqeLvueeeGZxbkXvsWLez6kF1k3C1vwzMEa3j1fh
-	 NIGCLKlGbK7ouBbayfER4k4Ut0siSqxMUBjE2JGMZ3LD7M+xGRjA003CGeCxO40iyQ
-	 IyBKh0XDj4WwUyHH6AfmSWs0kvtDXjtesPcIelaInaCOWNpMhAm1+FTFJgG8E2lb1S
-	 U7y5SY5hM/XcQ==
-Date: Fri, 7 Nov 2025 09:25:47 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, Christian Zigotzky <chzigotzky@xenosoft.de>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	mad skateman <madskateman@gmail.com>,
-	"R . T . Dickinson" <rtd2@xtra.co.nz>,
-	Darren Stevens <darren@stevens-zone.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	luigi burdo <intermediadc@hotmail.com>, Al <al@datazap.net>,
-	Roland <rol7and@gmx.com>, Hongxing Zhu <hongxing.zhu@nxp.com>,
-	hypexed@yahoo.com.au, linuxppc-dev@lists.ozlabs.org,
-	debian-powerpc@lists.debian.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 1/2] PCI/ASPM: Cache Link Capabilities so quirks can
- override them
-Message-ID: <20251107152547.GA1998555@bhelgaas>
+	s=k20201202; t=1762531285;
+	bh=SAXkSml11M5xQ5oAowfwGP1WfIbbhD9Zwsc1+gFtZVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G1OqoxtV7XlT2wwuQ5Uez60kwG8g2e3K4oXYvr5lCUmDLnRe2lDqJfqpdyozZ9Kfs
+	 9cK/Pp4gs2exlM5ZaZgfE/mSts/OwwIwkCNUlopoOf55C/E/oCxFH4g1GkpuhBOQLc
+	 GevH4WEkQ/xUCsGWGMcEuw40zHNAV2BFJUHAJFbr5fa5pHtu6BKUEsKKzGsJoGHBVK
+	 LIruon02MTTCyGk7ziSVANwsf4TxGmKVozxHLsq3vvxJUR+H9wB9GZSvIotqrUV4ud
+	 cVhLCCIpj3frChH2BVoHb8jxb4jO/OzKabXV1PHaTXuqZVIniF59yBQsetybD1Wq21
+	 bF79hpL4xdXKw==
+Date: Fri, 7 Nov 2025 18:01:20 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <skolothumtho@nvidia.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, iommu@lists.linux.dev,
+	linux-mm@kvack.org, linux-doc@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v7 05/11] PCI/P2PDMA: Document DMABUF model
+Message-ID: <20251107160120.GD15456@unreal>
+References: <20251106-dmabuf-vfio-v7-0-2503bf390699@nvidia.com>
+ <20251106-dmabuf-vfio-v7-5-2503bf390699@nvidia.com>
+ <135df7eb-9291-428b-9c86-d58c2e19e052@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,64 +81,114 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aQ2EXqDvnxjyXq_7@wunner.de>
+In-Reply-To: <135df7eb-9291-428b-9c86-d58c2e19e052@infradead.org>
 
-On Fri, Nov 07, 2025 at 06:32:14AM +0100, Lukas Wunner wrote:
-> On Thu, Nov 06, 2025 at 12:36:38PM -0600, Bjorn Helgaas wrote:
-> > Cache the PCIe Link Capabilities register in struct pci_dev so quirks can
-> > remove features to avoid hardware defects.  The idea is:
-> > 
-> >   - set_pcie_port_type() reads PCIe Link Capabilities and caches it in
-> >     dev->lnkcap
-> > 
-> >   - HEADER quirks can update the cached dev->lnkcap to remove advertised
-> >     features that don't work correctly
-> > 
-> >   - pcie_aspm_cap_init() relies on dev->lnkcap and ignores any features not
-> >     advertised there
+On Thu, Nov 06, 2025 at 10:15:07PM -0800, Randy Dunlap wrote:
 > 
-> I realize that memory is cheap, but it still feels a bit wasteful
-> to cache the entire 32-bit register wholesale.  It contains
-> reserved bits as of PCIe r7.0, various uninteresting bits and
-> portions of it are already cached elsewhere and thus now duplicated.
-> I'm wondering if it would make sense to instead only cache the ASPM bits
-> that are relevant here?  That's the approach we've followed so far.
-
-My first try (which I didn't post) cached only the two bits we need
-for this.  It's not awful, and the aspm.c patch was smaller, so maybe
-it's the right approach, at least for v6.18.
-
-One thing I didn't like about pci_disable_aspm_cap() (which I know you
-said you *did* like :)) is that it adds a layer of indirection.  I
-like having PCI_EXP_LNKCAP_ASPM_L0S in the quirk because it's more
-directly connected to the spec and the hardware register, and grep
-works better for code readers.
-
-But if we only cache the ASPM cap bits, we would need
-pci_disable_aspm_cap() to manage converting PCI_EXP_LNKCAP_ASPM_L0S or
-PCIE_LINK_STATE_L0S to the right place.
-
-(A bit of a tangent, but I've never liked the PCIE_LINK_STATE_* bits
-because they look like they ought to be register bits, but they're
-not.  I think the code would be improved overall if we could remove
-them.)
-
-> You're initializing the link_active_reporting bit from the newly
-> cached lnkcap register, I'd prefer having a static inline instead
-> which extracts the bit from the cached register on demand,
-> thus obviating the need to have a duplicate cached copy of the bit.
 > 
-> pci_set_bus_speed() caches bus->max_bus_speed from the Link
-> Capabilities register and isn't converted by this patch to use
-> the cached register.  There are various others, e.g.
-> get_port_device_capability() in drivers/pci/pcie/portdrv.c
-> could also get PCI_EXP_LNKCAP_LBNC from the cached lnkcap
-> register.  Same for pcie_get_supported_speeds().  If the
-> intention is to convert these in a separate step in v6.19,
-> it would be good to mention that in the changelog.
+> On 11/6/25 6:16 AM, Leon Romanovsky wrote:
+> > From: Jason Gunthorpe <jgg@nvidia.com>
+> > 
+> > Reflect latest changes in p2p implementation to support DMABUF lifecycle.
+> > 
+> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> > ---
+> >  Documentation/driver-api/pci/p2pdma.rst | 95 +++++++++++++++++++++++++--------
+> >  1 file changed, 72 insertions(+), 23 deletions(-)
+> > 
+> > diff --git a/Documentation/driver-api/pci/p2pdma.rst b/Documentation/driver-api/pci/p2pdma.rst
+> > index d0b241628cf1..69adea45f73e 100644
+> > --- a/Documentation/driver-api/pci/p2pdma.rst
+> > +++ b/Documentation/driver-api/pci/p2pdma.rst
+> > @@ -9,22 +9,47 @@ between two devices on the bus. This type of transaction is henceforth
+> >  called Peer-to-Peer (or P2P). However, there are a number of issues that
+> >  make P2P transactions tricky to do in a perfectly safe way.
+> >  
+> > -One of the biggest issues is that PCI doesn't require forwarding
+> > -transactions between hierarchy domains, and in PCIe, each Root Port
+> > -defines a separate hierarchy domain. To make things worse, there is no
+> > -simple way to determine if a given Root Complex supports this or not.
+> > -(See PCIe r4.0, sec 1.3.1). Therefore, as of this writing, the kernel
+> > -only supports doing P2P when the endpoints involved are all behind the
+> > -same PCI bridge, as such devices are all in the same PCI hierarchy
+> > -domain, and the spec guarantees that all transactions within the
+> > -hierarchy will be routable, but it does not require routing
+> > -between hierarchies.
+> > -
+> > -The second issue is that to make use of existing interfaces in Linux,
+> > -memory that is used for P2P transactions needs to be backed by struct
+> > -pages. However, PCI BARs are not typically cache coherent so there are
+> > -a few corner case gotchas with these pages so developers need to
+> > -be careful about what they do with them.
+> > +For PCIe the routing of TLPs is well defined up until they reach a host bridge
+> 
+> Define what TLP means?
 
-I agree with all of that, and there are several other PCI_EXP_LNKCAP
-reads that could be replaced, but that would have to be for v6.19.
+In PCIe "world", TLP is very well-known and well-defined acronym, which
+means Transaction Layer Packet.
 
-Bjorn
+>                                    well-defined
+
+Thanks
+
+diff --git a/Documentation/driver-api/pci/p2pdma.rst b/Documentation/driver-api/pci/p2pdma.rst
+index 69adea45f73e..7530296a5dea 100644
+--- a/Documentation/driver-api/pci/p2pdma.rst
++++ b/Documentation/driver-api/pci/p2pdma.rst
+@@ -9,17 +9,17 @@ between two devices on the bus. This type of transaction is henceforth
+ called Peer-to-Peer (or P2P). However, there are a number of issues that
+ make P2P transactions tricky to do in a perfectly safe way.
+
+-For PCIe the routing of TLPs is well defined up until they reach a host bridge
+-or root port. If the path includes PCIe switches then based on the ACS settings
+-the transaction can route entirely within the PCIe hierarchy and never reach the
+-root port. The kernel will evaluate the PCIe topology and always permit P2P
+-in these well defined cases.
++For PCIe the routing of Transaction Layer Packets (TLPs) is well-defined up
++until they reach a host bridge or root port. If the path includes PCIe switches
++then based on the ACS settings the transaction can route entirely within
++the PCIe hierarchy and never reach the root port. The kernel will evaluate
++the PCIe topology and always permit P2P in these well-defined cases.
+
+ However, if the P2P transaction reaches the host bridge then it might have to
+ hairpin back out the same root port, be routed inside the CPU SOC to another
+ PCIe root port, or routed internally to the SOC.
+
+-As this is not well defined or well supported in real HW the kernel defaults to
++As this is not well-defined or well supported in real HW the kernel defaults to
+ blocking such routing. There is an allow list to allow detecting known-good HW,
+ in which case P2P between any two PCIe devices will be permitted.
+
+@@ -39,7 +39,7 @@ delegates lifecycle management to the providing driver. It is expected that
+ drivers using this option will wrap their MMIO memory in DMABUF and use DMABUF
+ to provide an invalidation shutdown. These MMIO pages have no struct page, and
+ if used with mmap() must create special PTEs. As such there are very few
+-kernel uAPIs that can accept pointers to them, in particular they cannot be used
++kernel uAPIs that can accept pointers to them; in particular they cannot be used
+ with read()/write(), including O_DIRECT.
+
+ Building on this, the subsystem offers a layer to wrap the MMIO in a ZONE_DEVICE
+@@ -154,7 +154,7 @@ access happens.
+ Usage With DMABUF
+ =================
+
+-DMABUF provides an alternative to the above struct page based
++DMABUF provides an alternative to the above struct page-based
+ client/provider/orchestrator system. In this mode the exporting driver will wrap
+ some of its MMIO in a DMABUF and give the DMABUF FD to userspace.
+
+@@ -162,10 +162,10 @@ Userspace can then pass the FD to an importing driver which will ask the
+ exporting driver to map it.
+
+ In this case the initiator and target pci_devices are known and the P2P subsystem
+-is used to determine the mapping type. The phys_addr_t based DMA API is used to
++is used to determine the mapping type. The phys_addr_t-based DMA API is used to
+ establish the dma_addr_t.
+
+-Lifecycle is controlled by DMABUF move_notify(), when the exporting driver wants
++Lifecycle is controlled by DMABUF move_notify(). When the exporting driver wants
+ to remove() it must deliver an invalidation shutdown to all DMABUF importing
+ drivers through move_notify() and synchronously DMA unmap all the MMIO.
+
 
