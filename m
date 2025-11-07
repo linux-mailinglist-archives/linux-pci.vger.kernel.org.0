@@ -1,207 +1,250 @@
-Return-Path: <linux-pci+bounces-40598-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40599-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37F78C415D0
-	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 19:59:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB2CCC41679
+	for <lists+linux-pci@lfdr.de>; Fri, 07 Nov 2025 20:16:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EF05D4E9958
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 18:59:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5EEE918832FA
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Nov 2025 19:16:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08A0933DEE7;
-	Fri,  7 Nov 2025 18:58:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E31E2F12DE;
+	Fri,  7 Nov 2025 19:16:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H59v75Ni"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="OWx5EK4c"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f66.google.com (mail-io1-f66.google.com [209.85.166.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5D333CEA8;
-	Fri,  7 Nov 2025 18:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636762D0C83
+	for <linux-pci@vger.kernel.org>; Fri,  7 Nov 2025 19:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762541923; cv=none; b=oOrWT/WtaSGTmZWpMsAyWJkW+Wa83PzmeCi0FhRoZrsAnZ7eQ8DtE+CEd9DSTwVpFbcT/ovwy35otzl/Tn+9p4yR8oQ/tDmk1ZQDLpOfHjoUqgMPkY8tUjU7ESeDSYQIrFzEvgQEZGvfe65mux3XEK7puJ9GZ8bUYkJku0ZpDzQ=
+	t=1762542967; cv=none; b=LDYWFDdJfPsfVyXK3iPFHxgErswTZOdj4PnIKranvNmM965XPSJdslDffOGY9OCfXHq2jbUVIGlnzvbCOwyuABEgibMoe2pwtCw9LqKm5dNQi3x5WEq29GajBgbtpfgrDlurMcBHm9Ez7MJ+tjJVF6gcl/VtGGGI2GM9o25yPBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762541923; c=relaxed/simple;
-	bh=bOUbnZvb2TbWof6JwYRWtCUjJZ+np312O1qVpM42BAw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H9TCIRg3b9h++Fo3Wzci5wvQZ3FtVyvuMpuW/ggrpBTWtIenztLxNNy4teBNCWKDaidLLOkSBzMCxWeKLpqGEODj2YIwSkXCTbjTbYSXbivQqp793Tn6Jrd+k42inzb3MVRR5iq/O+gWDCCDIrEMOasmE+MJv/30HTJZias6qjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=H59v75Ni; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=PjiF0FDj1ggdA8+srznADWIujFetT2w1WcC08yNm+xE=; b=H59v75NiiIx555adWgSui938BX
-	Yc3i1CYEaGF7O6kQ1NqaqRVT/Zz7Cswv0/fmOzsuOsqzoIRagasqeUrHrhrdChqEbZeXwaG25NO+S
-	5wwiT1Bk++lMCO2rTIpSkO6LuvNwiSk1/lj7Setie4/hO5vXucwRTkyP4yelMuEJS4S3/t3xpANoZ
-	fMWvRG+69LUGWzme6PVDco0ZFCeM7vfUpGeksDZI3z5FpBYHlU5+MqvBB/XCUz0tSEk1fDzrRkUZ2
-	YHwjo2XWY68XJ4S/UyDHNpcYYoIRz6GCK8IoBHNkuYm6Mq2NkrCY2ePjJ4l6ltSL9O9XJUZxKJPhW
-	/Noao/Cg==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vHRfI-00000000bYE-3FZm;
-	Fri, 07 Nov 2025 18:58:28 +0000
-Message-ID: <0c265a9b-fdc5-40d7-845f-30910f1ac6ea@infradead.org>
-Date: Fri, 7 Nov 2025 10:58:27 -0800
+	s=arc-20240116; t=1762542967; c=relaxed/simple;
+	bh=q8z9+PmjzZ8xWRRUGOEKAikoRbeoaeKm1pXl4fitFcg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VJxC1u10uY8HJ27ZWAMLnxvxf0zSpRRowPJmtMDOvf65EQPQK1xxd3f33kZ5FHw/GmHoB4qT83d9iHyzbNGfAjH/VUDKThySPqOI8uLSrm06QRKWx/0bEpiKhk8Gnditl+YrSMRvIPtaxzpPAnKjHJgPQmvV7gdIAiiarF3y17Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=OWx5EK4c; arc=none smtp.client-ip=209.85.166.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-io1-f66.google.com with SMTP id ca18e2360f4ac-940d327df21so30075339f.1
+        for <linux-pci@vger.kernel.org>; Fri, 07 Nov 2025 11:16:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1762542963; x=1763147763; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6n9WzDNQaPD3sJObWy9/wpMh9WA3E6Erilh18wQKqfc=;
+        b=OWx5EK4cW11RU++avdrrUtRe1oNPfeh7QN6cSD6GdqROfFE+E8bb+ijlFpeM2P52Nm
+         TQeCyHhU7mUaGFbeLJB2GhA7ywqgNYoRHyCL+mGboFSJDXBkgFhIl7jpZ6m3OgZRS2cu
+         lJqR+WN5nCkG/diEc4efTmJrbNqwP2Qm7vFJkq+Kg083tzSWwx9hQBwfbHcVb4DKSd9+
+         hp5rwooAE2AWo1ZEe88LyPoq1GM7SyC4M7PWzob4titHgB1k7EAygVhmQpKKYTcc0y2B
+         XND1mi0TdhZSS9pnAl6fPsj+t18kkDxNjgQ05WGuHFQPAIkDpp6aTccnrMpPylt6dgwJ
+         FeVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762542963; x=1763147763;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6n9WzDNQaPD3sJObWy9/wpMh9WA3E6Erilh18wQKqfc=;
+        b=NE22RZ7+H2jjQUdzXMl1ghUXN0g7MLDdAuTD0qI114pGL933iebPHvquzhCY9S9AKs
+         88Xyt6RGSo5/LMelbpmQatb8GfOliAYFPHoO1NM6OvVvOKtGY4SHvq6NoudHsnHfMQCm
+         bqs4sk/OoGN+9SaGmyAUMhOAfDyZZExdiRyuhnGaEZQiYl2NJuKv5MFijFNhrZwCOk9C
+         I0poRGnaDpBp1xplNGbDpZwmFLL3NvnoSgPFcWlieq5UnJ720yI73LcXqS9AzgGgNgN1
+         9sYOZXpn9iVcvFufq/kkpvH1AWdxgySXgidRatSmMYTMpqxyxAw4xgFvmzLw039SG8Nn
+         tZpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiPpUSY/kLfAm8LJkEH5rAI2TvZw52/8LQ248IgzXjXkSf+N3y7D0mAwVWCOMK/7JLKlqGOo6jkQk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLsmGsMaa0QYWBElYNxUp3uVOpblUrweaye2AhxUz10Zfdpo9w
+	ErVhAaZhFCbV0aFhAOlIX6u8X22+xrugQagYoy0bQqkkk1wHJ/Q9uphaiF8rBBn3tI4=
+X-Gm-Gg: ASbGncuw7IeqNlkXb2Hf2rgqffEl8y99ezEEQUBJanEC3P1uoRYX+Ev+U6heH44Ko4g
+	YrHAc/SinwzysfajmqwKXbIsI0PnqA20LwjuEEwSzrSfuGUmIRmP/+j0Os2OdLJMSMO00KFnK+H
+	seGBF0evTc6M+VxxgOrAfFfFdjkTgEEwi6++adkWCRoL6ZFeYtau7+zzKjNpQV2Uffxk/52gVNr
+	d3HYPOS1le4itlKnlrjMiJMdfArnxKcC53fpVIj73LqXt50we59/D+FRy/u7aXkacyA/Nl9trcB
+	/dM+5DtAMM55Frn58HGWjI0xUmcpQKTHDf9o4BsRldnORQl8FL64Q2YPTySoi23fwQAutO+mt8S
+	DTz8RWSpyXtO26SbSqtrMJ6UcaWU4yEh+XeoZam59hox4OIfpfVx98s7qFvjONX+8cA365H1Abx
+	vy5TNS2jePu3Qq8aaZQAA9X8ULezzlprLy54uR0iorP90Mxno9GsQxng==
+X-Google-Smtp-Source: AGHT+IHzW2i2JPY8Wetr24eEJmqYYe9Yl8l6cwzTHxWm6YorX15rRz+Oc0kP8V7OeF++pSW10dZrTw==
+X-Received: by 2002:a05:6602:3e81:b0:945:ac8e:fcb9 with SMTP id ca18e2360f4ac-9489602f282mr55483139f.17.1762542963188;
+        Fri, 07 Nov 2025 11:16:03 -0800 (PST)
+Received: from zippy.localdomain (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-94888c34c6asm118772939f.10.2025.11.07.11.16.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Nov 2025 11:16:02 -0800 (PST)
+From: Alex Elder <elder@riscstar.com>
+To: dlan@gentoo.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	vkoul@kernel.org,
+	kishon@kernel.org,
+	bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	mani@kernel.org
+Cc: ziyao@disroot.org,
+	aurelien@aurel32.net,
+	johannes@erdfelt.com,
+	mayank.rana@oss.qualcomm.com,
+	qiang.yu@oss.qualcomm.com,
+	shradha.t@samsung.com,
+	inochiama@gmail.com,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	p.zabel@pengutronix.de,
+	christian.bruel@foss.st.com,
+	thippeswamy.havalige@amd.com,
+	krishna.chundru@oss.qualcomm.com,
+	guodong@riscstar.com,
+	devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/7] Introduce SpacemiT K1 PCIe phy and host controller
+Date: Fri,  7 Nov 2025 13:15:49 -0600
+Message-ID: <20251107191557.1827677-1-elder@riscstar.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 05/11] PCI/P2PDMA: Document DMABUF model
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe
- <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
- Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Andrew Morton <akpm@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Ankit Agrawal <ankita@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
- Shameer Kolothum <skolothumtho@nvidia.com>, Kevin Tian
- <kevin.tian@intel.com>, Alex Williamson <alex@shazbot.org>,
- Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-block@vger.kernel.org, iommu@lists.linux.dev, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
- kvm@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20251106-dmabuf-vfio-v7-0-2503bf390699@nvidia.com>
- <20251106-dmabuf-vfio-v7-5-2503bf390699@nvidia.com>
- <135df7eb-9291-428b-9c86-d58c2e19e052@infradead.org>
- <20251107160120.GD15456@unreal>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20251107160120.GD15456@unreal>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-	
+This series introduces a PHY driver and a PCIe driver to support PCIe
+on the SpacemiT K1 SoC.  The PCIe implementation is derived from a
+Synopsys DesignWare PCIe IP.  The PHY driver supports one combination
+PCIe/USB PHY as well as two PCIe-only PHYs.  The combo PHY port uses
+one PCIe lane, and the other two ports each have two lanes.  All PCIe
+ports operate at 5 GT/second.
 
-On 11/7/25 8:01 AM, Leon Romanovsky wrote:
-> On Thu, Nov 06, 2025 at 10:15:07PM -0800, Randy Dunlap wrote:
->>
->>
->> On 11/6/25 6:16 AM, Leon Romanovsky wrote:
->>> From: Jason Gunthorpe <jgg@nvidia.com>
->>>
->>> Reflect latest changes in p2p implementation to support DMABUF lifecycle.
->>>
->>> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
->>> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
->>> ---
->>>  Documentation/driver-api/pci/p2pdma.rst | 95 +++++++++++++++++++++++++--------
->>>  1 file changed, 72 insertions(+), 23 deletions(-)
->>>
->>> diff --git a/Documentation/driver-api/pci/p2pdma.rst b/Documentation/driver-api/pci/p2pdma.rst
->>> index d0b241628cf1..69adea45f73e 100644
->>> --- a/Documentation/driver-api/pci/p2pdma.rst
->>> +++ b/Documentation/driver-api/pci/p2pdma.rst
->>> @@ -9,22 +9,47 @@ between two devices on the bus. This type of transaction is henceforth
->>>  called Peer-to-Peer (or P2P). However, there are a number of issues that
->>>  make P2P transactions tricky to do in a perfectly safe way.
->>>  
->>> -One of the biggest issues is that PCI doesn't require forwarding
->>> -transactions between hierarchy domains, and in PCIe, each Root Port
->>> -defines a separate hierarchy domain. To make things worse, there is no
->>> -simple way to determine if a given Root Complex supports this or not.
->>> -(See PCIe r4.0, sec 1.3.1). Therefore, as of this writing, the kernel
->>> -only supports doing P2P when the endpoints involved are all behind the
->>> -same PCI bridge, as such devices are all in the same PCI hierarchy
->>> -domain, and the spec guarantees that all transactions within the
->>> -hierarchy will be routable, but it does not require routing
->>> -between hierarchies.
->>> -
->>> -The second issue is that to make use of existing interfaces in Linux,
->>> -memory that is used for P2P transactions needs to be backed by struct
->>> -pages. However, PCI BARs are not typically cache coherent so there are
->>> -a few corner case gotchas with these pages so developers need to
->>> -be careful about what they do with them.
->>> +For PCIe the routing of TLPs is well defined up until they reach a host bridge
->>
->> Define what TLP means?
-> 
-> In PCIe "world", TLP is very well-known and well-defined acronym, which
-> means Transaction Layer Packet.
+The PCIe PHYs must be configured using a value that can only be
+determined using the combo PHY, operating in PCIe mode.  To allow
+that PHY to be used for USB, the needed calibration step is performed
+by the PHY driver automatically at probe time.  Once this step is done,
+the PHY can be used for either PCIe or USB.
 
-It's your choice (or Bjorn's). I'm just reviewing...
+This initial version of the driver supports 32 MSIs, and does not
+support PCI INTx interrupts.  The hardware does not support MSI-X.
 
->>                                    well-defined
-> 
-> Thanks
-> 
-> diff --git a/Documentation/driver-api/pci/p2pdma.rst b/Documentation/driver-api/pci/p2pdma.rst
-> index 69adea45f73e..7530296a5dea 100644
-> --- a/Documentation/driver-api/pci/p2pdma.rst
-> +++ b/Documentation/driver-api/pci/p2pdma.rst
-> @@ -9,17 +9,17 @@ between two devices on the bus. This type of transaction is henceforth
->  called Peer-to-Peer (or P2P). However, there are a number of issues that
->  make P2P transactions tricky to do in a perfectly safe way.
-> 
-> -For PCIe the routing of TLPs is well defined up until they reach a host bridge
-> -or root port. If the path includes PCIe switches then based on the ACS settings
-> -the transaction can route entirely within the PCIe hierarchy and never reach the
-> -root port. The kernel will evaluate the PCIe topology and always permit P2P
-> -in these well defined cases.
-> +For PCIe the routing of Transaction Layer Packets (TLPs) is well-defined up
-> +until they reach a host bridge or root port. If the path includes PCIe switches
-> +then based on the ACS settings the transaction can route entirely within
-> +the PCIe hierarchy and never reach the root port. The kernel will evaluate
-> +the PCIe topology and always permit P2P in these well-defined cases.
-> 
->  However, if the P2P transaction reaches the host bridge then it might have to
->  hairpin back out the same root port, be routed inside the CPU SOC to another
->  PCIe root port, or routed internally to the SOC.
-> 
-> -As this is not well defined or well supported in real HW the kernel defaults to
-> +As this is not well-defined or well supported in real HW the kernel defaults to
-Nit:                              well-supported
+Version 5 of this series incorporates suggestions made during the
+review of version 4.  Specific highlights are detailed below.
 
-The rest of it looks good. Thanks.
+Note:
+Aurelien Jarno and Johannes Erdfelt have reported seeing ASPM errors
+accessing NVMe drives when using earlier versions of this series.
+The Kconfig files they used were very different from the RISC-V
+default configuration.
 
->  blocking such routing. There is an allow list to allow detecting known-good HW,
->  in which case P2P between any two PCIe devices will be permitted.
-> 
-> @@ -39,7 +39,7 @@ delegates lifecycle management to the providing driver. It is expected that
->  drivers using this option will wrap their MMIO memory in DMABUF and use DMABUF
->  to provide an invalidation shutdown. These MMIO pages have no struct page, and
->  if used with mmap() must create special PTEs. As such there are very few
-> -kernel uAPIs that can accept pointers to them, in particular they cannot be used
-> +kernel uAPIs that can accept pointers to them; in particular they cannot be used
->  with read()/write(), including O_DIRECT.
-> 
->  Building on this, the subsystem offers a layer to wrap the MMIO in a ZONE_DEVICE
-> @@ -154,7 +154,7 @@ access happens.
->  Usage With DMABUF
->  =================
-> 
-> -DMABUF provides an alternative to the above struct page based
-> +DMABUF provides an alternative to the above struct page-based
->  client/provider/orchestrator system. In this mode the exporting driver will wrap
->  some of its MMIO in a DMABUF and give the DMABUF FD to userspace.
-> 
-> @@ -162,10 +162,10 @@ Userspace can then pass the FD to an importing driver which will ask the
->  exporting driver to map it.
-> 
->  In this case the initiator and target pci_devices are known and the P2P subsystem
-> -is used to determine the mapping type. The phys_addr_t based DMA API is used to
-> +is used to determine the mapping type. The phys_addr_t-based DMA API is used to
->  establish the dma_addr_t.
-> 
-> -Lifecycle is controlled by DMABUF move_notify(), when the exporting driver wants
-> +Lifecycle is controlled by DMABUF move_notify(). When the exporting driver wants
->  to remove() it must deliver an invalidation shutdown to all DMABUF importing
->  drivers through move_notify() and synchronously DMA unmap all the MMIO.
-> 
+Aurelien has since reported the errors do not occur when using
+defconfig.  Johannes has not reported back about this.
 
+I do not claim these issues are resolved, however this version
+of the series does address all other feedback received to date.
+
+					-Alex
+
+This series is available here:
+  https://github.com/riscstar/linux/tree/outgoing/pcie-v5
+
+Between version 3 and version 4:
+- Clarify that INTx interrupts are not currently supported
+- Add Rob Herring's Reviewed-by on patch 3
+- The name of the PCIe root port will always begin with "pcie"
+- Lines in the bindings are now wrapped at 80 columns
+- Subject lines are all captialized (after subsystem tags)
+- Place the PCIe Kconfig option in the proper location based on
+  vendor name (not Kconfig symbol); expand its description
+- Drop two PCIe controller Kconfig dependencies
+- Use dw_pcie_readl_dbi() and dw_pcie_writel_dbi() when turning
+  off ASPM L1
+- The dw_pcie_host_ops->init callback has been rearranged a bit:
+    - The vendor and device IDs are now set early
+    - PERST# is asserted separate from putting the controller in RC mode
+      and indicating power is detected
+    - phy_init() is now called later, just before deasserting PERST#
+- Because of timing issues involved in having the root port enable power,
+  getting and enabling the regulator is back to being done in the PCIe
+  controller probe function
+- The regulator definition is moved back to the PCIe controller DT node,
+  out of the root port sub-node (in "k1-bananapi-f3.dts")
+
+Here is version 4 of this series:
+  https://lore.kernel.org/lkml/20251030220259.1063792-1-elder@riscstar.com/
+
+Between version 3 and version 4:
+  - In the DT binding for the PCIe host controlloller, add a new
+    sub-node representing the root port
+  - Move the phys and supply properties out of the PCIe host controller
+    and into the root port node
+  - Define the spacemit,apmu property later in the binding and DTS files
+  - Define the device_type property first in the binding examples and
+    DTS files
+  - Add root port sub-nodes in the examples and the DTS files
+  - Select the PCI_PWRCTRL_SLOT config option when PCIE_SPACEMIT_K1 is
+    enabled
+  - Parse the root port node in the driver, and get the PHY
+  - Leverage the PCI pwrctrl slot driver to get and enable the regulator
+  - Don't set num_vectors to 256; just use the default (32)
+  - Cleaned up some comments, white space, and symbol names based on
+    feedback from Mani
+  - Add some runtime PM calls to ensure it works propertly
+  - Add a new post_init callback, which disables ASPM L1 for the link
+
+Here is version 3 of this series:
+  https://lore.kernel.org/lkml/20251017190740.306780-1-elder@riscstar.com/
+
+Between version 2 and version 3:
+  - Reviewed-by from Rob added to the first two patches
+  - The "num-viewport" property has been removed
+  - The "phy" reset is listed first in the combo PHY binding
+  - The PHY now requires a resets property to specify the "phy" reset
+  - The PCIe driver no longer requires a "phy" reset
+  - The PHY driver now gets and deasserts the reset for all PHYs
+  - Error handling and "put" of clocks in the PHY driver has been
+    corrected (for clk_bulk_get() rather than clk_bulk_get_all())
+
+Here is version 2 of this series:
+  https://lore.kernel.org/lkml/20251013153526.2276556-1-elder@riscstar.com/
+
+
+Alex Elder (7):
+  dt-bindings: phy: spacemit: Add SpacemiT PCIe/combo PHY
+  dt-bindings: phy: spacemit: Introduce PCIe PHY
+  dt-bindings: pci: spacemit: Introduce PCIe host controller
+  phy: spacemit: Introduce PCIe/combo PHY
+  PCI: spacemit: Add SpacemiT PCIe host driver
+  riscv: dts: spacemit: Add a PCIe regulator
+  riscv: dts: spacemit: PCIe and PHY-related updates
+
+ .../bindings/pci/spacemit,k1-pcie-host.yaml   | 157 ++++
+ .../bindings/phy/spacemit,k1-combo-phy.yaml   | 114 +++
+ .../bindings/phy/spacemit,k1-pcie-phy.yaml    |  71 ++
+ .../boot/dts/spacemit/k1-bananapi-f3.dts      |  44 ++
+ arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi  |  33 +
+ arch/riscv/boot/dts/spacemit/k1.dtsi          | 176 +++++
+ drivers/pci/controller/dwc/Kconfig            |  13 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-spacemit-k1.c | 353 +++++++++
+ drivers/phy/Kconfig                           |  11 +
+ drivers/phy/Makefile                          |   1 +
+ drivers/phy/phy-spacemit-k1-pcie.c            | 670 ++++++++++++++++++
+ 12 files changed, 1644 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/spacemit,k1-pcie-phy.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-spacemit-k1.c
+ create mode 100644 drivers/phy/phy-spacemit-k1-pcie.c
+
+
+base-commit: 9c0826a5d9aa4d52206dd89976858457a2a8a7ed
 -- 
-~Randy
+2.48.1
 
 
