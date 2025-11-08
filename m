@@ -1,189 +1,171 @@
-Return-Path: <linux-pci+bounces-40645-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40646-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74873C435A3
-	for <lists+linux-pci@lfdr.de>; Sat, 08 Nov 2025 23:43:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F236C435C7
+	for <lists+linux-pci@lfdr.de>; Sat, 08 Nov 2025 23:59:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0A5011886B47
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Nov 2025 22:44:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C12CF3AF10E
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Nov 2025 22:59:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18D91271A9A;
-	Sat,  8 Nov 2025 22:43:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11B9F2AEF5;
+	Sat,  8 Nov 2025 22:59:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T90R/NFy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OdVPJjzK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C26D252292
-	for <linux-pci@vger.kernel.org>; Sat,  8 Nov 2025 22:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE6F18E1F
+	for <linux-pci@vger.kernel.org>; Sat,  8 Nov 2025 22:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762641814; cv=none; b=N/pDjKOx8ic8lVQq1lsUhL2NrwMIZTFARiQrIVYzhU871ThArp9z7y5FHNk5OMGvcGV1D1embS/m1pMxfnpGD8e2Qk17VSqwRAb8hoiRjgrKJcjfOb+HfVk4NiPuN9X7zKKXFpmBTy28aGU72Zvl3sTE3/C7rZxU5tN+KdPRymc=
+	t=1762642740; cv=none; b=uoIw5/80nG+i8FBKfXougWLAehn15bOLVFOEjwADlII1gYVhu7cTQQJ0x5X0YzA0EP1AAAiDrAcr1CgxwyyBHQ7r0PxHzz1mPGXlvuMrwMECJE9kId2UHGdGjlapbiaepIrKr1Vk90WbC8msF8ko0cmDvW+O+nPYQ49YgVVP6tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762641814; c=relaxed/simple;
-	bh=Y+uY9AkG8jnbUsyHDtuyh+LKJdD/DJna8xyrHuGV5WU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KAJdtiadsn020mwf7/4H9YAtcIwpimyH/JJ541ql7mTDzuC4+l9RYZDkktREjnpvpUh8WH2iQwlsenlAE3TXhEuRbiDNl/0bMl6CidLyP1IyMDwis7T8WfQSJHMYlvsBgxtTfmnULX3DcIgQIBVqT9f9BT39Z5z1aU1KMzEUcus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T90R/NFy; arc=none smtp.client-ip=209.85.217.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-5d980e08e06so905417137.0
-        for <linux-pci@vger.kernel.org>; Sat, 08 Nov 2025 14:43:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762641811; x=1763246611; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=AVoITpMtYi5Kgaxbk7LevCo8Kqli+/vM/Zg8iA9IuYM=;
-        b=T90R/NFyWpdcrtXz/cn0pUaOs9WcyswQh0cUDEO3HdWbtw48a5YBMt/Kv1udcoovCi
-         MA1gpXkT9LU7k4Yc9iQzf0IplFluzh6FmUSYEX7V+NXTFUUORyOrPiIiVKEi1OLFQJRQ
-         0n/WbjrnehjtcJfboTGPwSzHDGFK8kgj561JKGBTGw1rl5LFsgsmjHgQ3VUdrNy/4PvO
-         bSFgBDEEAmQz7zpfaOz0zQEtUjJ6ZJwa576y9L/36Lp9T4DBLNhxRpUpku4I+wh4rimB
-         TFRbdEE/DledGXQAt6fiZES6JUwmpa8aNNZiiCajLaP3yEPgNysqyVhCHnWJJHvQeWht
-         0nQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762641811; x=1763246611;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AVoITpMtYi5Kgaxbk7LevCo8Kqli+/vM/Zg8iA9IuYM=;
-        b=KqqrHCOatQ1P4bfgE5cDrein5ZXVDoQ7MAgmi8YIGhFHHQkwnYhHO0zwfiTt1I1rji
-         oprggJHJ3NFzO8W1HgOOKZlswygutQoLGRLenbStegwLCGI4kikhLdKluf/V+uxxvmDu
-         9SlhTPmPc/9W46RoI8zqtxhMxrQrBZaUlb/daoHfGAFPHJkhbr0I4F3F68P1ITg1huUA
-         +nXsHBjj5dn4V/ddLcgRrxv7oA3wb6N56kEPdBvikQAUDhxjJFYkKwySXGcedVF8uzIR
-         AcLbjhA17twdy26L2/uDYYPOczmrimzGTnc4xbXeCqQmxg92Cd2q+Zfes4uwuZl4Mpwi
-         yCDA==
-X-Forwarded-Encrypted: i=1; AJvYcCWRzlmqrBWG5arn4RwnBbAx40eTdKcUNoNX8aZNfeXt4HiKirFG9OS+LAthmdfMmL3QuyB8hg68tiE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkbXYKfEeI+pRIShJUlQAxp13WVedVJ514ZFigHTNRe4EXI12p
-	2vB+kWSsmcFhbY9i4G9l2Iy5upkjRhHd9aShQjnwcWch4g4XkMlzoSK8
-X-Gm-Gg: ASbGnctOp2OzqF8u6H4ZN9gjtQ58KHvtXYm42wpRcXxV9ezBH++97qbxBo96ZEtIUN4
-	YjBiTLobJZZa/YiD3y/oe4wUOqQP47xi/oE9kbJ0ALGfFm7zT/y6Rgzt8AXFfz2gfYmcxk6K7ZL
-	PhV4IXdNBtM4Cd4WZXcsRwRNZkl1fmd9M4FCTBM1RDk5RMk94LwvX/lFXyNxYAcNGZr8shgckdU
-	tX/5nxSF5e6njP7+nilK4NG1BYKJxAFmuQr8r8caFOBeInZvKQZ6Xtl0Ow21fnfq1o6VgcqpuOS
-	pY+bu7htoBRblTo23nt8iID7QR4ExwVoZTuoZBCzpUGuPYFpgQPqA6LiCnE6+hoj57Pw/x5P0vn
-	HNKvjDgCh9HGV5Vw2iGDIxb91NTsM2zm6GvPYrbhQ1pOmtYhN+d00gu4BzR0yk9E7poQeQt6P6g
-	==
-X-Google-Smtp-Source: AGHT+IFsj6aNYCy4VSY/pT65HzYuwBfF3Efce20HU3WXVuf6OpeZkuBOsC9gHRfJcS97JADvXgP2xg==
-X-Received: by 2002:a05:6102:6cb:b0:5db:ebb4:fde3 with SMTP id ada2fe7eead31-5ddc46eef21mr1212345137.16.1762641811172;
-        Sat, 08 Nov 2025 14:43:31 -0800 (PST)
-Received: from geday ([2804:7f2:800b:4eac::dead:c001])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-93725285d26sm1269736241.7.2025.11.08.14.43.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Nov 2025 14:43:29 -0800 (PST)
-Date: Sat, 8 Nov 2025 19:43:17 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Ye Zhang <ye.zhang@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Johan Jonker <jbx6244@gmail.com>,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: rockchip: align bindings to PCIe spec
-Message-ID: <aQ_HhfK0pbOE1m1R@geday>
-References: <4b5ffcccfef2a61838aa563521672a171acb27b2.1762321976.git.geraldogabriel@gmail.com>
- <ba120577-42da-424d-8102-9d085c1494c8@rock-chips.com>
- <aQsIXcQzeYop6a0B@geday>
- <67b605b0-7046-448a-bc9b-d3ac56333809@rock-chips.com>
- <aQ1c7ZDycxiOIy8Y@geday>
- <d9e257bd-806c-48b4-bb22-f1342e9fc15a@rock-chips.com>
- <sbulnlwz3vxyk3yw2c2tcsdvyu57cdvyixkpeq2okh4vn6yyod@4o4kltfb5u6n>
+	s=arc-20240116; t=1762642740; c=relaxed/simple;
+	bh=Wg2i7EaxkKdUzxrmllswZZb6v/kPcldu5WZSKMni+74=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=HWH/gQm4ZD7+CR6q6y47tM7QYE824rRiepKtKRxWgTYdon6+DqbEZanNz86f8iAM58yCFhBbf1qzclI1pHXO1aBAaAynbFTx5AB1dNoZ/266oxnJYlHFzKobL4SLFh1LrOuvSAfITrpP2LZB7xLaMe0L5FCvxloHqf9drvrWalc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OdVPJjzK; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762642738; x=1794178738;
+  h=date:from:to:cc:subject:message-id;
+  bh=Wg2i7EaxkKdUzxrmllswZZb6v/kPcldu5WZSKMni+74=;
+  b=OdVPJjzKKkncs9A/ap0IKvYDx1MryWHHgQuGXT/F+LnqMo6OVKX7PyOj
+   G9+JWNJ2rJeHeFgMkwOJtPm1KrbkVzFafEcL4awo4U8uzgM0Fv+3wOVOw
+   o0WXuuh+bBUwYKrHEGMKWl0mrLm/KC25dLGHRc/UTqNbDjBgdFyxiwwye
+   6qdQSd2wQijkBFADN0QHuVh//0MOaW5QuCisJiizc6qKDLzoDC4iwazbS
+   JGxF55Jte8rnOsKX+ooVm9TmhvZFHaiPhiuN1pZdQj426iOOosnsfaYi4
+   Pz9ggUO6ztwlFJK/7R8V+etbZyC93bxb8ha7t2V9fokRGgaJ9LRqvA7EC
+   g==;
+X-CSE-ConnectionGUID: NonMlCZQStqCJsy6H+2W5w==
+X-CSE-MsgGUID: l3OXi4vURFSHLzYdlcrT+w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11607"; a="76197853"
+X-IronPort-AV: E=Sophos;i="6.19,290,1754982000"; 
+   d="scan'208";a="76197853"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2025 14:58:58 -0800
+X-CSE-ConnectionGUID: vxkEXQBhRY+8+mA8AONtpg==
+X-CSE-MsgGUID: KM6yI62cQLCdOgUkHphD9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,290,1754982000"; 
+   d="scan'208";a="188517391"
+Received: from lkp-server01.sh.intel.com (HELO 6ef82f2de774) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 08 Nov 2025 14:58:57 -0800
+Received: from kbuild by 6ef82f2de774 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vHrtW-0001WF-1K;
+	Sat, 08 Nov 2025 22:58:54 +0000
+Date: Sun, 09 Nov 2025 06:58:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:for-linus] BUILD REGRESSION
+ 2b8258e8694f49b247b611933149c59c79013393
+Message-ID: <202511090618.Y6KWUnlX-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <sbulnlwz3vxyk3yw2c2tcsdvyu57cdvyixkpeq2okh4vn6yyod@4o4kltfb5u6n>
 
-On Sat, Nov 08, 2025 at 11:12:54PM +0100, Sebastian Reichel wrote:
-> Hi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+branch HEAD: 2b8258e8694f49b247b611933149c59c79013393  PCI/ASPM: Avoid L0s and L1 on Freescale Root Ports
 
-Hi Sebastian,
+Error/Warning ids grouped by kconfigs:
 
-> 
-> On Fri, Nov 07, 2025 at 11:01:04AM +0800, Shawn Lin wrote:
-> > + Ye Zhang
-> > 
-> > 在 2025/11/07 星期五 10:43, Geraldo Nascimento 写道:
-> > > On Wed, Nov 05, 2025 at 04:56:36PM +0800, Shawn Lin wrote:
-> > > > 在 2025/11/05 星期三 16:18, Geraldo Nascimento 写道:
-> > > > > Hi Shawn, glad to hear from you.
-> > > > > 
-> > > > > Perhaps the following change is better? It resolves the issue
-> > > > > without the added complication of open drain. After you questioned
-> > > > > if open drain is actually part of the spec, I remembered that
-> > > > > GPIO_OPEN_DRAIN is actually (GPIO_SINGLE_ENDED | GPIO_LINE_OPEN_DRAIN)
-> > > > > so I decided to test with just GPIO_SINGLE_ENDED and it works.
-> > > 
-> > > Shawn,
-> > > 
-> > > I quote from the PCIe Mini Card Electromechanical Specification Rev 1.2
-> > > 
-> > > "3.4.1. Logic Signal Requirements
-> > > 
-> > > The 3.3V card logic levels for single-ended digital signals (WAKE#,
-> > > CLKREQ#, PERST#, and W_DISABLE#) are given in Table 3-7. [...]"
-> > > 
-> > > So while you are correct that PERST# is most definitely not Open Drain,
-> > > there's evidence on the spec that defines this signal as Single-Ended.
-> > > 
-> > 
-> > This's true. But I couldn't find any user in dts using either
-> > GPIO_SINGLE_ENDED or GPIO_OPEN_DRAIN for PCIe PERST#. I'm curious
-> > how these two flags affect actual behavior of chips. Ye, could you
-> > please help check it?
-> 
-> FWIW I assume single-ended in the spec means it's not differential
-> like all the highspeed signals on the PCIe connection. This says
-> nothing about open-drain, open-source or push-pull being used. The
+recent_errors
+`-- mips-allyesconfig
+    |-- (.head.text):relocation-truncated-to-fit:R_MIPS_26-against-kernel_entry
+    `-- (.ref.text):relocation-truncated-to-fit:R_MIPS_26-against-start_secondary
 
-yes, I agree. It was an oversight on my part to assume open-drain on
-PERST# was part of the spec just because many cores implement it that
-way. Kudos to Shawn for correcting me.
+elapsed time: 2835m
 
-> kernel on the other hand has a very specific understanding of
-> GPIO_SINGLE_ENDED:
-> 
-> 	if (flags & OF_GPIO_SINGLE_ENDED) {
-> 		if (flags & OF_GPIO_OPEN_DRAIN)
-> 			lflags |= GPIO_OPEN_DRAIN;
-> 		else
-> 			lflags |= GPIO_OPEN_SOURCE;
-> 	}
-> 
-> I.e. it is the same as configuring open-source ;)
+configs tested: 74
+configs skipped: 1
 
-Yup, I had noticed that. This works because the reset value of PMU GRF
-register PMUGRF_GPIO0B_P sets the relevant PERST# GPIO (GPIO0-12) on my
-board to pull-down, which can work with Open Source/Emitter. If we set
-the GPIO to Open Drain/Collector we must on the other hand set that pin
-to pull-up. Either way it works.
+tested configs:
+alpha                   allnoconfig    gcc-15.1.0
+alpha                  allyesconfig    clang-19
+arc                    allmodconfig    clang-19
+arc                     allnoconfig    gcc-15.1.0
+arc                    allyesconfig    clang-19
+arm                    allmodconfig    clang-19
+arm                     allnoconfig    clang-22
+arm                    allyesconfig    clang-19
+arm64                  allmodconfig    clang-19
+arm64                   allnoconfig    gcc-15.1.0
+arm64                  allyesconfig    clang-22
+csky                   allmodconfig    gcc-15.1.0
+csky                    allnoconfig    gcc-15.1.0
+csky                   allyesconfig    gcc-15.1.0
+hexagon                allmodconfig    clang-19
+hexagon                 allnoconfig    clang-22
+hexagon                allyesconfig    clang-19
+hexagon     randconfig-001-20251107    clang-22
+hexagon     randconfig-002-20251107    clang-22
+i386                   allmodconfig    clang-20
+i386                    allnoconfig    gcc-14
+i386                   allyesconfig    clang-20
+loongarch              allmodconfig    clang-19
+loongarch               allnoconfig    clang-22
+loongarch              allyesconfig    clang-22
+loongarch   randconfig-001-20251107    gcc-15.1.0
+loongarch   randconfig-002-20251107    clang-19
+m68k                   allmodconfig    clang-19
+m68k                    allnoconfig    gcc-15.1.0
+m68k                   allyesconfig    clang-19
+microblaze             allmodconfig    clang-19
+microblaze              allnoconfig    gcc-15.1.0
+microblaze             allyesconfig    clang-19
+mips                   allmodconfig    gcc-15.1.0
+mips                    allnoconfig    gcc-15.1.0
+mips                   allyesconfig    gcc-15.1.0
+nios2                   allnoconfig    gcc-11.5.0
+nios2       randconfig-001-20251107    gcc-11.5.0
+nios2       randconfig-002-20251107    gcc-8.5.0
+openrisc                allnoconfig    gcc-15.1.0
+openrisc               allyesconfig    gcc-15.1.0
+parisc                 allmodconfig    gcc-15.1.0
+parisc                  allnoconfig    gcc-15.1.0
+parisc                 allyesconfig    gcc-15.1.0
+powerpc                allmodconfig    gcc-15.1.0
+powerpc                 allnoconfig    gcc-15.1.0
+powerpc                allyesconfig    gcc-15.1.0
+riscv                  allmodconfig    gcc-15.1.0
+riscv                   allnoconfig    gcc-15.1.0
+riscv                  allyesconfig    gcc-15.1.0
+riscv       randconfig-001-20251107    clang-22
+riscv       randconfig-002-20251107    gcc-13.4.0
+s390                    allnoconfig    clang-22
+s390        randconfig-001-20251107    gcc-8.5.0
+s390        randconfig-002-20251107    gcc-15.1.0
+sh                      allnoconfig    gcc-15.1.0
+sh          randconfig-001-20251107    gcc-13.4.0
+sh          randconfig-002-20251107    gcc-11.5.0
+sparc                   allnoconfig    gcc-15.1.0
+um                     allmodconfig    clang-19
+um                      allnoconfig    clang-22
+um                     allyesconfig    clang-19
+x86_64                 allmodconfig    clang-20
+x86_64                  allnoconfig    clang-20
+x86_64                 allyesconfig    clang-20
+x86_64                        kexec    clang-20
+x86_64                     rhel-9.4    clang-20
+x86_64                 rhel-9.4-bpf    gcc-14
+x86_64                rhel-9.4-func    clang-20
+x86_64          rhel-9.4-kselftests    clang-20
+x86_64               rhel-9.4-kunit    gcc-14
+x86_64                 rhel-9.4-ltp    gcc-14
+x86_64                rhel-9.4-rust    clang-20
+xtensa                  allnoconfig    gcc-15.1.0
 
-I've been investigating why that GPIO isn't properly working as
-Push-Pull for my board (Rock PI N10) but so far I'm clueless.
-
-Thank you,
-Geraldo Nascimento
-
-> 
-> Greetings,
-> 
-> -- Sebastian
-
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
