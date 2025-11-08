@@ -1,55 +1,55 @@
-Return-Path: <linux-pci+bounces-40632-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40633-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6CA6C42DE7
-	for <lists+linux-pci@lfdr.de>; Sat, 08 Nov 2025 15:04:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 034C1C42DED
+	for <lists+linux-pci@lfdr.de>; Sat, 08 Nov 2025 15:05:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFD213B452C
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Nov 2025 14:03:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE1BC3B3E2F
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Nov 2025 14:04:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36809231845;
-	Sat,  8 Nov 2025 14:03:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E5DD23A9AD;
+	Sat,  8 Nov 2025 14:03:19 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023137.outbound.protection.outlook.com [40.107.44.137])
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022141.outbound.protection.outlook.com [52.101.126.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1D71DE4F1;
-	Sat,  8 Nov 2025 14:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B537C21FF36;
+	Sat,  8 Nov 2025 14:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.141
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762610598; cv=fail; b=qniHEv0yEQnXL9zUwJ/k9SmdmlX2RgLPOHQO8QpQCjRNjyVeWQE68wt7IjmvusBDeUW4F8n97CF3VPtoTNid51srPU3SC0i1BiNL4VYgDVQ2jAQD5kKiLXMCA42o9P7KvInvEQMNdBc3S6ywiStONZazc9WtOCDxCy8q8K2Mlfk=
+	t=1762610599; cv=fail; b=LiKcS0Kfu43cA7DgN5ze0QQyMa8/3XC3iYppEkyramjyeXciM279TB/NXcFs0leSSQdRDq0rZq6HSEP2bu+6eiRBVcFJ8lIHFrMzI2osQgGIUuu9xqxpUKdM+3EgAN3qU44XDbxoLlzVyfbL6JjTpq+X5LeuhmyIRP4cF21qffI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762610598; c=relaxed/simple;
-	bh=WlQClg6frxhcRHEMj8ZylbzI4DB6f6yJ0EXyHCZdLhU=;
+	s=arc-20240116; t=1762610599; c=relaxed/simple;
+	bh=X+k7Iigd2NMGn/R26vLP63F94H9w9AxUntSWq+w6fJI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PhA/OfBr+0U4HWUeR2S02BBuzHSMnV+MIBiXBwaDguhHUTYnFajjevczVufwy1OcQxWV7yU47lo3WMnrSCoNMcNuSrMbuVd6k1yzbu08qZYrkN9mMBWPoSIOPwy9T+O7czE9Vq0iwfRGCs2QsfpxNXvd6nYnXUMKQRU5s/RG50A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.137
+	 MIME-Version:Content-Type; b=g9mvdd5+etOopf8tQ9gHJ9Y8n8PQZEU8sNh3OJ52dh/Ca5n9+rRX4e4Z5I30v6ROcAZc8CzT0xLQzFsc1IEbCgCO3fE3wMosRwaYeNb/bTB6cLIp5WpvpgRORmqN7QCSx2RsVzCJBXYCt5zQidzQ5tHCuEM9l9IK8b0J+UqmaAQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.126.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cfTaXzuihE+1VtoGYNRFS9eGccliapct/k+qyTG58gTaeUl0mUiRJVb+uJ0gnSodaJUSgxRs23PYFuQchSPZ4TSSwptbBS5wtC2d8qQ5VVHdym2Zl6uhdEcXhEVii9vfX5nNKh9OCLjJbOhVcRej23lIrIpRvy1VOMOIBxAXjR7DimowQlzDNOMBsNHd/aiPitB8gIslIN/tBMD0ndOM0X7wayADUDMFN6Kr9BtKQcr6eve9Aqqh0/7p9/nlCdo3onAQSQJ4rzmpZEUyzZT8MHJL9bgZ4aub/nAW3+uGFahNQsIi9n83BA7AwBnRlwF73hzzHQE1lnJjFlsTfDUs2w==
+ b=NggqGcRBshSQZkVy+dvPcq4Q2rQ4UBE1edrKfZRmyTIIIEqq13/m+X69LZgO5XLW+uNugEaZzMqRak3fFTtaObbMhyOYVYsKXPWFeM/A3sxbXlLk9wwYgO7iaasashgwON85bNea/kkx9wshC01wMUp2T7RonvrRyqAENFGTQpAL9H+tEcUY1qp6mcFs9EoNuoYjbp565Ahrxckqnq8Tzq95+Pz0tdrzqskK8OwnW5ej2rQ704FMuGnqRYECFIOzaxS9e7wuWEdBp5nqF0A81dBZydwCsdZyU1p1i4Gw0CetVTeUyIh/OgUBC3EBzHQ543z0gOKzI3eysmN7drBJiA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WXU9wPxi9DZ+GV6htPv6QnuXrMW5w671lSIBh5+Bnh4=;
- b=Cg/qc3qETuPz2J9lvJThGDuRIqsyMs6iQqvU/PsDioScjwRGZf3CvbleZycg7aZf2+7QJriT9/RqzCEzb3CbH+/5c4pLaDA7UtFrtWiu8NW2FeKZEhEwf2ayApqfsSzeSr0DXxkpwYgde+4RXV3AUslqpONfqHKaKGvTNK2VgiI5LT9yqfoXSFqW5dsr9CsaJV3pS+FjbqdqgEM6abG6AYQq6nK7aXQ6a2VbB/DmHyT20yPMteVhj6IB8rYHqWa7Ltl2PsQ3aGxK4ex3uVXEq3R57ObW6L9sMgNMtpYnDtjP4xwr3byTiGNAVYoJf5gTBXK1kButR06vu2A8Vlq/bw==
+ bh=n+udEMxIaEkITBc0fDjiQfdSxHcDgn+KJXyxrpbyPnU=;
+ b=PvSEv3ayRRJYOUwa/zhE+KhqSPtM0P/6g1yPOXCgf/jK4bPS8Vf+3gOUuITjP2BR+ySOqmHCbtKVatJKL66ZF6g24ueg6IxtP1t+eBbxOGM2Z4VXCXbpvgV/o+aTDL3FMSFUwHEW9Sh6PkBD7bZF1T4WP1dOTrrwAEp0v7ezqDJ/GAvNAmN7pawsbecRd8Uug4pKy1QavbK0ZlkUi01U4Adn6ndG0RVprpE5NmUpjS/X/4oWR635kIRx1ND218QvVgBM8xei2qOLckq5IK68W1GEdrwGxxYaCvuW9ZnEMlHz2m+clxhAmsjGLY7E46I7XG9tO7IDDs9sI1R3e3Rm4Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
  dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
  not signed); arc=none (0)
-Received: from PS2PR01CA0009.apcprd01.prod.exchangelabs.com
- (2603:1096:300:2d::21) by KUZPR06MB8109.apcprd06.prod.outlook.com
- (2603:1096:d10:47::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.15; Sat, 8 Nov
- 2025 14:03:11 +0000
-Received: from TY2PEPF0000AB88.apcprd03.prod.outlook.com
- (2603:1096:300:2d:cafe::47) by PS2PR01CA0009.outlook.office365.com
- (2603:1096:300:2d::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9298.15 via Frontend Transport; Sat,
- 8 Nov 2025 14:03:25 +0000
+Received: from PS2PR02CA0070.apcprd02.prod.outlook.com (2603:1096:300:5a::34)
+ by KL1PR06MB6257.apcprd06.prod.outlook.com (2603:1096:820:d1::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.12; Sat, 8 Nov
+ 2025 14:03:12 +0000
+Received: from TY2PEPF0000AB89.apcprd03.prod.outlook.com
+ (2603:1096:300:5a:cafe::53) by PS2PR02CA0070.outlook.office365.com
+ (2603:1096:300:5a::34) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9298.14 via Frontend Transport; Sat,
+ 8 Nov 2025 14:03:12 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
  smtp.mailfrom=cixtech.com; dkim=none (message not signed)
  header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
@@ -57,11 +57,11 @@ Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
  222.71.101.198 as permitted sender) receiver=protection.outlook.com;
  client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
 Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- TY2PEPF0000AB88.mail.protection.outlook.com (10.167.253.11) with Microsoft
+ TY2PEPF0000AB89.mail.protection.outlook.com (10.167.253.7) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9320.13 via Frontend Transport; Sat, 8 Nov 2025 14:03:09 +0000
+ 15.20.9320.13 via Frontend Transport; Sat, 8 Nov 2025 14:03:11 +0000
 Received: from hans.. (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 529594143A8B;
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 61F294143A8D;
 	Sat,  8 Nov 2025 22:03:06 +0800 (CST)
 From: hans.zhang@cixtech.com
 To: bhelgaas@google.com,
@@ -82,9 +82,9 @@ Cc: mpillai@cadence.com,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <hans.zhang@cixtech.com>
-Subject: [PATCH v11 08/10] MAINTAINERS: add entry for CIX Sky1 PCIe driver
-Date: Sat,  8 Nov 2025 22:03:03 +0800
-Message-ID: <20251108140305.1120117-9-hans.zhang@cixtech.com>
+Subject: [PATCH v11 09/10] arm64: dts: cix: Add PCIe Root Complex on sky1
+Date: Sat,  8 Nov 2025 22:03:04 +0800
+Message-ID: <20251108140305.1120117-10-hans.zhang@cixtech.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20251108140305.1120117-1-hans.zhang@cixtech.com>
 References: <20251108140305.1120117-1-hans.zhang@cixtech.com>
@@ -97,82 +97,205 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB88:EE_|KUZPR06MB8109:EE_
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB89:EE_|KL1PR06MB6257:EE_
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 49d35590-7066-4d5f-b840-08de1ecf8c8a
+X-MS-Office365-Filtering-Correlation-Id: 74592b3a-d3e5-4ddc-bae3-08de1ecf8d6a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|1800799024;
+	BCL:0;ARA:13230040|376014|7416014|82310400026|1800799024|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?0mstjp6x4McUIMe0lNIoZL6fLPOZAUCXdy3AWEBuCK48zYK1VQS0dFle7Bpd?=
- =?us-ascii?Q?Ka3LY48u+Q5wNIRBbj3ywwczr0HkQ5cE7TpSaZaWP8lm6BSZLpA6N+w7ggKl?=
- =?us-ascii?Q?iUMxqaPejZSNH6unvjBXYTOwW2HNOczQ6UM83RQEAnb/KnZqqR38J0mIjQ3s?=
- =?us-ascii?Q?UZVn8GXixRfHZqcsSxZZH61eRvayeaI/K79YzdymsXTnCSwAHgbGykWLDfS0?=
- =?us-ascii?Q?8sA4W+rdfvCiXyjzUxrvHPlROG1Y0OFHaMCAvVh4SfI8WRPHODxpfBEd4RB3?=
- =?us-ascii?Q?FkAhriQl2rdhbee/QK3fMVU2n6m2kg0zvCNkT56moUpy5S6c+9FMLFpXPyob?=
- =?us-ascii?Q?ypr7lxl9ges/2b2CATk6WVmV6KBt8ncNKI8WMoBQQO7b/Q9OLtp/lgYwm5qe?=
- =?us-ascii?Q?5pqVrCa5Os/f/HpDLkIpcuyDfiFUgaPKb9Cx/MUBHt+EKRvZHKYFuu558VVP?=
- =?us-ascii?Q?TiBhm8XZBxcQa7FIVQgmZ/+HEYFwgIA9+f6kqD9PJQlKTl1RQmT3PeN1n6Fj?=
- =?us-ascii?Q?7M9oX5MEWxrNphk8NeeY4PelNZJZz5ZnY786QyQHEE8i3BWCTng8Sjr/IARF?=
- =?us-ascii?Q?BHi3PFnnlBRjIsalgCCcgcohwH2NxIBSP6WTeEPE1oHsSePwWjlqPyLSV+tY?=
- =?us-ascii?Q?mSGRpCnI6DmmeD6tcl6hHnTdwTVvLcEi3iZ3JL/VtTqYqM6LQT2VMxEPRYmE?=
- =?us-ascii?Q?El0/5RdzLNDgd+uoZc4B39SuvQx6lFE7cjiqDxP4rJ03iq1iI8WjjFdK/DFt?=
- =?us-ascii?Q?OREy8Hp1I8/BHSXzOKBWoXcvFqc7XjbT/zO/2S35JGHyATNr2iQTjk051yO9?=
- =?us-ascii?Q?PbMhSwkAJH55BXcv9wewkYDJc1UeAvtgAiufgEDRpgbyZXSI1gOXn7lKN3HZ?=
- =?us-ascii?Q?EMJCk0Lb7go+GrOA7zfUVG6+N4huG1d/DQZ7///N2jmCBKnrbd4Va82q8J2Z?=
- =?us-ascii?Q?yB3F1lI3SMNYohJuHX3/Vn0Pn0CBmsSdAkIDjBynN1vUSpGjIgyqBwmvp89e?=
- =?us-ascii?Q?5BkER9GENhGwDurpBWgW9w36e/0AMIm2EB4kouL8KCu1s4OeVOKEiYaIHlpo?=
- =?us-ascii?Q?Kpw8MEZc9ezW+/vpX1W8acBLzXo8CJXb6LsvBgFgFZvWTFqsbfIVLcOd3uDL?=
- =?us-ascii?Q?C+ZLZnGWXpmO9M5+gjsrHxd0mZQNmBgdCAzyGelCVCSTY+WtXqdiW7rueSJn?=
- =?us-ascii?Q?9wGhgkCYOmW5ltBzE5Rfjvu/jYaT2sGh1lR7OY8mkmyyd6RqdDtaJZ1h8GqI?=
- =?us-ascii?Q?sGCjKEEJotw5EQOmMBhLLU6YEXfKptHqMxJpA34QL5anJeCx4yVBpf1f1Z1h?=
- =?us-ascii?Q?kfe1SR9Dbp+sANs9FaLhvtzskdPQ6PbLkOSQmadSVBVoB40fjyYwQBuGJapj?=
- =?us-ascii?Q?OyMJCkaBEuiTuoiUYQ/XxkmuDZ1PyNHHj3sCj1PmlOrpfAxKwsGG85qSZudj?=
- =?us-ascii?Q?FM9BK6W0VWNjA6cpnKP+t7DVyDJukB3jGNnaVPwZwj7ZglUOn5ZKBnoi3t4W?=
- =?us-ascii?Q?ECGa+3OfvC1PniFFj6PKOCiV3T7BAj8hYmTmQ2PN+X3A7lYcTkqwpyOQSnY2?=
- =?us-ascii?Q?rAncguDDZm36+BnR7/s=3D?=
+	=?us-ascii?Q?1JHrkTtjzRjBQAgAaovIqCTFTjE7WkJGLPnMbZ4Bhycalnw0G5Gb+8EIS90w?=
+ =?us-ascii?Q?GS1g+/9NpdJUdwKci8xPm6TXwz6FJZOSjxc3ft/4+Z0B6SVOjymvN8rittqD?=
+ =?us-ascii?Q?gXnn+Gi1U86iS+sxCLHz6KeWM21mhSK//0uuWJTxoD/TxymX+BamHV8XvVHs?=
+ =?us-ascii?Q?sYrLmA7DPKZlg8n7E/AgKv0pwYLlJ7iL/6jcOiRVVzf3TYj6JcdUun2O8T1t?=
+ =?us-ascii?Q?VnCm7qWsvhmMAU8tBGtG9iPnvhAQ1YW31RnNxgPO3gULWsZ1/CDclgJNvSXH?=
+ =?us-ascii?Q?MJGgKyqDpqHOJv1ffCzNc2ozacxZeAxm/5vFcqGUqEUSjuFOyVBKJhvvIrcd?=
+ =?us-ascii?Q?tqSL8YeAZjzmsHhjRnVAhMRJAv8QJBfAZFGIhcKbvoelLKkvn3ev0zjgF47K?=
+ =?us-ascii?Q?wfKMid40MGRL6MkWjWmsS6FEe/ED+LjgPzQiuWkigJapqJVa6ba5T2qunR8T?=
+ =?us-ascii?Q?79Vb0z6tb3bE0rbURt7rJTPdeu6pEO2vwlqPg0Zz4iTx/bqA/sbYgmPRDeU0?=
+ =?us-ascii?Q?BE5R8YNlUNDfCojbL0X8qjUPgrI/3qTxPS6pQNMgsUW6LNBQoxZVBPHxg7Eo?=
+ =?us-ascii?Q?ldKAneQrrNQqZUhbXopGKrTGy/msJhSYMYZWtQOwlZfx6Z8YM12ruWc/58tT?=
+ =?us-ascii?Q?mE2YAYMYXl+rvpxbQwdxf6wbHdoe0pVv5PUOP3AJ1xZIQt0obQZslMtjvMlm?=
+ =?us-ascii?Q?bwHCwAcmNG0yXE0NIKkth5jYzKzefQUZwphCTCktd2k6lC5n1E+hwuWKlN+a?=
+ =?us-ascii?Q?9iLwYuBwYaVP8k3sd08eHmjQGNnSD2YYG9uBtVF/kXiKEWELNdclLgVc4HkU?=
+ =?us-ascii?Q?6N8S9digM8f8Z9bT8Te77NSDDkQxfakQeEJsDM2ngYIp6I0sTEMt6j1hU9TE?=
+ =?us-ascii?Q?K9B27pGUd51KpaW80ufdeWm7XXxJMNSUCLPyP7iR3+ixpmNjAmtvDegzzu3v?=
+ =?us-ascii?Q?06b8nW3ydmrtro7Xlxi+wCVAWQMrgxp/uZE4hvqm1lw27iWWDDxonV4RliJL?=
+ =?us-ascii?Q?pzgDdh6yAjRoGIiYQAYiZ8RXHmgz2l6M7dWm7KOh6fhajReZjcHhG/h1F/JU?=
+ =?us-ascii?Q?k0EaSO4WFY3FFkOGG4LC4QwaUBEXU+RedbbAzd42z/aKxDwdKV72C7Z1ytzJ?=
+ =?us-ascii?Q?gh8PfW1RA9t77In58VSpB5GWViQEX09B4Si9V5tO9FBv8+qszPefkwfn0dr+?=
+ =?us-ascii?Q?bHJmjrQjbNu/tMYIJvieUrjbO9ARr2OPA1Ql7QxV5EbO5p96Lw8utLnWb1VK?=
+ =?us-ascii?Q?AmF4czZVDfbK7MaFEXn8oTYelpULJcyNp1Zcvays+s9j6E/olrE6lEWkY48w?=
+ =?us-ascii?Q?U29nCt8rgHBZyT4uIMeAz0mp8h2N+LVhnuZOf5h9yfgvkU2HDFXYlyw1hPaV?=
+ =?us-ascii?Q?zGKoW/gb7ylMnqsZABmZTOS9Rv1rXFym4ALfp8avRsnivCq81eQAd0gj6hP8?=
+ =?us-ascii?Q?RK34Ukdd4jD47VPBTCQLnPaJLkm5SHxcLzVyIgV6YMvqvLSgE30kN9dWs1ru?=
+ =?us-ascii?Q?SP+exkmHWZYHQYbAfQ5gUpZqgCkYVcBoEjSP1EnDfng6JzqbYfKI9o4HEPZV?=
+ =?us-ascii?Q?5wzlL1KtMKWoQSU+zJQ=3D?=
 X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1102;
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1102;
 X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2025 14:03:09.5517
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2025 14:03:11.0606
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49d35590-7066-4d5f-b840-08de1ecf8c8a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74592b3a-d3e5-4ddc-bae3-08de1ecf8d6a
 X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	TY2PEPF0000AB88.apcprd03.prod.outlook.com
+	TY2PEPF0000AB89.apcprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KUZPR06MB8109
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6257
 
 From: Hans Zhang <hans.zhang@cixtech.com>
 
-Add myself as maintainer of Sky1 PCIe host driver
+Add pcie_x*_rc node to support Sky1 PCIe driver based on the
+Cadence PCIe core.
+
+Supports Gen1/Gen2/Gen3/Gen4, 1/2/4/8 lane, MSI/MSI-x interrupts
+using the ARM GICv3.
 
 Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/cix/sky1.dtsi | 126 ++++++++++++++++++++++++++++++
+ 1 file changed, 126 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 46bd8e033042..5b3f3aa74365 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19646,6 +19646,13 @@ S:	Orphan
- F:	Documentation/devicetree/bindings/pci/cdns,*
- F:	drivers/pci/controller/cadence/*cadence*
+diff --git a/arch/arm64/boot/dts/cix/sky1.dtsi b/arch/arm64/boot/dts/cix/sky1.dtsi
+index 2fb2c99c0796..1abafbfc3c9b 100644
+--- a/arch/arm64/boot/dts/cix/sky1.dtsi
++++ b/arch/arm64/boot/dts/cix/sky1.dtsi
+@@ -388,6 +388,132 @@ mbox_ap2sfh: mailbox@80a0000 {
+ 			cix,mbox-dir = "tx";
+ 		};
  
-+PCI DRIVER FOR CIX Sky1
-+M:	Hans Zhang <hans.zhang@cixtech.com>
-+L:	linux-pci@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pci/cix,sky1-pcie-*.yaml
-+F:	drivers/pci/controller/cadence/*sky1*
++		pcie_x8_rc: pcie@a010000 {
++			compatible = "cix,sky1-pcie-host";
++			reg = <0x00 0x0a010000 0x00 0x10000>,
++			      <0x00 0x2c000000 0x00 0x4000000>,
++			      <0x00 0x0a000300 0x00 0x100>,
++			      <0x00 0x0a000400 0x00 0x100>,
++			      <0x00 0x60000000 0x00 0x00100000>;
++			reg-names = "reg", "cfg", "rcsu_strap", "rcsu_status", "msg";
++			ranges = <0x01000000 0x0 0x60100000 0x0 0x60100000 0x0 0x00100000>,
++				 <0x02000000 0x0 0x60200000 0x0 0x60200000 0x0 0x1fe00000>,
++				 <0x43000000 0x18 0x00000000 0x18 0x00000000 0x04 0x00000000>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			bus-range = <0xc0 0xff>;
++			device_type = "pci";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &gic 0 0 GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 2 &gic 0 0 GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 3 &gic 0 0 GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 4 &gic 0 0 GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH 0>;
++			msi-map = <0xc000 &gic_its 0xc000 0x4000>;
++			status = "disabled";
++		};
 +
- PCI DRIVER FOR FREESCALE LAYERSCAPE
- M:	Minghuan Lian <minghuan.Lian@nxp.com>
- M:	Mingkai Hu <mingkai.hu@nxp.com>
++		pcie_x4_rc: pcie@a070000 {
++			compatible = "cix,sky1-pcie-host";
++			reg = <0x00 0x0a070000 0x00 0x10000>,
++			      <0x00 0x29000000 0x00 0x3000000>,
++			      <0x00 0x0a060300 0x00 0x40>,
++			      <0x00 0x0a060400 0x00 0x40>,
++			      <0x00 0x50000000 0x00 0x00100000>;
++			reg-names = "reg", "cfg", "rcsu_strap", "rcsu_status", "msg";
++			ranges = <0x01000000 0x00 0x50100000 0x00 0x50100000 0x00 0x00100000>,
++				 <0x02000000 0x00 0x50200000 0x00 0x50200000 0x00 0x0fe00000>,
++				 <0x43000000 0x14 0x00000000 0x14 0x00000000 0x04 0x00000000>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			bus-range = <0x90 0xbf>;
++			device_type = "pci";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &gic 0 0 GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 2 &gic 0 0 GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 3 &gic 0 0 GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 4 &gic 0 0 GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH 0>;
++			msi-map = <0x9000 &gic_its 0x9000 0x3000>;
++			status = "disabled";
++		};
++
++		pcie_x2_rc: pcie@a0c0000 {
++			compatible = "cix,sky1-pcie-host";
++			reg = <0x00 0x0a0c0000 0x00 0x10000>,
++			      <0x00 0x26000000 0x00 0x3000000>,
++			      <0x00 0x0a0600340 0x00 0x20>,
++			      <0x00 0x0a0600440 0x00 0x20>,
++			      <0x00 0x40000000 0x00 0x00100000>;
++			reg-names = "reg", "cfg", "rcsu_strap", "rcsu_status", "msg";
++			ranges = <0x01000000 0x0 0x40100000 0x0 0x40100000 0x0 0x00100000>,
++				 <0x02000000 0x0 0x40200000 0x0 0x40200000 0x0 0x0fe00000>,
++				 <0x43000000 0x10 0x00000000 0x10 0x00000000 0x04 0x00000000>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			bus-range = <0x60 0x8f>;
++			device_type = "pci";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &gic 0 0 GIC_SPI 427 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 2 &gic 0 0 GIC_SPI 428 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 3 &gic 0 0 GIC_SPI 429 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 4 &gic 0 0 GIC_SPI 430 IRQ_TYPE_LEVEL_HIGH 0>;
++			msi-map = <0x6000 &gic_its 0x6000 0x3000>;
++			status = "disabled";
++		};
++
++		pcie_x1_0_rc: pcie@a0d0000 {
++			compatible = "cix,sky1-pcie-host";
++			reg = <0x00 0x0a0d0000 0x00 0x10000>,
++			      <0x00 0x20000000 0x00 0x3000000>,
++			      <0x00 0x0a060360 0x00 0x20>,
++			      <0x00 0x0a060460 0x00 0x20>,
++			      <0x00 0x30000000 0x00 0x00100000>;
++			reg-names = "reg", "cfg", "rcsu_strap", "rcsu_status", "msg";
++			ranges = <0x01000000 0x0 0x30100000 0x0 0x30100000 0x0 0x00100000>,
++				 <0x02000000 0x0 0x30200000 0x0 0x30200000 0x0 0x07e00000>,
++				 <0x43000000 0x08 0x00000000 0x08 0x00000000 0x04 0x00000000>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			bus-range = <0x00 0x2f>;
++			device_type = "pci";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &gic 0 0 GIC_SPI 436 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 2 &gic 0 0 GIC_SPI 437 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 3 &gic 0 0 GIC_SPI 438 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 4 &gic 0 0 GIC_SPI 439 IRQ_TYPE_LEVEL_HIGH 0>;
++			msi-map = <0x0000 &gic_its 0x0000 0x3000>;
++			status = "disabled";
++		};
++
++		pcie_x1_1_rc: pcie@a0e0000 {
++			compatible = "cix,sky1-pcie-host";
++			reg = <0x00 0x0a0e0000 0x00 0x10000>,
++			      <0x00 0x23000000 0x00 0x3000000>,
++			      <0x00 0x0a060380 0x00 0x20>,
++			      <0x00 0x0a060480 0x00 0x20>,
++			      <0x00 0x38000000 0x00 0x00100000>;
++			reg-names = "reg", "cfg", "rcsu_strap", "rcsu_status", "msg";
++			ranges = <0x01000000 0x0 0x38100000 0x0 0x38100000 0x0 0x00100000>,
++				 <0x02000000 0x0 0x38200000 0x0 0x38200000 0x0 0x07e00000>,
++				 <0x43000000 0x0C 0x00000000 0x0C 0x00000000 0x04 0x00000000>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			bus-range = <0x30 0x5f>;
++			device_type = "pci";
++
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &gic 0 0 GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 2 &gic 0 0 GIC_SPI 446 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 3 &gic 0 0 GIC_SPI 447 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 4 &gic 0 0 GIC_SPI 448 IRQ_TYPE_LEVEL_HIGH 0>;
++			msi-map = <0x3000 &gic_its 0x3000 0x3000>;
++			status = "disabled";
++		};
++
+ 		gic: interrupt-controller@e010000 {
+ 			compatible = "arm,gic-v3";
+ 			reg = <0x0 0x0e010000 0 0x10000>,	/* GICD */
 -- 
 2.49.0
 
