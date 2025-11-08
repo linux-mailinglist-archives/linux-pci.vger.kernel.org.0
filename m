@@ -1,62 +1,64 @@
-Return-Path: <linux-pci+bounces-40619-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40620-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B14AC42C5E
-	for <lists+linux-pci@lfdr.de>; Sat, 08 Nov 2025 12:59:59 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C4F8C42CE3
+	for <lists+linux-pci@lfdr.de>; Sat, 08 Nov 2025 13:34:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2DBEA188C977
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Nov 2025 12:00:24 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 09A26349AB8
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Nov 2025 12:34:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 517C92E040E;
-	Sat,  8 Nov 2025 11:59:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7C7954654;
+	Sat,  8 Nov 2025 12:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E8EzCDoc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZAe1C6aB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA0B134AB;
-	Sat,  8 Nov 2025 11:59:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7C3170A11;
+	Sat,  8 Nov 2025 12:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762603193; cv=none; b=ptMdD3OEONSVHNV3RtG2AURsJZl13gCNxnh6a1sh72NV4tq4n9ikcRHpVs5O6fXcZAiYlnksvV1R61xTsnufLEUAZwbdZTvL296Y4YMGnmKyhZAR3iwZsWCvaX+DSOe9+QgwA2hpYpjIpMVQYKAzm2Whyaa+4Wqvz67JeGSc0SA=
+	t=1762605272; cv=none; b=S0NUA1doN4Hb2tOtSH4ZahXp7D2ZxBl1qqAfQ+1VN1a087aIRzcTJ3JvrPqgIwJEagrMJydMgVi0Yb5hi8lSS3o7iauR6KZgihVuam2mYBtcyw0xxNJ9i/Xbuyzp6lG2jdvy0uyG2ZJZAk3I/B2wTjxblWMgx2ONUYnWCs1taBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762603193; c=relaxed/simple;
-	bh=zifuSYbrSRqU3MWoa3DZjrPt60rFa2uX47b60iGOZM8=;
+	s=arc-20240116; t=1762605272; c=relaxed/simple;
+	bh=45EdQFA6NEw7zfaldijyvwunk1IEh60CWkYy3zjQTj8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YNY9bEwihIJnXjnc7K4vu6z8U0vb1VS//KAFNotKlG5/AO3ZUVu3ElK7zY7KHdbRNVHQD/keG5lARDda7Bb4TjTYIRdLIsK8r1C4oiphHJ290hP3mwBydv5PIxHXBFtnZ9Q9Rwnc8YSIGIdgnyQxn3y5NW7YdNVU2CWLKMseGiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E8EzCDoc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 622BCC4CEF7;
-	Sat,  8 Nov 2025 11:59:52 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=bfLEdpS9PA3O/phyn+r8muAoDGH2USvdi0UDgycsjdtXjwgOlB7r05AuszRKlaJHwm3YYCXLlKtO7ra+HL/6g7RZf8CKj0c3i7TmsueZxkFgFifOuXMIJPr67J/3C8yTkqALK7QJWtDz1qnRjLvhs1WdQLZuaDf6Xr40i9Bv6IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZAe1C6aB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A579C116C6;
+	Sat,  8 Nov 2025 12:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762603193;
-	bh=zifuSYbrSRqU3MWoa3DZjrPt60rFa2uX47b60iGOZM8=;
+	s=k20201202; t=1762605272;
+	bh=45EdQFA6NEw7zfaldijyvwunk1IEh60CWkYy3zjQTj8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E8EzCDocbhseVA2outwAgOHzNxe8UAYJ5JYW1/7Z3vm0/Q/MWiSe2ugYCP2JZYX/7
-	 zSdITqWi0PqAd82WHax/FBD95+NrtgCzLpKk09yUiPXfZ/GlVCDRL0g34/MsS0mSys
-	 psr/1Y+GfxZM5zir+xTV0RX1K2r62VtqNBDcjkZ6kXneAVQwVne2gCut+ASPywpgMP
-	 +2JVAF3mO0q2ksPQyQOmWvx8H4qtBiDc0GMh3xou9VA13cNgfbp8+B1aZfb1dWms/j
-	 wgUdVgFeiYeSRQ44kc8zltwmnDUrh5XTe/dPCnyenSUQZ8KYlSey0XkUW9B2zuGMQW
-	 Kc1qD5d1oCIFQ==
-Date: Sat, 8 Nov 2025 12:59:50 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Abraham I <kishon@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: qcom: Enforce check for PHY,
- PERST# properties
-Message-ID: <20251108-toad-of-hypothetical-opportunity-ebfa74@kuoka>
-References: <20251106-pci-binding-v2-0-bebe9345fc4b@oss.qualcomm.com>
- <20251106-pci-binding-v2-1-bebe9345fc4b@oss.qualcomm.com>
+	b=ZAe1C6aBQOu9ufMPYHKXtgVkRMFWTkasSqsDrHkF2pcnXXL2tKM478Rl/JOtw1fuA
+	 bD0mol7BLa/ILSTZ5qVjy6diwgDi24ZKHJyysi3Pl5wz4IzIy0Uraf3VwDMLdaRgpr
+	 AWFZCkK0vdShLRvi2D8ey+7byiPq9+7NaXIlNkITumuldt2OcQXRNyedOpLm9lBHrg
+	 P7bITn3re31Mn5YZ6PGiwnoBGL/jeNK1YeK2+0lMuOIvQ0Qu8Mxs3ThqN3blG22LJ+
+	 2wCof2QQuNkXYclObVKA0Mu34jcLNBvldL7On6QA5fE0MaWJAwAseZZHR3Ks29JLiX
+	 8O1QW3z1i8/kQ==
+Date: Sat, 8 Nov 2025 13:34:26 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: FUKAUMI Naoki <naoki@radxa.com>, Damien Le Moal <dlemoal@kernel.org>,
+	Anand Moon <linux.amoon@gmail.com>, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Dragan Simic <dsimic@manjaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
+Message-ID: <aQ840q5BxNS1eIai@ryzen>
+References: <20250113-rockchip-no-wait-v1-1-25417f37b92f@kernel.org>
+ <1E8E4DB773970CB5+5a52c9e1-01b8-4872-99b7-021099f04031@radxa.com>
+ <6e87b611-13ea-4d89-8dbf-85510dd86fa6@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,120 +67,82 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251106-pci-binding-v2-1-bebe9345fc4b@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6e87b611-13ea-4d89-8dbf-85510dd86fa6@rock-chips.com>
 
-On Thu, Nov 06, 2025 at 04:57:16PM +0530, Manivannan Sadhasivam wrote:
-> Currently, the binding supports specifying the required PHY, PERST#
-> properties in two ways:
+Hello Shawn,
+
+On Tue, Oct 21, 2025 at 03:10:13PM +0800, Shawn Lin wrote:
+> 在 2025/10/21 星期二 12:26, FUKAUMI Naoki 写道:
+> > Hi Niklas, Bjorn,
+> > 
+> > I noticed an issue on the Rockchip RK3588S SoC using the ASMedia ASM2806
+> > PCIe bridge where devices behind the bridge fail to probe since v6.14.
+> > Specifically, this started happening after commit
+> > 647d69605c70368d54fc012fce8a43e8e5955b04.
+> > dmesg logs from before and after this commit are available at:
+> >   https://gist.github.com/RadxaNaoki/fca2bfca2ee80fefee7b00c7967d2e3d
+> > 
+> > I have confirmed that reverting the following commits fixes the issue:
+> >   commit ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we
+> > can detect Link Up")
+> >   commit 0e0b45ab5d77 ("PCI: dw-rockchip: Enumerate endpoints based on
+> > dll_link_up IRQ")
+> > 
 > 
-> 1. Controller node (deprecated)
-> 	- phys
-> 	- perst-gpios
+> Then these two commits would like to reply on link up irq instead of
+> fixed delay in dwc framework. Here is a not very precise timeline
+> description.
 > 
-> 2. Root Port node
-> 	- phys
-> 	- reset-gpios
+> time(ms) |  dw_pcie_wait_for_link（）     | sys irq_thread() | Hot reset
+> -------------------------------------------------------------------------
+> 0:       |  dw_pcie_link_up return false  |  link up irq     |
+> 1x       |  Physical link up happend      |                  |
+> 90:      |  dw_pcie_link_up return true   |                  |
+> 100:     |                                |  msleep(100) done|
+> 10x:     |                                |  pci_rescan_bus  |
+> 1xx:     |                                |                  | <==occur
+> 190:     |  msleep(90) done               |                  |
+> 19x:     |  pci_host_probe                |                  |
 > 
-> But there is no check to make sure that the both variants are not mixed.
-> For instance, if the Controller node specifies 'phys', 'reset-gpios',
+> What if the hot reset happens when pci_rescan_bus() starts. I think
+> scan devices possible fail when seeing 0xffffffff from cfg read. But
+> a 90ms delay perfectly avoids this event in dw_pcie_wait_for_link(), and by
+> the time the 90ms delay is completed, the link is actually in an
+> accessible state.
 
-Schema already does not allow it, unless I missed which schema defines
-reset-gpios in controller node.
-
-> or if the Root Port node specifies 'phys', 'perst-gpios', then the driver
-> will fail as reported. Hence, enforce the check in the binding to catch
-> these issues.
-
-I do not see such check.
-
-> 
-> It is also possible that DTs could have 'phys' property in Controller node
-> and 'reset-gpios' properties in the Root Port node. It will also be a
-> problem, but it is not possible to catch these cross-node issues in the
-> binding.
-
-... so this commit changes nothing?
-
-The commit actually does change, but something completely different than
-you write here, so entire commit msg is describing entirely different
-cast. What you achieve here is to require perst-gpios, if controller
-node defined phys. Unfortunately your commit msg does not explain why
-perst-gpios are now required...
-
-> 
-> Reported-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> Reported-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Closes: https://lore.kernel.org/linux-pci/8f2e0631-6c59-4298-b36e-060708970ced@oss.qualcomm.com
-> Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
-That's too many tags. Either someone reported you bug or someone
-suggested you to do something, not both (and proposing solution is not
-suggesting a commit since you already knew you need to make the commit
-because of bug...)
+The pcie-dw-rockchip.c driver is modelled after the qcom driver.
+So if this is a problem when a ASM2806 switch is connected, I would
+expect qcom platforms to have the same problem.
 
 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie-common.yaml        | 16 ++++++++++++++++
->  .../devicetree/bindings/pci/qcom,pcie-sc8180x.yaml       |  3 +++
->  2 files changed, 19 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> index ab2509ec1c4b40ac91a93033d1bab1b12c39362f..d56c0dc2ae4d3944294ca50cab708915c9f60ea8 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> @@ -111,6 +111,14 @@ patternProperties:
->        phys:
->          maxItems: 1
->  
-> +    oneOf:
-> +      - required:
-> +          - phys
-> +          - reset-gpios
-> +      - properties:
-> +          phys: false
-> +          reset-gpios: false
-> +
->      unevaluatedProperties: false
->  
->  required:
-> @@ -129,6 +137,14 @@ anyOf:
->    - required:
->        - msi-map
->  
-> +oneOf:
-> +  - required:
-> +      - phys
-> +      - perst-gpios
-> +  - properties:
-> +      phys: false
-> +      perst-gpios: false
-> +
->  allOf:
->    - $ref: /schemas/pci/pci-host-bridge.yaml#
->  
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.yaml
-> index 34a4d7b2c8459aeb615736f54c1971014adb205f..17abc7f7b7e9d71777380ddbfe90288e6187a827 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.yaml
-> @@ -77,6 +77,7 @@ unevaluatedProperties: false
->  examples:
->    - |
->      #include <dt-bindings/clock/qcom,gcc-sc8180x.h>
-> +    #include <dt-bindings/gpio/gpio.h>
->      #include <dt-bindings/interconnect/qcom,sc8180x.h>
->      #include <dt-bindings/interrupt-controller/arm-gic.h>
->  
-> @@ -164,5 +165,7 @@ examples:
->  
->              resets = <&gcc GCC_PCIE_0_BCR>;
->              reset-names = "pci";
-> +
-> +            perst-gpios = <&tlmm 175 GPIO_ACTIVE_LOW>;
->          };
->      };
-> 
-> -- 
-> 2.48.1
-> 
+Do we have a PCI trace that can tell us exactly what goes wrong?
+
+FUKAUMI-san tells us that the enumeration does not detect any devices,
+but also that there is no crash.
+
+If we assume the scenario from your timeline above, that a hot reset
+happens just after pci_rescan_bus(), after a hot reset, LTSSM should
+re-enter link training.
+
+I verified this:
+# bc=$(setpci -s 0000:00:00.0 BRIDGE_CONTROL)
+# setpci -s 0000:00:00.0 BRIDGE_CONTROL=$(printf "%04x" $((0x$bc | 0x40))) && sl eep 0.01 && setpci -s 0000:00:00.0 BRIDGE_CONTROL=$bc
+[   65.723990] rockchip-dw-pcie a40000000.pcie: PCIE_CLIENT_INTR_STATUS_MISC: 0x7
+[   65.724701] rockchip-dw-pcie a40000000.pcie: LTSSM_STATUS: 0x30011
+[   65.825787] rockchip-dw-pcie a40000000.pcie: Received Link up event. Starting enumeration!
+
+So we get another link up IRQ after the hot reset.
+
+The IRQ handler for this IRQ will once again call pci_rescan_bus().
+So I would expect that this second pci_rescan_bus() call would actually
+be able to find the device behind the switch.
+
+
+Mani, Bjorn, thoughts?
+
+
+
+Kind regards,
+Niklas
 
