@@ -1,191 +1,379 @@
-Return-Path: <linux-pci+bounces-40622-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40625-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21FB6C42D42
-	for <lists+linux-pci@lfdr.de>; Sat, 08 Nov 2025 14:28:02 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38D5CC42DAB
+	for <lists+linux-pci@lfdr.de>; Sat, 08 Nov 2025 15:03:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9378D3AFC7B
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Nov 2025 13:28:00 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A8D964E38DB
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Nov 2025 14:03:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5F8E1A3166;
-	Sat,  8 Nov 2025 13:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilNH3q9N"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15462217F55;
+	Sat,  8 Nov 2025 14:03:16 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022098.outbound.protection.outlook.com [40.107.75.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2B127470;
-	Sat,  8 Nov 2025 13:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762608478; cv=none; b=h4G5z9Jgb8QIhtCtev77rQ6IF/TsqK0Jd8j5MHTg0yQ4A2obPZMiOeRtJQwP+h0MpA3i9my6O9zjWWCmbqSjr4sUD0kOStXYHQ07mZf/U2PV5dZjNyq4TK89L+y8fTLktNsc8ZjruOlxln7KdumbLBvCVQfDuceZeu0x7Zh/kHc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762608478; c=relaxed/simple;
-	bh=QeGuROr+Dr2oL5DcoUeRVOAIwOeC5RcqPRm5KXFpnsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o496L/2b5wPtf6mCMz44AoFNX1Tdkj4FhAKghXovcN1F6AMGA5lMfBfN8jCrhjT3IW6iZpsC1QU58OCQ3BwWxKKEXTx9jCzwynSPb6KEsHDPyCIVeRU1C/+/G1gdMASnIGgse/UgBXgxzYA9vl/kewVAuTyAPFk231m9qPOaeVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilNH3q9N; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A9A6C116C6;
-	Sat,  8 Nov 2025 13:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762608478;
-	bh=QeGuROr+Dr2oL5DcoUeRVOAIwOeC5RcqPRm5KXFpnsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ilNH3q9NrhOHNla2+3dARxg/3Xfn1ZfQl4N1Bwdi/w3zRG3uAPUb0dj5OlNLq5szQ
-	 j4u2uMCLxotZPpjEkOHexu4uKUXfbGsRA3kRtVg8OKzxSxFVebmvnuOOo8VB9yO7iM
-	 Ob3otYACIYoorbZaU3eYWA9BHOuTblqgHt+u8YzeUwTBI3QNfwOt+opdia8WQWVGai
-	 +A13AQMVw4fQQCAnAyVi4Xz8eDT7/2Bo4iVZ6sy4cP1cTUUxc9bvO67WunBT7DvA0E
-	 EGE4cLJFasLg33S/kgZv7naDA9CrS8FNNlenKd8Aow39KEhiSvEHHYL2tZmjkoj/5k
-	 zaRF0XqP+48Wg==
-Date: Sat, 8 Nov 2025 14:27:52 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: FUKAUMI Naoki <naoki@radxa.com>, Damien Le Moal <dlemoal@kernel.org>,
-	Anand Moon <linux.amoon@gmail.com>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Dragan Simic <dsimic@manjaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
-Message-ID: <aQ9FWEuW47L8YOxC@ryzen>
-References: <20250113-rockchip-no-wait-v1-1-25417f37b92f@kernel.org>
- <1E8E4DB773970CB5+5a52c9e1-01b8-4872-99b7-021099f04031@radxa.com>
- <6e87b611-13ea-4d89-8dbf-85510dd86fa6@rock-chips.com>
- <aQ840q5BxNS1eIai@ryzen>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E02619005E;
+	Sat,  8 Nov 2025 14:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.98
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762610595; cv=fail; b=X3cm3l46gFiYvKbT4UuQ+mqaMSFFLaem+bJixAha7xv+0v5sAJKJVesS78oGy30EtFhRJGLNZtyXga75Z4AXS/CyVASajkrmW7O9Bj19ND6nV/ziyxKxmW9hpmHWvr9S45sXSMUCdJaQe+uuXjaMlfiUILNGPW9P+bZM+zAsrds=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762610595; c=relaxed/simple;
+	bh=8FcjBcgqZ+cKgZ6da9rByXGQeS1mKTaAnahDU17GFjo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QkfMsbEBIdTdMrX7TVniEUVZQw6cjDk/b0Nx/od5cxBI1cqvEr6j7/84SKNd+EXOj8vO1tDxM41G34UYVLC6xaNx6LIiMwtEME26+NUq1cUkuBtCYa2MgajZWG7OlJaaE12GS4xYXgFbZiH0/JJmMhE7WpFn4mpAP8lBe20WTIg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tyDP9e9dbPY6/OY4PM7yimY7xsS/9c1loLLtwK45OZU1jTfncL1m3XZb8QQL8MKVDVESBdNbZP8Ry2d75MnRbZ3Nk+fnjFKpMZvCQOCA+T0naAX0XAaxp5DQFHz0DeUSKuABMYxgbWMDyeCVP/x60rvRxNWbXcnA2Ys2KLskfGBBtaam/s5cBBKCJlmFij6O+rLxCWvjegKRMBwD5pJsl1M3it8RQqZZRQ5Al+ILbzDiriSPjWTpGpymHuxx01bv1+fsmTmr8jfsoHnFnRxvfY1xmxdivMI/bIUuUgmSfX8I1Z17/g4w/eTu2Z9U6xW+kzLErkp907pqZlDmTb9lkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QQ5XL67g5v4J21IfE2OiuzEDx83Fb+J5bvQBZ1d/pYE=;
+ b=hudVsWIaqX0XyoNsp/hNGuP+DRAEZmXUtC4K4htjY3HbFd/Sz/4ShP0RWMiLKfZ6lr6DJzte78KImQapiU7TCxwq4APnS1yv3SE2rpXtli7Yt/raTSnX7vwgzB+wKcjQ67i+IcIRPXSuQ3z60UUr0KwloSyLJJRIsU8A0i4r1d4cjfgKRpvQK+nfYRdhDws65Br7wABP89oyvFfA6DJpg/t1mk+UeDw2s9oTlozz4Oc2EjexzBr7fHtaSxJVSOV3/lrJfeVf30aJTIIEfnXh1haTchWBHMC+Y2EJ4/umOXXVGfMpdgJuLRQQn5N7S6KWNh+wBEpA8T2u7HWQz5j3Pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from PSBPR02CA0004.apcprd02.prod.outlook.com (2603:1096:301::14) by
+ KUZPR06MB8058.apcprd06.prod.outlook.com (2603:1096:d10:48::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9298.8; Sat, 8 Nov 2025 14:03:09 +0000
+Received: from TY2PEPF0000AB87.apcprd03.prod.outlook.com
+ (2603:1096:301:0:cafe::d7) by PSBPR02CA0004.outlook.office365.com
+ (2603:1096:301::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9298.15 via Frontend Transport; Sat,
+ 8 Nov 2025 14:03:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ TY2PEPF0000AB87.mail.protection.outlook.com (10.167.253.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9320.13 via Frontend Transport; Sat, 8 Nov 2025 14:03:07 +0000
+Received: from hans.. (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id BAEB941C014B;
+	Sat,  8 Nov 2025 22:03:05 +0800 (CST)
+From: hans.zhang@cixtech.com
+To: bhelgaas@google.com,
+	helgaas@kernel.org,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	mani@kernel.org,
+	robh@kernel.org,
+	kwilczynski@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: mpillai@cadence.com,
+	fugang.duan@cixtech.com,
+	guoyin.chen@cixtech.com,
+	peter.chen@cixtech.com,
+	cix-kernel-upstream@cixtech.com,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <hans.zhang@cixtech.com>
+Subject: [PATCH v11 00/10] Enhance the PCIe controller driver for next generation controllers
+Date: Sat,  8 Nov 2025 22:02:55 +0800
+Message-ID: <20251108140305.1120117-1-hans.zhang@cixtech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aQ840q5BxNS1eIai@ryzen>
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB87:EE_|KUZPR06MB8058:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: ff7c8191-80f2-4101-06bb-08de1ecf8b30
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|7416014|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?WX+Zclak9sSvcO2ocknozMgAZPk/euz6ZiH9Wlpz974w/giD3Jc0UUwC6u/6?=
+ =?us-ascii?Q?hYQO7RbjfNbS1KyfbhmXy25ys1P9lk8qBSZxiZDxN5pRAuyxDjbZ72kQc4Ps?=
+ =?us-ascii?Q?lhPy7YU77lQEsz9U90kX3B9bDEFQUMjDL+WawDGghCGkHUXyREEmHZ/t0W21?=
+ =?us-ascii?Q?BUO/haM7ouRzRZT9lQCiXbNFxODByFk/ZFEuUhFt6RlekL0V0G3ihPl9U1qB?=
+ =?us-ascii?Q?+3BxjSQsfXCF5cIApdS9dXN+dwd+uyAMNxx5zIW7awEscB1b4vBSYyeWgTVq?=
+ =?us-ascii?Q?nNcQJkr9uO0oYKcYq3mDsfxslJi9GrI4N3lT5C1URq8v+vyCBvj+1iJsDUVF?=
+ =?us-ascii?Q?wpiO1YOoH6WOmW0gtz8P+TqGQQwsYAXCUC8C39gXVkr6i6FyaIE2b9ozLmM/?=
+ =?us-ascii?Q?Z27kEn0sKqOTdJIlnzCdibmFC+/Iz2ZciqVdOGCx0JL4ZlIdXAzDVYGR2n2q?=
+ =?us-ascii?Q?OuXr5cDuuJ6O8s6rr5ZVuNhu6RgJh09sB5fOq+jGjVVmiWFNpVUGBgRlSoT5?=
+ =?us-ascii?Q?EG+4+VeyhZSmWwEUWhyhf7L05FFPsNNh01P/4ogiatTnnNC5P0mOMdRQkU6E?=
+ =?us-ascii?Q?CYIDjMffkfAOhsaiiPjeYs019oYKcfLH08X1Mxj9HQe26IihdNGd2A115Yb9?=
+ =?us-ascii?Q?cl3oFr8unpZ3WpglA4M3hruI2ChICD5Om26URad5JI+IoJCHk5ucv5ucmMu7?=
+ =?us-ascii?Q?faeOKFulw+6ci7BH7w3PBgrK5R7TOfijnWMA/fxSO/xy58h0gedPPY6dZ33p?=
+ =?us-ascii?Q?utKxGsJDdznHsj0yIbHt2+dl7/5YmmyPiG7tvXRceM5wCNpmE7RVlB3E81iD?=
+ =?us-ascii?Q?5sZOBN58dOWJUI07T1gYlmqZhinBBgVWBZxStPnWe2ybq2dCSsjIvYL60EIM?=
+ =?us-ascii?Q?VQNzs/lXL97ZSpNddS+n1YZP5gL2wY3zBz8rrhI+09zyTY/896LFg3UEFEGd?=
+ =?us-ascii?Q?cwt4hF4snioakwl/TvF7syehZgV7ItMNUBbfmVNrfI1T4AoQMZ/9CO1aKZLB?=
+ =?us-ascii?Q?d/xnSEjJSocjJIg3an8XirU5sWqhxP4yTzHY1/ffF2NGGIycRCxcZ/6mOOR+?=
+ =?us-ascii?Q?O8pV/XEnnjhvPpww25e3Pt+O8qlf7IRK+AC7WBS7l909H70xRqg69Baun6NT?=
+ =?us-ascii?Q?jRxfalSDLznXdis/MdGM2wh524yBUjJQD+0eUfQkpDDy5DCc3H01cp3q3Kug?=
+ =?us-ascii?Q?D8NiM1akWOqPUbWUKTi2XDg7aUWSuNCztxs36AYXXb6boFeaXldbG+9tvqqU?=
+ =?us-ascii?Q?CZyUE4ablP8aCTDGG3yMj8lWf8mCYo+OU5km2nxAQXzN0XrV1JBwjJIr01kV?=
+ =?us-ascii?Q?rP0mfxiXxDvDABJZ7oWRAZdPyQ5HVcqhb+wTqU3qAv+beiFqPcZslEb7cliz?=
+ =?us-ascii?Q?AMkne3noZab5qD9FXGFefMFnmU7ofmdbdkiw0IRe8rmXN3pX79UFDcd/4Q99?=
+ =?us-ascii?Q?+hi3+xWeiPlzovt9Qm2Q6m4stf2RFDBcZaeji2yvTApv+ooV73oHGv+du7mU?=
+ =?us-ascii?Q?VszR4T3/KaTD+0yhDcVUrccK7tERF+jh6ylNOm07myrYsG8altstZ5VXG9r3?=
+ =?us-ascii?Q?R7sSD/8d9KEcaFJCSBI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(7416014)(376014)(82310400026);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2025 14:03:07.1324
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff7c8191-80f2-4101-06bb-08de1ecf8b30
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	TY2PEPF0000AB87.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KUZPR06MB8058
 
-On Sat, Nov 08, 2025 at 01:34:32PM +0100, Niklas Cassel wrote:
-> 
-> The pcie-dw-rockchip.c driver is modelled after the qcom driver.
-> So if this is a problem when a ASM2806 switch is connected, I would
-> expect qcom platforms to have the same problem.
+From: Hans Zhang <hans.zhang@cixtech.com>
 
-Looking more closely at this, comparing the "good" kernel:
+---
+Dear Maintainers,
 
-[    1.868857] pci 0004:40:00.0: [1d87:3588] type 01 class 0x060400 PCIe Root Port
-[    1.869509] pci 0004:40:00.0: ROM [mem 0x00000000-0x0000ffff pref]
-[    1.870050] pci 0004:40:00.0: PCI bridge to [bus 01-ff]
-[    1.870510] pci 0004:40:00.0:   bridge window [io  0x0000-0x0fff]
-[    1.871044] pci 0004:40:00.0:   bridge window [mem 0x00000000-0x000fffff]
-[    1.871640] pci 0004:40:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-[    1.872353] pci 0004:40:00.0: supports D1 D2
-[    1.872738] pci 0004:40:00.0: PME# supported from D0 D1 D3hot
-[    1.875190] pci 0004:40:00.0: Primary bus is hard wired to 0
-[    1.875690] pci 0004:40:00.0: bridge configuration invalid ([bus 01-ff]), reconfiguring
-[    1.876543] pci 0004:41:00.0: [1b21:2806] type 01 class 0x060400 PCIe Switch Upstream Port
-[    1.877384] pci 0004:41:00.0: PCI bridge to [bus 00]
-[    1.877846] pci 0004:41:00.0:   bridge window [io  0x0000-0x0fff]
-[    1.878389] pci 0004:41:00.0:   bridge window [mem 0x00000000-0x000fffff]
-[    1.879030] pci 0004:41:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-[    1.879764] pci 0004:41:00.0: enabling Extended Tags
-[    1.880614] pci 0004:41:00.0: PME# supported from D0 D3hot D3cold
-[    1.881409] pci 0004:41:00.0: 2.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s PCIe x1 link at 0004:40:00.0 (capable of 15.752 Gb/s with 8.0 GT/s PCIe x2 link)
-[    1.888729] pci 0004:41:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
-[    1.889766] pci 0004:42:00.0: [1b21:2806] type 01 class 0x060400 PCIe Switch Downstream Port
-[    1.890621] pci 0004:42:00.0: PCI bridge to [bus 00]
-[    1.891084] pci 0004:42:00.0:   bridge window [io  0x0000-0x0fff]
-[    1.891628] pci 0004:42:00.0:   bridge window [mem 0x00000000-0x000fffff]
-[    1.892269] pci 0004:42:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-[    1.893028] pci 0004:42:00.0: enabling Extended Tags
-...
-[    1.928510] pci_bus 0004:43: busn_res: [bus 43-4f] end is updated to 44
-[    1.929432] pci_bus 0004:45: busn_res: [bus 45-4f] end is updated to 45
-[    1.944674] pci_bus 0004:46: busn_res: [bus 46-4f] end is updated to 46
-[    1.956691] pci_bus 0004:47: busn_res: [bus 47-4f] end is updated to 47
-[    1.957298] pci_bus 0004:42: busn_res: [bus 42-4f] end is updated to 47
-[    1.957893] pci_bus 0004:41: busn_res: [bus 41-4f] end is updated to 47
-
-
-With the "bad" kernel:
-[    1.383075] pci 0004:40:00.0: [1d87:3588] type 01 class 0x060400 PCIe Root Port
-[    1.383738] pci 0004:40:00.0: ROM [mem 0x00000000-0x0000ffff pref]
-[    1.384280] pci 0004:40:00.0: PCI bridge to [bus 01-ff]
-[    1.384740] pci 0004:40:00.0:   bridge window [io  0x0000-0x0fff]
-[    1.385274] pci 0004:40:00.0:   bridge window [mem 0x00000000-0x000fffff]
-[    1.385871] pci 0004:40:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-[    1.386582] pci 0004:40:00.0: supports D1 D2
-[    1.386957] pci 0004:40:00.0: PME# supported from D0 D1 D3hot
-[    1.389549] pci 0004:40:00.0: Primary bus is hard wired to 0
-[    1.390062] pci 0004:40:00.0: bridge configuration invalid ([bus 01-ff]), reconfiguring
-[    1.390897] pci_bus 0004:41: busn_res: [bus 41-4f] end is updated to 41
-[    1.391505] pci 0004:40:00.0: ROM [mem 0xf4200000-0xf420ffff pref]: assigned
-[    1.392130] pci 0004:40:00.0: PCI bridge to [bus 41]
-[    1.392607] pci_bus 0004:40: resource 4 [io  0x0000-0xfffff]
-[    1.393103] pci_bus 0004:40: resource 5 [mem 0xf4200000-0xf4ffffff]
-[    1.393657] pci_bus 0004:40: resource 6 [mem 0xa00000000-0xa3fffffff]
-[    1.412296] pci 0004:41:00.0: [1b21:2806] type 01 class 0x060400 PCIe Switch Upstream Port
-[    1.413155] pci 0004:41:00.0: PCI bridge to [bus 00]
-[    1.413641] pci 0004:41:00.0:   bridge window [io  0x0000-0x0fff]
-[    1.414204] pci 0004:41:00.0:   bridge window [mem 0x00000000-0x000fffff]
-[    1.414934] pci 0004:41:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-[    1.415746] pci 0004:41:00.0: enabling Extended Tags
-[    1.416465] pci 0004:41:00.0: PME# supported from D0 D3hot D3cold
-[    1.417181] pci 0004:41:00.0: 4.000 Gb/s available PCIe bandwidth, limited by 5.0 GT/s PCIe x1 link at 0004:40:00.0 (capable of 15.752 Gb/s with 8.0 GT/s PCIe x2 link)
-[    1.423384] pci 0004:41:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
-[    1.424348] pci_bus 0004:42: busn_res: can not insert [bus 42-41] under [bus 41] (conflicts with (null) [bus 41])
-[    1.425351] pci 0004:42:00.0: [1b21:2806] type 01 class 0x060400 PCIe Switch Downstream Port
-[    1.426698] pci 0004:42:00.0: PCI bridge to [bus 00]
-[    1.427184] pci 0004:42:00.0:   bridge window [io  0x0000-0x0fff]
-[    1.427766] pci 0004:42:00.0:   bridge window [mem 0x00000000-0x000fffff]
-[    1.428415] pci 0004:42:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-[    1.429171] pci 0004:42:00.0: enabling Extended Tags
-...
-[    1.462051] pci_bus 0004:43: busn_res: can not insert [bus 43-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.463116] pci_bus 0004:43: busn_res: [bus 43-41] end is updated to 43
-[    1.463718] pci_bus 0004:43: busn_res: can not insert [bus 43] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.464651] pci 0004:42:00.0: devices behind bridge are unusable because [bus 43] cannot be assigned for them
-[    1.465688] pci_bus 0004:44: busn_res: can not insert [bus 44-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.466747] pci_bus 0004:44: busn_res: [bus 44-41] end is updated to 44
-[    1.467351] pci_bus 0004:44: busn_res: can not insert [bus 44] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.468283] pci 0004:42:02.0: devices behind bridge are unusable because [bus 44] cannot be assigned for them
-[    1.469322] pci_bus 0004:45: busn_res: can not insert [bus 45-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.470370] pci_bus 0004:45: busn_res: [bus 45-41] end is updated to 45
-[    1.470960] pci_bus 0004:45: busn_res: can not insert [bus 45] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.471902] pci 0004:42:06.0: devices behind bridge are unusable because [bus 45] cannot be assigned for them
-[    1.472930] pci_bus 0004:46: busn_res: can not insert [bus 46-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.473985] pci_bus 0004:46: busn_res: [bus 46-41] end is updated to 46
-[    1.474578] pci_bus 0004:46: busn_res: can not insert [bus 46] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.475530] pci 0004:42:0e.0: devices behind bridge are unusable because [bus 46] cannot be assigned for them
-[    1.476414] pci_bus 0004:42: busn_res: [bus 42-41] end is updated to 46
-[    1.477001] pci_bus 0004:42: busn_res: can not insert [bus 42-46] under [bus 41] (conflicts with (null) [bus 41])
-[    1.477911] pci 0004:41:00.0: devices behind bridge are unusable because [bus 42-46] cannot be assigned for them
-[    1.478814] pcieport 0004:40:00.0: bridge has subordinate 41 but max busn 46
+This series is Cadence's HPA PCIe IP and the Root Port driver of our
+CIX sky1. Please help review. Thank you very much.
 
 
-We can see that the pcie-dw-rockchip.c driver detects the ASM2806 switch
-in both cases. So the problem is not really with enumerating the root port.
+Hi Mani,
 
-The problem seems to be that with the "bad" kernel, you get a lot of:
-[    1.464651] pci 0004:42:00.0: devices behind bridge are unusable because [bus 43] cannot be assigned for them
+Thank you very much for your time in reviewing this series of patches.
+Manikandan has revised it. I'm not sure if it meets your requirements.
+Please take some time to review it. Thank you again.
 
-Because the bus ends are different, and conflicts with each other.
-I don't know why this happens.
+Best regards,
+Hans
+---
 
-Perhaps we could add a quirk for ASM2806 that does some extra sleep if that
-switch is detected, if for some reason, the switch is not actually ready
-after the delays defined by the PCIe specification.
+Enhances the exiting Cadence PCIe controller drivers to support
+HPA (High Performance Architecture) Cadence PCIe controllers.
 
-(And btw. please test with the latest 6.18-rc, as, from experience, the
-ASPM problems in earlier RCs can result in some weird problems that are
-not immediately deduced to be caused by the ASPM enablement.)
+The patch set enhances the Cadence PCIe driver for HPA support.
+The header files are separated out for legacy and high performance
+register maps, register address and bit definitions. The driver
+read register and write register functions for HPA take the
+updated offset stored from the platform driver to access the registers.
+As part of refactoring of the code, few new files are added to the
+driver by splitting the existing files.
+This helps SoC vendor who change the address map within PCIe controller
+in their designs. Setting the menuconfig appropriately will allow
+selection between RP and/or EP PCIe controller support. The support
+will include Legacy and HPA for the selected configuration.
+
+The TI SoC continues to be supported with the changes incorporated.
+
+The changes address the review comments in the previous patches where
+the need to move away from "ops" pointers used in current implementation
+and separate out the Legacy and HPA driver implementation was stressed.
+
+The scripts/checkpatch.pl has been run on the patches with and without
+--strict. With the --strict option, 4 checks are generated on 3 patch,
+which can be ignored. There are no code fixes required for these checks.
+All other checks generated by ./scripts/checkpatch.pl --strict can be 
+ignored.
+---
+Changes for v11:
+https://patchwork.kernel.org/project/linux-pci/patch/20251020042857.706786-1-hans.zhang@cixtech.com/
+
+  - Fixes for testbot comments
+  - Addressed the comments from Manivannan on patchset 10
+	- Removed unused function cdns_pcie_hpa_reset_outbound_region.
+	- Used function pointer callbacks to functions to reuse them
+	- removed some not required code as per the comments
+  - Modify the two return values of pci-sky1.c and add MODULE_DEVICE_TABLE(). (Mani)
+
+Changes for v10:
+https://patchwork.kernel.org/project/linux-pci/cover/20250901092052.4051018-1-hans.zhang@cixtech.com/
+
+  - Rebase to v6.18-rc2.
+  - Comments from Manivannan which have been addressed.
+  - Merging of header file split patches with the patches that 
+    use the changes.
+  - Addressing some of the code comments, initialization of variables,
+    making some functions static and removing unused functions.
+  - Delete the cdns_pcie_hpa_create_region_for_ecam function, which
+    depends on the initialization of ECAM by bios. After this series
+    is accepted, I will submit it later.
+
+Changes for v9
+https://patchwork.kernel.org/project/linux-pci/cover/20250819115239.4170604-1-hans.zhang@cixtech.com/
+
+	- Fixes the issue of kernel test robot where one variable overflow was flagged
+https://urldefense.com/v3/__https://lore.kernel.org/oe-kbuild-all/202508261955.U9IomdXb-lkp@intel.com/__;!!EHscmS1ygiU1lA!EZnnh6v5bjIDVqDhCnuprUvH9PTNCSANIaNa6wx7Tp3NgGMqsrTwOKz9z8z5fWHkQH3Q8l_S$
+	- Minor changes that includes adding a flag for RC, removing vendor id and device id from DTS.
+    - Fix comments
+	- Remove EP platform code by removing patch 0007 in v8 series
+    - Fix comments style for new files
+    - Remove #define from within functions to header file
+  - Modification of the review opinion on CIX SKY1 RC driver (Mani).
+
+Changes for v8
+  - Fixed the error issue of DT binding. (Rob and Krzysztof)
+  - Optimization of CIX SKY1 Root Port driver. (Bjorn and Krzysztof)
+  - Review comments fixed. (Bjorn and Krzysztof)
+  - All comments related fixes like single line comments, spaces
+        between HPA or LGA, periods in single line, changes proposed
+        in the description, etc are fixed. (Bjorn and Krzysztof)
+  - Patches have been split to separate out code moves from
+    update and fixes.
+  - "cdns_...send_irq.." renamed to "cdns_..raise_irq.."
+
+  The test log on the Orion O6 board is as follows:
+  root@cix-localhost:~# lspci
+  0000:c0:00.0 PCI bridge: Device 1f6c:0001
+  0000:c1:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
+  0001:90:00.0 PCI bridge: Device 1f6c:0001
+  0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller PM9A1/PM9A3/980PRO
+  0002:60:00.0 PCI bridge: Device 1f6c:0001
+  0002:61:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
+  0003:00:00.0 PCI bridge: Device 1f6c:0001
+  0003:01:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.11ax Wireless Network Controller
+  0004:30:00.0 PCI bridge: Device 1f6c:0001
+  0004:31:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8125 2.5GbE Controller (rev 05)
+  root@cix-localhost:~#
+  root@cix-localhost:~# uname -a
+  Linux cix-localhost 6.17.0-rc2-00043-gb2782ead460c #185 SMP PREEMPT Tue Aug 19 19:35:34 CST 2025 aarch64 GNU/Linux
+  root@cix-localhost:~# cat /etc/issue
+  Debian GNU/Linux 12 \n \l
+
+Changes for v7
+https://patchwork.kernel.org/project/linux-pci/cover/20250813042331.1258272-1-hans.zhang@cixtech.com/
+
+  - Rebase to v6.17-rc1.
+  - Fixed the error issue of cix,sky1-pcie-host.yaml make dt_binding_check.
+  - CIX SKY1 Root Port driver compilation error issue: Add header
+    file, Kconfig select PCI_ECAM.
+
+Changes for v6
+https://patchwork.kernel.org/project/linux-pci/cover/20250808072929.4090694-1-hans.zhang@cixtech.com/
+
+  - The IP level DTS changes for HPA have been removed as the SoC
+    level DTS is added
+  - Virtual FPGA platform is also removed as the CiX SoC support is
+    added
+  - Fix the issue of dt bindings
+  - Modify the order of PCIe node attributes in sky1-orion-o6.dts
+    and delete unnecessary attributes.
+  - Continue to simplify the RC driver.
+  - The patch of the Cix Sky1 platform has been accepted and merged into the linux master branch.
+  https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250721144500.302202-1-peter.chen@cixtech.com/
+
+Changes for v5
+https://patchwork.kernel.org/project/linux-pci/cover/20250630041601.399921-1-hans.zhang@cixtech.com/
+
+  - Header and code files separated for library functions(common
+    functions used by both architectures) and Legacy and HPA.
+  - Few new files added as part of refactoring
+  - No checks for "is_hpa" as the functions have been separated
+    out
+  - Review comments from previous patches have been addressed
+  - Add region 0 for ECAM and region 1 for message.
+  - Add CIX sky1 PCIe drivers. Submissions based on the following v9 patches:
+  https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250609031627.1605851-1-peter.chen@cixtech.com/
+
+  Cix Sky1 base dts review link to show its review status:
+  https://lore.kernel.org/all/20250609031627.1605851-9-peter.chen@cixtech.com/
+
+  The test log on the Orion O6 board is as follows:
+  root@cix-localhost:~# lspci
+  0000:c0:00.0 PCI bridge: Device 1f6c:0001
+  0000:c1:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
+  0001:90:00.0 PCI bridge: Device 1f6c:0001
+  0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller PM9A1/PM9A3/980PRO
+  0002:60:00.0 PCI bridge: Device 1f6c:0001
+  0002:61:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.11ax Wireless Network Controller
+  0003:00:00.0 PCI bridge: Device 1f6c:0001
+  0003:01:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
+  0004:30:00.0 PCI bridge: Device 1f6c:0001
+  0004:31:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
+  root@cix-localhost:~# uname -a
+  Linux cix-localhost 6.16.0-rc1-00023-gbaa962a95a28 #138 SMP PREEMPT Fri Jun 27 16:43:41 CST 2025 aarch64 GNU/Linux
+  root@cix-localhost:~# cat /etc/issue
+  Debian GNU/Linux 12 \n \l
+ 
+Changes for v4
+https://patchwork.kernel.org/project/linux-pci/cover/20250424010445.2260090-1-hans.zhang@cixtech.com/
+
+  - Add header file bitfield.h to pcie-cadence.h
+  - Addressed the following review comments
+          Merged the TI patch as it
+          Removed initialization of struct variables to '0'
+
+Changes for v3
+https://patchwork.kernel.org/project/linux-pci/patch/20250411103656.2740517-1-hans.zhang@cixtech.com/
+
+  - Patch version v3 added to the subject
+  - Use HPA tag for architecture descriptions
+  - Remove bug related changes to be submitted later as a separate
+    patch
+  - Two patches merged from the last series to ensure readability to
+    address the review comments
+  - Fix several description related issues, coding style issues and
+    some misleading comments
+  - Remove cpu_addr_fixup() functions
+---
+
+Hans Zhang (6):
+  dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex bindings
+  PCI: Add Cix Technology Vendor and Device ID
+  PCI: sky1: Add PCIe host support for CIX Sky1
+  MAINTAINERS: add entry for CIX Sky1 PCIe driver
+  arm64: dts: cix: Add PCIe Root Complex on sky1
+  arm64: dts: cix: Enable PCIe on the Orion O6 board
+
+Manikandan K Pillai (4):
+  PCI: cadence: Add module support for platform controller driver
+  PCI: cadence: Split PCIe controller header file
+  PCI: cadence: Move PCIe RP common functions to a separate file
+  PCI: cadence: Add support for High Perf Architecture (HPA) controller
+
+ .../bindings/pci/cix,sky1-pcie-host.yaml      |  83 ++++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/boot/dts/cix/sky1-orion-o6.dts     |  20 +
+ arch/arm64/boot/dts/cix/sky1.dtsi             | 126 ++++++
+ drivers/pci/controller/cadence/Kconfig        |  21 +-
+ drivers/pci/controller/cadence/Makefile       |  11 +-
+ drivers/pci/controller/cadence/pci-sky1.c     | 235 ++++++++++
+ .../cadence/pcie-cadence-host-common.c        | 289 ++++++++++++
+ .../cadence/pcie-cadence-host-common.h        |  46 ++
+ .../cadence/pcie-cadence-host-hpa.c           | 368 ++++++++++++++++
+ .../controller/cadence/pcie-cadence-host.c    | 278 +-----------
+ .../cadence/pcie-cadence-hpa-regs.h           | 193 +++++++++
+ .../pci/controller/cadence/pcie-cadence-hpa.c | 167 +++++++
+ .../cadence/pcie-cadence-lga-regs.h           | 230 ++++++++++
+ .../controller/cadence/pcie-cadence-plat.c    |   9 +-
+ drivers/pci/controller/cadence/pcie-cadence.c |  12 +
+ drivers/pci/controller/cadence/pcie-cadence.h | 410 ++++++++----------
+ include/linux/pci_ids.h                       |   3 +
+ 18 files changed, 1992 insertions(+), 516 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
+ create mode 100644 drivers/pci/controller/cadence/pci-sky1.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-host-common.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-host-common.h
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-host-hpa.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-hpa-regs.h
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-hpa.c
+ create mode 100644 drivers/pci/controller/cadence/pcie-cadence-lga-regs.h
 
 
-Kind regards,
-Niklas
+base-commit: 6146a0f1dfae5d37442a9ddcba012add260bceb0
+-- 
+2.49.0
+
 
