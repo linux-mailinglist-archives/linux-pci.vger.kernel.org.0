@@ -1,148 +1,178 @@
-Return-Path: <linux-pci+bounces-40620-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40621-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C4F8C42CE3
-	for <lists+linux-pci@lfdr.de>; Sat, 08 Nov 2025 13:34:37 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70AC7C42D2F
+	for <lists+linux-pci@lfdr.de>; Sat, 08 Nov 2025 14:10:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 09A26349AB8
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Nov 2025 12:34:37 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1A8DE4E1B53
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Nov 2025 13:10:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7C7954654;
-	Sat,  8 Nov 2025 12:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A00119005E;
+	Sat,  8 Nov 2025 13:09:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZAe1C6aB"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="dV9AIGO5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-24.smtpout.orange.fr [80.12.242.24])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7C3170A11;
-	Sat,  8 Nov 2025 12:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C005F34D3A9;
+	Sat,  8 Nov 2025 13:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762605272; cv=none; b=S0NUA1doN4Hb2tOtSH4ZahXp7D2ZxBl1qqAfQ+1VN1a087aIRzcTJ3JvrPqgIwJEagrMJydMgVi0Yb5hi8lSS3o7iauR6KZgihVuam2mYBtcyw0xxNJ9i/Xbuyzp6lG2jdvy0uyG2ZJZAk3I/B2wTjxblWMgx2ONUYnWCs1taBY=
+	t=1762607399; cv=none; b=QBvwxbJL7bDSoVzcJitOYqbtcwRRjPBgb4ZgWy0cO+IptdOl9s2NRld9m1xptmy/W1FYa2Fjpdr4mpEIK6qEYfQ5snWhJJFj+yBEuvdM+GIYEi9dehSIwQTCE6ZkPbUJ4Hlt3rtS9nHCxhfJBzYR1XjXtmLFOIN/vONr65f8ezQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762605272; c=relaxed/simple;
-	bh=45EdQFA6NEw7zfaldijyvwunk1IEh60CWkYy3zjQTj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bfLEdpS9PA3O/phyn+r8muAoDGH2USvdi0UDgycsjdtXjwgOlB7r05AuszRKlaJHwm3YYCXLlKtO7ra+HL/6g7RZf8CKj0c3i7TmsueZxkFgFifOuXMIJPr67J/3C8yTkqALK7QJWtDz1qnRjLvhs1WdQLZuaDf6Xr40i9Bv6IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZAe1C6aB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A579C116C6;
-	Sat,  8 Nov 2025 12:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762605272;
-	bh=45EdQFA6NEw7zfaldijyvwunk1IEh60CWkYy3zjQTj8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZAe1C6aBQOu9ufMPYHKXtgVkRMFWTkasSqsDrHkF2pcnXXL2tKM478Rl/JOtw1fuA
-	 bD0mol7BLa/ILSTZ5qVjy6diwgDi24ZKHJyysi3Pl5wz4IzIy0Uraf3VwDMLdaRgpr
-	 AWFZCkK0vdShLRvi2D8ey+7byiPq9+7NaXIlNkITumuldt2OcQXRNyedOpLm9lBHrg
-	 P7bITn3re31Mn5YZ6PGiwnoBGL/jeNK1YeK2+0lMuOIvQ0Qu8Mxs3ThqN3blG22LJ+
-	 2wCof2QQuNkXYclObVKA0Mu34jcLNBvldL7On6QA5fE0MaWJAwAseZZHR3Ks29JLiX
-	 8O1QW3z1i8/kQ==
-Date: Sat, 8 Nov 2025 13:34:26 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: FUKAUMI Naoki <naoki@radxa.com>, Damien Le Moal <dlemoal@kernel.org>,
-	Anand Moon <linux.amoon@gmail.com>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Dragan Simic <dsimic@manjaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
-Message-ID: <aQ840q5BxNS1eIai@ryzen>
-References: <20250113-rockchip-no-wait-v1-1-25417f37b92f@kernel.org>
- <1E8E4DB773970CB5+5a52c9e1-01b8-4872-99b7-021099f04031@radxa.com>
- <6e87b611-13ea-4d89-8dbf-85510dd86fa6@rock-chips.com>
+	s=arc-20240116; t=1762607399; c=relaxed/simple;
+	bh=eDlMDq1XI0QJzQ19YXeN2G+kTl1DYm/+RWUFzDzitbg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nOkq/2rRoSy/ow5LqaTl+IGZn6R12PSzGVwEh9N220Lir0GvJ/ZOXYjyJ2Fh6BkQ7o1V0DKrGAi1zHWPZEI5Y968eCaE0XP4NABhjN41DSwtLRHPAHncT6U03Xv4U7MMEcXSrXuHIbHW4HU6mmw1yLtbRQ5YeFCMICDaUhbP6aA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=dV9AIGO5; arc=none smtp.client-ip=80.12.242.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+ ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id HiYOvhfDuznX9HiYOvZaHP; Sat, 08 Nov 2025 14:00:33 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1762606833;
+	bh=aRGRFm8nQr5WAaRrinpk9KWjIa54yU+4iQS0RwjiVHw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=dV9AIGO5VvC+elQurmqsLtlcfKPFa9KJWs8T1UvJRBZI65JlxwrheFUYsvpgm+6ts
+	 1hHHejsRTLicDpc+yCdmFZ4BG0PM6zrEZT4MCL5zjANBryR2NUeCcGQ/v/zFbq2kTQ
+	 nSnB/51xKINEALpZ9sHEvOJatXQlMyqLoKMI/2TH63GNAW83WRTEA8sDY+JgTZGcEu
+	 uX14hXVl/IMt+Umpij8cvguLgma1IcTPbhUSU+K2m9/BdkGXzP8fP3lSjDd08ImQTQ
+	 Aoa3r8nYM23m/XdHeVqP3R05IsLFaV2dKJYIo0kQ0bxShUNL9CY5nBc03QDNgEJkuw
+	 wX6SPDTFC2dyQ==
+X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 08 Nov 2025 14:00:33 +0100
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+Message-ID: <120b2f62-25e6-4ea3-9907-230080c61f70@wanadoo.fr>
+Date: Sat, 8 Nov 2025 14:00:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 5/7] PCI: spacemit: Add SpacemiT PCIe host driver
+To: Alex Elder <elder@riscstar.com>, lpieralisi@kernel.org,
+ kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org, bhelgaas@google.com
+Cc: dlan@gentoo.org, aurelien@aurel32.net, johannes@erdfelt.com,
+ p.zabel@pengutronix.de, christian.bruel@foss.st.com,
+ thippeswamy.havalige@amd.com, krishna.chundru@oss.qualcomm.com,
+ mayank.rana@oss.qualcomm.com, qiang.yu@oss.qualcomm.com,
+ shradha.t@samsung.com, inochiama@gmail.com, guodong@riscstar.com,
+ linux-pci@vger.kernel.org, spacemit@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20251107191557.1827677-1-elder@riscstar.com>
+ <20251107191557.1827677-6-elder@riscstar.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Content-Language: en-US, fr-FR
+In-Reply-To: <20251107191557.1827677-6-elder@riscstar.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6e87b611-13ea-4d89-8dbf-85510dd86fa6@rock-chips.com>
 
-Hello Shawn,
-
-On Tue, Oct 21, 2025 at 03:10:13PM +0800, Shawn Lin wrote:
-> 在 2025/10/21 星期二 12:26, FUKAUMI Naoki 写道:
-> > Hi Niklas, Bjorn,
-> > 
-> > I noticed an issue on the Rockchip RK3588S SoC using the ASMedia ASM2806
-> > PCIe bridge where devices behind the bridge fail to probe since v6.14.
-> > Specifically, this started happening after commit
-> > 647d69605c70368d54fc012fce8a43e8e5955b04.
-> > dmesg logs from before and after this commit are available at:
-> >   https://gist.github.com/RadxaNaoki/fca2bfca2ee80fefee7b00c7967d2e3d
-> > 
-> > I have confirmed that reverting the following commits fixes the issue:
-> >   commit ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we
-> > can detect Link Up")
-> >   commit 0e0b45ab5d77 ("PCI: dw-rockchip: Enumerate endpoints based on
-> > dll_link_up IRQ")
-> > 
+Le 07/11/2025 à 20:15, Alex Elder a écrit :
+> Introduce a driver for the PCIe host controller found in the SpacemiT
+> K1 SoC.  The hardware is derived from the Synopsys DesignWare PCIe IP.
+> The driver supports three PCIe ports that operate at PCIe gen2 transfer
+> rates (5 GT/sec).  The first port uses a combo PHY, which may be
+> configured for use for USB 3 instead.
 > 
-> Then these two commits would like to reply on link up irq instead of
-> fixed delay in dwc framework. Here is a not very precise timeline
-> description.
-> 
-> time(ms) |  dw_pcie_wait_for_link（）     | sys irq_thread() | Hot reset
-> -------------------------------------------------------------------------
-> 0:       |  dw_pcie_link_up return false  |  link up irq     |
-> 1x       |  Physical link up happend      |                  |
-> 90:      |  dw_pcie_link_up return true   |                  |
-> 100:     |                                |  msleep(100) done|
-> 10x:     |                                |  pci_rescan_bus  |
-> 1xx:     |                                |                  | <==occur
-> 190:     |  msleep(90) done               |                  |
-> 19x:     |  pci_host_probe                |                  |
-> 
-> What if the hot reset happens when pci_rescan_bus() starts. I think
-> scan devices possible fail when seeing 0xffffffff from cfg read. But
-> a 90ms delay perfectly avoids this event in dw_pcie_wait_for_link(), and by
-> the time the 90ms delay is completed, the link is actually in an
-> accessible state.
+> Signed-off-by: Alex Elder <elder@riscstar.com>
+> ---
 
-The pcie-dw-rockchip.c driver is modelled after the qcom driver.
-So if this is a problem when a ASM2806 switch is connected, I would
-expect qcom platforms to have the same problem.
+...
 
+> +static int k1_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct k1_pcie *k1;
+> +	int ret;
+> +
+> +	k1 = devm_kzalloc(dev, sizeof(*k1), GFP_KERNEL);
+> +	if (!k1)
+> +		return -ENOMEM;
+> +
+> +	k1->pmu = syscon_regmap_lookup_by_phandle_args(dev_of_node(dev),
+> +						       SYSCON_APMU, 1,
+> +						       &k1->pmu_off);
+> +	if (IS_ERR(k1->pmu))
+> +		return dev_err_probe(dev, PTR_ERR(k1->pmu),
+> +				     "failed to lookup PMU registers\n");
+> +
+> +	k1->link = devm_platform_ioremap_resource_byname(pdev, "link");
+> +	if (!k1->link)
 
-Do we have a PCI trace that can tell us exactly what goes wrong?
+if (IS_ERR(k1->link)) ?
 
-FUKAUMI-san tells us that the enumeration does not detect any devices,
-but also that there is no crash.
+> +		return dev_err_probe(dev, -ENOMEM,
+> +				     "failed to map \"link\" registers\n");
 
-If we assume the scenario from your timeline above, that a hot reset
-happens just after pci_rescan_bus(), after a hot reset, LTSSM should
-re-enter link training.
+Message with -ENOMEM are ignored, so a direct return -ENOMEM is less 
+verbose and will bhave the same. See [1].
 
-I verified this:
-# bc=$(setpci -s 0000:00:00.0 BRIDGE_CONTROL)
-# setpci -s 0000:00:00.0 BRIDGE_CONTROL=$(printf "%04x" $((0x$bc | 0x40))) && sl eep 0.01 && setpci -s 0000:00:00.0 BRIDGE_CONTROL=$bc
-[   65.723990] rockchip-dw-pcie a40000000.pcie: PCIE_CLIENT_INTR_STATUS_MISC: 0x7
-[   65.724701] rockchip-dw-pcie a40000000.pcie: LTSSM_STATUS: 0x30011
-[   65.825787] rockchip-dw-pcie a40000000.pcie: Received Link up event. Starting enumeration!
+But in this case, I think it should be PTR_ERR(k1->link).
 
-So we get another link up IRQ after the hot reset.
+[1]: 
+https://elixir.bootlin.com/linux/v6.18-rc2/source/drivers/base/core.c#L5015
 
-The IRQ handler for this IRQ will once again call pci_rescan_bus().
-So I would expect that this second pci_rescan_bus() call would actually
-be able to find the device behind the switch.
+> +
+> +	k1->pci.dev = dev;
+> +	k1->pci.ops = &k1_pcie_ops;
+> +	dw_pcie_cap_set(&k1->pci, REQ_RES);
+> +
+> +	k1->pci.pp.ops = &k1_pcie_host_ops;
+> +
+> +	/* Hold the PHY in reset until we start the link */
+> +	regmap_set_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
+> +			APP_HOLD_PHY_RST);
+> +
+> +	ret = devm_regulator_get_enable(dev, "vpcie3v3");
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +				     "failed to get \"vpcie3v3\" supply\n");
+> +
+> +	pm_runtime_set_active(dev);
+> +	pm_runtime_no_callbacks(dev);
+> +	devm_pm_runtime_enable(dev);
+> +
+> +	platform_set_drvdata(pdev, k1);
+> +
+> +	ret = k1_pcie_parse_port(k1);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to parse root port\n");
+> +
+> +	ret = dw_pcie_host_init(&k1->pci.pp);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to initialize host\n");
+> +
+> +	return 0;
+> +}
 
+...
 
-Mani, Bjorn, thoughts?
+> +static const struct of_device_id k1_pcie_of_match_table[] = {
+> +	{ .compatible = "spacemit,k1-pcie", },
+> +	{ },
 
+Unneeded trainling comma after a terminator.
 
+> +};
+> +
+> +static struct platform_driver k1_pcie_driver = {
+> +	.probe	= k1_pcie_probe,
+> +	.remove	= k1_pcie_remove,
+> +	.driver = {
+> +		.name			= "spacemit-k1-pcie",
+> +		.of_match_table		= k1_pcie_of_match_table,
+> +		.probe_type		= PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +};
+> +module_platform_driver(k1_pcie_driver);
 
-Kind regards,
-Niklas
 
