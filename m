@@ -1,77 +1,79 @@
-Return-Path: <linux-pci+bounces-40639-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40640-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 485C2C4302F
-	for <lists+linux-pci@lfdr.de>; Sat, 08 Nov 2025 17:55:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF307C43032
+	for <lists+linux-pci@lfdr.de>; Sat, 08 Nov 2025 17:55:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2830F4E0341
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Nov 2025 16:55:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 02C1A3AEEB6
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Nov 2025 16:55:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE87E21D3F5;
-	Sat,  8 Nov 2025 16:55:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACFE1221294;
+	Sat,  8 Nov 2025 16:55:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9c3GHIv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DbkmHxGW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617531F7586
-	for <linux-pci@vger.kernel.org>; Sat,  8 Nov 2025 16:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB0421C163
+	for <linux-pci@vger.kernel.org>; Sat,  8 Nov 2025 16:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762620929; cv=none; b=tXNi5rQjzyPf+oh+lR84K24RpEPaFKt7aVkQzt8HKhxzbgwWDRlXNmnepWTsN1w8UkQYiDN7OdJA7nHPErXgezcOE4sJk6j/I8IUAvDeY78zB6c9uvOe6zrMp1QDyylqUPsvtAexehqX8VRTL+KM4YkI3T15LM7GPNdH8N82RK0=
+	t=1762620935; cv=none; b=IdUMxtODAswpz2ifmcTJXgDaJEkN9XHVUP4dqw4MAPPdi5OOrAeXypOK+xdQ+UmBlm/TkeKG3vW+pKSQEoDHnxTXK50z4PqOu4nxPJv/JHhWAWv1kl93fbn6pGmCXS29dUYRHgWpxhcHNVmw11aMdC+N9ip3TOHtpWrJ+w5OCYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762620929; c=relaxed/simple;
-	bh=jwOLrkoRqkPeOPBDl31nNUDJya3IFjX8AQzLP7gIsVY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Gpc6a6SHObn1dhjxEupuiisnPf1BSsqguzVFNGm0bzHMJaXSY2eC/rjjJkm2UnQCN6BKlfuEgDGjE/8jwQ5ibTRFtAyUNAxxIcl3m06dKhIjlvufj3HaD270QNHyrMpmineDOWCxmo8MiaGtYEyCk4sGI6h2XM2DAc8kHrAApi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E9c3GHIv; arc=none smtp.client-ip=209.85.210.174
+	s=arc-20240116; t=1762620935; c=relaxed/simple;
+	bh=GVUuC2fy2XU/fv4+p+YVtdSoHU3S//UTllww5EZKxAY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nnxE1AyXmdU5aBEo+Xyp9D0oFkvtBcr7TP5mVoePuk6+R7Q5fTl+3N0Ad9sJuiuwpIRf6HJEHZ63f80RzxelcZWFHL+pnobFU2Cfo9u2ulg06kCItOLKumy4nM5y38mB5STG3s6rA+vmiAUNyERJB7da5QBYt1A9OyOy0mrD/R0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DbkmHxGW; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7aca3e4f575so1395560b3a.2
-        for <linux-pci@vger.kernel.org>; Sat, 08 Nov 2025 08:55:28 -0800 (PST)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7a9c64dfa8aso1463545b3a.3
+        for <linux-pci@vger.kernel.org>; Sat, 08 Nov 2025 08:55:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762620928; x=1763225728; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OKOkwqrhiH/tVcZkXWMht9KXzTRKBq9BT+UhE+2IcfE=;
-        b=E9c3GHIvk8SZ+HjnOjFeg8NruJWIti36H1LyeMXHBunyu5D1zqGF0HauV7NkMg/7P2
-         QIRkfc6uQZfRzHWWPhbLN9JIkPrjCwmuRZ9aVKssC51mb9jCDOm3Zz8gWWBG8LvkgJmz
-         iuyPHGBmX84wx1MXBDUXwGks+J4MYgx5SbekjrpsRZjjqzWwVIeJZVjx+cUEkJClbZNF
-         E7YnHazC8RU2kdJsQkqaZWB0LTwHubwPuX94O1cgghZH17o7bI15dBv2ZfRLRtGjVous
-         2g2NtO4KtdfnPPbx5QZg2uoRj8jOAOvS+PqyoHnquYuQQImRbRNY/QrCSle4k8rZUTQH
-         XXhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762620928; x=1763225728;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1762620933; x=1763225733; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OKOkwqrhiH/tVcZkXWMht9KXzTRKBq9BT+UhE+2IcfE=;
-        b=bb989+3E09cC8hwzqXFd6SMaaZOLduSjkEwLJOv7Tk2c5JLLjWgbce6nPBwLF5Uj19
-         XIYrH2RFugeuMoYrk9NnHslck/ahXgicW+f3EJAwfJGgmNGorYTJRfpdlVmhxWz4ICnO
-         LHCo9R/5iqyYMPBCOLnYOIisQeRy6LkTxosNmLN1B23DqaI+wLEJ87VAv58tPrCOLgIq
-         +S5OOB5k8QG0Fl8z/wuRXwsw2ubodQH/Wzbw+SCSwkPJy+mmmQmy3iA3YD+k2ArYoANf
-         em1vmy6tBsECcOTAzvGSjABmDSH5x2nmwySB5CdSvmlwUFcvHDjjzsNUBWwdrUmPkNVR
-         nMVg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+KGL8N+5huXZVgDUe1cBGitM6TQIuFELzz2HUC2DFYDnsY3VEuspIaBmWe3kHIzziIWumY27eaAY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdFwPGPVLikZWjQDe4ZtanD5xc9m9DtoJaCJXSKW7HdxBp7JlR
-	IV/MhSvxlDj6rtRU9y+OclEabwIqJaOy26eI9GxTALbBSsSS7RI0i/jB
-X-Gm-Gg: ASbGnct1ZYzdCtzGAfL1wVoecrwM76xZiB4ghYjB83LQ3cME+YZl5n8U79Q0DMmPqBC
-	EIZWp6CWZrMVUz83g/tEswSfmHMcl7RyQBqv3Y0VpCbWJVk4BLGQKF/vdfZ28BbwYiu7hRC4xNR
-	6EMpQBZh31jCPUXQIhfZGs29/JzC++ZCq5V5xBy/VTun0QO5hNflZ1oVXrMQ1l1YEksRggnH+82
-	eqV4ouBT1fpQu+Rl9wp3BwzUXzaERWYO07JVNzfDPzjsU9Y4S3UAAMgV8nJUEacHcz90JbdAo69
-	GF1AKcJHltm7wjB2/k7Ml2NW6j0YWZJ7v/tGtXO0w2tN1PDMoHSrEPbFN/kVO+HMgrbj3Twx5ar
-	hAEu8eKze7GHMl6kl0mZhl7u4NHm6XuQzs1Jw+Q446hsVu7TORtDIhFXlR5gk6abSRYKjNpyn+/
-	IHSiOg5/M7FOww9QWw5PlxxsXXjg5hbF4l3WZfLTY=
-X-Google-Smtp-Source: AGHT+IGBRSYfYejPzPUa6G3F+P0qHnfJt8Gfvd2VQxOhkvmZSJiF5/f7Vm00ZiSW3lNcWNhmhQeP/g==
-X-Received: by 2002:a05:6a21:99a0:b0:349:c80b:d5e9 with SMTP id adf61e73a8af0-353a21e1f48mr4740818637.23.1762620927662;
-        Sat, 08 Nov 2025 08:55:27 -0800 (PST)
+        bh=lfa0z+UQO6yPcSPdZFfLbPGOinvzfqyizepJWfWVugE=;
+        b=DbkmHxGWioCkZx25jyb8Qezw5paJvwTDxlKB2UEwkHVlYc1SX1WroRv3JDbcvWclrg
+         zPRcVKZ0lPVVgVkBjxpYlij/HTSzjmJOE4eT3eCzncIH81obauiOTONIXmpbo/6fD5Tu
+         iX1ly8pozsMdlj9FEJxjfVOanB1MNscYVRL/00qgREE7Uz6lyMnWHmkvmGiozESds8oH
+         ig7LYSsiixC4q5n7ONLGEm90hbIZiBmcf4DIIIMYWBydSDl0etBmu4o3jRO0tuArXrMm
+         vO0ZbEknHpzgiAtDTKnSMELgojOnqWG4N0EcBiHCODtlEAqkHA/KjR0b9/1K/qOymrun
+         sRoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762620933; x=1763225733;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lfa0z+UQO6yPcSPdZFfLbPGOinvzfqyizepJWfWVugE=;
+        b=OJCBj+0m0+7qDGhoq9XXTE93aQmFn1B5jaIzYwa5l2omAbE37mMlkICkxQn6hyht8G
+         mcMXzVrboFJLNjIEVWUZQzJjSP+VehJZ7UsBXxy9fea4I9gDYht/CvH0tIWYBL/1RyNJ
+         WH9tO4Su/ZFUqLFl0PVoBfVsD3Zh5qkkSjFb5OtpOnkqD9QM54u803MWXxmU1chFmPhl
+         +993t/YllQ5iA+gHgkSHSgjzUQqcBftb44R5LaFFwYVwlXfgmAtCbrg9nhXTlVD6BaI8
+         Tmwj+E1+F9ZKuVUob8fTokKpeUqoq8nJqkwfYzMZvCfLqRpimshpEUIZNGzxyG2r5EGO
+         NEeA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSPO/oLgAw8Ej/dQFx5Aj0eeSqr3ZsvP72vQoXVIOoCl00Esldl1d+QSi+AFR+2G9sc3ZbByj5siM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/q39yD7zMwUfcQfKY4IvOFMVF7pbT5TcSK8YRphH5KpKZa4sa
+	bMVeZePpCcmaYRqjhWgCn0hQRIdFvIPLpNZiZztOK/Yq0ZfU6sAlvYIA
+X-Gm-Gg: ASbGnctAF1Zo65JoGIeJMQv8Yy7YOVX5I4XVUdGAXuAZi0OTlQETtx8VeH9JS+5Mzud
+	Hx0SZ6mWEP52xEkLDeaYIbTwjLaestH+wSLX/Zx7PXiYE5fexQ8dFDZdYWqQ9yOXKk4O3JfaPaL
+	zalDHsMmf0fWjmWWfxmX1ZHDt3pyJ/6xwu2DfxS1XptbtpVefsMtJ0n6QL0CYDJSKUWO8q+JfTc
+	Z8tGxSyLRZPmi1+hvXc5xdsitzxTbfftaavI7fVUggmRLRqYFuvn8zXJaZhX+3oSqCoupJKMO2Q
+	K1mA5mWoPOUUJslAdMY5RlNBGKXa0r9VUGpNR/uhSNOGpE2LAah3JYPwP918+4UJO0OSlh0m9kn
+	ntcO3OzbU05GlO7sMyM2WI/PDRodeaCT5CRFWlHWvJUicWMielW3XpAP9MmtBQrpEqO1Fi0oLDW
+	g4qAdOnClZ5wpUl3Gwj5osteL+Kg3W76JSSQVSIj8zJNl9wUn8oiBh8iYovZ+7
+X-Google-Smtp-Source: AGHT+IEfnEipPO2csirPutJrNuJd3yrwHgpaw0FqT9YBv+eiOHV3d1CaNtZHRbJHir19k7Fvsh4rgg==
+X-Received: by 2002:a05:6a21:48f:b0:334:97dd:c5b4 with SMTP id adf61e73a8af0-353a23d2a25mr3798516637.27.1762620932714;
+        Sat, 08 Nov 2025 08:55:32 -0800 (PST)
 Received: from localhost.localdomain ([119.127.199.141])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ba901c3817csm8181254a12.30.2025.11.08.08.55.23
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ba901c3817csm8181254a12.30.2025.11.08.08.55.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Nov 2025 08:55:27 -0800 (PST)
+        Sat, 08 Nov 2025 08:55:32 -0800 (PST)
 From: Guangbo Cui <jckeep.cuiguangbo@gmail.com>
 To: Miguel Ojeda <ojeda@kernel.org>,
 	Alex Gaynor <alex.gaynor@gmail.com>,
@@ -89,10 +91,12 @@ Cc: Boqun Feng <boqun.feng@gmail.com>,
 	rust-for-linux@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Guangbo Cui <jckeep.cuiguangbo@gmail.com>
-Subject: [RFC PATCH v1 0/2] rust: pci: Introduce PCIe error handler support and sample usage
-Date: Sat,  8 Nov 2025 16:55:09 +0000
-Message-ID: <20251108165511.98546-1-jckeep.cuiguangbo@gmail.com>
+Subject: [RFC PATCH v1 1/2] rust: pci: add PCIe bus error handler support
+Date: Sat,  8 Nov 2025 16:55:10 +0000
+Message-ID: <20251108165511.98546-2-jckeep.cuiguangbo@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251108165511.98546-1-jckeep.cuiguangbo@gmail.com>
+References: <20251108165511.98546-1-jckeep.cuiguangbo@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -102,38 +106,388 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi all,
+This patch introduces Rust abstractions for PCIe Advanced Error Reporting
+(AER) and general PCI bus error handling. It provides safe bindings for
+the struct pci_error_handlers callbacks, allowing Rust PCI drivers to
+implement device-specific recovery logic for events such as MMIO
+restoration, slot reset, and fatal/correctable error notifications.
 
-This RFC patchset introduces basic PCIe Advanced Error Reporting (AER)
-support for Rust PCI drivers and provides a simple example to demonstrate
-it's usage.
+The new ErrorHandler trait defines the equivalent of the C
+pci_error_handlers interface, including all callback methods, along
+with Rust enums ErsResult and ChannelState that mirror the kernel's
+pci_ers_result_t and pci_channel_state_t.
 
-The first patch adds the necessary infrastructure in the Rust PCI layer to
-support device-specific PCI error handlers, mirroring the existing C
-`struct pci_error_handlers` callbacks.
+This enables fully type-safe integration between Rust PCI drivers and
+the Linux PCI error recovery infrastructure.
 
-The second patch updates the Rust PCI sample driver to implement a set of
-dummy error handlers. These callbacks simply print messages and return
-predefined results, serving as a guide for future Rust PCI driver authors
-who want to handle PCIe AER events safely.
-
-This series is an RFC for discussion and not intended for merging yet.
+Existing Rust PCI sample drivers are updated to specify a default
+ErrorHandler = () until they implement custom error handling.
 
 Signed-off-by: Guangbo Cui <jckeep.cuiguangbo@gmail.com>
 ---
-
-Guangbo Cui (2):
-  rust: pci: add PCIe bus error handler support
-  sample: rust: pci: implement dummy error handlers to demonstrate usage
-
  rust/kernel/pci.rs                    |  11 ++
  rust/kernel/pci/err.rs                | 273 ++++++++++++++++++++++++++
  samples/rust/rust_dma.rs              |   1 +
  samples/rust/rust_driver_auxiliary.rs |   2 +
- samples/rust/rust_driver_pci.rs       |  47 ++++-
- 5 files changed, 333 insertions(+), 1 deletion(-)
+ samples/rust/rust_driver_pci.rs       |   2 +
+ 5 files changed, 289 insertions(+)
  create mode 100644 rust/kernel/pci/err.rs
 
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index 7fcc5f6022c1..24c82305f195 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -24,8 +24,10 @@
+ };
+ use kernel::prelude::*;
+ 
++mod err;
+ mod id;
+ 
++pub use self::err::{ChannelState, ErrorHandler, ErsResult};
+ pub use self::id::{Class, ClassMask, Vendor};
+ 
+ /// An adapter for the registration of PCI drivers.
+@@ -47,6 +49,7 @@ unsafe fn register(
+             (*pdrv.get()).probe = Some(Self::probe_callback);
+             (*pdrv.get()).remove = Some(Self::remove_callback);
+             (*pdrv.get()).id_table = T::ID_TABLE.as_ptr();
++            (*pdrv.get()).err_handler = err::ErrorHandlerVTable::<T::ErrorHandler>::vtable_ptr();
+         }
+ 
+         // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
+@@ -265,6 +268,14 @@ pub trait Driver: Send {
+     // ```
+     type IdInfo: 'static;
+ 
++    /// The PCI error handler implementation for this driver.
++    // TODO: Use `associated_type_defaults` once stabilized:
++    //
++    // ```
++    // type ErrorHandler: err::ErrorHandler = ();
++    // ```
++    type ErrorHandler: err::ErrorHandler;
++
+     /// The table of device ids supported by the driver.
+     const ID_TABLE: IdTable<Self::IdInfo>;
+ 
+diff --git a/rust/kernel/pci/err.rs b/rust/kernel/pci/err.rs
+new file mode 100644
+index 000000000000..d61520563bc3
+--- /dev/null
++++ b/rust/kernel/pci/err.rs
+@@ -0,0 +1,273 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! PCI error handling abstractions.
++//!
++//! This module provides traits and types to handle PCI bus errors in Rust PCI drivers.
++
++use core::marker::PhantomData;
++
++use kernel::prelude::*;
++
++use crate::{
++    device,
++    error::VTABLE_DEFAULT_ERROR, //
++};
++
++use super::Device;
++
++/// Result type for PCI error handling operations.
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++#[repr(u32)]
++pub enum ErsResult {
++    /// No result/none/not supported in device driver
++    None = bindings::pci_ers_result_PCI_ERS_RESULT_NONE,
++    /// Device driver can recover without slot reset
++    CanRecover = bindings::pci_ers_result_PCI_ERS_RESULT_CAN_RECOVER,
++    /// Device driver wants slot to be reset
++    NeedReset = bindings::pci_ers_result_PCI_ERS_RESULT_NEED_RESET,
++    /// Device has completely failed, is unrecoverable
++    Disconnect = bindings::pci_ers_result_PCI_ERS_RESULT_DISCONNECT,
++    /// Device driver is fully recovered and operational
++    Recovered = bindings::pci_ers_result_PCI_ERS_RESULT_RECOVERED,
++    /// No AER capabilities registered for the driver
++    NoAerDriver = bindings::pci_ers_result_PCI_ERS_RESULT_NO_AER_DRIVER,
++}
++
++impl ErsResult {
++    fn into_c(self) -> bindings::pci_ers_result_t {
++        self as bindings::pci_ers_result_t
++    }
++}
++
++/// PCI channel state representation.
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++#[repr(u32)]
++pub enum ChannelState {
++    /// I/O channel is in normal state
++    Normal = bindings::pci_channel_io_normal,
++    /// I/O to channel is blocked
++    Frozen = bindings::pci_channel_io_frozen,
++    /// PCI card is dead
++    PermanentFailure = bindings::pci_channel_io_perm_failure,
++}
++
++impl TryFrom<u32> for ChannelState {
++    type Error = kernel::error::Error;
++
++    fn try_from(value: u32) -> Result<Self> {
++        match value {
++            bindings::pci_channel_io_normal => Ok(ChannelState::Normal),
++            bindings::pci_channel_io_frozen => Ok(ChannelState::Frozen),
++            bindings::pci_channel_io_perm_failure => Ok(ChannelState::PermanentFailure),
++            _ => Err(kernel::error::code::EINVAL),
++        }
++    }
++}
++
++/// PCI bus error handler trait.
++#[vtable]
++pub trait ErrorHandler {
++    /// The driver type associated with this error handler.
++    type Driver;
++
++    /// PCI bus error detected on this device
++    fn error_detected(
++        _dev: &Device<device::Bound>,
++        _error: ChannelState,
++        _this: Pin<&Self::Driver>,
++    ) -> ErsResult {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// MMIO has been re-enabled, but not DMA
++    fn mmio_enabled(_dev: &Device<device::Bound>, _this: Pin<&Self::Driver>) -> ErsResult {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// PCI slot has been reset
++    fn slot_reset(_dev: &Device<device::Bound>, _this: Pin<&Self::Driver>) -> ErsResult {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// PCI function reset prepare
++    fn reset_prepare(_dev: &Device<device::Bound>, _this: Pin<&Self::Driver>) {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// PCI function reset completed
++    fn reset_done(_dev: &Device<device::Bound>, _this: Pin<&Self::Driver>) {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Device driver may resume normal operations
++    fn resume(_dev: &Device<device::Bound>, _this: Pin<&Self::Driver>) {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++
++    /// Allow device driver to record more details of a correctable error
++    fn cor_error_detected(_dev: &Device<device::Bound>, _this: Pin<&Self::Driver>) {
++        build_error!(VTABLE_DEFAULT_ERROR)
++    }
++}
++
++#[vtable]
++impl ErrorHandler for () {
++    type Driver = ();
++}
++
++/// A vtable for the error handler trait.
++pub(super) struct ErrorHandlerVTable<T: ErrorHandler>(PhantomData<T>);
++
++impl<T: ErrorHandler + 'static> ErrorHandlerVTable<T> {
++    extern "C" fn error_detected(
++        pdev: *mut bindings::pci_dev,
++        error: bindings::pci_channel_state_t,
++    ) -> bindings::pci_ers_result_t {
++        // SAFETY: The PCI bus only ever calls the error_detected callback with a valid pointer
++        // to a `struct pci_dev`.
++        //
++        // INVARIANT: `pdev` is valid for the duration of `error_detected()`.
++        let pdev = unsafe { &*pdev.cast::<Device<device::CoreInternal>>() };
++
++        // SAFETY: `error_detected` is only ever called after a successful call to
++        // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
++        // and stored a `Pin<KBox<T>>`.
++        let data = unsafe { pdev.as_ref().drvdata_borrow::<Pin<KBox<T::Driver>>>() };
++
++        let error = ChannelState::try_from(error).unwrap_or(ChannelState::PermanentFailure);
++
++        T::error_detected(pdev, error, data).into_c()
++    }
++
++    extern "C" fn mmio_enabled(pdev: *mut bindings::pci_dev) -> bindings::pci_ers_result_t {
++        // SAFETY: The PCI bus only ever calls the mmio_enabled callback with a valid pointer
++        // to a `struct pci_dev`.
++        //
++        // INVARIANT: `pdev` is valid for the duration of `mmio_enabled()`.
++        let pdev = unsafe { &*pdev.cast::<Device<device::CoreInternal>>() };
++
++        // SAFETY: `mmio_enabled` is only ever called after a successful call to
++        // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
++        // and stored a `Pin<KBox<T>>`.
++        let data = unsafe { pdev.as_ref().drvdata_borrow::<Pin<KBox<T::Driver>>>() };
++
++        T::mmio_enabled(pdev, data).into_c()
++    }
++
++    extern "C" fn slot_reset(pdev: *mut bindings::pci_dev) -> bindings::pci_ers_result_t {
++        // SAFETY: The PCI bus only ever calls the slot_reset callback with a valid pointer to a
++        // `struct pci_dev`.
++        //
++        // INVARIANT: `pdev` is valid for the duration of `slot_reset()`.
++        let pdev = unsafe { &*pdev.cast::<Device<device::CoreInternal>>() };
++
++        // SAFETY: `slot_reset` is only ever called after a successful call to
++        // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
++        // and stored a `Pin<KBox<T>>`.
++        let data = unsafe { pdev.as_ref().drvdata_borrow::<Pin<KBox<T::Driver>>>() };
++
++        T::slot_reset(pdev, data).into_c()
++    }
++
++    extern "C" fn reset_prepare(pdev: *mut bindings::pci_dev) {
++        // SAFETY: The PCI bus only ever calls the reset_prepare callback with a valid pointer to a
++        // `struct pci_dev`.
++        //
++        // INVARIANT: `pdev` is valid for the duration of `reset_prepare()`.
++        let pdev = unsafe { &*pdev.cast::<Device<device::CoreInternal>>() };
++
++        // SAFETY: `reset_prepare` is only ever called after a successful call to
++        // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
++        // and stored a `Pin<KBox<T>>`.
++        let data = unsafe { pdev.as_ref().drvdata_borrow::<Pin<KBox<T::Driver>>>() };
++
++        T::reset_prepare(pdev, data)
++    }
++
++    extern "C" fn reset_done(pdev: *mut bindings::pci_dev) {
++        // SAFETY: The PCI bus only ever calls the reset_done callback with a valid pointer to a
++        // `struct pci_dev`.
++        //
++        // INVARIANT: `pdev` is valid for the duration of `reset_done()`.
++        let pdev = unsafe { &*pdev.cast::<Device<device::CoreInternal>>() };
++
++        // SAFETY: `reset_done` is only ever called after a successful call to
++        // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
++        // and stored a `Pin<KBox<T>>`.
++        let data = unsafe { pdev.as_ref().drvdata_borrow::<Pin<KBox<T::Driver>>>() };
++
++        T::reset_done(pdev, data)
++    }
++
++    extern "C" fn resume(pdev: *mut bindings::pci_dev) {
++        // SAFETY: The PCI bus only ever calls the resume callback with a valid pointer to a
++        // `struct pci_dev`.
++        //
++        // INVARIANT: `pdev` is valid for the duration of `resume()`.
++        let pdev = unsafe { &*pdev.cast::<Device<device::CoreInternal>>() };
++
++        // SAFETY: `resume` is only ever called after a successful call to
++        // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
++        // and stored a `Pin<KBox<T>>`.
++        let data = unsafe { pdev.as_ref().drvdata_borrow::<Pin<KBox<T::Driver>>>() };
++
++        T::resume(pdev, data)
++    }
++
++    extern "C" fn cor_error_detected(pdev: *mut bindings::pci_dev) {
++        // SAFETY: The PCI bus only ever calls the cor_error_detected callback with a valid pointer
++        // to a `struct pci_dev`.
++        //
++        // INVARIANT: `pdev` is valid for the duration of `cor_error_detected()`.
++        let pdev = unsafe { &*pdev.cast::<Device<device::CoreInternal>>() };
++
++        // SAFETY: `cor_error_detected` is only ever called after a successful call to
++        // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
++        // and stored a `Pin<KBox<T>>`.
++        let data = unsafe { pdev.as_ref().drvdata_borrow::<Pin<KBox<T::Driver>>>() };
++
++        T::cor_error_detected(pdev, data)
++    }
++
++    const VTABLE: bindings::pci_error_handlers = bindings::pci_error_handlers {
++        error_detected: if T::HAS_ERROR_DETECTED {
++            Some(Self::error_detected)
++        } else {
++            None
++        },
++        mmio_enabled: if T::HAS_MMIO_ENABLED {
++            Some(Self::mmio_enabled)
++        } else {
++            None
++        },
++        slot_reset: if T::HAS_SLOT_RESET {
++            Some(Self::slot_reset)
++        } else {
++            None
++        },
++        reset_prepare: if T::HAS_RESET_PREPARE {
++            Some(Self::reset_prepare)
++        } else {
++            None
++        },
++        reset_done: if T::HAS_RESET_DONE {
++            Some(Self::reset_done)
++        } else {
++            None
++        },
++        resume: if T::HAS_RESUME {
++            Some(Self::resume)
++        } else {
++            None
++        },
++        cor_error_detected: if T::HAS_COR_ERROR_DETECTED {
++            Some(Self::cor_error_detected)
++        } else {
++            None
++        },
++    };
++
++    pub(super) const fn vtable_ptr() -> *const bindings::pci_error_handlers {
++        core::ptr::from_ref(&Self::VTABLE)
++    }
++}
+diff --git a/samples/rust/rust_dma.rs b/samples/rust/rust_dma.rs
+index 4d324f06cc2a..ea0113a42446 100644
+--- a/samples/rust/rust_dma.rs
++++ b/samples/rust/rust_dma.rs
+@@ -53,6 +53,7 @@ unsafe impl kernel::transmute::FromBytes for MyStruct {}
+ 
+ impl pci::Driver for DmaSampleDriver {
+     type IdInfo = ();
++    type ErrorHandler = ();
+     const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
+ 
+     fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> Result<Pin<KBox<Self>>> {
+diff --git a/samples/rust/rust_driver_auxiliary.rs b/samples/rust/rust_driver_auxiliary.rs
+index 55ece336ee45..b714be978fdf 100644
+--- a/samples/rust/rust_driver_auxiliary.rs
++++ b/samples/rust/rust_driver_auxiliary.rs
+@@ -56,6 +56,8 @@ struct ParentDriver {
+ impl pci::Driver for ParentDriver {
+     type IdInfo = ();
+ 
++    type ErrorHandler = ();
++
+     const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
+ 
+     fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> Result<Pin<KBox<Self>>> {
+diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
+index 55a683c39ed9..11ed48dd9fbb 100644
+--- a/samples/rust/rust_driver_pci.rs
++++ b/samples/rust/rust_driver_pci.rs
+@@ -63,6 +63,8 @@ fn testdev(index: &TestIndex, bar: &Bar0) -> Result<u32> {
+ impl pci::Driver for SampleDriver {
+     type IdInfo = TestIndex;
+ 
++    type ErrorHandler = ();
++
+     const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
+ 
+     fn probe(pdev: &pci::Device<Core>, info: &Self::IdInfo) -> Result<Pin<KBox<Self>>> {
 -- 
 2.43.0
 
