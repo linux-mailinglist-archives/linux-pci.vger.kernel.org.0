@@ -1,154 +1,212 @@
-Return-Path: <linux-pci+bounces-40650-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40651-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6133CC43D7A
-	for <lists+linux-pci@lfdr.de>; Sun, 09 Nov 2025 13:28:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 374C4C43F23
+	for <lists+linux-pci@lfdr.de>; Sun, 09 Nov 2025 14:42:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 19C193A86E0
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Nov 2025 12:28:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA883188C0E6
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Nov 2025 13:43:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 917E32EC088;
-	Sun,  9 Nov 2025 12:28:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01F502E7BC9;
+	Sun,  9 Nov 2025 13:42:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hurIJbO4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M3+nydoK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FC31D432D;
-	Sun,  9 Nov 2025 12:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B2026E715
+	for <linux-pci@vger.kernel.org>; Sun,  9 Nov 2025 13:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762691308; cv=none; b=t8dNCLotK7Q1/NCQ9tt+hhXS4E1SdDjU3lHtalOMBnCx8xNLMQO23k2gfuMheORwBcfXAsGpZk3D49ikHO/XS6ORy/oA8VWk2Uq3A7s1psmk8ZvdccD4qg+4xmRRnmvrSZ4fUHYvqCRvkPeVJ4FoZDY2aJXaNYWsP2eer5Ny4Dk=
+	t=1762695771; cv=none; b=rh04koi6/g9/0aejGBwOFOOVjf4gGq9/yh3Vl3peQzLkqdETjdNQlftIaN4qjEdbSwa7oZ9lJzrpCaRWzVQESnIqbpE6ftCBIRiRH3VzrYsu28XyILQa7kzsoksKxZKc+vcwhYMTuAxVsbF2XsLUidVbIUS7dNtR92CiD5qCX5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762691308; c=relaxed/simple;
-	bh=9+deIiz/07lRUWttLH1XL6KToavdGNMSxgLPjvkZhJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I00AvXOenYpXypKMlNARr6i2L18a7PtX49dxEYF4HjeX8OkYDUPJNSnBfs5W96PEztmHOjqhhCooCIgZlVzgagv/mp7J876uffYEGM4PTpHzu/PDYRJ3Cy2HWu0cfolx9pvk/7kKaZyMqnD/rdkdVSutlx5uMGAOA+a0qbpsXGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hurIJbO4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E41ABC4CEF8;
-	Sun,  9 Nov 2025 12:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762691307;
-	bh=9+deIiz/07lRUWttLH1XL6KToavdGNMSxgLPjvkZhJg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hurIJbO4oHCGlhmRNAgt+fgtD84571YdTIU65SqQLikCy0YK6bGSG7HxhBNlSk9aS
-	 PALZVZ02wZOtd9kZLJqpdvYHJZ/HSYktjSKv08/JU4tlGx8jIssFmNBzs4yu2IGtJU
-	 0YxNi2u0zPftBTq/zVxWk45vug4/C5PHWgNZJRuErdgmGm9yisSh6mwc0bA40SRXas
-	 FbTqSGCiqroy0yC+wm+BmvTih4g6V/tnUB0rYJShev3QE87VQusnlGoMuV7RlUvqbg
-	 CkslesMC7ljHB7f7iAID75aBnIQP3T9N/4s6Ty0pftu6RB/9GGpUUvhN9L9fBqEL/h
-	 wvgFouCpUPSUg==
-Date: Sun, 9 Nov 2025 13:28:22 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: FUKAUMI Naoki <naoki@radxa.com>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Anand Moon <linux.amoon@gmail.com>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Dragan Simic <dsimic@manjaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
-Message-ID: <aRCI5kG16_1erMME@ryzen>
-References: <20250113-rockchip-no-wait-v1-1-25417f37b92f@kernel.org>
- <1E8E4DB773970CB5+5a52c9e1-01b8-4872-99b7-021099f04031@radxa.com>
- <6e87b611-13ea-4d89-8dbf-85510dd86fa6@rock-chips.com>
- <aQ840q5BxNS1eIai@ryzen>
- <aQ9FWEuW47L8YOxC@ryzen>
- <55EB0E5F655F3AFC+136b89fd-98d4-42af-a99d-a0bb05cc93f3@radxa.com>
+	s=arc-20240116; t=1762695771; c=relaxed/simple;
+	bh=vdiRyUz2JP7aiCsI5Ie3p4Ld411xX9iSGnk2FgYYWuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Kt3CY4T+u7PfFR4m9t6F1JaEew0zU2TYPNtf8ZyY0Am7Y7vRAH9U4ek8YtbCDqrxB/KV7GMdCXJixqAoJgXv5mR798p0KKzL8wRvoPKHNalGMmitBmfGxtEuHksqsbzuLrrhj3++UtwKmrCE7LaS+PW0j95QoU4s8IQ5VVgkd3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M3+nydoK; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762695770; x=1794231770;
+  h=date:from:to:cc:subject:message-id;
+  bh=vdiRyUz2JP7aiCsI5Ie3p4Ld411xX9iSGnk2FgYYWuQ=;
+  b=M3+nydoKxt/cwK/qqql9T+Mf5eT6/HeThhSQjnuUHX8KcHhVMKeshB/A
+   VSgdlyjtInbrByQAYmebTsgCTk6TW2MkwnCoifdNfhdyizUUtm81gPI+Z
+   OOb4owKSQbgm2m6cdqSZcnKm4NFuhQgLaYRqNwUUeEhO+WW4G+SR3hP6B
+   25wxEpYFbQmHzcwlLpcLgSy0wIE+12q9ryeFSi/cn+3z5yiilM+6tKUyc
+   K45+/f5sRwRiuG+TWVSiuYCOb78QDKDivWCIBgy3h8AISg0pEHaCtWaB3
+   vkqpPv46WgVVZ6DIwc7di66u79EK5sFLsM1zUS7qekNONnO8AFE2dNFPy
+   Q==;
+X-CSE-ConnectionGUID: XkTXFucGS7yBADAlK/FC8A==
+X-CSE-MsgGUID: 3Vm26Ox0QsKGXdZFinKS3Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11607"; a="64469914"
+X-IronPort-AV: E=Sophos;i="6.19,291,1754982000"; 
+   d="scan'208";a="64469914"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 05:42:50 -0800
+X-CSE-ConnectionGUID: QQKJa9E8R228iVLkys27gQ==
+X-CSE-MsgGUID: 8cM+XAQ/RtOXbssn6ByOeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,291,1754982000"; 
+   d="scan'208";a="188413415"
+Received: from lkp-server01.sh.intel.com (HELO 6ef82f2de774) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 09 Nov 2025 05:42:49 -0800
+Received: from kbuild by 6ef82f2de774 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vI5gs-00022V-2q;
+	Sun, 09 Nov 2025 13:42:46 +0000
+Date: Sun, 09 Nov 2025 21:41:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/dwc] BUILD SUCCESS
+ e8fe6b3413a1b92b4bc0f0182ea4b49ee369541b
+Message-ID: <202511092149.c2x4BBln-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <55EB0E5F655F3AFC+136b89fd-98d4-42af-a99d-a0bb05cc93f3@radxa.com>
 
-On Sun, Nov 09, 2025 at 01:42:23PM +0900, FUKAUMI Naoki wrote:
-> Hi Niklas,
-> 
-> On 11/8/25 22:27, Niklas Cassel wrote:
-> (snip)> (And btw. please test with the latest 6.18-rc, as, from experience,
-> the
-> > ASPM problems in earlier RCs can result in some weird problems that are
-> > not immediately deduced to be caused by the ASPM enablement.)
-> 
-> Here is dmesg from v6.18-rc4:
->  https://gist.github.com/RadxaNaoki/40e1d049bff4f1d2d4773a5ba0ed9dff
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc
+branch HEAD: e8fe6b3413a1b92b4bc0f0182ea4b49ee369541b  PCI: dwc: Check for the device presence during suspend and resume
 
-Same problem as before:
-[    1.732538] pci_bus 0004:43: busn_res: can not insert [bus 43-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.732645] pci_bus 0004:43: busn_res: [bus 43-41] end is updated to 43
-[    1.732651] pci_bus 0004:43: busn_res: can not insert [bus 43] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.732661] pci 0004:42:00.0: devices behind bridge are unusable because [bus 43] cannot be assigned for them
-[    1.732840] pci_bus 0004:44: busn_res: can not insert [bus 44-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.732947] pci_bus 0004:44: busn_res: [bus 44-41] end is updated to 44
-[    1.732952] pci_bus 0004:44: busn_res: can not insert [bus 44] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.732962] pci 0004:42:02.0: devices behind bridge are unusable because [bus 44] cannot be assigned for them
-[    1.733134] pci_bus 0004:45: busn_res: can not insert [bus 45-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.733246] pci_bus 0004:45: busn_res: [bus 45-41] end is updated to 45
-[    1.733255] pci_bus 0004:45: busn_res: can not insert [bus 45] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.733266] pci 0004:42:06.0: devices behind bridge are unusable because [bus 45] cannot be assigned for them
-[    1.733438] pci_bus 0004:46: busn_res: can not insert [bus 46-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.733544] pci_bus 0004:46: busn_res: [bus 46-41] end is updated to 46
-[    1.733550] pci_bus 0004:46: busn_res: can not insert [bus 46] under [bus 42-41] (conflicts with (null) [bus 42-41])
-[    1.733560] pci 0004:42:0e.0: devices behind bridge are unusable because [bus 46] cannot be assigned for them
-[    1.733571] pci_bus 0004:42: busn_res: [bus 42-41] end is updated to 46
-[    1.733575] pci_bus 0004:42: busn_res: can not insert [bus 42-46] under [bus 41] (conflicts with (null) [bus 41])
-[    1.733585] pci 0004:41:00.0: devices behind bridge are unusable because [bus 42-46] cannot be assigned for them
-[    1.733596] pcieport 0004:40:00.0: bridge has subordinate 41 but max busn 46
+elapsed time: 1614m
 
+configs tested: 119
+configs skipped: 3
 
-Seems like the ASM2806 switch, for some reason, is not ready.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-One change that Diederik pointed out is that in the "good" case,
-the link is always in Gen1 speed.
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                     nsimosci_hs_defconfig    gcc-15.1.0
+arc                   randconfig-001-20251109    gcc-12.5.0
+arc                   randconfig-002-20251109    gcc-8.5.0
+arm                               allnoconfig    clang-22
+arm                         nhk8815_defconfig    clang-22
+arm                   randconfig-001-20251109    clang-16
+arm                   randconfig-002-20251109    clang-22
+arm                   randconfig-003-20251109    clang-22
+arm                   randconfig-004-20251109    gcc-8.5.0
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20251109    gcc-15.1.0
+arm64                 randconfig-002-20251109    gcc-12.5.0
+arm64                 randconfig-003-20251109    clang-19
+arm64                 randconfig-004-20251109    gcc-8.5.0
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20251109    gcc-14.3.0
+csky                  randconfig-002-20251109    gcc-11.5.0
+hexagon                           allnoconfig    clang-22
+hexagon               randconfig-001-20251108    clang-22
+hexagon               randconfig-002-20251108    clang-22
+i386                              allnoconfig    gcc-14
+i386        buildonly-randconfig-001-20251109    gcc-14
+i386        buildonly-randconfig-002-20251109    gcc-13
+i386        buildonly-randconfig-003-20251109    clang-20
+i386        buildonly-randconfig-004-20251109    clang-20
+i386                                defconfig    clang-20
+i386                  randconfig-002-20251109    gcc-14
+i386                  randconfig-003-20251109    clang-20
+i386                  randconfig-004-20251109    clang-20
+i386                  randconfig-005-20251109    gcc-14
+i386                  randconfig-011-20251109    clang-20
+i386                  randconfig-012-20251109    clang-20
+i386                  randconfig-013-20251109    gcc-14
+i386                  randconfig-014-20251109    gcc-14
+i386                  randconfig-015-20251109    gcc-12
+i386                  randconfig-016-20251109    gcc-14
+i386                  randconfig-017-20251109    gcc-14
+loongarch                         allnoconfig    clang-22
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20251108    gcc-12.5.0
+loongarch             randconfig-002-20251108    gcc-12.5.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20251108    gcc-8.5.0
+nios2                 randconfig-002-20251108    gcc-9.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20251109    gcc-9.5.0
+parisc                randconfig-002-20251109    gcc-13.4.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                     ksi8560_defconfig    gcc-15.1.0
+powerpc               randconfig-001-20251109    clang-22
+powerpc               randconfig-002-20251109    clang-22
+powerpc                     redwood_defconfig    clang-22
+powerpc                     tqm8541_defconfig    clang-22
+powerpc                         wii_defconfig    gcc-15.1.0
+powerpc64             randconfig-001-20251109    gcc-8.5.0
+powerpc64             randconfig-002-20251109    gcc-8.5.0
+riscv                             allnoconfig    gcc-15.1.0
+riscv                               defconfig    clang-22
+s390                              allnoconfig    clang-22
+sh                                allnoconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                           se7712_defconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20251109    gcc-8.5.0
+sparc                 randconfig-002-20251109    gcc-15.1.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20251109    gcc-8.5.0
+sparc64               randconfig-002-20251109    gcc-14.3.0
+um                                allnoconfig    clang-22
+um                                  defconfig    clang-22
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20251109    gcc-13
+um                    randconfig-002-20251109    clang-17
+um                           x86_64_defconfig    clang-22
+x86_64                            allnoconfig    clang-20
+x86_64      buildonly-randconfig-001-20251109    clang-20
+x86_64      buildonly-randconfig-002-20251109    gcc-14
+x86_64      buildonly-randconfig-003-20251109    clang-20
+x86_64      buildonly-randconfig-004-20251109    clang-20
+x86_64      buildonly-randconfig-005-20251109    clang-20
+x86_64      buildonly-randconfig-006-20251109    clang-20
+x86_64                              defconfig    gcc-14
+x86_64                randconfig-001-20251109    clang-20
+x86_64                randconfig-002-20251109    clang-20
+x86_64                randconfig-003-20251109    gcc-14
+x86_64                randconfig-004-20251109    gcc-14
+x86_64                randconfig-005-20251109    gcc-14
+x86_64                randconfig-006-20251109    clang-20
+x86_64                randconfig-011-20251109    gcc-14
+x86_64                randconfig-012-20251109    clang-20
+x86_64                randconfig-013-20251109    gcc-14
+x86_64                randconfig-014-20251109    clang-20
+x86_64                randconfig-015-20251109    clang-20
+x86_64                randconfig-016-20251109    clang-20
+x86_64                randconfig-071-20251109    clang-20
+x86_64                randconfig-072-20251109    clang-20
+x86_64                randconfig-073-20251109    gcc-14
+x86_64                randconfig-074-20251109    clang-20
+x86_64                randconfig-075-20251109    gcc-14
+x86_64                randconfig-076-20251109    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20251109    gcc-13.4.0
+xtensa                randconfig-002-20251109    gcc-13.4.0
 
-Perhaps you could build with CONFIG_PCI_QUIRKS=y and try this patch:
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 214ed060ca1b..ac134d95a97f 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -96,6 +96,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
- {
- 	static const struct pci_device_id ids[] = {
- 		{ PCI_VDEVICE(ASMEDIA, 0x2824) }, /* ASMedia ASM2824 */
-+		{ PCI_VDEVICE(ASMEDIA, 0x2806) }, /* ASMedia ASM2806 */
- 		{}
- 	};
- 	u16 lnksta, lnkctl2;
-
-
-
-
-
-If that does not work, perhaps you could try this patch
-(assuming that all Rock 5C:s have a ASM2806 on pcie2x1l2):
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5c.dts b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5c.dts
-index dd7317bab613..26f8539d934a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5c.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5c.dts
-@@ -452,6 +452,7 @@ &pcie2x1l2 {
- 	pinctrl-0 = <&pcie20x1_2_perstn_m0>;
- 	reset-gpios = <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>;
- 	vpcie3v3-supply = <&pcie2x1l2_3v3>;
-+	max-link-speed = <1>;
- 	status = "okay";
- };
-
-
-
-Kind regards,
-Niklas
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
