@@ -1,212 +1,191 @@
-Return-Path: <linux-pci+bounces-40651-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40652-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 374C4C43F23
-	for <lists+linux-pci@lfdr.de>; Sun, 09 Nov 2025 14:42:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C452C43F6E
+	for <lists+linux-pci@lfdr.de>; Sun, 09 Nov 2025 15:01:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA883188C0E6
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Nov 2025 13:43:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F048F3AD86A
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Nov 2025 14:01:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01F502E7BC9;
-	Sun,  9 Nov 2025 13:42:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E95B1A317D;
+	Sun,  9 Nov 2025 14:00:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M3+nydoK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eBQt3xoL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B2026E715
-	for <linux-pci@vger.kernel.org>; Sun,  9 Nov 2025 13:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED08928E9;
+	Sun,  9 Nov 2025 14:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762695771; cv=none; b=rh04koi6/g9/0aejGBwOFOOVjf4gGq9/yh3Vl3peQzLkqdETjdNQlftIaN4qjEdbSwa7oZ9lJzrpCaRWzVQESnIqbpE6ftCBIRiRH3VzrYsu28XyILQa7kzsoksKxZKc+vcwhYMTuAxVsbF2XsLUidVbIUS7dNtR92CiD5qCX5Y=
+	t=1762696858; cv=none; b=aa/HQEH9qF7wkTa8SHDM9mTZvNz3blN7QnbHPbGsBvkcp9V2miseLNBnkWdMC1vHteG1KKX9c82MUC/Qz/SLBmnNG0Xbas7/bvROY/0RvkrTXLrEiMks6L4NJOslCxNk6l97Wlqcy/c+C5apD/t5B4XnpwywxvsgTq/KumIJe18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762695771; c=relaxed/simple;
-	bh=vdiRyUz2JP7aiCsI5Ie3p4Ld411xX9iSGnk2FgYYWuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Kt3CY4T+u7PfFR4m9t6F1JaEew0zU2TYPNtf8ZyY0Am7Y7vRAH9U4ek8YtbCDqrxB/KV7GMdCXJixqAoJgXv5mR798p0KKzL8wRvoPKHNalGMmitBmfGxtEuHksqsbzuLrrhj3++UtwKmrCE7LaS+PW0j95QoU4s8IQ5VVgkd3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M3+nydoK; arc=none smtp.client-ip=198.175.65.20
+	s=arc-20240116; t=1762696858; c=relaxed/simple;
+	bh=qRmvRrnare0TWk/dp4GNb0PQAxXpydFLfOVO9gdJJl8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sPPdjgC3LuKKTc9RW7en7Byq57mMh2765R3saCVOWEAfdO50vXlJJWdG9v/9NB2BFbHd0jalowrlRHLEwJzJsdHQALM87fukW0F7Wfa95iWg1od+OHOEpL0opifWtwZSPtgwOmgaSsh0sTCWiHr7YuXn/dE/FhhYsOrHsXit/2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eBQt3xoL; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762695770; x=1794231770;
-  h=date:from:to:cc:subject:message-id;
-  bh=vdiRyUz2JP7aiCsI5Ie3p4Ld411xX9iSGnk2FgYYWuQ=;
-  b=M3+nydoKxt/cwK/qqql9T+Mf5eT6/HeThhSQjnuUHX8KcHhVMKeshB/A
-   VSgdlyjtInbrByQAYmebTsgCTk6TW2MkwnCoifdNfhdyizUUtm81gPI+Z
-   OOb4owKSQbgm2m6cdqSZcnKm4NFuhQgLaYRqNwUUeEhO+WW4G+SR3hP6B
-   25wxEpYFbQmHzcwlLpcLgSy0wIE+12q9ryeFSi/cn+3z5yiilM+6tKUyc
-   K45+/f5sRwRiuG+TWVSiuYCOb78QDKDivWCIBgy3h8AISg0pEHaCtWaB3
-   vkqpPv46WgVVZ6DIwc7di66u79EK5sFLsM1zUS7qekNONnO8AFE2dNFPy
-   Q==;
-X-CSE-ConnectionGUID: XkTXFucGS7yBADAlK/FC8A==
-X-CSE-MsgGUID: 3Vm26Ox0QsKGXdZFinKS3Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11607"; a="64469914"
+  t=1762696856; x=1794232856;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qRmvRrnare0TWk/dp4GNb0PQAxXpydFLfOVO9gdJJl8=;
+  b=eBQt3xoLFuZWA8XFt9ADpn325FmRJA36Jss9qCDYWM04gX1RIVuGUIxJ
+   rKMdr1zYX74fWe2SRHuLUz4Kvm/sgn3ayPxcUuYSuOjLeh1sYwP+ZuYf3
+   V+aa6ySNsQyyEFcdQi+qsbn8Wldl1FP48T1lq4sBMZ9jUGanhnifff0ct
+   vNq4Os1j+eTDV+Vuei1FvedAijnTb4m0FavuMmJryZcE9641vXzkN5ikA
+   NbH0yrsj+8WU66KYiMQH1R5T5VVoNJ4O0hF1Un7vZ84baXV+cvu0Pze5N
+   BpPFwbFbx8bM02zE2dKRDqrKAJLBDjyadFtacFv/F3FXD5woblpWUnIlv
+   A==;
+X-CSE-ConnectionGUID: H0863HC9Tw+qK9IsLNdDgw==
+X-CSE-MsgGUID: JJeb9jjVTSCnZTvT4aLVXA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11607"; a="63978175"
 X-IronPort-AV: E=Sophos;i="6.19,291,1754982000"; 
-   d="scan'208";a="64469914"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 05:42:50 -0800
-X-CSE-ConnectionGUID: QQKJa9E8R228iVLkys27gQ==
-X-CSE-MsgGUID: 8cM+XAQ/RtOXbssn6ByOeg==
+   d="scan'208";a="63978175"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 06:00:55 -0800
+X-CSE-ConnectionGUID: wak9vCs2R62rKxC/6PUr/g==
+X-CSE-MsgGUID: mY/wPM1hQTq/TlKA2wytsg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,291,1754982000"; 
-   d="scan'208";a="188413415"
+   d="scan'208";a="225718384"
 Received: from lkp-server01.sh.intel.com (HELO 6ef82f2de774) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 09 Nov 2025 05:42:49 -0800
+  by orviesa001.jf.intel.com with ESMTP; 09 Nov 2025 06:00:51 -0800
 Received: from kbuild by 6ef82f2de774 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1vI5gs-00022V-2q;
-	Sun, 09 Nov 2025 13:42:46 +0000
-Date: Sun, 09 Nov 2025 21:41:54 +0800
+	id 1vI5yL-00023L-0H;
+	Sun, 09 Nov 2025 14:00:49 +0000
+Date: Sun, 9 Nov 2025 21:59:50 +0800
 From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/dwc] BUILD SUCCESS
- e8fe6b3413a1b92b4bc0f0182ea4b49ee369541b
-Message-ID: <202511092149.c2x4BBln-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+To: hans.zhang@cixtech.com, bhelgaas@google.com, helgaas@kernel.org,
+	lpieralisi@kernel.org, kw@linux.com, mani@kernel.org,
+	robh@kernel.org, kwilczynski@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, mpillai@cadence.com,
+	fugang.duan@cixtech.com, guoyin.chen@cixtech.com,
+	peter.chen@cixtech.com, cix-kernel-upstream@cixtech.com,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 03/10] PCI: cadence: Move PCIe RP common functions to
+ a separate file
+Message-ID: <202511092106.mkNV0iyb-lkp@intel.com>
+References: <20251108140305.1120117-4-hans.zhang@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251108140305.1120117-4-hans.zhang@cixtech.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc
-branch HEAD: e8fe6b3413a1b92b4bc0f0182ea4b49ee369541b  PCI: dwc: Check for the device presence during suspend and resume
+Hi,
 
-elapsed time: 1614m
+kernel test robot noticed the following build warnings:
 
-configs tested: 119
-configs skipped: 3
+[auto build test WARNING on 6146a0f1dfae5d37442a9ddcba012add260bceb0]
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+url:    https://github.com/intel-lab-lkp/linux/commits/hans-zhang-cixtech-com/PCI-cadence-Add-module-support-for-platform-controller-driver/20251108-220607
+base:   6146a0f1dfae5d37442a9ddcba012add260bceb0
+patch link:    https://lore.kernel.org/r/20251108140305.1120117-4-hans.zhang%40cixtech.com
+patch subject: [PATCH v11 03/10] PCI: cadence: Move PCIe RP common functions to a separate file
+config: i386-randconfig-014-20251109 (https://download.01.org/0day-ci/archive/20251109/202511092106.mkNV0iyb-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251109/202511092106.mkNV0iyb-lkp@intel.com/reproduce)
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                     nsimosci_hs_defconfig    gcc-15.1.0
-arc                   randconfig-001-20251109    gcc-12.5.0
-arc                   randconfig-002-20251109    gcc-8.5.0
-arm                               allnoconfig    clang-22
-arm                         nhk8815_defconfig    clang-22
-arm                   randconfig-001-20251109    clang-16
-arm                   randconfig-002-20251109    clang-22
-arm                   randconfig-003-20251109    clang-22
-arm                   randconfig-004-20251109    gcc-8.5.0
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20251109    gcc-15.1.0
-arm64                 randconfig-002-20251109    gcc-12.5.0
-arm64                 randconfig-003-20251109    clang-19
-arm64                 randconfig-004-20251109    gcc-8.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20251109    gcc-14.3.0
-csky                  randconfig-002-20251109    gcc-11.5.0
-hexagon                           allnoconfig    clang-22
-hexagon               randconfig-001-20251108    clang-22
-hexagon               randconfig-002-20251108    clang-22
-i386                              allnoconfig    gcc-14
-i386        buildonly-randconfig-001-20251109    gcc-14
-i386        buildonly-randconfig-002-20251109    gcc-13
-i386        buildonly-randconfig-003-20251109    clang-20
-i386        buildonly-randconfig-004-20251109    clang-20
-i386                                defconfig    clang-20
-i386                  randconfig-002-20251109    gcc-14
-i386                  randconfig-003-20251109    clang-20
-i386                  randconfig-004-20251109    clang-20
-i386                  randconfig-005-20251109    gcc-14
-i386                  randconfig-011-20251109    clang-20
-i386                  randconfig-012-20251109    clang-20
-i386                  randconfig-013-20251109    gcc-14
-i386                  randconfig-014-20251109    gcc-14
-i386                  randconfig-015-20251109    gcc-12
-i386                  randconfig-016-20251109    gcc-14
-i386                  randconfig-017-20251109    gcc-14
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251108    gcc-12.5.0
-loongarch             randconfig-002-20251108    gcc-12.5.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251108    gcc-8.5.0
-nios2                 randconfig-002-20251108    gcc-9.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20251109    gcc-9.5.0
-parisc                randconfig-002-20251109    gcc-13.4.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                     ksi8560_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20251109    clang-22
-powerpc               randconfig-002-20251109    clang-22
-powerpc                     redwood_defconfig    clang-22
-powerpc                     tqm8541_defconfig    clang-22
-powerpc                         wii_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20251109    gcc-8.5.0
-powerpc64             randconfig-002-20251109    gcc-8.5.0
-riscv                             allnoconfig    gcc-15.1.0
-riscv                               defconfig    clang-22
-s390                              allnoconfig    clang-22
-sh                                allnoconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                           se7712_defconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251109    gcc-8.5.0
-sparc                 randconfig-002-20251109    gcc-15.1.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20251109    gcc-8.5.0
-sparc64               randconfig-002-20251109    gcc-14.3.0
-um                                allnoconfig    clang-22
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251109    gcc-13
-um                    randconfig-002-20251109    clang-17
-um                           x86_64_defconfig    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64      buildonly-randconfig-001-20251109    clang-20
-x86_64      buildonly-randconfig-002-20251109    gcc-14
-x86_64      buildonly-randconfig-003-20251109    clang-20
-x86_64      buildonly-randconfig-004-20251109    clang-20
-x86_64      buildonly-randconfig-005-20251109    clang-20
-x86_64      buildonly-randconfig-006-20251109    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20251109    clang-20
-x86_64                randconfig-002-20251109    clang-20
-x86_64                randconfig-003-20251109    gcc-14
-x86_64                randconfig-004-20251109    gcc-14
-x86_64                randconfig-005-20251109    gcc-14
-x86_64                randconfig-006-20251109    clang-20
-x86_64                randconfig-011-20251109    gcc-14
-x86_64                randconfig-012-20251109    clang-20
-x86_64                randconfig-013-20251109    gcc-14
-x86_64                randconfig-014-20251109    clang-20
-x86_64                randconfig-015-20251109    clang-20
-x86_64                randconfig-016-20251109    clang-20
-x86_64                randconfig-071-20251109    clang-20
-x86_64                randconfig-072-20251109    clang-20
-x86_64                randconfig-073-20251109    gcc-14
-x86_64                randconfig-074-20251109    clang-20
-x86_64                randconfig-075-20251109    gcc-14
-x86_64                randconfig-076-20251109    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20251109    gcc-13.4.0
-xtensa                randconfig-002-20251109    gcc-13.4.0
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511092106.mkNV0iyb-lkp@intel.com/
 
---
+All warnings (new ones prefixed by >>):
+
+   drivers/pci/controller/cadence/pcie-cadence-host-common.c: In function 'cdns_pcie_host_bar_config':
+>> drivers/pci/controller/cadence/pcie-cadence-host-common.c:188:23: warning: variable 'pci_addr' set but not used [-Wunused-but-set-variable]
+     188 |         u64 cpu_addr, pci_addr, size, winsize;
+         |                       ^~~~~~~~
+
+
+vim +/pci_addr +188 drivers/pci/controller/cadence/pcie-cadence-host-common.c
+
+   183	
+   184	int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
+   185				      struct resource_entry *entry,
+   186				      cdns_pcie_host_bar_ib_cfg pci_host_ib_config)
+   187	{
+ > 188		u64 cpu_addr, pci_addr, size, winsize;
+   189		struct cdns_pcie *pcie = &rc->pcie;
+   190		struct device *dev = pcie->dev;
+   191		enum cdns_pcie_rp_bar bar;
+   192		unsigned long flags;
+   193		int ret;
+   194	
+   195		cpu_addr = entry->res->start;
+   196		pci_addr = entry->res->start - entry->offset;
+   197		flags = entry->res->flags;
+   198		size = resource_size(entry->res);
+   199	
+   200		while (size > 0) {
+   201			/*
+   202			 * Try to find a minimum BAR whose size is greater than
+   203			 * or equal to the remaining resource_entry size. This will
+   204			 * fail if the size of each of the available BARs is less than
+   205			 * the remaining resource_entry size.
+   206			 *
+   207			 * If a minimum BAR is found, IB ATU will be configured and
+   208			 * exited.
+   209			 */
+   210			bar = cdns_pcie_host_find_min_bar(rc, size);
+   211			if (bar != RP_BAR_UNDEFINED) {
+   212				ret = pci_host_ib_config(rc, bar, cpu_addr, size, flags);
+   213				if (ret)
+   214					dev_err(dev, "IB BAR: %d config failed\n", bar);
+   215				return ret;
+   216			}
+   217	
+   218			/*
+   219			 * If the control reaches here, it would mean the remaining
+   220			 * resource_entry size cannot be fitted in a single BAR. So we
+   221			 * find a maximum BAR whose size is less than or equal to the
+   222			 * remaining resource_entry size and split the resource entry
+   223			 * so that part of resource entry is fitted inside the maximum
+   224			 * BAR. The remaining size would be fitted during the next
+   225			 * iteration of the loop.
+   226			 *
+   227			 * If a maximum BAR is not found, there is no way we can fit
+   228			 * this resource_entry, so we error out.
+   229			 */
+   230			bar = cdns_pcie_host_find_max_bar(rc, size);
+   231			if (bar == RP_BAR_UNDEFINED) {
+   232				dev_err(dev, "No free BAR to map cpu_addr %llx\n",
+   233					cpu_addr);
+   234				return -EINVAL;
+   235			}
+   236	
+   237			winsize = bar_max_size[bar];
+   238			ret = pci_host_ib_config(rc, bar, cpu_addr, winsize, flags);
+   239			if (ret) {
+   240				dev_err(dev, "IB BAR: %d config failed\n", bar);
+   241				return ret;
+   242			}
+   243	
+   244			size -= winsize;
+   245			cpu_addr += winsize;
+   246		}
+   247	
+   248		return 0;
+   249	}
+   250	
+
+-- 
 0-DAY CI Kernel Test Service
 https://github.com/intel/lkp-tests/wiki
 
