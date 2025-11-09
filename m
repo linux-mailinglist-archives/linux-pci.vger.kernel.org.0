@@ -1,187 +1,131 @@
-Return-Path: <linux-pci+bounces-40648-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40649-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 659CBC43993
-	for <lists+linux-pci@lfdr.de>; Sun, 09 Nov 2025 07:51:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C10BC43BA9
+	for <lists+linux-pci@lfdr.de>; Sun, 09 Nov 2025 11:25:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F30D21889BC1
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Nov 2025 06:52:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44D8218896CA
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Nov 2025 10:25:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67496770FE;
-	Sun,  9 Nov 2025 06:51:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 011C32D641D;
+	Sun,  9 Nov 2025 10:25:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NsMdolEI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PTAzi+ON"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA8E883F;
-	Sun,  9 Nov 2025 06:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879BE2D5932
+	for <linux-pci@vger.kernel.org>; Sun,  9 Nov 2025 10:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762671110; cv=none; b=OT0/Oo72fQ/ghUUK8SDcyQjL9gU+eNuM1ZbD/4KxSikZ2RgqOufOtNjUBMn7QgP2fpqHgn49Z7GrZHniBs+2TWoHrMF2PP7wp0i9Wj/xWmKSZ7+/iPVm4FDYsOSx1qwbkS9+wn4XD/anDLPcHBthGs8//DJYThZytHOEysnetmI=
+	t=1762683917; cv=none; b=fP2pSTYhDL++kqWyE6K2uK9u6ooakgp9/0ruk7n9ZFCrdy6+rD/ecXHqgWPpGgMhYv3EVHR12Ot/7Xe/2yQFXODAhSuolDT8lX+Lf849ZAKqk2TG2Fc6Ch+DhvfcnpEo8uaukbhtnlxy+P6nRv8G3dHuHlQWvPkY/Mz5Mj3X/RI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762671110; c=relaxed/simple;
-	bh=MjDOt2y11QmzHF2gEFJK2lQgeHlq6vkMc5A4XeB0RbY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RMBIh6NUHdbJunTrL3C7fdQy/wD4DLr57MdMxRQlFmKbpM0/UPVPZ6L2nTQRkCLGoOvdr32leQsOiwczu3x4QbeCh1yGtK40SkNElbTG6ln4adqyZ8JkaE32tfzaAcQZNLIlE3WfupBfKWkhQMJQ3fu4HcrT5zdBt0/ZB+E5lD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NsMdolEI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BBBAC116B1;
-	Sun,  9 Nov 2025 06:51:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762671109;
-	bh=MjDOt2y11QmzHF2gEFJK2lQgeHlq6vkMc5A4XeB0RbY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NsMdolEIRb19jC0QwXU10fbcgYllK8QpXG4ZtQ1RvzQeEswgBQsd5paSLvdSsxOCD
-	 rbApSj1I/q0dfl/0kCIDROZpWhMscQDc9VOsS6fHSHMYWENwW3cnkuRPunjvNF+sMQ
-	 uaTCZ7AxHQBlOIMQZnTxQvZ0xTyeoRmv3KGnz8QirfXVCNfEmFbYegDOsiSN/dCE+l
-	 +wCcu+TYf02hfSC8pP/pzq9Z3x4ARgErD5HvTX43EcIlaz6py6nEMXnxk4Ja9NmOuR
-	 ReykoaaBA1tpr16Zuvfqt5SSKu+ensPUI6SP9dzxgWundkTLamXvMHqRsGvGh/Tejf
-	 Ysb2jEM3uQ4lw==
-Date: Sun, 9 Nov 2025 08:51:39 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: dave.hansen@linux.intel.com, peterz@infradead.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-	Balbir Singh <balbirs@nvidia.com>, Ingo Molnar <mingo@kernel.org>,
-	Kees Cook <kees@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	"Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>
-Subject: Re: [PATCH] x86/kaslr: P2PDMA is one of a class of ZONE_DEVICE-KASLR
- collisions
-Message-ID: <aRA5-wgo6bm_TA74@kernel.org>
-References: <20251108023215.2984031-1-dan.j.williams@intel.com>
+	s=arc-20240116; t=1762683917; c=relaxed/simple;
+	bh=aTj+xi1dNvcUs59gPpu5k/cwPtbqdjHMItUzYc4T4H8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R4xmjOYZmljaWW+tx8JZEA4Y4IEem3qxqsaBA1wUrKakNp3WUteV7lRcfIGZ/bpMPnzYW86uCArgwuXq3+CwXpU0vraDGov+jJtHMQqqSb+VB3PZBIPIC0YAWu2aLZCCOEhqZ0oZY54qqmzUZmhdtkEeY5yJesNRsBgbpvLSEhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PTAzi+ON; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-343641ceb62so276605a91.1
+        for <linux-pci@vger.kernel.org>; Sun, 09 Nov 2025 02:25:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762683916; x=1763288716; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TY4/B0HvJE+qTQFqM/P/T84yDE9f54fdQMk2u26RaLo=;
+        b=PTAzi+ONCWCLiiSb+RXZBrDtoEeA4zpt+ZloHAn2PXMpf/iDBkNbEi9vhSCs1l2Uwh
+         27f2qwohI9FGUwSZdzuGepkmAwljd5qGp3SKmXyXdG4/kv2F0kXy6u/M/RlAFHi7Ol/I
+         JNXa0nRQHPawfdoyLvnR+3dn/gm993WiyTgCDHFz1TDTRHc0BBmWZiA4xOoJwz8VKV5f
+         h3kmAD5L67Bmp8GTyezcTW4Dr9sSK7Grok65NwpC6fAfTODNBvewFWFwC8yXu26nergb
+         MabqGxOlAuykwGZ+wwxA88JBsPNuuTEWp7D1hMCaXgVCDDW4tBfof7U9oSve5x7ocMDb
+         UcYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762683916; x=1763288716;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=TY4/B0HvJE+qTQFqM/P/T84yDE9f54fdQMk2u26RaLo=;
+        b=NElaGV244bIcxy3yohFJM3OYvx03WZRD2ohszK9FXfogDffATUHI8KoMkrE7YG1OOs
+         aSTczsRizkl15X5t8KApQ61s2eU324Q//ZTmBtKafwLuZYD1JSqZQSASJDeCjPWUoA9u
+         KtU5KpepauQrz7J3cty2ED8PInRqi2FVUhgq/bjDUe81GeQgf+OCx/uPiDT5GBblMUKZ
+         qlnaGotMvqVs3v0it/jM4RkqMBNnVW9jnFuDaJDUR7JW+SiUpYB9fmAHFPjB7K91fsF9
+         PEhjj5oPoZJJMcHOROJ9bPJO4hQUzKHhFbLDBZQj3Q82NjsSfVIb0vgK5zSQnA1JAL0C
+         WdUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUrv4AokXTbtHZ+IOxUOa2hK7paOa1bHJKQZUD2ui4wUme8pH5wxj0thm2ewlty76coaku2vhX2u6s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfVeiWhdMfXN5uxPmNYWKfweuPW6dIs+U2oaucJORw2ZVV4LdZ
+	MUlPpWHqHGmCRVkS7Rv+YccvcTNiohH8kOqEGsV9KF2Q1m8BIwwBtffOv4rHf21kon+fPcwBk8Y
+	Oy4K6lLdaX0WaLSxy/Nf38U3ypkz3y6c=
+X-Gm-Gg: ASbGnct3i9EeTW4Wx576Zm6rpMC6rjzOsATfzgQE0QA04gCl4ZDI/Q5iMKeS4/axVE0
+	zd3cxQcoZsKEdOx2zFv8v4pIAdnkwKAa+fBa/ex8QoUv3lUqrUp0ek0NXp3LS2Aekr53I04WCxw
+	3m3hZXpEdy6RLNuJJ5MxoBcsl50BIl92SQaAsMIQKBPtjB54bNyGUvtfh1Co/XlUdNqE2wmFKQ4
+	Q9Z0cj4+qXzvwzZAUVntCTAS835aNgdoCoeZbh5S/HWuHRbiu3FaVq28QYBew3dVqqDXEXFDw4d
+	8z04fxCifQ6rX38oA1QKhmk/bDfImob7umsiUPMSgVPT7hljD422TctOE80r2Ys98QaQpNexV2Z
+	5n2sHXJPLeVzTmg==
+X-Google-Smtp-Source: AGHT+IGQaikK6vNNCjPVJeuplJDKBJe3N+BOuc4E9oBGcfkuiKRHIvOyik2Rqu1v9UYf81SQNtrIpb/0+IN8q6el/3k=
+X-Received: by 2002:a17:902:d4c8:b0:297:fe30:3b94 with SMTP id
+ d9443c01a7336-297fe304a7fmr17893915ad.9.1762683915716; Sun, 09 Nov 2025
+ 02:25:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251108023215.2984031-1-dan.j.williams@intel.com>
+References: <20251027200547.1038967-1-markus.probst@posteo.de>
+ <DDVLMBC40199.2BVFYHDGQP4Q4@kernel.org> <cf50c6db2106a900f2b9b3e11e477617d8cbb04a.camel@posteo.de>
+ <CANiq72nhhji-cz2T2Cg9y5AwUwcc9q1Hd=-6J=6TafaxcHZHeA@mail.gmail.com> <d0f1effa5352959191ea8525963e84a832026dee.camel@posteo.de>
+In-Reply-To: <d0f1effa5352959191ea8525963e84a832026dee.camel@posteo.de>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 9 Nov 2025 11:25:03 +0100
+X-Gm-Features: AWmQ_blh3zXPBDBa2xOppsa0rLUtvjo_85ItJVX54L8bAP5DoouwDP0v002pXaE
+Message-ID: <CANiq72mmb7oH_3bj8_EwMA8RGg6M9TjWj+ebbaEQV-RxLx1iBw@mail.gmail.com>
+Subject: Re: [PATCH v7 0/2] rust: leds: add led classdev abstractions
+To: Markus Probst <markus.probst@posteo.de>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Leon Romanovsky <leon@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	bjorn3_gh@protonmail.com, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-leds@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 07, 2025 at 06:32:15PM -0800, Dan Williams wrote:
-> Commit 7ffb791423c7 ("x86/kaslr: Reduce KASLR entropy on most x86 systems")
-> is too narrow. ZONE_DEVICE, in general, lets any physical address be added
-> to the direct-map. I.e. not only ACPI hotplug ranges, CXL Memory Windows,
-> or EFI Specific Purpose Memory, but also any PCI MMIO range for the
-> CONFIG_DEVICE_PRIVATE and CONFIG_PCI_P2PDMA cases.
-> 
-> A potential path to recover entropy would be to walk ACPI and determine the
-> limits for hotplug and PCI MMIO before kernel_randomize_memory(). On
-> smaller systems that could yield some KASLR address bits. This needs
-> additional investigation to determine if some limited ACPI table scanning
-> can happen this early without an open coded solution like
-> arch/x86/boot/compressed/acpi.c needs to deploy.
-> 
-> Cc: Balbir Singh <balbirs@nvidia.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Kees Cook <kees@kernel.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>
-> Fixes: 7ffb791423c7 ("x86/kaslr: Reduce KASLR entropy on most x86 systems")
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/pci/Kconfig |  6 ------
->  mm/Kconfig          | 12 ++++++++----
->  arch/x86/mm/kaslr.c | 10 +++++-----
->  3 files changed, 13 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index f94f5d384362..47e466946bed 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -207,12 +207,6 @@ config PCI_P2PDMA
->  	  P2P DMA transactions must be between devices behind the same root
->  	  port.
->  
-> -	  Enabling this option will reduce the entropy of x86 KASLR memory
-> -	  regions. For example - on a 46 bit system, the entropy goes down
-> -	  from 16 bits to 15 bits. The actual reduction in entropy depends
-> -	  on the physical address bits, on processor features, kernel config
-> -	  (5 level page table) and physical memory present on the system.
-> -
->  	  If unsure, say N.
->  
->  config PCI_LABEL
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 0e26f4fc8717..d17ebcc1a029 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -1128,10 +1128,14 @@ config ZONE_DEVICE
->  	  Device memory hotplug support allows for establishing pmem,
->  	  or other device driver discovered memory regions, in the
->  	  memmap. This allows pfn_to_page() lookups of otherwise
-> -	  "device-physical" addresses which is needed for using a DAX
-> -	  mapping in an O_DIRECT operation, among other things.
-> -
-> -	  If FS_DAX is enabled, then say Y.
-> +	  "device-physical" addresses which is needed for DAX, PCI_P2PDMA, and
-> +	  DEVICE_PRIVATE features among others.
-> +
-> +	  Enabling this option will reduce the entropy of x86 KASLR memory
-> +	  regions. For example - on a 46 bit system, the entropy goes down
-> +	  from 16 bits to 15 bits. The actual reduction in entropy depends
-> +	  on the physical address bits, on processor features, kernel config
-> +	  (5 level page table) and physical memory present on the system.
->  
->  #
->  # Helpers to mirror range of the CPU page tables of a process into device page
-> diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-> index 3c306de52fd4..834641c6049a 100644
-> --- a/arch/x86/mm/kaslr.c
-> +++ b/arch/x86/mm/kaslr.c
-> @@ -115,12 +115,12 @@ void __init kernel_randomize_memory(void)
->  
->  	/*
->  	 * Adapt physical memory region size based on available memory,
-> -	 * except when CONFIG_PCI_P2PDMA is enabled. P2PDMA exposes the
-> -	 * device BAR space assuming the direct map space is large enough
-> -	 * for creating a ZONE_DEVICE mapping in the direct map corresponding
-> -	 * to the physical BAR address.
-> +	 * except when CONFIG_ZONE_DEVICE is enabled. ZONE_DEVICE wants to map
-> +	 * any physical address into the direct-map. KASLR wants to reliably
-> +	 * steal some physical address bits. Those design choices are in direct
-> +	 * conflict.
->  	 */
-> -	if (!IS_ENABLED(CONFIG_PCI_P2PDMA) && (memory_tb < kaslr_regions[0].size_tb))
-> +	if (!IS_ENABLED(CONFIG_ZONE_DEVICE) && (memory_tb < kaslr_regions[0].size_tb))
->  		kaslr_regions[0].size_tb = memory_tb;
+On Sat, Nov 8, 2025 at 3:49=E2=80=AFPM Markus Probst <markus.probst@posteo.=
+de> wrote:
+>
+> Could you please clarify if there would be other responsibilities to it
+> than code reviews and adapting the code to breaking changes from the
+> LED Subsystem (I assume I will be notified in that event).
 
-A stupid question, why we adjust virtual kaslr to actual physical memory
-size at all rather than always use maximal addressable size?
-  
->  	/*
-> 
-> base-commit: 6146a0f1dfae5d37442a9ddcba012add260bceb0
-> -- 
-> 2.51.0
-> 
+It depends on the case, e.g. if the LED maintainers prefer that you
+manage your own tree and send PRs to them.
 
--- 
-Sincerely yours,
-Mike.
+But, generally speaking, a kernel maintainer takes care of a few more
+things, e.g. triaging bugs, fixing issues, tracking patches, deciding
+which releases a patch should go into (backporting), etc. Some details
+at:
+
+    https://docs.kernel.org/maintainer/feature-and-driver-maintainers.html#=
+responsibilities
+
+This is not meant to discourage you, of course -- being a kernel
+maintainer is a fairly unique experience. Now, how much it is wildly
+varies depending on what code it is, e.g. how many changes go through
+the C side, how many users/callers you have etc.
+
+I hope that helps!
+
+Cheers,
+Miguel
 
