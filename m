@@ -1,63 +1,60 @@
-Return-Path: <linux-pci+bounces-40654-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40655-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 827A2C442AF
-	for <lists+linux-pci@lfdr.de>; Sun, 09 Nov 2025 17:49:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8E10C44304
+	for <lists+linux-pci@lfdr.de>; Sun, 09 Nov 2025 18:01:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7130C4E2CA4
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Nov 2025 16:49:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55E833B0D86
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Nov 2025 17:01:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 134F92FE56C;
-	Sun,  9 Nov 2025 16:49:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFBFF2FFDC9;
+	Sun,  9 Nov 2025 17:01:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P9RwGyyR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jKxieL0p"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E901AA7BF;
-	Sun,  9 Nov 2025 16:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3AF2E173B;
+	Sun,  9 Nov 2025 17:01:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762706955; cv=none; b=NwYCPQBRN6w1T70r/3YhgWRKOUoKJn2wKh5EetkjqIdjlra39+E7za9pTnX2FHuPYhVLOo5V09Bv7CLE5ArPWa2tCq1HUvZLqTPFWD/1HUTQYWHvxBVJXlRAU7M2ys0RsrvvBJj8ckL9yfWEtdpSNpO/o30sdLGPVo8WZ12jpS4=
+	t=1762707708; cv=none; b=n4urGldbQZ5NBZjUpFXol3rFkrsenHunReFRwOV9/wYLm5vsCWgMZeigw7jY3OrlWaFm90yNuno/3XMzFu5Cq1fBd/daM1ARg7t/MNw9xgqET/5Iq2PkKfwc7ro1LJzt1J1oLsjlBG5G6AlKeEP5DGe9mxIhXifjKAJyrCWX2gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762706955; c=relaxed/simple;
-	bh=n4hSzcHd13twCNudNTmDw4sXbKY11Ss4Ov/R5YPLLzw=;
+	s=arc-20240116; t=1762707708; c=relaxed/simple;
+	bh=fo6RnCcC6+xCBiWx8ezB7q67nBjsPLn9NX71+SjOlmI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lHWoBZK1BXE0EBbXOAVGQZ9e11LpN68VsxVGfua5Itwm80pDhrX28/hTm1aVWl1MV8qGQLIlRTewN0klnD3fbzFp09uKpuf6X2GUEdojX2VLiiKWAjS979aDQyfNWy4GytMmVmGtbxUo4d8F1u/uHeGXSAQrhx4DzPCHVvpCfeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P9RwGyyR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9B13C4CEF7;
-	Sun,  9 Nov 2025 16:49:04 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=DWsD3BdAOr4ivklSRIe73GEV2s3ZeUvxMiXyUpLq7AMjoJr+u0oSvie/IKr/ggY0yxcuiyhMrD7jmDrGCU7K0WJHV9Qsg4pWK9euqBgD7H4dnj07vbmMYhfM3SiIvaukP8ErOWKZMUQXf1u93LUAgYHvqG7LUL9kF7ua4gVPw5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jKxieL0p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A75C116B1;
+	Sun,  9 Nov 2025 17:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762706954;
-	bh=n4hSzcHd13twCNudNTmDw4sXbKY11Ss4Ov/R5YPLLzw=;
+	s=k20201202; t=1762707706;
+	bh=fo6RnCcC6+xCBiWx8ezB7q67nBjsPLn9NX71+SjOlmI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P9RwGyyRA/kvUZWhJ5Obm4NXxCl4uM4orfTPuniXCdZfAVOOzHZ9AJtzYDn9LefRh
-	 JrCHXAYpxOesbk+4SZirluizDJPcZ4M/KXKJXVkDq2OPSZ0VooIlqmiCchzXVeQPo1
-	 NiZvrUlAld7U8AJfIqWde+gCYMDVim8pSicYR8+NW8qIuZm2eTpuAmTJSgH73QY+nf
-	 ZLvtPqNr5tE2wFohMEIJ37oxkFGp9I9Mg3oQ7a8y+VE3Lh3L455cJsqoyBtg+ut0ss
-	 tDZsmllo/KU0y94eAGMXxaEbOJAblOTxQlDCDF5iZqpJrXb/NWXAadGl7XkcN4tf6a
-	 ubAZJ6wX5K0Hw==
-Date: Sun, 9 Nov 2025 22:18:58 +0530
+	b=jKxieL0psnA3JStnPdJ0GRnPuUwFlUYceI8t3CyNv5+hRse7IA1a8Z0uVjZWbJyld
+	 bNn5B9Nj4/XVglF3vUC1cJDjrwDBq5F7wJlQahSMEHXUYYf8zh3HFpV+R1e0BnqfDd
+	 Bb0JKXemnCW0vyk/3R1k7bvh5tftzwg85NlnkJ5F5yn8uGh0FNIcMz/nxQsu+FmaNZ
+	 myCQxq6Hr4EcqgLFJJAm3TfkrirZ70nyVVUuNsyB6ZjSAxjeWElwJ/ubqWDAng2i+L
+	 CO6xsB4+NiSvjryeIytRcT4AGauG5LzUZfeL83SRqsDGwROKwWUyWLsVJUyB7ZxtxZ
+	 X1WLsHh6FunZQ==
+Date: Sun, 9 Nov 2025 22:31:29 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Abraham I <kishon@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: qcom: Enforce check for PHY,
- PERST# properties
-Message-ID: <3wxfj3w2ilgmmmvntng4yohvorz3tn54egnyltg3dd3fwk67yq@f5p62em6sg2g>
-References: <20251106-pci-binding-v2-0-bebe9345fc4b@oss.qualcomm.com>
- <20251106-pci-binding-v2-1-bebe9345fc4b@oss.qualcomm.com>
- <20251108-toad-of-hypothetical-opportunity-ebfa74@kuoka>
+To: kernel test robot <lkp@intel.com>
+Cc: hans.zhang@cixtech.com, bhelgaas@google.com, helgaas@kernel.org, 
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, kwilczynski@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, oe-kbuild-all@lists.linux.dev, 
+	mpillai@cadence.com, fugang.duan@cixtech.com, guoyin.chen@cixtech.com, 
+	peter.chen@cixtech.com, cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 03/10] PCI: cadence: Move PCIe RP common functions to
+ a separate file
+Message-ID: <xiaf3qvskwrqr7riradv6jnt5jmwcgenfr6mss5wtlddmxuwoa@ke2kdaq6adqz>
+References: <20251108140305.1120117-4-hans.zhang@cixtech.com>
+ <202511092106.mkNV0iyb-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,83 +64,117 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251108-toad-of-hypothetical-opportunity-ebfa74@kuoka>
+In-Reply-To: <202511092106.mkNV0iyb-lkp@intel.com>
 
-On Sat, Nov 08, 2025 at 12:59:50PM +0100, Krzysztof Kozlowski wrote:
-> On Thu, Nov 06, 2025 at 04:57:16PM +0530, Manivannan Sadhasivam wrote:
-> > Currently, the binding supports specifying the required PHY, PERST#
-> > properties in two ways:
-> > 
-> > 1. Controller node (deprecated)
-> > 	- phys
-> > 	- perst-gpios
-> > 
-> > 2. Root Port node
-> > 	- phys
-> > 	- reset-gpios
-> > 
-> > But there is no check to make sure that the both variants are not mixed.
-> > For instance, if the Controller node specifies 'phys', 'reset-gpios',
+On Sun, Nov 09, 2025 at 09:59:50PM +0800, kernel test robot wrote:
+> Hi,
 > 
-> Schema already does not allow it, unless I missed which schema defines
-> reset-gpios in controller node.
+> kernel test robot noticed the following build warnings:
 > 
-
-'reset-gpios' is currently a valid property for both controller and Root Port
-nodes. Where does the schema restricts it?
-
-> > or if the Root Port node specifies 'phys', 'perst-gpios', then the driver
-> > will fail as reported. Hence, enforce the check in the binding to catch
-> > these issues.
+> [auto build test WARNING on 6146a0f1dfae5d37442a9ddcba012add260bceb0]
 > 
-> I do not see such check.
+> url:    https://github.com/intel-lab-lkp/linux/commits/hans-zhang-cixtech-com/PCI-cadence-Add-module-support-for-platform-controller-driver/20251108-220607
+> base:   6146a0f1dfae5d37442a9ddcba012add260bceb0
+> patch link:    https://lore.kernel.org/r/20251108140305.1120117-4-hans.zhang%40cixtech.com
+> patch subject: [PATCH v11 03/10] PCI: cadence: Move PCIe RP common functions to a separate file
+> config: i386-randconfig-014-20251109 (https://download.01.org/0day-ci/archive/20251109/202511092106.mkNV0iyb-lkp@intel.com/config)
+> compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251109/202511092106.mkNV0iyb-lkp@intel.com/reproduce)
 > 
-
-Don't you think the below required properties not enforce this check for Root
-Port and Controller node? This atleast makes sure that if 'phys' is present,
-'reset-gpios' would be required for Root Port and 'perst-gpios' is required for
-Controller node.
-
-> > 
-> > It is also possible that DTs could have 'phys' property in Controller node
-> > and 'reset-gpios' properties in the Root Port node. It will also be a
-> > problem, but it is not possible to catch these cross-node issues in the
-> > binding.
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202511092106.mkNV0iyb-lkp@intel.com/
 > 
-> ... so this commit changes nothing?
+> All warnings (new ones prefixed by >>):
 > 
-> The commit actually does change, but something completely different than
-> you write here, so entire commit msg is describing entirely different
-> cast. What you achieve here is to require perst-gpios, if controller
-> node defined phys. Unfortunately your commit msg does not explain why
-> perst-gpios are now required...
+>    drivers/pci/controller/cadence/pcie-cadence-host-common.c: In function 'cdns_pcie_host_bar_config':
+> >> drivers/pci/controller/cadence/pcie-cadence-host-common.c:188:23: warning: variable 'pci_addr' set but not used [-Wunused-but-set-variable]
+>      188 |         u64 cpu_addr, pci_addr, size, winsize;
+>          |                       ^~~~~~~~
+> 
 > 
 
-The Qcom PCIe controller node never supported 'reset-gpios' for PERST#. It used
-the 'perst-gpios' property instead. And I do not wanted to replace it with
-'reset-gpios' property since we had decided to move PERST# to Root Port node,
-where 'reset-gpios' is already the norm.
-
-> > 
-> > Reported-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> > Reported-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> > Closes: https://lore.kernel.org/linux-pci/8f2e0631-6c59-4298-b36e-060708970ced@oss.qualcomm.com
-> > Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> 
-> That's too many tags. Either someone reported you bug or someone
-> suggested you to do something, not both (and proposing solution is not
-> suggesting a commit since you already knew you need to make the commit
-> because of bug...)
-> 
-
-I disagree. Both Konrad and Krishna reported the issue in mixing up the
-properties and driver ended up failing the probe. Then Dmitry suggested a schema
-snippet [1] to catch these kind of mixups during DT validation. I did see it as
-a valid suggestion that deserved the tag.
+No need to repost the series, just to fix this warning. If there are no more
+comments, then I will fix it up while applying.
 
 - Mani
 
-[1] https://lore.kernel.org/linux-pci/qref5ooh6pl2sznf7iifrbric7hsap63ffbytkizdyrzt6mtqz@q5r27ho2sbq3/
+> vim +/pci_addr +188 drivers/pci/controller/cadence/pcie-cadence-host-common.c
+> 
+>    183	
+>    184	int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
+>    185				      struct resource_entry *entry,
+>    186				      cdns_pcie_host_bar_ib_cfg pci_host_ib_config)
+>    187	{
+>  > 188		u64 cpu_addr, pci_addr, size, winsize;
+>    189		struct cdns_pcie *pcie = &rc->pcie;
+>    190		struct device *dev = pcie->dev;
+>    191		enum cdns_pcie_rp_bar bar;
+>    192		unsigned long flags;
+>    193		int ret;
+>    194	
+>    195		cpu_addr = entry->res->start;
+>    196		pci_addr = entry->res->start - entry->offset;
+>    197		flags = entry->res->flags;
+>    198		size = resource_size(entry->res);
+>    199	
+>    200		while (size > 0) {
+>    201			/*
+>    202			 * Try to find a minimum BAR whose size is greater than
+>    203			 * or equal to the remaining resource_entry size. This will
+>    204			 * fail if the size of each of the available BARs is less than
+>    205			 * the remaining resource_entry size.
+>    206			 *
+>    207			 * If a minimum BAR is found, IB ATU will be configured and
+>    208			 * exited.
+>    209			 */
+>    210			bar = cdns_pcie_host_find_min_bar(rc, size);
+>    211			if (bar != RP_BAR_UNDEFINED) {
+>    212				ret = pci_host_ib_config(rc, bar, cpu_addr, size, flags);
+>    213				if (ret)
+>    214					dev_err(dev, "IB BAR: %d config failed\n", bar);
+>    215				return ret;
+>    216			}
+>    217	
+>    218			/*
+>    219			 * If the control reaches here, it would mean the remaining
+>    220			 * resource_entry size cannot be fitted in a single BAR. So we
+>    221			 * find a maximum BAR whose size is less than or equal to the
+>    222			 * remaining resource_entry size and split the resource entry
+>    223			 * so that part of resource entry is fitted inside the maximum
+>    224			 * BAR. The remaining size would be fitted during the next
+>    225			 * iteration of the loop.
+>    226			 *
+>    227			 * If a maximum BAR is not found, there is no way we can fit
+>    228			 * this resource_entry, so we error out.
+>    229			 */
+>    230			bar = cdns_pcie_host_find_max_bar(rc, size);
+>    231			if (bar == RP_BAR_UNDEFINED) {
+>    232				dev_err(dev, "No free BAR to map cpu_addr %llx\n",
+>    233					cpu_addr);
+>    234				return -EINVAL;
+>    235			}
+>    236	
+>    237			winsize = bar_max_size[bar];
+>    238			ret = pci_host_ib_config(rc, bar, cpu_addr, winsize, flags);
+>    239			if (ret) {
+>    240				dev_err(dev, "IB BAR: %d config failed\n", bar);
+>    241				return ret;
+>    242			}
+>    243	
+>    244			size -= winsize;
+>    245			cpu_addr += winsize;
+>    246		}
+>    247	
+>    248		return 0;
+>    249	}
+>    250	
+> 
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
