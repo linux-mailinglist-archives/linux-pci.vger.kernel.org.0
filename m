@@ -1,171 +1,109 @@
-Return-Path: <linux-pci+bounces-40646-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40647-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F236C435C7
-	for <lists+linux-pci@lfdr.de>; Sat, 08 Nov 2025 23:59:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A776C4386C
+	for <lists+linux-pci@lfdr.de>; Sun, 09 Nov 2025 05:43:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C12CF3AF10E
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Nov 2025 22:59:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 283603ACD83
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Nov 2025 04:43:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11B9F2AEF5;
-	Sat,  8 Nov 2025 22:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OdVPJjzK"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A55C020FAB2;
+	Sun,  9 Nov 2025 04:43:25 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from bg5.exmail.qq.com (bg5.exmail.qq.com [43.154.197.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE6F18E1F
-	for <linux-pci@vger.kernel.org>; Sat,  8 Nov 2025 22:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169B734D3A9;
+	Sun,  9 Nov 2025 04:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.154.197.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762642740; cv=none; b=uoIw5/80nG+i8FBKfXougWLAehn15bOLVFOEjwADlII1gYVhu7cTQQJ0x5X0YzA0EP1AAAiDrAcr1CgxwyyBHQ7r0PxHzz1mPGXlvuMrwMECJE9kId2UHGdGjlapbiaepIrKr1Vk90WbC8msF8ko0cmDvW+O+nPYQ49YgVVP6tk=
+	t=1762663405; cv=none; b=bnSet/orPg+kBG0jCmKce4CevUK72BaIkUQ/knbUsWo7kT1QSc049Hv7RCVOTIjZJfnI9cTyu8gv3YTVK6KMs0cTRoCD1ZYUO0dvYRc3hAcHbSdIHDlQsLSVZjVE2p4u0BQqTJC3/O9r31D4s380M+FteRw/ojSEBzijDrOo41A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762642740; c=relaxed/simple;
-	bh=Wg2i7EaxkKdUzxrmllswZZb6v/kPcldu5WZSKMni+74=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=HWH/gQm4ZD7+CR6q6y47tM7QYE824rRiepKtKRxWgTYdon6+DqbEZanNz86f8iAM58yCFhBbf1qzclI1pHXO1aBAaAynbFTx5AB1dNoZ/266oxnJYlHFzKobL4SLFh1LrOuvSAfITrpP2LZB7xLaMe0L5FCvxloHqf9drvrWalc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OdVPJjzK; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762642738; x=1794178738;
-  h=date:from:to:cc:subject:message-id;
-  bh=Wg2i7EaxkKdUzxrmllswZZb6v/kPcldu5WZSKMni+74=;
-  b=OdVPJjzKKkncs9A/ap0IKvYDx1MryWHHgQuGXT/F+LnqMo6OVKX7PyOj
-   G9+JWNJ2rJeHeFgMkwOJtPm1KrbkVzFafEcL4awo4U8uzgM0Fv+3wOVOw
-   o0WXuuh+bBUwYKrHEGMKWl0mrLm/KC25dLGHRc/UTqNbDjBgdFyxiwwye
-   6qdQSd2wQijkBFADN0QHuVh//0MOaW5QuCisJiizc6qKDLzoDC4iwazbS
-   JGxF55Jte8rnOsKX+ooVm9TmhvZFHaiPhiuN1pZdQj426iOOosnsfaYi4
-   Pz9ggUO6ztwlFJK/7R8V+etbZyC93bxb8ha7t2V9fokRGgaJ9LRqvA7EC
-   g==;
-X-CSE-ConnectionGUID: NonMlCZQStqCJsy6H+2W5w==
-X-CSE-MsgGUID: l3OXi4vURFSHLzYdlcrT+w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11607"; a="76197853"
-X-IronPort-AV: E=Sophos;i="6.19,290,1754982000"; 
-   d="scan'208";a="76197853"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2025 14:58:58 -0800
-X-CSE-ConnectionGUID: vxkEXQBhRY+8+mA8AONtpg==
-X-CSE-MsgGUID: KM6yI62cQLCdOgUkHphD9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,290,1754982000"; 
-   d="scan'208";a="188517391"
-Received: from lkp-server01.sh.intel.com (HELO 6ef82f2de774) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 08 Nov 2025 14:58:57 -0800
-Received: from kbuild by 6ef82f2de774 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vHrtW-0001WF-1K;
-	Sat, 08 Nov 2025 22:58:54 +0000
-Date: Sun, 09 Nov 2025 06:58:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD REGRESSION
- 2b8258e8694f49b247b611933149c59c79013393
-Message-ID: <202511090618.Y6KWUnlX-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1762663405; c=relaxed/simple;
+	bh=J6B8ZdMlonKYuEyFFgpmUmH5fkMBCY1UBK1BL+6hz7g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AmLuyp0uhUopGur5ckER6lsd4Tsz2J4+G9Ca170tLbL3JD9mqo3Rm04bsUqNYHK2Fd9PxS7xupQeY0JrRsUQ6XLsHDznNGHbOlDyuPjSE4SxyNHowMJo3FMgp7hJD7d+7/iRG3L4fnVwNmnesKJMX6mrDMRYkam5//1YT+TcHGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=43.154.197.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: zesmtpip2t1762663347t2fca86ea
+X-QQ-Originating-IP: V9Kbroh4xSX4Zqjajg/LaEFIkR0Xw+xFYpVOld+vU/I=
+Received: from [IPV6:240f:10b:7440:1:d0bf:3b2d ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sun, 09 Nov 2025 12:42:24 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 16878913424154187079
+Message-ID: <55EB0E5F655F3AFC+136b89fd-98d4-42af-a99d-a0bb05cc93f3@radxa.com>
+Date: Sun, 9 Nov 2025 13:42:23 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
+To: Niklas Cassel <cassel@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Anand Moon <linux.amoon@gmail.com>,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Dragan Simic <dsimic@manjaro.org>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Heiko Stuebner <heiko@sntech.de>
+References: <20250113-rockchip-no-wait-v1-1-25417f37b92f@kernel.org>
+ <1E8E4DB773970CB5+5a52c9e1-01b8-4872-99b7-021099f04031@radxa.com>
+ <6e87b611-13ea-4d89-8dbf-85510dd86fa6@rock-chips.com>
+ <aQ840q5BxNS1eIai@ryzen> <aQ9FWEuW47L8YOxC@ryzen>
+Content-Language: en-US
+From: FUKAUMI Naoki <naoki@radxa.com>
+In-Reply-To: <aQ9FWEuW47L8YOxC@ryzen>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:radxa.com:qybglogicsvrsz:qybglogicsvrsz4b-0
+X-QQ-XMAILINFO: MACXe2l6e7j9v35cxXlys+1EbRUY2ZBE36NcO09yuYiVtJbAsInfvNrA
+	zMmVX6zUXnYROdeDt+E1WTwfghk3OchcYr8YfFMpRUB9ts46w2+N18QlspT7i0y6ev26W9K
+	57k1yU15AOENuHgNYAbQcBjbh2S15otw60LYGzRHqWrbQXNMA/zsBq2Vhuryp7hA9J4Qp5o
+	pIrwHftCO7W7cb1n+ND+5Px2FlT/cqY8SpJgFhV1KoZskrhE9AdScycDMvOX8uqgIt1IfPA
+	saC59ujFHODGy1pdQpyj1rTUTNVSoOBrZuj874SXwuTuyHJ0JthYXIBBsFPwJpvc4JmPJcg
+	wNqpJOPcaroctymNwOudq84nGCBplQ5KxQHGwDhG2nAiH6VSrLbSj6F6vTdy/wD+pMjgjMH
+	x1K5FdKhC54qAXvYj3eyU3rcwhAMZXTrpBDnIKU2uunQk/0nNPnWt23gxZwZlgTvK63BTAJ
+	0XfJNXBIL6oKht52IK+GwSr3mPk/9Bzk2QDiYpjEiQIcp6EVRhFeXLsJGbboVCVly2loSJt
+	+tbqwvDCDI7nkoIAido+GwBagOS8YPxJ1dFLd8bRxOESzElgl0PTJQ+AUp4XmiF9uYWGYaq
+	A9qlsIMWuOpPgMwVvaF4PQM4W/YmiuOKKSyGMRz8F45KHyUxwkMPcn/bY6bzBbmOaOAdXPz
+	YIp28mEYiT4QLGEqBq3TARvZAtCOJ4fNhyThTjKez8yKWuJc0/e7o9o/qaqANrXGHYtVKgb
+	MR1DA8KnhtchIkkmnsLwa3rdYZeCKSFtyJ5kmJrsdpy+cJNAPSi87g8/AzfKPAh8NbhBQNv
+	EAe9ZmkStznHRw+XdFoclNKsH9h/dOctom+JIzFVRc9PVYFYseq1U+yWuKWdoLOx2O8w2Ml
+	GnL8p1syI00/TjkJNTv9T1XOs5+4HPNVbMbtbTO+oacpCvYeM0rUhSv6NSn2C+k/JPo3oIb
+	NeveftR5jrygw0UR0g1QGXFCxuAMNjaKWaAdq/VyN8rbf/aBnWMRwNjLz
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-RECHKSPAM: 0
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-branch HEAD: 2b8258e8694f49b247b611933149c59c79013393  PCI/ASPM: Avoid L0s and L1 on Freescale Root Ports
+Hi Niklas,
 
-Error/Warning ids grouped by kconfigs:
+On 11/8/25 22:27, Niklas Cassel wrote:
+(snip)> (And btw. please test with the latest 6.18-rc, as, from 
+experience, the
+> ASPM problems in earlier RCs can result in some weird problems that are
+> not immediately deduced to be caused by the ASPM enablement.)
 
-recent_errors
-`-- mips-allyesconfig
-    |-- (.head.text):relocation-truncated-to-fit:R_MIPS_26-against-kernel_entry
-    `-- (.ref.text):relocation-truncated-to-fit:R_MIPS_26-against-start_secondary
+Here is dmesg from v6.18-rc4:
+  https://gist.github.com/RadxaNaoki/40e1d049bff4f1d2d4773a5ba0ed9dff
 
-elapsed time: 2835m
-
-configs tested: 74
-configs skipped: 1
-
-tested configs:
-alpha                   allnoconfig    gcc-15.1.0
-alpha                  allyesconfig    clang-19
-arc                    allmodconfig    clang-19
-arc                     allnoconfig    gcc-15.1.0
-arc                    allyesconfig    clang-19
-arm                    allmodconfig    clang-19
-arm                     allnoconfig    clang-22
-arm                    allyesconfig    clang-19
-arm64                  allmodconfig    clang-19
-arm64                   allnoconfig    gcc-15.1.0
-arm64                  allyesconfig    clang-22
-csky                   allmodconfig    gcc-15.1.0
-csky                    allnoconfig    gcc-15.1.0
-csky                   allyesconfig    gcc-15.1.0
-hexagon                allmodconfig    clang-19
-hexagon                 allnoconfig    clang-22
-hexagon                allyesconfig    clang-19
-hexagon     randconfig-001-20251107    clang-22
-hexagon     randconfig-002-20251107    clang-22
-i386                   allmodconfig    clang-20
-i386                    allnoconfig    gcc-14
-i386                   allyesconfig    clang-20
-loongarch              allmodconfig    clang-19
-loongarch               allnoconfig    clang-22
-loongarch              allyesconfig    clang-22
-loongarch   randconfig-001-20251107    gcc-15.1.0
-loongarch   randconfig-002-20251107    clang-19
-m68k                   allmodconfig    clang-19
-m68k                    allnoconfig    gcc-15.1.0
-m68k                   allyesconfig    clang-19
-microblaze             allmodconfig    clang-19
-microblaze              allnoconfig    gcc-15.1.0
-microblaze             allyesconfig    clang-19
-mips                   allmodconfig    gcc-15.1.0
-mips                    allnoconfig    gcc-15.1.0
-mips                   allyesconfig    gcc-15.1.0
-nios2                   allnoconfig    gcc-11.5.0
-nios2       randconfig-001-20251107    gcc-11.5.0
-nios2       randconfig-002-20251107    gcc-8.5.0
-openrisc                allnoconfig    gcc-15.1.0
-openrisc               allyesconfig    gcc-15.1.0
-parisc                 allmodconfig    gcc-15.1.0
-parisc                  allnoconfig    gcc-15.1.0
-parisc                 allyesconfig    gcc-15.1.0
-powerpc                allmodconfig    gcc-15.1.0
-powerpc                 allnoconfig    gcc-15.1.0
-powerpc                allyesconfig    gcc-15.1.0
-riscv                  allmodconfig    gcc-15.1.0
-riscv                   allnoconfig    gcc-15.1.0
-riscv                  allyesconfig    gcc-15.1.0
-riscv       randconfig-001-20251107    clang-22
-riscv       randconfig-002-20251107    gcc-13.4.0
-s390                    allnoconfig    clang-22
-s390        randconfig-001-20251107    gcc-8.5.0
-s390        randconfig-002-20251107    gcc-15.1.0
-sh                      allnoconfig    gcc-15.1.0
-sh          randconfig-001-20251107    gcc-13.4.0
-sh          randconfig-002-20251107    gcc-11.5.0
-sparc                   allnoconfig    gcc-15.1.0
-um                     allmodconfig    clang-19
-um                      allnoconfig    clang-22
-um                     allyesconfig    clang-19
-x86_64                 allmodconfig    clang-20
-x86_64                  allnoconfig    clang-20
-x86_64                 allyesconfig    clang-20
-x86_64                        kexec    clang-20
-x86_64                     rhel-9.4    clang-20
-x86_64                 rhel-9.4-bpf    gcc-14
-x86_64                rhel-9.4-func    clang-20
-x86_64          rhel-9.4-kselftests    clang-20
-x86_64               rhel-9.4-kunit    gcc-14
-x86_64                 rhel-9.4-ltp    gcc-14
-x86_64                rhel-9.4-rust    clang-20
-xtensa                  allnoconfig    gcc-15.1.0
+Best regards,
 
 --
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+FUKAUMI Naoki
+Radxa Computer (Shenzhen) Co., Ltd.
+
+> Kind regards,
+> Niklas
+> 
+
 
