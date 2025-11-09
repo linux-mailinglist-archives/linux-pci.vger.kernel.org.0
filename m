@@ -1,191 +1,163 @@
-Return-Path: <linux-pci+bounces-40652-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40653-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C452C43F6E
-	for <lists+linux-pci@lfdr.de>; Sun, 09 Nov 2025 15:01:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CC56C44232
+	for <lists+linux-pci@lfdr.de>; Sun, 09 Nov 2025 17:18:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F048F3AD86A
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Nov 2025 14:01:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B5013AC4A2
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Nov 2025 16:18:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E95B1A317D;
-	Sun,  9 Nov 2025 14:00:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F75B2FFF94;
+	Sun,  9 Nov 2025 16:18:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eBQt3xoL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TjFVkM5d"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED08928E9;
-	Sun,  9 Nov 2025 14:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9005C96;
+	Sun,  9 Nov 2025 16:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762696858; cv=none; b=aa/HQEH9qF7wkTa8SHDM9mTZvNz3blN7QnbHPbGsBvkcp9V2miseLNBnkWdMC1vHteG1KKX9c82MUC/Qz/SLBmnNG0Xbas7/bvROY/0RvkrTXLrEiMks6L4NJOslCxNk6l97Wlqcy/c+C5apD/t5B4XnpwywxvsgTq/KumIJe18=
+	t=1762705098; cv=none; b=khODiVjiUng32vlr8d1yRow8lvxBa9Rd+Ac7iXW4LZelFZQZNhZwtqnBcn4tzI41RlmuVPe7x3YL0T9Ouehjb3RApt76XIFYKD7Bm9JQo6TIpmGO/3bEdiDzos4DRvSFKrrbaC6K3cKqa0nQ4zEhGmcTrPOX8BFYTp9CSFk5kH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762696858; c=relaxed/simple;
-	bh=qRmvRrnare0TWk/dp4GNb0PQAxXpydFLfOVO9gdJJl8=;
+	s=arc-20240116; t=1762705098; c=relaxed/simple;
+	bh=NI6YboA8JS5E8R5DZqhB6Ej/6kcnfJbcc0r0CkZyfok=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sPPdjgC3LuKKTc9RW7en7Byq57mMh2765R3saCVOWEAfdO50vXlJJWdG9v/9NB2BFbHd0jalowrlRHLEwJzJsdHQALM87fukW0F7Wfa95iWg1od+OHOEpL0opifWtwZSPtgwOmgaSsh0sTCWiHr7YuXn/dE/FhhYsOrHsXit/2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eBQt3xoL; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762696856; x=1794232856;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qRmvRrnare0TWk/dp4GNb0PQAxXpydFLfOVO9gdJJl8=;
-  b=eBQt3xoLFuZWA8XFt9ADpn325FmRJA36Jss9qCDYWM04gX1RIVuGUIxJ
-   rKMdr1zYX74fWe2SRHuLUz4Kvm/sgn3ayPxcUuYSuOjLeh1sYwP+ZuYf3
-   V+aa6ySNsQyyEFcdQi+qsbn8Wldl1FP48T1lq4sBMZ9jUGanhnifff0ct
-   vNq4Os1j+eTDV+Vuei1FvedAijnTb4m0FavuMmJryZcE9641vXzkN5ikA
-   NbH0yrsj+8WU66KYiMQH1R5T5VVoNJ4O0hF1Un7vZ84baXV+cvu0Pze5N
-   BpPFwbFbx8bM02zE2dKRDqrKAJLBDjyadFtacFv/F3FXD5woblpWUnIlv
-   A==;
-X-CSE-ConnectionGUID: H0863HC9Tw+qK9IsLNdDgw==
-X-CSE-MsgGUID: JJeb9jjVTSCnZTvT4aLVXA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11607"; a="63978175"
-X-IronPort-AV: E=Sophos;i="6.19,291,1754982000"; 
-   d="scan'208";a="63978175"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 06:00:55 -0800
-X-CSE-ConnectionGUID: wak9vCs2R62rKxC/6PUr/g==
-X-CSE-MsgGUID: mY/wPM1hQTq/TlKA2wytsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,291,1754982000"; 
-   d="scan'208";a="225718384"
-Received: from lkp-server01.sh.intel.com (HELO 6ef82f2de774) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 09 Nov 2025 06:00:51 -0800
-Received: from kbuild by 6ef82f2de774 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vI5yL-00023L-0H;
-	Sun, 09 Nov 2025 14:00:49 +0000
-Date: Sun, 9 Nov 2025 21:59:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: hans.zhang@cixtech.com, bhelgaas@google.com, helgaas@kernel.org,
-	lpieralisi@kernel.org, kw@linux.com, mani@kernel.org,
-	robh@kernel.org, kwilczynski@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, mpillai@cadence.com,
-	fugang.duan@cixtech.com, guoyin.chen@cixtech.com,
-	peter.chen@cixtech.com, cix-kernel-upstream@cixtech.com,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 03/10] PCI: cadence: Move PCIe RP common functions to
- a separate file
-Message-ID: <202511092106.mkNV0iyb-lkp@intel.com>
-References: <20251108140305.1120117-4-hans.zhang@cixtech.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=DpiAb5Bq3unxJhzIXtXrPDPaobQrBCllw6v/PDcv7+vis1PoYuF9JV7nJNSZxCSyoZycd+32EqGP9+cxTGeBBRczSJUMono1DBxW5U5URfKf4oYh4bqJ4I7DcgYW1giPgay/do8fl3eynqnPWsOSv8hV6Y/Dmi+q/sF3OR6D0XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TjFVkM5d; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC341C19424;
+	Sun,  9 Nov 2025 16:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762705096;
+	bh=NI6YboA8JS5E8R5DZqhB6Ej/6kcnfJbcc0r0CkZyfok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TjFVkM5dwPQ1+LU6/Gyv8cRk6zvs9gBLYbsCUO2a6AMcJp23CYQ38gZc6kZGZlyRV
+	 Z75IZLYokWkXIUgtvvrhCKo70x5gaCb7UEMZtpkOEGqToB8tKI7VWd+/2BS1lbpar1
+	 7wqC5epNF9G4fe+70Z6Jpatfo0fjAmQHtT2gySWQ2eF+aKRpAbFw91RfEYUQYRepiw
+	 wsO0FxDoYrkCJPCOgAYn7ag3USyEwBdw5JjwWxOpNiW8YOweAJMyKTRRHtM7FZk+iI
+	 gSkO/G03UuJsU1W4YtqGNlvhdI0M0WN1q8qIJbIIhuiZN6aT9HGF5GvMDHc9E9CT2q
+	 lkqVeGDsap4Uw==
+Date: Sun, 9 Nov 2025 21:48:02 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: connector: Add PCIe M.2 Mechanical
+ Key M connector
+Message-ID: <qrgaulegz2tb7yzklyl7rpkgbf6ysx44bxtyn6n3tcyq4an4e5@bzngutkvfno3>
+References: <20251108-pci-m2-v2-0-e8bc4d7bf42d@oss.qualcomm.com>
+ <20251108-pci-m2-v2-1-e8bc4d7bf42d@oss.qualcomm.com>
+ <gmwg46c3za5z2ev34mms44gpq3sq7sb4jaozbdn5cejwbejbpo@wwr2j7dkjov4>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251108140305.1120117-4-hans.zhang@cixtech.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <gmwg46c3za5z2ev34mms44gpq3sq7sb4jaozbdn5cejwbejbpo@wwr2j7dkjov4>
 
-Hi,
+On Sat, Nov 08, 2025 at 08:10:54PM +0200, Dmitry Baryshkov wrote:
+> On Sat, Nov 08, 2025 at 08:53:19AM +0530, Manivannan Sadhasivam wrote:
+> > Add the devicetree binding for PCIe M.2 Mechanical Key M connector defined
+> > in the PCI Express M.2 Specification, r4.0, sec 5.3. This connector
+> > provides interfaces like PCIe and SATA to attach the Solid State Drives
+> > (SSDs) to the host machine along with additional interfaces like USB, and
+> > SMB for debugging and supplementary features. At any point of time, the
+> > connector can only support either PCIe or SATA as the primary host
+> > interface.
+> > 
+> > The connector provides a primary power supply of 3.3v, along with an
+> > optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating at
+> > 1.8v sideband signaling.
+> > 
+> > The connector also supplies optional signals in the form of GPIOs for fine
+> > grained power management.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > ---
+> >  .../bindings/connector/pcie-m2-m-connector.yaml    | 122 +++++++++++++++++++++
+> >  1 file changed, 122 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..be0a3b43e8fd2a2a3b76cad4808ddde79dceaa21
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
+> > @@ -0,0 +1,122 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/connector/pcie-m2-m-connector.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: PCIe M.2 Mechanical Key M Connector
+> > +
+> > +maintainers:
+> > +  - Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > +
+> > +description:
+> > +  A PCIe M.2 M connector node represents a physical PCIe M.2 Mechanical Key M
+> > +  connector. The Mechanical Key M connectors are used to connect SSDs to the
+> > +  host system over PCIe/SATA interfaces. These connectors also offer optional
+> > +  interfaces like USB, SMB.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: pcie-m2-m-connector
+> 
+> Is a generic compatible enough here? Compare this to the USB connectors,
+> which, in case of an independent USB-B connector controlled/ing GPIOs,
+> gets additional gpio-usb-b-connector?
+> 
 
-kernel test robot noticed the following build warnings:
+I can't comment on it as I've not seen such usecases as of now. But I do think
+that this generic compatible should satisfy most of the design requirements. If
+necessity arises, a custom compatible could be introduced with this generic one
+as a fallback.
 
-[auto build test WARNING on 6146a0f1dfae5d37442a9ddcba012add260bceb0]
+> > +
+> > +  vpcie3v3-supply:
+> > +    description: A phandle to the regulator for 3.3v supply.
+> > +
+> > +  vio1v8-supply:
+> > +    description: A phandle to the regulator for VIO 1.8v supply.
+> > +
+> > +  ports:
+> > +    $ref: /schemas/graph.yaml#/properties/ports
+> > +    description: OF graph bindings modeling the interfaces exposed on the
+> > +      connector. Since a single connector can have multiple interfaces, every
+> > +      interface has an assigned OF graph port number as described below.
+> > +
+> > +    properties:
+> > +      port@0:
+> > +        $ref: /schemas/graph.yaml#/properties/port
+> > +        description: PCIe/SATA interface
+> 
+> Should it be defined as having two endpoints: one for PCIe, one for
+> SATA?
+> 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/hans-zhang-cixtech-com/PCI-cadence-Add-module-support-for-platform-controller-driver/20251108-220607
-base:   6146a0f1dfae5d37442a9ddcba012add260bceb0
-patch link:    https://lore.kernel.org/r/20251108140305.1120117-4-hans.zhang%40cixtech.com
-patch subject: [PATCH v11 03/10] PCI: cadence: Move PCIe RP common functions to a separate file
-config: i386-randconfig-014-20251109 (https://download.01.org/0day-ci/archive/20251109/202511092106.mkNV0iyb-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251109/202511092106.mkNV0iyb-lkp@intel.com/reproduce)
+I'm not sure. From the dtschema of the connector node:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511092106.mkNV0iyb-lkp@intel.com/
+"If a single port is connected to more than one remote device, an 'endpoint'
+child node must be provided for each link"
 
-All warnings (new ones prefixed by >>):
+Here, a single port is atmost connected to only one endpoint and that endpoint
+could PCIe/SATA. So IMO, defining two endpoint nodes doesn't fit here.
 
-   drivers/pci/controller/cadence/pcie-cadence-host-common.c: In function 'cdns_pcie_host_bar_config':
->> drivers/pci/controller/cadence/pcie-cadence-host-common.c:188:23: warning: variable 'pci_addr' set but not used [-Wunused-but-set-variable]
-     188 |         u64 cpu_addr, pci_addr, size, winsize;
-         |                       ^~~~~~~~
-
-
-vim +/pci_addr +188 drivers/pci/controller/cadence/pcie-cadence-host-common.c
-
-   183	
-   184	int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
-   185				      struct resource_entry *entry,
-   186				      cdns_pcie_host_bar_ib_cfg pci_host_ib_config)
-   187	{
- > 188		u64 cpu_addr, pci_addr, size, winsize;
-   189		struct cdns_pcie *pcie = &rc->pcie;
-   190		struct device *dev = pcie->dev;
-   191		enum cdns_pcie_rp_bar bar;
-   192		unsigned long flags;
-   193		int ret;
-   194	
-   195		cpu_addr = entry->res->start;
-   196		pci_addr = entry->res->start - entry->offset;
-   197		flags = entry->res->flags;
-   198		size = resource_size(entry->res);
-   199	
-   200		while (size > 0) {
-   201			/*
-   202			 * Try to find a minimum BAR whose size is greater than
-   203			 * or equal to the remaining resource_entry size. This will
-   204			 * fail if the size of each of the available BARs is less than
-   205			 * the remaining resource_entry size.
-   206			 *
-   207			 * If a minimum BAR is found, IB ATU will be configured and
-   208			 * exited.
-   209			 */
-   210			bar = cdns_pcie_host_find_min_bar(rc, size);
-   211			if (bar != RP_BAR_UNDEFINED) {
-   212				ret = pci_host_ib_config(rc, bar, cpu_addr, size, flags);
-   213				if (ret)
-   214					dev_err(dev, "IB BAR: %d config failed\n", bar);
-   215				return ret;
-   216			}
-   217	
-   218			/*
-   219			 * If the control reaches here, it would mean the remaining
-   220			 * resource_entry size cannot be fitted in a single BAR. So we
-   221			 * find a maximum BAR whose size is less than or equal to the
-   222			 * remaining resource_entry size and split the resource entry
-   223			 * so that part of resource entry is fitted inside the maximum
-   224			 * BAR. The remaining size would be fitted during the next
-   225			 * iteration of the loop.
-   226			 *
-   227			 * If a maximum BAR is not found, there is no way we can fit
-   228			 * this resource_entry, so we error out.
-   229			 */
-   230			bar = cdns_pcie_host_find_max_bar(rc, size);
-   231			if (bar == RP_BAR_UNDEFINED) {
-   232				dev_err(dev, "No free BAR to map cpu_addr %llx\n",
-   233					cpu_addr);
-   234				return -EINVAL;
-   235			}
-   236	
-   237			winsize = bar_max_size[bar];
-   238			ret = pci_host_ib_config(rc, bar, cpu_addr, winsize, flags);
-   239			if (ret) {
-   240				dev_err(dev, "IB BAR: %d config failed\n", bar);
-   241				return ret;
-   242			}
-   243	
-   244			size -= winsize;
-   245			cpu_addr += winsize;
-   246		}
-   247	
-   248		return 0;
-   249	}
-   250	
+- Mani
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
 
