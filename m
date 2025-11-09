@@ -1,61 +1,63 @@
-Return-Path: <linux-pci+bounces-40653-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40654-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CC56C44232
-	for <lists+linux-pci@lfdr.de>; Sun, 09 Nov 2025 17:18:22 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 827A2C442AF
+	for <lists+linux-pci@lfdr.de>; Sun, 09 Nov 2025 17:49:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B5013AC4A2
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Nov 2025 16:18:21 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7130C4E2CA4
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Nov 2025 16:49:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F75B2FFF94;
-	Sun,  9 Nov 2025 16:18:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 134F92FE56C;
+	Sun,  9 Nov 2025 16:49:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TjFVkM5d"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P9RwGyyR"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9005C96;
-	Sun,  9 Nov 2025 16:18:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E901AA7BF;
+	Sun,  9 Nov 2025 16:49:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762705098; cv=none; b=khODiVjiUng32vlr8d1yRow8lvxBa9Rd+Ac7iXW4LZelFZQZNhZwtqnBcn4tzI41RlmuVPe7x3YL0T9Ouehjb3RApt76XIFYKD7Bm9JQo6TIpmGO/3bEdiDzos4DRvSFKrrbaC6K3cKqa0nQ4zEhGmcTrPOX8BFYTp9CSFk5kH4=
+	t=1762706955; cv=none; b=NwYCPQBRN6w1T70r/3YhgWRKOUoKJn2wKh5EetkjqIdjlra39+E7za9pTnX2FHuPYhVLOo5V09Bv7CLE5ArPWa2tCq1HUvZLqTPFWD/1HUTQYWHvxBVJXlRAU7M2ys0RsrvvBJj8ckL9yfWEtdpSNpO/o30sdLGPVo8WZ12jpS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762705098; c=relaxed/simple;
-	bh=NI6YboA8JS5E8R5DZqhB6Ej/6kcnfJbcc0r0CkZyfok=;
+	s=arc-20240116; t=1762706955; c=relaxed/simple;
+	bh=n4hSzcHd13twCNudNTmDw4sXbKY11Ss4Ov/R5YPLLzw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DpiAb5Bq3unxJhzIXtXrPDPaobQrBCllw6v/PDcv7+vis1PoYuF9JV7nJNSZxCSyoZycd+32EqGP9+cxTGeBBRczSJUMono1DBxW5U5URfKf4oYh4bqJ4I7DcgYW1giPgay/do8fl3eynqnPWsOSv8hV6Y/Dmi+q/sF3OR6D0XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TjFVkM5d; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC341C19424;
-	Sun,  9 Nov 2025 16:18:08 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=lHWoBZK1BXE0EBbXOAVGQZ9e11LpN68VsxVGfua5Itwm80pDhrX28/hTm1aVWl1MV8qGQLIlRTewN0klnD3fbzFp09uKpuf6X2GUEdojX2VLiiKWAjS979aDQyfNWy4GytMmVmGtbxUo4d8F1u/uHeGXSAQrhx4DzPCHVvpCfeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P9RwGyyR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9B13C4CEF7;
+	Sun,  9 Nov 2025 16:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762705096;
-	bh=NI6YboA8JS5E8R5DZqhB6Ej/6kcnfJbcc0r0CkZyfok=;
+	s=k20201202; t=1762706954;
+	bh=n4hSzcHd13twCNudNTmDw4sXbKY11Ss4Ov/R5YPLLzw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TjFVkM5dwPQ1+LU6/Gyv8cRk6zvs9gBLYbsCUO2a6AMcJp23CYQ38gZc6kZGZlyRV
-	 Z75IZLYokWkXIUgtvvrhCKo70x5gaCb7UEMZtpkOEGqToB8tKI7VWd+/2BS1lbpar1
-	 7wqC5epNF9G4fe+70Z6Jpatfo0fjAmQHtT2gySWQ2eF+aKRpAbFw91RfEYUQYRepiw
-	 wsO0FxDoYrkCJPCOgAYn7ag3USyEwBdw5JjwWxOpNiW8YOweAJMyKTRRHtM7FZk+iI
-	 gSkO/G03UuJsU1W4YtqGNlvhdI0M0WN1q8qIJbIIhuiZN6aT9HGF5GvMDHc9E9CT2q
-	 lkqVeGDsap4Uw==
-Date: Sun, 9 Nov 2025 21:48:02 +0530
+	b=P9RwGyyRA/kvUZWhJ5Obm4NXxCl4uM4orfTPuniXCdZfAVOOzHZ9AJtzYDn9LefRh
+	 JrCHXAYpxOesbk+4SZirluizDJPcZ4M/KXKJXVkDq2OPSZ0VooIlqmiCchzXVeQPo1
+	 NiZvrUlAld7U8AJfIqWde+gCYMDVim8pSicYR8+NW8qIuZm2eTpuAmTJSgH73QY+nf
+	 ZLvtPqNr5tE2wFohMEIJ37oxkFGp9I9Mg3oQ7a8y+VE3Lh3L455cJsqoyBtg+ut0ss
+	 tDZsmllo/KU0y94eAGMXxaEbOJAblOTxQlDCDF5iZqpJrXb/NWXAadGl7XkcN4tf6a
+	 ubAZJ6wX5K0Hw==
+Date: Sun, 9 Nov 2025 22:18:58 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
 Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: connector: Add PCIe M.2 Mechanical
- Key M connector
-Message-ID: <qrgaulegz2tb7yzklyl7rpkgbf6ysx44bxtyn6n3tcyq4an4e5@bzngutkvfno3>
-References: <20251108-pci-m2-v2-0-e8bc4d7bf42d@oss.qualcomm.com>
- <20251108-pci-m2-v2-1-e8bc4d7bf42d@oss.qualcomm.com>
- <gmwg46c3za5z2ev34mms44gpq3sq7sb4jaozbdn5cejwbejbpo@wwr2j7dkjov4>
+	Abraham I <kishon@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: qcom: Enforce check for PHY,
+ PERST# properties
+Message-ID: <3wxfj3w2ilgmmmvntng4yohvorz3tn54egnyltg3dd3fwk67yq@f5p62em6sg2g>
+References: <20251106-pci-binding-v2-0-bebe9345fc4b@oss.qualcomm.com>
+ <20251106-pci-binding-v2-1-bebe9345fc4b@oss.qualcomm.com>
+ <20251108-toad-of-hypothetical-opportunity-ebfa74@kuoka>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,98 +67,83 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <gmwg46c3za5z2ev34mms44gpq3sq7sb4jaozbdn5cejwbejbpo@wwr2j7dkjov4>
+In-Reply-To: <20251108-toad-of-hypothetical-opportunity-ebfa74@kuoka>
 
-On Sat, Nov 08, 2025 at 08:10:54PM +0200, Dmitry Baryshkov wrote:
-> On Sat, Nov 08, 2025 at 08:53:19AM +0530, Manivannan Sadhasivam wrote:
-> > Add the devicetree binding for PCIe M.2 Mechanical Key M connector defined
-> > in the PCI Express M.2 Specification, r4.0, sec 5.3. This connector
-> > provides interfaces like PCIe and SATA to attach the Solid State Drives
-> > (SSDs) to the host machine along with additional interfaces like USB, and
-> > SMB for debugging and supplementary features. At any point of time, the
-> > connector can only support either PCIe or SATA as the primary host
-> > interface.
+On Sat, Nov 08, 2025 at 12:59:50PM +0100, Krzysztof Kozlowski wrote:
+> On Thu, Nov 06, 2025 at 04:57:16PM +0530, Manivannan Sadhasivam wrote:
+> > Currently, the binding supports specifying the required PHY, PERST#
+> > properties in two ways:
 > > 
-> > The connector provides a primary power supply of 3.3v, along with an
-> > optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating at
-> > 1.8v sideband signaling.
+> > 1. Controller node (deprecated)
+> > 	- phys
+> > 	- perst-gpios
 > > 
-> > The connector also supplies optional signals in the form of GPIOs for fine
-> > grained power management.
+> > 2. Root Port node
+> > 	- phys
+> > 	- reset-gpios
 > > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > ---
-> >  .../bindings/connector/pcie-m2-m-connector.yaml    | 122 +++++++++++++++++++++
-> >  1 file changed, 122 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..be0a3b43e8fd2a2a3b76cad4808ddde79dceaa21
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
-> > @@ -0,0 +1,122 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/connector/pcie-m2-m-connector.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: PCIe M.2 Mechanical Key M Connector
-> > +
-> > +maintainers:
-> > +  - Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > +
-> > +description:
-> > +  A PCIe M.2 M connector node represents a physical PCIe M.2 Mechanical Key M
-> > +  connector. The Mechanical Key M connectors are used to connect SSDs to the
-> > +  host system over PCIe/SATA interfaces. These connectors also offer optional
-> > +  interfaces like USB, SMB.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: pcie-m2-m-connector
+> > But there is no check to make sure that the both variants are not mixed.
+> > For instance, if the Controller node specifies 'phys', 'reset-gpios',
 > 
-> Is a generic compatible enough here? Compare this to the USB connectors,
-> which, in case of an independent USB-B connector controlled/ing GPIOs,
-> gets additional gpio-usb-b-connector?
+> Schema already does not allow it, unless I missed which schema defines
+> reset-gpios in controller node.
 > 
 
-I can't comment on it as I've not seen such usecases as of now. But I do think
-that this generic compatible should satisfy most of the design requirements. If
-necessity arises, a custom compatible could be introduced with this generic one
-as a fallback.
+'reset-gpios' is currently a valid property for both controller and Root Port
+nodes. Where does the schema restricts it?
 
-> > +
-> > +  vpcie3v3-supply:
-> > +    description: A phandle to the regulator for 3.3v supply.
-> > +
-> > +  vio1v8-supply:
-> > +    description: A phandle to the regulator for VIO 1.8v supply.
-> > +
-> > +  ports:
-> > +    $ref: /schemas/graph.yaml#/properties/ports
-> > +    description: OF graph bindings modeling the interfaces exposed on the
-> > +      connector. Since a single connector can have multiple interfaces, every
-> > +      interface has an assigned OF graph port number as described below.
-> > +
-> > +    properties:
-> > +      port@0:
-> > +        $ref: /schemas/graph.yaml#/properties/port
-> > +        description: PCIe/SATA interface
+> > or if the Root Port node specifies 'phys', 'perst-gpios', then the driver
+> > will fail as reported. Hence, enforce the check in the binding to catch
+> > these issues.
 > 
-> Should it be defined as having two endpoints: one for PCIe, one for
-> SATA?
+> I do not see such check.
 > 
 
-I'm not sure. From the dtschema of the connector node:
+Don't you think the below required properties not enforce this check for Root
+Port and Controller node? This atleast makes sure that if 'phys' is present,
+'reset-gpios' would be required for Root Port and 'perst-gpios' is required for
+Controller node.
 
-"If a single port is connected to more than one remote device, an 'endpoint'
-child node must be provided for each link"
+> > 
+> > It is also possible that DTs could have 'phys' property in Controller node
+> > and 'reset-gpios' properties in the Root Port node. It will also be a
+> > problem, but it is not possible to catch these cross-node issues in the
+> > binding.
+> 
+> ... so this commit changes nothing?
+> 
+> The commit actually does change, but something completely different than
+> you write here, so entire commit msg is describing entirely different
+> cast. What you achieve here is to require perst-gpios, if controller
+> node defined phys. Unfortunately your commit msg does not explain why
+> perst-gpios are now required...
+> 
 
-Here, a single port is atmost connected to only one endpoint and that endpoint
-could PCIe/SATA. So IMO, defining two endpoint nodes doesn't fit here.
+The Qcom PCIe controller node never supported 'reset-gpios' for PERST#. It used
+the 'perst-gpios' property instead. And I do not wanted to replace it with
+'reset-gpios' property since we had decided to move PERST# to Root Port node,
+where 'reset-gpios' is already the norm.
+
+> > 
+> > Reported-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > Reported-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> > Closes: https://lore.kernel.org/linux-pci/8f2e0631-6c59-4298-b36e-060708970ced@oss.qualcomm.com
+> > Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> 
+> That's too many tags. Either someone reported you bug or someone
+> suggested you to do something, not both (and proposing solution is not
+> suggesting a commit since you already knew you need to make the commit
+> because of bug...)
+> 
+
+I disagree. Both Konrad and Krishna reported the issue in mixing up the
+properties and driver ended up failing the probe. Then Dmitry suggested a schema
+snippet [1] to catch these kind of mixups during DT validation. I did see it as
+a valid suggestion that deserved the tag.
 
 - Mani
+
+[1] https://lore.kernel.org/linux-pci/qref5ooh6pl2sznf7iifrbric7hsap63ffbytkizdyrzt6mtqz@q5r27ho2sbq3/
 
 -- 
 மணிவண்ணன் சதாசிவம்
