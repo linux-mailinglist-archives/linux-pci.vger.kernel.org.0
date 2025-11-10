@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-40732-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40733-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B73C7C48ADE
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 19:48:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE1C6C48B23
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 19:50:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66585188CD56
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 18:48:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 928453A94AE
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 18:48:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA42532C954;
-	Mon, 10 Nov 2025 18:47:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4C2032E6BA;
+	Mon, 10 Nov 2025 18:47:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Enyucwxt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KtJ27YWb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B46632ABF3;
-	Mon, 10 Nov 2025 18:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F1332E153;
+	Mon, 10 Nov 2025 18:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762800463; cv=none; b=cv/X61rtrwX4bJMoRYbzIYM5xbEk2Ni6bU7djq7uwk13dnlwzicM4oPv1kMywWFP04BoT1f2+3xZ4iBstm+XxEgM9YKgUkPLSETZu/oLCMjxQQHWRS06zG3ayd1SXQTwCbj4ZCNrRUrQMksW6Lz/N9U9oT7ECJ7PqxwPBB0h+Wc=
+	t=1762800470; cv=none; b=SSLnyAzGx8PhVJ3Q5kDpWnOZds2zKESA5uYr6gO5olZigOWQ66n9pAx30FL43/+KhNju3qf+1ueq0+rqZs7EtVkH/CL3Cm+gwJA0EqqvuShU5xGv+6dfQWOT3OBEYIRKZcmW9j5HXk2lOdi+ShDICYTUye2fwxgGx5xb5IythhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762800463; c=relaxed/simple;
-	bh=Kew62E3E6IXuZlcG7gu+P9XzNY1zD9FK9bnTsI2boF4=;
+	s=arc-20240116; t=1762800470; c=relaxed/simple;
+	bh=fCt0uZJtXQzZViSDNcneyMtrnn/y5yDZ8tsLO9qgG3A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z3rnQh80RZVm4zNYW2Xn+MhwIK1/9hxf5yDkTQVdLDeXaXcIGshfME7XEqqmqkKEjGt8uy4TZ1txF8RC6WMjZNby88SepW/Ct4JB7Ycz1yFgG87PKds0VzUYWoJvEf/zBIeB4l3VyiyL0rn4iMAN0BjDUhPtLJT6EVHT34+7P1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Enyucwxt; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=NdITJFV0lgQWw2tGjuw4ykn0WxdtOiyjVW4a/A6qoJKRmqfB4qNH4hmYGYU9/ZPLjqJ+R8TH3ubD7IdaF2C7tWrJoeCraoeC0MScxM4NKq3gFrLiYmSNPynhtIy5iF3dQINnVX90Y3ggf21oa1SeyZqhfGEzwXx5yxVAs+22mMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KtJ27YWb; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762800462; x=1794336462;
+  t=1762800469; x=1794336469;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Kew62E3E6IXuZlcG7gu+P9XzNY1zD9FK9bnTsI2boF4=;
-  b=EnyucwxtjCWLRvGTqAdWjOEIUhGfAleQyXJLmPea1E56AE1ofTo8aPvY
-   MTqkWxVXuC6tRlLTFiAzNs1bPsMQxlMA9KMtKB7x3DqSNhFeF4g18aqak
-   2m6Qiwri7Ck0rAd3J6gUbP24WvM04tmw5zxsl8ag/DDN04RbNNG0KfsHi
-   lg2RDy9UP9saWa87UX/6ILAMOW5A9FHIUAvx6S5d7gatBwcpfophLT0bz
-   ZiO3YS46G5bOGsEMlTmLfyp9q/3tS4xin9uUtA6S6SV6zXc7tPye2nAli
-   sO/FY4QdoynJ3Zr8oFjd0/2GRtImLpbKiZ6+1ZzDEF2eqBt8GMZCrGJsi
-   A==;
-X-CSE-ConnectionGUID: AYMt4uHVTLyFHKHjsgRbUQ==
-X-CSE-MsgGUID: 99+SC2UgR/uWeem9WjrHqg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="64769605"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="64769605"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 10:47:38 -0800
-X-CSE-ConnectionGUID: tjBTfSXPSK+R85GBxnBx7Q==
-X-CSE-MsgGUID: icFeQ/OWQnuNNObR45nQtA==
+  bh=fCt0uZJtXQzZViSDNcneyMtrnn/y5yDZ8tsLO9qgG3A=;
+  b=KtJ27YWbsHcce8I6/xGFR5R7FAE/yv/LWuU5A5cJgXeKvoe9xOePWhHE
+   XyiVJ64KQD2xckH5oCkY6TtBb5R1Gnv7B3/3e8bE9pt6VIXQb4WUFOLVp
+   fEU7UmaZu8ZL4WEIaro1PwFQlE58v8+vAABzMKBp7CjAnOof+y9JE3Hsl
+   TBf2cs4olVEevdS9un6SlLL0J2af+2o8gxs4hs3nYxaJtV9uAWGAd4Q9a
+   qojTHKxTl30fAD2SQ+WlrEuJgaqWXfodEN/oqSOF1SlJ/ofaZLYRPupsH
+   bLc7JHE9CHJst4VjnEq5hvFz7MXanMZaWs5FLwp/+vtxkX55wldOr22pK
+   w==;
+X-CSE-ConnectionGUID: lcBwhgWwTxWQuoCQ1VpW0A==
+X-CSE-MsgGUID: mhTJfPhpRHSd9UlLjFo3VQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="65013788"
+X-IronPort-AV: E=Sophos;i="6.19,294,1754982000"; 
+   d="scan'208";a="65013788"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 10:47:48 -0800
+X-CSE-ConnectionGUID: vLwpzXxWTlqMkVe0jU7QSA==
+X-CSE-MsgGUID: vqdaBx3wRd2oCOgUpZsMtg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,294,1754982000"; 
-   d="scan'208";a="193749559"
+   d="scan'208";a="189190196"
 Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa004.fm.intel.com with ESMTP; 10 Nov 2025 10:47:29 -0800
+  by fmviesa009.fm.intel.com with ESMTP; 10 Nov 2025 10:47:39 -0800
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id EEA2B96; Mon, 10 Nov 2025 19:47:28 +0100 (CET)
+	id 0116B97; Mon, 10 Nov 2025 19:47:28 +0100 (CET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Corey Minyard <corey@minyard.net>,
 	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
@@ -157,9 +157,9 @@ Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Jaroslav Kysela <perex@perex.cz>,
 	Takashi Iwai <tiwai@suse.com>
-Subject: [PATCH v1 01/23] lib/vsprintf: Add specifier for printing struct timespec64
-Date: Mon, 10 Nov 2025 19:40:20 +0100
-Message-ID: <20251110184727.666591-2-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 02/23] ALSA: seq: Switch to use %ptSp
+Date: Mon, 10 Nov 2025 19:40:21 +0100
+Message-ID: <20251110184727.666591-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20251110184727.666591-1-andriy.shevchenko@linux.intel.com>
 References: <20251110184727.666591-1-andriy.shevchenko@linux.intel.com>
@@ -171,121 +171,52 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A handful drivers want to print a content of the struct timespec64
-in a format of %lld:%09ld. In order to make their lives easier, add
-the respecting specifier directly to the printf() implementation.
+Use %ptSp instead of open coded variants to print content of
+struct timespec64 in human readable format.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- Documentation/core-api/printk-formats.rst | 11 ++++++++--
- lib/tests/printf_kunit.c                  |  4 ++++
- lib/vsprintf.c                            | 25 +++++++++++++++++++++++
- 3 files changed, 38 insertions(+), 2 deletions(-)
+ sound/core/seq/seq_queue.c | 2 +-
+ sound/core/seq/seq_timer.c | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-index 7f2f11b48286..6fdb417f5140 100644
---- a/Documentation/core-api/printk-formats.rst
-+++ b/Documentation/core-api/printk-formats.rst
-@@ -547,11 +547,13 @@ Time and date
- 	%pt[RT]s		YYYY-mm-dd HH:MM:SS
- 	%pt[RT]d		YYYY-mm-dd
- 	%pt[RT]t		HH:MM:SS
--	%pt[RT][dt][r][s]
-+	%ptSp			<seconds>.<nanoseconds>
-+	%pt[RST][dt][r][s]
- 
- For printing date and time as represented by::
- 
--	R  struct rtc_time structure
-+	R  content of struct rtc_time
-+	S  content of struct timespec64
- 	T  time64_t type
- 
- in human readable format.
-@@ -563,6 +565,11 @@ The %pt[RT]s (space) will override ISO 8601 separator by using ' ' (space)
- instead of 'T' (Capital T) between date and time. It won't have any effect
- when date or time is omitted.
- 
-+The %ptSp is equivalent to %lld.%09ld for the content of the struct timespec64.
-+When the other specifiers given, it becomes the respective equivalent of
-+%ptT[dt][r][s].%09ld. In other words, the seconds are being printed in the
-+human readable format followed by dot and nanoseconds.
-+
- Passed by reference.
- 
- struct clk
-diff --git a/lib/tests/printf_kunit.c b/lib/tests/printf_kunit.c
-index bc54cca2d7a6..7617e5b8b02c 100644
---- a/lib/tests/printf_kunit.c
-+++ b/lib/tests/printf_kunit.c
-@@ -504,6 +504,7 @@ time_and_date(struct kunit *kunittest)
- 	};
- 	/* 2019-01-04T15:32:23 */
- 	time64_t t = 1546615943;
-+	struct timespec64 ts = { .tv_sec = t, .tv_nsec = 11235813 };
- 
- 	test("(%pt?)", "%pt", &tm);
- 	test("2018-11-26T05:35:43", "%ptR", &tm);
-@@ -522,6 +523,9 @@ time_and_date(struct kunit *kunittest)
- 	test("0119-00-04 15:32:23", "%ptTsr", &t);
- 	test("15:32:23|2019-01-04", "%ptTts|%ptTds", &t, &t);
- 	test("15:32:23|0119-00-04", "%ptTtrs|%ptTdrs", &t, &t);
-+
-+	test("2019-01-04T15:32:23.011235813", "%ptS", &ts);
-+	test("1546615943.011235813", "%ptSp", &ts);
- }
- 
- static void
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 3f99834fd788..f29eb6368891 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -1989,6 +1989,28 @@ char *time64_str(char *buf, char *end, const time64_t time,
- 	return rtc_str(buf, end, &rtc_time, spec, fmt);
- }
- 
-+static noinline_for_stack
-+char *timespec64_str(char *buf, char *end, const struct timespec64 *ts,
-+                     struct printf_spec spec, const char *fmt)
-+{
-+	static const struct printf_spec default_dec09_spec = {
-+		.base = 10,
-+		.field_width = 9,
-+		.precision = -1,
-+		.flags = ZEROPAD,
-+	};
-+
-+	if (fmt[2] == 'p')
-+		buf = number(buf, end, ts->tv_sec, default_dec_spec);
-+	else
-+		buf = time64_str(buf, end, ts->tv_sec, spec, fmt);
-+	if (buf < end)
-+		*buf = '.';
-+	buf++;
-+
-+	return number(buf, end, ts->tv_nsec, default_dec09_spec);
-+}
-+
- static noinline_for_stack
- char *time_and_date(char *buf, char *end, void *ptr, struct printf_spec spec,
- 		    const char *fmt)
-@@ -1999,6 +2021,8 @@ char *time_and_date(char *buf, char *end, void *ptr, struct printf_spec spec,
- 	switch (fmt[1]) {
- 	case 'R':
- 		return rtc_str(buf, end, (const struct rtc_time *)ptr, spec, fmt);
-+	case 'S':
-+		return timespec64_str(buf, end, (const struct timespec64 *)ptr, spec, fmt);
- 	case 'T':
- 		return time64_str(buf, end, *(const time64_t *)ptr, spec, fmt);
- 	default:
-@@ -2464,6 +2488,7 @@ early_param("no_hash_pointers", no_hash_pointers_enable);
-  * - 'g' For block_device name (gendisk + partition number)
-  * - 't[RT][dt][r][s]' For time and date as represented by:
-  *      R    struct rtc_time
-+ *      S    struct timespec64
-  *      T    time64_t
-  * - 'C' For a clock, it prints the name (Common Clock Framework) or address
-  *       (legacy clock framework) of the clock
+diff --git a/sound/core/seq/seq_queue.c b/sound/core/seq/seq_queue.c
+index f5c0e401c8ae..f6e86cbf38bc 100644
+--- a/sound/core/seq/seq_queue.c
++++ b/sound/core/seq/seq_queue.c
+@@ -699,7 +699,7 @@ void snd_seq_info_queues_read(struct snd_info_entry *entry,
+ 		snd_iprintf(buffer, "current tempo      : %d\n", tmr->tempo);
+ 		snd_iprintf(buffer, "tempo base         : %d ns\n", tmr->tempo_base);
+ 		snd_iprintf(buffer, "current BPM        : %d\n", bpm);
+-		snd_iprintf(buffer, "current time       : %d.%09d s\n", tmr->cur_time.tv_sec, tmr->cur_time.tv_nsec);
++		snd_iprintf(buffer, "current time       : %ptSp s\n", &tmr->cur_time);
+ 		snd_iprintf(buffer, "current tick       : %d\n", tmr->tick.cur_tick);
+ 		snd_iprintf(buffer, "\n");
+ 	}
+diff --git a/sound/core/seq/seq_timer.c b/sound/core/seq/seq_timer.c
+index 29b018a212fc..06074d822bae 100644
+--- a/sound/core/seq/seq_timer.c
++++ b/sound/core/seq/seq_timer.c
+@@ -442,7 +442,7 @@ void snd_seq_info_timer_read(struct snd_info_entry *entry,
+ 	int idx;
+ 	struct snd_seq_timer *tmr;
+ 	struct snd_timer_instance *ti;
+-	unsigned long resolution;
++	struct timespec64 resolution;
+ 	
+ 	for (idx = 0; idx < SNDRV_SEQ_MAX_QUEUES; idx++) {
+ 		struct snd_seq_queue *q __free(snd_seq_queue) = queueptr(idx);
+@@ -457,8 +457,8 @@ void snd_seq_info_timer_read(struct snd_info_entry *entry,
+ 			if (!ti)
+ 				break;
+ 			snd_iprintf(buffer, "Timer for queue %i : %s\n", q->queue, ti->timer->name);
+-			resolution = snd_timer_resolution(ti) * tmr->ticks;
+-			snd_iprintf(buffer, "  Period time : %lu.%09lu\n", resolution / 1000000000, resolution % 1000000000);
++			resolution = ns_to_timespec64(snd_timer_resolution(ti) * tmr->ticks);
++			snd_iprintf(buffer, "  Period time : %ptSp\n", &resolution);
+ 			snd_iprintf(buffer, "  Skew : %u / %u\n", tmr->skew, tmr->skew_base);
+ 		}
+  	}
 -- 
 2.50.1
 
