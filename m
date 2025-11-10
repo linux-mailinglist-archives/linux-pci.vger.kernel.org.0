@@ -1,126 +1,116 @@
-Return-Path: <linux-pci+bounces-40666-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40667-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6635AC44E43
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 05:05:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A1D3C44E74
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 05:30:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6253B4E55D0
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 04:05:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 390B7188CE40
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 04:31:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7977533D6;
-	Mon, 10 Nov 2025 04:05:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83AC641C63;
+	Mon, 10 Nov 2025 04:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UGpOJCIW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E16299927;
-	Mon, 10 Nov 2025 04:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D65720468E
+	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 04:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762747503; cv=none; b=q83wEGDhmqyR3c8jA6uB4W19gnw2Ig8AqvUjZYrC1oKaMJp+sdMqtq+25DcEGLy8yyE6k+zNBPEMvsn/00N7RQ7ytSl8UPqasVzZputOIp4FgYysAwl8FKHYM0VMdXglbkMgW1l1/cE4/jYAJjyvlo/keIFkfQNY8VDmNRbYWdk=
+	t=1762749042; cv=none; b=aCqheHOcvNhqAmdtX3HDLaDDpfbt1+IyrABxkR20Gqqaz8WXsj+y9wZSmWixugCcF8Nrw6aQdVCLKJBH6n3JDMeeg2j3sj4UmH9D/EjUqrHzOdrR+P5oQJEWGIEZ06Anv/MzapAe9le5eGsHbPhzNLR5wZ6NWBSRp2VmkvIFNTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762747503; c=relaxed/simple;
-	bh=RTjKEpIDzrwmwtqOKmKcQDUA+BQVu2gXoDCgg7LL/9Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Izp71vhechtdMUobg0NaA1wwJPLNSfnmghuF01oJTtx3wwM/gN71hq9yDEuDmxgjim86kkY/iPVtUPAPSJ60L9lYixzMEyo07Mc8kQxCUv/FHHGwq08x6zZ860pLoiRwvEjCE87K+7iOp6uqwz5/urkCoRkPXvLqBVfbyWoCqvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from DESKTOP-L0HPE2S (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowAC3f3BjZBFpGlkwAA--.16112S2;
-	Mon, 10 Nov 2025 12:04:52 +0800 (CST)
-From: Haotian Zhang <vulab@iscas.ac.cn>
-To: jdmason@kudzu.us,
-	dave.jiang@intel.com,
-	allenbh@gmail.com,
-	mani@kernel.org,
-	kwilczynski@kernel.org,
-	kishon@kernel.org,
-	bhelgaas@google.com
-Cc: ntb@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haotian Zhang <vulab@iscas.ac.cn>
-Subject: [PATCH] pci: endpoint: Add missing NULL check for alloc_workqueue()
-Date: Mon, 10 Nov 2025 12:04:46 +0800
-Message-ID: <20251110040446.2065-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.50.1.windows.1
+	s=arc-20240116; t=1762749042; c=relaxed/simple;
+	bh=/MaK8XJpPj9MvaeY04XRTBctbl3/A0aTY2hauY/Dgw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HzoQd1tplNdz9heafwsOTGc5bwL3ORKlU8W02opqfn1/dxjQ3Wz9SU2RB9NDcmD4Vgc7vMnb3ycVsqxtpJ0N1KYXAyR9faBG5mkEbOKym7PprvKFt5w4d8vkDP75bemrcmSOO45eqphzWOXV/ijCsFiJhU6cA1ALBAWhtRqmZbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UGpOJCIW; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762749041; x=1794285041;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/MaK8XJpPj9MvaeY04XRTBctbl3/A0aTY2hauY/Dgw4=;
+  b=UGpOJCIWqsgiZU0a7T0NkjtTJV6Pk3lK2shSxTBX/4/eZhAsfBCq/IkW
+   /QB1raN9IiGGxT+yucHJkxReWGhDjMMsUWDTZiqyqBYPCXMSTMQn8NDZe
+   JvHXUgr+gIWFA3DseTK0VsnYi5QTE4bLiBxuXTCV0a1rXTiDcx+iOEAtO
+   Xt/lXmta1VlmWLLEkrWtdGlZA5+JRoG8pfoDDeswUWX2CtpmgXcCOaKjw
+   tz/xjczioUpTBJnHYYX2CxvIIhUFZdQ+nurCovkGKfXhR8GHEit7DxmF/
+   C7Q8rykmxyUndluZGijBtRcNgrCnTKXMqsVW5GcPrdl0ZglSIs7V8vOQl
+   g==;
+X-CSE-ConnectionGUID: PR9fxh5wQP+odMSDbC7fLg==
+X-CSE-MsgGUID: jnv8RCpTSW+Izpm4kPVelw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="64707625"
+X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
+   d="scan'208";a="64707625"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 20:30:40 -0800
+X-CSE-ConnectionGUID: phv2LWDmT3msgRtTHfJFRw==
+X-CSE-MsgGUID: y13hwxISRsWhn3w+6x6PRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
+   d="scan'208";a="225829214"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa001.jf.intel.com with ESMTP; 09 Nov 2025 20:30:38 -0800
+Date: Mon, 10 Nov 2025 12:16:16 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-pci@vger.kernel.org, linux-coco@lists.linux.dev,
+	gregkh@linuxfoundation.org, aik@amd.com, aneesh.kumar@kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
+	Samuel Ortiz <sameo@rivosinc.com>
+Subject: Re: [PATCH v8 7/9] PCI/IDE: Add IDE establishment helpers
+Message-ID: <aRFnEMYe9yCic5a3@yilunxu-OptiPlex-7050>
+References: <20251031212902.2256310-1-dan.j.williams@intel.com>
+ <20251031212902.2256310-8-dan.j.williams@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAC3f3BjZBFpGlkwAA--.16112S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZFW7Jr18WrW5XF45Cr4xtFb_yoW8uF43pr
-	ZayFy0yrW0qr4UtFZ8Xw4kCFyakanYg34UCF1fuw1avw47WFZYqan5try5tF1DCrWUXw45
-	ta98X3sFqF1UAr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
-	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
-	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwwCA2kRR2h3EwAAs5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251031212902.2256310-8-dan.j.williams@intel.com>
 
-The alloc_workqueue() function can return NULL on memory allocation
-failure. Without proper error checking, this leads to a NULL pointer
-dereference when queue_work() is later called with the NULL workqueue
-pointer in epf_ntb_epc_init().
+> +{
+> +	if (!pci_is_pcie(pdev)) {
+> +		pci_warn_once(pdev, "not a PCIe device\n");
+> +		return NULL;
+> +	}
+> +
+> +	switch (pci_pcie_type(pdev)) {
+> +	case PCI_EXP_TYPE_ENDPOINT:
+> +		if (pdev != ide->pdev) {
+> +			pci_warn_once(pdev, "setup expected Endpoint: %s\n", pci_name(ide->pdev));
+> +			return NULL;
+> +		}
+> +		return &ide->partner[PCI_IDE_EP];
+> +	case PCI_EXP_TYPE_ROOT_PORT: {
 
-Add a NULL check immediately after alloc_workqueue() and return -ENOMEM
-on failure to prevent the driver from loading with an invalid workqueue
-pointer.
+No need the braces
 
-Fixes: e35f56bb0330 ("PCI: endpoint: Support NTB transfer between RC and EP")
-Fixes: 8b821cf76150 ("PCI: endpoint: Add EP function driver to provide NTB functionality")
-Signed-off-by: Haotian Zhang <vulab@iscas.ac.cn>
----
- drivers/pci/endpoint/functions/pci-epf-ntb.c  | 4 ++++
- drivers/pci/endpoint/functions/pci-epf-vntb.c | 4 ++++
- 2 files changed, 8 insertions(+)
+Reviewed-by: Xu Yilun <yilun.xu@linux.intel.com>
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-index e01a98e74d21..b3d96a2e3a8c 100644
---- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-@@ -2126,6 +2126,10 @@ static int __init epf_ntb_init(void)
- 
- 	kpcintb_workqueue = alloc_workqueue("kpcintb", WQ_MEM_RECLAIM |
- 					    WQ_HIGHPRI, 0);
-+	if (!kpcintb_workqueue) {
-+		pr_err("Failed to allocate kpcintb workqueue\n");
-+		return -ENOMEM;
-+	}
- 	ret = pci_epf_register_driver(&epf_ntb_driver);
- 	if (ret) {
- 		destroy_workqueue(kpcintb_workqueue);
-diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-index 83e9ab10f9c4..79800f1fecc3 100644
---- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-@@ -1534,6 +1534,10 @@ static int __init epf_ntb_init(void)
- 
- 	kpcintb_workqueue = alloc_workqueue("kpcintb", WQ_MEM_RECLAIM |
- 					    WQ_HIGHPRI, 0);
-+	if (!kpcintb_workqueue) {
-+		pr_err("Failed to allocate kpcintb workqueue\n");
-+		return -ENOMEM;
-+	}
- 	ret = pci_epf_register_driver(&epf_ntb_driver);
- 	if (ret) {
- 		destroy_workqueue(kpcintb_workqueue);
--- 
-2.50.1.windows.1
-
+> +		struct pci_dev *rp = pcie_find_root_port(ide->pdev);
+> +
+> +		if (pdev != rp) {
+> +			pci_warn_once(pdev, "setup expected Root Port: %s\n",
+> +				      pci_name(rp));
+> +			return NULL;
+> +		}
+> +		return &ide->partner[PCI_IDE_RP];
+> +	}
+> +	default:
+> +		pci_warn_once(pdev, "invalid device type\n");
+> +		return NULL;
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(pci_ide_to_settings);
 
