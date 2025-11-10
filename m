@@ -1,100 +1,97 @@
-Return-Path: <linux-pci+bounces-40712-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40713-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 063B6C46FAE
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 14:42:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 38509C47122
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 15:02:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A14218883DD
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 13:41:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0AB201886603
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 14:02:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B248A13C3F2;
-	Mon, 10 Nov 2025 13:41:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A1A9307AEA;
+	Mon, 10 Nov 2025 14:02:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/KyLeHb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="beqHn+dE"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2401DED7B;
-	Mon, 10 Nov 2025 13:41:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD210228CBC;
+	Mon, 10 Nov 2025 14:02:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762782069; cv=none; b=ZvJnPfqTH/OlPPggW5+clHRS8vqs9s3P/zY9fv2iDaApuv70kdY0ozhMtRsp1x6N+Oe4MLuz/7iLh0uEnwdjDTCF+20L7ausYFd/QRJdM1EUMMrMymVKjkuVBTH5U4ueBwlXXoZJejcwObt0wzX1mm1s9Gq2lplYdHh0g77DnLw=
+	t=1762783336; cv=none; b=qzRzWKWZWKrnXMhhUrgHniWmvMhBSYVpvkVJLTXTO+4dy1W39ZlsR9HxqeM0pmprnqBUj2q6dzC8stzyhjO+RtzZ537X3r2wyFMdxz617pXfnR9okFeEtQA9KwodCvFXqOjdba17Ppwvejc42MIAdAKKgKH0LRKFKgTmE/QyWwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762782069; c=relaxed/simple;
-	bh=YyvEILKZOPaCVdYywI5ynhrjxIxQw+U5jV/llmxJWmY=;
+	s=arc-20240116; t=1762783336; c=relaxed/simple;
+	bh=kRwsXVFv1McQ3Dvj5cuxK3qdGt6Zp8GEmPh7L11Pq6c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eahi6qIkqgTyASFNZ20Yzu7OUVlY64ZSifhI9TGg60TTHVyeKyKxXu3phclSYklXqpCyBd/iPqc8S0bGfERCHJyvL4R96Scch+xpGFwiYcpD9xg/k11nWOgSDHEEeyi36jbJaKi0dWY9+DoHPPIeBuHmhS8oJ25x3271kqKLBio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/KyLeHb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F4EC4CEFB;
-	Mon, 10 Nov 2025 13:41:01 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=LHartHoHZUupQ54qCOH7gYH9WevRpfrptYVxy27IXit6uJ6MXH5zLcuPQDk2fZmqaAmPiUGqpIV0bpv1les1uNrMQII2iwyxiPHZngJPDnLnKZJGdjFkLxIp1AtW56QNtNG9enmK0JgOmfZFHE33wNVF/DuBo09SKW6+1ALWeAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=beqHn+dE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 803D7C19422;
+	Mon, 10 Nov 2025 14:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762782065;
-	bh=YyvEILKZOPaCVdYywI5ynhrjxIxQw+U5jV/llmxJWmY=;
+	s=k20201202; t=1762783336;
+	bh=kRwsXVFv1McQ3Dvj5cuxK3qdGt6Zp8GEmPh7L11Pq6c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R/KyLeHbVTG85KmeM2p+RjVp3d2RIC9vKlxVoeYyMtFnnZVq8Bv/PjBeQWFxZ7yi7
-	 h45NIs/Sk3wnniA7bsUNalcD++sDa8oQXxUe3HkGJ3rFRYWxzLf3Dm7QtR06zCumN5
-	 sqxZCEZA3pXAn4FqK/z5rbhbB4BalWIjMfGSYh/tM80LxXP0bbWQpS5hhCT4yxWKd+
-	 IO2ltmJeuYhy8xcoJNIqifrP0SyGsafOhXluqfjC1onGgoXe+Dd8aWnLdc6dx2egxb
-	 Bh9yQVugGUspb3VrXacOHtZIMWacqgv+epE1VAe2omnMVCHHEDpsQ4dSqxG1cw4VrQ
-	 sDI6tNGHBTbeA==
-Date: Mon, 10 Nov 2025 13:40:58 +0000
-From: Lee Jones <lee@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Markus Probst <markus.probst@posteo.de>,
-	Pavel Machek <pavel@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	bjorn3_gh@protonmail.com, Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	rust-for-linux@vger.kernel.org, linux-leds@vger.kernel.org,
+	b=beqHn+dEFMF6TBBtFIUbQk20e2unDHEEzqFAseqx1VMPiiixeu0GzDT0ztuC0E6K6
+	 HXvc9etRm9K+Kfme2p3YPXOtamnzXnO4UPe6QEBpFfj8VWRJKgnghUfq5SggvC4x8N
+	 UTymRzOeKwUyxxevZvjYO7LiX8WJmZNVZt5P5JSgVASRoHPv0HTEenu69ELlPyOm12
+	 vlQCDNJbwPIrLOT/+RHu8TXrz08NGiS8IkJIEr5syqFEhFOQ0l82dAjXgzd8iviUcH
+	 LNGhdI42I421yxYIGngpyRj1RYM6a7lQUTpBLKMQAEqU5eavAC+9XPnA7HmaCJlB91
+	 NbeXBTprGPMBw==
+Date: Mon, 10 Nov 2025 16:02:11 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Gerd Bayer <gbayer@linux.ibm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Jay Cornwall <Jay.Cornwall@amd.com>,
+	Felix Kuehling <Felix.Kuehling@amd.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Alexander Schmidt <alexs@linux.ibm.com>, linux-s390@vger.kernel.org,
 	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/2] rust: leds: add led classdev abstractions
-Message-ID: <20251110134058.GC1949330@google.com>
-References: <20251027200547.1038967-1-markus.probst@posteo.de>
- <DDVLMBC40199.2BVFYHDGQP4Q4@kernel.org>
+Subject: Re: [PATCH 1/2] PCI: AtomicOps: Define valid root port capabilities
+Message-ID: <20251110140211.GK15456@unreal>
+References: <20251110-fix_pciatops-v1-0-edc58a57b62e@linux.ibm.com>
+ <20251110-fix_pciatops-v1-1-edc58a57b62e@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DDVLMBC40199.2BVFYHDGQP4Q4@kernel.org>
+In-Reply-To: <20251110-fix_pciatops-v1-1-edc58a57b62e@linux.ibm.com>
 
-On Thu, 30 Oct 2025, Danilo Krummrich wrote:
+On Mon, Nov 10, 2025 at 02:25:05PM +0100, Gerd Bayer wrote:
+> Provide the two combinations of Atomic Op Completion size attributes
+> that a root port may support per PCIe Spec 7.0 section 6.15.3.1. -
+> besides the trivial "No support" - as two new defines.
+> 
+> Change documentation of pci_enable_atomic_ops_to_root() that these are
+> the only ones that should be used. Also, spell out that all requested
+> capabilities need to be supported at the root port for enable to
+> succeed. Also emphasize that on success, this sets AtomicOpsCtl:ReqEn to
+> 1, and leaves it untouched in case of failure.
+> 
+> Suggested-by: Leon Romanovsky <leon@kernel.org>
+> Signed-off-by: Gerd Bayer <gbayer@linux.ibm.com>
+> ---
+>  drivers/pci/pci.c             | 13 +++++++------
+>  include/uapi/linux/pci_regs.h |  8 ++++++++
+>  2 files changed, 15 insertions(+), 6 deletions(-)
 
-> Hi Markus,
-> 
-> On Mon Oct 27, 2025 at 9:06 PM CET, Markus Probst wrote:
-> > Markus Probst (2):
-> >   rust: Add trait to convert a device reference to a bus device
-> >     reference
-> >   rust: leds: add basic led classdev abstractions
-> 
-> I don't see an entry in the MAINTAINERS file for the added LED code.
-> 
-> Did you hear back from the LED maintainers already?
-> 
-> @Lee, Pavel: What's your take on this?
+<...>
 
-I'd be happy to take LED Rust patches at face value so long as they come
-with a quality Rust-specific Reviewed-by.  Reviewing professional level
-Rust code is presently beyond my capabilities.
+> +/* PCIe spec 7.0 6.15.3.1: Root ports may support one of 2 sets of Atomic Ops */
+> +#define  PCI_EXP_ROOT_PORT_ATOMIC_BASE		\
+> +	(PCI_EXP_DEVCAP2_ATOMIC_COMP32 |	\
+> +	 PCI_EXP_DEVCAP2_ATOMIC_COMP64)
+> +#define  PCI_EXP_ROOT_PORT_ATOMIC_FULL		\
+> +	(PCI_EXP_DEVCAP2_ATOMIC_COMP32 |	\
+> +	 PCI_EXP_DEVCAP2_ATOMIC_COMP64 |	\
+> +	 PCI_EXP_DEVCAP2_ATOMIC_COMP128)
 
--- 
-Lee Jones [李琼斯]
+Thanks for doing this.
 
