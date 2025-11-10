@@ -1,417 +1,186 @@
-Return-Path: <linux-pci+bounces-40706-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40707-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DA61C46C7A
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 14:09:09 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F39EC46CFE
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 14:15:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCEB2188EF19
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 13:09:33 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0D2924EBDBF
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 13:14:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDF58217F33;
-	Mon, 10 Nov 2025 13:09:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E18473112C4;
+	Mon, 10 Nov 2025 13:13:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eyNN9ewc"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FnIKMiJ6";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="F7/DrDrT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018DE1DF759;
-	Mon, 10 Nov 2025 13:09:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F74730FF31
+	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 13:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762780145; cv=none; b=E6kMNXsCf0BxGrnASQ92oNU9o5UqTZsNCUP5SQSch6yiitkmaiQaOA/iifuwRaBn9VLXG+Rjv0MILFRWRPrliYIKYo/uxbcGr1TGSoXoJ7RO3wGPl0vP6kj++06jQinL7uk4I0qhIKsGsXNf7sEyQlPETjQsiXLZwRdBemSx21g=
+	t=1762780425; cv=none; b=FMaLdxAN85G7L2tzGsHk4Tp63n3ZiC+mxUmI8jmS7cv/DO00uEm4gcuZXCNfnCpbSjl6nXoL5ZXKB3Nde6K374i4bj0RhbPI7FIFMtTPuuQH3uaPpq1j0lUrnt2c0LF7teZ/ZpOeUcjzUgkfdW+JSaVldmmxozb9YSqV+gaZnTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762780145; c=relaxed/simple;
-	bh=B2J1a2q/whp1jrzxwLC2myuPw5kOTZYNA09xq7GqzDY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=C9vR2JgF+8eXBdwj9LpbNGvzTZeRxFrWN1xGUw1gG2Nc83hJfkO0CBFrsLaEJBwYO+ikGBXOWD16E0hwnx2psMM0O+3utdTctH9iQt/pBzlDBdGDv8vZwaUDnIARYg4IS06V14HYotpsaDP8UAMHQhDEYslShSVjyFJy8sArKGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eyNN9ewc; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A9Ki79V023602;
-	Mon, 10 Nov 2025 13:08:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=kNvUbl
-	7pKnnp35VjjFyvB6PwejJv+lmV8s8QdHth1Qs=; b=eyNN9ewc23JxNc32+31Y5I
-	R+Iyy8FVHrMhaSkqVXbJtr+3b0+LaJrITmY468Nge4tA41g9jjRiuEQ/JzXT3ras
-	ajtCQFL79SwLBDeSKQwGdiwSlNLJVJgbw2GEC9tDbg80imGVDb5GytSWOOYfDtTH
-	lVZpBhvtFBuAZ3Ekpl8cBlykEtcBsIQwVlHrrOTZWKr/9OZxtGEDIYk5xExoen+/
-	P+YVyeZsMMULWsK8zh/MqTcWivSyidPrh3tWECk+SSqW7S00faLdbZ0xJVDocVyU
-	toWeTb6pw5MaOD0Wj3nZn/AbAPCnEm/9zv9yyTv5GT3icPMOhac70C3b/LMsT3eQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aa5chy2a6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Nov 2025 13:08:49 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AAD6upT031475;
-	Mon, 10 Nov 2025 13:08:48 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aa5chy29y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Nov 2025 13:08:48 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AAD16IW004735;
-	Mon, 10 Nov 2025 13:08:47 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4aagjxntqr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Nov 2025 13:08:47 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AAD8WTH10748616
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Nov 2025 13:08:32 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CF57C58060;
-	Mon, 10 Nov 2025 13:08:45 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6DF575803F;
-	Mon, 10 Nov 2025 13:08:42 +0000 (GMT)
-Received: from [9.87.143.152] (unknown [9.87.143.152])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 10 Nov 2025 13:08:42 +0000 (GMT)
-Message-ID: <7385677843a7790e01158644f63ae4dbb3353bfe.camel@linux.ibm.com>
-Subject: Re: [PATCH v5 1/2] PCI: Fix isolated PCI function probing with ARI
- and SR-IOV
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jan Kiszka
- <jan.kiszka@siemens.com>,
-        Bibo Mao <maobibo@loongson.cn>,
-        linux-s390
- <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev,
-        Farhan Ali
- <alifm@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Tianrui
- Zhao	 <zhaotianrui@loongson.cn>,
-        Gerald Schaefer
- <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev
- <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Christian
- Borntraeger <borntraeger@linux.ibm.com>,
-        Gerd Bayer	
- <gbayer@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Date: Mon, 10 Nov 2025 14:08:41 +0100
-In-Reply-To: <CAAhV-H4MNSiUqYpE919YcCaC-_-Q3GBwxRL13ggjsyLahQ-t1A@mail.gmail.com>
-References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
-	 <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com>
-	 <CAAhV-H6qqppoX_G5KrWmPor16bXfvNTE2x8Xx6yajAYPqxpigw@mail.gmail.com>
-	 <958ef380be4ea488698fab05245d631998c32a48.camel@linux.ibm.com>
-	 <CAAhV-H7iMKmLnisD-874D2ZC919sDYeWy3tw=+eUqifK--6-Dg@mail.gmail.com>
-	 <8dd0f3df4b18a6c9f8b49ede7bc2ab71e40fd8f9.camel@linux.ibm.com>
-	 <CAAhV-H4MNSiUqYpE919YcCaC-_-Q3GBwxRL13ggjsyLahQ-t1A@mail.gmail.com>
-Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	s=arc-20240116; t=1762780425; c=relaxed/simple;
+	bh=sAyJEnQpOE+CyoPsEVV52oBcegXRqpcGw3Hj73SO1gM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m3eU8Gn0A0YFNLobtfXohmQ7bCyRbLmz5ufDx6zX8qmorsjb6Y2j8qoC5xJ4jwbbRywuPZ6YW+uN/4xLm3UQJ4KoVvpQH0GJC32kuUMHhDBDRkXUXFejEpDcbO1egalyPsZWvDhvhaCIWwCtiJ1VqZrmvWrwK631tiEftfouOwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FnIKMiJ6; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=F7/DrDrT; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AACOJeZ2407325
+	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 13:13:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zf5by7v/g7p+dvGHpfj+j+RRTgR0OJ9Fd2rr/ysTKL4=; b=FnIKMiJ6Agw8Bw7d
+	D5l7XFqGN2+lHQ5BEbn0Fv4yo5kBF3fGxUt2j7XPo1HEj7tPwE0dJdcVtcFMsTqR
+	nB5DTif6JbwYoEPpvCgCRdhnA66hmCfwRCmYKd4ww+ToVJmDCyFipto/RkoVRccF
+	lYgdeyKMb7HCLa2kjMF/jzv9vtmKR772GjPLCZStXjLIoc1lJh9N0clrNKtRUtYI
+	R+/6O1HIJaS94oRRCigXi8mfz/Jf5oDKU9qWfrYGwaaU7WgxKPATGra8H1kqx+51
+	ZqATOwjTJi/hsTm+beLsCseKwe2j784oW8mFVWUqZ1VyschZpGpcUw9VTYUN1Oev
+	9AhXGw==
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4abatd97ar-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 13:13:43 +0000 (GMT)
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-ba433d88288so2335796a12.2
+        for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 05:13:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1762780423; x=1763385223; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zf5by7v/g7p+dvGHpfj+j+RRTgR0OJ9Fd2rr/ysTKL4=;
+        b=F7/DrDrTohOcSHx8oxMgWQV7l0XZ7Svv1IGwC0DJDJgAb+qdunIhWtq5qLQC05sYGY
+         GgdNoHyr36DyWyWAmhnw9BKxXThjvE3MuHnEOYA7ht+iAVAMaNN+Pc60scfGKz4Lf3h5
+         N3xBZH8ZSTaAvz56Y2/4SHi+UbMf2L3TcjC3IycIGHhNmIYXHM+JutlUj6IVL+Iwuibn
+         jVoEE7yoLRAABLybOHFoKuU7sMJ4hDYb2y/HHOFmAYEPa7RA5v4GZQyc6pHb+kYA/16H
+         8qW7ySCSHqBMRq/KnTPNjYqZO2vyydeO+K8EVt3oDAV83uWGhWs9rMSSDhHssJPogXoS
+         zYtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762780423; x=1763385223;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zf5by7v/g7p+dvGHpfj+j+RRTgR0OJ9Fd2rr/ysTKL4=;
+        b=lDhli4588ghlLEtK62dVwnSGjO8jMjfXN1C05FOjkgnydFRk0e7t7p+8riFY497YOS
+         4KPjjkg0VpaXA8izJf2RGQaIHWEE0tUkE2Uunx6XMn3w+GmEuamU0GYbl7nbY/QzYHh2
+         AaIyxphvGsx9W/dz8Goeamp8GAVjpdVkloRaTak2xSj21JQ6gU1Ui7JikstymJVtTPX5
+         KjZSm3t/AcgI48dA7IDWKCzPoagikBnmbzB/fli+FYy11VGVj3UmEHJLw4Kyzn8hNoCx
+         rQnsKuQaCuUkM/qw7xmYP/2LyWbB73RKUiLyCg+BHwQBrs6goLFc0/CSqvIojBbr7p8Y
+         cCug==
+X-Forwarded-Encrypted: i=1; AJvYcCUuzbcL6R0HcgG6yFTJtu9eAKPGZcTwA8Jffqlt+OFPlbZ1+WBjwx8pOfT57ELNUMVSZU9GVocRpMQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXm3aZ68Zgl/YoIHuYu108A51di3VeYyVGQbBES6kxl/HQmNyH
+	FIaNuoRgzTuuFw8ZK27usLSeGRh2np6Tg9QGLh0G4j7w1CFYS8qOq+q7HwIp9w0HDb+GirYkCki
+	BhTDNnVs/MFewn6v0MAxVZgLXggSUzsX+vCIc6x8ooWAfr/n02y1+JS7kHje/bsk=
+X-Gm-Gg: ASbGncstuAXF5cRI/HM180t7j32Jvs3WoFNRjsaqp2LdjVOfNErEePbOhu88WLCnmUa
+	7A4vYRx3QzgvfOiFWUaVOddJywO8BHR2zzDjiKdoyUopibDLKcSptv3ZmIh5sUNV45o47AU3AR2
+	Sl+XSuQ/3xNbqxGFnn3/xBq25qxlPJDtS0URXb2aGPAupfvDl8ZV/p+OohO0R7UoZCcnzRhYDfh
+	UhkdUkYI6g6py95NXNSMvv6umHKBwIUDeWRteC/2SawR3/c9+3fXfLDoYfTN4KmBcBKKx55UsXj
+	Cg7jhQ7qCc2PJXgnR/QoHmf4HPS6jbLHZU0+hTyBZFBQv1lwb1GGK7PnuyTFNpis1XNzF6xp3pQ
+	KtPlFcVuoftgXopSnlwV+AMv6OX49MaI=
+X-Received: by 2002:a17:90a:e710:b0:340:ec3b:b587 with SMTP id 98e67ed59e1d1-3436cb7a93amr9070689a91.1.1762780422764;
+        Mon, 10 Nov 2025 05:13:42 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHpxzKYemCJDBtZNVtT/gk1VWfrU0u+FC6zzifoWeyFyq0P4Hf5egp7j8ghzn6uNZubwpXZ1w==
+X-Received: by 2002:a17:90a:e710:b0:340:ec3b:b587 with SMTP id 98e67ed59e1d1-3436cb7a93amr9070654a91.1.1762780422139;
+        Mon, 10 Nov 2025 05:13:42 -0800 (PST)
+Received: from [192.168.29.63] ([49.43.224.0])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b0cc17a688sm12007008b3a.40.2025.11.10.05.13.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Nov 2025 05:13:41 -0800 (PST)
+Message-ID: <511ebf46-63ed-45af-9d66-ccd1d944763a@oss.qualcomm.com>
+Date: Mon, 10 Nov 2025 18:43:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Ss+dKfO0 c=1 sm=1 tr=0 ts=6911e3e1 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=Vxuvrjjsk0R2FVS2G4UA:9 a=QEXdDO2ut3YA:10
- a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA4MDA5NSBTYWx0ZWRfX5TZLDVOuVBl6
- YACMeI7LzqoognOXN5cCmuSMFnR2dW2pCvMsy4lUTFxv0yBXWoaJ54ijIPUhSdsaYMqRUzM+FGm
- WRUsvdbNwydy09AUWGTdEW0Ql43O7p+gyyYCrHIZVX2WuwgI+Fi9xnXfEgeEp4o9tMC9j4iHjRM
- 2uLS4L780gK6VVcvx54IVxrGobLnzqj+Die0APKkV8qvX6vkwbIXkSypNXQ3W2tQZ3tfv0VzeiJ
- q68zrbIKJFvnKvgC18RX6sDjcchDtJa6LQyOIYzhvuh+JT4M0a4dJ7mRCK4APqVwX8wnuWTMA2m
- 80907DkovkUs67ZCMNeSmSSwl1kKzvOwCa7Kka3+/x6z6E/z5TCKUp7WqyBAxnEfAxYrOhLm9gV
- u2cEz1W4LYByvTjCa2D7RbpuJX6aYQ==
-X-Proofpoint-GUID: PZvNFbRZCkhZR1pzN2hteTUMaVos9zR6
-X-Proofpoint-ORIG-GUID: CNvox4p8N4inxrInH8OJ6ISqn_21NbuI
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] schemas: pci: Document PCIe T_POWER_ON
+To: andersson@kernel.org, robh@kernel.org, manivannan.sadhasivam@linaro.org,
+        krzk@kernel.org, helgaas@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        lpieralisi@kernel.org, kw@linux.com, conor+dt@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree-spec@vger.kernel.org, quic_vbadigan@quicinc.com
+References: <20251110112550.2070659-1-krishna.chundru@oss.qualcomm.com>
+Content-Language: en-US
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <20251110112550.2070659-1-krishna.chundru@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 4frKZwVq3GCBi62XmUj3XofW1QlegBZ7
+X-Authority-Analysis: v=2.4 cv=eZowvrEH c=1 sm=1 tr=0 ts=6911e507 cx=c_pps
+ a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=08Rv9HEMxtlCNW7Dos5SIA==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=SpA6wshyjLPcRYPzmHsA:9
+ a=QEXdDO2ut3YA:10 a=_Vgx9l1VpLgwpw_dHYaR:22
+X-Proofpoint-ORIG-GUID: 4frKZwVq3GCBi62XmUj3XofW1QlegBZ7
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEwMDExNSBTYWx0ZWRfX2xETzjBYs+YR
+ /V6TWVd31af/jqubfB6APtdJiNY/HgxGyFfscbruRexppZkIhCJTteEmNd6BMIBxBa3FaKCj40J
+ p7PF0CcsBh3se80Ipe7XTRWCG7uh/HawSj6d7wiWHsK0HbJjKFddMz8FvWySSHQ/DtQGlYQXcwl
+ nHJXEP5HsFLKFLooO2zWNkBONq7q2hCBFUrROfEmsC05yH2c1bucgez7yqodKpl9HDgT6wBbKvW
+ LPzgEzeqcKX/yo+ZYmFDEgvXAQHJvFjj3MiehxauHygfgLwJl6p5tBLoW8YmWGpGu2uMkHp4rTf
+ kBXmpXL8eplW1vJjArmUM+hsWhB9Y35sWciDkz0AyO8Xm1vuDkJCayYz2TrnTsB52SYLj+OitZ4
+ JrZcScYXxofSM4MdbHG18GubCvhYpg==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-11-10_05,2025-11-10_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 suspectscore=0 impostorscore=0 bulkscore=0 phishscore=0
- lowpriorityscore=0 adultscore=0 priorityscore=1501 spamscore=0 malwarescore=0
+ suspectscore=0 spamscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
+ clxscore=1015 malwarescore=0 priorityscore=1501 bulkscore=0 phishscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511080095
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511100115
 
-On Fri, 2025-11-07 at 15:19 +0800, Huacai Chen wrote:
-> On Wed, Nov 5, 2025 at 5:46=E2=80=AFPM Niklas Schnelle <schnelle@linux.ib=
-m.com> wrote:
-> >=20
-> > On Wed, 2025-11-05 at 09:01 +0800, Huacai Chen wrote:
-> > > On Mon, Nov 3, 2025 at 7:23=E2=80=AFPM Niklas Schnelle <schnelle@linu=
-x.ibm.com> wrote:
-> > > >=20
-> > > > On Mon, 2025-11-03 at 17:50 +0800, Huacai Chen wrote:
-> > > > > Hi, Niklas,
-> > > > >=20
-> > > > > On Wed, Oct 29, 2025 at 5:42=E2=80=AFPM Niklas Schnelle <schnelle=
-@linux.ibm.com> wrote:
-> > > > > >=20
-> > > > > > When the isolated PCI function probing mechanism is used in con=
-junction
-> > > > > > with ARI or SR-IOV it may not find all available PCI functions.=
- In the
-> > > > > > case of ARI the problem is that next_ari_fn() always returns -E=
-NODEV if
-> > > > > > dev is NULL and thus if fn 0 is missing the scan stops.
-> > > > > >=20
-> > > > > > For SR-IOV things are more complex. Here the problem is that th=
-e check
-> > > > > > for multifunction may fail. One example where this can occur is=
- if the
-> > > > > > first passed-through function is a VF with devfn 8. Now in
-> > > > > > pci_scan_slot() this means it is fn 0 and thus multifunction do=
-esn't get
-> > > > > > set. Since VFs don't get multifunction set via PCI_HEADER_TYPE_=
-MFD it
-> > > > > > remains unset and probing stops even if there is a devfn 9.
-> > > > > >=20
-> > > > > > Now at the moment both of these issues are hidden on s390. The =
-first one
-> > > > > > because ARI is detected as disabled as struct pci_bus's self is=
- NULL
-> > > > > > even though firmware does enable and use ARI. The second issue =
-is hidden
-> > > > > > as a side effect of commit 25f39d3dcb48 ("s390/pci: Ignore RID =
-for
-> > > > > > isolated VFs"). This is because VFs are either put on their own=
- virtual
-> > > > > > bus if the parent PF is not passed-through to the same instance=
- or VFs
-> > > > > > are hotplugged once SR-IOV is enabled on the parent PF and then
-> > > > > > pci_scan_single_device() is used.
-> > > > > >=20
-> > > > > > Still especially the first issue prevents correct detection of =
-ARI and
-> > > > > > the second might be a problem for other users of isolated funct=
-ion
-> > > > > > probing. Fix both issues by keeping things as simple as possibl=
-e. If
-> > > > > > isolated function probing is enabled simply scan every possible=
- devfn.
-> > > > > I'm very sorry, but applying this patch on top of commit a02fd056=
-61d7
-> > > > > ("PCI: Extend isolated function probing to LoongArch") we fail to
-> > > > > boot.
-> > > > >=20
-> > > > > Boot log:
-> > > > > [   10.365340] megaraid cmm: 2.20.2.7 (Release Date: Sun Jul 16
-> > > > > 00:01:03 EST 2006)
-> > > > > [   10.372628] megaraid: 2.20.5.1 (Release Date: Thu Nov 16 15:32=
-:35 EST 2006)
-> > > > > [   10.379564] megasas: 07.734.00.00-rc1
-> > > > > [   10.383222] mpt3sas version 54.100.00.00 loaded
-> > > > > [   10.388304] nvme nvme0: pci function 0000:08:00.0
-> > > > > [   10.395088] Freeing initrd memory: 45632K
-> > > > > [   10.469822] ------------[ cut here ]------------
-> > > > > [   10.474409] WARNING: CPU: 0 PID: 247 at drivers/ata/libahci.c:=
-233
-> > > > > ahci_enable_ahci+0x64/0xb8
-> > > > > [   10.482804] Modules linked in:
-> > > > > [   10.485838] CPU: 0 UID: 0 PID: 247 Comm: kworker/0:11 Not tain=
-ted
-> > > > > 6.18.0-rc3 #1 PREEMPT(full)
-> > > > > [   10.494397] Hardware name: To be filled by O.E.M.To be fill To=
- be
-> > > > > filled by O.E.M.To be fill/To be filled by O.E.M.To be fill, BIOS
-> > > > > Loongson-UDK2018-V4.0.
-> > > > > [   10.508139] Workqueue: events work_for_cpu_fn
-> > > > > [   10.512468] pc 900000000103be2c ra 900000000103be28 tp
-> > > > > 900000010ae44000 sp 900000010ae47be0
-> > > > > [   10.520769] a0 0000000000000000 a1 00000000000000b0 a2
-> > > > > 0000000000000001 a3 9000000001810e0c
-> > > > > [   10.529069] a4 9000000002343e20 a5 0000000000000001 a6
-> > > > > 0000000000000010 a7 0000000000000000
-> > > > > [   10.537373] t0 d10951fa66920f31 t1 d10951fa66920f31 t2
-> > > > > 0000000000001280 t3 000000000674c000
-> > > > > [   10.545673] t4 0000000000000000 t5 0000000000000000 t6
-> > > > > 9000000008002480 t7 00000000000000b4
-> > > > > [   10.553972] t8 90000001055eab90 u0 900000010ae47b68 s9
-> > > > > 9000000002221a50 s0 0000000000000000
-> > > > > [   10.562272] s1 ffff800032435800 s2 0000000000000000 s3
-> > > > > ffffffff80000000 s4 9000000002221570
-> > > > > [   10.570571] s5 0000000000000005 s6 9000000101ccf0b8 s7
-> > > > > 90000000023dd000 s8 900000010ae47d08
-> > > > > [   10.578869]    ra: 900000000103be28 ahci_enable_ahci+0x60/0xb8
-> > > > > [   10.584665]   ERA: 900000000103be2c ahci_enable_ahci+0x64/0xb8
-> > > > > [   10.590461]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=3DCC DACM=
-=3DCC -WE)
-> > > > > [   10.596609]  PRMD: 00000004 (PPLV0 +PIE -PWE)
-> > > > > [   10.600937]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
-> > > > > [   10.605698]  ECFG: 00071c1d (LIE=3D0,2-4,10-12 VS=3D7)
-> > > > > [   10.610458] ESTAT: 000c0000 [BRK] (IS=3D ECode=3D12 EsubCode=
-=3D0)
-> > > > > [   10.615994]  PRID: 0014d010 (Loongson-64bit, Loongson-3C6000/S=
-)
-> > > > > [   10.621875] CPU: 0 UID: 0 PID: 247 Comm: kworker/0:11 Not tain=
-ted
-> > > > > 6.18.0-rc3 #1 PREEMPT(full)
-> > > > > [   10.621877] Hardware name: To be filled by O.E.M.To be fill To=
- be
-> > > > > filled by O.E.M.To be fill/To be filled by O.E.M.To be fill, BIOS
-> > > > > Loongson-UDK2018-V4.0.
-> > > > > [   10.621878] Workqueue: events work_for_cpu_fn
-> > > > > [   10.621881] Stack : 900000010ae47848 0000000000000000
-> > > > > 90000000002436bc 900000010ae44000
-> > > > > [   10.621884]         900000010ae47820 900000010ae47828
-> > > > > 0000000000000000 900000010ae47968
-> > > > > [   10.621887]         900000010ae47960 900000010ae47960
-> > > > > 900000010ae47630 0000000000000001
-> > > > > [   10.621890]         0000000000000001 900000010ae47828
-> > > > > d10951fa66920f31 9000000100414300
-> > > > > [   10.621893]         80000000ffffe34d fffffffffffffffe
-> > > > > 000000000000034f 000000000000002f
-> > > > > [   10.621896]         0000000000000063 0000000000000001
-> > > > > 000000000674c000 9000000002221a50
-> > > > > [   10.621899]         0000000000000000 0000000000000000
-> > > > > 90000000020b6500 90000000023dd000
-> > > > > [   10.621902]         00000000000000e9 0000000000000009
-> > > > > 0000000000000002 90000000023dd000
-> > > > > [   10.621905]         900000010ae47d08 0000000000000000
-> > > > > 90000000002436d4 0000000000000000
-> > > > > [   10.621908]         00000000000000b0 0000000000000004
-> > > > > 0000000000000000 0000000000071c1d
-> > > > > [   10.621910]         ...
-> > > > > [   10.621912] Call Trace:
-> > > > > [   10.621913] [<90000000002436d4>] show_stack+0x5c/0x180
-> > > > > [   10.621918] [<900000000023f328>] dump_stack_lvl+0x6c/0x9c
-> > > > > [   10.621923] [<9000000000266eb8>] __warn+0x80/0x108
-> > > > > [   10.621927] [<90000000017d1910>] report_bug+0x158/0x2a8
-> > > > > [   10.621932] [<900000000180b610>] do_bp+0x2d0/0x340
-> > > > > [   10.621938] [<9000000000241da0>] handle_bp+0x120/0x1c0
-> > > > > [   10.621940] [<900000000103be2c>] ahci_enable_ahci+0x64/0xb8
-> > > > > [   10.621943] [<900000000103beb8>] ahci_save_initial_config+0x38=
-/0x4d8
-> > > > > [   10.621946] [<90000000010391b4>] ahci_init_one+0x354/0x1088
-> > > > > [   10.621950] [<9000000000d16cdc>] local_pci_probe+0x44/0xb8
-> > > > > [   10.621953] [<9000000000286f78>] work_for_cpu_fn+0x18/0x30
-> > > > > [   10.621956] [<900000000028a840>] process_one_work+0x160/0x330
-> > > > > [   10.621961] [<900000000028b208>] worker_thread+0x330/0x460
-> > > > > [   10.621964] [<9000000000295fdc>] kthread+0x11c/0x138
-> > > > > [   10.621968] [<900000000180b740>] ret_from_kernel_thread+0x28/0=
-xa8
-> > > > > [   10.621971] [<9000000000241484>] ret_from_kernel_thread_asm+0x=
-c/0x88
-> > > > > [   10.621973]
-> > > > >=20
-> > > > >=20
-> > > >=20
-> > > > This looks like a warning telling us that AHCI enable failed / time=
-d
-> > > > out. Do you have Panic on Warn on that this directly causes a boot
-> > > > failure? The only relation I can see with my patch is that maybe th=
-is
-> > > > AHCI device wasn't probed before and somehow isn't working?
-> > > The rootfs is on the AHCI controller, so AHCI failure causes the boot
-> > > failure, without this patch no boot problems.
-> > >=20
-> > > Huacai
-> > >=20
-> >=20
-> > Ok, I'm going to need more details to make sense of this. Can you tell
-> > me if ARI is enabled for that bus? Did you test with both patches or
-> > just this one? Could you provide lspci -vv from a good boot and can you
-> > tell which AHCI device the root device is on? Also could you clarify
-> > why you set hypervisor_isolated_pci_functions() in particular this
-> > seems like a bare metal boot, right? When running in KVM do you pass-
-> > through individual PCI functions with the guest seeing a devfn other
-> > than 0 alone, i.e. a missing devfn 0? Or do you need this for bare
-> > metal for some reason? If you don't need it for bare metal, does the
-> > boot work if you return 0 from hypervisor_isolated_pci_functions() with
-> > this patch?
-> 1. ARI isn't enabled.
-> 2. Only test the first patch.
-> 3. This is a bare metal boot.
-> 4. If hypervisor_isolated_pci_functions() return 0 then boot is OK
-> 5. PCI information please see the attachment.
->=20
-> Huacai
+Please ignore this patch, it has some mistakes which I have sent 
+accidentally.
 
-Thanks for the input. As far as I can see the lspci from a good boot
-shows no holes in your devfn space so this particular system doesn't
-seem to need the isolated function probing at all. But even then using
-it should only try out all devfns and thus never skip one that is found
-without isolated function probing.
+- Krishna Chaitanya.
 
-To sanity check this, I just booted my personal AMD Ryzen 3900X system
-with this series plus a two-liner to unconditionally enable isolated
-function probing also on x86_64 and it came up fine including AMD
-graphics and my Intel NIC with enabled SR-IOV.=C2=A0
-
-So I'm really perplexed and coming back to the thought that a device on
-your system is misbehaving when probing is attempted and maybe due to a
-similar issue as what I saw with SR-IOV it wasn't probed so far but
-really should be probed if isolated function probing is enabled. I also
-still don't understand your use-case. If it is for VMs then maybe you
-could limit it to those? Otherwise it feels like this is just a hack to
-probe an odd topology and I wonder if you should rather set
-PCI_SCAN_ALL_PCIE_DEVS to find those?
-
-Thanks,
-Niklas
+On 11/10/2025 4:55 PM, Krishna Chaitanya Chundru wrote:
+>  From PCIe r6, sec 5.5.4 & Table 5-11 in sec 5.5.5 T_POWER_ON is the
+> minimum amount of time(in us) that each component must wait in L1.2.Exit
+> after sampling CLKREQ# asserted before actively driving the interface to
+> ensure no device is ever actively driving into an unpowered component and
+> these values are based on the components and AC coupling capacitors used
+> in the connection linking the two components.
+>
+> This property should be used to indicate the T_POWER_ON for each Root Port.
+>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+> Changes in V1:
+> - Updated the commit text (Mani).
+>
+>   dtschema/schemas/pci/pci-bus-common.yaml | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+>
+> diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
+> index 5257339..bbe5510 100644
+> --- a/dtschema/schemas/pci/pci-bus-common.yaml
+> +++ b/dtschema/schemas/pci/pci-bus-common.yaml
+> @@ -152,6 +152,15 @@ properties:
+>         This property is invalid in host bridge nodes.
+>       maxItems: 1
+>   
+> +  t-power-on-us:
+> +    description:
+> +      The minimum amount of time that each component must wait in
+> +      L1.2.Exit after sampling CLKREQ# asserted before actively driving
+> +      the interface to ensure no device is ever actively driving into an
+> +      unpowered component. This value is based on the components and AC
+> +      coupling capacitors used in the connection linking the two
+> +      components(PCIe r6.0, sec 5.5.4).
+> +
+>     supports-clkreq:
+>       description:
+>         If present this property specifies that CLKREQ signal routing exists from
 
