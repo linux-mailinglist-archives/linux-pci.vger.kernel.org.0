@@ -1,166 +1,150 @@
-Return-Path: <linux-pci+bounces-40689-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40690-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F290C45DD3
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 11:16:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CCBCDC460D9
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 11:50:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFC903A3B54
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 10:15:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F9FF3A7F68
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 10:48:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BB193054C2;
-	Mon, 10 Nov 2025 10:15:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DD3E30217E;
+	Mon, 10 Nov 2025 10:48:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="GaomGJcZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LIT+guEJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m19731101.qiye.163.com (mail-m19731101.qiye.163.com [220.197.31.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A100530100C;
-	Mon, 10 Nov 2025 10:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E52301034
+	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 10:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762769743; cv=none; b=Jqqzn7/iazDf5+m3dUveWElEFpLYaqZI/StatjokGF0yMovhr0Tj2rV4wdwM6hogaDdv2lEzSjImF8Mig20ekVdJkPDz9Uql/t5MkNWUVrLewTUtp99f0Jz7IO9oUWqNG2MMRa1OOeuE9xDPg9XUO1bYv2n1OFNr4+FiUi0zsOA=
+	t=1762771736; cv=none; b=uOMK50yuVe+Khq9mGjtfpE9LjcXkRY1FR246bWDsNQ5WWqzkIszy0uZQ5HAlKv+F9oZyNLiEsSJIfakiOoqmc6mIOaGKB11mPxylRt9kOzqOjIzvx41OjjrQvrtW7oJ2NH2AyjYZ55Juqv6jVIaDGDgVlYorEjeZqckbCmCC7Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762769743; c=relaxed/simple;
-	bh=O8EVIs+xuKhjj0/Qcm4jV97y/fyO7N1TPbS+b2dkZAk=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=QpVZj8zvQNsW0z6pUuXw4SafY8HK4EATR7b+dVQMxzOlDn/va0Pvw6Ju5AOWJqdQkEIEjDIgnmJ9LnfuAt1bj7Wacz5nKgEe6wnbiK5f5WeX9qPF4/irSG/5yKX3bzdDSHqG1rG7hQDbTnNjx6dHpDVIKwWUKz1leS/YkwZEyuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=GaomGJcZ; arc=none smtp.client-ip=220.197.31.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.129] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 2909a128f;
-	Mon, 10 Nov 2025 18:15:35 +0800 (GMT+08:00)
-Message-ID: <dc932773-af5b-4af7-a0d0-8cc72dfbd3c7@rock-chips.com>
-Date: Mon, 10 Nov 2025 18:15:33 +0800
+	s=arc-20240116; t=1762771736; c=relaxed/simple;
+	bh=xrxwoznpXpxNSfNbja8LI6AG/5ekNGybu+V3S1CSNQU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hjUh/gXqQfn+gCawZ02cPhUQ8H8r7AWKGnjPaEpK/8YRfwWl2+vEPP08Jn+IBDvdND00MGZuX1lCA3Idjsa3d1collzNMEFM7GCrF3Al/KGD7qZTHywJPYzlLve7o3fxiCJCR8B/dOcqnv4xkA2R51hFmlDP7Orizuz85WyKdHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LIT+guEJ; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2981f9ce15cso8180025ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 02:48:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1762771734; x=1763376534; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+cJ0HZa/RIQ3oZ9bdzNteTdSwTIuu4RhJvYmWAVNz08=;
+        b=LIT+guEJ1I5Z0jOjLZ8hHfBipi0MTaV/dK4py9deFJ3fpUB6a4PO14NHgX7AD+BcEw
+         JwQ1V0Rvfmpay6Oq+iVrVs0sSwT4RzOJWkjva9THjhoPcjOZEXguwA6avgrDxYzpFtgx
+         P3xbd51v0k1j/ybNzpjLfqftUyk2cWxajAKAtxhKReQla7RbR9heY1VcfynjkOhuBq/p
+         CbHjhSjwa0sThA5TJqq0MZjAE4L3AVivVBVzgeIkSiPS3OoIPGDyYYYzBHfssGPOAee/
+         z4F4NWjSfGvox3JP7mwbaaw8oYAaxxgvADNqUJV4PHmNcoY0GIgarnfhLoNlOaeEmxqs
+         Vrgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762771734; x=1763376534;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+cJ0HZa/RIQ3oZ9bdzNteTdSwTIuu4RhJvYmWAVNz08=;
+        b=vi1EOWi28wNWSnta4AsACEh0c+1pqIOb7mOfXlVuFvnHM3I9Pxl6E/QDJooJEpOpAe
+         wZGKri+jydbIijYDfsA980j1qq4tSEWQ59PF/bg01bWqj8H8IE5YgqnpEgQqBFxWn0h/
+         URKUB5fpZ+T4Fl3lIrADYkrA0JbUrGLDcm3gsjYP73gT18wDrtrk1ChANNOR1FBNX1If
+         nigVIzZj5qJyf3S8NaFAQuoNKfRoTiZQZaBg3SGZWbTwAmrfgt5mYEp0Ldyeb3MYhIl2
+         QttuR6LAt7a9lFOqDeA2jdfSdD3D9WwCcQfu7l5ooo3AItmuo1UFuwDsuEZEs53Yb5Ol
+         DsCw==
+X-Forwarded-Encrypted: i=1; AJvYcCXTZzNMEanHqyYFhYEwO8OAP8fh37BIQhT00+o6hZu7Ex0wRwBhMMWd7J6DhyB6FUwRWyqQaB5dDOw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyg6uJIY+gznuGGX+ZtTg7CtNu3iZeeAAxbNrqpnnk3BZLCoQdB
+	unN9S/VyobmQ2TdXVANRDEJy4cfJw1Qj9X1xA/Xvm6gLNkdd6bXeQmdP21XwgOZb/mfmtJ7DYuh
+	Bot0mE55Ku/YwSDN32M6fQq2n3SJ4BLgm3UOvzcV2oA==
+X-Gm-Gg: ASbGncv5f8OVaPsg86EfmgKddqdWtH0Ma3TJPgkyeUKuBNDSc4dIvIou3+7O7amPZKR
+	+wgwzUAw2JdMMG7vp+bkylZoYYaMEnXKiqk5XPd9cWchacb/C2LG0zQpgW0Hr0Ps/sPM6Sa6dff
+	nYjF4pQRyeFAhhUTD9hmv1Q1L0AsNSsPn1D/FOUzmbrur2PPW1v9vt+nL+Vh4MnHlOVwD+X/X7D
+	eJ13ogRRy7UzmMCjLUoOYud4OjggTqnZz99oKL5CSUWE00HQmPoHtjEUswqwrKRsZLeqboV+0Vf
+	9dv6Lk6V+yy/Pg==
+X-Google-Smtp-Source: AGHT+IE0FRG82nD93aofUD0cfwt+8b4Cf99CbEmLHNKF85pla2dK3w+D2zv8As6P254OUXAtQqh7YN7RNUqhVZAS+EA=
+X-Received: by 2002:a17:903:41d2:b0:297:c0f0:42a1 with SMTP id
+ d9443c01a7336-297e56d0d34mr99121845ad.44.1762771733753; Mon, 10 Nov 2025
+ 02:48:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, Damien Le Moal <dlemoal@kernel.org>,
- Anand Moon <linux.amoon@gmail.com>, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, Dragan Simic <dsimic@manjaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Heiko Stuebner <heiko@sntech.de>, mani@kernel.org
-Subject: Re: [RESEND] Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
-To: FUKAUMI Naoki <naoki@radxa.com>, Niklas Cassel <cassel@kernel.org>
-References: <20250113-rockchip-no-wait-v1-1-25417f37b92f@kernel.org>
- <1E8E4DB773970CB5+5a52c9e1-01b8-4872-99b7-021099f04031@radxa.com>
- <6e87b611-13ea-4d89-8dbf-85510dd86fa6@rock-chips.com>
- <aQ840q5BxNS1eIai@ryzen> <aQ9FWEuW47L8YOxC@ryzen>
- <55EB0E5F655F3AFC+136b89fd-98d4-42af-a99d-a0bb05cc93f3@radxa.com>
- <aRCI5kG16_1erMME@ryzen>
- <F8B2B6FA2884D69A+b7da13f2-0ffb-4308-b1ba-0549bc461be8@radxa.com>
- <780a4209-f89f-43a9-9364-331d3b77e61e@rock-chips.com>
- <4487DA40249CC821+19232169-a096-4737-bc6a-5cec9592d65f@radxa.com>
- <363d6b4d-c999-43d4-866e-880ef7d0dec3@rock-chips.com>
- <0C31787C387488ED+fd39bfe6-0844-4a87-bf48-675dd6d6a2df@radxa.com>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <0C31787C387488ED+fd39bfe6-0844-4a87-bf48-675dd6d6a2df@radxa.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9a6d438d5d09cckunm2a41cfe81382c3e
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGhgaSFYaGkgaSkNJGU9PHx9WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZS1VLVUtVS1kG
-DKIM-Signature: a=rsa-sha256;
-	b=GaomGJcZFoXy9dmKjLqxt7SSQwarCMv4UTRUnrqYXArfcRVHwNXTJEHw2s9PSPE9iGfN8S0vj7/5FE4SI677ltHzqcx8kqhuDDOr/4Cvmv4GuwiC1PderlOoae7sw3AVJSuz5uBBzLbtDsdOy6roqwSdbIwwONzCSx8H2PtfC1g=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=VAr21MtQeeygUzAg/O3leSHmqCylhYlryIgLa6wjxJs=;
-	h=date:mime-version:subject:message-id:from;
+References: <20251107044319.8356-1-manivannan.sadhasivam@oss.qualcomm.com>
+In-Reply-To: <20251107044319.8356-1-manivannan.sadhasivam@oss.qualcomm.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Mon, 10 Nov 2025 11:48:40 +0100
+X-Gm-Features: AWmQ_blifxa081st-IFJuyykgPdA-ffOj8SxBaRYKjoJg0IU0sOOhKrJk_VvJmc
+Message-ID: <CAKfTPtBd=D9gTfyfcAjH8ucMtDFP-7jZHkZq8HN+yVCnNmK8Aw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] PCI: dwc: Check for device presence in suspend and resume
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org, 
+	bhelgaas@google.com, will@kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, robh@kernel.org, linux-arm-msm@vger.kernel.org, 
+	zhangsenchuan@eswincomputing.com
+Content-Type: text/plain; charset="UTF-8"
 
-在 2025/11/10 星期一 15:52, FUKAUMI Naoki 写道:
-> Hi Shawn,
-> 
-> On 11/10/25 16:12, Shawn Lin wrote:
-> (snip)> Thanks for testing. I just got a ASM2806 switch as yours and 
-> verified it
->> on vanilla v6.18-rc5. After 30 times of cold boot, two NVMes behind
->> ASM2806 work as expected. Nothing special happened when I checked
->> with PA as well. You could help check the log and lspci dump there[1].
->>
->> [1]https://pastebin.com/sAF1fT0g
-> 
-> Thanks for the info!
-> 
-> I tried ASM2806 on Radxa ROCK 5B (RK3588).
->   https://gist.github.com/RadxaNaoki/640e47d377add9fe38301de164d4058e
-> 
-> It doesn't work on PCIe 2.0 (M.2 E Key), but it does work on PCIe 3.0 
-> (M.2 M Key).
-> 
-> Could you try PCIe 2.0 slot on your board?
+On Fri, 7 Nov 2025 at 05:43, Manivannan Sadhasivam
+<manivannan.sadhasivam@oss.qualcomm.com> wrote:
+>
+> Hi,
+>
+> This series aims to fix the usage of dw_pcie_link_up() API to check for Link up
+> during system suspend. The motivation for this series comes from recent
+> discussions [1] [2], where developers wanted to skip PME_Turn_Off broadcast in
+> dw_pcie_suspend_noirq() API when devices are not attached to the bus. They ended
+> up using dw_pcie_link_up() to check for the device presence due to the bad
+> example in the pcie-qcom driver which does the same. The usage of
+> dw_pcie_link_up() API here would be racy as the link can go down at any time
+> after the check.
+>
+> So to properly check for the device presence, this series introduces an API,
+> pci_root_ports_have_device(), that accepts the Root bus pointer and checks for
+> the presence of a device under any of the Root Ports. This API is used to
+> replace the dw_pcie_link_up() check in suspend path of pcie-qcom driver and also
+> used to skip the PME_Turn_Off brodcast message in dwc_pcie_suspend_noirq() API
+> and to skip waiting for the link up in dwc_pcie_resume_noirq() API.
+>
+> Testing
+> =======
+>
+> This series is tested on Qualcomm Lenovo Thinkpad T14s and observed no
+> functional change during the system suspend path.
+>
+> - Mani
+>
+> [1] https://lore.kernel.org/linux-pci/CAKfTPtCtHquxtK=Zx2WSNm15MmqeUXO8XXi8FkS4EpuP80PP7g@mail.gmail.com/
+> [2] https://lore.kernel.org/linux-pci/27516921.17f2.1997bb2a498.Coremail.zhangsenchuan@eswincomputing.com/
+>
+> Changes in v2:
+>
+> * Skipped waiting for link up in dwc_pcie_resume_noirq() if there was no device
+>   before suspend.
+> * Fixed the kdoc for pci_root_ports_have_device()
+>
+> Manivannan Sadhasivam (3):
+>   PCI: host-common: Add an API to check for any device under the Root
+>     Ports
+>   PCI: qcom: Check for the presence of a device instead of Link up
+>     during suspend
+>   PCI: dwc: Check for the device presence during suspend and resume
 
-I did, it doesn't work on PCIe 2.0 slot. From the PA, I could see
-the link is still in training during pci_host_probe() is called.
-Add some delay before pci_rescan_bus() in pcie-dw-rockchip doesn't
-help. But the below change should work as we delayed pci_host_probe().
+You already queued it but FWIW
+Tested-by: Vincent Guittot <vincent.guittot@linaro.org>
 
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -236,6 +236,8 @@ static int rockchip_pcie_start_link(struct dw_pcie *pci)
-         msleep(PCIE_T_PVPERL_MS);
-         gpiod_set_value_cansleep(rockchip->rst_gpio, 1);
-
-+       msleep(50);
-+
-         return 0;
-
-Otherwise we got:
-
-[    0.841518] pci_bus 0003:33: busn_res: can not insert [bus 33-31] 
-under [bus 32-31] (conflicts with (null) [bus 32-31])
-[    0.842596] pci_bus 0003:33: busn_res: [bus 33-31] end is updated to 33
-[    0.843184] pci_bus 0003:33: busn_res: can not insert [bus 33] under 
-[bus 32-31] (conflicts with (null) [bus 32-31])
-[    0.844120] pci 0003:32:00.0: devices behind bridge are unusable 
-because [bus 33] cannot be assigned for them
-[    0.845229] pci_bus 0003:34: busn_res: can not insert [bus 34-31] 
-under [bus 32-31] (conflicts with (null) [bus 32-31])
-[    0.846309] pci_bus 0003:34: busn_res: [bus 34-31] end is updated to 34
-[    0.846898] pci_bus 0003:34: busn_res: can not insert [bus 34] under 
-[bus 32-31] (conflicts with (null) [bus 32-31])
-[    0.847833] pci 0003:32:06.0: devices behind bridge are unusable 
-because [bus 34] cannot be assigned for them
-[    0.848923] pci_bus 0003:35: busn_res: can not insert [bus 35-31] 
-under [bus 32-31] (conflicts with (null) [bus 32-31])
-[    0.850014] pci_bus 0003:35: busn_res: [bus 35-31] end is updated to 35
-[    0.850605] pci_bus 0003:35: busn_res: can not insert [bus 35] under 
-[bus 32-31] (conflicts with (null) [bus 32-31])
-[    0.851540] pci 0003:32:0e.0: devices behind bridge are unusable 
-because [bus 35] cannot be assigned for them
-[    0.852424] pci_bus 0003:32: busn_res: [bus 32-31] end is updated to 35
-[    0.853028] pci_bus 0003:32: busn_res: can not insert [bus 32-35] 
-under [bus 31] (conflicts with (null) [bus 31])
-[    0.853184] hub 3-0:1.0: USB hub found
-[    0.853931] pci 0003:31:00.0: devices behind bridge are unusable 
-because [bus 32-35] cannot be assigned for them
-[    0.854262] hub 3-0:1.0: 1 port detected
-[    0.855144] pcieport 0003:30:00.0: bridge has subordinate 31 but max 
-busn 35
-[    0.855722] hub 4-0:1.0: USB hub found
-[    0.856109] pci 0003:32:00.0: PCI bridge to [bus 33]
-[    0.856939] pci 0003:32:06.0: PCI bridge to [bus 34]
-[    0.857133] hub 4-0:1.0: 1 port detected
-[    0.857430] pci 0003:32:0e.0: PCI bridge to [bus 35]
-[    0.858236] pci 0003:31:00.0: PCI bridge to [bus 32-35]
-
-> 
-> Best regards,
-> 
-> -- 
-> FUKAUMI Naoki
-> Radxa Computer (Shenzhen) Co., Ltd.
-> 
-> 
-
+>
+>  .../pci/controller/dwc/pcie-designware-host.c | 13 ++++++++++++
+>  drivers/pci/controller/dwc/pcie-qcom.c        |  6 ++++--
+>  drivers/pci/controller/pci-host-common.c      | 21 +++++++++++++++++++
+>  drivers/pci/controller/pci-host-common.h      |  2 ++
+>  4 files changed, 40 insertions(+), 2 deletions(-)
+>
+> --
+> 2.48.1
+>
 
