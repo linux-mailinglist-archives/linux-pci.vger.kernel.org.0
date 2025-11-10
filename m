@@ -1,306 +1,281 @@
-Return-Path: <linux-pci+bounces-40718-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40719-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAD3FC47C02
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 17:02:37 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 273B4C47D63
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 17:16:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A54551895F35
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 15:55:32 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 778CB4F480B
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 16:07:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E066827FB3C;
-	Mon, 10 Nov 2025 15:53:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 923A8279918;
+	Mon, 10 Nov 2025 16:07:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjy8zyfm"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="R2vtZnv4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011069.outbound.protection.outlook.com [40.107.130.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D1827EFE9;
-	Mon, 10 Nov 2025 15:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762789994; cv=none; b=KZMdW48l1MTWSKiUEh0E1mEjkP1Ey7/qh7DGBhvxYiDT9nOQdjLJ3GqQG2QA98C0MLZG/C4utd1SYt2bAeaK3UTn743ftsY73eDrxb0COvF2s0giCJ7uSeT0cqOFf8tWusv4IMtLMYcEXhoFadX4843+q4MUEA5I4B/gKKs48JY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762789994; c=relaxed/simple;
-	bh=X/dWGimw/LSFDTpuFMyHfdQWDYn1vJWeUhPbI31TuUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dqIxDGOxyJ/FHiWZYkLRanZOaacdQiYuui2gDGlcObWvQzLgmjCo3wiHcpcWy4MwC1/XVqc7rLg4vyiamfqb0zB78sHy9kTi9Cl7i2P+49B1mLexXxLIk8aAx4Cy7kxuljNKp6EZSQ4axha6NzTjMSMM2keP+ijWRtQ642Xf8BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hjy8zyfm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0843C4CEFB;
-	Mon, 10 Nov 2025 15:53:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762789994;
-	bh=X/dWGimw/LSFDTpuFMyHfdQWDYn1vJWeUhPbI31TuUQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hjy8zyfmOzcWWLBWM69sAJmZb/mjGHCqwcvT59DFPvRBNLZLuD4GFaf3iXFqX0VPR
-	 4iqYEeRq4YCOgOV+zcKc5F517L19UD1x6A+iimLAehaHNCJP9yVUns++rX5stn7y0j
-	 0l1/5hpeecQP9Px8WVA1DvtSb2OnrkYsxocChZ6SJe3TwWacIB7Abb3OoZGoEl7jjO
-	 I/qbeqVKY0AR4ECB6XWwCho0Acg57DjXbBRR9xVQvSy3Gy26XBVlmr4NsvJ82KDIwU
-	 7Bd/BB3lZjQlXQkSQRmNeOwGUrkd55rvzhdWPpvwUGLIcWl01UHqw79myKhhZicnKv
-	 ZmI63oGozEO7A==
-Date: Mon, 10 Nov 2025 21:23:02 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, FUKAUMI Naoki <naoki@radxa.com>, 
-	Damien Le Moal <dlemoal@kernel.org>, Anand Moon <linux.amoon@gmail.com>, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Dragan Simic <dsimic@manjaro.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [RESEND] Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
-Message-ID: <2n3wamm3txxc6xbmvf3nnrvaqpgsck3w4a6omxnhex3mqeujib@2tb4svn5d3z6>
-References: <aQ9FWEuW47L8YOxC@ryzen>
- <55EB0E5F655F3AFC+136b89fd-98d4-42af-a99d-a0bb05cc93f3@radxa.com>
- <aRCI5kG16_1erMME@ryzen>
- <F8B2B6FA2884D69A+b7da13f2-0ffb-4308-b1ba-0549bc461be8@radxa.com>
- <780a4209-f89f-43a9-9364-331d3b77e61e@rock-chips.com>
- <4487DA40249CC821+19232169-a096-4737-bc6a-5cec9592d65f@radxa.com>
- <363d6b4d-c999-43d4-866e-880ef7d0dec3@rock-chips.com>
- <0C31787C387488ED+fd39bfe6-0844-4a87-bf48-675dd6d6a2df@radxa.com>
- <dc932773-af5b-4af7-a0d0-8cc72dfbd3c7@rock-chips.com>
- <aRHb4S40a7ZUDop1@ryzen>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611FF276041;
+	Mon, 10 Nov 2025 16:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762790864; cv=fail; b=e02icaykjkDK5P3NwTgJhMhEMOKsVabjObgiZqMXHrJRi54ZvtHBCxuKDocteD0hd5O8sZjFyg+m6Y2onLKDRKqRaVEy9C7fFrJDxyvaUzbRHmThPS0WtT8pKUb4wZOTNs8aVZtthwbRaL+pye64y2r9LkRN1rKf91EY3F6Onfg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762790864; c=relaxed/simple;
+	bh=kAjgJ8iAGUpjJRu6H3Vr+pACEEixxxRtm5+veS74b1Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=andi5HFzPcnkoOiVGexAM30+vDPNcsSMJMUNtM6IfvDEvLG12YX7Rd8F3gTqsLXMGGKvjWWtXYgVc6qHpEzcJk1V7FCvwKekVoCE+kauERCloZ51vbwWmeI/9CDhcHdR4L1FbbxPM1sKKD/g9xUfD49nq58P4ygEu3tufjH7qr8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=R2vtZnv4; arc=fail smtp.client-ip=40.107.130.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zAvpJy2JJLuwxP/7mbTWe8XvqUaJrqZHKGO0VHxhxoY4OTgQqZkg+mYMsaGJIGSJV/MxZAjROizEUfOTS7kHhs7KIsZ498Ik1Wap40RyW9bc8oKedg+RdojEwqE6Sh6JzABuy4633HSaf+R+dnn6tuD/odIYhAvFA4um0jko0wWzt1cpeMLI2BjomqQd8huobE+NrEjn9XcHELDmQj2h4NVWy2GVsYIY5OL6hFOjjDjOZYkp9Ax1ott3rcz1zgoTNbJgb7LGsHzQddglAbKPJ4Dizo1/GibY+3Y3wWSJMBEKZWJH0VuYQzYOjVcR/5RtJ9e3Cyb9Nwa0oOLcDBHRPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oG0VVc/WOY2F2AQbB0otwwx/lTubQtnxKxuWqo12GRw=;
+ b=RcRMCrMa6HkpCUOiurV6DGTC7rduHeD73WgF7Vx3W/0rkABm1Q8wjidljV+/Bw4GCBaQoAbE3UM75rSNo7WyWKjDAGanDwXpHq4Kd024Nwme4CFj7tykQ0EBq1bZL6+BOD4/AvPUkvKbhWK32cxldgEG+aChbVESEcKcC2FkHKx76ti4X83u3q9Rz1s2sbk7WXDJ2OwVSSVy3srO6vDD0rLDS7D0s91MxETOJXEk5y/cplmFkPN81I5eI52Fxmdfg+CW1KEEvXTHsZvpa1MEurmjWSPAXAG2YhL3S1OvqKypJugM1Ra+v6SSj6gAthWCl/CaNoHBrPS5vaEXwWAM0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oG0VVc/WOY2F2AQbB0otwwx/lTubQtnxKxuWqo12GRw=;
+ b=R2vtZnv4IY8FGtqhDQtT80gw4nKe7GYTtFtRrwo8LdiMAcbkJhWl6fPgL7dyKLEqS9iobeXex9LDq/VgBFEGVOtxQ1ilx9duSqvQFAfJwi+wGT990WcGJQqrX5AQZvLfpxF3ZYH+ge7stoj1EctLp64xdTW0u/VuBJqXHZIdxDNXalgnqxQuDFUFoZwzX84QwlHmQo2d6YwrUp3r09yHL0jzDT/lY8u479nKQBDCtIIv1xNkvgOJXUW6ByhEUEJhckltVxO5eZBRE30n6pqnGuoNNjx+CY468Ce5jfaboDgDjrcoLWHiEskbYLt68oL5q5J1XDd5ffwUTZ45dB3MvA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
+ by PA1PR04MB10604.eurprd04.prod.outlook.com (2603:10a6:102:48e::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.16; Mon, 10 Nov
+ 2025 16:07:00 +0000
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::55ef:fa41:b021:b5dd]) by DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::55ef:fa41:b021:b5dd%4]) with mapi id 15.20.9298.015; Mon, 10 Nov 2025
+ 16:06:54 +0000
+Date: Mon, 10 Nov 2025 11:06:46 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+	Linux ACPI <linux-acpi@vger.kernel.org>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Takashi Iwai <tiwai@suse.de>, LKML <linux-kernel@vger.kernel.org>,
+	Zhang Qilong <zhangqilong3@huawei.com>, Dhruva Gole <d-gole@ti.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH v1 1/3] PM: runtime: Wrapper macros for
+ ACQUIRE()/ACQUIRE_ERR()
+Message-ID: <aRINlvX2GpW3Ue94@lizhi-Precision-Tower-5810>
+References: <13883374.uLZWGnKmhe@rafael.j.wysocki>
+ <10752302.nUPlyArG6x@rafael.j.wysocki>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <10752302.nUPlyArG6x@rafael.j.wysocki>
+X-ClientProxiedBy: PH7P220CA0063.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:32c::30) To DB9PR04MB9626.eurprd04.prod.outlook.com
+ (2603:10a6:10:309::18)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aRHb4S40a7ZUDop1@ryzen>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|PA1PR04MB10604:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0374e114-a394-4c4c-0fc4-08de20732a3c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|52116014|376014|366016|1800799024|19092799006|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?xxNzcj01xQ96dn4SGtkLaFAoQe+RKYzDqKEoDMN/ttBPogvHgD1CtphhlSEw?=
+ =?us-ascii?Q?lOt++YBv2bTtpcdxCUO21h6PtmiMtFpMbPq2uxhDVhiZ1SKKCnMmcmdyWDuY?=
+ =?us-ascii?Q?twl8qOgst5S5yxG2ggzPEXW3QMZ+UYyE2clwTTqqYK4MaLpogGWHBh2rJlWZ?=
+ =?us-ascii?Q?Zbj1nBtAcEwapysiVYdnczbJmqpRKuhC4hGeUCI1ntRJaS/9qWSeCRxWbT/P?=
+ =?us-ascii?Q?Sl1eJE5+sgwAQEjtVpCkQX55jngmzdxcgiK7rSXGDPA1AyHDGqrbBS4cbw4X?=
+ =?us-ascii?Q?jfxDuw523b2eWcp1sw05dwvS9AZQ60Fr4JRhbSyQzKCJsvRJXhGbtEMc27f3?=
+ =?us-ascii?Q?eq7tSQfD4P1sEjKJwvxgQ+RX9PpDPVWTFlICL0TZE03ChK702R/6RdHe4ACJ?=
+ =?us-ascii?Q?qYYp7GytKoiDiOBe0aDfTfvQpGXHCS/pYGtGS6AAf7c/Fo9RNBL6dFIKSV/a?=
+ =?us-ascii?Q?xYkGEr69F6pKc9rb1IhDUWrWJmidoL8tv2R57eYGObAQAd5hDmi+8rdeZfik?=
+ =?us-ascii?Q?ky3gA2pW/zdlktvoz3WxaX1Y9paM+xgjFDrn0RwslX/2P8cgQ/K5JPXsFFtg?=
+ =?us-ascii?Q?6IfF/sj5IQ1XkALA/HvckCSNdpOsGXID5mWKSzD66ejUHZobJwFd6TANya/C?=
+ =?us-ascii?Q?ImbOSCzPF/qm0D9io6IJbHvzsPm+W5SdFEWslc7Da2dTwOf0luwKDPYK6g4g?=
+ =?us-ascii?Q?DgOjPnp2X2+jmlDz7CnaEiyYZy1Z/MJAyPpbnf9Ke/PBDOWfH0y4M9/+jsdg?=
+ =?us-ascii?Q?hEUPlVlCF++GJoq0hUy9Ku5UbQD5pPxnX3qeBcellMv+l3mPmnUX99Fr/pnz?=
+ =?us-ascii?Q?KytV1K+pDauGMVHBC4mdArppFlhuBRQgNer4sAqN7uN6CallnMRd9BUY8aMF?=
+ =?us-ascii?Q?n6hR4USJO4MHx6TeTJwDOvxZNZGwoltkLThPlMvn+eVpDT8wi1fcUrYefoyA?=
+ =?us-ascii?Q?oZTC6+Iw293l/h7WxVvAS6wBKz8uMpfrzGYzSDceUTcplgRIXwdk3vLezTre?=
+ =?us-ascii?Q?N3DOeJIHU+RuKJSn/WJy5R62a3n70JpHPdSbdADVbFwfCbYUftMj58uBGnW/?=
+ =?us-ascii?Q?WVBmq2s7ERGnk1XSiNft2op2P86gpA07PrubNLg0GriEnGEozEg7EPUPaKA8?=
+ =?us-ascii?Q?p3z69MW0wBjwqAMs/I6lTJIk3eVpUnvat3caZPEDNrAQ96pCEaA2oTXeXe2y?=
+ =?us-ascii?Q?jHFwTklOmS41BQmnutpQzbdRc5dLNJYmZ8liLCzDmvtMkedhh5Hj/lmvD0bv?=
+ =?us-ascii?Q?ze0hlPpOgNY3odmtaV9LA1E5qMZje2TPlXExvsqzsrOUlQIAkM1DnslSPf4o?=
+ =?us-ascii?Q?czksnRVJ6KlMRdnTMnru7YXdkRIOgmV8B9jyo3NwXLrqBN5zF7HC6WAekCp+?=
+ =?us-ascii?Q?34XjfF78y8dRz4B3uR1kSEL2GcdTNvX1daUQ+LgbLO8DXDDboiVRJ7Sneosc?=
+ =?us-ascii?Q?ip75bm89CDSZ4QLKbrJfh9tOQHQQG11UjdLcANWf2fNcsVJQe3uKXCHNtsKe?=
+ =?us-ascii?Q?WMoa3Np0JjdF9bn0kTNgknsrtUGKo6mcH+7E?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(376014)(366016)(1800799024)(19092799006)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Qix5ct3cxT+DxkyU6a2XqzSGYDKyhGCuLBg+CX44ydgVS81aYKCdeoHc49OP?=
+ =?us-ascii?Q?mLXet50gAxc4dQfUm8XgKPFFmu95PpU+GUUuyfOq0YI7h5hBXr5mPQvkJ4dv?=
+ =?us-ascii?Q?sB5iw0saNvgzeVP1xOBXcdecJAXtuymUd3QLmPK0l8ReSvvv6YtcGp4Jfmr4?=
+ =?us-ascii?Q?dOziht5xu7YRHNtuqYuV+4TnPVlXStGNXJWyLZ3S4LertSDyrYvHSfYfRw81?=
+ =?us-ascii?Q?arvX3t9nTLWPPu3mWRvnECNe9k7sC08HgZk1BPJIL/nigaVmsyQWERvvrxHJ?=
+ =?us-ascii?Q?6vj10/FekNvr1CASewXskYgS3By/pfrt2JSfr3gUKZuZlz4aEkRHARFpBsru?=
+ =?us-ascii?Q?BLc/iC+aVU3IH7B0Cu05B1+ocSQUJOz/mz0abx0tj1zpBmx/ukZL3De+RM4u?=
+ =?us-ascii?Q?EEsWTRE22NTMe7P5tAfz151K4VuAUq3j9L3pzKNRidio39E7F6vmsrIfgzD9?=
+ =?us-ascii?Q?dBhmEUY+YrFnrCZVJR/NURDHjMNNh3g31r2e0KZz4mBRuvXRwPKUvQ0oLBDx?=
+ =?us-ascii?Q?ygbBuTUbXIObn7oKuG2Co8lSLnUTVbVa3ryxIJD/pWbtCjfgBtBqubvxDK3l?=
+ =?us-ascii?Q?nvbiXoSqJWuvx6WNBh08BAXl4ZVolDT6Qf443LINPLnTy5DfiRHQKbDdnPcy?=
+ =?us-ascii?Q?PNBlVgRDKQAKAmU0a7Q2Z5DdP1eka33A+S759IOGeF/iXME/dmpw+9t5IPip?=
+ =?us-ascii?Q?XBLiGR2IYbBPwfhJQtyOW5A9SGFSvRi4Otbok5Jg+UutwgKqSsvfpUgN4Z1q?=
+ =?us-ascii?Q?wh9pAnL2mK7saCEe91Hek+0qNU4O/xEA+6NzT67iiVStfGGMR/kTLAT2GW1X?=
+ =?us-ascii?Q?4H0ETTYCFvVEYqqFdmaXyoXTfJqlrpzsEYEYhzlra4mKILaxwiRwj3U0hJls?=
+ =?us-ascii?Q?nkJUge4GybvA9uSBBqTdaI+d8VHQu030bZpnxGzBtHStFVOJvdC+hCecvgzK?=
+ =?us-ascii?Q?soXcNENKQwRsPhOTbFahMZWviBI6RD3JJ/giNX/fHM3NzdJdXNNjAKBxm6E2?=
+ =?us-ascii?Q?70GyjynbkIQWJMD8nfFBPTXTSsN3CSu93ze7hZeJJbBdJQYr1Jo0V9/eswra?=
+ =?us-ascii?Q?UKtGZtjvtv5FMxeQ6Z/deSv8iGsO+3mV2DIPWTrMB4dRLl/xr7vAMm6y44x5?=
+ =?us-ascii?Q?msh4laavKvvZLKENwyFKXjYoMqz50BoTWq3D9rc9JSA0KEL0t7ZYwqcYdNHS?=
+ =?us-ascii?Q?abD71hKgcFEGqa8r9xCselBsukv0/eCfO4THjk3g5jQbrIJBeeDOH1V1dPPF?=
+ =?us-ascii?Q?zHycs6eUMG+RelEsXvEimQzOmGFQKrvP9QCsdUE39OHJ39rpmmgb4o+C4eAs?=
+ =?us-ascii?Q?Q9ljHbsbpYnH69P2gXjtuhHDfraX8/S19ViybBcf/b9gkgMJNjQenXIR4C7L?=
+ =?us-ascii?Q?HUtN41N3fbIQwOK1sa4Mz+U0s5FYPym7Y47U08wAH3TcqXGhkVDL1hNErnBg?=
+ =?us-ascii?Q?fjUPVRekZ2zenJGVWYdBavMgQjfH4fZIS1iAZZevPgM2Act8GuJjZaDqzHwj?=
+ =?us-ascii?Q?bP4VTp4DDFNpBldpmpsKD4sZklaJyH5pQmhA5bM1tkRkBrOVZIG3eMWDx7V0?=
+ =?us-ascii?Q?E8bnUe/pF1lzNygIuLx1AXNo3rdWciLbx1Rs3RtO?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0374e114-a394-4c4c-0fc4-08de20732a3c
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Nov 2025 16:06:53.8190
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yZSyjnD9fndht4OVXwB3ajgEkY/KwGrvd6GF0LHVZW+06xr+RxmNqy0sqXkZqGK63E1+j2TVArvwnDNd0Q5o4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10604
 
-On Mon, Nov 10, 2025 at 01:34:41PM +0100, Niklas Cassel wrote:
-> On Mon, Nov 10, 2025 at 06:15:33PM +0800, Shawn Lin wrote:
-> > > 
-> > > Could you try PCIe 2.0 slot on your board?
-> > 
-> > I did, it doesn't work on PCIe 2.0 slot. From the PA, I could see
-> > the link is still in training during pci_host_probe() is called.
-> > Add some delay before pci_rescan_bus() in pcie-dw-rockchip doesn't
-> > help. But the below change should work as we delayed pci_host_probe().
-> > 
-> > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > @@ -236,6 +236,8 @@ static int rockchip_pcie_start_link(struct dw_pcie *pci)
-> >         msleep(PCIE_T_PVPERL_MS);
-> >         gpiod_set_value_cansleep(rockchip->rst_gpio, 1);
-> > 
-> > +       msleep(50);
-> > +
-> >         return 0;
-> > 
-> > Otherwise we got:
-> > 
-> > [    0.841518] pci_bus 0003:33: busn_res: can not insert [bus 33-31] under
-> > [bus 32-31] (conflicts with (null) [bus 32-31])
-> > [    0.842596] pci_bus 0003:33: busn_res: [bus 33-31] end is updated to 33
-> > [    0.843184] pci_bus 0003:33: busn_res: can not insert [bus 33] under [bus
-> > 32-31] (conflicts with (null) [bus 32-31])
-> > [    0.844120] pci 0003:32:00.0: devices behind bridge are unusable because
-> > [bus 33] cannot be assigned for them
-> > [    0.845229] pci_bus 0003:34: busn_res: can not insert [bus 34-31] under
-> > [bus 32-31] (conflicts with (null) [bus 32-31])
-> > [    0.846309] pci_bus 0003:34: busn_res: [bus 34-31] end is updated to 34
-> > [    0.846898] pci_bus 0003:34: busn_res: can not insert [bus 34] under [bus
-> > 32-31] (conflicts with (null) [bus 32-31])
-> > [    0.847833] pci 0003:32:06.0: devices behind bridge are unusable because
-> > [bus 34] cannot be assigned for them
-> > [    0.848923] pci_bus 0003:35: busn_res: can not insert [bus 35-31] under
-> > [bus 32-31] (conflicts with (null) [bus 32-31])
-> > [    0.850014] pci_bus 0003:35: busn_res: [bus 35-31] end is updated to 35
-> > [    0.850605] pci_bus 0003:35: busn_res: can not insert [bus 35] under [bus
-> > 32-31] (conflicts with (null) [bus 32-31])
-> > [    0.851540] pci 0003:32:0e.0: devices behind bridge are unusable because
-> > [bus 35] cannot be assigned for them
-> > [    0.852424] pci_bus 0003:32: busn_res: [bus 32-31] end is updated to 35
-> > [    0.853028] pci_bus 0003:32: busn_res: can not insert [bus 32-35] under
-> > [bus 31] (conflicts with (null) [bus 31])
-> > [    0.853184] hub 3-0:1.0: USB hub found
-> > [    0.853931] pci 0003:31:00.0: devices behind bridge are unusable because
-> > [bus 32-35] cannot be assigned for them
-> > [    0.854262] hub 3-0:1.0: 1 port detected
-> > [    0.855144] pcieport 0003:30:00.0: bridge has subordinate 31 but max busn
-> > 35
-> > [    0.855722] hub 4-0:1.0: USB hub found
-> > [    0.856109] pci 0003:32:00.0: PCI bridge to [bus 33]
-> > [    0.856939] pci 0003:32:06.0: PCI bridge to [bus 34]
-> > [    0.857133] hub 4-0:1.0: 1 port detected
-> > [    0.857430] pci 0003:32:0e.0: PCI bridge to [bus 35]
-> > [    0.858236] pci 0003:31:00.0: PCI bridge to [bus 32-35]
-> 
-> Mani,
-> 
-> while I see the idea behind your suggested hack:
->  
-> +       if (pdev->vendor == 0x1d87 && pdev->device == 0x3588) {
-> +               pdev->is_hotplug_bridge = pdev->is_pciehp = 1;
-> +               return;
-> +       }
-> 
-> 
-> Considering what Shawn says, that the switch gets enumerated properly
-> if we simply add a msleep() in ->start_link(), which will be called
-> by dw_pcie_host_init() before pci_host_probe() is called...
-> 
+On Fri, Nov 07, 2025 at 07:39:55PM +0100, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Add several wrapper macros for ACQUIRE()/ACQUIRE_ERR() and runtime PM
+> usage counter guards introduced recently: pm_runtime_active_try,
+> pm_runtime_active_auto_try, pm_runtime_active_try_enabled, and
+> pm_runtime_active_auto_try_enabled.
+>
+> The new macros are simpler and should be more straightforward to use.
+> Moreover, they do not expose internal details that are not strictly
+> related to the code using the macros.
+>
+> For example, they can be used for rewriting a piece of code like below:
+>
+>         ACQUIRE(pm_runtime_active_try, pm)(dev);
+>         if ((ret = ACQUIRE_ERR(pm_runtime_active_try, &pm)))
+>                 return ret;
+>
+> in the following way:
+>
+>         PM_RUNTIME_ACQUIRE(dev);
+>         if ((ret = PM_RUNTIME_ACQUIRE_ERR))
 
-Yes, that delay probably gives enough time for the link up IRQ to kick in before
-the initial bus scan happens.
+Personally, I feel like PM_RUNTIME_ACQUIRE_ERR hide too much informaiton.
 
-> ...we already have a delay in the link up IRQ handler, before calling
-> pci_rescan_bus().
-> 
+There are not clear connection between PM_RUNTIME_ACQUIRE and
+PM_RUNTIME_ACQUIRE_ERR. but previous code, the 'pm' is good connector.
 
-That delay won't help in this case.
-
-> So, I think that the problem is that we are unconditionally calling
-> pci_host_probe() in dw_pcie_host_init(), even for platforms that have
-> a link-up IRQ.
-> 
-> 
-> I think a better solution would be something like:
-> 
-
-This solution will work as long as the PCIe device is powered ON before
-start_link(). For CEM and M.2 Key M connectors, the host controller can power
-manage the components. But for other specifications/keys requiring custom power
-management, a separate driver would be needed.
-
-That's why I suggested using pwrctrl framework as it can satisfy both usecases.
-However, as I said, it needs a bit of rework and I'm close to submitting it.
-
-But until that gets merged, either we need to revert your link up IRQ change or
-have the below patch. IMO, the revert seems simple.
-
-- Mani
-
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index e92513c5bda5..42d987ddab7d 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -565,6 +565,39 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
->  	return 0;
->  }
->  
-> +static int dw_pcie_host_initial_scan(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct pci_host_bridge *bridge = pp->bridge;
-> +	int ret;
+Frank
+>                 return ret;
+>
+> If the original code does not care about the specific error code
+> returned when attempting to resume the device:
+>
+>         ACQUIRE(pm_runtime_active_try, pm)(dev);
+>         if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
+>                 return -ENXIO;
+>
+> it may be changed like this:
+>
+>         PM_RUNTIME_ACQUIRE(dev);
+>         if (PM_RUNTIME_ACQUIRE_ERR)
+>                 return -ENXIO;
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  include/linux/pm_runtime.h |   55 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>
+> --- a/include/linux/pm_runtime.h
+> +++ b/include/linux/pm_runtime.h
+> @@ -637,6 +637,61 @@ DEFINE_GUARD_COND(pm_runtime_active_auto
+>  DEFINE_GUARD_COND(pm_runtime_active_auto, _try_enabled,
+>  		  pm_runtime_resume_and_get(_T), _RET == 0)
+>
+> +/*
+> + * ACQUIRE() wrapper macros for the guards defined above.
+> + *
+> + * The tagged __PM_RUNTIME_ACQUIRE*() variants are for the cases in which two or
+> + * more of these macros are used in the same scope and the tags are necessary to
+> + * distinguish the internal guard variables from each other. Don't do that
+> + * unless you have to. No, really. If they are needed, using simple tags is
+> + * recommended (for example, individual digits or letters).
+> + *
+> + * The simpler PM_RUNTIME_ACQUIRE*() variants are wrappers around the
+> + * corresponding __PM_RUNTIME_ACQUIRE*() that use the underline character
+> + * as a (special) tag.  They should be suitable for the vast majority of use
+> + * cases.
+> + *
+> + * Don't mix up PM_RUNTIME_ACQUIRE*() with __PM_RUNTIME_ACQUIRE*() even though
+> + * that may work.
+> + */
+> +#define __PM_RUNTIME_ACQUIRE(dev, tag)	\
+> +	ACQUIRE(pm_runtime_active_try, _pm_runtime_guard_var_##tag)(dev)
 > +
-> +	ret = pci_host_probe(bridge);
-> +	if (ret)
-> +		return ret;
+> +#define PM_RUNTIME_ACQUIRE(dev)	\
+> +	__PM_RUNTIME_ACQUIRE(dev, _)
 > +
-> +	if (pp->ops->post_init)
-> +		pp->ops->post_init(pp);
+> +#define __PM_RUNTIME_ACQUIRE_AUTOSUSPEND(dev, tag)	\
+> +	ACQUIRE(pm_runtime_active_auto_try, _pm_runtime_guard_var_##tag)(dev)
 > +
-> +	dwc_pcie_debugfs_init(pci, DW_PCIE_RC_TYPE);
+> +#define PM_RUNTIME_ACQUIRE_AUTOSUSPEND(dev)	\
+> +	__PM_RUNTIME_ACQUIRE_AUTOSUSPEND(dev, _)
 > +
-> +	return 0;
-> +}
+> +#define __PM_RUNTIME_ACQUIRE_ENABLED(dev, tag)	\
+> +	ACQUIRE(pm_runtime_active_try_enabled, _pm_runtime_guard_var_##tag)(dev)
 > +
-> +void dw_pcie_handle_link_up_irq(struct dw_pcie_rp *pp)
-> +{
-> +	if (!pp->initial_linkup_irq_done) {
-> +		if (dw_pcie_host_initial_scan(pp)) {
-> +			//TODO: cleanup
-> +		}
-> +		pp->initial_linkup_irq_done = true;
-> +	} else {
-> +		/* Rescan the bus to enumerate endpoint devices */
-> +		pci_lock_rescan_remove();
-> +		pci_rescan_bus(pp->bridge->bus);
-> +		pci_unlock_rescan_remove();
-> +	}
-> +}
+> +#define PM_RUNTIME_ACQUIRE_ENABLED(dev)	\
+> +	__PM_RUNTIME_ACQUIRE_ENABLED(dev, _)
 > +
->  int dw_pcie_host_init(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> @@ -672,15 +705,13 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->  	if (!pp->use_linkup_irq)
->  		/* Ignore errors, the link may come up later */
->  		dw_pcie_wait_for_link(pci);
-> -
-> -	ret = pci_host_probe(bridge);
-> -	if (ret)
-> -		goto err_stop_link;
-> -
-> -	if (pp->ops->post_init)
-> -		pp->ops->post_init(pp);
-> -
-> -	dwc_pcie_debugfs_init(pci, DW_PCIE_RC_TYPE);
-> +	else
-> +		/*
-> +		 * For platforms with Link Up IRQ, initial scan will be done
-> +		 * on first Link Up IRQ.
-> +		 */
-> +		if (dw_pcie_host_initial_scan(pp))
-> +			goto err_stop_link;
->  
->  	return 0;
->  
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index e995f692a1ec..a31bd93490dc 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -427,6 +427,7 @@ struct dw_pcie_rp {
->  	int			msg_atu_index;
->  	struct resource		*msg_res;
->  	bool			use_linkup_irq;
-> +	bool			initial_linkup_irq_done;
->  	struct pci_eq_presets	presets;
->  	struct pci_config_window *cfg;
->  	bool			ecam_enabled;
-> @@ -807,6 +808,7 @@ void dw_pcie_msi_init(struct dw_pcie_rp *pp);
->  int dw_pcie_msi_host_init(struct dw_pcie_rp *pp);
->  void dw_pcie_free_msi(struct dw_pcie_rp *pp);
->  int dw_pcie_setup_rc(struct dw_pcie_rp *pp);
-> +void dw_pcie_handle_link_up_irq(struct dw_pcie_rp *pp);
->  int dw_pcie_host_init(struct dw_pcie_rp *pp);
->  void dw_pcie_host_deinit(struct dw_pcie_rp *pp);
->  int dw_pcie_allocate_domains(struct dw_pcie_rp *pp);
-> @@ -844,6 +846,9 @@ static inline int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
->  	return 0;
->  }
->  
-> +static inline void dw_pcie_handle_link_up_irq(struct dw_pcie_rp *pp)
-> +{ }
+> +#define __PM_RUNTIME_ACQUIRE_ENABLED_AUTOSUSPEND(dev, tag)	\
+> +	ACQUIRE(pm_runtime_active_auto_try_enabled, _pm_runtime_guard_var_##tag)(dev)
 > +
->  static inline int dw_pcie_host_init(struct dw_pcie_rp *pp)
->  {
->  	return 0;
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index 8a882dcd1e4e..042e5845bdd6 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -468,10 +468,7 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
->  		if (rockchip_pcie_link_up(pci)) {
->  			msleep(PCIE_RESET_CONFIG_WAIT_MS);
->  			dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
-> -			/* Rescan the bus to enumerate endpoint devices */
-> -			pci_lock_rescan_remove();
-> -			pci_rescan_bus(pp->bridge->bus);
-> -			pci_unlock_rescan_remove();
-> +			dw_pcie_handle_link_up_irq(pp);
->  		}
->  	}
->  
-> 
-> 
-> 
-> 
-> What do you think?
-> 
-> 
-> 
-> Kind regards,
-> Niklas
-
--- 
-மணிவண்ணன் சதாசிவம்
+> +#define PM_RUNTIME_ACQUIRE_ENABLED_AUTOSUSPEND(dev)	\
+> +	__PM_RUNTIME_ACQUIRE_ENABLED_AUTOSUSPEND(dev, _)
+> +
+> +/*
+> + * ACQUIRE_ERR() wrapper macros for guard pm_runtime_active.
+> + *
+> + * Always check __PM_RUNTIME_ACQUIRE_ERR() with a matching tag after using one
+> + * of the tagged __PM_RUNTIME_ACQUIRE*() macros defined above (yes, it can be
+> + * used with any of them) and avoid accessing the given device if it is nonzero.
+> + * Analogously, always check PM_RUNTIME_ACQUIRE_ERR after using any of the
+> + * simpler PM_RUNTIME_ACQUIRE*() macros.
+> + */
+> +#define __PM_RUNTIME_ACQUIRE_ERR(tag)	\
+> +	ACQUIRE_ERR(pm_runtime_active, &_pm_runtime_guard_var_##tag)
+> +
+> +#define PM_RUNTIME_ACQUIRE_ERR	__PM_RUNTIME_ACQUIRE_ERR(_)
+> +
+>  /**
+>   * pm_runtime_put_sync - Drop device usage counter and run "idle check" if 0.
+>   * @dev: Target device.
+>
+>
+>
 
