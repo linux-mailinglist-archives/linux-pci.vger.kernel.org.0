@@ -1,166 +1,204 @@
-Return-Path: <linux-pci+bounces-40660-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40662-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2FA8C44A94
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 00:58:10 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 842B3C44B8C
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 02:25:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9EA8C4E1046
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Nov 2025 23:58:09 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 099A7345E32
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 01:25:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70CC626CE0F;
-	Sun,  9 Nov 2025 23:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUDTdBoT"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8A92433A6;
+	Mon, 10 Nov 2025 01:25:24 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023129.outbound.protection.outlook.com [40.107.44.129])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B719925F96B
-	for <linux-pci@vger.kernel.org>; Sun,  9 Nov 2025 23:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762732685; cv=none; b=uUdqkFNwao3H/5sokf+0VtYrISrHVOk1LJPnA/ETEJetRHnWNxCdviaYkLAB6abFTx9OwVhO2ZkGU8pLNAN5AkrUIiBCj5o8P9l8sn4Pte+mA1JNwD9iX+VccjrEkA7Glp3rxoWNOmBKp5HrM2Vofitnvh5V9yj+5FbU8eZaBb8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762732685; c=relaxed/simple;
-	bh=VYPoW3UY0CELQy8XzPDSdrI2ABoXchU20b+SMwMONAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AocTD06KKZyUmPn2JwVudIzE4E4NyuApUZJCr2aODsOWE5queBFIOx4mqW/bYGRmyOJNPrP3oSTRLMGkH0zTV5gaU9wrY4YA1B4ztJuaWwp9U6Tbv9hfjwx7MJThF2OT3Q0V4Pg2LFZ1v1rfKTp7UhKC5uE3nkRif4RrT6IKY40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bUDTdBoT; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-5dbcd54d2d8so2217620137.2
-        for <linux-pci@vger.kernel.org>; Sun, 09 Nov 2025 15:58:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762732682; x=1763337482; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ciGXNa1z8OLW1upm7VDcuKg7m+mkewvk1om1QMnHPzA=;
-        b=bUDTdBoTIr6XCmxW6aMvQNwbXKzjE13//r4WFAOJ5pFDX6E0imd5bvPzHrTasbosFr
-         w85qy0bUoMy+MTme1RB2dgptUh2e8nPkyAYTzKPpgHEv1iS430jvoMu8xQQkUlvBq1dc
-         TcN7o9O8EAc5Kss436g9N2WL3sl0q23GRaIlC+f+Aaqr9xPjGVVrL9lhAnX6OU1+RXdE
-         Uzfu1+HlgaSXAW6ThN4BOuLrwYtzGgJamvnyPYsl1s0bdoihyaNG0Zfc58FJIcX78k17
-         m95P0jv5s8GrMiyqDTs+yRV4UL6VY9JaME+788PVIgBW4aJS9eCKL0kRqcKWu4652rNJ
-         8FKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762732682; x=1763337482;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ciGXNa1z8OLW1upm7VDcuKg7m+mkewvk1om1QMnHPzA=;
-        b=MNrUB1T5KgCd3yqdpLYt3Mfa12+aOLr8OMeZWa74pXEZpClxBOINma62iQDTsVge7U
-         aRzBklYh5h9PEquWVCrRWrazf/g8tt++R14PJ9fO7kieO/lx4drapNwnTArXL4Gigy95
-         3W5D6hWkXhsVccIYnjSGYT4CcPiywllA/OcKv9WxRRdPFkI6RYLfALBaDsyfUOYwLMRA
-         zZKvBs1UvKqwjv76x30/CPGu3iZT1MHiABKshX4cSS4S5Y2X7iKdn6eaZtvDi+TTtxYl
-         oFZ8yHSIW6lmMHqV0zrmu2kGqYbOphMAgepnFLybfiYOtQMmDlx1MjTeGrsT5tJyaHKq
-         yeEw==
-X-Forwarded-Encrypted: i=1; AJvYcCVZhCNSTch61pA0vpENdSUJyXdXaAZNdK/jSBuFmVRtUdA68Kw476mfDo3TFNuFMzeNAV5ZAFh/uvk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2NcnFgo6AynJXNBCcEXT3G/9mA2scROdAVHpzBoxdtQhnmylv
-	xmUceGcAck3SU6ZV2xEdGpVK9r/ynqOGixErTYlfhYzKMEN3Nm3tgf0U
-X-Gm-Gg: ASbGncshbV3eMQ9Hy5BROKZYwNsP680GSDpTyfrRbRb6ZLkIK22uleN/wKcT0LLVCU/
-	bh6V0Vg/eSnUx6xAlvzoLsC6yJmDm5tGTuGyzq+ECtUy+Y768chly/d9R0QevvxCwWZk7woVoIs
-	H/PrOaut/seRtsYI/qrO5v5YtA6GDGI0iYBXgkOpApK7Rely7jhL4KbGo001zVnIZF1V8XWIuYO
-	o6db2QIhq/Kev0Zd28x4hRcSNYsCI2VvfC1AMqKa9HP9cJ1tAepOuY9+YgDDfEo1qIwg+mNhfif
-	FV1p0SqBJGj/14gkDH8owmj5wOJx2+ZYugXGlsWO+EDkJi392l0DQrtoZ2TF3ZFXCT6eiLJLkTF
-	zChKoxlrH0hbHBqC5UWUkTbJSQfwf+wfhLu0bFNtSXtxzB5uPL9iyK+wnNDPnKwEX4eDz10ioEF
-	GC14rBoJJ4
-X-Google-Smtp-Source: AGHT+IHkEshzMykihoxZN8xwmOnrJz2pDDGH7SWMAzmcaEUtc/A4N6Xa3uJOm+m//4yVDMfdlbkPlw==
-X-Received: by 2002:a05:6102:3049:b0:5db:f031:84c4 with SMTP id ada2fe7eead31-5ddc475a644mr2405338137.28.1762732682621;
-        Sun, 09 Nov 2025 15:58:02 -0800 (PST)
-Received: from geday ([2804:7f2:800b:6140::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-559958320aasm6388204e0c.20.2025.11.09.15.57.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Nov 2025 15:58:00 -0800 (PST)
-Date: Sun, 9 Nov 2025 20:57:52 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Dragan Simic <dsimic@manjaro.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Johan Jonker <jbx6244@gmail.com>
-Subject: Re: [RFC PATCH 2/2] PCI: rockchip-host: drop wait on PERST# toggle
-Message-ID: <aREqgL8JVYUcKO7R@geday>
-References: <d3d0c3a387ff461e62bbd66a0bde654a9a17761e.1762150971.git.geraldogabriel@gmail.com>
- <20251103181038.GA1814635@bhelgaas>
- <aQrKtFT0ldc70gKj@geday>
- <17220ae9-9e0e-cb0b-63bd-eaf9a6ed6411@manjaro.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3341448E3;
+	Mon, 10 Nov 2025 01:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.129
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762737924; cv=fail; b=b7L+fNbkMjFYHvc2Ya/pSxTLNNMQ9a8JkwmkPHJ/zqTi6hvfHu/OyJDxanX25vYG975wiHr8HpAulaUoAQTEbQg8XnKNDve9Xomyz6kW1DDox7JEZcrM0P9VhgzZly9RVwzzcooiyAkSvatrE5ls8Ihq8KEY45GbSdukDLfR7/M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762737924; c=relaxed/simple;
+	bh=158+CvfCjyJbDrUkksgqu8oTRlHVfZoK5R//+/DH6YE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aM58m3fIDeKWBE3Z2zcuUpoG3rly7dytVc7N5qQnba5PFGsQhSGSXJ9+wEi5hZ6DFeX0U8ErzCYU0phw7jOZDfx5tqOiif2OOiW+UgeR9gAKV7fMU5rW1/yvpo6dw/AbSZlWRPX8H8+w7tb0ZCT/303COMuYeuW8Wh/8NhrzrqU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oKtIZXFO8dxq+093f7nzYOqWzGdMuttPwwKdVINpV3Z3xyxsdUo01qk7RbEOWzLhW+6Jhm6IcejeLmPisy/A9BRxqkpO91VG5/hz9lL9T+FvIeDJx9oj8MdwXgQVdeurFzNiLSHqv0zBG9yhWIwxEjPGH5hcIChJ9k1fm1hzpeZAIcOpyayW6ZbgaIUcFA0cneTQTwjyG5d+wd+KD7UHtoR86NqZQL16FL6HsLVC0gt/xTf2I/HATLsT6HYm5oACCE4NKxTmkRwStT6d2QsH8Uosoq8lqZI4suIDUvyfYX2WaT5yAJFlWCJhLW4Vkv35vdRkXSrzl9XDp6U0jeEcdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KWjPOyH7amipU1r6BzVCjG82zpKGj3ajdiX9K6C3qX8=;
+ b=pQmiFcJZ5RDRulZDYaMLyT1Ii5rWliuxKwxrb+8qVTKZT49WxSCT6ihafwaGrj69bwMP8xb5PuBqRpVnQQyHV3frP7EpdHi3sVbVOEHPj4u95K/Zm0xvvcqeSfgxqO9ZtbqVKG8kizKxaD1u2iBvdo3uJbmEYByosCH769vmlR8tK+Jz37RpoHjDxUCtU8L2euIiokW00QK8uMnqpcVsHDeQVQlPwXSAbx7OI65edcpqDQkrDNBacEmLkNty0zAZBJzRAH2evWZivDUYwFtPjEEAuxVVot1aV4MpdU1nNu/XugwGYyPFl7Tyc62/m9gHH+UV3a+LDNRsStqU7ihDpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from PSBPR02CA0009.apcprd02.prod.outlook.com (2603:1096:301::19) by
+ PUZPR06MB6066.apcprd06.prod.outlook.com (2603:1096:301:113::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.16; Mon, 10 Nov
+ 2025 01:25:14 +0000
+Received: from OSA0EPF000000CB.apcprd02.prod.outlook.com
+ (2603:1096:301:0:cafe::6) by PSBPR02CA0009.outlook.office365.com
+ (2603:1096:301::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9298.16 via Frontend Transport; Mon,
+ 10 Nov 2025 01:25:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ OSA0EPF000000CB.mail.protection.outlook.com (10.167.240.57) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9320.13 via Frontend Transport; Mon, 10 Nov 2025 01:25:13 +0000
+Received: from [172.16.96.116] (unknown [172.16.96.116])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 236E740A5BD4;
+	Mon, 10 Nov 2025 09:25:12 +0800 (CST)
+Message-ID: <8f24da57-9700-4429-8947-36b27211476a@cixtech.com>
+Date: Mon, 10 Nov 2025 09:25:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <17220ae9-9e0e-cb0b-63bd-eaf9a6ed6411@manjaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 03/10] PCI: cadence: Move PCIe RP common functions to
+ a separate file
+To: Manivannan Sadhasivam <mani@kernel.org>, kernel test robot <lkp@intel.com>
+Cc: bhelgaas@google.com, helgaas@kernel.org, lpieralisi@kernel.org,
+ kw@linux.com, robh@kernel.org, kwilczynski@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, oe-kbuild-all@lists.linux.dev, mpillai@cadence.com,
+ fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
+ cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20251108140305.1120117-4-hans.zhang@cixtech.com>
+ <202511092106.mkNV0iyb-lkp@intel.com>
+ <xiaf3qvskwrqr7riradv6jnt5jmwcgenfr6mss5wtlddmxuwoa@ke2kdaq6adqz>
+Content-Language: en-US
+From: Hans Zhang <hans.zhang@cixtech.com>
+In-Reply-To: <xiaf3qvskwrqr7riradv6jnt5jmwcgenfr6mss5wtlddmxuwoa@ke2kdaq6adqz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: OSA0EPF000000CB:EE_|PUZPR06MB6066:EE_
+X-MS-Office365-Filtering-Correlation-Id: f6677bd3-035e-4cf9-658d-08de1ff7ff4a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|7416014|376014|36860700013|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SG0rMWRKc3VNNUxCZERLWVkyaFhFQmZwZ2ZVelZuKzAxaGt2M0h2cmYzY3Zq?=
+ =?utf-8?B?SVB2dUhYeU1RT0N2bDE4b0lWVjhpNW1HK3BvWUtyVThyMExjNkJpVytndHJm?=
+ =?utf-8?B?dXk1Vk9FUFBlSVYyOUtmbEJYZW5tSjBXRVVwWEl4VVZ4am1pKzhqT0hFU3RX?=
+ =?utf-8?B?Y0hnQm56UjhTd3U3TTJsVytSMzd3eTFiZ0pVYU9pZy81VGVqUDBoa2hRZUpY?=
+ =?utf-8?B?bmtmWitHS3BCaFB1RTFrcysxVHM2elFaVkJJWTE2S1NVMWR5dmZCZk94TElu?=
+ =?utf-8?B?TGU1M2NocityeWlaRG9IT1hNd0dGT1Z0MTVPbW9IdGNVMVRTWi96YnhER09Z?=
+ =?utf-8?B?UTFVYzlyM1g5NzRaQXJReXRvcHpaYVIrQzlMVTJrYlRramxoZXBOM29Ybmk0?=
+ =?utf-8?B?YWhkLytRYWhSekFWRXEvS1RNMXRLWHV4cU9HSW16eFpOcHNmaWtFTTZYbnpH?=
+ =?utf-8?B?dlpoQlZPaVIvNmMxQ2lEZ3djamVyMEpmaWkvTGdkVVNGZUw4MjUvNXRMMkRB?=
+ =?utf-8?B?dmFoR3VDcVIwMFh6MXl4cWt4WXVyUmFJREVWcDF1TWZPK2hFYUYraTJ1NmpK?=
+ =?utf-8?B?bHdnSk0wQnA0V3pXa3VMRmF5cE04RU9seUZqdmhuUURtczdjZzd1d1B1V1Ra?=
+ =?utf-8?B?dHdOeHVlbHlQZWRBNDFnY0FuY3R1S1dpNUVGaFdWOEVlS1JCeExmUnRNRVF3?=
+ =?utf-8?B?Y015K3NISEVzTnVvSEV3QmFXZVdOcHNiZ1NYUko3YW50K3puYU1tK2FrSFB1?=
+ =?utf-8?B?ajArTGJSWGV6dHZ1S2xQOWhseS93M1JoN3Q3cjNKUEVrY0FJdmttYjExOGhn?=
+ =?utf-8?B?YlhNNGo3ejhDOU03eHlJOFRGTWsvK1IvOWRFd29neUZITWJDOWxlck9odHEy?=
+ =?utf-8?B?elpmNWhOTjlYNkQ0bXZBYXlnN0NabjkzcVV3cEpRc09BZmtoNnlOQmdqOHE5?=
+ =?utf-8?B?TTEwWk40TWhUKzhLd2xVMDdCSWY5WEU3KzN5a28zYXNBNEpCOTJNSUpkQmhp?=
+ =?utf-8?B?c3dZWEVaRlk3dTBUUERzdGI3aXhHRU0vU0ZlNm1kemV1VE1TeTJUNkdBRXZj?=
+ =?utf-8?B?bTlmbGlBSDBFNWlXYXA0UnBqYk5Cd0FnK1MxZytPNUlVNlFkdHNVTFJnNTE1?=
+ =?utf-8?B?UklRSnlmRmtlM0JYNTBLVWMzSURZM3hacEFjSEg4U251M3prOWZZSlF0bGtv?=
+ =?utf-8?B?aU41YjBmdjZ5YlYySHpNbU1PTkRsc0ZtbDBnblVyS084N2JyTjVwR21wQmdS?=
+ =?utf-8?B?TW5pYXdqRzk0RENXZDkvTGUxc1lhbWF1ZENYWEVpZDlSNGZYVndkTFBiQWRY?=
+ =?utf-8?B?Z0RSMzFaT3ZGeE4vd1BlaWxIY1l2YU5vUFIycWlqNjBDQ0JuVy80UWVHWHVl?=
+ =?utf-8?B?MzZhTmcxY205Mm04REFMbUljbTF1eWVwN2RDcFArcC9JQ3ZOWC9yRk00bFdE?=
+ =?utf-8?B?YVhNQ1p1eWx5OXYxYk1oOG80Q2JyVDhjeDhBK2t5SS9SK1BLYnNva1UySXN6?=
+ =?utf-8?B?Uis2TCtqSUF0MmxCcEMwUVNsdjFSQnVMVEFHTC9HRFB2TWVqTjR0d1VINmNY?=
+ =?utf-8?B?TUhsWWEzNHNiVERrOWliNGtCNEh4cEg2UVF6WkJWRzNMUWt4ZEpLUnZyVVFV?=
+ =?utf-8?B?SmFsWXVockFZRW1nN0t1RG4ram5NdWxyQ1U2WTY5U1E1UjNSLzMxN3cwSlR1?=
+ =?utf-8?B?Qk13WllNUGhKdHozZm80R3N2RHJrR0JHMVlTQUdvRU5paUV1cDhKVUs1MG5p?=
+ =?utf-8?B?UXVxOTFmVXZuYlF6aHRneWROVHJmdVUrajRXTFZTclh3bVFEWUc0ajNwUmFv?=
+ =?utf-8?B?b3VpV1AybVVvNHkzRFFCOFZkcjNhV3FTSFZra3AycE9FM1hNR1lVTlhVTy8z?=
+ =?utf-8?B?c1hFV2lnL3NOZlJoUXlMQVcrbzdTZ1YxckhsaHRXeFgrODlkTktkWEdiZVAx?=
+ =?utf-8?B?OXN3Ym14QWM2TEY3MHV1QkFmVEFlRzFhQlUrVytPcW9VVkVWb0Y4WWdLNnIz?=
+ =?utf-8?B?QnRNelJpa29jck15NzM1Y3dPUmxNcWdhdXBVMVZvVlBEbm5WbjZwMXZDRnpw?=
+ =?utf-8?B?cmxhNDBKM2Z3bGpiSGZTeDI1Q3FkcC9wdUZYS2JBeS92akR4N1FUWmRUSmlz?=
+ =?utf-8?Q?PL43XcXVOeVfTlqqvbWLJICoS?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(376014)(36860700013)(13003099007);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Nov 2025 01:25:13.1281
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6677bd3-035e-4cf9-658d-08de1ff7ff4a
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	OSA0EPF000000CB.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB6066
 
-On Mon, Nov 10, 2025 at 12:51:49AM +0100, Dragan Simic wrote:
-> Hello Geraldo,
+
+
+On 11/10/2025 1:01 AM, Manivannan Sadhasivam wrote:
+> EXTERNAL EMAIL
 > 
-> On Wednesday, November 05, 2025 04:55 CET, Geraldo Nascimento <geraldogabriel@gmail.com> wrote:
-> > I did some more testing, intrigued by why would a delay of more than
-> > 5 ms after the enablement of the power rails trigger failure in
-> > initial link-training.
-> > 
-> > Something in my intuition kept telling me this was PERST# related,
-> > and so I followed that rabbit-hole.
-> > 
-> > It seems the following change will allow the SSD to work with the
-> > Rockchip-IP PCIe core without any other changes. So it is purely
-> > a DT change and we are able to keep the mandatory 100ms delay
-> > after driving PERST# low, as well as the always-on/boot-on
-> > properties of the 3v3 power regulator.
-> > 
-> > This time everything is within the PCIe spec AFAICT, PERST# indeed
-> > is an Open Drain signal, and indeed it does requires pull-up resistor
-> > to maintain the drive after driving it high.
-> > 
-> > I'm still testing the overall stability of this, let's hope for the
-> > best!
-> > 
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> > index aa70776e898a..1c5afc0413bc 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> > @@ -383,13 +383,14 @@ &pcie_phy {
-> >  };
-> >  
-> >  &pcie0 {
-> > -	ep-gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
-> > +	ep-gpios = <&gpio0 RK_PB4 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> >  	num-lanes = <4>;
-> > -	pinctrl-0 = <&pcie_clkreqnb_cpm>;
-> > +	pinctrl-0 = <&pcie_clkreqnb_cpm>, <&pcie_perst>;
-> >  	pinctrl-names = "default";
-> >  	vpcie0v9-supply = <&vcca_0v9>;	/* VCC_0V9_S0 */
-> >  	vpcie1v8-supply = <&vcca_1v8>;	/* VCC_1V8_S0 */
-> >  	vpcie3v3-supply = <&vcc3v3_pcie>;
-> > +	max-link-speed = <2>;
+> On Sun, Nov 09, 2025 at 09:59:50PM +0800, kernel test robot wrote:
+>> Hi,
+>>
+>> kernel test robot noticed the following build warnings:
+>>
+>> [auto build test WARNING on 6146a0f1dfae5d37442a9ddcba012add260bceb0]
+>>
+>> url:https://github.com/intel-lab-lkp/linux/commits/hans-zhang-cixtech-com/ 
+>> PCI-cadence-Add-module-support-for-platform-controller- 
+>> driver/20251108-220607
+>> base:   6146a0f1dfae5d37442a9ddcba012add260bceb0
+>> patch link:https://lore.kernel.org/r/20251108140305.1120117-4- 
+>> hans.zhang%40cixtech.com
+>> patch subject: [PATCH v11 03/10] PCI: cadence: Move PCIe RP common functions to a separate file
+>> config: i386-randconfig-014-20251109 (https://download.01.org/0day-ci/ 
+>> archive/20251109/202511092106.mkNV0iyb-lkp@intel.com/config)
+>> compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+>> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/ 
+>> archive/20251109/202511092106.mkNV0iyb-lkp@intel.com/reproduce)
+>>
+>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>> the same patch/commit), kindly add following tags
+>> | Reported-by: kernel test robot<lkp@intel.com>
+>> | Closes:https://lore.kernel.org/oe-kbuild-all/202511092106.mkNV0iyb-lkp@intel.com/
+>>
+>> All warnings (new ones prefixed by >>):
+>>
+>>     drivers/pci/controller/cadence/pcie-cadence-host-common.c: In function 'cdns_pcie_host_bar_config':
+>>>> drivers/pci/controller/cadence/pcie-cadence-host-common.c:188:23: warning: variable 'pci_addr' set but not used [-Wunused-but-set-variable]
+>>       188 |         u64 cpu_addr, pci_addr, size, winsize;
+>>           |                       ^~~~~~~~
+>>
+>>
+> No need to repost the series, just to fix this warning. If there are no more
+> comments, then I will fix it up while applying.
 > 
-> FWIW, we shouldn't be enabling PCIe Gen2 here, because it's been
-> already disabled for the RK3399 due to unknown errata in the commit
-> 712fa1777207 ("arm64: dts: rockchip: add max-link-speed for rk3399",
-> 2016-12-16).  It's perfectly reasonable to assume the same for the
-> RK3399Pro, which is basically RK3399 packaged together with RK1808,
-> AFAIK with no on-package interconnects.
 
-Hi Dragan!
+Hi Mani,
 
-Thanks for the catch, you are correct. But in this case it was just
-for my tests and it crept in in the git diff. I wasn't really proposing
-to make that change.
+Thank you very much.
 
-Thanks,
-Geraldo Nascimento
+
+Best regards,
+Hans
+
+
+> - Mani
 
 
