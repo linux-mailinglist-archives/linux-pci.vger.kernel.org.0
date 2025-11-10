@@ -1,570 +1,158 @@
-Return-Path: <linux-pci+bounces-40685-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40686-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA1AFC4588B
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 10:10:35 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB065C458AF
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 10:13:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8206D3A1FD8
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 09:10:34 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9DCAE4E4A52
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 09:13:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6F8A2FDC57;
-	Mon, 10 Nov 2025 09:10:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DC0C2FF153;
+	Mon, 10 Nov 2025 09:13:06 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net (zg8tmja5ljk3lje4mi4ymjia.icoremail.net [209.97.182.222])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E76C426299;
-	Mon, 10 Nov 2025 09:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.182.222
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.205.26])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2680E2FC89F;
+	Mon, 10 Nov 2025 09:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.229.205.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762765831; cv=none; b=FKRXtxr1hPZlFzvKlNh9IshFU1CA+S29Agawc1gzb11nc9fFKLoeAeqJbTWsoTHIg9lMYcnrTNwfMLmShXc5rmIvz0uURlxO1mC5UJQpt9FtfeldKi23e3nNH4RAVdz2BEYV8XG5QD8dFtsycw5izWpapvuhTDl7osFyYhgMY60=
+	t=1762765986; cv=none; b=o0rTNtlXvaw62DWOrHu+Ux+3T1i1vCrrKnIjL9OaJCLPiaUpZoutZNDsPd+MSEXba/ar9Wx3hIbn16rGU0uBY+A09uX1fRDY2KINIGPdxiiXcPOscRKd2DAbPDI1G17P3Lij+RBFhiQZ7DPW4u2ktYsGv9zSCGQpIy7rCmlosHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762765831; c=relaxed/simple;
-	bh=To8Zr7pq7QVNWqITISmUu790fg8x9wjeUUgxi7SIVRc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KhwSrS9i5DxjWSLk9yV68+OIYEKGNM3OVpmmGdzeMsF0EhXqs2qTdV9ft7+eCqPb1eUqRyM81sdzfoFsMzyOZ4HwQo7E7DQYmP3F8m5P3MzbHgoUMNyDDwTOocXDpln5USLxeF1rqEEVm3KpcLcCh+1f7uuMHurfpCQEk6kICWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=209.97.182.222
+	s=arc-20240116; t=1762765986; c=relaxed/simple;
+	bh=9u1iCCFaJVVRUnPC6w8LlPngxI4hdJ58PuC60PIrX4o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=HHEji6BgKINQvMkzoLQPJAXk9cPbOXAtgVZsCH9TyaGqTt8/iBbmX86sZpqgsMM6J5a9D2ngy0LlypwpQOYnJ/oSbBX4FNJKkmIatwOek/iJq74IFiackw2RcnfUydyahsbA0bYKVLkjIlqb1NpKatRyNpxA220rIjBcp8K/GJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.229.205.26
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0004758DT.eswin.cn (unknown [10.12.96.83])
-	by app1 (Coremail) with SMTP id TAJkCgD372fkqxFpA9JyAA--.16982S2;
-	Mon, 10 Nov 2025 17:09:58 +0800 (CST)
-From: zhangsenchuan@eswincomputing.com
-To: bhelgaas@google.com,
-	mani@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	robh@kernel.org,
-	p.zabel@pengutronix.de,
-	jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	christian.bruel@foss.st.com,
-	mayank.rana@oss.qualcomm.com,
-	shradha.t@samsung.com,
-	krishna.chundru@oss.qualcomm.com,
-	thippeswamy.havalige@amd.com,
-	inochiama@gmail.com
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com,
-	ouyanghui@eswincomputing.com,
-	Senchuan Zhang <zhangsenchuan@eswincomputing.com>
-Subject: [PATCH v5 2/2] PCI: eic7700: Add Eswin PCIe host controller driver
-Date: Mon, 10 Nov 2025 17:09:53 +0800
-Message-ID: <20251110090953.1429-1-zhangsenchuan@eswincomputing.com>
-X-Mailer: git-send-email 2.49.0.windows.1
-In-Reply-To: <20251110090716.1392-1-zhangsenchuan@eswincomputing.com>
-References: <20251110090716.1392-1-zhangsenchuan@eswincomputing.com>
+Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
+ ajax-webmail-app2 (Coremail) ; Mon, 10 Nov 2025 17:12:51 +0800 (GMT+08:00)
+Date: Mon, 10 Nov 2025 17:12:51 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
+To: "Manivannan Sadhasivam" <mani@kernel.org>
+Cc: "Manivannan Sadhasivam" <manivannan.sadhasivam@oss.qualcomm.com>,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	will@kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, robh@kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: Re: [PATCH 2/3] PCI: qcom: Check for the presence of a device
+ instead of Link up during suspend
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
+ 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
+ mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
+In-Reply-To: <fnayczbumpynzvhafv3ryozlg2qwsxsyzpn5p44kc4o3hy7uux@lp5qgsd6ajtw>
+References: <20251106061326.8241-1-manivannan.sadhasivam@oss.qualcomm.com>
+ <20251106061326.8241-3-manivannan.sadhasivam@oss.qualcomm.com>
+ <35086b08.c4e.19a58a7d6bc.Coremail.zhangsenchuan@eswincomputing.com>
+ <nhjlanhzndhlbtfohnkypwuzpw6nw43cysjmoam3qv4rrs22hr@ic3hgtfoeb6e>
+ <311e1152.cc3.19a5cff7033.Coremail.zhangsenchuan@eswincomputing.com>
+ <fnayczbumpynzvhafv3ryozlg2qwsxsyzpn5p44kc4o3hy7uux@lp5qgsd6ajtw>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TAJkCgD372fkqxFpA9JyAA--.16982S2
-X-Coremail-Antispam: 1UD129KBjvAXoW3Kw4fZFWDKrW5Cr1UAw4UXFb_yoW8Gw47Co
-	Z3Xrn3Xw1fWr1rurZ7XF1Iv34xZa4IvFW3XFnY939rCay0yr15tryDGwnIqw13Cr40krW5
-	Xw1xXw13CF4Iqa1rn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUYN7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E6xAIw20EY4v20xva
-	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
-	x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8
-	Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-	8cxan2IY04v7M4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxVW8ZVWrXwCY02Avz4vE-syl42
-	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
-	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI4
-	8JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4U
-	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
-	C2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRiBT5PUUUUU==
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/
+Message-ID: <503961f9.dd6.19a6d0a1e94.Coremail.zhangsenchuan@eswincomputing.com>
+X-Coremail-Locale: en_US
+X-CM-TRANSID:TQJkCgDnK6+TrBFpINNyAA--.1237W
+X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAQECBmkQw
+	gEm0AAAsI
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW3Jw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
-
-Add driver for the Eswin EIC7700 PCIe host controller, which is based on
-the DesignWare PCIe core, IP revision 6.00a. The PCIe Gen.3 controller
-supports a data rate of 8 GT/s and 4 channels, support INTx and MSI
-interrupts.
-
-Signed-off-by: Yu Ning <ningyu@eswincomputing.com>
-Signed-off-by: Yanghui Ou <ouyanghui@eswincomputing.com>
-Signed-off-by: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
----
- drivers/pci/controller/dwc/Kconfig        |  11 +
- drivers/pci/controller/dwc/Makefile       |   1 +
- drivers/pci/controller/dwc/pcie-eic7700.c | 420 ++++++++++++++++++++++
- 3 files changed, 432 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-eic7700.c
-
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 349d4657393c..66568efb324f 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -93,6 +93,17 @@ config PCIE_BT1
- 	  Enables support for the PCIe controller in the Baikal-T1 SoC to work
- 	  in host mode. It's based on the Synopsys DWC PCIe v4.60a IP-core.
- 
-+config PCIE_EIC7700
-+	bool "Eswin EIC7700 PCIe controller"
-+	depends on ARCH_ESWIN || COMPILE_TEST
-+	depends on PCI_MSI
-+	select PCIE_DW_HOST
-+	help
-+	  Say Y here if you want PCIe controller support for the Eswin EIC7700.
-+	  The PCIe controller on EIC7700 is based on DesignWare hardware,
-+	  enables support for the PCIe controller in the EIC7700 SoC to work in
-+	  host mode.
-+
- config PCI_IMX6
- 	bool
- 
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index 7ae28f3b0fb3..04f751c49eba 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
- obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
- obj-$(CONFIG_PCIE_AMD_MDB) += pcie-amd-mdb.o
- obj-$(CONFIG_PCIE_BT1) += pcie-bt1.o
-+obj-$(CONFIG_PCIE_EIC7700) += pcie-eic7700.o
- obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
- obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
- obj-$(CONFIG_PCIE_FU740) += pcie-fu740.o
-diff --git a/drivers/pci/controller/dwc/pcie-eic7700.c b/drivers/pci/controller/dwc/pcie-eic7700.c
-new file mode 100644
-index 000000000000..4e84dc5f399a
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-eic7700.c
-@@ -0,0 +1,420 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ESWIN EIC7700 PCIe root complex driver
-+ *
-+ * Copyright 2025, Beijing ESWIN Computing Technology Co., Ltd.
-+ *
-+ * Authors: Yu Ning <ningyu@eswincomputing.com>
-+ *          Senchuan Zhang <zhangsenchuan@eswincomputing.com>
-+ *          Yanghui Ou <ouyanghui@eswincomputing.com>
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/resource.h>
-+#include <linux/reset.h>
-+#include <linux/types.h>
-+
-+#include "../pci-host-common.h"
-+#include "pcie-designware.h"
-+
-+/* ELBI registers */
-+#define PCIEELBI_CTRL0_OFFSET		0x0
-+#define PCIEELBI_STATUS0_OFFSET		0x100
-+
-+/* LTSSM register fields */
-+#define PCIEELBI_APP_LTSSM_ENABLE	BIT(5)
-+
-+/* APP_HOLD_PHY_RST register fields */
-+#define PCIEELBI_APP_HOLD_PHY_RST	BIT(6)
-+
-+/* PM_SEL_AUX_CLK register fields */
-+#define PCIEELBI_PM_SEL_AUX_CLK		BIT(16)
-+
-+/* DEV_TYPE register fields */
-+#define PCIEELBI_CTRL0_DEV_TYPE		GENMASK(3, 0)
-+
-+/* Vendor and device ID value */
-+#define PCI_VENDOR_ID_ESWIN		0x1fe1
-+#define PCI_DEVICE_ID_ESWIN		0x2030
-+
-+#define EIC7700_NUM_RSTS		ARRAY_SIZE(eic7700_pcie_rsts)
-+
-+static const char * const eic7700_pcie_rsts[] = {
-+	"pwr",
-+	"dbi",
-+};
-+
-+struct eic7700_pcie_data {
-+	bool msix_cap;
-+};
-+
-+struct eic7700_pcie_port {
-+	struct list_head list;
-+	struct reset_control *perst;
-+	int num_lanes;
-+};
-+
-+struct eic7700_pcie {
-+	struct dw_pcie pci;
-+	struct clk_bulk_data *clks;
-+	struct reset_control_bulk_data resets[EIC7700_NUM_RSTS];
-+	struct list_head ports;
-+	const struct eic7700_pcie_data *data;
-+	int num_clks;
-+	bool active_device;
-+};
-+
-+#define to_eic7700_pcie(x) dev_get_drvdata((x)->dev)
-+
-+static int eic7700_pcie_start_link(struct dw_pcie *pci)
-+{
-+	u32 val;
-+
-+	/* Enable LTSSM */
-+	val = readl_relaxed(pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
-+	val |= PCIEELBI_APP_LTSSM_ENABLE;
-+	writel_relaxed(val, pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
-+
-+	return 0;
-+}
-+
-+static bool eic7700_pcie_link_up(struct dw_pcie *pci)
-+{
-+	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	u16 val = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
-+
-+	return val & PCI_EXP_LNKSTA_DLLLA;
-+}
-+
-+static enum dw_pcie_ltssm eic7700_pcie_get_ltssm(struct dw_pcie *pci)
-+{
-+	dev_info(pci->dev, "LTSSM_L2 not supported\n");
-+
-+	/* Return 0 only ensure skip read_poll_timeout function check */
-+	return 0;
-+}
-+
-+static int eic7700_pcie_perst_deassert(struct eic7700_pcie_port *port,
-+				       struct eic7700_pcie *pcie)
-+{
-+	int ret;
-+
-+	ret = reset_control_assert(port->perst);
-+	if (ret) {
-+		dev_err(pcie->pci.dev, "Failed to assert PERST#\n");
-+		return ret;
-+	}
-+
-+	/* Ensure that PERST# has been asserted for at least 100 ms */
-+	msleep(PCIE_T_PVPERL_MS);
-+
-+	ret = reset_control_deassert(port->perst);
-+	if (ret) {
-+		dev_err(pcie->pci.dev, "Failed to deassert PERST#\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int eic7700_pcie_parse_port(struct eic7700_pcie *pcie,
-+				   struct device_node *node)
-+{
-+	struct device *dev = pcie->pci.dev;
-+	struct eic7700_pcie_port *port;
-+
-+	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-+	if (!port)
-+		return -ENOMEM;
-+
-+	port->perst = of_reset_control_get_exclusive(node, "perst");
-+	if (IS_ERR(port->perst)) {
-+		dev_err(dev, "Failed to get PERST# reset\n");
-+		return PTR_ERR(port->perst);
-+	}
-+
-+	/*
-+	 * Since the Root Port node is separated out by pcie devicetree, the
-+	 * DWC core initialization code cannot parse the num-lanes attribute
-+	 * in the Root Port. Before entering the DWC core initialization code,
-+	 * the platform driver code parses the Root Port node. The EIC7700 only
-+	 * supports one Root Port node, and the num-lanes attribute is suitable
-+	 * for the case of one Root Rort.
-+	 */
-+	of_property_read_u32(node, "num-lanes", &port->num_lanes);
-+	pcie->pci.num_lanes = port->num_lanes;
-+
-+	INIT_LIST_HEAD(&port->list);
-+	list_add_tail(&port->list, &pcie->ports);
-+
-+	return 0;
-+}
-+
-+static int eic7700_pcie_parse_ports(struct eic7700_pcie *pcie)
-+{
-+	struct eic7700_pcie_port *port, *tmp;
-+	struct device *dev = pcie->pci.dev;
-+	int ret;
-+
-+	for_each_available_child_of_node_scoped(dev->of_node, of_port) {
-+		ret = eic7700_pcie_parse_port(pcie, of_port);
-+		if (ret)
-+			goto err_port;
-+	}
-+
-+	return 0;
-+
-+err_port:
-+	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
-+		list_del(&port->list);
-+
-+	return ret;
-+}
-+
-+static void eic7700_pcie_hide_broken_msix_cap(struct dw_pcie *pci)
-+{
-+	u16 offset, val;
-+
-+	/*
-+	 * Hardware doesn't support MSI-X but it advertises MSI-X capability,
-+	 * to avoid this problem, the MSI-X capability in the PCIe capabilities
-+	 * linked-list needs to be disabled. Since the PCI Express capability
-+	 * structure's next pointer points to the MSI-X capability, and the
-+	 * MSI-X capability's next pointer is null (00H), so only the PCI
-+	 * Express capability structure's next pointer needs to be set 00H.
-+	 */
-+	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	val = dw_pcie_readl_dbi(pci, offset);
-+	val &= ~PCI_CAP_LIST_NEXT_MASK;
-+	dw_pcie_writel_dbi(pci, offset, val);
-+}
-+
-+static int eic7700_pcie_host_init(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct eic7700_pcie *pcie = to_eic7700_pcie(pci);
-+	struct eic7700_pcie_port *port;
-+	u8 msi_cap;
-+	u32 val;
-+	int ret;
-+
-+	/*
-+	 * If resources are not released during suspend, resume does not
-+	 * require reinitializing them.
-+	 */
-+	if (pcie->active_device)
-+		return 0;
-+
-+	pcie->num_clks = devm_clk_bulk_get_all_enabled(pci->dev, &pcie->clks);
-+	if (pcie->num_clks < 0)
-+		return dev_err_probe(pci->dev, pcie->num_clks,
-+				     "Failed to get pcie clocks\n");
-+
-+	ret = reset_control_bulk_deassert(EIC7700_NUM_RSTS, pcie->resets);
-+	if (ret) {
-+		dev_err(pcie->pci.dev, "Failed to deassert resets\n");
-+		return ret;
-+	}
-+
-+	/* Configure Root Port type */
-+	val = readl_relaxed(pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
-+	val &= ~PCIEELBI_CTRL0_DEV_TYPE;
-+	val |= FIELD_PREP(PCIEELBI_CTRL0_DEV_TYPE, PCI_EXP_TYPE_ROOT_PORT);
-+	writel_relaxed(val, pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
-+
-+	list_for_each_entry(port, &pcie->ports, list) {
-+		ret = eic7700_pcie_perst_deassert(port, pcie);
-+		if (ret)
-+			goto err_perst;
-+	}
-+
-+	/* Configure app_hold_phy_rst */
-+	val = readl_relaxed(pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
-+	val &= ~PCIEELBI_APP_HOLD_PHY_RST;
-+	writel_relaxed(val, pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
-+
-+	/* The maximum waiting time for the clock switch lock is 20ms */
-+	ret = readl_poll_timeout(pci->elbi_base + PCIEELBI_STATUS0_OFFSET,
-+				 val, !(val & PCIEELBI_PM_SEL_AUX_CLK), 1000,
-+				 20000);
-+	if (ret) {
-+		dev_err(pci->dev, "Timeout waiting for PM_SEL_AUX_CLK ready\n");
-+		goto err_phy_init;
-+	}
-+
-+	/*
-+	 * Configure ESWIN VID:DID for Root Port as the default values are
-+	 * invalid.
-+	 */
-+	dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, PCI_VENDOR_ID_ESWIN);
-+	dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, PCI_DEVICE_ID_ESWIN);
-+
-+	/* Configure support 32 MSI vectors */
-+	msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
-+	val = dw_pcie_readw_dbi(pci, msi_cap + PCI_MSI_FLAGS);
-+	val &= ~PCI_MSI_FLAGS_QMASK;
-+	val |= FIELD_PREP(PCI_MSI_FLAGS_QMASK, 5);
-+	dw_pcie_writew_dbi(pci, msi_cap + PCI_MSI_FLAGS, val);
-+
-+	/* Configure disable MSI-X cap */
-+	if (!pcie->data->msix_cap)
-+		eic7700_pcie_hide_broken_msix_cap(pci);
-+
-+	return 0;
-+
-+err_phy_init:
-+	list_for_each_entry(port, &pcie->ports, list)
-+		reset_control_assert(port->perst);
-+err_perst:
-+	reset_control_bulk_assert(EIC7700_NUM_RSTS, pcie->resets);
-+
-+	return ret;
-+}
-+
-+static void eic7700_pcie_host_deinit(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct eic7700_pcie *pcie = to_eic7700_pcie(pci);
-+	struct eic7700_pcie_port *port;
-+
-+	if (pci_root_ports_have_device(pp->bridge->bus)) {
-+		pcie->active_device = true;
-+		return;
-+	}
-+
-+	list_for_each_entry(port, &pcie->ports, list)
-+		reset_control_assert(port->perst);
-+	reset_control_bulk_assert(EIC7700_NUM_RSTS, pcie->resets);
-+	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
-+}
-+
-+static void eic7700_pcie_pme_turn_off(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+
-+	/*
-+	 * Hardware doesn't support enter the D3code and L2/L3 states, send
-+	 * PME_Turn_Off message, which will then cause Vmain to be removed and
-+	 * controller stop working.
-+	 */
-+	dev_info(pci->dev, "Can't send PME_Turn_Off message\n");
-+}
-+
-+static const struct dw_pcie_host_ops eic7700_pcie_host_ops = {
-+	.init = eic7700_pcie_host_init,
-+	.deinit = eic7700_pcie_host_deinit,
-+	.pme_turn_off = eic7700_pcie_pme_turn_off,
-+};
-+
-+static const struct dw_pcie_ops dw_pcie_ops = {
-+	.start_link = eic7700_pcie_start_link,
-+	.link_up = eic7700_pcie_link_up,
-+	.get_ltssm = eic7700_pcie_get_ltssm,
-+};
-+
-+static int eic7700_pcie_probe(struct platform_device *pdev)
-+{
-+	const struct eic7700_pcie_data *data;
-+	struct eic7700_pcie_port *port, *tmp;
-+	struct device *dev = &pdev->dev;
-+	struct eic7700_pcie *pcie;
-+	struct dw_pcie *pci;
-+	int ret, i;
-+
-+	data = of_device_get_match_data(dev);
-+	if (!data)
-+		return dev_err_probe(dev, -EINVAL, "OF data missing\n");
-+
-+	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-+	if (!pcie)
-+		return -ENOMEM;
-+
-+	INIT_LIST_HEAD(&pcie->ports);
-+
-+	pci = &pcie->pci;
-+	pci->dev = dev;
-+	pci->ops = &dw_pcie_ops;
-+	pci->pp.ops = &eic7700_pcie_host_ops;
-+	pcie->data = data;
-+
-+	for (i = 0; i < EIC7700_NUM_RSTS; i++)
-+		pcie->resets[i].id = eic7700_pcie_rsts[i];
-+
-+	ret = devm_reset_control_bulk_get_exclusive(dev, EIC7700_NUM_RSTS,
-+						    pcie->resets);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to get resets\n");
-+
-+	ret = eic7700_pcie_parse_ports(pcie);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to parse Root Port: %d\n", ret);
-+
-+	platform_set_drvdata(pdev, pcie);
-+
-+	ret = dw_pcie_host_init(&pci->pp);
-+	if (ret) {
-+		dev_err(dev, "Failed to initialize host\n");
-+		goto err_init;
-+	}
-+
-+	return 0;
-+
-+err_init:
-+	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-+		list_del(&port->list);
-+		reset_control_put(port->perst);
-+	}
-+
-+	return ret;
-+}
-+
-+static int eic7700_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct eic7700_pcie *pcie = dev_get_drvdata(dev);
-+
-+	return dw_pcie_suspend_noirq(&pcie->pci);
-+}
-+
-+static int eic7700_pcie_resume_noirq(struct device *dev)
-+{
-+	struct eic7700_pcie *pcie = dev_get_drvdata(dev);
-+
-+	return dw_pcie_resume_noirq(&pcie->pci);
-+}
-+
-+static const struct dev_pm_ops eic7700_pcie_pm_ops = {
-+	NOIRQ_SYSTEM_SLEEP_PM_OPS(eic7700_pcie_suspend_noirq,
-+				  eic7700_pcie_resume_noirq)
-+};
-+
-+static const struct eic7700_pcie_data eic7700_data = {
-+	.msix_cap = false,
-+};
-+
-+static const struct of_device_id eic7700_pcie_of_match[] = {
-+	{ .compatible = "eswin,eic7700-pcie", .data = &eic7700_data },
-+	{},
-+};
-+
-+static struct platform_driver eic7700_pcie_driver = {
-+	.probe = eic7700_pcie_probe,
-+	.driver = {
-+		.name = "eic7700-pcie",
-+		.of_match_table = eic7700_pcie_of_match,
-+		.suppress_bind_attrs = true,
-+		.pm = &eic7700_pcie_pm_ops,
-+	},
-+};
-+builtin_platform_driver(eic7700_pcie_driver);
-+
-+MODULE_DESCRIPTION("Eswin EIC7700 PCIe host controller driver");
-+MODULE_AUTHOR("Yu Ning <ningyu@eswincomputing.com>");
-+MODULE_AUTHOR("Senchuan Zhang <zhangsenchuan@eswincomputing.com>");
-+MODULE_AUTHOR("Yanghui Ou <ouyanghui@eswincomputing.com>");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
-
+CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiTWFuaXZhbm5hbiBTYWRo
+YXNpdmFtIiA8bWFuaUBrZXJuZWwub3JnPgo+IFNlbmQgdGltZTpTYXR1cmRheSwgMDgvMTEvMjAy
+NSAxODoyNTozNgo+IFRvOiB6aGFuZ3NlbmNodWFuIDx6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0
+aW5nLmNvbT4KPiBDYzogIk1hbml2YW5uYW4gU2FkaGFzaXZhbSIgPG1hbml2YW5uYW4uc2FkaGFz
+aXZhbUBvc3MucXVhbGNvbW0uY29tPiwgbHBpZXJhbGlzaUBrZXJuZWwub3JnLCBrd2lsY3p5bnNr
+aUBrZXJuZWwub3JnLCBiaGVsZ2Fhc0Bnb29nbGUuY29tLCB3aWxsQGtlcm5lbC5vcmcsIGxpbnV4
+LXBjaUB2Z2VyLmtlcm5lbC5vcmcsIGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsIHJvYmhA
+a2VybmVsLm9yZywgbGludXgtYXJtLW1zbUB2Z2VyLmtlcm5lbC5vcmcKPiBTdWJqZWN0OiBSZTog
+W1BBVENIIDIvM10gUENJOiBxY29tOiBDaGVjayBmb3IgdGhlIHByZXNlbmNlIG9mIGEgZGV2aWNl
+IGluc3RlYWQgb2YgTGluayB1cCBkdXJpbmcgc3VzcGVuZAo+IAo+IE9uIEZyaSwgTm92IDA3LCAy
+MDI1IGF0IDAyOjI3OjE1UE0gKzA4MDAsIHpoYW5nc2VuY2h1YW4gd3JvdGU6Cj4gPiAKPiA+IAo+
+ID4gCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZXMtLS0tLQo+ID4gPiBGcm9tOiAiTWFuaXZh
+bm5hbiBTYWRoYXNpdmFtIiA8bWFuaUBrZXJuZWwub3JnPgo+ID4gPiBTZW5kIHRpbWU6VGh1cnNk
+YXksIDA2LzExLzIwMjUgMTk6NTc6MTYKPiA+ID4gVG86IHpoYW5nc2VuY2h1YW4gPHpoYW5nc2Vu
+Y2h1YW5AZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gPiBDYzogIk1hbml2YW5uYW4gU2FkaGFzaXZh
+bSIgPG1hbml2YW5uYW4uc2FkaGFzaXZhbUBvc3MucXVhbGNvbW0uY29tPiwgbHBpZXJhbGlzaUBr
+ZXJuZWwub3JnLCBrd2lsY3p5bnNraUBrZXJuZWwub3JnLCBiaGVsZ2Fhc0Bnb29nbGUuY29tLCB3
+aWxsQGtlcm5lbC5vcmcsIGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmcsIGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmcsIHJvYmhAa2VybmVsLm9yZywgbGludXgtYXJtLW1zbUB2Z2VyLmtlcm5l
+bC5vcmcKPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzNdIFBDSTogcWNvbTogQ2hlY2sgZm9y
+IHRoZSBwcmVzZW5jZSBvZiBhIGRldmljZSBpbnN0ZWFkIG9mIExpbmsgdXAgZHVyaW5nIHN1c3Bl
+bmQKPiA+ID4gCj4gPiA+IE9uIFRodSwgTm92IDA2LCAyMDI1IGF0IDA2OjEzOjA1UE0gKzA4MDAs
+IHpoYW5nc2VuY2h1YW4gd3JvdGU6Cj4gPiA+ID4gCj4gPiA+ID4gCj4gPiA+ID4gCj4gPiA+ID4g
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiA+ID4gPiA+IEZyb206ICJNYW5pdmFubmFu
+IFNhZGhhc2l2YW0iIDxtYW5pdmFubmFuLnNhZGhhc2l2YW1Ab3NzLnF1YWxjb21tLmNvbT4KPiA+
+ID4gPiA+IFNlbmQgdGltZTpUaHVyc2RheSwgMDYvMTEvMjAyNSAxNDoxMzoyNQo+ID4gPiA+ID4g
+VG86IGxwaWVyYWxpc2lAa2VybmVsLm9yZywga3dpbGN6eW5za2lAa2VybmVsLm9yZywgbWFuaUBr
+ZXJuZWwub3JnLCBiaGVsZ2Fhc0Bnb29nbGUuY29tCj4gPiA+ID4gPiBDYzogd2lsbEBrZXJuZWwu
+b3JnLCBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnLCBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnLCByb2JoQGtlcm5lbC5vcmcsIGxpbnV4LWFybS1tc21Admdlci5rZXJuZWwub3JnLCB6aGFu
+Z3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbSwgIk1hbml2YW5uYW4gU2FkaGFzaXZhbSIgPG1h
+bml2YW5uYW4uc2FkaGFzaXZhbUBvc3MucXVhbGNvbW0uY29tPgo+ID4gPiA+ID4gU3ViamVjdDog
+W1BBVENIIDIvM10gUENJOiBxY29tOiBDaGVjayBmb3IgdGhlIHByZXNlbmNlIG9mIGEgZGV2aWNl
+IGluc3RlYWQgb2YgTGluayB1cCBkdXJpbmcgc3VzcGVuZAo+ID4gPiA+ID4gCj4gPiA+ID4gPiBU
+aGUgc3VzcGVuZCBoYW5kbGVyIGNoZWNrcyBmb3IgdGhlIFBDSWUgTGluayB1cCB0byBkZWNpZGUg
+d2hlbiB0byB0dXJuIG9mZgo+ID4gPiA+ID4gdGhlIGNvbnRyb2xsZXIgcmVzb3VyY2VzLiBCdXQg
+dGhpcyBjaGVjayBpcyByYWN5IGFzIHRoZSBQQ0llIExpbmsgY2FuIGdvCj4gPiA+ID4gPiBkb3du
+IGp1c3QgYWZ0ZXIgdGhpcyBjaGVjay4KPiA+ID4gPiA+IAo+ID4gPiA+ID4gU28gdXNlIHRoZSBu
+ZXdseSBpbnRyb2R1Y2VkIEFQSSwgcGNpX3Jvb3RfcG9ydHNfaGF2ZV9kZXZpY2UoKSB0aGF0IGNo
+ZWNrcwo+ID4gPiA+ID4gZm9yIHRoZSBwcmVzZW5jZSBvZiBhIGRldmljZSB1bmRlciBhbnkgb2Yg
+dGhlIFJvb3QgUG9ydHMgdG8gcmVwbGFjZSB0aGUKPiA+ID4gPiA+IExpbmsgdXAgY2hlY2suCj4g
+PiA+ID4gPiAKPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IE1hbml2YW5uYW4gU2FkaGFzaXZhbSA8
+bWFuaXZhbm5hbi5zYWRoYXNpdmFtQG9zcy5xdWFsY29tbS5jb20+Cj4gPiA+ID4gPiAtLS0KPiA+
+ID4gPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLXFjb20uYyB8IDYgKysrKy0t
+Cj4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMo
+LSkKPiA+ID4gPiA+IAo+ID4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xs
+ZXIvZHdjL3BjaWUtcWNvbS5jIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1xY29t
+LmMKPiA+ID4gPiA+IGluZGV4IDgwNWVkYmJmZTdlYi4uYjJiODllMmU0OTE2IDEwMDY0NAo+ID4g
+PiA+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1xY29tLmMKPiA+ID4g
+PiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtcWNvbS5jCj4gPiA+ID4g
+PiBAQCAtMjAxOCw2ICsyMDE4LDcgQEAgc3RhdGljIGludCBxY29tX3BjaWVfcHJvYmUoc3RydWN0
+IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+ID4gPiA+ICBzdGF0aWMgaW50IHFjb21fcGNpZV9z
+dXNwZW5kX25vaXJxKHN0cnVjdCBkZXZpY2UgKmRldikKPiA+ID4gPiA+ICB7Cj4gPiA+ID4gPiAg
+CXN0cnVjdCBxY29tX3BjaWUgKnBjaWU7Cj4gPiA+ID4gPiArCXN0cnVjdCBkd19wY2llX3JwICpw
+cDsKPiA+ID4gPiA+ICAJaW50IHJldCA9IDA7Cj4gPiA+ID4gPiAgCj4gPiA+ID4gPiAgCXBjaWUg
+PSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPiA+ID4gPiA+IEBAIC0yMDUzLDggKzIwNTQsOSBAQCBz
+dGF0aWMgaW50IHFjb21fcGNpZV9zdXNwZW5kX25vaXJxKHN0cnVjdCBkZXZpY2UgKmRldikKPiA+
+ID4gPiA+ICAJICogcG93ZXJkb3duIHN0YXRlLiBUaGlzIHdpbGwgYWZmZWN0IHRoZSBsaWZldGlt
+ZSBvZiB0aGUgc3RvcmFnZSBkZXZpY2VzCj4gPiA+ID4gPiAgCSAqIGxpa2UgTlZNZS4KPiA+ID4g
+PiA+ICAJICovCj4gPiA+ID4gPiAtCWlmICghZHdfcGNpZV9saW5rX3VwKHBjaWUtPnBjaSkpIHsK
+PiA+ID4gPiA+IC0JCXFjb21fcGNpZV9ob3N0X2RlaW5pdCgmcGNpZS0+cGNpLT5wcCk7Cj4gPiA+
+ID4gPiArCXBwID0gJnBjaWUtPnBjaS0+cHA7Cj4gPiA+ID4gPiArCWlmICghcGNpX3Jvb3RfcG9y
+dHNfaGF2ZV9kZXZpY2UocHAtPmJyaWRnZS0+YnVzKSkgewo+ID4gPiA+IAo+ID4gPiA+IEknbSBh
+IGxpdHRsZSBjb25mdXNlZC4KPiA+ID4gPiBUaGUgcGNpX3Jvb3RfcG9ydHNfaGF2ZV9kZXZpY2Ug
+ZnVuY3Rpb24gY2FuIGhlbHAgY2hlY2sgaWYgdGhlcmUgaXMgYW55IGRldmljZSAKPiA+ID4gPiBh
+dmFpbGFibGUgdW5kZXIgdGhlIFJvb3QgUG9ydHMsIGlmIHRoZXJlIGlzIGEgZGV2aWNlIGF2YWls
+YWJsZSwgdGhlIHJlc291cmNlIAo+ID4gPiA+IGNhbm5vdCBiZSByZWxlYXNlZCwgaXMgaXQgYWxz
+byBuZWNlc3NhcnkgdG8gcmVsZWFzZSByZXNvdXJjZXMgd2hlbiBlbnRlcmluZyAKPiA+ID4gPiB0
+aGUgTDIvTDMgc3RhdGU/Cj4gPiA+ID4gCj4gPiA+IAo+ID4gPiBJdCBpcyB1cHRvIHRoZSBjb250
+cm9sbGVyIGRyaXZlciB0byBkZWNpZGUuIE9uY2UgdGhlIGxpbmsgZW50ZXJzIEwyL0wzLCB0aGUK
+PiA+ID4gZGV2aWNlIHdpbGwgYmUgaW4gRDNDb2xkIHN0YXRlLiBTbyB0aGUgY29udHJvbGxlciBj
+YW4ganVzdCBkaXNhYmxlIGFsbCBQQ0llCj4gPiA+IHJlc291cmNlcyB0byBzYXZlIHBvd2VyLgo+
+ID4gPiAKPiA+ID4gQnV0IGl0IGlzIG5vdCBwb3NzaWJsZSB0byB0cmFuc2l0aW9uIGFsbCBQQ0ll
+IGRldmljZXMgdG8gRDNDb2xkIGR1cmluZyBzdXNwZW5kLAo+ID4gPiBmb3IgaW5zdGFuY2UgTlZN
+ZS4gSSdtIGhvcGluZyB0byBmaXggaXQgdG9vIGluIHRoZSBjb21pbmcgZGF5cy4KPiA+ID4gCj4g
+PiBIaSwgTWFuaXZhbm5hbgo+ID4gCj4gPiBUaGFuayB5b3UgZm9yIHlvdXIgZXhwbGFuYXRpb24u
+Cj4gPiAKPiA+IEJ5IHRoZSB3YXksIGluIHY1IHBhdGNoLCBJIHJlbW92ZWQgdGhlIGR3X3BjaWVf
+bGlua191cCBqdWRnbWVudCwgYW5kIGN1cnJlbnRseQo+ID4gcmVzb3VyY2VzIGFyZSBkaXJlY3Rs
+eSByZWxlYXNlZC4KPiA+IEF0IHByZXNlbnQsIGkgaGF2ZSBjb21wbGV0ZWQgdGhlIHBjaWUgdjUg
+cGF0Y2ggd2l0aG91dCBhZGRpbmcgdGhlIAo+ID4gcGNpX3Jvb3RfcG9ydHNfaGF2ZV9kZXZpY2Ug
+ZnVuY3Rpb24uIERvIEkgbmVlZCB0byB3YWl0IGZvciB5b3UgdG8gbWVyZ2UgaXQgCj4gPiBiZWZv
+cmUgc2VuZGluZyB0aGUgVjUgcGF0Y2g/Cj4gPiAKPiAKPiBJJ3ZlIG1lcmdlZCBteSBzZXJpZXMg
+dG8gcGNpL2NvbnRyb2xsZXIvZHdjIGJyYW5jaC4gWW91IGNhbiB1c2UgdGhpcyBicmFuY2ggYXMg
+YQo+IGJhc2UgZm9yIHlvdXIgdjUuCj4gCkhpLCBNYW5pdmFubmFuCgpUaGFuayB5b3UgdmVyeSBt
+dWNoIGZvciB0aGUgbmV3bHkgY3JlYXRlZCBicmFuY2guIEkgaGF2ZSBhbHJlYWR5IHN1Ym1pdHRl
+ZCBhIHY1IApwYXRjaCBiYXNlZCBvbiB0aGlzIGJyYW5jaC4KCktpbmQgcmVnYXJkcywKU2VuY2h1
+YW4gWmhhbmc=
 
