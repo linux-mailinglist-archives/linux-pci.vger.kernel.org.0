@@ -1,105 +1,126 @@
-Return-Path: <linux-pci+bounces-40665-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40666-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A209C44DFB
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 04:59:44 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6635AC44E43
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 05:05:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0755C188CCC8
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 04:00:09 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6253B4E55D0
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 04:05:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 187CD28C5B1;
-	Mon, 10 Nov 2025 03:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ggumNjt/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7977533D6;
+	Mon, 10 Nov 2025 04:05:03 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB3628C00D
-	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 03:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E16299927;
+	Mon, 10 Nov 2025 04:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762747181; cv=none; b=FoyQox0yY0ABobcpynTE3bWwC88wwOT+D/3gVoYY0Qg5qaI6lW3SNK3/34J8IhAeno2WQtfmRLAXRiDWyZmVX7IXNHYKNf1LiAYIy1GM3LbJUC+vhC+78oaqD2CqQlD0bSjcthmEiygednlVHb8P1pCoNftUO8bxrjtihJ/Ad5U=
+	t=1762747503; cv=none; b=q83wEGDhmqyR3c8jA6uB4W19gnw2Ig8AqvUjZYrC1oKaMJp+sdMqtq+25DcEGLy8yyE6k+zNBPEMvsn/00N7RQ7ytSl8UPqasVzZputOIp4FgYysAwl8FKHYM0VMdXglbkMgW1l1/cE4/jYAJjyvlo/keIFkfQNY8VDmNRbYWdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762747181; c=relaxed/simple;
-	bh=I0FjTHzU8X0vmig/FJeYke3iDTi4CGAfUw2yqwkABOQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H5M1pIwq0v9ofuxIJDeA4374cKzaHriELzc5KftN6Sx5NTvi4nUs5T6KvK9JPhViwZGoB9BucFQYcFw2gyzlV0IyQSMaxMP/jqtQuC1k2+dj8T8yuDvVzQ+Ogj4RmGchH8zc/9KTPwj18AgbhYKKVXJon9vRArbCM6YKmcIP3oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ggumNjt/; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762747179; x=1794283179;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=I0FjTHzU8X0vmig/FJeYke3iDTi4CGAfUw2yqwkABOQ=;
-  b=ggumNjt/hzVloTRq2kMrd5v22WE60JJAZtmZJRC09IFEygVv0pLWva/H
-   HW9YOplmbdRG7ZkAOAABapl9sdDbO/8ZOBAPV9+DSiCwvdmaVCdPNW20G
-   HCz6AhwbHS4oh63u0wRw8f+yjDJBYiYMQza73VvpRCRa6fQuuu2q/QSX3
-   pJJ8oxqquafNXqH9AEJkVRiXjWUhg5Yb5GEwzOiyvQz9DGJ9nSXZHHHU9
-   a01z0sZlpoPDXb1FxNm3e/UgMk+YnsdeE7xj8waIpf7GK8ps4Q33J1YO1
-   Ddb4eahEjui4oOVdIGK5vYaqUMx5fgFAtxdHTBhiQY/DzEqSbSiIb0+Nq
-   Q==;
-X-CSE-ConnectionGUID: JJkoyFW/QvyKZXpDYmNYPQ==
-X-CSE-MsgGUID: F95aZ5ZxT0ydgjlbKR61Ww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="64949418"
-X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
-   d="scan'208";a="64949418"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 19:59:39 -0800
-X-CSE-ConnectionGUID: ZwNJci3ZTIOtMRUDTP0I6w==
-X-CSE-MsgGUID: +scLqliaR6O1mA8geYiCmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
-   d="scan'208";a="211972496"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa002.fm.intel.com with ESMTP; 09 Nov 2025 19:59:36 -0800
-Date: Mon, 10 Nov 2025 11:45:15 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-pci@vger.kernel.org, linux-coco@lists.linux.dev,
-	gregkh@linuxfoundation.org, aik@amd.com, aneesh.kumar@kernel.org,
-	Lukas Wunner <lukas@wunner.de>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Samuel Ortiz <sameo@rivosinc.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH v8 5/9] PCI: Add PCIe Device 3 Extended Capability
- enumeration
-Message-ID: <aRFfy8gQi6+JwLTQ@yilunxu-OptiPlex-7050>
-References: <20251031212902.2256310-1-dan.j.williams@intel.com>
- <20251031212902.2256310-6-dan.j.williams@intel.com>
+	s=arc-20240116; t=1762747503; c=relaxed/simple;
+	bh=RTjKEpIDzrwmwtqOKmKcQDUA+BQVu2gXoDCgg7LL/9Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Izp71vhechtdMUobg0NaA1wwJPLNSfnmghuF01oJTtx3wwM/gN71hq9yDEuDmxgjim86kkY/iPVtUPAPSJ60L9lYixzMEyo07Mc8kQxCUv/FHHGwq08x6zZ860pLoiRwvEjCE87K+7iOp6uqwz5/urkCoRkPXvLqBVfbyWoCqvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from DESKTOP-L0HPE2S (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowAC3f3BjZBFpGlkwAA--.16112S2;
+	Mon, 10 Nov 2025 12:04:52 +0800 (CST)
+From: Haotian Zhang <vulab@iscas.ac.cn>
+To: jdmason@kudzu.us,
+	dave.jiang@intel.com,
+	allenbh@gmail.com,
+	mani@kernel.org,
+	kwilczynski@kernel.org,
+	kishon@kernel.org,
+	bhelgaas@google.com
+Cc: ntb@lists.linux.dev,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Haotian Zhang <vulab@iscas.ac.cn>
+Subject: [PATCH] pci: endpoint: Add missing NULL check for alloc_workqueue()
+Date: Mon, 10 Nov 2025 12:04:46 +0800
+Message-ID: <20251110040446.2065-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.50.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251031212902.2256310-6-dan.j.williams@intel.com>
+X-CM-TRANSID:zQCowAC3f3BjZBFpGlkwAA--.16112S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZFW7Jr18WrW5XF45Cr4xtFb_yoW8uF43pr
+	ZayFy0yrW0qr4UtFZ8Xw4kCFyakanYg34UCF1fuw1avw47WFZYqan5try5tF1DCrWUXw45
+	ta98X3sFqF1UAr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwwCA2kRR2h3EwAAs5
 
-On Fri, Oct 31, 2025 at 02:28:57PM -0700, Dan Williams wrote:
-> PCIe r7.0 Section 7.7.9 Device 3 Extended Capability Structure, defines the
-> canonical location for determining the Flit Mode of a device. This status
-> is a dependency for PCIe IDE enabling. Add a new fm_enabled flag to 'struct
-> pci_dev'.
-> 
-> Cc: Lukas Wunner <lukas@wunner.de>
-> Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Samuel Ortiz <sameo@rivosinc.com>
-> Cc: Alexey Kardashevskiy <aik@amd.com>
-> Cc: Xu Yilun <yilun.xu@linux.intel.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+The alloc_workqueue() function can return NULL on memory allocation
+failure. Without proper error checking, this leads to a NULL pointer
+dereference when queue_work() is later called with the NULL workqueue
+pointer in epf_ntb_epc_init().
 
-Reviewed-by: Xu Yilun <yilun.xu@linux.intel.com>
+Add a NULL check immediately after alloc_workqueue() and return -ENOMEM
+on failure to prevent the driver from loading with an invalid workqueue
+pointer.
 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Fixes: e35f56bb0330 ("PCI: endpoint: Support NTB transfer between RC and EP")
+Fixes: 8b821cf76150 ("PCI: endpoint: Add EP function driver to provide NTB functionality")
+Signed-off-by: Haotian Zhang <vulab@iscas.ac.cn>
+---
+ drivers/pci/endpoint/functions/pci-epf-ntb.c  | 4 ++++
+ drivers/pci/endpoint/functions/pci-epf-vntb.c | 4 ++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+index e01a98e74d21..b3d96a2e3a8c 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+@@ -2126,6 +2126,10 @@ static int __init epf_ntb_init(void)
+ 
+ 	kpcintb_workqueue = alloc_workqueue("kpcintb", WQ_MEM_RECLAIM |
+ 					    WQ_HIGHPRI, 0);
++	if (!kpcintb_workqueue) {
++		pr_err("Failed to allocate kpcintb workqueue\n");
++		return -ENOMEM;
++	}
+ 	ret = pci_epf_register_driver(&epf_ntb_driver);
+ 	if (ret) {
+ 		destroy_workqueue(kpcintb_workqueue);
+diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+index 83e9ab10f9c4..79800f1fecc3 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+@@ -1534,6 +1534,10 @@ static int __init epf_ntb_init(void)
+ 
+ 	kpcintb_workqueue = alloc_workqueue("kpcintb", WQ_MEM_RECLAIM |
+ 					    WQ_HIGHPRI, 0);
++	if (!kpcintb_workqueue) {
++		pr_err("Failed to allocate kpcintb workqueue\n");
++		return -ENOMEM;
++	}
+ 	ret = pci_epf_register_driver(&epf_ntb_driver);
+ 	if (ret) {
+ 		destroy_workqueue(kpcintb_workqueue);
+-- 
+2.50.1.windows.1
+
 
