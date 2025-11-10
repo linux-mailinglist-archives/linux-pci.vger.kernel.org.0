@@ -1,149 +1,288 @@
-Return-Path: <linux-pci+bounces-40669-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40668-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA469C44F1D
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 06:04:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9113C44EF8
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 05:56:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BC133B0C64
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 05:03:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7299B188B016
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 04:57:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 228B12E6CA6;
-	Mon, 10 Nov 2025 05:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DnZZ+JpP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C4BE257852;
+	Mon, 10 Nov 2025 04:56:47 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.77.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6840134D395
-	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 05:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A23192D8A;
+	Mon, 10 Nov 2025 04:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.77.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762751029; cv=none; b=kXe7zZEg+VQvaxy2zjaIID6xOthfzbrivhHTPPj5PdDRl4TlLdtZaAqLeezKVlt0SyDA9EUonaDP+UQ20MXUP2fpCDnavuBwwpZi9e1rKWNKN78EaltU64tvGxBsEiz5YEc/AqiXwGMUUaKBMptL9bCk68goqd4P2Li9XbYo5DU=
+	t=1762750606; cv=none; b=QDPJk7uD/1Jlk3FNRKd+Pi4pXIa7/aDN/X7CoggT9z0ITFrNEEUR6bgQV151PppjS/RQdCzAygvZKFENAxyCrA+nrFW2OSUdH1ab8Qj58YYqv6VANkGBqPl6dnB17fjEapDKdS0KyTQkX2FY7sU0qfe/WUJkQoahhuR2pY99b7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762751029; c=relaxed/simple;
-	bh=1hGjb/Di2zX64C6GwMgF3nsBBBIdZwQBDq8ZftFONJs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ae7/ARaBBHpzM7WyPngEsnQ4IxrwWzi1HV0uQ0pEM3DSvNyKmV4GEe8vtNvJjvQRt+xnknxKHViXfdy2u9hocrHTC9U1J+iUP3+/0NkhTwA1a8wCTzvXDZ2fNRu079+13/wa83PF0z7J3csrt8wcTtpRYnKOq9L9IySo8zGJ2YQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DnZZ+JpP; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762751027; x=1794287027;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1hGjb/Di2zX64C6GwMgF3nsBBBIdZwQBDq8ZftFONJs=;
-  b=DnZZ+JpPUs50zL+/PeCCrZySkfaekQyGUok7jLrMgemSA3ScQXyB0nDQ
-   OZ51Wv9n3XBKY/LkZNIa7PVZWePvOELbZaL9tQgoq6f+aHgcUIX3LL61G
-   nr6480s420vLbZWretyHVICMOaFeYWOspMZ/xBRedLrxoV6quNoiYDkMy
-   kv0u+kcqVqPLo0bzzVQ7OXJ5r2VQxbr3XmBTpDZNDZuOruec+RjNTLPcQ
-   r2IfOJa97Vyy6wpKiOXx36M9rA1JBDJt7hrMeQflAnxMKjB7P2EIqJGjS
-   jDhSYH0YwyOk61Wu7bUqUgRIxyqOQYdkJzJEK5Okp+lg3oTUjZC2nyNtI
-   w==;
-X-CSE-ConnectionGUID: VDI3eTKSQAamgJiH5vqoZw==
-X-CSE-MsgGUID: ldgpVSrSSX+VjxnLjVJ//g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="64708888"
-X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
-   d="scan'208";a="64708888"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 21:03:46 -0800
-X-CSE-ConnectionGUID: NJOIT8ewSICf+9TOOWn/6g==
-X-CSE-MsgGUID: 12Ql8C77TiO6t3UK8FNdJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
-   d="scan'208";a="193758234"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa005.jf.intel.com with ESMTP; 09 Nov 2025 21:03:44 -0800
-Date: Mon, 10 Nov 2025 12:49:22 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-pci@vger.kernel.org, linux-coco@lists.linux.dev,
-	gregkh@linuxfoundation.org, aik@amd.com, aneesh.kumar@kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-	Samuel Ortiz <sameo@rivosinc.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH v8 8/9] PCI/IDE: Report available IDE streams
-Message-ID: <aRFu0q6/tdrfU8Qo@yilunxu-OptiPlex-7050>
-References: <20251031212902.2256310-1-dan.j.williams@intel.com>
- <20251031212902.2256310-9-dan.j.williams@intel.com>
+	s=arc-20240116; t=1762750606; c=relaxed/simple;
+	bh=vuSSJ5lVhs5/D7bBHlZMp7Fcz7SC7zsqdWca8T7O4lo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UdatXtNev3oA/8K49LxmUVpOqak7OyW28hvdyvlsqObEF5eYYa4gbBc50UUWchgoQBhbq391V16idb/41dfI2DAcA+Ft47iAVy7wKI0NQA8MdeWaekAcr09O7JeEp+AgZBc5PPUgKoW4Ca8S0ZQor+Vv1Kx3n+Gol6Q+bvth14A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=114.132.77.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: zesmtpip2t1762750567t2c0a3873
+X-QQ-Originating-IP: sCbPGXNSp3rCGfP8X/uqriZf4cuAEpZXSbbY2NF4pvY=
+Received: from [IPV6:240f:10b:7440:1:64e0:6ba: ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 10 Nov 2025 12:56:04 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 10838902812744037431
+Message-ID: <4487DA40249CC821+19232169-a096-4737-bc6a-5cec9592d65f@radxa.com>
+Date: Mon, 10 Nov 2025 13:56:03 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251031212902.2256310-9-dan.j.williams@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND] Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Anand Moon <linux.amoon@gmail.com>,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Dragan Simic <dsimic@manjaro.org>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
+ mani@kernel.org, Niklas Cassel <cassel@kernel.org>
+References: <20250113-rockchip-no-wait-v1-1-25417f37b92f@kernel.org>
+ <1E8E4DB773970CB5+5a52c9e1-01b8-4872-99b7-021099f04031@radxa.com>
+ <6e87b611-13ea-4d89-8dbf-85510dd86fa6@rock-chips.com>
+ <aQ840q5BxNS1eIai@ryzen> <aQ9FWEuW47L8YOxC@ryzen>
+ <55EB0E5F655F3AFC+136b89fd-98d4-42af-a99d-a0bb05cc93f3@radxa.com>
+ <aRCI5kG16_1erMME@ryzen>
+ <F8B2B6FA2884D69A+b7da13f2-0ffb-4308-b1ba-0549bc461be8@radxa.com>
+ <780a4209-f89f-43a9-9364-331d3b77e61e@rock-chips.com>
+Content-Language: en-US
+From: FUKAUMI Naoki <naoki@radxa.com>
+In-Reply-To: <780a4209-f89f-43a9-9364-331d3b77e61e@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:radxa.com:qybglogicsvrsz:qybglogicsvrsz4b-0
+X-QQ-XMAILINFO: MjQ00mYXMHtuiaHRtmsnbZ5BomsDZD/7KjQ+SmXa+8PPMbWf/5Vy3NiV
+	yjDfRVlCBeTp6RhYwxFqTPealz0GgCvNTn2iFqUMQ10bpiQK3MU0/qNMLrebT2iQRjFiCDz
+	Nx+kd32xYn7H+xAlGHDIOQ/NWDvEhO/YLPPhaAGmU5BYC9+qoAgn/5cpveytyfezIpOf4a2
+	F9PT0I4iXO96Vx9LQ0ALGjSEcheJZIvTDQ4MY8UkBRDy+RExsPJ65kEWrhEwETSChH5XWfV
+	yipO1C3xPh8aCpI8DYhRftPZKwyKZzgN+ppdNZ5IMLaB4EksrCOufHLrGwsHdGcf6rgOn4v
+	GkuXQhiGAwruMhoWUaXIKVofszI8D6rwqM11J4Ha2Cj8ActK++3HCVIp3PzE/2xaHiPFsRZ
+	AUQxy/7OlH4IeIXnSAv49Fg905I3UHfMX0QveKiAGyjvvs82VtE3hwFoAd3/ajotPlmqAmn
+	hN2XqkGSpzxkBaFbUa48I+2M2+FXDNWGwIu8l4i4EUJMT/lhWC6oqpJ3ftdUhVzzwVipXPH
+	VIKi31mz6S/XfIfecg1JTgZwYXW4CPcEN8ZgP0x+pDKQV09g9Sups3R11LUnnuS3y+KE4SU
+	xoqHVOYeyRAcDwdconRMOtDDLPpjQJL3tIMj8sk028yiRhXpF4rBOQO9Mlq5jwCDegj4QR6
+	xth15El+zNHlI7lmWGxlUXGpLT8m4r1LhER89jL3Jf7yWwaOTIn8t+PjwXSYYs+vyJvzDGO
+	Nfh+JWdZrMeQM33DsJ6Dz3HARoFDJkBK2YSUpoObqetstCMwdNyRrwahpBKW6LeUXWYJr/p
+	uhyBPCrfDkE0mdFMiwvkoTc1jeislQv/TjbHVXi1f+zFBGUZ4/+Utqk0R01+7dYZPltXuAZ
+	KVwI0ZgW+XHO8bmeJOYZzIK8Bt9jPVofAJsZtqE3/ltepivX1X3nSiKBZA+FI8sO5F/l/E+
+	pEjx/9sipDyRUcNVxJAHuSG9WEXpFZyMLnbu4lRzhQ6sGf8qswy+HlejwL2bFcHUi/aA=
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-RECHKSPAM: 0
 
-On Fri, Oct 31, 2025 at 02:29:00PM -0700, Dan Williams wrote:
-> The limited number of link-encryption (IDE) streams that a given set of
-> host bridges supports is a platform specific detail. Provide
-> pci_ide_init_nr_streams() as a generic facility for either platform TSM
+Hi Shawn,
 
-Should be updated to pci_ide_set_nr_streams().
+On 11/10/25 11:30, Shawn Lin wrote:
+> Hi Fukaumi
+> 
+> 在 2025/11/10 星期一 7:26, FUKAUMI Naoki 写道:
+>> (RESEND: fix mani's email address)
+>>
+>> Hi Niklas,
+>>
+>> On 11/9/25 21:28, Niklas Cassel wrote:
+>>> On Sun, Nov 09, 2025 at 01:42:23PM +0900, FUKAUMI Naoki wrote:
+>>>> Hi Niklas,
+>>>>
+>>>> On 11/8/25 22:27, Niklas Cassel wrote:
+>>>> (snip)> (And btw. please test with the latest 6.18-rc, as, from 
+>>>> experience,
+>>>> the
+>>>>> ASPM problems in earlier RCs can result in some weird problems that 
+>>>>> are
+>>>>> not immediately deduced to be caused by the ASPM enablement.)
+>>>>
+>>>> Here is dmesg from v6.18-rc4:
+>>>>   https://gist.github.com/RadxaNaoki/40e1d049bff4f1d2d4773a5ba0ed9dff
+>>>
+>>> Same problem as before:
+>>> [    1.732538] pci_bus 0004:43: busn_res: can not insert [bus 43-41] 
+>>> under [bus 42-41] (conflicts with (null) [bus 42-41])
+>>> [    1.732645] pci_bus 0004:43: busn_res: [bus 43-41] end is updated 
+>>> to 43
+>>> [    1.732651] pci_bus 0004:43: busn_res: can not insert [bus 43] 
+>>> under [bus 42-41] (conflicts with (null) [bus 42-41])
+>>> [    1.732661] pci 0004:42:00.0: devices behind bridge are unusable 
+>>> because [bus 43] cannot be assigned for them
+>>> [    1.732840] pci_bus 0004:44: busn_res: can not insert [bus 44-41] 
+>>> under [bus 42-41] (conflicts with (null) [bus 42-41])
+>>> [    1.732947] pci_bus 0004:44: busn_res: [bus 44-41] end is updated 
+>>> to 44
+>>> [    1.732952] pci_bus 0004:44: busn_res: can not insert [bus 44] 
+>>> under [bus 42-41] (conflicts with (null) [bus 42-41])
+>>> [    1.732962] pci 0004:42:02.0: devices behind bridge are unusable 
+>>> because [bus 44] cannot be assigned for them
+>>> [    1.733134] pci_bus 0004:45: busn_res: can not insert [bus 45-41] 
+>>> under [bus 42-41] (conflicts with (null) [bus 42-41])
+>>> [    1.733246] pci_bus 0004:45: busn_res: [bus 45-41] end is updated 
+>>> to 45
+>>> [    1.733255] pci_bus 0004:45: busn_res: can not insert [bus 45] 
+>>> under [bus 42-41] (conflicts with (null) [bus 42-41])
+>>> [    1.733266] pci 0004:42:06.0: devices behind bridge are unusable 
+>>> because [bus 45] cannot be assigned for them
+>>> [    1.733438] pci_bus 0004:46: busn_res: can not insert [bus 46-41] 
+>>> under [bus 42-41] (conflicts with (null) [bus 42-41])
+>>> [    1.733544] pci_bus 0004:46: busn_res: [bus 46-41] end is updated 
+>>> to 46
+>>> [    1.733550] pci_bus 0004:46: busn_res: can not insert [bus 46] 
+>>> under [bus 42-41] (conflicts with (null) [bus 42-41])
+>>> [    1.733560] pci 0004:42:0e.0: devices behind bridge are unusable 
+>>> because [bus 46] cannot be assigned for them
+>>> [    1.733571] pci_bus 0004:42: busn_res: [bus 42-41] end is updated 
+>>> to 46
+>>> [    1.733575] pci_bus 0004:42: busn_res: can not insert [bus 42-46] 
+>>> under [bus 41] (conflicts with (null) [bus 41])
+>>> [    1.733585] pci 0004:41:00.0: devices behind bridge are unusable 
+>>> because [bus 42-46] cannot be assigned for them
+>>> [    1.733596] pcieport 0004:40:00.0: bridge has subordinate 41 but 
+>>> max busn 46
+>>>
+>>>
+>>> Seems like the ASM2806 switch, for some reason, is not ready.
+>>>
+>>> One change that Diederik pointed out is that in the "good" case,
+>>> the link is always in Gen1 speed.
+>>>
+>>> Perhaps you could build with CONFIG_PCI_QUIRKS=y and try this patch:
+>>>
+>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>>> index 214ed060ca1b..ac134d95a97f 100644
+>>> --- a/drivers/pci/quirks.c
+>>> +++ b/drivers/pci/quirks.c
+>>> @@ -96,6 +96,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
+>>>   {
+>>>       static const struct pci_device_id ids[] = {
+>>>           { PCI_VDEVICE(ASMEDIA, 0x2824) }, /* ASMedia ASM2824 */
+>>> +        { PCI_VDEVICE(ASMEDIA, 0x2806) }, /* ASMedia ASM2806 */
+>>>           {}
+>>>       };
+>>>       u16 lnksta, lnkctl2;
+>>
+>> It doesn't help with either probing behind the bridge or the link speed.
+>>
+>>> If that does not work, perhaps you could try this patch
+>>> (assuming that all Rock 5C:s have a ASM2806 on pcie2x1l2):
+>>
+>> ROCK 5C has a PCIe FPC connector and I'm using Dual 2.5G Router HAT.
+>>   https://radxa.com/products/rock5/5c#techspec
+>>   https://radxa.com/products/accessories/dual-2-5g-router-hat
+>>
+>> Regarding the link speed, I initially suspected the FPC connector and/ 
+>> or cable might be the issue. However, I tried the Dual 2.5G Router HAT 
+>> with the ROCK 5A (which uses a different cable), and I got the same 
+>> result.
+>>
+>> BTW, the link speed varies between 2Gb/s and 4Gb/s depending on the 
+>> reboot. (with or without quirk)
+> 
+> Could you please help check this patch?
 
-> drivers, or PCI core native IDE, to report the number available streams.
-> After invoking pci_ide_init_nr_streams() an "available_secure_streams"
+I tried your patch on top of vanilla v6.18-rc5.
+  https://gist.github.com/RadxaNaoki/b42252ce3209d9f6bc2d4c90c71956ae
 
-I suppose should also be pci_ide_set_nr_streams() here.
+I got 2 oops,
 
-> attribute appears in PCI host bridge sysfs to convey that count.
+- its_msi_teardown+0x120/0x140
+   New with this patch.
 
-I don't see how it appears later. 
+- of_pci_add_properties+0x284/0x4c4
+   It sometimes happen with vanilla v6.18-rcX.
 
-> +static umode_t pci_ide_attr_visible(struct kobject *kobj, struct attribute *a, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct pci_host_bridge *hb = to_pci_host_bridge(dev);
+Nothing behind the bridge is probed.
+
+Best regards,
+
+--
+FUKAUMI Naoki
+Radxa Computer (Shenzhen) Co., Ltd.
+
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -454,6 +454,8 @@ static irqreturn_t 
+> rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
+>          struct dw_pcie *pci = &rockchip->pci;
+>          struct dw_pcie_rp *pp = &pci->pp;
+>          struct device *dev = pci->dev;
+> +       struct pci_bus *child, *root_bus = NULL;
+> +       struct pci_dev *bridge;
+>          u32 reg;
+> 
+>          reg = rockchip_pcie_readl_apb(rockchip, 
+> PCIE_CLIENT_INTR_STATUS_MISC);
+> @@ -462,12 +464,21 @@ static irqreturn_t 
+> rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
+>          dev_dbg(dev, "PCIE_CLIENT_INTR_STATUS_MISC: %#x\n", reg);
+>          dev_dbg(dev, "LTSSM_STATUS: %#x\n", 
+> rockchip_pcie_get_ltssm(rockchip));
+> 
+> +       list_for_each_entry(child, &pp->bridge->bus->children, node) {
+> +               if (child->parent == pp->bridge->bus) {
+> +                       root_bus = child;
+> +                       bridge = root_bus->self;
+> +                       break;
+> +               }
+> +        }
 > +
-> +	if (a == &dev_attr_available_secure_streams.attr)
-> +		if (!hb->nr_ide_streams)
-> +			return 0;
+>          if (reg & PCIE_RDLH_LINK_UP_CHGED) {
+>                  if (rockchip_pcie_link_up(pci)) {
+>                          msleep(PCIE_RESET_CONFIG_WAIT_MS);
+>                          dev_dbg(dev, "Received Link up event. Starting 
+> enumeration!\n");
+>                          /* Rescan the bus to enumerate endpoint devices */
+>                          pci_lock_rescan_remove();
+> +                       pci_stop_and_remove_bus_device(bridge);
+>                          pci_rescan_bus(pp->bridge->bus);
+>                          pci_unlock_rescan_remove();
+>                  }
+> 
+> 
+>>
+>> Best regards,
+>>
+>> -- 
+>> FUKAUMI Naoki
+>> Radxa Computer (Shenzhen) Co., Ltd.
+>>
+>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5c.dts b/arch/ 
+>>> arm64/boot/dts/rockchip/rk3588s-rock-5c.dts
+>>> index dd7317bab613..26f8539d934a 100644
+>>> --- a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5c.dts
+>>> +++ b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5c.dts
+>>> @@ -452,6 +452,7 @@ &pcie2x1l2 {
+>>>       pinctrl-0 = <&pcie20x1_2_perstn_m0>;
+>>>       reset-gpios = <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>;
+>>>       vpcie3v3-supply = <&pcie2x1l2_3v3>;
+>>> +    max-link-speed = <1>;
+>>>       status = "okay";
+>>>   };
+>>>
+>>>
+>>>
+>>> Kind regards,
+>>> Niklas
+>>>
+>>
+>>
+> 
+> 
 
-The previous patch unconditionally initializes nr_ide_streams to 256, so
-this check is not functional for "appear later". Maybe remove it.
-
-> +
-> +	return a->mode;
-> +}
-> +
-> +const struct attribute_group pci_ide_attr_group = {
-> +	.attrs = pci_ide_attrs,
-> +	.is_visible = pci_ide_attr_visible,
-> +};
-> +
-> +/**
-> + * pci_ide_set_nr_streams() - sets size of the pool of IDE Stream resources
-> + * @hb: host bridge boundary for the stream pool
-> + * @nr: number of streams
-> + *
-> + * Platform PCI init and/or expert test module use only. Limit IDE
-> + * Stream establishment by setting the number of stream resources
-> + * available at the host bridge. Platform init code must set this before
-> + * the first pci_ide_stream_alloc() call if the platform has less than the
-> + * default of 256 streams per host-bridge.
-> + *
-> + * The "PCI_IDE" symbol namespace is required because this is typically
-> + * a detail that is settled in early PCI init. I.e. this export is not
-> + * for endpoint drivers.
-> + */
-> +void pci_ide_set_nr_streams(struct pci_host_bridge *hb, u16 nr)
-> +{
-> +	hb->nr_ide_streams = min(nr, 256);
-> +	WARN_ON_ONCE(!ida_is_empty(&hb->ide_stream_ida));
-> +	sysfs_update_group(&hb->dev.kobj, &pci_ide_attr_group);
-
-Also no need to update group, is it?
-
-
-Should be easy to address these concerns. I believe I can also:
-
-Reviewed-by: Xu Yilun <yilun.xu@linux.intel.com>
-
-> +}
 
