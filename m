@@ -1,146 +1,175 @@
-Return-Path: <linux-pci+bounces-40780-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40785-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0064EC494A0
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 21:45:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 583A7C497EA
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 23:15:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4252D3B3492
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 20:42:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 080541888875
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 22:15:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C5A72F39D6;
-	Mon, 10 Nov 2025 20:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="htuAqLZ4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="W1pcFNtX"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA5472FFF94;
+	Mon, 10 Nov 2025 22:15:08 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680472F291B;
-	Mon, 10 Nov 2025 20:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827E82F83BE;
+	Mon, 10 Nov 2025 22:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762807347; cv=none; b=lysskvUAiExUfC+tFAC+Floa4Q7j5i/KPtcr0Dfzpwq0dwWBrxnbAnZCHu4dLgno5GgadBb+S5w7iocrL2JNCx1Q5SkCwtIO/awU7mlxvycMj3C7jah+vyiBSfi0hYrHxjRSH1rb3IJeQyLXjTAdtaEOqJ+K0peFSKe9R6VHMv4=
+	t=1762812908; cv=none; b=CnRWgbEMOpGpT94LqxFpmwrvUUq2Wo/M59Fp8oxpBsqtJBHR6QQfue0GQ2nxUy02kru+wG2FM1I4ic+yoou9/6n2dPlLMDRbP9j5+EvvjfqijI2EVYQzl0QEVumq0bQzwVCkDbctVFrwdDJ5ar/oNf86rB0yfmNWOSivk9oOYL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762807347; c=relaxed/simple;
-	bh=EVZlZ6pxpX8LL3e1/kedrfN4wUWfo9Ezw2G03AI99jE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fi0vyutT7WBs6aU0w+xNF3bahL2GS9TQ3qVwvzd2PSq71W7oayLszx1k1HgKPXpPLPvRo9WU1hiQEDDcg+33vQcz42o5kWdybDi3e7ZY7lNu7UDRTdZiNqzBPvg0ZhGtItMPxtiabLM+E5JALVF9vta0nbVA+L2pFbVBgmDtt/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=htuAqLZ4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=W1pcFNtX; arc=none smtp.client-ip=202.12.124.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id C4D701D000F8;
-	Mon, 10 Nov 2025 15:42:23 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Mon, 10 Nov 2025 15:42:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1762807343;
-	 x=1762893743; bh=gqeX2If3HYh30yCslpotpD1eSH8ukdg4bxJbH47uciI=; b=
-	htuAqLZ4SouJYoITuzsRhJjEXMvYg51jdhYpfuNbonoAiCijob/69evbidTgy+sh
-	iRd/focxifhKHG29GSovKjpd+ZahK1KX4u/ZS5xwu1cwXqVC/UCcfTwYH5JPDv12
-	hGHLp/nV+WavmCJRl9wTrZikJq0k+REA/xuHpzuBgd81DF7sIwQG9Nn6LXDccuBp
-	Kcbv2MQHhh0bNcI9y7090F/H/ONHQBQn0M3YoNGcqHaUJhgJYpUOx9LyevwJdnFy
-	Ict245DxpPf6jiaMEQZaHVfubTy/2FN5JOeKQcWBk3z0YAlBC9LITZ62vdXk1Y/c
-	Rd49/UzrTC9Hg0y+GBi9Hg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1762807343; x=
-	1762893743; bh=gqeX2If3HYh30yCslpotpD1eSH8ukdg4bxJbH47uciI=; b=W
-	1pcFNtXWP9fMq2c7Go8PGx8HwIWpuPF2lBF5s8fzNuWqlubpSf71I4RGXc/+pwcE
-	wq+IM4acQDpUfJS8lOK336Hg+6Yhp/JfxC5SEFBEOLYskuuF1zMvdgewgnWx52X/
-	fNOBJyzaAv96LswEo/scIGTSRxWJi2ZUU5XAvFuOshhDJGBo38Xa+K5zj1omajl4
-	9Nzw2IiBoN/XHZmZW4L1O2XuQ5m2ygcV/Ej73MJG4tl8Yp+XoKJ+BgkgvopLu2GH
-	obrv7xcViS0KT+tbc+wUE4u16+09BsabKp6VUrTPLyomAqmaiXC7s3Fr/VvCaEMh
-	I3yt1TVyxJAxtgG24ZoJw==
-X-ME-Sender: <xms:Lk4SadPf7Z_61ugy1UZG-S0z50mLGWjkeWFW-KUtptz0WE1qSwYswA>
-    <xme:Lk4SaWQnTbNosFeU6S8-IkOOxvD-vMp6PSlA7UVcS1gFInm63zNeLDUnY47L26hp1
-    UJx5XZp5pVS_p1iGPb8C2-PW03MLsP60V0ld5GGp6ghlpo8mHKR>
-X-ME-Received: <xmr:Lk4SaSQT-qKgrv4djpFBdctnnMfQHHqqcvgPYrMcvkpGGEF5Ve9ebvTg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggdduleelfedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkjghfgggtgfesthejredttddtvdenucfhrhhomheptehlvgigucgh
-    ihhllhhirghmshhonhcuoegrlhgvgiesshhhrgiisghothdrohhrgheqnecuggftrfgrth
-    htvghrnhepteetudelgeekieegudegleeuvdffgeehleeivddtfeektdekkeehffehudet
-    hffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hlvgigsehshhgriigsohhtrdhorhhgpdhnsggprhgtphhtthhopeefhedpmhhouggvpehs
-    mhhtphhouhhtpdhrtghpthhtoheplhgvohhnsehkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhoghgrnhhg
-    seguvghlthgrthgvvgdrtghomhdprhgtphhtthhopegrgigsohgvsehkvghrnhgvlhdrug
-    hkpdhrtghpthhtoheprhhosghinhdrmhhurhhphhihsegrrhhmrdgtohhmpdhrtghpthht
-    ohepjhhorhhoseeksgihthgvshdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtohepmhdrshiihihprhhofihskhhisehsrghmshhunhhgrdgt
-    ohhmpdhrtghpthhtohepjhhgghesiihivghpvgdrtggr
-X-ME-Proxy: <xmx:Lk4SaXAf2U3xTIUQxs8i0IsnHoTy1Jl7o0BH0TlVy7zhF4WWB901JA>
-    <xmx:Lk4SacCXUZGgOPwzyeCst1KYlCMu_DTngssMm-yanfi8GAiSreZfOA>
-    <xmx:Lk4SaYxVBS9qwrWpCA566IQDcrCbii10ahjD77GRLJBh3SrN6LWZAw>
-    <xmx:Lk4SaejgdRKg7EjLQE1Gk-cfpzoWXZw-pFjsodEgU8MMWqFzLPeaiQ>
-    <xmx:L04SaZr36QwMGCQIKH-kIOIQH3332nOSuBo78ltSYdTNpyhWUvhiqLCC>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 10 Nov 2025 15:42:19 -0500 (EST)
-Date: Mon, 10 Nov 2025 13:42:18 -0700
-From: Alex Williamson <alex@shazbot.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
- Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Jason Gunthorpe <jgg@ziepe.ca>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>,
- Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
- Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Ankit Agrawal <ankita@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
- Shameer Kolothum <skolothumtho@nvidia.com>,
- Kevin Tian <kevin.tian@intel.com>, Krishnakant Jaju <kjaju@nvidia.com>,
- Matt Ochs <mochs@nvidia.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- iommu@lists.linux.dev, linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
- linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
- Nicolin Chen <nicolinc@nvidia.com>,
- Vivek Kasireddy <vivek.kasireddy@intel.com>
-Subject: Re: [PATCH v7 00/11] vfio/pci: Allow MMIO regions to be exported
- through dma-buf
-Message-ID: <20251110134218.5e399b0f.alex@shazbot.org>
-In-Reply-To: <20251106-dmabuf-vfio-v7-0-2503bf390699@nvidia.com>
-References: <20251106-dmabuf-vfio-v7-0-2503bf390699@nvidia.com>
+	s=arc-20240116; t=1762812908; c=relaxed/simple;
+	bh=+WlH/NbDr0mjjatqb4cIN9yWJOlXS/1+eJwQztpVPIk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MAZWEhBuXClGdcxeqJMgct0aOXv0soUx9AhsaOweUXupzIaMb43h5bswEvM8EmxgxVh1eI4pdFG0HDwfqWvMFnzq/UOmEI4PFPB8xGQNvnHcVKHkTUaX7KL+W8BlOt7ZYdIuOL1su6VlHArCzlIHDBcZIVfNVTS/oXx7ZdOgtV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: zesmtpip4t1762812868t96193133
+X-QQ-Originating-IP: E9Yl8bFeRQ31iU6DcptQALqHx/7FY2qbcwSWHKucAQI=
+Received: from [IPV6:240f:10b:7440:1:62e3:2c99 ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 11 Nov 2025 06:14:25 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 3378252220156844302
+Message-ID: <326A5CF08811110E+7785bc1e-6245-453d-9312-1b5726e7aed1@radxa.com>
+Date: Tue, 11 Nov 2025 07:14:23 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND] Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
+To: Niklas Cassel <cassel@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Damien Le Moal
+ <dlemoal@kernel.org>, Anand Moon <linux.amoon@gmail.com>,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Dragan Simic <dsimic@manjaro.org>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>
+References: <55EB0E5F655F3AFC+136b89fd-98d4-42af-a99d-a0bb05cc93f3@radxa.com>
+ <aRCI5kG16_1erMME@ryzen>
+ <F8B2B6FA2884D69A+b7da13f2-0ffb-4308-b1ba-0549bc461be8@radxa.com>
+ <780a4209-f89f-43a9-9364-331d3b77e61e@rock-chips.com>
+ <4487DA40249CC821+19232169-a096-4737-bc6a-5cec9592d65f@radxa.com>
+ <363d6b4d-c999-43d4-866e-880ef7d0dec3@rock-chips.com>
+ <0C31787C387488ED+fd39bfe6-0844-4a87-bf48-675dd6d6a2df@radxa.com>
+ <dc932773-af5b-4af7-a0d0-8cc72dfbd3c7@rock-chips.com>
+ <aRHb4S40a7ZUDop1@ryzen>
+ <2n3wamm3txxc6xbmvf3nnrvaqpgsck3w4a6omxnhex3mqeujib@2tb4svn5d3z6>
+ <aRJEDEEJr9Ic-RKN@fedora>
+Content-Language: en-US
+From: FUKAUMI Naoki <naoki@radxa.com>
+In-Reply-To: <aRJEDEEJr9Ic-RKN@fedora>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:radxa.com:qybglogicsvrsz:qybglogicsvrsz4b-0
+X-QQ-XMAILINFO: MIfEOJQLr2d3R5VWvHtd3WXY3phVeHxbPzqeNq5Gp8qpfCZ5LghL9pHW
+	neXswakvSU6G+GriCMfvO4Oz6PbIPMNiQ8ICbTqwi3NNCY6Y05Nw5QgP/GNSmpU5+XBAU+3
+	sbqOmMb1NLQ6FhNz4EC3UyLrFEmiPP62qAUMjucX5mtXIDU0bhQB7jqjDFkMyv9nDdQB09n
+	d9Shhlbf8fQO8SOeDAijUc2rWDmzG7qZM/OSpaleaKoyR7HFuz3PcX0SmIMaQ6obqKVyuUD
+	WijWjZ1NWxoniE8phTPNTRxVC0CzJr1y+I93ZjXQ0bglP/xJfSuXOrTHBtewM0AOjFILkZ2
+	cdIYgtbjOQvTM428g59Yjq8p5Q1rGgNBcZKMOBwyDg0BjzZj8l7LYAvFNyzx64lByhsToQi
+	osgJSTnDCaNOEicp3JT0cJRTyQN/rX5viMVDSn3AKQ1RZXTtkYqX3BN1ekTJtwie1t2n57w
+	TmlG0XtiPj8FlVMzhNhy7uAdNUJq2IF/SoCOc+KbhD5TgBVH9yBf5EXsD0tj9/L5DvnNMZY
+	GOHA5q50tgVUevbZEzEFz211eYnaCBW+MqrI+iy+LKeTSbPE6PgBlZKjjeMKub0pi/fkNJ3
+	p32X2jkBY6Vygwh0QCvyINKYUvqtwMguXqL3sq/ADUJw5XHXCrFRkh4AUcpOrpafCWRWp3b
+	Yw/qhRHC0L9tjPvo+CAyQRa+glNkWF5DiAryi58cQmgCd5NHK6gFtD6O0wH0yPHNDoQgTrP
+	cIrX2NN/VT4Zvi+dzm/u3KOr8PvXeX7Kzeun5IYMPXbuKPkBiueCpE3G1EVUYNs/CncJof3
+	4/A802S4zD2ECW/qQLTJnskrt9gPj+N3m9HZVWKC7y/nyVQ9Qh5YNDDoYa6vQ23YNGan1Rc
+	76CUB1VonyGOhcKKUmqcEBUP1A6n3X3mfn8QZkTDLqlYZqqt63JDl6JNLL8SDydkyjoAgoD
+	sOyjBvzuuIKRMSmXW2QCG9NQJzaU90flUocpR/p+0a1OO2M2uXc9O1vcWKBzs1YiwIhk=
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-RECHKSPAM: 0
 
-On Thu,  6 Nov 2025 16:16:45 +0200
-Leon Romanovsky <leon@kernel.org> wrote:
+Hi Niklas,
 
-> Changelog:
-> v7:
->  * Dropped restore_revoke flag and added vfio_pci_dma_buf_move
->    to reverse loop.
->  * Fixed spelling errors in documentation patch.
->  * Rebased on top of v6.18-rc3.
->  * Added include to stddef.h to vfio.h, to keep uapi header file independent.
+On 11/11/25 04:59, Niklas Cassel wrote:
+> On Mon, Nov 10, 2025 at 09:23:02PM +0530, Manivannan Sadhasivam wrote:
+>>>
+>>> Considering what Shawn says, that the switch gets enumerated properly
+>>> if we simply add a msleep() in ->start_link(), which will be called
+>>> by dw_pcie_host_init() before pci_host_probe() is called...
+>>>
+>>
+>> Yes, that delay probably gives enough time for the link up IRQ to kick in before
+>> the initial bus scan happens.
+> 
+> I think that the problem is that even for platforms with link up IRQ,
+> we will always do:
+> 1) dw_pcie_start_link() (if (!dw_pcie_link_up()))
+> 2) pci_host_probe() from dw_pcie_host_init(), this will enumerate the bus
+> 3) pci_rescan_bus() from the Link Up IRQ handler
+> 
+> Thus, in 2, when enumerating the bus, without performing any of the delays
+> mandated by the PCIe spec, it still seems possible to detect a device (it
+> must have been really quick to initialize), and to communicate with that
+> device, however since we have not performed the delays mandated by the spec,
+> it appears that the device might not yet behave properly.
+> 
+> Hence my suggestion to never call pci_host_probe() in dw_pcie_host_init()
+> for platforms with Link Up IRQ.
+> 
+> At least for pcie-dw-rockchip.c, we only unmask the Link Up IRQ after
+> dw_pcie_host_init() has returned, so I think that your theory: that Shawn's
+> suggested delay causes the Link Up IRQ to kick in before the initial bus
+> scan, is incorrect. (Since the IRQ should not be able to trigger until
+> dw_pcie_host_init() has returned.)
+> 
+> 
+>>
+>>> ...we already have a delay in the link up IRQ handler, before calling
+>>> pci_rescan_bus().
+>>>
+>>
+>> That delay won't help in this case.
+> 
+> Sure, I was just saying that even though Shawn's patch made things work,
+> it seems incorrect, as we do not want to add "the same delay" that we
+> already have in the Link Up IRQ. (The delay in the Link Up IRQ should be
+> the only one.)
+> 
+> 
+>>> I think a better solution would be something like:
+> 
+> (snip)
+> 
+>> This solution will work as long as the PCIe device is powered ON before
+>> start_link(). For CEM and M.2 Key M connectors, the host controller can power
+>> manage the components. But for other specifications/keys requiring custom power
+>> management, a separate driver would be needed.
+>>
+>> That's why I suggested using pwrctrl framework as it can satisfy both usecases.
+>> However, as I said, it needs a bit of rework and I'm close to submitting it.
+>>
+>> But until that gets merged, either we need to revert your link up IRQ change or
+>> have the below patch. IMO, the revert seems simple.
+> 
+> Using pwrctrl framework once it can handle this use case sounds good to me.
+> 
+> FUKAUMI, could you please send a revert of the two patches?
 
-I think we're winding down on review comments.  It'd be great to get
-p2pdma and dma-buf acks on this series.  Otherwise it's been posted
-enough that we'll assume no objections.  Thanks,
+Well, I cannot write a detailed explanation...
 
-Alex
+Best regards,
+
+--
+FUKAUMI Naoki
+Radxa Computer (Shenzhen) Co., Ltd.
+
+> Kind regards,
+> Niklas
+> 
+
+
 
