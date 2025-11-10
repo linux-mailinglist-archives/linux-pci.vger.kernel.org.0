@@ -1,186 +1,172 @@
-Return-Path: <linux-pci+bounces-40707-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40708-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F39EC46CFE
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 14:15:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 024F2C46DFB
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 14:25:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0D2924EBDBF
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 13:14:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A2FCF1890508
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 13:26:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E18473112C4;
-	Mon, 10 Nov 2025 13:13:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9ABD12EBB9C;
+	Mon, 10 Nov 2025 13:25:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FnIKMiJ6";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="F7/DrDrT"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sAYxNKBY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F74730FF31
-	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 13:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145DF22579E;
+	Mon, 10 Nov 2025 13:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762780425; cv=none; b=FMaLdxAN85G7L2tzGsHk4Tp63n3ZiC+mxUmI8jmS7cv/DO00uEm4gcuZXCNfnCpbSjl6nXoL5ZXKB3Nde6K374i4bj0RhbPI7FIFMtTPuuQH3uaPpq1j0lUrnt2c0LF7teZ/ZpOeUcjzUgkfdW+JSaVldmmxozb9YSqV+gaZnTo=
+	t=1762781135; cv=none; b=ZbzpU0ccYEV7+rTLASUy0Z7SukS0cPaM/DjsFAaaxRNsaHwLAkTlJUsP785Ej/v4gkJ63WtBundBySmjBZ7eMsB44pF9JUST5dff0p0tFLCrmOIv/qHDe7VOwUj2cEFUk93ARTuYTcfsfB1xiTrrWqS6GREvwtoM5HV6uPAw704=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762780425; c=relaxed/simple;
-	bh=sAyJEnQpOE+CyoPsEVV52oBcegXRqpcGw3Hj73SO1gM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m3eU8Gn0A0YFNLobtfXohmQ7bCyRbLmz5ufDx6zX8qmorsjb6Y2j8qoC5xJ4jwbbRywuPZ6YW+uN/4xLm3UQJ4KoVvpQH0GJC32kuUMHhDBDRkXUXFejEpDcbO1egalyPsZWvDhvhaCIWwCtiJ1VqZrmvWrwK631tiEftfouOwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FnIKMiJ6; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=F7/DrDrT; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AACOJeZ2407325
-	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 13:13:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	zf5by7v/g7p+dvGHpfj+j+RRTgR0OJ9Fd2rr/ysTKL4=; b=FnIKMiJ6Agw8Bw7d
-	D5l7XFqGN2+lHQ5BEbn0Fv4yo5kBF3fGxUt2j7XPo1HEj7tPwE0dJdcVtcFMsTqR
-	nB5DTif6JbwYoEPpvCgCRdhnA66hmCfwRCmYKd4ww+ToVJmDCyFipto/RkoVRccF
-	lYgdeyKMb7HCLa2kjMF/jzv9vtmKR772GjPLCZStXjLIoc1lJh9N0clrNKtRUtYI
-	R+/6O1HIJaS94oRRCigXi8mfz/Jf5oDKU9qWfrYGwaaU7WgxKPATGra8H1kqx+51
-	ZqATOwjTJi/hsTm+beLsCseKwe2j784oW8mFVWUqZ1VyschZpGpcUw9VTYUN1Oev
-	9AhXGw==
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4abatd97ar-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 13:13:43 +0000 (GMT)
-Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-ba433d88288so2335796a12.2
-        for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 05:13:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1762780423; x=1763385223; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zf5by7v/g7p+dvGHpfj+j+RRTgR0OJ9Fd2rr/ysTKL4=;
-        b=F7/DrDrTohOcSHx8oxMgWQV7l0XZ7Svv1IGwC0DJDJgAb+qdunIhWtq5qLQC05sYGY
-         GgdNoHyr36DyWyWAmhnw9BKxXThjvE3MuHnEOYA7ht+iAVAMaNN+Pc60scfGKz4Lf3h5
-         N3xBZH8ZSTaAvz56Y2/4SHi+UbMf2L3TcjC3IycIGHhNmIYXHM+JutlUj6IVL+Iwuibn
-         jVoEE7yoLRAABLybOHFoKuU7sMJ4hDYb2y/HHOFmAYEPa7RA5v4GZQyc6pHb+kYA/16H
-         8qW7ySCSHqBMRq/KnTPNjYqZO2vyydeO+K8EVt3oDAV83uWGhWs9rMSSDhHssJPogXoS
-         zYtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762780423; x=1763385223;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zf5by7v/g7p+dvGHpfj+j+RRTgR0OJ9Fd2rr/ysTKL4=;
-        b=lDhli4588ghlLEtK62dVwnSGjO8jMjfXN1C05FOjkgnydFRk0e7t7p+8riFY497YOS
-         4KPjjkg0VpaXA8izJf2RGQaIHWEE0tUkE2Uunx6XMn3w+GmEuamU0GYbl7nbY/QzYHh2
-         AaIyxphvGsx9W/dz8Goeamp8GAVjpdVkloRaTak2xSj21JQ6gU1Ui7JikstymJVtTPX5
-         KjZSm3t/AcgI48dA7IDWKCzPoagikBnmbzB/fli+FYy11VGVj3UmEHJLw4Kyzn8hNoCx
-         rQnsKuQaCuUkM/qw7xmYP/2LyWbB73RKUiLyCg+BHwQBrs6goLFc0/CSqvIojBbr7p8Y
-         cCug==
-X-Forwarded-Encrypted: i=1; AJvYcCUuzbcL6R0HcgG6yFTJtu9eAKPGZcTwA8Jffqlt+OFPlbZ1+WBjwx8pOfT57ELNUMVSZU9GVocRpMQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXm3aZ68Zgl/YoIHuYu108A51di3VeYyVGQbBES6kxl/HQmNyH
-	FIaNuoRgzTuuFw8ZK27usLSeGRh2np6Tg9QGLh0G4j7w1CFYS8qOq+q7HwIp9w0HDb+GirYkCki
-	BhTDNnVs/MFewn6v0MAxVZgLXggSUzsX+vCIc6x8ooWAfr/n02y1+JS7kHje/bsk=
-X-Gm-Gg: ASbGncstuAXF5cRI/HM180t7j32Jvs3WoFNRjsaqp2LdjVOfNErEePbOhu88WLCnmUa
-	7A4vYRx3QzgvfOiFWUaVOddJywO8BHR2zzDjiKdoyUopibDLKcSptv3ZmIh5sUNV45o47AU3AR2
-	Sl+XSuQ/3xNbqxGFnn3/xBq25qxlPJDtS0URXb2aGPAupfvDl8ZV/p+OohO0R7UoZCcnzRhYDfh
-	UhkdUkYI6g6py95NXNSMvv6umHKBwIUDeWRteC/2SawR3/c9+3fXfLDoYfTN4KmBcBKKx55UsXj
-	Cg7jhQ7qCc2PJXgnR/QoHmf4HPS6jbLHZU0+hTyBZFBQv1lwb1GGK7PnuyTFNpis1XNzF6xp3pQ
-	KtPlFcVuoftgXopSnlwV+AMv6OX49MaI=
-X-Received: by 2002:a17:90a:e710:b0:340:ec3b:b587 with SMTP id 98e67ed59e1d1-3436cb7a93amr9070689a91.1.1762780422764;
-        Mon, 10 Nov 2025 05:13:42 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHpxzKYemCJDBtZNVtT/gk1VWfrU0u+FC6zzifoWeyFyq0P4Hf5egp7j8ghzn6uNZubwpXZ1w==
-X-Received: by 2002:a17:90a:e710:b0:340:ec3b:b587 with SMTP id 98e67ed59e1d1-3436cb7a93amr9070654a91.1.1762780422139;
-        Mon, 10 Nov 2025 05:13:42 -0800 (PST)
-Received: from [192.168.29.63] ([49.43.224.0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b0cc17a688sm12007008b3a.40.2025.11.10.05.13.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Nov 2025 05:13:41 -0800 (PST)
-Message-ID: <511ebf46-63ed-45af-9d66-ccd1d944763a@oss.qualcomm.com>
-Date: Mon, 10 Nov 2025 18:43:34 +0530
+	s=arc-20240116; t=1762781135; c=relaxed/simple;
+	bh=M281PdKkCCNkCQo5UdxHcyxmHAV+Ri9XLT5PyGHe0Qw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IcakPeM2/iOv8zuLLnMuaPzg56J5ntUxgdqcDpkZMvGSwe8grfHE858s74sg/ffQx3etsjYYTKr2dzjMiCp1OFj60/mdKzeUxINfYY9jvTx4iNME1gm/QSbwQeTn09HAhjMkCc0Plb5dWhCo9lPQqZYutiBSnKv/Nl1j/KP8lRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sAYxNKBY; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AADHNsZ002817;
+	Mon, 10 Nov 2025 13:25:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=69CElqUVy8RLaqayOD8yFbTQwzhV
+	KpzfxD9KPhmLy9s=; b=sAYxNKBYc/yiJ7NM6RkZRMWAir+OvafJ1i8gyUnUDPHy
+	xM4GmxltIpG3UMPhBWUe1gyiZEI9gxNd9XCSWgDpVBKKIJB6fAZqPJta5xfTLTQw
+	+Zy3DsCiVt3m14YIusqkZ0Njd+oZWRzTeAsZUzR04ROGYikYXXYlpLFxzj5cRE53
+	Ed4VQ/8k8ecSbtGGgsnW/f00QtvNrdT67IdMk+ZK/YpRSy7T5D7pg7RHbA31aLE2
+	5mQjytkE3xSTrXWPvuVMs0bsZ5hFv7ygi69kK3Jwi5f5hmcABvz6He9t6wscdOt4
+	TWtV6hwrcxa5FR9OAClF/bH+h2fJ3uB7UN7+wolrPA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a9wc70d5s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Nov 2025 13:25:28 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AADHMeU029222;
+	Mon, 10 Nov 2025 13:25:28 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a9wc70d5n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Nov 2025 13:25:27 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AACnKND014841;
+	Mon, 10 Nov 2025 13:25:26 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4aahpjwq1j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Nov 2025 13:25:26 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AADPM2M55247146
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Nov 2025 13:25:22 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B84922004D;
+	Mon, 10 Nov 2025 13:25:22 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8D05E20043;
+	Mon, 10 Nov 2025 13:25:22 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 10 Nov 2025 13:25:22 +0000 (GMT)
+From: Gerd Bayer <gbayer@linux.ibm.com>
+Subject: [PATCH 0/2] PCI: AtomicOps: Fix pci_enable_atomic_ops_to_root()
+Date: Mon, 10 Nov 2025 14:25:04 +0100
+Message-Id: <20251110-fix_pciatops-v1-0-edc58a57b62e@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] schemas: pci: Document PCIe T_POWER_ON
-To: andersson@kernel.org, robh@kernel.org, manivannan.sadhasivam@linaro.org,
-        krzk@kernel.org, helgaas@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        lpieralisi@kernel.org, kw@linux.com, conor+dt@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree-spec@vger.kernel.org, quic_vbadigan@quicinc.com
-References: <20251110112550.2070659-1-krishna.chundru@oss.qualcomm.com>
-Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <20251110112550.2070659-1-krishna.chundru@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 4frKZwVq3GCBi62XmUj3XofW1QlegBZ7
-X-Authority-Analysis: v=2.4 cv=eZowvrEH c=1 sm=1 tr=0 ts=6911e507 cx=c_pps
- a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=08Rv9HEMxtlCNW7Dos5SIA==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=SpA6wshyjLPcRYPzmHsA:9
- a=QEXdDO2ut3YA:10 a=_Vgx9l1VpLgwpw_dHYaR:22
-X-Proofpoint-ORIG-GUID: 4frKZwVq3GCBi62XmUj3XofW1QlegBZ7
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEwMDExNSBTYWx0ZWRfX2xETzjBYs+YR
- /V6TWVd31af/jqubfB6APtdJiNY/HgxGyFfscbruRexppZkIhCJTteEmNd6BMIBxBa3FaKCj40J
- p7PF0CcsBh3se80Ipe7XTRWCG7uh/HawSj6d7wiWHsK0HbJjKFddMz8FvWySSHQ/DtQGlYQXcwl
- nHJXEP5HsFLKFLooO2zWNkBONq7q2hCBFUrROfEmsC05yH2c1bucgez7yqodKpl9HDgT6wBbKvW
- LPzgEzeqcKX/yo+ZYmFDEgvXAQHJvFjj3MiehxauHygfgLwJl6p5tBLoW8YmWGpGu2uMkHp4rTf
- kBXmpXL8eplW1vJjArmUM+hsWhB9Y35sWciDkz0AyO8Xm1vuDkJCayYz2TrnTsB52SYLj+OitZ4
- JrZcScYXxofSM4MdbHG18GubCvhYpg==
+X-B4-Tracking: v=1; b=H4sIALDnEWkC/x2MQQqAIBAAvyJ7TlAjk74SEWZb7UVFIwLx70nHY
+ ZgpkDERZphYgYQPZQq+gewYuMv6EzntjUEJNUgpND/oXaMje4eY+YhGC4PObaKHlsSEzf+7ean
+ 1Aweb5NFeAAAA
+X-Change-ID: 20251106-fix_pciatops-7e8608eccb03
+To: Bjorn Helgaas <bhelgaas@google.com>, Jay Cornwall <Jay.Cornwall@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>
+Cc: Niklas Schnelle <schnelle@linux.ibm.com>,
+        Alexander Schmidt <alexs@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gerd Bayer <gbayer@linux.ibm.com>, Leon Romanovsky <leon@kernel.org>,
+        stable@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA4MDAxOCBTYWx0ZWRfX53KRCwDSxl/h
+ lyKRPSsLHBISFZe10KAgQ2aCy4J2IkN9HBI+SMTCNBQl9YSc12cSCZ4H5qT2q1CnB9gdUrNl3FG
+ nTSdLcry+gpQNrwXA7QQOTgBsJLGEEbeAATx1VvzgVf+I9v5X2SMgeUyJl7kASoJm1Xst+t6bHQ
+ IbOptq6FiN92YJjT5wg67LysPIPhf31R5frry2FIzYZqRNtDZG95pkmHtCYFi0DL5vBoE5a4n3B
+ dEwu8QtYiYoRq/G4S2Zp0QGBwnt1odrPt1Kk1zolJmn/2uOScRn3w5EmR284lP5IDFauXzIidir
+ p/BWcDIduAGW4B9WO+8SADjqdTkaGhca8eECl44lyYbUgmKBvLq9JRQvzdt9AmIViDUnVvEA6B6
+ twRnRcsTSv7bXM1YE8qK+btli/0SQg==
+X-Authority-Analysis: v=2.4 cv=GcEaXAXL c=1 sm=1 tr=0 ts=6911e7c8 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=ESohFN6d5o8hY1LCVJoA:9 a=QEXdDO2ut3YA:10
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-GUID: SFNmk6CvC9OOEQ0hiYo0zNW1RPJxsJSD
+X-Proofpoint-ORIG-GUID: EX6tyP_6F1B8TGWbDKEP6Rw2em64XCJK
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-11-10_05,2025-11-10_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 spamscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
- clxscore=1015 malwarescore=0 priorityscore=1501 bulkscore=0 phishscore=0
+ suspectscore=0 malwarescore=0 bulkscore=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 clxscore=1015 spamscore=0 priorityscore=1501 phishscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511100115
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511080018
 
-Please ignore this patch, it has some mistakes which I have sent 
-accidentally.
+Hi Bjorn et al.
 
-- Krishna Chaitanya.
+this series addresses a few issues that have come up with the helper
+function that enables Atomic Op Requests to be initiated by PCI
+enpoints:
 
-On 11/10/2025 4:55 PM, Krishna Chaitanya Chundru wrote:
->  From PCIe r6, sec 5.5.4 & Table 5-11 in sec 5.5.5 T_POWER_ON is the
-> minimum amount of time(in us) that each component must wait in L1.2.Exit
-> after sampling CLKREQ# asserted before actively driving the interface to
-> ensure no device is ever actively driving into an unpowered component and
-> these values are based on the components and AC coupling capacitors used
-> in the connection linking the two components.
->
-> This property should be used to indicate the T_POWER_ON for each Root Port.
->
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
-> Changes in V1:
-> - Updated the commit text (Mani).
->
->   dtschema/schemas/pci/pci-bus-common.yaml | 9 +++++++++
->   1 file changed, 9 insertions(+)
->
-> diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
-> index 5257339..bbe5510 100644
-> --- a/dtschema/schemas/pci/pci-bus-common.yaml
-> +++ b/dtschema/schemas/pci/pci-bus-common.yaml
-> @@ -152,6 +152,15 @@ properties:
->         This property is invalid in host bridge nodes.
->       maxItems: 1
->   
-> +  t-power-on-us:
-> +    description:
-> +      The minimum amount of time that each component must wait in
-> +      L1.2.Exit after sampling CLKREQ# asserted before actively driving
-> +      the interface to ensure no device is ever actively driving into an
-> +      unpowered component. This value is based on the components and AC
-> +      coupling capacitors used in the connection linking the two
-> +      components(PCIe r6.0, sec 5.5.4).
-> +
->     supports-clkreq:
->       description:
->         If present this property specifies that CLKREQ signal routing exists from
+A. Most in-tree users of this helper use it incorrectly [0].
+B. On s390, Atomic Op Requests are enabled, although the helper
+   cannot know whether the root port is really supporting them.
+C. Loop control in the helper function does not guarantee that a root
+   port's capabilities are ever checked against those requested by the
+   caller.
+
+Address these issue with the following patches:
+Patch 1: Make it harder to mis-use the enablement function,
+Patch 2: Addresses issues B. and C.
+
+I did test that issue B is fixed with these patches. Also, I verified
+that Atomic Ops enablement on a Mellanox/Nvidia ConnectX-6 adapter
+plugged straight into the root port of a x86 system still gets AtomicOp
+Requests enabled. However, I did not test this with any PCIe switches
+between root port and endpoint.
+
+Ideally, both patches would be incorporated immediately, so we could
+start correcting the mis-uses in the device drivers. I don't know of any
+complaints when using Atomic Ops on devices where the driver is
+mis-using the helper. Patch 2 however, is fixing an obseved issue.
+
+[0]: https://lore.kernel.org/all/fbe34de16f5c0bf25a16f9819a57fdd81e5bb08c.camel@linux.ibm.com/
+[1]: https://lore.kernel.org/all/20251105-mlxatomics-v1-0-10c71649e08d@linux.ibm.com/
+
+Signed-off-by: Gerd Bayer <gbayer@linux.ibm.com>
+---
+Gerd Bayer (2):
+      PCI: AtomicOps: Define valid root port capabilities
+      PCI: AtomicOps: Fix logic in enable function
+
+ drivers/pci/pci.c             | 43 +++++++++++++++++++++----------------------
+ include/uapi/linux/pci_regs.h |  8 ++++++++
+ 2 files changed, 29 insertions(+), 22 deletions(-)
+---
+base-commit: e9a6fb0bcdd7609be6969112f3fbfcce3b1d4a7c
+change-id: 20251106-fix_pciatops-7e8608eccb03
+
+Best regards,
+-- 
+Gerd Bayer <gbayer@linux.ibm.com>
+
 
