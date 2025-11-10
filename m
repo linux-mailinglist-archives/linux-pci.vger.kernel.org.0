@@ -1,185 +1,177 @@
-Return-Path: <linux-pci+bounces-40671-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40672-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEC06C451BC
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 07:40:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F6E8C4522E
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 07:56:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 45C933466F7
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 06:40:29 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id AAA73346AA7
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 06:56:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 699FB2E6CA4;
-	Mon, 10 Nov 2025 06:40:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85B772E92B0;
+	Mon, 10 Nov 2025 06:56:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CDz545vz"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gnYYw6cp";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Byjgce0l"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7F2212551
-	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 06:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202CB2E8B95
+	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 06:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762756825; cv=none; b=gbAMFur7J57VCuuR7QPksqFFVkRWgWU49/uINXxXdpoS+k2HVUqnPJdoC5YSIhJA+N0Cp4qsKIUCUAMPbi1eZBiq5bBKJoDwT301oqgVJBPAFgVMjr9rFiN0njK6EIPOVLH/u7jyHLKvoSONixdolu1V6xJDLI8gPEgo1XFieQ4=
+	t=1762757777; cv=none; b=bpF2OdUuZ+agrUqbHLZ2YRrvsNftC8eGR+MMdicYkuPel6VEg9vkTueCF5zEOktmsaPgG7PTusUh9S8Q9lbUPpUs98pyGff1K1gTjVL81E3ZhMVJflsm3Drt+iW3g4HFgDnbN4UAsf0c8s6JJomTa95zV42uXfdczJ8ptz3bHpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762756825; c=relaxed/simple;
-	bh=KigUZ2jK8l3FAFeu8HfbDV/ulYwYwMOzZCAktxcvJQk=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=EM+sCHLg3ywEH28Ij+WvhLfxjlSBIr+/Hw5lIpuSXMQNHQcbR9biXCjtuaA2WXzWBoIFfxWZ4GBBiTD+kbsYeLy28mlxpXjioRHbF6Jc4A+uPZ0Hs8uqTh4NJltgXj8u0+6hgToMAeUiT4bahY62dYKBquVlHtsVtbvOkwy5lnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CDz545vz; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-477619f8ae5so20233805e9.3
-        for <linux-pci@vger.kernel.org>; Sun, 09 Nov 2025 22:40:23 -0800 (PST)
+	s=arc-20240116; t=1762757777; c=relaxed/simple;
+	bh=V+DIvAVczDzOt/Tkg6whkzz5HQVAibDy8MvhqHSfRCA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Gkw+xAOTcsH5PQmLLgCa11ifXthUU2Ni5OqBfhtZab4mOJh6CgcBWkBmnqDy0UB6pfgkZ6OaEZNbcnMyqNgVqX0RzDuYLK23un6mlxsd99h3HWoTb4k6BCKVwLEpjGkNqCvPKgJ9yPrrCwQtuCckVtEYTvZYLNyppb5mR5FtHHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gnYYw6cp; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Byjgce0l; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5A9MTx4P1621055
+	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 06:56:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	bPP/EyjT2wII9bMHLU4QX3es3K/LqGTkzbqM6Papzbs=; b=gnYYw6cpx0Fjen+H
+	5qy7EDBTI5wzHU79FunFy8v2oOvdbsBpNa+xlqa4ZQ3vRMfqCy/4PmHkS4oQ7xf7
+	lNlZl4MIrrQNECJ91RW5IJO/EINtjC9NMot89W9MtfyC26BvVzFauBh5XzIOYTWb
+	7snJMy0+nVwcETJ95QvtfYDiWqjyxXnufN6B+6vf6B4kspbvPUbSTVXcQH0CJGmW
+	8UElZWBfup89uCQp+lQpx5kgls3xDWjN0LgXa+ZNq6i21HcVxq5Tgoa0wtKsu/yX
+	KJwtHAYxU6pi9l+0+ANMArqP/odd1rOG1B5WvVcBkkCRbkYg6l+WXuz/zESO5FAk
+	nN15SA==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4a9xu9undy-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 06:56:15 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-34378c914b4so1639111a91.1
+        for <linux-pci@vger.kernel.org>; Sun, 09 Nov 2025 22:56:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1762756822; x=1763361622; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JD4y8dFL4Qc3UIMVu1ByWGHKasnWIhJOmctGKB7rHNk=;
-        b=CDz545vz6s18xFePAd/R0A6HvnJQrY45YZyaR65gAj6JjhXUpXlM1KpIaZvaOfAIIC
-         FeYHwC0MavRD8mqeMQcFEDsYg9iz2tu4m0eoxz8eCVr+cI3pX7tBaWnBTF56r6Zdmuou
-         VoCBPGHPNc7wTaRK7b0/XXjyJu3C05TI1ZjTxPaFf5Q50In1xJOSp7ooIifR6Gm3hQ23
-         YD/owhXMqQxLY2JCJAfL9DhbK78OBsmHCt5p9hxuuVp5XivH0PrXrIKeUJRwWh13IUTu
-         iN7YF7E/hLe5q2pFAKr+K8LE4W+F+DKHUuxRMiwEfMC06hva+edzX57N5CnaTOXuER08
-         9t4g==
+        d=oss.qualcomm.com; s=google; t=1762757775; x=1763362575; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bPP/EyjT2wII9bMHLU4QX3es3K/LqGTkzbqM6Papzbs=;
+        b=Byjgce0lWBZv112berjZMKlCBZ8K5AiTTEdS8ZCmxlt+pEWHs/xQ5rAoxzvvfrhxOp
+         00K+Idtfeg898CWXcKD9XxI8c1rN99EUqdLZtit+qiTduvHIGGINatDD1jXtQmct12cX
+         UOv70MQCZ6/1T2uH2+qYWAGSnoFhg3kRfloK+qnVcOzdbKfdH8M71uhinW4G3MhZpfaQ
+         VAGN37BTKIKB8ji4E3jDIxLHDfZNrlsrAzqqZmVvjXDCMxxCnFFxW5oeh1BGHnECH69t
+         RwG96WFMFgudzh9r6HznvLaFpgpWWUfxGR6UGSYw24qgYJWds6gy6E31zqiTiRlG4iDO
+         nnPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762756822; x=1763361622;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JD4y8dFL4Qc3UIMVu1ByWGHKasnWIhJOmctGKB7rHNk=;
-        b=DSfShPDj1hV38F6vnH0mispwb85SST0g+WuKwL/snVpMnkurQzXzdUCYPkvAsOAstX
-         6z7adefqz+tnVqFQ0Xt4bs7KkALZNasXtNdftecDWur1ne4dvDhWe9FAehIisyxnAomR
-         84sHFS4YDysvvhJa545xHQ1nao5FbXPJjqcZWtzvJEF7dMmfp3kUtxJ5Oc03evi8Cjml
-         SOxPN1jnhccNNk3wg9sjviOmBIzFAZTjdccGdD6kFKD8QXD0Yb7YljZMQPR1XEoA483e
-         /lVhWXasufZIVXIwR3T57PtM6AWpKH7lnsDRKGYJL1L44WeqX6lroVuS+rbCZbgzXeVL
-         t5Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCWWe3RAUhCMioHGm4OtDOFF5XGwk+yuKVOyrX8k+A4Z9YNL+BuixGE+lb0qgbcJWMjpURUylBSsGSo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzICKJMmzjvcZsTfTfZSBrEGkN0mgfbCV12I9vs7TDogmO9zL58
-	HqXFLXWnlWdo/aC7RjvfFbuEDFyIc4/MvLlCCk6u3Jl2Ss60fVIyZSCuLaPhDqlcU2Q=
-X-Gm-Gg: ASbGncs5kg6CsG4b3PKM8AB5ZPywEC/DsjkYaeotwhX6DNyQTIi5YSePfs4bj8/9zu7
-	K0MOpfeXcnvzFEAbHpV0te59qKSfid6cB97bPyMFnpUfnZvIcz0VxMDCdCnlnBb+C8X5AoaFng7
-	Lb5ezRbMCHk1ajFVQkIZpISQIo2AnNn5pE3FLxYa+yfTyRA4rsk52tBM9ewEd6NhztzQEbtNpAV
-	3NQa8/ni40j49BMI8mnBeapptAU4VrcEJXhh5jBCFPT+oi4TaqBFQICUpSrgMrcDkGj6PcsyMnf
-	x4NCscaLVQy3ctGZ7cr5XExNgCro6wkoo7RUDYV2bCfMEBLUyg8HsrpMHtPUWHU0EN05GexTctA
-	tXijXqYuacALTSI+BA2QKYRAvjOQKvI7jadbAEdXaCwDjst1zC5W8tPhGMFh0CErUDBdC8sfTOV
-	v/HnZftD3ordA0sU/H6DyA1bRp47j2DXVsdlkW8v7CeNfGUpYknrL/QknZSn2nVOU=
-X-Google-Smtp-Source: AGHT+IGOz9+9CDJ3QnsnAcx96wfbo8Uh+Kija8Qn/BBtDb3lYcNFsN3pjUBwX1/h1H29lxDD/6wJ8A==
-X-Received: by 2002:a05:600c:4448:b0:46e:206a:78cc with SMTP id 5b1f17b1804b1-47773290517mr61287685e9.28.1762756821769;
-        Sun, 09 Nov 2025 22:40:21 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:3d9:2080:f168:a23e:c1b2:ae61? ([2a01:e0a:3d9:2080:f168:a23e:c1b2:ae61])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47763b5714dsm111549355e9.0.2025.11.09.22.40.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Nov 2025 22:40:21 -0800 (PST)
-Message-ID: <b341a3b3-c215-4335-a962-799a64a3c1b7@linaro.org>
-Date: Mon, 10 Nov 2025 07:40:20 +0100
+        d=1e100.net; s=20230601; t=1762757775; x=1763362575;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=bPP/EyjT2wII9bMHLU4QX3es3K/LqGTkzbqM6Papzbs=;
+        b=uq5IHC5D+IbQLJ5dj2YOjcRwysuEX3QcNA27h6nac1G6710QttlE6Y+xmWo760bhkN
+         3NOtYM+qD8aMoAxxkExb+2CZooRnRMuO2qmIFYRK4CNZSRwSlmdHlyF80RoCfbpIglce
+         ofe6xA4T8DXLlf0iVQnybE3bhLIp2Kil1KG/vECynsS4EGodeA5sZkssciADbKOBiIpP
+         l3DqRQ/fx8rciJ9ev/QWcFWF/XavdWn3kb2d/LQXAwN11MrT203q0fMUp+ZYnzQK9Gv+
+         BPpJFL3DwDav9xTqlZlxFfSyDUykf7vmr9u9kDjFXHPnTzJdcmWvqG4xOC+dWH5Ogo0d
+         zZMQ==
+X-Gm-Message-State: AOJu0YzMYd9obbZKCHttpTIvXj9EipltjdVNPO7qdnu4BdEit2SXGg0U
+	q6G7S0/ZnuROvmTRLuEdQDy+1Op5VvqDwarF+nm3eDqKZh6QSrQpY9Vfb61tYpekzj4dQcWpnQL
+	tGiK/07B5kaxUUt92/XtqDRA69uTZz8+daJimKGKmCXin+4GqNkmmqI7s8c6eI9Y=
+X-Gm-Gg: ASbGncsZnezSK3sPQLcp0xBY0rj2LCNazChQZsXUgDIBYKTgCNy7nmo9K3K63Arwhnv
+	954qLftOk5nQyrXw64Nun4ZctLIYV19++j4Xul0jRDUR3vrp9E30ABAjcT8V9N+bWM4s5wxliaZ
+	qLLN8zPzhJMFxhW3xiYK3EHiVEqA802NWbilurahvhGvl5Uwa6p6uQVANG9BZ/tqbw6nXGN/iWG
+	eMmOSHRl2kXqFQz8c3/sC7lJo5S8di5+Ct1cDj1TaBDn4gmpRwaBoqvuytV73kh9v1gRYk+1gCQ
+	IafaZm8corYo00qZroN++iC+YYExRZjcO1orPgrRB0TUWKFGgEbvJtVgpxp9q991PJmBSCDFV26
+	Y
+X-Received: by 2002:a17:90b:5710:b0:32e:5d87:8abc with SMTP id 98e67ed59e1d1-3436cd0f1f0mr10125486a91.36.1762757774579;
+        Sun, 09 Nov 2025 22:56:14 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHYMFCEW+VsM+etUbmQ/zHKtVvlMdywCxJgC9tLLnLF4IVTMN7CmfPAWy4Wy9Uex9snC5RxDQ==
+X-Received: by 2002:a17:90b:5710:b0:32e:5d87:8abc with SMTP id 98e67ed59e1d1-3436cd0f1f0mr10125465a91.36.1762757774113;
+        Sun, 09 Nov 2025 22:56:14 -0800 (PST)
+Received: from [192.168.1.2] ([2401:4900:884c:92ad:3fef:1d6a:49a7:308b])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-341a696dfe9sm16705022a91.10.2025.11.09.22.56.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Nov 2025 22:56:13 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+X-Google-Original-From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Hanjie Lin <hanjie.lin@amlogic.com>, Yue Wang <yue.wang@amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, stable+noautosel@kernel.org,
+        stable@vger.kernel.org, Linnaea Lavia <linnaea-von-lavia@live.com>
+In-Reply-To: <20251101-pci-meson-fix-v1-0-c50dcc56ed6a@oss.qualcomm.com>
+References: <20251101-pci-meson-fix-v1-0-c50dcc56ed6a@oss.qualcomm.com>
+Subject: Re: (subset) [PATCH RESEND 0/3] PCI: meson: Fix the parsing of DBI
+ region
+Message-Id: <176275776139.8821.9724702125495761876.b4-ty@kernel.org>
+Date: Mon, 10 Nov 2025 12:26:01 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH RESEND 1/3] dt-bindings: PCI: amlogic: Fix the register
- name of the DBI region
-To: Manivannan Sadhasivam <mani@kernel.org>,
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Hanjie Lin <hanjie.lin@amlogic.com>,
- Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Andrew Murray <amurray@thegoodpenguin.co.uk>,
- Jingoo Han <jingoohan1@gmail.com>,
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org
-References: <20251101-pci-meson-fix-v1-0-c50dcc56ed6a@oss.qualcomm.com>
- <20251101-pci-meson-fix-v1-1-c50dcc56ed6a@oss.qualcomm.com>
- <31271df3-73e1-4eea-9bba-9e5b3bf85409@linaro.org>
- <rguwscxck7vel3hjdd2hlkypzdbwdvafdryxtz5benweduh4eg@sny4rr2nx5aq>
- <20251106-positive-attractive-tiger-ec9c1c@kuoka>
- <lsue7hlgybqpru3qfetlpee2mswnycvhxjffwyxtplmpqved2u@aohtwjtxesr4>
- <65hstqcfcca7xj3cdtq7iikcdojbltfu42zlfdelskakesu3cd@hl3kydp6dw2t>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <65hstqcfcca7xj3cdtq7iikcdojbltfu42zlfdelskakesu3cd@hl3kydp6dw2t>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
+X-Proofpoint-ORIG-GUID: j7uWuJxdJsemv1R8V5uNJF_6XTRRSBc1
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEwMDA1OSBTYWx0ZWRfX+73zGtzpiK5v
+ BbupL+sNXlbPBFKtqlfi5lzUxV/EJWDX/8GPT8hbWDHHLRuWTtUntGxjSqgQ/R4oeQEMEiNDVpt
+ Q3wGo6iPFJxGq6H3HBDzqr6xM/7Fgfo2b8fejaFT/6PY+tCmc6+WWd47piU1pHVnE9VW/gtvuXt
+ RpLwnp50D0/jwHd2dRhdOXub9u1bmGbr8s0jW2kUgQfROeGjj0BT6W3srK051IxruJv2cbdw6mM
+ N8uxRs+nYZ/4d+lT1g5fQP9TUkcZihHHANvMpNshvG+Z8DX2rQtO2jrZ1HADmgDs1OB4ABl9LXf
+ LkwaZzszTEu7cK+Uvu/+v/3EyaJdsemgs/0oWrj9l1SOmcKFt6jjzfkzjNIkfbV6L+Ydwm0VKmQ
+ rlWkWWYyDoUIO5equlGJ3pQ0vZv3Lw==
+X-Authority-Analysis: v=2.4 cv=ZPXaWH7b c=1 sm=1 tr=0 ts=69118c8f cx=c_pps
+ a=0uOsjrqzRL749jD1oC5vDA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=F-EKWGjZHOx0vckpNnAA:9 a=QEXdDO2ut3YA:10
+ a=mQ_c8vxmzFEMiUWkPHU9:22
+X-Proofpoint-GUID: j7uWuJxdJsemv1R8V5uNJF_6XTRRSBc1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-10_02,2025-11-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0 clxscore=1015
+ priorityscore=1501 phishscore=0 spamscore=0 adultscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511100059
 
-On 11/8/25 11:40, Manivannan Sadhasivam wrote:
-> On Thu, Nov 06, 2025 at 02:37:17PM +0530, Manivannan Sadhasivam wrote:
->> On Thu, Nov 06, 2025 at 09:30:15AM +0100, Krzysztof Kozlowski wrote:
->>> On Mon, Nov 03, 2025 at 03:42:58PM +0530, Manivannan Sadhasivam wrote:
->>>> On Mon, Nov 03, 2025 at 10:47:36AM +0100, Neil Armstrong wrote:
->>>>> Hi Mani,
->>>>>
->>>>> On 11/1/25 05:29, Manivannan Sadhasivam wrote:
->>>>>> Binding incorrectly specifies the 'DBI' region as 'ELBI'. DBI is a must
->>>>>> have region for DWC controllers as it has the Root Port and controller
->>>>>> specific registers, while ELBI has optional registers.
->>>>>>
->>>>>> Hence, fix the binding. Though this is an ABI break, this change is needed
->>>>>> to accurately describe the PCI memory map.
->>>>>
->>>>> Not fan of this ABI break, the current bindings should be marked as deprecated instead.
->>>>>
->>>>
->>>> Fair enough. Will make it as deprecated.
->>>
->>> The true question is what value was being passed as that item (ELBI)?
->>> Because if this was always DBI - device has DBI there - then what
->>> deprecation would change?
->>
->> Nothing, except not breaking old DTs with the binding check. That's why I
->> decided to remove it in the first place.
->>
+
+On Sat, 01 Nov 2025 09:59:39 +0530, Manivannan Sadhasivam wrote:
+> This compile tested only series aims to fix the DBI parsing issue repored in
+> [1]. The issue stems from the fact that the DT and binding described 'dbi'
+> region as 'elbi' from the start.
 > 
-> Neil, do you still insist on marking the 'elbi' region deprecated than removing
-> it?
-
-Not really. if the original definition was wrong, let's fix it.
-
-Neil
-
+> Now, both binding and DTs are fixed and the driver is reworked to work with both
+> old and new DTs.
 > 
-> - Mani
-> 
+> [...]
+
+Applied, thanks!
+
+[1/3] dt-bindings: PCI: amlogic: Fix the register name of the DBI region
+      commit: 4813dea9e272ba0a57c50b8d51d440dd8e3ccdd7
+[3/3] PCI: meson: Fix parsing the DBI register region
+      commit: eff0306b109f2d611e44f0155b0324f6cfec3ef4
+
+Best regards,
+-- 
+Manivannan Sadhasivam <mani@kernel.org>
 
 
