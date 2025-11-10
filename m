@@ -1,158 +1,144 @@
-Return-Path: <linux-pci+bounces-40686-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40687-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB065C458AF
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 10:13:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C23BDC458E2
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 10:15:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9DCAE4E4A52
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 09:13:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6AB8E1890467
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 09:15:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DC0C2FF153;
-	Mon, 10 Nov 2025 09:13:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADF6A2FE56E;
+	Mon, 10 Nov 2025 09:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vQoamAS+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.205.26])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2680E2FC89F;
-	Mon, 10 Nov 2025 09:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.229.205.26
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14AE285C8E
+	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 09:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762765986; cv=none; b=o0rTNtlXvaw62DWOrHu+Ux+3T1i1vCrrKnIjL9OaJCLPiaUpZoutZNDsPd+MSEXba/ar9Wx3hIbn16rGU0uBY+A09uX1fRDY2KINIGPdxiiXcPOscRKd2DAbPDI1G17P3Lij+RBFhiQZ7DPW4u2ktYsGv9zSCGQpIy7rCmlosHo=
+	t=1762766105; cv=none; b=BcJdKXBEtMx6LorYtX9VgyVBkUqM7hYsHPfL40HCt8NEz2WtQ2PY+s7TWhMenfyUWNyPFIlSSFQQVAn7HcecIJuMhfoO+gUW0c9zi/QHh8YEO0olomZVOv9VGzU7h9rvGwf8sI2xGluyfU1eOldgGzubzJ+0H2DKrVY5jhO8eUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762765986; c=relaxed/simple;
-	bh=9u1iCCFaJVVRUnPC6w8LlPngxI4hdJ58PuC60PIrX4o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=HHEji6BgKINQvMkzoLQPJAXk9cPbOXAtgVZsCH9TyaGqTt8/iBbmX86sZpqgsMM6J5a9D2ngy0LlypwpQOYnJ/oSbBX4FNJKkmIatwOek/iJq74IFiackw2RcnfUydyahsbA0bYKVLkjIlqb1NpKatRyNpxA220rIjBcp8K/GJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.229.205.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
- ajax-webmail-app2 (Coremail) ; Mon, 10 Nov 2025 17:12:51 +0800 (GMT+08:00)
-Date: Mon, 10 Nov 2025 17:12:51 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-To: "Manivannan Sadhasivam" <mani@kernel.org>
-Cc: "Manivannan Sadhasivam" <manivannan.sadhasivam@oss.qualcomm.com>,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	will@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, robh@kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: Re: [PATCH 2/3] PCI: qcom: Check for the presence of a device
- instead of Link up during suspend
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <fnayczbumpynzvhafv3ryozlg2qwsxsyzpn5p44kc4o3hy7uux@lp5qgsd6ajtw>
-References: <20251106061326.8241-1-manivannan.sadhasivam@oss.qualcomm.com>
- <20251106061326.8241-3-manivannan.sadhasivam@oss.qualcomm.com>
- <35086b08.c4e.19a58a7d6bc.Coremail.zhangsenchuan@eswincomputing.com>
- <nhjlanhzndhlbtfohnkypwuzpw6nw43cysjmoam3qv4rrs22hr@ic3hgtfoeb6e>
- <311e1152.cc3.19a5cff7033.Coremail.zhangsenchuan@eswincomputing.com>
- <fnayczbumpynzvhafv3ryozlg2qwsxsyzpn5p44kc4o3hy7uux@lp5qgsd6ajtw>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1762766105; c=relaxed/simple;
+	bh=2+PqvTsIgaNTk/7uCk6kfDMTr3xQc57xAYsQHUDudqM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gqH9pOUeb0rV+wBygb74iMZt82B/7wG2gKXmb2HO6R/TowqlZi6v6kfrWLSmNWnLqK7/oMQ/LMwGLeYbNd4kqwXclTURruskrH2QosEEBuXDLHtZj9znB3/kxrYcEj9x0hCmQlnZCWNQBjZAXrqaew3vunVDhEZRURJrH9s9lKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vQoamAS+; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6419e6dab7fso642977a12.2
+        for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 01:15:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1762766100; x=1763370900; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NXFnmmWcp+T86M4X7Xk/v6jPWKY4nv9UjyUBijcqLEQ=;
+        b=vQoamAS+F6pl8KkrO4lJUya+bpcXEx8dhbKTFpTLD+It+F8omkDa8RI+2okKpdY6QB
+         VSWW434xasv65TJG9tI/z8ZigUUcm9NM372aCXsb+RnA6OZjZAWe40iQCMGPOLX+1SRF
+         /aZuGzH7tqG6ATJsXY7zpeiYSb4tdxthPOyPkuiLesZj/AT+4bD84pp+otQIuChATLTa
+         Wbuv0xsGlzBav0wTKFJMkUWlvNlxWqXsBmlyKnc3XC4fAyusM5WlPuf3ZyvT2WWX5Aa0
+         J1+fVcTxXOjuFtcDGhCGK7uLw2CSnmKodnUBpuuNZQIT6oreu58No8/Tnh1txiziwCiW
+         LQqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762766100; x=1763370900;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NXFnmmWcp+T86M4X7Xk/v6jPWKY4nv9UjyUBijcqLEQ=;
+        b=MtWLV1cy17ZVlRNPgYOhxhoJWPqast/WW0GLWVSJPkwZfmwkxOvQni+PE3YccwqlgS
+         IGV0VvUt5JrN78d18ZSbInLrqrTJSKit0ONVFg2cyBZlgivjIltpWQD1kUiMkj42/zaf
+         coM/ffzOQkOz9bMVTjuyqe9/as4BiOPYb4TEpzA6KNX3Ivu7VUjoVadRdlDJq6c3oNU6
+         MobDIeLVvwvU3ljJCmoRBjMLFA71iSYQu7WZJ+scaeqOpSNwt+KDX2i9WtY/iamJqCpH
+         +WBktJTOg7ZBvl8b1x2b7QLuQ7FhPBgf08Wl2ZGtQEYMYSyyjo5i5hJ2hRLNs7yqY9aj
+         Q1aA==
+X-Forwarded-Encrypted: i=1; AJvYcCWq7+PiQjp9OJeSBddCQUeaYaYLVzc05jiGud74/Nvc1Qih9akcvWtiwEjzicRAsMdtBBCVAwIL2jc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvA+o1Xak/MD23IEHnThgFmb2RYKUZl+2oFFYflo+ZMSRpwrEE
+	Zg8Zm54q53g0l8LiueO9EzvlO59VXiiMbVRykeYm35QiSw3wizeCH8ubape1nu0JosgAm037nkh
+	1D7+e8nm/WwVqUL40qTZWYsTVcVe8+KM09g768duk0w==
+X-Gm-Gg: ASbGncuK6M73HwxzAYrP+WqgpPlP7QYQ5EZcdLrN8qTWLEcRAKOmdDcVIyCBanzuB0L
+	mf0Gb+c+1zefOgtzUWser5yyVqLRTTaE/RC6GSvM01LWkvEa0NBFYgl+19JrallSHDB4u2xl/fS
+	BwKs1A2hXyb9zKnHT1rWUtJtxH9iDZBWYBVdDYzzIhqG6ca1r/d/Ueh1t0g1oz3uP9rDpjt6J1V
+	YM3UGc5Rmei0I36/9NuJvzKHIZfWMtfOCHuGLH7APgknsIax7KzxbczFqq40AaZy9gQWLqwzICc
+	hv+fYBUsw+jl7SJ9PcV7MDJ7c/kinavfT64=
+X-Google-Smtp-Source: AGHT+IG5jsntiKbL9XDoTScxbX6sK0/o8ty8iuXm+qmOqxUowPC2iS+ovEiKsBoSdXQkOeKy6r5NlaZELkfmqB0OJxc=
+X-Received: by 2002:a05:6402:26d0:b0:640:cd2a:3cc1 with SMTP id
+ 4fb4d7f45d1cf-6415db564bbmr5934589a12.0.1762766100006; Mon, 10 Nov 2025
+ 01:15:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <503961f9.dd6.19a6d0a1e94.Coremail.zhangsenchuan@eswincomputing.com>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:TQJkCgDnK6+TrBFpINNyAA--.1237W
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAQECBmkQw
-	gEm0AAAsI
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW3Jw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+References: <CAKfTPtC87w7RVSDAXWXRX1sjgo4s=_Z_k62+mfTXrMZwmkEpFg@mail.gmail.com>
+ <20251106173853.GA1959661@bhelgaas>
+In-Reply-To: <20251106173853.GA1959661@bhelgaas>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Mon, 10 Nov 2025 10:14:48 +0100
+X-Gm-Features: AWmQ_bmdJnu871GRec3avwkB2KMRGJUSatF4zpeqoF6tG3-YU67MrrGvp-or-eI
+Message-ID: <CAKfTPtD3UUXq=PwBJKx2q5VEBbAie-M1XgTbx3hmxZV1yQGBww@mail.gmail.com>
+Subject: Re: [PATCH 1/4 v3] dt-bindings: PCI: s32g: Add NXP PCIe controller
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, chester62515@gmail.com, mbrugger@suse.com, 
+	ghennadi.procopciuc@oss.nxp.com, s32@nxp.com, bhelgaas@google.com, 
+	jingoohan1@gmail.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	Ionut.Vicovan@nxp.com, larisa.grigore@nxp.com, Ghennadi.Procopciuc@nxp.com, 
+	ciprianmarian.costea@nxp.com, bogdan.hamciuc@nxp.com, Frank.li@nxp.com, 
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	cassel@kernel.org, Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+Content-Type: text/plain; charset="UTF-8"
 
-CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiTWFuaXZhbm5hbiBTYWRo
-YXNpdmFtIiA8bWFuaUBrZXJuZWwub3JnPgo+IFNlbmQgdGltZTpTYXR1cmRheSwgMDgvMTEvMjAy
-NSAxODoyNTozNgo+IFRvOiB6aGFuZ3NlbmNodWFuIDx6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0
-aW5nLmNvbT4KPiBDYzogIk1hbml2YW5uYW4gU2FkaGFzaXZhbSIgPG1hbml2YW5uYW4uc2FkaGFz
-aXZhbUBvc3MucXVhbGNvbW0uY29tPiwgbHBpZXJhbGlzaUBrZXJuZWwub3JnLCBrd2lsY3p5bnNr
-aUBrZXJuZWwub3JnLCBiaGVsZ2Fhc0Bnb29nbGUuY29tLCB3aWxsQGtlcm5lbC5vcmcsIGxpbnV4
-LXBjaUB2Z2VyLmtlcm5lbC5vcmcsIGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsIHJvYmhA
-a2VybmVsLm9yZywgbGludXgtYXJtLW1zbUB2Z2VyLmtlcm5lbC5vcmcKPiBTdWJqZWN0OiBSZTog
-W1BBVENIIDIvM10gUENJOiBxY29tOiBDaGVjayBmb3IgdGhlIHByZXNlbmNlIG9mIGEgZGV2aWNl
-IGluc3RlYWQgb2YgTGluayB1cCBkdXJpbmcgc3VzcGVuZAo+IAo+IE9uIEZyaSwgTm92IDA3LCAy
-MDI1IGF0IDAyOjI3OjE1UE0gKzA4MDAsIHpoYW5nc2VuY2h1YW4gd3JvdGU6Cj4gPiAKPiA+IAo+
-ID4gCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZXMtLS0tLQo+ID4gPiBGcm9tOiAiTWFuaXZh
-bm5hbiBTYWRoYXNpdmFtIiA8bWFuaUBrZXJuZWwub3JnPgo+ID4gPiBTZW5kIHRpbWU6VGh1cnNk
-YXksIDA2LzExLzIwMjUgMTk6NTc6MTYKPiA+ID4gVG86IHpoYW5nc2VuY2h1YW4gPHpoYW5nc2Vu
-Y2h1YW5AZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gPiBDYzogIk1hbml2YW5uYW4gU2FkaGFzaXZh
-bSIgPG1hbml2YW5uYW4uc2FkaGFzaXZhbUBvc3MucXVhbGNvbW0uY29tPiwgbHBpZXJhbGlzaUBr
-ZXJuZWwub3JnLCBrd2lsY3p5bnNraUBrZXJuZWwub3JnLCBiaGVsZ2Fhc0Bnb29nbGUuY29tLCB3
-aWxsQGtlcm5lbC5vcmcsIGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmcsIGxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmcsIHJvYmhAa2VybmVsLm9yZywgbGludXgtYXJtLW1zbUB2Z2VyLmtlcm5l
-bC5vcmcKPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzNdIFBDSTogcWNvbTogQ2hlY2sgZm9y
-IHRoZSBwcmVzZW5jZSBvZiBhIGRldmljZSBpbnN0ZWFkIG9mIExpbmsgdXAgZHVyaW5nIHN1c3Bl
-bmQKPiA+ID4gCj4gPiA+IE9uIFRodSwgTm92IDA2LCAyMDI1IGF0IDA2OjEzOjA1UE0gKzA4MDAs
-IHpoYW5nc2VuY2h1YW4gd3JvdGU6Cj4gPiA+ID4gCj4gPiA+ID4gCj4gPiA+ID4gCj4gPiA+ID4g
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiA+ID4gPiA+IEZyb206ICJNYW5pdmFubmFu
-IFNhZGhhc2l2YW0iIDxtYW5pdmFubmFuLnNhZGhhc2l2YW1Ab3NzLnF1YWxjb21tLmNvbT4KPiA+
-ID4gPiA+IFNlbmQgdGltZTpUaHVyc2RheSwgMDYvMTEvMjAyNSAxNDoxMzoyNQo+ID4gPiA+ID4g
-VG86IGxwaWVyYWxpc2lAa2VybmVsLm9yZywga3dpbGN6eW5za2lAa2VybmVsLm9yZywgbWFuaUBr
-ZXJuZWwub3JnLCBiaGVsZ2Fhc0Bnb29nbGUuY29tCj4gPiA+ID4gPiBDYzogd2lsbEBrZXJuZWwu
-b3JnLCBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnLCBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnLCByb2JoQGtlcm5lbC5vcmcsIGxpbnV4LWFybS1tc21Admdlci5rZXJuZWwub3JnLCB6aGFu
-Z3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbSwgIk1hbml2YW5uYW4gU2FkaGFzaXZhbSIgPG1h
-bml2YW5uYW4uc2FkaGFzaXZhbUBvc3MucXVhbGNvbW0uY29tPgo+ID4gPiA+ID4gU3ViamVjdDog
-W1BBVENIIDIvM10gUENJOiBxY29tOiBDaGVjayBmb3IgdGhlIHByZXNlbmNlIG9mIGEgZGV2aWNl
-IGluc3RlYWQgb2YgTGluayB1cCBkdXJpbmcgc3VzcGVuZAo+ID4gPiA+ID4gCj4gPiA+ID4gPiBU
-aGUgc3VzcGVuZCBoYW5kbGVyIGNoZWNrcyBmb3IgdGhlIFBDSWUgTGluayB1cCB0byBkZWNpZGUg
-d2hlbiB0byB0dXJuIG9mZgo+ID4gPiA+ID4gdGhlIGNvbnRyb2xsZXIgcmVzb3VyY2VzLiBCdXQg
-dGhpcyBjaGVjayBpcyByYWN5IGFzIHRoZSBQQ0llIExpbmsgY2FuIGdvCj4gPiA+ID4gPiBkb3du
-IGp1c3QgYWZ0ZXIgdGhpcyBjaGVjay4KPiA+ID4gPiA+IAo+ID4gPiA+ID4gU28gdXNlIHRoZSBu
-ZXdseSBpbnRyb2R1Y2VkIEFQSSwgcGNpX3Jvb3RfcG9ydHNfaGF2ZV9kZXZpY2UoKSB0aGF0IGNo
-ZWNrcwo+ID4gPiA+ID4gZm9yIHRoZSBwcmVzZW5jZSBvZiBhIGRldmljZSB1bmRlciBhbnkgb2Yg
-dGhlIFJvb3QgUG9ydHMgdG8gcmVwbGFjZSB0aGUKPiA+ID4gPiA+IExpbmsgdXAgY2hlY2suCj4g
-PiA+ID4gPiAKPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IE1hbml2YW5uYW4gU2FkaGFzaXZhbSA8
-bWFuaXZhbm5hbi5zYWRoYXNpdmFtQG9zcy5xdWFsY29tbS5jb20+Cj4gPiA+ID4gPiAtLS0KPiA+
-ID4gPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLXFjb20uYyB8IDYgKysrKy0t
-Cj4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMo
-LSkKPiA+ID4gPiA+IAo+ID4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xs
-ZXIvZHdjL3BjaWUtcWNvbS5jIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1xY29t
-LmMKPiA+ID4gPiA+IGluZGV4IDgwNWVkYmJmZTdlYi4uYjJiODllMmU0OTE2IDEwMDY0NAo+ID4g
-PiA+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1xY29tLmMKPiA+ID4g
-PiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtcWNvbS5jCj4gPiA+ID4g
-PiBAQCAtMjAxOCw2ICsyMDE4LDcgQEAgc3RhdGljIGludCBxY29tX3BjaWVfcHJvYmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+ID4gPiA+ICBzdGF0aWMgaW50IHFjb21fcGNpZV9z
-dXNwZW5kX25vaXJxKHN0cnVjdCBkZXZpY2UgKmRldikKPiA+ID4gPiA+ICB7Cj4gPiA+ID4gPiAg
-CXN0cnVjdCBxY29tX3BjaWUgKnBjaWU7Cj4gPiA+ID4gPiArCXN0cnVjdCBkd19wY2llX3JwICpw
-cDsKPiA+ID4gPiA+ICAJaW50IHJldCA9IDA7Cj4gPiA+ID4gPiAgCj4gPiA+ID4gPiAgCXBjaWUg
-PSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPiA+ID4gPiA+IEBAIC0yMDUzLDggKzIwNTQsOSBAQCBz
-dGF0aWMgaW50IHFjb21fcGNpZV9zdXNwZW5kX25vaXJxKHN0cnVjdCBkZXZpY2UgKmRldikKPiA+
-ID4gPiA+ICAJICogcG93ZXJkb3duIHN0YXRlLiBUaGlzIHdpbGwgYWZmZWN0IHRoZSBsaWZldGlt
-ZSBvZiB0aGUgc3RvcmFnZSBkZXZpY2VzCj4gPiA+ID4gPiAgCSAqIGxpa2UgTlZNZS4KPiA+ID4g
-PiA+ICAJICovCj4gPiA+ID4gPiAtCWlmICghZHdfcGNpZV9saW5rX3VwKHBjaWUtPnBjaSkpIHsK
-PiA+ID4gPiA+IC0JCXFjb21fcGNpZV9ob3N0X2RlaW5pdCgmcGNpZS0+cGNpLT5wcCk7Cj4gPiA+
-ID4gPiArCXBwID0gJnBjaWUtPnBjaS0+cHA7Cj4gPiA+ID4gPiArCWlmICghcGNpX3Jvb3RfcG9y
-dHNfaGF2ZV9kZXZpY2UocHAtPmJyaWRnZS0+YnVzKSkgewo+ID4gPiA+IAo+ID4gPiA+IEknbSBh
-IGxpdHRsZSBjb25mdXNlZC4KPiA+ID4gPiBUaGUgcGNpX3Jvb3RfcG9ydHNfaGF2ZV9kZXZpY2Ug
-ZnVuY3Rpb24gY2FuIGhlbHAgY2hlY2sgaWYgdGhlcmUgaXMgYW55IGRldmljZSAKPiA+ID4gPiBh
-dmFpbGFibGUgdW5kZXIgdGhlIFJvb3QgUG9ydHMsIGlmIHRoZXJlIGlzIGEgZGV2aWNlIGF2YWls
-YWJsZSwgdGhlIHJlc291cmNlIAo+ID4gPiA+IGNhbm5vdCBiZSByZWxlYXNlZCwgaXMgaXQgYWxz
-byBuZWNlc3NhcnkgdG8gcmVsZWFzZSByZXNvdXJjZXMgd2hlbiBlbnRlcmluZyAKPiA+ID4gPiB0
-aGUgTDIvTDMgc3RhdGU/Cj4gPiA+ID4gCj4gPiA+IAo+ID4gPiBJdCBpcyB1cHRvIHRoZSBjb250
-cm9sbGVyIGRyaXZlciB0byBkZWNpZGUuIE9uY2UgdGhlIGxpbmsgZW50ZXJzIEwyL0wzLCB0aGUK
-PiA+ID4gZGV2aWNlIHdpbGwgYmUgaW4gRDNDb2xkIHN0YXRlLiBTbyB0aGUgY29udHJvbGxlciBj
-YW4ganVzdCBkaXNhYmxlIGFsbCBQQ0llCj4gPiA+IHJlc291cmNlcyB0byBzYXZlIHBvd2VyLgo+
-ID4gPiAKPiA+ID4gQnV0IGl0IGlzIG5vdCBwb3NzaWJsZSB0byB0cmFuc2l0aW9uIGFsbCBQQ0ll
-IGRldmljZXMgdG8gRDNDb2xkIGR1cmluZyBzdXNwZW5kLAo+ID4gPiBmb3IgaW5zdGFuY2UgTlZN
-ZS4gSSdtIGhvcGluZyB0byBmaXggaXQgdG9vIGluIHRoZSBjb21pbmcgZGF5cy4KPiA+ID4gCj4g
-PiBIaSwgTWFuaXZhbm5hbgo+ID4gCj4gPiBUaGFuayB5b3UgZm9yIHlvdXIgZXhwbGFuYXRpb24u
-Cj4gPiAKPiA+IEJ5IHRoZSB3YXksIGluIHY1IHBhdGNoLCBJIHJlbW92ZWQgdGhlIGR3X3BjaWVf
-bGlua191cCBqdWRnbWVudCwgYW5kIGN1cnJlbnRseQo+ID4gcmVzb3VyY2VzIGFyZSBkaXJlY3Rs
-eSByZWxlYXNlZC4KPiA+IEF0IHByZXNlbnQsIGkgaGF2ZSBjb21wbGV0ZWQgdGhlIHBjaWUgdjUg
-cGF0Y2ggd2l0aG91dCBhZGRpbmcgdGhlIAo+ID4gcGNpX3Jvb3RfcG9ydHNfaGF2ZV9kZXZpY2Ug
-ZnVuY3Rpb24uIERvIEkgbmVlZCB0byB3YWl0IGZvciB5b3UgdG8gbWVyZ2UgaXQgCj4gPiBiZWZv
-cmUgc2VuZGluZyB0aGUgVjUgcGF0Y2g/Cj4gPiAKPiAKPiBJJ3ZlIG1lcmdlZCBteSBzZXJpZXMg
-dG8gcGNpL2NvbnRyb2xsZXIvZHdjIGJyYW5jaC4gWW91IGNhbiB1c2UgdGhpcyBicmFuY2ggYXMg
-YQo+IGJhc2UgZm9yIHlvdXIgdjUuCj4gCkhpLCBNYW5pdmFubmFuCgpUaGFuayB5b3UgdmVyeSBt
-dWNoIGZvciB0aGUgbmV3bHkgY3JlYXRlZCBicmFuY2guIEkgaGF2ZSBhbHJlYWR5IHN1Ym1pdHRl
-ZCBhIHY1IApwYXRjaCBiYXNlZCBvbiB0aGlzIGJyYW5jaC4KCktpbmQgcmVnYXJkcywKU2VuY2h1
-YW4gWmhhbmc=
+On Thu, 6 Nov 2025 at 18:38, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Senchuan]
+>
+> On Thu, Nov 06, 2025 at 09:09:01AM +0100, Vincent Guittot wrote:
+> > On Thu, 6 Nov 2025 at 08:12, Manivannan Sadhasivam <mani@kernel.org> wrote:
+> > > On Wed, Oct 22, 2025 at 07:43:06PM +0200, Vincent Guittot wrote:
+> > > > Describe the PCIe host controller available on the S32G platforms.
+>
+> > > > +            phys = <&serdes0 PHY_TYPE_PCIE 0 0>;
+> > >
+> > > PHY is a Root Port specific resource, not Root Complex. So it
+> > > should be moved to the Root Port node and the controller driver
+> > > should parse the Root Port node and control PHY. Most of the
+> > > existing platforms still specify PHY and other Root Port
+> > > properties in controller node, but they are wrong.
+> >
+> > Yeah, we had similar discussion on v1 and as designware core code
+> > doesn't support it, the goal was to follow other implementations
+> > until designware core is able to parse root port nodes.  I can add a
+> > root port node for the phy and parse it in s32 probe function but
+> > then If I need to restrict the number of lane to 1 instead of the
+> > default 2 with num-lanes then I have to put it the controller node
+> > otherwise designware core node will not get it.
+>
+> I think it's better to put the PHY info, including num-lanes, in Root
+> Port DT nodes now even thought the DWC core doesn't explicitly support
+> that yet because it's much easier to change the DWC core and the
+> driver code than it is to change the DT structure.
+>
+> That will mean a little extra code in the s32g driver now, but we will
+> be able to remove that eventually.  If we leave the PHY in the DT
+> controller node, we may eventually end up having to support two s32g
+> DT structures: the single RP style with PHY in the controller, and a
+> multiple RP style with PHY in the RP.
+>
+> We'll likely have both structures for many existing drivers, but I
+> think it will be simpler if new drivers can avoid the old one.
+
+Okay, i will add a RP node
+
+>
+> The eic7700 driver is an example of num-lanes support in the driver:
+> https://lore.kernel.org/linux-pci/20251030083143.1341-1-zhangsenchuan@eswincomputing.com/
+>
+> Bjorn
 
