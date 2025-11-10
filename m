@@ -1,151 +1,257 @@
-Return-Path: <linux-pci+bounces-40681-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40682-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE496C4556B
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 09:19:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7C83C4565D
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 09:41:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 977DF3B256F
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 08:18:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 612A71888461
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 08:41:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D83CB24BBE4;
-	Mon, 10 Nov 2025 08:18:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C37F2FD1C1;
+	Mon, 10 Nov 2025 08:41:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hFR3FZ/x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bovRykUg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D98323504B
-	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 08:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413CF2FB978
+	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 08:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762762736; cv=none; b=TAxkopXcDcHLxnH8Ct2Ocu4YcRcogCDxQgMR/gsELFWJHPem+WDwtC6LY80asLTWUCzCMKye3amN2LDlNX+fPAzMKYZv7qHB6165ZnVBA76XoZKeipRHqeKSqhSOjo0hRntrvY/GtnWuKpTre7Xah8Uu9m/TuBt8dVMsTXpZhV0=
+	t=1762764080; cv=none; b=pJxywQdFy/1MSovcanS8xjCBbLydR4HyqhuYpkmrnl5NnUYEBQ6/L8ZofYXNkpUOXVuxfVDlLqyGNXCNlBsbiz1NezR5GcieLoQGwrqCTiUqTY0d7ekVvPUoee1nyYcNzrU04o+/S9mgXF8ohheHrsbGP6xhy7FOBXfa4aCc9fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762762736; c=relaxed/simple;
-	bh=LUwREsvCB54P+nF2qMZzK2Xq5d8lmHU9Yu4Uy90Zjvo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=H5qUDlzb2dFsBclXT2f2AQ22IgGUYNR+4uqnGBVtNLOtsUk6kLvpgILkKd01PbQttpBTqvAUyg6GGIHgfwucWB1slHwHp82C6if4tQXhCIvHCCIyUjq1isy9vw6G1M+t0QBOnuMzVh5zZTUGAhqtkeL4tBpmG2HkbIgNrz4bex4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hFR3FZ/x; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-47778b23f64so5282055e9.0
-        for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 00:18:54 -0800 (PST)
+	s=arc-20240116; t=1762764080; c=relaxed/simple;
+	bh=jgIEC3io5JNbRWacuU/h993h9DriZXR9D2I9x9lfLPw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mHd3DvPZzu+orwdUbMij5FZpvpv1L/anLRCVAE21fvuDbT5xBxDUMzR3JDtQ5VgUFW9iEk8NC+2n88a3UzkCfjw4g7Khaq0/8QGrFgEkyuaiKeyyoAlsyUOhSUMZP5khWjGy8826FtzB9Qwyp6+7JFVTcmDhh8JUERmqNaDG0KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bovRykUg; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6418738efa0so1295778a12.1
+        for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 00:41:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1762762733; x=1763367533; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1762764074; x=1763368874; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+Ow0jXvjkh77pOXWIP6I5DYsF4xpz6igLz3RhPzX2Hc=;
-        b=hFR3FZ/xshkoNyuZt5jSfQ+VXYtbnH85AAMhNYL1vNq0ObRVZo3kqTd9pRB5ePgm/T
-         FK/fRHmQjsHC4g9/MseoRElf+XkPC0tJOTg8N/Stpjo8x5mUBUbqeCClPC+EbHH/6d8Q
-         SQL3RrYP+E0fGsZ9lWIamvwlL44kAdsxwcnpUdp/5jA07ytfRiCP5wS0vkoPV1hnmtSI
-         0Yx0waezk41ae0tqyTFN2nVywJslB8Ub5aJe21eISo5PoIqkd4T5OZ4nAVu6j3/DxHU6
-         Uqc8YpasHmX/uagAe4/oeprsq9vTZrCH8l8L4/syh0rxsCPEs6vULAysGDLK6y9YRHHC
-         /gGA==
+        bh=6P0y/Q79WY1s2WSJKAVn4OYeud7z6vgKLms8t7x+yjg=;
+        b=bovRykUgnAqiB+pop1jaF80oFF1N6ziudOzx1wnsVLvbzKpbYojkvpzZh8IIL76Lzy
+         JKIeWRw2jk89TNZA4Hy7E+onx8k4SaETj0gYExY3XBhMEvzOOiDaGJ+rpDFGHte3EEXT
+         IitteGXtzGEQ21kWXJPHvy6VAoODnQx56mwBfwT9g6scYM/4wI9uBYQepbpYDfsQdZtF
+         FkKf7UmzNtdzjTn4fDJNRNs2l2Dj40v8iCuypd8tLTXQhKhzzBkAvi0qQvcxOPf04MsU
+         U0J6IBxLLpMTuHkEyhkH9MXNDM/ZiusBvKCI+uIHQa8oB0sbk2eg508Mpvr6bKsvxIjz
+         QGHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762762733; x=1763367533;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20230601; t=1762764074; x=1763368874;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=+Ow0jXvjkh77pOXWIP6I5DYsF4xpz6igLz3RhPzX2Hc=;
-        b=nU0NlruCAxPtwf/4kBQAHWHmtokzHTaB3Tvwoh3rc5QkKEmkKJUratLqXTsKdSU65a
-         DF7wCBh+2fs3w7AKvkgkugGIJmJS16v9ZQaCAFkAXb0cXXYVRW84NV163AbI3Z9ppB7I
-         maU0DFJduS2cHFIcwmrGl46iiGpn2hWM9RhhcDctijk6xeLIAal5YwgsqK6fDycEdaie
-         6t39mgE/iqCTCMEmew6XM3EkaaR8z14+Smv+vOGTwdS2Sbnenlkpfr7ZodYDREv1u+mU
-         FQePk79riEhHny1TBO3/PqbkIYPm2ZSuJgEzqXEJSymrBzIt0YWxkhv1fu9SdF9zU9bz
-         1y0w==
-X-Gm-Message-State: AOJu0Yz+4CDYr9YkX8M3xiGu5/uoUjxLqWmu8LqTq28Zml3SdGjPoXhR
-	e9s1jgxAbuVPJ4f83LLoq8BhFAunxDn1eBQkQvSAP2PS7TQsRqcQ2OidqYRZxbIEkG8=
-X-Gm-Gg: ASbGncsiqXPqTIuAMGkG6+hSPwdxbHjnfefrpdMml/9OS4zYOQZVPg9Wmk66HSR0AXF
-	Z94WXF4S0uIfR/pe0LPDLSXyeAMpmMEE/qZhUbstJP8KvxWzVLynfKmzkbcEQqbC8QxJbymxhmd
-	UBUeSrq8CKARw7DoadjZg2+WPohOKvBIya6voJOqHVVmfAQeseqc37hlO8TTI4kxth7iLBbHwar
-	kP3O7kRuJcorbfOTrA1bk4VGJsMN9FrIsGBlFr5PzZS3PW1mhz9QYqKLIZWPGC8n6JgTFk3HTVG
-	67lnW1Y8zlW/2EtVG9ivnQNit0R9snX5NRSFRBbc6y1Z9gA+zHv8rQA3rGVoycb6Uj6Z7t9YZyu
-	EGF0CgJa448NO+5PalRzCrwJDko2JEQcr9V9LKBz7g5HX5IuovKsCmr06FYOPMkcDvcVRlXvkKo
-	VbAAJvCOuYI95b3OGZrHz+
-X-Google-Smtp-Source: AGHT+IFNAJ6Bn4FpyZtFF1NnxwYE2SjgYr7mpYVD4++XybQIbWpInXbD7iemC8JYoesp/8+j6x9DXg==
-X-Received: by 2002:a05:600c:4fc7:b0:477:6d96:b3dd with SMTP id 5b1f17b1804b1-47773236f6cmr51381675e9.1.1762762733314;
-        Mon, 10 Nov 2025 00:18:53 -0800 (PST)
-Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4776bd08834sm192070105e9.15.2025.11.10.00.18.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Nov 2025 00:18:53 -0800 (PST)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Bjorn Helgaas <bhelgaas@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Hanjie Lin <hanjie.lin@amlogic.com>, 
- Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Andrew Murray <amurray@thegoodpenguin.co.uk>, 
- Jingoo Han <jingoohan1@gmail.com>, 
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, stable+noautosel@kernel.org, 
- stable@vger.kernel.org, Linnaea Lavia <linnaea-von-lavia@live.com>
-In-Reply-To: <20251101-pci-meson-fix-v1-0-c50dcc56ed6a@oss.qualcomm.com>
-References: <20251101-pci-meson-fix-v1-0-c50dcc56ed6a@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH RESEND 0/3] PCI: meson: Fix the parsing of DBI
- region
-Message-Id: <176276273239.834148.1225755186046227156.b4-ty@linaro.org>
-Date: Mon, 10 Nov 2025 09:18:52 +0100
+        bh=6P0y/Q79WY1s2WSJKAVn4OYeud7z6vgKLms8t7x+yjg=;
+        b=i+daOoEksQPleuzWGAS+rq0R/0kzCxtHupLjBptEc6qBQOSsGlZLqLvFSFMywkeU4+
+         oszQk4+9RwO1TnC6sZ/fyZT0UCDuOyAI99AW6BRaZ9OezKsNX/VHg8dcL2Bm7j0Koz2W
+         oiwLRcJnVnUJb9ww2lnXHQz+KUPMJPb9TiObkJqFC2R6VtqVPnnaQ4PJ2EG+5FhPfHFS
+         L4x0TjrOK3DabKCR77YH9x8o4bZSvsSg1WfbtP9E6KWLLZ2Rz1qbHLIFCgjKRXp5706y
+         8HE9vvf/wltg9ikrhI48vKYYYweC5/jS4UkI+805gtttHr84ZON903FZPRUgtgRD5E7f
+         rejA==
+X-Forwarded-Encrypted: i=1; AJvYcCUddd+iGBhrEJEHX+YVRiotAC6r0nG53vq6bEO9OLC7yKNwzBB53bS/kvZ+xyp1jsGh0QnG0ML5hi0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykEbR5S6iar/Ke9OiT/wHJ0wIiAYfxdZvFonDdA/HhSBAINnd1
+	EQkbKUTItq8ju41Rwi+Usre2Sq+3vJuwtThNVV8WeWarZwOdNUTgfeFHZhb2KD48sUHGB5Itsmf
+	mP0IrKyi0BsHChbtidgAdUjOOIacHWA8=
+X-Gm-Gg: ASbGncuJGL+YxNhEe1jicfD/EgZaG44sMaJ80cTpJ15EkNdBrJrORmrSbd/wLYt28mN
+	MsJkItO31qIjF5EB+6wSidme303JED+lxKxdPIX4HxfM3gv/2x3NuxcXFLBjVWOy8t4Wi0VQ1TO
+	WmY4QfML4OaiCBwBCa4T+dBKRnRsysHOvd0rr+fxcRkQahB3UJeB/Ony+pCtH+RZZu797ed+Rw/
+	3F6osIafVW4+DQFQTwuFu2AGoxAKFRe1/hrUxEYk9kWF9PCad6D00DtxwbfAqspy2o9GN7FP+25
+	JIRe
+X-Google-Smtp-Source: AGHT+IESNTw6qjYvvZVQIviNrko/W/ThLKfPP6Zlh7jZBNCmaaRmiw1Z2ff+JZpJCCEs3KNCeqlEMNKff6nGkITYWsM=
+X-Received: by 2002:a05:6402:51ce:b0:641:72a8:c921 with SMTP id
+ 4fb4d7f45d1cf-64172a8d10emr3999634a12.23.1762764073934; Mon, 10 Nov 2025
+ 00:41:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
+References: <20251029-rockchip-pcie-system-suspend-v4-0-ce2e1b0692d2@collabora.com>
+ <cf6zumlp4iiltglu7bbrpdeysaznrkyvlemwl4lxwkfjkgux7a@wl37bxilsprx>
+ <cbvcjgcd7saxj42ifgqn3l6mwpgenlhbr4zuf5ibqbtj6rmzqh@yuc7flbwyi2y> <CANAwSgSvtc57kh-VJewk5=_MvfL3KVxNFU8C+tGh4iqJhnEVtw@mail.gmail.com>
+In-Reply-To: <CANAwSgSvtc57kh-VJewk5=_MvfL3KVxNFU8C+tGh4iqJhnEVtw@mail.gmail.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Mon, 10 Nov 2025 14:10:56 +0530
+X-Gm-Features: AWmQ_bmU-RlL1-d4qH4b9tmN5UWK_GZG4fHWCZvQROFJ3et4gEEIr6Y6zbTvTnI
+Message-ID: <CANAwSgTj0JzFN2CHOSG=X_gx5KttP-tZeLaC5uYZYhcPheP_Vg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/9] PCI: dw-rockchip: add system suspend support
+To: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Jingoo Han <jingoohan1@gmail.com>, 
+	Shawn Lin <shawn.lin@rock-chips.com>, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi All,
 
-On Sat, 01 Nov 2025 09:59:39 +0530, Manivannan Sadhasivam wrote:
-> This compile tested only series aims to fix the DBI parsing issue repored in
-> [1]. The issue stems from the fact that the DT and binding described 'dbi'
-> region as 'elbi' from the start.
-> 
-> Now, both binding and DTs are fixed and the driver is reworked to work with both
-> old and new DTs.
-> 
-> [...]
+On Fri, 7 Nov 2025 at 00:31, Anand Moon <linux.amoon@gmail.com> wrote:
+>
+> Hi Sebastian,
+>
+> On Tue, 4 Nov 2025 at 00:29, Sebastian Reichel
+> <sebastian.reichel@collabora.com> wrote:
+> >
+> > Hi,
+> >
+> > On Sat, Nov 01, 2025 at 07:29:41PM +0530, Manivannan Sadhasivam wrote:
+> > > On Wed, Oct 29, 2025 at 06:56:39PM +0100, Sebastian Reichel wrote:
+> > > > I've recently been working on fixing up at least basic system suspe=
+nd
+> > > > support on the Rockchip RK3576 platform. Currently the biggest open
+> > > > issue is missing support in the PCIe driver. This series is a follo=
+w-up
+> > > > for Shawn Lin's series with feedback from Niklas Cassel and Manivan=
+nan
+> > > > Sadhasivam being handled as well as some of my own changes fixing u=
+p
+> > > > things I noticed.
+> > > >
+> > > > In opposite to Shawn Lin I did not test with different peripherals =
+as my
+> > > > main goal is getting basic suspend to ram working in the first plac=
+e.
+> > >
+> > > Wouldn't it break users who have connected endpoint devices and suspe=
+nd their
+> > > platform? I don't want to have an untested feature that could potenti=
+ally cause
+> > > regressions, just for the sake of getting basic system PM.
+> > >
+> > > But if your goal is to just add basic system PM operations for CI
+> > > testing, then I would suggest you to do something minimal in the
+> > > suspend/resume path that don't disrupt the operation of a device.
+> > >
+> > > But this also should be tested with some devices for sanity.
+> >
+> > My goal is proper system PM support, but I would like to go step by
+> > step. Right now system suspend on the Rockchip RK3576 EVB just hangs
+> > the board and it has to be power cycled afterwards. In parallel to
+> > this series I've send a bunch of fixes to get it working. It surely
+> > isn't perfect, but I fear things regressing again in other areas while
+> > the complex PCIe system sleep is being worked on - simply blocking syst=
+em
+> > suspend is not very helpful, since it effectively hides suspend problem=
+s.
+> >
+> As per my understanding, the current DTS configuration is missing definit=
+ions
+> for critical PCIe power management GPIOs (clkreq-gpios, perst-gpios, wake=
+-gpios)
+>
+> clkreq-gpios, such as PCIE30x1_0_CLKREQn_M1_L (not sure if it is used ?)
+> perst-gpios such as PCIE30x1_0_PERSTn_M1_L
+> wake-gpios, such as PCIE30x1_0_WAKEn_M1_L.
+>
+As per the TRM 11.5 Interface Description
+Signal Name     Direction   IO Attribute             Description
+------------    ---------   -----------------------
+------------------------------------------------------------
+BUTTON_RSTN     I             Pull-down                    External
+reset button input; pulled low to initiate reset
+WAKEN                   I/O        Open-drain, pull-up      Wake
+signal; enables device or host to signal wake events
+PERSTN                 I/O         Pull-down                     PCIe
+reset signal; asserted low to reset endpoint or root complex
+CLKREQN              I/O         Open-drain, pull-up      Clock
+request signal; used for dynamic clock management
 
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.19/arm64-dt)
+See the following commit 4294e3211178 ("arm64: dts: rockchip: Split up
+RK3588's PCIe pinctrls")
 
-[2/3] arm64: dts: amlogic: Fix the register name of the 'DBI' region
-      https://git.kernel.org/amlogic/c/8b983ae355aab50942c72096beba30254c5078bd
+    These pinctrls manage the low-speed PCIe signals:
+    - CLKREQ#: An output on the RK3588 (both RC or EP modes), used to
+      request that external clock-generation circuitry provide a clock.
+    - PERST#: An input on the RK3588 in EP mode, used to detect a reset
+      signal from the RC. In RC mode, the hardware does not use this signal=
+:
+      Linux itself generates it by putting the pin in GPIO mode.
+    - WAKE#: In EP mode, this is an output; in RC mode, this is an input.
 
-These changes has been applied on the intermediate git tree [1].
+    Each of these signals serves a distinct purpose, and more importantly,
+    PERST# should not be muxed when the RK3588 is in the RC role. Bundling
+    them together in pinctrl groups prevents proper use: indeed, almost non=
+e
+    of the current board-specific .dts files make any use of them.
+    (Exception: Rock 5A recently had a patch land that misuses _pins; this
+     patch corrects that.)
 
-The v6.19/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
-for inclusion in their intermediate git branches in order to be sent to Linus during
-the next merge window, or sooner if it's a set of fixes.
+    However, on some RK3588 boards, the PCIe 3 controller will indefinitely
+    stall the boot if CLKREQ# is not muxed (details in the next patch).
+    This patch unbundles the signals to allow them to be used.
 
-In the cases of fixes, those will be merged in the current release candidate
-kernel and as soon they appear on the Linux master branch they will be
-backported to the previous Stable and Long-Stable kernels [2].
+So we can use these pinctrl to perform different tasks
+like PERST# to reset and WAKE# to wake the PCIE in suspend / resume state.
 
-The intermediate git branches are merged daily in the linux-next tree [3],
-people are encouraged testing these pre-release kernels and report issues on the
-relevant mailing-lists.
+Is this a good way to split the rk368 PCIe pinctrl into separate components=
+?
 
-If problems are discovered on those changes, please submit a signed-off-by revert
-patch followed by a corrective changeset.
+Here is the example user wake gpio.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
+b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
+index 19a08f7794e6..13a7aa3ec1fc 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
+@@ -359,9 +359,10 @@ rgmii_phy1: ethernet-phy@1 {
+ };
 
--- 
-Neil
+ &pcie2x1l2 {
+-       pinctrl-0 =3D <&pcie2_reset>, <&pcie20x1m0_clkreqn>, <&pcie20x1m0_w=
+aken>;
++       pinctrl-0 =3D <&pcie2_reset>, <&pcie20x1m0_clkreqn>, <&pcie2wakeup>=
+;
+        pinctrl-names =3D "default";
+        reset-gpios =3D <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>;
++       wakeup-gpio =3D <&gpio3 RK_PD0 GPIO_ACTIVE_HIGH>;
+        vpcie3v3-supply =3D <&vcc3v3_wf>;
+        status =3D "okay";
+ };
 
+I haven=E2=80=99t come across a working example for this in RC mode.
+Is there any confirmation that this approach functions as expected?
+
+
+> However, the RK3588 TRM indicates that these power management functions
+> can be controlled programmatically using specific memory-mapped registers=
+:
+>
+> The PCIE_CLIENT_POWER_CON register at 0x002C provides comprehensive
+> power management controls, including link-state management, wake-up
+> event handling,
+> and clock management.
+>
+> In PHY GRF, we have the PCIe3PHY_GRF_PHY0_LN0_CON0 register at 0x1000 all=
+ows
+> direct control over the PHY's power state (P-states like P1, P2),
+> enabling transitions into
+> deep suspend (L2/L3) via register writes
+> clkreq_n Clock request for lane X. This is a side-band signal that a
+> PIPE 4.2 controller needs
+> to enter and exit P1.CPM, P1.1, and P1.2 power states.
+>
+> My thought is that using rockchip_pcie_phy_deinit() in the suspend
+> routine and rockchip_pcie_phy_init() in the resume routine are
+> incorrect; these functions
+> likely perform full resets or power cuts rather than managed power
+> state transitions,
+> thus disrupting the desired suspended state of the PCIe link
+>
+> I tried a few things on my own, but I am not moving forward.
+>
+Thanks
+-Anand
 
