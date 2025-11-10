@@ -1,111 +1,247 @@
-Return-Path: <linux-pci+bounces-40730-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40731-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0E47C4882D
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 19:17:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10AAEC48A1B
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 19:47:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5E37B4E7990
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 18:17:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F30E188B381
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 18:48:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9652329E5D;
-	Mon, 10 Nov 2025 18:17:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DE2C31B127;
+	Mon, 10 Nov 2025 18:47:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DFyXs1Td"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LGoJh2Bf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F1D318146;
-	Mon, 10 Nov 2025 18:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A8B321445;
+	Mon, 10 Nov 2025 18:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762798657; cv=none; b=lY2X0Ni0uJ7pJ+rk7L3ujkdaFDZEZS3mCfxoiEPBcSShtvy3RpU5s8F8E9lrbHJd1EeC8Kmkki6PTNCRvG+XsNvp2CzsEuz0u5Uqh/LbdQbtm1oJIUaw4UhJ5S3PTHiiH8fCZSNZ78iNurrP0bjYD3+SY0NVd/tIE9b+OPigZ0U=
+	t=1762800461; cv=none; b=lYCRzW+zeLP/NPkDfHQprL/qzGw6aJfHb3DTU7Wp7zqXzPALRqOn2YOvdAytnJ6G6NmnBQConTuZT3WIbWAsgI5OigvQcvTqv27YzfwQos9nOej3mxO4/yUeTE4vCsP5+w1HELD3IOlzwsLn17hz6QqLoMww2hCHKRUwo93Ll+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762798657; c=relaxed/simple;
-	bh=TkDygIMReA0SstkB5OvgzehqDlcij0Z0ZMvUqL6Rj74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hPjj1ow8gPDNhWW1+gryN0kezikFUae0DLBC4IRLFrtZulLPNTxtalhvaRl8s7xYP/ByqIPuwQOaYD+rpoS2dFrlcSLRhc36tIJVosomsJzCf1tVoqmTL57kZ4Zm0fKu8TesTCLakP8fsBr1VRgT31A0H1C/wHfZIeqbKV8DOjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DFyXs1Td; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B0E5C4CEFB;
-	Mon, 10 Nov 2025 18:17:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762798657;
-	bh=TkDygIMReA0SstkB5OvgzehqDlcij0Z0ZMvUqL6Rj74=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DFyXs1Td95alAV9mBklla3aaLsx4v3Zb0tF2w/SldWPWrmvaZwljumavflQt/+pJS
-	 /78H7RWWWx9eK3Y1Vr5qr3Pilt/9rVcdguILnUC3c5kAUqeANq/U6wfqWVRBRRYbaB
-	 ksiKkzM88zCFbEoJtaDQUztIGco4nsjm0JGV5YLvg09vYCxntLJWnr1qz8/VhRg7iH
-	 no31Y0kixnMoaHlZcfic5LQ1OCKI7vTH6tfFq9pM9SktkHcjlDMzkizEVqQkYQ3Qos
-	 bW7YzVRByJuvxQbg8C77SYSe1V0gpcqk5biJUkJnMEY+kb9jQm4GyWaQa0ri1Afwpg
-	 qYCdQmSeVbvjA==
-Date: Mon, 10 Nov 2025 12:21:43 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: cros-qcom-dts-watchers@chromium.org, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com, 
-	quic_mrana@quicinc.com, quic_vpernami@quicinc.com, mmareddy@quicinc.com, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH v8 0/5] PCI: dwc: Add ECAM support with iATU
- configuration
-Message-ID: <zovd3p46jmyitqyr5obsvvmxj3sa3lcaczmnv4iskhos44klhk@gk6c55ndeklr>
-References: <20250828-ecam_v4-v8-0-92a30e0fa02d@oss.qualcomm.com>
- <176160465177.73268.9869510926279916233.b4-ty@kernel.org>
- <e9306983-e2df-4235-a58b-e0b451380b52@oss.qualcomm.com>
+	s=arc-20240116; t=1762800461; c=relaxed/simple;
+	bh=wAsccoU8w3B4eRMZuq2gxUaDz+Dt38AFte0j5k5tPOM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f8b3W5vuv4s+XrWqI8Pq0RA3TaRw/MEVpgYTAM1ahjT1QyE7YmmDTJTBLniQowlxO8/sMtpIWDtIkVUfm9pabR0MK5QKdPljqSm3yNWLGVd55TvuBd9t0f85I+EzBcQz5VReCQ7quExOZuOi8ZKznIeSpKmiZMJ8ZxQ0GURhXF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LGoJh2Bf; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762800459; x=1794336459;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wAsccoU8w3B4eRMZuq2gxUaDz+Dt38AFte0j5k5tPOM=;
+  b=LGoJh2BfuuEOTUk0FiynunvbwgLCHK795YE0dQ/MitEsCtJpwtpHTNiH
+   Nj6DYMl0zfgqyZKeLkaIY24F4IrEO/yRszpr2pGlrgkllCR9uwnm+Ad6P
+   t82nYcC5sYBsM3u38jMXlH3omlApFSwmhr+bGxDW3c0GIsGsznSIq1Vl/
+   prU9QmGB93oR52h+IN8sUUIdWFSOtsVDl1/upJtDsCuargTd1crVycmb7
+   s+FgSrUKSzRx6B9/FNN0VMBgC2vv5PHlNXMAIzZWbsk4J9qBNsuspoSjD
+   eJsTYEWjytAZvwraGcA8LHnyUUyOAE+gQXStxJ4820FW5AMOL1xxCPDSO
+   A==;
+X-CSE-ConnectionGUID: 8l0vfIDUQsig8WVTeYr+tA==
+X-CSE-MsgGUID: w/1pe4BtTF24tYVmPynttA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="64769602"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="64769602"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 10:47:38 -0800
+X-CSE-ConnectionGUID: i9YCGhVJRUGQcVlTpVIfpg==
+X-CSE-MsgGUID: Z0/CCH/BSBOYpkaQrxg0zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,294,1754982000"; 
+   d="scan'208";a="193749558"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa004.fm.intel.com with ESMTP; 10 Nov 2025 10:47:29 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id E8E2195; Mon, 10 Nov 2025 19:47:28 +0100 (CET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Corey Minyard <corey@minyard.net>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Hans Verkuil <hverkuil@kernel.org>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Vitaly Lifshits <vitaly.lifshits@intel.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Calvin Owens <calvin@wbinvd.org>,
+	Sagi Maimon <maimon.sagi@gmail.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Karan Tilak Kumar <kartilak@cisco.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Max Kellermann <max.kellermann@ionos.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	amd-gfx@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org,
+	freedreno@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	linux-mmc@vger.kernel.org,
+	netdev@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	linux-pci@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	ceph-devel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Gustavo Padovan <gustavo@padovan.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jesszhan0024@gmail.com>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rodolfo Giometti <giometti@enneenne.com>,
+	Jonathan Lemon <jonathan.lemon@gmail.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Stefan Haberland <sth@linux.ibm.com>,
+	Jan Hoeppner <hoeppner@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Satish Kharat <satishkh@cisco.com>,
+	Sesidhar Baddela <sebaddel@cisco.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Xiubo Li <xiubli@redhat.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Subject: [PATCH v1 00/23] treewide: Introduce %ptS for struct timespec64 and convert users
+Date: Mon, 10 Nov 2025 19:40:19 +0100
+Message-ID: <20251110184727.666591-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e9306983-e2df-4235-a58b-e0b451380b52@oss.qualcomm.com>
-
-On Tue, Oct 28, 2025 at 11:12:23PM +0530, Krishna Chaitanya Chundru wrote:
-> 
-> On 10/28/2025 4:07 AM, Bjorn Andersson wrote:
-> > On Thu, 28 Aug 2025 13:04:21 +0530, Krishna Chaitanya Chundru wrote:
-> > > The current implementation requires iATU for every configuration
-> > > space access which increases latency & cpu utilization.
-> > > 
-> > > Designware databook 5.20a, section 3.10.10.3 says about CFG Shift Feature,
-> > > which shifts/maps the BDF (bits [31:16] of the third header DWORD, which
-> > > would be matched against the Base and Limit addresses) of the incoming
-> > > CfgRd0/CfgWr0 down to bits[27:12]of the translated address.
-> > > 
-> > > [...]
-> > Applied, thanks!
-> > 
-> > [1/5] arm64: dts: qcom: sc7280: Increase config size to 256MB for ECAM feature
-> >        commit: 03e928442d469f7d8dafc549638730647202d9ce
-> 
-> Hi Bjorn,
-> 
-> Can you revert this change, this is regression due to this series due to
-> that we have change the logic,
-
-How is that possible? This is patch 1 in the series, by definition it
-doesn't have any outstanding dependencies.
+Content-Transfer-Encoding: 8bit
 
 
-I've reverted the change.
+Here is the third part of unification time printing in the kernel.
+This time for struct timespec64. The first patch brings support
+into printf() implementation (test cases and documentation update
+included) followed by the treewide conversion of the current users.
 
-Regards,
-Bjorn
+The idea is to have one or a few biggest users included, the rest
+can be taken next release cycle on the subsystem basis, but I won't
+object if the respective maintainers already give their tags. Depending
+on the tags received it may go via dedicated subsystem or via PRINTK
+tree.
 
-> we need to update the dtsi accordingly, I will send a separate for all
-> controllers to enable this ECAM feature.
-> 
-> - Krishna Chaitanya.
-> 
-> 
-> > Best regards,
+Note, not everything was compile-tested. Kunit test has been passed, though.
+
+Andy Shevchenko (23):
+  lib/vsprintf: Add specifier for printing struct timespec64
+  ALSA: seq: Switch to use %ptSp
+  ceph: Switch to use %ptSp
+  libceph: Switch to use %ptSp
+  dma-buf: Switch to use %ptSp
+  drm/amdgpu: Switch to use %ptSp
+  drm/msm: Switch to use %ptSp
+  drm/vblank: Switch to use %ptSp
+  drm/xe: Switch to use %ptSp
+  e1000e: Switch to use %ptSp
+  igb: Switch to use %ptSp
+  ipmi: Switch to use %ptSp
+  media: av7110: Switch to use %ptSp
+  media: v4l2-ioctl: Switch to use %ptSp
+  mmc: mmc_test: Switch to use %ptSp
+  net: dsa: sja1105: Switch to use %ptSp
+  PCI: epf-test: Switch to use %ptSp
+  pps: Switch to use %ptSp
+  ptp: ocp: Switch to use %ptSp
+  s390/dasd: Switch to use %ptSp
+  scsi: fnic: Switch to use %ptS
+  scsi: snic: Switch to use %ptSp
+  tracing: Switch to use %ptSp
+
+ Documentation/core-api/printk-formats.rst     | 11 ++++-
+ drivers/char/ipmi/ipmi_si_intf.c              |  3 +-
+ drivers/char/ipmi/ipmi_ssif.c                 |  6 +--
+ drivers/dma-buf/sync_debug.c                  |  2 +-
+ .../gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c  |  3 +-
+ drivers/gpu/drm/drm_vblank.c                  |  6 +--
+ .../gpu/drm/msm/disp/msm_disp_snapshot_util.c |  3 +-
+ drivers/gpu/drm/msm/msm_gpu.c                 |  3 +-
+ drivers/gpu/drm/xe/xe_devcoredump.c           |  4 +-
+ drivers/media/v4l2-core/v4l2-ioctl.c          |  5 +-
+ drivers/mmc/core/mmc_test.c                   | 18 +++----
+ drivers/net/dsa/sja1105/sja1105_tas.c         |  8 ++--
+ drivers/net/ethernet/intel/e1000e/ptp.c       |  7 +--
+ drivers/net/ethernet/intel/igb/igb_ptp.c      |  7 +--
+ drivers/pci/endpoint/functions/pci-epf-test.c |  5 +-
+ drivers/pps/generators/pps_gen_parport.c      |  3 +-
+ drivers/pps/kapi.c                            |  3 +-
+ drivers/ptp/ptp_ocp.c                         | 15 +++---
+ drivers/s390/block/dasd.c                     |  3 +-
+ drivers/scsi/fnic/fnic_trace.c                | 46 ++++++++----------
+ drivers/scsi/snic/snic_debugfs.c              | 10 ++--
+ drivers/scsi/snic/snic_trc.c                  |  5 +-
+ drivers/staging/media/av7110/av7110.c         |  2 +-
+ fs/ceph/dir.c                                 |  5 +-
+ fs/ceph/inode.c                               | 47 ++++++-------------
+ fs/ceph/xattr.c                               |  6 +--
+ kernel/trace/trace_output.c                   |  6 +--
+ lib/tests/printf_kunit.c                      |  4 ++
+ lib/vsprintf.c                                | 25 ++++++++++
+ net/ceph/messenger_v2.c                       |  6 +--
+ sound/core/seq/seq_queue.c                    |  2 +-
+ sound/core/seq/seq_timer.c                    |  6 +--
+ 32 files changed, 131 insertions(+), 154 deletions(-)
+
+-- 
+2.50.1
+
 
