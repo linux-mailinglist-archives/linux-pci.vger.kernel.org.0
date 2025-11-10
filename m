@@ -1,257 +1,222 @@
-Return-Path: <linux-pci+bounces-40682-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40683-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7C83C4565D
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 09:41:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5095C45879
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 10:07:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 612A71888461
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 08:41:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D6003AC141
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 09:07:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C37F2FD1C1;
-	Mon, 10 Nov 2025 08:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bovRykUg"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1D4826299;
+	Mon, 10 Nov 2025 09:07:44 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413CF2FB978
-	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 08:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 899B72FD7C7;
+	Mon, 10 Nov 2025 09:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762764080; cv=none; b=pJxywQdFy/1MSovcanS8xjCBbLydR4HyqhuYpkmrnl5NnUYEBQ6/L8ZofYXNkpUOXVuxfVDlLqyGNXCNlBsbiz1NezR5GcieLoQGwrqCTiUqTY0d7ekVvPUoee1nyYcNzrU04o+/S9mgXF8ohheHrsbGP6xhy7FOBXfa4aCc9fU=
+	t=1762765664; cv=none; b=RKRk7lKnkeTE7McBQUdEYQm0OJNUBFuzT5wuvhJ+rkrCR8a+GWD1C4zOPrq8N/PBq7pLKYr6/SoBCbtcZvIS50JDL8fpUtSVnGmQp7EWzS6G6q2kzF6eW2wdUn1Dl4wDCjmwLOpjYN748z1kRRwEhIRrtHCspcA0P1sTx87OFTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762764080; c=relaxed/simple;
-	bh=jgIEC3io5JNbRWacuU/h993h9DriZXR9D2I9x9lfLPw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mHd3DvPZzu+orwdUbMij5FZpvpv1L/anLRCVAE21fvuDbT5xBxDUMzR3JDtQ5VgUFW9iEk8NC+2n88a3UzkCfjw4g7Khaq0/8QGrFgEkyuaiKeyyoAlsyUOhSUMZP5khWjGy8826FtzB9Qwyp6+7JFVTcmDhh8JUERmqNaDG0KY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bovRykUg; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6418738efa0so1295778a12.1
-        for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 00:41:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762764074; x=1763368874; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6P0y/Q79WY1s2WSJKAVn4OYeud7z6vgKLms8t7x+yjg=;
-        b=bovRykUgnAqiB+pop1jaF80oFF1N6ziudOzx1wnsVLvbzKpbYojkvpzZh8IIL76Lzy
-         JKIeWRw2jk89TNZA4Hy7E+onx8k4SaETj0gYExY3XBhMEvzOOiDaGJ+rpDFGHte3EEXT
-         IitteGXtzGEQ21kWXJPHvy6VAoODnQx56mwBfwT9g6scYM/4wI9uBYQepbpYDfsQdZtF
-         FkKf7UmzNtdzjTn4fDJNRNs2l2Dj40v8iCuypd8tLTXQhKhzzBkAvi0qQvcxOPf04MsU
-         U0J6IBxLLpMTuHkEyhkH9MXNDM/ZiusBvKCI+uIHQa8oB0sbk2eg508Mpvr6bKsvxIjz
-         QGHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762764074; x=1763368874;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6P0y/Q79WY1s2WSJKAVn4OYeud7z6vgKLms8t7x+yjg=;
-        b=i+daOoEksQPleuzWGAS+rq0R/0kzCxtHupLjBptEc6qBQOSsGlZLqLvFSFMywkeU4+
-         oszQk4+9RwO1TnC6sZ/fyZT0UCDuOyAI99AW6BRaZ9OezKsNX/VHg8dcL2Bm7j0Koz2W
-         oiwLRcJnVnUJb9ww2lnXHQz+KUPMJPb9TiObkJqFC2R6VtqVPnnaQ4PJ2EG+5FhPfHFS
-         L4x0TjrOK3DabKCR77YH9x8o4bZSvsSg1WfbtP9E6KWLLZ2Rz1qbHLIFCgjKRXp5706y
-         8HE9vvf/wltg9ikrhI48vKYYYweC5/jS4UkI+805gtttHr84ZON903FZPRUgtgRD5E7f
-         rejA==
-X-Forwarded-Encrypted: i=1; AJvYcCUddd+iGBhrEJEHX+YVRiotAC6r0nG53vq6bEO9OLC7yKNwzBB53bS/kvZ+xyp1jsGh0QnG0ML5hi0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykEbR5S6iar/Ke9OiT/wHJ0wIiAYfxdZvFonDdA/HhSBAINnd1
-	EQkbKUTItq8ju41Rwi+Usre2Sq+3vJuwtThNVV8WeWarZwOdNUTgfeFHZhb2KD48sUHGB5Itsmf
-	mP0IrKyi0BsHChbtidgAdUjOOIacHWA8=
-X-Gm-Gg: ASbGncuJGL+YxNhEe1jicfD/EgZaG44sMaJ80cTpJ15EkNdBrJrORmrSbd/wLYt28mN
-	MsJkItO31qIjF5EB+6wSidme303JED+lxKxdPIX4HxfM3gv/2x3NuxcXFLBjVWOy8t4Wi0VQ1TO
-	WmY4QfML4OaiCBwBCa4T+dBKRnRsysHOvd0rr+fxcRkQahB3UJeB/Ony+pCtH+RZZu797ed+Rw/
-	3F6osIafVW4+DQFQTwuFu2AGoxAKFRe1/hrUxEYk9kWF9PCad6D00DtxwbfAqspy2o9GN7FP+25
-	JIRe
-X-Google-Smtp-Source: AGHT+IESNTw6qjYvvZVQIviNrko/W/ThLKfPP6Zlh7jZBNCmaaRmiw1Z2ff+JZpJCCEs3KNCeqlEMNKff6nGkITYWsM=
-X-Received: by 2002:a05:6402:51ce:b0:641:72a8:c921 with SMTP id
- 4fb4d7f45d1cf-64172a8d10emr3999634a12.23.1762764073934; Mon, 10 Nov 2025
- 00:41:13 -0800 (PST)
+	s=arc-20240116; t=1762765664; c=relaxed/simple;
+	bh=ounb2rgNRnZ+C0nw1vRgXJqll0VcTSlYTSuvKXABGsE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oA3x4C6l7DNI2T+/Tg/XUTWiCwBzz3vsO4kpS991FOZYTW4R3etsEzu8C1F2kfY3NNtuEQqXfb3E9pb1RezaN/sxwmuOq2f0txlJIPNYiUGvUbdaGlqY2lzALfRUqomx3L3ag9W/6R1BcYUih6eS/xnNidupJvVTdVVu5bxb4FM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0004758DT.eswin.cn (unknown [10.12.96.83])
+	by app1 (Coremail) with SMTP id TAJkCgDX0GhHqxFpzchyAA--.16819S2;
+	Mon, 10 Nov 2025 17:07:21 +0800 (CST)
+From: zhangsenchuan@eswincomputing.com
+To: bhelgaas@google.com,
+	mani@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	robh@kernel.org,
+	p.zabel@pengutronix.de,
+	jingoohan1@gmail.com,
+	gustavo.pimentel@synopsys.com,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	christian.bruel@foss.st.com,
+	mayank.rana@oss.qualcomm.com,
+	shradha.t@samsung.com,
+	krishna.chundru@oss.qualcomm.com,
+	thippeswamy.havalige@amd.com,
+	inochiama@gmail.com
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	pinkesh.vaghela@einfochips.com,
+	ouyanghui@eswincomputing.com,
+	Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+Subject: [PATCH v5 0/2] Add driver support for Eswin EIC7700 SoC PCIe controller
+Date: Mon, 10 Nov 2025 17:07:15 +0800
+Message-ID: <20251110090716.1392-1-zhangsenchuan@eswincomputing.com>
+X-Mailer: git-send-email 2.49.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251029-rockchip-pcie-system-suspend-v4-0-ce2e1b0692d2@collabora.com>
- <cf6zumlp4iiltglu7bbrpdeysaznrkyvlemwl4lxwkfjkgux7a@wl37bxilsprx>
- <cbvcjgcd7saxj42ifgqn3l6mwpgenlhbr4zuf5ibqbtj6rmzqh@yuc7flbwyi2y> <CANAwSgSvtc57kh-VJewk5=_MvfL3KVxNFU8C+tGh4iqJhnEVtw@mail.gmail.com>
-In-Reply-To: <CANAwSgSvtc57kh-VJewk5=_MvfL3KVxNFU8C+tGh4iqJhnEVtw@mail.gmail.com>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Mon, 10 Nov 2025 14:10:56 +0530
-X-Gm-Features: AWmQ_bmU-RlL1-d4qH4b9tmN5UWK_GZG4fHWCZvQROFJ3et4gEEIr6Y6zbTvTnI
-Message-ID: <CANAwSgTj0JzFN2CHOSG=X_gx5KttP-tZeLaC5uYZYhcPheP_Vg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/9] PCI: dw-rockchip: add system suspend support
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Jingoo Han <jingoohan1@gmail.com>, 
-	Shawn Lin <shawn.lin@rock-chips.com>, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgDX0GhHqxFpzchyAA--.16819S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3Wr1xZr4xCFy8KryxXry7KFg_yoWxtr17pa
+	97KFWjkrn8Gr4fXrs7Aa1F9F4fXFsxAFy5CwnFg347ZanF93s7tryvkFy3ta47CrZ3ZrWY
+	va12qanYkFn8ArDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r4a6rW5MxkIecxEwVCm-wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRkwIhUUUUU=
+X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/
 
-Hi All,
+From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
 
-On Fri, 7 Nov 2025 at 00:31, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> Hi Sebastian,
->
-> On Tue, 4 Nov 2025 at 00:29, Sebastian Reichel
-> <sebastian.reichel@collabora.com> wrote:
-> >
-> > Hi,
-> >
-> > On Sat, Nov 01, 2025 at 07:29:41PM +0530, Manivannan Sadhasivam wrote:
-> > > On Wed, Oct 29, 2025 at 06:56:39PM +0100, Sebastian Reichel wrote:
-> > > > I've recently been working on fixing up at least basic system suspe=
-nd
-> > > > support on the Rockchip RK3576 platform. Currently the biggest open
-> > > > issue is missing support in the PCIe driver. This series is a follo=
-w-up
-> > > > for Shawn Lin's series with feedback from Niklas Cassel and Manivan=
-nan
-> > > > Sadhasivam being handled as well as some of my own changes fixing u=
-p
-> > > > things I noticed.
-> > > >
-> > > > In opposite to Shawn Lin I did not test with different peripherals =
-as my
-> > > > main goal is getting basic suspend to ram working in the first plac=
-e.
-> > >
-> > > Wouldn't it break users who have connected endpoint devices and suspe=
-nd their
-> > > platform? I don't want to have an untested feature that could potenti=
-ally cause
-> > > regressions, just for the sake of getting basic system PM.
-> > >
-> > > But if your goal is to just add basic system PM operations for CI
-> > > testing, then I would suggest you to do something minimal in the
-> > > suspend/resume path that don't disrupt the operation of a device.
-> > >
-> > > But this also should be tested with some devices for sanity.
-> >
-> > My goal is proper system PM support, but I would like to go step by
-> > step. Right now system suspend on the Rockchip RK3576 EVB just hangs
-> > the board and it has to be power cycled afterwards. In parallel to
-> > this series I've send a bunch of fixes to get it working. It surely
-> > isn't perfect, but I fear things regressing again in other areas while
-> > the complex PCIe system sleep is being worked on - simply blocking syst=
-em
-> > suspend is not very helpful, since it effectively hides suspend problem=
-s.
-> >
-> As per my understanding, the current DTS configuration is missing definit=
-ions
-> for critical PCIe power management GPIOs (clkreq-gpios, perst-gpios, wake=
--gpios)
->
-> clkreq-gpios, such as PCIE30x1_0_CLKREQn_M1_L (not sure if it is used ?)
-> perst-gpios such as PCIE30x1_0_PERSTn_M1_L
-> wake-gpios, such as PCIE30x1_0_WAKEn_M1_L.
->
-As per the TRM 11.5 Interface Description
-Signal Name     Direction   IO Attribute             Description
-------------    ---------   -----------------------
-------------------------------------------------------------
-BUTTON_RSTN     I             Pull-down                    External
-reset button input; pulled low to initiate reset
-WAKEN                   I/O        Open-drain, pull-up      Wake
-signal; enables device or host to signal wake events
-PERSTN                 I/O         Pull-down                     PCIe
-reset signal; asserted low to reset endpoint or root complex
-CLKREQN              I/O         Open-drain, pull-up      Clock
-request signal; used for dynamic clock management
+Changes in v5:
+- Updates: eswin,eic7700-pcie.yaml
+  - Modify reg-names: update mgmt to elbi.
+  - Modify clock-names: update pclk to phy_reg.
+  - Modify reset-names: update powerup to pwr.
+  - Remove powerup modify in "snps,dw-pcie-common.yaml" file.
 
-See the following commit 4294e3211178 ("arm64: dts: rockchip: Split up
-RK3588's PCIe pinctrls")
+- Updates: pcie-eic7700.c
+  - Update the driver submission comment, mention EIC7700 in the
+    "config PCIE_EIC7700" and in the driver title.
+  - Update some comments, for examples: "s/PME_TURN_OFF/PME_Turn_Off/",
+    "s/INTX/INx/", "s/PERST/PERST#/", "s/perst/PERST#/", "s/id/ID/".
+  - Update "struct *_pcie" name and function name, add the eic7700 prefix.
+  - Use PCIEELBI_CTRL0_DEV_TYPE macro and update comment, use FIELD_PREP.
+  - Add eic7700_pcie_data pointer in struct eic7700_pcie.
+  - Update .deinit callback function name and removed the dw_pcie_link_up
+    judgment, add pci_root_ports_have_device function judgment.
+  - Remove devm_platform_ioremap_resource_byname function get mgmt, use
+    platform_get_resource_byname function get elbi in "pcie-designware.c".
+  - Update of_reset_control_get to of_reset_control_get_exclusive, use
+    devm_reset_control_bulk_get_exclusive function get resets, update use
+    reset_control_bulk_assert/reset_control_bulk_deassert function.
+- Link to V4: https://lore.kernel.org/all/20251030082900.1304-1-zhangsenchuan@eswincomputing.com/
+- Link to https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/tree/?h=controller/dwc
 
-    These pinctrls manage the low-speed PCIe signals:
-    - CLKREQ#: An output on the RK3588 (both RC or EP modes), used to
-      request that external clock-generation circuitry provide a clock.
-    - PERST#: An input on the RK3588 in EP mode, used to detect a reset
-      signal from the RC. In RC mode, the hardware does not use this signal=
-:
-      Linux itself generates it by putting the pin in GPIO mode.
-    - WAKE#: In EP mode, this is an output; in RC mode, this is an input.
+Changes in v4:
+- Updates: eswin,eic7700-pcie.yaml
+  - Use snps,dw-pcie.yaml instead pci-host-bridge.yaml.
 
-    Each of these signals serves a distinct purpose, and more importantly,
-    PERST# should not be muxed when the RK3588 is in the RC role. Bundling
-    them together in pinctrl groups prevents proper use: indeed, almost non=
-e
-    of the current board-specific .dts files make any use of them.
-    (Exception: Rock 5A recently had a patch land that misuses _pins; this
-     patch corrects that.)
+- Updates: snps,dw-pcie-common.yaml
+  - Add powerup reset property, our powerup property is somewhat different
+    from the general attributes defined by Synopsys DWC binding.
 
-    However, on some RK3588 boards, the PCIe 3 controller will indefinitely
-    stall the boot if CLKREQ# is not muxed (details in the next patch).
-    This patch unbundles the signals to allow them to be used.
+- Updates: pcie-eic7700.c
+  - Update the driver submission comment.
+  - Alphabetize so the menuconfig entries remain sorted by vendor.
+  - Update use PCI_CAP_LIST_NEXT_MASK macro.
+  - Use readl_poll_timeout function.
+  - Update eswin_pcie_suspend/eswin_pcie_resume name to
+    eswin_pcie_suspend_noirq/eswin_pcie_resume_noirq.
+  - PM use dw_pcie_suspend_noirq and dw_pcie_resume_noirq function and add
+    eswin_pcie_get_ltssm, eswin_pcie_pme_turn_off, eswin_pcie_host_exit
+    function adapt to PM.
+- Link to V3: https://lore.kernel.org/linux-pci/20250923120946.1218-1-zhangsenchuan@eswincomputing.com/
 
-So we can use these pinctrl to perform different tasks
-like PERST# to reset and WAKE# to wake the PCIE in suspend / resume state.
+Changes in v3:
+- Updates: eswin,eic7700-pcie.yaml
+  - Based on the last patch yaml file, devicetree separates the root port
+    node, changing it significantly. Therefore, "Reviewed-by: Krzysztof
+    Kozlowski <krzysztof.kozlowski@linaro.org>" is not added.
+  - Clock and reset drivers are under review. In yaml, macro definitions
+    used in clock and reset can only be replaced by constant values.
+  - Move the num-lanes and perst resets to the PCIe Root Port node, make
+    it easier to support multiple Root Ports in future versions of the
+    hardware.
+  - Update the num-lanes attribute and modify define num-lanes as decimal.
+  - Optimize the ranges attribute and clear the relocatable flag (bit 31)
+    for any regions.
+  - Update comment: inte~inth are actual interrupts and these names align
+    with the interrupt names in the hardware IP, inte~inth interrupts
+    corresponds to Deassert_INTA~Deassert_INTD.
+  - Add Signed-off-by: Yanghui Ou <ouyanghui@eswincomputing.com>.
 
-Is this a good way to split the rk368 PCIe pinctrl into separate components=
-?
+- Updates: pcie-eic7700.c
+  - Update the submission comment and add DWC IP revision, data rate, lane
+    information.
+  - Optimize the "config PCIE_EIC7700" configuration.
+  - Optimize the macro definition, add bitfield definition for the mask,
+    and remove redundant comments. optimize comments, make use of 80
+    columns for comments.
+  - Use the dw_pcie_find_capability function to obtain the offset by
+    traversing the function list.
+  - Remove the sets MPS code and configure it by PCI core.
+  - Alphabetize so the menuconfig entries remain sorted by vendor.
+  - Configure ESWIN VID:DID for Root Port as the default values are
+	invalid,and remove the redundant lane config.
+  - Use reverse Xmas order for all local variables in this driver
+  - Hardware doesn't support MSI-X but it advertises MSI-X capability, set
+    a flag and clear it conditionally.
+  - Resets are all necessary, Update the interface function for resets.
+  - Since driver does not depend on any parent to power on any resource,
+    the pm runtime related functions are removed.
+  - Remove "eswin_pcie_shutdown" function, our comment on the shutdown
+    function is incorrect. Moreover, when the host powers reboots,it will
+    enter the shutdown function, we are using host reset and do not need
+    to assert perst. Therefore, the shutdown function is not necessary.
+  - remove "eswin_pcie_remove", because it is not safe to remove it during
+    runtime, and this driver has been modified to builtin_platform_driver
+    and does not support hot plugging, therefore, the remove function is
+    not needed.
+  - The Suspend function adds link state judgment, and for controllers
+    with active devices, resources cannot be turned off.
+  - Add Signed-off-by: Yanghui Ou <ouyanghui@eswincomputing.com>.
+- Link to V2: https://lore.kernel.org/linux-pci/20250829082021.49-1-zhangsenchuan@eswincomputing.com/
 
-Here is the example user wake gpio.
+Changes in v2:
+- Updates: eswin,eic7700-pcie.yaml
+  - Optimize the naming of "clock-names" and "reset-names".
+  - Add a reference to "$ref: /schemas/pci/pci-host-bridge.yaml#".
+    (The name of the reset attribute in the "snps,dw-pcie-common.yaml"
+    file is different from our reset attribute and "snps,dw-pcie.yaml"
+    file cannot be directly referenced)
+  - Follow DTS coding style to optimize yaml attributes.
+  - Remove status = "disabled" from yaml.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
-b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
-index 19a08f7794e6..13a7aa3ec1fc 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
-@@ -359,9 +359,10 @@ rgmii_phy1: ethernet-phy@1 {
- };
+- Updates: pcie-eic7700.c
+  - Remove unnecessary imported header files.
+  - Use dev_err instead of pr_err and remove the WARN_ON function.
+  - The eswin_evb_socket_power_on function is removed and not supported.
+  - The eswin_pcie_remove function is placed after the probe function.
+  - Optimize function alignment.
+  - Manage the clock using the devm_clk_bulk_get_all_enabled function.
+  - Handle the release of resources after the dw_pcie_host_init function
+    call fails.
+  - Remove the dev_dbg function and remove __exit_p.
+  - Add support for the system pm function.
+- Link to V1: https://lore.kernel.org/all/20250516094057.1300-1-zhangsenchuan@eswincomputing.com/
 
- &pcie2x1l2 {
--       pinctrl-0 =3D <&pcie2_reset>, <&pcie20x1m0_clkreqn>, <&pcie20x1m0_w=
-aken>;
-+       pinctrl-0 =3D <&pcie2_reset>, <&pcie20x1m0_clkreqn>, <&pcie2wakeup>=
-;
-        pinctrl-names =3D "default";
-        reset-gpios =3D <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>;
-+       wakeup-gpio =3D <&gpio3 RK_PD0 GPIO_ACTIVE_HIGH>;
-        vpcie3v3-supply =3D <&vcc3v3_wf>;
-        status =3D "okay";
- };
+Senchuan Zhang (2):
+  dt-bindings: PCI: eic7700: Add Eswin PCIe host controller
+  PCI: eic7700: Add Eswin PCIe host controller driver
 
-I haven=E2=80=99t come across a working example for this in RC mode.
-Is there any confirmation that this approach functions as expected?
+ .../bindings/pci/eswin,eic7700-pcie.yaml      | 167 +++++++
+ drivers/pci/controller/dwc/Kconfig            |  11 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-eic7700.c     | 420 ++++++++++++++++++
+ 4 files changed, 599 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/eswin,eic7700-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-eic7700.c
 
+--
+2.25.1
 
-> However, the RK3588 TRM indicates that these power management functions
-> can be controlled programmatically using specific memory-mapped registers=
-:
->
-> The PCIE_CLIENT_POWER_CON register at 0x002C provides comprehensive
-> power management controls, including link-state management, wake-up
-> event handling,
-> and clock management.
->
-> In PHY GRF, we have the PCIe3PHY_GRF_PHY0_LN0_CON0 register at 0x1000 all=
-ows
-> direct control over the PHY's power state (P-states like P1, P2),
-> enabling transitions into
-> deep suspend (L2/L3) via register writes
-> clkreq_n Clock request for lane X. This is a side-band signal that a
-> PIPE 4.2 controller needs
-> to enter and exit P1.CPM, P1.1, and P1.2 power states.
->
-> My thought is that using rockchip_pcie_phy_deinit() in the suspend
-> routine and rockchip_pcie_phy_init() in the resume routine are
-> incorrect; these functions
-> likely perform full resets or power cuts rather than managed power
-> state transitions,
-> thus disrupting the desired suspended state of the PCIe link
->
-> I tried a few things on my own, but I am not moving forward.
->
-Thanks
--Anand
 
