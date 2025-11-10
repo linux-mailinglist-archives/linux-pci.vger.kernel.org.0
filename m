@@ -1,82 +1,44 @@
-Return-Path: <linux-pci+bounces-40715-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40716-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD998C4788B
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 16:28:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3960BC478C0
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 16:30:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DBEA14EFE7A
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 15:20:29 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5C8B24F0984
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 15:22:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F50A23D2B1;
-	Mon, 10 Nov 2025 15:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="aEij+ROR"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE4AB18A956;
+	Mon, 10 Nov 2025 15:22:22 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bg5.exmail.qq.com (bg5.exmail.qq.com [43.154.197.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3697118A956
-	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 15:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12195248176;
+	Mon, 10 Nov 2025 15:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.154.197.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762788019; cv=none; b=CRCfQvRkzUts95OBtibvsZHrEJTmzJ5vJqkLbPdLrnVmOfNL3tU2EcV9RM/V/sSDyv6yCV0QOvjHDrXjlpUR8IEB3WDkA/Z5qQZQj+YKdN+wQ41B8LKEUPeshIPdnTJSz1xuacP+0mx6i7rlJZixwvdDkupThTmkH5ArdDeHEFI=
+	t=1762788142; cv=none; b=AV5PN1yvWzIDfOnwTQkK5jQpUYAplxOiQ45Z477cESNtRrI1G0hPUg7sGvB0GHoIFOQ+KbGX99SHTHwJ/N5OspSc2jeSdsFVYLVJWW380S3WRmO3vjV7DL94l7W3IgT8ukJJ30sFpmT/rpFBz3i6rBnEO80zsXlntksPWbV33eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762788019; c=relaxed/simple;
-	bh=sO2EwoD/iYNjfdcI7NveTHw7NYQaesuq9uoAsC4fvXY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=kVpTWK6qsGKqBh4UuMY0TcTnrb0W6iorF7UTYg0oQqBZh7u1MqwVeyDrbRw/Oi/xaT2ONaoY9/YJbdiQ6u0fd+HvzUqEHI6kTet8X+EUZM7Evn8iu1ruvdxDxLsi1sdjvX59Wn6cNMpyKHI8PMUAS5uwkbsnAe2tv5O34gL1Zpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=aEij+ROR; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-43376624a8fso17941505ab.0
-        for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 07:20:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1762788016; x=1763392816; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=wHqCJdsR7z6UGezYu2PLRy2EX3z1OohmVvws0HQYrFQ=;
-        b=aEij+RORaRMFW8ONPGQ9MWQ2SIC99rnZNqHsx0buzMifST7WGMnZpAxk9MePnIjJAm
-         z0Rk4mmyamAHdCvYKqA8ylg2mfS4aKsJ/rwSfqXDuQ0L1cPLsKVA43GTTTfSCR6xpqbR
-         t1HLDL6Y2SkQGWyktQeaC0YOwa84kAizkyOKAsNGvicI9iaH4urPRZrVo8+FsCIDfTiO
-         1P38R0DXg/HLhF6roXQbQxV/FuNuIaUEBlPrxshNCjcNbih4K1hSnyAwHuEolAMFRcqY
-         rF+bFBf/XV4kL+gxrJKUuUgG59wW59TccqLxz0SO+BqLpBxD2G1LCVgI68AwKcn1YdUB
-         bFyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762788016; x=1763392816;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wHqCJdsR7z6UGezYu2PLRy2EX3z1OohmVvws0HQYrFQ=;
-        b=OChyycHrTWGWia6mpNyAg8fhIB55LF3XpOk51iwNAbFB5C3tyFLowHbmvBOhbl+qnY
-         jgmvmwBFnHNXhjI1Jvsn5GH0prSW/4AgSnW/M3kOZfXfrVXMjIgItZ8eukj2/Db1/cPE
-         63Hf2tSj3vN7BWmRwnNjh7rxQcatI6hJvIDHXSVwezfFbDekrJRfKGFDVKOaYUX4Z71M
-         8xQVwJ4mONouDdeTyU5y19jFzxYFFVyLLkz9q7bTTn9jzMEaZ+HN0BaVeQGc5Z7N/BZD
-         E299ro8LlCGvjDE4IIzBIP97Ha8MNevp6zv/j/62lpsA75yHrvj1dG6t9J052YaO15wz
-         TekQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWdL890lF0NYChrCrcz2CPWECfAjSujjEfCCFwR9uW7TV7sSUGRgm7p883zXYY76RBW3awsU5jRQuM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvF6pJHXLhJCk/4uubuOs9Ul9Ls54XRqs+Kdn/tFMofO4dmRSS
-	PvhhHbysnuiV3CBk1MhIQbKddM+pkhWd+MIMBGle7Jq/h3o8p+eXsssQgL6fPidD0LY=
-X-Gm-Gg: ASbGncsK85Bg+feJO6gb+16YoqHpNRsxyP0iBrvWW27BzGtDwmg/d0CPU/dQph7usVI
-	7boYo1q7Co81EDP9UhAjHqwGMx2slo4ms/1IhfF+4GC+ngENHMdfw8/hKr9OkOxvY8VPz4d4oH/
-	KPJMTaO9qRv8ABjo7tLCSVnoW8YuHT9xHGcHoYwUoEkq56dR/ISXzhDkyQq+iajmu5MZD15DpMc
-	I+h3waFSDsLObrrLOf7zqGkF54Bq6j5mTFBw10+TtBOH3pBZoKXuXV5wylguJ5ukBkl2X1smeMc
-	qTKyNzeporl5Ym3s1uN3WwSWmLHFg7ypc3UdQVVapofZilYhxhWp2yA6Q7w5ibBul8OwyGGCBao
-	0ZlMZv7aCcJP2G+ghWBSO6DjVWn0YRRTPjgSlzi7Gqcuw9CHE/35IvlB8AdW0LsjBeP1ZQIXAYi
-	WrbeWnOxW3dRlSw/2Lu/KsKMJbdM6lYgJ8WrX1uRo=
-X-Google-Smtp-Source: AGHT+IEbu7UkRnaq1HAZF7KJE8mC7YX4IT4qsm04tHRZF/RRVkDmdBo8SVYWqOjog8FiLYEn3hk8pw==
-X-Received: by 2002:a05:6e02:1aa2:b0:433:3034:e88 with SMTP id e9e14a558f8ab-43367e48c8bmr107760915ab.21.1762788016218;
-        Mon, 10 Nov 2025 07:20:16 -0800 (PST)
-Received: from [172.22.22.28] (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-4334f4f5b90sm56357735ab.33.2025.11.10.07.20.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Nov 2025 07:20:15 -0800 (PST)
-Message-ID: <66ab3a48-5d5a-47c7-b8eb-b477fd987314@riscstar.com>
-Date: Mon, 10 Nov 2025 09:20:13 -0600
+	s=arc-20240116; t=1762788142; c=relaxed/simple;
+	bh=tniiazd6hJS/d6UPRFeXlFLHzPXuww9Z91yP+4dSifc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q0aMxrNaI20UjPkBFObdBAXvlrd/1g40jNaAnqlQkHSWw0eVz5gU3wE7SN5ytSST//6k7ENg0+vvZMFxxR07SxKnO0KmtauX1ISHz8Uz2b+m7wCHCReZ53lgSXGDQnKtB/n5P5p2nfpgGXKPPfO+6KVjIReve076mtOMLfnr6iU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=43.154.197.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: zesmtpip4t1762788085t27e37098
+X-QQ-Originating-IP: js3e0qfumeGjfavwQtgcJo4DX3v2AKIgEpfZkT7Tm78=
+Received: from [IPV6:240f:10b:7440:1:64e0:6ba: ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 10 Nov 2025 23:21:21 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 6773966002148824605
+Message-ID: <7A613E8E5A3767C6+84d31db2-074e-49aa-8e82-bfb78632d2fa@radxa.com>
+Date: Tue, 11 Nov 2025 00:21:20 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -84,164 +46,271 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/7] Introduce SpacemiT K1 PCIe phy and host controller
-To: dlan@gentoo.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
- bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
- mani@kernel.org, ziyao@disroot.org, johannes@erdfelt.com,
- mayank.rana@oss.qualcomm.com, qiang.yu@oss.qualcomm.com,
- shradha.t@samsung.com, inochiama@gmail.com, pjw@kernel.org,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- p.zabel@pengutronix.de, christian.bruel@foss.st.com,
- thippeswamy.havalige@amd.com, krishna.chundru@oss.qualcomm.com,
- guodong@riscstar.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-phy@lists.infradead.org, spacemit@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20251107191557.1827677-1-elder@riscstar.com>
- <aQ8kqIljwGZfkF8M@aurel32.net>
+Subject: Re: [RESEND] Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
+To: Niklas Cassel <cassel@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>,
+ mani@kernel.org
+Cc: Damien Le Moal <dlemoal@kernel.org>, Anand Moon <linux.amoon@gmail.com>,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Dragan Simic <dsimic@manjaro.org>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>
+References: <aQ9FWEuW47L8YOxC@ryzen>
+ <55EB0E5F655F3AFC+136b89fd-98d4-42af-a99d-a0bb05cc93f3@radxa.com>
+ <aRCI5kG16_1erMME@ryzen>
+ <F8B2B6FA2884D69A+b7da13f2-0ffb-4308-b1ba-0549bc461be8@radxa.com>
+ <780a4209-f89f-43a9-9364-331d3b77e61e@rock-chips.com>
+ <4487DA40249CC821+19232169-a096-4737-bc6a-5cec9592d65f@radxa.com>
+ <363d6b4d-c999-43d4-866e-880ef7d0dec3@rock-chips.com>
+ <0C31787C387488ED+fd39bfe6-0844-4a87-bf48-675dd6d6a2df@radxa.com>
+ <dc932773-af5b-4af7-a0d0-8cc72dfbd3c7@rock-chips.com>
+ <aRHb4S40a7ZUDop1@ryzen> <aRHdeVCY3rRmxe80@ryzen>
 Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <aQ8kqIljwGZfkF8M@aurel32.net>
+From: FUKAUMI Naoki <naoki@radxa.com>
+In-Reply-To: <aRHdeVCY3rRmxe80@ryzen>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:radxa.com:qybglogicsvrsz:qybglogicsvrsz4b-0
+X-QQ-XMAILINFO: MlIcwAHh6GgKadjCK3/b8Wp33BXceK8eK2+9V3nrr8yNKDwfg/hupuxU
+	kjPqafGduz1k8vymBX2q4C4jNo5q2kqVojsDfmrdUlIJJioUPu1eIBmK1oAzAyikGuMtboA
+	UDutHmw/O2pRVZ9d9uiEGGgQ7jhPZYrlUG6NNvMGk8CXLlMXQV66IXMTxyPkbq7ddAK+r9K
+	nMRzkdbe9jGAFaLQr7xQFHCEWdlMKYhCBuThCjUyxSJzWbIr4RHV+OHetnk0aVVFNekx/y9
+	am2/FVcn4HS+hBZ7DIqzboR1jGo7Dp8wGk2RpKoOWkARKTowoCf1tMuqiLaIM/N+geNc4O7
+	2j3UL2TQ4ldd9GJrraRe3oYoX+UNp9mki6gmR3xBHNeGz03lNxJmKHHqi554PCLtCMOrUWo
+	d7UrBzYCY7HrWXwEHbAHbnPtwiPM94Ur6yOqjyS/JMZFh7tmn9JNw+jzgiDavaNP/ZBlOH4
+	WVD/Bj+HK5+nQw+EmbPsEM6ADvrpOXmQu5VUsvIb2ekeU1ulK9mFaIBBw8Rl5Lp9pXO/XhN
+	wzE/0woSw9Dzrh4E9vu23pGFnRnTdPLLC9Qc5f3mmxNWY7hYp9Odc/NtCSCdG3G4uKMDeIm
+	csWeGOjbiNtILAYTtN+DLn/NKRL6O6AbMhXirMFVT4teeauczQMtUQjW+E2+mhXeRR/Mzna
+	6uZo99kMsnyk95c0+e1tY67BNUq55KKxc12PRYg+k/arykHD8whNPerwrMLyk1/nlGnLPIM
+	STDG5eikybIF2MWRcBC7+jxz2WRqkCqktJBG/NerNOuH8jPrYTDoTyJ/f4ImVqnwdMjXBHX
+	SXrD/3Gqv8kPvA2bwIAqf/w8RGzGBVxmep+5CE2qRU8n9lKJr42XO2FrOEwcO6B4sGK2ByE
+	V3TZYSV5o5Adj/st/wL1mgIO8Z+t0aBELowVHMSzNnpYfEHYrpIlBgIlC9rpDRM2LDVA2wW
+	keL0C0AN2nPvQ/6xo8ZEPj7IM4J+XKUme8sA1Mj9lsXuSWQ==
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-On 11/8/25 5:08 AM, Aurelien Jarno wrote:
-> Hi Alex,
-> 
-> Thanks for this new version.
-> 
-> On 2025-11-07 13:15, Alex Elder wrote:
->> This series introduces a PHY driver and a PCIe driver to support PCIe
->> on the SpacemiT K1 SoC.  The PCIe implementation is derived from a
->> Synopsys DesignWare PCIe IP.  The PHY driver supports one combination
->> PCIe/USB PHY as well as two PCIe-only PHYs.  The combo PHY port uses
->> one PCIe lane, and the other two ports each have two lanes.  All PCIe
->> ports operate at 5 GT/second.
->>
->> The PCIe PHYs must be configured using a value that can only be
->> determined using the combo PHY, operating in PCIe mode.  To allow
->> that PHY to be used for USB, the needed calibration step is performed
->> by the PHY driver automatically at probe time.  Once this step is done,
->> the PHY can be used for either PCIe or USB.
->>
->> This initial version of the driver supports 32 MSIs, and does not
->> support PCI INTx interrupts.  The hardware does not support MSI-X.
->>
->> Version 5 of this series incorporates suggestions made during the
->> review of version 4.  Specific highlights are detailed below.
->>
->> Note:
->> Aurelien Jarno and Johannes Erdfelt have reported seeing ASPM errors
->> accessing NVMe drives when using earlier versions of this series.
->> The Kconfig files they used were very different from the RISC-V
->> default configuration.
->>
->> Aurelien has since reported the errors do not occur when using
->> defconfig.  Johannes has not reported back about this.
-> 
-> Unfortunately, while it is true with v4, this is not the case with v5
-> anymore :(
+Hi Shawn, Mani, Niklas,
 
-That's too bad, but thank you for reporting it.
+I'm testing your patches on ROCK 5A/5C, but the behavior is 
+inconsistent. Sometimes it works, sometimes it doesn't, and sometimes I 
+get an oops. I'm a bit confused, so I'll try again tomorrow.
 
-> Fundamentally in the generic designware driver, post_init (which is used
-> to disable L1 support on the controller side) is called after starting
-> the link. The comparison of the capabilities is done in
-> pcie_aspm_cap_init when the link is up, which happens a tiny bit after
-> starting it.
-> 
-> In practice with v4, the link is started, ASPM L1 is disabled and the
-> link becomes up. With v5, the move of the code getting and enabling the
-> regulator changed the timing, and ASPM L1 is now disabled on the
-> controller 2-3 ms after the link is up, which is too late.
+BTW, do you have any idea about this oops?
 
-Yes in v4, we relied on the root port driver to enable the
-regulator, but (on my system anyway) that happened too late,
-*after* the PCIe controller driver held PERST# asserted for
-100 msec.  PERST# is not supposed to be de-asserted until
-power is known to be stable.  So v5 went back to having
-the controller get the regulator in k1_pcie_probe().
+[    1.680251] Unable to handle kernel NULL pointer dereference at 
+virtual address 0000000000000080
+[    1.681039] Mem abort info:
+[    1.681294]   ESR = 0x0000000096000004
+[    1.681627]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    1.682101]   SET = 0, FnV = 0
+[    1.682382]   EA = 0, S1PTW = 0
+[    1.682662]   FSC = 0x04: level 0 translation fault
+[    1.683119] Data abort info:
+[    1.683381]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[    1.683869]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[    1.684324]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[    1.684798] user pgtable: 4k pages, 48-bit VAs, pgdp=000000005630d000
+[    1.685374] [0000000000000080] pgd=0000000000000000, p4d=0000000000000000
+[    1.685983] Internal error: Oops: 0000000096000004 [#1]  SMP
+[    1.686483] Modules linked in: phy_rockchip_usbdp typec 
+phy_rockchip_naneng_combphy phy_rockchip_samsung_hdptx dwmac_rk 
+stmmac_platform stmmac pcs_xpcs rockchipdrm dw_hdmi_qp analogix_dp 
+dw_hdmi dw_mipi_dsi drm_dp_aux_bus drm_display_helper cec drm_client_lib 
+drm_dma_helper drm_kms_helper drm backlight
+[    1.688881] CPU: 0 UID: 0 PID: 171 Comm: irq/87-pcie-sys Tainted: G 
+      W           6.18.0-rc5-dirty #2 PREEMPT
+[    1.689801] Tainted: [W]=WARN
+[    1.690066] Hardware name: radxa Radxa ROCK 5C/Radxa ROCK 5C, BIOS 
+2025.10-00012-g0c3aff620204-dirty 10/01/2025
+[    1.690952] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS 
+BTYPE=--)
+[    1.691567] pc : of_pci_add_properties+0x284/0x4c4
+[    1.692000] lr : of_pci_add_properties+0x264/0x4c4
+[    1.692426] sp : ffff8000813fbbf0
+[    1.692722] x29: ffff8000813fbc40 x28: ffffcfffe906b3b8 x27: 
+ffffcfffeb95b1d0
+[    1.693358] x26: ffff000001236980 x25: ffff00007452ceac x24: 
+ffff000008844600
+[    1.693993] x23: ffff00007452ce00 x22: ffff0000073b3a00 x21: 
+ffff00000045db10
+[    1.694628] x20: ffff00000057c000 x19: 0000000000000000 x18: 
+00000000ffffffff
+[    1.695264] x17: 0000000000000000 x16: 0000000000000000 x15: 
+ffff8000813fba70
+[    1.695898] x14: ffff000000c355b8 x13: ffff000000c355b6 x12: 
+0000000000000000
+[    1.696533] x11: 00333634353d4d55 x10: 000000000000002c x9 : 
+0000000000000000
+[    1.697168] x8 : ffff00007479c800 x7 : 0000000000000000 x6 : 
+0000000000696370
+[    1.697803] x5 : 0000000000000000 x4 : 0000000000000002 x3 : 
+ffff8000813fbc20
+[    1.698439] x2 : ffffcfffeabc6ef0 x1 : ffff0000073b3a00 x0 : 
+0000000000000000
+[    1.699074] Call trace:
+[    1.699293]  of_pci_add_properties+0x284/0x4c4 (P)
+[    1.699723]  of_pci_make_dev_node+0xd8/0x150
+[    1.700109]  pci_bus_add_device+0x138/0x168
+[    1.700485]  pci_bus_add_devices+0x3c/0x88
+[    1.700853]  pci_bus_add_devices+0x68/0x88
+[    1.701220]  pci_rescan_bus+0x30/0x44
+[    1.701551]  rockchip_pcie_rc_sys_irq_thread+0xb8/0xd0
+[    1.702010]  irq_thread_fn+0x2c/0xa8
+[    1.702333]  irq_thread+0x168/0x320
+[    1.702648]  kthread+0x12c/0x204
+[    1.702941]  ret_from_fork+0x10/0x20
+[    1.703267] Code: aa1603e1 f000abc2 d2800044 913bc042 (f94040a0)
 
-I am supposed to receive the WD Blue SN570 on Wednesday, and
-when I get that I'll have a chance to try to reproduce at
-least one of these problems, and can ensure there are no
-timing-related issues like this.
+Best regards,
 
-Thank you for your continued testing and feedback about this.
+--
+FUKAUMI Naoki
+Radxa Computer (Shenzhen) Co., Ltd.
 
-					-Alex
-
-> I have added a call to pci_info to display the moment where ASPM is
-> disabled. This is without the regulator change:
+On 11/10/25 21:41, Niklas Cassel wrote:
+> On Mon, Nov 10, 2025 at 01:34:41PM +0100, Niklas Cassel wrote:
+>> @@ -672,15 +705,13 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>>   	if (!pp->use_linkup_irq)
+>>   		/* Ignore errors, the link may come up later */
+>>   		dw_pcie_wait_for_link(pci);
+>> -
+>> -	ret = pci_host_probe(bridge);
+>> -	if (ret)
+>> -		goto err_stop_link;
+>> -
+>> -	if (pp->ops->post_init)
+>> -		pp->ops->post_init(pp);
+>> -
+>> -	dwc_pcie_debugfs_init(pci, DW_PCIE_RC_TYPE);
+>> +	else
+>> +		/*
+>> +		 * For platforms with Link Up IRQ, initial scan will be done
+>> +		 * on first Link Up IRQ.
+>> +		 */
+>> +		if (dw_pcie_host_initial_scan(pp))
+>> +			goto err_stop_link;
 > 
-> [    0.386730] spacemit-k1-pcie ca400000.pcie: host bridge /soc/pcie-bus/pcie@ca400000 ranges:
-> [    0.386970] spacemit-k1-pcie ca800000.pcie: host bridge /soc/pcie-bus/pcie@ca800000 ranges:
-> [    0.387017] spacemit-k1-pcie ca800000.pcie:       IO 0x00b7002000..0x00b7101fff -> 0x0000000000
-> [    0.387047] spacemit-k1-pcie ca800000.pcie:      MEM 0x00a0000000..0x00afffffff -> 0x00a0000000
-> [    0.387062] spacemit-k1-pcie ca800000.pcie:      MEM 0x00b0000000..0x00b6ffffff -> 0x00b0000000
-> [    0.400109] spacemit-k1-pcie ca400000.pcie:       IO 0x009f002000..0x009f101fff -> 0x0000000000
-> [    0.490101] spacemit-k1-pcie ca800000.pcie: iATU: unroll T, 8 ob, 8 ib, align 4K, limit 4G
-> [    0.494195] spacemit-k1-pcie ca400000.pcie:      MEM 0x0090000000..0x009effffff -> 0x0090000000
-> [    0.850344] spacemit-k1-pcie ca400000.pcie: iATU: unroll T, 8 ob, 8 ib, align 4K, limit 4G
-> [    0.950133] spacemit-k1-pcie ca400000.pcie: PCIe Gen.1 x2 link up
-> [    1.129988] spacemit-k1-pcie ca400000.pcie: PCI host bridge to bus 0000:00
-> [    1.335482] pci_bus 0000:00: root bus resource [bus 00-ff]
-> [    1.340946] pci_bus 0000:00: root bus resource [io  0x100000-0x1fffff] (bus address [0x0000-0xfffff])
-> [    1.350181] pci_bus 0000:00: root bus resource [mem 0x90000000-0x9effffff]
-> [    1.358734] pci_bus 0000:00: resource 4 [io  0x100000-0x1fffff]
-> [    1.362033] pci_bus 0000:00: resource 5 [mem 0x90000000-0x9effffff]
-> [    1.368289] spacemit-k1-pcie ca400000.pcie: pcie_aspm_override_default_link_state
-> [    1.375967] pci 0000:00:00.0: [1e5d:3003] type 01 class 0x060400 PCIe Root Port
-> [    1.383043] pci 0000:00:00.0: BAR 0 [mem 0x00000000-0x000fffff]
-> [    1.388927] pci 0000:00:00.0: BAR 1 [mem 0x00000000-0x000fffff]
-> [    1.394826] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> [    1.400061] pci 0000:00:00.0:   bridge window [io  0x100000-0x100fff]
-> [    1.406460] pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
-> [    1.413245] pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-> [    1.421012] pci 0000:00:00.0: supports D1
-> [    1.424948] pci 0000:00:00.0: PME# supported from D0 D1 D3hot D3cold
-> [    1.432718] pci 0000:01:00.0: [1987:5015] type 00 class 0x010802 PCIe Endpoint
-> [    1.438698] pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
-> [    1.445426] pci 0000:01:00.0: 4.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s PCIe x2 link at 0000:00:00.0 (capable of 31.504 Gb/s with 8.0 GT/s PCIe x4 link)
-> [    1.464897] pci_bus 0000:01: busn_res: [bus 01-ff] end is updated to 01
+> Oops.. this condition was inverted, what I meant was:
 > 
-> And this is with the regulator change:
-> 
-> [    0.410796] spacemit-k1-pcie ca400000.pcie: host bridge /soc/pcie-bus/pcie@ca400000 ranges:
-> [    0.410836] spacemit-k1-pcie ca800000.pcie: host bridge /soc/pcie-bus/pcie@ca800000 ranges:
-> [    0.410889] spacemit-k1-pcie ca800000.pcie:       IO 0x00b7002000..0x00b7101fff -> 0x0000000000
-> [    0.410917] spacemit-k1-pcie ca800000.pcie:      MEM 0x00a0000000..0x00afffffff -> 0x00a0000000
-> [    0.410932] spacemit-k1-pcie ca800000.pcie:      MEM 0x00b0000000..0x00b6ffffff -> 0x00b0000000
-> [    0.424651] spacemit-k1-pcie ca400000.pcie:       IO 0x009f002000..0x009f101fff -> 0x0000000000
-> [    0.436446] spacemit-k1-pcie ca400000.pcie:      MEM 0x0090000000..0x009effffff -> 0x0090000000
-> [    0.513897] spacemit-k1-pcie ca800000.pcie: iATU: unroll T, 8 ob, 8 ib, align 4K, limit 4G
-> [    0.559595] spacemit-k1-pcie ca400000.pcie: iATU: unroll T, 8 ob, 8 ib, align 4K, limit 4G
-> [    0.839412] spacemit-k1-pcie ca400000.pcie: PCIe Gen.1 x2 link up
-> [    0.847078] spacemit-k1-pcie ca400000.pcie: PCI host bridge to bus 0000:00
-> [    0.857600] pci_bus 0000:00: root bus resource [bus 00-ff]
-> [    0.868702] pci_bus 0000:00: root bus resource [io  0x100000-0x1fffff] (bus address [0x0000-0xfffff])
-> [    1.146409] pci_bus 0000:00: root bus resource [mem 0x90000000-0x9effffff]
-> [    1.373742] pci 0000:00:00.0: [1e5d:3003] type 01 class 0x060400 PCIe Root Port
-> [    1.380963] pci 0000:00:00.0: BAR 0 [mem 0x00000000-0x000fffff]
-> [    1.386883] pci 0000:00:00.0: BAR 1 [mem 0x00000000-0x000fffff]
-> [    1.392808] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> [    1.395394] pci 0000:00:00.0:   bridge window [io  0x100000-0x100fff]
-> [    1.401811] pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
-> [    1.408583] pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-> [    1.416354] pci 0000:00:00.0: supports D1
-> [    1.420294] pci 0000:00:00.0: PME# supported from D0 D1 D3hot D3cold
-> [    1.428220] pci 0000:01:00.0: [1987:5015] type 00 class 0x010802 PCIe Endpoint
-> [    1.434034] pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
-> [    1.440772] pci 0000:01:00.0: 4.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s PCIe x2 link at 0000:00:00.0 (capable of 31.504 Gb/s with 8.0 GT/s PCIe x4 link)
-> [    1.463390] pci 0000:01:00.0: pcie_aspm_override_default_link_state
-> [    1.467000] pci 0000:01:00.0: ASPM: default states L1
-> [    1.472093] pci_bus 0000:01: busn_res: [bus 01-ff] end is updated to 01
-> 
-> Note how the line pcie_aspm_override_default_link_state arrives too
-> late.
-> 
-> Regards
-> Aurelien
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index e92513c5bda5..0e04c1d6d260 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -565,6 +565,39 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
+>   	return 0;
+>   }
+>   
+> +static int dw_pcie_host_initial_scan(struct dw_pcie_rp *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct pci_host_bridge *bridge = pp->bridge;
+> +	int ret;
+> +
+> +	ret = pci_host_probe(bridge);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (pp->ops->post_init)
+> +		pp->ops->post_init(pp);
+> +
+> +	dwc_pcie_debugfs_init(pci, DW_PCIE_RC_TYPE);
+> +
+> +	return 0;
+> +}
+> +
+> +void dw_pcie_handle_link_up_irq(struct dw_pcie_rp *pp)
+> +{
+> +	if (!pp->initial_linkup_irq_done) {
+> +		if (dw_pcie_host_initial_scan(pp)) {
+> +			//TODO: cleanup
+> +		}
+> +		pp->initial_linkup_irq_done = true;
+> +	} else {
+> +		/* Rescan the bus to enumerate endpoint devices */
+> +		pci_lock_rescan_remove();
+> +		pci_rescan_bus(pp->bridge->bus);
+> +		pci_unlock_rescan_remove();
+> +	}
+> +}
+> +
+>   int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>   {
+>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> @@ -669,18 +702,17 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>   	 * If there is no Link Up IRQ, we should not bypass the delay
+>   	 * because that would require users to manually rescan for devices.
+>   	 */
+> -	if (!pp->use_linkup_irq)
+> +	if (!pp->use_linkup_irq) {
+>   		/* Ignore errors, the link may come up later */
+>   		dw_pcie_wait_for_link(pci);
+>   
+> -	ret = pci_host_probe(bridge);
+> -	if (ret)
+> -		goto err_stop_link;
+> -
+> -	if (pp->ops->post_init)
+> -		pp->ops->post_init(pp);
+> -
+> -	dwc_pcie_debugfs_init(pci, DW_PCIE_RC_TYPE);
+> +		/*
+> +		 * For platforms with Link Up IRQ, initial scan will be done
+> +		 * on first Link Up IRQ.
+> +		 */
+> +		if (dw_pcie_host_initial_scan(pp))
+> +			goto err_stop_link;
+> +	}
+>   
+>   	return 0;
+>   
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index e995f692a1ec..a31bd93490dc 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -427,6 +427,7 @@ struct dw_pcie_rp {
+>   	int			msg_atu_index;
+>   	struct resource		*msg_res;
+>   	bool			use_linkup_irq;
+> +	bool			initial_linkup_irq_done;
+>   	struct pci_eq_presets	presets;
+>   	struct pci_config_window *cfg;
+>   	bool			ecam_enabled;
+> @@ -807,6 +808,7 @@ void dw_pcie_msi_init(struct dw_pcie_rp *pp);
+>   int dw_pcie_msi_host_init(struct dw_pcie_rp *pp);
+>   void dw_pcie_free_msi(struct dw_pcie_rp *pp);
+>   int dw_pcie_setup_rc(struct dw_pcie_rp *pp);
+> +void dw_pcie_handle_link_up_irq(struct dw_pcie_rp *pp);
+>   int dw_pcie_host_init(struct dw_pcie_rp *pp);
+>   void dw_pcie_host_deinit(struct dw_pcie_rp *pp);
+>   int dw_pcie_allocate_domains(struct dw_pcie_rp *pp);
+> @@ -844,6 +846,9 @@ static inline int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
+>   	return 0;
+>   }
+>   
+> +static inline void dw_pcie_handle_link_up_irq(struct dw_pcie_rp *pp)
+> +{ }
+> +
+>   static inline int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>   {
+>   	return 0;
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index 8a882dcd1e4e..042e5845bdd6 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -468,10 +468,7 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
+>   		if (rockchip_pcie_link_up(pci)) {
+>   			msleep(PCIE_RESET_CONFIG_WAIT_MS);
+>   			dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
+> -			/* Rescan the bus to enumerate endpoint devices */
+> -			pci_lock_rescan_remove();
+> -			pci_rescan_bus(pp->bridge->bus);
+> -			pci_unlock_rescan_remove();
+> +			dw_pcie_handle_link_up_irq(pp);
+>   		}
+>   	}
+>   
 > 
 
 
