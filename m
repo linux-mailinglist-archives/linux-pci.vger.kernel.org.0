@@ -1,207 +1,166 @@
-Return-Path: <linux-pci+bounces-40688-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40689-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE264C45A12
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 10:28:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F290C45DD3
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 11:16:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 218661883940
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 09:28:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFC903A3B54
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 10:15:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAF7E2FF658;
-	Mon, 10 Nov 2025 09:27:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BB193054C2;
+	Mon, 10 Nov 2025 10:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="GaomGJcZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 608F42FCC12;
-	Mon, 10 Nov 2025 09:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from mail-m19731101.qiye.163.com (mail-m19731101.qiye.163.com [220.197.31.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A100530100C;
+	Mon, 10 Nov 2025 10:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762766862; cv=none; b=bOAgTIU/MDMySWpblatcsFSis2nUyp8AVGOpIwzR+aPFsfeATZlk87LV5BzurTiw+91Gl22uNEs0qJ7PVGsn+PyD/DrUqP63tqnkXcZ2phBQKu74YYuT6PPlbsHztDre7IbBnR1SfA0NubNo7LoivbLi28HjL4PaOJWvN5meSKw=
+	t=1762769743; cv=none; b=Jqqzn7/iazDf5+m3dUveWElEFpLYaqZI/StatjokGF0yMovhr0Tj2rV4wdwM6hogaDdv2lEzSjImF8Mig20ekVdJkPDz9Uql/t5MkNWUVrLewTUtp99f0Jz7IO9oUWqNG2MMRa1OOeuE9xDPg9XUO1bYv2n1OFNr4+FiUi0zsOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762766862; c=relaxed/simple;
-	bh=lvCisinHxBohjXwi6s1rq1OKzFQ6iGsMW2qgN23WPt4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=bFOKwBSlp5WcBpHapB2tHfTiYp9lyjm78rFz/Wsu7OHcosXROGV+l+Ngwi/9tDp0GndGdua6nbrPJjS/z094uuVCn3ndpi5QswSUc1uvqkXpvK8UdHjvFixEfidndSy1zvZPu+1t5enjApa2k7XC9oWGhZh7Uky5Fh1jJQcqLAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
- ajax-webmail-app2 (Coremail) ; Mon, 10 Nov 2025 17:27:17 +0800 (GMT+08:00)
-Date: Mon, 10 Nov 2025 17:27:17 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>
-Cc: bhelgaas@google.com, mani@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	robh@kernel.org, p.zabel@pengutronix.de, jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com,
-	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
-	thippeswamy.havalige@amd.com, inochiama@gmail.com,
-	ningyu@eswincomputing.com, linmin@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com
-Subject: Re: Re: [PATCH v4 1/2] dt-bindings: PCI: EIC7700: Add Eswin PCIe
- host controller
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <20251103-gentle-precise-bloodhound-ef7136@kuoka>
-References: <20251030082900.1304-1-zhangsenchuan@eswincomputing.com>
- <20251030083057.1324-1-zhangsenchuan@eswincomputing.com>
- <20251103-gentle-precise-bloodhound-ef7136@kuoka>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1762769743; c=relaxed/simple;
+	bh=O8EVIs+xuKhjj0/Qcm4jV97y/fyO7N1TPbS+b2dkZAk=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=QpVZj8zvQNsW0z6pUuXw4SafY8HK4EATR7b+dVQMxzOlDn/va0Pvw6Ju5AOWJqdQkEIEjDIgnmJ9LnfuAt1bj7Wacz5nKgEe6wnbiK5f5WeX9qPF4/irSG/5yKX3bzdDSHqG1rG7hQDbTnNjx6dHpDVIKwWUKz1leS/YkwZEyuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=GaomGJcZ; arc=none smtp.client-ip=220.197.31.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.129] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2909a128f;
+	Mon, 10 Nov 2025 18:15:35 +0800 (GMT+08:00)
+Message-ID: <dc932773-af5b-4af7-a0d0-8cc72dfbd3c7@rock-chips.com>
+Date: Mon, 10 Nov 2025 18:15:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <5139568.0.19a6d1757cb.Coremail.zhangsenchuan@eswincomputing.com>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:TQJkCgC3+q31rxFp6P5yAA--.544W
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAgECBmkQw
-	lsmzQACsO
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, Damien Le Moal <dlemoal@kernel.org>,
+ Anand Moon <linux.amoon@gmail.com>, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Dragan Simic <dsimic@manjaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Heiko Stuebner <heiko@sntech.de>, mani@kernel.org
+Subject: Re: [RESEND] Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
+To: FUKAUMI Naoki <naoki@radxa.com>, Niklas Cassel <cassel@kernel.org>
+References: <20250113-rockchip-no-wait-v1-1-25417f37b92f@kernel.org>
+ <1E8E4DB773970CB5+5a52c9e1-01b8-4872-99b7-021099f04031@radxa.com>
+ <6e87b611-13ea-4d89-8dbf-85510dd86fa6@rock-chips.com>
+ <aQ840q5BxNS1eIai@ryzen> <aQ9FWEuW47L8YOxC@ryzen>
+ <55EB0E5F655F3AFC+136b89fd-98d4-42af-a99d-a0bb05cc93f3@radxa.com>
+ <aRCI5kG16_1erMME@ryzen>
+ <F8B2B6FA2884D69A+b7da13f2-0ffb-4308-b1ba-0549bc461be8@radxa.com>
+ <780a4209-f89f-43a9-9364-331d3b77e61e@rock-chips.com>
+ <4487DA40249CC821+19232169-a096-4737-bc6a-5cec9592d65f@radxa.com>
+ <363d6b4d-c999-43d4-866e-880ef7d0dec3@rock-chips.com>
+ <0C31787C387488ED+fd39bfe6-0844-4a87-bf48-675dd6d6a2df@radxa.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <0C31787C387488ED+fd39bfe6-0844-4a87-bf48-675dd6d6a2df@radxa.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9a6d438d5d09cckunm2a41cfe81382c3e
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGhgaSFYaGkgaSkNJGU9PHx9WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZS1VLVUtVS1kG
+DKIM-Signature: a=rsa-sha256;
+	b=GaomGJcZFoXy9dmKjLqxt7SSQwarCMv4UTRUnrqYXArfcRVHwNXTJEHw2s9PSPE9iGfN8S0vj7/5FE4SI677ltHzqcx8kqhuDDOr/4Cvmv4GuwiC1PderlOoae7sw3AVJSuz5uBBzLbtDsdOy6roqwSdbIwwONzCSx8H2PtfC1g=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=VAr21MtQeeygUzAg/O3leSHmqCylhYlryIgLa6wjxJs=;
+	h=date:mime-version:subject:message-id:from;
 
-CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiS3J6eXN6dG9mIEtvemxv
-d3NraSIgPGtyemtAa2VybmVsLm9yZz4KPiBTZW5kIHRpbWU6TW9uZGF5LCAwMy8xMS8yMDI1IDE2
-OjQ4OjAyCj4gVG86IHpoYW5nc2VuY2h1YW5AZXN3aW5jb21wdXRpbmcuY29tCj4gQ2M6IGJoZWxn
-YWFzQGdvb2dsZS5jb20sIG1hbmlAa2VybmVsLm9yZywga3J6aytkdEBrZXJuZWwub3JnLCBjb25v
-citkdEBrZXJuZWwub3JnLCBscGllcmFsaXNpQGtlcm5lbC5vcmcsIGt3aWxjenluc2tpQGtlcm5l
-bC5vcmcsIHJvYmhAa2VybmVsLm9yZywgcC56YWJlbEBwZW5ndXRyb25peC5kZSwgamluZ29vaGFu
-MUBnbWFpbC5jb20sIGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tLCBsaW51eC1wY2lAdmdl
-ci5rZXJuZWwub3JnLCBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZywgbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZywgY2hyaXN0aWFuLmJydWVsQGZvc3Muc3QuY29tLCBtYXlhbmsucmFuYUBv
-c3MucXVhbGNvbW0uY29tLCBzaHJhZGhhLnRAc2Ftc3VuZy5jb20sIGtyaXNobmEuY2h1bmRydUBv
-c3MucXVhbGNvbW0uY29tLCB0aGlwcGVzd2FteS5oYXZhbGlnZUBhbWQuY29tLCBpbm9jaGlhbWFA
-Z21haWwuY29tLCBuaW5neXVAZXN3aW5jb21wdXRpbmcuY29tLCBsaW5taW5AZXN3aW5jb21wdXRp
-bmcuY29tLCBwaW5rZXNoLnZhZ2hlbGFAZWluZm9jaGlwcy5jb20sIG91eWFuZ2h1aUBlc3dpbmNv
-bXB1dGluZy5jb20KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0IDEvMl0gZHQtYmluZGluZ3M6IFBD
-STogRUlDNzcwMDogQWRkIEVzd2luIFBDSWUgaG9zdCBjb250cm9sbGVyCj4gCj4gT24gVGh1LCBP
-Y3QgMzAsIDIwMjUgYXQgMDQ6MzA6NTdQTSArMDgwMCwgemhhbmdzZW5jaHVhbkBlc3dpbmNvbXB1
-dGluZy5jb20gd3JvdGU6Cj4gPiBGcm9tOiBTZW5jaHVhbiBaaGFuZyA8emhhbmdzZW5jaHVhbkBl
-c3dpbmNvbXB1dGluZy5jb20+Cj4gPiAKPiA+IEFkZCBEZXZpY2UgVHJlZSBiaW5kaW5nIGRvY3Vt
-ZW50YXRpb24gZm9yIHRoZSBFc3dpbiBFSUM3NzAwIFBDSWUKPiA+IGNvbnRyb2xsZXIgbW9kdWxl
-LCB0aGUgUENJZSBjb250cm9sbGVyIGVuYWJsZXMgdGhlIGNvcmUgdG8gY29ycmVjdGx5Cj4gPiBp
-bml0aWFsaXplIGFuZCBtYW5hZ2UgdGhlIFBDSWUgYnVzIGFuZCBjb25uZWN0ZWQgZGV2aWNlcy4K
-PiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogWXUgTmluZyA8bmluZ3l1QGVzd2luY29tcHV0aW5nLmNv
-bT4KPiA+IFNpZ25lZC1vZmYtYnk6IFlhbmdodWkgT3UgPG91eWFuZ2h1aUBlc3dpbmNvbXB1dGlu
-Zy5jb20+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBTZW5jaHVhbiBaaGFuZyA8emhhbmdzZW5jaHVhbkBl
-c3dpbmNvbXB1dGluZy5jb20+Cj4gPiAtLS0KPiA+ICAuLi4vYmluZGluZ3MvcGNpL2Vzd2luLGVp
-Yzc3MDAtcGNpZS55YW1sICAgICAgfCAxNjYgKysrKysrKysrKysrKysrKysrCj4gPiAgLi4uL2Jp
-bmRpbmdzL3BjaS9zbnBzLGR3LXBjaWUtY29tbW9uLnlhbWwgICAgIHwgICAyICstCj4gPiAgMiBm
-aWxlcyBjaGFuZ2VkLCAxNjcgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+ID4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Vzd2lu
-LGVpYzc3MDAtcGNpZS55YW1sCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcGNpL2Vzd2luLGVpYzc3MDAtcGNpZS55YW1sIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9lc3dpbixlaWM3NzAwLXBjaWUueWFtbAo+ID4g
-bmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uZTZjMDVlM2EwOTNh
-Cj4gPiAtLS0gL2Rldi9udWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcGNpL2Vzd2luLGVpYzc3MDAtcGNpZS55YW1sCj4gPiBAQCAtMCwwICsxLDE2NiBAQAo+
-ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xh
-dXNlKQo+ID4gKyVZQU1MIDEuMgo+ID4gKy0tLQo+ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUu
-b3JnL3NjaGVtYXMvcGNpL2Vzd2luLGVpYzc3MDAtcGNpZS55YW1sIwo+ID4gKyRzY2hlbWE6IGh0
-dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIwo+ID4gKwo+ID4gK3Rp
-dGxlOiBFc3dpbiBFSUM3NzAwIFBDSWUgaG9zdCBjb250cm9sbGVyCj4gPiArCj4gPiArbWFpbnRh
-aW5lcnM6Cj4gPiArICAtIFl1IE5pbmcgPG5pbmd5dUBlc3dpbmNvbXB1dGluZy5jb20+Cj4gPiAr
-ICAtIFNlbmNodWFuIFpoYW5nIDx6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbT4KPiA+
-ICsgIC0gWWFuZ2h1aSBPdSA8b3V5YW5naHVpQGVzd2luY29tcHV0aW5nLmNvbT4KPiA+ICsKPiA+
-ICtkZXNjcmlwdGlvbjoKPiA+ICsgIFRoZSBQQ0llIGNvbnRyb2xsZXIgb24gRUlDNzcwMCBTb0Mu
-Cj4gPiArCj4gPiArcHJvcGVydGllczoKPiA+ICsgIGNvbXBhdGlibGU6Cj4gPiArICAgIGNvbnN0
-OiBlc3dpbixlaWM3NzAwLXBjaWUKPiA+ICsKPiA+ICsgIHJlZzoKPiA+ICsgICAgbWF4SXRlbXM6
-IDMKPiA+ICsKPiA+ICsgIHJlZy1uYW1lczoKPiA+ICsgICAgaXRlbXM6Cj4gPiArICAgICAgLSBj
-b25zdDogZGJpCj4gPiArICAgICAgLSBjb25zdDogY29uZmlnCj4gPiArICAgICAgLSBjb25zdDog
-bWdtdAo+IAo+IFRoYXQncyBkZXByZWNhdGVkLiBSZWFkIGl0cyBkZXNjcmlwdGlvbi4gVGhhdCdz
-IGp1c3QgZWxiaS4KPiAKPiA+ICsKPiA+ICsgIHJhbmdlczoKPiA+ICsgICAgbWF4SXRlbXM6IDMK
-PiA+ICsKPiA+ICsgICcjaW50ZXJydXB0LWNlbGxzJzoKPiA+ICsgICAgY29uc3Q6IDEKPiA+ICsK
-PiA+ICsgIGludGVycnVwdC1uYW1lczoKPiA+ICsgICAgaXRlbXM6Cj4gPiArICAgICAgLSBjb25z
-dDogbXNpCj4gPiArICAgICAgLSBjb25zdDogaW50YQo+ID4gKyAgICAgIC0gY29uc3Q6IGludGIK
-PiA+ICsgICAgICAtIGNvbnN0OiBpbnRjCj4gPiArICAgICAgLSBjb25zdDogaW50ZAo+IAo+IFRo
-c2UgYXJlIGxlZ2FjeSBzaWduYWxzLiBXaHkgYXJlIHlvdSB1c2luZyBsZWdhY3k/Cj4gCj4gPiAr
-Cj4gPiArICBpbnRlcnJ1cHQtbWFwOgo+ID4gKyAgICBtYXhJdGVtczogNAo+ID4gKwo+ID4gKyAg
-aW50ZXJydXB0LW1hcC1tYXNrOgo+ID4gKyAgICBpdGVtczoKPiA+ICsgICAgICAtIGNvbnN0OiAw
-Cj4gPiArICAgICAgLSBjb25zdDogMAo+ID4gKyAgICAgIC0gY29uc3Q6IDAKPiA+ICsgICAgICAt
-IGNvbnN0OiA3Cj4gPiArCj4gPiArICBjbG9ja3M6Cj4gPiArICAgIG1heEl0ZW1zOiA0Cj4gPiAr
-Cj4gPiArICBjbG9jay1uYW1lczoKPiA+ICsgICAgaXRlbXM6Cj4gPiArICAgICAgLSBjb25zdDog
-bXN0cgo+ID4gKyAgICAgIC0gY29uc3Q6IGRiaQo+ID4gKyAgICAgIC0gY29uc3Q6IHBjbGsKPiAK
-PiBEZXByZWNhdGVkIG5hbWUuCj4gCj4gPiArICAgICAgLSBjb25zdDogYXV4Cj4gPiArCj4gPiAr
-ICByZXNldHM6Cj4gPiArICAgIG1heEl0ZW1zOiAyCj4gPiArCj4gPiArICByZXNldC1uYW1lczoK
-PiA+ICsgICAgaXRlbXM6Cj4gPiArICAgICAgLSBjb25zdDogZGJpCj4gPiArICAgICAgLSBjb25z
-dDogcG93ZXJ1cAo+IAo+IE5vIHN1Y2ggbmFtZS4KPiAKPiA+ICsKPiA+ICtwYXR0ZXJuUHJvcGVy
-dGllczoKPiA+ICsgICJecGNpZUAiOgo+ID4gKyAgICB0eXBlOiBvYmplY3QKPiA+ICsgICAgJHJl
-ZjogL3NjaGVtYXMvcGNpL3BjaS1wY2ktYnJpZGdlLnlhbWwjCj4gPiArCj4gPiArICAgIHByb3Bl
-cnRpZXM6Cj4gPiArICAgICAgcmVnOgo+ID4gKyAgICAgICAgbWF4SXRlbXM6IDEKPiA+ICsKPiA+
-ICsgICAgICBudW0tbGFuZXM6Cj4gPiArICAgICAgICBtYXhpbXVtOiA0Cj4gPiArCj4gPiArICAg
-ICAgcmVzZXRzOgo+ID4gKyAgICAgICAgbWF4SXRlbXM6IDEKPiA+ICsKPiA+ICsgICAgICByZXNl
-dC1uYW1lczoKPiA+ICsgICAgICAgIGl0ZW1zOgo+ID4gKyAgICAgICAgICAtIGNvbnN0OiBwZXJz
-dAo+ID4gKwo+ID4gKyAgICByZXF1aXJlZDoKPiA+ICsgICAgICAtIHJlZwo+ID4gKyAgICAgIC0g
-cmFuZ2VzCj4gPiArICAgICAgLSBudW0tbGFuZXMKPiA+ICsgICAgICAtIHJlc2V0cwo+ID4gKyAg
-ICAgIC0gcmVzZXQtbmFtZXMKPiA+ICsKPiA+ICsgICAgdW5ldmFsdWF0ZWRQcm9wZXJ0aWVzOiBm
-YWxzZQo+ID4gKwo+ID4gK3JlcXVpcmVkOgo+ID4gKyAgLSBjb21wYXRpYmxlCj4gPiArICAtIHJl
-Zwo+ID4gKyAgLSByYW5nZXMKPiA+ICsgIC0gaW50ZXJydXB0cwo+ID4gKyAgLSBpbnRlcnJ1cHQt
-bmFtZXMKPiA+ICsgIC0gaW50ZXJydXB0LW1hcC1tYXNrCj4gPiArICAtIGludGVycnVwdC1tYXAK
-PiA+ICsgIC0gJyNpbnRlcnJ1cHQtY2VsbHMnCj4gPiArICAtIGNsb2Nrcwo+ID4gKyAgLSBjbG9j
-ay1uYW1lcwo+ID4gKyAgLSByZXNldHMKPiA+ICsgIC0gcmVzZXQtbmFtZXMKPiA+ICsKPiA+ICth
-bGxPZjoKPiA+ICsgIC0gJHJlZjogL3NjaGVtYXMvcGNpL3NucHMsZHctcGNpZS55YW1sIwo+ID4g
-Kwo+ID4gK3VuZXZhbHVhdGVkUHJvcGVydGllczogZmFsc2UKPiA+ICsKPiA+ICtleGFtcGxlczoK
-PiA+ICsgIC0gfAo+ID4gKyAgICBzb2Mgewo+ID4gKyAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8
-Mj47Cj4gPiArICAgICAgICAjc2l6ZS1jZWxscyA9IDwyPjsKPiA+ICsKPiA+ICsgICAgICAgIHBj
-aWVANTQwMDAwMDAgewo+ID4gKyAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZXN3aW4sZWljNzcw
-MC1wY2llIjsKPiA+ICsgICAgICAgICAgICByZWcgPSA8MHgwIDB4NTQwMDAwMDAgMHgwIDB4NDAw
-MDAwMD4sCj4gPiArICAgICAgICAgICAgICAgICAgPDB4MCAweDQwMDAwMDAwIDB4MCAweDgwMDAw
-MD4sCj4gPiArICAgICAgICAgICAgICAgICAgPDB4MCAweDUwMDAwMDAwIDB4MCAweDEwMDAwMD47
-Cj4gPiArICAgICAgICAgICAgcmVnLW5hbWVzID0gImRiaSIsICJjb25maWciLCAibWdtdCI7Cj4g
-PiArICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8Mz47Cj4gPiArICAgICAgICAgICAgI3Np
-emUtY2VsbHMgPSA8Mj47Cj4gPiArICAgICAgICAgICAgI2ludGVycnVwdC1jZWxscyA9IDwxPjsK
-PiA+ICsgICAgICAgICAgICByYW5nZXMgPSA8MHgwMTAwMDAwMCAweDAgMHg0MDgwMDAwMCAweDAg
-MHg0MDgwMDAwMCAweDAgMHg4MDAwMDA+LAo+ID4gKyAgICAgICAgICAgICAgICAgICAgIDwweDAy
-MDAwMDAwIDB4MCAweDQxMDAwMDAwIDB4MCAweDQxMDAwMDAwIDB4MCAweGYwMDAwMDA+LAo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgIDwweDQzMDAwMDAwIDB4ODAgMHgwMDAwMDAwMCAweDgwIDB4
-MDAwMDAwMDAgMHgyIDB4MDAwMDAwMDA+Owo+ID4gKyAgICAgICAgICAgIGJ1cy1yYW5nZSA9IDww
-eDAwIDB4ZmY+Owo+ID4gKyAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2sgMTQ0PiwKPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICA8JmNsb2NrIDE0NT4sCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgPCZjbG9jayAxNDY+LAo+ID4gKyAgICAgICAgICAgICAgICAgICAgIDwmY2xvY2sgMTQ3PjsK
-PiA+ICsgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJtc3RyIiwgImRiaSIsICJwY2xrIiwgImF1
-eCI7Cj4gPiArICAgICAgICAgICAgcmVzZXRzID0gPCZyZXNldCA5Nz4sCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgPCZyZXNldCA5OD47Cj4gPiArICAgICAgICAgICAgcmVzZXQtbmFtZXMgPSAi
-ZGJpIiwgInBvd2VydXAiOwo+ID4gKyAgICAgICAgICAgIGludGVycnVwdHMgPSA8MjIwPiwgPDE3
-OT4sIDwxODA+LCA8MTgxPiwgPDE4Mj4sIDwxODM+LCA8MTg0PiwgPDE4NT4sIDwxODY+Owo+ID4g
-KyAgICAgICAgICAgIGludGVycnVwdC1uYW1lcyA9ICJtc2kiLCAiaW50YSIsICJpbnRiIiwgImlu
-dGMiLCAiaW50ZCI7Cj4gPiArICAgICAgICAgICAgaW50ZXJydXB0LXBhcmVudCA9IDwmcGxpYz47
-Cj4gPiArICAgICAgICAgICAgaW50ZXJydXB0LW1hcC1tYXNrID0gPDB4MCAweDAgMHgwIDB4Nz47
-Cj4gPiArICAgICAgICAgICAgaW50ZXJydXB0LW1hcCA9IDwweDAgMHgwIDB4MCAweDEgJnBsaWMg
-MTc5PiwKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDB4MCAweDAgMHgwIDB4MiAm
-cGxpYyAxODA+LAo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MHgwIDB4MCAweDAg
-MHgzICZwbGljIDE4MT4sCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwweDAgMHgw
-IDB4MCAweDQgJnBsaWMgMTgyPjsKPiA+ICsgICAgICAgICAgICBkZXZpY2VfdHlwZSA9ICJwY2ki
-Owo+ID4gKyAgICAgICAgICAgIHBjaWVAMCB7Cj4gPiArICAgICAgICAgICAgICAgIHJlZyA9IDww
-eDAgMHgwIDB4MCAweDAgMHgwPjsKPiA+ICsgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMg
-PSA8Mz47Cj4gPiArICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDI+Owo+ID4gKyAgICAg
-ICAgICAgICAgICByYW5nZXM7Cj4gPiArICAgICAgICAgICAgICAgIGRldmljZV90eXBlID0gInBj
-aSI7Cj4gPiArICAgICAgICAgICAgICAgIG51bS1sYW5lcyA9IDw0PjsKPiA+ICsgICAgICAgICAg
-ICAgICAgcmVzZXRzID0gPCZyZXNldCA5OT47Cj4gPiArICAgICAgICAgICAgICAgIHJlc2V0LW5h
-bWVzID0gInBlcnN0IjsKPiA+ICsgICAgICAgICAgICB9Owo+ID4gKyAgICAgICAgfTsKPiA+ICsg
-ICAgfTsKPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cGNpL3NucHMsZHctcGNpZS1jb21tb24ueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9wY2kvc25wcyxkdy1wY2llLWNvbW1vbi55YW1sCj4gPiBpbmRleCAzNDU5NDk3MmQ4
-ZGIuLmNmZjUyZDAwMjZiMCAxMDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9wY2kvc25wcyxkdy1wY2llLWNvbW1vbi55YW1sCj4gPiArKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3NucHMsZHctcGNpZS1jb21tb24ueWFtbAo+
-ID4gQEAgLTE3Niw3ICsxNzYsNyBAQCBwcm9wZXJ0aWVzOgo+ID4gICAgICAgICAgICAgIC0gZGVz
-Y3JpcHRpb246IFNlZSBuYXRpdmUgJ3BoeScgcmVzZXQgZm9yIGRldGFpbHMKPiA+ICAgICAgICAg
-ICAgICAgIGVudW06IFsgcGNpZXBoeSwgbGluayBdCj4gPiAgICAgICAgICAgICAgLSBkZXNjcmlw
-dGlvbjogU2VlIG5hdGl2ZSAncHdyJyByZXNldCBmb3IgZGV0YWlscwo+ID4gLSAgICAgICAgICAg
-ICAgZW51bTogWyB0dXJub2ZmIF0KPiA+ICsgICAgICAgICAgICAgIGVudW06IFsgdHVybm9mZiwg
-cG93ZXJ1cCBdCj4gCj4gTkFLLCB5b3UgY2Fubm90IGFkZCBtb3JlIGRlcHJlY2F0ZWQgbmFtZXMu
-IERvIHlvdSB1bmRlcnN0YW5kIHdoYXQKPiBkZXByZWNhdGVkL2xlZ2FjeSBtZWFuPwo+IAoKSGks
-IEtyenlzenRvZgoKVGhhbmsgeW91IGZvciB5b3VyIHJlbWluZGVyLiBJIG1pc3VuZGVyc3Rvb2Qg
-ZGVwcmVjYXRlZC9sZWdhY3kuCkkgaGF2ZSBzdWJtaXR0ZWQgdGhlIHBjaWUgdjUgcGFjdGggYW5k
-IG1hZGUgdGhlIG1vZGlmaWNhdGlvbnMuCgpLaW5kIHJlZ2FyZHMsClNlbmNodWFuIFpoYW5n
+在 2025/11/10 星期一 15:52, FUKAUMI Naoki 写道:
+> Hi Shawn,
+> 
+> On 11/10/25 16:12, Shawn Lin wrote:
+> (snip)> Thanks for testing. I just got a ASM2806 switch as yours and 
+> verified it
+>> on vanilla v6.18-rc5. After 30 times of cold boot, two NVMes behind
+>> ASM2806 work as expected. Nothing special happened when I checked
+>> with PA as well. You could help check the log and lspci dump there[1].
+>>
+>> [1]https://pastebin.com/sAF1fT0g
+> 
+> Thanks for the info!
+> 
+> I tried ASM2806 on Radxa ROCK 5B (RK3588).
+>   https://gist.github.com/RadxaNaoki/640e47d377add9fe38301de164d4058e
+> 
+> It doesn't work on PCIe 2.0 (M.2 E Key), but it does work on PCIe 3.0 
+> (M.2 M Key).
+> 
+> Could you try PCIe 2.0 slot on your board?
+
+I did, it doesn't work on PCIe 2.0 slot. From the PA, I could see
+the link is still in training during pci_host_probe() is called.
+Add some delay before pci_rescan_bus() in pcie-dw-rockchip doesn't
+help. But the below change should work as we delayed pci_host_probe().
+
+--- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
++++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+@@ -236,6 +236,8 @@ static int rockchip_pcie_start_link(struct dw_pcie *pci)
+         msleep(PCIE_T_PVPERL_MS);
+         gpiod_set_value_cansleep(rockchip->rst_gpio, 1);
+
++       msleep(50);
++
+         return 0;
+
+Otherwise we got:
+
+[    0.841518] pci_bus 0003:33: busn_res: can not insert [bus 33-31] 
+under [bus 32-31] (conflicts with (null) [bus 32-31])
+[    0.842596] pci_bus 0003:33: busn_res: [bus 33-31] end is updated to 33
+[    0.843184] pci_bus 0003:33: busn_res: can not insert [bus 33] under 
+[bus 32-31] (conflicts with (null) [bus 32-31])
+[    0.844120] pci 0003:32:00.0: devices behind bridge are unusable 
+because [bus 33] cannot be assigned for them
+[    0.845229] pci_bus 0003:34: busn_res: can not insert [bus 34-31] 
+under [bus 32-31] (conflicts with (null) [bus 32-31])
+[    0.846309] pci_bus 0003:34: busn_res: [bus 34-31] end is updated to 34
+[    0.846898] pci_bus 0003:34: busn_res: can not insert [bus 34] under 
+[bus 32-31] (conflicts with (null) [bus 32-31])
+[    0.847833] pci 0003:32:06.0: devices behind bridge are unusable 
+because [bus 34] cannot be assigned for them
+[    0.848923] pci_bus 0003:35: busn_res: can not insert [bus 35-31] 
+under [bus 32-31] (conflicts with (null) [bus 32-31])
+[    0.850014] pci_bus 0003:35: busn_res: [bus 35-31] end is updated to 35
+[    0.850605] pci_bus 0003:35: busn_res: can not insert [bus 35] under 
+[bus 32-31] (conflicts with (null) [bus 32-31])
+[    0.851540] pci 0003:32:0e.0: devices behind bridge are unusable 
+because [bus 35] cannot be assigned for them
+[    0.852424] pci_bus 0003:32: busn_res: [bus 32-31] end is updated to 35
+[    0.853028] pci_bus 0003:32: busn_res: can not insert [bus 32-35] 
+under [bus 31] (conflicts with (null) [bus 31])
+[    0.853184] hub 3-0:1.0: USB hub found
+[    0.853931] pci 0003:31:00.0: devices behind bridge are unusable 
+because [bus 32-35] cannot be assigned for them
+[    0.854262] hub 3-0:1.0: 1 port detected
+[    0.855144] pcieport 0003:30:00.0: bridge has subordinate 31 but max 
+busn 35
+[    0.855722] hub 4-0:1.0: USB hub found
+[    0.856109] pci 0003:32:00.0: PCI bridge to [bus 33]
+[    0.856939] pci 0003:32:06.0: PCI bridge to [bus 34]
+[    0.857133] hub 4-0:1.0: 1 port detected
+[    0.857430] pci 0003:32:0e.0: PCI bridge to [bus 35]
+[    0.858236] pci 0003:31:00.0: PCI bridge to [bus 32-35]
+
+> 
+> Best regards,
+> 
+> -- 
+> FUKAUMI Naoki
+> Radxa Computer (Shenzhen) Co., Ltd.
+> 
+> 
+
 
