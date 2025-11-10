@@ -1,121 +1,99 @@
-Return-Path: <linux-pci+bounces-40701-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40702-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65306C46759
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 13:08:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41E83C467A4
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 13:10:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8B0E1899F87
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 12:04:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 240861882699
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 12:07:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0B0F308F18;
-	Mon, 10 Nov 2025 12:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aCGzzz2B"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2BB430ACFB;
+	Mon, 10 Nov 2025 12:06:58 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E8916CD33;
-	Mon, 10 Nov 2025 12:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886FD306B00;
+	Mon, 10 Nov 2025 12:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762776226; cv=none; b=LDSC0NWzsBxWEXqhYkBpfGGt1/9If8NH+hP8Z3DLU3RX4qTM/9CGgaElBauTGZQLqEqWGKkmkrnDWp8Wm9njtrZNY1IJJ631lM10HL7d5TMsv9zNT4dkb006AcxGopZx9VMStQt//2EZpsSt3alKRaz6Nn98MQqT2+T3kla3J0s=
+	t=1762776418; cv=none; b=HyHr2I8y1e2B9qDbKagICP/oxZoE9dn18FoSE3A+71uAhpzN6umNPpKb/A6vnhy/4R5dWT4sye9lTNUe7tzFpfDYVh3t43Kw//SfYvOukJN25sfLfVfgIqJhWIUoLz/gpUncYlNyelnFY2NtSsTne2NixUgLISgal4bFTurHZEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762776226; c=relaxed/simple;
-	bh=exuxjfiF+hl8JLjvfyMbiNZrRie/mRLZNK7fcvMzatU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bW08Ie20gpBdmOXCw/yuOGd7U+jbJo8n4wCc8B1EiI4bqfRepqeNMKvrt6ZXLAEKH2SSZWqCnfL8ARlBX1BXyc4gGzA049v6Y6pp8VWd3Y68hHshQTXeiCQo1dhbsJFX9ghDh8os1rmzlN8kz1EkyLIwlyV2NeAvr01QPLujuQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aCGzzz2B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21BD3C4CEFB;
-	Mon, 10 Nov 2025 12:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762776226;
-	bh=exuxjfiF+hl8JLjvfyMbiNZrRie/mRLZNK7fcvMzatU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aCGzzz2B+iIhrbnKcTBUrTkJoaey5UBdodVT7is7nxq/bsuacn1mWrSFdPw3MeBK6
-	 xyCChGTKzwMwYsKPORp++PIQx+oQmfnNtOIos9jeZV/f3KCOAW/YIHLHG+zrRI0D6e
-	 5XH5FdLJGAwUvLTZVLwlgVxQ1U7uPHKNNvoNLC6NNar+pwcHwQZC3DJVH7mX0O2Buw
-	 o5ciXKyW4rtCR77dJnkpGTUBcVt/zSWq2O5mKY+hOtm1cwQ7WY2ytVWFfynHV2nPls
-	 ZowwPx5Vyjny8kAE/1ATpZ023Y3oTpA1RwB4kKLzJX4RqOsjBqx79J8tHgoonfuyVD
-	 asKXjznFT7D4g==
-Date: Mon, 10 Nov 2025 17:33:34 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: andersson@kernel.org, robh@kernel.org, krzk@kernel.org, 
-	helgaas@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	lpieralisi@kernel.org, kw@linux.com, conor+dt@kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree-spec@vger.kernel.org, quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v2] schemas: pci: Document PCIe T_POWER_ON
-Message-ID: <gqvc3orlyk6l5jq2bpxsf5lvvafmtxcpdquffcpdqdiek3bldh@l3em25rqaldg>
-References: <20251110112947.2071036-1-krishna.chundru@oss.qualcomm.com>
+	s=arc-20240116; t=1762776418; c=relaxed/simple;
+	bh=DapSXJIGI5RjygyLazVd9YzJJIWHq9DQ9gkiGsc6Rp0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FgDcdn5da05gkUZLrctPfdSYyUdWYJuAtq2mAjIYmz9CphKahM0+lTEZw8aDwMxAxujbuMK5Hh3xJF/bJZ9op0gkEbyRWviHs0qs5C7u8xAh1a5YElHfOVJsf3SEW9LKMC3lUNwHH0Cw5S57ayQlgIyxw7iBGlJLSaPCUH5D5zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d4pKq3nGgzJ46Dk;
+	Mon, 10 Nov 2025 20:06:23 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id B777A140257;
+	Mon, 10 Nov 2025 20:06:52 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Mon, 10 Nov
+ 2025 12:06:51 +0000
+Date: Mon, 10 Nov 2025 12:06:50 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: Linux PM <linux-pm@vger.kernel.org>, Linux ACPI
+	<linux-acpi@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>, LKML
+	<linux-kernel@vger.kernel.org>, Zhang Qilong <zhangqilong3@huawei.com>, Frank
+ Li <Frank.Li@nxp.com>, Dhruva Gole <d-gole@ti.com>, Dan Williams
+	<dan.j.williams@intel.com>, Linux PCI <linux-pci@vger.kernel.org>, "Bjorn
+ Helgaas" <helgaas@kernel.org>, Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH v1 0/3] PM: runtime: Wrapper macros for usage counter
+ guards
+Message-ID: <20251110120650.00004de8@huawei.com>
+In-Reply-To: <13883374.uLZWGnKmhe@rafael.j.wysocki>
+References: <13883374.uLZWGnKmhe@rafael.j.wysocki>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251110112947.2071036-1-krishna.chundru@oss.qualcomm.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Mon, Nov 10, 2025 at 04:59:47PM +0530, Krishna Chaitanya Chundru wrote:
-> From PCIe r6, sec 5.5.4 & Table 5-11 in sec 5.5.5 T_POWER_ON is the
-> minimum amount of time(in us) that each component must wait in L1.2.Exit
-> after sampling CLKREQ# asserted before actively driving the interface to
-> ensure no device is ever actively driving into an unpowered component and
-> these values are based on the components and AC coupling capacitors used
-> in the connection linking the two components.
-> 
-> This property should be used to indicate the T_POWER_ON for each Root Port.
-> 
+On Fri, 07 Nov 2025 19:35:09 +0100
+"Rafael J. Wysocki" <rafael@kernel.org> wrote:
 
-I'm not sure if we should restrict this property to just Root Ports. Defining a
-property in 'pci-bus-common.yaml' means, all PCI bridges could use it, but this
-value is applicable to endpoint devices also.
-
-Also, you might want to add some info that the driver (or DT consumer) should
-derive the T_POWER_ON Scale and T_POWER_ON Value from this value.
-
-- Mani
-
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
-> Changes in v1:
-> - Updated the commiit text (Mani).
-> - Link to v1: https://lore.kernel.org/all/20251110112550.2070659-1-krishna.chundru@oss.qualcomm.com/#t
+> Hi All,
 > 
->  dtschema/schemas/pci/pci-bus-common.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> The runtime PM usage counter guards introduced recently:
 > 
-> diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
-> index 5257339..bbe5510 100644
-> --- a/dtschema/schemas/pci/pci-bus-common.yaml
-> +++ b/dtschema/schemas/pci/pci-bus-common.yaml
-> @@ -152,6 +152,15 @@ properties:
->        This property is invalid in host bridge nodes.
->      maxItems: 1
->  
-> +  t-power-on-us:
-> +    description:
-> +      The minimum amount of time that each component must wait in
-> +      L1.2.Exit after sampling CLKREQ# asserted before actively driving
-> +      the interface to ensure no device is ever actively driving into an
-> +      unpowered component. This value is based on the components and AC
-> +      coupling capacitors used in the connection linking the two
-> +      components(PCIe r6.0, sec 5.5.4).
-> +
->    supports-clkreq:
->      description:
->        If present this property specifies that CLKREQ signal routing exists from
-> -- 
-> 2.34.1
+> https://lore.kernel.org/linux-pm/6196611.lOV4Wx5bFT@rafael.j.wysocki/
 > 
+> and then fixed:
 > 
+> https://lore.kernel.org/linux-pm/5943878.DvuYhMxLoT@rafael.j.wysocki/
+> 
+> should generally work, but using them feels sort of arcane and cryptic
+> even though the underlying concept is relatively straightforward.
+> 
+> For this reason, runtime PM wrapper macros around ACQUIRE() and
+> ACQUIRE_ERR() involving the new guards are introduced in this series
+> (patch [1/3]) and then used in the code already using the guards (patches
+> [2/3] and [3/3]) to make it look more straightforward.
+> 
+> Thanks!
 
--- 
-மணிவண்ணன் சதாசிவம்
+It's an interesting trade off between completely hiding the magic variables
+and verbosity.  The PM_RUNTIME_ACQUIRE_ERR smells like something we'd
+expect to be using global state (given no parameters), but it is of
+course just local with a magic name.  Will take a little getting
+used to but then so does all this cleanup.h magic.  So on balance
+I think this is a good change.
+
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
