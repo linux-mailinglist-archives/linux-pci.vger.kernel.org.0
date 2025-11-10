@@ -1,161 +1,121 @@
-Return-Path: <linux-pci+bounces-40700-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40701-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A490FC46645
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 12:53:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65306C46759
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 13:08:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F3F96188A162
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 11:53:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8B0E1899F87
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 12:04:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C571309EEC;
-	Mon, 10 Nov 2025 11:53:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0B0F308F18;
+	Mon, 10 Nov 2025 12:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aCGzzz2B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FC52FFFA4
-	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 11:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E8916CD33;
+	Mon, 10 Nov 2025 12:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762775581; cv=none; b=UINqvUc5mHIJXeGGUjS1K5/lRvb2FLIiiS0k5lABv33BvioyfEL78y6vuDORX6RL1OpgBxw+ckSYrfJZeuNy1k7ooGE2B3IaMvXhRKfKBRGzQEC9VEU17jE9bxU3Ty2FZsJQouRaTgHQ+LGqZrjwqy/H6zKq1U7RihuZlYezbuM=
+	t=1762776226; cv=none; b=LDSC0NWzsBxWEXqhYkBpfGGt1/9If8NH+hP8Z3DLU3RX4qTM/9CGgaElBauTGZQLqEqWGKkmkrnDWp8Wm9njtrZNY1IJJ631lM10HL7d5TMsv9zNT4dkb006AcxGopZx9VMStQt//2EZpsSt3alKRaz6Nn98MQqT2+T3kla3J0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762775581; c=relaxed/simple;
-	bh=UInVXx6PfxMGWatXk87n8xA//u7uJm12qA+8CDGNxIQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rbTwBT1F2Y39QLP1BHXX36r4jeQerUruFmoNDOwoFWHCJ8F/LEFmfeItyZ7V0hJCugCvl9+XaJBhQvZDfsbZj8DvnkLfMKIq/IXB0+2gT8e80fa6x9zMZRA5Bp2u/vDmqXpW0y7tWq40ZP5OvweWZ1bi9kf6biYASd20hxMfmAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d4p1m2PNtzJ46h2;
-	Mon, 10 Nov 2025 19:52:28 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 85A05140257;
-	Mon, 10 Nov 2025 19:52:57 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Mon, 10 Nov
- 2025 11:52:56 +0000
-Date: Mon, 10 Nov 2025 11:52:55 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: <dan.j.williams@intel.com>
-CC: <linux-pci@vger.kernel.org>, <linux-coco@lists.linux.dev>,
-	<bhelgaas@google.com>, <aneesh.kumar@kernel.org>, <yilun.xu@linux.intel.com>,
-	<aik@amd.com>
-Subject: Re: [PATCH 3/6] PCI/IDE: Initialize an ID for all IDE streams
-Message-ID: <20251110115255.000010f3@huawei.com>
-In-Reply-To: <690be315ed059_74f761007a@dwillia2-mobl4.notmuch>
-References: <20251105040055.2832866-1-dan.j.williams@intel.com>
-	<20251105040055.2832866-4-dan.j.williams@intel.com>
-	<20251105152704.00002741@huawei.com>
-	<690be315ed059_74f761007a@dwillia2-mobl4.notmuch>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1762776226; c=relaxed/simple;
+	bh=exuxjfiF+hl8JLjvfyMbiNZrRie/mRLZNK7fcvMzatU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bW08Ie20gpBdmOXCw/yuOGd7U+jbJo8n4wCc8B1EiI4bqfRepqeNMKvrt6ZXLAEKH2SSZWqCnfL8ARlBX1BXyc4gGzA049v6Y6pp8VWd3Y68hHshQTXeiCQo1dhbsJFX9ghDh8os1rmzlN8kz1EkyLIwlyV2NeAvr01QPLujuQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aCGzzz2B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21BD3C4CEFB;
+	Mon, 10 Nov 2025 12:03:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762776226;
+	bh=exuxjfiF+hl8JLjvfyMbiNZrRie/mRLZNK7fcvMzatU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aCGzzz2B+iIhrbnKcTBUrTkJoaey5UBdodVT7is7nxq/bsuacn1mWrSFdPw3MeBK6
+	 xyCChGTKzwMwYsKPORp++PIQx+oQmfnNtOIos9jeZV/f3KCOAW/YIHLHG+zrRI0D6e
+	 5XH5FdLJGAwUvLTZVLwlgVxQ1U7uPHKNNvoNLC6NNar+pwcHwQZC3DJVH7mX0O2Buw
+	 o5ciXKyW4rtCR77dJnkpGTUBcVt/zSWq2O5mKY+hOtm1cwQ7WY2ytVWFfynHV2nPls
+	 ZowwPx5Vyjny8kAE/1ATpZ023Y3oTpA1RwB4kKLzJX4RqOsjBqx79J8tHgoonfuyVD
+	 asKXjznFT7D4g==
+Date: Mon, 10 Nov 2025 17:33:34 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: andersson@kernel.org, robh@kernel.org, krzk@kernel.org, 
+	helgaas@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	lpieralisi@kernel.org, kw@linux.com, conor+dt@kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree-spec@vger.kernel.org, quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v2] schemas: pci: Document PCIe T_POWER_ON
+Message-ID: <gqvc3orlyk6l5jq2bpxsf5lvvafmtxcpdquffcpdqdiek3bldh@l3em25rqaldg>
+References: <20251110112947.2071036-1-krishna.chundru@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251110112947.2071036-1-krishna.chundru@oss.qualcomm.com>
 
-
-> > > ---
-> > >  drivers/pci/pci.h       |   2 +
-> > >  include/linux/pci-ide.h |   6 ++
-> > >  include/linux/pci.h     |   1 +
-> > >  drivers/pci/ide.c       | 133 ++++++++++++++++++++++++++++++++++++++++
-> > >  drivers/pci/remove.c    |   1 +
-> > >  5 files changed, 143 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
-> > > index d7fc741f3a26..33b3c54c62a1 100644
-> > > --- a/drivers/pci/ide.c
-> > > +++ b/drivers/pci/ide.c
-
+On Mon, Nov 10, 2025 at 04:59:47PM +0530, Krishna Chaitanya Chundru wrote:
+> From PCIe r6, sec 5.5.4 & Table 5-11 in sec 5.5.5 T_POWER_ON is the
+> minimum amount of time(in us) that each component must wait in L1.2.Exit
+> after sampling CLKREQ# asserted before actively driving the interface to
+> ensure no device is ever actively driving into an unpowered component and
+> these values are based on the components and AC coupling capacitors used
+> in the connection linking the two components.
 > 
-> > > +}
-> > > +
-> > > +static bool claim_stream(struct pci_host_bridge *hb, u8 stream_id,
-> > > +			 struct pci_dev *pdev, u8 stream_idx)
-> > > +{
-> > > +	dev_info(&hb->dev, "Stream ID %d active at init\n", stream_id);
-> > > +	if (!reserve_stream_id(hb, stream_id)) {
-> > > +		dev_info(&hb->dev, "Failed to claim %s Stream ID %d\n",
-> > > +			 stream_id == PCI_IDE_RESERVED_STREAM_ID ? "reserved" :
-> > > +								   "active",
-> > > +			 stream_id);  
-> > 
-> > Good to have a comment on why we carry on anyway.  
+> This property should be used to indicate the T_POWER_ON for each Root Port.
 > 
-> ...but we do not carry on. When claim_stream() fails pci_ide_init()
-> fails. So this dev_info() is there to clue in an admin wondering why IDE
-> capabilities may not be available for some devices.
 
-Ok. Failure isn't an error as such, but stuff just doesn't get set up.
-Fair enough.
+I'm not sure if we should restrict this property to just Root Ports. Defining a
+property in 'pci-bus-common.yaml' means, all PCI bridges could use it, but this
+value is applicable to endpoint devices also.
 
+Also, you might want to add some info that the driver (or DT consumer) should
+derive the T_POWER_ON Scale and T_POWER_ON Value from this value.
 
-> > > +	if (!reserve_stream_id(hb, stream_id))
-> > > +		return NULL;
-> > > +
-> > > +	*sid = (struct pci_ide_stream_id) {
-> > > +		.hb = hb,
-> > > +		.stream_id = stream_id,
-> > > +	};
-> > > +
-> > > +	return sid;
-> > > +}
-> > > +DEFINE_FREE(free_stream_id, struct pci_ide_stream_id *,
-> > > +	    if (_T) ida_free(&_T->hb->ide_stream_ids_ida, _T->stream_id))
-> > > +
-> > >  /**
-> > >   * pci_ide_stream_register() - Prepare to activate an IDE Stream
-> > >   * @ide: IDE settings descriptor
-> > > @@ -313,6 +427,7 @@ int pci_ide_stream_register(struct pci_ide *ide)
-> > >  {
-> > >  	struct pci_dev *pdev = ide->pdev;
-> > >  	struct pci_host_bridge *hb = pci_find_host_bridge(pdev->bus);
-> > > +	struct pci_ide_stream_id __sid;
-> > >  	u8 ep_stream, rp_stream;
-> > >  	int rc;
-> > >  
-> > > @@ -321,6 +436,13 @@ int pci_ide_stream_register(struct pci_ide *ide)
-> > >  		return -ENXIO;
-> > >  	}
-> > >  
-> > > +	struct pci_ide_stream_id *sid __free(free_stream_id) =
-> > > +		alloc_stream_id(hb, ide->stream_id, &__sid);  
-> > 
-> > Given the use of __sid as magic storage, I wonder if this can
-> > be a CLASS with that storage wrapped up alongside a flag
-> > we clear to make the destructor a no op. Similar to what happens for
-> > spin_lock_irqsave where we stash flags etc via __DEFINE_UNLOCK_GUARD() 
-> > 
-> > Would need something a little more complex than current retain_and_null_ptr()
-> > as it would need to set _T.ptr = NULL rather that _T = NULL.  
+- Mani
+
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+> Changes in v1:
+> - Updated the commiit text (Mani).
+> - Link to v1: https://lore.kernel.org/all/20251110112550.2070659-1-krishna.chundru@oss.qualcomm.com/#t
 > 
-> Interesting. It is rare to have this kind of request model in core code.
-> Most of the "discover the platform published resource + request it"
-> happens in driver probe contexts and devm cleanup is available for that
-> (e.g.  devm_request_mem_region()). If we can find more users for such a
-> scope-based-cleanup model I would cheer on the person that wanted to
-> take that on.
+>  dtschema/schemas/pci/pci-bus-common.yaml | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> Otherwise the "magic storage" approach is also taken with:
+> diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
+> index 5257339..bbe5510 100644
+> --- a/dtschema/schemas/pci/pci-bus-common.yaml
+> +++ b/dtschema/schemas/pci/pci-bus-common.yaml
+> @@ -152,6 +152,15 @@ properties:
+>        This property is invalid in host bridge nodes.
+>      maxItems: 1
+>  
+> +  t-power-on-us:
+> +    description:
+> +      The minimum amount of time that each component must wait in
+> +      L1.2.Exit after sampling CLKREQ# asserted before actively driving
+> +      the interface to ensure no device is ever actively driving into an
+> +      unpowered component. This value is based on the components and AC
+> +      coupling capacitors used in the connection linking the two
+> +      components(PCIe r6.0, sec 5.5.4).
+> +
+>    supports-clkreq:
+>      description:
+>        If present this property specifies that CLKREQ signal routing exists from
+> -- 
+> 2.34.1
 > 
->     struct stream_index __stream[PCI_IDE_HB + 1];
->     ...
->     alloc_stream_index(..., &__stream[...]);
 > 
-Agreed. Potentially this is something for another day. 
 
-Jonathan
-
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
