@@ -1,249 +1,150 @@
-Return-Path: <linux-pci+bounces-40663-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40664-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27C62C44C61
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 03:30:42 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9B75C44DEF
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 04:58:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3C8C3A46F1
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 02:30:40 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A531B4E1FFD
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 03:58:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5736817555;
-	Mon, 10 Nov 2025 02:30:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0847828C5B1;
+	Mon, 10 Nov 2025 03:58:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="GUxFPHmh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K7NbbK+8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m32117.qiye.163.com (mail-m32117.qiye.163.com [220.197.32.117])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FE020ED;
-	Mon, 10 Nov 2025 02:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144CA28A72F
+	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 03:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762741839; cv=none; b=DTUPPMKOjZy11qnjciSP674uU8xQGlKDaYfBsqbCZCmmmTdZoUSqUa53jH1hdsyqIud8IMsRPkQECL+78D0IzuyohjOpcdiP51+B3gYiSrIw3+nsGb8OERlrP4S4EuIBqX+lhvxq7y1n91bvlmunKrMnOMREGIdFlWm5rNvXUHY=
+	t=1762747125; cv=none; b=QS0OAteyYx51nsdFrKVZOzWKS7iTvFiGaq0ZP2Hgd7fyY/wSiFykFnCLZEe8t4e1a93JWohZ221qju3TZ3o38B13viZkL9NCiUSWl3iZC12zpBiYQOpx0x+3IbDBrsOIU8CFI9y0MzNPEQuyR0YUUVWdGZgpxMN394PHXmn71pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762741839; c=relaxed/simple;
-	bh=semVxE4nupV8mktdww+1XMfEXXQO9FmklDp6OOkMI6A=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=F2kqFruG3coFtk6yPmKVkMi3CNUiZf0m4apzwM3JGu7WHFdVucps9ZfCdgpxElwMBkWunR7HYjtocyAJt2Ml3FinHAvDepwopC4EGP8ImUCStuZrqp4fBC8EjK9ZyO11Y2mrWzelPXgT/Zp0KPuZDQ/Y4mJ45RxsUOG+RuWvm00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=GUxFPHmh; arc=none smtp.client-ip=220.197.32.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.129] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 28f6e9869;
-	Mon, 10 Nov 2025 10:30:24 +0800 (GMT+08:00)
-Message-ID: <780a4209-f89f-43a9-9364-331d3b77e61e@rock-chips.com>
-Date: Mon, 10 Nov 2025 10:30:20 +0800
+	s=arc-20240116; t=1762747125; c=relaxed/simple;
+	bh=IR4tchos/E8hgWZcbbM8s8lqpQ1h4sKfPoc9AVB+plI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NQLQmRldseV6zwgkuOQOTxx5rQhz7izUqBivBGb7g/ee5c2ReyLOBaVbF5mddT+b72616M2OmfNy49OuSNd129g0KAnjshT2CIMEFIqbXVYMn9GtIzu8NCmXX1tN2hf28IVQYZvFXMchgTFI0iz955SXLwjwjHx1AL0MtmxSKYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K7NbbK+8; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762747124; x=1794283124;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IR4tchos/E8hgWZcbbM8s8lqpQ1h4sKfPoc9AVB+plI=;
+  b=K7NbbK+83kvCvDgc+j3n9dxhldmSYLhcvOnjqLXQthn9DZ0PCgP+FyBP
+   mfGcVZgO94P2yyrKBw9Jj7O+WPXQ/fzQSKH2gwi0LxBjIkMQY/cQHJcj/
+   11Uw8W28Kqd6VI0VBB9GOqz2wZL8EMLGRwZxDMTU/Wuu8uooZH22ezZtm
+   wnGx7DNq8m0AoFEyx9Bd16jTHzsEWzP+5+UidIkk0aZ2EBjqRiIvQWU4J
+   x/GbtG4FBBCkNLZ81Wa6/aSEJJdAaXgYMHdvgeiVflHF0P1wDKRhjwZQj
+   lPBG9WTnZ04b3eenNFqm4NPYH8PdLbsX/YAA6JR/xaZvXgbwvYzJ+eKwn
+   w==;
+X-CSE-ConnectionGUID: jaUMMdU6TaWbFzSgtN2+TQ==
+X-CSE-MsgGUID: UcPQz58IStOVYZin/rtmUw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="75406017"
+X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
+   d="scan'208";a="75406017"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 19:58:43 -0800
+X-CSE-ConnectionGUID: lItjY3QqSGGOFJMfltOF7w==
+X-CSE-MsgGUID: Xx1VV85/Q2OleUdn3aWbWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
+   d="scan'208";a="219299468"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa001.fm.intel.com with ESMTP; 09 Nov 2025 19:58:41 -0800
+Date: Mon, 10 Nov 2025 11:44:19 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-pci@vger.kernel.org, linux-coco@lists.linux.dev,
+	gregkh@linuxfoundation.org, aik@amd.com, aneesh.kumar@kernel.org,
+	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH v8 4/9] PCI/TSM: Establish Secure Sessions and Link
+ Encryption
+Message-ID: <aRFfk14DJWEVhC/R@yilunxu-OptiPlex-7050>
+References: <20251031212902.2256310-1-dan.j.williams@intel.com>
+ <20251031212902.2256310-5-dan.j.williams@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, Damien Le Moal <dlemoal@kernel.org>,
- Anand Moon <linux.amoon@gmail.com>, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, Dragan Simic <dsimic@manjaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Heiko Stuebner <heiko@sntech.de>, mani@kernel.org,
- Niklas Cassel <cassel@kernel.org>
-Subject: Re: [RESEND] Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
-To: FUKAUMI Naoki <naoki@radxa.com>
-References: <20250113-rockchip-no-wait-v1-1-25417f37b92f@kernel.org>
- <1E8E4DB773970CB5+5a52c9e1-01b8-4872-99b7-021099f04031@radxa.com>
- <6e87b611-13ea-4d89-8dbf-85510dd86fa6@rock-chips.com>
- <aQ840q5BxNS1eIai@ryzen> <aQ9FWEuW47L8YOxC@ryzen>
- <55EB0E5F655F3AFC+136b89fd-98d4-42af-a99d-a0bb05cc93f3@radxa.com>
- <aRCI5kG16_1erMME@ryzen>
- <F8B2B6FA2884D69A+b7da13f2-0ffb-4308-b1ba-0549bc461be8@radxa.com>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <F8B2B6FA2884D69A+b7da13f2-0ffb-4308-b1ba-0549bc461be8@radxa.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9a6b99abfe09cckunm39d6557412b970a
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQh9IHVZIGBhMSh0aGkJJHxpWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpKQk
-	xVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=GUxFPHmh5MX8wp7RrOmxB7Fy+w6B+Zbl+TkUp3xCyX6leuKuiZCEFDdiKy0akiHYJJ+ykpT8yYLRVhjtplDwDi210e+zX1I9nI8LBPfoA4nn5T50/H5L3/kwWPOBHjGFG2hrGK534NEh9XfEtJtZdcDhKuiJWgTB2uW9Gc7jEx4=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=ST4GcK2McWrhDhZAl75VtQG+4FHxpdlWOF4ND05GHw4=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251031212902.2256310-5-dan.j.williams@intel.com>
 
-Hi Fukaumi
+> +#ifdef CONFIG_PCI_TSM
+> +int pci_tsm_register(struct tsm_dev *tsm_dev);
+> +void pci_tsm_unregister(struct tsm_dev *tsm_dev);
+> +int pci_tsm_link_constructor(struct pci_dev *pdev, struct pci_tsm *tsm,
+> +			     struct tsm_dev *tsm_dev);
+> +int pci_tsm_pf0_constructor(struct pci_dev *pdev, struct pci_tsm_pf0 *tsm,
+> +			    struct tsm_dev *tsm_dev);
+> +void pci_tsm_pf0_destructor(struct pci_tsm_pf0 *tsm);
+> +int pci_tsm_doe_transfer(struct pci_dev *pdev, u8 type, const void *req,
+> +			 size_t req_sz, void *resp, size_t resp_sz);
+> +#else
+> +static inline int pci_tsm_register(struct tsm_dev *tsm_dev)
+> +{
+> +	return 0;
+> +}
+> +static inline void pci_tsm_unregister(struct tsm_dev *tsm_dev)
+> +{
+> +}
+> +static inline int pci_tsm_doe_transfer(struct pci_dev *pdev, u8 type,
+> +				       const void *req, size_t req_sz,
+> +				       void *resp, size_t resp_sz)
 
-在 2025/11/10 星期一 7:26, FUKAUMI Naoki 写道:
-> (RESEND: fix mani's email address)
-> 
-> Hi Niklas,
-> 
-> On 11/9/25 21:28, Niklas Cassel wrote:
->> On Sun, Nov 09, 2025 at 01:42:23PM +0900, FUKAUMI Naoki wrote:
->>> Hi Niklas,
->>>
->>> On 11/8/25 22:27, Niklas Cassel wrote:
->>> (snip)> (And btw. please test with the latest 6.18-rc, as, from 
->>> experience,
->>> the
->>>> ASPM problems in earlier RCs can result in some weird problems that are
->>>> not immediately deduced to be caused by the ASPM enablement.)
->>>
->>> Here is dmesg from v6.18-rc4:
->>>   https://gist.github.com/RadxaNaoki/40e1d049bff4f1d2d4773a5ba0ed9dff
->>
->> Same problem as before:
->> [    1.732538] pci_bus 0004:43: busn_res: can not insert [bus 43-41] 
->> under [bus 42-41] (conflicts with (null) [bus 42-41])
->> [    1.732645] pci_bus 0004:43: busn_res: [bus 43-41] end is updated 
->> to 43
->> [    1.732651] pci_bus 0004:43: busn_res: can not insert [bus 43] 
->> under [bus 42-41] (conflicts with (null) [bus 42-41])
->> [    1.732661] pci 0004:42:00.0: devices behind bridge are unusable 
->> because [bus 43] cannot be assigned for them
->> [    1.732840] pci_bus 0004:44: busn_res: can not insert [bus 44-41] 
->> under [bus 42-41] (conflicts with (null) [bus 42-41])
->> [    1.732947] pci_bus 0004:44: busn_res: [bus 44-41] end is updated 
->> to 44
->> [    1.732952] pci_bus 0004:44: busn_res: can not insert [bus 44] 
->> under [bus 42-41] (conflicts with (null) [bus 42-41])
->> [    1.732962] pci 0004:42:02.0: devices behind bridge are unusable 
->> because [bus 44] cannot be assigned for them
->> [    1.733134] pci_bus 0004:45: busn_res: can not insert [bus 45-41] 
->> under [bus 42-41] (conflicts with (null) [bus 42-41])
->> [    1.733246] pci_bus 0004:45: busn_res: [bus 45-41] end is updated 
->> to 45
->> [    1.733255] pci_bus 0004:45: busn_res: can not insert [bus 45] 
->> under [bus 42-41] (conflicts with (null) [bus 42-41])
->> [    1.733266] pci 0004:42:06.0: devices behind bridge are unusable 
->> because [bus 45] cannot be assigned for them
->> [    1.733438] pci_bus 0004:46: busn_res: can not insert [bus 46-41] 
->> under [bus 42-41] (conflicts with (null) [bus 42-41])
->> [    1.733544] pci_bus 0004:46: busn_res: [bus 46-41] end is updated 
->> to 46
->> [    1.733550] pci_bus 0004:46: busn_res: can not insert [bus 46] 
->> under [bus 42-41] (conflicts with (null) [bus 42-41])
->> [    1.733560] pci 0004:42:0e.0: devices behind bridge are unusable 
->> because [bus 46] cannot be assigned for them
->> [    1.733571] pci_bus 0004:42: busn_res: [bus 42-41] end is updated 
->> to 46
->> [    1.733575] pci_bus 0004:42: busn_res: can not insert [bus 42-46] 
->> under [bus 41] (conflicts with (null) [bus 41])
->> [    1.733585] pci 0004:41:00.0: devices behind bridge are unusable 
->> because [bus 42-46] cannot be assigned for them
->> [    1.733596] pcieport 0004:40:00.0: bridge has subordinate 41 but 
->> max busn 46
->>
->>
->> Seems like the ASM2806 switch, for some reason, is not ready.
->>
->> One change that Diederik pointed out is that in the "good" case,
->> the link is always in Gen1 speed.
->>
->> Perhaps you could build with CONFIG_PCI_QUIRKS=y and try this patch:
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index 214ed060ca1b..ac134d95a97f 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -96,6 +96,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
->>   {
->>       static const struct pci_device_id ids[] = {
->>           { PCI_VDEVICE(ASMEDIA, 0x2824) }, /* ASMedia ASM2824 */
->> +        { PCI_VDEVICE(ASMEDIA, 0x2806) }, /* ASMedia ASM2806 */
->>           {}
->>       };
->>       u16 lnksta, lnkctl2;
-> 
-> It doesn't help with either probing behind the bridge or the link speed.
-> 
->> If that does not work, perhaps you could try this patch
->> (assuming that all Rock 5C:s have a ASM2806 on pcie2x1l2):
-> 
-> ROCK 5C has a PCIe FPC connector and I'm using Dual 2.5G Router HAT.
->   https://radxa.com/products/rock5/5c#techspec
->   https://radxa.com/products/accessories/dual-2-5g-router-hat
-> 
-> Regarding the link speed, I initially suspected the FPC connector and/or 
-> cable might be the issue. However, I tried the Dual 2.5G Router HAT with 
-> the ROCK 5A (which uses a different cable), and I got the same result.
-> 
-> BTW, the link speed varies between 2Gb/s and 4Gb/s depending on the 
-> reboot. (with or without quirk)
+Any concern to keep the stub without PCI_TSM?
+pci_tsm_pf0_constructor/destructor() don't do this.
 
-Could you please help check this patch?
+> +{
+> +	return -ENXIO;
+> +}
+> +#endif
 
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -454,6 +454,8 @@ static irqreturn_t 
-rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
-         struct dw_pcie *pci = &rockchip->pci;
-         struct dw_pcie_rp *pp = &pci->pp;
-         struct device *dev = pci->dev;
-+       struct pci_bus *child, *root_bus = NULL;
-+       struct pci_dev *bridge;
-         u32 reg;
+[...]
 
-         reg = rockchip_pcie_readl_apb(rockchip, 
-PCIE_CLIENT_INTR_STATUS_MISC);
-@@ -462,12 +464,21 @@ static irqreturn_t 
-rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
-         dev_dbg(dev, "PCIE_CLIENT_INTR_STATUS_MISC: %#x\n", reg);
-         dev_dbg(dev, "LTSSM_STATUS: %#x\n", 
-rockchip_pcie_get_ltssm(rockchip));
+> diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
+> new file mode 100644
+> index 000000000000..6a2849f77adc
+> --- /dev/null
+> +++ b/drivers/pci/tsm.c
+> @@ -0,0 +1,643 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Interface with platform TEE Security Manager (TSM) objects as defined by
+> + * PCIe r7.0 section 11 TEE Device Interface Security Protocol (TDISP)
+> + *
+> + * Copyright(c) 2024-2025 Intel Corporation. All rights reserved.
+> + */
+> +
+> +#define dev_fmt(fmt) "PCI/TSM: " fmt
+> +
+> +#include <linux/bitfield.h>
 
-+       list_for_each_entry(child, &pp->bridge->bus->children, node) {
-+               if (child->parent == pp->bridge->bus) {
-+                       root_bus = child;
-+                       bridge = root_bus->self;
-+                       break;
-+               }
-+        }
-+
-         if (reg & PCIE_RDLH_LINK_UP_CHGED) {
-                 if (rockchip_pcie_link_up(pci)) {
-                         msleep(PCIE_RESET_CONFIG_WAIT_MS);
-                         dev_dbg(dev, "Received Link up event. Starting 
-enumeration!\n");
-                         /* Rescan the bus to enumerate endpoint devices */
-                         pci_lock_rescan_remove();
-+                       pci_stop_and_remove_bus_device(bridge);
-                         pci_rescan_bus(pp->bridge->bus);
-                         pci_unlock_rescan_remove();
-                 }
+No need the bitfield.h
 
+> +#include <linux/pci.h>
+> +#include <linux/pci-doe.h>
+> +#include <linux/pci-tsm.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/tsm.h>
+> +#include <linux/xarray.h>
 
-> 
-> Best regards,
-> 
-> -- 
-> FUKAUMI Naoki
-> Radxa Computer (Shenzhen) Co., Ltd.
-> 
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5c.dts b/arch/ 
->> arm64/boot/dts/rockchip/rk3588s-rock-5c.dts
->> index dd7317bab613..26f8539d934a 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5c.dts
->> +++ b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5c.dts
->> @@ -452,6 +452,7 @@ &pcie2x1l2 {
->>       pinctrl-0 = <&pcie20x1_2_perstn_m0>;
->>       reset-gpios = <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>;
->>       vpcie3v3-supply = <&pcie2x1l2_3v3>;
->> +    max-link-speed = <1>;
->>       status = "okay";
->>   };
->>
->>
->>
->> Kind regards,
->> Niklas
->>
-> 
-> 
+No need the xarray.h
+
+Anyway, they are all minor and cause no impact, I don't expect a new
+version.
+
+Reviewed-by: Xu Yilun <yilun.xu@linux.intel.com>
 
 
