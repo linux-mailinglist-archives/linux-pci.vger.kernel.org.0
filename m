@@ -1,123 +1,151 @@
-Return-Path: <linux-pci+bounces-40680-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40681-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 226D3C45438
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 08:55:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE496C4556B
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 09:19:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E6EF4188EF30
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 07:55:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 977DF3B256F
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 08:18:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2F142E54B6;
-	Mon, 10 Nov 2025 07:55:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D83CB24BBE4;
+	Mon, 10 Nov 2025 08:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hFR3FZ/x"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bg2.exmail.qq.com (bg2.exmail.qq.com [114.132.63.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C917279787;
-	Mon, 10 Nov 2025 07:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.63.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D98323504B
+	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 08:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762761306; cv=none; b=aXsNveHBIf7sW4uRODkkaJpI+ScbvkAiEfXvFFmHcrxI90or2kcsoTgrV/Li0qeCkb3EC4KhtiCO0ijVQo/SkYHnTonxP4CTU0ckMAEeYpRYV4riaDlU+bz+wAg0BMdk4PfYUfQZiB2GuZDOCQZVDA4XoeTRM9pjoCQZaJH8D9c=
+	t=1762762736; cv=none; b=TAxkopXcDcHLxnH8Ct2Ocu4YcRcogCDxQgMR/gsELFWJHPem+WDwtC6LY80asLTWUCzCMKye3amN2LDlNX+fPAzMKYZv7qHB6165ZnVBA76XoZKeipRHqeKSqhSOjo0hRntrvY/GtnWuKpTre7Xah8Uu9m/TuBt8dVMsTXpZhV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762761306; c=relaxed/simple;
-	bh=LwvXpTSVojyx1MC96z6doTIVU2BtzwaHAIfGb93IdHY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E/WLl3x8jH2cVyN5dz1vaQsS7HVm4RwMyRfy2FHPSv4MhoHZ1Lu74n9ysaKeCpwRCQC89bdzZBdwE2IzfwkPyVxUgYHzzI/5Czo/QaqfbFapoVUTWbn+JR+a8s3T/XT0ymUKy0srRaKD2mg1SxNmDSykchiAnOSAu73ad4ncJ9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=114.132.63.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
-X-QQ-mid: zesmtpip4t1762761171t85c608ae
-X-QQ-Originating-IP: 4/pj04GV+NUG9bPpfO1T31SnMqTdV393yM24KkNEq88=
-Received: from [IPV6:240f:10b:7440:1:64e0:6ba: ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 10 Nov 2025 15:52:47 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 3134091033668820903
-Message-ID: <0C31787C387488ED+fd39bfe6-0844-4a87-bf48-675dd6d6a2df@radxa.com>
-Date: Mon, 10 Nov 2025 16:52:46 +0900
+	s=arc-20240116; t=1762762736; c=relaxed/simple;
+	bh=LUwREsvCB54P+nF2qMZzK2Xq5d8lmHU9Yu4Uy90Zjvo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=H5qUDlzb2dFsBclXT2f2AQ22IgGUYNR+4uqnGBVtNLOtsUk6kLvpgILkKd01PbQttpBTqvAUyg6GGIHgfwucWB1slHwHp82C6if4tQXhCIvHCCIyUjq1isy9vw6G1M+t0QBOnuMzVh5zZTUGAhqtkeL4tBpmG2HkbIgNrz4bex4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hFR3FZ/x; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-47778b23f64so5282055e9.0
+        for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 00:18:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1762762733; x=1763367533; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+Ow0jXvjkh77pOXWIP6I5DYsF4xpz6igLz3RhPzX2Hc=;
+        b=hFR3FZ/xshkoNyuZt5jSfQ+VXYtbnH85AAMhNYL1vNq0ObRVZo3kqTd9pRB5ePgm/T
+         FK/fRHmQjsHC4g9/MseoRElf+XkPC0tJOTg8N/Stpjo8x5mUBUbqeCClPC+EbHH/6d8Q
+         SQL3RrYP+E0fGsZ9lWIamvwlL44kAdsxwcnpUdp/5jA07ytfRiCP5wS0vkoPV1hnmtSI
+         0Yx0waezk41ae0tqyTFN2nVywJslB8Ub5aJe21eISo5PoIqkd4T5OZ4nAVu6j3/DxHU6
+         Uqc8YpasHmX/uagAe4/oeprsq9vTZrCH8l8L4/syh0rxsCPEs6vULAysGDLK6y9YRHHC
+         /gGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762762733; x=1763367533;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+Ow0jXvjkh77pOXWIP6I5DYsF4xpz6igLz3RhPzX2Hc=;
+        b=nU0NlruCAxPtwf/4kBQAHWHmtokzHTaB3Tvwoh3rc5QkKEmkKJUratLqXTsKdSU65a
+         DF7wCBh+2fs3w7AKvkgkugGIJmJS16v9ZQaCAFkAXb0cXXYVRW84NV163AbI3Z9ppB7I
+         maU0DFJduS2cHFIcwmrGl46iiGpn2hWM9RhhcDctijk6xeLIAal5YwgsqK6fDycEdaie
+         6t39mgE/iqCTCMEmew6XM3EkaaR8z14+Smv+vOGTwdS2Sbnenlkpfr7ZodYDREv1u+mU
+         FQePk79riEhHny1TBO3/PqbkIYPm2ZSuJgEzqXEJSymrBzIt0YWxkhv1fu9SdF9zU9bz
+         1y0w==
+X-Gm-Message-State: AOJu0Yz+4CDYr9YkX8M3xiGu5/uoUjxLqWmu8LqTq28Zml3SdGjPoXhR
+	e9s1jgxAbuVPJ4f83LLoq8BhFAunxDn1eBQkQvSAP2PS7TQsRqcQ2OidqYRZxbIEkG8=
+X-Gm-Gg: ASbGncsiqXPqTIuAMGkG6+hSPwdxbHjnfefrpdMml/9OS4zYOQZVPg9Wmk66HSR0AXF
+	Z94WXF4S0uIfR/pe0LPDLSXyeAMpmMEE/qZhUbstJP8KvxWzVLynfKmzkbcEQqbC8QxJbymxhmd
+	UBUeSrq8CKARw7DoadjZg2+WPohOKvBIya6voJOqHVVmfAQeseqc37hlO8TTI4kxth7iLBbHwar
+	kP3O7kRuJcorbfOTrA1bk4VGJsMN9FrIsGBlFr5PzZS3PW1mhz9QYqKLIZWPGC8n6JgTFk3HTVG
+	67lnW1Y8zlW/2EtVG9ivnQNit0R9snX5NRSFRBbc6y1Z9gA+zHv8rQA3rGVoycb6Uj6Z7t9YZyu
+	EGF0CgJa448NO+5PalRzCrwJDko2JEQcr9V9LKBz7g5HX5IuovKsCmr06FYOPMkcDvcVRlXvkKo
+	VbAAJvCOuYI95b3OGZrHz+
+X-Google-Smtp-Source: AGHT+IFNAJ6Bn4FpyZtFF1NnxwYE2SjgYr7mpYVD4++XybQIbWpInXbD7iemC8JYoesp/8+j6x9DXg==
+X-Received: by 2002:a05:600c:4fc7:b0:477:6d96:b3dd with SMTP id 5b1f17b1804b1-47773236f6cmr51381675e9.1.1762762733314;
+        Mon, 10 Nov 2025 00:18:53 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4776bd08834sm192070105e9.15.2025.11.10.00.18.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Nov 2025 00:18:53 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Hanjie Lin <hanjie.lin@amlogic.com>, 
+ Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Andrew Murray <amurray@thegoodpenguin.co.uk>, 
+ Jingoo Han <jingoohan1@gmail.com>, 
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, stable+noautosel@kernel.org, 
+ stable@vger.kernel.org, Linnaea Lavia <linnaea-von-lavia@live.com>
+In-Reply-To: <20251101-pci-meson-fix-v1-0-c50dcc56ed6a@oss.qualcomm.com>
+References: <20251101-pci-meson-fix-v1-0-c50dcc56ed6a@oss.qualcomm.com>
+Subject: Re: (subset) [PATCH RESEND 0/3] PCI: meson: Fix the parsing of DBI
+ region
+Message-Id: <176276273239.834148.1225755186046227156.b4-ty@linaro.org>
+Date: Mon, 10 Nov 2025 09:18:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND] Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
-To: Shawn Lin <shawn.lin@rock-chips.com>, Niklas Cassel <cassel@kernel.org>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Anand Moon <linux.amoon@gmail.com>,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Dragan Simic <dsimic@manjaro.org>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kw@linux.com>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
- mani@kernel.org
-References: <20250113-rockchip-no-wait-v1-1-25417f37b92f@kernel.org>
- <1E8E4DB773970CB5+5a52c9e1-01b8-4872-99b7-021099f04031@radxa.com>
- <6e87b611-13ea-4d89-8dbf-85510dd86fa6@rock-chips.com>
- <aQ840q5BxNS1eIai@ryzen> <aQ9FWEuW47L8YOxC@ryzen>
- <55EB0E5F655F3AFC+136b89fd-98d4-42af-a99d-a0bb05cc93f3@radxa.com>
- <aRCI5kG16_1erMME@ryzen>
- <F8B2B6FA2884D69A+b7da13f2-0ffb-4308-b1ba-0549bc461be8@radxa.com>
- <780a4209-f89f-43a9-9364-331d3b77e61e@rock-chips.com>
- <4487DA40249CC821+19232169-a096-4737-bc6a-5cec9592d65f@radxa.com>
- <363d6b4d-c999-43d4-866e-880ef7d0dec3@rock-chips.com>
-Content-Language: en-US
-From: FUKAUMI Naoki <naoki@radxa.com>
-In-Reply-To: <363d6b4d-c999-43d4-866e-880ef7d0dec3@rock-chips.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:radxa.com:qybglogicsvrsz:qybglogicsvrsz4b-0
-X-QQ-XMAILINFO: Nnd5cAEgLcFhaoh1TEl1DJYJf6tH1GPtz0M1lW/Y83FG0Y7A81bY4kY8
-	UCyUIkphKW8g8LkRoe/5mvRRljOzdgBBZ0my6EdhTyhj2HNKazxJbrfXkpVQUjxFsds4zSa
-	eJ77nEliz5VgZlxrVbKF/d22uPEIpi8zFk7I0uoyEfUUuj1m4O9RW4eH3jIsDOW//A+o9jo
-	xlW0aF/lW4NRF1dWGf3ithBsdEuKY//7KYaXpcZzvsOWfaC7t/IrIEg71XHzla45JgZKlwK
-	WDngZoN5bAxkjOMDcyQXPRnHeVsXqof5UQQXfY+Xz/4p+p9kfzYcxUsn1o4WLxIEdEczTzY
-	SWLz3Zuc7WZKFjLQO8+lwQud3txm1pmQjqe/nbKSJzvOseoUljE2VMRQvtpBxBsz4pb06LA
-	56EjbeQce5jc2+3Ilc+ILFTzqdPnBIGHlcvgpzaphoAZRaHvLRke4+VGGalXZ5k1rSTNJop
-	EodhbJKYkETdx5tAQorF9knNXTStsWebZu+TEVakk5zzA3Dz4HouE2W8LNlmFux64M4lg43
-	s/TFswj+XyXimmnF8/QmQSR4hHC4t+cW01Ze9Z+mOSjrLdB3coiS1BlYZSM7cyTcm77EOwo
-	kyQRtm2DDMvOrv6oZffVhSYXwlbjCc7PEAOFyeKygVsfmk9TcpzCXkOGT84w8qL4GmeJNq0
-	sXEgf+50URUkFU5HiXYsSq6RB2ncbimjpZVpYVcjzTXPrQr+SzYy2NZn4TbJZ41VuCjJdkD
-	39GaHVNMsWVM8BxFk48IUtbXsG9OpmWnsw4a0QEyt9Jd6FylFGSHsQvpWO+DdUmeKG8v3vc
-	Gr9i7eGeSKc5QdKavHcc8O2zlUKmxjEabs6QuVg6GY4qm9778vxdcnhinoHs1z2WuNxBseB
-	m1FrnSA9UdGOBwD2NRGh9Tg3HzV7PynlYjmEmNVMeTJbfH7vhMyLJuQ3ogJ1l7fP3L/r/ri
-	9CW3RRconjGKPWjalY6Nbck+RmOGmhwN0QUySDw8rAdEb2WlG84oRYzeJBAZufOlECp50+k
-	tqZr60jZ0S2R9+0fSX
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-SPAM: true
-X-QQ-RECHKSPAM: 3
+X-Mailer: b4 0.14.3
 
-Hi Shawn,
+Hi,
 
-On 11/10/25 16:12, Shawn Lin wrote:
-(snip)> Thanks for testing. I just got a ASM2806 switch as yours and 
-verified it
-> on vanilla v6.18-rc5. After 30 times of cold boot, two NVMes behind
-> ASM2806 work as expected. Nothing special happened when I checked
-> with PA as well. You could help check the log and lspci dump there[1].
+On Sat, 01 Nov 2025 09:59:39 +0530, Manivannan Sadhasivam wrote:
+> This compile tested only series aims to fix the DBI parsing issue repored in
+> [1]. The issue stems from the fact that the DT and binding described 'dbi'
+> region as 'elbi' from the start.
 > 
-> [1]https://pastebin.com/sAF1fT0g
+> Now, both binding and DTs are fixed and the driver is reworked to work with both
+> old and new DTs.
+> 
+> [...]
 
-Thanks for the info!
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.19/arm64-dt)
 
-I tried ASM2806 on Radxa ROCK 5B (RK3588).
-  https://gist.github.com/RadxaNaoki/640e47d377add9fe38301de164d4058e
+[2/3] arm64: dts: amlogic: Fix the register name of the 'DBI' region
+      https://git.kernel.org/amlogic/c/8b983ae355aab50942c72096beba30254c5078bd
 
-It doesn't work on PCIe 2.0 (M.2 E Key), but it does work on PCIe 3.0 
-(M.2 M Key).
+These changes has been applied on the intermediate git tree [1].
 
-Could you try PCIe 2.0 slot on your board?
+The v6.19/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
 
-Best regards,
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
 
---
-FUKAUMI Naoki
-Radxa Computer (Shenzhen) Co., Ltd.
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+-- 
+Neil
 
 
