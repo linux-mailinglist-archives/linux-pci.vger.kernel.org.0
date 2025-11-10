@@ -1,185 +1,145 @@
-Return-Path: <linux-pci+bounces-40799-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40801-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A6C9C49CB0
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 00:40:19 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51FE0C49D1F
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 00:58:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 88CF73AF2F4
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 23:38:19 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 295394EF1C0
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Nov 2025 23:58:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A9852F7471;
-	Mon, 10 Nov 2025 23:38:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D2522EC09F;
+	Mon, 10 Nov 2025 23:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="U0xyIRec"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rMfnUB62"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8651F2F744B
-	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 23:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE079337B8A
+	for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 23:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762817881; cv=none; b=jrooRNJXEZhPKCyv3L/aMwaR3HSNUhjCx0jyCnIS+hxA0dICQppK63MkIrOSW3tVtsDjXP5ZzB62fnDySBf/ty7UUohRUnNPF/zR3z5LDS9dbZS1DRLN6ZftYWDOAZYG7QauKaSvcRccMvu7iDKEng3EXWThZVyc/mym1Il5+lY=
+	t=1762819085; cv=none; b=a/XQGUOpCoMRRHEwCqbocN4LXs18uIQxVF0M4CiEMU82tGZUqam2/Qz43FifNGzLCRRhSrxUlaFw3eWU2EnQUtq/PdKonFUlaq6VsrzPWEIxwVH+fCnZehA76UDI3efv+Rmuz5n02VMj1KilJZK5k+HYD7xHUEJ7y8r3fVRfy+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762817881; c=relaxed/simple;
-	bh=odPTQHqCk/AknyMQCUhv0A0QcmH6YIldSa1T8WY4Ets=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E5Dm7HBVl/VPuIEr2++Zpm4p0oVX6J28jN5/graHck8thrJe2Vw6GBbbF4YwKzuJiGaQmuSdruaSLfsdh548/iPcY9ZLL9ullisEtjVojYH+NVYilAxYrx6ZT7Ssun+F6Xuszar60uM/dPzr8ZAO4TVhhZ+5M+ktsglFzUIFiYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=U0xyIRec; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <3eb5379f-c7ad-4aea-ab9a-20e07b7f34d0@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1762817866;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N5NdZ3Il1D+l8lwQLcK5dXwNIadjasDY9t8ilnV/mV0=;
-	b=U0xyIRecUBR+iYd+jFcmevJu/4H+A2bbNJnN96yfE0hlgn9ZMrH3LxAIKYqZS4s3cJ1uvm
-	+7WK+gk43pd/VuQQ8rDReqm1AlKlWm8GBWmK3v11GgPPZIdbI1RU8LPuoyCqW5EbUBDj5d
-	3Ou4TSlLX99wMRUdq/vNAC0vrqSI3Ow=
-Date: Mon, 10 Nov 2025 23:37:33 +0000
+	s=arc-20240116; t=1762819085; c=relaxed/simple;
+	bh=gR2t+MCFT0pENLeKE/c4frJpybxo9Ti1EMQAvfgDQGI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e5x4+YTG28AgejATvnCOxj9T85HaIAGj07qtdRMTuTUPgCGQchlbQCmtuAsGLzKRQXGAhnp2c+ajNLI/inxKfomnSb2vzvuAgQPdDtmenaPzv9DUpCrUAi/YP+e09p6p0o3o45sNlI3w6+j4mgoYz+xgu4bvL2keaIyQTNESAR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rMfnUB62; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-378d54f657fso29921991fa.2
+        for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 15:58:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1762819082; x=1763423882; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gR2t+MCFT0pENLeKE/c4frJpybxo9Ti1EMQAvfgDQGI=;
+        b=rMfnUB62IkZBgU4Z+MwGW9CfUGrmA19YQdXxMpBNsOeSJ0mEIRcXgpji9QXC0EYyJa
+         o+/Tku8BunlJT5rqpTHIDQcnC0gQ3F+JkdSrYjtxQfXoIsyhWp6/QS7GuituJLbu5Vwy
+         Y2z36yLhaznblXd+6FSzx3ztBGjYUzzA+q46QqvbjDXeQi0qTzWXA3AuPHvGZXRtu8Cq
+         RTZKrvyOiNDmIj/4kKFajk4V5MVhg+bkHb0LR2U8TtduyxRf1DorNvQFruPMZ/SbpwDG
+         13aG9D3U2O+aC7XKZ2XKF3l80D0Wm2qCGZQQeTFm/o11lzRynFNQt5R4bLoZZjz8H5GR
+         UBqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762819082; x=1763423882;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=gR2t+MCFT0pENLeKE/c4frJpybxo9Ti1EMQAvfgDQGI=;
+        b=bzpsQ1SwpXlFTZitlvV7YId3l8DjMoOcTcreFJiQl9PRfmL8QEr+mtuQRlw4/zbK3M
+         8k5LpkF2sfpZtz2ePvpbfD4qABSWtwG4pTcUvYZEk6ZXvSuQXXHyNyxgSrnD15DYiOvr
+         VDEFpjrsEqg2jvPBIe04yxho5ML/ihy/yfvZdWW7V11gHZ3T0eC0JgmeJE+ok8nP6d72
+         1WdsU1omKRelkKPGt43TpOcU9F+OcH6riHBOefG8wpv9XViP0+7BsnCZUZ+gsmcjYHhK
+         NK+d470+B4wYNo1A1WL5c1Yeqr1FjPfGvaUrltftLtX3IIbeoT/oZMpI3pfihZFE2/3c
+         BjOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVrEJ5XRONQwfSPZbuhTq/stC8/kkFjvWk3+vLTGEk+dghZW2uUgUFs+9ldEP+WqOC9g+XEVFJQX6g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUtK1oOD7Ji4H44awJo1MkUpCqWRyp1oQj7cth/uWfIEGPYpIO
+	4BvSgQr/Xh+CgF/7CfrXwkxssbRUEU82QnSal/ZNJIaOtKyQ5AaSmJsLn96mwYG4qO2H/ON2jQ/
+	qdTWNNw6hoQRYhMA/N54h65TRSGozSXr/+eiCdKyI6g==
+X-Gm-Gg: ASbGncu1p8ELGjAh78w7WhI1pC6YylMQtJjGki5FTCj/ErV96ZfP4r8zhgQSXwvrLqB
+	EmJzGq0HczIj1tWA4ujhXInkPXsyz/qQGv+hXR1GMkkL+b2TDa9dPk7fRlWJ8+NfEUtrYGbGNiP
+	s2ZgCw+rWgfvisg6r6S2h2SIN9fFHZXa0LHAj7VdT+wwzIuf41rrtHdqvh6cbvzeOAFrjregtFk
+	R7AnNw2J92LTyZz2PqhJA0l38P+y5tsijD4I7fYfjDW128PwpZNMvhBCrab3TlGSwjA/wY=
+X-Google-Smtp-Source: AGHT+IGq8/YFN7hlWLIK9a4/CG12Y6T0bDy/N5/JTLofPKZElIMDZsi5lcAadM+CuswrNL2lnuY1YgL0/HzwYkg+O1w=
+X-Received: by 2002:a05:6512:b03:b0:594:4a5a:346 with SMTP id
+ 2adb3069b0e04-5945f15bf72mr2619011e87.17.1762819081904; Mon, 10 Nov 2025
+ 15:58:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1 19/23] ptp: ocp: Switch to use %ptSp
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Corey Minyard <corey@minyard.net>, =?UTF-8?Q?Christian_K=C3=B6nig?=
- <christian.koenig@amd.com>, "Dr. David Alan Gilbert" <linux@treblig.org>,
- Alex Deucher <alexander.deucher@amd.com>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Rob Clark <robin.clark@oss.qualcomm.com>,
- Matthew Brost <matthew.brost@intel.com>, Hans Verkuil <hverkuil@kernel.org>,
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Vitaly Lifshits <vitaly.lifshits@intel.com>,
- Manivannan Sadhasivam <mani@kernel.org>, Niklas Cassel <cassel@kernel.org>,
- Calvin Owens <calvin@wbinvd.org>, Sagi Maimon <maimon.sagi@gmail.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Karan Tilak Kumar <kartilak@cisco.com>,
- Casey Schaufler <casey@schaufler-ca.com>,
- Steven Rostedt <rostedt@goodmis.org>, Petr Mladek <pmladek@suse.com>,
- Max Kellermann <max.kellermann@ionos.com>, Takashi Iwai <tiwai@suse.de>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- openipmi-developer@lists.sourceforge.net, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
- amd-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
- linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
- intel-wired-lan@lists.osuosl.org, linux-pci@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-staging@lists.linux.dev, ceph-devel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-sound@vger.kernel.org
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Jonathan Corbet <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>,
- Gustavo Padovan <gustavo@padovan.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Lucas De Marchi <lucas.demarchi@intel.com>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Rodolfo Giometti
- <giometti@enneenne.com>, Jonathan Lemon <jonathan.lemon@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>,
- Stefan Haberland <sth@linux.ibm.com>, Jan Hoeppner <hoeppner@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Satish Kharat <satishkh@cisco.com>,
- Sesidhar Baddela <sebaddel@cisco.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Xiubo Li
- <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>
-References: <20251110184727.666591-1-andriy.shevchenko@linux.intel.com>
- <20251110184727.666591-20-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20251110184727.666591-20-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <20251107-wakeirq_support-v5-0-464e17f2c20c@oss.qualcomm.com> <20251107-wakeirq_support-v5-2-464e17f2c20c@oss.qualcomm.com>
+In-Reply-To: <20251107-wakeirq_support-v5-2-464e17f2c20c@oss.qualcomm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 11 Nov 2025 00:57:50 +0100
+X-Gm-Features: AWmQ_blAezbQ4rkb-Vrevk4Zgb5huFnQ0lcUTpotRRUAIJPGPB05jzXROpJ4ido
+Message-ID: <CACRpkdY9HsnG=xo=swnMcVha+unmvmxR6e6Ynsj09srM_tPmWA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] PCI: Add support for PCIe WAKE# interrupt
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com, 
+	sherry.sun@nxp.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/11/2025 18:40, Andy Shevchenko wrote:
-> Use %ptSp instead of open coded variants to print content of
-> struct timespec64 in human readable format.
-> 
-> While at it, fix wrong use of %ptT against struct timespec64.
-> It's kinda lucky that it worked just because the first member
-> there 64-bit and it's of time64_t type. Now with %ptS it may
-> be used correctly.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->   drivers/ptp/ptp_ocp.c | 15 ++++++---------
->   1 file changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-> index a5c363252986..a0bb8d3045d2 100644
-> --- a/drivers/ptp/ptp_ocp.c
-> +++ b/drivers/ptp/ptp_ocp.c
-> @@ -3261,7 +3261,7 @@ signal_show(struct device *dev, struct device_attribute *attr, char *buf)
->   			   signal->duty, signal->phase, signal->polarity);
->   
->   	ts = ktime_to_timespec64(signal->start);
-> -	count += sysfs_emit_at(buf, count, " %ptT TAI\n", &ts);
-> +	count += sysfs_emit_at(buf, count, " %ptS TAI\n", &ts);
->   
->   	return count;
->   }
-> @@ -4287,11 +4287,9 @@ ptp_ocp_summary_show(struct seq_file *s, void *data)
->   		ns += (s64)bp->utc_tai_offset * NSEC_PER_SEC;
->   		sys_ts = ns_to_timespec64(ns);
->   
-> -		seq_printf(s, "%7s: %lld.%ld == %ptT TAI\n", "PHC",
-> -			   ts.tv_sec, ts.tv_nsec, &ts);
-> -		seq_printf(s, "%7s: %lld.%ld == %ptT UTC offset %d\n", "SYS",
-> -			   sys_ts.tv_sec, sys_ts.tv_nsec, &sys_ts,
-> -			   bp->utc_tai_offset);
-> +		seq_printf(s, "%7s: %ptSp == %ptS TAI\n", "PHC", &ts, &ts);
-> +		seq_printf(s, "%7s: %ptSp == %ptS UTC offset %d\n", "SYS",
-> +			   &sys_ts, &sys_ts, bp->utc_tai_offset);
->   		seq_printf(s, "%7s: PHC:SYS offset: %lld  window: %lld\n", "",
->   			   timespec64_to_ns(&ts) - ns,
->   			   post_ns - pre_ns);
-> @@ -4499,9 +4497,8 @@ ptp_ocp_phc_info(struct ptp_ocp *bp)
->   		 ptp_clock_index(bp->ptp));
->   
->   	if (!ptp_ocp_gettimex(&bp->ptp_info, &ts, NULL))
-> -		dev_info(&bp->pdev->dev, "Time: %lld.%ld, %s\n",
-> -			 ts.tv_sec, ts.tv_nsec,
-> -			 bp->sync ? "in-sync" : "UNSYNCED");
-> +		dev_info(&bp->pdev->dev, "Time: %ptSp, %s\n",
-> +			 &ts, bp->sync ? "in-sync" : "UNSYNCED");
->   }
->   
->   static void
+On Fri, Nov 7, 2025 at 10:22=E2=80=AFAM Krishna Chaitanya Chundru
+<krishna.chundru@oss.qualcomm.com> wrote:
 
-Acked-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+> According to the PCIe specification 6, sec 5.3.3.2, there are two defined
+> wakeup mechanisms: Beacon and WAKE# for the Link wakeup mechanisms to
+> provide a means of signaling the platform to re-establish power and
+> reference clocks to the components within its domain. Beacon is a hardwar=
+e
+> mechanism invisible to software (PCIe r7.0, sec 4.2.7.8.1). Adding WAKE#
+> support in PCI framework.
+>
+> According to the PCIe specification, multiple WAKE# signals can exist in
+> a system. In configurations involving a PCIe switch, each downstream port
+> (DSP) of the switch may be connected to a separate WAKE# line, allowing
+> each endpoint to signal WAKE# independently. From figure 5.4, WAKE# can
+> also be terminated at the switch itself. To support this, the WAKE#
+> should be described in the device tree node of the endpint/bridge. If all
+> endpoints share a single WAKE# line, then WAKE# should be defined in the
+> each node.
+>
+> To support legacy devicetree in direct attach case, driver will search
+> in root port node for WAKE# if the driver doesn't find in the endpoint
+> node.
+>
+> In pci_device_add(), PCI framework will search for the WAKE# in its node,
+> If not found, it searches in its upstream port only if upstream port is
+> root port to support legacy bindings. Once found, register for the wake I=
+RQ
+> in shared mode, as the WAKE# may be shared among multiple endpoints.
+>
+> When the IRQ is asserted, the handle_threaded_wake_irq() handler triggers
+> a pm_runtime_resume(). The PM framework ensures that the parent device is
+> resumed before the child i.e controller driver which can bring back devic=
+e
+> state to D0.
+>
+> WAKE# is added in dts schema and merged based on below links.
+>
+> Link: https://lore.kernel.org/all/20250515090517.3506772-1-krishna.chundr=
+u@oss.qualcomm.com/
+> Link: https://github.com/devicetree-org/dt-schema/pull/170
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.co=
+m>
+
+The GPIO parts look all right to me, a bit complex since we can't use
+devm_* stuff here, but that happens.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
 
