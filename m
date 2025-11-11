@@ -1,147 +1,216 @@
-Return-Path: <linux-pci+bounces-40822-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40823-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDF5FC4B952
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 07:01:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DFAF4C4B9DF
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 07:12:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 226DE3B744F
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 06:01:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E4753A837F
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 06:12:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4BEF1A317D;
-	Tue, 11 Nov 2025 06:01:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBD9E2BCF68;
+	Tue, 11 Nov 2025 06:12:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z95UwU2F"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F4m8Imv6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C9C16EB42
-	for <linux-pci@vger.kernel.org>; Tue, 11 Nov 2025 06:01:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E806429E101
+	for <linux-pci@vger.kernel.org>; Tue, 11 Nov 2025 06:12:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762840893; cv=none; b=H2u/98r64OZeCNhV7q8byxiJxQ6SzMVSXMfasFuKSmoaDxAEQAiMtjgNHY6KCe1pK+maBTs0G+6zAb2ISpbIaMMfDade1DCuOuA+8v9M4ipetgPFD4ubmC1JOCjHKaqpoehHIuTny+7r7qWyiUXYx64tu8D5Zv649YLQDKu/P4Y=
+	t=1762841533; cv=none; b=tqRyxijUWsJHYeNfXc0B5Q8iapOrvLhxxshmZ6u2TjGstbVEJ83+gZswSiIXJGv/8Yx71qH/9Ci4bdGbRwsyGTgC8cn40q4x4w6iCoLaowEpEEacO2Q3bQO36RHJ/8+Jwb9hMQ9H22ApUT/y3oN4rAMiu6J8XHl09WLCqTtrQxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762840893; c=relaxed/simple;
-	bh=wd+AiYAHruPjJQSTOB4mXmdXpJNcgLiNv7nMibMjNiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uNq3ecOZ3mgOUp94/r6bzJsWtjql0TsO6dCCR7pUllyY7SpUmXkPopwQTOLAKEgIqgKLioOS5EL/LNGmj4huKndy7CrfrFM26sHKpuvyL6mW3OOxRPfaoggYJxZS5hWbVUmNBzviijiLQeR7SeteCjLI48TLhzC8alEmoYqFywQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z95UwU2F; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1762841533; c=relaxed/simple;
+	bh=fCP2AgHUxsJh0c9vX7ENI+nVcyMN9tY1e6fziP1tnjY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D0mRzwzRzFUp9L0xjxtOPvFA6MX3KUMzZKvIOhX/LH5A8bJDegDwTzrWpJMdoWfQYq72nkRXfXhRD+XAn9cezVicdxfbR9t7r+l8fq65A85TdjISRyjnidQFhCjEea8iFNi1QgfnCxpcyQg1UE30lRUNw7Qhh4/52AgvEcm3ZME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F4m8Imv6; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762840891; x=1794376891;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wd+AiYAHruPjJQSTOB4mXmdXpJNcgLiNv7nMibMjNiw=;
-  b=Z95UwU2FxCZsaOWtvbgRPjWl1i7Y+7FkifisEETDZkMOKDaeYPvlFWok
-   Hz4pL28TI2PaEmHVMwtoFHUm4rVj2K7K3wTkAxxi9cYVnSVejrDF2oEsY
-   U3nGvNMr8Tehrva65WqJn+8zER4eTTDWmF8sUxnvvHZ0XXBMX/218Rc9v
-   X8BQbw/o4rG2S0wc8yW2zVqOAaaBVOeq6D7CEab/AW3BKa8B0qpSQDs+y
-   gvl8WcH8FhMV+8r8Yi7NTlhO+vVI4MkjJsdFuByO3krgP83bXAj+Sq8+0
-   4oYKUygfiL9zwcJiPNnAWhLMqPToY3gF+g+3eI3bHxlP8ZUneGNiH/rsX
-   g==;
-X-CSE-ConnectionGUID: sII7yUfZRFOcKSJZu1uKuw==
-X-CSE-MsgGUID: NIzKyku3SoqSzXUaT/zBPQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="52455204"
+  t=1762841532; x=1794377532;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=fCP2AgHUxsJh0c9vX7ENI+nVcyMN9tY1e6fziP1tnjY=;
+  b=F4m8Imv6kvmhmybBCUVyflYtcQ6xV45CS9RlkNhV1rI+w36hXFesVt5z
+   8ag99EgptqTv8HCdMzYFImLmSCo5hzk0zUKc7sFSKjtFTRjGKtZyEKdT4
+   /LkUweGX1dv3WIRAGlSf/rT8P/zNdziAIqxeLILDXw0SaDRQSb7EoEuKj
+   1srS7+whbc6V1Z6LWmzADkCYLDmVHG3K0pyUmx+etbmODEVLYR0DMGJ3K
+   zYe9rEZv7a1W0x+Ryu9HbRpTM5Adpw10FGNzi03LCBODTRr8MfFb9wDpm
+   9WM/JEa4n4JuQHxbJUWsTeKh0doHrXRQATgy5prLwKbNZz+Wi/TSSD7S5
+   A==;
+X-CSE-ConnectionGUID: Tev+eE41SuOWQveYXz//Fw==
+X-CSE-MsgGUID: NHc0r8cpRy6hsvUDTZwoDA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="52457653"
 X-IronPort-AV: E=Sophos;i="6.19,295,1754982000"; 
-   d="scan'208";a="52455204"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 22:01:30 -0800
-X-CSE-ConnectionGUID: RNsA4MWKSIa9STGDCfVipw==
-X-CSE-MsgGUID: B/itmVGYThab9Qn1waruCQ==
+   d="scan'208";a="52457653"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 22:10:51 -0800
+X-CSE-ConnectionGUID: yD+LiCxwSP27ckDJcL6QWA==
+X-CSE-MsgGUID: iL8L1cwxTDqT38LBDCH3jg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,295,1754982000"; 
-   d="scan'208";a="193876964"
+   d="scan'208";a="188842816"
 Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa004.fm.intel.com with ESMTP; 10 Nov 2025 22:01:29 -0800
+  by orviesa007.jf.intel.com with ESMTP; 10 Nov 2025 22:10:50 -0800
 Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 8D45495; Tue, 11 Nov 2025 07:01:28 +0100 (CET)
-Date: Tue, 11 Nov 2025 07:01:28 +0100
+	id C9C4A95; Tue, 11 Nov 2025 07:10:48 +0100 (CET)
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH v3] PCI/PTM: Do not enable PTM solely based on the
- capability existense
-Message-ID: <20251111060128.GU2912318@black.igk.intel.com>
-References: <20251031060959.GY2912318@black.igk.intel.com>
- <20251111001023.GA2143615@bhelgaas>
+To: linux-pci@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH v4] PCI/PTM: Enable PTM only if it advertises a role
+Date: Tue, 11 Nov 2025 07:10:48 +0100
+Message-ID: <20251111061048.681752-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20251111001023.GA2143615@bhelgaas>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Nov 10, 2025 at 06:10:23PM -0600, Bjorn Helgaas wrote:
-> On Fri, Oct 31, 2025 at 07:09:59AM +0100, Mika Westerberg wrote:
-> > On Thu, Oct 30, 2025 at 03:59:37PM -0500, Bjorn Helgaas wrote:
-> > > On Thu, Oct 30, 2025 at 02:46:05PM +0100, Mika Westerberg wrote:
-> > > > It is not advisable to enable PTM solely based on the fact that the
-> > > > capability exists. Instead there are separate bits in the capability
-> > > > register that need to be set for the feature to be enabled for a given
-> > > > component (this is suggestion from Intel PCIe folks, and also shown in
-> > > > PCIe r7.0 sec 6.21.1 figure 6-21):
-> > > 
-> > > Can we start with a minimal statement of what's wrong?  Is the problem
-> > > that 01:00.0 sent a PTM Request Message that 00:07.0 detected as an
-> > > ACS violation?
-> > 
-> > The problem is that once the PCIe Switch is hotplugged we get tons of AER
-> > errors like below (here upstream port is 2b:00.0, in the previous example
-> > it was 01:00.0):
-> > 
-> > [  156.337979] pci 0000:2b:00.0: PTM enabled, 4ns granularity
-> > [  156.350822] pcieport 0000:00:07.1: AER: Multiple Uncorrectable (Non-Fatal) error message received from 0000:00:07.1
-> > [  156.361417] pcieport 0000:00:07.1: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Receiver ID)
-> > [  156.372656] pcieport 0000:00:07.1:   device [8086:e44f] error status/mask=00200000/00000000
-> > [  156.381041] pcieport 0000:00:07.1:    [21] ACSViol                (First)
-> > [  156.387842] pcieport 0000:00:07.1: AER:   TLP Header: 0x34000000 0x00000052 0x00000000 0x00000000
-> 
-> If I read this right:
-> 
->   0x34000000 is 0011 0100 0...0
->     Fmt  001    4 DW header, no data (PCIe r7.0, sec 2.2.1.1)
->     Type 10100  Message Request, Local - Terminate at Receiver (2.2.1.1, 2.2.8)
-> 
->   0x00000052 is 0...0 0101 0010
->     0x0000     Requester ID
->     0101 0010  PTM Request (2.2.8.10)
-> 
-> The fact that the Request ID is 0x0000 and the error is an ACS
-> Violation looks like the implementation note in sec 6.12.1.1:
-> 
->   Functions are permitted to transmit Upstream Messages before they
->   have been assigned a Bus Number. Such messages will have a Requester
->   ID with a Bus Number of 00h. If the Downstream Port has ACS Source
->   Validation enabled, these Messages (see Table F-1, Section 2.2.8.2,
->   and Section 6.22.1) will likely be detected as an ACS Violation
->   error.
+We have a Upstream Port (2b:00.0) that has following in the PTM capability:
 
-Okay thanks for looking.
+  Capabilities: [220 v1] Precision Time Measurement
+		PTMCap: Requester- Responder- Root-
 
-> So I assume 2b:00.0 sent a PTM Request with Requester ID of 0, and
-> 00:07.1 logged the ACS violation.  It's odd that 2b:00.0 would send a
-> PTM request if it doesn't advertise the PTM Requester role.  Also odd
-> that it doesn't seem to know its Bus Number.  It's supposed to capture
-> that from every config write request (sec 2.2.9.1), and I would think
-> it should have seen several by now including the one that enable PTM.
+Linux enables PTM for this without looking into what roles it actually
+supports. Immediately after enabling PTM we start getting these:
 
-Indeed but for some reason the flood of AER ACS violations start
-immediately after we enabled it. Even if it has the bus number already
-assigned.
+  pci 0000:2b:00.0: [8086:5786] type 01 class 0x060400 PCIe Switch Upstream Port
+  ...
+  pci 0000:2b:00.0: PTM enabled, 4ns granularity
+  ...
+  pcieport 0000:00:07.1: AER: Multiple Uncorrectable (Non-Fatal) error message received from 0000:00:07.1
+  pcieport 0000:00:07.1: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Receiver ID)
+  pcieport 0000:00:07.1:   device [8086:e44f] error status/mask=00200000/00000000
+  pcieport 0000:00:07.1:    [21] ACSViol                (First)
+  pcieport 0000:00:07.1: AER:   TLP Header: 0x34000000 0x00000052 0x00000000 0x00000000
 
-> But I think your fix is right even if we don't understand exactly how
-> we got there.  Are you planning an update, or ...?  Just wanted to
-> make sure we're not waiting for each other.
+Fix this by enabling PTM only if any of the following conditions are
+true (see more in PCIe r7.0 sec 6.21.1 figure 6-21):
 
-Yes, I have the new version ready. Tested it yesterday and was planning to
-send it out today.
+  - PCIe Endpoint that has PTM capability must to declare requester
+    capable
+  - PCIe Switch Upstream Port that has PTM capability must declare
+    at least responder capable
+  - PCIe Root Port must declare root port capable.
+
+While there make the enabling happen for all in __pci_enable_ptm() instead
+of enabling some in pci_ptm_init() and some in __pci_enable_ptm().
+
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+Previous versions can be seen:
+
+  v3: https://lore.kernel.org/linux-pci/20251030134606.3782352-1-mika.westerberg@linux.intel.com/
+  v2: https://lore.kernel.org/linux-pci/20251028060427.2163115-1-mika.westerberg@linux.intel.com/
+  v1: https://lore.kernel.org/linux-pci/20251021104833.3729120-1-mika.westerberg@linux.intel.com/
+
+Changes from v3:
+
+  - Cache the responder and requester capability bits.
+  - Enable PTM only in __pci_enable_ptm().
+  - Update $subject and commit message.
+  - Since this is changed quite a lot, I dropped the Reviewed-by from Lukas
+    and also stable tag.
+
+Changes from v2:
+
+  - Limit the check in __pci_enable_ptm() to Endpoints and Legacy
+    Endpoints.
+  - Added stable tags suggested by Lukas, and PCIe spec reference.
+  - Added Reviewed-by tag from Lukas (hope it is okay to keep).
+
+Changes from v1:
+
+  - Limit Switch Upstream Port only to Responder, not both Requester and
+    Responder.
+
+ drivers/pci/pcie/ptm.c | 41 ++++++++++++++++++++++++++++++++++++++---
+ include/linux/pci.h    |  2 ++
+ 2 files changed, 40 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+index 65e4b008be00..30e25f1ad28e 100644
+--- a/drivers/pci/pcie/ptm.c
++++ b/drivers/pci/pcie/ptm.c
+@@ -81,9 +81,12 @@ void pci_ptm_init(struct pci_dev *dev)
+ 		dev->ptm_granularity = 0;
+ 	}
+ 
+-	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+-	    pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM)
+-		pci_enable_ptm(dev, NULL);
++	if (cap & PCI_PTM_CAP_RES)
++		dev->ptm_responder = 1;
++	if (cap & PCI_PTM_CAP_REQ)
++		dev->ptm_requester = 1;
++
++	pci_enable_ptm(dev, NULL);
+ }
+ 
+ void pci_save_ptm_state(struct pci_dev *dev)
+@@ -144,6 +147,38 @@ static int __pci_enable_ptm(struct pci_dev *dev)
+ 			return -EINVAL;
+ 	}
+ 
++	switch (pci_pcie_type(dev)) {
++	case PCI_EXP_TYPE_ROOT_PORT:
++		/*
++		 * Root Port must declare Root Capable if we want to enable
++		 * PTM for it.
++		 */
++		if (!dev->ptm_root)
++			return -EINVAL;
++		break;
++	case PCI_EXP_TYPE_UPSTREAM:
++		/*
++		 * Switch Upstream Ports must at least declare Responder
++		 * Capable if we want to enable PTM for it.
++		 */
++		if (!dev->ptm_responder)
++			return -EINVAL;
++		break;
++
++	case PCI_EXP_TYPE_ENDPOINT:
++	case PCI_EXP_TYPE_LEG_END:
++		/*
++		 * PCIe Endpoint must declare Requester Capable before we
++		 * can enable PTM for it.
++		 */
++		if (!dev->ptm_requester)
++			return -EINVAL;
++		break;
++
++	default:
++		return -EINVAL;
++	}
++
+ 	pci_read_config_dword(dev, ptm + PCI_PTM_CTRL, &ctrl);
+ 
+ 	ctrl |= PCI_PTM_CTRL_ENABLE;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index d1fdf81fbe1e..d5018cb5c331 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -500,6 +500,8 @@ struct pci_dev {
+ #ifdef CONFIG_PCIE_PTM
+ 	u16		ptm_cap;		/* PTM Capability */
+ 	unsigned int	ptm_root:1;
++	unsigned int	ptm_responder:1;
++	unsigned int	ptm_requester:1;
+ 	unsigned int	ptm_enabled:1;
+ 	u8		ptm_granularity;
+ #endif
+-- 
+2.50.1
+
 
