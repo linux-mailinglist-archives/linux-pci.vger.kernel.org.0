@@ -1,207 +1,314 @@
-Return-Path: <linux-pci+bounces-40927-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40928-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E30E6C4ED85
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 16:48:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D62F4C4EDE5
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 16:52:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FD03188A47B
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 15:47:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F07B1189AD3B
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 15:52:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29E692FCBEF;
-	Tue, 11 Nov 2025 15:46:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FD582874F1;
+	Tue, 11 Nov 2025 15:52:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FdGTbdIh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GQ9+bsUe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F7B26E146
-	for <linux-pci@vger.kernel.org>; Tue, 11 Nov 2025 15:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5507E36654E;
+	Tue, 11 Nov 2025 15:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762876019; cv=none; b=cimDWDle7IAWCzbLSkjzU6K1bdC7LhTMvMF0T9cJ8Z2bCd2yrjKNUg1oI2NacmxwXGlafYRyuB8uLj1qiMo15Izgy13xp1vIsu0k9+iFtXZNEKk25K7LBYqc4fOrGywjmiHf549LQllNmZlx9kDNI1JR4LCzEdBT/4imXxZURKs=
+	t=1762876347; cv=none; b=s+4DnXCx3OU9nU0hZjyNIZkmOuXPROzHLK8Quy/qrN5gMzx/7Y6U9MlsIMSxfITcueClnSn+66Uv3jCud8K/giD+pAVDCz0puzLZ3gvS+QHuSTs/ZF97dNmIOtoeQIong8WopUjEnPI5qei3prY3kyhnbGFUT3GXIsYPtzm7PaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762876019; c=relaxed/simple;
-	bh=EWYFeMiR+cDVeEtIY4903y2dovG/LJ4RyR6T9SqSRx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A0CGIafZU+2FXBy0GG7Pk9ZJZM0PIbBAdH3sr1aVbvNFnnMhnjC3tkdL+GqVlq/OTiuBBUC+rMY2ILyKnD5N9jw/CiI069604Yevj42q6qybKIUgQf+wbubQAKIGt2GE8kmKk+Q9x1/BkAQkEainet/875+1/SBy1KIBx9/sP2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FdGTbdIh; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1762876347; c=relaxed/simple;
+	bh=U8yfNqSN49Gaztelb9TgSAQVh0yLGw/hvy5W6Raqhno=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YcHd4EqsOQ29Zk5b5LrbaOjZxhWY+52Buc1aYAUc1MJiCyWu+5qzZMw86pFGCQ5EFXfEKMysslIsJPJDx9b3zCUGLkxZ5X0642gc8KKwFJHLJTD7ho8Pk+CD9EbPEYW+F74Kq60iAFu4nnigVC20NtGGrPUhJa5gpW0RjOIx1og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GQ9+bsUe; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762876017; x=1794412017;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EWYFeMiR+cDVeEtIY4903y2dovG/LJ4RyR6T9SqSRx8=;
-  b=FdGTbdIhm2iTMyks14X96IbRhgFnjRWTwZALFKSgkb+3uUp+7ZnWA7aW
-   eSRy+7aa07PgrM3uVAQq6JOxL7Gv7Wy92eA22F+S5Dr8Ys98Js+Ca0ZAz
-   4CFiBrpcyya4oVVTexc96fPk3UDIPbikY27FOhvvtoHGSdJixc/qP4krE
-   /hU8rOFjeeKwU8AWNdOGEiW81wcBiI/eIzaZWYR8fR7wp9HHLoRF3R2wk
-   eAh8a1yVHg7xijoRTyRNVM+SDH1uMmUx0wZ09C5n/fCjiQ1Smwd0gFMOP
-   PxCxqoCkXfHw2HZXQh9p253PRK5oH/CpRBLd4zwjD3k3iJOCyV3cp9Iwm
-   w==;
-X-CSE-ConnectionGUID: h3swe4k8RfawHZPlHPFbcA==
-X-CSE-MsgGUID: itbo9DzxTL62BZ7x0cOAxg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="87568906"
+  t=1762876345; x=1794412345;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=U8yfNqSN49Gaztelb9TgSAQVh0yLGw/hvy5W6Raqhno=;
+  b=GQ9+bsUexwOJlZQcKKAvk8bp+5XXlcq71TWvrUqSjyDUrWILAXJq+vDl
+   88pyvTSrrR47eNY73ZKFNjD3gLtVgM6gYuf+qmugqNkzAzaOj4702lz1K
+   qM5e3TuFTwQgbkzg23JUDPLHwrYwyc2y+RxkFJdd6mH5fTXOZQs97EO5s
+   8BjTshHuUk2bxHsQsDtrXCcK+6923y2KKax2vJBiTsz/zG9ZfNUwI8Ycu
+   5AexqJlfXawg1BceabnmifyoufvGo+oEmPKXKKAv4+optNq4vqVg5OGBn
+   Mb4OYSn100KixU4DasKY/gak7Ewy5VablsUXFWOac74zK66Sr5KyFNIx4
+   Q==;
+X-CSE-ConnectionGUID: gZUTDopFS/mHCxZRQncvDw==
+X-CSE-MsgGUID: R8Psr6b6TnyfgHEHLpkJFg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="67542108"
 X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
-   d="scan'208";a="87568906"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 07:46:57 -0800
-X-CSE-ConnectionGUID: CiWI1zW1Q1+EAAlhjkp+ew==
-X-CSE-MsgGUID: An/nNLjLT3a8YR2DiZIbyA==
+   d="scan'208";a="67542108"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 07:52:24 -0800
+X-CSE-ConnectionGUID: myQ64WRUR82e0u21QPoYyA==
+X-CSE-MsgGUID: DsYajqoRSU2B3P+rvtPpIA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
-   d="scan'208";a="189721716"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa010.fm.intel.com with ESMTP; 11 Nov 2025 07:46:54 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id B40BE96; Tue, 11 Nov 2025 16:46:53 +0100 (CET)
-Date: Tue, 11 Nov 2025 16:46:53 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH v4] PCI/PTM: Enable PTM only if it advertises a role
-Message-ID: <20251111154653.GV2912318@black.igk.intel.com>
-References: <20251111061048.681752-1-mika.westerberg@linux.intel.com>
- <20251111153942.GA2174680@bhelgaas>
+   d="scan'208";a="188959316"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.132])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 07:52:17 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 11 Nov 2025 17:52:13 +0200 (EET)
+To: =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>
+cc: =?ISO-8859-15?Q?Alex_Benn=E9e?= <alex.bennee@linaro.org>, 
+    Simon Richter <Simon.Richter@hogyros.de>, 
+    Lucas De Marchi <lucas.demarchi@intel.com>, 
+    Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org, 
+    Bjorn Helgaas <bhelgaas@google.com>, David Airlie <airlied@gmail.com>, 
+    dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
+    intel-xe@lists.freedesktop.org, Jani Nikula <jani.nikula@linux.intel.com>, 
+    Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+    linux-pci@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+    Simona Vetter <simona@ffwll.ch>, Tvrtko Ursulin <tursulin@ursulin.net>, 
+    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
+    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 8/9] drm/amdgpu: Remove driver side BAR release before
+ resize
+In-Reply-To: <eb776004-c798-453d-bfbf-a40810308253@amd.com>
+Message-ID: <5be404d2-3227-afb9-f8c9-226326263eee@linux.intel.com>
+References: <20251028173551.22578-1-ilpo.jarvinen@linux.intel.com> <20251028173551.22578-9-ilpo.jarvinen@linux.intel.com> <c90f155f-44fe-4144-af68-309531392d22@amd.com> <aaaf27cf-5de0-c4ef-0758-59849878a99f@linux.intel.com> <fd7fdf61-cb08-4dfc-ba7a-a8a5b7eb9fda@amd.com>
+ <10b095b5-f433-3bfc-c1c9-5da7db560696@linux.intel.com> <eb776004-c798-453d-bfbf-a40810308253@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20251111153942.GA2174680@bhelgaas>
+Content-Type: multipart/mixed; boundary="8323328-1291627756-1762876333=:1002"
 
-Hi,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Tue, Nov 11, 2025 at 09:39:42AM -0600, Bjorn Helgaas wrote:
-> On Tue, Nov 11, 2025 at 07:10:48AM +0100, Mika Westerberg wrote:
-> > We have a Upstream Port (2b:00.0) that has following in the PTM capability:
-> > 
-> >   Capabilities: [220 v1] Precision Time Measurement
-> > 		PTMCap: Requester- Responder- Root-
-> > 
-> > Linux enables PTM for this without looking into what roles it actually
-> > supports. Immediately after enabling PTM we start getting these:
-> > 
-> >   pci 0000:2b:00.0: [8086:5786] type 01 class 0x060400 PCIe Switch Upstream Port
-> >   ...
-> >   pci 0000:2b:00.0: PTM enabled, 4ns granularity
-> >   ...
-> >   pcieport 0000:00:07.1: AER: Multiple Uncorrectable (Non-Fatal) error message received from 0000:00:07.1
-> >   pcieport 0000:00:07.1: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Receiver ID)
-> >   pcieport 0000:00:07.1:   device [8086:e44f] error status/mask=00200000/00000000
-> >   pcieport 0000:00:07.1:    [21] ACSViol                (First)
-> >   pcieport 0000:00:07.1: AER:   TLP Header: 0x34000000 0x00000052 0x00000000 0x00000000
-> > 
-> > Fix this by enabling PTM only if any of the following conditions are
-> > true (see more in PCIe r7.0 sec 6.21.1 figure 6-21):
-> > 
-> >   - PCIe Endpoint that has PTM capability must to declare requester
-> >     capable
-> >   - PCIe Switch Upstream Port that has PTM capability must declare
-> >     at least responder capable
-> >   - PCIe Root Port must declare root port capable.
-> > 
-> > While there make the enabling happen for all in __pci_enable_ptm() instead
-> > of enabling some in pci_ptm_init() and some in __pci_enable_ptm().
-> > 
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > ---
-> > Previous versions can be seen:
-> > 
-> >   v3: https://lore.kernel.org/linux-pci/20251030134606.3782352-1-mika.westerberg@linux.intel.com/
-> >   v2: https://lore.kernel.org/linux-pci/20251028060427.2163115-1-mika.westerberg@linux.intel.com/
-> >   v1: https://lore.kernel.org/linux-pci/20251021104833.3729120-1-mika.westerberg@linux.intel.com/
-> > 
-> > Changes from v3:
-> > 
-> >   - Cache the responder and requester capability bits.
-> >   - Enable PTM only in __pci_enable_ptm().
-> >   - Update $subject and commit message.
-> >   - Since this is changed quite a lot, I dropped the Reviewed-by from Lukas
-> >     and also stable tag.
-> > 
-> > Changes from v2:
-> > 
-> >   - Limit the check in __pci_enable_ptm() to Endpoints and Legacy
-> >     Endpoints.
-> >   - Added stable tags suggested by Lukas, and PCIe spec reference.
-> >   - Added Reviewed-by tag from Lukas (hope it is okay to keep).
-> > 
-> > Changes from v1:
-> > 
-> >   - Limit Switch Upstream Port only to Responder, not both Requester and
-> >     Responder.
-> > 
-> >  drivers/pci/pcie/ptm.c | 41 ++++++++++++++++++++++++++++++++++++++---
-> >  include/linux/pci.h    |  2 ++
-> >  2 files changed, 40 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-> > index 65e4b008be00..30e25f1ad28e 100644
-> > --- a/drivers/pci/pcie/ptm.c
-> > +++ b/drivers/pci/pcie/ptm.c
-> > @@ -81,9 +81,12 @@ void pci_ptm_init(struct pci_dev *dev)
-> >  		dev->ptm_granularity = 0;
-> >  	}
-> >  
-> > -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> > -	    pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM)
-> > -		pci_enable_ptm(dev, NULL);
-> > +	if (cap & PCI_PTM_CAP_RES)
-> > +		dev->ptm_responder = 1;
-> > +	if (cap & PCI_PTM_CAP_REQ)
-> > +		dev->ptm_requester = 1;
-> > +
-> > +	pci_enable_ptm(dev, NULL);
-> 
-> This seems nice and clean overall.
-> 
-> I do wonder about the fact that previously we automatically enabled
-> PTM only for Root Ports and Switch Upstream Ports, but we didn't
-> enable it for Endpoints until a driver called pci_enable_ptm().
+--8323328-1291627756-1762876333=:1002
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Oh, that's good point actually.
+On Tue, 11 Nov 2025, Christian K=C3=B6nig wrote:
 
-Yeah it should be like this still:
+> On 11/11/25 13:56, Ilpo J=C3=A4rvinen wrote:
+> > On Tue, 11 Nov 2025, Christian K=C3=B6nig wrote:
+> >=20
+> >> On 11/11/25 12:08, Ilpo J=C3=A4rvinen wrote:
+> >>> On Tue, 11 Nov 2025, Christian K=C3=B6nig wrote:
+> >>>
+> >>>> Sorry for the late reply I'm really busy at the moment.
+> >>>>
+> >>>> On 10/28/25 18:35, Ilpo J=C3=A4rvinen wrote:
+> >>>>> PCI core handles releasing device's resources and their rollback in
+> >>>>> case of failure of a BAR resizing operation. Releasing resource pri=
+or
+> >>>>> to calling pci_resize_resource() prevents PCI core from restoring t=
+he
+> >>>>> BARs as they were.
+> >>>>
+> >>>> I've intentionally didn't do it this way because at least on AMD HW =
+we=20
+> >>>> could only release the VRAM and doorbell BAR (both 64bit), but not t=
+he=20
+> >>>> register BAR (32bit only).
+> >>>>
+> >>>> This patch set looks like the right thing in general, but which BARs=
+ are=20
+> >>>> now released by pci_resize_resource()?
+> >>>>
+> >>>> If we avoid releasing the 32bit BAR as well then that should work,=
+=20
+> >>>> otherwise we will probably cause problems.
+> >>>
+> >>> After these changes, pci_resize_resource() releases BARs that share t=
+he=20
+> >>> bridge window with the BAR to be resized. So the answer depends on th=
+e=20
+> >>> upstream bridge.
+> >>>
+> >>> However, amdgpu_device_resize_fb_bar() also checks that root bus has =
+a
+> >>> resource with a 64-bit address. That won't tell what the nearest brid=
+ge=20
+> >>> has though. Maybe that check should be converted to check the resourc=
+es of=20
+> >>> the nearest bus instead? It would make it impossible to have the=20
+> >>> 32-bit resource share the bridge window with the 64-bit resources so =
+the=20
+> >>> resize would be safe.
+> >>
+> >> Mhm, I don't think that will work.
+> >>
+> >>
+> >> I've added the check for the root bus to avoid a couple of issues duri=
+ng=20
+> >> resize, but checking the nearest bridge would block a whole bunch of u=
+se=20
+> >> cases and isn't even 100% save.
+> >>
+> >> See one use case of this is that all the BARs of the device start in t=
+he=20
+> >> same 32bit bridge window (or a mixture of 64bit and 32bit window).
+> >=20
+> > "32bit bridge window" is ambiguous. There are non-prefetchable and=20
+> > prefetchable bridge windows, out of which the latter can be 64-bit as=
+=20
+> > well. Which one you're talking about?
+>=20
+> The non-prefetchable 32bit window.
+>=20
+> > If a 64-bit prefetchable window exists, pbus_size_mem() nor=20
+> > __pci_assign_resource() would not have produced such a configuration wh=
+ere=20
+> > they're put into the same bridge window, even before the commit=20
+> > ae88d0b9c57f ("PCI: Use pbus_select_window_for_type() during mem window=
+=20
+> > sizing") (I think). Now pbus_size_mem() certainly doesn't.
+>=20
+> I need to double check, but if I'm not completely mistaken that is assign=
+ed by the BIOS.
+>=20
+> Here is an example of a "good" configuration where both VRAM (BAR0) and d=
+oorbell (BAR2) is in the prefetchable window and MMIO in the non-prefetchab=
+le:
+>=20
+> Device:
+> =09Region 0: Memory at 80000000 (64-bit, prefetchable) [size=3D256M]
+> =09Region 2: Memory at 90000000 (64-bit, prefetchable) [size=3D2M]
+> =09Region 4: I/O ports at 3000 [size=3D256]
+> =09Region 5: Memory at 9f300000 (32-bit, non-prefetchable) [size=3D1M]
+>=20
+> Bridge:
+> =09Memory behind bridge: 9f300000-9f4fffff [size=3D2M] [32-bit]
+> =09Prefetchable memory behind bridge: 80000000-901fffff [size=3D258M] [32=
+-bit]
+>=20
+> And here is an example of another system where things are mixed up:
+>=20
+> Device:
+> =09Region 0: Memory at 2c00000000 (64-bit, prefetchable) [size=3D256M]
+> =09Region 2: Memory at 94000000 (64-bit, prefetchable) [size=3D2M]
+> =09Region 4: I/O ports at 1000 [size=3D256]
+> =09Region 5: Memory at 94600000 (32-bit, non-prefetchable) [size=3D512K]
+>=20
+> Bridge:
+> =09Memory behind bridge: 94000000-946fffff [size=3D7M] [32-bit]
+> =09Prefetchable memory behind bridge: 2c00000000-2c107fffff [size=3D264M]=
+ [32-bit]
+>=20
+> In that example the doorbell ended up in the non-prefetchable window for=
+=20
+> some reason. And that config comes in all possible variations.
 
-if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-    pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM)
-	pci_enable_ptm(dev, NULL);
+The really odd thing is that there seems to be even room in that=20
+prefetchable window for a 2MB BAR.
 
-To keep the behaviour same.
+(Unless it's ppc which I heard is placing small BARs in a weird way.)
 
-> With this change, it looks like we automatically enable PTM for every
-> device that supports it.  Worth a mention in the commit log, and we
-> might also want to revisit the drivers (ice, idpf, igc, mlx5) that
-> explicitly enable it to remove the enable and disable calls there.
-> 
-> PTM consumes some link bandwidth, so the idea was to avoid paying that
-> cost unless a driver actually wanted to use PTM.  PTM Messages are
-> local, so they terminate at the Switch Downstream Port or Root Port
-> that receives them.  I assumed that Switches would only send PTM
-> Requests upstream if they received a PTM Request from a downstream
-> device, so I thought it would be free to enable PTM on the Switch.
-> 
-> But apparently that isn't true; these errors happen immediately when
-> enabling PTM on the Switch, before it's enabled on any downstream
-> device.  And it makes sense that a Switch could provide better service
-> if it kept its local Time Source updated so it could generate PTM
-> Responses directly instead of sending a request upstream, waiting for
-> a response, and passing it along downstream.
-> 
-> I still feel like it's worth avoiding the bandwidth cost by leaving
-> PTM disabled unless a driver wants it.  The cost is probably small,
-> but why pay it if we're not using PTM?  What are your thoughts?
+> On AMD GPUs both BAR0 and BAR2 are resizeable.
+>
+> So far we have only implemented resizing of BAR0, but essentially we=20
+> want to have both for some use cases.=20
 
-Fully agree. It was my mistake. If no objections I'll submit v5 with the
-above added back (+ the newline inconsistency thing Lukas mentioned).
+Okay. My plan is anyway to change the resource fitting logic so it will=20
+leave enough space to fit as large resources as possible at where the=20
+resizable BARs is at (once I get that far). Then BAR resize itself can be
+mostly done in-place without need to release the bridge windows at all.
+
+> >> What we have is that BAR 0 and 2 are 64bit BARs which can (after some=
+=20
+> >> preparation) move around freely. But IIRC BAR 4 are the legacy I/O por=
+ts=20
+> >> and BAR 5 is the 32bit MMIO registers (don't nail me on that, could be=
+=20
+> >> just the other way around).
+> >>
+> >> Especially that 32bit MMIO BAR *can't* move! Not only because it is=20
+> >> 32bit, but also because the amdgpu driver as well as the HW itself=20
+> >> through the VGA emulation, as well as the EFI/VESA/VBIOS code might=20
+> >> reference its absolute address.
+> >=20
+> > So if the 64-bit check is replaced with this:
+> >=20
+> > +       /* Check if the parent bridge has a 64-bit (pref) memory resour=
+ce */
+> > +       res =3D pci_resource_n(adev->pdev, 0)->parent;
+> > +       /* Trying to resize is pointless without a window above 4GB */
+> > +       if (!(res->flags & IORESOURCE_MEM_64))
+> > =09=09return 0;
+> >=20
+> > ...I don't think it's possible for 32-bit resource to share that window=
+=20
+> > under _any_ circumstance.
+>=20
+> Well see the example above.
+
+For the record, BAR0 would pass that 64-bit check above and could be=20
+resized safely too.
+
+But I hear your point that this kind of mixed config seems possible for=20
+some reason.
+
+> I have SSH access to a system where exactly that is the configuration.
+>
+> > If you say that ->parent somehow points to a non-IORESOURCE_MEM_64 wind=
+ow=20
+> > at this point, you're implying allocation for the 64-bit prefetchable=
+=20
+> > window was tried and failed, and __pci_assign_resource() then used one =
+of=20
+> > its fallbacks.
+>=20
+> No, as I said that comes from the BIOS.
+
+Normally we don't abide the BIOS allocations for normal BARs, only=20
+bridge windows are claimed using pci_claim_resource(). Only if=20
+preserve_config is set for the host bridge, also dev resources are=20
+claimed as they were discovered.
+
+The normal BARs are normally added into the resource tree using=20
+pci_assign_resource() which will not end up using the resource address of=
+=20
+the resource itself in determining where to place the=20
+resource (AFAICT from the code in __pci_assign_resource() ->
+pci_bus_alloc_resource() -> pci_bus_alloc_from_region() ->=20
+allocate_resource() -> __find_resource_space()).
+
+> > Are you saying that "some preparation" includes making room for that=20
+> > 64-bit prefetchable window that failed to assign earlier as I cannot se=
+e=20
+> > how else it would ever get assigned so that the 64-bit BARs could be mo=
+ved=20
+> > there?
+>=20
+> No, at least from the amdgpu driver side we don't touch the resource=20
+> allocation at all.=20
+>=20
+> In this case preparation means disabling the VGA emulation, cause=20
+> otherwise trying to resize the BAR can just cause a spontaneous system=20
+> reboot for some reason.=20
+>
+> >> Could we give pci_resize_resource() a mask of BARs which are save to=
+=20
+> >> release?
+> >=20
+> > It is possible.
+>=20
+> Then let us solve this issue by this somehow.
+
+I've added exclude_bars parameters to pci_resize_resource() and made
+amdgpu to pass 1 << 5 to it, will send v2 in a day or two with that. If=20
+you've better idea than using a literal like that, please let me know.
+
+--=20
+ i.
+
+--8323328-1291627756-1762876333=:1002--
 
