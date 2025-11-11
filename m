@@ -1,128 +1,142 @@
-Return-Path: <linux-pci+bounces-40910-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40911-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B46A2C4E1D9
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 14:31:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9860BC4E3CD
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 14:49:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 913C41898355
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 13:31:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4E383A82E5
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 13:49:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 963593370FE;
-	Tue, 11 Nov 2025 13:31:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 742193246F6;
+	Tue, 11 Nov 2025 13:49:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k5HHy5nt"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="JE3rvUeS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mail-m1973195.qiye.163.com (mail-m1973195.qiye.163.com [220.197.31.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC079328277;
-	Tue, 11 Nov 2025 13:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EA317B50A;
+	Tue, 11 Nov 2025 13:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762867867; cv=none; b=WNB9YG/uKpHWqwP+XDq8Zv4horO5UFFV3cmDm85I02lh340lnrqreQ1abfsuQZQgu2w7QbevXWYxb7VNj9FJS1S2JU4WKB/Ww8FIt8DBsUCQ7cAR+2az5ZSVUaw+b43nZluyXGOKcsu2t76veMUgdaj+Dws0uAtIlFm6OQNyLb0=
+	t=1762868964; cv=none; b=biNSIxBGfHoSxj9136x4WvpZyh7IbZ/SHkchJDrhMZLwRHBMjqtuehOy4gEp0wzGQk2pJgmqa5PartYEVv3/s8FRo+u1R3oWR153hyHAjCZ9RQr3WlbJ93SdMVLzT0QnYQZm/sPBm+Rhpey45UAKijG9iBCrhbvTXW8BTgF2UVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762867867; c=relaxed/simple;
-	bh=ZN7ilIPCvm1ED39/18OAcpT6wbPgwA+407V2M/i4Nuk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=uUq8S5/G7PYZv80IPUUf6rWa6JOuYp0pipagTDGkEgbEX1nBgRxDlm3/ru++8SEtaQ43rLZXp48pnQi7dXZaZbjz4xQDCUur//XYv3uPjSrkb+Il/TII39werO2ivDdiRiHgJthvDpoLKG5JirFzuxfxenFDcjOZYcXMDT0yP4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k5HHy5nt; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762867866; x=1794403866;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ZN7ilIPCvm1ED39/18OAcpT6wbPgwA+407V2M/i4Nuk=;
-  b=k5HHy5ntZnEcVowuzDVXwthgjT6bSQ5rDMgbDiVV/gi7qpvNkrBMw134
-   wgSBrfXaHSjKL02pr0uwFYiY2RmZmkYwHBDVg/f73Wr5fe7pw3MW9k9U8
-   v+Huf/tU8DSRWwtzErCNLFIUWLhKreD6kZJXTb71aedz7RjeLExIGaDjb
-   VbnKIVAVmtMnF+XOnUNNUAvz6KJi0NZW1I/EQnDy+uoXjgQ1wGWYVxPLU
-   IlhKZDgUJOVLsS0+V9Tsn8aN4kO6x04Y/F3EzMSvRm+zJ765oNLVjEcvt
-   kDVm5tVs2SchiCvjgSPiIreold71a90Voy7u5aK7KaGv50MZemUEm96P2
-   w==;
-X-CSE-ConnectionGUID: vGzsgCXtSuqv81LuWdnB4A==
-X-CSE-MsgGUID: 3dGoK7P9Q/SpSkq/XDqDEg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="68776232"
-X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
-   d="scan'208";a="68776232"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 05:30:57 -0800
-X-CSE-ConnectionGUID: g74Wvx2uRIK5WbjK9OJ2cw==
-X-CSE-MsgGUID: 0bViU1sPRQKPBMIty2HMag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
-   d="scan'208";a="194162513"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.132])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 05:30:54 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 11 Nov 2025 15:30:50 +0200 (EET)
-To: =?ISO-8859-15?Q?H=E5kon_Bugge?= <haakon.bugge@oracle.com>
-cc: Bjorn Helgaas <bhelgaas@google.com>, Sinan Kaya <okaya@codeaurora.org>, 
-    linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Do not attempt to set ExtTag for VFs
-In-Reply-To: <20251111132401.1827922-1-haakon.bugge@oracle.com>
-Message-ID: <dc6f1dc8-a2e7-d48f-49a2-ee6e0288e672@linux.intel.com>
-References: <20251111132401.1827922-1-haakon.bugge@oracle.com>
+	s=arc-20240116; t=1762868964; c=relaxed/simple;
+	bh=rs8ZMHsGqoZAi449uqrDys8kFWlhMODL2mwmbIrThnc=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=O0fsgJFIwvpCjSOxSrRcmPH7TiKAXZcAnJ8BdBoJ/adGbVD/d5PskbGWsk6fvBmYsMENT54E/3nVPs3UQu3s6CdnAKXnflQvcPVd2pRsDj0k/XpgLR+hawqOXB3USx/LwplBhOQBEnXJ1riIp3mQDrV/wa4fdJm950I8VRYcrx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=JE3rvUeS; arc=none smtp.client-ip=220.197.31.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [192.168.61.151] (unknown [110.83.51.2])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 293418357;
+	Tue, 11 Nov 2025 21:33:59 +0800 (GMT+08:00)
+Message-ID: <6b847014-ea46-4e16-8eab-c1a57e7a236e@rock-chips.com>
+Date: Tue, 11 Nov 2025 21:33:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-955354008-1762867850=:1002"
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, FUKAUMI Naoki <naoki@radxa.com>,
+ Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 0/6] PCI: dwc: Revert Link Up IRQ support
+To: Niklas Cassel <cassel@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+ Manivannan Sadhasivam <mani@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Heiko Stuebner <heiko@sntech.de>
+References: <20251111105100.869997-8-cassel@kernel.org>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <20251111105100.869997-8-cassel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9a731f8d6709cckunm858b49041d64c
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDHkwYVkNJHUwfHRkeSBlKHlYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKSktVQ0hVTkpVSVlXWRYaDxIVHRRZQVlPS0hVSktJT09PSFVKS0tVSk
+	JLS1kG
+DKIM-Signature: a=rsa-sha256;
+	b=JE3rvUeSo9xsGVjhoyWvCxwk+7LA/vw96b1LQfbIdMM20F2HkHfOVj6TQVzvEHpOQSauiG8jBjOI02owbOAiP2MOgjToiR2HyQLpOBi/C9OuGL/3jd/LmckwiEazBOkIc0XWl/GxisXYiQNP1D7Q4jZz1j+PSlsQtUFH1nZSJNE=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=T1dUf5Nc6vc4f4P7/aobXuszncjlaJXSyBYXfdKwIsE=;
+	h=date:mime-version:subject:message-id:from;
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-955354008-1762867850=:1002
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+在 2025/11/11 星期二 18:51, Niklas Cassel 写道:
+> Revert all patches related to pcie-designware Root Complex Link Up IRQ
+> support.
+> 
+> While this fake hotplugging was a nice idea, it has shown that this feature
+> does not handle PCIe switches correctly:
+> pci_bus 0004:43: busn_res: can not insert [bus 43-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci_bus 0004:43: busn_res: [bus 43-41] end is updated to 43
+> pci_bus 0004:43: busn_res: can not insert [bus 43] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci 0004:42:00.0: devices behind bridge are unusable because [bus 43] cannot be assigned for them
+> pci_bus 0004:44: busn_res: can not insert [bus 44-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci_bus 0004:44: busn_res: [bus 44-41] end is updated to 44
+> pci_bus 0004:44: busn_res: can not insert [bus 44] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci 0004:42:02.0: devices behind bridge are unusable because [bus 44] cannot be assigned for them
+> pci_bus 0004:45: busn_res: can not insert [bus 45-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci_bus 0004:45: busn_res: [bus 45-41] end is updated to 45
+> pci_bus 0004:45: busn_res: can not insert [bus 45] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci 0004:42:06.0: devices behind bridge are unusable because [bus 45] cannot be assigned for them
+> pci_bus 0004:46: busn_res: can not insert [bus 46-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci_bus 0004:46: busn_res: [bus 46-41] end is updated to 46
+> pci_bus 0004:46: busn_res: can not insert [bus 46] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci 0004:42:0e.0: devices behind bridge are unusable because [bus 46] cannot be assigned for them
+> pci_bus 0004:42: busn_res: [bus 42-41] end is updated to 46
+> pci_bus 0004:42: busn_res: can not insert [bus 42-46] under [bus 41] (conflicts with (null) [bus 41])
+> pci 0004:41:00.0: devices behind bridge are unusable because [bus 42-46] cannot be assigned for them
+> pcieport 0004:40:00.0: bridge has subordinate 41 but max busn 46
+> 
+> During the initial scan, PCI core doesn't see the switch and since the Root
+> Port is not hot plug capable, the secondary bus number gets assigned as the
+> subordinate bus number. This means, the PCI core assumes that only one bus
+> will appear behind the Root Port since the Root Port is not hot plug
+> capable.
+> 
+> This works perfectly fine for PCIe endpoints connected to the Root Port,
+> since they don't extend the bus. However, if a PCIe switch is connected,
+> then there is a problem when the downstream busses starts showing up and
+> the PCI core doesn't extend the subordinate bus number after initial scan
+> during boot.
+> 
+> The long term plan is to migrate this driver to the pwrctrl framework,
+> once it adds proper support for powering up and enumerating PCIe switches.
 
-On Tue, 11 Nov 2025, H=C3=A5kon Bugge wrote:
+For pcie-dw-rockchip
 
-> The bit for enabling extended tags is Reserved and Preserved (RsvdP)
-> for VFs.
+Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
+Tested-by: Shawn Lin <shawn.lin@rock-chips.com>
 
-Please add a PCIe spec reference.
+> 
+> Niklas Cassel (6):
+>    Revert "PCI: dw-rockchip: Don't wait for link since we can detect Link
+>      Up"
+>    Revert "PCI: dw-rockchip: Enumerate endpoints based on dll_link_up
+>      IRQ"
+>    Revert "PCI: qcom: Don't wait for link if we can detect Link Up"
+>    Revert "PCI: qcom: Enable MSI interrupts together with Link up if
+>      'Global IRQ' is supported"
+>    Revert "PCI: qcom: Enumerate endpoints based on Link up event in
+>      'global_irq' interrupt"
+>    Revert "PCI: dwc: Don't wait for link up if driver can detect Link Up
+>      event"
+> 
+>   .../pci/controller/dwc/pcie-designware-host.c | 10 +--
+>   drivers/pci/controller/dwc/pcie-designware.h  |  1 -
+>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 60 +-----------------
+>   drivers/pci/controller/dwc/pcie-qcom.c        | 63 +------------------
+>   4 files changed, 6 insertions(+), 128 deletions(-)
+> 
 
-> Hence, bail out early from pci_configure_extended_tags() if
-> the device is a VF.
->=20
-> Otherwise, we may see incorrect log messages such as:
->=20
-> =09   kernel: pci 0000:af:00.2: enabling Extended Tags
->=20
-> (af:00.2 is a VF)
->=20
-> Fixes: 60db3a4d8cc9 ("PCI: Enable PCIe Extended Tags if supported")
-> Signed-off-by: H=C3=A5kon Bugge <haakon.bugge@oracle.com>
-> ---
->  drivers/pci/probe.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 0ce98e18b5a87..014017e15bcc8 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2244,7 +2244,8 @@ int pci_configure_extended_tags(struct pci_dev *dev=
-, void *ign)
->  =09u16 ctl;
->  =09int ret;
-> =20
-> -=09if (!pci_is_pcie(dev))
-> +=09/* PCI_EXP_DEVCTL_EXT_TAG is RsvdP in VFs */
-> +=09if (!pci_is_pcie(dev) || dev->is_virtfn)
->  =09=09return 0;
-> =20
->  =09ret =3D pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
->=20
-
---=20
- i.
-
---8323328-955354008-1762867850=:1002--
 
