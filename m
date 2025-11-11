@@ -1,126 +1,182 @@
-Return-Path: <linux-pci+bounces-40833-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40834-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D02DEC4BBBA
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 07:51:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CAEBC4C117
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 08:19:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9EDF018826F3
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 06:52:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 39B0618E3281
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 07:12:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BEBF2741AC;
-	Tue, 11 Nov 2025 06:51:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CE71346FB9;
+	Tue, 11 Nov 2025 07:05:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="uI8/Mzpq"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kMdSMd+M"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012041.outbound.protection.outlook.com [52.101.43.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A5523B61A
-	for <linux-pci@vger.kernel.org>; Tue, 11 Nov 2025 06:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762843891; cv=none; b=Rzas8zx5rH7zYWpnOnml9ZAIdSk7E6IWYxorDGQZgPIQtVajWdI8TZKj32NcWdB9fbKivQc5/U9h1v1Pvwuv4LhFBO4f3dgrvFvKkVaLhGdoxyTHl+jOqjEUmlGfZEsE+0Vsnn2/PbDJm+8PJeNJrWDcJl+REHl9tHxO2wJKHI0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762843891; c=relaxed/simple;
-	bh=DErlls/0jBulJQGwlawMmjE7HKgq5cfvhi20S+9iayo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VppUMesAe6b/bfeL4VVqE8X1H2H1p95fz9SdAFuUsiCO5sH609I6GrGoVkmLdN8rG1OsYAm3FEPegLR1O+IKtHTHPIZtabFWifGahsEquIbiNQ9pbSu2HF3feDujxS6xbBsbjmY232ag8NKrK+b9341c1sRvpT1aESMH97AEBKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=uI8/Mzpq; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
-Message-ID: <36f05566-8c7a-485b-96e7-9792ab355374@packett.cool>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
-	s=key1; t=1762843876;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=smhud6T4SqC4w36gRlyhLwg16tK5nMSudVt7tZE829s=;
-	b=uI8/Mzpq9VCfvnfBdweD6Xzbo4CduDY6TixZiIKkPHALYiUZuKTVy7E4EOmNgqZ/JzjBRN
-	2bsBIzHdNMhKZPPeQcVgEvz+XWC8mWleRX3e1OmOc301gPPkC4VOBwW+iaXF5y5CwbsiIU
-	29xEXNssEZT/HA4zGr6dU5pdPpsF/kLFi5sl0x4kRomirNLaRW1JUI/iFHeOqB8ZUArUCf
-	kEhAYvuPVeSZZWz+wsGwOAVGOWISlU2KkE9TrpYrQ0pkODkLbfKuK2KOIvvo2ycpLSOSQo
-	UKFtPZfHa23wiFMd0hA1s9qjNivOX/K8wXRp8Fs3CWeKv4cYW0oys54BQePW6g==
-Date: Tue, 11 Nov 2025 03:51:03 -0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2B2346FD0;
+	Tue, 11 Nov 2025 07:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762844740; cv=fail; b=WZYiaC3G+rDE7cTP9o4bDx8FJlujJxSMwUyT2chs8UD+uu4i4uIasKVECHXl23AvfRcG5KEtUvZ4dsQohC2/rSv9A4qRba3cZjaVeV3HoRSpWXA7D8RyL0iYm/yMIyqoWYnRBnyrY8pBy8cVbYoIAE92ySvjgngnVQTKyeJdeVM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762844740; c=relaxed/simple;
+	bh=FKNx8F8Gk/HYKfUaXoUd0tBQKChfoStQpfP+Oorni2A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dy09swKJuhumUfu5AUE1KL82uoPmkVjEPg1DkG0D+HBOaKRsRzrcOo+0tOgpyBuXVV6jwsTmhaDDWI81PSmMePRWJIY2PRBe8qzpqubr6WLb6YI03O3Fztu04M7s2YiTpJffXl1Ul6KTgfiJHLkhbA6vSqwuuZdl/I5KsrPI3N8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kMdSMd+M; arc=fail smtp.client-ip=52.101.43.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kn2FjaEfSrJyofNcjBK6mkXd972Lho5Ftmsq9h4wUmNESk9iZnsgu0Ua79UcWxdVsHeDDd69F1cS1NyKbWCcvYvYdxNWrM4+VwwXqbd3NN1tyajU54XJ2NSuEeAoWLsJS1y2sLSAg5yP9K+PG5IY1GdxDOl1s0rMslGi77kiQgYJCLhUTJVLt7IqfmTkGZtXwPEqUedw6/LZcgYwy9ARsJxXPZIjjn2KRRDLqP2vQ/8Nt5gEYxOwWG6+SYGf2c7B8QoHtPOj3TYLWbIq3puN++wcHVolng58MEtXFoyuLjB6wGE3mxQhHMkRtArGGZsoqQ8ddS1+l58B4jLDxgDj+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UjrIt1aS+TpVpHd1RtOccDThd+ZrRS3kLtPUaNZ5YMM=;
+ b=rZAv8TeiNGjhCl1uVA3ls51qn92HzNZCmUw/RvfzA3ukSFgz8Uf4LSKyGqdHzrzAWclBmRY8s5wtEZzcoHOzQ60CPXDX3dPPsbwYupmPctOunoJjKVowptQLHKhD+7Ij4r8+NC92DcuOzoXYYYkoFRG8VIKXUOwVqayNpZQh78bgOgLawY+DtXf63YscHXSeMcP5l1oRggpa1PbZMheE3O3yxE5feYU83Ao3w/AfLOo2lNxZiSAmpvRn1KM05FCwkvwXxlnD90VH1fnTIf+8uPFEG8Nrpc72EQdyKSHf0GzvtLsZd0l3Od1n1wBz6dAX19iPrL6yr8Vczihz8OFUPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UjrIt1aS+TpVpHd1RtOccDThd+ZrRS3kLtPUaNZ5YMM=;
+ b=kMdSMd+Mx7nMVR/FDMmqP8Gmb9eX8qj1A2iBNtWxuM6tNWSxiksxMtpiQm2k9+zOMIW6FlOKOskDNvPfUun3/C3YFyRtI01XDFWTb/9N3e9pA5nQUgPPmK1UnpU073AWBqCtg/USCvBZcflE5OOvbI5b+Nq4q4Sxt2ISNumRJ9c=
+Received: from CH0PR03CA0092.namprd03.prod.outlook.com (2603:10b6:610:cd::7)
+ by DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.16; Tue, 11 Nov
+ 2025 07:05:36 +0000
+Received: from CH2PEPF00000142.namprd02.prod.outlook.com
+ (2603:10b6:610:cd:cafe::19) by CH0PR03CA0092.outlook.office365.com
+ (2603:10b6:610:cd::7) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9298.16 via Frontend Transport; Tue,
+ 11 Nov 2025 07:05:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ CH2PEPF00000142.mail.protection.outlook.com (10.167.244.75) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9320.13 via Frontend Transport; Tue, 11 Nov 2025 07:05:35 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.17; Mon, 10 Nov
+ 2025 23:05:35 -0800
+Received: from satlexmb08.amd.com (10.181.42.217) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 11 Nov
+ 2025 01:05:34 -0600
+Received: from xhdapps-pcie2.xilinx.com (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Mon, 10 Nov 2025 23:05:32 -0800
+From: Devendra K Verma <devendra.verma@amd.com>
+To: <bhelgaas@google.com>, <mani@kernel.org>, <vkoul@kernel.org>
+CC: <dmaengine@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
+	<Devendra.Verma@amd.com>
+Subject: [PATCH RESEND v6 0/2] Add AMD MDB Endpoint and non-LL mode Support
+Date: Tue, 11 Nov 2025 12:35:29 +0530
+Message-ID: <20251111070531.6808-1-devendra.verma@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 0/2] PCI/ASPM: Enable ASPM and Clock PM by default on
- devicetree platforms
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- manivannan.sadhasivam@oss.qualcomm.com,
- Rob Clark <robin.clark@oss.qualcomm.com>,
- Vignesh Raman <vignesh.raman@collabora.com>,
- Valentine Burley <valentine.burley@collabora.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- Manivannan Sadhasivam <mani@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- "David E. Box" <david.e.box@linux.intel.com>,
- Kai-Heng Feng <kai.heng.feng@canonical.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Chia-Lin Kao <acelan.kao@canonical.com>, Bjorn Helgaas <helgaas@kernel.org>
-References: <20250922-pci-dt-aspm-v2-0-2a65cf84e326@oss.qualcomm.com>
- <4cp5pzmlkkht2ni7us6p3edidnk25l45xrp6w3fxguqcvhq2id@wjqqrdpkypkf>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Val Packett <val@packett.cool>
-In-Reply-To: <4cp5pzmlkkht2ni7us6p3edidnk25l45xrp6w3fxguqcvhq2id@wjqqrdpkypkf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB05.amd.com: devendra.verma@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF00000142:EE_|DS7PR12MB9473:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4f363ab2-02fd-428b-fe7b-08de20f0b688
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ndVKAK3c9wYlixZDLm3aF53DaESpEVSFomU1TMZH5TYB8xYrZnCO0i0IYOvu?=
+ =?us-ascii?Q?BWCk6wEEZbUI3x0+96+wIYecvdLRLoFpvjVxRBYW2Dj4KB656iJLbFy0uhOz?=
+ =?us-ascii?Q?jFws+e5es9uwF0gUpqhyZBopwaburIAXIxr3p6EYh9MPQR3QmTyxSNOFzGRp?=
+ =?us-ascii?Q?MEMquNKgqF7i+7kv0UndzIS/m0vIPap710EpWUR6e7HwAakfgGEg3oNchcJk?=
+ =?us-ascii?Q?NanLd1sk7x9MmRTcuneSUxlrYb4E8GHl3eanBLBWIieb1ap0w8xpVWyxjAdb?=
+ =?us-ascii?Q?Hn5micyt63tmhQkWH1eg1kT+xBV/1HpOa07AebfHSdr4Dmal5k5C50E+Gxhg?=
+ =?us-ascii?Q?hascmAqHAdzfwUvIy9zy94eNWLSune6d5x36vlmmgACMKzEf37eUmz4BvuhW?=
+ =?us-ascii?Q?4VJ/zr/49OEi7niRROxQKydbhhsfQmrOnw164NQudqA7vQOEM5FGVCk7JM5/?=
+ =?us-ascii?Q?OZm3j34v5g2JxAtD9NBw3zfY40eFBSH7464fv7gpHYApA9fTyufyNr6mg6hA?=
+ =?us-ascii?Q?UR8jbiybi7wq5Igcgq5Lm/WpGksGqbYgoHX1+Krmq+7x9g0mFh8/4VhWt+8t?=
+ =?us-ascii?Q?YB4qDW8rkShOL9CwT//KSFSp75s2u59jMGhxN5C9KCcmpDfWsG0hn7SG1hLk?=
+ =?us-ascii?Q?YfkFSnkmejhYkaVDPPBWbNlBgujjpLcwrOp3uUd9ilpVBFWaElHWF91ob6zS?=
+ =?us-ascii?Q?rjckk54Mi9yt8VLnz8b5Cefn5iz0BB1ICk7312qzPhyvUbbBUx+a98njAV6j?=
+ =?us-ascii?Q?cLS6ud274rYH+wBblfi9r2ivsLqReoH1MMEhGKAGqfsGfihUg7WpMCIGhSkh?=
+ =?us-ascii?Q?wbFQvPjyuK8Wv+csUZS0IcbucXq5XdNNzBJbnjT5WvHdBMRmjXNz8sSZ3k25?=
+ =?us-ascii?Q?lEIb8+kRv3B41TVHfvt2of1jz9dZQ1IexQjUwI6QTETi+U+D1oNbKINk4cRq?=
+ =?us-ascii?Q?jtNrl3p9XaystjpRqb007zlwZgKPnVAxHR3zwwHIDfXBTv6lwf+zAZcZtgzb?=
+ =?us-ascii?Q?xTIAL6fzweF2X0PuF/ju/DRNCJUpoI68y4GkGVXYvIv7vq6tuEQ58g7NBkuS?=
+ =?us-ascii?Q?pNUDBsIL+P0KvN5kVshy/2DekpTgDaRRCQhevBUREvEsjCBeeFDM3SQJ9y11?=
+ =?us-ascii?Q?DztvJV4+y8NzMhr2wC1RomCNq06Rn/9xbOwO+4w4RTzgxT3KiWHqpYVaNl6L?=
+ =?us-ascii?Q?419tkU8qy+18hiiOZwNU1QUU2AGTNhlOls6GS9XJFWCxp3A8awuaKWufTfv4?=
+ =?us-ascii?Q?PRGWKcl7wcCLic2Av9Y0uqCESxt4IrwLrf3NzV7Tg1ccKaBtIEu1s0u081ag?=
+ =?us-ascii?Q?A4lUcn8AgtSimkOwVyy0nPEI3MuzqeQghoit7o9RK/LzpMNSmwYd8LNe4dU8?=
+ =?us-ascii?Q?my2I2+upRLPo1k1A3J929AaKOBQtXMBwkGRXsvI6hKTS1dY73zd7vlqal1/Z?=
+ =?us-ascii?Q?D8WKazhFnortyjknYncaPWJZbhwID7mzoUN9PkwXRSd69Uq8Au1XT23kpxjg?=
+ =?us-ascii?Q?I/dORjhe8c9sPuq4gvfmKhYaAZw1vyjnGzc5nyQLelUEa1G6zj1AlRQ9h8Ma?=
+ =?us-ascii?Q?hgR/t74OInB98k52d4w=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2025 07:05:35.9346
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f363ab2-02fd-428b-fe7b-08de20f0b688
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF00000142.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9473
 
+This series of patch support the following:
 
-On 11/8/25 1:18 PM, Dmitry Baryshkov wrote:
-> On Mon, Sep 22, 2025 at 09:46:43PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
->> Hi,
->>
->> This series is one of the 'let's bite the bullet' kind, where we have decided to
->> enable all ASPM and Clock PM states by default on devicetree platforms [1]. The
->> reason why devicetree platforms were chosen because, it will be of minimal
->> impact compared to the ACPI platforms. So seemed ideal to test the waters.
->>
->> This series is tested on Lenovo Thinkpad T14s based on Snapdragon X1 SoC. All
->> supported ASPM states are getting enabled for both the NVMe and WLAN devices by
->> default.
->> [..]
-> The series breaks the DRM CI on DB820C board (apq8096, PCIe network
-> card, NFS root). The board resets randomly after some time ([1]).
+ - AMD MDB Endpoint Support, as part of this patch following are
+   added:
+   o AMD supported device ID and vendor ID (Xilinx)
+   o AMD MDB specific driver data
+   o AMD specific VSEC capabilities to retrieve the base of
+     phys address of MDB side DDR
+   o Logic to assign the offsets to LL and data blocks if
+     more number of channels are enabled than configured
+     in the given pci_data struct.
 
-Is that reset.. due to the watchdog resetting a hard-frozen system?
+ - Addition of non-LL mode
+   o The IP supported non-LL mode functions
+   o Flexibility to choose non-LL mode via dma_slave_config
+     param peripheral_config, by the client for all the vendors
+     using HDMA IP.
+   o Allow IP utilization if LL mode is not available
 
-Me and a bunch of other people in the #aarch64-laptops irc/matrix room 
-have been experiencing these random hard freezes with ASPM enabled for 
-the NVMe SSD, on Hamoa (and Purwa too I think) devices.
+Devendra K Verma (2):
+  dmaengine: dw-edma: Add AMD MDB Endpoint Support
+  dmaengine: dw-edma: Add non-LL mode
 
-Totally unpredictable, could be after 4 minutes or 4 days of uptime. 
-Panic-indicator LED not blinking, no reaction to magic SysRq, display 
-image frozen, just a complete hang until the watchdog does the reset.
+ drivers/dma/dw-edma/dw-edma-core.c    |  41 ++++++++-
+ drivers/dma/dw-edma/dw-edma-core.h    |   1 +
+ drivers/dma/dw-edma/dw-edma-pcie.c    | 169 ++++++++++++++++++++++++++++++++--
+ drivers/dma/dw-edma/dw-hdma-v0-core.c |  61 +++++++++++-
+ drivers/dma/dw-edma/dw-hdma-v0-regs.h |   1 +
+ include/linux/dma/edma.h              |   1 +
+ 6 files changed, 260 insertions(+), 14 deletions(-)
 
-I have confirmed with a modified (to accept args) enable-aspm.sh 
-script[1] that disabling ASPM *only* for the SSD, while keeping it *on* 
-for the WiFi adapter, is enough to keep the system stable (got to about 
-a month of uptime in that state).
-
-If you have reproduced the same issue on an entirely different SoC, it's 
-probably a general driver issue.
-
-Please, please help us debug this using your internal secret debug 
-equipment :)
-
-
-[1]: https://gist.github.com/valpackett/8a6207b44364de6b32652f4041fe680f
-
-Thanks,
-~val
+-- 
+1.8.3.1
 
 
