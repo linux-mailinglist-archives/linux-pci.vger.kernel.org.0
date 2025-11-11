@@ -1,222 +1,293 @@
-Return-Path: <linux-pci+bounces-40806-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40807-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66ECEC4AA2A
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 02:35:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DF08C4ABE9
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 02:39:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 038FA1892F3C
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 01:27:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 718191884EA7
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 01:31:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96AD334B42B;
-	Tue, 11 Nov 2025 01:17:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 863EC189B84;
+	Tue, 11 Nov 2025 01:22:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="1X0bIYLP"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YxluLoBE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f68.google.com (mail-oa1-f68.google.com [209.85.160.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012001.outbound.protection.outlook.com [40.93.195.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1058330748C
-	for <linux-pci@vger.kernel.org>; Tue, 11 Nov 2025 01:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.68
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762823866; cv=none; b=hjU5UuL+u2qc3PPj6Rr3SwEg6/h5ib8zsTelvuZC4kRqJoUK4F8Llh6UnZP+ldqh2VlE6XEzKoRurkUTjuV3Jw7zgd7fipQWTEb1GGiMxjIYaqqKlZk0hGSMRtExXcOEgfdJffrktZbbgxquegVLXN3h6lOQZ1OfRzs5DJmlM2I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762823866; c=relaxed/simple;
-	bh=/awKTS4VkDV7YyuY2XqMrgn1/FWXuaIp1CGhvSR3qsg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YI6l9m1sDbedQg3nGWIUOR9bvWk4YRBA/9e/wn8nbsd0IvN3Ctz8tsrfgv5GFi+1Uo0tj3EzGh7iE65JXDOjoSktDn6V/dBstUa6RggUesCNUmhU4nNI15i+psa5kWqubnRYXXYtgYL/64WhQUXXeWoWCFgKbeCVD4/E5bEA/wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=1X0bIYLP; arc=none smtp.client-ip=209.85.160.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
-Received: by mail-oa1-f68.google.com with SMTP id 586e51a60fabf-3c9991e6ad1so180151fac.0
-        for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 17:17:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1762823863; x=1763428663; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IjPKo3ybe4fdml1XQE+jQ3G55BcDMlVXlR9cl8yZWH4=;
-        b=1X0bIYLPg5FTcJXhMNg4pxmUb76wfaApB+l+loii0/FgtqX/HWlaE6aNarA3fA9Js9
-         Cwr/pnjVw/q3j5GgfUcYJJmUxw/jTInjI6MeuuAxCyfd67UbKjFyQTJeeL68hCUtpCgv
-         FiR1iNbtgqjlwBPrj2nm0cbbtIsbIvO0nK++V7ByOhJx2aJAFWsu3V+P7WutbzH2gkaJ
-         CBY9dbIIANg6ZmHz/nZ3ngHXtPb7Hj43JsC/t5rIl7DR3aQwyV19mNxAMyhHyzknHFLy
-         qjd9pzDGh7fMH3dh49XFDtb87Ae4NleYzlXTxHYnKhEGBfrmvt+33yPlDBX1ApO1D4i7
-         ip+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762823863; x=1763428663;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=IjPKo3ybe4fdml1XQE+jQ3G55BcDMlVXlR9cl8yZWH4=;
-        b=RAOr+IkX++Rk0wOadQxNH/ICYnt0FrV1cGgn+YqGSrFPV28rjlRg3dPjM2B4+wooLY
-         3tEwkYkVhgrNF6gpWaT4hmSmMbGxbYYhHqgpfKi5aqGehqAWLEZs6/kxSRNWsfreXLk+
-         xrKP7Z3LLMWvv7DQ2wIt096vr6zqlYIZVi1rbz0q+hazeIi440+DN2tu7uMRTYsraF4T
-         lYS6/nMdntVmEXUzpRLFrkMu4EzXmBcdSgtRaOJHsRy+0VRIIsNF5Mo2CmuFJkZjjoXB
-         FEK6DjMHNXNzKQXGxCxQW4A4bDrl/9KBlY4X3rLU69OEO9zwweqlzmUJyIUxQehSkQra
-         RQEA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxHYZjdkeRUJS0Kxc/A/9ixbfEI/kJR3oWq/9s6AZiGUggQR4SuWni6MunJKVoQ/A6bj22wsVSnug=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykZq8/x70WKt1KvKCPl5RnQvUCBlteHc2a7jrzQL3KApDIetES
-	eWcdJKZ3qdVcrfpZFAEMHx3F5Pg61pGbDSjvqkC4KVPnBSu5YzBBn3en5626dvx0pKQ=
-X-Gm-Gg: ASbGncvujCyLoyqSvPNpnskkxOXbwi3K8MQAzcZvcs8qK+HihIasi4MOmlwkmASbYwj
-	t3eelAUpIBleG4IVyWtMKRzeRPGxP3Hv2ii96qF8yrXEhA/vPq4XeXn7FQPG7At7vcL7yghQ147
-	8TrZdxlDu3p5daUU1IezTi9G9c+MJqQiq4Niaswu02hA6Re9oVVp5iZ8avwqXz4ZX+c4ga65F3H
-	sNch6gXBlbe6+5I9jcdd/rmDdMbe9hsNjuGGJ49FNn2TtLT7PIbWnaxIl8801kT/+WAwaitsvkR
-	TeAgTdhTym/A8VABESjWz4CXKncz1x75t5etW0lcbzani7i27K8JU1Pgu/BBx3a7JWtv/m+EIPv
-	PW7h406Yg1jIBiXnP5gZuO/fgSqSrvHx8LFsxSZsrNVLOKhKRlV3ucwcSGt/oXMC7sQY1NOsiSd
-	ihQPVQg4I4SsG/7w==
-X-Google-Smtp-Source: AGHT+IHYqlJ/DqUior2uObKb688W9mKskJnwhdBfDC1sLOPoqWKjn2HRpxRv5pN7HFxTPVj3Axvofg==
-X-Received: by 2002:a05:6870:46a8:b0:3e1:d34:4283 with SMTP id 586e51a60fabf-3e815aaa2a3mr850172fac.19.1762823862970;
-        Mon, 10 Nov 2025 17:17:42 -0800 (PST)
-Received: from mail.minyard.net ([2001:470:b8f6:1b:b4e9:19a3:cdaf:7174])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3e7d6f7a27dsm4076840fac.0.2025.11.10.17.17.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Nov 2025 17:17:41 -0800 (PST)
-Date: Mon, 10 Nov 2025 19:17:35 -0600
-From: Corey Minyard <corey@minyard.net>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Christian K??nig <christian.koenig@amd.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Rob Clark <robin.clark@oss.qualcomm.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Hans Verkuil <hverkuil@kernel.org>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Vitaly Lifshits <vitaly.lifshits@intel.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>, Calvin Owens <calvin@wbinvd.org>,
-	Sagi Maimon <maimon.sagi@gmail.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Karan Tilak Kumar <kartilak@cisco.com>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Max Kellermann <max.kellermann@ionos.com>,
-	Takashi Iwai <tiwai@suse.de>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, amd-gfx@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, linux-mmc@vger.kernel.org,
-	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-	linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
-	ceph-devel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Gustavo Padovan <gustavo@padovan.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Abhinav Kumar <abhinav.kumar@linux.dev>,
-	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas Hellstr??m <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Krzysztof Wilczy??ski <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rodolfo Giometti <giometti@enneenne.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Stefan Haberland <sth@linux.ibm.com>,
-	Jan Hoeppner <hoeppner@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Satish Kharat <satishkh@cisco.com>,
-	Sesidhar Baddela <sebaddel@cisco.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Subject: Re: [PATCH v1 12/23] ipmi: Switch to use %ptSp
-Message-ID: <aRKOr2hyoqTnh85-@mail.minyard.net>
-Reply-To: corey@minyard.net
-References: <20251110184727.666591-1-andriy.shevchenko@linux.intel.com>
- <20251110184727.666591-13-andriy.shevchenko@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0933446B7;
+	Tue, 11 Nov 2025 01:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.1
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762824147; cv=fail; b=cFJvl9YgVAntmWlarRj6+qkqC6jZgcuDxYe4yMMKRPPHyIDgXZEhwS313UfL15rb/po1SBPmMn9/OdUXPRU7OboxawLFX0Mh2cViKC5Kkl9a2vJDPcWsJn+V2I+nYC1M2FYOgdM5ZV/WRQpCkWDfSH6FusdmK0nAvcm1fOyXEeE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762824147; c=relaxed/simple;
+	bh=vgBmE8GKd2o8mWwJrk6O9pnc5xS7gUor05jMzNfQNHg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=bsQZw4uLuWqC7YMJf1MTjnmglHE2XxpTwahJ9HfKGO5h2LlwmuTVNJA0jW7ZQbY6cLi7vaDeU6r5pH1up+1bgA1eZhtDFWADvPVnYXdd9Ar03Pgm13h0F1HOej/ixTBGiXKJYu4IYJGoPrbQqvPmgUw/MkMuq3vFpv7aTpniHbw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YxluLoBE; arc=fail smtp.client-ip=40.93.195.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OdCHw9jxWcZSViFzM7sehki2WLtMqoOjki+SRtZdrhLn+Cyl7kTM9VTbvVxqmrAGCpLVIDG28A97DLdg9SohSl69V4NOHX7WhjXAhyExdzlPhKmTURreibr1VQyQf95Fi5g2O4QVcwOVZFbCpWjqdMrwrUa3vz9t+FxoE3BA8Ma7/t9X5ARltsSwMY03b1z/7XOzBC1siu+uku57y14CgbSA6ppNcaGqefhTATwmtt7fND7/UvEUawZH95RMcGH/TItXQlc4b+Gt6yPnBlPpcEO7ZKf9vXj6HN4rXrLVa7k2ildEWNCSrXcIyzXo/6gV/QDaAZeOKx96vrLJRFqy0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=duLeZCxOHMv5b9z5/m1C4wLTsgXl1hVjVPgUnU5O0uo=;
+ b=WRy2jg0Wj6pogEqKOiwlMV7di1IINl+f62zAY5Jbss5VPX6/i0IIvoBTXdjdaCEETHL+HtcbSbcO6coJJdlXDyega/PTBXZl+i/nk9CjFQePz/u1UV/qOdhUvPCaohoCEWyroCv1ml1RM5mGfi5fFxuin6IZz9DwPtt3b5z50uJpBzTRt1MdYySzVCZnETYCnF00n1AP823NqY5qHZaRTGkkZswYWTwm5JJmTg9PEIVuhhhJuKfiGWz8kDvzXkh8DsMvv4PE1Tf0t8T8TXGx1cU/4KaD+5nZ2vZesc9qRcwbbIFf7uzqU+lMz+6uUTHBBYbDXsUXXf9WbpZvhRdkFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=duLeZCxOHMv5b9z5/m1C4wLTsgXl1hVjVPgUnU5O0uo=;
+ b=YxluLoBEyT890AL5v8d2A+tFTR3nYkndgYbrE2nxlKijQFFYzXBF4tWT3Fioya3XRscHYsl/FQvqIhl6u+1rHkH/hrR2PJkkvPo6ETrPx+reSVCcmsjm31NBNXSYI8bIiLJKls5UZLCo/o4nBs3za6Hjl1Ue25YeCZVPS+mUrfoxhk4Y31oE9CWWQiACVfEk2kkQ+QHi79xijBDmnmOCDvtn9kkTaawK0ThrupeleK4YyDD/Jj6knzlX4zXsKUYkr2A24zJ7GmGW7f0utn094dIxSueorYLV19/26yrUHI0kJkUtnhg6904o6ghJmxLP3bQxbVJf8WK10dO/nLaINw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH8PR12MB7277.namprd12.prod.outlook.com (2603:10b6:510:223::13)
+ by LV8PR12MB9357.namprd12.prod.outlook.com (2603:10b6:408:1ff::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.16; Tue, 11 Nov
+ 2025 01:22:22 +0000
+Received: from PH8PR12MB7277.namprd12.prod.outlook.com
+ ([fe80::3a4:70ea:ff05:1251]) by PH8PR12MB7277.namprd12.prod.outlook.com
+ ([fe80::3a4:70ea:ff05:1251%7]) with mapi id 15.20.9298.015; Tue, 11 Nov 2025
+ 01:22:22 +0000
+Message-ID: <439c62a4-ddac-425c-b505-ed9a33aae289@nvidia.com>
+Date: Tue, 11 Nov 2025 12:22:15 +1100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/kaslr: P2PDMA is one of a class of ZONE_DEVICE-KASLR
+ collisions
+To: Mike Rapoport <rppt@kernel.org>, Dan Williams <dan.j.williams@intel.com>
+Cc: dave.hansen@linux.intel.com, peterz@infradead.org, linux-mm@kvack.org,
+ linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+ Ingo Molnar <mingo@kernel.org>, Kees Cook <kees@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Andy Lutomirski <luto@kernel.org>,
+ Logan Gunthorpe <logang@deltatee.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, "Yasunori Gotou (Fujitsu)"
+ <y-goto@fujitsu.com>
+References: <20251108023215.2984031-1-dan.j.williams@intel.com>
+ <aRA5-wgo6bm_TA74@kernel.org>
+Content-Language: en-US
+From: Balbir Singh <balbirs@nvidia.com>
+In-Reply-To: <aRA5-wgo6bm_TA74@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR01CA0038.prod.exchangelabs.com (2603:10b6:a03:94::15)
+ To PH8PR12MB7277.namprd12.prod.outlook.com (2603:10b6:510:223::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251110184727.666591-13-andriy.shevchenko@linux.intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB7277:EE_|LV8PR12MB9357:EE_
+X-MS-Office365-Filtering-Correlation-Id: 89eb87f8-8909-4c5c-6548-08de20c0c375
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|10070799003|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Y1ZGRXl0VXIyZ0sxL2V6dlRmdkFHRHJmTVJzVGRDeVd6ZXVEUE81b3dPSXlX?=
+ =?utf-8?B?L2hPZkVNSTNZRjNqa3QxWllqV2lKcWxtcHVBa29ldU02L3RGMDNVUE5YUWwv?=
+ =?utf-8?B?Njk4MlF0MkgwT3lJL1dwQ1pCNjMyUHUwS2duQTNNd1hkRitSVFN3dHltVytV?=
+ =?utf-8?B?TWhvaDZ4NEhKMVZMeXZieGRRbGt3V3ZLQTBjTThSMVEwV1NEUlJMcHV1RFk5?=
+ =?utf-8?B?R2VmM0pZV2k4bHVaaE1KcHp5WXYvMFVCOXBid0l3d2loaWpFYmxZWFh1UDZ5?=
+ =?utf-8?B?eWlwNFplYkxkWHhuY3FZY3d3NjhVSGNIQlMzSldmT2dUcC9oWmN3K285ZUlL?=
+ =?utf-8?B?bUpDNDA4Tk1yc0J5bDNlYTlZVE9QSXE3QU4rOTIzOFAvYTVNWUY4dnB3Q0Jl?=
+ =?utf-8?B?dWpZWW1YdGJaemYwaXM1VVNmMVpZL3JCWkE3ZDd5ZlUzczQxdDJqcjlzS085?=
+ =?utf-8?B?UW9wL0RsOWowU0lyUE13OGtEckpaWU42VzRTS09YaGpJV3BqdGVsTUlxMGdC?=
+ =?utf-8?B?andlb2M2UmlLSEVkdC9DWFl2WlIzNEhSeDFVY2pMQTlyMFB0NXk1UmxSNW9J?=
+ =?utf-8?B?c3pDL0s3dW9zMGJWZUx3dFFVY3ZwdFpPR2Jub0Nzbk5hYUhNMlhQeGVTd3Fl?=
+ =?utf-8?B?V3BhWEl2S1VROHM1dE80bDJVRXRCbDlNdnlveThQYk9GNFBJb2NYUUQyMlhG?=
+ =?utf-8?B?V2ZhN3B2dThLak5BY1V3OVpJNDZlbGVNeldqUWw0QkI3NjJrTDQyRVJPT2gx?=
+ =?utf-8?B?YlJSam55aTRYZmxNZ2ZTeGhiaWxocWlRRzZjdTZIaW5zUThwbzhTWkFjaWNG?=
+ =?utf-8?B?WS95eHk4WWVwUzVHZFFsamkyZ2JXTFdSYUJnRG9wNmdJYVpob2NzRU5wNmNq?=
+ =?utf-8?B?RlNRMVJZdWQrSTVCa1JCdERjdGR6KzFKeGV0bDZOZXJuSFFJUDZ0b0h3OFAz?=
+ =?utf-8?B?VU5Fb3NMUFJOOXl5cUNkOWRqMzB6U2FrT1VtQVV3b2J0MDZJKzBTZVJKM29I?=
+ =?utf-8?B?TFMzenBlbWFSMnRyNnNkWStVelo0Yyt3eENldHFVSjFGWVQ5SE9NUGdpV0hm?=
+ =?utf-8?B?RHR5bWhSbEtzRjNaK21KVU01UXUwdW5hR3ZHdlVuV3gwRnc1QWpQV25hcGV6?=
+ =?utf-8?B?dWZtYTBTK0R5ZlVYc3R3dWhGWUVhbWE0ajFTdXQ2eXB5dGdxVUswKzV5WmNX?=
+ =?utf-8?B?TnlCL3Bpa0p6TW5GY2lrOVJRajlqcy9tVXZNU0VrNWd1bmJZK0JvaE1VUURs?=
+ =?utf-8?B?MzlaTHlKTVJoRkNXc3ZWWk9HVHNDRHAvQXNtRGd4SlNJdGNCeS9mMUE4OGJa?=
+ =?utf-8?B?eWtQUkFDOEhoM01ITVl1VzNreDR1NGw1R3VCRmZGb0Q5Tkx3c3JaZVZOSnVl?=
+ =?utf-8?B?ZDdKMXgyRWdNdTlPWXRQL2FLSG9iWFFlWklmNkJaK1dsZE02WEhzT0thd2k2?=
+ =?utf-8?B?U3pVemxKNDk4VzdsK0xpRExtVlh6M3J6MkVQMFExNU9VNG9ldTJZUUxPYzA4?=
+ =?utf-8?B?YlZZOEJTV2J2dUNLdGNQMit3RFFFYlpyc0dsNG5la3N3eEg2RE5aazcwR2l5?=
+ =?utf-8?B?Z1VGK1dTV0p0SXVMeEdRNlk3aDlzUlh3aVhubjNKNjZERVVlQXpFUGJPdnNy?=
+ =?utf-8?B?VktiRkluaXBVWDlkUTJWdGQ3NVRXTnR0NlBud2daLzVQQTBJV0FQYW41VHVo?=
+ =?utf-8?B?Q1hJajZUcVJCT1hCMVN5MERwUjFuVnVqNXdTcjRYSUkraStmbVNYTjJlZ1ll?=
+ =?utf-8?B?S3I2MWJJSDZQYzRiOHRFZ2tlKzNiYnBrc21SMHpjYWZURWVWZFJMYkxjdnlX?=
+ =?utf-8?B?Mi9CWTRISnlyK2FiRXlsYlBzR1QycGxucTJHTTV0cVNCK3k0RlZzSFFXL0ZW?=
+ =?utf-8?B?aEpNdWVCWFJtRTUzckVmOGx6alNIbHVxNjZOMk9IblVVTkliS0xCSUk1ZDFL?=
+ =?utf-8?Q?5GoohHFUDBq7AL6cwmNQhUgh+O8ofsOo?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7277.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(10070799003)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Q3liNklQTS9OVmhsTDhIUVVuS245VktFcjE3QTZqcWhIOTl6TmM5WUZyNjJu?=
+ =?utf-8?B?RFUxZU5LdGRKZzh6SGEveWlZU09xNFFaZ3dGK3ppMnVTMlBmR1R2VyswTnBq?=
+ =?utf-8?B?eklRWUR6YUZZK2VOaTVEdDcxd1FSUnNhdEpoNXdDY28xc0V3SUlwdms2aWdY?=
+ =?utf-8?B?ajUvaGliOXdzWEh2Uk1zd1EyZStiRnQ5UFh2SEw4S3hBajI5MWViUmlNK21i?=
+ =?utf-8?B?eWJkRW94SDRNT1Z0SWl5UG95UXhyMDdCSkFLZGJXR2t2UXJWVkxhTG9mTjR4?=
+ =?utf-8?B?dWZjald5MUFuUlFmbXdrQmpzUENweXdEUi9nNVViT0xBTVJ3TytzUEhUNi9y?=
+ =?utf-8?B?TVA1S3E5cGdRT2Vtb214WnhaRlQ5akp1SXZkSUc3YnZIQWVCLys0cFdnQlVa?=
+ =?utf-8?B?NitpckVDeE8wcGdwTGdmbDlBakRzczg4V1daVDJBVXBLanExUVZJSElZamF6?=
+ =?utf-8?B?R0RRVjRKSndOYzN1LzVBT1pQeCswNDBkRjAzeUNEZDZzVWRiQVhvek5uTWtm?=
+ =?utf-8?B?bUFIUjRwMXB0NFpoTnBZTWp4NUNua3Fnak1JS05KUGRqU3ZHeHBOZWp5Q0I1?=
+ =?utf-8?B?d0VxVHlRN0FRVHExQ1pEZXZTd2QzRmpOT3kvbEgwVlNKMmMrb0lVQXlBWnpV?=
+ =?utf-8?B?MERjcHFvWFZoVHAra29Na1N4VE1HTzJRd2xpVVBueXJlSXpWQWF0M3NrcmIr?=
+ =?utf-8?B?cnNWaTZoRG1ZMEM1QXZZVkR2SWFBbVFPdmNwZFpUZm81Z0VLbmFPOCtUd1Fh?=
+ =?utf-8?B?ODdCV0NkcWZ6Ryt0M0wzQUxvNjB1dmd5aVVaRVloaS9MVGJSN0E2UzdVQjhK?=
+ =?utf-8?B?YS9qaUN1WlRIenR6KzlFZHlhVzhEaTdQU0FGWFVYMzZhYmhXdlcxZXNSSjBE?=
+ =?utf-8?B?M2dWVW93Tm02MjB3UlZZZHBTNmJ5d3ZzZE94SWRKcklINGRnZ3U2dWxvV3JN?=
+ =?utf-8?B?TDFIS2R2aXVob2ZqeVQ1dDgxM3ZRRWdQZG5haGhFQmEzNHlmc3RsbVVWT1Nm?=
+ =?utf-8?B?K2JUSFZwMVlHU2RiN1FBZ3JOWlNXb0tjck5VNlhuanlLSld4cU9KTVlEQWQx?=
+ =?utf-8?B?VHpzYm0vVStWV0hVdjgzNzFDV3JjN2V4U0NxMnFCRllkbDNsRU13KzR1UktU?=
+ =?utf-8?B?ei9FZ0RtRmh6cGNpN0NyTkxYM3NUNnFTOEhPTE84cklmZ2xxQmMrSUZ6UmU2?=
+ =?utf-8?B?WHFYSmd0WVh1VkM4cm9tZXBmMzZwRExLNTlCeWQySGc0VzJFTm5yUVUxenQ0?=
+ =?utf-8?B?cSswNXBjY3F5WjBIbmhlL2k1ajF0eDk4RmlDUkpkeVZ0andIejcvTnhQSG1k?=
+ =?utf-8?B?aEZBakVvOUVCbHkzaTV0R2diekVOYndxOVByUHpQd3Y2bmZDVFJEZnRuYXlv?=
+ =?utf-8?B?L0FRRzNJQXJreFNndUFzeVd0c1Y1MDUyT1NOVlBmSVU2SytjQUE0NGpSbmoy?=
+ =?utf-8?B?ZG1MT2FZbG03VUFnT1NvaWN6UlBvTWQ1VGdGeFFwM2VNRWFwNDVlcFhXRkxz?=
+ =?utf-8?B?dG5qdXFtMlNTTjBGdnA4M0IzQlpPbkV4L0FtNXVPQyt2TDZycHkwb2JtWEJq?=
+ =?utf-8?B?a2J2UnhxUlBrbzNScThGSXphZmJ0dFRYTzlwTitCOXMyOWVZTTlJQkdKaXJS?=
+ =?utf-8?B?OEFNd1pEbnhoTUR6eG1IWjd1VVoxWVowdmZkZEJ2VXZrSWJCdnhXNlFuSVlv?=
+ =?utf-8?B?L2lIODdBdTlUYlRLc09sU0dKYUNvVzNyMzFZNTdURDI4L0dTNml1dllUc0Yv?=
+ =?utf-8?B?TEpVMXVoaWFlOXlCVkJZc053dkxYdDV3M1BNL0FJU0pEWWMzcS9SL0pZWGxD?=
+ =?utf-8?B?akNQU1RRQXlNTUJMWnFVbkVTcHlISEJETlNCU3Nvd1M5WmZ0US9JMTdtYkJQ?=
+ =?utf-8?B?NUJVVVhVNVk2OU1iZHpQdi92ZGpNSWEvSk9XejhWbzNwZXdmd09JWkpwemZU?=
+ =?utf-8?B?Ym1nMFlJbkdDNlh4T3ZrVjVNYlNPZnB6T3ZmbHdhby8xTXJZYTNjU0RCV0tD?=
+ =?utf-8?B?QjAzeEhCU0dFdnNTWEdBWFdsbXhWVTFsZHA1WkI0Y29SUkpaK1MyNUoyRGk2?=
+ =?utf-8?B?OUFYQmhFWGlzbUQvMlUrc3BzUGRqaGpEYzg0dkxUYVVYZmxRc01Ddm5BRVdu?=
+ =?utf-8?B?bUx3OVVVRzRyRXZZSW1xMEVnSDMxL2hUb3NBTWFWWU1uMldrTmFMM1lUZ01Q?=
+ =?utf-8?Q?e2CNrtJz4F3u3FMukpVYm2XkfxFarQ/3afFu6HLzRSAQ?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89eb87f8-8909-4c5c-6548-08de20c0c375
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7277.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2025 01:22:22.0119
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zXHZlLt09GmfV7MLMR9LaYfBiQJbxcOR8MGBXtvpA5J0MbgtoEVSrFMeTmgRYHhP1guO0KwEGEbhyRW6MBHndA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9357
 
-On Mon, Nov 10, 2025 at 07:40:31PM +0100, Andy Shevchenko wrote:
-> Use %ptSp instead of open coded variants to print content of
-> struct timespec64 in human readable format.
+On 11/9/25 17:51, Mike Rapoport wrote:
+> On Fri, Nov 07, 2025 at 06:32:15PM -0800, Dan Williams wrote:
+>> Commit 7ffb791423c7 ("x86/kaslr: Reduce KASLR entropy on most x86 systems")
+>> is too narrow. ZONE_DEVICE, in general, lets any physical address be added
+>> to the direct-map. I.e. not only ACPI hotplug ranges, CXL Memory Windows,
+>> or EFI Specific Purpose Memory, but also any PCI MMIO range for the
+>> CONFIG_DEVICE_PRIVATE and CONFIG_PCI_P2PDMA cases.
+>>
+>> A potential path to recover entropy would be to walk ACPI and determine the
+>> limits for hotplug and PCI MMIO before kernel_randomize_memory(). On
+>> smaller systems that could yield some KASLR address bits. This needs
+>> additional investigation to determine if some limited ACPI table scanning
+>> can happen this early without an open coded solution like
+>> arch/x86/boot/compressed/acpi.c needs to deploy.
+>>
+>> Cc: Balbir Singh <balbirs@nvidia.com>
+>> Cc: Ingo Molnar <mingo@kernel.org>
+>> Cc: Kees Cook <kees@kernel.org>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Andy Lutomirski <luto@kernel.org>
+>> Cc: Logan Gunthorpe <logang@deltatee.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>> Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Mike Rapoport <rppt@kernel.org>
+>> Cc: Suren Baghdasaryan <surenb@google.com>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>
+>> Fixes: 7ffb791423c7 ("x86/kaslr: Reduce KASLR entropy on most x86 systems")
+>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>> ---
+>>  drivers/pci/Kconfig |  6 ------
+>>  mm/Kconfig          | 12 ++++++++----
+>>  arch/x86/mm/kaslr.c | 10 +++++-----
+>>  3 files changed, 13 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+>> index f94f5d384362..47e466946bed 100644
+>> --- a/drivers/pci/Kconfig
+>> +++ b/drivers/pci/Kconfig
+>> @@ -207,12 +207,6 @@ config PCI_P2PDMA
+>>  	  P2P DMA transactions must be between devices behind the same root
+>>  	  port.
+>>  
+>> -	  Enabling this option will reduce the entropy of x86 KASLR memory
+>> -	  regions. For example - on a 46 bit system, the entropy goes down
+>> -	  from 16 bits to 15 bits. The actual reduction in entropy depends
+>> -	  on the physical address bits, on processor features, kernel config
+>> -	  (5 level page table) and physical memory present on the system.
+>> -
+>>  	  If unsure, say N.
+>>  
+>>  config PCI_LABEL
+>> diff --git a/mm/Kconfig b/mm/Kconfig
+>> index 0e26f4fc8717..d17ebcc1a029 100644
+>> --- a/mm/Kconfig
+>> +++ b/mm/Kconfig
+>> @@ -1128,10 +1128,14 @@ config ZONE_DEVICE
+>>  	  Device memory hotplug support allows for establishing pmem,
+>>  	  or other device driver discovered memory regions, in the
+>>  	  memmap. This allows pfn_to_page() lookups of otherwise
+>> -	  "device-physical" addresses which is needed for using a DAX
+>> -	  mapping in an O_DIRECT operation, among other things.
+>> -
+>> -	  If FS_DAX is enabled, then say Y.
+>> +	  "device-physical" addresses which is needed for DAX, PCI_P2PDMA, and
+>> +	  DEVICE_PRIVATE features among others.
+>> +
+>> +	  Enabling this option will reduce the entropy of x86 KASLR memory
+>> +	  regions. For example - on a 46 bit system, the entropy goes down
+>> +	  from 16 bits to 15 bits. The actual reduction in entropy depends
+>> +	  on the physical address bits, on processor features, kernel config
+>> +	  (5 level page table) and physical memory present on the system.
+>>  
+>>  #
+>>  # Helpers to mirror range of the CPU page tables of a process into device page
+>> diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
+>> index 3c306de52fd4..834641c6049a 100644
+>> --- a/arch/x86/mm/kaslr.c
+>> +++ b/arch/x86/mm/kaslr.c
+>> @@ -115,12 +115,12 @@ void __init kernel_randomize_memory(void)
+>>  
+>>  	/*
+>>  	 * Adapt physical memory region size based on available memory,
+>> -	 * except when CONFIG_PCI_P2PDMA is enabled. P2PDMA exposes the
+>> -	 * device BAR space assuming the direct map space is large enough
+>> -	 * for creating a ZONE_DEVICE mapping in the direct map corresponding
+>> -	 * to the physical BAR address.
+>> +	 * except when CONFIG_ZONE_DEVICE is enabled. ZONE_DEVICE wants to map
+>> +	 * any physical address into the direct-map. KASLR wants to reliably
+>> +	 * steal some physical address bits. Those design choices are in direct
+>> +	 * conflict.
+>>  	 */
+>> -	if (!IS_ENABLED(CONFIG_PCI_P2PDMA) && (memory_tb < kaslr_regions[0].size_tb))
+>> +	if (!IS_ENABLED(CONFIG_ZONE_DEVICE) && (memory_tb < kaslr_regions[0].size_tb))
+>>  		kaslr_regions[0].size_tb = memory_tb;
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> A stupid question, why we adjust virtual kaslr to actual physical memory
+> size at all rather than always use maximal addressable size?
 
-Quite a bit neater, yes.
+The original changelog that introduced the changes has a detailed explanation, IIRC.
 
-Acked-by: Corey Minyard <cminyard@mvista.com>
-
-> ---
->  drivers/char/ipmi/ipmi_si_intf.c | 3 +--
->  drivers/char/ipmi/ipmi_ssif.c    | 6 ++----
->  2 files changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-> index 70e55f5ff85e..5459ffdde8dc 100644
-> --- a/drivers/char/ipmi/ipmi_si_intf.c
-> +++ b/drivers/char/ipmi/ipmi_si_intf.c
-> @@ -275,8 +275,7 @@ void debug_timestamp(struct smi_info *smi_info, char *msg)
->  	struct timespec64 t;
->  
->  	ktime_get_ts64(&t);
-> -	dev_dbg(smi_info->io.dev, "**%s: %lld.%9.9ld\n",
-> -		msg, t.tv_sec, t.tv_nsec);
-> +	dev_dbg(smi_info->io.dev, "**%s: %ptSp\n", msg, &t);
->  }
->  #else
->  #define debug_timestamp(smi_info, x)
-> diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
-> index 1b63f7d2fcda..ef1582a029f4 100644
-> --- a/drivers/char/ipmi/ipmi_ssif.c
-> +++ b/drivers/char/ipmi/ipmi_ssif.c
-> @@ -1083,10 +1083,8 @@ static int sender(void *send_info, struct ipmi_smi_msg *msg)
->  		struct timespec64 t;
->  
->  		ktime_get_real_ts64(&t);
-> -		dev_dbg(&ssif_info->client->dev,
-> -			"**Enqueue %02x %02x: %lld.%6.6ld\n",
-> -			msg->data[0], msg->data[1],
-> -			(long long)t.tv_sec, (long)t.tv_nsec / NSEC_PER_USEC);
-> +		dev_dbg(&ssif_info->client->dev, "**Enqueue %02x %02x: %ptSp\n",
-> +			msg->data[0], msg->data[1], &t);
->  	}
->  	return IPMI_CC_NO_ERROR;
->  }
-> -- 
-> 2.50.1
-> 
+Balbir
 
