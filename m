@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-40938-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40939-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42CECC4FF66
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 23:17:52 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id B070DC4FF59
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 23:16:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABEE9189115A
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 22:17:07 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 525B24E90C5
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 22:16:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90B932EFD9E;
-	Tue, 11 Nov 2025 22:16:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21E7C2F12C4;
+	Tue, 11 Nov 2025 22:16:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KS4hKPhL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eJ6ZSNET"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E44A28D829;
-	Tue, 11 Nov 2025 22:16:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB70035CBCB;
+	Tue, 11 Nov 2025 22:16:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762899397; cv=none; b=V3l0fL+Iivw2a4Om5XnjKRLTdFp+cJJjqqFJbAPOmOYluLg6OfO33x7pa7hdZmc7Es3W26cTa1HEMV7FjoogjBhSzOqLb5nU7+0XXIvTyTFamvqoUrvahZ/IhkTjzVyvGTSN2r3ieuWJZTxzSDYefvmR0PzULUNpe+1LY0jHY/o=
+	t=1762899399; cv=none; b=jefv4Opdzog5ArQ1+0U+2lVSXTYxg6vfWcU5uveyyWgpVzTuNW/ElyjKR8SMbwmtgxi+OyJXSZAxei734xjrnFNUrynrWwTwloiB6JM3GCHegrjv7zvmgJVsGEjEq/4tajJOINHs8fc79BpYiHl4fBUxg1UM/FGaudN8VMz1tOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762899397; c=relaxed/simple;
-	bh=Y9HstsJyK11t68W7S89ulTb5JNMb6NXx+cmGs8N8ZM8=;
+	s=arc-20240116; t=1762899399; c=relaxed/simple;
+	bh=piP/RwbPgLfG2R/w3aecdxfRCWSEvz8vScqdpVTga7c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WUpjBknzkVVgVawXt8UcT5kyfFjwai+1oi17bP2t2Ofl8ROGd0m/tgaC+7fQR38/vocYgibJAkrdkxzVcvLKUfhIrDcyQ2192+FPySKP8CswDBAPZhIR357HQ9mn5WGBRfazCfUqbQG8EUR/XYoU0Acrx8+WkwqktADCGD6xzdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KS4hKPhL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CC8EC116D0;
-	Tue, 11 Nov 2025 22:16:37 +0000 (UTC)
+	 MIME-Version; b=Zuk+L6bm2f4lBzl4Ue9ZkgShrbo007oIYueAhM8hdUEhDo25byIC/4h0KJ8M2TszUI128EhIgMSYOHYjdHG8jeUBtQsZcIthkTET21gwMabRIVnhAPxfCnxccxiTiAgtAV0yv+VZXz5Hh8rcmT1s8V5VNVzvWcBrz/a/9G4meeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eJ6ZSNET; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58FDCC4CEF5;
+	Tue, 11 Nov 2025 22:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762899397;
-	bh=Y9HstsJyK11t68W7S89ulTb5JNMb6NXx+cmGs8N8ZM8=;
+	s=k20201202; t=1762899398;
+	bh=piP/RwbPgLfG2R/w3aecdxfRCWSEvz8vScqdpVTga7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KS4hKPhL8dbdNVUKUlSIJwO/8j0ikxwqVr1nlFhdN3IqN8m4RCmXdZEzJXm/eLjr8
-	 udyeLw3D6m8/B9ASnLkyckxmUkbGmEOo9O+55vfLwO8MSW89xRxN1UfkersbQaQM+C
-	 HBmXuBo2vdKp7xczcqQVrP55ZCFaMKwXiXgf+dVSkTGz87eY8bImIQYBJtgt5RZPvL
-	 yFlIFBx3THHS4OcSp8M+lpZbL1N7Jdix45tDUo5UT81MybKn6QJHK6okNGBcZadnIS
-	 QCwPoad/3/kqMGwiS0Vv5dc6vgfWFU22hxytL5Z9izqaB4mOaw4qxoWfYnSXiTIouc
-	 XtVhIG5mQlv5A==
+	b=eJ6ZSNETJMT92b3zYiGiIx7Ydvvs0kleK7C5qXbMjuOSuCW+VZK3Ls8jgstesTrWS
+	 yMADIldoLS/F5KrHgBeUm0uRcWt1rEuchfK9XmapNz2TF/Kz9a20CdqUr7FI8QNRAK
+	 88Nd8SbgCjY86c5xj4Dt8I8Mx1w9Nkg9tyOTl0MBxbYxbahx4qTMMb65q6xQz3HOt3
+	 zZtDJDqD5GYpsKvdB3/pssXrn9lYmP3eTYOq9k80N00IQFq/66K4CWAZ6V/ItqVBpC
+	 0DHFhiQD28+i1OvetrcVrXaylERxY3DNUFQq87ZSy3Zz8fApA+UZEB2WLG542UPJGE
+	 6nakGzrXOfMmw==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Niklas Cassel <cassel@kernel.org>,
 	Shawn Lin <shawn.lin@rock-chips.com>
@@ -72,9 +72,9 @@ Cc: Manivannan Sadhasivam <mani@kernel.org>,
 	linux-rockchip@lists.infradead.org,
 	kernel@pengutronix.de,
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 3/4] PCI: dw-rockchip: Configure L1sub support
-Date: Tue, 11 Nov 2025 16:16:10 -0600
-Message-ID: <20251111221621.2208606-4-helgaas@kernel.org>
+Subject: [PATCH 4/4] arm64: dts: rockchip: Add PCIe clkreq stuff for RK3588 EVB1
+Date: Tue, 11 Nov 2025 16:16:11 -0600
+Message-ID: <20251111221621.2208606-5-helgaas@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251111221621.2208606-1-helgaas@kernel.org>
 References: <20251111221621.2208606-1-helgaas@kernel.org>
@@ -88,110 +88,49 @@ Content-Transfer-Encoding: 8bit
 
 From: Shawn Lin <shawn.lin@rock-chips.com>
 
-L1 PM Substates for RC mode require support in the dw-rockchip driver
-including proper handling of the CLKREQ# sideband signal. It is mostly
-handled by hardware, but software still needs to set the clkreq fields
-in the PCIE_CLIENT_POWER_CON register to match the hardware implementation.
-
-For more details, see section '18.6.6.4 L1 Substate' in the RK3658 TRM 1.1
-Part 2, or section '11.6.6.4 L1 Substate' in the RK3588 TRM 1.0 Part2.
-
-Meanwhile, for the EP mode, we haven't prepared enough to actually support
-L1 PM Substates yet. So disable it now until proper support is added later.
+Add supports-clkreq and pinmux for PCIe ASPM L1 substates.
 
 Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-[bhelgaas: set pci->l1ss_support so DWC core preserves L1SS Capability bits;
-drop corresponding code here]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Link: https://patch.msgid.link/1761187883-150120-1-git-send-email-shawn.lin@rock-chips.com
+Reviewed-by: Hans Zhang <hans.zhang@cixtech.com>
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+Link: https://patch.msgid.link/1761187883-150120-2-git-send-email-shawn.lin@rock-chips.com
 ---
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index 3e2752c7dd09..62a095752833 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -62,6 +62,12 @@
- /* Interrupt Mask Register Related to Miscellaneous Operation */
- #define PCIE_CLIENT_INTR_MASK_MISC	0x24
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts b/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
+index ff1ba5ed56ef..c9d284cb738b 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts
+@@ -522,6 +522,7 @@ &pcie2x1l0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pcie2_0_rst>, <&pcie2_0_wake>, <&pcie2_0_clkreq>, <&wifi_host_wake_irq>;
+ 	reset-gpios = <&gpio4 RK_PA5 GPIO_ACTIVE_HIGH>;
++	supports-clkreq;
+ 	vpcie3v3-supply = <&vcc3v3_wlan>;
+ 	status = "okay";
  
-+/* Power Management Control Register */
-+#define PCIE_CLIENT_POWER_CON		0x2c
-+#define  PCIE_CLKREQ_READY		FIELD_PREP_WM16(BIT(0), 1)
-+#define  PCIE_CLKREQ_NOT_READY		FIELD_PREP_WM16(BIT(0), 0)
-+#define  PCIE_CLKREQ_PULL_DOWN		FIELD_PREP_WM16(GENMASK(13, 12), 1)
-+
- /* Hot Reset Control Register */
- #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
- #define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
-@@ -85,6 +91,7 @@ struct rockchip_pcie {
- 	struct regulator *vpcie3v3;
- 	struct irq_domain *irq_domain;
- 	const struct rockchip_pcie_of_data *data;
-+	bool supports_clkreq;
+@@ -545,7 +546,8 @@ wifi: wifi@0,0 {
+ &pcie2x1l1 {
+ 	reset-gpios = <&gpio4 RK_PA2 GPIO_ACTIVE_HIGH>;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pcie2_1_rst>, <&rtl8111_isolate>;
++	pinctrl-0 = <&pcie2_1_rst>, <&rtl8111_isolate>, <&pcie30x1m1_1_clkreqn>;
++	supports-clkreq;
+ 	status = "okay";
  };
  
- struct rockchip_pcie_of_data {
-@@ -200,6 +207,32 @@ static bool rockchip_pcie_link_up(struct dw_pcie *pci)
- 	return FIELD_GET(PCIE_LINKUP_MASK, val) == PCIE_LINKUP;
- }
+@@ -555,7 +557,8 @@ &pcie30phy {
  
-+/*
-+ * See e.g. section '11.6.6.4 L1 Substate' in the RK3588 TRM V1.0 for the steps
-+ * needed to support L1 substates. Currently, just enable L1 substates for RC
-+ * mode if CLKREQ# is properly connected and supports-clkreq is present in DT.
-+ * For EP mode, there are more things should be done to actually save power in
-+ * L1 substates, so disable L1 substates until there is proper support.
-+ */
-+static void rockchip_pcie_configure_l1sub(struct dw_pcie *pci)
-+{
-+	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-+
-+	/* Enable L1 substates if CLKREQ# is properly connected */
-+	if (rockchip->supports_clkreq &&
-+	    rockchip->data->mode == DW_PCIE_RC_TYPE ) {
-+		rockchip_pcie_writel_apb(rockchip, PCIE_CLKREQ_READY,
-+					 PCIE_CLIENT_POWER_CON);
-+		pci->l1ss_support = true;
-+		return;
-+	}
-+
-+	/* Otherwise, pull down CLKREQ# */
-+	rockchip_pcie_writel_apb(rockchip,
-+				 PCIE_CLKREQ_PULL_DOWN | PCIE_CLKREQ_NOT_READY,
-+				 PCIE_CLIENT_POWER_CON);
-+}
-+
- static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
- {
- 	u32 cap, lnkcap;
-@@ -264,6 +297,7 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
- 	irq_set_chained_handler_and_data(irq, rockchip_pcie_intx_handler,
- 					 rockchip);
- 
-+	rockchip_pcie_configure_l1sub(pci);
- 	rockchip_pcie_enable_l0s(pci);
- 
- 	return 0;
-@@ -301,6 +335,7 @@ static void rockchip_pcie_ep_init(struct dw_pcie_ep *ep)
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 	enum pci_barno bar;
- 
-+	rockchip_pcie_configure_l1sub(pci);
- 	rockchip_pcie_enable_l0s(pci);
- 	rockchip_pcie_ep_hide_broken_ats_cap_rk3588(ep);
- 
-@@ -412,6 +447,9 @@ static int rockchip_pcie_resource_get(struct platform_device *pdev,
- 		return dev_err_probe(&pdev->dev, PTR_ERR(rockchip->rst),
- 				     "failed to get reset lines\n");
- 
-+	rockchip->supports_clkreq = of_property_read_bool(pdev->dev.of_node,
-+							  "supports-clkreq");
-+
- 	return 0;
- }
- 
+ &pcie3x4 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pcie3_reset>;
++	pinctrl-0 = <&pcie3_reset>, <&pcie30x4m1_clkreqn>;
++	supports-clkreq;
+ 	reset-gpios = <&gpio4 RK_PB6 GPIO_ACTIVE_HIGH>;
+ 	vpcie3v3-supply = <&vcc3v3_pcie30>;
+ 	status = "okay";
 -- 
 2.43.0
 
