@@ -1,178 +1,159 @@
-Return-Path: <linux-pci+bounces-40838-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40840-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B121BC4C240
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 08:40:43 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9A70C4C37B
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 09:00:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A6733B77FA
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 07:40:42 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2BD154F7741
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 07:58:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A1E129DB6A;
-	Tue, 11 Nov 2025 07:40:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A49692C21F8;
+	Tue, 11 Nov 2025 07:58:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="kj0fp8Gs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ch1k3nWP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B787A31BC80
-	for <linux-pci@vger.kernel.org>; Tue, 11 Nov 2025 07:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF3015E8B;
+	Tue, 11 Nov 2025 07:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762846839; cv=none; b=laM9PELw28Bs9qbnPyZAJHkbFmS59mf/1WEQDkZxi8P5erlpsfoFe32WnP39MNs6HEWt/qCabbRjAJ5IFNIerjEC3M/IdFJjsr2KHZmwhpIH4ZE82OnJpwgQHrxccpdq1pkKf4XMQaUV8lZdIVjbblNq9x9laTXgaFpeR8N76S4=
+	t=1762847882; cv=none; b=eZKZjEKMN9mOhEY2V0ziQLm7n3Pg4kKKA465ZuyjldvniYjnr1iHR4kduPqpesPO9GTSvCQb7Ip+O6ksgBWjjTh/3SBQsjaGBDtnKU6ujtXtKP2DfXfXxSiu8w9qviIldyqIQw/SB+/Yw1L8R3anq0Ek62tlJJXWURrEDpHtQ3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762846839; c=relaxed/simple;
-	bh=/eAcCADFx1KN9TUNrzyCjPaC853i99Gc+U9+8pcCGB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A8Ndcmlqdi96UpXiEIBEfCmYHVbcLb/mK28yJ1WZ8xN87QmS/0O6JJxBI18sJtEppBIeJNmheuuL3sOhlKcH7y9uj8w+fY/0cQwQzVW4E0AFW/u/1SLqe42E8C6Zxz4bAWr1UtQ5kJi3DVNGu1qm3NPE+V1xZtFg1eWj5CY5zaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=kj0fp8Gs; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
-Message-ID: <c27b5514-1691-448a-9823-8b35955b0fc6@packett.cool>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
-	s=key1; t=1762846824;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2eSCPUFxckyk8DCfOmruedDrJB+PpW6As/uwDjHVXw0=;
-	b=kj0fp8GszZ+3R1nRN0IU+NipUQ6W2ywmEDXw9Gb1tforA+jEjkBCKuvFGzFUkYjuZtSUKi
-	5mhP7jivZrXjI3yqkV/XWw8W11SUr5KC3B+YQKgm9KY1yz5jFoZRJs6QrVR2nRll1zlin2
-	CBWNyCs1IxKl7Mo7zcKP9wOjt+4scFRWYPtnd0Ev4Z11ytiDJ/+h+bZU2Pyf3yVzT1FXXf
-	uG5+z13kbKJFFmgMqa9lyMe/kpt05ZLJWYeugprNdqL+3bo+p1QGicE8nio3p4UAHExbu3
-	4ZdxHSPURnpPRStgAG+6BNSWBqob7hekQ1ZYlkrrjo52bEb/7NugefSuuAyWnA==
-Date: Tue, 11 Nov 2025 04:40:01 -0300
+	s=arc-20240116; t=1762847882; c=relaxed/simple;
+	bh=5Uaa5nwFjVAGS3f1mHP+LmUtuVFBDubmN+xdr/NpZiU=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=QMpjdDxN+/6mX0/eB6d9HgpEsG02z037IrRnN32V1imj+Q0EBDxuRmDVJpDUNRwijPJK9vHIbOPC9j2xAbMUA7zppMrDfakOy3i+XqOwgBnvpYeT5O3TOu42+gDJHaMCS0OQXogbRmuVspjnOARReoRg5UkP7GyhUOke1IroFY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ch1k3nWP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85862C4CEF7;
+	Tue, 11 Nov 2025 07:57:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762847880;
+	bh=5Uaa5nwFjVAGS3f1mHP+LmUtuVFBDubmN+xdr/NpZiU=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=Ch1k3nWPMj6UEosM8Ssp+W11+ShFdJNgTHl19OiSOLt8ohzsfcyx1e1F7RmTDjV4h
+	 6nfm81zuqwh2U/1g+oysD3nb8RJ03+yxk6skIyzw3M3W3e/J9HtiabAgh4+xEFmu37
+	 l5MKqXDSdixGL84XrPmyQATSqs91LuFiI1HHYTjBcRMgp9dE7vdCjaftzIMHr0cVLk
+	 +CWgU4tpn3OvWPaoyx3SvYKWIXApBzibkh3iBOdzwx5+bk+s2HOEUiW5d50gYtDEsM
+	 lw10x7RmKw7oaN9Q1I5bh42iwHcHv5ipPInJZkoHKozkZTco3mSCA83d6op32oom8H
+	 eoL8yv1NXmTAw==
+Message-ID: <9f461bf7-3651-4be4-b6f9-20853cdc4c90@kernel.org>
+Date: Tue, 11 Nov 2025 08:57:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 0/2] PCI/ASPM: Enable ASPM and Clock PM by default on
- devicetree platforms
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- manivannan.sadhasivam@oss.qualcomm.com,
+User-Agent: Mozilla Thunderbird
+From: Hans Verkuil <hverkuil+cisco@kernel.org>
+Subject: Re: [PATCH v1 13/23] media: av7110: Switch to use %ptSp
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Corey Minyard <corey@minyard.net>, =?UTF-8?Q?Christian_K=C3=B6nig?=
+ <christian.koenig@amd.com>, "Dr. David Alan Gilbert" <linux@treblig.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
  Rob Clark <robin.clark@oss.qualcomm.com>,
- Vignesh Raman <vignesh.raman@collabora.com>,
- Valentine Burley <valentine.burley@collabora.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, Hans Verkuil <hverkuil@kernel.org>,
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Vitaly Lifshits <vitaly.lifshits@intel.com>,
+ Manivannan Sadhasivam <mani@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ Calvin Owens <calvin@wbinvd.org>, Sagi Maimon <maimon.sagi@gmail.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Karan Tilak Kumar <kartilak@cisco.com>,
+ Casey Schaufler <casey@schaufler-ca.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Petr Mladek <pmladek@suse.com>,
+ Max Kellermann <max.kellermann@ionos.com>, Takashi Iwai <tiwai@suse.de>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ openipmi-developer@lists.sourceforge.net, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+ amd-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org, linux-pci@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-staging@lists.linux.dev, ceph-devel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-sound@vger.kernel.org
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Jonathan Corbet <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Gustavo Padovan <gustavo@padovan.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- "David E. Box" <david.e.box@linux.intel.com>,
- Kai-Heng Feng <kai.heng.feng@canonical.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Chia-Lin Kao <acelan.kao@canonical.com>, Bjorn Helgaas <helgaas@kernel.org>
-References: <20250922-pci-dt-aspm-v2-0-2a65cf84e326@oss.qualcomm.com>
- <4cp5pzmlkkht2ni7us6p3edidnk25l45xrp6w3fxguqcvhq2id@wjqqrdpkypkf>
- <36f05566-8c7a-485b-96e7-9792ab355374@packett.cool>
- <qy4cnuj2dfpfsorpke6vg3skjyj2hgts5hhrrn5c5rzlt6l6uv@b4npmattvfcm>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Val Packett <val@packett.cool>
-In-Reply-To: <qy4cnuj2dfpfsorpke6vg3skjyj2hgts5hhrrn5c5rzlt6l6uv@b4npmattvfcm>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Rodolfo Giometti
+ <giometti@enneenne.com>, Jonathan Lemon <jonathan.lemon@gmail.com>,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Stefan Haberland <sth@linux.ibm.com>, Jan Hoeppner <hoeppner@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Satish Kharat <satishkh@cisco.com>,
+ Sesidhar Baddela <sebaddel@cisco.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Xiubo Li
+ <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>
+References: <20251110184727.666591-1-andriy.shevchenko@linux.intel.com>
+ <20251110184727.666591-14-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US, nl
+In-Reply-To: <20251110184727.666591-14-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 10/11/2025 19:40, Andy Shevchenko wrote:
+> Use %ptSp instead of open coded variants to print content of
+> struct timespec64 in human readable format.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On 11/11/25 4:19 AM, Manivannan Sadhasivam wrote:
-> On Tue, Nov 11, 2025 at 03:51:03AM -0300, Val Packett wrote:
->> On 11/8/25 1:18 PM, Dmitry Baryshkov wrote:
->>> On Mon, Sep 22, 2025 at 09:46:43PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
->>>> Hi,
->>>>
->>>> This series is one of the 'let's bite the bullet' kind, where we have decided to
->>>> enable all ASPM and Clock PM states by default on devicetree platforms [1]. The
->>>> reason why devicetree platforms were chosen because, it will be of minimal
->>>> impact compared to the ACPI platforms. So seemed ideal to test the waters.
->>>>
->>>> This series is tested on Lenovo Thinkpad T14s based on Snapdragon X1 SoC. All
->>>> supported ASPM states are getting enabled for both the NVMe and WLAN devices by
->>>> default.
->>>> [..]
->>> The series breaks the DRM CI on DB820C board (apq8096, PCIe network
->>> card, NFS root). The board resets randomly after some time ([1]).
->> Is that reset.. due to the watchdog resetting a hard-frozen system?
->>
->> Me and a bunch of other people in the #aarch64-laptops irc/matrix room have
->> been experiencing these random hard freezes with ASPM enabled for the NVMe
->> SSD, on Hamoa (and Purwa too I think) devices.
->>
-> Interesting! ASPM is tested and found to be working on Hamoa and other Qcom
-> chipsets also, except Makena based chipsets that doesn't support L0s due to
-> incorrect PHY settings. APQ8096 might be an exception since it is a really old
-> target and I'm digging up internally regarding the ASPM support.
->
->> Totally unpredictable, could be after 4 minutes or 4 days of uptime.
->> Panic-indicator LED not blinking, no reaction to magic SysRq, display image
->> frozen, just a complete hang until the watchdog does the reset.
->>
-> I have KIOXIA SSD on my T14s. I do see some random hang, but I thought those
-> predate the ASPM enablement as I saw them earlier as well. But even before this
-> series, we had ASPM enabled for SSDs on Qcom targets (or devices that gets
-> enumerated during initial bus scan), so it might be that the SSD doesn't support
-> ASPM well enough.
+Acked-by: Hans Verkuil <hverkuil+cisco@kernel.org>
 
-I certainly remember that ASPM *was* enabled by default when I first got 
-this laptop, via the custom way that predates this series.
+Regards,
 
-Actually that custom enablement code getting removed was how I 
-discovered it was ASPM related!
+	Hans
 
-I pulled linux-next once and suddenly the system became stable!.. and 
-then I noticed +2W of battery drain..
-
-> But I'm clueless on why it results in a hang. What I know on ARM platforms is
-> that we get SError aborts and other crazy bus/NOC issues if the device doesn't
-> respond to the PCIe read request. So the hang could be due to one of those
-> issues.
-
-Could the kernel be making requests before the device fully resumed from 
-a sleep state?
-
->> I have confirmed with a modified (to accept args) enable-aspm.sh script[1]
->> that disabling ASPM *only* for the SSD, while keeping it *on* for the WiFi
->> adapter, is enough to keep the system stable (got to about a month of uptime
->> in that state).
->>
-> So this confirms that the controller supports it, and the device (SSD) might be
-> of fault here.
->
->> If you have reproduced the same issue on an entirely different SoC, it's
->> probably a general driver issue.
->>
->> Please, please help us debug this using your internal secret debug equipment
->> :)
->>
-> Starting from v6.18-rc3, we only enable L0s and L1 by default on all devicetree
-> platforms. Are you seeing the hangs post -rc3 also? If so, could you please
-> share the SSD model by doing 'lspci -nn'?
-
-Yes, still seeing them on 6.18.0-rc4-next-20251107. At least with 
-pcie_aspm=force (have been using that recently, so likely all my testing 
-"post -rc3" was with force on.. but others have been testing without it)
-
-I'm currently using the stock drive: Sandisk Corp PC SN740 NVMe SSD 
-(DRAM-less) [15b7:5015] (rev 01)
-
-Though for a couple months I've used a 3rd party one, an SK Hynix BC901 
-[1c5c:1d59]
-
-And other users have different other models and still have the same issue.
-
-// Every time something PCIe related is posted to the mailing lists I've 
-been wondering if it could solve this :D
-"Program correct T_POWER_ON value for L1.2 exit timing" didn't help. 
-Testing "Remove DPC Extended Capability" now..
-
-
-~val
+> ---
+>  drivers/staging/media/av7110/av7110.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/media/av7110/av7110.c b/drivers/staging/media/av7110/av7110.c
+> index bc9a2a40afcb..602342d1174f 100644
+> --- a/drivers/staging/media/av7110/av7110.c
+> +++ b/drivers/staging/media/av7110/av7110.c
+> @@ -321,7 +321,7 @@ static inline void print_time(char *s)
+>  	struct timespec64 ts;
+>  
+>  	ktime_get_real_ts64(&ts);
+> -	pr_info("%s(): %lld.%09ld\n", s, (s64)ts.tv_sec, ts.tv_nsec);
+> +	pr_info("%s(): %ptSp\n", s, &ts);
+>  #endif
+>  }
+>  
 
 
