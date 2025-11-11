@@ -1,332 +1,222 @@
-Return-Path: <linux-pci+bounces-40805-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40806-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 549F3C4A7E2
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 02:29:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66ECEC4AA2A
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 02:35:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6FFBC3B55FD
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 01:20:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 038FA1892F3C
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 01:27:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55FCC2C324C;
-	Tue, 11 Nov 2025 01:11:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96AD334B42B;
+	Tue, 11 Nov 2025 01:17:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="BOyaK/oh"
+	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="1X0bIYLP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m15571.qiye.163.com (mail-m15571.qiye.163.com [101.71.155.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f68.google.com (mail-oa1-f68.google.com [209.85.160.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4750226560B;
-	Tue, 11 Nov 2025 01:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1058330748C
+	for <linux-pci@vger.kernel.org>; Tue, 11 Nov 2025 01:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762823509; cv=none; b=VW2gDOjxnnpjBrTDIpvxW6foXG2zsinyVln6ePMVXZKsDI08CSzX45F6r0f7EvCRw/dI4RaAn/HxffqPVFjOqxhDW4Zijz5t1/lmquJIE+87wgnzmQ/vmQq+NiHkR6hcLu/1p7btZ6wzJFRe3HOwv+oxfULAWZbDc3VBBxfVWYA=
+	t=1762823866; cv=none; b=hjU5UuL+u2qc3PPj6Rr3SwEg6/h5ib8zsTelvuZC4kRqJoUK4F8Llh6UnZP+ldqh2VlE6XEzKoRurkUTjuV3Jw7zgd7fipQWTEb1GGiMxjIYaqqKlZk0hGSMRtExXcOEgfdJffrktZbbgxquegVLXN3h6lOQZ1OfRzs5DJmlM2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762823509; c=relaxed/simple;
-	bh=pVSXEOIlA5whQSb68W9eNYjgobcVj2jZBRwn26UGdvE=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Jbv3Unw5qkiQKER0JIDJzWatbAF4QLReMV9lzmhCFh36F99HA8GrslizrM8EYpePGVKVz7E6i6H4Mr+HZUIkI6ZkmrEJlWkett47O3YqSl5/7Or/sCcBZ09zHGzfcUVLRlv7WDZJc/DwQIJJgD9GdOcBkZdYdnUe30zZNyDwlMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=BOyaK/oh; arc=none smtp.client-ip=101.71.155.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.129] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 291ae3422;
-	Tue, 11 Nov 2025 09:11:34 +0800 (GMT+08:00)
-Message-ID: <20685424-9097-4993-a60d-61c7f7a74b5f@rock-chips.com>
-Date: Tue, 11 Nov 2025 09:11:34 +0800
+	s=arc-20240116; t=1762823866; c=relaxed/simple;
+	bh=/awKTS4VkDV7YyuY2XqMrgn1/FWXuaIp1CGhvSR3qsg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YI6l9m1sDbedQg3nGWIUOR9bvWk4YRBA/9e/wn8nbsd0IvN3Ctz8tsrfgv5GFi+1Uo0tj3EzGh7iE65JXDOjoSktDn6V/dBstUa6RggUesCNUmhU4nNI15i+psa5kWqubnRYXXYtgYL/64WhQUXXeWoWCFgKbeCVD4/E5bEA/wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=1X0bIYLP; arc=none smtp.client-ip=209.85.160.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
+Received: by mail-oa1-f68.google.com with SMTP id 586e51a60fabf-3c9991e6ad1so180151fac.0
+        for <linux-pci@vger.kernel.org>; Mon, 10 Nov 2025 17:17:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1762823863; x=1763428663; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IjPKo3ybe4fdml1XQE+jQ3G55BcDMlVXlR9cl8yZWH4=;
+        b=1X0bIYLPg5FTcJXhMNg4pxmUb76wfaApB+l+loii0/FgtqX/HWlaE6aNarA3fA9Js9
+         Cwr/pnjVw/q3j5GgfUcYJJmUxw/jTInjI6MeuuAxCyfd67UbKjFyQTJeeL68hCUtpCgv
+         FiR1iNbtgqjlwBPrj2nm0cbbtIsbIvO0nK++V7ByOhJx2aJAFWsu3V+P7WutbzH2gkaJ
+         CBY9dbIIANg6ZmHz/nZ3ngHXtPb7Hj43JsC/t5rIl7DR3aQwyV19mNxAMyhHyzknHFLy
+         qjd9pzDGh7fMH3dh49XFDtb87Ae4NleYzlXTxHYnKhEGBfrmvt+33yPlDBX1ApO1D4i7
+         ip+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762823863; x=1763428663;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=IjPKo3ybe4fdml1XQE+jQ3G55BcDMlVXlR9cl8yZWH4=;
+        b=RAOr+IkX++Rk0wOadQxNH/ICYnt0FrV1cGgn+YqGSrFPV28rjlRg3dPjM2B4+wooLY
+         3tEwkYkVhgrNF6gpWaT4hmSmMbGxbYYhHqgpfKi5aqGehqAWLEZs6/kxSRNWsfreXLk+
+         xrKP7Z3LLMWvv7DQ2wIt096vr6zqlYIZVi1rbz0q+hazeIi440+DN2tu7uMRTYsraF4T
+         lYS6/nMdntVmEXUzpRLFrkMu4EzXmBcdSgtRaOJHsRy+0VRIIsNF5Mo2CmuFJkZjjoXB
+         FEK6DjMHNXNzKQXGxCxQW4A4bDrl/9KBlY4X3rLU69OEO9zwweqlzmUJyIUxQehSkQra
+         RQEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxHYZjdkeRUJS0Kxc/A/9ixbfEI/kJR3oWq/9s6AZiGUggQR4SuWni6MunJKVoQ/A6bj22wsVSnug=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykZq8/x70WKt1KvKCPl5RnQvUCBlteHc2a7jrzQL3KApDIetES
+	eWcdJKZ3qdVcrfpZFAEMHx3F5Pg61pGbDSjvqkC4KVPnBSu5YzBBn3en5626dvx0pKQ=
+X-Gm-Gg: ASbGncvujCyLoyqSvPNpnskkxOXbwi3K8MQAzcZvcs8qK+HihIasi4MOmlwkmASbYwj
+	t3eelAUpIBleG4IVyWtMKRzeRPGxP3Hv2ii96qF8yrXEhA/vPq4XeXn7FQPG7At7vcL7yghQ147
+	8TrZdxlDu3p5daUU1IezTi9G9c+MJqQiq4Niaswu02hA6Re9oVVp5iZ8avwqXz4ZX+c4ga65F3H
+	sNch6gXBlbe6+5I9jcdd/rmDdMbe9hsNjuGGJ49FNn2TtLT7PIbWnaxIl8801kT/+WAwaitsvkR
+	TeAgTdhTym/A8VABESjWz4CXKncz1x75t5etW0lcbzani7i27K8JU1Pgu/BBx3a7JWtv/m+EIPv
+	PW7h406Yg1jIBiXnP5gZuO/fgSqSrvHx8LFsxSZsrNVLOKhKRlV3ucwcSGt/oXMC7sQY1NOsiSd
+	ihQPVQg4I4SsG/7w==
+X-Google-Smtp-Source: AGHT+IHYqlJ/DqUior2uObKb688W9mKskJnwhdBfDC1sLOPoqWKjn2HRpxRv5pN7HFxTPVj3Axvofg==
+X-Received: by 2002:a05:6870:46a8:b0:3e1:d34:4283 with SMTP id 586e51a60fabf-3e815aaa2a3mr850172fac.19.1762823862970;
+        Mon, 10 Nov 2025 17:17:42 -0800 (PST)
+Received: from mail.minyard.net ([2001:470:b8f6:1b:b4e9:19a3:cdaf:7174])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3e7d6f7a27dsm4076840fac.0.2025.11.10.17.17.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Nov 2025 17:17:41 -0800 (PST)
+Date: Mon, 10 Nov 2025 19:17:35 -0600
+From: Corey Minyard <corey@minyard.net>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Christian K??nig <christian.koenig@amd.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Hans Verkuil <hverkuil@kernel.org>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Vitaly Lifshits <vitaly.lifshits@intel.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>, Calvin Owens <calvin@wbinvd.org>,
+	Sagi Maimon <maimon.sagi@gmail.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Karan Tilak Kumar <kartilak@cisco.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Max Kellermann <max.kellermann@ionos.com>,
+	Takashi Iwai <tiwai@suse.de>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, amd-gfx@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, linux-mmc@vger.kernel.org,
+	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+	linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
+	ceph-devel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Gustavo Padovan <gustavo@padovan.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas Hellstr??m <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Krzysztof Wilczy??ski <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rodolfo Giometti <giometti@enneenne.com>,
+	Jonathan Lemon <jonathan.lemon@gmail.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Stefan Haberland <sth@linux.ibm.com>,
+	Jan Hoeppner <hoeppner@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Satish Kharat <satishkh@cisco.com>,
+	Sesidhar Baddela <sebaddel@cisco.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Subject: Re: [PATCH v1 12/23] ipmi: Switch to use %ptSp
+Message-ID: <aRKOr2hyoqTnh85-@mail.minyard.net>
+Reply-To: corey@minyard.net
+References: <20251110184727.666591-1-andriy.shevchenko@linux.intel.com>
+ <20251110184727.666591-13-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, FUKAUMI Naoki <naoki@radxa.com>,
- Damien Le Moal <dlemoal@kernel.org>, Anand Moon <linux.amoon@gmail.com>,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Dragan Simic <dsimic@manjaro.org>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kw@linux.com>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [RESEND] Re: [PATCH] PCI: dw-rockchip: Skip waiting for link up
-To: Manivannan Sadhasivam <mani@kernel.org>, Niklas Cassel <cassel@kernel.org>
-References: <aQ9FWEuW47L8YOxC@ryzen>
- <55EB0E5F655F3AFC+136b89fd-98d4-42af-a99d-a0bb05cc93f3@radxa.com>
- <aRCI5kG16_1erMME@ryzen>
- <F8B2B6FA2884D69A+b7da13f2-0ffb-4308-b1ba-0549bc461be8@radxa.com>
- <780a4209-f89f-43a9-9364-331d3b77e61e@rock-chips.com>
- <4487DA40249CC821+19232169-a096-4737-bc6a-5cec9592d65f@radxa.com>
- <363d6b4d-c999-43d4-866e-880ef7d0dec3@rock-chips.com>
- <0C31787C387488ED+fd39bfe6-0844-4a87-bf48-675dd6d6a2df@radxa.com>
- <dc932773-af5b-4af7-a0d0-8cc72dfbd3c7@rock-chips.com>
- <aRHb4S40a7ZUDop1@ryzen>
- <2n3wamm3txxc6xbmvf3nnrvaqpgsck3w4a6omxnhex3mqeujib@2tb4svn5d3z6>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <2n3wamm3txxc6xbmvf3nnrvaqpgsck3w4a6omxnhex3mqeujib@2tb4svn5d3z6>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9a7077dc8f09cckunm54848aa914225a7
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUtNTlZPHkMZGhgdSx1OH0hWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=BOyaK/ohdmzbYiykEo0clvqZM2UhY49LTEupez1fpw/UXZmwifXLNCJGWgCY0uFm4gnpesTKnTj5dhjJT9CXW9pr3Qvx6IlllZjE0JiPYTS7+THdf4svEzsAdt+igOw7E+lHBaB2Bk2oK6qsz7n+EOkr7uuFohxm8EHwSDupORI=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=hN+qYeXD0nNjEq2i4fe4O2HG1Wn8fgXHYQaJv5FJpCY=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251110184727.666591-13-andriy.shevchenko@linux.intel.com>
 
-Hi Mani
+On Mon, Nov 10, 2025 at 07:40:31PM +0100, Andy Shevchenko wrote:
+> Use %ptSp instead of open coded variants to print content of
+> struct timespec64 in human readable format.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-在 2025/11/10 星期一 23:53, Manivannan Sadhasivam 写道:
-> On Mon, Nov 10, 2025 at 01:34:41PM +0100, Niklas Cassel wrote:
->> On Mon, Nov 10, 2025 at 06:15:33PM +0800, Shawn Lin wrote:
->>>>
->>>> Could you try PCIe 2.0 slot on your board?
->>>
->>> I did, it doesn't work on PCIe 2.0 slot. From the PA, I could see
->>> the link is still in training during pci_host_probe() is called.
->>> Add some delay before pci_rescan_bus() in pcie-dw-rockchip doesn't
->>> help. But the below change should work as we delayed pci_host_probe().
->>>
->>> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->>> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->>> @@ -236,6 +236,8 @@ static int rockchip_pcie_start_link(struct dw_pcie *pci)
->>>          msleep(PCIE_T_PVPERL_MS);
->>>          gpiod_set_value_cansleep(rockchip->rst_gpio, 1);
->>>
->>> +       msleep(50);
->>> +
->>>          return 0;
->>>
->>> Otherwise we got:
->>>
->>> [    0.841518] pci_bus 0003:33: busn_res: can not insert [bus 33-31] under
->>> [bus 32-31] (conflicts with (null) [bus 32-31])
->>> [    0.842596] pci_bus 0003:33: busn_res: [bus 33-31] end is updated to 33
->>> [    0.843184] pci_bus 0003:33: busn_res: can not insert [bus 33] under [bus
->>> 32-31] (conflicts with (null) [bus 32-31])
->>> [    0.844120] pci 0003:32:00.0: devices behind bridge are unusable because
->>> [bus 33] cannot be assigned for them
->>> [    0.845229] pci_bus 0003:34: busn_res: can not insert [bus 34-31] under
->>> [bus 32-31] (conflicts with (null) [bus 32-31])
->>> [    0.846309] pci_bus 0003:34: busn_res: [bus 34-31] end is updated to 34
->>> [    0.846898] pci_bus 0003:34: busn_res: can not insert [bus 34] under [bus
->>> 32-31] (conflicts with (null) [bus 32-31])
->>> [    0.847833] pci 0003:32:06.0: devices behind bridge are unusable because
->>> [bus 34] cannot be assigned for them
->>> [    0.848923] pci_bus 0003:35: busn_res: can not insert [bus 35-31] under
->>> [bus 32-31] (conflicts with (null) [bus 32-31])
->>> [    0.850014] pci_bus 0003:35: busn_res: [bus 35-31] end is updated to 35
->>> [    0.850605] pci_bus 0003:35: busn_res: can not insert [bus 35] under [bus
->>> 32-31] (conflicts with (null) [bus 32-31])
->>> [    0.851540] pci 0003:32:0e.0: devices behind bridge are unusable because
->>> [bus 35] cannot be assigned for them
->>> [    0.852424] pci_bus 0003:32: busn_res: [bus 32-31] end is updated to 35
->>> [    0.853028] pci_bus 0003:32: busn_res: can not insert [bus 32-35] under
->>> [bus 31] (conflicts with (null) [bus 31])
->>> [    0.853184] hub 3-0:1.0: USB hub found
->>> [    0.853931] pci 0003:31:00.0: devices behind bridge are unusable because
->>> [bus 32-35] cannot be assigned for them
->>> [    0.854262] hub 3-0:1.0: 1 port detected
->>> [    0.855144] pcieport 0003:30:00.0: bridge has subordinate 31 but max busn
->>> 35
->>> [    0.855722] hub 4-0:1.0: USB hub found
->>> [    0.856109] pci 0003:32:00.0: PCI bridge to [bus 33]
->>> [    0.856939] pci 0003:32:06.0: PCI bridge to [bus 34]
->>> [    0.857133] hub 4-0:1.0: 1 port detected
->>> [    0.857430] pci 0003:32:0e.0: PCI bridge to [bus 35]
->>> [    0.858236] pci 0003:31:00.0: PCI bridge to [bus 32-35]
->>
->> Mani,
->>
->> while I see the idea behind your suggested hack:
->>   
->> +       if (pdev->vendor == 0x1d87 && pdev->device == 0x3588) {
->> +               pdev->is_hotplug_bridge = pdev->is_pciehp = 1;
->> +               return;
->> +       }
->>
->>
->> Considering what Shawn says, that the switch gets enumerated properly
->> if we simply add a msleep() in ->start_link(), which will be called
->> by dw_pcie_host_init() before pci_host_probe() is called...
->>
-> 
-> Yes, that delay probably gives enough time for the link up IRQ to kick in before
-> the initial bus scan happens.
-> 
->> ...we already have a delay in the link up IRQ handler, before calling
->> pci_rescan_bus().
->>
-> 
-> That delay won't help in this case.
-> 
->> So, I think that the problem is that we are unconditionally calling
->> pci_host_probe() in dw_pcie_host_init(), even for platforms that have
->> a link-up IRQ.
->>
->>
->> I think a better solution would be something like:
->>
-> 
-> This solution will work as long as the PCIe device is powered ON before
-> start_link(). For CEM and M.2 Key M connectors, the host controller can power
-> manage the components. But for other specifications/keys requiring custom power
-> management, a separate driver would be needed.
-> 
+Quite a bit neater, yes.
 
-My test environment is a PCIe2.0 x1 CEM slot and a PCIe3.0 x4 CEM slot.
-The power supply for slots are controlled by pcie-dw-rockchip, far
-earlier than staring to link. From this point, I would expect the result
-is consistent, both worked or both failed. But, the result for these two
-slots is different, PCIe2.0 slot didn't work but PCIe3.0 slot worked.
+Acked-by: Corey Minyard <cminyard@mvista.com>
 
-After checking with PA, with gpio-input-tigger's help, I could see
-PCIe2.0 is still in tranning with thet switch, during pci_host_probe()
-is called. This is the only difference I could see then, so as a debug I
-add a delay to postpone the pci_host_probe() to make sure the link will
-be finished on background.
-
-So this's true if I added the delay, the pci_host_probe（） will see the
-switch and the following devices. So your analysis of extented bus makes
-sense. But pwrctrl seems helpless here, as we sure power-on the slot
-before star_link().
-
-> That's why I suggested using pwrctrl framework as it can satisfy both usecases.
-> However, as I said, it needs a bit of rework and I'm close to submitting it.
+> ---
+>  drivers/char/ipmi/ipmi_si_intf.c | 3 +--
+>  drivers/char/ipmi/ipmi_ssif.c    | 6 ++----
+>  2 files changed, 3 insertions(+), 6 deletions(-)
 > 
-> But until that gets merged, either we need to revert your link up IRQ change or
-> have the below patch. IMO, the revert seems simple.
+> diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
+> index 70e55f5ff85e..5459ffdde8dc 100644
+> --- a/drivers/char/ipmi/ipmi_si_intf.c
+> +++ b/drivers/char/ipmi/ipmi_si_intf.c
+> @@ -275,8 +275,7 @@ void debug_timestamp(struct smi_info *smi_info, char *msg)
+>  	struct timespec64 t;
+>  
+>  	ktime_get_ts64(&t);
+> -	dev_dbg(smi_info->io.dev, "**%s: %lld.%9.9ld\n",
+> -		msg, t.tv_sec, t.tv_nsec);
+> +	dev_dbg(smi_info->io.dev, "**%s: %ptSp\n", msg, &t);
+>  }
+>  #else
+>  #define debug_timestamp(smi_info, x)
+> diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
+> index 1b63f7d2fcda..ef1582a029f4 100644
+> --- a/drivers/char/ipmi/ipmi_ssif.c
+> +++ b/drivers/char/ipmi/ipmi_ssif.c
+> @@ -1083,10 +1083,8 @@ static int sender(void *send_info, struct ipmi_smi_msg *msg)
+>  		struct timespec64 t;
+>  
+>  		ktime_get_real_ts64(&t);
+> -		dev_dbg(&ssif_info->client->dev,
+> -			"**Enqueue %02x %02x: %lld.%6.6ld\n",
+> -			msg->data[0], msg->data[1],
+> -			(long long)t.tv_sec, (long)t.tv_nsec / NSEC_PER_USEC);
+> +		dev_dbg(&ssif_info->client->dev, "**Enqueue %02x %02x: %ptSp\n",
+> +			msg->data[0], msg->data[1], &t);
+>  	}
+>  	return IPMI_CC_NO_ERROR;
+>  }
+> -- 
+> 2.50.1
 > 
-> - Mani
-> 
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->> index e92513c5bda5..42d987ddab7d 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->> @@ -565,6 +565,39 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
->>   	return 0;
->>   }
->>   
->> +static int dw_pcie_host_initial_scan(struct dw_pcie_rp *pp)
->> +{
->> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->> +	struct pci_host_bridge *bridge = pp->bridge;
->> +	int ret;
->> +
->> +	ret = pci_host_probe(bridge);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (pp->ops->post_init)
->> +		pp->ops->post_init(pp);
->> +
->> +	dwc_pcie_debugfs_init(pci, DW_PCIE_RC_TYPE);
->> +
->> +	return 0;
->> +}
->> +
->> +void dw_pcie_handle_link_up_irq(struct dw_pcie_rp *pp)
->> +{
->> +	if (!pp->initial_linkup_irq_done) {
->> +		if (dw_pcie_host_initial_scan(pp)) {
->> +			//TODO: cleanup
->> +		}
->> +		pp->initial_linkup_irq_done = true;
->> +	} else {
->> +		/* Rescan the bus to enumerate endpoint devices */
->> +		pci_lock_rescan_remove();
->> +		pci_rescan_bus(pp->bridge->bus);
->> +		pci_unlock_rescan_remove();
->> +	}
->> +}
->> +
->>   int dw_pcie_host_init(struct dw_pcie_rp *pp)
->>   {
->>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->> @@ -672,15 +705,13 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->>   	if (!pp->use_linkup_irq)
->>   		/* Ignore errors, the link may come up later */
->>   		dw_pcie_wait_for_link(pci);
->> -
->> -	ret = pci_host_probe(bridge);
->> -	if (ret)
->> -		goto err_stop_link;
->> -
->> -	if (pp->ops->post_init)
->> -		pp->ops->post_init(pp);
->> -
->> -	dwc_pcie_debugfs_init(pci, DW_PCIE_RC_TYPE);
->> +	else
->> +		/*
->> +		 * For platforms with Link Up IRQ, initial scan will be done
->> +		 * on first Link Up IRQ.
->> +		 */
->> +		if (dw_pcie_host_initial_scan(pp))
->> +			goto err_stop_link;
->>   
->>   	return 0;
->>   
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index e995f692a1ec..a31bd93490dc 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -427,6 +427,7 @@ struct dw_pcie_rp {
->>   	int			msg_atu_index;
->>   	struct resource		*msg_res;
->>   	bool			use_linkup_irq;
->> +	bool			initial_linkup_irq_done;
->>   	struct pci_eq_presets	presets;
->>   	struct pci_config_window *cfg;
->>   	bool			ecam_enabled;
->> @@ -807,6 +808,7 @@ void dw_pcie_msi_init(struct dw_pcie_rp *pp);
->>   int dw_pcie_msi_host_init(struct dw_pcie_rp *pp);
->>   void dw_pcie_free_msi(struct dw_pcie_rp *pp);
->>   int dw_pcie_setup_rc(struct dw_pcie_rp *pp);
->> +void dw_pcie_handle_link_up_irq(struct dw_pcie_rp *pp);
->>   int dw_pcie_host_init(struct dw_pcie_rp *pp);
->>   void dw_pcie_host_deinit(struct dw_pcie_rp *pp);
->>   int dw_pcie_allocate_domains(struct dw_pcie_rp *pp);
->> @@ -844,6 +846,9 @@ static inline int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
->>   	return 0;
->>   }
->>   
->> +static inline void dw_pcie_handle_link_up_irq(struct dw_pcie_rp *pp)
->> +{ }
->> +
->>   static inline int dw_pcie_host_init(struct dw_pcie_rp *pp)
->>   {
->>   	return 0;
->> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> index 8a882dcd1e4e..042e5845bdd6 100644
->> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> @@ -468,10 +468,7 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
->>   		if (rockchip_pcie_link_up(pci)) {
->>   			msleep(PCIE_RESET_CONFIG_WAIT_MS);
->>   			dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
->> -			/* Rescan the bus to enumerate endpoint devices */
->> -			pci_lock_rescan_remove();
->> -			pci_rescan_bus(pp->bridge->bus);
->> -			pci_unlock_rescan_remove();
->> +			dw_pcie_handle_link_up_irq(pp);
->>   		}
->>   	}
->>   
->>
->>
->>
->>
->> What do you think?
->>
->>
->>
->> Kind regards,
->> Niklas
-> 
-
 
