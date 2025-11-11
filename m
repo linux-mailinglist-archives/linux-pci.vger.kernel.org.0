@@ -1,127 +1,128 @@
-Return-Path: <linux-pci+bounces-40909-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40910-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8087C4E1B8
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 14:29:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B46A2C4E1D9
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 14:31:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B41F3ADA21
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 13:28:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 913C41898355
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 13:31:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6E8533ADB0;
-	Tue, 11 Nov 2025 13:28:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 963593370FE;
+	Tue, 11 Nov 2025 13:31:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="PsPV9syg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k5HHy5nt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m19731102.qiye.163.com (mail-m19731102.qiye.163.com [220.197.31.102])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C873D328277;
-	Tue, 11 Nov 2025 13:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC079328277;
+	Tue, 11 Nov 2025 13:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762867704; cv=none; b=pEc4cvkpVzhpo+58gqPYgQQxRGOFqvMYJLCgZsqlIfUy3Fql12UC2ukwu1inYPfJet+RAXwFWnGVH/vjBJBXPfLVkEiHBaReiUePWDARymB4sV3/4Jj9mVjRkxop3ZaxFf7yKSPcxJY9UtaQjd2vTU0PHhj/yoBYBK5jojce3Uo=
+	t=1762867867; cv=none; b=WNB9YG/uKpHWqwP+XDq8Zv4horO5UFFV3cmDm85I02lh340lnrqreQ1abfsuQZQgu2w7QbevXWYxb7VNj9FJS1S2JU4WKB/Ww8FIt8DBsUCQ7cAR+2az5ZSVUaw+b43nZluyXGOKcsu2t76veMUgdaj+Dws0uAtIlFm6OQNyLb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762867704; c=relaxed/simple;
-	bh=qasncx5kM7I4waFsVrmupWo20+ww0qPodJcJnInnrmE=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=OtyZadVfKYHhrpbXwSxIUNs5JZTrxvnqFNzDX2O1TqbzCd6GDtRkaVD024yt9NH9yNHKwHaDHMSgWYdTzgub8EDgW4cdUuAe9t+c1k5FBR0T/u2JNO372tRmyiRJev0Q5AV8ZP3Ey9xygbUdCvre16j4iuCFzRDxTp6ru0z3iv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=PsPV9syg; arc=none smtp.client-ip=220.197.31.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [192.168.61.151] (unknown [110.83.51.2])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 29341817e;
-	Tue, 11 Nov 2025 21:28:10 +0800 (GMT+08:00)
-Message-ID: <6a2bef88-1fe8-4477-a179-e97e1e0b7178@rock-chips.com>
-Date: Tue, 11 Nov 2025 21:28:08 +0800
+	s=arc-20240116; t=1762867867; c=relaxed/simple;
+	bh=ZN7ilIPCvm1ED39/18OAcpT6wbPgwA+407V2M/i4Nuk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=uUq8S5/G7PYZv80IPUUf6rWa6JOuYp0pipagTDGkEgbEX1nBgRxDlm3/ru++8SEtaQ43rLZXp48pnQi7dXZaZbjz4xQDCUur//XYv3uPjSrkb+Il/TII39werO2ivDdiRiHgJthvDpoLKG5JirFzuxfxenFDcjOZYcXMDT0yP4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k5HHy5nt; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762867866; x=1794403866;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZN7ilIPCvm1ED39/18OAcpT6wbPgwA+407V2M/i4Nuk=;
+  b=k5HHy5ntZnEcVowuzDVXwthgjT6bSQ5rDMgbDiVV/gi7qpvNkrBMw134
+   wgSBrfXaHSjKL02pr0uwFYiY2RmZmkYwHBDVg/f73Wr5fe7pw3MW9k9U8
+   v+Huf/tU8DSRWwtzErCNLFIUWLhKreD6kZJXTb71aedz7RjeLExIGaDjb
+   VbnKIVAVmtMnF+XOnUNNUAvz6KJi0NZW1I/EQnDy+uoXjgQ1wGWYVxPLU
+   IlhKZDgUJOVLsS0+V9Tsn8aN4kO6x04Y/F3EzMSvRm+zJ765oNLVjEcvt
+   kDVm5tVs2SchiCvjgSPiIreold71a90Voy7u5aK7KaGv50MZemUEm96P2
+   w==;
+X-CSE-ConnectionGUID: vGzsgCXtSuqv81LuWdnB4A==
+X-CSE-MsgGUID: 3dGoK7P9Q/SpSkq/XDqDEg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="68776232"
+X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
+   d="scan'208";a="68776232"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 05:30:57 -0800
+X-CSE-ConnectionGUID: g74Wvx2uRIK5WbjK9OJ2cw==
+X-CSE-MsgGUID: 0bViU1sPRQKPBMIty2HMag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
+   d="scan'208";a="194162513"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.132])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 05:30:54 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 11 Nov 2025 15:30:50 +0200 (EET)
+To: =?ISO-8859-15?Q?H=E5kon_Bugge?= <haakon.bugge@oracle.com>
+cc: Bjorn Helgaas <bhelgaas@google.com>, Sinan Kaya <okaya@codeaurora.org>, 
+    linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Do not attempt to set ExtTag for VFs
+In-Reply-To: <20251111132401.1827922-1-haakon.bugge@oracle.com>
+Message-ID: <dc6f1dc8-a2e7-d48f-49a2-ee6e0288e672@linux.intel.com>
+References: <20251111132401.1827922-1-haakon.bugge@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Heiko Stuebner <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>,
- Simon Xue <xxm@rock-chips.com>, Damien Le Moal <dlemoal@kernel.org>,
- Dragan Simic <dsimic@manjaro.org>, FUKAUMI Naoki <naoki@radxa.com>,
- Diederik de Haas <diederik@cknow-tech.com>, stable@vger.kernel.org,
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, Manivannan Sadhasivam <mani@kernel.org>
-Subject: Re: [PATCH v3] PCI: dw-rockchip: Prevent advertising L1 Substates
- support
-To: Niklas Cassel <cassel@kernel.org>
-References: <20251017163252.598812-2-cassel@kernel.org>
- <176101411705.9573.17573145190800888773.b4-ty@kernel.org>
- <aRM1VOodnSpaob3P@ryzen>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <aRM1VOodnSpaob3P@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9a731a3b6809cckunm78c1b6a21c673
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCQhlLVkoeQh5LGkwZTh1NSVYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSktVQ0hVTkpVSVlXWRYaDxIVHRRZQVlPS0hVSktJT09PSFVKS0tVSk
-	JLS1kG
-DKIM-Signature: a=rsa-sha256;
-	b=PsPV9sygri8khXx7L0KPcrb4K3lnqIauAzyiSn44IFWT66tYJF8tOt8M8HTkNJYXomdo3DjUu1agtzuyIgN8fNm+66ysjTgdhT1k61W8OrhpBpRjLx0R1BGito43W+sxzWEL8IMTlvryifTLmXWvVTHhSn/2DAymXNfo16aYY0A=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=/u83YnPFnggQ2E/YqF7yyEYzCXsQAILKrvqFHKQdRqo=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: multipart/mixed; boundary="8323328-955354008-1762867850=:1002"
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-在 2025/11/11 星期二 21:08, Niklas Cassel 写道:
-> Hello Mani,
-> 
-> On Tue, Oct 21, 2025 at 08:05:17AM +0530, Manivannan Sadhasivam wrote:
->>
->> On Fri, 17 Oct 2025 18:32:53 +0200, Niklas Cassel wrote:
->>> The L1 substates support requires additional steps to work, namely:
->>> -Proper handling of the CLKREQ# sideband signal. (It is mostly handled by
->>>   hardware, but software still needs to set the clkreq fields in the
->>>   PCIE_CLIENT_POWER_CON register to match the hardware implementation.)
->>> -Program the frequency of the aux clock into the
->>>   DSP_PCIE_PL_AUX_CLK_FREQ_OFF register. (During L1 substates the core_clk
->>>   is turned off and the aux_clk is used instead.)
->>>
->>> [...]
->>
->> Applied, thanks!
->>
->> [1/1] PCI: dw-rockchip: Prevent advertising L1 Substates support
->>        commit: 40331c63e7901a2cc75ce6b5d24d50601efb833d
-> 
-> Last update in this thread was "Applied, thanks!"
-> 
-> and the patch was applied to pci/controller/dw-rockchip
-> 
-> since then it seems to have been demoted to pci/controller/dw-rockchip-pend
-> 
-> I'm simply curious, what is the plan for this patch?
-> 
-> I know that Shawn was working on a series that adds support for L1ss for
-> this driver, but it seems to have stagnated, so it seems far from certain
+--8323328-955354008-1762867850=:1002
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Yes, that's because Bjorn prefers to disable it in dwc core intially and
-sent a patch which we discussed but didn't come to a conclusion. So I 
-still be waiting..:）
+On Tue, 11 Nov 2025, H=C3=A5kon Bugge wrote:
 
-> that it will be ready in time to make it for the v6.19 merge window.
-> 
-> Right now, pci/next branch seems to merge pci/controller/dw-rockchip rather
-> than pci/controller/dw-rockchip-pend.
-> 
-> If the L1ss does not make it in time, then this patch will not have had any
-> time in linux-next, which might not make Linus happy.
-> 
-> 
-> Kind regards,
-> Niklas
-> 
+> The bit for enabling extended tags is Reserved and Preserved (RsvdP)
+> for VFs.
 
+Please add a PCIe spec reference.
+
+> Hence, bail out early from pci_configure_extended_tags() if
+> the device is a VF.
+>=20
+> Otherwise, we may see incorrect log messages such as:
+>=20
+> =09   kernel: pci 0000:af:00.2: enabling Extended Tags
+>=20
+> (af:00.2 is a VF)
+>=20
+> Fixes: 60db3a4d8cc9 ("PCI: Enable PCIe Extended Tags if supported")
+> Signed-off-by: H=C3=A5kon Bugge <haakon.bugge@oracle.com>
+> ---
+>  drivers/pci/probe.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 0ce98e18b5a87..014017e15bcc8 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2244,7 +2244,8 @@ int pci_configure_extended_tags(struct pci_dev *dev=
+, void *ign)
+>  =09u16 ctl;
+>  =09int ret;
+> =20
+> -=09if (!pci_is_pcie(dev))
+> +=09/* PCI_EXP_DEVCTL_EXT_TAG is RsvdP in VFs */
+> +=09if (!pci_is_pcie(dev) || dev->is_virtfn)
+>  =09=09return 0;
+> =20
+>  =09ret =3D pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
+>=20
+
+--=20
+ i.
+
+--8323328-955354008-1762867850=:1002--
 
