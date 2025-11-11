@@ -1,198 +1,118 @@
-Return-Path: <linux-pci+bounces-40802-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40803-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04585C49D2E
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 01:01:57 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89C79C49D4F
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 01:10:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B27FE18895C4
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 00:02:21 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 66C5E4E16BA
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 00:10:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CC5E17E4;
-	Tue, 11 Nov 2025 00:01:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8E9834D3A4;
+	Tue, 11 Nov 2025 00:10:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="c0bkWfqM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="biO4cc1/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012063.outbound.protection.outlook.com [40.93.195.63])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88408173;
-	Tue, 11 Nov 2025 00:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762819312; cv=fail; b=uWe2XIC38/75k1jLJxdMaM/QW3cSSLEEGxM38P0UmlCNjpeGKzjRV2SFeswtOCbsUXOSrui6BZ9MGRgMjsDbvzrlqBsq3t/KZoOOH5QFZH6/EzFUSNMSZPDJPBvIv2w0EtMdTsE2tHG/RSjFrlgD8sJX8rZGKmG87uH37SmHTd0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762819312; c=relaxed/simple;
-	bh=CE0NVjgC+7nYhL4xVZXBFskZA2LTwq03APTPgNBB7HM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=c37TIvxmDoaNCZZ6RyNJ9Cefw9VPVbyZin9+LT/dmyclal+nLgG7lXhFY4ldL0I14c9sxyod8Rl7VBShBv5HFkfIprZWruRbendeT0vafymPLei4vepyC3G8WQ/ltk+Pu+XoTubTWDNeQk3P8ftanusPJ8/NiaRo5M7ZZhr3zRk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=c0bkWfqM; arc=fail smtp.client-ip=40.93.195.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BVsLYUN6qTTXQB8R/FkGKjDXAoYJgFWRT/SQqK0LBHyx2QuojRczijm+O8T32dLt1e/waDQgMO+eWOPm6+w/ITiA/OQkaWaI1T4+2PyJJKYxFD+7X8fprkfXNu5/2AW2uJAJpQO3PEK1LrnNnaQUxfkOT/l8CjcV4wKX184Q9btKCEwB0sJIJDTGgaqPtvqUvo4p39hj1xYKJ/Kt8cmBxgfEwGRPP19Q2cgyjjhSemiRGAAhye+KCr4TxyOm337Cg6XuWHxQLOv35fhnyH22/E/2At/KB2u1fZ+l9TSo+xZaBpCpHIQ13dogb7TMR7A/iA7H8Mm6r4+/BdyHSchsIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CE0NVjgC+7nYhL4xVZXBFskZA2LTwq03APTPgNBB7HM=;
- b=u798eSW59U2PIKqGQJlHqam2h+rn1ljpEge3048cSD1IUzOsqlet3psMMK6ptT4EoZBy0/vgGECrV3podbd6X3UMAxBI99TXOIY2pFDv2kpcjUvO6+9oFgiBzVF8VXZMNJ0cMxxKNo9bfxaINJiewockE2ux5GcC6S2bAVkUAlslLtg9HBIv4dXbCJ/6K7/YFX4jU6HEsnq9u1gL/qcte43pkdE1bXyPAndBeA+kZ08yxLbyH0wOKg0WsbEtEmDLe6+m69VB3Rdui6T4uuUldV0+gordA5Do5oOA/iMRPuEJIfimZK5I17LPFPNKS+RZ6OTPWpdZ6v1GNWLO4iH7mw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CE0NVjgC+7nYhL4xVZXBFskZA2LTwq03APTPgNBB7HM=;
- b=c0bkWfqMeSIGIzZ64ohWB8Yf+uAshcVZJAIjyNrHLjGneUKy9A9uYvnwqDMmctxyDXvHJpabS1JbcUq4DAr0ZBivYgysMWCGOz0MlYHEyHsLJUgjDAS/4dyTp4+YFqaJkqhhZAw0kvXXbieYi5I76bkyfWTWVhD8MglYJ04trL2KRGWejWtscnAe5GpUBbBv7kqs5tsiLO++58xYee+QSViasAJOV48M10YaLqZcTiPDq35WDYKoEgPMHp2KiRXfR7OGSn0P8uSfxllUoiFQVOanBwODU6NI4oOBBgScH4iAllrXj6rZFtjaaPtpOoi3+2A319vmEDhSx2wPcQviDQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by CY8PR12MB7265.namprd12.prod.outlook.com (2603:10b6:930:57::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.16; Tue, 11 Nov
- 2025 00:01:45 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%2]) with mapi id 15.20.9298.015; Tue, 11 Nov 2025
- 00:01:45 +0000
-Message-ID: <0e8988f4-07ba-4c3a-8285-2960bc40dc65@nvidia.com>
-Date: Mon, 10 Nov 2025 19:01:39 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 RESEND 0/7] rust: pci: add config space read/write
- support
-To: Zhi Wang <zhiw@nvidia.com>, rust-for-linux@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: dakr@kernel.org, aliceryhl@google.com, bhelgaas@google.com,
- kwilczynski@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
- boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
- lossin@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu,
- markus.probst@posteo.de, helgaas@kernel.org, cjia@nvidia.com,
- smitra@nvidia.com, ankita@nvidia.com, aniketa@nvidia.com,
- kwankhede@nvidia.com, targupta@nvidia.com, acourbot@nvidia.com,
- jhubbard@nvidia.com, zhiwang@kernel.org
-References: <20251110204119.18351-1-zhiw@nvidia.com>
-Content-Language: en-US
-From: Joel Fernandes <joelagnelf@nvidia.com>
-In-Reply-To: <20251110204119.18351-1-zhiw@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN9PR03CA0329.namprd03.prod.outlook.com
- (2603:10b6:408:112::34) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CDB34D39F
+	for <linux-pci@vger.kernel.org>; Tue, 11 Nov 2025 00:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762819825; cv=none; b=F5e49NzlU7/nQtxHjtk74cgUrVFl3TWRwL4yzdn6nVaPoWMGV7F3L3og5XHm3SbvTAG+oRuxuumD/YKGTT2sv7B+iVZ5K95jjYOo8+r9EqywH4Rc/0l5VjL0az5T3v0dY7i+Qz9QRAwW6ydaIAjtEmx/H6zaDJJWd+vlPsLkTN4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762819825; c=relaxed/simple;
+	bh=rRvG0iQXm6FYRmMhVfK5QouUbTbjM7n4L41pEsa65Eo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=nS6z9IFy1XzHmwmASxNn4jGUQwhZqXbmH8/zHGiJzAliT+RglsrRq34VsjwBnwopy9gWUvRQQMesvQzMPA5XAmtrbmkRG38GKITqiQDjzvqZUN5dLByRLTgZLcttl7IbqixzgwbcUYzlbCpD1itCDrkry14FDAOGnEN+b6wYXVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=biO4cc1/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D1DBC19421;
+	Tue, 11 Nov 2025 00:10:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762819825;
+	bh=rRvG0iQXm6FYRmMhVfK5QouUbTbjM7n4L41pEsa65Eo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=biO4cc1/MbfqNlQGa4A6IaA2sFCQrFyC7J7GvuBS9o3H8EqbPbod+MxtrQZ7okCI8
+	 5IskJebU5at4RgApKNCL6eEmrSSgIy+pdd9B8iVJ3C/O0ntVacitnscw0X40RksuVw
+	 OugTmqBZViVJZmPBv7/uUyXY9Q12098nLjim0I5uSE1fjlrLBrHf4y9ojb+HkpIGSh
+	 aSjDXVt9qPBUT8IaLUzOf1xL2Y6dhoVrYJhtCs7Z2JTYoUBuIVmPnzLAI3eq6hcP+C
+	 DOzD/9sDnBcuqEsLaPlt6m1XGbJAe8PnmqL3Z9pu4o0zsnz/ZMs+5j2zCIiec2VbP/
+	 HWGyz43wQS4XA==
+Date: Mon, 10 Nov 2025 18:10:23 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v3] PCI/PTM: Do not enable PTM solely based on the
+ capability existense
+Message-ID: <20251111001023.GA2143615@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|CY8PR12MB7265:EE_
-X-MS-Office365-Filtering-Correlation-Id: 807898e5-6eb3-404a-c288-08de20b58073
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TXd4OGl0bmFTQ0xRWEU3TGg1Q1R0dStlbXUxYkQ0Z1ZYeU5Mem82eFMrSWU0?=
- =?utf-8?B?R2FhUDNVZk9vV2lKdzdDbjdOcVFEMFc5WWVsZUpIdGxBaGtiaHpJWGRLcXJw?=
- =?utf-8?B?Z0VRNnpyeG1oM3k1YVF2VU16MmtudllOb2RrOVhUK0I5Y1BhSlkyU1UxQzZJ?=
- =?utf-8?B?bWxpTUEweWRoZ2lweDcwQlBoaHhwWnMyMEJtTlNnTG5vREtJT3hheTA1RTd0?=
- =?utf-8?B?Sy9VbEhrODF2ejZmakVPaTFzYUxob3hyNHBWL2JsYm9NV3ZqYUpOQzRXOUN4?=
- =?utf-8?B?b0JPWHU1OXUzOEx4aWhjbmhnWmtUdVhnSnNjMTlYQTNzY1Z5Q0hrOVUwbG13?=
- =?utf-8?B?WmFGMWpFcDQxVkNCOUgzWFhRRENQbTBBUndnclRXOURBZ1NxajYyYnBmaG9Q?=
- =?utf-8?B?cmZlSFN6aHV6QzV2Q3c3WmtrY2ZZbmdOOFBDV2QvVHRPZk42YWljVHV1SlBy?=
- =?utf-8?B?YTlNWmptK3ZHcVFicVcrZm1nc0JlNlJsOW94dDJqTmZPWTZJSXdOeHlUMVR4?=
- =?utf-8?B?L3Y0MTBzV2NZT1ZZcnY5aTJDeHBQZHlVVmFhdDZXOFRnSXd0RGl4cVgrd0xW?=
- =?utf-8?B?N1hmdTQxREI5Y2U1dkFveUtvdm1nMDZRdmxld0FkTjc0TlhKclU1ZFdHeVVW?=
- =?utf-8?B?SU9mTkl1Rlh6NFFTNjdJZktMKyttMFNQWmFmd29ZM3pBdkkyaXRtaDFYbjFo?=
- =?utf-8?B?K2VBU0lrT053RHZlSFJuY25DQkFxYW5hUmZRN1p4aGtHWC9VNWZOTndYVjBs?=
- =?utf-8?B?cUhKbThiSU44YWZ5TWwwcEFjK3FMTFlEK2ErYi9OVzhCaEhaWUpjRXYwTWRw?=
- =?utf-8?B?czFDNnVERU9mSmorSStvUC9zelZhYkkxejNyd09LVnhhaE1CS2UvS2hxd1Ju?=
- =?utf-8?B?UG5Vc0VTNzhuZUhOK3AxWFRhcFIyQTlCN3RpYzd6ZGQrWXFLVEtEdEVpR2lI?=
- =?utf-8?B?djFTVFNHZFppNmNzZmxscFZualdPdnI2N1NBNWc3bG9oNUJEM243VDYxQXVV?=
- =?utf-8?B?aXdwaTdvNmJwT1oyWUxHdStoaVIyYWhLenlJQWl4aXJVM2JaQjI1b200YjBF?=
- =?utf-8?B?d1VEMmhTTWtjeXlYT0QyRzVMNGRHUjdhZmRhVDFnUGJRaTZQYlVHd0xnemZa?=
- =?utf-8?B?RWJmUHB5VlREYWpZblo3MXZjNjRGcHp3RHVjb0FRL0lrb0xmeGozZUlvSlM4?=
- =?utf-8?B?dUFRcUNkdlNMWEx6cXoxUWRUQzZ1OVF5OUFReW1pTjRkUHliWEhlZ0p0Znl5?=
- =?utf-8?B?NklLUDlMS2RHODV3Uno2ZkNGcXU0ZWpvME1UODNmeTRYNElBQzJ4Snh2K0NC?=
- =?utf-8?B?a1RyQXZwUjdhdmlOTFRiczFWaEZ0dlI4T3o4WkFNZ2poejFQWDFXR2NETnBM?=
- =?utf-8?B?ZllHVS9ZejRSMDBrN2JvWHRXdmVONVM3eWJ2K0VnbkMwb0oyYWVkRmpQRTNI?=
- =?utf-8?B?Qzh2TnVxc3dVNFVkSjhxMEVtR3ZDZ0daaEJZSHkwK1NjRmQ2bGNlRVc5UG5C?=
- =?utf-8?B?MVZWNnNCT3kvcy9TTWtrTWZnWGxTeUw3cCtlUC9YR1Y0M3h3R0FOdjJBUTNq?=
- =?utf-8?B?M1ZVT3ZmNzZsdzdiR0ZONTFZbVUyZ1Z2UFMxcEYzVC9obTFQZjBCZ1JzMGYv?=
- =?utf-8?B?SnNXenE0NTNhODF6QzRBazlSZ2hHVnlGSENibkdBR1d2dG05SFFOYWpVN1h2?=
- =?utf-8?B?b3dZL1VwMmxTbExjYjVCSzJOVGYrb0l1KzNCdTNOamZRR1lIUEVuUU9DbFBD?=
- =?utf-8?B?ODNIU1ZnZlpkS0Mrc0RidkRaaEZEVEp6TW1BYUJtOEwyVmdRY0VVOTd2dms4?=
- =?utf-8?B?TjNJQWZUSjE4SmJPM3grRkRtZTIzNGVGbjgwNTJJVjFSVU93UjdGNUlHUmgv?=
- =?utf-8?B?NlpHaGpTclE5cGFBVjdwZWlGWE1pYXltSDNTdjRDby8yYzRJQm9SdkJ5WWcz?=
- =?utf-8?Q?+wu42ToQ+IU2+Xwp8ttsAvIN3sB6VdQC?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Rm1LU0FpZng0ZlFRSmVzUDZxU3l2WXRLN1pDRE5WVFFiMFdGTkhickRkR1d6?=
- =?utf-8?B?QTk2dkh6VEV4VVRrbGZ0RDhNQ29nUmpsWkJVODBPUVR3SVVFVytCa056aC80?=
- =?utf-8?B?OVhBSEltNTlaUlhNOUZjTkdiZit3MFdsTUNheFFwTlcvTzVLZ3VYL1pRYWFP?=
- =?utf-8?B?ODNlL3lNNmRkaTRCUk03bFUzRk8zdXRLY3hQd09TNHh5YWpGTHJ1OHVtRFdZ?=
- =?utf-8?B?aGovZ3JZemFxNWZSMGxzckhRcDRsMnh4bTN0UWcyd3pEMnBxUTB6NVpXbGZ4?=
- =?utf-8?B?V0NrQ2tYODdPRUpEQmNJejJtUGl6WHZlNVhYZnJrdGlUUmViNUc2d1h1aERs?=
- =?utf-8?B?L2RNNXc3MWRYWEluQytmVzRZZ1hqT1FJTzA1alRnTnZ5UmZ0U0JVOWxDUlZl?=
- =?utf-8?B?VE9rRm9RV0FyUkVsR1NOazRYUUNEZUxjb215cHYyMjZXL0ZkQ0xKb0tPNHNU?=
- =?utf-8?B?eXRjc0RpUVlOcGlONkwzTG5CQ2JWMDFkSVorSWhGbEpQeldFUDV0WWlhc2Vi?=
- =?utf-8?B?S090MWJZR1J2ZzZFMjFrQnZhdkpYQjFBMWl4OW9GdC9oNmtyQ3VBY1d3TERF?=
- =?utf-8?B?cmo0Sks1L3RSUjVHNHp1aFNQbGVyWTA5K3lTbjhhRnpBVk4yT2VXYVhKVzNK?=
- =?utf-8?B?WTQ1VjhQNUgxbmw2aEZCM2NENTg0L0VnZTJraTNxRlhqamFPSTBVZ0tKTWhF?=
- =?utf-8?B?Y3NTZU9NaGF2TUJRa1AxMEczYzRkMmF2b3U4dHk1b25CV0kyTXJPb0NlMHN5?=
- =?utf-8?B?NjNvZVNCRmNpaGN1bVdPc3cvcHBxS3RXRHdXWE1vODJlY3BYQ2lPaDQ1eHZn?=
- =?utf-8?B?TXFka3J2M2J6eUhzWVZGTWdnUWNhRWY4Qm1Sa2ZWdWFRTXdsWURmT3dKMlVS?=
- =?utf-8?B?ZTJDSTFPalVIak43ZnYwdVovYjc5WVdUZnRrVG5IcGRiYTBkTjRIRS9RenhR?=
- =?utf-8?B?dWZyT1Nac0IxZmxYbU9IajZDT0R4bmp2S1c2YUxjOG03cU5hY3ZIOEtua3Vv?=
- =?utf-8?B?bU1mdjdmb3hBdzZUMU1QaXlzdHR5ZGgrbTJOeHhxcGNKSnc1QWhhNElVcUdB?=
- =?utf-8?B?MWwzUXpyelJKcnNYV1F3eHVMV1pSTTlUQi8rN3JVRFlvMHViYlBUdURieThu?=
- =?utf-8?B?ZzMwYkZIR1M1TENvQjNvTGtsSEtlQWtudG9NalNxYXBqRkFMZ3lacEhkdEhL?=
- =?utf-8?B?MWVqY1duRTB4YzB6VnozZk5CeVBPcTJDU2hRQkhiaFM0UzNsaUNkNW5IakFO?=
- =?utf-8?B?VThQTjB5Y083RTJNWXNaT1NvNm91TXNMdG50T2dlY1FLeHhMYVM0STcxWFNo?=
- =?utf-8?B?ZnFWVjdUT0Y1Y0xraVoycWwzdjQ3bkFhM1B6UUJpV1RMVm9nYzd1SndGditl?=
- =?utf-8?B?ek9hTjF1N2xyYVE3MGl4a1RzMGxVdmJhOUI0NUV6UGxtcGJYQmxaNmNDa2pL?=
- =?utf-8?B?VE1GREJrb0FTZnBXeGhFbXl1cWZsc3dvQUNLQWFqYUdRNzRSakNmZ1lHb1dB?=
- =?utf-8?B?QnBIdTRKRFVOakR3cE4rbVFLRUdRaEIzR01PUXNvSXJHN2wvVnBacXppSmJZ?=
- =?utf-8?B?azNiblJla0VTcFNSbGFZa2huUUc1QTRXcWM1RWhhaTFFakRuY3czYVFMOG85?=
- =?utf-8?B?YlJxbXVrUnRGNURrazNvczNVQVVQK21YaitSY210NUdZdmpZVU9SNVR4TXVR?=
- =?utf-8?B?M0kzUkVZNnFJaTFMK1NKUjV5MU9Ea0d2V1ZZZkRZVHBTekNGd2Z4UHNnVWty?=
- =?utf-8?B?TG9haThhKzlEOWw2blhhZlhlUEEySkw1UXdtUldnZU83R3R4QzRISUdpYStk?=
- =?utf-8?B?dldSNjBkb0F0Sm53cjRWMTM0emVHUDRvOHlOa2FMM3c0NnV4d1NHN1F4bXRM?=
- =?utf-8?B?UmZRY1JNV2ZCbk40SDdsdnBvdThDRXNGMXFwbTRoejJ3RGd5M2x0RWF1WnFj?=
- =?utf-8?B?VFNtbUFjV3R1Mkd6Tk43VjM1OEltRzQrSWVaZlA3TDgxUGY4dDZ5UmRaTkFH?=
- =?utf-8?B?UDIvUGU2UlY4V1ZtT1FDMit4L0RjTTVoWU5DMXQ0ZWdOOU52cUJpbFVDeEY3?=
- =?utf-8?B?N1ZTRndlSG42djJlR2FDNlYwc1RBVWNTWWt6emc3dGNJRXFuYUdFcE9KWWx1?=
- =?utf-8?Q?kfWwtYF0HdtrfutNtW5L4jvBZ?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 807898e5-6eb3-404a-c288-08de20b58073
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2025 00:01:45.1226
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qf9BWpYSJ59LWbIrqoe1ErWCw/dPDiR/VLDOfmRlc6F8SLnZZe7JY5kwmbO/7j61FQpkyvvPrhV2XQsvLU5W4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7265
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251031060959.GY2912318@black.igk.intel.com>
 
-On 11/10/2025 3:41 PM, Zhi Wang wrote:
-> In the NVIDIA vGPU RFC [1], the PCI configuration space access is
-> required in nova-core for preparing gspVFInfo when vGPU support is
-> enabled. This series is the following up of the discussion with Danilo
-> for how to introduce support of PCI configuration space access in Rust
-> PCI abstractions.
+On Fri, Oct 31, 2025 at 07:09:59AM +0100, Mika Westerberg wrote:
+> On Thu, Oct 30, 2025 at 03:59:37PM -0500, Bjorn Helgaas wrote:
+> > On Thu, Oct 30, 2025 at 02:46:05PM +0100, Mika Westerberg wrote:
+> > > It is not advisable to enable PTM solely based on the fact that the
+> > > capability exists. Instead there are separate bits in the capability
+> > > register that need to be set for the feature to be enabled for a given
+> > > component (this is suggestion from Intel PCIe folks, and also shown in
+> > > PCIe r7.0 sec 6.21.1 figure 6-21):
+> > 
+> > Can we start with a minimal statement of what's wrong?  Is the problem
+> > that 01:00.0 sent a PTM Request Message that 00:07.0 detected as an
+> > ACS violation?
+> 
+> The problem is that once the PCIe Switch is hotplugged we get tons of AER
+> errors like below (here upstream port is 2b:00.0, in the previous example
+> it was 01:00.0):
+> 
+> [  156.337979] pci 0000:2b:00.0: PTM enabled, 4ns granularity
+> [  156.350822] pcieport 0000:00:07.1: AER: Multiple Uncorrectable (Non-Fatal) error message received from 0000:00:07.1
+> [  156.361417] pcieport 0000:00:07.1: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Receiver ID)
+> [  156.372656] pcieport 0000:00:07.1:   device [8086:e44f] error status/mask=00200000/00000000
+> [  156.381041] pcieport 0000:00:07.1:    [21] ACSViol                (First)
+> [  156.387842] pcieport 0000:00:07.1: AER:   TLP Header: 0x34000000 0x00000052 0x00000000 0x00000000
 
-Hi Zhi, is there a tree with all the patches and dependencies for this series?
+If I read this right:
 
-Typically it is a good idea to provide it with all dependencies, so folks can
-checkout the tree.
+  0x34000000 is 0011 0100 0...0
+    Fmt  001    4 DW header, no data (PCIe r7.0, sec 2.2.1.1)
+    Type 10100  Message Request, Local - Terminate at Receiver (2.2.1.1, 2.2.8)
 
-git format-patch also has an --auto option that adds base commit information, so
-folks know
+  0x00000052 is 0...0 0101 0010
+    0x0000     Requester ID
+    0101 0010  PTM Request (2.2.8.10)
 
-Thanks.
+The fact that the Request ID is 0x0000 and the error is an ACS
+Violation looks like the implementation note in sec 6.12.1.1:
+
+  Functions are permitted to transmit Upstream Messages before they
+  have been assigned a Bus Number. Such messages will have a Requester
+  ID with a Bus Number of 00h. If the Downstream Port has ACS Source
+  Validation enabled, these Messages (see Table F-1, Section 2.2.8.2,
+  and Section 6.22.1) will likely be detected as an ACS Violation
+  error.
+
+So I assume 2b:00.0 sent a PTM Request with Requester ID of 0, and
+00:07.1 logged the ACS violation.  It's odd that 2b:00.0 would send a
+PTM request if it doesn't advertise the PTM Requester role.  Also odd
+that it doesn't seem to know its Bus Number.  It's supposed to capture
+that from every config write request (sec 2.2.9.1), and I would think
+it should have seen several by now including the one that enable PTM.
+
+But I think your fix is right even if we don't understand exactly how
+we got there.  Are you planning an update, or ...?  Just wanted to
+make sure we're not waiting for each other.
+
+Bjorn
 
