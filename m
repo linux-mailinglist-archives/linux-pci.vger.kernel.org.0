@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-40902-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40904-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0C04C4DE90
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 13:55:27 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4DCDC4DF1B
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 13:59:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 714B83A4A11
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 12:49:31 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 128994FC080
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 12:50:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6391635970C;
-	Tue, 11 Nov 2025 12:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D4AD366550;
+	Tue, 11 Nov 2025 12:28:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M5G7od7i"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BYVFL/wa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA031361DA9;
-	Tue, 11 Nov 2025 12:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEFC361DCC;
+	Tue, 11 Nov 2025 12:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762864098; cv=none; b=Ya4wgY92QiwU8NVWbaxniwlcDm9VRFwxgOtITIYfVoPQznc82x4aR/IZd1f1cLC3wdOxTGo0ac8HHELX+XWeb2wZZnr3EWMvULTk5sNT7HNVkgnoqEIIyc8wPa1NWOn78aZc6uq5w0NPpqSUWod/X3RAMByJrCYY7pRgpxUQnmo=
+	t=1762864098; cv=none; b=tQCzpeGYSxq52vkT2PBfpLvW0J/qkzH8pVr1F1B2RNpZXoZuvgmjj92brH18SlCyY/qhFvo7ZNecxPl0k6AR2Q9R1+HVkfIsGJuNR+PX1OGUiFg5tkTIIFo2emzWQigFfoYWXS7BveSvzVztYnhqiVuMCA/xexnJESe0L59GAac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1762864098; c=relaxed/simple;
-	bh=B1Xtrhk2cx5QcGIp4Q5mjR0I0BttlAUvRoFGFQemARM=;
+	bh=OtFs4nYXEH1ThWKykhpKfwgYG7osOn2qi/Z49bIrWUw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UYU4jOXMSl7CEyU6LNHCto962IBbWDXCM/8lCY+5r7ODbxSRfJX+sEOyuhzx+2dNFEIk25V+HAODSMQouH/fHz0UK1Z52rUVZXe+BKr8fecX51wF9zIZ9a7etUrkq/MeUCCLo7gyuE+8qxkDebvfL8Tzly1NdpZQEVLAwaIaAcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M5G7od7i; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=bowNWiOjJhq+gQkmnAlgGKjlhyo81omPuMooKC4spaOIfs2w8wmDgM5K9tuiZr2onDxYAbjMnkAafQi2PQNEknUe/07gkYaxdcouRBZFOiI5du0wVN9TtI0UdP/WCGeXyFA7VG9oMaQT5esL2FAIaqluKxH8zMC1hxdqcb7qgHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BYVFL/wa; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762864095; x=1794400095;
+  t=1762864096; x=1794400096;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=B1Xtrhk2cx5QcGIp4Q5mjR0I0BttlAUvRoFGFQemARM=;
-  b=M5G7od7iUKbEEMiBLqvETO3IK6ZXreRsTZJeagrSnyMEKxb3miey24WI
-   XCWSb0MIJpBTcuTJg0rkp9z+4aoyUq0Bmt7LW7T+iNVgxTgWntFGYdSlr
-   AjCKdcS/Dgb9kniFFx1tE1rjaBRZnbvt0DPeHaVl203T+K6Q1ql01WJAA
-   NcwWrYABK5qEXEz403SQRN3JOe9otenWfJxxwjaoDVAWOuA9V/GJfYYF9
-   QyIoagd88A0gUWmFT9jVh1QkM4fswsUxcUokCVrJPmFKx4Bs0x1XesIVk
-   m6JEPZjIT/19Z3Fz4le1tavRmC24Eq/bNCX5T8zommsGJ723gSKO9PdBG
-   Q==;
-X-CSE-ConnectionGUID: vughKY66TvmPIo2x1erQIg==
-X-CSE-MsgGUID: wwxnKcQiSSuSfhJl9L0RZg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="82553318"
+  bh=OtFs4nYXEH1ThWKykhpKfwgYG7osOn2qi/Z49bIrWUw=;
+  b=BYVFL/waIEA8DYye86BSPQEDB9l2CJ+IICWo51yTstEGSP4HUzXiH1fY
+   KnvkL4MZ70TyyrJeESLb+5Orcm8pxk1h0eyMHLjXreWmYeu+D4TJRYInm
+   +k8Yh/P4ZhyXfqOMws3ckgjny/7sZS4mfxTIAn4CkN1722UTT0GJCeTUH
+   DsEQ6xMJq9uqcS/cTW2T5dMZnJJojPjrtuuShoDunOqaK5zOuqcX58TGJ
+   lXtyKKU1CwGO1oi4C3ckk7yBlVnctVdFH+u9hLbtAXwx+xuwfOo2MIz29
+   jc5wUM32tfXbQBlBgkhEPv5YnojKF5LM/AyXCtUFf+U95xoahPHCAwNCH
+   A==;
+X-CSE-ConnectionGUID: HOShL0rVTROT+/juwYNR/g==
+X-CSE-MsgGUID: 6nLtbYHKQdObDHEGzxpnxA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="75607210"
 X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
-   d="scan'208";a="82553318"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 04:28:13 -0800
-X-CSE-ConnectionGUID: y4Tf/TFLRkqAmpqOMEXvxA==
-X-CSE-MsgGUID: qwHa3zDTS9aAI/J+tsN1Nw==
+   d="scan'208";a="75607210"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 04:28:13 -0800
+X-CSE-ConnectionGUID: tMUh47YlR0iztmLUL7ZOeg==
+X-CSE-MsgGUID: n8CanOcvRy2xvoMOm6Z2iA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
-   d="scan'208";a="212343338"
+   d="scan'208";a="188592937"
 Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa002.fm.intel.com with ESMTP; 11 Nov 2025 04:28:05 -0800
+  by fmviesa007.fm.intel.com with ESMTP; 11 Nov 2025 04:28:05 -0800
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 57FF3AA; Tue, 11 Nov 2025 13:27:38 +0100 (CET)
+	id 5E57DAB; Tue, 11 Nov 2025 13:27:38 +0100 (CET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Corey Minyard <corey@minyard.net>,
 	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
@@ -153,9 +153,9 @@ Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 20/21] scsi: snic: Switch to use %ptSp
-Date: Tue, 11 Nov 2025 13:20:20 +0100
-Message-ID: <20251111122735.880607-21-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 21/21] tracing: Switch to use %ptSp
+Date: Tue, 11 Nov 2025 13:20:21 +0100
+Message-ID: <20251111122735.880607-22-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20251111122735.880607-1-andriy.shevchenko@linux.intel.com>
 References: <20251111122735.880607-1-andriy.shevchenko@linux.intel.com>
@@ -170,56 +170,32 @@ Content-Transfer-Encoding: 8bit
 Use %ptSp instead of open coded variants to print content of
 struct timespec64 in human readable format.
 
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/scsi/snic/snic_debugfs.c | 10 ++++------
- drivers/scsi/snic/snic_trc.c     |  5 ++---
- 2 files changed, 6 insertions(+), 9 deletions(-)
+ kernel/trace/trace_output.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/snic/snic_debugfs.c b/drivers/scsi/snic/snic_debugfs.c
-index 9dd975b36b5b..edf3e5ef28a6 100644
---- a/drivers/scsi/snic/snic_debugfs.c
-+++ b/drivers/scsi/snic/snic_debugfs.c
-@@ -282,8 +282,8 @@ snic_stats_show(struct seq_file *sfp, void *data)
- 	jiffies_to_timespec64(stats->misc.last_ack_time, &last_ack_tms);
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index ebbab3e9622b..cc2d3306bb60 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -1490,12 +1490,12 @@ trace_hwlat_print(struct trace_iterator *iter, int flags,
  
- 	seq_printf(sfp,
--		   "Last ISR Time               : %llu (%8llu.%09lu)\n"
--		   "Last Ack Time               : %llu (%8llu.%09lu)\n"
-+		   "Last ISR Time               : %llu (%ptSp)\n"
-+		   "Last Ack Time               : %llu (%ptSp)\n"
- 		   "Ack ISRs                    : %llu\n"
- 		   "IO Cmpl ISRs                : %llu\n"
- 		   "Err Notify ISRs             : %llu\n"
-@@ -298,10 +298,8 @@ snic_stats_show(struct seq_file *sfp, void *data)
- 		   "Queue Ramp Down             : %lld\n"
- 		   "Queue Last Queue Depth      : %lld\n"
- 		   "Target Not Ready            : %lld\n",
--		   (u64) stats->misc.last_isr_time,
--		   last_isr_tms.tv_sec, last_isr_tms.tv_nsec,
--		   (u64)stats->misc.last_ack_time,
--		   last_ack_tms.tv_sec, last_ack_tms.tv_nsec,
-+		   (u64) stats->misc.last_isr_time, &last_isr_tms,
-+		   (u64) stats->misc.last_ack_time, &last_ack_tms,
- 		   (u64) atomic64_read(&stats->misc.ack_isr_cnt),
- 		   (u64) atomic64_read(&stats->misc.cmpl_isr_cnt),
- 		   (u64) atomic64_read(&stats->misc.errnotify_isr_cnt),
-diff --git a/drivers/scsi/snic/snic_trc.c b/drivers/scsi/snic/snic_trc.c
-index c2e5ab7e976c..6bad1ea9a6a7 100644
---- a/drivers/scsi/snic/snic_trc.c
-+++ b/drivers/scsi/snic/snic_trc.c
-@@ -56,9 +56,8 @@ snic_fmt_trc_data(struct snic_trc_data *td, char *buf, int buf_sz)
- 	jiffies_to_timespec64(td->ts, &tmspec);
+ 	trace_assign_type(field, entry);
  
- 	len += snprintf(buf, buf_sz,
--			"%llu.%09lu %-25s %3d %4x %16llx %16llx %16llx %16llx %16llx\n",
--			tmspec.tv_sec,
--			tmspec.tv_nsec,
-+			"%ptSp %-25s %3d %4x %16llx %16llx %16llx %16llx %16llx\n",
-+			&tmspec,
- 			td->fn,
- 			td->hno,
- 			td->tag,
+-	trace_seq_printf(s, "#%-5u inner/outer(us): %4llu/%-5llu ts:%lld.%09ld count:%d",
++	trace_seq_printf(s, "#%-5u inner/outer(us): %4llu/%-5llu ts:%ptSp count:%d",
+ 			 field->seqnum,
+ 			 field->duration,
+ 			 field->outer_duration,
+-			 (long long)field->timestamp.tv_sec,
+-			 field->timestamp.tv_nsec, field->count);
++			 &field->timestamp,
++			 field->count);
+ 
+ 	if (field->nmi_count) {
+ 		/*
 -- 
 2.50.1
 
