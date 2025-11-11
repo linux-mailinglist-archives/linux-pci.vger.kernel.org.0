@@ -1,311 +1,233 @@
-Return-Path: <linux-pci+bounces-40824-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40825-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5103C4BA1C
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 07:19:27 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60684C4BB09
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 07:39:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 686F93B6754
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 06:19:26 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3D9FE4E7656
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Nov 2025 06:39:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05FC62BE639;
-	Tue, 11 Nov 2025 06:19:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 707732D978B;
+	Tue, 11 Nov 2025 06:38:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aW/O5v1h"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2TLQw/WR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011019.outbound.protection.outlook.com [40.107.208.19])
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010057.outbound.protection.outlook.com [52.101.201.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7012882B6
-	for <linux-pci@vger.kernel.org>; Tue, 11 Nov 2025 06:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97092D878D;
+	Tue, 11 Nov 2025 06:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762841963; cv=fail; b=lFqnQQunSV323/DHKZ463JN+4dEVEd4uu0VMtg0G2suYYRLioTgf61AxVHMHbGhsxe3ChAwVV6HxKpu2Pze69DPLlSiWZuGz4aMjIB/VvcnbNGklJEODYbq05hdEgCSpD1FEnxtlP67hfRIk9yL8KaZeJTW4AYEd2ePYzGwZUZM=
+	t=1762843133; cv=fail; b=ac6PyeI92AgQwEjwzbs1NEKK2zk2wNc2MMkE/M06oox2UDt9kiTIxKzxXtPrb2m/7N7rNBoAg19rL3JKTc9XdoTxARcRXyuAyrhgaMoazi6VtdE05tZYeZUhJCiV1Kn5j4lQxJ7FIcSMsKvkD7FhbJjy7V6yb1jGBaW3IAGgKCk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762841963; c=relaxed/simple;
-	bh=eQAn9Z6P1wakCbcVdVyBdElY85o2Jh6w1GQW1dWfm90=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Vd+IR+rHTQKOHpNs73x2jbQL4LZ9kaZEHMmfQGODZapDu4QnvynMZrH0/L8RR59o6lG73q9bOd9oSl2G15Gt9uHZqMEb3M5P9FDXJfsaufmtrRn5n/r83O3fE9cByVwJ/sTzD7YgRzICAHQ55mJbbLPWDI4Z4ce1t3MBH7Lc4a8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aW/O5v1h; arc=fail smtp.client-ip=40.107.208.19
+	s=arc-20240116; t=1762843133; c=relaxed/simple;
+	bh=qOCW5qmGvY5JhE+3ToHl+690wxL074OecmpFkTywc7E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A6CIc4N2kqowWw5saStzCaG6HM1PDZMp03hdGFVx1axWFqc1fCYVs4R4nIFCMxKYte0gpxiEg5gaPSmFYuIF4xygqu0MYcKS/YAiuEzI623utw3+okF0EQGt07dvlvuje/7TdB7fd60yRQbkvBm53Tnc17wQISkKMy7FazMQgec=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2TLQw/WR; arc=fail smtp.client-ip=52.101.201.57
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HFha2LgE38zhNhJCgn79BE9WTUFqIoHVzmke0qJQBbDsZUAWrknT6mbOmLwU4USEoFMQ6wGLZKccLx1SKb27auKxuINTt9LUMToIWJ+GVZGKZt7nNwlef7oiy//G7+Bgsz8C0EHmE1ylHuWTgVmCwbh2y/B0NdCmpF5VoJS+mKq34vv7E2bwScpJhyR1ShmEVa3CIpw0AKo8psX7PK0aXcMUu5FIoqvkUvXWLyFPjey9wxEAFx9LIIDYL2mwAAPj3XQF1JlxzZOF7mKEx6shys/yoYX4mPtYqCPN/eZ0l7LfA5aNJ61VXwge84prqD60UZAnrz1n2E4OGUw9pxFjtA==
+ b=cV0UuvR5W5ZkxczZ/MrEFl5ATVoFtxtFwGqzdsBR2sENGDR4Ool4yrQ6WpyhzacyYGfTqnK8p73kDE094eweffiEPYr/TorDKSfej7qndH+8lnwXWkj9KHRBaFshLMtf28hedC9/NVpo+qqQ6HLdfDNB/f4JO1FePjRB/B4D6NseqMdN3szWKpCNkuDxl9vqFYjQomEaVXefllOXGiM8394X9lelRKYXXvvJDhqQuyZ+L/+2fOZ8Ay+dUPf+M4HcyzLSjUMZgssAK/pc8cn/epkQP/gp8WXXXjhjWP+KrpfS+qTZ/unvUs5skOINV1RRevOQH/9YgJSYKL0B3nmOFw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zjchM9fhh+pZipHzIFv9lYqyrID6MUNSNf1w4k5lnEc=;
- b=KsULSj0htuXv4Lz9rB1cc3VKze5gq7NV5CSVp2yqOv0sjtTt7k6LHocar9QnHdOyonNCowDrKjcm65KNd/2sXrafIzRgytFIsDsPcUUnQgmHV4aCrpKtdTZfhFEnMN5mOZHWvAvNYJ3x7kadmHh5B1x6M4RQ/L0MF2OPZBzgW+37pKr5w0BfjJZds0r/NXqLBz+wZenU7eZqLPhGAv19bv5qNJIhOEjtQ6cP/qHe/+R7LOOp6NVIvwLnR+CEbKvzx/HzBe2K8lT9exlKt7x/ayf1mn7s1LqKBCqC+YT5dmyM3SFTZee8dWF4ctetpTHgWW9wPkO57psmPhQBaNM+5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+ bh=nMXZd/qYl7pQZCZWhzVZ9/2gt11G61p9zoPIb7u6PM4=;
+ b=mUdOI0FxGsCYK4dXGNfY/rFVAtZuWcVjNLex2xPn0bUkoc73rQGJZnZwcpSvWKQNqQUTKNixzgSARzd1/YLnOuXwxJs7pzDF8gxyvHyntjrTOi7AMevp8A0Zq5I4WKh8TCgzYz6jOM+tXt7+EHs1aiZSrYQr4szEjT0bAmH+xiwDKPpprAAxA485arGdNKmEC2/qhYL9/sWt13G0ZaZGY0qcCx3EaCFfdrJ7DUf5N0EHtYfuSOCJlxNskYcZrnr1ZKTcED0lg8/oFw5b82+8QXDM7wnGdY1+zs6pe0V60GGLVM5caHqOrYPzFbMsVNuTWVKzNH3bdpdlnYeTNSqGvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zjchM9fhh+pZipHzIFv9lYqyrID6MUNSNf1w4k5lnEc=;
- b=aW/O5v1hpWc6DUblBbks7TjlA4RKixjUHYIv+MRYuttXM+bA7YtvIMLaSLYVKebvznRpw8+ohwuqjug9/SPTsf7kK24ehNO5xpVd72jVImbZKLRuDHCITzv1fHOnvfsi9QKQUYcp1/i/4Ek27G797n5VPUEcy/GeEDxPODlzJr4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by PH8PR12MB7230.namprd12.prod.outlook.com (2603:10b6:510:226::17) with
+ bh=nMXZd/qYl7pQZCZWhzVZ9/2gt11G61p9zoPIb7u6PM4=;
+ b=2TLQw/WRpbPVz+fpVSqgoc/RJ26UJGDH3MgBLBZLc4MKRcN9SoHquvdCLY77xMt2zZsUfFOgKiTrOEqXqo4n1Y8X4QQMCgtuWNKVX9OB+9jajSyA06M+wqp0QbGFwe6FwiQjNUXKQ/3etmdEjbf2nxQZuBSX8DX8gRiJjxY+uWM=
+Received: from CH2PR03CA0002.namprd03.prod.outlook.com (2603:10b6:610:59::12)
+ by DM6PR12MB4105.namprd12.prod.outlook.com (2603:10b6:5:217::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.16; Tue, 11 Nov
- 2025 06:19:16 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%7]) with mapi id 15.20.9320.013; Tue, 11 Nov 2025
- 06:19:16 +0000
-Message-ID: <d8ea14c0-857e-4e83-9440-cf590e8b2b4b@amd.com>
-Date: Tue, 11 Nov 2025 17:18:58 +1100
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH pciutils] ls-ecaps: Add XT and TEE-Limited support
- reporting
-To: linux-pci@vger.kernel.org
-Cc: =?UTF-8?Q?Martin_Mare=C5=A1?= <mj@ucw.cz>
-References: <20251023071101.578312-1-aik@amd.com>
+ 2025 06:38:46 +0000
+Received: from CH1PEPF0000AD76.namprd04.prod.outlook.com
+ (2603:10b6:610:59:cafe::bd) by CH2PR03CA0002.outlook.office365.com
+ (2603:10b6:610:59::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9298.16 via Frontend Transport; Tue,
+ 11 Nov 2025 06:38:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CH1PEPF0000AD76.mail.protection.outlook.com (10.167.244.53) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9320.13 via Frontend Transport; Tue, 11 Nov 2025 06:38:45 +0000
+Received: from aiemdee.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 10 Nov
+ 2025 22:38:34 -0800
 From: Alexey Kardashevskiy <aik@amd.com>
-Content-Language: en-US
-In-Reply-To: <20251023071101.578312-1-aik@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SYBPR01CA0171.ausprd01.prod.outlook.com
- (2603:10c6:10:52::15) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+To: <linux-kernel@vger.kernel.org>
+CC: <linux-crypto@vger.kernel.org>, <linux-pci@vger.kernel.org>, Tom Lendacky
+	<thomas.lendacky@amd.com>, John Allen <john.allen@amd.com>, Herbert Xu
+	<herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
+	Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>, "Suravee
+ Suthikulpanit" <suravee.suthikulpanit@amd.com>, Will Deacon
+	<will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Dan Williams
+	<dan.j.williams@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, Eric Biggers
+	<ebiggers@google.com>, Brijesh Singh <brijesh.singh@amd.com>, Gary R Hook
+	<gary.hook@amd.com>, "Borislav Petkov (AMD)" <bp@alien8.de>, Kim Phillips
+	<kim.phillips@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, Jason Gunthorpe
+	<jgg@ziepe.ca>, "Michael Roth" <michael.roth@amd.com>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Xu Yilun <yilun.xu@linux.intel.com>, Gao
+ Shiyuan <gaoshiyuan@baidu.com>, "Sean Christopherson" <seanjc@google.com>,
+	Nikunj A Dadhania <nikunj@amd.com>, Dionna Glaze <dionnaglaze@google.com>,
+	<iommu@lists.linux.dev>, <linux-coco@lists.linux.dev>, Alexey Kardashevskiy
+	<aik@amd.com>
+Subject: [PATCH kernel 0/6] PCI/TSM: Enabling core infrastructure on AMD SEV TIO
+Date: Tue, 11 Nov 2025 17:38:12 +1100
+Message-ID: <20251111063819.4098701-1-aik@amd.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|PH8PR12MB7230:EE_
-X-MS-Office365-Filtering-Correlation-Id: b3b28110-ff93-4b58-a6ac-08de20ea3d80
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD76:EE_|DM6PR12MB4105:EE_
+X-MS-Office365-Filtering-Correlation-Id: 44e690b8-ca99-4bd5-d4c0-08de20ecf6d3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|36860700013|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dTMxZjhWcEFGRWxxL1hKRzhGbFd1VE4xeHhEcGZXWlByY09TUktMTXVPbHBi?=
- =?utf-8?B?cGRlL2dZengyanVxcXQwWXNJcnRsZndsSXFTZUNNQWJkWWQ0cElJczRxUzcv?=
- =?utf-8?B?TFFoVUxkMEd1WFgwa2J6OHk1VzBZMEpBUk52WHpWZ1VmV0p1TExuWUhnRFgr?=
- =?utf-8?B?eC9zYlBxRlZEbS8vdXgrUFFEMWxkdE5ManFsZTVTcFVpLzBSZkdDenM5UkhU?=
- =?utf-8?B?SWVMUVc5RlY2ZUNjMzVXcXZ6NFM5Q21zUjkxeHpyT0JBcGtITnRVN1ZNUTll?=
- =?utf-8?B?M0pXTlVKZGdzUFd1Vzg2TmtwWDIrN2RtRmtrVldPcVJJUm8yakdIVlJ2bUR3?=
- =?utf-8?B?L0t6ZC9nWHZmV0VhNWw1ZnRvTnVWWDFFSUtOZEo0R2E3dkIxZ3B3VjNUZklE?=
- =?utf-8?B?enNyK1VPN1RNV0tlS0d5K0VKUnYxektJRHdNUUdOZDFpQmlsdVh0S2Ryc3ov?=
- =?utf-8?B?QzNYQ3J0ZUVaRDUvbE9YanRsQmdxV1V0aGJvQUxGMEdwQ0c0VXRkOUI1M0FQ?=
- =?utf-8?B?djlodzFJQU5sTGNia2hEclNtdzRMWFhtQkk2SXVJeGlHaHVNSXhvdUVkQktu?=
- =?utf-8?B?ZUdHQnB2aTVXeTViTlhiNUE1amRVSTJaNzFGUGd1QUZGUUpiZU0wUVVmd0V1?=
- =?utf-8?B?cUxRQnBzTzhKM2dGRUp2d3lwL2diYS91SkFkd3BoNzBaVlpBdDI1alVKWUVY?=
- =?utf-8?B?VVhwN2FnR094dUxwNlhET1JMcnU2WjdrSHRySUNueHliR2JlVk9meUwyMXpD?=
- =?utf-8?B?bGdyYzdoa3NJNWxPZXo0b2ZLM1RhZGh3Y2cyVDVkQlJlUHJ2QW9JRG52Z3ZU?=
- =?utf-8?B?cGhXaEJIUkVmVnZlbE81Vmhpelk5eGg1N1N5N1pxWVozWlhFWTV0VWhCenAw?=
- =?utf-8?B?WHJSZFZzYkhhTk5QbHpuMm13NGgyaWUxSU8wT09HQ21GMUFIVFBZV1BGY2hi?=
- =?utf-8?B?K0hkb0xIRTdrWHl3YW1jeTl3aUxOdmpKdXoxdHByK1RnQWE5T29nMjJYNEVJ?=
- =?utf-8?B?c0p3b3puWEtrdFI3WXNDMVpRU1AycTZ1dTZGZVdEc3pGbWFXczNzdmE0RjN5?=
- =?utf-8?B?bDlGRzhtYWthSWF0c0Vld2pLVXR3S2VKQ1pxWVFZU2h1R1YwNVdLa2hXTUFq?=
- =?utf-8?B?U1NDejR3M292eXV3eHRVek9RTFhtYkRQcW5lQ0RjNFowaU83TEo2a3BuK3Jh?=
- =?utf-8?B?czg3a1g4VTNtRVBoVHlQd1dveVFjSG45OFYveVFoQ3gzZ1A0aFJwY2NURzQv?=
- =?utf-8?B?Z0dHL2xGZlU1Zngrc1QxTFoxT0tsblNCRXQvZHRCb1Q4OWtSSTdqWi85M0Fy?=
- =?utf-8?B?WVZ2NTF2bEJERmlwUHJ0dmdtNTRpekVtai9Cajc3QXBoblV1OGIxTjNEQW5I?=
- =?utf-8?B?c3RvMkhmaVpBMmE3aURvU20vOGIvY0FtQVMvZWNuZUxNOHBrZmI4L05QNHZ0?=
- =?utf-8?B?aTgzWGtTc01OR1dtOGdITW9sSVdRTm4zSFNRMVRFMHVNZ0FNbjNnU1ZsZzhK?=
- =?utf-8?B?TG5xTUJDNTR2MnZXakl0R29IU2dLbDB3UythRGpwKzBsUEQ5ZHR3aG9FbXc0?=
- =?utf-8?B?RkR0dGlxaHUwZ2daV0FXWEZ2Q1E1OG1UUmhwZnZ5Zjk5RWRwem9Va1k4bDdR?=
- =?utf-8?B?eE5QUWs0eFdSVklBWEJCcEtzVmg1b0g4cEJ6VCtUbDZPNWdFamI5QjlqZVcw?=
- =?utf-8?B?ejlkRDQxNzdma1FVMjA0R1pnZlp4YVI0YTBSY0EwVXNxVDVYK2QzYTYyWmhU?=
- =?utf-8?B?QVJ0S0c1ZWZFaWJOVVhVWG9jS1FRZG04eXUxM1A5Uk9MWUtzNEdNb0xqdXpS?=
- =?utf-8?B?NWV2RGlEVFVEREliM0grOHR1NjJycVpjdncwU1pRekZjWEhxL29kekRRb05z?=
- =?utf-8?B?NmFYR2k1WFA1aExBeE5mK1ZFczhpenN4MVp5d1JMZ3B4OGtLcnEvaGFCNzAx?=
- =?utf-8?Q?vbM40j5WC2C+E2B3FUL5OmZ3hMUbzYK6?=
+	=?us-ascii?Q?A+5YUZFwiISY6RyGNxHoJfQlFmxYJ0nZNfJ5zuY0elAfJtYi+qEm6rKHQM2F?=
+ =?us-ascii?Q?H8kAuV2rgHDLrQHhtSOFlLxM0mzu+zQX0LurV4jZk/W3vQNIplueYSpXi5Hr?=
+ =?us-ascii?Q?GqY8Y49HrEUocuqPo7+z85sYy1/Rbba/EqJSG9zvORdtWYyQVl0Hn+WPGcE8?=
+ =?us-ascii?Q?LbO9oXMFNN0n3t5Vy4JWOVKcH9CD6RCEmGad5AX1vA0nzSPmUZ0TT0NWWEHu?=
+ =?us-ascii?Q?n468g1juhd3PEsuUX+L0mzWgqajmhL9X52GsCYczqieIjFeNYq6RcZzKadh8?=
+ =?us-ascii?Q?AMMxDvtx0nm73puymKPRUN23XQ/o1aHSyX7wsImplVz77c6lnofqN/ev+tk6?=
+ =?us-ascii?Q?43plyVwxCZcfPtM+zwSy4Uu+pcMNZvG+jUzyDpzvpIetQJk/UGeWEKijj1Lr?=
+ =?us-ascii?Q?37xc4bRS3lmiYNmbng15vBhTKMMBHVLoIq3cDrFsrZaXLP7zjREaZ1pCreBS?=
+ =?us-ascii?Q?DgQefeBpWkcKq+epB6hwyRNfZWkhK+eY14z7mNzsvWJyrktQ3juHdA70DGtH?=
+ =?us-ascii?Q?UTN3417ZwouCnib8e3nDo60IUOXjFt6PPoT63sS8TysbElpVXlNUxRphHC/n?=
+ =?us-ascii?Q?8gDqcR28S/k+351Xf16Tw+HjAaPmdtMM+XV0zTmCL291MkULjM15E7li3SSb?=
+ =?us-ascii?Q?7IZ9afyDIKwx6fOUbnUJy2BC81qj0BpaHJgNS1Zn4XTKZOIMFWlYSqB2kXg4?=
+ =?us-ascii?Q?yxumWtlwO8LWt47OsSNajd3/6/3F/PsAAkZam8nx1n0Xdjx2mGyIbmWSmCp5?=
+ =?us-ascii?Q?76wxRhzu+eUulq8CuUdpj8lb5mBdTcD154X3cqK105bnjsurLO4zuQ9zXt4o?=
+ =?us-ascii?Q?txcghM0uCfgf9b05CEkhNTI2w8tvx/bZRFLzCff931qJZ/ItG0DbJ8LXyz0y?=
+ =?us-ascii?Q?wT09ZkdBSts5z1uxloLp+SYAIQKnivLujvPn0JaifMCEkyBtfxDcH0dwra/J?=
+ =?us-ascii?Q?CoyiokjxcbMO021mt1yXZAzEZwVu1+YbpcR/mF/61ioEwzt9++OG9KrFYuru?=
+ =?us-ascii?Q?FaIqdIIbuXAmdb+ID+MHp2ndPqcuX+9amwci+YBKfsK2z5WU6o1N32KqxyGB?=
+ =?us-ascii?Q?5AQmOefdanf5J2eYtrxxrxUXXaGpcQrxTx3sN8qmxPDEOlIORWvIbI5GkLQA?=
+ =?us-ascii?Q?JzU3otM3ZqOws1bYY32ovQ5xdDPv54weqcJ5qEeBjEBTe+pFQ8vdSW9KbMte?=
+ =?us-ascii?Q?IYICSrS8LqWveAi6TvFqEBxiSz56Yk4eL3NOqv64CSdvI5e1uyKjixGk7LDZ?=
+ =?us-ascii?Q?sWGzZf/2wVLJaXIzb3P3AYlxskK3GHNTM+L5qMC5duQ78I1ZOgPtTRVlSMWa?=
+ =?us-ascii?Q?K1EduOpX9oTyUPL1v0loFBR9YkSjPOGQ1VQ4S4mkR6ast4+mkJprjkg6ksZH?=
+ =?us-ascii?Q?0UUcG4xxrHZclI2FazmMzfmqFiUN3nf2/fQBwVpXm0XsJbyrZihEiCtFuHF1?=
+ =?us-ascii?Q?GzfWat5tTKDH+EYEBCJDLhpf3UQBbey6vEQV3nHhuc7Ib7D6fiyY+ogktNe3?=
+ =?us-ascii?Q?2Ho5dKI7y2YMJI3iz/4VwqtomADRIMVveZJw49IXrbY4NuISlvqXVYNhVtNH?=
+ =?us-ascii?Q?2S8svhyr7xz5GQYvRUgDeailXHdOCRZSpZ7fJs3n?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a3RSaEFoQWptZkVOODRvSXRESFh3TjBNNmYwWUNWamVmTEh4ZHJob005R2wr?=
- =?utf-8?B?OGk3bUFyV3M5cVRMd1JVMWQrWmlpV0E1emJVMTRxOG42OThhMXE0ek05K0l1?=
- =?utf-8?B?K2tOaGVCbVI1S3hmcXVsV1JFTndwNWFEUmtTTG42UzgwOXRVcXNrL24zV2Fn?=
- =?utf-8?B?VGNEMllqcHcxQ3duZ1NIR2pzS3IyTjgzRXVvemRJa0lUcm41MGFxZjBjMEdt?=
- =?utf-8?B?MWR5bUxJUFowaXc3cXZBcFpJM0g5UGhyL3NxbENJQzZtWVBRdnZIdDFlaWFr?=
- =?utf-8?B?ckpsUis4WUpCWHJtU2JFcCtKTWNnRjFNZnZ1L0c3OUpvcWdSUU1naWQwSHc3?=
- =?utf-8?B?TjRnODNLM202dm0vLzJCTHpPMTJ3VE1hZ0w4OTNIUitxTlNKaFdmRjYwVW1X?=
- =?utf-8?B?VUFmWW9COUFiYjZUU1JTOWJiNHpjSEM3c08rRTlGZE4xSTJlVXRtV1JpRENp?=
- =?utf-8?B?a1B4K1lJWkw3TlliMHdHWlM0MHNETUdJUEh6RlA5TFc3c2llc0h3UkEyOXRk?=
- =?utf-8?B?QkNVSGxmQm5KZXRtU0R0NWVER1REZUU4M3hIUU1NMlViNk1VaEN6MXpkenkx?=
- =?utf-8?B?YWxmYklMWFpTTEpLdkNhbmVrdkdVRGlxV1VGSG8wTzZ1NEJVajRKWXNaZm5l?=
- =?utf-8?B?SWh3eHJVZlNnMDNPSTVlTWpsZERBd2hyQzFqLzFaOWkwa2U0ci94QkRpRXpo?=
- =?utf-8?B?cWZZaElVRnYxZXY5VTlzQ2RiQTFWQ3hRT2UwOGI5Mnk5NW9QY3ZWdFQ1QmFt?=
- =?utf-8?B?bUVsVVd4R0VUblUyYTVQVUlOUVlPcldkdWo3Qi9WbHRaL3AzcUl5UVE4N09j?=
- =?utf-8?B?OUtKeHNVU1l0L1dJamVLU3pjSHRPVXFmZkRlOEFhWXRmK0JOTWlKa3hlc0FJ?=
- =?utf-8?B?cHZYMzcwNGw2U25HaDYweDlBNmZUYjFlZkd5ekhzNmdURVh0Y2hFaFlJZDBv?=
- =?utf-8?B?S21kcnFNallnMWhPenEwRE1qbldwYTIxbVEwdlVzOUQ4Yi9CMmFJWnhTQ3hF?=
- =?utf-8?B?UkVobmt5QmhqZ20xK3JnUFA4aG94a3lUTExMOFQ3RGhQTitjcTZXeTE0QlMr?=
- =?utf-8?B?enRIU1hpVnFvYldlbHJqNHFkeUcwWFgxME9oZVEyb2JzQ0dQVnlueVlCd1A0?=
- =?utf-8?B?eTZlbXhHc1FjQS8yWGxUUERienZHVzlBWVNXelkybUoyM3V1alZXZC9TbEVp?=
- =?utf-8?B?c0tkdkx6Zmc4KzZ1V2p2bGoyS3dlNHZBYWZLTmRxaEdTK2NSSVpaUWI2RW9K?=
- =?utf-8?B?dVFNSWdaY0Z5T0tXRlVNNkhKYUZtaFpuRUZFbHE5NmcvQmJ4em5tQnFZYTFW?=
- =?utf-8?B?ZXVOSDJuanNiQ1MreHM3bmNpQmJ0RDBjeFhib2p2MExvR2FObU1HUjVFSHZt?=
- =?utf-8?B?cjFKTUhtaDZ5akgvTTlNWGtJR1FGWlFsZTV2MjV2MnFROXVQMTlYOS84UnZI?=
- =?utf-8?B?cXBDT2pCWkVZTXF6MWZhQkgwaHFQMVlJRnBraFN3OVZ5OEZmak1NQWZiSXFI?=
- =?utf-8?B?ekN6TE5yWjdQLzAxZWhrV3ZlbnBlRytpdEkrdmJZZDdjSnJyaHRmLzcwejQz?=
- =?utf-8?B?TkdiL0lpa1JMaUZkakZ3Y0N3ZHVwMzRpcktrUTNRM1JrVXJtb2o3UEZzbk8y?=
- =?utf-8?B?azVqTE96S2oxSWZZeHdWbHRZV2dFWnJ2ZGowa0lPQUhqdlNGWFdtWWpqU3JW?=
- =?utf-8?B?bEk2Wkx1S1NTc0tTQ1A5SjA2bmF6UGN1cFhYR1BoSkhFdWhYZ0pFUXhJbndV?=
- =?utf-8?B?cnVxQVdlYVBGQlJtc1RPdnRndjR3aTZxOUx0M3ZqZzZROWpCR3VTSk0zZlJz?=
- =?utf-8?B?VEtZeHYwV0NFM25Hdm9mdVpIOUw2S3U1Y1BXN2pqQ2xZS1p6bHYwS0ZlNkw4?=
- =?utf-8?B?YWRwZUcxQmxpditPOUZQRE8rbFJBWXVvZHF0N2lwcnQxTnhIRFhMVm1uTno3?=
- =?utf-8?B?M2MwYTQySWg5akIyclVObVFpTThhb1E1M2c4bTNmaEJqd0ZSeVBOMFplSUJz?=
- =?utf-8?B?QlpraEc2Y29NOUM5clNkZFFXUmhkd2g4RGdEMUZqZjB3TllERXBoQUpuQUZq?=
- =?utf-8?B?c1RTck5ROFowVzlKZ1g4eWtJcUw2azd1M2dBOXZPWktrVzNyd1dsREE3RHZZ?=
- =?utf-8?Q?YstYCZ3jA1mHYy+g0nmZAzNmZ?=
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(36860700013)(13003099007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3b28110-ff93-4b58-a6ac-08de20ea3d80
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2025 06:19:16.1835
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2025 06:38:45.8102
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44e690b8-ca99-4bd5-d4c0-08de20ecf6d3
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TZcwnXt3GzYC5qZRVwdvQmzrSVuJ2cH8QDxtrrx5Wrap/Ixz7xlXAJ0W2MtX6+gnoCVLN4EaAovYhqrx14nMLA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7230
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD76.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4105
 
-Ping? Thanks,
+Here are some patches to begin enabling SEV-TIO on AMD.
+
+SEV-TIO allows guests to establish trust in a device that supports TEE
+Device Interface Security Protocol (TDISP, defined in PCIe r6.0+) and
+then interact with the device via private memory.
+
+In order to streamline upstreaming process, a common TSM infrastructure
+is being developed in collaboration with Intel+ARM+RiscV. There is
+Documentation/driver-api/pci/tsm.rst with proposed phases:
+1. IDE: encrypt PCI, host only
+2. TDISP: lock + accept flow, host and guest, interface report
+3. Enable secure MMIO + DMA: IOMMUFD, KVM changes
+4. Device attestation: certificates, measurements
+
+This is phase1 == IDE only.
+
+SEV TIO spec:
+https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/specifications/58271.pdf
+
+Acronyms:
+TEE - Trusted Execution Environments, a concept of managing trust between the host and devices
+TSM - TEE Security Manager (TSM), an entity which ensures security on the host
+PSP - AMD platform secure processor (also "ASP", "AMD-SP"), acts as TSM on AMD.
+SEV TIO - the TIO protocol implemented by the PSP and used by the host
+GHCB - guest/host communication block - a protocol for guest-to-host communication via a shared page
+TDISP - TEE Device Interface Security Protocol (PCIe).
 
 
-On 23/10/25 18:11, Alexey Kardashevskiy wrote:
-> PCIe r6.1 added TDISP with TEE Limited bits.
-> PCIe r7.0 added XT mode for IDE TLPs.
-> 
-> Define new bits and update the test.
-> 
-> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
-> ---
->   lib/header.h  |  5 +++++
->   ls-ecaps.c    | 13 +++++++++----
->   tests/cap-ide |  4 ++--
->   3 files changed, 16 insertions(+), 6 deletions(-)
-> 
-> diff --git a/lib/header.h b/lib/header.h
-> index b68f2a0..c84b7a8 100644
-> --- a/lib/header.h
-> +++ b/lib/header.h
-> @@ -1540,17 +1540,20 @@
->   #define  PCI_IDE_CAP_AGGREGATION_SUPP	0x10	/* Aggregation Supported */
->   #define  PCI_IDE_CAP_PCRC_SUPP		0x20	/* PCRC Supported */
->   #define  PCI_IDE_CAP_IDE_KM_SUPP	0x40	/* IDE_KM Protocol Supported */
-> +#define  PCI_IDE_CAP_SEL_CFG_SUPP	0x80    /* Selective IDE for Config Request Support */
->   #define  PCI_IDE_CAP_ALG(x)	(((x) >> 8) & 0x1f) /* Supported Algorithms */
->   #define  PCI_IDE_CAP_ALG_AES_GCM_256	0	/* AES-GCM 256 key size, 96b MAC */
->   #define  PCI_IDE_CAP_LINK_TC_NUM(x)		(((x) >> 13) & 0x7) /* Number of TCs Supported for Link IDE */
->   #define  PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(x)	(((x) >> 16) & 0xff) /* Number of Selective IDE Streams Supported */
->   #define  PCI_IDE_CAP_TEE_LIMITED_SUPP   0x1000000 /* TEE-Limited Stream Supported */
-> +#define  PCI_IDE_CAP_XT_SUPP		0x2000000 /* XT Supported */
->   #define PCI_IDE_CTL		0x8
->   #define  PCI_IDE_CTL_FLOWTHROUGH_IDE	0x4	/* Flow-Through IDE Stream Enabled */
->   #define PCI_IDE_LINK_STREAM		0xC
->   /* Link IDE Stream block, up to PCI_IDE_CAP_LINK_TC_NUM */
->   /* Link IDE Stream Control Register */
->   #define  PCI_IDE_LINK_CTL_EN		0x1	/* Link IDE Stream Enable */
-> +#define  PCI_IDE_LINK_CTL_XT		0x2	/* Link IDE Stream XT Enable */
->   #define  PCI_IDE_LINK_CTL_TX_AGGR_NPR(x)(((x) >> 2) & 0x3) /* Tx Aggregation Mode NPR */
->   #define  PCI_IDE_LINK_CTL_TX_AGGR_PR(x)	(((x) >> 4) & 0x3) /* Tx Aggregation Mode PR */
->   #define  PCI_IDE_LINK_CTL_TX_AGGR_CPL(x)(((x) >> 6) & 0x3) /* Tx Aggregation Mode CPL */
-> @@ -1567,6 +1570,7 @@
->   #define  PCI_IDE_SEL_CAP_BLOCKS_NUM(x)	((x) & 0xf) /* Number of Address Association Register Blocks */
->   /* Selective IDE Stream Control Register */
->   #define  PCI_IDE_SEL_CTL_EN		0x1	/* Selective IDE Stream Enable */
-> +#define  PCI_IDE_SEL_CTL_XT		0x2	/* Selective IDE Stream XT Enable */
->   #define  PCI_IDE_SEL_CTL_TX_AGGR_NPR(x)	(((x) >> 2) & 0x3) /* Tx Aggregation Mode NPR */
->   #define  PCI_IDE_SEL_CTL_TX_AGGR_PR(x)	(((x) >> 4) & 0x3) /* Tx Aggregation Mode PR */
->   #define  PCI_IDE_SEL_CTL_TX_AGGR_CPL(x)	(((x) >> 6) & 0x3) /* Tx Aggregation Mode CPL */
-> @@ -1576,6 +1580,7 @@
->   #define  PCI_IDE_SEL_CTL_ALG(x)		(((x) >> 14) & 0x1f) /* Selected Algorithm */
->   #define  PCI_IDE_SEL_CTL_TC(x)		(((x) >> 19) & 0x7)  /* Traffic Class */
->   #define  PCI_IDE_SEL_CTL_DEFAULT	0x400000 /* Default Stream */
-> +#define  PCI_IDE_SEL_CTL_TEE_LIMITED	0x800000 /* TEE-Limited Stream */
->   #define  PCI_IDE_SEL_CTL_ID(x)		(((x) >> 24) & 0xff) /* Stream ID */
->   /* Selective IDE Stream Status Register */
->   #define  PCI_IDE_SEL_STS_STATUS(x)	((x) & 0xf) /* Selective IDE Stream State */
-> diff --git a/ls-ecaps.c b/ls-ecaps.c
-> index 0bb7412..ceeefd7 100644
-> --- a/ls-ecaps.c
-> +++ b/ls-ecaps.c
-> @@ -1665,7 +1665,7 @@ cap_ide(struct device *d, int where)
->       if (l & PCI_IDE_CAP_SELECTIVE_IDE_SUPP)
->           selnum = PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(l) + 1;
->   
-> -    printf("\t\tIDECap: Lnk=%d Sel=%d FlowThru%c PartHdr%c Aggr%c PCPC%c IDE_KM%c Alg='%s' TCs=%d TeeLim%c\n",
-> +    printf("\t\tIDECap: Lnk=%d Sel=%d FlowThru%c PartHdr%c Aggr%c PCPC%c IDE_KM%c SelCfg%c Alg='%s' TCs=%d TeeLim%c XT%c\n",
->         linknum,
->         selnum,
->         FLAG(l, PCI_IDE_CAP_FLOWTHROUGH_IDE_SUPP),
-> @@ -1673,9 +1673,11 @@ cap_ide(struct device *d, int where)
->         FLAG(l, PCI_IDE_CAP_AGGREGATION_SUPP),
->         FLAG(l, PCI_IDE_CAP_PCRC_SUPP),
->         FLAG(l, PCI_IDE_CAP_IDE_KM_SUPP),
-> +      FLAG(l, PCI_IDE_CAP_SEL_CFG_SUPP),
->         ide_alg(buf2, sizeof(buf2), PCI_IDE_CAP_ALG(l)),
->         PCI_IDE_CAP_LINK_TC_NUM(l) + 1,
-> -      FLAG(l, PCI_IDE_CAP_TEE_LIMITED_SUPP)
-> +      FLAG(l, PCI_IDE_CAP_TEE_LIMITED_SUPP),
-> +      FLAG(l, PCI_IDE_CAP_XT_SUPP)
->         );
->   
->       l = get_conf_long(d, where + PCI_IDE_CTL);
-> @@ -1697,10 +1699,11 @@ cap_ide(struct device *d, int where)
->             {
->               // Link IDE Stream Control Register
->               l = get_conf_long(d, off);
-> -            printf("\t\t%sLinkIDE#%d Ctl: En%c NPR%s PR%s CPL%s PCRC%c HdrEnc=%s Alg='%s' TC%d ID%d\n",
-> +            printf("\t\t%sLinkIDE#%d Ctl: En%c XT%c NPR%s PR%s CPL%s PCRC%c HdrEnc=%s Alg='%s' TC%d ID%d\n",
->                 offstr(offs, off),
->                 i,
->                 FLAG(l, PCI_IDE_LINK_CTL_EN),
-> +              FLAG(l, PCI_IDE_LINK_CTL_XT),
->                 aggr[PCI_IDE_LINK_CTL_TX_AGGR_NPR(l)],
->                 aggr[PCI_IDE_LINK_CTL_TX_AGGR_PR(l)],
->                 aggr[PCI_IDE_LINK_CTL_TX_AGGR_CPL(l)],
-> @@ -1744,10 +1747,11 @@ cap_ide(struct device *d, int where)
->           // Selective IDE Stream Control Register
->           l = get_conf_long(d, off);
->   
-> -        printf("\t\t%sSelectiveIDE#%d Ctl: En%c NPR%s PR%s CPL%s PCRC%c CFG%c HdrEnc=%s Alg='%s' TC%d ID%d%s\n",
-> +        printf("\t\t%sSelectiveIDE#%d Ctl: En%c XT%c NPR%s PR%s CPL%s PCRC%c CFG%c HdrEnc=%s Alg='%s' TC%d TeeLim%c ID%d%s\n",
->             offstr(offs, off),
->             i,
->             FLAG(l, PCI_IDE_SEL_CTL_EN),
-> +          FLAG(l, PCI_IDE_SEL_CTL_XT),
->             aggr[PCI_IDE_SEL_CTL_TX_AGGR_NPR(l)],
->             aggr[PCI_IDE_SEL_CTL_TX_AGGR_PR(l)],
->             aggr[PCI_IDE_SEL_CTL_TX_AGGR_CPL(l)],
-> @@ -1756,6 +1760,7 @@ cap_ide(struct device *d, int where)
->             TABLE(hdr_enc_mode, PCI_IDE_SEL_CTL_PART_ENC(l), buf1),
->             ide_alg(buf2, sizeof(buf2), PCI_IDE_SEL_CTL_ALG(l)),
->             PCI_IDE_SEL_CTL_TC(l),
-> +          FLAG(l, PCI_IDE_SEL_CTL_TEE_LIMITED),
->             PCI_IDE_SEL_CTL_ID(l),
->             (l & PCI_IDE_SEL_CTL_DEFAULT) ? " Default" : ""
->             );
-> diff --git a/tests/cap-ide b/tests/cap-ide
-> index edae551..eabf5ea 100644
-> --- a/tests/cap-ide
-> +++ b/tests/cap-ide
-> @@ -76,10 +76,10 @@ e1:00.0 Class 0800: Device aaaa:bbbb
->   		PASIDCap: Exec+ Priv+, Max PASID Width: 10
->   		PASIDCtl: Enable+ Exec- Priv-
->   	Capabilities: [830 v1] Integrity & Data Encryption
-> -		IDECap: Lnk=0 Sel=1 FlowThru- PartHdr- Aggr- PCPC- IDE_KM+ Alg='AES-GCM-256-96b' TCs=8 TeeLim+
-> +		IDECap: Lnk=0 Sel=1 FlowThru- PartHdr- Aggr- PCPC- IDE_KM+ SelCfg- Alg='AES-GCM-256-96b' TCs=8 TeeLim+ XT-
->   		IDECtl: FTEn-
->   		SelectiveIDE#0 Cap: RID#=1
-> -		SelectiveIDE#0 Ctl: En+ NPR- PR- CPL- PCRC- CFG- HdrEnc=no Alg='AES-GCM-256-96b' TC0 ID0 Default
-> +		SelectiveIDE#0 Ctl: En- XT- NPR- PR- CPL- PCRC- CFG- HdrEnc=no Alg='AES-GCM-256-96b' TC0 TeeLim- ID0
->   		SelectiveIDE#0 Sta: secure RecvChkFail-
->   		SelectiveIDE#0 RID: Valid+ Base=0 Limit=ffff SegBase=0
->   		SelectiveIDE#0 RID#0: Valid+ Base=0 Limit=ffffffffffffffff
+Flow:
+- Boot host OS, load CCP which registers itself as a TSM
+- PCI TSM creates sysfs nodes under "tsm" subdirectory in for all TDISP-capable devices
+- Enable IDE via "echo tsm0 > /sys/bus/pci/devices/0000:e1:00.0/tsm/connect"
+- observe "secure" in stream states in "lspci" for the rootport and endpoint
+
+
+This is pushed out to
+https://github.com/AMDESE/linux-kvm/commits/tsm-staging
+
+
+The previous conversation is here:
+https://lore.kernel.org/r/20250218111017.491719-1-aik@amd.com
+
+This is based on sha1
+6fdb0d839738 Dan Williams "PCI/TSM: Documentation: Add Maturity Map".
+
+Please comment. Thanks.
+
+
+
+Alexey Kardashevskiy (6):
+  PCI/TSM: Add secure SPDM DOE mailbox
+  ccp: Make snp_reclaim_pages and __sev_do_cmd_locked public
+  psp-sev: Assign numbers to all status codes and add new
+  iommu/amd: Report SEV-TIO support
+  crypto: ccp: Enable SEV-TIO feature in the PSP when supported
+  crypto/ccp: Implement SEV-TIO PCIe IDE (phase1)
+
+ drivers/crypto/ccp/Kconfig          |   1 +
+ drivers/crypto/ccp/Makefile         |   8 +
+ drivers/crypto/ccp/sev-dev-tio.h    | 141 +++
+ drivers/crypto/ccp/sev-dev.h        |   8 +
+ drivers/iommu/amd/amd_iommu_types.h |   1 +
+ include/linux/amd-iommu.h           |   2 +
+ include/linux/pci-tsm.h             |  14 +
+ include/linux/psp-sev.h             |  22 +-
+ include/uapi/linux/psp-sev.h        |  66 +-
+ drivers/crypto/ccp/sev-dev-tio.c    | 989 ++++++++++++++++++++
+ drivers/crypto/ccp/sev-dev-tsm.c    | 435 +++++++++
+ drivers/crypto/ccp/sev-dev.c        |  69 +-
+ drivers/iommu/amd/init.c            |   9 +
+ drivers/pci/tsm.c                   |   4 +
+ 14 files changed, 1733 insertions(+), 36 deletions(-)
+ create mode 100644 drivers/crypto/ccp/sev-dev-tio.h
+ create mode 100644 drivers/crypto/ccp/sev-dev-tio.c
+ create mode 100644 drivers/crypto/ccp/sev-dev-tsm.c
 
 -- 
-Alexey
+2.51.0
 
 
