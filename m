@@ -1,133 +1,183 @@
-Return-Path: <linux-pci+bounces-41013-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41014-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17D0EC53CA9
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 18:51:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEF5FC542A9
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 20:36:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B818D344551
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 17:51:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28EF2424D84
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 19:30:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94382346A0C;
-	Wed, 12 Nov 2025 17:51:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5CF034EEF3;
+	Wed, 12 Nov 2025 19:29:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rO6Mud0E"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="szv3xAGH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCE5272813;
-	Wed, 12 Nov 2025 17:51:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7956334E767
+	for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 19:29:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762969893; cv=none; b=q2Ij10fwx59Fh9cb8WmMdOGVpPtCajhGwPaJURTO/u2IjQS3BLAJPYuDnloBTWkJ8k8FD5EfdUYpYASjSXjvsQS1SsQqz5VVl7+94WTVTf0Zf9akAYx0u/33AzUn5S7LFEg5TNazAaEfRKfUWUrOZQpL1YldNVYStokIaDACl78=
+	t=1762975764; cv=none; b=e3XRdSqbr/TorSlOwQYo/NV0t4Ar+9ningLmcYnwzU6d3syZ5CKyusnTIc5LOeCYDEoRTYHtK9Eg6VUZytrZVZlBQuIO7argsRaVzfmBcme7jWZsFJwg2VbauwZCZHJRuJNUSv8bgzW5kjxftFjLPtv9g7mIF/1QRnTXoOqzZtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762969893; c=relaxed/simple;
-	bh=T7knzhZ/hAoWyK2lUxIZdB+Ka4TMwRh1ujkOMO4Lf04=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VsO2ogcwJdF2yGTKLlMdP9LyD8g+lRFZPBDTFvOhnH92dgAIc9/UejhCIkZZVkozmX3qX67R0GahrNvABcUNHSEouaet/PGgoUGGA8t3vI9d0LhZlPNaYvB4iRDzoWC2fo3tbcx19yt3cJk3YcI6RZUjI7ZeatbBnrB2YxN6jPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rO6Mud0E; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D3DC4CEF8;
-	Wed, 12 Nov 2025 17:51:18 +0000 (UTC)
+	s=arc-20240116; t=1762975764; c=relaxed/simple;
+	bh=cBs5VsCM5bkQCwAVcWEWV1HKeCFrZdeAh6gx6vjF0Ps=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ru6qZc81xyYbl7+8QU94jnbivuxnuUGkQsf7ZIItin/YziWaA+5eTkNtBtMF/iSbVyVIs21NrPB+iGRHiFdvM6nSo4SwKSfZV9aeozCszmKbBHDqq8lyGQvPcr7Gy1LOQmwmjp3SzHklBTd6Iv6cmIJ13OIHAA7GLvOUj5WdNIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=szv3xAGH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38993C16AAE
+	for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 19:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762969893;
-	bh=T7knzhZ/hAoWyK2lUxIZdB+Ka4TMwRh1ujkOMO4Lf04=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rO6Mud0EMKXzwiNc2bQlzO+QiF4pc3XFFext9cJ/t5Wa69rSTMlzvwp4mvrpz5ern
-	 1/w711HXbiu7bl1ydAB5DUdFcwgQ1lJWeN5IpVji2dEdgRtnIF2lrTd0he6MlSGbV+
-	 Zu6LUatZFmxfv4DqArs0FAoWQnazXwpImSlLMqQBPAtLcvSFfO6Qh9Ae3bcMYyPItL
-	 aHx51+xOY/Tg8XTyidCaat1h3AuReI9ji7hHyBaIaStsRhn2b+K5jgPh7En09xzheM
-	 0NaPZ/ftBPYlEZu+UPAyMN6G+DftPSkldBOvdcp8DKUWQSRJl+tUyr3vPq+x1twkib
-	 lhmGS0PYRvO5Q==
-Date: Wed, 12 Nov 2025 23:21:07 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, 
-	Shawn Lin <shawn.lin@rock-chips.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
-	Kever Yang <kever.yang@rock-chips.com>, Simon Xue <xxm@rock-chips.com>, 
-	Damien Le Moal <dlemoal@kernel.org>, Dragan Simic <dsimic@manjaro.org>, 
-	FUKAUMI Naoki <naoki@radxa.com>, Diederik de Haas <diederik@cknow-tech.com>, 
-	Richard Zhu <hongxing.zhu@nxp.com>, Frank Li <Frank.li@nxp.com>, 
-	Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Conor Dooley <conor@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Hans Zhang <hans.zhang@cixtech.com>, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, kernel@pengutronix.de, 
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 1/4] PCI: dwc: Advertise L1 PM Substates only if driver
- requests it
-Message-ID: <22srj63j7fzmsebwxwjnnxnpmdn2iwxo36gkrl36gdm7ge2xif@dmrdbfgu3hn3>
-References: <20251111221621.2208606-1-helgaas@kernel.org>
- <20251111221621.2208606-2-helgaas@kernel.org>
- <aRRDzKFVTFTIuvvh@ryzen>
+	s=k20201202; t=1762975764;
+	bh=cBs5VsCM5bkQCwAVcWEWV1HKeCFrZdeAh6gx6vjF0Ps=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=szv3xAGH5agPEKMl9f7UkYYhRkgqB9AKS9v5496ledDdhmin+wBReWGI/iRlnpyNh
+	 HbYV6ylofcN/goxA5r50ITFCx+VPTD/XMpI2F+HTqWiVmXb4Ba/WsGQCub3AicyInu
+	 Ow8oG5q2NYNmka0aHseXh9DODZAbXJhxzKQn2f73gxSmsRUPvvLd8anRteQ9sj444E
+	 /Mlx1OFvwWRhC3fmxGHHwnyMo6Hor+kqovSGQ/g/qG38H4WqSasIzCVRFPRQ6h+h2M
+	 RQDZlilfFhJd8BVjaxhYZ0q9NyXQ9nvv3D3ovq7RmI7DOt7/d/Xw+wRa1dkg9PJaol
+	 ZbIunWXzgsM/A==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6431b0a1948so10314a12.3
+        for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 11:29:24 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXmELLwZ6B8ow7cJ4NzsAyUSQZpKUomzXtTWvvomcsbO7OdynZDEpgcvsZaj+RnxsEO36tErqeDke8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOKI/L5hnWRPqpfKH1bnA1Bd6nW5bATF3VAVil8RN7xvWujSkE
+	Bl/djTH1GNVStIWq65Z9L30LwFIcnSf2lqtq7uRGidHMuoCr4GSxtKWhFr50V0i4Ps0HvIlpcsW
+	CpvayrTVdqvGWmS2GvdlPPiV4QbrK+g==
+X-Google-Smtp-Source: AGHT+IHHsq6g1iGPfNpj/BGp5eL9w+14A+MEbPOCADp6BJOBMQBWxT0j5cv1w9FevsaSK63J53W6goPTLfg5SnHB+/k=
+X-Received: by 2002:a05:6402:34ce:b0:63b:ef0e:dfa7 with SMTP id
+ 4fb4d7f45d1cf-6431a4bfc9cmr3902960a12.6.1762975760981; Wed, 12 Nov 2025
+ 11:29:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aRRDzKFVTFTIuvvh@ryzen>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <20251015071420.1173068-6-herve.codina@bootlin.com> <20251030141448.GA3853761-robh@kernel.org>
+ <20251031162004.180d5e3f@bootlin.com> <20251112142632.GA1610836-robh@kernel.org>
+In-Reply-To: <20251112142632.GA1610836-robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 12 Nov 2025 13:29:09 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ89EcUvQnS0xYXOrw6wJ30TT5oFA85eCqHYdu43056cw@mail.gmail.com>
+X-Gm-Features: AWmQ_bnvVqS34104BGAfHcYDtcOO0joqpBN-zpybKauFgaXAFRsInCQMBTqH6M4
+Message-ID: <CAL_JsqJ89EcUvQnS0xYXOrw6wJ30TT5oFA85eCqHYdu43056cw@mail.gmail.com>
+Subject: Re: [PATCH v4 05/29] dt-bindings: bus: Add simple-platform-bus
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 12, 2025 at 09:22:36AM +0100, Niklas Cassel wrote:
-> On Tue, Nov 11, 2025 at 04:16:08PM -0600, Bjorn Helgaas wrote:
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -1060,6 +1060,8 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
-> >  		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
-> >  	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
-> >  
-> > +	dw_pcie_config_l1ss(pci);
-> 
-> The name dw_pcie_config_l1ss() sounds like we are enabling l1ss.
-> 
-> I know naming is hard.
-> 
-> Perhaps dw_pcie_disable_unsupported_l1ss() ?
-> 
-> Or something similar.
-> 
-> 
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -1067,6 +1067,8 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
-> >  	val &= ~REQ_NOT_ENTR_L1;
-> >  	writel(val, pcie->parf + PARF_PM_CTRL);
-> >  
-> > +	pci->l1ss_support = true;
-> > +
-> >  	val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
-> >  	val |= EN;
-> >  	writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
-> 
-> While it seems like ops_2_7_0 is the only type that explicitly does a
-> register write to enable L1ss, other versions might have the register
-> as enabled by default, so it would be nice if Mani could confirm exactly
-> which versions that should set l1ss_support = true.
-> 
+On Wed, Nov 12, 2025 at 8:26=E2=80=AFAM Rob Herring <robh@kernel.org> wrote=
+:
+>
+> On Fri, Oct 31, 2025 at 04:20:04PM +0100, Herve Codina wrote:
+> > Hi Rob,
+> >
+> > On Thu, 30 Oct 2025 09:14:48 -0500
+> > Rob Herring <robh@kernel.org> wrote:
+> >
+> > > On Wed, Oct 15, 2025 at 09:13:52AM +0200, Herve Codina wrote:
+> > > > A Simple Platform Bus is a transparent bus that doesn't need a spec=
+ific
+> > > > driver to perform operations at bus level.
+> > > >
+> > > > Similar to simple-bus, a Simple Platform Bus allows to automaticall=
+y
+> > > > instantiate devices connected to this bus.
+> > > >
+> > > > Those devices are instantiated only by the Simple Platform Bus prob=
+e
+> > > > function itself.
+> > >
+> > > Don't let Greg see this... :)
+> > >
+> > > I can't say I'm a fan either. "Platform bus" is a kernel thing, and t=
+he
+> > > distinction here between the 2 compatibles is certainly a kernel thin=
+g.
+> > >
+> > > I think this needs to be solved within the kernel.
+> >
+> > I fully agree with that.
+> >
+> > >
+> > > What I previously said is define a list of compatibles to not
+> > > instantiate the child devices. This would essentially be any case hav=
+ing
+> > > a specific compatible and having its own driver. So if someone has
+> > > 'compatible =3D "vendor,not-so-simple-bus", "simple-bus"', when and i=
+f
+> > > they add a driver for "vendor,not-so-simple-bus", then they have to a=
+dd
+> > > the compatible to the list in the simple-pm-bus driver. I wouldn't
+> > > expect this to be a large list. There's only a handful of cases where
+> > > "simple-bus" has a more specific compatible. And only a few of those
+> > > have a driver. A more general and complicated solution would be makin=
+g
+> > > linux handle 2 (or more) drivers matching a node and picking the driv=
+er
+> > > with most specific match. That gets complicated with built-in vs.
+> > > modules. I'm not sure we really need to solve that problem.
+> >
+> > Right. Let discard the "more general and complicated solution" and focu=
+s
+> > on the list of compatible to avoid child devices instantiation.
+> >
+> > Do you mean that, for "simple-bus" compatible we should:
+> >  - Remove the recursive device instantiation from of_platform_populate(=
+).
+>
+> That may be a problem I hadn't considered. While we've solved most probe
+> ordering issues, I think some may remain. Even when of_platform_populate(=
+)
+> is called affects this. For example, I tried removing various arm32
+> of_platform_.*populate() calls which run earlier than the default call,
+> but that broke some platforms. (Looking at the list of remaining ones, I
+> fixed the at91 pinctrl/gpio drivers, but never tried to remove the
+> calls again.)
+>
+> Maybe this can be restricted to cases which are not recursively created
+> from the root node. Not sure how we detect that. Perhaps no OF_POPULATED
+> flag on the parent node? Or we could just enable this for OF_DYNAMIC
+> nodes? That should be sufficient for your usecase.
 
-Yes, on the rest of the platforms, this bit is supposed to be enabled by
-default. AFAIK, all Qcom platforms should support L1SS, atleast the
-non-IPQ/APQ ones.
+Thinking a bit more about this, I think you don't have to do anything.
+If child nodes already got populated, calling of_platform_populate() a
+second time is essentially a nop. And for cases you care about, that
+wouldn't have happened. Of course, I'd still rather there only be 1
+path that devices could have been instantiated.
 
-We should set it for below cfgs:
-
-cfg_fw_managed
-cfg_sc8280xp
-cfg_1_34_0
-cfg_1_9_0
-cfg_2_7_0
-
-I excluded msm8996 due to one recent bug report.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Rob
 
