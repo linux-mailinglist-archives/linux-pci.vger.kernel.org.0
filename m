@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-40955-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40956-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40E52C50AB2
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 07:03:09 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8697C50B0D
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 07:22:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DA3B1898FF2
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 06:03:33 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D89974E7D9C
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 06:22:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBA202D5A14;
-	Wed, 12 Nov 2025 06:03:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66E6E2D94B7;
+	Wed, 12 Nov 2025 06:22:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oFcMwVhH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LzDtcjbX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32F31E3DCD;
-	Wed, 12 Nov 2025 06:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8424C10942;
+	Wed, 12 Nov 2025 06:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762927382; cv=none; b=m/15Qz4b03sw4H3TVj1E+ooVZJVxPI4qVo6ohJJFT/xmcj1Ym6pZKvbSUgc0iX0ilEK4DnaPd/hmXeNQ1PWE5l/DDz9Vvx18KSWuTBCdWJJ9aJhfkxCa822Keu4vWfUYWP8oqHF3whMqJ3BMx4AA8Kdm9qmQGS+eVeNet51aTuE=
+	t=1762928539; cv=none; b=E+539e+SCWByRFEdLhNAEu9YMxmDYQV4BrlQ+iEP4xtwSPjI2zUBd9Tj23s6Wk8YOFyjcvcZdAesOn26WE6nvlMJu0ywakD+pUk5eSlZa2aJOtDaOoA00L8/WE7kGvy6BsL9ptyRmeH9FEZicXlXIDDNXtlzhUfGX98peNP+zJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762927382; c=relaxed/simple;
-	bh=5P785U/6nIR5hmheHhi3SEIcKPyZPlJEhzUt1w6Lq7I=;
+	s=arc-20240116; t=1762928539; c=relaxed/simple;
+	bh=WUP1kjvtR8UUXkZWolJKlxqm2Abil0rICQsZg+E7nCk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SCeigCO6rc4GA0DoONqN0ZB6PA+GGRDK3tHoCs3z7Yysn3hsTVGVBGerUCGTX3n+v7nUM+wOeYY95H/tveJKWMRjdREaaT/Mb0WkJrJWJKLft6m0iHtPTNwIGUoZ9yblBHeK6mH6Y0bYX/lITUYwHDiE4hJmjAT3M/msSU4hWwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oFcMwVhH; arc=none smtp.client-ip=198.175.65.17
+	 In-Reply-To:Content-Type; b=CMEkvxrplpU2UbmknE3XdlC4NNjYBE8qsXe6Dp9Ymt6NNHMFpcvzfBVR+GFl+jMTIdXwLft32RDNdjsh2XmoT+CBD1qn7Vp1oJXZ45oIN+HhxDDeBcO00AmbSXa/R2hD+MD+/bLueCdanZUFDDkT0TTGAslb8ahsifJJnhoGxBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LzDtcjbX; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762927379; x=1794463379;
+  t=1762928537; x=1794464537;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=5P785U/6nIR5hmheHhi3SEIcKPyZPlJEhzUt1w6Lq7I=;
-  b=oFcMwVhHKBIgYjEBlDIzQxuUfbluayiPAldPXMm211ntr4UMFdk5mz6q
-   PnVyXllorQkc7Pml2jAejxJuTiDne7Lqx64bCQctRJ1MCBNM09uiQseUy
-   t1MX8LO7ModSXpWIAovaSfXjGJD6D9gIEq5XSAeUPESqt6j4wOgTQ7OBd
-   NrPAWXyoDq9JXu2g4KkxNq80vMgqcoVEdTVwO63WnwcpscEAl5SprrpIy
-   tKZodCx9zpslZ5vCSky+hQt6NqoeqJ8uaFzapQbfoRyGdrZXrM4RCUTPn
-   RysTKAZ5ToYq8XDJVQoWAbNiiQzRO24E/CCwA0n/pkINx6on4PlupC5iQ
+  bh=WUP1kjvtR8UUXkZWolJKlxqm2Abil0rICQsZg+E7nCk=;
+  b=LzDtcjbX0ne40r/mjR0TirnKeX9ffMeHZO6roH8FZApBBBIkIWImBn/M
+   YTHJicLbXMkcAgO16mv4w3qqveOuAK7lthGFQOmJMRWu2YWtyG+jhgRRl
+   zkX6zvzsB1keAUvj+26FAsPCFQrkoxRLQC+4ERXx9uyyFPEaAVP/g7GMo
+   E6e0yXKxIxtr164KfvaeyjOKoOu7HIcLI4rH4u4zR0Rcg65eIVBIv1hrt
+   HTsotLBrgji5sZs8Dbn8amUCXdPw+3TIEcUvgLA+gB253B2TNI0iXbugM
+   8jziFRhmE42XlD8fEYnF57TNThPLGeqplBHQVAKD/bbe9wYyl8z2D/GoG
    A==;
-X-CSE-ConnectionGUID: J3XQvOBvRaC1n4U0cpUfMQ==
-X-CSE-MsgGUID: QGYAZv4WRUuR9RNh5JXzcw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="64920252"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="64920252"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 22:02:59 -0800
-X-CSE-ConnectionGUID: h2IRcZemTGuOgw+Cz+mqmA==
-X-CSE-MsgGUID: SUtSziV9Qu6Uwss2XMdTJQ==
+X-CSE-ConnectionGUID: H5fe4gaeTDiHo0GYp9sPNg==
+X-CSE-MsgGUID: nlJHO3AuTp2/vj1t03DQHg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="82383158"
+X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
+   d="scan'208";a="82383158"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 22:22:17 -0800
+X-CSE-ConnectionGUID: bunbCrviTPWIJPn1B3GT+g==
+X-CSE-MsgGUID: jeGtRGzFRRCq22mROzCv+g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
-   d="scan'208";a="189864807"
+   d="scan'208";a="189106120"
 Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 22:02:55 -0800
-Message-ID: <d5445875-76bd-453d-b959-25989f5d3060@linux.intel.com>
-Date: Wed, 12 Nov 2025 13:58:51 +0800
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 22:22:12 -0800
+Message-ID: <60970315-613f-4e62-8923-e162c29d9362@linux.intel.com>
+Date: Wed, 12 Nov 2025 14:18:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,8 +67,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/5] iommu: Add iommu_driver_get_domain_for_dev()
- helper
+Subject: Re: [PATCH v5 4/5] iommu: Introduce iommu_dev_reset_prepare() and
+ iommu_dev_reset_done()
 To: Nicolin Chen <nicolinc@nvidia.com>, joro@8bytes.org, afael@kernel.org,
  bhelgaas@google.com, alex@shazbot.org, jgg@nvidia.com, kevin.tian@intel.com
 Cc: will@kernel.org, robin.murphy@arm.com, lenb@kernel.org,
@@ -78,141 +78,165 @@ Cc: will@kernel.org, robin.murphy@arm.com, lenb@kernel.org,
  pjaroszynski@nvidia.com, vsethi@nvidia.com, helgaas@kernel.org,
  etzhao1900@gmail.com
 References: <cover.1762835355.git.nicolinc@nvidia.com>
- <0303739735f3f49bcebc244804e9eeb82b1c41dc.1762835355.git.nicolinc@nvidia.com>
+ <28af027371a981a2b4154633e12cdb1e5a11da4a.1762835355.git.nicolinc@nvidia.com>
 Content-Language: en-US
 From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <0303739735f3f49bcebc244804e9eeb82b1c41dc.1762835355.git.nicolinc@nvidia.com>
+In-Reply-To: <28af027371a981a2b4154633e12cdb1e5a11da4a.1762835355.git.nicolinc@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 11/11/25 13:12, Nicolin Chen wrote:
-> There is a need to stage a resetting PCI device to temporally the blocked
-> domain and then attach back to its previously attached domain after reset.
-> 
-> This can be simply done by keeping the "previously attached domain" in the
-> iommu_group->domain pointer while adding an iommu_group->resetting_domain,
-> which gives troubles to IOMMU drivers using the iommu_get_domain_for_dev()
-> for a device's physical domain in order to program IOMMU hardware.
-> 
-> And in such for-driver use cases, the iommu_group->mutex must be held, so
-> it doesn't fit in external callers that don't hold the iommu_group->mutex.
-> 
-> Introduce a new iommu_driver_get_domain_for_dev() helper, exclusively for
-> driver use cases that hold the iommu_group->mutex, to separate from those
-> external use cases.
-> 
-> Add a lockdep_assert_not_held to the existing iommu_get_domain_for_dev()
-> and highlight that in a kdoc.
-> 
-> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->   include/linux/iommu.h                       |  1 +
->   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c |  5 ++--
->   drivers/iommu/iommu.c                       | 28 +++++++++++++++++++++
->   3 files changed, 32 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 801b2bd9e8d49..a42a2d1d7a0b7 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -910,6 +910,7 @@ extern int iommu_attach_device(struct iommu_domain *domain,
->   extern void iommu_detach_device(struct iommu_domain *domain,
->   				struct device *dev);
->   extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
-> +struct iommu_domain *iommu_driver_get_domain_for_dev(struct device *dev);
->   extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
->   extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
->   		     phys_addr_t paddr, size_t size, int prot, gfp_t gfp);
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> index a33fbd12a0dd9..412d1a9b31275 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> @@ -3125,7 +3125,8 @@ int arm_smmu_set_pasid(struct arm_smmu_master *master,
->   		       struct arm_smmu_domain *smmu_domain, ioasid_t pasid,
->   		       struct arm_smmu_cd *cd, struct iommu_domain *old)
->   {
-> -	struct iommu_domain *sid_domain = iommu_get_domain_for_dev(master->dev);
-> +	struct iommu_domain *sid_domain =
-> +		iommu_driver_get_domain_for_dev(master->dev);
->   	struct arm_smmu_attach_state state = {
->   		.master = master,
->   		.ssid = pasid,
-> @@ -3191,7 +3192,7 @@ static int arm_smmu_blocking_set_dev_pasid(struct iommu_domain *new_domain,
->   	 */
->   	if (!arm_smmu_ssids_in_use(&master->cd_table)) {
->   		struct iommu_domain *sid_domain =
-> -			iommu_get_domain_for_dev(master->dev);
-> +			iommu_driver_get_domain_for_dev(master->dev);
->   
->   		if (sid_domain->type == IOMMU_DOMAIN_IDENTITY ||
->   		    sid_domain->type == IOMMU_DOMAIN_BLOCKED)
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 1e322f87b1710..1f4d6ca0937bc 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -2217,6 +2217,15 @@ void iommu_detach_device(struct iommu_domain *domain, struct device *dev)
->   }
->   EXPORT_SYMBOL_GPL(iommu_detach_device);
->   
 > +/**
-> + * iommu_get_domain_for_dev() - Return the DMA API domain pointer
-> + * @dev - Device to query
+> + * iommu_dev_reset_prepare() - Block IOMMU to prepare for a device reset
+> + * @dev: device that is going to enter a reset routine
 > + *
-> + * This function can be called within a driver bound to dev. The returned
-> + * pointer is valid for the lifetime of the bound driver.
+> + * When certain device is entering a reset routine, it wants to block any IOMMU
+> + * activity during the reset routine. This includes blocking any translation as
+> + * well as cache invalidation (especially the device cache).
 > + *
-> + * It should not be called by drivers with driver_managed_dma = true.
-
-"driver_managed_dma != true" means the driver will use the default
-domain allocated by the iommu core during iommu probe. The iommu core
-ensures that this domain stored at group->domain will not be changed
-during the driver's whole lifecycle. That's reasonable.
-
-How about making some code to enforce this requirement? Something like
-below ...
-
+> + * This function attaches all RID/PASID of the device's to IOMMU_DOMAIN_BLOCKED
+> + * allowing any blocked-domain-supporting IOMMU driver to pause translation and
+> + * cahce invalidation, but leaves the software domain pointers intact so later
+> + * the iommu_dev_reset_done() can restore everything.
+> + *
+> + * Return: 0 on success or negative error code if the preparation failed.
+> + *
+> + * Caller must use iommu_dev_reset_prepare() and iommu_dev_reset_done() together
+> + * before/after the core-level reset routine, to unset the resetting_domain.
+> + *
+> + * These two functions are designed to be used by PCI reset functions that would
+> + * not invoke any racy iommu_release_device(), since PCI sysfs node gets removed
+> + * before it notifies with a BUS_NOTIFY_REMOVED_DEVICE. When using them in other
+> + * case, callers must ensure there will be no racy iommu_release_device() call,
+> + * which otherwise would UAF the dev->iommu_group pointer.
 > + */
->   struct iommu_domain *iommu_get_domain_for_dev(struct device *dev)
->   {
->   	/* Caller must be a probed driver on dev */
-> @@ -2225,10 +2234,29 @@ struct iommu_domain *iommu_get_domain_for_dev(struct device *dev)
->   	if (!group)
->   		return NULL;
->   
-> +	lockdep_assert_not_held(&group->mutex);
-
-...
-	if (WARN_ON(!dev->driver || !group->owner_cnt || group->owner))
-		return NULL;
-
-> +
->   	return group->domain;
->   }
->   EXPORT_SYMBOL_GPL(iommu_get_domain_for_dev);
->   
-> +/**
-> + * iommu_driver_get_domain_for_dev() - Return the driver-level domain pointer
-> + * @dev - Device to query
-> + *
-> + * This function can be called by an iommu driver that wants to get the physical
-> + * domain within an iommu callback function where group->mutex is held.
-> + */
-> +struct iommu_domain *iommu_driver_get_domain_for_dev(struct device *dev)
+> +int iommu_dev_reset_prepare(struct device *dev)
 > +{
 > +	struct iommu_group *group = dev->iommu_group;
+> +	unsigned long pasid;
+> +	void *entry;
+> +	int ret = 0;
 > +
-> +	lockdep_assert_held(&group->mutex);
+> +	if (!dev_has_iommu(dev))
+> +		return 0;
+
+Nit: This interface is only for PCI layer, so why not just
+
+	if (WARN_ON(!dev_is_pci(dev)))
+		return -EINVAL;
+?
 > +
-> +	return group->domain;
+> +	guard(mutex)(&group->mutex);
+> +
+> +	/*
+> +	 * Once the resetting_domain is set, any concurrent attachment to this
+> +	 * iommu_group will be rejected, which would break the attach routines
+> +	 * of the sibling devices in the same iommu_group. So, skip this case.
+> +	 */
+> +	if (dev_is_pci(dev)) {
+> +		struct group_device *gdev;
+> +
+> +		for_each_group_device(group, gdev) {
+> +			if (gdev->dev != dev)
+> +				return 0;
+> +		}
+> +	}
+
+With above dev_is_pci() check, here it can simply be,
+
+	if (list_count_nodes(&group->devices) != 1)
+		return 0;		
+
+> +
+> +	/* Re-entry is not allowed */
+> +	if (WARN_ON(group->resetting_domain))
+> +		return -EBUSY;
+> +
+> +	ret = __iommu_group_alloc_blocking_domain(group);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Stage RID domain at blocking_domain while retaining group->domain */
+> +	if (group->domain != group->blocking_domain) {
+> +		ret = __iommu_attach_device(group->blocking_domain, dev,
+> +					    group->domain);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	/*
+> +	 * Stage PASID domains at blocking_domain while retaining pasid_array.
+> +	 *
+> +	 * The pasid_array is mostly fenced by group->mutex, except one reader
+> +	 * in iommu_attach_handle_get(), so it's safe to read without xa_lock.
+> +	 */
+> +	xa_for_each_start(&group->pasid_array, pasid, entry, 1)
+> +		iommu_remove_dev_pasid(dev, pasid,
+> +				       pasid_array_entry_to_domain(entry));
+> +
+> +	group->resetting_domain = group->blocking_domain;
+> +	return ret;
 > +}
-> +EXPORT_SYMBOL_GPL(iommu_driver_get_domain_for_dev);
+> +EXPORT_SYMBOL_GPL(iommu_dev_reset_prepare);
 > +
->   /*
->    * For IOMMU_DOMAIN_DMA implementations which already provide their own
->    * guarantees that the group and its default domain are valid and correct.
+> +/**
+> + * iommu_dev_reset_done() - Restore IOMMU after a device reset is finished
+> + * @dev: device that has finished a reset routine
+> + *
+> + * When certain device has finished a reset routine, it wants to restore its
+> + * IOMMU activity, including new translation as well as cache invalidation, by
+> + * re-attaching all RID/PASID of the device's back to the domains retained in
+> + * the core-level structure.
+> + *
+> + * Caller must pair it with a successfully returned iommu_dev_reset_prepare().
+> + *
+> + * Note that, although unlikely, there is a risk that re-attaching domains might
+> + * fail due to some unexpected happening like OOM.
+> + */
+> +void iommu_dev_reset_done(struct device *dev)
+> +{
+> +	struct iommu_group *group = dev->iommu_group;
+> +	unsigned long pasid;
+> +	void *entry;
+> +
+> +	if (!dev_has_iommu(dev))
+> +		return;
+> +
+> +	guard(mutex)(&group->mutex);
+> +
+> +	/* iommu_dev_reset_prepare() was bypassed for the device */
+> +	if (!group->resetting_domain)
+> +		return;
+> +
+> +	/* iommu_dev_reset_prepare() was not successfully called */
+> +	if (WARN_ON(!group->blocking_domain))
+> +		return;
+> +
+> +	/* Re-attach RID domain back to group->domain */
+> +	if (group->domain != group->blocking_domain) {
+> +		WARN_ON(__iommu_attach_device(group->domain, dev,
+> +					      group->blocking_domain));
+> +	}
+> +
+> +	/*
+> +	 * Re-attach PASID domains back to the domains retained in pasid_array.
+> +	 *
+> +	 * The pasid_array is mostly fenced by group->mutex, except one reader
+> +	 * in iommu_attach_handle_get(), so it's safe to read without xa_lock.
+> +	 */
+> +	xa_for_each_start(&group->pasid_array, pasid, entry, 1)
+> +		WARN_ON(__iommu_set_group_pasid(
+> +			pasid_array_entry_to_domain(entry), group, pasid,
+> +			group->blocking_domain));
+> +
+> +	group->resetting_domain = NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_dev_reset_done);
+> +
+>   #if IS_ENABLED(CONFIG_IRQ_MSI_IOMMU)
+>   /**
+>    * iommu_dma_prepare_msi() - Map the MSI page in the IOMMU domain
 
-Others look good to me.
-
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Thanks,
+baolu
 
