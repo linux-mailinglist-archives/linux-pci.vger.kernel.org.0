@@ -1,52 +1,53 @@
-Return-Path: <linux-pci+bounces-41001-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40997-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB81AC52D62
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 15:55:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B5438C52D32
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 15:54:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0D39C341048
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 14:52:12 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4DCB234F165
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 14:51:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFBA734CFAC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68E513446BB;
 	Wed, 12 Nov 2025 14:45:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c+eWFXLV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+kgUaAP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C485341642;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9642342507;
 	Wed, 12 Nov 2025 14:45:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762958731; cv=none; b=ZWQk9UWlNF3UOZTaGncnNR2O3VARQbaRZSacdFpLAk3JVfXTy+jJsravbEBuLECGCnj9ZxCIPYd0ganCGmHTq92RtvPeuji/0mZ5XZnlkrdHa8hKgO50JRmBYxU+kRzNrVXquxWOeCBXwGAuX1NArmgYZKRmyvrdVZn9mBkYQ7s=
+	t=1762958731; cv=none; b=A5oYOUt16cDvCPmlhZ+m64HQry+DSQJUZ3dHzaVyTsiBNDaAwdPFejfL1NmKg2LCbOFg9PYhRqD2+aIGho1UAxl5oAoBX/cfZ0T48cf09IK9hzP9+WxnLOpztGUeOuoLpua7UtVbwB9gGt8zWf1af8zAoiQHGiUvhcIdeWjHizg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1762958731; c=relaxed/simple;
-	bh=ZTNyhNFf+p9S6BsXERBUufVxby0L/rriRpDnCjmebu0=;
+	bh=BSF6pgHwRJ8wKRNwr418rTD4ufEtxZ2p1Im79cwxzV4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y+HfB4367+6JE4M6txICxo34XPeUx+Bjo6QFObxj/pylCgURepi/rwq+WYC/gF4lMtGI8nyLzd3owH3ARxIqJdgYoAAFhl+h/SPha/g/T0ujmyHpB9aurNCE1ArQJTkSAVJRehyXJOk4Ahd7+xISlNIjq6Zdr86WZij4asE2Df8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c+eWFXLV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 30C6DC4CEF1;
+	 In-Reply-To:To:Cc; b=oApVg7ajpgxDNOQR1MvB6dRiK8kmQm1WO4gGtwKdHwK4b5jLwg/RmsTAqox+vELACiZhgH9pN4AnM4RgoYPh8w0n4sDd8YhkPr6G7oOhGWU/Ob1yinjGfHiYTrBLLeoWf9mM9bSSflmB7BXevs10/Lf6t/tLJGquaCAR9BsnqyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+kgUaAP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 40F42C19421;
 	Wed, 12 Nov 2025 14:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1762958731;
-	bh=ZTNyhNFf+p9S6BsXERBUufVxby0L/rriRpDnCjmebu0=;
+	bh=BSF6pgHwRJ8wKRNwr418rTD4ufEtxZ2p1Im79cwxzV4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=c+eWFXLVVteOvv4fIzjsKblkThHYhc5ibkkgVCrxCYjAbRU9sZvC0W2NsRkPWDD7L
-	 wuClsqH0O8DEEqHgFdIYFdlSUl8pHqEd304fkB9tzkRiyoAB3sB227XVjrFfmi+Qfc
-	 W6BYl+TaXj5RSovSCewKJgS5/LMm2qCcM7+oVgBhmZMprkoCCcFiahsh7l3EsTaEh5
-	 VILyCGIZl0HDu9lhuqQiv6fwfsI4uhB8L1aV02m+vxyXbd2nlqO9Gjk11WMHjA4kcL
-	 64fIVPVSnsjRLCIoljDLNCShdloLJoEoCYX4DyXAC9QVKtTOC6gSiNl1vsCeeBB57k
-	 JVQBrC2Wh7H8g==
+	b=Z+kgUaAPEnBSn83dE5sic6dzmfi26DDd05Jb/aMOfrFa02eXfQAaRBR8gJv7wwABK
+	 NSeYUVhHujfgfPy65QPOy2aG2xmfxpYZ0mOsVgS2z9Bpb9zMtQZXbA7LQpwV+h1kMA
+	 B/BaRARCqz78Wk9Q4+vTkp4wt9HS32wrNtVyTa7itnIfDpNzO8BIdeKYUkbxvlQzwg
+	 HOxB8vI8EFMic++Gx08VLXQ6LDTNZfQh+98pYRTaTrHBUwWHP3RHyV55CJRwdSUyxW
+	 m/kyRfpddntflRYGcoflMSaG/hf8VgdjM8QhTO6YY7CdG0XnpZGcZNKKO5JPhS5DH4
+	 gkIhXtosM/s5A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BEBCD13D3;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F9DCD1297;
 	Wed, 12 Nov 2025 14:45:31 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Wed, 12 Nov 2025 20:15:17 +0530
-Subject: [PATCH 5/9] serdev: Add modalias support for serdev client devices
+Date: Wed, 12 Nov 2025 20:15:18 +0530
+Subject: [PATCH 6/9] serdev: Skip registering serdev devices from DT is
+ external connector is used
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251112-pci-m2-e-v1-5-97413d6bf824@oss.qualcomm.com>
+Message-Id: <20251112-pci-m2-e-v1-6-97413d6bf824@oss.qualcomm.com>
 References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com>
 In-Reply-To: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com>
 To: Rob Herring <robh@kernel.org>, 
@@ -78,16 +79,16 @@ Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
  Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3104;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1489;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=d3crWSGCGUGn4wtoYTdDJMgOBARJSAYtgVh6kQhItYQ=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpFJ2HLBj0atRdQkoYoEtIlsRq/2nfEpNLLTmK8
- 0Ee8SHCPp2JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaRSdhwAKCRBVnxHm/pHO
- 9ccoB/9JulXVNBQpte5g04Zu3cGVEtybP7nbcJRotlJ106/5GvyjbUjrShqI832UjbWtjgtNtc3
- myVXAVbBbIRPoaVWY356o/T3owMpyRDkiLZk1NFJ0RVInasTwuDM+GXTT3URoLQkCYbusx7nlfn
- pP+eHsk+ZjcXWswcI+pRcm1d63s65LwpVHyeZlcxQv8r/cg/MbUp/PMEZiSHw/e4Ka3pprDytt7
- 2Osv6Mynw2x9nJ5M+sb3n1u0NRLnqeM/D5s/sPFAwyMHsCHy2VVabnJSwo7BsY/opFJ4jUa1c/k
- ryGpgpPFOpTHT7cFdpd8gXslxG4YoRjCn7kZZjis3WqdlDMM
+ bh=9l0vV6HXXlRQhGb6LPV2j9zLb+eL0Fpf0v/SXfsrOaY=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpFJ2HYIFtN5v5bNyD8H02BJPR+1uACNYqLJQdu
+ pU9f/L5A+2JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaRSdhwAKCRBVnxHm/pHO
+ 9RwgB/47EH+jLOBR8bp8aP5M5wGWY4SysKJtZO4fkj97iCzy/SsK9prWiuuaBDNz/F5VfGuxdtE
+ Kin9UH7qcWGK/P3pKH7xvC9p6Mm8NlJjS6oni2Z3zPLX6VllhharFcxCAoHHjXEvdbaw4EPGomr
+ S7Bq9ooyzXH3s3+GqPs7RdiqKCh3HIEhlt1xa550XiX7bCQDgjrsNVHqLy4jWaCrdWhfQ74eZlV
+ pJaVlLxPif2eLcTh562fAWZ2dA/Oknb7ywQKC0VSBcQyZqRuMwRMHr0eZOkcPwWg8i7QsB5jXun
+ UbBPcW1fXEPr3OZDqWb5SWwrc8t+apPpHsnLxxflovrsrkqs
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -97,91 +98,44 @@ Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-Add modlias support to serdev so that the serdev client driver can be
-autoloaded by udev when the serdev client device gets created.
+If an external connector like M.2 is connected to the serdev controller
+in DT, then the serdev devices will be created dynamically by the connector
+driver. So skip registering devices from DT node as there will be no
+statically defined devices.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
- drivers/tty/serdev/core.c       | 15 +++++++++++----
- include/linux/mod_devicetable.h |  1 +
- scripts/mod/file2alias.c        |  8 ++++++++
- 3 files changed, 20 insertions(+), 4 deletions(-)
+ drivers/tty/serdev/core.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-index f90095cb778f2374303f98809d1639a000e0d9e0..8c2a40a537d93f4b9353a2f128cdf51b521929b1 100644
+index 8c2a40a537d93f4b9353a2f128cdf51b521929b1..1378587d386356ca4415fa455b2ee722b5e44d3e 100644
 --- a/drivers/tty/serdev/core.c
 +++ b/drivers/tty/serdev/core.c
-@@ -34,7 +34,11 @@ static ssize_t modalias_show(struct device *dev,
- 	if (len != -ENODEV)
- 		return len;
+@@ -12,6 +12,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_graph.h>
+ #include <linux/of_device.h>
+ #include <linux/pm_domain.h>
+ #include <linux/pm_runtime.h>
+@@ -560,6 +561,15 @@ static int of_serdev_register_devices(struct serdev_controller *ctrl)
+ 	int err;
+ 	bool found = false;
  
--	return of_device_modalias(dev, buf, PAGE_SIZE);
-+	len = of_device_modalias(dev, buf, PAGE_SIZE);
-+	if (len != -ENODEV)
-+		return len;
++	/*
++	 * When the serdev controller is connected to an external connector like
++	 * M.2 in DT, then the serdev devices will be created dynamically by the
++	 * connector driver. So skip looking for devices in DT node as there will
++	 * be no statically defined devices.
++	 */
++	if (of_graph_is_present(ctrl->dev.of_node))
++		return 0;
 +
-+	return sysfs_emit(buf, SERDEV_DEVICE_MODALIAS_FMT "\n", dev_name(dev));
- }
- static DEVICE_ATTR_RO(modalias);
- 
-@@ -48,13 +52,16 @@ static int serdev_device_uevent(const struct device *dev, struct kobj_uevent_env
- {
- 	int rc;
- 
--	/* TODO: platform modalias */
--
- 	rc = acpi_device_uevent_modalias(dev, env);
- 	if (rc != -ENODEV)
- 		return rc;
- 
--	return of_device_uevent_modalias(dev, env);
-+	rc = of_device_uevent_modalias(dev, env);
-+	if (rc != -ENODEV)
-+		return rc;
-+
-+	return add_uevent_var(env, "MODALIAS=" SERDEV_DEVICE_MODALIAS_FMT,
-+					dev_name(dev));
- }
- 
- static void serdev_device_release(struct device *dev)
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index 70c54c4bedba2fcb8f5eb37c2d9ede05d5d91188..dad9637cf28552c3423affc4eb249efa6ba05514 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -976,6 +976,7 @@ struct coreboot_device_id {
- 	kernel_ulong_t driver_data;
- };
- 
-+#define SERDEV_DEVICE_MODALIAS_FMT "serdev:%s"
- #define SERDEV_NAME_SIZE 32
- 
- struct serdev_device_id {
-diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-index b3333560b95ee998fbe5bdc9ed380847962d1bd1..27e9f7c718c4d48ca5dbd5538490529119df9509 100644
---- a/scripts/mod/file2alias.c
-+++ b/scripts/mod/file2alias.c
-@@ -1371,6 +1371,13 @@ static void do_coreboot_entry(struct module *mod, void *symval)
- 	module_alias_printf(mod, false, "coreboot:t%08X", tag);
- }
- 
-+/* Looks like: serdev:S */
-+static void do_serdev_entry(struct module *mod, void *symval)
-+{
-+	DEF_FIELD_ADDR(symval, serdev_device_id, name);
-+	module_alias_printf(mod, false, SERDEV_DEVICE_MODALIAS_FMT, *name);
-+}
-+
- /* Does namelen bytes of name exactly match the symbol? */
- static bool sym_is(const char *name, unsigned namelen, const char *symbol)
- {
-@@ -1467,6 +1474,7 @@ static const struct devtable devtable[] = {
- 	{"usb", SIZE_usb_device_id, do_usb_entry_multi},
- 	{"pnp", SIZE_pnp_device_id, do_pnp_device_entry},
- 	{"pnp_card", SIZE_pnp_card_device_id, do_pnp_card_entry},
-+	{"serdev", SIZE_serdev_device_id, do_serdev_entry},
- };
- 
- /* Create MODULE_ALIAS() statements.
+ 	for_each_available_child_of_node(ctrl->dev.of_node, node) {
+ 		if (!of_property_present(node, "compatible"))
+ 			continue;
 
 -- 
 2.48.1
