@@ -1,261 +1,199 @@
-Return-Path: <linux-pci+bounces-40952-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40953-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AECCC50757
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 04:57:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAF80C508D8
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 05:42:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2790118960A0
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 03:57:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BF9A93A91AA
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 04:42:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 823EE2C327C;
-	Wed, 12 Nov 2025 03:57:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C74BE1A238C;
+	Wed, 12 Nov 2025 04:42:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h2VeDbcO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NBVT6Tvj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06DD2C028A
-	for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 03:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331FE28FFF6
+	for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 04:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762919844; cv=none; b=mqD/CxVpngeJve359sLW24AvK6rJPdbMPTVIC/ZNBB/9r6RYXdtSAUX6i0A0ga3p/j0uR8oifrKKcytA4PEnwOvbgOL8iVo31cRcWwiMU9oZAuuhTlEJDqtHP8qzhEB2zm2fxy3FNh/XsEKxP6aNZixDnbaSjmucxMptIHM7lgk=
+	t=1762922525; cv=none; b=YataJmJjCPBS+OgYmj4IbQcQ8vDl4J2JtGp6F976HDoXFgbqZeBL14XwAi8Hmt6U5cVypK+fPPF4f2kJjKTBA7NzAyvcVu9lEXWIkj0rSW4sGs+xEwnOL+ussKHtmQd5y9BzLdn2c+sQSMq2MIxyoxqZVCornw6UinnbDiiMCwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762919844; c=relaxed/simple;
-	bh=8UrXATVEOSkpcOqAwYDPjZ/LwNgFCgVkt2cRW5OlIyU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qlme7WeTSdvL+rLSiu8cZlAOTghsiQJcS+BbiIHT8GzVLa4JshXN4GYJi2L5m9oMJe/AI8OhYG8h8G7tVeVX2E0E6QXfaj2cVT63JD02kLIyydnSogzR5UhVn1gS9Tg0JIK6MKtXLAgP/bOOKMULKE/kKG6tlZ3D5li+zodFx1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=h2VeDbcO; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-343684a06b2so377171a91.1
-        for <linux-pci@vger.kernel.org>; Tue, 11 Nov 2025 19:57:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1762919842; x=1763524642; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ovVpRNi0EQ6lOoutzsikI7movk3CjwrYn04Q7//VyJg=;
-        b=h2VeDbcOJy+eyCjz9XR4Itw7E2lmCnI66r6HIVx7hECtt7bnN/VUstgHH02rAqpNh2
-         n3ed9max9IEh/itP+BR5XkTc4i0QVn+/1TsYBxUrrigO4l6jbR1jIBVBvK9k8INgXsV3
-         t3goUFHASs3xp0HS5JzrBd13qYyB2TLUuaWCM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762919842; x=1763524642;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ovVpRNi0EQ6lOoutzsikI7movk3CjwrYn04Q7//VyJg=;
-        b=Tt97KkVoobpmfU0zo9O5b9aLRuZn+Igy773jYYXLRMRKAA4jiekyEomyMbxm21zElr
-         k5e0ljduQvmTysi0tb+w8ygu0YFy/kJd/xICntf7RBGk4QBfU128cj1ESvGN9/QdKF0R
-         p9BTAunyt82Zn3S/wAvkTXEcJmNi039a5E241Q75T0g6ygJnG5O+Zl6pboxOm1Yg8bQS
-         QXgyXxzENS6K2OZ6xWDDeMD7iUqIJjJo3D9Q6Mp507zLEdr6lUjxvSsxIOS14ajP36Yc
-         N8lvkMgD3mRtb0JTeO8VDe9B60OKlf0v2EJXIcRQAUWWmt7I36MyXCuiISyoqOmpHofd
-         pWVw==
-X-Forwarded-Encrypted: i=1; AJvYcCU725S7C7EzJJatn/6b/KkVC283/b4sbySBKA535n/vTw4uDEOUIAsMDW/aLot1MJ2XfkGeoitt9yA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSXma4oKMCePa/l/4+B1l1y2T7js6uJdqZmjNnIrEpcmqdMix5
-	ebL3aIljyJxpUsRB5QJ92t3Zk+rDfD8o9wsaNjmTJl726bJHrAaPxw0pwjbKRVXVbA==
-X-Gm-Gg: ASbGncvjlWUlvlB4KZR8rrQlwLy02ZSZTNRsNQWDU6md2HiJPoUCTMRLHOdt7LqC3Eq
-	w1ldrxy9q7i9pIOg7F1BQ4gELsiNyDOXlVrIK9QB8wXjCML5znXDQGl5w2HNITR6QtS+QkkyqI8
-	HCeFGr4FBlSnk3Oi8+tfq7T814rja6Yxp7elFzYoluZyDjbiWEMOpyJtoMkINdfm74BsHvnSf3y
-	um+Jt0j6l5LACUTcJFl7/6xe3PKjhjKFHt9M5dnfFxPFkwzL9TXYyUEH0urUPF6YrHJhsC6SJlf
-	vwaw80vAlDRYIC5whS+cgB1saGTihSvFfPHbphj87GXE/nvhrTKIy4nBtvTQw3ZT2Ey1Exhq72G
-	RChBGEE5iXHgsZ/yV2DFgNes89fR0GkVCIlF2UqbOnZiiF+tsIWxjeYeRtd8WbnPz9p4i+TmXQS
-	UEOr+54pweJ1eZ5YeCh+wk8JpSEjPOA5SC
-X-Google-Smtp-Source: AGHT+IFuC7JCagvpoSYGItHOD5crq2vbUP/LygFRR5OO11qZWWEU7YvPgPRxAneMXyaEw4LK8Np9Xg==
-X-Received: by 2002:a17:90b:1fc5:b0:340:6f9c:b25b with SMTP id 98e67ed59e1d1-343dde030a0mr2130204a91.11.1762919841636;
-        Tue, 11 Nov 2025 19:57:21 -0800 (PST)
-Received: from google.com ([2a00:79e0:201d:8:8b66:5f0b:945c:64eb])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b783087c08sm1168218b3a.3.2025.11.11.19.57.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Nov 2025 19:57:21 -0800 (PST)
-Date: Wed, 12 Nov 2025 11:57:17 +0800
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: connector: Add PCIe M.2 Mechanical
- Key M connector
-Message-ID: <20251112035717.GA3363355@google.com>
-References: <20251108-pci-m2-v2-0-e8bc4d7bf42d@oss.qualcomm.com>
- <20251108-pci-m2-v2-1-e8bc4d7bf42d@oss.qualcomm.com>
+	s=arc-20240116; t=1762922525; c=relaxed/simple;
+	bh=MLTzLa1upqtCjzVdj7E06SsZajEcJtjE40sO9TZCERY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=AEkqkXIaduMAMmmd99Ovex3AFGNQ4ZSAhrOMLDyALtJbQLKo2yOp1BS2JclV3UYCxg5L2c6PvEr5yWpThrsJSbRAKng54bZFgRUXf19vFYxG/XxGB0pIbiw/5fzf1a2ESC1Apgg5/QW23jM2jnUOqlX94YpMHIOrixgyZQhP2yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NBVT6Tvj; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762922524; x=1794458524;
+  h=date:from:to:cc:subject:message-id;
+  bh=MLTzLa1upqtCjzVdj7E06SsZajEcJtjE40sO9TZCERY=;
+  b=NBVT6TvjPZrDjmsjRbQhCSgLj303FIdbXxIlWxibl1Q+Qw99uwHKspYI
+   Ug7MA7OzWnXFcwtbBEbZxcWoioWlrO7sEpEhA1qAyN5zhG9m7eQpAoC+F
+   Qi+XsnCR2s9BSxSGLPUCNJVtWgVxhXmad4XnydmuEQMH1t/5VME+1XyhO
+   mzRD7vJR/GUuf43DapmH9v4ugoUX/euECPHhQPGGjAK22BsWQjE6cdK8z
+   paI4SD2FVQKvXaBJzff/2XYYcasHwOVm0UWG+6MVht7/GC+74+QohE6E8
+   lbInc8tQ4x6yTZ3NArBupjpydP0jNYS7esAseZALrlIPMFNnrvuXCs9e2
+   A==;
+X-CSE-ConnectionGUID: 5LmlHxorSMK+aGm50hsfdQ==
+X-CSE-MsgGUID: 5ljbd5UkQSGQUgwe5RrJ4w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="67583180"
+X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
+   d="scan'208";a="67583180"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 20:42:03 -0800
+X-CSE-ConnectionGUID: sRePnTzHQT2UVG9iNkheXw==
+X-CSE-MsgGUID: KiHZFwGvSWiaocmcruHlIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
+   d="scan'208";a="194100474"
+Received: from lkp-server01.sh.intel.com (HELO 7b01c990427b) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 11 Nov 2025 20:42:03 -0800
+Received: from kbuild by 7b01c990427b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vJ2gC-0003pn-2G;
+	Wed, 12 Nov 2025 04:42:00 +0000
+Date: Wed, 12 Nov 2025 12:41:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:resource] BUILD SUCCESS
+ b8ec6bcdaa240d0bf56b50ae0e5de2d64929fc25
+Message-ID: <202511121205.icleMtJ7-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251108-pci-m2-v2-1-e8bc4d7bf42d@oss.qualcomm.com>
 
-On Sat, Nov 08, 2025 at 08:53:19AM +0530, Manivannan Sadhasivam wrote:
-> Add the devicetree binding for PCIe M.2 Mechanical Key M connector defined
-> in the PCI Express M.2 Specification, r4.0, sec 5.3. This connector
-> provides interfaces like PCIe and SATA to attach the Solid State Drives
-> (SSDs) to the host machine along with additional interfaces like USB, and
-> SMB for debugging and supplementary features. At any point of time, the
-> connector can only support either PCIe or SATA as the primary host
-> interface.
-> 
-> The connector provides a primary power supply of 3.3v, along with an
-> optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating at
-> 1.8v sideband signaling.
-> 
-> The connector also supplies optional signals in the form of GPIOs for fine
-> grained power management.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> ---
->  .../bindings/connector/pcie-m2-m-connector.yaml    | 122 +++++++++++++++++++++
->  1 file changed, 122 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..be0a3b43e8fd2a2a3b76cad4808ddde79dceaa21
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
-> @@ -0,0 +1,122 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/connector/pcie-m2-m-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: PCIe M.2 Mechanical Key M Connector
-> +
-> +maintainers:
-> +  - Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> +
-> +description:
-> +  A PCIe M.2 M connector node represents a physical PCIe M.2 Mechanical Key M
-> +  connector. The Mechanical Key M connectors are used to connect SSDs to the
-> +  host system over PCIe/SATA interfaces. These connectors also offer optional
-> +  interfaces like USB, SMB.
-> +
-> +properties:
-> +  compatible:
-> +    const: pcie-m2-m-connector
-> +
-> +  vpcie3v3-supply:
-> +    description: A phandle to the regulator for 3.3v supply.
-> +
-> +  vio1v8-supply:
-> +    description: A phandle to the regulator for VIO 1.8v supply.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git resource
+branch HEAD: b8ec6bcdaa240d0bf56b50ae0e5de2d64929fc25  PCI: Prevent restoring assigned resources
 
-FYI I just added vpcie1v8-supply to the core DT schema [1]. vpcie1v8
-instead of vio1v8 was requested by Rob.
+elapsed time: 1711m
 
-[1] https://github.com/devicetree-org/dt-schema/pull/176
+configs tested: 106
+configs skipped: 4
 
-> +
-> +  ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +    description: OF graph bindings modeling the interfaces exposed on the
-> +      connector. Since a single connector can have multiple interfaces, every
-> +      interface has an assigned OF graph port number as described below.
-> +
-> +    properties:
-> +      port@0:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: PCIe/SATA interface
-> +
-> +      port@1:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: USB interface
-> +
-> +      port@2:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: SMB interface
-> +
-> +    required:
-> +      - port@0
-> +
-> +  clocks:
-> +    description: 32.768 KHz Suspend Clock (SUSCLK) input from the host system to
-> +      the M.2 card. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.1 for
-> +      more details.
-> +    maxItems: 1
-> +
-> +  pedet-gpios:
-> +    description: GPIO controlled connection to PEDET signal. This signal is used
-> +      by the host systems to determine the communication protocol that the M.2
-> +      card uses; SATA signaling (low) or PCIe signaling (high). Refer, PCI
-> +      Express M.2 Specification r4.0, sec 3.3.4.2 for more details.
-> +    maxItems: 1
-> +
-> +  led1-gpios:
-> +    description: GPIO controlled connection to LED_1# signal. This signal is
-> +      used by the M.2 card to indicate the card status via the system mounted
-> +      LED. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.2 for more
-> +      details.
-> +    maxItems: 1
-> +
-> +  viocfg-gpios:
-> +    description: GPIO controlled connection to IO voltage configuration
-> +      (VIO_CFG) signal. This signal is used by the M.2 card to indicate to the
-> +      host system that the card supports an independent IO voltage domain for
-> +      the sideband signals. Refer, PCI Express M.2 Specification r4.0, sec
-> +      3.1.15.1 for more details.
-> +    maxItems: 1
-> +
-> +  pwrdis-gpios:
-> +    description: GPIO controlled connection to Power Disable (PWRDIS) signal.
-> +      This signal is used by the host system to disable power on the M.2 card.
-> +      Refer, PCI Express M.2 Specification r4.0, sec 3.3.5.2 for more details.
-> +    maxItems: 1
-> +
-> +  pln-gpios:
-> +    description: GPIO controlled connection to Power Loss Notification (PLN#)
-> +      signal. This signal is use to notify the M.2 card by the host system that
-> +      the power loss event is expected to occur. Refer, PCI Express M.2
-> +      Specification r4.0, sec 3.2.17.1 for more details.
-> +    maxItems: 1
-> +
-> +  plas3-gpios:
-> +    description: GPIO controlled connection to Power Loss Acknowledge (PLA_S3#)
-> +      signal. This signal is used by the M.2 card to notify the host system, the
-> +      status of the M.2 card's preparation for power loss.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - vpcie3v3-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # PCI M.2 Key M connector for SSDs with PCIe interface
-> +  - |
-> +    connector {
-> +        compatible = "pcie-m2-m-connector";
-> +        vpcie3v3-supply = <&vreg_nvme>;
-> +
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            port@0 {
-> +                reg = <0>;
-> +
-> +                endpoint {
-> +                    remote-endpoint = <&pcie6_port0_ep>;
-> +                };
-> +            };
-> +        };
-> +    };
-> 
-> -- 
-> 2.48.1
-> 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                          axs101_defconfig    gcc-15.1.0
+arc                   randconfig-001-20251111    gcc-11.5.0
+arc                   randconfig-002-20251111    gcc-12.5.0
+arm                               allnoconfig    clang-22
+arm                     am200epdkit_defconfig    gcc-15.1.0
+arm                          moxart_defconfig    gcc-15.1.0
+arm                   randconfig-001-20251111    clang-22
+arm                   randconfig-002-20251111    clang-17
+arm                   randconfig-003-20251111    clang-22
+arm                   randconfig-004-20251111    gcc-10.5.0
+arm                           tegra_defconfig    gcc-15.1.0
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20251112    clang-22
+arm64                 randconfig-002-20251112    gcc-10.5.0
+arm64                 randconfig-003-20251112    gcc-8.5.0
+arm64                 randconfig-004-20251112    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20251112    gcc-13.4.0
+csky                  randconfig-002-20251112    gcc-15.1.0
+hexagon                           allnoconfig    clang-22
+hexagon               randconfig-001-20251111    clang-22
+hexagon               randconfig-002-20251111    clang-16
+i386                              allnoconfig    gcc-14
+i386        buildonly-randconfig-001-20251112    clang-20
+i386        buildonly-randconfig-002-20251112    gcc-14
+i386        buildonly-randconfig-003-20251112    clang-20
+i386        buildonly-randconfig-004-20251112    clang-20
+i386        buildonly-randconfig-005-20251112    gcc-13
+i386        buildonly-randconfig-006-20251112    clang-20
+i386                  randconfig-001-20251112    gcc-14
+i386                  randconfig-002-20251112    gcc-14
+i386                  randconfig-003-20251112    gcc-14
+i386                  randconfig-004-20251112    clang-20
+i386                  randconfig-005-20251112    clang-20
+i386                  randconfig-006-20251112    clang-20
+i386                  randconfig-007-20251112    gcc-13
+i386                  randconfig-011-20251112    gcc-14
+i386                  randconfig-012-20251112    gcc-14
+i386                  randconfig-013-20251112    clang-20
+i386                  randconfig-014-20251112    clang-20
+i386                  randconfig-015-20251112    clang-20
+i386                  randconfig-016-20251112    gcc-14
+i386                  randconfig-017-20251112    clang-20
+loongarch                         allnoconfig    clang-22
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20251111    gcc-15.1.0
+loongarch             randconfig-002-20251111    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20251111    gcc-8.5.0
+nios2                 randconfig-002-20251111    gcc-11.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20251111    gcc-9.5.0
+parisc                randconfig-002-20251111    gcc-8.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                     akebono_defconfig    clang-22
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                      cm5200_defconfig    clang-22
+powerpc                     mpc5200_defconfig    clang-22
+powerpc               randconfig-001-20251111    gcc-8.5.0
+powerpc               randconfig-002-20251111    clang-22
+powerpc64             randconfig-002-20251111    gcc-12.5.0
+riscv                             allnoconfig    gcc-15.1.0
+riscv                               defconfig    clang-22
+s390                              allnoconfig    clang-22
+s390                                defconfig    clang-22
+sh                                allnoconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20251112    gcc-8.5.0
+sparc                 randconfig-002-20251112    gcc-14.3.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20251112    gcc-8.5.0
+sparc64               randconfig-002-20251112    clang-20
+um                                allnoconfig    clang-22
+um                                  defconfig    clang-22
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20251112    gcc-14
+um                    randconfig-002-20251112    gcc-14
+um                           x86_64_defconfig    clang-22
+x86_64                            allnoconfig    clang-20
+x86_64      buildonly-randconfig-001-20251112    clang-20
+x86_64      buildonly-randconfig-002-20251112    clang-20
+x86_64      buildonly-randconfig-003-20251112    clang-20
+x86_64      buildonly-randconfig-004-20251112    clang-20
+x86_64      buildonly-randconfig-005-20251112    gcc-14
+x86_64      buildonly-randconfig-006-20251112    gcc-14
+x86_64                              defconfig    gcc-14
+x86_64                randconfig-012-20251112    gcc-14
+x86_64                randconfig-071-20251112    clang-20
+x86_64                randconfig-073-20251112    clang-20
+x86_64                randconfig-074-20251112    gcc-13
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20251112    gcc-12.5.0
+xtensa                randconfig-002-20251112    gcc-8.5.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
