@@ -1,229 +1,241 @@
-Return-Path: <linux-pci+bounces-40982-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40983-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2929AC51DC2
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 12:13:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E42BC51ECD
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 12:23:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C79763A40C9
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 11:04:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF1793BE487
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 11:16:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAD87304BA4;
-	Wed, 12 Nov 2025 11:04:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E13C02D2390;
+	Wed, 12 Nov 2025 11:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=rol7and@gmx.com header.b="VvIivwVZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023126.outbound.protection.outlook.com [40.107.44.126])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300DAE56A;
-	Wed, 12 Nov 2025 11:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.126
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762945462; cv=fail; b=UVU8b7FlnsG//UeT+usjah+pjo9mSfh9C3MB7OS1lGFNRG/P40HBcQDgQC9wx1whljH2ldN9SX0jwG6AkSPSVYpEKTTQnx3Uvdr7D4RqbIOMqPJHM1o6/qvJOtrWr0EtKfysvUpwTvSMBLMeTbCokac5SLQ2xED9jcPJEq+z948=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762945462; c=relaxed/simple;
-	bh=MhyrXZKGimvgiILhHUbLE2HQ0cvRDmLZeppganDPGcY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MIsdgb6S3xiL8wIzD0Ic5oPD3GPanai3VqzNMLv7sn/qFnKcK6p56gE4kFbrUGSz80bblmlZF/H0ATXR1JTgv+ENjFTj114D28sAnCfdAesXFkl+uoFaaGLRqeLF1Pn93QNoTmthzTf0Lau3Mt1vTjf3t6OiJpio6d9/zjm0d1Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TWN2aHpk2T5k3GawjwPPmFplPP9R+pNNQXBDVh7uYzJc9c0vpzfYMXRs7dG1Uzhwh6Br5OGc+erDceoU1YIG3X6kAUnmgAJNW8bWVFp0jvJ4bkuAmS26H2BRg2SCe5O6mAwBQalPtaxWi2RifCQFl0ly6SCMRT9fNML+tlM4WDLhjFr0qUD7g4pvJjudwfl0EUqiNrSMesyaA01bVOj5pmmJBnM1K3pxtakoFqw9gI5dUTUAnOlGGdilKVArExMLsjnCJa6O4v6/q7VwdUNBAaZxwcc5zKgbWNQ1hpEwnHSdD0xNVIUJHrV8Ih+D1f8ozDL5nWro5hggctMSw1M/Ig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zA848SkabEn1QnVAIPBikXdCbqRN1MdWv+kVvgT+r5w=;
- b=nvbaOx72e36jUgWyJZO8kH5vKrn+dSwe7ccYn2aO01wLWtxG9lawNcIW1ovkm9D1dv/lvqLVsPQdPEY6wJQShIewvsoDhCzs+Gwri42wftD8aX7GXWFgr3bbiC09BrqLA3v7E1P0Ng2QxkdZZvcJmx07Ae9rQyGqsQbgBm0zw5IufLmbtLYlgGXfa4DBYBBL0kgAq2UkB2dp8hS3HHwiqs9XlPVgcjyC2Qf52dcfe8YRcIWqGmqgEHTJDuOmVF6ObX0TfuqNimtduJ35ZYrQ8x9svcWObuAvXjQ2QBQjyeT85PjaYPpJ14HTB5ebUDxKklrLtr4PXCeF0+iEjk3opA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=163.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SI2PR04CA0014.apcprd04.prod.outlook.com (2603:1096:4:197::18)
- by TY0PR06MB5756.apcprd06.prod.outlook.com (2603:1096:400:27e::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.16; Wed, 12 Nov
- 2025 11:04:13 +0000
-Received: from SG1PEPF000082E4.apcprd02.prod.outlook.com
- (2603:1096:4:197:cafe::1d) by SI2PR04CA0014.outlook.office365.com
- (2603:1096:4:197::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.16 via Frontend Transport; Wed,
- 12 Nov 2025 11:04:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG1PEPF000082E4.mail.protection.outlook.com (10.167.240.7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9320.13 via Frontend Transport; Wed, 12 Nov 2025 11:04:12 +0000
-Received: from [172.16.96.116] (unknown [172.16.96.116])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 23CB440A5BD4;
-	Wed, 12 Nov 2025 19:04:11 +0800 (CST)
-Message-ID: <6bd16478-4bf9-436a-b862-02d1ebac3d29@cixtech.com>
-Date: Wed, 12 Nov 2025 19:04:10 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5322BE7CD;
+	Wed, 12 Nov 2025 11:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762946173; cv=none; b=gUP0qLG0sZAk1r5PLxZ2aHWaXv5znipd0Ehn1w5cg+ic6JyDWsno3bYU7bMyDr1MYr5tPX+Cya1lc/lTbAEr/kKAL+r1XhR7djNoEdgL8IUU0ga1QOF5CFlJKcbAD1N6U1YMdoLK0mmN5Z4p80fxN3l1SvLY+ojRTJBcGOLrkro=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762946173; c=relaxed/simple;
+	bh=7LFsq6zPgzEG1xgnfD1CN2ptFpdtR8YL2pLWPVvB0aI=;
+	h=From:To:CC:Date:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=E4EYRKETZaCedmfgskQolO5b3NDXxuq1qKtYh2AV9LQzdLP+gHuOLGAtV3cu/k+MpZ9cvC6Jq0IRFWS2uHy3aKdogBDZRrTMwa+MpQ64WPMTqZ3IHvIKPLb/zBrOSyL8nJfmluDUR5AuZ/4mPqnY/fjsddDPoVxh91VFB0ZApOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=rol7and@gmx.com header.b=VvIivwVZ; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
+	s=s31663417; t=1762946142; x=1763550942; i=rol7and@gmx.com;
+	bh=V3dMfSLDA9/5oLhZRelXMXFipEIatIZnUCKkgQaeT+A=;
+	h=X-UI-Sender-Class:From:To:CC:Date:Message-ID:In-Reply-To:
+	 References:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=VvIivwVZdI6pguO96OlUtgefexm3BEswgEO7vaXyp7sWowv/7w6GzwfL4rsss0hA
+	 ekqMxf8Y+pciWq5PFIr4vRxSX6Tcqv6kLHnrttiMKxN8hgNDpiN/ywX2f0l+KdkBs
+	 AQW4JXzoR73pUW2kvq7ouR6DD75faV7AR1wus3EQt3bpHgMS2JP4WABdE3REgrNXS
+	 rg9ng7Kz64w+vICwQkVjR0uGrh/Mqx+XqIM/xJtgtt8sLnKj1o5NInQCup2W/R3ie
+	 0ECyJOghV5J6mCJpHqlZ2PgzQdnuuJRF+WDTtcdenSvpJgCwWJq8RoT2HZedoxsSJ
+	 9Z5jrpZi1yoo+lanVg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [127.0.0.1] ([81.197.35.33]) by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1Mzyya-1w54XY103a-017cWZ; Wed, 12
+ Nov 2025 12:15:42 +0100
+From: Roland <rol7and@gmx.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: linux-pci@vger.kernel.org,
+	Christian Zigotzky <chzigotzky@xenosoft.de>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	mad skateman <madskateman@gmail.com>,
+	R . T . Dickinson <rtd2@xtra.co.nz>,
+	Darren Stevens <darren@stevens-zone.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Lukas Wunner <lukas@wunner.de>,
+	luigi burdo <intermediadc@hotmail.com>,
+	Al <al@datazap.net>,
+	Hongxing Zhu <hongxing.zhu@nxp.com>,
+	hypexed@yahoo.com.au,
+	linuxppc-dev@lists.ozlabs.org,
+	debian-powerpc@lists.debian.org,
+	linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Date: Wed, 12 Nov 2025 13:15:44 +0200 (EET)
+Message-ID: <5a084954898.59053dc9@mail.gmx.com>
+In-Reply-To: <20251111171125.GA2190513@bhelgaas>
+References: <20251110222929.2140564-1-helgaas@kernel.org>
+ <20251111171125.GA2190513@bhelgaas>
+User-Agent: YAM/2.10-dev (AmigaOS4; PPC; rv:20210601-b6f7110)
+Subject: Re: PCI/ASPM: Allow quirks to avoid L0s and L1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/2] PCI: Configure Root Port MPS during host probing
-To: Shawn Lin <shawn.lin@rock-chips.com>, Hans Zhang <18255117159@163.com>,
- lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
- helgaas@kernel.org, heiko@sntech.de, mani@kernel.org, yue.wang@Amlogic.com
-Cc: pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org,
- jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
- martin.blumenstingl@googlemail.com, cassel@kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20251104165125.174168-1-18255117159@163.com>
- <20251104165125.174168-2-18255117159@163.com>
- <ef433574-3e81-4636-82c8-9bc3552addca@rock-chips.com>
-Content-Language: en-US
-From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <ef433574-3e81-4636-82c8-9bc3552addca@rock-chips.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG1PEPF000082E4:EE_|TY0PR06MB5756:EE_
-X-MS-Office365-Filtering-Correlation-Id: c57403e5-38e8-4caf-6227-08de21db369f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RmFBTlJiUlJzdnJzV2dqUkNjNjJmYk5UUklDVlRWL05kU0xLWXFhYWt2UjZw?=
- =?utf-8?B?NHI2ZURTRlVTZ1pQeGFpL1VvcWdyeVZTdnRPTlV0L29lSDhxZ0kvbTRaNlBG?=
- =?utf-8?B?aTRUOVRqNzgvWnFrNWwwN25CR2dSbmNVdVRtRzlaaFRxc3A5cllwT2htTjVo?=
- =?utf-8?B?Y3ZiNHA4WVJGWUVUVXpERHUyWnlkVlV5SVdPNlhYVUlmaXQrZm9FdDRYS28w?=
- =?utf-8?B?cWM3ZmFCZzZIVWN3aGZrandIK1FCa2pvdHl6Q0R2cTdpSlNMdWRoQjFIeHpM?=
- =?utf-8?B?MDdmVldQcEo2MDNkUHhSYXFmV0FiZ1NVRWhVVTBDQWFaaXpSdFZYaHBKRkdD?=
- =?utf-8?B?ZldvZDhpQTc1bysrbEJPV0lHUVdnT2ZCZjI5Wll1cTZwSnZWR0RFQXFpRXMz?=
- =?utf-8?B?OUw1emc5cG5MczFVTEk0MFE5UGhaUUcxTExOaTltYjRYNVROMnp0ME50dHJH?=
- =?utf-8?B?akF4aGQ1Q0R1cnRady9iT0U1UDZtOWtMNjNLUm1XZlAwVmJnaWhMZmZHWWZa?=
- =?utf-8?B?T0JNZ2s4bStTdmpDb1BOZW5wQU5VZWNZbnljSll4cnhjUUFRYzVzTkVobGxS?=
- =?utf-8?B?NEFzSFg4TXo0Nis0TERKQngwQ2xEd1p1b3NCaWZWaVN3Q29pRm1pL0VJdHJW?=
- =?utf-8?B?VE9ENmx5bEh6aUt0cVl0Sjh3Rm1yVTY5YnBuaUdvSEh1aDN6Q1MySUd5eFQv?=
- =?utf-8?B?OVFvSVAvVFZPRVVLWXVlN1dkVDM4Q1FtT1QzODRGdWxva0FjTU0zMHpMT0Uv?=
- =?utf-8?B?Y2FYVFZUWmtQZmhOUVNUTG1hVDBPZVlOWVBockcxUCtDQThqaDZKK3Y3aXpW?=
- =?utf-8?B?ZkFjSFFNU1ZRaHFMSmJIbmpKWmJ3aEl2UFdpMjJpU1cxL21HaEtIUUY0K2Fh?=
- =?utf-8?B?NWFlNk9GMVFoZEtxTGhHbUEyckdJek1qaDlwT0FOeVd6VUpPK1NROWhRNHZP?=
- =?utf-8?B?NmN3ZWpFdld1RXlFVytKTG9iVEV6MVZUT1VmMEp2d2lsb1c0TTFTUHNhOHJm?=
- =?utf-8?B?SG5aalBoTWs1cGl4YW5YQkVQdXhpVkVUaENQMW16QXVackp2WThHZmpjc1h2?=
- =?utf-8?B?aGFLMlYvQ2o2cGk3aEtScU5RVnhxa09pZThCQUVSVjRLMHFhNUhuaUljMXlp?=
- =?utf-8?B?OGErVmxuSTVONlczRU02Sy9KbDZjZUJsbWlZU3RzdXhNbkFxNFArNldWbTZJ?=
- =?utf-8?B?UjN5K0ZPaVIyYWo0N2svcDgzbE1zOWVkVFVOVlg3K0ZidkIvdm1WeGVwYXRG?=
- =?utf-8?B?TVYxcXoyMCtKVTFwemJ0eWZTZlIwUzhqOWJVd2gyTG81THg4M3Y5empsSUtG?=
- =?utf-8?B?RE01a2Y0U2RONmc4WXFmdzZpUnN5TytUUmQ1SEd3ekVSKy9jdnVqaTZPOTZT?=
- =?utf-8?B?UlQ1R0l3TjY5b3R2cHh1N1RXbG4ySm9CUnBGUWpvMWZuVXhIRE5NZlNtNHJY?=
- =?utf-8?B?WFFJTUoxNmY2Q0hWRTdMN3pldkcvYjJ0dGlseHY1YXAvYURvVkFLVlVydFVX?=
- =?utf-8?B?dWZGUEgzTWp4WU5VTTgwL1NlOG5PaVVlQnFmbWpMdU1rOVVkR3U5emJZN3NL?=
- =?utf-8?B?MWZwNGhlNWFKUmV5ZkMwUUtqSldHcnU5TTRlZE95b3ZVMjN2aDRzSktRSlAx?=
- =?utf-8?B?aDZNWE16Z0JpcGEzNWkyOEw5VTBGWkd6RjZRQzlVc3NNQW5PSUtVNjgvNHho?=
- =?utf-8?B?NFIycGNTbDVBT2FvYXc2V254Q3oyNURZKzdjUTJBVXdHSkJwdXk0ZjRGY2oz?=
- =?utf-8?B?S0h2SXo0VGFIZmhkNWhyM1NGSmZjZnhlT0NhQVZOazhybjJtUlo5dE0xZWpV?=
- =?utf-8?B?SFoxQStnVWVsMHY5c3R0eUZjOXpWSGZYMGZ6MEJrbS80cktzdjRic2lNNkY4?=
- =?utf-8?B?OUlpY0pQb1N1dHBRd2x1dVpFNmR1MGltSjR2bUZkUm5RN00vNG5CT2Y0elJz?=
- =?utf-8?B?VnpHREV3NkVjdGs2V0M5djlWTWtxbzdmK1lkdW1DSzZjemJFWXBKUEhjbEY0?=
- =?utf-8?B?WGlueXpnNks5eG05SWVSVldoSmtYQ2tXdDhrbUx6dHNpc1lHbVZFUVlFdWUv?=
- =?utf-8?B?SnFYZldTZVcwS1p4aklRMGx0TlFtWHBSTE1XaXREdk56b1B5aHhKbkd0VnZ4?=
- =?utf-8?Q?pInQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014)(7053199007);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2025 11:04:12.9423
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c57403e5-38e8-4caf-6227-08de21db369f
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG1PEPF000082E4.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR06MB5756
+Content-Type: text/plain
+X-Provags-ID: V03:K1:EqKJ57t0N3ZHa+lDhvy8GiMuetI+banQcpulZjM3kqdTlN1LBCZ
+ QXJ9XL5cnvHJgXh0IaltLyx8zv6KL5RQ0RvB8QENtBBUX1GQLlbKQFYvrCdpXFFqiAHa3HN
+ dIkCpBeULDm8sVLxokZxzu0pf+moAm3MwnOp1K/2so4OHbKQR1f3Mb2AzZ8FCTOnOmXVn2E
+ fLZFm2a3T+xLXbdAmTMSQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:sa5qCy8gJIs=;BN0vMc95JN7p8mSt/wB7j/NaAtA
+ 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
+Content-Transfer-Encoding: quoted-printable
+
+Hello all!
+
+I started to get to my email these discussions about Linux a few days ago.=
+ I have not subscribed any mailing list, or given anyone permission to inc=
+lude my name on such list!
+
+So, if there is a moderator on this list, could you PLEASE remove immediat=
+ely my email (rol7and@gmx.com) from the recipients/cc list? Thank you!
+
+If there is no moderator, could the participants then please take care to =
+remove my email from their messages? Thank you!
+
+Regards,
+
+Roland
 
 
 
-On 11/12/2025 4:31 PM, Shawn Lin wrote:
-> EXTERNAL EMAIL
-> 
-> 在 2025/11/05 星期三 0:51, Hans Zhang 写道:
->> Current PCIe initialization logic may leave Root Ports (root bridges)
->> operating with non-optimal Maximum Payload Size (MPS) settings. Existing
->> code in pci_configure_mps() returns early for devices without an upstream
->> bridge (!bridge) which includes Root Ports, so their MPS values remain
->> at firmware/hardware defaults. This fails to utilize the controller's 
->> full
->> capabilities, leading to suboptimal data transfer efficiency across the
->> PCIe hierarchy.
->>
->> With this patch, during the host controller probing phase:
->> - When PCIe bus tuning is enabled (not PCIE_BUS_TUNE_OFF), and
->> - The device is a Root Port without an upstream bridge (!bridge),
->> The Root Port's MPS is set to its hardware-supported maximum value
->> (128 << dev->pcie_mpss).
->>
->> Note that this initial maximum MPS setting may be reduced later, during
->> downstream device enumeration, if any downstream device does not suppor
->> the Root Port's maximum MPS.
->>
->> This change ensures Root Ports are properly initialized before downstream
->> devices negotiate MPS, while maintaining backward compatibility via the
->> PCIE_BUS_TUNE_OFF check.
->>
-> 
-> Tested-by: Shawn Lin <shawn.lin@rock-chips.com>
-
-Hi Shawn,
-
-Thank you for your test.
-
-Best regards,
-Hans
-
-> 
->> Suggested-by: Niklas Cassel <cassel@kernel.org>
->> Suggested-by: Manivannan Sadhasivam <mani@kernel.org>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
->> ---
->>   drivers/pci/probe.c | 12 ++++++++++++
->>   1 file changed, 12 insertions(+)
->>
->> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> index 0ce98e18b5a8..2459def3af9b 100644
->> --- a/drivers/pci/probe.c
->> +++ b/drivers/pci/probe.c
->> @@ -2196,6 +2196,18 @@ static void pci_configure_mps(struct pci_dev *dev)
->>               return;
->>       }
->>
->> +     /*
->> +      * Unless MPS strategy is PCIE_BUS_TUNE_OFF (don't touch MPS at 
->> all),
->> +      * start off by setting Root Ports' MPS to MPSS. This only 
->> applies to
->> +      * Root Ports without an upstream bridge (root bridges), as 
->> other Root
->> +      * Ports will have downstream bridges. Depending on the MPS 
->> strategy
->> +      * and MPSS of downstream devices, the Root Port's MPS may be
->> +      * overridden later.
->> +      */
->> +     if (!bridge && pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
->> +         pcie_bus_config != PCIE_BUS_TUNE_OFF)
->> +             pcie_set_mps(dev, 128 << dev->pcie_mpss);
->> +
->>       if (!bridge || !pci_is_pcie(bridge))
->>               return;
->>
-> 
-> 
+> On Mon, Nov 10, 2025 at 04:22:24PM -0600, Bjorn Helgaas wrote:
+>> From: Bjorn Helgaas <bhelgaas@google.com>
+>>=20
+>> We enabled ASPM too aggressively in v6.18-rc1.  f3ac2ff14834 ("PCI/ASPM=
+:
+>> Enable all ClockPM and ASPM states for devicetree platforms") enabled
+>> ASPM L0s, L1, and (if advertised) L1 PM Substates.
+>>=20
+>> df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree
+>> platforms") (v6.18-rc3) backed off and omitted Clock PM and L1 Substate=
+s
+>> because we don't have good infrastructure to discover CLKREQ# support,
+>> and L1 Substates may require device-specific configuration.
+>>=20
+>> L0s and L1 are generically discoverable and should not require
+>> device-specific support, but some devices advertise them even though
+>> they don't work correctly.  This series is a way to add quirks avoid L0=
+s
+>> and L1 in this case.
+>>=20
+>>=20
+>> Bjorn Helgaas (4):
+>>   PCI/ASPM: Cache L0s/L1 Supported so advertised link states can be
+>>     overridden
+>>   PCI/ASPM: Add pcie_aspm_remove_cap() to override advertised link
+>>     states
+>>   PCI/ASPM: Convert quirks to override advertised link states
+>>   PCI/ASPM: Avoid L0s and L1 on Freescale Root Ports
+>>=20
+>>  drivers/pci/pci.h       |  2 ++
+>>  drivers/pci/pcie/aspm.c | 25 +++++++++++++++++--------
+>>  drivers/pci/probe.c     |  7 +++++++
+>>  drivers/pci/quirks.c    | 38 +++++++++++++++++++-------------------
+>>  include/linux/pci.h     |  2 ++
+>>  5 files changed, 47 insertions(+), 27 deletions(-)
+>
+> Applied to pci/for-linus, hoping for v6.18.  Thanks Shawn and Lukas
+> for testing and reviewing.  Any other comments and testing would be
+> very welcome.
+>
+> I think we'll need to add a similar quirk for Christian's X1000
+> (https://lore.kernel.org/r/a41d2ca1-fcd9-c416-b111-a958e92e94bf@xenosoft=
+.de),
+> but I don't know the device ID for it yet.
+>
+>> --=20
+>>=20
+>> v1:
+>> https://lore.kernel.org/r/20251106183643.1963801-1-helgaas@kernel.org
+>
+>> Changes between v1 and v2:
+>> - Cache just the two bits for L0s and L1 support, not the entire Link
+>>   Capabilities (Lukas)
+>> - Add pcie_aspm_remove_cap() to override the ASPM Support bits in Link
+>>   Capabilities (Lukas)
+>> - Convert existing quirks to use pcie_aspm_remove_cap() instead of
+>>   pci_disable_link_state(), and from FINAL to HEADER (Mani)
+Regards
 
 
