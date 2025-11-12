@@ -1,143 +1,120 @@
-Return-Path: <linux-pci+bounces-40980-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40981-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4660C51AB4
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 11:32:49 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3F85C51ADE
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 11:34:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 672164F991F
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 10:24:57 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3E43E4FAFE0
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 10:25:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44B3D302CA7;
-	Wed, 12 Nov 2025 10:24:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A7702FD1D5;
+	Wed, 12 Nov 2025 10:24:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=markoturk-info.20230601.gappssmtp.com header.i=@markoturk-info.20230601.gappssmtp.com header.b="XuGjaS7J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crb3PhBQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657E73043CC
-	for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 10:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB5A302176
+	for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 10:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762943056; cv=none; b=plYupg5X3KlZmONELolw21QIV9YlBDLCmd0uttG/t6QUq305DAnpDy6hQfLApbYO8h1ZMkV4pXWO64kfQmQEH07DCnNSOiTE3Gpdkqq9k8CJjEvzyl49zou5HDHF4WZAACf/ED6AAVnTupphAXOT1/zA+17JD3AzJrGlx6nm2Jo=
+	t=1762943079; cv=none; b=mSbOwcfRIFxjFvxjf7cAPUNtce8hFxnTbOYHztqZFkg9JWZLq01aXoToQ7sWXcVDvPcFoeRlG0pPWTDYLipgR3dJjGd7LIBhoLrlWbw2pO0XhEomb6XtrT+hGsNeXhKuMwCOzsq3eg2wAo0uHIOuFIiDYbraB6eWt7A9jPmFu4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762943056; c=relaxed/simple;
-	bh=M8uAG9ixHRcCTpHYvaaWAx/R8QVND+K/8ZZYTlL2/zQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jt/FxRZar9jCqNO/l5Omk5Fva4GxHpdmhKA7e11Y3OTIx85gzZPfcFA9AM0aV/H/+3tv5oWMhLsE/2ygu72x9tcaxMuyMo1OXVPYAUqTaVBMMr/BIVrLbzRB2ScYNq3M/vL/utpArK5Z/sFB0PvFOr8wDfQODmUi4k4lJXiyjy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=markoturk.info; spf=pass smtp.mailfrom=markoturk.info; dkim=pass (2048-bit key) header.d=markoturk-info.20230601.gappssmtp.com header.i=@markoturk-info.20230601.gappssmtp.com header.b=XuGjaS7J; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=markoturk.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=markoturk.info
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-64088c6b309so1011218a12.0
-        for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 02:24:14 -0800 (PST)
+	s=arc-20240116; t=1762943079; c=relaxed/simple;
+	bh=TSihLUp500EyLAY4SEa7kifFx2y3QU41/npOaDx+y2c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I2mwEWImd5ZT5vWrp2kkSzG8hjkR4l6NRKuBe5FoDAdA2rLlFzfJxp7kpLTIsoPgbwS2w8O7jp4QYWHmUdRz4KPEvVng08mHmueHbE056OuqljmUJfolR0ImnzFzp1BgWrpx1H9Kx5+66iwKKQOButp57wchW12T9/4AzoBEoJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=crb3PhBQ; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2960771ec71so834345ad.0
+        for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 02:24:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=markoturk-info.20230601.gappssmtp.com; s=20230601; t=1762943053; x=1763547853; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Ic0qfm/57y45gyiMD5PGLbyXiZfTfxHN/0+4CG80SRs=;
-        b=XuGjaS7JPzAvvrtvXqK3iSIV8DqEHvlz3PLT2cu8UNWY+9UJvuma+jFogeHsOs5VBY
-         KRI3khejk3UVSD79hCdJzmTWUDEbmbGXV9OAr1knPaccvcnQJsDGUFanIiopLSd24q2l
-         EsCITOTz6YE50V23BwLt2SQTMV8XsqnPHZTpfP0JHLFfn0HhQ5MGmVtzQzkryEvesju+
-         JG9CrOlv/qdIBM0dAi/EZOlQV/oBgPnnoObuPhNt9072WUCic0SIoOLp2f2AlMW8CKzT
-         Zi6lmO7loWEef0NFqT1cZFSCIcAvMXIstHAV7LynxQ91kgp+x3Jb8vcR7TVW9aOAQqmr
-         wMpA==
+        d=gmail.com; s=20230601; t=1762943077; x=1763547877; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=thRGHA7lZ4WvBhWmfKrR34oGBTmy7fpmtkgJ42jHEO0=;
+        b=crb3PhBQyzm6KXbKhOXYVtQTvo3n08sBbdrnt9np5UTZzIdEJlADC74KV7flWmSL49
+         GCyQnvIDZLEfEeAX1xh2OvqbBLryq9M8TF398fBIMzPxipwrULjCd6bxDMPkeksf2JMR
+         tb70i+G2FEMMfJIStEdULo1WWlO5UeXuTdHmbrIdfCCZZCGX1CkEusSPgw/nVc0jMknH
+         Kk6shyto9CICk8yBWHUBOESyhjT7MlPdd5z1kxB3YiTKeMod5KG7nLDE29CfZljdLBKa
+         MvOz/tLq9eUUJ/vDGqTwrXDxGFpj6SU0P/7FWRHPg/0eHML40CZAOBKVLtF6AoMdKMPW
+         OkJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762943053; x=1763547853;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ic0qfm/57y45gyiMD5PGLbyXiZfTfxHN/0+4CG80SRs=;
-        b=MmcuECbUvFqq2bSCRqkEIc5zZnt0MIHnT4c6apjFHQkvhAuRDM8XclI6bWKv6sq7Z7
-         RCvA5sNNWdQi5TcrRYdSFxw/qfFzvDgtnVF27EmlVTXQAOmEO07RScvtOh7lmagu5yfY
-         CswTiEcu/WvhWbpSHsxua9m0Szik5SceUDfUfYiqkSiYfesSR7H0uhXNeq0WhHS/hen4
-         cBJWFOxTtAY/kwiCr6WVrJ8jJ1QR3+EtFLEBIKcUc0iTR7Ypz2f2H4w4DN4fKPqeqZz2
-         cXv8q6AJpuLIyQwH3ZkwrrZVrAVkWRMT7TI7r+8ZhRRNdQ+uW+SxnzqmmQIDYXuYMkyT
-         6+GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVs8LfqsOaz/FTRTfxLIkzKMvWtBoIQALkB0gX9sTsBax6Oqi/WVViMsJhjj34XzOc0BxWRyjG/ChM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAGaokcS3Puw9tPfL6/fOr3um+ydQfLacuVkojSOVaqaOMiy/L
-	zXTjKg0+/yfkIKvibXLEJvPmoi5Qn3J9CJnqwyncCS6vseVr6GXuZDhKFd9URDDkQ7w=
-X-Gm-Gg: ASbGncvusd35kftiT86TSbP+2po+MUrUCkQ+OPDsV4zwu2vTeeH+Zwrg2iC8GLM+AiU
-	XPnvkkG6vbMoMm+oAS/rFn72zTXpXUtkEXdQSjS4mGdeTygoUxikpu2PBaKDVPN8SdSDnVpwsgH
-	KFS+Ap0gi7zw3tuNafKBddhs87Rg1FyDylIxAd+Lsgl5E1yzm7brQLdoG0K4ZQSlwPjLGQZb5t/
-	SPwejXBXTL0f91DNy6L5OWQhipmR8jm/PGN9DX07nCX9Yv8opCo9ramDgd8SXp/muRn5VY1aevh
-	oTwnq/56IFWQSEe0rpQS4Z54vRVHz+FbzlYSx22EQ6s3c3uTvq7GSLqlsXhHG9flAAxSGosUUVK
-	7QIkcjNmhzBcDUfWERZuiGFh/pM3V1KRkcGwy2i9Ijuh4f9Kt4WBqR+lfPfG6rIoqhnOosJxeNQ
-	Is0xg7IdAoBWA2A1I=
-X-Google-Smtp-Source: AGHT+IGPX2jqgfNlBcn8vUVVz5PZOrSa5PVRsmMn0VDGyjnwgM2lcTvxiPhRZ4VUOy1lTWfuw/2Gpg==
-X-Received: by 2002:a17:907:9688:b0:b6d:5fc8:4a93 with SMTP id a640c23a62f3a-b7331a6f98emr226168466b.36.1762943052568;
-        Wed, 12 Nov 2025 02:24:12 -0800 (PST)
-Received: from vps.markoturk.info ([109.60.6.168])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b72bf9be009sm1541886566b.60.2025.11.12.02.24.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 02:24:11 -0800 (PST)
-Date: Wed, 12 Nov 2025 11:24:10 +0100
-From: Marko Turk <marko@markoturk.info>
-To: Dirk Behme <dirk.behme@de.bosch.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, dakr@kernel.org,
-	bhelgaas@google.com, kwilczynski@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] samples: rust: fix endianness issue in rust_driver_pci
-Message-ID: <aRRgSsOFGlt76E7o@vps.markoturk.info>
-References: <20251101214629.10718-1-mt@markoturk.info>
- <aRRJPZVkCv2i7kt2@vps.markoturk.info>
- <CANiq72kfy3RvCwxp7Y++fKTMrviP5CqC_Zts_NjtEtNCnpU3Mg@mail.gmail.com>
- <7f3bb267-7cff-45e1-84a7-15245cffd99f@de.bosch.com>
+        d=1e100.net; s=20230601; t=1762943077; x=1763547877;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=thRGHA7lZ4WvBhWmfKrR34oGBTmy7fpmtkgJ42jHEO0=;
+        b=TxsoXM2cH9kIyAIe2nSH+oJewoKzkvxouuOMB9gtTOOT6hReFom5yRaJgdhvfabOav
+         dGoj258psm1hfPtDaM8QLkCCTfnXEdMx4hlKW0InaYDg/TMsWBr7A6wHQfofd+7Df5Q6
+         DVQboo1McMwkH23crbWqkuuzd/vpppgTzH2WthS4uul/Qr/r9GIVb42TM9W7yS4xefTL
+         NxMltXeR3D6MA4T4dSIcFb7DvkrQ9DKAJxLJu/GKjk0ab/ceKS6ZM29i7L2nYxzbTDrM
+         UCHc3YM8/rIYpHbbPq8akbEgjBwj77Mm3GVWwv/lMFnDfqDynIh5wO7La1+NDbzalAEC
+         cJpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUwhp72yWCGKvcHegcQZ6GP80Gc6jkkhMmIPM6oEaESHKWZQTr94W9LK5r89NMa0UIfLKuWRtIlpVM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd8l2SEDjUg4X03aN2g4ASiwePU/w50WRDWpLx2/9O1Ye6WWhM
+	11ZCi9TLt9CJmSzNpf6MZqORt4eREq5hBSw2YguH2k/f953/JcCZYZbssC+Rly/5csYE0VLUlaE
+	86DtHRizdwAcI9necInh6iXAe0zukzZ4=
+X-Gm-Gg: ASbGncstXq8yIb34qbgQjjh71GM/ehpQm+vQl9alFyKxRA88RmaYuVd/MN7zXzQ9lRX
+	3Ahfg4kW76E2vSE0eU3iufX1XvraHMoU4+aNsuAcWKTac9j1zxyC8LmOeIMYbifvUnGU00xaLRj
+	MkVoygpOQWtbE3j4+QqIsoFiNr0zwwKamFFoDYcrcs0VRgQco2W59iVYJXwUBgLCvkBAdIep0Us
+	HozW5+HSn7AjHiFBCxHBVe1s2zl6Qe+369cfqCwW26Zzbt1BhDpWqYDBIbDwf02MQGS2Cx8AyD5
+	474KDWHZkZuYAi8eypAKcQwZcxPxlEG4bGQ2+cd+fsvbUuGLGztlTNyAsFjXKYJ6x6ef5579Ugt
+	5u58=
+X-Google-Smtp-Source: AGHT+IFXdt0eC/TNJMhVwjtz0jzvWJqBrfAxSOIG+Uex6LRyLb1AH62t6/E7Goh+RdshjhJ2iPlgpXN/tE1L0o8I8Os=
+X-Received: by 2002:a17:902:e84c:b0:296:53b:fcd3 with SMTP id
+ d9443c01a7336-2984ede5835mr19538865ad.9.1762943077201; Wed, 12 Nov 2025
+ 02:24:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+References: <20251101214629.10718-1-mt@markoturk.info> <aRRJPZVkCv2i7kt2@vps.markoturk.info>
+ <CANiq72kfy3RvCwxp7Y++fKTMrviP5CqC_Zts_NjtEtNCnpU3Mg@mail.gmail.com> <7f3bb267-7cff-45e1-84a7-15245cffd99f@de.bosch.com>
 In-Reply-To: <7f3bb267-7cff-45e1-84a7-15245cffd99f@de.bosch.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 12 Nov 2025 11:24:25 +0100
+X-Gm-Features: AWmQ_blvUG-sHnAQM0zxhw6lztFvEbWamDmMnEK-LJSwP8G6De2JOOAOnCidHdE
+Message-ID: <CANiq72=xZ08i3MFqXyxFG63gq29EUggoyb57SJWPNW-Y_VFqqg@mail.gmail.com>
+Subject: Re: [PATCH] samples: rust: fix endianness issue in rust_driver_pci
+To: Dirk Behme <dirk.behme@de.bosch.com>
+Cc: Marko Turk <mt@markoturk.info>, dakr@kernel.org, bhelgaas@google.com, 
+	kwilczynski@kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 12, 2025 at 11:16:40AM +0100, Dirk Behme wrote:
-> On 12/11/2025 10:37, Miguel Ojeda wrote:
-> > On Wed, Nov 12, 2025 at 9:47=E2=80=AFAM Marko Turk <mt@markoturk.info> =
-wrote:
-> > >=20
-> > > On Sat, Nov 01, 2025 at 10:46:54PM +0100, Marko Turk wrote:
-> > > > QEMU PCI test device specifies all registers as little endian. OFFS=
-ET
-> > > > register is converted properly, but the COUNT register is not.
-> > > >=20
-> > > > Apply the same conversion to the COUNT register also.
-> > > >=20
-> > > > Signed-off-by: Marko Turk <mt@markoturk.info>
-> > > > Fixes: 685376d18e9a ("samples: rust: add Rust PCI sample driver")
-> > >=20
-> > > Can someone take a look?
-> >=20
-> > Your message was in my spam folder -- that may be affecting who saw it.
-> >=20
-> > > From https://www.qemu.org/docs/master/specs/pci-testdev.html:
-> >=20
-> >      "All registers are little endian."
-> >=20
-> > So this seems right. A couple tags:
-> >=20
-> > Cc: stable@vger.kernel.org
-> > Link: https://www.qemu.org/docs/master/specs/pci-testdev.html
-> >=20
-> > Cc'ing Dirk, since he tested the sample originally.
->=20
->=20
+On Wed, Nov 12, 2025 at 11:17=E2=80=AFAM Dirk Behme <dirk.behme@de.bosch.co=
+m> wrote:
+>
 > Hmm, I can't find the initial patch in my Inbox. Even
->=20
+>
 > https://lore.kernel.org/rust-for-linux/aRRJPZVkCv2i7kt2@vps.markoturk.inf=
 o/
->=20
+>
 > doesn't seem to have it?
 
-Initially I didn't send to rust-for-linux mailing list. It's here on lkml:
-https://lore.kernel.org/lkml/20251101214629.10718-1-mt@markoturk.info/
+It was only sent to the linux-pci list -- for situations like this,
+you can click in the "[not found]" message at the bottom, and then on
 
-Marko
+    Message-ID: <20251101214629.10718-1-mt@markoturk.info>
+    found in another inbox:
+
+    ../../linux-pci/20251101214629.10718-1-mt@markoturk.info/
+
+where that last line is a link to the other list that you can click to find=
+ it.
+
+I hope that helps!
+
+Cheers,
+Miguel
 
