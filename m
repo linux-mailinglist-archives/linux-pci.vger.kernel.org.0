@@ -1,183 +1,224 @@
-Return-Path: <linux-pci+bounces-40957-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40958-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9C0AC50BC9
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 07:40:28 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5EB5C50FE6
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 08:46:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B82D0188745E
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 06:40:26 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 820C44E2F48
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 07:46:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC5B32DF15F;
-	Wed, 12 Nov 2025 06:39:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC15E2F12A3;
+	Wed, 12 Nov 2025 07:46:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eus6FUAE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C8oe+Zjo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010056.outbound.protection.outlook.com [52.101.46.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C692DC788;
-	Wed, 12 Nov 2025 06:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762929596; cv=fail; b=fWCuzi+WXtcbCZh6WqkWHQWyUc7Cmd/5Eh7V97D2u6lpXFH1fNBCQQPjTk4DZg8jXVAtIrsmXYTK4uyy0nqDXMPQZlAjWwfTUd3T5nEdlo99vOx5O0NAi7fdsltYM9xasxX1H8Dz+J4HXZ0r9N5M5PtI3YgLxDT05Zvm7z3k5/Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762929596; c=relaxed/simple;
-	bh=K8OQApxQaba/gGPvPwsLAA9hOdcdrWosZJGMlIGfL2o=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VKr99pt0BsguwFekIjfpEx/4kDtPBXVAXRVlvSDJyXE/Bjg+3tmQHBHfOC28gzWpzmyIRyf48FpatbFuMxb1hFIajFtzSAdOhv+CB/LNrw1bqfe4Yh1eq9yGJGAp1k+KtgBguR3skayF8TO61R62Wy7KiEZTvgaEbtqwTJpFwSY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=eus6FUAE; arc=fail smtp.client-ip=52.101.46.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bUDz2Kz4Mn/U1pR1yxOm6e6ekXz+v5qfHcrqfZodxmsaqiQhC+aRSA3qALqpZHbnDFVWndZuhhQtabkN7cPVEBcRlKk1Zex1iO9g4jM7TL5qqI2sq51bgLw787UXAGEegow1Ar6YjGPXn197bJSoh57nGXG5GWA9L5vspL5Uz+tyjCaTIhGbKXLi5WkgajzBNaJhgNFE4quq6dyaaJP8kYYKgKt6tTNlhwtYIUIayk5bbEwIZRwia7eKoJ7Lvn/cA+1ecEufTdPApGGgDvB8VXHRmC8QdfN5zYGfthcCLdL4T6MYavrWLe7DWPABGFMG/MFS5s8fcYnm5SJt13up6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Y/cDwCmGZwWgUMWP3Z9lLvOpk6Os4ApsRoVIDg99lMU=;
- b=aw0yYrg00ZqC18AM2P5ENI0gqvxl0shKPjjG5HJ4IaINduB2k2OP80L5I0hqcugR0L5z7RRL/W7rOe1ZHkMfspPbtkHCPA7bW35ktyEebhSXlx5yuIzjvci1s9wNLcw37UzspnmyeBvEMvLCQbHrCme4XoqFbgwIpppAjv7FasjoQxO/T2fYM4T3BADk6FH9775vW5Zr2/QNh8j+feyurhEGiUBRkOn4qjMfoCw4Q+6g4Rv8jSGnb+elhdVX+9xQrMxXWyQHfAclrZZ05fnPMoVdGbSqHv5/VXxHzXkMyxa6BwOB+0SOmo4I5ptVoNNHJSQAwqwGCJIzqZh0pvZ1ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.21.194) smtp.rcpttodomain=redhat.com smtp.mailfrom=ti.com; dmarc=pass
- (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
- (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y/cDwCmGZwWgUMWP3Z9lLvOpk6Os4ApsRoVIDg99lMU=;
- b=eus6FUAEvHBkcGQe494QKrDNjZWJ3Zb4Z2KRUOTvoTzL0LZWJSzQkGw2RvpWaTKjlAhy72Gk6UEidslqzeCszwQdmTWj8MKbWl+VTnPsku0owlqt6pfFngAC8/Trt/sy6ZG1BE2YhTmeM3tqWT45u2vxVg5VOrwrY4rVeAv9a6Y=
-Received: from MW4PR04CA0199.namprd04.prod.outlook.com (2603:10b6:303:86::24)
- by CH3PR10MB6692.namprd10.prod.outlook.com (2603:10b6:610:148::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.15; Wed, 12 Nov
- 2025 06:39:52 +0000
-Received: from CO1PEPF000075F1.namprd03.prod.outlook.com
- (2603:10b6:303:86:cafe::e8) by MW4PR04CA0199.outlook.office365.com
- (2603:10b6:303:86::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.15 via Frontend Transport; Wed,
- 12 Nov 2025 06:39:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.194)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.21.194 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.21.194; helo=flwvzet200.ext.ti.com; pr=C
-Received: from flwvzet200.ext.ti.com (198.47.21.194) by
- CO1PEPF000075F1.mail.protection.outlook.com (10.167.249.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9320.13 via Frontend Transport; Wed, 12 Nov 2025 06:39:51 +0000
-Received: from DFLE203.ent.ti.com (10.64.6.61) by flwvzet200.ext.ti.com
- (10.248.192.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 12 Nov
- 2025 00:39:43 -0600
-Received: from DFLE213.ent.ti.com (10.64.6.71) by DFLE203.ent.ti.com
- (10.64.6.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 12 Nov
- 2025 00:39:43 -0600
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE213.ent.ti.com
- (10.64.6.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Wed, 12 Nov 2025 00:39:43 -0600
-Received: from localhost (lcpd911.dhcp.ti.com [172.24.233.130])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5AC6dfRd2207191;
-	Wed, 12 Nov 2025 00:39:42 -0600
-Date: Wed, 12 Nov 2025 12:09:41 +0530
-From: Dhruva Gole <d-gole@ti.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: Linux PM <linux-pm@vger.kernel.org>, Linux ACPI
-	<linux-acpi@vger.kernel.org>, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Takashi Iwai <tiwai@suse.de>, LKML <linux-kernel@vger.kernel.org>, "Zhang
- Qilong" <zhangqilong3@huawei.com>, Frank Li <Frank.Li@nxp.com>, Dan Williams
-	<dan.j.williams@intel.com>, Linux PCI <linux-pci@vger.kernel.org>, "Bjorn
- Helgaas" <helgaas@kernel.org>, Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH v1 0/3] PM: runtime: Wrapper macros for usage counter
- guards
-Message-ID: <20251112063941.kbg44srt5f7rfkjb@lcpd911>
-References: <13883374.uLZWGnKmhe@rafael.j.wysocki>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30C42ECEA7
+	for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 07:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762933580; cv=none; b=dDTCx7hZAQWNKr5CrVeF8JLbSL2+uxL/ybZKa+ZW9TSu7zdHFIbFc3JWmZ1haWE7G13rdSyIV/w4SuJYRB6hfq0GszLHhdRPA3vMo/HVqJQeY1SdHlUmdQCnvVq3ayN2i9SvCoIuggeKppE2yF6xLztH4gnTNT6EWBdJ2vz8yBo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762933580; c=relaxed/simple;
+	bh=Cl1tTuVvknF5bKZDbnFljdj0Z2F2e/YcmqWWiP+O1d8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nh5n0UAjhJRDmhZ1Bw/bbkFTO2nEFjbaeCvZykKEBVHZ0qb2+5xlbNaPPjtctlqeydb9ADjEuJbXRWNFaHNE5kRndOeBS/0+vqkFNACDLLDYz16TkTX6QyFCu/WdpIqgg1pJfktpKmkMUO1J0RNnSzLPasYEysuMckaRDFiyLps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C8oe+Zjo; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762933578; x=1794469578;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Cl1tTuVvknF5bKZDbnFljdj0Z2F2e/YcmqWWiP+O1d8=;
+  b=C8oe+ZjoXJiRD9XPNVUYJ73JdZs6wxcJnB1xRkN6fKdybxOYemyIpe3U
+   ms4g+cn13TXJQEHuYvpNZ3MiOEUmY8+x36Q2SMcmpO1o2AkDkfFn3iUkM
+   TV0rHEz1iG7F+T8rVErYHs92e7N82BH6nhOE+snEhTqTGe6wVY9d/69Hf
+   FprFs5ZXHNLTHhaeRsbj1xp0C7jgsWL43bj+4reiqAAVhTt9edcFlgzP4
+   MfZ8JfP47azJkkD9cJMfek8yMjZAhK2M0uhvSkk/TzrOJX1b/sg+VuvWu
+   0TIMOE10esQX8nOQAEC6eHtpnI/RZlxp8q/LSlAKZzsx9ncO9NesuF5RD
+   Q==;
+X-CSE-ConnectionGUID: xDBTmYSrQhOc/3IepbYr3g==
+X-CSE-MsgGUID: fXS4aThuSqulL8J1lO9H1g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="76451279"
+X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
+   d="scan'208";a="76451279"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 23:46:18 -0800
+X-CSE-ConnectionGUID: gqfvcd2QR7q5tmCEK/PXeg==
+X-CSE-MsgGUID: EYa5MY5pThqKuNVRaFA6sg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
+   d="scan'208";a="188412133"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa006.jf.intel.com with ESMTP; 11 Nov 2025 23:46:16 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id CE7B595; Wed, 12 Nov 2025 08:46:14 +0100 (CET)
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: linux-pci@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH v5] PCI/PTM: Enable PTM only if it advertises a role
+Date: Wed, 12 Nov 2025 08:46:14 +0100
+Message-ID: <20251112074614.1440266-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <13883374.uLZWGnKmhe@rafael.j.wysocki>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000075F1:EE_|CH3PR10MB6692:EE_
-X-MS-Office365-Filtering-Correlation-Id: d095273b-ff1e-4d90-ea57-08de21b64854
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Opqh2cXOAcc32zkx78y2/8Qm/8BsfS41ENvzEKKENQzquGnTSOnPcOD72k5F?=
- =?us-ascii?Q?KWC5YphokE769kfsQnasmwRheHgjyfi+4XoJpx3nUNlFyyFSvG13woJw/30M?=
- =?us-ascii?Q?VCrivJSyvMlGMB1mcIb+uY50KLYd0dReUO/vfCes1u2VBJbIUmvIqx5GFbGg?=
- =?us-ascii?Q?xuh22bmh0PHlCdPkw4Rr411Q6Tz5xHxFakuinuZ6R4rR9ubhvNVCgyMvZCvI?=
- =?us-ascii?Q?ApZLo/jTsBsBpVsPXPC/lnXVtPaouol1YqZ8hCMMIN/XCJtvZMZdu3a7xerb?=
- =?us-ascii?Q?Es2KpAkxzKDr+y3+lNNXzM7cTsSMmqV2HPCjdww1RCzljHQykb6Pj4IrKvPE?=
- =?us-ascii?Q?Xn/LT/YwhE4TvJHa8KHgNGdQIYzgHF0A0JAaZIt9tOvDfITPTgR1gcRDD9vo?=
- =?us-ascii?Q?W0mwIP50lf931ZXHglESW1B7WXPw7IBx5e0mmt3wwSSGgWSrTcgIyB+e9Zg5?=
- =?us-ascii?Q?7LiV5xByyLD5Dnw0rhhezw7FMev/EabTdXqo3enrWkuTI+4bRlf/vardcO3a?=
- =?us-ascii?Q?qpdijinlRAvlduafb7OcNqmfAgc7OAxmCcO+FDmMw5Gr62I4t6ZWUVh00OK6?=
- =?us-ascii?Q?wNIn669HVI2qtxrlh17qh2uIrFUEbWOUvpN8Vh6ZuAm/N2RkNeZl2MV2Gpy2?=
- =?us-ascii?Q?fyNrjxw5OSEHKpZAU5YzDa7OOqbAAZ3i9B9zI01bAlApxRHrcdTlbM5NGZry?=
- =?us-ascii?Q?YNR0EScNQsLKu7nSdHtGESYIn/o7c2L0Jo1pBz7N4gzhIvWRvnzDiE22iyAf?=
- =?us-ascii?Q?2JtPFbq5e21e73dorcNEUevprIyCNF0Zkeme1GLliom98zWtx9TP8mOobTZi?=
- =?us-ascii?Q?868g18Bn7SC/s/WJEX/gczaB3dQ9MQf+tRKgKXoSMq0mAh1UjEuNVJK6H+p5?=
- =?us-ascii?Q?OHyMSGo29DVAkl2Zqy8Im4xqePROp0UVKuESFnRj+JKGydJG75iwUorSLbD/?=
- =?us-ascii?Q?+C7Rwk3sy/cAV9VakSXnIcoyos0smfeB5Gei8hzUuRrxMMNyic0M7zATeaEF?=
- =?us-ascii?Q?1bBsY7yv8jhDD39HwZKhjczCne+Cn7i5w0bFQ6AnQgQAyo2J2tG0HQdR8llm?=
- =?us-ascii?Q?H05YjwZMg4UMHZ0t/mION4XmaAttkoL4JSTklOoOU5ySz4aXq2lwl7bK2TrO?=
- =?us-ascii?Q?M9vEqMvGNqHIYdqRuots3pGGgtM5alPMOvo8mCDgWUYibaMY4FTSdI81lrfO?=
- =?us-ascii?Q?wrWgk7z5q1vqFA72QsCY4m7VoaYM0wJgiZGg6t14aKqLYT8YFlE6rUJuVdU9?=
- =?us-ascii?Q?zL3GRHUXl7bxRGgw4Nd5GReWukkMUTIxtAUNtiXG1FwOQXc8UcqBtagb8bQ4?=
- =?us-ascii?Q?EDar3TyauqJYyD3kaP7y4OCZrWF69c0b5O2x9cUXjLQuTKcqGrQiwTdS0bpc?=
- =?us-ascii?Q?YFEuGRbE8FK591ZGjAUkgRCnwGVynAJJFLnHZy7sBMKN84Ko4cHWFkdncoVV?=
- =?us-ascii?Q?HvfPbsc+BIqzearAu6zgnxQiFh5ScaQDUQJEZMpN0ExM1l+T8c+IALcY0EJO?=
- =?us-ascii?Q?2TiVVtiRwEJiXpe+YAoa81s9psDvJjstAUuttbk/y1qYkfzUIu6cNm6S+kQB?=
- =?us-ascii?Q?RHnEakDYxEue/9GNeRo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:198.47.21.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet200.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2025 06:39:51.3096
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d095273b-ff1e-4d90-ea57-08de21b64854
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.194];Helo=[flwvzet200.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000075F1.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB6692
+Content-Transfer-Encoding: 8bit
 
-On Nov 07, 2025 at 19:35:09 +0100, Rafael J. Wysocki wrote:
-> Hi All,
-> 
-> The runtime PM usage counter guards introduced recently:
-> 
-> https://lore.kernel.org/linux-pm/6196611.lOV4Wx5bFT@rafael.j.wysocki/
-> 
-> and then fixed:
-> 
-> https://lore.kernel.org/linux-pm/5943878.DvuYhMxLoT@rafael.j.wysocki/
-> 
-> should generally work, but using them feels sort of arcane and cryptic
-> even though the underlying concept is relatively straightforward.
-> 
-> For this reason, runtime PM wrapper macros around ACQUIRE() and
-> ACQUIRE_ERR() involving the new guards are introduced in this series
-> (patch [1/3]) and then used in the code already using the guards (patches
-> [2/3] and [3/3]) to make it look more straightforward.
+We have a Upstream Port (2b:00.0) that has following in the PTM capability:
 
-The patches look okay to me,
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
+  Capabilities: [220 v1] Precision Time Measurement
+		PTMCap: Requester- Responder- Root-
 
+Linux enables PTM for this without looking into what roles it actually
+supports. Immediately after enabling PTM we start getting these:
+
+  pci 0000:2b:00.0: [8086:5786] type 01 class 0x060400 PCIe Switch Upstream Port
+  ...
+  pci 0000:2b:00.0: PTM enabled, 4ns granularity
+  ...
+  pcieport 0000:00:07.1: AER: Multiple Uncorrectable (Non-Fatal) error message received from 0000:00:07.1
+  pcieport 0000:00:07.1: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Receiver ID)
+  pcieport 0000:00:07.1:   device [8086:e44f] error status/mask=00200000/00000000
+  pcieport 0000:00:07.1:    [21] ACSViol                (First)
+  pcieport 0000:00:07.1: AER:   TLP Header: 0x34000000 0x00000052 0x00000000 0x00000000
+
+Fix this by enabling PTM only if any of the following conditions are
+true (see more in PCIe r7.0 sec 6.21.1 figure 6-21):
+
+  - PCIe Endpoint that has PTM capability must to declare requester
+    capable
+  - PCIe Switch Upstream Port that has PTM capability must declare
+    at least responder capable
+  - PCIe Root Port must declare root port capable.
+
+While there make the enabling happen for all in __pci_enable_ptm() instead
+of enabling some in pci_ptm_init() and some in __pci_enable_ptm().
+
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+Hi,
+
+I hope I did not make any stupid mistakes this time ;-) My testing still
+passed: the Root Port that has ->ptm_root (and ->ptm_responder) PTM is
+enabled and the Switch Upstream Port that does not have ->ptm_responder is
+not enabled (and I don't see the flood of AER errors).
+
+Previous versions can be seen:
+
+  v4: https://lore.kernel.org/linux-pci/20251111061048.681752-1-mika.westerberg@linux.intel.com/
+  v3: https://lore.kernel.org/linux-pci/20251030134606.3782352-1-mika.westerberg@linux.intel.com/
+  v2: https://lore.kernel.org/linux-pci/20251028060427.2163115-1-mika.westerberg@linux.intel.com/
+  v1: https://lore.kernel.org/linux-pci/20251021104833.3729120-1-mika.westerberg@linux.intel.com/
+
+Changes from v4:
+
+  - Do not enable PTM automatically for all components (e.g keep the
+    existing behavior).
+  - Make the switch-case new lines consistent.
+
+Changes from v3:
+
+  - Cache the responder and requester capability bits.
+  - Enable PTM only in __pci_enable_ptm().
+  - Update $subject and commit message.
+  - Since this is changed quite a lot, I dropped the Reviewed-by from Lukas
+    and also stable tag.
+
+Changes from v2:
+
+  - Limit the check in __pci_enable_ptm() to Endpoints and Legacy
+    Endpoints.
+  - Added stable tags suggested by Lukas, and PCIe spec reference.
+  - Added Reviewed-by tag from Lukas (hope it is okay to keep).
+
+Changes from v1:
+
+  - Limit Switch Upstream Port only to Responder, not both Requester and
+    Responder.
+
+ drivers/pci/pcie/ptm.c | 35 +++++++++++++++++++++++++++++++++++
+ include/linux/pci.h    |  2 ++
+ 2 files changed, 37 insertions(+)
+
+diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+index 65e4b008be00..fb1f3d0d8448 100644
+--- a/drivers/pci/pcie/ptm.c
++++ b/drivers/pci/pcie/ptm.c
+@@ -81,6 +81,11 @@ void pci_ptm_init(struct pci_dev *dev)
+ 		dev->ptm_granularity = 0;
+ 	}
+ 
++	if (cap & PCI_PTM_CAP_RES)
++		dev->ptm_responder = 1;
++	if (cap & PCI_PTM_CAP_REQ)
++		dev->ptm_requester = 1;
++
+ 	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+ 	    pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM)
+ 		pci_enable_ptm(dev, NULL);
+@@ -144,6 +149,36 @@ static int __pci_enable_ptm(struct pci_dev *dev)
+ 			return -EINVAL;
+ 	}
+ 
++	switch (pci_pcie_type(dev)) {
++	case PCI_EXP_TYPE_ROOT_PORT:
++		/*
++		 * Root Port must declare Root Capable if we want to enable
++		 * PTM for it.
++		 */
++		if (!dev->ptm_root)
++			return -EINVAL;
++		break;
++	case PCI_EXP_TYPE_UPSTREAM:
++		/*
++		 * Switch Upstream Ports must at least declare Responder
++		 * Capable if we want to enable PTM for it.
++		 */
++		if (!dev->ptm_responder)
++			return -EINVAL;
++		break;
++	case PCI_EXP_TYPE_ENDPOINT:
++	case PCI_EXP_TYPE_LEG_END:
++		/*
++		 * PCIe Endpoint must declare Requester Capable before we
++		 * can enable PTM for it.
++		 */
++		if (!dev->ptm_requester)
++			return -EINVAL;
++		break;
++	default:
++		return -EINVAL;
++	}
++
+ 	pci_read_config_dword(dev, ptm + PCI_PTM_CTRL, &ctrl);
+ 
+ 	ctrl |= PCI_PTM_CTRL_ENABLE;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index d1fdf81fbe1e..d5018cb5c331 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -500,6 +500,8 @@ struct pci_dev {
+ #ifdef CONFIG_PCIE_PTM
+ 	u16		ptm_cap;		/* PTM Capability */
+ 	unsigned int	ptm_root:1;
++	unsigned int	ptm_responder:1;
++	unsigned int	ptm_requester:1;
+ 	unsigned int	ptm_enabled:1;
+ 	u8		ptm_granularity;
+ #endif
 -- 
-Best regards,
-Dhruva Gole
-Texas Instruments Incorporated
+2.50.1
+
 
