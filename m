@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-40962-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40963-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72299C5115E
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 09:22:50 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65C67C511DC
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 09:30:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id ED9E034BD01
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 08:22:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1E28C18972A8
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 08:31:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 233312DC796;
-	Wed, 12 Nov 2025 08:22:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 391682EDD6F;
+	Wed, 12 Nov 2025 08:29:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kttxp00X"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6TTndyT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4CD2D6E42;
-	Wed, 12 Nov 2025 08:22:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F05A279346;
+	Wed, 12 Nov 2025 08:29:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762935766; cv=none; b=dHGUgKpTP/nBv6FI0FuBY9zI1pTJKWSIz5f5bh86u+/w/89juLaQW7sgpRuzAO1IgMxZClqrfIGSoXQA9SdtMkXwNyCJK5Cy6Pw6pU39ifKbHG5hlWK7ENSoCFLc8MIVBH6q2+PsKt7+699Q1p3KYoqMUOieoZDtQa+PtAQYkC8=
+	t=1762936170; cv=none; b=bj/ErPqDqbT55jG0r1ALHjatT/yxe4DQlDZZHaLWOZ+BzE2/lekSmrqDA42i4hDg1H7g4UhDNvyzZsc/IwqQjokFZb55h6eGijoarO0axfPAR+fBQ/rVCHPvwvKoeP9XU8XNCd0+RQNBaUpvG6xup7vasBZn3kH+s53Kt/ThhsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762935766; c=relaxed/simple;
-	bh=WHWCVmYt6UtQ3D5Ri8XoM/WvWGHNmlnb2EcUM8qufBk=;
+	s=arc-20240116; t=1762936170; c=relaxed/simple;
+	bh=P/0U373DGH20CkAHJePNGHyKPPEzprJMAMaujhEWE3g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L88nZgCR1r6uLXS3Ib42dSQmhzKJGpUgQdvop5ZD41WKuSZVtAAAqlEQwyG9SH/4Oahh8bD4wYWmWv0XO1jJsbLmcOCc6MMZ1wVHrPrAMJU38b4sK+OuKfk1dyEy7gLVHjMEf2HfewVyom9nOB5WriVnYy6lwSSwkPl2z/PlEEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kttxp00X; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A174BC4CEF8;
-	Wed, 12 Nov 2025 08:22:39 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=YADtiZ+B69fcIY1A4i8dzQCWu+V8dCGey9Dl2+k5I9gBbvhjQeEZOIhXFmqBizAV4rvqoBl13D2w2EbJ/C2yPzyTGw4VV79cEv8udk/9ocP1D/GQK1tNU+ygeZRxGBnWXCbUXQCt0hQAlNIcs0F8ypS9t9tZEfoDfS88ivI7/Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6TTndyT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36568C4AF0F;
+	Wed, 12 Nov 2025 08:29:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762935765;
-	bh=WHWCVmYt6UtQ3D5Ri8XoM/WvWGHNmlnb2EcUM8qufBk=;
+	s=k20201202; t=1762936169;
+	bh=P/0U373DGH20CkAHJePNGHyKPPEzprJMAMaujhEWE3g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kttxp00Xc7Q2NVR9zWtAQOW32+K5IUJtvvbjIacWFrREkJHKtXZvOqAE9Gua6PoGC
-	 Z0PWHqSpMfxReJv7iL5UYQPsbL046fDjJOWbbV4bdQ4pdjMz2nIzAIHZhMw7bzayUP
-	 y2Bv+7T/1TtBofUmqHq5O+CejsEDVgK3i6OQG2/ijVcXuHJBdoNk3MTvk2hn7OOdM5
-	 4L32vutb2OpX5twJ0FaMH2B6Hocia+8TeMb5mZAZkTeNOGVOALNy25ugZsQxFkScZ+
-	 F5ZGrNhFI8NY7qx2IFdGhctYLQpV0z7JBTaVUMm/cMNC1+rmxzdT6Bx+4s4v6urya+
-	 S/b1vretnjh2g==
-Date: Wed, 12 Nov 2025 09:22:36 +0100
+	b=S6TTndyT/9VXKdEYPZNdVHH1e9mSNLLOM0nt2QNNuy2DF1zpJ7VX1W+XA8x8VBpFw
+	 0q6reZVdpYS5+XUTeIlSFeRx/5l+TKy5+5Rh3Jtxytgs3/FTaIUG4PY7L+PNR7D4PF
+	 wXiTYDw8GjkAr6Eq8wyo5PlZ5FKT6nEP5lRpV8aqYzrH0DwRY/S2dqMJrFElqiVqMn
+	 RIDq1wZTZe7QbeVDI+1y+p6nbUc9YUwzB9djea+Ku5JeccJn6zwmtExUdHKGhMMIZC
+	 bN3Wj70GJa9eWKC0+3SeaJ3f5uIehr962xnTbck2guqY5qREURZ8Vegcrhv4M/VpBo
+	 +fZ8lRpBqYwzw==
+Date: Wed, 12 Nov 2025 09:29:20 +0100
 From: Niklas Cassel <cassel@kernel.org>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: Shawn Lin <shawn.lin@rock-chips.com>,
@@ -65,11 +65,10 @@ Cc: Shawn Lin <shawn.lin@rock-chips.com>,
 	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org, kernel@pengutronix.de,
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 1/4] PCI: dwc: Advertise L1 PM Substates only if driver
- requests it
-Message-ID: <aRRDzKFVTFTIuvvh@ryzen>
+Subject: Re: [PATCH 2/4] PCI: tegra194: Remove unnecessary L1SS disable code
+Message-ID: <aRRFYEgBigYDlfQh@ryzen>
 References: <20251111221621.2208606-1-helgaas@kernel.org>
- <20251111221621.2208606-2-helgaas@kernel.org>
+ <20251111221621.2208606-3-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,44 +77,29 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251111221621.2208606-2-helgaas@kernel.org>
+In-Reply-To: <20251111221621.2208606-3-helgaas@kernel.org>
 
-On Tue, Nov 11, 2025 at 04:16:08PM -0600, Bjorn Helgaas wrote:
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -1060,6 +1060,8 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
->  		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
->  	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
->  
-> +	dw_pcie_config_l1ss(pci);
+On Tue, Nov 11, 2025 at 04:16:09PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> The DWC core clears the L1 Substates Supported bits unless the driver sets
+> the "dw_pcie.l1ss_support" flag.
+> 
+> The tegra194 init_host_aspm() sets "dw_pcie.l1ss_support" if the platform
+> has the "supports-clkreq" DT property.  If "supports-clkreq" is absent,
+> "dw_pcie.l1ss_support" is not set, and the DWC core will clear the L1
+> Substates Supported bits.
+> 
+> The tegra194 code to clear the L1 Substates Supported bits is unnecessary,
+> so remove it.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
 
-The name dw_pcie_config_l1ss() sounds like we are enabling l1ss.
+Since init_host_aspm() is now the only place using struct tegra_pcie_dw
+struct member cfg_link_cap_l1sub, I think that you can remove this struct
+member, and instead make this a local variable in init_host_aspm().
 
-I know naming is hard.
-
-Perhaps dw_pcie_disable_unsupported_l1ss() ?
-
-Or something similar.
-
-
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1067,6 +1067,8 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
->  	val &= ~REQ_NOT_ENTR_L1;
->  	writel(val, pcie->parf + PARF_PM_CTRL);
->  
-> +	pci->l1ss_support = true;
-> +
->  	val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
->  	val |= EN;
->  	writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
-
-While it seems like ops_2_7_0 is the only type that explicitly does a
-register write to enable L1ss, other versions might have the register
-as enabled by default, so it would be nice if Mani could confirm exactly
-which versions that should set l1ss_support = true.
-
-
-Kind regards,
-Niklas
+Other than that, looks good to me:
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
 
