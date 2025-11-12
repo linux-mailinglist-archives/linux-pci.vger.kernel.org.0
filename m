@@ -1,70 +1,53 @@
-Return-Path: <linux-pci+bounces-41028-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41029-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59B3EC54B9C
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 23:40:40 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3C98C54D2B
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 00:42:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 78B1E4E3D1B
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 22:38:36 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1304C347025
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 23:42:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AD0A2D5C95;
-	Wed, 12 Nov 2025 22:38:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3811D2737F3;
+	Wed, 12 Nov 2025 23:42:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RnX5Vdxq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XpAwP8Jw"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F5A262FDD
-	for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 22:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1027026CE02
+	for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 23:42:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762987113; cv=none; b=Lr5TJg+nZloLV/XPnkG5gC9KqNNmL5WXMXyhZgSThK5FASiLHoYqCnd5p5Zd+iWs+4RZ9wdyePO3mamUgDgEnyXcVYe0JKELE3570eOEYJ+SznPba/g+wxOgUn7TIMbFcOpdYa4fd3f1yFTGfDzr59UZUrJgUgwvZjNqnjABlCs=
+	t=1762990923; cv=none; b=qPU5/4pKgbBGEaWOItgyz5Bm3huyJJQf56vFK0uQr5/cp9hEpmZmH5yj27TmbXtwQdmxpDi7VpvB8OGeo0+FrPe2Rk0tAvXi/2FMeaKfI6I0d7mgcTaMavi8TErGO88vr8ZInXiiLnKE6Iojrff+IjA/VgWg1fXwGwri/c2QdzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762987113; c=relaxed/simple;
-	bh=7JOpHh3ITXKexgD/3ZZE8c1j0sx8rxNvxSRy064lh8U=;
+	s=arc-20240116; t=1762990923; c=relaxed/simple;
+	bh=Qdtcjw82VHPgyUugIrOhuTsmFbDR188N/1D1MG3Nugs=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=g+DYmbOo0GPRFTasKoQ0WiPIhIq/UgYKAulJMDedONBE7q9ztYn9qAK6Su1DxA8jD+BeYhp3mSvvBeE1INL9C8EBH5XtQ53VNJU5Xvvbyw/UUP4JzgfF9pzX913Ou/GHe6T0qHqStgK5hJ7dcvivfVpdpwrpTlfgi9o6IayV5tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RnX5Vdxq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D3FDC4AF0B;
-	Wed, 12 Nov 2025 22:38:32 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=AwTwtHuaOjLKXrUcXASg2FyBZWGn/ADCISYG4l+itEeohDJKROec7uVU+GW4VrR3uQe3QojGgFFGOwhumdy/czIAtpsW3EdPwYtrZIz46ERyh+s7tNn/zyrTqDCvXrdV6RABMpAr6BzBVOLh6udhlQpRDK0oSLhXlraeDHuAlGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XpAwP8Jw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62384C4CEF8;
+	Wed, 12 Nov 2025 23:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762987112;
-	bh=7JOpHh3ITXKexgD/3ZZE8c1j0sx8rxNvxSRy064lh8U=;
+	s=k20201202; t=1762990922;
+	bh=Qdtcjw82VHPgyUugIrOhuTsmFbDR188N/1D1MG3Nugs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=RnX5VdxqXXd79Ms7+GgEALirAiKSqK38eks0P5cfIiAm93yDSulmLkc1m4nWT0PDt
-	 kzjFcuEYjkphZxNp41IpYrEAEUUKqg5gfJwWz0buVWDc2+mkumi1dsDboCQqlyHM4N
-	 HhxVZrCl7fYxWKBaApo1hXNXxCel/MpvucfatDB6JkpegZ8o490W89oCgzjdvza6oD
-	 Q09SRHV5PPw4gMBTmW6DJecuaPvsY6WtXM3cNm6HKi7revWlcPsiwvg6xVDvL/Ecab
-	 YZwR83/KtENlfOHyf8FFCldCrIDLzU2fJqR/il6JIc2XMWD86TtV2lsbq1S+n0Ld0I
-	 JGgXHlM4MicKA==
-Date: Wed, 12 Nov 2025 16:38:31 -0600
+	b=XpAwP8JwkbF8yAdBNh/g3kPtDM3GTeyHSm9siqfbJBmj22LUfTyQLKwlN8cLxa+tq
+	 k+bcNP7++mPF6rA9mcpRodPI0u6pp5yK8+9J6fdVxlcn+de+ZdXYM/vmjo+CXovyK5
+	 wc9CmjIDvjNkcUKEr05KHbnryu1xe5H7+ElQrfT2rqSUrpRIkF53E5K+FM2FlNAyfb
+	 e9gLGRfK/k4EvLEalGAv0vqD6WV1ykIncDJ9lsyuGLrT1LA7RTFK7gG/5UYeQiqmPy
+	 DaJ4rLddf78V4a+MqKxMuBv13AaF4jUHz761hHcM1u4i53Zcqa/0JHzPuLF+dGh3js
+	 T7RMRxnYAkHgg==
+Date: Wed, 12 Nov 2025 17:42:01 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Riana Tauro <riana.tauro@intel.com>,
-	"Sean C. Dardis" <sean.c.dardis@intel.com>,
-	Farhan Ali <alifm@linux.ibm.com>,
-	Benjamin Block <bblock@linux.ibm.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Alek Du <alek.du@intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, qat-linux@intel.com,
-	Dave Jiang <dave.jiang@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH 1/2] PCI: Ensure error recoverability at all times
-Message-ID: <20251112223831.GA2245026@bhelgaas>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v5] PCI/PTM: Enable PTM only if it advertises a role
+Message-ID: <20251112234201.GA2250212@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,186 +56,160 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <070a03221dbec25f478d36d7bc76e0da81985c5d.1760274044.git.lukas@wunner.de>
+In-Reply-To: <20251112074614.1440266-1-mika.westerberg@linux.intel.com>
 
-On Sun, Oct 12, 2025 at 03:25:01PM +0200, Lukas Wunner wrote:
-> When the PCI core gained power management support in 2002, it introduced
-> pci_save_state() and pci_restore_state() helpers to restore Config Space
-> after a D3hot or D3cold transition, which implies a Soft or Fundamental
-> Reset (PCIe r7.0 sec 5.8):
+On Wed, Nov 12, 2025 at 08:46:14AM +0100, Mika Westerberg wrote:
+> We have a Upstream Port (2b:00.0) that has following in the PTM capability:
 > 
->   https://git.kernel.org/tglx/history/c/a5287abe398b
-> 
-> In 2006, EEH and AER were introduced to recover from errors by performing
-> a reset.  Because errors can occur at any time, drivers began calling
-> pci_save_state() on probe to ensure recoverability.
-> 
-> In 2009, recoverability was foiled by commit c82f63e411f1 ("PCI: check
-> saved state before restore"):  It amended pci_restore_state() to bail out
-> if the "state_saved" flag has been cleared.  The flag is cleared by
-> pci_restore_state() itself, hence a saved state is now allowed to be
-> restored only once and is then invalidated.  That doesn't seem to make
-> sense because the saved state should be good enough to be reused.
-> 
-> Soon after, drivers began to work around this behavior by calling
-> pci_save_state() immediately after pci_restore_state(), see e.g. commit
-> b94f2d775a71 ("igb: call pci_save_state after pci_restore_state").
-> Hilariously, two drivers even set the "saved_state" flag to true before
-> invoking pci_restore_state(), see ipr_reset_restore_cfg_space() and
-> e1000_io_slot_reset().
-> 
-> Despite these workarounds, recoverability at all times is not guaranteed:
-> E.g. when a PCIe port goes through a runtime suspend and resume cycle,
-> the "saved_state" flag is cleared by:
-> 
->   pci_pm_runtime_resume()
->     pci_pm_default_resume_early()
->       pci_restore_state()
-> 
-> ... and hence on a subsequent AER event, the port's Config Space cannot be
-> restored.  
+>   Capabilities: [220 v1] Precision Time Measurement
+> 		PTMCap: Requester- Responder- Root-
 
-I guess this restore would be done by a driver's
-pci_error_handlers.slot_reset() or .reset_done() calling
-pci_restore_state()?
+Sec 7.9.15.2 says "Switches supporting PTM must Set PTM Responder
+Capable".  To me that sounds like "Switches with a PTM Capability must
+Set PTM Responder Capable".  But I guess whoever designed this device
+didn't think the same way.
 
-> Riana reports a recovery failure of a GPU-integrated PCIe
-> switch and has root-caused it to the behavior of pci_restore_state().
-> Another workaround would be necessary, namely calling pci_save_state() in
-> pcie_port_device_runtime_resume().
+> Linux enables PTM for this without looking into what roles it actually
+> supports. Immediately after enabling PTM we start getting these:
 > 
-> The motivation of commit c82f63e411f1 was to prevent restoring state if
-> pci_save_state() hasn't been called before.  But that can be achieved by
-> saving state already on device addition, after Config Space has been
-> initialized.  A desirable side effect is that devices become recoverable
-> even if no driver gets bound.  This renders the commit unnecessary, so
-> revert it.
+>   pci 0000:2b:00.0: [8086:5786] type 01 class 0x060400 PCIe Switch Upstream Port
+>   ...
+>   pci 0000:2b:00.0: PTM enabled, 4ns granularity
+>   ...
+>   pcieport 0000:00:07.1: AER: Multiple Uncorrectable (Non-Fatal) error message received from 0000:00:07.1
+>   pcieport 0000:00:07.1: PCIe Bus Error: severity=Uncorrectable (Non-Fatal), type=Transaction Layer, (Receiver ID)
+>   pcieport 0000:00:07.1:   device [8086:e44f] error status/mask=00200000/00000000
+>   pcieport 0000:00:07.1:    [21] ACSViol                (First)
+>   pcieport 0000:00:07.1: AER:   TLP Header: 0x34000000 0x00000052 0x00000000 0x00000000
 > 
-> Reported-by: Riana Tauro <riana.tauro@intel.com> # off-list
-> Tested-by: Riana Tauro <riana.tauro@intel.com>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Fix this by enabling PTM only if any of the following conditions are
+> true (see more in PCIe r7.0 sec 6.21.1 figure 6-21):
+> 
+>   - PCIe Endpoint that has PTM capability must to declare requester
+>     capable
+>   - PCIe Switch Upstream Port that has PTM capability must declare
+>     at least responder capable
+>   - PCIe Root Port must declare root port capable.
+> 
+> While there make the enabling happen for all in __pci_enable_ptm() instead
+> of enabling some in pci_ptm_init() and some in __pci_enable_ptm().
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+Applied to pci/ptm for v6.19, thanks!
+
 > ---
-> Proof that removing the check in pci_restore_state() makes no
-> difference for the PCI core:
+> Hi,
 > 
-> * The only relevant invocations of pci_restore_state() are in
->   drivers/pci/pci-driver.c
-> * One invocation is in pci_restore_standard_config(), which is
->   always called conditionally on "if (pci_dev->state_saved)".
->   So the check at the beginning of pci_restore_state() which
->   this patch removes is an unnecessary duplication.
-> * Another invocation is in pci_pm_default_resume_early(), which
->   is called from pci_pm_resume_noirq(), pci_pm_restore_noirq()
->   and pci_pm_runtime_resume().  Those functions are only called
->   after prior calls to pci_pm_suspend_noirq(), pci_pm_freeze_noirq(),
->   and pci_pm_runtime_suspend(), respectively.  And all of them
->   call pci_save_state().  So the "if (!dev->state_saved)" check
->   in pci_restore_state() never evaluates to true.
-> * A third invocation is in pci_pm_thaw_noirq().  It is only called
->   after a prior call to pci_pm_freeze_noirq(), which invokes
->   pci_save_state().  So likewise the "if (!dev->state_saved)" check
->   in pci_restore_state() never evaluates to true.
+> I hope I did not make any stupid mistakes this time ;-) My testing still
+> passed: the Root Port that has ->ptm_root (and ->ptm_responder) PTM is
+> enabled and the Switch Upstream Port that does not have ->ptm_responder is
+> not enabled (and I don't see the flood of AER errors).
+>
+> Previous versions can be seen:
 > 
->  drivers/pci/bus.c   | 7 +++++++
->  drivers/pci/pci.c   | 3 ---
->  drivers/pci/probe.c | 2 --
->  3 files changed, 7 insertions(+), 5 deletions(-)
+>   v4: https://lore.kernel.org/linux-pci/20251111061048.681752-1-mika.westerberg@linux.intel.com/
+>   v3: https://lore.kernel.org/linux-pci/20251030134606.3782352-1-mika.westerberg@linux.intel.com/
+>   v2: https://lore.kernel.org/linux-pci/20251028060427.2163115-1-mika.westerberg@linux.intel.com/
+>   v1: https://lore.kernel.org/linux-pci/20251021104833.3729120-1-mika.westerberg@linux.intel.com/
 > 
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index f26aec6..4318568 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -358,6 +358,13 @@ void pci_bus_add_device(struct pci_dev *dev)
->  	pci_bridge_d3_update(dev);
+> Changes from v4:
+> 
+>   - Do not enable PTM automatically for all components (e.g keep the
+>     existing behavior).
+>   - Make the switch-case new lines consistent.
+> 
+> Changes from v3:
+> 
+>   - Cache the responder and requester capability bits.
+>   - Enable PTM only in __pci_enable_ptm().
+>   - Update $subject and commit message.
+>   - Since this is changed quite a lot, I dropped the Reviewed-by from Lukas
+>     and also stable tag.
+> 
+> Changes from v2:
+> 
+>   - Limit the check in __pci_enable_ptm() to Endpoints and Legacy
+>     Endpoints.
+>   - Added stable tags suggested by Lukas, and PCIe spec reference.
+>   - Added Reviewed-by tag from Lukas (hope it is okay to keep).
+> 
+> Changes from v1:
+> 
+>   - Limit Switch Upstream Port only to Responder, not both Requester and
+>     Responder.
+> 
+>  drivers/pci/pcie/ptm.c | 35 +++++++++++++++++++++++++++++++++++
+>  include/linux/pci.h    |  2 ++
+>  2 files changed, 37 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+> index 65e4b008be00..fb1f3d0d8448 100644
+> --- a/drivers/pci/pcie/ptm.c
+> +++ b/drivers/pci/pcie/ptm.c
+> @@ -81,6 +81,11 @@ void pci_ptm_init(struct pci_dev *dev)
+>  		dev->ptm_granularity = 0;
+>  	}
 >  
->  	/*
-> +	 * Save config space for error recoverability.  Clear state_saved
-> +	 * to detect whether drivers invoked pci_save_state() on suspend.
-
-Can we expand this a little to explain how this is detected and what
-drivers *should* be doing?  I think the reason is that the PCI core
-can invoke pci_save_state() on suspend if the driver did not.
-
-I assume:
-
-  - PCI core always calls pci_save_state() and clears state_saved when
-    device is enumerated (below)
-
-  - When it has configured the device to the state it wants restore,
-    the driver may call pci_save_state() again, which will set
-    state_saved
-
-  - If driver has not called pci_save_state(), i.e., state_saved is
-    still clear, we want the PCI core to call pci_save_state() during
-    suspend
-
-This sounds sensible to me.  It would be nice if there were a few more
-words about pci_save_state() and pci_restore_state() in
-Documentation/.
-
-pci_save_state() isn't mentioned at all in Documentation/PCI, and 
-Documentation/PCI/pci-error-recovery.rst contains this:
-
-  It is important for the platform to restore the PCI config space
-  to the "fresh poweron" state, rather than the "last state". After
-  a slot reset, the device driver will almost always use its standard
-  device initialization routines, and an unusual config space setup
-  may result in hung devices, kernel panics, or silent data corruption.
-
-The PCI core doesn't call pci_restore_state() in the error recovery
-path, so maybe that matches the platform (PCI core) restoring "fresh
-poweron" state.  And maybe the driver using "its standard device init
-routines" is an oblique reference to things like pci_restore_state(),
-which is called by several .slot_reset() and .reset_done() callbacks?
-
-pci.rst mentions the PCI core saving and restoring the "standard
-configuration registers if the driver hasn't done that", which I guess
-refers to pci_save_state().  This seems like it could be more explicit
-and maybe could mention the default of saving/restoring the state at
-suspend, and the option that if the driver itself calls
-pci_save_state(), *that* state will be restored.
-
-This all looks good to me, and I'm sorry I took so long to get to it.
-
-But I surely would like to have Rafael's ack for this because power
-management is a mystery to me.
-
-> +	 */
-> +	pci_save_state(dev);
-> +	dev->state_saved = false;
+> +	if (cap & PCI_PTM_CAP_RES)
+> +		dev->ptm_responder = 1;
+> +	if (cap & PCI_PTM_CAP_REQ)
+> +		dev->ptm_requester = 1;
 > +
-> +	/*
->  	 * If the PCI device is associated with a pwrctrl device with a
->  	 * power supply, create a device link between the PCI device and
->  	 * pwrctrl device.  This ensures that pwrctrl drivers are probed
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b14dd06..2f0da5d 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1855,9 +1855,6 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
->   */
->  void pci_restore_state(struct pci_dev *dev)
->  {
-> -	if (!dev->state_saved)
-> -		return;
-> -
->  	pci_restore_pcie_state(dev);
->  	pci_restore_pasid_state(dev);
->  	pci_restore_pri_state(dev);
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index c83e75a..c7c7a3d 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2747,8 +2747,6 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+>  	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+>  	    pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM)
+>  		pci_enable_ptm(dev, NULL);
+> @@ -144,6 +149,36 @@ static int __pci_enable_ptm(struct pci_dev *dev)
+>  			return -EINVAL;
+>  	}
 >  
->  	pci_reassigndev_resource_alignment(dev);
+> +	switch (pci_pcie_type(dev)) {
+> +	case PCI_EXP_TYPE_ROOT_PORT:
+> +		/*
+> +		 * Root Port must declare Root Capable if we want to enable
+> +		 * PTM for it.
+> +		 */
+> +		if (!dev->ptm_root)
+> +			return -EINVAL;
+> +		break;
+> +	case PCI_EXP_TYPE_UPSTREAM:
+> +		/*
+> +		 * Switch Upstream Ports must at least declare Responder
+> +		 * Capable if we want to enable PTM for it.
+> +		 */
+> +		if (!dev->ptm_responder)
+> +			return -EINVAL;
+> +		break;
+> +	case PCI_EXP_TYPE_ENDPOINT:
+> +	case PCI_EXP_TYPE_LEG_END:
+> +		/*
+> +		 * PCIe Endpoint must declare Requester Capable before we
+> +		 * can enable PTM for it.
+> +		 */
+> +		if (!dev->ptm_requester)
+> +			return -EINVAL;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+>  	pci_read_config_dword(dev, ptm + PCI_PTM_CTRL, &ctrl);
 >  
-> -	dev->state_saved = false;
-> -
->  	pci_init_capabilities(dev);
->  
->  	/*
+>  	ctrl |= PCI_PTM_CTRL_ENABLE;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index d1fdf81fbe1e..d5018cb5c331 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -500,6 +500,8 @@ struct pci_dev {
+>  #ifdef CONFIG_PCIE_PTM
+>  	u16		ptm_cap;		/* PTM Capability */
+>  	unsigned int	ptm_root:1;
+> +	unsigned int	ptm_responder:1;
+> +	unsigned int	ptm_requester:1;
+>  	unsigned int	ptm_enabled:1;
+>  	u8		ptm_granularity;
+>  #endif
 > -- 
-> 2.51.0
+> 2.50.1
 > 
 
