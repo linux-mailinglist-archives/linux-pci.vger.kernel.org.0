@@ -1,82 +1,138 @@
-Return-Path: <linux-pci+bounces-40975-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40976-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B7FBC51881
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 11:00:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E53FC517FA
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 10:55:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4D1FB4FF086
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 09:51:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C7611881FF4
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 09:55:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 135602FE566;
-	Wed, 12 Nov 2025 09:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CCD9217F36;
+	Wed, 12 Nov 2025 09:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VR1sSncF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD122FDC5B
-	for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 09:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970042FF15A;
+	Wed, 12 Nov 2025 09:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762941014; cv=none; b=r5I49P4rEn3i88IFltqQod0bxl5msxP9H81jmXH3qBKAq8VjSA4jXbtNUX1SJ6lTDi6pXHk/R3jYM7eSq7BVdwLo/xyhOxFfCA9LMDY2GnKqPSMjI0Nm64E1TQdWblgidnRu+3ws5jY+ME2KcoUanfYaOgXw07+62PJFGy2IQQo=
+	t=1762941321; cv=none; b=f/OAerXxwq/pboA8USMOOUKGMiw6szCC/A+QsUuefeLgRIfCkQTUMpH0OYRbJbhEifJO/33Nwzzu48WUdhjkjtOfnNaxvpxlo798Pp5QWQ+Z3GlJ6BG9s/hOzu6tKqwSLg7h2aO5RVSFUbsuNe4zxj4UJ53/aEb+BBmoiJjvWVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762941014; c=relaxed/simple;
-	bh=pWaoinVZH7rlrVoExU+UXZcijLxigr8ftAiDGCtifQQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RfE5cJg3WX/5aodezP57RWT0aTzENO1EG7dmLQME8ZLtHz7nQwA7qwGEOmT+w1Hm/cobIz7LLjcQuctlwwEt7iA9lr+RxYSl63ESU1CsENxSo5YT3JsE7zT8PYYhZlGcOAo3CKGUr6g3ohNzXz0L6NIxIzVxnPGE6fdIPMEwzWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id CA721200C2E1;
-	Wed, 12 Nov 2025 10:50:01 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id BD4D8137E4; Wed, 12 Nov 2025 10:50:01 +0100 (CET)
-Date: Wed, 12 Nov 2025 10:50:01 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4] PCI/PTM: Enable PTM only if it advertises a role
-Message-ID: <aRRYSQO9DKo_7ipy@wunner.de>
-References: <20251111061048.681752-1-mika.westerberg@linux.intel.com>
- <20251111153942.GA2174680@bhelgaas>
+	s=arc-20240116; t=1762941321; c=relaxed/simple;
+	bh=SFI9MM3tuC+Bivwx7QPVbtLlk+ybwULToKZLNrhJT38=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Rly784UDLHEabmbabTkfaNZNy1QWaVJj+2l9PvSsBi1D91qFuw7emLdPUnG/SjHwZ+pcf0GCXhd5lSsZpqx8dGt/JhxQM39djUFDjiFKSoNtSTH5+fsh+FWQtUPt6S8dcAHsbrfpw6xCQTvKv45ev32ijrq1NvLZd4Se/7AHpas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=VR1sSncF; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AC8cWMe025757;
+	Wed, 12 Nov 2025 09:54:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2025-04-25; bh=dmkHiVLSvORdYgKy
+	1/Um6NDsCxamLB7VRZ94gczACkY=; b=VR1sSncF/Dfu2KPGNwCsEvp190ta9FpI
+	zz5TlnRH8vPBUs6VJiDEOGqEZOM5aexxdYQ2BC/h2pc9J4HW+ZewBmJIErXz59kK
+	eNhoHdleaDCEKyId6GaGpdP7n8mTBR7+rmzrEcToVa2CezwHYs75FpR4jJdxkhJX
+	CW2NvIT5nx8EuHG0jCno9MTSM1x6gk+LhJp/7Ss1oYTiXWOGfJlCYp5ky9uq9O/e
+	Ctx4HEcfY7TTwYLBHjxlTvSERiho5OC0u87DveUI+2JLn1rnfVWpqGEK283nL4fs
+	In50tcvllS69GJUzh4TW2eymptQ/FxoaKMuzZ6gz2qVoeQjiABTYtA==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4acpg686e8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 12 Nov 2025 09:54:45 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5AC7ml82021018;
+	Wed, 12 Nov 2025 09:54:45 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4a9vaagc8t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 12 Nov 2025 09:54:45 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5AC9siwH015703;
+	Wed, 12 Nov 2025 09:54:44 GMT
+Received: from lab61.no.oracle.com (lab61.no.oracle.com [10.172.144.82])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4a9vaagc7r-1;
+	Wed, 12 Nov 2025 09:54:44 +0000
+From: =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>
+To: Bjorn Helgaas <bhelgaas@google.com>, Sinan Kaya <okaya@codeaurora.org>
+Cc: =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] PCI: Do not attempt to set ExtTag for VFs
+Date: Wed, 12 Nov 2025 10:54:40 +0100
+Message-ID: <20251112095442.1913258-1-haakon.bugge@oracle.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251111153942.GA2174680@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-12_03,2025-11-11_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ adultscore=0 bulkscore=0 suspectscore=0 spamscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2510240000 definitions=main-2511120079
+X-Authority-Analysis: v=2.4 cv=FK8WBuos c=1 sm=1 tr=0 ts=69145966 cx=c_pps
+ a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=M51BFTxLslgA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8 a=mnBHqYny2I4Dg18uI9AA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: L1_0lufocTbI3epD7E9WtsQPQKPhC-CN
+X-Proofpoint-ORIG-GUID: L1_0lufocTbI3epD7E9WtsQPQKPhC-CN
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEyMDA2NCBTYWx0ZWRfXymYuhkNsVWbg
+ VsJwo+Mhg+9EBcSgHO14/inP4aE0Q7LVoPBfP/+/0cMn+vMsrViJB3iyZrSJ9NB23uS29mTnbJT
+ bD5g2Ls+RatisXbx2H/p520zLP4qVcg1HdXNRyCJlwu6lhRHQaIAbcnS7ES7BmNsxHYw3OiL0OT
+ PrFYLR8phOC1cSgZFMO/cNpux4caipIvyAQKWhqB+A1RxE7V1QNgRMXe3RNvt6/shkN6JPXNIPP
+ Lg4H0v5jqiUjXvMKdDoRwHhwxZgbkRbEEXsZfTCeg4SIFeZHuc91XG90FMK3kCThv3/3C5d81RJ
+ 5hnWHBum5bpRQedlmecYN2yopx3X666yaid0giFtka4WsDoXt+/guRVTbST1dkWdeR8Of5jmEgC
+ UpW81Lfn4+tD4eHhzoliznByvBVWFw==
 
-On Tue, Nov 11, 2025 at 09:39:42AM -0600, Bjorn Helgaas wrote:
-> I do wonder about the fact that previously we automatically enabled
-> PTM only for Root Ports and Switch Upstream Ports, but we didn't
-> enable it for Endpoints until a driver called pci_enable_ptm().
-> 
-> With this change, it looks like we automatically enable PTM for every
-> device that supports it.  Worth a mention in the commit log, and we
-> might also want to revisit the drivers (ice, idpf, igc, mlx5) that
-> explicitly enable it to remove the enable and disable calls there.
-> 
-> PTM consumes some link bandwidth, so the idea was to avoid paying that
-> cost unless a driver actually wanted to use PTM.
+The bit for enabling extended tags is Reserved and Preserved (RsvdP)
+for VFs, according to PCIe r7.0 section 7.5.3.4 table 7.21.  Hence,
+bail out early from pci_configure_extended_tags() if the device is a
+VF.
 
-pci_pm_suspend() and pci_pm_runtime_suspend() call pci_suspend_ptm()
-and there's a code comment preceding the call that it allows platforms
-such as Intel Coffee Lake to go to a deeper power state.
+Otherwise, we may see incorrect log messages such as:
 
-So apparently PTM not only has a bandwidth cost but also a power cost.
+	   kernel: pci 0000:af:00.2: enabling Extended Tags
 
-Thanks,
+(af:00.2 is a VF)
 
-Lukas
+Fixes: 60db3a4d8cc9 ("PCI: Enable PCIe Extended Tags if supported")
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+
+---
+
+v1 -> v2: Added ref to PCIe spec
+---
+ drivers/pci/probe.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 0ce98e18b5a87..014017e15bcc8 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2244,7 +2244,8 @@ int pci_configure_extended_tags(struct pci_dev *dev, void *ign)
+ 	u16 ctl;
+ 	int ret;
+ 
+-	if (!pci_is_pcie(dev))
++	/* PCI_EXP_DEVCTL_EXT_TAG is RsvdP in VFs */
++	if (!pci_is_pcie(dev) || dev->is_virtfn)
+ 		return 0;
+ 
+ 	ret = pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
+-- 
+2.43.5
+
 
