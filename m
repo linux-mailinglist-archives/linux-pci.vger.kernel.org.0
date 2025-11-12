@@ -1,235 +1,163 @@
-Return-Path: <linux-pci+bounces-40947-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40944-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 158D1C50520
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 03:19:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 412B7C503DB
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 02:52:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AD8AE4E59EF
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 02:19:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 14A921887BA1
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 01:52:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FBA63594A;
-	Wed, 12 Nov 2025 02:19:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0C6D28B4F0;
+	Wed, 12 Nov 2025 01:51:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="DNa5Gs7k"
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="g2OnEPAA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m1973173.qiye.163.com (mail-m1973173.qiye.163.com [220.197.31.73])
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DCD3A944;
-	Wed, 12 Nov 2025 02:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775CC28DB49;
+	Wed, 12 Nov 2025 01:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762913969; cv=none; b=TnLk++38gxOS/Lzj0eKi94DMGcd7HgDJwAA+Pv/fqenPAeahznte+ePmcEsKH+7g2/e/jBHnSAH19TWV77g6lORuuEAKSxkJwegKqkh2+ELWAH8N4cN7UB1d/odxfPCjFtY67PLXTpakU88KqNyNBk2bHb9qJbrBBJ34BcLS/Dk=
+	t=1762912301; cv=none; b=AwO4LasLnpwrOqJ85sdBkjZ5lhoRLQAP7hiJJFUyT6JfZgwz3p3GmL8hI0rgpeFHsJy5xIPiPxGQntMGT4oq0BDYERUDwqhKoSMd7czkXt+Bpeamu8x5HO3adUemmQ2oPKrh4Uqm3+UCz16Ff8RveB7yLfTkkT5UrsjlVU7473w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762913969; c=relaxed/simple;
-	bh=zrv4BQuAkbeUDpzcVRThVXvibXJv+pWYHlspRCkMfOk=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=OVbvxen98DtEU8iJlEeckFE7oTKS7FoHlthO/mQKn8HaZz6AdWtmVVnePD+JReMrDWBMVUo3dm9fdMJPkvzh/ViJqDiN3T5zWpenV1LxSrqmxLVzHrf98vNZWHkg++MaoQIwBU6hfz78E0eFq+Y9RJMc6y8LSl+o1EQ0Nf+MPPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=DNa5Gs7k; arc=none smtp.client-ip=220.197.31.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [192.168.61.151] (unknown [110.83.51.2])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 293fd660a;
-	Wed, 12 Nov 2025 09:03:42 +0800 (GMT+08:00)
-Message-ID: <79a8c3cc-2b60-4bce-b1ba-7ab5f033f924@rock-chips.com>
-Date: Wed, 12 Nov 2025 09:03:38 +0800
+	s=arc-20240116; t=1762912301; c=relaxed/simple;
+	bh=i3Nk53O/boHBuFajvOJf0+NAQQ8HEj8mlkMRb6nOWXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PeyJok8gqktXrFr5MR3Axm8qAj7Gyq6xKqYJL/NSaeMdc/K3Fhp9zMyIcwIoonjSLDsdmLhJLFyKe4WKJVyi3S86mdxbcWGHLygMST7GZN+E8VTUpsurthTT098AWz/jDpKFt1/nCVXxvNk8qmMwa9VhYIZWv4Zd4b9u0h9+jxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=g2OnEPAA; arc=none smtp.client-ip=1.95.21.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=hYfwcXlk1yVhq5DVinFiJbUOXo8e/FkjNZ+187JUQvQ=;
+	b=g2OnEPAAzyP8npm4AZ+DsbfBUsKE+VOkkIsHbR8DM5R8ndnfTRN9gZOsm006g7
+	1gy1K3u7D2+fX5wx+0jMYPvwLLbgT2EQLiigh52k0OxTyufcz35V4g8MERCGW4EV
+	IwkqXZzqMk5ENaydSxSc6uknGetzcgC+qBNYW8fSqpGek=
+Received: from dragon (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id M88vCgD3XBjz5xNpPSHPAQ--.5419S3;
+	Wed, 12 Nov 2025 09:50:45 +0800 (CST)
+Date: Wed, 12 Nov 2025 09:50:43 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Frank Li <Frank.li@nxp.com>, "robh@kernel.org" <robh@kernel.org>
+Cc: Hongxing Zhu <hongxing.zhu@nxp.com>,
+	"l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 01/11] arm64: dts: imx95-15x15-evk: Add
+ supports-clkreq property to PCIe M.2 port
+Message-ID: <aRPn89vIkmije-Ks@dragon>
+References: <20251015030428.2980427-1-hongxing.zhu@nxp.com>
+ <20251015030428.2980427-2-hongxing.zhu@nxp.com>
+ <aRLhko0h1OZgvo2o@dragon>
+ <AS8PR04MB8833D099959C62A97AC8CB868CCFA@AS8PR04MB8833.eurprd04.prod.outlook.com>
+ <aRNf3TUTawixqGR1@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, Manivannan Sadhasivam <mani@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Kever Yang <kever.yang@rock-chips.com>, Simon Xue <xxm@rock-chips.com>,
- Damien Le Moal <dlemoal@kernel.org>, Dragan Simic <dsimic@manjaro.org>,
- FUKAUMI Naoki <naoki@radxa.com>, Diederik de Haas <diederik@cknow-tech.com>,
- Richard Zhu <hongxing.zhu@nxp.com>, Frank Li <Frank.li@nxp.com>,
- Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Conor Dooley <conor@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>, Hans Zhang <hans.zhang@cixtech.com>,
- linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- kernel@pengutronix.de, Bjorn Helgaas <bhelgaas@google.com>,
- Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH 1/4] PCI: dwc: Advertise L1 PM Substates only if driver
- requests it
-To: Bjorn Helgaas <helgaas@kernel.org>
-References: <20251111221621.2208606-1-helgaas@kernel.org>
- <20251111221621.2208606-2-helgaas@kernel.org>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <20251111221621.2208606-2-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9a759702a009cckunm68f60faf90264
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTUNNVkxJSRoZGR5KTRoaHlYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSktVQ0hVTkpVSVlXWRYaDxIVHRRZQVlPS0hVSktISkpCTVVKS0tVSk
-	JZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=DNa5Gs7krwEhPUprrj/3XgxdSRjNLBnw+qN8B4C1vhJlTX/vfffYkqXOnhtb/6isIcgYPxadD7Z2X5DoSALMwp3BimgGwfur5wMUdCPUpgAhoDNn1bx0HLtK5uyLXSstW6gi7Ky7ThJ0IqZ6g1wO8KJqM501+F+nkx1fxrx3axo=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=X0Bnr2iJChPdZ80UCVLiI+51ilZQPsF7USzqD4IyGeA=;
-	h=date:mime-version:subject:message-id:from;
+In-Reply-To: <aRNf3TUTawixqGR1@lizhi-Precision-Tower-5810>
+X-CM-TRANSID:M88vCgD3XBjz5xNpPSHPAQ--.5419S3
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZr4kWrWrZw1DtFy5JFW5Wrg_yoW5Zr4DpF
+	WUGF4DGF18WFyrJwsFqFyFkFyDtwn3AFsI9r1DWryUtrZ0kF1FqF429rs3ur1Dtr48K3y0
+	vF1qq3sag345Zr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbVysUUUUU=
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiORZWu2kT5-bznwAA3F
 
-在 2025/11/12 星期三 6:16, Bjorn Helgaas 写道:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, Nov 11, 2025 at 11:10:05AM -0500, Frank Li wrote:
+> On Tue, Nov 11, 2025 at 08:02:35AM +0000, Hongxing Zhu wrote:
+> > > -----Original Message-----
+> > > From: Shawn Guo <shawnguo2@yeah.net>
+> > > Sent: 2025年11月11日 15:11
+> > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
+> > > lpieralisi@kernel.org; kwilczynski@kernel.org; mani@kernel.org;
+> > > robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
+> > > bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
+> > > kernel@pengutronix.de; festevam@gmail.com; linux-pci@vger.kernel.org;
+> > > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> > > imx@lists.linux.dev; linux-kernel@vger.kernel.org
+> > > Subject: Re: [PATCH v6 01/11] arm64: dts: imx95-15x15-evk: Add
+> > > supports-clkreq property to PCIe M.2 port
+> > >
+> > > On Wed, Oct 15, 2025 at 11:04:18AM +0800, Richard Zhu wrote:
+> > > > According to PCIe r6.1, sec 5.5.1.
+> > > >
+> > > > The following rules define how the L1.1 and L1.2 substates are entered:
+> > > > Both the Upstream and Downstream Ports must monitor the logical state
+> > > > of the CLKREQ# signal.
+> > > >
+> > > > Typical implement is using open drain, which connect RC's clkreq# to
+> > > > EP's clkreq# together and pull up clkreq#.
+> > > >
+> > > > imx95-15x15-evk matches this requirement, so add supports-clkreq to
+> > > > allow PCIe device enter ASPM L1 Sub-State.
+> > > >
+> > > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > > > ---
+> > > >  arch/arm64/boot/dts/freescale/imx95-15x15-evk.dts | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/arch/arm64/boot/dts/freescale/imx95-15x15-evk.dts
+> > > > b/arch/arm64/boot/dts/freescale/imx95-15x15-evk.dts
+> > > > index 148243470dd4a..3ee032c154fa3 100644
+> > > > --- a/arch/arm64/boot/dts/freescale/imx95-15x15-evk.dts
+> > > > +++ b/arch/arm64/boot/dts/freescale/imx95-15x15-evk.dts
+> > > > @@ -556,6 +556,7 @@ &pcie0 {
+> > > >  	pinctrl-names = "default";
+> > > >  	reset-gpio = <&gpio5 13 GPIO_ACTIVE_LOW>;
+> > > >  	vpcie-supply = <&reg_m2_pwr>;
+> > > > +	supports-clkreq;
+> > >
+> > > Is binding updated for this property?
+> > >
+> > > Shawn
+> > >
+> > Hi Shawn:
+> > As I know that It's a documented binding property as below.
+> > - supports-clkreq:
+> >    If present this property specifies that CLKREQ signal routing exists from
+> >    root port to downstream device and host bridge drivers can do programming
+> >    which depends on CLKREQ signal existence. For example, programming root port
+> >    not to advertise ASPM L1 Sub-States support if there is no CLKREQ signal.
+> > ./Documentation/devicetree/bindings/pci/pci.txt
 > 
-> L1 PM Substates require the CLKREF# signal and may also require
-> device-specific support.  If CLKREF# is not supported or driver support is
-> lacking, enabling L1.1 or L1.2 may cause errors when accessing devices,
-> e.g.,
+> Shawn:
 > 
->    nvme nvme0: controller is down; will reset: CSTS=0xffffffff, PCI_STATUS=0x10
+> 	This file should be removed. It is already merge to Rob's dt-scheme
+> as PCIe standard properties.
 > 
-> If the kernel is built with CONFIG_PCIEASPM_POWER_SUPERSAVE=y or users
-> enable L1.x via sysfs, users may trip over these errors even if L1
-> Substates haven't been enabled by firmware or the driver.
-> 
-> To prevent such errors, disable advertising the L1 PM Substates unless the
-> driver sets "dw_pcie.l1ss_support" to indicate that it knows CLKREF# is
-> present and any device-specific configuration has been done.
-> 
-> Set "dw_pcie.l1ss_support" in tegra194 (if DT includes the
-> "supports-clkreq' property) and qcom (for 2.7.0 controllers) so they can
-> continue to use L1 Substates.
-> 
-> Based on Niklas's patch:
-> https://patch.msgid.link/20251017163252.598812-2-cassel@kernel.org
+> See: https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-bus-common.yaml
 
+Ah, thanks!
 
-Except the issue Fank pointed out, the commit msg says CLKREF# 3 times
-which seems not a term from spec. Should it be CLKREQ# ?
+Rob,
 
-Otherwise,
-Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
+So it's no longer the case that kernel Documentation/devicetree/bindings
+has all bindings documentation?  Or it's never been the case?  I used to
+grep a property in the folder to see if it's documented or not.
 
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->   .../pci/controller/dwc/pcie-designware-ep.c   |  2 ++
->   .../pci/controller/dwc/pcie-designware-host.c |  2 ++
->   drivers/pci/controller/dwc/pcie-designware.c  | 24 +++++++++++++++++++
->   drivers/pci/controller/dwc/pcie-designware.h  |  2 ++
->   drivers/pci/controller/dwc/pcie-qcom.c        |  2 ++
->   drivers/pci/controller/dwc/pcie-tegra194.c    |  3 +++
->   6 files changed, 35 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 7f2112c2fb21..c94cff6eeb01 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -966,6 +966,8 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
->   	if (ep->ops->init)
->   		ep->ops->init(ep);
->   
-> +	dw_pcie_config_l1ss(pci);
-> +
->   	ptm_cap_base = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_PTM);
->   
->   	/*
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 20c9333bcb1c..f1d5b45a3214 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -1060,6 +1060,8 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
->   		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
->   	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
->   
-> +	dw_pcie_config_l1ss(pci);
-> +
->   	dw_pcie_config_presets(pp);
->   	/*
->   	 * If the platform provides its own child bus config accesses, it means
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index c644216995f6..ede686623fad 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -1081,6 +1081,30 @@ void dw_pcie_edma_remove(struct dw_pcie *pci)
->   	dw_edma_remove(&pci->edma);
->   }
->   
-> +void dw_pcie_config_l1ss(struct dw_pcie *pci)
-> +{
-> +	u16 l1ss;
-> +	u32 l1ss_cap;
-> +
-> +	if (!pci->l1ss_support)
-> +		return;
-> +
-> +	l1ss = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_L1SS);
-> +	if (!l1ss)
-> +		return;
-> +
-> +	/*
-> +	 * Unless the driver claims "l1ss_support", don't advertise L1 PM
-> +	 * Substates because they require CLKREF# and possibly other
-> +	 * device-specific configuration.
-> +	 */
-> +	l1ss_cap = dw_pcie_readl_dbi(pci, l1ss + PCI_L1SS_CAP);
-> +	l1ss_cap &= ~(PCI_L1SS_CAP_PCIPM_L1_1 | PCI_L1SS_CAP_ASPM_L1_1 |
-> +		      PCI_L1SS_CAP_PCIPM_L1_2 | PCI_L1SS_CAP_ASPM_L1_2 |
-> +		      PCI_L1SS_CAP_L1_PM_SS);
-> +	dw_pcie_writel_dbi(pci, l1ss + PCI_L1SS_CAP, l1ss_cap);
-> +}
-> +
->   void dw_pcie_setup(struct dw_pcie *pci)
->   {
->   	u32 val;
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index e995f692a1ec..8d14b1fe2280 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -516,6 +516,7 @@ struct dw_pcie {
->   	int			max_link_speed;
->   	u8			n_fts[2];
->   	struct dw_edma_chip	edma;
-> +	bool			l1ss_support;	/* L1 PM Substates support */
->   	struct clk_bulk_data	app_clks[DW_PCIE_NUM_APP_CLKS];
->   	struct clk_bulk_data	core_clks[DW_PCIE_NUM_CORE_CLKS];
->   	struct reset_control_bulk_data	app_rsts[DW_PCIE_NUM_APP_RSTS];
-> @@ -573,6 +574,7 @@ int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
->   				int type, u64 parent_bus_addr,
->   				u8 bar, size_t size);
->   void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index);
-> +void dw_pcie_config_l1ss(struct dw_pcie *pci);
->   void dw_pcie_setup(struct dw_pcie *pci);
->   void dw_pcie_iatu_detect(struct dw_pcie *pci);
->   int dw_pcie_edma_detect(struct dw_pcie *pci);
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 805edbbfe7eb..61c2f4e2f74d 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1067,6 +1067,8 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
->   	val &= ~REQ_NOT_ENTR_L1;
->   	writel(val, pcie->parf + PARF_PM_CTRL);
->   
-> +	pci->l1ss_support = true;
-> +
->   	val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
->   	val |= EN;
->   	writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 10e74458e667..3934757baa30 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -703,6 +703,9 @@ static void init_host_aspm(struct tegra_pcie_dw *pcie)
->   	val |= (pcie->aspm_pwr_on_t << 19);
->   	dw_pcie_writel_dbi(pci, pcie->cfg_link_cap_l1sub, val);
->   
-> +	if (pcie->supports_clkreq)
-> +		pci->l1ss_support = true;
-> +
->   	/* Program L0s and L1 entrance latencies */
->   	val = dw_pcie_readl_dbi(pci, PCIE_PORT_AFR);
->   	val &= ~PORT_AFR_L0S_ENTRANCE_LAT_MASK;
+Shawn
 
 
