@@ -1,162 +1,257 @@
-Return-Path: <linux-pci+bounces-40959-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40960-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83797C510BE
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 09:07:00 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0633C510FD
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 09:12:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 00E084F5670
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 08:03:44 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3B2284F3AA6
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 08:06:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2FFD2F3C07;
-	Wed, 12 Nov 2025 08:03:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EE172F3C12;
+	Wed, 12 Nov 2025 08:06:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QVZ42ao4"
+	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="ngzOWlR9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012049.outbound.protection.outlook.com [40.93.195.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23E92F25F8
-	for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 08:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762934614; cv=none; b=f5t9b+PBiD/7nFPBKBgEaebM01ZHcGIkmhWGStHD4JK2biJ47E2CJ3MsKvuiuBasbT6N0yO21SlITpN85sQEQ8p3ReVxZJfvS6otB9DyVWruCVZ55rao9hupxwozSzPQOpWfW1lj/g938f355+1E9qt+WeTl1tFb28+T8fEb8Ec=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762934614; c=relaxed/simple;
-	bh=zPGu40RBS+rv+lA9IJtOCrLM35WUPLbmW8rMipxE56o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rKeIKtWdcZz0Gp9EZTCACWodsUS9x6xK89jOnNYnfTktl/asWlNKEmIiOxB8/0uOD2ClKAq9XGItrzpYrTuv8kSvMkfVLUI0ZthGR3KRedFP+A4PxAGlXLdPJ0op/yVqszWEnSTscWRvy7+/hbNFI28emMwLOBY8qZvKOXFmmmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QVZ42ao4; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-297d4a56f97so5461005ad.1
-        for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 00:03:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762934612; x=1763539412; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IOQ8gbWYR/8pIKJHHt25CkEHl+HOhDt/PI+YYG3jAcU=;
-        b=QVZ42ao4mMs2CpSTRfVM3TADYwdgVveukUPeJiFkT0zZyeU1C745UJmB+LNccHAs4w
-         6OfI7wK7cm/5iPhzt8HwZQjUBeQZzHCXy/u1nRNJ4I92q/q/jTmlAKk12TPG9jOxj3ow
-         Cq41QXcXAH7ukzFK2ddDqNjOIvXhL2zgMkGLaGC4J9E9yVHMMrm2dM8xjIOnhByTV74E
-         1jiOj4nhvFJXEsbGixflauc1r2QgSgglutwMi/FP1ZEl3bIydaTBV+PVFgaKAncxhs1g
-         etoO4XUL6xXbVFn2lQ9nZfoQgxGrh0j+ykYkz9xKRqytcummxrSF61Ev47qetGTXAmuZ
-         KTRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762934612; x=1763539412;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IOQ8gbWYR/8pIKJHHt25CkEHl+HOhDt/PI+YYG3jAcU=;
-        b=WXk8g3nWQR4qigDzfQm9RhRqIBwCtUEPqluzs7n4aJqnH+XDOtaYAHyjYu3cMm2yRt
-         BOgav1ZPn7Ojd04qMGCshGhoTXoZco9qK35TsotjBwOoZHwlmqtFiL4IHrx/LuuZUCjG
-         AkXJYj8SLsgJrAnw0uV8e1S7Pe7QFpfrM2/43PHHtaEyF8BXhSjrIGS9EIwVtLHowIkP
-         eQ27hgrwTcQ/tqqUkki5jbf3EQvWDFQNY6xiOMq6RmQJUhdikG56/mUcgOZ/Ww7aepSE
-         sdG7Vb3sZxPSl/uvHOkz9FjpoF+V+n3cuW/dOq78pFcBqHHnXT4HgywQhvHJhnKzliyb
-         9zvA==
-X-Forwarded-Encrypted: i=1; AJvYcCXuN1KK8IMMvuegVi9tdOuxDpd+7NA+TsEiBZrs0yO5QOEPsF8le2qkdAYHtwHg+stHAtwnlJTXvxE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvkO3XADAUi2PmEzLTIDCKIrmYCFd0WvnjA1AU0rEpzoTPo8fA
-	C8k64TJYw+jUWsgxIIwkNeqx2ZYr2seQYnndCRisn/FTLZShcwrKwsLG
-X-Gm-Gg: ASbGncst2eXtfljEEqHJAdGbpw00wDy5cv6JqWX3tUh5oXUQbKDp8+JxTI+8yhuxRhy
-	aGFb+qojErmeudWjw4VXaqyyqXYpWZw7QGCoVMmFSIQ5STBUbrFAx0gCdpiGv3UwgmIH5gyYznh
-	wzJ9JZF3/XFxRJy0QDUALyOqwU2xCnCWh8lByVWDoTxfvlwYN+b5YmmiW/P60iPmPhWLYar2zmT
-	jwru2AnhmPuTu+kh+XGvZus4Vor1UU/dK/WueKBg3BhB4EJRbywC7gL3hei5nRwQTsUL6GUsI0H
-	51XCyPf0NerHMkRUhXsyec1vdvCHgH6WN1JMkhH0wSFdUcAQkbqEJB3SgZyhGF58ANpt1jCAiwP
-	E3d9kk3rm60LQup8klX7ts1BKaWlae+MM8c+SSG60DiGNYw3ugoQ6q4enXg3QAsH+9OeSRdunJQ
-	==
-X-Google-Smtp-Source: AGHT+IH+DPJMbQNSOGKgtCR72ZONR0AxugfjM0MLXwjdzOTvsq+YFq9t1EqGEJ/mZYCDIKH8bOXU0g==
-X-Received: by 2002:a17:902:e78b:b0:269:8d1b:40c3 with SMTP id d9443c01a7336-2984ed2b619mr28705965ad.12.1762934611984;
-        Wed, 12 Nov 2025 00:03:31 -0800 (PST)
-Received: from geday ([2804:7f2:800b:7c80::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2984dbdac10sm21286815ad.22.2025.11.12.00.03.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 00:03:31 -0800 (PST)
-Date: Wed, 12 Nov 2025 05:03:19 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: =?utf-8?B?5byg54Oo?= <ye.zhang@rock-chips.com>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	linux-pci <linux-pci@vger.kernel.org>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	devicetree <devicetree@vger.kernel.org>,
-	krzk+dt <krzk+dt@kernel.org>, conor+dt <conor+dt@kernel.org>,
-	Johan Jonker <jbx6244@gmail.com>,
-	linux-rockchip <linux-rockchip@lists.infradead.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: align bindings to PCIe spec
-Message-ID: <aRQ_R90S8T82th45@geday>
-References: <4b5ffcccfef2a61838aa563521672a171acb27b2.1762321976.git.geraldogabriel@gmail.com>
- <ba120577-42da-424d-8102-9d085c1494c8@rock-chips.com>
- <aQsIXcQzeYop6a0B@geday>
- <67b605b0-7046-448a-bc9b-d3ac56333809@rock-chips.com>
- <aQ1c7ZDycxiOIy8Y@geday>
- <d9e257bd-806c-48b4-bb22-f1342e9fc15a@rock-chips.com>
- <aRLEbfsmXnGwyigS@geday>
- <AGsAmwCFJj0ZQ4vKzrqC84rs.3.1762847224180.Hmail.ye.zhang@rock-chips.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25AE52ECD34;
+	Wed, 12 Nov 2025 08:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762934790; cv=fail; b=pbqC5bClRgnWIHuDPTW0NcmBzppGYepb/WyjZsdmPekg8qkEj5rCI3t1gfSHRqreaIGRqdqfo/beYTa7bnGwwJKfI66b1j4B+fD9kcbswb0FZWOUft64nTxw/ift1IfIfZisGgeyfVkc9lTh/CWcWahdAhQiKA6L0NFhzxFvCYM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762934790; c=relaxed/simple;
+	bh=kxUmm4RdxRTfTor7IQDVEhkOgwHaPZnqSLzEweE+H80=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=QGCXTA7UlfuHrst5n3ed0YRdA4EwRMWqAzXhzdj0qct3lRh11L4UYIC/CmA1dDwzG9UaswT1wUWoCj4qNs+e6b+Xb2aaZokMS2mfTU9iSduawAMD7jXqdwfmmVDi8+IVw/gZYF25uDBoML/U4zXxMG3fM3Ix1IKfa7n0SrqFLzE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=ngzOWlR9; arc=fail smtp.client-ip=40.93.195.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZouAj7AhL/BkBx4cdt/c/JJ/Ncqv5WcHHKCP0X5bUUk0AZHUJQIiiAecbHuOcVdvdfYsUXR2uwYGbnZaljdvKLCDuC7BSXOj+1+3NRr4ItSnrdfgDRI0XE01bpEpeCHyJYvyQTQ9ohoL1IqnU0862M5dpUUL7+m5Sa8io+uRmwb/3RNGH9PiAJtFTtK8ZJnG6BcG3ysW3UwmDCw1pxbLWZZ4dI6cnwEOSJOn6haNtWL/BJuan3N9rbJbYvi5mK/WwkawvAJ+GT5PM4FlLJ72AcCnho+y7k7T4Kj3dXlCvT5mHb7JDmAtHiTAdiB1l7c0eOSveTyYQADEI1pbWR1t8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LKYmegH3ykHGiWV1hZKmrDw3+XreT4d7ug60Uik8NjY=;
+ b=zBXoC7ZiMa9ElI40t/wL59FujROvSr/vsVSUbHU8DMATZafQl1xzqIGwCY7ZvhjwIlIni/tg3cmfXxPLKSebpcBj6vqHeMpcDCJkRJU/giUEV8FkHIgOiS+80kts2q+TPpObOmCi204guKF429dGJWTKRz3Zj1TpENjWHwwAca73evg85WHjlHAqS3rqdq/s32v1i3Fb1KCvxTjG/dImT2Pn4cCmassW+bAudYvvyvYUoIM2e6NYBtVtNlrrDjy8nF/5GS7jYt2f4kIStmADApoTWKRUNTNCiTnccjkhrzO6/nXwNyrES5K4vcdXPZCCEsKKX/sN1euGydvC2Pt7uA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
+ dkim=pass header.d=altera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LKYmegH3ykHGiWV1hZKmrDw3+XreT4d7ug60Uik8NjY=;
+ b=ngzOWlR9HHenRcNT4vNyCG0iWzBW5wOfCf4vgi/9z+VmAry9jxiKcxAuofHbuxnRYyAG/0ggp2W1TwxZtnN1TBX9LCxs0yrDoPt2QAHhBo3ip3n6C6oElWIbyCF1OPJcAqFvmhRwjKrHixsea2IG+WeKuFQtjdwpmqShxUPvHQRZri+1Zb6k/Ouon1A6Tv3PYWy4PwK5lEbfjR1qWugV1zYAvmHglc1lb8KvzocMlCRHAfgcVydpHxtKFgkWNB/1DtIivQ3SjXrJUGwgCZ3W0SroOQeonZ383dr7D7KUGq+UW4QruJItm4n88WyE34lBenhgZaMuLsdGSoQrf+YFTA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=altera.com;
+Received: from SA1PR03MB6498.namprd03.prod.outlook.com (2603:10b6:806:1c5::7)
+ by DM4PR03MB7000.namprd03.prod.outlook.com (2603:10b6:8:48::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.15; Wed, 12 Nov
+ 2025 08:06:25 +0000
+Received: from SA1PR03MB6498.namprd03.prod.outlook.com
+ ([fe80::feea:da58:faeb:9ebc]) by SA1PR03MB6498.namprd03.prod.outlook.com
+ ([fe80::feea:da58:faeb:9ebc%4]) with mapi id 15.20.9320.013; Wed, 12 Nov 2025
+ 08:06:24 +0000
+Message-ID: <e940eae5-16bb-46e1-83aa-47c6ff747083@altera.com>
+Date: Wed, 12 Nov 2025 13:36:09 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/2] PCI: Configure Root Port MPS during host probing
+To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
+ kwilczynski@kernel.org, bhelgaas@google.com, helgaas@kernel.org,
+ heiko@sntech.de, mani@kernel.org, yue.wang@Amlogic.com
+Cc: pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org,
+ jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
+ martin.blumenstingl@googlemail.com, cassel@kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-rockchip@lists.infradead.org
+References: <20251104165125.174168-1-18255117159@163.com>
+Content-Language: en-US
+From: Mahesh Vaidya <mahesh.vaidya@altera.com>
+In-Reply-To: <20251104165125.174168-1-18255117159@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA5PR01CA0070.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:1b7::10) To SA1PR03MB6498.namprd03.prod.outlook.com
+ (2603:10b6:806:1c5::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AGsAmwCFJj0ZQ4vKzrqC84rs.3.1762847224180.Hmail.ye.zhang@rock-chips.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR03MB6498:EE_|DM4PR03MB7000:EE_
+X-MS-Office365-Filtering-Correlation-Id: 55c0c3a0-5d68-48a4-a02d-08de21c25f1e
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TFRFRG5aY3JHOEZTMFlxZ3YxQTFNYlM2Vy9iaFh5MFhaNlkwWTNEWFduVlds?=
+ =?utf-8?B?ZndNS0Z3VEh3MDdYK1dqcTA2aC85QWE4OHlUTS9HN3pwSmdpT2F1eHRIM0Ru?=
+ =?utf-8?B?N1JCR2JpOXRLRjhISlpSeXdZejZ4VmlENHFncW9sRStqMVZBL0ZjenNnb3Fq?=
+ =?utf-8?B?WjlKUHJjNDdJWGQ5Qm95ZHdRUjc4TTVDUlRmb0tGSUh5MUV6akkwOVZxUDRW?=
+ =?utf-8?B?VnJNdXBoVmM0SHNXTElDQU9OVWZUdmk2eU1SaEZVYWJpbDFOeTJYSTA3OTJX?=
+ =?utf-8?B?RGh1WlBzOE1YSEFlbzdCeSt3UkZVTTlWQzBxeHF5OGNEVFhsZkhqeTNLbHJK?=
+ =?utf-8?B?WkpBWFlqSEJST0VqcDB4UWhVN2JQam00QVh0Sk9ldUQvcWR3Y3A3NXhlWnBT?=
+ =?utf-8?B?OVJNdkJVcEQ2UWk3SGY5OWhiaEoyb0lUcmRIS2JvT0VuZkJyeFRpaUg0OWRk?=
+ =?utf-8?B?RWZIOWRIY0oyTC9kVllpdDBJQkhUcGYvZmFsL0I4OEhkbTV4NUZIS0c1MTcz?=
+ =?utf-8?B?R21kNjd1ZVh2ME1sLzJsQ3pHYUNoOVNZNXdMOTF6cW1yUDJTRGlFUjNBOGl1?=
+ =?utf-8?B?MjVmL0VSQzRxTit6MWQvZW5yRWZxZ29Xazl0NHA3ejJYeDlWeE81VSs2akJr?=
+ =?utf-8?B?Qm10OUtreHF1RFJQVUNhMG40NmhtdE9CaVZhMHVrWW5QUElabktLZWhXa201?=
+ =?utf-8?B?UCtYWFYzV3pkWHIwUW1Xa0ZzdHVvbndZVlpDbTAxOC83ejNxR1JpMTY0ZUJo?=
+ =?utf-8?B?c0pPK1ptUWhLakNrRm1HT3FNSVl3S2NCcUEycytpV21BSmtDY2hzaFhmRDly?=
+ =?utf-8?B?NG9kRy9oMy9iNERKMVVqK0NDd0o5WXdiK0FEdXJ5QUhMdlc2YlVTbU53Zy9X?=
+ =?utf-8?B?bThJVVVZWDErMzFTcWZkUzRMSmZVSjhYWGZrc3NxeURuNDRPWFFZWnZNSGU3?=
+ =?utf-8?B?MExjMW5NTUdheEdKc09wejdiUXRPeVBCZHNyQ1B0TnRDeThZdXRxeGhRTlNO?=
+ =?utf-8?B?cXdmZUZRckxQUDBEeXhZbEdiOGNqOUdiMS9ERngrZzU5L2hIS3BaU2xieFZL?=
+ =?utf-8?B?c25SUEZjQ2YvRUhmTVpTSnBXYjc3UlNYUXJDMkNUUWFVOXR4S1h5elJpd3Vh?=
+ =?utf-8?B?bEErdEUxdE1SY2d4N3pZdkF6dCsweXdLN3FreEFDUzA0T2lzQlZrUHFYL2J0?=
+ =?utf-8?B?RmxyTzNXWjFBTkdWUXA4MkZEc2d4d2s0dDJ1V21vcURpcEExT3pMVml0clZq?=
+ =?utf-8?B?eG9tSHBjZHJFU0ZiMi9FcnpSUHByYzN2R1NMS3hHMWtEZTlvbmcvOGlXWUNN?=
+ =?utf-8?B?N1F6czdVSUI2YkZ2L1ordjdwUmcvMFJzTFo0TFV4ZWptTTYxNjg2c0ZPM3ZM?=
+ =?utf-8?B?NFpGc1c5WDc2SlRod1RBVTVaL1g0bG5GeGxkb3pHeFFuNWwrb1lrLzNJejFo?=
+ =?utf-8?B?TEZYallHU1Bsa2RmWnBaMzBFL2pPbFdCcnlOb0VXVTVTSjdVYnNkR3BvdFpU?=
+ =?utf-8?B?cVltYTYwZ3hoRjF1TXErN0RkWkVxbnJTaTFNRFBwODhEYnQ2NlVieG13cC8r?=
+ =?utf-8?B?K2JOZXV5M0JRV2NSd1U3a0lDdGRzQTlsSkUxN3dJMSt3dVpUK3hzQXhaVFBs?=
+ =?utf-8?B?eWxTcTh6aGZ1Wk93am1oOFl1NlhFYzVka2E2V01EUXJKdmNpWStvMEJtTkZU?=
+ =?utf-8?B?bGJwV3hMU0hSU3lBeVErRFVmTWN1OEg1eHk2UGJmN2ZPRldjWXRCTWg4ZytJ?=
+ =?utf-8?B?bHMwMzdrdy96SHdzczlkUHFMT2dmTzRxenI5OEJweGxWa1hjb3loY0h3SUlG?=
+ =?utf-8?B?cVlGUXA5YTg0dnFrRVpseGRNR2EvZTU5eW9jMnZSTU5tamt4TmpSdDhOVmNK?=
+ =?utf-8?B?Z0JMVjQ4YW5qaFVHR2l2OVNUM0NpaklFNmtuZk5oVWRuYUVBMCtBZHhZUm5q?=
+ =?utf-8?Q?g0P5lv7C+yNNPkEg1ILEZEk06OZFDG5N?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR03MB6498.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NHdzYVBISWxjY2NlcThnOGVxcmJHWXhVdVhXZ2hNdTlCUThPWTBmUmFKdDYw?=
+ =?utf-8?B?Ti8wdzVmU3UrcGVSZFFtaFBqUnFsVG5laXFqVlI1V1EwbHpQcE81L0JwK2NW?=
+ =?utf-8?B?ZkRGOCtQTUY2UEVRbVh6QWZnOStEOTBuTUNnanpyaysvOS9xMmZ4Mm9Ed0la?=
+ =?utf-8?B?UkJTTnB6QmpRMTBlaGM4SVJZTVp5L0dYUzJ5aGdhM2E4ZVdUS0Roa1htZFZl?=
+ =?utf-8?B?MitoWkExWWhZRkhiTkxqZHhqbXZOQnFub1J3TWlnQjQwU0tLZDBFOVBzQ1lJ?=
+ =?utf-8?B?VWFxblBmRno2bFNYZkdqNzVMaytEZmtwM2M5dVNHSG5nTkx4TTZIUENTZHE1?=
+ =?utf-8?B?d1NrUW9Bam50WVhRQ3B4aCtZZ3ZvM2Mzalp5UVF0cW1zWEtLd3ZhcGdPUGlt?=
+ =?utf-8?B?djA0bVRQTVBFSjFhU1FrSG9MaEZpUm9IbDduRTVvelZsQ3FkazJQZ0dBRVpR?=
+ =?utf-8?B?N0FuV3l3REJhaFVBVkU0YXNoSFgvYURuRGhvQnlBMENiWEdDY2hDRkQ5NTNV?=
+ =?utf-8?B?ODhXS1BsZWpneitMSnc2YlFZQ3dyT3phSXNaWnNhQWFXbU93aGYxVThycFI4?=
+ =?utf-8?B?UVdsV00wWWtMcXk0ZkZqWmpVUCs4c2VMY0VKNjFkdTNJdy8wNEY0L2szczgv?=
+ =?utf-8?B?QWJjMEhwQldOc1VwRytHRzlabnIzazBVelhjTmJaVy9BTHNkUGJoVzYwckxx?=
+ =?utf-8?B?Mnl0cHpCc21YNVVwL3Y3dzZzSmR1d3p3MjJKaWxkWExzZnhWdkdOQlA5dU9R?=
+ =?utf-8?B?d2RCc2k4WWNweTU5ODNzZlhkOVZxWVdyL04xM2RLY2dBb0ZGZzZvVUZ4QUlX?=
+ =?utf-8?B?K21iUnNVbTNqMCtqQ1RlRVNKdlpWaHkyVE9aUUNWaTJrZmdqUGRKM2pITDVp?=
+ =?utf-8?B?SE1qY3FoeGxhU3QzSFFvSWhQZmVpbmh6MnBLKzNGOTV3bUdwV2I1cHpXQk5z?=
+ =?utf-8?B?U3grL0s1WlVlUGYvQWVWUDY0NDR1Mm1hdjVDdFZNVzJuWVhSU3REQXFTWDA4?=
+ =?utf-8?B?KzRYUEtES3NyRHl1ZzdPM2tXS3IzcytIeGFOMXlEUWtRMytWSjRPSjdUaUE4?=
+ =?utf-8?B?U2VsRnQvN0h4aU4zOUQzRjJjckdhR2RuSlRwOERJSzNLdG5JeTZFU25HcWFS?=
+ =?utf-8?B?d2ZrSUlYRmJKOUNGVThNTExoSmMvS3Y4bzZNQ2RrY1NxRVVWakFxN3VTZ2Rq?=
+ =?utf-8?B?VU5JVlYwb2syY1YzTzVQVExTVmZ3UXhYRzV4bEs2L1FoSnh6c0lkYzFscXNQ?=
+ =?utf-8?B?NldCZklVc3R3TWFHVTBWOEJXREhrZ2tKV1BzeUZ3SUpaZ3lLeEU0dEdQQzNs?=
+ =?utf-8?B?Y2NlYVRITHJxQXZXOVpWWHJaTkxldzFJLzZpRk42L29vSlVGZ2E3LzF5citl?=
+ =?utf-8?B?UkVvQklEeXpQRmtFS20yY1g2R0Y2T09xSWl3ZGNxMWFnNVFNOGhubjVsTnJL?=
+ =?utf-8?B?LzhVZjdUNmpnazNKNW9wN1gzOHlrSFFEbmZhZm80eWpxSG5CdlVQUlZuakRj?=
+ =?utf-8?B?UGpLVi9RY1IyL3RJalA1clY3bEROVHRRZXV5MUx3MVZDeUk3Z3NmazZYY09K?=
+ =?utf-8?B?eHJ0dUNYNTVMTi9sRUUrWXhGdE0yUkh3UTdVYW5MSnMwZzlidEZoeEpGNzR6?=
+ =?utf-8?B?TGZiaHBkck94Zll1UjlpYXVmekFlcnVrelhiOTFHdDJJK3B3V1Zqb1FDMGtj?=
+ =?utf-8?B?MDBXRTVnWkpremtBUmFjVGVMalNvamlvbXdRanNOa2xhVjczVzE3WldYRjIv?=
+ =?utf-8?B?YzkrVTZIZDlJNk94L1BVMFNNdTB6MU9JMlVSNW14YXNBb1liMm1UQmtKNjlE?=
+ =?utf-8?B?RktvdXF6YkxKWnJzWDAyczhvd3FabC9KY1JvWVlaWUdGcWN5ZlVUSW10K1ZT?=
+ =?utf-8?B?cURLdytiQWJRMmxaM3BKbFRMNjNJbUZlRWp5Z2w2Q2xhRG1HclJNUjhZbWhK?=
+ =?utf-8?B?QWpHV1RQUjlqelpHYVFFQ1NlaWpDd3pXeVAzWTZBSGxsUmV5ZG9XYWdXaFpB?=
+ =?utf-8?B?bjN2Tld2RGxEVENYUVcvYXNib2JXQ3FnZk9KVWJlL0JuWmNBTHlnaXl2WHUr?=
+ =?utf-8?B?elBYTWd6M1BCWkF4VGRFSlN6VllKRk1vSFdPa1R5bjg5WUQrTkR1SkQ4amVo?=
+ =?utf-8?B?RVpoK1h4dFVLZEwwSzU0VG5NdGJIbkZuOUc4T0x6UkgyeXBzMTU2QXlqYzlM?=
+ =?utf-8?B?OFE9PQ==?=
+X-OriginatorOrg: altera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55c0c3a0-5d68-48a4-a02d-08de21c25f1e
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR03MB6498.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2025 08:06:24.4441
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ATzkl0ezhRH1rKwHFVjR6VvB2DeXAHGSVnh9bP9gySdrum6KjFHRLjh8ZSDLbIBMQylD0+piduR/16+6hgd8/w9M3WwfgKyOH7Nvu6GEXeQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR03MB7000
 
-On Tue, Nov 11, 2025 at 03:47:04PM +0800, 张烨 wrote:
-> Hi Geraldo,
-> 
-> In standard GPIO operations, the typical practice is to set the output level first before configuring the direction as output. This approach helps avoid outputting an uncertain voltage level at the instant when the direction switches from input to output.
 
-Thanks for the explanation Ye Zhang, it makes sense to me. It avoids the
-pin to not be floating so to speak. I kept hammering at this problem, by
-the way is PCIe PERST# side-band signal refusing to co-operate and
-failing PCIe initial link-training.
+On 04-11-2025 22:21, Hans Zhang wrote:
+> Current PCIe initialization exhibits a key optimization gap: Root Ports
+> may operate with non-optimal Maximum Payload Size (MPS) settings. While
+> downstream device configuration is handled during bus enumeration, Root
+> Port MPS values inherited from firmware or hardware defaults often fail
+> to utilize the full capabilities supported by controller hardware. This
+> results in suboptimal data transfer efficiency throughout the PCIe
+> hierarchy.
+>
+> This patch series addresses this by:
+>
+> 1.  Core PCI enhancement (Patch 1):
+> - Proactively configures Root Port MPS during host controller probing
+> - Sets initial MPS to hardware maximum (128 << dev->pcie_mpss)
+> - Conditional on PCIe bus tuning being enabled (PCIE_BUS_TUNE_OFF unset)
+> - Maintains backward compatibility via PCIE_BUS_TUNE_OFF check
+> - Preserves standard MPS negotiation during downstream enumeration
+>
+> 2.  Driver cleanup (Patch 2):
+> - Removes redundant MPS configuration from Meson PCIe controller driver
+> - Functionality is now centralized in PCI core
+> - Simplifies driver maintenance long-term
+>
+> ---
+> Changes for v6:
+> - Modify the commit message and comments. (Bjorn)
+> - Patch 1/2 code logic: Add !bridge check to configure MPS only for Root Ports
+>    without an upstream bridge (root bridges), avoiding incorrect handling of
+>    non-root-bridge Root Ports (Niklas).
+Tested this patch series on Agilex 7.
 
-You're not going to like this:
+Tested-by: Mahesh Vaidya <mahesh.vaidya@altera.com>
 
-diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-index 47174eb3ba76..fea2c55992e8 100644
---- a/drivers/gpio/gpio-rockchip.c
-+++ b/drivers/gpio/gpio-rockchip.c
-@@ -183,11 +183,13 @@ static int rockchip_gpio_set(struct gpio_chip *gc, unsigned int offset,
- 	struct rockchip_pin_bank *bank = gpiochip_get_data(gc);
- 	unsigned long flags;
- 
-+	rockchip_gpio_set_direction(gc, offset, true);
-+
- 	raw_spin_lock_irqsave(&bank->slock, flags);
- 	rockchip_gpio_writel_bit(bank, offset, value, bank->gpio_regs->port_dr);
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
- 
--	return 0;
-+	return rockchip_gpio_set_direction(gc, offset, false);
- }
- 
- static int rockchip_gpio_get(struct gpio_chip *gc, unsigned int offset)
-
-By setting direction INPUT, then writing out, then setting OUTPUT again
-miraculously it doesn't fail initial link training, with no other
-changes that already have been rejected by PCI folks and Shawn Lin.
-
-Everything works as expected. Is this an explainable behaviour by
-Rockchip GPIO core?
-
-The problem I am observing is that once I set PERST# it becomes
-unsettable again. So that's why those open-drain/open-source hacks
-worked (gpiolib will hack the pull polarity to INPUT).
-
-Thanks,
-Geraldo Nascimento
-
-> 
-> Additionally, for Rockchip's GPIO controller specifically, setting the level value should not be affected by the direction setting - the data register write should be effective regardless of whether the pin is configured as input or output.
+>
+> Changes for v5:
+> https://patchwork.kernel.org/project/linux-pci/patch/20250620155507.1022099-1-18255117159@163.com/
+>
+> - Use pcie_set_mps directly instead of pcie_write_mps.
+> - The patch 1 commit message were modified.
+>
+> Changes for v4:
+> https://patchwork.kernel.org/project/linux-pci/patch/20250510155607.390687-1-18255117159@163.com/
+>
+> - The patch [v4 1/2] add a comment to explain why it was done this way.
+> - The patch [v4 2/2] have not been modified.
+> - Drop patch [v3 3/3]. The Maintainer of the pci-aardvark.c file suggests
+>    that this patch cannot be submitted. In addition, Mani also suggests
+>    dropping this patch until this series of issues is resolved.
+>
+> Changes for v3:
+> https://patchwork.kernel.org/project/linux-pci/patch/20250506173439.292460-1-18255117159@163.com/
+>
+> - The new split is patch 2/3 and 3/3.
+> - Modify the patch 1/3 according to Niklas' suggestion.
+>
+> Changes for v2:
+> https://patchwork.kernel.org/project/linux-pci/patch/20250425095708.32662-1-18255117159@163.com/
+>
+> - According to the Maintainer's suggestion, limit the setting of MPS
+>    changes to platforms with controller drivers.
+> - Delete the MPS code set by the SOC manufacturer.
+> ---
+>
+> Hans Zhang (2):
+>    PCI: Configure Root Port MPS during host probing
+>    PCI: dwc: Remove redundant MPS configuration
+>
+>   drivers/pci/controller/dwc/pci-meson.c | 17 -----------------
+>   drivers/pci/probe.c                    | 12 ++++++++++++
+>   2 files changed, 12 insertions(+), 17 deletions(-)
+>
+>
+> base-commit: 691d401c7e0e5ea34ac6f8151bc0696db1b2500a
 
