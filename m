@@ -1,125 +1,82 @@
-Return-Path: <linux-pci+bounces-40974-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-40975-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 344E2C517C4
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 10:54:29 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B7FBC51881
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 11:00:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E15F3AE548
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 09:38:17 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4D1FB4FF086
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Nov 2025 09:51:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 413E32FFF94;
-	Wed, 12 Nov 2025 09:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsF0FxMS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 135602FE566;
+	Wed, 12 Nov 2025 09:50:14 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21CF2FFF81
-	for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 09:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD122FDC5B
+	for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 09:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762940257; cv=none; b=q3UknGo8CECTGSraMeqOX2NqFjjeeSM3VgktS4ePU4aGftdC//t4ssdO0/c2iWKJOIa/WDSZBZpOf/qY1AIIEjxnECr7KTKgAb1vfFFInY9/E35y026EXseNj17NdtzZKlhiwQcWbgVqipUbCS++VnxaA8cQxTeG1obLq8hMyuw=
+	t=1762941014; cv=none; b=r5I49P4rEn3i88IFltqQod0bxl5msxP9H81jmXH3qBKAq8VjSA4jXbtNUX1SJ6lTDi6pXHk/R3jYM7eSq7BVdwLo/xyhOxFfCA9LMDY2GnKqPSMjI0Nm64E1TQdWblgidnRu+3ws5jY+ME2KcoUanfYaOgXw07+62PJFGy2IQQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762940257; c=relaxed/simple;
-	bh=hCDeVTqFeb8OCPymlEUvRNJIVTTjvVc1/ClAQBXXnOc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LZFMQjVtWbRx7y30CPo1dRLcO0WGAsy9VtAhmJdPhVoTKTxYVXu3ZLP8lLpVMcsKOS40I7lO/lRy0kEOKtrXPa3VnW2iId9C7jMGS3HRpAg/smx4+TNXyC+EbquTlGlJizJTGIhkWm0KCWegNZn3vvR30Qx973GrYbJ4glKhb10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WsF0FxMS; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b67cd5d88ddso87550a12.0
-        for <linux-pci@vger.kernel.org>; Wed, 12 Nov 2025 01:37:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762940255; x=1763545055; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VfWmqteduDoVLqj6JdhBgBiH8a4Ayud5Tb7Bt0CJ/gA=;
-        b=WsF0FxMS8mzXEeyWRR7r4qLWRZO3QGbSO39+9raslSbMBDM7uF3e3vgkocLsjZ278a
-         BYAU8rBorVNKWsZHM3+I44i1OurmXTuWZ0LwgLNUXYW883h2R69L3GXXqe8g1lOiCJxB
-         kyjv0K7P0ra9GSOpHWaJGGTHToKrOraFxDKibnMZm7LDj+0scKTDB/M0GKb292nJ3oYR
-         meLuSl/C+Gt+QB7Xz2gharKc/e99nCXIyNXzO6K/lpA7dUMO66xjnCREecQTSquqa7pM
-         xBfLuDoHfiwltF6xrNz8k5/hfD19IXO5+KB6pyMaq4ncy45n64VZipbXSl/YS0/UEbxQ
-         qQwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762940255; x=1763545055;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=VfWmqteduDoVLqj6JdhBgBiH8a4Ayud5Tb7Bt0CJ/gA=;
-        b=jU95UuJrIrxrD+yp4l3OwsZeCCc5sQOihsQFWvySY/qumEO4cpQJXPgMddnkuaYdD6
-         hzvYXF+Lnt4BjzX9PbRiFL2GuSCLCd+zyA3Kgn37fz2OvTDoLbDb6EMVuwBdbMu/j0zL
-         SFp5htD+0XGvPW920lGQwUUyqFokHVH/7zK12BjbshCGfl/k5THlETsLVNRqJoC4zumV
-         Ncj5qvwGZwG26ZhVEpF6JGeyP1QgrVnwL1XfV1bwpE3iY9tmX6E9v0h8MKv11Y9zJLA+
-         cR9xCoW0w3Z6B725Nep8TrSK+kYyfnJD0vYTR0k23PrRqOg0ElJ7kGsHRxEuokC3J5+d
-         ussQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVS+qE4r8XW3YaVxoC3ya9lVRKIw9/OTnNH3QVMdpI+zrsAWYXjtZjlKt6ElHQSAkWLcOZkbHVSn+g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/KH5JHFdMbSArBN36B9TrNTYHt+UwSiqt3s1NhUBjo7RuEpKc
-	6sriGIqe1Y3gYTv8GEQxbJiTiPNBDgty6q771T0D/0DFNpD3lIvrh4n7EcYiCJZLSMnVanqkdRe
-	ev8urw34Wfp1rsk7rIzSEUIocp/l5unc=
-X-Gm-Gg: ASbGnct1nTZLHxBiBeaUyozEekGFu3OfMyk7wCffhZatKn0qud4dMkanx/We2AM4+Sn
-	6ZJ3kn6SJO6W8zDPXbWyS4lNyCbfd0k2VGJ+R+dzKlw3w8FMamF/PXvT0jVQ1JX0EkExwysB9bh
-	YJQHRLqp7A7Q9a+CxuznYbWPurjI/nIS+baO6oKPYChdS0QHzw7JE0dr0FQiAd9a0r6Pli/lLA9
-	GXhWRN07E9RDcPLwymQLYof05aiTTEnRgOqkl2lCNcxb9aSU50uPFAVEvOskRVJYFrlRHiGLPv/
-	+HJ62dDlCLm74g+LfjYrmpSoo4H8p+66TyGpLrccVYJY45vBmcYAZvtRV9QnRZpCA2fHH8/Kmf5
-	O5Ro=
-X-Google-Smtp-Source: AGHT+IF7dXQUMFsuDu6yVFEy1qQhkvdBAqpDcIJQlWtpA21Ok2PTF3w0o0PHF/4blQHATl8xPBVAytdXYF1ksZ+cx+0=
-X-Received: by 2002:a17:902:d507:b0:295:3f35:a31b with SMTP id
- d9443c01a7336-2984ec8c0d5mr19207665ad.0.1762940255046; Wed, 12 Nov 2025
- 01:37:35 -0800 (PST)
+	s=arc-20240116; t=1762941014; c=relaxed/simple;
+	bh=pWaoinVZH7rlrVoExU+UXZcijLxigr8ftAiDGCtifQQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RfE5cJg3WX/5aodezP57RWT0aTzENO1EG7dmLQME8ZLtHz7nQwA7qwGEOmT+w1Hm/cobIz7LLjcQuctlwwEt7iA9lr+RxYSl63ESU1CsENxSo5YT3JsE7zT8PYYhZlGcOAo3CKGUr6g3ohNzXz0L6NIxIzVxnPGE6fdIPMEwzWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id CA721200C2E1;
+	Wed, 12 Nov 2025 10:50:01 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id BD4D8137E4; Wed, 12 Nov 2025 10:50:01 +0100 (CET)
+Date: Wed, 12 Nov 2025 10:50:01 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4] PCI/PTM: Enable PTM only if it advertises a role
+Message-ID: <aRRYSQO9DKo_7ipy@wunner.de>
+References: <20251111061048.681752-1-mika.westerberg@linux.intel.com>
+ <20251111153942.GA2174680@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251101214629.10718-1-mt@markoturk.info> <aRRJPZVkCv2i7kt2@vps.markoturk.info>
-In-Reply-To: <aRRJPZVkCv2i7kt2@vps.markoturk.info>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 12 Nov 2025 10:37:22 +0100
-X-Gm-Features: AWmQ_bmCvbaIgHZdY2OvUnghnEILgb9lSGGzpn6r-4k_0J9xQP5iYx7rCXgAVnM
-Message-ID: <CANiq72kfy3RvCwxp7Y++fKTMrviP5CqC_Zts_NjtEtNCnpU3Mg@mail.gmail.com>
-Subject: Re: [PATCH] samples: rust: fix endianness issue in rust_driver_pci
-To: Marko Turk <mt@markoturk.info>, Dirk Behme <dirk.behme@de.bosch.com>
-Cc: dakr@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251111153942.GA2174680@bhelgaas>
 
-On Wed, Nov 12, 2025 at 9:47=E2=80=AFAM Marko Turk <mt@markoturk.info> wrot=
-e:
->
-> On Sat, Nov 01, 2025 at 10:46:54PM +0100, Marko Turk wrote:
-> > QEMU PCI test device specifies all registers as little endian. OFFSET
-> > register is converted properly, but the COUNT register is not.
-> >
-> > Apply the same conversion to the COUNT register also.
-> >
-> > Signed-off-by: Marko Turk <mt@markoturk.info>
-> > Fixes: 685376d18e9a ("samples: rust: add Rust PCI sample driver")
->
-> Can someone take a look?
+On Tue, Nov 11, 2025 at 09:39:42AM -0600, Bjorn Helgaas wrote:
+> I do wonder about the fact that previously we automatically enabled
+> PTM only for Root Ports and Switch Upstream Ports, but we didn't
+> enable it for Endpoints until a driver called pci_enable_ptm().
+> 
+> With this change, it looks like we automatically enable PTM for every
+> device that supports it.  Worth a mention in the commit log, and we
+> might also want to revisit the drivers (ice, idpf, igc, mlx5) that
+> explicitly enable it to remove the enable and disable calls there.
+> 
+> PTM consumes some link bandwidth, so the idea was to avoid paying that
+> cost unless a driver actually wanted to use PTM.
 
-Your message was in my spam folder -- that may be affecting who saw it.
+pci_pm_suspend() and pci_pm_runtime_suspend() call pci_suspend_ptm()
+and there's a code comment preceding the call that it allows platforms
+such as Intel Coffee Lake to go to a deeper power state.
 
-From https://www.qemu.org/docs/master/specs/pci-testdev.html:
+So apparently PTM not only has a bandwidth cost but also a power cost.
 
-    "All registers are little endian."
+Thanks,
 
-So this seems right. A couple tags:
-
-Cc: stable@vger.kernel.org
-Link: https://www.qemu.org/docs/master/specs/pci-testdev.html
-
-Cc'ing Dirk, since he tested the sample originally.
-
-Thanks!
-
-Cheers,
-Miguel
+Lukas
 
