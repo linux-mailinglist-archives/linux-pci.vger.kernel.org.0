@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-41128-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41129-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36700C58CDA
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 17:43:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5565C58CD7
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 17:43:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C56A3B227C
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:35:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C5643B0AB3
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:35:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2524F35770A;
-	Thu, 13 Nov 2025 16:28:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2B1E359705;
+	Thu, 13 Nov 2025 16:28:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VB/CmBlI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eshkKC8i"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA9D359701;
-	Thu, 13 Nov 2025 16:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081E3359714;
+	Thu, 13 Nov 2025 16:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763051281; cv=none; b=r9HQit7fNQh3QUYN2UMcKYjuBR2OI0g3XxNWzrfR5pne5rXU8dKkIqyGLl0UVcDYRDrd8hzu+eeEYI9+UzYpoh+uGyr7XH5Kn5IE+0sBRDXDBHIHhF6QawakVhJ9q81ADIJxu5rprX3nwzJTix0B1zJtpjOCa7QwHQWsEje2ByE=
+	t=1763051295; cv=none; b=HSgUKDLBOo9Zq5nqBW4mPBokA1GNumA9DXd0xNbZs5Rro/UsTilxUjFWV1lxXh0wamQjsz4BTne+XVTnIPQv1x01aTcoHgPK3ljsD7dm+t9Sj9DjJnFM5n0pfilqXEtfd526Am8B3Cy8Gewk81amo6qTdsBh1RkxW0+FOlqmPz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763051281; c=relaxed/simple;
-	bh=MVDaAvkelaEcHOmBsAKoL7x0hnHzvyKwT0qtGb/G8DA=;
+	s=arc-20240116; t=1763051295; c=relaxed/simple;
+	bh=T67rUIzcpoy6szI0dlVUnS3b/3FKuUeuX2dq/TY/3JM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tQeXUpQbdCX6Bf3hvAXlNReOhDBDMEayNsCdrR7E2yBWtAM5bEb4SrL9Pk8QjhBGgWs1yopYTl2MLlALYWoB6gZhWrXZdcJGH7o5iGeJ3tdgFKTRFBG/PY6FcrmwJ+ji7ROw7jC8E7GRsVMiluXz4VD23QDUuu9MHzG9OwtmRt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VB/CmBlI; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version:Content-Type; b=NKNhoPCflgnZlU7B0CvgzpN1+3OjbTgmzkuFnwUnZZeMNk7SFvBRIPXj7F+7EWFld6fRs44gOtGQ8EC5ATHwVPLJz+8hVb9ZaCeC2xtwj0ZlVoeJJ9xwFADzrP+d6W0IArCNJm3wCclCGDk1EdE1uhA8Ao5K4II7yKwASvH2aoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eshkKC8i; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763051278; x=1794587278;
+  t=1763051292; x=1794587292;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=MVDaAvkelaEcHOmBsAKoL7x0hnHzvyKwT0qtGb/G8DA=;
-  b=VB/CmBlICm1zZREeaAtvmuDKnMGy9LT9LLPEFpJCnutLp12L6kcoGb9C
-   el7Eu1l2PW8NnCXY2tn/mcRnDeTmQkP/TrqYnMPI2zWzIExrQvIkts9dg
-   RQVPG9a1Yp6xm9KhrKc7BfGk8Vtbplk4Y6N85Yidxm0MomU3ksLpG0xvJ
-   nVj5/A/8XlFy5O7H/v2hEIQMBxqBICXJC6zk6h5/LcwfaqCUO70rsp6Uo
-   EEMQQG76Lz8fus9bSgpCf/M+d80zfJ9qwvnc3O2BXOfoTHwm7K+9yyo+C
-   D3YjrXb8i3cNzDW3QqaIRkFkP2HdkXBlEHOKkJGv6EJIQ5bPHrr5yChOF
-   w==;
-X-CSE-ConnectionGUID: XVdyA0O8RzC9w8sfa640fQ==
-X-CSE-MsgGUID: ECXkCCvBQqun9GQp1rOOUA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="65176223"
+  bh=T67rUIzcpoy6szI0dlVUnS3b/3FKuUeuX2dq/TY/3JM=;
+  b=eshkKC8iMhIakEHkZKtCFHz+aVPjZdDSre0+/KZXrcIEdD3LxLBvHlMO
+   bVdcrQ9hFqDBCsgC/ZHM+Y3+C8qoEVuGYsNqzT6y2ztn1dXdJi49l8Mdb
+   UwBYNKWHSc/D81bN9TVfIe9ebJoZKI+FtQvSYPS2VIVVNFQ2GkxoMwZha
+   jOKqSaXtKa+ctraiu2eH+gfVBKSK5GLVVIQjg4MCd3R0B3X8njRasfRvO
+   iWEeB9oQ9Av5wqUnF38P5YTq9DNE1b/JHFU4HEwsq5HMdPS3T7Ymya40q
+   El2S44kX3plWc0Bvu0aPQiAoyu6BvQEJv4jJPR2HMBLfvT83aX+Makutb
+   Q==;
+X-CSE-ConnectionGUID: gD6RdRnvSL65OFv+BGfKrA==
+X-CSE-MsgGUID: K0/rHj1eTVSnk3aV4wodmg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="69002377"
 X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="65176223"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 08:27:57 -0800
-X-CSE-ConnectionGUID: AslXPsLmQdiqPBGhi2cnOQ==
-X-CSE-MsgGUID: oo/KyPEhQ+K9TOFXLFU/KA==
+   d="scan'208";a="69002377"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 08:28:11 -0800
+X-CSE-ConnectionGUID: J9KyXnk1TXONEoLILEnV+w==
+X-CSE-MsgGUID: gpaDOCATQE+SYMkJkackIQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="189971963"
+   d="scan'208";a="194699502"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.164])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 08:27:53 -0800
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 08:28:03 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
 	Simon Richter <Simon.Richter@hogyros.de>,
@@ -80,9 +80,9 @@ To: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
 	=?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
 	linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 07/11] PCI: Add kerneldoc for pci_resize_resource()
-Date: Thu, 13 Nov 2025 18:26:24 +0200
-Message-Id: <20251113162628.5946-8-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 08/11] drm/xe: Remove driver side BAR release before resize
+Date: Thu, 13 Nov 2025 18:26:25 +0200
+Message-Id: <20251113162628.5946-9-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20251113162628.5946-1-ilpo.jarvinen@linux.intel.com>
 References: <20251113162628.5946-1-ilpo.jarvinen@linux.intel.com>
@@ -95,44 +95,33 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-As pci_resize_resource() is meant to be used also outside of PCI core,
-document the interface with kerneldoc.
+PCI core handles releasing device's resources and their rollback in
+case of failure of a BAR resizing operation. Releasing resource prior
+to calling pci_resize_resource() prevents PCI core from restoring the
+BARs as they were.
+
+Remove driver-side release of BARs from the xe driver.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>
 ---
- drivers/pci/setup-res.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/gpu/drm/xe/xe_vram.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index e4486d7030c0..558e452fc799 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -455,6 +455,25 @@ void pci_resize_resource_set_size(struct pci_dev *dev, int resno, int size)
- 	resource_set_size(res, res_size);
- }
+diff --git a/drivers/gpu/drm/xe/xe_vram.c b/drivers/gpu/drm/xe/xe_vram.c
+index 00dd027057df..5aacab9358a4 100644
+--- a/drivers/gpu/drm/xe/xe_vram.c
++++ b/drivers/gpu/drm/xe/xe_vram.c
+@@ -33,9 +33,6 @@ _resize_bar(struct xe_device *xe, int resno, resource_size_t size)
+ 	int bar_size = pci_rebar_bytes_to_size(size);
+ 	int ret;
  
-+/**
-+ * pci_resize_resource - reconfigure a Resizable BAR and resources
-+ * @dev: the PCI device
-+ * @resno: index of the BAR to be resized
-+ * @size: new size as defined in the spec (0=1MB, 31=128TB)
-+ * @exclude_bars: a mask of BARs that should not be released
-+ *
-+ * Reconfigures @resno to @size and re-runs resource assignment algorithm
-+ * with the new size.
-+ *
-+ * Prior to resize, @dev resources that share the bridge window with @resno
-+ * are released (unpins the bridge window resource to allow changing it).
-+ * The caller may prevent releasing a particular BAR by providing
-+ * @exclude_bars mask but it may result in the resize operation failing due
-+ * to insufficient space.
-+ *
-+ * Return: 0 on success, or negative on error. In case of an error, the
-+ *         resources are restored to their original places.
-+ */
- int pci_resize_resource(struct pci_dev *dev, int resno, int size,
- 			int exclude_bars)
- {
+-	if (pci_resource_len(pdev, resno))
+-		pci_release_resource(pdev, resno);
+-
+ 	ret = pci_resize_resource(pdev, resno, bar_size, 0);
+ 	if (ret) {
+ 		drm_info(&xe->drm, "Failed to resize BAR%d to %dM (%pe). Consider enabling 'Resizable BAR' support in your BIOS\n",
 -- 
 2.39.5
 
