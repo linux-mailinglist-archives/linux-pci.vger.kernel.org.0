@@ -1,81 +1,81 @@
-Return-Path: <linux-pci+bounces-41166-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41168-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9765C597FB
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 19:37:04 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4ACE3C59873
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 19:41:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8CB03A34B3
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 18:35:39 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8BF834F0F39
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 18:36:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52CC431282C;
-	Thu, 13 Nov 2025 18:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1B88313546;
+	Thu, 13 Nov 2025 18:35:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bOyRpcD/"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZppNf3q/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97073126C3;
-	Thu, 13 Nov 2025 18:35:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0BB31195B;
+	Thu, 13 Nov 2025 18:35:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763058921; cv=none; b=NWd/crqFzn6yarDvz6v6Zxw16piWnF7vSg9cD8lQ+uzBbyFi3gpLYGLsQRplpCk4eTVGIcSmEXbfFV0xt9xd8IVeSjdKT2xfg2yIJUv3eYNUP1nMjL2VHO7DWEHs8PRnnb4/9CWyethWEXtmknIsuJuP/i+t/0RXOxgTvof4yaI=
+	t=1763058923; cv=none; b=kS7YcVKxdcngUxD7C7KX5mOrpQE6QObSa87OqQ6bfJy1/ax8X0Lj/dTQMJtVDCEswbsiommKeYXg+LQ5T2aS8/xC+5m+OLTFgtilHFo84MuhVnkp+WWXZcJcKv9IDxzbvVqgnlF8fAAlikOF03O0t5Tt7GpQjIiew2oCbT8cFPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763058921; c=relaxed/simple;
-	bh=zZBPbp2ZZOrRWb91SI15MQiYFsj47IjA66DS6/Ee7PI=;
+	s=arc-20240116; t=1763058923; c=relaxed/simple;
+	bh=N2y0RbaxEYXxat1cUzPU+W13xkfMheEUmR7XA/kfbBY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e7SmLl/osV44ofr4+AeyWqSmUWJeqNf3uSP5VCiS7h7YEZ0c4NterDn1F/XyUzCMVWL6R64RU5e1otwp/TTz5hH8WF5AQkB88zMB9ceNuvcCq10O+qYy3XQkT2edFm0sMxzmBCdq2uP+oDxBUUAqu6zvUOk1uU214jx3IBHWua0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bOyRpcD/; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=Bj6zU3SSmMxt66o1mfE1eL+VJKiI+eDhUNOo8sTDFBKQeose7N8lNn8gpegL7CKSViL5YIyTkEBP662C0Kw5++9tAicGJofhnAMptBzFD3VPcle2HaUSUCMvxaRPglr/e/hma+5A2wKJ2wbcSn9WyT29Al9x3EWT+WJ5k/v3BtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZppNf3q/; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADGAJu7018111;
-	Thu, 13 Nov 2025 18:35:13 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADIOkAL014326;
+	Thu, 13 Nov 2025 18:35:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=4kJCpqCEm8nHCEzhS
-	aW5OnDcESvJl0HJbi1PWbkUb5c=; b=bOyRpcD/T8lfnvoC9u1iKT/IlrtGvkbPr
-	4uY/oXg76NAlIbX6M9I4AUUi38K/5Q49iHcXt12OuE3oXpDeKKABdfgGGqoJ4ITj
-	asIeRLQUlLAXjJz2a7Ttpm2wE+MXG0CiSfAKHBOY8rAlukfvl4GIV4dAMJ4XLyTb
-	yy5FwaI1q99M6H2BNo4rTBLLCrC85I0dLE0kkFJmDryDJD32ryPmDl+0Bca+u1gk
-	8GKTM0tXsFaXyTLYjklPHtnrDh1qSt3VcNZD44B0JkDnB1A9hplk+cuGNbWxskhe
-	R2lMF1hqiCrQMYI7x36GW3VGKMFgRsHj6flpJUQgIJrDF32sUxSDA==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aa5cjgj2x-1
+	:mime-version:references:subject:to; s=pp1; bh=IRt4lKhfNqfWjHA56
+	anJ4y+xBtlFYzTL73eGDhJeSKQ=; b=ZppNf3q/dFm+Uy0O+7P/NHS5HHoMXJaHX
+	XHJYrBbL481opgHflGKAoKcrPbqi2HUAEGJ9MGmhvzsDDiuzh542X2GXXRyygAMb
+	oHypxKU8PRjdSm0vt9tdp/tnc0Go+tTkq87tmSWFZyvhzO/2WOAlghvrctEi7Eiq
+	PgrxYzCGwZA23Ea1+kk23WTwjXq4iR+9BuctfdR7Cyry2nY8HPfv1FSZUcehpYhl
+	XbA/zPG06Rv2osmH+lxyloVLrujBqYXGkT97RcGXerjOmAbX/bpLzJzlh0rxKq25
+	g6CXW08WF/HYLfZ9bfbOSlW+2osx1l2Zhc1ZbzAZ99aM1NGCJYx/w==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aa5cjgj34-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Nov 2025 18:35:13 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADGCT5I028880;
-	Thu, 13 Nov 2025 18:35:12 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4aag6sqkjh-1
+	Thu, 13 Nov 2025 18:35:14 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADFk1Ag007309;
+	Thu, 13 Nov 2025 18:35:14 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4aajdjq8fb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Nov 2025 18:35:12 +0000
+	Thu, 13 Nov 2025 18:35:14 +0000
 Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5ADIZBOB30802654
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5ADIZCiA7995946
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 13 Nov 2025 18:35:11 GMT
+	Thu, 13 Nov 2025 18:35:13 GMT
 Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 74A1A58053;
+	by IMSVA (Postfix) with ESMTP id C33FE58053;
+	Thu, 13 Nov 2025 18:35:12 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9EF235805F;
 	Thu, 13 Nov 2025 18:35:11 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2F1485805F;
-	Thu, 13 Nov 2025 18:35:10 +0000 (GMT)
 Received: from IBM-D32RQW3.ibm.com (unknown [9.61.243.9])
 	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 13 Nov 2025 18:35:10 +0000 (GMT)
+	Thu, 13 Nov 2025 18:35:11 +0000 (GMT)
 From: Farhan Ali <alifm@linux.ibm.com>
 To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
 Cc: helgaas@kernel.org, lukas@wunner.de, alex@shazbot.org, clg@redhat.com,
         stable@vger.kernel.org, alifm@linux.ibm.com, schnelle@linux.ibm.com,
-        mjrosato@linux.ibm.com, Benjamin Block <bblock@linux.ibm.com>
-Subject: [PATCH v5 4/9] PCI: Add additional checks for flr reset
-Date: Thu, 13 Nov 2025 10:34:57 -0800
-Message-ID: <20251113183502.2388-5-alifm@linux.ibm.com>
+        mjrosato@linux.ibm.com
+Subject: [PATCH v5 5/9] s390/pci: Update the logic for detecting passthrough device
+Date: Thu, 13 Nov 2025 10:34:58 -0800
+Message-ID: <20251113183502.2388-6-alifm@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251113183502.2388-1-alifm@linux.ibm.com>
 References: <20251113183502.2388-1-alifm@linux.ibm.com>
@@ -87,19 +87,19 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Ss+dKfO0 c=1 sm=1 tr=0 ts=691624e1 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
- a=GmWZ7bcXLGqOY80bcTIA:9 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA4MDA5NSBTYWx0ZWRfX3yhP+cKl5JSu
- 1An9IPvkjNVj+yFdHElOA9M+pT3yzbBUAXHWq/JoFXz4yeO5gGPUxKSJuCZaH/UKu38xQAWs3Cp
- pJFSqOf5O2cqZWfCSqrq8Y4T2Urd+CzTFcW1GA1MHDXc1KMBldbsideg8bjKAJ3uLGlZoYpsYJo
- TMuf+bd5VDY+7kV7eMATQm27Rx/CK58HtkERDBxhNGNw7dcza/YMSky3/ztYA3DksTwRn2V+s8F
- YBSvcsUwmiF0fJNwBn5TkR+ZEzGjtENuB7Z6hf0rFEs3oEkVFz4+rlr4fXXdBLiTdFF21unUtf8
- fG+zrTKY15Iu6X7L+/P9C2ihBs37JwOyhWgfPIisrsZRAgnQ5PLm+ExutBZfP2m+yay6k1IksbD
- KpqROye6nHZVaaKUAbJp7DgAYBzqjQ==
-X-Proofpoint-GUID: J9YU1oaYo4-d0eV39bG3upQIXQqsXsl4
-X-Proofpoint-ORIG-GUID: J9YU1oaYo4-d0eV39bG3upQIXQqsXsl4
+X-Authority-Analysis: v=2.4 cv=Ss+dKfO0 c=1 sm=1 tr=0 ts=691624e3 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
+ a=MtaQWmmsotiDqj5H3ecA:9 a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA4MDA5NSBTYWx0ZWRfX+jZ1+zkS6w6u
+ 3x0v5NXyRu8FnerRUtVCTVIePKaUukTRstNhG+dmCBMyl/LHj0VSQpfy8GgnPSGaYv7Y7yzQnqG
+ 1mASJWISkgS8SEQcTUm59/T5UPdAEgHrv6ZSUoH3ijwYKvLwq6VazXQGwiMdN9QSpaPAhgM5nEo
+ CygfcJpVajPZcGYA1306RYeriwjO36KB2oDpgsw/n80LimF4TvRq8ViRT4saH3H9ygTorbCaAEe
+ nlqHFYsm75OV8ZPt8+a0HnuDkt6U70s4OosqvpdMF8wR2Yf3O0P1xpZQQT0ym5dO4xr84BR1zmu
+ 0QkCtv5zCP4a/uyPr7Qh3xRKP8BEf2C02EsmFrHBUw0y5hPYR01SKJ1jTY86F1gepcl8aeb5nJw
+ lv0wWamcOP/iAAgRUPy2tqks9DLuBA==
+X-Proofpoint-GUID: BUmClEWIin1uLFlZfM_XSoJ0BabwBLqX
+X-Proofpoint-ORIG-GUID: BUmClEWIin1uLFlZfM_XSoJ0BabwBLqX
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-11-13_03,2025-11-13_01,2025-10-01_01
@@ -109,41 +109,99 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511080095
 
-If a device is in an error state, then any reads of device registers can
-return error value. Add addtional checks to validate if a device is in an
-error state before doing an flr reset.
+We can now have userspace drivers (vfio-pci based) on s390x. The userspace
+drivers will not have any KVM fd and so no kzdev associated with them. So
+we need to update the logic for detecting passthrough devices to not depend
+on struct kvm_zdev.
 
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
 Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
 ---
- drivers/pci/pci.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/s390/include/asm/pci.h      |  1 +
+ arch/s390/pci/pci_event.c        | 14 ++++----------
+ drivers/vfio/pci/vfio_pci_zdev.c |  9 ++++++++-
+ 3 files changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 3a9a283b5be9..4f03b1c730cf 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4525,12 +4525,19 @@ EXPORT_SYMBOL_GPL(pcie_flr);
-  */
- int pcie_reset_flr(struct pci_dev *dev, bool probe)
+diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+index a32f465ecf73..52afd2ddc0c8 100644
+--- a/arch/s390/include/asm/pci.h
++++ b/arch/s390/include/asm/pci.h
+@@ -169,6 +169,7 @@ struct zpci_dev {
+ 
+ 	char res_name[16];
+ 	bool mio_capable;
++	bool mediated_recovery;
+ 	struct zpci_bar_struct bars[PCI_STD_NUM_BARS];
+ 
+ 	u64		start_dma;	/* Start of available DMA addresses */
+diff --git a/arch/s390/pci/pci_event.c b/arch/s390/pci/pci_event.c
+index 27db1e72c623..c2deba16e4ea 100644
+--- a/arch/s390/pci/pci_event.c
++++ b/arch/s390/pci/pci_event.c
+@@ -61,16 +61,10 @@ static inline bool ers_result_indicates_abort(pci_ers_result_t ers_res)
+ 	}
+ }
+ 
+-static bool is_passed_through(struct pci_dev *pdev)
++static bool needs_mediated_recovery(struct pci_dev *pdev)
  {
-+	u32 reg;
-+
- 	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
- 		return -ENOTTY;
+ 	struct zpci_dev *zdev = to_zpci(pdev);
+-	bool ret;
+-
+-	mutex_lock(&zdev->kzdev_lock);
+-	ret = !!zdev->kzdev;
+-	mutex_unlock(&zdev->kzdev_lock);
+-
+-	return ret;
++	return zdev->mediated_recovery;
+ }
  
- 	if (!(dev->devcap & PCI_EXP_DEVCAP_FLR))
- 		return -ENOTTY;
+ static bool is_driver_supported(struct pci_driver *driver)
+@@ -195,7 +189,7 @@ static pci_ers_result_t zpci_event_attempt_error_recovery(struct pci_dev *pdev)
+ 	}
+ 	pdev->error_state = pci_channel_io_frozen;
  
-+	if (pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &reg)) {
-+		pci_warn(dev, "Device unable to do an FLR\n");
-+		return -ENOTTY;
-+	}
+-	if (is_passed_through(pdev)) {
++	if (needs_mediated_recovery(pdev)) {
+ 		pr_info("%s: Cannot be recovered in the host because it is a pass-through device\n",
+ 			pci_name(pdev));
+ 		status_str = "failed (pass-through)";
+@@ -280,7 +274,7 @@ static void zpci_event_io_failure(struct pci_dev *pdev, pci_channel_state_t es)
+ 	 * we will inject the error event and let the guest recover the device
+ 	 * itself.
+ 	 */
+-	if (is_passed_through(pdev))
++	if (needs_mediated_recovery(pdev))
+ 		goto out;
+ 	driver = to_pci_driver(pdev->dev.driver);
+ 	if (driver && driver->err_handler && driver->err_handler->error_detected)
+diff --git a/drivers/vfio/pci/vfio_pci_zdev.c b/drivers/vfio/pci/vfio_pci_zdev.c
+index 0990fdb146b7..a7bc23ce8483 100644
+--- a/drivers/vfio/pci/vfio_pci_zdev.c
++++ b/drivers/vfio/pci/vfio_pci_zdev.c
+@@ -148,6 +148,8 @@ int vfio_pci_zdev_open_device(struct vfio_pci_core_device *vdev)
+ 	if (!zdev)
+ 		return -ENODEV;
+ 
++	zdev->mediated_recovery = true;
 +
- 	if (probe)
+ 	if (!vdev->vdev.kvm)
  		return 0;
  
+@@ -161,7 +163,12 @@ void vfio_pci_zdev_close_device(struct vfio_pci_core_device *vdev)
+ {
+ 	struct zpci_dev *zdev = to_zpci(vdev->pdev);
+ 
+-	if (!zdev || !vdev->vdev.kvm)
++	if (!zdev)
++		return;
++
++	zdev->mediated_recovery = false;
++
++	if (!vdev->vdev.kvm)
+ 		return;
+ 
+ 	if (zpci_kvm_hook.kvm_unregister)
 -- 
 2.43.0
 
