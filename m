@@ -1,56 +1,56 @@
-Return-Path: <linux-pci+bounces-41083-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41084-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09388C573D2
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 12:41:14 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AE12C5743B
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 12:49:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4BB0B357BD0
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 11:36:27 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 822344E0454
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 11:49:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2965B2EB5CE;
-	Thu, 13 Nov 2025 11:36:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37C8227B34E;
+	Thu, 13 Nov 2025 11:49:01 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D8133F8A4
-	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 11:36:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0AD336EE5
+	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 11:48:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763033785; cv=none; b=MiUPobvhsrgej3HI4FgaUp/FhjsT4BKIauX1P3nM+LW8FjgE78/gWM1jE7qXKB0doD7gGKRlDCnvU9adjDNDDQiaXF5v4BvRQIjeNFpsDok7+zPRLME1buGzlPdp6X2OrNLehCN4Sp/o9Op71Gy8EcWlRXNxye+kBJ7m9cV12JI=
+	t=1763034541; cv=none; b=sWYKKDxf24xaclF0+skOBFmY79NaEPYN2ONZYFdxnA7l7032xDweiyGnYvN8+nIfnpxkwlwNmAXJ0kUU3Vh+4eurv1rC7HbBwj5/TdRZD3yypXk2z2vMCHGpJiJzVrtT69VF/wA5kk8V2hoiXN/+iMcPdQMn5sHfz7HkTULx+IQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763033785; c=relaxed/simple;
-	bh=YUCLKjsmRfTHIUJ7aou5XK4iVdEJEQRU6+KSmW2F6QE=;
+	s=arc-20240116; t=1763034541; c=relaxed/simple;
+	bh=a2g0IjUt34kU2RpiF+4FLlDER1grl/YUd6l7/XC5sj8=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LErHZbM5F5WfT3nwbJi5SX0Gk/N2rEn4CnUiO9WEpR5SFZ3iKcd8tQXKVqFQIQ9B8xUC786iOJ/WMzaB1bRyVxS7fmyJzdcVGAabP/56hHX7Ho9osjQenMOrsVrgHa4WP/zc3ER+HnTN8yO6tvTtx8GwnMLNAfy8DqroJB07qeI=
+	 MIME-Version:Content-Type; b=IxIDyzcBR/t1i7CMjI0hXKCO6VkKLwfJPFZRp6DaP+dHmlfey/l6//hRjcVK5imDFq35M1IEyfBVyzgdTJL33hG8KWyYi6362SkC0XXk2pZ2kywVkm04No2CBzxcbduI+Uzgb9zqNfd9EACPn/0oaa7R30QmLRN4tkBFsdO/OAI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d6dW54D4rzJ46pd;
-	Thu, 13 Nov 2025 19:35:45 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d6dnf4kSJzJ46Zp;
+	Thu, 13 Nov 2025 19:48:22 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9C7EA140277;
-	Thu, 13 Nov 2025 19:36:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B02341402F5;
+	Thu, 13 Nov 2025 19:48:56 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 13 Nov
- 2025 11:36:19 +0000
-Date: Thu, 13 Nov 2025 11:36:17 +0000
+ 2025 11:48:56 +0000
+Date: Thu, 13 Nov 2025 11:48:54 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-pci@vger.kernel.org>, <linux-coco@lists.linux.dev>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Bjorn Helgaas
-	<bhelgaas@google.com>
-Subject: Re: [PATCH v2 3/8] resource: Introduce resource_assigned() for
- discerning active resources
-Message-ID: <20251113113617.00007078@huawei.com>
-In-Reply-To: <20251113021446.436830-4-dan.j.williams@intel.com>
+CC: <linux-pci@vger.kernel.org>, <linux-coco@lists.linux.dev>, Xu Yilun
+	<yilun.xu@linux.intel.com>, Aneesh Kumar K.V <aneesh.kumar@kernel.org>, Arto
+ Merilainen <amerilainen@nvidia.com>
+Subject: Re: [PATCH v2 4/8] PCI/IDE: Add Address Association Register setup
+ for downstream MMIO
+Message-ID: <20251113114854.00005520@huawei.com>
+In-Reply-To: <20251113021446.436830-5-dan.j.williams@intel.com>
 References: <20251113021446.436830-1-dan.j.williams@intel.com>
-	<20251113021446.436830-4-dan.j.williams@intel.com>
+	<20251113021446.436830-5-dan.j.williams@intel.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -58,78 +58,45 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Wed, 12 Nov 2025 18:14:41 -0800
+On Wed, 12 Nov 2025 18:14:42 -0800
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> A PCI bridge resource lifecycle involves both a "request" and "assign"
-> phase. At any point in time that resource may not yet be assigned, or may
-> have failed to assign (because it does not fit).
->=20
-> There are multiple conventions to determine when assignment has not
-> completed: IORESOURCE_UNSET, IORESOURCE_DISABLED, and checking whether the
-> resource is parented.
->=20
-> In code paths that are known to not be racing assignment, e.g. post
-> subsys_initcall(), the most reliable method to judge that a bridge resour=
-ce
-> is assigned is to check the resource is parented [1].
->=20
-> Introduce a resource_assigned() helper for this purpose.
->=20
-> Link: http://lore.kernel.org/2b9f7f7b-d6a4-be59-14d4-7b4ffccfe373@linux.i=
-ntel.com [1]
-> Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> From: Xu Yilun <yilun.xu@linux.intel.com>
+> 
+> The address ranges for downstream Address Association Registers need to
+> cover memory addresses for all functions (PFs/VFs/downstream devices)
+> managed by a Device Security Manager (DSM). The proposed solution is get
+> the memory (32-bit only) range and prefetchable-memory (64-bit capable)
+> range from the immediate ancestor downstream port (either the direct-attach
+> RP or deepest switch port when switch attached).
+> 
+> Similar to RID association, address associations will be set by default if
+> hardware sets 'Number of Address Association Register Blocks' in the
+> 'Selective IDE Stream Capability Register' to a non-zero value. TSM drivers
+> can opt-out of the settings by zero'ing out unwanted / unsupported address
+> ranges. E.g. TDX Connect only supports prefetachable (64-bit capable)
+> memory ranges for the Address Association setting.
+> 
+> If the immediate downstream port provides both a memory range and
+> prefetchable-memory range, but the IDE partner port only provides 1 Address
+> Association Register block then the TSM driver can pick which range to
+> associate, or let the PCI core prioritize memory.
+> 
+> Note, the Address Association Register setup for upstream requests is still
+> uncertain so is not included.
+> 
+> Co-developed-by: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+> Co-developed-by: Arto Merilainen <amerilainen@nvidia.com>
+> Signed-off-by: Arto Merilainen <amerilainen@nvidia.com>
+> Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Given you replied (and I'm happy to accept that reply) to the doc formattin=
-g comment
-I had on v1.  This LGTM
+This addressed only comment I was expecting to result in changes in v1, so
 Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-
-Nice to have a follow up series applying this more widely if anyone has tim=
-e.
-Lots of them in pci/setup-bus.c for instance.=20
-One of those is doing an assignment check but maybe isn't good to change as=
- it is
-
-if (res->parent)
-	return res->parent;
-
-Others all look like low hanging fruit for the readability improvement this
-brings.
-
-
-> ---
->  include/linux/ioport.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
->=20
-> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> index e8b2d6aa4013..9afa30f9346f 100644
-> --- a/include/linux/ioport.h
-> +++ b/include/linux/ioport.h
-> @@ -334,6 +334,15 @@ static inline bool resource_union(const struct resou=
-rce *r1, const struct resour
->  	return true;
->  }
-> =20
-> +/*
-> + * Check if this resource is added to a resource tree or detached. Calle=
-r is
-> + * responsible for not racing assignment.
-> + */
-> +static inline bool resource_assigned(struct resource *res)
-> +{
-> +	return res->parent;
-> +}
-> +
->  int find_resource_space(struct resource *root, struct resource *new,
->  			resource_size_t size, struct resource_constraint *constraint);
-> =20
-
 
