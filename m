@@ -1,197 +1,179 @@
-Return-Path: <linux-pci+bounces-41120-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41121-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBB60C58C29
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 17:35:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E20CC58D88
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 17:48:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0B4CF4FF99E
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:26:50 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BDCE85420D8
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:32:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69368357A32;
-	Thu, 13 Nov 2025 16:15:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C04FB35771D;
+	Thu, 13 Nov 2025 16:26:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rjXZ2o9I"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FImPdnPQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450F935581D
-	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 16:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACEC17D2
+	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 16:26:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763050558; cv=none; b=HyfDZKyQhtji9ShdNdc088RjDMDNocVpy3sOFKceZE8ml1AYcPOW/pMMQ2uh7+kIYiNNic83XqzyhgTZuiKr7LRpfDmT0gE+hQhd9wzEUNqaBwet+ULlCgriVLZbXFkbBOy40MqI9FrnUWYQe5tk2tFTaBKo7DXMnQt9ye4xzMI=
+	t=1763051204; cv=none; b=t29bDg9D6JI1J1erRWIZIxybW+76QAcJNblmXon6yEANzPT0DOXWaD0lNt4HkVMM0NnasvJFzlyiawBXrRVK1MANc+mbeMIJ0B0Rrrn62gLrDqXULT/tNevFRTJxgqOJ9RrJMFVDd6oFxSzYu7XbxgWljQ5kBpaSW17K7Wttyv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763050558; c=relaxed/simple;
-	bh=XQNhWvUyDWNeDKKlzU5pWy2MIeMgWmx5TtodAq+3XE8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=EzWBEYqahvkC6wSOs8rxkOG+8pGB3HpKYf01pbnUwTXCNLKcjfYvUYy/o0LmTRVAG2be47nakBSLM/m5wMn2NJ3Vipv2WwqsdH+SU/gqvd87X3HHLHqFESVD9n3eNrn5R44Liky1tyXLcQ4iCZATnmosVzwJkaqIQxFAdLgCG24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rjXZ2o9I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9490C113D0;
-	Thu, 13 Nov 2025 16:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763050557;
-	bh=XQNhWvUyDWNeDKKlzU5pWy2MIeMgWmx5TtodAq+3XE8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rjXZ2o9IKx4AsQ5j7L/NQ+XjWy8FGrp8+HIh7v9L7qPzStpj+kz666dxyOpa1lVrO
-	 hCKDHk3RfKMVP9NANGYf7NcwOqti0eDlnF6Vi3rP1uUhKbA5xeTD5jd1QnOMTxlMnR
-	 VrylEEV3CYX02sjVuVU17hKntKr3eRXUEcCmvlieCn9egknccaB0ApqDw1XbVT90+1
-	 XB+8rrRvXwHshkb20ytJEARMSZSezhTmJo/Je1JuwPY63kkU99s4/l3pJr+jAT8OeR
-	 2ztMkRjkzLUzBsYGM62CHZdoZMA+03A3u3gQ50MhUDxNA4xTX/s6KtVigUdTu3q9K0
-	 K7k357CvcEBEw==
-Date: Thu, 13 Nov 2025 10:15:56 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Riana Tauro <riana.tauro@intel.com>,
-	"Sean C. Dardis" <sean.c.dardis@intel.com>,
-	Farhan Ali <alifm@linux.ibm.com>,
-	Benjamin Block <bblock@linux.ibm.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Alek Du <alek.du@intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+	s=arc-20240116; t=1763051204; c=relaxed/simple;
+	bh=q5Skt0OtlAqHnc+PsJMhZYM80doWwAu7rSkxepWYXmk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=M9zDB1y9UpXDJU24btBwJG7Mxh9X52HerPf9/5tym5HL4KadrJkiagBINoDxRfBom2JNIxE08lJCHAt1Lemd8wWD4bBeZJE83zEcHh8/k0o9yKHdBKmIvhd7XTMR4AYiw9CJ2YXHYwjwblPgH4yCDtMyKcDE6t9hNPHAMo6GtYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FImPdnPQ; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763051203; x=1794587203;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=q5Skt0OtlAqHnc+PsJMhZYM80doWwAu7rSkxepWYXmk=;
+  b=FImPdnPQCn/ELYRVHVUDcamQVPH/pHB4WCSdZK7tsWCVF1KnS1JS8jhd
+   S3+iRygCXnM5NyXbBaXBhf3MKLZU+K66qwL135EwIsH2nTXmqTB2p76lq
+   EJfcZLNi4oboooI1rypVWvEoV2AgmKgDjQJXJRzFLYAK0FlSHtDnVBoN1
+   9MC3L8mJ9bWjtZaAA34H13FnPU6hvtg2ApS0N7nsFLgHX5/fFlz7mAVqf
+   9i/BpT9nwS1ZQ82BimpIBqtEi0M4cQFVu2H0qmOb6NE3Txxx3Jnwp9deH
+   8djTihoYXg+nVWBaG+ms+Oq5PzmsVtUqd3Lizfg9LM1skoovE37v7Ulev
+   A==;
+X-CSE-ConnectionGUID: sdMX2O/WQeihcKBIpC5CNQ==
+X-CSE-MsgGUID: NwrpgsQXQzCptNPBqErBEw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="65074078"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="65074078"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 08:26:42 -0800
+X-CSE-ConnectionGUID: Mp0m3lPLSZSKY1ATLvKgcw==
+X-CSE-MsgGUID: OVCixanWRwmVQCKrct9tjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
+   d="scan'208";a="226864796"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.164])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 08:26:35 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
+	Simon Richter <Simon.Richter@hogyros.de>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	David Airlie <airlied@gmail.com>,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
 	linux-pci@vger.kernel.org,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, qat-linux@intel.com,
-	Dave Jiang <dave.jiang@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH 1/2] PCI: Ensure error recoverability at all times
-Message-ID: <20251113161556.GA2284238@bhelgaas>
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	=?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 00/11] PCI: BAR resizing fix/rework
+Date: Thu, 13 Nov 2025 18:26:17 +0200
+Message-Id: <20251113162628.5946-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aRWnAd-PZuHMqBwd@wunner.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 13, 2025 at 10:38:09AM +0100, Lukas Wunner wrote:
-> On Wed, Nov 12, 2025 at 04:38:31PM -0600, Bjorn Helgaas wrote:
-> > On Sun, Oct 12, 2025 at 03:25:01PM +0200, Lukas Wunner wrote:
-> > > Despite these workarounds, recoverability at all times is not guaranteed:
-> > > E.g. when a PCIe port goes through a runtime suspend and resume cycle,
-> > > the "saved_state" flag is cleared by:
-> > > 
-> > >   pci_pm_runtime_resume()
-> > >     pci_pm_default_resume_early()
-> > >       pci_restore_state()
-> > > 
-> > > ... and hence on a subsequent AER event, the port's Config Space cannot be
-> > > restored.  
-> > 
-> > I guess this restore would be done by a driver's
-> > pci_error_handlers.slot_reset() or .reset_done() calling
-> > pci_restore_state()?
-> 
-> Yes.  Restoration of config space after an error-recovery-induced reset
-> is currently always the job of the device driver.
-> 
-> E.g. in the case of portdrv, it happens in pcie_portdrv_slot_reset().
-> 
-> We could revisit this design decision and change the behavior to have
-> pcie_do_recovery() call pci_restore_state(), thus reducing boilerplate
-> in the drivers.  But that would be a separate effort, orthogonal to the
-> present patch.
+Hi all,
 
-Agreed.
+Thanks to issue reports from Simon Richter and Alex Bennée, I
+discovered BAR resize rollback can corrupt the resource tree. As fixing
+corruption requires avoiding overlapping resource assignments, the
+correct fix can unfortunately results in worse user experience, what
+appeared to be "working" previously might no longer do so. Thus, I had
+to do a larger rework to pci_resize_resource() in order to properly
+restore resource states as it was prior to BAR resize.
 
-> > > +++ b/drivers/pci/bus.c
-> > > @@ -358,6 +358,13 @@ void pci_bus_add_device(struct pci_dev *dev)
-> > >  	pci_bridge_d3_update(dev);
-> > >  
-> > >  	/*
-> > > +	 * Save config space for error recoverability.  Clear state_saved
-> > > +	 * to detect whether drivers invoked pci_save_state() on suspend.
-> > 
-> > Can we expand this a little to explain how this is detected and what
-> > drivers *should* be doing?
-> 
-> That is documented in Documentation/power/pci.rst, "3.1.2. suspend()":
-> 
->    "This callback is expected to quiesce the device and prepare it to be
->     put into a low-power state by the PCI subsystem.  It is not required
->     (in fact it even is not recommended) that a PCI driver's suspend()
->     callback save the standard configuration registers of the device [...]
-> 
->     However, in some rare case it is convenient to carry out these
->     operations in a PCI driver.  Then, pci_save_state() [...] should be
->     used to save the device's standard configuration registers [...].
->     Moreover, if the driver calls pci_save_state(), the PCI subsystem will
->     not execute either pci_prepare_to_sleep(), or pci_set_power_state()
->     for its device, so the driver is then responsible for handling the
->     device as appropriate."
+This rework has been on my TODO list anyway but it wasn't the highest
+prio item until pci_resize_resource() started to cause regressions due
+to other resource assignment algorithm changes.
 
-Yes.  I should have proposed some text for the comment, e.g.,
+BAR resize rollback does not always restore BAR resources as they were
+before the resize operation was started. Currently, when
+pci_resize_resource() call is made by a driver, the driver must release
+device resource prior to the call. This is a design flaw in
+pci_resize_resource() API as PCI core cannot then save the state of
+those resources from what it was prior to release so it could restore
+them later if the BAR size change has to be rolled back.
 
-  Save config space for error recoverability.  Clear state_saved.  If
-  driver calls pci_save_state() again, state_saved will be set and
-  we'll know that on suspend, the PCI core shouldn't call
-  pci_save_state() or change the device power state.
+PCI core's BAR resize operation doesn't even attempt to restore the
+device resources currently when rolling back BAR resize operation. If
+the normal resource assignment algorithm assigned those resources, then
+device resources might be assigned after pci_resize_resource() call but
+that could also trigger the resource tree corruption issue so what
+appeared to an user as "working" might be a corrupted state.
 
-> > I think the reason is that the PCI core
-> > can invoke pci_save_state() on suspend if the driver did not.
-> 
-> Right.  By calling pci_save_state(), a driver signals to the PCI core
-> that it assumes responsibility for putting the device into a low power
-> state.  If a driver wants to keep a device in D0, it could call
-> pci_save_state() and thus prevent the PCI core from putting it e.g.
-> into D3.
+With the new pci_resize_resource() interface, the driver calling
+pci_resize_resource() should no longer release the device resources.
 
-It seems like there are two things going on here, and I'm not sure
-they're completely compatible:
+I've added WARN_ON_ONCE() to pick up similar bugs that cause resource
+tree corruption. At least in my tests all looked clear on that front
+after this series.
 
-  1) Driver calls pci_save_state() to take over device power
-     management and prevent the PCI core from doing it.
+It would still be nice if the reporters could test these changes
+resolve the claim conflicts (while I've tested the series to some extent,
+I don't have such conflicts here).
 
-  2) Driver calls pci_save_state() to capture the device state it
-     wants to restore when recovering from an error.
+This series will likely conflict with some drm changes from Lucas (will
+make them partially obsolete by removing the need to release dev's
+resources on the driver side).
 
-Shouldn't a driver be able to do 2) without also getting 1)?
+I'll soon submit refresh of pci/rebar series on top of this series as
+there are some conflicts with them.
 
-> > I assume:
-> > 
-> >   - PCI core always calls pci_save_state() and clears state_saved when
-> >     device is enumerated (below)
-> > 
-> >   - When it has configured the device to the state it wants restore,
-> >     the driver may call pci_save_state() again, which will set
-> >     state_saved
-> > 
-> >   - If driver has not called pci_save_state(), i.e., state_saved is
-> >     still clear, we want the PCI core to call pci_save_state() during
-> >     suspend
-> 
-> Right.
-> 
-> > This sounds sensible to me.  It would be nice if there were a few more
-> > words about pci_save_state() and pci_restore_state() in
-> > Documentation/.
-> > 
-> > pci_save_state() isn't mentioned at all in Documentation/PCI
-> 
-> Right, it's documented in the Documentation/power directory. :)
+v2:
+- Add exclude_bars parameter to pci_resize_resource()
+- Add Link tags
+- Add kerneldoc patch
+- Add patch to release pci_bus_sem earlier.
+- Fix to uninitialized var warnings.
+- Don't use guard() as goto from before it triggers error with clang.
 
-Yes, in the pci.rst I mentioned, but it mostly uses the "saves the
-device's standard configuration registers" wording.
+Ilpo Järvinen (11):
+  PCI: Prevent resource tree corruption when BAR resize fails
+  PCI/IOV: Adjust ->barsz[] when changing BAR size
+  PCI: Change pci_dev variable from 'bridge' to 'dev'
+  PCI: Try BAR resize even when no window was released
+  PCI: Freeing saved list does not require holding pci_bus_sem
+  PCI: Fix restoring BARs on BAR resize rollback path
+  PCI: Add kerneldoc for pci_resize_resource()
+  drm/xe: Remove driver side BAR release before resize
+  drm/i915: Remove driver side BAR release before resize
+  drm/amdgpu: Remove driver side BAR release before resize
+  PCI: Prevent restoring assigned resources
 
-I'm just wishing for a more concrete mention of "pci_save_state()",
-since that's where the critical "state_saved" flag is updated.
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c  |  10 +-
+ drivers/gpu/drm/i915/gt/intel_region_lmem.c |  14 +--
+ drivers/gpu/drm/xe/xe_vram.c                |   5 +-
+ drivers/pci/iov.c                           |  15 +--
+ drivers/pci/pci-sysfs.c                     |  17 +--
+ drivers/pci/pci.c                           |   4 +
+ drivers/pci/pci.h                           |   9 +-
+ drivers/pci/setup-bus.c                     | 126 ++++++++++++++------
+ drivers/pci/setup-res.c                     |  52 ++++----
+ include/linux/pci.h                         |   3 +-
+ 10 files changed, 142 insertions(+), 113 deletions(-)
 
-And I'm not sure Documentation/ includes anything about the idea of
-a driver using pci_save_state() to capture the state it wants to
-restore after an error.  I guess that's obvious now that I write it
-down, but I'm sure learning a lot from this conversation :)
 
-Bjorn
+base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+-- 
+2.39.5
+
 
