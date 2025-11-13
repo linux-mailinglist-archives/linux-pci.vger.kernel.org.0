@@ -1,75 +1,75 @@
-Return-Path: <linux-pci+bounces-41053-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41052-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6E87C55B78
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 05:56:53 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0F7EC55B63
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 05:53:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 864D334E4C0
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 04:53:31 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B7F984E1EE5
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 04:53:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01175301000;
-	Thu, 13 Nov 2025 04:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 228562DFF3F;
+	Thu, 13 Nov 2025 04:53:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y+yUYbQv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ep8kBNy8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7283009F8
-	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 04:53:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BA13009D3
+	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 04:53:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763009605; cv=none; b=MCqX9dGbhwrkwosDOUmtj/Sfa7mCcHTcxb6IKcQTX6Y6kYw0csMgQXWbx3J7n59hZGs9gLo1gpma1ght0jAZk7q9hPrRaPRUmtjvfXxcjn0rwIfeR7A0dhFeS2NQGb2qPQWh6k2d8df0ITY8aaU23IuGaytZ1NF8k1x1o6xs5UI=
+	t=1763009605; cv=none; b=MLfOwJhp0SWxaZnABAsV8h89kPhRYOUaMH9usV8xKpbglxeSziHJBIdmM84x4K3DnO4CfTQb5bSuENdRhfuG5zCsWVpSTcg6J2t3p1bEPBWRN+wnO5GGLf/r2QxyD7506MrLLy4q6EzAhyCuDkyYf9p7upLrzziUBGvVKIHqd7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1763009605; c=relaxed/simple;
-	bh=MDTy5l7zBehoe+SZ4+HdMgrSU8NN3NUhiMGEUnkraTU=;
+	bh=Sgk4sNsoPmm9DQzn3ceYNqEReekm5CzcVM4xwpOkc0o=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=MEGUg3DtXxeLdLq/NTfn3NZgc+qAouaimYNd6M1UMmgPFHbdbv2JtdAHFbmM9KImKG4wsGyQtT1oDVaiX2RQ6GyxcnKvDMo67Ms7pq411bQ9lGBVo1sWETC1UkO7SylB56ARh3ICN1Hu7kmDxByP477QXKlJWb+eqRFvg3otFcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y+yUYbQv; arc=none smtp.client-ip=198.175.65.10
+	 Content-Disposition; b=SHMnAWGxUfnjmnsN9dvsWMs/hVTA4PUEi7i3qpQaAeleroHSF0ilx9wroITRGn5L1qLJy07Kz+bWdbhZHyZnMnvQGNZ6NY6gfdG2sTBfoSkV5FrD77+AncxnGDVsTQKskZbQm20QTmx5oE7W/PnWw7rU9NDjn5nSlUzGvdhSM6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ep8kBNy8; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763009605; x=1794545605;
+  t=1763009604; x=1794545604;
   h=date:from:to:cc:subject:message-id:mime-version;
-  bh=MDTy5l7zBehoe+SZ4+HdMgrSU8NN3NUhiMGEUnkraTU=;
-  b=Y+yUYbQvz84duTC8xO1eP/H7Mu4yGOygixkEJ7H6uL8PvvuvZnTmerhc
-   N6vWDy4a0OGxgbE+K5rRX9SyVEubfH/0r/wcEKhgc0xytF6vZ9GsaJrSd
-   MJgxM4WGgqsIt3W5nTzNvoOiqrCYy+qMov9+nL88qlzX0M0Emm014xACz
-   b1nin6GRKhFyt0TRe+1fG6e6x3tu7yVbXfIQMSA51hle7Ugt1e3hxAmmx
-   ZcoGJnW++3180atNPU+xcUS7b71hmchgvFLXWW++ukeJpCzeUBxPkK/mF
-   rmQ2l1LmwRbKqHHjKNmUBpCrtvD6Hgpxn7JjtmggVvTXb+RfokUqEXxpy
-   w==;
-X-CSE-ConnectionGUID: AbuU8RHuS4e9LWZ2PuL5Vg==
-X-CSE-MsgGUID: YeQZsdeJS3ycga5PesPu/g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11611"; a="82480075"
+  bh=Sgk4sNsoPmm9DQzn3ceYNqEReekm5CzcVM4xwpOkc0o=;
+  b=Ep8kBNy8qKorytH/NAIRp1/vRAyO68fevUzgRq2DZYyhb4pIIwDgVzCN
+   UcFbrH9+zKGWMDHxBANSxqe77CUmyzi6Df1TFeM3rsgoH7cBx3YO0rNxu
+   XW1UPmOs/mdPrFAavHSMmpSDOlWGjJbj631q7nDIqRQku+yEM09ruFerX
+   0rSVi94USU2zoO+CitkV0aAUybWmMqptG+UIUcK1KiJFvih3grLhcZTBM
+   xRjFiAJZ6xnFHGyhtN5yPZVlV2PPo/zMNkarIr9PQCMRwauHyzRi1jSY0
+   XHHyA+ip+DaTKKudNa4tv2k5v386cEWx+NqDMfwHYxGEGVyENLka0Gs7r
+   g==;
+X-CSE-ConnectionGUID: lLuQAr/1Qc65Qz6wZ8MhFw==
+X-CSE-MsgGUID: 79QCNSm1T9OyD6Gfil0/Jg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11611"; a="82480071"
 X-IronPort-AV: E=Sophos;i="6.19,301,1754982000"; 
-   d="scan'208";a="82480075"
+   d="scan'208";a="82480071"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 20:53:24 -0800
-X-CSE-ConnectionGUID: rijXJvZUSse0BSAmNvPBpQ==
-X-CSE-MsgGUID: tODqS8BESkOR7W5dEGWH9Q==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 20:53:23 -0800
+X-CSE-ConnectionGUID: ABE8EZQ2SUax+nD615gsTw==
+X-CSE-MsgGUID: E/QqV3EQSUSu8ZNfMYlAdg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,301,1754982000"; 
-   d="scan'208";a="189415463"
+   d="scan'208";a="189415464"
 Received: from lkp-server01.sh.intel.com (HELO 7b01c990427b) ([10.239.97.150])
   by orviesa007.jf.intel.com with ESMTP; 12 Nov 2025 20:53:21 -0800
 Received: from kbuild by 7b01c990427b with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1vJPKh-0004uO-1s;
+	id 1vJPKh-0004uL-1o;
 	Thu, 13 Nov 2025 04:53:19 +0000
-Date: Thu, 13 Nov 2025 12:52:30 +0800
+Date: Thu, 13 Nov 2025 12:52:34 +0800
 From: kernel test robot <lkp@intel.com>
 To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Subject: [pci:for-linus 6/6] drivers/pci/quirks.c:2528:56: error: use of
- undeclared identifier 'quirk_disable_aspm_l0s_l1_cap'; did you mean
- 'quirk_disable_aspm_l0s_l1'?
-Message-ID: <202511131032.6htiMYJT-lkp@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: [pci:for-linus 6/6] drivers/pci/quirks.c:2528:56: error:
+ 'quirk_disable_aspm_l0s_l1_cap' undeclared here (not in a function); did you
+ mean 'quirk_disable_aspm_l0s_l1'?
+Message-ID: <202511131022.oNFNddSz-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -82,31 +82,27 @@ Content-Disposition: inline
 tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
 head:   c478e1774359af6039f586f0a49280cfe180a21b
 commit: c478e1774359af6039f586f0a49280cfe180a21b [6/6] PCI/ASPM: Avoid L0s and L1 on Hi1105 [19e5:1105] Wi-Fi
-config: loongarch-allnoconfig (https://download.01.org/0day-ci/archive/20251113/202511131032.6htiMYJT-lkp@intel.com/config)
-compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 996639d6ebb86ff15a8c99b67f1c2e2117636ae7)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251113/202511131032.6htiMYJT-lkp@intel.com/reproduce)
+config: alpha-allnoconfig (https://download.01.org/0day-ci/archive/20251113/202511131022.oNFNddSz-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251113/202511131022.oNFNddSz-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511131032.6htiMYJT-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511131022.oNFNddSz-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
->> drivers/pci/quirks.c:2528:56: error: use of undeclared identifier 'quirk_disable_aspm_l0s_l1_cap'; did you mean 'quirk_disable_aspm_l0s_l1'?
+   In file included from drivers/pci/quirks.c:21:
+>> drivers/pci/quirks.c:2528:56: error: 'quirk_disable_aspm_l0s_l1_cap' undeclared here (not in a function); did you mean 'quirk_disable_aspm_l0s_l1'?
     2528 | DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0x1105, quirk_disable_aspm_l0s_l1_cap);
          |                                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |                                                        quirk_disable_aspm_l0s_l1
-   include/linux/pci.h:2362:40: note: expanded from macro 'DECLARE_PCI_FIXUP_HEADER'
-    2362 |                 hook, vendor, device, PCI_ANY_ID, 0, hook)
-         |                                                      ^~~~
-   include/linux/pci.h:2321:43: note: expanded from macro 'DECLARE_PCI_FIXUP_SECTION'
+   include/linux/pci.h:2321:57: note: in definition of macro 'DECLARE_PCI_FIXUP_SECTION'
     2321 |                 = { vendor, device, class, class_shift, hook };
          |                                                         ^~~~
-   drivers/pci/quirks.c:2514:13: note: 'quirk_disable_aspm_l0s_l1' declared here
-    2514 | static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
-         |             ^
-   1 error generated.
+   drivers/pci/quirks.c:2528:1: note: in expansion of macro 'DECLARE_PCI_FIXUP_HEADER'
+    2528 | DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0x1105, quirk_disable_aspm_l0s_l1_cap);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~
 
 
 vim +2528 drivers/pci/quirks.c
