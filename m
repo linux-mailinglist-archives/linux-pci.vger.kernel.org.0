@@ -1,157 +1,133 @@
-Return-Path: <linux-pci+bounces-41117-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41118-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED17CC58A06
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 17:12:43 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C098C58AFE
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 17:25:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3EACA4A727F
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 15:33:42 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9251E4FFDE9
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 15:58:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A11DF2D8372;
-	Thu, 13 Nov 2025 15:24:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B19BF351FC2;
+	Thu, 13 Nov 2025 15:54:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="GpdDsCqr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JLg62xZp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A370B2FBE09
-	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 15:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78578352929;
+	Thu, 13 Nov 2025 15:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763047487; cv=none; b=ug6qcFCMjz/CrsoUSnMcx4tjiJZs4BUwl8S9J4I+/SjcHtL7abCw44FXXOgph7ylMX0apvfELSHHb25cljkOqyY55pFT68LAZRybXUHxrjmJ9iErCvF2nLsD1JOy7lNinGChhNNex80ueynG+n5gqBF7hbshBo2XAGAdj0eY4/0=
+	t=1763049251; cv=none; b=pR86j1etO8sODJ6kOFcmhkzJYgIc97USys1WbfAm+oKjn8Ey6vEwvHlf4lDscutwpC25KuSs27PVx83AUD7a+c2k/Uq1mgBfJYXZ42LPRR3iOCt3HtQcxKYjSwq9TvLXaCHL6nZg4PZnj35Vrhn7CrlPGYNLo7KbF0r6SESW394=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763047487; c=relaxed/simple;
-	bh=a8Oh4ByEmIDtGdZ8h4OuLqjW5FkDttrFXTOx2NT4iss=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rFNFqUgAXxCgxzk9Yr9ttxWc1ka1lfErKHLN9CGEvBxAnP5v11T97/m2NXQF63l5ZVzvUIumtawYu3tuzOse5UA+3IaRE9zWbGN00L2yiWPrzXKIv8qclnhcufaGzAMd16j+MFwNczRv3y8ieciq2BEUGURYiBK7RwWnfRgbCJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=GpdDsCqr; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4775ae77516so10861095e9.1
-        for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 07:24:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1763047484; x=1763652284; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iB+JT+rAjTzk5qbj4tgjSnTjnda4G40CL0DtaEMW97s=;
-        b=GpdDsCqrLIix28BI6t007HUPegFO3MBRZgB+SsxTYwALow5rm66zBh7t9qjBFivPWE
-         9aejZSa4HfhABOr6MBT/H42UMdfZ+lXTQnVFGpLhbdaJ5Uu0o87PxRV6xE4HHyJdDRyr
-         hZMlg2jqpoPlhE4vKjAeIumZrnEF+uShmuoRgQitPSYH3UfskwS8yLLUqn1WBrHwV6hp
-         Jg52+FUe8trj5HkWCpWirpK17M1P2A/T0h5OtgIZaOdGx1WSuCevnkJu0vZMSgBnjU0Q
-         w1sU4r2Hwzyk91khCOMvNt/KezqretHovC9HFa4DHXOffv3WQB2j5AcbCfbLxmloQy1n
-         ENyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763047484; x=1763652284;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iB+JT+rAjTzk5qbj4tgjSnTjnda4G40CL0DtaEMW97s=;
-        b=JrGrsvAnT/rXFyPE2jiCGjMxShtwU+f+/9dPEEWFaDT3KJajd4HHLiyPdaWLJmCAY7
-         GRKGlMQy4ciUmT0tthqDaB67BcwgckZw29lu5+rT85MOEbPgfxZLOFvui0HSu9J0wMBT
-         HEMELUtseC2DZXHic4MeIdssNH+j63DL69Q0/VeuxpYIef1SNJcvGQhm26N+/w14lva/
-         LZGv932z76+6y0lPkmCOUJlakrTb3yJlHfndZEyMky92HnZ/EkgkcZhdSlLXH9guMIP5
-         LzkR8g8HQB586hGmMxhWB2JJaIlAy3KvNTAcTIjNZAc2nzHTecQjzLZ5MpakFe9hiNnk
-         /EKg==
-X-Gm-Message-State: AOJu0YwNbLglo5fOoynU5fUFxwatDQb4+axtq4G05+P7ZhKkyT/KQJp7
-	bQxbcmIMkzo0FAY8Xu6SejhRdki/43F6qcATsdvXt+Bt1Za6NyiaPuTlUrII0zJchcQ=
-X-Gm-Gg: ASbGnctHaJtPgFKY+GSeddznvs8qoMgzbZc7kR0cFpk+OSknzVEV6e/ROslZVnrG6WQ
-	3mnqRuW8ps71DSUmoM6jCP3X71xzsYxEk+iePKDrQ79dPNjhPLEEhT0/CPfMvOwmxzTOyCdaO0f
-	RICLwaNnId+KQoR2PSf0dr21V8h75Gj6TB2MaFbbiZlFP4XhOV9/zz2/9LK8gloaBP8MSZlYm47
-	nvTYMvUq4Z7+rr09m6SQBXAdrglo2tu0Vl+7UN6JOj0XX0nQrOrWB+SIaNzHoZ6ngK1a9nacvRw
-	KriqiBwwyAIV5ol3v0f9EXuqmgcD9A8Svr0BsgqoQidJxTRuBxquI4Lr/oIFxjUB5ETd9gtUFQV
-	TVXVjTn8fsw+MNa6NDrLVV4BxVO8wMuPy+f+iRteetzl718mcMSoKp+Rltrj62dYNRiCzKUKcJz
-	YMpFJ4pvED
-X-Google-Smtp-Source: AGHT+IE4kSPN0NcyZr5YwaFByd3zY3e87tD0XqKRmf32VutndhscEu4TOszysUiok7ZPHwh1vTJRjw==
-X-Received: by 2002:a05:600c:3546:b0:475:dae5:d972 with SMTP id 5b1f17b1804b1-47787095cc8mr69292105e9.23.1763047483038;
-        Thu, 13 Nov 2025 07:24:43 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.134])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e97a87sm4923542f8f.20.2025.11.13.07.24.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Nov 2025 07:24:42 -0800 (PST)
-Message-ID: <c8f7f55e-4229-49b6-8627-2a177ca85d5f@tuxon.dev>
-Date: Thu, 13 Nov 2025 17:24:40 +0200
+	s=arc-20240116; t=1763049251; c=relaxed/simple;
+	bh=PksXhfm6DxsOyKhs9Ke2wv9TNPEzGflef5ZRqcdeWFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=i2d97IAyUpVGBYCHCeyCLFjBPGwBei/WQyNrVst5dm3UpmGqR6yzt0K1f6y+pwPYt7/DicDU4qxxcDeQEUrde3GK186fZJ3KJmFKUPq72wbb8+VNW6epiF2ANEdzlSPFLmHKJPjllHZnKhSo9mgKiSru2DcKwJjyq2Bagnf/oxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JLg62xZp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1AB2C4CEFB;
+	Thu, 13 Nov 2025 15:54:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763049251;
+	bh=PksXhfm6DxsOyKhs9Ke2wv9TNPEzGflef5ZRqcdeWFw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=JLg62xZp+Cf9n4/V4/JASc36uOkBlJrNjWaDfju6VfwTy+RABTfYoPqm6vm3xxzl7
+	 AVHGsKSC5c/aq5FTqBNKdcTWd/Lt5HtSJGqYb0P+gERHBPfuyfdupdR4nJYWkS60ml
+	 1g0SNcgYsxcMi0pAJkzvjyq/8e5MvwuyT7uhITQWpo0o3abebssykmL7QtAmkBaUxz
+	 0IQnlkddtndT3OGd40fCrWTgQnFaQQo8EofQRKsEN00VfdcYsfGpE5DQw63stVVZct
+	 JTrunFYjFoshIsaJHUIGn1MBYcTKPsSqX/cbyQGqKhp1SCb2wJ+Yg3AVmhB9IfZkU1
+	 6m4fcuj/9dAng==
+Date: Thu, 13 Nov 2025 09:54:09 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	andersson@kernel.org, robh@kernel.org,
+	manivannan.sadhasivam@linaro.org, krzk@kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	lpieralisi@kernel.org, kw@linux.com, conor+dt@kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree-spec@vger.kernel.org, quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v2] schemas: pci: Document PCIe T_POWER_ON
+Message-ID: <20251113155409.GA2283653@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/6] PCI: rzg3s-host: Add Renesas RZ/G3S SoC host
- driver
-To: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
- robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
- conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
- p.zabel@pengutronix.de
-Cc: linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-References: <20251029133653.2437024-1-claudiu.beznea.uj@bp.renesas.com>
- <20251029133653.2437024-3-claudiu.beznea.uj@bp.renesas.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <20251029133653.2437024-3-claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aRWYoHvaCCN95ZR9@wunner.de>
 
-Hi,
+On Thu, Nov 13, 2025 at 09:36:48AM +0100, Lukas Wunner wrote:
+> On Thu, Nov 13, 2025 at 09:33:54AM +0530, Krishna Chaitanya Chundru wrote:
+> > On 11/10/2025 6:11 PM, Lukas Wunner wrote:
+> > > On Mon, Nov 10, 2025 at 04:59:47PM +0530, Krishna Chaitanya Chundru wrote:
+> > > > From PCIe r6, sec 5.5.4 & Table 5-11 in sec 5.5.5 T_POWER_ON
+> > > > is the minimum amount of time(in us) that each component must
+> > > > wait in L1.2.Exit after sampling CLKREQ# asserted before
+> > > > actively driving the interface to ensure no device is ever
+> > > > actively driving into an unpowered component and these values
+> > > > are based on the components and AC coupling capacitors used
+> > > > in the connection linking the two components.
+> > > > 
+> > > > This property should be used to indicate the T_POWER_ON for
+> > > > each Root Port.
+> > >
+> > > What's the difference between this property and the Port
+> > > T_POWER_ON_Scale and T_POWER_ON_Value in the L1 PM Substates
+> > > Capabilities Register?
+> > > 
+> > > Why do you need this in the device tree even though it's
+> > > available in the register?
+> > 
+> > This value is same as L1 PM substates value, some controllers
+> > needs to update this value before enumeration as hardware might
+> > now program this value correctly[1].
+> > 
+> > [1]: [PATCH] PCI: qcom: Program correct T_POWER_ON value for L1.2
+> > exit timing
+> > 
+> > <https://lore.kernel.org/all/20251104-t_power_on_fux-v1-1-eb5916e47fd7@oss.qualcomm.com/>
+> 
+> Per PCIe r7.0 sec 7.8.3.2, all fields in the L1 PM Substates Capabilities
+> Register are of type "HwInit", which sec 7.4 defines as:
+> 
+>    "Register bits are permitted, as an implementation option, to be
+>     hard-coded, initialized by system/device firmware, or initialized
+>     by hardware mechanisms such as pin strapping or nonvolatile storage.
+>     Initialization by system firmware is permitted only for
+>     system-integrated devices.
+>     Bits must be fixed in value and read-only after initialization."
+>                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> These bits are not supposed to be writable by the operating system,
+> so what you're doing in that patch is not spec-compliant.
+> 
+> I think it needs to be made explicit in the devicetree schema that
+> the property is only intended for non-compliant hardware which allows
+> (and requires) the operating system to initialize the register.
 
-On 10/29/25 15:36, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
-> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
-> only as a root complex, with a single-lane (x1) configuration. The
-> controller includes Type 1 configuration registers, as well as IP
-> specific registers (called AXI registers) required for various adjustments.
-> 
-> Hardware manual can be downloaded from the address in the "Link" section.
-> The following steps should be followed to access the manual:
-> 1/ Click the "User Manual" button
-> 2/ Click "Confirm"; this will start downloading an archive
-> 3/ Open the downloaded archive
-> 4/ Navigate to r01uh1014ej*-rzg3s-users-manual-hardware -> Deliverables
-> 5/ Open the file r01uh1014ej*-rzg3s.pdf
-> 
-> Link: https://www.renesas.com/en/products/rz-g3s?
-> queryID=695cc067c2d89e3f271d43656ede4d12
-> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
-> 
-> Changes in v6:
-> - split the help message from Kconfig to 80 chars
-> - dropped unused defines
-> - dropped dot at the end of short comments
-> - re-arranged the members of rzg3s_pcie_child_prepare_bus(),
->   rzg3s_pcie_child_read_conf(), rzg3s_pcie_child_write_conf(),
->   rzg3s_pcie_root_map_bus() to save few lines
-> - in rzg3s_pcie_irq_compose_msi_msg() drop drop_mask and use
->   RZG3S_PCI_MSIRCVWADRL_MASK
-> - merge INTx and MSI configuration in rzg3s_pcie_init_irqdomain(); with it,
->   rzg3s_pcie_host_setup() takes now only 2 function pointer for IRQ domain
->   config and teardown; also, updated the names of other functions to match
->   the most used pattern accross other drivers:
-> -- rzg3s_pcie_msi_enable() -> rzg3s_pcie_init_msi()
-> -- rzg3s_pcie_host_parse_root_port() -> rzg3s_pcie_host_parse_port()
-> -- rzg3s_pcie_host_init_root_port() -> rzg3s_pcie_host_init_port() 
-> - used dev_fwnode() instead of of_fwnode_handle()
-> - used fsleep() instead of usleep_range()
-> - pass "size - 1" to rzg3s_pcie_set_inbound_window() only and keep the
->   undecremented value in the calling function
-> - added a comment on top of request_irq() to explain why devm_ variant
->   was not used
+I don't see a driver patch that uses this yet, but I assume the driver
+will use a device-specific way to set the value that will appear in
+the L1 PM Substates Capabilities register, and the register visible in
+config space probably is read-only as the PCIe spec describes, so I
+don't think this makes the hardware non-compliant.
 
-Could you please let me know if there's anything I should be doing for this
-version?
+> Maybe it makes more sense to have a property which specifies the raw
+> 32-bit register contents, instead of having a property for each
+> individual field.  Otherwise you'll have to amend the schema
+> whenever the PCIe spec extends the register with additional fields.
 
-Thank you,
-Claudiu
+I don't have any personal experience with this hardware, but I think
+the device-specific registers that back the standard PCI config
+registers sometimes use different formats.  pcie-brcmstb.c is a good
+example that I've tripped over several times:
+https://lore.kernel.org/all/5ca0b4a2-ec3a-4fa5-a691-7e3bab88890a@broadcom.com/
+
+Bjorn
 
