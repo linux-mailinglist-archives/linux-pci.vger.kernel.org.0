@@ -1,203 +1,157 @@
-Return-Path: <linux-pci+bounces-41116-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41117-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3806C585A8
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:25:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED17CC58A06
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 17:12:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83A683BB5B9
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 15:18:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3EACA4A727F
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 15:33:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84D9135A93C;
-	Thu, 13 Nov 2025 15:03:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A11DF2D8372;
+	Thu, 13 Nov 2025 15:24:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WOuQz+Me"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="GpdDsCqr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4E135A125;
-	Thu, 13 Nov 2025 15:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A370B2FBE09
+	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 15:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763046206; cv=none; b=lAVMRdUs/shogM1reRvJOXLY0XrbL5sItC0ApdIXZ/MXUruG6fddNcl3cIzQQd2eMBXXiHI/cRfBJTl6YzQwArZsO8vvogZXo+KVrG25bEUjO49OyiAHtHOd7VdDjmj7pRW/l+xjRa9aTV9NVOr5LiJeiIDM41kBi/tadQUkj9o=
+	t=1763047487; cv=none; b=ug6qcFCMjz/CrsoUSnMcx4tjiJZs4BUwl8S9J4I+/SjcHtL7abCw44FXXOgph7ylMX0apvfELSHHb25cljkOqyY55pFT68LAZRybXUHxrjmJ9iErCvF2nLsD1JOy7lNinGChhNNex80ueynG+n5gqBF7hbshBo2XAGAdj0eY4/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763046206; c=relaxed/simple;
-	bh=OtFs4nYXEH1ThWKykhpKfwgYG7osOn2qi/Z49bIrWUw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e2xsrQoCaO+LsaAgsIMF0gWKSjFPdhiqFEd8Bm244lyfBeDcaHf+zi3Hn1QfDBesPRTvAkMH2CuoPesf03dRx3uNGXU1WJvuETybCf4POthb2ZWIBTj0xNrXbpJfjHrhcmxzoAEM42u9oql44adyUxwbtfIRuOnvWX8sapDMLFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WOuQz+Me; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763046205; x=1794582205;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=OtFs4nYXEH1ThWKykhpKfwgYG7osOn2qi/Z49bIrWUw=;
-  b=WOuQz+MeEOQavM2mL8rxvEvgJpuCI5O3AzUufeQa8/e11H0o5GTZ5GqT
-   n9cxFhd8bXBSS7O5mztTZkRV0wjoLc4Nd3Zz+OBhfrmtOMHV52kpdOSTe
-   Rl6KIdIbq8g8S3a0ftsG19Lmoc36q+tM5d1gjKNY4f8qBCsIKNU8qr9PX
-   nZXteDnIuQomJrb1YNR5hIwSkCfd+eGZbStKrhZWL0w2oeiMifj34Xfiu
-   OeQC2ewD0Z57bPNcBgZleBbS7L4GpLJXymksKUBMUPPjEdv5H+mYWwU7f
-   hbr+XEVgsT0qZ1wsuIDBJBXgiXZXqR2vib8qrTk2du0g4Bo+o+ABGNNXA
-   g==;
-X-CSE-ConnectionGUID: voUJCzjSS5mlD7Il6h4a8Q==
-X-CSE-MsgGUID: 4tcvY+JeTQ+4hNpACC1S4Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="65054771"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="65054771"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 07:03:04 -0800
-X-CSE-ConnectionGUID: wsJEWqiyRSOTWbBWxtwAyw==
-X-CSE-MsgGUID: TObbgzKmSz6dKnfJs+E4CA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="220325238"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa001.fm.intel.com with ESMTP; 13 Nov 2025 07:02:55 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 88811AB; Thu, 13 Nov 2025 16:02:19 +0100 (CET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Corey Minyard <corey@minyard.net>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Rob Clark <robin.clark@oss.qualcomm.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
-	Vitaly Lifshits <vitaly.lifshits@intel.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Calvin Owens <calvin@wbinvd.org>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Sagi Maimon <maimon.sagi@gmail.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Karan Tilak Kumar <kartilak@cisco.com>,
-	Hans Verkuil <hverkuil+cisco@kernel.org>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
-	Max Kellermann <max.kellermann@ionos.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	amd-gfx@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org,
-	freedreno@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	linux-mmc@vger.kernel.org,
-	netdev@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	linux-pci@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	ceph-devel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Gustavo Padovan <gustavo@padovan.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Abhinav Kumar <abhinav.kumar@linux.dev>,
-	Jessica Zhang <jesszhan0024@gmail.com>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rodolfo Giometti <giometti@enneenne.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Stefan Haberland <sth@linux.ibm.com>,
-	Jan Hoeppner <hoeppner@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Satish Kharat <satishkh@cisco.com>,
-	Sesidhar Baddela <sebaddel@cisco.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Xiubo Li <xiubli@redhat.com>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v3 21/21] tracing: Switch to use %ptSp
-Date: Thu, 13 Nov 2025 15:32:35 +0100
-Message-ID: <20251113150217.3030010-22-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
-References: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1763047487; c=relaxed/simple;
+	bh=a8Oh4ByEmIDtGdZ8h4OuLqjW5FkDttrFXTOx2NT4iss=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rFNFqUgAXxCgxzk9Yr9ttxWc1ka1lfErKHLN9CGEvBxAnP5v11T97/m2NXQF63l5ZVzvUIumtawYu3tuzOse5UA+3IaRE9zWbGN00L2yiWPrzXKIv8qclnhcufaGzAMd16j+MFwNczRv3y8ieciq2BEUGURYiBK7RwWnfRgbCJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=GpdDsCqr; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4775ae77516so10861095e9.1
+        for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 07:24:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1763047484; x=1763652284; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iB+JT+rAjTzk5qbj4tgjSnTjnda4G40CL0DtaEMW97s=;
+        b=GpdDsCqrLIix28BI6t007HUPegFO3MBRZgB+SsxTYwALow5rm66zBh7t9qjBFivPWE
+         9aejZSa4HfhABOr6MBT/H42UMdfZ+lXTQnVFGpLhbdaJ5Uu0o87PxRV6xE4HHyJdDRyr
+         hZMlg2jqpoPlhE4vKjAeIumZrnEF+uShmuoRgQitPSYH3UfskwS8yLLUqn1WBrHwV6hp
+         Jg52+FUe8trj5HkWCpWirpK17M1P2A/T0h5OtgIZaOdGx1WSuCevnkJu0vZMSgBnjU0Q
+         w1sU4r2Hwzyk91khCOMvNt/KezqretHovC9HFa4DHXOffv3WQB2j5AcbCfbLxmloQy1n
+         ENyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763047484; x=1763652284;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iB+JT+rAjTzk5qbj4tgjSnTjnda4G40CL0DtaEMW97s=;
+        b=JrGrsvAnT/rXFyPE2jiCGjMxShtwU+f+/9dPEEWFaDT3KJajd4HHLiyPdaWLJmCAY7
+         GRKGlMQy4ciUmT0tthqDaB67BcwgckZw29lu5+rT85MOEbPgfxZLOFvui0HSu9J0wMBT
+         HEMELUtseC2DZXHic4MeIdssNH+j63DL69Q0/VeuxpYIef1SNJcvGQhm26N+/w14lva/
+         LZGv932z76+6y0lPkmCOUJlakrTb3yJlHfndZEyMky92HnZ/EkgkcZhdSlLXH9guMIP5
+         LzkR8g8HQB586hGmMxhWB2JJaIlAy3KvNTAcTIjNZAc2nzHTecQjzLZ5MpakFe9hiNnk
+         /EKg==
+X-Gm-Message-State: AOJu0YwNbLglo5fOoynU5fUFxwatDQb4+axtq4G05+P7ZhKkyT/KQJp7
+	bQxbcmIMkzo0FAY8Xu6SejhRdki/43F6qcATsdvXt+Bt1Za6NyiaPuTlUrII0zJchcQ=
+X-Gm-Gg: ASbGnctHaJtPgFKY+GSeddznvs8qoMgzbZc7kR0cFpk+OSknzVEV6e/ROslZVnrG6WQ
+	3mnqRuW8ps71DSUmoM6jCP3X71xzsYxEk+iePKDrQ79dPNjhPLEEhT0/CPfMvOwmxzTOyCdaO0f
+	RICLwaNnId+KQoR2PSf0dr21V8h75Gj6TB2MaFbbiZlFP4XhOV9/zz2/9LK8gloaBP8MSZlYm47
+	nvTYMvUq4Z7+rr09m6SQBXAdrglo2tu0Vl+7UN6JOj0XX0nQrOrWB+SIaNzHoZ6ngK1a9nacvRw
+	KriqiBwwyAIV5ol3v0f9EXuqmgcD9A8Svr0BsgqoQidJxTRuBxquI4Lr/oIFxjUB5ETd9gtUFQV
+	TVXVjTn8fsw+MNa6NDrLVV4BxVO8wMuPy+f+iRteetzl718mcMSoKp+Rltrj62dYNRiCzKUKcJz
+	YMpFJ4pvED
+X-Google-Smtp-Source: AGHT+IE4kSPN0NcyZr5YwaFByd3zY3e87tD0XqKRmf32VutndhscEu4TOszysUiok7ZPHwh1vTJRjw==
+X-Received: by 2002:a05:600c:3546:b0:475:dae5:d972 with SMTP id 5b1f17b1804b1-47787095cc8mr69292105e9.23.1763047483038;
+        Thu, 13 Nov 2025 07:24:43 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.134])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53e97a87sm4923542f8f.20.2025.11.13.07.24.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Nov 2025 07:24:42 -0800 (PST)
+Message-ID: <c8f7f55e-4229-49b6-8627-2a177ca85d5f@tuxon.dev>
+Date: Thu, 13 Nov 2025 17:24:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/6] PCI: rzg3s-host: Add Renesas RZ/G3S SoC host
+ driver
+To: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+ robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
+ conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
+ p.zabel@pengutronix.de
+Cc: linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+References: <20251029133653.2437024-1-claudiu.beznea.uj@bp.renesas.com>
+ <20251029133653.2437024-3-claudiu.beznea.uj@bp.renesas.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <20251029133653.2437024-3-claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Use %ptSp instead of open coded variants to print content of
-struct timespec64 in human readable format.
+Hi,
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- kernel/trace/trace_output.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On 10/29/25 15:36, Claudiu wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+> only as a root complex, with a single-lane (x1) configuration. The
+> controller includes Type 1 configuration registers, as well as IP
+> specific registers (called AXI registers) required for various adjustments.
+> 
+> Hardware manual can be downloaded from the address in the "Link" section.
+> The following steps should be followed to access the manual:
+> 1/ Click the "User Manual" button
+> 2/ Click "Confirm"; this will start downloading an archive
+> 3/ Open the downloaded archive
+> 4/ Navigate to r01uh1014ej*-rzg3s-users-manual-hardware -> Deliverables
+> 5/ Open the file r01uh1014ej*-rzg3s.pdf
+> 
+> Link: https://www.renesas.com/en/products/rz-g3s?
+> queryID=695cc067c2d89e3f271d43656ede4d12
+> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> ---
+> 
+> Changes in v6:
+> - split the help message from Kconfig to 80 chars
+> - dropped unused defines
+> - dropped dot at the end of short comments
+> - re-arranged the members of rzg3s_pcie_child_prepare_bus(),
+>   rzg3s_pcie_child_read_conf(), rzg3s_pcie_child_write_conf(),
+>   rzg3s_pcie_root_map_bus() to save few lines
+> - in rzg3s_pcie_irq_compose_msi_msg() drop drop_mask and use
+>   RZG3S_PCI_MSIRCVWADRL_MASK
+> - merge INTx and MSI configuration in rzg3s_pcie_init_irqdomain(); with it,
+>   rzg3s_pcie_host_setup() takes now only 2 function pointer for IRQ domain
+>   config and teardown; also, updated the names of other functions to match
+>   the most used pattern accross other drivers:
+> -- rzg3s_pcie_msi_enable() -> rzg3s_pcie_init_msi()
+> -- rzg3s_pcie_host_parse_root_port() -> rzg3s_pcie_host_parse_port()
+> -- rzg3s_pcie_host_init_root_port() -> rzg3s_pcie_host_init_port() 
+> - used dev_fwnode() instead of of_fwnode_handle()
+> - used fsleep() instead of usleep_range()
+> - pass "size - 1" to rzg3s_pcie_set_inbound_window() only and keep the
+>   undecremented value in the calling function
+> - added a comment on top of request_irq() to explain why devm_ variant
+>   was not used
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index ebbab3e9622b..cc2d3306bb60 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -1490,12 +1490,12 @@ trace_hwlat_print(struct trace_iterator *iter, int flags,
- 
- 	trace_assign_type(field, entry);
- 
--	trace_seq_printf(s, "#%-5u inner/outer(us): %4llu/%-5llu ts:%lld.%09ld count:%d",
-+	trace_seq_printf(s, "#%-5u inner/outer(us): %4llu/%-5llu ts:%ptSp count:%d",
- 			 field->seqnum,
- 			 field->duration,
- 			 field->outer_duration,
--			 (long long)field->timestamp.tv_sec,
--			 field->timestamp.tv_nsec, field->count);
-+			 &field->timestamp,
-+			 field->count);
- 
- 	if (field->nmi_count) {
- 		/*
--- 
-2.50.1
+Could you please let me know if there's anything I should be doing for this
+version?
 
+Thank you,
+Claudiu
 
