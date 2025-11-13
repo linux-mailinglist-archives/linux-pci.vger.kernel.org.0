@@ -1,32 +1,32 @@
-Return-Path: <linux-pci+bounces-41073-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41074-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9CD2C56A46
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 10:40:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38759C56AC1
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 10:46:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9000B35059D
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 09:38:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 882AA3B7DC3
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 09:39:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29A2C257859;
-	Thu, 13 Nov 2025 09:38:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D67422C327A;
+	Thu, 13 Nov 2025 09:39:49 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C6D23ED6A
-	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 09:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CE226B96A;
+	Thu, 13 Nov 2025 09:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763026697; cv=none; b=JA5nKSe64+nZOhDKTu8HOovfa9ePwhrTVXADiWR/cl/oV4kPaDPTBeZuB0PNzKNs6X9lPxfNtZlSbBtYgQppjwLQrFzJ+5LsMOHms3m+9VH3f96i0IhB9c092rxxt6X+53F+ZECnhgUluYB1PYmaq7rril+tpZZtsUtGVRsJB4w=
+	t=1763026789; cv=none; b=YGf78Q86z7SwRxnM7jFNpf0wlmkRSIraCTq10o3M6wB+flY7uBDArxUM/JOFcKxcFbidljZf3hP0tTEtCmABIltuAsbBZyNLeTF7t/7GgaPNnQf7iEY4bLmWfp0eXoYXL2MnvNuZ9wesGmkWJ8gM3yb8KVG2PWh0Gr3ZwuPArAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763026697; c=relaxed/simple;
-	bh=p2leIeRpTkORfNucmug+8e5oSatEwtr5Tot7BUoraew=;
+	s=arc-20240116; t=1763026789; c=relaxed/simple;
+	bh=JyOs83ES5xDEb+WWNZwFA2NK/2lJXpxI/KUuI3yL6Fg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BME8klzeXdJsBbq1iBI9rrYhCgjAnVKb0CnS1BHUGHCWx1MoF/4ryF6IIg+m6Q6rK7VEXW4LsXZuZsHnaaZJu3L2UfmQ4nwEFd2C92+nFbDK+G6fK4cTcbvWgc08VcwNvK6QTNtJfESTrEonFwOQRXrFbOjxlHnmNhQWgnsNWg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+	 Content-Type:Content-Disposition:In-Reply-To; b=adXQO5n6WZI1hIa2JpoawleSfj29k0AoWManjpxSjmyN0OhMeNxohn+keKflpLYe/DuQ/KwOAVjbtxLGi/cVvMyiyQ6S51bNoXLKYKulj5uSHTm2GOsTvStTm/ATyV/rbohh4e/o+ztbvfYu6Y1nsGUQyOLS4gEsdDnwXumkkks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
 Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
@@ -34,37 +34,23 @@ Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
 	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384
 	 client-signature ECDSA (secp384r1) client-digest SHA384)
 	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id B6DD32C02BAE;
-	Thu, 13 Nov 2025 10:38:09 +0100 (CET)
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id AE61C20083DA;
+	Thu, 13 Nov 2025 10:39:44 +0100 (CET)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 9BB47192C; Thu, 13 Nov 2025 10:38:09 +0100 (CET)
-Date: Thu, 13 Nov 2025 10:38:09 +0100
+	id A8CDB1217A; Thu, 13 Nov 2025 10:39:44 +0100 (CET)
+Date: Thu, 13 Nov 2025 10:39:44 +0100
 From: Lukas Wunner <lukas@wunner.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Riana Tauro <riana.tauro@intel.com>,
-	"Sean C. Dardis" <sean.c.dardis@intel.com>,
-	Farhan Ali <alifm@linux.ibm.com>,
-	Benjamin Block <bblock@linux.ibm.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Alek Du <alek.du@intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, qat-linux@intel.com,
-	Dave Jiang <dave.jiang@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH 1/2] PCI: Ensure error recoverability at all times
-Message-ID: <aRWnAd-PZuHMqBwd@wunner.de>
-References: <070a03221dbec25f478d36d7bc76e0da81985c5d.1760274044.git.lukas@wunner.de>
- <20251112223831.GA2245026@bhelgaas>
+To: Johnny Chang <Johnny-CC.Chang@mediatek.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Project_Global_Digits_Upstream_Group@mediatek.com
+Subject: Re: [PATCH] PCI: Mark Nvidia GB10 to avoid bus reset
+Message-ID: <aRWnYCI6Ax14XNJq@wunner.de>
+References: <20251113084441.2124737-1-Johnny-CC.Chang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,108 +59,13 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251112223831.GA2245026@bhelgaas>
+In-Reply-To: <20251113084441.2124737-1-Johnny-CC.Chang@mediatek.com>
 
-On Wed, Nov 12, 2025 at 04:38:31PM -0600, Bjorn Helgaas wrote:
-> On Sun, Oct 12, 2025 at 03:25:01PM +0200, Lukas Wunner wrote:
-> > Despite these workarounds, recoverability at all times is not guaranteed:
-> > E.g. when a PCIe port goes through a runtime suspend and resume cycle,
-> > the "saved_state" flag is cleared by:
-> > 
-> >   pci_pm_runtime_resume()
-> >     pci_pm_default_resume_early()
-> >       pci_restore_state()
-> > 
-> > ... and hence on a subsequent AER event, the port's Config Space cannot be
-> > restored.  
-> 
-> I guess this restore would be done by a driver's
-> pci_error_handlers.slot_reset() or .reset_done() calling
-> pci_restore_state()?
+On Thu, Nov 13, 2025 at 04:44:06PM +0800, Johnny Chang wrote:
+> Nvidia GB10 PCIe hosts will encounter problem occasionally
+> after SBR(secondary bus reset) is applied.
 
-Yes.  Restoration of config space after an error-recovery-induced reset
-is currently always the job of the device driver.
-
-E.g. in the case of portdrv, it happens in pcie_portdrv_slot_reset().
-
-We could revisit this design decision and change the behavior to have
-pcie_do_recovery() call pci_restore_state(), thus reducing boilerplate
-in the drivers.  But that would be a separate effort, orthogonal to the
-present patch.
-
-> > +++ b/drivers/pci/bus.c
-> > @@ -358,6 +358,13 @@ void pci_bus_add_device(struct pci_dev *dev)
-> >  	pci_bridge_d3_update(dev);
-> >  
-> >  	/*
-> > +	 * Save config space for error recoverability.  Clear state_saved
-> > +	 * to detect whether drivers invoked pci_save_state() on suspend.
-> 
-> Can we expand this a little to explain how this is detected and what
-> drivers *should* be doing?
-
-That is documented in Documentation/power/pci.rst, "3.1.2. suspend()":
-
-   "This callback is expected to quiesce the device and prepare it to be
-    put into a low-power state by the PCI subsystem.  It is not required
-    (in fact it even is not recommended) that a PCI driver's suspend()
-    callback save the standard configuration registers of the device [...]
-
-    However, in some rare case it is convenient to carry out these
-    operations in a PCI driver.  Then, pci_save_state() [...] should be
-    used to save the device's standard configuration registers [...].
-    Moreover, if the driver calls pci_save_state(), the PCI subsystem will
-    not execute either pci_prepare_to_sleep(), or pci_set_power_state()
-    for its device, so the driver is then responsible for handling the
-    device as appropriate."
-
-> I think the reason is that the PCI core
-> can invoke pci_save_state() on suspend if the driver did not.
-
-Right.  By calling pci_save_state(), a driver signals to the PCI core
-that it assumes responsibility for putting the device into a low power
-state.  If a driver wants to keep a device in D0, it could call
-pci_save_state() and thus prevent the PCI core from putting it e.g.
-into D3.
-
-> I assume:
-> 
->   - PCI core always calls pci_save_state() and clears state_saved when
->     device is enumerated (below)
-> 
->   - When it has configured the device to the state it wants restore,
->     the driver may call pci_save_state() again, which will set
->     state_saved
-> 
->   - If driver has not called pci_save_state(), i.e., state_saved is
->     still clear, we want the PCI core to call pci_save_state() during
->     suspend
-
-Right.
-
-> This sounds sensible to me.  It would be nice if there were a few more
-> words about pci_save_state() and pci_restore_state() in
-> Documentation/.
-> 
-> pci_save_state() isn't mentioned at all in Documentation/PCI
-
-Right, it's documented in the Documentation/power directory. :)
-
-The "state_saved" flag in struct pci_dev is an internal flag used by
-the PCI core to keep track of whether a driver called pci_save_state()
-on suspend.
-
-The logic to update the flag is not modified by the patch, deliberately so
-to avoid any breakage.  The flag is currently initialized to false in
-pci_device_add() (even though it already is false due to kzalloc() zeroing
-the memory).  I'm now later calling pci_save_state() in pci_bus_add_device(),
-which sets the flag to true.  To preserve the existing logic, I am resetting
-the flag to false again.
-
-The only change made by the patch is to not invalidate the saved state
-upon pci_restore_state() and thus allow re-using it for error recovery.
-The patch seeks to avoid changing the behavior of suspend/resume.
-I wanted to keep this minimal, non-intrusive and as low risk as possible.
+Could you elaborate what kinds of problems occur, how often they occur, etc?
 
 Thanks,
 
