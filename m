@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-41150-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41151-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79D8BC59539
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 19:02:25 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50449C5976E
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 19:29:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 00E1D34D605
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 18:02:25 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3A29F502F5F
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 18:02:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EFE0346791;
-	Thu, 13 Nov 2025 18:01:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB52730748E;
+	Thu, 13 Nov 2025 18:01:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MHVARSFP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nQGfWQC8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F15229BD95;
-	Thu, 13 Nov 2025 18:01:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D712FBDE2;
+	Thu, 13 Nov 2025 18:01:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763056899; cv=none; b=hg7fmi0r4nO6KZqk4UnEz9D4Pk6lyi3s+acEaPkmZyefQgjXST4JqRWto1cveBGUSV8JK4Ew7ntYG35KEkYUZhw21ztTQ90joOp16opxcdE1Yos4zyzGJO8g8MAWyA+D8Smvo8GfgwgVtb5au2mqS0DnJlpc9a31r2QALXdjsCY=
+	t=1763056911; cv=none; b=ObD8rhUX+Ut4GJVW4f+apOZfSefSWig0J1wAHK9+ZH7GAzelWYwMcouwS/6mvrKFA4F2B4aljX0aqTxogh4a36lpD4P4T8HA1Y7/cUlaP8T0Xk/ASpX+4hHoVpeNVKsRbWmrKFIM5n4F7tH4mfE51lr0GVb+P8e4DYCn5mFn7rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763056899; c=relaxed/simple;
-	bh=Mhb9W5CShBH9lUW5aOdaQ3Fc0vAw/2EZR+ZRatwurTQ=;
+	s=arc-20240116; t=1763056911; c=relaxed/simple;
+	bh=DhatKJFXqqwKu6DghbCbpp5pfXLE9DijpjZOhPHBtYk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gHhVjQszhnQXAttuAMmzUwOlyzuhYBFAN7BqXqJzPxZXON/ey6sfdv/pxRdL4pEtB+JW3ALUGr1eiqKJynrIMathmOQotdKOSeVyCRGMj3hli+rC1fUgXS18hJHPjcwLbWqnJ7O3Dya0kitWwluW0+bospC8vXAyb8m0B+omt7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MHVARSFP; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version:Content-Type; b=k7OW4/ErMPGFt8aC7/1kGldmKvA/ORotnrKWWLWWUXKsvEZvgwLS6M8oj++y4ZXwvB9XZbQX6uUql3RcpBSYTbU5T/2lBGQoBVoVo0tU0P6IAN7H+QrMKAES0X5kC6684Owq7OCdwUvPMaXA4jSmu4PhgQomLYRTT3/S4v7ovVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nQGfWQC8; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763056898; x=1794592898;
+  t=1763056910; x=1794592910;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Mhb9W5CShBH9lUW5aOdaQ3Fc0vAw/2EZR+ZRatwurTQ=;
-  b=MHVARSFPH/dQuzUF0E4FjL0BfK+idNxEknvVbVw5/W7N+6jl8IX6jlEk
-   ig7TSl3S1aYpLxCJO3Y5+Tu9sedTGKAX4+Sb0KEg15ihTEE/Ae7NX65eF
-   qCIQOE9Bk29dnuAsj/TVFgU48NccQn9yqCQNq7GEWKZo+0bURwHzdYTXB
-   07NqFc48L8l1SD64BINt+HbrZipflXn/VGyAufkzV1AtaqtQA54C6vva2
-   0v4o1NGIMJ1mf1ileEMx9FJsX3PjA1acXWU1IGt102QO1hxGiT8JeH5w/
-   Q/BdSoWyJJ+1L5/mBCuYXGjWl36cOo/vdN2lmS4iBWGeoLXqCLdtBQN2m
+  bh=DhatKJFXqqwKu6DghbCbpp5pfXLE9DijpjZOhPHBtYk=;
+  b=nQGfWQC80Agbo5tiaI3ViT8u745hyjpefvB65tgJjBWxpScSw4Mpdvie
+   GA5Th9KDhHEv2QjOEaWKlcR8rqMw7aazO6WP73qHNPkk+n0TGZkDjfA4q
+   xrjBsdIj+KUBCsdMRkr+56aHGSvgkBgIQMbMm5cl5gG9YIrhNUK3JQQ2o
+   DPteINiyJEE7DI2icVzeIJv20CBNKO7h3Qr4J3ni7GJnk/1G9vzZH9BS3
+   c/uFzQp+GpxJ/6teuuTA6v0+7yFxWzT+WNuUMBJ8xeP/j0d1FxzThv0AF
+   8M+vaxAjReW3WneXsBuUp27/wcCVSor6e0xLjNdNIoBUUZB+izvt2pgNI
    g==;
-X-CSE-ConnectionGUID: EvELzVvGT5eBaA08PZxh/g==
-X-CSE-MsgGUID: 9ncLbq2CTl+55vjkD3EqAA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="52710946"
+X-CSE-ConnectionGUID: 0j1rasHKQLCAPZA2XOILSQ==
+X-CSE-MsgGUID: QTnC0n0OTV2lFZCnM213tg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="52711013"
 X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="52710946"
+   d="scan'208";a="52711013"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 10:01:36 -0800
-X-CSE-ConnectionGUID: C+/nr2tmSy2iDXrs8M2vFQ==
-X-CSE-MsgGUID: XLm8AHb6RteJDIg01Kchxw==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 10:01:49 -0800
+X-CSE-ConnectionGUID: C+c1PLI8Q2uZB2xzBtTl+A==
+X-CSE-MsgGUID: fis5VgY/Ri2ayuh8e41zzw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="189574021"
+   d="scan'208";a="189574086"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.164])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 10:01:28 -0800
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 10:01:42 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -80,9 +80,9 @@ To: linux-pci@vger.kernel.org,
 	Andi Shyti <andi.shyti@linux.intel.com>,
 	linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v4 02/11] PCI: Clean up pci_rebar_bytes_to_size() and move to rebar.c
-Date: Thu, 13 Nov 2025 20:00:44 +0200
-Message-Id: <20251113180053.27944-3-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v4 03/11] PCI: Move pci_rebar_size_to_bytes() and export it
+Date: Thu, 13 Nov 2025 20:00:45 +0200
+Message-Id: <20251113180053.27944-4-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20251113180053.27944-1-ilpo.jarvinen@linux.intel.com>
 References: <20251113180053.27944-1-ilpo.jarvinen@linux.intel.com>
@@ -95,85 +95,72 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Move pci_rebar_bytes_to_size() from include/linux/pci.h to rebar.c as it
-does not look very trivial and is not expected to be performance critical.
+pci_rebar_size_to_bytes() is in drivers/pci/pci.h but would be useful for
+endpoint drivers as well.
 
-Convert literals to use a newly added PCI_REBAR_MIN_SIZE define.
+Move the function to rebar.c and export it.
 
-Also add kernel doc for the function as the function is exported.
+In addition, convert the literal to where the number comes from
+(PCI_REBAR_MIN_SIZE).
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Reviewed-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Michael J. Ruhl <mjruhl@habana.ai>
 ---
- drivers/pci/rebar.c | 23 +++++++++++++++++++++++
- include/linux/pci.h | 10 +++-------
- 2 files changed, 26 insertions(+), 7 deletions(-)
+ drivers/pci/pci.h   |  4 ----
+ drivers/pci/rebar.c | 12 ++++++++++++
+ include/linux/pci.h |  1 +
+ 3 files changed, 13 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 41df35920632..a1e7dbeb0f2c 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -1024,10 +1024,6 @@ void pci_rebar_init(struct pci_dev *pdev);
+ void pci_restore_rebar_state(struct pci_dev *pdev);
+ int pci_rebar_get_current_size(struct pci_dev *pdev, int bar);
+ int pci_rebar_set_size(struct pci_dev *pdev, int bar, int size);
+-static inline u64 pci_rebar_size_to_bytes(int size)
+-{
+-	return 1ULL << (size + 20);
+-}
+ 
+ struct device_node;
+ 
 diff --git a/drivers/pci/rebar.c b/drivers/pci/rebar.c
-index f6ed7e4893a7..0eb6fc445703 100644
+index 0eb6fc445703..8b291d3e0ad4 100644
 --- a/drivers/pci/rebar.c
 +++ b/drivers/pci/rebar.c
-@@ -7,11 +7,34 @@
- #include <linux/errno.h>
- #include <linux/export.h>
- #include <linux/ioport.h>
-+#include <linux/log2.h>
- #include <linux/pci.h>
-+#include <linux/sizes.h>
- #include <linux/types.h>
+@@ -35,6 +35,18 @@ int pci_rebar_bytes_to_size(u64 bytes)
+ }
+ EXPORT_SYMBOL_GPL(pci_rebar_bytes_to_size);
  
- #include "pci.h"
- 
-+#define PCI_REBAR_MIN_SIZE	((resource_size_t)SZ_1M)
-+
 +/**
-+ * pci_rebar_bytes_to_size - Convert size in bytes to PCI BAR Size
-+ * @bytes: size in bytes
++ * pci_rebar_size_to_bytes - Convert BAR Size to bytes
++ * @size: BAR Size as defined in the PCIe spec (0=1MB, 31=128TB)
 + *
-+ * Convert bytes to BAR Size in Resizable BAR Capability (PCIe r6.2,
-+ * sec. 7.8.6.3).
-+ *
-+ * Return: BAR Size as defined in the PCIe spec (0=1MB, 31=128TB).
++ * Return: BAR size in bytes.
 + */
-+int pci_rebar_bytes_to_size(u64 bytes)
++resource_size_t pci_rebar_size_to_bytes(int size)
 +{
-+	int rebar_minsize = ilog2(PCI_REBAR_MIN_SIZE);
-+
-+	bytes = roundup_pow_of_two(bytes);
-+
-+	return max(ilog2(bytes), rebar_minsize) - rebar_minsize;
++	return 1ULL << (size + ilog2(PCI_REBAR_MIN_SIZE));
 +}
-+EXPORT_SYMBOL_GPL(pci_rebar_bytes_to_size);
++EXPORT_SYMBOL_GPL(pci_rebar_size_to_bytes);
 +
  void pci_rebar_init(struct pci_dev *pdev)
  {
  	pdev->rebar_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 34ff295cd2e3..628dda63b9e0 100644
+index 628dda63b9e0..33b27e0c4f3e 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -1419,17 +1419,13 @@ void pcibios_reset_secondary_bus(struct pci_dev *dev);
- void pci_update_resource(struct pci_dev *dev, int resno);
- int __must_check pci_assign_resource(struct pci_dev *dev, int i);
- int pci_release_resource(struct pci_dev *dev, int resno);
--static inline int pci_rebar_bytes_to_size(u64 bytes)
--{
--	bytes = roundup_pow_of_two(bytes);
--
--	/* Return BAR size as defined in the resizable BAR specification */
--	return max(ilog2(bytes), 20) - 20;
--}
+@@ -1422,6 +1422,7 @@ int pci_release_resource(struct pci_dev *dev, int resno);
  
-+/* Resizable BAR related routines */
-+int pci_rebar_bytes_to_size(u64 bytes);
+ /* Resizable BAR related routines */
+ int pci_rebar_bytes_to_size(u64 bytes);
++resource_size_t pci_rebar_size_to_bytes(int size);
  u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar);
  int __must_check pci_resize_resource(struct pci_dev *dev, int i, int size,
  				     int exclude_bars);
-+
- int pci_select_bars(struct pci_dev *dev, unsigned long flags);
- bool pci_device_is_present(struct pci_dev *pdev);
- void pci_ignore_hotplug(struct pci_dev *dev);
 -- 
 2.39.5
 
