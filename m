@@ -1,120 +1,133 @@
-Return-Path: <linux-pci+bounces-41070-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41071-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B70DAC56557
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 09:44:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95AB9C56575
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 09:45:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1F946354875
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 08:39:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C3703B509F
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 08:45:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C68B7333753;
-	Thu, 13 Nov 2025 08:36:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63D512DC352;
+	Thu, 13 Nov 2025 08:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="no1+SRZj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21904333459;
-	Thu, 13 Nov 2025 08:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C022C21EC;
+	Thu, 13 Nov 2025 08:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763023019; cv=none; b=g/kFuR8rvdyS+YXyd00Qf07VDzGZudyv+/yPR3rt71rEb8CifQ8qKnUPt+O8ooDZOvSGKjfY5BBkV/VJlw91owl8XvRY0ZMYdBR6MeMlymPtAUhMwvn/7iMBhhs35swkNy2BqfW9oe1n+nJLmxuC3hxnSdPu/VERGkWonHtU6wo=
+	t=1763023535; cv=none; b=Ro6ZifmTCJJCp4JQQ8QFlUGCLdx+Km0BztERYAxNL/+o8Syuu66QsoTkjNm0/3MmXTjJsMeP7VWidgNNM+vEWMKmHV0kAR2xPjeyKLfJXva9tlPXa8F5d4UhQ2Y5+H2+p2kTH5cd+JmuuBzrAP3x+GvHiFzSi0JzSkQkS6rXynA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763023019; c=relaxed/simple;
-	bh=9tmZNT31eqYFTJ2Nfxp+D1J2uiA9NkpKSfKBy+GJCx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZaOLZUcum+yGPAU8gSEAI/4PGeso6pDhkrTRpLVTrbkXSl7EqY7TFck2eoTj3D9YuzvkHFzFLseYUblP/R0mx/3SZU5Lf9yVBGMNaAvi4F69dUF7/3dT11Vs9LNXA6bcSojz3POGvnGkLa8in/xvMwEcqpYf2pW3FZB89Zp2yBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 8D6692C06646;
-	Thu, 13 Nov 2025 09:36:48 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 7A4635160; Thu, 13 Nov 2025 09:36:48 +0100 (CET)
-Date: Thu, 13 Nov 2025 09:36:48 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: andersson@kernel.org, robh@kernel.org, manivannan.sadhasivam@linaro.org,
-	krzk@kernel.org, helgaas@kernel.org, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, lpieralisi@kernel.org, kw@linux.com,
-	conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree-spec@vger.kernel.org,
-	quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v2] schemas: pci: Document PCIe T_POWER_ON
-Message-ID: <aRWYoHvaCCN95ZR9@wunner.de>
-References: <20251110112947.2071036-1-krishna.chundru@oss.qualcomm.com>
- <aRHdiYYcn2uZkLor@wunner.de>
- <44c7b4a8-33ce-4516-81bf-349b5e555806@oss.qualcomm.com>
+	s=arc-20240116; t=1763023535; c=relaxed/simple;
+	bh=yZH1UkLt0oe2VEji1eEQrjQIwX753ewx3YaYtlAQDm8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OIUZYbWE5QL/xGYf8AsIni64LZ9HrK7Dn414WHPGUna2E/26VEwYRQjF0w8ruO3mX1193wVEommC6OmU5jKbPu1M1Hs4dCm3PcHclcp6v5CK68ukyzle+RaW3yFJ272egGOZ/lsoVLGMPrBg2gynJNs2oD1VH9nBZaMEfMHX9ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=no1+SRZj; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+X-UUID: 165206a8c06d11f0b33aeb1e7f16c2b6-20251113
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=hu479yPj8wbBYx+WzD14ywVL3ZHRcGR0GXGR0sSeAEc=;
+	b=no1+SRZjdc/QUFWioe22TRkQGQhriQgNN9Jl5sYCj/hq5s4ssmuqhewIVi2UZPLTO5LNlZmgZgxupT6MfArZQDiZMOyylon755lX9/DwrcuePbOAlH7p5HyRDttdxVI7BlBajI5GAfjXlWIV+aLJ68PVDW5ap3U87mKcxoyVXZo=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:5d9dc6a4-b194-43e4-a3ff-a566a2fdc45f,IP:0,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:-5
+X-CID-META: VersionHash:a9d874c,CLOUDID:983dda57-17e4-43d2-bf73-55337eed999a,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102|836|888|898,TC:-5,Content:0|15|5
+	0,EDM:-3,IP:nil,URL:0,File:130,RT:0,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
+	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 165206a8c06d11f0b33aeb1e7f16c2b6-20251113
+Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw02.mediatek.com
+	(envelope-from <johnny-cc.chang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 548567511; Thu, 13 Nov 2025 16:45:20 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Thu, 13 Nov 2025 16:45:19 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1748.26 via Frontend Transport; Thu, 13 Nov 2025 16:45:19 +0800
+From: Johnny Chang <Johnny-CC.Chang@mediatek.com>
+To: Bjorn Helgaas <bhelgaas@google.com>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<Project_Global_Digits_Upstream_Group@mediatek.com>, Johnny-CC Chang
+	<Johnny-CC.Chang@mediatek.com>
+Subject: [PATCH] PCI: Mark Nvidia GB10 to avoid bus reset
+Date: Thu, 13 Nov 2025 16:44:06 +0800
+Message-ID: <20251113084441.2124737-1-Johnny-CC.Chang@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <44c7b4a8-33ce-4516-81bf-349b5e555806@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-On Thu, Nov 13, 2025 at 09:33:54AM +0530, Krishna Chaitanya Chundru wrote:
-> On 11/10/2025 6:11 PM, Lukas Wunner wrote:
-> > On Mon, Nov 10, 2025 at 04:59:47PM +0530, Krishna Chaitanya Chundru wrote:
-> > >  From PCIe r6, sec 5.5.4 & Table 5-11 in sec 5.5.5 T_POWER_ON is the
-> > Please use the latest spec version as reference, i.e. PCIe r7.0.
-> ack.
-> > > minimum amount of time(in us) that each component must wait in L1.2.Exit
-> > > after sampling CLKREQ# asserted before actively driving the interface to
-> > > ensure no device is ever actively driving into an unpowered component and
-> > > these values are based on the components and AC coupling capacitors used
-> > > in the connection linking the two components.
-> > > 
-> > > This property should be used to indicate the T_POWER_ON for each Root Port.
-> > What's the difference between this property and the Port T_POWER_ON_Scale
-> > and T_POWER_ON_Value in the L1 PM Substates Capabilities Register?
-> > 
-> > Why do you need this in the device tree even though it's available
-> > in the register?
-> 
-> This value is same as L1 PM substates value, some controllers needs to
-> update this
-> value before enumeration as hardware might now program this value
-> correctly[1].
-> 
-> [1]: [PATCH] PCI: qcom: Program correct T_POWER_ON value for L1.2 exit
-> timing
-> 
-> <https://lore.kernel.org/all/20251104-t_power_on_fux-v1-1-eb5916e47fd7@oss.qualcomm.com/>
+From: Johnny-CC Chang <Johnny-CC.Chang@mediatek.com>
 
-Per PCIe r7.0 sec 7.8.3.2, all fields in the L1 PM Substates Capabilities
-Register are of type "HwInit", which sec 7.4 defines as:
+Nvidia GB10 PCIe hosts will encounter problem occasionally
+after SBR(secondary bus reset) is applied.
+Enable NO_BUS_RESET quirk for Nvidia GB10 PCIe hosts.
 
-   "Register bits are permitted, as an implementation option, to be
-    hard-coded, initialized by system/device firmware, or initialized
-    by hardware mechanisms such as pin strapping or nonvolatile storage.
-    Initialization by system firmware is permitted only for
-    system-integrated devices.
-    Bits must be fixed in value and read-only after initialization."
-                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Signed-off-by: Johnny-CC Chang <Johnny-CC.Chang@mediatek.com>
+---
+ drivers/pci/quirks.c    | 11 +++++++++++
+ include/linux/pci_ids.h |  2 ++
+ 2 files changed, 13 insertions(+)
 
-These bits are not supposed to be writable by the operating system,
-so what you're doing in that patch is not spec-compliant.
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index b94264cd3833..12a10fa84c8a 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3746,6 +3746,17 @@ static void quirk_no_bus_reset(struct pci_dev *dev)
+ 	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
+ }
+ 
++/*
++ * Nvidia GB10 PCIe hosts will encounter problem occasionally
++ * after SBR (secondary bus reset) is applied.
++ * SBR needs to be prevented for these PCIe hosts.
++ */
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_NVIDIA, PCI_DEVICE_ID_NVIDIA_GB10_GEN5_X4,
++			 quirk_no_bus_reset);
++
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_NVIDIA, PCI_DEVICE_ID_NVIDIA_GB10_GEN4_X1,
++			 quirk_no_bus_reset);
++
+ /*
+  * Some NVIDIA GPU devices do not work with bus reset, SBR needs to be
+  * prevented for those affected devices.
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 92ffc4373f6d..661dc1594213 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -1382,6 +1382,8 @@
+ #define PCI_DEVICE_ID_NVIDIA_GEFORCE_320M           0x08A0
+ #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP79_SMBUS     0x0AA2
+ #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP89_SATA	    0x0D85
++#define PCI_DEVICE_ID_NVIDIA_GB10_GEN5_X4           0x22CE
++#define PCI_DEVICE_ID_NVIDIA_GB10_GEN4_X1           0x22D0
+ 
+ #define PCI_VENDOR_ID_IMS		0x10e0
+ #define PCI_DEVICE_ID_IMS_TT128		0x9128
+-- 
+2.45.2
 
-I think it needs to be made explicit in the devicetree schema that
-the property is only intended for non-compliant hardware which allows
-(and requires) the operating system to initialize the register.
-
-Maybe it makes more sense to have a property which specifies the raw
-32-bit register contents, instead of having a property for each
-individual field.  Otherwise you'll have to amend the schema
-whenever the PCIe spec extends the register with additional fields.
-
-Thanks,
-
-Lukas
 
