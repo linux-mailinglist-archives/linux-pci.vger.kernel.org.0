@@ -1,150 +1,133 @@
-Return-Path: <linux-pci+bounces-41186-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41189-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED8C2C5A0C8
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 22:04:54 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC271C5A26C
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 22:38:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D73DC4E273B
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 21:04:53 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7BD60347587
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 21:38:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 095E52D2494;
-	Thu, 13 Nov 2025 21:04:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30F6032571F;
+	Thu, 13 Nov 2025 21:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ldNyGFLN"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="nDl0MKy8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D2D2C11DE;
-	Thu, 13 Nov 2025 21:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76EC3254B1
+	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 21:37:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763067891; cv=none; b=Y/odTH1ypD4gmXmi5r15TwaFF3uE3Z+B2u70Gk4mIXuG9Oj7n/NUpgW+6ThaNupgpqMXyELXcyEtHi1YunmFK1i07tukBDZ6VHxEHcyUtBb9c9tcU1IA0qMltbBC8TvlNf+DyP4jag1v3Se2ro5Ef8nBN64XGRl7kq6Sd8PqsPQ=
+	t=1763069860; cv=none; b=RXaR2KACDt+/rI8kDkGon1wJkeFiHj8EWaVY80063VZZYVDpvgViLJ6zw19dszgHRfbLvcoEkKKYDmrMSzibMYUBSVhFPrxS4jcCeASEYyiQ+BY4AhhG8D+0SAA46WYrFJF7spKxcpBCZRxuvY4iAOBcb3sQVLBVOk/VMA1QxEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763067891; c=relaxed/simple;
-	bh=xLrJZEPePccg2xhmkiorFWRycwjnGRNEZWCFNbWd6RM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=psY2uFTzZEUOWUvdyHVWyjqP3JqcY5CEuvPfG1APdoZG7hmgKkm0mPUKwq2Ms2mLVNGivyAvLGuEwazEl3l0r5po8IYz7u0izIwroTb5spZm2vTXKCGVmE7KudpF7M3ZCrpZPiDUgcewVOa0krJDOp/ELPv79ftvoH+VjFFc5R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ldNyGFLN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A3C1C4CEFB;
-	Thu, 13 Nov 2025 21:04:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763067891;
-	bh=xLrJZEPePccg2xhmkiorFWRycwjnGRNEZWCFNbWd6RM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ldNyGFLN048R3GGyhgBcoHDVHXNm0rwBymbIAArd3QQ6u3+URAPScIgQbU9uXDa1Z
-	 +hURL3mocS3LL1Vj/d8qWyU7mvxa2vQPH846Ses24l5LtjrrfdiDugEN3LsLaBO3vy
-	 B6KAhq2B832v44Ug8IAecnvzX5/WjMuLI6CrsAzENUqX3JlcyBhilviwr+KVKWmUIU
-	 PoVNdhBMHReNMrXn0NFgk9YWQxzLkZkb8J7+V/4Sh/PHkM+zz6331VRBWpBCpFBKyH
-	 cIM27R2cwjrwYevC2oSfl75Wf2kqV+QPNxUMAnLXqI/kZG3tGEwHY/LanZLbWu17mc
-	 8MloFM4HijThg==
-Date: Thu, 13 Nov 2025 15:04:50 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	amd-gfx@lists.freedesktop.org, David Airlie <airlied@gmail.com>,
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	"Michael J . Ruhl" <mjruhl@habana.ai>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/11] PCI: Resizable BAR improvements
-Message-ID: <20251113210450.GA2314988@bhelgaas>
+	s=arc-20240116; t=1763069860; c=relaxed/simple;
+	bh=5TNlqq0nn/dB7CaEZMfDE2J+2YooCTDXWl35OGhkUCo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GIUlYyEmHG5PDlWjOx3CFnXB9WLmmg8kLDIN4DtnYA4MKiZOK4JVpiE3lzxofFZt7MDfpUgXd3OJWfr3Qg7DpUdr33PzeVTbSGo2B5oqEe8CT3XpygmAXtngpQiZdaHAAd+RcbEQw2f6LIo3AW4vRntB3/Vc1zmJAZUHCd2PBFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=nDl0MKy8; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+	by m0001303.ppops.net (8.18.1.11/8.18.1.11) with ESMTP id 5ADJZ6gN736031
+	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 13:37:37 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2025-q2; bh=unenlBehig4ih9eN9L
+	cbC67e5n1CVX4Fyyz/24V+tK0=; b=nDl0MKy8yCMChW3qeFKiNqVxpgsFV6eeJU
+	sG+YJZM4gYM2UIQrK1PnZfC9VHiKyc7UCnJuBIVUaNZ2T+WFABK583Tetu99bJVm
+	glr/BxMzruFYtUmnjc00TR3zP5dmaQwqY5YwCd7WITATjO+dA/UBP46TSO10NDoQ
+	BRsOOvfcYtzchCWFh4aX9bvZsax7ehPR4HzLqkoRgFm/3GiHmausLNvJqlk6jYQ+
+	JLDzjP0avwx9FSzOqyelr+tmQ0nPQiLOKML0OlgdZpGG+a/GDmjef5RbfqmJr8WU
+	iMqi3o1pbiMGqHmRnoGtSB3pCuQ3+yiJ+zNMiFW3edulVUcT0FHg==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by m0001303.ppops.net (PPS) with ESMTPS id 4adnm79136-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 13:37:37 -0800 (PST)
+Received: from twshared22076.03.snb1.facebook.com (2620:10d:c0a8:1b::2d) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.20; Thu, 13 Nov 2025 21:37:24 +0000
+Received: by devbig259.ftw1.facebook.com (Postfix, from userid 664516)
+	id 68E97C14673F; Thu, 13 Nov 2025 13:37:13 -0800 (PST)
+From: Zhiping Zhang <zhipingz@meta.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Bjorn
+ Helgaas <bhelgaas@google.com>, <linux-rdma@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Keith Busch
+	<kbusch@kernel.org>, Yochai Cohen <yochai@nvidia.com>,
+        Yishai Hadas
+	<yishaih@nvidia.com>
+CC: Zhiping Zhang <zhipingz@meta.com>
+Subject: [RFC 0/2] Set steering-tag directly for PCIe P2P memory access
+Date: Thu, 13 Nov 2025 13:37:10 -0800
+Message-ID: <20251113213712.776234-1-zhipingz@meta.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251113180053.27944-1-ilpo.jarvinen@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: OOm4mCE9Pn2aq6fXSxIM4YkG6sdgd18G
+X-Authority-Analysis: v=2.4 cv=dqXWylg4 c=1 sm=1 tr=0 ts=69164fa1 cx=c_pps
+ a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
+ a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VabnemYjAAAA:8
+ a=LD3YureWr3Rg3Zxk1oQA:9 a=gKebqoRLp9LExxC7YDUY:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEzMDE2OSBTYWx0ZWRfX9ws3eYLXTkyx
+ gt6Too7XNYH5aV0PY+g+ZXY20op0EGOk9klwHCwr7/kvEjgHIsmzmKqh7FdF6PR8fb96zCZ9HPV
+ m+Vy2A23R/atTwvOVCKVE6uOZL13DyRqGCJfknqr6SlebOr2CFZSYlMQmwKAo1PGGiEt9vRut2Y
+ KzkbWkTSdaftHJA3cWDoiIfLGs+QYrYw+uZC5CZ63UAyz6b9lmHuRRqbCDRUZh0Xd56VetGlGVg
+ Y69BhOl0O2WJguLjh1q+Aff3/RpA7f5rjKBumBOVZSWEXJM49yirkj4hxNhvUdvxhdbhLzrT68z
+ j/Jd1/22hSHIq7oUu8T8ForaZrq4eL/XUjFdevwX6PtaWiidzg+EKvc8eXR8XN4xX/AniA2HRaz
+ 4IxS0Mo1RnhGAj6sygsfW0ZU1GWNbA==
+X-Proofpoint-ORIG-GUID: OOm4mCE9Pn2aq6fXSxIM4YkG6sdgd18G
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-13_05,2025-11-13_02,2025-10-01_01
 
-On Thu, Nov 13, 2025 at 08:00:42PM +0200, Ilpo Järvinen wrote:
-> pci.c has been used as catch everything that doesn't fits elsewhere
-> within PCI core and thus resizable BAR code has been placed there as
-> well. Move Resizable BAR related code to a newly introduced rebar.c to
-> reduce size of pci.c. After move, there are no pci_rebar_*() calls from
-> pci.c indicating this is indeed well-defined subset of PCI core.
-> 
-> Endpoint drivers perform Resizable BAR related operations which could
-> well be performed by PCI core to simplify driver-side code. This
-> series adds a few new API functions to that effect and converts the
-> drivers to use the new APIs (in separate patches).
-> 
-> While at it, also convert BAR sizes bitmask to u64 as PCIe spec already
-> specifies more sizes than what will fit u32 to make the API typing more
-> future-proof. The extra sizes beyond 128TB are not added at this point.
-> 
-> Some parts of this are to be used by the resizable BAR changes into the
-> resource fitting/assingment logic but these seem to stand on their own
-> so sending these out now to reduce the size of the other patch series.
-> 
-> This v4 rebases what's currently in pci/rebar on top of the BAR resize
-> changes in pci/resource as they'd have nasty conflicts otherwise so
-> they can start to peacefully coexist in the pci/resource branch.
-> 
-> v4:
-> - Rebased on top of pci/resource changes to solve conflicts
-> 
-> v3: https://lore.kernel.org/linux-pci/20251022133331.4357-1-ilpo.jarvinen@linux.intel.com/
-> - Rebased to solve minor conflicts
-> 
-> v2: https://lore.kernel.org/linux-pci/20250915091358.9203-1-ilpo.jarvinen@linux.intel.com/
-> - Kerneldoc:
->   - Improve formatting of errno returns
->   - Open "ctrl" -> "control"
->   - Removed mislead "bit" words (when referring to BAR size)
->   - Rewrote pci_rebar_get_possible_sizes() kernel doc to not claim the
->     returned bitmask is defined in PCIe spec as the capability bits now
->     span across two registers in the spec and are not continuous (we
->     don't support the second block of bits yet, but this API is expected
->     to return the bits without the hole so it will not be matching with
->     the spec layout).
-> - Dropped superfluous zero check from pci_rebar_size_supported()
-> - Small improvement to changelog of patch 7
-> 
-> Ilpo Järvinen (11):
->   PCI: Move Resizable BAR code to rebar.c
->   PCI: Clean up pci_rebar_bytes_to_size() and move to rebar.c
->   PCI: Move pci_rebar_size_to_bytes() and export it
->   PCI: Improve Resizable BAR functions kernel doc
->   PCI: Add pci_rebar_size_supported() helper
->   drm/i915/gt: Use pci_rebar_size_supported()
->   drm/xe/vram: Use PCI rebar helpers in resize_vram_bar()
->   PCI: Add pci_rebar_get_max_size()
->   drm/xe/vram: Use pci_rebar_get_max_size()
->   drm/amdgpu: Use pci_rebar_get_max_size()
->   PCI: Convert BAR sizes bitmasks to u64
-> 
->  Documentation/driver-api/pci/pci.rst        |   3 +
->  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c  |   8 +-
->  drivers/gpu/drm/i915/gt/intel_region_lmem.c |  10 +-
->  drivers/gpu/drm/xe/xe_vram.c                |  32 +-
->  drivers/pci/Makefile                        |   2 +-
->  drivers/pci/iov.c                           |  10 +-
->  drivers/pci/pci-sysfs.c                     |   2 +-
->  drivers/pci/pci.c                           | 149 ---------
->  drivers/pci/pci.h                           |   5 +-
->  drivers/pci/rebar.c                         | 325 ++++++++++++++++++++
->  drivers/pci/setup-res.c                     |  85 -----
->  include/linux/pci.h                         |  15 +-
->  12 files changed, 361 insertions(+), 285 deletions(-)
->  create mode 100644 drivers/pci/rebar.c
+Currently, the steering tag can be used for a CPU on the motherboard; the
+ACPI check is in place to query and obtain the supported steering tag. Th=
+is
+same check is not possible for the accelerator devices because they are=20
+designed to be plug-and-play to and ownership can not be always confirmed=
+.
 
-Applied on top of pci/resource, thanks!
+We intend to use the steering tag to improve RDMA NIC memory access on a =
+GPU
+or accelerator device via PCIe peer-to-peer. An application can construct=
+ a
+dma handler (DMAH) with the device memory type and a direct steering-tag
+value, and this DMAH can be used to register a RDMA memory region with DM=
+ABUF
+for the RDMA NIC to access the device memory. The steering tag contains
+additional instructions or hints to the GPU or accelerator device for
+advanced memory operations, such as, read cache selection.
+
+Signed-off-by: Zhiping Zhang <zhipingz@meta.com>
+
+Zhiping Zhang (2):
+  PCIe: Add a memory type for P2P memory access
+  RDMA: Set steering-tag value directly for P2P memory access
+
+ .../infiniband/core/uverbs_std_types_dmah.c   | 28 +++++++++++++++++++
+ drivers/infiniband/core/uverbs_std_types_mr.c |  3 ++
+ drivers/infiniband/hw/mlx5/dmah.c             |  5 ++--
+ .../net/ethernet/mellanox/mlx5/core/lib/st.c  | 12 +++++---
+ drivers/pci/tph.c                             |  4 +++
+ include/linux/mlx5/driver.h                   |  4 +--
+ include/linux/pci-tph.h                       |  4 ++-
+ include/rdma/ib_verbs.h                       |  2 ++
+ include/uapi/rdma/ib_user_ioctl_cmds.h        |  1 +
+ 9 files changed, 53 insertions(+), 10 deletions(-)
+
+--=20
+2.47.3
+
 
