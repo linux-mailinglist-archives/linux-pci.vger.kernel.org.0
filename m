@@ -1,59 +1,67 @@
-Return-Path: <linux-pci+bounces-41141-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41142-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74B05C594DF
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 18:58:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 656B4C5958E
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 19:04:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2C4554FB82C
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 17:10:01 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5ECF4503C53
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 17:11:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D073835581E;
-	Thu, 13 Nov 2025 16:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C99C3624AC;
+	Thu, 13 Nov 2025 16:57:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBvcqTPJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e+qg4lkz"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983D9352935;
-	Thu, 13 Nov 2025 16:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2507C346FA4;
+	Thu, 13 Nov 2025 16:57:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763053004; cv=none; b=PlfOn1KW2axIUgW/jV49h25sC8dbydCJhL/bt4TVRVOscZXKCbVlUgqqpQPmpTX42gYQirWM1GqnYWTPXVpN9mF42F8CGTC4oJNMo7wHKY2ZzQlq8ZJMlkp9NaWH8sMF7ifXtqvXFJ0QLMKgvAEIeNISps+PLmn8aOwfBZnjHgM=
+	t=1763053063; cv=none; b=hN5XekQrTgyYdZcSz+8VOiRKjr2HtBdb7SW5verWx2J8+Gm9zU6wwDgePC9R4wgesBcQ5XFSHd8OaumJKW7luGMzSSlCEm92OCKQfvNQUPwy/5aDwhHhqY/fD7/RoGIWS4KsZmDF0aqKf1JuCRz5mNxD+lpq1hwGJCzDfjnJdGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763053004; c=relaxed/simple;
-	bh=jzytsllnjQJ99vmFdu3C51azo2FL03qL04AUDKMdEwI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XjEqgvQD3qelfIMzd1A6Kup/nW/LsHC+/M1AnDn+SB+2i16A8QdGdklxeF5dxe7+uO5bYYiUb2FS34Izlfwef/zUdVdc5viMnTnG5FwonOfYCJkA+IAdqLPquF7EuPIKnAPyXWseuTD2fP1qZFazYHF1w73pxdRnqszS2DOzp6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBvcqTPJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11B75C4CEFB;
-	Thu, 13 Nov 2025 16:56:36 +0000 (UTC)
+	s=arc-20240116; t=1763053063; c=relaxed/simple;
+	bh=GYMl84uOyw1qOLVxM8g1QeRFBc0QP2rjuLETvSvGF+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=V6B7gCMYuarQDhNLQJxVbpNoomgu8Pxp6MUAYq2u5bpSSsmdnCtQHo6sjkDqLq0mA0/sGXU2pY3OOdWxrhIh1pfiWGzWsn1U61CgJGQZrbfZRSZ7Ir8b1GB7Un6R6qc2Jxq24/T2Std6LIEg9VEOXZk8okJJu0UUXCe+I/YWj1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e+qg4lkz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85372C4CEFB;
+	Thu, 13 Nov 2025 16:57:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763053004;
-	bh=jzytsllnjQJ99vmFdu3C51azo2FL03qL04AUDKMdEwI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SBvcqTPJUzuQ8g+vcQkQ4zbB/YI2PFzt7W15NhJUzRbIjFW9/foP3KfLmmEiEIKAJ
-	 kTyUAuEJ7Hk2gvaGwq9hIrCkL7JBMGkt2h1Nw3ng+rfodHGoi3CEKB8HNL/Tk39Pds
-	 GEd4GpnHoPF4cnDO03L0IlJ+J1rY/uRDL3xm5tXcbRvLe6RyiXS7YU3XnhjInCPMn+
-	 WKJMxDjK5BSgQ8wqWgIJ3EbRSnUuGQgMv8cjRHucxD8DNKPku1GXIuoMHqXFOwu8Il
-	 YQRONWWEI6lOES86eky6SvP3MIT7cVx+P6QhSR1bw7v2PZraZF0prqNeq8vd5tgs+Z
-	 RFfhV/97ccuAg==
-Date: Thu, 13 Nov 2025 22:26:29 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com, will@kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, 
-	linux-arm-msm@vger.kernel.org, zhangsenchuan@eswincomputing.com, vincent.guittot@linaro.org
-Subject: Re: [PATCH v2 3/3] PCI: dwc: Check for the device presence during
- suspend and resume
-Message-ID: <pzpyipassbzzsffys5mexxxip7oubwq37a564skb5udkfh363b@3sbkrz7atj3s>
-References: <20251107044319.8356-1-manivannan.sadhasivam@oss.qualcomm.com>
- <20251107044319.8356-4-manivannan.sadhasivam@oss.qualcomm.com>
- <aRISPgCZyEZxStIN@lizhi-Precision-Tower-5810>
+	s=k20201202; t=1763053062;
+	bh=GYMl84uOyw1qOLVxM8g1QeRFBc0QP2rjuLETvSvGF+8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=e+qg4lkzb8JVZPmAq8f+RZNKCKx7PBOXzfdHxJ9AoAazhEv+USLriQCChCv3RE3s4
+	 r3mUFdHjD6xH5Rf3gK/6vPhvw0gdiRDUe5CfpKd5jFdCkIlNDcYnuDYVbSW4MTURa5
+	 oVMn9fmO1taFYFp9e9AGrE8jHBUS0hORyHyOOItLgIBFiecHbsPAT7CzCT81NNIDR1
+	 5GnznoD7VSdmm/DBWDXyBaQHTzzx5kUTNK2Nj2EYc4E4LLe5zzg3iOIZv6ADwhYZh0
+	 EgzSZcipbUZtZbFM7etNYGxkiP0r0hwZybkvUEmj7b3CXEDuqeaLVSTGxy3Edd+gUl
+	 8OiupaqeLTIBA==
+Date: Thu, 13 Nov 2025 10:57:41 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+	Simon Richter <Simon.Richter@hogyros.de>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	amd-gfx@lists.freedesktop.org, Bjorn Helgaas <bhelgaas@google.com>,
+	David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	linux-pci@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/9] PCI/IOV: Adjust ->barsz[] when changing BAR size
+Message-ID: <20251113165741.GA2288786@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,84 +71,18 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aRISPgCZyEZxStIN@lizhi-Precision-Tower-5810>
+In-Reply-To: <fe9bd3af-51f6-c1af-9cdc-c78aee7aaef9@linux.intel.com>
 
-On Mon, Nov 10, 2025 at 11:26:38AM -0500, Frank Li wrote:
-> On Fri, Nov 07, 2025 at 10:13:19AM +0530, Manivannan Sadhasivam wrote:
-> > If there is no device available under the Root Ports, there is no point in
-> > sending PME_Turn_Off and waiting for L2/L3 transition during suspend, it
-> > will result in a timeout. Hence, skip those steps if no device is available
-> > during suspend.
-> >
-> > During resume, do not wait for the link up if there was no device connected
-> > before suspend. It is very unlikely that a device will get connected while
-> > the host system was suspended.
-> >
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware-host.c | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index 20c9333bcb1c..5a39e7139ec9 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -20,6 +20,7 @@
-> >  #include <linux/platform_device.h>
-> >
-> >  #include "../../pci.h"
-> > +#include "../pci-host-common.h"
-> >  #include "pcie-designware.h"
-> >
-> >  static struct pci_ops dw_pcie_ops;
-> > @@ -1129,6 +1130,9 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
-> >  	u32 val;
-> >  	int ret;
-> >
-> > +	if (!pci_root_ports_have_device(pci->pp.bridge->bus))
-> > +		goto stop_link;
-> > +
-> >  	/*
-> >  	 * If L1SS is supported, then do not put the link into L2 as some
-> >  	 * devices such as NVMe expect low resume latency.
-> > @@ -1162,6 +1166,7 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
-> >  	 */
-> >  	udelay(1);
+On Thu, Nov 13, 2025 at 06:35:26PM +0200, Ilpo Järvinen wrote:
+> On Thu, 13 Nov 2025, Bjorn Helgaas wrote:
+> > On Tue, Oct 28, 2025 at 07:35:44PM +0200, Ilpo Järvinen wrote:
+> > > pci_rebar_set_size() adjusts BAR size for both normal and IOV BARs. The
+> > > struct pci_srvio keeps a cached copy of BAR size in unit of
+> > > resource_size_t in ->barsz[] ...
+> > 
+> > Nit: s/pci_srvio/pci/sriov/  (fixed locally, FYI in case you post a v2)
 > 
-> I think move pme_turn_off() to helper funciton will make code look better
-> 
+> I just posted v2 without seeing this first. :-(
 
-What about the L2 entry timeout?
-
-> 	if (pci_root_ports_have_device()) {
-> 		ret = dwc_pme_turn_off();
-> 		if (ret)
-> 			return ret;
-> 	};
-> 
-> 
-> >
-> > +stop_link:
-> >  	dw_pcie_stop_link(pci);
-> >  	if (pci->pp.ops->deinit)
-> >  		pci->pp.ops->deinit(&pci->pp);
-> > @@ -1195,6 +1200,14 @@ int dw_pcie_resume_noirq(struct dw_pcie *pci)
-> >  	if (ret)
-> >  		return ret;
-> >
-> > +	/*
-> > +	 * If there was no device before suspend, skip waiting for link up as
-> > +	 * it is bound to fail. It is very unlikely that a device will get
-> > +	 * connected *during* suspend.
-> 
-> I think it should use certern term. the a device will not get linkup during
-> suspend, if this happen, it is a new hotjoin device after system resume.
-> 
-
-Sure.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Perfect, we crossed in the mail!  I'll tweak this locally.
 
