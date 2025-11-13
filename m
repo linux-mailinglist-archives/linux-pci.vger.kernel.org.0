@@ -1,64 +1,65 @@
-Return-Path: <linux-pci+bounces-41096-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41095-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0837AC582EF
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:04:11 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8DB5C582E6
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:03:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 202E54E78DC
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 15:03:17 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1D322343194
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 15:02:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26DC82773C6;
-	Thu, 13 Nov 2025 15:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B7D02E718B;
+	Thu, 13 Nov 2025 15:02:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VRe81eVr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ia5BIb+r"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5E62E5429;
-	Thu, 13 Nov 2025 15:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94E42E1EF8;
+	Thu, 13 Nov 2025 15:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763046164; cv=none; b=buzQqCvsp94Qlfnuvm0AVarUqsmtGca7CojrB7VLXiamedlsmfEfiKQFpKhZNQ1uQ77Be7OXvthG3MfhWUkUTPETgnMjrbOcPN89dtoojJu2Om7ql684bqlFErK96cVSsw1C+FQQN5oLueiY977L2Qk8oB1uN85Ug8DrRyf86i8=
+	t=1763046152; cv=none; b=TzfKvVZV0h3NdLEP8Z+XZJBoWov70d7raQi5bKd3m/IjOAeBYGF85w/yUF+EObIUYutnaho0nNEm+z/bey2frq5s3z7Ptm6PenuokOf+cf2Srcgyk4D1/rmOY8BRkPur7OPXJBIL1Urs9XO1ZV29GQmxeNUU02Tu+siSlxyngeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763046164; c=relaxed/simple;
-	bh=vx0/Sdb0miwmSnREMEy30Z2f25MQbxHWNPqxk4mpfZk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fO8ppQznr8OHjx8PyrBQcy88qgnRphpbNMmEbBfwnKNT6d+JMkXuQ17xDhzOl9CId9CMExBalCnKX7RDeaC0ZOg4KjRgE35cjkYvJbSRBA2hsB/rlRg40Hhzz49twLrnLC/ZZ11iHtMA9cff0qrTp0wLt+L8aoUhwyTDzASeJjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VRe81eVr; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1763046152; c=relaxed/simple;
+	bh=2B46NT1dSQc4u95Gk/QrFTNjX7VR1jBDUh9ZV8b1ovg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fEUdCC4ZXbG6u2CN5PwN6mEx5ctWtV5W5YcukTolaQ76NoQcEgyBtSCNpJSj2kD6na7zXPFXmB/0ZcGHYQps0bGupP4UljOM2KiqPLcxSfNHUPvxCmAO5iZVx4tZJPahcDP1kxQ+m4jQqQj5agRVaUOWIUhFV8uGX3knw/zfZKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ia5BIb+r; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763046162; x=1794582162;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vx0/Sdb0miwmSnREMEy30Z2f25MQbxHWNPqxk4mpfZk=;
-  b=VRe81eVrxoCBcgzavv3+aNRPrGhNBHEh7nmxzooX0ReTUfIZs8jAxNP4
-   /tX+MOjoLOsdyd/1ZKHTia1TRiGwI6t7WnmqDOz3F6XTm8AjTJgezyfeX
-   1EeNWEc4NiiAUTLLOymowCHjAjqUrDBTotzOssGvl49sqmIIG7UjEgq7O
-   QDnFA7oN+K309bir8LcArClFjq9EU9US4PZRkzgS/W2OoGG3iVyBnfqxC
-   0m75w/LEM5KsUEYdEnbfTlaLAIinVZY69V7cM+Klr6/AXvfMp3USRP4Qd
-   9qGG98IeTPjLKQCJAR+iSREJNr7Du7v37w8CEMsJCdo6BIxeDuQw2Msns
-   w==;
-X-CSE-ConnectionGUID: 7EPVwNgAQSWdDwd00ZQDZQ==
-X-CSE-MsgGUID: 6/jJcZf/QleX9QsyyS8Pqw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="65054025"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="65054025"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 07:02:41 -0800
-X-CSE-ConnectionGUID: LWhFLovNRgWDoJiNm0HUow==
-X-CSE-MsgGUID: nE6QdQs7Rjq7/OOgIgzs2g==
+  t=1763046151; x=1794582151;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=2B46NT1dSQc4u95Gk/QrFTNjX7VR1jBDUh9ZV8b1ovg=;
+  b=ia5BIb+rdleWXxBPTLhiSbbK32+FXmCsx+XFV/c1p4UseWi6tdJhrr11
+   HCL+H+45ZQRb7acOiAyM4ofDfCZDrhi64887sxTFCDbvB+U8BBX4RKhRo
+   pO2nmjYFXZANC70zQIfczKCiome6GK6ho5LxPAj+oScoKk8Nkggvm4vwM
+   qKBWJ345CrEWqRU+O8D6mXNVJFxS+NDKfhJ947A0Fxk2UtgtRZ1U6hGZ2
+   iGam3NWWC0LLGpblfWXY9e61LjENCKVe9U0Ol+az+CiBErMfnMHQ9F3Ju
+   C2O0jV+8J27Tu6H6rIBwrQFlf/46ReqAcaC+kj2iDTn6iqHvH8T5s6FPm
+   Q==;
+X-CSE-ConnectionGUID: NuxIPPvRSRSeSFXRX0t4Gg==
+X-CSE-MsgGUID: Gh2SaHaaTsqOzZT3345z7A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="68991460"
+X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
+   d="scan'208";a="68991460"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 07:02:29 -0800
+X-CSE-ConnectionGUID: Vz8xRacFQwaRx7eYs36+8g==
+X-CSE-MsgGUID: H/6qh459QiuQ7G0yqQYVsA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="220324615"
+   d="scan'208";a="188810179"
 Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa001.fm.intel.com with ESMTP; 13 Nov 2025 07:02:20 -0800
+  by orviesa010.jf.intel.com with ESMTP; 13 Nov 2025 07:02:19 -0800
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 008C496; Thu, 13 Nov 2025 16:02:18 +0100 (CET)
+	id 05CA197; Thu, 13 Nov 2025 16:02:19 +0100 (CET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Corey Minyard <corey@minyard.net>,
 	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
@@ -153,100 +154,140 @@ Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v3 00/21] treewide: Introduce %ptS for struct timespec64 and convert users
-Date: Thu, 13 Nov 2025 15:32:14 +0100
-Message-ID: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 01/21] lib/vsprintf: Add specifier for printing struct timespec64
+Date: Thu, 13 Nov 2025 15:32:15 +0100
+Message-ID: <20251113150217.3030010-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
+References: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Here is the third part of the unification time printing in the kernel.
-This time for struct timespec64. The first patch brings a support
-into printf() implementation (test cases and documentation update
-included) followed by the treewide conversion of the current users.
+A handful drivers want to print a content of the struct timespec64
+in a format of %lld:%09ld. In order to make their lives easier, add
+the respecting specifier directly to the printf() implementation.
 
-Petr, we got like more than a half being Acked, I think if you are okay
-with this, the patches that have been tagged can be applied.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ Documentation/core-api/printk-formats.rst | 11 +++++++--
+ lib/tests/printf_kunit.c                  |  4 ++++
+ lib/vsprintf.c                            | 28 ++++++++++++++++++++++-
+ 3 files changed, 40 insertions(+), 3 deletions(-)
 
-Note, not everything was compile-tested. Kunit test has been passed, though.
-
-Changelog v3:
-- fixed a compilation issue with fnic (LKP), also satisfied checkpatch
-- collected more tags
-
-Petr, I have not renamed 'p' to 'n' due to much of rework and
-noise introduction for the changes that has been reviewed.
-However, I addressed the documentation issues.
-
-v2: <20251111122735.880607-1-andriy.shevchenko@linux.intel.com>
-
-Changelog v2:
-- dropped wrong patches (Hans, Takashi)
-- fixed most of the checkpatch warnings (fdo CI, media CI)
-- collected tags
-
-v1: <20251110184727.666591-1-andriy.shevchenko@linux.intel.com>
-
-Andy Shevchenko (21):
-  lib/vsprintf: Add specifier for printing struct timespec64
-  ceph: Switch to use %ptSp
-  libceph: Switch to use %ptSp
-  dma-buf: Switch to use %ptSp
-  drm/amdgpu: Switch to use %ptSp
-  drm/msm: Switch to use %ptSp
-  drm/vblank: Switch to use %ptSp
-  drm/xe: Switch to use %ptSp
-  e1000e: Switch to use %ptSp
-  igb: Switch to use %ptSp
-  ipmi: Switch to use %ptSp
-  media: av7110: Switch to use %ptSp
-  mmc: mmc_test: Switch to use %ptSp
-  net: dsa: sja1105: Switch to use %ptSp
-  PCI: epf-test: Switch to use %ptSp
-  pps: Switch to use %ptSp
-  ptp: ocp: Switch to use %ptSp
-  s390/dasd: Switch to use %ptSp
-  scsi: fnic: Switch to use %ptSp
-  scsi: snic: Switch to use %ptSp
-  tracing: Switch to use %ptSp
-
- Documentation/core-api/printk-formats.rst     | 11 +++-
- drivers/char/ipmi/ipmi_si_intf.c              |  3 +-
- drivers/char/ipmi/ipmi_ssif.c                 |  6 +--
- drivers/dma-buf/sync_debug.c                  |  2 +-
- .../gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c  |  3 +-
- drivers/gpu/drm/drm_vblank.c                  |  6 +--
- .../gpu/drm/msm/disp/msm_disp_snapshot_util.c |  3 +-
- drivers/gpu/drm/msm/msm_gpu.c                 |  3 +-
- drivers/gpu/drm/xe/xe_devcoredump.c           |  4 +-
- drivers/mmc/core/mmc_test.c                   | 20 +++----
- drivers/net/dsa/sja1105/sja1105_tas.c         |  8 ++-
- drivers/net/ethernet/intel/e1000e/ptp.c       |  7 +--
- drivers/net/ethernet/intel/igb/igb_ptp.c      |  7 +--
- drivers/pci/endpoint/functions/pci-epf-test.c |  5 +-
- drivers/pps/generators/pps_gen_parport.c      |  3 +-
- drivers/pps/kapi.c                            |  3 +-
- drivers/ptp/ptp_ocp.c                         | 13 ++---
- drivers/s390/block/dasd.c                     |  3 +-
- drivers/scsi/fnic/fnic_trace.c                | 52 ++++++++-----------
- drivers/scsi/snic/snic_debugfs.c              | 10 ++--
- drivers/scsi/snic/snic_trc.c                  |  5 +-
- drivers/staging/media/av7110/av7110.c         |  2 +-
- fs/ceph/dir.c                                 |  5 +-
- fs/ceph/inode.c                               | 49 ++++++-----------
- fs/ceph/xattr.c                               |  6 +--
- kernel/trace/trace_output.c                   |  6 +--
- lib/tests/printf_kunit.c                      |  4 ++
- lib/vsprintf.c                                | 28 +++++++++-
- net/ceph/messenger_v2.c                       |  6 +--
- 29 files changed, 130 insertions(+), 153 deletions(-)
-
+diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+index 7f2f11b48286..c0b1b6089307 100644
+--- a/Documentation/core-api/printk-formats.rst
++++ b/Documentation/core-api/printk-formats.rst
+@@ -547,11 +547,13 @@ Time and date
+ 	%pt[RT]s		YYYY-mm-dd HH:MM:SS
+ 	%pt[RT]d		YYYY-mm-dd
+ 	%pt[RT]t		HH:MM:SS
+-	%pt[RT][dt][r][s]
++	%ptSp			<seconds>.<nanoseconds>
++	%pt[RST][dt][r][s]
+ 
+ For printing date and time as represented by::
+ 
+-	R  struct rtc_time structure
++	R  content of struct rtc_time
++	S  content of struct timespec64
+ 	T  time64_t type
+ 
+ in human readable format.
+@@ -563,6 +565,11 @@ The %pt[RT]s (space) will override ISO 8601 separator by using ' ' (space)
+ instead of 'T' (Capital T) between date and time. It won't have any effect
+ when date or time is omitted.
+ 
++The %ptSp is equivalent to %lld.%09ld for the content of the struct timespec64.
++When the other specifiers are given, it becomes the respective equivalent of
++%ptT[dt][r][s].%09ld. In other words, the seconds are being printed in
++the human readable format followed by a dot and nanoseconds.
++
+ Passed by reference.
+ 
+ struct clk
+diff --git a/lib/tests/printf_kunit.c b/lib/tests/printf_kunit.c
+index bc54cca2d7a6..7617e5b8b02c 100644
+--- a/lib/tests/printf_kunit.c
++++ b/lib/tests/printf_kunit.c
+@@ -504,6 +504,7 @@ time_and_date(struct kunit *kunittest)
+ 	};
+ 	/* 2019-01-04T15:32:23 */
+ 	time64_t t = 1546615943;
++	struct timespec64 ts = { .tv_sec = t, .tv_nsec = 11235813 };
+ 
+ 	test("(%pt?)", "%pt", &tm);
+ 	test("2018-11-26T05:35:43", "%ptR", &tm);
+@@ -522,6 +523,9 @@ time_and_date(struct kunit *kunittest)
+ 	test("0119-00-04 15:32:23", "%ptTsr", &t);
+ 	test("15:32:23|2019-01-04", "%ptTts|%ptTds", &t, &t);
+ 	test("15:32:23|0119-00-04", "%ptTtrs|%ptTdrs", &t, &t);
++
++	test("2019-01-04T15:32:23.011235813", "%ptS", &ts);
++	test("1546615943.011235813", "%ptSp", &ts);
+ }
+ 
+ static void
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 11dbf1023391..51a88b3f5b52 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -1983,6 +1983,28 @@ char *time64_str(char *buf, char *end, const time64_t time,
+ 	return rtc_str(buf, end, &rtc_time, spec, fmt);
+ }
+ 
++static noinline_for_stack
++char *timespec64_str(char *buf, char *end, const struct timespec64 *ts,
++		     struct printf_spec spec, const char *fmt)
++{
++	static const struct printf_spec default_dec09_spec = {
++		.base = 10,
++		.field_width = 9,
++		.precision = -1,
++		.flags = ZEROPAD,
++	};
++
++	if (fmt[2] == 'p')
++		buf = number(buf, end, ts->tv_sec, default_dec_spec);
++	else
++		buf = time64_str(buf, end, ts->tv_sec, spec, fmt);
++	if (buf < end)
++		*buf = '.';
++	buf++;
++
++	return number(buf, end, ts->tv_nsec, default_dec09_spec);
++}
++
+ static noinline_for_stack
+ char *time_and_date(char *buf, char *end, void *ptr, struct printf_spec spec,
+ 		    const char *fmt)
+@@ -1993,6 +2015,8 @@ char *time_and_date(char *buf, char *end, void *ptr, struct printf_spec spec,
+ 	switch (fmt[1]) {
+ 	case 'R':
+ 		return rtc_str(buf, end, (const struct rtc_time *)ptr, spec, fmt);
++	case 'S':
++		return timespec64_str(buf, end, (const struct timespec64 *)ptr, spec, fmt);
+ 	case 'T':
+ 		return time64_str(buf, end, *(const time64_t *)ptr, spec, fmt);
+ 	default:
+@@ -2456,9 +2480,11 @@ early_param("no_hash_pointers", no_hash_pointers_enable);
+  * - 'd[234]' For a dentry name (optionally 2-4 last components)
+  * - 'D[234]' Same as 'd' but for a struct file
+  * - 'g' For block_device name (gendisk + partition number)
+- * - 't[RT][dt][r][s]' For time and date as represented by:
++ * - 't[RST][dt][r][s]' For time and date as represented by:
+  *      R    struct rtc_time
++ *      S    struct timespec64
+  *      T    time64_t
++ * - 'tSp' For time represented by struct timespec64 printed as <seconds>.<nanoseconds>
+  * - 'C' For a clock, it prints the name (Common Clock Framework) or address
+  *       (legacy clock framework) of the clock
+  * - 'G' For flags to be printed as a collection of symbolic strings that would
 -- 
 2.50.1
 
