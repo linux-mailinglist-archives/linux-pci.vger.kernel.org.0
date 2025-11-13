@@ -1,126 +1,146 @@
-Return-Path: <linux-pci+bounces-41134-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41135-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07504C5923C
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 18:27:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A8DBC58FC4
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 18:05:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 51D994F2653
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:44:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 913113ABF5C
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:49:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 701DC347BBA;
-	Thu, 13 Nov 2025 16:35:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B7F3364E81;
+	Thu, 13 Nov 2025 16:40:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EllSJxDc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ooEGjnbM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34A7339719;
-	Thu, 13 Nov 2025 16:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E5F363C6F;
+	Thu, 13 Nov 2025 16:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763051737; cv=none; b=fzWH2oeqb4vE0QuK7Jp0Z9LB9rz1JNb8GbNhf80reOCqJSdpP6Cl0vbdmFkv9xoDUgy4upJvdv6x+lUdemltgtZw2pBpVjE3c171xMweYfMQZZhXgYCMtclSoyefWY0LR3UH5cOfsq+k4H4dhRmP0dILlydGpP2/GuDvEDh3c+U=
+	t=1763052015; cv=none; b=rL3xG5vlJmccB/RyYgsuZphh9RIt6LvxOyqNbG5AxdffkHdfEIVxyFqCp/r+lamms4QVufktGIGNBLQfZca02llIFHBEcrgl937eowUWW7FxY22owlvn6dMzIkkkpnEp20IV5Wyuxm8sG9kHpsvtGzu9lOjdmT3hr4Jsm3nk3x4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763051737; c=relaxed/simple;
-	bh=7sbPr+OYyRHBar1nKJfkvEGRrRcDwW4T5/fLzZ8KSEo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=B61Gy1RyaAdsVO83EOgNJ/t2aAsoADXtSfRpyQ1q7IZ9Ma5aGvK8B3RXNYURrFJziu34YUtgre5A2VJSvgrwUAXv1f5zYhwfefAWh5WcQfuhn4Jck6EOtZpvDM14eSLfqDRnhoNHh0t44VH17/hOWG6HLp0+Qu8s02/9wFJ7Iqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EllSJxDc; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763051735; x=1794587735;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=7sbPr+OYyRHBar1nKJfkvEGRrRcDwW4T5/fLzZ8KSEo=;
-  b=EllSJxDc1De/hqVhnw/Z8XITHBdhpRfNAh5cUOiA7GsRL9EQ1vjSHvG7
-   O1rUo0HXPlX7Vg0rHw9sosBjVAhYRhaquyV1pLPjgb4zLcyFgPLwjsfND
-   Obub0PNA6mbh//YsaJzvXCHnxJHqXxWAaevrmeWTBLuJ0llA7RsVYwn/K
-   JPhcyZBfyn7BPwsBzB2gJ5fbF0UT2kBY9QiRHdPj7XqadS/e9NmQuys4r
-   DCDz/IQCN3u+SvwH8zMufWzNQCROQi8Fcpw3wZrho2hcSlovj6XmiW7M/
-   1FvRsyT9C30nuQxwpMq5CQn9pwGrTZX+CebAN9X3seHbMpCQJbM551E1U
-   w==;
-X-CSE-ConnectionGUID: kELafbY9SGuVnPIIxajDww==
-X-CSE-MsgGUID: IUq6GM66SSmR7ZT3rRf+9Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="65044998"
-X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="65044998"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 08:35:34 -0800
-X-CSE-ConnectionGUID: 8fmo2khdT9W4Y07G+JXKdA==
-X-CSE-MsgGUID: UwGyd1zXQbq2VfYt/HLLxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="220357168"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.164])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 08:35:30 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 13 Nov 2025 18:35:26 +0200 (EET)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: =?ISO-8859-15?Q?Alex_Benn=E9e?= <alex.bennee@linaro.org>, 
-    Simon Richter <Simon.Richter@hogyros.de>, 
-    Lucas De Marchi <lucas.demarchi@intel.com>, 
-    Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org, 
-    Bjorn Helgaas <bhelgaas@google.com>, David Airlie <airlied@gmail.com>, 
-    dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
-    intel-xe@lists.freedesktop.org, Jani Nikula <jani.nikula@linux.intel.com>, 
-    Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
-    linux-pci@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-    Simona Vetter <simona@ffwll.ch>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/9] PCI/IOV: Adjust ->barsz[] when changing BAR size
-In-Reply-To: <20251113162932.GA2285446@bhelgaas>
-Message-ID: <fe9bd3af-51f6-c1af-9cdc-c78aee7aaef9@linux.intel.com>
-References: <20251113162932.GA2285446@bhelgaas>
+	s=arc-20240116; t=1763052015; c=relaxed/simple;
+	bh=ee+JYwZFiWl4rPvu1lWFozwqOKR006mY1ONvIK0qE1Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=LU82DUhl+3hfHbW3bUrClIzPIxq8VICk6k6o6Qh4a10l9fKA9XreWFh/EfdFnuHoQshO5yPOY0/17jJJmn+/BYweQ8MeCU09IY7vxoRPbS5ekN0bfkXQNt/27xyXm04WQJMV2XGMTTXN/6OnSR9pC1TF1BUWXpqdLJIwqKshh3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ooEGjnbM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B41ACC4CEF7;
+	Thu, 13 Nov 2025 16:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763052014;
+	bh=ee+JYwZFiWl4rPvu1lWFozwqOKR006mY1ONvIK0qE1Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ooEGjnbMmSQrPkE0Ps+Q3yUSrS4YUF35htEs4f2SE24S1Uwf2aYYdJrKk5xTyAMls
+	 uiLlwGyNsKBsO2swIX+g8h8SF8XbuMxw/Dul4Qiu+zHrB/C9lKYR3v2/e/yCysRGg1
+	 T7n9h06pB8tY5zb+0ochXdGNCcEOdcjbC+23e1bj6bYQNrSddeZBnqyrDLtyJJDleT
+	 zzZyajAp7cCIRE1nKMLfxfKgNJy7YlWdBsYAujGho1cGZ9GORYmgKBQ0zy7AkK4B/l
+	 wxGABXJLJjrUQSD6S1B859/ZuyPp0NlErIwcxSnsTUViuKndFC5r0ZTk1m+AFfIpVl
+	 fNBYJ0k+MYFeA==
+Date: Thu, 13 Nov 2025 10:40:13 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	bhelgaas@google.com, will@kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, robh@kernel.org,
+	linux-arm-msm@vger.kernel.org, zhangsenchuan@eswincomputing.com,
+	vincent.guittot@linaro.org, Frank Li <Frank.li@nxp.com>
+Subject: Re: [PATCH v2 3/3] PCI: dwc: Check for the device presence during
+ suspend and resume
+Message-ID: <20251113164013.GA2285612@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1084105416-1763051726=:1464"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251107044319.8356-4-manivannan.sadhasivam@oss.qualcomm.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+[+cc Frank]
 
---8323328-1084105416-1763051726=:1464
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On Fri, Nov 07, 2025 at 10:13:19AM +0530, Manivannan Sadhasivam wrote:
+> If there is no device available under the Root Ports, there is no point in
+> sending PME_Turn_Off and waiting for L2/L3 transition during suspend, it
+> will result in a timeout. Hence, skip those steps if no device is available
+> during suspend.
+> 
+> During resume, do not wait for the link up if there was no device connected
+> before suspend. It is very unlikely that a device will get connected while
+> the host system was suspended.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 20c9333bcb1c..5a39e7139ec9 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/platform_device.h>
+>  
+>  #include "../../pci.h"
+> +#include "../pci-host-common.h"
+>  #include "pcie-designware.h"
+>  
+>  static struct pci_ops dw_pcie_ops;
+> @@ -1129,6 +1130,9 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>  	u32 val;
+>  	int ret;
+>  
+> +	if (!pci_root_ports_have_device(pci->pp.bridge->bus))
+> +		goto stop_link;
 
-On Thu, 13 Nov 2025, Bjorn Helgaas wrote:
+This looks racy.  Maybe it's still OK, but I think it would be good to
+include a comment to acknowledge that and explain why either outcome
+is acceptable, e.g., if a user removes a device during suspend, it
+results in a timeout but nothing more terrible.
 
-> On Tue, Oct 28, 2025 at 07:35:44PM +0200, Ilpo J=C3=A4rvinen wrote:
-> > pci_rebar_set_size() adjusts BAR size for both normal and IOV BARs. The
-> > struct pci_srvio keeps a cached copy of BAR size in unit of
-> > resource_size_t in ->barsz[] ...
->=20
-> Nit: s/pci_srvio/pci/sriov/  (fixed locally, FYI in case you post a v2)
+>  	/*
+>  	 * If L1SS is supported, then do not put the link into L2 as some
+>  	 * devices such as NVMe expect low resume latency.
+> @@ -1162,6 +1166,7 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>  	 */
+>  	udelay(1);
+>  
+> +stop_link:
+>  	dw_pcie_stop_link(pci);
+>  	if (pci->pp.ops->deinit)
+>  		pci->pp.ops->deinit(&pci->pp);
+> @@ -1195,6 +1200,14 @@ int dw_pcie_resume_noirq(struct dw_pcie *pci)
+>  	if (ret)
+>  		return ret;
+>  
+> +	/*
+> +	 * If there was no device before suspend, skip waiting for link up as
+> +	 * it is bound to fail. It is very unlikely that a device will get
+> +	 * connected *during* suspend.
 
-I just posted v2 without seeing this first. :-(
+I'm not convinced.  Unlike the suspend side, where the race window is
+tiny, here the window is the entire time the system is suspended, and
+at least in laptop usage, there's no reason I would hesitate to plug
+something in while suspended.
 
-I seem to never learn to type those letters in the correct order, I don't=
-=20
-know why I always keep typing them wrong.
+Regardless, the overall behavior needs to be acceptable whether or not
+a device was connected during suspend.
 
-> I'm not sure what "unit of resource_size_t" adds here, maybe could be
-> removed to just say this?
->=20
->   struct pci_srvio keeps a cached copy of BAR size in ->barsz[] ...
+This is probably the same thing you said, Frank, sorry if I'm just
+repeating it.
 
-Seems okay with me. I just had it there to differentiate from "BAR size"=20
-which happens to often be the format directly compatible with field in the=
-=20
-capability.
-
---=20
- i.
-
---8323328-1084105416-1763051726=:1464--
+> +	if (!pci_root_ports_have_device(pci->pp.bridge->bus))
+> +		return 0;
+> +
+>  	ret = dw_pcie_wait_for_link(pci);
+>  	if (ret)
+>  		return ret;
+> -- 
+> 2.48.1
+> 
 
