@@ -1,238 +1,217 @@
-Return-Path: <linux-pci+bounces-41181-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41182-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B652CC59FF7
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 21:43:11 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15254C5A018
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 21:49:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C753E3550DA
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 20:42:09 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E0AF64E286B
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 20:49:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AB7E31CA7E;
-	Thu, 13 Nov 2025 20:41:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 872AF320387;
+	Thu, 13 Nov 2025 20:49:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="etxOQbk1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QvfIZLd4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECC531A042
-	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 20:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763066508; cv=fail; b=tbBAWzB6OlCDqkkgw5MildyMoD1BCsA065iX2jY4yG7h4gfAM8VcQopbE9M64tId/PnfpcWG5IWG/a/ZhTT77k8t7kEJham1JtORZfIaTjXsZQGY6RBGFUvxugfRD9g35NsHESe8B7kaUhZyHnJzZ5BDkbwWEIWMgF22sImjIa4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763066508; c=relaxed/simple;
-	bh=8Rf7QNbIeeNWBzyGdXjvWXxdMPVUuFC+4oajhwRBiDk=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=Y0SJEvqqyJIHrhHGs2g/5XsusLn+AdJg3KaeTtwnQNIF9JIRkI9atn3ZJGMeD62q1ac9pFCgQVAj1xv0tEj9vtPxafgReSgzqSCkGpn4W/8adtNKLaGqtzq3ZGnsI4QQHATRavuJRdSGixaz8WQBcnN5Q9ZM2bXcQdKjOJOG5yo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=etxOQbk1; arc=fail smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763066507; x=1794602507;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=8Rf7QNbIeeNWBzyGdXjvWXxdMPVUuFC+4oajhwRBiDk=;
-  b=etxOQbk1LLpeSnmMjvXhZ82JBG536DR0C4G7Y4UnRW6ukzK/WUy/Yi4I
-   L88E5apXzkn///pj617vQp0rFONPRz8rap1BsYsZFCtoIRSCJ6QNXS2gD
-   qRMnWTlAtP9VLuiWwf4CNDAVrLIb9J/NM21IY/hICoO01eDOrUJmKF84P
-   5X6aAHKdfZTON7Pi2cfp+Dh2UYTNEewzSoXVLWl0LtTUhwdF8uywl0mpe
-   h+vR/lMeRGzxyeBfN8IYdLq1z3O2/ffiYRN9IZV+NhAUs8lsIePvHFf8F
-   3oUZrHPbnQWat9ynodiPQxqBvivkwAq7ocw2b0n+wWDnLbNDUC5SwI4D6
-   w==;
-X-CSE-ConnectionGUID: XK2kNV26T0K6RJpWKtiTDg==
-X-CSE-MsgGUID: UjaP7YguTvKKzLqq+hIUrQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="82791492"
-X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="82791492"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 12:41:46 -0800
-X-CSE-ConnectionGUID: cDg2Uoi6SDGk0iHWWz818w==
-X-CSE-MsgGUID: 1GJSk2YVQ+6OHPftlLV32g==
-X-ExtLoop1: 1
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 12:41:46 -0800
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Thu, 13 Nov 2025 12:41:45 -0800
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Thu, 13 Nov 2025 12:41:45 -0800
-Received: from CH1PR05CU001.outbound.protection.outlook.com (52.101.193.3) by
- edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Thu, 13 Nov 2025 12:41:44 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KPkqi/WHUT/kDEpWnvCoJDi4zycBxaWwUKyU1RwIF6br2Wq9EnoQjvFcVEpR3q/P3u/v5h4YWn/gDv+MoJoA3RC/0SiM0SPxCAJ46Vl9cOyArhSYyiNFUHH4ATqaudAt9eN3BvtYI8CtokWnaLwh2ngaVvGrzvaIB0QWDiCUG0kQmUr281yaM1p63CZshxKlrJwq7XALZJmkmCWFryqsiOBbhyJ5MCYlKidE3CuSpPBHe/TVipdwyko1bzGJKoAbm2S5eHTKKIASsj7UIzlM7j1auwzD7UMeB9FvUrrE60vcxNqluH5bE+GFSDjj/otewhzoHYhsXk9Y8hwsILfngg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j8hBCFJfVgvh4JC2Brm5pwbexkZurANI9e7clfEyI0k=;
- b=NQNx0MhftWwtcESM+unslTxvQ+NgKPdZSe/qfGvM/alwaoCb9Vs9MNBnJ32XmyJ+P2Car6jLrnNXU4DPvZdZNyfM9cwmfhsLscekkMIEA2uBRyDKdtvxehXBfWApCTI7np3nw8i/88hu3X6a7mZBuZEZ6KD3mnMu16ECcL8IhYpV6WqCfQq5yK9GxZMV72UU2d55ODA1Jkb0lKsm2b7ihDFGa3+IKWtCrlfe7JHcXtmFv6Xk3sY3kRf7Gb1ru3Z/wYsyvRPSDVzZarI/2XMDN3nGSwDi2nY/ZSJDox7nzYtqBk3Z8uyX9Q33Je1wAVw9NKytN6B+crQ3Rp2mFjr1pg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CY8PR11MB7194.namprd11.prod.outlook.com (2603:10b6:930:92::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.16; Thu, 13 Nov
- 2025 20:41:41 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff%4]) with mapi id 15.20.9320.013; Thu, 13 Nov 2025
- 20:41:39 +0000
-From: <dan.j.williams@intel.com>
-Date: Thu, 13 Nov 2025 12:41:22 -0800
-To: Jonathan Cameron <jonathan.cameron@huawei.com>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: <linux-pci@vger.kernel.org>, <linux-coco@lists.linux.dev>, Xu Yilun
-	<yilun.xu@linux.intel.com>, Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-Message-ID: <69164272efaef_81241007d@dwillia2-mobl4.notmuch>
-In-Reply-To: <20251113120111.000038a0@huawei.com>
-References: <20251113021446.436830-1-dan.j.williams@intel.com>
- <20251113021446.436830-7-dan.j.williams@intel.com>
- <20251113120111.000038a0@huawei.com>
-Subject: Re: [PATCH v2 6/8] PCI/TSM: Add pci_tsm_bind() helper for
- instantiating TDIs
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR02CA0027.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::40) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62501315D29
+	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 20:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763066959; cv=none; b=SlupN1zX1oSqhvz49p2fx2ZecWP7UrvbTzM6eiyxz70FPrrmFm1WbHQKFcp4GjjReCvbqWhCtvUqvx04gakmJRT31fHITp3M9OoWGA/JUQZuvx64POavF16O/hCt2fN0tuIz/eZFolATLCxOe19KmubHHyp8sQDV5p7+1ppXhwo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763066959; c=relaxed/simple;
+	bh=EPLxhXO88cqccq1mPagqYGrejUHoFDLiArdjyg3Q4AY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jH7ettbgdluvfi2BI6KW0+rWZ0LSh7lXcGzfeFgxgZvDCP5SF5JRfPLhhpcDbHGtJ+siTBy6jt12ml8EPvuL/r0dh94AQ2YmL4vpvDVB3PwkSGCEweGLMWd8sA6QfNUSKRMYLkBeL8Kr6BHxaDEkvoglonIZlAN47L+Tu+ulnvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QvfIZLd4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42984C2BCAF
+	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 20:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763066959;
+	bh=EPLxhXO88cqccq1mPagqYGrejUHoFDLiArdjyg3Q4AY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QvfIZLd4HTnup0ZMtaGA/lNKtFA4b2Nq2CQ6iixuM/2w3GhWk34S6/0lkFS7kfrLz
+	 YsoTj9CwVgvrXnOHfwmLwtGc2W6qzLqti6TyK/KhFIpIdbXEj1KsVT+FpKcpvy4CB2
+	 OZUUoM0WX3QpDm8qJO4icWt80PfmGg5v2OrxaMpw+KxDT9MwpAqFi15hhOHHT/QYlI
+	 9vaDM+kI1/iB/dcvVjYcHV3haLw83n2YWaGW5Hoof3DEJKJwnnHfunyf5KlaNdUZlx
+	 k+wMziFz0sx8IGX5nSQo04krncs4ARBANHLI16UjkKHe2g/EkRijpXmLCmiDltFqnW
+	 YNejq+VtwfpUA==
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-656b52c0f88so486116eaf.0
+        for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 12:49:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWRxzsHT9DdZAYiRtxGBszclRkNA7T0HNc6eqk5QnTiun5lzDp7CtwkHlaDT4OwCs9/2/s65N2dzq0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYFn57AbHVnCJ9UWJK6LalPz6sMYKFfK0nheUbGd9XzuNSzz2r
+	9RDrIk0bq4s/5WDcGyjXUQDRkgyciE9W1skmAfbqcXEUj8ZRDGcIRHg440FPN/U+OsNujd1uOxV
+	MEP1FG7pgg1Qw9C+MDmwSn1LsLB0klBY=
+X-Google-Smtp-Source: AGHT+IFwpjmkzTtdNC78gv8DWtXRXf7ZYpQ6PtpdSfXZY/SuePzaNDE3JPoucOxGQGfHuxcykzaK7k0EtIbv9uBiEr0=
+X-Received: by 2002:a05:6808:891a:20b0:450:d2b:d80d with SMTP id
+ 5614622812f47-45097587d0fmr285198b6e.43.1763066958394; Thu, 13 Nov 2025
+ 12:49:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY8PR11MB7194:EE_
-X-MS-Office365-Filtering-Correlation-Id: 27446c1b-915c-4db7-4190-08de22f50bed
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?aDFrQmplYW9nRyt2OUtxbnJyWjE0ZEhuNlIyZk42ZDBSeGVwQ1dab3p1UlBz?=
- =?utf-8?B?L3BlZ1l2NlpFeTljRzMxVURYMTROWUkxMWlDM1FxUWY4U2l4YmZJbVBiYUV3?=
- =?utf-8?B?THBSYkRpT0NhUmxZTG9iM25iQW1ZVU9QbU54M3JMTmw3aDBCT05mcUt6S2ts?=
- =?utf-8?B?cFAzb2pITkJHeUNEU3oyM3lGeEhsWTcrb05OTGhBQkk3R1MrQm5FMS85TVlp?=
- =?utf-8?B?QnEwQmU5WlVDbEc0S1BFS2Ntcm1QUjNmZytXSkxFRXpJMGRJc2krWVVSeDNF?=
- =?utf-8?B?R05GY01PeTBLbGNaWldYOXNDcFNtTHRtSHROTUlaTy8zdUVaWVJmOGhtRnVy?=
- =?utf-8?B?MXFZZGdQZ0JzbHRSWHgvMXhJcktuVXFOTS9YTGk0aWhpcjRHVUJ4anVDSEth?=
- =?utf-8?B?R09FODdxb0cyemtvTjhwQmljemRtbklnUjl2eG82amFuUDBKY3IyTys4QVpk?=
- =?utf-8?B?SWJ4dTZaZ3RnNGVJenhhcHBxUHFKUTlkcjlGcDI1UlVCNUprM2c2OGNHK1R1?=
- =?utf-8?B?SlBVSlM5bHR0amtQQmtnZFgyQll1MDYva2tMQkdCZzd6MDVQNllDeWpnV3Jj?=
- =?utf-8?B?Tktid2RoZ1MwUzQzbVRYaHdRZXp3azVOeFVIazhGWHZ0MWs2bkg3aU1GeXZx?=
- =?utf-8?B?Vkp3OHBVVldFVVN3RE9jTUlMRXpEUGdqYW5yQmczQXlFbkNMTS9ucTRWc3JY?=
- =?utf-8?B?eUtveU44azFvT0tYb1g2S0ZSZTFwelNSa3I4UDlNTFh6T1ArUmwyM1BEdEhT?=
- =?utf-8?B?ZW51OEk1QnNjUys4Q29kQkNPaVBDYmdQMFBHNjE0SEJoSDJ4ZnFmVlNoYXpQ?=
- =?utf-8?B?U1o4ZncvaUJJMXpxL0YxY0VTVGd1c1lpelVNSlovWnQ3Y0xoMkpZSVpVVFhk?=
- =?utf-8?B?a0tvMGxBS2dXZ1dpVzIxeXJEVk5JYWk2ZkVFd0djbzIxM3B6VXdpWU5lSkhT?=
- =?utf-8?B?cVdDbzVid2dnd1ptRVJNWEJPRG9ERjN2S0NCL3VNdndlNFdwQ2xUZllxRG12?=
- =?utf-8?B?anUzYTlOZXQ5bUtMTGd2bmNjVm9mU0VOMEpFUHNmTlVrVGdqYmJnNERFWThj?=
- =?utf-8?B?djF1RTZhdS9WcWJTcWRjQXFBQkRQQ0hnVlRDQmJiVGN3RFY2MTNaV3Vxek9o?=
- =?utf-8?B?VnA3VVNxSmRxdHBmbkZZNGt0NTVISXNpODdaLzNqRGhqTzdOT3VjcjFTM09r?=
- =?utf-8?B?TDMyVjJXZ2hBa2MzUEtCM0VQcDhlK2NvWGZOeXpOV2VpUlZCWVZxNkRneHFy?=
- =?utf-8?B?U3JxSlVBalVaMlZ4TDJBVFJoeGt4MDloaFowMUg1elA3SnY0ekdicjlrUmVU?=
- =?utf-8?B?VFhpaFZiNklKSUlPN2s1QUtCdkdXenZOL2NMTENUNjVHN1VnWFppNzNDdUgv?=
- =?utf-8?B?a1cyMmJ4MGZJVHYyM2ZGbWJNcFV0MFRWNndHV0lmSlBrUUp6aFVnakk2QmRr?=
- =?utf-8?B?VWlBQnRaY1JVYXZWZVBPRDArbzg0anFHbHVvS3NrTk92czQrMTFMTmk1RVVS?=
- =?utf-8?B?TDJWR09jYStYUVp4WkN1VnhBVUIrSnlXYUJWMXFucEFDRmptSENJTnhBajVT?=
- =?utf-8?B?WDJkY1VRYUEvd1FkZGl3eXRGNUl5MDZjazFUbTdYRUpOTlZ1SFBwRHR5RVIz?=
- =?utf-8?B?d090cUZCQUs1RmhRWjJhNTNBd3N6VUdLRXhFRFVvcjNHeFFlcTMxWGZlU3VW?=
- =?utf-8?B?cTYzc2c4bDRRMHRxS1l3RGlQdFd5ZVcvL3hKRFR0eTJhMjgrL3FzMzBjKzVM?=
- =?utf-8?B?RndlNng1SG5MVUx6YzdjTllzMnBHUEYvdG1WRkVIaVNlRVEwVEJ0MnBZK2NF?=
- =?utf-8?B?NUpaUTBjVFE1Rkd6a2k2Q3doUFFUdEZmWUx2cjVqT0VRQzd5cTkwTEloRVpk?=
- =?utf-8?B?dGIrTC9jZVJ2Qm9UU05PalhoRy9zM0lCWUZoekJJU1VTUG4wbElOZUpTUDV0?=
- =?utf-8?Q?eRQbg/MY02MR8yVH5S9967D3ljoMrpg7?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZGFZMkhOb01HZjgrKzVsVitHU3JiRzl1cmdxdHRxdDBIUFhtWlBaajZwOEE5?=
- =?utf-8?B?cjlYNmNiTGxoR1h4UWUwOUdkZWpQWlRsN0c4Y3JrdUc2TnlrKy96emFjTkZt?=
- =?utf-8?B?blhXU2d6RDNlNk5OYi9KWU1pVklzUzRVN2lDVnM0TU9SaDdUcjh0UTIyaVBn?=
- =?utf-8?B?UTA3ZkJkYnJOMUh6T2FUNExPRmo1bDlsMTczQVI3L2xOcGVXbTlzZVBUVWQ5?=
- =?utf-8?B?VDJoK0wxOW5sYXpIVEM3UUhoZ0Y2aTZaYWJDcEdBSkJuV3poVVFRRFV0Z3A4?=
- =?utf-8?B?QVdDaHNINDkvT29LQldmUVNqTW8rVnFpMjJRVUhTclBoR1pqRk1vU1F6LzJo?=
- =?utf-8?B?Q015UnAzSU8rNzBpaHNwZ253aWFjaXBlalNjVEtsbHNoOWdUYUhhRVYxVWxj?=
- =?utf-8?B?OFF3RFJUNU1KbC9EQVBIRmJpRkFBdE95NEpJNnI4ZDE3ZTdrMjF1Nk5ZVVk5?=
- =?utf-8?B?L2ZtTEc3eHgrMzBYSGcvREhyZGtGSk1kSEJxQXV3NzBkUmJ0OUc0eEQzbXpK?=
- =?utf-8?B?a1pISFV1bjJFOVZBSmxPRStsRXZSdS9SWU9HLzYxSTVNd2lEZUxjOWh2cWhV?=
- =?utf-8?B?emxyK0V2VVE1M2lpZUFTTWJJZkNiVGJRKzFUOWhwUldNcSs1UVFzbHFOeHZP?=
- =?utf-8?B?NzZkKzhMWEZueHVYWlE3ekxUTVhheDFqUCtxRnFlSzdvYmhuNnlvd0NOUllM?=
- =?utf-8?B?VDZUTjFPZm1YeGVyZHNIMlQvQmsrODc2SnBodTRIdHRXT3pOTzJma2R3T1k5?=
- =?utf-8?B?N0hXVUo2WWlWcFg1YVg0OWJ3azVQSEJQSTkxNVRKc25pdXdIWTdsNXJycHBW?=
- =?utf-8?B?T08vQmU3SVJWSnNXQzAwaklQNzFuYUFVNW4yalJucEd1WHhwWllRbWhyc25K?=
- =?utf-8?B?SW1qY04yREExaTZ3bVkzV1RaQnNKc3JaVzl6eU03SVNSMlN2eGpCOTMxMGJY?=
- =?utf-8?B?R2xrdGZjK3pxUER0YjJqSmxJVE4wRzFuRTlTNDJLaFdnd1Z5WW5pcEx4UHRp?=
- =?utf-8?B?RnliT1hqUGsrMk9rTmdGNUc0V1FWY1AraE83VU9HT3dYeHJIZ1FxOWtzUzBN?=
- =?utf-8?B?ZndUZ1l4cTVBQlYxMXdURDMvSUZGVE5BaEU2eVNSUjA5R2M5ZzQ5OUlYMS85?=
- =?utf-8?B?ZjFLVDlRZWwvK0hOZUJWYjRrcm1kekdtZ0pnN3RQTW9SOEJySndQL3lzRU1t?=
- =?utf-8?B?bkN6RDBVa3MwU2VYNUlZb0xDZ2t0Ynl5dFZKcElONkMzWHVhWDZjMFF4aWlT?=
- =?utf-8?B?VmxLeFhyMzRJeVQyamliV2NMY1BLVEI1Qkt2anY0OEE5VjRidmhBTm1oTWR1?=
- =?utf-8?B?c2ZTelI3ZVFpdklFd1JEM2V1QnVReXo0MzRyOXpIWGFxQ3FabHRHNnRiY0ZO?=
- =?utf-8?B?Z1hsMGo4Z0FWdG1PUDJDaEZWNTM5eTVlQ3hOZ1p2RzFvNGRsRWlRZXQwT3Ux?=
- =?utf-8?B?VUhiZnJnK20zbVhYekRTaE1PZGpiNFFvVy9LSCtNSGhmTnVtbG10czBvbHBr?=
- =?utf-8?B?TTVUNWUrLzZuZmxKaTNMWXpuM1lSQ2RMaUdVcHZRSEZkblRmTTBlRGdveUxR?=
- =?utf-8?B?QlNFMjFMREM5UmVWVVRxamNwMEo0T0Z0aXNHMFVhWlZMNWc1WTlQR1lodUtB?=
- =?utf-8?B?b0UvOEFmbFJTTGJWbTk2T05OSmVWWklzSlRqYXd2cEtXWFJnQWZKNUxZejJ4?=
- =?utf-8?B?dGgwMVR5ZksyTFlXc0FuTnZTajQ4UkxzaUpuUDd3dU5FZlBvbjdzdk5weFRU?=
- =?utf-8?B?cEtIUDBmTGRyRUlMTTltbTRHM0tZKzFiM2JCaUdmTllxTUpQWm9nb2JCVitC?=
- =?utf-8?B?YWdrL1R6T2tramJhRWI4ZVNoZWZ4bjJPTHBDTDB4ak5JY21IeCs3c0p1MDRH?=
- =?utf-8?B?UTFudURkblFtWFF4QkZsM244SjV5dEtOc3JYUk9KWUJqTVJGU0dWSmM1Zkl5?=
- =?utf-8?B?ODhmNUtrTXhwd3ZqZzE5emE4L2s0bmZYR3VHQzBLbTlMK3ZyZlVkODhJVHZ1?=
- =?utf-8?B?TWs4d3NselZWeFdGRTQxQlBudEsxaExYd3d4VklsUjJMeHdXdEhRVjgxUlFG?=
- =?utf-8?B?Uyt3NXlyaG1NSTV5MXVOTUw1UUJCT3YvRFIyck1mZjN0cDNKSmtnby9mZ0Fv?=
- =?utf-8?B?V1hEamZST2NJUHNPaUEyK3U5RmJwN1pXTEpnbjZnWmFwL0pmMGFlOFBSamQy?=
- =?utf-8?B?dVE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27446c1b-915c-4db7-4190-08de22f50bed
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2025 20:41:39.6845
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TkrE+G0pBXGt0c+3TE15EwtVBZQuRwH8/ZrAJsBZ/7pEXAbTP4+B1B2i1RvlTsF4LQc43a8LlKI67aVmhTGktbFPRhGU02IcYAZtxHs6jJI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7194
-X-OriginatorOrg: intel.com
+References: <cover.1760274044.git.lukas@wunner.de> <070a03221dbec25f478d36d7bc76e0da81985c5d.1760274044.git.lukas@wunner.de>
+In-Reply-To: <070a03221dbec25f478d36d7bc76e0da81985c5d.1760274044.git.lukas@wunner.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 13 Nov 2025 21:49:06 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hE31RqZ19oN_11cKYnLY_CP0KccTGwa9ViT4UmR+6rfg@mail.gmail.com>
+X-Gm-Features: AWmQ_bnCbyYw_3lIyx6vhiRISpeG2Rm90g8CMXSUM0RGtBN2XV9EuW1_hG_yvts
+Message-ID: <CAJZ5v0hE31RqZ19oN_11cKYnLY_CP0KccTGwa9ViT4UmR+6rfg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI: Ensure error recoverability at all times
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Riana Tauro <riana.tauro@intel.com>, "Sean C. Dardis" <sean.c.dardis@intel.com>, 
+	Farhan Ali <alifm@linux.ibm.com>, Benjamin Block <bblock@linux.ibm.com>, 
+	Niklas Schnelle <schnelle@linux.ibm.com>, Alek Du <alek.du@intel.com>, 
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org, 
+	linux-pci@vger.kernel.org, Giovanni Cabiddu <giovanni.cabiddu@intel.com>, qat-linux@intel.com, 
+	Dave Jiang <dave.jiang@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Jonathan Cameron wrote:
-> On Wed, 12 Nov 2025 18:14:44 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
-> 
-> > After a PCIe device has established a secure link and session between a TEE
-> > Security Manager (TSM) and its local Device Security Manager (DSM), the
-> > device or its subfunctions are candidates to be bound to a private memory
-> > context, a TVM. A PCIe device function interface assigned to a TVM is a TEE
-> > Device Interface (TDI).
-> > 
-> > The pci_tsm_bind() requests the low-level TSM driver to associate the
-> > device with private MMIO and private IOMMU context resources of a given TVM
-> > represented by a @kvm argument. A device in the bound state corresponds to
-> > the TDISP protocol LOCKED state and awaits validation by the TVM. It is a
-> > 'struct pci_tsm_link_ops' operation because, similar to IDE establishment,
-> > it involves host side resource establishment and context setup on behalf of
-> > the guest. It is also expected to be performed lazily to allow for
-> > operation of the device in non-confidential "shared" context for pre-lock
-> > configuration.
-> > 
-> > Co-developed-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> LGTM to me so
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> though I would like to here from Aneesh on whether the v1 discussion
-> answered all questions expressed.
+On Sun, Oct 12, 2025 at 3:30=E2=80=AFPM Lukas Wunner <lukas@wunner.de> wrot=
+e:
+>
+> When the PCI core gained power management support in 2002, it introduced
+> pci_save_state() and pci_restore_state() helpers to restore Config Space
+> after a D3hot or D3cold transition, which implies a Soft or Fundamental
+> Reset (PCIe r7.0 sec 5.8):
+>
+>   https://git.kernel.org/tglx/history/c/a5287abe398b
+>
+> In 2006, EEH and AER were introduced to recover from errors by performing
+> a reset.  Because errors can occur at any time, drivers began calling
+> pci_save_state() on probe to ensure recoverability.
+>
+> In 2009, recoverability was foiled by commit c82f63e411f1 ("PCI: check
+> saved state before restore"):  It amended pci_restore_state() to bail out
+> if the "state_saved" flag has been cleared.  The flag is cleared by
+> pci_restore_state() itself, hence a saved state is now allowed to be
+> restored only once and is then invalidated.  That doesn't seem to make
+> sense because the saved state should be good enough to be reused.
+>
+> Soon after, drivers began to work around this behavior by calling
+> pci_save_state() immediately after pci_restore_state(), see e.g. commit
+> b94f2d775a71 ("igb: call pci_save_state after pci_restore_state").
+> Hilariously, two drivers even set the "saved_state" flag to true before
+> invoking pci_restore_state(), see ipr_reset_restore_cfg_space() and
+> e1000_io_slot_reset().
+>
+> Despite these workarounds, recoverability at all times is not guaranteed:
+> E.g. when a PCIe port goes through a runtime suspend and resume cycle,
+> the "saved_state" flag is cleared by:
+>
+>   pci_pm_runtime_resume()
+>     pci_pm_default_resume_early()
+>       pci_restore_state()
+>
+> ... and hence on a subsequent AER event, the port's Config Space cannot b=
+e
+> restored.  Riana reports a recovery failure of a GPU-integrated PCIe
+> switch and has root-caused it to the behavior of pci_restore_state().
+> Another workaround would be necessary, namely calling pci_save_state() in
+> pcie_port_device_runtime_resume().
+>
+> The motivation of commit c82f63e411f1 was to prevent restoring state if
+> pci_save_state() hasn't been called before.  But that can be achieved by
+> saving state already on device addition, after Config Space has been
+> initialized.  A desirable side effect is that devices become recoverable
+> even if no driver gets bound.  This renders the commit unnecessary, so
+> revert it.
+>
+> Reported-by: Riana Tauro <riana.tauro@intel.com> # off-list
+> Tested-by: Riana Tauro <riana.tauro@intel.com>
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> ---
+> Proof that removing the check in pci_restore_state() makes no
+> difference for the PCI core:
+>
+> * The only relevant invocations of pci_restore_state() are in
+>   drivers/pci/pci-driver.c
+> * One invocation is in pci_restore_standard_config(), which is
+>   always called conditionally on "if (pci_dev->state_saved)".
+>   So the check at the beginning of pci_restore_state() which
+>   this patch removes is an unnecessary duplication.
+> * Another invocation is in pci_pm_default_resume_early(), which
+>   is called from pci_pm_resume_noirq(), pci_pm_restore_noirq()
+>   and pci_pm_runtime_resume().  Those functions are only called
+>   after prior calls to pci_pm_suspend_noirq(), pci_pm_freeze_noirq(),
+>   and pci_pm_runtime_suspend(), respectively.  And all of them
+>   call pci_save_state().  So the "if (!dev->state_saved)" check
+>   in pci_restore_state() never evaluates to true.
+> * A third invocation is in pci_pm_thaw_noirq().  It is only called
+>   after a prior call to pci_pm_freeze_noirq(), which invokes
+>   pci_save_state().  So likewise the "if (!dev->state_saved)" check
+>   in pci_restore_state() never evaluates to true.
+>
+>  drivers/pci/bus.c   | 7 +++++++
+>  drivers/pci/pci.c   | 3 ---
+>  drivers/pci/probe.c | 2 --
+>  3 files changed, 7 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index f26aec6..4318568 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -358,6 +358,13 @@ void pci_bus_add_device(struct pci_dev *dev)
+>         pci_bridge_d3_update(dev);
+>
+>         /*
+> +        * Save config space for error recoverability.  Clear state_saved
+> +        * to detect whether drivers invoked pci_save_state() on suspend.
+> +        */
+> +       pci_save_state(dev);
+> +       dev->state_saved =3D false;
+> +
+> +       /*
+>          * If the PCI device is associated with a pwrctrl device with a
+>          * power supply, create a device link between the PCI device and
+>          * pwrctrl device.  This ensures that pwrctrl drivers are probed
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b14dd06..2f0da5d 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1855,9 +1855,6 @@ static void pci_restore_rebar_state(struct pci_dev =
+*pdev)
+>   */
+>  void pci_restore_state(struct pci_dev *dev)
+>  {
+> -       if (!dev->state_saved)
+> -               return;
+> -
 
-I did follow up with him on the last CCC call and setting tsm->tdi in
-the TSM driver as needed is the going forward plan.
+So after this change, is there any mechanism to clear state_saved
+after a suspend-resume cycle so that the next cycle is not confused by
+seeing it set?
 
-Thanks for taking a look at these.
+>         pci_restore_pcie_state(dev);
+>         pci_restore_pasid_state(dev);
+>         pci_restore_pri_state(dev);
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index c83e75a..c7c7a3d 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2747,8 +2747,6 @@ void pci_device_add(struct pci_dev *dev, struct pci=
+_bus *bus)
+>
+>         pci_reassigndev_resource_alignment(dev);
+>
+> -       dev->state_saved =3D false;
+> -
+>         pci_init_capabilities(dev);
+>
+>         /*
+> --
 
