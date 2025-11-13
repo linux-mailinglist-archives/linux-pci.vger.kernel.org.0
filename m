@@ -1,67 +1,66 @@
-Return-Path: <linux-pci+bounces-41055-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41056-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96514C55BF1
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 06:03:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 09F77C55C30
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 06:07:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 564B14E2B3E
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 05:01:13 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0A1284E2B5D
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 05:06:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58AF0302769;
-	Thu, 13 Nov 2025 05:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 298A82C0F71;
+	Thu, 13 Nov 2025 05:06:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DKgetDj7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKFnmi8k"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1264E1EDA3C;
-	Thu, 13 Nov 2025 05:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A892206B1;
+	Thu, 13 Nov 2025 05:06:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763010067; cv=none; b=KTc+m4Y9AP82Kh5mTKqgwP6m/HAyofyLNVzUWC08OEo0KwmItJ3MNRcO3739xNWVCjUjVatuu33epFAb6mmTKj0GGrOGoDYhbj35u4nxbQUavieA1tNLdOqbm64FvYEylv8LFTc4LYZvISl5R9hQNVVzRjQFCJxQb7XvRnkOhns=
+	t=1763010367; cv=none; b=g3IYUbLzry7Y2Qnhr0fXo+bTL5u9dBDs/Jq3Llr+BZo3UDgygLqfSbU/lXWZA9Vm5SPX7s7lg7Z3CGhOUiXQBgjY1PxdbWlk9JtLfrKNM6fRXGKZ1pA6v/2gkp1pTPe8CpoHxzHmTxFM3kYGimvXs2uxZnj3Gr/+lbVWNMSOofY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763010067; c=relaxed/simple;
-	bh=elbIHIxtHN/iHCWls82TyqD3OxlbCSrevgrw2dpxzBI=;
+	s=arc-20240116; t=1763010367; c=relaxed/simple;
+	bh=lmFEIO+FTlALqETVG4s9zKtGVmA3KisKqKNts7GmV/w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gUpJ/VV1jDuaAydRqKxl407oRvgHnW72cnm7ePtLugmR6iQM9VDIrlH8LoPWGswymRxfi7bmu2CzvpE+aLQDUQwwkbmlCXjGdGrxzW0iMwB/OtazgPBR+1vFq2iMTKVBlfza3d/tvH/Vqt0ZY3cAtzodWcNVdB/HlYsPgO29izI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DKgetDj7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FA76C19424;
-	Thu, 13 Nov 2025 05:00:51 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=atetdWvuEc8SNxcSozP6YYWI3+KYpV7X7MwclMxX+PMpsaRqWe9NCRufqME8f11uX7fCpq2FefSqwFrAq8G/04b3zgyp1U4Eje5W4+T2mVEDEuCnx0r2awqYN+jhL7bUwqnCReP5GzWLOCXoVoH+/z/mzDM26LiNpvGVmpABQ1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IKFnmi8k; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB1AFC19421;
+	Thu, 13 Nov 2025 05:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763010066;
-	bh=elbIHIxtHN/iHCWls82TyqD3OxlbCSrevgrw2dpxzBI=;
+	s=k20201202; t=1763010364;
+	bh=lmFEIO+FTlALqETVG4s9zKtGVmA3KisKqKNts7GmV/w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DKgetDj7dRR9Tfdf7Vr3zTxqI/ZLzKWaMpV2ow4x0puNQVtVelNfSdUZ2RKjLTROg
-	 e1ci46SxX8QhyVvhq42cupyaLkqn5pSKQoZRm+zuYjmTGQS9oQOyxVGMOTWXVnqrqn
-	 kjF7uVCwbDXPS6dQ6ApjXrMoVlW3PmSAH2QB7+QzqoumRp0gcINGgIIRsvXyfyRRGR
-	 BtkronFgRDPcwh0yq/Rs8VWiEK/+rFeER34DXNzZWI6Zu8vXPXH9wjXc2SOeGJG89p
-	 xQ9MWkqJ0cmkhd7IeyQOOEAHVlMrI6o8oy3DiXMdXyw5HVS4BzlVEFeIHR2Pnqxg24
-	 RGy9fx6Mj6eSA==
-Date: Thu, 13 Nov 2025 10:30:42 +0530
+	b=IKFnmi8krDCishqGq+XkYTFxcp1Ltwc2ixWwd/VwE6mo/oy3F9TQipbl2enEDj9vz
+	 WtgRLq3n3jwX3y8fEWutGtpCWdwC4A5Y0dsJNClcChJTQa6JWdojqqa1dhW7SWlyiw
+	 WLv1gJvFj2HroeByWrsRHYHDJmoFAZ7faVi7S5OMl7RT0tOSH63EZErA8++H8b2E98
+	 nA2Zwpal40DC0QWP8EB9sDq44Of+dqArF1Wtx9842iGGTcbuCshLutyZ1CprzALfXN
+	 llJfproSgc/Y9v+FT3nneBRtKiPyMh7HCIs8de7k+IegQAMfL10o0JwuaPFmwIYTKu
+	 /KpAQ80zqhBNA==
+Date: Thu, 13 Nov 2025 10:35:38 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: manivannan.sadhasivam@oss.qualcomm.com, Rob Herring <robh@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>
 Subject: Re: [PATCH 7/9] dt-bindings: connector: Add PCIe M.2 Mechanical Key
  E connector
-Message-ID: <qiwgnela4b6gbwuuq7xaqjong47c2ix6caagjl6ryqukzqkswn@6l7rvkf4dfyx>
+Message-ID: <dpemyc5l44alocdtbntnocwzfx3hdrppcf2dwhwasxx5v7zfku@hr6whu6siapm>
 References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com>
  <20251112-pci-m2-e-v1-7-97413d6bf824@oss.qualcomm.com>
- <aRS/3OTerCBGlmBm@lizhi-Precision-Tower-5810>
+ <t45yq2cqj2t7lv4ifnvv556ewznjtzhdvvmofzgb5kcsarydqe@hxtonnejw6t7>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,10 +70,12 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aRS/3OTerCBGlmBm@lizhi-Precision-Tower-5810>
+In-Reply-To: <t45yq2cqj2t7lv4ifnvv556ewznjtzhdvvmofzgb5kcsarydqe@hxtonnejw6t7>
 
-On Wed, Nov 12, 2025 at 12:11:56PM -0500, Frank Li wrote:
-> On Wed, Nov 12, 2025 at 08:15:19PM +0530, Manivannan Sadhasivam wrote:
+On Wed, Nov 12, 2025 at 10:08:57PM +0200, Dmitry Baryshkov wrote:
+> On Wed, Nov 12, 2025 at 08:15:19PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > 
 > > Add the devicetree binding for PCIe M.2 Mechanical Key E connector defined
 > > in the PCI Express M.2 Specification, r4.0, sec 5.1.2. This connector
 > > provides interfaces like PCIe or SDIO to attach the WiFi devices to the
@@ -82,20 +83,20 @@ On Wed, Nov 12, 2025 at 12:11:56PM -0500, Frank Li wrote:
 > > devices along with additional interfaces like I2C for NFC solution. At any
 > > point of time, the connector can only support either PCIe or SDIO as the
 > > WiFi interface and USB or UART as the BT interface.
-> >
+> > 
 > > The connector provides a primary power supply of 3.3v, along with an
 > > optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating at
 > > 1.8v sideband signaling.
-> >
+> > 
 > > The connector also supplies optional signals in the form of GPIOs for fine
 > > grained power management.
-> >
+> > 
 > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 > > ---
 > >  .../bindings/connector/pcie-m2-e-connector.yaml    | 154 +++++++++++++++++++++
 > >  MAINTAINERS                                        |   1 +
 > >  2 files changed, 155 insertions(+)
-> >
+> > 
 > > diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
 > > new file mode 100644
 > > index 0000000000000000000000000000000000000000..91cb56b1a75b7e3de3b9fe9a7537089f96875746
@@ -140,64 +141,23 @@ On Wed, Nov 12, 2025 at 12:11:56PM -0500, Frank Li wrote:
 > > +        $ref: /schemas/graph.yaml#/properties/port
 > > +        description: PCIe/SDIO interface
 > 
-> 
-> PCIe and SDIO is difference signal at key E. why combine to one port? The
-> similar case is USB2.0/UART
+> The same comment as for the M-key bindings: please describe endpoints.
 > 
 
-They will be defined as separate endpoints in the next version.
+Sure.
 
-> > +
-> > +      port@1:
-> > +        $ref: /schemas/graph.yaml#/properties/port
-> > +        description: USB 2.0/UART interface
-> > +
-> > +      port@2:
-> > +        $ref: /schemas/graph.yaml#/properties/port
-> > +        description: PCM/I2S interface
-> > +
-> > +      port@3:
-> > +        $ref: /schemas/graph.yaml#/properties/port
-> > +        description: I2C interface
-> > +
-> > +    oneOf:
-> > +      - required:
-> > +          - port@0
-> > +
-> > +  clocks:
-> > +    description: 32.768 KHz Suspend Clock (SUSCLK) input from the host system to
-> > +      the M.2 card. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.1 for
-> > +      more details.
-> > +    maxItems: 1
-> 
-> Do we need add pciref clock here?
-> 
-> > +
-> > +  w_disable1-gpios:
-> 
-> use "-"
-> 
-> w-disable1-gpios
-> 
-
-I just went with the spec that defines the signal as W_DISABLE.
-
-> > +    description: GPIO controlled connection to W_DISABLE1# signal. This signal
-> > +      is used by the system to disable WiFi radio in the M.2 card. Refer, PCI
-> > +      Express M.2 Specification r4.0, sec 3.1.12.3 for more details.
-> > +    maxItems: 1
-> > +
-> > +  w_disable2-gpios:
-> > +    description: GPIO controlled connection to W_DISABLE2# signal. This signal
-> > +      is used by the system to disable BT radio in the M.2 card. Refer, PCI
-> > +      Express M.2 Specification r4.0, sec 3.1.12.3 for more details.
-> > +    maxItems: 1
-> > +
 > > +  led1-gpios:
 > > +    description: GPIO controlled connection to LED_1# signal. This signal is
 > > +      used by the M.2 card to indicate the card status via the system mounted
 > > +      LED. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.2 for more
 > > +      details.
+> 
+> How are we supposed to handle these LEDs? I have been assuming that
+> these pins should go striaght to the LED driver.
+> 
+
+Yes. I should just drop these.
+
 > > +    maxItems: 1
 > > +
 > > +  led2-gpios:
@@ -214,13 +174,14 @@ I just went with the spec that defines the signal as W_DISABLE.
 > > +      the sideband signals. Refer, PCI Express M.2 Specification r4.0, sec
 > > +      3.1.15.1 for more details.
 > > +    maxItems: 1
-> > +
-> > +  uim_power_src-gpios:
 > 
-> property use -
+> This more looks like viocfg-supply. Looking at this one and several
+> other pins, it's more like a GPIO controller, providing those pins for
+> the system, rather than a GPIO consumer.
 > 
 
-Again, this is as per the spec. If DT maintainers object to it, I'll change it.
+It is not a supply, but rather an indicator to the host. If it is low, then it
+indicates that the card supports 3.3V on the sideband IO signals.
 
 - Mani
 
