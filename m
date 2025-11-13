@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-41105-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41107-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AD05C58466
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:16:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B28B6C58482
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:17:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E199B3A21FD
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 15:10:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 07FFF3B101B
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 15:11:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0D1034DB62;
-	Thu, 13 Nov 2025 15:03:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AB51352F9D;
+	Thu, 13 Nov 2025 15:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YiLnhQ3o"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D8mRZTQM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C034633DEF6;
-	Thu, 13 Nov 2025 15:02:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A8334DB72;
+	Thu, 13 Nov 2025 15:03:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763046180; cv=none; b=ZGVvwaNYZvVMaZ6uzGkKIUnvf4ouU6b+WV+l55EuIgduFQO0idrjzZ6HerLrT7NhyM8NWq9faIPg+8O1+GbC8oXfWq/1sqZujbUu2O4zswFpgfN7mjdsWjCX0ZZ5mfMddim3EcK5b3ZRWOuvHW88frYOsWm4a7JB/xiHf7Jm9Fk=
+	t=1763046182; cv=none; b=fOWu2yFXWz29fcSzabvceUhnnd6gZx/Wm4+EWyLrekTQPfdrnL5xMAtxkHDmz62sLLI56g4b9HyPHqnyFfR6i/MCncvDKIp+A6Sfv4cieiFhGFfmRMPNBGY9wobQInoekRLa6cN9oZSprflDq2nkGsgiEFs60HAcCWK6G1hX4Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763046180; c=relaxed/simple;
-	bh=GOmlU8+AxY4qiyUG0euFaX4L/EDMDObrk8lwMAMh1Z8=;
+	s=arc-20240116; t=1763046182; c=relaxed/simple;
+	bh=QGRUCvRhLj/TwbX4dQMKGketmqckWUD9lEEl/Hr0Xm0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LbHnYDntefNCA+5j5Czg9LuaQE0Da2Wmcq4U3zc5XcJ+6HkrTlIZ2e4MPdi/X8NXkz+FPeOyqfwv+xBaEXzjdmx7rJcJRA4YiIvK0PUTcjEmPAd6WCxJjJApHhd3UU9bsfEtLO4c9P13nJef3JXR1Xn4Zt5Fmlz+BbbPRvkQvVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YiLnhQ3o; arc=none smtp.client-ip=192.198.163.12
+	 MIME-Version; b=WZ+zPLate76lz+pQf+r+SQoQ6OQ4A6pWIw4jAlp52BbW37KVuYGtnmax1IvA2V1jQboQzn4wQNL8JICYmgdy3HLk3uoR6IfuLiBPFQ/AQ3OoOU8RGxf1vpRqGt/Kt0IYNfAx5zySIc3GJnE/1I8dQFE/I7NRJcyOAhS+NHHcFDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D8mRZTQM; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763046179; x=1794582179;
+  t=1763046181; x=1794582181;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=GOmlU8+AxY4qiyUG0euFaX4L/EDMDObrk8lwMAMh1Z8=;
-  b=YiLnhQ3otwj+Bhyk6lMOGhMM8k0i9kJJ3XTuEbUmt/CAMg63EUE2EmoR
-   AVL7Pmlj7QCx7ACahUlxSXKbM8RJqVNQzV1x11jQJyvDH/X8AZXHNzsl6
-   s1PwIbu7WzELbUTqKSLT9JuU7DinhYKCXDVKHeJMFM/7RVZt8Xw5zPUPx
-   GqCBfN4RGLUHKCNIda0tqNlhSWSbALgNmyUeSxddn+ZnGSux3WFFcAKeQ
-   UY3Y2lg08QflNsvA1O4x2+GKxYUYGMjyUXmn676K9fgXaJ8L/NqS55gJA
-   vM9H6rb9LgcyXd9uu4iCDXnAwaREt/V+8QhUCloHBAk7sBY1M3Okfodhh
-   w==;
-X-CSE-ConnectionGUID: dPPbA7yHQD+SUvfzN9YWEg==
-X-CSE-MsgGUID: qPs7wU40T+uH/HgdCEXz6g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="68991740"
+  bh=QGRUCvRhLj/TwbX4dQMKGketmqckWUD9lEEl/Hr0Xm0=;
+  b=D8mRZTQM1ZWGgj4agkipRoDo1FK3IsPGjkTn0j2HgWIcYRFZGZGGMiqx
+   ha54RcIVB6ptmcdZDTWBfCXvuHZ9y6JF+FkNvSnBhwd1aw7NgdeBdlUCJ
+   w+WDeGJ0HHuppRMKe8iUaHHUeyMxxkDymbi9ZsKaPFSJ3Lp9ajBA+8puQ
+   571r950Vi7fSnqk2wPkLQCcfuCIteNDs9+FNtGN3mKUOgQAbwYyZBPQej
+   0d3Ne1slvgJw9itwT8hFle7ukVyYtS+uzrpfO62P9b7YkuDcEZeCp0UTj
+   X6bfGexJT2P8jEFOdOLuTCYAfLEarLahN/tCfFcrGEqihVMSrAWK7//uE
+   A==;
+X-CSE-ConnectionGUID: nYOKn3nXRdOgpieVXD1F9w==
+X-CSE-MsgGUID: 138i8fEZQ4OJsCgK45Yl0w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="68991762"
 X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="68991740"
+   d="scan'208";a="68991762"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 07:02:58 -0800
-X-CSE-ConnectionGUID: VoHVivOhTuuJ8F2T91fvwQ==
-X-CSE-MsgGUID: aM4vg+x7RCGNGIIJNMHExw==
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 07:03:00 -0800
+X-CSE-ConnectionGUID: 5CUhbO4uTiu+bkjCSEH4EQ==
+X-CSE-MsgGUID: YAzCFLIJQGOxDYsCfcVI5g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="188810329"
+   d="scan'208";a="188810343"
 Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa010.jf.intel.com with ESMTP; 13 Nov 2025 07:02:48 -0800
+  by orviesa010.jf.intel.com with ESMTP; 13 Nov 2025 07:02:50 -0800
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 6DC70A7; Thu, 13 Nov 2025 16:02:19 +0100 (CET)
+	id 74964A8; Thu, 13 Nov 2025 16:02:19 +0100 (CET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Corey Minyard <corey@minyard.net>,
 	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
@@ -154,9 +154,9 @@ Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v3 17/21] ptp: ocp: Switch to use %ptSp
-Date: Thu, 13 Nov 2025 15:32:31 +0100
-Message-ID: <20251113150217.3030010-18-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 18/21] s390/dasd: Switch to use %ptSp
+Date: Thu, 13 Nov 2025 15:32:32 +0100
+Message-ID: <20251113150217.3030010-19-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
 References: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
@@ -171,48 +171,25 @@ Content-Transfer-Encoding: 8bit
 Use %ptSp instead of open coded variants to print content of
 struct timespec64 in human readable format.
 
-While at it, fix wrong use of %ptT against struct timespec64.
-It's kinda lucky that it worked just because the first member
-there 64-bit and it's of time64_t type. Now with %ptS it may
-be used correctly.
-
-Acked-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/ptp/ptp_ocp.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ drivers/s390/block/dasd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-index eeebe4d149f7..21a8109fae34 100644
---- a/drivers/ptp/ptp_ocp.c
-+++ b/drivers/ptp/ptp_ocp.c
-@@ -4293,11 +4293,9 @@ ptp_ocp_summary_show(struct seq_file *s, void *data)
- 		ns += (s64)bp->utc_tai_offset * NSEC_PER_SEC;
- 		sys_ts = ns_to_timespec64(ns);
- 
--		seq_printf(s, "%7s: %lld.%ld == %ptT TAI\n", "PHC",
--			   ts.tv_sec, ts.tv_nsec, &ts);
--		seq_printf(s, "%7s: %lld.%ld == %ptT UTC offset %d\n", "SYS",
--			   sys_ts.tv_sec, sys_ts.tv_nsec, &sys_ts,
--			   bp->utc_tai_offset);
-+		seq_printf(s, "%7s: %ptSp == %ptS TAI\n", "PHC", &ts, &ts);
-+		seq_printf(s, "%7s: %ptSp == %ptS UTC offset %d\n", "SYS",
-+			   &sys_ts, &sys_ts, bp->utc_tai_offset);
- 		seq_printf(s, "%7s: PHC:SYS offset: %lld  window: %lld\n", "",
- 			   timespec64_to_ns(&ts) - ns,
- 			   post_ns - pre_ns);
-@@ -4505,9 +4503,8 @@ ptp_ocp_phc_info(struct ptp_ocp *bp)
- 		 ptp_clock_index(bp->ptp));
- 
- 	if (!ptp_ocp_gettimex(&bp->ptp_info, &ts, NULL))
--		dev_info(&bp->pdev->dev, "Time: %lld.%ld, %s\n",
--			 ts.tv_sec, ts.tv_nsec,
--			 bp->sync ? "in-sync" : "UNSYNCED");
-+		dev_info(&bp->pdev->dev, "Time: %ptSp, %s\n",
-+			 &ts, bp->sync ? "in-sync" : "UNSYNCED");
- }
- 
- static void
+diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
+index 7765e40f7cea..97dcc70f669e 100644
+--- a/drivers/s390/block/dasd.c
++++ b/drivers/s390/block/dasd.c
+@@ -974,8 +974,7 @@ static void dasd_stats_array(struct seq_file *m, unsigned int *array)
+ static void dasd_stats_seq_print(struct seq_file *m,
+ 				 struct dasd_profile_info *data)
+ {
+-	seq_printf(m, "start_time %lld.%09ld\n",
+-		   (s64)data->starttod.tv_sec, data->starttod.tv_nsec);
++	seq_printf(m, "start_time %ptSp\n", &data->starttod);
+ 	seq_printf(m, "total_requests %u\n", data->dasd_io_reqs);
+ 	seq_printf(m, "total_sectors %u\n", data->dasd_io_sects);
+ 	seq_printf(m, "total_pav %u\n", data->dasd_io_alias);
 -- 
 2.50.1
 
