@@ -1,211 +1,215 @@
-Return-Path: <linux-pci+bounces-41092-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41090-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A407C57F2E
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 15:30:26 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 165A1C57EB2
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 15:25:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C5A7E34DAFF
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 14:26:36 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8A47C4EAB76
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 14:19:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3FAA28C854;
-	Thu, 13 Nov 2025 14:26:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 001FE283129;
+	Thu, 13 Nov 2025 14:19:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="ew70EQT5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HKPoZDzj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C22C289367
-	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 14:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55A926D4DD
+	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 14:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763043991; cv=none; b=EewHIRVf3ps3kBDJPpfheQTr3UzTMz9+Sl8tPqcSrFiFqOOdtGMYg3rk4w3SblYPY03XEKbpIf+/0gamyZkg/UHvATbq0BE2mn5+2pIaaXUATHe/8Yck0bH2WSC0JLfQkQZAfjHzGIxZGK7AFq3C49DCDAYXgmKrfkV1jKtYtpY=
+	t=1763043561; cv=none; b=VMsCGd2lbyexsHaWhw0HBA8unk9bRS+LprOdsF4xie6lp8Wkv1OBvYKPd6f0RqOXTJCVAAr5dUQoAN3Ssi2duLItGWCkHP1Ox6+F1+VAZR4xlj+R3iReCDZ+UafS7mXwq+j1OgZFwNQFIKNegBl5XNGJgjmLLz8/UK9xrIfRuPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763043991; c=relaxed/simple;
-	bh=pEtsXEYDUVwFnZGZDZwf6LQ8RdbFl0B6scfu0LRUXU4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jLdlie4gt3U0lZiSAaA+IEHCkWfybFe3vx481QZjfduqbPNMMednYedV/zXJxDbXujltICnvcDGj52aYwp7jsFFiBRJ4NujWG9M14DvwQBtnhbZgH6RnMrPyj5R+R6LbzCo+9IQxrCt6UUmpFDW6NKcBs8KyGNqKng7YK3wlsME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=ew70EQT5; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id EC24F240028
-	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 15:17:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de; s=2017;
-	t=1763043457; bh=adBBVnRsn7HOZmzACpymK40j8Veheszabl7lrdMc79A=;
-	h=Message-ID:Subject:From:To:Cc:Date:Autocrypt:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version:OpenPGP:From;
-	b=ew70EQT52cJdMgXCXLOLor/H/VLZGG3bz/CZ83Wu+R/5Q5MLsdzoat8QBWz8d4+bI
-	 wIRTwCmtKi/JVSwLUyCbIQSWcIAyeJAD/fuCr/30NEum8KpBK0HT2aQo7lKrHF5qv6
-	 g7zU3R/6idx9cJAcqMqPZJPp42OkL8hfHAKDCZEZTFhT9tkwEzoe/DttLqClB9RbdL
-	 6qSwPuuIcnH/bfOFeKb1WB0JG9shLP45xENrlC0Xzbz6JOUeajOwf4IsDAlKPEisX3
-	 k4FysbpxZ6DvLWu6Wz5hIpySSEYE7QfI9B4xvF63lG0QJrbOZy5JJ3NafuXp+kJJly
-	 VwNp3mDJytCAg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4d6j5p2CqVz6trs;
-	Thu, 13 Nov 2025 15:17:34 +0100 (CET)
-Message-ID: <ce0b823830c8477b723fb8d6ee0166e5b5848fa0.camel@posteo.de>
-Subject: Re: [PATCH v7 0/2] rust: leds: add led classdev abstractions
-From: Markus Probst <markus.probst@posteo.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miguel Ojeda
-	 <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Danilo Krummrich
-	 <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Lee Jones
-	 <lee@kernel.org>, Pavel Machek <pavel@kernel.org>
-Cc: Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-  Leon Romanovsky	 <leon@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, 	bjorn3_gh@protonmail.com, Benno Lossin
- <lossin@kernel.org>, Andreas Hindborg	 <a.hindborg@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, Trevor Gross	 <tmgross@umich.edu>, Bjorn Helgaas
- <bhelgaas@google.com>, Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=	
- <kwilczynski@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-leds@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Thu, 13 Nov 2025 14:17:36 +0000
-In-Reply-To: <20251027200547.1038967-1-markus.probst@posteo.de>
-References: <20251027200547.1038967-1-markus.probst@posteo.de>
-Autocrypt: addr=markus.probst@posteo.de; prefer-encrypt=mutual;
- keydata=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
- R3rOFHA==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1763043561; c=relaxed/simple;
+	bh=+60GxZqo7W68nBsBK+4RC1waiWGLnIxNTQPjNx2YCXQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wdd0H2wcy3vmlb95v3BJPTK6Q4f6iEu1BEfqBtUe3evGMMdZELB2Pd1hxOJdGj+zUKNkazugi7eMnIaJsXvyHusML4lLcSu0hGVl1E8Dwfml3Mrnirf3jkLm4+5lilSRncBy5688O95+Vfaa7JQH982ogdgMgB33OEFfNl0FEms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HKPoZDzj; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-640aa1445c3so1445215a12.1
+        for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 06:19:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1763043558; x=1763648358; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8gGk2esZ3TPP+U/Xv/QDaG4ohk1EPYMCao+ua5Ut7t0=;
+        b=HKPoZDzjuucpsOnDVeeX5FEffNZmMkEhlZUPhNbufPgXC5bim6wpOygxs3qsKJOIHJ
+         wAAMT8FZ2Zo/xn2Cp7pNHcDqfbtUq2T8+W81lsRmpBy6AAjYPHFHVfV+6y2wwYCxGoFU
+         INo2jKqULR2PwHyeRV2G36PZnv1r2U17qcToy1s3gSRNsvSKBJL/VBMzpLyJCT9P8Hfm
+         s/FnpM2JQu+lcRgugPqYBibi15c3j909O73bjmBPdR7ddIwrilS2d8KNJne3FYhvEgCO
+         wdpZF4HYeas5hoFFpQbTcjLfNm+dKzg13JMYkzfvFG1Kb1gjo/bjYK5X/prLBvbIOQIt
+         SVXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763043558; x=1763648358;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8gGk2esZ3TPP+U/Xv/QDaG4ohk1EPYMCao+ua5Ut7t0=;
+        b=IdxnGjcJHmyDAx/Mv7Jj/lEffUODXkoWkMKugIsGTYjVmocHyPYGCRiNkrGd3m2GjO
+         vA07eKyy+SleQqG4QSjvFhwM6kZ0h1k8JpSS7lBg6KB8Zh4uobFfuZQzBrLIHRv8qJB1
+         suTUgnlSnHNriDUZqF4FkD5C4uFhbiDkjrCYpxl5bzLJ3YNbKOFIIwTyNBQ8clxQRw3N
+         4E2PgK5N0TXKSZ/eyV4lyK/kGXhswXXhh4mu6VEhh5rVQfTt423dmhDjAAjjzaxojKxk
+         VGSOCG5kcU9X10cA6IJVYjXnjYrjlu2G/oTxYnu8Cd/gkc6mjoSEh283DWkPZkww+i9M
+         XZIg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLr+GQJzHusZv8Dc7rvTq6dkluW2Pa3Hhq5EoOcEGR7zrHz8ESWWBm0gH08D72X2eXxQkLKu4unSI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7PI8eKRZZj4YOumPgDwwcuFjqIwFLIGhXD1PL3qbFtrBeOM5p
+	oRIy1Dxt0WOR9DDmvWYXuoO9jXPm8VAlaHxMWFtpqGkWSLqf8vQmuE2daPFtf5TGoaaCVxwAFVg
+	YNijZBY3EFXhYc/Jddf+p4OUk4+2jxJC0gb6i2GNuzQ==
+X-Gm-Gg: ASbGncvoay2UVz/FC58efgnO1bR9eoQly3MxAdsUXQH073L7Kg8+6vQq8YCw6he1nW7
+	8kkSniVuORHQ2gAM32AFEvfhXwLXedpbkpTPCgSsZQkJPwMAXcgpzJpP3Umi+9wKm6PeIHLOlOv
+	grn/fV7UuuBqRtvR4H/kuF/Px48WBAB8/j6LRU/bIwu7+luAERmZztUB37SzdVxqN+NP+dn8R0x
+	7H5nfRAwOYbl2Ew5GjMXaUvg1vtmUKWq2KFfc+9YfuTJIEHJd0agSJLf/eWtJhRamggx91kLmIs
+	xcqu7RYrA+hlFw==
+X-Google-Smtp-Source: AGHT+IEk4ZuVDBz3u+9Uv4/zJfB1Emeu9cNMcz6aWafXiAHCM1K8SOZabMAhPk/X3XNWJIyPPXn256y5U9W+nbjKzzM=
+X-Received: by 2002:a05:6402:27c6:b0:640:95e2:cd17 with SMTP id
+ 4fb4d7f45d1cf-6431a57e355mr5833525a12.36.1763043558031; Thu, 13 Nov 2025
+ 06:19:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-OpenPGP: url=https://posteo.de/keys/markus.probst@posteo.de.asc; preference=encrypt
+References: <20251110173334.234303-1-vincent.guittot@linaro.org>
+ <20251110173334.234303-2-vincent.guittot@linaro.org> <aRIn1COnQG6Mz27j@lizhi-Precision-Tower-5810>
+In-Reply-To: <aRIn1COnQG6Mz27j@lizhi-Precision-Tower-5810>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Thu, 13 Nov 2025 15:19:06 +0100
+X-Gm-Features: AWmQ_bn4_FBV_0kJ1ugPYoCrbCQQh9T4qf5dxZ1Dk01YEW7NuCgTcJxJ5cXExLg
+Message-ID: <CAKfTPtBT6qT2zC8toUOEFD_ZkJPBMJgZrZc2NCAFSUXANYJ==Q@mail.gmail.com>
+Subject: Re: [PATCH 1/4 v4] dt-bindings: PCI: s32g: Add NXP PCIe controller
+To: Frank Li <Frank.li@nxp.com>
+Cc: chester62515@gmail.com, mbrugger@suse.com, ghennadi.procopciuc@oss.nxp.com, 
+	s32@nxp.com, bhelgaas@google.com, jingoohan1@gmail.com, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, Ionut.Vicovan@nxp.com, larisa.grigore@nxp.com, 
+	ciprianmarian.costea@nxp.com, bogdan.hamciuc@nxp.com, 
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	cassel@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 2025-10-27 at 20:06 +0000, Markus Probst wrote:
-> This patch series has previously been contained in
-> https://lore.kernel.org/rust-for-linux/20251008181027.662616-1-markus.pro=
-bst@posteo.de/T/#t
-> which added a rust written led driver for a microcontroller via i2c.
->=20
-> As the reading and writing to the i2c client via the register!
-> macro has not been implemented yet [1], the patch series will only
-> contain the additional abstractions required.
->=20
-> [1] https://lore.kernel.org/rust-for-linux/DDDS2V0V2NVJ.16ZKXCKUA1HUV@ker=
-nel.org/
->=20
-> The following changes were made:
-> * add abstraction to convert a device reference to a bus device
->   reference for use in class device callbacks
->=20
-> * add basic led classdev abstractions to register and unregister leds
->=20
-> Changes since v6:
-> * fixed typos
-> * improved documentation
->=20
-> Changes since v5:
-> * rename `IntoBusDevice` trait into `AsBusDevice`
-> * fix documentation about `LedOps::BLOCKING`
-> * removed dependency on i2c bindings
-> * added `AsBusDevice` implementation for `platform::Device`
-> * removed `device::Device` fallback implementation
-> * document that `AsBusDevice` must not be used by drivers and is
->   intended for bus and class device abstractions only.
->=20
-> Changes since v4:
-> * add abstraction to convert a device reference to a bus device
->   reference
-> * require the bus device as parent device and provide it in class device
->   callbacks
-> * remove Pin<Vec<_>> abstraction (as not relevant for the led
->   abstractions)
-> * fixed formatting in `led::Device::new`
-> * fixed `LedOps::BLOCKING` did the inverse effect
->=20
-> Changes since v3:
-> * fixed kunit tests failing because of example in documentation
->=20
-> Changes since v2:
-> * return `Devres` on `led::Device` creation
-> * replace KBox<T> with T in struct definition
-> * increment and decrement reference-count of fwnode
-> * make a device parent mandatory for led classdev creation
-> * rename `led::Handler` to `led::LedOps`
-> * add optional `brightness_get` function to `led::LedOps`
-> * use `#[vtable]` instead of `const BLINK: bool`
-> * use `Opaque::cast_from` instead of casting a pointer
-> * improve documentation
-> * improve support for older rust versions
-> * use `&Device<Bound>` for parent
->=20
-> Changes since v1:
-> * fixed typos noticed by Onur =C3=96zkan
->=20
-> Markus Probst (2):
->   rust: Add trait to convert a device reference to a bus device
->     reference
->   rust: leds: add basic led classdev abstractions
->=20
-> Markus Probst (2):
->   rust: Add trait to convert a device reference to a bus device
->     reference
->   rust: leds: add basic led classdev abstractions
+On Mon, 10 Nov 2025 at 18:59, Frank Li <Frank.li@nxp.com> wrote:
+>
+> On Mon, Nov 10, 2025 at 06:33:31PM +0100, Vincent Guittot wrote:
+> > Describe the PCIe host controller available on the S32G platforms.
+> >
+> > Co-developed-by: Ionut Vicovan <Ionut.Vicovan@nxp.com>
+> > Signed-off-by: Ionut Vicovan <Ionut.Vicovan@nxp.com>
+> > Co-developed-by: Bogdan-Gabriel Roman <bogdan-gabriel.roman@nxp.com>
+> > Signed-off-by: Bogdan-Gabriel Roman <bogdan-gabriel.roman@nxp.com>
+> > Co-developed-by: Larisa Grigore <larisa.grigore@nxp.com>
+> > Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
+> > Co-developed-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
+> > Signed-off-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
+> > Co-developed-by: Ciprian Marian Costea <ciprianmarian.costea@nxp.com>
+> > Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@nxp.com>
+> > Co-developed-by: Bogdan Hamciuc <bogdan.hamciuc@nxp.com>
+> > Signed-off-by: Bogdan Hamciuc <bogdan.hamciuc@nxp.com>
+> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > ---
+> >  .../bindings/pci/nxp,s32g-pcie.yaml           | 130 ++++++++++++++++++
+> >  1 file changed, 130 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/nxp,s32g-pcie.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/nxp,s32g-pcie.yaml b/Documentation/devicetree/bindings/pci/nxp,s32g-pcie.yaml
+> > new file mode 100644
+> > index 000000000000..6077c251c2cd
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/nxp,s32g-pcie.yaml
+> > @@ -0,0 +1,130 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pci/nxp,s32g-pcie.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: NXP S32G2xxx/S32G3xxx PCIe Root Complex controller
+> > +
+> > +maintainers:
+> > +  - Bogdan Hamciuc <bogdan.hamciuc@nxp.com>
+> > +  - Ionut Vicovan <ionut.vicovan@nxp.com>
+> > +
+> > +description:
+> > +  This PCIe controller is based on the Synopsys DesignWare PCIe IP.
+> > +  The S32G SoC family has two PCIe controllers, which can be configured as
+> > +  either Root Complex or Endpoint.
+> > +
+> > +allOf:
+> > +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+>
+> Suggest move allOf after required, in case add if-else branch later.
 
-Hi,
+okay
+>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - enum:
+> > +          - nxp,s32g2-pcie
+> > +      - items:
+> > +          - const: nxp,s32g3-pcie
+> > +          - const: nxp,s32g2-pcie
+> > +
+> > +  reg:
+> > +    maxItems: 6
+> > +
+> > +  reg-names:
+> > +    items:
+> > +      - const: dbi
+> > +      - const: dbi2
+> > +      - const: atu
+> > +      - const: dma
+> > +      - const: ctrl
+> > +      - const: config
+> > +
+> > +  interrupts:
+> > +    maxItems: 2
+>
+> Need match interrupt-names's restriction
+>
+>       minItems: 1
+>       maxItems: 2
 
-So you know in advance, I will add a 3. patch for multicolor led
-classdev abstractions (drivers/leds/led-class-multicolor.c,
-include/linux/led-class-multicolor.h) to this patch series.
+Yes
 
-In the atmega1608 led driver (the user of these abstractions) there are
-leds with different colors that share the same slot.
-Technically "drivers/leds/rgb/leds-group-multicolor.c" could be used in
-combination with single color leds instead, but then hardware
-accelerated blinking wouldn't be supported. I think it would make more
-sense to directly implement it in the driver.
+>
+> > +
+> > +  interrupt-names:
+> > +    items:
+> > +      - const: msi
+> > +      - const: dma
+> > +    minItems: 1
+> > +
+> ...
+> > +
+> > +        pcie@40400000 {
+> > +            compatible = "nxp,s32g3-pcie",
+> > +                         "nxp,s32g2-pcie";
+>
+> put to one line to save LOC.
 
-The existing 2 patches shouldn't change, so feel free to review them.
+Okay
 
-Thanks
-- Markus Probst
-
->=20
->  rust/kernel/auxiliary.rs |   7 +
->  rust/kernel/device.rs    |  33 ++++
->  rust/kernel/led.rs       | 375 +++++++++++++++++++++++++++++++++++++++
->  rust/kernel/lib.rs       |   1 +
->  rust/kernel/pci.rs       |   7 +
->  rust/kernel/platform.rs  |   7 +
->  rust/kernel/usb.rs       |   6 +
->  7 files changed, 436 insertions(+)
->  create mode 100644 rust/kernel/led.rs
+>
+> Frank
+> > +            reg = <0x00 0x40400000 0x0 0x00001000>,   /* dbi registers */
+> > +                  <0x00 0x40420000 0x0 0x00001000>,   /* dbi2 registers */
+> > +                  <0x00 0x40460000 0x0 0x00001000>,   /* atu registers */
+> > +                  <0x00 0x40470000 0x0 0x00001000>,   /* dma registers */
+> > +                  <0x00 0x40481000 0x0 0x000000f8>,   /* ctrl registers */
+> > +                  <0x5f 0xffffe000 0x0 0x00002000>;   /* config space */
+> ...
+> > +            };
+> > +        };
+> > +    };
+> > --
+> > 2.43.0
+> >
 
