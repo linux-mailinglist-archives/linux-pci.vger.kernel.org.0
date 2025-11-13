@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-41102-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41099-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8534FC58439
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:15:00 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85F39C58352
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:07:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A4614358D19
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 15:07:51 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1BFBF4E74A6
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 15:05:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81CF52FC010;
-	Thu, 13 Nov 2025 15:02:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8721F2F49FC;
+	Thu, 13 Nov 2025 15:02:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SIB4YErO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I2MNAVlR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077562E9749;
-	Thu, 13 Nov 2025 15:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CFA2EE60B;
+	Thu, 13 Nov 2025 15:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763046174; cv=none; b=PM7vIoFNiUGnbIBVE0W69lOwKYLcrzUZPU5jNXFszJus2OlFdJtPs4AiSzdgHI/fZ1smS8HcuVNQ7SQBio5Hv93NDW7kAKBIFnbYux2dn9E9ndpWKwkXe0GFuMRxJ3oLRdZG6Fv7FVE2XdYnwO908GouYmM8TwgPenouiCA809o=
+	t=1763046168; cv=none; b=TFZT+HTs6k79jnT77BZAQKPQpfQy20b8G/9XEOT1+mGkTFftZJFd4f5JETNdILybpjip5IG4WLveUVCB734/a6SZlCzZ+Cu5R4h+nhsAfw1mz7gGH4RIV1lV5PQVfOiSpzQFPhHdnN+5Ajg3wb2vSPYqN+V+l/jzVfqtQ6Nri+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763046174; c=relaxed/simple;
-	bh=jhQAb/y0XW4Cp8ya1S6FBNc1pzeLrYTXe+I39wWdlNQ=;
+	s=arc-20240116; t=1763046168; c=relaxed/simple;
+	bh=Re9XzxeVgaRpFu9Nr8p7rXjuLRXS6TBbrXT9/XQ7Zd0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PKsJa+BjO1pfv/5AjKnKt8JyjapdCF9ar2B36n1zQMwOHXWHTT4OTtX7wIY34grYYHxojydqocdI7XJ48E0P7SBBZK4FH2yPw787a5P9XJjvcs9v4Q+b7GetaCSwg8sggBsUmZY88pP2DJsPVCQJgSwX52i38z2NsxE3DLlxcC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SIB4YErO; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=o/4MBj9MVlzD2OrhtXKji0D17zg08Cztjn0VtgRvb3qBZdnHXbuyAZjLqhVKHAP0DOjyyElG6Ty+Lu0lPGPkvpg8ekuz6+Z5hM0R/oAp/WKX6cyAcySzaPU/MVAr2OCW0etLJrNtAN+qympaKiX39QsP5qyZFi7s67nIpiy6VLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I2MNAVlR; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763046171; x=1794582171;
+  t=1763046167; x=1794582167;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jhQAb/y0XW4Cp8ya1S6FBNc1pzeLrYTXe+I39wWdlNQ=;
-  b=SIB4YErOekT7+Q/zdzMAtYe6hQ9hv83L1PiAbYii18DVLvcmq45gC8Sf
-   JmEtOod/93WIjHnfjQnnqu2Yhu9ON8GyX3AllTz9Q9CEf/0pVSS1AxpEh
-   XdIE1LttP89+8tImqeUsfqOX/RnkE6EcxqLTu7PbmoGw197+pyDfKNYQF
-   OLtH83VUcWYEEFUVtqco+7aeDYhLyBJSI1kXsEzHeZfPb7Q7ZP783lnZ9
-   Zu+BzKSXxNG5YU0KoEstaCH7Qz5p5geJu3SJqLzmrh/anFKcsJdbaY3LM
-   MNd4TckjhKlCJMoUs4mjvR8EdUd10XhMVqmZr3W9qIGChkw6cldL0PyCO
-   g==;
-X-CSE-ConnectionGUID: yukiW0iYTa2Tal0tE5EAZw==
-X-CSE-MsgGUID: lI8iBzsrTOyp1Hj5y4N44A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="65054187"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="65054187"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 07:02:46 -0800
-X-CSE-ConnectionGUID: WU/yiIdnT0O1Qw74SR8zbA==
-X-CSE-MsgGUID: zYVOcnDCRgSmt0uZMzxNsw==
+  bh=Re9XzxeVgaRpFu9Nr8p7rXjuLRXS6TBbrXT9/XQ7Zd0=;
+  b=I2MNAVlRDoKdmJBnttD93YH6ed3G7W4lo+X4itkRH8gxsHXOlh4HC49R
+   t5j1PAsLOqwKsS4TV/43DUTqr4yWcWyMfwKQQJO4s8K581h34A7yKsonj
+   nKDDdefFW2HDzxTT1y03v+1s9TtUo4gA/H60tub1yWKoPxSZUGQXNYl6H
+   QYKBZbiVL5jCPIK7B3FdKFO4VvA0Y3lxhf4D6oOj4OC5oALqa4I39QBxj
+   4dry1fYGY8ur0c/vCeM2nAeBYfgNhJ/TLKzhCWUmcKLbKmQ696P6GDWKE
+   A2lp7Cc2iofkvFEU3/TI/1mvQixOKXoL2GVRL4sddGgDKULmQpXCUUkPE
+   A==;
+X-CSE-ConnectionGUID: GqXYUylZRUC2AY4Z47Kb1g==
+X-CSE-MsgGUID: 9+MWZn3sTaCn2sFWpCDE2A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="68991564"
+X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
+   d="scan'208";a="68991564"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 07:02:42 -0800
+X-CSE-ConnectionGUID: jgz+n6WVTPmKrN1pNQhPJg==
+X-CSE-MsgGUID: Pq6wVSdiTx2MefzRsMnAQg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="220324902"
+   d="scan'208";a="188810239"
 Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa001.fm.intel.com with ESMTP; 13 Nov 2025 07:02:32 -0800
+  by orviesa010.jf.intel.com with ESMTP; 13 Nov 2025 07:02:33 -0800
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 206FD9B; Thu, 13 Nov 2025 16:02:19 +0100 (CET)
+	id 270F09C; Thu, 13 Nov 2025 16:02:19 +0100 (CET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Corey Minyard <corey@minyard.net>,
 	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
@@ -154,9 +154,9 @@ Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v3 05/21] drm/amdgpu: Switch to use %ptSp
-Date: Thu, 13 Nov 2025 15:32:19 +0100
-Message-ID: <20251113150217.3030010-6-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 06/21] drm/msm: Switch to use %ptSp
+Date: Thu, 13 Nov 2025 15:32:20 +0100
+Message-ID: <20251113150217.3030010-7-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
 References: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
@@ -171,26 +171,40 @@ Content-Transfer-Encoding: 8bit
 Use %ptSp instead of open coded variants to print content of
 struct timespec64 in human readable format.
 
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/msm/disp/msm_disp_snapshot_util.c | 3 +--
+ drivers/gpu/drm/msm/msm_gpu.c                     | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c
-index 8a026bc9ea44..4e2fe6674db8 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c
-@@ -217,8 +217,7 @@ amdgpu_devcoredump_read(char *buffer, loff_t offset, size_t count,
- 	drm_printf(&p, "version: " AMDGPU_COREDUMP_VERSION "\n");
+diff --git a/drivers/gpu/drm/msm/disp/msm_disp_snapshot_util.c b/drivers/gpu/drm/msm/disp/msm_disp_snapshot_util.c
+index 071bcdea80f7..19b470968f4d 100644
+--- a/drivers/gpu/drm/msm/disp/msm_disp_snapshot_util.c
++++ b/drivers/gpu/drm/msm/disp/msm_disp_snapshot_util.c
+@@ -82,8 +82,7 @@ void msm_disp_state_print(struct msm_disp_state *state, struct drm_printer *p)
+ 	drm_printf(p, "kernel: " UTS_RELEASE "\n");
+ 	drm_printf(p, "module: " KBUILD_MODNAME "\n");
+ 	drm_printf(p, "dpu devcoredump\n");
+-	drm_printf(p, "time: %lld.%09ld\n",
+-		state->time.tv_sec, state->time.tv_nsec);
++	drm_printf(p, "time: %ptSp\n", &state->time);
+ 
+ 	list_for_each_entry_safe(block, tmp, &state->blocks, node) {
+ 		drm_printf(p, "====================%s================\n", block->name);
+diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+index 17759abc46d7..a4251afe4541 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -197,8 +197,7 @@ static ssize_t msm_gpu_devcoredump_read(char *buffer, loff_t offset,
+ 	drm_printf(&p, "---\n");
  	drm_printf(&p, "kernel: " UTS_RELEASE "\n");
  	drm_printf(&p, "module: " KBUILD_MODNAME "\n");
--	drm_printf(&p, "time: %lld.%09ld\n", coredump->reset_time.tv_sec,
--		   coredump->reset_time.tv_nsec);
-+	drm_printf(&p, "time: %ptSp\n", &coredump->reset_time);
- 
- 	if (coredump->reset_task_info.task.pid)
- 		drm_printf(&p, "process_name: %s PID: %d\n",
+-	drm_printf(&p, "time: %lld.%09ld\n",
+-		state->time.tv_sec, state->time.tv_nsec);
++	drm_printf(&p, "time: %ptSp\n", &state->time);
+ 	if (state->comm)
+ 		drm_printf(&p, "comm: %s\n", state->comm);
+ 	if (state->cmd)
 -- 
 2.50.1
 
