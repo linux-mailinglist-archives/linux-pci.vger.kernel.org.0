@@ -1,75 +1,96 @@
-Return-Path: <linux-pci+bounces-41071-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41072-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95AB9C56575
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 09:45:56 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76626C569BE
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 10:34:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C3703B509F
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 08:45:39 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9DF964EAB52
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 09:27:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63D512DC352;
-	Thu, 13 Nov 2025 08:45:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CCB02DAFB9;
+	Thu, 13 Nov 2025 09:27:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="no1+SRZj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XOc2CDFs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012055.outbound.protection.outlook.com [40.107.209.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C022C21EC;
-	Thu, 13 Nov 2025 08:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763023535; cv=none; b=Ro6ZifmTCJJCp4JQQ8QFlUGCLdx+Km0BztERYAxNL/+o8Syuu66QsoTkjNm0/3MmXTjJsMeP7VWidgNNM+vEWMKmHV0kAR2xPjeyKLfJXva9tlPXa8F5d4UhQ2Y5+H2+p2kTH5cd+JmuuBzrAP3x+GvHiFzSi0JzSkQkS6rXynA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763023535; c=relaxed/simple;
-	bh=yZH1UkLt0oe2VEji1eEQrjQIwX753ewx3YaYtlAQDm8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OIUZYbWE5QL/xGYf8AsIni64LZ9HrK7Dn414WHPGUna2E/26VEwYRQjF0w8ruO3mX1193wVEommC6OmU5jKbPu1M1Hs4dCm3PcHclcp6v5CK68ukyzle+RaW3yFJ272egGOZ/lsoVLGMPrBg2gynJNs2oD1VH9nBZaMEfMHX9ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=no1+SRZj; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-X-UUID: 165206a8c06d11f0b33aeb1e7f16c2b6-20251113
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=hu479yPj8wbBYx+WzD14ywVL3ZHRcGR0GXGR0sSeAEc=;
-	b=no1+SRZjdc/QUFWioe22TRkQGQhriQgNN9Jl5sYCj/hq5s4ssmuqhewIVi2UZPLTO5LNlZmgZgxupT6MfArZQDiZMOyylon755lX9/DwrcuePbOAlH7p5HyRDttdxVI7BlBajI5GAfjXlWIV+aLJ68PVDW5ap3U87mKcxoyVXZo=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:5d9dc6a4-b194-43e4-a3ff-a566a2fdc45f,IP:0,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:-5
-X-CID-META: VersionHash:a9d874c,CLOUDID:983dda57-17e4-43d2-bf73-55337eed999a,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102|836|888|898,TC:-5,Content:0|15|5
-	0,EDM:-3,IP:nil,URL:0,File:130,RT:0,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
-	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 165206a8c06d11f0b33aeb1e7f16c2b6-20251113
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw02.mediatek.com
-	(envelope-from <johnny-cc.chang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 548567511; Thu, 13 Nov 2025 16:45:20 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26; Thu, 13 Nov 2025 16:45:19 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1748.26 via Frontend Transport; Thu, 13 Nov 2025 16:45:19 +0800
-From: Johnny Chang <Johnny-CC.Chang@mediatek.com>
-To: Bjorn Helgaas <bhelgaas@google.com>, Matthias Brugger
-	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<Project_Global_Digits_Upstream_Group@mediatek.com>, Johnny-CC Chang
-	<Johnny-CC.Chang@mediatek.com>
-Subject: [PATCH] PCI: Mark Nvidia GB10 to avoid bus reset
-Date: Thu, 13 Nov 2025 16:44:06 +0800
-Message-ID: <20251113084441.2124737-1-Johnny-CC.Chang@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E2F2D1F7B;
+	Thu, 13 Nov 2025 09:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763026043; cv=fail; b=VMVhNMNtt9wh5QHXNQV8n0KtlcggH4KIgIuoosvv2wvpWGDqZ4VSfjUueneCtKFkfuz771zNfXzin/WVYK7qESWKc6/IL/NFtcDy3cuIJdSh2n3o1N9HVoBvYuDgw6i7xn57CzkPsHy99HM9cB3L5XU4CIXBv/SZAzv8Xq2t2mA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763026043; c=relaxed/simple;
+	bh=tWNN8QIKQBnkrEJpPwtOGkqEBNVgBU/B8i/2JsUrKAs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HRsY5q7Ziv90jkdupJN3Kia+VoYjVyeN9NqoawQdqiU6bFiLSqeJTVubT+GrwncJDsLy0HUkI9+y5IXRbtl2fqmeLFyDIrxTiU8U01K1C+KEZ5sW5HdhtTB1lc/XuFV2u6oTNBjwX2h+NruK/9rAuajnJBfg5VFGmbBsauPsEgA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XOc2CDFs; arc=fail smtp.client-ip=40.107.209.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IHb8CMr35BC+8vNqPzWedotN5NKfyew/zF9adEYfeO9QBXshk+TGiHcdPEzrVnMaN6LwKBrfLkNco+bXFWzKuMEJePN5hysPJc7Fp/7L5e1l+mIcOle1VVjD16zUuunj/UGD3mfJjF7tgkWHGB3ehAsFqCVCtMZXf1Y1G+DOHSTvtreE1/gTAlNE4ggkwWU9ly1+3TWDn9O83ebMz/4TMHYOeGdmUPAkZgvj2IdK0qRRZYK81XMxvMsN/EUixBNq95MQglSA3SKWHgcYzcWtqQhxXtaJQwzBw11iW/StrH4KwXLeFYNkvfSwukE2UQHUhkjJbzR4wdbpu0cEsR1n2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PdRSHxlGS74JO/oURTcuVIbvsA/EO2eZ5Gq9re+VK4k=;
+ b=lBAB9frgWnjjuQJQcvPH44shJtvFIUyoV1R3L+x/bVoIxU8rbXuy6Q1jmb4AaGudYaEDvNaac6Z59y26E62J2oa0Yg6DdmXPtbJfQKeuYoZcRgBgLKA2mn+29phcuxwpxs9pqqXrLfUpzF2xh7bqBzuyEJ0uWU518JiglDN3KEiyhjaaq03DE9R5s1odzj6cXJ2MVy4QDY4nq1h8MXB0HvD9oFR0hiWNSqbQ0rom2DW9rVt+85uuySEMQ0z6H2O2UtPpoQKEs1ZVO+svSUYjRpLZwPIOthbZJ+Gj/3Tn8M46JDZl0+L/bfZktSJxgZj+7y1wgNTb0HG5XxH2KvYvKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 198.47.23.194) smtp.rcpttodomain=lists.infradead.org smtp.mailfrom=ti.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PdRSHxlGS74JO/oURTcuVIbvsA/EO2eZ5Gq9re+VK4k=;
+ b=XOc2CDFsso4ti0uKIRSLoupe7GkyqufxbJcSsdkrDifq9zQ6kFIJLxnaT+MhzsRmBueVVXj105ryKoHx3IGGUiG311Q24rjBOPRufiRzzVB7qSgccsgIbhYnw2BDGVisKzTUOsc1fp9cjH8IhiIIzIe+uczAu0Npl4horaKUNTI=
+Received: from SJ0PR13CA0126.namprd13.prod.outlook.com (2603:10b6:a03:2c6::11)
+ by DM6PR10MB4348.namprd10.prod.outlook.com (2603:10b6:5:21e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.17; Thu, 13 Nov
+ 2025 09:27:12 +0000
+Received: from SJ1PEPF00002313.namprd03.prod.outlook.com
+ (2603:10b6:a03:2c6:cafe::b8) by SJ0PR13CA0126.outlook.office365.com
+ (2603:10b6:a03:2c6::11) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9343.6 via Frontend Transport; Thu,
+ 13 Nov 2025 09:27:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.194)
+ smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
+ action=none header.from=ti.com;
+Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
+ 198.47.23.194 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.23.194; helo=lewvzet200.ext.ti.com; pr=C
+Received: from lewvzet200.ext.ti.com (198.47.23.194) by
+ SJ1PEPF00002313.mail.protection.outlook.com (10.167.242.167) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9320.13 via Frontend Transport; Thu, 13 Nov 2025 09:27:12 +0000
+Received: from DLEE201.ent.ti.com (157.170.170.76) by lewvzet200.ext.ti.com
+ (10.4.14.103) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 13 Nov
+ 2025 03:27:10 -0600
+Received: from DLEE203.ent.ti.com (157.170.170.78) by DLEE201.ent.ti.com
+ (157.170.170.76) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 13 Nov
+ 2025 03:27:09 -0600
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE203.ent.ti.com
+ (157.170.170.78) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
+ Transport; Thu, 13 Nov 2025 03:27:09 -0600
+Received: from toolbox.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.73.74])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5AD9R5TO4193020;
+	Thu, 13 Nov 2025 03:27:06 -0600
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <mani@kernel.org>,
+	<robh@kernel.org>, <bhelgaas@google.com>, <unicorn_wang@outlook.com>,
+	<kishon@kernel.org>
+CC: <arnd@arndb.de>, <stable@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH] PCI: cadence: Kconfig: change PCIE_CADENCE configs from tristate to bool
+Date: Thu, 13 Nov 2025 14:57:20 +0530
+Message-ID: <20251113092721.3757387-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,56 +99,102 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-MTK: N
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002313:EE_|DM6PR10MB4348:EE_
+X-MS-Office365-Filtering-Correlation-Id: b06bf77e-baad-484e-2884-08de2296d381
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|32650700017|82310400026|376014|7416014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PkpGETsYmpP9MZsspr10Un0HwtARDC0j1NfbQE4IVxXj2hGumedF/AoAFp5q?=
+ =?us-ascii?Q?yaM7jhoeyTf2y0Sl0paU3AWsveMV0seh1ygRnHcqq2NWagAWYegRrrCjOGvl?=
+ =?us-ascii?Q?Ol4fsWMs8GiwkPgiGNlZg5PcAXhjRu263/W7eskHzZO+45PkCq/0fb6yUhgV?=
+ =?us-ascii?Q?JFjUM2I4bsdq3tVH7LVe42ZvQhVsBGO3P5LZn68rBA7Luvx1fGBjK3GhV9AQ?=
+ =?us-ascii?Q?cJPGImMMjKBYFloGD+Mi6ZLoH0rRM6pH1B4tQq6W6GTlGksStfHAjWjkNSig?=
+ =?us-ascii?Q?E1vflyH14VUbA+qjPPe8tllz1mjjfL+BMkopAp91m+naPH1g37RNcUa3b0+D?=
+ =?us-ascii?Q?6R77cZPzbJCI2gYEyHjbGCufXQklgAKshf+1pPczf2RtKmZZ8FrxD1Ezyjmf?=
+ =?us-ascii?Q?4Dr063XK4rz3OygHVGvsyYwwtHMZbST3b2ecYDbtBGQEb0E8AjkMUSoCYyQg?=
+ =?us-ascii?Q?xn1/fiDVK8kWVr6heqO/+Ik0HwnNJ+rYfHtKgbvrlOJCe00TsLvlf+Cb4DGR?=
+ =?us-ascii?Q?XJYRVoNCTzlpwQoNBguDHWtUfM2pJfzLuaN2yO6w9Z1HDVom9oL5kzAS23gp?=
+ =?us-ascii?Q?yUEWu0rRaGGAc8X1kzsg8dfk1DS6kkL0+pTcqrZoSkPghiXX6IV5F6gUZncm?=
+ =?us-ascii?Q?xflFMdXYyVHyMZAPmdmIWQy/v9i77LhV2iwuY/yTTA9KS3Q/kqDlyw6Y+FNU?=
+ =?us-ascii?Q?/EATGI/x7PAP/7zOEblKaPUekw3sJe5HOc8Q7yOa8ZHq6e4fVDR7rYXaY5BL?=
+ =?us-ascii?Q?K2qmd9OLNWojropyVLUg+C9WeU0Rt2GrW8RwuXb5l0WGbVcbo327c/vZQM92?=
+ =?us-ascii?Q?EAt0oC7lrFhi9RDLC7d/bKDNlmoEdgJd+6LmLHtmyxoDZ4aiex8Bh0f8wqGb?=
+ =?us-ascii?Q?AtUkqRD8Qa64A5KMt6fOvP9tUp2MKYH5Xz5WUU8YHuuI2lXhySk2kdkGY7aV?=
+ =?us-ascii?Q?f2WHVh3sBwz+Ss1aU+/mHhv2MsiOspgK1E93P6yJP4a9N1oVSW2qY2/lGTcp?=
+ =?us-ascii?Q?nArv8LjVjnRsb4f+V5hWlVJwt7KqStEAC4JRdMXSq02wKoQmYgXWgVFI4U/P?=
+ =?us-ascii?Q?vIOmXzl7O1z2h1c3zj1KmCwywMQNFFveNTI+hHr4zWBIiDibJTFTZC3O6aof?=
+ =?us-ascii?Q?HEUcBRTfyYPGGTcHlRAhkBtd0Xr3qnxOQj2Qz/7GPSmSkrsNwIU/F5oitfJG?=
+ =?us-ascii?Q?kUhYB/xNgN/vdEigVTBuhZwj3sNINyKVfBpFK2j9YUEsloKaiRf+CYD96uTA?=
+ =?us-ascii?Q?mYRpRD0sVqcHGLJJyQiSBacL7SHW+EC3gof8Q1SG9HwHX8hRRXJHxnQFqN8H?=
+ =?us-ascii?Q?KrWgC9VnubQKnSkoG7HWW7OOU7LK6fQ8v7vaNfBxDIJzlaNsMgfxc4Fqis/x?=
+ =?us-ascii?Q?xvajF0+TbrItP15lAJQTi9uDkVrGaGjU5QIF+OH30yjnGNZfbxquoaot8zBI?=
+ =?us-ascii?Q?7nlt6uHNU3EzTrVd3dCThxD9cnKzz2OqIPmGqB8uoF2a5QfFujbyAZgJ990K?=
+ =?us-ascii?Q?WxnebXahhe4DJ2FQdVVWUo5p1uc3jxLdB33tHfZ1l8SycRKd90eUbjBDjuYa?=
+ =?us-ascii?Q?nueXYvNMVWGBz/rMzVo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:198.47.23.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet200.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(32650700017)(82310400026)(376014)(7416014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: ti.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2025 09:27:12.1481
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b06bf77e-baad-484e-2884-08de2296d381
+X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.194];Helo=[lewvzet200.ext.ti.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00002313.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB4348
 
-From: Johnny-CC Chang <Johnny-CC.Chang@mediatek.com>
+The drivers associated with the PCIE_CADENCE, PCIE_CADENCE_HOST AND
+PCIE_CADENCE_EP configs are used by multiple vendor drivers and serve as a
+library of helpers. Since the vendor drivers could individually be built
+as built-in or as loadable modules, it is possible to select a build
+configuration wherein a vendor driver is built-in while the library is
+built as a loadable module. This will result in a build error as reported
+in the 'Closes' link below.
 
-Nvidia GB10 PCIe hosts will encounter problem occasionally
-after SBR(secondary bus reset) is applied.
-Enable NO_BUS_RESET quirk for Nvidia GB10 PCIe hosts.
+Address the build error by changing the library configs to be 'bool'
+instead of 'tristate'.
 
-Signed-off-by: Johnny-CC Chang <Johnny-CC.Chang@mediatek.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202511111705.MZ7ls8Hm-lkp@intel.com/
+Fixes: 1c72774df028 ("PCI: sg2042: Add Sophgo SG2042 PCIe driver")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
- drivers/pci/quirks.c    | 11 +++++++++++
- include/linux/pci_ids.h |  2 ++
- 2 files changed, 13 insertions(+)
+ drivers/pci/controller/cadence/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b94264cd3833..12a10fa84c8a 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3746,6 +3746,17 @@ static void quirk_no_bus_reset(struct pci_dev *dev)
- 	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
- }
+diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
+index 02a639e55fd8..980da64ce730 100644
+--- a/drivers/pci/controller/cadence/Kconfig
++++ b/drivers/pci/controller/cadence/Kconfig
+@@ -4,16 +4,16 @@ menu "Cadence-based PCIe controllers"
+ 	depends on PCI
  
-+/*
-+ * Nvidia GB10 PCIe hosts will encounter problem occasionally
-+ * after SBR (secondary bus reset) is applied.
-+ * SBR needs to be prevented for these PCIe hosts.
-+ */
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_NVIDIA, PCI_DEVICE_ID_NVIDIA_GB10_GEN5_X4,
-+			 quirk_no_bus_reset);
-+
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_NVIDIA, PCI_DEVICE_ID_NVIDIA_GB10_GEN4_X1,
-+			 quirk_no_bus_reset);
-+
- /*
-  * Some NVIDIA GPU devices do not work with bus reset, SBR needs to be
-  * prevented for those affected devices.
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 92ffc4373f6d..661dc1594213 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -1382,6 +1382,8 @@
- #define PCI_DEVICE_ID_NVIDIA_GEFORCE_320M           0x08A0
- #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP79_SMBUS     0x0AA2
- #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP89_SATA	    0x0D85
-+#define PCI_DEVICE_ID_NVIDIA_GB10_GEN5_X4           0x22CE
-+#define PCI_DEVICE_ID_NVIDIA_GB10_GEN4_X1           0x22D0
+ config PCIE_CADENCE
+-	tristate
++	bool
  
- #define PCI_VENDOR_ID_IMS		0x10e0
- #define PCI_DEVICE_ID_IMS_TT128		0x9128
+ config PCIE_CADENCE_HOST
+-	tristate
++	bool
+ 	depends on OF
+ 	select IRQ_DOMAIN
+ 	select PCIE_CADENCE
+ 
+ config PCIE_CADENCE_EP
+-	tristate
++	bool
+ 	depends on OF
+ 	depends on PCI_ENDPOINT
+ 	select PCIE_CADENCE
 -- 
-2.45.2
+2.51.1
 
 
