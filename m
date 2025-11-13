@@ -1,71 +1,72 @@
-Return-Path: <linux-pci+bounces-41038-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41039-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26B2BC55660
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 03:14:17 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4D21C5565F
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 03:14:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3E9644E14CB
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 02:14:13 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B5D28348A11
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 02:14:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 043D62DA756;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A089F2E11BC;
 	Thu, 13 Nov 2025 02:14:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FqnOxudm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ob3GCPJQ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5E62DC333
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2252DF14B
 	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 02:14:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763000047; cv=none; b=A44aTy9+7Vc760ytzPBXkIyaNdJmPZ1MotuZKMkEqKlB46HhXDgYrTFMO6rSm9BLimpAIKiohtoOAxu8KOPCmv4jqU62nEkevzAErY2s8mpvnVd3pFTVl81AsYisQAFdrvpy7c7umfrCpwJScFfCU8e+IobbijipI8t1NbXyGiE=
+	t=1763000048; cv=none; b=s0mr7F4A4VsRLPZbrdfYlkFvxm05Qsh+qXcr/uhQ8iObdCrsE9Xtv8wGZRO+AnapoOw/pv51KV92dtVG6SHQX+4L4EUia5meaLUhM2h52q0IAoa8oOJKNsAjurOzUO3TyiMbMqDRMjM+cRpB0JTEOP0hck7qNQDTpnhX4315bX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763000047; c=relaxed/simple;
-	bh=eC6qEbzsXevdG9GwC4fXz4RHY1UhX66VpCUuU/hYOPY=;
+	s=arc-20240116; t=1763000048; c=relaxed/simple;
+	bh=zktKfxnwHupTkrYTYObZqvpcEjofeu5PnpGY5JLmcz8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gNSj8mbkPYFs0rjHDeu5HQVCZcZ4lMQEpmrSbWQY/GMGo8pgFTxsQyVej3GcSeevcCC2/7xNORtSL+EjRRfF9s2tgFgabLPB28Tn204HcVQZdE9iM2l0AdZQvAnOOeQofeo6uFUVHq6q+drHj3e6EpYcgSXECi67cDoEeWR0zak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FqnOxudm; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=gL27r035v1hRpIPGZO6T3qOqwamJjr0B4DRIT964LVFCSLNFdoqbAlHF0qUOOfHP1KdkKuxE4ZUpCS6fd/xgInXHuvWxPDD4Blsm2S3sXNOJYdKK27tVuTmk4EXpkMyaXqJVa7N//D+wtNcf5zhaK8l+5wyyHrqt8Vst5x78UNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ob3GCPJQ; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763000047; x=1794536047;
+  t=1763000048; x=1794536048;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=eC6qEbzsXevdG9GwC4fXz4RHY1UhX66VpCUuU/hYOPY=;
-  b=FqnOxudmvyHCVRtL9OOfxE8K0DC/XZ9wge54JYz33DyBgfF9qlVkV1rt
-   bb/u9QnkKyNleEYxBW3LIY+jMxsLD6ywCPbMc6hgxHKL6R2fzta/PI2LF
-   xYntO1JH1XIhZPPgyKALPiGkVB792gbumg2e93yhxKuAExcKumA3P7hwn
-   6MScAz9TAD6Qgt9so4hrIfIPtQ/AsOrexvirQ/jgXu3+gOijxwpKf38Uu
-   0LianFE8r13JmUOrrPLwiqfU8y8pRvvop4mDwArWs1GeFZhj0B/V7cYSx
-   j1DGqp6vS9dQkU1pMo4vY1Gk6OxWrL/DrEiJtDgHe6pDp+kWmr4TCqm7c
-   Q==;
-X-CSE-ConnectionGUID: 2Ln8RGHhQvKdO4/aeJkXeA==
-X-CSE-MsgGUID: F5WKvM6KQGal7uwEoi7fJw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11611"; a="82471760"
+  bh=zktKfxnwHupTkrYTYObZqvpcEjofeu5PnpGY5JLmcz8=;
+  b=Ob3GCPJQX4Qy2m0nbGu6w6LaNyueCVTdhoYv0FUdpLWcJaNxI4GrVcwk
+   zA8hvUIcFEeJ3E7KlECVfHF+Q88kZ+IXnS/g4d2tGpIEDqBnX/DM59rNJ
+   Mnbu0lE2rlt2I0UpFvqHjPn7xoRTWQ45KMjhun4VUUrmL/rRNeA9W2+2l
+   tGHnxcnpA49hcXwqPb/WIz6YSNLDetzRuWOHbs7E/tQv8uwEyiHIEG2Jv
+   Erb0xHSGNpRp0IPXrCjs0VfidQPpdwofiMEWumalmGfAXuDqwJK9qmdaD
+   vLdVmuylsc0jaKJAx8+m8EBCwP9BgAra4hWVN57rCHfJ1u133hZovwk8a
+   A==;
+X-CSE-ConnectionGUID: RJ+FTIPQQCyVo8MMW8R/EQ==
+X-CSE-MsgGUID: BwHpH7DFT4G9VORJnCOmWg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11611"; a="82471763"
 X-IronPort-AV: E=Sophos;i="6.19,300,1754982000"; 
-   d="scan'208";a="82471760"
+   d="scan'208";a="82471763"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
   by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 18:14:05 -0800
-X-CSE-ConnectionGUID: ZQpneiF3QUW2iQvOhVJhTw==
-X-CSE-MsgGUID: bg6OzPHMQ+iwymjsr8irjw==
+X-CSE-ConnectionGUID: pw2c2rezSP228ESM7BCQDg==
+X-CSE-MsgGUID: I82hlWRPTQeP+ecIoLpmhQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,300,1754982000"; 
-   d="scan'208";a="189802488"
+   d="scan'208";a="189802491"
 Received: from dwillia2-desk.jf.intel.com ([10.88.27.145])
   by fmviesa009.fm.intel.com with ESMTP; 12 Nov 2025 18:14:04 -0800
 From: Dan Williams <dan.j.williams@intel.com>
 To: linux-pci@vger.kernel.org
 Cc: linux-coco@lists.linux.dev,
 	Jonathan.Cameron@huawei.com,
-	Xu Yilun <yilun.xu@linux.intel.com>
-Subject: [PATCH v2 2/8] PCI/TSM: Drop stub for pci_tsm_doe_transfer()
-Date: Wed, 12 Nov 2025 18:14:40 -0800
-Message-ID: <20251113021446.436830-3-dan.j.williams@intel.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2 3/8] resource: Introduce resource_assigned() for discerning active resources
+Date: Wed, 12 Nov 2025 18:14:41 -0800
+Message-ID: <20251113021446.436830-4-dan.j.williams@intel.com>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251113021446.436830-1-dan.j.williams@intel.com>
 References: <20251113021446.436830-1-dan.j.williams@intel.com>
@@ -75,34 +76,51 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Just like pci_tsm_pf0_{con,de}structor(), in the CONFIG_PCI_TSM=n case there
-should be no callers of pci_tsm_doe_transfer().
+A PCI bridge resource lifecycle involves both a "request" and "assign"
+phase. At any point in time that resource may not yet be assigned, or may
+have failed to assign (because it does not fit).
 
-Reported-by: Xu Yilun <yilun.xu@linux.intel.com>
-Closes: http://lore.kernel.org/aRFfk14DJWEVhC/R@yilunxu-OptiPlex-7050
+There are multiple conventions to determine when assignment has not
+completed: IORESOURCE_UNSET, IORESOURCE_DISABLED, and checking whether the
+resource is parented.
+
+In code paths that are known to not be racing assignment, e.g. post
+subsys_initcall(), the most reliable method to judge that a bridge resource
+is assigned is to check the resource is parented [1].
+
+Introduce a resource_assigned() helper for this purpose.
+
+Link: http://lore.kernel.org/2b9f7f7b-d6a4-be59-14d4-7b4ffccfe373@linux.intel.com [1]
+Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- include/linux/pci-tsm.h | 6 ------
- 1 file changed, 6 deletions(-)
+ include/linux/ioport.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/include/linux/pci-tsm.h b/include/linux/pci-tsm.h
-index e921d30f9b6c..d7b078d5e272 100644
---- a/include/linux/pci-tsm.h
-+++ b/include/linux/pci-tsm.h
-@@ -147,11 +147,5 @@ static inline int pci_tsm_register(struct tsm_dev *tsm_dev)
- static inline void pci_tsm_unregister(struct tsm_dev *tsm_dev)
- {
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index e8b2d6aa4013..9afa30f9346f 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -334,6 +334,15 @@ static inline bool resource_union(const struct resource *r1, const struct resour
+ 	return true;
  }
--static inline int pci_tsm_doe_transfer(struct pci_dev *pdev, u8 type,
--				       const void *req, size_t req_sz,
--				       void *resp, size_t resp_sz)
--{
--	return -ENXIO;
--}
- #endif
- #endif /*__PCI_TSM_H */
+ 
++/*
++ * Check if this resource is added to a resource tree or detached. Caller is
++ * responsible for not racing assignment.
++ */
++static inline bool resource_assigned(struct resource *res)
++{
++	return res->parent;
++}
++
+ int find_resource_space(struct resource *root, struct resource *new,
+ 			resource_size_t size, struct resource_constraint *constraint);
+ 
 -- 
 2.51.1
 
