@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-41111-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41105-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B24DC58551
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:23:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AD05C58466
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 16:16:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 117C14F2859
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 15:15:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E199B3A21FD
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 15:10:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2940357A32;
-	Thu, 13 Nov 2025 15:03:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0D1034DB62;
+	Thu, 13 Nov 2025 15:03:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hmh37m6F"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YiLnhQ3o"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B73357709;
-	Thu, 13 Nov 2025 15:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C034633DEF6;
+	Thu, 13 Nov 2025 15:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763046192; cv=none; b=glnFbLOt+WukjIKAEsBGspgGPtcvjYOs0VrexBg8FPXqbhhhYBeNPSH5Kmjjg7yw9nUsz29mrWw4wsNm5WyxpTsYpr5dN9BR65KwuSQRfnmzztXQmqkGoB5kEeOqsKx8syxn3L/LGhV1ihd6CuC0GjMnl8qIcFEU9yUYGI3JAKY=
+	t=1763046180; cv=none; b=ZGVvwaNYZvVMaZ6uzGkKIUnvf4ouU6b+WV+l55EuIgduFQO0idrjzZ6HerLrT7NhyM8NWq9faIPg+8O1+GbC8oXfWq/1sqZujbUu2O4zswFpgfN7mjdsWjCX0ZZ5mfMddim3EcK5b3ZRWOuvHW88frYOsWm4a7JB/xiHf7Jm9Fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763046192; c=relaxed/simple;
-	bh=9P5AC3KVHcn4TcLoSKblVZwstZQ28owfF1NSWgu0v6M=;
+	s=arc-20240116; t=1763046180; c=relaxed/simple;
+	bh=GOmlU8+AxY4qiyUG0euFaX4L/EDMDObrk8lwMAMh1Z8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HFEsL6vjfASIRAen52/bIbGHuqUBztjwY+UIXVyVYmoXIIBzmnqkyEwJ0y8t2/RuGKO+7YE/lLjXYe3o+6dwp+PoCpuLBkud9fF+58hX+m5hXuav6VyONWDASS/zy1ZN+6KAkGlUtj4Ztl7J7EXlkhSemWTVp4Pjb66RfYRp6KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hmh37m6F; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=LbHnYDntefNCA+5j5Czg9LuaQE0Da2Wmcq4U3zc5XcJ+6HkrTlIZ2e4MPdi/X8NXkz+FPeOyqfwv+xBaEXzjdmx7rJcJRA4YiIvK0PUTcjEmPAd6WCxJjJApHhd3UU9bsfEtLO4c9P13nJef3JXR1Xn4Zt5Fmlz+BbbPRvkQvVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YiLnhQ3o; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763046191; x=1794582191;
+  t=1763046179; x=1794582179;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=9P5AC3KVHcn4TcLoSKblVZwstZQ28owfF1NSWgu0v6M=;
-  b=hmh37m6FNPDLSBPf3TZ0RFlOM3a8y0neuwk+NuQXJoZ+pSzCsCj0vH2i
-   GINAcfT5CPlU/YhtxpM+a9CoAWXvK47K8bR/SKxTUfZrVo225zJEcMEOz
-   tCBo7HBZJ3JUZVzfwUmNgVyRVbE+dguLZ8sBPA2exo5u6c+iKgHDjL7jb
-   2ONxeNPVZ4rlbc1fnkg4gGcnzvq7ZQm7HGPuOv8k5pLEVjvU7MwPkYehC
-   OwLh+005lgFUhlHi2TXU0Y35xdA4NhGjpOWuoPaXu3nxB+0TMLLjlt3Th
-   wNdW69UFFPAgWvMhEiH9r+vyFxSqarBgSUWV4T8nFATYKUg3BOSRfMLr1
-   A==;
-X-CSE-ConnectionGUID: 3D97nWVBQCW0VGzQDYRhDQ==
-X-CSE-MsgGUID: v9h2Jn/IRsGLC7H1Q3p8Gg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="65054541"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="65054541"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 07:02:57 -0800
-X-CSE-ConnectionGUID: AydCmECNRpCLYzOsn/mxTw==
-X-CSE-MsgGUID: WE2PlCIlTNqCt+7aCVDUWA==
+  bh=GOmlU8+AxY4qiyUG0euFaX4L/EDMDObrk8lwMAMh1Z8=;
+  b=YiLnhQ3otwj+Bhyk6lMOGhMM8k0i9kJJ3XTuEbUmt/CAMg63EUE2EmoR
+   AVL7Pmlj7QCx7ACahUlxSXKbM8RJqVNQzV1x11jQJyvDH/X8AZXHNzsl6
+   s1PwIbu7WzELbUTqKSLT9JuU7DinhYKCXDVKHeJMFM/7RVZt8Xw5zPUPx
+   GqCBfN4RGLUHKCNIda0tqNlhSWSbALgNmyUeSxddn+ZnGSux3WFFcAKeQ
+   UY3Y2lg08QflNsvA1O4x2+GKxYUYGMjyUXmn676K9fgXaJ8L/NqS55gJA
+   vM9H6rb9LgcyXd9uu4iCDXnAwaREt/V+8QhUCloHBAk7sBY1M3Okfodhh
+   w==;
+X-CSE-ConnectionGUID: dPPbA7yHQD+SUvfzN9YWEg==
+X-CSE-MsgGUID: qPs7wU40T+uH/HgdCEXz6g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="68991740"
+X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
+   d="scan'208";a="68991740"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 07:02:58 -0800
+X-CSE-ConnectionGUID: VoHVivOhTuuJ8F2T91fvwQ==
+X-CSE-MsgGUID: aM4vg+x7RCGNGIIJNMHExw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="220325115"
+   d="scan'208";a="188810329"
 Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa001.fm.intel.com with ESMTP; 13 Nov 2025 07:02:45 -0800
+  by orviesa010.jf.intel.com with ESMTP; 13 Nov 2025 07:02:48 -0800
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 67493A6; Thu, 13 Nov 2025 16:02:19 +0100 (CET)
+	id 6DC70A7; Thu, 13 Nov 2025 16:02:19 +0100 (CET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Corey Minyard <corey@minyard.net>,
 	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
@@ -154,9 +154,9 @@ Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v3 16/21] pps: Switch to use %ptSp
-Date: Thu, 13 Nov 2025 15:32:30 +0100
-Message-ID: <20251113150217.3030010-17-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 17/21] ptp: ocp: Switch to use %ptSp
+Date: Thu, 13 Nov 2025 15:32:31 +0100
+Message-ID: <20251113150217.3030010-18-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
 References: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
@@ -171,41 +171,48 @@ Content-Transfer-Encoding: 8bit
 Use %ptSp instead of open coded variants to print content of
 struct timespec64 in human readable format.
 
-Acked-by: Rodolfo Giometti <giometti@enneenne.com>
+While at it, fix wrong use of %ptT against struct timespec64.
+It's kinda lucky that it worked just because the first member
+there 64-bit and it's of time64_t type. Now with %ptS it may
+be used correctly.
+
+Acked-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pps/generators/pps_gen_parport.c | 3 +--
- drivers/pps/kapi.c                       | 3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/ptp/ptp_ocp.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pps/generators/pps_gen_parport.c b/drivers/pps/generators/pps_gen_parport.c
-index f5eeb4dd01ad..05bbf8d30ef1 100644
---- a/drivers/pps/generators/pps_gen_parport.c
-+++ b/drivers/pps/generators/pps_gen_parport.c
-@@ -80,8 +80,7 @@ static enum hrtimer_restart hrtimer_event(struct hrtimer *timer)
- 	/* check if we are late */
- 	if (expire_time.tv_sec != ts1.tv_sec || ts1.tv_nsec > lim) {
- 		local_irq_restore(flags);
--		pr_err("we are late this time %lld.%09ld\n",
--				(s64)ts1.tv_sec, ts1.tv_nsec);
-+		pr_err("we are late this time %ptSp\n", &ts1);
- 		goto done;
- 	}
+diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+index eeebe4d149f7..21a8109fae34 100644
+--- a/drivers/ptp/ptp_ocp.c
++++ b/drivers/ptp/ptp_ocp.c
+@@ -4293,11 +4293,9 @@ ptp_ocp_summary_show(struct seq_file *s, void *data)
+ 		ns += (s64)bp->utc_tai_offset * NSEC_PER_SEC;
+ 		sys_ts = ns_to_timespec64(ns);
  
-diff --git a/drivers/pps/kapi.c b/drivers/pps/kapi.c
-index e9389876229e..6985c34de2ce 100644
---- a/drivers/pps/kapi.c
-+++ b/drivers/pps/kapi.c
-@@ -163,8 +163,7 @@ void pps_event(struct pps_device *pps, struct pps_event_time *ts, int event,
- 	/* check event type */
- 	BUG_ON((event & (PPS_CAPTUREASSERT | PPS_CAPTURECLEAR)) == 0);
+-		seq_printf(s, "%7s: %lld.%ld == %ptT TAI\n", "PHC",
+-			   ts.tv_sec, ts.tv_nsec, &ts);
+-		seq_printf(s, "%7s: %lld.%ld == %ptT UTC offset %d\n", "SYS",
+-			   sys_ts.tv_sec, sys_ts.tv_nsec, &sys_ts,
+-			   bp->utc_tai_offset);
++		seq_printf(s, "%7s: %ptSp == %ptS TAI\n", "PHC", &ts, &ts);
++		seq_printf(s, "%7s: %ptSp == %ptS UTC offset %d\n", "SYS",
++			   &sys_ts, &sys_ts, bp->utc_tai_offset);
+ 		seq_printf(s, "%7s: PHC:SYS offset: %lld  window: %lld\n", "",
+ 			   timespec64_to_ns(&ts) - ns,
+ 			   post_ns - pre_ns);
+@@ -4505,9 +4503,8 @@ ptp_ocp_phc_info(struct ptp_ocp *bp)
+ 		 ptp_clock_index(bp->ptp));
  
--	dev_dbg(&pps->dev, "PPS event at %lld.%09ld\n",
--			(s64)ts->ts_real.tv_sec, ts->ts_real.tv_nsec);
-+	dev_dbg(&pps->dev, "PPS event at %ptSp\n", &ts->ts_real);
+ 	if (!ptp_ocp_gettimex(&bp->ptp_info, &ts, NULL))
+-		dev_info(&bp->pdev->dev, "Time: %lld.%ld, %s\n",
+-			 ts.tv_sec, ts.tv_nsec,
+-			 bp->sync ? "in-sync" : "UNSYNCED");
++		dev_info(&bp->pdev->dev, "Time: %ptSp, %s\n",
++			 &ts, bp->sync ? "in-sync" : "UNSYNCED");
+ }
  
- 	timespec_to_pps_ktime(&ts_real, ts->ts_real);
- 
+ static void
 -- 
 2.50.1
 
