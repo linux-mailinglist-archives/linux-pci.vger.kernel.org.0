@@ -1,101 +1,93 @@
-Return-Path: <linux-pci+bounces-41068-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41069-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B19AC564A2
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 09:35:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BA35AC5654E
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 09:43:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 777014EE890
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 08:27:36 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1F3D14E3FF3
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Nov 2025 08:38:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A1432F77C;
-	Thu, 13 Nov 2025 08:27:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E46C332EBF;
+	Thu, 13 Nov 2025 08:36:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RU0RMMAJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aScoYiCc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC0B2FF663
-	for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 08:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418F1332EA5;
+	Thu, 13 Nov 2025 08:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763022448; cv=none; b=c2Tjxin2v853DZOiMHXVUZCfkGZEMIxgnElztmGt8RM6R/Lhs2jzKexNCOLBcTkY33mbdmAFNCaNJSdurFLbyJ39q00fMSRLVz9DQMBP31ronNAtQ0CoSBd573pA1HKTmDyZ6P3tICTlZbnmwOgEvoNv3g0LvGp05i/uqAyobM4=
+	t=1763023014; cv=none; b=V58f1//tNDQOjGTB+VDCES8n58jvIlr1iV5g6RT4+GcGT4bL/QrNsZTJ5z6HiYqz+72fYVihWDDtgigsgfDjc3OP6rZ9i/rbzlvtI4GjdiJvj+3NbiM+auJ7yNBZYDBF5J4wMJa87bv0syMR0dqMeTrzxPtiFuuDo03ctmId/xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763022448; c=relaxed/simple;
-	bh=d1qk7FVWVfRJhE+KtiEvk+u0EBagMhnk/HxpVt1YtfA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BDRI7KDYPM1wcaVPl7noedptC9mbQzG6LOg5v53sNQVPJmjCdnnlAetRva+ocmPbDWL6B6KQKHNzH2h3uE3TOKnnjq8RkT+JzVHFn8R0jKbxdGsaLExiklB5dVAIXgSCOIt81Cmpi0aSpaPPuhTN2tVwgMvicx8/ws6Z4VbsL48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RU0RMMAJ; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2952d120da1so306625ad.3
-        for <linux-pci@vger.kernel.org>; Thu, 13 Nov 2025 00:27:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763022447; x=1763627247; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d1qk7FVWVfRJhE+KtiEvk+u0EBagMhnk/HxpVt1YtfA=;
-        b=RU0RMMAJ9wpHrAru9L/W+udDUyeHe3q8RqqEClDkTbPU2m2+NIkxItBY/I1Upf/kk4
-         2VGjgX0ShTE6d4GNhZG0zbYF/E+749jhNltSojdgEot3nXhbF4Kh7sFD7fVhkVOd2kkE
-         wc3RyPcG1gVXuG3bJ7Oi3eDFxxdIEzNhnN/Se1ZHeJCZjVujdEMwTAR3JrniBZ8Ek8pV
-         3KE2IrL3EGpn4tulc7q9anfApVtYRBbo36GCt1318i9o/SN1T+71oihsB1coZ1fXCZhY
-         HmZwmNvyEJnIwVPNMuplg7/mNFDwHxi4ROFw45bxriMml7Rf1lKNiACzimViCJZpkYE2
-         ikwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763022447; x=1763627247;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=d1qk7FVWVfRJhE+KtiEvk+u0EBagMhnk/HxpVt1YtfA=;
-        b=gDV30OVNs+J9NbeZXLrngtt6We4Jr0OJOdCl1btq/G6khivgjZVxMrIhXggbt2tl9r
-         oGVoLRre7u2Eg1xJa6UcWe1DpQ4hHh8f1U07Tqp/cfloKe2KJfRk7pdXBxApoDe9iWPl
-         +z0/dGHlVCOlU/s7t8VGycl3dbgVGwjgDLIboAaAmAtnaxaz1WtTwDwkSbXi4GaEzkKV
-         0qPTLjQiH2ayojRG3pcUW2BYBtxlXIt/O7LUOPE5nzOdVpsZUwI/x9/cXthDUPxfh4M9
-         jsj+qK3ojOPzv8WP0tPBrXk0qpm9wdqmlQI8ojGVcseKSfU78IsZqkBFTf4sDBqdVqRe
-         imUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUszH23HM9lrNKIXHZ/Lm+bLRpJ8yfE5q1PvMRV6IB3m+fmOniLGymPDiBUty31scn1xQa8Q3w9NKY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxY9oSEoCXfq6UaWge8mo7vX0kksdzoG7lo6EvtHHqHnp8F7JXs
-	TXQT1WnNpWh1I0csSy+cekbrV9SI9iUgma4Goo+gYx2aZXzBMjDyMUIIAj8hHVL5LVqt9rxfs36
-	+yJkEDOnA8RPc/f6E0pNl1BRtcerRSFA=
-X-Gm-Gg: ASbGncsfS68+3f9mMWfifGh1sMNGdphZdtq8ygih9mEDcOt24BIkNuY6ry90c8ZgQXy
-	aak2N3W3pFRRJfRIdUpa8WvRY1GOFLPPmGJmPmnMTRkzJ0yaBwsjYi2FddXDTkkr6Kszv+hVrvW
-	b6HHmuu8cOz3lLChqcGT65V7NeCtCNpAc1NHB0oUH6CYaoAhgKUuEQ3L1YSW28kLEhmOnnDze2N
-	9nTidDZdutq3sWuPIvp9ufiDHmwBcTrIXO13GN0IRXw3Yzx++yrvGHRbaZ5NwfbWVxgP2trfHks
-	5ixxReOuuJYVbB4Ba0EipPFyDY+92Y0/eCoPN9Z9u31U+UHRH23t4LxkdtWCHF7s9nXAa5tUcuw
-	wfvw=
-X-Google-Smtp-Source: AGHT+IGabKCaWKO8REK+43Eg4r6FgFxCqOu4BbB6BrKUf2h40WukUnS1SFQ2Rv/WiM0zMAyYUdxkiYVrqRkg5TTtI+w=
-X-Received: by 2002:a17:902:f683:b0:290:c94a:f4c8 with SMTP id
- d9443c01a7336-2985b942248mr13558545ad.1.1763022446725; Thu, 13 Nov 2025
- 00:27:26 -0800 (PST)
+	s=arc-20240116; t=1763023014; c=relaxed/simple;
+	bh=9EJM89dqS8V7H2HgA9yh7GOCyNrBNciwpjIAAoGDgfw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=jflmgpLm93/rczoN+5898sgIYEev9kNprZvkM4Pkr5Z6Jqtynh7pJcm6Ww07MVwp+0aS59obiCkMP2T5zkqhP/WTCFRezQ8BMVCIRaSsT/X4ghBqtWtWKanaG8yjMEmIOEunKuSJAyx1N27A8RSblC/Nj2a9Kra3H0KFc8F88MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aScoYiCc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94EDBC4CEF5;
+	Thu, 13 Nov 2025 08:36:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763023013;
+	bh=9EJM89dqS8V7H2HgA9yh7GOCyNrBNciwpjIAAoGDgfw=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=aScoYiCcFo/WXTh8dWelB49gVEU72Pywt6yw3q+S+gtnIv3/oTQPeWWgw1hRLiTrM
+	 /1VHMidNrv9nwaA2sdADvwNdDGrdGgrKGeLnz3Ygsjp6ATh6vdzJVi2oWQYj478SNO
+	 f5vtn3kWvLGi3nvc8PozFi2DhaNnQ+ecRzswnTk4vUyBt/uyqbDQ+B3xFMHS7NUKed
+	 OIBM1HIVIlIZBZL5ByMp/EBECq74y+/uzak77btDS0mPnRuJ1ydvDb+jcjqsn1vTtr
+	 4nDczPT68KZ6O2rhWj3ZtmQ3y9A9JmdGboefJKigNoGcWnYKZu+VhTVbszhrSxci+B
+	 HbpjCDdq99S+w==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20251101214629.10718-1-mt@markoturk.info> <aRRJPZVkCv2i7kt2@vps.markoturk.info>
- <CANiq72kfy3RvCwxp7Y++fKTMrviP5CqC_Zts_NjtEtNCnpU3Mg@mail.gmail.com>
- <CANiq72=yQ1tn0MmxNHPO4qOiGm7xZzHJAdXFsBBwmFdsC37=ZA@mail.gmail.com> <DE7F6RR1NAKW.3DJYO44O73941@kernel.org>
-In-Reply-To: <DE7F6RR1NAKW.3DJYO44O73941@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 13 Nov 2025 09:27:14 +0100
-X-Gm-Features: AWmQ_bnSp6sDCbEYJ3FC6kACZqmnj-bo2Avyv0Hf_y2c6mHRFhvWknBqrxsDf3E
-Message-ID: <CANiq72=fr8tTYXz7Wd5AYr-1f+6ohggTfGBz5KWDE97675MP+A@mail.gmail.com>
-Subject: Re: [PATCH] samples: rust: fix endianness issue in rust_driver_pci
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Marko Turk <mt@markoturk.info>, Dirk Behme <dirk.behme@de.bosch.com>, bhelgaas@google.com, 
-	kwilczynski@kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 13 Nov 2025 19:36:43 +1100
+Message-Id: <DE7FHUVN5QE0.3ECM9JKXUNWFW@kernel.org>
+Subject: Re: [PATCH] samples: rust: fix endianness issue in rust_driver_pci
+Cc: "Dirk Behme" <dirk.behme@de.bosch.com>, <bhelgaas@google.com>,
+ <kwilczynski@kernel.org>, <linux-pci@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>, "Marko Turk"
+ <mt@markoturk.info>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20251101214629.10718-1-mt@markoturk.info>
+ <aRRJPZVkCv2i7kt2@vps.markoturk.info>
+ <CANiq72kfy3RvCwxp7Y++fKTMrviP5CqC_Zts_NjtEtNCnpU3Mg@mail.gmail.com>
+ <CANiq72=yQ1tn0MmxNHPO4qOiGm7xZzHJAdXFsBBwmFdsC37=ZA@mail.gmail.com>
+ <DE7F6RR1NAKW.3DJYO44O73941@kernel.org>
+In-Reply-To: <DE7F6RR1NAKW.3DJYO44O73941@kernel.org>
 
-On Thu, Nov 13, 2025 at 9:22=E2=80=AFAM Danilo Krummrich <dakr@kernel.org> =
-wrote:
+On Thu Nov 13, 2025 at 7:22 PM AEDT, Danilo Krummrich wrote:
+> On Wed Nov 12, 2025 at 8:56 PM AEDT, Miguel Ojeda wrote:
+>> I guess we could potentially consider something like returning a
+>> wrapper to force us to explicitly pick either LE or BE to prevent
+>> things like this.
 >
+> In general, the I/O backend (e.g. MMIO, I2C, etc.) is supposed to take ca=
+re
+> of endianness.
+>
+> In the case of MMIO we (currently) always assume that the device is
+> little-endian; this is also what the C functions used to implement the MM=
+IO
+> backend (e.g. readl()) assume, i.e. they always convert from little-endia=
+n to
+> CPU endianness.
+
+I.e. if we'd support a big-endian architecture in Rust
+
+	u32::from_le(bar.read32())
+
+would be a bug.
+
 > I don't think we should do anything else; the cases where we need to deal=
  with
 > big-endian devices for MMIO should be extremely rare -- rare enough that =
@@ -107,9 +99,13 @@ there
 > (that ended up in the sample driver by accident) and properly document th=
 e
 > little-endian assumption of the MMIO backend.
-
-Sounds good then, thanks!
-
-Cheers,
-Miguel
+>
+> (Currently, this simply is the Io structure, but there is a patch series =
+[1]
+> from Zhi splitting things up, so we can start supporting arbitrary I/O
+> backends.)
+>
+> @Marko: Two separate patches for this would be very welcome. :)
+>
+> [1] https://lore.kernel.org/all/20251110204119.18351-1-zhiw@nvidia.com/
 
