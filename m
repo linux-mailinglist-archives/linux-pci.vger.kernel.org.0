@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-41278-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41279-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B911C5F9CA
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Nov 2025 00:39:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5344DC5F9EB
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Nov 2025 00:45:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0F65F4E0319
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 23:39:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6411C3BEC91
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 23:45:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8644303CA3;
-	Fri, 14 Nov 2025 23:39:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 029C930F542;
+	Fri, 14 Nov 2025 23:45:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cp5gRDVc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CrngH4Up"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77D318EFD1
-	for <linux-pci@vger.kernel.org>; Fri, 14 Nov 2025 23:39:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28C030F53E
+	for <linux-pci@vger.kernel.org>; Fri, 14 Nov 2025 23:45:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763163568; cv=none; b=q0gEk8WJe/I6SszzTQLqIS0LEuF5jStshZtmLEHSzgWmRfw9nml4OQAJ+XeBOuDsNKLmP9ipklUtu12aItR6HZ4mw1YVI3An8RvrW4AkUNPckFcWxfFmcsL4OKjK3+v3zVSzzThdfwsrGb1E5pJ1OKZi2tt/JIxQQ5zlerMH4Bs=
+	t=1763163945; cv=none; b=tSz8q014BDXtfGbwQHTceyqHWVn4Dfm7b5onckEkT231Z5WBQMLWMYIwtr8CjfYWIfGyl9P+35eTuKm1S1jcb+l8GfU47NzKwzMW3b65ToKMdK6N4//cdsXKVq6Zr6p4cBGv/r5kZH5s+nS866IHeTvLmA8Zqsfqe8Oiaom1H4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763163568; c=relaxed/simple;
-	bh=mMZEYwBQECCPCFF8rmEdIOUMs8DDjVoCSWmS9oPZGwY=;
+	s=arc-20240116; t=1763163945; c=relaxed/simple;
+	bh=VjOUQn2CMnLCK8Ez8KnMoiA++LC+kuNQ89cJ9UDiqgU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Azzp4xb+L+hbZZAmJz4hZxJtTPb/8Ee/nB72X4BiPkLqXC3AT0N+ZHC328bgqhRTXMjfLsbNPE+cUoH7sW1iPOVrREgI2HKBzhyHbHlUL8F8QqjTm7ooO/ICBdgMTZZx9ER6LJRmrpOl79mFhvPuBQGYaRasQehrnpLe0bK6tik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cp5gRDVc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40C90C16AAE;
-	Fri, 14 Nov 2025 23:39:28 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=lffD8A/dchz+eMcM37epPOPNIbU5KQAuRmK1QHBqx9kvHYrpNgbgNiYwu/TCGhhbhQhHpkWwvp5BRHxePMx0FHN+PzzS25LPOPMwNVYy5mkhjAIxrHEq2bIPpFyYF91HoVfoYNcH1wb8zlE7/zldcbJqE5O0Dr3EAV+9OomD+cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CrngH4Up; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C52DC16AAE;
+	Fri, 14 Nov 2025 23:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763163568;
-	bh=mMZEYwBQECCPCFF8rmEdIOUMs8DDjVoCSWmS9oPZGwY=;
+	s=k20201202; t=1763163945;
+	bh=VjOUQn2CMnLCK8Ez8KnMoiA++LC+kuNQ89cJ9UDiqgU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Cp5gRDVcjC3odfNuO0uHJbvv0x7lSokw9lbB3VBBnT4oX3LS/AlBEfKF3Gj+5ESrY
-	 R7tPcaKBiCXYjqhifGtNAbUwEDcrTo16D5fzXyYonT6qlCTKNSwTZPpiv6vq1E5bkk
-	 zjUEOjZCVkdNeAbrH3nCiZcNaG2h2jMBc7O+krrZivj5zeTyLrdFW1kWW/jXeldHer
-	 aOfqCv21KD5NIGmiCAK+1+8rqNmAluym4f9WlQj1izWKzay1miKSXj6wwJHvItgjxO
-	 368GpWGEeQSiwgFYVsBDE4IcWL/nspVEwAFYM3E8hnrBQ2JP3m/TriIUrwM/aqFQZ6
-	 DdtBz42MCPAQw==
-Date: Fri, 14 Nov 2025 17:39:27 -0600
+	b=CrngH4UpTSR0l68GfGHGvcRYcsBQPtp5oAgbzGTIck6kdV2BVKE4UD17+nymFyigP
+	 Yd0dBrcbgUKB+C96gfivjhJ/xPLHCu17vaOur2/6WZLK2VxV2Fnidy51wc9kLupdd9
+	 7fOUfVMuEjtJ18yisyyoBAH1uRSI9wQzYx1y6EDvASg3UabAXcEqsiwA5DEjoYX2jJ
+	 kLDMzddbEWwlhyZNyoFZl/eL6QpH1+e8qZdUTtLrRL9baw4dxulV1q8Q9jvO2KiuYj
+	 6lLkOuCJSfEtoWdyLU3jfvqOjcYB9zAhCY9YJPSmU34FzBxlzwz3Gqq2RM3ssy505v
+	 o45hHW1Hwjk1A==
+Date: Fri, 14 Nov 2025 17:45:43 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Lukas Wunner <lukas@wunner.de>
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -64,8 +64,8 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH 1/2] PCI: Ensure error recoverability at all times
-Message-ID: <20251114233927.GA2340588@bhelgaas>
+Subject: Re: [PATCH 0/2] PCI: Universal error recoverability of devices
+Message-ID: <20251114234543.GA2350415@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,121 +74,81 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aRd7y8blTOn1XYFE@wunner.de>
+In-Reply-To: <cover.1760274044.git.lukas@wunner.de>
 
-On Fri, Nov 14, 2025 at 07:58:19PM +0100, Lukas Wunner wrote:
-> On Thu, Nov 13, 2025 at 10:15:56AM -0600, Bjorn Helgaas wrote:
-> > It seems like there are two things going on here, and I'm not sure
-> > they're completely compatible:
-> > 
-> >   1) Driver calls pci_save_state() to take over device power
-> >      management and prevent the PCI core from doing it.
-> > 
-> >   2) Driver calls pci_save_state() to capture the device state it
-> >      wants to restore when recovering from an error.
-> > 
-> > Shouldn't a driver be able to do 2) without also getting 1)?
+On Sun, Oct 12, 2025 at 03:25:00PM +0200, Lukas Wunner wrote:
+> When PCI devices are reset -- either to recover from an error or
+> after a D3hot/D3cold transition -- their Config Space needs to be
+> restored.
 > 
-> In general, it can:
+> D3hot/D3cold transitions happen under the control of the kernel,
+> hence it is able to save Config Space before and restore it afterwards.
 > 
-> A number of drivers already call pci_save_state() on probe to capture
-> the state for subsequent error recovery.  If the driver has modified
-> config space in its probe hook, then calling pci_save_state() continues
-> to make sense.  If the driver has *not* modified config space, then the
-> call becomes obsolete once this patch is accepted.
+> However errors may occur unexpectedly and it may then be impossible
+> to save Config Space because the device may be inaccessible (e.g. DPC)
+> or Config Space may be corrupted.  So it must be saved ahead of time.
+> 
+> This isn't done consistently because the PCI core doesn't take care
+> of it and only a subset of drivers do.  The situation is aggravated
+> by the behavior of pci_restore_state(), which only allows restoring
+> Config Space once and invalidates the saved copy afterwards.
+> 
+> Solve all these problems by saving an initial copy of Config Space
+> on device addition which drivers may update if they change registers.
+> Modify pci_restore_state() to allow using the saved copy indefinitely
+> and drop all the workarounds for its previous behavior that have
+> accumulated in the tree.
+> 
+> Lukas Wunner (2):
+>   PCI: Ensure error recoverability at all times
+>   treewide: Drop pci_save_state() after pci_restore_state()
+> 
+>  drivers/crypto/intel/qat/qat_common/adf_aer.c    | 2 --
+>  drivers/dma/ioat/init.c                          | 1 -
+>  drivers/net/ethernet/broadcom/bnx2.c             | 2 --
+>  drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c | 1 -
+>  drivers/net/ethernet/broadcom/tg3.c              | 1 -
+>  drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c  | 1 -
+>  drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c  | 2 --
+>  drivers/net/ethernet/hisilicon/hibmcge/hbg_err.c | 1 -
+>  drivers/net/ethernet/intel/e1000e/netdev.c       | 1 -
+>  drivers/net/ethernet/intel/fm10k/fm10k_pci.c     | 6 ------
+>  drivers/net/ethernet/intel/i40e/i40e_main.c      | 1 -
+>  drivers/net/ethernet/intel/ice/ice_main.c        | 2 --
+>  drivers/net/ethernet/intel/igb/igb_main.c        | 2 --
+>  drivers/net/ethernet/intel/igc/igc_main.c        | 2 --
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c    | 1 -
+>  drivers/net/ethernet/mellanox/mlx4/main.c        | 1 -
+>  drivers/net/ethernet/mellanox/mlx5/core/main.c   | 1 -
+>  drivers/net/ethernet/meta/fbnic/fbnic_pci.c      | 1 -
+>  drivers/net/ethernet/microchip/lan743x_main.c    | 1 -
+>  drivers/net/ethernet/myricom/myri10ge/myri10ge.c | 4 ----
+>  drivers/net/ethernet/neterion/s2io.c             | 1 -
+>  drivers/pci/bus.c                                | 7 +++++++
+>  drivers/pci/pci.c                                | 3 ---
+>  drivers/pci/pcie/portdrv.c                       | 1 -
+>  drivers/pci/probe.c                              | 2 --
+>  drivers/scsi/bfa/bfad.c                          | 1 -
+>  drivers/scsi/csiostor/csio_init.c                | 1 -
+>  drivers/scsi/ipr.c                               | 1 -
+>  drivers/scsi/lpfc/lpfc_init.c                    | 6 ------
+>  drivers/scsi/qla2xxx/qla_os.c                    | 5 -----
+>  drivers/scsi/qla4xxx/ql4_os.c                    | 5 -----
+>  drivers/tty/serial/8250/8250_pci.c               | 1 -
+>  drivers/tty/serial/jsm/jsm_driver.c              | 1 -
+>  33 files changed, 7 insertions(+), 62 deletions(-)
 
-So I guess "state_saved == true" means "driver does its own power
-management and PCI core shouldn't do it", and drivers that want 2) but
-not 1) just need to set state_saved = false after they call
-pci_save_state()?
+Applied to pci/err, maybe for v6.19?
 
-That makes sense in sort of a weird way that makes my head hurt every
-time I try to understand it.  I think it's the sequence of
-"pci_save_state(); dev->state_saved = false" that seems
-counter-intuitive: we just saved the state; why would we immediately
-turn around and say we didn't?  Maybe "state_saved" isn't the most
-appropriate name.
+It touches a lot of drivers, so it'd be nice to have more time in
+-next, but it is mostly in error recovery paths that aren't going to
+be exercised much anyway.
 
-After error recovery, those drivers will see the state the driver
-identified when it called pci_save_state().  But after resume, they
-will see the state the PCI core saved at suspend time.  Right?
+I'll watch for a minor update of comments and update if I see it.
 
-> The reason I'm using the "in general" qualifier:
-> 
-> I've identified two corner cases where the PCI core neglects to set
-> state_saved = false before commencing the suspend sequence:
-> 
-> * If a driver has legacy PCI PM callbacks, pci_legacy_suspend() neglects
->   to set state_saved = false.  Yet both pci_legacy_suspend() and
->   pci_legacy_suspend_late() subsequently query the state_saved flag.
-
-> * If a device is unbound or its driver has no PM callbacks
->   (driver->pm == NULL), pci_pm_freeze() neglects to set state_saved = false.
->   Yet pci_pm_freeze_noirq() subsequently queries the state_saved flag.
-> 
-> In these corner cases, pci_legacy_suspend() and pci_pm_freeze() depend
-> on some other part of the PCI core to set state_saved = false.
-> For a freshly enumerated device, the flag is initialized to false by
-> kzalloc() and pci_device_add() also explicitly sets it to false for good
-> measure.  On resume (or thaw or restore), the flag is set to false by
-> pci_restore_state().  The latter is preserved as is by my patch and the
-> former is moved to pci_bus_add_device() to retain the current behavior.
-> 
-> Clearly, the two corner cases should be fixed and then setting
-> state_saved = false in pci_bus_add_device() becomes unnecessary.
-> 
-> I'd prefer doing that in a separate step though.
-> 
-> So drivers which use legacy PCI PM callbacks or have no PM callbacks
-> should currently not call pci_save_state() on probe without manually
-> setting state_saved = false afterwards.  If they neglect that, then
-> pci_legacy_suspend_late() and pci_pm_freeze_noirq() will not call
-> pci_save_state() on the next suspend cycle and so the state that
-> will be restored on resume is the one recorded on probe, not the
-> one that the device had on suspend.  If these two states happen
-> to be identical, there's no problem.
-> 
-> > > > > +++ b/drivers/pci/bus.c
-> > > > > @@ -358,6 +358,13 @@ void pci_bus_add_device(struct pci_dev *dev)
-> > > > >  	pci_bridge_d3_update(dev);
-> > > > >  
-> > > > >  	/*
-> > > > > +	 * Save config space for error recoverability.  Clear state_saved
-> > > > > +	 * to detect whether drivers invoked pci_save_state() on suspen
-> [...]
-> > > > Can we expand this a little to explain how this is detected and what
-> > > > drivers *should* be doing?
-> [...]
-> > Yes.  I should have proposed some text for the comment, e.g.,
-> > 
-> >   Save config space for error recoverability.  Clear state_saved.  If
-> >   driver calls pci_save_state() again, state_saved will be set and
-> >   we'll know that on suspend, the PCI core shouldn't call
-> >   pci_save_state() or change the device power state.
-> 
-> I'm fine with rewording the code comment like this, as well as splitting
-> the code comment as suggested by Rafael.  Would you prefer amending the
-> code comment when applying or should I respin with a reworded comment?
-> 
-> Again, clearing state_saved in pci_bus_add_device() is just a temporary
-> measure to retain the existing behavior.  It (and an accompanying code
-> comment) can be dropped once pci_legacy_suspend() and pci_pm_freeze()
-> are fixed.
-> 
-> > I'm just wishing for a more concrete mention of "pci_save_state()",
-> > since that's where the critical "state_saved" flag is updated.
-> > 
-> > And I'm not sure Documentation/ includes anything about the idea of
-> > a driver using pci_save_state() to capture the state it wants to
-> > restore after an error.  I guess that's obvious now that I write it
-> > down, but I'm sure learning a lot from this conversation :)
-> 
-> Okay, noted that the documentation could be improved.  I'd be glad
-> if this could be postponed to a separate step as well though.
-> I can only address problems one at a time. :)
-
-Absolutely.  Would you mind posting an update with the tweaks above?
-I'm not at all confident about doing it myself.
+Thanks a lot for your work and description of this.  It's a big step
+in my understanding of PM and error recovery.  Which still leaves me
+mostly ignorant, just slightly less so.
 
 Bjorn
 
