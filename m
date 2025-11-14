@@ -1,144 +1,147 @@
-Return-Path: <linux-pci+bounces-41238-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41239-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2671C5D2D2
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 13:50:13 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFE77C5D357
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 14:00:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8303F4209D7
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 12:49:23 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 799674E8342
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 12:58:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 824ED22172C;
-	Fri, 14 Nov 2025 12:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 197EA2459CF;
+	Fri, 14 Nov 2025 12:58:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="az1xF04J"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SJi1BqVk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8791C3BE0
-	for <linux-pci@vger.kernel.org>; Fri, 14 Nov 2025 12:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D44244685
+	for <linux-pci@vger.kernel.org>; Fri, 14 Nov 2025 12:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763124544; cv=none; b=d2nJVSiKZvE6dxDA6Z547NYMUF/lCWgaI1drO1htPHINYf/mYg+yGiFncqm8QbB+TvIxi6lDQz5oTIJqZUe68iQr5uAJob4pjFtfjkAVzRW1hfJtuVeas59ulit4RQ7pxsEgJzfdWY6yBwFRMq73zaS68h4l5uHwZy4kxHbH404=
+	t=1763125116; cv=none; b=Rk5Bcyl3QSmo59umfaWl678hbS4qgivmowQltur1tNfPRlcCUWlQFu58andcxaUtWf8/+OBc2bxOBXlTyxlcWRNMauinsGnE04xmZWD86OpkLdC+7GfoiW01rANPeFQ4rkoU//sUEskM+Q2TwYvG6LizmZjCXgXWGOJoGOuwaDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763124544; c=relaxed/simple;
-	bh=Vs1j3k+egiqigYTw8Bu/0q6YTfCwbX01X7FAVLFuegQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=EX6jra/tgR0VQG9S7ByKFJJA0pquY1fOxEXpBhXopdUU1hCH+xhBnYJQySNGhaoU2GSwXfPs1/wYqIjDxG/NDj4iwDdVO3L5M0tBHcwe1eIJO526bF5JpbGEWUB2SY9JZd82ZWUDSqk6ekvco0yx66FyTJbCuGo1RweCNLUsrAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=az1xF04J; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763124542; x=1794660542;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=Vs1j3k+egiqigYTw8Bu/0q6YTfCwbX01X7FAVLFuegQ=;
-  b=az1xF04JkPFUQN9wzHn0L40lBXzwLzwlvSTrglLM5DYUqMUpURrpegS1
-   h1xug+Sdq71gA6MPbj+bt9JEbBzrRwwPJpNGTdYZQOy7XOw+5MsBJhEZ/
-   6/Ifuq6rJ7lNnIJFMM4t6EGGtbZYJIZ3A5bqAWhMmGy2nj/DaGVvvoXKD
-   vdCPfwVEuW6H+kpkk+TNLDNKUSHuBVPaV2+MGIAts0FjuhREVD0AHHA5Q
-   lGaxr14Ivok5WAOwkHMwnLts+KzKI1qWORlNLLmNZKK1RotuUG7e0P3Ph
-   l7Z9L1iH9Q6A1TzR7Qn1P82pBn/kgrubKAdDLqdUTWtVNTJ4qVmIzBfAQ
-   A==;
-X-CSE-ConnectionGUID: 0TZOoCWrS5ufE05jbd5uFQ==
-X-CSE-MsgGUID: qsFi2w0iRL6yvvYNb9wSZA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="65120319"
-X-IronPort-AV: E=Sophos;i="6.19,304,1754982000"; 
-   d="scan'208";a="65120319"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2025 04:48:55 -0800
-X-CSE-ConnectionGUID: U6d+MCYmTIq1xaNsEtxY+Q==
-X-CSE-MsgGUID: KpimQk4BTG+luBVtzfZkPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,304,1754982000"; 
-   d="scan'208";a="189616838"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.31])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2025 04:48:50 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 14 Nov 2025 14:48:46 +0200 (EET)
-To: =?ISO-8859-15?Q?Alex_Benn=E9e?= <alex.bennee@linaro.org>
-cc: Simon Richter <Simon.Richter@hogyros.de>, 
-    Lucas De Marchi <lucas.demarchi@intel.com>, 
-    Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org, 
-    Bjorn Helgaas <bhelgaas@google.com>, David Airlie <airlied@gmail.com>, 
-    dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
-    intel-xe@lists.freedesktop.org, Jani Nikula <jani.nikula@linux.intel.com>, 
-    Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
-    linux-pci@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-    Simona Vetter <simona@ffwll.ch>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
-Subject: Re: [PATCH v2 00/11] PCI: BAR resizing fix/rework
-In-Reply-To: <87jyzsq0nr.fsf@draig.linaro.org>
-Message-ID: <7321c165-e38b-6016-54b0-48fcdfdaa199@linux.intel.com>
-References: <20251113162628.5946-1-ilpo.jarvinen@linux.intel.com> <87jyzsq0nr.fsf@draig.linaro.org>
+	s=arc-20240116; t=1763125116; c=relaxed/simple;
+	bh=iA0B3gs+fKlBWg5jSYfzc7MH5kde6ly60DrjWZEi2hg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=BqGu/A5yHW5Pc/8j0/erPYhuvaXyx7O6g80v/9eU7t45+t0/2aras7CWvo/tkFv27EHbzk/+2suvJkG6AdfhYKiuHT5nr/VAo5q/KpC+7m6CDZOfdVhQkZP1QDU1tobFmaA0EA1Z5JWHeSnjr9wDwoTC3cTzkDtG12oqvbTSkto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SJi1BqVk; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-477939321e6so2411715e9.0
+        for <linux-pci@vger.kernel.org>; Fri, 14 Nov 2025 04:58:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1763125113; x=1763729913; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fonN4XORu9kB4zZFGQ4ycucG5mwQsDuI6SHsKqHgqKc=;
+        b=SJi1BqVk0WgK2qEzUmLRHZ575lQOoJUwQPMvfZwEv6tEP4t531qNhTmSOV3p78sbke
+         wOEE0O/fOXLpAuH3okl9TikC6B/YGOA3D6Y3uZh8rFF7Gj2UFaUV1VDl5QAI8DYClVD+
+         mbfyKtlsr2YreOguRdPF0Vja8Zp3MctEUOM6iP8vehpOlcng/oaGV1FaemQcvQi0fv5s
+         SWaBxOewZP5mqpmAhoDL0lzeu+j5YnxJ3d/BULLzw54y2IARztLKLorq6n4IrcWCPLE8
+         /dXvaReV01WK5wpFfMyTfm5lsoVQD1JLUSBX8cR4pgnRDH57lsv3sVogoYCiVww3Ov9v
+         b5Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763125113; x=1763729913;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fonN4XORu9kB4zZFGQ4ycucG5mwQsDuI6SHsKqHgqKc=;
+        b=VH43qFwYE6pBp4h32S5bnNsBL1j5vvEol3zGd474UT33wlZNstjXAWoIyJyRbf47AV
+         19HncF/QBynARWix3lHmLRwnT5SI/xd0gy6hu5tQLjmFwU6kuaELmDYkPIwEKMwm6Ex2
+         nU2790POkW2QmPwhtftwkkTH8jI2Zoq9Qqth3SbjtkD5IgkLxYiAhegeLS1bKaubY0Uh
+         d4O6B04io2aOv2LH7WpMPYiD2nriX/oNs/Oxm0qYFWK/0Fj2TIw02PcvwA6Usy0sI0C4
+         1gWLSlhLU4PCVovk0ua8n2LkGOQ9QaqokTjlJOqJUHkPobvMylXfIvbMMw9T2tF++jKM
+         +2rw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsnSUbIJ171QOx1r/UJOBcTTtQ5IFmR814OoNgmjM/lPtoicTGTdZJCxGKUq8w0VrRFjZTW/eQvog=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9O8I8YKucCGA/fa4Oe+SfVlQHx/BFHY7oqJiYk4e/Yq8N5Mpo
+	t4M7kF+cz8AUpbe/LjyKNlV+fXnu2mvahN6sp6uflJTxevHHNrcm1fUmWnE5qSe3WXgpqvcof3g
+	VNf/vkHw9dPD/FPONiQ==
+X-Google-Smtp-Source: AGHT+IG2ECgXQJKqQsmQtOoG3o4r3rbEaGdM9qNWVQ/7abksmLYaocSL2QKZivyXJfCJ2v6fZgvJM/aIE1P9m6Y=
+X-Received: from wmco18.prod.google.com ([2002:a05:600c:a312:b0:477:d21:4a92])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:8b5b:b0:46e:53cb:9e7f with SMTP id 5b1f17b1804b1-4778fe7cdccmr21897295e9.18.1763125112769;
+ Fri, 14 Nov 2025 04:58:32 -0800 (PST)
+Date: Fri, 14 Nov 2025 12:58:31 +0000
+In-Reply-To: <20251110204119.18351-5-zhiw@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-860166094-1763122538=:1008"
-Content-ID: <8d7e8208-1885-0d8b-a6cf-f1895a519fae@linux.intel.com>
+Mime-Version: 1.0
+References: <20251110204119.18351-1-zhiw@nvidia.com> <20251110204119.18351-5-zhiw@nvidia.com>
+Message-ID: <aRcnd_nSflxnALQ9@google.com>
+Subject: Re: [PATCH v6 RESEND 4/7] rust: io: factor common I/O helpers into Io trait
+From: Alice Ryhl <aliceryhl@google.com>
+To: Zhi Wang <zhiw@nvidia.com>
+Cc: rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dakr@kernel.org, bhelgaas@google.com, 
+	kwilczynski@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	lossin@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, 
+	markus.probst@posteo.de, helgaas@kernel.org, cjia@nvidia.com, 
+	smitra@nvidia.com, ankita@nvidia.com, aniketa@nvidia.com, 
+	kwankhede@nvidia.com, targupta@nvidia.com, acourbot@nvidia.com, 
+	joelagnelf@nvidia.com, jhubbard@nvidia.com, zhiwang@kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, Nov 10, 2025 at 10:41:16PM +0200, Zhi Wang wrote:
+> The previous Io<SIZE> type combined both the generic I/O access helpers
+> and MMIO implementation details in a single struct.
+> 
+> To establish a cleaner layering between the I/O interface and its concrete
+> backends, paving the way for supporting additional I/O mechanisms in the
+> future, Io<SIZE> need to be factored.
+> 
+> Factor the common helpers into a new Io trait, and move the MMIO-specific
+> logic into a dedicated Mmio<SIZE> type implementing that trait. Rename the
+> IoRaw to MmioRaw and update the bus MMIO implementations to use MmioRaw.
+> 
+> No functional change intended.
+> 
+> Cc: Alexandre Courbot <acourbot@nvidia.com>
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Danilo Krummrich <dakr@kernel.org>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
 
---8323328-860166094-1763122538=:1008
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <01e8aae0-c24c-7924-0748-50421fa6d7ac@linux.intel.com>
+This defines three traits:
 
-On Fri, 14 Nov 2025, Alex Benn=E9e wrote:
+* Io
+* IoInfallible: Io
+* IoFallible: Io
 
-> Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> writes:
->=20
-> > Hi all,
-> >
-> > Thanks to issue reports from Simon Richter and Alex Benn=E9e, I
-> > discovered BAR resize rollback can corrupt the resource tree. As fixing
-> > corruption requires avoiding overlapping resource assignments, the
-> > correct fix can unfortunately results in worse user experience, what
-> > appeared to be "working" previously might no longer do so. Thus, I had
-> > to do a larger rework to pci_resize_resource() in order to properly
-> > restore resource states as it was prior to BAR resize.
-> <snip>
-> >
-> > base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
->=20
-> Ahh I have applied to 6.18-rc5 with minor conflicts and can verify that
-> on my AVA the AMD GPU shows up again and I can run inference jobs
-> against it. So for that case:
->=20
-> Tested-by: Alex Benn=E9e <alex.bennee@linaro.org>
+This particular split says that there are going to be cases where we
+implement IoInfallible only, cases where we implement IoFallible only,
+and maybe cases where we implement both.
 
-Thanks for testing! (And saving me the effort of backporting to 6.17 :-))
+And the distiction between them is whether the bounds check is runtime
+or compile-time.
 
-I'd be interested to see the dmesg with this series applied just to check=
-=20
-there isn't anything else I should still look at (even if it now appears=20
-to work).
+But this doesn't make much sense to me. Surely any Io resource that can
+provide compile-time checked io can also provide runtime-checked io, so
+maybe IoFallible should extend IoInfallible?
 
-You seemed to have only a few io resource assignment failures to occur=20
-during BAR resize which might be the reason the kernel thought rollback=20
-is necessary (so AFAICT, the rollback likely was entirely unnecessary as=20
-the mem resources did assign successfully).
+And why are these separate traits at all? Why not support both
+compile-time and runtime-checked IO always?
 
-I made the resize to ignore unrelated (reoccuring) io resource failures in=
-=20
-the commit 31af09b3eaf3 ("PCI: Fix failure detection during resource=20
-resize"), but that might not have been backported to 6.15 you took the log=
-=20
-from (in the initial report). So kernel might not even do rollback at all=
-=20
-with 6.18-rc5.
+I noticed also that the trait does not have methods for 64-bit writes,
+and that these are left as inherent methods on Mmio.
 
---=20
- i.
---8323328-860166094-1763122538=:1008--
+The traits that would make sense to me are these:
+
+* Io
+* Io64: Io
+
+where Io provides everything the three traits you have now provides, and
+Io64 provides the 64-bit operations. That way, everything needs to
+support operations of various sizes with both compile-time and
+runtime-checked bounds, but types may opt-in to providing 64-bit ops.
+
+Thoughts?
+
+Alice
 
