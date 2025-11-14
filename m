@@ -1,120 +1,219 @@
-Return-Path: <linux-pci+bounces-41233-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41234-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47A22C5C978
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 11:32:35 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id E118EC5C9E4
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 11:37:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 447CB3BC792
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 10:31:21 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2C3DE34251B
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 10:32:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30775313277;
-	Fri, 14 Nov 2025 10:31:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E68230147C;
+	Fri, 14 Nov 2025 10:32:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TqhQP6UX"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0IeQHNPp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012031.outbound.protection.outlook.com [52.101.43.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4F23128C0;
-	Fri, 14 Nov 2025 10:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763116268; cv=none; b=QVrH/J2vWzklgT8di7gXTZFAPK1UOnmVEMZ4aJIMWvB1cN0Uzu3qg79NGmvdyailxm0qGSCdj5sGYU1qjvVKahtEIbBf2CP83BG2Ox5DwPo3LHe8wFheRiCQrqA92M9Ns6jMPHDf01OcwbpYOlzKeBHKYlIks0eQPJ8rHYa6lS8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763116268; c=relaxed/simple;
-	bh=4H+gkE1nhzILPkm76jIHz8K1t3KUC9ctV4oeJAaqBDA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=XubqHh6lBu7Muh5dzd5w5fMQedqrtHw4hSbqLOJePKD5iPnqkQsaJJpBVHfmygVPGIj/mQAbj+uq5MIrs4TyXG8Jw+vQmGx0gbcmZElVJy5m29LmJM8WvsQGPlT/GEJVunGwhKgzvIYb4tYPY9wRkyZlLIFqk95Gek1z4BJ9Fm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TqhQP6UX; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763116266; x=1794652266;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=4H+gkE1nhzILPkm76jIHz8K1t3KUC9ctV4oeJAaqBDA=;
-  b=TqhQP6UXeNWPnJxCPCog51n/nSygYUgM8QEHtJHGFt3aEEGYg0fSICHZ
-   i6/ZlkZJEqA0rpYvrAzZ4NDB000xGkMC4yYMZslwmg0PicIIwggwHTKAj
-   bFRkD/AWp8vLI8rVgFMHhmq/r9yBkzZuK0BS7v2e5HjnLVA1eeD9mwz+3
-   WY+N8NXRYXr6btWUmAovXlNNrN38tiegOvhfL1TYx7evLRZrcagPbIxQ9
-   r9JEz9J4p5FyMaQjyRptLCI8bH2VK434vbzPnyZVuZWF5tRZlKCE8cQpe
-   oB7PqSXakNohoKNqFAx1acSNIPBrkLgTjW8Ow1OQMLXrAoJGbAEfP3tmB
-   w==;
-X-CSE-ConnectionGUID: MoM6vQTATEW+rdIAVgSuuw==
-X-CSE-MsgGUID: Kon7nMDYSiWeYxnFtukGLA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="76670211"
-X-IronPort-AV: E=Sophos;i="6.19,304,1754982000"; 
-   d="scan'208";a="76670211"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2025 02:31:04 -0800
-X-CSE-ConnectionGUID: eBJRYcq2Sr6a7pU+o5mKXQ==
-X-CSE-MsgGUID: OeaTK7j+SCKPYKFtdtMwLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,304,1754982000"; 
-   d="scan'208";a="213155445"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.31])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2025 02:31:00 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	linux-pci@vger.kernel.org,
-	Alex Deucher <alexander.deucher@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 1/1] PCI (& drm/amdgpu): BAR to be excluded depends on HW generation
-Date: Fri, 14 Nov 2025 12:30:53 +0200
-Message-Id: <20251114103053.13778-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945893054FD;
+	Fri, 14 Nov 2025 10:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.31
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763116366; cv=fail; b=CbcZ7w/d5brn3D62y5180F/dzS/D/Juh0TvUo6mhTSMqOSjN+/cerif/AQISXacEs3xuA+0BOoEZoRaKFzJCg6H+7kTPFXM1GfLuDfmf6w0qjVrPwr3iLd1kyYxuzPF8j5pOiQJKTEp+cjURCsL19mV4+5z5cktur9zfZ8MrQN4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763116366; c=relaxed/simple;
+	bh=V90cIQ5dnEAqeD7zhnGMpyFNipnphWFCclqIVw5UL9Y=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Hj65b8j9fiy6gjKxzKgPekrYTkDybpHz3GpQNY3leaI67nwwMILR/ed8gDbSg7REy3wCmaHl020nmu3m2c2/pdxrHz0rdj7BR8JRvD7nse2XR75V32GOINB4NoSlqX086Sp+b4Muom7Qop1B7qRl4I7iV8gNrVqRHmSregKSLKQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0IeQHNPp; arc=fail smtp.client-ip=52.101.43.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VpG/XgmaclBOmWogUxjRCREFo+3kdX1hosqogZSSR9Px5vDlPw+sbZ9ybo4hGiqtGDYg+gc3eMqAfegtdw1zEDVvfE2TK0+SXIBFNca3R88lbnFj18Hx9uGLNEgiAFo0CV+EfU+alMhaWrfGjfUSJx4Okq/BixdZ9hWo5GzuMAntYqN+bz0jsHCr+k1RT/LruyLQmyoDrKq/AVKNofCued5ibg9qo9HgmnoUjfmINFfB38PUF9iFgY81glvYUsQHvvM+wPLsVzz/j56l8o/hF6QDK7u8BQDHSG11n7PUxLyyB3oEJDVj7Ja1ozS7Zp8/6jEj40G79zmqJWKzfxu0hw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vA/4q13ShoRKDPnAbwin72wNKr/UpL+KhdCZGDsqFiE=;
+ b=KicvrguyafnTI+7Hn1JuJZ9UGFw9rkr9zU3yWXr5LMM229LABprieZdZbHRxUIeZbCMgy4AeaQdCEJFjqMm3nSjPNfkcRNXvvL4NJ30sSibkytKWi7qFaxqrWFMqrsuwUxSQIIFpeOpmdkTIwH/qfbFNb4uIHZARWr3rZRSSm8F8T0yTyJ5sIfFStikfw/cl2bRySupNsbfuOzws0pr+/Z7R5DJvP8VtqC4QtiAIbRQzXO6Czj/n/97mWVX4DQZ/uvPBNUINumbVXKUkI2xXjCaHU3sS7aOhfVZoIacXQFBLdqPS7zEbbpLcTB/NBKOb5Si/sTGQz+6TTIi7dRwxFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vA/4q13ShoRKDPnAbwin72wNKr/UpL+KhdCZGDsqFiE=;
+ b=0IeQHNPpbezt3L+AmF8W8cwtZOzwEC33n+Z97ckJ5IlBuwiQFZlifLNNp5A+QoPrL8qeiCOqDk++zEQXVyICqV0tqrsu4msxg+XflIMhhInJKy9QWJYSAzJLhRVYjvwcd0ivIDRqPOYLjONY4vGYkeyo1Za/Fbp71b2Fi656g3I=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by MN2PR12MB4344.namprd12.prod.outlook.com (2603:10b6:208:26e::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.15; Fri, 14 Nov
+ 2025 10:32:41 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%4]) with mapi id 15.20.9320.013; Fri, 14 Nov 2025
+ 10:32:39 +0000
+Message-ID: <278c43d6-08b1-4a24-816d-390c885d9216@amd.com>
+Date: Fri, 14 Nov 2025 11:32:34 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] PCI (& drm/amdgpu): BAR to be excluded depends on HW
+ generation
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ Alex Deucher <alexander.deucher@amd.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20251114103053.13778-1-ilpo.jarvinen@linux.intel.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20251114103053.13778-1-ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR4P281CA0446.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:c6::12) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|MN2PR12MB4344:EE_
+X-MS-Office365-Filtering-Correlation-Id: 47dc3384-cd61-4ad3-a264-08de236922ab
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?U0dML282SDVlVVdSaDhFam4vZmtoNjVoQ0hjeFV3aU96TmY1WGdGUmNUR3F3?=
+ =?utf-8?B?SGpXYkQ1V1V3a3NKb1VsVHhBdGZUZ1pCVmM3ZXVtWnhKakprK0VtbHZxM3lT?=
+ =?utf-8?B?dFFQdHJrLzZoWDBaYURxck9XTURnRE96MEIvdHlxVUhrY3hJTS96bkV0QVo2?=
+ =?utf-8?B?V1JDaGE0VnEzakY0UW9CZDhleUR6enQvYzlVVmo3YUdKa0NwVGZxQ0RiejRp?=
+ =?utf-8?B?a2xuaE1ycFB5a0dvRVpLMXRMR211S2FrL3FzeTNCb2Y3RXJUOE0xNU1yeDV3?=
+ =?utf-8?B?b3Z5TkwwcTRWWEVMaDUyVjJzc2l4SzlBSHBJYUFJa3orc3JUZG5hZ0xGL3Rn?=
+ =?utf-8?B?bHhJTUtOcG5YSDQ1SU9mREtVVHIxbFAyL25TazJrNjBzSEdxR1BDbTExUGZP?=
+ =?utf-8?B?RU9qUkJRZm9BcjdQUFNlQWFIOC9odm9UdzloQVpkUTdBbDJOZzFwdXk5d3Jt?=
+ =?utf-8?B?allLRS9LS09NYlZ3MzJjYmY4QUpxYXpGRGw2R0U0V0UrUUxINEYrMVR2Y0Ju?=
+ =?utf-8?B?NktzTlpIVDM1SXZScDcvc3Q2WlhDY1BYYVFPV2ZiczBoSnIyeFdNMmh3L0Q4?=
+ =?utf-8?B?bVVDTFZyTjRjdk5GR2ZUR0pjYkwxTUorVkNldE5LL280QUdnbjI2cGlnRjRU?=
+ =?utf-8?B?QnBnUURVanFZYnVEVFNJZjlrTVJvYTNYUkh5M2hZeEtHcUdDTXNaTEZTNUw4?=
+ =?utf-8?B?RkVHeGkxMjROcGhYbUFPdnZPcXVDaHljOUtEbkZCOE10NVRqbTV2NWxiY3Mr?=
+ =?utf-8?B?NVc4Nm1YS0tvM1NQMlRtZ0hoRE82R3MxSzducGhwMzJGMFNqK2ZXRW8yUzRK?=
+ =?utf-8?B?OVhscElVZGppVVIrUjk1bFhKQ2pBU3lHMDN0YnhwOGlSVytTZitFclNwam8r?=
+ =?utf-8?B?V0NOd21leitTZ3FBbmsvWkVWSlFhU1YwRGdlNFpmUTFUdWtFNHJlMXB3Wksy?=
+ =?utf-8?B?dENuUFhHdEFhWiswM0hNbVBoZGZWSHhzL3hiejU0MElubi9NRmFUUDNCTFA1?=
+ =?utf-8?B?TG1MSjJtTDZraE5GelY3clhPM0VsdEttdVRTYTkzdUVjYmI0cUV0aVJYZTBY?=
+ =?utf-8?B?K05IOFNoUDRBcDVYNUdvanNTdVhqclRPeDlWTTNwd09kcUY2U2ZWcEwvejMv?=
+ =?utf-8?B?NTI5SWN1ZlFXaG5ZNk8vak5heXBnZ2xObVYyMnYvUlAvU0JrMmRGY05Vbzll?=
+ =?utf-8?B?RGt4NmR4WVdlVTVZWXJ3K3hsUDJ0THFwRzQ0eldoTmJHMjF5YUhNc3BxdDRC?=
+ =?utf-8?B?NHZMdFRpQzI2T1RYYWlqbStHekxrdWRTVnpJdVdCekpyL2p3ckVHMjdYbEhB?=
+ =?utf-8?B?ckY1WlZyWWd3OTMyZytyQ3hsMXFlTlEwT05XV1MzQU9OODZPUmlOWExPUDIy?=
+ =?utf-8?B?SzloMVhOTHFJVExYejMxYmVKWXRreHdWbTUzUTM5ZDYxOVE5V0FYc0hyQkVG?=
+ =?utf-8?B?YWJERzlvWHRwVkxFUjZNbFIwMmRtdFdQcFZSM1cvWTVtRndtTHZkcVVoU1Bs?=
+ =?utf-8?B?eEpULzZJRWcrTHVJcXIwSWFnQ3luSGVhNUlyUGIxenY3RWJJdkZIMUZ6ZVdM?=
+ =?utf-8?B?UGNRRDlheDFwMlNvTEx4aVB4dzBPQ2hsR2lzRnhyektNNXpLeVdsd0YwYng0?=
+ =?utf-8?B?b1BKRzB3TGdxaEV1NEZVQ1BtcFJxWFhKYUVzTCtKempOekdtQkZPMVYxNklY?=
+ =?utf-8?B?dUsybkYrc20yS2ZYZmR3R1hnaG40L2lGUzhsY0xVdzdpRldoTlUvWkJzazRk?=
+ =?utf-8?B?U1BGeXB3ajQ2OGVsS2xtcUZ3S3JlUEVWcWJhQ1JUWCtTWFR6N3hsQ2tMVG5Z?=
+ =?utf-8?B?MjJISG5lUE45WG1hSHEzUHlVNFg2b1JaNi9CUzNGbFJHQXBkREpSZEVZY0Zr?=
+ =?utf-8?B?RnppeGFwbXZzN1FmMzZQTFA4SVROTGsvdkRXd29SdE4xdzdHZ2JEVThQckdY?=
+ =?utf-8?Q?fd8uciS4IdTA07/sIDPF4bZrC0gh8I01?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VTRyMGluYlhMNkZ0Z1E0SEhtb0UzZysydE80S3FUNjFaQjF2bTdPbjF2cndE?=
+ =?utf-8?B?MkcyRVkzR0Z2RXNrL1dGcmdUR0JFOGVaVkRGbnlRQnorUy85YXN0eHpINjJL?=
+ =?utf-8?B?ZW9JMmdXems0eHlBRDlXU2gzdE5vc1FLa0hXV05acGVSSmNzRlI3M0VWZ3A1?=
+ =?utf-8?B?dDNPQTJPUmFsOW5jbmJMTVI4RWRMMHNPTmp4WmFLSlpWdzRlRkFveTNQajNp?=
+ =?utf-8?B?M2JvN2hUczFLVkNXYlVTemNUOHNpSHNyS0FxcU9YcVZ3VHAwU0Rram42MEsx?=
+ =?utf-8?B?V2pJeHg2UTZkQXBtb2ZQOGRRQkxQWVYrdm1Ed0FBSFJuWTREMHlheWFMaHVi?=
+ =?utf-8?B?anF0VDg0Q1hacExVNDRNVDI4aFlJWUp1a2hXWDFZYisyVUFvNzg2ZVhLUTU5?=
+ =?utf-8?B?ejc2M0RLcmtnVlJJaEgyTUg1TklRNWY2TjYvSlUxSWZRYVBmR0hwK1RBcjVa?=
+ =?utf-8?B?a3dYbEFNMm1kOW41YTRBMGUwVlhQRWk0NS9nN0NPSE1sa25uM3VaUVhMM29r?=
+ =?utf-8?B?eEJoVEptbGtOMmFYaXI1aStPRGpDTkIxRXJNZUs3cUtkdGdTampZUGdtc1Jx?=
+ =?utf-8?B?Tk5FWFNNRTJiNUttcG9OM29NL2FaMEZVQ0NWMkdXUnhSOWMzSmJ6RmtYWk1I?=
+ =?utf-8?B?dmZDeElWaWxPdTdueEZYWFA2cDVpWVkvV1BWTTYra1k0M2J1SU82T1hFVERo?=
+ =?utf-8?B?OGxiOEVTS2xWMklVbHBsdURMTjVjRGh3bVFPT1ZyeGJld2NLdXNXLzliZmFS?=
+ =?utf-8?B?eTB6OHBMNlNVa0ZnNndiREdGejR0dmh4Tm5ZRVV3S2dWdG1aUmx1SmlvUmE4?=
+ =?utf-8?B?VDlOL0NBbTVNNWlFcnhHNEx1TUVrT0FBa09FdDRnQ3EyVUhGZTJ5ZUZ6dWNU?=
+ =?utf-8?B?TEF1WHFSNUNJZ3JsRU93Mm9Zc1JsQWRkU09MZEg4RlpraDBydlFORFlEVmlG?=
+ =?utf-8?B?bHhPS3hCODJPbTdJMkFIOWFNYzR3a2JBK2liL0V6TDhjSTJOZGJ6TUx6QWZF?=
+ =?utf-8?B?SGs3TnlVdDI1cE85WDZLTzkvRkJSTUJ2UHNqNGdJVWh6UXVNeE45QW1GYm9r?=
+ =?utf-8?B?RWpibE94bklEV21BdjFNSjlMQlRHcW05bmZxUit1ZXhVRHdUYjNRRnJwSWpR?=
+ =?utf-8?B?YlVGek1MVDZyVGZkN0NBWTRmMEZ0R1FJNnl4bDNCK1VQbGJPYWo1UytNYmw3?=
+ =?utf-8?B?NFRsMnc2ZEd5bUdHRHpFMCtKMmdUZi9xbjYydnRlaWo3V0NCdUxsV2srNzFv?=
+ =?utf-8?B?YWt1Ry9SZE1yS09ISkVMNzduaDFMbjl0WDNSVktqcXVkTGIxVkEvZXVsT3Ux?=
+ =?utf-8?B?cFFQY1h6enpNRklrNERCNk94dVZDT1RrM2d5V2hmMEZnQjB0VjJpLzVRLzhK?=
+ =?utf-8?B?STJjYXBSc0JNRk50aU0zc1pTYkQwUXRRVUZabUw3eEQ0QTVHbG9ZcEtuWGhz?=
+ =?utf-8?B?YThDV090eVg0cFU5KzFDYlcxSEswdkFoQWFZNXF4eHZycnA3RnRoMWVJaEZo?=
+ =?utf-8?B?T1FOQUpTN2RnbkZDRTQ4NElDSW8xenF6cVpzWk1oRVZmRHBOOGtLUnZyUFFw?=
+ =?utf-8?B?aCt0ZHVubW1mU1h3V0xPZ0ZRd0libzdzU0F0RkIxdWFTZyt5RDJSbS83b0RK?=
+ =?utf-8?B?VTRHdk45VlB4emJQa2M1MXdtV3NLZWNMOGZKRHlvcU03Q1hJRzVSSEZZY1pu?=
+ =?utf-8?B?bk5pYkxlZTNUOWJKM3h0MTB4ZDJHT0NlMjF4S29KUmtZbGxKK0NyVmZhSFpw?=
+ =?utf-8?B?VDVMSU1hK092ZHRxb25iRWViRGxFbEJTRTd6SFJ0cVMreFFka0dhMVZGQngr?=
+ =?utf-8?B?a0ZCQWVLdG5DMXEwYWNRVFpNaHc3aGljZ3hhdngwS1ZacjF5T25VNnlaTXUv?=
+ =?utf-8?B?TDdzQmVjM0NQM3M5Nlh2OXFEQ3hYNzA2Zko1aWtWWEhJRysxZkVHTnBXdUto?=
+ =?utf-8?B?SGkxRWxRVUhJRTRsWjZHS2JHcURHblk4aXdVUk5SUW02RGhicXkzQ2RuVDVH?=
+ =?utf-8?B?MlFRMnRMakdQUk5RVFVsWnE4UHdZQ2ViQmZXaTBkZ2RwYzVOWi9MWWJsZWwz?=
+ =?utf-8?B?SGxETXZzRG1LK1VHNjNRSkYzUVhCSi9ZR2JhbWZZQitJQStZUFRKV0k4UXJN?=
+ =?utf-8?Q?fSsp9O11C/vFVjoLQUCcStXSM?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47dc3384-cd61-4ad3-a264-08de236922ab
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2025 10:32:39.6289
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /dDJFoejpOOlZ2P0v3BowTcp7cMu/iLWNUrN4+vvaPMaYsuWf7KI6ep3tWSCbmDq
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4344
 
-Depending on HW generation, BAR that needs to be excluded from
-pci_resize_resource() is either 2 or 5.
+On 11/14/25 11:30, Ilpo Järvinen wrote:
+> Depending on HW generation, BAR that needs to be excluded from
+> pci_resize_resource() is either 2 or 5.
+> 
+> Suggested-by: Christian König <christian.koenig@amd.com>
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Suggested-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
+Reviewed-by: Christian König <christian.koenig@amd.com>
 
-This change should be be folded into the commit 73cd7ee85e78 ("PCI: Fix
-restoring BARs on BAR resize rollback path") in the pci/resource branch.
+If necessary feel free to add Acked-by: Christian König <christian.koenig@amd.com> to the amdgpu patch in this set as well.
 
-Also the changelog should be changed: "(BAR 5)" -> "(BAR 2 or 5)".
+Regards,
+Christian.
 
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index 4e241836ae68..bf0bc38e1c47 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -1736,7 +1736,9 @@ int amdgpu_device_resize_fb_bar(struct amdgpu_device *adev)
- 
- 	pci_release_resource(adev->pdev, 0);
- 
--	r = pci_resize_resource(adev->pdev, 0, rbar_size, 1 << 5);
-+	r = pci_resize_resource(adev->pdev, 0, rbar_size,
-+				(adev->asic_type >= CHIP_BONAIRE) ? 1 << 5
-+								  : 1 << 2);
- 	if (r == -ENOSPC)
- 		dev_info(adev->dev,
- 			 "Not enough PCI address space for a large BAR.");
-
-base-commit: 73cd7ee85e788bc2541bfce2500e3587cf79f081
--- 
-2.39.5
+> ---
+> 
+> This change should be be folded into the commit 73cd7ee85e78 ("PCI: Fix
+> restoring BARs on BAR resize rollback path") in the pci/resource branch.
+> 
+> Also the changelog should be changed: "(BAR 5)" -> "(BAR 2 or 5)".
+> 
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> index 4e241836ae68..bf0bc38e1c47 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> @@ -1736,7 +1736,9 @@ int amdgpu_device_resize_fb_bar(struct amdgpu_device *adev)
+>  
+>  	pci_release_resource(adev->pdev, 0);
+>  
+> -	r = pci_resize_resource(adev->pdev, 0, rbar_size, 1 << 5);
+> +	r = pci_resize_resource(adev->pdev, 0, rbar_size,
+> +				(adev->asic_type >= CHIP_BONAIRE) ? 1 << 5
+> +								  : 1 << 2);
+>  	if (r == -ENOSPC)
+>  		dev_info(adev->dev,
+>  			 "Not enough PCI address space for a large BAR.");
+> 
+> base-commit: 73cd7ee85e788bc2541bfce2500e3587cf79f081
 
 
