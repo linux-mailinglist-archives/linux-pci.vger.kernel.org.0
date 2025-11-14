@@ -1,97 +1,62 @@
-Return-Path: <linux-pci+bounces-41261-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41262-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2D9DC5EB1C
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 18:58:53 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35269C5ECAB
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 19:14:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 02D144F9780
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 17:50:17 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A7635384F1F
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 17:58:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22622346E61;
-	Fri, 14 Nov 2025 17:48:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1423F346794;
+	Fri, 14 Nov 2025 17:57:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrRY4ZQr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xu0OuBEW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16C03451B0;
-	Fri, 14 Nov 2025 17:48:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76682D29D1;
+	Fri, 14 Nov 2025 17:57:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763142527; cv=none; b=NT/aFXl3SHt0Dxq85VbCrEo/YYhzksJVvgiNn8Bk80KrrtFvKrf3z2nFLkk8QCAwKoOpIIHbluCcL2s3SN/zfEsn9K9WS+C5gfivErLlvPaaK1Gza5Nmr95SMKyT4JZgspqdbRMicVgUSIjdgGszzyQ8V8mw6j/0kJxJriQ5z4Y=
+	t=1763143061; cv=none; b=tYJ50XDW4EP5vZD0pRaCbyp56rg+efjZTjvYsDTbTA5URSXZ/DW7wfxDiCjJ4tfCTxDi7SUHZLBbdPmaG2maDGND/evjFOA3WneP+6kWat0E0JOctrVc6Smbus/zC6Dn2Qe8AJazc1a6My7iYjiRT7+DNmpC77flx4dnOSBrcPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763142527; c=relaxed/simple;
-	bh=yocwTQVHHZ1oHWeawnGjtUSUysV1o9GGmLQY2fd93FA=;
+	s=arc-20240116; t=1763143061; c=relaxed/simple;
+	bh=vfL1Pl5c9TiW8/PwiGRW6nnpwuYEWu4MfO4FlaLmKHI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PwkQfKbYruidPj+x6DurcpMrZzpgF3Ez8A2lwN+CYoDOnoAFHFNlwnx25b3lJfDBA8C6ZmGtb6IAwYZcy+WeOjSu4mL0IT4csg/p/1ohRqGu4eTjphH9udvzbYf8/h7hg1YVjaHY2AHihKzFtKTAnvM9cE7vuI8voQEBAQhjRP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrRY4ZQr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20BA5C116D0;
-	Fri, 14 Nov 2025 17:48:46 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=lHbsZvGrYsPC6W0ZbEfS7Q7/BGCwStjtjZ0+D+KJcsuMSTlwc6Jt6G+Y2utVgaOpPL39qXd3OCHl0nOyZBH4pRisgbd7cdsnVD/YMGvfRFTHiJb2QIXCgB9TDa35UPsUeJ4oUhXggIQmcn7Bzh1OsarZXSHMFmO6Tx2ypK40XBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xu0OuBEW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E157C4CEF1;
+	Fri, 14 Nov 2025 17:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763142526;
-	bh=yocwTQVHHZ1oHWeawnGjtUSUysV1o9GGmLQY2fd93FA=;
+	s=k20201202; t=1763143061;
+	bh=vfL1Pl5c9TiW8/PwiGRW6nnpwuYEWu4MfO4FlaLmKHI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jrRY4ZQrDYvtv6r8RIAFYBCRLxeDPRRQdFhBOSiHfHjEmJEFZwQjQlxLe5Uy5KLpz
-	 weOmScjpMD9XpoOt77SUWH5R7y/xNE8DF6lcEn4qWeNN540vDg+B8LgnWCgRqa4R0T
-	 sib1hd1cIceLKwAzoZlfgOu3daGIE7raxiI1LC5BR0R8roVGqGTQ87bAasz2PxucVh
-	 uMPcUqtO9zxeHeJw8B4UJ2oTIaZbpPI8n2wMKR0p34lGoQGI3RjZ5nLGBE/dkvN7+5
-	 It+4AUl0P8h3pRHUb6PKeo/0OY1eivLQ27zQvNkN66gucGnW3u9he2Gr3NIwXLyYoC
-	 uw7qDwwhB3xLQ==
-Date: Fri, 14 Nov 2025 11:48:44 -0600
+	b=Xu0OuBEWCNcolV9hhQObYp9kEcBWREwXELrFxs6Dn5F2/wauksne/QZLElvFfOcOJ
+	 /KpeikNwouH60qUgW8TB4qMGaiId5DNDddBrp1NPKER/Dfmxl3bm7pim1IbSxFIB2B
+	 i97Qi4e1nvvr3hSFz4YqtfVti2Bg6kIpvqJP1NGVPw/dclDCR9ewE/mzoB1zy2Vbum
+	 RYMqOvufhORb6Do3p3d06qiM6vI+QHCea+0jbUF+qLau8jljoW0TM6+c/8Vu8TL0fV
+	 3YBHnaIIvL02TNvlqkVAlYJPhSCjExbFzP098OfwyMFXS7j5w9nWiA4L0hDFzUSdv4
+	 Qh3MysW9mB8UQ==
+Date: Fri, 14 Nov 2025 11:57:39 -0600
 From: Rob Herring <robh@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Len Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
-	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 00/29] lan966x pci device: Add support for SFPs
-Message-ID: <20251114174844.GA3792362-robh@kernel.org>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+	Bjorn Andersson <andersson@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/12] dt-bindings: PCI: qcom: Move remaining devices to
+ dedicated schema
+Message-ID: <20251114175739.GA3805640-robh@kernel.org>
+References: <20251103-dt-bindings-pci-qcom-v1-0-c0f6041abf9b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -100,96 +65,49 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251015071420.1173068-1-herve.codina@bootlin.com>
+In-Reply-To: <20251103-dt-bindings-pci-qcom-v1-0-c0f6041abf9b@linaro.org>
 
-On Wed, Oct 15, 2025 at 09:13:47AM +0200, Herve Codina wrote:
-> Hi,
+On Mon, Nov 03, 2025 at 04:14:40PM +0100, Krzysztof Kozlowski wrote:
+> Some time ago I already moved several devices from qcom,pcie.yaml
+> binding to a dedicated binding files for easier reviewing and
+> maintenance.
 > 
-> This series add support for SFPs ports available on the LAN966x PCI
-> device. In order to have the SFPs supported, additional devices are
-> needed such as clock controller and I2C.
+> Move the remaining one which makes the qcom,pcie.yaml empty thus can be
+> entirely removed.
 > 
-> As a reminder, the LAN966x PCI device driver use a device-tree overlay
-> to describe devices available on the PCI board. Adding support for SFPs
-> ports consists in adding more devices in the already existing
-> device-tree overlay.
+> Best regards,
+> Krzysztof
 > 
-> With those devices added, the device-tree overlay is more complex and
-> some consumer/supplier relationship are needed in order to remove
-> devices in correct order when the LAN966x PCI driver is removed.
+> ---
+> Krzysztof Kozlowski (12):
+>       dt-bindings: PCI: qcom,pcie-sm8150: Merge SC8180x into SM8150
+>       dt-bindings: PCI: qcom,pcie-sdx55: Move SDX55 to dedicated schema
+>       dt-bindings: PCI: qcom,pcie-sdm845: Move SDM845 to dedicated schema
+>       dt-bindings: PCI: qcom,pcie-qcs404: Move QCS404 to dedicated schema
+>       dt-bindings: PCI: qcom,pcie-ipq5018: Move IPQ5018 to dedicated schema
+>       dt-bindings: PCI: qcom,pcie-ipq6018: Move IPQ6018 and IPQ8074 Gen3 to dedicated schema
+>       dt-bindings: PCI: qcom,pcie-ipq8074: Move IPQ8074 to dedicated schema
+>       dt-bindings: PCI: qcom,pcie-ipq4019: Move IPQ4019 to dedicated schema
+>       dt-bindings: PCI: qcom,pcie-ipq9574: Move IPQ9574 to dedicated schema
+>       dt-bindings: PCI: qcom,pcie-apq8064: Move APQ8064 to dedicated schema
+>       dt-bindings: PCI: qcom,pcie-msm8996: Move MSM8996 to dedicated schema
+>       dt-bindings: PCI: qcom,pcie-apq8084: Move APQ8084 to dedicated schema
 > 
-> Those links are typically provided by fw_devlink and we faced some
-> issues with fw_devlink and overlays.
-> 
-> This series gives the big picture related to the SFPs support from
-> fixing issues to adding new devices. Of course, it can be split if
-> needed.
-> 
-> The first part of the series (patch 1, 2 and 3) fixes fw_devlink when it
-> is used with overlay. Patches 1 and 3 were previously sent by Saravana
-> [0]. I just rebased them on top of v6.18-rc1 and added patch 2 in order
-> to take into account feedback received on the series sent by Saravana.
-> 
-> Those modification were not sufficient in our case and so, on top of
-> that, patches 4 to 7 fix some more issues related to fw_devlink.
-> 
-> Patches 8 to 13 introduce and use fw_devlink_set_device() in already
-> existing code.
-> 
-> Patches 14 and 15 are related also to fw_devlink but specific to PCI and
-> the device-tree nodes created during enumeration.
-> 
-> Patches 16, 17 and 18 are related fw_devlink too but specific to I2C
-> muxes. Patches purpose is to correctly set a link between an adapter
-> supplier and its consumer. Indeed, an i2c mux adapter's parent is not
-> the i2c mux supplier but the adapter the i2c mux is connected to. Adding
-> a new link between the adapter supplier involved when i2c muxes are used
-> avoid a freeze observed during device removal.
-> 
-> Patch 19 adds support for fw_delink on x86. fw_devlink is needed to have
-> the consumer/supplier relationship between devices in order to ensure a
-> correct device removal order. Adding fw_devlink support for x86 has been
-> tried in the past but was reverted [1] because it broke some systems.
-> Instead of enabling fw_devlink on *all* x86 system, enable it on *all*
-> x86 except on those where it leads to issue.
-> 
-> Patches 20 and 21 allow to build clock and i2c controller used by the
-> LAN966x PCI device when the LAN966x PCI device is enabled.
-> 
-> Patches 22 to 26 are specific to the LAN966x. They touch the current
-> dtso, split it in dtsi/dtso files, rename the dtso and improve the
-> driver to allow easier support for other boards.
-> 
-> The next patch (patch 27) update the LAN966x device-tree overlay itself
-> to have the SPF ports and devices they depends on described.
-> 
-> The last two patches (patches 28 and 29) sort the existing drivers in
-> the needed driver list available in the Kconfig help and add new drivers
-> in this list keep the list up to date with the devices described in the
-> device-tree overlay.
-> 
-> We believe some items from the above list can be merged separately, with
-> no build dependencies. We expect:
-> 
->  - Patches 1 to 7 to be taken by driver core maintainers
-> 
->  - Patches 8 to 13 to be taken by driver core maintainers
-> 
->  - Patches 14 and 15 to be taken by driver core or PCI maintainers
->   (depend on patch 8)
-> 
->  - Patches 16 to 18 to be taken by I2C maintainers
-> 
->  - Patch 19 to be taken by driver core or OF maintainers
-> 
->  - Patch 20 to be taken by clock maintainers
-> 
->  - Patch 21 to be taken by I2C maintainers
-> 
->  - Patches 22 to 29 to be taken by misc maintainers
+>  .../devicetree/bindings/pci/qcom,pcie-apq8064.yaml | 170 +++++
+>  .../devicetree/bindings/pci/qcom,pcie-apq8084.yaml | 109 +++
+>  .../devicetree/bindings/pci/qcom,pcie-ipq4019.yaml | 146 ++++
+>  .../devicetree/bindings/pci/qcom,pcie-ipq5018.yaml | 189 +++++
+>  .../devicetree/bindings/pci/qcom,pcie-ipq6018.yaml | 179 +++++
+>  .../devicetree/bindings/pci/qcom,pcie-ipq8074.yaml | 165 +++++
+>  .../devicetree/bindings/pci/qcom,pcie-ipq9574.yaml | 183 +++++
+>  .../devicetree/bindings/pci/qcom,pcie-msm8996.yaml | 156 ++++
+>  .../devicetree/bindings/pci/qcom,pcie-qcs404.yaml  | 131 ++++
+>  .../devicetree/bindings/pci/qcom,pcie-sc8180x.yaml | 168 -----
+>  .../devicetree/bindings/pci/qcom,pcie-sdm845.yaml  | 190 +++++
+>  .../devicetree/bindings/pci/qcom,pcie-sdx55.yaml   | 172 +++++
+>  .../devicetree/bindings/pci/qcom,pcie-sm8150.yaml  |   1 +
+>  .../devicetree/bindings/pci/qcom,pcie.yaml         | 782 ---------------------
+>  14 files changed, 1791 insertions(+), 950 deletions(-)
 
-I don't think this is going to land in 6.19, so I've applied patches 1 
-and 3.
-
-Rob
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
