@@ -1,161 +1,204 @@
-Return-Path: <linux-pci+bounces-41213-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41214-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 288D4C5BAE0
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 08:09:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96608C5BCB2
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 08:31:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 306DD4E8C5F
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 07:03:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E85A53A4ADF
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 07:31:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8138619F137;
-	Fri, 14 Nov 2025 07:03:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD4C22F6190;
+	Fri, 14 Nov 2025 07:31:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Kkr8BUxq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VqrKIJLk"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ihh3mPg2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D188B12DDA1;
-	Fri, 14 Nov 2025 07:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BA92EBB9A;
+	Fri, 14 Nov 2025 07:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763103809; cv=none; b=aTgyu+3eIItJqmxCeWXB6mZdmUtLQS+eucGmrYBjQQNNHV6yrf2wyCG+8xoYovn8uguE8VEEZmkTOA0w3rjBagFUahntq7cXt6es4rLAyxViqNUn0r3IilegNm8EROl4p3zSSacoZ5fLyNN81dQTFsEMcMnGILWyav38p8nemoI=
+	t=1763105480; cv=none; b=klnkoQzjsK1bB+xGfaO6TXFqJ+xXuEKYZSvZ36Rcphx2yEKa6QF3BQ4VvYA74ORl9iLVJjuK5XOvUFdkz6SIFvmwPAfUzMTA85UHMtEdyVwSU373z21zLu9gyXuP6IacmD+dg2JwtrNNUOiUViUlIEb3g+Omap/QEWIgdGgZvPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763103809; c=relaxed/simple;
-	bh=JJmcUa8kzgG4fsYeJvqgfTT9tu3JsO3ITBAzyO0ISvc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Ix8p8dVetKtbdjFlvm8C5udWmFz5eLxzY1sOxmKAURk1yduo8PCFRGPBOdkGwg+DwOytB2CdxSr4Eb0qtYrdFWVxig/wwypQcbqdWRiJj/cRLKKAQjnePGv/Ik7ahKWqMFnYacABRthqOT1JlEEXjrMUyLfmXvGAbX+Vh7aPL6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Kkr8BUxq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VqrKIJLk; arc=none smtp.client-ip=202.12.124.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id A0A797A013D;
-	Fri, 14 Nov 2025 02:03:25 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Fri, 14 Nov 2025 02:03:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1763103805;
-	 x=1763190205; bh=+9e6FQJYDBsPl1jkD3novF2T5qQ3BDazY3CfaJMvju8=; b=
-	Kkr8BUxqPGK1Z3+4BpwkcXn5eWZ9hMKOCWH9VvtuOl+T5CZniYPcirw4hz4KbzdQ
-	GKsbIF3vOFzTZntkQ6NCK/rtrMeAMNRe3j5OUq9xExIihhTwc3Z/qRom3f8tL3yS
-	7n2V4faSNEDFfp/ujiH3LAvBsSEziqCvB2Rf++cCpMXwi+2OnPSN9NwwtHrT3YYW
-	Wz0ea1xFFlEXs3HBXsI9GRf7hXxIOlfP3v7G46WAjSqJVOZJary7yua61l1Afuaj
-	0qYzD+bxLzOZnEc+QWoEm2VXAp8kvLkMR/gXCROlc91RF47RX6WrFjoRjiv9CFZq
-	qG3sIpCL8ks0PqG32b3rtA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763103805; x=
-	1763190205; bh=+9e6FQJYDBsPl1jkD3novF2T5qQ3BDazY3CfaJMvju8=; b=V
-	qrKIJLkCU7Mup7XIDF1GPVKKA5HtwWZ8hfI1GSxMH389tPz/7C6xyCWjp3gvQEDZ
-	foJS+VzCfYF2PT0hBwbTr4KUYAlAO0HaEExLkiyAHoKg10wDZoFKMsbFFoj114Dc
-	5Wity2sFlDERE1MOMPiMQZZJR0VhsYMMxYofbe8ltLdnxvvvqoqswy/wRopAjq68
-	N9WQnOW/dayWEX5etQkEAVT+sYVCJ6olEbiIJX6T10NXQDNao54wMcsP6krVnCrc
-	aeXE/f5cr2JL/yezBvx2EWoH0EuaefrGUHPI98nKSWvaIr5711lWo8X/2prxgu5K
-	y4g+Fa6yM8jYn6zirN7Fw==
-X-ME-Sender: <xms:PNQWacaVLBgC9nNxAwigGX5Drf_gq_HI7fBsev8LJN1HNxR62q6Ygg>
-    <xme:PNQWaSN9ovvEr8UNpipQJTb-Tytj75m2UJODHaIoQWt_WNoGL43TEbXLsZ-HG9x7t
-    0j-cAa8b-NsPptu3MkCZOWxBU6FuCLfPHKLizBNIb53mu5cfuCk_4c>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvtdeludejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoh
-    epkhhishhhohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkfihilhgtiiihnhhs
-    khhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlphhivghrrghlihhsiheskhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtohepmhgrnhhisehkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmh
-    dqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohep
-    uhhnihgtohhrnhgpfigrnhhgsehouhhtlhhoohhkrdgtohhmpdhrtghpthhtohepshdqvh
-    gruggrphgrlhhlihesthhirdgtohhm
-X-ME-Proxy: <xmx:PNQWaXUUidTCGn64MDLMVcH47OvgeHBQFXeYoNhlQ4GbuQwTL4iPsg>
-    <xmx:PNQWaUwbGym5csyq4rlEQA7cA_CwvSknjLXJiP2xEfbGuENE6u-Uvg>
-    <xmx:PNQWaWxviwxkJ9-dMGWL06UcV7Ck3G16huzVzBcb5QYNJk0HI3Oxmw>
-    <xmx:PNQWaR24J5sgWpWmsX9owMhMU2_lhQL0E23a1XmsLbzraobsEovf6w>
-    <xmx:PdQWafCtN7VisKCATc9zZ-SqIK6ihquremM1SW5EHRJqIbo3FQZzl7kE>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CE6DB700054; Fri, 14 Nov 2025 02:03:24 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1763105480; c=relaxed/simple;
+	bh=IxF8X1vfgVSVMfT8B2eub1WyPsdDbytWvtHeqhTmLhA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bHcQIEK6/4AM+zIqvhoF1bnKY240npXMQZDDvhWLUTwEi7327xIZL4e09xOsbeVs024VgXKlFQ8CrhjYirP4oaVbGcW2ORim9u7vvYtMyMPTGCXDUSt+IzZhuwuTEWVQPhjKZK2BLzXkzVacnN43/HHMDaFR1NKcRgYg3JKKFgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ihh3mPg2; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id D08544E416AF;
+	Fri, 14 Nov 2025 07:31:16 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 90B36606F6;
+	Fri, 14 Nov 2025 07:31:16 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 91780102F24BE;
+	Fri, 14 Nov 2025 08:30:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1763105473; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=I/md1yzfYHmg4zf6NhSCwlxOr7WiJ5xSExfYcNRcf0c=;
+	b=Ihh3mPg240Inv5tK6a0y2bc6iUFXi846hUKdidOylUDZuvveWMMENdHQaSkRED6RzFOXBq
+	s3tYQSOkev+hYVQeHR4xdj9gsjCBZE4xoVzfSAK/1g2MipCnnjRB9Bkk5GjuXG3Cx7DOFw
+	kYgFKBggTQm+b9pCxa+CSSQ/ZTWCwURcGhX3PYd9ux7EBGyx/9AHjyRmK+4KGnJIGUEThM
+	qzUZSLvpXFlxbq5qUbppYDVR3bLAksRf/LYtY1SMB9VNJh0223ScvrKjeOG9M97dF0T3LW
+	uvqxAXMSPLBRG2VoFl3r/PtCN/OynUaIXjcWuLff+sSzDc+2UloAc/8A3W9eSw==
+Date: Fri, 14 Nov 2025 08:30:56 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
+ Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
+ Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, Bjorn
+ Helgaas <bhelgaas@google.com>, Charles Keepax
+ <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
+ <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Mark Brown <broonie@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, Davidlohr
+ Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+ <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
+ Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 05/29] dt-bindings: bus: Add simple-platform-bus
+Message-ID: <20251114083056.31553866@bootlin.com>
+In-Reply-To: <CAL_JsqJ89EcUvQnS0xYXOrw6wJ30TT5oFA85eCqHYdu43056cw@mail.gmail.com>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+	<20251015071420.1173068-6-herve.codina@bootlin.com>
+	<20251030141448.GA3853761-robh@kernel.org>
+	<20251031162004.180d5e3f@bootlin.com>
+	<20251112142632.GA1610836-robh@kernel.org>
+	<CAL_JsqJ89EcUvQnS0xYXOrw6wJ30TT5oFA85eCqHYdu43056cw@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AO4N9SNPwumV
-Date: Fri, 14 Nov 2025 08:03:04 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Siddharth Vadapalli" <s-vadapalli@ti.com>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- "Manivannan Sadhasivam" <mani@kernel.org>, "Rob Herring" <robh@kernel.org>,
- bhelgaas@google.com, "Chen Wang" <unicorn_wang@outlook.com>,
- "Kishon Vijay Abraham I" <kishon@kernel.org>
-Cc: stable@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- srk@ti.com
-Message-Id: <201b9ad1-3ebd-4992-acdd-925d2e357d22@app.fastmail.com>
-In-Reply-To: <250d2b94d5785e70530200e00c1f0f46fde4311b.camel@ti.com>
-References: <20251113092721.3757387-1-s-vadapalli@ti.com>
- <084b804f-2999-4f8d-8372-43cfbf0c0d28@app.fastmail.com>
- <250d2b94d5785e70530200e00c1f0f46fde4311b.camel@ti.com>
-Subject: Re: [PATCH] PCI: cadence: Kconfig: change PCIE_CADENCE configs from tristate
- to bool
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri, Nov 14, 2025, at 06:47, Siddharth Vadapalli wrote:
-> On Thu, 2025-11-13 at 11:13 +0100, Arnd Bergmann wrote:
->> On Thu, Nov 13, 2025, at 10:27, Siddharth Vadapalli wrote:
+Hi Rob,
 
-> Thank you for the suggestion. I think that the following Makefile changes
-> will be sufficient and Kconfig doesn't need to be modified:
->
-> diff --git a/drivers/pci/controller/cadence/Makefile
-> b/drivers/pci/controller/cadence/Makefile
-> index 5e23f8539ecc..1a97c9b249b8 100644
-> --- a/drivers/pci/controller/cadence/Makefile
-> +++ b/drivers/pci/controller/cadence/Makefile
-> @@ -4,4 +4,6 @@ obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
->  obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
->  obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
->  obj-$(CONFIG_PCI_J721E) += pci-j721e.o
-> +pci_j721e-y := pci-j721e.o pcie-cadence.o
->  obj-$(CONFIG_PCIE_SG2042_HOST) += pcie-sg2042.o
-> +pci_sg2042_host-y := pci-sg2042.o pcie-cadence.o
->
-> If either of PCI_J721E or SG2042_HOST is selected as a built-in module,
-> then pcie-cadence-host.c, pcie-cadence-ep.c and pcie-cadence.c drivers will
-> be built-in. If both PCI_J721E and SG2042_HOST are selected as loadable
-> modules, only then the library drivers will be enabled as loadable modules.
->
-> Please let me know what you think.
+On Wed, 12 Nov 2025 13:29:09 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-I don't think that the version above does what you want,
-this would build the pcie-cadence.o file into three separate
-modules and break in additional ways if a subset of them are
-built-in.
+> On Wed, Nov 12, 2025 at 8:26 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, Oct 31, 2025 at 04:20:04PM +0100, Herve Codina wrote:  
+> > > Hi Rob,
+> > >
+> > > On Thu, 30 Oct 2025 09:14:48 -0500
+> > > Rob Herring <robh@kernel.org> wrote:
+> > >  
+> > > > On Wed, Oct 15, 2025 at 09:13:52AM +0200, Herve Codina wrote:  
+> > > > > A Simple Platform Bus is a transparent bus that doesn't need a specific
+> > > > > driver to perform operations at bus level.
+> > > > >
+> > > > > Similar to simple-bus, a Simple Platform Bus allows to automatically
+> > > > > instantiate devices connected to this bus.
+> > > > >
+> > > > > Those devices are instantiated only by the Simple Platform Bus probe
+> > > > > function itself.  
+> > > >
+> > > > Don't let Greg see this... :)
+> > > >
+> > > > I can't say I'm a fan either. "Platform bus" is a kernel thing, and the
+> > > > distinction here between the 2 compatibles is certainly a kernel thing.
+> > > >
+> > > > I think this needs to be solved within the kernel.  
+> > >
+> > > I fully agree with that.
+> > >  
+> > > >
+> > > > What I previously said is define a list of compatibles to not
+> > > > instantiate the child devices. This would essentially be any case having
+> > > > a specific compatible and having its own driver. So if someone has
+> > > > 'compatible = "vendor,not-so-simple-bus", "simple-bus"', when and if
+> > > > they add a driver for "vendor,not-so-simple-bus", then they have to add
+> > > > the compatible to the list in the simple-pm-bus driver. I wouldn't
+> > > > expect this to be a large list. There's only a handful of cases where
+> > > > "simple-bus" has a more specific compatible. And only a few of those
+> > > > have a driver. A more general and complicated solution would be making
+> > > > linux handle 2 (or more) drivers matching a node and picking the driver
+> > > > with most specific match. That gets complicated with built-in vs.
+> > > > modules. I'm not sure we really need to solve that problem.  
+> > >
+> > > Right. Let discard the "more general and complicated solution" and focus
+> > > on the list of compatible to avoid child devices instantiation.
+> > >
+> > > Do you mean that, for "simple-bus" compatible we should:
+> > >  - Remove the recursive device instantiation from of_platform_populate().  
+> >
+> > That may be a problem I hadn't considered. While we've solved most probe
+> > ordering issues, I think some may remain. Even when of_platform_populate()
+> > is called affects this. For example, I tried removing various arm32
+> > of_platform_.*populate() calls which run earlier than the default call,
+> > but that broke some platforms. (Looking at the list of remaining ones, I
+> > fixed the at91 pinctrl/gpio drivers, but never tried to remove the
+> > calls again.)
+> >
+> > Maybe this can be restricted to cases which are not recursively created
+> > from the root node. Not sure how we detect that. Perhaps no OF_POPULATED
+> > flag on the parent node? Or we could just enable this for OF_DYNAMIC
+> > nodes? That should be sufficient for your usecase.  
+> 
+> Thinking a bit more about this, I think you don't have to do anything.
+> If child nodes already got populated, calling of_platform_populate() a
+> second time is essentially a nop. And for cases you care about, that
+> wouldn't have happened. Of course, I'd still rather there only be 1
+> path that devices could have been instantiated.
+> 
 
-I would still suggest combining pcie-cadence{,-ep,-host}.o into
-one module that is used by the other drivers, as that would address
-the build failure you are observing.
+Hum, if my understanding is correct, this looks like what I did in the v3
+iteration [1].
 
-An alternative would be to change the pcie-j721e.c file to only
-reference the host portion if host support is enabled for this
-driver.
+The idea was:
+  1) Do not change anything in of_platform_.*populate()
+  2) Update the simple-bus driver to populate children if there is only one
+     compatible string and this string matches the compatible string handled
+     by the driver.
 
-      Arnd
+We can be more restrictive for 2) and only populate children if the only one
+compatible string is "simple-bus". This will keep current behavior for
+"simple-mfd", "isa" and "arm,amba-bus".
+
+If you think this could be the right direction, I will bring those modification
+in the next iteration.
+
+Also, do you think we should be more restrictive and populate children in the
+simple-bus driver only for "simple-bus" compatible?
+
+[1] https://lore.kernel.org/lkml/20250613134817.681832-6-herve.codina@bootlin.com/
+
+Best regards,
+Hervé
 
