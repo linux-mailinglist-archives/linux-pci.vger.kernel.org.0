@@ -1,128 +1,149 @@
-Return-Path: <linux-pci+bounces-41243-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41244-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E21DC5D4BC
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 14:18:29 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87C3DC5D54D
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 14:25:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 29D3A34EDCF
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 13:12:43 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 64AED4EC2A6
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 13:17:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77A7C245012;
-	Fri, 14 Nov 2025 13:12:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1C5E30F7F7;
+	Fri, 14 Nov 2025 13:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lWRSZh28"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8795619E7D1;
-	Fri, 14 Nov 2025 13:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8792F068F;
+	Fri, 14 Nov 2025 13:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763125958; cv=none; b=gow99QKnvJNy+pQ9cPaIrq3O+39rirWCfUFYO//ue+9LNitiadRxd493Yk/5SZI3yNkds5rLFxneLsUssv2iYsEjbv8o02PSyX93iAh3G2D1vJhsSKOsgj/gzrt2BFeGzSlfXTJ7FfsYNEeUbHPRHpjAU0qWg3EcaoOkKFv4lj4=
+	t=1763126218; cv=none; b=E+oIZiB7Rxqupdbae03fmwmF92cmRAu7zrkG/goV21DoBCXtXWoElxjE8Biwxki2Vt/yKKqChH0eBVHZ6NDHcuvPb3sIU5FNu4O0NgCvvK4Bak24WF02bHr2C6VZcIvdY1Q8OiZ8ymtdPZWgj1YKO2P7sOdeEpD59DaGm2lS8bI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763125958; c=relaxed/simple;
-	bh=1hXjKIg4/jA/DRDAjapwgRzU4bIgIF8InlmC3moADzU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P7U6+RCvMgBBUL9lplCbMS52VziXashmhlA7R+NHQYvC9gb2M/DU6jQTBTT1XTrKJvyQj6Yxypre8tarLY1dURyLvdZPbxzxBMmyeBo0oZcr8rE4uYEBYXZNDVXkpYlWhkkYCR2jo71k4zoKZ4R7hlU9/voNEUqmgHfAKAePZkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4d7Hbf4QRDzJ46F0;
-	Fri, 14 Nov 2025 21:11:58 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 601F714027A;
-	Fri, 14 Nov 2025 21:12:34 +0800 (CST)
-Received: from localhost (10.126.173.232) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Fri, 14 Nov
- 2025 13:12:33 +0000
-Date: Fri, 14 Nov 2025 13:12:32 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Zhiping Zhang <zhipingz@meta.com>
-CC: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, "Bjorn
- Helgaas" <bhelgaas@google.com>, <linux-rdma@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <netdev@vger.kernel.org>, Keith Busch
-	<kbusch@kernel.org>, Yochai Cohen <yochai@nvidia.com>, Yishai Hadas
-	<yishaih@nvidia.com>
-Subject: Re: [RFC 1/2] Set steering-tag directly for PCIe P2P memory access
-Message-ID: <20251114131232.00006e9e@huawei.com>
-In-Reply-To: <20251113213712.776234-2-zhipingz@meta.com>
-References: <20251113213712.776234-1-zhipingz@meta.com>
-	<20251113213712.776234-2-zhipingz@meta.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1763126218; c=relaxed/simple;
+	bh=RzE25d2d9v/fSEKhDggTlj9ePRKiOdKbPr8EKVUlmfU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EWT93cBh9xLt82YXNO2Uz7VoiclI5Rk0wGPVsuzgUbnahuXHaPMfrsJBKirMZOWZG6d6XwAk3ycWuCTxE1FYkyJAH7EscVy8eTIpw7C6ru1PE37r7zPXEgVjzSpXEKqeY1lCcL56/6iQ0CFaBJV205rrPzS7VD9HuL8TfGrERgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lWRSZh28; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763126217; x=1794662217;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=RzE25d2d9v/fSEKhDggTlj9ePRKiOdKbPr8EKVUlmfU=;
+  b=lWRSZh28kbdAhx35m7IzI6O2Yq9HE+5FH2Bck8SSc4IJqSXa3lT1SgPA
+   AxkUigOMGFPM1noQlmsurIi2Rerqir9ROGu8OSZyKYjjA+QS7yu9o6o36
+   kfKUOOqjTOsXTeaPxYkxTggWfle+3u71wZ9H5SaqeDL50ZA9yO+Vl7+WI
+   RYXkIAxYDUozE+mdZtVyPiLZLPcta1rR/UNP2hJtnJzlhnmuN1XtD61O0
+   MVfbm44rnP4BDQ7s3m0l/YjVIUU4uOTNHPLN/AWDn9FiIIGp7F5Or7GvM
+   DHYOYqDXOSKZxo1PrGN0uPq2YUTEMHXB4dQfcxepM0zUYUjnIOUJbrWIg
+   Q==;
+X-CSE-ConnectionGUID: SA9BbpTzRGmN0dsxg2LCYg==
+X-CSE-MsgGUID: AtwJ0d/2Q1+zBKXRG5Wbig==
+X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="82612792"
+X-IronPort-AV: E=Sophos;i="6.19,304,1754982000"; 
+   d="scan'208";a="82612792"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2025 05:16:56 -0800
+X-CSE-ConnectionGUID: tLpJ9J04REWyET8TY8pkSQ==
+X-CSE-MsgGUID: vAIfT8BCT2iy+wMU147Rzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,304,1754982000"; 
+   d="scan'208";a="189620457"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.31])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2025 05:16:51 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 14 Nov 2025 15:16:48 +0200 (EET)
+To: =?ISO-8859-15?Q?Alex_Benn=E9e?= <alex.bennee@linaro.org>
+cc: Simon Richter <Simon.Richter@hogyros.de>, 
+    Lucas De Marchi <lucas.demarchi@intel.com>, 
+    Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org, 
+    Bjorn Helgaas <bhelgaas@google.com>, David Airlie <airlied@gmail.com>, 
+    dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
+    intel-xe@lists.freedesktop.org, Jani Nikula <jani.nikula@linux.intel.com>, 
+    Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+    linux-pci@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+    Simona Vetter <simona@ffwll.ch>, Tvrtko Ursulin <tursulin@ursulin.net>, 
+    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
+    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
+    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 08/11] drm/xe: Remove driver side BAR release before
+ resize
+In-Reply-To: <87ecq0pxos.fsf@draig.linaro.org>
+Message-ID: <3dd004b8-6710-e73b-fad9-d7685d2de5cc@linux.intel.com>
+References: <20251113162628.5946-1-ilpo.jarvinen@linux.intel.com> <20251113162628.5946-9-ilpo.jarvinen@linux.intel.com> <87ecq0pxos.fsf@draig.linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+Content-Type: multipart/mixed; BOUNDARY="8323328-10488022-1763126168=:1008"
+Content-ID: <17787d87-d6d0-c4a6-d47c-0de46448de3d@linux.intel.com>
 
-On Thu, 13 Nov 2025 13:37:11 -0800
-Zhiping Zhang <zhipingz@meta.com> wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> PCIe: Add a memory type for P2P memory access
-> 
-> The current tph memory type definition applies for CPU use cases. For device
-> memory accessed in the peer-to-peer (P2P) manner, we need another memory
-> type.
-> 
-> Signed-off-by: Zhiping Zhang <zhipingz@meta.com>
-> ---
->  drivers/pci/tph.c       | 4 ++++
->  include/linux/pci-tph.h | 4 +++-
->  2 files changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
-> index cc64f93709a4..d983c9778c72 100644
-> --- a/drivers/pci/tph.c
-> +++ b/drivers/pci/tph.c
-> @@ -67,6 +67,8 @@ static u16 tph_extract_tag(enum tph_mem_type mem_type, u8 req_type,
->  			if (info->pm_st_valid)
->  				return info->pm_st;
->  			break;
-> +		default:
-> +			return 0;
->  		}
->  		break;
->  	case PCI_TPH_REQ_EXT_TPH: /* 16-bit tag */
-> @@ -79,6 +81,8 @@ static u16 tph_extract_tag(enum tph_mem_type mem_type, u8 req_type,
->  			if (info->pm_xst_valid)
->  				return info->pm_xst;
->  			break;
-> +		default:
-> +			return 0;
->  		}
->  		break;
->  	default:
-> diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
-> index 9e4e331b1603..b989302b6755 100644
-> --- a/include/linux/pci-tph.h
-> +++ b/include/linux/pci-tph.h
-> @@ -14,10 +14,12 @@
->   * depending on the memory type: Volatile Memory or Persistent Memory. When a
->   * caller query about a target's Steering Tag, it must provide the target's
->   * tph_mem_type. ECN link: https://members.pcisig.com/wg/PCI-SIG/document/15470.
-> + * Add a new tph type for PCI peer-to-peer access use case.
->   */
->  enum tph_mem_type {
->  	TPH_MEM_TYPE_VM,	/* volatile memory */
-> -	TPH_MEM_TYPE_PM		/* persistent memory */
-> +	TPH_MEM_TYPE_PM,	/* persistent memory */
-> +	TPH_MEM_TYPE_P2P	/* peer-to-peer accessable memory */
+--8323328-10488022-1763126168=:1008
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <1f479a4d-2c67-db3b-3dd7-09632eef6845@linux.intel.com>
 
-Trivial but this time definitely add the trailing comma!  Maybe there will never
-be any more in here but maybe there will and we can avoid a line of
-churn next time.
+On Fri, 14 Nov 2025, Alex Benn=E9e wrote:
 
->  };
->  
->  #ifdef CONFIG_PCIE_TPH
+> Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> writes:
+>=20
+> > PCI core handles releasing device's resources and their rollback in
+> > case of failure of a BAR resizing operation. Releasing resource prior
+> > to calling pci_resize_resource() prevents PCI core from restoring the
+> > BARs as they were.
+> >
+> > Remove driver-side release of BARs from the xe driver.
+> >
+> > Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> > Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+> > ---
+> >  drivers/gpu/drm/xe/xe_vram.c | 3 ---
+> >  1 file changed, 3 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/xe/xe_vram.c b/drivers/gpu/drm/xe/xe_vram.=
+c
+> > index 00dd027057df..5aacab9358a4 100644
+> > --- a/drivers/gpu/drm/xe/xe_vram.c
+> > +++ b/drivers/gpu/drm/xe/xe_vram.c
+> > @@ -33,9 +33,6 @@ _resize_bar(struct xe_device *xe, int resno, resource=
+_size_t size)
+> >  =09int bar_size =3D pci_rebar_bytes_to_size(size);
+> >  =09int ret;
+> > =20
+> > -=09if (pci_resource_len(pdev, resno))
+> > -=09=09pci_release_resource(pdev, resno);
+> > -
+> >  =09ret =3D pci_resize_resource(pdev, resno, bar_size, 0);
+> >  =09if (ret) {
+> >  =09=09drm_info(&xe->drm, "Failed to resize BAR%d to %dM (%pe). Conside=
+r enabling 'Resizable BAR' support in your BIOS\n",
+>=20
+> This didn't apply, I assume due to a clash with:
+>=20
+>   d30203739be79 (drm/xe: Move rebar to be done earlier)
 
+The xe driver changes do not matter if you using only amdgpu.
+
+We know those xe changes in the drm tree conflict as the need for this=20
+BAR resizing rework was not know when the xe changes were made. The=20
+resolution is just to remove the release_bars() function from xe driver=20
+completely as BAR releasing prior to resize is now handled by=20
+pci_resize_resource().
+
+--=20
+ i.
+--8323328-10488022-1763126168=:1008--
 
