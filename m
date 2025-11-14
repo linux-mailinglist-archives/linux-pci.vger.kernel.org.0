@@ -1,61 +1,60 @@
-Return-Path: <linux-pci+bounces-41218-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41220-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB3D3C5C196
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 09:54:14 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77BDAC5C26B
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 10:05:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 641D03B410A
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 08:54:13 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5AE444E6681
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 09:02:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 788022727E5;
-	Fri, 14 Nov 2025 08:54:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 206A52FE05A;
+	Fri, 14 Nov 2025 09:02:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R4VUaI+X"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iXfsI9i/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012042.outbound.protection.outlook.com [52.101.53.42])
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010001.outbound.protection.outlook.com [52.101.201.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F6412DDA1;
-	Fri, 14 Nov 2025 08:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63C423741;
+	Fri, 14 Nov 2025 09:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.1
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763110450; cv=fail; b=QWPYux64/a3ARzJMV/fOPfAOXzb3jWlXuSsgf5cfwaa0XGEnB771hLrLpOcrH8vjkI1DL5tWvV84u+UOMuqsJ4vbpqGFbxWgXeAoplv4+FY8SM2nSPJUeZpBtAX4Xi4p7KVN5Zepwml8yPjgZNz4pVkeww3HgsGP5HjHpBvdOz0=
+	t=1763110953; cv=fail; b=o+PiiIVJMGViOE2X96sKURCERF8t8JvcNqmo4VwmTOZckZKXLwBdjIoq/A8HdY3fFSfmPLKrjl3fgjcD9UbH/3AjMmNAAzC9qmQ1piWt2iQkZLxe1U/oYQ1rLzPy5O+KKaptc3nd7j4JB8zM9lA2rZUmmQilNd7qYAri/MgJH0g=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763110450; c=relaxed/simple;
-	bh=Zb5GZcv9XoRmTonp23BK7ahB9LApqkp945KTCQMbYHw=;
+	s=arc-20240116; t=1763110953; c=relaxed/simple;
+	bh=s7dTvWgUWN4PhPdiV1Nv5iflxGftpsaHRQQefThN+k8=;
 	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jHjuIO0Ql+krdf2m37O5xW3NkmPSmVwmUbtAHHwLyEtV28mvaRP8EyVJsZnraDS4iV7o38GUXieq+zdVJPID4JEufzJ3XKu/e+HdAhxYgtvCoiNyOd+7OcjnQ+ajrJqflRnxepgNIaak9p30sHAeQHhzItq0mP47ivVuSI7Q0Bc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=R4VUaI+X; arc=fail smtp.client-ip=52.101.53.42
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bx22DnYCFnuSNWDDOl849bHnEA/ROmBM275VbSCP8qbuRhb8eiMpeTWejz2ru2KEMDI8lm/0FtmQxBH9b3qfKo+JCFvkHzZTYrnxyCRFdOHraQ+1E9nkbpuJsUPmuN4ibzG+mluY41QXZXcpIpNi1IuRPJIRg+1TAgROuWAObOw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=iXfsI9i/; arc=fail smtp.client-ip=52.101.201.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fS5TAotEWZ/bUIlQKlpy1mrpbQ0XXo37fhZTnfmWkDFk/pJxY2VEi5qNEDkA6oJqwOBCVhSwCiANQG5/l8oYfuq/XN0tmxk5ZyKUzgAdZuIN5g68Vwd5xJaj8hGGQ/gslFPoQucdqjFDvKn3JhpWl79eJ9veSl+W+yvChRf1ubxB8TOB09ieOQ0HCrEXgOZFzMc+FspJPePBxJajzANjj12g6KdAZKc0IlxiNJ3jYMrriGHuRvD+01WlWT0EdAkxKFdTc9m+iuKj/SuVvqy0mh06+qanju2ZIa54Z8hCUv87GmMFqUUMcepgQThAikWtDpSvobeQqfOzvICFCIjTag==
+ b=A8RJs9Kff2Tz2g3eHazIKE3FEYaQDwkaM4e1k6NmYwSXAJAjOWc2AjTxsLnqeE7H2kUFCD19XgKQOskRE+UZIbwdRAaW5ocL0lKKBIzfCBkHGfEydLGznXnYvipT+hiQSmMZh9aKfNrs9iNv+ip+FBxFJnZiVGdppzd9rAt0QTSkxrMsg5N9iGZJxcqBoGWDxKSVav4ywt8Pu/CHOeOcOaD9YffMt0PC90mmhVi8PD01z7ay0N5v4oYl5pQzX09ThuAcXlGDn0o2bVxAhfKXG867w2yP8RdOamEy3574nR49THHsoFZugOPHFY2NTwXEKS+3BaUY1Pa3u47D0cBLqg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j0P13tOeq2Cdkfkq5eQBJXHqLUwgm9+Yl4q+wgEvcAI=;
- b=r0kSJKrWp/E5sCEgCm9EmhasT0PFBs+FwPnXrjaEOAdRXgUmFYWphDfoy9zrwad99WM+X4riuYaPAQteCBjnDeiOzXDrmNnSWuD/7vCHmYpEhozeSrmZWRWu7U9lSgggo03i+ytaPYsL1fC6VPYgmuAFMe+j5szF0fdlmWXZPU87d/sIWlbGHdDCSmKbFCQuTto7MDXJ9lYpn8REfGtrgygQ5sVHTc3/MOTCWFAB1qQqWSzVWMqJRYMjE6a/Sh/u85+JhkTTO1mQFbtJqODlMIPPNuZ7KQf7UGpBBam1mVpqTiLO9KuPxl7xc4JkmgT+0jppyOG94XjXCo3wvJobIQ==
+ bh=YyllwrKLjfX15Z3eXTyT7NS4hiVtOam974bw6nDnpNo=;
+ b=T9KbKeGdnY9y+xB1gIQNsaXz8xC435T8JttS6ak0S+34zv3Js8/ppSNgl1YqU5aTEMvOqIn3SjomqW5A3P2oGnTPQE0/6wUhOm1Mayz4ntyRM6m4dzJ7dQJiNs55ascGmY4mh2GBQ9DNiGBawjNR++/uHSXretP9JELKVDqFg3hrRjAYkJKRocLNipd3DaHMRR0hq4S8VI9tf+up4FOK0f/8kTeotCM8f8wTMVD2aYjyUorD+on7cLeJX7JnDQ/U2ui/rKSPzZn/6k+5tuclz2DwWU5ctnj5gCXb90573zXBg/w/TrOYN0z5GI0TjeCW3AkBx+P/msd0aCWgCe2CUA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  198.47.21.195) smtp.rcpttodomain=kernel.org smtp.mailfrom=ti.com; dmarc=pass
  (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
  (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j0P13tOeq2Cdkfkq5eQBJXHqLUwgm9+Yl4q+wgEvcAI=;
- b=R4VUaI+X5vcNLIFDirs7y1OrrGX1Bo1gaPIMHRfZPvYoz0hDrc4pX8EIEcVuNFl6WQcnMIpDg1s1GjtH4IjKO5bp1JoLdFchYTQVOwdTaO90q3eSGYY5FKOr4/+n2C2mKk/lBbB+pvAUwcGO2hIJuNK8O86vFYRB3O/TRX9ahW4=
-Received: from DS0PR17CA0010.namprd17.prod.outlook.com (2603:10b6:8:191::26)
- by MW4PR10MB5680.namprd10.prod.outlook.com (2603:10b6:303:18e::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.15; Fri, 14 Nov
- 2025 08:54:02 +0000
-Received: from DS1PEPF00017090.namprd03.prod.outlook.com
- (2603:10b6:8:191:cafe::97) by DS0PR17CA0010.outlook.office365.com
- (2603:10b6:8:191::26) with Microsoft SMTP Server (version=TLS1_3,
+ bh=YyllwrKLjfX15Z3eXTyT7NS4hiVtOam974bw6nDnpNo=;
+ b=iXfsI9i/3SFUcTRIHIuefalPobDNTo2wa6qZ+WPoA9geD+IehJkqclLHAxi5ZS7Cxb0cdyOts2Md5dN6GkQXcV8pyntAMDkgiyr4odNqcXTnTae5inHcQtj/f3n/jX/y3yA7tWghodH5r4iscCVCWCrQJPXwKqkFwLet2wvs8eQ=
+Received: from CH2PR03CA0002.namprd03.prod.outlook.com (2603:10b6:610:59::12)
+ by DS0PR10MB7152.namprd10.prod.outlook.com (2603:10b6:8:f1::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9320.17; Fri, 14 Nov 2025 09:02:25 +0000
+Received: from CH3PEPF0000000A.namprd04.prod.outlook.com
+ (2603:10b6:610:59:cafe::a9) by CH2PR03CA0002.outlook.office365.com
+ (2603:10b6:610:59::12) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.18 via Frontend Transport; Fri,
- 14 Nov 2025 08:53:57 +0000
+ 14 Nov 2025 09:02:24 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.195)
  smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
  action=none header.from=ti.com;
@@ -63,25 +62,25 @@ Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
  198.47.21.195 as permitted sender) receiver=protection.outlook.com;
  client-ip=198.47.21.195; helo=flwvzet201.ext.ti.com; pr=C
 Received: from flwvzet201.ext.ti.com (198.47.21.195) by
- DS1PEPF00017090.mail.protection.outlook.com (10.167.17.132) with Microsoft
+ CH3PEPF0000000A.mail.protection.outlook.com (10.167.244.37) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9320.13 via Frontend Transport; Fri, 14 Nov 2025 08:54:01 +0000
-Received: from DFLE215.ent.ti.com (10.64.6.73) by flwvzet201.ext.ti.com
+ 15.20.9320.13 via Frontend Transport; Fri, 14 Nov 2025 09:02:23 +0000
+Received: from DFLE114.ent.ti.com (10.64.6.35) by flwvzet201.ext.ti.com
  (10.248.192.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Fri, 14 Nov
- 2025 02:53:56 -0600
-Received: from DFLE211.ent.ti.com (10.64.6.69) by DFLE215.ent.ti.com
- (10.64.6.73) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Fri, 14 Nov
- 2025 02:53:56 -0600
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE211.ent.ti.com
- (10.64.6.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.2.2562.20; Fri, 14 Nov
+ 2025 03:02:16 -0600
+Received: from DFLE204.ent.ti.com (10.64.6.62) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Fri, 14
+ Nov 2025 03:02:16 -0600
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE204.ent.ti.com
+ (10.64.6.62) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Fri, 14 Nov 2025 02:53:56 -0600
+ Transport; Fri, 14 Nov 2025 03:02:16 -0600
 Received: from localhost (lcpd911.dhcp.ti.com [172.24.233.130])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5AE8rtJi1740195;
-	Fri, 14 Nov 2025 02:53:56 -0600
-Date: Fri, 14 Nov 2025 14:23:55 +0530
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5AE92EqB1715068;
+	Fri, 14 Nov 2025 03:02:15 -0600
+Date: Fri, 14 Nov 2025 14:32:14 +0530
 From: Dhruva Gole <d-gole@ti.com>
 To: "Rafael J. Wysocki" <rafael@kernel.org>
 CC: Linux PM <linux-pm@vger.kernel.org>, Linux ACPI
@@ -90,11 +89,11 @@ CC: Linux PM <linux-pm@vger.kernel.org>, Linux ACPI
  Qilong" <zhangqilong3@huawei.com>, Frank Li <Frank.Li@nxp.com>, Dan Williams
 	<dan.j.williams@intel.com>, Linux PCI <linux-pci@vger.kernel.org>, "Bjorn
  Helgaas" <helgaas@kernel.org>
-Subject: Re: [PATCH v2 1/3] PM: runtime: Wrapper macros for
- ACQUIRE()/ACQUIRE_ERR()
-Message-ID: <20251114085355.qgz54ekuivaz2ah5@lcpd911>
+Subject: Re: [PATCH v2 2/3] ACPI: TAD: Use
+ PM_RUNTIME_ACQUIRE()/PM_RUNTIME_ACQUIRE_ERR()
+Message-ID: <20251114090214.z5lx2rwog76j6opc@lcpd911>
 References: <5959587.DvuYhMxLoT@rafael.j.wysocki>
- <3400866.aeNJFYEL58@rafael.j.wysocki>
+ <2040585.PYKUYFuaPT@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -103,139 +102,151 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <3400866.aeNJFYEL58@rafael.j.wysocki>
+In-Reply-To: <2040585.PYKUYFuaPT@rafael.j.wysocki>
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017090:EE_|MW4PR10MB5680:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7e7db2d1-3056-4db1-4a70-08de235b5b4c
+X-MS-TrafficTypeDiagnostic: CH3PEPF0000000A:EE_|DS0PR10MB7152:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2854b1b8-da11-4119-83bd-08de235c8672
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|82310400026|36860700013;
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|7416014|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?58l6MbdVXTpxs4RA7BKd1SzQ8naRtjMzTc+OxMhaWLU0b8+9HUiIjFQq52JD?=
- =?us-ascii?Q?Ktggo0AhEkHkgHgILDOLJwZUnE78J8l23IN5gkw+N35+QqbvAKoqXxNu+NhN?=
- =?us-ascii?Q?iVyq6CXpEinrnBcUtw9IaxRHa+dUixbVZWD1wMRsePV2Ny9qeqdIYbietTjP?=
- =?us-ascii?Q?S1vHHZyLDrhNtSfzOF9eA4EJj/HzoliUOP/wfhIrdEJPsYUU3CFUxvj7wXlP?=
- =?us-ascii?Q?sgVxq79zz9UZQB7TjbFM0FgwOZ6RF3yDUa3/rtfMy016my3Jhmo4rSwuKCbT?=
- =?us-ascii?Q?GpyThfuFQdIiTNELpzIuIEFFtcqyFT2KIyy5kNr3uNFmaHTLwkW3GwWjKMQ2?=
- =?us-ascii?Q?uw4qoVtv1lid4oRBba0WWpwnttUQia4scEGi6mkySgsJYL+nawCsWdXhuqQ6?=
- =?us-ascii?Q?qbpDz0FLmlyZj9KJoWlrjxm8TH3s38eiSYW2gNKLCSGv9F4zMNvfvcp8ef2I?=
- =?us-ascii?Q?qugvz2iK59G0g5dewoTKf+vGfZcIImKmI50MqebIBrksSlZ6Zb+sPuSCGO00?=
- =?us-ascii?Q?oJspDNnWSeq3z22mjTwCkK6Jw1X1YNmDWYxQ39+om95j5WWjStO1gAqGjqvT?=
- =?us-ascii?Q?L9HSst04PDYIaHW3ygRybaM0WGA5IXG3uJhvVxlYY4ae94Ti+PbWb5sdkCtN?=
- =?us-ascii?Q?p4M+aOFkI6xn5aaOX1R52PT5v5rt8uDFVDrAPginWhpmxvKyzJr+lNHIFr4z?=
- =?us-ascii?Q?AFiURDVGsG+cdohQlKwAOIEFIqJ9TFwmcy8ySPDEEG6NzoeBiVO791LHXAN7?=
- =?us-ascii?Q?IgCtZLA68d1owU5gwtoK6uQX0dJclhn25k0vPrdiR/3UStPdFJZoSEhIQVKa?=
- =?us-ascii?Q?u6/pER++z+Q5BRUi/ed+N+wwuHEipIhGgO28rGk9AJbj4NKkaWUwgtUwqtmF?=
- =?us-ascii?Q?axUk+E7WvQt3p8KywK28tPoQbH5FjTYg0jHa6Ua5ZRqA2EnB77LUrk3LqLhC?=
- =?us-ascii?Q?mNz8qkTdjbpGGDLcQePgYYP1fF/OQAu2u5Ax6zhCMU7zW1CziW41jc8KXvGH?=
- =?us-ascii?Q?g9S6zI1MwVkW5lixHjKCGHyvCKB6JoSKz+L6cEm7sA1XHhO+duZ7W37WpG2b?=
- =?us-ascii?Q?FGlsmCgUk1ZIk2pfDoaMUJbTIRZz2KDfiyla+MQJnWS2RsScjh5VvDL55Z0x?=
- =?us-ascii?Q?D7iXP4Lr+09viElFoFfx8sxf3JW4GzXqq7vTzkOP06uvv0DsXkqU1rUjPhzL?=
- =?us-ascii?Q?lhAw1RcQ2T8rb+aD3CM56PLpJY6gxsf3pWHntHF2zKnKXFo0lbRQwChDIGHD?=
- =?us-ascii?Q?OO88FPGA68Azypqe7sMOJaIPozJYm1PC8OsHqkj6Tf4lIhPyG/BvnvQCq/Ko?=
- =?us-ascii?Q?iY527RtbPoOK5LyrmxoA7655yH1+Coax6hKrGSRPcJUTDeem8cbxeXZaMDkd?=
- =?us-ascii?Q?iFYjLhbfNepqLcya3mNVN3lO6zAlv4ARLUT44ZMfZEOEhmhMcYG4sGTthUnG?=
- =?us-ascii?Q?S5o7ppseFY0AmtuFGW5dZBw5KNZGFN9rzusfBvDsMpjCv2Ar9niMKIFSMSCI?=
- =?us-ascii?Q?oImlSf41RVWdlMsVdJgefV9ALy7LfZ+xcL7lMFgNOZ5YUafe1KK9lzY1BLC7?=
- =?us-ascii?Q?sfKccK96p0szrVDLe0c=3D?=
+	=?us-ascii?Q?JKPahThiiPXXuEyZrC/TGug22ReFJ+hRbTC37nImDorTikJwqb2wipBRgEH3?=
+ =?us-ascii?Q?RKM1/hYleFJQNbnzr4/KlyxqH5VaUXZBpMxcLZRUUsV9IsmfN5epYIFU+Ebe?=
+ =?us-ascii?Q?dvvCBf00CGGXaS3Yc5BGkq0k/lcJONCEzvFIG/JwAObM+3Wy/uwto5yaZpkA?=
+ =?us-ascii?Q?Ii0JO0rRttfyOYRGBvo8sDTT18rMWG/BbCw8eqCd0Ir/uPC1aFgliylApJ1b?=
+ =?us-ascii?Q?F5a4683sGCzedjTBCmYRxeFLpMUpOx7B7HzT/PiAFlOejtAtV+M1Li+4LWZx?=
+ =?us-ascii?Q?qMjX4hONIpuI1MyYGsqLgAbTsFm6C74v6X6hTjfYccHnJS2qh0Gm0T1P0vxO?=
+ =?us-ascii?Q?45hC9K8D7NO3Oixa/E0o9Rxwr5KR1kVF8VlxjrNgicuJ8ZTpwPcBTGCnkyDz?=
+ =?us-ascii?Q?hIZlFW6d8A4pTOSuawtSJS7+uo8udsez0mkbbOssyzSzg50eXTMzScKQ9NDN?=
+ =?us-ascii?Q?eQwDRNIqw1VVK1VoSnaIfR1bjSTJ7oDD3/jyZqxVpqCObscYL2w6gEAeOsZV?=
+ =?us-ascii?Q?+G+J28aeaKVIoDB3d0PcTEgY4XU8Umn8b8W9ihgE7KcpPwvdqqdF0T3Az/lJ?=
+ =?us-ascii?Q?C5jsUW9C/dIYxc3aUe6nsGGOM6rbc6lKa9fvo9TXChvMfXCPuCc5XHIWiHkO?=
+ =?us-ascii?Q?GkQeCeRFDH81BV8owVzUzJB8aYhGKKMZwDV4rgWk2fK7jZtz9QUK9serFjvW?=
+ =?us-ascii?Q?0hAC4jPMzCjVzFakCOcvFkBYQ5aZoZ7R5pJhUYo9jMdqBGqDYio2ShJrOQR7?=
+ =?us-ascii?Q?6CGO6rsq0pK+5TL16ee2u00/TsHTahQsVb86b+grcYInbSH7mX0UVC2t0u94?=
+ =?us-ascii?Q?bNzwZmGSrR8XkLoCXgQXu8oQHE+nu/TTKmne+l1xVAkcYrjJnV/Ya7QJpykk?=
+ =?us-ascii?Q?gTdhscWa6RNpDonQMSD4RWAU5k9ZoRPBKL0z2QVOBXXgSOcp/u2nDiTLozTj?=
+ =?us-ascii?Q?Cj0qOo/VGhppYn3x98HwULZA7ovOEi5U76LT83ir5KEN8K03eCcGLcpKtIfw?=
+ =?us-ascii?Q?5Yi/2WByS88o9aQYbvdKZdz53RFG2lTFiVFQWqnTEmE+byONHI9ajRQ6K1Gq?=
+ =?us-ascii?Q?vXx9vz8Gak+GJ2WT8oa2GLqwS91P2DWqbplCAtI/Dcl36EVGr5PABg78/KDl?=
+ =?us-ascii?Q?MFKIQWEyuh0xlXjUTR2H69SFYhXDPu3nKv5bSHyLmEq6hcdR4UPACbRgIxhD?=
+ =?us-ascii?Q?YLlrzP4nEL40wPYBySTqz2X1acIs/pzhfYDBuu1zySKiGibnEj/RJwbpJBNu?=
+ =?us-ascii?Q?0+xGMr6Y6APLaKKg65O9ZlrqTO8pgbIo/VN082H82KC5X1B5oVto2r4ct9gx?=
+ =?us-ascii?Q?6d9iAQHsoyq03N6tHT8RkUUA4LQiPFIfQR1p6zXLg+pHYuxxJIJbFYJUTVwu?=
+ =?us-ascii?Q?KEOnzz9zHp6FypUCOqa2YFuw9vNCYJJ2Nki383KQD4Kd7UGMEda41zBJnbbf?=
+ =?us-ascii?Q?xKKxkomthof4KnJXrxsIx9IC14Bbr+oKPknuA/kSBJWJm/klaUOpeK3d2pam?=
+ =?us-ascii?Q?fYpe21OOu9eEzQD5pMO3Lf9KQ9Zouqa9Lf1S3V2DqBGY6W2DI6xG9kdD2pPE?=
+ =?us-ascii?Q?0nYIh6PVm1Lcr0Y+jsU=3D?=
 X-Forefront-Antispam-Report:
-	CIP:198.47.21.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet201.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+	CIP:198.47.21.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet201.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(7416014)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2025 08:54:01.3402
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2025 09:02:23.1868
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e7db2d1-3056-4db1-4a70-08de235b5b4c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2854b1b8-da11-4119-83bd-08de235c8672
 X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.195];Helo=[flwvzet201.ext.ti.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017090.namprd03.prod.outlook.com
+	CH3PEPF0000000A.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB5680
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7152
 
-On Nov 13, 2025 at 20:33:33 +0100, Rafael J. Wysocki wrote:
+On Nov 13, 2025 at 20:34:53 +0100, Rafael J. Wysocki wrote:
 > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Add wrapper macros for ACQUIRE()/ACQUIRE_ERR() and runtime PM
-> usage counter guards introduced recently: pm_runtime_active_try,
-> pm_runtime_active_auto_try, pm_runtime_active_try_enabled, and
-> pm_runtime_active_auto_try_enabled.
+> Use new PM_RUNTIME_ACQUIRE() and PM_RUNTIME_ACQUIRE_ERR() wrapper macros
+> to make the code look more straightforward.
 > 
-> The new macros should be more straightforward to use.
-> 
-> For example, they can be used for rewriting a piece of code like below:
-> 
->         ACQUIRE(pm_runtime_active_try, pm)(dev);
->         if ((ret = ACQUIRE_ERR(pm_runtime_active_try, &pm)))
->                 return ret;
-> 
-> in the following way:
-> 
->         PM_RUNTIME_ACQUIRE(dev, pm);
->         if ((ret = PM_RUNTIME_ACQUIRE_ERR(&pm)))
->                 return ret;
-> 
-> If the original code does not care about the specific error code
-> returned when attepmting to resume the device:
-> 
->         ACQUIRE(pm_runtime_active_try, pm)(dev);
->         if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
->                 return -ENXIO;
-> 
-> it may be changed like this:
-> 
->         PM_RUNTIME_ACQUIRE(dev, pm);
->         if (PM_RUNTIME_ACQUIRE_ERR(&pm))
->                 return -ENXIO;
-> 
-> Link: https://lore.kernel.org/linux-pm/5068916.31r3eYUQgx@rafael.j.wysocki/
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> ---
-> 
-> v1 -> v2:
->    * The new macros take the guard variable name as a parameter.
->    * The new ERR macro takes a guard variable pointer as a parameter (Dan).
->    * Added underscore prefix to the macro parameter names.
-> 
-> ---
->  include/linux/pm_runtime.h |   24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> --- a/include/linux/pm_runtime.h
-> +++ b/include/linux/pm_runtime.h
-> @@ -637,6 +637,30 @@ DEFINE_GUARD_COND(pm_runtime_active_auto
->  DEFINE_GUARD_COND(pm_runtime_active_auto, _try_enabled,
->  		  pm_runtime_resume_and_get(_T), _RET == 0)
->  
-> +/* ACQUIRE() wrapper macros for the guards defined above. */
-> +
-> +#define PM_RUNTIME_ACQUIRE(_dev, _var)			\
-> +	ACQUIRE(pm_runtime_active_try, _var)(_dev)
-> +
-> +#define PM_RUNTIME_ACQUIRE_AUTOSUSPEND(_dev, _var)	\
-> +	ACQUIRE(pm_runtime_active_auto_try, _var)(_dev)
-> +
-> +#define PM_RUNTIME_ACQUIRE_IF_ENABLED(_dev, _var)	\
-> +	ACQUIRE(pm_runtime_active_try_enabled, _var)(_dev)
-> +
-> +#define PM_RUNTIME_ACQUIRE_IF_ENABLED_AUTOSUSPEND(_dev, _var)	\
-> +	ACQUIRE(pm_runtime_active_auto_try_enabled, _var)(_dev)
-> +
-> +/*
-> + * ACQUIRE_ERR() wrapper macro for guard pm_runtime_active.
-> + *
-> + * Always check PM_RUNTIME_ACQUIRE_ERR() after using one of the
-> + * PM_RUNTIME_ACQUIRE*() macros defined above (yes, it can be used with
-> + * any of them) and if it is nonzero, avoid accessing the given device.
-> + */
-> +#define PM_RUNTIME_ACQUIRE_ERR(_var_ptr)	\
-> +	ACQUIRE_ERR(pm_runtime_active, _var_ptr)
-> +
+> No intentional funtional impact.
+
+Nit: 'functional'
 
 Reviewed-by: Dhruva Gole <d-gole@ti.com>
+
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> v1 -> v2: Adjust to the changes in patch [1/3].
+> 
+> ---
+>  drivers/acpi/acpi_tad.c |   24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+> 
+> --- a/drivers/acpi/acpi_tad.c
+> +++ b/drivers/acpi/acpi_tad.c
+> @@ -90,8 +90,8 @@ static int acpi_tad_set_real_time(struct
+>  	args[0].buffer.pointer = (u8 *)rt;
+>  	args[0].buffer.length = sizeof(*rt);
+>  
+> -	ACQUIRE(pm_runtime_active_try, pm)(dev);
+> -	if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
+> +	PM_RUNTIME_ACQUIRE(dev, pm);
+> +	if (PM_RUNTIME_ACQUIRE_ERR(&pm))
+>  		return -ENXIO;
+>  
+>  	status = acpi_evaluate_integer(handle, "_SRT", &arg_list, &retval);
+> @@ -137,8 +137,8 @@ static int acpi_tad_get_real_time(struct
+>  {
+>  	int ret;
+>  
+> -	ACQUIRE(pm_runtime_active_try, pm)(dev);
+> -	if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
+> +	PM_RUNTIME_ACQUIRE(dev, pm);
+> +	if (PM_RUNTIME_ACQUIRE_ERR(&pm))
+>  		return -ENXIO;
+>  
+>  	ret = acpi_tad_evaluate_grt(dev, rt);
+> @@ -275,8 +275,8 @@ static int acpi_tad_wake_set(struct devi
+>  	args[0].integer.value = timer_id;
+>  	args[1].integer.value = value;
+>  
+> -	ACQUIRE(pm_runtime_active_try, pm)(dev);
+> -	if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
+> +	PM_RUNTIME_ACQUIRE(dev, pm);
+> +	if (PM_RUNTIME_ACQUIRE_ERR(&pm))
+>  		return -ENXIO;
+>  
+>  	status = acpi_evaluate_integer(handle, method, &arg_list, &retval);
+> @@ -322,8 +322,8 @@ static ssize_t acpi_tad_wake_read(struct
+>  
+>  	args[0].integer.value = timer_id;
+>  
+> -	ACQUIRE(pm_runtime_active_try, pm)(dev);
+> -	if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
+> +	PM_RUNTIME_ACQUIRE(dev, pm);
+> +	if (PM_RUNTIME_ACQUIRE_ERR(&pm))
+>  		return -ENXIO;
+>  
+>  	status = acpi_evaluate_integer(handle, method, &arg_list, &retval);
+> @@ -377,8 +377,8 @@ static int acpi_tad_clear_status(struct
+>  
+>  	args[0].integer.value = timer_id;
+>  
+> -	ACQUIRE(pm_runtime_active_try, pm)(dev);
+> -	if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
+> +	PM_RUNTIME_ACQUIRE(dev, pm);
+> +	if (PM_RUNTIME_ACQUIRE_ERR(&pm))
+>  		return -ENXIO;
+>  
+>  	status = acpi_evaluate_integer(handle, "_CWS", &arg_list, &retval);
+> @@ -417,8 +417,8 @@ static ssize_t acpi_tad_status_read(stru
+>  
+>  	args[0].integer.value = timer_id;
+>  
+> -	ACQUIRE(pm_runtime_active_try, pm)(dev);
+> -	if (ACQUIRE_ERR(pm_runtime_active_try, &pm))
+> +	PM_RUNTIME_ACQUIRE(dev, pm);
+> +	if (PM_RUNTIME_ACQUIRE_ERR(&pm))
+>  		return -ENXIO;
+>  
+>  	status = acpi_evaluate_integer(handle, "_GWS", &arg_list, &retval);
+> 
+> 
+> 
 
 -- 
 Best regards,
