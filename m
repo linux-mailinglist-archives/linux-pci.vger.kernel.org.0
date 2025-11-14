@@ -1,260 +1,174 @@
-Return-Path: <linux-pci+bounces-41257-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41258-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8922DC5EB65
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 19:02:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E601C5EB97
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 19:05:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0696A363E90
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 17:27:50 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E84E435AE8B
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 17:39:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 673AF2D3A93;
-	Fri, 14 Nov 2025 17:27:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A821341AAA;
+	Fri, 14 Nov 2025 17:39:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="AZDau9eg"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Iw786pLi";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="SkmIQe+s"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010033.outbound.protection.outlook.com [52.101.201.33])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B99339B51;
-	Fri, 14 Nov 2025 17:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.33
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763141264; cv=fail; b=YwuJhNW5pV+nH0oBDnbc2LNRGFVMS58cph/bFLBDXXRpPb51Mj5oWQfctJak0Q3g2BmXqQnPcqhhSRpt1Z4b/FfUFFbrs1ani3ssDrXgUUspRVjAZ04Dazxi0vj4bnxODdQMBXOvMG4N1DP4nG4xDLdj7UoJNFCJiv/4pWLFqdQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763141264; c=relaxed/simple;
-	bh=udSTIv5G6xHl9ix2KcC/0pI3KYegpmHqUcpA5DSQjdU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cOe+Tn3KbmTJjYvVHdcnU+MFHChFsqRS7MlPQPryPOpvHAHl+ZYW2+xm4V4rmCJU2TSGR2nWfEvXefniXxJ7t7hb37si0uedSI0N187dsT26NV1g1liF8xptpXLRf+hOVq5I43O4SdRu0PQi2TkkSGbpRiEuLRHT3pXwAsm7Fjc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=AZDau9eg; arc=fail smtp.client-ip=52.101.201.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GjPZuQvH8/vO5xdKNp40VmqDF12ea68C1FoMOT74okP7IX8s2lLzbUPIxyX2N+bBQSuNELflbJOgy+6/CUTqHAGFuuHQzHnqMu3tiS+FO4GvcXD+qIIDaug8Ktdg5PeR0GvS5Qa8rnsQ9m+ZdiiEHzhhw3FEvH1FlhlEy3DmBS5rNfivL9Udst3+OpcWVzr+N9CJe9oe+3sQHni/N8FMB3LKZVsutNZHuJ4ZacElep2wyL6Vpqw77rZBYcLRjRMyLwdtv9bSZOOs22VFFHQy11ayiZqNPCaySOiFlbh5SFGn0urKLbxSak4pEK0EdTXdB3HZRTkT+hVH2oEy9Fj7MQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L43rGTl6WWNgGSPOVyZQps50YcKq+Sju9yJwnDEXD9M=;
- b=w2Lnx1QWg1IG7pttMdjx54z8/AI7JJPXSC0gM1uTLtPwUaYb5mTFPgmy2QLIsC/RaxEhsq2wX9nwVZmCwj8cEqbXH57ouKgCHY98ahqi7qO0KTk4wc2kFlzCGnwKT7nhAR3f9aTnhPXdphR3Ml/R9jEKYmeqpMs0OEF/Z/dkIKeFbqNrGMtuLUgMmDQ23isQe0Y6Lfrd5x68QbYQnJEH8DCb8o/qmIX4uX9XqLe/QpEhH6q/axSiBiGVj4+D8LzFxxeru14bkgeVzfCZXMZ1MEFhNU0CwYysfUUW1qvuP2veMNElHolcHUV49bhpHe4hDGkVpr9Zrn91cUZ/nkqbSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L43rGTl6WWNgGSPOVyZQps50YcKq+Sju9yJwnDEXD9M=;
- b=AZDau9egjnaQaAFD5/Cgq8Uw/OkWf46YnGg1vhclHm7lgjrXR1ttU4xOWjPuuB/I69BkEQOo2oac/zJf2gAT3WCaBbErE5LMWlLC2Nxcoo02x8x0Rper7/HIhRxr2UaNinds07ExX4ovSQQIvjY3+lkef4pjq4O4qqbtIQNsL+0Ugxtpqbcj278qrRKTOL8nGANPUDNNfFI7UEL8jvLXuZRK+J8Qn2JXMagHkQOPHRkFrUUy+rSB/b8MzP1lTNDS2C6rNLsDXpTpaAmDgpqfzeS4wmTsgSYWIsfKQLgVKXGRDYuJkev5XtP4YsjQjCdntql7AFzXOw41DBcxo3uGFg==
-Received: from BY5PR17CA0034.namprd17.prod.outlook.com (2603:10b6:a03:1b8::47)
- by DS5PPF8002542C7.namprd12.prod.outlook.com (2603:10b6:f:fc00::657) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.15; Fri, 14 Nov
- 2025 17:27:36 +0000
-Received: from SJ1PEPF00002319.namprd03.prod.outlook.com
- (2603:10b6:a03:1b8:cafe::f5) by BY5PR17CA0034.outlook.office365.com
- (2603:10b6:a03:1b8::47) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.18 via Frontend Transport; Fri,
- 14 Nov 2025 17:27:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- SJ1PEPF00002319.mail.protection.outlook.com (10.167.242.229) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9320.13 via Frontend Transport; Fri, 14 Nov 2025 17:27:35 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Fri, 14 Nov
- 2025 09:27:27 -0800
-Received: from drhqmail202.nvidia.com (10.126.190.181) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.20; Fri, 14 Nov 2025 09:27:27 -0800
-Received: from inno-thin-client (10.127.8.12) by mail.nvidia.com
- (10.126.190.181) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
- Transport; Fri, 14 Nov 2025 09:27:20 -0800
-Date: Fri, 14 Nov 2025 19:27:19 +0200
-From: Zhi Wang <zhiw@nvidia.com>
-To: Alice Ryhl <aliceryhl@google.com>
-CC: <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <dakr@kernel.org>, <bhelgaas@google.com>,
-	<kwilczynski@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
-	<boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
-	<lossin@kernel.org>, <a.hindborg@kernel.org>, <tmgross@umich.edu>,
-	<markus.probst@posteo.de>, <helgaas@kernel.org>, <cjia@nvidia.com>,
-	<smitra@nvidia.com>, <ankita@nvidia.com>, <aniketa@nvidia.com>,
-	<kwankhede@nvidia.com>, <targupta@nvidia.com>, <acourbot@nvidia.com>,
-	<joelagnelf@nvidia.com>, <jhubbard@nvidia.com>, <zhiwang@kernel.org>
-Subject: Re: [PATCH v6 RESEND 4/7] rust: io: factor common I/O helpers into
- Io trait
-Message-ID: <20251114192719.15a3c1a7.zhiw@nvidia.com>
-In-Reply-To: <aRcnd_nSflxnALQ9@google.com>
-References: <20251110204119.18351-1-zhiw@nvidia.com>
-	<20251110204119.18351-5-zhiw@nvidia.com>
-	<aRcnd_nSflxnALQ9@google.com>
-Organization: NVIDIA
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1EB340D9D
+	for <linux-pci@vger.kernel.org>; Fri, 14 Nov 2025 17:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763141945; cv=none; b=eG1iwQAumaWMJ2vFyZByeE/DnjoQX9aYRx5OEXZobYTgZZVooidBUJWl6VV43RTdvlOpXopkgWqIzLQU176HeGs6aOrGJB7N3iLrV8STGZOjRAyw837Lt5FcQA4PaHxSRy0c8rysLKhy9q0THu4x3NCf0vAQvKQoS7slfR4C4VE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763141945; c=relaxed/simple;
+	bh=5jqsF6qpdbjHJ9L3+uMrQ8lMk3Vf+muidopenzoDqXE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ryQDO/DJRnS2Ko+XXau1J6HcgE2at1QUbIHrSkIYzx+V7fGYgEikgB1YKWuePIpuxQPg3+i2rQDt0Zs7ZWusZtjmxXLpXOKRVwEq+uXEcTawpeZlJwAEdu/VHtKAY6dN8+M0K+lUQpy1gVNCxWlSn1I1Z3f2HI6CLanxnw+y/wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Iw786pLi; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=SkmIQe+s; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AEHSjcj120518
+	for <linux-pci@vger.kernel.org>; Fri, 14 Nov 2025 17:39:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	HMxW2aaBF5DcW3MN80vii4x5Su81NzhoZ3dDWieADzs=; b=Iw786pLiSRMhyq+c
+	/slhpaN96gscDlFdPEzcFtjstFkWfY6kOPIPKa7Z7xRlO6hQM2Ug7hYQ3hyjfBpd
+	SCVR10He/5frX7a/MJBiXh/5yrBkUYTbocEnaKXR7TfvyJ3Fhp6AF4csJI7h1NRY
+	S/TR9Qu+nFyNVHdqYijFiRg4PRhGWPMGJg5JpVxuWYvqsLQWd/dCd61B8Deic11o
+	99cSi2ktiUbEL6bzXLRhSbZzFbf4vKByefzcfGuTDGNcTpYRQose1DjjGxDSUHHJ
+	wM5yC1jpBnuUusFynQgMW9XiZxqhZ+Ti0NCvI3DU5Lxnsb0ETbWr6pSyG+Iuc66Y
+	zOVh9Q==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ae7pj0867-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 14 Nov 2025 17:39:01 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-297fbfb4e53so41145275ad.1
+        for <linux-pci@vger.kernel.org>; Fri, 14 Nov 2025 09:39:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1763141940; x=1763746740; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HMxW2aaBF5DcW3MN80vii4x5Su81NzhoZ3dDWieADzs=;
+        b=SkmIQe+sxvMUjYiVCOGggBdD/qQnn0K5I7ITOulNZfRu4Lm7v5sT8uPQoDjFPFYTU4
+         wzP8SNDbG2LO2MaASABTd+rof0e+tKpFqSRixGfl4ofpl5r8GVFEjov2GqFMNP+f4JTK
+         0OdyQkcFW3jfjaNYB1IsXMGjM61tFTqDRGWNsymx6EPDKcDXc7Mf7l5+LSIvrnObHuqm
+         ccYwuJFrGK+PsSv3ElCF/zpdmomlaG7c4eNb8tWAge303PhxbVroRiBC96UUHtdMw6F/
+         itztiFQZIVbhvsXbayRg68mCPBnj/dO0GaCWHr0rIjGK7QZaWncrVaYyx5VxGiloW7iZ
+         l6lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763141940; x=1763746740;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=HMxW2aaBF5DcW3MN80vii4x5Su81NzhoZ3dDWieADzs=;
+        b=vtX5NbIsWdQVLqquTCCoZVJYWP91bcbi4KOgyzfiBLzP9LUQnNanmp7jp7wTc+OgII
+         Aiz/XqE/Re/RbhYSgvwk+6jDXlpWJ6T765gome2vkpgiC6fw1UJra7Gd8TaEjmz6ZqfK
+         qKvU8tEk2CGTZXF2q9B5Pzz670Rj/ESzhE4Pb1ceunAoIjywDWQ+b0lOMUrL83daEf54
+         cBLI7Qoc31hiB6i9jxf3vNI7q9zZp2UI+RigEm3+L7xDO77mxMlRDwtiSRxD/d2FbPXt
+         biuSykoLWLCxiva3jqhxKYGoCpjXWNDeG1IexUyArG3GFFIsJickNCGpTgM7bYDCm1Xs
+         UFkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUMegDxHUNQn1poSlkNTQ7+ke96vNGY/UXmdU5YhSjITWAsKxj2XFXOR4iAeOiHjH4La4GIdG53pIU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjVNqZpmbUzsNQQ1BeZsl5+z+fOUM4BltiPJB/4b0pB1c60Nj+
+	fs0SyLBhJHBzQQfgx4JDeg64Dn4xsNgkvaWFwiG51uvhNHvNv6FUEnUhe/FxqA/651yaqDQuoSZ
+	70QdXXmjL+yUwBehHgZJq4QDqj3OTeQPwSWoGQ04KA1ldVlP7ReXZOQIb42+qObed8Fmt+pw=
+X-Gm-Gg: ASbGncv5eVMKtOip5oBcmEbZxbfUI2V5BFCW4l67yuFftCwJHAE+GTjiaFrg0WF83aE
+	RzcCEhRhw2Em+Qp2pzD7F0lm1vFJ91S8tNuP48tYYmD85cloLPXrBbUOzvhO9NCIJkfFc9irfSx
+	TgdExwd80A2S1giiW3r6XMC6BzA+is/iz36wp5Nho6Rbp8Lk7xmz+EXgzZ5SGFF69/DN6B3p6CV
+	BZWtpivxAPBp1THEq8ecRcdNBx3lO9WsEmEdfE6pNLZcrcMDqY2ztsqj0OUkrONnwvXIKkrhCEK
+	rLIPOwoWdLh+Lm1kmRkVlvE68jHIkI0f4Rh8bGQczZSDQrlHMsziOXkmyl3bmA==
+X-Received: by 2002:a17:902:d48b:b0:295:8da4:6404 with SMTP id d9443c01a7336-2986a74af0fmr46220405ad.40.1763141940212;
+        Fri, 14 Nov 2025 09:39:00 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHutVOyH5k64ynXYMtx+bq2Tb3zdEJvtOd9hJTOgTVPbN1aautTCRluYkEqXUbvSGzDK3h9iQ==
+X-Received: by 2002:a17:902:d48b:b0:295:8da4:6404 with SMTP id d9443c01a7336-2986a74af0fmr46219985ad.40.1763141939669;
+        Fri, 14 Nov 2025 09:38:59 -0800 (PST)
+Received: from work.. ([120.60.130.65])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c24941csm61649035ad.41.2025.11.14.09.38.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Nov 2025 09:38:59 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+X-Google-Original-From: Manivannan Sadhasivam <mani@kernel.org>
+To: bhelgaas@google.com, helgaas@kernel.org, lpieralisi@kernel.org,
+        robh@kernel.org, kwilczynski@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, hans.zhang@cixtech.com
+Cc: Manivannan Sadhasivam <mani@kernel.org>, mpillai@cadence.com,
+        fugang.duan@cixtech.com, guoyin.chen@cixtech.com,
+        peter.chen@cixtech.com, cix-kernel-upstream@cixtech.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH v11 00/10] Enhance the PCIe controller driver for next generation controllers
+Date: Fri, 14 Nov 2025 23:08:45 +0530
+Message-ID: <176314178823.616736.15861987413016604978.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20251108140305.1120117-1-hans.zhang@cixtech.com>
+References: <20251108140305.1120117-1-hans.zhang@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002319:EE_|DS5PPF8002542C7:EE_
-X-MS-Office365-Filtering-Correlation-Id: 090e9e54-c61a-4134-e368-08de23a31a30
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|7416014|82310400026|13003099007|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?sQ0wmx055DPRDOYDvJ6CwYxOV/Neqza0baYTjBPRdx0gDz/DSOxhriBXOk2C?=
- =?us-ascii?Q?zPI7PEsysbB9UNqHcR1liF1D5pz/x8O8g7qKhAxgBgFG23SEk+xkXVvFlSVR?=
- =?us-ascii?Q?6rmsEP942afuCFVBhNgNPDjEsgq9T+UNVQW+2GA3GIaxBsqRCilwggEhk6O2?=
- =?us-ascii?Q?2O47bVAvRKnnm9DpCO2bD2pVyV0/GlkcfclLL5TsIIVWzXtwN2KabKiKsFtI?=
- =?us-ascii?Q?6jfjcpFrn5AfyvV3G+uD1daUWWRG/n1WYvo7ThONzpntxMQSDK6R2FhbJDVq?=
- =?us-ascii?Q?kPOnUkmmMvb1HNERPDuKXm5ZqfZGbvfdJNtSa30G3zR06r3oIgyln7xgJ2ys?=
- =?us-ascii?Q?HxrZ74Io1H5fVNmNUVQHeLb2Nfs3zj7oGcrtDNXaWwPCHDUIlv5v+M4JfhVb?=
- =?us-ascii?Q?RXa/iRVlmeVWkIFDeyDKTQASTkMsXd6XWezOAnAp8VZmo08VZX4PX1IzvCAS?=
- =?us-ascii?Q?2MZWE7Ns08mjNM7+NZHXZbnHoZVa9/hxZ8y8RRkhqfypdmz/q32uOMeLNLZx?=
- =?us-ascii?Q?mgHx4ocmoaNykuCPdAHaedtqZTeL0jYC6YMi1RCdmbly1O8n7DFHztRTPG5s?=
- =?us-ascii?Q?QFzwwylfojSU0j0SUdPtPQD1a41CoR0RmM33YTvQkxFWvl0BlbLzslpGOQMX?=
- =?us-ascii?Q?2LWcG6r+9LroECqilQWWo/5DABmLrJuOruhjfjzBhY5pOxvTtLtrNX233CqI?=
- =?us-ascii?Q?swC3DdggUuDQ4cvjw1bWuibR2N38Mfx041q4r+3zZ4BMWk8Y2VdHO+LcmJGM?=
- =?us-ascii?Q?CJVocLeKFwaRCYvdVo4FwqxlFT/xMzjeu3xf07k6DpUoo9qlsXILWof52NIj?=
- =?us-ascii?Q?zxb12FRyc5jLPRlpNNcnwMAUFWE5vfJ9sqW6nTVmCZm6CeJ28w6zeNgGu6vR?=
- =?us-ascii?Q?fCZEyfv1kP1NCdjyh+T4xXtYv+XIsD48TUaUP+CWcCIswXRRABKGQdYVpcS8?=
- =?us-ascii?Q?nc9tMsVRfGgRc3dPif3eUPqfrBa+rgICYzl5src2nGoEK9VoU6xY3kf3a6m5?=
- =?us-ascii?Q?rb0UgGsW8o9Jlr/IzB7fiGSMDL5ThuvqkYEErZGZjxtp68FIDw1uuojpnxwZ?=
- =?us-ascii?Q?8EiJOtB5qEyZe/QZLSj7DFiuEvB+/aFBQ8Sb2EHXL7Hbkwpd3iCZfhz5sx2a?=
- =?us-ascii?Q?Xr4BFMDCXB9KUaf1dhBeXWJ40zq8mJb2SehS0Re/g9YCICZqepUMuz3XrF8L?=
- =?us-ascii?Q?LJWNJxc7mBARtkurPQrN3NI3YSijRHzbopMuDlcQmHnMyZqyDobenYh4EkQm?=
- =?us-ascii?Q?Fkh91suU8/Yb4iCZJhET3qWFiWG86V8rKMa0m9YBMBb7vFn9o2AFTeqlwBUX?=
- =?us-ascii?Q?7ltxbp8Wr0In8UI6/w71ddeOqDRxY5lgoEvrhUWPfZF0PPODqT/JQeWfIPl3?=
- =?us-ascii?Q?5BoDFWeylD+Mp6U2JN7yLknCYB3jxr538RU5gOyd3Kc58tGM2ANyQxaLYdSR?=
- =?us-ascii?Q?2+exM0ojXb06U9Gff5NXlUeRkqSxaGPSB2G508JxRRcNL97shCoOEvL2Bgyl?=
- =?us-ascii?Q?qDwPD0l6YLcNbbqk4+WE3Pg+BeNZwDgOQLEKuINhU+hEkjaugYlOiiim7vUh?=
- =?us-ascii?Q?AveI8zBUhdanM4bpiV2BPAe0t+7Ibb7ERwOgLxxp?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(7416014)(82310400026)(13003099007)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2025 17:27:35.9001
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 090e9e54-c61a-4134-e368-08de23a31a30
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002319.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPF8002542C7
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: 6L3BEdh1y_wlJ8_Nl9ibLexQG1Q4vl8L
+X-Authority-Analysis: v=2.4 cv=Z53h3XRA c=1 sm=1 tr=0 ts=69176935 cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=FzO0a8Pu37YIpYJNCzyc8A==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=TAThrSAKAAAA:8 a=VwQbUJbxAAAA:8
+ a=qsCD9Ejo0f7OZcNaWdAA:9 a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22
+ a=8BaDVV8zVhUtoWX9exhy:22
+X-Proofpoint-GUID: 6L3BEdh1y_wlJ8_Nl9ibLexQG1Q4vl8L
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE0MDE0MiBTYWx0ZWRfX6BFD1prHFlvG
+ +mVThxP6m9Asn0QuuNFWzgIEazyr9bI7eNMUSFmiZ6Bf7ggIUEJvq6ExDrTyQp2pqO/c3StYMam
+ Jg9ZNEszebAnIQBwUON/HXnSzBEd8BRNMJggItPkw1MU4f1bADZbdjUqctooQ6rNsGT5J6L5Vn+
+ NRGPtGEluP53ugrxANsqnSDG8iBkZjW05fyPOuQN2R2cSp2skKv1KqK5vMmYU7tACJ7Lz947wVG
+ TeQrQKuodNNggzkyVli2fBNUAICv/3O7dflH5Vxk8cw3OGkQXIchpbnEw1xRUkPJE0GkEweOhzi
+ M/utA28UynO/s5iDnD1xrAbvjbqW0DLxxIzZoSPvWz5SXzxIInaOXL+5On/yXkgVpnuR9FQ98G4
+ gYouqt+NaM4sppNM2lfMXMYaFwXbLA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-14_05,2025-11-13_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 phishscore=0 bulkscore=0 adultscore=0 lowpriorityscore=0
+ spamscore=0 malwarescore=0 suspectscore=0 impostorscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511140142
 
-On Fri, 14 Nov 2025 12:58:31 +0000
-Alice Ryhl <aliceryhl@google.com> wrote:
 
-> On Mon, Nov 10, 2025 at 10:41:16PM +0200, Zhi Wang wrote:
-> > The previous Io<SIZE> type combined both the generic I/O access
-> > helpers and MMIO implementation details in a single struct.
-> > 
-> > To establish a cleaner layering between the I/O interface and its
-> > concrete backends, paving the way for supporting additional I/O
-> > mechanisms in the future, Io<SIZE> need to be factored.
-> > 
-> > Factor the common helpers into a new Io trait, and move the
-> > MMIO-specific logic into a dedicated Mmio<SIZE> type implementing
-> > that trait. Rename the IoRaw to MmioRaw and update the bus MMIO
-> > implementations to use MmioRaw.
-> > 
-> > No functional change intended.
-> > 
-> > Cc: Alexandre Courbot <acourbot@nvidia.com>
-> > Cc: Bjorn Helgaas <helgaas@kernel.org>
-> > Cc: Danilo Krummrich <dakr@kernel.org>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Signed-off-by: Zhi Wang <zhiw@nvidia.com>
-> 
-> This defines three traits:
-> 
-> * Io
-> * IoInfallible: Io
-> * IoFallible: Io
-> 
-> This particular split says that there are going to be cases where we
-> implement IoInfallible only, cases where we implement IoFallible only,
-> and maybe cases where we implement both.
-> 
-> And the distiction between them is whether the bounds check is runtime
-> or compile-time.
-> 
-> But this doesn't make much sense to me. Surely any Io resource that
-> can provide compile-time checked io can also provide runtime-checked
-> io, so maybe IoFallible should extend IoInfallible?
-> 
-> And why are these separate traits at all? Why not support both
-> compile-time and runtime-checked IO always?
->
-
-Hi Alice:
-
-Thanks for comments. I did have a version that PCI configuration space
-only have fallible accessors because I thought the device can be
-unplugged or a VF might fail its FLR and get unresponsive, so the driver
-may need to check the return all the time. And Danilo's comments were
-let's have the infallible accessors for PCI configuration space and add
-them later if some driver needs it. [1]
-
-I am open to either options. like have both or having infallibles first
-and fallibles later.
-
-> I noticed also that the trait does not have methods for 64-bit writes,
-> and that these are left as inherent methods on Mmio.
-> 
-> The traits that would make sense to me are these:
-> 
-> * Io
-> * Io64: Io
+On Sat, 08 Nov 2025 22:02:55 +0800, hans.zhang@cixtech.com wrote:
 > 
 
-Hehe. I had the same idea here [2]:
+Applied, thanks!
 
-> Io trait - Main trait + 32-bit access
->  | 
->  | -- Common address/bound checks
->  |
->  |	(accessor traits)
->  | -- Io Fallible trait - (MMIO backend implements)
->  | -- Io Infallible trait - (MMIO/ConfigSpace backend implements this)
->  |
->  | -- Io64 trait - For backend supports 64 bit access
-> 	   |      (accessor traits)
->          | -- Io64 Faillable trait (MMIO backend implements this)
-> 	   | -- Io64 Infallible trait (MMIO backend implements this)
+[01/10] PCI: cadence: Add module support for platform controller driver
+        commit: 611627a4e5e4af7b96aab4f10d130f6a8a615020
+[02/10] PCI: cadence: Split PCIe controller header file
+        commit: 3977be25f5fd973cad6bed810ac1045ba8cfbfa6
+[03/10] PCI: cadence: Move PCIe RP common functions to a separate file
+        commit: b80a7b4713c967479752ea4801eb1d1933093f58
+[04/10] PCI: cadence: Add support for High Perf Architecture (HPA) controller
+        commit: f5fa6c33b173d9279a4c6c9bff166aa7881f9e0f
+[05/10] dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex bindings
+        commit: 50067e81132b9938ae655d7c17cc6e1ec7824e39
+[07/10] PCI: sky1: Add PCIe host support for CIX Sky1
+        commit: 8fdf7a5556526f646cbec0c4575ebc639052ee8a
+[08/10] MAINTAINERS: add entry for CIX Sky1 PCIe driver
+        commit: 7bdb5b229c552ea69962aa33f508a72f2789543b
 
-I am struggling with how many IO backends actually need 64bit read/write
-other than MMIO backend. E.g. SPI, I2C. The conclusion we had so far was
-we can add it at any time when someone need it. If we think this is
-necessary, I can add it in the next spin.
+NOTE: Squashed the patch 6 with 7 and moved the PCI ID definitions to the controller
+driver itself. We don't add IDs to the uapi header unless there are more than
+one user in the kernel.
 
-[1] https://lore.kernel.org/all/DE00WIVOSYC2.2CAGWUYWE6FZ@kernel.org/
-[2]
-https://lore.kernel.org/all/e7a75899-be93-4f0f-9c9f-0d63d03f4806@kernel.org/
+- Mani
 
-> where Io provides everything the three traits you have now provides,
-> and Io64 provides the 64-bit operations. That way, everything needs to
-> support operations of various sizes with both compile-time and
-> runtime-checked bounds, but types may opt-in to providing 64-bit ops.
-> 
-> Thoughts?
-> 
-> Alice
-
+Best regards,
+-- 
+Manivannan Sadhasivam <mani@kernel.org>
 
