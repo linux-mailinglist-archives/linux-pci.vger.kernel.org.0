@@ -1,144 +1,287 @@
-Return-Path: <linux-pci+bounces-41200-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41201-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 191B6C5AF90
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 03:03:53 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC5ADC5B198
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 04:24:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 979A7354306
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 02:03:52 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 8566A353EDD
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Nov 2025 03:24:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44CD6264602;
-	Fri, 14 Nov 2025 02:03:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A678123EAB6;
+	Fri, 14 Nov 2025 03:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="HmX4lbpU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (l-sdnproxy.icoremail.net [20.188.111.126])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02A77269CF1;
-	Fri, 14 Nov 2025 02:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.188.111.126
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C16B20298C;
+	Fri, 14 Nov 2025 03:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763085827; cv=none; b=qHk9VM6swQJnSc3VaRQ+CEWAuSoOWAuKJpMiNPIYKQI59QYJHZ3ymed/8KQ+9W0V9QkqmUq4fIZQcqPz7uIXGJnaA9vk2+1guoW5r9WpRoPwnzGhodjy/FnOnL5k25hPBnWt1QhctWyLustfbHslZ8rfSQCgI/RnHspzWwdHQ6o=
+	t=1763090660; cv=none; b=EUsvGft1sR+ZTPqNxPdSyV9C564Lx2krw9SDKMkcfiOax6eGIjLS5SxBjYZxVxCaX8tAsNfWkJtQDCETODUnLo0Fgy1tzhFGbzLyiImxCeyJThV3kZxm4X96SHIFZJdFc4VinK6B41L9/POKALY1qTbMSeSNGvcJB0n9saceKCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763085827; c=relaxed/simple;
-	bh=fzw6wJKVwQCOolx0vN9I+ZcrGEAQLxVX5sR0rTJ+NOc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=C1frWSgloXH5a5dXQrdxj5+r9QklotgIbJJy3fBO8yWL+pu+w2QPn109p5l/Q9OUqiSXGwYQNY2qyv3oejbrw3MtIWff/V3a9Zq+fqhzpRRyXfBPJfnKmhxF/OAHXTts9dGwtNdu0Z8BUq8uSFE2Ii+Dc5OqyYS/funce43AWDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=20.188.111.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
- ajax-webmail-app2 (Coremail) ; Fri, 14 Nov 2025 10:03:26 +0800 (GMT+08:00)
-Date: Fri, 14 Nov 2025 10:03:26 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-To: "Manivannan Sadhasivam" <mani@kernel.org>,
-	"Bjorn Helgaas" <helgaas@kernel.org>
-Cc: "Manivannan Sadhasivam" <manivannan.sadhasivam@oss.qualcomm.com>,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	will@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, robh@kernel.org,
-	linux-arm-msm@vger.kernel.org, vincent.guittot@linaro.org,
-	"Frank Li" <Frank.li@nxp.com>
-Subject: Re: Re: [PATCH v2 3/3] PCI: dwc: Check for the device presence
- during suspend and resume
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <6uidenlpio4lsn7cecdubxlojo4slm6g76zteu74jg7xqhnv2y@kmsnhuh3dqiz>
-References: <20251107044319.8356-4-manivannan.sadhasivam@oss.qualcomm.com>
- <20251113164013.GA2285612@bhelgaas>
- <6uidenlpio4lsn7cecdubxlojo4slm6g76zteu74jg7xqhnv2y@kmsnhuh3dqiz>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1763090660; c=relaxed/simple;
+	bh=mIVeT2rGrMsH4ue71pTIxQIxOMi38taHtzNz6sRXphc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UBLr6KbN5NSSIhFQ0kw0TiGmQNg28I3W8wlgCuIPLiAxbtR/XvE2hmtHjukERm5NOIU9TCD3gGyqezRZg1TLBmyw1v55j0nvsDX3/g9pwkIBGuWXL2V2QdkRqp4fBeVHNxTtQ2HDMElK600QV1+1xZQCyQZK0YFiY+I7y/IEkX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=HmX4lbpU; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1763090633; x=1763695433; i=w_armin@gmx.de;
+	bh=Q4vUvQcq2tnJRGmKLq120f5QMyRlcuVxYUcrmWKOs6U=;
+	h=X-UI-Sender-Class:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:To:Cc:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=HmX4lbpUHEc0dYy8kxSAwz7q399fZc0pHz9eYezR11yePUyAcWcxPjPKlR8ky0XS
+	 cwtoQqmLoevg4XjPumn+ucYdbEHK22N6wddkOVgPYhv3niJJHZc9fUusV/CcQ0rMe
+	 8xKaav6jNzLcSHeG+2l5ux8k838fAF5RupCrUqrZc9ai0b8EqNfUVLtW/91S0KJBR
+	 UY2hOigRgszIZBH6Web3uNRR6pxgljxbGR3UT+xv+vuKgdPv9wUBr+ZeFdCs3TPsi
+	 dAvdNkQvmObNiNCrwEv/u7TfDS/Vf+iTC9Gr3wbpXn4feP3iQ+GlE0L1GMoLoIz56
+	 xXGTJgfotk8FVXrVRA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [127.0.0.1] ([93.202.247.91]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MTzb8-1vjdGc2phy-00YKis; Fri, 14
+ Nov 2025 04:23:52 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+Subject: [PATCH RFC 0/8] thermal: core: Allow setting the parent device of
+ thermal zone/cooling devices
+Date: Fri, 14 Nov 2025 04:23:01 +0100
+Message-Id: <20251114-thermal-device-v1-0-d8b442aae38b@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <62a83468.243.19a801a6d02.Coremail.zhangsenchuan@eswincomputing.com>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:TQJkCgBnq67ujRZpCHh7AA--.1623W
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAgEGBmkWC
-	FsJYwABsE
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-B4-Tracking: v=1; b=H4sIAJagFmkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1NDQ0MT3ZKM1KLcxBzdFKDi5FRdM1PTFENjCwsjk2QzJaCmgqLUtMwKsIH
+ RSkFuzkqxtbUAKCMckmUAAAA=
+X-Change-ID: 20251114-thermal-device-655d138824c6
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Lucas Stach <l.stach@pengutronix.de>, 
+ Russell King <linux+etnaviv@armlinux.org.uk>, 
+ Christian Gmeiner <christian.gmeiner@gmail.com>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Amit Daniel Kachhap <amit.kachhap@gmail.com>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, Len Brown <lenb@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Ido Schimmel <idosch@nvidia.com>, 
+ Petr Machata <petrm@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Jeff Johnson <jjohnson@kernel.org>, 
+ Miri Korenblit <miriam.rachel.korenblit@intel.com>, 
+ Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+ Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>, 
+ Sean Wang <sean.wang@mediatek.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Peter Kaestle <peter@piie.net>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Potnuri Bharat Teja <bharat@chelsio.com>, 
+ Sebastian Reichel <sre@kernel.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Support Opensource <support.opensource@diasemi.com>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+ linux-tegra@vger.kernel.org, linux-acpi@vger.kernel.org, 
+ linux-doc@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-wireless@vger.kernel.org, ath10k@lists.infradead.org, 
+ ath11k@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
+ linux-pci@vger.kernel.org, imx@lists.linux.dev, 
+ linux-renesas-soc@vger.kernel.org
+X-Mailer: b4 0.14.3
+X-Provags-ID: V03:K1:+sQC6XJityyPeqf8ATkjW/K9SbuukJVyXf5EoW8hD1EpHIZtMr3
+ X/UKPKjsFSA6l29FTcQBKzyHfVg/DxJJWIOZQNVsKvP0A8yvP9W8VXH4yYuaXnQgsT+ZxAb
+ b3nRSrHxe27/nehrCzWDSieaqE7OH03Rdr2segv/ylu8N/fkXG+JtiExAsNPPPoKJXUnPGn
+ kn3XOZdNtkPxA6h1kt2pA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:q1yh7z5Kc+U=;RKcBJD6e11WT77XjTrtojbt4RYU
+ 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
+ Fnsxc86w=
 
-CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiTWFuaXZhbm5hbiBTYWRo
-YXNpdmFtIiA8bWFuaUBrZXJuZWwub3JnPgo+IFNlbmQgdGltZTpGcmlkYXksIDE0LzExLzIwMjUg
-MDE6MDE6MjcKPiBUbzogIkJqb3JuIEhlbGdhYXMiIDxoZWxnYWFzQGtlcm5lbC5vcmc+Cj4gQ2M6
-ICJNYW5pdmFubmFuIFNhZGhhc2l2YW0iIDxtYW5pdmFubmFuLnNhZGhhc2l2YW1Ab3NzLnF1YWxj
-b21tLmNvbT4sIGxwaWVyYWxpc2lAa2VybmVsLm9yZywga3dpbGN6eW5za2lAa2VybmVsLm9yZywg
-YmhlbGdhYXNAZ29vZ2xlLmNvbSwgd2lsbEBrZXJuZWwub3JnLCBsaW51eC1wY2lAdmdlci5rZXJu
-ZWwub3JnLCBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLCByb2JoQGtlcm5lbC5vcmcsIGxp
-bnV4LWFybS1tc21Admdlci5rZXJuZWwub3JnLCB6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0aW5n
-LmNvbSwgdmluY2VudC5ndWl0dG90QGxpbmFyby5vcmcsICJGcmFuayBMaSIgPEZyYW5rLmxpQG54
-cC5jb20+Cj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAzLzNdIFBDSTogZHdjOiBDaGVjayBmb3Ig
-dGhlIGRldmljZSBwcmVzZW5jZSBkdXJpbmcgc3VzcGVuZCBhbmQgcmVzdW1lCj4gCj4gT24gVGh1
-LCBOb3YgMTMsIDIwMjUgYXQgMTA6NDA6MTNBTSAtMDYwMCwgQmpvcm4gSGVsZ2FhcyB3cm90ZToK
-PiA+IFsrY2MgRnJhbmtdCj4gPiAKPiA+IE9uIEZyaSwgTm92IDA3LCAyMDI1IGF0IDEwOjEzOjE5
-QU0gKzA1MzAsIE1hbml2YW5uYW4gU2FkaGFzaXZhbSB3cm90ZToKPiA+ID4gSWYgdGhlcmUgaXMg
-bm8gZGV2aWNlIGF2YWlsYWJsZSB1bmRlciB0aGUgUm9vdCBQb3J0cywgdGhlcmUgaXMgbm8gcG9p
-bnQgaW4KPiA+ID4gc2VuZGluZyBQTUVfVHVybl9PZmYgYW5kIHdhaXRpbmcgZm9yIEwyL0wzIHRy
-YW5zaXRpb24gZHVyaW5nIHN1c3BlbmQsIGl0Cj4gPiA+IHdpbGwgcmVzdWx0IGluIGEgdGltZW91
-dC4gSGVuY2UsIHNraXAgdGhvc2Ugc3RlcHMgaWYgbm8gZGV2aWNlIGlzIGF2YWlsYWJsZQo+ID4g
-PiBkdXJpbmcgc3VzcGVuZC4KPiA+ID4gCj4gPiA+IER1cmluZyByZXN1bWUsIGRvIG5vdCB3YWl0
-IGZvciB0aGUgbGluayB1cCBpZiB0aGVyZSB3YXMgbm8gZGV2aWNlIGNvbm5lY3RlZAo+ID4gPiBi
-ZWZvcmUgc3VzcGVuZC4gSXQgaXMgdmVyeSB1bmxpa2VseSB0aGF0IGEgZGV2aWNlIHdpbGwgZ2V0
-IGNvbm5lY3RlZCB3aGlsZQo+ID4gPiB0aGUgaG9zdCBzeXN0ZW0gd2FzIHN1c3BlbmRlZC4KPiA+
-ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6IE1hbml2YW5uYW4gU2FkaGFzaXZhbSA8bWFuaXZhbm5h
-bi5zYWRoYXNpdmFtQG9zcy5xdWFsY29tbS5jb20+Cj4gPiA+IC0tLQo+ID4gPiAgZHJpdmVycy9w
-Y2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWhvc3QuYyB8IDEzICsrKysrKysrKysr
-KysKPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspCj4gPiA+IAo+ID4gPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWhv
-c3QuYyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1ob3N0LmMK
-PiA+ID4gaW5kZXggMjBjOTMzM2JjYjFjLi41YTM5ZTcxMzllYzkgMTAwNjQ0Cj4gPiA+IC0tLSBh
-L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1ob3N0LmMKPiA+ID4g
-KysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWhvc3QuYwo+
-ID4gPiBAQCAtMjAsNiArMjAsNyBAQAo+ID4gPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2Rl
-dmljZS5oPgo+ID4gPiAgCj4gPiA+ICAjaW5jbHVkZSAiLi4vLi4vcGNpLmgiCj4gPiA+ICsjaW5j
-bHVkZSAiLi4vcGNpLWhvc3QtY29tbW9uLmgiCj4gPiA+ICAjaW5jbHVkZSAicGNpZS1kZXNpZ253
-YXJlLmgiCj4gPiA+ICAKPiA+ID4gIHN0YXRpYyBzdHJ1Y3QgcGNpX29wcyBkd19wY2llX29wczsK
-PiA+ID4gQEAgLTExMjksNiArMTEzMCw5IEBAIGludCBkd19wY2llX3N1c3BlbmRfbm9pcnEoc3Ry
-dWN0IGR3X3BjaWUgKnBjaSkKPiA+ID4gIAl1MzIgdmFsOwo+ID4gPiAgCWludCByZXQ7Cj4gPiA+
-ICAKPiA+ID4gKwlpZiAoIXBjaV9yb290X3BvcnRzX2hhdmVfZGV2aWNlKHBjaS0+cHAuYnJpZGdl
-LT5idXMpKQo+ID4gPiArCQlnb3RvIHN0b3BfbGluazsKPiA+IAo+ID4gVGhpcyBsb29rcyByYWN5
-LiAgTWF5YmUgaXQncyBzdGlsbCBPSywgYnV0IEkgdGhpbmsgaXQgd291bGQgYmUgZ29vZCB0bwo+
-ID4gaW5jbHVkZSBhIGNvbW1lbnQgdG8gYWNrbm93bGVkZ2UgdGhhdCBhbmQgZXhwbGFpbiB3aHkg
-ZWl0aGVyIG91dGNvbWUKPiA+IGlzIGFjY2VwdGFibGUsIGUuZy4sIGlmIGEgdXNlciByZW1vdmVz
-IGEgZGV2aWNlIGR1cmluZyBzdXNwZW5kLCBpdAo+ID4gcmVzdWx0cyBpbiBhIHRpbWVvdXQgYnV0
-IG5vdGhpbmcgbW9yZSB0ZXJyaWJsZS4KPiA+IAo+IAo+IE9rLgo+IAo+ID4gPiAgCS8qCj4gPiA+
-ICAJICogSWYgTDFTUyBpcyBzdXBwb3J0ZWQsIHRoZW4gZG8gbm90IHB1dCB0aGUgbGluayBpbnRv
-IEwyIGFzIHNvbWUKPiA+ID4gIAkgKiBkZXZpY2VzIHN1Y2ggYXMgTlZNZSBleHBlY3QgbG93IHJl
-c3VtZSBsYXRlbmN5Lgo+ID4gPiBAQCAtMTE2Miw2ICsxMTY2LDcgQEAgaW50IGR3X3BjaWVfc3Vz
-cGVuZF9ub2lycShzdHJ1Y3QgZHdfcGNpZSAqcGNpKQo+ID4gPiAgCSAqLwo+ID4gPiAgCXVkZWxh
-eSgxKTsKPiA+ID4gIAo+ID4gPiArc3RvcF9saW5rOgo+ID4gPiAgCWR3X3BjaWVfc3RvcF9saW5r
-KHBjaSk7Cj4gPiA+ICAJaWYgKHBjaS0+cHAub3BzLT5kZWluaXQpCj4gPiA+ICAJCXBjaS0+cHAu
-b3BzLT5kZWluaXQoJnBjaS0+cHApOwo+ID4gPiBAQCAtMTE5NSw2ICsxMjAwLDE0IEBAIGludCBk
-d19wY2llX3Jlc3VtZV9ub2lycShzdHJ1Y3QgZHdfcGNpZSAqcGNpKQo+ID4gPiAgCWlmIChyZXQp
-Cj4gPiA+ICAJCXJldHVybiByZXQ7Cj4gPiA+ICAKPiA+ID4gKwkvKgo+ID4gPiArCSAqIElmIHRo
-ZXJlIHdhcyBubyBkZXZpY2UgYmVmb3JlIHN1c3BlbmQsIHNraXAgd2FpdGluZyBmb3IgbGluayB1
-cCBhcwo+ID4gPiArCSAqIGl0IGlzIGJvdW5kIHRvIGZhaWwuIEl0IGlzIHZlcnkgdW5saWtlbHkg
-dGhhdCBhIGRldmljZSB3aWxsIGdldAo+ID4gPiArCSAqIGNvbm5lY3RlZCAqZHVyaW5nKiBzdXNw
-ZW5kLgo+ID4gCj4gPiBJJ20gbm90IGNvbnZpbmNlZC4gIFVubGlrZSB0aGUgc3VzcGVuZCBzaWRl
-LCB3aGVyZSB0aGUgcmFjZSB3aW5kb3cgaXMKPiA+IHRpbnksIGhlcmUgdGhlIHdpbmRvdyBpcyB0
-aGUgZW50aXJlIHRpbWUgdGhlIHN5c3RlbSBpcyBzdXNwZW5kZWQsIGFuZAo+ID4gYXQgbGVhc3Qg
-aW4gbGFwdG9wIHVzYWdlLCB0aGVyZSdzIG5vIHJlYXNvbiBJIHdvdWxkIGhlc2l0YXRlIHRvIHBs
-dWcKPiA+IHNvbWV0aGluZyBpbiB3aGlsZSBzdXNwZW5kZWQuCj4gPiAKPiAKPiBJbiB0aGF0IGNh
-c2UsIHdlIGp1c3QgbmVlZCB0byBkbzoKPiAKPiAJLyogSWdub3JlIGVycm9ycyBhcyB0aGVyZSBj
-b3VsZCBiZSBubyBkZXZpY2VzIGNvbm5lY3RlZCAqLwo+IAlkd19wY2llX3dhaXRfZm9yX2xpbmso
-KQo+IAo+IEkgd2FudGVkIHRvIGF2b2lkIHRoZSB0aW1lb3V0IGlmIHdlIGtuZXcgdGhhdCB0aGVy
-ZSB3YXMgbm8gZGV2aWNlIGNvbm5lY3RlZAo+IGR1cmluZyBzdXNwZW5kLgo+IApIaSwgTWFuaQoK
-QWx0aG91Z2ggaXQgd2lsbCBpZ25vcmUgdGhlIGp1ZGdtZW50IGR1cmluZyBub3JtYWwgZGV2aWNl
-IGNvbm5lY3Rpb24uCkZvcnR1bmF0ZWx5LCB0aGlzIGZ1bmN0aW9uIHdpbGwgcHJpbnQgcHJvbXB0
-IGluZm9ybWF0aW9uLiBQZXJoYXBzLCB0aGlzIGlzIGEKZ29vZCBjaG9pY2UuIFRoZXJlIGlzIGFs
-c28gc3VjaCBhIHByYWN0aWNlIGluIHRoZSBkd19wY2llX2hvc3RfaW5pdCBmdW5jdGlvbi4KZm9y
-IGV4YW1wbGUgaW4gdGhlIGR3X3BjaWVfaG9zdF9pbml0OgoKICAgIC8qIElnbm9yZSBlcnJvcnMu
-IHRoZSBsaW5rIG1heSBjb21lIHVwIGxhdGVyICovCiAgICAgZHdfcGNpZV93YWl0X2Zvcl9saW5r
-KHBjaSk7CgpQZXJoYXBzIHRoZXJlIGFyZSBvdGhlciBiZXR0ZXIgbWV0aG9kcy4gRm9yIG5vdywg
-dGhpcyBpcyB3aGF0IEkgaGF2ZSBzZWVuLgoKS2luZCByZWdhcmRzLApTZW5jaHVhbiBaaGFuZw==
+Drivers registering thermal zone/cooling devices are currently unable
+to tell the thermal core what parent device the new thermal zone/
+cooling device should have, potentially causing issues with suspend
+ordering and making it impossible for user space appications to
+associate a given thermal zone device with its parent device.
+
+This patch series aims to fix this issue by extending the functions
+used to register thermal zone/cooling devices to also accept a parent
+device pointer. The first six patches convert all functions used for
+registering cooling devices, while the functions used for registering
+thermal zone devices are converted by the remaining two patches.
+
+I tested this series on various devices containing (among others):
+- ACPI thermal zones
+- ACPI processor devices
+- PCIe cooling devices
+- Intel Wifi card
+- Intel powerclamp
+- Intel TCC cooling
+
+I also compile-tested the remaining affected drivers, however i would
+still be happy if the relevant maintainers (especially those of the
+mellanox ethernet switch driver) could take a quick glance at the
+code and verify that i am using the correct device as the parent
+device.
+
+This work is also necessary for extending the ACPI thermal zone driver
+to support the _TZD ACPI object in the future.
+
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Armin Wolf (8):
+      thermal: core: Allow setting the parent device of cooling devices
+      thermal: core: Set parent device in thermal_of_cooling_device_regist=
+er()
+      ACPI: processor: Stop creating "device" sysfs link
+      ACPI: fan: Stop creating "device" sysfs link
+      ACPI: video: Stop creating "device" sysfs link
+      thermal: core: Set parent device in thermal_cooling_device_register(=
+)
+      ACPI: thermal: Stop creating "device" sysfs link
+      thermal: core: Allow setting the parent device of thermal zone devic=
+es
+
+ Documentation/driver-api/thermal/sysfs-api.rst     | 10 ++++-
+ drivers/acpi/acpi_video.c                          |  9 +----
+ drivers/acpi/fan_core.c                            | 16 ++------
+ drivers/acpi/processor_thermal.c                   | 15 +------
+ drivers/acpi/thermal.c                             | 33 ++++++---------
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c              |  4 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c |  4 +-
+ drivers/net/ethernet/mellanox/mlxsw/core_thermal.c | 47 +++++++++++------=
+=2D----
+ drivers/net/wireless/ath/ath10k/thermal.c          |  2 +-
+ drivers/net/wireless/ath/ath11k/thermal.c          |  2 +-
+ drivers/net/wireless/intel/iwlwifi/mld/thermal.c   |  6 +--
+ drivers/net/wireless/intel/iwlwifi/mvm/tt.c        | 12 +++---
+ drivers/net/wireless/mediatek/mt76/mt7915/init.c   |  2 +-
+ drivers/net/wireless/mediatek/mt76/mt7996/init.c   |  2 +-
+ drivers/platform/x86/acerhdf.c                     |  4 +-
+ drivers/power/supply/power_supply_core.c           |  4 +-
+ drivers/thermal/armada_thermal.c                   |  2 +-
+ drivers/thermal/cpufreq_cooling.c                  |  2 +-
+ drivers/thermal/cpuidle_cooling.c                  |  2 +-
+ drivers/thermal/da9062-thermal.c                   |  2 +-
+ drivers/thermal/devfreq_cooling.c                  |  2 +-
+ drivers/thermal/dove_thermal.c                     |  2 +-
+ drivers/thermal/imx_thermal.c                      |  2 +-
+ .../intel/int340x_thermal/int3400_thermal.c        |  2 +-
+ .../intel/int340x_thermal/int3403_thermal.c        |  4 +-
+ .../intel/int340x_thermal/int3406_thermal.c        |  2 +-
+ .../intel/int340x_thermal/int340x_thermal_zone.c   | 13 +++---
+ .../int340x_thermal/processor_thermal_device_pci.c |  7 ++--
+ drivers/thermal/intel/intel_pch_thermal.c          |  2 +-
+ drivers/thermal/intel/intel_powerclamp.c           |  2 +-
+ drivers/thermal/intel/intel_quark_dts_thermal.c    |  2 +-
+ drivers/thermal/intel/intel_soc_dts_iosf.c         |  2 +-
+ drivers/thermal/intel/intel_tcc_cooling.c          |  2 +-
+ drivers/thermal/intel/x86_pkg_temp_thermal.c       |  6 +--
+ drivers/thermal/kirkwood_thermal.c                 |  2 +-
+ drivers/thermal/pcie_cooling.c                     |  2 +-
+ drivers/thermal/renesas/rcar_thermal.c             | 10 +++--
+ drivers/thermal/spear_thermal.c                    |  2 +-
+ drivers/thermal/tegra/soctherm.c                   |  5 +--
+ drivers/thermal/testing/zone.c                     |  2 +-
+ drivers/thermal/thermal_core.c                     | 23 +++++++----
+ drivers/thermal/thermal_of.c                       |  9 +++--
+ include/linux/thermal.h                            | 22 +++++-----
+ 43 files changed, 145 insertions(+), 162 deletions(-)
+=2D--
+base-commit: 399fb812cd1532773e6aa985c0949859221341c4
+change-id: 20251114-thermal-device-655d138824c6
+
+Best regards,
+=2D-=20
+Armin Wolf <W_Armin@gmx.de>
 
 
