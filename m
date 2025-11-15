@@ -1,58 +1,59 @@
-Return-Path: <linux-pci+bounces-41311-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41315-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31B2EC60B02
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Nov 2025 21:58:48 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5EA6C60B2C
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Nov 2025 21:59:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by tor.lore.kernel.org (Postfix) with ESMTPS id 1B0EA20897
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Nov 2025 20:58:47 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 477764E1E31
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Nov 2025 20:59:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37C1F23C8C7;
-	Sat, 15 Nov 2025 20:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98089248F72;
+	Sat, 15 Nov 2025 20:58:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="d6IFiUNq"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="SRtp7rTM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223F023372C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2232722756A;
 	Sat, 15 Nov 2025 20:58:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763240323; cv=none; b=Nu+V4xvd1zY4Ac2NwcIcmnGlIYtqcFpay4dG0uKzTXg/PX44fzQclgl9DQQwxc/jS7Cy7ePBeJeaNkGh3kDtXgx0Nnx+tKAxk2TC2xBdWUPVLYJWPvld2qxGkNoETTHoFpzaENA8KfxXdyRebMzh2mQ35hN/g4rOKny1Bj7d9Fk=
+	t=1763240324; cv=none; b=Ut45C0/4IO3vpbSCnqvXt3tuRj0Go3fsHP037o7Oo/d5jaL8SZYzSG0+dRe2OkxosU1KsbcG8N5e/3V7GBBZ13ZtwcJuHj3QSnXFoHb1+dDM+Tt8IDh5C/eyTDX8QA7M/pi8hJ0wrSjcDZ8EeE7+iqAD41woFDw+ux3hTWsmjEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763240323; c=relaxed/simple;
-	bh=BNloXSmxfui+A+UD0vb6639VkVLh4h7qFS1iqqJUbUo=;
+	s=arc-20240116; t=1763240324; c=relaxed/simple;
+	bh=JdKvpThqp3TDs4o0pkrFusvXBPtE9LtpoPmwO6qXgiM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=u2NYQd13BhbfoGVBGtpemAQgiDOwX1JGhjrrty7IE6K2E0YZBsSjKF9+JpD/pXXbqYVf4cVKxnK4Er6beuMxOW0QE3Bu3Ncr4yZoEPETIR7RIshXYufOeTvINmTnD0jtKgIXONU44f4xpUxyWg1aonkF+9/8YKsko5cWaYBSbYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=d6IFiUNq; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:To:Cc; b=X0JwBeSRmOL+yk5ur+GwwmyBoETvD/s1h8Uz2AHTeMQUjhw0PejaK45CL7tKn0W+XbwU2M58JHj0ygIDvs6U4h3+oprPtr5cR34ArHTBPKduWuEquCEgkYyGQDSJhKI2r6/TEvzg6/Q+zzW3oSo1z+hnE/9gOsVI1T+xcIbRWm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=SRtp7rTM; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
 	s=mail; t=1763240312;
-	bh=BNloXSmxfui+A+UD0vb6639VkVLh4h7qFS1iqqJUbUo=;
+	bh=JdKvpThqp3TDs4o0pkrFusvXBPtE9LtpoPmwO6qXgiM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=d6IFiUNqQD+93pkq4ov86+rPsBtqWuNo+o78OoQQeHDVPP6RnQvqLT0il8ol+tsgU
-	 YMhKX0Dz+TVcC3EtyHF7Ck6JT2/94g3FzZeYYCK8zWmMpsh5DSSZjwm9ME60o3QjoV
-	 aOlfgrFV808O7OmvfGCGPaouspC95qn7GlhLeK8hX25M45q2CTlbc8uP12FRDKPVwK
-	 LBDVWjUfhgIZz3+HIzzg0OF6DEGWUKypIn05PzcPlXgp4iu/wxaIF0yTtyjJD/dJgg
-	 u/IO3GbZ5fekm38/cTda66Kaxq1x5qkpojvKA3nkAb/chsHnprCZNbOK1OnknsJ9O0
-	 ypAexouToZ05Q==
-Received: from beast.luon.net (simons.connected.by.freedominter.net [45.83.240.172])
+	b=SRtp7rTMzwbGSe7WBPL0JooFZ9MC1NaN0wdOyoTLxb7QDCJyG8qYLDo8LnLl6Jcmb
+	 /OXnw8pz4g1m2BZnlPg4zGJ/arOYZUxhiH9GpqZWWaVngrMs1GSZR2elktYm7v3QHS
+	 YjErx28KgjfJeTUV9fvRXSpTIeO6TwTPDSueAaH7FnHqPnBRFD+H3VBlfDM16Qto2Y
+	 1xtK8UKg8qJkN6usUZ5Amdb6P5hM8ZiJpvf8Phn8NDxhBbG7qFcWe99IgU+Ibvdni+
+	 gNqBYbv0Y5bFf1jLmW7mL5kl9LhhuI3ZqxTL74Mypm3V2ZlK7BZ1pgJn82afW2SXpo
+	 z0iWQVf1AWNow==
+Received: from beast.luon.net (unknown [IPv6:2a10:3781:2531::8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: sjoerd)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6FCE517E00B0;
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7138F17E0202;
 	Sat, 15 Nov 2025 21:58:32 +0100 (CET)
 Received: by beast.luon.net (Postfix, from userid 1000)
-	id 11F6A110527D9; Sat, 15 Nov 2025 21:58:32 +0100 (CET)
+	id 175EF110527DB; Sat, 15 Nov 2025 21:58:32 +0100 (CET)
 From: Sjoerd Simons <sjoerd@collabora.com>
-Date: Sat, 15 Nov 2025 21:58:04 +0100
-Subject: [PATCH v4 01/11] dt-bindings: mfd: syscon: Add mt7981-topmisc
+Date: Sat, 15 Nov 2025 21:58:05 +0100
+Subject: [PATCH v4 02/11] dt-bindings: PCI: mediatek-gen3: Add MT7981 PCIe
+ compatible
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,7 +62,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251115-openwrt-one-network-v4-1-48cbda2969ac@collabora.com>
+Message-Id: <20251115-openwrt-one-network-v4-2-48cbda2969ac@collabora.com>
 References: <20251115-openwrt-one-network-v4-0-48cbda2969ac@collabora.com>
 In-Reply-To: <20251115-openwrt-one-network-v4-0-48cbda2969ac@collabora.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -89,28 +90,31 @@ Cc: kernel@collabora.com, devicetree@vger.kernel.org,
  Conor Dooley <conor.dooley@microchip.com>
 X-Mailer: b4 0.14.3
 
-This hardware block amongst other things includes a multiplexer for a
-high-speed Combo-Phy. This binding allows exposing the multiplexer
+Add compatible string for MediaTek MT7981 PCIe Gen3 controller.
+The MT7981 PCIe controller is compatible with the MT8192 PCIe
+controller.
 
 Acked-by: Conor Dooley <conor.dooley@microchip.com>
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
 ---
- Documentation/devicetree/bindings/mfd/syscon.yaml | 1 +
+V1 -> V2: Improve commit subject
+---
+ Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
-index 657c38175fba2..51511078c4c3b 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.yaml
-+++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
-@@ -193,6 +193,7 @@ properties:
-           - mediatek,mt2701-pctl-a-syscfg
-           - mediatek,mt2712-pctl-a-syscfg
-           - mediatek,mt6397-pctl-pmic-syscfg
-+          - mediatek,mt7981-topmisc
-           - mediatek,mt7988-topmisc
-           - mediatek,mt8135-pctl-a-syscfg
-           - mediatek,mt8135-pctl-b-syscfg
+diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+index 0278845701ce8..4db700fc36ba7 100644
+--- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
++++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+@@ -48,6 +48,7 @@ properties:
+     oneOf:
+       - items:
+           - enum:
++              - mediatek,mt7981-pcie
+               - mediatek,mt7986-pcie
+               - mediatek,mt8188-pcie
+               - mediatek,mt8195-pcie
 
 -- 
 2.51.0
