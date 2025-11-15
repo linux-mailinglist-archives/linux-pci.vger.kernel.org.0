@@ -1,79 +1,79 @@
-Return-Path: <linux-pci+bounces-41294-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41295-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04C69C602A9
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Nov 2025 10:49:49 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2ED3C602BB
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Nov 2025 10:51:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 8859D348C0F
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Nov 2025 09:49:48 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 57E1034AD2C
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Nov 2025 09:51:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0AD327F19F;
-	Sat, 15 Nov 2025 09:49:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD290281525;
+	Sat, 15 Nov 2025 09:51:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a6i4zfta"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9bIyFi3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D93C2749E6
-	for <linux-pci@vger.kernel.org>; Sat, 15 Nov 2025 09:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161BE281532
+	for <linux-pci@vger.kernel.org>; Sat, 15 Nov 2025 09:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763200183; cv=none; b=ROzyF6chb9ChfloHdE8B6DAezVAi9Spc2ZKYISos0fsdZuG/nuJ9Hsh6g5F1HWWJ1ewqgoOXKo/VAZ7C9tyN3gXB4ekvbz9cfDhWYh2g2CNwq7qJbNqCdPXWYAW52atIJq+T70zluCAYvqGB/0Q5tASAC9fEhdQD7AELezubk58=
+	t=1763200298; cv=none; b=q5KmChrDMx4YkyDMzUXADZ3VtL0l3dChsTzQl9O+vzPMtXgo4PaaV2+dGljK5PUQXu8ZGEfZMicL1bx/1lqpfDnQ2DMxyX8ncveVBPU7anNtgh26CpcJLyHFqs3o4ZOQpePTs8oQFA/FId/9rXPemQcjfjCdFXM2pyJzBRjKvi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763200183; c=relaxed/simple;
-	bh=pzql7SHdC4gyXabGm1aAvDmdKPa3cQ9FY4OzZp2mAac=;
+	s=arc-20240116; t=1763200298; c=relaxed/simple;
+	bh=CDcBesjBeDH8HiQdDnJyVwV7463lVlwERDCq6R1p72Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aN96OcxqwTOf63Q+FREHtu8ck5OU3yQFrXaY5/EVQHqKX3fKsigc4DR9mqO/AftsKNT7/ov/3NWWad9Bte88kEie67BJoqd1YnqXGw5UXPhVhPMo5GPSW1iatGLd9ixGWmyYnRzY4tSnBqHJU4Mpz2hQiM616cyU5Z8f5714Nkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a6i4zfta; arc=none smtp.client-ip=209.85.210.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=rsmfhiUJF2SLIyH/8hH/O6gAj0xg++vvju7AE4XC5ZRf3v+CnJ7JUI6inC83pXab7lZJ3NkhTkYkvfkXAOsPX6pfl04DYad/1qhVEcYMv9F/8XRMx9Ak9UH08U9E7Pq5N9HnNB+En9Ml6p1bJ2KTYbuQdP/wBI4pYyD9xwk07jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k9bIyFi3; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7b7828bf7bcso2652794b3a.2
-        for <linux-pci@vger.kernel.org>; Sat, 15 Nov 2025 01:49:41 -0800 (PST)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-295548467c7so32648565ad.2
+        for <linux-pci@vger.kernel.org>; Sat, 15 Nov 2025 01:51:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763200181; x=1763804981; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1763200296; x=1763805096; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wE07oQibqqeqSQy9mXIzB1NU0J0tg0hcvxGPotz1NFE=;
-        b=a6i4zftaTyuecD3ZKhqMneWz3+8+Kfdpvdqmpfp3dwUrUMJNBYLv6iCWBgLkuRQURp
-         DYsxLWY0HL6D156HQLjFCwD7BJnBVMiYrW7ZdJvdmHoV3XULK6pTK+B8AAQyevxGVKns
-         pYg1Mlh5iE9PM3JGbZpJThZ0g5wDodyYbgizDnoZjdVnLXif42dwtUL0WKKleDqBRoTE
-         fn1hyVE8myU/ALLX2QRCm0wOvapWNEV5ZXqkllIypHoOxNsNgrwC2ozHxJhsVgJHpg28
-         Yp4sTnHKXg+ghnAg4xVzXsRwVlDr3LoxHGARigByeiRq9J35XkWo0TJTgklyGCfgthfI
-         JKOQ==
+        bh=7yRRIzPGF37+ZW/9QuVq1mSuHX636hF32XUa+RdwYXc=;
+        b=k9bIyFi3ttsIsIuotUcvTVB/DpZb5VM+Jy+jtm+LjkVWVrPp+0VPzxKQ0He8Nm8Gmx
+         yYA6PBdemeNmPwn1YuSdiinhTjlkSqwikz0r7BPWpHZSsn90B9i/HPGyM2GDZ2EH6mgE
+         31sRP4yASEek9bJ6Xo/eMpZME4+lDWLukT73xtBul5JrhRNT+REBkYIwwibJAsfAQgIe
+         1Nl+QQMNfM+Dk0qrqvhZGtk5BQc1gBI1PmRwF6+aKRaTtrfpZmdMN/pTaORKL9xJwgt6
+         hai2lUvW3OwTzdk18yYh7aapvusV1iE4YjAYjb0aXyUtiyO2JJvMrae7CBd7fwrsSAb3
+         xu5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763200181; x=1763804981;
+        d=1e100.net; s=20230601; t=1763200296; x=1763805096;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wE07oQibqqeqSQy9mXIzB1NU0J0tg0hcvxGPotz1NFE=;
-        b=T2FZIMCViBrHfnGptrGXxb61lE1AaXP4VyFIHpjvwoQG2ie3qXCSCQpfBTOVbismjH
-         82cXC950OP0dNj6OVjNvLL/Cm6v1yX2DMF4qs4VZokYVBlRrDt23rh7luSF1M21i70As
-         eELzh3MUMbxx/rP2HS+2cWVUCNE4I8P9+UgmGUMiDnM03cKm7h++h89OeEC3W3pvXSl7
-         Yz8LLe2hVnLytnhgL1aDPH1T2h9gHUscdjbMB+MiTVgRo67/YOwomf32KZvaWLGGBxOD
-         158D0o8hOF1y0GASu61wwoWemlobRfV1MIyGogcjEtOllT0invjlYRrJ3KPZZj4CMLWJ
-         n5Kw==
-X-Forwarded-Encrypted: i=1; AJvYcCV3uUN3U8ix3oqvWprQ+Mwj3R2tH4AMxGLHze4YDeOM+O4yq3FTgt/kEMO7Usy2995SLkZO+Cq1m64=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyycCafWnL+YHHo5zscPlV6fxgG7elGhbomd1j7GNvlpqSa2FYT
-	yEGDfJ94bh1vwEvkje8ZRI5IfH2Wu31uUfNEXsgYlnMKYXsSN/HuOaqE
-X-Gm-Gg: ASbGncvDAEV+oxRLJUYDgAytlnwmC5NjPUavScaGqYGK4RpqNMjBCme7UgguXFhTIPD
-	d/VLXouFIe8W2zvO56CL5lE9RfBUW1ovSSIPbCAk6qxIkN+JcAtec0h/g+DbKwEQDwhNFDfBBAE
-	SHwVIS2BgS7Stf4vDC3mPFv7JA0YvVvd73bcOFT2jp8UUA7uGrBfSAzXNyvZd0iQq/Dup2minoc
-	lqxG+TRx+BlI0393EO73krBof4AwT9Ya0YY/a42fUVF1fp8Qn4v+DfMvTQVJ6z0ML8DXp26ikF/
-	gWMFXAy2zAG0cPgbkGtZKewCI5xrekuQVHjX1Kl6KNUMe+u03lI82wouE+YknvkohwJOdWdmG5s
-	YOVCFfiUadHSp9HJ9MSTP3qk1lpXFPGQbrxAmXHeRafRgqFCM2VSq1GTNmp7NJJZNigZ8Ogw1tg
+        bh=7yRRIzPGF37+ZW/9QuVq1mSuHX636hF32XUa+RdwYXc=;
+        b=IGtJasF9cbCLnJB+OqBhdwibRF1ybgr/9pHzqBoqcR/Znk6U14wo1WV/CLLKK5JVCm
+         N/kVpNnzSqnPuTKtNwSQiqjwv27k4L2fCD+KkB0owcja32qyDO2BNm76h/yuxY8max7K
+         ARFxlT1W7MxlnwAc+XLpSBjUI5ilCpATPViDLljeG9w+ScJsvJmWYtgL2C2291ycADFr
+         AOlkcg5KfrFxYvVSJeA+IAs96T8ZSBkABldUJG7r5RgT9FevP/0WRNenbMLNV9SebDHm
+         lTwphNwd4xr1F0BRDh6AnFxtV2N0ePyQ5+eSGrUVHgBl5mW30oWEfGPy3exBtP5QK6bf
+         dn9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVSGLkvWo2zLtf6N+0iX5pMOuuTEvDgzSRkV+p/+4Ypy00aewfSvJvqAtww2yXmf55YdXd805t+D5E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzp5j/IbEELKE7nwWv5v3D6JN5evnBta0b2fmTbZkAkJetj1dVY
+	UW8QTFneaZ/lV9KJVxmObaLpDgAdddo7gV/SEti+UpH4cbrfbZUyPlV5
+X-Gm-Gg: ASbGncv8Eg0p3Tov9YnfPRMjqCguBPKQm97ikb091Xstlv11un39Ejadhc8gwVeqSX/
+	ZSpxWZfRWGmbodPqPb5CP6IuZHcqN6wBp72ugGJ0fbjc2NxmZzPh6o/A00SC+kvw5aWuvZ4Q137
+	A5BqqBzeBClpPQLRBMYaouVQfoY8CkpG0gs0KdQo2K29/LtHsQroaBXXm/2ej2heNznQ4/WF1Am
+	Oc0UlhH5JYHmxQo9HqXkqdeZG94wmDe4IqabSK9X8Q9sHxxew86HbaRDnnNb4TH+WNHwq+xgewf
+	Fl6g7EiEjPSzolYOHJOQ8kOGFmscEqEsErBqbcNmDtHFS474lKZ1OyTVbQdNxaHrrvgep1sw0ki
+	K5Va/iRZSp95+DDWHW/huadkXlURy57YjynhCr5J+aEeLv5pOS4YcTMQqCNyaMOXIWCKbfrdRYQ
 	==
-X-Google-Smtp-Source: AGHT+IH17OP8J1VVJXCEJ0MIe3g5xMSq/3p+n5rpNXju3JOpEjrQNJV81hmioCrP4BodIIfRH/nioQ==
-X-Received: by 2002:a05:7022:43a6:b0:119:e56b:957b with SMTP id a92af1059eb24-11b40b29d05mr3386170c88.0.1763200181160;
-        Sat, 15 Nov 2025 01:49:41 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHDzihlPaHj5ciPC1avrMW/DUXWk3g/TfMMzpdbx9pWLRPYDr6Bl34n8EK+fex8PZCS0cSmgg==
+X-Received: by 2002:a05:701b:2803:b0:119:e569:fbad with SMTP id a92af1059eb24-11b411fd316mr1430818c88.28.1763200296250;
+        Sat, 15 Nov 2025 01:51:36 -0800 (PST)
 Received: from geday ([2804:7f2:800b:a121::dead:c001])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11b060885c0sm23755473c88.3.2025.11.15.01.49.37
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2a49db102f5sm16211340eec.4.2025.11.15.01.51.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Nov 2025 01:49:40 -0800 (PST)
-Date: Sat, 15 Nov 2025 06:49:33 -0300
+        Sat, 15 Nov 2025 01:51:35 -0800 (PST)
+Date: Sat, 15 Nov 2025 06:51:29 -0300
 From: Geraldo Nascimento <geraldogabriel@gmail.com>
 To: Dragan Simic <dsimic@manjaro.org>
 Cc: linux-rockchip@lists.infradead.org,
@@ -88,11 +88,11 @@ Cc: linux-rockchip@lists.infradead.org,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Johan Jonker <jbx6244@gmail.com>
-Subject: Re: [PATCH 1/3] PCI: rockchip: warn of danger of 5.0 GT/s speeds
-Message-ID: <aRhMrXz_RlL0WErZ@geday>
+Subject: Re: [PATCH 2/3] PCI: rockchip-host: comment danger of 5.0 GT/s speed
+Message-ID: <aRhNIcGcQKp2ylqN@geday>
 References: <cover.1763197368.git.geraldogabriel@gmail.com>
- <d6593ae4f59468f294fdddfef83791e0db100e13.1763197368.git.geraldogabriel@gmail.com>
- <a214ac9a-36d9-6505-64a8-92af2da42cf1@manjaro.org>
+ <b04ed0deb42c914847dd28233010f9573d6b5902.1763197368.git.geraldogabriel@gmail.com>
+ <c8a6d165-2cdd-cd0d-4bed-95dfa5ff30d2@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -101,69 +101,55 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a214ac9a-36d9-6505-64a8-92af2da42cf1@manjaro.org>
+In-Reply-To: <c8a6d165-2cdd-cd0d-4bed-95dfa5ff30d2@manjaro.org>
 
-On Sat, Nov 15, 2025 at 10:24:49AM +0100, Dragan Simic wrote:
+On Sat, Nov 15, 2025 at 10:30:49AM +0100, Dragan Simic wrote:
 > Hello Geraldo,
 > 
 > On Saturday, November 15, 2025 10:10 CET, Geraldo Nascimento <geraldogabriel@gmail.com> wrote:
-> > Shawn Lin from Rockchip has reiterated that there may be danger in using
-> > their PCIe with 5.0 GT/s speeds. Warn the user if they make a DT change
-> > from the default and at the same time, drive at 2.5 GT/s only, in case
-> > the DT max-link-speed property is invalid or inexistent.
+> > According to Rockchip sources, there is grave danger in enabling 5.0
+> > GT/s speed for this core. Add a comment documenting that danger and
+> > discouraging end-users from forcing higher speed through DT changes.
 > > 
-> > Fixes: 956cd99b35a8 ("PCI: rockchip: Separate common code from RC driver")
 > > Link: https://lore.kernel.org/all/ffd05070-9879-4468-94e3-b88968b4c21b@rock-chips.com/
 > > Reported-by: Shawn Lin <shawn.lin@rock-chips.com>
 > > Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
 > > ---
-> >  drivers/pci/controller/pcie-rockchip.c | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> >  drivers/pci/controller/pcie-rockchip-host.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
 > > 
-> > diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-> > index 0f88da378805..ed67886a6d43 100644
-> > --- a/drivers/pci/controller/pcie-rockchip.c
-> > +++ b/drivers/pci/controller/pcie-rockchip.c
-> > @@ -66,8 +66,12 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
-> >  	}
-> >  
-> >  	rockchip->link_gen = of_pci_get_max_link_speed(node);
-> > -	if (rockchip->link_gen < 0 || rockchip->link_gen > 2)
-> > -		rockchip->link_gen = 2;
-> > +	if (rockchip->link_gen < 0 || rockchip->link_gen > 2) {
-> > +		rockchip->link_gen = 1;
-> > +		dev_warn(dev, "invalid max-link-speed, set to 2.5 GT/s\n");
-> > +	}
-> > +	else if (rockchip->link_gen == 2)
-> > +		dev_warn(dev, "5.0 GT/s may lead to catastrophic failure\n");
-> >  
-> >  	for (i = 0; i < ROCKCHIP_NUM_PM_RSTS; i++)
-> >  		rockchip->pm_rsts[i].id = rockchip_pci_pm_rsts[i];
+> > diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> > index ee1822ca01db..7e6ff76466b7 100644
+> > --- a/drivers/pci/controller/pcie-rockchip-host.c
+> > +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> > @@ -332,6 +332,11 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
+> >  		/*
+> >  		 * Enable retrain for gen2. This should be configured only after
+> >  		 * gen1 finished.
+> > +		 *
+> > +		 * According to Rockchip this path is dangerous and may lead to
+> > +		 * catastrophic failure. Even if the odds are small, users are
+> > +		 * still discouraged to engage the corresponding DT option.
+> > +		 *
+> >  		 */
+> >  		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL2);
+> >  		status &= ~PCI_EXP_LNKCTL2_TLS;
 > 
-> Looking good to me, thanks for this patch!  People often declare
-> PCIe Gen2 on RK3399-based boards as "works for me", which actually
-> happens very often, but such simple evaluations cannot be taken
-> as a proof of Gen2 correctness.
+> Looking good to me, thanks for this patch!  There's no need
+> to emit warnings here, because they'd be emitted already in
+> the rockchip_pcie_parse_dt() function.
 > 
-> Furthermore, RK3399's internal interconnects limit the effective
-> I/O speed of PCIe transfers already, so switching to PCIe Gen1
-> actually doesn't result in some large I/O performance penalties.
-> 
-> With all that in mind, please feel free to include
+> Please feel free to include
 > 
 > Reviewed-by: Dragan Simic <dsimic@manjaro.org>
+>
 
-Hi Dragan,
+I disagree, I think the comment stands.
 
-I think I'll include a Reported-By: you too, since you were the first to
-warn me of unknown errata regarding Rockchip PCIe.
+Even if we reduce to one line, ex:
 
-I told you it was a test of mine but I didn't realize the grave danger
-implied by Shawn Lin declarations.
++ May cause damage
 
-Once I realized this could end badly the only way I could retribute was
-to send a few corrections :)
-
-Thank you,
+Regards,
 Geraldo Nascimento
 
