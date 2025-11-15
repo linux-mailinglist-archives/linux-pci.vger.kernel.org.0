@@ -1,161 +1,130 @@
-Return-Path: <linux-pci+bounces-41284-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41285-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id D135BC60150
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Nov 2025 08:49:42 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id E72C5C60165
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Nov 2025 09:01:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4A84E3567E2
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Nov 2025 07:49:42 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D6FC44E2657
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Nov 2025 08:01:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C9971D8E1A;
-	Sat, 15 Nov 2025 07:49:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A93E19F137;
+	Sat, 15 Nov 2025 08:01:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MYYeZ30m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3f7cpId"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE3E2AE78
-	for <linux-pci@vger.kernel.org>; Sat, 15 Nov 2025 07:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7736818AFD
+	for <linux-pci@vger.kernel.org>; Sat, 15 Nov 2025 08:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763192978; cv=none; b=env5GyphniyFuKHxgb1MNcABFjDZlNm1WDY1nu5DLLwQBdtI3kysQqOCSFwypxXjK+Re9IIBXzQWKcm7hU/hcN8LvqpZ4/JMh+kbzqggvuIx1quZzOKjJroDkIxR5RM9ARqBzCKEU8H5wCRpkwKRqR1bG3Ax26XYVv9Pm08H0ZM=
+	t=1763193694; cv=none; b=AiXGhyaiCgm0EMyg9utuVKzpmZcLHbb6kGcu/pDAZZLq7hqymWld9UiJS1HnqiQmGkVxleDwM0x/nMttIo53Zb4JEmLnZNDDbATnGWsYvdrJ/edRkrFtUxxr14rs+bxImNfU25LUyy++zD9rsKy0jqxOMQFbuR117cBO6FzbYxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763192978; c=relaxed/simple;
-	bh=dqrO2NW3Q8hVGNeeeOyCbWIH1VOzzKgbTbx49TVKvG0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=e7wt9UYOnLc2wq04wcBJKbBKAQBYB5GK8awKJmc65N9SsBDPKdAV9tcjq6vrlYK0Dpe4kt43A7699IO5r1aK6KQCRKy5aMdlfylv01MoruEWPaOkTCN1Zwk181QPOAQDFub1YIBRKKbWWAgdcUcQx99fcZ+xXGqpEBzW+0VVWJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MYYeZ30m; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763192977; x=1794728977;
-  h=date:from:to:cc:subject:message-id;
-  bh=dqrO2NW3Q8hVGNeeeOyCbWIH1VOzzKgbTbx49TVKvG0=;
-  b=MYYeZ30mcUdaFi26SMeRpY2SZkwVBwliXeSaLkcpUTKmw2vEyvWVgHGt
-   PsiuVgqjZt/Sv6jac3Vtkw8aCeC/nYIfL25gTGCNRjBFkvd8v3zld9wYj
-   PJZ+z4tM1mbHjZzuSQOvVR/vKZz1HX/cl8AWL87J5Xb7Lva+IEZ9I2/ic
-   gKT+5ptwY9OvuZfSTgD7kssCGaFwacqqjVrP3bjhCltuZxPd5zoRUySkz
-   AeIoEUyaWZDTsENcSmjC6vTSrtyRcvGXtE3ch2DD4K73Evbu6JtdXLxpF
-   Fvx5nQqJOOcZViK86YzvNaMFCI0ardlKDJakF1WzYnLYHc8zQVNvSQGSq
-   w==;
-X-CSE-ConnectionGUID: s1cx+vCdRWuGA6/qARNSCw==
-X-CSE-MsgGUID: JLWC2mXASsmRUpm1fRoA8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="65213355"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="65213355"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2025 23:49:36 -0800
-X-CSE-ConnectionGUID: IX1GOd3ER1Gc+oo8No2myA==
-X-CSE-MsgGUID: dMSLjPjoQyyZrev9UOWtRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,306,1754982000"; 
-   d="scan'208";a="220877775"
-Received: from lkp-server01.sh.intel.com (HELO 7b01c990427b) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 14 Nov 2025 23:49:35 -0800
-Received: from kbuild by 7b01c990427b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vKB2K-0007nH-1W;
-	Sat, 15 Nov 2025 07:49:32 +0000
-Date: Sat, 15 Nov 2025 15:49:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/meson] BUILD SUCCESS
- eff0306b109f2d611e44f0155b0324f6cfec3ef4
-Message-ID: <202511151514.PhRoLJQ5-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1763193694; c=relaxed/simple;
+	bh=GPea8v+C6CZ4NaswYIQKCfHPmEXZ2BAAYp+oRZw7z+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U7DnI0AU6EufdYoo9MehK7xDi0DkDbIsiWnvM0P0EujGxRQDBi620L4CoTHlOfs4Fn2iIYdCUi9UP52YKljFD6kJtL5OEelX9txGTJwNRX76imPG64wzDZo8cKp6xJca5iENB42BBIBom8YihBgd0cpyFOmR0jUatyU4CK5UlwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O3f7cpId; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2980d9b7df5so26860265ad.3
+        for <linux-pci@vger.kernel.org>; Sat, 15 Nov 2025 00:01:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763193693; x=1763798493; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aAYAENnRQYD19CKiNMUWYlXpPcpPP46lLv9VD+gXegY=;
+        b=O3f7cpIdplETii/DK/zOo9goDene2mvPKSRJ+RwJDkESv8unZgegYfjtDuLkk47xdP
+         Jthnh3waPWVVeb6XlgAFvTIcWPctPUqhOclxt5zPynm3GSNaokTIL3EMsQduuGhdNadx
+         9ARCDqxCoNV3DtlvXuM4DrEPZvvdbN1UynJcA6ek9vKBOu35ZNLqQ+u4WRz6nMQDOukD
+         4+lK5oUEP3r4ZbogZ/7TGdMee0HdvrpDYtDetukdh+crgF4z3hjh1Bh93rsSc4HNJ5Fg
+         XJBAlF8zxgbbyJQT2HFSZw/unnw/e4mA+vK4dgHtiKikMyWyogSzvfJrP4hn/cvzcYIS
+         v/Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763193693; x=1763798493;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aAYAENnRQYD19CKiNMUWYlXpPcpPP46lLv9VD+gXegY=;
+        b=rV2tPlmSMGD3YWlNfBI0d3ZBQm7Yh5vF49m04ksD3yyhqLdYjst39VRpQ1RyOx8YbH
+         8RizV4QToZJSKRLi0S8/OsT/ABJn6XV7xZIdjk/z0D846eaa0CQ2R88FSPyqj5sQgub1
+         JkXjkB4VIzIRboExBXwoBI4/EHFa3VoiNJoCDNVIkGFo1DwZSEwyRG93bNsy+7XpWR6M
+         r+6EAW5CPgrgzPAP8uJjb7wrdcyhk++LEA01haLviFehuVi+sgLwXQYNaKwNxtlUpi39
+         9FHePOzCxtCKGvwSxozLSD6rCuXqZBSdzkDxEZfxkiNfRUlccS1bx0Xe0vLlU0G3UEf4
+         cLWg==
+X-Forwarded-Encrypted: i=1; AJvYcCXlkOAPD8w64F7QCwn3JmjyKVSGNUzWYXQjL0OMBJFn09ULtwoXPTMRmLoe7lAqPiqkA+pKijREB/U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw59PbIxgfWIZ5LzfQmBAgd4E5187E+zs4yCETFz7AFCicn0KrN
+	SJVn+O66SyK8kT7adldqwH04o7e8kL4cqFvhdLc1nEp3HwFah7aCePtB
+X-Gm-Gg: ASbGncv0fa1KWx2EahsZqFm4/401KZT3EgvSbl7Ujzzem99qLUuJ5RrKIE7sa4xcOl+
+	XBeMQiIjsLFTnZnwFRAuGeWeDhlaLUxbZoAOkKBHk/W6/qo75GFA/ouTJz3GD/8Q4j4LzLZ5Zdl
+	d0ndyO9hPUzb1KkPk+zDYBEU3wjLu9vzT/pzG6xoOQROa0HwE3JPfnfMYMI0JzjQP+ZHqS23qcl
+	R16cmSUuGy9BdpsSlXA05OemZ2vWn2C6syAGgw0jdiO0EDr7cZamitbulQ09esADcXDijwQXgOW
+	/+uCcksIkNIwzTQdE5mhcVYNkDdhyWisRX2GMRbjf0m+4ObKRLtehOSUdufcLtoKPr4Q6ulnQGk
+	zkzm9NteM0efzKe+uwL0fKrU5s7coHmu+VDojYHQCwR8DxtBQA67xkC0F9HLI6pWTgxhs68Sppz
+	hKuU5e2Hi8yhPoOaAuf8WLikIkIOQ=
+X-Google-Smtp-Source: AGHT+IHEN2mRU40eTIFziL9jKfVUWLwIHR9DBbKHOJZB0CnM+M25iCaVtz2d2f+nVbVfs/09LVH2fw==
+X-Received: by 2002:a17:902:d58f:b0:27e:ec72:f67 with SMTP id d9443c01a7336-2986a6badc2mr68510065ad.6.1763193692693;
+        Sat, 15 Nov 2025 00:01:32 -0800 (PST)
+Received: from 2a2a0ba7cec8 ([113.102.238.177])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c234644sm77467785ad.10.2025.11.15.00.01.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Nov 2025 00:01:32 -0800 (PST)
+Date: Sat, 15 Nov 2025 08:01:27 +0000
+From: Guangbo Cui <jckeep.cuiguangbo@gmail.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [RFC PATCH v1 0/2] rust: pci: Introduce PCIe error handler
+ support and sample usage
+Message-ID: <aRgzVyEMj2dnsSvM@2a2a0ba7cec8>
+References: <20251108165511.98546-1-jckeep.cuiguangbo@gmail.com>
+ <DE5Q13AXWVZC.1NRFHPA8CSO0T@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DE5Q13AXWVZC.1NRFHPA8CSO0T@kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/meson
-branch HEAD: eff0306b109f2d611e44f0155b0324f6cfec3ef4  PCI: meson: Fix parsing the DBI register region
+On Tue, Nov 11, 2025 at 07:26:42PM +1100, Danilo Krummrich wrote:
+> Thanks for the series, I will have a detailed look in a few weeks.
+> 
+> I think this will be useful in the nova-core driver for instance. However, I
+> wonder if you have another use-case you wrote this code for?
 
-elapsed time: 7248m
+Hi Danilo,
 
-configs tested: 68
-configs skipped: 2
+Thanks for the feedback.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+At the moment I don’t have a production driver making use of these
+callbacks, only a few toy-level drivers I wrote for experimentation.
 
-tested configs:
-alpha                   allnoconfig    gcc-15.1.0
-alpha                  allyesconfig    gcc-15.1.0
-arc                     allnoconfig    gcc-15.1.0
-arc         randconfig-001-20251111    gcc-11.5.0
-arc         randconfig-002-20251111    gcc-12.5.0
-arm                     allnoconfig    clang-22
-arm         randconfig-001-20251111    clang-22
-arm         randconfig-002-20251111    clang-17
-arm         randconfig-003-20251111    clang-22
-arm         randconfig-004-20251111    gcc-10.5.0
-arm64                   allnoconfig    gcc-15.1.0
-csky                    allnoconfig    gcc-15.1.0
-hexagon                allmodconfig    clang-17
-hexagon                 allnoconfig    clang-22
-hexagon                allyesconfig    clang-22
-hexagon     randconfig-001-20251110    clang-22
-hexagon     randconfig-002-20251110    clang-22
-i386                    allnoconfig    gcc-14
-loongarch              allmodconfig    clang-19
-loongarch               allnoconfig    clang-22
-loongarch   randconfig-001-20251110    clang-22
-loongarch   randconfig-002-20251110    clang-22
-m68k                   allmodconfig    gcc-15.1.0
-m68k                    allnoconfig    gcc-15.1.0
-m68k                   allyesconfig    gcc-15.1.0
-microblaze             allmodconfig    gcc-15.1.0
-microblaze              allnoconfig    gcc-15.1.0
-microblaze             allyesconfig    gcc-15.1.0
-mips                    allnoconfig    gcc-15.1.0
-nios2                   allnoconfig    gcc-11.5.0
-nios2       randconfig-001-20251110    gcc-11.5.0
-nios2       randconfig-002-20251110    gcc-10.5.0
-openrisc                allnoconfig    gcc-15.1.0
-parisc                  allnoconfig    gcc-15.1.0
-parisc      randconfig-001-20251111    gcc-9.5.0
-parisc      randconfig-002-20251111    gcc-8.5.0
-powerpc                 allnoconfig    gcc-15.1.0
-powerpc     randconfig-001-20251111    gcc-8.5.0
-powerpc     randconfig-002-20251111    clang-22
-powerpc64   randconfig-002-20251111    gcc-12.5.0
-riscv                   allnoconfig    gcc-15.1.0
-riscv       randconfig-001-20251110    clang-22
-riscv       randconfig-002-20251110    gcc-8.5.0
-s390                   allmodconfig    clang-18
-s390                    allnoconfig    clang-22
-s390                   allyesconfig    gcc-15.1.0
-s390        randconfig-001-20251110    gcc-8.5.0
-s390        randconfig-002-20251110    gcc-8.5.0
-sh                     allmodconfig    gcc-15.1.0
-sh                      allnoconfig    gcc-15.1.0
-sh                     allyesconfig    gcc-15.1.0
-sh          randconfig-001-20251110    gcc-15.1.0
-sh          randconfig-002-20251110    gcc-15.1.0
-sparc                  allmodconfig    gcc-15.1.0
-sparc                   allnoconfig    gcc-15.1.0
-um                     allmodconfig    clang-19
-um                      allnoconfig    clang-22
-um                     allyesconfig    gcc-14
-x86_64                  allnoconfig    clang-20
-x86_64                        kexec    clang-20
-x86_64                     rhel-9.4    clang-20
-x86_64                 rhel-9.4-bpf    gcc-14
-x86_64                rhel-9.4-func    clang-20
-x86_64          rhel-9.4-kselftests    clang-20
-x86_64               rhel-9.4-kunit    gcc-14
-x86_64                 rhel-9.4-ltp    gcc-14
-x86_64                rhel-9.4-rust    clang-20
-xtensa                  allnoconfig    gcc-15.1.0
+The main motivation for this RFC was that the Rust PCI layer currently lacks
+parity with the C pci_error_handlers interface. Some parts of the PCI
+subsystem (AER, recovery paths) need these callbacks, so having the Rust
+side prepared seems useful for future drivers.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+The sample driver is only meant to demonstrate the API surface and help discuss
+the interface design. If the approach looks reasonable, I’m happy to iterate on
+it or refine the API based on the feedback.
+
+Best regards,
+Guangbo
 
