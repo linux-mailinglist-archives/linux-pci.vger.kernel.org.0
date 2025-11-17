@@ -1,79 +1,79 @@
-Return-Path: <linux-pci+bounces-41459-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41460-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25E56C66543
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 22:47:57 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79D2EC66561
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 22:49:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id DA807298D9
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 21:47:55 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C61564EFBDE
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 21:48:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3F0C2417D1;
-	Mon, 17 Nov 2025 21:47:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EDC231A046;
+	Mon, 17 Nov 2025 21:48:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCQStyD1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nGHdZN5I"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E802D47E8
-	for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 21:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588D72D47E8
+	for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 21:48:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763416073; cv=none; b=K8xWdM5Xef5ka8/Z5PcbycKPAFtBjLAvUWXxiqSKrjgy0g4+7FY8XlabkPg3+2asRWKRfhEIdmv3lubdaDRN/T0WqBh9/7aXazw3/eKX6vqbVUWJto/ub9TvrI4oWBKheUEKRl2fT0045ddM7k6mnJO6wmg+BVhiL78EbYStyRA=
+	t=1763416088; cv=none; b=c36seye//PMbzQTvzV/r/wVV9LQcH8eTZFWmBhm/mh4a1G5BdnvE4/UeA9Y9MDwvui7ka6MLZ9BFa8fnLG9GMPza7prjN9BbVj+k6ayolPzx4ncvIOL+nNXIIJ+fGULUU5uQJ8D2cxKDwh3OPX9LbsubEw5MGCw2i+XXEqJjFQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763416073; c=relaxed/simple;
-	bh=T3dxPbQ2jaoVjzwoPbkSmnChj+7Q9Kt8EGPLYj9Ei+Q=;
+	s=arc-20240116; t=1763416088; c=relaxed/simple;
+	bh=N7yoy676EeqVZ/62XxJvvSdA1uNBBUMaKv2tP/KofSg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b4vTpftFEPZGwCV5E6Kkr8EwWgC2tvLQ3RT+Ywq5VM4rw3UEAz6dBTFkpSoYjcXOOfya5FAf45kFKO3U7y7LQf4tvMKvDr5rqZezSEXDis34phkexaRndPxeb0erxv6IvxxyVgBGf5s0Y5nrslKqy8UhSlZtXLwjT/UAGHISdiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VCQStyD1; arc=none smtp.client-ip=209.85.210.47
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vwbvaxphu3GgpIikNGvsTiKWu9G2WKThHsU342BP05Ss9qWQEtGkipVQEDEFj1BjanqEo/+Pg3FigD8U0p3JQ/LH9cRZdK6+a5isB3y88V5W43rkHN5fJ7VZwx5zY0KkYoQurCU9UnlVNDoTC5Fxxr+mI2OAhGbO/+m1fIXNHNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nGHdZN5I; arc=none smtp.client-ip=209.85.161.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-7c75d0bda4aso1688756a34.2
-        for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 13:47:52 -0800 (PST)
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-657244ed2c2so1218222eaf.1
+        for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 13:48:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763416071; x=1764020871; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1763416086; x=1764020886; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FztTc2k5M11TsDtaJ8wrSSkPXnje8lRDmvN72GDsbxs=;
-        b=VCQStyD1JBDl6SzsW8TSHGEgKb+bFUaNyA5e7YQ4q293jgZKXnaFa/QXLfUtZhzVMa
-         +2sio2PJx5F27ycF17mTTIpX7S+5SPskK2+v6ZUF6a1Y4z/qSBUgDh0xwcAlZwdp5TPg
-         kjJj1o+Ax2cqrNZIA5arAXD/q6I/JD3hW3U0l8d2FX4L2/Hpieb0AVCtksGmikIBBm38
-         n12mtB93bq2aD7CTWE+y8XVSzznxlE1G0C1jnV2v33D5s+IwymusCKYVZ2vbEov9gcoE
-         ZaGW/8p8pPP7WljXgTmAj66/g166oVTGoF+KELTVR1qz2+ZYKAzuj+O7YL03BOdhoJnK
-         uegg==
+        bh=x6y/eRSxQiwoKH2ttdAfQIDdA/0Ls/cq+YnfjCvj2Xo=;
+        b=nGHdZN5IBLk4HMO+DiHZtjA3H6wipDaNX7uglki4xuk8ZxzOsTie97AsvtT7Ym0wJB
+         Z6iNcJp8+wLD5D8tmJ5UGPjjRKT+/huW65JQBw5UnhX3D8HMIy2CniH/RA8K3LhfvCZL
+         x5rfFMhsmuoC0DmjivzyIHBANp1ZfAtD9YelKv6y39j6/f3nNk2W08P9iwrBcxxjVgw+
+         RVkON5SjMnmBlUUYvN4sfpVg4GZZnwb+ZVV3Dt9FB6191nuh+ctIL90WDDdfE63M21r2
+         lO3Hv8zx0zXObLm218m3Yh/OIfJaDnEd2qX4PcvomTD5RPiYC76W+Cy5ZLvko9kQjZxy
+         J08Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763416071; x=1764020871;
+        d=1e100.net; s=20230601; t=1763416086; x=1764020886;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FztTc2k5M11TsDtaJ8wrSSkPXnje8lRDmvN72GDsbxs=;
-        b=MaLfcl6oCw9aPClxQ5c018l2mo6hmCNJjPfPWfOT2hUMzNlmF682Nul8aF07BjzxyK
-         mJ8z7R1oSHE1DKENu+YnKHWbB5NHH2H6fjbmtvTAH5rxCxxN5D0tfQ5GMmxQ+baWoByP
-         JJ72Nc2SbFr563XD4Tx9pZrOHw+LRM09PVycG8K6oxS3mrYXWUcYDH5ASELLlWlD4Hw0
-         Cf/Rhsja2ag/bPK7TN/s2ewStYt32pwB7GUW6G3qRNX7ZjIoWOEDBuhj2ej9Ov9LuVCZ
-         bYznqWLIIRFJ/J9oA/W1FzI/Tc3Cv3TI7AbALC5ihiPgAqX9NLWYoeNImx8VnNPlKOa1
-         iOkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+S0O69L5njYLxNCpdtMyhZj1RsQaXJKwO7IRyfqKrShG0LY0P8V9zmOcxy9yHVcYxyUjUd+M0tr0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwB5axWvT1zSIgrQ6BeYaLN0Khd6SUH/uI7WJWkga6XxnuKbE1W
-	HJsNcjFMpq5jbSl9OyKQRtpQx3szUDUK5Q05Xsg3+urnSte3zGN1Z+CH
-X-Gm-Gg: ASbGncsI0/tvWPPqdKrXx+YzXrudMhbPXJZLo5QHWtRXtE7vQgO+uReksmjMUvyOL8D
-	r+AbDs3uNG1Gf0E0n3HfDtZVyNxP7DDjH9x/f+BHLn9B8biOGPJMwzIoH5nt7V++p8MDyM+pQxx
-	1fqFa5V7rhSf4UvICFKg4x6Yxn2LbKMaAuZz+CPsaJh/5xDjYtkpa1usiq4nM8Pl/irrVgMQhaT
-	2mmgzu2EYnNsdzV8wrYpEJd83Z7Tn5WXE8bFkgGwJfrbOinkZS8N+gDLxEfBbXu9AMG6h2JePTJ
-	MJ2RjMLUTdi5i5AX7esPF6Jdta/c1DaIw4U/Aek7Pz4JMlAIWke2W4eRWvX9WQ7+Ap8fjnypKmE
-	3LF91zGI7B4BxuLe+NKn53vLo2fJl4LXkI4FtOyncW3SPB4Uvos7L9gP560yrrEM5Nr8AwsbQrQ
+        bh=x6y/eRSxQiwoKH2ttdAfQIDdA/0Ls/cq+YnfjCvj2Xo=;
+        b=G4Xh+jsWK8zxaTMckpc3cBx9P5AQyO0bnpyYAsDAAR85zhbiDhzhnQ6kTiamV7q1kv
+         0t8+DQx1+hfKrnnJvVc4qRFBAc10tHvLmp9JpK78+xXlkrlmS/mIIhmLVuqvf1NnS1AX
+         B10t0HBLPC2YblsuQiCqpiwSxi1am0ZDKgWibzJJCm+tnNI0uXkw/z3nAIgMA1FM+D1S
+         qbfCMaj1yZUUsTgBQnUP2lyRqednS/w8YE1UylPWGGleBCGHpnYpLUuNhDAYSCNiIkKR
+         DS830oG4WLsVBD734mTsgs2gXhT9O21QFx91gT0pxm5aJ0r/bz8ZOBBvqTC9thRX4gXg
+         b+Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/sB797vYfXHsv9DOO+8gkYQPR5g4dvpK9R5QQezcfYO6LzIc6NojFefO34dZYDD1HaOMOEQRvOOc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWd7VRdcgzp48SyVvsV1ybtFkQUgjAIxv9d7lpp8Hm0bl+eccM
+	rXEMs7Mzt7uMLRkQc+jSR9mF9WRSsCOP7ruGta+hEmp7tMSqd91C9G1t
+X-Gm-Gg: ASbGncuyPToTQpqL30nb3YusTCkovkOXHwwjF6vTWApWZtvXjHMy93XIV0gDIWphHA/
+	BeSC1RCjVG1d8XZiIcFbbhCHHhmoiocmkWixrlJYQYFkOImmo8R8MVzJvKkUW0ijWH71yW1nGG6
+	BkL/G/0cT2waUe4QcvtZ/pVQZ3rAI6nFaTaSq5wbHTmd/AOnVwzz4o6jkLpWvjT4qnxLZVyZxqV
+	WZZ50oy5ARgIyT1CZy4fvEa85IuAlg/A047kS9YSk5LW3OZRrFctzgJ9SpW32df2NE4Dd5LeKlM
+	3UxPnLezPfVnKKd3BRUBztiZbTVzwtV2QqbSWORSxj46Be7q4M1vWc5s8MN0nKCAb9lkBaTLNiU
+	qe5EdpCXPsrSh4LC4Mkg60DVY/GwL5v082T64QiyrpMa3eDCMy1O3OFiVE5Xbzxf8uKc7VY/2Hg
 	==
-X-Google-Smtp-Source: AGHT+IGMYVYdHBolX/z6M9K3TLoZVSU9KkaoXZJ5KYuYSaivd49NkYuXdvP0LyKiiZfq9uKzciAXCQ==
-X-Received: by 2002:a05:6808:3a18:b0:44f:6d70:45af with SMTP id 5614622812f47-4509738e814mr6476179b6e.9.1763416071337;
-        Mon, 17 Nov 2025 13:47:51 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHrk3F7EjTrY16q42KIOsJoZ7DxS7LCW9UgjNx+oGF51fraAPigETXdAfIQtidOQRWCmx4LQA==
+X-Received: by 2002:a05:6808:80ac:b0:450:d1e8:6f5d with SMTP id 5614622812f47-450d1e881a4mr2055837b6e.5.1763416086240;
+        Mon, 17 Nov 2025 13:48:06 -0800 (PST)
 Received: from geday ([2804:7f2:800b:a807::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3e8522b268fsm6350105fac.18.2025.11.17.13.47.45
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7c73a283b3asm5938805a34.4.2025.11.17.13.48.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Nov 2025 13:47:50 -0800 (PST)
-Date: Mon, 17 Nov 2025 18:47:43 -0300
+        Mon, 17 Nov 2025 13:48:05 -0800 (PST)
+Date: Mon, 17 Nov 2025 18:47:59 -0300
 From: Geraldo Nascimento <geraldogabriel@gmail.com>
 To: Shawn Lin <shawn.lin@rock-chips.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -89,9 +89,9 @@ To: Shawn Lin <shawn.lin@rock-chips.com>,
 Cc: linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org
-Subject: [PATCH v2 3/4] arm64: dts: rockchip: remove dangerous max-link-speed
- from helios64
-Message-ID: <43bb639c120f599106fca2deee6c6599b2692c5c.1763415706.git.geraldogabriel@gmail.com>
+Subject: [PATCH v2 4/4] arm64: dts: rockchip: remove redundant max-link-speed
+ from nanopi-r4s
+Message-ID: <6694456a735844177c897581f785cc00c064c7d1.1763415706.git.geraldogabriel@gmail.com>
 References: <cover.1763415705.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -103,34 +103,30 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <cover.1763415705.git.geraldogabriel@gmail.com>
 
-Shawn Lin from Rockchip strongly discourages attempts to use their
-RK3399 PCIe core at 5.0 GT/s speed, citing concerns about catastrophic
-failures that may happen. Even if the odds are low, drop from last user
-of this non-default property for the RK3399 platform, helios64 board
-dts.
+This is already the default in rk3399-base.dtsi, remove redundant
+declaration from rk3399-nanopi-r4s.dtsi.
 
-Fixes: 755fff528b1b ("arm64: dts: rockchip: add variables for pcie completion to helios64")
-Link: https://lore.kernel.org/all/e8524bf8-a90c-423f-8a58-9ef05a3db1dd@rock-chips.com/
+Fixes: db792e9adbf8 ("rockchip: rk3399: Add support for FriendlyARM NanoPi R4S")
 Cc: stable@vger.kernel.org
-Reported-by: Shawn Lin <shawn.lin@rock-chips.com>
+Reported-by: Dragan Simic <dsimic@manjaro.org>
 Reviewed-by: Dragan Simic <dsimic@manjaro.org>
 Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts | 1 -
+ arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts b/arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts
-index e7d4a2f9a95e..78a7775c3b22 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts
-@@ -424,7 +424,6 @@ &pcie_phy {
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi
+index 8d94d9f91a5c..3a9a10f531bd 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi
+@@ -71,7 +71,6 @@ &i2c4 {
+ };
  
  &pcie0 {
- 	ep-gpios = <&gpio2 RK_PD4 GPIO_ACTIVE_HIGH>;
--	max-link-speed = <2>;
- 	num-lanes = <2>;
- 	pinctrl-names = "default";
- 	status = "okay";
+-	max-link-speed = <1>;
+ 	num-lanes = <1>;
+ 	vpcie3v3-supply = <&vcc3v3_sys>;
+ };
 -- 
 2.49.0
 
