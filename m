@@ -1,147 +1,141 @@
-Return-Path: <linux-pci+bounces-41406-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41407-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66B1FC6453E
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 14:22:03 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7236BC648C4
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 15:05:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 47E894E752D
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 13:17:22 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 59C204E9AE4
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 14:00:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC5F8330B11;
-	Mon, 17 Nov 2025 13:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4966023958A;
+	Mon, 17 Nov 2025 14:00:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c550pCdk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1y8nGwj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE08930CD8B;
-	Mon, 17 Nov 2025 13:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150901E008B;
+	Mon, 17 Nov 2025 14:00:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763385438; cv=none; b=qJE0v06Jut7TZYpFX2+dzjl0X4qQ1oVcJqws648lTCL0RMn+fajn941PrNgxK7XC9XqjpkLVXbBCEFhs1xlYTSM2mS5qs2emUF/AJzd0UQs1dfjDT8hYs+eyoegWT3FfwNukjbRCZ2V7KZ6IOIS3lmmM1g3inmPKPBELEkutgyU=
+	t=1763388020; cv=none; b=DzYze663c13Ai1igQQtk0ca+VNdLEabq66d2FGwdsgyd8DwC4hWfEDsphl/3M795mwJ0jJDqx4EG0UQVYfIJ2GGnAN5mUpwHxkLkUoyQeQ2OVOwA1Q7DTIbx3FLxCBSA+eO/XbDWrQOtdCBQnt6ClsuXew1dIOy2dCijIKCdroA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763385438; c=relaxed/simple;
-	bh=xxRVdtfTiOQTO2jyXwimxqWcnuxgrlQL288pVe0i6qw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iEoyfZ+oJ6NusewLR3veCPwBcYpdDbgFsyIJ36FgMEOn2HPL1KtNjUMIjlmxXfsRL8FLSYMAqz+X6kWxm6nW51fQ1nD5MXE7o7Zx2eqZ/pFxI3W7c8bZvH0TEdb9r2/qFT3YP/0l6N2hdLlvpmzcbz+PScD/QuKPfXc3RgMkbSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c550pCdk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1280AC113D0;
-	Mon, 17 Nov 2025 13:17:06 +0000 (UTC)
+	s=arc-20240116; t=1763388020; c=relaxed/simple;
+	bh=YoL7p6wREBJKyjLBhUuUwEP3qFVZ0NeQwm26ZY6pEnA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fa2Qni8MKZnFHCgn2wf4ZOiK6r6GEazex+2KBLOCI78OSJIltmzJzIHBa3VlzsrkjLvH/uNeZb8f/G9de2cXQc4PHgc0LHp+qt0dfIpgvYPU2j9Tp67PUpFlx7zjYNGSasto66+ayzmy2q946JUo4djVQJO52a82T4725pLbwUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1y8nGwj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E040C4CEF1;
+	Mon, 17 Nov 2025 14:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763385438;
-	bh=xxRVdtfTiOQTO2jyXwimxqWcnuxgrlQL288pVe0i6qw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c550pCdkJK+yNP+DqSVvgoIJBsW5teGVE/5W3xmfUaLaCBThmuk6hVhdtUlBiF7by
-	 9jlT5Jh/yvA9YhcGpMQ1u8uASYsLwvKT/uRST5Roi8Vnlnh7fVWaCNufPO1LAeHX+K
-	 n6EmpyuEPUAfZYq8ZnhIQIqr+8k42SYM12NdHdlzkmgi9KIuJj+NrXzcW2YzbvHR3D
-	 KmiQIlFhd8FdBdGNGaGf43d6sPx9z9hcSecSYDWUaJrXRm1FMTkgYxMi1SJZud2CXv
-	 mewJQAaui7JyPnt0PCiMXwbLgR+Sfucy+bp71fdeTcqLiMHSpEPXhb1fs3ggQMNVgT
-	 ABimt9Z0vvmuA==
-Date: Mon, 17 Nov 2025 18:47:00 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Vitor Soares <ivitro@gmail.com>
-Cc: Alex Elder <elder@riscstar.com>, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, dlan@gentoo.org, 
-	aurelien@aurel32.net, johannes@erdfelt.com, p.zabel@pengutronix.de, 
-	christian.bruel@foss.st.com, thippeswamy.havalige@amd.com, krishna.chundru@oss.qualcomm.com, 
-	mayank.rana@oss.qualcomm.com, qiang.yu@oss.qualcomm.com, shradha.t@samsung.com, 
-	inochiama@gmail.com, guodong@riscstar.com, linux-pci@vger.kernel.org, 
-	spacemit@lists.linux.dev, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 5/7] PCI: spacemit: Add SpacemiT PCIe host driver
-Message-ID: <7f5r2lnlrsltowfninu76bivebgwkr5i3pdorj3hywg22mtmdz@m35cpser6opt>
-References: <20251113214540.2623070-1-elder@riscstar.com>
- <20251113214540.2623070-6-elder@riscstar.com>
- <f55e2df3fcd025148b7262c3753e5136cc324b09.camel@gmail.com>
+	s=k20201202; t=1763388019;
+	bh=YoL7p6wREBJKyjLBhUuUwEP3qFVZ0NeQwm26ZY6pEnA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=b1y8nGwj5b/wA+Agu1M816LSZBkSamGPKqceMhspZxR2FVJb4RT+T8p0fJBDGgb5h
+	 j4AJrZh3Owv7cS+6C7roATZCD0nEwxzn+RVbn50BpEw+nxU9DyMyIPzc/5jkW1g3Wo
+	 72cBqzDUnO7Js2pFDcQSmiXvPIowRYTX4xVvMQsIr0elrIHY0K4wDNEH7kCxNC5+Qm
+	 R2ZkU15k1IxWYyvUQY5mteVDotrxWQ1ZlxAz9rsj4WG2tAdz7S5/KhsE9pYOKHKNJ+
+	 aM7lRNQB1YirkFWPBuvVhO0RTl300qVlO65kekzUGpRbTXEvEk0JdhCYowbaVRJZVU
+	 AFctSR3E51c/g==
+From: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
+To: linux-coco@lists.linux.dev,
+	kvmarm@lists.linux.dev
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dan.j.williams@intel.com,
+	aik@amd.com,
+	lukas@wunner.de,
+	Samuel Ortiz <sameo@rivosinc.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Steven Price <steven.price@arm.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
+Subject: [PATCH v2 00/11] TSM: Implement ->lock()/->accept() callbacks for ARM CCA TDISP setup
+Date: Mon, 17 Nov 2025 19:29:56 +0530
+Message-ID: <20251117140007.122062-1-aneesh.kumar@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f55e2df3fcd025148b7262c3753e5136cc324b09.camel@gmail.com>
 
-On Mon, Nov 17, 2025 at 01:01:04PM +0000, Vitor Soares wrote:
 
-[...]
+This patch series implements the TSM ->lock(), ->unlock and ->accept() callbacks
+required for the TDISP setup with ARM CCA described in the RMM ALP17 specification [1].
 
-> > +static int k1_pcie_probe(struct platform_device *pdev)
-> > +{
-> > +       struct device *dev = &pdev->dev;
-> > +       struct k1_pcie *k1;
-> > +       int ret;
-> > +
-> > +       k1 = devm_kzalloc(dev, sizeof(*k1), GFP_KERNEL);
-> > +       if (!k1)
-> > +               return -ENOMEM;
-> > +
-> > +       k1->pmu = syscon_regmap_lookup_by_phandle_args(dev_of_node(dev),
-> > +                                                      SYSCON_APMU, 1,
-> > +                                                      &k1->pmu_off);
-> > +       if (IS_ERR(k1->pmu))
-> > +               return dev_err_probe(dev, PTR_ERR(k1->pmu),
-> > +                                    "failed to lookup PMU registers\n");
-> > +
-> > +       k1->link = devm_platform_ioremap_resource_byname(pdev, "link");
-> > +       if (IS_ERR(k1->link))
-> > +               return dev_err_probe(dev, PTR_ERR(k1->link),
-> > +                                    "failed to map \"link\" registers\n");
-> > +
-> > +       k1->pci.dev = dev;
-> > +       k1->pci.ops = &k1_pcie_ops;
-> > +       k1->pci.pp.num_vectors = MAX_MSI_IRQS;
-> > +       dw_pcie_cap_set(&k1->pci, REQ_RES);
-> > +
-> > +       k1->pci.pp.ops = &k1_pcie_host_ops;
-> > +
-> > +       /* Hold the PHY in reset until we start the link */
-> > +       regmap_set_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
-> > +                       APP_HOLD_PHY_RST);
-> > +
-> > +       ret = devm_regulator_get_enable(dev, "vpcie3v3");
-> > +       if (ret)
-> > +               return dev_err_probe(dev, ret,
-> > +                                    "failed to get \"vpcie3v3\" supply\n");
-> > +
-> 
-> Hi,
-> 
-> While investigation a similar PCIe setup, I come across this patch series and
-> had a question regarding regulator handling.
-> 
-> In the patch, the host controller explicitly enables the vpcie3v3. However, the
-> pci-pwctrl-slot driver (compatible pciclass,0604) is also instantiated via
-> device tree and is supposed to manage the slot supply.
-> 
-> I'm wondering whether it's actually necessary to enable the regulator in the
-> host controller, since the slot driver should already take care of it. However,
-> in my tests, the endpoint is not discovered unless the host driver enables the
-> regulator early. It's not entirely clear whether this is due to the PHY and
-> reset sequence, or the timing of the vpcie3v3 regulator activation.
-> 
-> @Manivannan: In the patch, the host controller driver enables the vpcie3v3
-> regulator, even though the pci-pwrctrl-slot driver (pciclass,0604) is supposed
-> to manage it. Is this duplication intentional, or is there a preferred way to
-> ensure the supply is active before bus scanning? Any guidance would be
-> appreciated.
-> 
+The series builds upon the TSM framework patches posted at [2] . A git repository
+containing all the related changes is available at [3].
 
-Yes, the regulator handling is duplicated now. This is due to missing PERST#
-handling in the pwrctrl-slot driver. We are working on a series to be posted
-this week that will fix this issue, but until then, pwrctrl-slot driver is not
-reliable to power up the endpoint. So I've asked Alex to handle the regulator
-and PERST# in the controller driver for now. Once my rework series gets merged,
-this part can be dropped from the controller driver and there is no change
-required in the binding/dts.
+Testing / Usage
 
-- Mani
+echo ${DEVICE} > /sys/bus/pci/devices/${DEVICE}/driver/unbind
+
+To Transition the device to TDISP LOCK state:
+echo tsm0 > /sys/bus/pci/devices/${DEVICE}/tsm/lock
+
+To Transition the device to TDISP RUN state:
+echo 1 > /sys/bus/pci/devices/${DEVICE}/tsm/accept
+
+echo ${DEVICE} > /sys/bus/pci/drivers_probe 
+
+[1] https://developer.arm.com/-/cdn-downloads/permalink/Architectures/Armv9/DEN0137_1.1-alp17.zip
+[2] https://lore.kernel.org/all/20251024020418.1366664-1-dan.j.williams@intel.com/
+[3] https://git.gitlab.arm.com/linux-arm/linux-cca.git cca/topics/cca-guest-setup-upstream-v2
+
+
+Aneesh Kumar K.V (Arm) (11):
+  coco: guest: arm64: Guest TSM callback and realm device lock support
+  coco: guest: arm64: Add Realm Host Interface and guest DA helper
+  coco: guest: arm64: Add support for guest initiated TDI bind/unbind
+  coco: guest: arm64: Add support for updating interface reports from
+    device
+  coco: guest: arm64: Add support for updating measurements from device
+  coco: guest: arm64: Add support for reading cached objects from host
+  coco: guest: arm64: Validate Realm MMIO mappings from TDISP report
+  coco: guest: arm64: Add support for fetching and verifying device info
+  coco: guest: arm64: Wire Realm TDISP RUN/STOP transitions into guest
+    driver
+  coco: arm64: dma: Update force_dma_unencrypted for accepted devices
+  coco: guest: arm64: Enable vdev DMA after attestation
+
+ arch/arm64/include/asm/mem_encrypt.h      |   6 +-
+ arch/arm64/include/asm/rhi.h              |  77 +++++
+ arch/arm64/include/asm/rsi.h              |   3 +
+ arch/arm64/include/asm/rsi_cmds.h         |  81 +++++
+ arch/arm64/include/asm/rsi_smc.h          |  58 ++++
+ arch/arm64/kernel/rsi.c                   |  11 +
+ arch/arm64/mm/mem_encrypt.c               |  10 +
+ drivers/virt/coco/Makefile                |   2 +-
+ drivers/virt/coco/arm-cca-guest/Kconfig   |  10 +-
+ drivers/virt/coco/arm-cca-guest/Makefile  |   3 +-
+ drivers/virt/coco/arm-cca-guest/arm-cca.c |  95 +++++-
+ drivers/virt/coco/arm-cca-guest/rhi-da.c  | 330 ++++++++++++++++++++
+ drivers/virt/coco/arm-cca-guest/rhi-da.h  |  18 ++
+ drivers/virt/coco/arm-cca-guest/rsi-da.c  | 354 ++++++++++++++++++++++
+ drivers/virt/coco/arm-cca-guest/rsi-da.h  |  83 +++++
+ include/linux/swiotlb.h                   |   5 +
+ 16 files changed, 1137 insertions(+), 9 deletions(-)
+ create mode 100644 arch/arm64/include/asm/rhi.h
+ create mode 100644 drivers/virt/coco/arm-cca-guest/rhi-da.c
+ create mode 100644 drivers/virt/coco/arm-cca-guest/rhi-da.h
+ create mode 100644 drivers/virt/coco/arm-cca-guest/rsi-da.c
+ create mode 100644 drivers/virt/coco/arm-cca-guest/rsi-da.h
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.43.0
+
 
