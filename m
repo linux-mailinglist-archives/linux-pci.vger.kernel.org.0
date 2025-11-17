@@ -1,146 +1,140 @@
-Return-Path: <linux-pci+bounces-41426-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41427-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2504C65004
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 16:59:22 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7C85C65013
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 17:00:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id A766128F8B
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 15:59:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id B670520848
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 16:00:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CFFA29D282;
-	Mon, 17 Nov 2025 15:59:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BB3D2BE03B;
+	Mon, 17 Nov 2025 16:00:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="C/KqexO6"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="O5EyoHLI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail1.manjaro.org (mail1.manjaro.org [142.132.176.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075C529CB4C;
-	Mon, 17 Nov 2025 15:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=142.132.176.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F9124A066
+	for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 16:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763395154; cv=none; b=CpYBy/ftzh3tg+NLJr4EUfhwNmEII2NERwdfWc7IDtnn53RucVvVgNTv/WjkvXXBa52fniWE0aWCZm24wHryfKOJNzLCF/akbVrUGx9kiP9VvHs8hXBH/r0mZ75uJxe2RGNuCB5MmnoD7JrVmm4b9o5rjyrI0V82JfYQp4pVQtM=
+	t=1763395234; cv=none; b=mi/zxdwy8HG5j8jj1cXIt1sgOhcybyPtSeR1HQ+2Qq/G3HyzAB+eim5KK2Wv/KxBTjunMEh9MVwqNVozEiznyJ5ZjO6RxM9RCpc3dDbu4UTmMpizsvBzqSoU6v143tXnQ+DfrH5nKWJwVa5smE47ZDlov7hQo//8+8ZKAyNnfx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763395154; c=relaxed/simple;
-	bh=AzUm5SyQnN+H3BhkLDc4TI3blmZP45mMPd046i1WLic=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=q079XAt5eOWEge3fSghxC+vJXEqZ/S21myG9vjPxj6WWsjZCMH1FToKj01oZgvHs0eni7fo6Q9rke780X7lbhycrTQB/N08iNINrc5s5vJdMcaLDKC9wp0BOU074HjEMHI4qhyO2NnmPfQkUSsgTU8QUmLboPEdp+engxvtomnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=C/KqexO6; arc=none smtp.client-ip=142.132.176.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPA id D540841095;
-	Mon, 17 Nov 2025 16:59:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=dkim;
-	t=1763395149; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=Zkn44FjR+pCfEjpttwFCzM+vdwVOm3Tq+gRyYYZrqaw=;
-	b=C/KqexO6h7lCq322ARNRT5+LGtjamGKURkllK3HzjYPHOKO9anlQ9NZ7A6nMfVY0JJmEr6
-	AUcCqnVVFSWbcP1G6B2+XD6fpN3hpt3UMc3HkCbS/itsh2YIWPbChNvUNF6kB4Wr4pg524
-	xncW8KuE0cfGMsYpvmDrGcGTWB94CziDsnu/UdoBqFNVDe0mZphVfLrqHes/XibvRfT4kQ
-	A355rmGB9ABLCSljkVTlTOkGCSXo7EByB/NmHg5T6VrgaghIGlHn4ixJomMtGonqWEZTnl
-	5tdONmWdhYwJtUasEUF/pLGlkPryYIH+QkXvy0btaKmwHxax6los3e4QVCvtVQ==
-From: "Dragan Simic" <dsimic@manjaro.org>
-In-Reply-To: <aRrIhA1uv_aIneOc@geday>
-Content-Type: text/plain; charset="utf-8"
-References: <cover.1763197368.git.geraldogabriel@gmail.com>
- <8f3cc1c1-7bf7-4610-b7ce-79ebd6f05a6e@rock-chips.com>
- <257951b7-c22e-9707-6aba-3dc5794306bb@manjaro.org> <aRrIhA1uv_aIneOc@geday>
-Date: Mon, 17 Nov 2025 16:59:05 +0100
-Cc: "Shawn Lin" <shawn.lin@rock-chips.com>, "Lorenzo Pieralisi" <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Manivannan Sadhasivam" <mani@kernel.org>, "Rob Herring" <robh@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>, "Heiko Stuebner" <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Johan Jonker" <jbx6244@gmail.com>, linux-rockchip@lists.infradead.org
-To: "Geraldo Nascimento" <geraldogabriel@gmail.com>
+	s=arc-20240116; t=1763395234; c=relaxed/simple;
+	bh=G7C4pAgpKtZexEHJcykCN6RuqFFJo5KbCaykefTP9os=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ja0VJt5H1mx3mQQUI6MYt6s4cT8hSm8c+rjqTXYrLEAHBGMPtxu6Fmwy8D60LS67Ez3RC9goNF/Zd3jQ7gYdpvqR2zHe+xbjDMAK0nbFQTJzgdWfcH13ICW5frnuMuh/iPiTOdqCsaUJvgEQ9bQC1nfQkEiIn3idILX321fYz8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=O5EyoHLI; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4ee18a21886so7732531cf.1
+        for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 08:00:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1763395231; x=1764000031; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gFCLv8SrKLLdHd1BTr34c+OpWZv8CYrj5E911NYrygg=;
+        b=O5EyoHLIhbrQuztPhtUFu74iYvDbavEgjlvI3ocBpCsWgvRTYhekXKOyBqMvrRZgS5
+         XtNhz/v05SOPK6Bmy8b1MT4K+92OCcHdpXyynn27yKtp0kPfVa/IHLSeZewoV6QCLxbd
+         MvN4HIIiMY0vWcBc0p8nzuyeCMkpvTtB1pQCEu5eKXqU9jRiAeDPJm44wE1iCbg7JoXw
+         ZOlr7F/M3C0jBYGrBrZpLhT+2GLRIEaCRvM76q0dEv613B3JOSGmZpy1uj7v+Q0n5l9X
+         th9gNsW8s8wDzeCjDu61LIPxThJSarYueYtavnLaOPFblcu9AWJvuNATHHb9AmOXfgo5
+         olYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763395231; x=1764000031;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gFCLv8SrKLLdHd1BTr34c+OpWZv8CYrj5E911NYrygg=;
+        b=KSQyNShrIkS5ZX1uz9Yti9jBsWiZX1ijF1RV/W3jhc/AiT4Cnon+HtzQZlZ2M9viVz
+         dRIovF7enU4YkOEcN87vFYuoGKfAm0dUr/ZbVEu1p7ZssA6n9jKKcxNpJJUyyr5/CRMO
+         hXALyfNRV44uDnGqwDarauBJ31S+cUizk5XxYBae88enBcqHHCyP0Y2K9a7BzB2S6T48
+         1dstpyfEWJCpv6JtkARcd/9J9EGWDAj5i+9shuVZTjT7mjkYdlExmSal6VQq7CWFnIyH
+         BAkb3KpwdbwejBfdg0sZKPhKYruB5yTHxm6tmvBMIRvttp6qM8zYZEeitKgHauBqQD9U
+         eOUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZqHQzW+giOlxYW0TfuGGLo1m5yfucz3oN7UaEUpmZgFDofLXMwCeYuzIEbxk7MrIWxYzPKGOV2nk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yye2YYWA3n8OLQEdBiCda5VOl7bZOz47tIsF7KIyqhVSfOjBWv1
+	2hHq9zNo/UQNavy5yOX3b6o+QmMp8dDKtqg5w7lNh74cfYlkCu/zuJ/8JIkyFK069XU=
+X-Gm-Gg: ASbGnctfn6cjxcAwzWDtQBPJcUWe1pNUZPt2OkaxmhSA2fx7EwObg62e1LFXjnnMZHp
+	e1iVy7nXtvtYAjbbU5b34mVqunaw9DmcZvKSJyrrQJB1Ui/k5aCvs7yGurgXDp2o+Z3F6XUdWyl
+	QHiO0COOeSRkNf0wsx6nv3fvsJThcVKGlQSDAWw/47TiWuFSmODgbWzfb1XC0AD7wuvVjgZDBBM
+	lWD3lzdjgAN9zDQ8+vSs1ye255+w7TWmfAzrsvgCGBJF6wy4b/nGG3LbPZWgDARK8N8hpo1dM4r
+	mnuLeLzdeJieF3WvwKs3KJsFpdXV8aRrDARu5ipKiHkMRaqsByJlGlnynEjNyoyXqZtZ18m6vjS
+	gfPFeMwHbo0z0lvy/iV+Q/21nUn23bSdK5KpjiLelacbHIdOGinYy6XXmTbeII+e3kcgZHHsK+Q
+	+EB0wZvjTq68fbHRvL/AT/sf7/ZXiN6AcybDglviOAs8Asv0T5xc8GW0/j
+X-Google-Smtp-Source: AGHT+IHbSQImGkihOS5IZmENbT3R5EBp3J8G7fdTRwsSVJjLa5azC+CHu51Ebm1tLe+D3yglmQCuLw==
+X-Received: by 2002:a05:622a:1453:b0:4ee:2e6e:a0f9 with SMTP id d75a77b69052e-4ee2e6ea38fmr9781441cf.35.1763395229938;
+        Mon, 17 Nov 2025 08:00:29 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-882862d04e1sm94957706d6.7.2025.11.17.08.00.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Nov 2025 08:00:29 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1vL1eW-000000004wY-27Uj;
+	Mon, 17 Nov 2025 12:00:28 -0400
+Date: Mon, 17 Nov 2025 12:00:28 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Zhiping Zhang <zhipingz@meta.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
+	netdev@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+	Yochai Cohen <yochai@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>
+Subject: Re: [RFC 2/2] Set steering-tag directly for PCIe P2P memory access
+Message-ID: <20251117160028.GA17968@ziepe.ca>
+References: <20251113213712.776234-1-zhipingz@meta.com>
+ <20251113213712.776234-3-zhipingz@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4afa0534-5458-ac0c-6c92-38ed52aea00b@manjaro.org>
-Subject: =?utf-8?q?Re=3A?= [PATCH 0/3] =?utf-8?q?PCI=3A?==?utf-8?q?_rockchip=3A?=
- =?utf-8?q?_5=2E0?= GT/s speed may be dangerous
-User-Agent: SOGoMail 5.12.3
-Content-Transfer-Encoding: quoted-printable
-X-Last-TLS-Session-Version: None
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251113213712.776234-3-zhipingz@meta.com>
 
-Hello Geraldo,
+On Thu, Nov 13, 2025 at 01:37:12PM -0800, Zhiping Zhang wrote:
+> RDMA: Set steering-tag value directly in DMAH struct for DMABUF MR
+> 
+> This patch enables construction of a dma handler (DMAH) with the P2P memory type
+> and a direct steering-tag value. It can be used to register a RDMA memory
+> region with DMABUF for the RDMA NIC to access the other device's memory via P2P.
+> 
+> Signed-off-by: Zhiping Zhang <zhipingz@meta.com>
+> ---
+>  .../infiniband/core/uverbs_std_types_dmah.c   | 28 +++++++++++++++++++
+>  drivers/infiniband/core/uverbs_std_types_mr.c |  3 ++
+>  drivers/infiniband/hw/mlx5/dmah.c             |  5 ++--
+>  .../net/ethernet/mellanox/mlx5/core/lib/st.c  | 12 +++++---
+>  include/linux/mlx5/driver.h                   |  4 +--
+>  include/rdma/ib_verbs.h                       |  2 ++
+>  include/uapi/rdma/ib_user_ioctl_cmds.h        |  1 +
+>  7 files changed, 46 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/infiniband/core/uverbs_std_types_dmah.c b/drivers/infiniband/core/uverbs_std_types_dmah.c
+> index 453ce656c6f2..1ef400f96965 100644
+> --- a/drivers/infiniband/core/uverbs_std_types_dmah.c
+> +++ b/drivers/infiniband/core/uverbs_std_types_dmah.c
+> @@ -61,6 +61,27 @@ static int UVERBS_HANDLER(UVERBS_METHOD_DMAH_ALLOC)(
+>  		dmah->valid_fields |= BIT(IB_DMAH_MEM_TYPE_EXISTS);
+>  	}
+>  
+> +	if (uverbs_attr_is_valid(attrs, UVERBS_ATTR_ALLOC_DMAH_DIRECT_ST_VAL)) {
+> +		ret = uverbs_copy_from(&dmah->direct_st_val, attrs,
+> +				       UVERBS_ATTR_ALLOC_DMAH_DIRECT_ST_VAL);
+> +		if (ret)
+> +			goto err;
 
-On Monday, November 17, 2025 08:02 CET, Geraldo Nascimento <geraldogabr=
-iel@gmail.com> wrote:
-> On Mon, Nov 17, 2025 at 04:57:11AM +0100, Dragan Simic wrote:
-> > On Monday, November 17, 2025 04:42 CET, Shawn Lin <shawn.lin@rock-c=
-hips.com> wrote:
-> > > =E5=9C=A8 2025/11/15 =E6=98=9F=E6=9C=9F=E5=85=AD 17:10, Geraldo N=
-ascimento =E5=86=99=E9=81=93:
-> > > > In recent interactions with Shawn Lin from Rockchip it came to =
-my
-> > > > attention there's an unknown errata regarding 5.0 GT/s operatio=
-nal
-> > > > speed of their PCIe core. According to Shawn there's grave dang=
-er
-> > > > even if the odds are low. To contain any damage, let's cover th=
-e
-> > > > remaining corner-cases where the default would lead to 5.0 GT/s
-> > > > operation as well as add a comment to Root Complex driver core,
-> > > > documenting this danger.
-> > >=20
-> > > I'm not sure just adding a warn would be a good choice. Could we =
-totally
-> > > force to use gen1 and add a warn if trying to use Gen2.
-> >=20
-> > I think that forcing 2.5 GT/s with an appropriate warning message
-> > is a good idea.  That would be like some quirk that gets applied
-> > automatically, to prevent data corruption, while warning people
-> > who attempt to "overclock" the PCIe interface.
->=20
-> Alright, I'll send v2 with this suggestion in mind. So that driving t=
-he
-> core at 5.0 GT/s will require patching and compiling own kernel.
->=20
-> > > Meanwhile amend the commit message to add a reference
-> > > of RK3399 official datesheet[1] which says PCIe on RK3399 should =
-only
-> > > support 2.5GT/s?
-> > >=20
-> > > [1]https://opensource.rock-chips.com/images/d/d7/Rockchip=5FRK339=
-9=5FDatasheet=5FV2.1-20200323.pdf
-> >=20
->=20
-> Shawn, URLs have the bad habit of changing or simply disappearing, so=
- I
-> don't think it's a good idea to put URL in the commit message.
+This should not come from userspace, the dmabuf exporter should
+provide any TPH hints as part of the attachment process.
 
-Ah, it's actually perfectly fine, there's always Wayback Machibe
-to rescue references/URLs that may disappear over time.  Wikipedia
-relies heavily on exactly that mechanism, for example.
+We are trying not to allow userspace raw access to the TPH values, so
+this is not a desirable UAPI here.
 
-[2] https://web.archive.org/
-
-> Also, the datasheet just mentions that RK3399 supports only 2.5 GT/s,
-> it does not mention possible damage from driving the core at 5.0 GT/s=
-.
-
-True, but having an additional reference doesn't hurt, especially
-because the revision history mentions, albeit vaguely, an update
-to the PCIe specification in version 1.1.of the datasheet.  Though,
-if we had the version 1.0 publicly available for comparison, that
-would've been much better. :)
-
-> > Also, rewording the patch summary as follows below may be good,
-> > because that would provide more details:
-> >=20
-> >   PCI: rockchip: Warn about Gen2 5.0 GT/s on RK3399 being unsafe
-> >=20
-> > Or, if we'll go with the automatic downgrading, like this:
-> >=20
-> >   PCI: rockchip: Limit RK3399 to Gen1 2.5 GT/s to prevent breakage
->=20
-> Dragan, these are good ones, thanks. Though I think I'll omit Gen1/Ge=
-n2
-> wording since I know how much Bjorn dislikes those terms.
-
-I'm glad that you like those, and I also thought about not including
-the GenX parts, because they're basically a bit redundant. :)
-
+Jason
 
