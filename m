@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-41461-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41462-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 471E0C6663C
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 23:05:17 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26D46C66684
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 23:07:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id 1149D299BC
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 22:05:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id 36B0D296C3
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 22:07:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ED123451BA;
-	Mon, 17 Nov 2025 22:05:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AF49320CCD;
+	Mon, 17 Nov 2025 22:07:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQAqFEYq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OwOKcyjJ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC1031E10B;
-	Mon, 17 Nov 2025 22:05:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA62303C94;
+	Mon, 17 Nov 2025 22:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763417106; cv=none; b=ZPU+Kt3kfG666Nxm67OlQ02ANC6hSgLIKQL19H696TMLwgPFYaHxLqRgMLmANMTrS5GM3T8Bi5YsW5Geo8zN8rfq3qOYS6rN8tsbRaKKmkNdUfXeYLgWnIrYGCHlhxmvx2AfSZ6Q332gJQW8yM1yZB40CwsSCQZDE68EmPV/9nA=
+	t=1763417249; cv=none; b=sTAqX2GxGvBZix89yj26OemJrXPv8VdNI7x6GcaPmgS9+wEfQECoFwBwsRLusCeAck98v0wH9LFByXhT4Wgz1Xw6W3dvoTt7zFNFrlRQYqbYFKNfATgRS6GVTx1v6A4QqnF7awmPvqu+VGL2PV6RTZJWPcnA0lpexwiPxFQScqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763417106; c=relaxed/simple;
-	bh=5/G8GIkoO7z2N8ciB1v5Rc2n9Ta4Nf0bZTaX7MC2Olw=;
+	s=arc-20240116; t=1763417249; c=relaxed/simple;
+	bh=G5kP84evxJ/rHjY7X0g6Ked+OOEAmAcqeB7BBk32zYA=;
 	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=f3Z8PfN5AbPlpolijiindKgkQPmwu4OfIQCzHJJ2YCdbwIZD+0l42cwBRgAbct6ASfGwx0oaqPMNfWlTwaiDu2oMLPwWK9k6qHyGWIcNQzQrOLPngqR5DGYesn/KqBbhqBqXKl/USHeSjbkKR865USBpt/dzZmoKcODTWYzRBLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQAqFEYq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F33EAC2BCB6;
-	Mon, 17 Nov 2025 22:04:56 +0000 (UTC)
+	 References:In-Reply-To; b=fuOS+m9PoEh0R86BFJPbQZHYhkPf+Bf/RbFuoCBFSm6gXXzIU89JPSZZhwl9TMAIhWiCJWFu3mXhq8zivwAr0L9XMGlLnN01NL+tXICBcFYxyaXUcxg5DyAP2ZEAZ8KcD4Fmmii9h4bUoJV06GDsGiGKN7OF11T7VqS7E0V8WkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OwOKcyjJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5F50C4CEF1;
+	Mon, 17 Nov 2025 22:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763417103;
-	bh=5/G8GIkoO7z2N8ciB1v5Rc2n9Ta4Nf0bZTaX7MC2Olw=;
+	s=k20201202; t=1763417248;
+	bh=G5kP84evxJ/rHjY7X0g6Ked+OOEAmAcqeB7BBk32zYA=;
 	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=tQAqFEYqeC+cHKxLKAxS4qQCq5OcyG2fl4sxNMXCdvs0/SbfDVAbi27opRi7+v0T9
-	 CiHX5Yzvy+uIe14n/2VQv63FAajjXIBP1j2NjbWezUXXryVVM3w8HdS2HdEkJK0gdX
-	 Oe8yOpK8r66UArcxA7Ji54TP/w3gYyANv6BQHGEpFWvVZsZHtswu6DcDKSJOdNtLCK
-	 X5vcJK0kq3lnH0Q3OGaVVgiRYMFOnzNGSmnDGUXCYToVwEGfnTqutbkkP1gTM4/2uf
-	 VyWHgNC3Jm/mdQQjdgLshNUczH6YEjiSVk2N1sA5G2q33EY8TZX04yzfko6mcqDLl3
-	 Ammys52N69phw==
+	b=OwOKcyjJTcxujuWF3/3Yx56EEAvpX/ZDrNYDGO7+UGqC+Mzt2dmylhXEQTFlYIDB6
+	 lbqsWJy73Aj8X+tyyvgvtUXRNDXBXNrgjv3cDGOXwKgBoAsSaCm5uHs3PJ2d30/EK+
+	 CVV7bWIwqjad3N54Mo8kjf0af2PkVwvE/nRZr+AndBt9E4haJBxRCA4TdqnhJAV+Ky
+	 ErS12PsZ07UmkZv52gbA82b0XcCD4wFsWfhAEVOO+rBceQ4rp3Tzya+CLkVH/dOLtc
+	 AzJ/UrFoidjR3pT0v29NiufNrhUxm7Y+XrmSgwPj0pzddbRSfTj4iOXHbsfj0wE0lE
+	 tw2I5mroKaLTg==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -49,53 +49,35 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 18 Nov 2025 11:04:53 +1300
-Message-Id: <DEBB6T5ZEYQW.19GFZ39AF1SVO@kernel.org>
-Subject: Re: [PATCH v7 1/2] rust: Add trait to convert a device reference to
- a bus device reference
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Rafael J.
- Wysocki" <rafael@kernel.org>, "Lee Jones" <lee@kernel.org>, "Pavel Machek"
- <pavel@kernel.org>, "Dave Ertman" <david.m.ertman@intel.com>, "Ira Weiny"
- <ira.weiny@intel.com>, "Leon Romanovsky" <leon@kernel.org>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Bjorn Helgaas" <bhelgaas@google.com>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-leds@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-To: "Markus Probst" <markus.probst@posteo.de>
+Date: Tue, 18 Nov 2025 11:07:18 +1300
+Message-Id: <DEBB8NVXCG2G.26NWTAPEE8N1X@kernel.org>
+Subject: Re: [PATCH v6 RESEND 6/7] rust: pci: add config space read/write
+ support
+Cc: "Zhi Wang" <zhiw@nvidia.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <aliceryhl@google.com>, <bhelgaas@google.com>, <kwilczynski@kernel.org>,
+ <ojeda@kernel.org>, <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>,
+ <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <lossin@kernel.org>,
+ <a.hindborg@kernel.org>, <tmgross@umich.edu>, <markus.probst@posteo.de>,
+ <helgaas@kernel.org>, <cjia@nvidia.com>, <smitra@nvidia.com>,
+ <ankita@nvidia.com>, <aniketa@nvidia.com>, <kwankhede@nvidia.com>,
+ <targupta@nvidia.com>, <acourbot@nvidia.com>, <jhubbard@nvidia.com>,
+ <zhiwang@kernel.org>
+To: "Joel Fernandes" <joelagnelf@nvidia.com>
 From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20251027200547.1038967-1-markus.probst@posteo.de>
- <20251027200547.1038967-2-markus.probst@posteo.de>
-In-Reply-To: <20251027200547.1038967-2-markus.probst@posteo.de>
+References: <20251110204119.18351-1-zhiw@nvidia.com>
+ <20251110204119.18351-7-zhiw@nvidia.com>
+ <20251114002005.GA2384907@joelbox2>
+In-Reply-To: <20251114002005.GA2384907@joelbox2>
 
-On Tue Oct 28, 2025 at 9:06 AM NZDT, Markus Probst wrote:
-> Implement the `AsBusDevice` trait for converting a `Device` reference to =
-a
-> bus device reference for all bus devices.
->
-> The `AsBusDevice` trait allows abstractions to provide the bus device in
-> class device callbacks. It must not be used by drivers and is intended fo=
-r
-> bus and class device abstractions only.
->
-> Signed-off-by: Markus Probst <markus.probst@posteo.de>
+On Fri Nov 14, 2025 at 1:20 PM NZDT, Joel Fernandes wrote:
+> Also we should have a comment on why its safe for _ret to be ignored.
+> Basically what guarantees that the call is really infallible? Anything we=
+ can
+> do to ensure errors are not silently ignored? Let me know if I missed
+> something.
 
-Applied to driver-core-testing, thanks!
+Please also see [1].
 
-    [ * Remove unused import.
-      * Change visibility of AsBusDevice to public.
-      * Fix build for USB.
-      * Add impl for I2cClient.
-      - Danilo ]
-
---
-
-Given that it's already quite late in the cycle, I expect the LED stuff to =
-land
-in the next cycle, hence I picked this one up in the driver-core tree.
-
-- Danilo
+[1] https://lore.kernel.org/all/DE8PBRC48D14.IX6FUPOLLVHR@kernel.org/
 
