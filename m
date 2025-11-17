@@ -1,154 +1,126 @@
-Return-Path: <linux-pci+bounces-41439-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41440-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19F81C65969
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 18:46:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 87F23C65AC9
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 19:14:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 19D75350E8E
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 17:37:24 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 09AA0347046
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 18:10:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B40A12F8BFC;
-	Mon, 17 Nov 2025 17:37:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A98493016F7;
+	Mon, 17 Nov 2025 18:10:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y1uxPfuE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnV5RHyo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8336529D268;
-	Mon, 17 Nov 2025 17:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B6D3016F9
+	for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 18:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763401038; cv=none; b=himJruErd7nyZYD1Vh2sYgbdPwhEHCafWtZ8Ut07X2raRtjpq0BOAclpqQqQ+e9AlzPjs9miO3AVQm/cE7VvhjPg2qn5GH30B0BM8L+PxnmLapRc2grwLOxtnuXBDxdIdPCIGfhPoy8PjNqKpdMXnAI57Pi6o2oG1D89GrD/cF0=
+	t=1763403032; cv=none; b=VNC3WVrNpSOL/H1+XMzl5gSBV7BDM6YOrMQglFp9+evS4hVZ6RZ0Kt3sTss3umxi6bc+ZkNZQMwhUAeYMA3IyOlXS4ec7GHMDLmfxmN70+NQZbfo7hM8vhoamlI3Yd2eJBDbZHxqMCRgDpnw3yYU8t3TCZCY0Jc+f3vuoxxLdes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763401038; c=relaxed/simple;
-	bh=xaJwj4w/55f9caNeZTmSEHP8i/cA6sqKW7e+HMlLTUc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kD8jAttRUZ2u3WOGkrLA0QbegrNVuEGsUjjQEOHcbUJCIczM4Zh4iWL+PX/zkZpD4YERV4P9PhHSiW4dsgw70MbeJIqY7SjiLtZRSTRuPynEAIKItuc8re5i5zTcuHZIW3OuxHUfLZ6lQwFY3IkEcYgGMtkLBgfCe3BsSbDV+rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y1uxPfuE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F9F1C19425;
-	Mon, 17 Nov 2025 17:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763401036;
-	bh=xaJwj4w/55f9caNeZTmSEHP8i/cA6sqKW7e+HMlLTUc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y1uxPfuE5W2Lm/R/zsthGPD9m29er72tTcgxXt6CxtX7xUJWghvu2YLLYdILO7x7V
-	 zytxGct0hN5EVmcT57L5q3nD3rvpA0e6FSaWTR1sup2uAL/nhb3zbD9Urem3xmAMNk
-	 p/w8bjzMZH8H5LI+ZtXvHS1BrlYlUMRwVVP9deSlhY+M9PXkzP7nUYFhyAlEXfmO+4
-	 0RrGiLb/17Y4rSqtN6htu9i0jr2VPJ5q18/TkoNehFfheycq4zaGiGCr5L/BqyFkdr
-	 7ikWzQ/RbpbYWO+yF8J7BgB8PADlMQEWoyZcoGTyiIxyih17StZXwBAa1jf6sIfg9l
-	 0gOF2Ju/ewVLw==
-Date: Mon, 17 Nov 2025 23:07:01 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com, will@kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, 
-	linux-arm-msm@vger.kernel.org, zhangsenchuan@eswincomputing.com, vincent.guittot@linaro.org
-Subject: Re: [PATCH v2 2/3] PCI: qcom: Check for the presence of a device
- instead of Link up during suspend
-Message-ID: <qu3gnvl7t7ehpxhkchz6ragjoeafktwr4dtstattthfv3jezd7@zrfwrlr2vzx5>
-References: <zgj3ubyb234ig6ndz6ov5q3szvuxnd3jkz2rjglbad4ksri6nl@ov7boxuar4va>
- <20251113172250.GA2291436@bhelgaas>
+	s=arc-20240116; t=1763403032; c=relaxed/simple;
+	bh=5WNzN9ugf9bFnLYzpIUefRPZtj9OPo6qkpk7hqxsSHw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t8O6YZQpZo5LLKG3Tb7rpK/fmF4xfnfXmDMSDRN09MWpCojyKYcf0WmG/frlABNK15omcjh5wjrpgUGgauDEbdD8Ipv9jZ0C5rk9xBK+Y9aWCMNyv/gLdRk6OzryxOkRGoGCM5OLK+TGHtEDEaOwZ3ryglGWzSYzTp9J0fsrk54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HnV5RHyo; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-298039e00c2so58835685ad.3
+        for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 10:10:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763403030; x=1764007830; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bAkL1Z1gQqOYv9fn52lDehmUngUxGCXsulPI0imzeMs=;
+        b=HnV5RHyokW635escYiouqbM+fW7bqk0NO7gKtvnuCuX0Hz21Tb1HXzN6NgMtO7WRjQ
+         RULmjNyV6WovnQqkxaaOa53vzw9FC47HY/IN6KmAWRmGxujAL9gCm4NhFhsw9uI4pL6I
+         0cu4vrmF81tnnGQmFGpWtVKyAhpU8AllCKoIQa4XkJ6NpNyy5/Yab0Ug+nDKDBbMYsPC
+         JRTvfcdHbBiVkEX1U+j1AZD5MJE9VKOVTQzCs5WmFcbLJZkZ+GoFCWnACOyQfEMBTSSD
+         mN1ehDEIzMdxPGnEKujPGwefbz5p5RHNX+zm8/mKrv4xlnoOK5jcrAenpIbflStXs13g
+         Whmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763403030; x=1764007830;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bAkL1Z1gQqOYv9fn52lDehmUngUxGCXsulPI0imzeMs=;
+        b=fAEoUW49NZpTZ1vReJ1mQ2s4SmrBbYf3Ohz0mHFEYvO6YmkaYMoL0+/KrK+yVvd/Bw
+         cuQqmSOyyMb/u1scRpTB06a4gjAn0Z4BMrEYUa8DCBJvHRVanAQ+n57nA2rKQtSiJyRM
+         9l1KIQlTvxU9G0Ik4uV2askK6tSWZbRGUO1RE/1BiSDC+rz8iWIhhTOZMWobKt0HV+L0
+         PrWsoxMHG8NMQUO1I+tefQ/jS/FUSm4LeOJn0oJhnt7dp1PSyrK6QyJPmezQOpjXdy54
+         3YlOCNPg8uVp/ivRsginNzfkPI9fbY/3vCy3xUP/TyY2rXaDPqs4IMCHLrDhXezmRcSU
+         XYYA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/7garVPJQsxxczYt2A5128/4PhY1RjbQSL33OTQ6TR2uA1dHlZ606ZFL+zXIiW+5lsAE7Y/Ge0MM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoLgRc4K0Tbzni+9oCSYKMdUHhgDn1Kky7Ro1EVXyi6pY7BGAo
+	PtCcuNrjFatKObRB0b1qkSN0dmruLtZixx0F4nVLMwml23svTJwLftkP
+X-Gm-Gg: ASbGncuJKS0Nw2CPUW5qSzMR8pEP2XAuGDZOqG1bxuTGi43LvjKKCdymmchoOkmJNm5
+	YbBYFFUOw66uPGYuvTsZq3pvudx+TcOp9y36DPujvU/0h4BnRVTofqw5PTZ4JUBIB86D4JUSCEo
+	2CQuXmAGfp9aCTJpp5spckcV1VhlzSvA8KF1hg6EqcutEt6Yj5oruBeY1dAiiu/BDT5CVhJP6Vj
+	IZSkNPfiD8lfthwr4qq3ywG5+y+WPN85/cTu/1sZgRLkkEZII5mToWEtud+0Gh8phNQZTdbClpX
+	dSLokMgmhT1CcS+2MOt79zSAiUUA72WdQzkQeY/x9xY4UqOrpec49aTXCTSIDc7QnedCNpOaQGr
+	kBCfpBOY+ckGC7/+49L7meCVY6zlz1LN6cThoLNOAhJnLbJ7VlPzpkkxUn96yIWoR6S0vxA0k51
+	nAZwmEhqqyfNavIpZwHwWJfOqh001qaQ==
+X-Google-Smtp-Source: AGHT+IGmunqrQlVpfahUUkxZIBVj+bc+HmF1/RslcMS43E5s/13BnptrYkrUhKGL+v/DRdjNaQZxAQ==
+X-Received: by 2002:a17:902:f641:b0:295:5625:7e41 with SMTP id d9443c01a7336-2986a6ec9c1mr175237865ad.22.1763403030526;
+        Mon, 17 Nov 2025 10:10:30 -0800 (PST)
+Received: from rockpi-5b ([45.112.0.172])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c245ecdsm147237955ad.32.2025.11.17.10.10.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Nov 2025 10:10:29 -0800 (PST)
+From: Anand Moon <linux.amoon@gmail.com>
+To: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	linux-pci@vger.kernel.org (open list:PCIE DRIVER FOR ROCKCHIP),
+	linux-rockchip@lists.infradead.org (open list:PCIE DRIVER FOR ROCKCHIP),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC support),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Anand Moon <linux.amoon@gmail.com>
+Subject: [RFC v1 0/5] Fix some register offset as per RK3399 TRM part 2
+Date: Mon, 17 Nov 2025 23:40:08 +0530
+Message-ID: <20251117181023.482138-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251113172250.GA2291436@bhelgaas>
 
-On Thu, Nov 13, 2025 at 11:22:50AM -0600, Bjorn Helgaas wrote:
-> On Thu, Nov 13, 2025 at 10:24:17PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Nov 13, 2025 at 10:41:47AM -0600, Bjorn Helgaas wrote:
-> > > On Fri, Nov 07, 2025 at 10:13:18AM +0530, Manivannan Sadhasivam wrote:
-> > > > The suspend handler checks for the PCIe Link up to decide when to turn off
-> > > > the controller resources. But this check is racy as the PCIe Link can go
-> > > > down just after this check.
-> > > > 
-> > > > So use the newly introduced API, pci_root_ports_have_device() that checks
-> > > > for the presence of a device under any of the Root Ports to replace the
-> > > > Link up check.
-> > > 
-> > > Why is pci_root_ports_have_device() itself not racy?
-> > 
-> > Because it is very uncommon for the 'pci_dev' to go away during the
-> > host controller suspend. It might still be possible in edge cases,
-> > but very common as the link down. I can reword it.
-> 
-> I guess it's better to acknowledge replacing one race with another
-> than it would be to suggest that this *removes* a race.
-> 
+In order to enable ASPM we need to fix the register offset as
+RK3399 TRM part 2 - PCIe Controller.
 
-Ok.
+Tested on Radxa Rock Pi 4b.
 
-> But I don't understand the point of this.  Is
-> pci_root_ports_have_device() *less* racy than the
-> qcom_pcie_suspend_noirq() check?  Why would that be?
-> 
+Thanks
+-Anand
 
-The check is supposed to perform deinit only if there are no devices connected
-to the slot. And the reason to skip the deinit was mostly due to driver behavior
-like NVMe driver, which expects the device to be in D0 even during system
-suspend on non-x86 platforms.
+Anand Moon (5):
+  PCI: rockchip: Fix Link Control register offset and enable ASPM/CLKREQ
+  PCI: rockchip: Fix Device Control register offset for Max payload size
+  PCI: rockchip: Fix Slot Capability Register offset for slot power
+    limit
+  PCI: rockchip: Fix Link Control and Status Register 2 for target link
+    speed
+  PCI: rockchip: Fix Linkwidth Control Register offset for Retrain Link
 
-Since the check is for the existence of the device nevertheless, I thought,
-making use of pci_root_ports_have_device() serves the purpose instead of
-checking the data link layer status.
+ drivers/pci/controller/pcie-rockchip-host.c | 31 +++++++++++----------
+ drivers/pci/controller/pcie-rockchip.h      |  5 ++++
+ 2 files changed, 21 insertions(+), 15 deletions(-)
 
-> I'm kind of skeptical about adding pci_root_ports_have_device() at
-> all.  It seems like it just encourages racy behavior in drivers.
-> 
 
-I agree that though it is not very common, but with async suspend, it is
-possible that 'pci_dev' may get removed during controller suspend.
-
-So I've dropped this series from controller/dwc until we conclude.
-
-- Mani
-
-> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/pcie-qcom.c | 6 ++++--
-> > > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > index 805edbbfe7eb..b2b89e2e4916 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > @@ -2018,6 +2018,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
-> > > >  static int qcom_pcie_suspend_noirq(struct device *dev)
-> > > >  {
-> > > >  	struct qcom_pcie *pcie;
-> > > > +	struct dw_pcie_rp *pp;
-> > > >  	int ret = 0;
-> > > >  
-> > > >  	pcie = dev_get_drvdata(dev);
-> > > > @@ -2053,8 +2054,9 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
-> > > >  	 * powerdown state. This will affect the lifetime of the storage devices
-> > > >  	 * like NVMe.
-> > > >  	 */
-> > > > -	if (!dw_pcie_link_up(pcie->pci)) {
-> > > > -		qcom_pcie_host_deinit(&pcie->pci->pp);
-> > > > +	pp = &pcie->pci->pp;
-> > > > +	if (!pci_root_ports_have_device(pp->bridge->bus)) {
-> > > > +		qcom_pcie_host_deinit(pp);
-> > > >  		pcie->suspended = true;
-> > > >  	}
-> > > >  
-> > > > -- 
-> > > > 2.48.1
-> > > > 
-> > 
-> > -- 
-> > மணிவண்ணன் சதாசிவம்
-
+base-commit: e7c375b181600caf135cfd03eadbc45eb530f2cb
 -- 
-மணிவண்ணன் சதாசிவம்
+2.50.1
+
 
