@@ -1,194 +1,152 @@
-Return-Path: <linux-pci+bounces-41377-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41378-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A0B4C63475
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 10:44:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D16D3C6359E
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 10:52:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7E9F434E804
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 09:38:51 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7B35B380FA4
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 09:45:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B99732D7D7;
-	Mon, 17 Nov 2025 09:34:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BC2332779B;
+	Mon, 17 Nov 2025 09:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jNpXelJu"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="T0EkJgKC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qYUEP6bx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A6F32D44E
-	for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 09:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB19D299A96;
+	Mon, 17 Nov 2025 09:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763372069; cv=none; b=YYuMoy5OWAyejN/FxMl/4fwCoag5FTyicp/9V6LWQD7UeOpn+Dzz/fp3KzKtpwaByCrecVpD3MdGAzoW8P5DcFFw5OKRn/eK72fbHB9LsbN/LBTPb/xo8u90dHCfo6P3B+b6c9lDccYYcP255Osj90BXuSOZEwofsfbs2gaQjPc=
+	t=1763372603; cv=none; b=jheNm4YnGANRDDLBbHdKMMjt1v1upcg6Ox6EhEcij40w891gv50XDhLMd3xDG3ipzuZDpoS2PN0vZcHhCxEkU0pQOX/LBC4pc9SjFE2wQbpztW4EdazO9dQQlB0eKiyi8Gi3OvhKJbTUb8aO9GDzlvBrj2xaXZKX3HHkORLeRfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763372069; c=relaxed/simple;
-	bh=wnjJiODhg3fkoaxgD7HzJvhXpJ/AWSxe5A/XA2O8zjk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=noV7iWw7hS2l/7W5FsljkQSkxP0f6LXMd8Mm2GgjCvK7fj2zQyGvesK+5n/+daedGLa8Q40U6uG/KR/EcodlUyFxTAvfCt/X/tVRTNJZJjIEN8AwJrqx5J1jbrUbxNez0c7jNx7DAmADUQMgASa/jPhdbUrTkHlQ73E3dUuZaBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jNpXelJu; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763372066; x=1794908066;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=wnjJiODhg3fkoaxgD7HzJvhXpJ/AWSxe5A/XA2O8zjk=;
-  b=jNpXelJujrpfws+lhR9pPb1eHIi9W0r0FmVtfyI5qzRhCBQ9YkEjHaCI
-   etJdbo4WwVhXzUg+gF4zlSw0McgFA7sL8dPN7CJRhhHYOEn9pxp8x0oF7
-   3rTSfhyxH2/GecK+oAXnRn8oDOfJbhgns4+Hg6lWZTLu8FrYTd5HEb4UQ
-   LjMYWedqBhGXOADC36pedjDpFGO0vjp8LcX1K+EpRQ9SGnxbTu8mOgvW4
-   Mz1pZBex2pgNLDyxEhl7U4+1EyvqKL3Lpg8H5Z3wfYgCVoTxmHf+7E0tF
-   5fvxIpIR2BxyEycdKcz8XR/phiCamA3vxsFvIAvzZNW3YXa0EBVe523XL
-   g==;
-X-CSE-ConnectionGUID: jnwInsu1RmiOMr2C50mdqg==
-X-CSE-MsgGUID: tzt7upt3QvS1oiqGC/60qw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11615"; a="75967749"
-X-IronPort-AV: E=Sophos;i="6.19,311,1754982000"; 
-   d="scan'208";a="75967749"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 01:34:26 -0800
-X-CSE-ConnectionGUID: WJI4MjKzQmS1JsrPRLHRGA==
-X-CSE-MsgGUID: mWw44/g8SwG9tSXje/hpEg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,311,1754982000"; 
-   d="scan'208";a="190198551"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.239])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 01:34:23 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 17 Nov 2025 11:34:20 +0200 (EET)
-To: Matt Roper <matthew.d.roper@intel.com>
-cc: intel-xe@lists.freedesktop.org, 
-    Michal Wajdeczko <michal.wajdeczko@intel.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/2] drm/xe: Improve rebar log messages
-In-Reply-To: <20251114215621.GT3905809@mdroper-desk1.amr.corp.intel.com>
-Message-ID: <af1b8517-a48c-0826-b02a-db102424ac8a@linux.intel.com>
-References: <20251031-xe-pci-rebar-2-part-2-v1-0-c4a794a39041@intel.com> <20251031-xe-pci-rebar-2-part-2-v1-2-c4a794a39041@intel.com> <20251114215621.GT3905809@mdroper-desk1.amr.corp.intel.com>
+	s=arc-20240116; t=1763372603; c=relaxed/simple;
+	bh=Fq6cDpU79qOWFGK1t0X95O9tDLh2cB4gJjqrGSnshp0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=oOEbRBjdNLiV35pmSgLlDdJ0kZ20PznWmUYznKma3trWsDTPNjd3XNdOoehA2wRpegXIeM/iG7OYHDA2hi1kM7dPOH4h88NS+QDB4WrbSO+ladVJbDXSwk5j1/9U4lPje60ALxG5JYP+3FPFLd0uVzqV5+ZJDRBW8LC9viZmxKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=T0EkJgKC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qYUEP6bx; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id AB8FA14001D3;
+	Mon, 17 Nov 2025 04:43:19 -0500 (EST)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Mon, 17 Nov 2025 04:43:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1763372599;
+	 x=1763458999; bh=sT1vNBwVROLZPKVddoZIohPPUecTNY2R/P13dlzJXbI=; b=
+	T0EkJgKCLIMPF806+hzXmRAcbNfdJCAILARWg4EZM3zfUKfFxdOLqpcgIcwiXOfO
+	erQot5VlD2cux2/ErnW+Iv1l0l7wCQyqGQS5kuIvo4T6Gm4bUGlrsoKqk47Uotca
+	E9nDWWD1KIQlF0KHgJRTA6ZWwgQBf9Q51OpxtbrPKnx94NIW/33yT58y+KTZSWrC
+	K86nm98bpfBAuhFBlmr716VG14/0oVuZZkwCGPQw498/7shNMjSYpRQ7hLF7N66R
+	BMBQoCOkLCd+kUYVWgYf8vmw0KMI/Cjztmjq5RpMDbQGVpXIezXjCCIRvQIpuHhL
+	mQmxwOPFQqhc8FeahVF+tw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763372599; x=
+	1763458999; bh=sT1vNBwVROLZPKVddoZIohPPUecTNY2R/P13dlzJXbI=; b=q
+	YUEP6bxzDTn7NmjJyBFJumNssyRd1QtWpfl+IGOcEttrH4b3TnZgECNvRF1zW2px
+	FfeSi1D821IA9dGrt0mbg0zD+CjogPIihHYkM3iOi5mBVLPE7RaouVzTy7MjHe1Y
+	HOnCupfVSPg1PmJdfOySY2CuUirqIwIginvXWiDJOtarpDXGWhmEE+5+HCR+iXfL
+	Cwkd5htyewgMzRGwOMgGzMhdqEt6l0uCHqN90bf8/3xFEhref5atI5k8xaN2vcc+
+	ex1x1Isd+J/HM36HkJoj75Cq6WRlvmzwSSv8fn5I3pupiWBcUGHkhhGiDbRwbhy6
+	AWwfsDNDO0/aCtXlxMbuw==
+X-ME-Sender: <xms:N-4aac2RFyGLnUqijeqQVvomJGuo2PxuLYBAqt0uglJeLGzaAuYzaw>
+    <xme:N-4aaR4Wkk4LEKkpbrgFkPuY7RXosBHwr6SIRFQ1Y4FRNe_mRDo2CILmNGPDlH9eM
+    JgPMTQwgWtIocecGg5aJj77D02aDMuLaq5sfcIoLvulH3wSHjNV1Ds>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvudekudefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
+    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoh
+    epkhhishhhohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkfihilhgtiiihnhhs
+    khhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlphhivghrrghlihhsiheskhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtohepmhgrnhhisehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmh
+    dqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohep
+    uhhnihgtohhrnhgpfigrnhhgsehouhhtlhhoohhkrdgtohhmpdhrtghpthhtohepshdqvh
+    gruggrphgrlhhlihesthhirdgtohhm
+X-ME-Proxy: <xmx:N-4aaRyxh3Q8AJLSnX6F5evD92we4PcMxwOS-dT1AmzJTQqO4UacmA>
+    <xmx:N-4aaWfYNUUD9IFnF7hWPzYPR00X20e1hiEmn-Z4V-wRVLRicp8vXg>
+    <xmx:N-4aaes1uMi8oAZ3-VSieEl5QqNgqZnZIMPKuAs6SYRRxv6QTri8kQ>
+    <xmx:N-4aaTBWohPtb6UOlfDQzdIsxUIZXQlJTbrVRf42yzQ-N57mnU6W3A>
+    <xmx:N-4aaRep-p8ziAyI6weD5d5bkRxM78vHFBwKvGArWFGK7Qz1G5IzeFM2>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 76DBE700063; Mon, 17 Nov 2025 04:43:19 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-363282355-1763371698=:982"
-Content-ID: <4b40d736-eff3-bb06-9747-0ebdf7389807@linux.intel.com>
+X-ThreadId: AO4N9SNPwumV
+Date: Mon, 17 Nov 2025 10:42:58 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Siddharth Vadapalli" <s-vadapalli@ti.com>
+Cc: "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ "Manivannan Sadhasivam" <mani@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ bhelgaas@google.com, "Chen Wang" <unicorn_wang@outlook.com>,
+ "Kishon Vijay Abraham I" <kishon@kernel.org>, stable@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, srk@ti.com
+Message-Id: <477b851b-56b1-497a-812a-eb0c9bfdc4d8@app.fastmail.com>
+In-Reply-To: <8ac2ed36a85f854a54ee1d05599891632087869d.camel@ti.com>
+References: <20251113092721.3757387-1-s-vadapalli@ti.com>
+ <084b804f-2999-4f8d-8372-43cfbf0c0d28@app.fastmail.com>
+ <250d2b94d5785e70530200e00c1f0f46fde4311b.camel@ti.com>
+ <201b9ad1-3ebd-4992-acdd-925d2e357d22@app.fastmail.com>
+ <7eaa4d917f7639913838abd4fd64ae8fe73a8cfc.camel@ti.com>
+ <37f6f8ce-12b2-44ee-a94c-f21b29c98821@app.fastmail.com>
+ <8ac2ed36a85f854a54ee1d05599891632087869d.camel@ti.com>
+Subject: Re: [PATCH] PCI: cadence: Kconfig: change PCIE_CADENCE configs from tristate
+ to bool
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, Nov 17, 2025, at 10:23, Siddharth Vadapalli wrote:
+> On Mon, 2025-11-17 at 10:06 +0100, Arnd Bergmann wrote:
+>> On Mon, Nov 17, 2025, at 07:05, Siddharth Vadapalli wrote:
+>> 
+>> but you may want to split it up further to get better dead
+>> code elimination and prevent similar bugs from reappearing when
+>> another call gets added without this type of check.
+>> 
+>> If you split j721e_pcie_driver into a host and an ep driver
+>> structure with their own probe/remove callbacks, you can
+>> move the IS_ENABLED() check all the way into module_init()
+>> function.
+>
+> Thank you for the suggestion :)
+>
+> Would it work if I send a quick fix for `cdns_pcie_host_disable` using
+> IS_ENABLED in the existing driver implementation and then send the
+> refactoring series later? This is to resolve the build error quickly until
+> the refactoring series is ready.
+>
+> On the other hand, if it should be fixed the right way by refactoring, I
+> will not post the temporary fix. Please let me know.
 
---8323328-363282355-1763371698=:982
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <5cbdb3e6-8534-9ab8-74b5-db984d067d99@linux.intel.com>
+Please see if my suggestion works in practice using all the
+combinations of build options, I may have missed something.
+If it fixes all the build failures, merging and backporting
+this first makes sense.
 
-On Fri, 14 Nov 2025, Matt Roper wrote:
-
-> On Fri, Oct 31, 2025 at 02:17:43PM -0700, Lucas De Marchi wrote:
-> > Some minor improvements to the log messages in the rebar logic:
-> > use xe-oriented printk, switch unit from M to MiB in a few places for
-> > consistency and us ilog2(SZ_1M) for clarity.
-> >=20
-> > Suggested-by: Michal Wajdeczko <michal.wajdeczko@intel.com>
-> > Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> > Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
->=20
-> Reviewed-by: Matt Roper <matthew.d.roper@intel.com>
->=20
-> > ---
-> >  drivers/gpu/drm/xe/xe_pci_rebar.c | 20 +++++++++-----------
-> >  1 file changed, 9 insertions(+), 11 deletions(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/xe/xe_pci_rebar.c b/drivers/gpu/drm/xe/xe_=
-pci_rebar.c
-> > index d21e29c95ca33..378447a3be0ca 100644
-> > --- a/drivers/gpu/drm/xe/xe_pci_rebar.c
-> > +++ b/drivers/gpu/drm/xe/xe_pci_rebar.c
-> > @@ -6,12 +6,11 @@
-> >  #include <linux/pci.h>
-> >  #include <linux/types.h>
-> > =20
-> > -#include <drm/drm_print.h>
-> > -
-> >  #include "regs/xe_bars.h"
-> >  #include "xe_device_types.h"
-> >  #include "xe_module.h"
-> >  #include "xe_pci_rebar.h"
-> > +#include "xe_printk.h"
-> > =20
-> >  #define BAR_SIZE_SHIFT 20
-> > =20
-> > @@ -47,12 +46,12 @@ static void resize_bar(struct xe_device *xe, int re=
-sno, resource_size_t size)
-> > =20
-> >  =09ret =3D pci_resize_resource(pdev, resno, bar_size);
-> >  =09if (ret) {
-> > -=09=09drm_info(&xe->drm, "Failed to resize BAR%d to %dM (%pe). Conside=
-r enabling 'Resizable BAR' support in your BIOS\n",
-> > -=09=09=09 resno, 1 << bar_size, ERR_PTR(ret));
-> > +=09=09xe_info(xe, "Failed to resize BAR%d to %dMiB (%pe). Consider ena=
-bling 'Resizable BAR' support in your BIOS\n",
-> > +=09=09=09resno, 1 << bar_size, ERR_PTR(ret));
-> >  =09=09return;
-> >  =09}
-> > =20
-> > -=09drm_info(&xe->drm, "BAR%d resized to %dM\n", resno, 1 << bar_size);
-> > +=09xe_info(xe, "BAR%d resized to %dMiB\n", resno, 1 << bar_size);
-> >  }
-> > =20
-> >  /*
-> > @@ -93,9 +92,8 @@ void xe_pci_rebar(struct xe_device *xe)
-> >  =09=09bar_size_bit =3D bar_size_mask & BIT(pci_rebar_bytes_to_size(reb=
-ar_size));
-> > =20
-> >  =09=09if (!bar_size_bit) {
-> > -=09=09=09drm_info(&xe->drm,
-> > -=09=09=09=09 "Requested size: %lluMiB is not supported by rebar sizes:=
- 0x%x. Leaving default: %lluMiB\n",
-> > -=09=09=09=09 (u64)rebar_size >> 20, bar_size_mask, (u64)current_size >=
-> 20);
-> > +=09=09=09xe_info(xe, "Requested size: %lluMiB is not supported by reba=
-r sizes: 0x%x. Leaving default: %lluMiB\n",
-> > +=09=09=09=09(u64)rebar_size >> ilog2(SZ_1M), bar_size_mask, (u64)curre=
-nt_size >> ilog2(SZ_1M));
-> >  =09=09=09return;
-
-I don't remember if I said it already but this will cause more conflicts=20
-with what's in the pci/resource branch so preferrably defer this until the=
-=20
-next cycle so the between trees conflicts are avoided.
-
---=20
- i.
-
-
-> >  =09=09}
-> > =20
-> > @@ -111,8 +109,8 @@ void xe_pci_rebar(struct xe_device *xe)
-> >  =09=09=09return;
-> >  =09}
-> > =20
-> > -=09drm_info(&xe->drm, "Attempting to resize bar from %lluMiB -> %lluMi=
-B\n",
-> > -=09=09 (u64)current_size >> 20, (u64)rebar_size >> 20);
-> > +=09xe_info(xe, "Attempting to resize bar from %lluMiB -> %lluMiB\n",
-> > +=09=09(u64)current_size >> ilog2(SZ_1M), (u64)rebar_size >> ilog2(SZ_1=
-M));
-> > =20
-> >  =09while (root->parent)
-> >  =09=09root =3D root->parent;
-> > @@ -124,7 +122,7 @@ void xe_pci_rebar(struct xe_device *xe)
-> >  =09}
-> > =20
-> >  =09if (!root_res) {
-> > -=09=09drm_info(&xe->drm, "Can't resize VRAM BAR - platform support is =
-missing. Consider enabling 'Resizable BAR' support in your BIOS\n");
-> > +=09=09xe_info(xe, "Can't resize VRAM BAR - platform support is missing=
-=2E Consider enabling 'Resizable BAR' support in your BIOS\n");
-> >  =09=09return;
-> >  =09}
-
---8323328-363282355-1763371698=:982--
+     Arnd
 
