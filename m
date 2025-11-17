@@ -1,129 +1,106 @@
-Return-Path: <linux-pci+bounces-41354-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41363-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF2F4C62218
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 03:42:32 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57E60C62ADB
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 08:12:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5BD5E4E81CD
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 02:42:10 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id 5FD1422954
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 07:12:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73D0627B4E1;
-	Mon, 17 Nov 2025 02:39:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 345B73176E0;
+	Mon, 17 Nov 2025 07:12:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kFdxbHjl"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="iqz49SGW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mail-m32105.qiye.163.com (mail-m32105.qiye.163.com [220.197.32.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B5727E05F;
-	Mon, 17 Nov 2025 02:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87805316910;
+	Mon, 17 Nov 2025 07:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763347171; cv=none; b=sENhfrrS+weGfJ8iUOnrtTpWTy89lHLiH36TwElaGq3CBnLKg4MSdHeVbJ1S86QLGoP1YIWRZRCIu5oqkitaMyTqMqtRN+qpN+U0XSsrCQLG2I+rSh39e3c8ZzZtv/jHoMkjamCMr6h0A360+F11/F4PboOM7+PKBCXrj2voMqc=
+	t=1763363545; cv=none; b=Febhd/1fTXV7gB6rzMkJbn2xneEBbBGWyj5TiNwa/wFxlilasiipTXTSPhpRJv6mecmRIOVjEKetfUMVnKMkvDXcqy+hnqZUqj8ktx+50FHY9J7WVK/CpOjjWCsTaQEQMAj1IdPJIBdZw/c3jhb2nfDvfVzuYg0MrSJoOLC+OKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763347171; c=relaxed/simple;
-	bh=rXScII9er1iRGZXNNqYS6o0YjelZ8hdCoPtxn3zisMI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mA91Uc7gkBvCJLpoDOOq9+iuuu3juqWd3XwDc6fdkcaUd+QzeTHJjggPePJr+MOGQtisrzq9c2+RMKuOqSbnVZvlKmM7fopQAZHYuBaHA0IciZ8Fgs58E9U00Q+aiksNAuWV6HP56MWk8J5wAhA+lRvuhqscQ7l38GgH39pPTmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kFdxbHjl; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763347170; x=1794883170;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rXScII9er1iRGZXNNqYS6o0YjelZ8hdCoPtxn3zisMI=;
-  b=kFdxbHjl3lzzWtMtj/K5p19vfyA7Hoh9ap2TyA2l1gx4sLL/GT6cUnVA
-   jB5prqlWO5VHtF01GVLyG/8ntuVvwMADf2aOe4I8gleuNmHWiGCCCaE6g
-   1+pgaE/4HZWo0ZuXesUmN2m+yvxfJwriPB50sQSC2YfwrwWYygDHFjxBM
-   cI2gDdKygHDDox0cpFdP5x6qISI1LR0RvhUDBFP//UxXqQANRSTqYAQwi
-   Vh+VOflUaE3gZLPegf6YvDSaiMf1XRp1X4AEYYoSxjaJ22pwhRgx4vOwM
-   b/oBtjAGVISByt+CeU6992BhonbFMZnjMh+yORn3GlNVtENCXQRL0NAko
-   A==;
-X-CSE-ConnectionGUID: KJWsqLmhSgqC5ksqT4rvTg==
-X-CSE-MsgGUID: ao8p+wQTQSuYx/dPtGN15Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11615"; a="82729639"
-X-IronPort-AV: E=Sophos;i="6.19,310,1754982000"; 
-   d="scan'208";a="82729639"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2025 18:39:30 -0800
-X-CSE-ConnectionGUID: kd0YV+4EQXupkqe2ppiz6g==
-X-CSE-MsgGUID: U0j2srXpR9GlZojKT13Q2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,310,1754982000"; 
-   d="scan'208";a="227658539"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.165])
-  by orviesa001.jf.intel.com with ESMTP; 16 Nov 2025 18:39:25 -0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org
-Cc: chao.gao@intel.com,
-	dave.jiang@intel.com,
-	baolu.lu@linux.intel.com,
-	yilun.xu@linux.intel.com,
-	yilun.xu@intel.com,
-	zhenzhong.duan@intel.com,
-	kvm@vger.kernel.org,
-	rick.p.edgecombe@intel.com,
-	dave.hansen@linux.intel.com,
-	dan.j.williams@intel.com,
-	kas@kernel.org,
-	x86@kernel.org
-Subject: [PATCH v1 26/26] coco/tdx-host: Finally enable SPDM session and IDE Establishment
-Date: Mon, 17 Nov 2025 10:23:10 +0800
-Message-Id: <20251117022311.2443900-27-yilun.xu@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20251117022311.2443900-1-yilun.xu@linux.intel.com>
-References: <20251117022311.2443900-1-yilun.xu@linux.intel.com>
+	s=arc-20240116; t=1763363545; c=relaxed/simple;
+	bh=hBs7BWFuJLm3njcdhha6spSB4xF2eB1P648L2la8O7A=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ABRQ7a1U/e/DXOW4qC5jRK25L+27OMqF5/S+x0xrdeTgZ/r2kQGvunt3lPghRqrNGWTH6sLf2ohOXUAA8H5cMgoh15NoH2fUmCMCciCRcKMahVcZmMbD+avshwaiemxOWxDshBErIG2vjH2gF7EX/WKzWDaAu66jR3wu7Cb4i5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=iqz49SGW; arc=none smtp.client-ip=220.197.32.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.14] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 29c9004d4;
+	Mon, 17 Nov 2025 11:42:59 +0800 (GMT+08:00)
+Message-ID: <8f3cc1c1-7bf7-4610-b7ce-79ebd6f05a6e@rock-chips.com>
+Date: Mon, 17 Nov 2025 11:42:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Johan Jonker <jbx6244@gmail.com>,
+ Dragan Simic <dsimic@manjaro.org>, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 0/3] PCI: rockchip: 5.0 GT/s speed may be dangerous
+To: Geraldo Nascimento <geraldogabriel@gmail.com>
+References: <cover.1763197368.git.geraldogabriel@gmail.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <cover.1763197368.git.geraldogabriel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9a8fe8a40409cckunm2225600d70b383
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGk9ISFZDHx8aThpIQxkdTU1WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=iqz49SGWasZFgXzvmpgvrAR/MiWOraupVXaPEaboWVYCcb/RkncHqs1bDxk236bb5xLnrZpa/O9g9zIVR3QitzVvwYdmqnu25XhHXnG5UGEq/cJdWiS4vzlPE29CJQ8C9imQcmwuPVBFSZsuTZaZ61zjdE1XET97PRp2eNCjBec=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=L/mOHkyVCGlpZGPK0VdOwC9RDdilpu9JCgLw5m5Dy4Y=;
+	h=date:mime-version:subject:message-id:from;
 
-The basic SPDM session and IDE functionalities are all implemented,
-enable them.
+Hi Geraldo,
 
-Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
----
- drivers/virt/coco/tdx-host/tdx-host.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+在 2025/11/15 星期六 17:10, Geraldo Nascimento 写道:
+> In recent interactions with Shawn Lin from Rockchip it came to my
+> attention there's an unknown errata regarding 5.0 GT/s operational
+> speed of their PCIe core. According to Shawn there's grave danger
+> even if the odds are low. To contain any damage, let's cover the
+> remaining corner-cases where the default would lead to 5.0 GT/s
+> operation as well as add a comment to Root Complex driver core,
+> documenting this danger.
+> 
 
-diff --git a/drivers/virt/coco/tdx-host/tdx-host.c b/drivers/virt/coco/tdx-host/tdx-host.c
-index 7f3c00f17ec7..b809f8f77206 100644
---- a/drivers/virt/coco/tdx-host/tdx-host.c
-+++ b/drivers/virt/coco/tdx-host/tdx-host.c
-@@ -885,7 +885,7 @@ static int tdx_iommu_enable_all(void)
- 	return ret;
- }
- 
--static int __maybe_unused tdx_connect_init(struct device *dev)
-+static int tdx_connect_init(struct device *dev)
- {
- 	struct tsm_dev *link;
- 	int ret;
-@@ -934,12 +934,8 @@ static int __maybe_unused tdx_connect_init(struct device *dev)
- 
- static int tdx_host_probe(struct faux_device *fdev)
- {
--	/*
--	 * Only support TDX Connect now. More TDX features could be added here.
--	 *
--	 * TODO: do tdx_connect_init() when it is fully implemented.
--	 */
--	return 0;
-+	/* Only support TDX Connect now. More TDX features could be added here. */
-+	return tdx_connect_init(&fdev->dev);
- }
- 
- static struct faux_device_ops tdx_host_ops = {
--- 
-2.25.1
+I'm not sure just adding a warn would be a good choice. Could we totally
+force to use gen1 and add a warn if trying to use Gen2.
+
+Meanwhile amend the commit message to add a reference
+of RK3399 official datesheet[1] which says PCIe on RK3399 should only
+support 2.5GT/s?
+
+
+[1]https://opensource.rock-chips.com/images/d/d7/Rockchip_RK3399_Datasheet_V2.1-20200323.pdf
+
+> Geraldo Nascimento (3):
+>    PCI: rockchip: warn of danger of 5.0 GT/s speeds
+>    PCI: rockchip-host: comment danger of 5.0 GT/s speed
+>    arm64: dts: rockchip: drop max-link-speed = <2> in helios64 PCIe
+> 
+>   arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts | 1 -
+>   drivers/pci/controller/pcie-rockchip-host.c            | 5 +++++
+>   drivers/pci/controller/pcie-rockchip.c                 | 8 ++++++--
+>   3 files changed, 11 insertions(+), 3 deletions(-)
+> 
 
 
