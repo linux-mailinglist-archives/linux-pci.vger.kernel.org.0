@@ -1,59 +1,61 @@
-Return-Path: <linux-pci+bounces-41405-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41406-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8B13C64535
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 14:19:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 66B1FC6453E
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 14:22:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E93A74E9D72
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 13:11:16 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 47E894E752D
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 13:17:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63143329374;
-	Mon, 17 Nov 2025 13:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC5F8330B11;
+	Mon, 17 Nov 2025 13:17:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ud1sBkeI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c550pCdk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D4D3191D5;
-	Mon, 17 Nov 2025 13:11:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE08930CD8B;
+	Mon, 17 Nov 2025 13:17:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763385075; cv=none; b=HdXq4ZkXryDTlDFgCK+H83x/o61quPkDHF2lBfBLedS3hjOKoBwUg/YrhKsxaaLPh154MQZ5xZaQwB77jKK70hlpTb7lDH4fhpH9AzBnPqrImf3BpHWDbY89njJiAEZcfiSkA7kOeTnkbecCVTPmwna183ft8J5dFZLbueVR8l0=
+	t=1763385438; cv=none; b=qJE0v06Jut7TZYpFX2+dzjl0X4qQ1oVcJqws648lTCL0RMn+fajn941PrNgxK7XC9XqjpkLVXbBCEFhs1xlYTSM2mS5qs2emUF/AJzd0UQs1dfjDT8hYs+eyoegWT3FfwNukjbRCZ2V7KZ6IOIS3lmmM1g3inmPKPBELEkutgyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763385075; c=relaxed/simple;
-	bh=afbf98xxoxrYAsyDxUue+ddYrMOu3g9haZyYcYEoHn4=;
+	s=arc-20240116; t=1763385438; c=relaxed/simple;
+	bh=xxRVdtfTiOQTO2jyXwimxqWcnuxgrlQL288pVe0i6qw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e9/PA4lJoNeEq543/E80YvDNzLgYC8cG5/tJm2QwTDdEg5FXen85UQkbrDJGU0Al49vqoyo8kSShDffIJ8NdyoXUZowYXPTfqYwGbmxgMFKHSX/+B88liAahWl3aavF/jCbQ6Mr75hTyM8+5YZ5qv7HIfWAm0eBitAzQbWWvexA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ud1sBkeI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90821C113D0;
-	Mon, 17 Nov 2025 13:11:08 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=iEoyfZ+oJ6NusewLR3veCPwBcYpdDbgFsyIJ36FgMEOn2HPL1KtNjUMIjlmxXfsRL8FLSYMAqz+X6kWxm6nW51fQ1nD5MXE7o7Zx2eqZ/pFxI3W7c8bZvH0TEdb9r2/qFT3YP/0l6N2hdLlvpmzcbz+PScD/QuKPfXc3RgMkbSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c550pCdk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1280AC113D0;
+	Mon, 17 Nov 2025 13:17:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763385074;
-	bh=afbf98xxoxrYAsyDxUue+ddYrMOu3g9haZyYcYEoHn4=;
+	s=k20201202; t=1763385438;
+	bh=xxRVdtfTiOQTO2jyXwimxqWcnuxgrlQL288pVe0i6qw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ud1sBkeIuofEHXfy7QpXQpwCm3U2lBLsfVtKYN5NPTawTUpV/qqaPwQQLl6J6GLQ4
-	 LZufGMbBMHHJQQCt5hfwX7a4oIeshPPpfoIxVmlC4lV1adSmAwhvtCjKZZ8TYAhiYP
-	 /APEE2vDBKtXw0wpGZhAPwxMy2/heZTKf4jaIooroOJCSO9H2wDdUglTmB0CMdPnLS
-	 +vECSsWDtSJwbrT460S7Fr1jjYn70JuZqUM6v/ExuFRMzx75a4btGEP52wA+uTX1MG
-	 i32duE2cmr0/p6V0JVJ3lmIlcuvow0k/DZ2w48cYU171QW6C+uxYBE8Qv/Z6DRNzaS
-	 CpHfdI6gKTBjw==
-Date: Mon, 17 Nov 2025 18:41:00 +0530
+	b=c550pCdkJK+yNP+DqSVvgoIJBsW5teGVE/5W3xmfUaLaCBThmuk6hVhdtUlBiF7by
+	 9jlT5Jh/yvA9YhcGpMQ1u8uASYsLwvKT/uRST5Roi8Vnlnh7fVWaCNufPO1LAeHX+K
+	 n6EmpyuEPUAfZYq8ZnhIQIqr+8k42SYM12NdHdlzkmgi9KIuJj+NrXzcW2YzbvHR3D
+	 KmiQIlFhd8FdBdGNGaGf43d6sPx9z9hcSecSYDWUaJrXRm1FMTkgYxMi1SJZud2CXv
+	 mewJQAaui7JyPnt0PCiMXwbLgR+Sfucy+bp71fdeTcqLiMHSpEPXhb1fs3ggQMNVgT
+	 ABimt9Z0vvmuA==
+Date: Mon, 17 Nov 2025 18:47:00 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/12] dt-bindings: PCI: qcom: Move remaining devices to
- dedicated schema
-Message-ID: <pipaqad6gzb4qq6kpg75xw3q35jdelbdvhgkwnc4e4r2y6bvry@uaqzrzkeqvru>
-References: <20251103-dt-bindings-pci-qcom-v1-0-c0f6041abf9b@linaro.org>
+To: Vitor Soares <ivitro@gmail.com>
+Cc: Alex Elder <elder@riscstar.com>, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, dlan@gentoo.org, 
+	aurelien@aurel32.net, johannes@erdfelt.com, p.zabel@pengutronix.de, 
+	christian.bruel@foss.st.com, thippeswamy.havalige@amd.com, krishna.chundru@oss.qualcomm.com, 
+	mayank.rana@oss.qualcomm.com, qiang.yu@oss.qualcomm.com, shradha.t@samsung.com, 
+	inochiama@gmail.com, guodong@riscstar.com, linux-pci@vger.kernel.org, 
+	spacemit@lists.linux.dev, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 5/7] PCI: spacemit: Add SpacemiT PCIe host driver
+Message-ID: <7f5r2lnlrsltowfninu76bivebgwkr5i3pdorj3hywg22mtmdz@m35cpser6opt>
+References: <20251113214540.2623070-1-elder@riscstar.com>
+ <20251113214540.2623070-6-elder@riscstar.com>
+ <f55e2df3fcd025148b7262c3753e5136cc324b09.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,66 +65,82 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251103-dt-bindings-pci-qcom-v1-0-c0f6041abf9b@linaro.org>
+In-Reply-To: <f55e2df3fcd025148b7262c3753e5136cc324b09.camel@gmail.com>
 
-On Mon, Nov 03, 2025 at 04:14:40PM +0100, Krzysztof Kozlowski wrote:
-> Some time ago I already moved several devices from qcom,pcie.yaml
-> binding to a dedicated binding files for easier reviewing and
-> maintenance.
+On Mon, Nov 17, 2025 at 01:01:04PM +0000, Vitor Soares wrote:
+
+[...]
+
+> > +static int k1_pcie_probe(struct platform_device *pdev)
+> > +{
+> > +       struct device *dev = &pdev->dev;
+> > +       struct k1_pcie *k1;
+> > +       int ret;
+> > +
+> > +       k1 = devm_kzalloc(dev, sizeof(*k1), GFP_KERNEL);
+> > +       if (!k1)
+> > +               return -ENOMEM;
+> > +
+> > +       k1->pmu = syscon_regmap_lookup_by_phandle_args(dev_of_node(dev),
+> > +                                                      SYSCON_APMU, 1,
+> > +                                                      &k1->pmu_off);
+> > +       if (IS_ERR(k1->pmu))
+> > +               return dev_err_probe(dev, PTR_ERR(k1->pmu),
+> > +                                    "failed to lookup PMU registers\n");
+> > +
+> > +       k1->link = devm_platform_ioremap_resource_byname(pdev, "link");
+> > +       if (IS_ERR(k1->link))
+> > +               return dev_err_probe(dev, PTR_ERR(k1->link),
+> > +                                    "failed to map \"link\" registers\n");
+> > +
+> > +       k1->pci.dev = dev;
+> > +       k1->pci.ops = &k1_pcie_ops;
+> > +       k1->pci.pp.num_vectors = MAX_MSI_IRQS;
+> > +       dw_pcie_cap_set(&k1->pci, REQ_RES);
+> > +
+> > +       k1->pci.pp.ops = &k1_pcie_host_ops;
+> > +
+> > +       /* Hold the PHY in reset until we start the link */
+> > +       regmap_set_bits(k1->pmu, k1->pmu_off + PCIE_CLK_RESET_CONTROL,
+> > +                       APP_HOLD_PHY_RST);
+> > +
+> > +       ret = devm_regulator_get_enable(dev, "vpcie3v3");
+> > +       if (ret)
+> > +               return dev_err_probe(dev, ret,
+> > +                                    "failed to get \"vpcie3v3\" supply\n");
+> > +
 > 
-> Move the remaining one which makes the qcom,pcie.yaml empty thus can be
-> entirely removed.
+> Hi,
+> 
+> While investigation a similar PCIe setup, I come across this patch series and
+> had a question regarding regulator handling.
+> 
+> In the patch, the host controller explicitly enables the vpcie3v3. However, the
+> pci-pwctrl-slot driver (compatible pciclass,0604) is also instantiated via
+> device tree and is supposed to manage the slot supply.
+> 
+> I'm wondering whether it's actually necessary to enable the regulator in the
+> host controller, since the slot driver should already take care of it. However,
+> in my tests, the endpoint is not discovered unless the host driver enables the
+> regulator early. It's not entirely clear whether this is due to the PHY and
+> reset sequence, or the timing of the vpcie3v3 regulator activation.
+> 
+> @Manivannan: In the patch, the host controller driver enables the vpcie3v3
+> regulator, even though the pci-pwrctrl-slot driver (pciclass,0604) is supposed
+> to manage it. Is this duplication intentional, or is there a preferred way to
+> ensure the supply is active before bus scanning? Any guidance would be
+> appreciated.
 > 
 
-Series failed to apply to pci/dt-binding [1] branch (probably due to your other
-series [2]). Please rebase and resend.
+Yes, the regulator handling is duplicated now. This is due to missing PERST#
+handling in the pwrctrl-slot driver. We are working on a series to be posted
+this week that will fix this issue, but until then, pwrctrl-slot driver is not
+reliable to power up the endpoint. So I've asked Alex to handle the regulator
+and PERST# in the controller driver for now. Once my rework series gets merged,
+this part can be dropped from the controller driver and there is no change
+required in the binding/dts.
 
 - Mani
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=dt-binding
-[2] https://lore.kernel.org/linux-pci/20251030-dt-bindings-pci-qcom-fixes-power-domains-v2-0-28c1f11599fe@linaro.org
-
-> Best regards,
-> Krzysztof
-> 
-> ---
-> Krzysztof Kozlowski (12):
->       dt-bindings: PCI: qcom,pcie-sm8150: Merge SC8180x into SM8150
->       dt-bindings: PCI: qcom,pcie-sdx55: Move SDX55 to dedicated schema
->       dt-bindings: PCI: qcom,pcie-sdm845: Move SDM845 to dedicated schema
->       dt-bindings: PCI: qcom,pcie-qcs404: Move QCS404 to dedicated schema
->       dt-bindings: PCI: qcom,pcie-ipq5018: Move IPQ5018 to dedicated schema
->       dt-bindings: PCI: qcom,pcie-ipq6018: Move IPQ6018 and IPQ8074 Gen3 to dedicated schema
->       dt-bindings: PCI: qcom,pcie-ipq8074: Move IPQ8074 to dedicated schema
->       dt-bindings: PCI: qcom,pcie-ipq4019: Move IPQ4019 to dedicated schema
->       dt-bindings: PCI: qcom,pcie-ipq9574: Move IPQ9574 to dedicated schema
->       dt-bindings: PCI: qcom,pcie-apq8064: Move APQ8064 to dedicated schema
->       dt-bindings: PCI: qcom,pcie-msm8996: Move MSM8996 to dedicated schema
->       dt-bindings: PCI: qcom,pcie-apq8084: Move APQ8084 to dedicated schema
-> 
->  .../devicetree/bindings/pci/qcom,pcie-apq8064.yaml | 170 +++++
->  .../devicetree/bindings/pci/qcom,pcie-apq8084.yaml | 109 +++
->  .../devicetree/bindings/pci/qcom,pcie-ipq4019.yaml | 146 ++++
->  .../devicetree/bindings/pci/qcom,pcie-ipq5018.yaml | 189 +++++
->  .../devicetree/bindings/pci/qcom,pcie-ipq6018.yaml | 179 +++++
->  .../devicetree/bindings/pci/qcom,pcie-ipq8074.yaml | 165 +++++
->  .../devicetree/bindings/pci/qcom,pcie-ipq9574.yaml | 183 +++++
->  .../devicetree/bindings/pci/qcom,pcie-msm8996.yaml | 156 ++++
->  .../devicetree/bindings/pci/qcom,pcie-qcs404.yaml  | 131 ++++
->  .../devicetree/bindings/pci/qcom,pcie-sc8180x.yaml | 168 -----
->  .../devicetree/bindings/pci/qcom,pcie-sdm845.yaml  | 190 +++++
->  .../devicetree/bindings/pci/qcom,pcie-sdx55.yaml   | 172 +++++
->  .../devicetree/bindings/pci/qcom,pcie-sm8150.yaml  |   1 +
->  .../devicetree/bindings/pci/qcom,pcie.yaml         | 782 ---------------------
->  14 files changed, 1791 insertions(+), 950 deletions(-)
-> ---
-> base-commit: 503fcb70f99075032f5bbf528cec4650cb7dd7d0
-> change-id: 20251029-dt-bindings-pci-qcom-cc448e48ab58
-> 
-> Best regards,
-> -- 
-> Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
