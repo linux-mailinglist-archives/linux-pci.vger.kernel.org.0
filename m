@@ -1,256 +1,158 @@
-Return-Path: <linux-pci+bounces-41364-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41365-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A57ADC62B5A
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 08:25:15 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14CC3C63120
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 10:13:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 00026350BEC
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 07:25:14 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5E3184EFF76
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 09:09:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2143F156661;
-	Mon, 17 Nov 2025 07:25:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B1A1320A38;
+	Mon, 17 Nov 2025 09:08:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hf/zaDiP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JSOl7iL0";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hm36GJXK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+AKsyHCU"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="pl1Mou2a";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gtUVWTtW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089A9FBF6
-	for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 07:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7173246F7;
+	Mon, 17 Nov 2025 09:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763364311; cv=none; b=urNF5lUSp8d6rTfngL/6rwC/mgMHVK1jR18DwJPeEHZVIAnaekC52rjBxdz/x4p1HMY4UqdkI/mj/QynK7IV7wvo2Gap92z3ejUHw4N5rPdQx6MCHQaA5wLZrNkVmS0CCwov0tKAlpBTODjW5p4aE4gVmIpPvhztMD+prM5XwRY=
+	t=1763370486; cv=none; b=M17XqDMzzgODtdba06N6KIBt3NI5QVqiAfRG+rjbeU0qckLNPLxTAQMKnlft7IUcBTEzMy0bMbdWRdny2+adbUd6tt+5dRHe+62QLu5m2Y1koipkWKC08z/vcXNQYgAdpPpU+EPtQ4gu7frsDNT2PdZb3iyQ1PJXILCxaRbi314=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763364311; c=relaxed/simple;
-	bh=dUPVDPDRP3NNUt88ZfA+zvPXiA5WQJIBmxnHj+xmdMY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eklFOT0DO1hOUc4iQ+wqdhE6cxPmkS2sYAEHd5O2iUsesOelL3zmm3n8/RFYJeqOPR1a2jyQ2gDXCL70hOUYWUtmUExrN5p+s3acBwJ6MKfNfZ38SbKJ4p6tnvt+eOQs1DA5RzMc5g8WU2qHCSV2eHBmCPt1PdJhubjNajf49Y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hf/zaDiP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JSOl7iL0; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hm36GJXK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+AKsyHCU; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DFE25211F8;
-	Mon, 17 Nov 2025 07:25:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1763364306; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xvvBd8QK4XVRfEaq/PkpsjYeplILL5dLxZSS6uyILuI=;
-	b=hf/zaDiPkG6XqS44eAu0FMiGGtbHOoQwegvRJVXc15sMDc/d4VSlB65Kwh8MqzRFwh10vD
-	oDw0HRfIGxP7novIlogGZ/PzPDFERYfGpTSTrV8IzT9RSfvF8MzIlA/9Ev+5sudlDcNgha
-	GniWXaGQTK4FmAvxThHlJ3Eimkhgpco=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1763364306;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xvvBd8QK4XVRfEaq/PkpsjYeplILL5dLxZSS6uyILuI=;
-	b=JSOl7iL0DbDWwCBNuj3tCot9//7doVksTLbK0RqCKXo6szHkOEnNrsvKyCr/pc4V0wIz06
-	mkff0Myq2aUAIOAg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1763364305; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xvvBd8QK4XVRfEaq/PkpsjYeplILL5dLxZSS6uyILuI=;
-	b=hm36GJXK971978mz6GFQ9mOpyoIwUMFSlaNi8LgfHnxxrzwZ9dqpKjOx4d2UXJJdxfIpKz
-	7K2TYKjgNVDJgqeop9lYvcTWnhe76a4njn6ey0EorVaRxSCT70qIRPV+GkoEDw9XVAMySb
-	+9d8kyMdozay/xdElSOvF36sR5htzvU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1763364305;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xvvBd8QK4XVRfEaq/PkpsjYeplILL5dLxZSS6uyILuI=;
-	b=+AKsyHCUJjIEuQANniinyIgHnQb+4jjuinDWJ57SSywAKNKqyESDfzWNJUqL2rIxpqtvlI
-	HISdu37ZPU8MJ4AA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B0C963EA61;
-	Mon, 17 Nov 2025 07:25:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MqW0KdHNGmlBHAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Mon, 17 Nov 2025 07:25:05 +0000
-Message-ID: <50f7af87-8a04-44aa-87e8-f236102b71b8@suse.de>
-Date: Mon, 17 Nov 2025 08:25:05 +0100
+	s=arc-20240116; t=1763370486; c=relaxed/simple;
+	bh=MQJ8YPH8Nssy1ljCLQGwWx/LUNDSH+o2Sk5H8NIyyYc=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=atDBbIRPrnOIQpVVDA6oBBoWnBSwKegTokSaTfexuIeiaOFAeucgpst0wYQ35Jk7RILQIXMTLzY4v4oa2wIO5XdBbrx8OPM2Q4rBNTZVC8inktuuAZqDUW9ZXi6Qwxp7tpYZ/wTk4mKo7xFiTVJLrAdCMoKHPXymxJTPSPovviU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=pl1Mou2a; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gtUVWTtW; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 2FC731400138;
+	Mon, 17 Nov 2025 04:08:03 -0500 (EST)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Mon, 17 Nov 2025 04:08:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1763370483;
+	 x=1763456883; bh=PO+HprFxowvXbocpvtAlTvfgsKxJ9kwRQfs+WUVErPM=; b=
+	pl1Mou2a8h7kYUp3llgfzWaQkTkptKjNgKWve02MAli3WV7Yy+zFFzUiMVV55q8C
+	Gp9sO5auj0GBfNeNQSZFd45BmUjMqTPIEr/60m1CKIQny8PWwO/CiplylIBhEwxK
+	KPLSfkD5eEfxClT7Prcdsw5IzdArD3ReYb+bPpp3S7lYVqy5zAWZpp8JUxmhA1Yq
+	8jmkklnrt4xxtxWsvzZvuhtvWKGes3TQJUzguU4fIPMWnipTK/d6D6EYlr0Qp+Hy
+	bYHDTu2OduDkeTL/JPGJfLIHNPvG1IMBj2vGL/S+ywoodvbh5FlyeYK3K9bgS1dl
+	p/SP3CP2uWErMGLKjHavyg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763370483; x=
+	1763456883; bh=PO+HprFxowvXbocpvtAlTvfgsKxJ9kwRQfs+WUVErPM=; b=g
+	tUVWTtWQ9suuL5LE40z44bT+w2Tc0tk/1HmA3x9NuY7ziwGlRqlDman8J8F+71vg
+	cJjaFHJwUtsw3qZFyN26JF6jMgwp31QPsqVrNdgbjXK2/6jgC0wwOeWJpNQFivE/
+	HNvR4jVkAzHAutI9LXVQf+DqiG76fwr0PweuF+MT8xQ2vx+wQw3yZRr7UF+kUQV1
+	Xg8iyh9qRWPxSxPwtDx9mNzu92I62pxTQ0lNapNUJ/ICsMWWAfyo//0yAFCDRDet
+	fs6QP2t2z+xOWIxUVzhiLWKDzIKAadJiuiK86z7wKnz0KY3UwoNfAZKfPITmz8CB
+	M4IPzbNXf9ffR8J+y8BdQ==
+X-ME-Sender: <xms:8uUaaUo3h4NKJxokYbYGzN1po5V5t6oJllHAQTC1H277R2Kv3GeaKA>
+    <xme:8uUaaVfaBXz5BBBqyxYdy3U_GsM1p8yCymviuTaYLY2gksVrVsmVRFbKV2JdtG4Pi
+    qve-MD0bAgnWxMFJdbNGD6ldAB329EE_UMjPDMSOqID6Rcp06-5MlH5>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvudektdeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
+    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoh
+    epkhhishhhohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkfihilhgtiiihnhhs
+    khhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlphhivghrrghlihhsiheskhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtohepmhgrnhhisehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmh
+    dqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohep
+    uhhnihgtohhrnhgpfigrnhhgsehouhhtlhhoohhkrdgtohhmpdhrtghpthhtohepshdqvh
+    gruggrphgrlhhlihesthhirdgtohhm
+X-ME-Proxy: <xmx:8uUaaXkPpeIadKJMvzQsGDBOWh1Tjcyb_HYNz-fc5QIn_5I_yTtsIA>
+    <xmx:8-UaaQCUOi64x4mS4xdvxIWltUmj6-C2bwKXVe8MKvDIl17qfISE1Q>
+    <xmx:8-UaaRCMU9_LSXcsRQbaYW2jNnFweHe2YeZWhDYIUnZBMUItkuS2VA>
+    <xmx:8-UaafFBR8Oni9HUqk8SYx1FY8THGzhwWa1NMngIWtX0bbzWGBCJDw>
+    <xmx:8-UaafQesAiugEDtRmw1jUGiKcTBd3esQoZhIahysN1L032ZoLvjuIN3>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id DF8F9700063; Mon, 17 Nov 2025 04:08:02 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI/VGA: Don't assume the only VGA device on a system is
- `boot_vga`
-To: Mario Limonciello <superm1@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: mario.limonciello@amd.com, bhelgaas@google.com,
- Aaron Erhardt <aer@tuxedocomputers.com>, linux-pci@vger.kernel.org
-References: <20251029193455.GA1576217@bhelgaas>
- <546c998b-a740-4cc9-8f9c-21c8d2db7c3e@kernel.org>
- <ab9a68fa-bd4e-4c76-afab-b4b7c1713574@kernel.org>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <ab9a68fa-bd4e-4c76-afab-b4b7c1713574@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo,suse.com:url]
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+X-ThreadId: AO4N9SNPwumV
+Date: Mon, 17 Nov 2025 10:06:57 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Siddharth Vadapalli" <s-vadapalli@ti.com>
+Cc: "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ "Manivannan Sadhasivam" <mani@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ bhelgaas@google.com, "Chen Wang" <unicorn_wang@outlook.com>,
+ "Kishon Vijay Abraham I" <kishon@kernel.org>, stable@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, srk@ti.com
+Message-Id: <37f6f8ce-12b2-44ee-a94c-f21b29c98821@app.fastmail.com>
+In-Reply-To: <7eaa4d917f7639913838abd4fd64ae8fe73a8cfc.camel@ti.com>
+References: <20251113092721.3757387-1-s-vadapalli@ti.com>
+ <084b804f-2999-4f8d-8372-43cfbf0c0d28@app.fastmail.com>
+ <250d2b94d5785e70530200e00c1f0f46fde4311b.camel@ti.com>
+ <201b9ad1-3ebd-4992-acdd-925d2e357d22@app.fastmail.com>
+ <7eaa4d917f7639913838abd4fd64ae8fe73a8cfc.camel@ti.com>
+Subject: Re: [PATCH] PCI: cadence: Kconfig: change PCIE_CADENCE configs from tristate
+ to bool
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi
+On Mon, Nov 17, 2025, at 07:05, Siddharth Vadapalli wrote:
+> On Fri, 2025-11-14 at 08:03 +0100, Arnd Bergmann wrote:
+>> On Fri, Nov 14, 2025, at 06:47, Siddharth Vadapalli wrote:
 
-Am 17.11.25 um 06:20 schrieb Mario Limonciello:
->
->
-> On 10/29/25 2:38 PM, Mario Limonciello wrote:
->> +Thomas
->>
->> On 10/29/25 2:34 PM, Bjorn Helgaas wrote:
->>> On Wed, Oct 29, 2025 at 01:59:33PM -0500, Mario Limonciello (AMD) 
->>> wrote:
->>>> Some systems ship with multiple display class devices but not all
->>>> of them are VGA devices. If the "only" VGA device on the system is not
->>>> used for displaying the image on the screen marking it as `boot_vga`
->>>> because nothing was found is totally wrong.
->>>>
->>>> This behavior actually leads to mistakes of the wrong device being
->>>> advertised to userspace and then userspace can make incorrect 
->>>> decisions.
->>>>
->>>> As there is an accurate `boot_display` sysfs file stop lying about
->>>> `boot_vga` by assuming if nothing is found it's the right device.
->>>>
->>>> Reported-by: Aaron Erhardt <aer@tuxedocomputers.com>
->>>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220712
->>>> Tested-by: Aaron Erhardt <aer@tuxedocomputers.com>
->>>> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
->>>
->>> Do we need a Fixes: here?  A stable cc?
->>>
->>> The bugzilla suggests this might be a regression and hence v6.18
->>> material?
->>
->> Yeah I think you're right, we should add these two tags and this 
->> should go to 6.18 if it's a reasonable change.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: ad90860bd10ee ("fbcon: Use screen info to find primary device")
->>
->> But let's also make sure Thomas Zimmermann agrees with this change.
->>
->
-> ping?
+> I understand that the solution should be fixing the pci-j721e.c driver
+> rather than updating Kconfig or Makefile. Thank you for the feedback. I
+> will update the pci-j721e.c driver to handle the case that is triggering
+> the build error.
 
-Sorry, this fell though the cracks. I can see that this backfires, but still
+Ok, thanks!
 
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+I think a single if(IS_ENABLED(CONFIG_PCI_J721E_HOST)) check
+is probably enough to avoid the link failure
 
-because the overall logic of detecting the boot-up VGA is questionable. 
-It picks the first possible candidate instead of looking at all devices 
-before making the decision. If we see regressions from the patch here, 
-this would be the place to fix it.
-
-Best regards
-Thomas
-
->
->>>
->>>> ---
->>>>   drivers/pci/vgaarb.c | 7 -------
->>>>   1 file changed, 7 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
->>>> index 436fa7f4c3873..baa242b140993 100644
->>>> --- a/drivers/pci/vgaarb.c
->>>> +++ b/drivers/pci/vgaarb.c
->>>> @@ -652,13 +652,6 @@ static bool vga_is_boot_device(struct 
->>>> vga_device *vgadev)
->>>>           return true;
->>>>       }
->>>> -    /*
->>>> -     * Vgadev has neither IO nor MEM enabled.  If we haven't found 
->>>> any
->>>> -     * other VGA devices, it is the best candidate so far.
->>>> -     */
->>>> -    if (!boot_vga)
->>>> -        return true;
->>>> -
->>>>       return false;
->>>>   }
->>>> -- 
->>>> 2.43.0
->>>>
->>
->>
->
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
-GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
+--- a/drivers/pci/controller/cadence/pci-j721e.c
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -669,7 +669,8 @@ static void j721e_pcie_remove(struct platform_device *pdev)
+        struct cdns_pcie_ep *ep;
+        struct cdns_pcie_rc *rc;
+ 
+-       if (pcie->mode == PCI_MODE_RC) {
++       if (IS_ENABLED(CONFIG_PCI_J721E_HOST) &&
++           pcie->mode == PCI_MODE_RC) {
+                rc = container_of(cdns_pcie, struct cdns_pcie_rc, pcie);
+                cdns_pcie_host_disable(rc);
 
 
+but you may want to split it up further to get better dead
+code elimination and prevent similar bugs from reappearing when
+another call gets added without this type of check.
+
+If you split j721e_pcie_driver into a host and an ep driver
+structure with their own probe/remove callbacks, you can
+move the IS_ENABLED() check all the way into module_init()
+function.
+
+     Arnd
 
