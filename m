@@ -1,235 +1,194 @@
-Return-Path: <linux-pci+bounces-41376-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41377-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E526C6332B
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 10:37:44 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A0B4C63475
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 10:44:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3E8C5367280
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 09:32:07 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7E9F434E804
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 09:38:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B38526E719;
-	Mon, 17 Nov 2025 09:31:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B99732D7D7;
+	Mon, 17 Nov 2025 09:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jNpXelJu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022106.outbound.protection.outlook.com [40.107.75.106])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F8D313264;
-	Mon, 17 Nov 2025 09:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.106
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763371906; cv=fail; b=jFoWwHijctwK2wTr4rdzWJL0wtzYBZ7BezNMBy2SWVV5X+hcLskfgYi/t8uJm815vh0Gvf2VdOuFLfRoFFDMv8c+3tm28lGinfC07QbFV1CO8Ko2LwLq783s3w3BoIlaIm36o2D9egB9/FdRPy3ZHGyoKoXp0755FWfmUEHCDKo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763371906; c=relaxed/simple;
-	bh=8MefcZ3ESbjq7ILVt/kwS967+JyMk7iu60cToG+OnOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mCGfSmPUWEfs1ugz7FOt5ZXEA/0cJvC4+t7gpWZhEuM9CS7s9pjfLRRgvVcC/RdUPqlkSffvhuAPuMPOt+PxnP5AZn7eFhcJEiPVdZJ01YYmjkkEgohPo4hdOK7VLAAei/6DaaaVyJASnPK7MeJaPvxw8pIEMmU7C2ImhLgxFOs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=o0SFc2JmQH14fQBOOQgPuKZu5rYIyyJco6iXM9GSvEQobT3X5/WmsqXj6Godl8u9zknr46pJ9unu64VveGnanaiw3REEyAqeEvHgehGI8pNxrAgur5lo8Qbj3YOlYJIls49pug5eoteNfor35gFcQpaZi+7+esMf4NwJnatQLTvkxfQcbhOVB1m5HtM46n9etugQAzHwtjlQ2JU26nDXG/19gy33MMaEQ9OhRIKnwTSyycee5oITtIizT+eDEV4psmzlpKnjN3o9YIEqv7JThW2Qh0DKqGPdtQyl15Ngla551q9FYGdpjBcQeB50NthLlpJFqyRf6vx8cXpLxar6Jw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fWG6Bw6pNxLMN/G8PjvlKCO93yoSBiVIFEy5pZTJE+E=;
- b=Lcl85H33brBwoReWU7k5pBl2710ekQhISf1Gf4v22shEBvcSYPMZuy0uFDcNPRGJ9NHl6lr5rXbBsFnm7k+OqedYAxGIDXhCeXJ64CrL4aBVav5ynt0tbEVzWaNNahAsxRmnadTkAg7AyilbWj7lv7ONz1z0wadJU+hqxwrLHISeVVCmFG8AcRl+eKe7AMWemYqvkarRPzD6rX2wwEh0GXp97GW1ZY/MDkXrDRsIhJ+9Fc5w0sZVk1EsJtCkAy3nlXHq6olwsXaBSYCc+dg1TghhK69GgdZSzJEzSS2XbL4Fqwvj9C9EHx7SFOB82gNQovrJzr0FjFi7bV7Y5aKTRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SG2PR01CA0114.apcprd01.prod.exchangelabs.com
- (2603:1096:4:40::18) by KL1PR06MB6818.apcprd06.prod.outlook.com
- (2603:1096:820:10d::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.21; Mon, 17 Nov
- 2025 09:31:40 +0000
-Received: from SG1PEPF000082E2.apcprd02.prod.outlook.com
- (2603:1096:4:40:cafe::e5) by SG2PR01CA0114.outlook.office365.com
- (2603:1096:4:40::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.21 via Frontend Transport; Mon,
- 17 Nov 2025 09:31:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG1PEPF000082E2.mail.protection.outlook.com (10.167.240.5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9343.9 via Frontend Transport; Mon, 17 Nov 2025 09:31:39 +0000
-Received: from nchen-desktop (unknown [172.16.64.25])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 3080F41C0143;
-	Mon, 17 Nov 2025 17:31:39 +0800 (CST)
-Date: Mon, 17 Nov 2025 17:31:38 +0800
-From: Peter Chen <peter.chen@cixtech.com>
-To: hans.zhang@cixtech.com
-Cc: <bhelgaas@google.com>, <helgaas@kernel.org>, <lpieralisi@kernel.org>,
-	<kw@linux.com>, <mani@kernel.org>, <robh@kernel.org>,
-	<kwilczynski@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <mpillai@cadence.com>,
-	<fugang.duan@cixtech.com>, <guoyin.chen@cixtech.com>,
-	<cix-kernel-upstream@cixtech.com>, <linux-pci@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 10/10] arm64: dts: cix: Enable PCIe on the Orion O6
- board
-Message-ID: <aRrrej15SxLzRTa0@nchen-desktop>
-References: <20251108140305.1120117-1-hans.zhang@cixtech.com>
- <20251108140305.1120117-11-hans.zhang@cixtech.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A6F32D44E
+	for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 09:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763372069; cv=none; b=YYuMoy5OWAyejN/FxMl/4fwCoag5FTyicp/9V6LWQD7UeOpn+Dzz/fp3KzKtpwaByCrecVpD3MdGAzoW8P5DcFFw5OKRn/eK72fbHB9LsbN/LBTPb/xo8u90dHCfo6P3B+b6c9lDccYYcP255Osj90BXuSOZEwofsfbs2gaQjPc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763372069; c=relaxed/simple;
+	bh=wnjJiODhg3fkoaxgD7HzJvhXpJ/AWSxe5A/XA2O8zjk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=noV7iWw7hS2l/7W5FsljkQSkxP0f6LXMd8Mm2GgjCvK7fj2zQyGvesK+5n/+daedGLa8Q40U6uG/KR/EcodlUyFxTAvfCt/X/tVRTNJZJjIEN8AwJrqx5J1jbrUbxNez0c7jNx7DAmADUQMgASa/jPhdbUrTkHlQ73E3dUuZaBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jNpXelJu; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763372066; x=1794908066;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=wnjJiODhg3fkoaxgD7HzJvhXpJ/AWSxe5A/XA2O8zjk=;
+  b=jNpXelJujrpfws+lhR9pPb1eHIi9W0r0FmVtfyI5qzRhCBQ9YkEjHaCI
+   etJdbo4WwVhXzUg+gF4zlSw0McgFA7sL8dPN7CJRhhHYOEn9pxp8x0oF7
+   3rTSfhyxH2/GecK+oAXnRn8oDOfJbhgns4+Hg6lWZTLu8FrYTd5HEb4UQ
+   LjMYWedqBhGXOADC36pedjDpFGO0vjp8LcX1K+EpRQ9SGnxbTu8mOgvW4
+   Mz1pZBex2pgNLDyxEhl7U4+1EyvqKL3Lpg8H5Z3wfYgCVoTxmHf+7E0tF
+   5fvxIpIR2BxyEycdKcz8XR/phiCamA3vxsFvIAvzZNW3YXa0EBVe523XL
+   g==;
+X-CSE-ConnectionGUID: jnwInsu1RmiOMr2C50mdqg==
+X-CSE-MsgGUID: tzt7upt3QvS1oiqGC/60qw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11615"; a="75967749"
+X-IronPort-AV: E=Sophos;i="6.19,311,1754982000"; 
+   d="scan'208";a="75967749"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 01:34:26 -0800
+X-CSE-ConnectionGUID: WJI4MjKzQmS1JsrPRLHRGA==
+X-CSE-MsgGUID: mWw44/g8SwG9tSXje/hpEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,311,1754982000"; 
+   d="scan'208";a="190198551"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.239])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 01:34:23 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 17 Nov 2025 11:34:20 +0200 (EET)
+To: Matt Roper <matthew.d.roper@intel.com>
+cc: intel-xe@lists.freedesktop.org, 
+    Michal Wajdeczko <michal.wajdeczko@intel.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/2] drm/xe: Improve rebar log messages
+In-Reply-To: <20251114215621.GT3905809@mdroper-desk1.amr.corp.intel.com>
+Message-ID: <af1b8517-a48c-0826-b02a-db102424ac8a@linux.intel.com>
+References: <20251031-xe-pci-rebar-2-part-2-v1-0-c4a794a39041@intel.com> <20251031-xe-pci-rebar-2-part-2-v1-2-c4a794a39041@intel.com> <20251114215621.GT3905809@mdroper-desk1.amr.corp.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251108140305.1120117-11-hans.zhang@cixtech.com>
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG1PEPF000082E2:EE_|KL1PR06MB6818:EE_
-X-MS-Office365-Filtering-Correlation-Id: 60359ad9-1eb9-4a98-8fbc-08de25bc1cc9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|36860700013|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?y44B9k8uL0JPDraLctWCAoJcjD6jKboS/PokBGvn9Zdm+54coP+S+OxoiCvH?=
- =?us-ascii?Q?qMI3OXaGSvUcP/OQ6Kx4I/qvSt8Ocqi680jIi7SLC8BCJxSHU9B/2dkXHqBl?=
- =?us-ascii?Q?CQzlfdmLs3zJQyZBFTK3VxKAJCPlTC3AFBoLLkCx6ueFDrQV7/S0oe9o9z/g?=
- =?us-ascii?Q?6181KnYCvFxNUvRHpJX2valuwzm5kscgSLCvcQg8lsqemyDHDL1cWo8tTD4s?=
- =?us-ascii?Q?QK8RKvpzgCGnJALZxrlGWClCvNF7+935g7C75zp2d4sYfwxuK9NDw/hUk4/o?=
- =?us-ascii?Q?+edWqXcRc5K3efcctYgm2XOZQO4UTxQNSs3ltn/YxjwWjUpZVaH+uc2pOdz2?=
- =?us-ascii?Q?JYKEeBkIh43lLTz3fCpsZ5l8EtlLTKAkw7auWadQs0/pRhvmiczg+M2/7Isr?=
- =?us-ascii?Q?MrxmZ9ZAQJMF423csXyr7UplNh2gvQ5FO/pji0UteraIqlp8YnbbTLxKo2To?=
- =?us-ascii?Q?jqZjIXJhLrfuOhsTfds0bqAmSaH4BUch5DHpHmYK5dM0BQSUeRN0RNVvuL6N?=
- =?us-ascii?Q?biuGp1dinf73AcQKuie9ir/wM1CoiiHHZjs6IcQhL6j0JWJT082QqOGN6kCq?=
- =?us-ascii?Q?tP4rRcpm+Jw92V/0VMOQ6re5toZfeZiBq1FM5XLxTYJPSoI5Sum4OFkBRBny?=
- =?us-ascii?Q?D3xoVZpeLNXmgv9aTjb9vLLSO/CxWLNldiKrfeL86WYLhxnUi6silp8MqDH5?=
- =?us-ascii?Q?gBOIYs+N8RUOKTldDRgS8pwznJZqu/hZScVIgLPQHwrlkIz59Gts+ipGDOxf?=
- =?us-ascii?Q?C7CDH5I0u/pTSbT/eD9Eg2zBro0untbkGe8fOMnFhl5JZHSn0Nr8uv6av9mP?=
- =?us-ascii?Q?OsgLUWVNz/9tKRFZUHAfgjD7oks4Wl8ax8Zvg5/6Vgig1xyf/If4TnJ6E0g8?=
- =?us-ascii?Q?wqMfIkyh3zhnLOSHiNo3q0uiBgzAuV0d2QQaG/hf3wO8fFbWS//xjQ3nhWpH?=
- =?us-ascii?Q?k3XsCPxB9EQUuGZzEnVdX/aEWXfn3WX9Y06V9kucP83TutdzOWqAsnYftwNd?=
- =?us-ascii?Q?r3gGwZsCegVG8sf5gxpigRpqt3UVFC8Npr2nPbqK3HuZnByPCZG9gRS4JXvt?=
- =?us-ascii?Q?sZmFkX2WgU4jEr1fCcleUIePrjjHp5fiC8S1dK2gxmbkPumFxhNqf0L5dIBK?=
- =?us-ascii?Q?sRz4iwt3zZfOK6VF0zc7CfV73mv7QLMuenIaYZESioIpIhugyiPHW2yd33jR?=
- =?us-ascii?Q?v2sVCuY+59KI4oufZnnOzsaZYRXyBJtbU9mRKgMSxVDaVk8tnBFBEGF8eUiX?=
- =?us-ascii?Q?zN3ciPmmHZnkFow0jGnITx1NaCLcePsdA8Zr8Ba8gXPr3CibFQuwPCSztphU?=
- =?us-ascii?Q?sT6jOPterNd2/96MUF8/fzzg3+il2IUOzKbFZ7Hg2vOWxUUy7oH/pBAK1Eb1?=
- =?us-ascii?Q?u29flo1tNLRm9LjkhWelfZ5trV4MSI5gb8/iQfYOl8GdnJrRnN5O6vHitOQZ?=
- =?us-ascii?Q?2c4JbFtXvmCRmmcHZdos/PxZsMpNltn+DmQSCNL+LmI+GEh+HNeJjm4S8Po5?=
- =?us-ascii?Q?G80WXFDoIi1gW3plBysrBmuGTN6X2QzT7LZE7UOnkZUsKgZmjW9ING9MKlQ7?=
- =?us-ascii?Q?FgnJvvZbl465iL/LtOI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2025 09:31:39.8023
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60359ad9-1eb9-4a98-8fbc-08de25bc1cc9
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG1PEPF000082E2.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6818
+Content-Type: multipart/mixed; BOUNDARY="8323328-363282355-1763371698=:982"
+Content-ID: <4b40d736-eff3-bb06-9747-0ebdf7389807@linux.intel.com>
 
-On 25-11-08 22:03:05, hans.zhang@cixtech.com wrote:
-> From: Hans Zhang <hans.zhang@cixtech.com>
-> 
-> Add PCIe RC support on Orion O6 board.
-> 
-> The Orion O6 board includes multiple PCIe root complexes. The current
-> device tree configuration enables detection and basic operation of PCIe
-> endpoints on this platform.
-> 
-> GPIO and pinctrl subsystems for this platform are not yet ready for
-> upstream inclusion. Consequently, attributes such as reset-gpios and
-> pinctrl configurations are temporarily omitted from the PCIe node
-> definitions.
-> 
-> Endpoint detection and functionality are confirmed to be operational with
-> this basic configuration. The missing GPIO and pinctrl support will be
-> added incrementally in future patches as the dependent subsystems become
-> available upstream.
-> 
-> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Applied, Thanks.
+--8323328-363282355-1763371698=:982
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <5cbdb3e6-8534-9ab8-74b5-db984d067d99@linux.intel.com>
 
-Peter
-> ---
-> Dear Krzysztof and Mani,
-> 
-> Due to the fact that the GPIO, PINCTRL and other modules of our platform are
-> not yet ready for upstream. Attributes that PCIe depends on, such as reset-gpios
-> and pinctrl*, have not been added for the time being. It will be added gradually
-> in the future.
-> 
-> The following are Arnd's previous comments. We can go to upsteam separately.
-> https://lore.kernel.org/all/422deb4d-db29-48c1-b0c9-7915951df500@app.fastmail.com/
-> 
-> 
-> The following are the situations of five PCIe controller enumeration devices.
-> 
-> root@cix-localhost:~# uname -a
-> Linux cix-localhost 6.18.0-rc4-00010-g0f5b0f23abef #237 SMP PREEMPT Sat Nov  8 21:47:44 CST 2025 aarch64 GNU/Linux
-> root@cix-localhost:~#
-> root@cix-localhost:~# lspci
-> 0000:c0:00.0 PCI bridge: Device 1f6c:0001
-> 0000:c1:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
-> 0001:90:00.0 PCI bridge: Device 1f6c:0001
-> 0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller S4LV008[Pascal]
-> 0002:60:00.0 PCI bridge: Device 1f6c:0001
-> 0002:61:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.11ax Wireless Network Controller
-> 0003:00:00.0 PCI bridge: Device 1f6c:0001
-> 0003:01:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
-> 0004:30:00.0 PCI bridge: Device 1f6c:0001
-> 0004:31:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. Device 8126 (rev 01)
-> ---
->  arch/arm64/boot/dts/cix/sky1-orion-o6.dts | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/cix/sky1-orion-o6.dts b/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
-> index d74964d53c3b..be3ec4f5d11e 100644
-> --- a/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
-> +++ b/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
-> @@ -34,6 +34,26 @@ linux,cma {
->  
->  };
->  
-> +&pcie_x8_rc {
-> +	status = "okay";
-> +};
-> +
-> +&pcie_x4_rc {
-> +	status = "okay";
-> +};
-> +
-> +&pcie_x2_rc {
-> +	status = "okay";
-> +};
-> +
-> +&pcie_x1_0_rc {
-> +	status = "okay";
-> +};
-> +
-> +&pcie_x1_1_rc {
-> +	status = "okay";
-> +};
-> +
->  &uart2 {
->  	status = "okay";
->  };
-> -- 
-> 2.49.0
-> 
+On Fri, 14 Nov 2025, Matt Roper wrote:
 
--- 
+> On Fri, Oct 31, 2025 at 02:17:43PM -0700, Lucas De Marchi wrote:
+> > Some minor improvements to the log messages in the rebar logic:
+> > use xe-oriented printk, switch unit from M to MiB in a few places for
+> > consistency and us ilog2(SZ_1M) for clarity.
+> >=20
+> > Suggested-by: Michal Wajdeczko <michal.wajdeczko@intel.com>
+> > Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> > Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+>=20
+> Reviewed-by: Matt Roper <matthew.d.roper@intel.com>
+>=20
+> > ---
+> >  drivers/gpu/drm/xe/xe_pci_rebar.c | 20 +++++++++-----------
+> >  1 file changed, 9 insertions(+), 11 deletions(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/xe/xe_pci_rebar.c b/drivers/gpu/drm/xe/xe_=
+pci_rebar.c
+> > index d21e29c95ca33..378447a3be0ca 100644
+> > --- a/drivers/gpu/drm/xe/xe_pci_rebar.c
+> > +++ b/drivers/gpu/drm/xe/xe_pci_rebar.c
+> > @@ -6,12 +6,11 @@
+> >  #include <linux/pci.h>
+> >  #include <linux/types.h>
+> > =20
+> > -#include <drm/drm_print.h>
+> > -
+> >  #include "regs/xe_bars.h"
+> >  #include "xe_device_types.h"
+> >  #include "xe_module.h"
+> >  #include "xe_pci_rebar.h"
+> > +#include "xe_printk.h"
+> > =20
+> >  #define BAR_SIZE_SHIFT 20
+> > =20
+> > @@ -47,12 +46,12 @@ static void resize_bar(struct xe_device *xe, int re=
+sno, resource_size_t size)
+> > =20
+> >  =09ret =3D pci_resize_resource(pdev, resno, bar_size);
+> >  =09if (ret) {
+> > -=09=09drm_info(&xe->drm, "Failed to resize BAR%d to %dM (%pe). Conside=
+r enabling 'Resizable BAR' support in your BIOS\n",
+> > -=09=09=09 resno, 1 << bar_size, ERR_PTR(ret));
+> > +=09=09xe_info(xe, "Failed to resize BAR%d to %dMiB (%pe). Consider ena=
+bling 'Resizable BAR' support in your BIOS\n",
+> > +=09=09=09resno, 1 << bar_size, ERR_PTR(ret));
+> >  =09=09return;
+> >  =09}
+> > =20
+> > -=09drm_info(&xe->drm, "BAR%d resized to %dM\n", resno, 1 << bar_size);
+> > +=09xe_info(xe, "BAR%d resized to %dMiB\n", resno, 1 << bar_size);
+> >  }
+> > =20
+> >  /*
+> > @@ -93,9 +92,8 @@ void xe_pci_rebar(struct xe_device *xe)
+> >  =09=09bar_size_bit =3D bar_size_mask & BIT(pci_rebar_bytes_to_size(reb=
+ar_size));
+> > =20
+> >  =09=09if (!bar_size_bit) {
+> > -=09=09=09drm_info(&xe->drm,
+> > -=09=09=09=09 "Requested size: %lluMiB is not supported by rebar sizes:=
+ 0x%x. Leaving default: %lluMiB\n",
+> > -=09=09=09=09 (u64)rebar_size >> 20, bar_size_mask, (u64)current_size >=
+> 20);
+> > +=09=09=09xe_info(xe, "Requested size: %lluMiB is not supported by reba=
+r sizes: 0x%x. Leaving default: %lluMiB\n",
+> > +=09=09=09=09(u64)rebar_size >> ilog2(SZ_1M), bar_size_mask, (u64)curre=
+nt_size >> ilog2(SZ_1M));
+> >  =09=09=09return;
 
-Best regards,
-Peter
+I don't remember if I said it already but this will cause more conflicts=20
+with what's in the pci/resource branch so preferrably defer this until the=
+=20
+next cycle so the between trees conflicts are avoided.
+
+--=20
+ i.
+
+
+> >  =09=09}
+> > =20
+> > @@ -111,8 +109,8 @@ void xe_pci_rebar(struct xe_device *xe)
+> >  =09=09=09return;
+> >  =09}
+> > =20
+> > -=09drm_info(&xe->drm, "Attempting to resize bar from %lluMiB -> %lluMi=
+B\n",
+> > -=09=09 (u64)current_size >> 20, (u64)rebar_size >> 20);
+> > +=09xe_info(xe, "Attempting to resize bar from %lluMiB -> %lluMiB\n",
+> > +=09=09(u64)current_size >> ilog2(SZ_1M), (u64)rebar_size >> ilog2(SZ_1=
+M));
+> > =20
+> >  =09while (root->parent)
+> >  =09=09root =3D root->parent;
+> > @@ -124,7 +122,7 @@ void xe_pci_rebar(struct xe_device *xe)
+> >  =09}
+> > =20
+> >  =09if (!root_res) {
+> > -=09=09drm_info(&xe->drm, "Can't resize VRAM BAR - platform support is =
+missing. Consider enabling 'Resizable BAR' support in your BIOS\n");
+> > +=09=09xe_info(xe, "Can't resize VRAM BAR - platform support is missing=
+=2E Consider enabling 'Resizable BAR' support in your BIOS\n");
+> >  =09=09return;
+> >  =09}
+
+--8323328-363282355-1763371698=:982--
 
