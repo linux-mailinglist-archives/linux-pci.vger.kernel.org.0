@@ -1,155 +1,112 @@
-Return-Path: <linux-pci+bounces-41390-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41393-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id A782FC63DB6
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 12:39:02 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50F71C64011
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 13:12:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 11A12343166
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 11:34:31 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id 8B9FC24006
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 12:12:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99CE02D6E5C;
-	Mon, 17 Nov 2025 11:34:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35C2825785E;
+	Mon, 17 Nov 2025 12:12:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Z8ywHJMH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="syD3jK3r"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BCc9FN/b"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from flow-a6-smtp.messagingengine.com (flow-a6-smtp.messagingengine.com [103.168.172.141])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA7828640B;
-	Mon, 17 Nov 2025 11:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E819732C929
+	for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 12:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763379267; cv=none; b=O0SKurZaNknvpnZnNHQECBRf9t19Kg3/0AA2jBOQEqZyMGemXQ5azgoBs5brhcytXoh3rarcAbOVdDtSqPmc3v/Vz2BsUEieGeV5FYzCrIYz+OF5E5MDnQPRfzVPKfLdOqNHyRilpYdaHL1mzV6DIQcvP2DxKVecw1rL9MUg/oU=
+	t=1763381541; cv=none; b=P55MWa98IlscLBABKIk5vaw5zgmIau2r9jHRFQS0GzLVcWvm8nqNJmOq+9Y3VR4lbd8UmBcGztOvLYLDxYnj5q4NrppvHDFjZ+2T9VyKlZLWrk/VXN088ILQYUMSpnnG0++ThiW4G/9HrmTZTiBeJkteIEniHbj76YgduYYU/eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763379267; c=relaxed/simple;
-	bh=JktO8F5K8/AbbvqeJKCLi379h7FRs3fzEUHk/0VFZ88=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=qCYf1s5uPeG0DWye6KGx+7f9Du+DrUMnXBStznZaMLv61upRFN+Mp5q1wwfMPn9dqVoTn3pjXYJaGJxnWH5guXEHPV+ZhYDnTTchoZk0vVhIOHYaGVuI+oUCQ65DNkU7xpFBMYmy6Bz4E0qljN0DR5SDsHHYqxxTWP5Icm9zbXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Z8ywHJMH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=syD3jK3r; arc=none smtp.client-ip=103.168.172.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailflow.phl.internal (Postfix) with ESMTP id F097A13801C1;
-	Mon, 17 Nov 2025 06:34:23 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Mon, 17 Nov 2025 06:34:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1763379263;
-	 x=1763386463; bh=Fd2jDBS6TczwyfapWowGCLfJ2ZDyiWW2nSxP/Qc1jTw=; b=
-	Z8ywHJMH6RJztItXyxhnCdMdrpCnuulEfpshTedUx8fNsXHEt4EuNWlfudMcER9/
-	YpdnfwkgNKR7h2UJN1sPVzYzRw7v21vLO9pk55T7rcJMaljpVviGONhEmmZgbiK8
-	M7O7eQNMFqOANmFmbtenJnuDfHKEsVukkoB405Ci+2MJ8Ezs0tt6wzqmc77g4BCO
-	nXnOXxw2ULDztWr8/w+8EvicEkSj+foP5MpnSlTLfcPdehLwtlv8989/wZjas9p0
-	OMekgTgN8lkm39pWSPu7PLP00HOIIwrWcQe6K9qb5OGVKT6QKDh/ml2xZ1Jn/aud
-	Teah4O9SbocFkiPdIZyiZA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763379263; x=
-	1763386463; bh=Fd2jDBS6TczwyfapWowGCLfJ2ZDyiWW2nSxP/Qc1jTw=; b=s
-	yD3jK3rNfTS2oDa8ZUhjkAPKYvrSDSH3QepIrxzqgCnOKdlGwmBqb4af47TtRcCH
-	dmVieIMQA9uLuPwKU/EPgRQo1oaCIPVR7bniWdqNVk9kyQD1atG2XL6lwQzYRHi4
-	6aTa4bVJ25lIvBJRjIVR+Z3r7n8YAYe/LYelS3ZywFRqaxsvXQC43j4WyCFysTr0
-	jZi1yBqQDN9kvCK15SqBhj/QHUFhAAnPTqfsju6werXAZ2C41pNo4ruaRDJjgivJ
-	k2iGScGhfL3v8RbOeCiORVNJQHcVXztpv9D3x6JecYInZ28PLW4EyMvxlh38IbNI
-	UfK//XaFe8rOvvyqlnVTg==
-X-ME-Sender: <xms:Pwgbafudna6Sko-cwJ0ae9YtsZ60_dPgSxhFe61mt25fHmyV6vrrUw>
-    <xme:PwgbabSZ_h0Srl5kkbHZBMCI_n_AuqCdEP_3X01fZS0JAVAIsrLWklVqBEbZwqWs5
-    -DWPXlZy23mC_ojMgu1fOf5BppG7sWvOndZBRuQeHDj55HPlX9kFiM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvudekfeehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucfrhhhishhhihhnghdqkffkrfgprhhtucdliedtjedmne
-    cujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepfefhheetffduvdfgieeghfejtedvkeetkeejfeekkeelffejteevvdeghffh
-    iefhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggp
-    rhgtphhtthhopedugedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghhvghlgh
-    grrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehkihhshhhonheskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohepkhifihhltgiihihnshhkiheskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheplhhpihgvrhgrlhhishhisehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehmrghniheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlh
-    drohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdr
-    ihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehsqdhvrggurghprghllhhisehtih
-    drtghomhdprhgtphhtthhopehsrhhksehtihdrtghomh
-X-ME-Proxy: <xmx:PwgbaTpFJreT2VJHNLbYE7Whh4s9XfYb_hQQ1SZhEOUv5CR1396G3Q>
-    <xmx:PwgbadG5XJb_LDl5dZcgcMRSkvcm3QSc4MXaorMnLdb0ea5r1ml3og>
-    <xmx:PwgbaRTpQ3Oon1-T8cqdutDb3ek9gVcremSSU8NL-xtuPzgfL-qndw>
-    <xmx:PwgbabOobIF4ndC1xXGnLwC7cuUqVi49wehJ5zsGINBnCGpvvwotRw>
-    <xmx:PwgbaYUo0c5N5lyHxB6cAJOcPj63TJR56AKKr-ClAk4QCkoCUv9avjEX>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A75EE700054; Mon, 17 Nov 2025 06:34:23 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1763381541; c=relaxed/simple;
+	bh=hHkkkuzcm+OZgcYuNf2+6konfNd6VrAMNQZDC0IlSeY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mZ055vdoPCbmRSL243RgnIkLyDNQJTJ8xfcu+Qgm1Tolj+SQVUrWgEj7FX+/IMq3njz/lIa7Au4UhI5g8cC30cKuK4fYziUTdq9XF8h2FKX8Jr5dKO4hpSHko5MtVNpPHMhSQNZm5UgebxUUX5dWqxGuiijKAc84MDaB88cXpqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BCc9FN/b; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763381539; x=1794917539;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hHkkkuzcm+OZgcYuNf2+6konfNd6VrAMNQZDC0IlSeY=;
+  b=BCc9FN/bievtA+XL58uIHwZlBBDz2Y+gdGu9dlPqauthsIR8WUXAftnW
+   q0UjInJ39AbHdimPB0jntRY0VSpoMFEg0ZFAZbYQXHga2Cwj6AEPeVyof
+   n9vUzOONpcTZonD1vPwKCE+FhNDwZEYzZydXZG8tydNmMw6YulZhXg6Bs
+   Rwi2v/ZMS82nxmRzdRHf70XJBcmI84sS9c6o7/b01LtVDf/6CYItRaw1u
+   rUWx+8iSadx2d3fHKvwVHOYNVSgBA6nw7Fmepi+J5GTpgLLm/c1ikvDdl
+   trvh3z/cFZNRDvl1tI99/LrhX9Bn6b9SrKrcWAnJWEFhyWcX6M67jZ16k
+   Q==;
+X-CSE-ConnectionGUID: Us76Dz5wTV2EG/Exh72xpw==
+X-CSE-MsgGUID: PigVFU5wTtamjG19CFU4xg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11615"; a="65279958"
+X-IronPort-AV: E=Sophos;i="6.19,311,1754982000"; 
+   d="scan'208";a="65279958"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 04:12:18 -0800
+X-CSE-ConnectionGUID: twGw8rNGQZilaZjenVGMPQ==
+X-CSE-MsgGUID: R2rrSy3cSiKopfRyRGYLNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,311,1754982000"; 
+   d="scan'208";a="190230655"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa009.jf.intel.com with ESMTP; 17 Nov 2025 04:12:17 -0800
+Date: Mon, 17 Nov 2025 19:57:34 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-pci@vger.kernel.org, linux-coco@lists.linux.dev,
+	Jonathan.Cameron@huawei.com
+Subject: Re: [PATCH v2 7/8] PCI/TSM: Add pci_tsm_guest_req() for managing TDIs
+Message-ID: <aRsNrmcc5p2wUg9r@yilunxu-OptiPlex-7050>
+References: <20251113021446.436830-1-dan.j.williams@intel.com>
+ <20251113021446.436830-8-dan.j.williams@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ARY7ZiTdmDAg
-Date: Mon, 17 Nov 2025 12:34:03 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Siddharth Vadapalli" <s-vadapalli@ti.com>,
- "Vignesh Raghavendra" <vigneshr@ti.com>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- "Manivannan Sadhasivam" <mani@kernel.org>, "Rob Herring" <robh@kernel.org>,
- bhelgaas@google.com
-Cc: "Kishon Vijay Abraham I" <kishon@kernel.org>, stable@vger.kernel.org,
- Linux-OMAP <linux-omap@vger.kernel.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- srk@ti.com
-Message-Id: <965a2836-050a-4958-af95-ca3b5f9a57ed@app.fastmail.com>
-In-Reply-To: <20251117113246.1460644-1-s-vadapalli@ti.com>
-References: <20251117113246.1460644-1-s-vadapalli@ti.com>
-Subject: Re: [PATCH] PCI: j721e: Add config guards for Cadence Host and Endpoint
- library APIs
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251113021446.436830-8-dan.j.williams@intel.com>
 
-On Mon, Nov 17, 2025, at 12:32, Siddharth Vadapalli wrote:
-> Commit under Fixes enabled loadable module support for the driver under
-> the assumption that it shall be the sole user of the Cadence Host and
-> Endpoint library APIs. This assumption guarantees that we won't end up
-> in a case where the driver is built-in and the library support is built
-> as a loadable module.
->
-> With the introduction of [1], this assumption is no longer valid. The
-> SG2042 driver could be built as a loadable module, implying that the
-> Cadence Host library is also selected as a loadable module. However, the
-> pci-j721e.c driver could be built-in as indicated by CONFIG_PCI_J721E=y
-> due to which the Cadence Endpoint library is built-in. Despite the
-> library drivers being built as specified by their respective consumers,
-> since the 'pci-j721e.c' driver has references to the Cadence Host
-> library APIs as well, we run into a build error as reported at [0].
->
-> Fix this by adding config guards as a temporary workaround. The proper
-> fix is to split the 'pci-j721e.c' driver into independent Host and
-> Endpoint drivers as aligned at [2].
->
-> Fixes: a2790bf81f0f ("PCI: j721e: Add support to build as a loadable 
-> module")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: 
-> https://lore.kernel.org/oe-kbuild-all/202511111705.MZ7ls8Hm-lkp@intel.com/
-> Cc: <stable@vger.kernel.org>
-> [0]: https://lore.kernel.org/r/202511111705.MZ7ls8Hm-lkp@intel.com/
-> [1]: commit 1c72774df028 ("PCI: sg2042: Add Sophgo SG2042 PCIe driver")
-> [2]: 
-> https://lore.kernel.org/r/37f6f8ce-12b2-44ee-a94c-f21b29c98821@app.fastmail.com/
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+On Wed, Nov 12, 2025 at 06:14:45PM -0800, Dan Williams wrote:
+> A PCIe device function interface assigned to a TVM is a TEE Device
+> Interface (TDI). A TDI instantiated by pci_tsm_bind() needs additional
+> steps taken by the TVM to be accepted into the TVM's Trusted Compute
+> Boundary (TCB) and transitioned to the RUN state.
+> 
+> pci_tsm_guest_req() is a channel for the guest to request TDISP collateral,
+> like Device Interface Reports, and effect TDISP state changes, like
+> LOCKED->RUN transititions. Similar to IDE establishment and pci_tsm_bind(),
+              ^
+transition
 
-Looks good to me,
+[...]
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> +ssize_t pci_tsm_guest_req(struct pci_dev *pdev, enum pci_tsm_req_scope scope,
+> +			  sockptr_t req_in, size_t in_len, sockptr_t req_out,
+> +			  size_t out_len, u64 *tsm_code)
+> +{
+> +	struct pci_tsm_pf0 *tsm_pf0;
+> +	struct pci_tdi *tdi;
+> +	int rc;
+> +
+> +	/* Forbid requests that are not directly related to TDISP operations */
+> +	if (scope > PCI_TSM_REQ_STATE_CHANGE)
+> +		return -EINVAL;
+
+So we are not ready for PCI_TSM_REQ_DEBUG_READ/WRITE, is it?
+
+Others look good to me.
+
+Reviewed-by: Xu Yilun <yilun.xu@linux.intel.com>
+
 
