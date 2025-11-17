@@ -1,79 +1,79 @@
-Return-Path: <linux-pci+bounces-41370-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41371-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6D61C63150
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 10:14:53 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5F81C63180
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 10:16:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 20A6E4F1520
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 09:10:33 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 148CF366A63
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Nov 2025 09:10:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 478803277A4;
-	Mon, 17 Nov 2025 09:09:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8B54328B51;
+	Mon, 17 Nov 2025 09:09:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="bRRQepz3"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="H+qG/l22"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0493277AF
-	for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 09:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AED1328271
+	for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 09:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763370575; cv=none; b=TrhkoI4PgZ1HQj8l07IhkY1U++aAVCVwK5yy3EOxVRodj4KjbeZbnTU8BUzYpAfQMKsvU0gZchwQMggV8Hy66bORm1LkYJgvJ3JJO932nIumvEkjm2p4l5wmUeJrbTmkqYo83woSxL+1+eSflWMgXvaE7IlR1RZQAvRRMuQL9lU=
+	t=1763370576; cv=none; b=Tvjg7SsUOxHzfrAQbYXyWHq6WxdpoE81KWp98RhYXLvVYfE5wF5GCv6/t9wtxjoNieLhhWy/Sgo6AsXpqNxqydLqhWoMN7oWwTkotWo3GN4AP8viEu8fbQixwY0XdvEP2DRyGTjPJuBCVhQdI+M7cCCREo4vy0b7WN6i06ENiAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763370575; c=relaxed/simple;
-	bh=Uc0m+u0MfzVGyhFoLK6/9eDa4VlgU+XOoqI+PI/Ba+4=;
+	s=arc-20240116; t=1763370576; c=relaxed/simple;
+	bh=pBI9Hfqe5p9fGS68LNRQ7CQSWjqbWO5yp00qUZ+NqIE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GX8ay4OhUrvQi6flNiBe64ol6Wlc3eLTTlaKdDap2WMmBth4CH/sOirfpH/sWF0x7jUU7Rwmx1vFakDDQlTRDUAf2Hz253nKclJUrNlg9oC03CIB3WdzscNCQlMNd30Ub1sTFONCSVb7i8yhYdeLNR/e9MpNK0flDtB27U6MQWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=bRRQepz3; arc=none smtp.client-ip=209.85.221.48
+	 MIME-Version; b=O447mcM46m684R9dATb6YX5jo4WhYuPQV8qd9QSFAXkDnObFQW5g3pJgUM3QUZA1V3yz2OtJhcAqX5giC3Lasxd3HmcY3k3FEWhjFHJj+B3KfW6c52FjD+4ggCKOTZ72sm68V541FyiBg41u5zOKgV8tfW89Ej02OUJwes561uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=H+qG/l22; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-42b32a5494dso2324828f8f.2
-        for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 01:09:32 -0800 (PST)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-429c4c65485so3354419f8f.0
+        for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 01:09:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1763370571; x=1763975371; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1763370573; x=1763975373; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8pjDugLKEkjAIimWBDbAyQf5qbHt8SfkOSPMTheV0Y0=;
-        b=bRRQepz33UaVXEcFsMqvBSRlcw977qDw4RQpJDuuZmBxQqwcN60KUcK7f/xnAHApPx
-         yHkKTusUigICyyev0WqoLpMCVLbGe6g80WJnvoWqKY27c9n84HpPMAn3lWG/iYNtZkhz
-         VAtP2v5rx7tosaf6oHwrmtTybPsuaxXm2lfhu24dY2OoOSVyqZGQ9zzmLOgmb4xsHwjb
-         ZFzccWdAa+6sgnx1uuSIQ2Q9rH7yDs7CjJU3nCWhMnHEjQOAaoiDKB5rCob2k2c5rbJg
-         +5qYhATuVAGb9ad8gHCK5UuiwM2jyckb0s7wdyGg2YX3v2nztzO8kxFlcVJjbHYktQcT
-         ckIg==
+        bh=nfjHCPFht8CT2aoSmw57+NansBy7QzrkmQb7BflVv6I=;
+        b=H+qG/l22b4JZbkL7oxSdtqIh3JpNPts6blHilsTw1zyrY07PPtSZGG1hj40JmMqt5h
+         z8+aObXIUaGrPisd7rT9baIMttaff1ddW8hYf5hbVuzAMf0jZI8KXK7yB3WNS62+iySS
+         HWUcIZ3XPnyWnDSdTZA1kW0QOiOwoJ1uhgpjWDj5CpYDpSE3P/U3S7osyTMgwjm7bKdc
+         q/Fz1M6Cvu5VtfSxFq+VgGSWfmSThioi/fzdMstVihNDPg31SIdoEFVvm7CxogaMfLKB
+         P3aFJghRHEMV4iLI6mwhK34VjFVQNKAUXwCCN8iAnq2nrHzL618CpQUhbcbAQ6H/i65m
+         p11w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763370571; x=1763975371;
+        d=1e100.net; s=20230601; t=1763370573; x=1763975373;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=8pjDugLKEkjAIimWBDbAyQf5qbHt8SfkOSPMTheV0Y0=;
-        b=kH5/9pPkUy9K/DPJQ1blyV5CIgPbB9bAxAbwguI2FU0D7MgeA3Ce0vp6H1t/HzP/FA
-         aBaH+NW/r6y10LZ7a5vCFJ0Qu/15LQz/rGs5J1OhYucNV/UUke0io5ySN6FUinyH0699
-         pp3PWo1hzFttSW48cIi6uz+61v4rk928fDPW9q4OFhnMR1Kj5VF+YWozvQ8pEnY89NOl
-         Emsyxuh7AQyyQ6KeSuP+oGpZ2FqZ9dbgW5DDxCsbx/3qciSyDrxghSNZFVaE6++vFrZS
-         cruMOggxoCaNTTo1U0H6Daip9ZG3HD3Pzh6ZQymq466to7CTQvpmIYmXru4whii8mF/T
-         OgIA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+MTZ0RGL6IyjYrNx1le7lD0hWHo/RhSGQcuhy+o6Taxp1Z7rcA38fSM/JXAC80Vcr3UHdFRV89m0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywhu01AXWO3A0kA8ceRiYZ5oifcVrhHzR6vDsq4Dt1h3xU0/qh8
-	mRE4woq9FKCbBmyzQLzmcTmISmlH+LHa+9A5obGWl/DT8gv5W0lkWWhDor55iS9YGr4=
-X-Gm-Gg: ASbGnctTMG9fwHuYAdivrdKGOddqGQSAkjrKYgr645vMdM2Ib9m4lPD6mStHVn82hZo
-	jGtVvdqbXNSWCCV7u1D+f5Sb0VvIQ7RPlS+r5z3SW4c5nvKEOsz9UiFxL/oo8M00YgUOhcq9y2p
-	PBEfVrw5Jj9aYHN1jzIw8gIb3hv85S6zm2kgGcat7lAnCcfcnBYfxJbiWGdM1jkVTDfNJhdpcnW
-	+V/2qwBH+kEdCnbQmTApIy+VBfCq9hwD8E+2lzyw7XqgxX8aY2PHvkDlT9im7KqwivugRfBUBy0
-	xg/RRxS3i3h43T4Ofi7gMJrPz7x4Vf8c++L1Xcv0FSgfbMWLH0R6WB6b/zzHScNgrzFTCHq6Cml
-	RikqhfEpaLBTa/CKsixouJ5Zuq8xNcYblAnqN8jalwAr0QeJB7QX5YorAF0q3aG7zHiQE8sIkzh
-	YxvpC3I9bq+R5yPXjtKZQWZGJSpbms8gxaI+UQUirr
-X-Google-Smtp-Source: AGHT+IFgZYhCnic6U3YhRTVjNXH++Id/AtI5+oMJdQ8+Yorkl9uPjde2OHoNIXg0bcsWSzcUKJfixg==
-X-Received: by 2002:a05:6000:2305:b0:3ec:db87:e5f4 with SMTP id ffacd0b85a97d-42b5932482dmr10896537f8f.7.1763370571069;
-        Mon, 17 Nov 2025 01:09:31 -0800 (PST)
+        bh=nfjHCPFht8CT2aoSmw57+NansBy7QzrkmQb7BflVv6I=;
+        b=t3hLhJupaOep0xhBwOWo8zrJav3p0+SHEza5LplOkHiO22tNKX+wbj+ibbyBrunzU0
+         9Rt7qLPt/ETo248QmUyveIB5lJX9qfQit3qi2jypR1bclsNHeVBp3u3z8DnND3P55c/L
+         4/sTgTOo0yfPC+UECcYEncHPsKeejGQHv2bpLHfP8kZTBcL92vphbTG8DzVrWPICNNFz
+         yq8EHlQ0X/b2R6CeAsOU1dvU0L+16YRG4ZgaWPOxEYvFqAA+CPIhBgx4FpSQUtJGk1Or
+         4C7hOJ/W1fxM6zcAu8DHOaKxZN49qz2qXtyHf5BGPCcn/6FMPhhx1luKlx/3oICtMJHC
+         xFMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUm2pCWHjlqgYZB/HCJdJxt6EZe9WIUjqs2L27QuyAzUUuD3FzkWI5pFgylya0MUtnD6g3CWVXewj4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwObvrbGx1d6JyIEXg4g2HvGqibosZ+HLYlAdfjmxGvoeDyWWih
+	xwjVNsGRrLfY8stiEUhjDirHkp/0FEnKEeSoRM8vZugMOn+biZBZD3C25i/LjVeDeCg=
+X-Gm-Gg: ASbGncuvZrsAepcC67VElJCL0NTM7vkYA2DUFJ5jmk4zi2xD0O95ULqsQUBEQGcfr9A
+	DMmBcA1qpPdpncKWROeCZfbeETWi1LD9e031S6HU7EhOFUw/BZxR6prYbKhMKy+px+4wTX2bMii
+	TVbi93RvaNBw5ipGlaUJk2pvaVRIeJkXSe3+BfZvzTU6a3GkN/UwHqBOVEIJ1iPZwu99T1o2Pyw
+	piCMiFn43QlRrl2E20y5Zu/kbitgumfFTGkDf1f7TyGRtfBzP4WJn3movdxRoHxbyL6BheG4dwZ
+	AjOQt6lhBZMEkIVW10gcNsvlroEzDOiJH5uxcfokKX3DRhEYxhyi0YtDfU1vgpS78LgoEZZF+1H
+	Or1iyohrE+f9INK7IGmuLZgqaibdCGJtq0ebNxlPVGxt1x4tjUJ8mlxQlPpjnecuhy+YATtv850
+	YvaIeKCqYK0dnCfteC775OaG+Em+ozVg==
+X-Google-Smtp-Source: AGHT+IEC4CylV+boIHz5904t89ij/HQn2PhhtSEsjDe3u4uLcYNbMPFPmrQ47kjyJqYS0P2YXwlN9w==
+X-Received: by 2002:a05:6000:2509:b0:42b:4081:ccb8 with SMTP id ffacd0b85a97d-42b5934253amr11041513f8f.23.1763370572750;
+        Mon, 17 Nov 2025 01:09:32 -0800 (PST)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.134])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53f0b894sm25703786f8f.26.2025.11.17.01.09.29
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b53f0b894sm25703786f8f.26.2025.11.17.01.09.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Nov 2025 01:09:30 -0800 (PST)
+        Mon, 17 Nov 2025 01:09:32 -0800 (PST)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: bhelgaas@google.com,
@@ -91,10 +91,11 @@ Cc: claudiu.beznea@tuxon.dev,
 	linux-renesas-soc@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v7 4/6] arm64: dts: renesas: rzg3s-smarc-som: Add PCIe reference clock
-Date: Mon, 17 Nov 2025 11:08:56 +0200
-Message-ID: <20251117090859.3840888-5-claudiu.beznea.uj@bp.renesas.com>
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: [PATCH v7 5/6] arm64: dts: renesas: rzg3s-smarc: Enable PCIe
+Date: Mon, 17 Nov 2025 11:08:57 +0200
+Message-ID: <20251117090859.3840888-6-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251117090859.3840888-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20251117090859.3840888-1-claudiu.beznea.uj@bp.renesas.com>
@@ -108,10 +109,10 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Versa3 clock generator available on RZ/G3S SMARC Module provides the
-reference clock for SoC PCIe interface. Update the device tree to reflect
-this connection.
+The RZ Smarc Carrier-II board has PCIe headers mounted on it. Enable PCIe
+support.
 
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
@@ -120,31 +121,52 @@ Changes in v7:
 - none
 
 Changes in v6:
-- collected tags
+- none
 
 Changes in v5:
-- this patch is the result of dropping the updates to dma-ranges for
-  secure area and keeping only the remaining bits
+- collected tags
 
- arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+Changes in v4:
+- none
 
-diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
-index 39845faec894..b196f57fd551 100644
---- a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
-@@ -172,6 +172,11 @@ a0 80 30 30 9c
+Changes in v3:
+- collected tags
+
+Changes in v2:
+- none
+
+ arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
+index 5e044a4d0234..6e9e78aca0b0 100644
+--- a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
++++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
+@@ -132,6 +132,12 @@ power-monitor@44 {
  	};
  };
  
-+&pcie_port0 {
-+	clocks = <&versa3 5>;
-+	clock-names = "ref";
++&pcie {
++	pinctrl-0 = <&pcie_pins>;
++	pinctrl-names = "default";
++	status = "okay";
 +};
 +
- #if SW_CONFIG2 == SW_ON
- /* SD0 slot */
- &sdhi0 {
+ &pinctrl {
+ 	audio_clock_pins: audio-clock {
+ 		pins = "AUDIO_CLK1", "AUDIO_CLK2";
+@@ -159,6 +165,11 @@ key-3-gpio-hog {
+ 		line-name = "key-3-gpio-irq";
+ 	};
+ 
++	pcie_pins: pcie {
++		pinmux = <RZG2L_PORT_PINMUX(13, 2, 2)>, /* PCIE_RST_OUT_B */
++			 <RZG2L_PORT_PINMUX(13, 3, 2)>; /* PCIE_CLKREQ_B */
++	};
++
+ 	scif0_pins: scif0 {
+ 		pinmux = <RZG2L_PORT_PINMUX(6, 3, 1)>, /* RXD */
+ 			 <RZG2L_PORT_PINMUX(6, 4, 1)>; /* TXD */
 -- 
 2.43.0
 
