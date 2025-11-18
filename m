@@ -1,105 +1,238 @@
-Return-Path: <linux-pci+bounces-41474-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41475-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD5DAC66D36
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 02:22:04 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F532C66DFC
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 02:42:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by tor.lore.kernel.org (Postfix) with ESMTPS id C320529AAB
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 01:22:03 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id DB3A7353ECA
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 01:42:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 134C42E7BDE;
-	Tue, 18 Nov 2025 01:21:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE674303C91;
+	Tue, 18 Nov 2025 01:42:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="clOPZIEC"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FAqaaPI6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011010.outbound.protection.outlook.com [52.101.52.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E68A41;
-	Tue, 18 Nov 2025 01:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763428918; cv=none; b=kJgKGbKP3Do+Y6pcCG0sC50UX6tTUat7C0jQcA5zr2S/vpHMnqzQ6RpqUHDw0w52iVl6zmlVkvgAEgF2RYUMmh7Ekc5iM2GGGNxqBL+83CYZKLZsAJMNx7x3LnW+pEQ9Gp/DbjquMr/ZubCLF9xokPipYkDxPDN/ofD2jJBP/MQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763428918; c=relaxed/simple;
-	bh=gC0izo8g7qmGTNiJnv07fRED8eg/SxP/5knq30PB2zM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lc2KZOSmUjQgiYXurzJx66xSoOkhb9qA0Ah36jFsEbv3th5ngYGilZzE5RY1wkEdxBw6Dxe/rvv3w34gqvJ6SUBjz2Z2LS8Pyk1TOcE+VKmJxLozhGqngo3QZ6+muBxhSmP1pbopT+TVa9YxyO1TF9Gms3wjg39w+5dXYDBRsPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=clOPZIEC; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763428917; x=1794964917;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gC0izo8g7qmGTNiJnv07fRED8eg/SxP/5knq30PB2zM=;
-  b=clOPZIECgXfZUo/vv1O/Ra7UQINS40713fYxbCNn+y3U5BE0qGBoM1GN
-   sPRlLTTdLU3lqd/TloXP/PCy8jaIr9oVr4sCrgbBHISefU6OKjLgEgEH7
-   7OkW0Ex/wg144sqsXFbojbTGMRJ1Z0k5PIgZ9iZ867NkR/VXPJjkbQuDZ
-   8wvDYAUfVVaaKgQRbye87cSR0J+FgS4HbJqEQFBDogDiJ3QCeiRKydBz7
-   SNOwhVBqrT/JCD/PviLgpkfDEA0vfkQK49up/uzkSW314IL82PSuP6G+e
-   X/tnoS085f5IQvr3tfHPhqNpNzjWbTOkLMbtasGc57ij4TMaP0oLd3+NE
-   A==;
-X-CSE-ConnectionGUID: QltTTvd/RvSoqcmayJbQlw==
-X-CSE-MsgGUID: hfHOoLz1Sme8V8HnBTZXZQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="65376493"
-X-IronPort-AV: E=Sophos;i="6.19,313,1754982000"; 
-   d="scan'208";a="65376493"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 17:21:56 -0800
-X-CSE-ConnectionGUID: fdNxlNY1TEOIV/GNwZacXw==
-X-CSE-MsgGUID: vza4yNpCRUWxU8QIhByGHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,313,1754982000"; 
-   d="scan'208";a="190282992"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa007.fm.intel.com with ESMTP; 17 Nov 2025 17:21:52 -0800
-Date: Tue, 18 Nov 2025 09:07:08 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: linux-coco@lists.linux.dev, linux-pci@vger.kernel.org,
-	chao.gao@intel.com, dave.jiang@intel.com, baolu.lu@linux.intel.com,
-	yilun.xu@intel.com, zhenzhong.duan@intel.com, kvm@vger.kernel.org,
-	rick.p.edgecombe@intel.com, dave.hansen@linux.intel.com,
-	dan.j.williams@intel.com, kas@kernel.org, x86@kernel.org
-Subject: Re: [PATCH v1 00/26] PCI/TSM: TDX Connect: SPDM Session and IDE
- Establishment
-Message-ID: <aRvGvKfoQiNRG9yX@yilunxu-OptiPlex-7050>
-References: <20251117022311.2443900-1-yilun.xu@linux.intel.com>
- <64e8f61a-101e-4cfe-8f99-b5f6b9c9afa5@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9F52D3A6A;
+	Tue, 18 Nov 2025 01:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763430159; cv=fail; b=OB0jdaMqakv2XdcRb6C6JLaQGFRWpVWK1mZOXDe3uQQvOhCCN+jkwjsb1Mm24vbYeA3ItLqbeWzcSdQFQcqFau36D99EVoh6E+8XR5HT8z0hKLehVx22iHE12wRXFVXSDCKCh06p8Di9gzcXrF/Zdc963It3EHGuGFq4k2FBp/w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763430159; c=relaxed/simple;
+	bh=4Rk8kNbU8XpFKV/vP/ZSb9cYhmN7SjEZW1S9nBDZsqY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BkE1zm/tBep4n7a/4P1rNKZxBNoYiWku+8091tOCyAhTwILE3k4N7849uCqFOPWC7e8m9qQsz03hULA/kZYiIyw6b6ao+et2LOxV9sYs+GRmGBOhJjZ3HBdWGt36/pcd3z2Q1LI6fkjiy9uSgzqqHez6JpxUxDutWl4CjrnZ/ek=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FAqaaPI6; arc=fail smtp.client-ip=52.101.52.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hL+k7joOx9Yks6EJ/+95t36xQb/RNZ3IIgbw9Nibz4h2egLtAjpHeFA9a10XXuRqlxlAhmxbuX93mtCdgsgUwCZGnR+YwwvJfeiLRBx8sHSsN12Dhb3DhF4zfJ6wZFK4L3RW5pHCXDS9JEUkAL9LgvhELuYZ25w8FwwUS0TD/mc16qsi4w1J+wFDLo9ilXW6JQyX2xNHgjUqrx+AMjDzQhsW49IqDkQl/1kVtyXKnVZXxdQnWiquSG/BT3UvzrK5e6morBFAcgG7hXOpnq3WuA4slI53dgzGlPccaK9DtZibbObpLczq80GwAUQ4C5ys9j1BRBT/4fCgr9PKOXmyzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JB8mAPyqV3cTWmWabAAn2V/tzOhGv+2AqWKcJ1GVgD0=;
+ b=K2UZxCj8yQSKARKc2tk3xZAqUPMMjLKPK8nfYjDSnvKU5zfnaQeTmzBW6Pris0DM8v1Mr6cEB8H6cQm1oUBDHE4tpmAIO4IM97nkwKMFh1z2/5Al/YRzVUzM+RVwMFY7feHxYU6iyutBobkD+JbftF3m0XLNzUawnsX4szyixWPAsXfy/6gLDw7+QbfBu/eab83HL0K1QA5Z+xbG1BzZCVqGs/fMiJduZy4m8DzmV825Y6Of2+zCJ5rbZEJUWXTW7rM/t6j8tCkjhPxbD3nxzW0k3hWVwZlD6kGvaLXKMi5GST9OWz81MDhr10a/rQi3qMZv4I+c2klT3alpk4oX+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JB8mAPyqV3cTWmWabAAn2V/tzOhGv+2AqWKcJ1GVgD0=;
+ b=FAqaaPI6ZM9EGgn65CQhKBe4wI6k/i6AGcTlqWE4vyoXlePskibVZMlFz5Q4TpbzAfidlvicJYcDI6W7wZz1ab2MIQxx75I2uySrruODL6eWMSu/xz+u57HfCw8X2KhDrhc1fcx5DN4vtsHCxdpCDxDlgLJXm/hAMzvvt3pItHWB/yxxlp6QWzqfc3R3MmpUbkkvnNzl02sK2MSA9FnZt7Nta4ZajBC2kO1N4LKaVk2bdTruYH+NbP21+SVW4vPjX8GX14dhLmtmPteZEQvcABNvyqkaDQARu7KRYnm218vWhH8QuwO6NAPhslyg/goii0ToBGlHCd5V/Op41ZOboQ==
+Received: from BLAPR03CA0112.namprd03.prod.outlook.com (2603:10b6:208:32a::27)
+ by DM6PR12MB4139.namprd12.prod.outlook.com (2603:10b6:5:214::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.22; Tue, 18 Nov
+ 2025 01:42:31 +0000
+Received: from BL02EPF0002992A.namprd02.prod.outlook.com
+ (2603:10b6:208:32a:cafe::9e) by BLAPR03CA0112.outlook.office365.com
+ (2603:10b6:208:32a::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.22 via Frontend Transport; Tue,
+ 18 Nov 2025 01:42:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BL02EPF0002992A.mail.protection.outlook.com (10.167.249.55) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9343.9 via Frontend Transport; Tue, 18 Nov 2025 01:42:31 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 17 Nov
+ 2025 17:42:15 -0800
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 17 Nov
+ 2025 17:42:14 -0800
+Received: from Asurada-Nvidia (10.127.8.11) by mail.nvidia.com (10.129.68.8)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
+ Transport; Mon, 17 Nov 2025 17:42:13 -0800
+Date: Mon, 17 Nov 2025 17:42:12 -0800
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+CC: "joro@8bytes.org" <joro@8bytes.org>, "afael@kernel.org"
+	<afael@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"alex@shazbot.org" <alex@shazbot.org>, "jgg@nvidia.com" <jgg@nvidia.com>,
+	"will@kernel.org" <will@kernel.org>, "robin.murphy@arm.com"
+	<robin.murphy@arm.com>, "lenb@kernel.org" <lenb@kernel.org>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"patches@lists.linux.dev" <patches@lists.linux.dev>, "Jaroszynski, Piotr"
+	<pjaroszynski@nvidia.com>, "Sethi, Vikram" <vsethi@nvidia.com>,
+	"helgaas@kernel.org" <helgaas@kernel.org>, "etzhao1900@gmail.com"
+	<etzhao1900@gmail.com>
+Subject: Re: [PATCH v5 5/5] pci: Suspend iommu function prior to resetting a
+ device
+Message-ID: <aRvO9KWjWC5rk/Vx@Asurada-Nvidia>
+References: <cover.1762835355.git.nicolinc@nvidia.com>
+ <a166b07a254d3becfcb0f86e4911af556acbe2a9.1762835355.git.nicolinc@nvidia.com>
+ <BN9PR11MB52762516D6259BBD8C3740518CCAA@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <aRduRi8zBHdUe4KO@Asurada-Nvidia>
+ <BN9PR11MB52761B6B1751BF64AEAA3F948CC9A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <aRt2/0rcdjcGk1Z1@Asurada-Nvidia>
+ <BN9PR11MB527649AD7D251EAAFDFB753A8CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <64e8f61a-101e-4cfe-8f99-b5f6b9c9afa5@intel.com>
+In-Reply-To: <BN9PR11MB527649AD7D251EAAFDFB753A8CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0002992A:EE_|DM6PR12MB4139:EE_
+X-MS-Office365-Filtering-Correlation-Id: 39a778ae-a752-434a-8c63-08de2643bd50
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?cAPNijP1XFqcrhTWtR3zZm0RMIlzLw3UdS6j0X+VNll8NjyfNbnWif6pAb8w?=
+ =?us-ascii?Q?B790CmU2I4ZrkZ/YW7grxM34d9DeFIyvKdCPZ+vvZDuVS2MMOurWOrXIFOQ0?=
+ =?us-ascii?Q?zqHlLX4Q9BzdZbFSoEneFkA4CtGHfOX6QbdmsMkKj0Azag3sNURNSzNl+MBD?=
+ =?us-ascii?Q?4FO36hfIL/dNTC1RflFaBHgltTrePWRmxlF40Na3hhaRW/sVf7dNcOWtMqBs?=
+ =?us-ascii?Q?9+Lq8bJXx0cZK2SMn0boHpZyf8yOb9Uq/QEKfZhCE0aGWblZUJzaPgBOxOuG?=
+ =?us-ascii?Q?yQMElhlNOHuicVBnkqeXL3X73bgdjaHSwdwGOCvCrlonxS8Wy4WlKxITqWMT?=
+ =?us-ascii?Q?UznKg8gbg25PWGzEUSDXndcno7spQuLnK82ARMOvp65b86m54qsE+BqyvCvW?=
+ =?us-ascii?Q?gzyMwIy2ovXJSwuWAAqLFPyHbH5zkkadQ2FHluTPqBs2IBiiV0uxJal7DNhm?=
+ =?us-ascii?Q?hgemPkr0jxYNoinYE9CsGDvGz7urTO4M0y30WLL4/gvwS+P81AwQm6BQwICO?=
+ =?us-ascii?Q?JUkJ8j84P+V7euDFdpSiOJPnPYW0JlAxLW6c5fFvavoqpe0cEbPn+xC9q5Vd?=
+ =?us-ascii?Q?Xk7aVpYogEgHfaHxP+7pjf9MtoA3uYfy5gcNtIaSOouf8O0/f3Lm2XnCh1ZI?=
+ =?us-ascii?Q?n8bcfvzcl9xrbKVNY627xrKMx/rtymvKx3j4B4inYGY95az37UuLdKtWdS18?=
+ =?us-ascii?Q?tllvVQMvpYhP/PXuNwUft8+ZpKOCaPfhmM7bL6xxPjFMuKwX+yeGb4bM+mnq?=
+ =?us-ascii?Q?36jXRyOzyfDIIWIrer0KqU6dXXA1x0iKNgTNYP/P4TBZRQf3DwbpJk6KW/7Z?=
+ =?us-ascii?Q?yw/7ctI+nhEAO2JgxGMzhsSmVifURNg2A82I9Hj5XKmRoJl0yUItjsW6M9De?=
+ =?us-ascii?Q?5wACayt9uVi7rLXa3AdgfIgtb6IJkIkzQbxMSxXJbPZTXWgh2I5Nhn9xoOOC?=
+ =?us-ascii?Q?TMg81qz6EECVg4siq+jrVARdby7ERkalgE1YVz4UVXQGH/JArICfnlajAY2/?=
+ =?us-ascii?Q?XXzL/Ybj9gvhJmCw7nt/IdszfoR/8v56yGfw4OCsriaNcs1SJIT5qhtK/Zym?=
+ =?us-ascii?Q?gtZBn0Yrv5GTFG8BSX45rqaRZOKPUZ15vbeaPS5ZfuEaiHwGa1GujLn/aM3p?=
+ =?us-ascii?Q?Wz6OgA32OI4OhxZjjRnt+zZWvFbJVx5t/VO8Sxct0xYnXEVENRWZnxdhNuE5?=
+ =?us-ascii?Q?C/WqT7X2h+kjlVWiCfRkud09NdCc7FV4JaHDSsmvXdyjSzg5YTN8Cx0p7Zcq?=
+ =?us-ascii?Q?0qBh9rKAX2ptY5ar0OZKgIjS8Q62m/M4qpXN2Z5K4Ldeoq47isTC6oVUUve/?=
+ =?us-ascii?Q?lulAoCkDqbXw4KAXmLv69qNy9BI4KL+Wv6h9do8JqhPH/UHbdCRC24Z1MH54?=
+ =?us-ascii?Q?7WNbnlFtxJij4YVOzU1EPbA9oko09kmT8nW9rmQbWofmenXJ8JjlMjceDd2d?=
+ =?us-ascii?Q?NpGIFAmTfz4ATbqHSQdsligQDkHnVgXjGdKN6aSXfauUT8UsD25Qluck0y6X?=
+ =?us-ascii?Q?eEeksS9GSuuHlVx2yTToHzthA4IRo2T+R3UX/KCxi4dEEzPiyNeNkyHmVMdT?=
+ =?us-ascii?Q?ENq39wq4QJkmNmS+mMM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2025 01:42:31.2162
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39a778ae-a752-434a-8c63-08de2643bd50
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0002992A.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4139
 
-On Mon, Nov 17, 2025 at 03:05:50PM -0800, Dave Hansen wrote:
-> On 11/16/25 18:22, Xu Yilun wrote:
-> > This is a new version of the RFC [1]. It is based on Dan's
-> > "Link" TSM Core infrastructure [2][3] + Sean's VMXON RFC [4]. All
-> > together they enable the SPDM Session and IDE Establishment for TDX
-> > Connect. This series and its base commits are available in Dan's
-> > tsm.git#staging [5].
+On Tue, Nov 18, 2025 at 12:29:43AM +0000, Tian, Kevin wrote:
+> > From: Nicolin Chen <nicolinc@nvidia.com>
+> > Sent: Tuesday, November 18, 2025 3:27 AM
+> > 
+> > On Mon, Nov 17, 2025 at 04:52:05AM +0000, Tian, Kevin wrote:
+> > > > From: Nicolin Chen <nicolinc@nvidia.com>
+> > > > Sent: Saturday, November 15, 2025 2:01 AM
+> > > >
+> > > > On Fri, Nov 14, 2025 at 09:45:31AM +0000, Tian, Kevin wrote:
+> > > > > > From: Nicolin Chen <nicolinc@nvidia.com>
+> > > > > > Sent: Tuesday, November 11, 2025 1:13 PM
+> > > > > >
+> > > > > > +/*
+> > > > > > + * Per PCIe r6.3, sec 10.3.1 IMPLEMENTATION NOTE, software
+> > disables
+> > > > ATS
+> > > > > > before
+> > > > > > + * initiating a reset. Notify the iommu driver that enabled ATS.
+> > > > > > + */
+> > > > > > +int pci_reset_iommu_prepare(struct pci_dev *dev)
+> > > > > > +{
+> > > > > > +	if (pci_ats_supported(dev))
+> > > > > > +		return iommu_dev_reset_prepare(&dev->dev);
+> > > > > > +	return 0;
+> > > > > > +}
+> > > > >
+> > > > > the comment says "driver that enabled ATS", but the code checks
+> > > > > whether ATS is supported.
+> > > > >
+> > > > > which one is desired?
+> > > >
+> > > > The comments says "the iommu driver that enabled ATS". It doesn't
+> > > > conflict with what the PCI core checks here?
+> > >
+> > > actually this is sent to all IOMMU drivers. there is no check on whether
+> > > a specific driver has enabled ATS in this path.
+> > 
+> > But the comment doesn't say "check"..
+> > 
+> > How about "Notify the iommu driver that enables/disables ATS"?
+> > 
+> > The point is that pci_enable_ats() is called in iommu drivers.
+> > 
 > 
-> What are your expectations from posting this series? You cc'd me on it.
-> What would you like me to do with it? Is it ready to be merged? Are you
-> looking for reviews?
+> but in current way even an iommu driver which doesn't call
+> pci_enable_ats() will also be notified then I didn't see the
+> point of adding an attribute to "the iommu driver".
 
-It is not ready to be merged cause we still have the vmxon dependency,
-but I'm still looking for reviews from TDX side so that I can get better
-prepared when the dependency solved.
+Hmm, that's a fair point.
 
-Thanks,
-Yilun
+Having looked closely, I see only AMD and ARM call that to enable
+ATs. How others (e.g. Intel) enable it?
 
-> 
-> Or, is it just kinda being thrown out here so we can see what you are up to?
+And how do you think of the followings?
+
+/*
+ * Per PCIe r6.3, sec 10.3.1 IMPLEMENTATION NOTE, software disables ATS before
+ * initiating a reset. Though not all IOMMU drivers calls pci_enable_ats(), it
+ * only gets invoked in IOMMU driver. And it is racy to check dev->ats_enabled
+ * here, as a concurrent IOMMU attachment can enable ATS right after this line.
+ *
+ * Notify the IOMMU driver to stop IOMMU translations until the reset is done,
+ * to ensure that the ATS function and its related invalidations are disabled.
+ */
+
+Thanks
+Nicolin
 
