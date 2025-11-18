@@ -1,84 +1,72 @@
-Return-Path: <linux-pci+bounces-41531-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41532-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDE57C6B933
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 21:20:10 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0570C6B9F6
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 21:31:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id ED82E4E6FC0
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 20:19:02 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D7F3C4F7017
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 20:26:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD0BB2FAC16;
-	Tue, 18 Nov 2025 20:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C27F53002A4;
+	Tue, 18 Nov 2025 20:22:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jQfDsn61"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMrjatDw"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675F22F5A09;
-	Tue, 18 Nov 2025 20:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5B82FBE0D;
+	Tue, 18 Nov 2025 20:22:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763497133; cv=none; b=PrcQYKssrnp0xvulveCyYeXju5TZSATElKZJVtAnFngskku1KB4I5yCRo67jAeFsDJH3Zq9j4sFnzCfksC+6B/W1kd9JOCB50tvPSEuPn24l95e0uH1gx/woB6btgfBsa+EDyXW6vV93hhjVAKRMbs54HwEVjy6O3VboXP4edek=
+	t=1763497333; cv=none; b=PU7MVTzxbhe7goc6hkDTMF0VIuxK0XAZ24W2dGnldVojMwVp8QVf+Eo+ehrpg5NUTzt9nNTsa4pxm3SnZsCNvFWihlrpUlnN/ACPUJDBdoJy+0Ir0J8iXKMxUbpCdEglz35U12fXMBf7Wdwy7W0vrn73OTWOqYWVA/73UiuAS00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763497133; c=relaxed/simple;
-	bh=1gK/eOl0lFoJx/Qsgws6pSF6IokRCQEg1Ra5CF1IxTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DyAz4EJaMZTVcVlGGJXT/6+F/txgIqLpC1ZCNYwhnEU9DwE7kXmDCsJkJCDnU61Lt9zstkg9koojiD0cAanBHByamiCI1lSnj8zcguY/4RP1CIfDx+zppuIJpMXZqouZr1+QJVbY8PhFkBvtasPswJdnlT5DPefrgauuC0+ABTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jQfDsn61; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D6C3C19423;
-	Tue, 18 Nov 2025 20:18:49 +0000 (UTC)
+	s=arc-20240116; t=1763497333; c=relaxed/simple;
+	bh=m/y5HsGDFoNmN0W5o2ZWtHNb/BQMArPMLKv4Hr2h3S8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=bgNDJNDkoEH5YtsRT4ubGiYqTQHv8BjSmd6QWoAVFCK5B6fnSkm2ybHzQq6z9BtgJgH/l8sFIuvGv4HRWfDwKFeFUVkjlAxW0gWxHFIiGtMeeDJ/EiSh5enjYLxTZjxoA+KtQp9Of0u57eGUMtWh1b9WbY/gMuv/aT46v5mzMhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMrjatDw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9819DC2BC86;
+	Tue, 18 Nov 2025 20:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763497133;
-	bh=1gK/eOl0lFoJx/Qsgws6pSF6IokRCQEg1Ra5CF1IxTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jQfDsn61vufo6YOfQo79y+Ndb5/49pM+Kzub8NVaHCny22FBzQnFTrSLg2XdPo1s4
-	 q4Q7m4B585DTvH5HVWQ0DO/E2wa7u3fFCYB85WskqwPYKBTtnUrrPrWPRE5C2Ymwu9
-	 XI6NikQcB+qyFCqrr5w+MjHt0GyCFcaWHiNnpAZuQe+VtouSDZ9qJ1I29igbCkZOyV
-	 6JDMlf1DxIGJwl0KrKoWkLUy0geHXeEkVLKutwvuAT1n5/hnFBjFl+IVPa8640+D5j
-	 uK0n9LGxWeIjzuFUFMy16vZC128qAY115S6xdY8r0buoE9dRHyEPS8qfYYbszF8xDd
-	 vw0kkKc8fqFoQ==
-Date: Tue, 18 Nov 2025 13:18:46 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	Alex Mastro <amastro@fb.com>, Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [PATCH v8 09/11] vfio/pci: Enable peer-to-peer DMA transactions
- by default
-Message-ID: <aRzUpmUkDy-qN5c1@kbusch-mbp>
-References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
- <20251111-dmabuf-vfio-v8-9-fd9aa5df478f@nvidia.com>
- <BN9PR11MB52767F78317AF3AB94A5B7D38CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
+	s=k20201202; t=1763497333;
+	bh=m/y5HsGDFoNmN0W5o2ZWtHNb/BQMArPMLKv4Hr2h3S8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=CMrjatDwWqdM/v1dfj1rdQS5VbA8KTQeF2MCab2sKZ+pRRyFCtoXrwdXRWP/MXJWb
+	 e2YL4Z9l8u4EMzOLcmz95mCYQJwYpOaExEL3/aF1iyxGNrbGwOdnq/v+TJ0wawd8Br
+	 60iotRVM03mtDzt6h01lahKDWUrBddEOgZru4vSf6Zuc6o8glHkqkIWb2cRA8Q1qdA
+	 WQtnOsFvOWYnZMMenGPUjUISmMbm4yMlBPp2M0frhiOpea+0EKQLY/5DnMxqPewZPp
+	 6F4QjGFzap+UESXlGdEOIK1E69TzlX5xOcyFcsqbBwramyit9tpnxvgkZ9DJGJ/Umw
+	 2vfGPd/xT6S/Q==
+Date: Tue, 18 Nov 2025 14:22:10 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Niklas Cassel <cassel@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Simon Xue <xxm@rock-chips.com>, Damien Le Moal <dlemoal@kernel.org>,
+	Dragan Simic <dsimic@manjaro.org>, FUKAUMI Naoki <naoki@radxa.com>,
+	Diederik de Haas <diederik@cknow-tech.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>, Frank Li <Frank.li@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Conor Dooley <conor@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Hans Zhang <hans.zhang@cixtech.com>, linux-tegra@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, kernel@pengutronix.de,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 1/4] PCI: dwc: Advertise L1 PM Substates only if driver
+ requests it
+Message-ID: <20251118202210.GA2586610@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,17 +75,64 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BN9PR11MB52767F78317AF3AB94A5B7D38CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
+In-Reply-To: <22srj63j7fzmsebwxwjnnxnpmdn2iwxo36gkrl36gdm7ge2xif@dmrdbfgu3hn3>
 
-On Tue, Nov 18, 2025 at 07:18:36AM +0000, Tian, Kevin wrote:
-> > From: Leon Romanovsky <leon@kernel.org>
-> > Sent: Tuesday, November 11, 2025 5:58 PM
+On Wed, Nov 12, 2025 at 11:21:07PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Nov 12, 2025 at 09:22:36AM +0100, Niklas Cassel wrote:
+> > On Tue, Nov 11, 2025 at 04:16:08PM -0600, Bjorn Helgaas wrote:
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > @@ -1060,6 +1060,8 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
+> > >  		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
+> > >  	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
+> > >  
+> > > +	dw_pcie_config_l1ss(pci);
+
+> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > @@ -1067,6 +1067,8 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+> > >  	val &= ~REQ_NOT_ENTR_L1;
+> > >  	writel(val, pcie->parf + PARF_PM_CTRL);
+> > >  
+> > > +	pci->l1ss_support = true;
+> > > +
+> > >  	val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+> > >  	val |= EN;
+> > >  	writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
 > > 
-> > From: Leon Romanovsky <leonro@nvidia.com>
+> > While it seems like ops_2_7_0 is the only type that explicitly does a
+> > register write to enable L1ss, other versions might have the register
+> > as enabled by default, so it would be nice if Mani could confirm exactly
+> > which versions that should set l1ss_support = true.
+> > 
 > 
-> not required with only your own s-o-b
+> Yes, on the rest of the platforms, this bit is supposed to be enabled by
+> default. AFAIK, all Qcom platforms should support L1SS, atleast the
+> non-IPQ/APQ ones.
+> 
+> We should set it for below cfgs:
+> 
+> cfg_fw_managed
+> cfg_sc8280xp
+> cfg_1_34_0
+> cfg_1_9_0
+> cfg_2_7_0
 
-That's automatically appended when the sender and signer don't match.
-It's not uncommon for developers to send from a kernel.org email but
-sign off with a corporate account, or the other way around.
+Except for cfg_fw_managed, the above are all covered by
+qcom_pcie_init_2_7_0(), either via ops_2_7_0, ops_1_9_0, or
+ops_1_21_0.
+
+cfg_fw_managed is harder because we don't use dw_pcie_host_init() or
+dw_pcie_setup_rc().
+
+We do allocate a struct dw_pcie (where l1ss_support is) in
+qcom_pcie_ecam_host_init(), but only so we can call
+dw_pcie_msi_host_init() and dw_pcie_msi_init().
+
+Neither of those seems like a logical place to fiddle with L1SS
+support.
+
+Open to suggestions.
+
+Bjorn
 
