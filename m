@@ -1,249 +1,214 @@
-Return-Path: <linux-pci+bounces-41493-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41494-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38084C689D4
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 10:44:32 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BBEEC68C36
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 11:18:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D0252365FFD
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 09:42:04 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 377EE35DA34
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 10:14:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 091283195E5;
-	Tue, 18 Nov 2025 09:41:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD3613321D9;
+	Tue, 18 Nov 2025 10:12:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UzR081wP"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nQGnFtnr";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="IPUyin9w"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E06726738B;
-	Tue, 18 Nov 2025 09:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7FA2D8375
+	for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 10:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763458912; cv=none; b=dQ9Kkw85qCTCmjTEyQiflGE94tYdEb/zObsZB+n3KmyB1m0we74H1ZZl2vF1TrUZo6WvWi/1gRjvGwvM76e4CBnoDZ/onp+MmTgi51DjB6vdgImyz2rOwO4smOG4VI/SEQ9JqNWkNyBP1mspKeBrUOc46nB5m5KIZhwoxSY39vw=
+	t=1763460720; cv=none; b=qFuTip6noU9mZ3ynXggWZ2hFoba0SWXYcvIMqpS1Oc3jdvlP4VVQzQaIrSDH9cZLRnsPbrn81PWBFLDSw33kPFJsA2EdCgq/3tchKtXiL5Cyw74nwlSLa7Aqa7TkN+YV20eVZwPPVnuen446kCmDp4b7NIL5pQ630fkmsSx1NK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763458912; c=relaxed/simple;
-	bh=6TUYgiA62XUz5gKE4YkIs/WJ0a5pVPi5602UevDtAlY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=CZVJH7N1QlV0b04C+rXmITqNfHyqDe5faj3x7mwLEKvbzJoQZvrOzUTzdRDEpBwf/KCorwxXbeJlt+g6gu2htSSaxUa/YRyaBtGZzcVD7NF8b4+NCadqmggjYrphveCUgukK3A4qD/gRQGFt35qZnwv782lUU7Oris28KO5hwJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UzR081wP; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763458911; x=1794994911;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=6TUYgiA62XUz5gKE4YkIs/WJ0a5pVPi5602UevDtAlY=;
-  b=UzR081wPZxkDRaaIbh1KppUZyn3crNGOIIxDKNhFbKEWsyMqgJm+vtq8
-   ZY976XJ6mjDkrVRn0Ot4+Gi6CkmI6ALQ0jtvbH23YOTfV5wXtt4uaqIMF
-   VfguenggWiXMe2rOWWMW4ktyHEAhZ8vfTgcJSdG22ZPLP9Q+4sUlQ64zm
-   P1PaSZCQnfkXhYpD8zznf5P1wJ6OtWNccmTZLjW8qpE2btgt3hmyUC+I2
-   dVy0g0cn2L6P4HUvE42k5vJXaNO8qQ4kP4s+xYRxZGX3L6aXSqWJww0X1
-   zH9jYZUdItmcMmPDXN5YlARc2XXiB1oqqy/lB5/klLs9VXo+6QxbsQAXT
-   w==;
-X-CSE-ConnectionGUID: YiQMgWYeR5+erdJnA/Lulw==
-X-CSE-MsgGUID: XrFja3FCSZaFeEE0FgsGPw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="64675468"
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="64675468"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 01:41:49 -0800
-X-CSE-ConnectionGUID: xmDX5Nz1QGeTmdrc+qjkfg==
-X-CSE-MsgGUID: 89IvyINKSiqWhYbke59zNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="190501785"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.74])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 01:41:41 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 18 Nov 2025 11:41:37 +0200 (EET)
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-cc: Rob Herring <robh@kernel.org>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-    Nicolas Schier <nicolas.schier@linux.dev>, 
-    Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-    Manivannan Sadhasivam <mani@kernel.org>, 
-    Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-    Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-    Bartosz Golaszewski <brgl@bgdev.pl>, 
-    linux-serial <linux-serial@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, linux-kbuild@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
-    devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-    linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
-    Stephan Gerhold <stephan.gerhold@linaro.org>, 
-    Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH 3/9] serdev: Allow passing the serdev device name to
- serdev_device_add()
-In-Reply-To: <20251112-pci-m2-e-v1-3-97413d6bf824@oss.qualcomm.com>
-Message-ID: <7053dfed-5eff-7182-bc85-0437a4074c82@linux.intel.com>
-References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com> <20251112-pci-m2-e-v1-3-97413d6bf824@oss.qualcomm.com>
+	s=arc-20240116; t=1763460720; c=relaxed/simple;
+	bh=2k8kp2eCR6II4n4tUCL2G0L3QQg9MS54ilVfxnRiAaQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lzFUxDrfINnt77IKKcvII54goIAln/bDdOOXf9N+ArLIYA8STMfONSXynSKtZcoMRtNBvgnsDvFMLmTvzRaHCljAwiSiIxzjUGvW/QJWC+FH3LHlgKX46B5svxzUHKrO1YJu9vP77K0gWVIM8pUJNCbvBlAMuGsjMyU5eA//zFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nQGnFtnr; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=IPUyin9w; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AI2w9FY375768
+	for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 10:11:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	KsUDUPxoq1t6MjKduGIYJdoPPwEgISWzAZ7LFsDaIFs=; b=nQGnFtnrJESm64mR
+	9pEc4QGS9+y/0mQ5OuNcwYcNBN7K9xcBXlAZDMp3AESCmTFz6V4EtRyMRhEok4FE
+	LJlTT7GbrrR5JD/PzKyzc1ItEtLZtrnFYMd3p1CStYB1LamauxsLJ/Vxu9dE6eWk
+	sNGBuKh/xOWdXERN2tINpi6JyN7Z499XZZ7UF37dVO74mRhpBy4BVbzX6Slp8a/k
+	vVDWFOIGBUuoT4WZ+dC3O2E09RSTsmIUOQA3YrwJZmz8zBS8PkEbCE/SyB3PW+3g
+	iHXBEcNt1S3G0aV7cwlkcczhwsXkck9+4QYTxIP5O3gPGA81pEQJCyhpNgsHHus7
+	FctMpg==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ag76njrk8-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 10:11:57 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-29557f43d56so66778455ad.3
+        for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 02:11:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1763460717; x=1764065517; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KsUDUPxoq1t6MjKduGIYJdoPPwEgISWzAZ7LFsDaIFs=;
+        b=IPUyin9wB/Vj6H+ZgeTe7FQvnCbZtFe/t9i3L99WcMLdy2R/Zx5bSXNIeLW3qGU3j/
+         vM207TqagJu3qEpYf88CvI3fbvtYxsOLkZqZoElD7CGPDxVSONqMalsc0doQ7oY8CLk9
+         IjH/QoCZqyXhwFrJX25541VFH2HfdcEBKf6IQzsIZj+PKtSO9v/B1Y9SG5r5sdspQPOY
+         AqttR7Ya6kSzqpzyk8vQ1Q1mUs09vs+g7hd7/atZnOR2PQ1tHeI+tPJtDbOtn3dQv+f3
+         irSaGjRVa02XCYYFqjIZ2Nk9pbBfzOxpRn1K2d7szCD+DAMKfUmns3MZjhG1b90NZtyD
+         CirQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763460717; x=1764065517;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KsUDUPxoq1t6MjKduGIYJdoPPwEgISWzAZ7LFsDaIFs=;
+        b=FO5na+ziGBCSajaBmRAyMXbT/BKgforyTQUHMv4gppMypmWZtMRUipoxUGahxSZY2n
+         /Z2Oajx9uUP81dWSTmhnEbhoftmduLyT1ZW3Jjv2uWQhlr717MLbU8epHp788xtfrz/m
+         BCC2nbPOwhpnLNN0FfCdmdgY6rYuWYUev708KTglnp71xup2L8UR2Fw7CLYHhG5A9M6G
+         i2dU/pDB3Ifil9ZQEBm0xbk80R68Ls7REe+yN+9cFfKVEGM07faaOiEn2YDFddIyzcwF
+         YXj8PIpT3mf0OgzZ3PEp028C6fU3dZYANHmfKq2KmqyH2uxdcBTvObKOXHYipRXsZNyZ
+         VEOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXtTnlARYjmcuUO/yVV4psuszWiiJWcGMV4FbzKftbKRvx+EnLb++7xRbFXTtn8GE+EqubiJoUpl+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOTDm5aBlrIqGkx58YevRagW47iRtUvyJhXgmUE0MeETb7yqz0
+	MtcqXIgo1lCvg6D4bvCY/GxJAeEWXibkmRfZCa+ddRz9zTRmsI1UGJ1H9lk9spgoD/DfpkHLsX0
+	iYKmjhvMPZjubWYTbuvmjxvea2o5TCG+Rg42J2ClEnr7zZYABeEEo5xwQr/xL3cY=
+X-Gm-Gg: ASbGncuyDHq/S6NYuW6qyhnQD8xlhCtYh3rjmyEniamNzAyzHgsyQjq4ogSHGo4totl
+	TB1B5/IvJo0YdKYDX+N8MPB6xho0Q58naN/CiVgIGHUZ3v9CPRW61QooSUvnSk/RgaoioBD2M2P
+	GiZAGyRzniNUxB646kBx7FWq85up21Z8DfZkUsCs47xBKubzqubJ1esFK/oNp2N21uu3sn4uEt5
+	dmrpV8hs0kVfLbjJxWtXmnXG6+Tr96nxtI0wpirDbl4Fns1eARUyvx2bIXctB+/f90SVYj9jfFc
+	Nuuae5zNONznqghRQT29lsWJ3Jb1RZrFtJq939DBsmZMfkhzIxdaAtaP2jgU2brK73zZyA+sGhZ
+	cTKkV2E0cB+xK3iy3B0N2Mp4LydayXTcAXOj7MTe9K+Ru/Aquu1KDJSKgS9yW7awB
+X-Received: by 2002:a17:902:f647:b0:298:42ba:c422 with SMTP id d9443c01a7336-2986a73303amr176999535ad.31.1763460716847;
+        Tue, 18 Nov 2025 02:11:56 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFSElhq/foZIVZg0t4wjamD5rzsGK+/4gwbgY+RGs+mSFiFVT1jM6xTJZ07fGy9cGHEujc8lw==
+X-Received: by 2002:a17:902:f647:b0:298:42ba:c422 with SMTP id d9443c01a7336-2986a73303amr176999195ad.31.1763460716345;
+        Tue, 18 Nov 2025 02:11:56 -0800 (PST)
+Received: from [10.133.33.100] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2986e5ef32asm133115195ad.39.2025.11.18.02.11.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Nov 2025 02:11:56 -0800 (PST)
+Message-ID: <12bce4de-9491-4040-991b-529bc916983c@oss.qualcomm.com>
+Date: Tue, 18 Nov 2025 18:11:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2055180828-1763458897=:1205"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: Add PCIe3 and PCIe5 regulators
+ for HAMAO-IOT-EVK board
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
+        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+        bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
+        kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+        kw@linux.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+        qiang.yu@oss.qualcomm.com, krishna.chundru@oss.qualcomm.com,
+        quic_vbadigan@quicinc.com
+References: <20251112090316.936187-1-ziyue.zhang@oss.qualcomm.com>
+ <20251112090316.936187-3-ziyue.zhang@oss.qualcomm.com>
+ <rakvukrdsb3vpr4k22hgvbr2yc65me32uezwrqgn2573kblirt@7q7pgr3nkvso>
+Content-Language: en-US
+From: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+In-Reply-To: <rakvukrdsb3vpr4k22hgvbr2yc65me32uezwrqgn2573kblirt@7q7pgr3nkvso>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE4MDA4MSBTYWx0ZWRfXw+42mkVSAvTi
+ fflNy3F3KTwIueF28ItjjAUocWKmWt1gtqCkAYuYKsGC7AIAdKGPSWSWf/6Qk6tauliW1lLMFh0
+ yxS6l/70gHErqcNwjs0JHQntvTTq4EQ7aZ3WsdU/Y5rKeahvw/gbKKoP1CmjF/PEBeemTHqTQrP
+ UcQFtl98VkVLHAEJLAJR2ACwVbu/xeaqk/gw8F6fqPi3tFvAczTSO1YCWyodJ41nA6K43CEMVi1
+ a84XjzC1TLcNwJPi1QUe1xqaYdpv5vrEeF+1yj53zUchyx2+tnM27LmXPb0KcRLtzg1o9Fk1eFv
+ BLFSL860sNvBwCDsP8uC86n1pozpp/NuUChvu3HiIM08e0mXgJm/qY/Ionx+umJ4wC1lA3tqhE3
+ i50JZFhmjX/pbsPKmQKK7QWvkdh+Lg==
+X-Proofpoint-GUID: _e3UnhT8bvdL6JiZAEMGzzCuUgoX966G
+X-Proofpoint-ORIG-GUID: _e3UnhT8bvdL6JiZAEMGzzCuUgoX966G
+X-Authority-Analysis: v=2.4 cv=a4I9NESF c=1 sm=1 tr=0 ts=691c466d cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=0FT5JWsqCLsmEzCoxIcA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-17_04,2025-11-13_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 suspectscore=0 spamscore=0 clxscore=1015 bulkscore=0
+ adultscore=0 malwarescore=0 priorityscore=1501 impostorscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511180081
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-2055180828-1763458897=:1205
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On 11/13/2025 5:16 AM, Dmitry Baryshkov wrote:
+> On Wed, Nov 12, 2025 at 05:03:16PM +0800, Ziyue Zhang wrote:
+>> HAMAO IoT EVK uses PCIe5 to connect an SDX65 module for WWAN functionality
+>> and PCIe3 to connect a SATA controller. These interfaces require multiple
+>> voltage rails: PCIe5 needs 3.3V supplied by vreg_wwan, while PCIe3 requires
+>> 12V, 3.3V, and 3.3V AUX rails, controlled via PMIC GPIOs.
+>>
+>> Add the required fixed regulators with related pin configuration, and
+>> connect them to the PCIe3 and PCIe5 ports to ensure proper power for the
+>> SDX65 module and SATA controller.
+>>
+>> Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+>> Reviewed-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>> ---
+>>   arch/arm64/boot/dts/qcom/hamoa-iot-evk.dts | 83 ++++++++++++++++++++++
+>>   1 file changed, 83 insertions(+)
+>>
+>> +&pmc8380_3_gpios {
+>> +	pm_sde7_aux_3p3_en: pcie-aux-3p3-default-state {
+> What is sde7? Other than that:
+>
+>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+>
+Hi Dmitry
 
-On Wed, 12 Nov 2025, Manivannan Sadhasivam via B4 Relay wrote:
+I’m not sure what “sde7” refers to specifically. I saw this name in the
 
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
->=20
-> Instead of always setting the serdev device name from 'struct device' nam=
-e,
-> allow the callers to pass an optional name and set it as the serdev devic=
-e
-> name.
->=20
-> This will be used by the future callers passing the serdev device ID as t=
-he
-> name.
->=20
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.=
-com>
-> ---
->  drivers/platform/x86/dell/dell-uart-backlight.c             |  2 +-
->  .../platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c    |  2 +-
->  drivers/platform/x86/x86-android-tablets/core.c             |  2 +-
->  drivers/tty/serdev/core.c                                   | 13 +++++++=
-++----
->  include/linux/serdev.h                                      |  2 +-
->  5 files changed, 13 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/pl=
-atform/x86/dell/dell-uart-backlight.c
-> index f323a667dc2d2c7dec9fb284515bc3b6b984b7b9..f076cfac2bc5ec14899d6622d=
-084bae2ffecfa3c 100644
-> --- a/drivers/platform/x86/dell/dell-uart-backlight.c
-> +++ b/drivers/platform/x86/dell/dell-uart-backlight.c
-> @@ -354,7 +354,7 @@ static int dell_uart_bl_pdev_probe(struct platform_de=
-vice *pdev)
->  =09if (!serdev)
->  =09=09return -ENOMEM;
-> =20
-> -=09ret =3D serdev_device_add(serdev);
-> +=09ret =3D serdev_device_add(serdev, NULL);
->  =09if (ret) {
->  =09=09dev_err(&pdev->dev, "error %d adding serdev\n", ret);
->  =09=09serdev_device_put(serdev);
-> diff --git a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c=
- b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-> index 8551ab4d2c7dbc3a8d0b2f50071d4460a3ee65e9..5e568fe1162d1563183713f8d=
-5c71c59ff7667a1 100644
-> --- a/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-> +++ b/drivers/platform/x86/lenovo/yoga-tab2-pro-1380-fastcharger.c
-> @@ -260,7 +260,7 @@ static int yt2_1380_fc_pdev_probe(struct platform_dev=
-ice *pdev)
->  =09/* The fwnode is a managed node, so it will be auto-put on serdev_dev=
-ice_put() */
->  =09fwnode_handle_get(dev_fwnode(&serdev->dev));
-> =20
-> -=09ret =3D serdev_device_add(serdev);
-> +=09ret =3D serdev_device_add(serdev, NULL);
->  =09if (ret) {
->  =09=09serdev_device_put(serdev);
->  =09=09return dev_err_probe(&pdev->dev, ret, "adding serdev\n");
-> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/pl=
-atform/x86/x86-android-tablets/core.c
-> index 6588fae303562b7dc9a1a8d281b167e44f0d3e84..96140f5d4f79240f44cb4530e=
-e63777f783c6aaf 100644
-> --- a/drivers/platform/x86/x86-android-tablets/core.c
-> +++ b/drivers/platform/x86/x86-android-tablets/core.c
-> @@ -316,7 +316,7 @@ static __init int x86_instantiate_serdev(const struct=
- x86_dev_info *dev_info, in
->  =09ACPI_COMPANION_SET(&serdev->dev, serdev_adev);
->  =09acpi_device_set_enumerated(serdev_adev);
-> =20
-> -=09ret =3D serdev_device_add(serdev);
-> +=09ret =3D serdev_device_add(serdev, NULL);
->  =09if (ret) {
->  =09=09dev_err(&serdev->dev, "error %d adding serdev\n", ret);
->  =09=09serdev_device_put(serdev);
-> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-> index 2b5582cd5063a87c9a6c99f83a8ab071637eae57..76b89dd0720f89dbe34e205b9=
-05ef24d9f94d770 100644
-> --- a/drivers/tty/serdev/core.c
-> +++ b/drivers/tty/serdev/core.c
-> @@ -121,14 +121,19 @@ static int serdev_device_match(struct device *dev, =
-const struct device_driver *d
->  /**
->   * serdev_device_add() - add a device previously constructed via serdev_=
-device_alloc()
->   * @serdev:=09serdev_device to be added
-> + * @name:=09name of the serdev device (optional)
->   */
-> -int serdev_device_add(struct serdev_device *serdev)
-> +int serdev_device_add(struct serdev_device *serdev, const char *name)
-> +
->  {
->  =09struct serdev_controller *ctrl =3D serdev->ctrl;
->  =09struct device *parent =3D serdev->dev.parent;
->  =09int err;
-> =20
-> -=09dev_set_name(&serdev->dev, "%s-%d", dev_name(parent), serdev->nr);
-> +=09if (name)
-> +=09=09dev_set_name(&serdev->dev, "%s", name);
-> +=09else
-> +=09=09dev_set_name(&serdev->dev, "%s-%d", dev_name(parent), serdev->nr);
-> =20
->  =09/* Only a single slave device is currently supported. */
->  =09if (ctrl->serdev) {
-> @@ -544,7 +549,7 @@ static int of_serdev_register_devices(struct serdev_c=
-ontroller *ctrl)
-> =20
->  =09=09device_set_node(&serdev->dev, of_fwnode_handle(node));
-> =20
-> -=09=09err =3D serdev_device_add(serdev);
-> +=09=09err =3D serdev_device_add(serdev, NULL);
->  =09=09if (err) {
->  =09=09=09dev_err(&serdev->dev,
->  =09=09=09=09"failure adding device. status %pe\n",
-> @@ -692,7 +697,7 @@ static acpi_status acpi_serdev_register_device(struct=
- serdev_controller *ctrl,
->  =09ACPI_COMPANION_SET(&serdev->dev, adev);
->  =09acpi_device_set_enumerated(adev);
-> =20
-> -=09err =3D serdev_device_add(serdev);
-> +=09err =3D serdev_device_add(serdev, NULL);
->  =09if (err) {
->  =09=09dev_err(&serdev->dev,
->  =09=09=09"failure adding ACPI serdev device. status %pe\n",
-> diff --git a/include/linux/serdev.h b/include/linux/serdev.h
-> index ee42e293445d928a311bd3c120e609214f89a5dd..3b87909b199af74d619b4fe54=
-8c5c9c994e7bc15 100644
-> --- a/include/linux/serdev.h
-> +++ b/include/linux/serdev.h
-> @@ -163,7 +163,7 @@ static inline void serdev_controller_put(struct serde=
-v_controller *ctrl)
->  }
-> =20
->  struct serdev_device *serdev_device_alloc(struct serdev_controller *);
-> -int serdev_device_add(struct serdev_device *);
-> +int serdev_device_add(struct serdev_device *serdev, const char *name);
->  void serdev_device_remove(struct serdev_device *);
-> =20
->  struct serdev_controller *serdev_controller_alloc(struct device *host,
->=20
->=20
+schematic, and the pin is labeled PM_SDE7_AUX_3P3, so I used that naming
 
-Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+in the DT.
 
---=20
- i.
 
---8323328-2055180828-1763458897=:1205--
+BRs
+
+Ziyue
+
+>
+>> +		pins = "gpio8";
+>> +		function = "normal";
+>> +		output-enable;
+>> +		output-high;
+>> +		bias-pull-down;
+>> +		power-source = <0>;
+>> +	};
+>> +
+>> +	pm_sde7_main_3p3_en: pcie-main-3p3-default-state {
+>> +		pins = "gpio6";
+>> +		function = "normal";
+>> +		output-enable;
+>> +		output-high;
+>> +		bias-pull-down;
+>> +		power-source = <0>;
+>> +	};
+>> +};
+>> +
+>>   &pmc8380_5_gpios {
+>>   	usb0_pwr_1p15_reg_en: usb0-pwr-1p15-reg-en-state {
+>>   		pins = "gpio8";
+>> -- 
+>> 2.34.1
+>>
 
