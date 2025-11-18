@@ -1,158 +1,180 @@
-Return-Path: <linux-pci+bounces-41477-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41478-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAA4EC6750F
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 06:08:47 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A2F1C679B4
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 06:44:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6848B4E241D
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 05:08:46 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 90677362836
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 05:43:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23E8028032D;
-	Tue, 18 Nov 2025 05:08:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56E262D7390;
+	Tue, 18 Nov 2025 05:43:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C4/oGfUL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eCi2ciKB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207BF1B4257
-	for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 05:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CA12C375A;
+	Tue, 18 Nov 2025 05:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763442523; cv=none; b=VhlZVysMsbozZM9IhQUk5VQSa87Rk9IngJZJolcDRbtZCqCZC51pspjOdhBVxJ9U10UBBsp8So3uv/HxYpQvVRiS8g7LLRmy9yhXNTqEpgN4Lt3uly75wkJuv74AGgiAB5XkqMy+IaRbonYxpDot5RvcVPDQiE56EI80HOaJgT0=
+	t=1763444582; cv=none; b=nBf6bQNSr3Rs9hbJiYzLMac+PoU1UMSzJ6+eJ29290gR106vpp5T3YKFbf3YS48Srv6NaQuDXbVVIJ0trppYXNYKNS9FDuZtAyQA5zN+ywIYs6pL3QflgSU5fo1EwB9yOUiKdSOSO0slCpG3v7guzPUEbljUnIIOEfu4vKZUHuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763442523; c=relaxed/simple;
-	bh=pLz47jPyiToJiws+Auw267KV9qM2WilSOud6tPBiN3U=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=E2ge5BHZjkEU15lgulAf5VGX1YoE+rXI8bGA2QnGJmsN/DOnesZYCZwMj2yNksf3cXQBT6mrLf/91/JzI4iAclbkoBi35YF//OEBbzyVwFUh237I/NWmhIZwCEAUg1IYNe6MMatlm1iMiOvWbVAQDuMNbJ3k9+ihIwFJFdl9BfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C4/oGfUL; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1763444582; c=relaxed/simple;
+	bh=VbFlU1LcdUBsBT5iUvR+tT4oc46fne2Q1MslnRGjrXM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d9Ok7MiFJfUvtFkb4rVNuYnf3YhMBc+wGIhYQKs/HPp1ILRP7MDlKdRz7CRxYFfSCrsGTZieGQtLzmvoBOo9ewWTWqVj4OTF5ItupvxZzvKgoPC110q7+GqWOGAYfDw76Bxal6Ydm2W64y/yzc2Hr6oeOLWG1CQS7Jw4VmgHQrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eCi2ciKB; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763442522; x=1794978522;
-  h=date:from:to:cc:subject:message-id;
-  bh=pLz47jPyiToJiws+Auw267KV9qM2WilSOud6tPBiN3U=;
-  b=C4/oGfUL34HY0wSIau/Q979VHaXew7BddJeV7NLd08MJHdL4CXNh4y4T
-   5GWl70HYiG0izIT/9Ibe3DYup8V6JQKpBF/uWD/Gz3YCdlWbjWv/SWCTF
-   YzEHi3ozrOEfk93kFdQCvratfvDOfLmdRxNFda177ood/r1n7LHgCpiDs
-   9fuIKAtWzzW9nPVcQ+3qL6QHtW4e00tm/Je4tEXyGBB918gkeCX3H3XZk
-   +MGHW/7Ry4AvADqnY4bFZinv/n8jVVVmdfVTWPG34BWVCSJvr+AtXlbX0
-   c5Z1r6M96YVgaAMbWIjsp7CqcS6Y+e/BF5++3LAiRFW3iUnrsNt07qTbZ
+  t=1763444580; x=1794980580;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VbFlU1LcdUBsBT5iUvR+tT4oc46fne2Q1MslnRGjrXM=;
+  b=eCi2ciKB9b7KgkNk1jfw9VcYsjglAW0ZAh3w2F7Cnm+PkwaBC8qO4byX
+   00Z6auwQU2PTfrauR3L72Z/IdBuVfxM43i8lW2IKYiATSjLy2iwoYwu7G
+   jugPt9oFB1ERW3+Z/EQig/YYYUGj/3AL+/KH7m5T9I2cHIvvf+u65UzZL
+   gr1FLVj5jQeXSaFnFL+vlIsohr7Bmt8cU/QFiKY3t4HaJSbeEYaCX2jxr
+   Zq3coVSrCKkQLgsBBs2UPd+ix8nWYeTPz5CvH3yUWn/3jKhxCtFroaEpy
+   emql+5rSXtx43LYaN/tQKgRpZ3diBE92+M6enYd8z2e9KePLz2Mj5EABw
    A==;
-X-CSE-ConnectionGUID: 6H+5tUQ3SLy1oAsclmjHbQ==
-X-CSE-MsgGUID: nXmQZdmSQfSKukVVNx/jFQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="76915302"
-X-IronPort-AV: E=Sophos;i="6.19,313,1754982000"; 
-   d="scan'208";a="76915302"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 21:08:41 -0800
-X-CSE-ConnectionGUID: 6u7ZISlSQ6qR9sQYKblyeQ==
-X-CSE-MsgGUID: vj6BsUvNSouA0J90Mjd7Hg==
+X-CSE-ConnectionGUID: bslzijx8T1qhH02II5RoCA==
+X-CSE-MsgGUID: jRi3erMBSuykmaoUU46cQg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="53028423"
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="53028423"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 21:42:59 -0800
+X-CSE-ConnectionGUID: g55xazAASY6gp1sqPcfseQ==
+X-CSE-MsgGUID: 9IDYRVS6RdmXV8k/XcCKXg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,313,1754982000"; 
-   d="scan'208";a="195117723"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 17 Nov 2025 21:08:39 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vLDxF-0001LZ-1T;
-	Tue, 18 Nov 2025 05:08:37 +0000
-Date: Tue, 18 Nov 2025 13:08:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:ptm] BUILD SUCCESS
- 044b9f1a7f4f3d41563007d0762c83a7d7505ac0
-Message-ID: <202511181321.15iSSerm-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="189924294"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 21:42:54 -0800
+Message-ID: <4eeda61a-c71d-4ad1-8ac7-a14942f7a864@linux.intel.com>
+Date: Tue, 18 Nov 2025 13:38:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 5/5] pci: Suspend iommu function prior to resetting a
+ device
+To: Nicolin Chen <nicolinc@nvidia.com>, "Tian, Kevin" <kevin.tian@intel.com>
+Cc: "joro@8bytes.org" <joro@8bytes.org>, "afael@kernel.org"
+ <afael@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
+ "alex@shazbot.org" <alex@shazbot.org>, "jgg@nvidia.com" <jgg@nvidia.com>,
+ "will@kernel.org" <will@kernel.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>,
+ "lenb@kernel.org" <lenb@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "patches@lists.linux.dev" <patches@lists.linux.dev>,
+ "Jaroszynski, Piotr" <pjaroszynski@nvidia.com>,
+ "Sethi, Vikram" <vsethi@nvidia.com>, "helgaas@kernel.org"
+ <helgaas@kernel.org>, "etzhao1900@gmail.com" <etzhao1900@gmail.com>
+References: <cover.1762835355.git.nicolinc@nvidia.com>
+ <a166b07a254d3becfcb0f86e4911af556acbe2a9.1762835355.git.nicolinc@nvidia.com>
+ <BN9PR11MB52762516D6259BBD8C3740518CCAA@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <aRduRi8zBHdUe4KO@Asurada-Nvidia>
+ <BN9PR11MB52761B6B1751BF64AEAA3F948CC9A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <aRt2/0rcdjcGk1Z1@Asurada-Nvidia>
+ <BN9PR11MB527649AD7D251EAAFDFB753A8CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <aRvO9KWjWC5rk/Vx@Asurada-Nvidia>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <aRvO9KWjWC5rk/Vx@Asurada-Nvidia>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git ptm
-branch HEAD: 044b9f1a7f4f3d41563007d0762c83a7d7505ac0  PCI/PTM: Enable only if device advertises relevant role
+On 11/18/25 09:42, Nicolin Chen wrote:
+> On Tue, Nov 18, 2025 at 12:29:43AM +0000, Tian, Kevin wrote:
+>>> From: Nicolin Chen<nicolinc@nvidia.com>
+>>> Sent: Tuesday, November 18, 2025 3:27 AM
+>>>
+>>> On Mon, Nov 17, 2025 at 04:52:05AM +0000, Tian, Kevin wrote:
+>>>>> From: Nicolin Chen<nicolinc@nvidia.com>
+>>>>> Sent: Saturday, November 15, 2025 2:01 AM
+>>>>>
+>>>>> On Fri, Nov 14, 2025 at 09:45:31AM +0000, Tian, Kevin wrote:
+>>>>>>> From: Nicolin Chen<nicolinc@nvidia.com>
+>>>>>>> Sent: Tuesday, November 11, 2025 1:13 PM
+>>>>>>>
+>>>>>>> +/*
+>>>>>>> + * Per PCIe r6.3, sec 10.3.1 IMPLEMENTATION NOTE, software
+>>> disables
+>>>>> ATS
+>>>>>>> before
+>>>>>>> + * initiating a reset. Notify the iommu driver that enabled ATS.
+>>>>>>> + */
+>>>>>>> +int pci_reset_iommu_prepare(struct pci_dev *dev)
+>>>>>>> +{
+>>>>>>> +	if (pci_ats_supported(dev))
+>>>>>>> +		return iommu_dev_reset_prepare(&dev->dev);
+>>>>>>> +	return 0;
+>>>>>>> +}
+>>>>>> the comment says "driver that enabled ATS", but the code checks
+>>>>>> whether ATS is supported.
+>>>>>>
+>>>>>> which one is desired?
+>>>>> The comments says "the iommu driver that enabled ATS". It doesn't
+>>>>> conflict with what the PCI core checks here?
+>>>> actually this is sent to all IOMMU drivers. there is no check on whether
+>>>> a specific driver has enabled ATS in this path.
+>>> But the comment doesn't say "check"..
+>>>
+>>> How about "Notify the iommu driver that enables/disables ATS"?
+>>>
+>>> The point is that pci_enable_ats() is called in iommu drivers.
+>>>
+>> but in current way even an iommu driver which doesn't call
+>> pci_enable_ats() will also be notified then I didn't see the
+>> point of adding an attribute to "the iommu driver".
+> Hmm, that's a fair point.
+> 
+> Having looked closely, I see only AMD and ARM call that to enable
+> ATs. How others (e.g. Intel) enable it?
 
-elapsed time: 7519m
+The VT-d driver enables ATS in the iommu probe_finalize() path (for
+scalable mode).
 
-configs tested: 65
-configs skipped: 1
+static void intel_iommu_probe_finalize(struct device *dev)
+{
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+[...]
+         if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev)) {
+                 iommu_enable_pci_ats(info);
+                 /* Assign a DEVTLB cache tag to the default domain. */
+                 if (info->ats_enabled && info->domain) {
+                         u16 did = domain_id_iommu(info->domain, iommu);
 
-tested configs:
-alpha               allnoconfig    gcc-15.1.0
-alpha              allyesconfig    gcc-15.1.0
-arc                 allnoconfig    gcc-15.1.0
-arm                 allnoconfig    clang-22
-arm64               allnoconfig    gcc-15.1.0
-arm64              allyesconfig    clang-22
-csky               allmodconfig    gcc-15.1.0
-csky                allnoconfig    gcc-15.1.0
-csky               allyesconfig    gcc-15.1.0
-hexagon            allmodconfig    clang-17
-hexagon             allnoconfig    clang-22
-hexagon            allyesconfig    clang-22
-i386               allmodconfig    gcc-14
-i386                allnoconfig    gcc-14
-i386               allyesconfig    gcc-14
-loongarch          allmodconfig    clang-19
-loongarch           allnoconfig    clang-22
-loongarch          allyesconfig    clang-22
-m68k               allmodconfig    gcc-15.1.0
-m68k                allnoconfig    gcc-15.1.0
-m68k               allyesconfig    gcc-15.1.0
-microblaze         allmodconfig    gcc-15.1.0
-microblaze          allnoconfig    gcc-15.1.0
-microblaze         allyesconfig    gcc-15.1.0
-mips               allmodconfig    gcc-15.1.0
-mips                allnoconfig    gcc-15.1.0
-mips               allyesconfig    gcc-15.1.0
-nios2              allmodconfig    gcc-11.5.0
-nios2               allnoconfig    gcc-11.5.0
-nios2              allyesconfig    gcc-11.5.0
-openrisc           allmodconfig    gcc-15.1.0
-openrisc            allnoconfig    gcc-15.1.0
-openrisc           allyesconfig    gcc-15.1.0
-parisc             allmodconfig    gcc-15.1.0
-parisc              allnoconfig    gcc-15.1.0
-parisc             allyesconfig    gcc-15.1.0
-powerpc            allmodconfig    gcc-15.1.0
-powerpc             allnoconfig    gcc-15.1.0
-riscv              allmodconfig    clang-22
-riscv               allnoconfig    gcc-15.1.0
-riscv              allyesconfig    clang-16
-s390               allmodconfig    clang-18
-s390                allnoconfig    clang-22
-s390               allyesconfig    gcc-15.1.0
-sh                 allmodconfig    gcc-15.1.0
-sh                  allnoconfig    gcc-15.1.0
-sh                 allyesconfig    gcc-15.1.0
-sparc              allmodconfig    gcc-15.1.0
-sparc               allnoconfig    gcc-15.1.0
-um                 allmodconfig    clang-19
-um                  allnoconfig    clang-22
-um                 allyesconfig    gcc-14
-x86_64             allmodconfig    clang-20
-x86_64              allnoconfig    clang-20
-x86_64             allyesconfig    clang-20
-x86_64                    kexec    clang-20
-x86_64                 rhel-9.4    clang-20
-x86_64             rhel-9.4-bpf    gcc-14
-x86_64            rhel-9.4-func    clang-20
-x86_64      rhel-9.4-kselftests    clang-20
-x86_64           rhel-9.4-kunit    gcc-14
-x86_64             rhel-9.4-ltp    gcc-14
-x86_64            rhel-9.4-rust    clang-20
-xtensa              allnoconfig    gcc-15.1.0
-xtensa             allyesconfig    gcc-15.1.0
+                         if (cache_tag_assign(info->domain, did, dev,
+                                              IOMMU_NO_PASID, 
+CACHE_TAG_DEVTLB))
+                                 iommu_disable_pci_ats(info);
+                 }
+         }
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[...]
+}
+
+iommu_enable_pci_ats() will eventually call pci_enable_ats() after some
+necessary checks.
+
+Thanks,
+baolu
 
