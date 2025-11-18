@@ -1,77 +1,69 @@
-Return-Path: <linux-pci+bounces-41502-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41499-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id D99E2C698F8
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 14:15:22 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC2F7C6984A
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 14:02:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EE7BD4E2B73
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 13:14:57 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTPS id 7413E28D56
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 13:02:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76D5C31B805;
-	Tue, 18 Nov 2025 13:14:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2569F2D97BC;
+	Tue, 18 Nov 2025 13:02:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mAGIomI2"
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="v04/qdvc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26368329E46;
-	Tue, 18 Nov 2025 13:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8B123BCFF;
+	Tue, 18 Nov 2025 13:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763471694; cv=none; b=BVyvMDLsdbExqfx6uL0+aH/YDr6zeUYJhTotkIgNayZGUqsxE92L1gMGgkuT10/+d5MB7Ndnq7YDohh+yT54FMK3WYrqMOTJuB2hlMSAih+B4xwGOKOk1VMHm2FjHw6Q18ilHczTgvyhP+/WgnvSHvvflHp0sgZKfwq8fElV2jA=
+	t=1763470941; cv=none; b=kGlYYKwI0gu7otjeV59HWxXUTaXRZ3rbRPgh50cyUFEY/8O/nZdWsYzfuScY8tFyf8nt44c2EEVncowfjxph44INTJAqBPshe4ofYXNbehADkJj+LGNffo99SwRB78KKd3k9MghCYTvIKRG7oSOGbeCLwV2R6Uz8rMzqIt/Lqdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763471694; c=relaxed/simple;
-	bh=6eM5MEhpy8qjHBQhtFNZN0yn242L+U7uvd1kx4IHV/E=;
+	s=arc-20240116; t=1763470941; c=relaxed/simple;
+	bh=CB2uOReZgsobtwaBKBpmnV0Wphw1VrV1rB9pFCourqE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MYUp9yzvI1henfpViH0mQctxBPFjCUwoedFjK7r9e6uB7i4gD6mSRd7FZXY9vmbjhNmjT7Vy0FxhfvCZAHpE99PL5diCRaJDsbMNqxyCd18H8uIDLLxpX1yrIYe5/Jp/hB0LgEON4jmRMGws5lAiQZQzwGjAcj0ybwjYTNOBJyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mAGIomI2; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763471692; x=1795007692;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6eM5MEhpy8qjHBQhtFNZN0yn242L+U7uvd1kx4IHV/E=;
-  b=mAGIomI2GRIWPp9ms0iyg8NbaUUnxz3aMLg433BKBwVsPVBBIijM5K9v
-   CTEIumnBSTPbwvGiwp2qVLoQqvmtz9NoOtnfZGaFID8s5ehm4yKSxWB3A
-   sKhK/GbmzvyuYF0gtxGn5bk1Ef3NUIEH2nY8dZaXF37IJrVALHFtZMWlf
-   57eVq3mLqZH12jg0lLgMtRdQp2Z/QoZ7hwP2QfgLx38mZN0SdEYqQtpJY
-   M0eN/5XZIpQy4oVlGw4EngWsZbQFWWOANp9/J/hASX12h+sGZOzB619N8
-   ByY+6QkKzt+WY5QjMdOI5U7f1C2jlgSLUaz4BD71P6w8y+NMc580RYjl3
-   A==;
-X-CSE-ConnectionGUID: RfNB7KOSQ1axWoMPtoSNMw==
-X-CSE-MsgGUID: JtSW52ERRfSR96apoBEtRg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="69361867"
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="69361867"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 05:14:51 -0800
-X-CSE-ConnectionGUID: q0noG09pSv+jtV0xmXaiGA==
-X-CSE-MsgGUID: NncBD5WsSnCq7CwXI6o+VA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="194870125"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa003.jf.intel.com with ESMTP; 18 Nov 2025 05:14:48 -0800
-Date: Tue, 18 Nov 2025 21:00:02 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: linux-coco@lists.linux.dev, linux-pci@vger.kernel.org,
-	chao.gao@intel.com, dave.jiang@intel.com, baolu.lu@linux.intel.com,
-	yilun.xu@intel.com, zhenzhong.duan@intel.com, kvm@vger.kernel.org,
-	rick.p.edgecombe@intel.com, dave.hansen@linux.intel.com,
-	dan.j.williams@intel.com, kas@kernel.org, x86@kernel.org
-Subject: Re: [PATCH v1 07/26] x86/virt/tdx: Read TDX global metadata for TDX
- Module Extensions
-Message-ID: <aRxt0prMKusEEt2+@yilunxu-OptiPlex-7050>
-References: <20251117022311.2443900-1-yilun.xu@linux.intel.com>
- <20251117022311.2443900-8-yilun.xu@linux.intel.com>
- <89a4e42d-b0fd-49b0-8d51-df7bac0d5e5b@intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=WoTfX4VphjOmNRpJg5VhE6Ja/5w0hbr10v6eS5fW7KnqEDsLgwPCovQAd/CCGJ5TfuzxJ6dqUTTdDeMIQFTSjxK6Oh/q8cwTmQLhe6a4fZTZy6I1CwN1iajDfOuqYdTQUl7eAgk6eXNVKULlAT1Qve6wtsI1hrnIMNCuMYEOVrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=v04/qdvc; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=CB2uOReZgsobtwaBKBpmnV0Wphw1VrV1rB9pFCourqE=; b=v04/qdvc32+tt+zPP4pbDmrzkf
+	zXGN+g/n7abQcm8ATAQLOOicg69LK54vwGhdR8jdcZh3yLsGHMNA3Ut6OlqqiMOMStHcN7gxFfKxN
+	enI0+iv1n4sauXKQob6ILS8ypE7nUnadXxnfCJlEXdPaBj7rxfELh4+KlLT/MN2SBs8/tGY6r+j1s
+	CViq6f347IAYD/ZBAw4f+BRM+uNF9RSbdew7zxtwQhEk2cL2iXEVhLh8nlUMvdMAnDuiu44RuoVai
+	ciM5p5UncHRv9cYN7CNYAyQVHPxLxsepPQA/I94/WwnvGJaaw6RSksnJT8E8jby62YqZCLWtPio7B
+	sRZNlS6w==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <leitao@debian.org>)
+	id 1vLLLH-00FHMs-OI; Tue, 18 Nov 2025 13:01:56 +0000
+Date: Tue, 18 Nov 2025 05:01:47 -0800
+From: Breno Leitao <leitao@debian.org>
+To: tony.luck@intel.com, bp@alien8.de, akpm@linux-foundation.org
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	acpica-devel@lists.linux.dev, osandov@osandov.com, xueshuai@linux.alibaba.com, 
+	konrad.wilk@oracle.com, linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-pci@vger.kernel.org, kernel-team@meta.com, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>, 
+	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
+	Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH RESEND v5] vmcoreinfo: Track and log recoverable hardware
+ errors
+Message-ID: <vpilvvscosdl4o4cvbmtsrrp4btfwr5iidywmuiawfrgtlcwrr@ubtdbxfqyqpu>
+References: <20251010-vmcore_hw_error-v5-1-636ede3efe44@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -80,58 +72,32 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <89a4e42d-b0fd-49b0-8d51-df7bac0d5e5b@intel.com>
+In-Reply-To: <20251010-vmcore_hw_error-v5-1-636ede3efe44@debian.org>
+X-Debian-User: leitao
 
-On Mon, Nov 17, 2025 at 08:52:36AM -0800, Dave Hansen wrote:
-> On 11/16/25 18:22, Xu Yilun wrote:
-> > +static __init int get_tdx_sys_info_ext(struct tdx_sys_info_ext *sysinfo_ext)
-> > +{
-> > +	int ret = 0;
-> > +	u64 val;
-> > +
-> > +	if (!ret && !(ret = read_sys_metadata_field(0x3100000100000000, &val)))
-> > +		sysinfo_ext->memory_pool_required_pages = val;
-> > +	if (!ret && !(ret = read_sys_metadata_field(0x3100000100000001, &val)))
-> > +		sysinfo_ext->ext_required = val;
-> > +
-> > +	return ret;
-> > +}
-> 
-> These were OK-ish when they were being generated by a script.
-> 
-> Now that they're being generated by and edited by humans, they
-> need to actually be readable.
+Hello Andrew, Borislav, Tony,
 
-I agree. Further more, let me figure out if we could require minimum
-boilerplate code when a new field is added.
+On Fri, Oct 10, 2025 at 03:36:50AM -0700, Breno Leitao wrote:
+> Introduce a generic infrastructure for tracking recoverable hardware
+> errors (HW errors that are visible to the OS but does not cause a panic)
+> and record them for vmcore consumption. This aids post-mortem crash
+> analysis tools by preserving a count and timestamp for the last
+> occurrence of such errors. On the other side, correctable errors, which
+> the OS typically remains unaware of because the underlying hardware
+> handles them transparently, are less relevant for crash dump
+> and therefore are NOT tracked in this infrastructure.
 
-> 
-> Can we please get this down to something that looks more like:
-> 
-> 	MACRO(&sysinfo_ext->memory_pool_required_pages, 0x3100000100000000);
-> 	MACRO(&sysinfo_ext->ext_required,		0x3100000100000001);
-> 
-> You can generate code in that macro, or generate a struct like
-> this:
-> 
-> static __init int get_tdx_sys_info_ext(struct tdx_sys_info_ext *sysinfo_ext)
-> {
-> 	int ret = 0;
-> 	struct tdx_metadata_init[] = {
-> 		MACRO(&sysinfo_ext->memory_pool_required_pages, 0x3100000100000000),
-> 		MACRO(&sysinfo_ext->ext_required,		0x3100000100000001),
-> 		{},
-> 	};
-> 
-> 	return tdx_...(sysinfo_ext, tdx_metadata_init);
-> }
-> 
-> and have the helper parse the structure.
-> 
-> But, either way, the method that's being proposed here needs to go.
+<snip>
 
-I'll try and may need a seperate refactoring patch for the existing
-code.
+> Suggested-by: Tony Luck <tony.luck@intel.com>
+> Suggested-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
 
+Do you know what is the right tree for this patch?
 
+I am wondering if it should go through Kdump, x86 or RAS/MCE tree?
+
+Thanks
+--breno
 
