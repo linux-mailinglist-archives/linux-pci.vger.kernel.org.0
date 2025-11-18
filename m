@@ -1,239 +1,123 @@
-Return-Path: <linux-pci+bounces-41497-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41498-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A749C69069
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 12:16:57 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D39F9C69729
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 13:42:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 88BC0349E82
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 11:16:56 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id CA3FE2AB53
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 12:42:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A02F2F360E;
-	Tue, 18 Nov 2025 11:16:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA43C324B09;
+	Tue, 18 Nov 2025 12:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fo+VfjF+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="er5T6IQh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0902D59E8
-	for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 11:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33D7347BA3;
+	Tue, 18 Nov 2025 12:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763464611; cv=none; b=jJMp5us2BefMGiXCNp1RvsGdfQhFDlyl4AUD42VF3Nq0UpbXp0jgHUbv4tdrA0xKmz2uWBmp+r8TF1LffLCTiAHDfVFGzsDd9WBKC0WvMJzTU0M3+UPlySd3nMv5msHtMshhwnCH1BRFMgEoIbOm5q9FPUmtoLWNFai6EnyxoGs=
+	t=1763469751; cv=none; b=mwPG01MEE1hMVnPtXoYh5Zq1FOAMLptmJCc9c1C+aw9aN4eU4OGHuA3Vae1hRc/lYmsgfgHtHXOcI8hPmUXGYY+/kXqkRM1cI46SBPj50edQlaC/SYPs9E02tWQmooj2vk75aGgkmd54YfioPkviTWgERI2jYNdXKfSbWf79NpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763464611; c=relaxed/simple;
-	bh=NciOAruaUsOIMiB4AUT44IMQLQVHGuRwSg+HOJ8HSRo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L0Y7nr7Ai9SeuUk8vtOYkfScFfEJza9aDezBIuBNGFIYnkh0WfWI8VZ5Cso2i7GSfi392FEeBMilLLJuIOKfkNKwmneq/HyFA63mR2W14iYoNdB/oqqJMUE7rktCfSfyOI2JxvDJkybM9fnwiH0ib/q1MQsC8KmyDqfSuncEgJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fo+VfjF+; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-640aaa89697so7082582a12.3
-        for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 03:16:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763464608; x=1764069408; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ICI58HqE+ly7YapWrb44Ml5uRJuKE+CUkOe4M7qjE5M=;
-        b=fo+VfjF+9SvHmRNZui1BH/p7jcIp5YiB4yYWZKpWI9DHM1zlNYr0/+lTw/dD7lFstD
-         rfsZhPekRMRaRx/3NIT5B7ZCdf1zhqTLZeUOPbWY5vGQ7VGM/RUlKGsEF85/U2Hu2Wpb
-         MFUWut4XyRQtXD73K+3rhJQwPpVLmXkoy8UBP7rQqVU6x0EWmP1j6YFBXLP3Dqm3NSR1
-         2EPEcetwsO8rxd57bBSUHpSv6oc1Gi4mpYkqoOyNDN80RbmkKzmf7u1qyQrSIguHobtY
-         PXUqd2yIT6uSVmfQJGyPQWFuB0iqh+jtdLCVW6u+nxxYGO8m0OeIioeSPToqf/T0c5Jc
-         0AcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763464608; x=1764069408;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ICI58HqE+ly7YapWrb44Ml5uRJuKE+CUkOe4M7qjE5M=;
-        b=CZ3jCw1+G6Ne2ORh/VCfEYsD6Tr5fFM2b+1R2si/SuMI4kWNZYwjx/sWBwoHVl0J/S
-         xFWkghX1AoPqrZnA4frIz1hhqGJwTLNF3IOlhmD+gIC5Egaa1AT9CZO6ztxa/Akch8bK
-         U57fq66ia38g9NwOeW+5d9iWog6iPgbpgKWrcoqjSDbg9jHjiOXOgAm/ilaC2iD1VqwA
-         H5Hm/K+VUFMfcS+Yluy4abCthGipCAbpGf1h6B6KrxAuT8570Q7Lb5tH3mlpJcbIMjpS
-         pqKahrDwCTtifKzXnz6i3pz/ULondbAb3meUDnLPic2Vrhij6lwkG9RSZFaLH2af+1mf
-         ubSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnINOvnTnzMKYypb1gLHtLuTba50FyhtfGDNFxL5ORT8LaJDjTcsVGTCxPezCbxa4rlinUEe+jDFk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPhlJsOQsge12wbGfycOChQxpHLDbJyDQc6Tq82pKX3sx5s9Pu
-	W8uBv9W12b6Dq4rKlkKk+8MSKaoWCENVUVNrKsghtyGtafpI1Bwuv/xheLk8PDq7eqmPcXzkXIR
-	Yy7H7Gu405rLsJNr+4Ze6EeeF5VLuG2c=
-X-Gm-Gg: ASbGnctaQnnuhXe7Vz2JegvLSCX4GBJlcZ9siqyduUFOohSukEoiAbocjXugLfCTRXx
-	a++VifwaYSDLTQYUoOVOYkjH+pmF0r9aFnFUezNtjQV6f/elsMQOULOjE97/IfVJWxqDffznqK5
-	PgkqoTrzoGP5GrGc1XLkyezIS1N6SRqTEfk+ekG2lAHelQ4KCBN7fTVdnbk6wIzqOWDNMSrMuMY
-	n/wiOqps5Tr6az3vpyBW6pAB6Q88lecW2AanoAKCqOD6yDnaXgshyhVXQ4frv83FlhSGA==
-X-Google-Smtp-Source: AGHT+IGk8eL0HoWbK04CZRhqLg9Zqyg4kUzMUvvqXtI9msvINBej1DvZVcQa01Y7VyQwGu9XDV2OL2RxowdJygXo/7w=
-X-Received: by 2002:a05:6402:26d1:b0:640:ecaa:1973 with SMTP id
- 4fb4d7f45d1cf-64350e8ccb6mr13827406a12.24.1763464607610; Tue, 18 Nov 2025
- 03:16:47 -0800 (PST)
+	s=arc-20240116; t=1763469751; c=relaxed/simple;
+	bh=omW4v+Tc3Le2QAQshFJbpuP+L60KdBKt3nR18RcALXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EAtZhO6UKX7unXP5pUf/QGcjOcXs74L0b4CuZngYCyQLkTwRBDYK9WbcmbKFofeW9Vn0ot3rEa44/Hljt2EqknUJons/ihhBEfFn8R7jKSaKPw59py8i60evsV9qm+V1cdZ6dkOtudaW/NCow3tuucvAf+qNAE40KYqxqm4InWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=er5T6IQh; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763469750; x=1795005750;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=omW4v+Tc3Le2QAQshFJbpuP+L60KdBKt3nR18RcALXs=;
+  b=er5T6IQheD8bv4BMG5u1bH5Qp8IfQToj3zLapMDp+McOBBH277Pe/Phu
+   cgjLUQfPaV2t9CZNeY+c+23gXr76kdrgemvhmQUnygMasEzUvW3I0vi2w
+   GDzv2MuIGhOZai+BhXZ/PnzqtQK+OdKc17nD0bG3O9uKzutB20SKF924c
+   Qj911MKDVMhloWikitkVHfPsCSAXElraGrBx+r28m5y25yXoQi4cfDxwe
+   5uD2SCphLn+/Wh+iu4EqpgdWTI4A2wNYFbR5S3+Ga+oAnZy++igj/HPtw
+   ipUNgSj4F0P+uSC34sNn4m0WeR1KxAWNixZTRvn2sPePZVTKmkEMc/Rcn
+   w==;
+X-CSE-ConnectionGUID: P5SQNxeWSiuqLgkw6aR6yw==
+X-CSE-MsgGUID: U3xHq0ToTDG1QFpiCqSbPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="65369814"
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="65369814"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 04:42:29 -0800
+X-CSE-ConnectionGUID: O+PKAPd1TESN5U62SXzP0A==
+X-CSE-MsgGUID: EmcXUBzwSMyUDkqlVl+y7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="221655749"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa001.fm.intel.com with ESMTP; 18 Nov 2025 04:42:26 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id 78E0098; Tue, 18 Nov 2025 13:42:25 +0100 (CET)
+Date: Tue, 18 Nov 2025 13:42:25 +0100
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>, Jonathan Cameron <jic23@kernel.org>
+Cc: Christian Bruel <christian.bruel@foss.st.com>,
+	linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>
+Subject: Re: [PATCH v2 1/1] PCI: stm32: Don't use "proxy" headers
+Message-ID: <aRxpsc02hGW1w_hu@black.igk.intel.com>
+References: <20251114185534.3287497-1-andriy.shevchenko@linux.intel.com>
+ <20251117204348.GA2522408@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251117181023.482138-3-linux.amoon@gmail.com> <20251118005056.GA2541796@bhelgaas>
-In-Reply-To: <20251118005056.GA2541796@bhelgaas>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Tue, 18 Nov 2025 16:46:30 +0530
-X-Gm-Features: AWmQ_bksxI4TM_0iWFBAZwf_P1h7XfT3sMIf2tlbZ560ebj9GBa7XRzaoXRCoWo
-Message-ID: <CANAwSgSMiRrPp5G+guGQSsqArz7M750NAg8SQoorUQ7gJhUxHQ@mail.gmail.com>
-Subject: Re: [RFC v1 2/5] PCI: rockchip: Fix Device Control register offset
- for Max payload size
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Heiko Stuebner <heiko@sntech.de>, 
-	"open list:PCIE DRIVER FOR ROCKCHIP" <linux-pci@vger.kernel.org>, 
-	"open list:PCIE DRIVER FOR ROCKCHIP" <linux-rockchip@lists.infradead.org>, 
-	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251117204348.GA2522408@bhelgaas>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Bjorn
+On Mon, Nov 17, 2025 at 02:43:48PM -0600, Bjorn Helgaas wrote:
+> On Fri, Nov 14, 2025 at 07:52:01PM +0100, Andy Shevchenko wrote:
+> > Update header inclusions to follow IWYU (Include What You Use)
+> > principle.
+> > 
+> > In particular, replace of_gpio.h, which is subject to remove by the GPIOLIB
+> > subsystem, with the respective headers that are being used by the driver.
+> 
+> Thanks, Andy!  It looks like a lot of work to figure this out by hand.
 
-Thanks for your review comments.
+True.
 
-On Tue, 18 Nov 2025 at 06:21, Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Nov 17, 2025 at 11:40:10PM +0530, Anand Moon wrote:
-> > As per 17.6.6.1.29 PCI Express Device Capabilities Register
-> > (PCIE_RC_CONFIG_DC) reside at offset 0xc8 within the Root Complex (RC)
-> > configuration space, not at the offset of the PCI Express Capability
-> > List (0xc0). Following changes corrects the register offset to use
-> > PCIE_RC_CONFIG_DC (0xc8) to configure Max Payload Size.
-> >
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> >  drivers/pci/controller/pcie-rockchip-host.c | 4 ++--
-> >  drivers/pci/controller/pcie-rockchip.h      | 1 +
-> >  2 files changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-> > index f0de5b2590c4..d51780f4a254 100644
-> > --- a/drivers/pci/controller/pcie-rockchip-host.c
-> > +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> > @@ -382,10 +382,10 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
-> >               rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_LNKCAP);
-> >       }
-> >
-> > -     status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR + PCI_EXP_DEVCTL);
-> > +     status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_DC + PCI_EXP_DEVCTL);
-> >       status &= ~PCI_EXP_DEVCTL_PAYLOAD;
-> >       status |= PCI_EXP_DEVCTL_PAYLOAD_256B;
-> > -     rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR + PCI_EXP_DEVCTL);
-> > +     rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_DC + PCI_EXP_DEVCTL);
-> >
-> >       return 0;
-> >  err_power_off_phy:
-> > diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-> > index 5d8a3ae38599..c0ec6c32ea16 100644
-> > --- a/drivers/pci/controller/pcie-rockchip.h
-> > +++ b/drivers/pci/controller/pcie-rockchip.h
-> > @@ -157,6 +157,7 @@
-> >  #define PCIE_EP_CONFIG_LCS           (PCIE_EP_CONFIG_BASE + 0xd0)
-> >  #define PCIE_RC_CONFIG_RID_CCR               (PCIE_RC_CONFIG_BASE + 0x08)
-> >  #define PCIE_RC_CONFIG_CR            (PCIE_RC_CONFIG_BASE + 0xc0)
-> > +#define PCIE_RC_CONFIG_DC            (PCIE_RC_CONFIG_BASE + 0xc8)
->
-> Per the RK3399 TRM:
->
->   DEVCAP              0xc4
->   DEVCTL and DEVSTA   0xc8
->   LNKCAP              0xcc
->   LNKCTL and LNKSTA   0xd0
->   SLTCAP              0xd4
->   SLTCTL and SLTSTA   0xd8
->
-> That all makes good sense and matches the relative offsets in the PCIe
-> Capability.
->
-> I have no idea how we got from that to the mind-bendingly obtuse
-> #defines here:
->
->   PCIE_RC_CONFIG_CR == PCIE_RC_CONFIG_BASE + 0xc0
->                     == 0xa00000 + 0xc0
->                     == 0xa000c0
->
->   PCIE_RC_CONFIG_DC == PCIE_RC_CONFIG_BASE + 0xc8
->                     == 0xa00000 + 0xc8
->                     == 0xa000c8
->
->   PCIE_RC_CONFIG_LC == PCIE_RC_CONFIG_BASE + 0xd0
->                     == 0xa00000 + 0xd0
->                     == 0xa000d0
->
->   PCIE_RC_CONFIG_SR == PCIE_RC_CONFIG_BASE + 0xd4
->                     == 0xa00000 + 0xd4
->                     == 0xa000d4
->
-> And they're used like this:
->
->   PCIE_RC_CONFIG_CR + PCI_EXP_LNKCAP == 0xa000c0 + 0x0c
->                                      == 0xa000cc
->
->   PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL == 0xa000c0 + 0x10
->                                      == 0xa000d0
->
->   PCIE_RC_CONFIG_DC + PCI_EXP_DEVCTL == 0xa000c8 + 0x08
->                                      == 0xa000d0     <-- same as LNKCTL?
->
->   PCIE_RC_CONFIG_SR + PCI_EXP_DEVCAP == 0xa000d4 + 0x04
->                                      == 0xa000d8     <--
->
->   PCIE_RC_CONFIG_LC + PCI_EXP_LNKCTL == 0xa000d0 + 0x10
->                                      == 0xa000e0     <-- but LNKCTL was at 0xa000d0 above?
->
-> And the mappings don't make any sense to me:
-You are correct, PCIE_RC_CONFIG_DC + PCI_EXP_DEVCTL  results in an
-incorrect offset.
+> Is there a tool to figure this out?  Maybe something I could run when
+> reviewing patches?
 
-As per my understanding
-#define PCI_EXP_DEVCTL 0x08 /* Device Control */
-#define  PCI_EXP_DEVCTL_PAYLOAD 0x00e0 /* Max_Payload_Size */
-#define  PCI_EXP_DEVCTL_PAYLOAD_128B 0x0000 /* 128 Bytes */
-#define  PCI_EXP_DEVCTL_PAYLOAD_256B 0x0020 /* 256 Bytes */
-#define  PCI_EXP_DEVCTL_PAYLOAD_512B 0x0040 /* 512 Bytes */
-#define  PCI_EXP_DEVCTL_PAYLOAD_1024B 0x0060 /* 1024 Bytes */
+I have a déjà vu answering this question. Was it you last time who asked
+the same?
 
-What I was thinking about was mapping it to a register to offset the
-Max_Payload_Size (7:5) at PCIE_RC_CONFIG_DC (0xa000c8).
+The tool is iwyu which is heavily tuned for the kernel use by Jonathan (Cc'ed).
+But I do it manually.
 
-Sorry for the noise.
->
->   CR -> LNKCAP & LNKCTL
->   DC -> DEVCTL (ok, this one makes a *little* sense)
->   SR -> DEVCAP
->   LC -> LNKCTL (would make some sense except that we have CR above)
->
-> This is all just really hard to read.  It looks like if we defined a
-> single base address for the PCIe Capability, we shouldn't need all the
-> _CR, _DC, _LC, _SR, etc #defines.  E.g., we could have
->
->   #define ROCKCHIP_RP_PCIE_CAP ...
-#define ROCKCHIP_RP_PCIE_CAP (PCIE_RC_CONFIG_BASE + 0xc0)
-Is this ok? But the current code uses the same.
->
->   rockchip_pcie_read(rockchip, ROCKCHIP_RP_PCIE_CAP + PCI_EXP_DEVCAP)
->   rockchip_pcie_read(rockchip, ROCKCHIP_RP_PCIE_CAP + PCI_EXP_LNKCTL)
->   ...
->
-> with maybe some minor adjustment for 16-bit registers since Rockchip
-> only seems to support 32-bit accesses (?)
->
-> None of these registers are *Root Complex* registers; they're all part
-> of a PCIe Capability, which applies to a Root *Port*.
->
-Ok, I understood
-> >  #define PCIE_RC_CONFIG_LC            (PCIE_RC_CONFIG_BASE + 0xd0)
-> >  #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
-> >  #define PCIE_RC_CONFIG_THP_CAP               (PCIE_RC_CONFIG_BASE + 0x274)
-> > --
-> > 2.50.1
-> >
-Thanks
--Anand
+> IWYU seems like a nice principle but I couldn't find any mention in
+> Documentation/.  Should it be covered there somehow?
+
+Perhaps. Maybe we can start with IIO, where it's a highly recommended thing
+for the new code submissions.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
