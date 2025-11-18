@@ -1,180 +1,116 @@
-Return-Path: <linux-pci+bounces-41478-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41479-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A2F1C679B4
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 06:44:52 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7ABFAC67C4B
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 07:46:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 90677362836
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 05:43:27 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3172E4E2CCF
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 06:46:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56E262D7390;
-	Tue, 18 Nov 2025 05:43:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7392F2ECE82;
+	Tue, 18 Nov 2025 06:46:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eCi2ciKB"
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="li9ou6xr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mail1.manjaro.org (mail1.manjaro.org [142.132.176.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CA12C375A;
-	Tue, 18 Nov 2025 05:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB59A2DEA8F;
+	Tue, 18 Nov 2025 06:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=142.132.176.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763444582; cv=none; b=nBf6bQNSr3Rs9hbJiYzLMac+PoU1UMSzJ6+eJ29290gR106vpp5T3YKFbf3YS48Srv6NaQuDXbVVIJ0trppYXNYKNS9FDuZtAyQA5zN+ywIYs6pL3QflgSU5fo1EwB9yOUiKdSOSO0slCpG3v7guzPUEbljUnIIOEfu4vKZUHuw=
+	t=1763448361; cv=none; b=WU+62G3gMO9SEXaXeA3TECAN1ijjw/+f2ObhPr5pKcdOzgC57bvTQ2sd7xYVTpqjrQYQiDnwT7MMDKVIwr/rrW2Ym4uWIvjx/5X4MQTnPRaxCjT260kwODsiE6rAm3luxpGif6JNyIG41SGREkdrEXIpsl2+ypQoFv3ry5HPLIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763444582; c=relaxed/simple;
-	bh=VbFlU1LcdUBsBT5iUvR+tT4oc46fne2Q1MslnRGjrXM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d9Ok7MiFJfUvtFkb4rVNuYnf3YhMBc+wGIhYQKs/HPp1ILRP7MDlKdRz7CRxYFfSCrsGTZieGQtLzmvoBOo9ewWTWqVj4OTF5ItupvxZzvKgoPC110q7+GqWOGAYfDw76Bxal6Ydm2W64y/yzc2Hr6oeOLWG1CQS7Jw4VmgHQrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eCi2ciKB; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763444580; x=1794980580;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VbFlU1LcdUBsBT5iUvR+tT4oc46fne2Q1MslnRGjrXM=;
-  b=eCi2ciKB9b7KgkNk1jfw9VcYsjglAW0ZAh3w2F7Cnm+PkwaBC8qO4byX
-   00Z6auwQU2PTfrauR3L72Z/IdBuVfxM43i8lW2IKYiATSjLy2iwoYwu7G
-   jugPt9oFB1ERW3+Z/EQig/YYYUGj/3AL+/KH7m5T9I2cHIvvf+u65UzZL
-   gr1FLVj5jQeXSaFnFL+vlIsohr7Bmt8cU/QFiKY3t4HaJSbeEYaCX2jxr
-   Zq3coVSrCKkQLgsBBs2UPd+ix8nWYeTPz5CvH3yUWn/3jKhxCtFroaEpy
-   emql+5rSXtx43LYaN/tQKgRpZ3diBE92+M6enYd8z2e9KePLz2Mj5EABw
-   A==;
-X-CSE-ConnectionGUID: bslzijx8T1qhH02II5RoCA==
-X-CSE-MsgGUID: jRi3erMBSuykmaoUU46cQg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="53028423"
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="53028423"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 21:42:59 -0800
-X-CSE-ConnectionGUID: g55xazAASY6gp1sqPcfseQ==
-X-CSE-MsgGUID: 9IDYRVS6RdmXV8k/XcCKXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="189924294"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 21:42:54 -0800
-Message-ID: <4eeda61a-c71d-4ad1-8ac7-a14942f7a864@linux.intel.com>
-Date: Tue, 18 Nov 2025 13:38:40 +0800
+	s=arc-20240116; t=1763448361; c=relaxed/simple;
+	bh=PSiUpa/eDkNZRBNCEBFgVrc9bSKxramRSEbePZoOX1c=;
+	h=From:Content-Type:Date:Cc:To:MIME-Version:Message-ID:Subject; b=IAG/tQeTt5neuym45ZfPJxq1k4yzi4cLYrhbYPNOvQUY6wAHDkrBzavFbFYHQecb1p3QWi6uQF5+MTFZ6/dwlkGsPaJeeTHALFkGu3F/LEZ/ra7D9HaNk0YHkxIkrOIhab3rarTGyZhcuBaK5snoQlrjwr0K6ax6SM8SZT6FouU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=li9ou6xr; arc=none smtp.client-ip=142.132.176.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPA id 714004103E;
+	Tue, 18 Nov 2025 07:45:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=dkim;
+	t=1763448350; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=oza7QOE7STENTsJELxhbxHGoxqd5ZR6iMq7QEFYudIk=;
+	b=li9ou6xrplD4MYbzDfkTc1D7NTfJU2VUnP4HVmRY9YIr05y8/wiiH+UWnmjQywITY3UrrD
+	i90LEN67mmU7jeDZeMqnDA6fo/5ejlzI8RPO6cmxn+JLcZAE5I86t+poXikES4Ccxh+E+p
+	+3yQVS+vkClHN2T6s2Xh1mpe64KIsBM+ZEU+eYHJtrVw11OVX/IokCW2kNK3DGIWd5QFIB
+	mGeG/C+oEYFyTNahUOol0r2k8GTPVRNmzMQGRMHhx789UuvC16teo+la/AReO+yfXTMWNv
+	HPXtqeMaJI92lm9gq/nFI9dZ3q71ESg5X8RMpC4KMuWF+Z7rx7RvEjVlZo5M0g==
+From: "Dragan Simic" <dsimic@manjaro.org>
+Content-Type: text/plain; charset="utf-8"
+Date: Tue, 18 Nov 2025 07:45:45 +0100
+Cc: "Shawn Lin" <shawn.lin@rock-chips.com>, "Lorenzo Pieralisi" <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Manivannan Sadhasivam" <mani@kernel.org>, "Rob Herring" <robh@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>, "Heiko Stuebner" <heiko@sntech.de>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Johan Jonker" <jbx6244@gmail.com>, linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: "Geraldo Nascimento" <geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/5] pci: Suspend iommu function prior to resetting a
- device
-To: Nicolin Chen <nicolinc@nvidia.com>, "Tian, Kevin" <kevin.tian@intel.com>
-Cc: "joro@8bytes.org" <joro@8bytes.org>, "afael@kernel.org"
- <afael@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
- "alex@shazbot.org" <alex@shazbot.org>, "jgg@nvidia.com" <jgg@nvidia.com>,
- "will@kernel.org" <will@kernel.org>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>,
- "lenb@kernel.org" <lenb@kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "patches@lists.linux.dev" <patches@lists.linux.dev>,
- "Jaroszynski, Piotr" <pjaroszynski@nvidia.com>,
- "Sethi, Vikram" <vsethi@nvidia.com>, "helgaas@kernel.org"
- <helgaas@kernel.org>, "etzhao1900@gmail.com" <etzhao1900@gmail.com>
-References: <cover.1762835355.git.nicolinc@nvidia.com>
- <a166b07a254d3becfcb0f86e4911af556acbe2a9.1762835355.git.nicolinc@nvidia.com>
- <BN9PR11MB52762516D6259BBD8C3740518CCAA@BN9PR11MB5276.namprd11.prod.outlook.com>
- <aRduRi8zBHdUe4KO@Asurada-Nvidia>
- <BN9PR11MB52761B6B1751BF64AEAA3F948CC9A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <aRt2/0rcdjcGk1Z1@Asurada-Nvidia>
- <BN9PR11MB527649AD7D251EAAFDFB753A8CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <aRvO9KWjWC5rk/Vx@Asurada-Nvidia>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <aRvO9KWjWC5rk/Vx@Asurada-Nvidia>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Message-ID: <e5d5c0dc-81d6-ae0e-7552-c2e4fb39bb0a@manjaro.org>
+Subject: =?utf-8?q?Re=3A?= [PATCH v2 0/4] =?utf-8?q?PCI=3A?==?utf-8?q?_rockchip=3A?=
+ =?utf-8?q?_5=2E0?= GT/s speed may be dangerous
+User-Agent: SOGoMail 5.12.3
+Content-Transfer-Encoding: quoted-printable
+X-Last-TLS-Session-Version: None
 
-On 11/18/25 09:42, Nicolin Chen wrote:
-> On Tue, Nov 18, 2025 at 12:29:43AM +0000, Tian, Kevin wrote:
->>> From: Nicolin Chen<nicolinc@nvidia.com>
->>> Sent: Tuesday, November 18, 2025 3:27 AM
->>>
->>> On Mon, Nov 17, 2025 at 04:52:05AM +0000, Tian, Kevin wrote:
->>>>> From: Nicolin Chen<nicolinc@nvidia.com>
->>>>> Sent: Saturday, November 15, 2025 2:01 AM
->>>>>
->>>>> On Fri, Nov 14, 2025 at 09:45:31AM +0000, Tian, Kevin wrote:
->>>>>>> From: Nicolin Chen<nicolinc@nvidia.com>
->>>>>>> Sent: Tuesday, November 11, 2025 1:13 PM
->>>>>>>
->>>>>>> +/*
->>>>>>> + * Per PCIe r6.3, sec 10.3.1 IMPLEMENTATION NOTE, software
->>> disables
->>>>> ATS
->>>>>>> before
->>>>>>> + * initiating a reset. Notify the iommu driver that enabled ATS.
->>>>>>> + */
->>>>>>> +int pci_reset_iommu_prepare(struct pci_dev *dev)
->>>>>>> +{
->>>>>>> +	if (pci_ats_supported(dev))
->>>>>>> +		return iommu_dev_reset_prepare(&dev->dev);
->>>>>>> +	return 0;
->>>>>>> +}
->>>>>> the comment says "driver that enabled ATS", but the code checks
->>>>>> whether ATS is supported.
->>>>>>
->>>>>> which one is desired?
->>>>> The comments says "the iommu driver that enabled ATS". It doesn't
->>>>> conflict with what the PCI core checks here?
->>>> actually this is sent to all IOMMU drivers. there is no check on whether
->>>> a specific driver has enabled ATS in this path.
->>> But the comment doesn't say "check"..
->>>
->>> How about "Notify the iommu driver that enables/disables ATS"?
->>>
->>> The point is that pci_enable_ats() is called in iommu drivers.
->>>
->> but in current way even an iommu driver which doesn't call
->> pci_enable_ats() will also be notified then I didn't see the
->> point of adding an attribute to "the iommu driver".
-> Hmm, that's a fair point.
-> 
-> Having looked closely, I see only AMD and ARM call that to enable
-> ATs. How others (e.g. Intel) enable it?
+Hello Geraldo,
 
-The VT-d driver enables ATS in the iommu probe_finalize() path (for
-scalable mode).
+Thanks a lot for the v2!  Please, see some comments below.
 
-static void intel_iommu_probe_finalize(struct device *dev)
-{
+On Monday, November 17, 2025 22:46 CET, Geraldo Nascimento <geraldogabr=
+iel@gmail.com> wrote:
+> Dragan Simic already had warned me of potential issues with 5.0 GT/s
+> speed operation in Rockchip PCIe. However, in recent interactions
+> with Shawn Lin from Rockchip it came to my attention there's grave
+> danger in the unknown errata regarding 5.0 GT/s operational speed
+> of their PCIe core. Even if the odds are low, to contain any damage,
+> let's cover the remaining corner-cases where the default would lead
+> to 5.0 GT/s operation as well as add a comment to Root Complex driver
+> core, documenting this danger. Furthermore, remove redundant
+> declaration of max-link-speed from rk3399-nanopi-r4s.dtsi
+>=20
+> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
 
-[...]
-         if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev)) {
-                 iommu_enable_pci_ats(info);
-                 /* Assign a DEVTLB cache tag to the default domain. */
-                 if (info->ats_enabled && info->domain) {
-                         u16 did = domain_id_iommu(info->domain, iommu);
+As a note, Signed-off-by tags are redundant in cover letters, because
+there's no source code in them that can actually be signed off.
 
-                         if (cache_tag_assign(info->domain, did, dev,
-                                              IOMMU_NO_PASID, 
-CACHE_TAG_DEVTLB))
-                                 iommu_disable_pci_ats(info);
-                 }
-         }
+> Changes in v2:
+> - hard limit to 2.5 GT/s, not just warn
+> - add Reported-by: and Reviewed-by: Dragan Simic
+> - remove redundant declaration of max-link-speed from helios64 dts
+> - fix Link: of helios64 patch
+> - simplify RC mode comment
+> - Link to v1: https://lore.kernel.org/all/aRhR79u5BPtRRFw3@geday/
 
-[...]
-}
+Technically, you shouldn't have included my Reviewed-by tags in some
+of the patches in the v2 of this series, because the patches were
+either modified significantly since I gave my Reviewed-by for them
+in the v1, or they were actually introduced in the v2.
 
-iommu_enable_pci_ats() will eventually call pci_enable_ats() after some
-necessary checks.
+However, I checked all four patches in the v2 again and everything
+is still fine, so just to make sure, please feel free to include for
+the entire series:
 
-Thanks,
-baolu
+Reviewed-by: Dragan Simic <dsimic@manjaro.org>
+
+> Geraldo Nascimento (4):
+>   PCI: rockchip: limit RK3399 to 2.5 GT/s to prevent damage
+>   PCI: rockchip-host: comment danger of 5.0 GT/s speed
+>   arm64: dts: rockchip: remove dangerous max-link-speed from helios64
+>   arm64: dts: rockchip: remove redundant max-link-speed from nanopi-r=
+4s
+>=20
+>  arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts |  1 -
+>  arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi    |  1 -
+>  drivers/pci/controller/pcie-rockchip-host.c            |  3 +++
+>  drivers/pci/controller/pcie-rockchip.c                 | 10 ++++++++=
+--
+>  4 files changed, 11 insertions(+), 4 deletions(-)
+
+
 
