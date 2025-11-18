@@ -1,209 +1,174 @@
-Return-Path: <linux-pci+bounces-41470-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41471-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 058D2C66B14
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 01:45:28 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B170C66B3B
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 01:50:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9E6954E1355
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 00:45:26 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTPS id CC83129715
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 00:50:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D11B2144C7;
-	Tue, 18 Nov 2025 00:45:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F5F2944F;
+	Tue, 18 Nov 2025 00:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="OlKqWkhC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022122.outbound.protection.outlook.com [52.101.126.122])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC735D27E;
-	Tue, 18 Nov 2025 00:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.122
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763426721; cv=fail; b=gKDYA2ymSNlEZQUXTbVsGBTScrFHUvccCzEaxIxkRUcmEC9OARIgtW0rUEbvFF7uVpDqFEMAw04+bkVYfQpHGUMoIm9vxVCWZqX2Fnt7mJTOyI0vI4SJ10ZLEBsvXU2LsITdLEOSOWrACcgJqjJAQxEbsun5R2VLQlWS+3mPnn4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763426721; c=relaxed/simple;
-	bh=IS1ANQWeQCYcFhjbGRh6yMIMyHHtuXBm2i8qrMxDe/g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dc0ZvOEg5kCMABOGh0dxFhPEk/Ckze+sEpNoqRZjy3xYMTzIk03/kwmHOS6Ha5BqkXA5PdjyqYA3top9+0454F8XuJleyh2N32pq689BvatTMwN793x1aqwwPpAFgUBqSb/X/uj/EEztAdE7MLv1CLrwIBu6ORp2b2SK4QK9/JE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.126.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xdaDafT7HC5u8tgoF3UckXGS/dUXdnFgWpjtB/KHRBKXY4kFQ9/lK0AOxC7B4StqE1t/Sp/igF/gLgN6Yd6rrgNz9n4KBXP7toTKANgO8w/aHJJWTB9AyvdoU1LQAUfpFjmFBpRsRgaFtTsYVBk3oPMuX6y/GWu+gfyuDO+lpyxM8CpSX88OOh33v/bFInFuVRZ0X3gjupFVnpMcU5/6vkQpmSMB1MdOVv+FiE5jPsvXnLHPiGoPX0XynX8I96iRN74zT8F9Zjg4x0VrIzk37VODmDaqrJIt4LMsPvQUDttnFx3z59wFi+Pxwteaz+1WLjVYmG2cdRTsmBzaNgduJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iyJ323Z5AhwEQzdPgj3mL5ZWT/g6bYsJ08EAboDc1LQ=;
- b=ee+o3KQ4q6twn9E8ZpsS19fD+mdW2xt3cpjGWbaYzMC5umF9cAkG/TjpkceB0mZHy1thEL+7NPEDKG9QFBrPU/c5vnQuSu2ob3LnPDgLtA0jIW+yXt0CO2NKZtoNp+gKEGtSZIQ6ixxgVwuA7vFVY5Wk7akaKZViu3KjyVjXQRXW6rPVgBJr8bRSWPr2i7yp4E7PGEZ60NVyRFmWkfTjc2xjw73St06J8wUW3U5yrt84nxrMOCK+f4eRWeby3VBbfyGUN3NhB8N6g03V/FTVgx/3EpofHnA29zWE+T7HyvDlOi7cwzBCn65FIkjfPdKIBfY1IBGvXO6k3ZwXkPX76g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from PS2PR01CA0017.apcprd01.prod.exchangelabs.com
- (2603:1096:300:2d::29) by KL1PR06MB6517.apcprd06.prod.outlook.com
- (2603:1096:820:f8::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.18; Tue, 18 Nov
- 2025 00:45:13 +0000
-Received: from OSA0EPF000000C7.apcprd02.prod.outlook.com
- (2603:1096:300:2d:cafe::a5) by PS2PR01CA0017.outlook.office365.com
- (2603:1096:300:2d::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.23 via Frontend Transport; Tue,
- 18 Nov 2025 00:45:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- OSA0EPF000000C7.mail.protection.outlook.com (10.167.240.53) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9343.9 via Frontend Transport; Tue, 18 Nov 2025 00:45:11 +0000
-Received: from [192.168.129.22] (unknown [192.168.129.22])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 8D7BD41C0145;
-	Tue, 18 Nov 2025 08:45:10 +0800 (CST)
-Message-ID: <52abaad8-a43e-4e29-93d7-86a3245692c3@cixtech.com>
-Date: Tue, 18 Nov 2025 08:45:09 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C0E1C2334
+	for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 00:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763427020; cv=none; b=DRWxi5HiFzZwYrLXWklzyUZvGdEKYdYly6aTIVVbAFIiVxoA8/J5ZMBCJjnLBdaHuXFLH1spIe73x/hBskUE/8EDq9DKJGcGHKIsKsFtJP2R5xZM7Xk40UibaDixbYX6Cxuh5G5SHIXoenIzD6NiKRsg7Esx9HGUftFjz0PmJJ8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763427020; c=relaxed/simple;
+	bh=gHS/Eg1xPCcRUqB7YMbxuhHmVgSNi2IWCXXJ0dykZng=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mp5ABHKhVrHxsgiPZ4k3A0R15V/sVIq3OgWEFz2vHjI16PW0t531nkSG8pA0b96I+/jklbXDajTh/P79AWl8dbiLmJVH4HBG6FpXX9fE5VG2ljhMroturxIt0ElfBl/dPSRa+96pKCoQOGjuM+Shd2bAmEECOGsVQZFaSwYFYjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=OlKqWkhC; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AHLm0Wd3852206
+	for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 16:50:18 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
+	 bh=K984MT1BI8AsKR90UtDQZfW+zUX5Q/Uf71qK2FmsDdo=; b=OlKqWkhC7au8
+	rsRERnOWkZ1JBrcgPX6tXoR1ZjiZhpDjUL/GGlCRoo1CEn+penMwj6x96Pvi5TXE
+	rONHC3ISgwbXtX2D/twGG/bS9Eu4S97cZCte4Mfcdls2+HW4tRvz7nLIRaWau0sv
+	PUrJKWk0JHKbuHJm0yokoD+S/hyC7GmRkKGQhMynm2xQw+zzMLBfB120/2gZ7Wh4
+	sJEBvbmNtYXbKjazhh66EUJIOVDkHALsoAnmem10EGeTZV/nw3ulaFVAbKwiFMBk
+	1G4Qc41ZWlOmRbiaebPhsRwjwuJB6U9ZegtwM8R/gOC/OmU9ffFr7ZdJnFSf7kNx
+	NeGZcwlV8g==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4ag7w3ut8h-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 17 Nov 2025 16:50:17 -0800 (PST)
+Received: from twshared12874.03.snb2.facebook.com (2620:10d:c0a8:1b::30) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.20; Tue, 18 Nov 2025 00:50:15 +0000
+Received: by devbig259.ftw1.facebook.com (Postfix, from userid 664516)
+	id E597DC3DF760; Mon, 17 Nov 2025 16:50:05 -0800 (PST)
+From: <zhipingz@meta.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+CC: <jgg@ziepe.ca>, <leon@kernel.org>, <bhelgaas@google.com>,
+        <linux-rdma@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <kbusch@kernel.org>, <yochai@nvidia.com>,
+        <yishaih@nvidia.com>
+Subject: Re: [RFC 1/2] Set steering-tag directly for PCIe P2P memory access
+Date: Mon, 17 Nov 2025 16:50:01 -0800
+Message-ID: <20251118005005.1473648-1-zhipingz@meta.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20251114131232.00006e9e@huawei.com>
+References: <20251114131232.00006e9e@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 04/10] PCI: cadence: Add support for High Perf
- Architecture (HPA) controller
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, mpillai@cadence.com,
- fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
- cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251117210805.GA2531096@bhelgaas>
-Content-Language: en-US
-From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <20251117210805.GA2531096@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OSA0EPF000000C7:EE_|KL1PR06MB6517:EE_
-X-MS-Office365-Filtering-Correlation-Id: 16ee2d28-5d37-420b-fb10-08de263bbb3d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|36860700013|1800799024|82310400026|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?R1FUVVp3MmlFeDl5dkhtRVFnbythUTgzdzFFT3pXb0RGQ0wxaEROMEViNkFx?=
- =?utf-8?B?TWJJQmVLb3VvZ1U2ZVppcE1sR1lzY3cxcGRBbEtSQXNBekZqOVJEcmlFbVRY?=
- =?utf-8?B?aStXa0lPQ0tNUkNqZmc0MnRHU0dhL3BVdVJ5Sk0rTDlrU2JNSS9BdHZNT0xZ?=
- =?utf-8?B?dklSay9MWUZjcElmdFhoMU1XWTRHTll5MlhDY1FIYVAzbE4rM0ptV1FGUG1H?=
- =?utf-8?B?TVpIeHVoNnNkTGZIZ2d2NVdWZ2FLK296UW5qdWp5Q0dlR1FLUWVxa2NjaU52?=
- =?utf-8?B?UUJmUTRvN2hwME5rM1B2SHBkcXBCajEvVEk1bHhMMnk3QnlxTnA1aHlCamZz?=
- =?utf-8?B?c3JpdWlhcUJQU0xKTjRCVjRueEJWZFlEVm01S3JJcy9GbmQ2ZGN5M2l1WVlU?=
- =?utf-8?B?bFViZVZYd0x5UlJudTlIMEJUNE01SUVuelJ2YWd0a3ZkOE12MENrY0o1TGdB?=
- =?utf-8?B?dlA5TG14VDJ5Wkl0VU9aanB6b3VJc1VmNDV1UmJmNmU4SjlKcUh2NW5iRjAr?=
- =?utf-8?B?NnVMV3g4SEY5QjZIaFRrcWpyNkJ3R0g1amFEUjBySEFUZWxvSm8zQlRXOTdE?=
- =?utf-8?B?R0V2UG5SVVdTbkNIcXprN28yZXBHemtIN0pScytNdkVuV25FYUxIMDlwdUN6?=
- =?utf-8?B?Si9UNlNFV2xRdFJnU2s3MlQ0aTBHTUJhVkhET0kwcm1TNXl3amlBRU1zaXNM?=
- =?utf-8?B?UDF2NUVFUE9OS2Z6dWVnUjJSa2pzU244UnBXb3V1N0FoYnBaR3M0QnA3WkZP?=
- =?utf-8?B?M3Y4cEc3Nlg2RldDbmI0OEM1NWpwOERBbDIxVkxudjdLQnprelNFbnJjaUdh?=
- =?utf-8?B?QkE4d3F6ZGdXekNaMEpJaTJKTDB1eTRsMTc2QjdoWXNaaDZqMjFIbXJocGdv?=
- =?utf-8?B?cU15OGZFOVpGODNLRWtHWWNnZHVLRE9iSUFuOUUxSllpT2ZkcEw0WFgvRVRP?=
- =?utf-8?B?d1BJWUg1VWh6bGdsTEFuNUVUMkRROUV6VHlUWWZwYXRZV05lUWd3K29vL3RR?=
- =?utf-8?B?ZmJyYXUweUxhZTVjV2NuYjhCV2lRNnBxdWF4QjE4WGlvTHdpVGJ5MWVweHVJ?=
- =?utf-8?B?WmhsT2JsOE5mQk92YkJPMzlxUmk2RjhkZVl0QmpVMjVHTGsxN0E2MWJNQzlF?=
- =?utf-8?B?RnZIRUErcWhOUGZGNlF3MTc0cWJjOXJvZm4rRG1FaWdkTmc0RGZpVU04UDlD?=
- =?utf-8?B?MnJvYjY4cDRnRzZUbnFsZURRbjQvUW9WREE3eDAwWEZFaUxEYXlIcHRpcXcv?=
- =?utf-8?B?VCtJZDN0VVB1dXBWQXlaRTJDVkgyYUF6OUMraExnbjNBT3hXNEg4WTNaZmZq?=
- =?utf-8?B?YWFTY2JZSUlKRXJnOS9SbDRDbmx3K1prS1pEWlUxV3p2NFNBdXZCWUIybEpC?=
- =?utf-8?B?TXIyUDRkY2c4QnhPVWo5VDNvODk5aTZWd2hPbkZOWjZUTG9peXFQYVRYb0pk?=
- =?utf-8?B?bVJHL3A5czVsRlM2S1R4dEtDOU1KOVBTSXJ4ZTdSMTdOc0puQXY4NmFJZVFk?=
- =?utf-8?B?RE5BKzNhdEQ5VGJtY2lFTmhRS3dFS1lNa0RnS05qeHV4SWpXRDVVSWFjMkR1?=
- =?utf-8?B?OHBRM1NyMnBmNlA4ZlBkb2lwNVNMOElkZnh1Rzk4UisyOFhNRW01ODdESHkw?=
- =?utf-8?B?QUZsRHNPNFMycVRXMGlFQWtPOG1SRWl4TnZuUHJKWjFUQjZEZXg4T0ZnQ1NM?=
- =?utf-8?B?cEgxYld1T1Boa3M2VzE1WGlWVEFxNm1kTW9LREs1Q0l6QWRWZngzNUQ3WXJp?=
- =?utf-8?B?ajVhZjdkdTJzeWY5amdoYzBIOU5lZHNiTHAwd2dTZ2ZaY0hCMzQvSCtsd2Rr?=
- =?utf-8?B?cDZQQURWYkNnRGdDLzdCRTFxK0hIR1lQbVNlek9jY0QxelRyRW1lY0R6MEZT?=
- =?utf-8?B?NFVSVGlrSmEycGliL1lNZ0QwckkxLzFQaHBFcGV3elh4WU9uV21JUDJLblJn?=
- =?utf-8?B?SDY0SytaRHc5Q1BNMENIRUYxZXU1dmdkUzBhZGFYck9KOFFYWEl0dDlMSWh6?=
- =?utf-8?B?K3lNMHdVelFiekMzaFFRNXpTYkwzRXhSL0tuM0IrdTJPMlZndk96RktSaHJq?=
- =?utf-8?B?cUFEbjBsNzBXeTA4VWxaOHplNjVHYzl1L2E4TWl2ZkNBUU85OUt0Y0pqeDIv?=
- =?utf-8?Q?okJM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(1800799024)(82310400026)(7053199007);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2025 00:45:11.7310
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16ee2d28-5d37-420b-fb10-08de263bbb3d
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	OSA0EPF000000C7.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6517
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE4MDAwNCBTYWx0ZWRfXyKsR4s9bYjwP
+ 9MEPd6VfY31iYuJ1UdwaMFOclR5U1YlRdR1z3Y4c5AYOyIt6oaz63476RiFDbrtHzDzK4wz3ZY5
+ u9o0f5HNHa3p5TomvZbD0aghvMhcT5I+sHGQFYzewh/zyH83CT68+SoE0j1ABMJU/WX3Mw5lpdF
+ S6D66qbOmJ3dA21GrtiGgvLNsNRBkprSVGJy1ib2DkJ/urkDjkKNrvxaxsZ7vbtsiKf78QHm6Qt
+ TQGWWYrl87Vr6+siWgYeYj4w3lAo1sHHPKCqTiYq5oU+XbfS24zLqXd0EIsMDkbym3xWZlbou3x
+ 12WuEX9piPkgbH5MXQfxRq6U38i1e2Hoc3Fhtjgv2/wE46r8GUJL0mxSx6HAat7mvtHkklE/snT
+ mvuUx4fgfiWMHZwUz5DRtyhn/gWUKQ==
+X-Proofpoint-ORIG-GUID: 3k4UNhTtn5z8O7EmkUdMD3PZ3aYcyUVj
+X-Authority-Analysis: v=2.4 cv=Zsfg6t7G c=1 sm=1 tr=0 ts=691bc2c9 cx=c_pps
+ a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=S7gPgYD2AAAA:8 a=VabnemYjAAAA:8 a=tBecTD8rVLH8ZP6GYt4A:9 a=QEXdDO2ut3YA:10
+ a=1f8SinR9Uz0LDa1zYla5:22 a=gKebqoRLp9LExxC7YDUY:22
+X-Proofpoint-GUID: 3k4UNhTtn5z8O7EmkUdMD3PZ3aYcyUVj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-17_04,2025-11-13_02,2025-10-01_01
 
+> From: Jonathan Cameron @ 2025-11-14 13:12 UTC (permalink / raw)
+>  To: Zhiping Zhang
+>  Cc: Jason Gunthorpe, Leon Romanovsky, Bjorn Helgaas, linux-rdma,
+>	linux-pci, netdev, Keith Busch, Yochai Cohen, Yishai Hadas
+>
+> On Thu, 13 Nov 2025 13:37:11 -0800
+> Zhiping Zhang <zhipingz@meta.com> wrote:
+>
+> > PCIe: Add a memory type for P2P memory access
+> >=20
+> > The current tph memory type definition applies for CPU use cases. For=
+ device
+> > memory accessed in the peer-to-peer (P2P) manner, we need another mem=
+ory
+> > type.
+> >=20
+> > Signed-off-by: Zhiping Zhang <zhipingz@meta.com>
+> > ---
+> >  drivers/pci/tph.c       | 4 ++++
+> >  include/linux/pci-tph.h | 4 +++-
+> >  2 files changed, 7 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
+> > index cc64f93709a4..d983c9778c72 100644
+> > --- a/drivers/pci/tph.c
+> > +++ b/drivers/pci/tph.c
+> > @@ -67,6 +67,8 @@ static u16 tph_extract_tag(enum tph_mem_type mem_ty=
+pe, u8 req_type,
+> > 			if (info->pm_st_valid)
+> > 				return info->pm_st;
+> > 			break;
+> > +		default:
+> > +			return 0;
+> > 		}
+> > 		break;
+> > 	case PCI_TPH_REQ_EXT_TPH: /* 16-bit tag */
+> > @@ -79,6 +81,8 @@ static u16 tph_extract_tag(enum tph_mem_type mem_ty=
+pe, u8 req_type,
+> > 			if (info->pm_xst_valid)
+> > 				return info->pm_xst;
+> > 			break;
+> > +		default:
+> > +			return 0;
+> > 		}
+> > 		break;
+> > 	default:
+> > diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
+> > index 9e4e331b1603..b989302b6755 100644
+> > --- a/include/linux/pci-tph.h
+> > +++ b/include/linux/pci-tph.h
+> > @@ -14,10 +14,12 @@
+> >   * depending on the memory type: Volatile Memory or Persistent Memor=
+y. When a
+> >   * caller query about a target's Steering Tag, it must provide the t=
+arget's
+> >   * tph_mem_type. ECN link: https://members.pcisig.com/wg/PCI-SIG/doc=
+ument/15470.
+> > + * Add a new tph type for PCI peer-to-peer access use case.
+> >   */
+> >  enum tph_mem_type {
+> >  	TPH_MEM_TYPE_VM,	/* volatile memory */
+> > -	TPH_MEM_TYPE_PM		/* persistent memory */
+> > +	TPH_MEM_TYPE_PM,	/* persistent memory */
+> > +	TPH_MEM_TYPE_P2P	/* peer-to-peer accessable memory */
+>
+> Trivial but this time definitely add the trailing comma!  Maybe there w=
+ill never
+> be any more in here but maybe there will and we can avoid a line of
+> churn next time.
+>
 
+Thanks for catching that! I=E2=80=99ll add the trailing comma to the enum=
+ in the patch.
 
-On 11/18/2025 5:08 AM, Bjorn Helgaas wrote:
-> EXTERNAL EMAIL
-> 
-> On Sat, Nov 08, 2025 at 10:02:59PM +0800, hans.zhang@cixtech.com wrote:
->> From: Manikandan K Pillai <mpillai@cadence.com>
->>
->> Add support for Cadence PCIe RP configuration for High Performance
->> Architecture (HPA) controllers. The Cadence High Performance
->> controllers are the latest PCIe controllers that have support for DMA,
->> optional IDE and updated register set. Add register definitions for High
->> Performance Architecture (HPA) PCIe controllers.
-> 
->>   /**
->>    * struct cdns_pcie - private data for Cadence PCIe controller drivers
->>    * @reg_base: IO mapped register base
->>    * @mem_res: start/end offsets in the physical system memory to map PCI accesses
->> + * @msg_res: Region for send message to map PCI accesses
->>    * @dev: PCIe controller
->>    * @is_rc: tell whether the PCIe controller mode is Root Complex or Endpoint.
->>    * @phy_count: number of supported PHY devices
->> @@ -45,16 +85,20 @@ struct cdns_pcie_ops {
->>    * @link: list of pointers to corresponding device link representations
->>    * @ops: Platform-specific ops to control various inputs from Cadence PCIe
->>    *       wrapper
->> + * @cdns_pcie_reg_offsets: Register bank offsets for different SoC
->>    */
->>   struct cdns_pcie {
->> -     void __iomem            *reg_base;
->> -     struct resource         *mem_res;
->> -     struct device           *dev;
->> -     bool                    is_rc;
->> -     int                     phy_count;
->> -     struct phy              **phy;
->> -     struct device_link      **link;
->> -     const struct cdns_pcie_ops *ops;
->> +     void __iomem                         *reg_base;
->> +     void __iomem                         *mem_base;
-> 
->    $ DIR=drivers/pci/
->    $ find $DIR -type f -name \*.[ch] | xargs scripts/kernel-doc -none 2>&1
->    Warning: drivers/pci/controller/cadence/pcie-cadence.h:101 struct member 'mem_base' not described in 'cdns_pcie'
-> 
-> Can you supply text for this doc?  We can amend the commit to include
-> it.
-
-Hi Bjorn,
-
-This variable should be deleted. Mani, could you please help handle it?
-
-It seems that Manikandan missed deleting this variable during the 
-modification process. I checked and found that it wasn't used.
-
-
-Best regards,
-Hans
-
-
+> >  };
+> > =20
+> >  #ifdef CONFIG_PCIE_TPH
 
 
