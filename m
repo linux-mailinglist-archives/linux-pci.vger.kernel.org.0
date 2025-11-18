@@ -1,142 +1,169 @@
-Return-Path: <linux-pci+bounces-41529-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41530-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 964ECC6B854
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 21:06:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0007C6B88A
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 21:11:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3620235401F
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 20:06:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id 7B5372B2C0
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 20:11:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D1BB2DCBF8;
-	Tue, 18 Nov 2025 20:06:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A8622F39B7;
+	Tue, 18 Nov 2025 20:10:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUurIK0Z"
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="dKsiVfIf";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="b4BcgUdY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F23827F00A;
-	Tue, 18 Nov 2025 20:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4164E2877F1;
+	Tue, 18 Nov 2025 20:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763496380; cv=none; b=SrfBwta448TZz4Gom61jXusPrJh8GMpbtvEjQdViGSp5qFx873RJXuS+dSld5K/9HR/tgqdQ/RYT7stfy5WtWkw6xv2+fFCc5KRJRR2BbqbCW8n6UXKrLnZmEEakJ5Kuy1yj6u3K4eloIUlWK8Z8qTxEonHBbO1FtVL/ukyGAsg=
+	t=1763496656; cv=none; b=JCA8g81SQYc2IKA0I1g7eTw79iQbtHdN7NKEmgwS/+v46D2AH+HaDjHVEbtzqzet5LvBWMPzg8f1legDF0a5EMrXcvUL9x69AgZSOvvuBEm+irz7MpfkI5wgi0iL3XH3+xh7BOahCI9+8L0u/Ya2Bzj5HqQTDDcAIfdRzT/dPPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763496380; c=relaxed/simple;
-	bh=OWueXLv1GkidpSobbWOxzP1bNyno7+0tNkEr7FL03sw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hP2q0qp+xCWD5v8TSiuqrvV3c3qNwSugynpZuleeiL94XDDvfLgFZQZTFkoZeer3UU3egAEjAN6QAJK16PVnhhGLVk8YXPg8nw+nktrvdlw0lUi4Ip+zjqMriTGS0MxnvHnNUHyuIqLsuK/DvzE1gmn/G4NUY4tDbANHmTtHe7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUurIK0Z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF55DC4CEF5;
-	Tue, 18 Nov 2025 20:06:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763496378;
-	bh=OWueXLv1GkidpSobbWOxzP1bNyno7+0tNkEr7FL03sw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kUurIK0Z0sKXeHJdsUgGZ2LIf1F7YrKZt2nQRR4Isz709nmFMo/qoMDiEkAtB0a0q
-	 qiccU3CYAvBKFHEkPzn4DND9yaXDM9f9Q3No5h2j1xvWeMjaE3cD7XKzlhTVNLIVF5
-	 LsMX1t/AS2eJNIE704QaNBpZSI559hShgvQ/QPMUMqpCpsxEhDFqNT7XShwrd2NWrj
-	 l8IDJLQhluW8axVX9tzEZ4A/bHphXCNCkjM2T5PLydmqgMVCGYs55/f/NhT9fC7rUk
-	 Gn+NggMtGQLfqe24VnT0aic3x1CFUnLoIY6e97PtARFNVHdy+tVjrmBZkpGLAYtoiP
-	 B0mkVjNKqwvCA==
-Date: Tue, 18 Nov 2025 21:06:08 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Simon Xue <xxm@rock-chips.com>, Damien Le Moal <dlemoal@kernel.org>,
-	Dragan Simic <dsimic@manjaro.org>, FUKAUMI Naoki <naoki@radxa.com>,
-	Diederik de Haas <diederik@cknow-tech.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>, Frank Li <Frank.li@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Conor Dooley <conor@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Hans Zhang <hans.zhang@cixtech.com>, linux-tegra@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, kernel@pengutronix.de,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 2/4] PCI: tegra194: Remove unnecessary L1SS disable code
-Message-ID: <aRzRsFKkVouJDRRs@ryzen>
-References: <aRRFYEgBigYDlfQh@ryzen>
- <20251118185917.GA2583698@bhelgaas>
+	s=arc-20240116; t=1763496656; c=relaxed/simple;
+	bh=1fth7gGrJVrKK4e+LaBq1u2hD9qEZfqURKPU94apF1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fnulnLqX4/VfICqcm5wv9BtEQc5MZe5zpRTlcW9l7sFqapZDAZ6hf2vXjpB66Y8xCF0wRLmPEc454vPNH4NmqiH8HR3TBCZCpL7LJKPNLF4d3dxsBbC50KgMBXErxlQboS8yhpot4QSG5oqLBh1LSVAXJF0OmqzGmm538l9c5UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=dKsiVfIf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=b4BcgUdY; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 7E23D1D00011;
+	Tue, 18 Nov 2025 15:10:50 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Tue, 18 Nov 2025 15:10:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1763496650;
+	 x=1763583050; bh=JKFcF4a+cNbrtlp+FIdvl2Y5hDbZC7BuoipJJsoD+Xg=; b=
+	dKsiVfIfgRz3kNZHBVLW4w4a09M1An1YvYNcijPZ2AbBFboB1FxX0SwNlWv2rI3m
+	jLV/veDDgOhw9IS/7J8t81UctKoauLfjaXOyWqAp44a4MChEre02HVqGpMlsgIQ5
+	OVDMVHJablLjrzU+B8hL8QqRQ1+FyFvGpkw3BwGVonzwVgBd7NvVAsA+IlLoTNVT
+	kot+Gxju1ZTzga7Bee121GDDqWNUI+lqCGgG89zYk6ckhz8rEtrBbj0mNQhPhOcc
+	4uOd0pLPLZNlB7v3J3DPPBINt8sCnltepxWxkehpeYBA1Harjd8rccj6w8gmbij3
+	nDgGERM8bBQyy2uD5HkTCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763496650; x=
+	1763583050; bh=JKFcF4a+cNbrtlp+FIdvl2Y5hDbZC7BuoipJJsoD+Xg=; b=b
+	4BcgUdYcPIovWahMuxFSya7KoSim52uHsgehgqj/ncnPhxE3qTN1l9XUmfH5dLA0
+	nA9E0d7Le0Mc4/Xf7R7J2lQ/+CU38ymtFa6iaGShFA8iMhhJds2uyGYsUrmk0AGZ
+	wwHqhNPuDyy3T1wmEKwJ83vo1u1sv9Rg4GlJkbcIEp90cjcQFPESsb71YSlLcyQd
+	UEAV/QlH64EIJ1lqCiYY4cKUDhQBuK7Z/C878cS9zvqM5xyFNzLBS1ECI4FZmTN2
+	zM7jJStJjqi5FJm842MkyHtQUwl7n/Nil39X0PVzn77HpNlgls3inc0qko2NNjgy
+	yxSKoNtyts9q6kzxUKgCg==
+X-ME-Sender: <xms:yNIcaVSvmDTF8VooyebZ_3iAuWJLF1nEpDYA2SFkLVpCRLI7ry-_yQ>
+    <xme:yNIcaVmEGLCY5Y5fPmoEJKQOT9y5RfkjFiDcjDM82fNtYUukk3d8ZO-gnIlZyOOPP
+    GAmhpj4l6gxq2LE9j06pWjqNlxkgm2Z3bZOzOLp7Twv9NJiGOok>
+X-ME-Received: <xmr:yNIcaTzm8Q6mhtNsmKzPVt9MMUAmwOqIQ5a4gIx8lLQ0mWSG2DA3IJH6>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvvddvvdegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkjghfgggtgfesthejredttddtvdenucfhrhhomheptehlvgigucgh
+    ihhllhhirghmshhonhcuoegrlhgvgiesshhhrgiisghothdrohhrgheqnecuggftrfgrth
+    htvghrnhepteetudelgeekieegudegleeuvdffgeehleeivddtfeektdekkeehffehudet
+    hffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hlvgigsehshhgriigsohhtrdhorhhgpdhnsggprhgtphhtthhopeefgedpmhhouggvpehs
+    mhhtphhouhhtpdhrtghpthhtohepkhgvvhhinhdrthhirghnsehinhhtvghlrdgtohhmpd
+    hrtghpthhtoheplhgvohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegshhgvlhhg
+    rggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhoghgrnhhgseguvghlthgrth
+    gvvgdrtghomhdprhgtphhtthhopegrgigsohgvsehkvghrnhgvlhdrughkpdhrtghpthht
+    oheprhhosghinhdrmhhurhhphhihsegrrhhmrdgtohhmpdhrtghpthhtohepjhhorhhose
+    eksgihthgvshdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtohepmhdrshiihihprhhofihskhhisehsrghmshhunhhgrdgtohhm
+X-ME-Proxy: <xmx:yNIcaf26KhFFpsUivmrVFhTObM-rKgDaEfC2zz-v9EkVExJppHMvwg>
+    <xmx:yNIcaSxvHZrLpODSMU140Px8A7i2ec7wW6bLtqhUmriZmnVfLlueSA>
+    <xmx:yNIcaQJG6BeoorANBFQ22bf_jmYfsKJ4ShsrttygfX-HrSPLvyCzdg>
+    <xmx:yNIcaY_XYy0V85f_vM-5tra11pYCLKaPoalvR53bkh_Q_lBlGmVbiA>
+    <xmx:ytIcabAqBX1IJkm5xY2Na7fzL8IPkzZ-PxplGx_6mGsuM1UBrv418EQg>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 18 Nov 2025 15:10:45 -0500 (EST)
+Date: Tue, 18 Nov 2025 13:10:38 -0700
+From: Alex Williamson <alex@shazbot.org>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+ "Robin Murphy" <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ "Jason Gunthorpe" <jgg@ziepe.ca>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jonathan Corbet <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+ Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "Ankit Agrawal" <ankita@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
+ "Shameer Kolothum" <skolothumtho@nvidia.com>,
+ Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+ Alex Mastro <amastro@fb.com>, Nicolin Chen <nicolinc@nvidia.com>
+Subject: Re: [PATCH v8 09/11] vfio/pci: Enable peer-to-peer DMA transactions
+ by default
+Message-ID: <20251118131038.32b7804d.alex@shazbot.org>
+In-Reply-To: <BN9PR11MB52767F78317AF3AB94A5B7D38CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
+	<20251111-dmabuf-vfio-v8-9-fd9aa5df478f@nvidia.com>
+	<BN9PR11MB52767F78317AF3AB94A5B7D38CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251118185917.GA2583698@bhelgaas>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Nov 18, 2025 at 12:59:17PM -0600, Bjorn Helgaas wrote:
-> On Wed, Nov 12, 2025 at 09:29:20AM +0100, Niklas Cassel wrote:
-> > On Tue, Nov 11, 2025 at 04:16:09PM -0600, Bjorn Helgaas wrote:
-> > > From: Bjorn Helgaas <bhelgaas@google.com>
-> > >
-> > > The DWC core clears the L1 Substates Supported bits unless the driver sets
-> > > the "dw_pcie.l1ss_support" flag.
-> > >
-> > > The tegra194 init_host_aspm() sets "dw_pcie.l1ss_support" if the platform
-> > > has the "supports-clkreq" DT property.  If "supports-clkreq" is absent,
-> > > "dw_pcie.l1ss_support" is not set, and the DWC core will clear the L1
-> > > Substates Supported bits.
-> > >
-> > > The tegra194 code to clear the L1 Substates Supported bits is unnecessary,
-> > > so remove it.
-> > >
-> > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > ---
-> >
-> > Since init_host_aspm() is now the only place using struct tegra_pcie_dw
-> > struct member cfg_link_cap_l1sub, I think that you can remove this struct
-> > member, and instead make this a local variable in init_host_aspm().
->
-> It looks like tegra_pcie_ep_irq_thread() also uses it, although I'm
-> dubious about that.
->
-> It's odd that software would be responsible for sending LTR messages,
-> but I guess this only happens for tegra194_pcie_dw_ep_of_data, and
-> apparently it's fixed (".has_ltr_req_fix" for tegra234.
->
-> And odd that we would read the capability register on every interrupt
-> even though this driver is the only thing that can change it, so we
-> should be able to cache the value in init_host_aspm().
+On Tue, 18 Nov 2025 07:18:36 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-Yes, sorry, my thinking was that this code in tegra_pcie_ep_irq_thread():
+> > From: Leon Romanovsky <leon@kernel.org>
+> > Sent: Tuesday, November 11, 2025 5:58 PM
+> > 
+> > From: Leon Romanovsky <leonro@nvidia.com>  
+> 
+> not required with only your own s-o-b
+> 
+> > @@ -2090,6 +2092,9 @@ int vfio_pci_core_init_dev(struct vfio_device
+> > *core_vdev)
+> >  	INIT_LIST_HEAD(&vdev->dummy_resources_list);
+> >  	INIT_LIST_HEAD(&vdev->ioeventfds_list);
+> >  	INIT_LIST_HEAD(&vdev->sriov_pfs_item);
+> > +	ret = pcim_p2pdma_init(vdev->pdev);
+> > +	if (ret && ret != -EOPNOTSUPP)
+> > +		return ret;  
+> 
+> Reading the commit msg seems -EOPNOTSUPP is only returned for fake
+> PCI devices, otherwise it implies regression. better add a comment for it?
 
-	/* If EP doesn't advertise L1SS, just return */
-	val = dw_pcie_readl_dbi(pci, pcie->cfg_link_cap_l1sub);
-	if (!(val & (PCI_L1SS_CAP_ASPM_L1_1 | PCI_L1SS_CAP_ASPM_L1_2)))
-		return IRQ_HANDLED;
+I think the commit log is saying that if a device comes along that
+can't support this, we'd quirk the init path to return -EOPNOTSUPP for
+that particular device here.  This path is currently used when
+!CONFIG_PCI_P2PDMA to make this error non-fatal to the device init.
 
+I don't see a regression if such a device comes along and while we
+could survive other types of failures by disabling p2pdma here, I think
+all such cases are sufficient rare out of memory cases to consider them
+catastrophic.  Thanks,
 
-after your patch can be replaced with:
-
-	/* If EP doesn't advertise L1SS, just return */
-	if (!pci->l1ss_support)
-		return IRQ_HANDLED;
-
-
-Since we already know that if !pci->l1ss_support,
-these bits will be cleared by DWC common code.
-
-
-So, after that, we could replace the struct tegra_pcie_dw
-struct member cfg_link_cap_l1sub with a local variable in
-init_host_aspm().
-
-
-Kind regards,
-Niklas
+Alex
 
