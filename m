@@ -1,181 +1,236 @@
-Return-Path: <linux-pci+bounces-41527-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41528-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FBBAC6B62F
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 20:17:35 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D9CAC6B7D0
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 20:48:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C71DE4F08E5
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 19:15:21 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6F11D4E2C4D
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 19:48:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DBD536404E;
-	Tue, 18 Nov 2025 19:09:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21A3F25B31B;
+	Tue, 18 Nov 2025 19:48:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e+mGwKal"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AYYTFY4f"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB942366DD8;
-	Tue, 18 Nov 2025 19:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA2D1E3DE5;
+	Tue, 18 Nov 2025 19:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763492956; cv=none; b=N1STid2Nm20UMya3BwU2D8ixiEpb9L/bHQM59tC1K4tMBV0FVlWkdDKtWn/vviLQqznt8CkUb9XJTQ88FB6wyNx1WwZCu+LxXiP1bQyQeBYAtVF1/3Q6uUvEG4rLUTZHDkm7gsdY1Qc8n9pSpmhHFlY+5c98mAcRyDki2/BEjro=
+	t=1763495288; cv=none; b=EvK/35wRqNGjXeKEzZ2zk/QpKtVqCeJ4Au90QA6ctPaCeolMS/yidA36atHIPnsvjGzrQMNwqz25PzsKdncbyjWg4A83pDVY6KLugYPGBPKNMEld8PjrMYl5e782fprEzqZyLFJmbKYUNN67itDWabCGpiX7p+b0aT0sw4liywE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763492956; c=relaxed/simple;
-	bh=5ln9yQLShanL8HNdyhz0x5apv7YrZKXZwF/7CPu5SOg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z8EmW3K9KqffyCU7vijdHuU/MHAhY1t2iZDC0PqYcignEfnAN4zVSR4ZkuXZYcOu1Vl2LulLScxgvBvWg5fjoIBaUuOX+b9btEObP+IjFNZMPbLd9V7o2VE6827icTyisnMx4BGeQ2aIBcBmKiAmHcXLmaqw2bQZq/b675DD81o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e+mGwKal; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763492954; x=1795028954;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5ln9yQLShanL8HNdyhz0x5apv7YrZKXZwF/7CPu5SOg=;
-  b=e+mGwKalova8uMYo8AY0iQXfjeMtFcu8KxBK3Hoei18AlGgNXmW47xn3
-   S15B7eIlWwrrczbgRrXpZ2u0Y2MeviTmEo9UyikmK8z23IJT5pf7UcJdv
-   y1IjBgWmib0HIBaYEGFR3tzR2akAcSGSEgAqvh/NOvpIT70+8dhBRQ7Vg
-   jPM/GIn3bxk87hG5F3GEhvz89ZWnsU/XcYFxSwMmZnGGhoRH5WMBuIUZ3
-   Ae9sxirGzDLnkcTSh3KBd8jirq/1xt/UWX/urTNlbf8x2vAkXzluqu38m
-   swVMJ13ZNDihHjOHyatb092OLrJTADnp5WX4toLgBFpZiJTXzJqge5YmH
-   w==;
-X-CSE-ConnectionGUID: 49RHZw4PQo2R5VCdRVGuKA==
-X-CSE-MsgGUID: KVnkh934TmGStFvPyyjyWw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="68132427"
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="68132427"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 11:09:13 -0800
-X-CSE-ConnectionGUID: 14Dg1cXzThuvCVYU85e6uw==
-X-CSE-MsgGUID: YpnGESm+S/a5CSITpAygFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
-   d="scan'208";a="191627364"
-Received: from tslove-mobl4.amr.corp.intel.com (HELO [10.125.109.142]) ([10.125.109.142])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 11:09:12 -0800
-Message-ID: <70056924-1702-4020-b805-014efb87afdd@intel.com>
-Date: Tue, 18 Nov 2025 11:09:12 -0800
+	s=arc-20240116; t=1763495288; c=relaxed/simple;
+	bh=LTuF70HwzOWawLdegHtHahnCjvkdLsBPOGc8x/siiEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=UdWv/Re1NvQKTTNuerDWErmpkG6EelXzD1UKJyTFUcBlSuSh2nLHhYx6uPZveUGKuk5YrEpnW+/hZFFu+oxDaU/axrnK73W1dW3mu666roN7VuV0O4pjGNX8Hhg7pqrK9IU+zl3rrh6LjzYyfN6EASxY5FS6RUD7m821PB0tXHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AYYTFY4f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2664C19423;
+	Tue, 18 Nov 2025 19:48:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763495286;
+	bh=LTuF70HwzOWawLdegHtHahnCjvkdLsBPOGc8x/siiEs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=AYYTFY4fRD9asNUz2r0O/g27bM4cmK/R9iU3u8cK3Bol6afFg6BVOZsZF7TjZ6fgF
+	 i7kQAVclLkSCfZMkyNdawpx7s8cvzpsEZbLY4dcaqw2kjmc/0+GPQbXbTTrwVbR5tw
+	 ggaCT4uZK5oUCbUg+7LTKRsvnwMs9hD4T4YW62BK9SwR7+TtV167YGOPRhCh0fVAe0
+	 gdTf4qmtt5gTAKz1nNyIqK6FuoNKOc6thXWjeuwSVB5Gw+dxBm9jL1axPDuM0UsclM
+	 g2h9DjUeFf/4Nszr5lDsO/osPDs2MnSPDIviRPG5U/3ro/RZEpC/ZIr/effvdC8PuL
+	 AiTohfVDoa5ZQ==
+Date: Tue, 18 Nov 2025 13:48:03 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Simon Xue <xxm@rock-chips.com>, Damien Le Moal <dlemoal@kernel.org>,
+	Dragan Simic <dsimic@manjaro.org>, FUKAUMI Naoki <naoki@radxa.com>,
+	Diederik de Haas <diederik@cknow-tech.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>, Frank Li <Frank.li@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Conor Dooley <conor@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Hans Zhang <hans.zhang@cixtech.com>, linux-tegra@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, kernel@pengutronix.de,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH 1/4] PCI: dwc: Advertise L1 PM Substates only if driver
+ requests it
+Message-ID: <20251118194803.GA2586265@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 06/26] x86/virt/tdx: Add tdx_page_array helpers for new
- TDX Module objects
-To: Xu Yilun <yilun.xu@linux.intel.com>, linux-coco@lists.linux.dev,
- linux-pci@vger.kernel.org
-Cc: chao.gao@intel.com, dave.jiang@intel.com, baolu.lu@linux.intel.com,
- yilun.xu@intel.com, zhenzhong.duan@intel.com, kvm@vger.kernel.org,
- rick.p.edgecombe@intel.com, dave.hansen@linux.intel.com,
- dan.j.williams@intel.com, kas@kernel.org, x86@kernel.org
-References: <20251117022311.2443900-1-yilun.xu@linux.intel.com>
- <20251117022311.2443900-7-yilun.xu@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20251117022311.2443900-7-yilun.xu@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <79a8c3cc-2b60-4bce-b1ba-7ab5f033f924@rock-chips.com>
 
-On 11/16/25 18:22, Xu Yilun wrote:
-...> +	struct tdx_page_array *array __free(kfree) = kzalloc(sizeof(*array),
-> +							     GFP_KERNEL);
-> +	if (!array)
-> +		return NULL;
+On Wed, Nov 12, 2025 at 09:03:38AM +0800, Shawn Lin wrote:
+> 在 2025/11/12 星期三 6:16, Bjorn Helgaas 写道:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> > 
+> > L1 PM Substates require the CLKREF# signal and may also require
+> > device-specific support.  If CLKREF# is not supported or driver support is
+> > lacking, enabling L1.1 or L1.2 may cause errors when accessing devices,
+> > e.g.,
+> > 
+> >    nvme nvme0: controller is down; will reset: CSTS=0xffffffff, PCI_STATUS=0x10
+> > 
+> > If the kernel is built with CONFIG_PCIEASPM_POWER_SUPERSAVE=y or users
+> > enable L1.x via sysfs, users may trip over these errors even if L1
+> > Substates haven't been enabled by firmware or the driver.
+> > 
+> > To prevent such errors, disable advertising the L1 PM Substates unless the
+> > driver sets "dw_pcie.l1ss_support" to indicate that it knows CLKREF# is
+> > present and any device-specific configuration has been done.
+> > 
+> > Set "dw_pcie.l1ss_support" in tegra194 (if DT includes the
+> > "supports-clkreq' property) and qcom (for 2.7.0 controllers) so they can
+> > continue to use L1 Substates.
+> > 
+> > Based on Niklas's patch:
+> > https://patch.msgid.link/20251017163252.598812-2-cassel@kernel.org
+> 
+> 
+> Except the issue Fank pointed out, the commit msg says CLKREF# 3 times
+> which seems not a term from spec. Should it be CLKREQ# ?
 
-I just reworked this to use normal goto's. It looks a billion times
-better. Please remove all these __free()'s unless you have specific
-evidence that they make the code better.
+Yes!  Thank you, fixed locally.
 
-Maybe I'm old fashioned, but I don't see anything wrong with:
-
-static struct tdx_pglist *tdx_pglist_alloc(unsigned int nr_pages)
-{
-        struct tdx_page_array *array = NULL;
-        struct page **pages = NULL;
-        struct page *root = NULL;
-        int ret;
-
-        if (!nr_pages)
-                return NULL;
-
-        array = kzalloc(sizeof(*array), GFP_KERNEL);
-        if (!array)
-                goto out_free;
-
-        root = kzalloc(PAGE_SIZE, GFP_KERNEL);
-        if (!root)
-                goto out_free;
-
-        pages = kcalloc(nr_pages, sizeof(*pages), GFP_KERNEL);
-        if (!pages)
-                goto out_free;
-
-        ret = tdx_alloc_pages_bulk(nr_pages, pages);
-        if (ret)
-                goto out_free;
-
-        array->nr_pages	= nr_pages;
-        array->pages	= pages;
-        array->root	= root;
-
-        return array;
-
-out_free:
-        kfree(array);
-        kfree(root);
-        kfree(pages);
-
-        return NULL;
-}
-
+> Otherwise,
+> Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
+> 
+> > 
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> >   .../pci/controller/dwc/pcie-designware-ep.c   |  2 ++
+> >   .../pci/controller/dwc/pcie-designware-host.c |  2 ++
+> >   drivers/pci/controller/dwc/pcie-designware.c  | 24 +++++++++++++++++++
+> >   drivers/pci/controller/dwc/pcie-designware.h  |  2 ++
+> >   drivers/pci/controller/dwc/pcie-qcom.c        |  2 ++
+> >   drivers/pci/controller/dwc/pcie-tegra194.c    |  3 +++
+> >   6 files changed, 35 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index 7f2112c2fb21..c94cff6eeb01 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -966,6 +966,8 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+> >   	if (ep->ops->init)
+> >   		ep->ops->init(ep);
+> > +	dw_pcie_config_l1ss(pci);
+> > +
+> >   	ptm_cap_base = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_PTM);
+> >   	/*
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > index 20c9333bcb1c..f1d5b45a3214 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > @@ -1060,6 +1060,8 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
+> >   		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
+> >   	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
+> > +	dw_pcie_config_l1ss(pci);
+> > +
+> >   	dw_pcie_config_presets(pp);
+> >   	/*
+> >   	 * If the platform provides its own child bus config accesses, it means
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > index c644216995f6..ede686623fad 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -1081,6 +1081,30 @@ void dw_pcie_edma_remove(struct dw_pcie *pci)
+> >   	dw_edma_remove(&pci->edma);
+> >   }
+> > +void dw_pcie_config_l1ss(struct dw_pcie *pci)
+> > +{
+> > +	u16 l1ss;
+> > +	u32 l1ss_cap;
+> > +
+> > +	if (!pci->l1ss_support)
+> > +		return;
+> > +
+> > +	l1ss = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_L1SS);
+> > +	if (!l1ss)
+> > +		return;
+> > +
+> > +	/*
+> > +	 * Unless the driver claims "l1ss_support", don't advertise L1 PM
+> > +	 * Substates because they require CLKREF# and possibly other
+> > +	 * device-specific configuration.
+> > +	 */
+> > +	l1ss_cap = dw_pcie_readl_dbi(pci, l1ss + PCI_L1SS_CAP);
+> > +	l1ss_cap &= ~(PCI_L1SS_CAP_PCIPM_L1_1 | PCI_L1SS_CAP_ASPM_L1_1 |
+> > +		      PCI_L1SS_CAP_PCIPM_L1_2 | PCI_L1SS_CAP_ASPM_L1_2 |
+> > +		      PCI_L1SS_CAP_L1_PM_SS);
+> > +	dw_pcie_writel_dbi(pci, l1ss + PCI_L1SS_CAP, l1ss_cap);
+> > +}
+> > +
+> >   void dw_pcie_setup(struct dw_pcie *pci)
+> >   {
+> >   	u32 val;
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > index e995f692a1ec..8d14b1fe2280 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > @@ -516,6 +516,7 @@ struct dw_pcie {
+> >   	int			max_link_speed;
+> >   	u8			n_fts[2];
+> >   	struct dw_edma_chip	edma;
+> > +	bool			l1ss_support;	/* L1 PM Substates support */
+> >   	struct clk_bulk_data	app_clks[DW_PCIE_NUM_APP_CLKS];
+> >   	struct clk_bulk_data	core_clks[DW_PCIE_NUM_CORE_CLKS];
+> >   	struct reset_control_bulk_data	app_rsts[DW_PCIE_NUM_APP_RSTS];
+> > @@ -573,6 +574,7 @@ int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> >   				int type, u64 parent_bus_addr,
+> >   				u8 bar, size_t size);
+> >   void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index);
+> > +void dw_pcie_config_l1ss(struct dw_pcie *pci);
+> >   void dw_pcie_setup(struct dw_pcie *pci);
+> >   void dw_pcie_iatu_detect(struct dw_pcie *pci);
+> >   int dw_pcie_edma_detect(struct dw_pcie *pci);
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 805edbbfe7eb..61c2f4e2f74d 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -1067,6 +1067,8 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+> >   	val &= ~REQ_NOT_ENTR_L1;
+> >   	writel(val, pcie->parf + PARF_PM_CTRL);
+> > +	pci->l1ss_support = true;
+> > +
+> >   	val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+> >   	val |= EN;
+> >   	writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+> > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > index 10e74458e667..3934757baa30 100644
+> > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > @@ -703,6 +703,9 @@ static void init_host_aspm(struct tegra_pcie_dw *pcie)
+> >   	val |= (pcie->aspm_pwr_on_t << 19);
+> >   	dw_pcie_writel_dbi(pci, pcie->cfg_link_cap_l1sub, val);
+> > +	if (pcie->supports_clkreq)
+> > +		pci->l1ss_support = true;
+> > +
+> >   	/* Program L0s and L1 entrance latencies */
+> >   	val = dw_pcie_readl_dbi(pci, PCIE_PORT_AFR);
+> >   	val &= ~PORT_AFR_L0S_ENTRANCE_LAT_MASK;
+> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
