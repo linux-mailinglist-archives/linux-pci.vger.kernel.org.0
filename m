@@ -1,204 +1,155 @@
-Return-Path: <linux-pci+bounces-41505-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41506-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EF57C6A0C0
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 15:40:49 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8BAFC69F9D
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 15:30:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 106164FC8A2
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 14:30:35 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id E98AF2BD45
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 14:30:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D21C35A95C;
-	Tue, 18 Nov 2025 14:30:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25F52355020;
+	Tue, 18 Nov 2025 14:30:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Lq4z7uIo"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="B/WGySyv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E1D304BAF
-	for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 14:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E5D30216C
+	for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 14:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763476207; cv=none; b=OUM7cLMx4QtD/FiLVpyMcGAh1q7znCOi8pxNdVDNPB6wj0cnr7OD04Att1fMtQXqyd/nSC8PZcC4jA5nPvHt9D9MP+Df7nKk4uhMAIZz/eeWhV4HoKJpWSg3yemoDPpZDfek3cY7atAUvufvutIVABJJu1EM8lVhmAVdxOYiZY0=
+	t=1763476209; cv=none; b=lQ5Pdpk50g36lDZ/ZCDm9+vHuUB3XSZKS6It8Y3xOm8Rzb/ODqiY2FUZSlpQrLvBxEnmzUZ6f4rvieDxHlVvqoeXEYujeGpNotZxTIPgO6eKQhH7NeFryL7h28Las1OgktezmK9nsFryvwEzgAw1ijzt2ONx4tq8HsYDCYopzNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763476207; c=relaxed/simple;
-	bh=812u0/kE8U6KIifXA4o4gTvauRi/MWbHZ1WwZdLX1Rs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qg8boPUoQx35/g3feZqf4z/yckaZuzZd4QsrfsEoBtCMPZuLYUUUIn00gVoVReac/xqLfqPS1DGkzBAS33J+CCNbE0fEbjv+vQL73YbEDMYiSSwdbT9b7Wig1M476qrSLL0PEDagn/jqHBqoCqezjb5v5mffihEme/HJzLJs3wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Lq4z7uIo; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5959b2f3fc9so499324e87.2
-        for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 06:30:03 -0800 (PST)
+	s=arc-20240116; t=1763476209; c=relaxed/simple;
+	bh=Vzm9kAK03gjq3/EFXB7Lf/qLfrswTurpUBT72P7Q9wQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FHfA0jdgqB4LSW824FPncC3fDJRDYwWfRUKa8htGvIh6blLOpRMtXlr6F//Cehvkxvn4QnMIFcu4o1EfP1hIS2tuRtcj0BtKGTUQWmSWMrhVIViCPV+Bwbauljc6kljRqbHxPst8I9MO/dk5guzZ46zkAXR1FGTi9IlBnfXtrEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=B/WGySyv; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-8b1e54aefc5so469860985a.1
+        for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 06:30:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1763476202; x=1764081002; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JPuRb3+haxxFSoGOZ/Vv3ClCGfszWqWGAZKDKrczFMg=;
-        b=Lq4z7uIoHwX+T0oZpnQeE7Sgq9N1okHHPsxFDCimKWGvAYYyd1L3RkOxAFX6qqwgAK
-         n7bdZ81LqGV1aeevTqZ8wYxo8zm2fcmodj9xNDXKeQJspHWeAezhpEaV3ItXy5cPjLX4
-         6lleapZWGYLkpOGJxS/+B70xq3sqzhS76pnHvh3KpwGhTjAk0fG5Bfaevs8HoAynZMpF
-         6Y9f9b3Bef5JuVIba38qaCDqJwveVXQ19CNrRhMaBrwVBCOxUcjdGZbK08iPRuO8sCQ+
-         nlyYi9cr1Cu3HHRMrga2WbosxHKUD2ZvZJFSImC9bw3VIP1RTXdGahqstC5GX3Xx94Lo
-         LSYg==
+        d=ziepe.ca; s=google; t=1763476205; x=1764081005; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=gAj/lhLwXUkQIe838UyunLw5D1V/iLtJCJGMnOEEnt8=;
+        b=B/WGySyvLaU8JIymArDTv5WHkDz63O8yjgtHNuDkhXoWlTVVEPwduRMKJRIl0VF0pt
+         8TX3wC2CbRl78X8YvI6a76RvnNUvSap8sF82eEalnIXUMlSH6IQZ2lf/EfXMaqK3D0ge
+         X5WIamr7y8ESnWfA/FuSzY5Ur6gzM7VRfSLkcWXG5ZJT1jx/WSECD5qqvvLR/jW4FtK5
+         lXAqbLAS2gBp1REviCoz1CfM4ZfT1CkwTYXQnaa+Q+f0AhzEUqD9RCYPP7bMY70mYbIq
+         d0nSRxqUw+WlBG8E/FBiGUk4abSaitO3o2hlCXsKqA/G/VWD92vKkCqNV5klizdv4fJN
+         4ByA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763476202; x=1764081002;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=JPuRb3+haxxFSoGOZ/Vv3ClCGfszWqWGAZKDKrczFMg=;
-        b=IvlziV3wdC8o516sksmS4CTA7AWOz12EVaUuKWcz4+Tfl4lCNstVtuCdXJCV1NZT/0
-         SIFwfXMXUbtqP355ItpnmvV7AaqsRGwYB6nxAQGsW66xfQTsQM+sJOOfl660/zcimg7A
-         jJtHc3U5Pkrwhmxg8lCJqkTfMsy9Y9hua/CXZ1AX3qSMjewIeze7zf0JCil929pkKRPr
-         rWeqjiOhEOPsvPoV93Gq458C0B22potIX+BNaU3uQ0ywsqXLzIzFhPPgSU73ifwIHCzh
-         r69+ewUC6PJoZMLufoO4rBOLC/+dMa9Ga8hcMeL4xqiFdWxdgfEVJR+y83LSbnf3FS2L
-         xV4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUzYN0Gnda/N+riv0k6PL79E3rBAq59neXIBqcvjg6iKVwoEx+k4/tqVZ55jZ0hdfnVx8LzvqVQKxU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0nMm0piHyMEG0Gx+G6mwUsK3zoQJIgls9yXLGPgS606QTrvL6
-	Ht1+iEaI5G82C4gQrBVxqqt1YEkr4RCn0unzvEkK7KgOhAfUfHeSBEibkPpYRavTO86yF961EfT
-	doIIg6QQluc/JelJbPBAtaYDw9k3h40+VFzzT+cGhNA==
-X-Gm-Gg: ASbGnct+zGiCRY4PaVDqS9edKFE0ZmtPa1jcHKD/UYh0ujPJDGSNOExibpBspNnvGJN
-	znDiKsKAawQhfeD4ndKpyS3pIE58Gjl31qPIWrYaDDNv49H3L5lIuEHl8Z0HAPUDSXe8HqJdykd
-	VR9hcoij6UMEfU45oGF7MaZC4irPPKEND0RW51tz5UEy+jWRCwuCbO8e2x9X6NgU22UKLBizca7
-	m2tU8XR8GnQB//DcXknMXQsp2XdqFonKiV0Wbvbokowt7KLV4TFBBNq1Wf+QJlorfesvV/LBrBE
-	Vs3kN0wIDSKbC1o+KL0KCHgy/P0VAku2KZx5
-X-Google-Smtp-Source: AGHT+IG/8x599leRbcc55AKG5x7ewC54AAGqLK2r1ZPyGFLtbdnyvhRmFu7yQc8cTfZdSXpR6fRtj7AIKLBehJrw2m0=
-X-Received: by 2002:a05:6512:3ca2:b0:57a:2be1:d779 with SMTP id
- 2adb3069b0e04-595841febd2mr6716947e87.31.1763476201587; Tue, 18 Nov 2025
- 06:30:01 -0800 (PST)
+        d=1e100.net; s=20230601; t=1763476205; x=1764081005;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gAj/lhLwXUkQIe838UyunLw5D1V/iLtJCJGMnOEEnt8=;
+        b=vRSXwldRWJjp9ErpaHpZLjTD+BIxVvASqRTeM9f7q8jAYc8xJ4gureM2/c9UAK5sdt
+         MUZ7MAQ5jDdIh2jaq78mmafocsLxZQx+K1GYfCz8mpRWP8Rff/PSKhsvlogZcnvSEm+c
+         C7pQGBF8iV9XoTrbJUtjnnpsfYIZFARsyD9d62DdKXt7NR/hQj62m/vopgtW+YYcPt7A
+         J6HgqAaWtSnhIK1pRLqEXL8sMdZesEgoBwa5uJ5EAlT+U5RmALZP5BqTquHNxWQIHqno
+         OZSXwPosljGQ5TGoJ3t3+JVPvj59Bd6u4+djrSby616xUjE5N0RcMzvZ30IxFLgYhPSt
+         deYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWrJGr8/Vncg7qeyFvhJ+xR77pLvtmjDukxIyPWLjHULoCrZXlEAX5hLiqR/LrXzseX0+L5D2Q/rpg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSLrMpL2jA27qi5HaqRoeqkOHEp9dJsC1Ot5maYahyqa66JziU
+	gqcqtOMT6XN5aJfVXB3Xa2dH/u6bop3dAz92UySU9h+8Ua1evOIRfhl2rxKIGoIdCLY=
+X-Gm-Gg: ASbGncuvFc1vo1z6Ph80sQjRXJ0tFfp7MEwlqm35E9V16HCGtI5n7PBGqTgMglxEVMr
+	51jkUxvjf0wUibcA8QaO+TCl3hppcN/kv3zKYOGofu8uid7y/tyVY4FR+g6OTShvpc+L8TcQjjG
+	WN0YEV8sXkTd5sl4owSMl7ye1NHxnLsq3J7KdXcpLjMoA2IPdgPGvHLLvx37b+WVnMSUbgiwEc3
+	K0ool1Q/iHPzgle+3O/WOFg7FR/nz4nwEqSEc1ibnVVDLKl5ji7Fa1lyWZuEk+9SDI+ihgk1LVe
+	22W+qbEPK/DOJPb0CweNRNHKDyPpmbRHqeWMJuqWSEgMRz/P1WXWiwvUfZUhTzJoOzVrWBfa6nT
+	PPQlZGnZA5U4gmbQE35RIAHRWjkdYg+C15DEuoFLE61ZC809Pz918YI0Ana30CuujXDT2EFYVMe
+	EKzUlVXA9UuXi5gs4mR/pztpz+fV8z49bK5vVbYgrvV5ohLs3af0nvgCjWREkPr2GTmwQ=
+X-Google-Smtp-Source: AGHT+IGl2QxjkDkgi5jKGR6lwtLy9hLDUjSd3xhjzd2vh/OGWRtCENW0fUVdt2sQ45uUuO7DIyidjQ==
+X-Received: by 2002:a05:622a:4a15:b0:4ed:df82:ca30 with SMTP id d75a77b69052e-4edfc875136mr206770331cf.13.1763476204719;
+        Tue, 18 Nov 2025 06:30:04 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-882862d0944sm115395396d6.9.2025.11.18.06.30.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Nov 2025 06:30:04 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1vLMiZ-00000000NFZ-1yj6;
+	Tue, 18 Nov 2025 10:30:03 -0400
+Date: Tue, 18 Nov 2025 10:30:03 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Ankit Agrawal <ankita@nvidia.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <skolothumtho@nvidia.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	Alex Mastro <amastro@fb.com>, Nicolin Chen <nicolinc@nvidia.com>
+Subject: Re: [PATCH v8 11/11] vfio/nvgrace: Support get_dmabuf_phys
+Message-ID: <20251118143003.GH17968@ziepe.ca>
+References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
+ <20251111-dmabuf-vfio-v8-11-fd9aa5df478f@nvidia.com>
+ <SA1PR12MB7199A8A0D17CDC980F819CC6B0D6A@SA1PR12MB7199.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com> <20251112-pci-m2-e-v1-8-97413d6bf824@oss.qualcomm.com>
-In-Reply-To: <20251112-pci-m2-e-v1-8-97413d6bf824@oss.qualcomm.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 18 Nov 2025 15:29:49 +0100
-X-Gm-Features: AWmQ_bnS7J2LiofnEnjv4l_cFHHTAIWcbKZPMExzLrGKBD6vTSaTLBGi1oU52Ic
-Message-ID: <CAMRc=MdRw+spjN0ySJ7We_GJ8GaDU2Nb4unaxcnr2ZLjLOeSrA@mail.gmail.com>
-Subject: Re: [PATCH 8/9] Bluetooth: hci_qca: Add support for WCN7850 PCIe M.2 card
-To: manivannan.sadhasivam@oss.qualcomm.com
-Cc: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, linux-serial@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SA1PR12MB7199A8A0D17CDC980F819CC6B0D6A@SA1PR12MB7199.namprd12.prod.outlook.com>
 
-On Wed, Nov 12, 2025 at 3:45=E2=80=AFPM Manivannan Sadhasivam via B4 Relay
-<devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
->
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
->
-> The WCN7850 PCIe M.2 card connected to the UART controller exposes the
-> 'WCN7850' serdev device and is controlled using the pwrseq framework.
->
-> Hence, add support for it in the driver. It reuses the existing
-> 'qca_soc_data_wcn7850' driver data.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.=
-com>
-> ---
->  drivers/bluetooth/hci_qca.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 4cff4d9be3132561ee9bae4ddf2c8ac0bc13ecd7..09bfb3bba93698f496947775b=
-f6b31f2f20279f1 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -26,6 +26,7 @@
->  #include <linux/mod_devicetable.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/of_graph.h>
->  #include <linux/acpi.h>
->  #include <linux/platform_device.h>
->  #include <linux/pwrseq/consumer.h>
-> @@ -2344,6 +2345,9 @@ static int qca_serdev_probe(struct serdev_device *s=
-erdev)
->
->         qcadev->serdev_hu.serdev =3D serdev;
->         data =3D device_get_match_data(&serdev->dev);
-> +       if (!data && serdev->id)
-> +               data =3D (const struct qca_device_data *) serdev->id->dri=
-ver_data;
+On Tue, Nov 18, 2025 at 07:59:20AM +0000, Ankit Agrawal wrote:
+> +       if (nvdev->resmem.memlength && region_index == RESMEM_REGION_INDEX) {
+> +               /*
+> +                * The P2P properties of the non-BAR memory is the same as the
+> +                * BAR memory, so just use the provider for index 0. Someday
+> +                * when CXL gets P2P support we could create CXLish providers
+> +                * for the non-BAR memory.
+> +                */
+> +               mem_region = &nvdev->resmem;
+> +       } else if (region_index == USEMEM_REGION_INDEX) {
+> +               /*
+> +                * This is actually cachable memory and isn't treated as P2P in
+> +                * the chip. For now we have no way to push cachable memory
+> +                * through everything and the Grace HW doesn't care what caching
+> +                * attribute is programmed into the SMMU. So use BAR 0.
+> +                */
+> +               mem_region = &nvdev->usemem;
+> +       }
 > +
->         serdev_device_set_drvdata(serdev, qcadev);
->         device_property_read_string_array(&serdev->dev, "firmware-name",
->                                          qcadev->firmware_name, ARRAY_SIZ=
-E(qcadev->firmware_name));
-> @@ -2384,6 +2388,15 @@ static int qca_serdev_probe(struct serdev_device *=
-serdev)
->         case QCA_WCN6855:
->         case QCA_WCN7850:
->         case QCA_WCN6750:
-> +               if (of_graph_is_present(dev_of_node(&serdev->ctrl->dev)))=
- {
-> +                       qcadev->bt_power->pwrseq =3D devm_pwrseq_get(&ser=
-dev->ctrl->dev,
-> +                                                                  "uart"=
-);
-> +                       if (IS_ERR(qcadev->bt_power->pwrseq))
-> +                               qcadev->bt_power->pwrseq =3D NULL;
-> +                       else
-> +                               break;
-> +               }
+> 
+> Can we replace this with nvgrace_gpu_memregion()?
 
-Did you by any chance copy this logic from commit: db0ff7e15923
-("driver: bluetooth: hci_qca:fix unable to load the BT driver")? This
-commit is wrong and it flew under my radar during the summer and I
-never got around to fixing it. It doesn't take into account probe
-deferral.
+Yes, looks like
 
-Bartosz
+But we need to preserve the comments above as well somehow.
 
-> +
->                 if (!device_property_present(&serdev->dev, "enable-gpios"=
-)) {
->                         /*
->                          * Backward compatibility with old DT sources. If=
- the
-> @@ -2740,6 +2753,12 @@ static const struct acpi_device_id qca_bluetooth_a=
-cpi_match[] =3D {
->  MODULE_DEVICE_TABLE(acpi, qca_bluetooth_acpi_match);
->  #endif
->
-> +static const struct serdev_device_id qca_bluetooth_serdev_match[] =3D {
-> +       { "WCN7850", (kernel_ulong_t)&qca_soc_data_wcn7850 },
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(serdev, qca_bluetooth_serdev_match);
-> +
->  #ifdef CONFIG_DEV_COREDUMP
->  static void hciqca_coredump(struct device *dev)
->  {
-> @@ -2756,6 +2775,7 @@ static void hciqca_coredump(struct device *dev)
->  static struct serdev_device_driver qca_serdev_driver =3D {
->         .probe =3D qca_serdev_probe,
->         .remove =3D qca_serdev_remove,
-> +       .id_table =3D qca_bluetooth_serdev_match,
->         .driver =3D {
->                 .name =3D "hci_uart_qca",
->                 .of_match_table =3D of_match_ptr(qca_bluetooth_of_match),
->
-> --
-> 2.48.1
->
->
+Jason
 
