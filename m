@@ -1,184 +1,191 @@
-Return-Path: <linux-pci+bounces-41549-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41550-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7A16C6BED2
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 00:03:10 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06612C6C025
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 00:31:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id 9AF192A2DA
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 23:03:08 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3FB1434ECCF
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 23:30:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C8CA30F531;
-	Tue, 18 Nov 2025 23:02:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83B5630F539;
+	Tue, 18 Nov 2025 23:29:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PGtrMolH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M9UBGVUa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C7D2DC79F
-	for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 23:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEF6302CDB
+	for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 23:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763506979; cv=none; b=Mjgdj/5aucgq7TkpdCm7f07MD5cfEtxO5GAdA4i5naW/UqG2VuJDshrJ544/IJnvExWlSsOaO8UEJ7BUgBSOee+i7r9FYMhT2DmxzmDow83FdsWmOymx/bErQYGQGz+I8a/bK9K+MhX3Dh/7SlL4p9Tgo85l7uWQI9FMLZ8iqjg=
+	t=1763508571; cv=none; b=nqBKd7Q7JoU8Smb5FAo6MOeih3Mx3HhvwjCptPp3kFS+z6fzyBFbaw3WdnHVESspm9wMsQ5nn/hU4c2uF+S0E1w2P/N47jJzaz/9tOJntn5R7b1orZAaDa+LU6Pj2II/8Pxalkg+qOukDLGBvPeirP3/4EbjMOnfUjHP/yRgK0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763506979; c=relaxed/simple;
-	bh=scFNZX9ag0i6pgwb7zn5W5v2rOxL4+aniwaNGa7QpTE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kJWjh0FyabK2GJA/kZnWxz91sNS9WTpCx38l1CJvQ0OZg8ZuA3an+FWw7/d6/Q7tG9I5jkDbkiPfBlC7t2qdsnelMjwd/e2d0L8FPqM6Xmm/yZn5e5813e0PiNptwMjVfHvrq5JKbxyXOixFZq0KNGSo16bg4j34y6fdxEFjW5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=PGtrMolH; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-8b2e530a748so295497285a.0
-        for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 15:02:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1763506975; x=1764111775; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=V9774m00qC+l22EqhxH404c/5WuwECoHlv+7tMAloKg=;
-        b=PGtrMolH6Qz2B+82VKf1tqJiPDAxYTw1ids62c39Hjs96vRIcsgVJLYiUmwdEnCZtd
-         +cip3SWdQ1IAz+Wc9ftRRHpkdn635dM17uGQggs02cjVxhL14Pyn8YNfqVoGmOq9J/7T
-         wa3EIqW9TPC8OrvrngjqzH5aXDB6ZC8za0V3t98PCbk+XDHVS+i9UVe2MiA2sDZaGCw9
-         SJ6oFOpBWUPpMIrZaEXmW2/8PBOA6Kcx5SqFZ4VRW89JehH10ySlJf/qqsZRhb8BfYjF
-         xbSVLqnwywsiz63rrA8JtuloT1Is74xQn1fLg51SzLGsuOB4IJOoEKMMQ2ZKzgScxY2+
-         +Lqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763506975; x=1764111775;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V9774m00qC+l22EqhxH404c/5WuwECoHlv+7tMAloKg=;
-        b=ofUKhc0gBfAq+ZKLGZBMJUtioEgkqvPu4tyVaEe+7zezrc8+RE9CWkPZAiqX1arSpp
-         7u9oUdO0vky/H7wwyZXDVMCo+v9hj7jqRn/Imphl0BluaO0hHWmKCQWShBu/MS8RN9fk
-         FOF/3w6SOH84cUxoL9CtOsENHJJaiGCUpvxYcRn/goiO+DOBfVmmuqaEsLsoNR/hLQS1
-         AQeVvFvD9kEByme/P/iJiLfMM3YpOTZ+3pgcsWbB04GhBNJ2ISZioXDMeoSwuMA2Zcqc
-         HAZLrtWUVnTQwdPQwoepw5FvmaEJEviwu8TzIB/f5R+K+pqilwm7Bt55FbTN5kN9lp/6
-         ULXg==
-X-Forwarded-Encrypted: i=1; AJvYcCVRhlLrCNnFTR0Goli5MBkOacCuTxj/h/2IfYBdxsk/z3VkambhVKwkiXz3N3Q5CzUlZqC+zqulItU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaHTNo7gF4w2cFwQGj8Mg6E+H+470v1CfKaZ1OvzD+wwYqtgzT
-	V63kro+i7PB4F6g4c0k7zRt/hTDia21lhuXh8xzt5X3DZZnla27hfGWBt1h00vMgHIs=
-X-Gm-Gg: ASbGncvIila792/GWtCWQ008Fl9HWFBD8ip8PFcKAIpqAwMJUCPzkQ6VMQUsAPromeo
-	fa+divvgd0JGNNf5ETomW1ENo9Zf8TFag/1/fsm4LY3TIf7jZYtDSmCyLBP7Z13RFoGrdtL6Siu
-	ehHGkLnimJBbRWx2IEesXEf5GyF5hkKHUdNapHwv1CYWH7WL5wdpi8w2vfcUNwKy/DSgCgXSEgD
-	Y78bdaduYb7Jk6kV8NnDj9LYRBsTkRutR9Q3S3JZxy9otkFiHzdiFMMo1g9MJ8Y8Orf2omN6gJk
-	z7O/vElp46E6wLDyGM5hzhM48mHfy999bq+OqWSetuNncfd6lf2mgaT1BWoMRVpb8fhNMrSvE7i
-	h2MCsbTTXpemyy1hpemkLCs58mtf9ShOcWONwmgPYKTEpBi/ys9lyZaTyzgrE28RfgKDsxdM0Ru
-	WYJJFnhERfOWDL9SdJwt4MqZaqWiUI+Gn/VU3PCAAp7r68Een2Eeap6TNC
-X-Google-Smtp-Source: AGHT+IE7qxNdGTB3O4Cyd9l/l5kqP+7hVSaobWOJQOGThUG/TNMz01RlkEIy242KlmPT6y0A+36Y2Q==
-X-Received: by 2002:a05:620a:4454:b0:8b2:eab0:629a with SMTP id af79cd13be357-8b2eab06506mr1265910785a.70.1763506975311;
-        Tue, 18 Nov 2025 15:02:55 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b2da3e4cf4sm883665285a.10.2025.11.18.15.02.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Nov 2025 15:02:54 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1vLUiq-00000000W6g-43N6;
-	Tue, 18 Nov 2025 19:02:52 -0400
-Date: Tue, 18 Nov 2025 19:02:52 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [PATCH v8 06/11] dma-buf: provide phys_vec to scatter-gather
- mapping routine
-Message-ID: <20251118230252.GJ17968@ziepe.ca>
-References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
- <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
+	s=arc-20240116; t=1763508571; c=relaxed/simple;
+	bh=Ml+/JUEl67k9M1xamdqbbO86iPOxjeqIBnk9NE14iNU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=ItDKqcANfkE5hTleiA1zqG6kDjybKGsc6PpZdeGVNu1DGMjTplxsq3QeYyvy3DkYVgw7C7Jli0pysFhabm9K2qlu85f6jDLNkRIdoLEkeixb9SB+/NQjnT/Gvm/UmQIoYdi/sWjzNfwWqz357ThORNdT4z7/TjwoT6nqeVq5yxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M9UBGVUa; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763508570; x=1795044570;
+  h=date:from:to:cc:subject:message-id;
+  bh=Ml+/JUEl67k9M1xamdqbbO86iPOxjeqIBnk9NE14iNU=;
+  b=M9UBGVUapk4qTdrBe67RIchigS9M0l/gtY1sj1XDMxiCW30BN+mt6IeY
+   kYL+CuSIsiBqEaw1lI2u3WHUIJZe+k4bxNM2MENcsDZEOP1oNzkzxph1D
+   hpBgc3bOekTbJxy11hjD0AS0EBYgZoezZKjBodGnxQRtFNT7oQ0WAjW0v
+   X+ViqJEUv5PSBLGV97fuTDVCFQ1CS65QBmx5v5PaGSXe+ZrxZmMAEZpkL
+   US6yWnB2zZAQ99DNL434PebtbB1VaBrJi8PIhwFHFHV95Akq+4diJkrHs
+   Q8kNtdxdNxhzUgQiOzMQ3T162C9VNNljbyESkxlXZb0FSKZ5JLkVzNdG+
+   A==;
+X-CSE-ConnectionGUID: 0sqwHa/ASdSPQhCcLAYcJg==
+X-CSE-MsgGUID: ZkwWdtDsSsiogqfvbH5uXQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="69411889"
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="69411889"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 15:29:29 -0800
+X-CSE-ConnectionGUID: HVuTfhVaRwqmDu+3tG1UDQ==
+X-CSE-MsgGUID: tb6ksEZ8QauHe/2XZiZnzg==
+X-ExtLoop1: 1
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 18 Nov 2025 15:29:28 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vLV8X-0002Gl-31;
+	Tue, 18 Nov 2025 23:29:25 +0000
+Date: Wed, 19 Nov 2025 07:28:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/dwc] BUILD SUCCESS
+ f994ca5a3c812db6896ff04a5cf1fbd286d88799
+Message-ID: <202511190728.XfcY9o7h-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
 
-On Tue, Nov 11, 2025 at 11:57:48AM +0200, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@nvidia.com>
-> 
-> Add dma_buf_map() and dma_buf_unmap() helpers to convert an array of
-> MMIO physical address ranges into scatter-gather tables with proper
-> DMA mapping.
-> 
-> These common functions are a starting point and support any PCI
-> drivers creating mappings from their BAR's MMIO addresses. VFIO is one
-> case, as shortly will be RDMA. We can review existing DRM drivers to
-> refactor them separately. We hope this will evolve into routines to
-> help common DRM that include mixed CPU and MMIO mappings.
-> 
-> Compared to the dma_map_resource() abuse this implementation handles
-> the complicated PCI P2P scenarios properly, especially when an IOMMU
-> is enabled:
-> 
->  - Direct bus address mapping without IOVA allocation for
->    PCI_P2PDMA_MAP_BUS_ADDR, using pci_p2pdma_bus_addr_map(). This
->    happens if the IOMMU is enabled but the PCIe switch ACS flags allow
->    transactions to avoid the host bridge.
-> 
->    Further, this handles the slightly obscure, case of MMIO with a
->    phys_addr_t that is different from the physical BAR programming
->    (bus offset). The phys_addr_t is converted to a dma_addr_t and
->    accommodates this effect. This enables certain real systems to
->    work, especially on ARM platforms.
-> 
->  - Mapping through host bridge with IOVA allocation and DMA_ATTR_MMIO
->    attribute for MMIO memory regions (PCI_P2PDMA_MAP_THRU_HOST_BRIDGE).
->    This happens when the IOMMU is enabled and the ACS flags are forcing
->    all traffic to the IOMMU - ie for virtualization systems.
-> 
->  - Cases where P2P is not supported through the host bridge/CPU. The
->    P2P subsystem is the proper place to detect this and block it.
-> 
-> Helper functions fill_sg_entry() and calc_sg_nents() handle the
-> scatter-gather table construction, splitting large regions into
-> UINT_MAX-sized chunks to fit within sg->length field limits.
-> 
-> Since the physical address based DMA API forbids use of the CPU list
-> of the scatterlist this will produce a mangled scatterlist that has
-> a fully zero-length and NULL'd CPU list. The list is 0 length,
-> all the struct page pointers are NULL and zero sized. This is stronger
-> and more robust than the existing mangle_sg_table() technique. It is
-> a future project to migrate DMABUF as a subsystem away from using
-> scatterlist for this data structure.
-> 
-> Tested-by: Alex Mastro <amastro@fb.com>
-> Tested-by: Nicolin Chen <nicolinc@nvidia.com>
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> ---
->  drivers/dma-buf/dma-buf.c | 235 ++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/dma-buf.h   |  18 ++++
->  2 files changed, 253 insertions(+)
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc
+branch HEAD: f994ca5a3c812db6896ff04a5cf1fbd286d88799  PCI: dwc: Fix wrong PORT_LOGIC_LTSSM_STATE_MASK definition
 
-I've looked at this enough times now, the logic for DMA mapping and
-the construction of the scatterlist is good:
+elapsed time: 1753m
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+configs tested: 100
+configs skipped: 3
 
-Jason
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                   allnoconfig    gcc-15.1.0
+arc                     allnoconfig    gcc-15.1.0
+arc         randconfig-001-20251118    gcc-14.3.0
+arc         randconfig-002-20251118    gcc-15.1.0
+arm                     allnoconfig    clang-22
+arm               lpc18xx_defconfig    clang-22
+arm         randconfig-001-20251118    gcc-8.5.0
+arm         randconfig-002-20251118    gcc-10.5.0
+arm         randconfig-003-20251118    clang-22
+arm         randconfig-004-20251118    clang-22
+arm              spear6xx_defconfig    clang-22
+arm64                   allnoconfig    gcc-15.1.0
+arm64       randconfig-001-20251118    clang-20
+arm64       randconfig-002-20251118    clang-22
+arm64       randconfig-003-20251118    clang-19
+arm64       randconfig-004-20251118    clang-17
+csky                    allnoconfig    gcc-15.1.0
+csky        randconfig-001-20251118    gcc-10.5.0
+csky        randconfig-002-20251118    gcc-15.1.0
+hexagon                 allnoconfig    clang-22
+hexagon     randconfig-001-20251118    clang-16
+hexagon     randconfig-002-20251118    clang-22
+i386                    allnoconfig    gcc-14
+i386        randconfig-001-20251118    clang-20
+i386        randconfig-002-20251118    clang-20
+i386        randconfig-003-20251118    gcc-14
+i386        randconfig-004-20251118    gcc-14
+i386        randconfig-005-20251118    clang-20
+i386        randconfig-006-20251118    gcc-14
+i386        randconfig-007-20251118    gcc-14
+i386        randconfig-011-20251118    gcc-14
+i386        randconfig-012-20251118    gcc-12
+i386        randconfig-013-20251118    clang-20
+i386        randconfig-014-20251118    gcc-14
+i386        randconfig-015-20251118    gcc-14
+i386        randconfig-016-20251118    gcc-14
+i386        randconfig-017-20251118    clang-20
+loongarch               allnoconfig    clang-22
+loongarch                 defconfig    clang-19
+loongarch   randconfig-001-20251118    gcc-15.1.0
+loongarch   randconfig-002-20251118    gcc-15.1.0
+m68k                    allnoconfig    gcc-15.1.0
+m68k                      defconfig    gcc-15.1.0
+microblaze              allnoconfig    gcc-15.1.0
+microblaze                defconfig    gcc-15.1.0
+mips                    allnoconfig    gcc-15.1.0
+mips               db1xxx_defconfig    clang-22
+mips                eyeq6_defconfig    clang-22
+mips              maltaup_defconfig    clang-22
+nios2                   allnoconfig    gcc-11.5.0
+nios2                     defconfig    gcc-11.5.0
+nios2       randconfig-001-20251118    gcc-11.5.0
+nios2       randconfig-002-20251118    gcc-8.5.0
+openrisc                allnoconfig    gcc-15.1.0
+openrisc                  defconfig    gcc-15.1.0
+parisc                  allnoconfig    gcc-15.1.0
+parisc                    defconfig    gcc-15.1.0
+parisc      randconfig-001-20251118    gcc-14.3.0
+parisc      randconfig-002-20251118    gcc-12.5.0
+parisc64                  defconfig    gcc-15.1.0
+powerpc                 allnoconfig    gcc-15.1.0
+powerpc            ppc44x_defconfig    clang-22
+riscv                   allnoconfig    gcc-15.1.0
+riscv                     defconfig    clang-22
+riscv       randconfig-001-20251118    gcc-10.5.0
+riscv       randconfig-002-20251118    clang-22
+s390                    allnoconfig    clang-22
+s390                      defconfig    clang-22
+s390        randconfig-002-20251118    gcc-9.5.0
+sh                      allnoconfig    gcc-15.1.0
+sh                        defconfig    gcc-15.1.0
+sh          randconfig-001-20251118    gcc-11.5.0
+sh          randconfig-002-20251118    gcc-15.1.0
+sh                rsk7269_defconfig    gcc-15.1.0
+sparc                   allnoconfig    gcc-15.1.0
+sparc                     defconfig    gcc-15.1.0
+sparc       randconfig-001-20251119    gcc-15.1.0
+sparc       randconfig-002-20251119    gcc-15.1.0
+sparc64                   defconfig    clang-20
+sparc64     randconfig-001-20251119    gcc-15.1.0
+sparc64     randconfig-002-20251119    clang-22
+um                      allnoconfig    clang-22
+um                        defconfig    clang-22
+um                   i386_defconfig    gcc-14
+um          randconfig-001-20251119    clang-16
+um          randconfig-002-20251119    gcc-14
+um                 x86_64_defconfig    clang-22
+x86_64                  allnoconfig    clang-20
+x86_64                    defconfig    gcc-14
+x86_64                        kexec    clang-20
+x86_64                     rhel-9.4    clang-20
+x86_64                 rhel-9.4-bpf    gcc-14
+x86_64                rhel-9.4-func    clang-20
+x86_64          rhel-9.4-kselftests    clang-20
+x86_64               rhel-9.4-kunit    gcc-14
+x86_64                 rhel-9.4-ltp    gcc-14
+xtensa                 alldefconfig    gcc-15.1.0
+xtensa                  allnoconfig    gcc-15.1.0
+xtensa      randconfig-001-20251119    gcc-8.5.0
+xtensa      randconfig-002-20251119    gcc-11.5.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
