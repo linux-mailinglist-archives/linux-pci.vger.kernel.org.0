@@ -1,68 +1,161 @@
-Return-Path: <linux-pci+bounces-41523-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41524-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D7C8C6B44A
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 19:45:39 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4146AC6B496
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 19:51:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id D25142923D
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 18:45:36 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id 4037E29133
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 18:51:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16FE0225390;
-	Tue, 18 Nov 2025 18:45:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7F692E1F00;
+	Tue, 18 Nov 2025 18:50:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="olkFA1QK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIQ0xxrX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BB520C48A;
-	Tue, 18 Nov 2025 18:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366352E03EC
+	for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 18:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763491530; cv=none; b=ZtToJLGKRaGWSJD7pmUnf9EWcIdIYAjrQMavVXIe3VN3VawKyBKrSodn4JncYea2huSzkf6KxTO7XyHogS7VYv9gZB8zzBH6sSB68Dd0aeNia8Gc6J/OIIV0Jt5FT94wVvGWVhpdwTnUQXCjL6DfNRyJONN4ckxT5i1/ZkltXGY=
+	t=1763491832; cv=none; b=r5vNwF9RDpHhhQ3W2HucMWhbjYC2x6WZwfqLWv8D46K2+jYdReXydmRQxpyMMb4GmnYMa/GIFWJAwJdYlvwXOVgB4IV3CRB5MRP0ewGTgEqSyApcXv1IrTfhIxj56+GtWzUGG5FOtQxmyzh8WM2VFDGbkjve+1S2WsTvZLFwhYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763491530; c=relaxed/simple;
-	bh=6f58PRvKFkPh7LpJwZK27THW4/eyjaxEvpsou4a3DUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MyCL/w8nxBAIbOBkSwbqVZT29lVlJ2oFpAHUC5YL8bz7mugGjDfRLRrilqYhmuWPVNl1Z+w/VkE8vDyMqvZd7P8zf48wHsvIM5vnwedhgBYeUnMDcFmLzpMzd1b852f+nAtZE50ir9T5/lWjnkOv0B3s+kPhkOpdIy9KudOtCfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=olkFA1QK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D67F4C2BCB4;
-	Tue, 18 Nov 2025 18:45:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763491528;
-	bh=6f58PRvKFkPh7LpJwZK27THW4/eyjaxEvpsou4a3DUg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=olkFA1QKiEIh54DeHw/MOZ/H3l+sy0QX7HyWDXfdbKT/kaGlM3jXV2FIuKZgHnXtl
-	 lAMKO0msifxm+HUaTZqfmdOhlG72ti8GM1/00Tn34+h4NpZYxMYx8knYHsIZeeObfe
-	 W/KOwikIqx4vNEnYM08zyOkAtKqB7ManqociEuZd7+2sqPdvDDyP8ecED2vfxa6IPB
-	 BFyYWfULA1Tu8c075zX0q1xyIsR6O84zzZ/iBJePyZFODcGNWbhgojY4PoXbdhZ04m
-	 CPjP/AO96vjL+91E4697K7oIrfjSm5AT6b9ElT3XVUC2m6/SpPY6E9isFnb8axyoKr
-	 uUTUWVEVXwoKw==
-Date: Tue, 18 Nov 2025 12:45:25 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	s=arc-20240116; t=1763491832; c=relaxed/simple;
+	bh=FHR1vghh3/Ry94P21SXhw8smish6xFij+qwri1zqTjg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V06RT2flijgOQ33wSUMNqxTU3HQnjETKvKUl3wYxykg242nHeUk0voXxUv4jzuaHGa401Li11gHxPTJXs+zdhuYCT8LU3JLEW9nSoPDapD1VSdbcBtBDWW7lVpC/QPKJVT4RocFEnVb7eywuwSclp4XvIrK2si7v71S0EKortnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LIQ0xxrX; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4779c672e9cso2683035e9.1
+        for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 10:50:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763491827; x=1764096627; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/xelqTh0MJxdYizhebw3VTy7C2C4gWnDlrkViLNdgoU=;
+        b=LIQ0xxrXQWQtmEb6OWHzz4PyETg0i3Uw21zC8mPfIRT7zfrT9WATNk/f5o5HFWqSw3
+         GHZa+BEy2LfmeNkJ6Ghqu9WoGVm3+cqnzv+jIoUiy1hpcCJnFST3f9SdFwCimVJWpYpO
+         nOYdofIi5m0ZJyu8Ci9mPqxbTLduex4Qv1vT0z23xsPBY1XA1YsY/aECC1lvl86KDILB
+         jMV8gXDK5dGx0puOyOuAnZWQAjt294/94HSjMWYlLvmnjNh4Q3Dg+0VLRyYc/oJB4J0P
+         /qwVF8RrWsNLKDUzz6fYvmYz20m81WCCyCmtDqOcVpwLWSjIKGtM4jjJmqS1q+ZSJgRe
+         aPOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763491827; x=1764096627;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/xelqTh0MJxdYizhebw3VTy7C2C4gWnDlrkViLNdgoU=;
+        b=nISN0SmKifjwm/lmfxPOjjYtcDqhowh5/I9jolNF2hyhjD/Ze7zHPDYb39bJt8+sho
+         N7p5oX5KXby9bhhwCQaws4Gr75QcVWwSX5Uo1XQuUS2sjdoXC+QVA5HqSLCbXn7xkfQM
+         hSc3A71VH+05NKF/m8RngRajCdq78MXsEaXm45hfHw3LR63KAo3GZDSi9gFQP0rDfhUu
+         n1UNhWaJ+bA6sZB9mF9oY3RXRfm84iLkfXZ1pGASpfsC+POtplmKbvfBr29aNceY2AKv
+         qWLne+Q4gGaSC4M3MbRqr12GiH4lohkXv4Y1HLChxME+ll03N/asLUiHh5MbPKSdc3o1
+         M6kw==
+X-Forwarded-Encrypted: i=1; AJvYcCXacu0GwGxdOZIiIklCeNfK1SW+Rd9IyZNe97aBttlIiQpxXAfIusaFoWBY8bQcvUPvR8NbtjGiy3k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw40ED2xo2vyL5KpkxSEtbxMllWYC/IAHjFpmb7HE/UA2QuSHDV
+	C6Pq3L7/I15Gqo03H/UXudwrVw11zqk9gQh31iuaM7qfOJgpvmzdE44U
+X-Gm-Gg: ASbGncsYaOFXeXW1AntWaL2drUptM3Zv8Pn8Au+AvCrEgW9YDvpoEh4uITuIhB+4aDP
+	EhGPhdjS86Nyf62IEq3sPUUMS/0yZpzaVTCu9VE9Bn95H/pseV++VZ8xBBnW2Zhvc+CQQjUgR+W
+	jBBi6PxcUIWiWzxl6cDBE+XoPtuWMSZVbRkVTyNqqymuheVDDHpM6taYRgFEOD3pVd1QncFUplF
+	o3uFbUbMjJ3PBpA+X9nqYr6CviPGmZPhfWkn54B8QceCcW6omWfly40g80BVQ4XVN0oeccDYdpS
+	+tqgQADq7Dc0C89uT1rBXzidEvLOg08iOR4LKKy2k/dfMuL1Xrkzwb7D44v6LMlVM5c/cr8aRJ+
+	tT/91d8bTQsm9LZAv8tWPiDhhCB4FMKAqRHwFPWoJbn88BcTeoB1ek4kXodg0wU41s0+milZNTT
+	4lXxvy6dzC2f42
+X-Google-Smtp-Source: AGHT+IHx6i4VYWR6pSTcXtSoFlN4Y9U/3Z/PI54PVyQA5JnsfbBaJwpdM3LzkIBKtiuh5JtXbYxanA==
+X-Received: by 2002:a05:600c:1547:b0:477:5c70:e14e with SMTP id 5b1f17b1804b1-4778feabadamr87966605e9.5.1763491827278;
+        Tue, 18 Nov 2025 10:50:27 -0800 (PST)
+Received: from skbuf ([2a02:2f04:d106:d600:9ac1:9a91:7d1:a813])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477a9df99d3sm22110705e9.12.2025.11.18.10.50.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Nov 2025 10:50:23 -0800 (PST)
+Date: Tue, 18 Nov 2025 20:50:17 +0200
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Corey Minyard <corey@minyard.net>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
+	Vitaly Lifshits <vitaly.lifshits@intel.com>,
 	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Andersson <andersson@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>, Calvin Owens <calvin@wbinvd.org>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Sagi Maimon <maimon.sagi@gmail.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Karan Tilak Kumar <kartilak@cisco.com>,
+	Hans Verkuil <hverkuil+cisco@kernel.org>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
+	Max Kellermann <max.kellermann@ionos.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, amd-gfx@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, linux-mmc@vger.kernel.org,
+	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+	linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
+	ceph-devel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Gustavo Padovan <gustavo@padovan.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
 	Konrad Dybcio <konradybcio@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH v9 0/7] PCI: Enable Power and configure the TC9563 PCIe
- switch
-Message-ID: <20251118184525.GA2583175@bhelgaas>
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rodolfo Giometti <giometti@enneenne.com>,
+	Jonathan Lemon <jonathan.lemon@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Stefan Haberland <sth@linux.ibm.com>,
+	Jan Hoeppner <hoeppner@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Satish Kharat <satishkh@cisco.com>,
+	Sesidhar Baddela <sebaddel@cisco.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 14/21] net: dsa: sja1105: Switch to use %ptSp
+Message-ID: <20251118185017.kk7binsumhh27n7x@skbuf>
+References: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
+ <20251113150217.3030010-15-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,159 +164,24 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251101-tc9563-v9-0-de3429f7787a@oss.qualcomm.com>
+In-Reply-To: <20251113150217.3030010-15-andriy.shevchenko@linux.intel.com>
 
-On Sat, Nov 01, 2025 at 09:29:31AM +0530, Krishna Chaitanya Chundru wrote:
-> TC9563 is the PCIe switch which has one upstream and three downstream
-> ports. To one of the downstream ports ethernet MAC is connected as endpoint
-> device. Other two downstream ports are supposed to connect to external
-> device. One Host can connect to TC956x by upstream port.
-> 
-> TC9563 switch power is controlled by the GPIO's. After powering on
-> the switch will immediately participate in the link training. if the
-> host is also ready by that time PCIe link will established. 
-> 
-> The TC9563 needs to configured certain parameters like de-emphasis,
-> disable unused port etc before link is established.
-> 
-> As the controller starts link training before the probe of pwrctl driver,
-> the PCIe link may come up as soon as we power on the switch. Due to this
-> configuring the switch itself through i2c will not have any effect as
-> this configuration needs to done before link training. To avoid this
-> introduce assert_perst() which asserts & de-asserts the PERST# which helps
-> to stop switch from participating from the link training.
-> 
-> Note: The QPS615 PCIe switch is rebranded version of Toshiba switch TC9563 series.
-> There is no difference between both the switches, both has two open downstream ports
-> and one embedded downstream port to which Ethernet MAC is connected. As QPS615 is the
-> rebranded version of Toshiba switch rename qps615 with tc9563 so that this driver
-> can be leveraged by all who are using Toshiba switch.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
-> Changes in v9:
-> - Change driver to align with dt properties (Bjorn).
-> - Link to v8: https://lore.kernel.org/r/20251031-tc9563-v8-0-3eba55300061@oss.qualcomm.com
-> 
-> Changes in v8:
-> - Rebase on the pci branch (Bjorn)
-> - Change order of the patch (Dmitry)
-> - Couple of nits pointed by (Ilpo)
-> - Change reset-gpios to resx-gpios (Mani)
-> - Link to v7: https://lore.kernel.org/r/20251029-qps615_v4_1-v7-0-68426de5844a@oss.qualcomm.com
-> 
-> Changes in v7:
-> - Rename stop_link() & start_link() to asser_perst() and change all
->   occurances  (Bjorn).
-> - Remove PCIe link is active check & relevent patch,  assume this driver will
->   be for the swicth connected directly to the root port, if it is
->   connected in the DSP of another switch we can't control the link so driver will not have any impact
->   we need make them as fixed regulators for now.
-> - Link to v6: https://lore.kernel.org/r/20250828-qps615_v4_1-v6-0-985f90a7dd03@oss.qualcomm.com
-> 
-> Changes in v6:
-> - Took v10 patch  https://lore.kernel.org/all/1822371399.1670864.1756212520886.JavaMail.zimbra@raptorengineeringinc.com/
->   to my series as my change is dependent on it.
-> - Add Reviewed-by tag by Rob on dt-binding patch.
-> - Add Reviewed-by tag by Dmitry on devicetree.
-> - Fixed compilation errors.
-> - Fixed n-fts issue point by (Bjorn Helgaas).
-> - Fixed couple of nits by (Bjorn Helgas).
-> - Link to v5: https://lore.kernel.org/r/20250412-qps615_v4_1-v5-0-5b6a06132fec@oss.qualcomm.com
-> Changes from v4:
-> - Rename tc956x to tc9563, instead of using x which represents overlay board one
->   use actual name (Konrad & Krzysztof).
-> - Remove the patches 9 & 10 from the series and this will be added by mani
-> - Couple of nits by Konrad
-> - Have defconfig change for TC956X by Dmitry
-> - Change the function name pcie_is_link_active to pcie_link_is_active
->   replace all call sites of pciehp_check_link_active() with a call
->   to the new function. return bool instead of int (Lukas)
-> - Add pincntrl property for reset gpio (Dmitry)
-> - Follow the example-schema order, remove ref for the
->   tx-amplitude-microvolt, change the vendor prefix (Krzysztof)
-> - for USP node refer pci-bus-common.yaml and for remaining refer
->   pci-pci-bridge.yaml(Mani)
-> - rebase to latest code and change pci dev retrieval logic due code
->   changes in the latest tip.
-> - Link to v4: https://lore.kernel.org/r/20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com
-> changes from v3:
-> - move common properties like l0s-delay, l1-delay and nfts to pci-host-common.yaml (bjorn H)
-> - remove axi-clk-frequency property (Krzysztof)
-> - Update the pattern properties (Rob)
-> - use pci-pci-bridge as the reference (Rob)
-> - change tx-amplitude-millivolt to tx-amplitude-microvolt  (Krzysztof)
-> - rename qps615_pwrctl_power_on to qps615_pwrctl_bring_up (Bart)
-> - move the checks for l0s_delay, l1_delay etc to helper functon to
->   reduce a level of indentation (Bjorn H)
-> - move platform_set_drvdata to end after there is no error return (bjorn H)
-> - Replace GPIOD_ASIS to GPIOD_OUT_HIGH (Mani)
-> - Create a common api to check if link is up or not and use that to call
->   stop_link() and start_link().
-> - couple of nits in comments, names etc from everyone
-> Link to v3: https://lore.kernel.org/all/20241112-qps615_pwr-v3-3-29a1e98aa2b0@quicinc.com/T/
-> Changes from v2:
-> - As per offline discussions with rob i2c-parent is best suitable to
->   use i2c client device. So use i2c-parent as suggested and remove i2c
->   client node reference from the dt-bindings & devicetree.
-> - Remove "PCI: Change the parent to correctly represent pcie hierarchy"
->   as this requires seperate discussions.
-> - Remove bdf logic to identify the dsp's and usp's to make it generic
->   by using the logic that downstream devices will always child of
->   upstream node and dsp1, dsp2 will always in same order (Dmitry)
-> - Remove recursive function for parsing devicetree instead parse
->   only for required devicetree nodes (Dmitry)
-> - Fix the issue in be & le conversion (Dmitry).
-> - Call put_device for i2c device once done with the usage (Dmitry)
-> - Use $defs to describe common properties between upstream port and
->   downstream properties. and remove unneccessary if then. (Krzysztof)
-> - Place the qcom,qps615 compatibility in dt-binding document in alphabatic order (Krzysztof)
-> - Rename qcom,no-dfe to describe it as hardware capability and change
->   qcom,nfts description to reflect hardware details (Krzysztof)
-> - Fix the indentation in the example in dt binding (Dmitry)
-> - Add more description to qcom,nfts (Dmitry)
-> - Remove nanosec from the property description (Dmitry)
-> - Link to v2: https://lore.kernel.org/r/linux-arm-msm/20240803-qps615-v2-0-9560b7c71369@quicinc.com/T/
-> Changes from v1:
-> - Instead of referencing whole i2c-bus add i2c-client node and reference it (Dmitry)
-> - Change the regulator's as per the schematics as per offline review
-> (Bjorn Andresson)
-> - Remove additional host check in bus.c (Bart)
-> - For stop_link op change return type from int to void (Bart)
-> - Remove firmware based approach for configuring sequence as suggested
-> by multiple reviewers.
-> - Introduce new dt-properties for the switch to configure the switch
-> as we are replacing the firmware based approach.
-> - The downstream ports add properties in the child nodes which will
-> represented in PCIe hierarchy format.
-> - Removed D3cold D0 sequence in suspend resume for now as it needs
-> separate discussion.
-> - Link to v1: https://lore.kernel.org/linux-pci/20240626-qps615-v1-4-2ade7bd91e02@quicinc.com/T/
-> 
-> ---
-> Krishna Chaitanya Chundru (7):
->       dt-bindings: PCI: Add binding for Toshiba TC9563 PCIe switch
->       PCI: Add assert_perst() operation to control PCIe PERST#
->       PCI: dwc: Add assert_perst() hook for dwc glue drivers
->       PCI: dwc: Implement .assert_perst() hook
->       PCI: qcom: Add support for assert_perst()
->       PCI: pwrctrl: Add power control driver for TC9563
->       arm64: dts: qcom: qcs6490-rb3gen2: Add TC9563 PCIe switch node
-> 
->  .../devicetree/bindings/pci/toshiba,tc9563.yaml    | 179 ++++++
->  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts       | 128 ++++
->  arch/arm64/boot/dts/qcom/sc7280.dtsi               |   2 +-
->  drivers/pci/controller/dwc/pcie-designware-host.c  |   9 +
->  drivers/pci/controller/dwc/pcie-designware.h       |   9 +
->  drivers/pci/controller/dwc/pcie-qcom.c             |  13 +
->  drivers/pci/pwrctrl/Kconfig                        |  14 +
->  drivers/pci/pwrctrl/Makefile                       |   2 +
->  drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c           | 648 +++++++++++++++++++++
->  include/linux/pci.h                                |   1 +
->  10 files changed, 1004 insertions(+), 1 deletion(-)
+Hi Andy,
 
-Applied to pci/pwrctrl-tc9563 for v6.19, except for the
-arch/arm64/boot/dts/qcom/ patch, which I assume will be handled
-elsewhare (note the apparent typo in that patch pointed out by
-Konrad).
+On Thu, Nov 13, 2025 at 03:32:28PM +0100, Andy Shevchenko wrote:
+> Use %ptSp instead of open coded variants to print content of
+> struct timespec64 in human readable format.
+> 
+> Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+
+Acked-by: Vladimir Oltean <olteanv@gmail.com>
+Tested-by: Vladimir Oltean <olteanv@gmail.com>
+
+Thanks!
+
+This is a rarely modified portion of the SJA1105 driver, and it doesn't
+conflict with other changes that I have planned, so from my PoV there is
+no problem with the patch being picked up via other trees.
 
