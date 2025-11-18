@@ -1,152 +1,158 @@
-Return-Path: <linux-pci+bounces-41476-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41477-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id D32EEC670FE
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 03:49:56 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAA4EC6750F
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 06:08:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B45043567B8
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 02:48:30 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6848B4E241D
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 05:08:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4941B645;
-	Tue, 18 Nov 2025 02:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23E8028032D;
+	Tue, 18 Nov 2025 05:08:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="neQxWp76"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C4/oGfUL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869EA3203BB
-	for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 02:48:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207BF1B4257
+	for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 05:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763434101; cv=none; b=ECg3qD3s86RqM0+JNCQMloOaDV3XfWXGPhvtBLN9+UuGKMAl0ormInfKAnyypPA15NSlF3VNNg7sJdTaD2+epMtDFntHtMnSUvAz6oG8snSOG7rCfO46Y4h3/2nJvzy4B6rjSJfntcm8hgUyOX1aJPAbNWp1d533//HZoStw4/I=
+	t=1763442523; cv=none; b=VhlZVysMsbozZM9IhQUk5VQSa87Rk9IngJZJolcDRbtZCqCZC51pspjOdhBVxJ9U10UBBsp8So3uv/HxYpQvVRiS8g7LLRmy9yhXNTqEpgN4Lt3uly75wkJuv74AGgiAB5XkqMy+IaRbonYxpDot5RvcVPDQiE56EI80HOaJgT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763434101; c=relaxed/simple;
-	bh=n+CZthML9eAKpg7fuI/hBOtHwwZxx1J6VXoalswkOGY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=AkZJm9mbRBtRxJPni+1hZMQWYlfOtyOs/ArpEYHWnqan06WzVbUDrnbqdhLtBEo2fjAG4UvgCG4lasbaTDdVdR4NY3sSmY97YHuKvnaYn9gey+ElDS8J6ECRktqewalvEuYtG6+ghj6zNLavnpO0rJcTTP8m8VvGUOi46pYA4po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=neQxWp76; arc=none smtp.client-ip=115.124.30.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1763434095; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=jHzu4ojLiInJE/iENcKSYBecM3BsBpf/f/W9AOlxMX4=;
-	b=neQxWp762irT1n5DLCH7AEH5oZVyr3Sb5OWxymcSgVXqmPhLjuD5qW7egMWKe7Ovj0i3j/HJjjv+StKkSMFW9D2W/C7NTyW4HuFr3awYm8yPHrTnyAW8D78F0856tBwtj2OyOit+1Q/IC8RMsvl+A2bKvWMu91BBkIIP4x0zrxE=
-Received: from 30.178.83.114(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0WshGBic_1763434094 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 18 Nov 2025 10:48:15 +0800
-Message-ID: <02f81329-48ef-439c-9c0d-dc1e93f174f2@linux.alibaba.com>
-Date: Tue, 18 Nov 2025 10:48:14 +0800
+	s=arc-20240116; t=1763442523; c=relaxed/simple;
+	bh=pLz47jPyiToJiws+Auw267KV9qM2WilSOud6tPBiN3U=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=E2ge5BHZjkEU15lgulAf5VGX1YoE+rXI8bGA2QnGJmsN/DOnesZYCZwMj2yNksf3cXQBT6mrLf/91/JzI4iAclbkoBi35YF//OEBbzyVwFUh237I/NWmhIZwCEAUg1IYNe6MMatlm1iMiOvWbVAQDuMNbJ3k9+ihIwFJFdl9BfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C4/oGfUL; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763442522; x=1794978522;
+  h=date:from:to:cc:subject:message-id;
+  bh=pLz47jPyiToJiws+Auw267KV9qM2WilSOud6tPBiN3U=;
+  b=C4/oGfUL34HY0wSIau/Q979VHaXew7BddJeV7NLd08MJHdL4CXNh4y4T
+   5GWl70HYiG0izIT/9Ibe3DYup8V6JQKpBF/uWD/Gz3YCdlWbjWv/SWCTF
+   YzEHi3ozrOEfk93kFdQCvratfvDOfLmdRxNFda177ood/r1n7LHgCpiDs
+   9fuIKAtWzzW9nPVcQ+3qL6QHtW4e00tm/Je4tEXyGBB918gkeCX3H3XZk
+   +MGHW/7Ry4AvADqnY4bFZinv/n8jVVVmdfVTWPG34BWVCSJvr+AtXlbX0
+   c5Z1r6M96YVgaAMbWIjsp7CqcS6Y+e/BF5++3LAiRFW3iUnrsNt07qTbZ
+   A==;
+X-CSE-ConnectionGUID: 6H+5tUQ3SLy1oAsclmjHbQ==
+X-CSE-MsgGUID: nXmQZdmSQfSKukVVNx/jFQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="76915302"
+X-IronPort-AV: E=Sophos;i="6.19,313,1754982000"; 
+   d="scan'208";a="76915302"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2025 21:08:41 -0800
+X-CSE-ConnectionGUID: 6u7ZISlSQ6qR9sQYKblyeQ==
+X-CSE-MsgGUID: vj6BsUvNSouA0J90Mjd7Hg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,313,1754982000"; 
+   d="scan'208";a="195117723"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 17 Nov 2025 21:08:39 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vLDxF-0001LZ-1T;
+	Tue, 18 Nov 2025 05:08:37 +0000
+Date: Tue, 18 Nov 2025 13:08:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:ptm] BUILD SUCCESS
+ 044b9f1a7f4f3d41563007d0762c83a7d7505ac0
+Message-ID: <202511181321.15iSSerm-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH] PCI: Check rom image addr at every step
-From: Guixin Liu <kanie@linux.alibaba.com>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
-References: <20251114063411.88744-1-kanie@linux.alibaba.com>
-In-Reply-To: <20251114063411.88744-1-kanie@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-Gentle ping...
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git ptm
+branch HEAD: 044b9f1a7f4f3d41563007d0762c83a7d7505ac0  PCI/PTM: Enable only if device advertises relevant role
 
-BR
-Guixin Liu
+elapsed time: 7519m
 
-在 2025/11/14 14:34, Guixin Liu 写道:
-> We meet a crash when running stress-ng:
->    BUG: unable to handle page fault for address: ffa0000007f40000
->    RIP: 0010:pci_get_rom_size+0x52/0x220
->    Call Trace:
->    <TASK>
->    pci_map_rom+0x80/0x130
->    pci_read_rom+0x4b/0xe0
->    kernfs_file_read_iter+0x96/0x180
->    vfs_read+0x1b1/0x300
->    ksys_read+0x63/0xe0
->    do_syscall_64+0x34/0x80
->    entry_SYSCALL_64_after_hwframe+0x78/0xe2
-> Bcause of broken rom space, before calling readl(pds), pds already
-> points to the rom space end (rom + size - 1), invoking readl()
-> would therefore cause an out-of-bounds access and trigger a crash.
->
-> Fix this by adding every step address checking.
->
-> Fixes: 47b975d234ea ("PCI: Avoid iterating through memory outside the resource window")
-> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
-> ---
->   drivers/pci/rom.c | 25 +++++++++++++++++++++----
->   1 file changed, 21 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
-> index e18d3a4383ba..f9377ad3f89f 100644
-> --- a/drivers/pci/rom.c
-> +++ b/drivers/pci/rom.c
-> @@ -69,6 +69,10 @@ void pci_disable_rom(struct pci_dev *pdev)
->   }
->   EXPORT_SYMBOL_GPL(pci_disable_rom);
->   
-> +#define PCI_ROM_DATA_STRUCT_OFFSET 24
-> +#define PCI_ROM_LAST_IMAGE_OFFSET 21
-> +#define PCI_ROM_LAST_IMAGE_LEN_OFFSET 16
-> +
->   /**
->    * pci_get_rom_size - obtain the actual size of the ROM image
->    * @pdev: target PCI device
-> @@ -86,28 +90,41 @@ static size_t pci_get_rom_size(struct pci_dev *pdev, void __iomem *rom,
->   	void __iomem *image;
->   	int last_image;
->   	unsigned int length;
-> +	void __iomem *end = rom + size;
->   
->   	image = rom;
->   	do {
->   		void __iomem *pds;
-> +
-> +		if (image + 2 >= end)
-> +			break;
-> +
->   		/* Standard PCI ROMs start out with these bytes 55 AA */
->   		if (readw(image) != 0xAA55) {
->   			pci_info(pdev, "Invalid PCI ROM header signature: expecting 0xaa55, got %#06x\n",
->   				 readw(image));
->   			break;
->   		}
-> +
-> +		if (image + PCI_ROM_DATA_STRUCT_OFFSET + 2 >= end)
-> +			break;
->   		/* get the PCI data structure and check its "PCIR" signature */
-> -		pds = image + readw(image + 24);
-> +		pds = image + readw(image + PCI_ROM_DATA_STRUCT_OFFSET);
-> +		if (pds + 4 >= end)
-> +			break;
->   		if (readl(pds) != 0x52494350) {
->   			pci_info(pdev, "Invalid PCI ROM data signature: expecting 0x52494350, got %#010x\n",
->   				 readl(pds));
->   			break;
->   		}
-> -		last_image = readb(pds + 21) & 0x80;
-> -		length = readw(pds + 16);
-> +
-> +		if (pds + PCI_ROM_LAST_IMAGE_OFFSET + 1 >= end)
-> +			break;
-> +		last_image = readb(pds + PCI_ROM_LAST_IMAGE_OFFSET) & 0x80;
-> +		length = readw(pds + PCI_ROM_LAST_IMAGE_LEN_OFFSET);
->   		image += length * 512;
->   		/* Avoid iterating through memory outside the resource window */
-> -		if (image >= rom + size)
-> +		if (image + 2 >= end)
->   			break;
->   		if (!last_image) {
->   			if (readw(image) != 0xAA55) {
+configs tested: 65
+configs skipped: 1
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha               allnoconfig    gcc-15.1.0
+alpha              allyesconfig    gcc-15.1.0
+arc                 allnoconfig    gcc-15.1.0
+arm                 allnoconfig    clang-22
+arm64               allnoconfig    gcc-15.1.0
+arm64              allyesconfig    clang-22
+csky               allmodconfig    gcc-15.1.0
+csky                allnoconfig    gcc-15.1.0
+csky               allyesconfig    gcc-15.1.0
+hexagon            allmodconfig    clang-17
+hexagon             allnoconfig    clang-22
+hexagon            allyesconfig    clang-22
+i386               allmodconfig    gcc-14
+i386                allnoconfig    gcc-14
+i386               allyesconfig    gcc-14
+loongarch          allmodconfig    clang-19
+loongarch           allnoconfig    clang-22
+loongarch          allyesconfig    clang-22
+m68k               allmodconfig    gcc-15.1.0
+m68k                allnoconfig    gcc-15.1.0
+m68k               allyesconfig    gcc-15.1.0
+microblaze         allmodconfig    gcc-15.1.0
+microblaze          allnoconfig    gcc-15.1.0
+microblaze         allyesconfig    gcc-15.1.0
+mips               allmodconfig    gcc-15.1.0
+mips                allnoconfig    gcc-15.1.0
+mips               allyesconfig    gcc-15.1.0
+nios2              allmodconfig    gcc-11.5.0
+nios2               allnoconfig    gcc-11.5.0
+nios2              allyesconfig    gcc-11.5.0
+openrisc           allmodconfig    gcc-15.1.0
+openrisc            allnoconfig    gcc-15.1.0
+openrisc           allyesconfig    gcc-15.1.0
+parisc             allmodconfig    gcc-15.1.0
+parisc              allnoconfig    gcc-15.1.0
+parisc             allyesconfig    gcc-15.1.0
+powerpc            allmodconfig    gcc-15.1.0
+powerpc             allnoconfig    gcc-15.1.0
+riscv              allmodconfig    clang-22
+riscv               allnoconfig    gcc-15.1.0
+riscv              allyesconfig    clang-16
+s390               allmodconfig    clang-18
+s390                allnoconfig    clang-22
+s390               allyesconfig    gcc-15.1.0
+sh                 allmodconfig    gcc-15.1.0
+sh                  allnoconfig    gcc-15.1.0
+sh                 allyesconfig    gcc-15.1.0
+sparc              allmodconfig    gcc-15.1.0
+sparc               allnoconfig    gcc-15.1.0
+um                 allmodconfig    clang-19
+um                  allnoconfig    clang-22
+um                 allyesconfig    gcc-14
+x86_64             allmodconfig    clang-20
+x86_64              allnoconfig    clang-20
+x86_64             allyesconfig    clang-20
+x86_64                    kexec    clang-20
+x86_64                 rhel-9.4    clang-20
+x86_64             rhel-9.4-bpf    gcc-14
+x86_64            rhel-9.4-func    clang-20
+x86_64      rhel-9.4-kselftests    clang-20
+x86_64           rhel-9.4-kunit    gcc-14
+x86_64             rhel-9.4-ltp    gcc-14
+x86_64            rhel-9.4-rust    clang-20
+xtensa              allnoconfig    gcc-15.1.0
+xtensa             allyesconfig    gcc-15.1.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
