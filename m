@@ -1,199 +1,223 @@
-Return-Path: <linux-pci+bounces-41491-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41492-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 817A2C682E5
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 09:23:18 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE7ACC689AE
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 10:43:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 8670B35B0BF
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 08:18:00 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 577594F20A2
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 09:39:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8000930C637;
-	Tue, 18 Nov 2025 08:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8958E29D29C;
+	Tue, 18 Nov 2025 09:39:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="TLau1Is7"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="s3xQLcn/";
+	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="gMq/Rk0e"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010005.outbound.protection.outlook.com [52.101.46.5])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70F83081D0;
-	Tue, 18 Nov 2025 08:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A911391;
+	Tue, 18 Nov 2025 09:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=60.244.123.138
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763453871; cv=fail; b=XQa64/ZyN5otxpDX0EGfKfVjvPeq9f7QcWkPejY8iXSTsm0IG8Mx09RpalkPijuuME1TEdQYpj25WnKGAtnN8KS+Wx781V0o5pTFQu+nQlQzK1SFk/I2AcgnILxEHZJGi6bZhwHtlfQ6iImtzlmHdUSv/g/64W6bnwAHVHPRzMo=
+	t=1763458771; cv=fail; b=rjZBgFETkBr777czGno9ktUzf5Q9Nh3dH5tRYvX9j3kCk1w5VnAkEkhE+kQxiirMR5LDUwumTVKSvpath0mypzTq0rLsgcN5+WOkT7hdkYT9GctfoAmKafr7INoJGdPld3fPMM91gOaPdzeLUhakK577m+yTLflytvP3QVgK0M4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763453871; c=relaxed/simple;
-	bh=jIcpdh9dBj4mqj+aIdR8y5lS+TWPMtDkMvKHnGVuvGM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O4nF3jP7gkd1Okup0idnPKc5reLdzIY5k2Qwd4804fLIxWacmV1MCLtXA5R6HTwbOW4Iayou7FoQYdaItlQqp4BJEdbQluuRkpKNO1W5vV+flj3dl60KmUuNiYxD/DSzJVz92+moQfuowSLrb0mOaz/n/EHPeJEqOllYQMy+/iU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=TLau1Is7; arc=fail smtp.client-ip=52.101.46.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1763458771; c=relaxed/simple;
+	bh=ivkwV5oE/STrAI9iGXT8kA/El3W1suq9EaS6QtN/xoc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=QZWMOfXXpFZFf9wHZHzbN3OADORokfmwAm5Ska6h6jQt+CWs2WoxbmQ9um/p3JqSEu64LjyzrkvEpl45t5b1LUz2o9KeT7Q2GM3jNeVyTTO0Fqez+joxTSGi67h8tTzBnJaGeuLXlGK+yRPl05IRl0T3YE6S2WbduHAXS+9pHCo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=s3xQLcn/; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=gMq/Rk0e; arc=fail smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+X-UUID: 769dfe9cc46211f08ac0a938fc7cd336-20251118
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=ivkwV5oE/STrAI9iGXT8kA/El3W1suq9EaS6QtN/xoc=;
+	b=s3xQLcn//XsMgf5abEKMmz7S7Irn/CwkSVfRtvDcjWYsedNijIQF5J8eWoG+nMswUYvhvitZ3/GStJap4wNJJfvYq3mf2aEs5CnUZM9yPsFj6SJNHZWSCyl6i2z6CMQD+wOOkcr1Zdq1OKMsD0mrUwsskqNkuNz0SFMqwNA92Yo=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:28e26c28-982c-4ffd-bd7f-8b08c0b52755,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:a9d874c,CLOUDID:23840658-17e4-43d2-bf73-55337eed999a,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|110|111|836|888|898,
+	TC:-5,Content:0|15|50,EDM:-3,IP:nil,URL:0,File:130,RT:0,Bulk:nil,QS:nil,BE
+	C:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 769dfe9cc46211f08ac0a938fc7cd336-20251118
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
+	(envelope-from <johnny-cc.chang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1519730918; Tue, 18 Nov 2025 17:39:22 +0800
+Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
+ MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Tue, 18 Nov 2025 17:39:20 +0800
+Received: from SG2PR04CU010.outbound.protection.outlook.com (172.21.101.237)
+ by mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server id
+ 15.2.1748.26 via Frontend Transport; Tue, 18 Nov 2025 17:39:20 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dnA/olFp1FR9jAmjA9pivnLy2Nf91cL9vd18ajy+4+bK7abxciUpYvhSNFbBbwVJcBMZbgFdD0iXEHystq+HUJbG54C/jaVgoiWP2KfTUJCxl+oV5yA+2aZnfj+uSkPrg4uQaq/g1ISJXqAh5fDwWHSAL/dQiRUqcVz6trsqrIpRhv3K9KrWcr8xdupLXhS9YSeAuJZ3eqE/sodb0xzgl1vynGo5bHjH6eoWSYwaH68KFjdNlBbgJiTjoD+6ZSJTgDvhTD1O3Ii2LDsDxRkrsMZUT34Ydo43kAwNk2JfdWUK3N1lwoyGY+gqRCVs9jbPSdQVefj2BwKWz9IGHlnWBA==
+ b=rU1hW6+jGgsvCuEJ7RR6LdNUyUWpxxmrUeWS5D/mJ7LAEm02V7O3BIp9Ms/WWj+Y1IY+xu0z0M7dka/6qxCfeAmj84lUhNlxwJo8zmeYWcZrBOVM/8cKW2trFRWcwyvkWi9qfiZmTIe9SPOTs9PccHTihtxy7ziWiqqkmRt3eM6+CxSivN5opE8lJnrtsN8KIPeh97zopaoqLdKrRhWUmRc9vPOQ1CbiJRXn3y+a8cDW70IFa/w/uC6F82ntFMYefDUV8GIbQ4ZIkAsm489HpYhs8o+WADKK4FAs9CQjpCMvIDWN61MnhbGD/NaswOF35p6bV5U5PHuXIG505/i9sA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2+WJ8N2Cf9h1AXY4Va9cV50qzJBjWoeZwku+rFJoA0M=;
- b=HI21baN+PeaoS098+sCYQe/goty8SbeOOFmQxOhAdwPZoQ4IaamQ4bW1wnYFOPQy6DSVesAfQcDRWBLO+9czVdCiBxS0ZgS3IvH+OJpON+22zGIRh/iIMJkjNhnOa/bUVKJjCn649bR09E0I7XOw87SQi8pTBL1NwjUUGHkf2K5PBQfBjcTeI7HCOgFmVzbnhkwwGDRXMIitWG24dZbXE2WNKRf62shTaAFr7iq3pxYjCIYxisSO9B3w39VQl+ggvybUe2uXOYGuKKaeNaaQUAovg52x1uf05HKWMNWfZ+2bZ3NAa+rzybLSOc2lzLUXh6Zvn1/vPWRz3uvM5/PjTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=ivkwV5oE/STrAI9iGXT8kA/El3W1suq9EaS6QtN/xoc=;
+ b=HXvwhFYOax7BpQTbwToAhY9J8VoFgdAP8AqMs3kqbJrR70zuJSWbPSSGxlAwBxubmvCTqM/zQb8sFTdgVOZqjKiTkIu9HZ8xWDgsJAHc/e/B9U4jZr/PZl9D6oArQ7UysuqZDJrFUnygNkihnj3/A5HzrRhEBlEESjkdDZNvbL0CGhUZeqcLviRkbheIAw35AeL6QUJZbBzp156XPtgTI0QjkCTbPWFmnGX8EJLNSMf0gMnPd/KuCa+5zPQ3E+bOZIq7eNjoSpw7aGY2mKsRcHpDMK7bUXL/YIWOhYBHIZ7ivHtLAdkCjiw/jprbqylUYssXgNlGaRhfpl8onbgEnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
+ dkim=pass header.d=mediatek.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2+WJ8N2Cf9h1AXY4Va9cV50qzJBjWoeZwku+rFJoA0M=;
- b=TLau1Is7NVz/4PbKautMkGaU3YMgf/BRqIVJLnrGnh395drg5iFzVtKageqt3D3D7ao9xsjlSAST9qJkeLe6CksW0VPv06lmUcM/tT30whuhWAxofc5EedNKrebIIHcJmCl6GKBMFZY0DBRFsRibu8WMHKdpfJQIFqucVsGVwGiqODgZoZ8hPOk1bN9XVQBcd9mF0VakI2l+Jf0swSbsEgr9l+kBeAYqXnk7Ua9pftLDtnM1KQ7iuAQtl0k1ICznYn4+7+3gjmU5CIvFJgyYqzExfktlEVmtCs0IENt7j59s/IW6XsVsZU2Y7e+Cxj2rfh+QxHYiqkUj1ShjVGjSdw==
-Received: from MW4PR04CA0279.namprd04.prod.outlook.com (2603:10b6:303:89::14)
- by IA0PR12MB8205.namprd12.prod.outlook.com (2603:10b6:208:400::19) with
+ bh=ivkwV5oE/STrAI9iGXT8kA/El3W1suq9EaS6QtN/xoc=;
+ b=gMq/Rk0eKe6BmxPjRzpVh8fBV/WoUHo326ANv+bsePY73VMFfUOl0JcGNDjTovHIkWgs0RijPQFwbcjfFQ4K5Qv1YdlKZklPIwYqtRs0sjBucMNpgi1LjbKlgRDYjTiKef84KT81cs1w6YAbjt7eyAd46RENBCZzBQeU8uYUN/E=
+Received: from TYZPR03MB6164.apcprd03.prod.outlook.com (2603:1096:400:12f::10)
+ by TYZPR03MB7639.apcprd03.prod.outlook.com (2603:1096:400:426::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.22; Tue, 18 Nov
- 2025 08:17:45 +0000
-Received: from SJ1PEPF000023D7.namprd21.prod.outlook.com
- (2603:10b6:303:89:cafe::87) by MW4PR04CA0279.outlook.office365.com
- (2603:10b6:303:89::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9343.10 via Frontend Transport; Tue,
- 18 Nov 2025 08:17:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- SJ1PEPF000023D7.mail.protection.outlook.com (10.167.244.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9366.1 via Frontend Transport; Tue, 18 Nov 2025 08:17:44 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 18 Nov
- 2025 00:17:28 -0800
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 18 Nov
- 2025 00:17:27 -0800
-Received: from Asurada-Nvidia (10.127.8.11) by mail.nvidia.com (10.129.68.6)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Tue, 18 Nov 2025 00:17:26 -0800
-Date: Tue, 18 Nov 2025 00:17:24 -0800
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-CC: "joro@8bytes.org" <joro@8bytes.org>, "afael@kernel.org"
-	<afael@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
-	"alex@shazbot.org" <alex@shazbot.org>, "jgg@nvidia.com" <jgg@nvidia.com>,
-	"will@kernel.org" <will@kernel.org>, "robin.murphy@arm.com"
-	<robin.murphy@arm.com>, "lenb@kernel.org" <lenb@kernel.org>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.20; Tue, 18 Nov
+ 2025 09:39:18 +0000
+Received: from TYZPR03MB6164.apcprd03.prod.outlook.com
+ ([fe80::4975:7e68:a99b:d655]) by TYZPR03MB6164.apcprd03.prod.outlook.com
+ ([fe80::4975:7e68:a99b:d655%5]) with mapi id 15.20.9320.018; Tue, 18 Nov 2025
+ 09:39:18 +0000
+From: =?utf-8?B?Sm9obm55LUNDIENoYW5nICjlvLXmmYvlmIkp?=
+	<Johnny-CC.Chang@mediatek.com>
+To: "lukas@wunner.de" <lukas@wunner.de>
+CC: Project_Global_Digits_Upstream_Group
+	<Project_Global_Digits_Upstream_Group@mediatek.com>, "AngeloGioacchino Del
+ Regno" <angelogioacchino.delregno@collabora.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
-	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>, "Jaroszynski, Piotr"
-	<pjaroszynski@nvidia.com>, "Sethi, Vikram" <vsethi@nvidia.com>,
-	"helgaas@kernel.org" <helgaas@kernel.org>, "etzhao1900@gmail.com"
-	<etzhao1900@gmail.com>
-Subject: Re: [PATCH v5 5/5] pci: Suspend iommu function prior to resetting a
- device
-Message-ID: <aRwrlOfuFWa8ODQK@Asurada-Nvidia>
-References: <cover.1762835355.git.nicolinc@nvidia.com>
- <a166b07a254d3becfcb0f86e4911af556acbe2a9.1762835355.git.nicolinc@nvidia.com>
- <BN9PR11MB52762516D6259BBD8C3740518CCAA@BN9PR11MB5276.namprd11.prod.outlook.com>
- <aRduRi8zBHdUe4KO@Asurada-Nvidia>
- <BN9PR11MB52761B6B1751BF64AEAA3F948CC9A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <aRt2/0rcdjcGk1Z1@Asurada-Nvidia>
- <BN9PR11MB527649AD7D251EAAFDFB753A8CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <aRvO9KWjWC5rk/Vx@Asurada-Nvidia>
- <BN9PR11MB527640AE172858646199B1888CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
+	<linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-mediatek@lists.infradead.org"
+	<linux-mediatek@lists.infradead.org>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>
+Subject: Re: [PATCH] PCI: Mark Nvidia GB10 to avoid bus reset
+Thread-Topic: [PATCH] PCI: Mark Nvidia GB10 to avoid bus reset
+Thread-Index: AQHcVHnastJoxsIJbEqLLkQpp8yUiLTwWe4AgAfbiIA=
+Date: Tue, 18 Nov 2025 09:39:18 +0000
+Message-ID: <39028d84844a08b8b716eb3941cc02562d21dc84.camel@mediatek.com>
+References: <20251113084441.2124737-1-Johnny-CC.Chang@mediatek.com>
+	 <aRWnYCI6Ax14XNJq@wunner.de>
+In-Reply-To: <aRWnYCI6Ax14XNJq@wunner.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mediatek.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYZPR03MB6164:EE_|TYZPR03MB7639:EE_
+x-ms-office365-filtering-correlation-id: 7eb5e5a1-7b62-4fe5-873a-08de26865859
+x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700021;
+x-microsoft-antispam-message-info: =?utf-8?B?RERhS2NBSGsvK2lxUGt3Z2QrbFNIOTlCcGlHeVdBVFNYSkc0bFN0d1dabTJa?=
+ =?utf-8?B?UnRzaVJsdHJxdW1NQUY3NXpPckVhTmd2ZFlkdHRMVnNYMWxmc0NGdEZpYmFZ?=
+ =?utf-8?B?OUhmWXBtb09ZWURvWW92Z1BuN3ZXeVFtKzFueU8zcTcrQzRmVmVwZnpTL1NQ?=
+ =?utf-8?B?eUR6SlBWV2NRcktKcjV0ZDVyYlQ2UCtFa0dPS1pZV3ZGNEVkci9RK2VSNmEw?=
+ =?utf-8?B?UmdxYUd5TW9KVWhtajZqbTJwRTlhZHFpRXhza1Y5Q3BlZmdEUm5rc0xSdW5U?=
+ =?utf-8?B?OUNNVEhIdGNHUWw1NDlSbnVpUzFJUUwwakNJRGhITzVhZ0ZKRVMzRjh5c2hR?=
+ =?utf-8?B?VUlzdzJ3NGdkckRsOXNrNkx2SytOREIwbnBvOWxFNU02OUpNSVZ3ZTBzSjlt?=
+ =?utf-8?B?WGp0b3ZEN2hicGl6T0JOdmRqVTVKNjZIaDFEaXFidHNQNi9EU2dJRmhZTlJi?=
+ =?utf-8?B?TEdSejR1MjZqdHJlamFzd3R5QTlBV1I2Z3FWakd3dnFkNVhLNUlmUFBoV2FQ?=
+ =?utf-8?B?UE5WZnY3Sy9Ob3lPd1NHUUZEcFZoZTJQRzkxbmUyKzhHdFgwTlR0WjN0U2d0?=
+ =?utf-8?B?ODJNbEY3a2RvQVYwQ1pWMDkrQ0RZdnVyc2pyMEJ5RlpDbG9TSHViUEtkT3ZN?=
+ =?utf-8?B?Qmxid2FVeEZqcW9MSS9GcEVqVnF3RnBNbzIycWV5SUJUVjhDYTJXbHhqbURa?=
+ =?utf-8?B?UmZzaGhqaFd3WUVmbkx4QWd4dThCZFZiY3pUeHFFaUNtTENIUmVMdnJvZEk3?=
+ =?utf-8?B?bE96SGgrSGR5b0IwL3VaYzRKakV0MjVhb29mc2hhZUpQc2R2Z0Uvd3hLL3F3?=
+ =?utf-8?B?SHo0bHNWR2QySlo4SllDOGNPOVVFREhCbkZPR2FrQ0VEQ1pHSFlJbVNNQ2J4?=
+ =?utf-8?B?R2FDSkEyOE14SUxCZXp6TXRrR3VRZnJMdXZZSEh6dkdLcUZIVk9pRFRVY3Q3?=
+ =?utf-8?B?VGZ4Vit0Q3dFem0zNlNJaVNEU2pFVE42cmVkdjRERWt5ZUliZFZxZ29CYi9v?=
+ =?utf-8?B?bWhsVnd2RVVhS1pQMUg3MkxDS0ZBc2I4ZW4zTmFuaHNHUDFtR0MwMWppTFFa?=
+ =?utf-8?B?TUtuRzN0a0t2WVUzdjAxNVJhbTQvOHpCdUlVVTFkcUZvQm9iVFhNWEU0dWFT?=
+ =?utf-8?B?T3UvU2VCZGNVVFpUZFh2MzE0UUZIV29sQXJlOFhpcytiWGdrdVk5Wm5rVS92?=
+ =?utf-8?B?aWNNcDBlMzFkTkdZeU9EWHIzbHJObEFkdmRJY29TUjZlc0J5bUF6T0ZjNXhV?=
+ =?utf-8?B?enlvejlkc2krbVYxdTl6VVBycHNvTVZGTFU0d2R1YlFPd1Jic2YxR0R6Ri92?=
+ =?utf-8?B?WndvdDRnVW4xcjlTQmg1QkxycnFiNjZzUWI4UU1XeUZKWlArb3VvR0I5V1Ba?=
+ =?utf-8?B?bU9kRFpuVndDd0lXYlh6Z0hZdW1KcjN2TFJ0RjNYYytjSGJ0SW01aEVKaUdK?=
+ =?utf-8?B?dFZqaThJZkJyenZSYUtXV3c1ZXloQWJzZ1NkZVRJb0UveXo0YWtkVEJXN1ZO?=
+ =?utf-8?B?cWF4WEVWL3hrN2kxNVArR1Mwemh0alM0VWRxbmlaaE1rSXpTVXZaZ3Zzc3JJ?=
+ =?utf-8?B?NEZHOE1jSVYzUUlSSFZUVExhcUVlUVVxYlRoK3prc1Q3dURMYkkvT1NsYTM2?=
+ =?utf-8?B?a3RPTTc5TkZ4N2dpTk9BMDUyd2Z5UEhxc0hxRVlJZDg5cU5yQlB4L0JONlJG?=
+ =?utf-8?B?UGk2OVlpbHRvT1VBTFJCaks0TkFzLzM1SDVReWFlRUlqK0paQmNsbWxNckdu?=
+ =?utf-8?B?eittTFB6UnY3VnRtUnhyQ1A2eVlmMVVOYVM4a09NMGNWM0hza3BVMkVVUUtK?=
+ =?utf-8?B?YW5ETTUvaS9Mek5VV3dpYmpreXBVUHpnbU5YdjFRcnc3Y1BCbmNlS3ZtMUNE?=
+ =?utf-8?B?b2w4WXZBcEVZY3ZNemZQY00yaVBneWppQXh4WStGQkRMTXRIdExiSkJQRExq?=
+ =?utf-8?B?b01vU1lHdjdwNFlZVTRNSDBVRUlwanR6TWZRRWZVTHR2N0dvcFRVeHNTMVZM?=
+ =?utf-8?B?Q3c3QkhMaFpZVFl0aHhSOUlvZGFwSGFZcHVhT01UdXM3WXNKNGYzUmdUOFZv?=
+ =?utf-8?Q?xhUBvF?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6164.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WDAxcVJuend5Ym1kODN1VFZhdnRkR2tBTTdjeDRtZyt3dlBwbXprcVlacjMx?=
+ =?utf-8?B?TkRuMUI1eEVsVzNVRTcvUG5HTWFvN1MrRkZwZUFEdzg3eEFEcFk0S1l0cHpw?=
+ =?utf-8?B?eERTR0lMVUhERmp5MmpBMFhHaGNsYTYzaExXaERac2N2VlJGYjcxZko5RTZZ?=
+ =?utf-8?B?Yjl3aXgwRHFnU0thT0QzcElJcEZ6MzZBRjB0MWpIT0hrK3VZYzlGNWN0NXZK?=
+ =?utf-8?B?aFlBK2lZWkFRSERJL3hCd29iWC9PTUhxejNLdi9ETW5tS3JMakZad1lMd2FJ?=
+ =?utf-8?B?RTlONS81TmtYc3VYbkZaZEZ1Qk5RN0hCSHlkcmxLRHNmVm56YlFLSFBib2o3?=
+ =?utf-8?B?NERyay81bzJoNlBBY1o5OGpVQVlhMzJtbE5mUk1UMTBkSFFCbFl0U3dmUFlG?=
+ =?utf-8?B?K2p1dlFvY21iaUZwRE1tYTlpbGdQWEpWMWZYN05kSlNRMXBlQUxTT3gyWnpi?=
+ =?utf-8?B?WEYwTDFiVUMzbmp1Y2oyZHBWbFB4OERYUURNNmladGRMa1NJK1R5V0laU2dJ?=
+ =?utf-8?B?RGdhSG9aTjE2ZDZwQVVScU5hdXY2ZWd1UEQweDZDeTFUenB0NUVSdUgrelZH?=
+ =?utf-8?B?QUl2UDFFWjVZYmg5VEY4YURoYUpMZjFrZGpZdCtPZ0NWdko0MUtVS2I3MVJI?=
+ =?utf-8?B?RGl5QTRJWUVoMUlVb2dJbVd4dE5VS0JLSld5UWx0NGMwTHptaWQyNkRlTGtQ?=
+ =?utf-8?B?YWhYMndhTDU5VHRLNWRwQXlKMG9EQkorcy96TEFJaUNXekR3NkhoSUNHL2dZ?=
+ =?utf-8?B?c2pQWGdocGFlVUtiRm5MZHQzd0JUYmpKVldBR0lNc0Y0Q1BpTExSQ0ZXOEtS?=
+ =?utf-8?B?V0F2cGx2SDdjTWFPc3ExUktZRXVDMFRwQnB2emNWM1FkSjIzTHNZelpQNlZL?=
+ =?utf-8?B?NFl5UFhFbHpCYVE4eDRvamp4ZURXL1JFakFoSHNHdjl0ZDZ3WmNRRENBTmps?=
+ =?utf-8?B?WXJ1WGcvd3lmSURMU0JUclBwVDZadkYySlNhZkh2NFN5Sm9pYnlocVl2S0pt?=
+ =?utf-8?B?MGdrNkZRaWdHbTd6OU5qNWdzTkExaWg2TEdIU3l4SEpYaDVobFNSTEtiV01s?=
+ =?utf-8?B?ZTVpcHJUdVN6K25qa2o4YVhHRnZuMldTVFU4bGlZb3BrRm1XMHJRUGZEQWJz?=
+ =?utf-8?B?YXczbmVZb1c1aktSSmJncStFYmJXZ0dNSFNlQjBTT0lOVFpXcjRmUGNqWExJ?=
+ =?utf-8?B?NmhQYTVOS3JnRWs4R1dOQkNBUVNQVFU3UTFHbytFU1l0dFdySkxHK3kyQjc5?=
+ =?utf-8?B?QVg0YXZuM3hIT1ltL2lzakhYQkd6ckhhdlNnRjByZUpwYWtRUWxXK3N5TXVv?=
+ =?utf-8?B?bzRQdTk2V3R0MW9iVGFoWkovRmc3Wit1TzcvQitMRWFwQkRtUkdJQnFNRUdt?=
+ =?utf-8?B?V0dXZlVUeWM2cnBDbXBQMHNkY3YvY0xRMTFFZ1FIMXVQQklqL2gwR2E0czVP?=
+ =?utf-8?B?bnV2VHpxWkpNYXJvZ2FWR3BlNGlvYXpFbERkNkpaM1pNWFhKYlRxVmdyZ0ZC?=
+ =?utf-8?B?d1o0RU5RbnJvZFJQTFZIS0orZzVwRjdpYUtlZ2hUWExzRzZMOVdUblkwRGJt?=
+ =?utf-8?B?V2N4dzhIS3B4MG5TNTBwSDNXRDNMcTFFWTdta2FvdkVlbVVFbVZLQ2dUa0J6?=
+ =?utf-8?B?T0xhT1pzMXJHSWZvMUJEbHlSUXJQb2p1cVlKSG1od0xBcEF5VWpkSDlpRVRS?=
+ =?utf-8?B?MkwzZWExdUtabHJlOVVTTVRJSk5LQnk5enpOMGRRUUlieTNPd2ZrdlM0WTd6?=
+ =?utf-8?B?UENaYlY0Ym00ck0yRFF2ZkxEa1E1eEpiWDBqMmtyN0x6WmhGUSs2QmRtZU5X?=
+ =?utf-8?B?bUozOXRJQ0JHR3NDSTd6TW5DV1VGZUVTblhUWTZ6SkFRczVFL040aHJ4RUt2?=
+ =?utf-8?B?cVlNWG5mbVlYTjhsQUI5c21ZbEE1bHN2cWF6OFozZFQySW4zeTVmZXFab1VB?=
+ =?utf-8?B?d3N2QXVyVERrVThTdEtZUkYwUkYxdFExT0lQbVc0YitrbXByb2Q0cGIyLzZM?=
+ =?utf-8?B?NVlWemVwNzFDM0RlcWtLU3hCT0I1aGxEU1dYclZUbDR2c3VDNkErTncvcHZQ?=
+ =?utf-8?B?OEc1MkFDc3EzcmRhZE1lYUx6TE42T2pxbGszWDNLeUZ2eCtabHlURjZkd2hz?=
+ =?utf-8?B?VnBteXcwWnc2dDkwdVdObjVFNm1WTHRKU3dsOHU5dWMxWHY0VWpWbmxyOU8r?=
+ =?utf-8?B?YlE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <914DFE9D30118F4C8A2E295BCDED1B26@apcprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB527640AE172858646199B1888CD6A@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D7:EE_|IA0PR12MB8205:EE_
-X-MS-Office365-Filtering-Correlation-Id: 950c08ff-ef52-4026-6bf4-08de267af38b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?qQowyPVVRLs4zpHmc+NHuAMSCwyJ01bJzJtC9IlERwOjtehcWpgrlAv7+3kt?=
- =?us-ascii?Q?0xJE7pOM+DaskhljOQXi7GZRAt9zud6dv2nXOdTMeiz8aMaQFztW0WoMrzR4?=
- =?us-ascii?Q?1qs45/JGnWFZxgER8dewf2zv+2ZDVJ/IfSpn5TnL73VRiwIYPZkFWjIFy8hT?=
- =?us-ascii?Q?EK162lf+fdsX5VH0Ik6wsaGdqe+BAmzWznzxH3aYMvFER5ILVvCNbwki+VtX?=
- =?us-ascii?Q?tv0347yOIfPzI85mWrhTEwmL0jBu5ESP31G9+X+t3bIw3/gJKF3YPxgTr+0w?=
- =?us-ascii?Q?cFLNE8Wmu01LdaHgI82+h9h+Kb0D0YqGS14SiV16GuKFoDVm3uEDpeM5Q8u5?=
- =?us-ascii?Q?fvgQdXiLPe7Cj03tmCy89Vl4s+Z7mT33AEgHwMqIMvvaj8jxRy66FxRq3pVW?=
- =?us-ascii?Q?TB/yWRzBScbzDUpfDWxnpY8bPWnGDDb/EhWfy5PKclqOATPpkGPjXKg2kKDt?=
- =?us-ascii?Q?a/hjBXQXinkMs+bbgBvoMnlWG1NpgWSIk42d1bbbWpkv69H51DVSil0pV4Il?=
- =?us-ascii?Q?OAcmczBdHdrRZk1ocju+PoAlGa2IS0Ja6DMNQ1owVs/Kl56MMWUTv6JNmyNE?=
- =?us-ascii?Q?NgAfPkf3A9CvwlC+0XKnwzHG5+enGOx+9BH7OdWKpjeOFRhUIqhsnnG21TF9?=
- =?us-ascii?Q?81cLrEratdNNXBa3DdK933IpzsHEaxQ/W4cAC4ZR0mz+//R6ViAhBt2fDCAc?=
- =?us-ascii?Q?DG7RnVJndWTUPh8ZmZ9c7XzFzHIHhaCkKyR7kZuONqdQTcKKRIDImj2L+xRn?=
- =?us-ascii?Q?mKtAj2/fObPl/eO9drdedi3FTQQpKu0qJKm1/ckamiCjEjNm9ee7rkczUW2h?=
- =?us-ascii?Q?yEvT0q6AsFLTd3DDADN8++mN44eT34p1YZcWRbKaQ4yaQyFzlWu4pkT0Bvyr?=
- =?us-ascii?Q?B6N8iK3JAZ90StJSavlE7bbS3I71o32qSFWGqYfTplCzIAI233LowfDntUTF?=
- =?us-ascii?Q?OQzhNfa8Q1pf4xpnRBMQoz3zP6u0qcl7us5ZqdKj+vVJNiS53YAcWk8ojdHe?=
- =?us-ascii?Q?Qck6nZ/LKLQ371WW+rHrgoOJMqoUvU88B/NXEiIj7ucLxotXUzVIHjFito2F?=
- =?us-ascii?Q?NjpZY4GOlszmmg0M0zgRciwcBOCUSHQuz3owKBx8qRPCqQbVryGPyvgZDFcK?=
- =?us-ascii?Q?v956ElxXtvH1EMpgzM+FdyX0cpSM6xfBAgnEcxFI2kVVnOVbtXlGqT9vMroJ?=
- =?us-ascii?Q?U0b2hUmhy3fHMyGN0xwO9AJV6QtDonAqaLojnHbgZbqJgCfk56DlDe5BxjX5?=
- =?us-ascii?Q?jCJkWXzZWqoPueppLws3apSzm8n3FwpA/EvFpWWtMFDz4YB0hhKO/qcfrVCk?=
- =?us-ascii?Q?7IRQvKmtVwEhyeHmAtHk0XtP5kHmHOmMaNjam04XZsuin9uKQi4OiaKXG2IZ?=
- =?us-ascii?Q?7EfdF5Zy2weXUl5aABYtHXp7k6lxZQMBcfOhi1Z5kJ9zAd86xXIpXIpGUk3j?=
- =?us-ascii?Q?mZ8fFvyqHzNRKB8va4VtlazZDtcqcs+9gZalcDdgK8CARynPvZAZ5aFKdG+U?=
- =?us-ascii?Q?9PjVMuK1xFvkbQSpbNrO7vk8wijevX8ljypDj4KJkT1Hg8eFGqbDbM6uhBF1?=
- =?us-ascii?Q?2HbdXphapdOTIdOlshU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2025 08:17:44.5813
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6164.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7eb5e5a1-7b62-4fe5-873a-08de26865859
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2025 09:39:18.2511
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 950c08ff-ef52-4026-6bf4-08de267af38b
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023D7.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8205
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DHsoVOteZTFj/ocyTbSyO9dtif/Mw/0as93ABFCBuI7VewDyCMvYz5nWODZSyY6DowQ5R5T9Kruf11p26TaELG0WwSfWxLE07n3zQSyilTE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB7639
 
-On Tue, Nov 18, 2025 at 07:53:27AM +0000, Tian, Kevin wrote:
-> > From: Nicolin Chen <nicolinc@nvidia.com>
-> > And how do you think of the followings?
-> > 
-> > /*
-> >  * Per PCIe r6.3, sec 10.3.1 IMPLEMENTATION NOTE, software disables ATS
-> > before
-> >  * initiating a reset. Though not all IOMMU drivers calls pci_enable_ats(), it
-> >  * only gets invoked in IOMMU driver. And it is racy to check dev-
-> > >ats_enabled
-> >  * here, as a concurrent IOMMU attachment can enable ATS right after this
-> > line.
-> >  *
-> >  * Notify the IOMMU driver to stop IOMMU translations until the reset is
-> > done,
-> >  * to ensure that the ATS function and its related invalidations are disabled.
-> >  */
-> > 
-> 
-> I'd remove the words between "Though not ..." and "after this line", which
-> could be explained in iommu side following Bjorn's suggestion to not check
-> pci_ats_supported() in pci core.
-
-OK. Thanks!
-
-Nicolin
+T24gVGh1LCAyMDI1LTExLTEzIGF0IDEwOjM5ICswMTAwLCBMdWthcyBXdW5uZXIgd3JvdGU6DQo+
+IE9uIFRodSwgTm92IDEzLCAyMDI1IGF0IDA0OjQ0OjA2UE0gKzA4MDAsIEpvaG5ueSBDaGFuZyB3
+cm90ZToNCj4gPiBOdmlkaWEgR0IxMCBQQ0llIGhvc3RzIHdpbGwgZW5jb3VudGVyIHByb2JsZW0g
+b2NjYXNpb25hbGx5DQo+ID4gYWZ0ZXIgU0JSKHNlY29uZGFyeSBidXMgcmVzZXQpIGlzIGFwcGxp
+ZWQuDQo+IA0KPiBDb3VsZCB5b3UgZWxhYm9yYXRlIHdoYXQga2luZHMgb2YgcHJvYmxlbXMgb2Nj
+dXIsIGhvdyBvZnRlbiB0aGV5DQo+IG9jY3VyLCBldGM/DQoNClRoZXJlIGlzIGFib3V0IDEvMTAw
+MCBjaGFuY2UgdGhhdCBhZnRlciBTQlIgaXMgYXBwbGllZCwgYW55IGZ1cnRoZXINCmFjY2VzcyB2
+aWEgdGhpcyByb290IHBvcnQgd2lsbCBiZSBibG9ja2VkIGFuZCBtYWtlIHN5c3RlbSBjcmFzaC4g
+DQoNClRoYW5rcywNCg0KSm9obm55DQo=
 
