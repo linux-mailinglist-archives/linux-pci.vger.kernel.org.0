@@ -1,142 +1,279 @@
-Return-Path: <linux-pci+bounces-41536-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41537-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 783F8C6BB3A
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 22:18:45 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 566A8C6BB76
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 22:29:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 70D4B4E1202
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 21:18:44 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 206AD357328
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 21:28:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6A792DAFB4;
-	Tue, 18 Nov 2025 21:18:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F32272DC357;
+	Tue, 18 Nov 2025 21:28:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fa8LOAlL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LDoL0hF8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75EE29AB07;
-	Tue, 18 Nov 2025 21:18:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA19A26E710;
+	Tue, 18 Nov 2025 21:28:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763500717; cv=none; b=NvU1RKhv+BdyuTHAFMfECKcjg2Z9eQQyo2XhzKvVYONZKvSqIbJeIGZpTxuVutGOyh+UEShp0+lYC0l5BHNr2utHosTthUna/AVbDQkOewBOtw52P8QdmzeYc5FP/G6GM1G/70saOFXMc58jXuQo6Y1JHSayFL9NgHaljfubzqE=
+	t=1763501301; cv=none; b=lD0YvClKuOnaKkAxyewmWMpkxUgzhUlrbXj2ViJP2tDZHJLHkwi6YJR7C9XZeOzxwkVGR3fJle1dx/nyYSA3TgslqVjrvUFJ9OnCBD4UlUq63teCGz0Ba5bbZ3qoRIuaB6XAeudZQPOUqV4zZSRJ4AfhvwdLyMZjF41fUs5d7ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763500717; c=relaxed/simple;
-	bh=6wWz4dUIUu3bV4VCg0t2TGcelVK03+4YgkyNMH+Jmxc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=WLtrJQzfHU5u0xZwzkvn0zpq3wXKaVmRLiv0KLsY5hV/zpYzx2fsz1KFJXZWUvmmDbtH/fiMPBokolCUeuRp7FHruo0ctiO/7ymxzHdd5AMFfkNg1kuT2EzE3JJBAzp1+fDl1Q1+8+fy81GtvJ/FXXx3dId5Xy55c0/ZU8972PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fa8LOAlL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E68C19423;
-	Tue, 18 Nov 2025 21:18:29 +0000 (UTC)
+	s=arc-20240116; t=1763501301; c=relaxed/simple;
+	bh=5UEjQXutcY6Htzw86LPN2V7rK8JUwjxX9GTjRfAUJEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=LM7oZ4LS936nsKv/Rk5qhCQawM6cmDah3rkyUkcBuMdcZ7Qp1iY5miPk/qq9vw+ETCRB1rZtDxBmHlJP8SXA8mrj8eD2lkWIXgKkMrsi/PenL6OXZSycZMlfRz5y5V/o4RuzEexDM8+N594KiomSNfKu553R8q+X4BW9C3FHMqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LDoL0hF8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC496C2BC87;
+	Tue, 18 Nov 2025 21:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763500716;
-	bh=6wWz4dUIUu3bV4VCg0t2TGcelVK03+4YgkyNMH+Jmxc=;
-	h=Date:From:Subject:Cc:To:References:In-Reply-To:From;
-	b=fa8LOAlLVKpqMnCIh6GzxMVW24Hxdi0MwqaSyH4Q9Iyv5QgmEESNRrgvXjwiCJ6gO
-	 x4Nm+TtwelnCrB1qQmpeHvZM547BK8+XmovHrJI7paqBBZ51Vqf9HAle8x0bjsY5Oe
-	 kwLUsHvVkCMvMFkL0XNb9IngOEoiKKktgpZjK07RQf7GkzrC/RsBEE1Wl6uWXmZMgi
-	 2+5CCRRPCEgBE7eX2PTbRNf2Jiq4+jg0YMhV2xQeBwoyBsrnoiX4HeC2B2mpYQTYdx
-	 iHQ56BCuJ8AUWwUtUU7CEI+BrPwiCfwg211fDxRkjjJ0iR/r+Wk9FhgI4Bj72KfQoM
-	 5cI6fiJ/iDp+g==
+	s=k20201202; t=1763501301;
+	bh=5UEjQXutcY6Htzw86LPN2V7rK8JUwjxX9GTjRfAUJEo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=LDoL0hF8/R17Jb4R4jcR6u6TQFpXCLUtFi+O3i3fssyxyrpALBouquyDvObHRZv3a
+	 qDUx5P+X/bg2F5wTT9n6nZ/ZLUrTYhm7EKaUw1WNzJDjIn36viKneXIaeOC+qpNuWc
+	 aaz5XkN8nVWfIjpdWPd5Z3KY9tQyx85+YqgFXWhfY2VXigZBp5HeiTJgg6fSlz3alg
+	 /DW/8fJInl1jZNTKl1qll/BTss7TmGeRwO0ilxAc7aie/Ask9Y37rfqGdKV5V0WOx+
+	 8zQTAY0AVauOIagUcHY30maVJ4hH+z7ZE0niuQbn/vqwErnE8kunm5d+ErIPZd14AH
+	 K/LEhMbIKf1mA==
+Date: Tue, 18 Nov 2025 15:28:18 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH] PCI: stm32: Fix LTSSM EP race with start link.
+Message-ID: <20251118212818.GA2591668@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 19 Nov 2025 10:18:27 +1300
-Message-Id: <DEC4TSQBTESW.28F17X9GHCIU7@kernel.org>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH v6 RESEND 4/7] rust: io: factor common I/O helpers into
- Io trait
-Cc: "Alice Ryhl" <aliceryhl@google.com>, "Zhi Wang" <zhiw@nvidia.com>,
- <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
- <kwilczynski@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <lossin@kernel.org>, <a.hindborg@kernel.org>, <tmgross@umich.edu>,
- <markus.probst@posteo.de>, <helgaas@kernel.org>, <cjia@nvidia.com>,
- <smitra@nvidia.com>, <ankita@nvidia.com>, <aniketa@nvidia.com>,
- <kwankhede@nvidia.com>, <targupta@nvidia.com>, <acourbot@nvidia.com>,
- <joelagnelf@nvidia.com>, <zhiwang@kernel.org>
-To: "John Hubbard" <jhubbard@nvidia.com>
-References: <20251110204119.18351-1-zhiw@nvidia.com>
- <20251110204119.18351-5-zhiw@nvidia.com> <aRcnd_nSflxnALQ9@google.com>
- <7b30a8a5-ec0b-4cc6-9e9a-2ff2b42ca3cf@nvidia.com>
-In-Reply-To: <7b30a8a5-ec0b-4cc6-9e9a-2ff2b42ca3cf@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67dbd8f6-2efe-4a73-a611-9081f364d2d4@foss.st.com>
 
-On Tue Nov 18, 2025 at 11:44 AM NZDT, John Hubbard wrote:
-> IO is generally something that can fail, so this whole idea of infallible
-> IO is making me uneasy.
->
-> I understand that we're trying to wrap it up into a bound device, but
-> bound devices are all about whether or not the driver lifetime is OK,
-> not so much about IO.
+[+cc Lukas in case I got the pciehp part wrong]
 
-That is correct, device context states are about driver lifetime. However, =
-it is
-at least related, see below.
+On Tue, Nov 18, 2025 at 07:34:01PM +0100, Christian Bruel wrote:
+> On 11/17/25 21:00, Bjorn Helgaas wrote:
+> > On Mon, Nov 17, 2025 at 01:04:47PM +0100, Christian Bruel wrote:
+> > > On 11/14/25 19:59, Bjorn Helgaas wrote:
+> > > > On Fri, Nov 14, 2025 at 08:45:52AM +0100, Christian Bruel wrote:
+> > > > > If the host has deasserted PERST# and started link training
+> > > > > before the link is started on EP side, enabling LTSSM before
+> > > > > the endpoint registers are initialized in the perst_irq
+> > > > > handler results in probing incorrect values.
+> > > > > 
+> > > > > Thus, wait for the PERST# level-triggered interrupt to start
+> > > > > link training at the end of initialization and cleanup the
+> > > > > stm32_pcie_[start stop]_link functions.
 
-> For PCIe, it is still possible for the device to fall off of the bus, and=
-=20
-> in that case you'll usually see 0xFFFF_FFFF returned from PCIe reads. The
-> Open RM driver has sprinkled around checks for this value (not fun, I
-> know), and Danilo hinted elsewhere that bound-ness requires not getting
-> these, so maybe that suffices. But it means that Rust will be "interestin=
-g"
-> here, because falling off the bus means that there will be a time window =
-in
-> which the IO is, in fact, fallible.
+To back up here, I'm trying to understand the race.
 
-The PCI configuration space accessors indeed check a flag that is set when =
-the
-device falls off the bus. However, it is not sufficient, since you still ha=
-ve a
-period of time when the device fell off the bus where the flag isn't set ye=
-t and
-the I/O accessor may still be used concurrently.
+IIUC the relevant events are link training and register init.  In the
+current stm32 EP driver, link training can start when the EP userspace
+writes to the 'start' configfs file.  And the register init happens
+when stm32_pcie_ep_perst_irq_thread() calls
+dw_pcie_ep_init_registers().
 
-(If you look at C drivers you will note that almost none of the drivers act=
-ually
-check the return value of the configuration space accessors; needless to sa=
-y
-MMIO ones don't even have the flag.)
+So I guess the problem is when the EP userspace enables the LTSSM
+before the host deasserts PERST#?  And the link train may complete
+before stm32_pcie_ep_perst_irq_thread() runs?
 
-Because of that, there is not a point in making all the I/O accessors falli=
-ble,
-because you'd have to deal with false negatives anyways, i.e. check the rea=
-d
-value for plausibility, because the device could already be gone, while the=
- flag
-is not set yet.
+And the fix here is to delay enabling the EP LTSSM until after
+stm32_pcie_perst_deassert() calls dw_pcie_ep_init_registers()?
 
-Additionally, when the device fell off the bus the driver core will unbind =
-the
-driver, so the period where fallability would serve at least some purpose w=
-ould
-be very short anyways.
+> > > > I've seen this kind of thing in other drivers, and I wondered
+> > > > whether it was safe because the host asserts and deasserts
+> > > > PERST# asynchronously, independent of anything the endpoint is
+> > > > doing.
+> > > > 
+> > > > I assume it's possible that the host deasserts PERST# before
+> > > > this driver has the stm32_pcie_ep_perst_irq_thread() thread
+> > > > set up.  If that happens and the driver doesn't see the PERST#
+> > > > interrupt, does everything still work correctly?
+> > > 
+> > > yes it does. the PERST# interrupt is level-triggered and, if
+> > > already de-asserted, fires only when enabled (it is NOAUTOEN)
+> > > with start_link.
+> > > 
+> > > At that point, the host can enumerate by performing a manual
+> > > rescan or rebind the PCIe driver, restarting the entire probe
+> > > sequence.
+> > > 
+> > > Tested the pcie_epf_test driver with various power-up sequences:
+> > > full power-up the host or device first, and stop or standby PM
+> > > suspend/resume.
+> > 
+> > Help me think through this.  I guess the interesting case is when
+> > the host boots first and enumerates devices before the stm32
+> > endpoint is ready, right?
+> > 
+> > I suppose the endpoint LTSSM is initially disabled, so the link is
+> > down, and the host enumeration didn't find anything?
+> 
+> yes. When the device is not started (start_link)
+> dw_pcie_wait_for_link() fails and pci_host_probe() only register the
+> root port:
+> 
+>         /*
+>          * Note: Skip the link up delay only when a Link Up IRQ is present.
+>          * If there is no Link Up IRQ, we should not bypass the delay
+>          * because that would require users to manually rescan for devices.
+>          */
+>         if (!pp->use_linkup_irq)
+>                 /* Ignore errors, the link may come up later */
+>                 dw_pcie_wait_for_link(pci);
+> 
+>        ret = pci_host_probe(bridge);
+> 
+> > Where does the link come up?  I see the pci_epc_start_store() that
+> > eventually leads to stm32_pcie_start_link(), which enables perst_irq.
+> 
+> The link appears when explicitly requested by writing '1' into the bound
+> endpoint device driver sysfs 'start' once the device is configured.
+> 
+> see https://www.kernel.org/doc/html/latest/PCI/endpoint/pci-test-howto.html
+> 
+> But how pci_epc_start_store() is iterated from the configfs_write_iter()
+> mechanism is beyond my knowledge...
 
-Instead, drivers have to be designed to be robust enough to deal with broke=
-n
-data read from the bus.
+OK.  I just wanted to learn whether this was all automatic or required
+user intervention.
 
-> Other IO subsystems can also get IO errors, too.
->
-> I wonder if we should just provide IoFallible? (It could check for the
-> 0xFFFF_FFFF case, for example, which is helpful to simplify the caller.)
+IIUC it's never completely automatic because even if the endpoint
+boots first, the endpoint LTSSM isn't enabled and the link won't train
+until userspace on the endpoint writes '1' into the 'start' configfs
+file.
 
-For some registers this could be an expected value, plus a device can fall =
-off
-the bus during a read was well, leaving you with broken data.
+> > Since you requested perst_irq with IRQF_TRIGGER_HIGH, and PERST#
+> > is deasserted, does that trigger stm32_pcie_ep_perst_irq_thread()
+> > and call stm32_pcie_perst_deassert() to enable the LTSSM?
+> 
+> perst_gpio is active low. So requesting the perst_irq with
+> IRQF_TRIGGER_HIGH triggers when deasserted.
+> 
+> This part is quite confusing (for me) because gpiod_get_value()
+> correctly returns 0 when the gpio is de-asserted, when the irq API
+> does not know about active low so we must use TRIGGER_HIGH
+> 
+> > When the link comes up, if the Downstream Port supports hotplug
+> > and pciehp is enabled, it might notice the link-up event and treat
+> > this as a hot-add?
+> 
+> yes, I just tried with a host pc with hot-plug enabled. lspci found
+> the stm32 EP, as you anticipated
+> 
+> > Otherwise the user would have to manually rescan to notice the
+> > endpoint?
+> 
+> indeed, this is how I proceed when the host does not support
+> hot-plug,
 
-I don't think trying to make all I/O operations fallible is the way to go, =
-it's
-just unreliable to detect in the generic layer. Instead, drivers should per=
-form
-a plausibility check on the read values (which they have to do anyways).
+I think we would prefer if the host would enumerate the endpoint
+whenever the endpoint becomes ready, even if that is after the host's
+initial enumeration, but I guess that's only possible if the host is
+notified when the link comes up.
+
+The main mechanism for that is hotplug, i.e., pciehp handles presence
+detect and link layer state changed events, both of which are managed
+by the PCIe Slot register set.  Those registers are optional and may
+not be implemented, e.g., if a Root Port is connected to a
+system-integrated device.
+
+But if they *are* implemented, I hope that pciehp makes it so no user
+intervention on the host side is required.
+
+> > > > > Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+> > > > > ---
+> > > > >    drivers/pci/controller/dwc/pcie-stm32-ep.c | 38 ++++++------------------------
+> > > > >    1 file changed, 7 insertions(+), 31 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-stm32-ep.c b/drivers/pci/controller/dwc/pcie-stm32-ep.c
+> > > > > index 3400c7cd2d88a279c49ef36a99fc7537c381c384..d0654bb43759bb8d0f0d7badbf7bdae839241fcf 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-stm32-ep.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-stm32-ep.c
+> > > > > @@ -37,36 +37,9 @@ static void stm32_pcie_ep_init(struct dw_pcie_ep *ep)
+> > > > >    		dw_pcie_ep_reset_bar(pci, bar);
+> > > > >    }
+> > > > > -static int stm32_pcie_enable_link(struct dw_pcie *pci)
+> > > > > -{
+> > > > > -	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
+> > > > > -
+> > > > > -	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
+> > > > > -			   STM32MP25_PCIECR_LTSSM_EN,
+> > > > > -			   STM32MP25_PCIECR_LTSSM_EN);
+> > > > > -
+> > > > > -	return dw_pcie_wait_for_link(pci);
+> > > > > -}
+> > > > > -
+> > > > > -static void stm32_pcie_disable_link(struct dw_pcie *pci)
+> > > > > -{
+> > > > > -	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
+> > > > > -
+> > > > > -	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR, STM32MP25_PCIECR_LTSSM_EN, 0);
+> > > > > -}
+> > > > > -
+> > > > >    static int stm32_pcie_start_link(struct dw_pcie *pci)
+> > > > >    {
+> > > > >    	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
+> > > > > -	int ret;
+> > > > > -
+> > > > > -	dev_dbg(pci->dev, "Enable link\n");
+> > > > > -
+> > > > > -	ret = stm32_pcie_enable_link(pci);
+> > > > > -	if (ret) {
+> > > > > -		dev_err(pci->dev, "PCIe cannot establish link: %d\n", ret);
+> > > > > -		return ret;
+> > > > > -	}
+> > > > >    	enable_irq(stm32_pcie->perst_irq);
+> > > > > @@ -77,11 +50,7 @@ static void stm32_pcie_stop_link(struct dw_pcie *pci)
+> > > > >    {
+> > > > >    	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
+> > > > > -	dev_dbg(pci->dev, "Disable link\n");
+> > > > > -
+> > > > >    	disable_irq(stm32_pcie->perst_irq);
+> > > > > -
+> > > > > -	stm32_pcie_disable_link(pci);
+> > > > >    }
+> > > > >    static int stm32_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > > @@ -152,6 +121,8 @@ static void stm32_pcie_perst_assert(struct dw_pcie *pci)
+> > > > >    	dev_dbg(dev, "PERST asserted by host\n");
+> > > > > +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR, STM32MP25_PCIECR_LTSSM_EN, 0);
+> > > > > +
+> > > > >    	pci_epc_deinit_notify(ep->epc);
+> > > > >    	stm32_pcie_disable_resources(stm32_pcie);
+> > > > > @@ -192,6 +163,11 @@ static void stm32_pcie_perst_deassert(struct dw_pcie *pci)
+> > > > >    	pci_epc_init_notify(ep->epc);
+> > > > > +	/* Enable link training */
+> > > > > +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
+> > > > > +			   STM32MP25_PCIECR_LTSSM_EN,
+> > > > > +			   STM32MP25_PCIECR_LTSSM_EN);
+> > > > > +
+> > > > >    	return;
+> > > > >    err_disable_resources:
+> > > > > 
+> > > > > ---
+> > > > > base-commit: 31115ecec74fe5c679a149d7037009f26b3aa8a9
+> > > > > change-id: 20251113-perst_ep-0b57b9679cf9
+> > > > > 
+> > > > > Best regards,
+> > > > > -- 
+> > > > > Christian Bruel <christian.bruel@foss.st.com>
+> > > > > 
+> > > 
+> 
 
