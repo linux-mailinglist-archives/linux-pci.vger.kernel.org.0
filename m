@@ -1,207 +1,205 @@
-Return-Path: <linux-pci+bounces-41509-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41510-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E756C6A4A4
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 16:25:25 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D6A0C6A6B8
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 16:54:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by tor.lore.kernel.org (Postfix) with ESMTPS id 72A482C21F
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 15:25:24 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6F01834C0D9
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Nov 2025 15:48:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6879364037;
-	Tue, 18 Nov 2025 15:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 021B436827A;
+	Tue, 18 Nov 2025 15:47:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mEE4eUYj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QLnMRxYH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF768361DD7;
-	Tue, 18 Nov 2025 15:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16ECE34DB64
+	for <linux-pci@vger.kernel.org>; Tue, 18 Nov 2025 15:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763479518; cv=none; b=fgMjvi/nfzqCDL56hzF4xuSHOxISfBINVEAJibe+VTBYUwYVTH3En40LFE38Bkcn1a27fVfItkHPdY70CJI0NAN6uRevvKSgjcsPY/0GYIyR6BlqNzfkTMBfgzvQoOF1WPpBo9HWG1l9x+9i5ipz+YLi+k56BX4mWbqSQxiWO7M=
+	t=1763480869; cv=none; b=nBLV64cOsK9UXYPfJtfRoXRYFghw/pIIcVc9CV8JQy01N3T988JP9YKtiiEu+K6IIEU/7QUt0VzTeshKD+wTCc60Nao0cEK1xR7EHaf8jQO/Ek8Wsv71S0XZpwA7cjDw/KGwFV+w2n/G37b9wwK+ghoulma2YGJ2WgtabIg+UJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763479518; c=relaxed/simple;
-	bh=b8qR1fNCOUcGmFlXBqf2Jmbglcn0cz6vrnKg5k3I8HY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KgoZneLy6v/l/lgb/zJMPPl3EJDQyna2nEj/yLnCAUojoju98Icev28XYJ++DkkMqrr3r1q5HvTJRNcPBc4vHGFssyKOdzpe0DncPDVMkTQQOb9lPq0Dq2PyFArLhi/sI407nF5GxAivBUZGq8QTeC/J+2KbBugWfaMZRbHs2vQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mEE4eUYj; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AI1tqs7028393;
-	Tue, 18 Nov 2025 15:23:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=b8qR1f
-	NCOUcGmFlXBqf2Jmbglcn0cz6vrnKg5k3I8HY=; b=mEE4eUYjgklKf8ckwZAhDy
-	SemFjclSHph4OIcNgGIRB33yKEvmDkUgpvf4MsjpE3xo0akxzvjylX58YARmSJ5h
-	c2Ooip5l5xKCeB+ZszFhhCXGu1T0RI/6rBGNycK4VKLDmLOQLbQF8xC71MwsdRpI
-	0oQIclRsJ2BH/z3isyuBtV/G5oGzzxcyO/U8jZGhW63jDjC0GT2rEygs7Nywqf0o
-	LKYkHjV4YQgao5GRKh0XTFLZa5uyctdwxj2IR2IjesWo4ulffbUPV3WfYorlMzp9
-	3UQws93x7ragECUHS6LnyzjaTYBragG1GGke7RSE/IYNqSxXY5az/LqI4/4Qzsew
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejmsk7vk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Nov 2025 15:23:16 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AICQoFw006967;
-	Tue, 18 Nov 2025 15:23:15 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4af62jbj06-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Nov 2025 15:23:15 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AIFNBfr40042972
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Nov 2025 15:23:12 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C34CE20040;
-	Tue, 18 Nov 2025 15:23:11 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9A79420043;
-	Tue, 18 Nov 2025 15:23:10 +0000 (GMT)
-Received: from [9.152.212.246] (unknown [9.152.212.246])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 18 Nov 2025 15:23:10 +0000 (GMT)
-Message-ID: <55871dc5-2467-4558-be5b-0296d478a6d1@linux.ibm.com>
-Date: Tue, 18 Nov 2025 16:23:09 +0100
+	s=arc-20240116; t=1763480869; c=relaxed/simple;
+	bh=cyhXzVMzGTGvtqpzcCL+7A+0PQYZJ8mfGKNkFW1y+6o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gSd0s3BBDWfzx7nKqi/OyplYQ6EuBeBEpa+wXJEFrhBakZff8+OLYNE3wrUgKTpwTSmKjM/s4o7D0t2h7lCTmtduC/VAl2U/k1YpiDM/bLh05C3l1BGhGq4FfM0FOEHQnF7UgojwLV/SxX4AL+nFQZCZkiOt5WQXwdC3y/m6xRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QLnMRxYH; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763480868; x=1795016868;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cyhXzVMzGTGvtqpzcCL+7A+0PQYZJ8mfGKNkFW1y+6o=;
+  b=QLnMRxYHrG8090xtEKL+UDY23h3ER/oiqccYx1XVmR8MwdQlS/ZpkXyf
+   K+u6irwDW/kNi7PCfCZmbEajM2XFc0194kAMXKaOFg+/azi7iX21/7QDE
+   Upgvpo2cCJouNiDnx1BG/QOc8xir3O3mc9BvJ2+zbcYZ6LoYRBo2t6cIa
+   +HniKK7ZcbziP9xpCPZKG2NsAHy7+3in9hR9TdskiAbRjDFRAa+DN5eJB
+   yjMl9yL2dWDdGLYBR+6BpQcoSALiQ/XZL8Bl7ETIgDXCRbgOe4pVy6TUb
+   w8AnIRp1yxwRy2M0TFDeJ2ma6hLHMoIT3dNTQG1i1aKPtEpqFzmNeU2iS
+   w==;
+X-CSE-ConnectionGUID: atNGnDHYTqCSxdyc5W2fYA==
+X-CSE-MsgGUID: ZOehhZULTeuFb3lATr5BBg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="76108767"
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="76108767"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 07:47:47 -0800
+X-CSE-ConnectionGUID: RETMKZeFQHWhYhwf2TrBtQ==
+X-CSE-MsgGUID: 1JcVudI1SnygAtcdcsvX7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="191564983"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa010.fm.intel.com with ESMTP; 18 Nov 2025 07:47:46 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id 442B398; Tue, 18 Nov 2025 16:47:45 +0100 (CET)
+Date: Tue, 18 Nov 2025 16:47:45 +0100
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Guixin Liu <kanie@linux.alibaba.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Check rom image addr at every step
+Message-ID: <aRyVIebrZk__gkKE@black.igk.intel.com>
+References: <20251114063411.88744-1-kanie@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 18/21] s390/dasd: Switch to use %ptSp
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Corey Minyard <corey@minyard.net>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?=
- <christian.koenig@amd.com>,
-        "Dr. David Alan Gilbert" <linux@treblig.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Rob Clark <robin.clark@oss.qualcomm.com>,
-        Matthew Brost <matthew.brost@intel.com>,
-        Ulf Hansson
- <ulf.hansson@linaro.org>,
-        Aleksandr Loktionov
- <aleksandr.loktionov@intel.com>,
-        Vitaly Lifshits
- <vitaly.lifshits@intel.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Niklas Cassel <cassel@kernel.org>, Calvin Owens <calvin@wbinvd.org>,
-        Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-        Sagi Maimon <maimon.sagi@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Karan Tilak Kumar <kartilak@cisco.com>,
-        Hans Verkuil <hverkuil+cisco@kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Petr Mladek <pmladek@suse.com>,
-        Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
-        Max Kellermann <max.kellermann@ionos.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, amd-gfx@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        intel-xe@lists.freedesktop.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
-        ceph-devel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Gustavo Padovan <gustavo@padovan.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rodolfo Giometti
- <giometti@enneenne.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev
- <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Satish Kharat <satishkh@cisco.com>,
-        Sesidhar Baddela <sebaddel@cisco.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Xiubo Li
- <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
- <20251113150217.3030010-19-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Stefan Haberland <sth@linux.ibm.com>
-In-Reply-To: <20251113150217.3030010-19-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: z5vCIuXQoxQhVWpfGoNnS3CQXWBOkQvm
-X-Authority-Analysis: v=2.4 cv=Rv3I7SmK c=1 sm=1 tr=0 ts=691c8f65 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=QyXUC8HyAAAA:8 a=VnNF1IyMAAAA:8 a=JNz3O4sEs4oywJvo4n4A:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=UhEZJTgQB8St2RibIkdl:22 a=Z5ABNNGmrOfJ6cZ5bIyy:22
- a=QOGEsqRv6VhmHaoFNykA:22
-X-Proofpoint-GUID: z5vCIuXQoxQhVWpfGoNnS3CQXWBOkQvm
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX7xgDi9VMkHy1
- xY1Kr5CN6JO103EZyDLYmJUVyCiuwKR/4uc3+Lmy/gvg5ECzM4sd6vU0zWqCHklppK8uLUvWjGX
- HwwwwH+Ce8Jw0NQCUNjE3exfborRXuQ4RjSB1HZACxh4RkWbE7BpIzojfb5TKd4SBA0XBh10Euo
- CsCaHasXAGt43yERBXoTQ5hFXFxjF+AK1zNBNgHfBYOInKsNmRYBkGYznwzarJkxLc/UdbEghnq
- kmXAnC8NgaNRASHp2cZtXrz3YttsT408eVXN4mQFU8o8MSMzbwi3Kptdqy/18crsQhyL56cLX4n
- RnZa0fHWW+S36zf2ZHPlGEIVPwtibWxtWTZqXsygWW1T/83Ban6/JWLGXi3iADfuOgd8HUjrRri
- jkkd9Ckpow854pIeK6bG7rGX3zWg/g==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-18_01,2025-11-18_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 clxscore=1011 phishscore=0 priorityscore=1501
- spamscore=0 lowpriorityscore=0 impostorscore=0 adultscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511150032
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251114063411.88744-1-kanie@linux.alibaba.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Am 13.11.25 um 15:32 schrieb Andy Shevchenko:
+On Fri, Nov 14, 2025 at 02:34:11PM +0800, Guixin Liu wrote:
+> We meet a crash when running stress-ng:
 
-> Use %ptSp instead of open coded variants to print content of
-> struct timespec64 in human readable format.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
++ blank line.
 
-Thanks, looks good to me.
+>   BUG: unable to handle page fault for address: ffa0000007f40000
+>   RIP: 0010:pci_get_rom_size+0x52/0x220
+>   Call Trace:
+>   <TASK>
+>   pci_map_rom+0x80/0x130
+>   pci_read_rom+0x4b/0xe0
+>   kernfs_file_read_iter+0x96/0x180
 
-Acked-by: Stefan Haberland <sth@linux.ibm.com> 
+>   vfs_read+0x1b1/0x300
+>   ksys_read+0x63/0xe0
+>   do_syscall_64+0x34/0x80
+>   entry_SYSCALL_64_after_hwframe+0x78/0xe2
+
+Please, read
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#backtraces-in-commit-messages
+and act accordingly (I think of 4 least significant lines)
+
++ blank line.
+
+> Bcause of broken rom space, before calling readl(pds), pds already
+> points to the rom space end (rom + size - 1), invoking readl()
+> would therefore cause an out-of-bounds access and trigger a crash.
+> 
+> Fix this by adding every step address checking.
+
+From the description and the code I'm not sure this is the best approach. Since
+the accesses seem to be not 4-byte aligned, perhaps readl() should be split to
+something shorter in such cases? Dunno, I haven't looked at the code.
+
+Ah, it seems we are looking for the full 4 bytes to match. But then we need more, no?
+See below.
+
+...
+
+> +#define PCI_ROM_DATA_STRUCT_OFFSET 24
+> +#define PCI_ROM_LAST_IMAGE_OFFSET 21
+> +#define PCI_ROM_LAST_IMAGE_LEN_OFFSET 16
+
+Are those based on PCI specifications? Perhaps if we go this way the reference
+to the spec needs to be added.
+
+...
+
+> static size_t pci_get_rom_size(struct pci_dev *pdev, void __iomem *rom,
+
+>  	void __iomem *image;
+>  	int last_image;
+>  	unsigned int length;
+> +	void __iomem *end = rom + size;
+
+Can you group together IOMEM addresses?
+
+	void __iomem *end = rom + size;
+	void __iomem *image;
+	int last_image;
+	unsigned int length;
+
+>  
+>  	image = rom;
+>  	do {
+>  		void __iomem *pds;
+
+> +		if (image + 2 >= end)
+> +			break;
+
+Shouldn't we rather check the size to be at least necessary minimum? With this
+done, this check won't be needed here. Or we would need another one to check
+for the length for the entire structure needed.
+
+>  		/* Standard PCI ROMs start out with these bytes 55 AA */
+>  		if (readw(image) != 0xAA55) {
+>  			pci_info(pdev, "Invalid PCI ROM header signature: expecting 0xaa55, got %#06x\n",
+>  				 readw(image));
+>  			break;
+>  		}
+
+> +		if (image + PCI_ROM_DATA_STRUCT_OFFSET + 2 >= end)
+> +			break;
+>  		/* get the PCI data structure and check its "PCIR" signature */
+> -		pds = image + readw(image + 24);
+> +		pds = image + readw(image + PCI_ROM_DATA_STRUCT_OFFSET);
+> +		if (pds + 4 >= end)
+> +			break;
+>  		if (readl(pds) != 0x52494350) {
+>  			pci_info(pdev, "Invalid PCI ROM data signature: expecting 0x52494350, got %#010x\n",
+>  				 readl(pds));
+
+You also want to reconsider double readl(). Would it have side-effects? What about hot-plug?
+
+>  			break;
+>  		}
+> -		last_image = readb(pds + 21) & 0x80;
+> -		length = readw(pds + 16);
+> +
+> +		if (pds + PCI_ROM_LAST_IMAGE_OFFSET + 1 >= end)
+> +			break;
+> +		last_image = readb(pds + PCI_ROM_LAST_IMAGE_OFFSET) & 0x80;
+> +		length = readw(pds + PCI_ROM_LAST_IMAGE_LEN_OFFSET);
+>  		image += length * 512;
+>  		/* Avoid iterating through memory outside the resource window */
+> -		if (image >= rom + size)
+> +		if (image + 2 >= end)
+>  			break;
+>  		if (!last_image) {
+>  			if (readw(image) != 0xAA55) {
+
+I agree that defensive programming helps, but I think it's too much in this
+case. We may relax and do less, but comprehensive checks.
+
+...
+
+Thanks for the testing and proposing a fix, nevertheless!
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
 
