@@ -1,119 +1,185 @@
-Return-Path: <linux-pci+bounces-41627-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41628-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE795C6F0E6
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 14:54:08 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id A19E1C6F146
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 14:57:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4B0913A6F58
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 13:45:49 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D4B8F345584
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 13:49:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ECE435FF54;
-	Wed, 19 Nov 2025 13:45:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43EB336402D;
+	Wed, 19 Nov 2025 13:48:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t75TnyXa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KA20TCoH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F26035A151;
-	Wed, 19 Nov 2025 13:45:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C7A35FF6C;
+	Wed, 19 Nov 2025 13:48:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763559934; cv=none; b=Dy4EdMDMK+WS6Dmvkm+Kp1J0Swaxt3NZ4NVfPvFv9Jsashw8I/T8+8H9O2fEcmY9QpZF1b73N6kcC6jWmz1SMdUyUBRmjhblf+LRYytDDjGzKM/uX6CNc0qpUwzc9RIDWos2dXUd2ANzn5KztXNZBb7mAoTvBJfpRD9Zy1LcIso=
+	t=1763560122; cv=none; b=VD9p+uybpNwr/pZyTpcduXDajHXuEUcXq98C0/fGgCn7kCT9uEKyVnCexVpq+DKpr3hiQsGDic8JYH2mlqIk277SyG946o4FtzwHfdUYPjGmhsepTAM3bm+B/N8ippfJ4FNM9YWayTgnhSTEONQGQeM58lgC10cN3jDQwKCydVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763559934; c=relaxed/simple;
-	bh=P3o8RHvDAEnUuERCe1BMnR1YwR+dMea/ZoAi5ZBXv90=;
+	s=arc-20240116; t=1763560122; c=relaxed/simple;
+	bh=WBVxdPHFlyOgnD3YarukkHOdXbptm0KrfxkS3OxiyOA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lbf/AEABb3uAI1ThvZVvGpffm8GAltUHtFkwbJeYhI75EkNH+FkF00zu0jSOqtumrX+mZQMa0xMLHZML545DeDIZuZPsAyxPR5/q1rj1S/1lh465h2Trg8FpXZuhVw1I7iuzNtHHy71phLEi6s6njohhT4CcIpOoJLmW1cR7+O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t75TnyXa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD7BBC16AAE;
-	Wed, 19 Nov 2025 13:45:30 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=fefCQ6x2ExQHqX9kN9w2TX9PZd57SEWWMGkIJrvlO9ZRnYHUY4aYJKRHb0yF2vI6m7+Zny9ibO4YzX6Tm6ih2lWr24ZG7KgM8qw7DU3+lsj80OSekR+IFX+78qmEnzu5ZW9fsu5UMk2HE3hX/wXTt42D34iAkP1trn3qXu1/pgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KA20TCoH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92F90C2BCB3;
+	Wed, 19 Nov 2025 13:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763559931;
-	bh=P3o8RHvDAEnUuERCe1BMnR1YwR+dMea/ZoAi5ZBXv90=;
+	s=k20201202; t=1763560121;
+	bh=WBVxdPHFlyOgnD3YarukkHOdXbptm0KrfxkS3OxiyOA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t75TnyXaIaLVKA8TVdFOIbUfmeHo4/btOI2oLFyTwx1lCjsveSchI1EBPOOc8OfEU
-	 7QixraT3KFGSPUvnTVnRthbFaGMDxNTZWUo5Tcxjf6aH53rpaqGFLVSFMNLDizUd3A
-	 QwSiZmvD//HgnssiilLrKxRM4vZ6cmc99aE4Coipe6CFlk1vQCZdASthF5vaDcQnkL
-	 MZ/cNswguYwRmgNRRMqMXz+l4ErdZVCb5X7Kve7bjXyjaAi9nArERygQ5n0D8BaTA5
-	 3+fmL+QNcnPUcs4ADrhIjk+gdWlLU2nzJQQ5TGivxfxYWknTlcOCS90Tp/YEkddNL6
-	 Jp9XI6WLvWISQ==
-Date: Wed, 19 Nov 2025 15:45:26 +0200
+	b=KA20TCoHh4xBpJsET+frUdvFAC1/PD10QEHBCIMaao0WAnseVamH90obusp+eQ5o2
+	 JrhR8HX77yzaqJbG7RbbqAQs3awsq4Yvi7P4lQEZ99DLZaMLoKH1/O5e8/LLveXrkv
+	 HCKoHyda54qc27+KsHvuXB6+0wPcCgAO6rsNtdaEMFdpPZjPGtqLRxBnqe3Arlb9EG
+	 osGef8+spXexQcAOPEgMRnoYG//AXXDg2MNWYqsnZOs0wHsYLRrmAJ/9zE8Pdo+dbS
+	 CMLK4jt8qhrjL3QY8uNgMZwKArml4umHyJINrVhyQzJ9qdxF59lBOeH32HAdcfhxrX
+	 lBCpSzaidWhXw==
+Date: Wed, 19 Nov 2025 15:48:36 +0200
 From: Leon Romanovsky <leon@kernel.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: "Tian, Kevin" <kevin.tian@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Bjorn Helgaas <bhelgaas@google.com>,
 	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
 	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
 	Will Deacon <will@kernel.org>,
 	Marek Szyprowski <m.szyprowski@samsung.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Kees Cook <kees@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Ankit Agrawal <ankita@nvidia.com>,
 	Yishai Hadas <yishaih@nvidia.com>,
 	Shameer Kolothum <skolothumtho@nvidia.com>,
+	Kevin Tian <kevin.tian@intel.com>,
 	Alex Williamson <alex@shazbot.org>,
 	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	Alex Mastro <amastro@fb.com>, Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [PATCH v8 06/11] dma-buf: provide phys_vec to scatter-gather
- mapping routine
-Message-ID: <20251119134526.GE18335@unreal>
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, iommu@lists.linux.dev,
+	linux-mm@kvack.org, linux-doc@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
+	Nicolin Chen <nicolinc@nvidia.com>
+Subject: Re: [Linaro-mm-sig] [PATCH v8 06/11] dma-buf: provide phys_vec to
+ scatter-gather mapping routine
+Message-ID: <20251119134836.GF18335@unreal>
 References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
  <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
- <BN9PR11MB5276BC3C0BDA85F0259A35058CD7A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20251119133000.GB18335@unreal>
- <20251119133708.GM17968@ziepe.ca>
+ <8a11b605-6ac7-48ac-8f27-22df7072e4ad@amd.com>
+ <20251119132511.GK17968@ziepe.ca>
+ <69436b2a-108d-4a5a-8025-c94348b74db6@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251119133708.GM17968@ziepe.ca>
+In-Reply-To: <69436b2a-108d-4a5a-8025-c94348b74db6@amd.com>
 
-On Wed, Nov 19, 2025 at 09:37:08AM -0400, Jason Gunthorpe wrote:
-> On Wed, Nov 19, 2025 at 03:30:00PM +0200, Leon Romanovsky wrote:
-> > On Wed, Nov 19, 2025 at 05:54:55AM +0000, Tian, Kevin wrote:
-> > > > From: Leon Romanovsky <leon@kernel.org>
-> > > > Sent: Tuesday, November 11, 2025 5:58 PM
-> > > > +
-> > > > +	if (dma->state && dma_use_iova(dma->state)) {
-> > > > +		WARN_ON_ONCE(mapped_len != size);
-> > > 
-> > > then "goto err_unmap_dma".
+On Wed, Nov 19, 2025 at 02:42:18PM +0100, Christian K�nig wrote:
+> On 11/19/25 14:25, Jason Gunthorpe wrote:
+> > On Wed, Nov 19, 2025 at 02:16:57PM +0100, Christian K�nig wrote:
+> >>> +/**
+> >>> + * dma_buf_map - Returns the scatterlist table of the attachment from arrays
+> >>> + * of physical vectors. This funciton is intended for MMIO memory only.
+> >>> + * @attach:	[in]	attachment whose scatterlist is to be returned
+> >>> + * @provider:	[in]	p2pdma provider
+> >>> + * @phys_vec:	[in]	array of physical vectors
+> >>> + * @nr_ranges:	[in]	number of entries in phys_vec array
+> >>> + * @size:	[in]	total size of phys_vec
+> >>> + * @dir:	[in]	direction of DMA transfer
+> >>> + *
+> >>> + * Returns sg_table containing the scatterlist to be returned; returns ERR_PTR
+> >>> + * on error. May return -EINTR if it is interrupted by a signal.
+> >>> + *
+> >>> + * On success, the DMA addresses and lengths in the returned scatterlist are
+> >>> + * PAGE_SIZE aligned.
+> >>> + *
+> >>> + * A mapping must be unmapped by using dma_buf_unmap().
+> >>> + */
+> >>> +struct sg_table *dma_buf_map(struct dma_buf_attachment *attach,
+> >>
+> >> That is clearly not a good name for this function. We already have overloaded the term *mapping* with something completely different.
+> >>
+> >>> +			     struct p2pdma_provider *provider,
+> >>> +			     struct dma_buf_phys_vec *phys_vec,
+> >>> +			     size_t nr_ranges, size_t size,
+> >>> +			     enum dma_data_direction dir)
+> >>> +{
+> >>> +	unsigned int nents, mapped_len = 0;
+> >>> +	struct dma_buf_dma *dma;
+> >>> +	struct scatterlist *sgl;
+> >>> +	dma_addr_t addr;
+> >>> +	size_t i;
+> >>> +	int ret;
+> >>> +
+> >>> +	dma_resv_assert_held(attach->dmabuf->resv);
+> >>> +
+> >>> +	if (WARN_ON(!attach || !attach->dmabuf || !provider))
+> >>> +		/* This function is supposed to work on MMIO memory only */
+> >>> +		return ERR_PTR(-EINVAL);
+> >>> +
+> >>> +	dma = kzalloc(sizeof(*dma), GFP_KERNEL);
+> >>> +	if (!dma)
+> >>> +		return ERR_PTR(-ENOMEM);
+> >>> +
+> >>> +	switch (pci_p2pdma_map_type(provider, attach->dev)) {
+> >>> +	case PCI_P2PDMA_MAP_BUS_ADDR:
+> >>> +		/*
+> >>> +		 * There is no need in IOVA at all for this flow.
+> >>> +		 */
+> >>> +		break;
+> >>> +	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
+> >>> +		dma->state = kzalloc(sizeof(*dma->state), GFP_KERNEL);
+> >>> +		if (!dma->state) {
+> >>> +			ret = -ENOMEM;
+> >>> +			goto err_free_dma;
+> >>> +		}
+> >>> +
+> >>> +		dma_iova_try_alloc(attach->dev, dma->state, 0, size);
+> >>
+> >> Oh, that is a clear no-go for the core DMA-buf code.
+> >>
+> >> It's intentionally up to the exporter how to create the DMA
+> >> addresses the importer can work with.
 > > 
-> > It never should happen, there is no need to provide error unwind to
-> > something that you won't get.
+> > I can't fully understand this remark?
 > 
-> It is expected that WARN_ON has recovery code, if it is possible and
-> not burdensome.
+> The exporter should be able to decide if it actually wants to use P2P when the transfer has to go through the host bridge (e.g. when IOMMU/bridge routing bits are enabled).
+> 
+> Thinking more about it exporters can now probably call pci_p2pdma_map_type(provider, attach->dev) before calling this function so that is probably ok.
+> 
+> >> We could add something like a dma_buf_sg_helper.c or similar and put it in there.
+> > 
+> > Yes, the intention is this function is an "exporter helper" that an
+> > exporter can call if it wants to help generate the scatterlist.
+> > 
+> > So your "no-go" is just about what file it is in, not anything about
+> > how it works?
+> 
+> Yes, exactly that. Just move it into a separate file somewhere and it's probably good to go as far as I can see.
+> 
+> But only take that as Acked-by, I would need at least a day (or week) of free time to wrap my head around all the technical details again. And that is something I won't have before January or even later.
 
-It’s not necessary, but since I’m calculating mapped_len again, it’s natural—and completely
-harmless—to double-check the arithmetic.
+If it helps, we can meet at LPC. Jason and/or I will be happy to assist.
 
 Thanks
 
 > 
-> Jason
+> Regards,
+> Christian.
+> 
+> > 
+> > Thanks,
+> > Jason
+> 
 
