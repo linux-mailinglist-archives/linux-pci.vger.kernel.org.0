@@ -1,147 +1,102 @@
-Return-Path: <linux-pci+bounces-41587-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41588-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FA95C6D4B4
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 09:06:53 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBB04C6D665
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 09:27:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id 3F8652C3C7
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 08:06:52 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id 05E572D5EE
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 08:27:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 326A1326922;
-	Wed, 19 Nov 2025 08:03:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53266328B70;
+	Wed, 19 Nov 2025 08:26:39 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C1DE2DC32E;
-	Wed, 19 Nov 2025 08:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78F1328B56;
+	Wed, 19 Nov 2025 08:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763539426; cv=none; b=LYTPGvctAmhwftiJROrf/WoDUNC2AzKfplFOpeqtFm/gvfPPuSiPhr4WNH2naZu9f7PIUVReY/HJjo3LfNKzqPyWiJ8SyaL/pq53CAt8C4WkyKLl2N4f1haZyp4iXn95Po5Y1mAM44m9ulsxBMmeuoEk5t71g16weI/0aV5Y6HY=
+	t=1763540799; cv=none; b=RCdHRFW+XEgsdvbEYgTUe/zF5a7W/xILD2zkNw2LeD3B1qgxhOJugrPfsdk248gQBYD/IIQWx2b3SY3ZUloaSc7giQTvc2sdHE8FwgisCPIA1AiuRj+hCQPFyX3kzMFR1RgyvsGn8SghU97pj//bavsEoTKQGRTfL/RuPBSvQmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763539426; c=relaxed/simple;
-	bh=e/H6vW41fo2bvHSftL/gRerCHI3QYwEuO4RpiZsYgD0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=ALPhS0DT4BXi3/OvTS5QBlyd1iGrFDiUdEPTAu1kjyu6CVIC1t8WmlwKyF/1vLUMzNGCz7Hv5q3PKMct+/UntRrPMrctxV39gp4CCUw/JTj6gSertzKVWxHawO0bvrlAXIgMbsqJNjGZTFgGWnDazk57puUjc13lb5MEpVQu1ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
- ajax-webmail-app2 (Coremail) ; Wed, 19 Nov 2025 16:03:22 +0800 (GMT+08:00)
-Date: Wed, 19 Nov 2025 16:03:22 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-To: "Manivannan Sadhasivam" <mani@kernel.org>
-Cc: "Bjorn Helgaas" <helgaas@kernel.org>,
-	"Manivannan Sadhasivam" <manivannan.sadhasivam@oss.qualcomm.com>,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	will@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, robh@kernel.org,
-	linux-arm-msm@vger.kernel.org, vincent.guittot@linaro.org
-Subject: Re: Re: [PATCH v2 2/3] PCI: qcom: Check for the presence of a
- device instead of Link up during suspend
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <qu3gnvl7t7ehpxhkchz6ragjoeafktwr4dtstattthfv3jezd7@zrfwrlr2vzx5>
-References: <zgj3ubyb234ig6ndz6ov5q3szvuxnd3jkz2rjglbad4ksri6nl@ov7boxuar4va>
- <20251113172250.GA2291436@bhelgaas>
- <qu3gnvl7t7ehpxhkchz6ragjoeafktwr4dtstattthfv3jezd7@zrfwrlr2vzx5>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1763540799; c=relaxed/simple;
+	bh=JoUwFWeauGilOKqObiO9RqGOULtI6Vb7USPVXnJc++M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vc/kBAGOF5oNmQTuxP4pmtPw6he+jPdQ4q3auycIA+cdEKj1sgzF7/xv5GmuX0w/hKCItZW7uk3F02/gS9bunLXZIzw6JjsiCXuLbuJbM9/gSqQwxkaLbk/3mnDA9nkJ2iKZF0yTRss3yhOWQniVHgbR0j9yzpD5ZUUyW4VUIAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id AA6D72C000A9;
+	Wed, 19 Nov 2025 09:26:27 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 77875E7B8; Wed, 19 Nov 2025 09:26:27 +0100 (CET)
+Date: Wed, 19 Nov 2025 09:26:27 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: dan.j.williams@intel.com
+Cc: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, bhelgaas@google.com,
+	shiju.jose@huawei.com, ming.li@zohomail.com,
+	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+	Benjamin.Cheatham@amd.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [RESEND v13 08/25] CXL/AER: Move AER drivers RCH error handling
+ into pcie/aer_cxl_rch.c
+Message-ID: <aR1_M_i3yIygd8v-@wunner.de>
+References: <20251104170305.4163840-1-terry.bowman@amd.com>
+ <20251104170305.4163840-9-terry.bowman@amd.com>
+ <691d377611d7b_1a37510056@dwillia2-mobl4.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <7b8d757a.542.19a9b23bda4.Coremail.zhangsenchuan@eswincomputing.com>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:TQJkCgBnq67KeR1pz6h8AA--.2066W
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAQELBmkcn
-	4IUUQABsh
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWDJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <691d377611d7b_1a37510056@dwillia2-mobl4.notmuch>
 
-CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiTWFuaXZhbm5hbiBTYWRo
-YXNpdmFtIiA8bWFuaUBrZXJuZWwub3JnPgo+IFNlbmQgdGltZTpUdWVzZGF5LCAxOC8xMS8yMDI1
-IDAxOjM3OjAxCj4gVG86ICJCam9ybiBIZWxnYWFzIiA8aGVsZ2Fhc0BrZXJuZWwub3JnPgo+IENj
-OiAiTWFuaXZhbm5hbiBTYWRoYXNpdmFtIiA8bWFuaXZhbm5hbi5zYWRoYXNpdmFtQG9zcy5xdWFs
-Y29tbS5jb20+LCBscGllcmFsaXNpQGtlcm5lbC5vcmcsIGt3aWxjenluc2tpQGtlcm5lbC5vcmcs
-IGJoZWxnYWFzQGdvb2dsZS5jb20sIHdpbGxAa2VybmVsLm9yZywgbGludXgtcGNpQHZnZXIua2Vy
-bmVsLm9yZywgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZywgcm9iaEBrZXJuZWwub3JnLCBs
-aW51eC1hcm0tbXNtQHZnZXIua2VybmVsLm9yZywgemhhbmdzZW5jaHVhbkBlc3dpbmNvbXB1dGlu
-Zy5jb20sIHZpbmNlbnQuZ3VpdHRvdEBsaW5hcm8ub3JnCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2
-MiAyLzNdIFBDSTogcWNvbTogQ2hlY2sgZm9yIHRoZSBwcmVzZW5jZSBvZiBhIGRldmljZSBpbnN0
-ZWFkIG9mIExpbmsgdXAgZHVyaW5nIHN1c3BlbmQKPiAKPiBPbiBUaHUsIE5vdiAxMywgMjAyNSBh
-dCAxMToyMjo1MEFNIC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOgo+ID4gT24gVGh1LCBOb3Yg
-MTMsIDIwMjUgYXQgMTA6MjQ6MTdQTSArMDUzMCwgTWFuaXZhbm5hbiBTYWRoYXNpdmFtIHdyb3Rl
-Ogo+ID4gPiBPbiBUaHUsIE5vdiAxMywgMjAyNSBhdCAxMDo0MTo0N0FNIC0wNjAwLCBCam9ybiBI
-ZWxnYWFzIHdyb3RlOgo+ID4gPiA+IE9uIEZyaSwgTm92IDA3LCAyMDI1IGF0IDEwOjEzOjE4QU0g
-KzA1MzAsIE1hbml2YW5uYW4gU2FkaGFzaXZhbSB3cm90ZToKPiA+ID4gPiA+IFRoZSBzdXNwZW5k
-IGhhbmRsZXIgY2hlY2tzIGZvciB0aGUgUENJZSBMaW5rIHVwIHRvIGRlY2lkZSB3aGVuIHRvIHR1
-cm4gb2ZmCj4gPiA+ID4gPiB0aGUgY29udHJvbGxlciByZXNvdXJjZXMuIEJ1dCB0aGlzIGNoZWNr
-IGlzIHJhY3kgYXMgdGhlIFBDSWUgTGluayBjYW4gZ28KPiA+ID4gPiA+IGRvd24ganVzdCBhZnRl
-ciB0aGlzIGNoZWNrLgo+ID4gPiA+ID4gCj4gPiA+ID4gPiBTbyB1c2UgdGhlIG5ld2x5IGludHJv
-ZHVjZWQgQVBJLCBwY2lfcm9vdF9wb3J0c19oYXZlX2RldmljZSgpIHRoYXQgY2hlY2tzCj4gPiA+
-ID4gPiBmb3IgdGhlIHByZXNlbmNlIG9mIGEgZGV2aWNlIHVuZGVyIGFueSBvZiB0aGUgUm9vdCBQ
-b3J0cyB0byByZXBsYWNlIHRoZQo+ID4gPiA+ID4gTGluayB1cCBjaGVjay4KPiA+ID4gPiAKPiA+
-ID4gPiBXaHkgaXMgcGNpX3Jvb3RfcG9ydHNfaGF2ZV9kZXZpY2UoKSBpdHNlbGYgbm90IHJhY3k/
-Cj4gPiA+IAo+ID4gPiBCZWNhdXNlIGl0IGlzIHZlcnkgdW5jb21tb24gZm9yIHRoZSAncGNpX2Rl
-dicgdG8gZ28gYXdheSBkdXJpbmcgdGhlCj4gPiA+IGhvc3QgY29udHJvbGxlciBzdXNwZW5kLiBJ
-dCBtaWdodCBzdGlsbCBiZSBwb3NzaWJsZSBpbiBlZGdlIGNhc2VzLAo+ID4gPiBidXQgdmVyeSBj
-b21tb24gYXMgdGhlIGxpbmsgZG93bi4gSSBjYW4gcmV3b3JkIGl0Lgo+ID4gCj4gPiBJIGd1ZXNz
-IGl0J3MgYmV0dGVyIHRvIGFja25vd2xlZGdlIHJlcGxhY2luZyBvbmUgcmFjZSB3aXRoIGFub3Ro
-ZXIKPiA+IHRoYW4gaXQgd291bGQgYmUgdG8gc3VnZ2VzdCB0aGF0IHRoaXMgKnJlbW92ZXMqIGEg
-cmFjZS4KPiA+IAo+IAo+IE9rLgo+IAo+ID4gQnV0IEkgZG9uJ3QgdW5kZXJzdGFuZCB0aGUgcG9p
-bnQgb2YgdGhpcy4gIElzCj4gPiBwY2lfcm9vdF9wb3J0c19oYXZlX2RldmljZSgpICpsZXNzKiBy
-YWN5IHRoYW4gdGhlCj4gPiBxY29tX3BjaWVfc3VzcGVuZF9ub2lycSgpIGNoZWNrPyAgV2h5IHdv
-dWxkIHRoYXQgYmU/Cj4gPiAKPiAKPiBUaGUgY2hlY2sgaXMgc3VwcG9zZWQgdG8gcGVyZm9ybSBk
-ZWluaXQgb25seSBpZiB0aGVyZSBhcmUgbm8gZGV2aWNlcyBjb25uZWN0ZWQKPiB0byB0aGUgc2xv
-dC4gQW5kIHRoZSByZWFzb24gdG8gc2tpcCB0aGUgZGVpbml0IHdhcyBtb3N0bHkgZHVlIHRvIGRy
-aXZlciBiZWhhdmlvcgo+IGxpa2UgTlZNZSBkcml2ZXIsIHdoaWNoIGV4cGVjdHMgdGhlIGRldmlj
-ZSB0byBiZSBpbiBEMCBldmVuIGR1cmluZyBzeXN0ZW0KPiBzdXNwZW5kIG9uIG5vbi14ODYgcGxh
-dGZvcm1zLgo+IAo+IFNpbmNlIHRoZSBjaGVjayBpcyBmb3IgdGhlIGV4aXN0ZW5jZSBvZiB0aGUg
-ZGV2aWNlIG5ldmVydGhlbGVzcywgSSB0aG91Z2h0LAo+IG1ha2luZyB1c2Ugb2YgcGNpX3Jvb3Rf
-cG9ydHNfaGF2ZV9kZXZpY2UoKSBzZXJ2ZXMgdGhlIHB1cnBvc2UgaW5zdGVhZCBvZgo+IGNoZWNr
-aW5nIHRoZSBkYXRhIGxpbmsgbGF5ZXIgc3RhdHVzLgo+IAo+ID4gSSdtIGtpbmQgb2Ygc2tlcHRp
-Y2FsIGFib3V0IGFkZGluZyBwY2lfcm9vdF9wb3J0c19oYXZlX2RldmljZSgpIGF0Cj4gPiBhbGwu
-ICBJdCBzZWVtcyBsaWtlIGl0IGp1c3QgZW5jb3VyYWdlcyByYWN5IGJlaGF2aW9yIGluIGRyaXZl
-cnMuCj4gPiAKPiAKPiBJIGFncmVlIHRoYXQgdGhvdWdoIGl0IGlzIG5vdCB2ZXJ5IGNvbW1vbiwg
-YnV0IHdpdGggYXN5bmMgc3VzcGVuZCwgaXQgaXMKPiBwb3NzaWJsZSB0aGF0ICdwY2lfZGV2JyBt
-YXkgZ2V0IHJlbW92ZWQgZHVyaW5nIGNvbnRyb2xsZXIgc3VzcGVuZC4KPiAKPiBTbyBJJ3ZlIGRy
-b3BwZWQgdGhpcyBzZXJpZXMgZnJvbSBjb250cm9sbGVyL2R3YyB1bnRpbCB3ZSBjb25jbHVkZS4K
-PiAKCkhpLCBNYW5pCgpJIHNlZSB0aGF0IHRoaXMgc2VyaWVzIGZyb20gY29udHJvbGxlci9kd2Mg
-aGFzIGJlZW4gdGVtcG9yYXJpbHkgcmVtb3ZlZC4gCkRvIEkgbmVlZCB0byB3YWl0IGZvciBhIGNv
-bmNsdXNpb24gbGF0ZXIgYmVmb3JlIHN1Ym1pdHRpbmcgdGhlIGNvZGUsIG9yCmRvIEkgbmVlZCB0
-byBjb250aW51ZSBzdWJtaXR0aW5nIHRoZSBwY2llIHY2IHBhdGNoIGJhc2VkIG9uIHRoZSBsYXRl
-c3QgCjYuMTgtcmM2IGJyYW5jaD8KCktpbmQgcmVnYXJkcywKU2VuY2h1YW4gWmhhbmcKCj4gCj4g
-PiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNYW5pdmFubmFuIFNhZGhhc2l2YW0gPG1hbml2YW5uYW4u
-c2FkaGFzaXZhbUBvc3MucXVhbGNvbW0uY29tPgo+ID4gPiA+ID4gLS0tCj4gPiA+ID4gPiAgZHJp
-dmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1xY29tLmMgfCA2ICsrKystLQo+ID4gPiA+ID4g
-IDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gPiA+ID4g
-PiAKPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ll
-LXFjb20uYyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtcWNvbS5jCj4gPiA+ID4g
-PiBpbmRleCA4MDVlZGJiZmU3ZWIuLmIyYjg5ZTJlNDkxNiAxMDA2NDQKPiA+ID4gPiA+IC0tLSBh
-L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtcWNvbS5jCj4gPiA+ID4gPiArKysgYi9k
-cml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLXFjb20uYwo+ID4gPiA+ID4gQEAgLTIwMTgs
-NiArMjAxOCw3IEBAIHN0YXRpYyBpbnQgcWNvbV9wY2llX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYpCj4gPiA+ID4gPiAgc3RhdGljIGludCBxY29tX3BjaWVfc3VzcGVuZF9ub2ly
-cShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiA+ID4gPiAgewo+ID4gPiA+ID4gIAlzdHJ1Y3QgcWNv
-bV9wY2llICpwY2llOwo+ID4gPiA+ID4gKwlzdHJ1Y3QgZHdfcGNpZV9ycCAqcHA7Cj4gPiA+ID4g
-PiAgCWludCByZXQgPSAwOwo+ID4gPiA+ID4gIAo+ID4gPiA+ID4gIAlwY2llID0gZGV2X2dldF9k
-cnZkYXRhKGRldik7Cj4gPiA+ID4gPiBAQCAtMjA1Myw4ICsyMDU0LDkgQEAgc3RhdGljIGludCBx
-Y29tX3BjaWVfc3VzcGVuZF9ub2lycShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiA+ID4gPiAgCSAq
-IHBvd2VyZG93biBzdGF0ZS4gVGhpcyB3aWxsIGFmZmVjdCB0aGUgbGlmZXRpbWUgb2YgdGhlIHN0
-b3JhZ2UgZGV2aWNlcwo+ID4gPiA+ID4gIAkgKiBsaWtlIE5WTWUuCj4gPiA+ID4gPiAgCSAqLwo+
-ID4gPiA+ID4gLQlpZiAoIWR3X3BjaWVfbGlua191cChwY2llLT5wY2kpKSB7Cj4gPiA+ID4gPiAt
-CQlxY29tX3BjaWVfaG9zdF9kZWluaXQoJnBjaWUtPnBjaS0+cHApOwo+ID4gPiA+ID4gKwlwcCA9
-ICZwY2llLT5wY2ktPnBwOwo+ID4gPiA+ID4gKwlpZiAoIXBjaV9yb290X3BvcnRzX2hhdmVfZGV2
-aWNlKHBwLT5icmlkZ2UtPmJ1cykpIHsKPiA+ID4gPiA+ICsJCXFjb21fcGNpZV9ob3N0X2RlaW5p
-dChwcCk7Cj4gPiA+ID4gPiAgCQlwY2llLT5zdXNwZW5kZWQgPSB0cnVlOwo+ID4gPiA+ID4gIAl9
-Cj4gPiA+ID4gPiAgCj4gPiA+ID4gPiAtLSAKPiA+ID4gPiA+IDIuNDguMQo+ID4gPiA+ID4gCj4g
-PiA+IAo+ID4gPiAtLSAKCg==
+On Tue, Nov 18, 2025 at 07:20:22PM -0800, dan.j.williams@intel.com wrote:
+> > +++ b/drivers/pci/pcie/aer.c
+> > @@ -1130,7 +1130,7 @@ static bool find_source_device(struct pci_dev *parent,
+> >   * Note: AER must be enabled and supported by the device which must be
+> >   * checked in advance, e.g. with pcie_aer_is_native().
+> >   */
+> > -static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+> > +void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+> >  {
+> >  	int aer = dev->aer_cap;
+> >  	u32 mask;
+> > @@ -1143,116 +1143,25 @@ static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+> >  	mask &= ~PCI_ERR_COR_INTERNAL;
+> >  	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
+> >  }
+> > +EXPORT_SYMBOL_GPL(pci_aer_unmask_internal_errors);
+> 
+> I can not imagine any other driver but the CXL core consuming this
+> symbol, so how about:
+> 
+> EXPORT_SYMBOL_FOR_MODULES(pci_aer_unmask_internal_errors, "cxl_core")
+
+The "xe" driver needs to unmask Uncorrectable Internal Errors
+(the default is "masked" per PCIe r7.0 sec 7.8.4.3) and could
+take advantage of this helper, so I've asked Terry to keep it
+available for anyone to use:
+
+https://lore.kernel.org/all/aK66OcdL4Meb0wFt@wunner.de/
+
+Thanks,
+
+Lukas
 
