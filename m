@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-41590-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41591-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B04CBC6D951
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 10:06:05 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 601A3C6D92D
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 10:04:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6D3374F8ADC
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 08:59:03 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTPS id 7AE992C063
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 09:02:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DB2732F745;
-	Wed, 19 Nov 2025 08:59:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12ACE3321C2;
+	Wed, 19 Nov 2025 09:02:54 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F2B32F742;
-	Wed, 19 Nov 2025 08:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C465B2FE57F;
+	Wed, 19 Nov 2025 09:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763542740; cv=none; b=IiQCyz0KmDpXV5DUSfS5+Cx1USTqPxgenIkvoFipOymMzTWMIZinvkFftWutfxOGfQ1zJz5UIWjhc0/vUTDFdNKb2pJ6Az+jfGEgB7w/l118wNxdCAc2+6KV5ERwlpojbU+6I8Nf0VttrFB7Et++JlPIAszBXgPpNNOt/rvgc6I=
+	t=1763542974; cv=none; b=L28ZAfO/VtcJn29OtkablxTRGHAV7ZRHPk/3udujPOucGkem6MXVB+6B2eZK9VBFusMaAYUVkflCcKtGhphylurcf9bqz1OOlTj8NlCU5JBxfAq/o4+5ann/KqV3Fvk6CORgAfu+u7UHzUzpmrPNL9nX7epmGEvPeHMYs5d5YqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763542740; c=relaxed/simple;
-	bh=pmzNbhnerjQ6nTAtpcMY6dtHILNg80J3lOP1vhbuUhM=;
-	h=Message-ID:In-Reply-To:References:From:Date:Subject:To:Cc; b=py7YJOXy4TGyy6LZ5S+9gRGfrfFVZtNtvqIrVyEvih6vW/8hWY1fQr7Wq3pwMjfOybd+ms6jGlhUwN1M5kDQ7nTL3sCcV3FTpJNSdqMoZm3w1BhJ09Dl2O1/KA9AaT2EeptjXqWWn+Sy6Din6USdegkOWbsRMvQcnCTA8kl9IaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=176.9.242.62
+	s=arc-20240116; t=1763542974; c=relaxed/simple;
+	bh=khznexja99m3YUAOOMMS1nQluaxouTojtHSeGANLr3k=;
+	h=Message-ID:In-Reply-To:References:From:Date:Subject:To:Cc; b=JhWvQ5mwOe5NAf/oUTRk61ns/pJMdNewLCbExrBCC8F1pFA6jAb6Nipn2bA6M1++2lYRhBgsviEFPCb1z0T/Tiz80oF4+t133TBUeXyXLoKnk9G7BEf2yMpQpsLXfMraMklD+VF/PiHAlvvQr4Dk9B6cFnaPfA1UMjaxWzHOwN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.240
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384
 	 client-signature ECDSA (secp384r1) client-digest SHA384)
 	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 5F1E02C000B0;
-	Wed, 19 Nov 2025 09:58:56 +0100 (CET)
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id CA1C7200803E;
+	Wed, 19 Nov 2025 10:02:43 +0100 (CET)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 36BA4D5EC; Wed, 19 Nov 2025 09:58:56 +0100 (CET)
-Message-ID: <094f2aad64418710daf0940112abe5a0afdc6bce.1763483367.git.lukas@wunner.de>
+	id C0714E729; Wed, 19 Nov 2025 10:02:43 +0100 (CET)
+Message-ID: <fd167945bd7852e1ca08cd4b202130659eea2c2f.1763483367.git.lukas@wunner.de>
 In-Reply-To: <cover.1763483367.git.lukas@wunner.de>
 References: <cover.1763483367.git.lukas@wunner.de>
 From: Lukas Wunner <lukas@wunner.de>
-Date: Wed, 19 Nov 2025 09:50:01 +0100
-Subject: [PATCH v2 1/3] PCI/PM: Reinstate clearing state_saved in legacy and
- !pm codepaths
+Date: Wed, 19 Nov 2025 09:50:02 +0100
+Subject: [PATCH v2 2/3] PCI/PM: Stop needlessly clearing state_saved on
+ enumeration and thaw
 To: Bjorn Helgaas <helgaas@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>
 Cc: Riana Tauro <riana.tauro@intel.com>, "Sean C. Dardis" <sean.c.dardis@intel.com>, Farhan Ali <alifm@linux.ibm.com>, Benjamin Block <bblock@linux.ibm.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Alek Du <alek.du@intel.com>, "Mahesh J Salgaonkar" <mahesh@linux.ibm.com>, Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
 Precedence: bulk
@@ -52,83 +52,52 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-When a PCI device is suspended, it is normally the PCI core's job to save
-Config Space and put the device into a low power state.  However drivers
-are allowed to assume these responsibilities.  When they do, the PCI core
-can tell by looking at the state_saved flag in struct pci_dev:  The flag
-is cleared before commencing the suspend sequence and it is set when
-pci_save_state() is called.  If the PCI core finds the flag set late in
-the suspend sequence, it refrains from calling pci_save_state() itself.
+The state_saved flag tells the PCI core whether a driver assumes
+responsibility to save Config Space and put the device into a low power
+state on suspend.
 
-But there are two corner cases where the PCI core neglects to clear the
-flag before commencing the suspend sequence:
+The flag is currently initialized to false on enumeration, even though it
+already is false (because struct pci_dev is zeroed by kzalloc()) and even
+though it is set to false before commencing the suspend sequence (the only
+code path where it's relevant).
 
-* If a driver has legacy PCI PM callbacks, pci_legacy_suspend() neglects
-  to clear the flag.  The (stale) flag is subsequently queried by
-  pci_legacy_suspend() itself and pci_legacy_suspend_late().
+The flag is also set to false in pci_pm_thaw(), i.e. on resume, when it's
+no longer relevant.
 
-* If a device has no driver or its driver has no PCI PM callbacks,
-  pci_pm_freeze() neglects to clear the flag.  The (stale) flag is
-  subsequently queried by pci_pm_freeze_noirq().
+Drop these two superfluous flag assignments for simplicity.
 
-The flag may be set prior to suspend if the device went through error
-recovery:  Drivers commonly invoke pci_restore_state() + pci_save_state()
-to restore Config Space after reset.
-
-The flag may also be set if drivers call pci_save_state() on probe to
-allow for recovery from subsequent errors.
-
-The result is that pci_legacy_suspend_late() and pci_pm_freeze_noirq()
-don't call pci_save_state() and so the state that will be restored on
-resume is the one recorded on last error recovery or on probe, not the one
-that the device had on suspend.  If the two states happen to be identical,
-there's no problem.
-
-Reinstate clearing the flag in pci_legacy_suspend() and pci_pm_freeze().
-The two functions used to do that until commit 4b77b0a2ba27 ("PCI: Clear
-saved_state after the state has been restored") deemed it unnecessary
-because it assumed that it's sufficient to clear the flag on resume in
-pci_restore_state().  The commit seemingly did not take into account that
-pci_save_state() and pci_restore_state() are not only used by power
-management code, but also for error recovery.
-
-Devices without driver or whose driver has no PCI PM callbacks may be in
-runtime suspend when pci_pm_freeze() is called.  Their state has already
-been saved, so don't clear the flag to skip a pointless pci_save_state()
-in pci_pm_freeze_noirq().
-
-None of the drivers with legacy PCI PM callbacks seem to use runtime PM,
-so clear the flag unconditionally in their case.
-
-Fixes: 4b77b0a2ba27 ("PCI: Clear saved_state after the state has been restored")
 Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v2.6.32+
 ---
- drivers/pci/pci-driver.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/pci-driver.c | 2 --
+ drivers/pci/probe.c      | 2 --
+ 2 files changed, 4 deletions(-)
 
 diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 302d61783f6c..327b21c48614 100644
+index 327b21c48614..7c2d9d596258 100644
 --- a/drivers/pci/pci-driver.c
 +++ b/drivers/pci/pci-driver.c
-@@ -629,6 +629,8 @@ static int pci_legacy_suspend(struct device *dev, pm_message_t state)
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	struct pci_driver *drv = pci_dev->driver;
- 
-+	pci_dev->state_saved = false;
-+
- 	if (drv && drv->suspend) {
- 		pci_power_t prev = pci_dev->current_state;
- 		int error;
-@@ -1036,6 +1038,8 @@ static int pci_pm_freeze(struct device *dev)
- 
- 	if (!pm) {
- 		pci_pm_default_suspend(pci_dev);
-+		if (!pm_runtime_suspended(dev))
-+			pci_dev->state_saved = false;
- 		return 0;
+@@ -1133,8 +1133,6 @@ static int pci_pm_thaw(struct device *dev)
+ 		pci_pm_reenable_device(pci_dev);
  	}
  
+-	pci_dev->state_saved = false;
+-
+ 	return error;
+ }
+ 
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index c83e75a0ec12..c7c7a3d5ec0f 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2747,8 +2747,6 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+ 
+ 	pci_reassigndev_resource_alignment(dev);
+ 
+-	dev->state_saved = false;
+-
+ 	pci_init_capabilities(dev);
+ 
+ 	/*
 -- 
 2.51.0
 
