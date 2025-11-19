@@ -1,113 +1,172 @@
-Return-Path: <linux-pci+bounces-41681-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41682-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81FFDC711BA
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 22:06:48 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 662CEC711D5
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 22:10:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id E9B6C24200
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 21:06:45 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 411E134ED31
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 21:09:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B48628DB76;
-	Wed, 19 Nov 2025 21:06:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41BE72E1F08;
+	Wed, 19 Nov 2025 21:08:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QBMghfui"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="otkduF27"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD17727E05F
-	for <linux-pci@vger.kernel.org>; Wed, 19 Nov 2025 21:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFED245012
+	for <linux-pci@vger.kernel.org>; Wed, 19 Nov 2025 21:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763586403; cv=none; b=FwFCbCcdZqKMsB9AKOTDMZaQiLzTJ1hddSCp/Kk3L1AMd8v+WtKbDezWjCzc8pz5cQ3zB69hBQZIcvpRwi5kQya3NDnYv9C3d+jWsgdF7T7TvgAJESJqAo+FBqfhjB4UTACzY4URjuDh51OqRRbQp/HnoRoOWgST6B7JAHPDN8Y=
+	t=1763586538; cv=none; b=rOvmVE6UBV08BNZiojTtNpeWc0lHqTouWWowqZ3uicZx5deAaKlysR6u6IACpnK5U0PNB9AUwGNkN7fXu24uBv91XJJDcOKEneqTp9KLPfLOv4FDfz46Pxd4Sx6cK3DaJY8CmmgCE07bt8ss1kGqCiringN2CS0y4EeKyQwXGn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763586403; c=relaxed/simple;
-	bh=wiW5Im+cSKrUpLwuFCugXLBn/QZFp+ixz0v54vet2DI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=O7vHMrsBUadSBqpHT/GcAF6VJnLmNq3xHF4xFEX1zu9r9C+64/GVBmO4Vsf0n8NnNDR2QtXA+B0DPzgFExAXL4aZDDJQB/Lxic7o7eOtaYTeb1+FDfnsW97eMqoX0N2hdGuxKx2OwHiYiZekdqLHkqm4OgrR8WM+XVwGZ8suAO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QBMghfui; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763586401; x=1795122401;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=wiW5Im+cSKrUpLwuFCugXLBn/QZFp+ixz0v54vet2DI=;
-  b=QBMghfuixpFMpegga385FKIoUSo96VDgBYGetsso3KNLXTrmpSzx96ZM
-   Qy37ktxOlv/gevbG4+IWVELiZmvTfRlWlM41dkfemozAOrY9qWeamKbAw
-   YgYSqCvGvUSVpLNszuYT5/d+/1H9XDFzGjz0fR9vTJ2q3d1SuVzZlbHer
-   9fmuVc/6QmMPXE3vSZueqzzVdZipTMyHjjtugvsshR4Y7IzDvk5ICtNEj
-   Hpl6nBiwsEPKftFUT7btk4HzL9d6u/t34YIvDrmy5I55ksoX2o2UO0MzL
-   0XeFaVUk8y//wnr+KBE1gxhy0rnU5glSql/y1Rhd0OCdIJi1EsCtJ+PDW
-   Q==;
-X-CSE-ConnectionGUID: PpSFwwgsRomPRjGbCnmFiQ==
-X-CSE-MsgGUID: 89x/7ENUSC6UXUMGMapQsQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="65522705"
-X-IronPort-AV: E=Sophos;i="6.19,316,1754982000"; 
-   d="scan'208";a="65522705"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 13:06:41 -0800
-X-CSE-ConnectionGUID: hIx+6T2aTfSWiTVBNXtbqg==
-X-CSE-MsgGUID: d/NUu+AkSNu9XwHBNLowfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,316,1754982000"; 
-   d="scan'208";a="196121227"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 19 Nov 2025 13:06:39 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vLpNt-0003KT-2H;
-	Wed, 19 Nov 2025 21:06:37 +0000
-Date: Thu, 20 Nov 2025 05:05:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>
-Subject: [pci:pwrctrl-tc9563 5/5] undefined reference to
- `i2c_unregister_device'
-Message-ID: <202511200555.M4TX84jK-lkp@intel.com>
+	s=arc-20240116; t=1763586538; c=relaxed/simple;
+	bh=16ZMTChKTjSpq1K5C21d8JLgJneqgfU+d17xRQO+50Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dMLclSLnefAutWzfbJO1pYsph1hHgHXmnT6T+KtejsnHnu4S9ssiNc3K+l6Vb+VXITx7YDl9RruUeRMJoOM7JzphDXCxF+FIxHhj22pC/YlNpIuLYhRW/x85uFh7oBDgkxxe7+KXLqlTAafP6mSEVSObq5RPz6FPSh2/3b3Djts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=otkduF27; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB776C116C6
+	for <linux-pci@vger.kernel.org>; Wed, 19 Nov 2025 21:08:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763586537;
+	bh=16ZMTChKTjSpq1K5C21d8JLgJneqgfU+d17xRQO+50Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=otkduF27NPeuj9DKNWoIdRslIiTT9935uXGl3u/4xMmUgBaHd1YnbW6P7esDHSmw7
+	 6hTdJkbQZM3oNoMlAcUwGLsmNnoZLoqgJiBJ+9HcVhcModTS6oMdaltmiFQS0FiRvi
+	 Aw06CiSCqz3WrlqssNU9yoXhjgPTkMpdNQ4DKWARDDXhwlUBBcm9UR0UBxr70NJeFk
+	 yYx6SqYL6nD54U7Ct+sY8wCb0HuC/G2MGGsGVK6IbCJYFduWIeuaSDdQ2p1PJnGePJ
+	 wR99Xt5Nu/iE0Yzh3wFbwwG1fag1Gt1bssWgARr7Us3Ziia/eZQNRAJ2DLy9Jz1Pve
+	 8vhtmES6VRcvQ==
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-450b5338459so72351b6e.2
+        for <linux-pci@vger.kernel.org>; Wed, 19 Nov 2025 13:08:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU3FoR9klbEEptbqINGrWfXl8m4qjpIDK2+LWx3kN2VvOhvqe9RHYiwTwWmF2Kxt0kC5GFh4Espvoo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPy3E1did18yKoqMYTQBdIE76cgCLuP522mdEUsBNcNrNlOKQV
+	2WuKtssHOzgnqGHKEDJRkhl745l6RDVgRyiP3CtJ79aMYz161dzhL0IDHNdL/xbG662kmsI+Uv3
+	Z6Iys2Ay0id7BxxxaOPWyrgEY1efhHo8=
+X-Google-Smtp-Source: AGHT+IHc04nHlgUwT2+nxDos3Jg4thRAorugNdW8jucP4fYf1TIOLd1CqRyUoTwdLt7mI0uTa8AF3kX48Fvs3/j7cF8=
+X-Received: by 2002:a05:6808:68c9:10b0:44f:8f02:c75a with SMTP id
+ 5614622812f47-451000904a8mr176480b6e.1.1763586536919; Wed, 19 Nov 2025
+ 13:08:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <cover.1763483367.git.lukas@wunner.de> <094f2aad64418710daf0940112abe5a0afdc6bce.1763483367.git.lukas@wunner.de>
+In-Reply-To: <094f2aad64418710daf0940112abe5a0afdc6bce.1763483367.git.lukas@wunner.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 19 Nov 2025 22:08:44 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0gPeQUHY_OpnvGPXgkE2dw4D008V2bFrF14tYgisKD6dQ@mail.gmail.com>
+X-Gm-Features: AWmQ_bnELAxukPfeKquwawkMHEgp3PlGUnRhS77TwPV0fUbQvNQrwqoD1__2ld0
+Message-ID: <CAJZ5v0gPeQUHY_OpnvGPXgkE2dw4D008V2bFrF14tYgisKD6dQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] PCI/PM: Reinstate clearing state_saved in legacy
+ and !pm codepaths
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Riana Tauro <riana.tauro@intel.com>, "Sean C. Dardis" <sean.c.dardis@intel.com>, 
+	Farhan Ali <alifm@linux.ibm.com>, Benjamin Block <bblock@linux.ibm.com>, 
+	Niklas Schnelle <schnelle@linux.ibm.com>, Alek Du <alek.du@intel.com>, 
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org, 
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pwrctrl-tc9563
-head:   72359837ad0d3f2cbc1364d1cba84357d6d38615
-commit: 72359837ad0d3f2cbc1364d1cba84357d6d38615 [5/5] PCI: pwrctrl: Add power control driver for TC9563
-config: alpha-randconfig-r054-20251120 (https://download.01.org/0day-ci/archive/20251120/202511200555.M4TX84jK-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251120/202511200555.M4TX84jK-lkp@intel.com/reproduce)
+On Wed, Nov 19, 2025 at 9:59=E2=80=AFAM Lukas Wunner <lukas@wunner.de> wrot=
+e:
+>
+> When a PCI device is suspended, it is normally the PCI core's job to save
+> Config Space and put the device into a low power state.  However drivers
+> are allowed to assume these responsibilities.  When they do, the PCI core
+> can tell by looking at the state_saved flag in struct pci_dev:  The flag
+> is cleared before commencing the suspend sequence and it is set when
+> pci_save_state() is called.  If the PCI core finds the flag set late in
+> the suspend sequence, it refrains from calling pci_save_state() itself.
+>
+> But there are two corner cases where the PCI core neglects to clear the
+> flag before commencing the suspend sequence:
+>
+> * If a driver has legacy PCI PM callbacks, pci_legacy_suspend() neglects
+>   to clear the flag.  The (stale) flag is subsequently queried by
+>   pci_legacy_suspend() itself and pci_legacy_suspend_late().
+>
+> * If a device has no driver or its driver has no PCI PM callbacks,
+>   pci_pm_freeze() neglects to clear the flag.  The (stale) flag is
+>   subsequently queried by pci_pm_freeze_noirq().
+>
+> The flag may be set prior to suspend if the device went through error
+> recovery:  Drivers commonly invoke pci_restore_state() + pci_save_state()
+> to restore Config Space after reset.
+>
+> The flag may also be set if drivers call pci_save_state() on probe to
+> allow for recovery from subsequent errors.
+>
+> The result is that pci_legacy_suspend_late() and pci_pm_freeze_noirq()
+> don't call pci_save_state() and so the state that will be restored on
+> resume is the one recorded on last error recovery or on probe, not the on=
+e
+> that the device had on suspend.  If the two states happen to be identical=
+,
+> there's no problem.
+>
+> Reinstate clearing the flag in pci_legacy_suspend() and pci_pm_freeze().
+> The two functions used to do that until commit 4b77b0a2ba27 ("PCI: Clear
+> saved_state after the state has been restored") deemed it unnecessary
+> because it assumed that it's sufficient to clear the flag on resume in
+> pci_restore_state().  The commit seemingly did not take into account that
+> pci_save_state() and pci_restore_state() are not only used by power
+> management code, but also for error recovery.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511200555.M4TX84jK-lkp@intel.com/
+That's right, it didn't.
 
-All errors (new ones prefixed by >>):
+> Devices without driver or whose driver has no PCI PM callbacks may be in
+> runtime suspend when pci_pm_freeze() is called.  Their state has already
+> been saved, so don't clear the flag to skip a pointless pci_save_state()
+> in pci_pm_freeze_noirq().
+>
+> None of the drivers with legacy PCI PM callbacks seem to use runtime PM,
+> so clear the flag unconditionally in their case.
+>
+> Fixes: 4b77b0a2ba27 ("PCI: Clear saved_state after the state has been res=
+tored")
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Cc: stable@vger.kernel.org # v2.6.32+
 
-   alpha-linux-ld: alpha-linux-ld: DWARF error: could not find abbrev number 14070
-   drivers/pci/pwrctrl/pci-pwrctrl-tc9563.o: in function `tc9563_pwrctrl_remove':
->> (.text+0x4c): undefined reference to `i2c_unregister_device'
->> alpha-linux-ld: (.text+0x50): undefined reference to `i2c_unregister_device'
->> alpha-linux-ld: (.text+0x60): undefined reference to `i2c_put_adapter'
-   alpha-linux-ld: (.text+0x64): undefined reference to `i2c_put_adapter'
+Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
 
-cocci warnings: (new ones prefixed by >>)
->> drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c:351:2-3: Unneeded semicolon
-   drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c:414:2-3: Unneeded semicolon
-   drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c:316:2-3: Unneeded semicolon
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  drivers/pci/pci-driver.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 302d61783f6c..327b21c48614 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -629,6 +629,8 @@ static int pci_legacy_suspend(struct device *dev, pm_=
+message_t state)
+>         struct pci_dev *pci_dev =3D to_pci_dev(dev);
+>         struct pci_driver *drv =3D pci_dev->driver;
+>
+> +       pci_dev->state_saved =3D false;
+> +
+>         if (drv && drv->suspend) {
+>                 pci_power_t prev =3D pci_dev->current_state;
+>                 int error;
+> @@ -1036,6 +1038,8 @@ static int pci_pm_freeze(struct device *dev)
+>
+>         if (!pm) {
+>                 pci_pm_default_suspend(pci_dev);
+> +               if (!pm_runtime_suspended(dev))
+> +                       pci_dev->state_saved =3D false;
+>                 return 0;
+>         }
+>
+> --
+> 2.51.0
+>
+>
 
