@@ -1,256 +1,176 @@
-Return-Path: <linux-pci+bounces-41608-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41609-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FD0DC6E5BC
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 13:01:33 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CFACC6E8B8
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 13:45:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sto.lore.kernel.org (Postfix) with ESMTPS id D5D802963E
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 12:01:32 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A263F3A036E
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 12:39:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10E4E354AE6;
-	Wed, 19 Nov 2025 12:01:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A1A435BDC1;
+	Wed, 19 Nov 2025 12:35:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6fFcK8Z"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gpjG0Cyn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AA3347FE8;
-	Wed, 19 Nov 2025 12:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF5032D0ED;
+	Wed, 19 Nov 2025 12:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763553682; cv=none; b=ncOSHeLJxuq7sQllRdTGQTbDTSz6Rwq306uyeBFExYVcHJRhBc4njqDavsibGk80Cb65trzsYh6nSj1WnbRL6LALyWCOJONPRd7jH877yllBGpDdF0itGIUwAMhQLHgSui32tA/OG3f987hK0/3J6dRn66R+aaBLglGoF9NH4+o=
+	t=1763555734; cv=none; b=GyHexDhucBJaO2DNXeBOWsbPX37AiFvmpIO8ffUx+LvynU7cwY8bK9MU4YWvpdTYAIZ2K1ylQ7jlgICYl8+x0UPhfzc3MfYyS5MKy78QdsVXt6ABtzPFeKhoxijvTNZCPFxbmwXW83lVXpO4jYdePuQdWst3qN2+Or/wLu95GGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763553682; c=relaxed/simple;
-	bh=pUd9GcXWVkOw+Wyv1/2YeXTij1093jTJf2tFx1gxPqA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NeXWX2m342ix5XaH+WXuKwl3X1E/K7xONgFyim+fj5J7wLOWfJujkY36x/5TXKArXP9wyVNQ3QKNCQgcuEh4uj5CuE617t/QJvko9jLLJR5XfdWjy0TBVz4G/SjO7ZizDzJ2tJhF5/rWbgVSlTUs6Ur7gWTw1ogU+BMSTFk50IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6fFcK8Z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55A3CC2BCB1;
-	Wed, 19 Nov 2025 12:01:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763553681;
-	bh=pUd9GcXWVkOw+Wyv1/2YeXTij1093jTJf2tFx1gxPqA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=O6fFcK8ZBkyit8zbUqkkjh9nVcoTRxc+NDVv0ghKMWjAfmkrrOwBGAzU11fJ3csY+
-	 0HiMCbB61IRbktQ1GzWkXYDVAJFTkNclODYuBrE9f0BNHcpk+AV1v9+kBr08bzsCXT
-	 hIOEX2P9DiB0SyqhjihEjeh/n9kEE7JqMk6VO7pv1f32q3kSvVwNyWkUzaPm+ekX7V
-	 1iIlKJQgp9BedvY/bEsvKWYbvNgznE6WMFgbRdSOyzNHIVaH0deHvmn6QSHE4K+W4S
-	 0tOLnKJ2wPTF/+ZGDIb5m1xbUzDUIRoa8sAb8T7IQq/+UvPBbXZYayOaTgqbB0KrDn
-	 ikXvHFebpObKA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1vLgsA-00000006W6j-1BYD;
-	Wed, 19 Nov 2025 12:01:18 +0000
-Date: Wed, 19 Nov 2025 12:01:17 +0000
-Message-ID: <86jyzms036.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Radu Rendec <rrendec@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,	Manivannan Sadhasivam
- <mani@kernel.org>,	Will Deacon <will@kernel.org>,	Rob Herring
- <robh@kernel.org>,	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kwilczynski@kernel.org>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	linux-pci@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: host-common: Do not set drvdata in pci_host_common_init()
-In-Reply-To: <20251118221244.372423-2-rrendec@redhat.com>
-References: <20251118221244.372423-1-rrendec@redhat.com>
-	<20251118221244.372423-2-rrendec@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1763555734; c=relaxed/simple;
+	bh=wNMXseu+Mh4CXbDfHxACCQ1T1j8+3/2EVRgmLLZns1c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hAlIVNSKyObr9buFvoj0SGOAjJsJz1hL8MwY6CcGgp2HTPvxh7VSkWB3+qjX/uZFcfwFuonD5SlfSelc53PBlx0ZRQYM/FbVil63IGsKsozT6wh5Bfyf7UV5ipKvO/gbwdi4jCuOB8BScFmqZY3p3xvdQWR8B6CItsZO2dQ5YKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gpjG0Cyn; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJ8wCKM005971;
+	Wed, 19 Nov 2025 12:35:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=kjV1+s3lsg5fuyqYOMllNghydBN1
+	0Wzgk35QPuOOXCw=; b=gpjG0CynWyl8eWUuVyf+qP4TDNJ14D1gvwVgUoQ9avwH
+	3c2E8mWuJKz0e1xT+o1c8uEOyjePCaSRS16oWjc+LVFEusvNM61QaqGBADjBUxfg
+	NrI8DzUHThJ17a1wsrShoymEYCF9ejywJHlSHx/x24y9+RPSyu6dyGisvS1PtRk+
+	CWmPqaH2ipCZtvKE1grinBxYBftQT2FBMOwFgTPVCKzJvxKFvO25DjP4iwirWVTT
+	DDquXag+GIBEgoUSaYunkgSMdfBahcak0vsJqKRIULrisWVOGjLADzI5vwh88OnW
+	jGQ9yeqV1FtMqCI7eewGz025X9j8uHXZSu90Ue0dWw==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejmsqmjg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Nov 2025 12:35:03 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJBY6Pw022347;
+	Wed, 19 Nov 2025 12:35:03 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4af4un0kxj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Nov 2025 12:35:03 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AJCZ27x31982300
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Nov 2025 12:35:02 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F3CEA58063;
+	Wed, 19 Nov 2025 12:35:01 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EBB9758056;
+	Wed, 19 Nov 2025 12:34:59 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 19 Nov 2025 12:34:59 +0000 (GMT)
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+Subject: [PATCH v2 0/2] PCI/IOV: Fix deadlock when removing PF with enabled
+ SR-IOV
+Date: Wed, 19 Nov 2025 13:34:50 +0100
+Message-Id: <20251119-revert_sriov_lock-v2-0-ea50eb1e8f96@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: rrendec@redhat.com, bhelgaas@google.com, mani@kernel.org, will@kernel.org, robh@kernel.org, kwilczynski@kernel.org, lpieralisi@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGq5HWkC/22NQQ6CMBREr0L+2pK2UFBX3sMQUsuv/AjUtNhgC
+ He3Epcu32TmzQoBPWGAc7aCx0iB3JRAHjIwvZ7uyKhLDJJLJbg8sVRCP7fBk4vt4MyDabSlUrU
+ tKm4h7Z4eLS2789ok7inMzr/3iyi+6c9W8D+2KBhnNbdHqTssZWUvA02vJafbmBs3QrNt2wfCJ
+ tAytgAAAA==
+X-Change-ID: 20251029-revert_sriov_lock-aef4557f360f
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Lukas Wunner <lukas@wunner.de>, Keith Busch <kbusch@kernel.org>,
+        Gerd Bayer <gbayer@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, Farhan Ali <alifm@linux.ibm.com>,
+        Julian Ruess <julianr@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1580;
+ i=schnelle@linux.ibm.com; h=from:subject:message-id;
+ bh=wNMXseu+Mh4CXbDfHxACCQ1T1j8+3/2EVRgmLLZns1c=;
+ b=owGbwMvMwCX2Wz534YHOJ2GMp9WSGDJldxYyP8yz+axUa7Fmn9KWVPO2siaTzT/5PihNOxmYJ
+ dCXdlOpo5SFQYyLQVZMkWVRl7PfuoIppnuC+jtg5rAygQxh4OIUgInU9jD8U56Rkv4mT+PqzYN/
+ l7eW7wnT5Z26/k+mxp0ia46FM94bKTL84X76Ycv+OwXdLsaZtg85vvestgjLvvOqY94knyc5nh9
+ 6uAA=
+X-Developer-Key: i=schnelle@linux.ibm.com; a=openpgp;
+ fpr=9DB000B2D2752030A5F72DDCAFE43F15E8C26090
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: piOyP0L7fU4FH4W8BVRvj0DRCuJcvqWJ
+X-Authority-Analysis: v=2.4 cv=Rv3I7SmK c=1 sm=1 tr=0 ts=691db978 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=GF2AMZyKLQVskBySm0IA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: piOyP0L7fU4FH4W8BVRvj0DRCuJcvqWJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX2E3Wauk8bwsF
+ l1DIrvCUEpBXvyqbejkUgekV/6yzbe5DmrAgBAw+di+mMtOJmiXeLgdVk9566FEu+NjQiQ5zDqd
+ +qc2FDUlBVcp8+mc+GylKFeMSJaKNOLmJLVdhlMk55KGZrQPhZc4p1lEjmYHkaDZBa7itzMH9eR
+ m0DJCJ7ollMen2jYmvyUMzLQf5cxLLhaYyXX/RJa6K+O5p88CJ7vDdZdovH9lF2K+jZY+abmfpe
+ WLYdgsJRll3G25e2I6w3LOB4iw9uA+UjYElvNO7c/4lVeEggqjEcBYOw3KUCbxUMCX6r9m8zIvh
+ SNx5mtlKq0htcT/jC2YLjm0ugLvxTPbVCa56vCM3V5rbDldCP0bs+kctTwuBCd//PhR3T3sTFN5
+ R9PPKIMKT+VwDUV4QUeryUmU/5MYmw==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-19_03,2025-11-18_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 clxscore=1015 phishscore=0 priorityscore=1501
+ spamscore=0 lowpriorityscore=0 impostorscore=0 adultscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511150032
 
-On Tue, 18 Nov 2025 22:12:43 +0000,
-Radu Rendec <rrendec@redhat.com> wrote:
-> 
-> Currently pci_host_common_init() uses the platform device's drvdata to
-> store the pointer to the allocated struct pci_host_bridge. This makes
-> sense for drivers that use pci_host_common_{probe,remove}() directly as
-> the platform probe/remove functions, but leaves no option for more
-> complex drivers to store a pointer to their own private data.
-> 
-> Change pci_host_common_init() to return the pointer to the allocated
-> struct pci_host_bridge, and move the platform_set_drvdata() call to
-> pci_host_common_probe(). This way, drivers that implement their own
-> probe function can still use pci_host_common_init() but store their own
-> pointer in the platform device's drvdata.
-> 
-> For symmetry, move the release code to a new function that takes a
-> pointer to struct pci_host_bridge, and make pci_host_common_release() a
-> wrapper to it that extracts the pointer from the platform device's
-> drvdata. This way, drivers that store their own private pointer in the
-> platform device's drvdata can still use the library release code.
-> 
-> No functional change to the existing users of pci-host-common is
-> intended, with the exception of the pcie-apple driver, which is modified
-> in a subsequent patch.
+Hi Bjorn,
 
-This paragraph doesn't belong here. Maybe as a note, but not in the
-commit message.
+Doing additional testing for a distribution backport of commit
+05703271c3cd ("PCI/IOV: Add PCI rescan-remove locking when
+enabling/disabling SR-IOV") Benjamin found a hang with s390's
+recover attribute. Further investigation showed this to be a deadlock by
+recursively trying to take pci_rescan_remove lock when removing a PF
+with enabled SR-IOV.
 
-> 
-> Signed-off-by: Radu Rendec <rrendec@redhat.com>
-> ---
->  drivers/pci/controller/pci-host-common.c | 36 ++++++++++++++++--------
->  drivers/pci/controller/pci-host-common.h |  6 ++--
->  2 files changed, 29 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
-> index 810d1c8de24e9..86002195c93ac 100644
-> --- a/drivers/pci/controller/pci-host-common.c
-> +++ b/drivers/pci/controller/pci-host-common.c
-> @@ -52,25 +52,24 @@ struct pci_config_window *pci_host_common_ecam_create(struct device *dev,
->  }
->  EXPORT_SYMBOL_GPL(pci_host_common_ecam_create);
->  
-> -int pci_host_common_init(struct platform_device *pdev,
-> -			 const struct pci_ecam_ops *ops)
-> +struct pci_host_bridge *pci_host_common_init(struct platform_device *pdev,
-> +					     const struct pci_ecam_ops *ops)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct pci_host_bridge *bridge;
->  	struct pci_config_window *cfg;
-> +	int rc;
->  
->  	bridge = devm_pci_alloc_host_bridge(dev, 0);
->  	if (!bridge)
-> -		return -ENOMEM;
-> +		return ERR_PTR(-ENOMEM);
->  
->  	of_pci_check_probe_only();
->  
-> -	platform_set_drvdata(pdev, bridge);
-> -
->  	/* Parse and map our Configuration Space windows */
->  	cfg = pci_host_common_ecam_create(dev, bridge, ops);
->  	if (IS_ERR(cfg))
-> -		return PTR_ERR(cfg);
-> +		return (struct pci_host_bridge *)cfg;
->  
->  	bridge->sysdata = cfg;
->  	bridge->ops = (struct pci_ops *)&ops->pci_ops;
-> @@ -78,31 +77,46 @@ int pci_host_common_init(struct platform_device *pdev,
->  	bridge->disable_device = ops->disable_device;
->  	bridge->msi_domain = true;
->  
-> -	return pci_host_probe(bridge);
-> +	rc = pci_host_probe(bridge);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	return bridge;
->  }
->  EXPORT_SYMBOL_GPL(pci_host_common_init);
->  
->  int pci_host_common_probe(struct platform_device *pdev)
->  {
->  	const struct pci_ecam_ops *ops;
-> +	struct pci_host_bridge *bridge;
->  
->  	ops = of_device_get_match_data(&pdev->dev);
->  	if (!ops)
->  		return -ENODEV;
->  
-> -	return pci_host_common_init(pdev, ops);
-> +	bridge = pci_host_common_init(pdev, ops);
-> +	if (IS_ERR(bridge))
-> +		return PTR_ERR(bridge);
-> +
-> +	platform_set_drvdata(pdev, bridge);
+The issue can be reproduced on both s390 and x86_64 with:
 
-Congratulations, you just broke pcie-microchip-host.c again.
+    $ echo <NUM> > /sys/bus/pci/devices/<pf>/sriov_numvfs
+    $ echo 1 > /sys/bus/pci/devices/<pf>/remove
 
-Yes, I did that myself in afc0a570bb613871 ("PCI: host-generic:
-Extract an ECAM bridge creation helper from pci_host_common_probe()"),
-and it was fixed by Geert in bdb32a0f67806 ("PCI: host-generic: Set
-driver_data before calling gen_pci_init()").
+As this seems worse than the original, hard to hit, race fixed by the
+cited commit I think we first want to revert the broken fix.
 
-> +
-> +	return 0;
->  }
->  EXPORT_SYMBOL_GPL(pci_host_common_probe);
->  
-> -void pci_host_common_remove(struct platform_device *pdev)
-> +void pci_host_common_release(struct pci_host_bridge *bridge)
->  {
-> -	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
-> -
->  	pci_lock_rescan_remove();
->  	pci_stop_root_bus(bridge->bus);
->  	pci_remove_root_bus(bridge->bus);
->  	pci_unlock_rescan_remove();
->  }
-> +EXPORT_SYMBOL_GPL(pci_host_common_release);
-
-Even with the pcie-apple.c driver change, this is never called. I'd
-refrain from adding an export until we actually have an identified
-user.
-
-> +
-> +void pci_host_common_remove(struct platform_device *pdev)
-> +{
-> +	pci_host_common_release(platform_get_drvdata(pdev));
-> +}
->  EXPORT_SYMBOL_GPL(pci_host_common_remove);
->  
->  MODULE_DESCRIPTION("Common library for PCI host controller drivers");
-> diff --git a/drivers/pci/controller/pci-host-common.h b/drivers/pci/controller/pci-host-common.h
-> index 51c35ec0cf37d..018e593bafe47 100644
-> --- a/drivers/pci/controller/pci-host-common.h
-> +++ b/drivers/pci/controller/pci-host-common.h
-> @@ -11,11 +11,13 @@
->  #define _PCI_HOST_COMMON_H
->  
->  struct pci_ecam_ops;
-> +struct pci_host_bridge;
->  
->  int pci_host_common_probe(struct platform_device *pdev);
-> -int pci_host_common_init(struct platform_device *pdev,
-> -			 const struct pci_ecam_ops *ops);
-> +struct pci_host_bridge *pci_host_common_init(struct platform_device *pdev,
-> +					     const struct pci_ecam_ops *ops);
->  void pci_host_common_remove(struct platform_device *pdev);
-> +void pci_host_common_release(struct pci_host_bridge *bridge);
->  
->  struct pci_config_window *pci_host_common_ecam_create(struct device *dev,
->  	struct pci_host_bridge *bridge, const struct pci_ecam_ops *ops);
-
-My concern with this is two-fold:
-
-- it is yet another obscure API change with odd side effects,
-  requiring to track and understand the per-driver flow of information
-  (and the apple pcie driver is a prime example of how hard this is)
-
-- we can't directly associate the PCIe port data with the bridge like
-  must drivers do, because the bridge allocation is done outside of
-  the calling driver, and there is no link back to the bridge from
-  pci_config_window.
-
-I'd rather that last point was addressed so that we could make the
-Apple driver behave similarly to other drivers, and let it use the
-bridge private data for its PCIe port information.
+Following that patch 2 attempts to fix the original issue by taking the
+PCI rescan/remove lock directly before calling into the driver's
+sriov_configure() callback enforcing the rule that this should only
+be called with the pci_rescan_remove_lock held.
 
 Thanks,
+Niklas
 
-	M.
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+---
+Changes in v2:
+- Collected R-b from Benjamin
+- Link to v1: https://lore.kernel.org/r/20251030-revert_sriov_lock-v1-0-70f82ade426f@linux.ibm.com
 
+---
+Niklas Schnelle (2):
+      Revert "PCI/IOV: Add PCI rescan-remove locking when enabling/disabling SR-IOV"
+      PCI/IOV: Fix race between SR-IOV enable/disable and hotplug
+
+ drivers/pci/iov.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+---
+base-commit: dcb6fa37fd7bc9c3d2b066329b0d27dedf8becaa
+change-id: 20251029-revert_sriov_lock-aef4557f360f
+
+Best regards,
 -- 
-Without deviation from the norm, progress is not possible.
+Niklas Schnelle
+
 
