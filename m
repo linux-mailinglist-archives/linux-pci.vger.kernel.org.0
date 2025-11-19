@@ -1,57 +1,57 @@
-Return-Path: <linux-pci+bounces-41652-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41657-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD044C6FB89
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 16:43:22 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B55FC6FF11
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 17:07:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by tor.lore.kernel.org (Postfix) with ESMTPS id A686C2DC2F
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 15:43:18 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6BBF4366CAC
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 15:58:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D7BD2E92B3;
-	Wed, 19 Nov 2025 15:42:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 559BD327C09;
+	Wed, 19 Nov 2025 15:52:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Q6XYebHb"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="iUTHAB35"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sinmsgout01.his.huawei.com (sinmsgout01.his.huawei.com [119.8.177.36])
+Received: from sinmsgout02.his.huawei.com (sinmsgout02.his.huawei.com [119.8.177.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0F42E92D0;
-	Wed, 19 Nov 2025 15:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=119.8.177.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4242636E548;
+	Wed, 19 Nov 2025 15:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=119.8.177.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763566975; cv=none; b=SMTQRzwFdNr5pErZE+M3fkF2NgVb0OMV7ADH1dbGT7Xz7HFVAPe/ltZtpFtQYNsEfvD30Le01h3V5wyg8blUN186uS5xtS+3OfwAEk7EelsCYUTng4k5ammSZYt+SFObHDbHCRjDEbEbfg0NaJkEZpt25oZ1IviL0eepIIy6YHs=
+	t=1763567537; cv=none; b=qkzUQQREDEUZ1/h1HhmfZHbULQAVFlk+hyYR9y2jp2S0mYGeVronYkvLMOknBUPSRGlHT9a+in467SmZL50wejNKKEM6KZHKLzYwQgIRy/O0bQH3PIjG4+6DdKH+QydfeRO5iePiJRQMx9YF4DF6Y5B5xDN3CwWxBnaF0fEUhLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763566975; c=relaxed/simple;
-	bh=35vOJPyrgKb+9cfdez7P0ePWSzUKBrJup9U4Y+XzUhU=;
+	s=arc-20240116; t=1763567537; c=relaxed/simple;
+	bh=bSdaB7lW1lSi0E0gZSaghl+2XjuxCB5jAB+RWuHLNLM=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K8ugphzLd/9R/oHa5ijz8lNROcErroNK2fvBoKMujnY1otc6aOhiNmjBeS8RYYh05o4Zm/68YZbNuxJGd0oaHpD85doVu/k20VCjOsf1GhUOlNMsfN8ZLQ9mNzHSJFP3btkoGSF1og5L9onSKhO1VNfVEsLSD06oZayAMAaCutM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Q6XYebHb; arc=none smtp.client-ip=119.8.177.36
+	 MIME-Version:Content-Type; b=iC7d7lqNjdMFAuQnrWpYoBk/TrZGpkNBx7oA27MZNiL8h4PjH4RROixdUOPkvHAHVFbLyaZawyu8BUxR3J2Eaxif+JQwUapHzmRFqCXlD2qKJXp6azZnz+GUmUY9NobxqCTJFh07WEd5PJtT0mqbOyiPIUCNc3AFd4QRwlZCuPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=iUTHAB35; arc=none smtp.client-ip=119.8.177.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=4KQ60AZkRR436n3z62l8wSAm4xK4aGrP18HCQEaGmFI=;
-	b=Q6XYebHbPap5JMYIPqzRsnJ0QvPVtJvZHbN2hIehZnC6wg1n94G2W6lCweazDWEVFr+nUIDUR
-	jaMCNXyMHIVgELx9VoVzTuCPm1H/aAfEp8lPKvKw+4Sod7xAadtW/ESkE3Nbjby+7qmrqUH5/to
-	GKTFGP5Mr5INoRWoVKDwG9c=
+	bh=q3clo3KyFTEVc2h7pK2fYPAaOgWyuzbjKCRKWYR9BsM=;
+	b=iUTHAB35Yh/j/CFTThTRZUBtsSSPrLIPJKaAAERqScHT9wanJafLG8Yj/CVg2EvEO+K+6soID
+	HMO0JIU7KRXMpp0pw8XFLn7IIVyAurdy4sWSFT1OqLFF8OO7CHUoB+IygjGIdX8pG1MCez2i8h1
+	Cea/8ZF59AKmPkbHvMQK3rk=
 Received: from frasgout.his.huawei.com (unknown [172.18.146.32])
-	by sinmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4dBQD415Jjz1P7G1;
-	Wed, 19 Nov 2025 23:20:51 +0800 (CST)
+	by sinmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4dBQRd1dkpz1vnLd;
+	Wed, 19 Nov 2025 23:30:53 +0800 (CST)
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dBQDq3W4VzHnH4l;
-	Wed, 19 Nov 2025 23:21:31 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dBQSK2DhDzHnGgk;
+	Wed, 19 Nov 2025 23:31:29 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7B0B81402ED;
-	Wed, 19 Nov 2025 23:22:04 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 4F53A14033C;
+	Wed, 19 Nov 2025 23:32:02 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 19 Nov
- 2025 15:22:03 +0000
-Date: Wed, 19 Nov 2025 15:22:01 +0000
+ 2025 15:32:01 +0000
+Date: Wed, 19 Nov 2025 15:32:00 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
 CC: <linux-coco@lists.linux.dev>, <kvmarm@lists.linux.dev>,
@@ -62,12 +62,12 @@ CC: <linux-coco@lists.linux.dev>, <kvmarm@lists.linux.dev>,
 	<steven.price@arm.com>, Bjorn Helgaas <helgaas@kernel.org>, Catalin Marinas
 	<catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>, Will Deacon
 	<will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [PATCH v2 01/11] coco: guest: arm64: Guest TSM callback and
- realm device lock support
-Message-ID: <20251119152201.00000876@huawei.com>
-In-Reply-To: <20251117140007.122062-2-aneesh.kumar@kernel.org>
+Subject: Re: [PATCH v2 02/11] coco: guest: arm64: Add Realm Host Interface
+ and guest DA helper
+Message-ID: <20251119153200.00007fd0@huawei.com>
+In-Reply-To: <20251117140007.122062-3-aneesh.kumar@kernel.org>
 References: <20251117140007.122062-1-aneesh.kumar@kernel.org>
-	<20251117140007.122062-2-aneesh.kumar@kernel.org>
+	<20251117140007.122062-3-aneesh.kumar@kernel.org>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -80,211 +80,173 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Mon, 17 Nov 2025 19:29:57 +0530
+On Mon, 17 Nov 2025 19:29:58 +0530
 "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
 
-> Register the TSM callback when the DA feature is supported by RSI. The
-> build order is also adjusted so that the TSM class is created before the
-> arm-cca-guest driver is initialized.
+> - describe the Realm Host Interface SMC IDs and result codes in a new
+>   `asm/rhi.h` header
+> - expose `struct rsi_host_call` plus an `rsi_host_call()` helper so we can
+>   invoke `SMC_RSI_HOST_CALL` from C code
+> - build a guest-side `rhi-da` helper that drives the vdev TDI state machine
+>   via RHI host calls and translates the firmware status codes
 > 
-> In addition, add support for the TDISP lock sequence. Writing a TSM
-> (TEE Security Manager) device name from `/sys/class/tsm` into `tsm/lock`
-> triggers the realm device lock operation.
+> This provides the basic RHI plumbing that later DA features rely on.
 > 
 > Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
-Hi Aneesh,
+Hi Aneesh, minor comments follow.
 
-Some minor stuff in here.   One general comment is that there
-are some fixlets for the CCA code surrounding what this patch
-should focus on. Break those out as separate cleanup or base
-this on top of the fixed up version of that code.
+> diff --git a/drivers/virt/coco/arm-cca-guest/rhi-da.c b/drivers/virt/coco/arm-cca-guest/rhi-da.c
+> new file mode 100644
+> index 000000000000..3430d8df4424
+> --- /dev/null
+> +++ b/drivers/virt/coco/arm-cca-guest/rhi-da.c
+...
 
-Thanks,
-
-Jonathan
-
-> diff --git a/arch/arm64/kernel/rsi.c b/arch/arm64/kernel/rsi.c
-> index 1b716d18b80e..2ec0f5dff02e 100644
-> --- a/arch/arm64/kernel/rsi.c
-> +++ b/arch/arm64/kernel/rsi.c
-> @@ -15,6 +15,7 @@
->  #include <asm/rsi.h>
->  
->  static struct realm_config config;
-> +static unsigned long rsi_feat_reg0;
->  
->  unsigned long prot_ns_shared;
->  EXPORT_SYMBOL(prot_ns_shared);
-> @@ -22,6 +23,12 @@ EXPORT_SYMBOL(prot_ns_shared);
->  DEFINE_STATIC_KEY_FALSE_RO(rsi_present);
->  EXPORT_SYMBOL(rsi_present);
->  
-> +bool rsi_has_da_feature(void)
-> +{
-> +	return u64_get_bits(rsi_feat_reg0, RSI_FEATURE_REGISTER_0_DA);
-
-I'm not keen on mixing explicit size of a u64 with the implicit
-fact an unsigned long is effectively a u64.  Can we tidy up the types
-to match?
- 
-> +}
-> +EXPORT_SYMBOL_GPL(rsi_has_da_feature);
-
-> diff --git a/drivers/virt/coco/Makefile b/drivers/virt/coco/Makefile
-> index cb52021912b3..57556d7c1cec 100644
-> --- a/drivers/virt/coco/Makefile
-> +++ b/drivers/virt/coco/Makefile
-> @@ -6,6 +6,6 @@ obj-$(CONFIG_EFI_SECRET)	+= efi_secret/
->  obj-$(CONFIG_ARM_PKVM_GUEST)	+= pkvm-guest/
->  obj-$(CONFIG_SEV_GUEST)		+= sev-guest/
->  obj-$(CONFIG_INTEL_TDX_GUEST)	+= tdx-guest/
-> -obj-$(CONFIG_ARM_CCA_GUEST)	+= arm-cca-guest/
->  obj-$(CONFIG_TSM) 		+= tsm-core.o
->  obj-$(CONFIG_TSM_GUEST)		+= guest/
-> +obj-$(CONFIG_ARM_CCA_GUEST)	+= arm-cca-guest/
-
-Check all patches for noise like this.  It may be a valid change but in this series
-it's just adding confusion.
-
-> diff --git a/drivers/virt/coco/arm-cca-guest/Kconfig b/drivers/virt/coco/arm-cca-guest/Kconfig
-> index a42359a90558..66b2d9202b66 100644
-> --- a/drivers/virt/coco/arm-cca-guest/Kconfig
-> +++ b/drivers/virt/coco/arm-cca-guest/Kconfig
-> @@ -1,11 +1,17 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
 > +
->  config ARM_CCA_GUEST
->  	tristate "Arm CCA Guest driver"
->  	depends on ARM64
-> +	depends on PCI_TSM
->  	select TSM_REPORTS
->  	select AUXILIARY_BUS
-> +	select TSM
->  	help
-> -	  The driver provides userspace interface to request and
-> +	  The driver provides userspace interface to request an
+> +bool rhi_has_da_support(void)
+> +{
+> +	int ret;
+> +	struct rsi_host_call *rhicall;
+> +
+> +	rhicall = kmalloc(sizeof(struct rsi_host_call), GFP_KERNEL);
 
-Push this fixlet to the series adding this or a follow up if that isn't being respun.
-Definitely shouldn't be in here.
+Doesn't look to be passed out anywhere, so not obvious why the lifetime
+of this extends beyond this function.  Maybe I'm missing something.
 
->  	  attestation report from the Realm Management Monitor(RMM).
-> +	  If the DA feature is supported, it also register with TSM framework.
->  
->  	  If you choose 'M' here, this module will be called
->  	  arm-cca-guest.
-> diff --git a/drivers/virt/coco/arm-cca-guest/Makefile b/drivers/virt/coco/arm-cca-guest/Makefile
-> index 75a120e24fda..bc3b2be4019f 100644
-> --- a/drivers/virt/coco/arm-cca-guest/Makefile
-> +++ b/drivers/virt/coco/arm-cca-guest/Makefile
-> @@ -1,4 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> +#
+> +	if (!rhicall)
+> +		return -ENOMEM;
+> +
+> +	rhicall->imm = 0;
+> +	rhicall->gprs[0] = RHI_DA_FEATURES;
+> +
+> +	ret = rsi_host_call(virt_to_phys(rhicall));
+> +	if (ret != RSI_SUCCESS || rhicall->gprs[0] == SMCCC_RET_NOT_SUPPORTED)
+> +		return false;
+> +
+> +	/* For base DA to work we need these to be supported */
+> +	if ((rhicall->gprs[0] & RHI_DA_BASE_FEATURE) == RHI_DA_BASE_FEATURE)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +static inline int rhi_vdev_continue(unsigned long vdev_id, unsigned long cookie)
+> +{
+> +	unsigned long ret;
+> +
+> +	struct rsi_host_call *rhi_call __free(kfree) =
+> +		kmalloc(sizeof(struct rsi_host_call), GFP_KERNEL);
 
-Stray change.
+sizeof(*rhi_call)  Same for all other cases of this.
 
->  obj-$(CONFIG_ARM_CCA_GUEST) += arm-cca-guest.o
->  
->  arm-cca-guest-y +=  arm-cca.o
-> diff --git a/drivers/virt/coco/arm-cca-guest/arm-cca.c b/drivers/virt/coco/arm-cca-guest/arm-cca.c
-> index dc96171791db..288fa53ad0af 100644
-> --- a/drivers/virt/coco/arm-cca-guest/arm-cca.c
-> +++ b/drivers/virt/coco/arm-cca-guest/arm-cca.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /*
-> - * Copyright (C) 2023 ARM Ltd.
-> + * Copyright (C) 2025 ARM Ltd.
-Usually we just extend the date span rather than claiming everything is
-2025. e.g.
- * Copyright (C) 2023-2025 ARM Ltd.
+> +	if (!rhi_call)
+> +		return -ENOMEM;
+> +
+> +	rhi_call->imm = 0;
+> +	rhi_call->gprs[0] = RHI_DA_VDEV_CONTINUE;
+> +	rhi_call->gprs[1] = vdev_id;
+> +	rhi_call->gprs[2] = cookie;
+> +
+> +	ret = rsi_host_call(virt_to_phys(rhi_call));
+> +	if (ret != RSI_SUCCESS)
+> +		return -EIO;
+> +
+> +	return map_rhi_da_error(rhi_call->gprs[0]);
+> +}
+> +
+> +static int __rhi_vdev_abort(unsigned long vdev_id, unsigned long *da_error)
+> +{
+> +	unsigned long ret;
+> +	struct rsi_host_call *rhi_call __free(kfree) =
+> +		kmalloc(sizeof(struct rsi_host_call), GFP_KERNEL);
 
->   */
+sizeof(*rhi_call) probably preferred.
 
-> @@ -192,6 +194,57 @@ static void unregister_cca_tsm_report(void *data)
->  	tsm_report_unregister(&arm_cca_tsm_report_ops);
->  }
->  
-> +static struct pci_tsm *cca_tsm_lock(struct tsm_dev *tsm_dev, struct pci_dev *pdev)
+> +	if (!rhi_call)
+> +		return -ENOMEM;
+> +
+> +	rhi_call->imm = 0;
+> +	rhi_call->gprs[0] = RHI_DA_VDEV_ABORT;
+> +	rhi_call->gprs[1] = vdev_id;
+> +
+> +	ret = rsi_host_call(virt_to_phys(rhi_call));
+> +	if (ret != RSI_SUCCESS)
+> +		return -EIO;
+> +
+> +	return *da_error = rhi_call->gprs[0];
+> +	return 0;
+
+?  Run builds after each patch and you may catch stuff like this.
+
+> +}
+> +
+> +static bool should_abort_rhi_call_loop(unsigned long vdev_id)
 > +{
 > +	int ret;
 > +
-> +	struct cca_guest_dsc *cca_dsc __free(kfree) =
-> +		kzalloc(sizeof(*cca_dsc), GFP_KERNEL);
-> +	if (!cca_dsc)
-> +		return ERR_PTR(-ENOMEM);
+> +	cond_resched();
+> +	if (signal_pending(current)) {
+> +		unsigned long da_error;
 > +
-> +	ret = pci_tsm_devsec_constructor(pdev, &cca_dsc->pci, tsm_dev);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	return ERR_PTR(-EIO);
-
-Perhaps add a comment so you have something like
-
-	return ERR_PTR(-EIO); /* For now always return an error */
-
-Just makes it a tiny bit easier to review as no need to go check this
-is removed in a later patch.
-
-> +}
-> +
-> +static void cca_tsm_unlock(struct pci_tsm *tsm)
-> +{
-> +	struct cca_guest_dsc *cca_dsc = to_cca_guest_dsc(tsm->pdev);
-> +
-> +	kfree(cca_dsc);
-> +}
-> +
-> +static struct pci_tsm_ops cca_devsec_pci_ops = {
-> +	.lock = cca_tsm_lock,
-> +	.unlock = cca_tsm_unlock,
-> +};
-> +
-> +static void cca_devsec_tsm_remove(void *tsm_dev)
-> +{
-> +	tsm_unregister(tsm_dev);
-> +}
-> +
-> +static int cca_devsec_tsm_register(struct auxiliary_device *adev)
-> +{
-> +	struct tsm_dev *tsm_dev;
-> +	int rc;
-> +
-> +	tsm_dev = tsm_register(&adev->dev, &cca_devsec_pci_ops);
-> +	if (IS_ERR(tsm_dev))
-> +		return PTR_ERR(tsm_dev);
-> +
-> +	rc = devm_add_action_or_reset(&adev->dev, cca_devsec_tsm_remove, tsm_dev);
-> +	if (rc) {
-> +		cca_devsec_tsm_remove(tsm_dev);
-
-Take a look at what the _or_reset() does in the devm_add_action_or_reset().
-Short story, you should not need this call if the devm machinery has returned
-an error.
-
-> +		return rc;
+> +		ret = __rhi_vdev_abort(vdev_id, &da_error);
+> +		/* consider all kind of error as not aborted */
+> +		if (!ret && (da_error == RHI_DA_SUCCESS))
+> +			return true;
 > +	}
-> +
-> +	return 0;
+> +	return false;
 > +}
+> +
+> +static int __rhi_vdev_set_tdi_state(unsigned long vdev_id,
+> +				    unsigned long target_state,
 
-> diff --git a/drivers/virt/coco/arm-cca-guest/rsi-da.h b/drivers/virt/coco/arm-cca-guest/rsi-da.h
-> new file mode 100644
-> index 000000000000..5ad3b740710e
-> --- /dev/null
-> +++ b/drivers/virt/coco/arm-cca-guest/rsi-da.h
+Maybe use an enum for target state? Can name it to align with the
+RHIDAVDevTDIState used as the type for this in the RHI spec.
 
-> +static inline int rsi_vdev_id(struct pci_dev *pdev)
+
+> +				    unsigned long *cookie)
 > +{
-> +	return (pci_domain_nr(pdev->bus) << 16) |
-> +	       PCI_DEVID(pdev->bus->number, pdev->devfn);
-
-I'm struggling to find where this is actually defined in the various specs
-so good to have a reference in a comment here.
-
-> +}
+> +	unsigned long ret;
 > +
+> +	struct rsi_host_call *rhi_call __free(kfree) =
+> +		kmalloc(sizeof(struct rsi_host_call), GFP_KERNEL);
+> +	if (!rhi_call)
+> +		return -ENOMEM;
+> +
+> +	rhi_call->imm = 0;
+> +	rhi_call->gprs[0] = RHI_DA_VDEV_SET_TDI_STATE;
+> +	rhi_call->gprs[1] = vdev_id;
+> +	rhi_call->gprs[2] = target_state;
+> +
+> +	ret = rsi_host_call(virt_to_phys(rhi_call));
+> +	if (ret != RSI_SUCCESS)
+> +		return -EIO;
+> +
+> +	*cookie = rhi_call->gprs[1];
+> +	return map_rhi_da_error(rhi_call->gprs[0]);
+> +}
+
+> diff --git a/drivers/virt/coco/arm-cca-guest/rhi-da.h b/drivers/virt/coco/arm-cca-guest/rhi-da.h
+> new file mode 100644
+> index 000000000000..8dd77c7ed645
+> --- /dev/null
+> +++ b/drivers/virt/coco/arm-cca-guest/rhi-da.h
+> @@ -0,0 +1,14 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2024 ARM Ltd.
+
+Possibly update if this has changed much this year.
+
+> + */
+> +
+> +#ifndef _VIRT_COCO_RHI_DA_H_
+> +#define _VIRT_COCO_RHI_DA_H_
+> +
+> +#include <asm/rhi.h>
+> +
+> +struct pci_dev;
+> +bool rhi_has_da_support(void);
+> +int rhi_vdev_set_tdi_state(struct pci_dev *pdev, unsigned long target_state);
 > +#endif
 
 
