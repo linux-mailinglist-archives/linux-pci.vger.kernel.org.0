@@ -1,321 +1,138 @@
-Return-Path: <linux-pci+bounces-41651-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41653-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C0DDC6FC50
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 16:49:33 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9412CC6FE53
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 17:00:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C75184E919C
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 15:41:19 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7FDD0364588
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 15:53:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EC252E424F;
-	Wed, 19 Nov 2025 15:41:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E10234107C;
+	Wed, 19 Nov 2025 15:47:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZA36zm5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/iaFsAP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B24285CB6;
-	Wed, 19 Nov 2025 15:41:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6EE2E8B81;
+	Wed, 19 Nov 2025 15:47:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763566876; cv=none; b=InXmhKLKDbK/aW/YX5c3FR6NY1XmgQxSA2KSvdmNUs4wVT36fKCz/mRBRkAB86iJon2df1sWl0lu7WNjtb1OfsTrysqgvrsKACMQYuQZ67Lu3CjDvYFXrVQX7aylS2Fx+x2s8uKpdb9nrpTia+/2APWmT1gI4b7AI42KYn2cPkU=
+	t=1763567253; cv=none; b=DpVrNGWvLtlQv+5TWphhkwmUbN28R5aQLX7wB5B6PcVSSxSGYubwrXbK+8TIdw8Ls4IVTXT/NMJGkfheFP4ZNAQvv/pcrX0MztFEbrEen2XDxnN2ZZ7oQ/wgRgidk+pNw+sujNfIsxsUYF9U7NPX8lIPkuv5HHqHX5+np/8r+nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763566876; c=relaxed/simple;
-	bh=+tu5xEE2csr5lj4QfalL/akMO0Iwzk3kuQR0JJgfkqQ=;
+	s=arc-20240116; t=1763567253; c=relaxed/simple;
+	bh=vicgZe2Av/U4KqK6bau+u9mHI2W4ZvV0ci7Vd1xAaJg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZW/os156ObB8wxAnA/7S1DtH9xEoiwkyEtRC34ghemRQXpx3IjdFkcsUE4ulLgN+eOB4ohWh7DgKyeRN63SeJDpaURtOWqr3wXBPdRQWm9m/or9NuThWuqKMmwvap0dbYTNLnut8GCsOSZHGEZMkA4198FmxCjF6DvMvb5TGHo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZA36zm5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B957C2BCB2;
-	Wed, 19 Nov 2025 15:41:12 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=WPMTnS8UpxDNYkU3w6xA2PT5QJR1P2yp+KcH+NPvYE8YZBDvL1uTsSGci4mLnoSMyYGQRRNOaZL+ls8/XBjHc0MeDcJtVgy7w/DRrTXbfU0+aPg80nu8fAWIj49+zVnxHr7le4GyzHMJJLzLwQbLu3UOC60xYLUv2fO2oCvpPv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/iaFsAP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B901DC4AF4D;
+	Wed, 19 Nov 2025 15:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763566873;
-	bh=+tu5xEE2csr5lj4QfalL/akMO0Iwzk3kuQR0JJgfkqQ=;
+	s=k20201202; t=1763567252;
+	bh=vicgZe2Av/U4KqK6bau+u9mHI2W4ZvV0ci7Vd1xAaJg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QZA36zm5JLd7o0QBgL/m337GXPzMm86iJP+sqGrJjj1yhmQahzCnAAdePGwI0czJ9
-	 rt4OUD/ZwcM93t/K+PUcYG/mPoxd3i5GXITekoSzYkf+zK+1puSkDtnkTCfXWs++0m
-	 M9zKcwUgAkxFOEXC/RFEX/wz1Iq7Syn6vdULPDfvt40zK7+wJ2eDruSfFEgrILevfv
-	 d1Sb/+sY9emGTM3ScYXG3ovMIORPEms7/vnPk+lNN/iOHrUpZto2zHikmZMZUuTeXw
-	 q5uBEXiMRpmdS+1CbaUYpBm+Kas3khufe9slupFE9daJ6PwQfcbycL8K+e+GM1qvBy
-	 uhz+0UV4rK9dw==
-Date: Wed, 19 Nov 2025 17:41:08 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [Linaro-mm-sig] [PATCH v8 06/11] dma-buf: provide phys_vec to
- scatter-gather mapping routine
-Message-ID: <20251119154108.GK18335@unreal>
-References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
- <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
- <8a11b605-6ac7-48ac-8f27-22df7072e4ad@amd.com>
- <20251119134245.GD18335@unreal>
- <6714dc49-6b5c-4d58-9a43-95bb95873a97@amd.com>
- <20251119145007.GJ18335@unreal>
- <26d7ecab-33ed-4aab-82d5-954b0d1d1718@amd.com>
+	b=m/iaFsAPw27Vo7KL+xOhpzChl9HwgPS91l9ZE9SkAkJCY2UaBQjQUzZhvNSIU0aTR
+	 mjUaPeN+1DpNB9Eu/vA1eUJYgT/Pfoz+V8332karyPbvh9E4dsexBeWKPFw55pyc5w
+	 HOGrzUy9f5ifz0axsOzC6LhDxNWcDYaObz3ObyauHXxPC+VgMvQ70Q1eU9tbDf32hH
+	 WGrz9JsHF69HhZs+dekb6hrSb9slrHLfcIHBv4S1HO+h5iw9cAoF4bPD8b5OP2vbtO
+	 SRL79BsrKKpcZJXfElkS5n7zaxeL8O3UTaUS7UCPqvj9+IRbu++GiYLfOBTOWVIqKP
+	 yj4TrAxEVZH9Q==
+Date: Wed, 19 Nov 2025 21:17:18 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH] PCI: stm32: Fix LTSSM EP race with start link.
+Message-ID: <k72rxq2j5hbpotgmshwau6tvvem3jnldahxxgg54qoxjs7jaxb@bgh4cgs5j25h>
+References: <20251118212818.GA2591668@bhelgaas>
+ <7053f336-59c9-47cc-ac97-eb2f0916ac4f@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <26d7ecab-33ed-4aab-82d5-954b0d1d1718@amd.com>
+In-Reply-To: <7053f336-59c9-47cc-ac97-eb2f0916ac4f@foss.st.com>
 
-On Wed, Nov 19, 2025 at 03:53:30PM +0100, Christian K�nig wrote:
+On Wed, Nov 19, 2025 at 04:13:47PM +0100, Christian Bruel wrote:
 > 
 > 
-> On 11/19/25 15:50, Leon Romanovsky wrote:
-> > On Wed, Nov 19, 2025 at 03:11:01PM +0100, Christian K�nig wrote:
-> >> On 11/19/25 14:42, Leon Romanovsky wrote:
-> >>> On Wed, Nov 19, 2025 at 02:16:57PM +0100, Christian K�nig wrote:
-> >>>>
-> >>>>
-> >>>> On 11/11/25 10:57, Leon Romanovsky wrote:
-> >>>>> From: Leon Romanovsky <leonro@nvidia.com>
-> >>>>>
-> >>>>> Add dma_buf_map() and dma_buf_unmap() helpers to convert an array of
-> >>>>> MMIO physical address ranges into scatter-gather tables with proper
-> >>>>> DMA mapping.
-> >>>>>
-> >>>>> These common functions are a starting point and support any PCI
-> >>>>> drivers creating mappings from their BAR's MMIO addresses. VFIO is one
-> >>>>> case, as shortly will be RDMA. We can review existing DRM drivers to
-> >>>>> refactor them separately. We hope this will evolve into routines to
-> >>>>> help common DRM that include mixed CPU and MMIO mappings.
-> >>>>>
-> >>>>> Compared to the dma_map_resource() abuse this implementation handles
-> >>>>> the complicated PCI P2P scenarios properly, especially when an IOMMU
-> >>>>> is enabled:
-> >>>>>
-> >>>>>  - Direct bus address mapping without IOVA allocation for
-> >>>>>    PCI_P2PDMA_MAP_BUS_ADDR, using pci_p2pdma_bus_addr_map(). This
-> >>>>>    happens if the IOMMU is enabled but the PCIe switch ACS flags allow
-> >>>>>    transactions to avoid the host bridge.
-> >>>>>
-> >>>>>    Further, this handles the slightly obscure, case of MMIO with a
-> >>>>>    phys_addr_t that is different from the physical BAR programming
-> >>>>>    (bus offset). The phys_addr_t is converted to a dma_addr_t and
-> >>>>>    accommodates this effect. This enables certain real systems to
-> >>>>>    work, especially on ARM platforms.
-> >>>>>
-> >>>>>  - Mapping through host bridge with IOVA allocation and DMA_ATTR_MMIO
-> >>>>>    attribute for MMIO memory regions (PCI_P2PDMA_MAP_THRU_HOST_BRIDGE).
-> >>>>>    This happens when the IOMMU is enabled and the ACS flags are forcing
-> >>>>>    all traffic to the IOMMU - ie for virtualization systems.
-> >>>>>
-> >>>>>  - Cases where P2P is not supported through the host bridge/CPU. The
-> >>>>>    P2P subsystem is the proper place to detect this and block it.
-> >>>>>
-> >>>>> Helper functions fill_sg_entry() and calc_sg_nents() handle the
-> >>>>> scatter-gather table construction, splitting large regions into
-> >>>>> UINT_MAX-sized chunks to fit within sg->length field limits.
-> >>>>>
-> >>>>> Since the physical address based DMA API forbids use of the CPU list
-> >>>>> of the scatterlist this will produce a mangled scatterlist that has
-> >>>>> a fully zero-length and NULL'd CPU list. The list is 0 length,
-> >>>>> all the struct page pointers are NULL and zero sized. This is stronger
-> >>>>> and more robust than the existing mangle_sg_table() technique. It is
-> >>>>> a future project to migrate DMABUF as a subsystem away from using
-> >>>>> scatterlist for this data structure.
-> >>>>>
-> >>>>> Tested-by: Alex Mastro <amastro@fb.com>
-> >>>>> Tested-by: Nicolin Chen <nicolinc@nvidia.com>
-> >>>>> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> >>>>> ---
-> >>>>>  drivers/dma-buf/dma-buf.c | 235 ++++++++++++++++++++++++++++++++++++++++++++++
-> >>>>>  include/linux/dma-buf.h   |  18 ++++
-> >>>>>  2 files changed, 253 insertions(+)
-> >>>>>
-> >>>>> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> >>>>> index 2bcf9ceca997..cb55dff1dad5 100644
-> >>>>> --- a/drivers/dma-buf/dma-buf.c
-> >>>>> +++ b/drivers/dma-buf/dma-buf.c
-> >>>>> @@ -1254,6 +1254,241 @@ void dma_buf_unmap_attachment_unlocked(struct dma_buf_attachment *attach,
-> >>>>>  }
-> >>>>>  EXPORT_SYMBOL_NS_GPL(dma_buf_unmap_attachment_unlocked, "DMA_BUF");
-> >>>>>  
-> >>>>> +static struct scatterlist *fill_sg_entry(struct scatterlist *sgl, size_t length,
-> >>>>> +					 dma_addr_t addr)
-> >>>>> +{
-> >>>>> +	unsigned int len, nents;
-> >>>>> +	int i;
-> >>>>> +
-> >>>>> +	nents = DIV_ROUND_UP(length, UINT_MAX);
-> >>>>> +	for (i = 0; i < nents; i++) {
-> >>>>> +		len = min_t(size_t, length, UINT_MAX);
-> >>>>> +		length -= len;
-> >>>>> +		/*
-> >>>>> +		 * DMABUF abuses scatterlist to create a scatterlist
-> >>>>> +		 * that does not have any CPU list, only the DMA list.
-> >>>>> +		 * Always set the page related values to NULL to ensure
-> >>>>> +		 * importers can't use it. The phys_addr based DMA API
-> >>>>> +		 * does not require the CPU list for mapping or unmapping.
-> >>>>> +		 */
-> >>>>> +		sg_set_page(sgl, NULL, 0, 0);
-> >>>>> +		sg_dma_address(sgl) = addr + i * UINT_MAX;
-> >>>>> +		sg_dma_len(sgl) = len;
-> >>>>> +		sgl = sg_next(sgl);
-> >>>>> +	}
-> >>>>> +
-> >>>>> +	return sgl;
-> >>>>> +}
-> >>>>> +
-> >>>>> +static unsigned int calc_sg_nents(struct dma_iova_state *state,
-> >>>>> +				  struct dma_buf_phys_vec *phys_vec,
-> >>>>> +				  size_t nr_ranges, size_t size)
-> >>>>> +{
-> >>>>> +	unsigned int nents = 0;
-> >>>>> +	size_t i;
-> >>>>> +
-> >>>>> +	if (!state || !dma_use_iova(state)) {
-> >>>>> +		for (i = 0; i < nr_ranges; i++)
-> >>>>> +			nents += DIV_ROUND_UP(phys_vec[i].len, UINT_MAX);
-> >>>>> +	} else {
-> >>>>> +		/*
-> >>>>> +		 * In IOVA case, there is only one SG entry which spans
-> >>>>> +		 * for whole IOVA address space, but we need to make sure
-> >>>>> +		 * that it fits sg->length, maybe we need more.
-> >>>>> +		 */
-> >>>>> +		nents = DIV_ROUND_UP(size, UINT_MAX);
-> >>>>> +	}
-> >>>>> +
-> >>>>> +	return nents;
-> >>>>> +}
-> >>>>> +
-> >>>>> +/**
-> >>>>> + * struct dma_buf_dma - holds DMA mapping information
-> >>>>> + * @sgt:    Scatter-gather table
-> >>>>> + * @state:  DMA IOVA state relevant in IOMMU-based DMA
-> >>>>> + * @size:   Total size of DMA transfer
-> >>>>> + */
-> >>>>> +struct dma_buf_dma {
-> >>>>> +	struct sg_table sgt;
-> >>>>> +	struct dma_iova_state *state;
-> >>>>> +	size_t size;
-> >>>>> +};
-> >>>>> +
-> >>>>> +/**
-> >>>>> + * dma_buf_map - Returns the scatterlist table of the attachment from arrays
-> >>>>> + * of physical vectors. This funciton is intended for MMIO memory only.
-> >>>>> + * @attach:	[in]	attachment whose scatterlist is to be returned
-> >>>>> + * @provider:	[in]	p2pdma provider
-> >>>>> + * @phys_vec:	[in]	array of physical vectors
-> >>>>> + * @nr_ranges:	[in]	number of entries in phys_vec array
-> >>>>> + * @size:	[in]	total size of phys_vec
-> >>>>> + * @dir:	[in]	direction of DMA transfer
-> >>>>> + *
-> >>>>> + * Returns sg_table containing the scatterlist to be returned; returns ERR_PTR
-> >>>>> + * on error. May return -EINTR if it is interrupted by a signal.
-> >>>>> + *
-> >>>>> + * On success, the DMA addresses and lengths in the returned scatterlist are
-> >>>>> + * PAGE_SIZE aligned.
-> >>>>> + *
-> >>>>> + * A mapping must be unmapped by using dma_buf_unmap().
-> >>>>> + */
-> >>>>> +struct sg_table *dma_buf_map(struct dma_buf_attachment *attach,
-> >>>>
-> >>>> That is clearly not a good name for this function. We already have overloaded the term *mapping* with something completely different.
-> >>>
-> >>> This function performs DMA mapping, so what name do you suggest instead of dma_buf_map()?
-> >>
-> >> Something like dma_buf_phys_vec_to_sg_table(). I'm not good at naming either.
+> On 11/18/25 22:28, Bjorn Helgaas wrote:
+> > [+cc Lukas in case I got the pciehp part wrong]
 > > 
-> > Can I call it simply dma_buf_mapping() as I plan to put that function in dma_buf_mapping.c
-> > file per-your request.
-> 
-> No, just completely drop the term "mapping" here. This is about phys_vector to sg_table conversion and nothing else.
-
-We have both map and unmap, so dma_buf_*_to_*() can be applicable to dma_buf_map() only.
-And it is not simple conversion, most of the logic is actually handles mapping:
-
-  137         for (i = 0; i < nr_ranges; i++) {
-  138                 if (!dma->state) {
-  139                         addr = pci_p2pdma_bus_addr_map(provider,
-  140                                                        phys_vec[i].paddr);
-  141                 } else if (dma_use_iova(dma->state)) {
-  142                         ret = dma_iova_link(attach->dev, dma->state,
-  143                                             phys_vec[i].paddr, 0,
-  144                                             phys_vec[i].len, dir,
-  145                                             DMA_ATTR_MMIO);
-  146                         if (ret)
-  147                                 goto err_unmap_dma;
-  148
-  149                         mapped_len += phys_vec[i].len;
-  150                 } else {
-  151                         addr = dma_map_phys(attach->dev, phys_vec[i].paddr,
-  152                                             phys_vec[i].len, dir,
-  153                                             DMA_ATTR_MMIO);
-  154                         ret = dma_mapping_error(attach->dev, addr);
-  155                         if (ret)
-  156                                 goto err_unmap_dma;
-  157                 }
-  158
-  159                 if (!dma->state || !dma_use_iova(dma->state))
-  160                         sgl = fill_sg_entry(sgl, phys_vec[i].len, addr);
-  161         }
-  162
-  163         if (dma->state && dma_use_iova(dma->state)) {
-  164                 WARN_ON_ONCE(mapped_len != size);
-  165                 ret = dma_iova_sync(attach->dev, dma->state, 0, mapped_len);
-  166                 if (ret)
-  167                         goto err_unmap_dma;
-  168
-  169                 sgl = fill_sg_entry(sgl, mapped_len, dma->state->addr);
-  170         }
-
-SG table conversion is only two lines (160 and 169) which are here
-because of DMABUF dependency on SG.
-
-What about dma_buf_phys_vec_mapping()/dma_buf_phys_vec_unmapping()?
-
-> 
-> That we create an IOVA mapping when the access needs to go through the root complex is an implementation detail.
 > 
 > > 
-> > Regarding SG, the long term plan is to remove SG table completely, so at
-> > least external users of DMABUF shouldn't be exposed to internal implementation
-> > details (SG table).
+> > To back up here, I'm trying to understand the race.
+> > 
+> > IIUC the relevant events are link training and register init.  In the
+> > current stm32 EP driver, link training can start when the EP userspace
+> > writes to the 'start' configfs file.  And the register init happens
+> > when stm32_pcie_ep_perst_irq_thread() calls
+> > dw_pcie_ep_init_registers().
+> > 
+> > So I guess the problem is when the EP userspace enables the LTSSM
+> > before the host deasserts PERST#?  And the link train may complete
+> > before stm32_pcie_ep_perst_irq_thread() runs?
 > 
-> Hui? Well I suggested to remove the sg_table, but that doesn't mean that implementations shouldn't be aware of that.
-
-VFIO which is first user of this interface. It doesn't care how
-internally DMABUF handles array of phys_vecs. Today, it is sg_table,
-tomorrow it will be something else.
-
-Thanks
-
-> 
-> Regards,
-> Christian.
+> The sequence also violated the spec (4.0, Section 6.6.1 "Conventional
+> Reset"), because it allowed the endpoint to enter the Detect state before
+> PERST# is deasserted
 > 
 > > 
-> > Thanks
+> > And the fix here is to delay enabling the EP LTSSM until after
+> > stm32_pcie_perst_deassert() calls dw_pcie_ep_init_registers()?
+> > 
 > 
+> > 
+> > I think we would prefer if the host would enumerate the endpoint
+> > whenever the endpoint becomes ready, even if that is after the host's
+> > initial enumeration, but I guess that's only possible if the host is
+> > notified when the link comes up.
+> > 
+> > The main mechanism for that is hotplug, i.e., pciehp handles presence
+> > detect and link layer state changed events, both of which are managed
+> > by the PCIe Slot register set.  Those registers are optional and may
+> > not be implemented, e.g., if a Root Port is connected to a
+> > system-integrated device.
+> > 
+> > But if they *are* implemented, I hope that pciehp makes it so no user
+> > intervention on the host side is required.
+> > 
+> 
+> 
+> I suppose that hotplug cannot be implemented without some kind of presence
+> detection signal from the EP (PRSNT#, ...) ? For now we have no
+> implementation to support this (from gpio or other).
+> 
+
+Most of the non-PC/Server platforms do not have hot pluggable connectors. So the
+lack of PRSNT# signal is very common.
+
+> However, using a PC host, I observe that when I resume the host from PCIe
+> autosuspend, for example, with 'lspci', PERST# is deasserted, and the stm32
+> PCIe EP device is correctly enumerated without a manual rescan. So thanks to
+> power management, a device can be enumerated asynchronously but when
+> requested, not when ready.
+> 
+
+I would assume that any host will deassert PERST# during boot itself, and keep
+the LTSSM in Link.Detect. But if the link is not detected, a host *may* assert
+PERST#. And during resume, it will try the same sequence and if your device is
+connected, it will get enumerated.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
