@@ -1,54 +1,54 @@
-Return-Path: <linux-pci+bounces-41607-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41608-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24AFDC6E428
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 12:37:47 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FD0DC6E5BC
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 13:01:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 8D8C234965F
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 11:31:07 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTPS id D5D802963E
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 12:01:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3C3A34B1A3;
-	Wed, 19 Nov 2025 11:30:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10E4E354AE6;
+	Wed, 19 Nov 2025 12:01:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tsCZ3b90"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6fFcK8Z"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0B9347FFE;
-	Wed, 19 Nov 2025 11:30:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AA3347FE8;
+	Wed, 19 Nov 2025 12:01:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763551844; cv=none; b=SFtQA+zdjYLQz+kppMGMTQytHZptdTCk/fze4VS+j5efuR8c6/YmrJSriZXRXgLzw+YkpxmpzmGZHioKCiMiq7j0rU84/J6wd/6YV7bcq1Q+MzF2O0xTZI1k2FPIrJrZvPAZm9cDxnD1jjeKjD8aRdPHylJLcQvebsgPtTaCM94=
+	t=1763553682; cv=none; b=ncOSHeLJxuq7sQllRdTGQTbDTSz6Rwq306uyeBFExYVcHJRhBc4njqDavsibGk80Cb65trzsYh6nSj1WnbRL6LALyWCOJONPRd7jH877yllBGpDdF0itGIUwAMhQLHgSui32tA/OG3f987hK0/3J6dRn66R+aaBLglGoF9NH4+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763551844; c=relaxed/simple;
-	bh=+5YXdMx46saMCGpp0KfgT4nTqpINGY6N6o3Z2+eXPTE=;
+	s=arc-20240116; t=1763553682; c=relaxed/simple;
+	bh=pUd9GcXWVkOw+Wyv1/2YeXTij1093jTJf2tFx1gxPqA=;
 	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SaI4bYBGCcKOQBeX8UdvIJjBdSHmyxoFdme4GmI9l6rhHUPMnPO22oGKKOC0bPiz1RKZUPRoHrwsYlYjDQb55LYmTM+O6akq5Bcl6NeC04TsG+6o5F0EZ5Zgl8dNjPswzm3twneaWvt/7Ld7SrDuXOwU/XfWVf9vnnOuJ+oPypA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tsCZ3b90; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5D8DC2BCC4;
-	Wed, 19 Nov 2025 11:30:43 +0000 (UTC)
+	 MIME-Version:Content-Type; b=NeXWX2m342ix5XaH+WXuKwl3X1E/K7xONgFyim+fj5J7wLOWfJujkY36x/5TXKArXP9wyVNQ3QKNCQgcuEh4uj5CuE617t/QJvko9jLLJR5XfdWjy0TBVz4G/SjO7ZizDzJ2tJhF5/rWbgVSlTUs6Ur7gWTw1ogU+BMSTFk50IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6fFcK8Z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55A3CC2BCB1;
+	Wed, 19 Nov 2025 12:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763551844;
-	bh=+5YXdMx46saMCGpp0KfgT4nTqpINGY6N6o3Z2+eXPTE=;
+	s=k20201202; t=1763553681;
+	bh=pUd9GcXWVkOw+Wyv1/2YeXTij1093jTJf2tFx1gxPqA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tsCZ3b90FimZTdmqyKH7ucxujhM3RDOJEucEDRLCZK+PUzWI1DGqTA+smX8vh3SmE
-	 e2U2LfTyTs75TS1B4x9wKLllf3zvmRfSBmnHTeATzS/xCcuX3P3YsM3NL0V84M5Ty5
-	 UpHN51yCpVxP0rkB9fxWoM7ySuIAE168EC7gXpb+DboICC8zCGSXabmPjsn8xR386o
-	 DsrlrHxoZvPwEBTGC1iTtaZoyWocNV7DBCOlEH3vBV/gvP28oQIyFFU2cox04BGTt6
-	 3AVG12DxJ1kZo7nXkK/i/7UQ8LYny9VTyMW0BjfNE7RlZbio31UqfOy3EyLh5x1tGT
-	 g6OizM7QjNXfw==
+	b=O6fFcK8ZBkyit8zbUqkkjh9nVcoTRxc+NDVv0ghKMWjAfmkrrOwBGAzU11fJ3csY+
+	 0HiMCbB61IRbktQ1GzWkXYDVAJFTkNclODYuBrE9f0BNHcpk+AV1v9+kBr08bzsCXT
+	 hIOEX2P9DiB0SyqhjihEjeh/n9kEE7JqMk6VO7pv1f32q3kSvVwNyWkUzaPm+ekX7V
+	 1iIlKJQgp9BedvY/bEsvKWYbvNgznE6WMFgbRdSOyzNHIVaH0deHvmn6QSHE4K+W4S
+	 0tOLnKJ2wPTF/+ZGDIb5m1xbUzDUIRoa8sAb8T7IQq/+UvPBbXZYayOaTgqbB0KrDn
+	 ikXvHFebpObKA==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.98.2)
 	(envelope-from <maz@kernel.org>)
-	id 1vLgOX-00000006Vas-0yGm;
-	Wed, 19 Nov 2025 11:30:41 +0000
-Date: Wed, 19 Nov 2025 11:30:40 +0000
-Message-ID: <86ldk2s1i7.wl-maz@kernel.org>
+	id 1vLgsA-00000006W6j-1BYD;
+	Wed, 19 Nov 2025 12:01:18 +0000
+Date: Wed, 19 Nov 2025 12:01:17 +0000
+Message-ID: <86jyzms036.wl-maz@kernel.org>
 From: Marc Zyngier <maz@kernel.org>
 To: Radu Rendec <rrendec@redhat.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>,	Manivannan Sadhasivam
@@ -57,10 +57,10 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,	Manivannan Sadhasivam
  <kwilczynski@kernel.org>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	linux-pci@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: apple: Store private pointer in platform device's drvdata
-In-Reply-To: <20251118221244.372423-3-rrendec@redhat.com>
+Subject: Re: [PATCH 1/2] PCI: host-common: Do not set drvdata in pci_host_common_init()
+In-Reply-To: <20251118221244.372423-2-rrendec@redhat.com>
 References: <20251118221244.372423-1-rrendec@redhat.com>
-	<20251118221244.372423-3-rrendec@redhat.com>
+	<20251118221244.372423-2-rrendec@redhat.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
  (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -76,139 +76,176 @@ X-SA-Exim-Rcpt-To: rrendec@redhat.com, bhelgaas@google.com, mani@kernel.org, wil
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, 18 Nov 2025 22:12:44 +0000,
+On Tue, 18 Nov 2025 22:12:43 +0000,
 Radu Rendec <rrendec@redhat.com> wrote:
 > 
-> Now pci_host_common_init() no longer uses the platform device's drvdata
-> to store the pointer to the allocated struct pci_host_bridge. Use the
-> drvdata to store the pointer to the driver's private data, which is the
-> struct apple_pcie allocated in apple_pcie_probe(). This eliminates the
-> need to store these pointers in a separate mapping table.
+> Currently pci_host_common_init() uses the platform device's drvdata to
+> store the pointer to the allocated struct pci_host_bridge. This makes
+> sense for drivers that use pci_host_common_{probe,remove}() directly as
+> the platform probe/remove functions, but leaves no option for more
+> complex drivers to store a pointer to their own private data.
 > 
-> This reverts most of the changes in commit 643c0c9d0496 ("PCI: apple:
-> Add tracking of probed root ports"). No "Fixes" tag is added because
-> nothing is broken in that commit. This is just a simplification.
+> Change pci_host_common_init() to return the pointer to the allocated
+> struct pci_host_bridge, and move the platform_set_drvdata() call to
+> pci_host_common_probe(). This way, drivers that implement their own
+> probe function can still use pci_host_common_init() but store their own
+> pointer in the platform device's drvdata.
+> 
+> For symmetry, move the release code to a new function that takes a
+> pointer to struct pci_host_bridge, and make pci_host_common_release() a
+> wrapper to it that extracts the pointer from the platform device's
+> drvdata. This way, drivers that store their own private pointer in the
+> platform device's drvdata can still use the library release code.
+> 
+> No functional change to the existing users of pci-host-common is
+> intended, with the exception of the pcie-apple driver, which is modified
+> in a subsequent patch.
+
+This paragraph doesn't belong here. Maybe as a note, but not in the
+commit message.
+
 > 
 > Signed-off-by: Radu Rendec <rrendec@redhat.com>
 > ---
->  drivers/pci/controller/pcie-apple.c | 53 ++++-------------------------
->  1 file changed, 7 insertions(+), 46 deletions(-)
+>  drivers/pci/controller/pci-host-common.c | 36 ++++++++++++++++--------
+>  drivers/pci/controller/pci-host-common.h |  6 ++--
+>  2 files changed, 29 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> index 0380d300adca6..75bb6d51d31c2 100644
-> --- a/drivers/pci/controller/pcie-apple.c
-> +++ b/drivers/pci/controller/pcie-apple.c
-> @@ -187,7 +187,6 @@ struct apple_pcie {
->  	const struct hw_info	*hw;
->  	unsigned long		*bitmap;
->  	struct list_head	ports;
-> -	struct list_head	entry;
->  	struct completion	event;
->  	struct irq_fwspec	fwspec;
->  	u32			nvecs;
-> @@ -206,9 +205,6 @@ struct apple_pcie_port {
->  	int			idx;
->  };
->  
-> -static LIST_HEAD(pcie_list);
-> -static DEFINE_MUTEX(pcie_list_lock);
-> -
->  static void rmw_set(u32 set, void __iomem *addr)
->  {
->  	writel_relaxed(readl_relaxed(addr) | set, addr);
-> @@ -724,45 +720,13 @@ static int apple_msi_init(struct apple_pcie *pcie)
->  	return 0;
+> diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+> index 810d1c8de24e9..86002195c93ac 100644
+> --- a/drivers/pci/controller/pci-host-common.c
+> +++ b/drivers/pci/controller/pci-host-common.c
+> @@ -52,25 +52,24 @@ struct pci_config_window *pci_host_common_ecam_create(struct device *dev,
 >  }
+>  EXPORT_SYMBOL_GPL(pci_host_common_ecam_create);
 >  
-> -static void apple_pcie_register(struct apple_pcie *pcie)
-> -{
-> -	guard(mutex)(&pcie_list_lock);
-> -
-> -	list_add_tail(&pcie->entry, &pcie_list);
-> -}
-> -
-> -static void apple_pcie_unregister(struct apple_pcie *pcie)
-> -{
-> -	guard(mutex)(&pcie_list_lock);
-> -
-> -	list_del(&pcie->entry);
-> -}
-> -
-> -static struct apple_pcie *apple_pcie_lookup(struct device *dev)
-> -{
-> -	struct apple_pcie *pcie;
-> -
-> -	guard(mutex)(&pcie_list_lock);
-> -
-> -	list_for_each_entry(pcie, &pcie_list, entry) {
-> -		if (pcie->dev == dev)
-> -			return pcie;
-> -	}
-> -
-> -	return NULL;
-> -}
-> -
->  static struct apple_pcie_port *apple_pcie_get_port(struct pci_dev *pdev)
->  {
->  	struct pci_config_window *cfg = pdev->sysdata;
-> -	struct apple_pcie *pcie;
-> +	struct apple_pcie *pcie = platform_get_drvdata(to_platform_device(cfg->parent));
-
-Isn't that an overly complicated way to write:
-
-	struct apple_pcie *pcie = dev_get_drvdata(cfg->parent);
-
->  	struct pci_dev *port_pdev;
->  	struct apple_pcie_port *port;
->  
-> -	pcie = apple_pcie_lookup(cfg->parent);
-> -	if (WARN_ON(!pcie))
-> -		return NULL;
-> -
->  	/* Find the root port this device is on */
->  	port_pdev = pcie_find_root_port(pdev);
->  
-> @@ -843,13 +807,9 @@ static void apple_pcie_disable_device(struct pci_host_bridge *bridge, struct pci
->  static int apple_pcie_init(struct pci_config_window *cfg)
->  {
->  	struct device *dev = cfg->parent;
-> -	struct apple_pcie *pcie;
-> +	struct apple_pcie *pcie = platform_get_drvdata(to_platform_device(dev));
->  	int ret;
->  
-> -	pcie = apple_pcie_lookup(dev);
-> -	if (WARN_ON(!pcie))
-> -		return -ENOENT;
-> -
->  	for_each_available_child_of_node_scoped(dev->of_node, of_port) {
->  		ret = apple_pcie_setup_port(pcie, of_port);
->  		if (ret) {
-> @@ -876,6 +836,7 @@ static int apple_pcie_probe(struct platform_device *pdev)
+> -int pci_host_common_init(struct platform_device *pdev,
+> -			 const struct pci_ecam_ops *ops)
+> +struct pci_host_bridge *pci_host_common_init(struct platform_device *pdev,
+> +					     const struct pci_ecam_ops *ops)
 >  {
 >  	struct device *dev = &pdev->dev;
->  	struct apple_pcie *pcie;
+>  	struct pci_host_bridge *bridge;
+>  	struct pci_config_window *cfg;
+> +	int rc;
+>  
+>  	bridge = devm_pci_alloc_host_bridge(dev, 0);
+>  	if (!bridge)
+> -		return -ENOMEM;
+> +		return ERR_PTR(-ENOMEM);
+>  
+>  	of_pci_check_probe_only();
+>  
+> -	platform_set_drvdata(pdev, bridge);
+> -
+>  	/* Parse and map our Configuration Space windows */
+>  	cfg = pci_host_common_ecam_create(dev, bridge, ops);
+>  	if (IS_ERR(cfg))
+> -		return PTR_ERR(cfg);
+> +		return (struct pci_host_bridge *)cfg;
+>  
+>  	bridge->sysdata = cfg;
+>  	bridge->ops = (struct pci_ops *)&ops->pci_ops;
+> @@ -78,31 +77,46 @@ int pci_host_common_init(struct platform_device *pdev,
+>  	bridge->disable_device = ops->disable_device;
+>  	bridge->msi_domain = true;
+>  
+> -	return pci_host_probe(bridge);
+> +	rc = pci_host_probe(bridge);
+> +	if (rc)
+> +		return ERR_PTR(rc);
+> +
+> +	return bridge;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_host_common_init);
+>  
+>  int pci_host_common_probe(struct platform_device *pdev)
+>  {
+>  	const struct pci_ecam_ops *ops;
 > +	struct pci_host_bridge *bridge;
->  	int ret;
 >  
->  	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> @@ -897,11 +858,11 @@ static int apple_pcie_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
+>  	ops = of_device_get_match_data(&pdev->dev);
+>  	if (!ops)
+>  		return -ENODEV;
 >  
-> -	apple_pcie_register(pcie);
-> +	bridge = pci_host_common_init(pdev, &apple_pcie_cfg_ecam_ops);
+> -	return pci_host_common_init(pdev, ops);
+> +	bridge = pci_host_common_init(pdev, ops);
 > +	if (IS_ERR(bridge))
 > +		return PTR_ERR(bridge);
+> +
+> +	platform_set_drvdata(pdev, bridge);
+
+Congratulations, you just broke pcie-microchip-host.c again.
+
+Yes, I did that myself in afc0a570bb613871 ("PCI: host-generic:
+Extract an ECAM bridge creation helper from pci_host_common_probe()"),
+and it was fixed by Geert in bdb32a0f67806 ("PCI: host-generic: Set
+driver_data before calling gen_pci_init()").
+
+> +
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_host_common_probe);
 >  
-> -	ret = pci_host_common_init(pdev, &apple_pcie_cfg_ecam_ops);
-> -	if (ret)
-> -		apple_pcie_unregister(pcie);
-> +	platform_set_drvdata(pdev, pcie);
+> -void pci_host_common_remove(struct platform_device *pdev)
+> +void pci_host_common_release(struct pci_host_bridge *bridge)
+>  {
+> -	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
+> -
+>  	pci_lock_rescan_remove();
+>  	pci_stop_root_bus(bridge->bus);
+>  	pci_remove_root_bus(bridge->bus);
+>  	pci_unlock_rescan_remove();
+>  }
+> +EXPORT_SYMBOL_GPL(pci_host_common_release);
 
-Not quite. You probably want to look at:
+Even with the pcie-apple.c driver change, this is never called. I'd
+refrain from adding an export until we actually have an identified
+user.
 
-- when struct pci_ecam_ops::init() is called...
-- ... compared to when you populate the driver data.
+> +
+> +void pci_host_common_remove(struct platform_device *pdev)
+> +{
+> +	pci_host_common_release(platform_get_drvdata(pdev));
+> +}
+>  EXPORT_SYMBOL_GPL(pci_host_common_remove);
+>  
+>  MODULE_DESCRIPTION("Common library for PCI host controller drivers");
+> diff --git a/drivers/pci/controller/pci-host-common.h b/drivers/pci/controller/pci-host-common.h
+> index 51c35ec0cf37d..018e593bafe47 100644
+> --- a/drivers/pci/controller/pci-host-common.h
+> +++ b/drivers/pci/controller/pci-host-common.h
+> @@ -11,11 +11,13 @@
+>  #define _PCI_HOST_COMMON_H
+>  
+>  struct pci_ecam_ops;
+> +struct pci_host_bridge;
+>  
+>  int pci_host_common_probe(struct platform_device *pdev);
+> -int pci_host_common_init(struct platform_device *pdev,
+> -			 const struct pci_ecam_ops *ops);
+> +struct pci_host_bridge *pci_host_common_init(struct platform_device *pdev,
+> +					     const struct pci_ecam_ops *ops);
+>  void pci_host_common_remove(struct platform_device *pdev);
+> +void pci_host_common_release(struct pci_host_bridge *bridge);
+>  
+>  struct pci_config_window *pci_host_common_ecam_create(struct device *dev,
+>  	struct pci_host_bridge *bridge, const struct pci_ecam_ops *ops);
+
+My concern with this is two-fold:
+
+- it is yet another obscure API change with odd side effects,
+  requiring to track and understand the per-driver flow of information
+  (and the apple pcie driver is a prime example of how hard this is)
+
+- we can't directly associate the PCIe port data with the bridge like
+  must drivers do, because the bridge allocation is done outside of
+  the calling driver, and there is no link back to the bridge from
+  pci_config_window.
+
+I'd rather that last point was addressed so that we could make the
+Apple driver behave similarly to other drivers, and let it use the
+bridge private data for its PCIe port information.
 
 Thanks,
 
