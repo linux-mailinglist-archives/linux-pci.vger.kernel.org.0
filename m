@@ -1,147 +1,77 @@
-Return-Path: <linux-pci+bounces-41598-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41599-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C9F2C6DFB7
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 11:28:56 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 843D3C6E2E3
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 12:16:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 941FA3681F7
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 10:27:23 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0643C4F274B
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 11:10:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5606534C990;
-	Wed, 19 Nov 2025 10:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED26135295D;
+	Wed, 19 Nov 2025 11:08:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MiU7xOEM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFbkS3It"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707CD3446B8;
-	Wed, 19 Nov 2025 10:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B770634F473;
+	Wed, 19 Nov 2025 11:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763548037; cv=none; b=dRSeZ8LDNfgUew98rmwGSBUhsATKcvL0qflJm2YvRMbUc5pcDL8czuy5DJkHChOslbWl430nP/cxuospn/LS4F+uUGFJ81E6wRIrgHqxDPkXoGQt6+49qAe+Z0MDQQS3wHeMgc1Q+fENHeYTfCWJIncHi7WcaF4GM7LAv+QbKJE=
+	t=1763550533; cv=none; b=XHwMbva5SX693dvO+0EgevxzMzB5IQfBSjTsSJMOJFHRxaYCJ11Nt+izdddee3/t+jK/DgJ4ULcvWTuz52nkDyJRwrUoCv8PH6idAsc0fTZ8Nu60id0XZ3mdGhxfxmz3dnfl9/kwzWBTdKPGnC4YwmfKVdeLp9Y551I42TEAiQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763548037; c=relaxed/simple;
-	bh=jmw9bhTP6DqEEo8SaI642JH1s3dFqQGzetmEw8f3+f0=;
+	s=arc-20240116; t=1763550533; c=relaxed/simple;
+	bh=i9B40rXvO4To44vDLCPvVcioheN0Q6vh2sMRTqdfAAs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZDEndxOQsGURyNyw7HJ+3V+/jE0nKso+pQgMGxupM6YJ2sUFd8ByT5zUdqRku+eLZ/bVdynuKs7sPZ5pqALwV5kMjzwfg5VTY37HYidePcJ+UWS5jym+sVUxabI3v10TTkJHSTuvzO/b0fEfj/1JAKGuzcuYStaCZWlv5FiVTVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MiU7xOEM; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763548035; x=1795084035;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jmw9bhTP6DqEEo8SaI642JH1s3dFqQGzetmEw8f3+f0=;
-  b=MiU7xOEMrvpSHRKoOGFoxjvp2olCkMHYcgyVqGCXYhxtUSjKS4HqPHZY
-   jwn1jZ20MYSLYgPZepTcbeT44WCjzhtiyp+/af2F23uBo2SxPny1E+O0E
-   i35l1wp5ztEr/UgnTalJgnFm37qhWHVpZKg8LSXY/NLmt0PE9WL14Y8tO
-   k3h/zOCwTRmKYN7LyemrWXS3V9sFi2e4KayP+OT7P6pLnL9tii32X9EIR
-   Lpgv24Cc1EEW8J6mJRkCTzvjuPiiwhLzT1y6FWYPeBcXX3xztfuWgYKGf
-   GVLiIWrx11wXkoB91Fm9V6NPb59zQvI7HbI0Bo9UlmO1kmJt9DFQYly3E
-   w==;
-X-CSE-ConnectionGUID: 2bBlveQeQxCd7RgNC0YNsw==
-X-CSE-MsgGUID: njPqeXaCSmC15wNSdDdbLw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="65286211"
-X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="65286211"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 02:27:12 -0800
-X-CSE-ConnectionGUID: BabbyDhyQAOE+ZtEsTT7/g==
-X-CSE-MsgGUID: bIH3DAOlTZmt1WuzGTp/dQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="195322765"
-Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.245])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 02:26:53 -0800
-Date: Wed, 19 Nov 2025 12:26:51 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Corey Minyard <corey@minyard.net>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Rob Clark <robin.clark@oss.qualcomm.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
-	Vitaly Lifshits <vitaly.lifshits@intel.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=tClt16QEbomgSwCIySxK/aSYGIy81lVJddMqDjwdA+RJtwuzcaMzCwxc4i9iCv9jVp6HjpaW0uC5MhkVKn+y8hXASD6okv5cDwpnYazpBCq5bKuK/m2qDVRWv4TGkjBALK++ZYLFOjwR9srVFeBPw0ERRlHjyxUHb4ET6zYvK/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFbkS3It; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5474FC19421;
+	Wed, 19 Nov 2025 11:08:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763550533;
+	bh=i9B40rXvO4To44vDLCPvVcioheN0Q6vh2sMRTqdfAAs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gFbkS3ItMYkCvXQBowRYIX3QCL4BzIbk1Z/T4w+vthqVM7dO2duydfViADLoc+28z
+	 jAVLswki+uqnYk3baXc1/xCPjJfR5AAVkweeYyd74OzQFAuRatReJpfNOMwr6OrSsn
+	 t/ukjM48syDrh5wEAKKvmTrwPM3rKHGZu1DKQYu8DoEMLmPge4Ramv+COrtVKAQOnQ
+	 60K0dMSN27vkVmSXH4FkMkxJrjSJtmT8xMAoBi8xerAfNemTyR9dy2nc17hKwr6vOF
+	 p+m7U5E5v86hrPOipyimgLTfy261+7s1J3d77Xp1583aHJiGVx6/zZ2JYwCMv2/V0O
+	 wf1kQrOefETjg==
+Date: Wed, 19 Nov 2025 12:08:41 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
 	Manivannan Sadhasivam <mani@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>, Calvin Owens <calvin@wbinvd.org>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Sagi Maimon <maimon.sagi@gmail.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Karan Tilak Kumar <kartilak@cisco.com>,
-	Hans Verkuil <hverkuil+cisco@kernel.org>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
-	Max Kellermann <max.kellermann@ionos.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, amd-gfx@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, linux-mmc@vger.kernel.org,
-	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-	linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
-	ceph-devel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Gustavo Padovan <gustavo@padovan.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Abhinav Kumar <abhinav.kumar@linux.dev>,
-	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rodolfo Giometti <giometti@enneenne.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Stefan Haberland <sth@linux.ibm.com>,
-	Jan Hoeppner <hoeppner@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Satish Kharat <satishkh@cisco.com>,
-	Sesidhar Baddela <sebaddel@cisco.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 19/21] scsi: fnic: Switch to use %ptSp
-Message-ID: <aR2bazZn8m4EMHdW@smile.fi.intel.com>
-References: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
- <20251113150217.3030010-20-andriy.shevchenko@linux.intel.com>
- <aR2XAYWTEgMZu_Mx@pathway.suse.cz>
+	Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Simon Xue <xxm@rock-chips.com>, Damien Le Moal <dlemoal@kernel.org>,
+	Dragan Simic <dsimic@manjaro.org>, FUKAUMI Naoki <naoki@radxa.com>,
+	Diederik de Haas <diederik@cknow-tech.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Conor Dooley <conor@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Hans Zhang <hans.zhang@cixtech.com>, linux-tegra@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, kernel@pengutronix.de,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 1/4] PCI: dwc: Advertise L1 PM Substates only if
+ driver requests it
+Message-ID: <aR2lOZDBEdGVd9On@ryzen>
+References: <20251118214312.2598220-1-helgaas@kernel.org>
+ <20251118214312.2598220-2-helgaas@kernel.org>
+ <aRz0ak6onKzZs2lY@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -150,133 +80,71 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aR2XAYWTEgMZu_Mx@pathway.suse.cz>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <aRz0ak6onKzZs2lY@lizhi-Precision-Tower-5810>
 
-On Wed, Nov 19, 2025 at 11:08:01AM +0100, Petr Mladek wrote:
-> On Thu 2025-11-13 15:32:33, Andy Shevchenko wrote:
-> > Use %ptSp instead of open coded variants to print content of
-> > struct timespec64 in human readable format.
+On Tue, Nov 18, 2025 at 05:34:18PM -0500, Frank Li wrote:
+> On Tue, Nov 18, 2025 at 03:42:15PM -0600, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> >
+> > L1 PM Substates require the CLKREQ# signal and may also require
+> > device-specific support.  If CLKREQ# is not supported or driver support is
+> > lacking, enabling L1.1 or L1.2 may cause errors when accessing devices,
+> > e.g.,
+> >
+> >   nvme nvme0: controller is down; will reset: CSTS=0xffffffff, PCI_STATUS=0x10
+> >
+> > If the kernel is built with CONFIG_PCIEASPM_POWER_SUPERSAVE=y or users
+> > enable L1.x via sysfs, users may trip over these errors even if L1
+> > Substates haven't been enabled by firmware or the driver.
+> >
+> > To prevent such errors, disable advertising the L1 PM Substates unless the
+> > driver sets "dw_pcie.l1ss_support" to indicate that it knows CLKREQ# is
+> > present and any device-specific configuration has been done.
+> >
+> > Set "dw_pcie.l1ss_support" in tegra194 (if DT includes the
+> > "supports-clkreq' property) and qcom (for cfg_2_7_0, cfg_1_9_0, cfg_1_34_0,
+> > and cfg_sc8280xp controllers) so they can continue to use L1 Substates.
+> >
+> > Based on Niklas's patch:
+> > https://patch.msgid.link/20251017163252.598812-2-cassel@kernel.org
+> >
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> >  .../pci/controller/dwc/pcie-designware-ep.c   |  2 ++
+> >  .../pci/controller/dwc/pcie-designware-host.c |  2 ++
+> >  drivers/pci/controller/dwc/pcie-designware.c  | 24 +++++++++++++++++++
+> >  drivers/pci/controller/dwc/pcie-designware.h  |  2 ++
+> >  drivers/pci/controller/dwc/pcie-qcom.c        |  2 ++
+> >  drivers/pci/controller/dwc/pcie-tegra194.c    |  3 +++
+> >  6 files changed, 35 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index 7f2112c2fb21..ad6c0fd67a65 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -966,6 +966,8 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+> >  	if (ep->ops->init)
+> >  		ep->ops->init(ep);
+> >
+> > +	dw_pcie_hide_unsupported_l1ss(pci);
+> > +
 > 
-> I was about to commit the changes into printk/linux.git and
-> found a mistake during the final double check, see below.
-> 
-> > diff --git a/drivers/scsi/fnic/fnic_trace.c b/drivers/scsi/fnic/fnic_trace.c
-> > index cdc6b12b1ec2..0a849a195a8e 100644
-> > --- a/drivers/scsi/fnic/fnic_trace.c
-> > +++ b/drivers/scsi/fnic/fnic_trace.c
-> > @@ -215,30 +213,26 @@ int fnic_get_stats_data(struct stats_debug_info *debug,
-> >  {
-> >  	int len = 0;
-> >  	int buf_size = debug->buf_size;
-> > -	struct timespec64 val1, val2;
-> > +	struct timespec64 val, val1, val2;
-> >  	int i = 0;
-> >  
-> > -	ktime_get_real_ts64(&val1);
-> > +	ktime_get_real_ts64(&val);
-> >  	len = scnprintf(debug->debug_buffer + len, buf_size - len,
-> >  		"------------------------------------------\n"
-> >  		 "\t\tTime\n"
-> >  		"------------------------------------------\n");
-> >  
-> > +	val1 = timespec64_sub(val, stats->stats_timestamps.last_reset_time);
-> > +	val2 = timespec64_sub(val, stats->stats_timestamps.last_read_time);
-> >  	len += scnprintf(debug->debug_buffer + len, buf_size - len,
-> > -		"Current time :          [%lld:%ld]\n"
-> > -		"Last stats reset time:  [%lld:%09ld]\n"
-> > -		"Last stats read time:   [%lld:%ld]\n"
-> > -		"delta since last reset: [%lld:%ld]\n"
-> > -		"delta since last read:  [%lld:%ld]\n",
-> > -	(s64)val1.tv_sec, val1.tv_nsec,
-> > -	(s64)stats->stats_timestamps.last_reset_time.tv_sec,
-> > -	stats->stats_timestamps.last_reset_time.tv_nsec,
-> > -	(s64)stats->stats_timestamps.last_read_time.tv_sec,
-> > -	stats->stats_timestamps.last_read_time.tv_nsec,
-> > -	(s64)timespec64_sub(val1, stats->stats_timestamps.last_reset_time).tv_sec,
-> > -	timespec64_sub(val1, stats->stats_timestamps.last_reset_time).tv_nsec,
-> > -	(s64)timespec64_sub(val1, stats->stats_timestamps.last_read_time).tv_sec,
-> > -	timespec64_sub(val1, stats->stats_timestamps.last_read_time).tv_nsec);
-> > +			 "Current time :          [%ptSp]\n"
-> > +			 "Last stats reset time:  [%ptSp]\n"
-> > +			 "Last stats read time:   [%ptSp]\n"
-> > +			 "delta since last reset: [%ptSp]\n"
-> > +			 "delta since last read:  [%ptSp]\n",
-> 
-> Both delta times are printed at the end.
-> 
-> > +			 &val,
-> > +			 &stats->stats_timestamps.last_reset_time, &val1,
-> > +			 &stats->stats_timestamps.last_read_time, &val2);
-> 
-> I think that this should be:
-> 
-> 			 &stats->stats_timestamps.last_reset_time,
-> 			 &stats->stats_timestamps.last_read_time,
-> 			 &val1, &val2);
-> 
-> >  	stats->stats_timestamps.last_read_time = val1;
-> 
-> The original code stored the current time in "val1". This should be:
-> 
-> 	stats->stats_timestamps.last_read_time = val;
-> 
-> > @@ -416,8 +410,8 @@ int fnic_get_stats_data(struct stats_debug_info *debug,
-> >  	jiffies_to_timespec64(stats->misc_stats.last_ack_time, &val2);
-> 
-> Just for record. Another values are stored into @val1 and @val2 at
-> this point.
-> 
-> >  	len += scnprintf(debug->debug_buffer + len, buf_size - len,
-> > -		  "Last ISR time: %llu (%8llu.%09lu)\n"
-> > -		  "Last ACK time: %llu (%8llu.%09lu)\n"
-> > +		  "Last ISR time: %llu (%ptSp)\n"
-> > +		  "Last ACK time: %llu (%ptSp)\n"
-> >  		  "Max ISR jiffies: %llu\n"
-> >  		  "Max ISR time (ms) (0 denotes < 1 ms): %llu\n"
-> >  		  "Corr. work done: %llu\n"
-> > @@ -437,10 +431,8 @@ int fnic_get_stats_data(struct stats_debug_info *debug,
-> >  		  "Number of rport not ready: %lld\n"
-> >  		 "Number of receive frame errors: %lld\n"
-> >  		 "Port speed (in Mbps): %lld\n",
-> > -		  (u64)stats->misc_stats.last_isr_time,
-> > -		  (s64)val1.tv_sec, val1.tv_nsec,
-> > -		  (u64)stats->misc_stats.last_ack_time,
-> > -		  (s64)val2.tv_sec, val2.tv_nsec,
-> > +		  (u64)stats->misc_stats.last_isr_time, &val1,
-> > +		  (u64)stats->misc_stats.last_ack_time, &val2,
-> 
-> So, this is correct!
-> 
-> >  		  (u64)atomic64_read(&stats->misc_stats.max_isr_jiffies),
-> >  		  (u64)atomic64_read(&stats->misc_stats.max_isr_time_ms),
-> >  		  (u64)atomic64_read(&stats->misc_stats.corr_work_done),
-> 
-> 
-> Now, I think that there is no need to resend the entire huge patchset.
-> 
-> I could either fix this when comitting or commit the rest and
-> you could send only this patch for review.
+> And, I don't think EP need clean L1SS CAP flags. If EP don't support L1SS,
+> it should be force pull down #clkreq.
 
-Thank you for the thoroughly done review, I changed that patch between the
-versions and the problem is that for printf() specifiers (extensions) we do not
-have an automatic type checking. We starve for a GCC plugin for that, yeah...
+I think the problem is that we cannot force pull down CLKREQ# in a generic
+DWC function. That would have to be done in glue driver specific callbacks.
 
-In any case, if you fold your changes in, I will appreciate that!
-Otherwise it's also fine with me to send a patch separately later on.
+Bjorn, perhaps we should simply drop the dw_pcie_hide_unsupported_l1ss()
+call from dw_pcie_ep_init_registers(), and consider hiding L1ss for EPs to
+be out of scope for this series.
 
-> PS: All other patches look good. Well, nobody acked 7th patch yet.
->     But I think that the change is pretty straightforward and
->     we could do it even without an ack.
+That way, we could still queue this series up for 6.19.
 
-This is my understanding as well. It changes the output, but that output is
-debug anyway. So I don't expect breakage of anything we have an obligation
-to keep working.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thoughts from everyone?
 
 
+
+Kind regards,
+Niklas
 
