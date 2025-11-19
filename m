@@ -1,168 +1,290 @@
-Return-Path: <linux-pci+bounces-41650-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41652-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3361FC6FA33
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 16:25:11 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD044C6FB89
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 16:43:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7F78734A39D
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 15:18:22 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id A686C2DC2F
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 15:43:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D424835E54A;
-	Wed, 19 Nov 2025 15:18:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D7BD2E92B3;
+	Wed, 19 Nov 2025 15:42:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XLnzen65"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Q6XYebHb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from sinmsgout01.his.huawei.com (sinmsgout01.his.huawei.com [119.8.177.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A0320DD75;
-	Wed, 19 Nov 2025 15:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0F42E92D0;
+	Wed, 19 Nov 2025 15:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=119.8.177.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763565496; cv=none; b=FzRV6KSTROU0hK43wMrWlWYjj2Gu6FznjcSdUFZqB18SPjJHqToK500Bp+e+iiz505j2DcTRFj1fwpieMH6BUNaqMXtkl1ENrqYxneld3OqF0VtI2+BWLwgj02O1ZA2kxJOKHC/b9ngvMU2X6r3yjnfA0Qsrf35XbQi6KSuQXqo=
+	t=1763566975; cv=none; b=SMTQRzwFdNr5pErZE+M3fkF2NgVb0OMV7ADH1dbGT7Xz7HFVAPe/ltZtpFtQYNsEfvD30Le01h3V5wyg8blUN186uS5xtS+3OfwAEk7EelsCYUTng4k5ammSZYt+SFObHDbHCRjDEbEbfg0NaJkEZpt25oZ1IviL0eepIIy6YHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763565496; c=relaxed/simple;
-	bh=m0bilSG7anMQ9RivuCEK2eUyRhrGLdhp3oH84ZVeV+o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t59KAv8ccarR8fpcFbgMJTn/7yaiT/QCi8tO9Io1KR7xvZxfyE4pjfmr6wNqz7eNSY7Ak24MTiOysfAU/gW23yoaVqDQfknyDPZ7+Xpy6H7kSfhPcF5K6N1hJY5l1N/YEkat8o8AsOl1G+AfFv90ZSrlEa3m02Su+3Hr1C6UArs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XLnzen65; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763565495; x=1795101495;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=m0bilSG7anMQ9RivuCEK2eUyRhrGLdhp3oH84ZVeV+o=;
-  b=XLnzen65eGSWqz6O2mMxVm4khBPt02nERAmEcF/IYJSiHuuNWjjGQmnl
-   JBVSYVjrIaq8Rd/VO+ethowB8E57n0WWpAuuhkRMR4GBdV/k4voIv0jJs
-   gfAxmLAQ1xHwZEmZ77JIYu1r4KqubuJw5B4qMSGLTiej8s6ZOi3YcaeVD
-   Vs7NdGviCPY5sSgDWILxAFIf1LbE1eObl4Xs4CUM544KoZuoRVhSzF0o5
-   kHIsduamqZ8ydpi2h3D72+fS7fzxmUAFLq9dssr+UZcAjRq0UcApmDJTg
-   DR9242AWauRlUq1u4fDREDzpaCJ/d1vSBmaEiwttbxNnx6Du4kR8wN3o7
-   A==;
-X-CSE-ConnectionGUID: qBP2JSFqQXSubgRbklg3jw==
-X-CSE-MsgGUID: SSc9diKkSt+RaVL3Vl9SzQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="64617542"
-X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="64617542"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 07:18:14 -0800
-X-CSE-ConnectionGUID: 77q1zW97SkiWo5sUap2Uug==
-X-CSE-MsgGUID: nflCPgkUSNmMF8EyK7HDaA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="190871917"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.109.180]) ([10.125.109.180])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2025 07:18:14 -0800
-Message-ID: <3c069d9f-501e-4fde-8ec7-7ea60e4159d0@intel.com>
-Date: Wed, 19 Nov 2025 07:18:13 -0800
+	s=arc-20240116; t=1763566975; c=relaxed/simple;
+	bh=35vOJPyrgKb+9cfdez7P0ePWSzUKBrJup9U4Y+XzUhU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K8ugphzLd/9R/oHa5ijz8lNROcErroNK2fvBoKMujnY1otc6aOhiNmjBeS8RYYh05o4Zm/68YZbNuxJGd0oaHpD85doVu/k20VCjOsf1GhUOlNMsfN8ZLQ9mNzHSJFP3btkoGSF1og5L9onSKhO1VNfVEsLSD06oZayAMAaCutM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Q6XYebHb; arc=none smtp.client-ip=119.8.177.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=4KQ60AZkRR436n3z62l8wSAm4xK4aGrP18HCQEaGmFI=;
+	b=Q6XYebHbPap5JMYIPqzRsnJ0QvPVtJvZHbN2hIehZnC6wg1n94G2W6lCweazDWEVFr+nUIDUR
+	jaMCNXyMHIVgELx9VoVzTuCPm1H/aAfEp8lPKvKw+4Sod7xAadtW/ESkE3Nbjby+7qmrqUH5/to
+	GKTFGP5Mr5INoRWoVKDwG9c=
+Received: from frasgout.his.huawei.com (unknown [172.18.146.32])
+	by sinmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4dBQD415Jjz1P7G1;
+	Wed, 19 Nov 2025 23:20:51 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dBQDq3W4VzHnH4l;
+	Wed, 19 Nov 2025 23:21:31 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7B0B81402ED;
+	Wed, 19 Nov 2025 23:22:04 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 19 Nov
+ 2025 15:22:03 +0000
+Date: Wed, 19 Nov 2025 15:22:01 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
+CC: <linux-coco@lists.linux.dev>, <kvmarm@lists.linux.dev>,
+	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <aik@amd.com>, <lukas@wunner.de>, Samuel Ortiz
+	<sameo@rivosinc.com>, Xu Yilun <yilun.xu@linux.intel.com>, Jason Gunthorpe
+	<jgg@ziepe.ca>, Suzuki K Poulose <Suzuki.Poulose@arm.com>, Steven Price
+	<steven.price@arm.com>, Bjorn Helgaas <helgaas@kernel.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>, Will Deacon
+	<will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: [PATCH v2 01/11] coco: guest: arm64: Guest TSM callback and
+ realm device lock support
+Message-ID: <20251119152201.00000876@huawei.com>
+In-Reply-To: <20251117140007.122062-2-aneesh.kumar@kernel.org>
+References: <20251117140007.122062-1-aneesh.kumar@kernel.org>
+	<20251117140007.122062-2-aneesh.kumar@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 00/26] PCI/TSM: TDX Connect: SPDM Session and IDE
- Establishment
-To: Xu Yilun <yilun.xu@linux.intel.com>, linux-coco@lists.linux.dev,
- linux-pci@vger.kernel.org
-Cc: chao.gao@intel.com, dave.jiang@intel.com, baolu.lu@linux.intel.com,
- yilun.xu@intel.com, zhenzhong.duan@intel.com, kvm@vger.kernel.org,
- rick.p.edgecombe@intel.com, dave.hansen@linux.intel.com,
- dan.j.williams@intel.com, kas@kernel.org, x86@kernel.org
-References: <20251117022311.2443900-1-yilun.xu@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20251117022311.2443900-1-yilun.xu@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-Any chance we could use english in subjects? Isn't this something more
-along the lines of:
+On Mon, 17 Nov 2025 19:29:57 +0530
+"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
 
-	PCI: Secure Device Passthrough For TDX, initial support
+> Register the TSM callback when the DA feature is supported by RSI. The
+> build order is also adjusted so that the TSM class is created before the
+> arm-cca-guest driver is initialized.
+> 
+> In addition, add support for the TDISP lock sequence. Writing a TSM
+> (TEE Security Manager) device name from `/sys/class/tsm` into `tsm/lock`
+> triggers the realm device lock operation.
+> 
+> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+Hi Aneesh,
 
-I mean, "TDX Connect" is a pure marketing term that doesn't tell us
-much. Right?
+Some minor stuff in here.   One general comment is that there
+are some fixlets for the CCA code surrounding what this patch
+should focus on. Break those out as separate cleanup or base
+this on top of the fixed up version of that code.
 
-I'll also say that even the beginning of the cover letter doesn't help a
-lot. Plain, acronym-free language when possible would be much
-appreciated there and across this series.
+Thanks,
 
-For instance, there's not even a problem statement to be seen. I asked
-ChatGPT: "write me a short, three sentence plain language paragraph
-about why TDX Connect is needed on top of regular TDX"
+Jonathan
 
-	Regular TDX keeps a guest’s memory safe but leaves the path to
-	physical devices exposed to the host. That means the host could
-	spoof a device, alter configuration, or watch DMA traffic. TDX
-	Connect closes that gap by letting the guest verify real devices
-	and encrypt the I/O link so the host can’t interfere.
+> diff --git a/arch/arm64/kernel/rsi.c b/arch/arm64/kernel/rsi.c
+> index 1b716d18b80e..2ec0f5dff02e 100644
+> --- a/arch/arm64/kernel/rsi.c
+> +++ b/arch/arm64/kernel/rsi.c
+> @@ -15,6 +15,7 @@
+>  #include <asm/rsi.h>
+>  
+>  static struct realm_config config;
+> +static unsigned long rsi_feat_reg0;
+>  
+>  unsigned long prot_ns_shared;
+>  EXPORT_SYMBOL(prot_ns_shared);
+> @@ -22,6 +23,12 @@ EXPORT_SYMBOL(prot_ns_shared);
+>  DEFINE_STATIC_KEY_FALSE_RO(rsi_present);
+>  EXPORT_SYMBOL(rsi_present);
+>  
+> +bool rsi_has_da_feature(void)
+> +{
+> +	return u64_get_bits(rsi_feat_reg0, RSI_FEATURE_REGISTER_0_DA);
 
-That would be a great way to open a cover letter.
+I'm not keen on mixing explicit size of a u64 with the implicit
+fact an unsigned long is effectively a u64.  Can we tidy up the types
+to match?
+ 
+> +}
+> +EXPORT_SYMBOL_GPL(rsi_has_da_feature);
 
-On 11/16/25 18:22, Xu Yilun wrote:
->  arch/x86/virt/vmx/tdx/tdx.c                   | 740 ++++++++++++-
->  arch/x86/virt/vmx/tdx/tdx_global_metadata.c   |  32 +
+> diff --git a/drivers/virt/coco/Makefile b/drivers/virt/coco/Makefile
+> index cb52021912b3..57556d7c1cec 100644
+> --- a/drivers/virt/coco/Makefile
+> +++ b/drivers/virt/coco/Makefile
+> @@ -6,6 +6,6 @@ obj-$(CONFIG_EFI_SECRET)	+= efi_secret/
+>  obj-$(CONFIG_ARM_PKVM_GUEST)	+= pkvm-guest/
+>  obj-$(CONFIG_SEV_GUEST)		+= sev-guest/
+>  obj-$(CONFIG_INTEL_TDX_GUEST)	+= tdx-guest/
+> -obj-$(CONFIG_ARM_CCA_GUEST)	+= arm-cca-guest/
+>  obj-$(CONFIG_TSM) 		+= tsm-core.o
+>  obj-$(CONFIG_TSM_GUEST)		+= guest/
+> +obj-$(CONFIG_ARM_CCA_GUEST)	+= arm-cca-guest/
 
-Let me know if anyone feels differently, but I really think the "TDX
-Host Extensions" need to be reviewed as a different patch set. Sure,
-they are a dependency for "TDX Connect". But, in the end, the host
-extension enabling does not interact at *ALL* with the later stuff. It's
-purely:
+Check all patches for noise like this.  It may be a valid change but in this series
+it's just adding confusion.
 
-	* Ask the TDX module how much memory it wants
-	* Feed it with that much memory
+> diff --git a/drivers/virt/coco/arm-cca-guest/Kconfig b/drivers/virt/coco/arm-cca-guest/Kconfig
+> index a42359a90558..66b2d9202b66 100644
+> --- a/drivers/virt/coco/arm-cca-guest/Kconfig
+> +++ b/drivers/virt/coco/arm-cca-guest/Kconfig
+> @@ -1,11 +1,17 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +
+>  config ARM_CCA_GUEST
+>  	tristate "Arm CCA Guest driver"
+>  	depends on ARM64
+> +	depends on PCI_TSM
+>  	select TSM_REPORTS
+>  	select AUXILIARY_BUS
+> +	select TSM
+>  	help
+> -	  The driver provides userspace interface to request and
+> +	  The driver provides userspace interface to request an
 
-... and voila! The fancy new extension works. Right?
+Push this fixlet to the series adding this or a follow up if that isn't being respun.
+Definitely shouldn't be in here.
 
-But can we break this up, please?
+>  	  attestation report from the Realm Management Monitor(RMM).
+> +	  If the DA feature is supported, it also register with TSM framework.
+>  
+>  	  If you choose 'M' here, this module will be called
+>  	  arm-cca-guest.
+> diff --git a/drivers/virt/coco/arm-cca-guest/Makefile b/drivers/virt/coco/arm-cca-guest/Makefile
+> index 75a120e24fda..bc3b2be4019f 100644
+> --- a/drivers/virt/coco/arm-cca-guest/Makefile
+> +++ b/drivers/virt/coco/arm-cca-guest/Makefile
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> +#
+
+Stray change.
+
+>  obj-$(CONFIG_ARM_CCA_GUEST) += arm-cca-guest.o
+>  
+>  arm-cca-guest-y +=  arm-cca.o
+> diff --git a/drivers/virt/coco/arm-cca-guest/arm-cca.c b/drivers/virt/coco/arm-cca-guest/arm-cca.c
+> index dc96171791db..288fa53ad0af 100644
+> --- a/drivers/virt/coco/arm-cca-guest/arm-cca.c
+> +++ b/drivers/virt/coco/arm-cca-guest/arm-cca.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /*
+> - * Copyright (C) 2023 ARM Ltd.
+> + * Copyright (C) 2025 ARM Ltd.
+Usually we just extend the date span rather than claiming everything is
+2025. e.g.
+ * Copyright (C) 2023-2025 ARM Ltd.
+
+>   */
+
+> @@ -192,6 +194,57 @@ static void unregister_cca_tsm_report(void *data)
+>  	tsm_report_unregister(&arm_cca_tsm_report_ops);
+>  }
+>  
+> +static struct pci_tsm *cca_tsm_lock(struct tsm_dev *tsm_dev, struct pci_dev *pdev)
+> +{
+> +	int ret;
+> +
+> +	struct cca_guest_dsc *cca_dsc __free(kfree) =
+> +		kzalloc(sizeof(*cca_dsc), GFP_KERNEL);
+> +	if (!cca_dsc)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	ret = pci_tsm_devsec_constructor(pdev, &cca_dsc->pci, tsm_dev);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	return ERR_PTR(-EIO);
+
+Perhaps add a comment so you have something like
+
+	return ERR_PTR(-EIO); /* For now always return an error */
+
+Just makes it a tiny bit easier to review as no need to go check this
+is removed in a later patch.
+
+> +}
+> +
+> +static void cca_tsm_unlock(struct pci_tsm *tsm)
+> +{
+> +	struct cca_guest_dsc *cca_dsc = to_cca_guest_dsc(tsm->pdev);
+> +
+> +	kfree(cca_dsc);
+> +}
+> +
+> +static struct pci_tsm_ops cca_devsec_pci_ops = {
+> +	.lock = cca_tsm_lock,
+> +	.unlock = cca_tsm_unlock,
+> +};
+> +
+> +static void cca_devsec_tsm_remove(void *tsm_dev)
+> +{
+> +	tsm_unregister(tsm_dev);
+> +}
+> +
+> +static int cca_devsec_tsm_register(struct auxiliary_device *adev)
+> +{
+> +	struct tsm_dev *tsm_dev;
+> +	int rc;
+> +
+> +	tsm_dev = tsm_register(&adev->dev, &cca_devsec_pci_ops);
+> +	if (IS_ERR(tsm_dev))
+> +		return PTR_ERR(tsm_dev);
+> +
+> +	rc = devm_add_action_or_reset(&adev->dev, cca_devsec_tsm_remove, tsm_dev);
+> +	if (rc) {
+> +		cca_devsec_tsm_remove(tsm_dev);
+
+Take a look at what the _or_reset() does in the devm_add_action_or_reset().
+Short story, you should not need this call if the devm machinery has returned
+an error.
+
+> +		return rc;
+> +	}
+> +
+> +	return 0;
+> +}
+
+> diff --git a/drivers/virt/coco/arm-cca-guest/rsi-da.h b/drivers/virt/coco/arm-cca-guest/rsi-da.h
+> new file mode 100644
+> index 000000000000..5ad3b740710e
+> --- /dev/null
+> +++ b/drivers/virt/coco/arm-cca-guest/rsi-da.h
+
+> +static inline int rsi_vdev_id(struct pci_dev *pdev)
+> +{
+> +	return (pci_domain_nr(pdev->bus) << 16) |
+> +	       PCI_DEVID(pdev->bus->number, pdev->devfn);
+
+I'm struggling to find where this is actually defined in the various specs
+so good to have a reference in a comment here.
+
+> +}
+> +
+> +#endif
+
 
