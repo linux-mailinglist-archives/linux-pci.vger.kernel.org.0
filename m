@@ -1,205 +1,254 @@
-Return-Path: <linux-pci+bounces-41564-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41565-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6362C6C5F3
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 03:27:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D0B86C6C62C
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 03:30:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id 6F36E298C0
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 02:27:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id 7A06529948
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 02:30:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CF42284686;
-	Wed, 19 Nov 2025 02:27:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B3DE1F130B;
+	Wed, 19 Nov 2025 02:30:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="BnPU31r7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eeZ26/G+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023111.outbound.protection.outlook.com [52.101.127.111])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBC81E8329;
-	Wed, 19 Nov 2025 02:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.111
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763519250; cv=fail; b=Hi9CqXzuTpIVg/Dqi/8ppghp0ifBVgk4HcOIJx2kKt+ZBkIy2iTk+JGuvf1CRT/0gPhp41LxUnTLYTU0jwtCCyr9jo5c2Y1AT6B//i2r1GtpOOXg8k8abGycNH5L92QdF1FPEYq86ruSp66I2WHzv23YuiBiINe/5cyxDFVaDZM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763519250; c=relaxed/simple;
-	bh=M9qWg364L09Q3J1of4DYNpWPtvtx69nicBOneuMpbtU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Sahj1oar+CWvek93x5abkz4JskcLqFf34roP8skzlwqE2EHoxowWr0hjr+CdPlEydfFZ8AFz1ORe/FsqYB2coaDGqoPqfSRh39DrXDmQICJGasSJNoyP/MrQSpa3SHsNmoaTr7w0siUtmbg30ob1LffbA33k73inWVBoEqHnRO8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=BnPU31r7; arc=fail smtp.client-ip=52.101.127.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ht55eN+MnhkD+qjvI9sOaS7vEcMY8exAF9l+mZ5W/G6yn23bDl8v5Cc17x0GHpPkRt6zUA+sLyZ63KVCKNthxqM4Y+306tU35tzn9doCgK+sDg8FXTJVsy7u3sA2KOc3qjPfFqJnkapgV1a9a+sBD2aI4dIBkVJXoeUVB3GR/7KNcHOiUAgOQ9eZYGB42FC1lFJDqhH8I2yJD3GubsLdMqEkE0De3hbS3gKTJqwz6z3oES9EjnKcfTtmdwWXvO5+ils2B21O6a1dM0oyIEEoNFrxkxpxSCZZWHXCHCauCa2yg2z7ijsudVNp3+c80NPm1sSrqB/wgOv6qHksUoczRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M9qWg364L09Q3J1of4DYNpWPtvtx69nicBOneuMpbtU=;
- b=ngEn/+eX+DsE+rwJZ6gfKQH/LxrqJ7X424w+kOv3Iz1+oP2dLrUedO3yKGthNdQ5h9sfKak6r5J0vkdJSvAwPAMxTowuZHdf4KNAANJAPmtQXEVXz6OLVym5sMHmkSuWubOiFRZGS/sYq9OiAMlJRS9qyROFTNt/0bpb5XQeVjnCKFzWtO/LD7RmmX1xkJH8Ynxw8iPYAKnWxdvuYFvvZKYMWDgs79UVNAlCbn4VXx7RAJUErczhIfoL69m8gIO1yv7VgYT1jV3PK6HM2b3WSju5550DE8o7VqhHciArespDJclc2H4TFI4U40JhaeTuwvyvjKxQvsizP51MG8io4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M9qWg364L09Q3J1of4DYNpWPtvtx69nicBOneuMpbtU=;
- b=BnPU31r7za4anJ7S1lqiakHsvIYhHFqCn39uvMBV37Ip6xgaYTyyLINsKiRvgdGgxiHlhn4gwlSZR3bPA3h0rGfFmWCCb817S6JqENKzmrbFIvtGrD4LnOV9o4Ve0YiP7ce0fKjF1Q5Ef9JGWylHqJqxc52MQrw3ShrmSWq4CqLGyt+u+LXz5T4afrO4NsVPDET0AhnuipQL8bI6XRhaGZeJPTjVyENcDuEz/nnBy/P3UWha3Wl95y4+tq/W05Qz9DmJFAE1pD+MaHxHLq5/vLXxlQvkjQ1Gncktg+i3zrjcvJ4QCFwArHASjDguJPdMeLjK0cG/2yNr7yVY9OTKRg==
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
- by SEYPR06MB5181.apcprd06.prod.outlook.com (2603:1096:101:8c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.21; Wed, 19 Nov
- 2025 02:27:22 +0000
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28%6]) with mapi id 15.20.9320.018; Wed, 19 Nov 2025
- 02:27:22 +0000
-From: Jacky Chou <jacky_chou@aspeedtech.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Andrew
- Jeffery <andrew@codeconstruct.com.au>, Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, Manivannan
- Sadhasivam <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, "linux-aspeed@lists.ozlabs.org"
-	<linux-aspeed@lists.ozlabs.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-phy@lists.infradead.org"
-	<linux-phy@lists.infradead.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: [PATCH v5 6/8] PCI: Add FMT, TYPE and CPL status definition for TLP
- header
-Thread-Topic: [PATCH v5 6/8] PCI: Add FMT, TYPE and CPL status definition for
- TLP header
-Thread-Index: AQHcV78oxw3pQAYCo0+MHD1idq0RtbT3H9KAgAIoIzA=
-Date: Wed, 19 Nov 2025 02:27:20 +0000
-Message-ID:
- <SEYPR06MB51340B04D9423EDEABFE9BA79DD7A@SEYPR06MB5134.apcprd06.prod.outlook.com>
-References: <20251117-upstream_pcie_rc-v5-6-b4a198576acf@aspeedtech.com>
- <20251117172859.GA2466937@bhelgaas>
-In-Reply-To: <20251117172859.GA2466937@bhelgaas>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|SEYPR06MB5181:EE_
-x-ms-office365-filtering-correlation-id: e7a4cb08-81a0-4be2-3aa4-08de27132ae0
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700021;
-x-microsoft-antispam-message-info:
- =?iso-8859-2?Q?S/PD1iHEg+ITnyVBPaua2SAZyE8HOi0gsc1if3DLqBdq3DtpIhYQrOcBEt?=
- =?iso-8859-2?Q?YPCNTrMa6sQYAoKT8L3Ygo1ICTNjbgX+M15mEMxfCYgV1pGSon667eEviH?=
- =?iso-8859-2?Q?CCYbjT2h4D8auEE7oaaPY7AVsjlKFfR/y/oM62iEfaKudG5zXPIbogU7Jm?=
- =?iso-8859-2?Q?IOav5fE3yuRdUaeUXekLyCPC+np3zDqJzgrg1UHMrRTESgpTfJdlgTFa0n?=
- =?iso-8859-2?Q?sOwvfDDZv2h/UcJPkI1kimMhYx9EsBpTDUy3wEiWtpn5ce66OqxS6Gk2wJ?=
- =?iso-8859-2?Q?HlVTSQrApRF3TaSaDh4J1CoIuTU1WEsUcwUE/XXtkAmlBn45r+SMvAFatM?=
- =?iso-8859-2?Q?AfHcJ/CA5u4fpGoGGGTuRZsJx5DyzD+B0p4OTGGbi6DPRpzPuNRLrrxQIK?=
- =?iso-8859-2?Q?zjMQNd0SjkWNT9XQF/LsJEmWmivlkva3vfXO0q2mili+I0VtmdZYPfcJ6i?=
- =?iso-8859-2?Q?Zv8cl1K0qQIKP1n0v1N818nUONw1E6OrtE2HbYgVn0r3Z1+tCj4xoc90Om?=
- =?iso-8859-2?Q?BgVfngjPRv7aIsKifeGw+m27Hzk0d8ttiHH6DhOL/2+/p1nh8qDw4WQBF3?=
- =?iso-8859-2?Q?LTn7PNF/oA/ziXJZVtUWJkHPL/hU+iBR05rnySc4nhATPI5qejUk1ZqtdL?=
- =?iso-8859-2?Q?SXRcoXcoGD0z6G0d1BfmKh5jdSp5S6kUwH+MIngbukHJCZp3rtFyuG4F4+?=
- =?iso-8859-2?Q?DijaMkosWid/uZUiRt81QfP4t78qwtGScr1DScyoFRtVT6Wfp9UQoT5L2s?=
- =?iso-8859-2?Q?yv91/l83JxhtgXPOrZMAC4XFQBAlv2v19GpzejVmHRVpKkA2M3L3Yy4ANW?=
- =?iso-8859-2?Q?O+m34XOmcfnJr0ZjEHLDUOYHgCIgVBska1untwIqywymQML/WqlEMXFP0K?=
- =?iso-8859-2?Q?Z2QpA4+WVeVQVuWFj4TpajFW0wb9zvdcA2/j2ZaQfF9Pq58auNZjHJQ74d?=
- =?iso-8859-2?Q?0t3+np5d7EQ/Sa5iWU9n+O7Gmdd3sR57/uLpK+zjnOmH62UO48UvNFDwt8?=
- =?iso-8859-2?Q?tri1hjrP3hX5Uk2wKSqIx6bVTzdh8dT3c0J94aqdvTNxQgAOdVCesq71QE?=
- =?iso-8859-2?Q?JQDIQorsOIAxK5HmFAT+t/qdiOVoIWYILvjGLEQgQNWRQTaLCbapXwc7xO?=
- =?iso-8859-2?Q?DxLJUi6fRLLusauJj2EB0DvkvAPMQvkB40FjxJFLN6yFl2GE5EVWvDfFlV?=
- =?iso-8859-2?Q?RVlahHfTBYcR2p2qFSpLc1yIIx/91l9b2e8aNFg3BfT7zKxcEoUm4HLQFf?=
- =?iso-8859-2?Q?LeuoFue3SSIntk2SdoTENIBm3c5hJWgUr9d+Y3dWz91kPSN2Lcfre2W4su?=
- =?iso-8859-2?Q?mdVq+Zl+N/T6Wx3jaju/e74/q50Egu4pfiWg5nM4tpGEXO5LrVuFkwH9Pg?=
- =?iso-8859-2?Q?LLMbNYR9wIi35FBAi2FuJOt8unCgUI45ME7WU+6jLZQoGEwmQrtr3RmMTt?=
- =?iso-8859-2?Q?WqlSb/c+6xghmifWMIm7hNzc4gwkVYQ4Y92t/owHcemezf5tUEY8v53Don?=
- =?iso-8859-2?Q?uQIHj9T5sPNARlKHmy93OxgzqQ/z+Sn1ZqTExuew9o95Wx7jVg61SNm9HM?=
- =?iso-8859-2?Q?/Vz7NRVJMeT4o30kcH9lEUUPauzY?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?UZ3n9gSw7+dwJ02C/sM0Tw3myoMjpLY+elZ8XxZzfmqk96Xi9F+RXMRdFx?=
- =?iso-8859-2?Q?B/QmL5I8sX1oYj58SQf3SLE+9BCPjXLJZUySF3zx/8PpouZh4Sy1Iehqua?=
- =?iso-8859-2?Q?mByu/M1IobKk4+gXcwMtIDo/2CISsbXGN+5mVbR9peVFes5Rbpy15rPh1m?=
- =?iso-8859-2?Q?ya7nv+ZjqwsK+I79DbF+75cM+EZ02aiSDMs9xP/GtejxOUxv60k6FUqhUu?=
- =?iso-8859-2?Q?lqdB9PKoxqGJASmQPL0DfoEIsw6Qv/XIDcgcDAl1zIaJCW8Fazul7DUfq+?=
- =?iso-8859-2?Q?XARNu6vFdZ+IKdVJ3bQh6PVYtNstjcPoV5Yhd2UiUbehdp1iFm+zRVHcfm?=
- =?iso-8859-2?Q?673gYmuv7RCPqubGM5g8/I0g/HJHBHTZPx5imyDHblU+MxYh7joUNx3EV3?=
- =?iso-8859-2?Q?KFEI+sjmuvFLWrZFVQBOYsaflPIHK14VtJ9+QrgspRTGh8h6M83OEimsoF?=
- =?iso-8859-2?Q?k7nC6ZU8uKcBGoPkPIrPXZxh2ytHlqxscF7TqiFWlurC7xdwGL0F0NP48i?=
- =?iso-8859-2?Q?jiAoLGiGbq+C+owBDVdys5eXRHFrBiz5rFRahuZsrb4LpmWlgdafUq/dWN?=
- =?iso-8859-2?Q?UtD+35TmJ8EVxyLu+hnp+8CFj2ATcLYlB1u+amc7XBCCksBhl/NdmqXjy7?=
- =?iso-8859-2?Q?Qnq6CMPd4ZYvcoXAkVMADezYseH387vxISBE07HhzZuLLZEsSz7cI12CJY?=
- =?iso-8859-2?Q?zJlYBoKqKsMtNHTEpGHUZPkjIf0aQGqAlUljE/XQHCpobpH8QZPVUGfb0I?=
- =?iso-8859-2?Q?5AiILUaVAf1etONlXJW9ytjb3G6ba14XZW7uQoAzvmXlH0Giz2paBpUKt5?=
- =?iso-8859-2?Q?Xsb76lYjOQCOoFx/M0WTECbdxQ2aCqoGLfJ2hT8LN9td9+FqB021Ph9QMm?=
- =?iso-8859-2?Q?RGBJL0OV1VxEub2trHaYuy3hmmzw7OcVQykl1dxbAKZKiuQ940v9I8Xikp?=
- =?iso-8859-2?Q?vXmv2oUFERi2jjYFHI6B7NM1lUGs+q9KqBRKBKQKO70zrJS+RbOqzrFBlX?=
- =?iso-8859-2?Q?+oQMHownXU3CJXsFztG+tV/3AODGIBIxgmUP4x8yhwUYR0rT4f8Wbr0p+J?=
- =?iso-8859-2?Q?W4e2s9JHR1suaXe0IilzE1uNdPQnrRLCVSMSESxHXG3VBnaAlmyqmaawF5?=
- =?iso-8859-2?Q?oyJfzQW4Y/DctFZ0Rjn0veBzZFFHKLHgZXVQw6EjnKFWBZhE9pxIu8tdWz?=
- =?iso-8859-2?Q?mjx9i/fuNttwFjJ0kYkpNIVjx74q9xt5uuysn14h84q38BZBSHrlJ9+/+/?=
- =?iso-8859-2?Q?TOVwMWjqKuG8GrM6IMnLxqin4L0ofebkJv9U8ovhsNWXcwuG2S5IuLxzJF?=
- =?iso-8859-2?Q?0g4xkhfimsI7Hif5BvNpNdqf14NLjfOZYBtxYThKu1GWZ5BC45ScWSoCg2?=
- =?iso-8859-2?Q?xM0U2HD3fK7oD9Yb+ZjPThHUdMzvKHabyPm177Ory8nUVhXDJ/y9DO5MlA?=
- =?iso-8859-2?Q?qXdc00MGexWg2t7poDoDNkuCJ+95DTHgCgIc3xyVlHlylGXMWCrWA0tefQ?=
- =?iso-8859-2?Q?ld+Y2a6+wDJQXkoLwg9M3DVgSXDS0dikDb/2LdQllJMcWwBSHYYpyRhsSn?=
- =?iso-8859-2?Q?/19rETpIq9eON5/oODQ6pA4Sm9wV3pyTvJAuz9K02eQMSz14wVGI2qVBXm?=
- =?iso-8859-2?Q?OhdW80RkZtKhq186Q01oYST59RIdRApvNS?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BDA4CB5B;
+	Wed, 19 Nov 2025 02:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763519453; cv=none; b=FdtkFbxnbDU5XZlSP2HI5Y0bRoJJU+n6GPlmnEr9m73xHLEZOBJXogmvmLNI5X7cCu0L3kkw9+FkiRa+ZkBtIkJBeCgmDSBNpUOIlMf8QojnqsH8lyv2MckfTsM4a43wV5yf7X0cTYxNYhnTSvs3uOUUP/85Jf8NZaMwwd2Wdww=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763519453; c=relaxed/simple;
+	bh=JbgYqJmxAL5gcFdKRLrhRdlqGMIuGzVFsUJ/BShX3xU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZgnfIrOlSCBHvtIw5G/rXwxs+rfWU9EcdH9bbHIVHRFQwuTo2mWjrKU/oOt75/y5SESr5RPv2tnbFNoWJEUqJybd4ijbEGPFQ1KP1E6b++tPyS3Klh0kjZHS/JG+qetV00fQIaRjR8OhHqr6ssG2E/7yV3gp3qkS7i6BLnTgCjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eeZ26/G+; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763519451; x=1795055451;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JbgYqJmxAL5gcFdKRLrhRdlqGMIuGzVFsUJ/BShX3xU=;
+  b=eeZ26/G+tzVaNEMkB4MM8Ac/D4wDXtJMyJUHzfg9BGIblyEm4/Db7pGA
+   PkHc1fYYykyyRcCLm9irT5J9XRJhNfXZxKP80osuRK6QgKvGvTzLR5yvr
+   990CD+TONLlxxbTnm2RB1HWJfuUsq6B+yrrh1yRAxupitgXtF40bVoVPz
+   HCP4EMaz0FMUffP+GOqzCtioCz3Scjt/4pEaydi8puAq/FGBXb0zqyUHD
+   xu9uKzKKsWUI6pSCqq4+Kw925XswvwwJCoAmE7KByw7ErSQvPMa5nvdQr
+   WRYZOIN65YNa9H5ZnHrIxDoR5COIoYgy7fSq8ET7dpBvaJdUjUidTdnUd
+   Q==;
+X-CSE-ConnectionGUID: lPXEZo6+QD+XU8MoR2gj6w==
+X-CSE-MsgGUID: 3O6Du7IYRbGINZMntAAEXw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="77012160"
+X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
+   d="scan'208";a="77012160"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 18:30:50 -0800
+X-CSE-ConnectionGUID: M+HTTEv+TZ699Y6u4qkS1w==
+X-CSE-MsgGUID: qn9gjqNIT9Wbu6YaVNIlXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
+   d="scan'208";a="228266107"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 18 Nov 2025 18:30:46 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vLXxy-0002Mh-33;
+	Wed, 19 Nov 2025 02:30:42 +0000
+Date: Wed, 19 Nov 2025 10:29:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nicolin Chen <nicolinc@nvidia.com>, robin.murphy@arm.com,
+	joro@8bytes.org, afael@kernel.org, bhelgaas@google.com,
+	alex@shazbot.org, jgg@nvidia.com, kevin.tian@intel.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, will@kernel.org,
+	lenb@kernel.org, baolu.lu@linux.intel.com,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+	patches@lists.linux.dev, pjaroszynski@nvidia.com, vsethi@nvidia.com,
+	helgaas@kernel.org, etzhao1900@gmail.com
+Subject: Re: [PATCH v6 5/5] PCI: Suspend iommu function prior to resetting a
+ device
+Message-ID: <202511191020.OczvlCww-lkp@intel.com>
+References: <9f6caaedc278fe057aacb813d94f44a93d8cab3c.1763512374.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7a4cb08-81a0-4be2-3aa4-08de27132ae0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2025 02:27:20.8850
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 35d/LTWw4Z0YT3d9LQ3NMm8TPjbd4F1khY+dtvxAcO2CrNdRrBUKN/+jMYPsOE5B2FhQc4ezS4ZEo2O7BMwMwxHGov2UkVjDBjMMotZNi28=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5181
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9f6caaedc278fe057aacb813d94f44a93d8cab3c.1763512374.git.nicolinc@nvidia.com>
 
-Hi Bjorn,
+Hi Nicolin,
 
-Thank you for your reply.
+kernel test robot noticed the following build errors:
 
-> > According to PCIe specification, add FMT, TYPE and CPL status
-> > definition for TLP header.
-> >
-> > Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
->=20
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> OK by me, but it'd be nice to move up a few lines so this is with the oth=
-er
-> TLP-related items and the unrelated PCI_BUS_BRIDGE_*_WINDOW values
-> aren't in the middle.
->=20
-> Might even consider moving these to be just above the Message Routing
-> constants so things are generally in the order they appear in the spec.
->=20
+[auto build test ERROR on next-20251118]
+[cannot apply to pci/next pci/for-linus awilliam-vfio/next awilliam-vfio/for-linus rafael-pm/linux-next rafael-pm/bleeding-edge linus/master v6.18-rc6 v6.18-rc5 v6.18-rc4 v6.18-rc6]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I'll move these above the Message Routing constants in the next version.
-Thanks for the suggestion.
+url:    https://github.com/intel-lab-lkp/linux/commits/Nicolin-Chen/iommu-Lock-group-mutex-in-iommu_deferred_attach/20251119-085721
+base:   next-20251118
+patch link:    https://lore.kernel.org/r/9f6caaedc278fe057aacb813d94f44a93d8cab3c.1763512374.git.nicolinc%40nvidia.com
+patch subject: [PATCH v6 5/5] PCI: Suspend iommu function prior to resetting a device
+config: loongarch-allnoconfig (https://download.01.org/0day-ci/archive/20251119/202511191020.OczvlCww-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 0bba1e76581bad04e7d7f09f5115ae5e2989e0d9)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251119/202511191020.OczvlCww-lkp@intel.com/reproduce)
 
-Thanks,
-Jacky
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511191020.OczvlCww-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/pci/pci.c:4341:36: error: incompatible pointer types passing 'struct pci_dev *' to parameter of type 'struct device *' [-Wincompatible-pointer-types]
+    4341 |         ret = pci_dev_reset_iommu_prepare(dev);
+         |                                           ^~~
+   include/linux/iommu.h:1519:62: note: passing argument to parameter 'dev' here
+    1519 | static inline int pci_dev_reset_iommu_prepare(struct device *dev)
+         |                                                              ^
+   drivers/pci/pci.c:4361:27: error: incompatible pointer types passing 'struct pci_dev *' to parameter of type 'struct device *' [-Wincompatible-pointer-types]
+    4361 |         pci_dev_reset_iommu_done(dev);
+         |                                  ^~~
+   include/linux/iommu.h:1524:60: note: passing argument to parameter 'dev' here
+    1524 | static inline void pci_dev_reset_iommu_done(struct device *dev)
+         |                                                            ^
+   drivers/pci/pci.c:4418:36: error: incompatible pointer types passing 'struct pci_dev *' to parameter of type 'struct device *' [-Wincompatible-pointer-types]
+    4418 |         ret = pci_dev_reset_iommu_prepare(dev);
+         |                                           ^~~
+   include/linux/iommu.h:1519:62: note: passing argument to parameter 'dev' here
+    1519 | static inline int pci_dev_reset_iommu_prepare(struct device *dev)
+         |                                                              ^
+   drivers/pci/pci.c:4439:27: error: incompatible pointer types passing 'struct pci_dev *' to parameter of type 'struct device *' [-Wincompatible-pointer-types]
+    4439 |         pci_dev_reset_iommu_done(dev);
+         |                                  ^~~
+   include/linux/iommu.h:1524:60: note: passing argument to parameter 'dev' here
+    1524 | static inline void pci_dev_reset_iommu_done(struct device *dev)
+         |                                                            ^
+   drivers/pci/pci.c:4476:36: error: incompatible pointer types passing 'struct pci_dev *' to parameter of type 'struct device *' [-Wincompatible-pointer-types]
+    4476 |         ret = pci_dev_reset_iommu_prepare(dev);
+         |                                           ^~~
+   include/linux/iommu.h:1519:62: note: passing argument to parameter 'dev' here
+    1519 | static inline int pci_dev_reset_iommu_prepare(struct device *dev)
+         |                                                              ^
+   drivers/pci/pci.c:4493:27: error: incompatible pointer types passing 'struct pci_dev *' to parameter of type 'struct device *' [-Wincompatible-pointer-types]
+    4493 |         pci_dev_reset_iommu_done(dev);
+         |                                  ^~~
+   include/linux/iommu.h:1524:60: note: passing argument to parameter 'dev' here
+    1524 | static inline void pci_dev_reset_iommu_done(struct device *dev)
+         |                                                            ^
+   drivers/pci/pci.c:4922:35: error: incompatible pointer types passing 'struct pci_dev *' to parameter of type 'struct device *' [-Wincompatible-pointer-types]
+    4922 |         rc = pci_dev_reset_iommu_prepare(dev);
+         |                                          ^~~
+   include/linux/iommu.h:1519:62: note: passing argument to parameter 'dev' here
+    1519 | static inline int pci_dev_reset_iommu_prepare(struct device *dev)
+         |                                                              ^
+   drivers/pci/pci.c:4934:27: error: incompatible pointer types passing 'struct pci_dev *' to parameter of type 'struct device *' [-Wincompatible-pointer-types]
+    4934 |         pci_dev_reset_iommu_done(dev);
+         |                                  ^~~
+   include/linux/iommu.h:1524:60: note: passing argument to parameter 'dev' here
+    1524 | static inline void pci_dev_reset_iommu_done(struct device *dev)
+         |                                                            ^
+   drivers/pci/pci.c:4959:35: error: incompatible pointer types passing 'struct pci_dev *' to parameter of type 'struct device *' [-Wincompatible-pointer-types]
+    4959 |         rc = pci_dev_reset_iommu_prepare(dev);
+         |                                          ^~~
+   include/linux/iommu.h:1519:62: note: passing argument to parameter 'dev' here
+    1519 | static inline int pci_dev_reset_iommu_prepare(struct device *dev)
+         |                                                              ^
+   drivers/pci/pci.c:4979:27: error: incompatible pointer types passing 'struct pci_dev *' to parameter of type 'struct device *' [-Wincompatible-pointer-types]
+    4979 |         pci_dev_reset_iommu_done(dev);
+         |                                  ^~~
+   include/linux/iommu.h:1524:60: note: passing argument to parameter 'dev' here
+    1524 | static inline void pci_dev_reset_iommu_done(struct device *dev)
+         |                                                            ^
+   10 errors generated.
+--
+>> drivers/pci/pci-acpi.c:983:36: error: incompatible pointer types passing 'struct pci_dev *' to parameter of type 'struct device *' [-Wincompatible-pointer-types]
+     983 |         ret = pci_dev_reset_iommu_prepare(dev);
+         |                                           ^~~
+   include/linux/iommu.h:1519:62: note: passing argument to parameter 'dev' here
+    1519 | static inline int pci_dev_reset_iommu_prepare(struct device *dev)
+         |                                                              ^
+   drivers/pci/pci-acpi.c:994:27: error: incompatible pointer types passing 'struct pci_dev *' to parameter of type 'struct device *' [-Wincompatible-pointer-types]
+     994 |         pci_dev_reset_iommu_done(dev);
+         |                                  ^~~
+   include/linux/iommu.h:1524:60: note: passing argument to parameter 'dev' here
+    1524 | static inline void pci_dev_reset_iommu_done(struct device *dev)
+         |                                                            ^
+   2 errors generated.
+--
+>> drivers/pci/quirks.c:4237:36: error: incompatible pointer types passing 'struct pci_dev *' to parameter of type 'struct device *' [-Wincompatible-pointer-types]
+    4237 |         ret = pci_dev_reset_iommu_prepare(dev);
+         |                                           ^~~
+   include/linux/iommu.h:1519:62: note: passing argument to parameter 'dev' here
+    1519 | static inline int pci_dev_reset_iommu_prepare(struct device *dev)
+         |                                                              ^
+   drivers/pci/quirks.c:4244:27: error: incompatible pointer types passing 'struct pci_dev *' to parameter of type 'struct device *' [-Wincompatible-pointer-types]
+    4244 |         pci_dev_reset_iommu_done(dev);
+         |                                  ^~~
+   include/linux/iommu.h:1524:60: note: passing argument to parameter 'dev' here
+    1524 | static inline void pci_dev_reset_iommu_done(struct device *dev)
+         |                                                            ^
+   2 errors generated.
+
+
+vim +4341 drivers/pci/pci.c
+
+  4325	
+  4326	/**
+  4327	 * pcie_flr - initiate a PCIe function level reset
+  4328	 * @dev: device to reset
+  4329	 *
+  4330	 * Initiate a function level reset unconditionally on @dev without
+  4331	 * checking any flags and DEVCAP
+  4332	 */
+  4333	int pcie_flr(struct pci_dev *dev)
+  4334	{
+  4335		int ret;
+  4336	
+  4337		if (!pci_wait_for_pending_transaction(dev))
+  4338			pci_err(dev, "timed out waiting for pending transaction; performing function level reset anyway\n");
+  4339	
+  4340		/* Have to call it after waiting for pending DMA transaction */
+> 4341		ret = pci_dev_reset_iommu_prepare(dev);
+  4342		if (ret) {
+  4343			pci_err(dev, "failed to stop IOMMU for a PCI reset: %d\n", ret);
+  4344			return ret;
+  4345		}
+  4346	
+  4347		pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_BCR_FLR);
+  4348	
+  4349		if (dev->imm_ready)
+  4350			goto done;
+  4351	
+  4352		/*
+  4353		 * Per PCIe r4.0, sec 6.6.2, a device must complete an FLR within
+  4354		 * 100ms, but may silently discard requests while the FLR is in
+  4355		 * progress.  Wait 100ms before trying to access the device.
+  4356		 */
+  4357		msleep(100);
+  4358	
+  4359		ret = pci_dev_wait(dev, "FLR", PCIE_RESET_READY_POLL_MS);
+  4360	done:
+  4361		pci_dev_reset_iommu_done(dev);
+  4362		return ret;
+  4363	}
+  4364	EXPORT_SYMBOL_GPL(pcie_flr);
+  4365	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
