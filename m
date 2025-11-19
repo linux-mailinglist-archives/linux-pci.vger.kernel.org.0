@@ -1,155 +1,205 @@
-Return-Path: <linux-pci+bounces-41563-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41564-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02891C6C5D5
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 03:25:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B6362C6C5F3
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 03:27:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id B0C0329824
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 02:25:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id 6F36E298C0
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 02:27:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCB60274B29;
-	Wed, 19 Nov 2025 02:25:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CF42284686;
+	Wed, 19 Nov 2025 02:27:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QY0jwdcX"
+	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="BnPU31r7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023111.outbound.protection.outlook.com [52.101.127.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C9C2749E0
-	for <linux-pci@vger.kernel.org>; Wed, 19 Nov 2025 02:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763519147; cv=none; b=rHxjqVDhYBrDpXK21ReEvenR67rBv485rA1B0QkWj8FOxmoejx8s28oaphCUd+nqYRFYq5hZF2bewksudKDSRKNLxFkUGvirLZNFQj2Umq1eHJfKQ9ZacnpNglxPuxBHATV0GzjuXpbUktAqRsDR4sGGthBt0Umbn4faLJMjuQo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763519147; c=relaxed/simple;
-	bh=7At8A/XCuIpzqQaeH+hNML0X+2b+5F4LUSD4OFffGns=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=pYkw5My3nvZV7t7XOLwlhS798sUaNHvotB6AUaRjBSKpjS8P61vkEPVJUV1mXa3dTk5KKXxEUBKNKmEpaAoTFWKZID9WPxE1zh1XexTXNlz3jW8IxHuWigM3do0lzQ6OmrpWjJRbwn2Bw3aGpsaE2+AOQCivtVgeXIwpvIBrSM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QY0jwdcX; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763519146; x=1795055146;
-  h=date:from:to:cc:subject:message-id;
-  bh=7At8A/XCuIpzqQaeH+hNML0X+2b+5F4LUSD4OFffGns=;
-  b=QY0jwdcXIEpqZAvcs51Cz4mBdBarYFnvE/u1nBwODhTzc+zrAvXsTbZb
-   GiZ1LfNNbN1ts/v8xxfzVPf79gqviJBDUCaf1mXpc3AxSKy0+OXWYAYuY
-   V7EprwOvNATMKKuFQ7lI80dzWjNRN8vXHEWIKC/Biezna4NI7oSgAF7ji
-   5sU5nbYI58qGXBV81gX4CPPbINRDDq1xde1H82T9d3capdwTm3vue4mwK
-   iM37y+84LvvLhMh9y+DmjMu+GlL5kRZJWAZSkRAW+VWuDjjFC073NK3AP
-   qkanLHzo4FSAaWtn1wI73wuP2d9e/dCR6xFPOifWvpFwjoXuhsc9tBJiX
-   g==;
-X-CSE-ConnectionGUID: GpOaUTCkSOSQZSPJwh8PlQ==
-X-CSE-MsgGUID: nRjM3t9kTSiHuyzlvd3nMQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11617"; a="76164674"
-X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="76164674"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 18:25:46 -0800
-X-CSE-ConnectionGUID: cEk+hImkRIqd+xoJkNcvuw==
-X-CSE-MsgGUID: vyepyyg9QjSXRLMzMSrhKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,315,1754982000"; 
-   d="scan'208";a="190195200"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 18 Nov 2025 18:25:44 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vLXt7-0002MB-2H;
-	Wed, 19 Nov 2025 02:25:41 +0000
-Date: Wed, 19 Nov 2025 10:25:33 +0800
-From: kernel test robot <lkp@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBC81E8329;
+	Wed, 19 Nov 2025 02:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.111
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763519250; cv=fail; b=Hi9CqXzuTpIVg/Dqi/8ppghp0ifBVgk4HcOIJx2kKt+ZBkIy2iTk+JGuvf1CRT/0gPhp41LxUnTLYTU0jwtCCyr9jo5c2Y1AT6B//i2r1GtpOOXg8k8abGycNH5L92QdF1FPEYq86ruSp66I2WHzv23YuiBiINe/5cyxDFVaDZM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763519250; c=relaxed/simple;
+	bh=M9qWg364L09Q3J1of4DYNpWPtvtx69nicBOneuMpbtU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Sahj1oar+CWvek93x5abkz4JskcLqFf34roP8skzlwqE2EHoxowWr0hjr+CdPlEydfFZ8AFz1ORe/FsqYB2coaDGqoPqfSRh39DrXDmQICJGasSJNoyP/MrQSpa3SHsNmoaTr7w0siUtmbg30ob1LffbA33k73inWVBoEqHnRO8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=BnPU31r7; arc=fail smtp.client-ip=52.101.127.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ht55eN+MnhkD+qjvI9sOaS7vEcMY8exAF9l+mZ5W/G6yn23bDl8v5Cc17x0GHpPkRt6zUA+sLyZ63KVCKNthxqM4Y+306tU35tzn9doCgK+sDg8FXTJVsy7u3sA2KOc3qjPfFqJnkapgV1a9a+sBD2aI4dIBkVJXoeUVB3GR/7KNcHOiUAgOQ9eZYGB42FC1lFJDqhH8I2yJD3GubsLdMqEkE0De3hbS3gKTJqwz6z3oES9EjnKcfTtmdwWXvO5+ils2B21O6a1dM0oyIEEoNFrxkxpxSCZZWHXCHCauCa2yg2z7ijsudVNp3+c80NPm1sSrqB/wgOv6qHksUoczRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M9qWg364L09Q3J1of4DYNpWPtvtx69nicBOneuMpbtU=;
+ b=ngEn/+eX+DsE+rwJZ6gfKQH/LxrqJ7X424w+kOv3Iz1+oP2dLrUedO3yKGthNdQ5h9sfKak6r5J0vkdJSvAwPAMxTowuZHdf4KNAANJAPmtQXEVXz6OLVym5sMHmkSuWubOiFRZGS/sYq9OiAMlJRS9qyROFTNt/0bpb5XQeVjnCKFzWtO/LD7RmmX1xkJH8Ynxw8iPYAKnWxdvuYFvvZKYMWDgs79UVNAlCbn4VXx7RAJUErczhIfoL69m8gIO1yv7VgYT1jV3PK6HM2b3WSju5550DE8o7VqhHciArespDJclc2H4TFI4U40JhaeTuwvyvjKxQvsizP51MG8io4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M9qWg364L09Q3J1of4DYNpWPtvtx69nicBOneuMpbtU=;
+ b=BnPU31r7za4anJ7S1lqiakHsvIYhHFqCn39uvMBV37Ip6xgaYTyyLINsKiRvgdGgxiHlhn4gwlSZR3bPA3h0rGfFmWCCb817S6JqENKzmrbFIvtGrD4LnOV9o4Ve0YiP7ce0fKjF1Q5Ef9JGWylHqJqxc52MQrw3ShrmSWq4CqLGyt+u+LXz5T4afrO4NsVPDET0AhnuipQL8bI6XRhaGZeJPTjVyENcDuEz/nnBy/P3UWha3Wl95y4+tq/W05Qz9DmJFAE1pD+MaHxHLq5/vLXxlQvkjQ1Gncktg+i3zrjcvJ4QCFwArHASjDguJPdMeLjK0cG/2yNr7yVY9OTKRg==
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
+ by SEYPR06MB5181.apcprd06.prod.outlook.com (2603:1096:101:8c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.21; Wed, 19 Nov
+ 2025 02:27:22 +0000
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28%6]) with mapi id 15.20.9320.018; Wed, 19 Nov 2025
+ 02:27:22 +0000
+From: Jacky Chou <jacky_chou@aspeedtech.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/j721e] BUILD SUCCESS
- 444a43bf3c029cc0a7c8d97611b3c126cddb5489
-Message-ID: <202511191027.a52DKeIO-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+CC: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Andrew
+ Jeffery <andrew@codeconstruct.com.au>, Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, Manivannan
+ Sadhasivam <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, "linux-aspeed@lists.ozlabs.org"
+	<linux-aspeed@lists.ozlabs.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-phy@lists.infradead.org"
+	<linux-phy@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
+	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: [PATCH v5 6/8] PCI: Add FMT, TYPE and CPL status definition for TLP
+ header
+Thread-Topic: [PATCH v5 6/8] PCI: Add FMT, TYPE and CPL status definition for
+ TLP header
+Thread-Index: AQHcV78oxw3pQAYCo0+MHD1idq0RtbT3H9KAgAIoIzA=
+Date: Wed, 19 Nov 2025 02:27:20 +0000
+Message-ID:
+ <SEYPR06MB51340B04D9423EDEABFE9BA79DD7A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+References: <20251117-upstream_pcie_rc-v5-6-b4a198576acf@aspeedtech.com>
+ <20251117172859.GA2466937@bhelgaas>
+In-Reply-To: <20251117172859.GA2466937@bhelgaas>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|SEYPR06MB5181:EE_
+x-ms-office365-filtering-correlation-id: e7a4cb08-81a0-4be2-3aa4-08de27132ae0
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700021;
+x-microsoft-antispam-message-info:
+ =?iso-8859-2?Q?S/PD1iHEg+ITnyVBPaua2SAZyE8HOi0gsc1if3DLqBdq3DtpIhYQrOcBEt?=
+ =?iso-8859-2?Q?YPCNTrMa6sQYAoKT8L3Ygo1ICTNjbgX+M15mEMxfCYgV1pGSon667eEviH?=
+ =?iso-8859-2?Q?CCYbjT2h4D8auEE7oaaPY7AVsjlKFfR/y/oM62iEfaKudG5zXPIbogU7Jm?=
+ =?iso-8859-2?Q?IOav5fE3yuRdUaeUXekLyCPC+np3zDqJzgrg1UHMrRTESgpTfJdlgTFa0n?=
+ =?iso-8859-2?Q?sOwvfDDZv2h/UcJPkI1kimMhYx9EsBpTDUy3wEiWtpn5ce66OqxS6Gk2wJ?=
+ =?iso-8859-2?Q?HlVTSQrApRF3TaSaDh4J1CoIuTU1WEsUcwUE/XXtkAmlBn45r+SMvAFatM?=
+ =?iso-8859-2?Q?AfHcJ/CA5u4fpGoGGGTuRZsJx5DyzD+B0p4OTGGbi6DPRpzPuNRLrrxQIK?=
+ =?iso-8859-2?Q?zjMQNd0SjkWNT9XQF/LsJEmWmivlkva3vfXO0q2mili+I0VtmdZYPfcJ6i?=
+ =?iso-8859-2?Q?Zv8cl1K0qQIKP1n0v1N818nUONw1E6OrtE2HbYgVn0r3Z1+tCj4xoc90Om?=
+ =?iso-8859-2?Q?BgVfngjPRv7aIsKifeGw+m27Hzk0d8ttiHH6DhOL/2+/p1nh8qDw4WQBF3?=
+ =?iso-8859-2?Q?LTn7PNF/oA/ziXJZVtUWJkHPL/hU+iBR05rnySc4nhATPI5qejUk1ZqtdL?=
+ =?iso-8859-2?Q?SXRcoXcoGD0z6G0d1BfmKh5jdSp5S6kUwH+MIngbukHJCZp3rtFyuG4F4+?=
+ =?iso-8859-2?Q?DijaMkosWid/uZUiRt81QfP4t78qwtGScr1DScyoFRtVT6Wfp9UQoT5L2s?=
+ =?iso-8859-2?Q?yv91/l83JxhtgXPOrZMAC4XFQBAlv2v19GpzejVmHRVpKkA2M3L3Yy4ANW?=
+ =?iso-8859-2?Q?O+m34XOmcfnJr0ZjEHLDUOYHgCIgVBska1untwIqywymQML/WqlEMXFP0K?=
+ =?iso-8859-2?Q?Z2QpA4+WVeVQVuWFj4TpajFW0wb9zvdcA2/j2ZaQfF9Pq58auNZjHJQ74d?=
+ =?iso-8859-2?Q?0t3+np5d7EQ/Sa5iWU9n+O7Gmdd3sR57/uLpK+zjnOmH62UO48UvNFDwt8?=
+ =?iso-8859-2?Q?tri1hjrP3hX5Uk2wKSqIx6bVTzdh8dT3c0J94aqdvTNxQgAOdVCesq71QE?=
+ =?iso-8859-2?Q?JQDIQorsOIAxK5HmFAT+t/qdiOVoIWYILvjGLEQgQNWRQTaLCbapXwc7xO?=
+ =?iso-8859-2?Q?DxLJUi6fRLLusauJj2EB0DvkvAPMQvkB40FjxJFLN6yFl2GE5EVWvDfFlV?=
+ =?iso-8859-2?Q?RVlahHfTBYcR2p2qFSpLc1yIIx/91l9b2e8aNFg3BfT7zKxcEoUm4HLQFf?=
+ =?iso-8859-2?Q?LeuoFue3SSIntk2SdoTENIBm3c5hJWgUr9d+Y3dWz91kPSN2Lcfre2W4su?=
+ =?iso-8859-2?Q?mdVq+Zl+N/T6Wx3jaju/e74/q50Egu4pfiWg5nM4tpGEXO5LrVuFkwH9Pg?=
+ =?iso-8859-2?Q?LLMbNYR9wIi35FBAi2FuJOt8unCgUI45ME7WU+6jLZQoGEwmQrtr3RmMTt?=
+ =?iso-8859-2?Q?WqlSb/c+6xghmifWMIm7hNzc4gwkVYQ4Y92t/owHcemezf5tUEY8v53Don?=
+ =?iso-8859-2?Q?uQIHj9T5sPNARlKHmy93OxgzqQ/z+Sn1ZqTExuew9o95Wx7jVg61SNm9HM?=
+ =?iso-8859-2?Q?/Vz7NRVJMeT4o30kcH9lEUUPauzY?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?UZ3n9gSw7+dwJ02C/sM0Tw3myoMjpLY+elZ8XxZzfmqk96Xi9F+RXMRdFx?=
+ =?iso-8859-2?Q?B/QmL5I8sX1oYj58SQf3SLE+9BCPjXLJZUySF3zx/8PpouZh4Sy1Iehqua?=
+ =?iso-8859-2?Q?mByu/M1IobKk4+gXcwMtIDo/2CISsbXGN+5mVbR9peVFes5Rbpy15rPh1m?=
+ =?iso-8859-2?Q?ya7nv+ZjqwsK+I79DbF+75cM+EZ02aiSDMs9xP/GtejxOUxv60k6FUqhUu?=
+ =?iso-8859-2?Q?lqdB9PKoxqGJASmQPL0DfoEIsw6Qv/XIDcgcDAl1zIaJCW8Fazul7DUfq+?=
+ =?iso-8859-2?Q?XARNu6vFdZ+IKdVJ3bQh6PVYtNstjcPoV5Yhd2UiUbehdp1iFm+zRVHcfm?=
+ =?iso-8859-2?Q?673gYmuv7RCPqubGM5g8/I0g/HJHBHTZPx5imyDHblU+MxYh7joUNx3EV3?=
+ =?iso-8859-2?Q?KFEI+sjmuvFLWrZFVQBOYsaflPIHK14VtJ9+QrgspRTGh8h6M83OEimsoF?=
+ =?iso-8859-2?Q?k7nC6ZU8uKcBGoPkPIrPXZxh2ytHlqxscF7TqiFWlurC7xdwGL0F0NP48i?=
+ =?iso-8859-2?Q?jiAoLGiGbq+C+owBDVdys5eXRHFrBiz5rFRahuZsrb4LpmWlgdafUq/dWN?=
+ =?iso-8859-2?Q?UtD+35TmJ8EVxyLu+hnp+8CFj2ATcLYlB1u+amc7XBCCksBhl/NdmqXjy7?=
+ =?iso-8859-2?Q?Qnq6CMPd4ZYvcoXAkVMADezYseH387vxISBE07HhzZuLLZEsSz7cI12CJY?=
+ =?iso-8859-2?Q?zJlYBoKqKsMtNHTEpGHUZPkjIf0aQGqAlUljE/XQHCpobpH8QZPVUGfb0I?=
+ =?iso-8859-2?Q?5AiILUaVAf1etONlXJW9ytjb3G6ba14XZW7uQoAzvmXlH0Giz2paBpUKt5?=
+ =?iso-8859-2?Q?Xsb76lYjOQCOoFx/M0WTECbdxQ2aCqoGLfJ2hT8LN9td9+FqB021Ph9QMm?=
+ =?iso-8859-2?Q?RGBJL0OV1VxEub2trHaYuy3hmmzw7OcVQykl1dxbAKZKiuQ940v9I8Xikp?=
+ =?iso-8859-2?Q?vXmv2oUFERi2jjYFHI6B7NM1lUGs+q9KqBRKBKQKO70zrJS+RbOqzrFBlX?=
+ =?iso-8859-2?Q?+oQMHownXU3CJXsFztG+tV/3AODGIBIxgmUP4x8yhwUYR0rT4f8Wbr0p+J?=
+ =?iso-8859-2?Q?W4e2s9JHR1suaXe0IilzE1uNdPQnrRLCVSMSESxHXG3VBnaAlmyqmaawF5?=
+ =?iso-8859-2?Q?oyJfzQW4Y/DctFZ0Rjn0veBzZFFHKLHgZXVQw6EjnKFWBZhE9pxIu8tdWz?=
+ =?iso-8859-2?Q?mjx9i/fuNttwFjJ0kYkpNIVjx74q9xt5uuysn14h84q38BZBSHrlJ9+/+/?=
+ =?iso-8859-2?Q?TOVwMWjqKuG8GrM6IMnLxqin4L0ofebkJv9U8ovhsNWXcwuG2S5IuLxzJF?=
+ =?iso-8859-2?Q?0g4xkhfimsI7Hif5BvNpNdqf14NLjfOZYBtxYThKu1GWZ5BC45ScWSoCg2?=
+ =?iso-8859-2?Q?xM0U2HD3fK7oD9Yb+ZjPThHUdMzvKHabyPm177Ory8nUVhXDJ/y9DO5MlA?=
+ =?iso-8859-2?Q?qXdc00MGexWg2t7poDoDNkuCJ+95DTHgCgIc3xyVlHlylGXMWCrWA0tefQ?=
+ =?iso-8859-2?Q?ld+Y2a6+wDJQXkoLwg9M3DVgSXDS0dikDb/2LdQllJMcWwBSHYYpyRhsSn?=
+ =?iso-8859-2?Q?/19rETpIq9eON5/oODQ6pA4Sm9wV3pyTvJAuz9K02eQMSz14wVGI2qVBXm?=
+ =?iso-8859-2?Q?OhdW80RkZtKhq186Q01oYST59RIdRApvNS?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7a4cb08-81a0-4be2-3aa4-08de27132ae0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2025 02:27:20.8850
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 35d/LTWw4Z0YT3d9LQ3NMm8TPjbd4F1khY+dtvxAcO2CrNdRrBUKN/+jMYPsOE5B2FhQc4ezS4ZEo2O7BMwMwxHGov2UkVjDBjMMotZNi28=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5181
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/j721e
-branch HEAD: 444a43bf3c029cc0a7c8d97611b3c126cddb5489  PCI: j721e: Use 'pcie->reset_gpio' directly and drop the local variable
+Hi Bjorn,
 
-elapsed time: 7632m
+Thank you for your reply.
 
-configs tested: 62
-configs skipped: 1
+> > According to PCIe specification, add FMT, TYPE and CPL status
+> > definition for TLP header.
+> >
+> > Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+>=20
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> OK by me, but it'd be nice to move up a few lines so this is with the oth=
+er
+> TLP-related items and the unrelated PCI_BUS_BRIDGE_*_WINDOW values
+> aren't in the middle.
+>=20
+> Might even consider moving these to be just above the Message Routing
+> constants so things are generally in the order they appear in the spec.
+>=20
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I'll move these above the Message Routing constants in the next version.
+Thanks for the suggestion.
 
-tested configs:
-alpha               allnoconfig    gcc-15.1.0
-alpha              allyesconfig    gcc-15.1.0
-arc                allmodconfig    gcc-15.1.0
-arc                 allnoconfig    gcc-15.1.0
-arc                allyesconfig    gcc-15.1.0
-arm                allmodconfig    gcc-15.1.0
-arm                 allnoconfig    clang-22
-arm                allyesconfig    gcc-15.1.0
-arm64              allmodconfig    clang-19
-arm64               allnoconfig    gcc-15.1.0
-arm64              allyesconfig    clang-22
-csky               allmodconfig    gcc-15.1.0
-csky                allnoconfig    gcc-15.1.0
-csky               allyesconfig    gcc-15.1.0
-hexagon            allmodconfig    clang-17
-hexagon             allnoconfig    clang-22
-hexagon            allyesconfig    clang-22
-i386               allmodconfig    gcc-14
-i386                allnoconfig    gcc-14
-i386               allyesconfig    gcc-14
-loongarch          allmodconfig    clang-19
-loongarch           allnoconfig    clang-22
-loongarch          allyesconfig    clang-22
-m68k               allmodconfig    gcc-15.1.0
-m68k                allnoconfig    gcc-15.1.0
-m68k               allyesconfig    gcc-15.1.0
-microblaze         allmodconfig    gcc-15.1.0
-microblaze          allnoconfig    gcc-15.1.0
-microblaze         allyesconfig    gcc-15.1.0
-mips               allmodconfig    gcc-15.1.0
-mips                allnoconfig    gcc-15.1.0
-mips               allyesconfig    gcc-15.1.0
-nios2               allnoconfig    gcc-11.5.0
-openrisc            allnoconfig    gcc-15.1.0
-openrisc           allyesconfig    gcc-15.1.0
-parisc             allmodconfig    gcc-15.1.0
-parisc              allnoconfig    gcc-15.1.0
-parisc             allyesconfig    gcc-15.1.0
-powerpc             allnoconfig    gcc-15.1.0
-riscv               allnoconfig    gcc-15.1.0
-s390               allmodconfig    clang-18
-s390                allnoconfig    clang-22
-s390               allyesconfig    gcc-15.1.0
-sh                 allmodconfig    gcc-15.1.0
-sh                  allnoconfig    gcc-15.1.0
-sh                 allyesconfig    gcc-15.1.0
-sparc              allmodconfig    gcc-15.1.0
-sparc               allnoconfig    gcc-15.1.0
-um                 allmodconfig    clang-19
-um                  allnoconfig    clang-22
-um                 allyesconfig    gcc-14
-x86_64              allnoconfig    clang-20
-x86_64             allyesconfig    clang-20
-x86_64                    kexec    clang-20
-x86_64                 rhel-9.4    clang-20
-x86_64             rhel-9.4-bpf    gcc-14
-x86_64            rhel-9.4-func    clang-20
-x86_64      rhel-9.4-kselftests    clang-20
-x86_64           rhel-9.4-kunit    gcc-14
-x86_64             rhel-9.4-ltp    gcc-14
-x86_64            rhel-9.4-rust    clang-20
-xtensa              allnoconfig    gcc-15.1.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Jacky
 
