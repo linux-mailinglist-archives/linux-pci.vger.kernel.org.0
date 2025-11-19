@@ -1,180 +1,147 @@
-Return-Path: <linux-pci+bounces-41586-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41587-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6E40C6D098
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 08:11:05 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FA95C6D4B4
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 09:06:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D7E1A352DC7
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 07:10:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id 3F8652C3C7
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 08:06:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C67712D9498;
-	Wed, 19 Nov 2025 07:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Z+MX5hAf"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 326A1326922;
+	Wed, 19 Nov 2025 08:03:47 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774B4260583
-	for <linux-pci@vger.kernel.org>; Wed, 19 Nov 2025 07:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C1DE2DC32E;
+	Wed, 19 Nov 2025 08:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763536220; cv=none; b=VEookBxs9otreKV+f1LzuOIupPiwYGJ12XmtV7F95VweGGimUt8mScUctM6k/7gTfBgzFHqvqHBasjA+w3ncA5E1Q2JQFRNPMSJKH2oan6ur30cmnycpC+JdMq+G9wv4c/h334mWnIMnR8EYGJpIpEiziPmmDID8TgHBMJTAWzw=
+	t=1763539426; cv=none; b=LYTPGvctAmhwftiJROrf/WoDUNC2AzKfplFOpeqtFm/gvfPPuSiPhr4WNH2naZu9f7PIUVReY/HJjo3LfNKzqPyWiJ8SyaL/pq53CAt8C4WkyKLl2N4f1haZyp4iXn95Po5Y1mAM44m9ulsxBMmeuoEk5t71g16weI/0aV5Y6HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763536220; c=relaxed/simple;
-	bh=xGuOjPFb3RpZCqapKtkaRek9zGjGdz2acxtw4o2DLe8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Imny9N6Iyw3KPXWkjvN9FD1c1feXyEuSCD/Gzn3W0Ky+d6BSqGoHe6vz8dUZ90klDCmK75R/keVrVKgyA+8xFUvZUERfJeMyInr1EPUXwotsqKt8H1n6ZZPKbKBVaSEmCoCTePkB4CAzydvWkGZRxp8uG+W5dPC/zXjDBe2HVNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Z+MX5hAf; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1763536208; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=bScDHEorsEDy34tWeZC0qZyGF/abO4EY19vip7+hrIs=;
-	b=Z+MX5hAfKCGzmS7PGcQYegye5t78q+AHEi3StnIDfsT5L9pC0tmkGnS6Nu06jFnl2cHsEXsd3vx6eYBa2+vfgphDsa+7s5AK2+gvpoRgJxQsRbnh8Itd18a7tw6bOXrDBqVU5ZQ7siM4QL7mpXjrFrvpnfv/tNDbklSg77Vt8BA=
-Received: from 30.178.83.6(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0WsnZ0ka_1763536207 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 19 Nov 2025 15:10:08 +0800
-Message-ID: <261a835a-7ab1-4899-afd5-496c9bbac452@linux.alibaba.com>
-Date: Wed, 19 Nov 2025 15:10:06 +0800
+	s=arc-20240116; t=1763539426; c=relaxed/simple;
+	bh=e/H6vW41fo2bvHSftL/gRerCHI3QYwEuO4RpiZsYgD0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=ALPhS0DT4BXi3/OvTS5QBlyd1iGrFDiUdEPTAu1kjyu6CVIC1t8WmlwKyF/1vLUMzNGCz7Hv5q3PKMct+/UntRrPMrctxV39gp4CCUw/JTj6gSertzKVWxHawO0bvrlAXIgMbsqJNjGZTFgGWnDazk57puUjc13lb5MEpVQu1ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
+ ajax-webmail-app2 (Coremail) ; Wed, 19 Nov 2025 16:03:22 +0800 (GMT+08:00)
+Date: Wed, 19 Nov 2025 16:03:22 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
+To: "Manivannan Sadhasivam" <mani@kernel.org>
+Cc: "Bjorn Helgaas" <helgaas@kernel.org>,
+	"Manivannan Sadhasivam" <manivannan.sadhasivam@oss.qualcomm.com>,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	will@kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, robh@kernel.org,
+	linux-arm-msm@vger.kernel.org, vincent.guittot@linaro.org
+Subject: Re: Re: [PATCH v2 2/3] PCI: qcom: Check for the presence of a
+ device instead of Link up during suspend
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
+ 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
+ mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
+In-Reply-To: <qu3gnvl7t7ehpxhkchz6ragjoeafktwr4dtstattthfv3jezd7@zrfwrlr2vzx5>
+References: <zgj3ubyb234ig6ndz6ov5q3szvuxnd3jkz2rjglbad4ksri6nl@ov7boxuar4va>
+ <20251113172250.GA2291436@bhelgaas>
+ <qu3gnvl7t7ehpxhkchz6ragjoeafktwr4dtstattthfv3jezd7@zrfwrlr2vzx5>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH] PCI: Check rom image addr at every step
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-References: <20251114063411.88744-1-kanie@linux.alibaba.com>
- <aRyVIebrZk__gkKE@black.igk.intel.com>
-From: Guixin Liu <kanie@linux.alibaba.com>
-In-Reply-To: <aRyVIebrZk__gkKE@black.igk.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Message-ID: <7b8d757a.542.19a9b23bda4.Coremail.zhangsenchuan@eswincomputing.com>
+X-Coremail-Locale: en_US
+X-CM-TRANSID:TQJkCgBnq67KeR1pz6h8AA--.2066W
+X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAQELBmkcn
+	4IUUQABsh
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWDJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-
-
-在 2025/11/18 23:47, Andy Shevchenko 写道:
-> On Fri, Nov 14, 2025 at 02:34:11PM +0800, Guixin Liu wrote:
->> We meet a crash when running stress-ng:
-> + blank line.
->
->>    BUG: unable to handle page fault for address: ffa0000007f40000
->>    RIP: 0010:pci_get_rom_size+0x52/0x220
->>    Call Trace:
->>    <TASK>
->>    pci_map_rom+0x80/0x130
->>    pci_read_rom+0x4b/0xe0
->>    kernfs_file_read_iter+0x96/0x180
->>    vfs_read+0x1b1/0x300
->>    ksys_read+0x63/0xe0
->>    do_syscall_64+0x34/0x80
->>    entry_SYSCALL_64_after_hwframe+0x78/0xe2
-> Please, read
-> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#backtraces-in-commit-messages
-> and act accordingly (I think of 4 least significant lines)
->
-> + blank line.
-Will be changed in v2, thanks.
->> Bcause of broken rom space, before calling readl(pds), pds already
->> points to the rom space end (rom + size - 1), invoking readl()
->> would therefore cause an out-of-bounds access and trigger a crash.
->>
->> Fix this by adding every step address checking.
->  From the description and the code I'm not sure this is the best approach. Since
-> the accesses seem to be not 4-byte aligned, perhaps readl() should be split to
-> something shorter in such cases? Dunno, I haven't looked at the code.
->
-> Ah, it seems we are looking for the full 4 bytes to match. But then we need more, no?
-> See below.
->
-> ...
-In my case, the rom start addr is 0xffa0000007f30000, the size is 
-0x10000, we got a data structure addr 0xffa0000007f3ffff which point to 
-the end of rom space, readl() will read 4 bytes therefore cause an 
-out-of-bounds access.
->
->> +#define PCI_ROM_DATA_STRUCT_OFFSET 24
->> +#define PCI_ROM_LAST_IMAGE_OFFSET 21
->> +#define PCI_ROM_LAST_IMAGE_LEN_OFFSET 16
-> Are those based on PCI specifications? Perhaps if we go this way the reference
-> to the spec needs to be added.
->
-> ...
->
->> static size_t pci_get_rom_size(struct pci_dev *pdev, void __iomem *rom,
->>   	void __iomem *image;
->>   	int last_image;
->>   	unsigned int length;
->> +	void __iomem *end = rom + size;
-> Can you group together IOMEM addresses?
->
-> 	void __iomem *end = rom + size;
-> 	void __iomem *image;
-> 	int last_image;
-> 	unsigned int length;
->
->>   
->>   	image = rom;
->>   	do {
->>   		void __iomem *pds;
->> +		if (image + 2 >= end)
->> +			break;
-> Shouldn't we rather check the size to be at least necessary minimum? With this
-> done, this check won't be needed here. Or we would need another one to check
-> for the length for the entire structure needed.
->
->>   		/* Standard PCI ROMs start out with these bytes 55 AA */
->>   		if (readw(image) != 0xAA55) {
->>   			pci_info(pdev, "Invalid PCI ROM header signature: expecting 0xaa55, got %#06x\n",
->>   				 readw(image));
->>   			break;
->>   		}
->> +		if (image + PCI_ROM_DATA_STRUCT_OFFSET + 2 >= end)
->> +			break;
->>   		/* get the PCI data structure and check its "PCIR" signature */
->> -		pds = image + readw(image + 24);
->> +		pds = image + readw(image + PCI_ROM_DATA_STRUCT_OFFSET);
->> +		if (pds + 4 >= end)
->> +			break;
->>   		if (readl(pds) != 0x52494350) {
->>   			pci_info(pdev, "Invalid PCI ROM data signature: expecting 0x52494350, got %#010x\n",
->>   				 readl(pds));
-> You also want to reconsider double readl(). Would it have side-effects? What about hot-plug?
->
->>   			break;
->>   		}
->> -		last_image = readb(pds + 21) & 0x80;
->> -		length = readw(pds + 16);
->> +
->> +		if (pds + PCI_ROM_LAST_IMAGE_OFFSET + 1 >= end)
->> +			break;
->> +		last_image = readb(pds + PCI_ROM_LAST_IMAGE_OFFSET) & 0x80;
->> +		length = readw(pds + PCI_ROM_LAST_IMAGE_LEN_OFFSET);
->>   		image += length * 512;
->>   		/* Avoid iterating through memory outside the resource window */
->> -		if (image >= rom + size)
->> +		if (image + 2 >= end)
->>   			break;
->>   		if (!last_image) {
->>   			if (readw(image) != 0xAA55) {
-> I agree that defensive programming helps, but I think it's too much in this
-> case. We may relax and do less, but comprehensive checks.
->
-> ...
->
-> Thanks for the testing and proposing a fix, nevertheless!
->
-In v2, I will change to checking addr is in the range of the header
-or data structure per spec.
-
-Best Regards,
-Guixin Liu
-
+CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiTWFuaXZhbm5hbiBTYWRo
+YXNpdmFtIiA8bWFuaUBrZXJuZWwub3JnPgo+IFNlbmQgdGltZTpUdWVzZGF5LCAxOC8xMS8yMDI1
+IDAxOjM3OjAxCj4gVG86ICJCam9ybiBIZWxnYWFzIiA8aGVsZ2Fhc0BrZXJuZWwub3JnPgo+IENj
+OiAiTWFuaXZhbm5hbiBTYWRoYXNpdmFtIiA8bWFuaXZhbm5hbi5zYWRoYXNpdmFtQG9zcy5xdWFs
+Y29tbS5jb20+LCBscGllcmFsaXNpQGtlcm5lbC5vcmcsIGt3aWxjenluc2tpQGtlcm5lbC5vcmcs
+IGJoZWxnYWFzQGdvb2dsZS5jb20sIHdpbGxAa2VybmVsLm9yZywgbGludXgtcGNpQHZnZXIua2Vy
+bmVsLm9yZywgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZywgcm9iaEBrZXJuZWwub3JnLCBs
+aW51eC1hcm0tbXNtQHZnZXIua2VybmVsLm9yZywgemhhbmdzZW5jaHVhbkBlc3dpbmNvbXB1dGlu
+Zy5jb20sIHZpbmNlbnQuZ3VpdHRvdEBsaW5hcm8ub3JnCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2
+MiAyLzNdIFBDSTogcWNvbTogQ2hlY2sgZm9yIHRoZSBwcmVzZW5jZSBvZiBhIGRldmljZSBpbnN0
+ZWFkIG9mIExpbmsgdXAgZHVyaW5nIHN1c3BlbmQKPiAKPiBPbiBUaHUsIE5vdiAxMywgMjAyNSBh
+dCAxMToyMjo1MEFNIC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOgo+ID4gT24gVGh1LCBOb3Yg
+MTMsIDIwMjUgYXQgMTA6MjQ6MTdQTSArMDUzMCwgTWFuaXZhbm5hbiBTYWRoYXNpdmFtIHdyb3Rl
+Ogo+ID4gPiBPbiBUaHUsIE5vdiAxMywgMjAyNSBhdCAxMDo0MTo0N0FNIC0wNjAwLCBCam9ybiBI
+ZWxnYWFzIHdyb3RlOgo+ID4gPiA+IE9uIEZyaSwgTm92IDA3LCAyMDI1IGF0IDEwOjEzOjE4QU0g
+KzA1MzAsIE1hbml2YW5uYW4gU2FkaGFzaXZhbSB3cm90ZToKPiA+ID4gPiA+IFRoZSBzdXNwZW5k
+IGhhbmRsZXIgY2hlY2tzIGZvciB0aGUgUENJZSBMaW5rIHVwIHRvIGRlY2lkZSB3aGVuIHRvIHR1
+cm4gb2ZmCj4gPiA+ID4gPiB0aGUgY29udHJvbGxlciByZXNvdXJjZXMuIEJ1dCB0aGlzIGNoZWNr
+IGlzIHJhY3kgYXMgdGhlIFBDSWUgTGluayBjYW4gZ28KPiA+ID4gPiA+IGRvd24ganVzdCBhZnRl
+ciB0aGlzIGNoZWNrLgo+ID4gPiA+ID4gCj4gPiA+ID4gPiBTbyB1c2UgdGhlIG5ld2x5IGludHJv
+ZHVjZWQgQVBJLCBwY2lfcm9vdF9wb3J0c19oYXZlX2RldmljZSgpIHRoYXQgY2hlY2tzCj4gPiA+
+ID4gPiBmb3IgdGhlIHByZXNlbmNlIG9mIGEgZGV2aWNlIHVuZGVyIGFueSBvZiB0aGUgUm9vdCBQ
+b3J0cyB0byByZXBsYWNlIHRoZQo+ID4gPiA+ID4gTGluayB1cCBjaGVjay4KPiA+ID4gPiAKPiA+
+ID4gPiBXaHkgaXMgcGNpX3Jvb3RfcG9ydHNfaGF2ZV9kZXZpY2UoKSBpdHNlbGYgbm90IHJhY3k/
+Cj4gPiA+IAo+ID4gPiBCZWNhdXNlIGl0IGlzIHZlcnkgdW5jb21tb24gZm9yIHRoZSAncGNpX2Rl
+dicgdG8gZ28gYXdheSBkdXJpbmcgdGhlCj4gPiA+IGhvc3QgY29udHJvbGxlciBzdXNwZW5kLiBJ
+dCBtaWdodCBzdGlsbCBiZSBwb3NzaWJsZSBpbiBlZGdlIGNhc2VzLAo+ID4gPiBidXQgdmVyeSBj
+b21tb24gYXMgdGhlIGxpbmsgZG93bi4gSSBjYW4gcmV3b3JkIGl0Lgo+ID4gCj4gPiBJIGd1ZXNz
+IGl0J3MgYmV0dGVyIHRvIGFja25vd2xlZGdlIHJlcGxhY2luZyBvbmUgcmFjZSB3aXRoIGFub3Ro
+ZXIKPiA+IHRoYW4gaXQgd291bGQgYmUgdG8gc3VnZ2VzdCB0aGF0IHRoaXMgKnJlbW92ZXMqIGEg
+cmFjZS4KPiA+IAo+IAo+IE9rLgo+IAo+ID4gQnV0IEkgZG9uJ3QgdW5kZXJzdGFuZCB0aGUgcG9p
+bnQgb2YgdGhpcy4gIElzCj4gPiBwY2lfcm9vdF9wb3J0c19oYXZlX2RldmljZSgpICpsZXNzKiBy
+YWN5IHRoYW4gdGhlCj4gPiBxY29tX3BjaWVfc3VzcGVuZF9ub2lycSgpIGNoZWNrPyAgV2h5IHdv
+dWxkIHRoYXQgYmU/Cj4gPiAKPiAKPiBUaGUgY2hlY2sgaXMgc3VwcG9zZWQgdG8gcGVyZm9ybSBk
+ZWluaXQgb25seSBpZiB0aGVyZSBhcmUgbm8gZGV2aWNlcyBjb25uZWN0ZWQKPiB0byB0aGUgc2xv
+dC4gQW5kIHRoZSByZWFzb24gdG8gc2tpcCB0aGUgZGVpbml0IHdhcyBtb3N0bHkgZHVlIHRvIGRy
+aXZlciBiZWhhdmlvcgo+IGxpa2UgTlZNZSBkcml2ZXIsIHdoaWNoIGV4cGVjdHMgdGhlIGRldmlj
+ZSB0byBiZSBpbiBEMCBldmVuIGR1cmluZyBzeXN0ZW0KPiBzdXNwZW5kIG9uIG5vbi14ODYgcGxh
+dGZvcm1zLgo+IAo+IFNpbmNlIHRoZSBjaGVjayBpcyBmb3IgdGhlIGV4aXN0ZW5jZSBvZiB0aGUg
+ZGV2aWNlIG5ldmVydGhlbGVzcywgSSB0aG91Z2h0LAo+IG1ha2luZyB1c2Ugb2YgcGNpX3Jvb3Rf
+cG9ydHNfaGF2ZV9kZXZpY2UoKSBzZXJ2ZXMgdGhlIHB1cnBvc2UgaW5zdGVhZCBvZgo+IGNoZWNr
+aW5nIHRoZSBkYXRhIGxpbmsgbGF5ZXIgc3RhdHVzLgo+IAo+ID4gSSdtIGtpbmQgb2Ygc2tlcHRp
+Y2FsIGFib3V0IGFkZGluZyBwY2lfcm9vdF9wb3J0c19oYXZlX2RldmljZSgpIGF0Cj4gPiBhbGwu
+ICBJdCBzZWVtcyBsaWtlIGl0IGp1c3QgZW5jb3VyYWdlcyByYWN5IGJlaGF2aW9yIGluIGRyaXZl
+cnMuCj4gPiAKPiAKPiBJIGFncmVlIHRoYXQgdGhvdWdoIGl0IGlzIG5vdCB2ZXJ5IGNvbW1vbiwg
+YnV0IHdpdGggYXN5bmMgc3VzcGVuZCwgaXQgaXMKPiBwb3NzaWJsZSB0aGF0ICdwY2lfZGV2JyBt
+YXkgZ2V0IHJlbW92ZWQgZHVyaW5nIGNvbnRyb2xsZXIgc3VzcGVuZC4KPiAKPiBTbyBJJ3ZlIGRy
+b3BwZWQgdGhpcyBzZXJpZXMgZnJvbSBjb250cm9sbGVyL2R3YyB1bnRpbCB3ZSBjb25jbHVkZS4K
+PiAKCkhpLCBNYW5pCgpJIHNlZSB0aGF0IHRoaXMgc2VyaWVzIGZyb20gY29udHJvbGxlci9kd2Mg
+aGFzIGJlZW4gdGVtcG9yYXJpbHkgcmVtb3ZlZC4gCkRvIEkgbmVlZCB0byB3YWl0IGZvciBhIGNv
+bmNsdXNpb24gbGF0ZXIgYmVmb3JlIHN1Ym1pdHRpbmcgdGhlIGNvZGUsIG9yCmRvIEkgbmVlZCB0
+byBjb250aW51ZSBzdWJtaXR0aW5nIHRoZSBwY2llIHY2IHBhdGNoIGJhc2VkIG9uIHRoZSBsYXRl
+c3QgCjYuMTgtcmM2IGJyYW5jaD8KCktpbmQgcmVnYXJkcywKU2VuY2h1YW4gWmhhbmcKCj4gCj4g
+PiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNYW5pdmFubmFuIFNhZGhhc2l2YW0gPG1hbml2YW5uYW4u
+c2FkaGFzaXZhbUBvc3MucXVhbGNvbW0uY29tPgo+ID4gPiA+ID4gLS0tCj4gPiA+ID4gPiAgZHJp
+dmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1xY29tLmMgfCA2ICsrKystLQo+ID4gPiA+ID4g
+IDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gPiA+ID4g
+PiAKPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ll
+LXFjb20uYyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtcWNvbS5jCj4gPiA+ID4g
+PiBpbmRleCA4MDVlZGJiZmU3ZWIuLmIyYjg5ZTJlNDkxNiAxMDA2NDQKPiA+ID4gPiA+IC0tLSBh
+L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtcWNvbS5jCj4gPiA+ID4gPiArKysgYi9k
+cml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLXFjb20uYwo+ID4gPiA+ID4gQEAgLTIwMTgs
+NiArMjAxOCw3IEBAIHN0YXRpYyBpbnQgcWNvbV9wY2llX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9k
+ZXZpY2UgKnBkZXYpCj4gPiA+ID4gPiAgc3RhdGljIGludCBxY29tX3BjaWVfc3VzcGVuZF9ub2ly
+cShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiA+ID4gPiAgewo+ID4gPiA+ID4gIAlzdHJ1Y3QgcWNv
+bV9wY2llICpwY2llOwo+ID4gPiA+ID4gKwlzdHJ1Y3QgZHdfcGNpZV9ycCAqcHA7Cj4gPiA+ID4g
+PiAgCWludCByZXQgPSAwOwo+ID4gPiA+ID4gIAo+ID4gPiA+ID4gIAlwY2llID0gZGV2X2dldF9k
+cnZkYXRhKGRldik7Cj4gPiA+ID4gPiBAQCAtMjA1Myw4ICsyMDU0LDkgQEAgc3RhdGljIGludCBx
+Y29tX3BjaWVfc3VzcGVuZF9ub2lycShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiA+ID4gPiAgCSAq
+IHBvd2VyZG93biBzdGF0ZS4gVGhpcyB3aWxsIGFmZmVjdCB0aGUgbGlmZXRpbWUgb2YgdGhlIHN0
+b3JhZ2UgZGV2aWNlcwo+ID4gPiA+ID4gIAkgKiBsaWtlIE5WTWUuCj4gPiA+ID4gPiAgCSAqLwo+
+ID4gPiA+ID4gLQlpZiAoIWR3X3BjaWVfbGlua191cChwY2llLT5wY2kpKSB7Cj4gPiA+ID4gPiAt
+CQlxY29tX3BjaWVfaG9zdF9kZWluaXQoJnBjaWUtPnBjaS0+cHApOwo+ID4gPiA+ID4gKwlwcCA9
+ICZwY2llLT5wY2ktPnBwOwo+ID4gPiA+ID4gKwlpZiAoIXBjaV9yb290X3BvcnRzX2hhdmVfZGV2
+aWNlKHBwLT5icmlkZ2UtPmJ1cykpIHsKPiA+ID4gPiA+ICsJCXFjb21fcGNpZV9ob3N0X2RlaW5p
+dChwcCk7Cj4gPiA+ID4gPiAgCQlwY2llLT5zdXNwZW5kZWQgPSB0cnVlOwo+ID4gPiA+ID4gIAl9
+Cj4gPiA+ID4gPiAgCj4gPiA+ID4gPiAtLSAKPiA+ID4gPiA+IDIuNDguMQo+ID4gPiA+ID4gCj4g
+PiA+IAo+ID4gPiAtLSAKCg==
 
