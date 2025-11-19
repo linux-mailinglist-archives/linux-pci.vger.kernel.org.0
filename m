@@ -1,59 +1,97 @@
-Return-Path: <linux-pci+bounces-41653-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41654-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9412CC6FE53
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 17:00:32 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73567C7008B
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 17:21:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7FDD0364588
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 15:53:24 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DE4284FC3D5
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 15:55:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E10234107C;
-	Wed, 19 Nov 2025 15:47:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46776377EB3;
+	Wed, 19 Nov 2025 15:50:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/iaFsAP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Laj4zYxh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6EE2E8B81;
-	Wed, 19 Nov 2025 15:47:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4F717D2;
+	Wed, 19 Nov 2025 15:50:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763567253; cv=none; b=DpVrNGWvLtlQv+5TWphhkwmUbN28R5aQLX7wB5B6PcVSSxSGYubwrXbK+8TIdw8Ls4IVTXT/NMJGkfheFP4ZNAQvv/pcrX0MztFEbrEen2XDxnN2ZZ7oQ/wgRgidk+pNw+sujNfIsxsUYF9U7NPX8lIPkuv5HHqHX5+np/8r+nw=
+	t=1763567408; cv=none; b=N99xdWoVmgJVUllSYTTA7BGdMb2DR4/hVsLE0SKsEwhmYiWcbmnTg2FBaw4oSH0Wpz9OmnwETME6TrgkIcQDJa2xzp6Kk8Ornk/ym2EYpn6QW5UZODFO2iLFpqIMrjSymDGgSWYmHp7hZffjJv4NLnrzklNM34hTPgNzchkRzTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763567253; c=relaxed/simple;
-	bh=vicgZe2Av/U4KqK6bau+u9mHI2W4ZvV0ci7Vd1xAaJg=;
+	s=arc-20240116; t=1763567408; c=relaxed/simple;
+	bh=mtl+IHM/JXtrCO8ISnitiGZcya/g9fsTYHXlgtCEzjQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WPMTnS8UpxDNYkU3w6xA2PT5QJR1P2yp+KcH+NPvYE8YZBDvL1uTsSGci4mLnoSMyYGQRRNOaZL+ls8/XBjHc0MeDcJtVgy7w/DRrTXbfU0+aPg80nu8fAWIj49+zVnxHr7le4GyzHMJJLzLwQbLu3UOC60xYLUv2fO2oCvpPv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/iaFsAP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B901DC4AF4D;
-	Wed, 19 Nov 2025 15:47:24 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=uyO14AnYKT/4hutPCI9e4BRS+TXDQ5aKcVakc2mhYGXqSyAUBVNeeuM0auo2DpH9ITtkvwBLVHb4hHoAUd6rL2Y3xNaR16hjxAYkHbBcDiqmM9CTK3C7vD7l06DJ8/BcIZG3b2UFYJxzk4VM31opoIc6bVw57CWSnRZ1RKwfwgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Laj4zYxh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A51C2BCB0;
+	Wed, 19 Nov 2025 15:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763567252;
-	bh=vicgZe2Av/U4KqK6bau+u9mHI2W4ZvV0ci7Vd1xAaJg=;
+	s=k20201202; t=1763567407;
+	bh=mtl+IHM/JXtrCO8ISnitiGZcya/g9fsTYHXlgtCEzjQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m/iaFsAPw27Vo7KL+xOhpzChl9HwgPS91l9ZE9SkAkJCY2UaBQjQUzZhvNSIU0aTR
-	 mjUaPeN+1DpNB9Eu/vA1eUJYgT/Pfoz+V8332karyPbvh9E4dsexBeWKPFw55pyc5w
-	 HOGrzUy9f5ifz0axsOzC6LhDxNWcDYaObz3ObyauHXxPC+VgMvQ70Q1eU9tbDf32hH
-	 WGrz9JsHF69HhZs+dekb6hrSb9slrHLfcIHBv4S1HO+h5iw9cAoF4bPD8b5OP2vbtO
-	 SRL79BsrKKpcZJXfElkS5n7zaxeL8O3UTaUS7UCPqvj9+IRbu++GiYLfOBTOWVIqKP
-	 yj4TrAxEVZH9Q==
-Date: Wed, 19 Nov 2025 21:17:18 +0530
+	b=Laj4zYxhFW+Cyz8oEoGr4IEUQkfwUMdLv7HRG6pEmMXhq+vvRB62wNZAYyCBhwMgW
+	 ydZ26okaryoinvEE8tIJbLlJoY1/cMOVAl5gZWnUjbENpW2a9mfRw+vAlvoqjU3euP
+	 pbkZQ00ScKclvx/Fc7+VWCtde1BoO4ZllGxuhaaQ6oHWiJx30xfmdUGu2l8xqahHsp
+	 T+hG+IPeCO3xnQsYkJ7VatBdtqrEHMzKKg55/4DdSBYnYup2E2b5/XfowD8zPoAvGV
+	 SUjpmYocHoRKpWNGz1Ow4h6dPUUWYAJv0jrXiCMFF0CA6h8rz5TtzNJHhRm6MSXZFU
+	 PqBSfmBBhtEiA==
+Date: Wed, 19 Nov 2025 21:19:25 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH] PCI: stm32: Fix LTSSM EP race with start link.
-Message-ID: <k72rxq2j5hbpotgmshwau6tvvem3jnldahxxgg54qoxjs7jaxb@bgh4cgs5j25h>
-References: <20251118212818.GA2591668@bhelgaas>
- <7053f336-59c9-47cc-ac97-eb2f0916ac4f@foss.st.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Corey Minyard <corey@minyard.net>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Alex Deucher <alexander.deucher@amd.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Rob Clark <robin.clark@oss.qualcomm.com>, 
+	Matthew Brost <matthew.brost@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Aleksandr Loktionov <aleksandr.loktionov@intel.com>, Vitaly Lifshits <vitaly.lifshits@intel.com>, 
+	Niklas Cassel <cassel@kernel.org>, Calvin Owens <calvin@wbinvd.org>, 
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>, Sagi Maimon <maimon.sagi@gmail.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Karan Tilak Kumar <kartilak@cisco.com>, 
+	Hans Verkuil <hverkuil+cisco@kernel.org>, Casey Schaufler <casey@schaufler-ca.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Petr Mladek <pmladek@suse.com>, 
+	Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>, Max Kellermann <max.kellermann@ionos.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	openipmi-developer@lists.sourceforge.net, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, amd-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, intel-xe@lists.freedesktop.org, linux-mmc@vger.kernel.org, 
+	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org, linux-pci@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev, 
+	ceph-devel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Gustavo Padovan <gustavo@padovan.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Abhinav Kumar <abhinav.kumar@linux.dev>, Jessica Zhang <jesszhan0024@gmail.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Lucas De Marchi <lucas.demarchi@intel.com>, 
+	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Tony Nguyen <anthony.l.nguyen@intel.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Rodolfo Giometti <giometti@enneenne.com>, 
+	Jonathan Lemon <jonathan.lemon@gmail.com>, Richard Cochran <richardcochran@gmail.com>, 
+	Stefan Haberland <sth@linux.ibm.com>, Jan Hoeppner <hoeppner@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Satish Kharat <satishkh@cisco.com>, 
+	Sesidhar Baddela <sebaddel@cisco.com>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 15/21] PCI: epf-test: Switch to use %ptSp
+Message-ID: <wuyn4v625xw4n2jm4eiullfrprmjiw4aiwo4zudcp4ppd2yeva@s7vzfoinnavt>
+References: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
+ <20251113150217.3030010-16-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,75 +101,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7053f336-59c9-47cc-ac97-eb2f0916ac4f@foss.st.com>
+In-Reply-To: <20251113150217.3030010-16-andriy.shevchenko@linux.intel.com>
 
-On Wed, Nov 19, 2025 at 04:13:47PM +0100, Christian Bruel wrote:
+On Thu, Nov 13, 2025 at 03:32:29PM +0100, Andy Shevchenko wrote:
+> Use %ptSp instead of open coded variants to print content of
+> struct timespec64 in human readable format.
 > 
-> 
-> On 11/18/25 22:28, Bjorn Helgaas wrote:
-> > [+cc Lukas in case I got the pciehp part wrong]
-> > 
-> 
-> > 
-> > To back up here, I'm trying to understand the race.
-> > 
-> > IIUC the relevant events are link training and register init.  In the
-> > current stm32 EP driver, link training can start when the EP userspace
-> > writes to the 'start' configfs file.  And the register init happens
-> > when stm32_pcie_ep_perst_irq_thread() calls
-> > dw_pcie_ep_init_registers().
-> > 
-> > So I guess the problem is when the EP userspace enables the LTSSM
-> > before the host deasserts PERST#?  And the link train may complete
-> > before stm32_pcie_ep_perst_irq_thread() runs?
-> 
-> The sequence also violated the spec (4.0, Section 6.6.1 "Conventional
-> Reset"), because it allowed the endpoint to enter the Detect state before
-> PERST# is deasserted
-> 
-> > 
-> > And the fix here is to delay enabling the EP LTSSM until after
-> > stm32_pcie_perst_deassert() calls dw_pcie_ep_init_registers()?
-> > 
-> 
-> > 
-> > I think we would prefer if the host would enumerate the endpoint
-> > whenever the endpoint becomes ready, even if that is after the host's
-> > initial enumeration, but I guess that's only possible if the host is
-> > notified when the link comes up.
-> > 
-> > The main mechanism for that is hotplug, i.e., pciehp handles presence
-> > detect and link layer state changed events, both of which are managed
-> > by the PCIe Slot register set.  Those registers are optional and may
-> > not be implemented, e.g., if a Root Port is connected to a
-> > system-integrated device.
-> > 
-> > But if they *are* implemented, I hope that pciehp makes it so no user
-> > intervention on the host side is required.
-> > 
-> 
-> 
-> I suppose that hotplug cannot be implemented without some kind of presence
-> detection signal from the EP (PRSNT#, ...) ? For now we have no
-> implementation to support this (from gpio or other).
-> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Most of the non-PC/Server platforms do not have hot pluggable connectors. So the
-lack of PRSNT# signal is very common.
-
-> However, using a PC host, I observe that when I resume the host from PCIe
-> autosuspend, for example, with 'lspci', PERST# is deasserted, and the stm32
-> PCIe EP device is correctly enumerated without a manual rescan. So thanks to
-> power management, a device can be enumerated asynchronously but when
-> requested, not when ready.
-> 
-
-I would assume that any host will deassert PERST# during boot itself, and keep
-the LTSSM in Link.Detect. But if the link is not detected, a host *may* assert
-PERST#. And during resume, it will try the same sequence and if your device is
-connected, it will get enumerated.
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 
 - Mani
+
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index b05e8db575c3..debd235253c5 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -331,9 +331,8 @@ static void pci_epf_test_print_rate(struct pci_epf_test *epf_test,
+>  		rate = div64_u64(size * NSEC_PER_SEC, ns * 1000);
+>  
+>  	dev_info(&epf_test->epf->dev,
+> -		 "%s => Size: %llu B, DMA: %s, Time: %llu.%09u s, Rate: %llu KB/s\n",
+> -		 op, size, dma ? "YES" : "NO",
+> -		 (u64)ts.tv_sec, (u32)ts.tv_nsec, rate);
+> +		 "%s => Size: %llu B, DMA: %s, Time: %ptSp s, Rate: %llu KB/s\n",
+> +		 op, size, dma ? "YES" : "NO", &ts, rate);
+>  }
+>  
+>  static void pci_epf_test_copy(struct pci_epf_test *epf_test,
+> -- 
+> 2.50.1
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
