@@ -1,143 +1,146 @@
-Return-Path: <linux-pci+bounces-41654-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41655-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73567C7008B
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 17:21:56 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 130D3C6FD90
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 16:56:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DE4284FC3D5
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 15:55:06 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id 235522F3DF
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Nov 2025 15:56:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46776377EB3;
-	Wed, 19 Nov 2025 15:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 900353A79C1;
+	Wed, 19 Nov 2025 15:50:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Laj4zYxh"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="wJbIiP6M"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sinmsgout02.his.huawei.com (sinmsgout02.his.huawei.com [119.8.177.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4F717D2;
-	Wed, 19 Nov 2025 15:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CD43A79AC;
+	Wed, 19 Nov 2025 15:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=119.8.177.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763567408; cv=none; b=N99xdWoVmgJVUllSYTTA7BGdMb2DR4/hVsLE0SKsEwhmYiWcbmnTg2FBaw4oSH0Wpz9OmnwETME6TrgkIcQDJa2xzp6Kk8Ornk/ym2EYpn6QW5UZODFO2iLFpqIMrjSymDGgSWYmHp7hZffjJv4NLnrzklNM34hTPgNzchkRzTA=
+	t=1763567450; cv=none; b=Pc/7fGtC3Ob2t6zYCjUfjZVlSnsSuzrsHB9uunMIazbF0Njgdc5GHLemj5yTo7dCwxH6J6iFOpi//E5W+P3gZDgWBec2e+zot9XPDxhEJ4PZOoKbOA/LM+2Qw75D9jWKCo5Or09P80CUAYLXTkSN73f48IsQfXVPebzEchgN5vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763567408; c=relaxed/simple;
-	bh=mtl+IHM/JXtrCO8ISnitiGZcya/g9fsTYHXlgtCEzjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uyO14AnYKT/4hutPCI9e4BRS+TXDQ5aKcVakc2mhYGXqSyAUBVNeeuM0auo2DpH9ITtkvwBLVHb4hHoAUd6rL2Y3xNaR16hjxAYkHbBcDiqmM9CTK3C7vD7l06DJ8/BcIZG3b2UFYJxzk4VM31opoIc6bVw57CWSnRZ1RKwfwgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Laj4zYxh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A51C2BCB0;
-	Wed, 19 Nov 2025 15:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763567407;
-	bh=mtl+IHM/JXtrCO8ISnitiGZcya/g9fsTYHXlgtCEzjQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Laj4zYxhFW+Cyz8oEoGr4IEUQkfwUMdLv7HRG6pEmMXhq+vvRB62wNZAYyCBhwMgW
-	 ydZ26okaryoinvEE8tIJbLlJoY1/cMOVAl5gZWnUjbENpW2a9mfRw+vAlvoqjU3euP
-	 pbkZQ00ScKclvx/Fc7+VWCtde1BoO4ZllGxuhaaQ6oHWiJx30xfmdUGu2l8xqahHsp
-	 T+hG+IPeCO3xnQsYkJ7VatBdtqrEHMzKKg55/4DdSBYnYup2E2b5/XfowD8zPoAvGV
-	 SUjpmYocHoRKpWNGz1Ow4h6dPUUWYAJv0jrXiCMFF0CA6h8rz5TtzNJHhRm6MSXZFU
-	 PqBSfmBBhtEiA==
-Date: Wed, 19 Nov 2025 21:19:25 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Corey Minyard <corey@minyard.net>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Alex Deucher <alexander.deucher@amd.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Rob Clark <robin.clark@oss.qualcomm.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Aleksandr Loktionov <aleksandr.loktionov@intel.com>, Vitaly Lifshits <vitaly.lifshits@intel.com>, 
-	Niklas Cassel <cassel@kernel.org>, Calvin Owens <calvin@wbinvd.org>, 
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>, Sagi Maimon <maimon.sagi@gmail.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Karan Tilak Kumar <kartilak@cisco.com>, 
-	Hans Verkuil <hverkuil+cisco@kernel.org>, Casey Schaufler <casey@schaufler-ca.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Petr Mladek <pmladek@suse.com>, 
-	Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>, Max Kellermann <max.kellermann@ionos.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	openipmi-developer@lists.sourceforge.net, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, amd-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, intel-xe@lists.freedesktop.org, linux-mmc@vger.kernel.org, 
-	netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org, linux-pci@vger.kernel.org, 
-	linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev, 
-	ceph-devel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Gustavo Padovan <gustavo@padovan.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Abhinav Kumar <abhinav.kumar@linux.dev>, Jessica Zhang <jesszhan0024@gmail.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Lucas De Marchi <lucas.demarchi@intel.com>, 
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Tony Nguyen <anthony.l.nguyen@intel.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Rodolfo Giometti <giometti@enneenne.com>, 
-	Jonathan Lemon <jonathan.lemon@gmail.com>, Richard Cochran <richardcochran@gmail.com>, 
-	Stefan Haberland <sth@linux.ibm.com>, Jan Hoeppner <hoeppner@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Satish Kharat <satishkh@cisco.com>, 
-	Sesidhar Baddela <sebaddel@cisco.com>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 15/21] PCI: epf-test: Switch to use %ptSp
-Message-ID: <wuyn4v625xw4n2jm4eiullfrprmjiw4aiwo4zudcp4ppd2yeva@s7vzfoinnavt>
-References: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
- <20251113150217.3030010-16-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1763567450; c=relaxed/simple;
+	bh=OnWo3e2LVYw1bwnRO0bBgJtQMSDrVhFI5AR6yUV7dZA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UI+rUedVzPrYrRpHLMFBWpmTWBqjYpl4gqThnDaYmJk7KFoMveZoc3HONLXqs843GboYwpBQnKEEoqYzUgFvTy+iy4GsdQ+vILkS8RSWkDr/YtQluobeaPrtgU6pF+URKk2ZYQctcBfAPdkZ0QHYsw34QOkOWHm1HRu/RPdljH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=wJbIiP6M; arc=none smtp.client-ip=119.8.177.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=3cdySq4RWh2IajHIx8YtiSWymoIFSnIHWX/ALQ3zVFw=;
+	b=wJbIiP6Mbx9aIBgM2TlPX2OG0o0XyoHgJqRFizACZkTEgnRMLdcOxKO07PEhdgwzL3aySX9qf
+	N0W799g86FQRQEWHGKsdgrT1TC5ZoVmfHvsTwOYdulIvTJ0E+KtgqkBlQRz3goiMaABYQS5q05F
+	FLiXhTS5rWORcRXO76RusQg=
+Received: from frasgout.his.huawei.com (unknown [172.18.146.32])
+	by sinmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4dBQs566Chz1vnN7;
+	Wed, 19 Nov 2025 23:49:29 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dBQsn6vrqzHnGdq;
+	Wed, 19 Nov 2025 23:50:05 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 047E114033F;
+	Wed, 19 Nov 2025 23:50:39 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 19 Nov
+ 2025 15:50:38 +0000
+Date: Wed, 19 Nov 2025 15:50:36 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
+CC: <linux-coco@lists.linux.dev>, <kvmarm@lists.linux.dev>,
+	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <aik@amd.com>, <lukas@wunner.de>, Samuel Ortiz
+	<sameo@rivosinc.com>, Xu Yilun <yilun.xu@linux.intel.com>, Jason Gunthorpe
+	<jgg@ziepe.ca>, Suzuki K Poulose <Suzuki.Poulose@arm.com>, Steven Price
+	<steven.price@arm.com>, Bjorn Helgaas <helgaas@kernel.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>, Will Deacon
+	<will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: [PATCH v2 03/11] coco: guest: arm64: Add support for guest
+ initiated TDI bind/unbind
+Message-ID: <20251119155036.000026ca@huawei.com>
+In-Reply-To: <20251117140007.122062-4-aneesh.kumar@kernel.org>
+References: <20251117140007.122062-1-aneesh.kumar@kernel.org>
+	<20251117140007.122062-4-aneesh.kumar@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251113150217.3030010-16-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Thu, Nov 13, 2025 at 03:32:29PM +0100, Andy Shevchenko wrote:
-> Use %ptSp instead of open coded variants to print content of
-> struct timespec64 in human readable format.
+On Mon, 17 Nov 2025 19:29:59 +0530
+"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
+
+> Add RHI for VDEV_SET_TDI_STATE
 > 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
-
-- Mani
-
-> ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+> Note: This is not part of RHI spec. This is a POC implementation
+> and will be later converted to correct interface defined by RHI.
 > 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index b05e8db575c3..debd235253c5 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -331,9 +331,8 @@ static void pci_epf_test_print_rate(struct pci_epf_test *epf_test,
->  		rate = div64_u64(size * NSEC_PER_SEC, ns * 1000);
->  
->  	dev_info(&epf_test->epf->dev,
-> -		 "%s => Size: %llu B, DMA: %s, Time: %llu.%09u s, Rate: %llu KB/s\n",
-> -		 op, size, dma ? "YES" : "NO",
-> -		 (u64)ts.tv_sec, (u32)ts.tv_nsec, rate);
-> +		 "%s => Size: %llu B, DMA: %s, Time: %ptSp s, Rate: %llu KB/s\n",
-> +		 op, size, dma ? "YES" : "NO", &ts, rate);
->  }
->  
->  static void pci_epf_test_copy(struct pci_epf_test *epf_test,
-> -- 
-> 2.50.1
-> 
+> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
 
--- 
-மணிவண்ணன் சதாசிவம்
+> diff --git a/drivers/virt/coco/arm-cca-guest/rsi-da.c b/drivers/virt/coco/arm-cca-guest/rsi-da.c
+> new file mode 100644
+> index 000000000000..6770861629f2
+> --- /dev/null
+> +++ b/drivers/virt/coco/arm-cca-guest/rsi-da.c
+> @@ -0,0 +1,36 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2025 ARM Ltd.
+> + */
+> +
+> +#include <linux/pci.h>
+> +#include <asm/rsi_cmds.h>
+> +
+> +#include "rsi-da.h"
+> +#include "rhi-da.h"
+> +
+> +#define PCI_TDISP_MESSAGE_VERSION_10	0x10
+
+Not sure why this define is here.  It sounds generic
+and looks ot be the TDISPVersion field content for first
+byte of a TDISP message.  If so should be in a PCI header
+not here.
+
+> +
+> +int cca_device_lock(struct pci_dev *pdev)
+> +{
+> +	int ret;
+> +
+> +	ret = rhi_vdev_set_tdi_state(pdev, RHI_DA_TDI_CONFIG_LOCKED);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to lock the device (%u)\n", ret);
+> +		return -EIO;
+Why eat ret?  It might have a useful error value to the caller.
+If there is a reason -EIO is special then add a comment here to explain
+that.
+> +	}
+> +	return 0;
+> +}
+> +
+> +int cca_device_unlock(struct pci_dev *pdev)
+> +{
+> +	int ret;
+> +
+> +	ret = rhi_vdev_set_tdi_state(pdev, RHI_DA_TDI_CONFIG_UNLOCKED);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to unlock the device (%u)\n", ret);
+> +		return -EIO;
+Same as above.
+> +	}
+> +	return 0;
+> +}
+
 
