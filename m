@@ -1,293 +1,307 @@
-Return-Path: <linux-pci+bounces-41795-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41797-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7CEBC7507B
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 16:38:50 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id B92D2C7509C
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 16:39:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 61A4E362801
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 15:29:33 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BD36A4EFB91
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 15:31:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F11DB393DCA;
-	Thu, 20 Nov 2025 15:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F33AC364034;
+	Thu, 20 Nov 2025 15:23:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="P8suQuB5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nd8bwrOy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sinmsgout02.his.huawei.com (sinmsgout02.his.huawei.com [119.8.177.37])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B1936C5B3;
-	Thu, 20 Nov 2025 15:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=119.8.177.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF9635F8B0;
+	Thu, 20 Nov 2025 15:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763652135; cv=none; b=IDKtdVRP84i+ONpNiZWMrUXFGpfeSjU9FtOnzagJoYkmfmP7GHi8dAZNoacHsOyXXLtRqYwxtkXBp5b8q4R6YF90BktgssXV/vlMqz4gfufoaZ5UOre7t4QlJahpO3w77CX/K0aiTNkaUIWE4A+NXeJ3Tqm+c0mRFHkypcQbqk4=
+	t=1763652222; cv=none; b=Mcyak6Vn+5TrTyy2sr2FdKzy0Lve7A/guN8/kXJMKhdviQ2Oh9HuifNYZODTzpbSl6K0JZy8EnZbyvehsT/CLkOOyxzZJJGik4opWckkrZz9pCekphi5ACMEYgvdOy96MoEFu1GuU14mwZPv1OfBSNgUWApO44YfTxtT7/uRzGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763652135; c=relaxed/simple;
-	bh=HTP7ZG0JLrR72YEpCQPOqmegXIQklqpfc1T/tjAQ2gk=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HsvW5QIx5I/8+8vW+LKs1EDUB40f3zEWSCdLYYwzA1KxuL+arOQ2tJQXQVWL+I6VANbzsMGTBF1wtQFP6IXlYSI2U6n5pH/Sw+XfobGkPFiuWN37MiJbRZrkPZebkh422iRLS76eesjAHgsXY7G54oANfaOSwatgHfQdC8ZnO2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=P8suQuB5; arc=none smtp.client-ip=119.8.177.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=tvyyaDNHmQ2x14W2WTsi4Y3M6d5AXJBaR91q3uubHa8=;
-	b=P8suQuB5PwqZjD42T1LpU9x6a8G94VQmb+EdDJjHp0fTt7YXE26W7pr8ZZrt97isNy5JuW9Rz
-	ocf1+lQIxqsN3ZKHxy8a8YaH1AUNkjARqjJP5a5D92bNNF0QuEppUN9AcB2CxojIm8BRpYUIz9E
-	aBYU43M1xRf+aQpZAtfvHCo=
-Received: from frasgout.his.huawei.com (unknown [172.18.146.33])
-	by sinmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4dC29f6KB8z1vpBc;
-	Thu, 20 Nov 2025 23:20:54 +0800 (CST)
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dC2B73cfPzJ46Yf;
-	Thu, 20 Nov 2025 23:21:19 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2CD101402F1;
-	Thu, 20 Nov 2025 23:22:05 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 20 Nov
- 2025 15:22:04 +0000
-Date: Thu, 20 Nov 2025 15:22:02 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
-CC: <linux-coco@lists.linux.dev>, <kvmarm@lists.linux.dev>,
-	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <aik@amd.com>, <lukas@wunner.de>, Samuel Ortiz
-	<sameo@rivosinc.com>, Xu Yilun <yilun.xu@linux.intel.com>, Jason Gunthorpe
-	<jgg@ziepe.ca>, Suzuki K Poulose <Suzuki.Poulose@arm.com>, Steven Price
-	<steven.price@arm.com>, Bjorn Helgaas <helgaas@kernel.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>, Will Deacon
-	<will@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: [PATCH v2 05/11] coco: guest: arm64: Add support for updating
- measurements from device
-Message-ID: <20251120152202.00001efb@huawei.com>
-In-Reply-To: <20251117140007.122062-6-aneesh.kumar@kernel.org>
-References: <20251117140007.122062-1-aneesh.kumar@kernel.org>
-	<20251117140007.122062-6-aneesh.kumar@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1763652222; c=relaxed/simple;
+	bh=bj15Y9VvxernGXOXAHezLeGkYBBoJT0P5MFHGRZHdKY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z579jMy9mcOQGcQLrxitNpnKVLpKbx5A80ghZqQI4EJESljkvF3jW0aTj7HXjvDPVo4laRpQ6CD7cRgxjZiNls2ZtKDdGCbp1XuHb9B62wLdREXoUKaGsCsVHUJmD3MLJEzok28tC65HvodsaYUx9YXz4JqnO9lSX85n7/2pHgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nd8bwrOy; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763652221; x=1795188221;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bj15Y9VvxernGXOXAHezLeGkYBBoJT0P5MFHGRZHdKY=;
+  b=Nd8bwrOydN4FwZmhwIy3ibXxDazhYoKh41ekJmJy+tk1em/G8KyknPrq
+   Fq2EtNLDyLqZl2PdURXNtG/YcbXWrcuFgaa8ZohAnwkgBOo7wJjTyeCT6
+   +3WPvJocmAOY8dex9bEGZLKzeZzfBWGQEDfFCZ+mNE4baAvDfb7OSD2t6
+   kOEhw+X4GXmKUR32fj6rg6HhhuDwSUWHlR7A/wJ8svagOr8Oj4Z6/0Ssm
+   mJgMOx2ek/LPFmepg6UcZQ3Tuog8HxR1ikDR1BMAvVZ9Il4E1X5llvluL
+   pCSqPIfk82wjU8yCYW2+m5btnoHVfZmYJynGykp5pb0avkhgGRCRxu8dw
+   w==;
+X-CSE-ConnectionGUID: rG0bbul6TK6NskT4S+axbg==
+X-CSE-MsgGUID: +oYp8VDSTAaO8GjdgkI8pw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11619"; a="65763636"
+X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
+   d="scan'208";a="65763636"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 07:23:41 -0800
+X-CSE-ConnectionGUID: poaTVW1nRHCa58cdzfOw5w==
+X-CSE-MsgGUID: 73x9Rz1PT1qkJmj6xyLN/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
+   d="scan'208";a="214749631"
+Received: from schen9-mobl4.amr.corp.intel.com (HELO [10.125.109.230]) ([10.125.109.230])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 07:23:40 -0800
+Message-ID: <13e894a8-474f-465a-a13a-5d892efbfadb@intel.com>
+Date: Thu, 20 Nov 2025 07:23:39 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 08/26] x86/virt/tdx: Add tdx_enable_ext() to enable of
+ TDX Module Extensions
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: linux-coco@lists.linux.dev, linux-pci@vger.kernel.org,
+ chao.gao@intel.com, dave.jiang@intel.com, baolu.lu@linux.intel.com,
+ yilun.xu@intel.com, zhenzhong.duan@intel.com, kvm@vger.kernel.org,
+ rick.p.edgecombe@intel.com, dave.hansen@linux.intel.com,
+ dan.j.williams@intel.com, kas@kernel.org, x86@kernel.org
+References: <20251117022311.2443900-1-yilun.xu@linux.intel.com>
+ <20251117022311.2443900-9-yilun.xu@linux.intel.com>
+ <cfcfb160-fcd2-4a75-9639-5f7f0894d14b@intel.com>
+ <aRyphEW2jpB/3Ht2@yilunxu-OptiPlex-7050>
+ <62bec236-4716-4326-8342-1863ad8a3f24@intel.com>
+ <aR6ws2yzwQumApb9@yilunxu-OptiPlex-7050>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <aR6ws2yzwQumApb9@yilunxu-OptiPlex-7050>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Mon, 17 Nov 2025 19:30:01 +0530
-"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
-
-> Fetch device measurements using RSI_RDEV_GET_MEASUREMENTS. The fetched
-> device measurements will be cached in the host.
+On 11/19/25 22:09, Xu Yilun wrote:
+> On Tue, Nov 18, 2025 at 10:32:13AM -0800, Dave Hansen wrote:
+...
+>> Please *say* that. Explain how existing TDX metadata consumes memory and
+>> how this new mechanism is different.
 > 
-> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
-Hi Aneesh
-
-Minor stuff inline.
-
-thanks
-
-Jonathan
-
-> ---
->  arch/arm64/include/asm/rhi.h             | 19 ++++++++
->  drivers/virt/coco/arm-cca-guest/rhi-da.c | 48 ++++++++++++++++++++
->  drivers/virt/coco/arm-cca-guest/rhi-da.h |  2 +
->  drivers/virt/coco/arm-cca-guest/rsi-da.c | 58 ++++++++++++++++++++++++
->  drivers/virt/coco/arm-cca-guest/rsi-da.h |  2 +
->  5 files changed, 129 insertions(+)
+> Yes.
 > 
-> diff --git a/arch/arm64/include/asm/rhi.h b/arch/arm64/include/asm/rhi.h
-> index 5f140015afc3..ce2ed8a440c3 100644
-> --- a/arch/arm64/include/asm/rhi.h
-> +++ b/arch/arm64/include/asm/rhi.h
-> @@ -42,6 +42,25 @@
->  #define RHI_DA_VDEV_CONTINUE		SMC_RHI_CALL(0x0051)
->  #define RHI_DA_VDEV_GET_INTERFACE_REPORT SMC_RHI_CALL(0x0052)
->  
-> +#define RHI_VDEV_MEASURE_SIGNED		BIT(0)
-> +#define RHI_VDEV_MEASURE_RAW		BIT(1)
-> +#define RHI_VDEV_MEASURE_EXCHANGE	BIT(2)
-Whilst I appreciate the specs are still subject to minor changes, 
-it would be very helpful if definitions like the ones above were
-all accompanied by a spec reference.
+> Existing ways to provide an array of metadata pages to TDX Module
+> varies:
+> 
+>  1. Assign each HPA for each SEAMCALL register.
+>  2. Call the same seamcall multiple times.
+>  3. Assign the PA of HPA-array in one register and the page number in
+>     another register.
+> 
+> TDX Module defines new interfaces trying to unify the page array
+> provision. It is similar to the 3rd method. The new objects HPA_ARRAY_T
+> and HPA_LIST_INFO need a 'root page' which contains a list of HPAs.
+> They collapse the HPA of the root page and the number of valid HPAs
+> into a 64 bit raw value for one SEAMCALL parameter.
+> 
+> I think these words should be in:
+> 
+>   x86/virt/tdx: Add tdx_page_array helpers for new TDX Module objects
 
-Which is another way of saying I can't find these ones ;)
+That's not quite what I was hoping for.
 
-> +struct rhi_vdev_measurement_params {
-> +	union {
-> +		u64 flags;
-> +		u8 padding0[256];
-> +	};
-> +	union {
-> +		u8 indices[32];
-> +		u8 padding1[256];
-> +	};
-> +	union {
-> +		u8 nonce[32];
-> +		u8 padding2[256];
-> +	};
-> +};
-> +#define RHI_DA_VDEV_GET_MEASUREMENTS	SMC_RHI_CALL(0x0053)
-> +
->  #define RHI_DA_TDI_CONFIG_UNLOCKED		0x0
->  #define RHI_DA_TDI_CONFIG_LOCKED		0x1
->  #define RHI_DA_TDI_CONFIG_RUN			0x2
-> diff --git a/drivers/virt/coco/arm-cca-guest/rhi-da.c b/drivers/virt/coco/arm-cca-guest/rhi-da.c
-> index f4fb8577e1b5..aa17bb3ee562 100644
-> --- a/drivers/virt/coco/arm-cca-guest/rhi-da.c
-> +++ b/drivers/virt/coco/arm-cca-guest/rhi-da.c
-> @@ -200,3 +200,51 @@ int rhi_update_vdev_interface_report_cache(struct pci_dev *pdev)
->  
->  	return ret;
->  }
-> +
-> +static inline int rhi_vdev_get_measurements(unsigned long vdev_id,
-> +					    phys_addr_t vdev_meas_phys,
-> +					    unsigned long *cookie)
-> +{
-> +	unsigned long ret;
-> +
-> +	struct rsi_host_call *rhi_call __free(kfree) =
-> +		kmalloc(sizeof(struct rsi_host_call), GFP_KERNEL);
+I want an overview of how this new memory fits into the overall scheme.
+I'd argue that these "control pages" are most similar to the PAMT:
+There's some back-and-forth with the module about how much memory it
+needs, the kernel allocates it, hands it over, and never gets it back.
 
-sizeof(*rhi_call) slightly preferred.
+That's the level that this needs to be presented at: a high-level
+logical overview.
 
-> +	if (!rhi_call)
-> +		return -ENOMEM;
-> +
-> +	rhi_call->imm = 0;
-> +	rhi_call->gprs[0] = RHI_DA_VDEV_GET_MEASUREMENTS;
-> +	rhi_call->gprs[1] = vdev_id;
-> +	rhi_call->gprs[2] = vdev_meas_phys;
-> +
-> +	ret = rsi_host_call(virt_to_phys(rhi_call));
-> +	if (ret != RSI_SUCCESS)
-> +		return -EIO;
-> +
-> +	*cookie = rhi_call->gprs[1];
-> +	return map_rhi_da_error(rhi_call->gprs[0]);
-> +}
-> +
+...> I think it may be too heavy. We have a hundred SEAMCALLs and I expect
+> few needs version 1. I actually think v2 is nothing different from a new
+> leaf. How about something like:
+> 
+> --- a/arch/x86/virt/vmx/tdx/tdx.h
+> +++ b/arch/x86/virt/vmx/tdx/tdx.h
+> @@ -46,6 +46,7 @@
+>  #define TDH_PHYMEM_PAGE_WBINVD         41
+>  #define TDH_VP_WR                      43
+>  #define TDH_SYS_CONFIG                 45
+> +#define TDH_SYS_CONFIG_V1              (TDH_SYS_CONFIG | (1ULL << TDX_VERSION_SHIFT))
+> 
+> And if a SEAMCALL needs export, add new tdh_foobar() helper. Anyway
+> the parameter list should be different.
 
+I'd need quite a bit of convincing that this is the right way.
 
-> diff --git a/drivers/virt/coco/arm-cca-guest/rsi-da.c b/drivers/virt/coco/arm-cca-guest/rsi-da.c
-> index c8ba72e4be3e..aa6e13e4c0ea 100644
-> --- a/drivers/virt/coco/arm-cca-guest/rsi-da.c
-> +++ b/drivers/virt/coco/arm-cca-guest/rsi-da.c
-> @@ -4,6 +4,7 @@
->   */
->  
->  #include <linux/pci.h>
-> +#include <linux/mem_encrypt.h>
->  #include <asm/rsi_cmds.h>
->  
->  #include "rsi-da.h"
-> @@ -35,9 +36,50 @@ int cca_device_unlock(struct pci_dev *pdev)
->  	return 0;
->  }
->  
-> +struct page *alloc_shared_pages(int nid, gfp_t gfp_mask, unsigned long min_size)
-> +{
-> +	int ret;
-> +	struct page *page;
-> +	/* We should normalize the size based on hypervisor page size */
-> +	int page_order = get_order(min_size);
-> +
-> +	/* Always request for zero filled pages */
+What is the scenario where there's a:
 
-Not sure the comment is necessary given the visible flag.
-If you were saying 'why' then a comment would be fine, but this is just
-repeating what we can see in the code.
+	TDH_SYS_CONFIG_V1
+and
+	TDH_SYS_CONFIG_V2
 
-> +	page = alloc_pages_node(nid, gfp_mask | __GFP_ZERO, page_order);
-> +
-> +	if (!page)
-> +		return NULL;
-> +
-> +	ret = set_memory_decrypted((unsigned long)page_address(page),
-> +				   1 << page_order);
-> +	/*
-> +	 * If set_memory_decrypted() fails then we don't know what state the
-> +	 * page is in, so we can't free it. Instead we leak it.
-> +	 * set_memory_decrypted() will already have WARNed.
-> +	 */
-> +	if (ret)
-> +		return NULL;
-> +
-> +	return page;
-> +}
-> +
-> +int free_shared_pages(struct page *page, unsigned long min_size)
-> +{
-> +	int ret;
-> +	/* We should normalize the size based on hypervisor page size */
-> +	int page_order = get_order(min_size);
-> +
-> +	ret = set_memory_encrypted((unsigned long)page_address(page), 1 << page_order);
-> +	/* If we fail to mark it encrypted don't free it back */
-> +	if (!ret)
-> +		__free_pages(page, page_order);
-> +	return ret;
-If failing to mark it encrypted is an error I'd find it easier to read this if it were
-out of line.
+in the tree at the same time?
 
-	ret = set_memory...
-	if (ret)
-		return ret;
+Second, does it hurt to pass the version along with other calls, like
+... (naming a random one) ... TDH_PHYMEM_PAGE_WBINVD ?
 
-	__free_pages();
+Even if we did this, we wouldn't copy and paste "(1ULL <<
+TDX_VERSION_SHIFT)" all over the place, right? We'd create a more
+concise, cleaner macro and then use it everywhere. Right?
+	
+>>>> rather non-obvious. It's doing:
+>>>>
+>>>> 	while (1) {
+>>>> 		fill(&array);
+>>>> 		tell_tdx_module(&array);
+>>>> 	}
+>>>
+>>> There is some explanation in Patch #6:
+>>
+>> That doesn't really help me, or future reviewers.
+>>
+>>>  4. Note the root page contains 512 HPAs at most, if more pages are
+>>>    required, refilling the tdx_page_array is needed.
+>>>
+>>>  - struct tdx_page_array *array = tdx_page_array_alloc(nr_pages);
+>>>  - for each 512-page bulk
+>>>    - tdx_page_array_fill_root(array, offset);
+>>>    - seamcall(TDH_XXX_ADD, array, ...);
+>>
+>> Great! That is useful information to have here, in the code.
 
-	return 0;
+I asked in my last message, but perhaps it was missed: Could you please
+start clearing irrelevant context in your replies. Like that hunk ^
 
-This is just a preference as someone who reads a lot of code.  Having error handling
-as the out of line path is more common and so what my brain (and other reviewers)
-has long been trained to expect.
+>>>> Why can't it be:
+>>>>
+>>>> 	while (1)
+>>>> 		fill(&array);
+>>>> 	while (1)
+>>>> 		tell_tdx_module(&array);
+>>>
+>>> The consideration is, no need to create as much supporting
+>>> structures (struct tdx_page_array *, struct page ** and root page) for
+>>> each 512-page bulk. Use one and re-populate it in loop is efficient.
+>>
+>> Huh? What is it efficient for? Are you saving a few pages of _temporary_
+>> memory?
+> 
+> In this case yes, cause no way to reclaim TDX Module EXT required pages.
+> But when reclaimation is needed, will hold these supporting structures
+> long time.
+> 
+> Also I want the tdx_page_array object itself not been restricted by 512
+> pages, so tdx_page_array users don't have to manage an array of array.
 
-> +}
-> +
->  int cca_update_device_object_cache(struct pci_dev *pdev, struct cca_guest_dsc *dsc)
->  {
->  	int ret;
-> +	struct page *shared_pages;
-> +	struct rhi_vdev_measurement_params *dev_meas;
->  
->  	ret = rhi_update_vdev_interface_report_cache(pdev);
->  	if (ret) {
-> @@ -45,5 +87,21 @@ int cca_update_device_object_cache(struct pci_dev *pdev, struct cca_guest_dsc *d
->  		return ret;
->  	}
->  
-> +	shared_pages = alloc_shared_pages(NUMA_NO_NODE, GFP_KERNEL, sizeof(struct rhi_vdev_measurement_params));
+I suspect we're not really talking about the same thing here.
 
-Perhaps sizeof(*dev_meas) would be both shorter and clearer.
+In any case, I'm not a super big fan of how tdx_ext_mempool_setup() is
+written. Can you please take another pass at it and try to simplify it
+and make it easier to follow?
 
-> +	if (!shared_pages)
-> +		return -ENOMEM;
-> +
-> +	dev_meas = (struct rhi_vdev_measurement_params *)page_address(shared_pages);
-> +	/* request for signed full transcript */
-> +	dev_meas->flags = RHI_VDEV_MEASURE_SIGNED | RHI_VDEV_MEASURE_EXCHANGE;
-> +	/* request all measurement block. Set bit 254 */
-> +	dev_meas->indices[31] = 0x40;
-> +	ret = rhi_update_vdev_measurements_cache(pdev, dev_meas);
-> +
-> +	free_shared_pages(shared_pages, sizeof(struct rhi_vdev_measurement_params));
+This would be a great opportunity to bring in some of your colleagues to
+take a look. You can solicit them for suggestions.
 
-It might be worth appropriate DEFINE_FREE() magic to to stash the size away
-and simplify this a tiny bit. Kind of depends on whether this is a one off
-or those helpers are going to get a reasonable amount of use.
+>>>>> +static int init_tdx_ext(void)
+>>>>> +{
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	if (!(tdx_sysinfo.features.tdx_features0 & TDX_FEATURES0_EXT))
+>>>>> +		return -EOPNOTSUPP;
+>>>>> +
+>>>>> +	struct tdx_page_array *mempool __free(tdx_ext_mempool_free) =
+>>>>> +		tdx_ext_mempool_setup();
+>>>>> +	/* Return NULL is OK, means no need to setup mempool */
+>>>>> +	if (IS_ERR(mempool))
+>>>>> +		return PTR_ERR(mempool);
+>>>>
+>>>> That's a somewhat odd comment to put above an if() that doesn't return NULL.
+>>>
+>>> I meant to explain why using IS_ERR instead of IS_ERR_OR_NULL. I can
+>>> impove the comment.
+>>
+>> I'd kinda rather the code was improved. Why cram everything into a
+>> pointer if you don't need to. This would be just fine, no?
+>>
+>> 	ret = tdx_ext_mempool_setup(&mempool);
+>> 	if (ret)
+>> 		return ret;
+> 
+> It's good.
+> 
+> The usage of pointer is still about __free(). In order to auto-free
+> something, we need an object handler for something. I think this is a
+> more controversial usage of __free() than pure allocation. We setup
+> something and want auto-undo something on failure.
+I'm not sure what you are trying to say here. By saying "It's good" are
+you agreeing that my suggested structure is good and that you will use
+it? Or are you saying that the original structure is good?
 
-> +	if (ret) {
-> +		pci_err(pdev, "failed to get device measurement (%d)\n", ret);
-> +		return ret;
-> +	}
->  	return 0;
->  }
+Second, what is an "object handler"? Are you talking about the function
+that is pointed to by __free()?
+
+Third, are you saying that the original code structure is somehow
+connected to __free()? I thought that all of these were logically
+equivalent:
+
+	void *foo __free(foofree) = alloc_foo();
+
+	void *foo __free(foofree) = NULL:
+	foo = alloc_foo();
+
+	void *foo __free(foofree) = NULL;
+	populate_foo(&foo);
+
+Is there something special about doing the variable assignment at the
+variable declaration spot?
 
