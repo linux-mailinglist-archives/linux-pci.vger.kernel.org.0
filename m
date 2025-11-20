@@ -1,142 +1,448 @@
-Return-Path: <linux-pci+bounces-41774-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41775-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E28BC736C3
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 11:16:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 319A9C73719
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 11:26:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DE2A64F08C0
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 10:13:07 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E7AC64E3748
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 10:26:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0711306B02;
-	Thu, 20 Nov 2025 10:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 161232EBBAA;
+	Thu, 20 Nov 2025 10:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GLAEEK93"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5F2428B40E;
-	Thu, 20 Nov 2025 10:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D038F2DE711;
+	Thu, 20 Nov 2025 10:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763633583; cv=none; b=HOmdw+HSo0taIC5lHKyEV8YkIW8IBrCH1rWMTC1F/Rk3unAeO6HXIDgkkNGZGcpCa1wS20ARXXUZvCoVbYOjgD5FaqiFGE3Na0s4r1SW4ynJjiYQQOmxhxl37gqXDpPSPf7i5MVokppTJ2qj7cexmhmgynYxmoiNQ6bvQiqs25Q=
+	t=1763634369; cv=none; b=RXKZkYsB/yR18mZJPW/Yga+B4YA3qdm0nXGcyZndJlIH72cIVsODlnzA1atbLPSjJzkOJD1BpjmfyVkdM4eldOVBnskWIArdOcj+4paStA49GD6T4b01OApku/KmtnUyxBdC8aVN/ong/YBaL0frEH23bKLRvlLc0vUgp8QWl1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763633583; c=relaxed/simple;
-	bh=gOMiq57HTxx79NRhQi+7+831DMzl1qRNS4Gvn3ry15s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ILzOf6SMfP3TueF9yhPJB/YpXzzOk1K1zBCOPkBK0x7/dmigZMpppN4ObQ5VIMZXubTBpEc2qUkXBXxXdU1/Yqf7ODSna6a5DLRpPykQnbdF8YKnVtJiKMVChTZ5Tl+XUPp2Yv2Tp0K78rB5o3lbFTrnmnFlTPfB5YF8eOWfwPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0004758DT.eswin.cn (unknown [10.12.96.83])
-	by app1 (Coremail) with SMTP id TAJkCgCnoWmW6R5p5P18AA--.34347S2;
-	Thu, 20 Nov 2025 18:12:39 +0800 (CST)
-From: zhangsenchuan@eswincomputing.com
-To: bhelgaas@google.com,
-	mani@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	robh@kernel.org,
-	p.zabel@pengutronix.de,
-	jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	christian.bruel@foss.st.com,
-	mayank.rana@oss.qualcomm.com,
-	shradha.t@samsung.com,
-	krishna.chundru@oss.qualcomm.com,
-	thippeswamy.havalige@amd.com,
-	inochiama@gmail.com
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com,
-	ouyanghui@eswincomputing.com,
-	Frank.li@nxp.com,
-	Senchuan Zhang <zhangsenchuan@eswincomputing.com>
-Subject: [PATCH v6 3/3] PCI: dwc: Add no_suspport_L2 flag and skip PME_Turn_Off broadcast
-Date: Thu, 20 Nov 2025 18:12:35 +0800
-Message-ID: <20251120101236.1538-1-zhangsenchuan@eswincomputing.com>
-X-Mailer: git-send-email 2.49.0.windows.1
-In-Reply-To: <20251120101018.1477-1-zhangsenchuan@eswincomputing.com>
-References: <20251120101018.1477-1-zhangsenchuan@eswincomputing.com>
+	s=arc-20240116; t=1763634369; c=relaxed/simple;
+	bh=DI7Cdd1ov2IMhJq4Nen2ZfUBn1MrWU7t3iy4UBZqN6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WQABpinLCwasbVsiXwDHY7+1o36SyoQV+Y8124aVOlURiabMh0bgYKFNNYoGeAK6lIc6HfoqCDb6kqSJiWp8ZI0iH+xiFFwW5mKmVSBkLPrsSQUuER0UU2GLgM/dywXn6XnjCEaWBfdqhxlSM6hi896kVI7nm8soRIhgrrMO/NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GLAEEK93; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C399C4CEF1;
+	Thu, 20 Nov 2025 10:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763634367;
+	bh=DI7Cdd1ov2IMhJq4Nen2ZfUBn1MrWU7t3iy4UBZqN6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GLAEEK93EJk41rFpzF9y6RUUplXLPT/7YtIBg+x6FOiBpu1RWFkQUPf0DS/4hExYt
+	 ZQ0DQgzbgVuxJbY8feps9zQ16q453OhUt53GHwAhbR01/esU23Y6j7zx2nLbQ5eU7z
+	 G/0/w5J5zl9oreKipIy1VVAbv3TKSm6zXUr+CSmKt6abrM++DFy9GZndopPomy5eUF
+	 VaWUUWgsTfsXQjYf0+vHZUgYCEmpwJ7DWID/XilEmqzqJzvg1wouMvtuH9/Sv7N0gA
+	 UKCGCKmIjJuZ0pO8egKJ0TL2SYsguLOVRux96TW4PWhfUSwKvXipTiB+BggeIT6Yl5
+	 eccvltaSOyX4A==
+Date: Thu, 20 Nov 2025 15:55:46 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: chester62515@gmail.com, mbrugger@suse.com, 
+	ghennadi.procopciuc@oss.nxp.com, s32@nxp.com, bhelgaas@google.com, jingoohan1@gmail.com, 
+	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, Ionut.Vicovan@nxp.com, larisa.grigore@nxp.com, 
+	Ghennadi.Procopciuc@nxp.com, ciprianmarian.costea@nxp.com, bogdan.hamciuc@nxp.com, 
+	Frank.li@nxp.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	cassel@kernel.org
+Subject: Re: [PATCH 3/4 v5] PCI: s32g: Add initial PCIe support (RC)
+Message-ID: <gz67pxlwddob5my62imtkiluwezixvn55gm2dse46njsolb3ct@p3wmu2j6swnc>
+References: <20251118160238.26265-1-vincent.guittot@linaro.org>
+ <20251118160238.26265-4-vincent.guittot@linaro.org>
+ <qvpx4ys2jqqugfbcdwidwvklcatdqiwdxfjumn7ncbh7z6ef5n@sepvjsatmpbd>
+ <CAKfTPtDONX3-syavhhza6t6+6U8wowqwCN2Hnv9CHBR6W9RNNQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TAJkCgCnoWmW6R5p5P18AA--.34347S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zw1xXr1DCry8Zw15WFyDJrb_yoW8ZrWUpa
-	98KFWIyF18JF45Za1Yy3Z3ur43t3Z8AFyUCa9293WfWa42va4Dt34xJFy3tFn7Jr4Iv343
-	Kr15ta93Ga13JFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBm14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r4a6rW5MxkIecxEwVCm-wCF04
-	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
-	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr4
-	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1U
-	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
-	8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRNSdgDUUUU
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/
+In-Reply-To: <CAKfTPtDONX3-syavhhza6t6+6U8wowqwCN2Hnv9CHBR6W9RNNQ@mail.gmail.com>
 
-From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+On Thu, Nov 20, 2025 at 10:06:53AM +0100, Vincent Guittot wrote:
+> On Thu, 20 Nov 2025 at 09:22, Manivannan Sadhasivam <mani@kernel.org> wrote:
+> >
+> > On Tue, Nov 18, 2025 at 05:02:37PM +0100, Vincent Guittot wrote:
+> > > Add initial support of the PCIe controller for S32G Soc family. Only
+> > > host mode is supported.
+> > >
+> > > Co-developed-by: Ionut Vicovan <Ionut.Vicovan@nxp.com>
+> > > Signed-off-by: Ionut Vicovan <Ionut.Vicovan@nxp.com>
+> > > Co-developed-by: Ciprian Marian Costea <ciprianmarian.costea@nxp.com>
+> > > Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@nxp.com>
+> > > Co-developed-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
+> > > Signed-off-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
+> > > Co-developed-by: Larisa Grigore <larisa.grigore@nxp.com>
+> > > Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
+> > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > > ---
+> > >  drivers/pci/controller/dwc/Kconfig            |  10 +
+> > >  drivers/pci/controller/dwc/Makefile           |   1 +
+> > >  .../pci/controller/dwc/pcie-nxp-s32g-regs.h   |  21 +
+> > >  drivers/pci/controller/dwc/pcie-nxp-s32g.c    | 391 ++++++++++++++++++
+> > >  4 files changed, 423 insertions(+)
+> > >  create mode 100644 drivers/pci/controller/dwc/pcie-nxp-s32g-regs.h
+> > >  create mode 100644 drivers/pci/controller/dwc/pcie-nxp-s32g.c
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > > index 349d4657393c..e276956c3fca 100644
+> > > --- a/drivers/pci/controller/dwc/Kconfig
+> > > +++ b/drivers/pci/controller/dwc/Kconfig
+> > > @@ -256,6 +256,16 @@ config PCIE_TEGRA194_EP
+> > >         in order to enable device-specific features PCIE_TEGRA194_EP must be
+> > >         selected. This uses the DesignWare core.
+> > >
+> > > +config PCIE_NXP_S32G
+> > > +     tristate "NXP S32G PCIe controller (host mode)"
+> > > +     depends on ARCH_S32 || COMPILE_TEST
+> > > +     select PCIE_DW_HOST
+> > > +     help
+> > > +       Enable support for the PCIe controller in NXP S32G based boards to
+> > > +       work in Host mode. The controller is based on DesignWare IP and
+> > > +       can work either as RC or EP. In order to enable host-specific
+> > > +       features PCIE_NXP_S32G must be selected.
+> > > +
+> > >  config PCIE_DW_PLAT
+> > >       bool
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> > > index 7ae28f3b0fb3..3301bbbad78c 100644
+> > > --- a/drivers/pci/controller/dwc/Makefile
+> > > +++ b/drivers/pci/controller/dwc/Makefile
+> > > @@ -10,6 +10,7 @@ obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+> > >  obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+> > >  obj-$(CONFIG_PCIE_FU740) += pcie-fu740.o
+> > >  obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+> > > +obj-$(CONFIG_PCIE_NXP_S32G) += pcie-nxp-s32g.o
+> > >  obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
+> > >  obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
+> > >  obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
+> > > diff --git a/drivers/pci/controller/dwc/pcie-nxp-s32g-regs.h b/drivers/pci/controller/dwc/pcie-nxp-s32g-regs.h
+> > > new file mode 100644
+> > > index 000000000000..81e35b6227d1
+> > > --- /dev/null
+> > > +++ b/drivers/pci/controller/dwc/pcie-nxp-s32g-regs.h
+> > > @@ -0,0 +1,21 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0+ */
+> > > +/*
+> > > + * Copyright 2015-2016 Freescale Semiconductor, Inc.
+> > > + * Copyright 2016-2023, 2025 NXP
+> > > + */
+> > > +
+> > > +#ifndef PCIE_S32G_REGS_H
+> > > +#define PCIE_S32G_REGS_H
+> > > +
+> > > +/* PCIe controller Sub-System */
+> > > +
+> > > +/* PCIe controller 0 General Control 1 */
+> > > +#define PCIE_S32G_PE0_GEN_CTRL_1             0x50
+> > > +#define DEVICE_TYPE_MASK                     GENMASK(3, 0)
+> > > +#define SRIS_MODE                            BIT(8)
+> > > +
+> > > +/* PCIe controller 0 General Control 3 */
+> > > +#define PCIE_S32G_PE0_GEN_CTRL_3             0x58
+> > > +#define LTSSM_EN                             BIT(0)
+> > > +
+> >
+> > Since this header is not used by other drivers as of now, I'd prefer moving
+> > these definitions inside the driver.
+> 
+> I would prefer to keep it separate. It makes reg easier to parse and
+> more registers will be added with new coming features
+> 
 
-The ESWIN EIC7700 soc does not support enter L2 link state. Therefore add
-no_suspport_L2 flag skip PME_Turn_Off broadcast and link state check code,
-other driver can reuse this flag if meet the similar situation.
+The convention we follow is to mostly add register definitions within the driver
+itself if they are not shared.
 
-Signed-off-by: Yu Ning <ningyu@eswincomputing.com>
-Signed-off-by: Yanghui Ou <ouyanghui@eswincomputing.com>
-Signed-off-by: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
----
- drivers/pci/controller/dwc/pcie-designware-host.c | 4 ++++
- drivers/pci/controller/dwc/pcie-designware.h      | 1 +
- 2 files changed, 5 insertions(+)
+> >
+> > > +#endif  /* PCI_S32G_REGS_H */
+> > > diff --git a/drivers/pci/controller/dwc/pcie-nxp-s32g.c b/drivers/pci/controller/dwc/pcie-nxp-s32g.c
+> > > new file mode 100644
+> > > index 000000000000..eaa6b5363afe
+> > > --- /dev/null
+> > > +++ b/drivers/pci/controller/dwc/pcie-nxp-s32g.c
+> > > @@ -0,0 +1,391 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * PCIe host controller driver for NXP S32G SoCs
+> > > + *
+> > > + * Copyright 2019-2025 NXP
+> > > + */
+> > > +
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/io.h>
+> > > +#include <linux/memblock.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of_device.h>
+> > > +#include <linux/of_address.h>
+> > > +#include <linux/pci.h>
+> > > +#include <linux/phy/phy.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/pm_runtime.h>
+> > > +#include <linux/sizes.h>
+> > > +#include <linux/types.h>
+> > > +
+> > > +#include "pcie-designware.h"
+> > > +#include "pcie-nxp-s32g-regs.h"
+> > > +
+> > > +struct s32g_pcie_port {
+> > > +     struct list_head list;
+> > > +     struct phy *phy;
+> > > +};
+> > > +
+> > > +struct s32g_pcie {
+> > > +     struct dw_pcie  pci;
+> > > +     void __iomem *ctrl_base;
+> > > +     struct list_head ports;
+> > > +};
+> > > +
+> > > +#define to_s32g_from_dw_pcie(x) \
+> > > +     container_of(x, struct s32g_pcie, pci)
+> > > +
+> > > +static void s32g_pcie_writel_ctrl(struct s32g_pcie *s32g_pp, u32 reg, u32 val)
+> > > +{
+> > > +     writel(val, s32g_pp->ctrl_base + reg);
+> > > +}
+> > > +
+> > > +static u32 s32g_pcie_readl_ctrl(struct s32g_pcie *s32g_pp, u32 reg)
+> > > +{
+> > > +     return readl(s32g_pp->ctrl_base + reg);
+> > > +}
+> > > +
+> > > +static void s32g_pcie_enable_ltssm(struct s32g_pcie *s32g_pp)
+> > > +{
+> > > +     u32 reg;
+> > > +
+> > > +     reg = s32g_pcie_readl_ctrl(s32g_pp, PCIE_S32G_PE0_GEN_CTRL_3);
+> > > +     reg |= LTSSM_EN;
+> > > +     s32g_pcie_writel_ctrl(s32g_pp, PCIE_S32G_PE0_GEN_CTRL_3, reg);
+> > > +}
+> > > +
+> > > +static void s32g_pcie_disable_ltssm(struct s32g_pcie *s32g_pp)
+> > > +{
+> > > +     u32 reg;
+> > > +
+> > > +     reg = s32g_pcie_readl_ctrl(s32g_pp, PCIE_S32G_PE0_GEN_CTRL_3);
+> > > +     reg &= ~LTSSM_EN;
+> > > +     s32g_pcie_writel_ctrl(s32g_pp, PCIE_S32G_PE0_GEN_CTRL_3, reg);
+> > > +}
+> > > +
+> > > +static int s32g_pcie_start_link(struct dw_pcie *pci)
+> > > +{
+> > > +     struct s32g_pcie *s32g_pp = to_s32g_from_dw_pcie(pci);
+> > > +
+> > > +     s32g_pcie_enable_ltssm(s32g_pp);
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static void s32g_pcie_stop_link(struct dw_pcie *pci)
+> > > +{
+> > > +     struct s32g_pcie *s32g_pp = to_s32g_from_dw_pcie(pci);
+> > > +
+> > > +     s32g_pcie_disable_ltssm(s32g_pp);
+> > > +}
+> > > +
+> > > +static struct dw_pcie_ops s32g_pcie_ops = {
+> > > +     .start_link = s32g_pcie_start_link,
+> > > +     .stop_link = s32g_pcie_stop_link,
+> > > +};
+> > > +
+> > > +/* Configure the AMBA AXI Coherency Extensions (ACE) interface */
+> > > +static void s32g_pcie_reset_mstr_ace(struct dw_pcie *pci, u64 ddr_base_addr)
+> > > +{
+> > > +     u32 ddr_base_low = lower_32_bits(ddr_base_addr);
+> > > +     u32 ddr_base_high = upper_32_bits(ddr_base_addr);
+> > > +
+> > > +     dw_pcie_dbi_ro_wr_en(pci);
+> > > +     dw_pcie_writel_dbi(pci, COHERENCY_CONTROL_3_OFF, 0x0);
+> > > +
+> > > +     /*
+> > > +      * Ncore is a cache-coherent interconnect module that enables the
+> > > +      * integration of heterogeneous coherent and non-coherent agents in
+> > > +      * the chip. Ncore Transactions to peripheral should be non-coherent
+> > > +      * or it might drop them.
+> > > +      *
+> > > +      * One example where this is needed are PCIe MSIs, which use NoSnoop=0
+> > > +      * and might end up routed to Ncore.
+> >
+> > I don't think this statement is correct. No Snoop attribute is only applicable
+> > to MRd/MWr operations and not applicable to MSIs. Also, you've marked the
+> 
+> The Ncore makes the bridge between the PCIe and the NoC and can decide
+> to drop some transactions based in this boundary
+> 
+> > controller as cache coherent in the binding, but this comment doesn't relate to
+> > it.
+> 
+> More details of the issue:
+> PCIe coherent traffic (e.g. MSIs) that targets peripheral space will
+> be dropped by Ncore because peripherals on S32G are not coherent as
+> slaves. We add a hard boundary in the PCIe controller coherency
+> control registers to separate physical memory space from peripheral
+> space.
+> 
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index e92513c5bda5..a203577606e5 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -1156,6 +1156,9 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
- 	if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
- 		return 0;
+Ok, this clarifies. Please add it to the comment.
 
-+	if (pci->no_suspport_L2)
-+		goto stop_link;
-+
- 	if (pci->pp.ops->pme_turn_off) {
- 		pci->pp.ops->pme_turn_off(&pci->pp);
- 	} else {
-@@ -1182,6 +1185,7 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
- 	 */
- 	udelay(1);
+> >
+> > > +      * Define the start of DDR as seen by Linux as the boundary between
+> > > +      * "memory" and "peripherals", with peripherals being below.
+> >
+> > Please mention what this configuration does and why it is necessary. This is not
+> > clearly mentioned in the comment.
+> >
+> > > +      */
+> > > +     dw_pcie_writel_dbi(pci, COHERENCY_CONTROL_1_OFF,
+> > > +                        (ddr_base_low & CFG_MEMTYPE_BOUNDARY_LOW_ADDR_MASK));
+> > > +     dw_pcie_writel_dbi(pci, COHERENCY_CONTROL_2_OFF, ddr_base_high);
+> > > +     dw_pcie_dbi_ro_wr_dis(pci);
+> > > +}
+> > > +
+> > > +static int s32g_init_pcie_controller(struct dw_pcie_rp *pp)
+> > > +{
+> > > +     struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > +     struct s32g_pcie *s32g_pp = to_s32g_from_dw_pcie(pci);
+> > > +     u32 val;
+> > > +
+> > > +     /* Set RP mode */
+> > > +     val = s32g_pcie_readl_ctrl(s32g_pp, PCIE_S32G_PE0_GEN_CTRL_1);
+> > > +     val &= ~DEVICE_TYPE_MASK;
+> > > +     val |= FIELD_PREP(DEVICE_TYPE_MASK, PCI_EXP_TYPE_ROOT_PORT);
+> > > +
+> > > +     /* Use default CRNS */
+> >
+> > SRNS?
+> 
+> it's CRNS
+> 
 
-+stop_link:
- 	dw_pcie_stop_link(pci);
- 	if (pci->pp.ops->deinit)
- 		pci->pp.ops->deinit(&pci->pp);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index e995f692a1ec..170a73299ce5 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -539,6 +539,7 @@ struct dw_pcie {
- 	 * use_parent_dt_ranges to true to avoid this warning.
- 	 */
- 	bool			use_parent_dt_ranges;
-+	bool			no_suspport_L2;
- };
+I'm not aware of CRNS, but only SRNS. Care to expand it?
 
- #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
---
-2.25.1
+> >
+> > > +     val &= ~SRIS_MODE;
+> > > +
+> > > +     s32g_pcie_writel_ctrl(s32g_pp, PCIE_S32G_PE0_GEN_CTRL_1, val);
+> > > +
+> > > +     /*
+> > > +      * Make sure we use the coherency defaults (just in case the settings
+> > > +      * have been changed from their reset values)
+> > > +      */
+> > > +     s32g_pcie_reset_mstr_ace(pci, memblock_start_of_DRAM());
+> > > +
+> > > +     dw_pcie_dbi_ro_wr_en(pci);
+> > > +
+> > > +     val = dw_pcie_readl_dbi(pci, PCIE_PORT_FORCE);
+> > > +     val |= PORT_FORCE_DO_DESKEW_FOR_SRIS;
+> > > +     dw_pcie_writel_dbi(pci, PCIE_PORT_FORCE, val);
+> > > +
+> > > +     val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+> > > +     val |= GEN3_RELATED_OFF_EQ_PHASE_2_3;
+> > > +     dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
+> > > +
+> > > +     dw_pcie_dbi_ro_wr_dis(pci);
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static const struct dw_pcie_host_ops s32g_pcie_host_ops = {
+> > > +     .init = s32g_init_pcie_controller,
+> > > +};
+> > > +
+> > > +static int s32g_init_pcie_phy(struct s32g_pcie *s32g_pp)
+> > > +{
+> > > +     struct dw_pcie *pci = &s32g_pp->pci;
+> > > +     struct device *dev = pci->dev;
+> > > +     struct s32g_pcie_port *port, *tmp;
+> > > +     int ret;
+> > > +
+> > > +     list_for_each_entry(port, &s32g_pp->ports, list) {
+> > > +             ret = phy_init(port->phy);
+> > > +             if (ret) {
+> > > +                     dev_err(dev, "Failed to init serdes PHY\n");
+> > > +                     goto err_phy_revert;
+> > > +             }
+> > > +
+> > > +             ret = phy_set_mode_ext(port->phy, PHY_MODE_PCIE, 0);
+> > > +             if (ret) {
+> > > +                     dev_err(dev, "Failed to set mode on serdes PHY\n");
+> > > +                     goto err_phy_exit;
+> > > +             }
+> > > +
+> > > +             ret = phy_power_on(port->phy);
+> > > +             if (ret) {
+> > > +                     dev_err(dev, "Failed to power on serdes PHY\n");
+> > > +                     goto err_phy_exit;
+> > > +             }
+> > > +     }
+> > > +
+> > > +     return 0;
+> > > +
+> > > +err_phy_exit:
+> > > +     phy_exit(port->phy);
+> > > +
+> > > +err_phy_revert:
+> > > +     list_for_each_entry_continue_reverse(port, &s32g_pp->ports, list) {
+> > > +             phy_power_off(port->phy);
+> > > +             phy_exit(port->phy);
+> > > +     }
+> > > +
+> > > +     list_for_each_entry_safe(port, tmp, &s32g_pp->ports, list)
+> > > +             list_del(&port->list);
+> >
+> > Can't you use list_for_each_entry_safe_reverse() to combine both operations?
+> 
+> No, it goes over all elements of the list whereas I only want to power
+> off and exit only those which have been init and powered on above.
+> 
 
+Sorry, I misread the kdoc...
+
+> >
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+
+[...]
+
+> > > +static struct platform_driver s32g_pcie_driver = {
+> > > +     .driver = {
+> > > +             .name   = "s32g-pcie",
+> > > +             .of_match_table = s32g_pcie_of_match,
+> > > +             .suppress_bind_attrs = true,
+> > > +             .pm = pm_sleep_ptr(&s32g_pcie_pm_ops),
+> > > +             .probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> > > +     },
+> > > +     .probe = s32g_pcie_probe,
+> > > +};
+> > > +
+> > > +module_platform_driver(s32g_pcie_driver);
+> >
+> > builtin_platform_driver() since this controller implements MSI controller.
+> 
+> Can you elaborate ?
+> 
+
+If a PCI controller is implementing an irqchip, it is not supposed to be removed
+during runtime due to IRQ disposal concern. So we encourage the driver to be
+tristate, but use builtin_platform_driver() so that it can be loaded as a
+module, but not removed dynamically.
+
+This limitation comes from the irqchip framework.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
