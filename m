@@ -1,141 +1,153 @@
-Return-Path: <linux-pci+bounces-41789-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41790-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45D72C743EB
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 14:31:06 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 769ACC743CD
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 14:30:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1C7A04F0A75
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 13:23:52 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id DD5F2353A26
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 13:24:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAB0533AD8A;
-	Thu, 20 Nov 2025 13:20:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DCBF372AD8;
+	Thu, 20 Nov 2025 13:21:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jMJVlNB8"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="cl5fE7e5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8277533A6ED
-	for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 13:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48ED91F0995
+	for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 13:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763644850; cv=none; b=D/Ez9ZU7Pf4shL56qSS9ch7dGPUR4V8kSVkAu7psPhZth02EZCcBCy/NAfdZ03WcyiGlcH4QI4DHb8LIOF/xQlmVFVfArfgGLcdFHBWxO9efXWvdaSYZI/34C+qZq2vZw8gWNUr0VaIpte3JHzZBWpfATA+2pEF1WnkE+LsVgHg=
+	t=1763644913; cv=none; b=ajgFoFxyEJJ2HFNmiSf0/xiVP7SO+JaPxt8V/TI5TeoWlorZ9uZHjoxZoR/vwklW0ckXOYEM/M/bZpD/D0duT7Y9vCjUqpxQlxJr9iOwIyU77Oj2/8/79NyukykpT4FHhHeE6MUAj+uXOaP8haFfzRX4kwFCTEywpWpCUt0kIs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763644850; c=relaxed/simple;
-	bh=FAIy2u4gJscDNGUshiInImCPqOKl3iOKQJH6e6Bc4JI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j73Is1L1y/hYZPTLGyM2b1FX5oE11NPoP8+GHXxjSWSqBJH27j8ZTcBuYQpTPxx8s89sj6hK9gFFbTcg/VLnnJyL8Sm+PsBYyh31534V6ZvDQGhhe6Qsa3um+YLkIJDjJAjQLj+dnsHS2VnMEcHVUFzESOclAKx5+ex52iYODVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=jMJVlNB8; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-8b2ed01ba15so72054885a.1
-        for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 05:20:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1763644847; x=1764249647; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=GaI8T1P9V7HUSR5GC1P83jhUObFww+4fRanAKkUJgJM=;
-        b=jMJVlNB8LyM4AYZyl088cBiSIlJ90Q1dm2hb+qOJix1EHdJs4siUbnVhSfjdoo+d8b
-         CpJ6KfO7u7JniZDhdoBs1zVrqavLhdwn31rKFf/kVN8vkyxieUH5wcPJTih/9lZw+PEX
-         fzdm1aYuxKCanV8/aYUVsuP51mR3HV9FaHggDK4qYX5m3Eht6ufYvvO9vptn0SOijTOl
-         cfmQgVoxaFFQaCv0MtR3VFkL7VdP7LsWZJMB5e2tkAY+4CqMtLl57rP2UzUjo5ld0ad3
-         Ew7cnRVtQJOT76Gc3wbQzgtVC/yQSTJ4MullMwUuBOCRwifmwR9JypsEhj+RRVt4akF1
-         VX3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763644847; x=1764249647;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GaI8T1P9V7HUSR5GC1P83jhUObFww+4fRanAKkUJgJM=;
-        b=lJLXxM2zoR/yVnunuOO/w0U8/r+YG+mDOoZB0MfS5/e0THU4xNRtK+snqY3yIdUZKK
-         jTLrf4bn8x26jv8BmarB9ddjLnGXpPElflMcqdawUxOJFEs7T9ZQg7ltrqqhK31Vi2cs
-         w9+C4cci6yMiOo3NHoTzXR/DgKLOJ+muWILmJ1qgbsHWQciBHep03IW51ZXzVkoAC/aE
-         7ioioBOwmkDvah1+Hlu9omiwFIIkw9i5iaq8wixhU6lkdqZW3yFf01n7MhZ9xS8GMzVc
-         QsqI+mqUFT8iTC0+F96MCiV3SHS2urp9EXMicicLzqBN180xmbu57cqEcFuOleRue0CC
-         606w==
-X-Forwarded-Encrypted: i=1; AJvYcCWOvM1NyHwIfs1u1CiaySDI+himSV7apQHKoDzcP9Mhi8xbtATO8PqINndXhuJDD1KpdiUJw/RD2nU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3w3HCKnsyEKgNafgBfUxBg7ZbweaWrUheabl6UqrJsjngCdOw
-	gclPTxHAQU1oLAJPQQTLw5Och5CSEQaX0oGj/x4/NIFcrr+2Ro1+0QShCmy76OQr64k=
-X-Gm-Gg: ASbGncvB8he8igSyQL6oK5x2ruZ5K9H2PGFNanA6KXQWv9xSiaZ7x4biETKB71klz0+
-	wap5T+k3PCUB2/nQ1go2S4FA3gx8N8Yd7ZWZI/h5y/A1MDYu2CzffQmwB1won0pWXiLSGuHj8Xy
-	1i0Du634iwvf0MS2yiFqsPG//mDGsvkERLwZOgKE4/yiOi8U4T8BHAgLSXMkNbNuwnFGsY4OfqH
-	kTcaomj0spmdLfsQ3ipYPMw1AK30UZrEzncW5RC/+AL3piFTocPZgOiaOGSMtILHs0cVSSI4g2j
-	0JGtxoYwtUQmCczg1YlrXEFeRM3hmoiYugK95U+CBCa5BO0TOUh5DvSW+JkFiU3m7s1WXbVblRi
-	pTEJCttWIhU1jYoa07dyQ65dTCeHbQ3DbafVmdVjkB82tG0YqcrXhE0ateKIkl5e+/kVkO0Lq/S
-	MxanWRQgtPO23RDW2AbieklV9ULUSq32k6zjpXF8FXxQmeu+XbUaoB1IMN
-X-Google-Smtp-Source: AGHT+IHQ4fmxCAI4/D2tK1B8sYqUFbudidu6PckWMercsX/iRS90WBjHNHkg95yPWC8b179KW1QKQA==
-X-Received: by 2002:a05:620a:318a:b0:89f:27dc:6536 with SMTP id af79cd13be357-8b32a193b85mr303322785a.54.1763644847316;
-        Thu, 20 Nov 2025 05:20:47 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-47-55-120-4.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.120.4])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8b3295c13ccsm148498285a.26.2025.11.20.05.20.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Nov 2025 05:20:46 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1vM4ac-00000000gLM-0tBz;
-	Thu, 20 Nov 2025 09:20:46 -0400
-Date: Thu, 20 Nov 2025 09:20:46 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [Linaro-mm-sig] [PATCH v8 06/11] dma-buf: provide phys_vec to
- scatter-gather mapping routine
-Message-ID: <20251120132046.GU17968@ziepe.ca>
-References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
- <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
- <8a11b605-6ac7-48ac-8f27-22df7072e4ad@amd.com>
- <20251119132511.GK17968@ziepe.ca>
- <69436b2a-108d-4a5a-8025-c94348b74db6@amd.com>
- <20251119193114.GP17968@ziepe.ca>
- <c115432c-b63d-4b99-be18-0bf96398e153@amd.com>
+	s=arc-20240116; t=1763644913; c=relaxed/simple;
+	bh=H4K4KUY2Rzx8q9CqWZhbCnxR9pPbZ7Vwxf6VkBfJ98Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=W1GLZ+oQPzg7s+Yrlql1+jsY5VRMJVbDQvCoSSl7bgOwwk+W/lwyioJo9U0P7akKdLBMI/PxSJctjF1EKlV49ahCUZ45sD3/YjiaeiUMA+u82/4ZYG2A21ZsD5LLsvns85BAkaqKciDhoA0Q5PCElnFT1rQwHCAFedLb7oQNlmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=cl5fE7e5; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id A11CE24002D
+	for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 14:21:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de; s=2017;
+	t=1763644909; bh=H4K4KUY2Rzx8q9CqWZhbCnxR9pPbZ7Vwxf6VkBfJ98Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:Autocrypt:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version:OpenPGP:From;
+	b=cl5fE7e504X1rwtiDkf+S2e17/Wa1wh1wQKVwXEzkamJqAzSfBLTA+PaZgFf2jPl0
+	 9tX8Z/7IwK2TGmqXEe8rh2Gc6T3cp8hkxq4I9qdrA+NSxBTltjlv4yXe0NFegCukA0
+	 WiKfhCfHfoNlD8fO+OCdFgZAORysyLsbqRizQMAM144a4EAEa+5kwoGAOAkhwpeV07
+	 k6Wx45GzuqDOPDJ8ISgCgBniYxP6D9OP2Y2cxrFC26qltK9xnTqzQTxaDTZLMXeNhh
+	 0myKSd55quK8N5FowWQzUyL8/rg/7k/9uxSj6yTDAHYJnM8rFaf61xR9+BHO6TJI2h
+	 Vcljwtdn9IGJA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4dBzX96WVSz6twj;
+	Thu, 20 Nov 2025 14:21:45 +0100 (CET)
+Message-ID: <501ad13182eb1c18f671343a34490deb043c2643.camel@posteo.de>
+Subject: Re: [PATCH v9 2/3] rust: leds: split generic and normal led
+ classdev abstractions up
+From: Markus Probst <markus.probst@posteo.de>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Ertman
+ <david.m.ertman@intel.com>, Ira Weiny	 <ira.weiny@intel.com>, Leon
+ Romanovsky <leon@kernel.org>, Miguel Ojeda	 <ojeda@kernel.org>, Alex Gaynor
+ <alex.gaynor@gmail.com>, Boqun Feng	 <boqun.feng@gmail.com>, Gary Guo
+ <gary@garyguo.net>,  =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron	
+ <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Andreas
+ Hindborg	 <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, Danilo
+ Krummrich	 <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Bjorn Helgaas	 <bhelgaas@google.com>, Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
+	 <kwilczynski@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Date: Thu, 20 Nov 2025 13:21:48 +0000
+In-Reply-To: <aR7zeX-akq2Zyf8B@google.com>
+References: <20251119-rust_leds-v9-0-86c15da19063@posteo.de>
+	 <20251119-rust_leds-v9-2-86c15da19063@posteo.de>
+	 <aR7zeX-akq2Zyf8B@google.com>
+Autocrypt: addr=markus.probst@posteo.de; prefer-encrypt=mutual;
+ keydata=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
+ R3rOFHA==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c115432c-b63d-4b99-be18-0bf96398e153@amd.com>
+OpenPGP: url=https://posteo.de/keys/markus.probst@posteo.de.asc; preference=encrypt
 
-On Thu, Nov 20, 2025 at 08:08:27AM +0100, Christian König wrote:
-> >> The exporter should be able to decide if it actually wants to use
-> >> P2P when the transfer has to go through the host bridge (e.g. when
-> >> IOMMU/bridge routing bits are enabled).
-> > 
-> > Sure, but this is a simplified helper for exporters that don't have
-> > choices where the memory comes from.
-> 
-> That is extremely questionable as justification to put that in common DMA-buf code.
+On Thu, 2025-11-20 at 10:54 +0000, Alice Ryhl wrote:
+> On Wed, Nov 19, 2025 at 02:11:24PM +0000, Markus Probst wrote:
+> > Move code specific to normal led class devices into a separate file and
+> > introduce the `led::Mode` trait to allow for other types of led class
+> > devices.
+> >=20
+> > Signed-off-by: Markus Probst <markus.probst@posteo.de>
+>=20
+> So it seems like the goal of this trait is to support both normal led
+> and multicolor led under the same code. However, it seems the traits
+> involved with this are pretty complex.
+>=20
+> My primary feedback here is: please consider if we can avoid these
+> complex traits. How much duplication would it really take to just have
+> two Device structs and two LedOps traits? I think a few pieces of
+> duplication would be far better than what this patch does.
+I counted over 221 lines of code for each classdev type (not counting
+LedOps). If we want to support `led_classdev_flash` later down the line
+(if a Rust driver would need it), that would be over 663 lines of code.
 
-FWIW we already have patches for a RDMA exporter lined up to use it as
-well. That's two users already...
+It doesn't look too complex to me, but thats maybe because I wrote it?
 
-Jason
+>=20
+> In fact, I'm not sure you even need two LedOps traits if you did that;
+> it seems like you could even get away with reusing the trait for both
+> cases.
+Currently it only uses one LedOps trait. The implementation in the
+multicolor needs access to `Device::subleds()`. `Device` gets passed as
+a reference to every LedOps function. If there would be two `Device`
+structs, I am not sure how we can preserve one LedOps trait. Possibly a
+type declaration on `Mode`? (assuming we still want the `Mode` trait)
+
+Thanks
+- Markus Probst
+
+>=20
+> Alice
 
