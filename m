@@ -1,135 +1,232 @@
-Return-Path: <linux-pci+bounces-41739-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41740-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38AC0C72A0D
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 08:39:42 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 537EEC72A16
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 08:41:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A03114E5390
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 07:38:22 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 13DFB4E14FE
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 07:41:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94B133081C6;
-	Thu, 20 Nov 2025 07:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0383B280CC1;
+	Thu, 20 Nov 2025 07:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fk1GOwXX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMrcTNFH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CC63043D3;
-	Thu, 20 Nov 2025 07:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED73BA3D;
+	Thu, 20 Nov 2025 07:41:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763624295; cv=none; b=CWciEAI5lDlPaxfaZtG5g//iTiyd8FQkItW7tsKRr923/q2fPW4WsFX9kX+/whIuyNqdaV4aXh2+x/Uslt71uw4VX8HHix1eX8oXfzavZoWS/JQOLc+Pg2QPvztbnFrQENHCL0+0gVKI/bT6AF3fHOWleQf1dpIbCOBnAmkrJDE=
+	t=1763624482; cv=none; b=f0KFeECqDq5G76RU7bMDYfyAGzBK4oopO+S8RokoVRWJz2I8z/tkukrLy1Nh3dmDETgIBQywRRWOmSwE49uum6n3DDURhyGg0ugUXemvQiu+kL8kmlXJTCs4XC1Ipn3S1jCUNZEvZhFCKv5gx+bnqm1byvrPFlzxf+Eztio7Fcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763624295; c=relaxed/simple;
-	bh=TBmcKl0VoEim/6SAhgGNXn7s3ldHbwABAdg4lb6XQUg=;
+	s=arc-20240116; t=1763624482; c=relaxed/simple;
+	bh=s9dFpDNhVJQOy00WDtmsNR9CXrYTRFP8sz932cIG1aY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qvNN6Bjd5xcS+nG7QiqFHlcPGPCX9i18BDxTW9ANPLt/emeXNaV/WmKnFFGFkTBIs6tVUGiYd5Ob57Xh2ZSVfRzsZ5d/Li++CvQioXVzN49OyAB3Xni0Saj4htdhwGY24RL5Hsi2bsbm1pFYHiKK4lx4kcl2O2CCoJp1HKOhCRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fk1GOwXX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B2CDC4CEF1;
-	Thu, 20 Nov 2025 07:38:14 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=K6sbywCMAP8K4FxbIBiMATRkXCYuK/9fcmqiNflX92dsFlU4i/EOlsXwmCJ9uFtWRoEhb3XC3ROTuAShzGx24f9TRxRH/KqjB9MBf+eMDwkNgHlvTZcsfFqwNXH6IiYIvJbCr3qz/oMNuAhMG8+v1o/+BGyRU2BGEIOjvS+CG44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMrcTNFH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3DDCC4CEF1;
+	Thu, 20 Nov 2025 07:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763624294;
-	bh=TBmcKl0VoEim/6SAhgGNXn7s3ldHbwABAdg4lb6XQUg=;
+	s=k20201202; t=1763624482;
+	bh=s9dFpDNhVJQOy00WDtmsNR9CXrYTRFP8sz932cIG1aY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fk1GOwXX+8I2wrjVFUFCs8eOHzSYMIpbSRNsybaaYnqmR1hvk8o1qyzeHekcACEa7
-	 0yEVvvcB58TVkvjvuQ+g/DQOgZnEaPJs34D8Vdf/e9Zwg/WSSr8nANTFzZTxu1EY4w
-	 f+G77YPyofCyVfOqnqhJ1EEumdeOwl1cYYCiSj7kjTatwWqUljRJ6vu6RxqRHEAEU8
-	 HRAo+V91htNpmPP70IHNTW6yrAz7B8PMq5q1hNDWdzinzbtY3bxLpPYfEP2VVI+Xgm
-	 NiTNPnC07XH/GYQn22i+8qeLjGe/j0I0H3GmLnYmVwrnbgDp8dKA8f5MMMocC3fZuC
-	 Xf3HRBvJIpyCw==
-Date: Thu, 20 Nov 2025 09:38:10 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [Linaro-mm-sig] [PATCH v8 06/11] dma-buf: provide phys_vec to
- scatter-gather mapping routine
-Message-ID: <20251120073810.GQ18335@unreal>
-References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
- <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
- <8a11b605-6ac7-48ac-8f27-22df7072e4ad@amd.com>
- <20251119134245.GD18335@unreal>
- <6714dc49-6b5c-4d58-9a43-95bb95873a97@amd.com>
- <20251119145007.GJ18335@unreal>
- <26d7ecab-33ed-4aab-82d5-954b0d1d1718@amd.com>
- <20251119163326.GL18335@unreal>
- <3053398d-94d8-42fa-aedc-927746375521@amd.com>
+	b=TMrcTNFHGZtRNuGiIozkxcwibujm3U9xXXg/AE+7gjTQaU+VKjF/wvqdadwJndSWO
+	 jeW8GTYT7YWqWl/pyE9J4dYaXgnhYfzSOT7vsEO2q5jevy1Sls7k2UOW1lpdo+fzr5
+	 FgNP/aDRO7yyfKgP6joo8TK3CnLsfUqzr0XXe8qoAJ65e6HOYokd+XjBY6kmwwTvKr
+	 xNWqGc03UfyRkUoVoLAXWQS7WqBFyfVa7EE0Nimnmf8Dq6Mu+GEBBBno71bU5cwxcw
+	 g0OXsebepCgPNL8ae8nrlhvbZbo+v6jc1Y3Nlm8OBRT6vCr2X0tR7JXiuqJg9kYdWe
+	 k1/WLNivuXmqA==
+Date: Thu, 20 Nov 2025 13:10:56 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Niklas Cassel <cassel@kernel.org>, 
+	Shawn Lin <shawn.lin@rock-chips.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+	Kever Yang <kever.yang@rock-chips.com>, Simon Xue <xxm@rock-chips.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, Dragan Simic <dsimic@manjaro.org>, 
+	FUKAUMI Naoki <naoki@radxa.com>, Diederik de Haas <diederik@cknow-tech.com>, 
+	Richard Zhu <hongxing.zhu@nxp.com>, Frank Li <Frank.li@nxp.com>, 
+	Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Conor Dooley <conor@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Hans Zhang <hans.zhang@cixtech.com>, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, kernel@pengutronix.de, 
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 1/4] PCI: dwc: Advertise L1 PM Substates only if
+ driver requests it
+Message-ID: <wja7vxtg7bqq2udepl5r3mvgg5swvuqtuzk6cnimgcbw2aegqs@hru6yzg4xx3o>
+References: <20251118214312.2598220-1-helgaas@kernel.org>
+ <20251118214312.2598220-2-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3053398d-94d8-42fa-aedc-927746375521@amd.com>
+In-Reply-To: <20251118214312.2598220-2-helgaas@kernel.org>
 
-On Thu, Nov 20, 2025 at 08:03:09AM +0100, Christian K�nig wrote:
-> On 11/19/25 17:33, Leon Romanovsky wrote:
-> > On Wed, Nov 19, 2025 at 03:53:30PM +0100, Christian K�nig wrote:
-> > 
-> > <...>
-> > 
-> >>>>>>> +struct sg_table *dma_buf_map(struct dma_buf_attachment *attach,
-> >>>>>>
-> >>>>>> That is clearly not a good name for this function. We already have overloaded the term *mapping* with something completely different.
-> >>>>>
-> >>>>> This function performs DMA mapping, so what name do you suggest instead of dma_buf_map()?
-> >>>>
-> >>>> Something like dma_buf_phys_vec_to_sg_table(). I'm not good at naming either.
-> >>>
-> >>> Can I call it simply dma_buf_mapping() as I plan to put that function in dma_buf_mapping.c
-> >>> file per-your request.
-> >>
-> >> No, just completely drop the term "mapping" here. This is about phys_vector to sg_table conversion and nothing else.
-> > 
-> > In order to progress, I renamed these functions to be
-> > dma_buf_phys_vec_to_sgt() and dma_buf_free_sgt(), and put everything in dma_buf_mapping.c file.
+On Tue, Nov 18, 2025 at 03:42:15PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Yeah, the problem is I even thought more about it and came to the conclusion that this is still not sufficient for an rb or an Ack-by.
+> L1 PM Substates require the CLKREQ# signal and may also require
+> device-specific support.  If CLKREQ# is not supported or driver support is
+> lacking, enabling L1.1 or L1.2 may cause errors when accessing devices,
+> e.g.,
 > 
-> A core concept of DMA-buf is that the exporter takes care of all the mappings and not the framework.
+>   nvme nvme0: controller is down; will reset: CSTS=0xffffffff, PCI_STATUS=0x10
 > 
-> Calling pci_p2pdma_bus_addr_map(), dma_map_phys() or dma_map_phys() from DMA-buf code is extremely questionable.
+> If the kernel is built with CONFIG_PCIEASPM_POWER_SUPERSAVE=y or users
+> enable L1.x via sysfs, users may trip over these errors even if L1
+> Substates haven't been enabled by firmware or the driver.
 > 
-> That should really be inside VFIO and not DMA-buf code, so to move forward I strongly suggest to either move that into VFIO or the DMA API directly.
+> To prevent such errors, disable advertising the L1 PM Substates unless the
+> driver sets "dw_pcie.l1ss_support" to indicate that it knows CLKREQ# is
+> present and any device-specific configuration has been done.
+> 
 
-We got the request to move to DMABUF and agreement a long time ago, in v5.
-https://lore.kernel.org/all/aPYrEroyWVOvAu-5@infradead.org/
+Going by this reasoning, why can't we enable L1 PM Substates for these platforms
+by default?
 
-Thanks
+- Mani
 
+> Set "dw_pcie.l1ss_support" in tegra194 (if DT includes the
+> "supports-clkreq' property) and qcom (for cfg_2_7_0, cfg_1_9_0, cfg_1_34_0,
+> and cfg_sc8280xp controllers) so they can continue to use L1 Substates.
 > 
-> Regards,
-> Christian.
+> Based on Niklas's patch:
+> https://patch.msgid.link/20251017163252.598812-2-cassel@kernel.org
 > 
-> > 
-> > Thanks
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  2 ++
+>  .../pci/controller/dwc/pcie-designware-host.c |  2 ++
+>  drivers/pci/controller/dwc/pcie-designware.c  | 24 +++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h  |  2 ++
+>  drivers/pci/controller/dwc/pcie-qcom.c        |  2 ++
+>  drivers/pci/controller/dwc/pcie-tegra194.c    |  3 +++
+>  6 files changed, 35 insertions(+)
 > 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 7f2112c2fb21..ad6c0fd67a65 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -966,6 +966,8 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+>  	if (ep->ops->init)
+>  		ep->ops->init(ep);
+>  
+> +	dw_pcie_hide_unsupported_l1ss(pci);
+> +
+>  	ptm_cap_base = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_PTM);
+>  
+>  	/*
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 20c9333bcb1c..7abeb771e32d 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -1060,6 +1060,8 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
+>  		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
+>  	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
+>  
+> +	dw_pcie_hide_unsupported_l1ss(pci);
+> +
+>  	dw_pcie_config_presets(pp);
+>  	/*
+>  	 * If the platform provides its own child bus config accesses, it means
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index c644216995f6..6e6a0dac5b53 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -1081,6 +1081,30 @@ void dw_pcie_edma_remove(struct dw_pcie *pci)
+>  	dw_edma_remove(&pci->edma);
+>  }
+>  
+> +void dw_pcie_hide_unsupported_l1ss(struct dw_pcie *pci)
+> +{
+> +	u16 l1ss;
+> +	u32 l1ss_cap;
+> +
+> +	if (pci->l1ss_support)
+> +		return;
+> +
+> +	l1ss = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_L1SS);
+> +	if (!l1ss)
+> +		return;
+> +
+> +	/*
+> +	 * Unless the driver claims "l1ss_support", don't advertise L1 PM
+> +	 * Substates because they require CLKREQ# and possibly other
+> +	 * device-specific configuration.
+> +	 */
+> +	l1ss_cap = dw_pcie_readl_dbi(pci, l1ss + PCI_L1SS_CAP);
+> +	l1ss_cap &= ~(PCI_L1SS_CAP_PCIPM_L1_1 | PCI_L1SS_CAP_ASPM_L1_1 |
+> +		      PCI_L1SS_CAP_PCIPM_L1_2 | PCI_L1SS_CAP_ASPM_L1_2 |
+> +		      PCI_L1SS_CAP_L1_PM_SS);
+> +	dw_pcie_writel_dbi(pci, l1ss + PCI_L1SS_CAP, l1ss_cap);
+> +}
+> +
+>  void dw_pcie_setup(struct dw_pcie *pci)
+>  {
+>  	u32 val;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index e995f692a1ec..a68eea47d451 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -516,6 +516,7 @@ struct dw_pcie {
+>  	int			max_link_speed;
+>  	u8			n_fts[2];
+>  	struct dw_edma_chip	edma;
+> +	bool			l1ss_support;	/* L1 PM Substates support */
+>  	struct clk_bulk_data	app_clks[DW_PCIE_NUM_APP_CLKS];
+>  	struct clk_bulk_data	core_clks[DW_PCIE_NUM_CORE_CLKS];
+>  	struct reset_control_bulk_data	app_rsts[DW_PCIE_NUM_APP_RSTS];
+> @@ -573,6 +574,7 @@ int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+>  				int type, u64 parent_bus_addr,
+>  				u8 bar, size_t size);
+>  void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index);
+> +void dw_pcie_hide_unsupported_l1ss(struct dw_pcie *pci);
+>  void dw_pcie_setup(struct dw_pcie *pci);
+>  void dw_pcie_iatu_detect(struct dw_pcie *pci);
+>  int dw_pcie_edma_detect(struct dw_pcie *pci);
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 805edbbfe7eb..61c2f4e2f74d 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1067,6 +1067,8 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+>  	val &= ~REQ_NOT_ENTR_L1;
+>  	writel(val, pcie->parf + PARF_PM_CTRL);
+>  
+> +	pci->l1ss_support = true;
+> +
+>  	val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+>  	val |= EN;
+>  	writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 10e74458e667..3934757baa30 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -703,6 +703,9 @@ static void init_host_aspm(struct tegra_pcie_dw *pcie)
+>  	val |= (pcie->aspm_pwr_on_t << 19);
+>  	dw_pcie_writel_dbi(pci, pcie->cfg_link_cap_l1sub, val);
+>  
+> +	if (pcie->supports_clkreq)
+> +		pci->l1ss_support = true;
+> +
+>  	/* Program L0s and L1 entrance latencies */
+>  	val = dw_pcie_readl_dbi(pci, PCIE_PORT_AFR);
+>  	val &= ~PORT_AFR_L0S_ENTRANCE_LAT_MASK;
+> -- 
+> 2.43.0
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
