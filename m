@@ -1,166 +1,173 @@
-Return-Path: <linux-pci+bounces-41736-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41737-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C624BC72951
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 08:25:17 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDFFBC7295A
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 08:25:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by tor.lore.kernel.org (Postfix) with ESMTPS id D650B28C91
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 07:25:16 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 43D4D3482AE
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 07:25:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3164E3043AE;
-	Thu, 20 Nov 2025 07:25:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BA9A2BF019;
+	Thu, 20 Nov 2025 07:25:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="nWjD1BwV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lrXMQR4N"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7522E1722
-	for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 07:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149372FDC53
+	for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 07:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763623514; cv=none; b=tMIQWbuMf6x5XarDyG9vOThcWVw8+eBVlH68yj77cqK+Iwh8+uf0ZydKydVFFC44b1WNQFYaOnYawP1tpd9zCpraqapw6DzIrPglv+lL/C7upvyCbRAHq5YbpQ/uLfXUebtOc4fcrIZPNYMGmoYuraApZeqwSI4TIItZA4Ly3uc=
+	t=1763623545; cv=none; b=LgcQ/dcLNk4Eg26gQLp+XQEWs5aBswaB0dtlOQbu5B8aFkIujMZGIT79xEsQ2fAebR6tnwTtLL0u9/IBkzGtZwg2GadsDggUzznOFAfTvBLo/fdn8JreJ1PvesMAU8s1E0EeFrWD2UBH5o8HvIl5tKeDwxWcIbKG2pv4VWRIexY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763623514; c=relaxed/simple;
-	bh=lUpWZ5UX3+i+7u0Pq8QdniaLTA2oaPmgIy1XELFHAHE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lMOpogNRl1hi5P0V7JLWB9suxzXpUjHVUGAM/q4nRMqOwN3lfZrJ6LIaN2ONtnZfXBete1ZVwsPr4OlPRooXh3+XcTaefa9LtKsu2mHWFciBJ6ntD7ZnE85ihCuz6en8vO5HC4GvBQuFFnUb6FC9yfHJWrgp5Dn0x2raD6hiePY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=nWjD1BwV; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AJNs6th366133
-	for <linux-pci@vger.kernel.org>; Wed, 19 Nov 2025 23:25:12 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=zJvQf5k4dRgM04NLpARHaBYHJtmHDdIhvwwQscTDcLI=; b=nWjD1BwVWCcA
-	F44UuWGoJRhci1nuRD9KZ/TyZTqrWrPfoHuyVNUd+u9cS7yO5S4xmXKskaxDO7qI
-	QvWwTkg8dMlIkOUbhnZ6akRRxMj1eA0POoEcppsAHcASvkWqPOzDshYyHlc9Dg4d
-	K48OLacjTwqFOdJw7Z2FUWu4rKRjftBzEX1i5mtXvv2dU/iU3lOQXBYBG3As5x2W
-	82uU+W7p7vRuH1+oHEseYPAqLojoDAWKDrst1Lp1hgjIo63aelI3fkRHkV/XMRsN
-	9Fu9OkK9wgAjb4fGd1wbBFnchSbdXCe8lEfAvF6EBROOPapUEEDrCaa9NaQmyKW5
-	F7UTRyZ8TA==
-Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4ahqymtkm8-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Wed, 19 Nov 2025 23:25:11 -0800 (PST)
-Received: from twshared1848.32.frc3.facebook.com (2620:10d:c0a8:fe::f072) by
- mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.29; Thu, 20 Nov 2025 07:24:57 +0000
-Received: by devbig259.ftw1.facebook.com (Postfix, from userid 664516)
-	id 42A10C5560F5; Wed, 19 Nov 2025 23:24:43 -0800 (PST)
-From: Zhiping Zhang <zhipingz@meta.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-CC: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-rdma@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <netdev@vger.kernel.org>, Keith Busch <kbusch@kernel.org>,
-        Yochai Cohen
-	<yochai@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>
-Subject: Re: [RFC 2/2] Set steering-tag directly for PCIe P2P memory access
-Date: Wed, 19 Nov 2025 23:24:40 -0800
-Message-ID: <20251120072442.2292818-1-zhipingz@meta.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251117160028.GA17968@ziepe.ca>
-References: <20251117160028.GA17968@ziepe.ca>
+	s=arc-20240116; t=1763623545; c=relaxed/simple;
+	bh=0BBRzQKaztjou1FCEm1RF9AHtnEOkfEB1zV8sHnTWIM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D4x9PHNPw2qkWx78DED1C9cid9jBhxy7UjhOieOYZ/zW9U9dWFz3LikkNt02SzadjITH6bhgm4HDOAWzcxUf3Kl0LEPmat/Th2mVut8ganmNPEe4L95ZgThvSgm47MKqI6NQYKBrQL+L4nV/JW5DDzV+921h1zmazx2OfnoloCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lrXMQR4N; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6419e6dab7fso711800a12.2
+        for <linux-pci@vger.kernel.org>; Wed, 19 Nov 2025 23:25:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1763623541; x=1764228341; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=oiy3MCCnIY+ubzrtfzu9IxcBIzwVrHngBHadvGb6qFA=;
+        b=lrXMQR4NtTqiw/qpi/NXGvr72xvHw2SY9NLMmzj/mrHa2zGI7xZbjybcyIcwzDVZwH
+         cDN6NlMnrCjoJDazuRaaRI+ZgiGFsSDcn1NKypDtxjtV27/OefQC17G7ir7TI26IPaJV
+         Di3q/GcaEo0pXeZWBeGnsCHdI3LUrXazvp1uLXas5cz8gy9YlVBCceO/d/t198eSuZ8t
+         NtUPnbQ/rWn0hulyKyxA2Dec3iKjHZLIllf6JlA7M+EBm1KVT/3BmfQIRYD8/DNXOZGy
+         YLkC6JhGbiKCehhwSjuLIwrXgkC8mo57FEX3ixxcmV0Mco6HPa84S1S2NmdyH9Fe39A8
+         C6VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763623541; x=1764228341;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oiy3MCCnIY+ubzrtfzu9IxcBIzwVrHngBHadvGb6qFA=;
+        b=Da31rRNCRs9yMm0BuLYJFCPkobk6Oq8xlzJV2RwN7h2Y5t5rKiTBek+ApCQDCvlQ83
+         /ajRNTB8TDyeiZTylNaKPv/Iy4mmwX3ydK022nV6C9ZqG6y990InJH5rRCMKCwtHWAFL
+         a7cYVcDV1mWlilq2nCogKU/0OIpJ4clI/FCckXzVuS/8DfUmzP3FWd8a/1HF4dyqTiIz
+         vFm+cT2PwmNxxn5L7VI4Ma1yLiBHgCXTCng0ffdO7duNraE3azR4VLSX7PHd6dkPK4NA
+         6B46B1qDwX8wL5nid3ZERz96HIyzYu1DT2dUFfoDYjDGCOKE/LLEV4oWttCKUZpKQIYq
+         vZ9w==
+X-Forwarded-Encrypted: i=1; AJvYcCXvcVdqW7HtZybZsxRcWWsU7d84GfZ3SMP2nitTVJmS95WRLxAwNA/u+eInREfVHe8th1IrGutIBic=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd4L1OaEDNedgZ6Q8EPhmmrMbY4YRgPiMXvpB7PHn45N3D7/fE
+	NcQNWsOwX2IH+5MNTGGYWhsBUJ+WNW6rcUleqnaQBN9IUGq3/GR9HpbSX8nnjkxS+JC0mOS9rkg
+	BqbsuF2hZdhnoG5y+DFiWDiuTomdZbNv6m5idwgpPbg==
+X-Gm-Gg: ASbGncta07fyiBjlMqHlM3kyv5fp9a4SpU/JNDOk/oWWUTGm3P0C+sjZ7V6tohia9Mo
+	z04RUz74rtl/wHnl6aQR1WtGHBTD7mXEmwOlhYXBaRmgi3zOB6z6xCN9jQS6XABwVJesyrRwif7
+	FAuVfzckx1gARMzRVTiJ+6UvY6/5YlmM4nOOlRJhh1XGTPTke6+OFA5YvVcC8q+i57eaoVeQdf5
+	AYtAJzghgmUTR+GiLsc/C1UoLuHT+suMzXbasscZrXkw4Q6fezBuKuiyz9lQzJrndxzPG4VsSoz
+	/mNqiI1YJGeMu3n0V3zLrzv4
+X-Google-Smtp-Source: AGHT+IFAQcf4dBYNDEi3TsDPhv8jstrKlO8aZK1F8IULbrCW1q+UfabVpHtWcfiu1HcoO4gSrjXgCyaW6ykmeZfOoLs=
+X-Received: by 2002:a05:6402:278d:b0:641:62bb:9c0 with SMTP id
+ 4fb4d7f45d1cf-645364652a8mr2343347a12.33.1763623541321; Wed, 19 Nov 2025
+ 23:25:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20251118160238.26265-1-vincent.guittot@linaro.org>
+ <20251118160238.26265-4-vincent.guittot@linaro.org> <aRymVtJKtcydh3g5@lizhi-Precision-Tower-5810>
+In-Reply-To: <aRymVtJKtcydh3g5@lizhi-Precision-Tower-5810>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Thu, 20 Nov 2025 08:25:30 +0100
+X-Gm-Features: AWmQ_bms-sMetVoc9nOrTa8Xt52hfzy9ouUOYIu45ml1BzNFdlb7_KVvCi0dBPc
+Message-ID: <CAKfTPtAhQJK1ezv3JF6FBK5ZBBWCWM0ADeg0SG2EG_2JjfzaMA@mail.gmail.com>
+Subject: Re: [PATCH 3/4 v5] PCI: s32g: Add initial PCIe support (RC)
+To: Frank Li <Frank.li@nxp.com>
+Cc: chester62515@gmail.com, mbrugger@suse.com, ghennadi.procopciuc@oss.nxp.com, 
+	s32@nxp.com, bhelgaas@google.com, jingoohan1@gmail.com, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, Ionut.Vicovan@nxp.com, larisa.grigore@nxp.com, 
+	Ghennadi.Procopciuc@nxp.com, ciprianmarian.costea@nxp.com, 
+	bogdan.hamciuc@nxp.com, linux-arm-kernel@lists.infradead.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev, cassel@kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-X-Authority-Analysis: v=2.4 cv=O4o0fR9W c=1 sm=1 tr=0 ts=691ec257 cx=c_pps
- a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VabnemYjAAAA:8 a=gBoSNsRbln1ruKUd0gAA:9 a=QEXdDO2ut3YA:10
- a=gKebqoRLp9LExxC7YDUY:22
-X-Proofpoint-ORIG-GUID: X3sJP5Lv46ld3Vy3UlPPd-hCzE828k1Q
-X-Proofpoint-GUID: X3sJP5Lv46ld3Vy3UlPPd-hCzE828k1Q
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTIwMDA0MiBTYWx0ZWRfX0QWvihsLR3oH
- ycpeebz4nfafOP7knUaNFnPQValFaGQv9MWZlyNy5HW9GD9Y+1MM413A8i/W977FvLzggzDCiDd
- Yt24yd/CtiMYPrr8BwYlB5yuXjR4K2qWcHGolDPoWjPmYcR+2k1DtXym03aJp/NpJQ0zNVlbdNY
- P5EEgV1GrAuexBFu4oZHZhxV4UQEhwAmBJHgMZ9kVgjFJ5ui+STLoOBDwYELqRDwJQokfU7iSKY
- WWnUrM7M3gKrRkKT8n2IG1MGB/kUXdpXxSWrnJh9WlkwPlDkHtxAou5wGyfq+SdcujOKn2qhdU1
- 761IZlRIDtbr/zH8XWBCCpd4v/TzerD/DlFv4vwDafWs6UNBjMkBtxb678cpTWBtdgYkrW7k4fm
- AvW3pkke5CBpUlCr6S77EEhSPcvgTA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-20_02,2025-11-18_02,2025-10-01_01
 
-On Monday, November 17, 2025 at 8:00=E2=80=AFAM, Jason Gunthorpe wrote:
-> Re: [RFC 2/2] Set steering-tag directly for PCIe P2P memory access
+On Tue, 18 Nov 2025 at 18:01, Frank Li <Frank.li@nxp.com> wrote:
 >
-> On Thu, Nov 13, 2025 at 01:37:12PM -0800, Zhiping Zhang wrote:
-> > RDMA: Set steering-tag value directly in DMAH struct for DMABUF MR
+> On Tue, Nov 18, 2025 at 05:02:37PM +0100, Vincent Guittot wrote:
+> > Add initial support of the PCIe controller for S32G Soc family. Only
+> > host mode is supported.
 > >
-> > This patch enables construction of a dma handler (DMAH) with the P2P =
-memory type
-> > and a direct steering-tag value. It can be used to register a RDMA me=
-mory
-> > region with DMABUF for the RDMA NIC to access the other device's memo=
-ry via P2P.
-> >
-> > Signed-off-by: Zhiping Zhang <zhipingz@meta.com>
+> > Co-developed-by: Ionut Vicovan <Ionut.Vicovan@nxp.com>
+> > Signed-off-by: Ionut Vicovan <Ionut.Vicovan@nxp.com>
+> > Co-developed-by: Ciprian Marian Costea <ciprianmarian.costea@nxp.com>
+> > Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@nxp.com>
+> > Co-developed-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
+> > Signed-off-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
+> > Co-developed-by: Larisa Grigore <larisa.grigore@nxp.com>
+> > Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
+> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 > > ---
-> > .../infiniband/core/uverbs_std_types_dmah.c   | 28 ++++++++++++++++++=
-+
-> > drivers/infiniband/core/uverbs_std_types_mr.c |  3 ++
-> > drivers/infiniband/hw/mlx5/dmah.c             |  5 ++--
-> > .../net/ethernet/mellanox/mlx5/core/lib/st.c  | 12 +++++---
-> > include/linux/mlx5/driver.h                   |  4 +--
-> > include/rdma/ib_verbs.h                       |  2 ++
-> > include/uapi/rdma/ib_user_ioctl_cmds.h        |  1 +
-> > 7 files changed, 46 insertions(+), 9 deletions(-)
+> >  drivers/pci/controller/dwc/Kconfig            |  10 +
+> >  drivers/pci/controller/dwc/Makefile           |   1 +
+> >  .../pci/controller/dwc/pcie-nxp-s32g-regs.h   |  21 +
+> >  drivers/pci/controller/dwc/pcie-nxp-s32g.c    | 391 ++++++++++++++++++
+> >  4 files changed, 423 insertions(+)
+> >  create mode 100644 drivers/pci/controller/dwc/pcie-nxp-s32g-regs.h
+> >  create mode 100644 drivers/pci/controller/dwc/pcie-nxp-s32g.c
 > >
-> > diff --git a/drivers/infiniband/core/uverbs_std_types_dmah.c b/driver=
-s/infiniband/core/uverbs_std_types_dmah.c
-> > index 453ce656c6f2..1ef400f96965 100644
-> > --- a/drivers/infiniband/core/uverbs_std_types_dmah.c
-> > +++ b/drivers/infiniband/core/uverbs_std_types_dmah.c
-> > @@ -61,6 +61,27 @@ static int UVERBS_HANDLER(UVERBS_METHOD_DMAH_ALLOC=
-)(
-> >               dmah->valid_fields |=3D BIT(IB_DMAH_MEM_TYPE_EXISTS);
-> >       }
+> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > index 349d4657393c..e276956c3fca 100644
+> > --- a/drivers/pci/controller/dwc/Kconfig
+> > +++ b/drivers/pci/controller/dwc/Kconfig
+> > @@ -256,6 +256,16 @@ config PCIE_TEGRA194_EP
+> >         in order to enable device-specific features PCIE_TEGRA194_EP must be
+> >         selected. This uses the DesignWare core.
 > >
-> > +     if (uverbs_attr_is_valid(attrs, UVERBS_ATTR_ALLOC_DMAH_DIRECT_S=
-T_VAL)) {
-> > +             ret =3D uverbs_copy_from(&dmah->direct_st_val, attrs,
-> > +                                    UVERBS_ATTR_ALLOC_DMAH_DIRECT_ST=
-_VAL);
-> > +             if (ret)
-> > +                     goto err;
+> ...
+> > +
+> > +static int s32g_pcie_init(struct device *dev, struct s32g_pcie *s32g_pp)
+> > +{
+> > +     int ret;
+> > +
+> > +     s32g_pcie_disable_ltssm(s32g_pp);
+> > +
+> > +     ret = s32g_init_pcie_phy(s32g_pp);
+> > +     if (ret)
+> > +             return ret;
 >
-> This should not come from userspace, the dmabuf exporter should
-> provide any TPH hints as part of the attachment process.
->=20
-> We are trying not to allow userspace raw access to the TPH values, so
-> this is not a desirable UAPI here.
+> Small nit:
 >
-> Jason
+> return s32g_init_pcie_phy(s32g_pp);
 
-Thanks for your feedback!
+Yes
 
-I understand the concern about not exposing raw TPH values to userspace.
-To clarify, would it be acceptable to use an index-based mapping table,=20
-where userspace provides an index and the kernel translates it to the=20
-appropriate TPH value? Given that the PCIe spec allows up to 16-bit TPH v=
-alues,
-this could require a mapping table of up to 128KB. Do you see this as a r=
-easonable
-approach, or is there a preferred alternative?
+>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-Additionally, in cases where the dmabuf exporter device can handle all po=
-ssible 16-bit
-TPH values  (i.e., it has its own internal mapping logic or table), shoul=
-d this still be
-entirely abstracted away from userspace?
+Thanks
 
-Zhiping
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void s32g_pcie_deinit(struct s32g_pcie *s32g_pp)
+> > +{
+> > +     s32g_pcie_disable_ltssm(s32g_pp);
+> > +
+> > +     s32g_deinit_pcie_phy(s32g_pp);
+> > +}
+> > +
+> ...
+> > +
+> > +module_platform_driver(s32g_pcie_driver);
+> > +
+> > +MODULE_AUTHOR("Ionut Vicovan <Ionut.Vicovan@nxp.com>");
+> > +MODULE_DESCRIPTION("NXP S32G PCIe Host controller driver");
+> > +MODULE_LICENSE("GPL");
+> > --
+> > 2.43.0
+> >
 
