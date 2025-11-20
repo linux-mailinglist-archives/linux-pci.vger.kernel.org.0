@@ -1,234 +1,188 @@
-Return-Path: <linux-pci+bounces-41806-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41807-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDB7DC7529D
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 16:56:46 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 680DCC75315
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 16:59:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6A8FE3640D8
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 15:50:52 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A5A1C4E9123
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 15:51:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4806B376BC8;
-	Thu, 20 Nov 2025 15:49:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFDD7376BE5;
+	Thu, 20 Nov 2025 15:50:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aQSSgymC";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="ovElWv/n"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MrWlbsmy";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="NkGV3fOZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28870376BEB
-	for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 15:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0956228851C
+	for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 15:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763653780; cv=none; b=LNzPqGjaQMltinWuhjZLlQ6rWPxCFy/tQUDEk7bNZF/PpPgMQdV6meWB2bVy0G+FJ4PDg82MUO/WrCR7lqoONEsRSvSiffvxtDde/8nROnU7V5DsTYvRMl08QTHDxrI5SwJfMX+ECSETytJxjrUecIFrSb82J+sPxnjaHa4JY2Q=
+	t=1763653851; cv=none; b=RDDELlKgV7PEKFKp5DKEWY09GV+bm7oTwTeeBz/YeNlH3GvRowypzUhVbdOPkVdHjNW6QPRytQg1H5wWUcvJJrUrLh6GCIQ9EK702OCqGJejKZgXUfdhNI/bCB9YkCMpHG44hKUrsEV9zpBEFXT0YkG4Ff5jNAew/BK4wACWseY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763653780; c=relaxed/simple;
-	bh=Z7khxCy0juQFD7sc2XVpGJcgIRewBFI8alTprYiEvgk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t8sVzXPf/GCC9g6ffddyKZw+TA+76lCNqqGD5DU3oqZ+FNNaQtyks75Y0i+e2zF6JHGDe6nRIHUFkcv+AMIe102fX7V2QM+7qo2ReJqn7RYeHKEM4fh2Blfz4mA6sMtUnpDAQrdLnq3RMfjdTXlDc3r7xgiu16S7x9Z5rHIM3Rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aQSSgymC; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=ovElWv/n; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763653776;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=91ugE35V8USHsTpLgO4hUdjEiFkkZFTQ1do7SDOhLck=;
-	b=aQSSgymCnqqz/DY/QMXDcHrLoxY0AkUSvIFmAKHmkE+wI+7h96ngPEu+zCctjvl3h9z6xM
-	6JBkedloNP8RwfP7B/gYkYTJEDPLiRd/4/yd8wDJrbwETZDbc423NYoK705B0dkC8CmBQ3
-	hy8wNcpr8W8LGXD2bBRzAkMR20n583o=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-520-ySoLOcCKOZeFmbmnuYlDCQ-1; Thu, 20 Nov 2025 10:49:35 -0500
-X-MC-Unique: ySoLOcCKOZeFmbmnuYlDCQ-1
-X-Mimecast-MFC-AGG-ID: ySoLOcCKOZeFmbmnuYlDCQ_1763653774
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-8805c2acd64so29786146d6.3
-        for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 07:49:34 -0800 (PST)
+	s=arc-20240116; t=1763653851; c=relaxed/simple;
+	bh=3LXjZvhAxhf5oSUUkSRQAsK/IDNbfA5F7E3Mq6aXfQg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=twYYuWWZmZsi2/ZAdnXVCHjjQhSbRA5qI9Ng48VO4wioEa3Mwi9LmFxv3/f6aAGp0RR8rqGMzWd2NTRvo9u1leJPv8zl4IaH807rbzA/RLSqdkNXGMM6KUM3BWFtQGt1XRAHVu2stIlB4M248cN1P9+VsC26hoqVaz1FmSEQigE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MrWlbsmy; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=NkGV3fOZ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AKEraIn082212
+	for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 15:50:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	fjJkCHucrCZBX5LjnXaIOgVpyAHpaiZEXld9Y5GuCoc=; b=MrWlbsmyA5Myc170
+	76O8bjw+rdnsu5I+jXBNKffSmeUz+9n+i7t2TnOLewNadcT6LY06NNc7C80IDnL2
+	W8TkAL+8as0th5hoQEJoPsZjUjTIVVSHGa/Rcp8ULNX2y8ExqopMxV/6rBPARx1M
+	Woz9OdtAXgkhWwpJwK0bYPEEdo/DSUcBQG5kspYPkz9z246nPtuW12e2m2ygkk45
+	eE6zqt17vPTowi2DJfCXQ1jHd21AP3OdfjeDuyBpbxPv/HACC0AlJ2H2cGT0SDVB
+	jdYTlGB4hKn7hwx9Wrezeh1uUMMyd0fNpbAKalX9KcMeUAr3vtUrktpmCOKVLt1l
+	3B1C5Q==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ahxrn9fya-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 15:50:48 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8b2ea2b51cfso28425285a.0
+        for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 07:50:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1763653774; x=1764258574; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=91ugE35V8USHsTpLgO4hUdjEiFkkZFTQ1do7SDOhLck=;
-        b=ovElWv/n8dnhczOqizRX4esUtAJiuOqGukPFGw96GFA5HTajt/uuIIvkNISom4jA2G
-         9eDnwOXNsHkL8FDJeAc4oZ7d11fwMGm7vn9Yfiyj2eCweLEy8/Z4MaH/1GqruIyDiAU+
-         BBc16guepRcZVx2QAhy+qAEQZrG5fU/6kMn+54AZPfaInMKz87wWJtH6M5eT9j5338t7
-         q+OiSVGacEoH3ELPaNCeFrokQgaxkD0h7D5Z54ciaH+Anxi2kXnwm7854TUK9JI/IaHu
-         NQDKt9nzDYjiSz/tP3DIHXnKVvbYGVOEXLG6uRSDFjD3QTGtFMIfSxharQz/2y6EPpi+
-         YiLA==
+        d=oss.qualcomm.com; s=google; t=1763653848; x=1764258648; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fjJkCHucrCZBX5LjnXaIOgVpyAHpaiZEXld9Y5GuCoc=;
+        b=NkGV3fOZy/AuMwIVroEXDysn46e+x8z6AhqrpqXHPt1BbwSU6GU+A7nNVZ06IeMNgn
+         1/2yUcGVuhEYCI0ml6XciFBPovnPJNevgaKG0jrz+8ezj0HY3tyuk91kbv53XUgRI7+j
+         /hb8BQC0PtbzuVKxgM3hPxNzuHd0xr3DHIFPE8yUV+olxicZvmYK/pVDHY3ic4E1/TDp
+         I6XXziMgN/y+lbxyxwZeVBgsG4A8CbPwN+Pb1nJGyNQ/LlkLCscIOHQVL0jj+TQUy8X9
+         nfJM9DPkHB4wSS4GKGxNil5kOCbvnPCiprtoFBXSOWF0QA6zFE4gsbBGKQumoNu9Xeb3
+         8Cew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763653774; x=1764258574;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=91ugE35V8USHsTpLgO4hUdjEiFkkZFTQ1do7SDOhLck=;
-        b=IqEXLkheJiN2UyVlPB0zqc6XnxfiqLfSCwiRYpnwLogoGzSP+L+wOJ7QUxpb56xBrt
-         hjiZXucnIBj9UeaPBKN+W4LYVdGXLISBN2RrrD8PbliaQOuVeQouLm02JtvsPQIwtZJJ
-         82SpASDTPhe1kMGS9cxyem5Dzz7Nx4Z/03En/SWh/mBgj6bW4RY6WvyfckODDke/CHu7
-         bw4EsgCFaso3/wL+zukYPBaZbLEeVbrEFs4nFRxpshNyIW6Obo6rLL0WDCLQbFDcQCvO
-         AtuAy+/o+Bm20ONjBiwkA1dkCLLN/09iTrxSQnivDbA9Q+7q+uIRoJNFKGsG5OlJzQPy
-         RzXw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9CzPHAZcyo5IvXhMewSgEzWTbV0ipBE+8iZR65T1NYl9SYPGETehX0zvn2OtlGS0z7K7P7qdHD5U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZrttuMFq76wpWI1XfswjL7GEZeSYDfrre1EtOCmxY6ipszgl4
-	xfJWRFENjtyQS28SJBQl5Q1DD1G6NfxN3jfsaYXbiSjj7FFzYDsk4/LUd2Otbv1Pp75fZWJzTQ9
-	7epqJlKGZpKVLAoW+xQ/q15aW5EJ43w1d33W8SrCOa1tihlXwdka9EM3kvQC99w==
-X-Gm-Gg: ASbGncuZ+n1UaohFEhwuCBS6j1zD5QcY3ewPe6CxRhegDFyf3T3gE2odiu1a6bdnLhC
-	NoFWXCICwtQbSQ29CaJ+44cFeLGNjt6AZAVVqaPiTqHhM035XnF4csbEhi3B1xH9/+lblpZWmp7
-	xO3AVfr3BzW3CrcTX/CJPSQF9YXEVl0N0S39s2PUltVaFfDmq1mt8pRjN0l6yd1e+iS/fRO1t+4
-	NeaEmYHbsSf/Uy20aVclFzw/XfzG5ksBxifStobmakkvUj+pOFm1cZ1lsnHlg2s/u+XdZj37VZY
-	YzecFyvE7t707i58PV1qnwsIvggT2OpRxvNRK4yIayQG+8aYfeHax6w9p/Qv9zGWvFqpzrdDFWn
-	N8xde7Fvc
-X-Received: by 2002:a05:6214:3283:b0:87c:1fd9:da52 with SMTP id 6a1803df08f44-8847a3d973dmr12006d6.9.1763653774132;
-        Thu, 20 Nov 2025 07:49:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHZDZecDuAU2AHXM6Uqgl8MchJS3ZXsbLZQMQHbbLh7Q6dI9fcKtwuWdhAIK4pa19g+Q9VupA==
-X-Received: by 2002:a05:6214:3283:b0:87c:1fd9:da52 with SMTP id 6a1803df08f44-8847a3d973dmr11206d6.9.1763653773470;
-        Thu, 20 Nov 2025 07:49:33 -0800 (PST)
-Received: from localhost ([2607:f2c0:b141:ac00:5cae:3da9:9913:ff7])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-8846e573909sm19710936d6.39.2025.11.20.07.49.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Nov 2025 07:49:33 -0800 (PST)
-Date: Thu, 20 Nov 2025 10:49:32 -0500
-From: Peter Colberg <pcolberg@redhat.com>
-To: Zhi Wang <zhiw@nvidia.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH 8/8] samples: rust: add SR-IOV driver sample
-Message-ID: <aR84jHNj0rhNRbaK@earendel>
-Mail-Followup-To: Zhi Wang <zhiw@nvidia.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>
-References: <20251119-rust-pci-sriov-v1-0-883a94599a97@redhat.com>
- <20251119-rust-pci-sriov-v1-8-883a94599a97@redhat.com>
- <20251120084132.40f72ba4.zhiw@nvidia.com>
+        d=1e100.net; s=20230601; t=1763653848; x=1764258648;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fjJkCHucrCZBX5LjnXaIOgVpyAHpaiZEXld9Y5GuCoc=;
+        b=cQ99dYuZMbkExQ2T3KG838AGUngAcGq06wTfrGXgkU7LMR43ZfxpGpTsobnUf5xHSj
+         9SAsXuEuPClAf4HlfzRqJ9488CC1ynIQCNOc3VUhyri4tOGpD/12tnU4Xdf6Hx5qeba6
+         OK5wMx89qQFJL/PpL1wVe2rGBX90d1VmM0/RLPbudlxzr/1++5paTI+FXAHLXidoPwSI
+         MzcECSZNC8Wnr1X+nG7tRj1p/WnYkqTFo+Rrp/1qPWhshE3VLbv0Cd1MXmhZ53b5GeMm
+         LvwbwQht2RWUclvhjYys6bDt39hL3eja/1Yn86l3+C6Poh2sxpzhoP0WCjpyAZusfHPP
+         mAHg==
+X-Gm-Message-State: AOJu0YzsnrvXzXJY1md8HTGYfpN9a7oJjKg2s+P4dbXmI+ZmbyZvFt4R
+	hheA3y3ulrOo6Se4QjIl0HENJu3EzQdLwofG1/ox7fleF+AKq3koB/E3t6EU0+wLrp++sz3cSKD
+	TT0Kbr/3jZUg1mLTDoQ4SqrTGsXn0JjWOwUfuiZ1h9dNCde2nzNmNTRXlsWvB4fo=
+X-Gm-Gg: ASbGnctpPjJtDyp/iJqJsQmqmvZrsxVJw5swjxDtWzlzPwNgc1SnbLmDS7lOXnA4+Or
+	0pOO5iov53n3qp2iVUkofSxYOepYPoJegb6JoW/u0zc5i0RhFK5+iz9Z2ud2UQY71i/6o1Zouyv
+	SZxYCSe5scNdAuhz4JEwNegOEgLT8qPxD8GnkUkF4sAelClPyyNNr7XIR+2unykdvp0Qcg7WxZk
+	iTU1I4oZqCpUbh3l6rcBPJHOuFdKyXsGiPHNxa5uoAIPgTzJUrPyRgvnUNyn3iSv/uHpqxkUUZ7
+	0/Z9EHuoatZMkcnPF2lF7U44iewR4EylphbtqCenV5ozlPe2jtS8Zwxzw2M8kef41W7dZaFMX0t
+	I05KUf4kU81724ridl2wTH3E7NmZuHz9WmJl1aRybMYzaUxVFYvlHqGZCU5/c57ZHfD4=
+X-Received: by 2002:a05:620a:7107:b0:8b2:1f04:f8b with SMTP id af79cd13be357-8b32747edf9mr366253885a.6.1763653848090;
+        Thu, 20 Nov 2025 07:50:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE4MYAPZE3Av5PSX2AH04IPx8xcJqHIXsZFnzG0TUzdhgaJAWfh7xBLUjVQ4xGirjPSFLXPHw==
+X-Received: by 2002:a05:620a:7107:b0:8b2:1f04:f8b with SMTP id af79cd13be357-8b32747edf9mr366250785a.6.1763653847529;
+        Thu, 20 Nov 2025 07:50:47 -0800 (PST)
+Received: from [192.168.119.202] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-645364437b2sm2304423a12.25.2025.11.20.07.50.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Nov 2025 07:50:46 -0800 (PST)
+Message-ID: <88778660-18de-40a7-83af-41f60334c4cc@oss.qualcomm.com>
+Date: Thu, 20 Nov 2025 16:50:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251120084132.40f72ba4.zhiw@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: Add quirk to disable ASPM L1 for Sandisk SN740 NVMe
+ SSDs
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+        bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <mani@kernel.org>
+References: <20251120154601.116806-1-mani@kernel.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20251120154601.116806-1-mani@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: p3AFUoV0JDdgZjb8o2m8QwlNVxK5hnMI
+X-Proofpoint-GUID: p3AFUoV0JDdgZjb8o2m8QwlNVxK5hnMI
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTIwMDEwNSBTYWx0ZWRfX3rhOrwrgAa4C
+ FRyl+irlFM3KKOaWTwMjo1FEx6X8zm66L+izqES4tbhbyUDHJQ1d132yqBbvO0KzNir/AnfjPyi
+ GTyRdpiyJATJN+8IiClFTy3/VOTdyRbjBdbpL3Kuc1UY0i6nGwbVwGIEXA7ZAKZ0ln0MPQK8omi
+ h2mrPaxfxLSkJS5teEpSxwaPRRNH4jbFxAyyC9+Q9ycsvxQlOO7tBFuk2h5fXg7ipx6gO0ZDU2j
+ NmpwkjVqt82AwIjQFkYBprD8MsVGua3Gm+xf6w5fqsYaXjWfv4WOGI1m6kQG1gjvLR8nf/AVvuS
+ bfQB4ASJLENqKhvvCczBN/bAr6dcaPZFScoebxIvFQPUbyhHqO+yh3NU1DD6AM0liN3lpNxKbGS
+ fU+Wk6Hfz/eIvg9asj8VU1wloB8ChA==
+X-Authority-Analysis: v=2.4 cv=S6TUAYsP c=1 sm=1 tr=0 ts=691f38d8 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8
+ a=6wk0BdiTjokcx5KyKl0A:9 a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-20_06,2025-11-20_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 clxscore=1015 adultscore=0 spamscore=0
+ impostorscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0
+ priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2510240001
+ definitions=main-2511200105
 
-On Thu, Nov 20, 2025 at 08:41:32AM +0200, Zhi Wang wrote:
-> On Wed, 19 Nov 2025 17:19:12 -0500
-> Peter Colberg <pcolberg@redhat.com> wrote:
-> 
-> > Add a new SR-IOV driver sample that demonstrates how to enable and
-> > disable the Single Root I/O Virtualization capability for a PCI
-> > device.
-> > 
-> > The sample may be exercised using QEMU's 82576 (igb) emulation.
-> > 
-> 
-> snip
-> 
-> > +
-> > +    fn sriov_configure(pdev: &pci::Device<Core>, nr_virtfn: i32) ->
-> > Result<i32> {
-> > +        assert!(pdev.is_physfn());
-> > +
-> > +        if nr_virtfn == 0 {
-> > +            dev_info!(
-> > +                pdev.as_ref(),
-> > +                "Disable SR-IOV (PCI ID: {}, 0x{:x}).\n",
-> > +                pdev.vendor_id(),
-> > +                pdev.device_id()
-> > +            );
-> > +            pdev.disable_sriov();
-> > +        } else {
-> > +            dev_info!(
-> > +                pdev.as_ref(),
-> > +                "Enable SR-IOV (PCI ID: {}, 0x{:x}).\n",
-> > +                pdev.vendor_id(),
-> > +                pdev.device_id()
-> > +            );
-> > +            pdev.enable_sriov(nr_virtfn)?;
-> > +        }
-> > +
-> 
-> IMO, it would be nice to simply demostrate how to reach the driver data
-> structure (struct SampleDriver) and its members (I think accessing one
-> dummy member in the SampleDriver is good enough, not something fancy),
-> which I believe quite many of the drivers need to do so and they can
-> take this as the kernel recommended approach instead of inventing
-> something new differently. :)
+On 11/20/25 4:46 PM, Manivannan Sadhasivam wrote:
+> The Sandisk SN740 NVMe SSDs cause below AER errors on the upstream Root
+> Port of PCIe controller in Lenovo Thinkpad T14s laptop when ASPM L1 is
 
-Thanks for the suggestion. I added a `private` member to SampleDriver,
-similar to the rust_driver_auxiliary sample, and extended the VF-only
-path of probe() to demonstrate how to reach the driver data of the PF
-device from a VF device.
+                             ^ Microsoft Surface Laptop 7
 
-Peter
+Konrad
 
+> enabled:
 > 
-> Z.
+>   pcieport 0006:00:00.0: AER: Correctable error message received from 0006:01:00.0
+>   nvme 0006:01:00.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
+>   nvme 0006:01:00.0:   device [15b7:5015] error status/mask=00000001/0000e000
+>   nvme 0006:01:00.0:    [ 0] RxErr
 > 
-> > +        assert_eq!(pdev.num_vf(), nr_virtfn);
-> > +        Ok(nr_virtfn)
-> > +    }
-> > +}
-> > +
-> > +#[pinned_drop]
-> > +impl PinnedDrop for SampleDriver {
-> > +    fn drop(self: Pin<&mut Self>) {
-> > +        dev_info!(self.pdev.as_ref(), "Remove Rust SR-IOV driver
-> > sample.\n");
-> > +    }
-> > +}
-> > +
-> > +kernel::module_pci_driver! {
-> > +    type: SampleDriver,
-> > +    name: "rust_driver_sriov",
-> > +    authors: ["Peter Colberg"],
-> > +    description: "Rust SR-IOV driver",
-> > +    license: "GPL v2",
-> > +}
-> > 
+> Hence, add a quirk to disable L1 state for this SSD.
 > 
-
+> Reported-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> ---
+>  drivers/pci/quirks.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 214ed060ca1b..a6f88c5ba2f4 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2525,6 +2525,18 @@ static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
+>   */
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
+>  
+> +static void quirk_disable_aspm_l1(struct pci_dev *dev)
+> +{
+> +       pci_info(dev, "Disabling ASPM L1\n");
+> +       pci_disable_link_state(dev, PCIE_LINK_STATE_L1);
+> +}
+> +
+> +/*
+> + * Sandisk SN740 NVMe SSDs cause AER timeout errors on the upstream PCIe Root
+> + * Port when ASPM L1 is enabled.
+> + */
+> +DECLARE_PCI_FIXUP_FINAL(0x15b7, 0x5015, quirk_disable_aspm_l1);
+> +
+>  /*
+>   * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+>   * Link bit cleared after starting the link retrain process to allow this
 
