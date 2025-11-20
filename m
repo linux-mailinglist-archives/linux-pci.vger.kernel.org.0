@@ -1,162 +1,152 @@
-Return-Path: <linux-pci+bounces-41741-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41742-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D814C72A2B
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 08:42:35 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EBE6C72A9A
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 08:53:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 229E83433ED
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 07:41:48 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B9660345C25
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 07:52:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44C59307AE5;
-	Thu, 20 Nov 2025 07:41:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5BBF2D46A1;
+	Thu, 20 Nov 2025 07:52:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QNiHfv2S"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ICads1Dq"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080F62D73A9;
-	Thu, 20 Nov 2025 07:41:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFDA27B349;
+	Thu, 20 Nov 2025 07:52:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763624502; cv=none; b=Ogami4kxpQX2NQUN/R3M3ro/TLjpu0HfoiOpxBY3N7KUo1pN7UIE6aDjprhmo3im11c9TR5rFm3lWeMk4xHOCiq6V1XzKIB9uhTNpbhn4QSB1HZa4uu2aSZ4Eb1rRkQ2EiPHzWPcb+tyjKwD7757hmPqFW80sBT+xbh+wb4yYew=
+	t=1763625167; cv=none; b=dMqykpk7HiJZ6oU1rcNlZXDna3+tlb9iBxTyuR4lpZtNQIcYMjYzKPh7e6pGBK6r3q2BC8zsVvPxLyAGubji1VQh0bzkF2LP3IO0aoNfQydAZZ8Ho/k4sMXTDZYsgryqHQgElQEVMgjKzThUMNgYdJZSp8rkd20oZ/o+6S9PrQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763624502; c=relaxed/simple;
-	bh=RzCrc8OP4MQJ51Y3Cp/KnGNHr8pH8H/uOuzXNgsdf0I=;
+	s=arc-20240116; t=1763625167; c=relaxed/simple;
+	bh=PCcS8iU+MQD7IjGPMGhvdSTgD9hnRAL2owebjIiNWS4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iU93IXi/OAI6lnY13C82Mphth7d33tck1ulOYaf4CAG9u5oeFL7ku0Ni4r/YRsFGISGwNx/JzG4RUJFcHYrBkE/ox7IQpULWZVa6mM90g0G2kHSaxOy4dtqb/Xv3lrNdk+klqQquIHLgireY0TS+MkR5sYrS3TQ2FHCAm3Y7Tp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QNiHfv2S; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE678C4CEF1;
-	Thu, 20 Nov 2025 07:41:40 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=s5750zsotrb3RO4cFxgL4LwW5ySZFA5IHYp/GWIyeTaqd42+uGPAQAi1mXk5AE7+4du2vFt0IStn8gV/5EB2g6A8sdttVIrtLllNMAr8cpEtBKfdUvfOn6YNGqwbG+7tB0BnZX+GPMbRAHy3ZW1mzOUwjcPpp52KGrw0c8IrpZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ICads1Dq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43EE6C4CEF1;
+	Thu, 20 Nov 2025 07:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763624501;
-	bh=RzCrc8OP4MQJ51Y3Cp/KnGNHr8pH8H/uOuzXNgsdf0I=;
+	s=k20201202; t=1763625167;
+	bh=PCcS8iU+MQD7IjGPMGhvdSTgD9hnRAL2owebjIiNWS4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QNiHfv2SAaFyrrm6ZhCR8ucSYnRrrdzPojcMIcohfbtDqJS/JJSe9Cm0EPsn0RMT1
-	 9FMh/DEL9DggTQsNRNFC6ZevNso3DG/8cJnjGqx1F973WBJx3zNUrkfRwIJTDtGniq
-	 T1iBja1OPDeFawU+b9NyxYO1eLXP5bDXy+x7TMExTwuaVkaO9yRhyCB63N85FD3fx7
-	 OxMoyn5s+7tJhzxI145c0GzmDIWiwooPR63zC0GIQoVhzfmUIy/rjbN0wvDQAasxv8
-	 4RKMSzrJoBj9dPKY+MZCCAfPLwtiZfQrtzxCUQWESd/6QU20I/oRvqEOXzQEx5F9s1
-	 fwoUvg48Mzzlw==
-Date: Thu, 20 Nov 2025 09:41:37 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [Linaro-mm-sig] [PATCH v8 06/11] dma-buf: provide phys_vec to
- scatter-gather mapping routine
-Message-ID: <20251120074137.GR18335@unreal>
-References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
- <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
- <8a11b605-6ac7-48ac-8f27-22df7072e4ad@amd.com>
- <20251119132511.GK17968@ziepe.ca>
- <69436b2a-108d-4a5a-8025-c94348b74db6@amd.com>
- <20251119193114.GP17968@ziepe.ca>
- <c115432c-b63d-4b99-be18-0bf96398e153@amd.com>
+	b=ICads1DqUmvuOZnOFex1dZonyIVaAiCKcFopkE5vgQTgNsmqyF9C4hlxGvSPvVhMJ
+	 /ZWMz8QmJxGa5zbVBxEy//i/s6NCd+43+QiDg/7m4fAjeoI8Wct6hyvws2ZIXNrSpW
+	 gxhwsUgO5UHfIEgAp7t/iCYAllfLLDgPkJE//v4IyTL5k2kXBdxrjvHqacy5bxDxGb
+	 4TRb795eNwFrkgvLGAbAz/hthBW49c9W8ZjRgMGYpN+JNd+5bMr2zmdsgCWfYGhx4I
+	 VZFH4I2GtjoQZf6EKCHf8FcyMoB8o/WrEnXoYL/5OpRjDHw7gIrDHnLcGzK+iGTQxl
+	 psiNMSKa5dOEA==
+Date: Thu, 20 Nov 2025 13:22:19 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
+	Shawn Lin <shawn.lin@rock-chips.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+	Kever Yang <kever.yang@rock-chips.com>, Simon Xue <xxm@rock-chips.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, Dragan Simic <dsimic@manjaro.org>, 
+	FUKAUMI Naoki <naoki@radxa.com>, Diederik de Haas <diederik@cknow-tech.com>, 
+	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Conor Dooley <conor@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Hans Zhang <hans.zhang@cixtech.com>, linux-tegra@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, kernel@pengutronix.de, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 1/4] PCI: dwc: Advertise L1 PM Substates only if
+ driver requests it
+Message-ID: <lhunx3lpx3fgzyszf3librekhlrqtewcu664i7anj2s54j7kcr@52tt66auzpnr>
+References: <20251118214312.2598220-1-helgaas@kernel.org>
+ <20251118214312.2598220-2-helgaas@kernel.org>
+ <aRz0ak6onKzZs2lY@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c115432c-b63d-4b99-be18-0bf96398e153@amd.com>
+In-Reply-To: <aRz0ak6onKzZs2lY@lizhi-Precision-Tower-5810>
 
-On Thu, Nov 20, 2025 at 08:08:27AM +0100, Christian K�nig wrote:
-> On 11/19/25 20:31, Jason Gunthorpe wrote:
-> > On Wed, Nov 19, 2025 at 02:42:18PM +0100, Christian K�nig wrote:
-> > 
-> >>>>> +	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
-> >>>>> +		dma->state = kzalloc(sizeof(*dma->state), GFP_KERNEL);
-> >>>>> +		if (!dma->state) {
-> >>>>> +			ret = -ENOMEM;
-> >>>>> +			goto err_free_dma;
-> >>>>> +		}
-> >>>>> +
-> >>>>> +		dma_iova_try_alloc(attach->dev, dma->state, 0, size);
-> >>>>
-> >>>> Oh, that is a clear no-go for the core DMA-buf code.
-> >>>>
-> >>>> It's intentionally up to the exporter how to create the DMA
-> >>>> addresses the importer can work with.
-> >>>
-> >>> I can't fully understand this remark?
-> >>
-> >> The exporter should be able to decide if it actually wants to use
-> >> P2P when the transfer has to go through the host bridge (e.g. when
-> >> IOMMU/bridge routing bits are enabled).
-> > 
-> > Sure, but this is a simplified helper for exporters that don't have
-> > choices where the memory comes from.
+On Tue, Nov 18, 2025 at 05:34:18PM -0500, Frank Li wrote:
+> On Tue, Nov 18, 2025 at 03:42:15PM -0600, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> >
+> > L1 PM Substates require the CLKREQ# signal and may also require
+> > device-specific support.  If CLKREQ# is not supported or driver support is
+> > lacking, enabling L1.1 or L1.2 may cause errors when accessing devices,
+> > e.g.,
+> >
+> >   nvme nvme0: controller is down; will reset: CSTS=0xffffffff, PCI_STATUS=0x10
+> >
+> > If the kernel is built with CONFIG_PCIEASPM_POWER_SUPERSAVE=y or users
+> > enable L1.x via sysfs, users may trip over these errors even if L1
+> > Substates haven't been enabled by firmware or the driver.
+> >
+> > To prevent such errors, disable advertising the L1 PM Substates unless the
+> > driver sets "dw_pcie.l1ss_support" to indicate that it knows CLKREQ# is
+> > present and any device-specific configuration has been done.
+> >
+> > Set "dw_pcie.l1ss_support" in tegra194 (if DT includes the
+> > "supports-clkreq' property) and qcom (for cfg_2_7_0, cfg_1_9_0, cfg_1_34_0,
+> > and cfg_sc8280xp controllers) so they can continue to use L1 Substates.
+> >
+> > Based on Niklas's patch:
+> > https://patch.msgid.link/20251017163252.598812-2-cassel@kernel.org
+> >
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> >  .../pci/controller/dwc/pcie-designware-ep.c   |  2 ++
+> >  .../pci/controller/dwc/pcie-designware-host.c |  2 ++
+> >  drivers/pci/controller/dwc/pcie-designware.c  | 24 +++++++++++++++++++
+> >  drivers/pci/controller/dwc/pcie-designware.h  |  2 ++
+> >  drivers/pci/controller/dwc/pcie-qcom.c        |  2 ++
+> >  drivers/pci/controller/dwc/pcie-tegra194.c    |  3 +++
+> >  6 files changed, 35 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index 7f2112c2fb21..ad6c0fd67a65 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -966,6 +966,8 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+> >  	if (ep->ops->init)
+> >  		ep->ops->init(ep);
+> >
+> > +	dw_pcie_hide_unsupported_l1ss(pci);
+> > +
 > 
-> That is extremely questionable as justification to put that in common DMA-buf code.
+> And, I don't think EP need clean L1SS CAP flags. If EP don't support L1SS,
+> it should be force pull down #clkreq.
 > 
-> > I fully expet to see changes to this to support more use cases,
-> > including the one above. We should do those changes along with users
-> > making use of them so we can evaluate what works best.
+> EP don't know if #clkreq connected in host boards, assume EP with same
+> software, which can run at two difference host system, one host system
+> connect #clkreq, the other system have not connect #clkreq.
 > 
-> Yeah, exactly that's my concern.
+> otherwords, support-clkreq property should be only for RC side. not EP
+> side. EP side l1ss support should depend on specific epf function and
+> controller's capablity.
 > 
-> >> But only take that as Acked-by, I would need at least a day (or
-> >> week) of free time to wrap my head around all the technical details
-> >> again. And that is something I won't have before January or even
-> >> later.
-> > 
-> > Sure, it is alot, and I think DRM community in general should come up
-> > to speed on the new DMA API and how we are pushing to see P2P work
-> > within Linux.
-> > 
-> > So thanks, we can take the Acked-by and progress here. Interested
-> > parties can pick it up from this point when time allows.
-> 
-> Wait a second. After sleeping a night over it I think my initial take that we really should not put that into common DMA-buf code seems to hold true.
-> 
-> This is the use case for VFIO, but I absolutely want to avoid other drivers from re-using this code until be have more experience with that.
-> 
-> So to move forward I now strongly think we should keep that in VFIO until somebody else comes along and needs that helper.
 
-It was put in VFIO at the beginning, but Christoph objected to it,
-because that will require exporting symbol for pci_p2pdma_map_type().
-which was universally agreed as not good idea.
+'support-clkreq' DT property is only applicable to the RC as per dtschema. So
+using it in the EP driver is wrong in the first place. We could add it to the EP
+schema, but that should be done first before relying on it in the driver.
 
-https://lore.kernel.org/all/aPYrEroyWVOvAu-5@infradead.org/
+Also, I do think that the device capability should accurately reflect whether
+L1ss is supported or not and not assume that the EP will pull the CLKREQ# low
+when it is not supported. If the L1ss CAP is available on both RC and EP, host
+software may enable L1ss and expect it to work.
 
-Thanks
+But enabling/disabling the CAP for EP should be done later based on either the
+DT property or controller specific flag.
 
-> 
-> Regards,
-> Christian.
-> 
-> > 
-> > We can also have a mini-community call to give a summary/etc on these
-> > topics.
-> > 
-> > Thanks,
-> > Jason
-> 
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
