@@ -1,344 +1,264 @@
-Return-Path: <linux-pci+bounces-41832-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41833-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id C78D2C765A6
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 22:17:14 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B617C76600
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 22:29:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B2DA74E01E0
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 21:17:13 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id EED982949D
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 21:29:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91BBB2C11CB;
-	Thu, 20 Nov 2025 21:17:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ECA330DEAD;
+	Thu, 20 Nov 2025 21:29:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FYxA2GBO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kdDNleF0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010068.outbound.protection.outlook.com [52.101.85.68])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57BC221271;
-	Thu, 20 Nov 2025 21:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C520245012;
+	Thu, 20 Nov 2025 21:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763673431; cv=fail; b=SFy61pyEIxj5mFWX2oLSh6obRWarVxMQwWhnMDaOIqWmR7sXPt8UIWSzB44NrneVW3yuYIKiVFhgo6Lzm8gE2S4b/a24T2PgtMVt0VWvkAMoKjtXgUHcSIgAk6MHkOsQmNHFKQ77YoTDL2aZFIpDRc1mPc6snTIN3jBi+jhSc1U=
+	t=1763674139; cv=fail; b=aN9Cn8z2yyaWH9u1mFUNPbqz12c6oQy5VTeivxC6qBiQNRjWHf3+BJczLPOA3mVKMYQyv/bhyFMWgFVfZBWju4CoaRQE8vGXvsycuXllhMEyzitVjSopwZZ9ppKybuobpaorzUKcOV15yIwqwo3R8LKdYXRWbtoUzoa+z4uKsd8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763673431; c=relaxed/simple;
-	bh=5Vzfz1TYiLv2A5D3aMYepOMP4N3OP/4Fu6ikn0W5y6w=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IauuDTuOTmBfT5eCVB7uRhYLzB6elibgwv5a+EPcm5yOZpqGG+y6H8v7rbJJciQXCI2TETGKyyNEuAHUsHfXP61+uepmQL7g9coOu656JLiRirZe06Z3a9OpiFezQLzXziXS/xS9CEo/fL13SstM2PsFDE7SNP0ZL2n8iASWOJ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FYxA2GBO; arc=fail smtp.client-ip=52.101.85.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1763674139; c=relaxed/simple;
+	bh=9XTi1YFUCgRfCYkw2G9+6QtXkIUP/+CBWQict3TsYAI=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=KcxVW8+fSHN3WQHF8VViOa5niUSMQLR1EYmT/BJkmUgy1PIT1he4rH+Tnq2ekYApkgfD9zSdoh6Z3Xuac/J1dsPmgH1WF3iwLn1XxsZKdBCE2PCqMx5Efc+ZBt19OYi+FSqxFQX/5AugxtpPpbml4G01AKsyM7AuUDZwEI1K3oo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kdDNleF0; arc=fail smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763674134; x=1795210134;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=9XTi1YFUCgRfCYkw2G9+6QtXkIUP/+CBWQict3TsYAI=;
+  b=kdDNleF0SuXKg8EUvSzB/CSlXBEdVQ72H7ttueaq1z6OPwyKRiup0lBw
+   51OMdgjHQ69MrgSs2AC83tUscwVytdgX7tXP8SkssLig0edY9MdyOlxdB
+   ujs1Svt0aK6NcA/zkQGJJWwpnkbNxOCM1lkiqLT1Nvbm3Qp4tQaQieBRq
+   DVHD6pckoU+kLU46YUEqQU7cBAA5IFCB3fuqE1Ug56lV7n1+XA1dg/LHr
+   j6JRv7TGPyaEHKYVtTvXhm8S84uEw+WsbZRsoQ/8h5zAg3SiYpiwGWHqp
+   ByVtSnLsRYTM5cpc1S6CCDVvEIo+yisidks4T0ZHKrMM5vqAuAtBhaWbH
+   w==;
+X-CSE-ConnectionGUID: EuPD9xwkTpusyjIbwPeAew==
+X-CSE-MsgGUID: vyeoMvXAS3uDTYh5xv0twA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11619"; a="64951338"
+X-IronPort-AV: E=Sophos;i="6.20,214,1758610800"; 
+   d="scan'208";a="64951338"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 13:28:49 -0800
+X-CSE-ConnectionGUID: oWLAQx48SMW1LwDtumxH8g==
+X-CSE-MsgGUID: QYcCrkw6StGbaEuZlTcYYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,214,1758610800"; 
+   d="scan'208";a="190785980"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 13:28:49 -0800
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Thu, 20 Nov 2025 13:28:48 -0800
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27 via Frontend Transport; Thu, 20 Nov 2025 13:28:48 -0800
+Received: from MW6PR02CU001.outbound.protection.outlook.com (52.101.48.11) by
+ edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Thu, 20 Nov 2025 13:28:48 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jmtmAkJPatNM49adMoSs6gT9s5froiBrhp4Sv65KczgbiCnONaRH4V45fKeYZK7+ZCgWKirOqgzSefYOmc73AHjGsjjHqK5qbxkd4O7U7WCtU+/es1T0We29dfCUMgNKB8XVfiWZr1doC2SB+2NwbaGncX+xcAbIZs0ZgH1+Yq3zb1hgMNLQIGk4zsACHAuYhaeJFJa0QjLTMQzg8ccelHbkJKUDRf+tZLQfDvZeCxpUiV9eMqY4R4p+59Td60wLdWVYdWpz9903Ld66xAVcn7aSwsa5INKVoN2oPwTUxRYD/UzykCBTnFUdR1oWHNyjC7dfCt2aqfrV8YH4zhvkpw==
+ b=x0CHysjVKiVdbGO6pJq899OI7oitmRS2H5r2quFsXQO8ytZ+rUQm+fY23umZ7ZMbmHGuAyvM84NLAD1f5zoLNiPnu0t3uNchpsfvu0lyZGwmkxelkwTK4FhFCrhMywpvQWGB8OpinTT+T7pWKCxC/waddweexkGhuIo/VcezoDw07+PW08sMHBAphOpgadl8Hs5VkfvV7+jT1yr07JOAr33uyafnSx/+Y3L/VRrXf0dXa8rjNRuuhmjLnHT8wSodcl5Uqknd8/mN++A3Z1VHD8OWHSjAzGG1C0eVTfNewnuRwR1BOvNQ+2pZ+327NDWjW6UUx0+u1hm31jJFdwyppg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ofg/Fr6pnMDnkbzhaPlKs8aBUHD1tcK0XogaWI6F0IA=;
- b=aqFg/JgnWyCYNoYUJR8jclh3Ju1eZhdwQgacjl6MAVIMAOPRydiiSi9lOl/bTxHw/SWH122HeXoRqRCQV2/Rd3YgAfMdMZlXdx19UAtUk0vOLVuhz8hvcx6ZZqqUpazRnlNECttH2kT1uGe9IDt/TVU/rlCjqIx3oXX6nmgQY+Pl1r867ROl/8Pwx1ohbY09dFpBcFDk4BDTczQzD5Wc9AgPGQ4bWpO8+XVtlEiU2sJJNsBpMaI1R5EWIovUIogXp2cycZihNq7P0e+QFoor3NYZdb8s1JyqQQzrRbhTw2ZGaDBAO/vC6iXr1PnewK6qAUGW1gkJarm5vPkxDBKOJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ofg/Fr6pnMDnkbzhaPlKs8aBUHD1tcK0XogaWI6F0IA=;
- b=FYxA2GBODryH7vmzezJwKw1zmj+2WuTKXyYfMZ+QXePzbCw3J6K9KX0X/w4B6timY6pU7thOyEXtT4jKYruPiSSM4FIfZKdi0SBWnQ4p0zBmDGo89cz9w4azlBidh6hG5AQso7yrpoI5H80FUUWNY9VRA120zcYhMDqO2nZKl0PVagl7rtBq85iBWhG48gFI9sxGCLrqArbw8W8RBzkV9wmu6qXRK32tjq7Q0NathLehUEBTLbVLaMfcC1hE8CMIrCKNcsR1qlQpciF0Fl+10woxK05cwQRAs648/+v9kV8oYf0/8ufeRbT1eyj1qFuCofvmZ8tBhGimYuoCyGQy1w==
-Received: from PH7PR02CA0024.namprd02.prod.outlook.com (2603:10b6:510:33d::10)
- by DM6PR12MB4201.namprd12.prod.outlook.com (2603:10b6:5:216::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.11; Thu, 20 Nov
- 2025 21:17:05 +0000
-Received: from CO1PEPF000044F7.namprd21.prod.outlook.com
- (2603:10b6:510:33d:cafe::c4) by PH7PR02CA0024.outlook.office365.com
- (2603:10b6:510:33d::10) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9343.11 via Frontend Transport; Thu,
- 20 Nov 2025 21:17:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CO1PEPF000044F7.mail.protection.outlook.com (10.167.241.197) with Microsoft
+ bh=jXxbl3qTLg3FxY2O38hQqyp+rM0tq7aWI91d875EkjE=;
+ b=ag2dICFsrILmIwh8UbIBpYwFecH/B2npOCVzwLjaCnCCPLwR70NgSkpd0qkriZ2MULtNkwuCz8mJTG+2yRSuykGsRSXJydzKzOS+Ce/pUjFkjwTcH/dDXMinCMlJQTz93YPdXe6Z3aeSMKiH0G45bq/AV9NKNjQsRUjQs8GK8nvEUX6Qgcv4DVUH4wVIFglQh60XSz3P4ISnPNPdg/2wnHm5ljeEwhCG6Cdt8z22XvwCIAppSgZX5+2GrJnoePdnhQEpwybwAqG1DVtUOOP2C9zb2KFdx7ok3qakHm5qsDfAJfYix9MGU5nWsNnGiqL+k982uS0iUsCsK9u3m0F1Gg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DS0PR11MB7959.namprd11.prod.outlook.com (2603:10b6:8:fd::7) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9366.1 via Frontend Transport; Thu, 20 Nov 2025 21:17:04 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 20 Nov
- 2025 13:16:34 -0800
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 20 Nov
- 2025 13:16:34 -0800
-Received: from inno-thin-client (10.127.8.13) by mail.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server id 15.2.2562.20 via Frontend Transport; Thu, 20
- Nov 2025 13:16:25 -0800
-Date: Thu, 20 Nov 2025 23:16:24 +0200
-From: Zhi Wang <zhiw@nvidia.com>
-To: Peter Colberg <pcolberg@redhat.com>
-CC: Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kwilczynski@kernel.org>, "Miguel
- Ojeda" <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
-	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, "=?UTF-8?B?QmrDtnJu?=
- Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>, Abdiel Janulgue
-	<abdiel.janulgue@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>,
-	Robin Murphy <robin.murphy@arm.com>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Dave Ertman <david.m.ertman@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
-	<linux-pci@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>, Joel Fernandes <joelagnelf@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH 0/8] rust: pci: add abstractions for SR-IOV capability
-Message-ID: <20251120231624.5cac712b.zhiw@nvidia.com>
-In-Reply-To: <20251120203444.321378c2.zhiw@nvidia.com>
-References: <20251119-rust-pci-sriov-v1-0-883a94599a97@redhat.com>
-	<20251120083213.6c5c01a5.zhiw@nvidia.com>
-	<aR8t0XdZVyN-0mak@earendel>
-	<20251120203444.321378c2.zhiw@nvidia.com>
-Organization: NVIDIA
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.33; x86_64-pc-linux-gnu)
+ 15.20.9343.11; Thu, 20 Nov 2025 21:28:46 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff%4]) with mapi id 15.20.9343.009; Thu, 20 Nov 2025
+ 21:28:46 +0000
+From: <dan.j.williams@intel.com>
+Date: Thu, 20 Nov 2025 13:28:44 -0800
+To: Alexey Kardashevskiy <aik@amd.com>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>, "John
+ Allen" <john.allen@amd.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David
+ S. Miller" <davem@davemloft.net>, Ashish Kalra <ashish.kalra@amd.com>, "Joerg
+ Roedel" <joro@8bytes.org>, Suravee Suthikulpanit
+	<suravee.suthikulpanit@amd.com>, Will Deacon <will@kernel.org>, Robin Murphy
+	<robin.murphy@arm.com>, Dan Williams <dan.j.williams@intel.com>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, Eric Biggers <ebiggers@google.com>, "Brijesh
+ Singh" <brijesh.singh@amd.com>, Gary R Hook <gary.hook@amd.com>, "Borislav
+ Petkov (AMD)" <bp@alien8.de>, Kim Phillips <kim.phillips@amd.com>, "Vasant
+ Hegde" <vasant.hegde@amd.com>, Jason Gunthorpe <jgg@ziepe.ca>, Michael Roth
+	<michael.roth@amd.com>, Xu Yilun <yilun.xu@linux.intel.com>, Gao Shiyuan
+	<gaoshiyuan@baidu.com>, Sean Christopherson <seanjc@google.com>, "Nikunj A
+ Dadhania" <nikunj@amd.com>, Dionna Glaze <dionnaglaze@google.com>,
+	<iommu@lists.linux.dev>, <linux-coco@lists.linux.dev>
+Message-ID: <691f880c7811c_1eb851006e@dwillia2-mobl4.notmuch>
+In-Reply-To: <442d4c48-8d6a-4129-b21a-cc2de4f0fcd0@amd.com>
+References: <20251111063819.4098701-1-aik@amd.com>
+ <20251111063819.4098701-7-aik@amd.com>
+ <20251111114742.00007cd8@huawei.com>
+ <442d4c48-8d6a-4129-b21a-cc2de4f0fcd0@amd.com>
+Subject: Re: [PATCH kernel 6/6] crypto/ccp: Implement SEV-TIO PCIe IDE
+ (phase1)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY3PR03CA0015.namprd03.prod.outlook.com
+ (2603:10b6:a03:39a::20) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F7:EE_|DM6PR12MB4201:EE_
-X-MS-Office365-Filtering-Correlation-Id: 98d968e1-41f9-44ea-317b-08de287a2754
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB7959:EE_
+X-MS-Office365-Filtering-Correlation-Id: 78ccb8fa-464d-4da5-4c29-08de287bc9db
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YW8n3aHRxwCsTu2jlI2AkMSU9n8nurkm8h6c8I4EUeIusjFAEBHPs7nVix1N?=
- =?us-ascii?Q?p9Cl2tvLqa1/CYgOH3xPK2HhbouQ+BF+2zUUStVapxQGS3114b60dCuzeH1C?=
- =?us-ascii?Q?TBVASwMNgCHFuKlrGtMku/o8AHz1s8eRIygEaQM56Fsit1fbHK3gesW8p7RK?=
- =?us-ascii?Q?F5OnoClAdaP1zC7RBfXVB0T9TmQIHBHLRy+K0UVD3L18d/1ck1MiPPVuHa19?=
- =?us-ascii?Q?qa+fQCqw2+mbfrLzETRT9RbILgY1CuegU+i3md3zxyVoIqOgoImSfquEPfGf?=
- =?us-ascii?Q?MwY4/2BGdkLwYt4xQRGuvHOJzzDEjbG6ESu2BxpfK0PxHDKIqdXHDUZi7Piy?=
- =?us-ascii?Q?2e/JdFFcPjTQ5HZ0NXT33VQIsqeuSygxP24QikoZC9A6R9U95o7aH2s8l5Jh?=
- =?us-ascii?Q?9acpYL7HQqyJ/LnjMnmjXkkOpkuJZ1FUi1ErSHJ+BnkzbHZH39fgwoTnP/UU?=
- =?us-ascii?Q?PKRYuWQC5NElDifmNyu3380xt7PpfEHBr41OdA54NgidUawYmCAjzYOiMK5T?=
- =?us-ascii?Q?deSASU5cOJzlGaS/F0ZRhLkNNlwAmboJNFnmM0k4C4bsqjePqSwMzhXzzoVU?=
- =?us-ascii?Q?R19341rrj/ndwnzkuT1cUU8eJVikphzDswLisHj73nzpCxkLEvCZcOrcoEV6?=
- =?us-ascii?Q?dcskFk+YvTlwiwa9BLhh2C057nChyDjVAR1dNjB1Syx0K4hpYIda041bn088?=
- =?us-ascii?Q?P0e0LZjzlLFYBU/XlTvFUGJsaWQ8JXimhEB0A/etomBRy6zD4bDcwE0IDmeP?=
- =?us-ascii?Q?Rp/J4xbbwh1SoTX5ZEnJNUa5Gh5LYGRGiQXucLBdkZnlCqln5nkwLYsAT+XD?=
- =?us-ascii?Q?OSmLw0otcebPZX9wmFQOoG6/izHRIH0vMqGRghRpgg94/hP93KuHiWdUNOjU?=
- =?us-ascii?Q?qvla6KctQs3Mi+UIAEz9PwCJWPT8QDa83ynHsvW88V+RccyRv4ghZRhTpDo+?=
- =?us-ascii?Q?Z9Fvridn+FliLEiCJCMQrgNY6IExS3TOmjoYaFRGLdqx68Eqk0B43zMEpe7u?=
- =?us-ascii?Q?hLSiKI1l91hcXHdUSsF7ezLgLEaqnpWj4YLGltcvASzclNf8Ja6X6KdlWZ+D?=
- =?us-ascii?Q?SENQpgTweK/2g5tTc8ZKWW5YKHpwpgRVok4VnOmITviY6tjZuplDJI9syyfj?=
- =?us-ascii?Q?M6nfnqcpK1r1hH2+JY+PiPxd70DKEi2eXZS3gkRSYF/2yxyBZX4Ad70A1FfK?=
- =?us-ascii?Q?N0wxf3wH/2tvW0SfZ45lJcdXhPTA3kuXaQh2WzNvcevQSKfcT3BEiW4YT1gb?=
- =?us-ascii?Q?lC9dDHdS1ftrES+L5j7Nk/ocQBAhH2xvK187pNMT0CBhM9R5RQsBcXZ6CK1q?=
- =?us-ascii?Q?a6iGTbTHEzejecEODyTLDhYfhOMI+QRJKivvKQbWDKydAAvEwqbNRrTGw/0r?=
- =?us-ascii?Q?cNS2SA3Vde40lyKksEKlaUyqo3zQ2nSYra9tu7N/VsjZdoqVk5zZ0vwVlqe2?=
- =?us-ascii?Q?IcGgvrUXdBqzyw3DrHizg6/ogLC7YsINJuU/hAShFZkWH7myGlTHcPM89lku?=
- =?us-ascii?Q?SqRJoh685aFJvVjpYnEY+1axodGqs5hg77vW0/VkXFvrMl6wzadL+atY4Rx1?=
- =?us-ascii?Q?5LNpqKSDUgvLHXghT/d7u6e2rgJ8b1/29nw8usNi?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2025 21:17:04.2600
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?eXZiS1NEcmUxc20xaEQ1UHlidHJKcW1ZQnhjdjNMYklpNTNCVDdQamg0amVk?=
+ =?utf-8?B?dW8vbmo0N2RVTjRaUjc3MHN6bGN5d0JvbGRyUWdIZlZlbXV6VFdiRnpHSWxx?=
+ =?utf-8?B?UE4yQWwvNVhUYlJlcVFUNjVaT1FNdzMyTEVYb09LL0xXeGFPZ09RWmN0Tndi?=
+ =?utf-8?B?SExYSHFIcHc5TkxFTVZMVDgrdk5Ka1VkbXdLaDMvbXlvZ2FlU3hvMTVhVGNU?=
+ =?utf-8?B?Qks2UDJLL1NCNzl5VHp1L1FzSEw3Y05zakt5bEZ4SXNubVk1b3pZNjhBWkZh?=
+ =?utf-8?B?d1k0V2t0K2tSUk9tditoZUJtWDBSbDVjYmdoZjNYSnlFdU5oVDdwTXFhT2gx?=
+ =?utf-8?B?Q3FldEhrSUVVcWtjalJkNjk4RmhhZEVBSWVGaVlYRndnZXFQRUZWYnNDZlN6?=
+ =?utf-8?B?NkQyKzBwbGFMRG5OcE9aekxVMmRNeHRpRG5CWmtZUm5yZWNsak1yNUszbHpH?=
+ =?utf-8?B?QjlHelVISitVcVJPVldKTkU2MHFGQ3A5M1NVczZ5ajdId0pmVEdKS0FSTXda?=
+ =?utf-8?B?QjR5c0FPMFdScjU5dmYwU3JsNkR4VzBhemI4WktuTWgyYklNK2Y1M051MTZ1?=
+ =?utf-8?B?clRMMG9uOU9yY3ljS1VlQkZXUzYyZHB3TU50NVlralBqNUh6RlE1Y3hWbGpJ?=
+ =?utf-8?B?RE1QMnJFVzVNRm5hZG4vWnZ1OCtta2hsT0FXUmx5b0MzZnhoK25oUDViRVA5?=
+ =?utf-8?B?QlpaYWNZOTlkb1J4NVgwN3MvTVVIVEZ1WWNyTDNzWnpvRHE3dGo4d0JvWVV0?=
+ =?utf-8?B?bm1KTFYvYkRHNUlqU0ZUdjJFajY5SVNlNWlZL3pDZDViMHRwYjVGV1FLWVA0?=
+ =?utf-8?B?NTdYalF5Kzl2YkVoZ1VxUlFNRndlNkhTZWI1Z1pGQ0NDWTcvREYyNzdpalc1?=
+ =?utf-8?B?aWxqWExQdWxXSyswTEQySmVTQ25VZUEyVGN4TmFJZjN3bXlsay85U014ZnlD?=
+ =?utf-8?B?Tis0UHpxcTdlNWppTFkxdXlxTUVjWjBFSVhlQWtoMEp0SUQzcW1jdDVWS2JU?=
+ =?utf-8?B?ZkFoYnh2WHRYbWhjckg3ZFVvOGIzdWtuMG9qNk8xQjQ2ek40aFJtY1dQYXlL?=
+ =?utf-8?B?K0FtTUpacG01emRLVzNLZ1JQNnZoTjg1K1N2Vm9vdkgrb3NFdnIxaE9ldFh6?=
+ =?utf-8?B?SzZvenN0ZHJpNzV1V2JsNE13QnduMVNWb1ovS2hwVEJoOEwxMFkxczUxNytL?=
+ =?utf-8?B?SHA0RENqVGFhWkQ0UnhlaTBDdHNRYW9JZ0k3QzRjVlMwU0hNT2V2T3hoRktJ?=
+ =?utf-8?B?RThoTmx6NjA2anBqK3ltRjY4VDhhL0RMS3NicVhVOXNJbGk4aWl1R1pDNVhG?=
+ =?utf-8?B?eWlJclYxV2x3RHFaZHpRaDc4RlZqVDBrMFIzT1hwd1pUb1VTM1ZHNW9QTUFv?=
+ =?utf-8?B?cEJPNmJQYThKQ05CYnFhdWhIUWJoTFUwUTFtZ3FOU1lHQ3J2ZjhpdjZ4RGdQ?=
+ =?utf-8?B?czc1SkI5YTJSMnJxVmloMUUzTncxdUVCek1JZGI1ZW1oRktNdUxjeDBhQStN?=
+ =?utf-8?B?dDY2Qmh3LzJ4UXR4RmVEb3dPRURjTUlWME1KaGJyN01mcERFdER1SXhlVTBT?=
+ =?utf-8?B?ZHRGN1hLb0d1V2tvMWJwSVh0SDFlZkRkUklEK24zVmdSUiswNFBBVE81VXZU?=
+ =?utf-8?B?VkVKUW53QW0yVG5PZ0ZwRWUxRWQzdHVtMHp6T3hlU25jN0JRTERuUTNVN2dB?=
+ =?utf-8?B?dzNXUDEyeW95anNTblBzOHdHYnZFNUp0R25kZHArU1NzcVg4MjBjS0FzOGYz?=
+ =?utf-8?B?N0UxSWhkbjZ1V0N5aSt0ZjZZWE92V3M4TE9UU2lGWWhyV0JHVDRrY3NmWlZI?=
+ =?utf-8?B?SXZnNXlTdkgzN3MzbFdLd045WXdnZURQQ3JBd0VsQzVvZ2lleWlVekZvVUFa?=
+ =?utf-8?B?V2h0Y3BKSG9hVEdxaDZpU0sxSzRoQ1IvaS96alZ4dERBRzY4YmtHN21waXB4?=
+ =?utf-8?Q?kpJHEU+kQLM+kBILoTTbLEQvx9ix8/Gq?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MTlsSzZSK2VWYUR2OElwVUs0ZGxieEhpbG9pY3JGaTVpYm5XRXBYYkNZTVNk?=
+ =?utf-8?B?ZEVCUW55dTJ1dnREMWF2K2RZa3lPR2NkeS9Rd0pUSVVpUXJDd2FQcHBaUElo?=
+ =?utf-8?B?eU1sNVlqVDdJYVEwYzlTcVBiTitLL0ZJR0k0dVZNMklwY3ArNnRNVTZwK0cz?=
+ =?utf-8?B?KzJXbWc2UjJBUnFjVU1XMElOZDZOcmhZRWc0L3l3SEl5NHl5aWJ5Q2pMKzBr?=
+ =?utf-8?B?ZzZkdFpPQVNZeDNWY0NhTm9Jd0RuRXNHeEZlSTM0MXNDa08xYWRlWk9RM3pm?=
+ =?utf-8?B?bElHZTlhM2dCdnFablFMcUhqQ0xiRHdOMHVWaVpmRTkwZFJ4V2FEWXd1WmUy?=
+ =?utf-8?B?S3BlZWZHVjZWb25pQlR4TVJKV0NpMTdTNXZIYXZYNXlNbGtCaHNpMnA4SkVz?=
+ =?utf-8?B?WnZDMTNlZ1h5RjBmdmxUSmNzUnlsbnFXSStNNllnU3RPQ3FlVlFoLzVVeFFV?=
+ =?utf-8?B?WmE5NHhtek9HdloyK0h0WkI2d2M3YnBZTEtQdXNqbnBENWN1cit6d3ZJZXhl?=
+ =?utf-8?B?ZHJYRDJiWkYrTUlnaVkxNTh5dUtER2kwYUJJU0svRjJvNFVsOGNOWVdZYWxi?=
+ =?utf-8?B?TVBzSTF6V2NUSnBtTUU1WVBRRDN3RFh1b3phU0JQRnFDZjNSWTJLSi9JWmJJ?=
+ =?utf-8?B?NkhrRkZaaXFEdjg2SEI3MG9yeHZEcjF0UjYyUEhTNHVjaU1yTkVLYnRGMXc1?=
+ =?utf-8?B?alVXL0svczF3WExrc0lTZEthWkdqckJUT1lLdHJYdTNLUXl5Rit0TS9tdkFP?=
+ =?utf-8?B?RkxnUVJSWW15T1Azb2k1NllESVFxa2dpSDJBN2h5bFZLbEFpQVVIK2F0TDdW?=
+ =?utf-8?B?cDdYai9Jc1BkMlhDaDNFVDRaOWFISGQ4WUVDSnpYS3JIdG96dVExRzV1OXNn?=
+ =?utf-8?B?SFNhK0JXN2cxckFQQ25OcTMweU1SWXhLdlY5MXZuZHZOc3FxcGFJcnRkZmVG?=
+ =?utf-8?B?VzdnTjE5WU9KZ3ZZcmZDOTRxb3BxQmxxZjgwTGk0a2VsSFVYUXBRWVRRelNh?=
+ =?utf-8?B?WjJRRi91cElFd2Y3RGp0dGxxMkFIZGJXWkQ1KzE4Ykl3emlCMmxuUzRPWVdr?=
+ =?utf-8?B?blVBbUVwY1FSMS9JR3NsZnZGSVdUdm1hdXRqRml0bVZoNVdkUzR5bnl4OUtk?=
+ =?utf-8?B?Tmw3c0V4NnNlSG03L1NVTGJlUFRNRTF5eXJOUVoyZjFmWGZnMUNLSzhRNkFO?=
+ =?utf-8?B?b29YclVDWWNxa2NmeWZWcjh2b2NxTmswNUdNSm5aekkzdDZMZ0Z6dnB2UEs2?=
+ =?utf-8?B?akFvMjcrcko3LzBVK2dyeU1FNmZhUWgrN3hkL21weEh4K3UzZG1tdzZBK01Y?=
+ =?utf-8?B?M2h2YTZzQlU5SVNzWnZ5T3M2NXNEZ29HM3lWdE9CSzBkb2p0cmtuTjhmcjR1?=
+ =?utf-8?B?T1pmOHBhems2bmJlZG1aTUF2Z29qTzZYM25xaEJudDl1bWhndmRRRFJJR2Rl?=
+ =?utf-8?B?RDZtQXpPbWlJcHhXeHdaNjZTZTBnZ2s5QTQ3a0gvdzZiVnhDSkVrRDNZUEdC?=
+ =?utf-8?B?c2xJczhWclRjcnJ3Q0NRYktWU3lRSXl3dG1zS2U4Sm9FVVBqK1A1VXkxbzdV?=
+ =?utf-8?B?R2FyV0RaZGpJVC9wRitqWXVpdldKMW5GVVQ5ZDIyZzFJTlU4aWpnQ25uT3ND?=
+ =?utf-8?B?cnpKZ1VGT3E4VnpLR2FhYXY4bDA4MEUvTFBZOHBvSlc1WTNoUUJBdlhkZHlB?=
+ =?utf-8?B?b3BlMTJCcXN4aGpzV0FyTVRyR1NtenRnYlFnd1R6Y3psZytQN0N5dVorTHVP?=
+ =?utf-8?B?dTM2d29BYXRrRUVGMkNlN0pZNlhFZHR6VmFsRzVtbVNhTTRYanlnYU5VU3dz?=
+ =?utf-8?B?QzJnZUpON21tamdtck1RcWhLMHEzVHZRRCsxbmJ2MFhIcTlvb1lLZ3VUZDJN?=
+ =?utf-8?B?OUFpcGNXQlo1R1l5ZXpWRzN1S011UjNiTXBBQ3JGaWFUYnREcmJLVHNkdVhG?=
+ =?utf-8?B?RU11NDRlSzNKSGFOTW9EcUlJTUw0UCs4VkFRbkZFTXdGV0pKbjBzV3d6Y0tm?=
+ =?utf-8?B?UGcwQU9ITG1KamNPa1BWcFNDd3QvOWQ4cHA1ZWVTdzU0bmpxNXdTV3Y4WVMv?=
+ =?utf-8?B?QThuUExWblQ4djFOVmMwSkpPdWw4MmNKcXZERGpBaG94cy85WmVYMTdyRGIr?=
+ =?utf-8?B?RlVDNnhESGh6QXdNSVQ3NERyRVlrVHlpZkIxb29pY083amk3OFB5ZWg2YXBW?=
+ =?utf-8?B?WlE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78ccb8fa-464d-4da5-4c29-08de287bc9db
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2025 21:28:46.7527
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98d968e1-41f9-44ea-317b-08de287a2754
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F7.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4201
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jPOCNIsVYp/bia82fKI+vfrBpkA3FbO48J757pQ4BAtLwcXtoQpWzWOAr0zMlqTfRRm2/fIX3cGhAI/IGJjdDxwAwB4HBCYJyXLX/0KYTD4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7959
+X-OriginatorOrg: intel.com
 
-On Thu, 20 Nov 2025 20:34:44 +0200
-Zhi Wang <zhiw@nvidia.com> wrote:
-
-I tested the patches on a L4, they are working perfectly. :) Though we
-can't bootstrap a vGPU and actually poke the VF so far, but VF
-enabling/disabling works without problem.
-
-[   97.447502] NovaCore 0000:b6:00.0: Enable SR-IOV (PCI ID: NVIDIA, 0x27b8).
-[   97.549467] pci 0000:b6:00.4: [10de:27b8] type 00 class 0x030200 PCIe Endpoint
-[   97.549499] pci 0000:b6:00.4: enabling Extended Tags
-[   97.549570] pci 0000:b6:00.4: Enabling HDA controller
-[   97.549894] pci 0000:b6:00.4: Adding to iommu group 88
-[   97.550649] NovaCore 0000:b6:00.4: enabling device (0000 -> 0002)
-[   97.550745] NovaCore 0000:b6:00.4: probe with driver NovaCore failed with error -22
-[  117.248723] NovaCore 0000:b6:00.0: Disable SR-IOV (PCI ID: NVIDIA, 0x27b8).
-
-The repo I am using can be found here:
-
-https://github.com/zhiwang-nvidia/nova-core/tree/rust-for-linux/test-sriov-on-nova-core
-
-Will test them again on the next spin. :)
-
-Z.
-
-> On Thu, 20 Nov 2025 10:03:45 -0500
-> Peter Colberg <pcolberg@redhat.com> wrote:
-> 
-> Hi Peter:
-> 
-> I met some errors when compiling on driver-core-next branch, you can
-> fix those in the next spin.
-> 
-> Fixes:
-> 
-> diff --git a/drivers/gpu/nova-core/driver.rs
-> b/drivers/gpu/nova-core/driver.rs index ca0d5f8ad54b..730e745cad63
-> 100644 --- a/drivers/gpu/nova-core/driver.rs
-> +++ b/drivers/gpu/nova-core/driver.rs
-> @@ -49,6 +49,7 @@ pub(crate) struct NovaCore {
->      ]
->  );
->  
-> +#[vtable]
->  impl pci::Driver for NovaCore {
->      type IdInfo = ();
->      const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
-> 
-> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> index d6cc5d7e7cd7..2d68db076f92 100644
-> --- a/rust/kernel/pci.rs
-> +++ b/rust/kernel/pci.rs
-> @@ -292,6 +292,7 @@ macro_rules! pci_device_table {
->  ///     ]
->  /// );
->  ///
-> +/// #[vtable]
->  /// impl pci::Driver for MyDriver {
->  ///     type IdInfo = ();
->  ///     const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
-> 
-> The code in the examples should be able to compile.
-> 
-> You can enable doctest by:
-> 
-> CONFIG_RUST_KERNEL_DOCTESTS=y
-> 
-> Then:
-> 
-> impl Device<device::Bound> {
->     /// Returns the Physical Function (PF) device for a Virtual
-> Function (VF) device. ///
->     /// # Examples
->     ///
-> 
-> snip
-> 
->     /// ```
->     /// let pf_pdev = vf_pdev.physfn()?;
->     /// let pf_drvdata = pf_pdev.as_ref().drvdata::<MyDriver>()?;
-> 
-> I saw this part is not able to be compiled.^
-> 
-> Z.
-> 
-> > On Thu, Nov 20, 2025 at 08:32:13AM +0200, Zhi Wang wrote:
-> > > On Wed, 19 Nov 2025 17:19:04 -0500
-> > > Peter Colberg <pcolberg@redhat.com> wrote:
-> > > 
-> > > Hi Peter:
-> > > 
-> > > Thanks for the patches. :) I will test them with nova-core and
-> > > come back with Tested-bys.
+Alexey Kardashevskiy wrote:
+[..]
+> >> +/*to_pci_tsm_pf0((pdev)->tsm)*/
 > > 
-> > Perfect, thanks Zhi.
-> > 
-> > > Nit: Let's use "kernel vertical" styles on imports. [1]
-> > > 
-> > > [1]
-> > > https://lore.kernel.org/all/20251105120352.77603-1-dakr@kernel.org/
-> > 
-> > Thanks, done for patch "samples: rust: add SR-IOV driver sample".
-> > 
-> > Peter
-> > 
-> > > 
-> > > > Add Rust abstractions for the Single Root I/O Virtualization
-> > > > (SR-IOV) capability of a PCI device. Provide a minimal set of
-> > > > wrappers for the SR-IOV C API to enable and disable SR-IOV for a
-> > > > device, and query if a PCI device is a Physical Function (PF) or
-> > > > Virtual Function (VF).
-> > > > 
-> > > > Using the #[vtable] attribute, extend the pci::Driver trait with
-> > > > an optional bus callback sriov_configure() that is invoked when
-> > > > a user-space application writes the number of VFs to the sysfs
-> > > > file `sriov_numvfs` to enable SR-IOV, or zero to disable SR-IOV
-> > > > [1].
-> > > > 
-> > > > Add a method physfn() to return the Physical Function (PF)
-> > > > device for a Virtual Function (VF) device in the bound device
-> > > > context. Unlike for a PCI driver written in C, guarantee that
-> > > > when a VF device is bound to a driver, the underlying PF device
-> > > > is bound to a driver, too.
-> > > > 
-> > > > When a device with enabled VFs is unbound from a driver, invoke
-> > > > the sriov_configure() callback to disable SR-IOV before the
-> > > > unbind() callback. To ensure the guarantee is upheld, call
-> > > > disable_sriov() to remove all VF devices if the driver has not
-> > > > done so already.
-> > > > 
-> > > > This series is based on Danilo Krummrich's series
-> > > > "Device::drvdata() and driver/driver interaction (auxiliary)"
-> > > > applied to driver-core-next, which similarly guarantees that
-> > > > when an auxiliary bus device is bound to a driver, the
-> > > > underlying parent device is bound to a driver, too [2].
-> > > > 
-> > > > Add an SR-IOV driver sample that exercises the SR-IOV capability
-> > > > using QEMU's 82576 (igb) emulation and was used to test the
-> > > > abstractions [3].
-> > > > 
-> > > > [1] https://docs.kernel.org/PCI/pci-iov-howto.html
-> > > > [2]
-> > > > https://lore.kernel.org/rust-for-linux/20251020223516.241050-1-dakr@kernel.org/
-> > > > [3] https://www.qemu.org/docs/master/system/devices/igb.html
-> > > > 
-> > > > Signed-off-by: Peter Colberg <pcolberg@redhat.com>
-> > > > ---
-> > > > John Hubbard (1):
-> > > >       rust: pci: add is_virtfn(), to check for VFs
-> > > > 
-> > > > Peter Colberg (7):
-> > > >       rust: pci: add is_physfn(), to check for PFs
-> > > >       rust: pci: add {enable,disable}_sriov(), to control SR-IOV
-> > > > capability rust: pci: add num_vf(), to return number of VFs
-> > > >       rust: pci: add vtable attribute to pci::Driver trait
-> > > >       rust: pci: add bus callback sriov_configure(), to control
-> > > > SR-IOV from sysfs rust: pci: add physfn(), to return PF device
-> > > > for VF device samples: rust: add SR-IOV driver sample
-> > > > 
-> > > >  MAINTAINERS                           |   1 +
-> > > >  rust/kernel/pci.rs                    | 148
-> > > > ++++++++++++++++++++++++++++++++++ samples/rust/Kconfig
-> > > >    |  11 +++ samples/rust/Makefile                 |   1 +
-> > > >  samples/rust/rust_dma.rs              |   1 +
-> > > >  samples/rust/rust_driver_auxiliary.rs |   1 +
-> > > >  samples/rust/rust_driver_pci.rs       |   1 +
-> > > >  samples/rust/rust_driver_sriov.rs     | 107
-> > > > ++++++++++++++++++++++++ 8 files changed, 271 insertions(+)
-> > > > ---
-> > > > base-commit: e4addc7cc2dfcc19f1c8c8e47f3834b22cb21559
-> > > > change-id: 20251026-rust-pci-sriov-ca8f501b2ae3
-> > > > 
-> > > > Best regards,
-> > > 
-> > 
-> > 
+> > Left over of something?
 > 
+> Actually not, to_pci_tsm_pf0() is a static helper in drivers/pci/tsm.c
+> and pdev_to_tsm_pf0() (below) is the same thing defined for
+> drivers/crypto/ccp/sev-dev-tsm.c and I wonder if to_pci_tsm_pf0() is
+> better be exported. pdev_to_tsm_pf0() does not need all the checks as
+> if we are that far past the initial setup, we can skip on some checks
+> which to_pci_tsm_pf0() performs so I have not exported
+> to_pci_tsm_pf0() but left the comment. Thanks,
 
+Why does the low-level TSM driver need to_pci_tsm_pf0() when it
+allocated the container for @tsm in the first place?
+
+For example, samples/devsec/ does this:
+
+static void devsec_link_tsm_pci_remove(struct pci_tsm *tsm)
+{
+        struct pci_dev *pdev = tsm->pdev;
+
+        dev_dbg(pci_tsm_host(pdev), "%s\n", pci_name(pdev));
+
+        if (is_pci_tsm_pf0(pdev)) {
+                struct devsec_tsm_pf0 *devsec_tsm = to_devsec_tsm_pf0(tsm);
+
+                pci_tsm_pf0_destructor(&devsec_tsm->pci);
+                kfree(devsec_tsm);
+        } else {
+                struct devsec_tsm_fn *devsec_tsm = to_devsec_tsm_fn(tsm);
+
+                kfree(devsec_tsm);
+        }
+}
+
+...where that to_devsec_tsm_pf0() is:
+
+static struct devsec_tsm_pf0 *to_devsec_tsm_pf0(struct pci_tsm *tsm)
+{
+        return container_of(tsm, struct devsec_tsm_pf0, pci.base_tsm);
+}
 
