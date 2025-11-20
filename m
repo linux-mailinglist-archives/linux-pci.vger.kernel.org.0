@@ -1,134 +1,135 @@
-Return-Path: <linux-pci+bounces-41738-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41739-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 464BEC729D7
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 08:33:34 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38AC0C72A0D
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 08:39:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id 397D6289D4
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 07:33:28 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A03114E5390
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 07:38:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0824E184E;
-	Thu, 20 Nov 2025 07:33:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94B133081C6;
+	Thu, 20 Nov 2025 07:38:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="grvCc5Tn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fk1GOwXX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373CE288C0E
-	for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 07:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CC63043D3;
+	Thu, 20 Nov 2025 07:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763624004; cv=none; b=IXSb6xShaTK5KWPquc8ltcLF/VVDHeN6YeP02D9deYU6Ydf9GXpj6ovIYhuLJ89UKkGoGwVGfot4UBZdn8WbwmiV5w2ZvTZGaySHkfrh7qEsyY270JsP3hfqTh8hBau1kvnggQW97l+CivjeYg75xXUF0ILIndoAchyxoOqIMjQ=
+	t=1763624295; cv=none; b=CWciEAI5lDlPaxfaZtG5g//iTiyd8FQkItW7tsKRr923/q2fPW4WsFX9kX+/whIuyNqdaV4aXh2+x/Uslt71uw4VX8HHix1eX8oXfzavZoWS/JQOLc+Pg2QPvztbnFrQENHCL0+0gVKI/bT6AF3fHOWleQf1dpIbCOBnAmkrJDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763624004; c=relaxed/simple;
-	bh=KFBnui6rPjAi53zIWecorUcdMS7QkWr6WfZXkU9nyuc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bqo1YLm+OzpAIJv4NXSqkgRsyquTdKIaLXFxPVQ+kxAzGfxchjB4EFrvQzrTd3kq9vu+iP4MsTA/PeEBq12XUgGCGRtkaVGg2QOl4Slb8yCbmXWAjDw6D/Ki1z+PQ2jAkfw02Mlv208KlXq632QfR59prBkWX6sqQvkXraXRd2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=grvCc5Tn; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b7291af7190so84050566b.3
-        for <linux-pci@vger.kernel.org>; Wed, 19 Nov 2025 23:33:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763624001; x=1764228801; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MVfkIhRM3NgSRE5RLXEAkdQGNqO22B4nKJCnXIMJHvk=;
-        b=grvCc5TnKGyv5LO00XYphGOfes8n1WwAHBIG2SidLRRVCdRbG0RJg4l0F49YuDmJAK
-         7y1T/wcrQeeZgDOR9VBuEfRsnD1FEQvj+dPx22dZr7qJ4xBBwfW38s0jEvWZrKNNTKAo
-         vTwltZI2vuecwgG3gbMNEu33i/Sd9jdyValZSF7bx4mY5P2Az4aAZVQwyhCGaCdvBJWQ
-         QIxaU+dxxtGljCSY+Rpr0k7JsZmvgTfHwqc7+nonJtbldC5BLiHl2i04/3jSHEw9LFbs
-         9J30ek1P4bN0Sgpz/k0IritBzq5TCYl4K207hktcjvOx4cG9omEBvsaQN7SBXW7bH2wO
-         H4QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763624001; x=1764228801;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MVfkIhRM3NgSRE5RLXEAkdQGNqO22B4nKJCnXIMJHvk=;
-        b=Npeu+jxiX0GlN+EOxZOevMxynWLNTU20ZVvoXQEeMTvxyO7Y4Xz+I3qShGeVV/IAWh
-         MW7+PlDMt1xqeOija6bH3ucX04oDb68forhMfMRa7EtRVciEWcJ+mqTG1/T/VisMXAhi
-         HxZ8NciGLX1Og5l5ywep0fygLWnWRAI3zHsOrTBGCvF3OAc27DaGXfSgR0BDVhvWLW8J
-         9SIn7UAtNpQBdPKEMHWkknpz0kYUu9w776x4agWRMwTjW+HBxSneAws4BoLEG2ZeOdru
-         2SdcsWp74cWIlHgojDdJx5tAyoC3wM+zxMr45Jytubl7hVhinO6ki4TF66gtgOglTL2a
-         9h5w==
-X-Forwarded-Encrypted: i=1; AJvYcCXzNB5RL2sou623CGt+aFofZFukKq85FRvw1wCyDZ8rvogjydESNxOtNo34iKL6pDEzFFKQe35hxu0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYqsyRo81WKMnsOPAPpCH5LF5H/0QCwQoRoyIvWnucZEShW1gT
-	Tb0JnZobLUQzl9nYeNybW8HSjy3eQbMc/E9OdOT8rI79CFemJv0ExyY+LzaPjrgACLOLLdBnoEp
-	/b1s68OWvt4FwPl0GwBzj3UDmlJlwllWdp2Vuc5HXTQ==
-X-Gm-Gg: ASbGnctdQngdwM4EkXI6sjix2NBdsS8JXOvOoRbGBSRCu9OSYdfjhS5lsDSm6BhuBtm
-	uvAkIsVnLRs68KNGtsbezWBBOK6m5rU8huyDwEFNAM/rc0C5xbfdIsqdE8PW6q6C7nz+JAarSqf
-	Iy9SIsnwt0uYlB3glN/YfGVwwaW3CXLrCwCE+bqxmmO7ILfWaUKkI3gnxryuxLTxSc5tuc1YGR4
-	Y1vuljQrWuy8U8Nc+n09If0HAifUoJUdkjUyHfvN7+IRuLN5XfOhycl9yiN91nunDY8RhHgYCy/
-	CrIzHBD/S0c+wCdw1bzcHxSTKNAjxZFP1RI=
-X-Google-Smtp-Source: AGHT+IGrBjsWGQrGykL6ffk3fkB/IMHlvu/W915gtS6XGras8xWeYHAhTtfC2TIoFsE0FQyTsy8fXGwwZAJo/EO2m4M=
-X-Received: by 2002:a17:907:9722:b0:b73:80de:e6b2 with SMTP id
- a640c23a62f3a-b76588aff91mr147960066b.31.1763624001540; Wed, 19 Nov 2025
- 23:33:21 -0800 (PST)
+	s=arc-20240116; t=1763624295; c=relaxed/simple;
+	bh=TBmcKl0VoEim/6SAhgGNXn7s3ldHbwABAdg4lb6XQUg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qvNN6Bjd5xcS+nG7QiqFHlcPGPCX9i18BDxTW9ANPLt/emeXNaV/WmKnFFGFkTBIs6tVUGiYd5Ob57Xh2ZSVfRzsZ5d/Li++CvQioXVzN49OyAB3Xni0Saj4htdhwGY24RL5Hsi2bsbm1pFYHiKK4lx4kcl2O2CCoJp1HKOhCRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fk1GOwXX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B2CDC4CEF1;
+	Thu, 20 Nov 2025 07:38:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763624294;
+	bh=TBmcKl0VoEim/6SAhgGNXn7s3ldHbwABAdg4lb6XQUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fk1GOwXX+8I2wrjVFUFCs8eOHzSYMIpbSRNsybaaYnqmR1hvk8o1qyzeHekcACEa7
+	 0yEVvvcB58TVkvjvuQ+g/DQOgZnEaPJs34D8Vdf/e9Zwg/WSSr8nANTFzZTxu1EY4w
+	 f+G77YPyofCyVfOqnqhJ1EEumdeOwl1cYYCiSj7kjTatwWqUljRJ6vu6RxqRHEAEU8
+	 HRAo+V91htNpmPP70IHNTW6yrAz7B8PMq5q1hNDWdzinzbtY3bxLpPYfEP2VVI+Xgm
+	 NiTNPnC07XH/GYQn22i+8qeLjGe/j0I0H3GmLnYmVwrnbgDp8dKA8f5MMMocC3fZuC
+	 Xf3HRBvJIpyCw==
+Date: Thu, 20 Nov 2025 09:38:10 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <skolothumtho@nvidia.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, iommu@lists.linux.dev,
+	linux-mm@kvack.org, linux-doc@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
+	Nicolin Chen <nicolinc@nvidia.com>
+Subject: Re: [Linaro-mm-sig] [PATCH v8 06/11] dma-buf: provide phys_vec to
+ scatter-gather mapping routine
+Message-ID: <20251120073810.GQ18335@unreal>
+References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
+ <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
+ <8a11b605-6ac7-48ac-8f27-22df7072e4ad@amd.com>
+ <20251119134245.GD18335@unreal>
+ <6714dc49-6b5c-4d58-9a43-95bb95873a97@amd.com>
+ <20251119145007.GJ18335@unreal>
+ <26d7ecab-33ed-4aab-82d5-954b0d1d1718@amd.com>
+ <20251119163326.GL18335@unreal>
+ <3053398d-94d8-42fa-aedc-927746375521@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251119-pci-dwc-suspend-rework-v1-0-aad104828562@oss.qualcomm.com>
- <20251119-pci-dwc-suspend-rework-v1-1-aad104828562@oss.qualcomm.com>
-In-Reply-To: <20251119-pci-dwc-suspend-rework-v1-1-aad104828562@oss.qualcomm.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Thu, 20 Nov 2025 08:33:09 +0100
-X-Gm-Features: AWmQ_blFK9VHm0z9cBp-9NWI0hN-zFp3wxCCL2qaoe6WYJsrlALzWaBKwmyg6pI
-Message-ID: <CAKfTPtB+h3eU5Fe5UzFva_-W2-EOX7RjaM_EG7qxuyTnCSHEWg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PCI: dwc: Skip PME_Turn_Off broadcast and L2/L3
- transition during suspend if link is not up
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, zhangsenchuan@eswincomputing.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3053398d-94d8-42fa-aedc-927746375521@amd.com>
 
-On Wed, 19 Nov 2025 at 19:10, Manivannan Sadhasivam
-<manivannan.sadhasivam@oss.qualcomm.com> wrote:
->
-> During system suspend, if the PCIe link is not up, then there is no need
-> to broadcast PME_Turn_Off message and wait for L2/L3 transition. So skip
-> them.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Tested-by: Vincent Guittot <vincent.guittot@linaro.org>
+On Thu, Nov 20, 2025 at 08:03:09AM +0100, Christian König wrote:
+> On 11/19/25 17:33, Leon Romanovsky wrote:
+> > On Wed, Nov 19, 2025 at 03:53:30PM +0100, Christian König wrote:
+> > 
+> > <...>
+> > 
+> >>>>>>> +struct sg_table *dma_buf_map(struct dma_buf_attachment *attach,
+> >>>>>>
+> >>>>>> That is clearly not a good name for this function. We already have overloaded the term *mapping* with something completely different.
+> >>>>>
+> >>>>> This function performs DMA mapping, so what name do you suggest instead of dma_buf_map()?
+> >>>>
+> >>>> Something like dma_buf_phys_vec_to_sg_table(). I'm not good at naming either.
+> >>>
+> >>> Can I call it simply dma_buf_mapping() as I plan to put that function in dma_buf_mapping.c
+> >>> file per-your request.
+> >>
+> >> No, just completely drop the term "mapping" here. This is about phys_vector to sg_table conversion and nothing else.
+> > 
+> > In order to progress, I renamed these functions to be
+> > dma_buf_phys_vec_to_sgt() and dma_buf_free_sgt(), and put everything in dma_buf_mapping.c file.
+> 
+> Yeah, the problem is I even thought more about it and came to the conclusion that this is still not sufficient for an rb or an Ack-by.
+> 
+> A core concept of DMA-buf is that the exporter takes care of all the mappings and not the framework.
+> 
+> Calling pci_p2pdma_bus_addr_map(), dma_map_phys() or dma_map_phys() from DMA-buf code is extremely questionable.
+> 
+> That should really be inside VFIO and not DMA-buf code, so to move forward I strongly suggest to either move that into VFIO or the DMA API directly.
 
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 20c9333bcb1c..8fe3454f3b13 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -1129,6 +1129,9 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
->         u32 val;
->         int ret;
->
-> +       if (!dw_pcie_link_up(pci))
-> +               goto stop_link;
-> +
->         /*
->          * If L1SS is supported, then do not put the link into L2 as some
->          * devices such as NVMe expect low resume latency.
-> @@ -1162,6 +1165,7 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
->          */
->         udelay(1);
->
-> +stop_link:
->         dw_pcie_stop_link(pci);
->         if (pci->pp.ops->deinit)
->                 pci->pp.ops->deinit(&pci->pp);
->
-> --
-> 2.48.1
->
+We got the request to move to DMABUF and agreement a long time ago, in v5.
+https://lore.kernel.org/all/aPYrEroyWVOvAu-5@infradead.org/
+
+Thanks
+
+> 
+> Regards,
+> Christian.
+> 
+> > 
+> > Thanks
+> 
 
