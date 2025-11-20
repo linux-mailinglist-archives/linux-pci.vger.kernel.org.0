@@ -1,66 +1,76 @@
-Return-Path: <linux-pci+bounces-41817-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41818-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98B52C758F6
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 18:11:08 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8790DC75908
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 18:11:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sto.lore.kernel.org (Postfix) with ESMTPS id 4465028A76
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 17:11:08 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id 9856B2BEF5
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 17:11:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 687F232471F;
-	Thu, 20 Nov 2025 17:11:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2209C36214A;
+	Thu, 20 Nov 2025 17:11:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihxve8Dz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aqLfR4iU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7A533A031;
-	Thu, 20 Nov 2025 17:11:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15D02F1FF3;
+	Thu, 20 Nov 2025 17:11:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763658664; cv=none; b=UPjaaYayOGAdyEaVsMvFWTPPxv2rV0JsB8iKk88/1nx8FBzp0GQxEQ+NHkjyASjCPLMIzmucN/V7EU7AWQdORPZ02Bdjcw6Co2zTqgkEgc692x7jvH0qdCBmkNvgJex8EWsHDup+0km8cTKy+x0J85o4AYXc7rL376+BUrD/EX4=
+	t=1763658676; cv=none; b=jw1rjqC3XTNVwat/7jxXF/ls187TCJYgCtDGX6kOAT7o+5EJut8MYaGxngzw2DfBqQuTqt5nrS7dMm5XpFdzuzDyO650TT+/X8I8fLj9MBZ9ssLd//OY6Vpn930+F3HZXaFE3GqI+fdpUWGPKdtf6mlST2TJpubgFo/0QSf4i8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763658664; c=relaxed/simple;
-	bh=srEXc3YV3Z9k+S6EjyCYz4pndYvvbKnp0h6Ftjs+8L8=;
+	s=arc-20240116; t=1763658676; c=relaxed/simple;
+	bh=TMLntoU8iUOS/qsRpXy6ReTJ0gjhyOEPYkzAMR3tBsI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AdEMEHiPm7W8C2fNlejvDtaKyQxtMvbH+nwNz9xkiM1z0RyCvfX6C2OxXVtTs1YZUkk2loinroi3RJB7b/juWTUb8+UzWQU9fdbo0L88aWlBBvR9uckFD5ttwUxXT0HQAVALpj47kArTHuyIvcimWKys3Nn5ex7Z3w5d265XRIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihxve8Dz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D931C4CEF1;
-	Thu, 20 Nov 2025 17:10:58 +0000 (UTC)
+	 MIME-Version:Content-Type; b=HS8KKNst0vZ1JTzoXTYXGbjn8aB8dF6D+RXImhcUEvuxCevbg1zM4DbcsWA/wNRItsy8ILXy9gfqow10XJBQ4PrrwZN+G/Ecabp2AVB0Rt7vBFD4rxVExc9gUXrKL43aMBLVJhAkfRsLeatt9OFVlLSqr+/JwvXR/blILh8AXyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aqLfR4iU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56A38C4CEF1;
+	Thu, 20 Nov 2025 17:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763658663;
-	bh=srEXc3YV3Z9k+S6EjyCYz4pndYvvbKnp0h6Ftjs+8L8=;
+	s=k20201202; t=1763658675;
+	bh=TMLntoU8iUOS/qsRpXy6ReTJ0gjhyOEPYkzAMR3tBsI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ihxve8DzixV2TWEoB5pzQv6zF5lJiNc9O+zNIBHJ+p1O3P+EAxeIFgpualrrnUUcK
-	 GM9o+qbJ2jonDThsdrpXOHcvSBF3NPB2DEXZTlI9SnMcA0ZJkteKHb9BZmnzHZVlcR
-	 aXBB1/lBhMUQHnSdmT9iw1OgJwUmWltt947pg2VwCMFOYj06hRaJcacgw/FNo3OxnQ
-	 fQoUtYZD0LyDmP43hC9um8bp28PrYl8JdiERR6dpb1QdN5L8lTx4YIx8rsNqY49+WH
-	 NVWvifn/N6DKmykahiO1ikXpWCZf8syhAlNUkBNCQAtt6DcxlX39/3MigYeKioRQdv
-	 XemZHmeMa1v4Q==
+	b=aqLfR4iUeq0dB4adf+THdyDTXEYLPmrUzBfkTi+siE4FErR83JFGTcLfKnZPwMODP
+	 zj2cUYj3WBLrInuLNgbziXnA7+G9xs8XtvV8dheiKGDn0HgJZReHIrRT/oWGXTphBw
+	 jav2dXGGvpcDBBZpIT1RCdSYwVNydmY44mIGqMAlNo1AsrYfgc5+mcS8i3aaEEr2ud
+	 4TUiRefxrRVy12nbdxe98sT9eFv8FdR5zFScbGQQFtJSC3KnpPv1GWm214oV8dZjgT
+	 NBl/XpNE1EKX2BLhLbdvZITRXTf7HBvkVza3ncDhy4jxeipTFt+dX7P+f3c6f1D9CH
+	 5vSYkUHWrDl8w==
 From: Vinod Koul <vkoul@kernel.org>
-To: Kishon Vijay Abraham I <kishon@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Ryder Lee <ryder.lee@mediatek.com>, 
+ Jianjun Wang <jianjun.wang@mediatek.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
  Lorenzo Pieralisi <lpieralisi@kernel.org>, 
  =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
  Manivannan Sadhasivam <mani@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Wenbin Yao <wenbin.yao@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, konrad.dybcio@oss.qualcomm.com, 
- qiang.yu@oss.qualcomm.com, Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <20250825-glymur_pcie5-v3-0-5c1d1730c16f@oss.qualcomm.com>
-References: <20250825-glymur_pcie5-v3-0-5c1d1730c16f@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH v3 0/4] PCI: qcom: Add support for Glymur PCIe
- Gen5x4
-Message-Id: <176365865805.207696.3284794076492688749.b4-ty@kernel.org>
-Date: Thu, 20 Nov 2025 22:40:58 +0530
+ Chunfeng Yun <chunfeng.yun@mediatek.com>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>, 
+ Sjoerd Simons <sjoerd@collabora.com>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, 
+ linux-phy@lists.infradead.org, netdev@vger.kernel.org, 
+ Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+In-Reply-To: <20251115-openwrt-one-network-v4-0-48cbda2969ac@collabora.com>
+References: <20251115-openwrt-one-network-v4-0-48cbda2969ac@collabora.com>
+Subject: Re: (subset) [PATCH v4 00/11] arm64: dts: mediatek: Add Openwrt
+ One AP functionality
+Message-Id: <176365866697.207696.9870186215211079064.b4-ty@kernel.org>
+Date: Thu, 20 Nov 2025 22:41:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -72,24 +82,38 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Mon, 25 Aug 2025 23:01:46 -0700, Wenbin Yao wrote:
-> Glymur is the next generation compute SoC of Qualcomm. This patch series
-> aims to add support for the fifth PCIe instance on it. The fifth PCIe
-> instance on Glymur has a Gen5 4-lane PHY. Patch [1/4] documents PHY as a
-> separate compatible and Patch [2/4] documents controller as a separate
-> compatible. Patch [3/4] describles the new PCS offsets in a dedicated
-> header file. Patch [4/4] adds configuration and compatible for PHY.
+On Sat, 15 Nov 2025 21:58:03 +0100, Sjoerd Simons wrote:
+> Significant changes in V4:
+>   * Drop patches that were picked up
+>   * Improve mediatek,net dt bindings:
+>     - Move back to V2 version (widening global constraint, constraining
+>       per compatible)
+>     - Ensure all compatibles are constraint in the amount of WEDs (2 for
+>       everything apart from mt7981). Specifically adding constraints for
+>       mediatek,mt7622-eth and ralink,rt5350-eth
+> Significant changes in V3:
+>   * Drop patches that were picked up
+>   * Re-order patches so changes that don't require dt binding changes
+>     come first (Requested by Angelo)
+>   * Specify drive power directly rather then using MTK_DRIVE_...
+>   * Simply mediatek,net binding changes to avoid accidental changes to
+>     other compatibles then mediatek,mt7981-eth
+> Significant changes in V2:
+>   * https://lore.kernel.org/lkml/20251016-openwrt-one-network-v1-0-de259719b6f2@collabora.com/
+>   * Only introduce labels in mt7981b.dtsi when required
+>   * Switch Airoha EN8811H phy irq to level rather then edge triggered
+>   * Move uart0 pinctrl from board dts to soc dtsi
+>   * Only overwrite constraints with non-default values in MT7981 bindings
+>   * Make SPI NOR nvmem cell labels more meaningfull
+>   * Seperate fixing and disable-by-default for the mt7981 in seperate
+>     patches
 > 
 > [...]
 
 Applied, thanks!
 
-[1/4] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the Glymur QMP PCIe PHY
-      commit: d877f881cec508a46f76dbed7c46ab78bc1c0d87
-[3/4] phy: qcom-qmp: pcs: Add v8.50 register offsets
-      commit: bc2ba6e3fb8a35cd83813be1bd4c5f066a401d8b
-[4/4] phy: qcom: qmp-pcie: Add support for Glymur PCIe Gen5x4 PHY
-      commit: 1797c6677ad6298ca463b6ee42245e19e9cc1206
+[03/11] dt-bindings: phy: mediatek,tphy: Add support for MT7981
+        commit: 80ac0fba0f1a72be2c7b532b8e2ad61300a165c3
 
 Best regards,
 -- 
