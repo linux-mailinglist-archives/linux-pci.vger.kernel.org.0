@@ -1,296 +1,258 @@
-Return-Path: <linux-pci+bounces-41753-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41754-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 708ADC73197
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 10:23:15 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C0C8C73213
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 10:29:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4D88E4E2221
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 09:23:14 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5E2C44E609F
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 09:28:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B74730E82E;
-	Thu, 20 Nov 2025 09:23:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5331F31158A;
+	Thu, 20 Nov 2025 09:28:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Czwx2cNc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4xF+5wM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75FE2FBE1C;
-	Thu, 20 Nov 2025 09:23:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0912116E0;
+	Thu, 20 Nov 2025 09:28:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763630590; cv=none; b=NNyw85XfDmodkLDPPXj5uARp86LijNYlzxcsY2O1ed/mWW3U4uFN6GduEoPF38UhTYwUH8D8xltUEJmQcvvysZCCIHIBiRFUrunOroJbyE0nefb9kRQqYIYFVG2ups/ylZOvtpMfsdxlzxbEH9KsW1jFRp+ACvgqtl17LFZl4m4=
+	t=1763630929; cv=none; b=LtN2qSuqbIpE0k0WG3EfOUlaeHqWDCSAIGFtylhDDFCbGy6zX+JtLj+tIX48njhIhdb2QY8YYV8xUmziwhzyWE+whuftDoAOG0Qwh+oxcpnU8WCsYbA3mYnSeGEcAGT0pgQXnCMJan519qlKBZkbf4YN6q7DN2Sue1bqe6sjCco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763630590; c=relaxed/simple;
-	bh=6YLG0MvmJWlaFPyCww/YsMdQWP5HEihl/TAyJznr6aQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qjfsSnhPfNQhWK2J7uqT/67FV+T+EhcxxmLjOcLVAN98wh6CdKoEJL5vkn7lbcjsC0fqjLAXr58XUb3TcrUY2YhimChWASbigChFwOVR7Ksfm0odRd1bD43dnWPSmsklQQUK04Xyx/UGgESdaDg9ql41E0ifJK0VK4PnPTl8sqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Czwx2cNc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F70EC4CEF1;
-	Thu, 20 Nov 2025 09:23:10 +0000 (UTC)
+	s=arc-20240116; t=1763630929; c=relaxed/simple;
+	bh=I2Ow+FoVVNgAF5HMTVEjWmPor12AxpDfs1Z6H54cyr8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FovNt3cDusOYW/LkNTihn2jfIhbx3ub0VkvOa5f4kMMuGiGuhx/srtogiI1Rj3scDdsUZhQBJHrUO6H3Fp3595NB1cPrMu8RQ8xhZ8xmjwabSQlf1WtUs/YDXAGzYf5nblhqHbGWIEvpqK/XApK4boBq3lCtlq+YKOnH5pMIfio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4xF+5wM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1571C4CEF1;
+	Thu, 20 Nov 2025 09:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763630590;
-	bh=6YLG0MvmJWlaFPyCww/YsMdQWP5HEihl/TAyJznr6aQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Czwx2cNcq31Yz9RL+XetgpLq25vzp6DtVj5cTGYfrGk+GGUbwhXC7ZC32pCCo/iI3
-	 vCDdYVrgWd1KNwyeARWMIenIgzNfQzr1rMCqr428mQrk5J7dyyokwBhIbNMs4UKjQ+
-	 dh9qHB2WR+/qcNtAIdZzLqFn3xFqWDVqiIl/4y3SLGMnFgrevZSvnCRiVuGVoIJmTL
-	 m2eWEfh5JvEfOo+L0ARTglgAp4Hgjp8gZM5hbgwJJVMaOZFwMw3wKiFZXrV9ZPRJo1
-	 2I8bdH0YSkKGDDnsKhml0P7Far7K8Ss6ojx9nRCmDHHCiJUpyTB7ZcEwShEC92v0++
-	 6c1agB0O73rZA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1vM0se-00000006pJ7-0mds;
-	Thu, 20 Nov 2025 09:23:08 +0000
-Date: Thu, 20 Nov 2025 09:23:07 +0000
-Message-ID: <868qg1rrb8.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Radu Rendec <rrendec@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,	Manivannan Sadhasivam
- <mani@kernel.org>,	Will Deacon <will@kernel.org>,	Rob Herring
- <robh@kernel.org>,	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kwilczynski@kernel.org>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	linux-pci@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: host-common: Do not set drvdata in pci_host_common_init()
-In-Reply-To: <d7b6b7de88a374a79c7ed707c74f12797b50cc58.camel@redhat.com>
-References: <20251118221244.372423-1-rrendec@redhat.com>
-	<20251118221244.372423-2-rrendec@redhat.com>
-	<86jyzms036.wl-maz@kernel.org>
-	<d7b6b7de88a374a79c7ed707c74f12797b50cc58.camel@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1763630927;
+	bh=I2Ow+FoVVNgAF5HMTVEjWmPor12AxpDfs1Z6H54cyr8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=s4xF+5wMT4a8M94UXO4W8SX/ZHtbVxbZgyCr/zZ5AEZBu/b5ZsWpMuuX/n+r8u+h5
+	 4rH9JeGqKTNngFLaGXWvqxsGZ4yMgs1vFlNWwhUHJWM/6XvWGNFLVWSFy0CkQbXgTL
+	 gg1nPrdVyPsYvj/myW5kVgUbLFTZT1fViF0ZH/gb2yBqGDfoMNVpSnxjeERbZipKjH
+	 CiIUaWD/18OOt/YX1zmcUySs76rRrFCbbN8Z8HZL1FS5unC8MMWfa0rw3G41S5awu7
+	 2m3Haa7BYkL+Gt3HSqKUFqGLCyXFOaLHpYPLakvL+iVUzMzpKjlkOboqpB4QnfJ7QW
+	 i0kRKIqxKZ//A==
+From: Leon Romanovsky <leon@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	=?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <skolothumtho@nvidia.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex@shazbot.org>
+Cc: Krishnakant Jaju <kjaju@nvidia.com>,
+	Matt Ochs <mochs@nvidia.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Alex Mastro <amastro@fb.com>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>
+Subject: [PATCH v9 00/11] vfio/pci: Allow MMIO regions to be exported through dma-buf
+Date: Thu, 20 Nov 2025 11:28:19 +0200
+Message-ID: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: rrendec@redhat.com, bhelgaas@google.com, mani@kernel.org, will@kernel.org, robh@kernel.org, kwilczynski@kernel.org, lpieralisi@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Change-ID: 20251016-dmabuf-vfio-6cef732adf5a
+X-Mailer: b4 0.15-dev-a6db3
+Content-Transfer-Encoding: 8bit
 
-On Wed, 19 Nov 2025 16:19:14 +0000,
-Radu Rendec <rrendec@redhat.com> wrote:
->=20
-> On Wed, 2025-11-19 at 12:01 +0000, Marc Zyngier wrote:
-> > On Tue, 18 Nov 2025 22:12:43 +0000,
-> > Radu Rendec <rrendec@redhat.com> wrote:
+Changelog:
+v9:
+ * Added Reviewed-by tags.
+ * Fixes to p2pdma documentation.
+ * Renamed dma_buf_map and unmap.
+ * Moved them to separate file.
+ * Used nvgrace_gpu_memregion() function instead of open-coded variant.
+ * Paired get_file_active() with fput().
+v8: https://patch.msgid.link/20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com
+ * Fixed spelling errors in p2pdma documentation file.
+ * Added vdev->pci_ops check for NULL in vfio_pci_core_feature_dma_buf().
+ * Simplified the nvgrace_get_dmabuf_phys() function.
+ * Added extra check in pcim_p2pdma_provider() to catch missing call
+   to pcim_p2pdma_init().
+v7: https://patch.msgid.link/20251106-dmabuf-vfio-v7-0-2503bf390699@nvidia.com
+ * Dropped restore_revoke flag and added vfio_pci_dma_buf_move
+   to reverse loop.
+ * Fixed spelling errors in documentation patch.
+ * Rebased on top of v6.18-rc3.
+ * Added include to stddef.h to vfio.h, to keep uapi header file independent.
+v6: https://patch.msgid.link/20251102-dmabuf-vfio-v6-0-d773cff0db9f@nvidia.com
+ * Fixed wrong error check from pcim_p2pdma_init().
+ * Documented pcim_p2pdma_provider() function.
+ * Improved commit messages.
+ * Added VFIO DMA-BUF selftest, not sent yet.
+ * Added __counted_by(nr_ranges) annotation to struct vfio_device_feature_dma_buf.
+ * Fixed error unwind when dma_buf_fd() fails.
+ * Document latest changes to p2pmem.
+ * Removed EXPORT_SYMBOL_GPL from pci_p2pdma_map_type.
+ * Moved DMA mapping logic to DMA-BUF.
+ * Removed types patch to avoid dependencies between subsystems.
+ * Moved vfio_pci_dma_buf_move() in err_undo block.
+ * Added nvgrace patch.
+v5: https://lore.kernel.org/all/cover.1760368250.git.leon@kernel.org
+ * Rebased on top of v6.18-rc1.
+ * Added more validation logic to make sure that DMA-BUF length doesn't
+   overflow in various scenarios.
+ * Hide kernel config from the users.
+ * Fixed type conversion issue. DMA ranges are exposed with u64 length,
+   but DMA-BUF uses "unsigned int" as a length for SG entries.
+ * Added check to prevent from VFIO drivers which reports BAR size
+   different from PCI, do not use DMA-BUF functionality.
+v4: https://lore.kernel.org/all/cover.1759070796.git.leon@kernel.org
+ * Split pcim_p2pdma_provider() to two functions, one that initializes
+   array of providers and another to return right provider pointer.
+v3: https://lore.kernel.org/all/cover.1758804980.git.leon@kernel.org
+ * Changed pcim_p2pdma_enable() to be pcim_p2pdma_provider().
+ * Cache provider in vfio_pci_dma_buf struct instead of BAR index.
+ * Removed misleading comment from pcim_p2pdma_provider().
+ * Moved MMIO check to be in pcim_p2pdma_provider().
+v2: https://lore.kernel.org/all/cover.1757589589.git.leon@kernel.org/
+ * Added extra patch which adds new CONFIG, so next patches can reuse
+ * it.
+ * Squashed "PCI/P2PDMA: Remove redundant bus_offset from map state"
+   into the other patch.
+ * Fixed revoke calls to be aligned with true->false semantics.
+ * Extended p2pdma_providers to be per-BAR and not global to whole
+ * device.
+ * Fixed possible race between dmabuf states and revoke.
+ * Moved revoke to PCI BAR zap block.
+v1: https://lore.kernel.org/all/cover.1754311439.git.leon@kernel.org
+ * Changed commit messages.
+ * Reused DMA_ATTR_MMIO attribute.
+ * Returned support for multiple DMA ranges per-dMABUF.
+v0: https://lore.kernel.org/all/cover.1753274085.git.leonro@nvidia.com
 
-[...]
+---------------------------------------------------------------------------
+Based on "[PATCH v6 00/16] dma-mapping: migrate to physical address-based API"
+https://lore.kernel.org/all/cover.1757423202.git.leonro@nvidia.com/ series.
+---------------------------------------------------------------------------
 
-> > My concern with this is two-fold:
-> >=20
-> > - it is yet another obscure API change with odd side effects,
-> > =C2=A0 requiring to track and understand the per-driver flow of informa=
-tion
-> > =C2=A0 (and the apple pcie driver is a prime example of how hard this i=
-s)
-> >=20
-> > - we can't directly associate the PCIe port data with the bridge like
-> > =C2=A0 must drivers do, because the bridge allocation is done outside of
-> > =C2=A0 the calling driver, and there is no link back to the bridge from
-> > =C2=A0 pci_config_window.
-> >=20
-> > I'd rather that last point was addressed so that we could make the
-> > Apple driver behave similarly to other drivers, and let it use the
-> > bridge private data for its PCIe port information.
->=20
-> Using the bridge private data to store the driver's private data was my
-> first thought too. In fact, in the first version of my (local) changes
-> I added a "size" parameter to pci_host_common_init(), to pass it down
-> to devm_pci_alloc_host_bridge() as the priv size.
->=20
-> But there's another problem with this approach: pci_host_common_init()
-> also calls pci_host_common_ecam_create() -> pci_ecam_create() ->
-> ops->init(), so init() would be called with the bridge private area
-> allocated but not populated.
->=20
-> I don't see an elegant solution to this. The two options that crossed
-> my mind are these:
->  * Add yet another parameter to pci_host_common_init(), a void *, so it
->    takes a void *priv and a size_t size. The size would be passed down
->    to devm_pci_alloc_host_bridge(), then `size` bytes would be copied
->    from `priv` to the bridge private data area. What I don't like about
->    this is the extra memcpy() and the fact that the calling driver
->    would have to prepare an "offline" copy of its private data (likely
->    as a local variable) and pass it to pci_host_common_init().
->  * Pass just the void *priv to pci_host_common_init(). By convention,
->    the bridge private data would be used to store that void *priv
->    itself, which is a pointer to the driver's private data. So, the 2nd
->    parameter to devm_pci_alloc_host_bridge() would be sizeof(void *).
->    The downside is that there's an extra pointer indirection.
+This series extends the VFIO PCI subsystem to support exporting MMIO
+regions from PCI device BARs as dma-buf objects, enabling safe sharing of
+non-struct page memory with controlled lifetime management. This allows RDMA
+and other subsystems to import dma-buf FDs and build them into memory regions
+for PCI P2P operations.
 
-I don't think either method is appealing. I expect the correct way
-would be to let individual drivers allocate the bridge (something that
-is already pretty common), initialise it as required, and pass that to
-pci_host_common_init().
+The series supports a use case for SPDK where a NVMe device will be
+owned by SPDK through VFIO but interacting with a RDMA device. The RDMA
+device may directly access the NVMe CMB or directly manipulate the NVMe
+device's doorbell using PCI P2P.
 
-> In any case, your other concern about linking back to the bridge from
-> pci_config_window would be addressed because pci_config_window has a
-> pointer to the device (the `parent` field), which (in this scenario, by
-> convention) has the bridge pointer stored as drvdata.
+However, as a general mechanism, it can support many other scenarios with
+VFIO. This dmabuf approach can be usable by iommufd as well for generic
+and safe P2P mappings.
 
-Ah, of course, thanks for pointing that out.
+In addition to the SPDK use-case mentioned above, the capability added
+in this patch series can also be useful when a buffer (located in device
+memory such as VRAM) needs to be shared between any two dGPU devices or
+instances (assuming one of them is bound to VFIO PCI) as long as they
+are P2P DMA compatible.
 
-> If any of the options above looks appealing, or if you have a better
-> idea, please let me know, and I can prepare a v2.
+The implementation provides a revocable attachment mechanism using dma-buf
+move operations. MMIO regions are normally pinned as BARs don't change
+physical addresses, but access is revoked when the VFIO device is closed
+or a PCI reset is issued. This ensures kernel self-defense against
+potentially hostile userspace.
 
-See the patch below, which I have actually tested on an M2-pro box.
+The series includes significant refactoring of the PCI P2PDMA subsystem
+to separate core P2P functionality from memory allocation features,
+making it more modular and suitable for VFIO use cases that don't need
+struct page support.
 
-	M.
+-----------------------------------------------------------------------
+The series is based originally on
+https://lore.kernel.org/all/20250307052248.405803-1-vivek.kasireddy@intel.com/
+but heavily rewritten to be based on DMA physical API.
+-----------------------------------------------------------------------
+The WIP branch can be found here:
+https://git.kernel.org/pub/scm/linux/kernel/git/leon/linux-rdma.git/log/?h=dmabuf-vfio-v9
 
-diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/control=
-ler/pci-host-common.c
-index 810d1c8de24e9..c473e7c03baca 100644
---- a/drivers/pci/controller/pci-host-common.c
-+++ b/drivers/pci/controller/pci-host-common.c
-@@ -53,16 +53,12 @@ struct pci_config_window *pci_host_common_ecam_create(s=
-truct device *dev,
- EXPORT_SYMBOL_GPL(pci_host_common_ecam_create);
-=20
- int pci_host_common_init(struct platform_device *pdev,
-+			 struct pci_host_bridge *bridge,
- 			 const struct pci_ecam_ops *ops)
- {
- 	struct device *dev =3D &pdev->dev;
--	struct pci_host_bridge *bridge;
- 	struct pci_config_window *cfg;
-=20
--	bridge =3D devm_pci_alloc_host_bridge(dev, 0);
--	if (!bridge)
--		return -ENOMEM;
--
- 	of_pci_check_probe_only();
-=20
- 	platform_set_drvdata(pdev, bridge);
-@@ -85,12 +81,17 @@ EXPORT_SYMBOL_GPL(pci_host_common_init);
- int pci_host_common_probe(struct platform_device *pdev)
- {
- 	const struct pci_ecam_ops *ops;
-+	struct pci_host_bridge *bridge;
-=20
- 	ops =3D of_device_get_match_data(&pdev->dev);
- 	if (!ops)
- 		return -ENODEV;
-=20
--	return pci_host_common_init(pdev, ops);
-+	bridge =3D devm_pci_alloc_host_bridge(&pdev->dev, 0);
-+	if (!bridge)
-+		return -ENOMEM;
-+
-+	return pci_host_common_init(pdev, bridge, ops);
- }
- EXPORT_SYMBOL_GPL(pci_host_common_probe);
-=20
-diff --git a/drivers/pci/controller/pci-host-common.h b/drivers/pci/control=
-ler/pci-host-common.h
-index 51c35ec0cf37d..b5075d4bd7eb3 100644
---- a/drivers/pci/controller/pci-host-common.h
-+++ b/drivers/pci/controller/pci-host-common.h
-@@ -14,6 +14,7 @@ struct pci_ecam_ops;
-=20
- int pci_host_common_probe(struct platform_device *pdev);
- int pci_host_common_init(struct platform_device *pdev,
-+			 struct pci_host_bridge *bridge,
- 			 const struct pci_ecam_ops *ops);
- void pci_host_common_remove(struct platform_device *pdev);
-=20
-diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/p=
-cie-apple.c
-index 0380d300adca6..701fba1e45db9 100644
---- a/drivers/pci/controller/pcie-apple.c
-+++ b/drivers/pci/controller/pcie-apple.c
-@@ -206,9 +206,6 @@ struct apple_pcie_port {
- 	int			idx;
- };
-=20
--static LIST_HEAD(pcie_list);
--static DEFINE_MUTEX(pcie_list_lock);
--
- static void rmw_set(u32 set, void __iomem *addr)
- {
- 	writel_relaxed(readl_relaxed(addr) | set, addr);
-@@ -724,32 +721,12 @@ static int apple_msi_init(struct apple_pcie *pcie)
- 	return 0;
- }
-=20
--static void apple_pcie_register(struct apple_pcie *pcie)
--{
--	guard(mutex)(&pcie_list_lock);
--
--	list_add_tail(&pcie->entry, &pcie_list);
--}
--
--static void apple_pcie_unregister(struct apple_pcie *pcie)
--{
--	guard(mutex)(&pcie_list_lock);
--
--	list_del(&pcie->entry);
--}
--
- static struct apple_pcie *apple_pcie_lookup(struct device *dev)
- {
--	struct apple_pcie *pcie;
--
--	guard(mutex)(&pcie_list_lock);
--
--	list_for_each_entry(pcie, &pcie_list, entry) {
--		if (pcie->dev =3D=3D dev)
--			return pcie;
--	}
-+	struct pci_host_bridge *bridge;
-=20
--	return NULL;
-+	bridge =3D dev_get_drvdata(dev);
-+	return pci_host_bridge_priv(bridge);
- }
-=20
- static struct apple_pcie_port *apple_pcie_get_port(struct pci_dev *pdev)
-@@ -875,13 +852,15 @@ static const struct pci_ecam_ops apple_pcie_cfg_ecam_=
-ops =3D {
- static int apple_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev =3D &pdev->dev;
-+	struct pci_host_bridge *bridge;
- 	struct apple_pcie *pcie;
- 	int ret;
-=20
--	pcie =3D devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
--	if (!pcie)
-+	bridge =3D devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-+	if (!bridge)
- 		return -ENOMEM;
-=20
-+	pcie =3D pci_host_bridge_priv(bridge);
- 	pcie->dev =3D dev;
- 	pcie->hw =3D of_device_get_match_data(dev);
- 	if (!pcie->hw)
-@@ -897,12 +876,7 @@ static int apple_pcie_probe(struct platform_device *pd=
-ev)
- 	if (ret)
- 		return ret;
-=20
--	apple_pcie_register(pcie);
--
--	ret =3D pci_host_common_init(pdev, &apple_pcie_cfg_ecam_ops);
--	if (ret)
--		apple_pcie_unregister(pcie);
--
-+	ret =3D pci_host_common_init(pdev, bridge, &apple_pcie_cfg_ecam_ops);
- 	return ret;
- }
-=20
+Thanks
 
---=20
-Without deviation from the norm, progress is not possible.
+---
+Jason Gunthorpe (2):
+      PCI/P2PDMA: Document DMABUF model
+      vfio/nvgrace: Support get_dmabuf_phys
+
+Leon Romanovsky (7):
+      PCI/P2PDMA: Separate the mmap() support from the core logic
+      PCI/P2PDMA: Simplify bus address mapping API
+      PCI/P2PDMA: Refactor to separate core P2P functionality from memory allocation
+      PCI/P2PDMA: Provide an access to pci_p2pdma_map_type() function
+      dma-buf: provide phys_vec to scatter-gather mapping routine
+      vfio/pci: Enable peer-to-peer DMA transactions by default
+      vfio/pci: Add dma-buf export support for MMIO regions
+
+Vivek Kasireddy (2):
+      vfio: Export vfio device get and put registration helpers
+      vfio/pci: Share the core device pointer while invoking feature functions
+
+ Documentation/driver-api/pci/p2pdma.rst |  97 +++++++---
+ block/blk-mq-dma.c                      |   2 +-
+ drivers/dma-buf/Makefile                |   2 +-
+ drivers/dma-buf/dma-buf-mapping.c       | 248 +++++++++++++++++++++++++
+ drivers/iommu/dma-iommu.c               |   4 +-
+ drivers/pci/p2pdma.c                    | 186 ++++++++++++++-----
+ drivers/vfio/pci/Kconfig                |   3 +
+ drivers/vfio/pci/Makefile               |   1 +
+ drivers/vfio/pci/nvgrace-gpu/main.c     |  52 ++++++
+ drivers/vfio/pci/vfio_pci.c             |   5 +
+ drivers/vfio/pci/vfio_pci_config.c      |  22 ++-
+ drivers/vfio/pci/vfio_pci_core.c        |  53 ++++--
+ drivers/vfio/pci/vfio_pci_dmabuf.c      | 316 ++++++++++++++++++++++++++++++++
+ drivers/vfio/pci/vfio_pci_priv.h        |  23 +++
+ drivers/vfio/vfio_main.c                |   2 +
+ include/linux/dma-buf-mapping.h         |  17 ++
+ include/linux/dma-buf.h                 |  11 ++
+ include/linux/pci-p2pdma.h              | 120 +++++++-----
+ include/linux/vfio.h                    |   2 +
+ include/linux/vfio_pci_core.h           |  42 +++++
+ include/uapi/linux/vfio.h               |  28 +++
+ kernel/dma/direct.c                     |   4 +-
+ mm/hmm.c                                |   2 +-
+ 23 files changed, 1101 insertions(+), 141 deletions(-)
+---
+base-commit: dcb6fa37fd7bc9c3d2b066329b0d27dedf8becaa
+change-id: 20251016-dmabuf-vfio-6cef732adf5a
+
+Best regards,
+--  
+Leon Romanovsky <leonro@nvidia.com>
+
 
