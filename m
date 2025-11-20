@@ -1,118 +1,125 @@
-Return-Path: <linux-pci+bounces-41812-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41813-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 578EEC755DC
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 17:31:51 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0696CC75775
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 17:49:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D9AEE4E170C
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 16:22:35 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5B12D361163
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 16:39:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF5EA3644C1;
-	Thu, 20 Nov 2025 16:22:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69F62364EA2;
+	Thu, 20 Nov 2025 16:39:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJqg5gsj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2kg0Tjj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1F53644B6
-	for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 16:22:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382E7363C6F;
+	Thu, 20 Nov 2025 16:39:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763655750; cv=none; b=rAtfsghRW/wQQQOw/EkIXFONqYnTzBcq/pLnWENF6aAa5yjMVyQOQQJSJPpXUVisQhhwkCAYR7DpKZbfZYfr2LnAIlj4ZGTbgPTdQpcqOAFHmEwIwIQacjLUp3yqdJmQByLR/a3J4nEIN/LaK0CaWnqxM6MROlNGd4IHY26fJmw=
+	t=1763656754; cv=none; b=kxbiiJUdqzxYcvvlTbRC4xZTCuQ/S5EVnjCAVnMZHUXjJibUJNp5wLrZ8I4lRWnlK1CwDSX3cU88dMZBtvpznh5g5+54GrEwH0tNd3edG3nmhgWpCCh3lWvPO+jCteEv5340EBRx51TTK2TENf2KTAPQbAsKSOUlGYhA+QfZZNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763655750; c=relaxed/simple;
-	bh=bi/Po0AgpnEbGaYHxKxOmZ9YXa7BiIdYeqc0S3my3Xo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M20pQxpvHkhkuqWvfRXs5TIfkXuBb3PlnyYn7CWrh8l5HEBrJmIvH+MerYobPlLCMQzv2PQ5Iy5Iubh+gwuJQEw2P6z3sywpd6rXj6FnWpISp20WIM+7LnR/C7ILKtTSAZSEkYmn+Y/XtH3PEw7MimMlRoEK9gcxvyMVTY6CtJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJqg5gsj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9205DC19425
-	for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 16:22:30 +0000 (UTC)
+	s=arc-20240116; t=1763656754; c=relaxed/simple;
+	bh=BnOq3z51JqZJ8uQTHJFdAkzYEzpauy5TFsDbeB3BY4s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nDtlCb/QsOAKgpoOea2MX3ug7ZC6gnkmwn1rVi0k5Ty92M62uxOqvjcO196H9LHFg0pU/bPZGo4Ed4WdcvwEEA8iSThasFqWNnzKfAW9DPAesgp8rBA8eu+BxfvQNps7t2zkf66QpOS6ajgOjvy/p8GtgTMnS3a7notYEXf0m7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2kg0Tjj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F08A7C116C6;
+	Thu, 20 Nov 2025 16:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763655750;
-	bh=bi/Po0AgpnEbGaYHxKxOmZ9YXa7BiIdYeqc0S3my3Xo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=OJqg5gsj68ksFZN0GbvCUrDOmfrmRxVknpZNcMdToGVZVvl4EawqQiK/RQ7e58ifU
-	 vwvTkArvsYgKhaFbPDYTNrAswmZJS94eTfPRPPhrE1hIJ7kn6kr7CgGow1eRsLVwh+
-	 Ubqao6grr+Ox/P33v8nvayEXUjcRzbzY/otv9qQWV46zE7hCP268zEkixGSjcQLuT1
-	 OM/SURl1hDHKSZYhO5shJ+N0LjpXKnP9vMougYMgUBNotoEzcNREMrmw3cuW13QsDJ
-	 nodPtUgFwQD7zQ1PbtHPPWCL9CX+kRLzBEnh0p3TRHH7doP1PaMme5cuOgaUtzKZJQ
-	 QD3VK61BRe7rg==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b739b3fc2a0so163422566b.3
-        for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 08:22:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWBpOR3OJxeVIN6U7iV3t2fSbQqCAC7bhLsvdNNq9tpNm79cFLl0hGKzPdN9L34lkOiuk6ivCtu18w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyebOhEdrl8LzWnETl7EDVlYp/KC3evztLyAn+qnuTYqn9+NQi7
-	ssEX0jsNGfwz5VJGSLQx71BDW163cl2Cd1bcOxZ1l3XizAzTvaxyZu/Zg7tCVqYG0vA96gujw4f
-	oPP2kSKnjEQdviX9MUdSn7GEVPcHK2A==
-X-Google-Smtp-Source: AGHT+IEWkCgWatcHpdXr/OIRJiRj/QCEmSn/C4yEQfCtXou2e73E372BAB9bX3hhR6qzcGe6jCZ9JRVO/S+7C6PFF8E=
-X-Received: by 2002:a17:907:db16:b0:b72:d001:7653 with SMTP id
- a640c23a62f3a-b7654de0b58mr374078966b.19.1763655748985; Thu, 20 Nov 2025
- 08:22:28 -0800 (PST)
+	s=k20201202; t=1763656754;
+	bh=BnOq3z51JqZJ8uQTHJFdAkzYEzpauy5TFsDbeB3BY4s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V2kg0Tjj5QAKnndNOFZg5UC+/n0jys+8p9t5bz8p2y04vHxqxgOE2geeBodAahomQ
+	 6m3d1+OMgwqwVvJImgdEJxg6I3jVlPT88OhSxZ93cPZtdsMP+msfK+1w3cGjTUH5Nv
+	 KVXDDGdIK+t3KqYt6Q2bt2kY6nQrRG1SAVr2XiYmixARbV/XEroZo9xi4/Ag7AT0SJ
+	 bSMR3ZrrUBkYF+RvU0I7zZpD2Aa96Em+gKXCZFEiXjNqiLkrPQxYJAxKRG/bx0AGZn
+	 SfYsbZi5aoUPmDMmRb3KWQe8ti0Kl2mPqG4nN/orjZlqLPNlTDR71a2uEHdq723P1/
+	 DQlMOgkh/0V3Q==
+Date: Thu, 20 Nov 2025 16:39:04 +0000
+From: Lee Jones <lee@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+	patchwork-bot+netdevbpf@kernel.org,
+	Sjoerd Simons <sjoerd@collabora.com>, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, matthias.bgg@gmail.com,
+	ryder.lee@mediatek.com, jianjun.wang@mediatek.com,
+	bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	mani@kernel.org, chunfeng.yun@mediatek.com, vkoul@kernel.org,
+	kishon@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, pabeni@redhat.com, lorenzo@kernel.org,
+	nbd@nbd.name, kernel@collabora.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-phy@lists.infradead.org, netdev@vger.kernel.org,
+	daniel@makrotopia.org, bryan@bryanhinton.com,
+	conor.dooley@microchip.com
+Subject: Re: [PATCH v4 00/11] arm64: dts: mediatek: Add Openwrt One AP
+ functionality
+Message-ID: <20251120163904.GL661940@google.com>
+References: <20251115-openwrt-one-network-v4-0-48cbda2969ac@collabora.com>
+ <176360700676.1051457.11874224265724256534.git-patchwork-notify@kernel.org>
+ <20251120152829.GH661940@google.com>
+ <20251120073639.3fd7cc7c@kernel.org>
+ <20251120154012.GJ661940@google.com>
+ <20251120074457.5aa06d89@kernel.org>
+ <c23d5d1e-4816-41c7-9886-41d586c84cc6@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com>
- <20251112-pci-m2-e-v1-6-97413d6bf824@oss.qualcomm.com> <CAL_JsqKBcXH0EWguto3EFY2cJ5p=8VUZczMHz1u5fNFocv-AmA@mail.gmail.com>
- <cjtnoqjr3v5o64caa6unllb2e2csyvybr6vnzwuqqrl453bgz7@drqmfkfbn5xg>
-In-Reply-To: <cjtnoqjr3v5o64caa6unllb2e2csyvybr6vnzwuqqrl453bgz7@drqmfkfbn5xg>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 20 Nov 2025 10:22:16 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLoD5GiiGgWTEa6-g8VwyuPTko-ewe5CKPBWMgHDnKaHg@mail.gmail.com>
-X-Gm-Features: AWmQ_blvWXZ3OwaL5ikiIPwr7cVeDcTz_uslr7dP8flZZyL49YRBC5MiFZDf9vA
-Message-ID: <CAL_JsqLoD5GiiGgWTEa6-g8VwyuPTko-ewe5CKPBWMgHDnKaHg@mail.gmail.com>
-Subject: Re: [PATCH 6/9] serdev: Skip registering serdev devices from DT is
- external connector is used
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: manivannan.sadhasivam@oss.qualcomm.com, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c23d5d1e-4816-41c7-9886-41d586c84cc6@collabora.com>
 
-On Wed, Nov 19, 2025 at 7:33=E2=80=AFAM Manivannan Sadhasivam <mani@kernel.=
-org> wrote:
->
-> On Tue, Nov 18, 2025 at 07:03:51AM -0600, Rob Herring wrote:
-> > On Wed, Nov 12, 2025 at 8:45=E2=80=AFAM Manivannan Sadhasivam via B4 Re=
-lay
-> > <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
-> > >
-> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > >
-> > > If an external connector like M.2 is connected to the serdev controll=
-er
-> > > in DT, then the serdev devices will be created dynamically by the con=
-nector
-> > > driver. So skip registering devices from DT node as there will be no
-> > > statically defined devices.
-> >
-> > You could still have statically defined devices. You are just choosing
-> > to probe them later from the connector driver.
-> >
->
-> The point of coming up with the M.2 binding is to avoid hardcoding the de=
-vices
-> in DT. So static devices are ruled out IMO.
+On Thu, 20 Nov 2025, AngeloGioacchino Del Regno wrote:
 
-Until you have any one of the reasons we have PCIe devices described
-even when in a standard slot. Take your pick. An ethernet adapter that
-omits an EEPROM for the MAC address.
+> Il 20/11/25 16:44, Jakub Kicinski ha scritto:
+> > On Thu, 20 Nov 2025 15:40:12 +0000 Lee Jones wrote:
+> > > > > >    - [v4,02/11] dt-bindings: PCI: mediatek-gen3: Add MT7981 PCIe compatible
+> > > > > >      (no matching commit)
+> > > > > >    - [v4,03/11] dt-bindings: phy: mediatek,tphy: Add support for MT7981
+> > > > > >      (no matching commit)
+> > > > > >    - [v4,04/11] arm64: dts: mediatek: mt7981b: Add PCIe and USB support
+> > > > > >      (no matching commit)
+> > > > > >    - [v4,05/11] arm64: dts: mediatek: mt7981b-openwrt-one: Enable PCIe and USB
+> > > > > >      (no matching commit)
+> > > > > >    - [v4,06/11] dt-bindings: net: mediatek,net: Correct bindings for MT7981
+> > > > > >      https://git.kernel.org/netdev/net-next/c/bc41fbbf6faa
+> > > > > >    - [v4,07/11] arm64: dts: mediatek: mt7981b: Add Ethernet and WiFi offload support
+> > > > > >      (no matching commit)
+> > > > > >    - [v4,08/11] arm64: dts: mediatek: mt7981b-openwrt-one: Enable Ethernet
+> > > > > >      (no matching commit)
+> > > > > >    - [v4,09/11] arm64: dts: mediatek: mt7981b: Disable wifi by default
+> > > > > >      (no matching commit)
+> > > > > >    - [v4,10/11] arm64: dts: mediatek: mt7981b: Add wifi memory region
+> > > > > >      (no matching commit)
+> > > > > >    - [v4,11/11] arm64: dts: mediatek: mt7981b-openwrt-one: Enable wifi
+> > > > > >      (no matching commit)
+> > > 
+> > > This is a very odd way of presenting that one patch from the set was merged.
+> > > 
+> > > Not sure I've seen this before.  Is it new?
+> > > 
+> > > It's very confusing.  Is it a core PW thing and / or can it be configured?
+> > 
+> > It's k.org infra bot. Konstantin, would it be possible to highlight
+> > more that a series is partially applied?
+> 
+> I guess that adding "(subset)" like b4 does would improve those messages quite
+> a lot ;-)
 
-Rob
+Right.  Or better still, just omit the ones that weren't touched.
+
+-- 
+Lee Jones [李琼斯]
 
