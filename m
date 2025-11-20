@@ -1,247 +1,244 @@
-Return-Path: <linux-pci+bounces-41779-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41780-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C897C73C5F
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 12:39:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5275CC73C6E
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 12:41:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4A5443411D2
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 11:34:43 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 83F8D347775
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 11:37:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4102231691B;
-	Thu, 20 Nov 2025 11:34:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5B5F32E735;
+	Thu, 20 Nov 2025 11:37:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uo1J8/rz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZXRD80a"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C294302150
-	for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 11:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7669832E697;
+	Thu, 20 Nov 2025 11:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763638480; cv=none; b=qKQvheikrgsSucU7QCf80IVOg4k+yQJ7d/sLXWWNaU/KfvgNVfdkEJroLIV3GipH7m7vGa5BK4Hl6TheqDHwGZT31ZtmdCm2F4lnM2eepqn4B11074hJnNK67wN9b2nkfCIXOYOv4G27MVBBXO9pspP8o3iAlAh0/8kyW+VCJt0=
+	t=1763638637; cv=none; b=RZjzlIORkCbH+fh9PkoO0Mq72AgmhhmK+EytAC6yPoav8hoa8qm/r29xAifJKQLqVrjimQ6Jpc0Ky9LE4P147R9agWM8kTz4PJi3LG30PMG+n6l9Vs19nRDrGjgqDB/ETdjfJz/92BR7wW2Bo075h3EG/hXSHjIkaCXGy1GXyjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763638480; c=relaxed/simple;
-	bh=KP9M7UM3DOMv7x2JJX8u2Wkqx8XiQYNRNIYo7FJg4jA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lFJRQSdTDwqlp58cUg6gaRKrTs4eWB+wN3dquIsLlv9GcFXEmIjD4S6HlCo+ydSRZTDdEBWxxiPM3e8b4+mOug63FF/5B+onjJ1Auu5Vadnevg47AxvlTL/Ceqo14ZVJTHowyjhrB26klr0jI108wDtUfzOfiZrcLU4q8BJD/Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Uo1J8/rz; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-429c521cf2aso503369f8f.3
-        for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 03:34:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763638476; x=1764243276; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=irYXhJk+YQeGcC0lwAQH2NJi0CRJgcwHwSYlTrUVyWo=;
-        b=Uo1J8/rzzOmAykhT8QeEoNjiD6ByR+ITbQqY/pEojvQzQt0YqxBWm211NH+un7gAjA
-         AOEzFu+0m4+xlWyylQc2fe8O7yq8JvSlpyw9LBPsI5gbSkNpSfHeSOY+I6lhxQo5mpwL
-         tyOiRIRenq0YE3T7tkaog3kqSc8kMWgHh7ux4UI/ikxLZkgrzqG+Hek5Q0QC+is/tiRG
-         qNjMwS2YFKBFZHLRuLnEj0ubMUY02ymLwmOmfrXaiXyb+cK70LwrksfxEQvt8mqZXbtl
-         iMd4+UHqtdLR1L0HmMq5meWoqzzINeRCjEKl/M7O//rY/qpA5v85tIXSaG1nV/aHr1QQ
-         2ucw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763638476; x=1764243276;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=irYXhJk+YQeGcC0lwAQH2NJi0CRJgcwHwSYlTrUVyWo=;
-        b=XqWTRRhcWKr4DmYB6EcrVDTlyL0bQ/5U7HVssH8PrQLIDuYt+tGDkrDEMoROxCWpmm
-         2WFg6Gt079eYEuRvOPIflR0Qy3mKnShzUAJC+0omawTgyuK7HXdpEBMHQnyb6V4u4ARg
-         n0ZmyOkhA5gxP3aMcI/F38aJIey/C1S72746mP8LcKomOdqrFp2yj63EJOAIwaCNWwO5
-         a8SuP5H1cowQCKJjc2A/EL99dB0UGjCW3SmPnTtoKleR0HFZXQAXyVdM6wIz7mNE799j
-         vzpStbma5MhV/fDd8Js2bUQfOI5yFf7Ckv3WmhX6m2+7gkAj2W++R68j3eEXHsZI/ns7
-         aZRw==
-X-Forwarded-Encrypted: i=1; AJvYcCWcQxcQZDKyvbzOeYhsAH5WiQIjtRqjzAj5yys+rm/3IoTZb6dPJRUVJnLgnv5ryXVGUd0bIgx1WIY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxOq2321zjTuKpCa10emwvGWrRXtSpBNn7ObKUUI29hjND5lwW
-	FM2qzfZtF41lkmT4ME+kIbGhZSHpe+pF/GRNLX88yVzoq/0jm89ZRktGZZVzHxyZFJMb9YYwyng
-	+blpzuD4AX9avnUFTLg==
-X-Google-Smtp-Source: AGHT+IGD6vFBG/qnJRTeI0Egc5o0fCaTq+k3AZilSs3nMUa4+yW7KKG3PYKjSiBTF3vYiJw3LYHTcpA/ftuQTWQ=
-X-Received: from wrbfq12.prod.google.com ([2002:a05:6000:2a0c:b0:42b:33e5:eba0])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:2210:b0:42b:3dbe:3a43 with SMTP id ffacd0b85a97d-42cb9a65043mr2524994f8f.50.1763638476264;
- Thu, 20 Nov 2025 03:34:36 -0800 (PST)
-Date: Thu, 20 Nov 2025 11:34:35 +0000
-In-Reply-To: <20251119-rust_leds-v9-1-86c15da19063@posteo.de>
+	s=arc-20240116; t=1763638637; c=relaxed/simple;
+	bh=RrpUxwlBxKhJ94bRnqangTKZ1qMlkCMgwAyjW/+afBM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P5ZvkRB7jYHLUb+gsA4Nsh4d0qTVhZaLVND1UN0SlkDeWhekq2ohlWMLFPv6LwJixoxGqfUnb9vkudwWPW1GGvNpGp5S/SyjN8wwD5g2Sk0lf6RMapTAVpZS1WT9gVqFaxU5grhxhT2hjBBpAacOUB7+t/5IGZd54OC03r7JY+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WZXRD80a; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F19D4C4CEF1;
+	Thu, 20 Nov 2025 11:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763638637;
+	bh=RrpUxwlBxKhJ94bRnqangTKZ1qMlkCMgwAyjW/+afBM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WZXRD80aP88NiIaZ79MOFF2VCZePCpW+tdSqFzcVIWdpzUH6lTMI50kHoomCs5PG+
+	 a0rvejtM4w3iIfB00Cakw52U7Po8fO9j8KxXn3YWBOU/8CeafQQEy6fd3iAFs4mbXZ
+	 VAkX05CMtQuUPLXUXfsmDuCw9Ga73Lim4j+ghC0q2o36N9JHXRA5WbHxEwqVp3yDpF
+	 fTyzh/SZdJEVTHCiTQNHPh4bI4RQ23KQxo05iCjla3bqJo0WGAddcQT4RoTR0cMAWW
+	 8TylQ7rlvi2BjgpV42WPBN8blvu9G+Z4lKefiNnGFyPBMllk99dxLEvzTd+lTEcVaq
+	 t24EPhRww7G3w==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1vM2yQ-00000006rX7-35N8;
+	Thu, 20 Nov 2025 11:37:14 +0000
+From: Marc Zyngier <maz@kernel.org>
+To: linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Radu Rendec <rrendec@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: [PATCH] PCI: host-generic: Move bridge allocation outside of pci_host_common_init()
+Date: Thu, 20 Nov 2025 11:36:30 +0000
+Message-ID: <20251120113630.2036078-1-maz@kernel.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251119-rust_leds-v9-0-86c15da19063@posteo.de> <20251119-rust_leds-v9-1-86c15da19063@posteo.de>
-Message-ID: <aR78ywVnpWaOEeJ-@google.com>
-Subject: Re: [PATCH v9 1/3] rust: leds: add basic led classdev abstractions
-From: Alice Ryhl <aliceryhl@google.com>
-To: Markus Probst <markus.probst@posteo.de>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Ertman <david.m.ertman@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	"Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rrendec@redhat.com, bhelgaas@google.com, mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org, lpieralisi@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Nov 19, 2025 at 02:11:21PM +0000, Markus Probst wrote:
-> Implement the core abstractions needed for led class devices, including:
-> 
-> * `led::LedOps` - the trait for handling leds, including
->   `brightness_set`, `brightness_get` and `blink_set`
-> 
-> * `led::InitData` - data set for the led class device
-> 
-> * `led::Device` - a safe wrapper around `led_classdev`
-> 
-> Signed-off-by: Markus Probst <markus.probst@posteo.de>
-> ---
->  MAINTAINERS        |   7 +
->  rust/kernel/led.rs | 472 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  rust/kernel/lib.rs |   1 +
->  3 files changed, 480 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b71ea515240a..80cb030911b7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14112,6 +14112,13 @@ F:	drivers/leds/
->  F:	include/dt-bindings/leds/
->  F:	include/linux/leds.h
->  
-> +LED SUBSYSTEM [RUST]
-> +M:	Markus Probst <markus.probst@posteo.de>
-> +L:	linux-leds@vger.kernel.org
-> +L:	rust-for-linux@vger.kernel.org
-> +S:	Maintained
-> +F:	rust/kernel/led.rs
-> +
->  LEGO MINDSTORMS EV3
->  R:	David Lechner <david@lechnology.com>
->  S:	Maintained
-> diff --git a/rust/kernel/led.rs b/rust/kernel/led.rs
-> new file mode 100644
-> index 000000000000..fca55f02be8d
-> --- /dev/null
-> +++ b/rust/kernel/led.rs
-> @@ -0,0 +1,472 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Abstractions for the leds driver model.
-> +//!
-> +//! C header: [`include/linux/leds.h`](srctree/include/linux/leds.h)
-> +
-> +use core::{
-> +    marker::PhantomData,
-> +    mem::transmute,
-> +    pin::Pin,
-> +    ptr::NonNull, //
-> +};
-> +
-> +use pin_init::{
-> +    pin_data,
-> +    pinned_drop,
-> +    PinInit, //
-> +};
-> +
-> +use crate::{
-> +    build_error,
-> +    container_of,
-> +    device::{
-> +        self,
-> +        property::FwNode,
-> +        AsBusDevice,
-> +        Bound, //
-> +    },
-> +    devres::Devres,
-> +    error::{
-> +        code::EINVAL,
-> +        from_result,
-> +        to_result,
-> +        Error,
-> +        Result,
-> +        VTABLE_DEFAULT_ERROR, //
-> +    },
-> +    macros::vtable,
-> +    str::CStr,
-> +    try_pin_init,
-> +    types::{
-> +        ARef,
-> +        Opaque, //
-> +    }, //
-> +};
+Having the host bridge allocation inside pci_host_common_init() results
+in a lot of complexity in the pcie-apple driver (the only direct user
+of this function outside of code PCI code).
 
-Please import kernel::prelude::* and remove all the imports that are
-available from the prelude.
+It forces the allocation of driver-specific tracking structures outside
+of the bridge allocation, which in turns requires it to use inneficient
+data structures to match the bridge and the private structre as needed.
 
-> +impl<'a> InitData<'a> {
-> +    /// Sets the firmware node
-> +    pub fn fwnode(self, fwnode: Option<ARef<FwNode>>) -> Self {
+Instead, let the bridge structure be passed to pci_host_common_init(),
+allowing the driver to allocate it together with the private data,
+as it is usually intended. The driver can then retrieve the bridge
+via the owning device attached to the PCI config window structure.
+This allows the pcie-apple driver to be significantly simplified.
 
-I'm thinking that perhaps this should just be a `&'a FwNode` instead?
-That way, you can increment the refcount in Device::new() if
-registration is successful.
+Both core and driver code are changed in one go to avoid going via
+a transitional interface.
 
-> +        Self { fwnode, ..self }
-> +    }
-> +
-> +    /// Sets a default label
+Link: https://lore.kernel.org/r/86jyzms036.wl-maz@kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: Radu Rendec <rrendec@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+---
+ drivers/pci/controller/pci-host-common.c | 13 ++++----
+ drivers/pci/controller/pci-host-common.h |  1 +
+ drivers/pci/controller/pcie-apple.c      | 42 ++++--------------------
+ 3 files changed, 14 insertions(+), 42 deletions(-)
 
-There are many missing periods in doc-comments.
+diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+index 810d1c8de24e9..c473e7c03baca 100644
+--- a/drivers/pci/controller/pci-host-common.c
++++ b/drivers/pci/controller/pci-host-common.c
+@@ -53,16 +53,12 @@ struct pci_config_window *pci_host_common_ecam_create(struct device *dev,
+ EXPORT_SYMBOL_GPL(pci_host_common_ecam_create);
+ 
+ int pci_host_common_init(struct platform_device *pdev,
++			 struct pci_host_bridge *bridge,
+ 			 const struct pci_ecam_ops *ops)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct pci_host_bridge *bridge;
+ 	struct pci_config_window *cfg;
+ 
+-	bridge = devm_pci_alloc_host_bridge(dev, 0);
+-	if (!bridge)
+-		return -ENOMEM;
+-
+ 	of_pci_check_probe_only();
+ 
+ 	platform_set_drvdata(pdev, bridge);
+@@ -85,12 +81,17 @@ EXPORT_SYMBOL_GPL(pci_host_common_init);
+ int pci_host_common_probe(struct platform_device *pdev)
+ {
+ 	const struct pci_ecam_ops *ops;
++	struct pci_host_bridge *bridge;
+ 
+ 	ops = of_device_get_match_data(&pdev->dev);
+ 	if (!ops)
+ 		return -ENODEV;
+ 
+-	return pci_host_common_init(pdev, ops);
++	bridge = devm_pci_alloc_host_bridge(&pdev->dev, 0);
++	if (!bridge)
++		return -ENOMEM;
++
++	return pci_host_common_init(pdev, bridge, ops);
+ }
+ EXPORT_SYMBOL_GPL(pci_host_common_probe);
+ 
+diff --git a/drivers/pci/controller/pci-host-common.h b/drivers/pci/controller/pci-host-common.h
+index 51c35ec0cf37d..b5075d4bd7eb3 100644
+--- a/drivers/pci/controller/pci-host-common.h
++++ b/drivers/pci/controller/pci-host-common.h
+@@ -14,6 +14,7 @@ struct pci_ecam_ops;
+ 
+ int pci_host_common_probe(struct platform_device *pdev);
+ int pci_host_common_init(struct platform_device *pdev,
++			 struct pci_host_bridge *bridge,
+ 			 const struct pci_ecam_ops *ops);
+ void pci_host_common_remove(struct platform_device *pdev);
+ 
+diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+index 0380d300adca6..a902aa81a497e 100644
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@ -206,9 +206,6 @@ struct apple_pcie_port {
+ 	int			idx;
+ };
+ 
+-static LIST_HEAD(pcie_list);
+-static DEFINE_MUTEX(pcie_list_lock);
+-
+ static void rmw_set(u32 set, void __iomem *addr)
+ {
+ 	writel_relaxed(readl_relaxed(addr) | set, addr);
+@@ -724,32 +721,9 @@ static int apple_msi_init(struct apple_pcie *pcie)
+ 	return 0;
+ }
+ 
+-static void apple_pcie_register(struct apple_pcie *pcie)
+-{
+-	guard(mutex)(&pcie_list_lock);
+-
+-	list_add_tail(&pcie->entry, &pcie_list);
+-}
+-
+-static void apple_pcie_unregister(struct apple_pcie *pcie)
+-{
+-	guard(mutex)(&pcie_list_lock);
+-
+-	list_del(&pcie->entry);
+-}
+-
+ static struct apple_pcie *apple_pcie_lookup(struct device *dev)
+ {
+-	struct apple_pcie *pcie;
+-
+-	guard(mutex)(&pcie_list_lock);
+-
+-	list_for_each_entry(pcie, &pcie_list, entry) {
+-		if (pcie->dev == dev)
+-			return pcie;
+-	}
+-
+-	return NULL;
++	return pci_host_bridge_priv(dev_get_drvdata(dev));
+ }
+ 
+ static struct apple_pcie_port *apple_pcie_get_port(struct pci_dev *pdev)
+@@ -875,13 +849,15 @@ static const struct pci_ecam_ops apple_pcie_cfg_ecam_ops = {
+ static int apple_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct pci_host_bridge *bridge;
+ 	struct apple_pcie *pcie;
+ 	int ret;
+ 
+-	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+-	if (!pcie)
++	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
++	if (!bridge)
+ 		return -ENOMEM;
+ 
++	pcie = pci_host_bridge_priv(bridge);
+ 	pcie->dev = dev;
+ 	pcie->hw = of_device_get_match_data(dev);
+ 	if (!pcie->hw)
+@@ -897,13 +873,7 @@ static int apple_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	apple_pcie_register(pcie);
+-
+-	ret = pci_host_common_init(pdev, &apple_pcie_cfg_ecam_ops);
+-	if (ret)
+-		apple_pcie_unregister(pcie);
+-
+-	return ret;
++	return pci_host_common_init(pdev, bridge, &apple_pcie_cfg_ecam_ops);
+ }
+ 
+ static const struct of_device_id apple_pcie_of_match[] = {
+-- 
+2.47.3
 
-> +/// Trait defining the operations for a LED driver.
-> +///
-> +/// # Examples
-> +///
-> +///```
-> +/// # use kernel::{
-> +/// #     c_str, device, devres::Devres,
-> +/// #     error::Result, led,
-> +/// #     macros::vtable, platform, prelude::*,
-> +/// # };
-> +/// # use core::pin::Pin;
-> +///
-> +/// struct MyLedOps;
-
-When using # in examples, please do not have an empty line before
-beginning the example. It shows up as a weird extra empty line in the
-rendered docs.
-
-You could consider just making the imports displayed here also.
-
-Also the ``` both above and below the example usually has a space:
-
-/// ```
-
-rather than
-
-///```
-
-> +                    // SAFETY:
-> +                    // - `parent.as_raw()` is guaranteed to be a pointer to a valid `device`
-> +                    //    or a null pointer.
-> +                    // - `ptr` is guaranteed to be a pointer to an initialized `led_classdev`.
-> +                    to_result(unsafe {
-> +                        bindings::led_classdev_register_ext(
-> +                            parent.as_ref().as_raw(),
-> +                            ptr,
-> +                            &mut init_data_raw,
-> +                        )
-> +                    })?;
-> +
-> +                    core::mem::forget(init_data.fwnode); // keep the reference count incremented
-
-This led abstraction implicitly takes a refcount on the fwnode and then
-drops it when the device is unbound.
-
-Lee, can you confirm that taking a refcount on the fwnode is the right
-way to use the LED subsytem?
-
-Alice
 
