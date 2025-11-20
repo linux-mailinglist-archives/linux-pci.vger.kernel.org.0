@@ -1,207 +1,161 @@
-Return-Path: <linux-pci+bounces-41744-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41745-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2732DC72B75
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 09:06:51 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCEB1C72C1E
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 09:20:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2B9244E3B88
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 08:06:48 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id B3BB32A0CF
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Nov 2025 08:20:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 770AB2ED164;
-	Thu, 20 Nov 2025 08:06:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF13A309DDD;
+	Thu, 20 Nov 2025 08:19:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jyoe7Oe5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dgkhgMAf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335D6372AB6;
-	Thu, 20 Nov 2025 08:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59232E8DF5
+	for <linux-pci@vger.kernel.org>; Thu, 20 Nov 2025 08:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763626000; cv=none; b=mPHwMi7kFIx3eH5JDrOB0WVa1xEmKw/Ml/NX7FkeMC8LD6S6MTEUp2RmziW7630BeCNjX2WfB3XU5tVzh3SMdeussUb9/TKrXxT59Jtkn9S2UtEtueBTxBVy1c0DLCH+a0kE4LW+X44X+LfxyK/OJO1rGnD0DLS5G98n2hMxDNQ=
+	t=1763626789; cv=none; b=kkjdD6MF9OO2F23aMn8QlAUgIFQeSC5zEEXs8kRpxnh+eytrFQjzWFGNBqIf3l/5Uh3CWzNRGDLvsEtoGGFaw78lpFm/tk3Z7T2tiFum8ca7GL0iQ/ugVKvzQ06kFikhdma7rJ8LxbT26X3X7cojQohejncaWETWDYjhs2L/YZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763626000; c=relaxed/simple;
-	bh=mxT/rSlaqP+txsmWmS9/PssKwzGp7j3BhlaZuVwXZis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LKJVZSCXFLtQZaqK+/XQ1aLWr5XYa4X0huCO3MjuwXwLPyE9ewJERBVkY0CRkMdwlvYcHdxkz19TzHZt8lAIgCHYGobNFBMZAr1VYWCmwhdfo73mu1V6nyp9XYCPGN43TF0b4uTnIwRI9I6xs/IM0FOwubA6n/Z5T1kvEtPaxCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jyoe7Oe5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 124CEC4CEF1;
-	Thu, 20 Nov 2025 08:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763625999;
-	bh=mxT/rSlaqP+txsmWmS9/PssKwzGp7j3BhlaZuVwXZis=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jyoe7Oe5fQPJ/c3G0Y3Le2MuwLeYij5ETlxaQsfHH0IeCeAp4SV8sma9/p4puBfJd
-	 uSJLTrxHP3QFvgERIjsj/1tqk+X/okArVSEm8ZMhuoWrUm+nw49VGAhsvO+/F7roqB
-	 earNWu4MD42Xdka7K6xqmgczk8orzPbhqOIDxQD+/aKHXhBiOGA4RplKw1T/I2rQ6a
-	 ev9a2LBRLzTP1F+YYtsiwBQ2gNaHKtotSqd6c5JXDYnlHf0a974bbsQ8w3T/BC46cr
-	 IlYGcGcRRMayKQVYgRTSLxtDvYEu5tk34YIf2hUPYoKt2aPFZV53WId4koKue3AXLS
-	 Eq5b6O0Zpw2Lw==
-Date: Thu, 20 Nov 2025 10:06:35 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [Linaro-mm-sig] [PATCH v8 06/11] dma-buf: provide phys_vec to
- scatter-gather mapping routine
-Message-ID: <20251120080635.GT18335@unreal>
-References: <20251111-dmabuf-vfio-v8-0-fd9aa5df478f@nvidia.com>
- <20251111-dmabuf-vfio-v8-6-fd9aa5df478f@nvidia.com>
- <8a11b605-6ac7-48ac-8f27-22df7072e4ad@amd.com>
- <20251119132511.GK17968@ziepe.ca>
- <69436b2a-108d-4a5a-8025-c94348b74db6@amd.com>
- <20251119193114.GP17968@ziepe.ca>
- <c115432c-b63d-4b99-be18-0bf96398e153@amd.com>
- <20251120074137.GR18335@unreal>
- <209499e2-6a06-4291-ad4c-77230926c665@amd.com>
+	s=arc-20240116; t=1763626789; c=relaxed/simple;
+	bh=r8efe2TLV24O/+EZZnr0+7kirTKROjII57XL1RaOfNw=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=EfsLe8/RWAUBtVdNAod34FbiJEJoUaDLvY33WZN2fRwizYFcIs5LhkyXsfaztgR9J3laOrU8ngGHlweFLg3Lnosr02VPYFOg12qf6zDR1kyOqzk0tVHBQBrCC5xdm9H+p6vIuA94uDEhWT6Nw3KlMlhRU+DLwwt8OwfUteC6vYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dgkhgMAf; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763626788; x=1795162788;
+  h=date:from:to:cc:subject:message-id;
+  bh=r8efe2TLV24O/+EZZnr0+7kirTKROjII57XL1RaOfNw=;
+  b=dgkhgMAfroRcdLzLPt2zpjGDg7bGJ88zf221MSThjB8JTBuHlFHItEOX
+   3XftiQEPtXiqHXrVB1eux5zp1O8afGvEwr5J5ZRqqGG/Q/Ccu16AwjtYs
+   XHIZd05REVv1qeqvVrBm9Aupd/DojiEsxxtLbxeEfkfnxU55uK8WETPtw
+   regJhgnqkhbQxnzuYrOsnolzzG2VbvdiXarmXchhhCw01ENlS5HzlX5ta
+   u5fsFf1gtgEdBZfySf6IRwdkdTHnvN4syJAl1AQ4YDlUFTk9aNNTmrPU5
+   kedGoj3Nj4Hniw4czWydgaNeNTC50RbybirkGNtEDzOgwtShRvFBIZ6Pn
+   Q==;
+X-CSE-ConnectionGUID: 29xbIFvCSzWrgb0DgiamCw==
+X-CSE-MsgGUID: IorDo9jERaiRMNs9VDYBfA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11618"; a="91167587"
+X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
+   d="scan'208";a="91167587"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 00:18:44 -0800
+X-CSE-ConnectionGUID: rOuc7fWHTvaXpFPqjSd9NQ==
+X-CSE-MsgGUID: gwQtNRgrSBiU1dgDk/drLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,317,1754982000"; 
+   d="scan'208";a="190549758"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 20 Nov 2025 00:18:43 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vLzsG-0003ld-2L;
+	Thu, 20 Nov 2025 08:18:40 +0000
+Date: Thu, 20 Nov 2025 16:17:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:err] BUILD SUCCESS
+ 73f1f9b0a2c9fc054597a6c35e0add09afec9d8c
+Message-ID: <202511201651.5Jk2qwUH-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <209499e2-6a06-4291-ad4c-77230926c665@amd.com>
 
-On Thu, Nov 20, 2025 at 08:54:37AM +0100, Christian König wrote:
-> On 11/20/25 08:41, Leon Romanovsky wrote:
-> > On Thu, Nov 20, 2025 at 08:08:27AM +0100, Christian König wrote:
-> >> On 11/19/25 20:31, Jason Gunthorpe wrote:
-> >>> On Wed, Nov 19, 2025 at 02:42:18PM +0100, Christian König wrote:
-> >>>
-> >>>>>>> +	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
-> >>>>>>> +		dma->state = kzalloc(sizeof(*dma->state), GFP_KERNEL);
-> >>>>>>> +		if (!dma->state) {
-> >>>>>>> +			ret = -ENOMEM;
-> >>>>>>> +			goto err_free_dma;
-> >>>>>>> +		}
-> >>>>>>> +
-> >>>>>>> +		dma_iova_try_alloc(attach->dev, dma->state, 0, size);
-> >>>>>>
-> >>>>>> Oh, that is a clear no-go for the core DMA-buf code.
-> >>>>>>
-> >>>>>> It's intentionally up to the exporter how to create the DMA
-> >>>>>> addresses the importer can work with.
-> >>>>>
-> >>>>> I can't fully understand this remark?
-> >>>>
-> >>>> The exporter should be able to decide if it actually wants to use
-> >>>> P2P when the transfer has to go through the host bridge (e.g. when
-> >>>> IOMMU/bridge routing bits are enabled).
-> >>>
-> >>> Sure, but this is a simplified helper for exporters that don't have
-> >>> choices where the memory comes from.
-> >>
-> >> That is extremely questionable as justification to put that in common DMA-buf code.
-> >>
-> >>> I fully expet to see changes to this to support more use cases,
-> >>> including the one above. We should do those changes along with users
-> >>> making use of them so we can evaluate what works best.
-> >>
-> >> Yeah, exactly that's my concern.
-> >>
-> >>>> But only take that as Acked-by, I would need at least a day (or
-> >>>> week) of free time to wrap my head around all the technical details
-> >>>> again. And that is something I won't have before January or even
-> >>>> later.
-> >>>
-> >>> Sure, it is alot, and I think DRM community in general should come up
-> >>> to speed on the new DMA API and how we are pushing to see P2P work
-> >>> within Linux.
-> >>>
-> >>> So thanks, we can take the Acked-by and progress here. Interested
-> >>> parties can pick it up from this point when time allows.
-> >>
-> >> Wait a second. After sleeping a night over it I think my initial take that we really should not put that into common DMA-buf code seems to hold true.
-> >>
-> >> This is the use case for VFIO, but I absolutely want to avoid other drivers from re-using this code until be have more experience with that.
-> >>
-> >> So to move forward I now strongly think we should keep that in VFIO until somebody else comes along and needs that helper.
-> > 
-> > It was put in VFIO at the beginning, but Christoph objected to it,
-> > because that will require exporting symbol for pci_p2pdma_map_type().
-> > which was universally agreed as not good idea.
-> 
-> Yeah, that is exactly what I object here :)
-> 
-> We can have the helper in DMA-buf *if* pci_p2pdma_map_type() is called by drivers or at least accessible. That's what I pointed out in the other mail before as well.
-> 
-> The exporter must be able to make decisions based on if the transaction would go over the host bridge or not.
-> 
-> Background is that in a lot of use cases you rather want to move the backing store into system memory instead of keeping it in local memory if the driver doesn't have direct access over a common upstream bridge.
-> 
-> Currently drivers decide that based on if IOMMU is enabled or not (and a few other quirks), but essentially you absolutely want a function which gives this information to exporters. For the VFIO use case it doesn't matter because you can't switch the BAR for system memory.
-> 
-> To unblock you, please add a big fat comment in the kerneldoc of the mapping explaining this and that it might be necessary for exporters to call pci_p2pdma_map_type() as well.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git err
+branch HEAD: 73f1f9b0a2c9fc054597a6c35e0add09afec9d8c  treewide: Drop pci_save_state() after pci_restore_state()
 
-Thanks,
+elapsed time: 7598m
 
-What do you think about it?
+configs tested: 68
+configs skipped: 0
 
-diff --git a/drivers/dma-buf/dma-buf-mapping.c b/drivers/dma-buf/dma-buf-mapping.c
-index a69bb73db86d..05ec84a0157b 100644
---- a/drivers/dma-buf/dma-buf-mapping.c
-+++ b/drivers/dma-buf/dma-buf-mapping.c
-@@ -84,6 +84,11 @@ struct dma_buf_dma {
-  * PAGE_SIZE aligned.
-  *
-  * A mapping must be unmapped by using dma_buf_free_sgt().
-+ *
-+ * NOTE: While this function is intended for DMA-buf importers, it is critical
-+ * that the DMA-buf exporter is capable of performing peer-to-peer (P2P) DMA
-+ * directly between PCI devices, without routing transactions through the host
-+ * bridge.
-  */
- struct sg_table *dma_buf_phys_vec_to_sgt(struct dma_buf_attachment *attach,
-                                         struct p2pdma_provider *provider,
-(END)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                   allnoconfig    gcc-15.1.0
+alpha                  allyesconfig    gcc-15.1.0
+arc                    allmodconfig    gcc-15.1.0
+arc                     allnoconfig    gcc-15.1.0
+arc                    allyesconfig    gcc-15.1.0
+arc         randconfig-001-20251115    gcc-13.4.0
+arc         randconfig-002-20251115    gcc-11.5.0
+arm                     allnoconfig    clang-22
+arm                    allyesconfig    gcc-15.1.0
+arm         randconfig-001-20251115    clang-22
+arm         randconfig-002-20251115    gcc-8.5.0
+arm         randconfig-003-20251115    gcc-10.5.0
+arm         randconfig-004-20251115    clang-22
+arm64                  allmodconfig    clang-19
+arm64                   allnoconfig    gcc-15.1.0
+csky                   allmodconfig    gcc-15.1.0
+csky                    allnoconfig    gcc-15.1.0
+hexagon                allmodconfig    clang-17
+hexagon                 allnoconfig    clang-22
+i386                   allmodconfig    gcc-14
+i386                    allnoconfig    gcc-14
+i386                   allyesconfig    gcc-14
+loongarch              allmodconfig    clang-19
+loongarch               allnoconfig    clang-22
+m68k                   allmodconfig    gcc-15.1.0
+m68k                    allnoconfig    gcc-15.1.0
+m68k                   allyesconfig    gcc-15.1.0
+microblaze              allnoconfig    gcc-15.1.0
+microblaze             allyesconfig    gcc-15.1.0
+mips                   allmodconfig    gcc-15.1.0
+mips                    allnoconfig    gcc-15.1.0
+mips                   allyesconfig    gcc-15.1.0
+nios2                  allmodconfig    gcc-11.5.0
+nios2                   allnoconfig    gcc-11.5.0
+openrisc               allmodconfig    gcc-15.1.0
+openrisc                allnoconfig    gcc-15.1.0
+parisc                 allmodconfig    gcc-15.1.0
+parisc                  allnoconfig    gcc-15.1.0
+parisc                 allyesconfig    gcc-15.1.0
+powerpc                allmodconfig    gcc-15.1.0
+powerpc                 allnoconfig    gcc-15.1.0
+riscv                  allmodconfig    clang-22
+riscv                   allnoconfig    gcc-15.1.0
+riscv                  allyesconfig    clang-16
+s390                   allmodconfig    clang-18
+s390                    allnoconfig    clang-22
+s390                   allyesconfig    gcc-15.1.0
+sh                     allmodconfig    gcc-15.1.0
+sh                      allnoconfig    gcc-15.1.0
+sh                     allyesconfig    gcc-15.1.0
+sparc                   allnoconfig    gcc-15.1.0
+sparc64                allmodconfig    clang-22
+um                     allmodconfig    clang-19
+um                      allnoconfig    clang-22
+um                     allyesconfig    gcc-14
+x86_64                 allmodconfig    clang-20
+x86_64                  allnoconfig    clang-20
+x86_64                 allyesconfig    clang-20
+x86_64                        kexec    clang-20
+x86_64                     rhel-9.4    clang-20
+x86_64                 rhel-9.4-bpf    gcc-14
+x86_64                rhel-9.4-func    clang-20
+x86_64          rhel-9.4-kselftests    clang-20
+x86_64               rhel-9.4-kunit    gcc-14
+x86_64                 rhel-9.4-ltp    gcc-14
+x86_64                rhel-9.4-rust    clang-20
+xtensa                  allnoconfig    gcc-15.1.0
+xtensa                 allyesconfig    gcc-15.1.0
 
-> 
-> Regards,
-> Christian.
-> 
-> > 
-> > https://lore.kernel.org/all/aPYrEroyWVOvAu-5@infradead.org/
-> > 
-> > Thanks
-> > 
-> >>
-> >> Regards,
-> >> Christian.
-> >>
-> >>>
-> >>> We can also have a mini-community call to give a summary/etc on these
-> >>> topics.
-> >>>
-> >>> Thanks,
-> >>> Jason
-> >>
-> 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
