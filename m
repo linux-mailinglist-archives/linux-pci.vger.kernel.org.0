@@ -1,146 +1,257 @@
-Return-Path: <linux-pci+bounces-41881-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41882-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A89EC7AD1E
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 17:24:36 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE254C7AD45
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 17:26:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 8951535477B
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 16:24:35 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A8B3C4E02E6
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 16:26:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 039BF33CEB2;
-	Fri, 21 Nov 2025 16:24:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D92871ACEDF;
+	Fri, 21 Nov 2025 16:26:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="iVYxelnp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UvzaBNSi"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="e3xa/MVu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6iaW69cV";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VV/AperT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+DorV6SI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5363C33E341;
-	Fri, 21 Nov 2025 16:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20E829B77E
+	for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 16:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763742270; cv=none; b=j3FC1PVhEEWpjoMUaLRBgE4cLbjeaLpj4GIyCAAB24enHpRhvosLiQOvUo7VUgrW/zu4JXBhRYgTB2ZPAl6ku1rE4qfIM0p6Zp/g1O/h5L6Z+0ybgOxZvh29c6CjAkTMuLkze1UYph5GNEdA0Sqw1V7911mWr/BhtwMUO2MseNw=
+	t=1763742369; cv=none; b=Xb+TFbFvTqf8fnoKrJmwPvKkqWpGTv5hbzActFtEOQek3O9n7Zl630ciFUf9KiSAmy6kQ0vLAh00Mcn9ZNmo2GOBNWOQQxm+71ljszyWuON6WNlHjSgjiH8QowuVETQanXKU0eF2povEyLTnvEX8+D3AcJdjA1rzr9RcgoR3gUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763742270; c=relaxed/simple;
-	bh=+roBNOCU2FTSHuPGdhzpgEM5wzJA/OhVLab+j8XE08E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xl0Zm5YGCV8SEmv2L0YJIDkBVn92iVyo+0gqZxcu2zoIXFn+o56yXM2MriRKuQQ7spC+ivtRqVQwNJ8ZkdB6NGByU7HkY7dZ464VcfSc0peQvJrcKIqqHlvQq+4TuCrHd3TNYWjBdr7sZ7RUWxXGMglIrOVORpred/KLhp9VDv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=iVYxelnp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UvzaBNSi; arc=none smtp.client-ip=202.12.124.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id A04FF1D00156;
-	Fri, 21 Nov 2025 11:24:25 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Fri, 21 Nov 2025 11:24:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1763742265;
-	 x=1763828665; bh=y9sPmO9ctPmEofVcJL2ve0sLdAoEmPz/dsTzOswFhgc=; b=
-	iVYxelnp6m8nPDJCJD3pghiuY0JnfpXoWiKDtyC1ZfTMF8fUQtXTaMX5yXfbLont
-	ST9OiZCOgXI8ULRFc6aFOTV/tf4SKt4W5wcQbP9AJZVnFKNBeKTXaQz1YXBFdesO
-	ngWnz2nFnL1qztTi6xyP0b4aSzvPm+uN9ak+bIptT2djVNAQLdqCmwibU9kE5Aby
-	VpAiSzJm+BAVU4pwbqnka0BeOqzyT0bMUyCvk7dAaYRepF8yb8plimv6meD7DiWX
-	p8wl94vOATtCxVWlASjaMB/2zpgiQXfFwIjaAR+tnZBqkJApVj4qwHk4EVRiCEnp
-	1g+zDY1l5gB38/tTHqvG8Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763742265; x=
-	1763828665; bh=y9sPmO9ctPmEofVcJL2ve0sLdAoEmPz/dsTzOswFhgc=; b=U
-	vzaBNSi3AV9eHP0xV5OI+fIMqpbdDdLZSjxGvsQ1T9RKmeLAwjextymi2cVXU8uy
-	Be6PO+J6KI0iovHc0UiFA8B7rQiJTAIxOd4DhBWcsamEOEW5kjFnqKsB7FIrhxeQ
-	GuiIAMeDF55zh/ogS1yglOFCO/9flUPn1HBDtkEepyUIH7oJ3GvW0fdgq2cG3HNt
-	Rreb7R/CH8xTdpLKWo0BA9gScPfpMk/xxjgIGSyYgTlnJbiy/QOWhAmLxQpYZ6V3
-	7/Vl+Dl5oQsAGlnSZbuDQqBdTTIF2o/fTw+PlG/91H2n4QIdikT7RS5D+uM/ue4F
-	NdHheTOKT/rjN+6DYqXNw==
-X-ME-Sender: <xms:N5IgaVaQZaAe5t79XnH1rbSJrYlQplMMYdp0M6-Mr3uWvt823MEJDQ>
-    <xme:N5IgaSsBncHkvTAX8k6pT0FvMeuYcjAGM09pjfPKAWMwiWFbRzWYD5L220C8E6Pk7
-    g55i_BbOAKRyF9cw6sEpexN2O8LimadQjIefkoeLiQUv98iWdUI>
-X-ME-Received: <xmr:N5Igad-WFs5Ve-cFz6F4xXvv1f14eMC6yGbsbN7RyWZyEu__tXqKIFcs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvfedtgeefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkjghfgggtgfesthejredttddtvdenucfhrhhomheptehlvgigucgh
-    ihhllhhirghmshhonhcuoegrlhgvgiesshhhrgiisghothdrohhrgheqnecuggftrfgrth
-    htvghrnhepteetudelgeekieegudegleeuvdffgeehleeivddtfeektdekkeehffehudet
-    hffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hlvgigsehshhgriigsohhtrdhorhhgpdhnsggprhgtphhtthhopeefhedpmhhouggvpehs
-    mhhtphhouhhtpdhrtghpthhtoheplhgvohhnsehkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhoghgrnhhg
-    seguvghlthgrthgvvgdrtghomhdprhgtphhtthhopegrgigsohgvsehkvghrnhgvlhdrug
-    hkpdhrtghpthhtoheprhhosghinhdrmhhurhhphhihsegrrhhmrdgtohhmpdhrtghpthht
-    ohepjhhorhhoseeksgihthgvshdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtohepmhdrshiihihprhhofihskhhisehsrghmshhunhhgrdgt
-    ohhmpdhrtghpthhtohepjhhgghesiihivghpvgdrtggr
-X-ME-Proxy: <xmx:N5IgaQ84u-HHIf2TcQNYp-qQlqRMCjkmlLokOX6AO2UGzSJhrElRBA>
-    <xmx:OJIgaXPtSD_NpuOHdtKoNjoojGX18VUQEBCkvknI_2nnhJz5NPrx0g>
-    <xmx:OJIgacOkV7PC26nL5WPRH0i6onKjj8iCzVuttmRsX2N7uBq0h1DUmQ>
-    <xmx:OJIgaVMFYRWTlkUhXAgJS6FxtMLkh8eI-ToaCrmBZCSefA8L7jXnYw>
-    <xmx:OZIgaTGK97vls5JNSW_jGH-7CSY683IBHOHRkaC1YrXeI4xtr5m3V3e5>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 21 Nov 2025 11:24:20 -0500 (EST)
-Date: Fri, 21 Nov 2025 09:24:17 -0700
-From: Alex Williamson <alex@shazbot.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
- Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Jason Gunthorpe <jgg@ziepe.ca>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>,
- Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
- Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Ankit Agrawal <ankita@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
- Shameer Kolothum <skolothumtho@nvidia.com>,
- Kevin Tian <kevin.tian@intel.com>, Krishnakant Jaju <kjaju@nvidia.com>,
- Matt Ochs <mochs@nvidia.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- iommu@lists.linux.dev, linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
- linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
- Nicolin Chen <nicolinc@nvidia.com>,
- Vivek Kasireddy <vivek.kasireddy@intel.com>
-Subject: Re: [PATCH v9 00/11] vfio/pci: Allow MMIO regions to be exported
- through dma-buf
-Message-ID: <20251121092417.7a6eaa2f.alex@shazbot.org>
-In-Reply-To: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
-References: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
+	s=arc-20240116; t=1763742369; c=relaxed/simple;
+	bh=wfKCScMOnSIwC4cB3cLBfu7TetMDG4K17te7qh71/0E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gi+16SGXLFkoP+4mJ36K2sexzrTz16LjRpvrbbiGVddsQ24kEhkXZuKWwQwhiX6kM3OIpBbR2xJZhuKzdC0+T57jyyke4E+eR9Ezb2KSN1W7z+d7MuxajoSOVowEE8WcbXkQzW2UaP/UU60m582nkm/M+v4de4dseEybDjOMsS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=e3xa/MVu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6iaW69cV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VV/AperT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+DorV6SI; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 787425BCC3;
+	Fri, 21 Nov 2025 16:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1763742366; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2EbQbMBVh+wtPe2xKxStWSFqDMGQxv4HinVXPej2xOg=;
+	b=e3xa/MVuw2mTa15pphIIiW3Fo7ayZEAeOTwDRCYR+LSYpJRosugF3q8BfYZsKiIeylcIKN
+	YIYoyBuposxE+4Rr1Ce+L4ACEOKq+vf77cEx7yYM/ws7Z+bMZl0KxfmusjiCcEWmaVBZcz
+	20pSRFRcmE31f9WhvQ7MpDYL7bY2Snw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1763742366;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2EbQbMBVh+wtPe2xKxStWSFqDMGQxv4HinVXPej2xOg=;
+	b=6iaW69cVy6XAOoi/21AmFXwZp5jxrwUMBQUI59lgt1PS9XOI1mtWjrvhU9z5hhbcc+K3tV
+	/iuFckSa5kxqfoDg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1763742365; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2EbQbMBVh+wtPe2xKxStWSFqDMGQxv4HinVXPej2xOg=;
+	b=VV/AperTpowj2cQmB95YfLGIhbpQrsQdRUpH6FBgAa1qYMuAS6fMKFCPCqOaoIKYR5pSB4
+	s6yuV4YEVNYreBx6rSo410SJITGRhO777f9G+Ep18SefHIXYGhrp2EVLCJPMUAQB58tYIt
+	0Jx4ZrMAj5vAxEIoUWzrP4mvhqCnn1w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1763742365;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=2EbQbMBVh+wtPe2xKxStWSFqDMGQxv4HinVXPej2xOg=;
+	b=+DorV6SINtIaTNa/HgRma0Y9SsO2x1mw1lziFfqwcAn1sqMO59qo7Cirv+ZBnP7ohtLy2P
+	CM9XZ8kP0TEKzvBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1B7E63EA61;
+	Fri, 21 Nov 2025 16:26:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0FlbBZ2SIGnICQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 21 Nov 2025 16:26:05 +0000
+Message-ID: <8d0bc096-e346-462b-a274-f0cc1456eea3@suse.de>
+Date: Fri, 21 Nov 2025 17:26:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] arch, sysfb: Move screen and edid info into single
+ place
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+ Javier Martinez Canillas <javierm@redhat.com>, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-efi@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org,
+ linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-fbdev@vger.kernel.org
+References: <20251121135624.494768-1-tzimmermann@suse.de>
+ <96a8d591-29d5-4764-94f9-6042252e53ff@app.fastmail.com>
+ <CAMj1kXF1Dh0RbuqYc0fhAPf-CM0mdYh8BhenM8-ugKVHfwnhBg@mail.gmail.com>
+ <199e7538-5b4a-483b-8976-84e4a8a0f2fd@suse.de>
+ <CAMj1kXE+mS1Sm5GaROU0P97J2w1pew0P_To4sKiw8h1iOMuLcg@mail.gmail.com>
+ <d080729c-6586-4b9c-b234-470977849d3d@suse.de>
+ <6dff8e7e-c99b-443d-a1d8-22650ca0b595@suse.de>
+ <CAMj1kXGpC_162bFL65kQw=7qVP7ezYw77Q76y217dDs8pqHogw@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <CAMj1kXGpC_162bFL65kQw=7qVP7ezYw77Q76y217dDs8pqHogw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,arndb.de:email,suse.com:url,suse.de:email,suse.de:mid]
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On Thu, 20 Nov 2025 11:28:19 +0200
-Leon Romanovsky <leon@kernel.org> wrote:
+Hi
 
-> Changelog:
-> v9:
->  * Added Reviewed-by tags.
->  * Fixes to p2pdma documentation.
->  * Renamed dma_buf_map and unmap.
->  * Moved them to separate file.
->  * Used nvgrace_gpu_memregion() function instead of open-coded variant.
->  * Paired get_file_active() with fput().
+Am 21.11.25 um 17:19 schrieb Ard Biesheuvel:
+> On Fri, 21 Nov 2025 at 17:09, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>>
+>>
+>> Am 21.11.25 um 17:08 schrieb Thomas Zimmermann:
+>>> Hi
+>>>
+>>> Am 21.11.25 um 16:56 schrieb Ard Biesheuvel:
+>>>> On Fri, 21 Nov 2025 at 16:53, Thomas Zimmermann <tzimmermann@suse.de>
+>>>> wrote:
+>>>>> Hi
+>>>>>
+>>>>> Am 21.11.25 um 16:16 schrieb Ard Biesheuvel:
+>>>>>> On Fri, 21 Nov 2025 at 16:10, Arnd Bergmann <arnd@arndb.de> wrote:
+>>>>>>> On Fri, Nov 21, 2025, at 14:36, Thomas Zimmermann wrote:
+>>>>>>>> Replace screen_info and edid_info with sysfb_primary_device of type
+>>>>>>>> struct sysfb_display_info. Update all users.
+>>>>>>>>
+>>>>>>>> Sysfb DRM drivers currently fetch the global edid_info directly,
+>>>>>>>> when
+>>>>>>>> they should get that information together with the screen_info
+>>>>>>>> from their
+>>>>>>>> device. Wrapping screen_info and edid_info in
+>>>>>>>> sysfb_primary_display and
+>>>>>>>> passing this to drivers enables this.
+>>>>>>>>
+>>>>>>>> Replacing both with sysfb_primary_display has been motivate by
+>>>>>>>> the EFI
+>>>>>>>> stub. EFI wants to transfer EDID via config table in a single entry.
+>>>>>>>> Using struct sysfb_display_info this will become easily possible.
+>>>>>>>> Hence
+>>>>>>>> accept some churn in architecture code for the long-term
+>>>>>>>> improvements.
+>>>>>>> This all looks good to me,
+>>>>>>>
+>>>>>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>>>>> Thanks
+>>>>>
+>>>>>>> It should also bring us one step closer to eventually
+>>>>>>> disconnecting the x86 boot ABI from the kernel-internal
+>>>>>>> sysfb_primary_display.
+>>>>>>>
+>>>>>> Agreed
+>>>>>>
+>>>>>> Acked-by: Ard Biesheuvel <ardb@kernel.org>
+>>>>> Thanks
+>>>>>
+>>>>>> I can take patches 1-2 right away, if that helps during the next
+>>>>>> cycle.
+>>>>>    From my sysfb-focused POV, these patches would ideally all go through
+>>>>> the same tree, say efi or generic arch, or whatever fits best. Most of
+>>>>> the other code is only renames anyway.
+>>>>>
+>>>> I don't mind queueing all of it, but I did get a conflict on
+>>>> drivers/pci/vgaarb.c
+>>> Probably from a78835b86a44 ("PCI/VGA: Select SCREEN_INFO on X86")
+>> https://lore.kernel.org/all/20251013220829.1536292-1-superm1@kernel.org/
+>>
+> Yes, if I merge back -rc2 first, I can apply patches 1-5 onto my
+> efi/next tree. But then I hit
+>
+> Applying: sysfb: Move edid_info into sysfb_primary_display
+> error: sha1 information is lacking or useless (drivers/gpu/drm/sysfb/efidrm.c).
+> error: could not build fake ancestor
+> Patch failed at 0006 sysfb: Move edid_info into sysfb_primary_display
+>
+> If you prefer, you can take the whole lot via the sysfb tree instead,
+> assuming it does not depend on the EDID changes I already queued up?
 
-Applied to vfio next branch with the fixes discussed for v6.19.  I also
-pushed a tag, vfio-v6.19-dma-buf-v9+, for this work.  Thanks,
+Sure, I can also add it to the drm-misc tree. ETA in upstream would be 
+v6.20-rc1.
 
-Alex
+Best regards
+Thomas
+
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
+
+
 
