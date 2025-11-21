@@ -1,135 +1,176 @@
-Return-Path: <linux-pci+bounces-41847-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41848-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3ECDDC779A4
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 07:48:59 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CABEC77A85
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 08:15:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1CDF94E3F4B
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 06:48:58 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTPS id 732FF29145
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 07:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25B70255E26;
-	Fri, 21 Nov 2025 06:48:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85970335BAD;
+	Fri, 21 Nov 2025 07:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="hnghXR09"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from zg8tmja2lje4os43os4xodqa.icoremail.net (zg8tmja2lje4os43os4xodqa.icoremail.net [206.189.79.184])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBF08238C07;
-	Fri, 21 Nov 2025 06:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.79.184
+Received: from mail-m1973186.qiye.163.com (mail-m1973186.qiye.163.com [220.197.31.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD82335074;
+	Fri, 21 Nov 2025 07:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763707733; cv=none; b=jxm25sAwXGavXGxvSnkkFANp9lr7buWAnIG5xLE7mtPFU8qTAwLFstB+eVot0Z1btSf/mF7bRyFKOBlr0uoqqO8lkDnS8DxLOAA1gLxnsnzICDQNpNLPsZgE3zJpH5vLHXKq91Koz1leIoUmWsIQFL0vm6yIDIiK6/genzgk/3Y=
+	t=1763709308; cv=none; b=DuuNuRXCAkg/V1RKMYpKI2ef2S/iG+Ilgjjm6qW/jmkH+DlmsSougiku2GrcXqzd8DDAtjaEGxcwyc/QsuMS9H4J7vHuBhzV+Yrgif/h6N8wPExGAoaxh6Yg9mMt5njUbpGvfuQ+pN8YN9zbuYN0K3AOdZczdLA9dBOxOuPcXZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763707733; c=relaxed/simple;
-	bh=fS5PgzwvioGL5pHjmQTgLKdllFC+X3iN9pvEDO4sWNw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=K0mxB8SdnYkBnH4WO1JkN8niHWfhm83I0tGmgHlpiKT4u/XGY0/7a/9/+PI45UN/SePBUcl3G2nuYZr2UcWH+4nhLvfkRmlvyygmUhR0baOh0eU1h2stYyPvlxJkGGvLA54vJVSiwp4lGR9yJFCngTdrwSUcX2noUR7AvaJJkWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.79.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
- ajax-webmail-app2 (Coremail) ; Fri, 21 Nov 2025 14:48:20 +0800 (GMT+08:00)
-Date: Fri, 21 Nov 2025 14:48:20 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-To: "Manivannan Sadhasivam" <mani@kernel.org>
-Cc: bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
-	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org,
-	p.zabel@pengutronix.de, jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com,
-	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
-	thippeswamy.havalige@amd.com, inochiama@gmail.com,
-	ningyu@eswincomputing.com, linmin@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com,
-	Frank.li@nxp.com
-Subject: Re: Re: [PATCH v6 3/3] PCI: dwc: Add no_suspport_L2 flag and skip
- PME_Turn_Off broadcast
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <dux47crrf6ranvexkpzw667hzmkgfguqadseco52svgvglalye@alxqq4ybu672>
-References: <20251120101018.1477-1-zhangsenchuan@eswincomputing.com>
- <20251120101236.1538-1-zhangsenchuan@eswincomputing.com>
- <dux47crrf6ranvexkpzw667hzmkgfguqadseco52svgvglalye@alxqq4ybu672>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1763709308; c=relaxed/simple;
+	bh=NOLQ1RHAqJ4Ke4Lu5YgZmaFnKVuyY/Xwb1CbjdrKD88=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=U2EJWb09ZDa51wVHb1IBd/ITu1n56C8c8PdjcjCo6G7Ptqb0RGcozceYAGVqDRRrkAYlrXHUO1M+LlA1gvwI7w9SjWiEHWc7xRcFzoRZ2c2fa9xRDDNuxSUB5Z6JnXH+Us/CH/c7pi5pdi+aa6Vo00KPWMB5j5n34RLVi0biEKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=hnghXR09; arc=none smtp.client-ip=220.197.31.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.14] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2a6655444;
+	Fri, 21 Nov 2025 15:14:52 +0800 (GMT+08:00)
+Message-ID: <c77bb3c8-f658-4275-b0f5-37ac215142f7@rock-chips.com>
+Date: Fri, 21 Nov 2025 15:14:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <11367b43.6d3.19aa52bc596.Coremail.zhangsenchuan@eswincomputing.com>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:TQJkCgDnK680CyBpFzB9AA--.2279W
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAQENBmkfQ
-	oMSzAAAsi
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, bhelgaas@google.com, krzk+dt@kernel.org,
+ conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+ robh@kernel.org, p.zabel@pengutronix.de, jingoohan1@gmail.com,
+ gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com,
+ shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
+ thippeswamy.havalige@amd.com, inochiama@gmail.com,
+ ningyu@eswincomputing.com, linmin@eswincomputing.com,
+ pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com,
+ Frank.li@nxp.com, Manivannan Sadhasivam <mani@kernel.org>
+Subject: Re: [PATCH v6 3/3] PCI: dwc: Add no_suspport_L2 flag and skip
+ PME_Turn_Off broadcast
+To: zhangsenchuan <zhangsenchuan@eswincomputing.com>
+References: <20251120101018.1477-1-zhangsenchuan@eswincomputing.com>
+ <20251120101236.1538-1-zhangsenchuan@eswincomputing.com>
+ <dux47crrf6ranvexkpzw667hzmkgfguqadseco52svgvglalye@alxqq4ybu672>
+ <11367b43.6d3.19aa52bc596.Coremail.zhangsenchuan@eswincomputing.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <11367b43.6d3.19aa52bc596.Coremail.zhangsenchuan@eswincomputing.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9aa544106509cckunm2b944a13204b7d
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0wfTVZOGkpISB9NSElIQk9WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=hnghXR09CoBe9P9V051IBP5XN/mFDqnVhFIJm06cf4rte7Yb3mAdOuU9fqchAYKJ0sK8oixonMaGIDNK9z8f3H5k92JhxyditoZLvaHq1AZwyY8048F3jiAKbmHbcF3t31VpTaDOlEfkQmCbFsr3G+0sdlp5Iz59qooy/VwJRR0=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=+PT3x6dFyDPHSY1UQdVOiSUBX7jV1afOUTNQD7zbnaI=;
+	h=date:mime-version:subject:message-id:from;
 
-CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiTWFuaXZhbm5hbiBTYWRo
-YXNpdmFtIiA8bWFuaUBrZXJuZWwub3JnPgo+IFNlbmQgdGltZTpUaHVyc2RheSwgMjAvMTEvMjAy
-NSAyMDo0NTozOAo+IFRvOiB6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbQo+IENjOiBi
-aGVsZ2Fhc0Bnb29nbGUuY29tLCBrcnprK2R0QGtlcm5lbC5vcmcsIGNvbm9yK2R0QGtlcm5lbC5v
-cmcsIGxwaWVyYWxpc2lAa2VybmVsLm9yZywga3dpbGN6eW5za2lAa2VybmVsLm9yZywgcm9iaEBr
-ZXJuZWwub3JnLCBwLnphYmVsQHBlbmd1dHJvbml4LmRlLCBqaW5nb29oYW4xQGdtYWlsLmNvbSwg
-Z3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb20sIGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmcs
-IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnLCBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
-LCBjaHJpc3RpYW4uYnJ1ZWxAZm9zcy5zdC5jb20sIG1heWFuay5yYW5hQG9zcy5xdWFsY29tbS5j
-b20sIHNocmFkaGEudEBzYW1zdW5nLmNvbSwga3Jpc2huYS5jaHVuZHJ1QG9zcy5xdWFsY29tbS5j
-b20sIHRoaXBwZXN3YW15LmhhdmFsaWdlQGFtZC5jb20sIGlub2NoaWFtYUBnbWFpbC5jb20sIG5p
-bmd5dUBlc3dpbmNvbXB1dGluZy5jb20sIGxpbm1pbkBlc3dpbmNvbXB1dGluZy5jb20sIHBpbmtl
-c2gudmFnaGVsYUBlaW5mb2NoaXBzLmNvbSwgb3V5YW5naHVpQGVzd2luY29tcHV0aW5nLmNvbSwg
-RnJhbmsubGlAbnhwLmNvbQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgMy8zXSBQQ0k6IGR3Yzog
-QWRkIG5vX3N1c3Bwb3J0X0wyIGZsYWcgYW5kIHNraXAgUE1FX1R1cm5fT2ZmIGJyb2FkY2FzdAo+
-IAo+IE9uIFRodSwgTm92IDIwLCAyMDI1IGF0IDA2OjEyOjM1UE0gKzA4MDAsIHpoYW5nc2VuY2h1
-YW5AZXN3aW5jb21wdXRpbmcuY29tIHdyb3RlOgo+ID4gRnJvbTogU2VuY2h1YW4gWmhhbmcgPHpo
-YW5nc2VuY2h1YW5AZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gCj4gPiBUaGUgRVNXSU4gRUlDNzcw
-MCBzb2MgZG9lcyBub3Qgc3VwcG9ydCBlbnRlciBMMiBsaW5rIHN0YXRlLiBUaGVyZWZvcmUgYWRk
-Cj4gPiBub19zdXNwcG9ydF9MMiBmbGFnIHNraXAgUE1FX1R1cm5fT2ZmIGJyb2FkY2FzdCBhbmQg
-bGluayBzdGF0ZSBjaGVjayBjb2RlLAo+ID4gb3RoZXIgZHJpdmVyIGNhbiByZXVzZSB0aGlzIGZs
-YWcgaWYgbWVldCB0aGUgc2ltaWxhciBzaXR1YXRpb24uCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6
-IFl1IE5pbmcgPG5pbmd5dUBlc3dpbmNvbXB1dGluZy5jb20+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBZ
-YW5naHVpIE91IDxvdXlhbmdodWlAZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gU2lnbmVkLW9mZi1i
-eTogU2VuY2h1YW4gWmhhbmcgPHpoYW5nc2VuY2h1YW5AZXN3aW5jb21wdXRpbmcuY29tPgo+IAo+
-IERvZXMgdGhpcyBwYXRjaCB3b3JrIGZvciB5b3U/Cj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcv
-bGludXgtcGNpLzIwMjUxMTE5LXBjaS1kd2Mtc3VzcGVuZC1yZXdvcmstdjEtMS1hYWQxMDQ4Mjg1
-NjJAb3NzLnF1YWxjb21tLmNvbS8KCmlmIHRoZSBQQ0llIGxpbmsgaXMgbm90IHVwLCB0aGlzIHN1
-aXRzIG1lIHRvbywgYnV0IGlmIHRoZSBQQ0llIGxpbmsgdXAsIApvdXIgaGFyZHdhcmUgZG9lcyBu
-b3Qgc3VwcG9ydCBlbnRlcmluZyB0aGUgTDIgbGluayBzdGF0ZS4gQXQgdGhpcyBwb2ludCwgCml0
-IGlzIGFsc28gbmVjZXNzYXJ5IHRvIHNraXAgdGhlIGJyb2FkY2FzdCBQTUVfVHVybl9PZmYgbWVz
-c2FnZSBhbmQgd2FpdApmb3IgTDIgdHJhbnNpdGlvbi4KCktpbmQgcmVnYXJkcywKU2VuY2h1YW4g
-WmhhbmcKCj4gCj4gPiAtLS0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRl
-c2lnbndhcmUtaG9zdC5jIHwgNCArKysrCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2Mv
-cGNpZS1kZXNpZ253YXJlLmggICAgICB8IDEgKwo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNSBpbnNl
-cnRpb25zKCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3
-Yy9wY2llLWRlc2lnbndhcmUtaG9zdC5jIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNp
-ZS1kZXNpZ253YXJlLWhvc3QuYwo+ID4gaW5kZXggZTkyNTEzYzViZGE1Li5hMjAzNTc3NjA2ZTUg
-MTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndh
-cmUtaG9zdC5jCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2ln
-bndhcmUtaG9zdC5jCj4gPiBAQCAtMTE1Niw2ICsxMTU2LDkgQEAgaW50IGR3X3BjaWVfc3VzcGVu
-ZF9ub2lycShzdHJ1Y3QgZHdfcGNpZSAqcGNpKQo+ID4gIAlpZiAoZHdfcGNpZV9yZWFkd19kYmko
-cGNpLCBvZmZzZXQgKyBQQ0lfRVhQX0xOS0NUTCkgJiBQQ0lfRVhQX0xOS0NUTF9BU1BNX0wxKQo+
-ID4gIAkJcmV0dXJuIDA7Cj4gPiAKPiA+ICsJaWYgKHBjaS0+bm9fc3VzcHBvcnRfTDIpCj4gPiAr
-CQlnb3RvIHN0b3BfbGluazsKPiA+ICsKPiA+ICAJaWYgKHBjaS0+cHAub3BzLT5wbWVfdHVybl9v
-ZmYpIHsKPiA+ICAJCXBjaS0+cHAub3BzLT5wbWVfdHVybl9vZmYoJnBjaS0+cHApOwo+ID4gIAl9
-IGVsc2Ugewo+ID4gQEAgLTExODIsNiArMTE4NSw3IEBAIGludCBkd19wY2llX3N1c3BlbmRfbm9p
-cnEoc3RydWN0IGR3X3BjaWUgKnBjaSkKPiA+ICAJICovCj4gPiAgCXVkZWxheSgxKTsKPiA+IAo+
-ID4gK3N0b3BfbGluazoKPiA+ICAJZHdfcGNpZV9zdG9wX2xpbmsocGNpKTsKPiA+ICAJaWYgKHBj
-aS0+cHAub3BzLT5kZWluaXQpCj4gPiAgCQlwY2ktPnBwLm9wcy0+ZGVpbml0KCZwY2ktPnBwKTsK
-PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndh
-cmUuaCBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5oCj4gPiBp
-bmRleCBlOTk1ZjY5MmExZWMuLjE3MGE3MzI5OWNlNSAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5oCj4gPiArKysgYi9kcml2ZXJzL3Bj
-aS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUuaAo+ID4gQEAgLTUzOSw2ICs1MzksNyBA
-QCBzdHJ1Y3QgZHdfcGNpZSB7Cj4gPiAgCSAqIHVzZV9wYXJlbnRfZHRfcmFuZ2VzIHRvIHRydWUg
-dG8gYXZvaWQgdGhpcyB3YXJuaW5nLgo+ID4gIAkgKi8KPiA+ICAJYm9vbAkJCXVzZV9wYXJlbnRf
-ZHRfcmFuZ2VzOwo+ID4gKwlib29sCQkJbm9fc3VzcHBvcnRfTDI7Cj4gPiAgfTsKPiA+IAo+ID4g
-ICNkZWZpbmUgdG9fZHdfcGNpZV9mcm9tX3BwKHBvcnQpIGNvbnRhaW5lcl9vZigocG9ydCksIHN0
-cnVjdCBkd19wY2llLCBwcCkKPiA+IC0tCj4gPiAyLjI1LjEKPiA+IAo+IAo+IC0tIAo+IOCuruCu
-o+Cuv+CuteCuo+CvjeCuo+CuqeCvjSDgrprgrqTgrr7grprgrr/grrXgrq7gr40K
+在 2025/11/21 星期五 14:48, zhangsenchuan 写道:
+> 
+> 
+> 
+>> -----Original Messages-----
+>> From: "Manivannan Sadhasivam" <mani@kernel.org>
+>> Send time:Thursday, 20/11/2025 20:45:38
+>> To: zhangsenchuan@eswincomputing.com
+>> Cc: bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, p.zabel@pengutronix.de, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com, shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com, thippeswamy.havalige@amd.com, inochiama@gmail.com, ningyu@eswincomputing.com, linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com, Frank.li@nxp.com
+>> Subject: Re: [PATCH v6 3/3] PCI: dwc: Add no_suspport_L2 flag and skip PME_Turn_Off broadcast
+>>
+>> On Thu, Nov 20, 2025 at 06:12:35PM +0800, zhangsenchuan@eswincomputing.com wrote:
+>>> From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+>>>
+>>> The ESWIN EIC7700 soc does not support enter L2 link state. Therefore add
+>>> no_suspport_L2 flag skip PME_Turn_Off broadcast and link state check code,
+>>> other driver can reuse this flag if meet the similar situation.
+>>>
+>>> Signed-off-by: Yu Ning <ningyu@eswincomputing.com>
+>>> Signed-off-by: Yanghui Ou <ouyanghui@eswincomputing.com>
+>>> Signed-off-by: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+>>
+>> Does this patch work for you?
+>> https://lore.kernel.org/linux-pci/20251119-pci-dwc-suspend-rework-v1-1-aad104828562@oss.qualcomm.com/
+> 
+> if the PCIe link is not up, this suits me too, but if the PCIe link up,
+> our hardware does not support entering the L2 link state. At this point,
+
+Per PCIe spec, 5.2 Link State Power Management:
+"L2/L3 Ready transition protocol support is required.
+The L2/L3 Ready state entry transition process must begin as soon as
+possible following the acknowledgment of a PME_Turn_Off Message, (i.e.,
+the injection of a PME_TO_Ack TLP). The Downstream component initiates
+L2/L3 Ready entry by sending a PM_Enter_L23 DLLP. "
+
+"L2 support is optional, and dependent upon the presence of auxiliary power"
+
+I interpret it as it is mandatory support for broadcast PME_Turn_Off and
+ack PME_TO_Ack, which is what the original code does. Then your IP can't
+really go into L2 for whatever reasons? Will your controller be broken 
+if acking PME_Turn_Off?  Otherwise we could still let L2/L3 Ready
+transstion happen and leave the device in L3 to save power.
+
+
+> it is also necessary to skip the broadcast PME_Turn_Off message and wait
+> for L2 transition.
+> 
+> Kind regards,
+> Senchuan Zhang
+> 
+>>
+>>> ---
+>>>   drivers/pci/controller/dwc/pcie-designware-host.c | 4 ++++
+>>>   drivers/pci/controller/dwc/pcie-designware.h      | 1 +
+>>>   2 files changed, 5 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> index e92513c5bda5..a203577606e5 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> @@ -1156,6 +1156,9 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>>>   	if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
+>>>   		return 0;
+>>>
+>>> +	if (pci->no_suspport_L2)
+>>> +		goto stop_link;
+>>> +
+>>>   	if (pci->pp.ops->pme_turn_off) {
+>>>   		pci->pp.ops->pme_turn_off(&pci->pp);
+>>>   	} else {
+>>> @@ -1182,6 +1185,7 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>>>   	 */
+>>>   	udelay(1);
+>>>
+>>> +stop_link:
+>>>   	dw_pcie_stop_link(pci);
+>>>   	if (pci->pp.ops->deinit)
+>>>   		pci->pp.ops->deinit(&pci->pp);
+>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>>> index e995f692a1ec..170a73299ce5 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>>> @@ -539,6 +539,7 @@ struct dw_pcie {
+>>>   	 * use_parent_dt_ranges to true to avoid this warning.
+>>>   	 */
+>>>   	bool			use_parent_dt_ranges;
+>>> +	bool			no_suspport_L2;
+>>>   };
+>>>
+>>>   #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
+>>> --
+>>> 2.25.1
+>>>
+>>
+>> -- 
+>> மணிவண்ணன் சதாசிவம்
+
 
