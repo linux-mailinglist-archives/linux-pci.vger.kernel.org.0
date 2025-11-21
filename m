@@ -1,81 +1,89 @@
-Return-Path: <linux-pci+bounces-41860-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41861-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89646C79262
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 14:13:45 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AA18C79802
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 14:37:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6FA83346E99
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 13:09:41 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2747A4E8151
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 13:37:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2C1D344055;
-	Fri, 21 Nov 2025 13:09:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7153434C123;
+	Fri, 21 Nov 2025 13:35:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CLJi7yG7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bgza6aNi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1886E34403C;
-	Fri, 21 Nov 2025 13:09:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E63334CFA1
+	for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 13:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763730561; cv=none; b=nYtChJoJzaWbBoKzAUbWGwsjBGWpPJyk7597uoXDnNhlSsaYi2y3qV0rJ/OFw+3Yzx6xXBV68zclge8QZrffuejdO/jDzEY1qPbFFc48xrNV01i7qeC6NpoIOIqziW5JopK1H7sFMGOD/6lOXxHXnUyH3Mdsqqk4CdcljumrrPE=
+	t=1763732142; cv=none; b=LO8MsXx1vUaZUx/n4F6XWxX9HwZvk66ASitmK7tOU6+Vjt7ZkQtcarJOSahNZAliVtpmVxd7WkpXUFkJxIakecyC0nyiDLpOW5kqmJ5sy/K4VT6pmsVmikIHetbxEt0aHjpNPRCkBiAM4Td3vw00IAd1tTG8ge2MtBca78PnHpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763730561; c=relaxed/simple;
-	bh=Mx8HU1WWOmumCvnpOXz2MRvFcRa3p7T/im80j8iH4Jc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uTWgghs/9upKn+B3Q2YFPpQu+0SesviGd6rX2mU8LnXrTKRvnApD6jDfMS7TiB54OnE2NG4Im3QfXYyhJOMHRoDeGyyeEbIPv4nQ1NSxQM3Pc0VmtZe3P86P++dAyeVmnletnoKSO0hIewcqwNYoIKjZmCaOY16JOSNP4AKYsBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CLJi7yG7; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763730558; x=1795266558;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Mx8HU1WWOmumCvnpOXz2MRvFcRa3p7T/im80j8iH4Jc=;
-  b=CLJi7yG7bAdPAIHdMYvdxurMrIkWkuS1gAUgR5E2DxVeyS5AzBUKxcp4
-   RWW38KupGIRGV2WqCexdli4IdIUp//Kbit8lsXGeDWsZ+bgvvr8rSSn1K
-   R/7A/rWJ8Wttu1VKXMC/ewuC5MrUfeRQtL0aE1B8dDoM03SDd5KEnoNdt
-   UfoTZOjIQHfvibuJcFQgbKoiLhxDGAuZbuwz2aNYGrPALiECgkPYbF4Rm
-   GYbjpv161Q7E6LT/Ny8kyDVVWJrRQbnqPxajHm9b9lcIF6nxModBQNZGC
-   Rd0YFSY5LVnydieQyedRd9YiZRj+FuD9c3LhymEERHQVSUdK15sGPhRwS
-   Q==;
-X-CSE-ConnectionGUID: sT3uQNS2Q7GZw+O1lL/9kQ==
-X-CSE-MsgGUID: uyY17x6gSd+jQ4JxrY3FdA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11619"; a="76505775"
-X-IronPort-AV: E=Sophos;i="6.20,215,1758610800"; 
-   d="scan'208";a="76505775"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 05:09:17 -0800
-X-CSE-ConnectionGUID: cglKvljOQ4ad6mlqkP7kKg==
-X-CSE-MsgGUID: rBcSODACTTC7Ti6Rcm0ksg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,215,1758610800"; 
-   d="scan'208";a="191368929"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa007.fm.intel.com with ESMTP; 21 Nov 2025 05:09:14 -0800
-Date: Fri, 21 Nov 2025 20:54:19 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: linux-coco@lists.linux.dev, linux-pci@vger.kernel.org,
-	chao.gao@intel.com, dave.jiang@intel.com, baolu.lu@linux.intel.com,
-	yilun.xu@intel.com, zhenzhong.duan@intel.com, kvm@vger.kernel.org,
-	rick.p.edgecombe@intel.com, dave.hansen@linux.intel.com,
-	dan.j.williams@intel.com, kas@kernel.org, x86@kernel.org
-Subject: Re: [PATCH v1 08/26] x86/virt/tdx: Add tdx_enable_ext() to enable of
- TDX Module Extensions
-Message-ID: <aSBg+5rS1Y498gHx@yilunxu-OptiPlex-7050>
-References: <20251117022311.2443900-1-yilun.xu@linux.intel.com>
- <20251117022311.2443900-9-yilun.xu@linux.intel.com>
- <cfcfb160-fcd2-4a75-9639-5f7f0894d14b@intel.com>
- <aRyphEW2jpB/3Ht2@yilunxu-OptiPlex-7050>
- <62bec236-4716-4326-8342-1863ad8a3f24@intel.com>
- <aR6ws2yzwQumApb9@yilunxu-OptiPlex-7050>
- <13e894a8-474f-465a-a13a-5d892efbfadb@intel.com>
+	s=arc-20240116; t=1763732142; c=relaxed/simple;
+	bh=drNEbA3TGFTz25pvYcWW3qcdRYeCRjiFF+YwTp5NrEg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=K91gaQVneiGMLiZ73aA4mjoNpbZE+0UTBrz2rl+q4yWEmJZ8vdShdXA2XGML9dCAXjqcjRmiASh/YfhfUm1+29h7Gl4yNVD3uRLTwfpKGIxRHCkDaxguv8fcKaUyvjlhx7JB6rOtHO2FvArOp5WhnBAlsdxpo8qPLfQZL9IxkQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bgza6aNi; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-42b3669ca3dso865498f8f.0
+        for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 05:35:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1763732139; x=1764336939; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qf7aj+yc10CQJFCUa9U/IQT8bJQVst3NQGAAJzT7Ug8=;
+        b=bgza6aNiKjTKHTmhAnHTBMa7gight++KoqJE4Mn2VeUMqsbsDSilaTiXltJJ6MjTkF
+         gxlLecbECbo4+NiMcX9SWoRrD+XtwrJBPYpzaQOthC357sYCUKRClqaRXl7wWIHO88Gl
+         zBgdNd/WplYLS4XsK7mbWCG3yDIrcinAksWIMZCKGQuaUrdjUmlVd349i5qyt7t0P7zH
+         gDYoqFBeJTrFSZI1g566VXxanzbgn8h7wWI/uiz1TrXMZv8EoFlsRoGZG3lTF59zz43s
+         8qiSmMwXll3XGXEAlz4YIxtpd1c85d19yCGxgKC5oD9cWSTrZ1sfG0+fgoyxOzHJOftY
+         EOCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763732139; x=1764336939;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qf7aj+yc10CQJFCUa9U/IQT8bJQVst3NQGAAJzT7Ug8=;
+        b=HWaBSDziFnepewNrEI+M9CeIFUnaLAiJCuOll/ykp2R+TcoUPpx9OEDeW8MYIn4z+9
+         duXhSAGf9tmDRWuNjm+DBXidMZNngXYM8v2vBnY7E5j78eJBQ4LdG4Qklb7cuBTYwN5O
+         l0HHlZ+vk+c8ZUW/6rKOIt2gIFdgEMS5pBm1E7pLvY+AqZ6rn5JjjpztHtI0BqjBpx+x
+         iRg4dEWF1fKcQO/RE0mjdoKtwtTwWWj3yEvPsdTxCLpZbDWxaCKnEZutkCNzBYrsQSx3
+         jjLrhnFXSE4YvtRp35iW5YE9vTl0dMdaQ7/0gUcIinl2wN5M1qzUuy+BwIiKHAn9qTya
+         VUjg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCj7QkJyZvkdgYMgb6dO5q9EevvWw1RGmQacvQhOxs9eiu+LKUQAVfga8Zol+V9KNzt/9SPlmkyV0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRV5vTGssa1hIzdnsAta1dv1J5Wk/i5zvEH/LAriG6GHqQg076
+	B1rsJuvt/mflwZCas6GNSMKNyTWUljyLDFk9nSWWYfVKR2CUrRXtDFePuye5JmP9aG8=
+X-Gm-Gg: ASbGncs4DjWaByFmBu0e00304dvq15sPyZZPQGiNA4xVxefc+4RxIPihwUMdbF2dy4w
+	Tdy04NYAYzOdePyTPJg+1hgoCswwnsUm7m1V2h6ZO7oKJAj7DeBP8H1mxwHfb9PnTkFysPIov0o
+	axYwAKFtWDSfH5VEVFx05AVbZG7iDyQQ0GQ/py6Uxq+LXIvGoUht6As8pgCI8Foy6rt3sHF+Hcj
+	XNSp2EaQMxh3Git5aSBPr2sKtwtyUilVAI5JP4Ymv67o4lfnMfsVYRZhYZggz5+S/6noDmZ3kVu
+	kBrV+2eoDN2F7ECIBWddI72PBMaA26MTmh2PL5/ohV7MynE+42ek/FhqNt+Qr6uNuGNc6GTyHci
+	Dagc0exEltLmtYqskH6uhXNXAoM4gzgXKxU+0GnBy/T2pk2xIaD0RPMn/zlOvHtDlg3RF3kek1m
+	rDYQUZFA/BnYViaYXF
+X-Google-Smtp-Source: AGHT+IFMJQ1wANIBmqRUOFCIS/jFxvbxo35wZufea9yE3HbGd15lQ3zQbTa6IMYdQDLdKJljttL+tg==
+X-Received: by 2002:a05:6000:4012:b0:428:5673:11e0 with SMTP id ffacd0b85a97d-42cc1d1999dmr2595402f8f.40.1763732138738;
+        Fri, 21 Nov 2025 05:35:38 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-42cb7fa41d2sm10902508f8f.22.2025.11.21.05.35.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Nov 2025 05:35:38 -0800 (PST)
+Date: Fri, 21 Nov 2025 16:35:35 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Hans Zhang <hans.zhang@cixtech.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH next] PCI: sky1: Fix error codes in sky1_pcie_resource_get()
+Message-ID: <aSBqp0cglr-Sc8na@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -84,214 +92,39 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <13e894a8-474f-465a-a13a-5d892efbfadb@intel.com>
+X-Mailer: git-send-email haha only kidding
 
-> I want an overview of how this new memory fits into the overall scheme.
-> I'd argue that these "control pages" are most similar to the PAMT:
-> There's some back-and-forth with the module about how much memory it
-> needs, the kernel allocates it, hands it over, and never gets it back.
-> 
-> That's the level that this needs to be presented at: a high-level
-> logical overview.
+Return negative -ENODEV instead of positive ENODEV.
 
-OK. I can split out a patch dedicate to the memory feeding, and put
-the overview in changelog.
+Fixes: 25b3feb70d64 ("PCI: sky1: Add PCIe host support for CIX Sky1")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/pci/controller/cadence/pci-sky1.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/pci/controller/cadence/pci-sky1.c b/drivers/pci/controller/cadence/pci-sky1.c
+index 99a1f3fae1b3..d8c216dc120d 100644
+--- a/drivers/pci/controller/cadence/pci-sky1.c
++++ b/drivers/pci/controller/cadence/pci-sky1.c
+@@ -65,7 +65,7 @@ static int sky1_pcie_resource_get(struct platform_device *pdev,
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+ 	if (!res)
+-		return dev_err_probe(dev, ENODEV, "unable to get \"cfg\" resource\n");
++		return dev_err_probe(dev, -ENODEV, "unable to get \"cfg\" resource\n");
+ 	pcie->cfg_res = res;
+ 
+ 	base = devm_platform_ioremap_resource_byname(pdev, "rcsu_strap");
+@@ -82,7 +82,7 @@ static int sky1_pcie_resource_get(struct platform_device *pdev,
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "msg");
+ 	if (!res)
+-		return dev_err_probe(dev, ENODEV, "unable to get \"msg\" resource\n");
++		return dev_err_probe(dev, -ENODEV, "unable to get \"msg\" resource\n");
+ 	pcie->msg_res = res;
+ 	pcie->msg_base = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(pcie->msg_base)) {
+-- 
+2.51.0
 
-x86/virt/tdx: Add extra memory to TDX Module for Extentions
-
-Currently, TDX module memory use is relatively static. But, some new
-features (called "TDX Module Extensions") need to use memory more
-dynamically. While 'static' here means the kernel provides necessary
-amount of memory to TDX Module for its initialization, 'dynamic' means
-extra memory be added after TDX Module initialization and before the
-first optional usage of TDX Module Extension. So add a new memory
-feeding process backed by a new SEAMCALL TDH.EXT.MEM.ADD.
-
-The process is mostly the same as adding PAMT. The kernel queries TDX
-Module how much memory needed, allocates it, hands it over and never
-gets it back.
-
-more details...
-
-For now, TDX Module Extensions consume quite large amount of memory
-(12800 pages), print this readout value on TDX Module Extentions
-initialization.
-
-> 
-> ...> I think it may be too heavy. We have a hundred SEAMCALLs and I expect
-> > few needs version 1. I actually think v2 is nothing different from a new
-
-Sorry for typo, there is no v2 yet.
-
-> > leaf. How about something like:
-> > 
-> > --- a/arch/x86/virt/vmx/tdx/tdx.h
-> > +++ b/arch/x86/virt/vmx/tdx/tdx.h
-> > @@ -46,6 +46,7 @@
-> >  #define TDH_PHYMEM_PAGE_WBINVD         41
-> >  #define TDH_VP_WR                      43
-> >  #define TDH_SYS_CONFIG                 45
-> > +#define TDH_SYS_CONFIG_V1              (TDH_SYS_CONFIG | (1ULL << TDX_VERSION_SHIFT))
-> > 
-> > And if a SEAMCALL needs export, add new tdh_foobar() helper. Anyway
-> > the parameter list should be different.
-> 
-> I'd need quite a bit of convincing that this is the right way.
-> 
-> What is the scenario where there's a:
-> 
-> 	TDH_SYS_CONFIG_V1
-> and
-> 	TDH_SYS_CONFIG_V2
-> 
-> in the tree at the same time?
-
-I assume you mean TDH_SYS_CONFIG & TDH_SYS_CONFIG_V1.
-
-If you want to enable optional features via this seamcall, you must use
-v1, otherwise v0 & v1 are all good. Mm... I suddenly don't see usecase
-they must co-exist. Unconditionally use v1 is fine. So does TDH_VP_INIT.
-
-Does that mean we don't have to keep versions, always use the latest is
-good? (Proper Macro to be used...)
-
- -#define TDH_SYS_CONFIG                 45
- +#define TDH_SYS_CONFIG                 (45 | (1ULL << TDX_VERSION_SHIFT))
-
-> 
-> Second, does it hurt to pass the version along with other calls, like
-> ... (naming a random one) ... TDH_PHYMEM_PAGE_WBINVD ?
-
-I see no runtime hurt, just an extra zero parameter passed around.
-
-And version change always goes with more parameters, if we add version
-parameter, it looks like:
-
- u64 tdh_phymem_page_wbinvd_tdr(int version, struct tdx_td *td, int new_param1, int new_param2);
-
-For readability, I prefer the following, they provide clear definitions:
-
- u64 tdh_phymem_page_wbinvd_tdr(struct tdx_td *td);
- u64 tdh_phymem_page_wbinvd_tdr_1(struct tdx_td *td, int new_param1, int new_param2);
-
-
-But I hope eventually we don't have to keep versions, then we don't have to choose:
-
- u64 tdh_phymem_page_wbinvd_tdr(struct tdx_td *td, int new_param1, int new_param2);
-
-
-> 
-> Even if we did this, we wouldn't copy and paste "(1ULL <<
-> TDX_VERSION_SHIFT)" all over the place, right? We'd create a more
-> concise, cleaner macro and then use it everywhere. Right?
-
-Sure. Will do.
-
-...
-
-> >>>> 	while (1)
-> >>>> 		fill(&array);
-> >>>> 	while (1)
-> >>>> 		tell_tdx_module(&array);
-> >>>
-> >>> The consideration is, no need to create as much supporting
-> >>> structures (struct tdx_page_array *, struct page ** and root page) for
-> >>> each 512-page bulk. Use one and re-populate it in loop is efficient.
-
-Sorry, I went through the history again and thought I got off track from
-here. I was trying to explain why I choose to let struct tdx_page_array
-not restricted by 512 pages. But that's not your question.
-
-For your question why:
-
-  while (1) {
-        fill(&array);
-        tell_tdx_module(&array);
-  }
-
-not:
-
-  while (1)
-        fill(&array);
-  while (1)
-        tell_tdx_module(&array);
-
-The TDX Module can only accept one root page (i.e. 512 HPAs at most), while
-struct tdx_page_array contains the whole EXT memory (12800 pages). So we
-can't populate all pages into one root page then tell TDX Module. We need to
-populate one batch, tell tdx module, then populate the next batch, tell
-tdx module...
-
-I assume when you said "Great! That is useful information to have here,
-in the code." The concern was solved.
-
-> I suspect we're not really talking about the same thing here.
-
-Sorry I deviated from the question.
-
-> 
-> In any case, I'm not a super big fan of how tdx_ext_mempool_setup() is
-> written. Can you please take another pass at it and try to simplify it
-> and make it easier to follow?
-
-Yes. I plan to remove the __free(). This gives the chance to re-organize
-things from the start.
-
-> 
-> This would be a great opportunity to bring in some of your colleagues to
-> take a look. You can solicit them for suggestions.
-
-Yes.
-
-...
-
-> >> I'd kinda rather the code was improved. Why cram everything into a
-> >> pointer if you don't need to. This would be just fine, no?
-> >>
-> >> 	ret = tdx_ext_mempool_setup(&mempool);
-> >> 	if (ret)
-> >> 		return ret;
-> > 
-> > It's good.
-> > 
-> > The usage of pointer is still about __free(). In order to auto-free
-> > something, we need an object handler for something. I think this is a
-> > more controversial usage of __free() than pure allocation. We setup
-> > something and want auto-undo something on failure.
-> I'm not sure what you are trying to say here. By saying "It's good" are
-> you agreeing that my suggested structure is good and that you will use
-> it? Or are you saying that the original structure is good?
-
-I mean your suggestion is good. I'll use it since I will remove
-__free().
-
-> 
-> Second, what is an "object handler"? Are you talking about the function
-> that is pointed to by __free()?
-
-Sorry, should be object handle, it refers to the pointer, the
-struct tdx_page_array *mempool
-
-> 
-> Third, are you saying that the original code structure is somehow
-> connected to __free()?
-
-Yes.
-
-> I thought that all of these were logically
-> equivalent:
-> 
-> 	void *foo __free(foofree) = alloc_foo();
-> 
-> 	void *foo __free(foofree) = NULL:
-> 	foo = alloc_foo();
-> 
-> 	void *foo __free(foofree) = NULL;
-> 	populate_foo(&foo);
-> 
-> Is there something special about doing the variable assignment at the
-> variable declaration spot?
-
-Yes, Dan explained it.
 
