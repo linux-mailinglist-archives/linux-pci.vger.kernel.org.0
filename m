@@ -1,130 +1,217 @@
-Return-Path: <linux-pci+bounces-41861-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41862-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AA18C79802
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 14:37:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6C8FC79DEF
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 15:00:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2747A4E8151
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 13:37:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id 8D9D02DCE8
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 14:00:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7153434C123;
-	Fri, 21 Nov 2025 13:35:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00D4F34CFD3;
+	Fri, 21 Nov 2025 13:56:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bgza6aNi"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iMKPWBQ2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Abyw+g0j";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iMKPWBQ2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Abyw+g0j"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E63334CFA1
-	for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 13:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45A734A77E
+	for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 13:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763732142; cv=none; b=LO8MsXx1vUaZUx/n4F6XWxX9HwZvk66ASitmK7tOU6+Vjt7ZkQtcarJOSahNZAliVtpmVxd7WkpXUFkJxIakecyC0nyiDLpOW5kqmJ5sy/K4VT6pmsVmikIHetbxEt0aHjpNPRCkBiAM4Td3vw00IAd1tTG8ge2MtBca78PnHpw=
+	t=1763733394; cv=none; b=coWSKLLn5IbYtWPblDlNF9wUFkxQkDRHtnh1d+uIHRvKihQWXNua4t15cv4FwzQkt/fxZHoKLgnQ6yYKISzzoPQNEzBlZPYVPyXymOuQY0DF8ljGmSFSkTOf9QTe6lZaGFUn1Q20Iw6K0DohC/dgpYKI1MDMwzTvV4/f+Rjr/qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763732142; c=relaxed/simple;
-	bh=drNEbA3TGFTz25pvYcWW3qcdRYeCRjiFF+YwTp5NrEg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=K91gaQVneiGMLiZ73aA4mjoNpbZE+0UTBrz2rl+q4yWEmJZ8vdShdXA2XGML9dCAXjqcjRmiASh/YfhfUm1+29h7Gl4yNVD3uRLTwfpKGIxRHCkDaxguv8fcKaUyvjlhx7JB6rOtHO2FvArOp5WhnBAlsdxpo8qPLfQZL9IxkQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bgza6aNi; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-42b3669ca3dso865498f8f.0
-        for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 05:35:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763732139; x=1764336939; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qf7aj+yc10CQJFCUa9U/IQT8bJQVst3NQGAAJzT7Ug8=;
-        b=bgza6aNiKjTKHTmhAnHTBMa7gight++KoqJE4Mn2VeUMqsbsDSilaTiXltJJ6MjTkF
-         gxlLecbECbo4+NiMcX9SWoRrD+XtwrJBPYpzaQOthC357sYCUKRClqaRXl7wWIHO88Gl
-         zBgdNd/WplYLS4XsK7mbWCG3yDIrcinAksWIMZCKGQuaUrdjUmlVd349i5qyt7t0P7zH
-         gDYoqFBeJTrFSZI1g566VXxanzbgn8h7wWI/uiz1TrXMZv8EoFlsRoGZG3lTF59zz43s
-         8qiSmMwXll3XGXEAlz4YIxtpd1c85d19yCGxgKC5oD9cWSTrZ1sfG0+fgoyxOzHJOftY
-         EOCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763732139; x=1764336939;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qf7aj+yc10CQJFCUa9U/IQT8bJQVst3NQGAAJzT7Ug8=;
-        b=HWaBSDziFnepewNrEI+M9CeIFUnaLAiJCuOll/ykp2R+TcoUPpx9OEDeW8MYIn4z+9
-         duXhSAGf9tmDRWuNjm+DBXidMZNngXYM8v2vBnY7E5j78eJBQ4LdG4Qklb7cuBTYwN5O
-         l0HHlZ+vk+c8ZUW/6rKOIt2gIFdgEMS5pBm1E7pLvY+AqZ6rn5JjjpztHtI0BqjBpx+x
-         iRg4dEWF1fKcQO/RE0mjdoKtwtTwWWj3yEvPsdTxCLpZbDWxaCKnEZutkCNzBYrsQSx3
-         jjLrhnFXSE4YvtRp35iW5YE9vTl0dMdaQ7/0gUcIinl2wN5M1qzUuy+BwIiKHAn9qTya
-         VUjg==
-X-Forwarded-Encrypted: i=1; AJvYcCXCj7QkJyZvkdgYMgb6dO5q9EevvWw1RGmQacvQhOxs9eiu+LKUQAVfga8Zol+V9KNzt/9SPlmkyV0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRV5vTGssa1hIzdnsAta1dv1J5Wk/i5zvEH/LAriG6GHqQg076
-	B1rsJuvt/mflwZCas6GNSMKNyTWUljyLDFk9nSWWYfVKR2CUrRXtDFePuye5JmP9aG8=
-X-Gm-Gg: ASbGncs4DjWaByFmBu0e00304dvq15sPyZZPQGiNA4xVxefc+4RxIPihwUMdbF2dy4w
-	Tdy04NYAYzOdePyTPJg+1hgoCswwnsUm7m1V2h6ZO7oKJAj7DeBP8H1mxwHfb9PnTkFysPIov0o
-	axYwAKFtWDSfH5VEVFx05AVbZG7iDyQQ0GQ/py6Uxq+LXIvGoUht6As8pgCI8Foy6rt3sHF+Hcj
-	XNSp2EaQMxh3Git5aSBPr2sKtwtyUilVAI5JP4Ymv67o4lfnMfsVYRZhYZggz5+S/6noDmZ3kVu
-	kBrV+2eoDN2F7ECIBWddI72PBMaA26MTmh2PL5/ohV7MynE+42ek/FhqNt+Qr6uNuGNc6GTyHci
-	Dagc0exEltLmtYqskH6uhXNXAoM4gzgXKxU+0GnBy/T2pk2xIaD0RPMn/zlOvHtDlg3RF3kek1m
-	rDYQUZFA/BnYViaYXF
-X-Google-Smtp-Source: AGHT+IFMJQ1wANIBmqRUOFCIS/jFxvbxo35wZufea9yE3HbGd15lQ3zQbTa6IMYdQDLdKJljttL+tg==
-X-Received: by 2002:a05:6000:4012:b0:428:5673:11e0 with SMTP id ffacd0b85a97d-42cc1d1999dmr2595402f8f.40.1763732138738;
-        Fri, 21 Nov 2025 05:35:38 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-42cb7fa41d2sm10902508f8f.22.2025.11.21.05.35.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Nov 2025 05:35:38 -0800 (PST)
-Date: Fri, 21 Nov 2025 16:35:35 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Hans Zhang <hans.zhang@cixtech.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH next] PCI: sky1: Fix error codes in sky1_pcie_resource_get()
-Message-ID: <aSBqp0cglr-Sc8na@stanley.mountain>
+	s=arc-20240116; t=1763733394; c=relaxed/simple;
+	bh=xym5R5yEVSDL4/KM5LMgvvTEfCR+Kft6Tnj1uH1q3FU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tok9s0vCiVP2sN6SWWPFlBOqv37K3xiNSpCd0orR2CA1tBbr5YOmEP1tNOlkVFtYhN7IWFtgQ4Pz6lQfrGqOAsom9oILMn3AJvugF6VwTMGeh/+7/oI0nmFD72cWcxBnd4++KFURW8HIu8CPAlrDkS4lw7b2aSppR1rFfsKAPQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iMKPWBQ2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Abyw+g0j; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iMKPWBQ2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Abyw+g0j; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 28247218EA;
+	Fri, 21 Nov 2025 13:56:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1763733391; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=2fy6AJV5/LJmpRrj1RphVCyLdSqiM/Tki+XKx37wkHU=;
+	b=iMKPWBQ2/YHLmQOMzgxyhZgL0qVKiRCtXOcpIhrGmp/kgyxlmA98lsYRipa9vkpslgCdGp
+	KdwVujc9na0fwt4t97s6rd4OfBWKtXmh/kRfine8gwUkvhtdVbu9uNgzcGm9EhYGSdMrV1
+	YEibxSNMD8K3yNpaFCBYQBYvBRpv3Ss=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1763733391;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=2fy6AJV5/LJmpRrj1RphVCyLdSqiM/Tki+XKx37wkHU=;
+	b=Abyw+g0jyRAdyZfxtFfsshAV0j5bGUOXfi7JyQENaF5nTh7i2CQVizKVX7OXJuuSarUXYD
+	zmJth7/Q/teZsWBQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=iMKPWBQ2;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Abyw+g0j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1763733391; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=2fy6AJV5/LJmpRrj1RphVCyLdSqiM/Tki+XKx37wkHU=;
+	b=iMKPWBQ2/YHLmQOMzgxyhZgL0qVKiRCtXOcpIhrGmp/kgyxlmA98lsYRipa9vkpslgCdGp
+	KdwVujc9na0fwt4t97s6rd4OfBWKtXmh/kRfine8gwUkvhtdVbu9uNgzcGm9EhYGSdMrV1
+	YEibxSNMD8K3yNpaFCBYQBYvBRpv3Ss=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1763733391;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=2fy6AJV5/LJmpRrj1RphVCyLdSqiM/Tki+XKx37wkHU=;
+	b=Abyw+g0jyRAdyZfxtFfsshAV0j5bGUOXfi7JyQENaF5nTh7i2CQVizKVX7OXJuuSarUXYD
+	zmJth7/Q/teZsWBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B94E83EA61;
+	Fri, 21 Nov 2025 13:56:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id TzTPK45vIGkqdQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 21 Nov 2025 13:56:30 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: ardb@kernel.org,
+	javierm@redhat.com,
+	arnd@arndb.de
+Cc: x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH 0/6] arch,sysfb: Move screen and edid info into single place
+Date: Fri, 21 Nov 2025 14:36:04 +0100
+Message-ID: <20251121135624.494768-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 28247218EA
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -3.01
 
-Return negative -ENODEV instead of positive ENODEV.
+Replace screen_info and edid_info with sysfb_primary_device of type
+struct sysfb_display_info. Update all users.
 
-Fixes: 25b3feb70d64 ("PCI: sky1: Add PCIe host support for CIX Sky1")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/pci/controller/cadence/pci-sky1.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Sysfb DRM drivers currently fetch the global edid_info directly, when
+they should get that information together with the screen_info from their
+device. Wrapping screen_info and edid_info in sysfb_primary_display and
+passing this to drivers enables this.
 
-diff --git a/drivers/pci/controller/cadence/pci-sky1.c b/drivers/pci/controller/cadence/pci-sky1.c
-index 99a1f3fae1b3..d8c216dc120d 100644
---- a/drivers/pci/controller/cadence/pci-sky1.c
-+++ b/drivers/pci/controller/cadence/pci-sky1.c
-@@ -65,7 +65,7 @@ static int sky1_pcie_resource_get(struct platform_device *pdev,
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
- 	if (!res)
--		return dev_err_probe(dev, ENODEV, "unable to get \"cfg\" resource\n");
-+		return dev_err_probe(dev, -ENODEV, "unable to get \"cfg\" resource\n");
- 	pcie->cfg_res = res;
- 
- 	base = devm_platform_ioremap_resource_byname(pdev, "rcsu_strap");
-@@ -82,7 +82,7 @@ static int sky1_pcie_resource_get(struct platform_device *pdev,
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "msg");
- 	if (!res)
--		return dev_err_probe(dev, ENODEV, "unable to get \"msg\" resource\n");
-+		return dev_err_probe(dev, -ENODEV, "unable to get \"msg\" resource\n");
- 	pcie->msg_res = res;
- 	pcie->msg_base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(pcie->msg_base)) {
+Replacing both with sysfb_primary_display has been motivate by the EFI
+stub. EFI wants to transfer EDID via config table in a single entry.
+Using struct sysfb_display_info this will become easily possible. Hence
+accept some churn in architecture code for the long-term improvements.
+
+Patches 1 and 2 reduce the exposure of screen_info in EFI-related code.
+
+Patch 3 adds struct sysfb_display_info.
+
+Patch 4 replaces scren_info with sysfb_primary_display. This results in
+several changes throught the kernel, but is really just a refactoring.
+
+Patch 5 updates sysfb to transfer sysfb_primary_display to the related
+drivers.
+
+Patch 6 moves edid_info into sysfb_primary_display. This resolves some
+drivers' reference to the global edid_info, but also makes the EDID data
+available on non-x86 architectures.
+
+The short-term benefit of this series is in patches 5 and 6. With
+sysfb_primary_display in place a follow-up series will improve EFI support
+for EDID as outlined in the series at [1] and [2].
+
+[1] https://lore.kernel.org/dri-devel/20251015160816.525825-1-tzimmermann@suse.de/
+[2] https://lore.kernel.org/linux-efi/20251119123011.1187249-5-ardb+git@google.com/
+
+Thomas Zimmermann (6):
+  efi: earlycon: Reduce number of references to global screen_info
+  efi: sysfb_efi: Reduce number of references to global screen_info
+  sysfb: Add struct sysfb_display_info
+  sysfb: Replace screen_info with sysfb_primary_display
+  sysfb: Pass sysfb_primary_display to devices
+  sysfb: Move edid_info into sysfb_primary_display
+
+ arch/arm64/kernel/image-vars.h                |  2 +-
+ arch/loongarch/kernel/efi.c                   | 11 +--
+ arch/loongarch/kernel/image-vars.h            |  2 +-
+ arch/riscv/kernel/image-vars.h                |  2 +-
+ arch/x86/kernel/kexec-bzimage64.c             |  4 +-
+ arch/x86/kernel/setup.c                       | 16 ++--
+ arch/x86/video/video-common.c                 |  4 +-
+ drivers/firmware/efi/earlycon.c               | 42 +++++-----
+ drivers/firmware/efi/efi-init.c               | 14 ++--
+ drivers/firmware/efi/libstub/efi-stub-entry.c | 18 +++--
+ drivers/firmware/efi/sysfb_efi.c              | 81 ++++++++++---------
+ drivers/firmware/sysfb.c                      | 13 +--
+ drivers/firmware/sysfb_simplefb.c             |  2 +-
+ drivers/gpu/drm/sysfb/efidrm.c                | 14 ++--
+ drivers/gpu/drm/sysfb/vesadrm.c               | 14 ++--
+ drivers/hv/vmbus_drv.c                        |  6 +-
+ drivers/pci/vgaarb.c                          |  4 +-
+ drivers/video/Kconfig                         |  1 -
+ drivers/video/fbdev/core/fbmon.c              |  8 +-
+ drivers/video/fbdev/efifb.c                   | 10 ++-
+ drivers/video/fbdev/vesafb.c                  | 10 ++-
+ drivers/video/fbdev/vga16fb.c                 |  8 +-
+ drivers/video/screen_info_pci.c               |  5 +-
+ include/linux/screen_info.h                   |  2 -
+ include/linux/sysfb.h                         | 23 ++++--
+ include/video/edid.h                          |  4 -
+ 26 files changed, 177 insertions(+), 143 deletions(-)
+
+
+base-commit: 57e807d4454add8b60e8807ad1cf812141f34cdb
 -- 
-2.51.0
+2.51.1
 
 
