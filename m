@@ -1,147 +1,316 @@
-Return-Path: <linux-pci+bounces-41889-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41890-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02C5EC7AF64
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 17:58:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C3AE0C7B067
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 18:14:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A2E814F32EF
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 16:50:15 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3ECF74F4B94
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 17:08:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBC4434CFD3;
-	Fri, 21 Nov 2025 16:49:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C03A3502B1;
+	Fri, 21 Nov 2025 17:06:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dAHAsKeZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fYoh/0Sm";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="BXPi5SIh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2223469E2
-	for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 16:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC15734E74B
+	for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 17:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763743771; cv=none; b=kedGhjA1zS+IsKLScN+mXBfvYSpQT0e36z49Ue3doaBSls+zwlSCEqV7WzwM2SrjvjERaJPq7mFBp38xTwfaJcNayYh7gJ53c1FpJeHBAZOcCO0c6vLEG/3EsdOof7obz72OtBz0a7/cftYbCR8ydVgjiOSUHCTF9cgmboUsscU=
+	t=1763744762; cv=none; b=m9GJmtA7e6YdArihJwyYgKVZ9B24x779cV2P0ZfjDn5ck4oBYuYyD6Z3cfdCDU83XJJ0+l8fL0CPFCjIRg9/Q7AYcKIbU3bDbwSqBr+xeNwEoJEQWdgPXJGrRd9a+jDryuHY5LBjbyNpjT9NnluN6O8nxju4qD/oj0dYJ1XSDd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763743771; c=relaxed/simple;
-	bh=8CNzFpWGHJiJ/kMik9XkodfqnXW6wo433Z1B1kwxkag=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L6VexTGelNejzcDP1yF71ak7vGDC2vRxJRYzEOEylJ+0V+OYHd2Fj94aYocjjYFuugavRk+u6I4xVx1ohuV8rV8u+NTZrEGnpB1bWdyMpu6op2QDnm6Ovz740aJ7NJolwjSUeq3BoUPr1kfOcklBgJIZOUr0hADUE/UHMAvGyU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dAHAsKeZ; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4779cc419b2so24040515e9.3
-        for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 08:49:29 -0800 (PST)
+	s=arc-20240116; t=1763744762; c=relaxed/simple;
+	bh=tmekbxR8wc1I7t6Q6VZZ1XIp/NWvYZvJ1hM4SKb77K0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=miriF77X2DsSdD32tJhNqs/elaRNCz5zXXSfXhv0Y54m1YO5+bJmi5+z3KlTFeQT/Dsl/DKKvoWJz8/WKNV1P55wjjau0SyyT8jTOCUwFQ26zEtYiV/ZbfSBDyCRvJM8FZuRFdoNWSl5PXO8rortxsa/aL06+5RoLF7/qwOkQFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fYoh/0Sm; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=BXPi5SIh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1763744742;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pcee4/A8vRRbWn/DfexDhknhgtkMbBICYwtyayyfJMY=;
+	b=fYoh/0Smgu+8FbluM5V5uvvNta+pCxNjApmIwkmGvXak7+e70jjAxRM0BvOK5+52RpuitA
+	kMItzbqC4hvjEcwBeW3DNZpHOMwlAUDnSO6RSeoaFr84ocwNIrMkuhSynxwTmpcCO+V5lT
+	Wn4R4BvT2M+wHJOLP53wrtC/fbuAp/g=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-120-ARSfAVuPObCnfbzpwOeOcQ-1; Fri, 21 Nov 2025 12:05:13 -0500
+X-MC-Unique: ARSfAVuPObCnfbzpwOeOcQ-1
+X-Mimecast-MFC-AGG-ID: ARSfAVuPObCnfbzpwOeOcQ_1763744713
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-8826a2b2d9aso67331566d6.1
+        for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 09:05:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763743768; x=1764348568; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tA1YZwkpqBYNCNgFaNMq2uv3rKscqjzMZ5GFDmRce68=;
-        b=dAHAsKeZ88W7IlUFTVKqEqp2x8NSRaxWcT7tRWVxJ3u1W9NRIxlaK+vg8Nt/kr6w0M
-         hnX9SeMr866Wc6OX69rDzBjrxOVjlmt7a4VvEKllg9m+M8G8unh7/pYvEPtMXs/eCgQE
-         /cr/OSa/2TGFlKyA4jq2QsgC4ihvHZDE38z7QGsseJCpwF8j1G9GzU7jSZhpuRye8Cdg
-         l/GJla2UihZe+Y9MR9NDQHupp4vWwTBEN3nbYguwqDft/fRNHVjWZXCUYNddw2prYVlS
-         yuOyTfNwOg6uWP4HoEXjubcrWDKEQzfftq+GlQ8vYMiSX+Sql++z5ePBG+2q5RedOlPY
-         2Evw==
+        d=redhat.com; s=google; t=1763744713; x=1764349513; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pcee4/A8vRRbWn/DfexDhknhgtkMbBICYwtyayyfJMY=;
+        b=BXPi5SIhUDHMl9uA/4qvsmhZ/PPEHjwxBTvyyCwngiTOlCOpUCivgMOWF1zvDA1P+r
+         eb+JYu3rMiiDSEhxU2cUA2lBFe1hooNf1DqdupgMIDvS7MckWvDfRPwhnzK9NxPjoYFF
+         gfy3Mlwmbtj4Ln6KwSxObZGyyaRBjge5NbLPTqt7Q92pKHfQV58PCO63QSFoZzW+ouIz
+         UokFxynGobwrvgwLqSH0BmHM9sPQlQoKnwN2N9l53TkysFGo1jt6TcMnTcJsBNdt0MBT
+         xG4OWnhU+at7o48lOBHt9mWksheFFo9x6oS9pUwdSW3YMvRrwRQCNyei4u/y+JxyVc77
+         siSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763743768; x=1764348568;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=tA1YZwkpqBYNCNgFaNMq2uv3rKscqjzMZ5GFDmRce68=;
-        b=jKI0lQKibk2dsPwBsvFcrGG9QnRlzWTWVKJU5ZkMrkFzvL2g9E6BqY7nGliY/aduvs
-         iPIfmCFlHdemjt4Qog4ckcHt9bWUNdFeeYnO4v3xyoEJpRkItsI7Elm3gq51iE69KKgu
-         sA1imTiLdeZPFs0Uy2AdumLAzC0GVOCNWa3YFoQuCe/UkwMQZWTYTw5baJ94EG5Wx81s
-         BVNCW5t8UwNBFxXNlOBQy8nkFVrgU39ZZNQqNZ1C80PX+np4fdK0AWE0cmUJ2FHx821Z
-         TrC07RsyO7h43phHIEGAvOmdn9aSsf6crgwCHjF1ZlUSpDVCTuLNR46j5tF/dGmx698K
-         fbnw==
-X-Forwarded-Encrypted: i=1; AJvYcCVeBAXaQBzIUGmhcQ6DtDkjovugCVNu+/o0sPpNX+BgNE9fQM4dqucGgnM8Y/BefI7z2c3/Q5A1xnM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNMEVozRv6l8HZOFwa9emSnPSorXmJd8v3mbK4bJd8du7N1dDG
-	mEwSU2jsfyuQuJW4kJEPMsti/b0zNjqzKzlMWjLjMerGKhbfAtVgxcoCEcAjT6N2A6c=
-X-Gm-Gg: ASbGnct/g1xhLv5GS1ubvsmSkt7N+dSv1/eeOZ71V/qyNmZrzQUw4lneyQvYaRZsUz1
-	wcGGZ1Uht6CrmFS7TetCN/Se2c9700r36fu2/xurfCOKIHOrzG00nnFKDxgZ4L3kbjBb9WRhsc0
-	jLaPkqgChRx4SzpwbCltIEwErItRA3cFMt/QdQtsWUHrbT/iTesOcm65xLdLbdjhlJxG6o/6uUM
-	+BvNR3JwVf4DkcuBovOeKUv7ro1PrqffFo8uklE1GW5UAnNOrMYF0nBYaoP0fSrxTi1bqSTOPGx
-	QzIU+bSipYdwNTCj6ygnDNEzr+73vIjcfL1q9MA2xGYsrhAqisFCUv/iFth0CwnbUu8vA4usDpj
-	WcMEJXEXXXmrdFbKt8npaUmfuIuMu2dvesbTXv1vpCxgegTiWoyQVGT92WofkN2CJMFBSx0mQpY
-	+utgv+WITJ0HHp7zrxUD8=
-X-Google-Smtp-Source: AGHT+IECYLnmyytfY8LzC6PdkZB/9Qv9aOOwBQ8USRlzz0beo5YI3DVNF2FJyRPzQ4ThwhycZbswbg==
-X-Received: by 2002:a05:600c:4f06:b0:471:9da:5248 with SMTP id 5b1f17b1804b1-477c114ef3dmr30830045e9.26.1763743768105;
-        Fri, 21 Nov 2025 08:49:28 -0800 (PST)
-Received: from vingu-cube.. ([2a01:e0a:f:6020:803a:ae25:6381:a6fc])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7fb8ff3sm12938478f8f.29.2025.11.21.08.49.26
+        d=1e100.net; s=20230601; t=1763744713; x=1764349513;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pcee4/A8vRRbWn/DfexDhknhgtkMbBICYwtyayyfJMY=;
+        b=d0ea5no1XMIrTsVlakJbjM/rC6vSX5Ehc7ZPl9FsqTpz/2LIFN0Rll2+DvTKGiaift
+         Cby1DMKrqFaGyl5QbLLuKgo4gfDmnkivLDPGnubT98tv4nx1m8UFneuuJyLFpI2pRZih
+         Ny1oo2RNyapKqA41EYLanqopBYNc4Sev9P4+t+x1WmCRVotMCYNVyLTCzuRiANjHVvhC
+         7wyLECfKw5sxkxt65GOq9UofozJW26TztAibYBs/CIxvs7F08nvbe3+2iEkYVITQ5Co/
+         AX+WdqahHgXmi3ymaT/YQacdptHl5lr6tNxlM1gbhV5mZJ7AnPhfCQAazqNlZgOEs69R
+         NiyA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDE2vE79YqyRaIUIGJacdp3OiVCQ4BtZyJoO8vUg6K7bIMS7XM38op3mNYhikvR6L70ZpQnuxIoXw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpNf0Y0CCk8R1F7Qcvm/qxrdW0SwKPgWF9AOnFRgCTqKdMD5sh
+	7Vy/UsZIxEvCrMgQf7eWBCguv0bKonpn+ftkXB2L0nOBtSdkvjSThPuwjzu6HvpYY9Fxw/5G+jE
+	Fy5j/p0zj4QsTeieGA74pSehlipGLoaiY9lNNxx5W2rqJ65oU6YZtaSZyCb38XA==
+X-Gm-Gg: ASbGnctu9tp4CdQVqI6CtbZMfzaDPAxK+KNT2aVqZAauaD0DzAuLB0qJO1ry64DeHLE
+	MzabLtiHoSlZyOaGNJcyhNMMfBhIkaLVdhiKiGRqrCQwErGXWCPNSSxSz/6zwmd1gWC/MgjMxCD
+	XSqTLLIGqLeE8XVHAkr6KR8aOTxjN6HQntXmBTvhIywrZsZmfgN3Wvd2WzMvWC8bReMdJF1VrHN
+	hE8l/nUYtml5PcmwCurBsLOo/kKoKBY524i9WNc9c8+swQJspJjXfbt+h53cWik6qB9z3kpsXri
+	zmguocBXngxB8tUNLzBF/tTIFq8+9vSBhTqOHA86SqY19nk9DQfC2nZLsa+6nP6IUAAETdYltpx
+	TsRu9pmqRuA==
+X-Received: by 2002:ad4:5aae:0:b0:882:6cd3:7f64 with SMTP id 6a1803df08f44-8847c525dbemr42276046d6.44.1763744712756;
+        Fri, 21 Nov 2025 09:05:12 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGLRcV7K0Bhq8TE5Bm7cm2cdZ/VYsJmCfeBsteGuVKLE0o2xsrM2bCCmTKOW8kK51KJ84vQ/g==
+X-Received: by 2002:ad4:5aae:0:b0:882:6cd3:7f64 with SMTP id 6a1803df08f44-8847c525dbemr42275096d6.44.1763744712063;
+        Fri, 21 Nov 2025 09:05:12 -0800 (PST)
+Received: from localhost ([2607:f2c0:b141:ac00:2fb1:d1df:b122:3b2c])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-8846e446a06sm43506306d6.2.2025.11.21.09.05.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Nov 2025 08:49:26 -0800 (PST)
-From: Vincent Guittot <vincent.guittot@linaro.org>
-To: chester62515@gmail.com,
-	mbrugger@suse.com,
-	ghennadi.procopciuc@oss.nxp.com,
-	s32@nxp.com,
-	bhelgaas@google.com,
-	jingoohan1@gmail.com,
-	lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	mani@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	Ionut.Vicovan@nxp.com,
-	larisa.grigore@nxp.com,
-	Ghennadi.Procopciuc@nxp.com,
-	ciprianmarian.costea@nxp.com,
-	bogdan.hamciuc@nxp.com,
-	Frank.li@nxp.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
+        Fri, 21 Nov 2025 09:05:11 -0800 (PST)
+Date: Fri, 21 Nov 2025 12:05:10 -0500
+From: Peter Colberg <pcolberg@redhat.com>
+To: Zhi Wang <zhiw@nvidia.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev
-Cc: cassel@kernel.org
-Subject: [PATCH 4/4 v6] MAINTAINERS: Add MAINTAINER for NXP S32G PCIe driver
-Date: Fri, 21 Nov 2025 17:49:20 +0100
-Message-ID: <20251121164920.2008569-5-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251121164920.2008569-1-vincent.guittot@linaro.org>
-References: <20251121164920.2008569-1-vincent.guittot@linaro.org>
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH 0/8] rust: pci: add abstractions for SR-IOV capability
+Message-ID: <aSCbxjbNJPPy2NVd@earendel>
+Mail-Followup-To: Zhi Wang <zhiw@nvidia.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>
+References: <20251119-rust-pci-sriov-v1-0-883a94599a97@redhat.com>
+ <20251120083213.6c5c01a5.zhiw@nvidia.com>
+ <aR8t0XdZVyN-0mak@earendel>
+ <20251120203444.321378c2.zhiw@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251120203444.321378c2.zhiw@nvidia.com>
 
-Add a new entry for S32G PCIe driver.
+On Thu, Nov 20, 2025 at 08:34:44PM +0200, Zhi Wang wrote:
+> On Thu, 20 Nov 2025 10:03:45 -0500
+> Peter Colberg <pcolberg@redhat.com> wrote:
+> 
+> Hi Peter:
+> 
+> I met some errors when compiling on driver-core-next branch, you can
+> fix those in the next spin.
+> 
+> Fixes:
+> 
+> diff --git a/drivers/gpu/nova-core/driver.rs
+> b/drivers/gpu/nova-core/driver.rs index ca0d5f8ad54b..730e745cad63
+> 100644 --- a/drivers/gpu/nova-core/driver.rs
+> +++ b/drivers/gpu/nova-core/driver.rs
+> @@ -49,6 +49,7 @@ pub(crate) struct NovaCore {
+>      ]
+>  );
+>  
+> +#[vtable]
+>  impl pci::Driver for NovaCore {
+>      type IdInfo = ();
+>      const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
+> 
+> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+> index d6cc5d7e7cd7..2d68db076f92 100644
+> --- a/rust/kernel/pci.rs
+> +++ b/rust/kernel/pci.rs
+> @@ -292,6 +292,7 @@ macro_rules! pci_device_table {
+>  ///     ]
+>  /// );
+>  ///
+> +/// #[vtable]
+>  /// impl pci::Driver for MyDriver {
+>  ///     type IdInfo = ();
+>  ///     const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
+> 
+> The code in the examples should be able to compile.
+> 
+> You can enable doctest by:
+> 
+> CONFIG_RUST_KERNEL_DOCTESTS=y
+> 
+> Then:
+> 
+> impl Device<device::Bound> {
+>     /// Returns the Physical Function (PF) device for a Virtual
+> Function (VF) device. ///
+>     /// # Examples
+>     ///
+> 
+> snip
+> 
+>     /// ```
+>     /// let pf_pdev = vf_pdev.physfn()?;
+>     /// let pf_drvdata = pf_pdev.as_ref().drvdata::<MyDriver>()?;
+> 
+> I saw this part is not able to be compiled.^
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Thanks Zhi, I applied all fixes.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e64b94e6b5a9..bec5d5792a5f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3137,6 +3137,15 @@ F:	arch/arm64/boot/dts/freescale/s32g*.dts*
- F:	drivers/pinctrl/nxp/
- F:	drivers/rtc/rtc-s32g.c
- 
-+ARM/NXP S32G PCIE CONTROLLER DRIVER
-+M:	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
-+R:	NXP S32 Linux Team <s32@nxp.com>
-+L:	imx@lists.linux.dev
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pci/nxp,s32g-pcie.yaml
-+F:	drivers/pci/controller/dwc/pcie-nxp-s32g*
-+
- ARM/NXP S32G/S32R DWMAC ETHERNET DRIVER
- M:	Jan Petrous <jan.petrous@oss.nxp.com>
- R:	s32@nxp.com
--- 
-2.43.0
+Peter
+
+> 
+> Z.
+> 
+> > On Thu, Nov 20, 2025 at 08:32:13AM +0200, Zhi Wang wrote:
+> > > On Wed, 19 Nov 2025 17:19:04 -0500
+> > > Peter Colberg <pcolberg@redhat.com> wrote:
+> > > 
+> > > Hi Peter:
+> > > 
+> > > Thanks for the patches. :) I will test them with nova-core and come
+> > > back with Tested-bys.
+> > 
+> > Perfect, thanks Zhi.
+> > 
+> > > Nit: Let's use "kernel vertical" styles on imports. [1]
+> > > 
+> > > [1]
+> > > https://lore.kernel.org/all/20251105120352.77603-1-dakr@kernel.org/
+> > 
+> > Thanks, done for patch "samples: rust: add SR-IOV driver sample".
+> > 
+> > Peter
+> > 
+> > > 
+> > > > Add Rust abstractions for the Single Root I/O Virtualization
+> > > > (SR-IOV) capability of a PCI device. Provide a minimal set of
+> > > > wrappers for the SR-IOV C API to enable and disable SR-IOV for a
+> > > > device, and query if a PCI device is a Physical Function (PF) or
+> > > > Virtual Function (VF).
+> > > > 
+> > > > Using the #[vtable] attribute, extend the pci::Driver trait with
+> > > > an optional bus callback sriov_configure() that is invoked when a
+> > > > user-space application writes the number of VFs to the sysfs file
+> > > > `sriov_numvfs` to enable SR-IOV, or zero to disable SR-IOV [1].
+> > > > 
+> > > > Add a method physfn() to return the Physical Function (PF) device
+> > > > for a Virtual Function (VF) device in the bound device context.
+> > > > Unlike for a PCI driver written in C, guarantee that when a VF
+> > > > device is bound to a driver, the underlying PF device is bound to
+> > > > a driver, too.
+> > > > 
+> > > > When a device with enabled VFs is unbound from a driver, invoke
+> > > > the sriov_configure() callback to disable SR-IOV before the
+> > > > unbind() callback. To ensure the guarantee is upheld, call
+> > > > disable_sriov() to remove all VF devices if the driver has not
+> > > > done so already.
+> > > > 
+> > > > This series is based on Danilo Krummrich's series
+> > > > "Device::drvdata() and driver/driver interaction (auxiliary)"
+> > > > applied to driver-core-next, which similarly guarantees that when
+> > > > an auxiliary bus device is bound to a driver, the underlying
+> > > > parent device is bound to a driver, too [2].
+> > > > 
+> > > > Add an SR-IOV driver sample that exercises the SR-IOV capability
+> > > > using QEMU's 82576 (igb) emulation and was used to test the
+> > > > abstractions [3].
+> > > > 
+> > > > [1] https://docs.kernel.org/PCI/pci-iov-howto.html
+> > > > [2]
+> > > > https://lore.kernel.org/rust-for-linux/20251020223516.241050-1-dakr@kernel.org/
+> > > > [3] https://www.qemu.org/docs/master/system/devices/igb.html
+> > > > 
+> > > > Signed-off-by: Peter Colberg <pcolberg@redhat.com>
+> > > > ---
+> > > > John Hubbard (1):
+> > > >       rust: pci: add is_virtfn(), to check for VFs
+> > > > 
+> > > > Peter Colberg (7):
+> > > >       rust: pci: add is_physfn(), to check for PFs
+> > > >       rust: pci: add {enable,disable}_sriov(), to control SR-IOV
+> > > > capability rust: pci: add num_vf(), to return number of VFs
+> > > >       rust: pci: add vtable attribute to pci::Driver trait
+> > > >       rust: pci: add bus callback sriov_configure(), to control
+> > > > SR-IOV from sysfs rust: pci: add physfn(), to return PF device
+> > > > for VF device samples: rust: add SR-IOV driver sample
+> > > > 
+> > > >  MAINTAINERS                           |   1 +
+> > > >  rust/kernel/pci.rs                    | 148
+> > > > ++++++++++++++++++++++++++++++++++ samples/rust/Kconfig
+> > > >    |  11 +++ samples/rust/Makefile                 |   1 +
+> > > >  samples/rust/rust_dma.rs              |   1 +
+> > > >  samples/rust/rust_driver_auxiliary.rs |   1 +
+> > > >  samples/rust/rust_driver_pci.rs       |   1 +
+> > > >  samples/rust/rust_driver_sriov.rs     | 107
+> > > > ++++++++++++++++++++++++ 8 files changed, 271 insertions(+)
+> > > > ---
+> > > > base-commit: e4addc7cc2dfcc19f1c8c8e47f3834b22cb21559
+> > > > change-id: 20251026-rust-pci-sriov-ca8f501b2ae3
+> > > > 
+> > > > Best regards,
+> > > 
+> > 
+> > 
+> 
 
 
