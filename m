@@ -1,151 +1,146 @@
-Return-Path: <linux-pci+bounces-41880-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41881-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 775B4C7ACDC
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 17:20:11 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A89EC7AD1E
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 17:24:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 02AE73A173B
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 16:20:00 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 8951535477B
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 16:24:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C1882FE05F;
-	Fri, 21 Nov 2025 16:19:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 039BF33CEB2;
+	Fri, 21 Nov 2025 16:24:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LVn7sgHi"
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="iVYxelnp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UvzaBNSi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C9B2673B7
-	for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 16:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5363C33E341;
+	Fri, 21 Nov 2025 16:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763741999; cv=none; b=prGTHRcL4njnHRHyty22wVDZ/ne4poN0/yTjJCoTl8PkZjShIZlvGyXIJw6uYQ6fBSJqj2gMHO67yR+3OovPIqqpO+ZEIKefClM5o+tfpHCd8POhH0kaTmpSmoUIlciuaDnIi8WuPqfWe+ZudjCM7/5CKpdkbKYZrR1Er3RoE9g=
+	t=1763742270; cv=none; b=j3FC1PVhEEWpjoMUaLRBgE4cLbjeaLpj4GIyCAAB24enHpRhvosLiQOvUo7VUgrW/zu4JXBhRYgTB2ZPAl6ku1rE4qfIM0p6Zp/g1O/h5L6Z+0ybgOxZvh29c6CjAkTMuLkze1UYph5GNEdA0Sqw1V7911mWr/BhtwMUO2MseNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763741999; c=relaxed/simple;
-	bh=cET4fLR+Sx0tqItmiU0JPHurpZgDU1nqYWJPQ7uvhYs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rQ4ERIEkTxnDYRPSpEvgXILopBYmjt13aUXoGzcjuIx0xXu14FhocXqIhMSCU/P3/6BroRQK7UW6LNjLMjyah35ImBlFz5hNrJ9LCn/QGwtvv7Df0ENtGLpIA1W36R2FcJK6Pi2r1EULFsqRztc2hBxv7xcbrfhrqYRR+UCkNGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LVn7sgHi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2985C2BC87
-	for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 16:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763741998;
-	bh=cET4fLR+Sx0tqItmiU0JPHurpZgDU1nqYWJPQ7uvhYs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LVn7sgHiTk6RLTGHtFAYvT5jt8uzinAFRBsJxMA1SfZel1bMIJ1hFT843Hnfd20C6
-	 yJGuhMhYYhggX1rZbeXzTJCiyw2JtfyOjPdE+gZyUeZuHTa/3fich29WX1yfpBasMI
-	 +pp3yZJV7CyDiEY2ErtONnDXBelFq5fitTil+cntXvg4ftcD+K4w6Y/2+c3n+JqRod
-	 RKqEoEU/bqquH5adcQVN11faw3W7KgplzC+Js1wPpvpvsdHqhTqSANFBA4dC1xnUXv
-	 TXqyK+KZNpwLWL/7XkONE899kog8Wbxb7wgM3KGd+kdA3ao++oNai2xTACQ3304AlS
-	 7mJu7ZkTqBQIg==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-59577c4c7c1so3028096e87.1
-        for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 08:19:58 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX+H/rezOR7dGHtZEG50HVB/EHyI6vccF9wAFmFuR/oofd6FUtegiv4cBDGl/XAWRvdaPJWHSCU+gw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3PGnzrfOpGGbgZrcY8HAiV2EQlN3LbLRuUnWQLPdUy76Pmoqw
-	jUgzf6GFZomIYGp9I6yD4QrnneimFrKUj9wM1Fk44T5Y4xGD/FDAc+cz4aR/m1xI79KO0NGpYK3
-	V0ZcP4nYzkd35mdlj5Gwn6f+DzLUBTT8=
-X-Google-Smtp-Source: AGHT+IGeSY0QcKkdeUCs++wMYjj72N3cUYU9kW2Fl9IQJ23AXOiUCrIM5BGdicOeoDbtfPEdjzSeYm/zK81S5JjGD00=
-X-Received: by 2002:ac2:4e04:0:b0:595:90ce:df8e with SMTP id
- 2adb3069b0e04-596a3740821mr1260884e87.5.1763741997082; Fri, 21 Nov 2025
- 08:19:57 -0800 (PST)
+	s=arc-20240116; t=1763742270; c=relaxed/simple;
+	bh=+roBNOCU2FTSHuPGdhzpgEM5wzJA/OhVLab+j8XE08E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Xl0Zm5YGCV8SEmv2L0YJIDkBVn92iVyo+0gqZxcu2zoIXFn+o56yXM2MriRKuQQ7spC+ivtRqVQwNJ8ZkdB6NGByU7HkY7dZ464VcfSc0peQvJrcKIqqHlvQq+4TuCrHd3TNYWjBdr7sZ7RUWxXGMglIrOVORpred/KLhp9VDv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=iVYxelnp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UvzaBNSi; arc=none smtp.client-ip=202.12.124.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id A04FF1D00156;
+	Fri, 21 Nov 2025 11:24:25 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Fri, 21 Nov 2025 11:24:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1763742265;
+	 x=1763828665; bh=y9sPmO9ctPmEofVcJL2ve0sLdAoEmPz/dsTzOswFhgc=; b=
+	iVYxelnp6m8nPDJCJD3pghiuY0JnfpXoWiKDtyC1ZfTMF8fUQtXTaMX5yXfbLont
+	ST9OiZCOgXI8ULRFc6aFOTV/tf4SKt4W5wcQbP9AJZVnFKNBeKTXaQz1YXBFdesO
+	ngWnz2nFnL1qztTi6xyP0b4aSzvPm+uN9ak+bIptT2djVNAQLdqCmwibU9kE5Aby
+	VpAiSzJm+BAVU4pwbqnka0BeOqzyT0bMUyCvk7dAaYRepF8yb8plimv6meD7DiWX
+	p8wl94vOATtCxVWlASjaMB/2zpgiQXfFwIjaAR+tnZBqkJApVj4qwHk4EVRiCEnp
+	1g+zDY1l5gB38/tTHqvG8Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763742265; x=
+	1763828665; bh=y9sPmO9ctPmEofVcJL2ve0sLdAoEmPz/dsTzOswFhgc=; b=U
+	vzaBNSi3AV9eHP0xV5OI+fIMqpbdDdLZSjxGvsQ1T9RKmeLAwjextymi2cVXU8uy
+	Be6PO+J6KI0iovHc0UiFA8B7rQiJTAIxOd4DhBWcsamEOEW5kjFnqKsB7FIrhxeQ
+	GuiIAMeDF55zh/ogS1yglOFCO/9flUPn1HBDtkEepyUIH7oJ3GvW0fdgq2cG3HNt
+	Rreb7R/CH8xTdpLKWo0BA9gScPfpMk/xxjgIGSyYgTlnJbiy/QOWhAmLxQpYZ6V3
+	7/Vl+Dl5oQsAGlnSZbuDQqBdTTIF2o/fTw+PlG/91H2n4QIdikT7RS5D+uM/ue4F
+	NdHheTOKT/rjN+6DYqXNw==
+X-ME-Sender: <xms:N5IgaVaQZaAe5t79XnH1rbSJrYlQplMMYdp0M6-Mr3uWvt823MEJDQ>
+    <xme:N5IgaSsBncHkvTAX8k6pT0FvMeuYcjAGM09pjfPKAWMwiWFbRzWYD5L220C8E6Pk7
+    g55i_BbOAKRyF9cw6sEpexN2O8LimadQjIefkoeLiQUv98iWdUI>
+X-ME-Received: <xmr:N5Igad-WFs5Ve-cFz6F4xXvv1f14eMC6yGbsbN7RyWZyEu__tXqKIFcs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvfedtgeefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkjghfgggtgfesthejredttddtvdenucfhrhhomheptehlvgigucgh
+    ihhllhhirghmshhonhcuoegrlhgvgiesshhhrgiisghothdrohhrgheqnecuggftrfgrth
+    htvghrnhepteetudelgeekieegudegleeuvdffgeehleeivddtfeektdekkeehffehudet
+    hffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hlvgigsehshhgriigsohhtrdhorhhgpdhnsggprhgtphhtthhopeefhedpmhhouggvpehs
+    mhhtphhouhhtpdhrtghpthhtoheplhgvohhnsehkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhoghgrnhhg
+    seguvghlthgrthgvvgdrtghomhdprhgtphhtthhopegrgigsohgvsehkvghrnhgvlhdrug
+    hkpdhrtghpthhtoheprhhosghinhdrmhhurhhphhihsegrrhhmrdgtohhmpdhrtghpthht
+    ohepjhhorhhoseeksgihthgvshdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtohepmhdrshiihihprhhofihskhhisehsrghmshhunhhgrdgt
+    ohhmpdhrtghpthhtohepjhhgghesiihivghpvgdrtggr
+X-ME-Proxy: <xmx:N5IgaQ84u-HHIf2TcQNYp-qQlqRMCjkmlLokOX6AO2UGzSJhrElRBA>
+    <xmx:OJIgaXPtSD_NpuOHdtKoNjoojGX18VUQEBCkvknI_2nnhJz5NPrx0g>
+    <xmx:OJIgacOkV7PC26nL5WPRH0i6onKjj8iCzVuttmRsX2N7uBq0h1DUmQ>
+    <xmx:OJIgaVMFYRWTlkUhXAgJS6FxtMLkh8eI-ToaCrmBZCSefA8L7jXnYw>
+    <xmx:OZIgaTGK97vls5JNSW_jGH-7CSY683IBHOHRkaC1YrXeI4xtr5m3V3e5>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 21 Nov 2025 11:24:20 -0500 (EST)
+Date: Fri, 21 Nov 2025 09:24:17 -0700
+From: Alex Williamson <alex@shazbot.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+ Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jonathan Corbet <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+ Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Ankit Agrawal <ankita@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
+ Shameer Kolothum <skolothumtho@nvidia.com>,
+ Kevin Tian <kevin.tian@intel.com>, Krishnakant Jaju <kjaju@nvidia.com>,
+ Matt Ochs <mochs@nvidia.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ iommu@lists.linux.dev, linux-mm@kvack.org, linux-doc@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Alex Mastro <amastro@fb.com>,
+ Nicolin Chen <nicolinc@nvidia.com>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>
+Subject: Re: [PATCH v9 00/11] vfio/pci: Allow MMIO regions to be exported
+ through dma-buf
+Message-ID: <20251121092417.7a6eaa2f.alex@shazbot.org>
+In-Reply-To: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
+References: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251121135624.494768-1-tzimmermann@suse.de> <96a8d591-29d5-4764-94f9-6042252e53ff@app.fastmail.com>
- <CAMj1kXF1Dh0RbuqYc0fhAPf-CM0mdYh8BhenM8-ugKVHfwnhBg@mail.gmail.com>
- <199e7538-5b4a-483b-8976-84e4a8a0f2fd@suse.de> <CAMj1kXE+mS1Sm5GaROU0P97J2w1pew0P_To4sKiw8h1iOMuLcg@mail.gmail.com>
- <d080729c-6586-4b9c-b234-470977849d3d@suse.de> <6dff8e7e-c99b-443d-a1d8-22650ca0b595@suse.de>
-In-Reply-To: <6dff8e7e-c99b-443d-a1d8-22650ca0b595@suse.de>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 21 Nov 2025 17:19:45 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGpC_162bFL65kQw=7qVP7ezYw77Q76y217dDs8pqHogw@mail.gmail.com>
-X-Gm-Features: AWmQ_bn-6TfeudJLq0R8hLHr8efLSQaLZUt3gyg8tPWks9v2PmiXguu4ImOLBA0
-Message-ID: <CAMj1kXGpC_162bFL65kQw=7qVP7ezYw77Q76y217dDs8pqHogw@mail.gmail.com>
-Subject: Re: [PATCH 0/6] arch, sysfb: Move screen and edid info into single place
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Arnd Bergmann <arnd@arndb.de>, Javier Martinez Canillas <javierm@redhat.com>, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org, 
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 21 Nov 2025 at 17:09, Thomas Zimmermann <tzimmermann@suse.de> wrote:
->
->
->
-> Am 21.11.25 um 17:08 schrieb Thomas Zimmermann:
-> > Hi
-> >
-> > Am 21.11.25 um 16:56 schrieb Ard Biesheuvel:
-> >> On Fri, 21 Nov 2025 at 16:53, Thomas Zimmermann <tzimmermann@suse.de>
-> >> wrote:
-> >>> Hi
-> >>>
-> >>> Am 21.11.25 um 16:16 schrieb Ard Biesheuvel:
-> >>>> On Fri, 21 Nov 2025 at 16:10, Arnd Bergmann <arnd@arndb.de> wrote:
-> >>>>> On Fri, Nov 21, 2025, at 14:36, Thomas Zimmermann wrote:
-> >>>>>> Replace screen_info and edid_info with sysfb_primary_device of type
-> >>>>>> struct sysfb_display_info. Update all users.
-> >>>>>>
-> >>>>>> Sysfb DRM drivers currently fetch the global edid_info directly,
-> >>>>>> when
-> >>>>>> they should get that information together with the screen_info
-> >>>>>> from their
-> >>>>>> device. Wrapping screen_info and edid_info in
-> >>>>>> sysfb_primary_display and
-> >>>>>> passing this to drivers enables this.
-> >>>>>>
-> >>>>>> Replacing both with sysfb_primary_display has been motivate by
-> >>>>>> the EFI
-> >>>>>> stub. EFI wants to transfer EDID via config table in a single entry.
-> >>>>>> Using struct sysfb_display_info this will become easily possible.
-> >>>>>> Hence
-> >>>>>> accept some churn in architecture code for the long-term
-> >>>>>> improvements.
-> >>>>> This all looks good to me,
-> >>>>>
-> >>>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> >>> Thanks
-> >>>
-> >>>>> It should also bring us one step closer to eventually
-> >>>>> disconnecting the x86 boot ABI from the kernel-internal
-> >>>>> sysfb_primary_display.
-> >>>>>
-> >>>> Agreed
-> >>>>
-> >>>> Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> >>> Thanks
-> >>>
-> >>>> I can take patches 1-2 right away, if that helps during the next
-> >>>> cycle.
-> >>>   From my sysfb-focused POV, these patches would ideally all go through
-> >>> the same tree, say efi or generic arch, or whatever fits best. Most of
-> >>> the other code is only renames anyway.
-> >>>
-> >> I don't mind queueing all of it, but I did get a conflict on
-> >> drivers/pci/vgaarb.c
-> >
-> > Probably from a78835b86a44 ("PCI/VGA: Select SCREEN_INFO on X86")
->
-> https://lore.kernel.org/all/20251013220829.1536292-1-superm1@kernel.org/
->
+On Thu, 20 Nov 2025 11:28:19 +0200
+Leon Romanovsky <leon@kernel.org> wrote:
 
-Yes, if I merge back -rc2 first, I can apply patches 1-5 onto my
-efi/next tree. But then I hit
+> Changelog:
+> v9:
+>  * Added Reviewed-by tags.
+>  * Fixes to p2pdma documentation.
+>  * Renamed dma_buf_map and unmap.
+>  * Moved them to separate file.
+>  * Used nvgrace_gpu_memregion() function instead of open-coded variant.
+>  * Paired get_file_active() with fput().
 
-Applying: sysfb: Move edid_info into sysfb_primary_display
-error: sha1 information is lacking or useless (drivers/gpu/drm/sysfb/efidrm.c).
-error: could not build fake ancestor
-Patch failed at 0006 sysfb: Move edid_info into sysfb_primary_display
+Applied to vfio next branch with the fixes discussed for v6.19.  I also
+pushed a tag, vfio-v6.19-dma-buf-v9+, for this work.  Thanks,
 
-If you prefer, you can take the whole lot via the sysfb tree instead,
-assuming it does not depend on the EDID changes I already queued up?
+Alex
 
