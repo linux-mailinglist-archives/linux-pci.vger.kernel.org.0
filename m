@@ -1,164 +1,135 @@
-Return-Path: <linux-pci+bounces-41841-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41842-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16B62C770D0
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 03:47:50 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71877C771B4
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 04:02:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id 4E1E6289F3
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 02:47:47 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E47AF356490
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 03:02:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B56AF2C3272;
-	Fri, 21 Nov 2025 02:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 522F82DEA77;
+	Fri, 21 Nov 2025 03:01:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="umciH1Kb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UT5nWW/X"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D562C2340;
-	Fri, 21 Nov 2025 02:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11D223ABA0;
+	Fri, 21 Nov 2025 03:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763693261; cv=none; b=gWxvApc4DYKrayASEEexiH65jTJDap1JyrtINlk7mDXGRBxR4V3SDJ7ef3Cc0sEwspBLUuaQ8D3tfuRxH+YFW+gzZA+xmerNKk57/H7adj0H+GwAoa8U9e3zPjSw5x+A31rwi+UMPa35a72823++ym+3S/0NbNAEo2brN0YbTCg=
+	t=1763694071; cv=none; b=O45nH0vKjjbGV3R6QgRn6IbCuY4b3xl4BMV04xZ1chEQ+l6w6n3M2prZz6CPG9imDkE4ar0EHtMcdsWmb3RLT2ohxLUv4OjEPu2wuqTTlFXfOQUFV0KWrTqn2fod+F7t/teawHlmpAbituK09XVKpiQlcX3lkqARnJ/90D6TmYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763693261; c=relaxed/simple;
-	bh=p+34e7Vy7ZrzEmj8uQRE4g/xDOXVf1bb1yoOHS6Q8f8=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=P22bLsibPx+rgzvnbG4OW7uycbcZfulMzBzajjEqh+6KYBVcXWXYp6BQ4lTityPydv/yS3fxx2JpW8VGv/l7XdD1+lvbdCuhdQdOgZyAytV//vWpSp5KPmVg++3Ad+HUKGzbI+EZaYOhgtXTCTz3wnDykMLmUGQjfit/wXCZ0P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=umciH1Kb; arc=none smtp.client-ip=113.46.200.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=7/+xC9VzlzEvb/9+gGLwhYCZZ6+xeKT68zJkKrNRvNo=;
-	b=umciH1KbToXmWnysWFcNx4N/28wNz0FN+EKeR71aSehD+o98NCvFpUht/EtqQYi3rjhCrLqTR
-	xZWOX/pqi5WYvldwqLxNWtnxyvByw/QgBSrE2U/DUzmcqJSsN8KVn3UF364j5bCMoAEZ0h88/IF
-	AVQ0DIPiG0E1xO56eb13KLQ=
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4dCKMx5vtWz1prL2;
-	Fri, 21 Nov 2025 10:45:49 +0800 (CST)
-Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 77BB314022D;
-	Fri, 21 Nov 2025 10:47:35 +0800 (CST)
-Received: from [10.174.178.247] (10.174.178.247) by
- dggpemf500002.china.huawei.com (7.185.36.57) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 21 Nov 2025 10:47:33 +0800
-Subject: Re: [PATCH RESEND v5] vmcoreinfo: Track and log recoverable hardware
- errors
-To: Breno Leitao <leitao@debian.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>, Tony Luck
-	<tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, Robert Moore
-	<robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
-	<mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Mauro Carvalho Chehab
-	<mchehab@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver
- O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>
-CC: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<acpica-devel@lists.linux.dev>, <osandov@osandov.com>,
-	<xueshuai@linux.alibaba.com>, <konrad.wilk@oracle.com>,
-	<linux-edac@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-pci@vger.kernel.org>, <kernel-team@meta.com>
-References: <20251010-vmcore_hw_error-v5-1-636ede3efe44@debian.org>
-From: Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <a4a34583-8f26-bb08-001f-a53715070c00@huawei.com>
-Date: Fri, 21 Nov 2025 10:47:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+	s=arc-20240116; t=1763694071; c=relaxed/simple;
+	bh=FVL7q02Hpy/Av8OCyCSpHvCN7UDMdCrsi9RsabkaWH0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ecyzoEgTI5Plmyof/Tu7noNV+m/RpOEsHYrSnetcoZivpg+inU9j/aNdwWIjbidMIpRV0CGUPZxyjSDD2AAlLjKh+ddBOKMCTUMgtMfkUgo54FiNwMbfcHg6AY4fye1Vt/DLrLFWC16xckvnetKzuADrXC3yDD1Evsh/fMcBpzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UT5nWW/X; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763694067; x=1795230067;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FVL7q02Hpy/Av8OCyCSpHvCN7UDMdCrsi9RsabkaWH0=;
+  b=UT5nWW/XhV0k/03xp12qcnlcQRJV68HXDsy5F8awlqylTvzC9eOOv4Ke
+   R8R7aMsMWZlaylmtD6VAnrRFvKU5hymDQr5TVY7XG/Byk5p5buO5NGFEk
+   I2fsf7C0gpF8nDss7ZLD4j0iJN8hqN1gq7OJzvW5Qvhz5z0hMSV7U7IIa
+   yC86QmFj2VV6GRq4fzgJeKoe3rCn+uCLsg0Xbdzb+2vTHShRHEtdYgft8
+   fwv+96pzRrpaOPeMmHTq8LofDm2R5oT7+0kh8p06qOB/TsPZk59dWNesq
+   45fDKBqBoXBhWls1S380sr6NgGoB/hWaaSHzQ9y1q+0C3opPXm0yG9POw
+   w==;
+X-CSE-ConnectionGUID: iTyIGvSDTB+9gGZOPNw23w==
+X-CSE-MsgGUID: t7RVNVp1S6G36t6Vcuv7Fg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11619"; a="68387428"
+X-IronPort-AV: E=Sophos;i="6.20,214,1758610800"; 
+   d="scan'208";a="68387428"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 19:01:05 -0800
+X-CSE-ConnectionGUID: yid6KJQSR2WsDJcpM4e0/g==
+X-CSE-MsgGUID: AjA8/8NURZi/0NhunpN+oA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,214,1758610800"; 
+   d="scan'208";a="195714715"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 20 Nov 2025 19:00:58 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vMHOK-0004sR-06;
+	Fri, 21 Nov 2025 03:00:56 +0000
+Date: Fri, 21 Nov 2025 11:00:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: Peter Colberg <pcolberg@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>, Zhi Wang <zhiw@nvidia.com>,
+	Peter Colberg <pcolberg@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH 1/8] rust: pci: add is_virtfn(), to check for VFs
+Message-ID: <202511211008.jgLuTcrQ-lkp@intel.com>
+References: <20251119-rust-pci-sriov-v1-1-883a94599a97@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20251010-vmcore_hw_error-v5-1-636ede3efe44@debian.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- dggpemf500002.china.huawei.com (7.185.36.57)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251119-rust-pci-sriov-v1-1-883a94599a97@redhat.com>
 
-On 2025/10/10 18:36, Breno Leitao wrote:
-> Introduce a generic infrastructure for tracking recoverable hardware
-> errors (HW errors that are visible to the OS but does not cause a panic)
-> and record them for vmcore consumption. This aids post-mortem crash
-> analysis tools by preserving a count and timestamp for the last
-> occurrence of such errors. On the other side, correctable errors, which
-> the OS typically remains unaware of because the underlying hardware
-> handles them transparently, are less relevant for crash dump
-> and therefore are NOT tracked in this infrastructure.
-> 
-> Add centralized logging for sources of recoverable hardware
-> errors based on the subsystem it has been notified.
-> 
-> hwerror_data is write-only at kernel runtime, and it is meant to be read
-> from vmcore using tools like crash/drgn. For example, this is how it
-> looks like when opening the crashdump from drgn.
-> 
-> 	>>> prog['hwerror_data']
-> 	(struct hwerror_info[1]){
-> 		{
-> 			.count = (int)844,
-> 			.timestamp = (time64_t)1752852018,
-> 		},
-> 		...
-> 
-> This helps fleet operators quickly triage whether a crash may be
-> influenced by hardware recoverable errors (which executes a uncommon
-> code path in the kernel), especially when recoverable errors occurred
-> shortly before a panic, such as the bug fixed by
-> commit ee62ce7a1d90 ("page_pool: Track DMA-mapped pages and unmap them
-> when destroying the pool")
-> 
-> This is not intended to replace full hardware diagnostics but provides
-> a fast way to correlate hardware events with kernel panics quickly.
-> 
-> Rare machine check exceptions—like those indicated by mce_flags.p5 or
-> mce_flags.winchip—are not accounted for in this method, as they fall
-> outside the intended usage scope for this feature’s user base.
-> 
-> Suggested-by: Tony Luck <tony.luck@intel.com>
-> Suggested-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> ---
-> Changes in v5:
-> - Move the headers to uapi file (Dave Hansen)
-> - Use atomic operations in the tracking struct (Dave Hansen)
-> - Drop the MCE enum type, and track MCE errors as "others"
-> - Document this feature better
-> - Link to v4: https://lore.kernel.org/r/20250801-vmcore_hw_error-v4-1-fa1fe65edb83@debian.org
-> 
-> Changes in v4:
-> - Split the error by hardware subsystem instead of kernel
->    subsystem/driver (Shuai)
-> - Do not count the corrected errors, only focusing on recoverable errors (Shuai)
-> - Link to v3: https://lore.kernel.org/r/20250722-vmcore_hw_error-v3-1-ff0683fc1f17@debian.org
-> 
-> Changes in v3:
-> - Add more information about this feature in the commit message
->    (Borislav Petkov)
-> - Renamed the function to hwerr_log_error_type() and use hwerr as
->    suffix (Borislav Petkov)
-> - Make the empty function static inline (kernel test robot)
-> - Link to v2: https://lore.kernel.org/r/20250721-vmcore_hw_error-v2-1-ab65a6b43c5a@debian.org
-> 
-> Changes in v2:
-> - Split the counter by recoverable error (Tony Luck)
-> - Link to v1: https://lore.kernel.org/r/20250714-vmcore_hw_error-v1-1-8cf45edb6334@debian.org
-> ---
->   Documentation/driver-api/hw-recoverable-errors.rst | 60 ++++++++++++++++++++++
->   arch/x86/kernel/cpu/mce/core.c                     |  4 ++
->   drivers/acpi/apei/ghes.c                           | 36 +++++++++++++
+Hi Peter,
 
-For the APEI part,
+kernel test robot noticed the following build errors:
 
-Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+[auto build test ERROR on e4addc7cc2dfcc19f1c8c8e47f3834b22cb21559]
 
-Thanks
-Hanjun
+url:    https://github.com/intel-lab-lkp/linux/commits/Peter-Colberg/rust-pci-add-is_virtfn-to-check-for-VFs/20251120-062302
+base:   e4addc7cc2dfcc19f1c8c8e47f3834b22cb21559
+patch link:    https://lore.kernel.org/r/20251119-rust-pci-sriov-v1-1-883a94599a97%40redhat.com
+patch subject: [PATCH 1/8] rust: pci: add is_virtfn(), to check for VFs
+config: um-randconfig-001-20251121 (https://download.01.org/0day-ci/archive/20251121/202511211008.jgLuTcrQ-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 9e9fe08b16ea2c4d9867fb4974edf2a3776d6ece)
+rustc: rustc 1.88.0 (6b00bc388 2025-06-23)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251121/202511211008.jgLuTcrQ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511211008.jgLuTcrQ-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> error[E0599]: no method named `is_virtfn` found for struct `bindings::pci_dev` in the current scope
+   --> rust/kernel/pci.rs:415:35
+   |
+   415 |         unsafe { (*self.as_raw()).is_virtfn() != 0 }
+   |                                   ^^^^^^^^^ method not found in `pci_dev`
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
