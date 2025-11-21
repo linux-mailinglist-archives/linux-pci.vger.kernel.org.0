@@ -1,329 +1,145 @@
-Return-Path: <linux-pci+bounces-41868-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41869-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF239C79FD5
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 15:09:20 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3129C7A25B
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 15:29:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 588C03830D7
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 14:02:39 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7E9634F0363
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 14:21:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80FDB3557FC;
-	Fri, 21 Nov 2025 13:56:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FABC346A07;
+	Fri, 21 Nov 2025 14:20:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HO5kGCHF";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1pD1z/ul";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HO5kGCHF";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1pD1z/ul"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uxkENGpF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7824234E776
-	for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 13:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5E6340D9A
+	for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 14:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763733419; cv=none; b=lc295WISNgBcbcMprxY2aPox++mkmAtzVEznUonoWP/8aZzMDOKxQCDWD2q/97+LfUCG2qKP0+LuB1GywPcicsUfyUNR9oQ3UxDAMgzu9oAyrLEuHmPixKbqrHPZJc3NY/1RUsB3Cac5UoFJkicFRprMBXq5+SizlyHIbY8sVA8=
+	t=1763734818; cv=none; b=LApTWgRd/iZIxMoqSlidPUYP05G5BC/I4toqHU0iKxQORhWMgpHpUssUqkvwGJQ76KFleQel6l6WV47q3GDIkvTk0ZfukyE6vCJV55tnC5FR+gXAU4LqHqgSXnndMNmm/4iFSYYmiPWelcd3vUPdM1xyZ+NQ1GKNEeCvk/gwZj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763733419; c=relaxed/simple;
-	bh=t9mEtVfE1aghZc+niuZNGmgFFHjSj37cGdOKDB5qz6w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WtN7RStv3r/S2Gb+L+TIzkN1swqhDbyGe946m/hL+My7onH361pH6Masey7J2Cigz9hLB2YQ+5kxa/bk2caEJbs7tPGFPDgK/6T4QXocsbB95jmqDB800Rcw9aoQKkOZs36qwoiUfJhg7vQLYylfH6UIz4ta256DPkYScoJkbKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HO5kGCHF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1pD1z/ul; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HO5kGCHF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1pD1z/ul; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 68BDB21018;
-	Fri, 21 Nov 2025 13:56:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1763733393; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xtghZh7eeBa0zgsffKJ3eiOL5OvyE27c0pocmVijFC4=;
-	b=HO5kGCHF/D1Pc+UNPx6GzgfVmbxpF5grD3EOQWM0q0xHGH0wMn3yv3RMHjiUVNU5nico0H
-	iaasSfMC/VKHi2q1hp0HDcfNhdjGaWhysg6aRDg8yirFpj3P1GVCRUE0Js3YSpD6Zm6let
-	fFcLsgH15EI7B5yD5ZUd+fj6+Qavma4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1763733393;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xtghZh7eeBa0zgsffKJ3eiOL5OvyE27c0pocmVijFC4=;
-	b=1pD1z/ul2RdfgYUbYvh2lclQ3zoY14m4Wxf+MQKFaqNHcVe8UwV8qBBkn5e1AgvpdONtIE
-	ryP6CP5k9FLQDUDQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=HO5kGCHF;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="1pD1z/ul"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1763733393; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xtghZh7eeBa0zgsffKJ3eiOL5OvyE27c0pocmVijFC4=;
-	b=HO5kGCHF/D1Pc+UNPx6GzgfVmbxpF5grD3EOQWM0q0xHGH0wMn3yv3RMHjiUVNU5nico0H
-	iaasSfMC/VKHi2q1hp0HDcfNhdjGaWhysg6aRDg8yirFpj3P1GVCRUE0Js3YSpD6Zm6let
-	fFcLsgH15EI7B5yD5ZUd+fj6+Qavma4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1763733393;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xtghZh7eeBa0zgsffKJ3eiOL5OvyE27c0pocmVijFC4=;
-	b=1pD1z/ul2RdfgYUbYvh2lclQ3zoY14m4Wxf+MQKFaqNHcVe8UwV8qBBkn5e1AgvpdONtIE
-	ryP6CP5k9FLQDUDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 115AD3EA61;
-	Fri, 21 Nov 2025 13:56:33 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0JjBApFvIGkqdQAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 21 Nov 2025 13:56:33 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: ardb@kernel.org,
-	javierm@redhat.com,
-	arnd@arndb.de
-Cc: x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH 6/6] sysfb: Move edid_info into sysfb_primary_display
-Date: Fri, 21 Nov 2025 14:36:10 +0100
-Message-ID: <20251121135624.494768-7-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20251121135624.494768-1-tzimmermann@suse.de>
-References: <20251121135624.494768-1-tzimmermann@suse.de>
+	s=arc-20240116; t=1763734818; c=relaxed/simple;
+	bh=S44K+7M87mUDWzitlSfBz3IfX5X78T+NM19oZFlPoqU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=TjAbOCPxmSrUHJU9TT9SMTAJcJEg5f5tZj5WvPUbWFJOuBjSjjVX/ITD9ZvLshpCy66dZuBYwLqXb5prMCLyNkQr2BCM3gcJ/IxRbQge3uyuN9Jwy7Ch5GDpP7yyRRACj9Mf6AFkCETIJxtHE8WTBrNUBE4nFryaEij24zv93QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uxkENGpF; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4779da35d27so26426115e9.3
+        for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 06:20:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1763734815; x=1764339615; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bF0yy4kYcfJc00YYadClwGA4hfPDk8gPIn3KVtCTX2w=;
+        b=uxkENGpF8ZQjmeaXr+DKREpMM+ezNZkAI6STgEy1X4iHLpJPBPY0DH7T+VX77oQQ1Q
+         eBYwbBr7GMrLkJzKQMVxsoHfUWrgLsJ3+9Xi/mFM0kgVUeqOLbel2aAKCDVQs3YJFV3+
+         puyExb23baqWC8H+Rgyz1wdvKy48QSa2IbDzzHFzXPIPZ/UWcScmFNb4KSJZ1xWaoavL
+         aOE3lDzIa16Z17p2UepKsAPOzfHYbsMtVXb0HBr0fHrm/2CVcz5+NEhL02HF6a65jfvp
+         cTCpDpIUtgFlDazdnPPNq/OWJGSVimv/c0be8CngImX635MsbmmEc6FJc/32o4nk9b1c
+         yPuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763734815; x=1764339615;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bF0yy4kYcfJc00YYadClwGA4hfPDk8gPIn3KVtCTX2w=;
+        b=eDCO5kRy+TcQYLKpkx0ObDv98L6BSmwUxMkcN6lm1BOlwKrEf+Tm1/PXQure1IubZ7
+         b6qb2mOecdj0QXUzM+5dcG5p2AJVtElfzKh9t2iFRDcNcQpgPdL3g+wmy5Z8vIjha/v5
+         fNvhfpTpieZw43gzuE1G1dxxrBoskuf48bPPXA8W9ph+kn2kQL5PxUBqT61lov30HGAP
+         MDyq8fPMGg60Jo5xvN1WBqi/n9v69GpqGrYeW7jD1fITLwc+B7CldtXuHkxP/E18flz2
+         nTloxuhKuhS6LVORvahhqWT6sLoTlZli7cXgN16pBm9tVUF6sCr2/n9EoQ+XVJmK5bSx
+         s4Pg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWSXkkSpaC6/bK5/QYteDJqFEg0Vxs42xaQwQIDjmaYkyURtN2twDCsx6zVoNz/KESDpktBWOMuCQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzw8Spc6zv3m5JyJBRjGahGyznhD3kr8XIJewV3/44Eiemq48wp
+	HKPvyVHWhSOt5DPFno1HJhXkO0wt4Rxo6KWC9CXWG5xU+XG7+6nyGdziB4U8LrFinl8NzfoY3LO
+	YIF7S/4Fgh7VJN+q9Hw==
+X-Google-Smtp-Source: AGHT+IHOOD4afO0MnsA4eFPhPWH6RGRFOOAgl0BEECmhcT6Gsttx5iYqEIkR92guCVGiooSMWjvF6Y8EbIyZtwQ=
+X-Received: from wmbes8.prod.google.com ([2002:a05:600c:8108:b0:477:165e:7e2a])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1c15:b0:471:13dd:bae7 with SMTP id 5b1f17b1804b1-477c01f5487mr36508565e9.30.1763734814799;
+ Fri, 21 Nov 2025 06:20:14 -0800 (PST)
+Date: Fri, 21 Nov 2025 14:20:13 +0000
+In-Reply-To: <20251119112117.116979-4-zhiw@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 68BDB21018
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
-	FROM_EQ_ENVFROM(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLtfyjk8sg4x43ngtem9djprcp)];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:mid,suse.de:dkim]
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -3.01
-X-Spam-Level: 
+Mime-Version: 1.0
+References: <20251119112117.116979-1-zhiw@nvidia.com> <20251119112117.116979-4-zhiw@nvidia.com>
+Message-ID: <aSB1Hcqr6W7EEjjK@google.com>
+Subject: Re: [PATCH v7 3/6] rust: io: factor common I/O helpers into Io trait
+From: Alice Ryhl <aliceryhl@google.com>
+To: Zhi Wang <zhiw@nvidia.com>
+Cc: rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dakr@kernel.org, bhelgaas@google.com, 
+	kwilczynski@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	lossin@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, 
+	markus.probst@posteo.de, helgaas@kernel.org, cjia@nvidia.com, 
+	smitra@nvidia.com, ankita@nvidia.com, aniketa@nvidia.com, 
+	kwankhede@nvidia.com, targupta@nvidia.com, acourbot@nvidia.com, 
+	joelagnelf@nvidia.com, jhubbard@nvidia.com, zhiwang@kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-Move x86's edid_info into sysfb_primary_display as a new field named
-edid. Adapt all users.
+On Wed, Nov 19, 2025 at 01:21:13PM +0200, Zhi Wang wrote:
+> The previous Io<SIZE> type combined both the generic I/O access helpers
+> and MMIO implementation details in a single struct.
+> 
+> To establish a cleaner layering between the I/O interface and its concrete
+> backends, paving the way for supporting additional I/O mechanisms in the
+> future, Io<SIZE> need to be factored.
+> 
+> Factor the common helpers into new {Io, Io64} traits, and move the
+> MMIO-specific logic into a dedicated Mmio<SIZE> type implementing that
+> trait. Rename the IoRaw to MmioRaw and update the bus MMIO implementations
+> to use MmioRaw.
+> 
+> No functional change intended.
+> 
+> Cc: Alexandre Courbot <acourbot@nvidia.com>
+> Cc: Alice Ryhl <aliceryhl@google.com>
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Danilo Krummrich <dakr@kernel.org>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
 
-An instance of edid_info has only been defined on x86. With the move
-into sysfb_primary_display, it becomes available on all architectures.
-Therefore remove this contraint from CONFIG_FIRMWARE_EDID.
+I said this on a previous version, but I still don't buy the split
+into IoFallible and IoInfallible.
 
-x86 fills the EDID data from boot_params.edid_info. DRM drivers pick
-up the raw data and make it available to DRM clients. Replace the
-drivers' references to edid_info and instead use the sysfb_display_info
-as passed from sysfb.
+For one, we're never going to have a method that can accept any Io - we
+will always want to accept either IoInfallible or IoFallible, so the
+base Io trait serves no purpose.
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
----
- arch/x86/kernel/setup.c          | 6 +-----
- drivers/gpu/drm/sysfb/efidrm.c   | 5 ++---
- drivers/gpu/drm/sysfb/vesadrm.c  | 5 ++---
- drivers/video/Kconfig            | 1 -
- drivers/video/fbdev/core/fbmon.c | 8 +++++---
- include/linux/sysfb.h            | 6 ++++++
- include/video/edid.h             | 4 ----
- 7 files changed, 16 insertions(+), 19 deletions(-)
+For another, the docs explain that the distinction between them is
+whether the bounds check is done at compile-time or runtime. That is not
+the kind of capability one normally uses different traits to distinguish
+between. It makes sense to have additional traits to distinguish
+between e.g.:
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 675e4b9deb1f..d9bfe2032cd9 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -215,10 +215,6 @@ arch_initcall(init_x86_sysctl);
- 
- struct sysfb_display_info sysfb_primary_display;
- EXPORT_SYMBOL(sysfb_primary_display);
--#if defined(CONFIG_FIRMWARE_EDID)
--struct edid_info edid_info;
--EXPORT_SYMBOL_GPL(edid_info);
--#endif
- 
- extern int root_mountflags;
- 
-@@ -530,7 +526,7 @@ static void __init parse_boot_params(void)
- 	ROOT_DEV = old_decode_dev(boot_params.hdr.root_dev);
- 	sysfb_primary_display.screen = boot_params.screen_info;
- #if defined(CONFIG_FIRMWARE_EDID)
--	edid_info = boot_params.edid_info;
-+	sysfb_primary_display.edid = boot_params.edid_info;
- #endif
- #ifdef CONFIG_X86_32
- 	apm_info.bios = boot_params.apm_bios_info;
-diff --git a/drivers/gpu/drm/sysfb/efidrm.c b/drivers/gpu/drm/sysfb/efidrm.c
-index 29533ae8fbbf..50e0aeef709c 100644
---- a/drivers/gpu/drm/sysfb/efidrm.c
-+++ b/drivers/gpu/drm/sysfb/efidrm.c
-@@ -24,7 +24,6 @@
- #include <drm/drm_print.h>
- #include <drm/drm_probe_helper.h>
- 
--#include <video/edid.h>
- #include <video/pixel_format.h>
- 
- #include "drm_sysfb_helper.h"
-@@ -207,8 +206,8 @@ static struct efidrm_device *efidrm_device_create(struct drm_driver *drv,
- 		&format->format, width, height, stride);
- 
- #if defined(CONFIG_FIRMWARE_EDID)
--	if (drm_edid_header_is_valid(edid_info.dummy) == 8)
--		sysfb->edid = edid_info.dummy;
-+	if (drm_edid_header_is_valid(dpy->edid.dummy) == 8)
-+		sysfb->edid = dpy->edid.dummy;
- #endif
- 	sysfb->fb_mode = drm_sysfb_mode(width, height, 0, 0);
- 	sysfb->fb_format = format;
-diff --git a/drivers/gpu/drm/sysfb/vesadrm.c b/drivers/gpu/drm/sysfb/vesadrm.c
-index 16fc223f8c5b..0680638b8131 100644
---- a/drivers/gpu/drm/sysfb/vesadrm.c
-+++ b/drivers/gpu/drm/sysfb/vesadrm.c
-@@ -25,7 +25,6 @@
- #include <drm/drm_print.h>
- #include <drm/drm_probe_helper.h>
- 
--#include <video/edid.h>
- #include <video/pixel_format.h>
- #include <video/vga.h>
- 
-@@ -474,8 +473,8 @@ static struct vesadrm_device *vesadrm_device_create(struct drm_driver *drv,
- 	}
- 
- #if defined(CONFIG_FIRMWARE_EDID)
--	if (drm_edid_header_is_valid(edid_info.dummy) == 8)
--		sysfb->edid = edid_info.dummy;
-+	if (drm_edid_header_is_valid(dpy->edid.dummy) == 8)
-+		sysfb->edid = dpy->edid.dummy;
- #endif
- 	sysfb->fb_mode = drm_sysfb_mode(width, height, 0, 0);
- 	sysfb->fb_format = format;
-diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-index d51777df12d1..ad55e7d62159 100644
---- a/drivers/video/Kconfig
-+++ b/drivers/video/Kconfig
-@@ -63,7 +63,6 @@ endif # HAS_IOMEM
- 
- config FIRMWARE_EDID
- 	bool "Enable firmware EDID"
--	depends on X86
- 	help
- 	  This enables access to the EDID transferred from the firmware.
- 	  On x86, this is from the VESA BIOS. DRM display drivers will
-diff --git a/drivers/video/fbdev/core/fbmon.c b/drivers/video/fbdev/core/fbmon.c
-index 0a65bef01e3c..07df7e98f8a3 100644
---- a/drivers/video/fbdev/core/fbmon.c
-+++ b/drivers/video/fbdev/core/fbmon.c
-@@ -32,11 +32,13 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/slab.h>
--#include <video/edid.h>
-+#include <linux/string_choices.h>
-+#include <linux/sysfb.h>
-+
- #include <video/of_videomode.h>
- #include <video/videomode.h>
-+
- #include "../edid.h"
--#include <linux/string_choices.h>
- 
- /*
-  * EDID parser
-@@ -1504,7 +1506,7 @@ const unsigned char *fb_firmware_edid(struct device *device)
- 		res = &dev->resource[PCI_ROM_RESOURCE];
- 
- 	if (res && res->flags & IORESOURCE_ROM_SHADOW)
--		edid = edid_info.dummy;
-+		edid = sysfb_primary_display.edid.dummy;
- 
- 	return edid;
- }
-diff --git a/include/linux/sysfb.h b/include/linux/sysfb.h
-index e8bde392c690..5226efde9ad4 100644
---- a/include/linux/sysfb.h
-+++ b/include/linux/sysfb.h
-@@ -12,6 +12,8 @@
- #include <linux/screen_info.h>
- #include <linux/types.h>
- 
-+#include <video/edid.h>
-+
- struct device;
- struct platform_device;
- struct screen_info;
-@@ -62,6 +64,10 @@ struct efifb_dmi_info {
- 
- struct sysfb_display_info {
- 	struct screen_info screen;
-+
-+#if defined(CONFIG_FIRMWARE_EDID)
-+	struct edid_info edid;
-+#endif
- };
- 
- extern struct sysfb_display_info sysfb_primary_display;
-diff --git a/include/video/edid.h b/include/video/edid.h
-index c2b186b1933a..52aabb706032 100644
---- a/include/video/edid.h
-+++ b/include/video/edid.h
-@@ -4,8 +4,4 @@
- 
- #include <uapi/video/edid.h>
- 
--#if defined(CONFIG_FIRMWARE_EDID)
--extern struct edid_info edid_info;
--#endif
--
- #endif /* __linux_video_edid_h__ */
--- 
-2.51.1
+* Whether IO ops can fail for reasons *other* than bounds checks.
+* Whether 64-bit IO ops are possible.
 
+Well ... I guess one could distinguish between whether it's possible to
+check bounds at compile-time at all. But if you can check them at
+compile-time, it should always be possible to check at runtime too, so
+one should be a sub-trait of the other if you want to distinguish
+them. (And then a trait name of KnownSizeIo would be more idiomatic.)
+
+And I'm not really convinced that the current compile-time checked
+traits are a good idea at all. See:
+https://lore.kernel.org/all/DEEEZRYSYSS0.28PPK371D100F@nvidia.com/
+
+If we want to have a compile-time checked trait, then the idiomatic way
+to do that in Rust would be to have a new integer type that's guaranteed
+to only contain integers <= the size. For example, the Bounded integer
+being added elsewhere.
+
+Alice
 
