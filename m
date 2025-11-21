@@ -1,138 +1,135 @@
-Return-Path: <linux-pci+bounces-41846-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41847-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D98CC777E9
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 07:01:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3ECDDC779A4
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 07:48:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1BF5E4E1009
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 06:01:30 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1CDF94E3F4B
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 06:48:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A859D26A1AB;
-	Fri, 21 Nov 2025 06:01:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cA0fhmCf"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25B70255E26;
+	Fri, 21 Nov 2025 06:48:53 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFA92586CE;
-	Fri, 21 Nov 2025 06:01:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+Received: from zg8tmja2lje4os43os4xodqa.icoremail.net (zg8tmja2lje4os43os4xodqa.icoremail.net [206.189.79.184])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBF08238C07;
+	Fri, 21 Nov 2025 06:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.79.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763704885; cv=none; b=iOiOZfqKLQfxQs4MVxukwF1AaeKsJdUwRVxzdnwxnm91GxeotFkHqNqKJAv+8DKlAyYUQDu1T2Qq8En3u+z6cvJulSLRNgp5KJyjhtNf/qn6cYHlbGPJbBnCsawM2TakCK03cU3naoV0VPMuleNhbIgzn57X1Op+jNUR6mfmvjw=
+	t=1763707733; cv=none; b=jxm25sAwXGavXGxvSnkkFANp9lr7buWAnIG5xLE7mtPFU8qTAwLFstB+eVot0Z1btSf/mF7bRyFKOBlr0uoqqO8lkDnS8DxLOAA1gLxnsnzICDQNpNLPsZgE3zJpH5vLHXKq91Koz1leIoUmWsIQFL0vm6yIDIiK6/genzgk/3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763704885; c=relaxed/simple;
-	bh=VxJUVnrel4GrYcjD7+FVaUwXq4Hddg0oQdzEZbbT1x4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=In1vu256MwmdcU2k0jLyoYnNYm/xJtpNyZUAJ39pHF7wNSTyxKuGtH5MTU0V5yAF1DddO0dixH68fQnAU8Lup59t9T8jwt18DR6avXjUHeOb6f43yOamJ/Wv8vcLY+eDf/oZQfq2wJuB3PzTJdefiAooqQ2YmDYkX9DK1FyrJcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cA0fhmCf; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763704884; x=1795240884;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VxJUVnrel4GrYcjD7+FVaUwXq4Hddg0oQdzEZbbT1x4=;
-  b=cA0fhmCfA92P13y349Hdud2Cvr1RcoWkbikJy/uIg+mUuDsFbihru8b9
-   PxH1I0fMKsRhrZmpmi2NHzWjsX0F8GDQLTzta1VRZd5YeBERhqkm5hKhU
-   vqph9pCGZlRm3HZY8uFOG6A/MB8bj3hKKVO6FLaD565Bl9hwi5HkwO7b9
-   I0KE4TdUqe/bKzbb/iIfLCBJ5QV5pZ1RE1PxLitg6WIsEpry34HKxXX5x
-   W0YQUiuISXHRUpZgWxnga/REM33uO69uGTKmY5rzsttYXHxpSrimqsCA3
-   mVnxliH+MRoauU88VRnbesV7J4XvCQN2RmInsYSJKprM2wuwodPWtW30y
-   w==;
-X-CSE-ConnectionGUID: w04q/ukPQ9CdJNgo+uqt1w==
-X-CSE-MsgGUID: Ji3+ZLvfRWSDLj6zcaT4Cg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11619"; a="88442594"
-X-IronPort-AV: E=Sophos;i="6.20,215,1758610800"; 
-   d="scan'208";a="88442594"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 22:01:23 -0800
-X-CSE-ConnectionGUID: mg0w5TNUSa+iEJ1jHHJkmw==
-X-CSE-MsgGUID: lYGsrtOCT9iCOVAefWA4oQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,215,1758610800"; 
-   d="scan'208";a="196738488"
-Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 20 Nov 2025 22:01:17 -0800
-Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vMKCo-00051X-1Q;
-	Fri, 21 Nov 2025 06:01:14 +0000
-Date: Fri, 21 Nov 2025 14:00:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Peter Colberg <pcolberg@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, Zhi Wang <zhiw@nvidia.com>,
-	Peter Colberg <pcolberg@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH 6/8] rust: pci: add bus callback sriov_configure(), to
- control SR-IOV from sysfs
-Message-ID: <202511211317.FkJsCIc0-lkp@intel.com>
-References: <20251119-rust-pci-sriov-v1-6-883a94599a97@redhat.com>
+	s=arc-20240116; t=1763707733; c=relaxed/simple;
+	bh=fS5PgzwvioGL5pHjmQTgLKdllFC+X3iN9pvEDO4sWNw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=K0mxB8SdnYkBnH4WO1JkN8niHWfhm83I0tGmgHlpiKT4u/XGY0/7a/9/+PI45UN/SePBUcl3G2nuYZr2UcWH+4nhLvfkRmlvyygmUhR0baOh0eU1h2stYyPvlxJkGGvLA54vJVSiwp4lGR9yJFCngTdrwSUcX2noUR7AvaJJkWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.79.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
+ ajax-webmail-app2 (Coremail) ; Fri, 21 Nov 2025 14:48:20 +0800 (GMT+08:00)
+Date: Fri, 21 Nov 2025 14:48:20 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
+To: "Manivannan Sadhasivam" <mani@kernel.org>
+Cc: bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org,
+	p.zabel@pengutronix.de, jingoohan1@gmail.com,
+	gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com,
+	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
+	thippeswamy.havalige@amd.com, inochiama@gmail.com,
+	ningyu@eswincomputing.com, linmin@eswincomputing.com,
+	pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com,
+	Frank.li@nxp.com
+Subject: Re: Re: [PATCH v6 3/3] PCI: dwc: Add no_suspport_L2 flag and skip
+ PME_Turn_Off broadcast
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
+ 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
+ mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
+In-Reply-To: <dux47crrf6ranvexkpzw667hzmkgfguqadseco52svgvglalye@alxqq4ybu672>
+References: <20251120101018.1477-1-zhangsenchuan@eswincomputing.com>
+ <20251120101236.1538-1-zhangsenchuan@eswincomputing.com>
+ <dux47crrf6ranvexkpzw667hzmkgfguqadseco52svgvglalye@alxqq4ybu672>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251119-rust-pci-sriov-v1-6-883a94599a97@redhat.com>
+Message-ID: <11367b43.6d3.19aa52bc596.Coremail.zhangsenchuan@eswincomputing.com>
+X-Coremail-Locale: en_US
+X-CM-TRANSID:TQJkCgDnK680CyBpFzB9AA--.2279W
+X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAQENBmkfQ
+	oMSzAAAsi
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-Hi Peter,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on e4addc7cc2dfcc19f1c8c8e47f3834b22cb21559]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Peter-Colberg/rust-pci-add-is_virtfn-to-check-for-VFs/20251120-062302
-base:   e4addc7cc2dfcc19f1c8c8e47f3834b22cb21559
-patch link:    https://lore.kernel.org/r/20251119-rust-pci-sriov-v1-6-883a94599a97%40redhat.com
-patch subject: [PATCH 6/8] rust: pci: add bus callback sriov_configure(), to control SR-IOV from sysfs
-config: um-randconfig-001-20251121 (https://download.01.org/0day-ci/archive/20251121/202511211317.FkJsCIc0-lkp@intel.com/config)
-compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 9e9fe08b16ea2c4d9867fb4974edf2a3776d6ece)
-rustc: rustc 1.88.0 (6b00bc388 2025-06-23)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251121/202511211317.FkJsCIc0-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511211317.FkJsCIc0-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> error[E0609]: no field `sriov_configure` on type `pci_driver`
-   --> rust/kernel/pci.rs:71:31
-   |
-   71 |                 (*pdrv.get()).sriov_configure = Some(Self::sriov_configure_callback);
-   |                               ^^^^^^^^^^^^^^^ unknown field
-   |
-   = note: available field is: `_address`
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiTWFuaXZhbm5hbiBTYWRo
+YXNpdmFtIiA8bWFuaUBrZXJuZWwub3JnPgo+IFNlbmQgdGltZTpUaHVyc2RheSwgMjAvMTEvMjAy
+NSAyMDo0NTozOAo+IFRvOiB6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbQo+IENjOiBi
+aGVsZ2Fhc0Bnb29nbGUuY29tLCBrcnprK2R0QGtlcm5lbC5vcmcsIGNvbm9yK2R0QGtlcm5lbC5v
+cmcsIGxwaWVyYWxpc2lAa2VybmVsLm9yZywga3dpbGN6eW5za2lAa2VybmVsLm9yZywgcm9iaEBr
+ZXJuZWwub3JnLCBwLnphYmVsQHBlbmd1dHJvbml4LmRlLCBqaW5nb29oYW4xQGdtYWlsLmNvbSwg
+Z3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb20sIGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmcs
+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnLCBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
+LCBjaHJpc3RpYW4uYnJ1ZWxAZm9zcy5zdC5jb20sIG1heWFuay5yYW5hQG9zcy5xdWFsY29tbS5j
+b20sIHNocmFkaGEudEBzYW1zdW5nLmNvbSwga3Jpc2huYS5jaHVuZHJ1QG9zcy5xdWFsY29tbS5j
+b20sIHRoaXBwZXN3YW15LmhhdmFsaWdlQGFtZC5jb20sIGlub2NoaWFtYUBnbWFpbC5jb20sIG5p
+bmd5dUBlc3dpbmNvbXB1dGluZy5jb20sIGxpbm1pbkBlc3dpbmNvbXB1dGluZy5jb20sIHBpbmtl
+c2gudmFnaGVsYUBlaW5mb2NoaXBzLmNvbSwgb3V5YW5naHVpQGVzd2luY29tcHV0aW5nLmNvbSwg
+RnJhbmsubGlAbnhwLmNvbQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgMy8zXSBQQ0k6IGR3Yzog
+QWRkIG5vX3N1c3Bwb3J0X0wyIGZsYWcgYW5kIHNraXAgUE1FX1R1cm5fT2ZmIGJyb2FkY2FzdAo+
+IAo+IE9uIFRodSwgTm92IDIwLCAyMDI1IGF0IDA2OjEyOjM1UE0gKzA4MDAsIHpoYW5nc2VuY2h1
+YW5AZXN3aW5jb21wdXRpbmcuY29tIHdyb3RlOgo+ID4gRnJvbTogU2VuY2h1YW4gWmhhbmcgPHpo
+YW5nc2VuY2h1YW5AZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gCj4gPiBUaGUgRVNXSU4gRUlDNzcw
+MCBzb2MgZG9lcyBub3Qgc3VwcG9ydCBlbnRlciBMMiBsaW5rIHN0YXRlLiBUaGVyZWZvcmUgYWRk
+Cj4gPiBub19zdXNwcG9ydF9MMiBmbGFnIHNraXAgUE1FX1R1cm5fT2ZmIGJyb2FkY2FzdCBhbmQg
+bGluayBzdGF0ZSBjaGVjayBjb2RlLAo+ID4gb3RoZXIgZHJpdmVyIGNhbiByZXVzZSB0aGlzIGZs
+YWcgaWYgbWVldCB0aGUgc2ltaWxhciBzaXR1YXRpb24uCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6
+IFl1IE5pbmcgPG5pbmd5dUBlc3dpbmNvbXB1dGluZy5jb20+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBZ
+YW5naHVpIE91IDxvdXlhbmdodWlAZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gU2lnbmVkLW9mZi1i
+eTogU2VuY2h1YW4gWmhhbmcgPHpoYW5nc2VuY2h1YW5AZXN3aW5jb21wdXRpbmcuY29tPgo+IAo+
+IERvZXMgdGhpcyBwYXRjaCB3b3JrIGZvciB5b3U/Cj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcv
+bGludXgtcGNpLzIwMjUxMTE5LXBjaS1kd2Mtc3VzcGVuZC1yZXdvcmstdjEtMS1hYWQxMDQ4Mjg1
+NjJAb3NzLnF1YWxjb21tLmNvbS8KCmlmIHRoZSBQQ0llIGxpbmsgaXMgbm90IHVwLCB0aGlzIHN1
+aXRzIG1lIHRvbywgYnV0IGlmIHRoZSBQQ0llIGxpbmsgdXAsIApvdXIgaGFyZHdhcmUgZG9lcyBu
+b3Qgc3VwcG9ydCBlbnRlcmluZyB0aGUgTDIgbGluayBzdGF0ZS4gQXQgdGhpcyBwb2ludCwgCml0
+IGlzIGFsc28gbmVjZXNzYXJ5IHRvIHNraXAgdGhlIGJyb2FkY2FzdCBQTUVfVHVybl9PZmYgbWVz
+c2FnZSBhbmQgd2FpdApmb3IgTDIgdHJhbnNpdGlvbi4KCktpbmQgcmVnYXJkcywKU2VuY2h1YW4g
+WmhhbmcKCj4gCj4gPiAtLS0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRl
+c2lnbndhcmUtaG9zdC5jIHwgNCArKysrCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2Mv
+cGNpZS1kZXNpZ253YXJlLmggICAgICB8IDEgKwo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNSBpbnNl
+cnRpb25zKCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3
+Yy9wY2llLWRlc2lnbndhcmUtaG9zdC5jIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNp
+ZS1kZXNpZ253YXJlLWhvc3QuYwo+ID4gaW5kZXggZTkyNTEzYzViZGE1Li5hMjAzNTc3NjA2ZTUg
+MTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndh
+cmUtaG9zdC5jCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2ln
+bndhcmUtaG9zdC5jCj4gPiBAQCAtMTE1Niw2ICsxMTU2LDkgQEAgaW50IGR3X3BjaWVfc3VzcGVu
+ZF9ub2lycShzdHJ1Y3QgZHdfcGNpZSAqcGNpKQo+ID4gIAlpZiAoZHdfcGNpZV9yZWFkd19kYmko
+cGNpLCBvZmZzZXQgKyBQQ0lfRVhQX0xOS0NUTCkgJiBQQ0lfRVhQX0xOS0NUTF9BU1BNX0wxKQo+
+ID4gIAkJcmV0dXJuIDA7Cj4gPiAKPiA+ICsJaWYgKHBjaS0+bm9fc3VzcHBvcnRfTDIpCj4gPiAr
+CQlnb3RvIHN0b3BfbGluazsKPiA+ICsKPiA+ICAJaWYgKHBjaS0+cHAub3BzLT5wbWVfdHVybl9v
+ZmYpIHsKPiA+ICAJCXBjaS0+cHAub3BzLT5wbWVfdHVybl9vZmYoJnBjaS0+cHApOwo+ID4gIAl9
+IGVsc2Ugewo+ID4gQEAgLTExODIsNiArMTE4NSw3IEBAIGludCBkd19wY2llX3N1c3BlbmRfbm9p
+cnEoc3RydWN0IGR3X3BjaWUgKnBjaSkKPiA+ICAJICovCj4gPiAgCXVkZWxheSgxKTsKPiA+IAo+
+ID4gK3N0b3BfbGluazoKPiA+ICAJZHdfcGNpZV9zdG9wX2xpbmsocGNpKTsKPiA+ICAJaWYgKHBj
+aS0+cHAub3BzLT5kZWluaXQpCj4gPiAgCQlwY2ktPnBwLm9wcy0+ZGVpbml0KCZwY2ktPnBwKTsK
+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndh
+cmUuaCBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5oCj4gPiBp
+bmRleCBlOTk1ZjY5MmExZWMuLjE3MGE3MzI5OWNlNSAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMv
+cGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5oCj4gPiArKysgYi9kcml2ZXJzL3Bj
+aS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUuaAo+ID4gQEAgLTUzOSw2ICs1MzksNyBA
+QCBzdHJ1Y3QgZHdfcGNpZSB7Cj4gPiAgCSAqIHVzZV9wYXJlbnRfZHRfcmFuZ2VzIHRvIHRydWUg
+dG8gYXZvaWQgdGhpcyB3YXJuaW5nLgo+ID4gIAkgKi8KPiA+ICAJYm9vbAkJCXVzZV9wYXJlbnRf
+ZHRfcmFuZ2VzOwo+ID4gKwlib29sCQkJbm9fc3VzcHBvcnRfTDI7Cj4gPiAgfTsKPiA+IAo+ID4g
+ICNkZWZpbmUgdG9fZHdfcGNpZV9mcm9tX3BwKHBvcnQpIGNvbnRhaW5lcl9vZigocG9ydCksIHN0
+cnVjdCBkd19wY2llLCBwcCkKPiA+IC0tCj4gPiAyLjI1LjEKPiA+IAo+IAo+IC0tIAo+IOCuruCu
+o+Cuv+CuteCuo+CvjeCuo+CuqeCvjSDgrprgrqTgrr7grprgrr/grrXgrq7gr40K
 
