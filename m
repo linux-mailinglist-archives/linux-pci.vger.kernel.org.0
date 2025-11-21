@@ -1,287 +1,120 @@
-Return-Path: <linux-pci+bounces-41854-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41855-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72CB5C77FBD
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 09:49:09 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9A2BC783AB
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 10:48:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id ED07E34E4F2
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 08:48:37 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 985584E13F3
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 09:48:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 659C033C19F;
-	Fri, 21 Nov 2025 08:48:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D68B33F8B3;
+	Fri, 21 Nov 2025 09:48:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nym8QA/4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fH5nntOK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A81833BBAF;
-	Fri, 21 Nov 2025 08:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721762F5B
+	for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 09:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763714897; cv=none; b=XnK0WtMhCoR61jBZ+UD54L2cylHrR2W3oHTLbCKXLnxdoVAGzrblEh5+RWS/uDJLXZO2gt31tY3IA+6kMt8bu80Y0OnbX/lB2LCTZwrYr7/nQX0Kfz6WvQeakyMCss3pQeD9MniJ9+qK6ZoeP4lQKi5N7Q+tc/Yo9XgNFxnZ5Tg=
+	t=1763718527; cv=none; b=DFfAr7G55UcV8HiUJV2HIDSSg2k3a/srrLc704paFvmstTNVlygMdbukIX4GH6mA8FfWGmy2sLOIQNItmXGT7GGdPdQPU/LZmS3KtouQdYinhJPfS+q+87Nj2MEnMEiy9sjU2574Lp/zhldzWfk3U8bicdY+uxlLxgZvScv0vWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763714897; c=relaxed/simple;
-	bh=OUDGpBZDkEF3ySxw/DubSWv8lCLf/8bprs+E92p9msE=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Jg+L5iB9mH7+H2MBf9vljEZx9nhgyy7DEuk+BeRZJOpD1c3F62jBwA0EGmkmqWzDgRI5cNl+sdgX7w9ZYiz69ehM8Z66Z+lpqmZoqU+NUImjlIPNsem3rQ2trykRoXiiWD1SJ5j+DFJQy81KRoIxZZPMtchS2270HAMc06/MSmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nym8QA/4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96255C4CEF1;
-	Fri, 21 Nov 2025 08:48:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763714896;
-	bh=OUDGpBZDkEF3ySxw/DubSWv8lCLf/8bprs+E92p9msE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nym8QA/4pUtTT7KbzxjHpCROPkgxhY9urUzAdVQAW4mpzhEzAe/cqwUjM3tsNl0sQ
-	 Q1UY5xAqHAeOon/ygQvG56xZtzLRVqzRX7aLhNHDRw0m413K6JOPxKRawIDw9a7V0P
-	 CGoD5MXgj1z32uWsaITdlo+7eZqoErgliNIUBzUhmbYcUfSJKfH4PhZj9DgZme/B/5
-	 ljtJqSl7l5PQFB6I3xGG6BUFXMZkz/DHLmR5UyqwRwzkPiabHyhWkP1HXZOOE2sbYu
-	 zDi3ks2K82mRl2GXZtCbUB9Dvmd0684Dl8M4cTDdzcsDysAYK/ka07AQxXv15zSjbu
-	 rvesMlrkY9Kfg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1vMMoP-00000007A9E-3sXc;
-	Fri, 21 Nov 2025 08:48:14 +0000
-Date: Fri, 21 Nov 2025 08:48:13 +0000
-Message-ID: <863467srea.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Radu Rendec <rrendec@redhat.com>
-Cc: linux-pci@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,	Bjorn Helgaas <bhelgaas@google.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,	Rob Herring <robh@kernel.org>,
-	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kwilczynski@kernel.org>,	Lorenzo
- Pieralisi <lpieralisi@kernel.org>
-Subject: Re: [PATCH] PCI: host-generic: Move bridge allocation outside of pci_host_common_init()
-In-Reply-To: <73a0863a70d558efaf29d6b988f3fec6312a22a9.camel@redhat.com>
-References: <20251120113630.2036078-1-maz@kernel.org>
-	<73a0863a70d558efaf29d6b988f3fec6312a22a9.camel@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1763718527; c=relaxed/simple;
+	bh=LF9MKeVs28+QaTBPa9kw6A/uGUimzmq/sym5DkzrGSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=r1V5WCgbjkXya/fXKrXRMhzrRyKE54YThXEtQEfYZjL/qp+/akyji7w3h2cYUGvwUBRdsGu+HtaqnHA2uUANcByfeLYrppDrPdZGj5lK2Ny/4GQSc66VvwJ675fKiTeFoOtHLnzH8l1YCcY1ripGos3BaMgZSDgi7Ywi0a8NlxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fH5nntOK; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-42b566859ecso1638015f8f.2
+        for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 01:48:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1763718524; x=1764323324; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UFwTNwrNkn3J7pmdVYGrUPZZHawxAS2+qz7cGz84mvM=;
+        b=fH5nntOKXOafhjW7dhdMdTdorEyLgocp4waNBTN1pfjfI8At3yPaQLDQwjlDwWD5Ae
+         BAm0XxQ9poZxgn5Q316IJ4RTKm75lFr3MGtPn72gtSFDR31pd0Io5SeuIz3N8VMe/6YD
+         MECV62tDpGm+Feg0/bZmhsersjUqDclQWMFP8vxsS3KzhWFJk4qcxMIDja/pJBBgEPzH
+         XSZSnWJyDuqN0Vrx6NcaBu1n/8eza0vyzMC6rasigr74Q+xXPYOqLkerZFt7IPNg6ovl
+         NWicPWOOVOetm27lFTxXiJ0JHSqxXjzv+VlC704vENClYmIYzrx5mSFsFDRycTZ+lfKd
+         1X5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763718524; x=1764323324;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=UFwTNwrNkn3J7pmdVYGrUPZZHawxAS2+qz7cGz84mvM=;
+        b=D/UEdt1T2AIFjostVhg3y0SphLljSzdd3Sw7q3fm2E+X5Mq/VRpZ16mDdUId1i5fs2
+         6AiaZ4U8I17A8yZLzQnIp6Edy0tSN9de42GusAvoyzpPZK+1G+urrNlhFWvsHal3HhcX
+         4n89qeRubpch7Wt4YaBYGsxt1W80O8E6RgyrfhIY15xLVY7xREHDeOPQopC3ZR5Fgd0/
+         acIPW7t/QOBNaqf+joolRGsQ5s7CGcnJ9C9oUhidl+dusvqVI6t01qcAtPXstsQShjip
+         0Wst5OOmthPaVYK2CSGCUN+fsWSHkDfhbZwNIMhNNm8SMacStelim1GBbeF0ETTtb+uW
+         IFQA==
+X-Gm-Message-State: AOJu0YwusuiJUkDzg49EnWz8EQJuOAa8x+LD7h16Rsb3YD4vxMkm/lT7
+	7MbRT4YGznAiaX8lNFBDWYZLeFWIrhKjBnourquo+NlvNNDUNoDq4WjuqnZbRQWiuic=
+X-Gm-Gg: ASbGncsIEMAbTytlm+avgdeEsR/QeivnS2ctfZJ70jVeJSl1rXdaxnSdEsn03d89aq4
+	NQHVSrznS7+Il3C6gh1DtO/wlFCJPytu67pJVTXxa/UK3RFGIXG0JVKG+FpMF0ETg+mGQnyMGi7
+	fcy6ENtlTg8uYVTUCkr0mxuBYNJ8vwum4acvGOEzy41L+nkU4UYEsNxwgeLxT75n85jIGHKWkKw
+	SWdGIps9OB94y33eVOeEHT0XFPhNilnVP+k5Vh0u2N1ALd2S163T3QuD3uumgfujXAeqJhiUDuL
+	fkeu+5x+pWBbkA/rK0pv2X9ylIXzzkPUnwh8WTkuZw/1IOyBn2xiaUpEmoFpJUFaAFf7DpKYtEJ
+	giHuY2x5rj6mmQ0PNRN64h17JdYFblb1/LKD/12C1efuLRMjKaoGKhEjVuLYx9Mu6MrX9ZfSXik
+	Q9ityQsptvTQGKjztG2FxnpoLm7Ug=
+X-Google-Smtp-Source: AGHT+IHSWd714QmLz7/+yc4k2WoFIfZVRy81NvvjR28HQpWzvHqJ3LdUtJ+oyKs5fTkj5K3qKZVSgw==
+X-Received: by 2002:a05:6000:26cc:b0:42b:39ee:286f with SMTP id ffacd0b85a97d-42cc1d19e4emr1519050f8f.48.1763718523622;
+        Fri, 21 Nov 2025 01:48:43 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-42cb7fd8e54sm10185789f8f.40.2025.11.21.01.48.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Nov 2025 01:48:43 -0800 (PST)
+Date: Fri, 21 Nov 2025 12:48:10 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org
+Subject: [bug report] PCI: Add pci_rebar_size_supported() helper
+Message-ID: <aSA1WiRG3RuhqZMY@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: rrendec@redhat.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bhelgaas@google.com, mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org, lpieralisi@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Thu, 20 Nov 2025 17:58:42 +0000,
-Radu Rendec <rrendec@redhat.com> wrote:
->=20
-> On Thu, 2025-11-20 at 11:36 +0000, Marc Zyngier wrote:
-> > Having the host bridge allocation inside pci_host_common_init() results
-> > in a lot of complexity in the pcie-apple driver (the only direct user
-> > of this function outside of code PCI code).
->                               ^^^^
-> nit: s/code/core :)
->=20
-> > It forces the allocation of driver-specific tracking structures outside
-> > of the bridge allocation, which in turns requires it to use inneficient
-> > data structures to match the bridge and the private structre as needed.
-> >=20
-> > Instead, let the bridge structure be passed to pci_host_common_init(),
-> > allowing the driver to allocate it together with the private data,
-> > as it is usually intended. The driver can then retrieve the bridge
-> > via the owning device attached to the PCI config window structure.
-> > This allows the pcie-apple driver to be significantly simplified.
-> >=20
-> > Both core and driver code are changed in one go to avoid going via
-> > a transitional interface.
-> >=20
-> > Link: https://lore.kernel.org/r/86jyzms036.wl-maz@kernel.org
-> > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > Cc: Radu Rendec <rrendec@redhat.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Manivannan Sadhasivam <mani@kernel.org>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
-> > Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > ---
-> > =C2=A0drivers/pci/controller/pci-host-common.c | 13 ++++----
-> > =C2=A0drivers/pci/controller/pci-host-common.h |=C2=A0 1 +
-> > =C2=A0drivers/pci/controller/pcie-apple.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- | 42 ++++--------------------
-> > =C2=A03 files changed, 14 insertions(+), 42 deletions(-)
-> >=20
-> > diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/con=
-troller/pci-host-common.c
-> > index 810d1c8de24e9..c473e7c03baca 100644
-> > --- a/drivers/pci/controller/pci-host-common.c
-> > +++ b/drivers/pci/controller/pci-host-common.c
-> > @@ -53,16 +53,12 @@ struct pci_config_window *pci_host_common_ecam_crea=
-te(struct device *dev,
-> > =C2=A0EXPORT_SYMBOL_GPL(pci_host_common_ecam_create);
-> > =C2=A0
-> > =C2=A0int pci_host_common_init(struct platform_device *pdev,
-> > +			 struct pci_host_bridge *bridge,
-> > =C2=A0			 const struct pci_ecam_ops *ops)
-> > =C2=A0{
-> > =C2=A0	struct device *dev =3D &pdev->dev;
-> > -	struct pci_host_bridge *bridge;
-> > =C2=A0	struct pci_config_window *cfg;
-> > =C2=A0
-> > -	bridge =3D devm_pci_alloc_host_bridge(dev, 0);
-> > -	if (!bridge)
-> > -		return -ENOMEM;
-> > -
-> > =C2=A0	of_pci_check_probe_only();
-> > =C2=A0
-> > =C2=A0	platform_set_drvdata(pdev, bridge);
-> > @@ -85,12 +81,17 @@ EXPORT_SYMBOL_GPL(pci_host_common_init);
-> > =C2=A0int pci_host_common_probe(struct platform_device *pdev)
-> > =C2=A0{
-> > =C2=A0	const struct pci_ecam_ops *ops;
-> > +	struct pci_host_bridge *bridge;
-> > =C2=A0
-> > =C2=A0	ops =3D of_device_get_match_data(&pdev->dev);
-> > =C2=A0	if (!ops)
-> > =C2=A0		return -ENODEV;
-> > =C2=A0
-> > -	return pci_host_common_init(pdev, ops);
-> > +	bridge =3D devm_pci_alloc_host_bridge(&pdev->dev, 0);
-> > +	if (!bridge)
-> > +		return -ENOMEM;
-> > +
-> > +	return pci_host_common_init(pdev, bridge, ops);
-> > =C2=A0}
-> > =C2=A0EXPORT_SYMBOL_GPL(pci_host_common_probe);
-> > =C2=A0
-> > diff --git a/drivers/pci/controller/pci-host-common.h b/drivers/pci/con=
-troller/pci-host-common.h
-> > index 51c35ec0cf37d..b5075d4bd7eb3 100644
-> > --- a/drivers/pci/controller/pci-host-common.h
-> > +++ b/drivers/pci/controller/pci-host-common.h
-> > @@ -14,6 +14,7 @@ struct pci_ecam_ops;
-> > =C2=A0
-> > =C2=A0int pci_host_common_probe(struct platform_device *pdev);
-> > =C2=A0int pci_host_common_init(struct platform_device *pdev,
-> > +			 struct pci_host_bridge *bridge,
-> > =C2=A0			 const struct pci_ecam_ops *ops);
-> > =C2=A0void pci_host_common_remove(struct platform_device *pdev);
-> > =C2=A0
-> > diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controll=
-er/pcie-apple.c
-> > index 0380d300adca6..a902aa81a497e 100644
-> > --- a/drivers/pci/controller/pcie-apple.c
-> > +++ b/drivers/pci/controller/pcie-apple.c
-> > @@ -206,9 +206,6 @@ struct apple_pcie_port {
-> > =C2=A0	int			idx;
-> > =C2=A0};
-> > =C2=A0
-> > -static LIST_HEAD(pcie_list);
-> > -static DEFINE_MUTEX(pcie_list_lock);
-> > -
-> > =C2=A0static void rmw_set(u32 set, void __iomem *addr)
-> > =C2=A0{
-> > =C2=A0	writel_relaxed(readl_relaxed(addr) | set, addr);
-> > @@ -724,32 +721,9 @@ static int apple_msi_init(struct apple_pcie *pcie)
-> > =C2=A0	return 0;
-> > =C2=A0}
-> > =C2=A0
-> > -static void apple_pcie_register(struct apple_pcie *pcie)
-> > -{
-> > -	guard(mutex)(&pcie_list_lock);
-> > -
-> > -	list_add_tail(&pcie->entry, &pcie_list);
-> > -}
-> > -
-> > -static void apple_pcie_unregister(struct apple_pcie *pcie)
-> > -{
-> > -	guard(mutex)(&pcie_list_lock);
-> > -
-> > -	list_del(&pcie->entry);
-> > -}
-> > -
-> > =C2=A0static struct apple_pcie *apple_pcie_lookup(struct device *dev)
-> > =C2=A0{
-> > -	struct apple_pcie *pcie;
-> > -
-> > -	guard(mutex)(&pcie_list_lock);
-> > -
-> > -	list_for_each_entry(pcie, &pcie_list, entry) {
-> > -		if (pcie->dev =3D=3D dev)
-> > -			return pcie;
-> > -	}
-> > -
-> > -	return NULL;
-> > +	return pci_host_bridge_priv(dev_get_drvdata(dev));
-> > =C2=A0}
-> >=20
-> >=20
->=20
-> You forgot to remove the `entry` field from struct apple_pcie. It's no
-> longer needed now that pcie_list is gone.
+Hello Ilpo Järvinen,
 
-Ah, good point. Fixed.
+Commit bb1fabd0d94e ("PCI: Add pci_rebar_size_supported() helper")
+from Nov 13, 2025 (linux-next), leads to the following Smatch static
+checker warning:
 
->=20
-> > =C2=A0
-> > =C2=A0static struct apple_pcie_port *apple_pcie_get_port(struct pci_dev=
- *pdev)
-> > @@ -875,13 +849,15 @@ static const struct pci_ecam_ops apple_pcie_cfg_e=
-cam_ops =3D {
-> > =C2=A0static int apple_pcie_probe(struct platform_device *pdev)
-> > =C2=A0{
-> > =C2=A0	struct device *dev =3D &pdev->dev;
-> > +	struct pci_host_bridge *bridge;
-> > =C2=A0	struct apple_pcie *pcie;
-> > =C2=A0	int ret;
-> > =C2=A0
-> > -	pcie =3D devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> > -	if (!pcie)
-> > +	bridge =3D devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-> > +	if (!bridge)
-> > =C2=A0		return -ENOMEM;
-> > =C2=A0
-> > +	pcie =3D pci_host_bridge_priv(bridge);
-> > =C2=A0	pcie->dev =3D dev;
-> > =C2=A0	pcie->hw =3D of_device_get_match_data(dev);
-> > =C2=A0	if (!pcie->hw)
-> > @@ -897,13 +873,7 @@ static int apple_pcie_probe(struct platform_device=
- *pdev)
-> > =C2=A0	if (ret)
-> > =C2=A0		return ret;
-> > =C2=A0
-> > -	apple_pcie_register(pcie);
-> > -
-> > -	ret =3D pci_host_common_init(pdev, &apple_pcie_cfg_ecam_ops);
-> > -	if (ret)
-> > -		apple_pcie_unregister(pcie);
-> > -
-> > -	return ret;
-> > +	return pci_host_common_init(pdev, bridge, &apple_pcie_cfg_ecam_ops);
-> > =C2=A0}
-> > =C2=A0
-> > =C2=A0static const struct of_device_id apple_pcie_of_match[] =3D {
->=20
-> With those two nitpicks addressed,
->=20
-> Reviewed-by: Radu Rendec <rrendec@redhat.com>
+	drivers/pci/rebar.c:142 pci_rebar_size_supported()
+	error: undefined (user controlled) shift '(((1))) << size'
 
-Thanks. I'll repost this patch some time next week, as this is only an
-optimisation, not really a fix.
+The problem is this call tree:
+__resource_resize_store() <- takes an unsigned long from the user
+  -> pci_resize_resource() <- truncates it to int
+     -> pci_rebar_size_supported()
 
->=20
-> And thanks again for spending time on this and creating the patch.
+drivers/pci/rebar.c
+    138 bool pci_rebar_size_supported(struct pci_dev *pdev, int bar, int size)
+    139 {
+    140         u64 sizes = pci_rebar_get_possible_sizes(pdev, bar);
+    141 
+--> 142         return BIT(size) & sizes;
+    143 }
 
-Nerd-sniping is a sport, it seems... ;-)
+So here size could be negative or >= BITS_PER_LONG which leads to
+shift wrapping.  But also truncating the ulong to int in
+__resource_resize_store() is not beautiful.
 
-Cheers,
-
-	M.
-
-
---=20
-Without deviation from the norm, progress is not possible.
+regards,
+dan carpenter
 
