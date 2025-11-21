@@ -1,140 +1,215 @@
-Return-Path: <linux-pci+bounces-41871-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41872-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95736C7A7AD
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 16:21:09 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7EE4C7A86D
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 16:25:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DAACA4E5E42
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 15:10:26 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BB63E4ED9A2
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 15:18:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A11B2D9481;
-	Fri, 21 Nov 2025 15:10:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 022413559F1;
+	Fri, 21 Nov 2025 15:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="dtY7eTXm";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QUA0Fo5S"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RVLB8nPd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759522D77E9;
-	Fri, 21 Nov 2025 15:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9AD0355815;
+	Fri, 21 Nov 2025 15:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763737824; cv=none; b=PFklOdWZVzqx7XvBGMAU1FTXxR+0r0OXfIcPA20Ctej2DJNtRskxNfx8udE1nCiGdd6orF2Hqz9KmyVwpUiBdiW0xz0+GJG9aL7QOJ7K8cmAcMp/AEWSbfzGNYZEbyTkvFo61v5o+gioIKHqquZMQwpvAHt+wzVKSYrorUpjkcQ=
+	t=1763738116; cv=none; b=Pob15daIE+E+6kebs3IcWewW+uJSqYa/T7DUU4Af3gCivFkTrMpmLkoLet/vqPxBdA2jktGNgbfPM3QiuWGy2JLXRTQeiaM3ny7ZdF9TESV7OKYg9w72BHO2IIrBnPeJUpm5OVlBm6EN3ulUNTHFyODwpMrINKfixXJHSxJUCZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763737824; c=relaxed/simple;
-	bh=zQmc1H8b7sb7g3t2YwDV+3J+D8KFWJ3TDpJc14/2hHc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=S5nmmdnZYhYEFPZe6nJD5lHJUITuZWjgPdX8GtfzKshQRNwQ3iTMV6FDHVHTqEjl1ntcsXVBa2OzZpyHFB0xXlR8e8vZpH1P3gNlP4Z/1gTnnST7fyX/kHIx3H1dyAPxhVpCrqzPYbZcrZ5pUYBkrGniM30H6v0HxNisY2I9EbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=dtY7eTXm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QUA0Fo5S; arc=none smtp.client-ip=202.12.124.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 7B06C7A013B;
-	Fri, 21 Nov 2025 10:10:21 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Fri, 21 Nov 2025 10:10:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1763737821;
-	 x=1763824221; bh=DzcM0SEDw1Im8fyyYBvoRQL2qFmDyiUwqhJDAcQietI=; b=
-	dtY7eTXm6z72fUOOO/qOQRCZCE7nLB5/COnsayJ2X3an2s6zR/DpxY7eInL21wlQ
-	WIQopkjoX7PAbVqd3MT9lU3RtJ600pmCc5N1Dm1coHHww/H0laqmBQBlTVnZ3QXQ
-	L4ESBSaG+iCHeJKZfvIhFj+AXJtwP2SYhBOaIuKJTzcFC5TOw4wWh15FKL7gocyJ
-	Y6WH3Sv43ZoCTATa+bMHhkWHLvJxIeNA+QgEyv9Ruf/+sPqGJGs+I3Q/RZL/8UF7
-	Zrx6C3Erl9ZKl95quATmJELhFxjo/nlckGUtbyfQHbF9awIjOxMxyt4qMVSp+9yt
-	uFeKQR1s4lhzCtMxwTGR0Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763737821; x=
-	1763824221; bh=DzcM0SEDw1Im8fyyYBvoRQL2qFmDyiUwqhJDAcQietI=; b=Q
-	UA0Fo5SvUkmXgGqQuJvjUSByoK42NUh42UjDqOaKiWgbS6MinxkT0sd272hB7W+D
-	HvctXy7+yEhgAJ51/xXbP/xAE6qW5YvtfY59YHMu/ol287owpGlf3fMiYgOTAhyW
-	jfgr7VTJf4K/GEf0acuiLyf/OCJS7wf69DtpG7zhHxO5/FuFETNEinUa3dQODHdL
-	bhI7i0QGvSML5IlRuw+oEHe20JqklyfVVF67csPpgl27AxWTgmo4Ei9BmwmnVtpu
-	oEZY1uUd1HRUEudf1xgj4V8nhLJkhDjDENxNkQ9AYvBlnY7msfO2AieYL6fNn/h1
-	xvgSLLmJJxqt/eOuC19Gg==
-X-ME-Sender: <xms:3IAgaYHUEGvo-ne5gkZhxxQ-MevE0ITlKZfF8bv2TXLk6DXyvgcZMg>
-    <xme:3IAgacI0kVVgEWlixUuWUfiT6FuFhLx9CpWjrWM5eHx1ERCwPpjdKNtgYZhIja-5v
-    kroOAJ2zKrzVh1F6q6_qLLg_H8k2HpnqsZ9Jsn5kdkdpsxS6h0dFA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvfedtvdekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopegrrhgusgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepgiekie
-    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughrihdquggvvhgvlheslhhishhtshdr
-    fhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvg
-    hrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhn
-    uhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoh
-    eplhhoohhnghgrrhgthheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehj
-    rghvihgvrhhmsehrvgguhhgrthdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrnh
-    hnsehsuhhsvgdruggvpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghr
-    nhgvlhdrohhrgh
-X-ME-Proxy: <xmx:3IAgaQobINDk36AsLM6qAi37y35WNG8fcy-IPYwT81UtDOP69W5h3Q>
-    <xmx:3IAgaXHy2EKi4JZDENLJjNgh2jqPvL0iGJdWo6ROzCZAfVBSSOEUpg>
-    <xmx:3IAgaU8wQD8W2AA4zezbIVBARPkZc-2doMkJoyEm_GT9fAygZG2L4g>
-    <xmx:3IAgaURbIfsqA_WQy6F7q2MeK8e-4Qti348yk5jtKvNDZdcs-FFwjw>
-    <xmx:3YAgaeSI3c_MRk18gVsMtEXTcvu2Jwxiwr0-6n59AFRitQQGspBnOGUo>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 8EB84700054; Fri, 21 Nov 2025 10:10:20 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1763738116; c=relaxed/simple;
+	bh=tGkLoaIerxSzCgo8kr0dzfb3bmHGcG6BnOlM4l+YMg4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YYgzcdcrRQEqW1gRY/+8cNrcH+Jw+aTgKyhyQtYny9UehqjJB0NEqlzlI6AqobBWtplt6Y9dQHjj5kj5SyEYypKBdGsuhAExHQnR91wbP2IYdjCSSMbN+1f0QsYO6T+67867D6Ekq5WQHNkSEfc//dgtMJCgC9yesw71TuPAgOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RVLB8nPd; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763738115; x=1795274115;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=tGkLoaIerxSzCgo8kr0dzfb3bmHGcG6BnOlM4l+YMg4=;
+  b=RVLB8nPd70IetbwiaInnhZWFvIykdtPeOD7keAFYtHqvdMDRjGp/HUzS
+   oAKA9Xal0mVs7jFYAPMM6MJnEnTNcHJgWyBZU/5P1BPcNLgRkLcqwQY4c
+   HS8sj/fiaPkw3JQPCG2vwfe6km9mMT0GTtRXw1bnX35VpPgy5YTpNUeZe
+   G7Pdi2G5xMwrQTBcevP7nk3noRvYAbjmra8rBVStfEU3nRkzNCgnPnQkG
+   UbGvEc/I3gnoy4Pn5zSuYgjIH+B5WRSG/b9EKOzzZ9zE2da65KWyz7Iks
+   arS8AZZPMMOuZIT+DBWO507xK5U8oJYaqVHi/j4ScCQDviBKCNCb3CmhO
+   A==;
+X-CSE-ConnectionGUID: 4oOgPnyNRJqiDPrnGzS5aw==
+X-CSE-MsgGUID: M6vZhUK3RaiGj5ridH4ufg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11620"; a="69690052"
+X-IronPort-AV: E=Sophos;i="6.20,216,1758610800"; 
+   d="scan'208";a="69690052"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 07:15:15 -0800
+X-CSE-ConnectionGUID: fpyK4875SNCv4NIwY/lWmQ==
+X-CSE-MsgGUID: amSWJXh2SBCjtU4H+qZSog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,216,1758610800"; 
+   d="scan'208";a="191499047"
+Received: from jmaxwel1-mobl.amr.corp.intel.com (HELO [10.125.110.33]) ([10.125.110.33])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 07:15:15 -0800
+Message-ID: <ca331aa3-6304-4e07-9ed9-94dc69726382@intel.com>
+Date: Fri, 21 Nov 2025 07:15:13 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A5Y7Dcvi2yON
-Date: Fri, 21 Nov 2025 16:09:50 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Thomas Zimmermann" <tzimmermann@suse.de>,
- "Ard Biesheuvel" <ardb@kernel.org>,
- "Javier Martinez Canillas" <javierm@redhat.com>
-Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
-Message-Id: <96a8d591-29d5-4764-94f9-6042252e53ff@app.fastmail.com>
-In-Reply-To: <20251121135624.494768-1-tzimmermann@suse.de>
-References: <20251121135624.494768-1-tzimmermann@suse.de>
-Subject: Re: [PATCH 0/6] arch,sysfb: Move screen and edid info into single place
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 08/26] x86/virt/tdx: Add tdx_enable_ext() to enable of
+ TDX Module Extensions
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: linux-coco@lists.linux.dev, linux-pci@vger.kernel.org,
+ chao.gao@intel.com, dave.jiang@intel.com, baolu.lu@linux.intel.com,
+ yilun.xu@intel.com, zhenzhong.duan@intel.com, kvm@vger.kernel.org,
+ rick.p.edgecombe@intel.com, dave.hansen@linux.intel.com,
+ dan.j.williams@intel.com, kas@kernel.org, x86@kernel.org
+References: <20251117022311.2443900-1-yilun.xu@linux.intel.com>
+ <20251117022311.2443900-9-yilun.xu@linux.intel.com>
+ <cfcfb160-fcd2-4a75-9639-5f7f0894d14b@intel.com>
+ <aRyphEW2jpB/3Ht2@yilunxu-OptiPlex-7050>
+ <62bec236-4716-4326-8342-1863ad8a3f24@intel.com>
+ <aR6ws2yzwQumApb9@yilunxu-OptiPlex-7050>
+ <13e894a8-474f-465a-a13a-5d892efbfadb@intel.com>
+ <aSBg+5rS1Y498gHx@yilunxu-OptiPlex-7050>
+Content-Language: en-US
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <aSBg+5rS1Y498gHx@yilunxu-OptiPlex-7050>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, Nov 21, 2025, at 14:36, Thomas Zimmermann wrote:
-> Replace screen_info and edid_info with sysfb_primary_device of type
-> struct sysfb_display_info. Update all users.
->
-> Sysfb DRM drivers currently fetch the global edid_info directly, when
-> they should get that information together with the screen_info from their
-> device. Wrapping screen_info and edid_info in sysfb_primary_display and
-> passing this to drivers enables this.
->
-> Replacing both with sysfb_primary_display has been motivate by the EFI
-> stub. EFI wants to transfer EDID via config table in a single entry.
-> Using struct sysfb_display_info this will become easily possible. Hence
-> accept some churn in architecture code for the long-term improvements.
+On 11/21/25 04:54, Xu Yilun wrote:
+...
+> For now, TDX Module Extensions consume quite large amount of memory
+> (12800 pages), print this readout value on TDX Module Extentions
+> initialization.
 
-This all looks good to me,
+Overall, the description is looking better, thanks!
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+A few more nits, though. Please don't talk about things in terms of
+number of pages. Just give the usage in megabytes.
 
-It should also bring us one step closer to eventually
-disconnecting the x86 boot ABI from the kernel-internal
-sysfb_primary_display.
 
-    Arnd
+>>> --- a/arch/x86/virt/vmx/tdx/tdx.h
+>>> +++ b/arch/x86/virt/vmx/tdx/tdx.h
+>>> @@ -46,6 +46,7 @@
+>>>  #define TDH_PHYMEM_PAGE_WBINVD         41
+>>>  #define TDH_VP_WR                      43
+>>>  #define TDH_SYS_CONFIG                 45
+>>> +#define TDH_SYS_CONFIG_V1              (TDH_SYS_CONFIG | (1ULL << TDX_VERSION_SHIFT))
+>>>
+>>> And if a SEAMCALL needs export, add new tdh_foobar() helper. Anyway
+>>> the parameter list should be different.
+>>
+>> I'd need quite a bit of convincing that this is the right way.
+>>
+>> What is the scenario where there's a:
+>>
+>> 	TDH_SYS_CONFIG_V1
+>> and
+>> 	TDH_SYS_CONFIG_V2
+>>
+>> in the tree at the same time?
+> 
+> I assume you mean TDH_SYS_CONFIG & TDH_SYS_CONFIG_V1.
+
+Sure. But I wasn't being that literal about it. My point was whether we
+need two macros for two simultaneous uses of the same seamcall.
+
+> If you want to enable optional features via this seamcall, you must use
+> v1, otherwise v0 & v1 are all good. Mm... I suddenly don't see usecase
+> they must co-exist. Unconditionally use v1 is fine. So does TDH_VP_INIT.
+> 
+> Does that mean we don't have to keep versions, always use the latest is
+> good? (Proper Macro to be used...)
+> 
+>  -#define TDH_SYS_CONFIG                 45
+>  +#define TDH_SYS_CONFIG                 (45 | (1ULL << TDX_VERSION_SHIFT))
+
+That's my theory: we don't need to keep versions.
+
+>> Second, does it hurt to pass the version along with other calls, like
+>> ... (naming a random one) ... TDH_PHYMEM_PAGE_WBINVD ?
+> 
+> I see no runtime hurt, just an extra zero parameter passed around.
+> 
+> And version change always goes with more parameters, if we add version
+> parameter, it looks like:
+> 
+>  u64 tdh_phymem_page_wbinvd_tdr(int version, struct tdx_td *td, int new_param1, int new_param2);
+> 
+> For readability, I prefer the following, they provide clear definitions:
+> 
+>  u64 tdh_phymem_page_wbinvd_tdr(struct tdx_td *td);
+>  u64 tdh_phymem_page_wbinvd_tdr_1(struct tdx_td *td, int new_param1, int new_param2);
+> 
+> But I hope eventually we don't have to keep versions, then we don't have to choose:
+> 
+>  u64 tdh_phymem_page_wbinvd_tdr(struct tdx_td *td, int new_param1, int new_param2);
+
+Sure, but that's not happening today. So for TDX_FEATURES0_TDXCONNECT at
+least, config_tdx_module() doesn't change.
+
+> The TDX Module can only accept one root page (i.e. 512 HPAs at most), while
+> struct tdx_page_array contains the whole EXT memory (12800 pages). So we
+> can't populate all pages into one root page then tell TDX Module. We need to
+> populate one batch, tell tdx module, then populate the next batch, tell
+> tdx module...
+
+That is, indeed, the information that I was looking for. Can you please
+ensure that makes it into code comments?
 
