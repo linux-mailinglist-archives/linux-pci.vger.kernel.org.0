@@ -1,202 +1,190 @@
-Return-Path: <linux-pci+bounces-41893-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41894-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5A34C7B536
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 19:28:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F89CC7B6B1
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 20:00:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6AF7A35D8EC
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 18:28:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 879393A7622
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Nov 2025 18:59:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5699721E082;
-	Fri, 21 Nov 2025 18:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E0992E040E;
+	Fri, 21 Nov 2025 18:57:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ixfW7LEH";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rj+AptQP"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oomZIlh5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87BC185B48
-	for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 18:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0E53597B;
+	Fri, 21 Nov 2025 18:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763749682; cv=none; b=AT+3WSq3lmiVB61Th932kzG9QalysQbvRY+D7ircmu1WY9zFFzkfxVGak9CrZUD5E4VBXrQL2Zb6D9RrpWvTvKBLv5p/q6IrfwJxtDVGrvzlE9LT/jk6td006ClINYXBtbzi0tDT7ULVKRVAM/mbEaYpq7orp2uV7xZEAjcrrJc=
+	t=1763751465; cv=none; b=sYK4FV6N2FSpflNqyUtqahpaAo/C9s+kulOkMeaCAOJcwykEPLI3ZE6qxoOcSWUpPaKhmBNyQgFfHntay3+x7qY5j0Xh71SJ0FPB6y2w+KUWLROCFJAYqkW7q3sFEkcBEoo2zBrIPNFzz6QSR/uPhsHx1b31Mo2w0OlMOfvR0T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763749682; c=relaxed/simple;
-	bh=eiNvpKMX+RHgtZkQ1+h3XWmFyZEgmHdrngHRg+aKUCk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VBPfKbsMBhPSesdlCi2IfUkdH+/XYMJFxQKPBhwiJzTYnnpy19VQOX41P1G1pYLhTOy7ZFmrluEhYN6bsibwRVhQQQSXyCci3ZEPXOxBZxUrp+CtYGR8GFCD66UlNo34H5LmbSTzxlfAXyunB2olu2zXg0NiZ1zfg6ZgqBRp0VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ixfW7LEH; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rj+AptQP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1763749679;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9F1gVEfkmOU4VbBNqbz6au89HcS75XiMRWvgttvUABM=;
-	b=ixfW7LEHmaOV+ePy7IbM2owLZ4KC0mVFbjZ1dgS6FTFZaJYPrTjM0cEQf+CxzaGXmKNQaH
-	AkiWGKzNmTZmxCi4+qX+FxUHTynRykr2AfaBeOnosshZfDBhM7LuavtHIxcIaOaQJVmXCz
-	52Pqme4i3TJvkcSkomNATQXcNKs0hds=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-306-d6f0Kv3kMaeJHkExSXTLLA-1; Fri, 21 Nov 2025 13:27:58 -0500
-X-MC-Unique: d6f0Kv3kMaeJHkExSXTLLA-1
-X-Mimecast-MFC-AGG-ID: d6f0Kv3kMaeJHkExSXTLLA_1763749678
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4ee42d99125so64401591cf.3
-        for <linux-pci@vger.kernel.org>; Fri, 21 Nov 2025 10:27:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1763749678; x=1764354478; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9F1gVEfkmOU4VbBNqbz6au89HcS75XiMRWvgttvUABM=;
-        b=Rj+AptQP1Kek8Lnm2EqEULRXP8sHAjjuPn5WmdYwlsxqhMon8zfSbQIMqZxx9zkF92
-         nppHz+XVw2OOro+eonbt2GI/pWx8Wi87PLE2Xe/OKv/Nm/lbF5xA9B0me3nOFi+IdLXt
-         6282bABEOEJ6IRNgffMVPJW+eyqvuAM+WS3GkRGq9E18682rLhX5KorPxhGvwnnYYP/l
-         QRvr6fWVcthAHBAzeaN333wOVtdxI+1sc7uuOUIbzAOA9EsANZcKfz77D5Fa70YYCZlr
-         QTbbZOMKAVg28q3M4h12JM+tIA8l3uL8rlC2muLOgq8tuUykUDLh4mOMdadH6++UysrZ
-         k1Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763749678; x=1764354478;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9F1gVEfkmOU4VbBNqbz6au89HcS75XiMRWvgttvUABM=;
-        b=ARL/fdNjD93WKQSSEZJOYorwX1vso06N3QzWbIhZo2CL9xYRN045+Rq5UKQJyH82vc
-         DfZq7o59GgUNOH8AwCb4PI1TLkKFGE8l56/QWcFoPkrbeQwY/BEHTsGHC/GYxbfFVRYF
-         cvCPiE6Is8YGgXBpBb8S91As694GF9HoUmT9xQkz8xjD7rtumaN3VcPMce9a2jKa9RAH
-         E9jj8SkA5vEkJt/lEn5hDTwaZnUeqUsvTUO49iECS1HaSDvY2vM/kwJ0EVn21UdKcZD1
-         MBhkaFHSl3WLDx8jC3Bn3EMudvoG4tHqt+O8z+/yf9is3GwXXr2gPvEd3Vn+DnheK7ky
-         xbAg==
-X-Forwarded-Encrypted: i=1; AJvYcCX9QfqSq4hub1RWsMQojzXc1iQJRksD5jAWiTuVhLZcuCpcynptUDUxD1mf5BVp+kNnpeYoaERr+0U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNygDaEo20gqeUmNRE+cbkTqB9Np1VYlINFHUMN5FO1dQcSUuR
-	+Ak8T6DidzNBz6RLr+/daddl4aT3YU6XTgiTF8lanmT/5LUFZvWEeQANQb1metEybXuDdVyGeXn
-	TB+AFVXn8LRyoU4JkpGXIYyVLap4HyEtf7robvl9aJiqp3G51pM+27Qh88hh4oQ==
-X-Gm-Gg: ASbGncsLJacQh3bSokoKOWrwanZrQU+NFj59/gS5kLi72HK8pt2Q6cjFMMF8P9STzc7
-	I16C+21EUMit5PWc2gq+5dlB+KL7PS8Tpp9wJDxQW93xwzpx0ztWLjkzu6Cr79mc3RA4hcenCqI
-	395OIDEP53Ln9q7WhbwkqOTG5VVVGvt4ysUbUJlF66GNtWqHqRTG2MJ2dGG2dWF2DGzGYpOvwnC
-	d+yyVqPUD7kMXE/YE03+GtSSreYh5THPFF0Zh5VbCyoVJYl7q1K4D9Xe7FaXkrFDYzxC6B/WDEB
-	v0jn2/Ykn1zjXmcP/vq1h1UcYV8ahmUgZ5c4KCkLROnU+Ogox1JFqgFrHTePJWmyPWtieF5gJkn
-	wnvRWX3LLsg==
-X-Received: by 2002:a05:622a:155:b0:4ed:da56:7a96 with SMTP id d75a77b69052e-4ee58af100cmr45387701cf.60.1763749677527;
-        Fri, 21 Nov 2025 10:27:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFkOzQWoZuQdAiXMy2SX7/W3kkLRTcNrhy9ckhF61k6Ze2u2Lmzw86pdU9Kf7yewixDrfgpEg==
-X-Received: by 2002:a05:622a:155:b0:4ed:da56:7a96 with SMTP id d75a77b69052e-4ee58af100cmr45387001cf.60.1763749676867;
-        Fri, 21 Nov 2025 10:27:56 -0800 (PST)
-Received: from localhost ([2607:f2c0:b141:ac00:2fb1:d1df:b122:3b2c])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4ee48d571d0sm41831021cf.12.2025.11.21.10.27.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Nov 2025 10:27:56 -0800 (PST)
-Date: Fri, 21 Nov 2025 13:27:55 -0500
-From: Peter Colberg <pcolberg@redhat.com>
-To: kernel test robot <lkp@intel.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
-	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, Zhi Wang <zhiw@nvidia.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH 1/8] rust: pci: add is_virtfn(), to check for VFs
-Message-ID: <aSCvKy64s-LBrM85@earendel>
-Mail-Followup-To: kernel test robot <lkp@intel.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
-	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, Zhi Wang <zhiw@nvidia.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>
-References: <20251119-rust-pci-sriov-v1-1-883a94599a97@redhat.com>
- <202511211008.jgLuTcrQ-lkp@intel.com>
+	s=arc-20240116; t=1763751465; c=relaxed/simple;
+	bh=/dk6Ai3+QotI1wqVHzgCNUvTLswT0XrkYaPzZ+4z8fg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZuH/Iu2Q0XLM+NAdwVf0SWlUn3IBRuXxFwhZTNu3asQwKtrEvQNK6wAW1W/+i9P710tJD6uFEcZDxKjjiGFIkv7qMnDLQPKEy26CSHEDTQbu9Jin8Tj2lw2sacWYC1JFhRzoBToOtOVxFmAWi3CTHD7x+Yf9/URGTUmE6OflbuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oomZIlh5; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ALEUr1g028867;
+	Fri, 21 Nov 2025 18:57:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=qyT3aV
+	XUS0qy3xeo2Jt8io+s2fQtl6tf6g20n+ujMFY=; b=oomZIlh5i8ZgfusUL0jIO3
+	yEPrQy6KLLHPDGGs08fGvw7ZM+U3/1tLWKppPyXi1mtv0Ub33cCcaget9qxws4lN
+	5CQVvzPKb3Ql9IfmFMRSbU38uMbva/TqzoY49CPkulLhRsJDI4JXaY32SdVUNw5A
+	Pb7shNKrPZ+X14J9SXg1ZHUPfPMNYONwJiN2mOpDDEYiI9gy/7dHJ4pu/dtzPaMb
+	qJ5PrB8TlOtKWHCRaqnK+3FaaFGIyuZp4DLtgu7UOmztFnvVSZQAF0hLqh4NUPED
+	rFptzgECpSgJp/WEfL+T5prmhQrHaWY/s/fScO4s0a3isUYM0P/CJ/8pbIAdrzcw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejkadtfd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Nov 2025 18:57:30 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5ALIqxWp007111;
+	Fri, 21 Nov 2025 18:57:30 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejkadtf8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Nov 2025 18:57:29 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5ALGXlnL017381;
+	Fri, 21 Nov 2025 18:57:29 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4af6j25rnd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Nov 2025 18:57:29 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5ALIvRjZ6423114
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Nov 2025 18:57:28 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B9DD85804B;
+	Fri, 21 Nov 2025 18:57:27 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0DAB658063;
+	Fri, 21 Nov 2025 18:57:26 +0000 (GMT)
+Received: from [9.61.252.112] (unknown [9.61.252.112])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 21 Nov 2025 18:57:25 +0000 (GMT)
+Message-ID: <ab3158f0-7954-4a89-88da-6d7d69111e3b@linux.ibm.com>
+Date: Fri, 21 Nov 2025 10:57:24 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202511211008.jgLuTcrQ-lkp@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Documentation: PCI: Amend error recovery doc with
+ pci_save_state() rules
+To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Linas Vepstas <linasvepstas@gmail.com>, linux-doc@vger.kernel.org
+References: <077596ba70202be0e43fdad3bb9b93d356cbe4ec.1763746079.git.lukas@wunner.de>
+Content-Language: en-US
+From: Farhan Ali <alifm@linux.ibm.com>
+In-Reply-To: <077596ba70202be0e43fdad3bb9b93d356cbe4ec.1763746079.git.lukas@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: fs6KLg9GEKleGzJvCp6K6fCRZECaWYD9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX5aCXAO1F2cPP
+ uElBjQhxOAEeVYKYpPU3ckb9J9WKYdgjfRX+yP+lghOa+L/8Zg5tH6RCFS1HOErPhQaBL4lXmtv
+ BXBFLz4ng4AtWDfEaFnG7Ycfs19Yn1+DG/CFD/ehAJBOTSha635k2L5o20fhKpR+VBRumJWCnRD
+ DFGQvDtzBN6HZThvWycmCH5E+GSTq7qDJuCQGoCOHZP5aYwEYmMruNmkpbJONGxkheXJ3+psQag
+ Ms6Ok9OwMcjIXKRx8M/SxBZfJDXF6QoPnupeG8/ys9FknWNKefZvZujlhmT0JnnSV3H1ixqkMx7
+ LFZeLpu9tjJnBP+T8+cvN0NGGVR7ySAc/5j6Sl+3KSapZgmTe8KSS8YVK7CNXF+wZaQDpiDakf9
+ qVyVFm+pJ8XPo5CgOFEgBzuFbfejeA==
+X-Proofpoint-ORIG-GUID: _dRHeuwYC4Sk6IJN0TT_cCPjuBL6GKfp
+X-Authority-Analysis: v=2.4 cv=XtL3+FF9 c=1 sm=1 tr=0 ts=6920b61a cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=RJpQON7kbKqcj-e44qYA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-21_05,2025-11-21_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 spamscore=0 bulkscore=0 priorityscore=1501 impostorscore=0
+ adultscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511150032
 
-On Fri, Nov 21, 2025 at 11:00:32AM +0800, kernel test robot wrote:
-> Hi Peter,
-> 
-> kernel test robot noticed the following build errors:
+Hi Lukas,
 
-This appears to be a generic issue with UML, unrelated to this series.
+Thanks for the update to documentation.
 
-https://rust-for-linux.zulipchat.com/#narrow/channel/288089-General/topic/CONFIG_UML.20maybe.20broken.3F/with/558611169
+On 11/21/2025 9:31 AM, Lukas Wunner wrote:
+> After recovering from a PCI error through reset, affected devices are in
+> D0_uninitialized state and need to be brought into D0_active state by
+> re-initializing their Config Space registers (PCIe r7.0 sec 5.3.1.1).
+>
+> To facilitate that, the PCI core provides pci_restore_state() and
+> pci_save_state() helpers.  Document rules governing their usage.
+>
+> As Bjorn notes, so far no file in "Documentation/ includes anything about
+> the idea of a driver using pci_save_state() to capture the state it wants
+> to restore after an error", even though it is a common pattern in drivers.
+> So that's obviously a gap that should be closed.
+>
+> Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+> Closes: https://lore.kernel.org/r/20251113161556.GA2284238@bhelgaas/
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> ---
+>   Documentation/PCI/pci-error-recovery.rst | 15 +++++++++++++++
+>   1 file changed, 15 insertions(+)
+>
+> diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI/pci-error-recovery.rst
+> index 5df481a..43bc4e3 100644
+> --- a/Documentation/PCI/pci-error-recovery.rst
+> +++ b/Documentation/PCI/pci-error-recovery.rst
+> @@ -326,6 +326,21 @@ be recovered, there is nothing more that can be done;  the platform
+>   will typically report a "permanent failure" in such a case.  The
+>   device will be considered "dead" in this case.
+>   
+> +Drivers typically need to call pci_restore_state() after reset to
+> +re-initialize the device's config space registers and thereby
+> +bring it from D0\ :sub:`uninitialized` into D0\ :sub:`active` state
+> +(PCIe r7.0 sec 5.3.1.1).  The PCI core invokes pci_save_state()
+> +on enumeration after initializing config space to ensure that a
+> +saved state is available for subsequent error recovery.
+> +Drivers which modify config space on probe may need to invoke
+> +pci_save_state() afterwards to record those changes for later
+> +error recovery.  When going into system suspend, pci_save_state()
+> +is called for every PCI device and that state will be restored
+> +not only on resume, but also on any subsequent error recovery.
 
-Thanks,
-Peter
+Nit: Should we clarify in the above sentence on what calls the 
+pci_save_state() when going into suspend? My assumption is the 
+pci_save_state() is called by the PCI core and not the drivers?
 
-> 
-> [auto build test ERROR on e4addc7cc2dfcc19f1c8c8e47f3834b22cb21559]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Peter-Colberg/rust-pci-add-is_virtfn-to-check-for-VFs/20251120-062302
-> base:   e4addc7cc2dfcc19f1c8c8e47f3834b22cb21559
-> patch link:    https://lore.kernel.org/r/20251119-rust-pci-sriov-v1-1-883a94599a97%40redhat.com
-> patch subject: [PATCH 1/8] rust: pci: add is_virtfn(), to check for VFs
-> config: um-randconfig-001-20251121 (https://download.01.org/0day-ci/archive/20251121/202511211008.jgLuTcrQ-lkp@intel.com/config)
-> compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 9e9fe08b16ea2c4d9867fb4974edf2a3776d6ece)
-> rustc: rustc 1.88.0 (6b00bc388 2025-06-23)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251121/202511211008.jgLuTcrQ-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202511211008.jgLuTcrQ-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
-> >> error[E0599]: no method named `is_virtfn` found for struct `bindings::pci_dev` in the current scope
->    --> rust/kernel/pci.rs:415:35
->    |
->    415 |         unsafe { (*self.as_raw()).is_virtfn() != 0 }
->    |                                   ^^^^^^^^^ method not found in `pci_dev`
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-> 
+> +In the unlikely event that the saved state recorded on suspend
+> +is unsuitable for error recovery, drivers should call
+> +pci_save_state() on resume.
+> +
+
+What should the PCI core do if the saved state recorded is bad? should 
+we continue to restore the device with the recorded bad state? On s390 
+restoring the device with the bad state can break the device put into 
+error again.
+
+Thanks
+
+Farhan
+
 
 
