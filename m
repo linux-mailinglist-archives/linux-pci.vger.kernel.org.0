@@ -1,276 +1,118 @@
-Return-Path: <linux-pci+bounces-41907-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41908-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53932C7CCDC
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Nov 2025 11:52:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B77BC7CD03
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Nov 2025 11:58:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 354684E23BD
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Nov 2025 10:52:44 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C07ED4E5104
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Nov 2025 10:58:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DCBD2D8DCF;
-	Sat, 22 Nov 2025 10:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="keDw0EdD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kZ1Pfx7g";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hddlKNFX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DlECyqnc"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AC342FCC1B;
+	Sat, 22 Nov 2025 10:58:10 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D592F12DC
-	for <linux-pci@vger.kernel.org>; Sat, 22 Nov 2025 10:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B2B2FC005;
+	Sat, 22 Nov 2025 10:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763808760; cv=none; b=trDnehBpjZJlI64V+wN3lzBH+bwJV/GksYJg+QJlG280SlPRMmEA+4h/0xPfYVZzpG59SEQ+syz75tWr+NtbU/wbi37ptkUN4xQMqYmCgCiXnqMNOm6Ob/M9qFQl9+7m92JaLrrBxAXf4NtERKxqF4/Ji17GAfli6hk+QTlYjyk=
+	t=1763809090; cv=none; b=HLhC65xsjiz7+ciG1cLyn28ns/4Q5ZNc+2bf4nSOtbNArTMPiTXOZPLKFLzME2VAHKuq4Wk17VpAZq2LtkBsEkRoDL9xjhwV6iKiHtLMZT0lGtn3QVAwTOgj8/GCQpbBw7yV+u13HHsImLJkG6NRgoQFWO0ByIkTVDBtuVPsAII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763808760; c=relaxed/simple;
-	bh=tOPPm3SrsXdlOrTClVrVXWb769N6IDAE86NSvf7G8CM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I63m8Kp4YCdekFJkdaGhsproUq7koqUtgPvybepMkpbzyWmMzXX42ivsgQfUo5UPdAOTPvtFqz4SMUVq9CiBS1dTrJTrnBwA5Y29xqBAcaGMvpVoy3PNwynhwYo+92znDFWLqJG6y5jwPYj9BCNBbJBtgUFrYd8K6ioy4hMesso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=keDw0EdD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kZ1Pfx7g; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hddlKNFX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DlECyqnc; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	s=arc-20240116; t=1763809090; c=relaxed/simple;
+	bh=RSZ498+qoeQDHURZOxifLzXL2J1l5TCP3+W2eBr7IcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EP/r9vMlE9L0nwxWRGK7+0FE1v0zPAlyzKSUkwrwW5q3yEfNQd6eR/t7sqsdYwRwU81TTXlSRKwcQCS/hc6S+ANMqkeVtk63oNqNfi6SLH1Vf4A9KlRwWhtd/s8YrqOpaWwHyKcePpTfJOf3UB9f7esKa16FOtejaOs7cekaJLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E50FE21256;
-	Sat, 22 Nov 2025 10:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1763808750; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Laiiiay7+G7aTYZZCvAkMaVrVoEya/eM5qsNMas60Tw=;
-	b=keDw0EdDzAD600Zk+3hAsGixxHUyqG3sl9M9k3SD0u3bZsxBAO4VkHbyaID7ez3KF0suAo
-	aRH0JwOLAwNwZGq7AgH9oPo6nxOkftap73Cwkm3vQRyUGI7nzkZWoYcP9gGIn7GeVaykMc
-	agLGnoioM6WbQkAHNewYjHxH4BUkFjA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1763808750;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Laiiiay7+G7aTYZZCvAkMaVrVoEya/eM5qsNMas60Tw=;
-	b=kZ1Pfx7gwbFjtvUlhEPm0x0sKg2YR84hpVeH329cVFqNpls46MbPxrr4JzScmTFPtkcGOe
-	2m+M5sC75RfNBOBg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=hddlKNFX;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=DlECyqnc
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1763808749; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Laiiiay7+G7aTYZZCvAkMaVrVoEya/eM5qsNMas60Tw=;
-	b=hddlKNFXH1DPfWpyPOAPQ781tw3qwgaKXryhPR91Fl9LV/mhJ6g79ihgbDLLofuXFL7WU3
-	lrGXXCqnVzUAHMJGwOMLYvbALiijjke5Wivkraf7UhgZJ0BsiX7OtpSGpxk71YVUSApAIZ
-	nL25h6EQkGbCKYpLeRqjj4szhkAtKWw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1763808749;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Laiiiay7+G7aTYZZCvAkMaVrVoEya/eM5qsNMas60Tw=;
-	b=DlECyqncHMj29Uw+yiok5t/wpRQW9OC/IdNna3GJL2mfFM9HXR2TJBomcdzU0QZ64KeAO/
-	62Q+n8E55Alb96BQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8679E3EA61;
-	Sat, 22 Nov 2025 10:52:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id PARiH+2VIWl6fAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Sat, 22 Nov 2025 10:52:29 +0000
-Message-ID: <4c716fd1-c989-4e48-9878-e7312fefc302@suse.de>
-Date: Sat, 22 Nov 2025 11:52:29 +0100
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 0CED02C000AC;
+	Sat, 22 Nov 2025 11:58:05 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id E6AEA1BFB7; Sat, 22 Nov 2025 11:58:04 +0100 (CET)
+Date: Sat, 22 Nov 2025 11:58:04 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Farhan Ali <alifm@linux.ibm.com>, Benjamin Block <bblock@linux.ibm.com>,
+	linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	alex.williamson@redhat.com, helgaas@kernel.org, clg@redhat.com,
+	mjrosato@linux.ibm.com
+Subject: Re: [PATCH v4 01/10] PCI: Avoid saving error values for config space
+Message-ID: <aSGXPJdqjGn8e_Tw@wunner.de>
+References: <aOQX6ZTMvekd6gWy@wunner.de>
+ <8c14d648-453c-4426-af69-4e911a1128c1@linux.ibm.com>
+ <aOZoWDQV0TNh-NiM@wunner.de>
+ <21ef5524-738a-43d5-bc9a-87f907a8aa70@linux.ibm.com>
+ <aOaqEhLOzWzswx8O@wunner.de>
+ <d69f239040b830718b124c5bcef01b5075768226.camel@linux.ibm.com>
+ <aOtL_Y6HH5-qh2jD@wunner.de>
+ <bb59edee909ceb09527cedec10896d45126f0027.camel@linux.ibm.com>
+ <aPT26UZ41DsN5C01@wunner.de>
+ <0f4776c0eac3c004d36677377525662d75752ebd.camel@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] arch, sysfb: Move screen and edid info into single
- place
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
- Javier Martinez Canillas <javierm@redhat.com>, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-efi@vger.kernel.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org,
- linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-fbdev@vger.kernel.org
-References: <20251121135624.494768-1-tzimmermann@suse.de>
- <96a8d591-29d5-4764-94f9-6042252e53ff@app.fastmail.com>
- <CAMj1kXF1Dh0RbuqYc0fhAPf-CM0mdYh8BhenM8-ugKVHfwnhBg@mail.gmail.com>
- <199e7538-5b4a-483b-8976-84e4a8a0f2fd@suse.de>
- <CAMj1kXE+mS1Sm5GaROU0P97J2w1pew0P_To4sKiw8h1iOMuLcg@mail.gmail.com>
- <d080729c-6586-4b9c-b234-470977849d3d@suse.de>
- <6dff8e7e-c99b-443d-a1d8-22650ca0b595@suse.de>
- <CAMj1kXGpC_162bFL65kQw=7qVP7ezYw77Q76y217dDs8pqHogw@mail.gmail.com>
- <8d0bc096-e346-462b-a274-f0cc1456eea3@suse.de>
- <CAMj1kXFdethf2sb1tm1V4wRW1SyPt-OnCmaAXc5cHNKuLJMXWA@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <CAMj1kXFdethf2sb1tm1V4wRW1SyPt-OnCmaAXc5cHNKuLJMXWA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: E50FE21256
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email,suse.com:url];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -4.51
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0f4776c0eac3c004d36677377525662d75752ebd.camel@linux.ibm.com>
 
-Hi
+On Mon, Oct 20, 2025 at 10:59:48AM +0200, Niklas Schnelle wrote:
+> Yeah I think we're talking past each other a bit. In my mind we're
+> really not doing the recovery in ->error_detected() at all. Within that
+> callback we only do the notify, and then do nothing in the rest of
+> recovery. Only after will the guest do recovery though I do see your
+> point that leaving the device in the error state kind of means that
+> recovery is still ongoing even if we're not in the recovery handler
+> anymore. But then any driver could also just return
+> PCI_ERS_RESULT_RECOVERED in error_detected() and land us in the same
+> situation.
 
-Am 21.11.25 um 17:31 schrieb Ard Biesheuvel:
-> On Fri, 21 Nov 2025 at 17:26, Thomas Zimmermann <tzimmermann@suse.de> wrote:
->> Hi
->>
->> Am 21.11.25 um 17:19 schrieb Ard Biesheuvel:
->>> On Fri, 21 Nov 2025 at 17:09, Thomas Zimmermann <tzimmermann@suse.de> wrote:
->>>>
->>>> Am 21.11.25 um 17:08 schrieb Thomas Zimmermann:
->>>>> Hi
->>>>>
->>>>> Am 21.11.25 um 16:56 schrieb Ard Biesheuvel:
->>>>>> On Fri, 21 Nov 2025 at 16:53, Thomas Zimmermann <tzimmermann@suse.de>
->>>>>> wrote:
->>>>>>> Hi
->>>>>>>
->>>>>>> Am 21.11.25 um 16:16 schrieb Ard Biesheuvel:
->>>>>>>> On Fri, 21 Nov 2025 at 16:10, Arnd Bergmann <arnd@arndb.de> wrote:
->>>>>>>>> On Fri, Nov 21, 2025, at 14:36, Thomas Zimmermann wrote:
->>>>>>>>>> Replace screen_info and edid_info with sysfb_primary_device of type
->>>>>>>>>> struct sysfb_display_info. Update all users.
->>>>>>>>>>
->>>>>>>>>> Sysfb DRM drivers currently fetch the global edid_info directly,
->>>>>>>>>> when
->>>>>>>>>> they should get that information together with the screen_info
->>>>>>>>>> from their
->>>>>>>>>> device. Wrapping screen_info and edid_info in
->>>>>>>>>> sysfb_primary_display and
->>>>>>>>>> passing this to drivers enables this.
->>>>>>>>>>
->>>>>>>>>> Replacing both with sysfb_primary_display has been motivate by
->>>>>>>>>> the EFI
->>>>>>>>>> stub. EFI wants to transfer EDID via config table in a single entry.
->>>>>>>>>> Using struct sysfb_display_info this will become easily possible.
->>>>>>>>>> Hence
->>>>>>>>>> accept some churn in architecture code for the long-term
->>>>>>>>>> improvements.
->>>>>>>>> This all looks good to me,
->>>>>>>>>
->>>>>>>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
->>>>>>> Thanks
->>>>>>>
->>>>>>>>> It should also bring us one step closer to eventually
->>>>>>>>> disconnecting the x86 boot ABI from the kernel-internal
->>>>>>>>> sysfb_primary_display.
->>>>>>>>>
->>>>>>>> Agreed
->>>>>>>>
->>>>>>>> Acked-by: Ard Biesheuvel <ardb@kernel.org>
->>>>>>> Thanks
->>>>>>>
->>>>>>>> I can take patches 1-2 right away, if that helps during the next
->>>>>>>> cycle.
->>>>>>>     From my sysfb-focused POV, these patches would ideally all go through
->>>>>>> the same tree, say efi or generic arch, or whatever fits best. Most of
->>>>>>> the other code is only renames anyway.
->>>>>>>
->>>>>> I don't mind queueing all of it, but I did get a conflict on
->>>>>> drivers/pci/vgaarb.c
->>>>> Probably from a78835b86a44 ("PCI/VGA: Select SCREEN_INFO on X86")
->>>> https://lore.kernel.org/all/20251013220829.1536292-1-superm1@kernel.org/
->>>>
->>> Yes, if I merge back -rc2 first, I can apply patches 1-5 onto my
->>> efi/next tree. But then I hit
->>>
->>> Applying: sysfb: Move edid_info into sysfb_primary_display
->>> error: sha1 information is lacking or useless (drivers/gpu/drm/sysfb/efidrm.c).
->>> error: could not build fake ancestor
->>> Patch failed at 0006 sysfb: Move edid_info into sysfb_primary_display
->>>
->>> If you prefer, you can take the whole lot via the sysfb tree instead,
->>> assuming it does not depend on the EDID changes I already queued up?
->> Sure, I can also add it to the drm-misc tree. ETA in upstream would be
->> v6.20-rc1.
->>
-> But does that mean the EDID firmware on non-x86 will have to wait for
-> 6.21? I was trying to avoid making this a 6 month effort.
+That would be a bug in the driver.  The point of the pci_error_handlers
+is to attempt recovery of the device in concert with the driver.
+If the driver "fakes" a recovered device towards the PCI core and then
+attempts recovery behind the PCI core's back, it gets to keep the pieces...
 
-No problem. Then let me rebase onto linux-next and put the existing EDID 
-patches for EFI on top. It's mostly acked or reviewed already. Once we 
-have it in good shape we can merged it all at once via the linux-efi 
-tree. Does that work for you?
+> But let's put that aside, say we want to implement your model where we
+> do check with the guest and its device driver. How would that work,
+> somehow error_detected() would have to wait for the guest to proceed
+> into recovery and since the guest could just not do that we'd have to
+> have some kind of timeout.
 
-Best regards
-Thomas
+Right, a timeout seems reasonable.
 
+> Also we can't allow the guest to choose
+> PCI_ERS_RESULT_RECOVERED because otherwise we'd again be in the
+> situation where recovery is completed without unblocking I/O.
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
-GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
+The guest should only return that if the device has really recovered.
+On an architecture which blocks I/O upon an error, by definition the
+device cannot already be recovered in the ->error_detected() stage.
 
+> And if we
+> want to stick to the architecture QEMU/KVM will have to kind of have a
+> mode where after being informed of ongoing recovery for a device they
+> intercept attempts to reset / firmware calls for reset and turn that
+> into the correct return. And somehow also deal with the timeout because
+> e.g. old Linux guests won't do recovery but there is also no
+> architected way for a guest to say that it does recovery.
 
+I guess there are gaps in qemu with regards to error recovery,
+but I think the solution is to add the missing functionality,
+not try to work around the gaps.
+
+Thanks,
+
+Lukas
 
