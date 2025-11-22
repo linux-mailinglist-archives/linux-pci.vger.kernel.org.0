@@ -1,206 +1,119 @@
-Return-Path: <linux-pci+bounces-41905-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41906-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B54EBC7CC8B
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Nov 2025 11:23:30 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B0CDC7CCA9
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Nov 2025 11:26:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6619A3A2867
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Nov 2025 10:23:29 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id F0C604E46AF
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Nov 2025 10:25:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 292EB2F9DAF;
-	Sat, 22 Nov 2025 10:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQFtcYB/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A11E62FA0F5;
+	Sat, 22 Nov 2025 10:25:05 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BCB2EA172;
-	Sat, 22 Nov 2025 10:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7672F9DB0;
+	Sat, 22 Nov 2025 10:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763807007; cv=none; b=u2kPVh107z8vQ0VT+jD3nfrbo8eUxi4DXI1rfHi0Y4mOFJ6iWHjIkZNsTvsQ5TPw5T4NebBbAqfG9bSXHClFxr2URX5UaU05vmlzoQHo0QzPg1vogDGIzrKMSZDHzRVqr6IyrVIXj1JOfDEgyTrJTceF7HmPaewZohUSlplvFAg=
+	t=1763807105; cv=none; b=O960V+UNQwmaDqerROsQ56PzRo7SWPN2TqCkRZKNg6Q3XBmCW+yC0kKh0Cll5FGNHbaU269ilUWBZ20PpIy5pbQCzLcy402HNeWj1ORYLKp5zhR1+JIdWRfvUkpWO/4j1DDaaQ9CK+Gltf6tzmeBZJX4tNFeZI6AKv65APVRrig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763807007; c=relaxed/simple;
-	bh=8u7bqapio1JsmO1mK0MJ2m2eVnwuOTbL1W4K/3Yktbc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=aKSoNcsvnKCb0VaDTI36z6yBNah0HfrIy/ZmksDgKoOfJ/AQuCinC6g19KkQsfphTFYr+7ZxspVMgkUvBa6dZcCXdtNi5ucKgstyTt82lkbhsazSgIEHlZtI6C77J9EQOQQXs+Y42CNInim5vF8Xz1tEarDIFBMFi9Lc60OrzBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQFtcYB/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4750C116C6;
-	Sat, 22 Nov 2025 10:23:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763807006;
-	bh=8u7bqapio1JsmO1mK0MJ2m2eVnwuOTbL1W4K/3Yktbc=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=tQFtcYB/+E2pIlLoeAI9xukS6zJRuZsQN8vTEZfZ8ZP6GG9rWp1lohqj5vop+GCgI
-	 ZZ7eYKQrRGq2bGmRYYDhWUCrHIPQuw7gW6mSrOFk/TfbK6Y5LXTQwBoi5AYeYQf6Ff
-	 0yDqja13uvU1VClOfdoweo+evAJYp5bo1k78DQKIUrqnNsWgBHAzTkpaPi185ZmPjw
-	 00Lg+Dh+rK2p7Q9Tmaah3Et/LKmswGK7URYIL7RJolaSUO6Q8IWYgDeAgPKM4K1Yo/
-	 9Xjnnx7PYJUE7lYBLQ5s4WkVYouriBWkM2QlT4+56nLgSuK6unUwjmIALxO0iFP8uy
-	 hY1lYdqbnntBw==
+	s=arc-20240116; t=1763807105; c=relaxed/simple;
+	bh=hR7oyl5iFs+wgbVb4sHkOvNmkCEqJ4QQX8TMyjpZcm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yb7rs4LZqyotvsmd4hCFxOVfP//1AB8FUZP7SHHbwxDwKyt0y0rqLFUK8eLInNncSDbflYKg6+9BJL53IAvXSR2w/VEsqmdICFSahxOlYJpriZ2iGo313UvZ/o772LAOzw7hpFtpckkGZ2ZSeeCvfh5lRcFcadyckx9tJTlQpIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id A58282006F59;
+	Sat, 22 Nov 2025 11:24:51 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 8E32C1BF15; Sat, 22 Nov 2025 11:24:51 +0100 (CET)
+Date: Sat, 22 Nov 2025 11:24:51 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Farhan Ali <alifm@linux.ibm.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Benjamin Block <bblock@linux.ibm.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+	Linas Vepstas <linasvepstas@gmail.com>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] Documentation: PCI: Amend error recovery doc with
+ pci_save_state() rules
+Message-ID: <aSGPc2qQGgdjp7iV@wunner.de>
+References: <077596ba70202be0e43fdad3bb9b93d356cbe4ec.1763746079.git.lukas@wunner.de>
+ <ab3158f0-7954-4a89-88da-6d7d69111e3b@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 22 Nov 2025 23:23:16 +1300
-Message-Id: <DEF5EC79OOT4.2MT1ET4IKXS5Y@kernel.org>
-Subject: Re: [PATCH 7/8] rust: pci: add physfn(), to return PF device for VF
- device
-Cc: "Peter Colberg" <pcolberg@redhat.com>, "Bjorn Helgaas"
- <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Abdiel Janulgue"
- <abdiel.janulgue@gmail.com>, "Daniel Almeida"
- <daniel.almeida@collabora.com>, "Robin Murphy" <robin.murphy@arm.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Dave Ertman"
- <david.m.ertman@intel.com>, "Ira Weiny" <ira.weiny@intel.com>, "Leon
- Romanovsky" <leon@kernel.org>, <linux-pci@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- "Alexandre Courbot" <acourbot@nvidia.com>, "Alistair Popple"
- <apopple@nvidia.com>, "Joel Fernandes" <joelagnelf@nvidia.com>, "John
- Hubbard" <jhubbard@nvidia.com>, "Zhi Wang" <zhiw@nvidia.com>
-To: "Jason Gunthorpe" <jgg@ziepe.ca>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20251119-rust-pci-sriov-v1-0-883a94599a97@redhat.com>
- <20251119-rust-pci-sriov-v1-7-883a94599a97@redhat.com>
- <20251121232642.GG233636@ziepe.ca>
-In-Reply-To: <20251121232642.GG233636@ziepe.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab3158f0-7954-4a89-88da-6d7d69111e3b@linux.ibm.com>
 
-On Sat Nov 22, 2025 at 12:26 PM NZDT, Jason Gunthorpe wrote:
-> On Wed, Nov 19, 2025 at 05:19:11PM -0500, Peter Colberg wrote:
->> Add a method to return the Physical Function (PF) device for a Virtual
->> Function (VF) device in the bound device context.
->>=20
->> Unlike for a PCI driver written in C, guarantee that when a VF device is
->> bound to a driver, the underlying PF device is bound to a driver, too.
->
-> You can't do this as an absolutely statement from rust code alone,
-> this statement is confused.
+On Fri, Nov 21, 2025 at 10:57:24AM -0800, Farhan Ali wrote:
+> On 11/21/2025 9:31 AM, Lukas Wunner wrote:
+> > +++ b/Documentation/PCI/pci-error-recovery.rst
+> > @@ -326,6 +326,21 @@ be recovered, there is nothing more that can be done;  the platform
+> >   will typically report a "permanent failure" in such a case.  The
+> >   device will be considered "dead" in this case.
+> > +Drivers typically need to call pci_restore_state() after reset to
+> > +re-initialize the device's config space registers and thereby
+> > +bring it from D0\ :sub:`uninitialized` into D0\ :sub:`active` state
+> > +(PCIe r7.0 sec 5.3.1.1).  The PCI core invokes pci_save_state()
+> > +on enumeration after initializing config space to ensure that a
+> > +saved state is available for subsequent error recovery.
+> > +Drivers which modify config space on probe may need to invoke
+> > +pci_save_state() afterwards to record those changes for later
+> > +error recovery.  When going into system suspend, pci_save_state()
+> > +is called for every PCI device and that state will be restored
+> > +not only on resume, but also on any subsequent error recovery.
+> 
+> Nit: Should we clarify in the above sentence on what calls the
+> pci_save_state() when going into suspend? My assumption is the
+> pci_save_state() is called by the PCI core and not the drivers?
 
-Indeed! However, I'd like to see that we actually provide this guarantee fr=
-om
-the C PCI code.
+Per section 3.1.2 of Documentation/power/pci.rst, pci_save_state()
+may be called by either the driver or the PCI core.  Normally it's
+the PCI core's responsibility, but a driver may choose to call it
+and bring the device into a low power state itself.  The PCI core
+recognizes that by looking at the state_saved flag in struct pci_dev
+and will then neither call pci_save_state() nor transition the device
+to a low power state.  That is the (only) purpose of the flag.
 
-So far I haven't heard a convincing reason for not providing this guarantee=
-. The
-only reason not to guarantee this I have heard is that some PF drivers only
-enable SR-IOV and hence could be unloaded afterwards. However, I think ther=
-e is
-no strong reason to do so.
+I could maybe add a cross-reference pointing to Documentation/power/pci.rst.
+And/or that document could be moved to Documentation/PCI/.
 
-What I would like to see is that we unbind VF drivers when the PF driver is
-unbound in general, analogous to what we are guaranteed by the auxiliary bu=
-s.
+> What should the PCI core do if the saved state recorded is bad? should we
+> continue to restore the device with the recorded bad state?
 
->> +    #[cfg(CONFIG_PCI_IOV)]
->> +    pub fn physfn(&self) -> Result<&Device<device::Bound>> {
->> +        if !self.is_virtfn() {
->> +            return Err(EINVAL);
->> +        }
->> +        // SAFETY:
->> +        // `self.as_raw` returns a valid pointer to a `struct pci_dev`.
->> +        //
->> +        // `physfn` is a valid pointer to a `struct pci_dev` since self=
-.is_virtfn() is `true`.
->> +        //
->> +        // `physfn` may be cast to a `Device<device::Bound>` since `pci=
-::Driver::remove()` calls
->> +        // `disable_sriov()` to remove all VF devices, which guarantees=
- that the underlying
->> +        // PF device is always bound to a driver when the VF device is =
-bound to a driver.
->
-> Wrong safety statement. There are drivers that don't call
-> disable_sriov(). You need to also check that the driver attached to
-> the PF is actually working properly.
+Basically the answer is, it should never happen and if it does,
+we've got a bug somewhere.
 
-Indeed, with this patch, only Rust drivers provide this guarantee of the VF
-being bound when the PF is bound.
+> On s390 restoring the device with the bad state can break the device
+> put into error again.
 
-> I do not like to see this attempt to open code the tricky login of
-> pci_iov_get_pf_drvdata() in rust without understanding the issues :(
+My (limited) understanding is that you may end up with a bad
+saved state on s390 virtualization scenarios because you're
+telling the PCI core in the ->error_detected phase() that the
+device has recovered and then you try to reset and recover the
+device on your own.  I think the solution is to enhance qemu
+to integrate better with error recovery on the host.
 
-I discussed this with Peter in advance (thanks Peter for your work on this
-topic!), and as mentioned above I'd like to see this series to propose that=
- we
-always guarantee that a VF is bound when the corresponding PF is bound.
+Thanks,
 
-With this, the above code will be correct and a driver can use the generic
-infrastructure to:
-
-  1) Call pci::Device<Bound>::physfn() returning a Result<pci::Device<Bound=
->>
-  2) Grab the driver's device private data from the returned Device<Bound>
-
-Note that 2) (i.e. accessing the driver's device private data with
-Device::drvdata() [1]) ensures that the device is actually bound (drvdata()=
- is
-only implemented for Device<Bound>) and that the returned type actually mat=
-ches
-the type of the object that has been stored.
-
-Since we always need those two checks when accessing a driver's device priv=
-ate
-data, it is already done in the generic drvdata() accessor.
-
-Therefore the only additional guarantee we have to give is that VF bound im=
-plies
-PF bound. Otherwise physfn() would need to be unsafe and the driver would n=
-eed
-to promise that this is the case. From there on drvdata() already does the =
-other
-checks as mentioned.
-
-I suggest to have a look at [2] for an example with how this turns out with=
- the
-auxiliary bus [2][3], since in the end it's the same problem, i.e. an auxil=
-iary
-driver calling into its parent, except that the auxiliary bus already guara=
-ntees
-that the parent is bound when the child is bound.
-
-Given that, there is no value in using pci_iov_get_pf_drvdata(), in Rust yo=
-u'd
-just call
-
-	// `vfdev` must be a `pci::Device<Bound>` for `physfn()` to be
-	// available; `pfdev` will therefore be a `pci::Device<Bound>` too
-	// (assuming we provide the guarantee for this, otherwise this would
-	// need to be unsafe).
-	let pfdev =3D vfdev.phyfn();
-
-	// `FooData` is the type of the PF drvier's device private data. The
-	// call to `drvdata()` will fail with an error of the asserted type is
-	// wrong.
-	let drvdata =3D pfdev.drvdata::<FooData>()?;
-
-So, if we'd provide a Rust accessor for the PF's device driver data, we'd
-implement it like above, because Device::drvdata() is already safe. If we w=
-ant
-pci::Device::pf_drvdata() to be safe, we'd otherwise need to do all the che=
-cks
-Device::drvdata() already does again before we call into
-pci_iov_get_pf_drvdata().
-
-(Note that I'm currently travelling, hence I might not be as responsive as
-usual. I'm travelling until after LPC; I plan to take a detailed look at th=
-is
-series in the week of the conference).
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core=
-.git/tree/rust/kernel/device.rs?h=3Ddriver-core-next#n313
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core=
-.git/tree/samples/rust/rust_driver_auxiliary.rs?h=3Ddriver-core-next#n81
-[3] https://lore.kernel.org/all/20251020223516.241050-1-dakr@kernel.org/
+Lukas
 
