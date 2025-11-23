@@ -1,116 +1,153 @@
-Return-Path: <linux-pci+bounces-41917-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41918-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 439F9C7D98D
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Nov 2025 23:43:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0D5DC7DA30
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Nov 2025 01:32:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DFE4B4E225C
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Nov 2025 22:43:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A83323A9411
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Nov 2025 00:32:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC71325B1D2;
-	Sat, 22 Nov 2025 22:43:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8618F72627;
+	Sun, 23 Nov 2025 00:32:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="piaH0agI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FXnogIay"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8E536D4E6;
-	Sat, 22 Nov 2025 22:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E8D14A91
+	for <linux-pci@vger.kernel.org>; Sun, 23 Nov 2025 00:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763851397; cv=none; b=JhQ7zbPxFB30qqSd8ttR/YTono8eutTIXxi8gyZD7fViKr8Eb6LVODRk7gYUQmEjEj8aSVh3vPip+7KTT8Gtg+/jXEjNWzpvSOotqIky8KU5SGWWdqjl0XGxi/FisLuzzltXYGgpU3f1RHZCfxRM9pTPjzjinl2DUfxxV6H1Tbc=
+	t=1763857942; cv=none; b=FKxQLO0t4wnAN5giibP8OseCu8ubB6hxZbcSm9ee00h5faek7GnrvEkqAnqX5TNA4WWjay3qpisJ2mUCpELKXP/KXGEurnf/TjkUPZ6xczVJh+75RLjpFGs2P8OLrBr00uO8eOzYvEl2qJlkpyfu4mVBPHM5NEm0oY+N4Z0HB/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763851397; c=relaxed/simple;
-	bh=paHOAJ6ecATAtdyavbLkTH42WlGJw2dQtjCLRfKd7lQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=m9yZMoP64FB00GSuMJJIYbCLlNMDgK1gCe1U/KhK2RHCYDbrCpml+H6MLw0ySWBDA8wLZNRSAQn//BqgaWLe9tGYDKjNE/2GZAIwVDSVnMgdKCzYHyykWe4Q7dpQwZjaSuziORDeuKBgs0y/r0ttymczLB2/1BBdmHnrjCu4FSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=piaH0agI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1375DC4CEF5;
-	Sat, 22 Nov 2025 22:43:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763851397;
-	bh=paHOAJ6ecATAtdyavbLkTH42WlGJw2dQtjCLRfKd7lQ=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=piaH0agI7xsNXEqya7qJZjFSCCL8lHbytKNdcrxkIPdcyqyOvza6HrJv/mEpqWSs4
-	 kZNvRoc2Ajwc7DOdsn9j78h2wddNySdBBp+ZqLNFoyRaUPfFOUiC0zpYC2tJJdYKhK
-	 Nhm2EZbZdyKfBRqVJnlAuQUpEUD6CHmZQYSJqCiUfe0lPPeW44x/RbX7F13ZOGF6UO
-	 DAnCFJ/REiKYc6tITcRdz8lmHC5DkMBI51xVGPja5HGcFy2ybtovhSaPehipb/LCxa
-	 QkkfZUM3KPY+RniGt3rCI+M96mbGHqn4bRSH9ILwyPoFVZayLxQ+Lp5ovHZ+WnckAo
-	 svS0ETVLgra0A==
+	s=arc-20240116; t=1763857942; c=relaxed/simple;
+	bh=2UBy4mnXQAhPsgD2N0rf+T9xXw03cN8NJ7fLVijoR8M=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=KFiAnCO1vUp8AU7a8VJ2Ruf8LbA9RvDvrW4mYoG+mvkw8NZk5jozmfqp6gWQ8Ot4fVE4WxxD4ijcx6RILJ508ACJK8hMl7JXHnfCqkjs7cj/ulpkYAjUZkrzcfls6U1VwK4gNyuF4u2wEbWP0HCtLLkK9R07lHazXCJQdDK1o/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FXnogIay; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763857941; x=1795393941;
+  h=date:from:to:cc:subject:message-id;
+  bh=2UBy4mnXQAhPsgD2N0rf+T9xXw03cN8NJ7fLVijoR8M=;
+  b=FXnogIayf6TBKbkC56e//VKw4e5J7ketk7AO3wqx61DveR/ut70JiTxs
+   11vBwY5SrHBnLRyDN2GeJZzvx45smOseZt0OtSq9hRrSs3+CpRuuVQ29A
+   HVsjK4Uu3vlo91B+xBfMu25QRKxEXQyNwkRUHd306+wBr19OB0rG7dpA4
+   VFEQDW5ZhdIEIbqps0kQQ9Ipyb7l5W110iCwO+RFbkTLO20W2EcCpOubY
+   d1Pi/dfKhlEkGk00BqmSDdtIgFMz2Oj/JfkhqKYLfYuJALMwmlNFXteae
+   F+a47d73i/LvzeIh02L3HuNaxhxCoYOD/5lNaMyl0/XelAtzYHRgdtSA+
+   w==;
+X-CSE-ConnectionGUID: CUz0/9bLQemQFqec+9do3g==
+X-CSE-MsgGUID: ZfJRy3IGS9m1NDM9fbzf7Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11621"; a="69772889"
+X-IronPort-AV: E=Sophos;i="6.20,219,1758610800"; 
+   d="scan'208";a="69772889"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2025 16:32:20 -0800
+X-CSE-ConnectionGUID: 4ssARJjIRhagIfMLR5bJlg==
+X-CSE-MsgGUID: qvVwvPkDSH+TzT7IXcZ5nQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,219,1758610800"; 
+   d="scan'208";a="196473761"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 22 Nov 2025 16:32:17 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vMy1W-0007w5-07;
+	Sun, 23 Nov 2025 00:32:14 +0000
+Date: Sun, 23 Nov 2025 08:31:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/stm32] BUILD SUCCESS
+ cfa3c76e059a2ed134f8da4ab8d2f46e3582b94e
+Message-ID: <202511230828.ZV9Colys-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 23 Nov 2025 11:43:08 +1300
-Message-Id: <DEFL4TG0WX1C.2GLH4417EPU3V@kernel.org>
-Subject: Re: [PATCH 7/8] rust: pci: add physfn(), to return PF device for VF
- device
-Cc: "Peter Colberg" <pcolberg@redhat.com>, "Bjorn Helgaas"
- <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Abdiel Janulgue"
- <abdiel.janulgue@gmail.com>, "Daniel Almeida"
- <daniel.almeida@collabora.com>, "Robin Murphy" <robin.murphy@arm.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Dave Ertman"
- <david.m.ertman@intel.com>, "Ira Weiny" <ira.weiny@intel.com>, "Leon
- Romanovsky" <leon@kernel.org>, <linux-pci@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- "Alexandre Courbot" <acourbot@nvidia.com>, "Alistair Popple"
- <apopple@nvidia.com>, "Joel Fernandes" <joelagnelf@nvidia.com>, "John
- Hubbard" <jhubbard@nvidia.com>, "Zhi Wang" <zhiw@nvidia.com>
-To: "Jason Gunthorpe" <jgg@ziepe.ca>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20251119-rust-pci-sriov-v1-0-883a94599a97@redhat.com>
- <20251119-rust-pci-sriov-v1-7-883a94599a97@redhat.com>
- <20251121232642.GG233636@ziepe.ca> <DEF5EC79OOT4.2MT1ET4IKXS5Y@kernel.org>
- <20251122161615.GN233636@ziepe.ca>
-In-Reply-To: <20251122161615.GN233636@ziepe.ca>
 
-On Sun Nov 23, 2025 at 5:16 AM NZDT, Jason Gunthorpe wrote:
-> I think to make progress along this line you need to still somehow
-> validate that the PF driver is working right, either by checking that
-> the driver is bound to a rust driver somehow or using the same
-> approach as the core helper.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/stm32
+branch HEAD: cfa3c76e059a2ed134f8da4ab8d2f46e3582b94e  PCI: stm32: Don't use 'proxy' headers
 
-Do you refer to the
+elapsed time: 7429m
 
-	if (pf_dev->driver !=3D pf_driver)
+configs tested: 60
+configs skipped: 0
 
-check? If so, that's (in a slightly different form) already part of the gen=
-eric
-Device::drvdata() accessor.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> I'm not sure the idea to force all drivers to do disable sriov is
-> going to be easy, and I'd rather see rust bindings progress without
-> opening such a topic..
+tested configs:
+alpha                   allnoconfig    gcc-15.1.0
+alpha                  allyesconfig    gcc-15.1.0
+arc                     allnoconfig    gcc-15.1.0
+arc         randconfig-001-20251118    gcc-14.3.0
+arc         randconfig-002-20251118    gcc-15.1.0
+arm                     allnoconfig    clang-22
+arm         randconfig-001-20251118    gcc-8.5.0
+arm         randconfig-002-20251118    gcc-10.5.0
+arm         randconfig-003-20251118    clang-22
+arm         randconfig-004-20251118    clang-22
+arm64                   allnoconfig    gcc-15.1.0
+csky                   allmodconfig    gcc-15.1.0
+csky                    allnoconfig    gcc-15.1.0
+hexagon                allmodconfig    clang-17
+hexagon                 allnoconfig    clang-22
+i386                   allmodconfig    gcc-14
+i386                    allnoconfig    gcc-14
+i386                   allyesconfig    gcc-14
+loongarch              allmodconfig    clang-19
+loongarch               allnoconfig    clang-22
+m68k                   allmodconfig    gcc-15.1.0
+m68k                    allnoconfig    gcc-15.1.0
+m68k                   allyesconfig    gcc-15.1.0
+microblaze              allnoconfig    gcc-15.1.0
+microblaze             allyesconfig    gcc-15.1.0
+mips                   allmodconfig    gcc-15.1.0
+mips                    allnoconfig    gcc-15.1.0
+mips                   allyesconfig    gcc-15.1.0
+nios2                   allnoconfig    gcc-11.5.0
+openrisc                allnoconfig    gcc-15.1.0
+parisc                 allmodconfig    gcc-15.1.0
+parisc                  allnoconfig    gcc-15.1.0
+parisc                 allyesconfig    gcc-15.1.0
+powerpc                allmodconfig    gcc-15.1.0
+powerpc                 allnoconfig    gcc-15.1.0
+riscv                  allmodconfig    clang-22
+riscv                   allnoconfig    gcc-15.1.0
+riscv                  allyesconfig    clang-16
+s390                   allmodconfig    clang-18
+s390                    allnoconfig    clang-22
+s390                   allyesconfig    gcc-15.1.0
+sh                     allmodconfig    gcc-15.1.0
+sh                      allnoconfig    gcc-15.1.0
+sh                     allyesconfig    gcc-15.1.0
+sparc                   allnoconfig    gcc-15.1.0
+um                     allmodconfig    clang-19
+um                      allnoconfig    clang-22
+um                     allyesconfig    gcc-14
+x86_64                 allmodconfig    clang-20
+x86_64                  allnoconfig    clang-20
+x86_64                 allyesconfig    clang-20
+x86_64                        kexec    clang-20
+x86_64                     rhel-9.4    clang-20
+x86_64                 rhel-9.4-bpf    gcc-14
+x86_64                rhel-9.4-func    clang-20
+x86_64          rhel-9.4-kselftests    clang-20
+x86_64               rhel-9.4-kunit    gcc-14
+x86_64                 rhel-9.4-ltp    gcc-14
+x86_64                rhel-9.4-rust    clang-20
+xtensa                  allnoconfig    gcc-15.1.0
 
-I'm sorry, I should have mentioned what I actually propose:
-
-My idea would be to provide a bool in struct pci_driver, which, if set,
-guarantees that all VFs are unbound when the PF is unbound.
-
-With this bool being set, the PCI bus can provide the guarantee that VF bou=
-nd
-implies PF bound; the Rust accessor can then leverage this guarantee.
-
-This can also be leveraged by the C code, where we could have a separate
-accessor that checks the bool rather than askes the driver to promise that =
-the
-PF is bound, which pci_iov_get_pf_drvdata() does.
-
-(Although I have to admit that without the additional type system capabilit=
-ies
-we have in Rust, it is not that big of an improvement.)
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
