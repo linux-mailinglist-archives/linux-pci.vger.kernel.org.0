@@ -1,104 +1,138 @@
-Return-Path: <linux-pci+bounces-41979-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41980-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9862C8207C
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 19:09:12 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62F8AC8216E
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 19:23:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6788D3A8350
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 18:09:11 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0EA8E34938F
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 18:23:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3FD631691E;
-	Mon, 24 Nov 2025 18:09:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E50953191C3;
+	Mon, 24 Nov 2025 18:23:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEd3XJcR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pcW16dNa"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3352C21EB;
-	Mon, 24 Nov 2025 18:08:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE2C3191B7
+	for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 18:23:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764007740; cv=none; b=AOYybq+eIwiOellz3hni95oQ1fIIakf4r5UUENIYuhEJboK3p8G8wvlkrm4dIxSvZMtcUWj1ch2/sAsPUfMPVw7XUfi2OiZczUWGKpyINaVnyS0CAJjj4nocdrUbWyAmbI5rGsI5ZnXMxlcx81CQq3uoJPYq1BBuTOj1wakRLck=
+	t=1764008623; cv=none; b=abSrWtMOEwdbJFLHBUONitgPYr1qqP1Tf6OVpuBr5Wr0SGfHhrRet6hfHDqkZYWMw6jQy555a05Jp4Uytz8YDYpyZy7AlN32xCScDgxMbsp/14bfSS325rINCrmzjdNUtB/MAke7OeCSyUZKqa2mF1EMEQSpfRHg+lEr5wOWjs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764007740; c=relaxed/simple;
-	bh=GhQcWx42J0d0ewB7WVogF7BGD8aTFOdgav+kUNjMAPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=qjRmOACbguWvBioyscAnaTQadAf1B1JLFtT+pPfHY29lOQM8aYtj9DVL8dpHF0t29AOQHr4xbq/dqMl5Tf19pTxItnWbhT4ObJ1ruBrJ6+5pnfYF5bqGJFN2gj22iCkrW0noebtP8P6bdMPAxA8GsZ1Ng3GTFa+lOoAH5mdlCJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEd3XJcR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE6C9C4CEF1;
-	Mon, 24 Nov 2025 18:08:58 +0000 (UTC)
+	s=arc-20240116; t=1764008623; c=relaxed/simple;
+	bh=2FX7rZXKca4g/J0UloZ6GYe00mJx2wV1IHK1gF3C2SY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t30AJce5HGaMNkyb3mOuyuJib/BEyCBBa7dudKrcaEMgGxTqqawbAAbA//UJ2E34z18vnZh0UjldqyuifHon6VXAXNnULVfjf4sM9nk/4wbq8tA8jgT+2WMzf0PvlHIm8PrlIEj7iIHCE3/MZHxCybsGwqHXRCTVkgjMv1rxD00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pcW16dNa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 693FFC19421
+	for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 18:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764007738;
-	bh=GhQcWx42J0d0ewB7WVogF7BGD8aTFOdgav+kUNjMAPM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=aEd3XJcR7n8AuUrojYsCfxJ8IZxUS8/qCkU28Hu96BCovkBmb6J3Z9oEKsea4Qj+I
-	 cwxAfX+QWcrI3wQJ3/p1VAyLBt3ezyakmR1ITcuc1b9cb5WC2Bmul3kDYIsxbl57Pn
-	 b1yR2Yh144jWyEfH4SVaCm2xNp0TmJNgwQopp4IjaO0I0AVfHlOdk81BWBuwKLFpEj
-	 +PTw1QwjJcJgCX+lJPnaJYMVOEI3RA7mnb/ZfFuN2KcUfFnvgsy+KoRYfr4KoNaVmC
-	 xR83NzucXAVQ5PYqSEkIBspYl6jlFomgMiFu3RKy6LZiyYgZIhBtVVqxGt+hb1t+3y
-	 jfCx6nFfKtduw==
-Date: Mon, 24 Nov 2025 12:08:57 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Hans Zhang <hans.zhang@cixtech.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH next] PCI: sky1: Fix error codes in
- sky1_pcie_resource_get()
-Message-ID: <20251124180857.GA2702217@bhelgaas>
+	s=k20201202; t=1764008623;
+	bh=2FX7rZXKca4g/J0UloZ6GYe00mJx2wV1IHK1gF3C2SY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pcW16dNaGiF6s5vT4XTzPkGay8JLppf19s8pSJ047d+L+LgCwIxWzqt6YMH7lQcM2
+	 GIWpqDETt2LsAaYcskOBlzfsLmu/C3Hm9y9x1aWsF4oWaIfFEB3A1qzdfIlN5Psimc
+	 S96qMPVKWDujYE+s8zYqlh52jOUE3gaE2oLQnb7O/soEHrcVO5nUm3ohI7NmzoGblr
+	 sNcWD3kJM1nxUSp+d/dybSKfbD6qyoRQcD1LL+NaGpCs2PYIs+/M5Nbv4EDHAsg03V
+	 XlFDgO1CaErFZccsvMXUsF8HE0U0qK2y56k9mUjb4AhAZHBcmOz5n4SdiejBtkMEhs
+	 oVR5hk/OF7EnA==
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-450f7f91845so720165b6e.1
+        for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 10:23:43 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVVBxQ+g7MMVHqt4HjHFx3p6Vr7EP2k3i6zBYSvk/RiXcXEsyzcdFn65FAKqrn5SqdUpic5tEo0ljc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUrk2lMXTORLCt4FczxKUs58in/JUxwbuk0AB9SoQKpdvTbuZx
+	hE7mCcuVY8H2mT/TMtKpPQZi1b5v945ktAWqs5Pyoec/CnNFCUr2OFxODMw7AXx01Bh7OdFMqey
+	llyVTq79+L4dFef4OQKM7hPD3bStF7yo=
+X-Google-Smtp-Source: AGHT+IE8USfY1TlzVhoxR68d6+kuU+3Zqd4gD73B+rh8Fu3seOp2TD6CFzvqRKbzETbK58xBjN4YE3uILspEa5NgttU=
+X-Received: by 2002:a05:6808:f8e:b0:450:ca65:ef63 with SMTP id
+ 5614622812f47-45115981923mr3951804b6e.24.1764008622715; Mon, 24 Nov 2025
+ 10:23:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aSBqp0cglr-Sc8na@stanley.mountain>
+References: <077596ba70202be0e43fdad3bb9b93d356cbe4ec.1763746079.git.lukas@wunner.de>
+In-Reply-To: <077596ba70202be0e43fdad3bb9b93d356cbe4ec.1763746079.git.lukas@wunner.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 24 Nov 2025 19:23:29 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0iSokgFwYLrXd-ZMYO8PABZwvfZBO-p5gKbETTcURp-oQ@mail.gmail.com>
+X-Gm-Features: AWmQ_blp4g0-S_IAjsDssU-F-OFcJ2Imj6eg_vHajqJ-TUa2ZdlupXjD1KnDNJw
+Message-ID: <CAJZ5v0iSokgFwYLrXd-ZMYO8PABZwvfZBO-p5gKbETTcURp-oQ@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: PCI: Amend error recovery doc with
+ pci_save_state() rules
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Farhan Ali <alifm@linux.ibm.com>, 
+	Benjamin Block <bblock@linux.ibm.com>, Niklas Schnelle <schnelle@linux.ibm.com>, 
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org, 
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Linas Vepstas <linasvepstas@gmail.com>, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 21, 2025 at 04:35:35PM +0300, Dan Carpenter wrote:
-> Return negative -ENODEV instead of positive ENODEV.
-> 
-> Fixes: 25b3feb70d64 ("PCI: sky1: Add PCIe host support for CIX Sky1")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+On Fri, Nov 21, 2025 at 6:31=E2=80=AFPM Lukas Wunner <lukas@wunner.de> wrot=
+e:
+>
+> After recovering from a PCI error through reset, affected devices are in
+> D0_uninitialized state and need to be brought into D0_active state by
+> re-initializing their Config Space registers (PCIe r7.0 sec 5.3.1.1).
+>
+> To facilitate that, the PCI core provides pci_restore_state() and
+> pci_save_state() helpers.  Document rules governing their usage.
+>
+> As Bjorn notes, so far no file in "Documentation/ includes anything about
+> the idea of a driver using pci_save_state() to capture the state it wants
+> to restore after an error", even though it is a common pattern in drivers=
+.
+> So that's obviously a gap that should be closed.
+>
+> Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+> Closes: https://lore.kernel.org/r/20251113161556.GA2284238@bhelgaas/
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
 
-Squashed into the commit, thanks!
+It looks good to me, so
+
+Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
 
 > ---
->  drivers/pci/controller/cadence/pci-sky1.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pci-sky1.c b/drivers/pci/controller/cadence/pci-sky1.c
-> index 99a1f3fae1b3..d8c216dc120d 100644
-> --- a/drivers/pci/controller/cadence/pci-sky1.c
-> +++ b/drivers/pci/controller/cadence/pci-sky1.c
-> @@ -65,7 +65,7 @@ static int sky1_pcie_resource_get(struct platform_device *pdev,
->  
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
->  	if (!res)
-> -		return dev_err_probe(dev, ENODEV, "unable to get \"cfg\" resource\n");
-> +		return dev_err_probe(dev, -ENODEV, "unable to get \"cfg\" resource\n");
->  	pcie->cfg_res = res;
->  
->  	base = devm_platform_ioremap_resource_byname(pdev, "rcsu_strap");
-> @@ -82,7 +82,7 @@ static int sky1_pcie_resource_get(struct platform_device *pdev,
->  
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "msg");
->  	if (!res)
-> -		return dev_err_probe(dev, ENODEV, "unable to get \"msg\" resource\n");
-> +		return dev_err_probe(dev, -ENODEV, "unable to get \"msg\" resource\n");
->  	pcie->msg_res = res;
->  	pcie->msg_base = devm_ioremap_resource(dev, res);
->  	if (IS_ERR(pcie->msg_base)) {
-> -- 
+>  Documentation/PCI/pci-error-recovery.rst | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI=
+/pci-error-recovery.rst
+> index 5df481a..43bc4e3 100644
+> --- a/Documentation/PCI/pci-error-recovery.rst
+> +++ b/Documentation/PCI/pci-error-recovery.rst
+> @@ -326,6 +326,21 @@ be recovered, there is nothing more that can be done=
+;  the platform
+>  will typically report a "permanent failure" in such a case.  The
+>  device will be considered "dead" in this case.
+>
+> +Drivers typically need to call pci_restore_state() after reset to
+> +re-initialize the device's config space registers and thereby
+> +bring it from D0\ :sub:`uninitialized` into D0\ :sub:`active` state
+> +(PCIe r7.0 sec 5.3.1.1).  The PCI core invokes pci_save_state()
+> +on enumeration after initializing config space to ensure that a
+> +saved state is available for subsequent error recovery.
+> +Drivers which modify config space on probe may need to invoke
+> +pci_save_state() afterwards to record those changes for later
+> +error recovery.  When going into system suspend, pci_save_state()
+> +is called for every PCI device and that state will be restored
+> +not only on resume, but also on any subsequent error recovery.
+> +In the unlikely event that the saved state recorded on suspend
+> +is unsuitable for error recovery, drivers should call
+> +pci_save_state() on resume.
+> +
+>  Drivers for multi-function cards will need to coordinate among
+>  themselves as to which driver instance will perform any "one-shot"
+>  or global device initialization. For example, the Symbios sym53cxx2
+> --
 > 2.51.0
-> 
+>
 
