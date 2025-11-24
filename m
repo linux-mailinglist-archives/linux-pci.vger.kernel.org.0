@@ -1,307 +1,289 @@
-Return-Path: <linux-pci+bounces-41950-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41944-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 953E9C81118
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 15:39:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71DFDC80C7E
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 14:33:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 45BB64E7D49
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 14:36:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 661D73A57D9
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 13:32:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A385D271456;
-	Mon, 24 Nov 2025 14:36:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A851F3054F2;
+	Mon, 24 Nov 2025 13:32:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXbHvO/9"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="elcZuPjZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013000.outbound.protection.outlook.com [40.93.196.0])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC6ED27BF93
-	for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 14:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763994998; cv=none; b=tjoUICbFYAudf0fg5yZ6DBa61gFzQeULUzol5RCdtq49+bsiIgp/5rDDJVRZMXqxVwaOq80KoQeyGqHqsUzb6nssgoHxn2VkFFpNql2QchHv5U/Ujx1PSm6TguEJ06/OLUz8dGbh0uuHLm3kwUfcpdaIYsLfhZzajXwxwAOdP44=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763994998; c=relaxed/simple;
-	bh=wSQ341CU5vsOctNXexpEakv7qkoHtZ0v3orCbR3i2WA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fG4gAA7FiSPaccKSOF1ZEml46jpjgeOOeOGOFwk7zQSLECeC4CfLIh3qBK3c3kACVinlSluFyhr5C6fRhVqoFSM6nOroAk0atuFRUa5t0z6pC6jXsMrmq6cm3zWc7GlqIPoyj6RPxOVBgeIrf+7lli6EuYtFWALqoOjsELJPjLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KXbHvO/9; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6418738efa0so6787416a12.1
-        for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 06:36:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763994995; x=1764599795; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DMHuhLQ2+QePhLbxyyov6Mwfn5dk2KsNTjCwuBZ/B2U=;
-        b=KXbHvO/9ol0/OiDNK7qOJvewM69cUrLRJMwl2GueEzDPO8a0jnZvVd0yM11GYlfMk0
-         eTi/gIEsE4lZrCBv0TN9OXsjpNO4hMRdtxSbcXgycLhx4eXiPll8tVH6sDcwR+GT6GJC
-         nTYPifOBMNFvhBV7Mrj/bx0TWAK958UXs/m4b6XBvCQkDwZcoIZyOx0RDxNEYEbkasb3
-         YtlQnEp2fEaUEdcPM0552kgGbYKAYv1NA4fxoxIKqueuyGu5rJPZQ3v+ldK9WdCbbGaC
-         iSkWasyWrTPePI0EK0Q3oURrQJh32VhHP9xZ7v70G9K/M97i+eTpwp0eOx2mSBvaXX5Y
-         MUTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763994995; x=1764599795;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DMHuhLQ2+QePhLbxyyov6Mwfn5dk2KsNTjCwuBZ/B2U=;
-        b=vpHOxZ0NTcSBkDOBBRWo9WWj1mv0GsTrqD7Jv/UVrIxha4HPElvoqv9ZtxW7R517YV
-         kO/BD86/e2pzt9p9CrexaF+m0VJAs3dIn5qV5kbVEs+M8hLXbi6GAn73o5TScNSP6zfm
-         yR3pwhgwGUSszw9mbICLgx1r0okN6Xf8P1A7UsyMQ33v6g3JcRU/GhFnVNktTBolxBgf
-         dUG7f864t2Adv4nFJadYSCqt4EhXDWSu/ZoYjUMKq4MJLOhEPJD2K3GNg+BBDMcEdKpQ
-         1TPs4mcx2bpTR3bcuIAFhSsBk6s2zYeN87PNl7XhyUXt+IT38bZCycefolgs6G95V/VL
-         CwVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWx8L0YWVxbzj8Bj/OEMI4GcsBWWdrp7qPnZfU0FwUx87m14geT8YG5ot6CK6tF45vmWvji2o8gIno=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxA6cWPGhKoyFz/VT0ebXWyRTFVOYKNQCHfR6y3iuDxX28JVL6v
-	jtfYWmXrjs/6hQDOFpR6uhjvzYas2BzlaMt+IxeFNNJ5mr90TvTtSc4HEJ11Rqr/
-X-Gm-Gg: ASbGncv5KRC3noum/v0az63dPK0Y0nWZ6bm2/+95LS5fpqa3hLvY8m6GNf/zdmlrCX5
-	UD3safwBSxWJPXj5PwMxjrb9n4Dte7dGfLNLgWSnWVxH0PLTMvQVF47272JDInVmkBhPBKhWPKA
-	/A7rxatJx/2i8XfVL4K18whACEBN4y0o/89CRCY1XfaNWJ9FCAVbviB10lBQDYDPoztqvcUQX3P
-	jM9Aqvhhx26oo9m2WuH0uqWU/S0tmRTjeXReTyQirJ2SF03zJuXTD2E2YuJUGAoVspsfLYQ2Uvy
-	sJJWKRsAtR1KMMdd3R1Dz/1VD/IbMKNBQQQ0/j5UOPu4LDmY5BKf4Rvm4UzQyUbIoHET1NaHic1
-	6OdG/Tpn+6ySL8tJHRQzxJpQsL0cn62xJYJ7gT9buP+qZW8K8V5ERKaVs1TSWWGJ4Q70B96xTsT
-	7W3ep0tSlxEXaZMg==
-X-Google-Smtp-Source: AGHT+IGs/95/cJ+tL3SsaiiXXgcuCaeuAg21ZTVttRpATbc8iAWB4Al2D0iS745iUZOaE4uems77rg==
-X-Received: by 2002:a2e:95d9:0:b0:37a:5bc6:ab9f with SMTP id 38308e7fff4ca-37cd92392c8mr23746331fa.26.1763989401463;
-        Mon, 24 Nov 2025 05:03:21 -0800 (PST)
-Received: from [10.38.18.76] ([213.255.186.37])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-37cc6b48e26sm27317291fa.1.2025.11.24.05.03.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Nov 2025 05:03:21 -0800 (PST)
-Message-ID: <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
-Date: Mon, 24 Nov 2025 15:03:19 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BD1B652;
+	Mon, 24 Nov 2025 13:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.0
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763991173; cv=fail; b=HXgXqe++hNASAoBJIXcMyJ93oohxaAIPJHPrVezQmt1s7KseMJWtnU9araHpksMXQpdy1EZ4Y0jtuVJEd/kvsW1uoi+5rc/f9kDqwOSRShsKWd4zXs+1E1vRihNTrutuz3U65it/6tBwLRkjRfsp3qRgWZ5CMpfSWOJUD2/lMBU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763991173; c=relaxed/simple;
+	bh=tvpwMonYietbT33sgo787LLTV8kPN6ov6wqWLAo+56M=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f4Bs0yKGBQu+cDD+nh3q1dhC/FwXSlptGWRs4QpZjoCfjaRfSoQSCEPy2S/yzjuzr7VTZVD5h6AeQVzSo6K58wF2b0nY4fy9QspKxMXrdHOkZC7I6gDhK1iymRsN9o0azMGbwZigREbzTjXwpgAbjr2VkvHN+2YTv6wtsmjTp98=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=elcZuPjZ; arc=fail smtp.client-ip=40.93.196.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Dbm2DXygH4q2GdJBu2LXZVQMYX/4gvuEmbUWV/KbPiHA8jb3mrf0i5eVOPOoZvJ4fRn5cr5/jHLThB9ha80kIBFEKid8Gox9n0HEj7xZ/rgFuwXw5RsPyALyvqPvjoII6q06q0dp6wm7+XMXiU3auiYjgxJXd6C/5v5bbteodyLBEYdU5dz5uyJXQ+1O/EY3fQayCSDS+qs4rnSaeuoneUnUtpTcy1q42qXRJXLTXzgrbquj07BnRz35EtYJRmIi4erA6iHHgy0kQfAt4o9IHmT4VMljTiakA+GAvsQUGfAim+500k9dsHAU5DvhnWMLZvUeIhdWLu2eRSU7Ux03+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qfrs+xYKSBIm0aUuIWZdBvO+O/psjuW9ZReKSmq6oJU=;
+ b=N63DJ9unmZIUqBT6CpPhTv2zgT6U2z5lBcHcMb3Eg44Pb5S4FmiwuNOqJvYUtpxYSB0S8PPDVfOk9SDJIreGIzFvzVlwL0kyJ1/hoPCcHnDnjHCUhcY/SlTvJOKUG+UITaPIMf+dpIrsnpv63pXyqqrZ9QwDlkEOCsGIwiRTp5fMjShQ9TX3K+DOJ3I5x7LqZp9BeFjbx4RMT7sClhmI15m5dJgmE2fL18e0q2pIHJpdb9oJ0udrA+3gzlE3K9k533mhTuu5NKfpp/Jxd1XBk6FHvcU3pa9yjPGMbWy61GR6UjVBP8Iag9n+kic24xf3Oqz4oQcxKoc0RULXldQDhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qfrs+xYKSBIm0aUuIWZdBvO+O/psjuW9ZReKSmq6oJU=;
+ b=elcZuPjZryJYWUlH+kQhIcWzFpYgShZo7o8dmuLGi4utr9Z0E084mXfAIHCXe3YsbtfMUG4i9fMZYH49DtL9sHxC9JQQBJIU3bC1Dlc6oyN6YzxMxLeO44qvFpAMquCH810+V+QwxnoM7Xs0o0OR/wf22E6jTOr00mDKB9rOS/ahl4Z34q23OXI5XLYlFRWb994mKihS0Ht7qKFmKVwBzxfJD5dQiw7rvbwEymNEKH4wh8O2NpXQ1h/vD9Uw5mrC3Xat3GhsU0ZCnAWQx5uwZhn8/wWoYQgx0h2sclHzCG1WFcSDD22vq5NuCxQzQ+e03dEdN2IBXP2kX4sKwievqw==
+Received: from SJ0PR03CA0174.namprd03.prod.outlook.com (2603:10b6:a03:338::29)
+ by BL1PR12MB5732.namprd12.prod.outlook.com (2603:10b6:208:387::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.17; Mon, 24 Nov
+ 2025 13:32:45 +0000
+Received: from CO1PEPF000044F9.namprd21.prod.outlook.com
+ (2603:10b6:a03:338:cafe::95) by SJ0PR03CA0174.outlook.office365.com
+ (2603:10b6:a03:338::29) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9343.17 via Frontend Transport; Mon,
+ 24 Nov 2025 13:32:22 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ CO1PEPF000044F9.mail.protection.outlook.com (10.167.241.199) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9388.0 via Frontend Transport; Mon, 24 Nov 2025 13:32:44 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 24 Nov
+ 2025 05:32:26 -0800
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.20; Mon, 24 Nov 2025 05:32:26 -0800
+Received: from inno-thin-client (10.127.8.13) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
+ Transport; Mon, 24 Nov 2025 05:32:19 -0800
+Date: Mon, 24 Nov 2025 15:32:18 +0200
+From: Zhi Wang <zhiw@nvidia.com>
+To: Alice Ryhl <aliceryhl@google.com>
+CC: <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <dakr@kernel.org>, <bhelgaas@google.com>,
+	<kwilczynski@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+	<boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+	<lossin@kernel.org>, <a.hindborg@kernel.org>, <tmgross@umich.edu>,
+	<markus.probst@posteo.de>, <helgaas@kernel.org>, <cjia@nvidia.com>,
+	<smitra@nvidia.com>, <ankita@nvidia.com>, <aniketa@nvidia.com>,
+	<kwankhede@nvidia.com>, <targupta@nvidia.com>, <acourbot@nvidia.com>,
+	<joelagnelf@nvidia.com>, <jhubbard@nvidia.com>, <zhiwang@kernel.org>
+Subject: Re: [PATCH v7 3/6] rust: io: factor common I/O helpers into Io
+ trait
+Message-ID: <20251124153218.7694b78a.zhiw@nvidia.com>
+In-Reply-To: <aSQxeSX0q4Z_jaAu@google.com>
+References: <20251119112117.116979-1-zhiw@nvidia.com>
+	<20251119112117.116979-4-zhiw@nvidia.com>
+	<aSB1Hcqr6W7EEjjK@google.com>
+	<20251124120846.267078e5.zhiw@nvidia.com>
+	<aSQxeSX0q4Z_jaAu@google.com>
+Organization: NVIDIA
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
- overlays"
-To: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
- Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Charles Keepax <ckeepax@opensource.cirrus.com>,
- Richard Fitzgerald <rf@opensource.cirrus.com>,
- David Rhodes <david.rhodes@cirrus.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
- linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>,
- Steen Hegelund <steen.hegelund@microchip.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-2-herve.codina@bootlin.com>
-Content-Language: en-US
-From: Kalle Niemi <kaleposti@gmail.com>
-In-Reply-To: <20251015071420.1173068-2-herve.codina@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F9:EE_|BL1PR12MB5732:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4710a83f-7271-46eb-ce7c-08de2b5df35c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|7416014|82310400026|1800799024|13003099007|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?3QpPkMagsxxjrXfnZcn+f7NSwMV3bsya6frTU0iIUdJ6AExdJ/LmKkbwcpbT?=
+ =?us-ascii?Q?lfSTRBt7jl/LDdS9NTCFiJu+6vMWYQpGOJu8HUShCT8RcVYMfN8kJ4kcwhx/?=
+ =?us-ascii?Q?2PSwLUhDhcSbFhUtYmHsi68VBMVLyJdrdkA2Ya6fQPWmUu3EvwQ6JCUIxSWX?=
+ =?us-ascii?Q?jMpUOx9Y419WkEXLPUXXVKACuaLyy2YjKzXrCF6bJXERW7y0Dr7cRDOUWPQM?=
+ =?us-ascii?Q?qoZXt3yHlHivzNwiYQJWnWtg0tAlM0mZjZpYCiCLH9T7aGTJjiyRvSfNO0/+?=
+ =?us-ascii?Q?2xyRtFsmr/LEaXXUbX31v71MJxjRiHptZarmf90skH8v6KOHU0ih8l58wv01?=
+ =?us-ascii?Q?pJMuDv1lAso624tTqO9u/3mAmupwQqab1JiVbYV1U0rwm8okLAmzXO8E12PC?=
+ =?us-ascii?Q?yjx+HWgOZOrqTMMeUXeBhBpJEeues6igwmNyiGNJR1Tdin1zxuwWTpkerQfS?=
+ =?us-ascii?Q?OHvR03hvbKucYrrL+fv6JPzVbv6I5d5pM8IKaFeS6HeqkOeuyxPm5TB1Jeqh?=
+ =?us-ascii?Q?R6ZZcta8saUJtThx13Krx8Ztt15VmUUJhHjPN9zh4icAueC8zK7iE3dOFrJv?=
+ =?us-ascii?Q?eqvY+aUp8foJRxMxL8rOmlK4Xc5sfGVc7aUQBW/4d58A+11cpSFqbB6BpIq1?=
+ =?us-ascii?Q?SpTLYkHAobNQZWg2lTMjOibjjR4c0TRXndfQka3KGzely88JpPaYeEO7quk8?=
+ =?us-ascii?Q?hFFj3qYoYJL9NT01iP4JM+XL/VYS6YfkRSV5I3kW0vULpg9jqWDhssY+0oRB?=
+ =?us-ascii?Q?6j56Ci4GaXf4eO8D3KbhIZ8RbMbiATdaaGKwqLe7FJ2dh/WmdqtQoj1j2X9A?=
+ =?us-ascii?Q?2LODAuNUWIEAXTm+nL1xaSY7YvmBhHWA2Yb5ii3EXq/rHMG3GT5KbukC4i+M?=
+ =?us-ascii?Q?H9WzajEI/EkGKSYl4vtBmHhcFHMZpTXPeZW3ohgpbry0XhIUGzVPLshcDqDn?=
+ =?us-ascii?Q?3PLs8iKy3zVsTbpgV4KdfMmbsp3AxikLjFHAaNpEKAI/6k9edWs5Z9SEwJti?=
+ =?us-ascii?Q?y/fVHM4HpCekX04+qtvss57nTYGiVUmLilzPI/wRbTJdGG1yLQMmy7yFeH0R?=
+ =?us-ascii?Q?dKwQxyr/aAa2TTCCzuw4aywSW7hnUafg9b87UQOdleRIlheNFeYwfxHI/Xmt?=
+ =?us-ascii?Q?MW/nS83izFs4nvgG7Zagcd1nWraGzIVwW3nhDFoKOJTEOapBiqSfA0UnPpjf?=
+ =?us-ascii?Q?HtZnTu9zYdP9bo2bnnrWN4rVGmA5Wqcyo9x8h4dNF4UWONMvnmKrJKJIKfmS?=
+ =?us-ascii?Q?CfTBuw0KUMkTgAfJSu5z4rcCRQiAFCIlXP9dAdNehUOvtEp3/rk+B539aebK?=
+ =?us-ascii?Q?vYM48aZnXj28C1pWfxOOru/3CAM1vDqt33uG6BBj9BdkCL2yTD5WxmFurX/9?=
+ =?us-ascii?Q?9zLZQlv8l0PF8nrka++Sqq/3zu785XpyDw2/EbT5tek0DsEDiZX7E2UC99Tb?=
+ =?us-ascii?Q?+hlanTB6UlI6o9/dCqiqov9dsVwBO9vxeH7ZOvysR2jRx0lsxyBrOsAUmyJv?=
+ =?us-ascii?Q?NipIhUoKmZzQM/9ZKxKhY+1rQtYeyqJHhAn0PZitiw/0IndShZQ2tmVsZJ13?=
+ =?us-ascii?Q?XDqqKQVo3ab0WMl8f4Y=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(82310400026)(1800799024)(13003099007)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Nov 2025 13:32:44.7097
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4710a83f-7271-46eb-ce7c-08de2b5df35c
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044F9.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5732
 
-On 10/15/25 10:13, Herve Codina wrote:
-> From: Saravana Kannan <saravanak@google.com>
+On Mon, 24 Nov 2025 10:20:41 +0000
+Alice Ryhl <aliceryhl@google.com> wrote:
+
+> On Mon, Nov 24, 2025 at 12:08:46PM +0200, Zhi Wang wrote:
+> > On Fri, 21 Nov 2025 14:20:13 +0000
+> > Alice Ryhl <aliceryhl@google.com> wrote:
+> > 
+> > > On Wed, Nov 19, 2025 at 01:21:13PM +0200, Zhi Wang wrote:
+> > > > The previous Io<SIZE> type combined both the generic I/O access
+> > > > helpers and MMIO implementation details in a single struct.
+> > > > 
+> > > > To establish a cleaner layering between the I/O interface and
+> > > > its concrete backends, paving the way for supporting additional
+> > > > I/O mechanisms in the future, Io<SIZE> need to be factored.
+> > > > 
+> > > > Factor the common helpers into new {Io, Io64} traits, and move
+> > > > the MMIO-specific logic into a dedicated Mmio<SIZE> type
+> > > > implementing that trait. Rename the IoRaw to MmioRaw and update
+> > > > the bus MMIO implementations to use MmioRaw.
+> > > > 
+> > > > No functional change intended.
+> > > > 
+> > > > Cc: Alexandre Courbot <acourbot@nvidia.com>
+> > > > Cc: Alice Ryhl <aliceryhl@google.com>
+> > > > Cc: Bjorn Helgaas <helgaas@kernel.org>
+> > > > Cc: Danilo Krummrich <dakr@kernel.org>
+> > > > Cc: John Hubbard <jhubbard@nvidia.com>
+> > > > Signed-off-by: Zhi Wang <zhiw@nvidia.com>
+> > > 
+> > > I said this on a previous version, but I still don't buy the split
+> > > into IoFallible and IoInfallible.
+> > > 
+> > > For one, we're never going to have a method that can accept any
+> > > Io - we will always want to accept either IoInfallible or
+> > > IoFallible, so the base Io trait serves no purpose.
+> > > 
+> > > For another, the docs explain that the distinction between them is
+> > > whether the bounds check is done at compile-time or runtime. That
+> > > is not the kind of capability one normally uses different traits
+> > > to distinguish between. It makes sense to have additional traits
+> > > to distinguish between e.g.:
+> > > 
+> > > * Whether IO ops can fail for reasons *other* than bounds checks.
+> > > * Whether 64-bit IO ops are possible.
+> > > 
+> > > Well ... I guess one could distinguish between whether it's
+> > > possible to check bounds at compile-time at all. But if you can
+> > > check them at compile-time, it should always be possible to check
+> > > at runtime too, so one should be a sub-trait of the other if you
+> > > want to distinguish them. (And then a trait name of KnownSizeIo
+> > > would be more idiomatic.)
+> > > 
+> > 
+> > Thanks a lot for the detailed feedback. Agree with the points. Let's
+> > keep the IoFallible and IoInfallible traits but not just tie them
+> > to the bound checks in the docs.
 > 
-> This reverts commit 1a50d9403fb90cbe4dea0ec9fd0351d2ecbd8924.
+> What do you plan to write in the docs instead?
 > 
-> While the commit fixed fw_devlink overlay handling for one case, it
-> broke it for another case. So revert it and redo the fix in a separate
-> patch.
+
+What I understad according to the discussion:
+
+1. Infallible vs Fallible:
+
+- Infallible indicates the I/O operation can will not return error from
+  the API level, and doesn't guarentee the hardware status from device
+  level.
+
+- Fallible indicates the I/O operation can return error from the
+  API level.
+
+2. compiling-time check vs run-time check:
+
+- driver specifies a known-valid-size I/O region, we go compiling-time
+  check (saves the cost of run-time check).
+
+- driver is not able to specifiy a known-valid-size I/O region, we
+  should go run-time check.
+
+For IoInfallible, I would write the doc as:
+
+A trait for I/O accessors that are guaranteed to succeed at the API
+level.
+
+Implementations of this trait provide I/O operations that do
+not return errors to the caller. From the perspective of the I/O
+API, the I/O operation is always considered successful.
+
+Note that this does *not* mean that the underlying device is guaranteed
+to be in a healthy state. Hardware-specific exceptional states must be
+detected and handled by the driver or subsystem managing the device.
+
+For Iofallible, 
+
+A trait for I/O accessors that may return an error.
+
+This trait represents I/O operations where the API can intentionally
+return an error. The error typically reflects issues detected by the
+subsystem.
+
+> > > And I'm not really convinced that the current compile-time checked
+> > > traits are a good idea at all. See:
+> > > https://lore.kernel.org/all/DEEEZRYSYSS0.28PPK371D100F@nvidia.com/
+
+snip
+
+> The last -rc of this cycle is already out, so I don't think you need
+> to worry about branch issues - you won't land it in time for that.
 > 
-> Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overlays")
-> Reported-by: Herve Codina <herve.codina@bootlin.com>
-> Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgyo8x6=9F9rZ+-KzjOg@mail.gmail.com/
-> Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin.com/
-> Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootlin.com/
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> Link: https://lore.kernel.org/lkml/20240411235623.1260061-2-saravanak@google.com/
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
-> ---
->   drivers/bus/imx-weim.c    | 6 ------
->   drivers/i2c/i2c-core-of.c | 5 -----
->   drivers/of/dynamic.c      | 1 -
->   drivers/of/platform.c     | 5 -----
->   drivers/spi/spi.c         | 5 -----
->   5 files changed, 22 deletions(-)
+
+I am mostly refering to the dependances if I have to implement this on
+top of bounded integer on driver-core-testing.
+
 > 
-> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
-> index 83d623d97f5f..87070155b057 100644
-> --- a/drivers/bus/imx-weim.c
-> +++ b/drivers/bus/imx-weim.c
-> @@ -327,12 +327,6 @@ static int of_weim_notify(struct notifier_block *nb, unsigned long action,
->   				 "Failed to setup timing for '%pOF'\n", rd->dn);
->   
->   		if (!of_node_check_flag(rd->dn, OF_POPULATED)) {
-> -			/*
-> -			 * Clear the flag before adding the device so that
-> -			 * fw_devlink doesn't skip adding consumers to this
-> -			 * device.
-> -			 */
-> -			rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
->   			if (!of_platform_device_create(rd->dn, NULL, &pdev->dev)) {
->   				dev_err(&pdev->dev,
->   					"Failed to create child device '%pOF'\n",
-> diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-> index eb7fb202355f..30b48a428c0b 100644
-> --- a/drivers/i2c/i2c-core-of.c
-> +++ b/drivers/i2c/i2c-core-of.c
-> @@ -176,11 +176,6 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
->   			return NOTIFY_OK;
->   		}
->   
-> -		/*
-> -		 * Clear the flag before adding the device so that fw_devlink
-> -		 * doesn't skip adding consumers to this device.
-> -		 */
-> -		rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
->   		client = of_i2c_register_device(adap, rd->dn);
->   		if (IS_ERR(client)) {
->   			dev_err(&adap->dev, "failed to create client for '%pOF'\n",
-> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> index 2eaaddcb0ec4..b5be7484fb36 100644
-> --- a/drivers/of/dynamic.c
-> +++ b/drivers/of/dynamic.c
-> @@ -225,7 +225,6 @@ static void __of_attach_node(struct device_node *np)
->   	np->sibling = np->parent->child;
->   	np->parent->child = np;
->   	of_node_clear_flag(np, OF_DETACHED);
-> -	np->fwnode.flags |= FWNODE_FLAG_NOT_DEVICE;
->   
->   	raw_spin_unlock_irqrestore(&devtree_lock, flags);
->   
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index f77cb19973a5..ef9445ba168b 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -739,11 +739,6 @@ static int of_platform_notify(struct notifier_block *nb,
->   		if (of_node_check_flag(rd->dn, OF_POPULATED))
->   			return NOTIFY_OK;
->   
-> -		/*
-> -		 * Clear the flag before adding the device so that fw_devlink
-> -		 * doesn't skip adding consumers to this device.
-> -		 */
-> -		rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
->   		/* pdev_parent may be NULL when no bus platform device */
->   		pdev_parent = of_find_device_by_node(parent);
->   		pdev = of_platform_device_create(rd->dn, NULL,
-> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> index 2e0647a06890..b22944a207c9 100644
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -4791,11 +4791,6 @@ static int of_spi_notify(struct notifier_block *nb, unsigned long action,
->   			return NOTIFY_OK;
->   		}
->   
-> -		/*
-> -		 * Clear the flag before adding the device so that fw_devlink
-> -		 * doesn't skip adding consumers to this device.
-> -		 */
-> -		rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
->   		spi = of_register_spi_device(ctlr, rd->dn);
->   		put_device(&ctlr->dev);
->   
-Sorry, some of you will receive this message now for second time. First 
-message was sent to older series of patches.
--
+> But there is another problem: Bounded only supports the case where the
+> bound is a power of two, so I don't think it's usable here. You can
+> have Io regions whose size is not a power of two.
 
-Hello,
+Any suggestion on this? :) Should I implement something like
+BoundedOffset? Also would like to hear some inputs from Danilo as well.
 
-Test system testing drivers for ROHM ICs bisected this commit to cause 
-BD71847 drivers probe to not be called.
+Z.
 
-The devicetree blob overlay describing bd71847 enables I2C1 bus on 
-BeagleBone Black aswell.
+> 
+> Alice
 
-Probe is called when the driver is used with HW connected to I2C2 bus. 
-I2C2 bus is enabled before overlaying devicetree blobs.
-
-
----- BD71847 Devicetree overlay source ----
-
-/dts-v1/;
-/plugin/;
-
-/{ /* this is our device tree overlay root node */
-
-     compatible = "ti,beaglebone", "ti,beaglebone-black";
-     part-number = "BBB-I2C1";
-      version = "00A0";
-
-     fragment@0 {
-         target = <&am33xx_pinmux>; // this is a link to an already 
-defined node in the device tree, so that node is overlayed with our 
-modification
-
-         __overlay__ {
-             i2c1_pins: pinmux_i2c1_pins {
-                 pinctrl-single,pins = <
-                       0x158 0x72 /* spi0_d1.i2c1_sda */
-                       0x15C 0x72 /* spi0_cs0.i2c1_sdl */
-                     >;
-             };
-         };
-     };
-....
-....
-
-     fragment@2 {
-         target = <&i2c1>;
-
-         __overlay__ {
-             pinctrl-0 = <&i2c1_pins>;
-             clock-frequency = <100000>;
-             status = "okay";
-
-             pmic: pmic@4b { /* the "test" defined as child of the i2c1 
-bus */
-                 compatible = "rohm,bd71847";
-                 reg = <0x4b>;
-                 ....
-                 ....
-}; /* root node end */
-
----- END OF BD71847 Devicetree overlay source ----
-
-Reverting this patch from linux-next from last friday fixes the issue.
-
-BR
-Kalle Niemi
 
