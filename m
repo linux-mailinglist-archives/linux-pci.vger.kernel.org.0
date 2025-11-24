@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-41985-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41986-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47730C827F5
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 22:17:40 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31BE3C82813
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 22:19:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E860C34911D
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 21:17:39 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id CEE70342F19
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 21:19:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 448DF2F362B;
-	Mon, 24 Nov 2025 21:17:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1945C2F363B;
+	Mon, 24 Nov 2025 21:19:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVxo5EX/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DNAG9tPd"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0F423F431;
-	Mon, 24 Nov 2025 21:17:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E423323F431;
+	Mon, 24 Nov 2025 21:19:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764019055; cv=none; b=bfyV5MKJ45zcW6m174maNXHo/rg9mVMzjSkzr1N78liNva0G5hIxNn/vwLoXVsSjlwQ/C8UN1GzPgLKVuFw7mrUnRLl+fpu/hf9PXAtUDcmw3GFRomi8pmMwGr+4Px4+Eu5JDN1VcGOcqdkAl3jz/2xJPMVDCLEaqSV0UwLV1kU=
+	t=1764019145; cv=none; b=jQ8AnonSLvoMVJ8J8w/ebQYEqQijjU6+n9Mp8LF0ZuA0nnHjLDaZt0HwKzWOjdFCjRH8NoEGHvQZDwedF4tgt3AybvW/Uj7Edso1YqfiP1j9TSAPIxbcvvn2p3dfV93CKs9rzB5PYDPvytX88V0SCMrG9MlbmgzPPt1l8xfq090=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764019055; c=relaxed/simple;
-	bh=zNscfGKNv8hOqltmXFupMlNTAemel39zeYpn0jPX3vU=;
+	s=arc-20240116; t=1764019145; c=relaxed/simple;
+	bh=DiDxFX94NXXIUzvxcS2+Fvuf/2KCTsklF/QbVLxONjU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=UagKctOkhblIin2AdqiI09Yr7mMkZJoBWdJJZmhDam+46CLezxUeqEO7aDuR+uAnP1D8YkPkZn1J156428dRO1/MEsq3ixj3pq98oGyH7n1HHVwHPraFB2H4511v4PlXgNHozV072BM+C1qZVHjcH5UPsACTg9ZPDsZYN+mmYAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVxo5EX/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C776C4CEF1;
-	Mon, 24 Nov 2025 21:17:34 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=lTDRHIGIRwszk4ZaeKCzsg29wfoGyrXK2SolszGMqCy/JbpLp05LOiGFOnjkm7plTZJaPo98ohoET27gLHID95mNfqyJV9psyZF2cKn7HiyuPhpk2ms30Yi4Bz7/yg/1PDQynGsFIz9pT7/wx74GdrtxUs/7D0TNj6DGMIvzOdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DNAG9tPd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DA9AC4CEFB;
+	Mon, 24 Nov 2025 21:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764019054;
-	bh=zNscfGKNv8hOqltmXFupMlNTAemel39zeYpn0jPX3vU=;
+	s=k20201202; t=1764019144;
+	bh=DiDxFX94NXXIUzvxcS2+Fvuf/2KCTsklF/QbVLxONjU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=cVxo5EX/R2ICIvKcH/weXjupo/uWy6PvclGfFyub18qbj/qqn+BV+Zhk466UmgpJf
-	 SeKSng0Rv1ctPCUzCh6kymHgMU2YrzY6Qojs1MQtPcobL7W/tqqWYVSzaKa68yB28W
-	 EJhwdmokiSXpWG6Z/56omkP7MXeLYhhEA6Jm1vOKgdOWkzYzj4kvNok9IigFNPyqhS
-	 YtUYlCPYj6kKsMVHprA+65OzaipVnn8PtcuNMzIXFaW6YE8EfdhkHISCY7nNjK3NCT
-	 agsMK5BeKtOygvJCO9wlLu+NCSNplvmvG6U6gxyBIrNK4B/b1jwA7JagAxJWlJu0kN
-	 /ifcj8YO2ZVQQ==
-Date: Mon, 24 Nov 2025 15:17:33 -0600
+	b=DNAG9tPd/4nqTFtv4FYVdApqANdOMIrVWr3lJDe2sCqX42/Zeq4glUcUMsPhjiD+Q
+	 t2m7XFOTFBJhBOnUXsp47g2HExxgWWc/M14S26V+yUlO67lCX508xmAuCm2EQWMZw2
+	 A9g6zO4z1WS9mllO+NiBHFuu7ogogLgoi+xlWZDuE4PeOTvPRBLrlW+QIX+D4AnHiu
+	 ExwSSAnfYbD2Et6LgjBwH1OESwSoyPlL+5t+B8e6G+n+xmDrNVq0ILqfngMEvVR86r
+	 a9TEkRX0ihIQi0Sja/eRtaJCbzbtDFER07VnFSBlrlpyMt1OtS6hK1uMjACv6wF2FN
+	 5QMXNSJwunAtg==
+Date: Mon, 24 Nov 2025 15:19:03 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Manivannan Sadhasivam <mani@kernel.org>
 Cc: Niklas Cassel <cassel@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>,
@@ -64,9 +64,9 @@ Cc: Niklas Cassel <cassel@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>,
 	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org, kernel@pengutronix.de,
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 1/4] PCI: dwc: Advertise L1 PM Substates only if driver
- requests it
-Message-ID: <20251124211733.GA2712491@bhelgaas>
+Subject: Re: [PATCH v2 1/4] PCI: dwc: Advertise L1 PM Substates only if
+ driver requests it
+Message-ID: <20251124211903.GA2712341@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,68 +75,32 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251118202210.GA2586610@bhelgaas>
+In-Reply-To: <wja7vxtg7bqq2udepl5r3mvgg5swvuqtuzk6cnimgcbw2aegqs@hru6yzg4xx3o>
 
-On Tue, Nov 18, 2025 at 02:22:13PM -0600, Bjorn Helgaas wrote:
-> On Wed, Nov 12, 2025 at 11:21:07PM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, Nov 12, 2025 at 09:22:36AM +0100, Niklas Cassel wrote:
-> > > On Tue, Nov 11, 2025 at 04:16:08PM -0600, Bjorn Helgaas wrote:
-> > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > @@ -1060,6 +1060,8 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
-> > > >  		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
-> > > >  	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
-> > > >  
-> > > > +	dw_pcie_config_l1ss(pci);
-> 
-> > > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > @@ -1067,6 +1067,8 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
-> > > >  	val &= ~REQ_NOT_ENTR_L1;
-> > > >  	writel(val, pcie->parf + PARF_PM_CTRL);
-> > > >  
-> > > > +	pci->l1ss_support = true;
-> > > > +
-> > > >  	val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
-> > > >  	val |= EN;
-> > > >  	writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
-> > > 
-> > > While it seems like ops_2_7_0 is the only type that explicitly does a
-> > > register write to enable L1ss, other versions might have the register
-> > > as enabled by default, so it would be nice if Mani could confirm exactly
-> > > which versions that should set l1ss_support = true.
-> > > 
+On Thu, Nov 20, 2025 at 01:10:56PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Nov 18, 2025 at 03:42:15PM -0600, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
 > > 
-> > Yes, on the rest of the platforms, this bit is supposed to be enabled by
-> > default. AFAIK, all Qcom platforms should support L1SS, atleast the
-> > non-IPQ/APQ ones.
+> > L1 PM Substates require the CLKREQ# signal and may also require
+> > device-specific support.  If CLKREQ# is not supported or driver support is
+> > lacking, enabling L1.1 or L1.2 may cause errors when accessing devices,
+> > e.g.,
 > > 
-> > We should set it for below cfgs:
+> >   nvme nvme0: controller is down; will reset: CSTS=0xffffffff, PCI_STATUS=0x10
 > > 
-> > cfg_fw_managed
-> > cfg_sc8280xp
-> > cfg_1_34_0
-> > cfg_1_9_0
-> > cfg_2_7_0
+> > If the kernel is built with CONFIG_PCIEASPM_POWER_SUPERSAVE=y or users
+> > enable L1.x via sysfs, users may trip over these errors even if L1
+> > Substates haven't been enabled by firmware or the driver.
+> > 
+> > To prevent such errors, disable advertising the L1 PM Substates unless the
+> > driver sets "dw_pcie.l1ss_support" to indicate that it knows CLKREQ# is
+> > present and any device-specific configuration has been done.
 > 
-> Except for cfg_fw_managed, the above are all covered by
-> qcom_pcie_init_2_7_0(), either via ops_2_7_0, ops_1_9_0, or
-> ops_1_21_0.
-> 
-> cfg_fw_managed is harder because we don't use dw_pcie_host_init() or
-> dw_pcie_setup_rc().
-> 
-> We do allocate a struct dw_pcie (where l1ss_support is) in
-> qcom_pcie_ecam_host_init(), but only so we can call
-> dw_pcie_msi_host_init() and dw_pcie_msi_init().
+> Going by this reasoning, why can't we enable L1 PM Substates for
+> these platforms by default?
 
-I'm just back from vacation so might be forgetting something, but I
-think cfg_fw_managed is OK here because in that case we never call
-dw_pcie_host_init(), so we never call dw_pcie_setup_rc() where
-dw_pcie_hide_unsupported_l1ss().
-
-So the L1SS cap should remain untouched and presumably advertises the
-L1SS support we want for cfg_fw_managed.
+I think we can, in a separate series.  I don't have time to deal with
+this before the v6.19 merge window, but you can certainly do that.
 
 Bjorn
 
