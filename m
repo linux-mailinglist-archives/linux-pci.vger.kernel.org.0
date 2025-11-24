@@ -1,117 +1,162 @@
-Return-Path: <linux-pci+bounces-41941-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41942-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CDF3C8018C
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 12:08:40 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 075B7C803D9
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 12:42:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83FD33A809E
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 11:07:20 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E21904E10F0
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 11:42:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47FB72F9DA7;
-	Mon, 24 Nov 2025 11:07:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D81632FC88B;
+	Mon, 24 Nov 2025 11:42:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G7eAzWb7"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JoHfhOMG";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="PPSklVGG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5500E2F3609;
-	Mon, 24 Nov 2025 11:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5136E248F48
+	for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 11:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763982433; cv=none; b=KRRIMmWNAIf1csyV8dR2aHgnURb6YplMUGp2BBWTGGj2//Iiv252rDypkoSKquD8MYj6mOBAPTRbhkvQXVDqoD3ARHVBcnIchrA4PU2hMFO6prmxkM4r5+GkHoZSc997AwcWI9o47cwbWOWdHChM3/CYzGfqkK2htIcuR5R8ouc=
+	t=1763984569; cv=none; b=EIg99pP9hvshW7svT4YvSADR77gs9eJd3rOR/zuSpsTO9R0dwb7yCoR64FpZ1U4JImYY2ZaaBFXR+zluJ9ldIpCbse/9MoxB78738KcUg6u63vW/mI+Xqb/iivd/ZNfN/FRYMOq5Nad4ThZKn7bAAmaGVUWuDPg3OHlPhL4yzXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763982433; c=relaxed/simple;
-	bh=1zHIvNEf+NEropyB/UiSTJ/BYa9+kSRseH9TJzhz5aY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L8TUCGnsqtCweVgf/oXjGMUiqZAz9x8xAq2M3B8JdTIXhjCElKIG194GK3lLbGO6xEXrWNQ6h+sCZmSXIKMHe3Kkxii7Sc39H1zeBS3ytIaQaq2O+oY0omTTPx64rg+SfhwFK7JAI+Eq8AeDFzkyKFPe7pSIXtHrw/RVki0MgR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G7eAzWb7; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763982431; x=1795518431;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1zHIvNEf+NEropyB/UiSTJ/BYa9+kSRseH9TJzhz5aY=;
-  b=G7eAzWb7IocJdC9N91G6A7b2CeSfEGC3i8djQ32L0XxqRzO5trXaXtHz
-   fKnRmGdkhEjPd5VY0dlqSCa9UdCn1ffHl6KUsfboEfuseuhCvecwsFUeQ
-   ObaAwdLO7nvrbIjoK8x534mOznHK30Np12ANJ3ozu2sH6WC/s+nIYtZc5
-   zF6FbjnD4B1uidMmNx7mMnn1m8wMMjEfG/bKXLLK49tBpEhAxVYVkZcOR
-   3C/1V8lgRcJ5VeaBwlHdN8tmWdHmQCkceopXZBnD1xw+hSjY0DCS7edQf
-   scefYXK8ufEJwFay+d6yKIfVkWjDmj/bP2ZBLfJZAJ873L10+dXRn4hBl
-   w==;
-X-CSE-ConnectionGUID: uqUv6Bd3Q2KuuLEVzvcHMg==
-X-CSE-MsgGUID: FPGGdLc+SKq15fNIYJ1OSw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11622"; a="66139180"
-X-IronPort-AV: E=Sophos;i="6.20,222,1758610800"; 
-   d="scan'208";a="66139180"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 03:07:11 -0800
-X-CSE-ConnectionGUID: pegE1URWRviKK6oQP8pXLg==
-X-CSE-MsgGUID: d3x5067aS+SRVZGCOqU64w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,222,1758610800"; 
-   d="scan'208";a="197230778"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa004.fm.intel.com with ESMTP; 24 Nov 2025 03:07:07 -0800
-Date: Mon, 24 Nov 2025 18:52:05 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: linux-coco@lists.linux.dev, linux-pci@vger.kernel.org,
-	chao.gao@intel.com, dave.jiang@intel.com, baolu.lu@linux.intel.com,
-	yilun.xu@intel.com, zhenzhong.duan@intel.com, kvm@vger.kernel.org,
-	rick.p.edgecombe@intel.com, dave.hansen@linux.intel.com,
-	dan.j.williams@intel.com, kas@kernel.org, x86@kernel.org
-Subject: Re: [PATCH v1 08/26] x86/virt/tdx: Add tdx_enable_ext() to enable of
- TDX Module Extensions
-Message-ID: <aSQ41bTeYKo29Zim@yilunxu-OptiPlex-7050>
-References: <20251117022311.2443900-1-yilun.xu@linux.intel.com>
- <20251117022311.2443900-9-yilun.xu@linux.intel.com>
- <cfcfb160-fcd2-4a75-9639-5f7f0894d14b@intel.com>
- <aRyphEW2jpB/3Ht2@yilunxu-OptiPlex-7050>
- <62bec236-4716-4326-8342-1863ad8a3f24@intel.com>
- <aR6ws2yzwQumApb9@yilunxu-OptiPlex-7050>
- <13e894a8-474f-465a-a13a-5d892efbfadb@intel.com>
- <aSBg+5rS1Y498gHx@yilunxu-OptiPlex-7050>
- <ca331aa3-6304-4e07-9ed9-94dc69726382@intel.com>
+	s=arc-20240116; t=1763984569; c=relaxed/simple;
+	bh=yxW+0hq+xdWaIvmIR13/79lwfDgz94e+THqjVqoR4yE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YqrxksTyR3TXrJlHa+EbsPffLTZl39ZosqKOi5QL6CIjP0YDEpuX6iv1ZLt/RPXboJCzbYtChO3xLlN9MjuvRm9tIIRMDVMg4r3WpLmxIo1PmAGKKtdr5Zr+/wwV0xck1NB+tbnzPPzN06NxgtKPaBQX+p9iIpAQwXAHhmNwajs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JoHfhOMG; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=PPSklVGG; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AO7TEUx3112066
+	for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 11:42:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vOwkRleX0/HPneuTZSuUXMIp11FuA1s/fb+Wlx7sHoU=; b=JoHfhOMGcbBjfxTh
+	1zKiq7cLwctkkTh5yt0xnh42UCAXUBAYIS3s672hOaC/lVMw49L0to1DFFyk/Ev2
+	QgyAPF2a9GgO1eVnK9m0J19R043YvPIMJazfBWyHZMEQLWhQg/YClwTieevfTCfS
+	yxy5hT49LCuUgXLTTDxcYiqYAA6svRFz6OWLc5y2HhKmlNh2NfUiEeKHo285EPas
+	dwmyRDL1nwjIKHDAt2zbaNUJ0X0PbW1067CbS8SUPlYGJAH0qxqe0MRwnsO1Y6sm
+	vyCaB2+iMIc/ArfYvp408fiIoe7FXTj9Q8zNrDhjrTLUobxBnysWswD16vWWCOY5
+	gojg9Q==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4amk10grfe-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 11:42:47 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-8b25c5dc2c3so107935185a.3
+        for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 03:42:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1763984566; x=1764589366; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vOwkRleX0/HPneuTZSuUXMIp11FuA1s/fb+Wlx7sHoU=;
+        b=PPSklVGGV3lSRqKmLjWrEfOonggJHoBi+xEKENFOiQNKpAOJJIqXin8ip18z2Vfuvs
+         rVbFzJ5HwvjjUlFpbiktTpTppoTZZtQZkUNZQqCLBusWgi0qA03MmI8hrL9ZMCoseIpB
+         eKFPPcO0zC438vM1kJH1eoTwFZq+xM26sZfvk9Bp1/AjCEp4hpj2zgzIn2Icr0RVQTRM
+         4eVm4Swqobr4v8XbBL7/LQeeAMctmyTrL03uu4k0Er16xY2z5/DMGh6fWMhzJbwlHdmZ
+         2bC4RzW9qc0LM97+jROObae7mIE6HabwSQru8WBBcsmZdJKgR748TyPKz2je4xvzpuIz
+         R9oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763984566; x=1764589366;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vOwkRleX0/HPneuTZSuUXMIp11FuA1s/fb+Wlx7sHoU=;
+        b=QBMQNmgTDX5+Y6kYXr3s24SELm00akdQvBo6DmbdLnyeUjPcCLo5oJVJS2MDXV6wNK
+         bCuvJui1Y8BSuBwYWIRQ+900WmPwr3EL9e9pWiHsIEst7tY6dFUPAvNz/eIwc1ubb/jU
+         UoAxVtJth4f3xCjGyFM3/p6AZ/Uck4DMRN6r06Z2bHRnG6jzaWgSLuxdG8IHFig35EJZ
+         vziB2CN2Tdry62uZCtYzElDBr9EDjH/2Vm816t8f+9SA0pjnArblRyyHxg1NXSzJG65P
+         FvZT75mBZqzvWOAW4UEhGBLbBx8GRpPLYqyV+9p895e2SNJ2WI0lIaH96KBAH8S3LKoT
+         EaMA==
+X-Gm-Message-State: AOJu0YyT21JWzHu2slYAF+YpqeteDVxq41NJZF4CEXIem68PoeQWxGKc
+	LPvj8Xl9f0DyVWaEugu8tj5mkUblGJavIsGfeKObcYho8oeNalIDfp231mSBP/hOq8tMrgu444v
+	kuwbx7XRK8mnz3fZpF8oKZHuvyG69T/V2HIWca3XROCSbPfgW1mVtKIczP/nkV+ITawcZTIg=
+X-Gm-Gg: ASbGncui9y55CDV5b2MwuBUDyF0cUwgSAk7IIj1CvZA1eD/piy7G7iombz9Wbt2GJ/d
+	LXFfucGNJygCJSDXilXqpw+sEhame9iIGwE0r3wXrW+4/5HZAAGMRdNuUK94gULmkD6Fm9Cww5p
+	xlr50S3xr2gFMpJWhYYI/fV5KQsF3J/5lOmlcr3dITm0tWgH/hpDGUK+ci8a589ywi6Vxv3XSr0
+	0QKRcapG5ImKxwJNp+5FQ3PIq5ZbIexzVXYTo4crgTSHZ5TTOFwppXvabsVamzSO99tC5Vy/TKk
+	+GaH6tAZYdBvyOLj2iF4qFFT5aI8Iz4m4XxgWpaTGzM0FxYhOV3Wt6MfSPaZramuyJSi1lRkinC
+	41s1OChhrW62LtwWQd1Xesl2tbTW6/JmWt4rxQlt9EFcRUz6WVdQKMI7aiJVv5HqeQ6I=
+X-Received: by 2002:ac8:7f47:0:b0:4ee:1367:8836 with SMTP id d75a77b69052e-4ee5b6fad57mr104481281cf.5.1763984566251;
+        Mon, 24 Nov 2025 03:42:46 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFOiv4g/u/e7x/GqCRfNkAnyc3/9hzMx8fvdYPjlkBHSJlkgo2NscmBHl0CkBVDbNGDKTEw6Q==
+X-Received: by 2002:ac8:7f47:0:b0:4ee:1367:8836 with SMTP id d75a77b69052e-4ee5b6fad57mr104481101cf.5.1763984565753;
+        Mon, 24 Nov 2025 03:42:45 -0800 (PST)
+Received: from [192.168.119.202] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-64536443784sm11705733a12.28.2025.11.24.03.42.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Nov 2025 03:42:44 -0800 (PST)
+Message-ID: <31bbe640-b1ea-454b-9c9c-ed013022f07c@oss.qualcomm.com>
+Date: Mon, 24 Nov 2025 12:42:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ca331aa3-6304-4e07-9ed9-94dc69726382@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] PCI: Add quirk to disable ASPM L1 for Sandisk SN740
+ NVMe SSDs
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+        bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <mani@kernel.org>
+References: <20251120161253.189580-1-mani@kernel.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20251120161253.189580-1-mani@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: He-WVVtUcP2E4byD5FYKj5NwLK1rkvWz
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI0MDEwMyBTYWx0ZWRfXxAB7jSmAaFc0
+ PmwDG+4UZe9LrbU741rIfUtmAyouur2NR8QJfjzvTI2ReJRyYkIaYvdG0npwDDNluA6/K2r0oeV
+ XuPTXSTbV73kFelckDrTgAOmusGI83KrjyOKHe/wQmXQ+Rrfpb2Pt1m3Wvz2CwvRjihu1/SL3WM
+ qoDnHst4rRfKtfeQ021fvZrOEzt1b8oUYfMu3D2UGkB5/OoJw/7fYPWfaD8hZIBCTMeowqoHCPy
+ +rfwlJ24K/Jlyn1Y5m8nnPbmbTE/5GKQr7+r1ninwi/KyDmEbeZPb6Z+oxcs04jsSSDrC4LrTZq
+ l0vMYG/cTefah/OgMBdVDCFjn21wsB+lT/i9tQbnBCyByrD5L9imPoSd7vdAZEFUguufb+Q9erP
+ f+8Rdqj9O3s1OT9lMwSPxBm6VQ59vg==
+X-Proofpoint-ORIG-GUID: He-WVVtUcP2E4byD5FYKj5NwLK1rkvWz
+X-Authority-Analysis: v=2.4 cv=SP9PlevH c=1 sm=1 tr=0 ts=692444b7 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8
+ a=IPny-iXwT8bmEns2PIkA:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-24_04,2025-11-21_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 priorityscore=1501 bulkscore=0 adultscore=0 suspectscore=0
+ phishscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511240103
 
-> A few more nits, though. Please don't talk about things in terms of
-> number of pages. Just give the usage in megabytes.
-
-Yes.
-
-...
-
-> >  -#define TDH_SYS_CONFIG                 45
-> >  +#define TDH_SYS_CONFIG                 (45 | (1ULL << TDX_VERSION_SHIFT))
+On 11/20/25 5:12 PM, Manivannan Sadhasivam wrote:
+> The Sandisk SN740 NVMe SSDs cause below AER errors on the upstream Root
+> Port of PCIe controller in Microsoft Surface Laptop 7, when ASPM L1 is
+> enabled:
 > 
-> That's my theory: we don't need to keep versions.
-
-Good to know.
-
-...
-
-> > The TDX Module can only accept one root page (i.e. 512 HPAs at most), while
-> > struct tdx_page_array contains the whole EXT memory (12800 pages). So we
-> > can't populate all pages into one root page then tell TDX Module. We need to
-> > populate one batch, tell tdx module, then populate the next batch, tell
-> > tdx module...
+>   pcieport 0006:00:00.0: AER: Correctable error message received from 0006:01:00.0
+>   nvme 0006:01:00.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
+>   nvme 0006:01:00.0:   device [15b7:5015] error status/mask=00000001/0000e000
+>   nvme 0006:01:00.0:    [ 0] RxErr
 > 
-> That is, indeed, the information that I was looking for. Can you please
-> ensure that makes it into code comments?
+> Hence, add a quirk to disable L1 by removing the ASPM_L1 CAP for this SSD.
+> 
+> Reported-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> ---
 
-Yes.
+This revision also works for me, thank you
+
+Tested-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> # X1E80100 Romulus
+
+Konrad
 
