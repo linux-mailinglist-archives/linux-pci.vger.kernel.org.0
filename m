@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-41961-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41956-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C266C81890
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 17:22:03 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B671C81860
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 17:21:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D39623A695F
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 16:21:20 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3C8514E1DBC
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 16:21:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD7F43168E1;
-	Mon, 24 Nov 2025 16:21:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C523314B84;
+	Mon, 24 Nov 2025 16:21:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tX4AFWpI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kdWWtbSB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDA93164CE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EECC3148BB;
 	Mon, 24 Nov 2025 16:21:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764001265; cv=none; b=mjzxuBguVS3sLYMZIFGDQWtTpFehBY39d4Kc/KWAQmep+O0PxYQkoAcJmjJr07qauDNN+OIdOlRPnrrH9topYPFyiE+t1fYMs9Dg6ava579x6h5b45iE/N2OZxwypdVHs4c2QuG8ThZ3Q9wZq2S63c2zEpr5MbfsPJsSdLw4Kts=
+	t=1764001264; cv=none; b=m+bWKSJrU88br/WYairvkbxEfzQr7e+yzorDQgq76wUqCO4Eroov3OoXUkG96nzd1tGlVw6EZSduTVgaZh+6AGedrrxVzG3wPf16sNRViKW3uVExOJAmBE0SogPwLYKo/ES09m3/A1CmPz+63M57hLwIDXytIRB3nvDtugqYKqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764001265; c=relaxed/simple;
-	bh=zco2/BCviUfYxQpIBiOf3uIUke+Ln/UupZMf14cmwU4=;
+	s=arc-20240116; t=1764001264; c=relaxed/simple;
+	bh=2/wSjlYlmesfAG0/zAvXE+XbKKwCVNRs5QkoifeUpB0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dzNY/IhteYH3b1+Vs98qzbc4diCLP2keo0EEwudHZAqtIPZu1viacPa6qN250e8ZHodGiwYPMFpzz4CTW2BX6FmWUG7KllRft2a5JpXAqbZyn9y9ZJHo5qRN0x53hWoAsr3NGlqpwbJu2FIJ6dB0KA4T0Mc52nS0nt/xGrBHRDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tX4AFWpI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 16375C2BC9E;
+	 In-Reply-To:To:Cc; b=siierCoVZANOAgsUjxNcCf8g5L0H/ZGReI20a1+wg3O4SDtCW6xNZ++vBNhzgezR6+p36p0a7pPc+N6Kw/SJJ+yqxZPA0Y7isriyvVHkkNUkKJkytXs8u2Q1bxq2j/lmcvide+F+1oBQIuNZcn3ayU3+s5aFr57O0kAYOSsZTms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kdWWtbSB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2408FC2BCB3;
 	Mon, 24 Nov 2025 16:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1764001264;
-	bh=zco2/BCviUfYxQpIBiOf3uIUke+Ln/UupZMf14cmwU4=;
+	bh=2/wSjlYlmesfAG0/zAvXE+XbKKwCVNRs5QkoifeUpB0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=tX4AFWpI+CXU4SRPf0DAt9f7TVgF1FSZXjXwxbcwV+3vaV93QOAzv3Qu2HGQLX4Ed
-	 m6w1J2W6SdVlXQ2i59MVB4aAQ3SR3kIqehaLeHgY9jt/66J0tzuCVYiICmdqqNSdvE
-	 GG100GfK6C6uiRn3dazTxwb8NZz7PG0xpwGGpqLh32zitq8gEJ+46r2E9Vteyn1PKh
-	 ZbByLWxUO8ldnMRNq4Hgv7/3XzaNe9K5SwinuSHHn53qs7Sd3s7ra2gX1wRqKZ7bWx
-	 MvvN0taObU71dGfCmNRNn3Td6e3BtBSoXIPorkZZjUhkB5sY5oL/LxsDvi16zBDYW3
-	 vXQvBxK+awPFQ==
+	b=kdWWtbSBrAJVZ5V4n/3cPF7R60EDNjhTCVwolPQAaR+jL+F+bEZm+dPq40mAUo5UR
+	 JqUprs/4D9ABmetu9DV2pxVqW5lm21a8IYRIU6962f+XSt3kIwKqEup2nOCAJMcuCS
+	 Ofia37m8ZziaNoGBRFKMAU9P+utyjEjWL5o/RMe5X9R1QQbn6bP2+gc6Rax+BeLKjM
+	 f4TpAgIE5/rPgoAAR/exiP2dIZHuL6TbHIMeWhY4lkb+DsK1cc9qDyT8BGYBya14V8
+	 ht3jaSQvKMOKmZ2CS5YP0n49EegSiN94slHO/NZ///IWr99AJqd3dGndTB3x6AXb/U
+	 svrYULLRJtGtQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F61CFD340;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB57CFD318;
 	Mon, 24 Nov 2025 16:21:04 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Mon, 24 Nov 2025 21:50:46 +0530
-Subject: [PATCH 3/5] PCI/pwrctrl: Add APIs for explicitly creating and
- destroying pwrctrl devices
+Date: Mon, 24 Nov 2025 21:50:47 +0530
+Subject: [PATCH 4/5] PCI/pwrctrl: Add APIs to power on/off the pwrctrl
+ devices
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251124-pci-pwrctrl-rework-v1-3-78a72627683d@oss.qualcomm.com>
+Message-Id: <20251124-pci-pwrctrl-rework-v1-4-78a72627683d@oss.qualcomm.com>
 References: <20251124-pci-pwrctrl-rework-v1-0-78a72627683d@oss.qualcomm.com>
 In-Reply-To: <20251124-pci-pwrctrl-rework-v1-0-78a72627683d@oss.qualcomm.com>
 To: Manivannan Sadhasivam <mani@kernel.org>, 
@@ -71,16 +71,16 @@ Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  Niklas Cassel <cassel@kernel.org>, Alex Elder <elder@riscstar.com>, 
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6941;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6010;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=/6Zt/61i3oECj3Xro/3od290T1IlBj1jROy08O6jXW0=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpJIXsL9zARIZVQxKtfxwg02B6fFzC0iVDfYUnq
- jGgerdkXYuJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaSSF7AAKCRBVnxHm/pHO
- 9Q/NB/4n0J8WQEPs8xDJLfR+Aau9u8lhR55Y2gEhf6uhKpyRpZVQKC14U2+KSAWTLu96V6SCiUd
- nS5P3qha4D49yPFBWTbvoV0YJmlqVwOp1e24J51X+qroPmMl7uRRI9+7aCg9+aSXT1coTTQC0cT
- ZrUG7eU/rrPMVF9ZOEsZCS+x0C41O0j/c2qfiKKQViebMfEYCH9Eq61DLQz+c5JeCdvtOoyhHlN
- /fNTuYDXN7lRNUlTuDasE/1FsmEce2malKF9ZxxoQhmb4h4xIM+z+8UXsFyWoY4Qj8e/6fyQQWm
- SWobMaJAE+iV5nOxNIaiLqxnATDrMnIeg+9MsP6a0SbJwida
+ bh=cTf/zTyNct49tnAIkI8rXW+P63X5Y4jjQ+JhAwnxQfc=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpJIXsO9rD/aqEW0RypVmV8irmgBjyoBahPFk8m
+ tpgvqsSyHyJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaSSF7AAKCRBVnxHm/pHO
+ 9bpcB/4ziIXp+vpYF7OTtY8KxDXddG3PWy+86Gdi24L4BV/3N7YXekjVocK2ZxBfvnpa9wS/5J/
+ pR001gLV4LGV8zzZj0iedAt/MKEno91JVxZ90a64ViJcZJsREG4meNY3MXh4sJMzvvbHA7t4JDH
+ wFLLGZ1ZF4+CD8Lq5IaPqZxvCjMUXA2S7D5IFiY9Ed2vvuyZxbT6jBuu/1mYEmuAPzZ/TxA5S3z
+ rb5IKvMpBcQX7m3RbhuR2nmA8ZVw5veX7IRofrfwNyZgoRSjPjvm5qH5FGekPy/fk2jSUGPvtAX
+ 91KzEafzULFaisrqcpQYuX8XOhVoPqVCMPUDlKHsPhOKbmb6
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -88,203 +88,192 @@ X-Endpoint-Received: by B4 Relay for
 X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-Previously, the PCI core created pwrctrl devices during pci_scan_device()
-on its own and then skipped enumeration of those devices, hoping the
-pwrctrl driver would power them on and trigger a bus rescan.
+To fix PCIe bridge resource allocation issues when powering PCIe
+switches with the pwrctrl driver, introduce APIs to explicitly power
+on and off all related devices simultaneously.
 
-This approach works for endpoint devices directly connected to Root Ports,
-but it fails for PCIe switches acting as bus extenders. When the switch
-requires pwrctrl support, and the pwrctrl driver is not available during
-the pwrctrl device creation, it's enumeration will be skipped during the
-initial PCI bus scan.
+Previously, the individual pwrctrl drivers powered on/off the PCIe devices
+autonomously, without any control from the controller drivers. But to
+enforce ordering w.r.t powering on the devices, these APIs will power
+on/off all the devices at the same time.
 
-This premature scan leads the PCI core to allocate resources (bridge
-windows, bus numbers) for the upstream bridge based on available downstream
-buses at scan time. For non-hotplug capable bridges, PCI core typically
-allocates resources based on the number of buses available during the
-initial bus scan, which happens to be just one if the switch is not powered
-on and enumerated at that time. When the switch gets enumerated later on,
-it will fail due to the lack of upstream resources.
+The pci_pwrctrl_power_on_devices() API recursively scans the PCI child
+nodes, makes sure that pwrctrl drivers are bind to devices, and calls their
+power_on() callbacks.
 
-As a result, a PCIe switch powered on by the pwrctrl driver cannot be
-reliably enumerated currently. Either the switch has to be enabled in the
-bootloader or the switch pwrctrl driver has to be loaded during the pwrctrl
-device creation time to workaround these issues.
+Similarly, pci_pwrctrl_power_off_devices() API powers off devices
+recursively via their power_off() callbacks.
 
-This commit introduces new APIs to explicitly create and destroy pwrctrl
-devices from controller drivers by recursively scanning the PCI child nodes
-of the controller. These APIs allow creating pwrctrl devices based on the
-original criteria and are intended to be called during controller probe and
-removal.
+These APIs are expected to be called during the controller probe and
+suspend/resume time to power on/off the devices. But before calling these
+APIs, the pwrctrl devices should've been created beforehand using the
+pci_pwrctrl_{create/destroy}_devices() APIs.
 
-These APIs, together with the upcoming APIs for power on/off will allow the
-controller drivers to power on all the devices before starting the initial
-bus scan, thereby solving the resource allocation issue.
-
+Co-developed-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-[mani: splitted the patch, cleaned up the code, and rewrote description]
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
- drivers/pci/pwrctrl/core.c  | 112 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/pci-pwrctrl.h |   8 +++-
- 2 files changed, 119 insertions(+), 1 deletion(-)
+ drivers/pci/pwrctrl/core.c  | 121 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pci-pwrctrl.h |   4 ++
+ 2 files changed, 125 insertions(+)
 
 diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
-index 6bdbfed584d6..6eca54e0d540 100644
+index 6eca54e0d540..e0a0cf015bd0 100644
 --- a/drivers/pci/pwrctrl/core.c
 +++ b/drivers/pci/pwrctrl/core.c
-@@ -3,14 +3,21 @@
-  * Copyright (C) 2024 Linaro Ltd.
-  */
- 
-+#define dev_fmt(fmt) "Pwrctrl: " fmt
-+
- #include <linux/device.h>
- #include <linux/export.h>
- #include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
- #include <linux/pci.h>
- #include <linux/pci-pwrctrl.h>
-+#include <linux/platform_device.h>
- #include <linux/property.h>
- #include <linux/slab.h>
- 
-+#include "../pci.h"
-+
- static int pci_pwrctrl_notify(struct notifier_block *nb, unsigned long action,
- 			      void *data)
+@@ -65,6 +65,7 @@ void pci_pwrctrl_init(struct pci_pwrctrl *pwrctrl, struct device *dev)
  {
-@@ -145,6 +152,111 @@ int devm_pci_pwrctrl_device_set_ready(struct device *dev,
+ 	pwrctrl->dev = dev;
+ 	INIT_WORK(&pwrctrl->work, rescan_work_func);
++	dev_set_drvdata(dev, pwrctrl);
+ }
+ EXPORT_SYMBOL_GPL(pci_pwrctrl_init);
+ 
+@@ -152,6 +153,126 @@ int devm_pci_pwrctrl_device_set_ready(struct device *dev,
  }
  EXPORT_SYMBOL_GPL(devm_pci_pwrctrl_device_set_ready);
  
-+static int pci_pwrctrl_create_device(struct device_node *np, struct device *parent)
++static int __pci_pwrctrl_power_on_device(struct device *dev)
++{
++	struct pci_pwrctrl *pwrctrl = dev_get_drvdata(dev);
++
++	if (!pwrctrl)
++		return 0;
++
++	return pwrctrl->power_on(pwrctrl);
++}
++
++/*
++ * Power on the devices in a depth first manner. Before powering on the device,
++ * make sure its driver is bound.
++ */
++static int pci_pwrctrl_power_on_device(struct device_node *np)
 +{
 +	struct platform_device *pdev;
 +	int ret;
 +
 +	for_each_available_child_of_node_scoped(np, child) {
-+		ret = pci_pwrctrl_create_device(child, parent);
++		ret = pci_pwrctrl_power_on_device(child);
 +		if (ret)
 +			return ret;
 +	}
 +
-+	/* Bail out if the platform device is already available for the node */
 +	pdev = of_find_device_by_node(np);
 +	if (pdev) {
++		if (!device_is_bound(&pdev->dev)) {
++			dev_err(&pdev->dev, "driver is not bound\n");
++			ret = -EPROBE_DEFER;
++		} else {
++			ret = __pci_pwrctrl_power_on_device(&pdev->dev);
++		}
 +		put_device(&pdev->dev);
-+		return 0;
-+	}
 +
-+	/*
-+	 * Sanity check to make sure that the node has the compatible property
-+	 * to allow driver binding.
-+	 */
-+	if (!of_property_present(np, "compatible"))
-+		return 0;
-+
-+	/*
-+	 * Check whether the pwrctrl device really needs to be created or not.
-+	 * This is decided based on at least one of the power supplies being
-+	 * defined in the devicetree node of the device.
-+	 */
-+	if (!of_pci_supply_present(np)) {
-+		dev_dbg(parent, "Skipping OF node: %s\n", np->name);
-+		return 0;
-+	}
-+
-+	/* Now create the pwrctrl device */
-+	pdev = of_platform_device_create(np, NULL, parent);
-+	if (!pdev) {
-+		dev_err(parent, "Failed to create pwrctrl device for node: %s\n", np->name);
-+		return -EINVAL;
++		if (ret)
++			return ret;
 +	}
 +
 +	return 0;
 +}
 +
 +/**
-+ * pci_pwrctrl_create_devices - Create pwrctrl devices
++ * pci_pwrctrl_power_on_devices - Power on the pwrctrl devices
 + *
-+ * @parent: Parent PCI device for which the pwrctrl devices need to be created.
++ * @parent: Parent PCI device for which the pwrctrl devices need to be powered
++ * on.
 + *
-+ * This function recursively creates pwrctrl devices for the child nodes
-+ * of the specified PCI parent device in a depth first manner.
++ * This function recursively traverses all pwrctrl devices for the child nodes
++ * of the specified PCI parent device, and powers them on in a depth first
++ * manner.
 + *
 + * Returns: 0 on success, negative error number on error.
 + */
-+int pci_pwrctrl_create_devices(struct device *parent)
++int pci_pwrctrl_power_on_devices(struct device *parent)
 +{
++	struct device_node *np = parent->of_node;
 +	int ret;
 +
-+	for_each_available_child_of_node_scoped(parent->of_node, child) {
-+		ret = pci_pwrctrl_create_device(child, parent);
++	for_each_available_child_of_node_scoped(np, child) {
++		ret = pci_pwrctrl_power_on_device(child);
 +		if (ret) {
-+			pci_pwrctrl_destroy_devices(parent);
++			pci_pwrctrl_power_off_devices(parent);
 +			return ret;
 +		}
 +	}
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(pci_pwrctrl_create_devices);
++EXPORT_SYMBOL_GPL(pci_pwrctrl_power_on_devices);
 +
-+static void pci_pwrctrl_destroy_device(struct device_node *np)
++static void __pci_pwrctrl_power_off_device(struct device *dev)
++{
++	struct pci_pwrctrl *pwrctrl = dev_get_drvdata(dev);
++
++	if (!pwrctrl)
++		return;
++
++	return pwrctrl->power_off(pwrctrl);
++}
++
++static int pci_pwrctrl_power_off_device(struct device_node *np)
 +{
 +	struct platform_device *pdev;
 +
 +	for_each_available_child_of_node_scoped(np, child)
-+		pci_pwrctrl_destroy_device(child);
++		pci_pwrctrl_power_off_device(child);
 +
 +	pdev = of_find_device_by_node(np);
-+	if (!pdev)
-+		return;
++	if (pdev) {
++		if (device_is_bound(&pdev->dev))
++			__pci_pwrctrl_power_off_device(&pdev->dev);
 +
-+	of_device_unregister(pdev);
-+	put_device(&pdev->dev);
++		put_device(&pdev->dev);
++	}
 +
-+	of_node_clear_flag(np, OF_POPULATED);
++	return 0;
 +}
 +
 +/**
-+ * pci_pwrctrl_destroy_devices - Destroy pwrctrl devices
++ * pci_pwrctrl_power_off_devices - Power off the pwrctrl devices
 + *
-+ * @parent: Parent PCI device for which the pwrctrl devices need to be destroyed.
++ * @parent: Parent PCI device for which the pwrctrl devices need to be powered
++ * off.
 + *
-+ * This function recursively destroys pwrctrl devices for the child nodes
-+ * of the specified PCI parent device in a depth first manner.
++ * This function recursively traverses all pwrctrl devices for the child nodes
++ * of the specified PCI parent device, and powers them off in a depth first
++ * manner.
++ *
++ * Returns: 0 on success, negative error number on error.
 + */
-+void pci_pwrctrl_destroy_devices(struct device *parent)
++void pci_pwrctrl_power_off_devices(struct device *parent)
 +{
 +	struct device_node *np = parent->of_node;
 +
 +	for_each_available_child_of_node_scoped(np, child)
-+		pci_pwrctrl_destroy_device(child);
++		pci_pwrctrl_power_off_device(child);
 +}
-+EXPORT_SYMBOL_GPL(pci_pwrctrl_destroy_devices);
++EXPORT_SYMBOL_GPL(pci_pwrctrl_power_off_devices);
 +
- MODULE_AUTHOR("Bartosz Golaszewski <bartosz.golaszewski@linaro.org>");
- MODULE_DESCRIPTION("PCI Device Power Control core driver");
- MODULE_LICENSE("GPL");
+ static int pci_pwrctrl_create_device(struct device_node *np, struct device *parent)
+ {
+ 	struct platform_device *pdev;
 diff --git a/include/linux/pci-pwrctrl.h b/include/linux/pci-pwrctrl.h
-index bd0ee9998125..5590ffec0bea 100644
+index 5590ffec0bea..1b77769eebbe 100644
 --- a/include/linux/pci-pwrctrl.h
 +++ b/include/linux/pci-pwrctrl.h
-@@ -54,5 +54,11 @@ int pci_pwrctrl_device_set_ready(struct pci_pwrctrl *pwrctrl);
- void pci_pwrctrl_device_unset_ready(struct pci_pwrctrl *pwrctrl);
- int devm_pci_pwrctrl_device_set_ready(struct device *dev,
- 				     struct pci_pwrctrl *pwrctrl);
--
-+#if IS_ENABLED(CONFIG_PCI_PWRCTRL)
-+int pci_pwrctrl_create_devices(struct device *parent);
-+void pci_pwrctrl_destroy_devices(struct device *parent);
-+#else
-+static inline int pci_pwrctrl_create_devices(struct device *parent) { return 0; }
-+static void pci_pwrctrl_destroy_devices(struct device *parent) { }
-+#endif
+@@ -57,8 +57,12 @@ int devm_pci_pwrctrl_device_set_ready(struct device *dev,
+ #if IS_ENABLED(CONFIG_PCI_PWRCTRL)
+ int pci_pwrctrl_create_devices(struct device *parent);
+ void pci_pwrctrl_destroy_devices(struct device *parent);
++int pci_pwrctrl_power_on_devices(struct device *parent);
++void pci_pwrctrl_power_off_devices(struct device *parent);
+ #else
+ static inline int pci_pwrctrl_create_devices(struct device *parent) { return 0; }
+ static void pci_pwrctrl_destroy_devices(struct device *parent) { }
++static inline int pci_pwrctrl_power_on_devices(struct device *parent) { return 0; }
++static void pci_pwrctrl_power_off_devices(struct device *parent) { }
+ #endif
  #endif /* __PCI_PWRCTRL_H__ */
 
 -- 
