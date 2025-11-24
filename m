@@ -1,121 +1,104 @@
-Return-Path: <linux-pci+bounces-41978-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41979-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 841E0C82025
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 19:03:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9862C8207C
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 19:09:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2B6403494AF
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 18:03:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6788D3A8350
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 18:09:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFC492BEC41;
-	Mon, 24 Nov 2025 18:02:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3FD631691E;
+	Mon, 24 Nov 2025 18:09:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZzudF/in"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEd3XJcR"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979DD28643C;
-	Mon, 24 Nov 2025 18:02:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3352C21EB;
+	Mon, 24 Nov 2025 18:08:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764007377; cv=none; b=n22lY/azIgGH8CAAbNox9AajyVhnxFyXxLNEaF0T80f4uoxp6Ce/h5egBzLrbXUVyTwTsuoZt0p/lK7/GQa2P1hoCV+IR+tjT5ImFkuSszSpK+Gc1Xv+GScPdb6FaCdUQlCNfiZAz3oVLbSxOr+rGqiOAYGNdzwa4Y8Zt9qGoow=
+	t=1764007740; cv=none; b=AOYybq+eIwiOellz3hni95oQ1fIIakf4r5UUENIYuhEJboK3p8G8wvlkrm4dIxSvZMtcUWj1ch2/sAsPUfMPVw7XUfi2OiZczUWGKpyINaVnyS0CAJjj4nocdrUbWyAmbI5rGsI5ZnXMxlcx81CQq3uoJPYq1BBuTOj1wakRLck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764007377; c=relaxed/simple;
-	bh=vVJOkgGpk1orF0T+8LRcES0SRASEEkMsr2eN64SHTYc=;
+	s=arc-20240116; t=1764007740; c=relaxed/simple;
+	bh=GhQcWx42J0d0ewB7WVogF7BGD8aTFOdgav+kUNjMAPM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Lw4AOFw9OkMtmaVEWOETWm5ag30og+ddhtUVtdRuI4J1++emxXEHfyLSC8TSvi+Uw7BeSsD+tzNKXU6koNRDGNFAfOHWFmQBAPW3pFwArawZNAZVjLGi4UCxFGTQFJY4/+jSK6lclZZGpstNurMHiHRzXDba60PLHRRzx6uSnfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZzudF/in; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3B9BC4CEF1;
-	Mon, 24 Nov 2025 18:02:56 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=qjRmOACbguWvBioyscAnaTQadAf1B1JLFtT+pPfHY29lOQM8aYtj9DVL8dpHF0t29AOQHr4xbq/dqMl5Tf19pTxItnWbhT4ObJ1ruBrJ6+5pnfYF5bqGJFN2gj22iCkrW0noebtP8P6bdMPAxA8GsZ1Ng3GTFa+lOoAH5mdlCJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEd3XJcR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE6C9C4CEF1;
+	Mon, 24 Nov 2025 18:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764007377;
-	bh=vVJOkgGpk1orF0T+8LRcES0SRASEEkMsr2eN64SHTYc=;
+	s=k20201202; t=1764007738;
+	bh=GhQcWx42J0d0ewB7WVogF7BGD8aTFOdgav+kUNjMAPM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ZzudF/inSo3Nt0LWRO4DqPkXgBSR4SQxZPAUx9U763h8oDk4K4NhEnYOA0LidBymt
-	 agY27Xz2u8S8WeuSPVgCqk2mUeX17RsAyd0j5BXl5z2QYr4kYRozXz2W7qvRYjazqv
-	 UHFJH0g0t8NUF7SlAENzs4/aft3FHR8vNJwyihtmymY2MI2dQdGQ0LwPtMLEi0bGim
-	 7/Xz5U2oBRAKi/g9VHxkDo/8JvsNkZ4d6uB2DWLIMzKnnMFVYllTXXfatkpv8wXhr3
-	 vIzB2EyXffHD5OQuxQH4nt3IUEkZ+R1Jz9243RcbRAr6c8OuTMlGQ2/IeOjyKu49xy
-	 uaJuvBTeBf2Hw==
-Date: Mon, 24 Nov 2025 12:02:55 -0600
+	b=aEd3XJcR7n8AuUrojYsCfxJ8IZxUS8/qCkU28Hu96BCovkBmb6J3Z9oEKsea4Qj+I
+	 cwxAfX+QWcrI3wQJ3/p1VAyLBt3ezyakmR1ITcuc1b9cb5WC2Bmul3kDYIsxbl57Pn
+	 b1yR2Yh144jWyEfH4SVaCm2xNp0TmJNgwQopp4IjaO0I0AVfHlOdk81BWBuwKLFpEj
+	 +PTw1QwjJcJgCX+lJPnaJYMVOEI3RA7mnb/ZfFuN2KcUfFnvgsy+KoRYfr4KoNaVmC
+	 xR83NzucXAVQ5PYqSEkIBspYl6jlFomgMiFu3RKy6LZiyYgZIhBtVVqxGt+hb1t+3y
+	 jfCx6nFfKtduw==
+Date: Mon, 24 Nov 2025 12:08:57 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hans Zhang <Hans.Zhang@cixtech.com>
-Cc: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Abaci Robot <abaci@linux.alibaba.com>,
-	Manikandan Karunakaran Pillai <mpillai@cadence.com>
-Subject: Re: =?utf-8?B?5Zue5aSN?= =?utf-8?Q?=3A?= [PATCH -next] PCI: cadence:
- remove unneeded semicolon
-Message-ID: <20251124180255.GA2700418@bhelgaas>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Hans Zhang <hans.zhang@cixtech.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH next] PCI: sky1: Fix error codes in
+ sky1_pcie_resource_get()
+Message-ID: <20251124180857.GA2702217@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <KL1PR0601MB472685FE5109782EF14C62DB9DD4A@KL1PR0601MB4726.apcprd06.prod.outlook.com>
+In-Reply-To: <aSBqp0cglr-Sc8na@stanley.mountain>
 
-On Thu, Nov 20, 2025 at 09:41:43AM +0000, Hans Zhang wrote:
-> + Manikandan
+On Fri, Nov 21, 2025 at 04:35:35PM +0300, Dan Carpenter wrote:
+> Return negative -ENODEV instead of positive ENODEV.
 > 
-> -----邮件原件-----
-> 发件人: Jiapeng Chong <jiapeng.chong@linux.alibaba.com> 
-> 发送时间: 2025年11月20日 17:35
-> 收件人: lpieralisi@kernel.org
-> 抄送: kwilczynski@kernel.org; mani@kernel.org; robh@kernel.org; bhelgaas@google.com; linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; Jiapeng Chong <jiapeng.chong@linux.alibaba.com>; Abaci Robot <abaci@linux.alibaba.com>
-> 主题: [PATCH -next] PCI: cadence: remove unneeded semicolon
-> 
-> [You don't often get email from jiapeng.chong@linux.alibaba.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> EXTERNAL EMAIL
-> 
-> No functional modification involved.
-> 
-> ./drivers/pci/controller/cadence/pcie-cadence.h:217:2-3: Unneeded semicolon.
-> 
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=27326
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+> Fixes: 25b3feb70d64 ("PCI: sky1: Add PCIe host support for CIX Sky1")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-Squashed this into the commit (f5fa6c33b173 ("PCI: cadence: Add
-support for High Perf Architecture (HPA) controller"), no need to
-repost this.
-
-There's a rash of this error.  Do you know of any others in
-drivers/pci/?
+Squashed into the commit, thanks!
 
 > ---
->  drivers/pci/controller/cadence/pcie-cadence.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pci/controller/cadence/pci-sky1.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index 717921411ed9..311a13ae46e7 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -214,7 +214,7 @@ static inline u32 cdns_reg_bank_to_off(struct cdns_pcie *pcie, enum cdns_pcie_re
->                 break;
->         default:
->                 break;
-> -       };
-> +       }
->         return offset;
->  }
-> 
-> --
-> 2.43.5
-> 
+> diff --git a/drivers/pci/controller/cadence/pci-sky1.c b/drivers/pci/controller/cadence/pci-sky1.c
+> index 99a1f3fae1b3..d8c216dc120d 100644
+> --- a/drivers/pci/controller/cadence/pci-sky1.c
+> +++ b/drivers/pci/controller/cadence/pci-sky1.c
+> @@ -65,7 +65,7 @@ static int sky1_pcie_resource_get(struct platform_device *pdev,
+>  
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+>  	if (!res)
+> -		return dev_err_probe(dev, ENODEV, "unable to get \"cfg\" resource\n");
+> +		return dev_err_probe(dev, -ENODEV, "unable to get \"cfg\" resource\n");
+>  	pcie->cfg_res = res;
+>  
+>  	base = devm_platform_ioremap_resource_byname(pdev, "rcsu_strap");
+> @@ -82,7 +82,7 @@ static int sky1_pcie_resource_get(struct platform_device *pdev,
+>  
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "msg");
+>  	if (!res)
+> -		return dev_err_probe(dev, ENODEV, "unable to get \"msg\" resource\n");
+> +		return dev_err_probe(dev, -ENODEV, "unable to get \"msg\" resource\n");
+>  	pcie->msg_res = res;
+>  	pcie->msg_base = devm_ioremap_resource(dev, res);
+>  	if (IS_ERR(pcie->msg_base)) {
+> -- 
+> 2.51.0
 > 
 
