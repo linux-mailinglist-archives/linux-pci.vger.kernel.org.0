@@ -1,162 +1,130 @@
-Return-Path: <linux-pci+bounces-41942-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41943-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 075B7C803D9
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 12:42:53 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83755C807D8
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 13:38:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E21904E10F0
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 11:42:51 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1F6D2343ACB
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 12:38:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D81632FC88B;
-	Mon, 24 Nov 2025 11:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D0B52F5473;
+	Mon, 24 Nov 2025 12:37:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JoHfhOMG";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="PPSklVGG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oj1T3K9Z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5136E248F48
-	for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 11:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDE22701CC;
+	Mon, 24 Nov 2025 12:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763984569; cv=none; b=EIg99pP9hvshW7svT4YvSADR77gs9eJd3rOR/zuSpsTO9R0dwb7yCoR64FpZ1U4JImYY2ZaaBFXR+zluJ9ldIpCbse/9MoxB78738KcUg6u63vW/mI+Xqb/iivd/ZNfN/FRYMOq5Nad4ThZKn7bAAmaGVUWuDPg3OHlPhL4yzXo=
+	t=1763987878; cv=none; b=fOf9TWGqe9u9VVlrVz3Zm6L3dsOu4SsT1CC3yKD5D+n3OQaS8k3AOiJdQhZflj1q003ZKk8ekVNAjAc4ysiBw8jLdkjx5oVVF5lTUYN2PvdNuLQZIo9Mb4QkiFTsppJUt2cXcv2vFAEXdSy46XIr4uqHK27xPxho4vxLc0yZPoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763984569; c=relaxed/simple;
-	bh=yxW+0hq+xdWaIvmIR13/79lwfDgz94e+THqjVqoR4yE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YqrxksTyR3TXrJlHa+EbsPffLTZl39ZosqKOi5QL6CIjP0YDEpuX6iv1ZLt/RPXboJCzbYtChO3xLlN9MjuvRm9tIIRMDVMg4r3WpLmxIo1PmAGKKtdr5Zr+/wwV0xck1NB+tbnzPPzN06NxgtKPaBQX+p9iIpAQwXAHhmNwajs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JoHfhOMG; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=PPSklVGG; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AO7TEUx3112066
-	for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 11:42:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	vOwkRleX0/HPneuTZSuUXMIp11FuA1s/fb+Wlx7sHoU=; b=JoHfhOMGcbBjfxTh
-	1zKiq7cLwctkkTh5yt0xnh42UCAXUBAYIS3s672hOaC/lVMw49L0to1DFFyk/Ev2
-	QgyAPF2a9GgO1eVnK9m0J19R043YvPIMJazfBWyHZMEQLWhQg/YClwTieevfTCfS
-	yxy5hT49LCuUgXLTTDxcYiqYAA6svRFz6OWLc5y2HhKmlNh2NfUiEeKHo285EPas
-	dwmyRDL1nwjIKHDAt2zbaNUJ0X0PbW1067CbS8SUPlYGJAH0qxqe0MRwnsO1Y6sm
-	vyCaB2+iMIc/ArfYvp408fiIoe7FXTj9Q8zNrDhjrTLUobxBnysWswD16vWWCOY5
-	gojg9Q==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4amk10grfe-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 11:42:47 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-8b25c5dc2c3so107935185a.3
-        for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 03:42:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1763984566; x=1764589366; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vOwkRleX0/HPneuTZSuUXMIp11FuA1s/fb+Wlx7sHoU=;
-        b=PPSklVGGV3lSRqKmLjWrEfOonggJHoBi+xEKENFOiQNKpAOJJIqXin8ip18z2Vfuvs
-         rVbFzJ5HwvjjUlFpbiktTpTppoTZZtQZkUNZQqCLBusWgi0qA03MmI8hrL9ZMCoseIpB
-         eKFPPcO0zC438vM1kJH1eoTwFZq+xM26sZfvk9Bp1/AjCEp4hpj2zgzIn2Icr0RVQTRM
-         4eVm4Swqobr4v8XbBL7/LQeeAMctmyTrL03uu4k0Er16xY2z5/DMGh6fWMhzJbwlHdmZ
-         2bC4RzW9qc0LM97+jROObae7mIE6HabwSQru8WBBcsmZdJKgR748TyPKz2je4xvzpuIz
-         R9oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763984566; x=1764589366;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vOwkRleX0/HPneuTZSuUXMIp11FuA1s/fb+Wlx7sHoU=;
-        b=QBMQNmgTDX5+Y6kYXr3s24SELm00akdQvBo6DmbdLnyeUjPcCLo5oJVJS2MDXV6wNK
-         bCuvJui1Y8BSuBwYWIRQ+900WmPwr3EL9e9pWiHsIEst7tY6dFUPAvNz/eIwc1ubb/jU
-         UoAxVtJth4f3xCjGyFM3/p6AZ/Uck4DMRN6r06Z2bHRnG6jzaWgSLuxdG8IHFig35EJZ
-         vziB2CN2Tdry62uZCtYzElDBr9EDjH/2Vm816t8f+9SA0pjnArblRyyHxg1NXSzJG65P
-         FvZT75mBZqzvWOAW4UEhGBLbBx8GRpPLYqyV+9p895e2SNJ2WI0lIaH96KBAH8S3LKoT
-         EaMA==
-X-Gm-Message-State: AOJu0YyT21JWzHu2slYAF+YpqeteDVxq41NJZF4CEXIem68PoeQWxGKc
-	LPvj8Xl9f0DyVWaEugu8tj5mkUblGJavIsGfeKObcYho8oeNalIDfp231mSBP/hOq8tMrgu444v
-	kuwbx7XRK8mnz3fZpF8oKZHuvyG69T/V2HIWca3XROCSbPfgW1mVtKIczP/nkV+ITawcZTIg=
-X-Gm-Gg: ASbGncui9y55CDV5b2MwuBUDyF0cUwgSAk7IIj1CvZA1eD/piy7G7iombz9Wbt2GJ/d
-	LXFfucGNJygCJSDXilXqpw+sEhame9iIGwE0r3wXrW+4/5HZAAGMRdNuUK94gULmkD6Fm9Cww5p
-	xlr50S3xr2gFMpJWhYYI/fV5KQsF3J/5lOmlcr3dITm0tWgH/hpDGUK+ci8a589ywi6Vxv3XSr0
-	0QKRcapG5ImKxwJNp+5FQ3PIq5ZbIexzVXYTo4crgTSHZ5TTOFwppXvabsVamzSO99tC5Vy/TKk
-	+GaH6tAZYdBvyOLj2iF4qFFT5aI8Iz4m4XxgWpaTGzM0FxYhOV3Wt6MfSPaZramuyJSi1lRkinC
-	41s1OChhrW62LtwWQd1Xesl2tbTW6/JmWt4rxQlt9EFcRUz6WVdQKMI7aiJVv5HqeQ6I=
-X-Received: by 2002:ac8:7f47:0:b0:4ee:1367:8836 with SMTP id d75a77b69052e-4ee5b6fad57mr104481281cf.5.1763984566251;
-        Mon, 24 Nov 2025 03:42:46 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFOiv4g/u/e7x/GqCRfNkAnyc3/9hzMx8fvdYPjlkBHSJlkgo2NscmBHl0CkBVDbNGDKTEw6Q==
-X-Received: by 2002:ac8:7f47:0:b0:4ee:1367:8836 with SMTP id d75a77b69052e-4ee5b6fad57mr104481101cf.5.1763984565753;
-        Mon, 24 Nov 2025 03:42:45 -0800 (PST)
-Received: from [192.168.119.202] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-64536443784sm11705733a12.28.2025.11.24.03.42.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Nov 2025 03:42:44 -0800 (PST)
-Message-ID: <31bbe640-b1ea-454b-9c9c-ed013022f07c@oss.qualcomm.com>
-Date: Mon, 24 Nov 2025 12:42:42 +0100
+	s=arc-20240116; t=1763987878; c=relaxed/simple;
+	bh=FKPMg3uIfj2UWT9aHfXB2xyEkoogoVhivvuGZBBOJGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bPo7rDjzPkzpy5Jxwvw6Dqs4qdnNJJWfoXaHM2Ui12cuVCO2MwAo48EvkbRBYsKb1KTXbuYnAYiHJjPyaFMBEXXh4jy/K+syHTedixg1BQlD3eGoVcK0lrSpqChvb1AGBdHRZ0kT8F3ZT9mJ/QoELhZ7HMPYjdVzkhZh3Im13Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oj1T3K9Z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A385C4CEF1;
+	Mon, 24 Nov 2025 12:37:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763987878;
+	bh=FKPMg3uIfj2UWT9aHfXB2xyEkoogoVhivvuGZBBOJGc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Oj1T3K9ZkUT3h5FIilNKp9UIlOF0kOeYy9B12BU1Ea2vPhHix5HIkzy6DujgrAgJE
+	 xJn68EYHNNUfmE3/q8O6VAzu+1ANOaFBltp2zSVHFJGw3/dmXMKdBaS1q44yMuX/cT
+	 9QfDZstg5rCrVGLXFwImgUTkk43f0C8CH5eJKlVf6VHI9jx+XwitHyDuv8DUvVsz0r
+	 BX9LLdz/uu0JpeRUWymWnacr0JRQ5Etug1ff/qOhB2ir6DjceZiWXoEB7HbwG+VJPO
+	 l4gVf13KcLrT6xqAugMB0vqdcr7SOlMDTbdX9Iva3RGu0pTV7dff/zw5TfTFkXxoMe
+	 zxVOOIY3rGfFQ==
+Date: Mon, 24 Nov 2025 18:07:44 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Shawn Lin <shawn.lin@rock-chips.com>, 
+	FUKAUMI Naoki <naoki@radxa.com>, Krishna chaitanya chundru <quic_krichai@quicinc.com>, 
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 0/6] PCI: dwc: Revert Link Up IRQ support
+Message-ID: <mt7miqkipr4dvxemftq6octxqzauueln252ncrcwy6i2t7wfhi@jtwokeilhwsi>
+References: <20251111105100.869997-8-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: Add quirk to disable ASPM L1 for Sandisk SN740
- NVMe SSDs
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
-        bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <mani@kernel.org>
-References: <20251120161253.189580-1-mani@kernel.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20251120161253.189580-1-mani@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: He-WVVtUcP2E4byD5FYKj5NwLK1rkvWz
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI0MDEwMyBTYWx0ZWRfXxAB7jSmAaFc0
- PmwDG+4UZe9LrbU741rIfUtmAyouur2NR8QJfjzvTI2ReJRyYkIaYvdG0npwDDNluA6/K2r0oeV
- XuPTXSTbV73kFelckDrTgAOmusGI83KrjyOKHe/wQmXQ+Rrfpb2Pt1m3Wvz2CwvRjihu1/SL3WM
- qoDnHst4rRfKtfeQ021fvZrOEzt1b8oUYfMu3D2UGkB5/OoJw/7fYPWfaD8hZIBCTMeowqoHCPy
- +rfwlJ24K/Jlyn1Y5m8nnPbmbTE/5GKQr7+r1ninwi/KyDmEbeZPb6Z+oxcs04jsSSDrC4LrTZq
- l0vMYG/cTefah/OgMBdVDCFjn21wsB+lT/i9tQbnBCyByrD5L9imPoSd7vdAZEFUguufb+Q9erP
- f+8Rdqj9O3s1OT9lMwSPxBm6VQ59vg==
-X-Proofpoint-ORIG-GUID: He-WVVtUcP2E4byD5FYKj5NwLK1rkvWz
-X-Authority-Analysis: v=2.4 cv=SP9PlevH c=1 sm=1 tr=0 ts=692444b7 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8
- a=IPny-iXwT8bmEns2PIkA:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-24_04,2025-11-21_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 bulkscore=0 adultscore=0 suspectscore=0
- phishscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511240103
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251111105100.869997-8-cassel@kernel.org>
 
-On 11/20/25 5:12 PM, Manivannan Sadhasivam wrote:
-> The Sandisk SN740 NVMe SSDs cause below AER errors on the upstream Root
-> Port of PCIe controller in Microsoft Surface Laptop 7, when ASPM L1 is
-> enabled:
+On Tue, Nov 11, 2025 at 11:51:00AM +0100, Niklas Cassel wrote:
+> Revert all patches related to pcie-designware Root Complex Link Up IRQ
+> support.
 > 
->   pcieport 0006:00:00.0: AER: Correctable error message received from 0006:01:00.0
->   nvme 0006:01:00.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
->   nvme 0006:01:00.0:   device [15b7:5015] error status/mask=00000001/0000e000
->   nvme 0006:01:00.0:    [ 0] RxErr
+> While this fake hotplugging was a nice idea, it has shown that this feature
+> does not handle PCIe switches correctly:
+> pci_bus 0004:43: busn_res: can not insert [bus 43-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci_bus 0004:43: busn_res: [bus 43-41] end is updated to 43
+> pci_bus 0004:43: busn_res: can not insert [bus 43] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci 0004:42:00.0: devices behind bridge are unusable because [bus 43] cannot be assigned for them
+> pci_bus 0004:44: busn_res: can not insert [bus 44-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci_bus 0004:44: busn_res: [bus 44-41] end is updated to 44
+> pci_bus 0004:44: busn_res: can not insert [bus 44] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci 0004:42:02.0: devices behind bridge are unusable because [bus 44] cannot be assigned for them
+> pci_bus 0004:45: busn_res: can not insert [bus 45-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci_bus 0004:45: busn_res: [bus 45-41] end is updated to 45
+> pci_bus 0004:45: busn_res: can not insert [bus 45] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci 0004:42:06.0: devices behind bridge are unusable because [bus 45] cannot be assigned for them
+> pci_bus 0004:46: busn_res: can not insert [bus 46-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci_bus 0004:46: busn_res: [bus 46-41] end is updated to 46
+> pci_bus 0004:46: busn_res: can not insert [bus 46] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci 0004:42:0e.0: devices behind bridge are unusable because [bus 46] cannot be assigned for them
+> pci_bus 0004:42: busn_res: [bus 42-41] end is updated to 46
+> pci_bus 0004:42: busn_res: can not insert [bus 42-46] under [bus 41] (conflicts with (null) [bus 41])
+> pci 0004:41:00.0: devices behind bridge are unusable because [bus 42-46] cannot be assigned for them
+> pcieport 0004:40:00.0: bridge has subordinate 41 but max busn 46
 > 
-> Hence, add a quirk to disable L1 by removing the ASPM_L1 CAP for this SSD.
+> During the initial scan, PCI core doesn't see the switch and since the Root
+> Port is not hot plug capable, the secondary bus number gets assigned as the
+> subordinate bus number. This means, the PCI core assumes that only one bus
+> will appear behind the Root Port since the Root Port is not hot plug
+> capable.
 > 
-> Reported-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
-> ---
+> This works perfectly fine for PCIe endpoints connected to the Root Port,
+> since they don't extend the bus. However, if a PCIe switch is connected,
+> then there is a problem when the downstream busses starts showing up and
+> the PCI core doesn't extend the subordinate bus number after initial scan
+> during boot.
+> 
+> The long term plan is to migrate this driver to the pwrctrl framework,
+> once it adds proper support for powering up and enumerating PCIe switches.
+> 
 
-This revision also works for me, thank you
+While I suggested to revert the link up IRQ patch for rockchip earlier, I didn't
+expect to drop the support for Qcom. The reason is, on Qcom SoCs, we have not
+seen a case where people connect a random PCIe switch and saw failures. Most of
+the Qcom usecases were around the M.2 and other proprietary connectors. There is
+only one in-house PCIe switch that is being actively used in our products, but
+so far, none of the bootloaders have turned them ON before kernel booting. So
+kernel relies on the newly merged pwrctrl driver to do the job. Even though it
+also suffers from the same resource allocation issue, this series won't help in
+any way as pwrctrl core performs rescan after the switch power ON, and by that
+time, it will be very late anyway.
 
-Tested-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> # X1E80100 Romulus
+So I'm happy to take the rockhip patches from this series as they fix the real
+issue that people have reported. But once the pwrctrl rework series gets merged,
+and the rockchip drivers support them, we can bring back the reverted changes.
 
-Konrad
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
