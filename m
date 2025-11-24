@@ -1,120 +1,177 @@
-Return-Path: <linux-pci+bounces-41934-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41935-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11740C7FBAF
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 10:53:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 87D0DC7FC21
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 10:56:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D7E10349B35
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 09:53:22 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 111E234ACC5
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 09:55:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 040AA2FC013;
-	Mon, 24 Nov 2025 09:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HIk56rAJ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D75342F6164;
+	Mon, 24 Nov 2025 09:54:35 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D092D2F7ABA;
-	Mon, 24 Nov 2025 09:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from zg8tmja2lje4os43os4xodqa.icoremail.net (zg8tmja2lje4os43os4xodqa.icoremail.net [206.189.79.184])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8D232F616D;
+	Mon, 24 Nov 2025 09:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.79.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763977835; cv=none; b=EkMdUuo55g6Zx9RaucCarsKJH4goKPVU/zzKwbcverzy0k5XUjl47kjo9DT05JUDTKuzuYAoPEWWu80uzEkEgyEzJFCG45P2UgkWvmeVhjkSgS0uSxdXpshkHQyTWMK9Ebl30UiMiI7lc33WcSPQorBE2U0Dk6qShvgB7NiY5Hk=
+	t=1763978075; cv=none; b=MIAcYeEuTCjWPfE0xuRD4faQYE+oO4s/49ymNxopfWxy4EIBy509OgQgSfme8kEvMnmdKRG2F7BVGBcu5myVgbRWIz6V3AoQFhd/HUF1gZmTa3NF2DeNI1OLXAfXnlPdSL82KLyWr6yEQsnttz7NqJuJLKfXQxcAWqXLhJh/t0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763977835; c=relaxed/simple;
-	bh=bASfff82Xxt7ngaVSFG9avx6FhFPZUj+QtmErTDg24A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UHJ/rfi135fkEi9oWf4rAuhjRt1vayUD/xd5AVg4pDVedZt8TEJOoFkjyMKo29JFK6f2KuCSllDtMEcptTJLqIPk1kq5B5+aEKNTAt/6wxbcQKU2TMyn579XTBEbC7PVZ0moe8Y40tOODFT+0NfNmE3UDXHlA/flkhRUBP48oqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HIk56rAJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F7DFC16AAE;
-	Mon, 24 Nov 2025 09:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763977835;
-	bh=bASfff82Xxt7ngaVSFG9avx6FhFPZUj+QtmErTDg24A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HIk56rAJr9IMPxcPnfspRsVoorSI+MPgdaWXBtVKQaAvYHbKilPtxBtq7HIU98Af2
-	 Ch8NHjhiC/ov16p7Elm9xxrUF4DxjKN0TvqJPhi1IXUImh+lizpdcRXSJKLFzpGKGF
-	 1z49l1fFp3XwmFqSYZ4n6I9TqgeYVvHhYiZCvEGZLs2aeULYk1b2WdTfialVG+Hk6S
-	 drKA1h4/bY21JL/GlwbbihAk1bDzWmZnptjcPdZPty7IoPEgWsrbW5GmAA8DcLWULO
-	 WS8+ZogLcVIET98ETRxt2WipNSx1ktLu6Dv0aCBkJVeE6UtrwiYQBJq5MA9d6uH+zc
-	 FLlRnE6UbIbYg==
-Date: Mon, 24 Nov 2025 10:50:29 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, FUKAUMI Naoki <naoki@radxa.com>,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 0/6] PCI: dwc: Revert Link Up IRQ support
-Message-ID: <aSQqZcW39Ze1IE74@ryzen>
-References: <20251111105100.869997-8-cassel@kernel.org>
+	s=arc-20240116; t=1763978075; c=relaxed/simple;
+	bh=x7QfpMJANVDpJDQnxYFKECtVmeDJ7sPd7edlq5nmgkA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=BRgrQIS7XeRVI3X0wbrIZHnZ0H29cdWaDi2McONzFbz2/sUg1JLorIY3XBS8s7eK3Ql5ShQ/x1P3zJJeVqUjDjNtO2f3JlWZudMUzXW1SNLQ5HOUs4/uVh66p3B7VWL2UTueriZ5ZrJwiywatGjsRQ6YTs1QiSPe1sw8Mzt9Gt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.79.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
+ ajax-webmail-app2 (Coremail) ; Mon, 24 Nov 2025 17:53:55 +0800 (GMT+08:00)
+Date: Mon, 24 Nov 2025 17:53:55 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
+To: "Shawn Lin" <shawn.lin@rock-chips.com>
+Cc: bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org,
+	p.zabel@pengutronix.de, jingoohan1@gmail.com,
+	gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com,
+	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
+	thippeswamy.havalige@amd.com, inochiama@gmail.com,
+	ningyu@eswincomputing.com, linmin@eswincomputing.com,
+	pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com,
+	Frank.li@nxp.com, "Manivannan Sadhasivam" <mani@kernel.org>
+Subject: Re: Re: [PATCH v6 3/3] PCI: dwc: Add no_suspport_L2 flag and skip
+ PME_Turn_Off broadcast
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
+ 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
+ mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
+In-Reply-To: <c77bb3c8-f658-4275-b0f5-37ac215142f7@rock-chips.com>
+References: <20251120101018.1477-1-zhangsenchuan@eswincomputing.com>
+ <20251120101236.1538-1-zhangsenchuan@eswincomputing.com>
+ <dux47crrf6ranvexkpzw667hzmkgfguqadseco52svgvglalye@alxqq4ybu672>
+ <11367b43.6d3.19aa52bc596.Coremail.zhangsenchuan@eswincomputing.com>
+ <c77bb3c8-f658-4275-b0f5-37ac215142f7@rock-chips.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251111105100.869997-8-cassel@kernel.org>
+Message-ID: <5638129a.7fc.19ab548c1bc.Coremail.zhangsenchuan@eswincomputing.com>
+X-Coremail-Locale: en_US
+X-CM-TRANSID:TQJkCgDnK68zKyRp0+N9AA--.2426W
+X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAQEQBmkjN
+	wMmNAAAs6
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-On Tue, Nov 11, 2025 at 11:51:00AM +0100, Niklas Cassel wrote:
-> Revert all patches related to pcie-designware Root Complex Link Up IRQ
-> support.
-> 
-> While this fake hotplugging was a nice idea, it has shown that this feature
-> does not handle PCIe switches correctly:
-> pci_bus 0004:43: busn_res: can not insert [bus 43-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
-> pci_bus 0004:43: busn_res: [bus 43-41] end is updated to 43
-> pci_bus 0004:43: busn_res: can not insert [bus 43] under [bus 42-41] (conflicts with (null) [bus 42-41])
-> pci 0004:42:00.0: devices behind bridge are unusable because [bus 43] cannot be assigned for them
-> pci_bus 0004:44: busn_res: can not insert [bus 44-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
-> pci_bus 0004:44: busn_res: [bus 44-41] end is updated to 44
-> pci_bus 0004:44: busn_res: can not insert [bus 44] under [bus 42-41] (conflicts with (null) [bus 42-41])
-> pci 0004:42:02.0: devices behind bridge are unusable because [bus 44] cannot be assigned for them
-> pci_bus 0004:45: busn_res: can not insert [bus 45-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
-> pci_bus 0004:45: busn_res: [bus 45-41] end is updated to 45
-> pci_bus 0004:45: busn_res: can not insert [bus 45] under [bus 42-41] (conflicts with (null) [bus 42-41])
-> pci 0004:42:06.0: devices behind bridge are unusable because [bus 45] cannot be assigned for them
-> pci_bus 0004:46: busn_res: can not insert [bus 46-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
-> pci_bus 0004:46: busn_res: [bus 46-41] end is updated to 46
-> pci_bus 0004:46: busn_res: can not insert [bus 46] under [bus 42-41] (conflicts with (null) [bus 42-41])
-> pci 0004:42:0e.0: devices behind bridge are unusable because [bus 46] cannot be assigned for them
-> pci_bus 0004:42: busn_res: [bus 42-41] end is updated to 46
-> pci_bus 0004:42: busn_res: can not insert [bus 42-46] under [bus 41] (conflicts with (null) [bus 41])
-> pci 0004:41:00.0: devices behind bridge are unusable because [bus 42-46] cannot be assigned for them
-> pcieport 0004:40:00.0: bridge has subordinate 41 but max busn 46
-> 
-> During the initial scan, PCI core doesn't see the switch and since the Root
-> Port is not hot plug capable, the secondary bus number gets assigned as the
-> subordinate bus number. This means, the PCI core assumes that only one bus
-> will appear behind the Root Port since the Root Port is not hot plug
-> capable.
-> 
-> This works perfectly fine for PCIe endpoints connected to the Root Port,
-> since they don't extend the bus. However, if a PCIe switch is connected,
-> then there is a problem when the downstream busses starts showing up and
-> the PCI core doesn't extend the subordinate bus number after initial scan
-> during boot.
-> 
-> The long term plan is to migrate this driver to the pwrctrl framework,
-> once it adds proper support for powering up and enumerating PCIe switches.
-
-
-Hello PCI maintainers,
-
-Merge window is opening soon,
-what is the status of this series?
-
-
-Kind regards,
-Niklas
+CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiU2hhd24gTGluIiA8c2hh
+d24ubGluQHJvY2stY2hpcHMuY29tPgo+IFNlbmQgdGltZTpGcmlkYXksIDIxLzExLzIwMjUgMTU6
+MTQ6NTEKPiBUbzogemhhbmdzZW5jaHVhbiA8emhhbmdzZW5jaHVhbkBlc3dpbmNvbXB1dGluZy5j
+b20+Cj4gQ2M6IHNoYXduLmxpbkByb2NrLWNoaXBzLmNvbSwgYmhlbGdhYXNAZ29vZ2xlLmNvbSwg
+a3J6aytkdEBrZXJuZWwub3JnLCBjb25vcitkdEBrZXJuZWwub3JnLCBscGllcmFsaXNpQGtlcm5l
+bC5vcmcsIGt3aWxjenluc2tpQGtlcm5lbC5vcmcsIHJvYmhAa2VybmVsLm9yZywgcC56YWJlbEBw
+ZW5ndXRyb25peC5kZSwgamluZ29vaGFuMUBnbWFpbC5jb20sIGd1c3Rhdm8ucGltZW50ZWxAc3lu
+b3BzeXMuY29tLCBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnLCBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZywgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZywgY2hyaXN0aWFuLmJydWVsQGZv
+c3Muc3QuY29tLCBtYXlhbmsucmFuYUBvc3MucXVhbGNvbW0uY29tLCBzaHJhZGhhLnRAc2Ftc3Vu
+Zy5jb20sIGtyaXNobmEuY2h1bmRydUBvc3MucXVhbGNvbW0uY29tLCB0aGlwcGVzd2FteS5oYXZh
+bGlnZUBhbWQuY29tLCBpbm9jaGlhbWFAZ21haWwuY29tLCBuaW5neXVAZXN3aW5jb21wdXRpbmcu
+Y29tLCBsaW5taW5AZXN3aW5jb21wdXRpbmcuY29tLCBwaW5rZXNoLnZhZ2hlbGFAZWluZm9jaGlw
+cy5jb20sIG91eWFuZ2h1aUBlc3dpbmNvbXB1dGluZy5jb20sIEZyYW5rLmxpQG54cC5jb20sICJN
+YW5pdmFubmFuIFNhZGhhc2l2YW0iIDxtYW5pQGtlcm5lbC5vcmc+Cj4gU3ViamVjdDogUmU6IFtQ
+QVRDSCB2NiAzLzNdIFBDSTogZHdjOiBBZGQgbm9fc3VzcHBvcnRfTDIgZmxhZyBhbmQgc2tpcCBQ
+TUVfVHVybl9PZmYgYnJvYWRjYXN0Cj4gCj4g5ZyoIDIwMjUvMTEvMjEg5pif5pyf5LqUIDE0OjQ4
+LCB6aGFuZ3NlbmNodWFuIOWGmemBkzoKPiA+IAo+ID4gCj4gPiAKPiA+PiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2VzLS0tLS0KPiA+PiBGcm9tOiAiTWFuaXZhbm5hbiBTYWRoYXNpdmFtIiA8bWFuaUBr
+ZXJuZWwub3JnPgo+ID4+IFNlbmQgdGltZTpUaHVyc2RheSwgMjAvMTEvMjAyNSAyMDo0NTozOAo+
+ID4+IFRvOiB6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbQo+ID4+IENjOiBiaGVsZ2Fh
+c0Bnb29nbGUuY29tLCBrcnprK2R0QGtlcm5lbC5vcmcsIGNvbm9yK2R0QGtlcm5lbC5vcmcsIGxw
+aWVyYWxpc2lAa2VybmVsLm9yZywga3dpbGN6eW5za2lAa2VybmVsLm9yZywgcm9iaEBrZXJuZWwu
+b3JnLCBwLnphYmVsQHBlbmd1dHJvbml4LmRlLCBqaW5nb29oYW4xQGdtYWlsLmNvbSwgZ3VzdGF2
+by5waW1lbnRlbEBzeW5vcHN5cy5jb20sIGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmcsIGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnLCBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLCBjaHJp
+c3RpYW4uYnJ1ZWxAZm9zcy5zdC5jb20sIG1heWFuay5yYW5hQG9zcy5xdWFsY29tbS5jb20sIHNo
+cmFkaGEudEBzYW1zdW5nLmNvbSwga3Jpc2huYS5jaHVuZHJ1QG9zcy5xdWFsY29tbS5jb20sIHRo
+aXBwZXN3YW15LmhhdmFsaWdlQGFtZC5jb20sIGlub2NoaWFtYUBnbWFpbC5jb20sIG5pbmd5dUBl
+c3dpbmNvbXB1dGluZy5jb20sIGxpbm1pbkBlc3dpbmNvbXB1dGluZy5jb20sIHBpbmtlc2gudmFn
+aGVsYUBlaW5mb2NoaXBzLmNvbSwgb3V5YW5naHVpQGVzd2luY29tcHV0aW5nLmNvbSwgRnJhbmsu
+bGlAbnhwLmNvbQo+ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgMy8zXSBQQ0k6IGR3YzogQWRk
+IG5vX3N1c3Bwb3J0X0wyIGZsYWcgYW5kIHNraXAgUE1FX1R1cm5fT2ZmIGJyb2FkY2FzdAo+ID4+
+Cj4gPj4gT24gVGh1LCBOb3YgMjAsIDIwMjUgYXQgMDY6MTI6MzVQTSArMDgwMCwgemhhbmdzZW5j
+aHVhbkBlc3dpbmNvbXB1dGluZy5jb20gd3JvdGU6Cj4gPj4+IEZyb206IFNlbmNodWFuIFpoYW5n
+IDx6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbT4KPiA+Pj4KPiA+Pj4gVGhlIEVTV0lO
+IEVJQzc3MDAgc29jIGRvZXMgbm90IHN1cHBvcnQgZW50ZXIgTDIgbGluayBzdGF0ZS4gVGhlcmVm
+b3JlIGFkZAo+ID4+PiBub19zdXNwcG9ydF9MMiBmbGFnIHNraXAgUE1FX1R1cm5fT2ZmIGJyb2Fk
+Y2FzdCBhbmQgbGluayBzdGF0ZSBjaGVjayBjb2RlLAo+ID4+PiBvdGhlciBkcml2ZXIgY2FuIHJl
+dXNlIHRoaXMgZmxhZyBpZiBtZWV0IHRoZSBzaW1pbGFyIHNpdHVhdGlvbi4KPiA+Pj4KPiA+Pj4g
+U2lnbmVkLW9mZi1ieTogWXUgTmluZyA8bmluZ3l1QGVzd2luY29tcHV0aW5nLmNvbT4KPiA+Pj4g
+U2lnbmVkLW9mZi1ieTogWWFuZ2h1aSBPdSA8b3V5YW5naHVpQGVzd2luY29tcHV0aW5nLmNvbT4K
+PiA+Pj4gU2lnbmVkLW9mZi1ieTogU2VuY2h1YW4gWmhhbmcgPHpoYW5nc2VuY2h1YW5AZXN3aW5j
+b21wdXRpbmcuY29tPgo+ID4+Cj4gPj4gRG9lcyB0aGlzIHBhdGNoIHdvcmsgZm9yIHlvdT8KPiA+
+PiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1wY2kvMjAyNTExMTktcGNpLWR3Yy1zdXNw
+ZW5kLXJld29yay12MS0xLWFhZDEwNDgyODU2MkBvc3MucXVhbGNvbW0uY29tLwo+ID4gCj4gPiBp
+ZiB0aGUgUENJZSBsaW5rIGlzIG5vdCB1cCwgdGhpcyBzdWl0cyBtZSB0b28sIGJ1dCBpZiB0aGUg
+UENJZSBsaW5rIHVwLAo+ID4gb3VyIGhhcmR3YXJlIGRvZXMgbm90IHN1cHBvcnQgZW50ZXJpbmcg
+dGhlIEwyIGxpbmsgc3RhdGUuIEF0IHRoaXMgcG9pbnQsCj4gCj4gUGVyIFBDSWUgc3BlYywgNS4y
+IExpbmsgU3RhdGUgUG93ZXIgTWFuYWdlbWVudDoKPiAiTDIvTDMgUmVhZHkgdHJhbnNpdGlvbiBw
+cm90b2NvbCBzdXBwb3J0IGlzIHJlcXVpcmVkLgo+IFRoZSBMMi9MMyBSZWFkeSBzdGF0ZSBlbnRy
+eSB0cmFuc2l0aW9uIHByb2Nlc3MgbXVzdCBiZWdpbiBhcyBzb29uIGFzCj4gcG9zc2libGUgZm9s
+bG93aW5nIHRoZSBhY2tub3dsZWRnbWVudCBvZiBhIFBNRV9UdXJuX09mZiBNZXNzYWdlLCAoaS5l
+LiwKPiB0aGUgaW5qZWN0aW9uIG9mIGEgUE1FX1RPX0FjayBUTFApLiBUaGUgRG93bnN0cmVhbSBj
+b21wb25lbnQgaW5pdGlhdGVzCj4gTDIvTDMgUmVhZHkgZW50cnkgYnkgc2VuZGluZyBhIFBNX0Vu
+dGVyX0wyMyBETExQLiAiCj4gCj4gIkwyIHN1cHBvcnQgaXMgb3B0aW9uYWwsIGFuZCBkZXBlbmRl
+bnQgdXBvbiB0aGUgcHJlc2VuY2Ugb2YgYXV4aWxpYXJ5IHBvd2VyIgo+IAo+IEkgaW50ZXJwcmV0
+IGl0IGFzIGl0IGlzIG1hbmRhdG9yeSBzdXBwb3J0IGZvciBicm9hZGNhc3QgUE1FX1R1cm5fT2Zm
+IGFuZAo+IGFjayBQTUVfVE9fQWNrLCB3aGljaCBpcyB3aGF0IHRoZSBvcmlnaW5hbCBjb2RlIGRv
+ZXMuIFRoZW4geW91ciBJUCBjYW4ndAo+IHJlYWxseSBnbyBpbnRvIEwyIGZvciB3aGF0ZXZlciBy
+ZWFzb25zPyBXaWxsIHlvdXIgY29udHJvbGxlciBiZSBicm9rZW4gCj4gaWYgYWNraW5nIFBNRV9U
+dXJuX09mZj8gIE90aGVyd2lzZSB3ZSBjb3VsZCBzdGlsbCBsZXQgTDIvTDMgUmVhZHkKPiB0cmFu
+c3N0aW9uIGhhcHBlbiBhbmQgbGVhdmUgdGhlIGRldmljZSBpbiBMMyB0byBzYXZlIHBvd2VyLgoK
+SGksIFNoYXduCgpUaGFuayB5b3UgZm9yIHlvdXIgY29tbWVudCBhbmQgZXhwbGFuYXRpb24uCk91
+ciBoYXJkd2FyZSBjYW5ub3QgYnJvYWRjYXN0IFBNRV9UdXJuX09mZi4gT3RoZXJ3aXNlLCB0aGUg
+Y29udHJvbGxlciB3aWxsCmhhdmUgcHJvYmxlbXMsIHRoZSBkYmkgcmVnaXN0ZXIgc2hvd3MgdGhh
+dCBpdCBjYW5ub3QgYmUgYWNjZXNzZWRlZC4gVGhlIGxpbmsKc3RhdGUgY2Fubm90IGJlIHJlYWQg
+aW4gdGhlIHJlYWRfcG9sbF90aW1lb3V0IGZ1bmN0aW9uLgoKS2luZCByZWdhcmRzLApTZW5jaHVh
+biBaaGFuZwoKPiAKPiAKPiA+IGl0IGlzIGFsc28gbmVjZXNzYXJ5IHRvIHNraXAgdGhlIGJyb2Fk
+Y2FzdCBQTUVfVHVybl9PZmYgbWVzc2FnZSBhbmQgd2FpdAo+ID4gZm9yIEwyIHRyYW5zaXRpb24u
+Cj4gPiAKPiA+IAo+ID4+Cj4gPj4+IC0tLQo+ID4+PiAgIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
+ZHdjL3BjaWUtZGVzaWdud2FyZS1ob3N0LmMgfCA0ICsrKysKPiA+Pj4gICBkcml2ZXJzL3BjaS9j
+b250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUuaCAgICAgIHwgMSArCj4gPj4+ICAgMiBmaWxl
+cyBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykKPiA+Pj4KPiA+Pj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1ob3N0LmMgYi9kcml2ZXJzL3Bj
+aS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtaG9zdC5jCj4gPj4+IGluZGV4IGU5MjUx
+M2M1YmRhNS4uYTIwMzU3NzYwNmU1IDEwMDY0NAo+ID4+PiAtLS0gYS9kcml2ZXJzL3BjaS9jb250
+cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtaG9zdC5jCj4gPj4+ICsrKyBiL2RyaXZlcnMvcGNp
+L2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1ob3N0LmMKPiA+Pj4gQEAgLTExNTYsNiAr
+MTE1Niw5IEBAIGludCBkd19wY2llX3N1c3BlbmRfbm9pcnEoc3RydWN0IGR3X3BjaWUgKnBjaSkK
+PiA+Pj4gICAJaWYgKGR3X3BjaWVfcmVhZHdfZGJpKHBjaSwgb2Zmc2V0ICsgUENJX0VYUF9MTktD
+VEwpICYgUENJX0VYUF9MTktDVExfQVNQTV9MMSkKPiA+Pj4gICAJCXJldHVybiAwOwo+ID4+Pgo+
+ID4+PiArCWlmIChwY2ktPm5vX3N1c3Bwb3J0X0wyKQo+ID4+PiArCQlnb3RvIHN0b3BfbGluazsK
+PiA+Pj4gKwo+ID4+PiAgIAlpZiAocGNpLT5wcC5vcHMtPnBtZV90dXJuX29mZikgewo+ID4+PiAg
+IAkJcGNpLT5wcC5vcHMtPnBtZV90dXJuX29mZigmcGNpLT5wcCk7Cj4gPj4+ICAgCX0gZWxzZSB7
+Cj4gPj4+IEBAIC0xMTgyLDYgKzExODUsNyBAQCBpbnQgZHdfcGNpZV9zdXNwZW5kX25vaXJxKHN0
+cnVjdCBkd19wY2llICpwY2kpCj4gPj4+ICAgCSAqLwo+ID4+PiAgIAl1ZGVsYXkoMSk7Cj4gPj4+
+Cj4gPj4+ICtzdG9wX2xpbms6Cj4gPj4+ICAgCWR3X3BjaWVfc3RvcF9saW5rKHBjaSk7Cj4gPj4+
+ICAgCWlmIChwY2ktPnBwLm9wcy0+ZGVpbml0KQo+ID4+PiAgIAkJcGNpLT5wcC5vcHMtPmRlaW5p
+dCgmcGNpLT5wcCk7Cj4gPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3
+Yy9wY2llLWRlc2lnbndhcmUuaCBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVz
+aWdud2FyZS5oCj4gPj4+IGluZGV4IGU5OTVmNjkyYTFlYy4uMTcwYTczMjk5Y2U1IDEwMDY0NAo+
+ID4+PiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUuaAo+
+ID4+PiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUuaAo+
+ID4+PiBAQCAtNTM5LDYgKzUzOSw3IEBAIHN0cnVjdCBkd19wY2llIHsKPiA+Pj4gICAJICogdXNl
+X3BhcmVudF9kdF9yYW5nZXMgdG8gdHJ1ZSB0byBhdm9pZCB0aGlzIHdhcm5pbmcuCj4gPj4+ICAg
+CSAqLwo+ID4+PiAgIAlib29sCQkJdXNlX3BhcmVudF9kdF9yYW5nZXM7Cj4gPj4+ICsJYm9vbAkJ
+CW5vX3N1c3Bwb3J0X0wyOwo+ID4+PiAgIH07Cj4gPj4+Cj4gPj4+ICAgI2RlZmluZSB0b19kd19w
+Y2llX2Zyb21fcHAocG9ydCkgY29udGFpbmVyX29mKChwb3J0KSwgc3RydWN0IGR3X3BjaWUsIHBw
+KQo+ID4+PiAtLQo+ID4+PiAyLjI1LjEKPiA+Pj4KPiA+Pgo+ID4+IC0tIAo+ID4+IOCuruCuo+Cu
+v+CuteCuo+CvjeCuo+CuqeCvjSDgrprgrqTgrr7grprgrr/grrXgrq7gr40K
 
