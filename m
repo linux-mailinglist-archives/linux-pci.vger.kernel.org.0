@@ -1,573 +1,144 @@
-Return-Path: <linux-pci+bounces-41997-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41998-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id D350FC82C9C
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 00:13:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20F8BC82D3C
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 00:39:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5884C34B940
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 23:13:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3CA93AC4FF
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 23:39:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A5702F656A;
-	Mon, 24 Nov 2025 23:13:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EE7A2D0607;
+	Mon, 24 Nov 2025 23:39:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kN5ndslQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VoSre1+e"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F882F363C
-	for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 23:13:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7482777E0;
+	Mon, 24 Nov 2025 23:39:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764025985; cv=none; b=rYLJEQacAbtJt66KVLe7aBAyWlvFrIygs3hb8O1qHcJIDT4PuX/TFF3T/j5v9qiivQiscC5TZEGM80GNIeaM/rIhOItgLojNpmwdB1occfjItfZuIC4CIJP8hQG1o0fz5E4+8179ra1jl0myeZBVBPzgfTlNYQ5tVhpWNWtCcgc=
+	t=1764027573; cv=none; b=tOD2Vdq58h9KFSd54iPo3tUXibfriz+50s1QiCIbMe547Dc5rbNGOmzdHSAGZcki+xxtn1AV2SFG8LcP+U+8eHbqbVQpengfzbEI1ybE1dVS3qpRBLysrlGT4PhCiMfFQN3/D1iNbpNB54z/HQw1/AeHH4VN+VGXPVLpoo/OIWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764025985; c=relaxed/simple;
-	bh=7L6wLiWf50CMhozOCy/O9YMBf4yB7mMeE3oPGf22zDY=;
+	s=arc-20240116; t=1764027573; c=relaxed/simple;
+	bh=ES5aQYT6ve9fmwHttXapFqTQXlDFpic7nVN1uIgkOws=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=QFrLb9nOGXfAGVnVwWwSJc+nna3IdTvs3al4+MpXbm3xgICRftdw3ykNktV+QkGeNI4MqCmi5GKyQv0twxq3+JRhv3Ci5/c1J07okPNKxgQ623OdBmi42gSGxxpbREPoJGInE6x9T5gKXg4xXA0/isthsLVmJnLZdGS3Vla5iss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kN5ndslQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ED61C4CEF1;
-	Mon, 24 Nov 2025 23:13:04 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=hRf9BkU43iyXcqIGG0Oy0NGOc1X/lwtFFQPIk17NSxKkLpuLEFeRtp/oxhOfAz9Sx4syJc+TIDlv3VxTDEufQ0325v1n/0FxLcPxuvrbKFxTY32v7vfMw7VZT2RoGGXA6rBX4L3+DeYNAWS5KMSSJCkBwCZOCooVfqEbPVmYtHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VoSre1+e; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E96FC4CEF1;
+	Mon, 24 Nov 2025 23:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764025984;
-	bh=7L6wLiWf50CMhozOCy/O9YMBf4yB7mMeE3oPGf22zDY=;
+	s=k20201202; t=1764027572;
+	bh=ES5aQYT6ve9fmwHttXapFqTQXlDFpic7nVN1uIgkOws=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=kN5ndslQ8JBFDZGMr6J+l0LJf4xwOWYH8UYhg5ChkQSO9L73KKwkY8iC4ndHktqLG
-	 QspO8HIRwWcww9Fy6qNDfZjOaznZ7HpnFaGNeNjDHA3Ib/gMzOG5k1H78zthYAy5i5
-	 FHOR3OdreezkrT8WR+GbQUhqIiM6IwSHKLP/QPIdk0x3XwuuTLh8V5zDxxUFxrMtf/
-	 0F0R5+KsfnPTJAIoDlK+o6YnNOP31+8n7A9S84Hs/3n7OWE/RxjEgsf50NMeBIQgrV
-	 uP/5hZ59emdNyTXm9CGhvKvUSpaWNBPeILlfvCyzaij6zUm1lGJyihH4FcyKPgOYcu
-	 gEGAzw+gcNoIw==
-Date: Mon, 24 Nov 2025 17:13:03 -0600
+	b=VoSre1+eDk9kmhPwZZGpSBcsgHO/66dNw5XF8kMq3Zm7sKuBUYsi3M5ufhHQyyczn
+	 SSmUtLld5eSylyDUqsb/9pK1P3C7fZlXE9Tu6a11mHHOPQIrrmv/oDF6HrwHQhLPRy
+	 AsTBXVk75b4llJjnR8IX39YGYf+1cEKSYOBAj1pTGknrzohWSi4g8G2+voG13zBA2H
+	 kp+3Af3Myc2xce0lapzkKO1x37vTsBsSro5Hi+tOzp6yHl3vhUkeWKA7Khe8ubC9G5
+	 4woA+AvT48urE72lmDt/CSp7Mja//j8w4KB6o4ybnG9H1TiHcS6RBCrA8g89DWvwsZ
+	 rTtdN2benwGng==
+Date: Mon, 24 Nov 2025 17:39:31 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Riana Tauro <riana.tauro@intel.com>,
-	"Sean C. Dardis" <sean.c.dardis@intel.com>,
-	Farhan Ali <alifm@linux.ibm.com>,
-	Benjamin Block <bblock@linux.ibm.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Alek Du <alek.du@intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, qat-linux@intel.com,
-	Dave Jiang <dave.jiang@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH 2/2] treewide: Drop pci_save_state() after
- pci_restore_state()
-Message-ID: <20251124231303.GA2724188@bhelgaas>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH 1/1] PCI: Check pci_rebar_size_supported() input
+Message-ID: <20251124233931.GA2725583@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <c2b28cc4defa1b743cf1dedee23c455be98b397a.1760274044.git.lukas@wunner.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251124153740.2995-1-ilpo.jarvinen@linux.intel.com>
 
-On Sun, Oct 12, 2025 at 03:25:02PM +0200, Lukas Wunner wrote:
-> In 2009, commit c82f63e411f1 ("PCI: check saved state before restore")
-> changed the behavior of pci_restore_state() such that it became necessary
-> to call pci_save_state() afterwards, lest recovery from subsequent PCI
-> errors fails.
+On Mon, Nov 24, 2025 at 05:37:40PM +0200, Ilpo Järvinen wrote:
+> According to Dan Carpenter, smatch detects issue with size parameter
+> given to pci_rebar_size_supported():
 > 
-> The commit has just been reverted and so all the pci_save_state() after
-> pci_restore_state() calls that have accumulated in the tree are now
-> superfluous.  Drop them.
-
-Heads-up network and scsi folks: this touches some of your drivers,
-mostly in error recovery paths and a few suspend/resume paths.
-
-This change has been in linux-next since Nov 17, and I hope to merge
-it for v6.19.  Acks would be great if you have a chance.
-
-Bjorn
-
-> Two drivers chose a different approach to achieve the same result:
-> drivers/scsi/ipr.c and drivers/net/ethernet/intel/e1000e/netdev.c set the
-> pci_dev's "state_saved" flag to true before calling pci_restore_state().
-> Drop this as well.
+>   drivers/pci/rebar.c:142 pci_rebar_size_supported()
+>   error: undefined (user controlled) shift '(((1))) << size'
 > 
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+>   The problem is this call tree:
+>   __resource_resize_store() <- takes an unsigned long from the user
+>      -> pci_resize_resource() <- truncates it to int
+>         -> pci_rebar_size_supported()
+> 
+> The string input to __resource_resize_store() is to unsigned long and
+> then passed to pci_resize_resource(). There could be similar problems
+> also with the values coming from GPU drivers.
+> 
+> Add 'size' validation to pci_rebar_size_supported().
+> 
+> There seems to be no SZ_128T prior to this so add one to be able to
+> specify the largest size supported by the kernel (PCIe r7.0 spec
+> already defines sizes even beyond 128TB but kernel does not yet support
+> them).
+> 
+> The issue looks older than the introduction of
+> pci_rebar_size_supported() in the commit bb1fabd0d94e ("PCI: Add
+> pci_rebar_size_supported() helper").
+> 
+> It would be also nice to convert 'size' unsigned too everywhere, maybe
+> even u8 but that is left as further work.
+> 
+> Fixes: 8bb705e3e79d ("PCI: Add pci_resize_resource() for resizing BARs")
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+Applied to pci/resource for v6.19, thanks!
+
 > ---
-> Some of the pci_save_state() calls in drivers' probe hooks may now
-> likewise be superfluous if the probe hook doesn't touch Config Space.
-> These calls will be identified and dealt with individually.
 > 
->  drivers/crypto/intel/qat/qat_common/adf_aer.c    | 2 --
->  drivers/dma/ioat/init.c                          | 1 -
->  drivers/net/ethernet/broadcom/bnx2.c             | 2 --
->  drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c | 1 -
->  drivers/net/ethernet/broadcom/tg3.c              | 1 -
->  drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c  | 1 -
->  drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c  | 2 --
->  drivers/net/ethernet/hisilicon/hibmcge/hbg_err.c | 1 -
->  drivers/net/ethernet/intel/e1000e/netdev.c       | 1 -
->  drivers/net/ethernet/intel/fm10k/fm10k_pci.c     | 6 ------
->  drivers/net/ethernet/intel/i40e/i40e_main.c      | 1 -
->  drivers/net/ethernet/intel/ice/ice_main.c        | 2 --
->  drivers/net/ethernet/intel/igb/igb_main.c        | 2 --
->  drivers/net/ethernet/intel/igc/igc_main.c        | 2 --
->  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c    | 1 -
->  drivers/net/ethernet/mellanox/mlx4/main.c        | 1 -
->  drivers/net/ethernet/mellanox/mlx5/core/main.c   | 1 -
->  drivers/net/ethernet/meta/fbnic/fbnic_pci.c      | 1 -
->  drivers/net/ethernet/microchip/lan743x_main.c    | 1 -
->  drivers/net/ethernet/myricom/myri10ge/myri10ge.c | 4 ----
->  drivers/net/ethernet/neterion/s2io.c             | 1 -
->  drivers/pci/pcie/portdrv.c                       | 1 -
->  drivers/scsi/bfa/bfad.c                          | 1 -
->  drivers/scsi/csiostor/csio_init.c                | 1 -
->  drivers/scsi/ipr.c                               | 1 -
->  drivers/scsi/lpfc/lpfc_init.c                    | 6 ------
->  drivers/scsi/qla2xxx/qla_os.c                    | 5 -----
->  drivers/scsi/qla4xxx/ql4_os.c                    | 5 -----
->  drivers/tty/serial/8250/8250_pci.c               | 1 -
->  drivers/tty/serial/jsm/jsm_driver.c              | 1 -
->  30 files changed, 57 deletions(-)
+> As this is so close to the merge window, I assume this will be routed
+> through next but I suggest not folding it to the commit bb1fabd0d94e
+> ("PCI: Add pci_rebar_size_supported() helper") as this should be
+> backported. It will fail backport immediately as pci_rebar_size_supported()
+> is only in pci/resource but I'll deal with it when the time comes and
+> create a backport for it to the older codebase.
 > 
-> diff --git a/drivers/crypto/intel/qat/qat_common/adf_aer.c b/drivers/crypto/intel/qat/qat_common/adf_aer.c
-> index 35679b2..9a5a4b3 100644
-> --- a/drivers/crypto/intel/qat/qat_common/adf_aer.c
-> +++ b/drivers/crypto/intel/qat/qat_common/adf_aer.c
-> @@ -105,7 +105,6 @@ void adf_dev_restore(struct adf_accel_dev *accel_dev)
->  			 accel_dev->accel_id);
->  		hw_device->reset_device(accel_dev);
->  		pci_restore_state(pdev);
-> -		pci_save_state(pdev);
->  	}
+> ---
+>  drivers/pci/rebar.c   | 3 +++
+>  include/linux/sizes.h | 1 +
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/drivers/pci/rebar.c b/drivers/pci/rebar.c
+> index 8f7af3053cd8..a84165a196fa 100644
+> --- a/drivers/pci/rebar.c
+> +++ b/drivers/pci/rebar.c
+> @@ -139,6 +139,9 @@ bool pci_rebar_size_supported(struct pci_dev *pdev, int bar, int size)
+>  {
+>  	u64 sizes = pci_rebar_get_possible_sizes(pdev, bar);
+>  
+> +	if (size < 0 || size > ilog2(SZ_128T) - ilog2(PCI_REBAR_MIN_SIZE))
+> +		return false;
+> +
+>  	return BIT(size) & sizes;
 >  }
+>  EXPORT_SYMBOL_GPL(pci_rebar_size_supported);
+> diff --git a/include/linux/sizes.h b/include/linux/sizes.h
+> index 49039494076f..f1f1a055b047 100644
+> --- a/include/linux/sizes.h
+> +++ b/include/linux/sizes.h
+> @@ -67,5 +67,6 @@
+>  #define SZ_16T				_AC(0x100000000000, ULL)
+>  #define SZ_32T				_AC(0x200000000000, ULL)
+>  #define SZ_64T				_AC(0x400000000000, ULL)
+> +#define SZ_128T				_AC(0x800000000000, ULL)
 >  
-> @@ -204,7 +203,6 @@ static pci_ers_result_t adf_slot_reset(struct pci_dev *pdev)
->  	if (!pdev->is_busmaster)
->  		pci_set_master(pdev);
->  	pci_restore_state(pdev);
-> -	pci_save_state(pdev);
->  	res = adf_dev_up(accel_dev, false);
->  	if (res && res != -EALREADY)
->  		return PCI_ERS_RESULT_DISCONNECT;
-> diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
-> index 02f68b3..2273986 100644
-> --- a/drivers/dma/ioat/init.c
-> +++ b/drivers/dma/ioat/init.c
-> @@ -1286,7 +1286,6 @@ static pci_ers_result_t ioat_pcie_error_slot_reset(struct pci_dev *pdev)
->  	} else {
->  		pci_set_master(pdev);
->  		pci_restore_state(pdev);
-> -		pci_save_state(pdev);
->  		pci_wake_from_d3(pdev, false);
->  	}
->  
-> diff --git a/drivers/net/ethernet/broadcom/bnx2.c b/drivers/net/ethernet/broadcom/bnx2.c
-> index cb1011f..805daae 100644
-> --- a/drivers/net/ethernet/broadcom/bnx2.c
-> +++ b/drivers/net/ethernet/broadcom/bnx2.c
-> @@ -6444,7 +6444,6 @@ static u32 bnx2_find_max_ring(u32 ring_size, u32 max_size)
->  	if (!(pcicmd & PCI_COMMAND_MEMORY)) {
->  		/* in case PCI block has reset */
->  		pci_restore_state(bp->pdev);
-> -		pci_save_state(bp->pdev);
->  	}
->  	rc = bnx2_init_nic(bp, 1);
->  	if (rc) {
-> @@ -8718,7 +8717,6 @@ static pci_ers_result_t bnx2_io_slot_reset(struct pci_dev *pdev)
->  	} else {
->  		pci_set_master(pdev);
->  		pci_restore_state(pdev);
-> -		pci_save_state(pdev);
->  
->  		if (netif_running(dev))
->  			err = bnx2_init_nic(bp, 1);
-> diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-> index f0f05d7..8e6eec8 100644
-> --- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-> +++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-> @@ -14216,7 +14216,6 @@ static pci_ers_result_t bnx2x_io_slot_reset(struct pci_dev *pdev)
->  
->  	pci_set_master(pdev);
->  	pci_restore_state(pdev);
-> -	pci_save_state(pdev);
->  
->  	if (netif_running(dev))
->  		bnx2x_set_power_state(bp, PCI_D0);
-> diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-> index 7f00ec7..ecc1220 100644
-> --- a/drivers/net/ethernet/broadcom/tg3.c
-> +++ b/drivers/net/ethernet/broadcom/tg3.c
-> @@ -18352,7 +18352,6 @@ static pci_ers_result_t tg3_io_slot_reset(struct pci_dev *pdev)
->  
->  	pci_set_master(pdev);
->  	pci_restore_state(pdev);
-> -	pci_save_state(pdev);
->  
->  	if (!netdev || !netif_running(netdev)) {
->  		rc = PCI_ERS_RESULT_RECOVERED;
-> diff --git a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-> index f92a355..3b1321c 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-> +++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-> @@ -2933,7 +2933,6 @@ static int t3_reenable_adapter(struct adapter *adapter)
->  	}
->  	pci_set_master(adapter->pdev);
->  	pci_restore_state(adapter->pdev);
-> -	pci_save_state(adapter->pdev);
->  
->  	/* Free sge resources */
->  	t3_free_sge_resources(adapter);
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-> index 392723e..1ce2091 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-> @@ -5456,7 +5456,6 @@ static pci_ers_result_t eeh_slot_reset(struct pci_dev *pdev)
->  
->  	if (!adap) {
->  		pci_restore_state(pdev);
-> -		pci_save_state(pdev);
->  		return PCI_ERS_RESULT_RECOVERED;
->  	}
->  
-> @@ -5471,7 +5470,6 @@ static pci_ers_result_t eeh_slot_reset(struct pci_dev *pdev)
->  
->  	pci_set_master(pdev);
->  	pci_restore_state(pdev);
-> -	pci_save_state(pdev);
->  
->  	if (t4_wait_dev_ready(adap->regs) < 0)
->  		return PCI_ERS_RESULT_DISCONNECT;
-> diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_err.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_err.c
-> index 83cf75b..2eb1e3d 100644
-> --- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_err.c
-> +++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_err.c
-> @@ -158,7 +158,6 @@ static pci_ers_result_t hbg_pci_err_slot_reset(struct pci_dev *pdev)
->  
->  	pci_set_master(pdev);
->  	pci_restore_state(pdev);
-> -	pci_save_state(pdev);
->  
->  	hbg_err_reset(priv);
->  	return PCI_ERS_RESULT_RECOVERED;
-> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-> index 201322d..7589660 100644
-> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
-> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-> @@ -7195,7 +7195,6 @@ static pci_ers_result_t e1000_io_slot_reset(struct pci_dev *pdev)
->  			"Cannot re-enable PCI device after reset.\n");
->  		result = PCI_ERS_RESULT_DISCONNECT;
->  	} else {
-> -		pdev->state_saved = true;
->  		pci_restore_state(pdev);
->  		pci_set_master(pdev);
->  
-> diff --git a/drivers/net/ethernet/intel/fm10k/fm10k_pci.c b/drivers/net/ethernet/intel/fm10k/fm10k_pci.c
-> index ae5fe34..d75b8a5 100644
-> --- a/drivers/net/ethernet/intel/fm10k/fm10k_pci.c
-> +++ b/drivers/net/ethernet/intel/fm10k/fm10k_pci.c
-> @@ -2423,12 +2423,6 @@ static pci_ers_result_t fm10k_io_slot_reset(struct pci_dev *pdev)
->  	} else {
->  		pci_set_master(pdev);
->  		pci_restore_state(pdev);
-> -
-> -		/* After second error pci->state_saved is false, this
-> -		 * resets it so EEH doesn't break.
-> -		 */
-> -		pci_save_state(pdev);
-> -
->  		pci_wake_from_d3(pdev, false);
->  
->  		result = PCI_ERS_RESULT_RECOVERED;
-> diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-> index 50be0a6..d8192aa 100644
-> --- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-> +++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-> @@ -16455,7 +16455,6 @@ static pci_ers_result_t i40e_pci_error_slot_reset(struct pci_dev *pdev)
->  	} else {
->  		pci_set_master(pdev);
->  		pci_restore_state(pdev);
-> -		pci_save_state(pdev);
->  		pci_wake_from_d3(pdev, false);
->  
->  		reg = rd32(&pf->hw, I40E_GLGEN_RTRIG);
-> diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-> index 86f5859..6c7dcca 100644
-> --- a/drivers/net/ethernet/intel/ice/ice_main.c
-> +++ b/drivers/net/ethernet/intel/ice/ice_main.c
-> @@ -5663,7 +5663,6 @@ static int ice_resume(struct device *dev)
->  
->  	pci_set_power_state(pdev, PCI_D0);
->  	pci_restore_state(pdev);
-> -	pci_save_state(pdev);
->  
->  	if (!pci_device_is_present(pdev))
->  		return -ENODEV;
-> @@ -5763,7 +5762,6 @@ static pci_ers_result_t ice_pci_err_slot_reset(struct pci_dev *pdev)
->  	} else {
->  		pci_set_master(pdev);
->  		pci_restore_state(pdev);
-> -		pci_save_state(pdev);
->  		pci_wake_from_d3(pdev, false);
->  
->  		/* Check for life */
-> diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-> index 85f9589..dbea372 100644
-> --- a/drivers/net/ethernet/intel/igb/igb_main.c
-> +++ b/drivers/net/ethernet/intel/igb/igb_main.c
-> @@ -9599,7 +9599,6 @@ static int __igb_resume(struct device *dev, bool rpm)
->  
->  	pci_set_power_state(pdev, PCI_D0);
->  	pci_restore_state(pdev);
-> -	pci_save_state(pdev);
->  
->  	if (!pci_device_is_present(pdev))
->  		return -ENODEV;
-> @@ -9754,7 +9753,6 @@ static pci_ers_result_t igb_io_slot_reset(struct pci_dev *pdev)
->  	} else {
->  		pci_set_master(pdev);
->  		pci_restore_state(pdev);
-> -		pci_save_state(pdev);
->  
->  		pci_enable_wake(pdev, PCI_D3hot, 0);
->  		pci_enable_wake(pdev, PCI_D3cold, 0);
-> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-> index 728d7ca..7aafa60b 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_main.c
-> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
-> @@ -7530,7 +7530,6 @@ static int __igc_resume(struct device *dev, bool rpm)
->  
->  	pci_set_power_state(pdev, PCI_D0);
->  	pci_restore_state(pdev);
-> -	pci_save_state(pdev);
->  
->  	if (!pci_device_is_present(pdev))
->  		return -ENODEV;
-> @@ -7667,7 +7666,6 @@ static pci_ers_result_t igc_io_slot_reset(struct pci_dev *pdev)
->  	} else {
->  		pci_set_master(pdev);
->  		pci_restore_state(pdev);
-> -		pci_save_state(pdev);
->  
->  		pci_enable_wake(pdev, PCI_D3hot, 0);
->  		pci_enable_wake(pdev, PCI_D3cold, 0);
-> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-> index 90d4e57..d65d691 100644
-> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-> @@ -12297,7 +12297,6 @@ static pci_ers_result_t ixgbe_io_slot_reset(struct pci_dev *pdev)
->  		adapter->hw.hw_addr = adapter->io_addr;
->  		pci_set_master(pdev);
->  		pci_restore_state(pdev);
-> -		pci_save_state(pdev);
->  
->  		pci_wake_from_d3(pdev, false);
->  
-> diff --git a/drivers/net/ethernet/mellanox/mlx4/main.c b/drivers/net/ethernet/mellanox/mlx4/main.c
-> index 03d2fc7..d1fbf37 100644
-> --- a/drivers/net/ethernet/mellanox/mlx4/main.c
-> +++ b/drivers/net/ethernet/mellanox/mlx4/main.c
-> @@ -4366,7 +4366,6 @@ static pci_ers_result_t mlx4_pci_slot_reset(struct pci_dev *pdev)
->  
->  	pci_set_master(pdev);
->  	pci_restore_state(pdev);
-> -	pci_save_state(pdev);
->  	return PCI_ERS_RESULT_RECOVERED;
->  }
->  
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-> index df93625..08f7778 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-> @@ -2095,7 +2095,6 @@ static pci_ers_result_t mlx5_pci_slot_reset(struct pci_dev *pdev)
->  
->  	pci_set_master(pdev);
->  	pci_restore_state(pdev);
-> -	pci_save_state(pdev);
->  
->  	err = wait_vital(pdev);
->  	if (err) {
-> diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_pci.c b/drivers/net/ethernet/meta/fbnic/fbnic_pci.c
-> index a7a6b4d..0fa90ba 100644
-> --- a/drivers/net/ethernet/meta/fbnic/fbnic_pci.c
-> +++ b/drivers/net/ethernet/meta/fbnic/fbnic_pci.c
-> @@ -574,7 +574,6 @@ static pci_ers_result_t fbnic_err_slot_reset(struct pci_dev *pdev)
->  
->  	pci_set_power_state(pdev, PCI_D0);
->  	pci_restore_state(pdev);
-> -	pci_save_state(pdev);
->  
->  	if (pci_enable_device_mem(pdev)) {
->  		dev_err(&pdev->dev,
-> diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
-> index 9d70b51..e4c542f 100644
-> --- a/drivers/net/ethernet/microchip/lan743x_main.c
-> +++ b/drivers/net/ethernet/microchip/lan743x_main.c
-> @@ -3915,7 +3915,6 @@ static int lan743x_pm_resume(struct device *dev)
->  
->  	pci_set_power_state(pdev, PCI_D0);
->  	pci_restore_state(pdev);
-> -	pci_save_state(pdev);
->  
->  	/* Restore HW_CFG that was saved during pm suspend */
->  	if (adapter->is_pci11x1x)
-> diff --git a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-> index e611ff7..7be30a8 100644
-> --- a/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-> +++ b/drivers/net/ethernet/myricom/myri10ge/myri10ge.c
-> @@ -3416,10 +3416,6 @@ static void myri10ge_watchdog(struct work_struct *work)
->  		 * nic was resumed from power saving mode.
->  		 */
->  		pci_restore_state(mgp->pdev);
-> -
-> -		/* save state again for accounting reasons */
-> -		pci_save_state(mgp->pdev);
-> -
->  	} else {
->  		/* if we get back -1's from our slot, perhaps somebody
->  		 * powered off our card.  Don't try to reset it in
-> diff --git a/drivers/net/ethernet/neterion/s2io.c b/drivers/net/ethernet/neterion/s2io.c
-> index 5026b02..1e55ccb 100644
-> --- a/drivers/net/ethernet/neterion/s2io.c
-> +++ b/drivers/net/ethernet/neterion/s2io.c
-> @@ -3425,7 +3425,6 @@ static void s2io_reset(struct s2io_nic *sp)
->  
->  		/* Restore the PCI state saved during initialization. */
->  		pci_restore_state(sp->pdev);
-> -		pci_save_state(sp->pdev);
->  		pci_read_config_word(sp->pdev, 0x2, &val16);
->  		if (check_pci_device_id(val16) != (u16)PCI_ANY_ID)
->  			break;
-> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> index d1b68c18..38a41cc 100644
-> --- a/drivers/pci/pcie/portdrv.c
-> +++ b/drivers/pci/pcie/portdrv.c
-> @@ -760,7 +760,6 @@ static pci_ers_result_t pcie_portdrv_slot_reset(struct pci_dev *dev)
->  	device_for_each_child(&dev->dev, &off, pcie_port_device_iter);
->  
->  	pci_restore_state(dev);
-> -	pci_save_state(dev);
->  	return PCI_ERS_RESULT_RECOVERED;
->  }
->  
-> diff --git a/drivers/scsi/bfa/bfad.c b/drivers/scsi/bfa/bfad.c
-> index ff9adfc..bdfd065 100644
-> --- a/drivers/scsi/bfa/bfad.c
-> +++ b/drivers/scsi/bfa/bfad.c
-> @@ -1528,7 +1528,6 @@ static int restart_bfa(struct bfad_s *bfad)
->  		goto out_disable_device;
->  	}
->  
-> -	pci_save_state(pdev);
->  	pci_set_master(pdev);
->  
->  	rc = dma_set_mask_and_coherent(&bfad->pcidev->dev, DMA_BIT_MASK(64));
-> diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csio_init.c
-> index 79c8daf..db0c217 100644
-> --- a/drivers/scsi/csiostor/csio_init.c
-> +++ b/drivers/scsi/csiostor/csio_init.c
-> @@ -1093,7 +1093,6 @@ static void csio_remove_one(struct pci_dev *pdev)
->  
->  	pci_set_master(pdev);
->  	pci_restore_state(pdev);
-> -	pci_save_state(pdev);
->  
->  	/* Bring HW s/m to ready state.
->  	 * but don't resume IOs.
-> diff --git a/drivers/scsi/ipr.c b/drivers/scsi/ipr.c
-> index 4421488..9512368 100644
-> --- a/drivers/scsi/ipr.c
-> +++ b/drivers/scsi/ipr.c
-> @@ -7859,7 +7859,6 @@ static int ipr_reset_restore_cfg_space(struct ipr_cmnd *ipr_cmd)
->  	struct ipr_ioa_cfg *ioa_cfg = ipr_cmd->ioa_cfg;
->  
->  	ENTER;
-> -	ioa_cfg->pdev->state_saved = true;
->  	pci_restore_state(ioa_cfg->pdev);
->  
->  	if (ipr_set_pcix_cmd_reg(ioa_cfg)) {
-> diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-> index f206267..065eb91 100644
-> --- a/drivers/scsi/lpfc/lpfc_init.c
-> +++ b/drivers/scsi/lpfc/lpfc_init.c
-> @@ -14434,12 +14434,6 @@ static int lpfc_cpu_online(unsigned int cpu, struct hlist_node *node)
->  
->  	pci_restore_state(pdev);
->  
-> -	/*
-> -	 * As the new kernel behavior of pci_restore_state() API call clears
-> -	 * device saved_state flag, need to save the restored state again.
-> -	 */
-> -	pci_save_state(pdev);
-> -
->  	if (pdev->is_busmaster)
->  		pci_set_master(pdev);
->  
-> diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-> index 5ffd945..9007533e 100644
-> --- a/drivers/scsi/qla2xxx/qla_os.c
-> +++ b/drivers/scsi/qla2xxx/qla_os.c
-> @@ -7886,11 +7886,6 @@ static void qla_pci_error_cleanup(scsi_qla_host_t *vha)
->  
->  	pci_restore_state(pdev);
->  
-> -	/* pci_restore_state() clears the saved_state flag of the device
-> -	 * save restored state which resets saved_state flag
-> -	 */
-> -	pci_save_state(pdev);
-> -
->  	if (ha->mem_only)
->  		rc = pci_enable_device_mem(pdev);
->  	else
-> diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-> index a761c0a..1f52379 100644
-> --- a/drivers/scsi/qla4xxx/ql4_os.c
-> +++ b/drivers/scsi/qla4xxx/ql4_os.c
-> @@ -9796,11 +9796,6 @@ static uint32_t qla4_8xxx_error_recovery(struct scsi_qla_host *ha)
->  	 */
->  	pci_restore_state(pdev);
->  
-> -	/* pci_restore_state() clears the saved_state flag of the device
-> -	 * save restored state which resets saved_state flag
-> -	 */
-> -	pci_save_state(pdev);
-> -
->  	/* Initialize device or resume if in suspended state */
->  	rc = pci_enable_device(pdev);
->  	if (rc) {
-> diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
-> index 152f914..65bd370 100644
-> --- a/drivers/tty/serial/8250/8250_pci.c
-> +++ b/drivers/tty/serial/8250/8250_pci.c
-> @@ -6178,7 +6178,6 @@ static pci_ers_result_t serial8250_io_slot_reset(struct pci_dev *dev)
->  		return PCI_ERS_RESULT_DISCONNECT;
->  
->  	pci_restore_state(dev);
-> -	pci_save_state(dev);
->  
->  	return PCI_ERS_RESULT_RECOVERED;
->  }
-> diff --git a/drivers/tty/serial/jsm/jsm_driver.c b/drivers/tty/serial/jsm/jsm_driver.c
-> index 417a5b6..8d21373 100644
-> --- a/drivers/tty/serial/jsm/jsm_driver.c
-> +++ b/drivers/tty/serial/jsm/jsm_driver.c
-> @@ -355,7 +355,6 @@ static void jsm_io_resume(struct pci_dev *pdev)
->  	struct jsm_board *brd = pci_get_drvdata(pdev);
->  
->  	pci_restore_state(pdev);
-> -	pci_save_state(pdev);
->  
->  	jsm_uart_port_init(brd);
->  }
+>  #endif /* __LINUX_SIZES_H__ */
+> 
+> base-commit: bf0a90fc907e47344f88e5b9b241082184dbac27
 > -- 
-> 2.51.0
+> 2.39.5
 > 
 
