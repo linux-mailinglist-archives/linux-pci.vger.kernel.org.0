@@ -1,56 +1,54 @@
-Return-Path: <linux-pci+bounces-41988-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41989-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E69A1C8287F
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 22:27:59 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1420C828AF
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 22:32:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9CACC3AB540
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 21:27:58 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 90A884E0EC6
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 21:32:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EC7C32E68D;
-	Mon, 24 Nov 2025 21:27:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44B722DBF40;
+	Mon, 24 Nov 2025 21:32:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5a7p2XY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KoikFaol"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FD72F363B;
-	Mon, 24 Nov 2025 21:27:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3791C84BC;
+	Mon, 24 Nov 2025 21:32:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764019676; cv=none; b=kXGntbdJ31l3ZnJfzoTMPOd0QNYE7mah1xmlljTV/rY0qpNxRxqEcZyUtaXUwjBLamHW5CFbvwBXC3fwITLfkxZ2RxXgbPA3ryaUNGZ4L7QjEZImjuRBD+3xMzCqyU20jt0opuc3UKIObrRtjGU8fZSL54W5T3/mZw4qBdXaAaA=
+	t=1764019963; cv=none; b=o+UFLN3dGRH+z25s/owsszXMkV12BPMprB4m/Js7UUfn0AMo04e9EPlGE7gD3he52f92RR+BcmnwnhRWXzvzke3FPnKAwaXfIphxEEk5IbXN9bSR54h6wnXRcG3uayseqlAczEqNq9lE+69Mxc3+bUTS1zCipk6+UcvPETGU1jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764019676; c=relaxed/simple;
-	bh=HSRYKWBW9pOroBohYQkSBsBpthFOGxhpexSq+GXtG8c=;
+	s=arc-20240116; t=1764019963; c=relaxed/simple;
+	bh=N/JgUuEqHbMVDwvonva1mhxZkydQiFcEqKnKir1ma6M=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=eeH8QltqlwpSJQtToKR/czEPnXfwkkheht0MkN+R3fqAGzhBwqXAhI/MtfMhHLAsfgoCSBoQ2Hzz6+Vo4+9jAs0CCkPpHasYtwUWIMXoo0nyI6brgS208NoZjL2YfP+QxwqDEJ75JiFgC040pfqBFsWCCP0zyw4EYi3TOOTNY4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5a7p2XY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30539C4CEFB;
-	Mon, 24 Nov 2025 21:27:55 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=PU4NhwAuxLot0uY1EM5qcDWBHgNLWGxm+8bUuV/XlK6zqVZqSLGQDvp4/nIRYmEjAbasLKkE5CbeN+jFwfESsM9G7E9M2Ze0sivaP1cBMKwLOrB4xZtc7nmJENSabl0ICXyBNR3AWjXyVTrjFOyn4AfKBIlPSyqMkCvJvD/bYBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KoikFaol; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76DA4C4CEF1;
+	Mon, 24 Nov 2025 21:32:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764019675;
-	bh=HSRYKWBW9pOroBohYQkSBsBpthFOGxhpexSq+GXtG8c=;
+	s=k20201202; t=1764019962;
+	bh=N/JgUuEqHbMVDwvonva1mhxZkydQiFcEqKnKir1ma6M=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=C5a7p2XYEWgnqtt6D6T0VdRdS3UNCMTPzV5RYVZFzJ4cmviKO0NRGOAhjzAaa1L8g
-	 m7Y89o/sTe7GSTjwjnxEWOHBlA7rY5XqMpA6o6AqelZ7+I5KR1WmtElWfAT6frqmaC
-	 zzn3fokF6Fm3LnpJI1cy2F0ZQgcOXXoL9WG3i2TCVxsrGFtKbUjQx/6Jnn0ibdETR2
-	 7nkjKPTRbh54NjaNIgPHJKaMmtxzwfMtD5bBC+vPoBjHoGC9Ih5HAkLm3VZf+MGs1b
-	 20ChU2xPL9Puh+KsuGFKVXyKasOU55A+/9Yu0jWnPR8L6tVy503Kqw3GIzfl+Sk8qC
-	 Ur4i+LRnKS8Qg==
-Date: Mon, 24 Nov 2025 15:27:53 -0600
+	b=KoikFaolpEGoLd3a/d/OrXm45UtteFI6cLqGu8VEyanf5G6PyvclXIHCCg/DOyWi+
+	 6Lb1KTD3MRzWDFIErlgTNB5RWqc30tIj1qyNoDYNALcTyfxPe7/b9glhRjV2N9J3IH
+	 1voVlPWJ5GWQNiyxQShU/kgl9/GHVY+tlZ+sPX/qcqu2XUz0+4oTbytEyyfmAjPy9L
+	 xEogljS6dgDV0oJMJHE6RznePi+T1HS7q6UgWTIcq5QrOexF+ZIyxt5Ri3uk4WaUzv
+	 drEAFA//o2pKCA5iDO0Z+lnA0CtpFK0fEVFZ2OyPsmMyqkfmSH6fJ998ipTVVq7VE/
+	 X7dM1JCsMJnSw==
+Date: Mon, 24 Nov 2025 15:32:41 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Zhiping Zhang <zhipingz@meta.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-rdma@vger.kernel.org,
-	linux-pci@vger.kernel.org, netdev@vger.kernel.org,
-	Keith Busch <kbusch@kernel.org>, Yochai Cohen <yochai@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>
-Subject: Re: [RFC 1/2] Set steering-tag directly for PCIe P2P memory access
-Message-ID: <20251124212753.GA2714985@bhelgaas>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Cc: bhelgaas@google.com, brgl@bgdev.pl, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, krishna.chundru@oss.qualcomm.com,
+	Manivannan Sadhasivam <mani@kernel.org>
+Subject: Re: [PATCH 0/2] PCI/pwrctrl: tc9563: A couple of fixes
+Message-ID: <20251124213241.GA2715978@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,76 +57,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251113213712.776234-2-zhipingz@meta.com>
+In-Reply-To: <20251120065116.13647-1-mani@kernel.org>
 
-On Thu, Nov 13, 2025 at 01:37:11PM -0800, Zhiping Zhang wrote:
-> PCIe: Add a memory type for P2P memory access
-
-This should be in the Subject: line.
-
-It should also start with "PCI/TPH: ..." (not "PCIe") to match
-previous history.
-
-> The current tph memory type definition applies for CPU use cases. For device
-> memory accessed in the peer-to-peer (P2P) manner, we need another memory
-> type.
-
-s/tph/TPH/
-
-Make this say what the patch does (not just that we *need* another
-memory type, that we actually *add* one).
-
-The subject line should also say what the patch does.  I don't think
-this patch actually changes the *setting* of the steering tag (I could
-be wrong, I haven't looked carefully).
-
-> Signed-off-by: Zhiping Zhang <zhipingz@meta.com>
-> ---
->  drivers/pci/tph.c       | 4 ++++
->  include/linux/pci-tph.h | 4 +++-
->  2 files changed, 7 insertions(+), 1 deletion(-)
+On Thu, Nov 20, 2025 at 12:21:14PM +0530, Manivannan Sadhasivam wrote:
+> Hi Bjorn,
 > 
-> diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
-> index cc64f93709a4..d983c9778c72 100644
-> --- a/drivers/pci/tph.c
-> +++ b/drivers/pci/tph.c
-> @@ -67,6 +67,8 @@ static u16 tph_extract_tag(enum tph_mem_type mem_type, u8 req_type,
->  			if (info->pm_st_valid)
->  				return info->pm_st;
->  			break;
-> +		default:
-> +			return 0;
->  		}
->  		break;
->  	case PCI_TPH_REQ_EXT_TPH: /* 16-bit tag */
-> @@ -79,6 +81,8 @@ static u16 tph_extract_tag(enum tph_mem_type mem_type, u8 req_type,
->  			if (info->pm_xst_valid)
->  				return info->pm_xst;
->  			break;
-> +		default:
-> +			return 0;
->  		}
->  		break;
->  	default:
-> diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
-> index 9e4e331b1603..b989302b6755 100644
-> --- a/include/linux/pci-tph.h
-> +++ b/include/linux/pci-tph.h
-> @@ -14,10 +14,12 @@
->   * depending on the memory type: Volatile Memory or Persistent Memory. When a
->   * caller query about a target's Steering Tag, it must provide the target's
->   * tph_mem_type. ECN link: https://members.pcisig.com/wg/PCI-SIG/document/15470.
-> + * Add a new tph type for PCI peer-to-peer access use case.
->   */
->  enum tph_mem_type {
->  	TPH_MEM_TYPE_VM,	/* volatile memory */
-> -	TPH_MEM_TYPE_PM		/* persistent memory */
-> +	TPH_MEM_TYPE_PM,	/* persistent memory */
-> +	TPH_MEM_TYPE_P2P	/* peer-to-peer accessable memory */
->  };
->  
->  #ifdef CONFIG_PCIE_TPH
-> -- 
-> 2.47.3
+> Please squash these fixes with the offending commit.
 > 
+> - Mani
+> 
+> Manivannan Sadhasivam (2):
+>   PCI/pwrctrl: tc9563: Enforce I2C dependency
+>   PCI/pwrctrl: tc9563: Remove unnecessary semicolons
+> 
+>  drivers/pci/pwrctrl/Kconfig              | 1 +
+>  drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c | 6 +++---
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+
+Squashed into pci/pwrctrl-tc9563, thanks!
 
