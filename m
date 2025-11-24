@@ -1,52 +1,53 @@
-Return-Path: <linux-pci+bounces-41958-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41957-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAE44C81870
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 17:21:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88344C81867
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 17:21:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C7FC14E3ADB
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 16:21:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F99B3A2E6A
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 16:21:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC2A62FC897;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A792B315D2D;
 	Mon, 24 Nov 2025 16:21:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HPGLSOGi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVskwYr5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78249314A99;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781BF314A63;
 	Mon, 24 Nov 2025 16:21:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764001264; cv=none; b=HhL47vRk6WSxVzyhPQgxlogxvFSdlwF47g8W/NHpxajIg3Ey8m3BW6uLYf30zjkOvXZ5irHPzP2ABXNpIDtN5mwkcw01kTmelPfUxaGovHeOmVcAB4KcHyW+ePRkMBHIeuNer5W+qA0P/MBpT6JAn/QjdM1pOBbe9fBAUZoP3U8=
+	t=1764001264; cv=none; b=O8Km9uKkr0H+8n8zZ5Nspp/VoADxzwnlC2bTe0gZN9GirebhW6lrH1VuFguawDWNhct6lpExuYpYr1trrWRESjkOg1k8iiufQh1Rf+VTbnWfgnUzR0Rlkq0fJzlvgBLg89BkQNoUsLcWqYyvzAg9wkGH84idru6SegggDBRdG8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1764001264; c=relaxed/simple;
-	bh=iVE1obRMnciMq20+t0E0Wgd8Gf0+fcO2/7lj1bhky3Y=;
+	bh=hj0W70plhEe4m1xw3Pm9LugNFa+BQ7eFwiLsZvfg92o=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OCl/4TyqKeG7kJqaHipIEtrzUGM1+xekgEwOp8vJ4xCf5Jj6RXrsatfCPIuEpK+d1Vd1U478TFGe2t3Ih8wq1K6YXpc2iBEgUA/qkeTp9BGE+7qHJvP1Z8CSZl/tE3lCumN9OK0asIgBdlr9DVzKRPcU/j2xIhAtnQhM5DEUXJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HPGLSOGi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E08DDC116C6;
+	 In-Reply-To:To:Cc; b=YiF2ueMNj40IZysS3MNrw46vbFTFLA5xOS6x8VDaXKcSxXkfAlPAhkloUFJpH2l779zmBKaVW7WytKOk2CnhOihM1k4JKKynQOc1j7JcyHGxYzMZTTXYxH86FVV9yHOjDhIntV2TgjsnkvNfsJQArVZTqIDsoEg8Y3VEh4np4zM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVskwYr5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EBF8CC19425;
 	Mon, 24 Nov 2025 16:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1764001264;
-	bh=iVE1obRMnciMq20+t0E0Wgd8Gf0+fcO2/7lj1bhky3Y=;
+	bh=hj0W70plhEe4m1xw3Pm9LugNFa+BQ7eFwiLsZvfg92o=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=HPGLSOGiOYUsgaQWkQmj06b+f2vBryJMJNG5VNG5/c8U76UwvLjNF/AAahqhh1IYo
-	 ZyFZzRpAP1eYh88Njvb99vcdbzhJuv9DGvnayocYqJn8uERakCSNvhsADmhIkzTnsX
-	 t8EXqJviNhhMdzEsXcW59evaWW+7AYXH+kXixqpffGaPhoDX6r4JhvBZVIdyMRacVg
-	 UVG6gTHmQPVRX7SLcNyZ1QOtbvjYUGM+70ToeDUZ33pq8XpRn9cmuJLNrk8xHtbtXm
-	 UNQrll/O3TDCOTwRoFPnonTJCEsBU4KYbjkpoC5K0tLQnv2zW8+fHbF+wrxGXGsyYP
-	 90SKxO7LT0uMw==
+	b=QVskwYr5gJ6iejEbV9hfZ664itEqtii0Y5UD1jxvRN08XCBs0tcV4lEL2o+kYSC1i
+	 mtwAUMhGPO2E3Hm1Rru04IW8xwMc845pOqUKVf/ylDt3IOk23tWZY3bybj9RCIs+GO
+	 0WmCJ2iN0b0TNPN2Edk4mFFlaVE0oLhJzO+OXLJtOyn/v23f44sRn1lYImxSFfbkLa
+	 WwxAPrtNMURu0sRB0hkPctzfmJ8cluIHD+L/xZHJw41egWK2RzcMcLPjEXCA4lj9Vv
+	 GiqBBAudilaSPuHuZYGrLUZOuYUJ8Xsvx3EGa69DmAu7Ob2o9LUMVC36aMgb4r1hbu
+	 5GJLR4nbmQiWA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5E0CFD313;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C4BCFD31D;
 	Mon, 24 Nov 2025 16:21:03 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Mon, 24 Nov 2025 21:50:44 +0530
-Subject: [PATCH 1/5] PCI: qcom: Parse PERST# from all PCIe bridge nodes
+Date: Mon, 24 Nov 2025 21:50:45 +0530
+Subject: [PATCH 2/5] PCI/pwrctrl: Add 'struct pci_pwrctrl::power_{on/off}'
+ callbacks
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251124-pci-pwrctrl-rework-v1-1-78a72627683d@oss.qualcomm.com>
+Message-Id: <20251124-pci-pwrctrl-rework-v1-2-78a72627683d@oss.qualcomm.com>
 References: <20251124-pci-pwrctrl-rework-v1-0-78a72627683d@oss.qualcomm.com>
 In-Reply-To: <20251124-pci-pwrctrl-rework-v1-0-78a72627683d@oss.qualcomm.com>
 To: Manivannan Sadhasivam <mani@kernel.org>, 
@@ -70,16 +71,16 @@ Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  Niklas Cassel <cassel@kernel.org>, Alex Elder <elder@riscstar.com>, 
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7456;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6293;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=MCSBhbbg9vGMpjTEI8+dqcv0csxSz0v3Na25Cc4NhqQ=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpJIXr9wE/ax/MgVsttiO9zRmORDEiQFQ7sdJLR
- 8msynOU2a6JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaSSF6wAKCRBVnxHm/pHO
- 9cYYB/99atS90AZH4KZDkPaL0aUWjyDucZSceInRXLoTp4vI7nFPdr9yHTJ+pg25bPACyaS78gY
- AWu+wM0FAaMZnl2cLToHhM224T3/UnTh9Fy5aRDsYdxagyxo2oJGx7soaqmJHvfnaz0tAVgF+ev
- dWljCMEoKRkZCmH7RCPBPgSQa3AddMR+Bjjj620kMnrETpEVLEkqDA2vlBGt4Am+93wH1fMaWrb
- NichJXuGZz5dORUL6QdMMCIPDFFxfOkhwm1F3YRCDSxk7OXlXGMJOcJG1kLT+kM3sEDXN9D2cAb
- Rg0yZ6t8g2eVROzvjv6wKj9XWjKjFZPMlzE47JoEQOenoKbh
+ bh=6deGnX1CPbvEiEx2HgwsKZt+v6TUHFgUyDrenVaupTY=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpJIXrGXndG74cMO1Hd7xDpblwiN6OUVi/XKe+s
+ DK2u/TK/I6JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaSSF6wAKCRBVnxHm/pHO
+ 9S6kB/sG1Cn+iSU+3yUfjQEfdBWW32DohrGeCJdphfyNPqVL2BzBtXVt9kfS8yf1xC2FVo14irO
+ 19VlWJz4piCuxuUlHk1z/EtEnxdUJU6MckI4xRMtyOjoESTIO2V1nxSFuZxQj/d2BNkKC2d+s4q
+ Zp1zBV3TBtv4gdx4M0TylqAl2sn/HZxMHULeGVKBl7Yazo6y/jVNVYlugr3gnUPqmWOAen6T8te
+ EKrFKmvt7/hMgpzuUloWmnt6KPdxsN/srNw/M03qnSoK6UCKTof7C1IDs3siONISBm6+ZMHqQ7P
+ EZPPRPOYzVp4DvPHCb8zG14y/TLbDjcfqL1u5ozQJKtohxkU
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -89,231 +90,184 @@ Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-Devicetree schema allows the PERST# GPIO to be present in all PCIe bridge
-nodes, not just in Root Port node. But the current logic parses PERST# only
-from the Root Port nodes. Though it is not causing any issue on the current
-platforms, the upcoming platforms will have PERST# in PCIe switch
-downstream ports also. So this requires parsing all the PCIe bridge nodes
-for the PERST# GPIO.
+To allow the pwrctrl core to control the power on/off sequences of the
+pwrctrl drivers, add the 'struct pci_pwrctrl::power_{on/off}' callbacks and
+populate them in the respective pwrctrl drivers.
 
-Hence, rework the parsing logic to extend to all PCIe bridge nodes starting
-from the Root Port node. If the 'reset-gpios' property is found for a PCI
-bridge node, the GPIO descriptor will be stored in qcom_pcie_perst::desc
-and added to the qcom_pcie_port::perst list.
+The pwrctrl drivers still power on the resources on their own now. So there
+is no functional change.
 
-It should be noted that if more than one bridge node has the same GPIO for
-PERST# (shared PERST#), the driver will error out. This is due to the
-limitation in the GPIOLIB subsystem that allows only exclusive (non-shared)
-access to GPIOs from consumers. But this is soon going to get fixed. Once
-that happens, it will get incorporated in this driver.
-
-So for now, PERST# sharing is not supported.
-
+Co-developed-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 102 +++++++++++++++++++++++++++------
- 1 file changed, 85 insertions(+), 17 deletions(-)
+ drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c | 27 +++++++++++++++---
+ drivers/pci/pwrctrl/slot.c               | 48 ++++++++++++++++++++++----------
+ include/linux/pci-pwrctrl.h              |  4 +++
+ 3 files changed, 61 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 805edbbfe7eb..7b6f4a391ce4 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -281,10 +281,15 @@ struct qcom_pcie_cfg {
- 	bool no_l0s;
+diff --git a/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c b/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
+index 4e664e7b8dd2..0fb9038a1d18 100644
+--- a/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
++++ b/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
+@@ -52,11 +52,27 @@ static const struct pci_pwrctrl_pwrseq_pdata pci_pwrctrl_pwrseq_qcom_wcn_pdata =
+ 	.validate_device = pci_pwrctrl_pwrseq_qcm_wcn_validate_device,
  };
  
-+struct qcom_pcie_perst {
-+	struct list_head list;
-+	struct gpio_desc *desc;
-+};
++static int pci_pwrctrl_pwrseq_power_on(struct pci_pwrctrl *ctx)
++{
++	struct pci_pwrctrl_pwrseq_data *data = container_of(ctx, struct pci_pwrctrl_pwrseq_data,
++							    ctx);
 +
- struct qcom_pcie_port {
- 	struct list_head list;
--	struct gpio_desc *reset;
- 	struct phy *phy;
-+	struct list_head perst;
- };
- 
- struct qcom_pcie {
-@@ -305,11 +310,14 @@ struct qcom_pcie {
- 
- static void qcom_perst_assert(struct qcom_pcie *pcie, bool assert)
- {
-+	struct qcom_pcie_perst *perst;
- 	struct qcom_pcie_port *port;
- 	int val = assert ? 1 : 0;
- 
--	list_for_each_entry(port, &pcie->ports, list)
--		gpiod_set_value_cansleep(port->reset, val);
-+	list_for_each_entry(port, &pcie->ports, list) {
-+		list_for_each_entry(perst, &port->perst, list)
-+			gpiod_set_value_cansleep(perst->desc, val);
-+	}
- 
- 	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
- }
-@@ -1710,18 +1718,58 @@ static const struct pci_ecam_ops pci_qcom_ecam_ops = {
- 	}
- };
- 
--static int qcom_pcie_parse_port(struct qcom_pcie *pcie, struct device_node *node)
-+/* Parse PERST# from all nodes in depth first manner starting from @np */
-+static int qcom_pcie_parse_perst(struct qcom_pcie *pcie,
-+				 struct qcom_pcie_port *port,
-+				 struct device_node *np)
- {
- 	struct device *dev = pcie->pci->dev;
--	struct qcom_pcie_port *port;
-+	struct qcom_pcie_perst *perst;
- 	struct gpio_desc *reset;
--	struct phy *phy;
- 	int ret;
- 
--	reset = devm_fwnode_gpiod_get(dev, of_fwnode_handle(node),
--				      "reset", GPIOD_OUT_HIGH, "PERST#");
--	if (IS_ERR(reset))
-+	if (!of_find_property(np, "reset-gpios", NULL))
-+		goto parse_child_node;
-+
-+	reset = devm_fwnode_gpiod_get(dev, of_fwnode_handle(np), "reset",
-+				      GPIOD_OUT_HIGH, "PERST#");
-+	if (IS_ERR(reset)) {
-+		/*
-+		 * FIXME: GPIOLIB currently supports exclusive GPIO access only.
-+		 * Non exclusive access is broken. But shared PERST# requires
-+		 * non-exclusive access. So once GPIOLIB properly supports it,
-+		 * implement it here.
-+		 */
-+		if (PTR_ERR(reset) == -EBUSY)
-+			dev_err(dev, "Shared PERST# is not supported\n");
-+
- 		return PTR_ERR(reset);
-+	}
-+
-+	perst = devm_kzalloc(dev, sizeof(*perst), GFP_KERNEL);
-+	if (!perst)
-+		return -ENOMEM;
-+
-+	INIT_LIST_HEAD(&perst->list);
-+	perst->desc = reset;
-+	list_add_tail(&perst->list, &port->perst);
-+
-+parse_child_node:
-+	for_each_available_child_of_node_scoped(np, child) {
-+		ret = qcom_pcie_parse_perst(pcie, port, child);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
++	return pwrseq_power_on(data->pwrseq);
 +}
 +
-+static int qcom_pcie_parse_port(struct qcom_pcie *pcie, struct device_node *node)
++static void pci_pwrctrl_pwrseq_power_off(struct pci_pwrctrl *ctx)
 +{
-+	struct device *dev = pcie->pci->dev;
-+	struct qcom_pcie_port *port;
-+	struct phy *phy;
-+	int ret;
++	struct pci_pwrctrl_pwrseq_data *data = container_of(ctx, struct pci_pwrctrl_pwrseq_data,
++							    ctx);
++
++	pwrseq_power_off(data->pwrseq);
++}
++
+ static void devm_pci_pwrctrl_pwrseq_power_off(void *data)
+ {
+-	struct pwrseq_desc *pwrseq = data;
++	struct pci_pwrctrl_pwrseq_data *pwrseq_data = data;
  
- 	phy = devm_of_phy_get(dev, node, NULL);
- 	if (IS_ERR(phy))
-@@ -1735,7 +1783,12 @@ static int qcom_pcie_parse_port(struct qcom_pcie *pcie, struct device_node *node
+-	pwrseq_power_off(pwrseq);
++	pci_pwrctrl_pwrseq_power_off(&pwrseq_data->ctx);
+ }
+ 
+ static int pci_pwrctrl_pwrseq_probe(struct platform_device *pdev)
+@@ -85,16 +101,19 @@ static int pci_pwrctrl_pwrseq_probe(struct platform_device *pdev)
+ 		return dev_err_probe(dev, PTR_ERR(data->pwrseq),
+ 				     "Failed to get the power sequencer\n");
+ 
+-	ret = pwrseq_power_on(data->pwrseq);
++	ret = pci_pwrctrl_pwrseq_power_on(&data->ctx);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret,
+ 				     "Failed to power-on the device\n");
+ 
+ 	ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_pwrseq_power_off,
+-				       data->pwrseq);
++				       data);
  	if (ret)
  		return ret;
  
--	port->reset = reset;
-+	INIT_LIST_HEAD(&port->perst);
++	data->ctx.power_on = pci_pwrctrl_pwrseq_power_on;
++	data->ctx.power_off = pci_pwrctrl_pwrseq_power_off;
 +
-+	ret = qcom_pcie_parse_perst(pcie, port, node);
-+	if (ret)
+ 	pci_pwrctrl_init(&data->ctx, dev);
+ 
+ 	ret = devm_pci_pwrctrl_device_set_ready(dev, &data->ctx);
+diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
+index 3320494b62d8..14701f65f1f2 100644
+--- a/drivers/pci/pwrctrl/slot.c
++++ b/drivers/pci/pwrctrl/slot.c
+@@ -17,13 +17,36 @@ struct pci_pwrctrl_slot_data {
+ 	struct pci_pwrctrl ctx;
+ 	struct regulator_bulk_data *supplies;
+ 	int num_supplies;
++	struct clk *clk;
+ };
+ 
+-static void devm_pci_pwrctrl_slot_power_off(void *data)
++static int pci_pwrctrl_slot_power_on(struct pci_pwrctrl *ctx)
+ {
+-	struct pci_pwrctrl_slot_data *slot = data;
++	struct pci_pwrctrl_slot_data *slot = container_of(ctx, struct pci_pwrctrl_slot_data, ctx);
++	int ret;
++
++	ret = regulator_bulk_enable(slot->num_supplies, slot->supplies);
++	if (ret < 0) {
++		dev_err(slot->ctx.dev, "Failed to enable slot regulators\n");
 +		return ret;
++	}
 +
- 	port->phy = phy;
- 	INIT_LIST_HEAD(&port->list);
- 	list_add_tail(&port->list, &pcie->ports);
-@@ -1745,9 +1798,10 @@ static int qcom_pcie_parse_port(struct qcom_pcie *pcie, struct device_node *node
- 
- static int qcom_pcie_parse_ports(struct qcom_pcie *pcie)
- {
-+	struct qcom_pcie_perst *perst, *tmp_perst;
-+	struct qcom_pcie_port *port, *tmp_port;
- 	struct device *dev = pcie->pci->dev;
--	struct qcom_pcie_port *port, *tmp;
--	int ret = -ENOENT;
-+	int ret = -ENODEV;
- 
- 	for_each_available_child_of_node_scoped(dev->of_node, of_port) {
- 		if (!of_node_is_type(of_port, "pci"))
-@@ -1760,7 +1814,9 @@ static int qcom_pcie_parse_ports(struct qcom_pcie *pcie)
- 	return ret;
- 
- err_port_del:
--	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-+	list_for_each_entry_safe(port, tmp_port, &pcie->ports, list) {
-+		list_for_each_entry_safe(perst, tmp_perst, &port->perst, list)
-+			list_del(&perst->list);
- 		phy_exit(port->phy);
- 		list_del(&port->list);
- 	}
-@@ -1771,6 +1827,7 @@ static int qcom_pcie_parse_ports(struct qcom_pcie *pcie)
- static int qcom_pcie_parse_legacy_binding(struct qcom_pcie *pcie)
- {
- 	struct device *dev = pcie->pci->dev;
-+	struct qcom_pcie_perst *perst;
- 	struct qcom_pcie_port *port;
- 	struct gpio_desc *reset;
- 	struct phy *phy;
-@@ -1792,19 +1849,28 @@ static int qcom_pcie_parse_legacy_binding(struct qcom_pcie *pcie)
- 	if (!port)
- 		return -ENOMEM;
- 
--	port->reset = reset;
-+	perst = devm_kzalloc(dev, sizeof(*perst), GFP_KERNEL);
-+	if (!perst)
-+		return -ENOMEM;
++	return clk_prepare_enable(slot->clk);
++}
 +
- 	port->phy = phy;
- 	INIT_LIST_HEAD(&port->list);
- 	list_add_tail(&port->list, &pcie->ports);
++static void pci_pwrctrl_slot_power_off(struct pci_pwrctrl *ctx)
++{
++	struct pci_pwrctrl_slot_data *slot = container_of(ctx, struct pci_pwrctrl_slot_data, ctx);
  
-+	perst->desc = reset;
-+	INIT_LIST_HEAD(&port->perst);
-+	INIT_LIST_HEAD(&perst->list);
-+	list_add_tail(&perst->list, &port->perst);
+ 	regulator_bulk_disable(slot->num_supplies, slot->supplies);
++	clk_disable_unprepare(slot->clk);
++}
 +
- 	return 0;
++static void devm_pci_pwrctrl_slot_release(void *data)
++{
++	struct pci_pwrctrl_slot_data *slot = data;
++
++	pci_pwrctrl_slot_power_off(&slot->ctx);
+ 	regulator_bulk_free(slot->num_supplies, slot->supplies);
  }
  
- static int qcom_pcie_probe(struct platform_device *pdev)
+@@ -31,7 +54,6 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
  {
-+	struct qcom_pcie_perst *perst, *tmp_perst;
-+	struct qcom_pcie_port *port, *tmp_port;
- 	const struct qcom_pcie_cfg *pcie_cfg;
- 	unsigned long max_freq = ULONG_MAX;
--	struct qcom_pcie_port *port, *tmp;
+ 	struct pci_pwrctrl_slot_data *slot;
  	struct device *dev = &pdev->dev;
- 	struct dev_pm_opp *opp;
- 	struct qcom_pcie *pcie;
-@@ -1945,7 +2011,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+-	struct clk *clk;
+ 	int ret;
  
- 	ret = qcom_pcie_parse_ports(pcie);
- 	if (ret) {
--		if (ret != -ENOENT) {
-+		if (ret != -ENODEV) {
- 			dev_err_probe(pci->dev, ret,
- 				      "Failed to parse Root Port: %d\n", ret);
- 			goto err_pm_runtime_put;
-@@ -2004,7 +2070,9 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- err_host_deinit:
- 	dw_pcie_host_deinit(pp);
- err_phy_exit:
--	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-+	list_for_each_entry_safe(port, tmp_port, &pcie->ports, list) {
-+		list_for_each_entry_safe(perst, tmp_perst, &port->perst, list)
-+			list_del(&perst->list);
- 		phy_exit(port->phy);
- 		list_del(&port->list);
+ 	slot = devm_kzalloc(dev, sizeof(*slot), GFP_KERNEL);
+@@ -46,23 +68,21 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
  	}
+ 
+ 	slot->num_supplies = ret;
+-	ret = regulator_bulk_enable(slot->num_supplies, slot->supplies);
+-	if (ret < 0) {
+-		dev_err_probe(dev, ret, "Failed to enable slot regulators\n");
+-		regulator_bulk_free(slot->num_supplies, slot->supplies);
+-		return ret;
+-	}
+ 
+-	ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_slot_power_off,
++	ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_slot_release,
+ 				       slot);
+ 	if (ret)
+ 		return ret;
+ 
+-	clk = devm_clk_get_optional_enabled(dev, NULL);
+-	if (IS_ERR(clk)) {
+-		return dev_err_probe(dev, PTR_ERR(clk),
++	slot->clk = devm_clk_get_optional(dev, NULL);
++	if (IS_ERR(slot->clk))
++		return dev_err_probe(dev, PTR_ERR(slot->clk),
+ 				     "Failed to enable slot clock\n");
+-	}
++
++	pci_pwrctrl_slot_power_on(&slot->ctx);
++
++	slot->ctx.power_on = pci_pwrctrl_slot_power_on;
++	slot->ctx.power_off = pci_pwrctrl_slot_power_off;
+ 
+ 	pci_pwrctrl_init(&slot->ctx, dev);
+ 
+diff --git a/include/linux/pci-pwrctrl.h b/include/linux/pci-pwrctrl.h
+index 4aefc7901cd1..bd0ee9998125 100644
+--- a/include/linux/pci-pwrctrl.h
++++ b/include/linux/pci-pwrctrl.h
+@@ -31,6 +31,8 @@ struct device_link;
+ /**
+  * struct pci_pwrctrl - PCI device power control context.
+  * @dev: Address of the power controlling device.
++ * @power_on: Callback to power on the power controlling device.
++ * @power_off: Callback to power off the power controlling device.
+  *
+  * An object of this type must be allocated by the PCI power control device and
+  * passed to the pwrctrl subsystem to trigger a bus rescan and setup a device
+@@ -38,6 +40,8 @@ struct device_link;
+  */
+ struct pci_pwrctrl {
+ 	struct device *dev;
++	int (*power_on)(struct pci_pwrctrl *pwrctrl);
++	void (*power_off)(struct pci_pwrctrl *pwrctrl);
+ 
+ 	/* private: internal use only */
+ 	struct notifier_block nb;
 
 -- 
 2.48.1
