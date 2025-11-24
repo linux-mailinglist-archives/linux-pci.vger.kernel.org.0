@@ -1,73 +1,56 @@
-Return-Path: <linux-pci+bounces-41987-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41988-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1526C82867
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 22:22:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E69A1C8287F
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 22:27:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CB7C14E2A13
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 21:22:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9CACC3AB540
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 21:27:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 997732F6936;
-	Mon, 24 Nov 2025 21:22:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EC7C32E68D;
+	Mon, 24 Nov 2025 21:27:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qUnwH3pW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5a7p2XY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C602F6921;
-	Mon, 24 Nov 2025 21:22:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FD72F363B;
+	Mon, 24 Nov 2025 21:27:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764019349; cv=none; b=DtWSVJ5K64vt6IYVefo54qG3y8mlb+iVu0xVjtZmxp8NcZuOe/maQFxzIPLu7CWW8r7SvRKHUYDkrVdrXwSy9+cY0x6Embdrit0b8VGduXoXS7hQUFYhFy18u2/1sPf1z7NH4FjFXIboBKseSsajstxKf3RQVV84j7Uv1ZNQJyo=
+	t=1764019676; cv=none; b=kXGntbdJ31l3ZnJfzoTMPOd0QNYE7mah1xmlljTV/rY0qpNxRxqEcZyUtaXUwjBLamHW5CFbvwBXC3fwITLfkxZ2RxXgbPA3ryaUNGZ4L7QjEZImjuRBD+3xMzCqyU20jt0opuc3UKIObrRtjGU8fZSL54W5T3/mZw4qBdXaAaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764019349; c=relaxed/simple;
-	bh=RgrwDiinUzSpRqOGQiyfN+hRdSZO/OtpULDIPl/RaxE=;
+	s=arc-20240116; t=1764019676; c=relaxed/simple;
+	bh=HSRYKWBW9pOroBohYQkSBsBpthFOGxhpexSq+GXtG8c=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JOFdNyWP09mbytPfYqG4Dl0acnH/pDkfUJ5FwDExswgzLk4rCWbvwNKIxZjggN251Au7YhlAK/A9iPI+ye4yuorvwtT+IHNm1Y9D2Y5uyWotWFjGPm8P8qUvnqXW/5pGtS8dx3KnMSyaQ3HtfYZ4gp8m9RAvi0HMvui9HHNq2gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qUnwH3pW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB27C4CEFB;
-	Mon, 24 Nov 2025 21:22:28 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=eeH8QltqlwpSJQtToKR/czEPnXfwkkheht0MkN+R3fqAGzhBwqXAhI/MtfMhHLAsfgoCSBoQ2Hzz6+Vo4+9jAs0CCkPpHasYtwUWIMXoo0nyI6brgS208NoZjL2YfP+QxwqDEJ75JiFgC040pfqBFsWCCP0zyw4EYi3TOOTNY4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5a7p2XY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30539C4CEFB;
+	Mon, 24 Nov 2025 21:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764019349;
-	bh=RgrwDiinUzSpRqOGQiyfN+hRdSZO/OtpULDIPl/RaxE=;
+	s=k20201202; t=1764019675;
+	bh=HSRYKWBW9pOroBohYQkSBsBpthFOGxhpexSq+GXtG8c=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=qUnwH3pWJBpE5n0hprzgUyQmQnyYDnqdsNL/7ivetkau8W72rzPw6TL6kyAZV06Cx
-	 EESXAQ4m3JglpM69+IQcbANa/HFyP8qH9IXLwafZrKq+OV8OsiNXw7UDN2s3xWfS86
-	 iq3U1hEgP0NdFE3xGqp8dkXzBpw21zocJN6AvpzNM2DQC4J5F8Y0wv+ajYA8mS1YIM
-	 NSphcDi7VxA//qJ0GbJa8B2of/bu+R600bs7kWLaj+FzTWGKztJcxFQqO5ST1vsMHv
-	 IH56mX+FT9s3Pcesq9w7rJJUrVxwhFgELcKZui4Ji52NlX0oO74l74Nq+azyLy8Ntb
-	 49DxDSoqMqi4A==
-Date: Mon, 24 Nov 2025 15:22:27 -0600
+	b=C5a7p2XYEWgnqtt6D6T0VdRdS3UNCMTPzV5RYVZFzJ4cmviKO0NRGOAhjzAaa1L8g
+	 m7Y89o/sTe7GSTjwjnxEWOHBlA7rY5XqMpA6o6AqelZ7+I5KR1WmtElWfAT6frqmaC
+	 zzn3fokF6Fm3LnpJI1cy2F0ZQgcOXXoL9WG3i2TCVxsrGFtKbUjQx/6Jnn0ibdETR2
+	 7nkjKPTRbh54NjaNIgPHJKaMmtxzwfMtD5bBC+vPoBjHoGC9Ih5HAkLm3VZf+MGs1b
+	 20ChU2xPL9Puh+KsuGFKVXyKasOU55A+/9Yu0jWnPR8L6tVy503Kqw3GIzfl+Sk8qC
+	 Ur4i+LRnKS8Qg==
+Date: Mon, 24 Nov 2025 15:27:53 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Frank Li <Frank.li@nxp.com>, Shawn Lin <shawn.lin@rock-chips.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Simon Xue <xxm@rock-chips.com>, Damien Le Moal <dlemoal@kernel.org>,
-	Dragan Simic <dsimic@manjaro.org>, FUKAUMI Naoki <naoki@radxa.com>,
-	Diederik de Haas <diederik@cknow-tech.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Conor Dooley <conor@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Hans Zhang <hans.zhang@cixtech.com>, linux-tegra@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, kernel@pengutronix.de,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 1/4] PCI: dwc: Advertise L1 PM Substates only if
- driver requests it
-Message-ID: <20251124212227.GA2713330@bhelgaas>
+To: Zhiping Zhang <zhipingz@meta.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-rdma@vger.kernel.org,
+	linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+	Keith Busch <kbusch@kernel.org>, Yochai Cohen <yochai@nvidia.com>,
+	Yishai Hadas <yishaih@nvidia.com>
+Subject: Re: [RFC 1/2] Set steering-tag directly for PCIe P2P memory access
+Message-ID: <20251124212753.GA2714985@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,71 +59,76 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aR2lOZDBEdGVd9On@ryzen>
+In-Reply-To: <20251113213712.776234-2-zhipingz@meta.com>
 
-On Wed, Nov 19, 2025 at 12:08:41PM +0100, Niklas Cassel wrote:
-> On Tue, Nov 18, 2025 at 05:34:18PM -0500, Frank Li wrote:
-> > On Tue, Nov 18, 2025 at 03:42:15PM -0600, Bjorn Helgaas wrote:
-> > > From: Bjorn Helgaas <bhelgaas@google.com>
-> > >
-> > > L1 PM Substates require the CLKREQ# signal and may also require
-> > > device-specific support.  If CLKREQ# is not supported or driver support is
-> > > lacking, enabling L1.1 or L1.2 may cause errors when accessing devices,
-> > > e.g.,
-> > >
-> > >   nvme nvme0: controller is down; will reset: CSTS=0xffffffff, PCI_STATUS=0x10
-> > >
-> > > If the kernel is built with CONFIG_PCIEASPM_POWER_SUPERSAVE=y or users
-> > > enable L1.x via sysfs, users may trip over these errors even if L1
-> > > Substates haven't been enabled by firmware or the driver.
-> > >
-> > > To prevent such errors, disable advertising the L1 PM Substates unless the
-> > > driver sets "dw_pcie.l1ss_support" to indicate that it knows CLKREQ# is
-> > > present and any device-specific configuration has been done.
-> > >
-> > > Set "dw_pcie.l1ss_support" in tegra194 (if DT includes the
-> > > "supports-clkreq' property) and qcom (for cfg_2_7_0, cfg_1_9_0, cfg_1_34_0,
-> > > and cfg_sc8280xp controllers) so they can continue to use L1 Substates.
-> > >
-> > > Based on Niklas's patch:
-> > > https://patch.msgid.link/20251017163252.598812-2-cassel@kernel.org
-> > >
-> > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > ---
-> > >  .../pci/controller/dwc/pcie-designware-ep.c   |  2 ++
-> > >  .../pci/controller/dwc/pcie-designware-host.c |  2 ++
-> > >  drivers/pci/controller/dwc/pcie-designware.c  | 24 +++++++++++++++++++
-> > >  drivers/pci/controller/dwc/pcie-designware.h  |  2 ++
-> > >  drivers/pci/controller/dwc/pcie-qcom.c        |  2 ++
-> > >  drivers/pci/controller/dwc/pcie-tegra194.c    |  3 +++
-> > >  6 files changed, 35 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > index 7f2112c2fb21..ad6c0fd67a65 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > @@ -966,6 +966,8 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
-> > >  	if (ep->ops->init)
-> > >  		ep->ops->init(ep);
-> > >
-> > > +	dw_pcie_hide_unsupported_l1ss(pci);
-> > > +
-> > 
-> > And, I don't think EP need clean L1SS CAP flags. If EP don't support L1SS,
-> > it should be force pull down #clkreq.
-> 
-> I think the problem is that we cannot force pull down CLKREQ# in a generic
-> DWC function. That would have to be done in glue driver specific callbacks.
-> 
-> Bjorn, perhaps we should simply drop the dw_pcie_hide_unsupported_l1ss()
-> call from dw_pcie_ep_init_registers(), and consider hiding L1ss for EPs to
-> be out of scope for this series.
-> 
-> That way, we could still queue this series up for 6.19.
-> 
-> Thoughts from everyone?
+On Thu, Nov 13, 2025 at 01:37:11PM -0800, Zhiping Zhang wrote:
+> PCIe: Add a memory type for P2P memory access
 
-Good idea, done locally, thanks!
+This should be in the Subject: line.
 
-Bjorn
+It should also start with "PCI/TPH: ..." (not "PCIe") to match
+previous history.
+
+> The current tph memory type definition applies for CPU use cases. For device
+> memory accessed in the peer-to-peer (P2P) manner, we need another memory
+> type.
+
+s/tph/TPH/
+
+Make this say what the patch does (not just that we *need* another
+memory type, that we actually *add* one).
+
+The subject line should also say what the patch does.  I don't think
+this patch actually changes the *setting* of the steering tag (I could
+be wrong, I haven't looked carefully).
+
+> Signed-off-by: Zhiping Zhang <zhipingz@meta.com>
+> ---
+>  drivers/pci/tph.c       | 4 ++++
+>  include/linux/pci-tph.h | 4 +++-
+>  2 files changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
+> index cc64f93709a4..d983c9778c72 100644
+> --- a/drivers/pci/tph.c
+> +++ b/drivers/pci/tph.c
+> @@ -67,6 +67,8 @@ static u16 tph_extract_tag(enum tph_mem_type mem_type, u8 req_type,
+>  			if (info->pm_st_valid)
+>  				return info->pm_st;
+>  			break;
+> +		default:
+> +			return 0;
+>  		}
+>  		break;
+>  	case PCI_TPH_REQ_EXT_TPH: /* 16-bit tag */
+> @@ -79,6 +81,8 @@ static u16 tph_extract_tag(enum tph_mem_type mem_type, u8 req_type,
+>  			if (info->pm_xst_valid)
+>  				return info->pm_xst;
+>  			break;
+> +		default:
+> +			return 0;
+>  		}
+>  		break;
+>  	default:
+> diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
+> index 9e4e331b1603..b989302b6755 100644
+> --- a/include/linux/pci-tph.h
+> +++ b/include/linux/pci-tph.h
+> @@ -14,10 +14,12 @@
+>   * depending on the memory type: Volatile Memory or Persistent Memory. When a
+>   * caller query about a target's Steering Tag, it must provide the target's
+>   * tph_mem_type. ECN link: https://members.pcisig.com/wg/PCI-SIG/document/15470.
+> + * Add a new tph type for PCI peer-to-peer access use case.
+>   */
+>  enum tph_mem_type {
+>  	TPH_MEM_TYPE_VM,	/* volatile memory */
+> -	TPH_MEM_TYPE_PM		/* persistent memory */
+> +	TPH_MEM_TYPE_PM,	/* persistent memory */
+> +	TPH_MEM_TYPE_P2P	/* peer-to-peer accessable memory */
+>  };
+>  
+>  #ifdef CONFIG_PCIE_TPH
+> -- 
+> 2.47.3
+> 
 
