@@ -1,102 +1,121 @@
-Return-Path: <linux-pci+bounces-41976-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41978-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AAF3C81C8B
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 18:04:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 841E0C82025
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 19:03:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id BA3C8341D84
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 17:04:54 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2B6403494AF
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 18:03:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F1342C11DB;
-	Mon, 24 Nov 2025 17:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFC492BEC41;
+	Mon, 24 Nov 2025 18:02:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="im4OP44f"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZzudF/in"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99E215CD74
-	for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 17:04:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979DD28643C;
+	Mon, 24 Nov 2025 18:02:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764003891; cv=none; b=uKpaNTr1oNUZd/ACi+xr5GhkGvzJlAcDcfXE9Rd/MwtMsuM4CE3actY8yLO91ztEkYH4EJYBIsZbNBhv8NcgRF2tj5Z+4ZlFcsxsQyCoN82st1lSm3kUHHwa4PCMR+/c7STDTXW9DxGRCQsmL+tYViDqhUCJp83F/4NOjXTrv74=
+	t=1764007377; cv=none; b=n22lY/azIgGH8CAAbNox9AajyVhnxFyXxLNEaF0T80f4uoxp6Ce/h5egBzLrbXUVyTwTsuoZt0p/lK7/GQa2P1hoCV+IR+tjT5ImFkuSszSpK+Gc1Xv+GScPdb6FaCdUQlCNfiZAz3oVLbSxOr+rGqiOAYGNdzwa4Y8Zt9qGoow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764003891; c=relaxed/simple;
-	bh=ni6ryahXA4WhKdPgeajWMOfblZG+42XfxR7yeQeGziE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q7w2neqdEUGz0CJCwUqidSQQWfi9/zG3JN0+j2XRbC32fgqPobwaaUnvhL5lKdp0Bj6F23feEwiIMURnr9y02w7KEi+dgJA790tmbfIHwlLh4z6JtSSgutNbTiwYKRBSrlG/7Q6PLVW71kdvOBJVzog9OZBk4E7wcDIGnlVCBYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=im4OP44f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3A28C16AAE
-	for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 17:04:50 +0000 (UTC)
+	s=arc-20240116; t=1764007377; c=relaxed/simple;
+	bh=vVJOkgGpk1orF0T+8LRcES0SRASEEkMsr2eN64SHTYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Lw4AOFw9OkMtmaVEWOETWm5ag30og+ddhtUVtdRuI4J1++emxXEHfyLSC8TSvi+Uw7BeSsD+tzNKXU6koNRDGNFAfOHWFmQBAPW3pFwArawZNAZVjLGi4UCxFGTQFJY4/+jSK6lclZZGpstNurMHiHRzXDba60PLHRRzx6uSnfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZzudF/in; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3B9BC4CEF1;
+	Mon, 24 Nov 2025 18:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764003890;
-	bh=ni6ryahXA4WhKdPgeajWMOfblZG+42XfxR7yeQeGziE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=im4OP44fxcV8oBiXqMZXwaFtVS4yC5hoDr6iH4M/56YLQZOOKaRle7OQov/Qnlgpc
-	 pweOpV/Qx9+TaPNP1i64KV9t0z1kwKpRZHEl/J3XlJC+cR+wqtv3oO8T3HsjEmhsrU
-	 ZtVBinn//9N8lupqgYuMpHVTmkr/1WpTaxJqeZFFs5ZzEB/cnxrzd6v+Cv9nfPUHID
-	 p7UIXEGSLpaf/Q67sQEMT1wDqa7UVI7zjqvecNs5hfGGIYGz+6abqQqYBsgMSYc7qn
-	 XhyxLD1u4+AfK9rfCUrFTgWqsCPefTxj02aekr97RvlQqXNTGyPfxQk2KneFbFI/b6
-	 uJjshK0d7lslQ==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5959187c5a9so3570473e87.1
-        for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 09:04:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUhmBPlCMLeRuo/4iS91BDJxBLUWZBr+wIbTMQYDje2wIsDawGQB3y6/24nIJBhy9UF6LH426xl9n4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjphNGFjLbRQ0jRPwoAGbqrQEY7eUFvTK3+QtBNbGoi7fm+VEC
-	hTf4KtfeZnnRmxLOhixtK74DI7LlwVSG4/RRTBgVxhnmJKIccIsbVwZWXVG+4pD19r7KpThxcPC
-	KR+6RMrJpPNc8gjXO5g/pMQOYqciIG5E=
-X-Google-Smtp-Source: AGHT+IGGU4X2n28nXl03AZEGYJ2qP+YdFmcNyxyi9o9xFWaX9qXe+5YYYmW9XiGzz0iE7mMdFpmgf1MgItGyyi+uahA=
-X-Received: by 2002:a05:6512:1282:b0:594:4c90:8415 with SMTP id
- 2adb3069b0e04-596a3edab39mr4528817e87.27.1764003889213; Mon, 24 Nov 2025
- 09:04:49 -0800 (PST)
+	s=k20201202; t=1764007377;
+	bh=vVJOkgGpk1orF0T+8LRcES0SRASEEkMsr2eN64SHTYc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ZzudF/inSo3Nt0LWRO4DqPkXgBSR4SQxZPAUx9U763h8oDk4K4NhEnYOA0LidBymt
+	 agY27Xz2u8S8WeuSPVgCqk2mUeX17RsAyd0j5BXl5z2QYr4kYRozXz2W7qvRYjazqv
+	 UHFJH0g0t8NUF7SlAENzs4/aft3FHR8vNJwyihtmymY2MI2dQdGQ0LwPtMLEi0bGim
+	 7/Xz5U2oBRAKi/g9VHxkDo/8JvsNkZ4d6uB2DWLIMzKnnMFVYllTXXfatkpv8wXhr3
+	 vIzB2EyXffHD5OQuxQH4nt3IUEkZ+R1Jz9243RcbRAr6c8OuTMlGQ2/IeOjyKu49xy
+	 uaJuvBTeBf2Hw==
+Date: Mon, 24 Nov 2025 12:02:55 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Hans Zhang <Hans.Zhang@cixtech.com>
+Cc: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Abaci Robot <abaci@linux.alibaba.com>,
+	Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Subject: Re: =?utf-8?B?5Zue5aSN?= =?utf-8?Q?=3A?= [PATCH -next] PCI: cadence:
+ remove unneeded semicolon
+Message-ID: <20251124180255.GA2700418@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251124165116.502813-1-tzimmermann@suse.de> <20251124165116.502813-9-tzimmermann@suse.de>
- <CAMj1kXFu4=L=ROVAaRORG5HMmYWHb6OXQf6pJ3yAZpeDmfmSeg@mail.gmail.com>
-In-Reply-To: <CAMj1kXFu4=L=ROVAaRORG5HMmYWHb6OXQf6pJ3yAZpeDmfmSeg@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 24 Nov 2025 18:04:36 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFtsneE3dFgUx6Hd=iBhD8YpvjfTSi-KZpuNaXfX07KyA@mail.gmail.com>
-X-Gm-Features: AWmQ_bkKMcK7WGWFCCrQ1b9TEIPkREY9pqhPyguPzmrEL1z0shGOixam-7jvNpI
-Message-ID: <CAMj1kXFtsneE3dFgUx6Hd=iBhD8YpvjfTSi-KZpuNaXfX07KyA@mail.gmail.com>
-Subject: Re: [PATCH v2 08/10] efi: Support EDID information
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: javierm@redhat.com, arnd@arndb.de, richard.lyu@suse.com, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org, 
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <KL1PR0601MB472685FE5109782EF14C62DB9DD4A@KL1PR0601MB4726.apcprd06.prod.outlook.com>
 
-On Mon, 24 Nov 2025 at 18:01, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Mon, 24 Nov 2025 at 17:52, Thomas Zimmermann <tzimmermann@suse.de> wrote:
-> >
-> > Add LINUX_EFI_PRIMARY_DISPLAY_TABLE_GUID to the list of config-table
-> > UUIDs. Read sysfb_primary_display from the entry. The UUID has been
-> > generated with uuidgen.
-> >
-> > Still support LINUX_EFI_SCREEN_INFO_TABLE_GUID as fallback in case an
-> > older boot loader invokes the kernel.
-> >
-> > If CONFIG_FIRMWARE_EDID=n, EDID information is disabled.
-> >
-> > Make the Kconfig symbol CONFIG_FIRMWARE_EDID available with EFI. Setting
-> > the value to 'n' disables EDID support.
-> >
-> > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
->
-> Why are we adding a new config table again?
->
->
+On Thu, Nov 20, 2025 at 09:41:43AM +0000, Hans Zhang wrote:
+> + Manikandan
+> 
+> -----邮件原件-----
+> 发件人: Jiapeng Chong <jiapeng.chong@linux.alibaba.com> 
+> 发送时间: 2025年11月20日 17:35
+> 收件人: lpieralisi@kernel.org
+> 抄送: kwilczynski@kernel.org; mani@kernel.org; robh@kernel.org; bhelgaas@google.com; linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; Jiapeng Chong <jiapeng.chong@linux.alibaba.com>; Abaci Robot <abaci@linux.alibaba.com>
+> 主题: [PATCH -next] PCI: cadence: remove unneeded semicolon
+> 
+> [You don't often get email from jiapeng.chong@linux.alibaba.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> EXTERNAL EMAIL
+> 
+> No functional modification involved.
+> 
+> ./drivers/pci/controller/cadence/pcie-cadence.h:217:2-3: Unneeded semicolon.
+> 
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=27326
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 
-Note that LINUX_EFI_SCREEN_INFO_TABLE_GUID is internal ABI only
-between the EFI stub and the core kernel.
+Squashed this into the commit (f5fa6c33b173 ("PCI: cadence: Add
+support for High Perf Architecture (HPA) controller"), no need to
+repost this.
+
+There's a rash of this error.  Do you know of any others in
+drivers/pci/?
+
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index 717921411ed9..311a13ae46e7 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -214,7 +214,7 @@ static inline u32 cdns_reg_bank_to_off(struct cdns_pcie *pcie, enum cdns_pcie_re
+>                 break;
+>         default:
+>                 break;
+> -       };
+> +       }
+>         return offset;
+>  }
+> 
+> --
+> 2.43.5
+> 
+> 
 
