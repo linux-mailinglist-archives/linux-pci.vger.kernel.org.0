@@ -1,206 +1,310 @@
-Return-Path: <linux-pci+bounces-41924-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41925-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64C4EC7E462
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Nov 2025 17:42:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68F9CC7EF3E
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 05:41:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id DEBFC347DB3
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Nov 2025 16:42:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BDF83A4036
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 04:41:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B37C7229B36;
-	Sun, 23 Nov 2025 16:42:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CF1729DB61;
+	Mon, 24 Nov 2025 04:41:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UDkHaJr8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODMg/sye"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BC319C546
-	for <linux-pci@vger.kernel.org>; Sun, 23 Nov 2025 16:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2AD91FF7BC;
+	Mon, 24 Nov 2025 04:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763916166; cv=none; b=oRlUBVIB3H1haNne9CjjPniOkspzn5+LOxsvARBzcFj3npF9hx/mFHJ4XA9PMRva0eUwl6ccV3Iy4rT8p4KuwYaGmxOjdEgVLuE7VLymAqco5TTfQf6cJYLORDuN6f3xGhI/BKYpQAHHUyNncMDwQ2Wx3VC5Gow2fPj1kxDiiOE=
+	t=1763959261; cv=none; b=n2zNpdWcIcmYJ4zbHOsTJIYq0lbzu7Kb3g0y3AG+Cuq9IV+e0td2MVgtabrBgr20DyutuIThNLEUzmHaOACbizY24jUN1W9gCOuXnUXWOaECzFH/Qzgfk/te9FffJkQqeOsBc+pMpZpsYG1EJD/Ncw3IHhyarO2UPap1p1Rgi5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763916166; c=relaxed/simple;
-	bh=cSYsTc9rurDaCIOyxSlxp078tfD177G4C6LbUYLDv0g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ABdL4ANapLxd6JxEJJnVOT2YDJHCi32+DMtkSC9e9MWBp7Lgnea4ep7z13/AasnypmQBNqWBaDyqN0kPaHWh8rkhe2uJxFccpSSPiFFm5Yo/092IgvrrL+5ii4VyoS9u6Y/RlYIrFHLnfD7rGTBBW83W03iGSSwDoIWDSkXPlMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UDkHaJr8; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-bc0e89640b9so2279987a12.1
-        for <linux-pci@vger.kernel.org>; Sun, 23 Nov 2025 08:42:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763916163; x=1764520963; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d0j1F7QCP+4D9igowWdEVkA8R7gqxJbBFhGcJ/oVN5w=;
-        b=UDkHaJr8FqzfLPqHrkAazWysjgU8Bq2vpb3dB8rsvJjRUPWTUWPcmdE3ZjPMLbUewl
-         kmngDOWFzaJ6BxyBH7ulGc4dfOPLVGPvRvY7fLGbJNoZ7xsZ2blAo14Zj5kGZI51Zgt+
-         knzeVhRxZZlcQn/dGazFok5rqbYIy+b3YCQWEiruxa1N9LrNFjSkejMXdBmUcvh4gOrD
-         KE5d5qVK+pwR1WADPAFPTN+RF3DqKrG1QhwLKpwMAj0Wwi7wwiDmk7YpNZ0fQweJtpL2
-         GXajrkykBD5DRMIEblGYDabb4quRh8ZHQXB9pzXEuYwQsx8tUBAABv1qF8dohdwJb1F7
-         H/SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763916163; x=1764520963;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=d0j1F7QCP+4D9igowWdEVkA8R7gqxJbBFhGcJ/oVN5w=;
-        b=EE2ZFB3/5q89H8fDTCGE7wfUDPpf4BZA5Wgkb1JohzV0ayVTAywnUmvH5Xm4Orwk9u
-         uu+LjYWSGK+Tib5WoMr+nF0kg1v2abeP3Q62g8sXi2CKqmCHtci02l2RXpnY+Lg2wiXT
-         Cx2YH7oVc2ySjWwH5ORxBrg6tP92MI/1EeDcvLyxx5oEBEogbobUe/+EzxagA/pAbLaW
-         Omam9s5mfp+NnKtoqLFqz3YThiDfWK8ARCOqdkj3yEHI9yWOWognWgHNHrdY/g0vgN0b
-         Sxb+3ZKV8toVHBNw2QSfaMDjReEl4/CzJdmH9+5fTAvNnomVsCXPJ7dBbSVEN5SM6ZNS
-         BV0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVeNmJlE0pb0ECWipWxVcEO3CHooc1EOlF3lBVhGlvTFPmFqDJPF0ubsEpIyA5TYtN7eUklXYMhvZ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWXWZgacu5dr4MtYhbwbaFfe6m7TOI1yDXtr6WdKcR1XL5Vfmz
-	pY/OGAUbQCO1b8I7MNMOzC4MI1Y6516/rvsfGOfyqIRmTtXH8bIw8j44
-X-Gm-Gg: ASbGncsN++cikl+QbBFWPEmTn7ldAi2FIg3kXPt9FtUeBSwKysZrixAD4y7MGNaOaSl
-	l/zmfQz1OmHrrfjElRdWI74Qz2a1/wqME2vCjj2BlH12wyJCGwKnTDVMpPdZoBFG/IjTOnikzcj
-	Yg8AkAdigf5fmCjXcXCpDR70ow+ZI9m75+w0vI+mVSyqt06/wNYqvczjUrTcsBzd7+g+K/0wcZT
-	adQTQqfrkKGgQEq7dCZA40niYa1x2SwtmoKCLeE37qOGQFmKh6At0+McqY0zHyK6zVxSc0ciN5+
-	lpBSBU3cwV8ACpLfUdAp8whSPFTgQWPL/W6CZjNqYAtYIJAIProPFPjE8xJOea3nMp5KKkwFBaB
-	Qz/LPQCctWhq3rJjvGHS4pJ/k2D8X52yJUlUy4rIxMirLkFeXaKJcWJ7bZ/HiZ6yLjkUTduJanz
-	bMBuhvHRrUZ2uzJyFErsmXvfg=
-X-Google-Smtp-Source: AGHT+IE13jqQnGMBUZ2qpPc1TDhmtseXk7/7dxNiq5aM2ZmAaTpjpGFXTOpMGpzVp9MUYxu7Pd26Pg==
-X-Received: by 2002:a05:7022:2509:b0:119:e56c:18a1 with SMTP id a92af1059eb24-11c9d60f0a7mr5105569c88.9.1763916162816;
-        Sun, 23 Nov 2025 08:42:42 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11c93cd457dsm56769583c88.0.2025.11.23.08.42.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Nov 2025 08:42:41 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sun, 23 Nov 2025 08:42:39 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-parisc@vger.kernel.org,
-	Helge Deller <deller@gmx.de>
-Subject: Re: [PATCH v9 02/13] PCI: Add devres helpers for iomap table
- [resulting in backtraces on HPPA]
-Message-ID: <16cd212f-6ea0-471d-bf32-34f55d7292fe@roeck-us.net>
-References: <20240613115032.29098-1-pstanner@redhat.com>
- <20240613115032.29098-3-pstanner@redhat.com>
+	s=arc-20240116; t=1763959261; c=relaxed/simple;
+	bh=q9L+mFCqqi7OtLGPXEUseU0UCKPzyxnW6nIpa0CKEWw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=nTF6arRAB5m49j6ZMpghNHcFZCj1AZXLzc3mQUOb/8VYyGthRaNKVaV8lxJvNamGNiGlWU255b8lkLJB91+QpDM7Vzk63Z3I+/Y57bOEmiVFmlOYBOWYkxSJdoTtI1Mqyd+1c9qraGthdfUQfgJWsPYbEL2viOEOIivT36h5ehs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODMg/sye; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9491CC4CEFB;
+	Mon, 24 Nov 2025 04:40:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763959259;
+	bh=q9L+mFCqqi7OtLGPXEUseU0UCKPzyxnW6nIpa0CKEWw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ODMg/syevllHhEnzaKfGzjSEJpEOc/Ue7UpzAHQ+v0IzF4+tStxbRm9BzaGdm2o3g
+	 N0R9Zonj4rD6G1zKO6eaStxv0d64aHrcw4YJg+pkU+2a9SelEH0geeg06LDSDwy8uM
+	 nTvhxRLzwDgWnj2etz0mRVJK7NhyByRJjy81tbw1MeejXIubSX9Z2+xjvOaLzgzn9G
+	 woRvybjg8h3VxWowQzUX/OwClH8WFEuTGnle5/r8UBp9y6uuWFpdBUpckZ9qG8YjTF
+	 ipUOb+D7nZ68A0WtOrjDPu7M2/qUv2tqCiobffTzSaHdtoMzpBjZ4Loh9+kfwAgIpp
+	 Jsg/hrkzl0KVQ==
+X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: linux-coco@lists.linux.dev, kvmarm@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dan.j.williams@intel.com, aik@amd.com, lukas@wunner.de,
+	Samuel Ortiz <sameo@rivosinc.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Steven Price <steven.price@arm.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: Re: [PATCH v2 01/11] coco: guest: arm64: Guest TSM callback and
+ realm device lock support
+In-Reply-To: <20251119152201.00000876@huawei.com>
+References: <20251117140007.122062-1-aneesh.kumar@kernel.org>
+ <20251117140007.122062-2-aneesh.kumar@kernel.org>
+ <20251119152201.00000876@huawei.com>
+Date: Mon, 24 Nov 2025 10:10:50 +0530
+Message-ID: <yq5acy58m4a5.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240613115032.29098-3-pstanner@redhat.com>
+Content-Type: text/plain
 
-Hi,
+Jonathan Cameron <jonathan.cameron@huawei.com> writes:
 
-On Thu, Jun 13, 2024 at 01:50:15PM +0200, Philipp Stanner wrote:
-> The pcim_iomap_devres.table administrated by pcim_iomap_table() has its
-> entries set and unset at several places throughout devres.c using manual
-> iterations which are effectively code duplications.
-> 
-> Add pcim_add_mapping_to_legacy_table() and
-> pcim_remove_mapping_from_legacy_table() helper functions and use them where
-> possible.
-> 
-> Link: https://lore.kernel.org/r/20240605081605.18769-4-pstanner@redhat.com
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> [bhelgaas: s/short bar/int bar/ for consistency]
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/pci/devres.c | 77 +++++++++++++++++++++++++++++++++-----------
->  1 file changed, 58 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-> index f13edd4a3873..845d6fab0ce7 100644
-> --- a/drivers/pci/devres.c
-> +++ b/drivers/pci/devres.c
-> @@ -297,6 +297,52 @@ void __iomem * const *pcim_iomap_table(struct pci_dev *pdev)
->  }
->  EXPORT_SYMBOL(pcim_iomap_table);
->  
-> +/*
-> + * Fill the legacy mapping-table, so that drivers using the old API can
-> + * still get a BAR's mapping address through pcim_iomap_table().
-> + */
-> +static int pcim_add_mapping_to_legacy_table(struct pci_dev *pdev,
-> +					    void __iomem *mapping, int bar)
-> +{
-> +	void __iomem **legacy_iomap_table;
-> +
-> +	if (bar >= PCI_STD_NUM_BARS)
-> +		return -EINVAL;
-> +
-> +	legacy_iomap_table = (void __iomem **)pcim_iomap_table(pdev);
-> +	if (!legacy_iomap_table)
-> +		return -ENOMEM;
-> +
-> +	/* The legacy mechanism doesn't allow for duplicate mappings. */
-> +	WARN_ON(legacy_iomap_table[bar]);
-> +
+> On Mon, 17 Nov 2025 19:29:57 +0530
+> "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
+>
+>> Register the TSM callback when the DA feature is supported by RSI. The
+>> build order is also adjusted so that the TSM class is created before the
+>> arm-cca-guest driver is initialized.
+>> 
+>> In addition, add support for the TDISP lock sequence. Writing a TSM
+>> (TEE Security Manager) device name from `/sys/class/tsm` into `tsm/lock`
+>> triggers the realm device lock operation.
+>> 
+>> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+> Hi Aneesh,
+>
+> Some minor stuff in here.   One general comment is that there
+> are some fixlets for the CCA code surrounding what this patch
+> should focus on. Break those out as separate cleanup or base
+> this on top of the fixed up version of that code.
+>
+> Thanks,
+>
+> Jonathan
+>
+>> diff --git a/arch/arm64/kernel/rsi.c b/arch/arm64/kernel/rsi.c
+>> index 1b716d18b80e..2ec0f5dff02e 100644
+>> --- a/arch/arm64/kernel/rsi.c
+>> +++ b/arch/arm64/kernel/rsi.c
+>> @@ -15,6 +15,7 @@
+>>  #include <asm/rsi.h>
+>>  
+>>  static struct realm_config config;
+>> +static unsigned long rsi_feat_reg0;
+>>  
+>>  unsigned long prot_ns_shared;
+>>  EXPORT_SYMBOL(prot_ns_shared);
+>> @@ -22,6 +23,12 @@ EXPORT_SYMBOL(prot_ns_shared);
+>>  DEFINE_STATIC_KEY_FALSE_RO(rsi_present);
+>>  EXPORT_SYMBOL(rsi_present);
+>>  
+>> +bool rsi_has_da_feature(void)
+>> +{
+>> +	return u64_get_bits(rsi_feat_reg0, RSI_FEATURE_REGISTER_0_DA);
+>
+> I'm not keen on mixing explicit size of a u64 with the implicit
+> fact an unsigned long is effectively a u64.  Can we tidy up the types
+> to match?
+>
 
-Ever since this patch has been applied, I see this warning on all hppa
-(parisc) systems.
+will switch rsi_feat_reg0 to static u64
 
-[    0.978177] WARNING: CPU: 0 PID: 1 at drivers/pci/devres.c:473 pcim_add_mapping_to_legacy_table.part.0+0x54/0x80
-[    0.978850] Modules linked in:
-[    0.979277] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.18.0-rc6-64bit+ #1 NONE
-[    0.979519] Hardware name: 9000/785/C3700
-[    0.979715]
-[    0.979768]      YZrvWESTHLNXBCVMcbcbcbcbOGFRQPDI
-[    0.979886] PSW: 00001000000001000000000000001111 Not tainted
-[    0.980006] r00-03  000000000804000f 00000000414e10a0 0000000040acb300 00000000434b1440
-[    0.980167] r04-07  00000000414a78a0 0000000000029000 0000000000000000 0000000043522000
-[    0.980314] r08-11  0000000000000000 0000000000000008 0000000000000000 00000000434b0de8
-[    0.980461] r12-15  00000000434b11b0 000000004156a8a0 0000000043c655a0 0000000000000000
-[    0.980608] r16-19  000000004016e080 000000004019e7d8 0000000000000030 0000000043549780
-[    0.981106] r20-23  0000000020000000 0000000000000000 000000000800000e 0000000000000000
-[    0.981317] r24-27  0000000000000000 000000000800000f 0000000043522260 00000000414a78a0
-[    0.981480] r28-31  00000000436af480 00000000434b1680 00000000434b14d0 0000000000027000
-[    0.981641] sr00-03  0000000000000000 0000000000000000 0000000000000000 0000000000000000
-[    0.981805] sr04-07  0000000000000000 0000000000000000 0000000000000000 0000000000000000
-[    0.981972]
-[    0.982024] IASQ: 0000000000000000 0000000000000000 IAOQ: 0000000040acb31c 0000000040acb320
-[    0.982185]  IIR: 03ffe01f    ISR: 0000000000000000  IOR: 00000000436af410
-[    0.982322]  CPU:        0   CR30: 0000000043549780 CR31: 0000000000000000
-[    0.982458]  ORIG_R28: 00000000434b16b0
-[    0.982548]  IAOQ[0]: pcim_add_mapping_to_legacy_table.part.0+0x54/0x80
-[    0.982733]  IAOQ[1]: pcim_add_mapping_to_legacy_table.part.0+0x58/0x80
-[    0.982871]  RP(r2): pcim_add_mapping_to_legacy_table.part.0+0x38/0x80
-[    0.983100] Backtrace:
-[    0.983439]  [<0000000040acba1c>] pcim_iomap+0xc4/0x170
-[    0.983577]  [<0000000040ba3e4c>] serial8250_pci_setup_port+0x8c/0x168
-[    0.983725]  [<0000000040ba7588>] setup_port+0x38/0x50
-[    0.983837]  [<0000000040ba7d94>] pci_hp_diva_setup+0x8c/0xd8
-[    0.983957]  [<0000000040baa47c>] pciserial_init_ports+0x2c4/0x358
-[    0.984088]  [<0000000040baa8bc>] pciserial_init_one+0x31c/0x330
-[    0.984214]  [<0000000040abfab4>] pci_device_probe+0x194/0x270
+>> +}
+>> +EXPORT_SYMBOL_GPL(rsi_has_da_feature);
+>
+>> diff --git a/drivers/virt/coco/Makefile b/drivers/virt/coco/Makefile
+>> index cb52021912b3..57556d7c1cec 100644
+>> --- a/drivers/virt/coco/Makefile
+>> +++ b/drivers/virt/coco/Makefile
+>> @@ -6,6 +6,6 @@ obj-$(CONFIG_EFI_SECRET)	+= efi_secret/
+>>  obj-$(CONFIG_ARM_PKVM_GUEST)	+= pkvm-guest/
+>>  obj-$(CONFIG_SEV_GUEST)		+= sev-guest/
+>>  obj-$(CONFIG_INTEL_TDX_GUEST)	+= tdx-guest/
+>> -obj-$(CONFIG_ARM_CCA_GUEST)	+= arm-cca-guest/
+>>  obj-$(CONFIG_TSM) 		+= tsm-core.o
+>>  obj-$(CONFIG_TSM_GUEST)		+= guest/
+>> +obj-$(CONFIG_ARM_CCA_GUEST)	+= arm-cca-guest/
+>
+> Check all patches for noise like this.  It may be a valid change but in this series
+> it's just adding confusion.
+>
 
-Looking into serial8250_pci_setup_port():
+This is required for the patch to work as intended. This patch adds
+registration with TSM, which depends on the TSM class being created
+before the arm_cca_guest driver is initialized. The commit message
+provides further details.
 
-        if (pci_resource_flags(dev, bar) & IORESOURCE_MEM) {
-                if (!pcim_iomap(dev, bar, 0) && !pcim_iomap_table(dev))
-                        return -ENOMEM;
+"Register the TSM callback when the DA feature is supported by RSI. The
+build order is also adjusted so that the TSM class is created before the
+arm-cca-guest driver is initialized.""
 
-This suggests that the failure is expected. I can see that pcim_iomap_table()
-is deprecated, and that one is supposed to use pcim_iomap() instead. However,
-pcim_iomap() _is_ alrady used, and I don't see a function which lets the
-caller replicate what is done above (attach multiple serial ports to the
-same PCI bar).
 
-How would you suggest to fix the problem ?
+>
+>> diff --git a/drivers/virt/coco/arm-cca-guest/Kconfig b/drivers/virt/coco/arm-cca-guest/Kconfig
+>> index a42359a90558..66b2d9202b66 100644
+>> --- a/drivers/virt/coco/arm-cca-guest/Kconfig
+>> +++ b/drivers/virt/coco/arm-cca-guest/Kconfig
+>> @@ -1,11 +1,17 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>> +#
+>> +
+>>  config ARM_CCA_GUEST
+>>  	tristate "Arm CCA Guest driver"
+>>  	depends on ARM64
+>> +	depends on PCI_TSM
+>>  	select TSM_REPORTS
+>>  	select AUXILIARY_BUS
+>> +	select TSM
+>>  	help
+>> -	  The driver provides userspace interface to request and
+>> +	  The driver provides userspace interface to request an
+>
+> Push this fixlet to the series adding this or a follow up if that isn't being respun.
+> Definitely shouldn't be in here.
+>
+>
+>>  	  attestation report from the Realm Management Monitor(RMM).
+>> +	  If the DA feature is supported, it also register with TSM framework.
+>>  
+>>  	  If you choose 'M' here, this module will be called
+>>  	  arm-cca-guest.
+>> diff --git a/drivers/virt/coco/arm-cca-guest/Makefile b/drivers/virt/coco/arm-cca-guest/Makefile
+>> index 75a120e24fda..bc3b2be4019f 100644
+>> --- a/drivers/virt/coco/arm-cca-guest/Makefile
+>> +++ b/drivers/virt/coco/arm-cca-guest/Makefile
+>> @@ -1,4 +1,5 @@
+>>  # SPDX-License-Identifier: GPL-2.0-only
+>> +#
+>
+> Stray change.
+>
+>>  obj-$(CONFIG_ARM_CCA_GUEST) += arm-cca-guest.o
+>>  
+>>  arm-cca-guest-y +=  arm-cca.o
+>> diff --git a/drivers/virt/coco/arm-cca-guest/arm-cca.c b/drivers/virt/coco/arm-cca-guest/arm-cca.c
+>> index dc96171791db..288fa53ad0af 100644
+>> --- a/drivers/virt/coco/arm-cca-guest/arm-cca.c
+>> +++ b/drivers/virt/coco/arm-cca-guest/arm-cca.c
+>> @@ -1,6 +1,6 @@
+>>  // SPDX-License-Identifier: GPL-2.0-only
+>>  /*
+>> - * Copyright (C) 2023 ARM Ltd.
+>> + * Copyright (C) 2025 ARM Ltd.
+> Usually we just extend the date span rather than claiming everything is
+> 2025. e.g.
+>  * Copyright (C) 2023-2025 ARM Ltd.
+>
+>>   */
+>
+>> @@ -192,6 +194,57 @@ static void unregister_cca_tsm_report(void *data)
+>>  	tsm_report_unregister(&arm_cca_tsm_report_ops);
+>>  }
+>>  
+>> +static struct pci_tsm *cca_tsm_lock(struct tsm_dev *tsm_dev, struct pci_dev *pdev)
+>> +{
+>> +	int ret;
+>> +
+>> +	struct cca_guest_dsc *cca_dsc __free(kfree) =
+>> +		kzalloc(sizeof(*cca_dsc), GFP_KERNEL);
+>> +	if (!cca_dsc)
+>> +		return ERR_PTR(-ENOMEM);
+>> +
+>> +	ret = pci_tsm_devsec_constructor(pdev, &cca_dsc->pci, tsm_dev);
+>> +	if (ret)
+>> +		return ERR_PTR(ret);
+>> +
+>> +	return ERR_PTR(-EIO);
+>
+> Perhaps add a comment so you have something like
+>
+> 	return ERR_PTR(-EIO); /* For now always return an error */
+>
+> Just makes it a tiny bit easier to review as no need to go check this
+> is removed in a later patch.
+>
+>
+>> +}
+>> +
+>> +static void cca_tsm_unlock(struct pci_tsm *tsm)
+>> +{
+>> +	struct cca_guest_dsc *cca_dsc = to_cca_guest_dsc(tsm->pdev);
+>> +
+>> +	kfree(cca_dsc);
+>> +}
+>> +
+>> +static struct pci_tsm_ops cca_devsec_pci_ops = {
+>> +	.lock = cca_tsm_lock,
+>> +	.unlock = cca_tsm_unlock,
+>> +};
+>> +
+>> +static void cca_devsec_tsm_remove(void *tsm_dev)
+>> +{
+>> +	tsm_unregister(tsm_dev);
+>> +}
+>> +
+>> +static int cca_devsec_tsm_register(struct auxiliary_device *adev)
+>> +{
+>> +	struct tsm_dev *tsm_dev;
+>> +	int rc;
+>> +
+>> +	tsm_dev = tsm_register(&adev->dev, &cca_devsec_pci_ops);
+>> +	if (IS_ERR(tsm_dev))
+>> +		return PTR_ERR(tsm_dev);
+>> +
+>> +	rc = devm_add_action_or_reset(&adev->dev, cca_devsec_tsm_remove, tsm_dev);
+>> +	if (rc) {
+>> +		cca_devsec_tsm_remove(tsm_dev);
+>
+> Take a look at what the _or_reset() does in the devm_add_action_or_reset().
+> Short story, you should not need this call if the devm machinery has returned
+> an error.
+>
+>> +		return rc;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>
+>> diff --git a/drivers/virt/coco/arm-cca-guest/rsi-da.h b/drivers/virt/coco/arm-cca-guest/rsi-da.h
+>> new file mode 100644
+>> index 000000000000..5ad3b740710e
+>> --- /dev/null
+>> +++ b/drivers/virt/coco/arm-cca-guest/rsi-da.h
+>
+>> +static inline int rsi_vdev_id(struct pci_dev *pdev)
+>> +{
+>> +	return (pci_domain_nr(pdev->bus) << 16) |
+>> +	       PCI_DEVID(pdev->bus->number, pdev->devfn);
+>
+> I'm struggling to find where this is actually defined in the various specs
+> so good to have a reference in a comment here.
+>
 
-Thanks,
-Guenter
+The vdev_id is provided by the host during the rmi_vdev_create
+operation. In the Linux implementation, we use the guest_rid as the
+vdev_id.
+
+https://git.gitlab.arm.com/linux-arm/linux-cca/-/commit/3c55fc14480183f18c694e3d6054578830719d00#152a2139b6b88b07ff1e0f53e408a1d4158076a4_643_715
+
+
+>> +}
+>> +
+>> +#endif
+
+-aneesh
 
