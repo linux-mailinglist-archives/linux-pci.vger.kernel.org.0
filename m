@@ -1,381 +1,242 @@
-Return-Path: <linux-pci+bounces-41960-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-41962-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83657C8188B
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 17:22:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 027B9C81AE6
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 17:51:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 973B93A459B
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 16:21:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B6DB3AA1B3
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Nov 2025 16:51:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD0463168E0;
-	Mon, 24 Nov 2025 16:21:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7585C3168F2;
+	Mon, 24 Nov 2025 16:51:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="soMAjU3U"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pcEULTFv";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FAkKWU22";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pcEULTFv";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FAkKWU22"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD293164C7;
-	Mon, 24 Nov 2025 16:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0C0314B69
+	for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 16:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764001265; cv=none; b=XD/LDwq8a2s2ICJ+V5NZmeSEwOCyF6kvowjV9kknD0ueFyEG93P9X261jbjqgWarhfoSuZjNDUnsXGqTdUQ9cm3SjAptJhJkzPqxIQlEl24YExemQrkCG1aTod6QaMAvTfhB0oaFmE3O+PdcQHgoxZtNsP8taQUGfil+4+PfQXo=
+	t=1764003090; cv=none; b=ZwyYz/5TypXPEvXEGRxGgq/9q04mz1xFwLbp+kJ4q7cYpo2xBvY6OzprLsHEBHkxQO9JrFtlqIPXHMEVxAFdb/CezDowJhWYUwn7sqHqsqY55bdTpJD0o/6xZLF7ANQjDPtE/OL2uX50zdYIbXtqMA1KW8MALL711YxPjGUv9xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764001265; c=relaxed/simple;
-	bh=thA6EpEnjrSH7ZNxTMbFIvg+M/dmxUF6+YiplwO094U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=h5ipdSjf+Wq/rkRk1vLkFUu1xBCAEPZmMuqyWEWkqVbGQ7LoUmtQYHk22BnOOnjmCR9g3JbLF13A9ZQo4qOCYtr/On764rEfXnxjtxFO55LhvKTvgZt65nvD9/kJLOwFY8dKkEjiH7pW6Li8bFdQLTXGjsWdLUeXCo9QUyopWgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=soMAjU3U; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3CE58C2BCAF;
-	Mon, 24 Nov 2025 16:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764001264;
-	bh=thA6EpEnjrSH7ZNxTMbFIvg+M/dmxUF6+YiplwO094U=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=soMAjU3U1wAY1x7SsJcEMrAUqf/1HAJALwGF08q5McGkEw8hLjOMi30Sp7t8f2VGu
-	 KA/87m393gTRjMqAUDcs5+Hv5wYCrgowTTqZN9dRhkzBt6iry+lPg6kcCNne46eq4s
-	 av7GZ4PrSbmkrnVU3p1K6wT/4nVa8Wj87m0DbztU1qzQ734J/tLNdnUolya5C0+Q7t
-	 onqAU+u/7jJ4gW7SxyiyZUFXV/YvJZL1Rhv8FK5QckjdfxrboJ9KczjET24ed085H0
-	 0vzmcy+p+kXoTSxhjykKehejkc3Tclsfl5lkMQP2wB1SSoKvTq1Msf3C8l+N75w65N
-	 gVm0OJLFiT/oQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3368DCFD31F;
-	Mon, 24 Nov 2025 16:21:04 +0000 (UTC)
-From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Mon, 24 Nov 2025 21:50:48 +0530
-Subject: [PATCH 5/5] PCI/pwrctrl: Switch to the new pwrctrl APIs
+	s=arc-20240116; t=1764003090; c=relaxed/simple;
+	bh=E37G2IPwLWK4zyo1aU8cmo0JUAfmqoMclnQa721pxjw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L1TkU6GMV2gbsmSFt43WwU0dt/fLEt/YRYXcC6YEFw3e38owqo0XZ5DNxS28otHlGaHyRBJba+UEt2PjlqweFazK6l2ekHka0cUC90FbQFXD2en0Gx0lWkY+hhe5DZPRVg7tWHYfctBduchkm9k1hmyISfQyruNY8sl4TBvcffM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pcEULTFv; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FAkKWU22; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pcEULTFv; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FAkKWU22; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9A19D21FE7;
+	Mon, 24 Nov 2025 16:51:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1764003084; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=nvlNT7/03lgKc0UqqVACl/eVo2J+fynx71RItOnRGt4=;
+	b=pcEULTFvf9YsJFrVufj1W0iUwwsreYnCfkn2g0j1eZ/l2nbMGiVmNI9ekGYIXluTqRBG1p
+	Qlpv3Glm5Klqq1IaTGamxXu8VbMMJd4yGHEBiEU6MU++rcBO53JYkeSgLovgLHN38Aanso
+	jvtrUDfFyu5SkrPS+IeloYbwofhc5Q0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1764003084;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=nvlNT7/03lgKc0UqqVACl/eVo2J+fynx71RItOnRGt4=;
+	b=FAkKWU22NH4zBfsWhA5Z8UEG7Kegt4AjWDxMgB9dfSfSU+5Q5QQAfScMcgKdGzaXpqlmhD
+	lmGcYab+z9V51LBA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=pcEULTFv;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=FAkKWU22
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1764003084; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=nvlNT7/03lgKc0UqqVACl/eVo2J+fynx71RItOnRGt4=;
+	b=pcEULTFvf9YsJFrVufj1W0iUwwsreYnCfkn2g0j1eZ/l2nbMGiVmNI9ekGYIXluTqRBG1p
+	Qlpv3Glm5Klqq1IaTGamxXu8VbMMJd4yGHEBiEU6MU++rcBO53JYkeSgLovgLHN38Aanso
+	jvtrUDfFyu5SkrPS+IeloYbwofhc5Q0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1764003084;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=nvlNT7/03lgKc0UqqVACl/eVo2J+fynx71RItOnRGt4=;
+	b=FAkKWU22NH4zBfsWhA5Z8UEG7Kegt4AjWDxMgB9dfSfSU+5Q5QQAfScMcgKdGzaXpqlmhD
+	lmGcYab+z9V51LBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 319EA3EA63;
+	Mon, 24 Nov 2025 16:51:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id sH6tCgyNJGm3GgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 24 Nov 2025 16:51:24 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: ardb@kernel.org,
+	javierm@redhat.com,
+	arnd@arndb.de,
+	richard.lyu@suse.com
+Cc: x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH v2 00/10] arch,sysfb,efi: Support EDID on non-x86 EFI systems
+Date: Mon, 24 Nov 2025 17:40:12 +0100
+Message-ID: <20251124165116.502813-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251124-pci-pwrctrl-rework-v1-5-78a72627683d@oss.qualcomm.com>
-References: <20251124-pci-pwrctrl-rework-v1-0-78a72627683d@oss.qualcomm.com>
-In-Reply-To: <20251124-pci-pwrctrl-rework-v1-0-78a72627683d@oss.qualcomm.com>
-To: Manivannan Sadhasivam <mani@kernel.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@kernel.org>, 
- Brian Norris <briannorris@chromium.org>, 
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
- Niklas Cassel <cassel@kernel.org>, Alex Elder <elder@riscstar.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9435;
- i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=mDB7xVX8LQeuezZL74Dh28IYQlR8cBKIJVcKC/1hNZ4=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpJIXsuhRW0BQsoWAqXI8mAjW/5GwKVcDDKgBng
- rzrf95SHSqJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaSSF7AAKCRBVnxHm/pHO
- 9e30B/99wz7r2n/2zStJ2MN+cr4rCnXIFcs3JJXu2aXW7Pqn4TQWeizI3uJlHOO8JekYzyKf9Fm
- LXkrJcZH5GPw3Rxf0e5RbsaE0fFltZoyHaAPTf/hoiqxIBF20kq5D7oyT1Hvo8B8XPWYnh2fr4g
- 5jKbg61hAGSDkZ54/pYW1Pj8ACCG0yJ9iCiZ+pcJUDFZbgiZ4et1F59+Cp4Xc7ZlIuOMPIDpd+6
- YUrM7NeZ4vVwfgYr+cXDWNJZt4m/3e/Gxxvg/3fAf3OI4U7Mfqqa+jFBERAFYtVgYnrwv4he1fL
- Wx2Z818e6zkq2/IxKRfg2fEeyZxqz4bH3sYKlKnFLzS9iU0J
-X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
-X-Endpoint-Received: by B4 Relay for
- manivannan.sadhasivam@oss.qualcomm.com/default with auth_id=461
-X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Reply-To: manivannan.sadhasivam@oss.qualcomm.com
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 9A19D21FE7
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -3.01
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Replace screen_info and edid_info with sysfb_primary_device of type
+struct sysfb_display_info. Update all users. Then implement EDID support
+in EFI's libstub.
 
-Adopt the recently introduced pwrctrl APIs to create, power on, destroy,
-and power off pwrctrl devices. In qcom_pcie_host_init(), call
-pci_pwrctrl_create_devices() to create devices, then
-pci_pwrctrl_power_on_devices() to power them on, both after controller
-resource initialization. Once successful, deassert PERST# for all devices.
+Sysfb DRM drivers currently fetch the global edid_info directly, when
+they should get that information together with the screen_info from their
+device. Wrapping screen_info and edid_info in sysfb_primary_display and
+passing this to drivers enables this.
 
-In qcom_pcie_host_deinit(), call pci_pwrctrl_power_off_devices() after
-asserting PERST#. Note that pci_pwrctrl_destroy_devices() is not called
-here, as deinit is only invoked during system suspend where device
-destruction is unnecessary. If the driver becomes removable in future,
-pci_pwrctrl_destroy_devices() should be called in the remove() handler.
+Replacing both with sysfb_primary_display has been motivate by the EFI
+stub. EFI wants to transfer EDID via config table in a single entry.
+Using struct sysfb_display_info this will become easily possible. Hence
+accept some churn in architecture code for the long-term improvements.
 
-At last, remove the old pwrctrl framework code from the PCI core, as the
-new APIs are now the sole consumer of pwrctrl functionality. And also do
-not power on the pwrctrl drivers during probe() as this is now handled by
-the APIs.
+Add a new UUID to transfer sysfb_primary_display via EFI's config table.
+Then implement support in the kernel and EFI's libstub.
 
-Co-developed-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
----
- drivers/pci/controller/dwc/pcie-qcom.c   | 22 ++++++++++--
- drivers/pci/probe.c                      | 59 --------------------------------
- drivers/pci/pwrctrl/core.c               | 15 --------
- drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c |  5 ---
- drivers/pci/pwrctrl/slot.c               |  2 --
- drivers/pci/remove.c                     | 20 -----------
- 6 files changed, 20 insertions(+), 103 deletions(-)
+Patches 1 and 2 reduce the exposure of screen_info in EFI-related code.
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 7b6f4a391ce4..691ba4243342 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -24,6 +24,7 @@
- #include <linux/of_pci.h>
- #include <linux/pci.h>
- #include <linux/pci-ecam.h>
-+#include <linux/pci-pwrctrl.h>
- #include <linux/pm_opp.h>
- #include <linux/pm_runtime.h>
- #include <linux/platform_device.h>
-@@ -1352,10 +1353,18 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
- 	if (ret)
- 		goto err_deinit;
- 
-+	ret = pci_pwrctrl_create_devices(pci->dev);
-+	if (ret)
-+		goto err_disable_phy;
-+
-+	ret = pci_pwrctrl_power_on_devices(pci->dev);
-+	if (ret)
-+		goto err_pwrctrl_destroy;
-+
- 	if (pcie->cfg->ops->post_init) {
- 		ret = pcie->cfg->ops->post_init(pcie);
- 		if (ret)
--			goto err_disable_phy;
-+			goto err_pwrctrl_power_off;
- 	}
- 
- 	qcom_ep_reset_deassert(pcie);
-@@ -1370,6 +1379,10 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
- 
- err_assert_reset:
- 	qcom_ep_reset_assert(pcie);
-+err_pwrctrl_power_off:
-+	pci_pwrctrl_power_off_devices(pci->dev);
-+err_pwrctrl_destroy:
-+	pci_pwrctrl_destroy_devices(pci->dev);
- err_disable_phy:
- 	qcom_pcie_phy_power_off(pcie);
- err_deinit:
-@@ -1384,6 +1397,11 @@ static void qcom_pcie_host_deinit(struct dw_pcie_rp *pp)
- 	struct qcom_pcie *pcie = to_qcom_pcie(pci);
- 
- 	qcom_ep_reset_assert(pcie);
-+	/*
-+	 * No need to destroy pwrctrl devices as this function only gets called
-+	 * during system suspend as of now.
-+	 */
-+	pci_pwrctrl_power_off_devices(pci->dev);
- 	qcom_pcie_phy_power_off(pcie);
- 	pcie->cfg->ops->deinit(pcie);
- }
-@@ -2035,7 +2053,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 
- 	ret = dw_pcie_host_init(pp);
- 	if (ret) {
--		dev_err(dev, "cannot initialize host\n");
-+		dev_err_probe(dev, ret, "cannot initialize host\n");
- 		goto err_phy_exit;
- 	}
- 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index c83e75a0ec12..34033605adf3 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2533,56 +2533,6 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
- }
- EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
- 
--#if IS_ENABLED(CONFIG_PCI_PWRCTRL)
--static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
--{
--	struct pci_host_bridge *host = pci_find_host_bridge(bus);
--	struct platform_device *pdev;
--	struct device_node *np;
--
--	np = of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
--	if (!np)
--		return NULL;
--
--	pdev = of_find_device_by_node(np);
--	if (pdev) {
--		put_device(&pdev->dev);
--		goto err_put_of_node;
--	}
--
--	/*
--	 * First check whether the pwrctrl device really needs to be created or
--	 * not. This is decided based on at least one of the power supplies
--	 * being defined in the devicetree node of the device.
--	 */
--	if (!of_pci_supply_present(np)) {
--		pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name);
--		goto err_put_of_node;
--	}
--
--	/* Now create the pwrctrl device */
--	pdev = of_platform_device_create(np, NULL, &host->dev);
--	if (!pdev) {
--		pr_err("PCI/pwrctrl: Failed to create pwrctrl device for node: %s\n", np->name);
--		goto err_put_of_node;
--	}
--
--	of_node_put(np);
--
--	return pdev;
--
--err_put_of_node:
--	of_node_put(np);
--
--	return NULL;
--}
--#else
--static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
--{
--	return NULL;
--}
--#endif
--
- /*
-  * Read the config data for a PCI device, sanity-check it,
-  * and fill in the dev structure.
-@@ -2592,15 +2542,6 @@ static struct pci_dev *pci_scan_device(struct pci_bus *bus, int devfn)
- 	struct pci_dev *dev;
- 	u32 l;
- 
--	/*
--	 * Create pwrctrl device (if required) for the PCI device to handle the
--	 * power state. If the pwrctrl device is created, then skip scanning
--	 * further as the pwrctrl core will rescan the bus after powering on
--	 * the device.
--	 */
--	if (pci_pwrctrl_create_device(bus, devfn))
--		return NULL;
--
- 	if (!pci_bus_read_dev_vendor_id(bus, devfn, &l, 60*1000))
- 		return NULL;
- 
-diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
-index e0a0cf015bd0..69bf2514c420 100644
---- a/drivers/pci/pwrctrl/core.c
-+++ b/drivers/pci/pwrctrl/core.c
-@@ -45,16 +45,6 @@ static int pci_pwrctrl_notify(struct notifier_block *nb, unsigned long action,
- 	return NOTIFY_DONE;
- }
- 
--static void rescan_work_func(struct work_struct *work)
--{
--	struct pci_pwrctrl *pwrctrl = container_of(work,
--						   struct pci_pwrctrl, work);
--
--	pci_lock_rescan_remove();
--	pci_rescan_bus(to_pci_host_bridge(pwrctrl->dev->parent)->bus);
--	pci_unlock_rescan_remove();
--}
--
- /**
-  * pci_pwrctrl_init() - Initialize the PCI power control context struct
-  *
-@@ -64,7 +54,6 @@ static void rescan_work_func(struct work_struct *work)
- void pci_pwrctrl_init(struct pci_pwrctrl *pwrctrl, struct device *dev)
- {
- 	pwrctrl->dev = dev;
--	INIT_WORK(&pwrctrl->work, rescan_work_func);
- 	dev_set_drvdata(dev, pwrctrl);
- }
- EXPORT_SYMBOL_GPL(pci_pwrctrl_init);
-@@ -95,8 +84,6 @@ int pci_pwrctrl_device_set_ready(struct pci_pwrctrl *pwrctrl)
- 	if (ret)
- 		return ret;
- 
--	schedule_work(&pwrctrl->work);
--
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(pci_pwrctrl_device_set_ready);
-@@ -109,8 +96,6 @@ EXPORT_SYMBOL_GPL(pci_pwrctrl_device_set_ready);
-  */
- void pci_pwrctrl_device_unset_ready(struct pci_pwrctrl *pwrctrl)
- {
--	cancel_work_sync(&pwrctrl->work);
--
- 	/*
- 	 * We don't have to delete the link here. Typically, this function
- 	 * is only called when the power control device is being detached. If
-diff --git a/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c b/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-index 0fb9038a1d18..7697a8a5cdde 100644
---- a/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-+++ b/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-@@ -101,11 +101,6 @@ static int pci_pwrctrl_pwrseq_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(data->pwrseq),
- 				     "Failed to get the power sequencer\n");
- 
--	ret = pci_pwrctrl_pwrseq_power_on(&data->ctx);
--	if (ret)
--		return dev_err_probe(dev, ret,
--				     "Failed to power-on the device\n");
--
- 	ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_pwrseq_power_off,
- 				       data);
- 	if (ret)
-diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
-index 14701f65f1f2..888300aeefec 100644
---- a/drivers/pci/pwrctrl/slot.c
-+++ b/drivers/pci/pwrctrl/slot.c
-@@ -79,8 +79,6 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(slot->clk),
- 				     "Failed to enable slot clock\n");
- 
--	pci_pwrctrl_slot_power_on(&slot->ctx);
--
- 	slot->ctx.power_on = pci_pwrctrl_slot_power_on;
- 	slot->ctx.power_off = pci_pwrctrl_slot_power_off;
- 
-diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-index ce5c25adef55..2a22595f38af 100644
---- a/drivers/pci/remove.c
-+++ b/drivers/pci/remove.c
-@@ -17,25 +17,6 @@ static void pci_free_resources(struct pci_dev *dev)
- 	}
- }
- 
--static void pci_pwrctrl_unregister(struct device *dev)
--{
--	struct device_node *np;
--	struct platform_device *pdev;
--
--	np = dev_of_node(dev);
--	if (!np)
--		return;
--
--	pdev = of_find_device_by_node(np);
--	if (!pdev)
--		return;
--
--	of_device_unregister(pdev);
--	put_device(&pdev->dev);
--
--	of_node_clear_flag(np, OF_POPULATED);
--}
--
- static void pci_stop_dev(struct pci_dev *dev)
- {
- 	pci_pme_active(dev, false);
-@@ -66,7 +47,6 @@ static void pci_destroy_dev(struct pci_dev *dev)
- 	pci_doe_destroy(dev);
- 	pcie_aspm_exit_link_state(dev);
- 	pci_bridge_d3_update(dev);
--	pci_pwrctrl_unregister(&dev->dev);
- 	pci_free_resources(dev);
- 	put_device(&dev->dev);
- }
+Patch 3 adds struct sysfb_display_info.
 
+Patch 4 replaces scren_info with sysfb_primary_display. This results in
+several changes throught the kernel, but is really just a refactoring.
+
+Patch 5 updates sysfb to transfer sysfb_primary_display to the related
+drivers.
+
+Patch 6 moves edid_info into sysfb_primary_display. This resolves some
+drivers' reference to the global edid_info, but also makes the EDID data
+available on non-x86 architectures.
+
+Patches 7 and 8 add kernel-side support for EDID transfers on non-x86
+EFI systems.
+
+Patches 9 implements EDID support in libstub. Patch 10 cleans up the
+config-table allocation to be easier to understand.
+
+This is v2 of the series. It combines v1 of the series at [1] plus
+changes from [2] and [3].
+
+[1] https://lore.kernel.org/dri-devel/20251121135624.494768-1-tzimmermann@suse.de/
+[2] https://lore.kernel.org/dri-devel/20251015160816.525825-1-tzimmermann@suse.de/
+[3] https://lore.kernel.org/linux-efi/20251119123011.1187249-5-ardb+git@google.com/
+
+Thomas Zimmermann (10):
+  efi: earlycon: Reduce number of references to global screen_info
+  efi: sysfb_efi: Reduce number of references to global screen_info
+  sysfb: Add struct sysfb_display_info
+  sysfb: Replace screen_info with sysfb_primary_display
+  sysfb: Pass sysfb_primary_display to devices
+  sysfb: Move edid_info into sysfb_primary_display
+  efi: Refactor init_primary_display() helpers
+  efi: Support EDID information
+  efi: libstub: Transfer EDID to kernel
+  efi: libstub: Simplify interfaces for primary_display
+
+ arch/arm64/kernel/image-vars.h                |  2 +-
+ arch/loongarch/kernel/efi.c                   | 47 +++++++----
+ arch/loongarch/kernel/image-vars.h            |  2 +-
+ arch/riscv/kernel/image-vars.h                |  2 +-
+ arch/x86/kernel/kexec-bzimage64.c             |  4 +-
+ arch/x86/kernel/setup.c                       | 16 ++--
+ arch/x86/video/video-common.c                 |  4 +-
+ drivers/firmware/efi/earlycon.c               | 42 +++++-----
+ drivers/firmware/efi/efi-init.c               | 47 +++++++----
+ drivers/firmware/efi/efi.c                    |  2 +
+ drivers/firmware/efi/libstub/Makefile         |  2 +-
+ drivers/firmware/efi/libstub/efi-stub-entry.c | 36 +++++++--
+ drivers/firmware/efi/libstub/efi-stub.c       | 49 +++++++----
+ drivers/firmware/efi/libstub/efistub.h        |  7 +-
+ .../firmware/efi/libstub/primary_display.c    | 41 ++++++++++
+ drivers/firmware/efi/libstub/screen_info.c    | 53 ------------
+ drivers/firmware/efi/libstub/zboot.c          |  6 +-
+ drivers/firmware/efi/sysfb_efi.c              | 81 ++++++++++---------
+ drivers/firmware/sysfb.c                      | 13 +--
+ drivers/firmware/sysfb_simplefb.c             |  2 +-
+ drivers/gpu/drm/sysfb/efidrm.c                | 14 ++--
+ drivers/gpu/drm/sysfb/vesadrm.c               | 14 ++--
+ drivers/hv/vmbus_drv.c                        |  6 +-
+ drivers/pci/vgaarb.c                          |  4 +-
+ drivers/video/Kconfig                         |  8 +-
+ drivers/video/fbdev/core/fbmon.c              |  8 +-
+ drivers/video/fbdev/efifb.c                   | 10 ++-
+ drivers/video/fbdev/vesafb.c                  | 10 ++-
+ drivers/video/fbdev/vga16fb.c                 |  8 +-
+ drivers/video/screen_info_pci.c               |  5 +-
+ include/linux/efi.h                           |  8 +-
+ include/linux/screen_info.h                   |  2 -
+ include/linux/sysfb.h                         | 23 ++++--
+ include/video/edid.h                          |  4 -
+ 34 files changed, 337 insertions(+), 245 deletions(-)
+ create mode 100644 drivers/firmware/efi/libstub/primary_display.c
+ delete mode 100644 drivers/firmware/efi/libstub/screen_info.c
+
+
+base-commit: d724c6f85e80a23ed46b7ebc6e38b527c09d64f5
 -- 
-2.48.1
-
+2.51.1
 
 
