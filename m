@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-42027-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42029-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66916C84A90
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 12:12:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A871C84AA8
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 12:12:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BC8F3AA6CD
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 11:12:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DDB6C3AAE1D
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 11:12:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E331315D24;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EE8E3168FC;
 	Tue, 25 Nov 2025 11:12:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQV13Wz5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YZ6Ap7dj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F7329B795;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42ADE314D16;
 	Tue, 25 Nov 2025 11:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764069153; cv=none; b=iCblIuuaw4KLEo2T5Wh+GmEL40Db9gSONwcBa3UjGgDAJVLz8+6c8EH79Lo0BExUY70Tc48yEZAoGZnyWZCJccEgSruO+j+93VrtP1NLJmTzyU2jDffakeJFomRpxD1bf55vwsvuYCGd2hlsArTKUXLmjjCwNvIfdyKZTut5scc=
+	t=1764069153; cv=none; b=IR/jddrDo8nsFLCvRqOKqx5bHIZoMAxMi4RtJ+V5D9apDjajif1yGmh3mdFN22wxBDqp2SfpcLee6m0jdYVhmL2lzmpqqkcsSd6GqEChHPdbrEi0szd4+gBlUv0bEv/iKbwEIZYnv27tt4q2YAuCE0fiNgfE7SId1Bnhtj89ydw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1764069153; c=relaxed/simple;
-	bh=TdY/Q2esA7fjGCbY16Y/7BsFURyPP/oQf6cnQxXJtlU=;
+	bh=YgTp47gBWwTxTZqUXWkk7rXcnJqKSr28f/BoeQqfZ2Q=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ubpiLcYWOkAm6XJFkNMYG1W7OinScpE9Pw0gquuEsVVtQR0X9ZglRRZ+JnCSqF7V+Rr9+0urSATeofm/HxjL/xDMdM+tBndLdyy5zfmTB/08qhM1Ye3JTNRyjd9uFF63M/wqRpBtDHEz+VHuTAFJJgzcsDIPKEd4N3zKMs7iPCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQV13Wz5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A4683C116B1;
+	 In-Reply-To:To:Cc; b=ZvI9Rkvtnyf6iMy9xJ3PXBia7zJGJYZMw92TFpAW8b+TP3TkcWm+NL2hfFL7I4XFTM7EL5JLWxJe/6qXag2coNlAtQCMUiOe1AeAFOaKRCjkx14Tocgd1CRwYmzpa+aU77mGPRVAS2wMfamaSw2IyAES1ESn/Yw5MFzvugGguaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YZ6Ap7dj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B288CC19423;
 	Tue, 25 Nov 2025 11:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1764069152;
-	bh=TdY/Q2esA7fjGCbY16Y/7BsFURyPP/oQf6cnQxXJtlU=;
+	bh=YgTp47gBWwTxTZqUXWkk7rXcnJqKSr28f/BoeQqfZ2Q=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=BQV13Wz5PZqh202S2C7mM3FmFv7W0mvYwDB7WGQ1V6Qf8E12Pu5EibR1Q7UPFi1n+
-	 cCpT6j0WSoAl/iLMWOs6aK6WkdPO79ANDo3s0YI5DXAEY3WJDUGN8U6akC2Cewpnsy
-	 nWIYrjFydQ2ZMYbWNI27TEQOo2EJuqmaF2U8WcxfyJlE6LnwKIK4z3q2Lu4f30/2l5
-	 9OwonaJ7huvICVRSJnxuElQhXedMcRzGjOU50Vh06oXmDhIB8gaP06o2LL4s33RkTU
-	 JhUJc5tSnk16lLD7WFwroVRUenXWdeq83ZFtSxqOByp5rxKcFajtZe2Nsi5r3b2W5H
-	 A0LQiSZs0qKkg==
+	b=YZ6Ap7djRf4vX9QfBYDYkVtsQ92W4KfxcH/BfSib6TRaJ/uWS0iPgH6UpXsZ8lPvc
+	 qasv8ejxSMPI1rNXtR+Ju3/BnDkzysAqkUyNVTvSnP4wZl5SdIqse8+hebTSZhKGbC
+	 o7h5V8J8bLAusJIvnwESnOkUQimQg6071lYpRWC9IRWuIGKQKn8sra7kHny3u4vixy
+	 6b2etMAw+LeJEU8+J9+kisDF7qqY46k50UH+XAargZUx6pqQ8qDf4wQaatXQ28As5v
+	 Zr0ka9U56aPPXb1fkYDO8CG7Zj2e+G5agGeZ3ndoVdzhI3KlaQCP+uVosU38R4/EGi
+	 WY5O8VD+Ugdgw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F15D0E6C7;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F6DCFD368;
 	Tue, 25 Nov 2025 11:12:32 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Tue, 25 Nov 2025 16:42:27 +0530
-Subject: [PATCH v3 2/4] PCI/pwrctrl: Add support for handling PCIe M.2
- connectors
+Date: Tue, 25 Nov 2025 16:42:28 +0530
+Subject: [PATCH v3 3/4] PCI/pwrctrl: Create pwrctrl device if the graph
+ port is found
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251125-pci-m2-v3-2-c528042aea47@oss.qualcomm.com>
+Message-Id: <20251125-pci-m2-v3-3-c528042aea47@oss.qualcomm.com>
 References: <20251125-pci-m2-v3-0-c528042aea47@oss.qualcomm.com>
 In-Reply-To: <20251125-pci-m2-v3-0-c528042aea47@oss.qualcomm.com>
 To: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -71,16 +71,16 @@ Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3872;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1400;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=HTvHAc0W+gqT3Gny5NRdE5ZGDr0iND6zrMawYcBU9kc=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpJY8dw2Hnsq2BXwbXXvxR2p7knFdcX9j6VsUKh
- K7Y8RrGG3CJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaSWPHQAKCRBVnxHm/pHO
- 9dcsB/4iw/bZmwyrAulLrLhnkj0HJ3jT02zpCt/xig3ohfMT8P5DAB1EzRr69yjxEvI8cDFR9NN
- GwyE2MMhlJzZCFMKT+GRqniTAoKeMNGUwtiTl2EYJHTPNe4CvxROx2YO2tNlaFivzIU6HjLVJjA
- l34KUHOCOZYj2MpEfPGEEi70gnpDFjsnCZOVY9uXh9hTLfY0DhCBhpZsl75imEugxirj972KGQe
- Ko2gUUekn2eNE9F2ZWOovC3SYqqQh/a8JYBEwrSSnU3BtyktARqhacqr3RhiDdP/KN03Bu/Dm+I
- gi7Jz+HNt3vJ+C4c6Js/BKdboitwqXA2cI8mozzuH0KeXMHF
+ bh=85qx2Om/7njPst0xF59AZpGkw5zpMb/2p4I8tf0rGZI=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpJY8d8dHupd6VCH/oWWZ7QPaB9MbZJaUhUHcND
+ zboN2Jf2ECJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaSWPHQAKCRBVnxHm/pHO
+ 9TkcB/9SuTMoRU5JJS6C646WFkzzsHd2Ulg4rKImNms7pLcqqyrc6/P7U0Bco+g0Cax4FvkIJzy
+ iF/h8h/aXc+tjDqcq//6cF6mYbyfUxH22QfN0ePqMWbFkQ8TbV/mVKwLOqjexHCzX3AtMvuUuhi
+ xKOUsCwhpKncFXKZ4lFt76UehmJiKM8bfEW0G6ILwrcuSmrIFs3osDINLRceMHuN2/54MEb1iYf
+ y07jsNw+NtFtNEBcQ4MaXNK1Dg3p2xrjlG9jT3Dsfw8Fo1hFo5q9pedfto3QmEcuQyFsq8VBkUm
+ AEqmE7RCcFuAw/UEp4ZiWk5C7HcNKIV0lzQdlrQc61jzdTEv
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -90,120 +90,40 @@ Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-Add support for handling the PCIe M.2 connectors as Power Sequencing
-devices. These connectors are exposed as the Power Sequencing devices
-as they often support multiple interfaces like PCIe/SATA, USB/UART to the
-host machine and each interfaces could be driven by different client
-drivers at the same time.
+The devicetree node of the PCIe Root Port/Slot could have the graph port
+to link the PCIe M.2 connector node. Since the M.2 connectors are modelled
+as Power Sequencing devices, they need to be controlled by the pwrctrl
+driver as like the Root Port/Slot supplies.
 
-This driver handles the PCIe interface of these connectors. It first checks
-for the presence of the graph port in the Root Port node with the help of
-of_graph_is_present() API, if present, it acquires/poweres ON the
-corresponding pwrseq device.
-
-Once the pwrseq device is powered ON, the driver will skip parsing the Root
-Port/Slot resources and registers with the pwrctrl framework.
+Hence, create the pwrctrl device if the graph port is found in the node.
 
 Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
- drivers/pci/pwrctrl/Kconfig |  1 +
- drivers/pci/pwrctrl/slot.c  | 35 ++++++++++++++++++++++++++++++-----
- 2 files changed, 31 insertions(+), 5 deletions(-)
+ drivers/pci/probe.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pwrctrl/Kconfig b/drivers/pci/pwrctrl/Kconfig
-index 6956c1854811..9a195cb7e117 100644
---- a/drivers/pci/pwrctrl/Kconfig
-+++ b/drivers/pci/pwrctrl/Kconfig
-@@ -13,6 +13,7 @@ config PCI_PWRCTRL_PWRSEQ
- 
- config PCI_PWRCTRL_SLOT
- 	tristate "PCI Power Control driver for PCI slots"
-+	select POWER_SEQUENCING
- 	select PCI_PWRCTRL
- 	help
- 	  Say Y here to enable the PCI Power Control driver to control the power
-diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
-index 3320494b62d8..d46c2365208a 100644
---- a/drivers/pci/pwrctrl/slot.c
-+++ b/drivers/pci/pwrctrl/slot.c
-@@ -8,8 +8,10 @@
- #include <linux/device.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index c83e75a0ec12..9c8669e2fe72 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -9,6 +9,7 @@
+ #include <linux/init.h>
+ #include <linux/pci.h>
+ #include <linux/msi.h>
 +#include <linux/of_graph.h>
- #include <linux/pci-pwrctrl.h>
+ #include <linux/of_pci.h>
+ #include <linux/of_platform.h>
  #include <linux/platform_device.h>
-+#include <linux/pwrseq/consumer.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- 
-@@ -17,12 +19,18 @@ struct pci_pwrctrl_slot_data {
- 	struct pci_pwrctrl ctx;
- 	struct regulator_bulk_data *supplies;
- 	int num_supplies;
-+	struct pwrseq_desc *pwrseq;
- };
- 
- static void devm_pci_pwrctrl_slot_power_off(void *data)
- {
- 	struct pci_pwrctrl_slot_data *slot = data;
- 
-+	if (slot->pwrseq) {
-+		pwrseq_power_off(slot->pwrseq);
-+		return;
-+	}
-+
- 	regulator_bulk_disable(slot->num_supplies, slot->supplies);
- 	regulator_bulk_free(slot->num_supplies, slot->supplies);
- }
-@@ -38,6 +46,20 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
- 	if (!slot)
- 		return -ENOMEM;
- 
-+	if (of_graph_is_present(dev_of_node(dev))) {
-+		slot->pwrseq = devm_pwrseq_get(dev, "pcie");
-+		if (IS_ERR(slot->pwrseq))
-+			return dev_err_probe(dev, PTR_ERR(slot->pwrseq),
-+				     "Failed to get the power sequencer\n");
-+
-+		ret = pwrseq_power_on(slot->pwrseq);
-+		if (ret)
-+			return dev_err_probe(dev, ret,
-+				     "Failed to power-on the device\n");
-+
-+		goto skip_resources;
-+	}
-+
- 	ret = of_regulator_bulk_get_all(dev, dev_of_node(dev),
- 					&slot->supplies);
- 	if (ret < 0) {
-@@ -53,17 +75,20 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
- 		return ret;
+@@ -2555,7 +2556,7 @@ static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, in
+ 	 * not. This is decided based on at least one of the power supplies
+ 	 * being defined in the devicetree node of the device.
+ 	 */
+-	if (!of_pci_supply_present(np)) {
++	if (!of_pci_supply_present(np) && !of_graph_is_present(np)) {
+ 		pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name);
+ 		goto err_put_of_node;
  	}
- 
--	ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_slot_power_off,
--				       slot);
--	if (ret)
--		return ret;
--
- 	clk = devm_clk_get_optional_enabled(dev, NULL);
- 	if (IS_ERR(clk)) {
-+		regulator_bulk_disable(slot->num_supplies, slot->supplies);
-+		regulator_bulk_free(slot->num_supplies, slot->supplies);
- 		return dev_err_probe(dev, PTR_ERR(clk),
- 				     "Failed to enable slot clock\n");
- 	}
- 
-+skip_resources:
-+	ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_slot_power_off,
-+				       slot);
-+	if (ret)
-+		return ret;
-+
- 	pci_pwrctrl_init(&slot->ctx, dev);
- 
- 	ret = devm_pci_pwrctrl_device_set_ready(dev, &slot->ctx);
 
 -- 
 2.48.1
