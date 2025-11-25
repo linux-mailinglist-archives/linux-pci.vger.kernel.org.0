@@ -1,94 +1,258 @@
-Return-Path: <linux-pci+bounces-42022-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42023-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C388C84372
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 10:27:21 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8418C84795
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 11:28:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id AC2FD34E055
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 09:27:20 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id BEED03438F4
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 10:28:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 679082D5932;
-	Tue, 25 Nov 2025 09:27:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 309A92FE56E;
+	Tue, 25 Nov 2025 10:27:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="Ujh5Xxgt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sygUi4Os"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44E1269B1C;
-	Tue, 25 Nov 2025 09:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0626C2F9C37;
+	Tue, 25 Nov 2025 10:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764062836; cv=none; b=fGfB0qmTBDxxexsfqLg1AK100CCVnDKRZUQHRAHtahcZ3v4KR5grV/OkzSTCsz50TIdLg3wUivBP77ZrouY/wd/FxMv/SDtiK6Q8RpqEtZk2Nxn2c8x+zY4ku9y9XTwmF+Ajt7hxoOG9sOBHee5vFxppyRs1pHXZ6ohsHxhP10k=
+	t=1764066474; cv=none; b=qEr9Trgr7XTD7NIDq0g6djvLJkAqJ4lYK2dAY2m6zRXImz4LAlVUisz4OfJzeg0si9bijk/1WhmCFBjnpNfFQE28LvOpnw/flUrRTpYKQoBvtVnume/8yC63QWzruEf19zW6Aj5k0LFCpd9o1WtNLGkoj06DEvR36G/Q67VNAYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764062836; c=relaxed/simple;
-	bh=9fsfpjAM2+mQ4S4GAkoN+7jqNZGufRMjtus1fCgCMqc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HwR4Vbuv9pVfdwJPCtTbTcpCKpopE/8Nqk6F6O0sVQ7Gc1vA8jnJprp3MZ5XuiigMhmoBwbV2s+/yQshXJFTaXiW74jb7HIkPl8+hUKKjBugDnQXt+c3wvPTU9QHES0aFAcYP616SxuANPibzSwll6hPhJYm0QHOgS5rw7obsUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=Ujh5Xxgt; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=k/+2LtzZDQDT/XIIJmpYRUvrcP2KDj85kUn+MGkQNJM=; b=Ujh5XxgtWd8jr9zZcd2oA5syOx
-	Cwt9IJjcT2z4O5nC1oTDkZz2phCS+d5yfzIkGRu+3qoqEO2RlWYiUacquZZfBmTVSUBoRbs2suKMb
-	tgNMMpisQA++79/GIAH54dlpgo6eDFiYCm+51O/uVjZGIk4WsbQUyxEdYxcDg802H6xhoFfnanQHH
-	9ssOiu60VP0hjxpyMc5BSbNgLUL69A3AfZGGp6YTPhBEe6KGim/4BfYTG36omzLqBzqEPxcbwEr1u
-	RUnLeqwU2gSJrzxpg6hLMJbWkXHRZJ1RayRA4ZqkwA+pmawb3gg1rEUtggbyAIsM1erOI2idwpGJb
-	W3EEC88g==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <leitao@debian.org>)
-	id 1vNpKA-003ICO-9j; Tue, 25 Nov 2025 09:27:02 +0000
-Date: Tue, 25 Nov 2025 01:26:55 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Borislav Petkov <bp@alien8.de>, akpm@linux-foundation.org
-Cc: tony.luck@intel.com, akpm@linux-foundation.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev, 
-	osandov@osandov.com, xueshuai@linux.alibaba.com, konrad.wilk@oracle.com, 
-	linux-edac@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
-	kernel-team@meta.com, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>, 
-	Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Hanjun Guo <guohanjun@huawei.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH RESEND v5] vmcoreinfo: Track and log recoverable hardware
- errors
-Message-ID: <zbqtqndpicedldf37c7t74cikasqruzkv2rqt2eh6ufjbj4exb@3p7ajieb6ovr>
-References: <20251010-vmcore_hw_error-v5-1-636ede3efe44@debian.org>
- <vpilvvscosdl4o4cvbmtsrrp4btfwr5iidywmuiawfrgtlcwrr@ubtdbxfqyqpu>
- <20251118141002.GEaRx-Oge8ZxtR4Vzi@fat_crate.local>
+	s=arc-20240116; t=1764066474; c=relaxed/simple;
+	bh=hOlaNf5irREQeC5hqJ1JIn+4xJWmxsP/XfB0B/la+Qc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f96kNn5yWqyYjwmfY/jU0CVNuprRIpUiW7dQUYuQNGjDV+04iKaOjKLPWnkCxpIa/dlDMWdDYU8rNkt4oqhDuDJIWT97ujSf0JQGAAioJtFc16Jrj5e96sQm+4Z89bPXhCp8cQiM72pWgQmkbSdkcwdbfB7rNUdUL+45wR76/R4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sygUi4Os; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74ADDC4CEF1;
+	Tue, 25 Nov 2025 10:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764066473;
+	bh=hOlaNf5irREQeC5hqJ1JIn+4xJWmxsP/XfB0B/la+Qc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sygUi4OsPVIJo5N7R7GGXVq4YmxJCqdw4HGtyXMEfO1elbS7w294nfId/WFoZpzKx
+	 0s2BlgwcGlrnLQnBm2XdKMEfbsGpqYdMwvUjECwIJivjifd4zoXsIgfRX7LmWhsnSS
+	 u7Wi4R4l2VFuoYmd42zP6y1DDvp1juvwoHED1cBKTZ1NzV2CSp+99zEtA4vDH++xKR
+	 nGKlMIiNXlnucDTupcKP0/+yZw2gcYJf67wQ+1+jJI7sh60/PvnDv3MRCUjaOiCgn2
+	 BAq0K0mC1KygoWIaqYxCzN1ZZKYFpSFYSt918dV5EubdzHUXVd+tDm1vQIWiEaK8us
+	 wmYsamamDTdxQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1vNqH0-000000087dw-48ay;
+	Tue, 25 Nov 2025 10:27:51 +0000
+From: Marc Zyngier <maz@kernel.org>
+To: linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Radu Rendec <rrendec@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: [PATCH v2] PCI: host-generic: Move bridge allocation outside of pci_host_common_init()
+Date: Tue, 25 Nov 2025 10:27:26 +0000
+Message-ID: <20251125102726.865617-1-maz@kernel.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251118141002.GEaRx-Oge8ZxtR4Vzi@fat_crate.local>
-X-Debian-User: leitao
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rrendec@redhat.com, bhelgaas@google.com, mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org, lpieralisi@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hello Andrew,
+Having the host bridge allocation inside pci_host_common_init() results
+in a lot of complexity in the pcie-apple driver (the only direct user
+of this function outside of core PCI code).
 
-On Tue, Nov 18, 2025 at 03:10:02PM +0100, Borislav Petkov wrote:
-> On Tue, Nov 18, 2025 at 05:01:47AM -0800, Breno Leitao wrote:
-> > Do you know what is the right tree for this patch?
-> > 
-> > I am wondering if it should go through Kdump, x86 or RAS/MCE tree?
-> 
-> I can take it if akpm wants me to...
+It forces the allocation of driver-specific tracking structures outside
+of the bridge allocation, which in turn requires it to use inefficient
+data structures to match the bridge and the private structure as needed.
 
-Would you prefer to have this patch on your tree, or on Borislav's?
+Instead, let the bridge structure be passed to pci_host_common_init(),
+allowing the driver to allocate it together with the private data,
+as it is usually intended. The driver can then retrieve the bridge
+via the owning device attached to the PCI config window structure.
+This allows the pcie-apple driver to be significantly simplified.
 
-Thanks
---breno
+Both core and driver code are changed in one go to avoid going via
+a transitional interface.
+
+Reviewed-by: Radu Rendec <rrendec@redhat.com>
+Link: https://lore.kernel.org/r/86jyzms036.wl-maz@kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+---
+
+Notes:
+    - Removed unused list_head from apple_pcie structure
+    - Fixed numerous typos
+    - Added Radu's RB
+
+ drivers/pci/controller/pci-host-common.c | 13 +++----
+ drivers/pci/controller/pci-host-common.h |  1 +
+ drivers/pci/controller/pcie-apple.c      | 43 ++++--------------------
+ 3 files changed, 14 insertions(+), 43 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+index 810d1c8de24e9..c473e7c03baca 100644
+--- a/drivers/pci/controller/pci-host-common.c
++++ b/drivers/pci/controller/pci-host-common.c
+@@ -53,16 +53,12 @@ struct pci_config_window *pci_host_common_ecam_create(struct device *dev,
+ EXPORT_SYMBOL_GPL(pci_host_common_ecam_create);
+ 
+ int pci_host_common_init(struct platform_device *pdev,
++			 struct pci_host_bridge *bridge,
+ 			 const struct pci_ecam_ops *ops)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct pci_host_bridge *bridge;
+ 	struct pci_config_window *cfg;
+ 
+-	bridge = devm_pci_alloc_host_bridge(dev, 0);
+-	if (!bridge)
+-		return -ENOMEM;
+-
+ 	of_pci_check_probe_only();
+ 
+ 	platform_set_drvdata(pdev, bridge);
+@@ -85,12 +81,17 @@ EXPORT_SYMBOL_GPL(pci_host_common_init);
+ int pci_host_common_probe(struct platform_device *pdev)
+ {
+ 	const struct pci_ecam_ops *ops;
++	struct pci_host_bridge *bridge;
+ 
+ 	ops = of_device_get_match_data(&pdev->dev);
+ 	if (!ops)
+ 		return -ENODEV;
+ 
+-	return pci_host_common_init(pdev, ops);
++	bridge = devm_pci_alloc_host_bridge(&pdev->dev, 0);
++	if (!bridge)
++		return -ENOMEM;
++
++	return pci_host_common_init(pdev, bridge, ops);
+ }
+ EXPORT_SYMBOL_GPL(pci_host_common_probe);
+ 
+diff --git a/drivers/pci/controller/pci-host-common.h b/drivers/pci/controller/pci-host-common.h
+index 51c35ec0cf37d..b5075d4bd7eb3 100644
+--- a/drivers/pci/controller/pci-host-common.h
++++ b/drivers/pci/controller/pci-host-common.h
+@@ -14,6 +14,7 @@ struct pci_ecam_ops;
+ 
+ int pci_host_common_probe(struct platform_device *pdev);
+ int pci_host_common_init(struct platform_device *pdev,
++			 struct pci_host_bridge *bridge,
+ 			 const struct pci_ecam_ops *ops);
+ void pci_host_common_remove(struct platform_device *pdev);
+ 
+diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+index 0380d300adca6..2d92fc79f6ddf 100644
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@ -187,7 +187,6 @@ struct apple_pcie {
+ 	const struct hw_info	*hw;
+ 	unsigned long		*bitmap;
+ 	struct list_head	ports;
+-	struct list_head	entry;
+ 	struct completion	event;
+ 	struct irq_fwspec	fwspec;
+ 	u32			nvecs;
+@@ -206,9 +205,6 @@ struct apple_pcie_port {
+ 	int			idx;
+ };
+ 
+-static LIST_HEAD(pcie_list);
+-static DEFINE_MUTEX(pcie_list_lock);
+-
+ static void rmw_set(u32 set, void __iomem *addr)
+ {
+ 	writel_relaxed(readl_relaxed(addr) | set, addr);
+@@ -724,32 +720,9 @@ static int apple_msi_init(struct apple_pcie *pcie)
+ 	return 0;
+ }
+ 
+-static void apple_pcie_register(struct apple_pcie *pcie)
+-{
+-	guard(mutex)(&pcie_list_lock);
+-
+-	list_add_tail(&pcie->entry, &pcie_list);
+-}
+-
+-static void apple_pcie_unregister(struct apple_pcie *pcie)
+-{
+-	guard(mutex)(&pcie_list_lock);
+-
+-	list_del(&pcie->entry);
+-}
+-
+ static struct apple_pcie *apple_pcie_lookup(struct device *dev)
+ {
+-	struct apple_pcie *pcie;
+-
+-	guard(mutex)(&pcie_list_lock);
+-
+-	list_for_each_entry(pcie, &pcie_list, entry) {
+-		if (pcie->dev == dev)
+-			return pcie;
+-	}
+-
+-	return NULL;
++	return pci_host_bridge_priv(dev_get_drvdata(dev));
+ }
+ 
+ static struct apple_pcie_port *apple_pcie_get_port(struct pci_dev *pdev)
+@@ -875,13 +848,15 @@ static const struct pci_ecam_ops apple_pcie_cfg_ecam_ops = {
+ static int apple_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct pci_host_bridge *bridge;
+ 	struct apple_pcie *pcie;
+ 	int ret;
+ 
+-	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+-	if (!pcie)
++	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
++	if (!bridge)
+ 		return -ENOMEM;
+ 
++	pcie = pci_host_bridge_priv(bridge);
+ 	pcie->dev = dev;
+ 	pcie->hw = of_device_get_match_data(dev);
+ 	if (!pcie->hw)
+@@ -897,13 +872,7 @@ static int apple_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	apple_pcie_register(pcie);
+-
+-	ret = pci_host_common_init(pdev, &apple_pcie_cfg_ecam_ops);
+-	if (ret)
+-		apple_pcie_unregister(pcie);
+-
+-	return ret;
++	return pci_host_common_init(pdev, bridge, &apple_pcie_cfg_ecam_ops);
+ }
+ 
+ static const struct of_device_id apple_pcie_of_match[] = {
+-- 
+2.47.3
+
 
