@@ -1,153 +1,206 @@
-Return-Path: <linux-pci+bounces-42014-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42015-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CC5CC83AFC
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 08:18:39 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AFF3C83B17
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 08:20:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5A16B4E490C
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 07:18:35 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B758C342D2F
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 07:20:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BF592D6E74;
-	Tue, 25 Nov 2025 07:18:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C573C13AA2D;
+	Tue, 25 Nov 2025 07:19:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XSEegx2q"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WUdO/WfD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="dl8Ok7ik";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WUdO/WfD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="dl8Ok7ik"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B775285404
-	for <linux-pci@vger.kernel.org>; Tue, 25 Nov 2025 07:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF3523EA87
+	for <linux-pci@vger.kernel.org>; Tue, 25 Nov 2025 07:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764055108; cv=none; b=gtg+a8GHxMb0aAVhyAjOAb/QhZD2WrfqodEf/mqUpoMaPM5ciX35ATs6Moai8q/EirPxkwhUD4ItO8SU2SRep57fhHXWYhf5lUjd/fK6iL1cA4xYm3coL8+6Tngc2aaeKatR5R9JUBEO/1ezTntL/gjuet6ICKJT5Qv+81ZP/JQ=
+	t=1764055197; cv=none; b=kse7CLDrqL7I6h5XmMJbZtodQX1HJerPX7FUmGXGLZknjQLia9yN7G8Jl1dNmlIiZUnCZHtxkiNi6dj4uchVfTqAiLjPIfJC29gxnxNhQsYdorQgXVll5XorbnxnQdJdauokE0xyf3wLOlglLwxTxOkwIkSf/UlV/q3HuKx+8K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764055108; c=relaxed/simple;
-	bh=Tz3LbhzJhL2NF3VwtgFGi4NJlgrEkYE+TVA7VGJCjo8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b866Hqf1LRQMgfz3BjhnAchLlSqqehAoOcX2Gv2DGpvhn36tMIPBXZAk5Fkzqy2dgkvYRbJuXmASoD0eBPhzcyPaKMR/xqtuDi5sWvDeMP+9Dh4tqeDw8WewSERCW7Q8T8m8mri0pVN6ScXynB8ONssomkPHxuCTYQze2JfTsio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XSEegx2q; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5957db5bdedso5345093e87.2
-        for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 23:18:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1764055104; x=1764659904; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C9KLrVH2R0wRtcEdh32X6NYZk3WdTp2IqjBZ1pxFS/A=;
-        b=XSEegx2q41pvUJLinnDVwbpShi1OI0s6HwnzS4G2WOgUvdABQwbMb5hWtND2JPg0YN
-         xXyKPpgmHokAznJfu3UR1xBISXTAn9yCZernqc6xTyklGoJtT1drq6OYEE8rOJCu8BMz
-         CDzzhq1JDR9rTdOeyphpGJMxEKQ1Xwu4j8u8Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764055104; x=1764659904;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=C9KLrVH2R0wRtcEdh32X6NYZk3WdTp2IqjBZ1pxFS/A=;
-        b=k7zi1vibUKc5fZFbSWH4vl4y+oapBlljDzLgp0d5K4Rd9hx8Upl6CTzkpEM+eNkMUE
-         gmlzKI+hW8Ga/m2i/kxnzn2yfDI7f9SEEugv8d6281j9p65AxP4aZN20mLB0OR3EahZ5
-         E9GNMHVF+ya18BLQJu2HMM5uxsdDxbyKPzbCqFBIaWiWxFlZbRU9yekuUkWywKS2IoCs
-         No8fmpOBqJPthIB6Yxuk06UNqNzjy8+Q/3ygkMGPOv+YIlx6Fqc3JTWgqBGs0AnNf2OM
-         CQW5GEEtdRi7JjUnCmVvwAF5W5YKBBJGNANNfcQgDRyr7RKjbUVv28QJZ2XFSTYC4oT9
-         Vv2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXxpC1T7SrBWviIzY4AH584PpISGFIDMW2cowRVH1+L0TM7sduO43v9AueollvmHFZmt1nnLiHDHb0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzccMdCeOqvHPx7Cms/oO/+cbRIwNUWcNdn4PtLjEd5g9AYNvO8
-	xxgewW9GHjxUpT9wPFnLg1RR0U/jDaL6sX07u82qeBAfgBwCLehrrK3Ri1flFRNLX7VHHlRV9Tq
-	t/Yk7RGDeXCwRr5+U8rvVq3+LcnsBzEjWiJCs6pNN
-X-Gm-Gg: ASbGnctwDDeRiqZYubVE1wW4UO+qs+9q9McSe6uXnuDDZ8bAYaEb1sbBTPujaKFCT4v
-	PfxCTNKxxqLXnx+lez7O5AMY70313qJOZ4lzDpOlE/Ooz7ER9JoYI6QOs0T4y235IO5ZZwqwV2V
-	8QFztFNI9RJZrCELzogPYq+7B4lTVq/aGtpSrU1YgTKQB5OUd01SWbWV2Bu2DBT9Ufn8PajwdeD
-	hFGM12fj6n7R8u5m7Kpe6nTl1iGW26DvJf/ICo03t2DnoEewnf8/SCL2+wkaUbdB+wndljpTI84
-	ptT4Ol1AT2Cvh3gdFupAn9PO/UatL+Mkx621
-X-Google-Smtp-Source: AGHT+IGrhybsyZ3HltBSJRrIxp5NbHesaqk0urlgmn2HoCi5Pbbf8Ic/TZ9/x6CZveL7/LiBNbNSgJFr7pcd5+HwKoo=
-X-Received: by 2002:a05:6512:3b95:b0:594:2f1a:6ff0 with SMTP id
- 2adb3069b0e04-596a3e9fc38mr6083359e87.9.1764055103647; Mon, 24 Nov 2025
- 23:18:23 -0800 (PST)
+	s=arc-20240116; t=1764055197; c=relaxed/simple;
+	bh=dLQBG1rEQ7d1Hra5TlsDFEOOTNry8QeKbqugR4oFGPg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wb6SMK1d6KJExxLfO34BhUWjmNnD0Cf+GBNW1o0/U3iB6hfTge4ny6WbWi+1TTT2au2lBJ3HYrEtaeX3WOQiYFc7fqA4SbtLWYdo0tpNs6hw4rpFhWkc6hRR4QY2yOazvkVzlutFFRxsCaC9XJwChK88hQU8/I5xWTsEyZSCZWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WUdO/WfD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=dl8Ok7ik; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WUdO/WfD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=dl8Ok7ik; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 99FA922653;
+	Tue, 25 Nov 2025 07:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1764055193; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=TPntlOqdFWfhwr/Kbhykec41hobmmKyQB3TzxwFkUv4=;
+	b=WUdO/WfD173ZFq/tfqsxWjrcSCfzNOy7tCuCaHuzEzYTyMWLfWbSib+W6SkFD1tRLlwL/q
+	DwpKjQoEkV9VRf3QULw259l6zaM7JVcR8IAq395MIcXM75BJY7k0P2uefrI5y2ffhOsh6Z
+	sE6cnd7fyct7T3tkXKZJnYk4rUZ0pjA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1764055193;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=TPntlOqdFWfhwr/Kbhykec41hobmmKyQB3TzxwFkUv4=;
+	b=dl8Ok7ikIupkgbJXbm1AVIfcq/9jM7IhiDaGX+BG12s20Hlm7OY4gJHWiPARPiIZOS2wnd
+	GrZUz0T1bdH7R3AQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1764055193; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=TPntlOqdFWfhwr/Kbhykec41hobmmKyQB3TzxwFkUv4=;
+	b=WUdO/WfD173ZFq/tfqsxWjrcSCfzNOy7tCuCaHuzEzYTyMWLfWbSib+W6SkFD1tRLlwL/q
+	DwpKjQoEkV9VRf3QULw259l6zaM7JVcR8IAq395MIcXM75BJY7k0P2uefrI5y2ffhOsh6Z
+	sE6cnd7fyct7T3tkXKZJnYk4rUZ0pjA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1764055193;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=TPntlOqdFWfhwr/Kbhykec41hobmmKyQB3TzxwFkUv4=;
+	b=dl8Ok7ikIupkgbJXbm1AVIfcq/9jM7IhiDaGX+BG12s20Hlm7OY4gJHWiPARPiIZOS2wnd
+	GrZUz0T1bdH7R3AQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2035F3EA63;
+	Tue, 25 Nov 2025 07:19:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ynIsBplYJWn5QQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 25 Nov 2025 07:19:53 +0000
+Message-ID: <8ff77586-724e-48a4-9282-643e8fa84d96@suse.de>
+Date: Tue, 25 Nov 2025 08:19:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251124-pci-pwrctrl-rework-v1-0-78a72627683d@oss.qualcomm.com> <20251124-pci-pwrctrl-rework-v1-5-78a72627683d@oss.qualcomm.com>
-In-Reply-To: <20251124-pci-pwrctrl-rework-v1-5-78a72627683d@oss.qualcomm.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Tue, 25 Nov 2025 15:18:12 +0800
-X-Gm-Features: AWmQ_blmfM4D42BW0mtigbQ0zM4iSkiLMdvXtsaw49mXE-k5hVXEr2ekLrwjHJY
-Message-ID: <CAGXv+5FnL_uvz2F6WDLwY-cwdQAqFicRTt26Pnqo-nqAhf4ikg@mail.gmail.com>
-Subject: Re: [PATCH 5/5] PCI/pwrctrl: Switch to the new pwrctrl APIs
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@kernel.org>, 
-	Brian Norris <briannorris@chromium.org>, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, Niklas Cassel <cassel@kernel.org>, 
-	Alex Elder <elder@riscstar.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 08/10] efi: Support EDID information
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: javierm@redhat.com, arnd@arndb.de, richard.lyu@suse.com, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-efi@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org,
+ linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-fbdev@vger.kernel.org
+References: <20251124165116.502813-1-tzimmermann@suse.de>
+ <20251124165116.502813-9-tzimmermann@suse.de>
+ <CAMj1kXFu4=L=ROVAaRORG5HMmYWHb6OXQf6pJ3yAZpeDmfmSeg@mail.gmail.com>
+ <CAMj1kXFtsneE3dFgUx6Hd=iBhD8YpvjfTSi-KZpuNaXfX07KyA@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <CAMj1kXFtsneE3dFgUx6Hd=iBhD8YpvjfTSi-KZpuNaXfX07KyA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,suse.com:url]
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On Tue, Nov 25, 2025 at 3:15=E2=80=AFPM Manivannan Sadhasivam
-<manivannan.sadhasivam@oss.qualcomm.com> wrote:
->
-> Adopt the recently introduced pwrctrl APIs to create, power on, destroy,
-> and power off pwrctrl devices. In qcom_pcie_host_init(), call
-> pci_pwrctrl_create_devices() to create devices, then
-> pci_pwrctrl_power_on_devices() to power them on, both after controller
-> resource initialization. Once successful, deassert PERST# for all devices=
-.
->
-> In qcom_pcie_host_deinit(), call pci_pwrctrl_power_off_devices() after
-> asserting PERST#. Note that pci_pwrctrl_destroy_devices() is not called
-> here, as deinit is only invoked during system suspend where device
-> destruction is unnecessary. If the driver becomes removable in future,
-> pci_pwrctrl_destroy_devices() should be called in the remove() handler.
->
-> At last, remove the old pwrctrl framework code from the PCI core, as the
-> new APIs are now the sole consumer of pwrctrl functionality. And also do
-> not power on the pwrctrl drivers during probe() as this is now handled by
-> the APIs.
->
-> Co-developed-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.=
-com>
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.co=
-m>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.=
-com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c   | 22 ++++++++++--
->  drivers/pci/probe.c                      | 59 --------------------------=
-------
->  drivers/pci/pwrctrl/core.c               | 15 --------
->  drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c |  5 ---
->  drivers/pci/pwrctrl/slot.c               |  2 --
->  drivers/pci/remove.c                     | 20 -----------
->  6 files changed, 20 insertions(+), 103 deletions(-)
+Hi
 
-[...]
+Am 24.11.25 um 18:04 schrieb Ard Biesheuvel:
+> On Mon, 24 Nov 2025 at 18:01, Ard Biesheuvel <ardb@kernel.org> wrote:
+>> On Mon, 24 Nov 2025 at 17:52, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>>> Add LINUX_EFI_PRIMARY_DISPLAY_TABLE_GUID to the list of config-table
+>>> UUIDs. Read sysfb_primary_display from the entry. The UUID has been
+>>> generated with uuidgen.
+>>>
+>>> Still support LINUX_EFI_SCREEN_INFO_TABLE_GUID as fallback in case an
+>>> older boot loader invokes the kernel.
+>>>
+>>> If CONFIG_FIRMWARE_EDID=n, EDID information is disabled.
+>>>
+>>> Make the Kconfig symbol CONFIG_FIRMWARE_EDID available with EFI. Setting
+>>> the value to 'n' disables EDID support.
+>>>
+>>> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+>> Why are we adding a new config table again?
+>>
+>>
+> Note that LINUX_EFI_SCREEN_INFO_TABLE_GUID is internal ABI only
+> between the EFI stub and the core kernel.
 
-> @@ -66,7 +47,6 @@ static void pci_destroy_dev(struct pci_dev *dev)
->         pci_doe_destroy(dev);
->         pcie_aspm_exit_link_state(dev);
->         pci_bridge_d3_update(dev);
-> -       pci_pwrctrl_unregister(&dev->dev);
->         pci_free_resources(dev);
->         put_device(&dev->dev);
+Ah, ok. That's my misconception. I was thinking that we have to support 
+external boot loaders building a config table.
 
-This hunk has a minor conflict with
+I'll just extend the existing UUID then.
 
-    079115370d00 PCI/IDE: Initialize an ID for all IDE streams
+Best regards
+Thomas
 
-already in linux-next.
 
->  }
->
-> --
-> 2.48.1
->
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
+
+
 
