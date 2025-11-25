@@ -1,106 +1,298 @@
-Return-Path: <linux-pci+bounces-42012-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42013-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA935C83735
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 07:20:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79B85C83833
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 07:43:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E86C3A9B23
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 06:20:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2EF153AA82B
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 06:43:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD850157487;
-	Tue, 25 Nov 2025 06:20:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6142929C339;
+	Tue, 25 Nov 2025 06:42:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="fGUwDsWn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXM4Oi51"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F8EEAF9
-	for <linux-pci@vger.kernel.org>; Tue, 25 Nov 2025 06:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A4129992B
+	for <linux-pci@vger.kernel.org>; Tue, 25 Nov 2025 06:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764051622; cv=none; b=F2vv0KI91P0VmgyyuBWNCczU2ChAsULi4u/N3RGR3Fekg20IL6AmoqFQ9KOuhM7OPHt3TxcEmcAkEMLDoXlwgHjjz9uLRht+Ka9q2AVsfAsKKM1Fx67z2HO6IDFp4CKnTwHE/j3uvOeNHwiS6vGBmZ96psSp7ABvMZ7UAFSnMFc=
+	t=1764052979; cv=none; b=CIGKd5w/D88fcgbnGDka52aBc6PW+S7xeIZkYn103X//pOTk4ORYJJgJh2zhpb2EHin0cgZI3LteV+BLMGRozcusrDULSZMYpaY2yEvcrvLJOwxXCMRDsqc3zqRsW7pRyVKvvpRwQ1HGFw56bLRmJ+xLkwheyHjV56c/kXBLobQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764051622; c=relaxed/simple;
-	bh=vQ0cGnxhQndUjYvDk0Ojw+QXOKt4L69WlfcQPYxa/v4=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:References:
-	 In-Reply-To:Content-Type; b=nqOxo7ouIzqy7R7DKc8r2Rkt9kw3tb3oY77J0XcH5ufMyCaS0NsJ8f5DsFNBtkCXiRofwztiNCwmC/8SpZh4XEoOajKa/+34d5TAyYNHTM9CC32cBTmX0VUJ+EWAvgZmXk3QYlRz2uMw3luzz8P4OHTlto+9w46wWjCXc/1vgic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=fGUwDsWn; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1764051611; h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type;
-	bh=vQ0cGnxhQndUjYvDk0Ojw+QXOKt4L69WlfcQPYxa/v4=;
-	b=fGUwDsWny2FJoB4pjNTWHvBznWzEyNxrTds3eBj9ITkWFRsD6GE2zaQzj4mMuPn1ULdgBtLJiB7IMj9uIVxL/9lT+0V4WzdDARqr+2pTGzlOANO7vZ+RjMKpLvEigkTmaiWT7glmNsDQr+lviIcCYhV/O6q8XgiFyMItvfhfGOk=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=guanghuifeng@linux.alibaba.com;NM=1;PH=DW;RN=5;SR=0;TI=W4_0.2.3_v5ForWebDing_21418606_1764051288404_o7001c184a;
-Received: from WS-web (guanghuifeng@linux.alibaba.com[W4_0.2.3_v5ForWebDing_21418606_1764051288404_o7001c184a] cluster:ay36) at Tue, 25 Nov 2025 14:20:10 +0800
-Date: Tue, 25 Nov 2025 14:20:10 +0800
-From: "guanghui.fgh" <guanghuifeng@linux.alibaba.com>
-To: "Bjorn Helgaas" <helgaas@kernel.org>
-Cc: "bhelgaas" <bhelgaas@google.com>,
-  "linux-pci" <linux-pci@vger.kernel.org>,
-  "kanie" <kanie@linux.alibaba.com>,
-  "alikernel-developer" <alikernel-developer@linux.alibaba.com>
-Reply-To: "guanghui.fgh" <guanghuifeng@linux.alibaba.com>
-Message-ID: <a4a2a5ee-1f4e-4560-b8cf-c9c10ae475dd.guanghuifeng@linux.alibaba.com>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gUENJOiBGaXggUENJZSBTQlIgZGV2L2xpbmsgd2FpdCBlcnJvcg==?=
-X-Mailer: [Alimail-Mailagent revision 372][W4_0.2.3][v5ForWebDing][Firefox]
+	s=arc-20240116; t=1764052979; c=relaxed/simple;
+	bh=bMVM6nwiRnBB3ygequtCXeKaSYZ8JKMr74Alu8bdTfM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t/2zg+mKFIKszBo3EOBmZnU0T9573NQKBfXeHInT/AIXOygtyMGJf6GHpKtgT4K3YeA58exDAl6tR+zj1o6MmNbqfcMIjNGYKsE+cUfANk+R4buXjtq4+SlF/hoJ55EEhIhqHCsFIscfYzmySX/BGvpcrmrTfFQVi2wyZQGZIns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PXM4Oi51; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-37a2d9cf22aso27423051fa.1
+        for <linux-pci@vger.kernel.org>; Mon, 24 Nov 2025 22:42:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764052975; x=1764657775; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oDwgPrbqR3WPQpKO2RN5Ep6D/2LO+UnqChlfZRK6eKg=;
+        b=PXM4Oi51/FPSyFM+6n3W1MkZ8lRcQmQDf5xTo4W0x/8klPd2i17BG+PpU/k99qVrEd
+         8FhrIhgvL/oMBEixwIderB1Ww0ZYJApyL96SU76Usb+75ViTYcgBbNIJmkdB2sqglt39
+         EHyCtOP7rzTY2LMk/dKOF1maizgzB3exwy6gBuLAE/kfnFoF1jwJzDmiGDfDXLV4J1hr
+         fHJIyFU4x2tpUq0fiJRIhox+RXrqjVWTwCFxxGlJtK13wa3x8sCRrXjhS17HwHoQn1a3
+         abGsydVqkqA5KRHnBiiW/E6itTeHdADHv/d7USbpF/FQoDWy/pxy9oSZYL14nXXU1RoR
+         xnBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764052975; x=1764657775;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oDwgPrbqR3WPQpKO2RN5Ep6D/2LO+UnqChlfZRK6eKg=;
+        b=YowyL+CoUFe4ZYLrQ0IOehLt1jluNaTH6ZdpkqEHDEQW0Bb2ZfiGR6h/D+WwWSk67O
+         Sf/7VHNuDhmiJgeO7W8ahAo5Q3bCegjAZJu+13P/4oEuCGuNQYxIu5MIOh+ru7P4p97e
+         r/p0dz+VYBU079YRbVLrQk6t+uH3raEUjlW1opDkF6Y6k5JGY1QVgtDktxbxzPSeWYYO
+         P/QI6LrViq58FP6wrJ/wPLGg5M3Zh6B+cX/RHLXfa9V6dlsp9sxNg82DV17n1sus2Y64
+         iLvLUu65BGkI4sfFsfIZlkuybSiGJ7nR3GpiXtKsIULDNaL5FYvyo9QHb2XzCA9x4lq0
+         F5Dg==
+X-Forwarded-Encrypted: i=1; AJvYcCWvkHRLc7bE+szpiyi9BHAZcG3/yyjuora4VkJsuSkbtKi+GNYpEBHi7BsU/bM+QRZNoSvbfiYCCfk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yww7F00ni+zy3RFHbDccgA00JR9LVMx77tu0rCdGHvkma62237F
+	VDNkLRecVTV97PVcWr243isQfcndQ+C/lQ563KwVEBG9x26Xp64Ha7+6
+X-Gm-Gg: ASbGncu5V6/8k+XaBuoc9II/VXp/XgEH8dC5TdIXxXDhgtxFnITBwMO+gtBX5Mk4V8I
+	IYmbpNXSS9xptf7IvyWBq95KD38QTA3hTyNjoiSDPwR8wqOulje2WtBNc+v7KQYA2/juz1RZo9j
+	ABVrDHFBLfsOR6dcnJkdRkWmGJFnsi96S4BL4nZX7oosHSGIWWT3pwmMIQ8I5rwXT4xvEJ8/hvE
+	/h7dDdwxwZhuTu/8KYTxa+5D7Krbe0+JCmU+eqe9TVfFxYK5oVNsRsUZFmeaaWKewPwMD5VA32m
+	E8DDDYONpV3SZmrK8Z4t1r/Vwdg3njEXDTTydyYShKnumcofJlb8tnhNFBPQn1MKUJmytVcDjmI
+	iAL174+quBws9R6X03rbqw8JHKRfkPm/uiFs1DA229QioAJXH1iCQ1qrqZToWHSyCNflcdJ7MXs
+	4mgeq0JmOlOuE3evvUzgK0wMgVDf919pZNJ8v04+4rHKFWIa/i4tuTjDIIQBa4HhGIZpRl
+X-Google-Smtp-Source: AGHT+IGn4O/LdPwrRfIUFu/wkzsPRHVD6YOLdNx92wJy+rnsWi85zUpEuMS1eU2wO8cl4kItz2sVag==
+X-Received: by 2002:a2e:a805:0:b0:37a:3910:6c77 with SMTP id 38308e7fff4ca-37cc82af4a6mr55071391fa.5.1764052974535;
+        Mon, 24 Nov 2025 22:42:54 -0800 (PST)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-37cc6b59ff5sm31356131fa.15.2025.11.24.22.42.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Nov 2025 22:42:53 -0800 (PST)
+Message-ID: <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
+Date: Tue, 25 Nov 2025 08:42:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-x-aliyun-im-through: {"version":"v1.0"}
-References: <20251124104502.777141-1-guanghuifeng@linux.alibaba.com>,<20251124235858.GA2726643@bhelgaas>
-x-aliyun-mail-creator: W4_0.2.3_v5ForWebDing_sgcTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NDsgcnY6MTQ1LjApIEdlY2tvLzIwMTAwMTAxIEZpcmVmb3gvMTQ1LjA=2N
-In-Reply-To: <20251124235858.GA2726643@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
+ overlays"
+To: Rob Herring <robh@kernel.org>, Kalle Niemi <kaleposti@gmail.com>
+Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
+ Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Charles Keepax <ckeepax@opensource.cirrus.com>,
+ Richard Fitzgerald <rf@opensource.cirrus.com>,
+ David Rhodes <david.rhodes@cirrus.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+ Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>,
+ Steen Hegelund <steen.hegelund@microchip.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <20251015071420.1173068-2-herve.codina@bootlin.com>
+ <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
+ <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
+ <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
+ <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-VGhhbmtzIGZvciB5b3VyIHJlc3BvbnNlLgoKMS4gV2hlbiBhIG11bHRpZnVuY3Rpb24gZGV2aWNl
-IGlzIGNvbm5lY3RlZCB0byBhIFBDSWUgc2xvdCB0aGF0IHN1cHBvcnRzIGhvdHBsdWcsIAogICBk
-dXJpbmcgdGhlIHBhc3N0aHJvZ2ggZGV2aWNlIHRvIGd1ZXN0IHByb2Nlc3MgYmFzZWQgb24gVkZJ
-Tywgc29tZSBkZXZpY2VzCiAgIG5lZWQgdG8gcGVyZm9ybSBhIGhvdCByZXNldCB0byBpbml0aWFs
-aXplIHRoZSBkZXZpY2U6CiAgIHZmaW9fcGNpX2Rldl9zZXRfaG90X3Jlc2V0IC0tLT4gX19wY2lf
-cmVzZXRfc2xvdC9fX3BjaV9yZXNldF9idXMgLS0tPgogICBwY2lfYnJpZGdlX3NlY29uZGFyeV9i
-dXNfcmVzZXQgLS0tPiBwY2lfYnJpZGdlX3dhaXRfZm9yX3NlY29uZGFyeV9idXMuCgogICBBZnRl
-ciBfX3BjaV9yZXNldF9zbG90L19fcGNpX3Jlc2V0X2J1cyBjYWxscyBwY2lfYnJpZGdlX3dhaXRf
-Zm9yX3NlY29uZGFyeV9idXMsCiAgIHRoZSBkZXZpY2Ugd2lsbCBiZSByZXN0b3JlZCB2aWEgcGNp
-X2Rldl9yZXN0b3JlLiBIb3dldmVyLCB3aGVuIGEgbXVsdGlmdW5jdGlvbiBQQ0llIGRldmljZQog
-ICBpcyBjb25uZWN0ZWQsIGV4ZWN1dGluZyBwY2lfYnJpZGdlX3dhaXRfZm9yX3NlY29uZGFyeV9i
-dXMgb25seSBndWFyYW50ZWVzIHRoZSByZXN0b3JhdGlvbgogICBvZiBhIHJhbmRvbSBkZXZpY2Uu
-IEZvciBvdGhlciBkZXZpY2VzIHRoYXQgYXJlIHN0aWxsIHJlc3RvcmluZywgZXhlY3V0aW5nIHBj
-aV9kZXZfcmVzdG9yZSBjYW5ub3QKICAgcmVzdG9yZSB0aGUgZGV2aWNlIHN0YXRlIG5vcm1hbGx5
-LCByZXN1bHRpbmcgaW4gZXJyb3JzIG9yIGV2ZW4gZGV2aWNlIG9mZmxpbmUuCgoyLiBJbiB0aGUg
-UENJZSBkcGNfaGFuZGxlciBwcm9jZXNzLCBkbyBwY2llX2RvX3JlY292ZXJ5KHBkZXYsIHBjaV9j
-aGFubmVsX2lvX2Zyb3plbiwgZHBjX3Jlc2V0X2xpbmspCiAgIHRvIHJlc3RvcmVzIHRoZSBQQ0ll
-IGxpbmsuIAogICBCdXQgZHBjX3Jlc2V0X2xpbmsgd2FpdHMgZm9yIHRoZSBsaW5rIHRvIHJlY292
-ZXIgdmlhIHBjaV9icmlkZ2Vfd2FpdF9mb3Jfc2Vjb25kYXJ5X2J1cyBiZWZvcmUgcmV0dXJuaW5n
-LgogICBTaW1pbGFybHksIHBjaWVfZG9fcmVjb3ZlcnkgcmVzdG9yZXMgZGV2aWNlcyB2aWEgcGNp
-X3dhbGtfYnJpZGdlKGJyaWRnZSwgcmVwb3J0X3Jlc3VtZSwgJnN0YXR1cyksCiAgIHdoaWNoIGFs
-c28gcmVxdWlyZXMgcGNpX2JyaWRnZV93YWl0X2Zvcl9zZWNvbmRhcnlfYnVzIHRvIHdhaXQgZm9y
-IGFsbCBkZXZpY2VzIHRvIHJlY292ZXIgY29tcGxldGVseS4KICAgRm9yIG90aGVyIGRldmljZXMg
-dGhhdCBhcmUgc3RpbGwgcmVzdG9yaW5nLCBleGVjdXRpbmcgcmVwb3J0X3Jlc3VtZSBjYW5ub3Qg
-cmVzdG9yZSB0aGUgZGV2aWNlIHN0YXRlIG5vcm1hbGx5LAogICByZXN1bHRpbmcgaW4gZXJyb3Jz
-IG9yIGV2ZW4gZGV2aWNlIG9mZmxpbmUuCgpPbiBNb24sIE5vdiAyNCwgMjAyNSBhdCAwNjo0NTow
-MlBNICswODAwLCBHdWFuZ2h1aSBGZW5nIHdyb3RlOgo+IFdoZW4gZXhlY3V0aW5nIGEgUENJZSBz
-ZWNvbmRhcnkgYnVzIHJlc2V0LCBhbGwgZG93bnN0cmVhbSBzd2l0Y2hlcyBhbmQKPiBlbmRwb2lu
-dHMgd2lsbCBnZW5lcmF0ZSByZXNldCBldmVudHMuIFNpbXVsdGFuZW91c2x5LCBhbGwgUENJZSBs
-aW5rcwo+IHdpbGwgdW5kZXJnbyByZXRyYWluaW5nLCBhbmQgZWFjaCBsaW5rIHdpbGwgaW5kZXBl
-bmRlbnRseSByZS1leGVjdXRlIHRoZQo+IExUU1NNIHN0YXRlIG1hY2hpbmUgdHJhaW5pbmcuIFRo
-ZXJlZm9yZSwgYWZ0ZXIgZXhlY3V0aW5nIHRoZSBTQlIsIGl0IGlzCj4gbmVjZXNzYXJ5IHRvIHdh
-aXQgZm9yIGFsbCBkb3duc3RyZWFtIGxpbmtzIGFuZCBkZXZpY2VzIHRvIGNvbXBsZXRlCj4gcmVj
-b3ZlcnkuIE90aGVyd2lzZSwgYWZ0ZXIgdGhlIFNCUiByZXR1cm5zLCBhY2Nlc3NpbmcgZGV2aWNl
-cyB3aXRoIHNvbWUKPiBsaW5rcyBvciBlbmRwb2ludHMgbm90IHlldCBmdWxseSByZWNvdmVyZWQg
-bWF5IHJlc3VsdCBpbiBkcml2ZXIgZXJyb3JzLAo+IG9yIGV2ZW4gdHJpZ2dlciBkZXZpY2Ugb2Zm
-bGluZSBpc3N1ZXMuCgpJIGd1ZXNzIHRoaXMgc29sdmVzIGEgcHJvYmxlbSB5b3UgaGF2ZSBvYnNl
-cnZlZD8KCkFyZSB0aGVyZSBhbnkgc3BlY2lmaWMgZGV0YWlscyB5b3UgY2FuIHNoYXJlIHRoYXQg
-d291bGQgaGVscAppbGx1c3RyYXRlIHRoZSBwcm9ibGVtP8KgIEUuZy4sIGNhc2VzIHdoZXJlIHdl
-IGRvIGEgU2Vjb25kYXJ5IEJ1cwpSZXNldCwgdGhlbiBhY2Nlc3MgYSBkb3duc3RyZWFtIGRldmlj
-ZSB0b28gZWFybHksIGFuZCBhbiBlcnJvcgpoYXBwZW5zPwoKQmpvcm4K
+On 24/11/2025 19:01, Rob Herring wrote:
+> On Mon, Nov 24, 2025 at 10:44 AM Kalle Niemi <kaleposti@gmail.com> wrote:
+>>
+>>
+>> On 11/24/25 16:53, Rob Herring wrote:
+>>> On Mon, Nov 24, 2025 at 8:48 AM Kalle Niemi <kaleposti@gmail.com> wrote:
+>>>> On 10/15/25 10:13, Herve Codina wrote:
+>>>>> From: Saravana Kannan <saravanak@google.com>
+>>>>>
+>>>>> This reverts commit 1a50d9403fb90cbe4dea0ec9fd0351d2ecbd8924.
+>>>>>
+>>>>> While the commit fixed fw_devlink overlay handling for one case, it
+>>>>> broke it for another case. So revert it and redo the fix in a separate
+>>>>> patch.
+>>>>>
+>>>>> Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overlays")
+>>>>> Reported-by: Herve Codina <herve.codina@bootlin.com>
+>>>>> Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgyo8x6=9F9rZ+-KzjOg@mail.gmail.com/
+>>>>> Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin.com/
+>>>>> Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootlin.com/
+>>>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
+>>>>> Link: https://lore.kernel.org/lkml/20240411235623.1260061-2-saravanak@google.com/
+>>>>> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+>>>>> Acked-by: Mark Brown <broonie@kernel.org>
+>>>>> ---
+>>>>>     drivers/bus/imx-weim.c    | 6 ------
+>>>>>     drivers/i2c/i2c-core-of.c | 5 -----
+>>>>>     drivers/of/dynamic.c      | 1 -
+>>>>>     drivers/of/platform.c     | 5 -----
+>>>>>     drivers/spi/spi.c         | 5 -----
+>>>>>     5 files changed, 22 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
+>>>>> index 83d623d97f5f..87070155b057 100644
+>>>>> --- a/drivers/bus/imx-weim.c
+>>>>> +++ b/drivers/bus/imx-weim.c
+>>>>> @@ -327,12 +327,6 @@ static int of_weim_notify(struct notifier_block *nb, unsigned long action,
+>>>>>                                  "Failed to setup timing for '%pOF'\n", rd->dn);
+>>>>>
+>>>>>                 if (!of_node_check_flag(rd->dn, OF_POPULATED)) {
+>>>>> -                     /*
+>>>>> -                      * Clear the flag before adding the device so that
+>>>>> -                      * fw_devlink doesn't skip adding consumers to this
+>>>>> -                      * device.
+>>>>> -                      */
+>>>>> -                     rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
+>>>>>                         if (!of_platform_device_create(rd->dn, NULL, &pdev->dev)) {
+>>>>>                                 dev_err(&pdev->dev,
+>>>>>                                         "Failed to create child device '%pOF'\n",
+>>>>> diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
+>>>>> index eb7fb202355f..30b48a428c0b 100644
+>>>>> --- a/drivers/i2c/i2c-core-of.c
+>>>>> +++ b/drivers/i2c/i2c-core-of.c
+>>>>> @@ -176,11 +176,6 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
+>>>>>                         return NOTIFY_OK;
+>>>>>                 }
+>>>>>
+>>>>> -             /*
+>>>>> -              * Clear the flag before adding the device so that fw_devlink
+>>>>> -              * doesn't skip adding consumers to this device.
+>>>>> -              */
+>>>>> -             rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
+>>>>>                 client = of_i2c_register_device(adap, rd->dn);
+>>>>>                 if (IS_ERR(client)) {
+>>>>>                         dev_err(&adap->dev, "failed to create client for '%pOF'\n",
+>>>>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+>>>>> index 2eaaddcb0ec4..b5be7484fb36 100644
+>>>>> --- a/drivers/of/dynamic.c
+>>>>> +++ b/drivers/of/dynamic.c
+>>>>> @@ -225,7 +225,6 @@ static void __of_attach_node(struct device_node *np)
+>>>>>         np->sibling = np->parent->child;
+>>>>>         np->parent->child = np;
+>>>>>         of_node_clear_flag(np, OF_DETACHED);
+>>>>> -     np->fwnode.flags |= FWNODE_FLAG_NOT_DEVICE;
+>>>>>
+>>>>>         raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>>>>>
+>>>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>>>>> index f77cb19973a5..ef9445ba168b 100644
+>>>>> --- a/drivers/of/platform.c
+>>>>> +++ b/drivers/of/platform.c
+>>>>> @@ -739,11 +739,6 @@ static int of_platform_notify(struct notifier_block *nb,
+>>>>>                 if (of_node_check_flag(rd->dn, OF_POPULATED))
+>>>>>                         return NOTIFY_OK;
+>>>>>
+>>>>> -             /*
+>>>>> -              * Clear the flag before adding the device so that fw_devlink
+>>>>> -              * doesn't skip adding consumers to this device.
+>>>>> -              */
+>>>>> -             rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
+>>>>>                 /* pdev_parent may be NULL when no bus platform device */
+>>>>>                 pdev_parent = of_find_device_by_node(parent);
+>>>>>                 pdev = of_platform_device_create(rd->dn, NULL,
+>>>>> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+>>>>> index 2e0647a06890..b22944a207c9 100644
+>>>>> --- a/drivers/spi/spi.c
+>>>>> +++ b/drivers/spi/spi.c
+>>>>> @@ -4791,11 +4791,6 @@ static int of_spi_notify(struct notifier_block *nb, unsigned long action,
+>>>>>                         return NOTIFY_OK;
+>>>>>                 }
+>>>>>
+>>>>> -             /*
+>>>>> -              * Clear the flag before adding the device so that fw_devlink
+>>>>> -              * doesn't skip adding consumers to this device.
+>>>>> -              */
+>>>>> -             rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
+>>>>>                 spi = of_register_spi_device(ctlr, rd->dn);
+>>>>>                 put_device(&ctlr->dev);
+>>>>>
+>>>> Sorry, some of you will receive this message now for second time. First
+>>>> message was sent to older series of patches.
+>>>> -
+>>>>
+>>>> Hello,
+>>>>
+>>>> Test system testing drivers for ROHM ICs bisected this commit to cause
+>>>> BD71847 drivers probe to not be called.
+>>> This driver (and overlay support) is in linux-next or something out of
+>>> tree on top of linux-next?
+>>>
+>>> Rob
+>>
+>> Yes the driver is in mainline linux: /drivers/mfd/rohm-bd718x7.c
+> 
+> I don't see any support to apply overlays in that driver.
+
+Ah. Sorry for the confusion peeps. I asked Kalle to report this without 
+proper consideration. 100% my bad.
+
+While the bd718x7 drive indeed is mainline (and tested), the actual 
+'glue-code' doing the overlay is part of the downstream test 
+infrastructure. So yes, this is not a bug in upstream kernel - this 
+falls in the category of an upstream change causing downstream things to 
+break. So, feel free to say: "Go fix your code" :)
+
+Now that this is sorted, if someone is still interested in helping us to 
+get our upstream drivers tested - the downstream piece is just taking 
+the compiled device-tree overlay at runtime (via bin-attribute file), 
+and applying it using the of_overlay_fdt_apply(). The approach is 
+working for our testing purposes when the device is added to I2C/SPI 
+node which is already enabled. However, in case where we have the I2C 
+disabled, and enable it in the same overlay where we add the new device 
+- then the new device does not get probed.
+
+I would be really grateful if someone had a pointer for us.
+
+Yours,
+	-- Matti
+
+-- 
+---
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
+
+~~ When things go utterly wrong vim users can always type :help! ~~
 
