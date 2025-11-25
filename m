@@ -1,334 +1,217 @@
-Return-Path: <linux-pci+bounces-42067-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42068-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D57DC85FA0
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 17:29:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E5DB1C86138
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 18:00:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15C513A80C4
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 16:29:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C35E3B2A77
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 17:00:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 913C33148C8;
-	Tue, 25 Nov 2025 16:29:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABCF432D0EA;
+	Tue, 25 Nov 2025 16:59:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S9hq4Mc3";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="t77KqhNJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SaPtcXQR";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="UNS8YvUH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865F523183F
-	for <linux-pci@vger.kernel.org>; Tue, 25 Nov 2025 16:29:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9737232BF26
+	for <linux-pci@vger.kernel.org>; Tue, 25 Nov 2025 16:59:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764088154; cv=none; b=ktlOhtJYHJYQ8jEL0ez4pMi9F9B4ndnbz4XRnyOnPzrgicytJ+ixQIktjnVeZOEeH3upOWu2aV1liGmN+5DsvokKVNdZtF8vRXa4AGe7lpjaYbyCs6xrxwyyiq5BDq2gJJmd7Gs5NYmResvMMJcebUEurIoa9RwNEwOOMy7WJ/g=
+	t=1764089954; cv=none; b=OU+T/w9j0izizdGgiFC0V3gUIExWsOug/3+9TO1S24RPAXO3Pt/9QhxMwBv/vNFsOVaNtAIFZvrM4dcT5bqGwfdbhgsE3jiftXCJLIXVT8sN2Hic1VE638Z2nHDnKvbQvB95NHhAw4H16EnFEQ7yjS0kAmexAfIO2R5Q22chLy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764088154; c=relaxed/simple;
-	bh=7H2Ker12oQZk6vM210ErNkOeX7XVKxQ3MS0MHQiOn24=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IjpsL/lUF9DtIFw9I+y31EXKyIs92DOSngq13VjhfzSTPHr6ayTcpurwalgYu1qZ19JiPgmS0eVwYubWJ0x8ChVh7pelXVygv9x4vjSZS7WQq1iUh9/fMzUJtrKGGjlHSrSNFb+kl/Oh/FgR5ywhYjbzgScBcjIsx27Ege+FB2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S9hq4Mc3; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=t77KqhNJ; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1764089954; c=relaxed/simple;
+	bh=QrCXwTVbTY2L/QXOdA+AJKifzsbPegD16vH5IBkdGJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=NhODZRyvgBcWmd6ep3mPETCH4UF1br75ghMJho6XW0vmpktnbRiaZ69qrC3Hj+LQXA/yLQJSAHs5mbddRIqsV+a0nQgquELTKMzSyj0t7O3WK7ydEKGsCee+aC4FqQPb+vMs4q2EJ1+bbH/0Hn8e3glm1GCEBSG85gh/gcSawBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SaPtcXQR; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=UNS8YvUH; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764088151;
+	s=mimecast20190719; t=1764089951;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/9VdPfUeGGC/W4hs0+0u5m9NGyRulUJvhrFT3kOxAUc=;
-	b=S9hq4Mc3UtZ08NqgFXQf8UOtray/A6h90u/Y/MrRBNJMSWGOlFg3GHqdIHZ4eptmhMiJb/
-	BdGMkhMuadhxFk8WAJvdr7ipWFoNDv0CkDYOjOUvKea0LzMKQ76Gg6zlWwfMFbTpmLZcDl
-	NWxQ+nwDMLwc9+9Eq8bPTPwNv8IqzEw=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hG/yosQtNPsaLgr5tkw6oyaa1Fhacq6iGIxAKL96B5c=;
+	b=SaPtcXQR0VaKNNBRINXwu65wu1vltsX1K9n9mGace1eixwA6EhqSBB6J5IqYYn0riuZIJN
+	mIr6XYY9+n9WQDncSLwsBSDDNDV/HEsFANEJqtARi+rvu0vpsfKpugyrsTaAax1P/f9hip
+	MVNXxwuqcJjYm7Ro+SMzLH8B+ytaVtQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-171-Nwp_hZGqOpe4SYYZXvJXMw-1; Tue, 25 Nov 2025 11:29:10 -0500
-X-MC-Unique: Nwp_hZGqOpe4SYYZXvJXMw-1
-X-Mimecast-MFC-AGG-ID: Nwp_hZGqOpe4SYYZXvJXMw_1764088149
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-295595cd102so124152435ad.3
-        for <linux-pci@vger.kernel.org>; Tue, 25 Nov 2025 08:29:09 -0800 (PST)
+ us-mta-137-A_CEPeL9OvmwdCHrXzaMfA-1; Tue, 25 Nov 2025 11:59:08 -0500
+X-MC-Unique: A_CEPeL9OvmwdCHrXzaMfA-1
+X-Mimecast-MFC-AGG-ID: A_CEPeL9OvmwdCHrXzaMfA_1764089947
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-429c5c8ae3bso5163533f8f.0
+        for <linux-pci@vger.kernel.org>; Tue, 25 Nov 2025 08:59:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1764088149; x=1764692949; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/9VdPfUeGGC/W4hs0+0u5m9NGyRulUJvhrFT3kOxAUc=;
-        b=t77KqhNJQ8vJRzkFvKUH5KAjRrF3f7iTIJPBASuhHAvfvx6e03XtyXJr0mRwqOhM8K
-         kUp1xiR5EBfZQ8YGFvSe78UJUytdRcjvX4CFkDOarjRIyzzJOv+eaef6cUltnxPkvVAQ
-         gDaXwT/3HuyjAXK98EQJ/9GY5mnv8Nwoa/Bilcu3SUmHKBDuIcFN5RXAL7bdwpttyQKB
-         Kdcm8CRL98qsO60IxDWTsjZUJhUx5lZox6egfC7AVwygyzSTGy3XVoZ4x5MmXoi9hppH
-         Kv9TGGjPvr6QfaDC4gYVmdhuNPRqo3R2MuTiEUQy5xnu8Bn5406wrPoK1YDjpLoxy9af
-         Mi8w==
+        d=redhat.com; s=google; t=1764089947; x=1764694747; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hG/yosQtNPsaLgr5tkw6oyaa1Fhacq6iGIxAKL96B5c=;
+        b=UNS8YvUHTYtcrPkW7zJRWp51Oirzp785bbqqoJdf66vfc7LAIXwMDDERXK43YgaZ+q
+         Q6UbfgLcebAsxTTQ6KjtzqZ2EP5UlcBvyuRhze9rp2S5X2yVYseYtgvzeObkrVDogsPN
+         m7OEZF1AS3Kuqk35U0YXLfnXfG+OnH6YnIXsuVxRPuQT26C/TwE5zG/NGt0pq7oynTEy
+         Q7RiW3L/bM48PrGDUW7GutP39roAW+BvizuyVL6jIx9KnU1sDGu0VwGed6o0kveWEPHg
+         ZRjsPjd9OmpsHZ+5kZUogt6iu6xt1mDrliNCRrZNI3ZBs6tO/RHR6B5xYHahVEzVMKv4
+         QZmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764088149; x=1764692949;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/9VdPfUeGGC/W4hs0+0u5m9NGyRulUJvhrFT3kOxAUc=;
-        b=jrSrI6w4fEVwnntD1JchfJm79ZienCSc75Y8GQQZQNrSXcEJVNq+5wxwT1rAGOVXPB
-         wZ9BwYO7gt7gGtC31JpKIh0nJ5DbEqh1fA/ezmERh/OQ2Uar+9LgJDogdOP3ly+FPvlZ
-         zZwRr8usE4lVIjvy+HAZqLNS4nyK1yS0Iu8e4mCkv3BJql9N5W0aCpHWABG3zTHjM2Z/
-         NjUz3Gk/yhhOVWkN92u0PRHHBtpZ53OOAF8FvhSdYIAdSROGmB8dC7idDybZsZQYmfUa
-         kXvVcnNWzQUBO6Aj0iEriXURCN6hBnUCVd7UoXa49lm0YUQcXUawB4A/ld+3wo/tO/my
-         hA6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUaYdJuXdvxqHxUvc719buF3WyNzaIcgJzvoCq686gGQh5kxPyU094xrEv+dcxyi+pIgiGPMmHnPOQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPkRoBULDYt2AA7szO4KOkYzI2zYq4cBbk2NN+fML8DKgH48l5
-	hH3kmJ7wBuDkX3xn886DMBpGG5WpTppjd3ZjEIAyon3QA+QIjUTfSQu0U46OjBDLRl8a68Vt1gz
-	tg6eoGs6y7u+K7sGTosT9kTcfnJkQZXdSedPbkBjFFT8uHsD8fhKRV4RKn04AnA==
-X-Gm-Gg: ASbGncv6UpsksUiG9YH+MlG+AZL1l/CvrILUhBjf9aq/VYeeCMMq8hP5YuKWGPP3Uoo
-	MBIfdY3OI/VdVRDuVIc2/pNM+9grE1RrU/K1/fJxc1Qz9byJ5iDB6SPZ/Z+xf9RhQBuiFQtkfm0
-	Q42/DXgQuAMH6uaol3PBjRyEko6rJ5v7EjelQ5atTBc8KhG7xZSS7w/lPJyvM0Pk/YjtTYibR35
-	SQV4xHNrh4OgbJEVx70TIFg4AHIBJ2f+Tx80CTcL0o1ytfrH2KvB1CrsxzWk5L6GrjULZyeATss
-	xJBf+K4cYH9TNgdjh3Ht060LXLhviZARY2tymM9FsoGiQbbynypeXiNgUq+PNemRL8MzqSFA0Ws
-	cQSsQLJkxlgOuUqMakklGtRvtLig3VO5LatFb
-X-Received: by 2002:a17:903:3c6f:b0:295:8c51:64ff with SMTP id d9443c01a7336-29b6bf37d57mr164174935ad.29.1764088148932;
-        Tue, 25 Nov 2025 08:29:08 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEok0ss3gIQ0hLyr6LzY46SNfe/5xP0Mg5Had2izv07cMVi9rYxGcIgLMurharveVJBPsL79Q==
-X-Received: by 2002:a17:903:3c6f:b0:295:8c51:64ff with SMTP id d9443c01a7336-29b6bf37d57mr164174555ad.29.1764088148497;
-        Tue, 25 Nov 2025 08:29:08 -0800 (PST)
-Received: from [10.200.68.138] (nat-pool-muc-u.redhat.com. [149.14.88.27])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b29b37fsm169912725ad.79.2025.11.25.08.28.59
+        d=1e100.net; s=20230601; t=1764089947; x=1764694747;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=hG/yosQtNPsaLgr5tkw6oyaa1Fhacq6iGIxAKL96B5c=;
+        b=jWBirlsCUCzH27aUufU/jPvY1zWHi600BuFyP36+RN+W6sBvY0nwmAdkRH2D8lweOu
+         sp63wmZC3ix/C3UqIMWoB8EaFriuENFoOncwO5ACNKAJ+c5mWCDWGiDxrGTs28dTrxwN
+         L4R7QcFL01d0mtbZBJaFtRCpHJcQ0hMyrCvPy7Y63g6gW4ppFjiBMQxAv1IfJElruSp/
+         NmZZF5Wv7NlZL7WXnc5McbE32apNMZmTOKiZgJTQ26n8RUPId5PryUhGE+T5BCGe+9js
+         A5P6MDdkGJY4e970Y/mxwuNArkomJDkc8Hd4aqx0FO4SxiiYcXpRI2KIdw6nhAkpvUzr
+         vKXw==
+X-Forwarded-Encrypted: i=1; AJvYcCUB76++B2DSeRgv/IBeE8RFb2bcA6Ktx+TLSkQKOAqvrYFG0zr2BfMSCtTYVmMR0zODr5IK/AkAUn4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBc/wQr3SViZEsvjyNJKPWuDmt2UlUA4Iwq+2soYn2YRamrClG
+	dUnzS6jraWDZjuXbISL6ugNnxru4IGDAtmbTPiO29mQ6cqW5dgZL73XSyN1miHWr4QiYDIN7wY7
+	9aZiPBiBV8cAmmYvlWNkt3ahSWkDm3YvQhtrliN5tCAmQfpk+z6tAaxiTElXi3g==
+X-Gm-Gg: ASbGncvjotnZL/ydfemxYJfgl7ZKBEyPcUfUrdCBIBwzJeBSaMXJOAANOgB1KexgpXE
+	s8p0N68wPzdceJcrVOsd8aj4iXaULb6VaJ1+zazoNsqGFgI82I3jwppEe80D8Vgv/k4cU4shSSs
+	sG8iCqFiYdfYrH1VF+k/mdLXS2mawGM6yzP/B13fKRn9eaxMdodJ5/zTUzWSyt7v2oNOJft7zTD
+	63hIJczbwOqyUuMKNLZIO0h7gsPwUBBOF0w9A+s1/ojtGvzl3NYzG6ulPN0ntCAUbC8i+CoayLo
+	j3Kn1GZ2gjQXlnxAA4KQc2DICSZCqj0M+fUvB2X3daDhFlqW3G3HIS63RRmzJ5pt94W0GmBq5T0
+	T+7iLWB09KPfNoudnijsDNFjCjjqtHnbhSBm91BQcY30Y2yWsKjgzpKM=
+X-Received: by 2002:a05:600c:4f49:b0:46e:761b:e7ff with SMTP id 5b1f17b1804b1-47904b24957mr33441225e9.28.1764089946764;
+        Tue, 25 Nov 2025 08:59:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHfZ6NgVrVjPGwjj83mk0cuZy70V+eAj/GkF9EsNDbbjKbkEF6o0Lstb1Ac7PYBzJ0qoAHtSg==
+X-Received: by 2002:a05:600c:4f49:b0:46e:761b:e7ff with SMTP id 5b1f17b1804b1-47904b24957mr33441015e9.28.1764089946293;
+        Tue, 25 Nov 2025 08:59:06 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb (host-2-99-207-158.as13285.net. [2.99.207.158])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4790552c3c9sm21068055e9.0.2025.11.25.08.59.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Nov 2025 08:29:08 -0800 (PST)
-Message-ID: <6e43c821658de1f388de99aac9cbbbbfdccb7ffd.camel@redhat.com>
-Subject: Re: [PATCH v9 02/13] PCI: Add devres helpers for iomap table
- [resulting in backtraces on HPPA]
-From: Philipp Stanner <pstanner@redhat.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Hans de Goede <hdegoede@redhat.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Bjorn Helgaas <bhelgaas@google.com>, Sam
- Ravnborg <sam@ravnborg.org>, dakr@redhat.com, 
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, linux-parisc@vger.kernel.org, Helge Deller
- <deller@gmx.de>
-Date: Tue, 25 Nov 2025 17:28:55 +0100
-In-Reply-To: <6c749a78-2c98-45a8-b9d4-47f79b56c918@roeck-us.net>
-References: <20240613115032.29098-1-pstanner@redhat.com>
-	 <20240613115032.29098-3-pstanner@redhat.com>
-	 <16cd212f-6ea0-471d-bf32-34f55d7292fe@roeck-us.net>
-	 <414bc2c721bfc60b8b8a1b7d069ff0fc9b3e5283.camel@redhat.com>
-	 <6c749a78-2c98-45a8-b9d4-47f79b56c918@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+        Tue, 25 Nov 2025 08:59:05 -0800 (PST)
+Date: Tue, 25 Nov 2025 16:59:04 +0000
+From: Juri Lelli <juri.lelli@redhat.com>
+To: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@linaro.org>
+Subject: [ANNOUNCE] Power Management and Scheduling in the Linux Kernel VIII
+ edition (OSPM-summit 2026) - save the date
+Message-ID: <aSXgWOmJZnvEFYaH@jlelli-thinkpadt14gen4.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2025-11-25 at 08:12 -0800, Guenter Roeck wrote:
-> On 11/25/25 07:48, Philipp Stanner wrote:
-> > On Sun, 2025-11-23 at 08:42 -0800, Guenter Roeck wrote:
-> > > Hi,
-> > >=20
-> > > On Thu, Jun 13, 2024 at 01:50:15PM +0200, Philipp Stanner wrote:
-> > > > The pcim_iomap_devres.table administrated by pcim_iomap_table() has=
- its
-> > > > entries set and unset at several places throughout devres.c using m=
-anual
-> > > > iterations which are effectively code duplications.
-> > > >=20
-> > > > Add pcim_add_mapping_to_legacy_table() and
-> > > > pcim_remove_mapping_from_legacy_table() helper functions and use th=
-em where
-> > > > possible.
-> > > >=20
-> > > > Link: https://lore.kernel.org/r/20240605081605.18769-4-pstanner@red=
-hat.com
-> > > > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > > > [bhelgaas: s/short bar/int bar/ for consistency]
-> > > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > > ---
-> > > > =C2=A0=C2=A0drivers/pci/devres.c | 77 +++++++++++++++++++++++++++++=
-++++-----------
-> > > > =C2=A0=C2=A01 file changed, 58 insertions(+), 19 deletions(-)
-> > > >=20
-> > > > diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-> > > > index f13edd4a3873..845d6fab0ce7 100644
-> > > > --- a/drivers/pci/devres.c
-> > > > +++ b/drivers/pci/devres.c
-> > > > @@ -297,6 +297,52 @@ void __iomem * const *pcim_iomap_table(struct =
-pci_dev *pdev)
-> > > > =C2=A0=C2=A0}
-> > > > =C2=A0=C2=A0EXPORT_SYMBOL(pcim_iomap_table);
-> > > > =C2=A0=20
-> > > > +/*
-> > > > + * Fill the legacy mapping-table, so that drivers using the old AP=
-I can
-> > > > + * still get a BAR's mapping address through pcim_iomap_table().
-> > > > + */
-> > > > +static int pcim_add_mapping_to_legacy_table(struct pci_dev *pdev,
-> > > > +					=C2=A0=C2=A0=C2=A0 void __iomem *mapping, int bar)
-> > > > +{
-> > > > +	void __iomem **legacy_iomap_table;
-> > > > +
-> > > > +	if (bar >=3D PCI_STD_NUM_BARS)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	legacy_iomap_table =3D (void __iomem **)pcim_iomap_table(pdev);
-> > > > +	if (!legacy_iomap_table)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	/* The legacy mechanism doesn't allow for duplicate mappings. */
-> > > > +	WARN_ON(legacy_iomap_table[bar]);
-> > > > +
-> > >=20
-> > > Ever since this patch has been applied, I see this warning on all hpp=
-a
-> > > (parisc) systems.
-> > >=20
-> > > [=C2=A0=C2=A0=C2=A0 0.978177] WARNING: CPU: 0 PID: 1 at drivers/pci/d=
-evres.c:473 pcim_add_mapping_to_legacy_table.part.0+0x54/0x80
-> > > [=C2=A0=C2=A0=C2=A0 0.978850] Modules linked in:
-> > > [=C2=A0=C2=A0=C2=A0 0.979277] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 No=
-t tainted 6.18.0-rc6-64bit+ #1 NONE
-> > > [=C2=A0=C2=A0=C2=A0 0.979519] Hardware name: 9000/785/C3700
-> > > [=C2=A0=C2=A0=C2=A0 0.979715]
-> > > [=C2=A0=C2=A0=C2=A0 0.979768]=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 YZrvWESTH=
-LNXBCVMcbcbcbcbOGFRQPDI
-> > > [=C2=A0=C2=A0=C2=A0 0.979886] PSW: 00001000000001000000000000001111 N=
-ot tainted
-> > > [=C2=A0=C2=A0=C2=A0 0.980006] r00-03=C2=A0 000000000804000f 000000004=
-14e10a0 0000000040acb300 00000000434b1440
-> > > [=C2=A0=C2=A0=C2=A0 0.980167] r04-07=C2=A0 00000000414a78a0 000000000=
-0029000 0000000000000000 0000000043522000
-> > > [=C2=A0=C2=A0=C2=A0 0.980314] r08-11=C2=A0 0000000000000000 000000000=
-0000008 0000000000000000 00000000434b0de8
-> > > [=C2=A0=C2=A0=C2=A0 0.980461] r12-15=C2=A0 00000000434b11b0 000000004=
-156a8a0 0000000043c655a0 0000000000000000
-> > > [=C2=A0=C2=A0=C2=A0 0.980608] r16-19=C2=A0 000000004016e080 000000004=
-019e7d8 0000000000000030 0000000043549780
-> > > [=C2=A0=C2=A0=C2=A0 0.981106] r20-23=C2=A0 0000000020000000 000000000=
-0000000 000000000800000e 0000000000000000
-> > > [=C2=A0=C2=A0=C2=A0 0.981317] r24-27=C2=A0 0000000000000000 000000000=
-800000f 0000000043522260 00000000414a78a0
-> > > [=C2=A0=C2=A0=C2=A0 0.981480] r28-31=C2=A0 00000000436af480 000000004=
-34b1680 00000000434b14d0 0000000000027000
-> > > [=C2=A0=C2=A0=C2=A0 0.981641] sr00-03=C2=A0 0000000000000000 00000000=
-00000000 0000000000000000 0000000000000000
-> > > [=C2=A0=C2=A0=C2=A0 0.981805] sr04-07=C2=A0 0000000000000000 00000000=
-00000000 0000000000000000 0000000000000000
-> > > [=C2=A0=C2=A0=C2=A0 0.981972]
-> > > [=C2=A0=C2=A0=C2=A0 0.982024] IASQ: 0000000000000000 0000000000000000=
- IAOQ: 0000000040acb31c 0000000040acb320
-> > > [=C2=A0=C2=A0=C2=A0 0.982185]=C2=A0 IIR: 03ffe01f=C2=A0=C2=A0=C2=A0 I=
-SR: 0000000000000000=C2=A0 IOR: 00000000436af410
-> > > [=C2=A0=C2=A0=C2=A0 0.982322]=C2=A0 CPU:=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0=C2=A0=C2=A0 CR30: 0000000043549780 CR31: 0000000000000000
-> > > [=C2=A0=C2=A0=C2=A0 0.982458]=C2=A0 ORIG_R28: 00000000434b16b0
-> > > [=C2=A0=C2=A0=C2=A0 0.982548]=C2=A0 IAOQ[0]: pcim_add_mapping_to_lega=
-cy_table.part.0+0x54/0x80
-> > > [=C2=A0=C2=A0=C2=A0 0.982733]=C2=A0 IAOQ[1]: pcim_add_mapping_to_lega=
-cy_table.part.0+0x58/0x80
-> > > [=C2=A0=C2=A0=C2=A0 0.982871]=C2=A0 RP(r2): pcim_add_mapping_to_legac=
-y_table.part.0+0x38/0x80
-> > > [=C2=A0=C2=A0=C2=A0 0.983100] Backtrace:
-> > > [=C2=A0=C2=A0=C2=A0 0.983439]=C2=A0 [<0000000040acba1c>] pcim_iomap+0=
-xc4/0x170
-> > > [=C2=A0=C2=A0=C2=A0 0.983577]=C2=A0 [<0000000040ba3e4c>] serial8250_p=
-ci_setup_port+0x8c/0x168
-> > > [=C2=A0=C2=A0=C2=A0 0.983725]=C2=A0 [<0000000040ba7588>] setup_port+0=
-x38/0x50
-> > > [=C2=A0=C2=A0=C2=A0 0.983837]=C2=A0 [<0000000040ba7d94>] pci_hp_diva_=
-setup+0x8c/0xd8
-> > > [=C2=A0=C2=A0=C2=A0 0.983957]=C2=A0 [<0000000040baa47c>] pciserial_in=
-it_ports+0x2c4/0x358
-> > > [=C2=A0=C2=A0=C2=A0 0.984088]=C2=A0 [<0000000040baa8bc>] pciserial_in=
-it_one+0x31c/0x330
-> > > [=C2=A0=C2=A0=C2=A0 0.984214]=C2=A0 [<0000000040abfab4>] pci_device_p=
-robe+0x194/0x270
-> > >=20
-> > > Looking into serial8250_pci_setup_port():
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (pci_resource_fla=
-gs(dev, bar) & IORESOURCE_MEM) {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!pcim_iomap(dev, bar, 0) && !pcim_iomap_tab=
-le(dev))
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- return -ENOMEM;
-> >=20
-> > Strange. From the code I see here the WARN_ON in
-> > pcim_add_mapping_to_legacy_table() should not fire. I suspect that it's
-> > actually triggered somewhere else.
-> >=20
->=20
-> pcim_iomap() calls pcim_add_mapping_to_legacy_table() which triggers the =
-traceback.
-> The caller uses the returned error to determine that it needs to call pci=
-m_iomap_table()
-> instead. As you point out below, that may not be necessary, but then it i=
-s already
-> too late and the warning was triggered.
->=20
-> > >=20
-> > > This suggests that the failure is expected. I can see that pcim_iomap=
-_table()
-> > > is deprecated, and that one is supposed to use pcim_iomap() instead. =
-However,
-> > > pcim_iomap() _is_ alrady used, and I don't see a function which lets =
-the
-> > > caller replicate what is done above (attach multiple serial ports to =
-the
-> > > same PCI bar).
-> >=20
-> > Is serial8250_pci_setup_port() invoked in a loop somewhere? Where does
-> > the "attach multiple" happen?
-> >=20
->=20
-> It is called for multiple serial ports, each of which are in the same bar=
- but
-> with different offset into the bar.
->=20
-> > >=20
-> > > How would you suggest to fix the problem ?
-> >=20
-> > I suggest you try to remove the `&& pcim_iomap_table(dev)` from above
-> > to see if that's really the cause. pcim_iomap() already creates the
-> > table, and if it succeeds the table has been created with absolute
-> > certainty. The entries will also be present. So the table-check is
-> > surplus.
-> >=20
->=20
-> How would that fix anything ? The warning would still be triggered from t=
-he
-> failed call to pcim_iomap() for the 2nd and subsequent serial port on the
-> same bar.
+Power Management and Scheduling in the Linux Kernel (OSPM-summit) VIII edition
 
-OK, I failed to see that it's really pcim_iomap() which is called
-multiple times for the same bar.
+April 14-16, 2026 - Arm, Cambridge (UK)
 
-The warning itself is harmless, so it's not urgent.
-Cleanup is always done through devres callbacks, one per resource. The
-table is not used for that, just for accessors of existing mappings. So
-at first glance I think that removing the WARN_ON would be OK. I'd like
-to hear Bjorn's opinion on that, though.
+.:: SAVE THE DATE
 
-Maybe you could investigate removing pcim_iomap_table() from this
-driver, obtaining the mappings directly from calls to pcim_iomap().
-Calling it multiple times for the same BAR is valid, it's just the
-table which complains. Since you are the first party I ever hear from
-about that WARN_ON. So with this driver ported one could argue that
-removing it is justified..
+OSPM is moving to the UK!
 
-Another possiblity could be to switch to unmanaged PCI. Use pci_iomap()
-and pci_enable_device() etc.
+Please note that this is a “save the date” announcement only.
 
-In case you have lots of spare cycles, the cleanest way would be to
-remove the legacy table altogether. To do so, one would have to port
-all users of pcim_iomap_table(). I have worked on that for a while and
-have removed many of them. The most difficult remaining users are AFAIR
-in drivers/ata/
+Given that the Linux Plumbers Conference 2025 (LPC25) is scheduled for
+December 2025, the call for topics and registrations will open in early
+2026, after LPC25 has concluded.
 
+More communication and further details will follow. Stay tuned!
 
-P.
+.:: FOCUS
+
+The VIII edition of the Power Management and Scheduling in the Linux
+Kernel (OSPM) summit aims at fostering discussions on power management
+and (real-time) scheduling techniques. The summit will be held at Arm in
+Cambridge (UK) on April 14-16, 2026.
+
+We welcome anybody interested in having discussions on the broad scope
+of scheduler techniques for reducing energy consumption while meeting
+performance and latency requirements, real-time systems, real-time and
+non-real-time scheduling, tooling, debugging and tracing.
+
+Feel free to take a look at what happened previous years:
+
+I   edition - https://lwn.net/Articles/721573/
+II  edition - https://lwn.net/Articles/754923/
+III edition - https://lwn.net/Articles/793281/
+IV  edition - https://lwn.net/Articles/820337/ (online)
+V   edition - https://lwn.net/Articles/934142/
+              https://lwn.net/Articles/934459/
+              https://lwn.net/Articles/935180/
+VI  edition - https://lwn.net/Articles/981371/
+VII edition - https://lwn.net/Articles/1020596/
+              https://lwn.net/Articles/1021332/
+              https://lwn.net/Articles/1022054/
+
+.:: FORMAT
+
+The summit is organized to cover three days of discussions and talks.
+
+The list of topics of interest includes (but it is not limited to):
+
+ - Power management techniques
+ - Scheduling techniques (real-time and non real-time)
+ - Energy consumption and CPU capacity aware scheduling
+ - Real-time virtualization
+ - Mobile/Server power management real-world use cases (successes and
+   failures)
+ - Power management and scheduling tooling (configuration, integration,
+   testing, etc.)
+ - Tracing
+ - Recap/lightning talks
+
+Presentations (50 min) can cover recently developed technologies,
+ongoing work and new ideas. Please understand that this workshop is not
+intended for presenting sales and marketing pitches.
+
+.:: SUBMIT A TOPIC/PRESENTATION
+
+Please consider this a "save the date" notification only. Information
+regarding important dates and how to submit topics will be announced in
+early 2026.
+
+.:: ATTENDING
+
+Attending OSPM-summit is free of charge, but registration to the event
+is mandatory. The event can allow a maximum of 50 people (so, be sure to
+register early!).
+
+Registration is scheduled to open in early 2026.
+
+While it is not strictly required to submit a topic/presentation,
+registrations with a topic/presentation proposal will take precedence.
+
+.:: VENUE
+
+OSPM26 is hosted at the Arm Cambridge campus (in Cambridge, UK), in the
+lecture theatre and breakout area. We appreciate Arm's generous support
+in providing the venue.
+
+Although the event takes place on Arm's premises, it is fully
+independent of Arm's business operations. The summit is organised by and
+for the open-source community, and everyone is welcome to take part in
+an open, collaborative environment.
+
+.:: ORGANIZERS
+
+Juri Lelli (Red Hat)
+Dietmar Eggemann (Arm)
+Tommaso Cucinotta (SSSA)
+Lorenzo Pieralisi (Linaro)
+
+http://retis.sssup.it/ospm-summit/
 
 
