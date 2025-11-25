@@ -1,258 +1,176 @@
-Return-Path: <linux-pci+bounces-42023-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42025-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8418C84795
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 11:28:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F909C84A76
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 12:12:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id BEED03438F4
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 10:28:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 25CCC3AA77C
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 11:12:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 309A92FE56E;
-	Tue, 25 Nov 2025 10:27:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E9E3314B86;
+	Tue, 25 Nov 2025 11:12:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sygUi4Os"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Om/MXhBE"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0626C2F9C37;
-	Tue, 25 Nov 2025 10:27:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF423101C9;
+	Tue, 25 Nov 2025 11:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764066474; cv=none; b=qEr9Trgr7XTD7NIDq0g6djvLJkAqJ4lYK2dAY2m6zRXImz4LAlVUisz4OfJzeg0si9bijk/1WhmCFBjnpNfFQE28LvOpnw/flUrRTpYKQoBvtVnume/8yC63QWzruEf19zW6Aj5k0LFCpd9o1WtNLGkoj06DEvR36G/Q67VNAYI=
+	t=1764069153; cv=none; b=u+ZVlpiMBoJFAbGdi9ACV+ziWoySU8OWFnuuOOZg7kv5nbT1xfMWHFN6w1aqC75H2D94XnC1/nJughykVsVMIgM2hcVl8niKwYQdXd1NrYgb5dr9e9KsvSYDONoldVC83UGeKSjln14TR60N2CFa80TMYhAwVJEQTcUMELHg9/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764066474; c=relaxed/simple;
-	bh=hOlaNf5irREQeC5hqJ1JIn+4xJWmxsP/XfB0B/la+Qc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f96kNn5yWqyYjwmfY/jU0CVNuprRIpUiW7dQUYuQNGjDV+04iKaOjKLPWnkCxpIa/dlDMWdDYU8rNkt4oqhDuDJIWT97ujSf0JQGAAioJtFc16Jrj5e96sQm+4Z89bPXhCp8cQiM72pWgQmkbSdkcwdbfB7rNUdUL+45wR76/R4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sygUi4Os; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74ADDC4CEF1;
-	Tue, 25 Nov 2025 10:27:53 +0000 (UTC)
+	s=arc-20240116; t=1764069153; c=relaxed/simple;
+	bh=4W5N3HFT9XqK9ao5zUtwS6grnw6Chec77zAq2yGW/nQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=K9uu75j5VlaSjT68X+eEpSych4vl5hvcHggDtxAEeIm2LAR0oR/To3wq5f2+r43Jp1Ez6wXNWAxWLXZszisJzZpRcls/qV3NrltSlEI/jqLPIU0rTd/qha7GF3YVKf9+wqOIkYhMLa8ZPEDKte3i3jzkGiQQywcV0necYrVRr2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Om/MXhBE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 86319C4CEF1;
+	Tue, 25 Nov 2025 11:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764066473;
-	bh=hOlaNf5irREQeC5hqJ1JIn+4xJWmxsP/XfB0B/la+Qc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=sygUi4OsPVIJo5N7R7GGXVq4YmxJCqdw4HGtyXMEfO1elbS7w294nfId/WFoZpzKx
-	 0s2BlgwcGlrnLQnBm2XdKMEfbsGpqYdMwvUjECwIJivjifd4zoXsIgfRX7LmWhsnSS
-	 u7Wi4R4l2VFuoYmd42zP6y1DDvp1juvwoHED1cBKTZ1NzV2CSp+99zEtA4vDH++xKR
-	 nGKlMIiNXlnucDTupcKP0/+yZw2gcYJf67wQ+1+jJI7sh60/PvnDv3MRCUjaOiCgn2
-	 BAq0K0mC1KygoWIaqYxCzN1ZZKYFpSFYSt918dV5EubdzHUXVd+tDm1vQIWiEaK8us
-	 wmYsamamDTdxQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1vNqH0-000000087dw-48ay;
-	Tue, 25 Nov 2025 10:27:51 +0000
-From: Marc Zyngier <maz@kernel.org>
-To: linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Radu Rendec <rrendec@redhat.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: [PATCH v2] PCI: host-generic: Move bridge allocation outside of pci_host_common_init()
-Date: Tue, 25 Nov 2025 10:27:26 +0000
-Message-ID: <20251125102726.865617-1-maz@kernel.org>
-X-Mailer: git-send-email 2.47.3
+	s=k20201202; t=1764069152;
+	bh=4W5N3HFT9XqK9ao5zUtwS6grnw6Chec77zAq2yGW/nQ=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=Om/MXhBEbDdzbE4dTjNnsYIax+1nxg+rxybxE/PLRzbmODm9uq4pupnr03IpRwkzC
+	 W+0kyxCdfbf+nKh1gpmd+kQsCv37mug/AL1b+Eld4fDVPRXl1WJqECyn5UC9nB6uwC
+	 XSuiH9auHE5zDziScucBxmS3ORJs0OwTMK6+emaB3T6ZqwMj413Luec5BkVcQjNL+v
+	 uevVF0YntTyRxoktHJ6Rek+luQhmYW+QrfYtyOD2ItkP5dr8AmBudR7CBW88sveQDq
+	 YGmVwG00issU2Tbs213ajLB2Y2DNn+lSB1epsShVKH/8dzD53/vqXn+gDT1iqAqJuD
+	 N2qmR6KID3Wkg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71145CFD368;
+	Tue, 25 Nov 2025 11:12:32 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
+Subject: [PATCH v3 0/4] PCI: Add initial support for handling PCIe M.2
+ connectors in devicetree
+Date: Tue, 25 Nov 2025 16:42:25 +0530
+Message-Id: <20251125-pci-m2-v3-0-c528042aea47@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rrendec@redhat.com, bhelgaas@google.com, mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org, lpieralisi@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABmPJWkC/22MQQ6CMBBFr0JmbQltKTSuvIdx0ZapNBGKrTYaw
+ t0tJBgXbiZ5k//eDBGDwwjHYoaAyUXnxwz8UIDp1XhF4rrMwComKK04mYwjAyNtw3nDqW6sUpD
+ HU0DrXlvofMncu/jw4b11E12/e0LsiURJRWSthaWWokB58jGW96e6GT8MZT6wlhL7teXXZtlGq
+ U3dtdrWrPtjL8vyAQcd/ifhAAAA
+X-Change-ID: 20251103-pci-m2-7633631b6faa
+To: Bjorn Helgaas <bhelgaas@google.com>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Stephan Gerhold <stephan.gerhold@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ linux-pm@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+ Frank Li <Frank.Li@nxp.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3890;
+ i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
+ bh=4W5N3HFT9XqK9ao5zUtwS6grnw6Chec77zAq2yGW/nQ=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpJY8dErVC8h8htWvNiDSqBzHfQ3sLVCilBhBXK
+ hUvQA1ST2uJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaSWPHQAKCRBVnxHm/pHO
+ 9bb6CACMnk1JcvfM0PgRT7maZnabMUcVjF/crON1hr1C+sNZx9zlvXNhu1vTVkN8hY/Sw3ujP2a
+ KmoZaypYTZEAM3+n/w3yO0eZlgCte1/DWtevGEJ0s5pN+t0VfsoWav2GTk084ImlfeYaP4UJSiN
+ Q1fCSa0DFfGl19p1iygp10MDI5zDllfjHIFc+6oi1d+7nN/YP1XgjM7UStTEetfsUDSRGY1aGYC
+ R4LpdZzyTSMNX3yBFBtA63yROanfGNqBlgZFphWjKr4E2B5DpkKLUjjd7Q/yG1RgBD/x8c4cb6V
+ 4IdEA3KXMN41G9jD57PA0aZEmUg8wNx9Mr6YkfcyPu3bqGxo
+X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@oss.qualcomm.com/default with auth_id=461
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
-Having the host bridge allocation inside pci_host_common_init() results
-in a lot of complexity in the pcie-apple driver (the only direct user
-of this function outside of core PCI code).
+Hi,
 
-It forces the allocation of driver-specific tracking structures outside
-of the bridge allocation, which in turn requires it to use inefficient
-data structures to match the bridge and the private structure as needed.
+This series is an initial attempt to support the PCIe M.2 connectors in the
+kernel and devicetree binding. The PCIe M.2 connectors as defined in the PCI
+Express M.2 Specification are widely used in Notebooks/Tablet form factors (even
+in PCs). On the ACPI platforms, power to these connectors are mostly handled by
+the firmware/BIOS and the kernel never bothered to directly power manage them as
+like other PCIe connectors. But on the devicetree platforms, the kernel needs to
+power manage these connectors with the help of the devicetree description. But
+so far, there is no proper representation of the M.2 connectors in devicetree
+binding. This forced the developers to fake the M.2 connectors as PMU nodes [1]
+and fixed regulators in devicetree.
 
-Instead, let the bridge structure be passed to pci_host_common_init(),
-allowing the driver to allocate it together with the private data,
-as it is usually intended. The driver can then retrieve the bridge
-via the owning device attached to the PCI config window structure.
-This allows the pcie-apple driver to be significantly simplified.
+So to properly support the M.2 connectors in devicetree platforms, this series
+introduces the devicetree binding for Mechanical Key M connector as an example
+and also the corresponding pwrseq driver and PCI changes in kernel to driver the
+connector.
 
-Both core and driver code are changed in one go to avoid going via
-a transitional interface.
+The Mechanical Key M connector is used to connect SSDs to the host machine over
+PCIe/SATA interfaces. Due to the hardware constraints, this series only adds
+support for driving the PCIe interface of the connector in the kernel.
 
-Reviewed-by: Radu Rendec <rrendec@redhat.com>
-Link: https://lore.kernel.org/r/86jyzms036.wl-maz@kernel.org
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Also, the optional interfaces supported by the Key M connectors are not
+supported in the driver and left for the future enhancements.
+
+Future work
+===========
+
+I'm planning to submit the follow-up series to add support for the Mechanical
+Key A connector for connecting the WiFI/BT cards, once some initial review
+happens on this series.
+
+Testing
+=======
+
+This series, together with the devicetree changes [2] [3] were tested on the
+Qualcomm X1e based Lenovo Thinkpad T14s Laptop which has the NVMe SSD connected
+over PCIe.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts?h=v6.18-rc4&id=d09ab685a8f51ba412d37305ea62628a01cbea57
+[2] https://github.com/Mani-Sadhasivam/linux/commit/40120d02219f34d2040ffa6328f0d406b1e4c04d
+[3] https://github.com/Mani-Sadhasivam/linux/commit/ff6c3075836cc794a3700b0ec6a4a9eb21d14c6f
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
+Changes in v3:
+- Changed the VIO supply name as per dtschema
+- Added explicit endpoint properties to port 0 node for host I/F
+- Used scope based cleanup for OF node in pwrseq driver
+- Collected review tags
+- Link to v2: https://lore.kernel.org/r/20251108-pci-m2-v2-0-e8bc4d7bf42d@oss.qualcomm.com
 
-Notes:
-    - Removed unused list_head from apple_pcie structure
-    - Fixed numerous typos
-    - Added Radu's RB
+Changes in v2:
+- Incorporated comments from Bartosz and Frank for pwrseq and dt-binding
+  patches, especially adding the pwrseq match() code.
+- Link to v1: https://lore.kernel.org/r/20251105-pci-m2-v1-0-84b5f1f1e5e8@oss.qualcomm.com
 
- drivers/pci/controller/pci-host-common.c | 13 +++----
- drivers/pci/controller/pci-host-common.h |  1 +
- drivers/pci/controller/pcie-apple.c      | 43 ++++--------------------
- 3 files changed, 14 insertions(+), 43 deletions(-)
+---
+Manivannan Sadhasivam (4):
+      dt-bindings: connector: Add PCIe M.2 Mechanical Key M connector
+      PCI/pwrctrl: Add support for handling PCIe M.2 connectors
+      PCI/pwrctrl: Create pwrctrl device if the graph port is found
+      power: sequencing: Add the Power Sequencing driver for the PCIe M.2 connectors
 
-diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
-index 810d1c8de24e9..c473e7c03baca 100644
---- a/drivers/pci/controller/pci-host-common.c
-+++ b/drivers/pci/controller/pci-host-common.c
-@@ -53,16 +53,12 @@ struct pci_config_window *pci_host_common_ecam_create(struct device *dev,
- EXPORT_SYMBOL_GPL(pci_host_common_ecam_create);
- 
- int pci_host_common_init(struct platform_device *pdev,
-+			 struct pci_host_bridge *bridge,
- 			 const struct pci_ecam_ops *ops)
- {
- 	struct device *dev = &pdev->dev;
--	struct pci_host_bridge *bridge;
- 	struct pci_config_window *cfg;
- 
--	bridge = devm_pci_alloc_host_bridge(dev, 0);
--	if (!bridge)
--		return -ENOMEM;
--
- 	of_pci_check_probe_only();
- 
- 	platform_set_drvdata(pdev, bridge);
-@@ -85,12 +81,17 @@ EXPORT_SYMBOL_GPL(pci_host_common_init);
- int pci_host_common_probe(struct platform_device *pdev)
- {
- 	const struct pci_ecam_ops *ops;
-+	struct pci_host_bridge *bridge;
- 
- 	ops = of_device_get_match_data(&pdev->dev);
- 	if (!ops)
- 		return -ENODEV;
- 
--	return pci_host_common_init(pdev, ops);
-+	bridge = devm_pci_alloc_host_bridge(&pdev->dev, 0);
-+	if (!bridge)
-+		return -ENOMEM;
-+
-+	return pci_host_common_init(pdev, bridge, ops);
- }
- EXPORT_SYMBOL_GPL(pci_host_common_probe);
- 
-diff --git a/drivers/pci/controller/pci-host-common.h b/drivers/pci/controller/pci-host-common.h
-index 51c35ec0cf37d..b5075d4bd7eb3 100644
---- a/drivers/pci/controller/pci-host-common.h
-+++ b/drivers/pci/controller/pci-host-common.h
-@@ -14,6 +14,7 @@ struct pci_ecam_ops;
- 
- int pci_host_common_probe(struct platform_device *pdev);
- int pci_host_common_init(struct platform_device *pdev,
-+			 struct pci_host_bridge *bridge,
- 			 const struct pci_ecam_ops *ops);
- void pci_host_common_remove(struct platform_device *pdev);
- 
-diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-index 0380d300adca6..2d92fc79f6ddf 100644
---- a/drivers/pci/controller/pcie-apple.c
-+++ b/drivers/pci/controller/pcie-apple.c
-@@ -187,7 +187,6 @@ struct apple_pcie {
- 	const struct hw_info	*hw;
- 	unsigned long		*bitmap;
- 	struct list_head	ports;
--	struct list_head	entry;
- 	struct completion	event;
- 	struct irq_fwspec	fwspec;
- 	u32			nvecs;
-@@ -206,9 +205,6 @@ struct apple_pcie_port {
- 	int			idx;
- };
- 
--static LIST_HEAD(pcie_list);
--static DEFINE_MUTEX(pcie_list_lock);
--
- static void rmw_set(u32 set, void __iomem *addr)
- {
- 	writel_relaxed(readl_relaxed(addr) | set, addr);
-@@ -724,32 +720,9 @@ static int apple_msi_init(struct apple_pcie *pcie)
- 	return 0;
- }
- 
--static void apple_pcie_register(struct apple_pcie *pcie)
--{
--	guard(mutex)(&pcie_list_lock);
--
--	list_add_tail(&pcie->entry, &pcie_list);
--}
--
--static void apple_pcie_unregister(struct apple_pcie *pcie)
--{
--	guard(mutex)(&pcie_list_lock);
--
--	list_del(&pcie->entry);
--}
--
- static struct apple_pcie *apple_pcie_lookup(struct device *dev)
- {
--	struct apple_pcie *pcie;
--
--	guard(mutex)(&pcie_list_lock);
--
--	list_for_each_entry(pcie, &pcie_list, entry) {
--		if (pcie->dev == dev)
--			return pcie;
--	}
--
--	return NULL;
-+	return pci_host_bridge_priv(dev_get_drvdata(dev));
- }
- 
- static struct apple_pcie_port *apple_pcie_get_port(struct pci_dev *pdev)
-@@ -875,13 +848,15 @@ static const struct pci_ecam_ops apple_pcie_cfg_ecam_ops = {
- static int apple_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	struct pci_host_bridge *bridge;
- 	struct apple_pcie *pcie;
- 	int ret;
- 
--	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
--	if (!pcie)
-+	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-+	if (!bridge)
- 		return -ENOMEM;
- 
-+	pcie = pci_host_bridge_priv(bridge);
- 	pcie->dev = dev;
- 	pcie->hw = of_device_get_match_data(dev);
- 	if (!pcie->hw)
-@@ -897,13 +872,7 @@ static int apple_pcie_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	apple_pcie_register(pcie);
--
--	ret = pci_host_common_init(pdev, &apple_pcie_cfg_ecam_ops);
--	if (ret)
--		apple_pcie_unregister(pcie);
--
--	return ret;
-+	return pci_host_common_init(pdev, bridge, &apple_pcie_cfg_ecam_ops);
- }
- 
- static const struct of_device_id apple_pcie_of_match[] = {
+ .../bindings/connector/pcie-m2-m-connector.yaml    | 141 ++++++++++++++++++
+ MAINTAINERS                                        |   7 +
+ drivers/pci/probe.c                                |   3 +-
+ drivers/pci/pwrctrl/Kconfig                        |   1 +
+ drivers/pci/pwrctrl/slot.c                         |  35 ++++-
+ drivers/power/sequencing/Kconfig                   |   8 ++
+ drivers/power/sequencing/Makefile                  |   1 +
+ drivers/power/sequencing/pwrseq-pcie-m2.c          | 160 +++++++++++++++++++++
+ 8 files changed, 350 insertions(+), 6 deletions(-)
+---
+base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+change-id: 20251103-pci-m2-7633631b6faa
+
+Best regards,
 -- 
-2.47.3
+Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+
 
 
