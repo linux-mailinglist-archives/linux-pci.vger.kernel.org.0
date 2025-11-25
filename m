@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-42025-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42026-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F909C84A76
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 12:12:38 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id E59EEC84A84
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 12:12:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 25CCC3AA77C
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 11:12:37 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6373D34EEE7
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 11:12:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E9E3314B86;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34EBF314B9D;
 	Tue, 25 Nov 2025 11:12:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Om/MXhBE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3Esag3f"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF423101C9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDFC73148D7;
 	Tue, 25 Nov 2025 11:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764069153; cv=none; b=u+ZVlpiMBoJFAbGdi9ACV+ziWoySU8OWFnuuOOZg7kv5nbT1xfMWHFN6w1aqC75H2D94XnC1/nJughykVsVMIgM2hcVl8niKwYQdXd1NrYgb5dr9e9KsvSYDONoldVC83UGeKSjln14TR60N2CFa80TMYhAwVJEQTcUMELHg9/U=
+	t=1764069153; cv=none; b=PSP5IzTBLzWuAjUpNa64NjBL1GYr47Anp7jEQ+KDSk/6ubU7/yF2t61rKOvyJxMWFa0emTX42VPuto9j2PIR/pTgca9UX7sW0NttEvca35SK3/kYS8GQY/8nBW7PUcta4puOcDGqUGDWdYlcSwClYOl7LWaWkVR7V5ge7D10LsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1764069153; c=relaxed/simple;
-	bh=4W5N3HFT9XqK9ao5zUtwS6grnw6Chec77zAq2yGW/nQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=K9uu75j5VlaSjT68X+eEpSych4vl5hvcHggDtxAEeIm2LAR0oR/To3wq5f2+r43Jp1Ez6wXNWAxWLXZszisJzZpRcls/qV3NrltSlEI/jqLPIU0rTd/qha7GF3YVKf9+wqOIkYhMLa8ZPEDKte3i3jzkGiQQywcV0necYrVRr2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Om/MXhBE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 86319C4CEF1;
+	bh=ncBuZsz3S9VpYYS3MhIzB+JWwuOwWOIy7kOlMKxIXr4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mFlvGXDBDdZ89miZaBR+v2F8FHow3Oe4OWC0GN34dZvFnt5zxfffOmFzkeMHFmIyOgtQfq4mWHEMaTo3+/vILSTwtY465YbgmN3254r6DCqTICvr7YvhO6jf76WO/2Q0s/ARA/AQVwBSMNNBvJj0hWU6yXv6zjCMAMRH00uZFlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u3Esag3f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 93230C116D0;
 	Tue, 25 Nov 2025 11:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1764069152;
-	bh=4W5N3HFT9XqK9ao5zUtwS6grnw6Chec77zAq2yGW/nQ=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=Om/MXhBEbDdzbE4dTjNnsYIax+1nxg+rxybxE/PLRzbmODm9uq4pupnr03IpRwkzC
-	 W+0kyxCdfbf+nKh1gpmd+kQsCv37mug/AL1b+Eld4fDVPRXl1WJqECyn5UC9nB6uwC
-	 XSuiH9auHE5zDziScucBxmS3ORJs0OwTMK6+emaB3T6ZqwMj413Luec5BkVcQjNL+v
-	 uevVF0YntTyRxoktHJ6Rek+luQhmYW+QrfYtyOD2ItkP5dr8AmBudR7CBW88sveQDq
-	 YGmVwG00issU2Tbs213ajLB2Y2DNn+lSB1epsShVKH/8dzD53/vqXn+gDT1iqAqJuD
-	 N2qmR6KID3Wkg==
+	bh=ncBuZsz3S9VpYYS3MhIzB+JWwuOwWOIy7kOlMKxIXr4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=u3Esag3flf3whGCC32nFs1OJ6jnWhk73ftd598cBYfcXVrsjasaBiWyWb7Cvfo0SI
+	 f8ne6w1Kl4vnPWJq/ooKn9NLi/iyBcpXEQZiHZau4AQX9SWGMWUnsvqu9i1um80yam
+	 ZLpYmsXu/fHBCXdsn2hAkvfPSMUItIsB/B7vgzZnBHROdBsXkYZub0kwNOVYVSZsI7
+	 ZxrhRg7xEliWfSarqZ6HosLIRiIB/kqvHca+WJMbUPsC+8q86jVJ8Vppa37FnpdQTA
+	 9WrH4aMAZJkQw4a9naDkL0ygOBCfBz93mz9cgceoQgENDUj9MutbYI7AZRzQ2zfThj
+	 lboeD8S7/tJuA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71145CFD368;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 842A7D0E6C6;
 	Tue, 25 Nov 2025 11:12:32 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Subject: [PATCH v3 0/4] PCI: Add initial support for handling PCIe M.2
- connectors in devicetree
-Date: Tue, 25 Nov 2025 16:42:25 +0530
-Message-Id: <20251125-pci-m2-v3-0-c528042aea47@oss.qualcomm.com>
+Date: Tue, 25 Nov 2025 16:42:26 +0530
+Subject: [PATCH v3 1/4] dt-bindings: connector: Add PCIe M.2 Mechanical Key
+ M connector
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,11 +56,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABmPJWkC/22MQQ6CMBBFr0JmbQltKTSuvIdx0ZapNBGKrTYaw
- t0tJBgXbiZ5k//eDBGDwwjHYoaAyUXnxwz8UIDp1XhF4rrMwComKK04mYwjAyNtw3nDqW6sUpD
- HU0DrXlvofMncu/jw4b11E12/e0LsiURJRWSthaWWokB58jGW96e6GT8MZT6wlhL7teXXZtlGq
- U3dtdrWrPtjL8vyAQcd/ifhAAAA
-X-Change-ID: 20251103-pci-m2-7633631b6faa
+Message-Id: <20251125-pci-m2-v3-1-c528042aea47@oss.qualcomm.com>
+References: <20251125-pci-m2-v3-0-c528042aea47@oss.qualcomm.com>
+In-Reply-To: <20251125-pci-m2-v3-0-c528042aea47@oss.qualcomm.com>
 To: Bjorn Helgaas <bhelgaas@google.com>, 
  Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -71,19 +69,18 @@ Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
  linux-pm@vger.kernel.org, 
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
- Frank Li <Frank.Li@nxp.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ Frank Li <Frank.Li@nxp.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3890;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6096;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=4W5N3HFT9XqK9ao5zUtwS6grnw6Chec77zAq2yGW/nQ=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpJY8dErVC8h8htWvNiDSqBzHfQ3sLVCilBhBXK
- hUvQA1ST2uJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaSWPHQAKCRBVnxHm/pHO
- 9bb6CACMnk1JcvfM0PgRT7maZnabMUcVjF/crON1hr1C+sNZx9zlvXNhu1vTVkN8hY/Sw3ujP2a
- KmoZaypYTZEAM3+n/w3yO0eZlgCte1/DWtevGEJ0s5pN+t0VfsoWav2GTk084ImlfeYaP4UJSiN
- Q1fCSa0DFfGl19p1iygp10MDI5zDllfjHIFc+6oi1d+7nN/YP1XgjM7UStTEetfsUDSRGY1aGYC
- R4LpdZzyTSMNX3yBFBtA63yROanfGNqBlgZFphWjKr4E2B5DpkKLUjjd7Q/yG1RgBD/x8c4cb6V
- 4IdEA3KXMN41G9jD57PA0aZEmUg8wNx9Mr6YkfcyPu3bqGxo
+ bh=R364tNw/jCl5Cu8x11j0DwL79urz2XK+pPjFAVTv1/w=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpJY8dhhgPVIMBaHWaxQntRNIqwuVBMufL8shON
+ /cpJymbQDKJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaSWPHQAKCRBVnxHm/pHO
+ 9ZvdB/4x53iErNy1kpDEL/7QY1lN3y1wK8ZnzZUncl44JMbcyLWdWdWNiNeqoVs7VYqSkEGG0Ep
+ ymzbJMWv4+2BGIhCulL3VsPK8mP7JZqzV6etKindd7A8CxOmOnG1wUx8Kc1jEZx/7noxsyS9YFs
+ zUU2CpbODg2kh8uj3PSsAsp0QDLFGIKQvUEEdKeAH2JA6nbpdhnwDZAz9lb4XErmzHepKn5F3w0
+ polaatAg3tGwf9tVe8QNiW7peuKD1Nf0OUfsZUIUtyWSPCJClZy1rWIaBXyHZI3gzOAZJyBoYqT
+ cfx/w5XtnZ2+SDAy0y+lXsJCp9nYXNPRav9CH8c2I58RKMNU
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -91,86 +88,179 @@ X-Endpoint-Received: by B4 Relay for
 X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
-Hi,
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-This series is an initial attempt to support the PCIe M.2 connectors in the
-kernel and devicetree binding. The PCIe M.2 connectors as defined in the PCI
-Express M.2 Specification are widely used in Notebooks/Tablet form factors (even
-in PCs). On the ACPI platforms, power to these connectors are mostly handled by
-the firmware/BIOS and the kernel never bothered to directly power manage them as
-like other PCIe connectors. But on the devicetree platforms, the kernel needs to
-power manage these connectors with the help of the devicetree description. But
-so far, there is no proper representation of the M.2 connectors in devicetree
-binding. This forced the developers to fake the M.2 connectors as PMU nodes [1]
-and fixed regulators in devicetree.
+Add the devicetree binding for PCIe M.2 Mechanical Key M connector defined
+in the PCI Express M.2 Specification, r4.0, sec 5.3. This connector
+provides interfaces like PCIe and SATA to attach the Solid State Drives
+(SSDs) to the host machine along with additional interfaces like USB, and
+SMB for debugging and supplementary features. At any point of time, the
+connector can only support either PCIe or SATA as the primary host
+interface.
 
-So to properly support the M.2 connectors in devicetree platforms, this series
-introduces the devicetree binding for Mechanical Key M connector as an example
-and also the corresponding pwrseq driver and PCI changes in kernel to driver the
-connector.
+The connector provides a primary power supply of 3.3v, along with an
+optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating at
+1.8v sideband signaling.
 
-The Mechanical Key M connector is used to connect SSDs to the host machine over
-PCIe/SATA interfaces. Due to the hardware constraints, this series only adds
-support for driving the PCIe interface of the connector in the kernel.
+The connector also supplies optional signals in the form of GPIOs for fine
+grained power management.
 
-Also, the optional interfaces supported by the Key M connectors are not
-supported in the driver and left for the future enhancements.
-
-Future work
-===========
-
-I'm planning to submit the follow-up series to add support for the Mechanical
-Key A connector for connecting the WiFI/BT cards, once some initial review
-happens on this series.
-
-Testing
-=======
-
-This series, together with the devicetree changes [2] [3] were tested on the
-Qualcomm X1e based Lenovo Thinkpad T14s Laptop which has the NVMe SSD connected
-over PCIe.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts?h=v6.18-rc4&id=d09ab685a8f51ba412d37305ea62628a01cbea57
-[2] https://github.com/Mani-Sadhasivam/linux/commit/40120d02219f34d2040ffa6328f0d406b1e4c04d
-[3] https://github.com/Mani-Sadhasivam/linux/commit/ff6c3075836cc794a3700b0ec6a4a9eb21d14c6f
-
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
-Changes in v3:
-- Changed the VIO supply name as per dtschema
-- Added explicit endpoint properties to port 0 node for host I/F
-- Used scope based cleanup for OF node in pwrseq driver
-- Collected review tags
-- Link to v2: https://lore.kernel.org/r/20251108-pci-m2-v2-0-e8bc4d7bf42d@oss.qualcomm.com
+ .../bindings/connector/pcie-m2-m-connector.yaml    | 141 +++++++++++++++++++++
+ 1 file changed, 141 insertions(+)
 
-Changes in v2:
-- Incorporated comments from Bartosz and Frank for pwrseq and dt-binding
-  patches, especially adding the pwrseq match() code.
-- Link to v1: https://lore.kernel.org/r/20251105-pci-m2-v1-0-84b5f1f1e5e8@oss.qualcomm.com
+diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
+new file mode 100644
+index 000000000000..f65a05d93735
+--- /dev/null
++++ b/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
+@@ -0,0 +1,141 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/connector/pcie-m2-m-connector.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: PCIe M.2 Mechanical Key M Connector
++
++maintainers:
++  - Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
++
++description:
++  A PCIe M.2 M connector node represents a physical PCIe M.2 Mechanical Key M
++  connector. The Mechanical Key M connectors are used to connect SSDs to the
++  host system over PCIe/SATA interfaces. These connectors also offer optional
++  interfaces like USB, SMB.
++
++properties:
++  compatible:
++    const: pcie-m2-m-connector
++
++  vpcie3v3-supply:
++    description: A phandle to the regulator for 3.3v supply.
++
++  vpcie1v8-supply:
++    description: A phandle to the regulator for VIO 1.8v supply.
++
++  ports:
++    $ref: /schemas/graph.yaml#/properties/ports
++    description: OF graph bindings modeling the interfaces exposed on the
++      connector. Since a single connector can have multiple interfaces, every
++      interface has an assigned OF graph port number as described below.
++
++    properties:
++      port@0:
++        $ref: /schemas/graph.yaml#/properties/port
++        description: Host interfaces of the connector
++
++        properties:
++          endpoint@0:
++            $ref: /schemas/graph.yaml#/properties/endpoint
++            description: PCIe interface
++
++          endpoint@1:
++            $ref: /schemas/graph.yaml#/properties/endpoint
++            description: SATA interface
++
++        anyOf:
++          - required:
++              - endpoint@0
++          - required:
++              - endpoint@1
++
++      port@1:
++        $ref: /schemas/graph.yaml#/properties/port
++        description: USB 2.0 interface
++
++      port@2:
++        $ref: /schemas/graph.yaml#/properties/port
++        description: SMB interface
++
++    required:
++      - port@0
++
++  clocks:
++    description: 32.768 KHz Suspend Clock (SUSCLK) input from the host system to
++      the M.2 card. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.1 for
++      more details.
++    maxItems: 1
++
++  pedet-gpios:
++    description: GPIO controlled connection to PEDET signal. This signal is used
++      by the host systems to determine the communication protocol that the M.2
++      card uses; SATA signaling (low) or PCIe signaling (high). Refer, PCI
++      Express M.2 Specification r4.0, sec 3.3.4.2 for more details.
++    maxItems: 1
++
++  led1-gpios:
++    description: GPIO controlled connection to LED_1# signal. This signal is
++      used by the M.2 card to indicate the card status via the system mounted
++      LED. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.2 for more
++      details.
++    maxItems: 1
++
++  viocfg-gpios:
++    description: GPIO controlled connection to IO voltage configuration
++      (VIO_CFG) signal. This signal is used by the M.2 card to indicate to the
++      host system that the card supports an independent IO voltage domain for
++      the sideband signals. Refer, PCI Express M.2 Specification r4.0, sec
++      3.1.15.1 for more details.
++    maxItems: 1
++
++  pwrdis-gpios:
++    description: GPIO controlled connection to Power Disable (PWRDIS) signal.
++      This signal is used by the host system to disable power on the M.2 card.
++      Refer, PCI Express M.2 Specification r4.0, sec 3.3.5.2 for more details.
++    maxItems: 1
++
++  pln-gpios:
++    description: GPIO controlled connection to Power Loss Notification (PLN#)
++      signal. This signal is use to notify the M.2 card by the host system that
++      the power loss event is expected to occur. Refer, PCI Express M.2
++      Specification r4.0, sec 3.2.17.1 for more details.
++    maxItems: 1
++
++  plas3-gpios:
++    description: GPIO controlled connection to Power Loss Acknowledge (PLA_S3#)
++      signal. This signal is used by the M.2 card to notify the host system, the
++      status of the M.2 card's preparation for power loss.
++    maxItems: 1
++
++required:
++  - compatible
++  - vpcie3v3-supply
++
++additionalProperties: false
++
++examples:
++  # PCI M.2 Key M connector for SSDs with PCIe interface
++  - |
++    connector {
++        compatible = "pcie-m2-m-connector";
++        vpcie3v3-supply = <&vreg_nvme>;
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port@0 {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                reg = <0>;
++
++                endpoint@0 {
++                    reg = <0>;
++                    remote-endpoint = <&pcie6_port0_ep>;
++                };
++            };
++        };
++    };
 
----
-Manivannan Sadhasivam (4):
-      dt-bindings: connector: Add PCIe M.2 Mechanical Key M connector
-      PCI/pwrctrl: Add support for handling PCIe M.2 connectors
-      PCI/pwrctrl: Create pwrctrl device if the graph port is found
-      power: sequencing: Add the Power Sequencing driver for the PCIe M.2 connectors
-
- .../bindings/connector/pcie-m2-m-connector.yaml    | 141 ++++++++++++++++++
- MAINTAINERS                                        |   7 +
- drivers/pci/probe.c                                |   3 +-
- drivers/pci/pwrctrl/Kconfig                        |   1 +
- drivers/pci/pwrctrl/slot.c                         |  35 ++++-
- drivers/power/sequencing/Kconfig                   |   8 ++
- drivers/power/sequencing/Makefile                  |   1 +
- drivers/power/sequencing/pwrseq-pcie-m2.c          | 160 +++++++++++++++++++++
- 8 files changed, 350 insertions(+), 6 deletions(-)
----
-base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
-change-id: 20251103-pci-m2-7633631b6faa
-
-Best regards,
 -- 
-Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+2.48.1
 
 
 
