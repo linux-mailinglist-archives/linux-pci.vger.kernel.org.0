@@ -1,58 +1,59 @@
-Return-Path: <linux-pci+bounces-42010-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42011-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 799F5C836BD
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 06:55:21 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF5B3C836C8
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 06:55:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 389713AC5D3
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 05:55:20 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 59E573467D8
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 05:55:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98F072853F2;
-	Tue, 25 Nov 2025 05:55:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B56D8286417;
+	Tue, 25 Nov 2025 05:55:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fbd5tE9i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vEr0CqiO"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FE71E505;
-	Tue, 25 Nov 2025 05:55:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8488228507B;
+	Tue, 25 Nov 2025 05:55:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764050116; cv=none; b=Y8Im1fkfSeZTSFFJyhFrMDpS1xqT8+TLOeKZsxXmGDo+PYiu3PsK5+Az9/zWpfx7ja7eEBk5R1tKyGI1lEsDgtsBcCHxJQZ2we4gYGZ+RVoyRxuJFsgt0WnnkBBstAwt08P45/TXuCQslCIis+nPdcdWQLTd75n5shJdrT43d6o=
+	t=1764050145; cv=none; b=fbmAsw6ljV927fu844T8IR7rCO9b399eBxlb8NlX/bgx30NlX1fehdzNvJzpctXZpx+GbVdMemjUTvD2lgI/y6g+q+HUGlQHuEwD6h7yJDikirbB9IGwedPAehjNvUtPywminuoeqazEo4immVuehEsg92livs7XtiJuFRrxNOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764050116; c=relaxed/simple;
-	bh=rA9BHtL3nqhfc287zBfkO4xgdFj0p+s9iU73udPzvYk=;
+	s=arc-20240116; t=1764050145; c=relaxed/simple;
+	bh=48ErKjGaEtb7aXQCMfQrk3VwREcMQsySK/d0DWH6IOY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i4YnEGXc/ppeT8r/d71Yn6o/+yx8iiIOLIyyWURDsBapLEKLoxL8grDWzbt+bffi0pjYELmSabs/xijdqtwdIve9iASA/zhrzVtHzaGPJ/ra2dcoT85Wx45YbQJPZTMIUbyMt829TqnYzpk7pdlomsRh0fcicpnsqbgH7OFLBPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fbd5tE9i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 743C4C4CEF1;
-	Tue, 25 Nov 2025 05:55:07 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=lrt+9yC2+Pk/7JM8YIK6IoCmtqoX5NGeyRF9Q1SQBnW14C3GaEsaSHfH5aWwbswIldCh+S5Iqa3N1zF0yv7d9WrZujToBTs1UvHnx5moAnoM4A3fil/fJ01gWLxLuuG9HxeP7iql89QHeFuiLgH0pBKbyfbF0bHzHhOzCPtVZeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vEr0CqiO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A1D4C19421;
+	Tue, 25 Nov 2025 05:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764050116;
-	bh=rA9BHtL3nqhfc287zBfkO4xgdFj0p+s9iU73udPzvYk=;
+	s=k20201202; t=1764050145;
+	bh=48ErKjGaEtb7aXQCMfQrk3VwREcMQsySK/d0DWH6IOY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fbd5tE9iwStrG5mxJ1X1J0CCpCIUruggcB4YM1R38hFp33Z5WuSo0Aa6C8tnmKU7r
-	 mRGIlya0E0WZl1EGKnjkH5Jsb6GancljzJKkl3MozuWTzgsPm+Lh4ggIdHG+JLUHHQ
-	 tnEt/pH6bEofv+edhc6nEZr3ULMKaI5iYXCK5b6Ldk33h14qSNENMwIlKxrrqnMsDm
-	 CPXyxTgq7T3q7d3pGO56ukaM4xySGni9zToqWN80hBhGDO+uI5MyGMgowqdiNHJOwZ
-	 s5Eth/MKZCPfL6iTMAK0ij7/iwGTrjfZziI5EcDX+ogcxD9v2flR2jWW3KT88QnZyZ
-	 HVWmEvQWhVxCA==
-Date: Tue, 25 Nov 2025 11:25:03 +0530
+	b=vEr0CqiOkp+00ddSKxjuHvXNEPSWKxw5m9NTB6PrKbyuZcqpeohbw7XZ26eJVVfGf
+	 Bz/HV3PKcDk1Nd4RRxF7OVoaa1jEB6B63j0neAMDmKlSlelgnZ1PKd2jXVVrGAuMpz
+	 YsYjrPXJdGl2LgxhlaQGWONafPRE/3K3VOBxm235ZAwQmZfFURDag1N8Rp6lj/ihv0
+	 HuTkCgCDAHrwwGgxefClavytlYh/y4OgY0cxoltRGePqexrCbDb6Qmi8SBOLOroEnS
+	 mptcNCgXVNU44YzON/AX6GTi55OzaFofq5k0QgcDkAvvMz9dlfUX1rbFegcvYz7Zx8
+	 X3qXn15FZDlpA==
+Date: Tue, 25 Nov 2025 11:25:32 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Claudiu <claudiu.beznea@tuxon.dev>
 Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
 	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, geert+renesas@glider.be, 
 	magnus.damm@gmail.com, p.zabel@pengutronix.de, linux-pci@vger.kernel.org, 
 	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: Re: [PATCH v8 5/6] arm64: dts: renesas: rzg3s-smarc: Enable PCIe
-Message-ID: <vrtz6pumfpjyis5sez7iia37yyruizl2wz3vb4ojafww5hrjev@pmy5uiknetre>
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH v8 6/6] arm64: defconfig: Enable PCIe for the Renesas
+ RZ/G3S SoC
+Message-ID: <c24nuqtczt2jxekl67boramlgullnxftwjfjlwcjjnyv47ykwc@tlpojiyzdk6r>
 References: <20251119143523.977085-1-claudiu.beznea.uj@bp.renesas.com>
- <20251119143523.977085-6-claudiu.beznea.uj@bp.renesas.com>
+ <20251119143523.977085-7-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,15 +63,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251119143523.977085-6-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20251119143523.977085-7-claudiu.beznea.uj@bp.renesas.com>
 
-On Wed, Nov 19, 2025 at 04:35:22PM +0200, Claudiu wrote:
+On Wed, Nov 19, 2025 at 04:35:23PM +0200, Claudiu wrote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > 
-> The RZ Smarc Carrier-II board has PCIe headers mounted on it. Enable PCIe
-> support.
+> Enable PCIe for the Renesas RZ/G3S SoC.
 > 
-> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
@@ -84,16 +83,16 @@ Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 > - none
 > 
 > Changes in v7:
-> - none
+> - rebased on top of v6.18-rc1
 > 
 > Changes in v6:
-> - none
-> 
-> Changes in v5:
 > - collected tags
 > 
+> Changes in v5:
+> - dropped Tb tag
+> 
 > Changes in v4:
-> - none
+> - made it builtin
 > 
 > Changes in v3:
 > - collected tags
@@ -101,38 +100,21 @@ Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 > Changes in v2:
 > - none
 > 
->  arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-> index 5e044a4d0234..6e9e78aca0b0 100644
-> --- a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-> @@ -132,6 +132,12 @@ power-monitor@44 {
->  	};
->  };
->  
-> +&pcie {
-> +	pinctrl-0 = <&pcie_pins>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
->  &pinctrl {
->  	audio_clock_pins: audio-clock {
->  		pins = "AUDIO_CLK1", "AUDIO_CLK2";
-> @@ -159,6 +165,11 @@ key-3-gpio-hog {
->  		line-name = "key-3-gpio-irq";
->  	};
->  
-> +	pcie_pins: pcie {
-> +		pinmux = <RZG2L_PORT_PINMUX(13, 2, 2)>, /* PCIE_RST_OUT_B */
-> +			 <RZG2L_PORT_PINMUX(13, 3, 2)>; /* PCIE_CLKREQ_B */
-> +	};
-> +
->  	scif0_pins: scif0 {
->  		pinmux = <RZG2L_PORT_PINMUX(6, 3, 1)>, /* RXD */
->  			 <RZG2L_PORT_PINMUX(6, 4, 1)>; /* TXD */
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index e3a2d37bd104..54fd09317edf 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -230,6 +230,7 @@ CONFIG_PCIE_MEDIATEK_GEN3=m
+>  CONFIG_PCI_TEGRA=y
+>  CONFIG_PCIE_RCAR_HOST=y
+>  CONFIG_PCIE_RCAR_EP=y
+> +CONFIG_PCIE_RENESAS_RZG3S_HOST=y
+>  CONFIG_PCIE_ROCKCHIP_HOST=m
+>  CONFIG_PCI_XGENE=y
+>  CONFIG_PCI_IMX6_HOST=y
 > -- 
 > 2.43.0
 > 
