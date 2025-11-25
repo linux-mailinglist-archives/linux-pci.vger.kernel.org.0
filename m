@@ -1,159 +1,158 @@
-Return-Path: <linux-pci+bounces-42002-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42004-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25188C830D3
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 02:54:26 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27E61C8361B
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 06:21:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A0EF3AE576
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 01:54:24 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CB4224E12A2
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 05:21:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8464C49659;
-	Tue, 25 Nov 2025 01:54:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1654B2853E9;
+	Tue, 25 Nov 2025 05:21:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="TABvJh0q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RXrYd7oJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m3270.qiye.163.com (mail-m3270.qiye.163.com [220.197.32.70])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C12CA95E
-	for <linux-pci@vger.kernel.org>; Tue, 25 Nov 2025 01:54:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97C8283FDD;
+	Tue, 25 Nov 2025 05:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764035662; cv=none; b=mFmsr6E68W8wsgNcHAsXrRQ92PdVH9kpb8yw2POG2RBpuxI78kaCZ0cJyQpXbl45brmXiVFfgCpH4X7OUBQiGYPlTQdpf3tGO7KmdyqboLu6dJ45h+0T38vYkoXYMLfvfhg4iwmALixzeKom2hDzFpBCeXKhLbPCWncmwTAjJ/0=
+	t=1764048105; cv=none; b=dG24Xu6TQkxSlr3BVXuC6VCXgyOF2cufbBdBnv+rrnujHOhOExGNLTmHUJqaj/e4yS/qR3YwwIu1i0ePVYO7lMHMFtgMDwPbrUpnzOcMO2ht+gCOHQ1bcbg32UgWK7JjpnqnLZ5S+0RD9Ae5d4Wp3IJdKGPDrTQ56tLlJYdf5eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764035662; c=relaxed/simple;
-	bh=tUHtVabB9N95cbVfo0Ugq69hm4/IeooLOpHHK2DJORo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=sbmFk2lntvBDh/M/v7KKoXBV3u/gFM5ejKT1Tj5WkFIlLVrfcx1i+r09Efb87DrYfSnId5gEtc3PVldjoHcZ75mKpm03Ht3DTP+yz/KApg30cV1GrU7pOFFsG9WMbB7KwTagNewGB1Tz/+2/LbLPkjoK8zglOsxPmZwuAt5qtq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=TABvJh0q; arc=none smtp.client-ip=220.197.32.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 2ac10623c;
-	Tue, 25 Nov 2025 09:54:08 +0800 (GMT+08:00)
-From: Shawn Lin <shawn.lin@rock-chips.com>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-rockchip@lists.infradead.org,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	linux-pci@vger.kernel.org,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 2/2] PCI: dw-rockchip: Change get_lttssm() to provide L1ss info
-Date: Tue, 25 Nov 2025 09:53:52 +0800
-Message-Id: <1764035632-180821-2-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1764035632-180821-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1764035632-180821-1-git-send-email-shawn.lin@rock-chips.com>
-X-HM-Tid: 0a9ab8b7dc0309cckunmc92cec9842ee22
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQx1KGFZLSh9NSU5OSkIdSBhWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=TABvJh0qHjzd3Lb+zpJlIggejrNAsVMBZmrRWtJ0irroVGIMnT2iIuNSLl/cSnPlIyaLPb3qSmUmH7ADnoVhnohuIPxX7hU3zwJch5ikTOqMZWd8xMylxig4cfYCUh6lvAnVrC5t3cRZF/6hcV8BxzuzZKoWoyLav6A4YveNbKM=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=IBwPvR/OW/JxFxvLDwrXC009YY5nSw2ucnUS0x3GS4A=;
-	h=date:mime-version:subject:message-id:from;
+	s=arc-20240116; t=1764048105; c=relaxed/simple;
+	bh=qed1tIlgYImH+5jgHrPf6vSo6U9oFRv/oP55UdFhWMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BnzU/E79DF1YDu+kB2OQQzv2fJ9MIilrHMQkJ10lMrr4yvedvyTvYmWa0RWM6IxxPzrOQsf3Ox1rpSV9C0n3MnsT8eqwpxDP8d+++xbhwfHt4StRUhEMY6LiTBLGpnA136DmzRbxUYTVsO71S6csx/rbOGjjfp3UYxrzL6TGubM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RXrYd7oJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09132C4CEF1;
+	Tue, 25 Nov 2025 05:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764048104;
+	bh=qed1tIlgYImH+5jgHrPf6vSo6U9oFRv/oP55UdFhWMM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RXrYd7oJTu2M2fgDwzIjyrsaKTIIUE3Vbbqiiom3OYz4r70MZ48cdh33Dwi9WHsrz
+	 W5MOhQmsutGsFP5gcQ1Q6MnjpnCk6t0FhVCMaqmnSakKaNYglhekorZCQhc2lLwuJs
+	 PuLnODdoWwbBQKvGEMcCJqCisSn93G4uOoWjt4lnolGCoQJOMxjlH5E4QVfIH31fWZ
+	 0NiZTum8t32AHI8qAoP5+qoCJXWRlAjly8azuY/I3Dd6hV9VXZiGFthSaqG09uth6E
+	 8a8P8WJHrGcQsiGVg/fw1TmuG8CtMuFrtKghTUsDM7fz+NvEpRDVRwseFoN3yj8rvf
+	 yGQFedtEIzLMA==
+Date: Tue, 25 Nov 2025 10:51:35 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Alexey Bogoslavsky <Alexey.Bogoslavsky@sandisk.com>, 
+	Jeffrey Lien <Jeff.Lien@sandisk.com>, Avinash M N <Avinash.M.N@sandisk.com>
+Subject: Re: [PATCH v2] PCI: Add quirk to disable ASPM L1 for Sandisk SN740
+ NVMe SSDs
+Message-ID: <tiadpmogdxom5h2bquct2ch6hoc6ozh6bgnzdmnj3mia22vtue@c5yjxbx65lsm>
+References: <20251120161253.189580-1-mani@kernel.org>
+ <20251124235307.GA2725632@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251124235307.GA2725632@bhelgaas>
 
-This patch renames rockchip_pcie_get_ltssm() to rockchip_pcie_get_ltssm_reg()
-and adds rockchip_pcie_get_ltssm() to get_lttssm() callback to in order to
-show the proper L1 substates. The PCIE_CLIENT_LTSSM_STATUS[5:0] register returns
-the same ltssm layout as enum dw_pcie_ltssm. So we only need to tell L1ss apart
-and return the proper value defined in pcie-designware.h.
+On Mon, Nov 24, 2025 at 05:53:07PM -0600, Bjorn Helgaas wrote:
+> [+cc Alexey, Jeffrey, Avinash]
+> 
+> On Thu, Nov 20, 2025 at 09:42:53PM +0530, Manivannan Sadhasivam wrote:
+> > The Sandisk SN740 NVMe SSDs cause below AER errors on the upstream Root
+> > Port of PCIe controller in Microsoft Surface Laptop 7, when ASPM L1 is
+> > enabled:
+> > 
+> >   pcieport 0006:00:00.0: AER: Correctable error message received from 0006:01:00.0
+> >   nvme 0006:01:00.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
+> >   nvme 0006:01:00.0:   device [15b7:5015] error status/mask=00000001/0000e000
+> >   nvme 0006:01:00.0:    [ 0] RxErr
+> 
+> Do we have any information about whether this error happens with the
+> SN740 on platforms other than the Surface Laptop 7?  Or whether it
+> happens on the Surface with other endpoints?
+> 
 
-cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
-L1_2 (0x142)
+This device comes pre installed with the Surface Laptop 7 I believe. It is not
+very convenient to replace the NVMe in a laptop for testing.
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
----
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 28 ++++++++++++++++---
- 1 file changed, 24 insertions(+), 4 deletions(-)
+> I'm a little hesitant about quirking devices and claiming they are
+> defective without a solid root cause.
+> 
 
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index f8605fe61a41..019d4f4f26a6 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -68,6 +68,11 @@
- #define  PCIE_CLKREQ_NOT_READY		FIELD_PREP_WM16(BIT(0), 0)
- #define  PCIE_CLKREQ_PULL_DOWN		FIELD_PREP_WM16(GENMASK(13, 12), 1)
+There are a couple of points that made me convince myself:
+
+* Other X1E laptops are working fine with ASPM L1.
+* This laptop has WCN785x WiFi/BT combo card connected to the other controller
+instance and L1 is working fine for it.
+* There is no known issue with ASPM L1 in X1E chipsets.
+
+Because of these, I was so certain that the NVMe is the fault here.
+
+> Sandisk folks, do you have any insight into this?  Any known errata or
+> possibility of looking into this with an analyzer?
+> 
+
+I don't think Konrad has access to the analyzer, neither any of us.
+
+If you are still hesitant, I'd suggest adding the platform check so that this
+quirk is only limited to the Surface Laptop 7:
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index adc54533df7f..1655757ba66a 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -29,6 +29,7 @@
+ #include <linux/ktime.h>
+ #include <linux/mm.h>
+ #include <linux/nvme.h>
++#include <linux/of.h>
+ #include <linux/platform_data/x86/apple.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/sizes.h>
+@@ -2527,15 +2528,19 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_FREESCALE, 0x0451, quirk_disable_aspm_l0s
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PASEMI, 0xa002, quirk_disable_aspm_l0s_l1);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0x1105, quirk_disable_aspm_l0s_l1);
  
-+/* RASDES TBA infomation */
-+#define PCIE_CLIENT_CDM_RASDES_TBA_INFO_CMN	0x154
-+#define  PCIE_CLIENT_CDM_RASDES_TBA_L1_1	BIT(4)
-+#define  PCIE_CLIENT_CDM_RASDES_TBA_L1_2	BIT(5)
++/*
++ * Sandisk SN740 NVMe SSDs in Microsoft Surface Laptop 7 cause AER timeout
++ * errors on the upstream PCIe Root Port when ASPM L1 is enabled.
++ */
+ static void quirk_disable_aspm_l1(struct pci_dev *dev)
+ {
+-       pcie_aspm_remove_cap(dev, PCI_EXP_LNKCAP_ASPM_L1);
++       struct device_node *root __free(device_node) = of_find_node_by_path("/");
++       const char *model = of_get_property(root, "compatible", NULL);
 +
- /* Hot Reset Control Register */
- #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
- #define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
-@@ -181,11 +186,25 @@ static int rockchip_pcie_init_irq_domain(struct rockchip_pcie *rockchip)
- 	return 0;
++       if (!strcmp(model, "microsoft,romulus13"))
++               pcie_aspm_remove_cap(dev, PCI_EXP_LNKCAP_ASPM_L1);
  }
  
--static u32 rockchip_pcie_get_ltssm(struct rockchip_pcie *rockchip)
-+static u32 rockchip_pcie_get_ltssm_reg(struct rockchip_pcie *rockchip)
- {
- 	return rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_LTSSM_STATUS);
- }
+-/*
+- * Sandisk SN740 NVMe SSDs cause AER timeout errors on the upstream PCIe Root
+- * Port when ASPM L1 is enabled.
+- */
+ DECLARE_PCI_FIXUP_HEADER(0x15b7, 0x5015, quirk_disable_aspm_l1);
  
-+static enum dw_pcie_ltssm rockchip_pcie_get_ltssm(struct dw_pcie *pci)
-+{
-+	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-+	u32 val = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_CDM_RASDES_TBA_INFO_CMN);
-+
-+	if (val & PCIE_CLIENT_CDM_RASDES_TBA_L1_1)
-+		return DW_PCIE_LTSSM_L1_1;
-+	else if (val & PCIE_CLIENT_CDM_RASDES_TBA_L1_2)
-+		return DW_PCIE_LTSSM_L1_2;
-+	else
-+		return rockchip_pcie_get_ltssm_reg(rockchip) &
-+			PCIE_LTSSM_STATUS_MASK;
-+}
-+
- static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
- {
- 	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
-@@ -201,7 +220,7 @@ static void rockchip_pcie_disable_ltssm(struct rockchip_pcie *rockchip)
- static bool rockchip_pcie_link_up(struct dw_pcie *pci)
- {
- 	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
--	u32 val = rockchip_pcie_get_ltssm(rockchip);
-+	u32 val = rockchip_pcie_get_ltssm_reg(rockchip);
- 
- 	return FIELD_GET(PCIE_LINKUP_MASK, val) == PCIE_LINKUP;
- }
-@@ -485,6 +504,7 @@ static const struct dw_pcie_ops dw_pcie_ops = {
- 	.link_up = rockchip_pcie_link_up,
- 	.start_link = rockchip_pcie_start_link,
- 	.stop_link = rockchip_pcie_stop_link,
-+	.get_ltssm = rockchip_pcie_get_ltssm,
- };
- 
- static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
-@@ -499,7 +519,7 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
- 	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
- 
- 	dev_dbg(dev, "PCIE_CLIENT_INTR_STATUS_MISC: %#x\n", reg);
--	dev_dbg(dev, "LTSSM_STATUS: %#x\n", rockchip_pcie_get_ltssm(rockchip));
-+	dev_dbg(dev, "LTSSM_STATUS: %#x\n", rockchip_pcie_get_ltssm_reg(rockchip));
- 
- 	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
- 		if (rockchip_pcie_link_up(pci)) {
-@@ -526,7 +546,7 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
- 	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
- 
- 	dev_dbg(dev, "PCIE_CLIENT_INTR_STATUS_MISC: %#x\n", reg);
--	dev_dbg(dev, "LTSSM_STATUS: %#x\n", rockchip_pcie_get_ltssm(rockchip));
-+	dev_dbg(dev, "LTSSM_STATUS: %#x\n", rockchip_pcie_get_ltssm_reg(rockchip));
- 
- 	if (reg & PCIE_LINK_REQ_RST_NOT_INT) {
- 		dev_dbg(dev, "hot reset or link-down reset\n");
+ /*
+
+This check is similar to the DMI checks we have currently non-DT platforms.
+Infact, we have also use the DMI checks on this laptop as it comes with SMBIOS.
+
+Note: I'm not sure if Konrad's lapto is based on "microsoft,romulus13" or
+"microsoft,romulus15".
+
+- Mani
+
 -- 
-2.43.0
-
+மணிவண்ணன் சதாசிவம்
 
