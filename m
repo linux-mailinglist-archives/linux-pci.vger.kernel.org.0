@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-42026-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42027-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id E59EEC84A84
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 12:12:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66916C84A90
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 12:12:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6373D34EEE7
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 11:12:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BC8F3AA6CD
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 11:12:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34EBF314B9D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E331315D24;
 	Tue, 25 Nov 2025 11:12:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3Esag3f"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQV13Wz5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDFC73148D7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F7329B795;
 	Tue, 25 Nov 2025 11:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764069153; cv=none; b=PSP5IzTBLzWuAjUpNa64NjBL1GYr47Anp7jEQ+KDSk/6ubU7/yF2t61rKOvyJxMWFa0emTX42VPuto9j2PIR/pTgca9UX7sW0NttEvca35SK3/kYS8GQY/8nBW7PUcta4puOcDGqUGDWdYlcSwClYOl7LWaWkVR7V5ge7D10LsY=
+	t=1764069153; cv=none; b=iCblIuuaw4KLEo2T5Wh+GmEL40Db9gSONwcBa3UjGgDAJVLz8+6c8EH79Lo0BExUY70Tc48yEZAoGZnyWZCJccEgSruO+j+93VrtP1NLJmTzyU2jDffakeJFomRpxD1bf55vwsvuYCGd2hlsArTKUXLmjjCwNvIfdyKZTut5scc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1764069153; c=relaxed/simple;
-	bh=ncBuZsz3S9VpYYS3MhIzB+JWwuOwWOIy7kOlMKxIXr4=;
+	bh=TdY/Q2esA7fjGCbY16Y/7BsFURyPP/oQf6cnQxXJtlU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mFlvGXDBDdZ89miZaBR+v2F8FHow3Oe4OWC0GN34dZvFnt5zxfffOmFzkeMHFmIyOgtQfq4mWHEMaTo3+/vILSTwtY465YbgmN3254r6DCqTICvr7YvhO6jf76WO/2Q0s/ARA/AQVwBSMNNBvJj0hWU6yXv6zjCMAMRH00uZFlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u3Esag3f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 93230C116D0;
+	 In-Reply-To:To:Cc; b=ubpiLcYWOkAm6XJFkNMYG1W7OinScpE9Pw0gquuEsVVtQR0X9ZglRRZ+JnCSqF7V+Rr9+0urSATeofm/HxjL/xDMdM+tBndLdyy5zfmTB/08qhM1Ye3JTNRyjd9uFF63M/wqRpBtDHEz+VHuTAFJJgzcsDIPKEd4N3zKMs7iPCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQV13Wz5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A4683C116B1;
 	Tue, 25 Nov 2025 11:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1764069152;
-	bh=ncBuZsz3S9VpYYS3MhIzB+JWwuOwWOIy7kOlMKxIXr4=;
+	bh=TdY/Q2esA7fjGCbY16Y/7BsFURyPP/oQf6cnQxXJtlU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=u3Esag3flf3whGCC32nFs1OJ6jnWhk73ftd598cBYfcXVrsjasaBiWyWb7Cvfo0SI
-	 f8ne6w1Kl4vnPWJq/ooKn9NLi/iyBcpXEQZiHZau4AQX9SWGMWUnsvqu9i1um80yam
-	 ZLpYmsXu/fHBCXdsn2hAkvfPSMUItIsB/B7vgzZnBHROdBsXkYZub0kwNOVYVSZsI7
-	 ZxrhRg7xEliWfSarqZ6HosLIRiIB/kqvHca+WJMbUPsC+8q86jVJ8Vppa37FnpdQTA
-	 9WrH4aMAZJkQw4a9naDkL0ygOBCfBz93mz9cgceoQgENDUj9MutbYI7AZRzQ2zfThj
-	 lboeD8S7/tJuA==
+	b=BQV13Wz5PZqh202S2C7mM3FmFv7W0mvYwDB7WGQ1V6Qf8E12Pu5EibR1Q7UPFi1n+
+	 cCpT6j0WSoAl/iLMWOs6aK6WkdPO79ANDo3s0YI5DXAEY3WJDUGN8U6akC2Cewpnsy
+	 nWIYrjFydQ2ZMYbWNI27TEQOo2EJuqmaF2U8WcxfyJlE6LnwKIK4z3q2Lu4f30/2l5
+	 9OwonaJ7huvICVRSJnxuElQhXedMcRzGjOU50Vh06oXmDhIB8gaP06o2LL4s33RkTU
+	 JhUJc5tSnk16lLD7WFwroVRUenXWdeq83ZFtSxqOByp5rxKcFajtZe2Nsi5r3b2W5H
+	 A0LQiSZs0qKkg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842A7D0E6C6;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F15D0E6C7;
 	Tue, 25 Nov 2025 11:12:32 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Tue, 25 Nov 2025 16:42:26 +0530
-Subject: [PATCH v3 1/4] dt-bindings: connector: Add PCIe M.2 Mechanical Key
- M connector
+Date: Tue, 25 Nov 2025 16:42:27 +0530
+Subject: [PATCH v3 2/4] PCI/pwrctrl: Add support for handling PCIe M.2
+ connectors
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251125-pci-m2-v3-1-c528042aea47@oss.qualcomm.com>
+Message-Id: <20251125-pci-m2-v3-2-c528042aea47@oss.qualcomm.com>
 References: <20251125-pci-m2-v3-0-c528042aea47@oss.qualcomm.com>
 In-Reply-To: <20251125-pci-m2-v3-0-c528042aea47@oss.qualcomm.com>
 To: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -69,18 +69,18 @@ Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
  linux-pm@vger.kernel.org, 
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
- Frank Li <Frank.Li@nxp.com>
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6096;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3872;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=R364tNw/jCl5Cu8x11j0DwL79urz2XK+pPjFAVTv1/w=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpJY8dhhgPVIMBaHWaxQntRNIqwuVBMufL8shON
- /cpJymbQDKJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaSWPHQAKCRBVnxHm/pHO
- 9ZvdB/4x53iErNy1kpDEL/7QY1lN3y1wK8ZnzZUncl44JMbcyLWdWdWNiNeqoVs7VYqSkEGG0Ep
- ymzbJMWv4+2BGIhCulL3VsPK8mP7JZqzV6etKindd7A8CxOmOnG1wUx8Kc1jEZx/7noxsyS9YFs
- zUU2CpbODg2kh8uj3PSsAsp0QDLFGIKQvUEEdKeAH2JA6nbpdhnwDZAz9lb4XErmzHepKn5F3w0
- polaatAg3tGwf9tVe8QNiW7peuKD1Nf0OUfsZUIUtyWSPCJClZy1rWIaBXyHZI3gzOAZJyBoYqT
- cfx/w5XtnZ2+SDAy0y+lXsJCp9nYXNPRav9CH8c2I58RKMNU
+ bh=HTvHAc0W+gqT3Gny5NRdE5ZGDr0iND6zrMawYcBU9kc=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpJY8dw2Hnsq2BXwbXXvxR2p7knFdcX9j6VsUKh
+ K7Y8RrGG3CJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaSWPHQAKCRBVnxHm/pHO
+ 9dcsB/4iw/bZmwyrAulLrLhnkj0HJ3jT02zpCt/xig3ohfMT8P5DAB1EzRr69yjxEvI8cDFR9NN
+ GwyE2MMhlJzZCFMKT+GRqniTAoKeMNGUwtiTl2EYJHTPNe4CvxROx2YO2tNlaFivzIU6HjLVJjA
+ l34KUHOCOZYj2MpEfPGEEi70gnpDFjsnCZOVY9uXh9hTLfY0DhCBhpZsl75imEugxirj972KGQe
+ Ko2gUUekn2eNE9F2ZWOovC3SYqqQh/a8JYBEwrSSnU3BtyktARqhacqr3RhiDdP/KN03Bu/Dm+I
+ gi7Jz+HNt3vJ+C4c6Js/BKdboitwqXA2cI8mozzuH0KeXMHF
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -90,174 +90,120 @@ Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-Add the devicetree binding for PCIe M.2 Mechanical Key M connector defined
-in the PCI Express M.2 Specification, r4.0, sec 5.3. This connector
-provides interfaces like PCIe and SATA to attach the Solid State Drives
-(SSDs) to the host machine along with additional interfaces like USB, and
-SMB for debugging and supplementary features. At any point of time, the
-connector can only support either PCIe or SATA as the primary host
-interface.
+Add support for handling the PCIe M.2 connectors as Power Sequencing
+devices. These connectors are exposed as the Power Sequencing devices
+as they often support multiple interfaces like PCIe/SATA, USB/UART to the
+host machine and each interfaces could be driven by different client
+drivers at the same time.
 
-The connector provides a primary power supply of 3.3v, along with an
-optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating at
-1.8v sideband signaling.
+This driver handles the PCIe interface of these connectors. It first checks
+for the presence of the graph port in the Root Port node with the help of
+of_graph_is_present() API, if present, it acquires/poweres ON the
+corresponding pwrseq device.
 
-The connector also supplies optional signals in the form of GPIOs for fine
-grained power management.
+Once the pwrseq device is powered ON, the driver will skip parsing the Root
+Port/Slot resources and registers with the pwrctrl framework.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
- .../bindings/connector/pcie-m2-m-connector.yaml    | 141 +++++++++++++++++++++
- 1 file changed, 141 insertions(+)
+ drivers/pci/pwrctrl/Kconfig |  1 +
+ drivers/pci/pwrctrl/slot.c  | 35 ++++++++++++++++++++++++++++++-----
+ 2 files changed, 31 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
-new file mode 100644
-index 000000000000..f65a05d93735
---- /dev/null
-+++ b/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
-@@ -0,0 +1,141 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/connector/pcie-m2-m-connector.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/pci/pwrctrl/Kconfig b/drivers/pci/pwrctrl/Kconfig
+index 6956c1854811..9a195cb7e117 100644
+--- a/drivers/pci/pwrctrl/Kconfig
++++ b/drivers/pci/pwrctrl/Kconfig
+@@ -13,6 +13,7 @@ config PCI_PWRCTRL_PWRSEQ
+ 
+ config PCI_PWRCTRL_SLOT
+ 	tristate "PCI Power Control driver for PCI slots"
++	select POWER_SEQUENCING
+ 	select PCI_PWRCTRL
+ 	help
+ 	  Say Y here to enable the PCI Power Control driver to control the power
+diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
+index 3320494b62d8..d46c2365208a 100644
+--- a/drivers/pci/pwrctrl/slot.c
++++ b/drivers/pci/pwrctrl/slot.c
+@@ -8,8 +8,10 @@
+ #include <linux/device.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
++#include <linux/of_graph.h>
+ #include <linux/pci-pwrctrl.h>
+ #include <linux/platform_device.h>
++#include <linux/pwrseq/consumer.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/slab.h>
+ 
+@@ -17,12 +19,18 @@ struct pci_pwrctrl_slot_data {
+ 	struct pci_pwrctrl ctx;
+ 	struct regulator_bulk_data *supplies;
+ 	int num_supplies;
++	struct pwrseq_desc *pwrseq;
+ };
+ 
+ static void devm_pci_pwrctrl_slot_power_off(void *data)
+ {
+ 	struct pci_pwrctrl_slot_data *slot = data;
+ 
++	if (slot->pwrseq) {
++		pwrseq_power_off(slot->pwrseq);
++		return;
++	}
 +
-+title: PCIe M.2 Mechanical Key M Connector
+ 	regulator_bulk_disable(slot->num_supplies, slot->supplies);
+ 	regulator_bulk_free(slot->num_supplies, slot->supplies);
+ }
+@@ -38,6 +46,20 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+ 	if (!slot)
+ 		return -ENOMEM;
+ 
++	if (of_graph_is_present(dev_of_node(dev))) {
++		slot->pwrseq = devm_pwrseq_get(dev, "pcie");
++		if (IS_ERR(slot->pwrseq))
++			return dev_err_probe(dev, PTR_ERR(slot->pwrseq),
++				     "Failed to get the power sequencer\n");
 +
-+maintainers:
-+  - Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
++		ret = pwrseq_power_on(slot->pwrseq);
++		if (ret)
++			return dev_err_probe(dev, ret,
++				     "Failed to power-on the device\n");
 +
-+description:
-+  A PCIe M.2 M connector node represents a physical PCIe M.2 Mechanical Key M
-+  connector. The Mechanical Key M connectors are used to connect SSDs to the
-+  host system over PCIe/SATA interfaces. These connectors also offer optional
-+  interfaces like USB, SMB.
++		goto skip_resources;
++	}
 +
-+properties:
-+  compatible:
-+    const: pcie-m2-m-connector
+ 	ret = of_regulator_bulk_get_all(dev, dev_of_node(dev),
+ 					&slot->supplies);
+ 	if (ret < 0) {
+@@ -53,17 +75,20 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_slot_power_off,
+-				       slot);
+-	if (ret)
+-		return ret;
+-
+ 	clk = devm_clk_get_optional_enabled(dev, NULL);
+ 	if (IS_ERR(clk)) {
++		regulator_bulk_disable(slot->num_supplies, slot->supplies);
++		regulator_bulk_free(slot->num_supplies, slot->supplies);
+ 		return dev_err_probe(dev, PTR_ERR(clk),
+ 				     "Failed to enable slot clock\n");
+ 	}
+ 
++skip_resources:
++	ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_slot_power_off,
++				       slot);
++	if (ret)
++		return ret;
 +
-+  vpcie3v3-supply:
-+    description: A phandle to the regulator for 3.3v supply.
-+
-+  vpcie1v8-supply:
-+    description: A phandle to the regulator for VIO 1.8v supply.
-+
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description: OF graph bindings modeling the interfaces exposed on the
-+      connector. Since a single connector can have multiple interfaces, every
-+      interface has an assigned OF graph port number as described below.
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: Host interfaces of the connector
-+
-+        properties:
-+          endpoint@0:
-+            $ref: /schemas/graph.yaml#/properties/endpoint
-+            description: PCIe interface
-+
-+          endpoint@1:
-+            $ref: /schemas/graph.yaml#/properties/endpoint
-+            description: SATA interface
-+
-+        anyOf:
-+          - required:
-+              - endpoint@0
-+          - required:
-+              - endpoint@1
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: USB 2.0 interface
-+
-+      port@2:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: SMB interface
-+
-+    required:
-+      - port@0
-+
-+  clocks:
-+    description: 32.768 KHz Suspend Clock (SUSCLK) input from the host system to
-+      the M.2 card. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.1 for
-+      more details.
-+    maxItems: 1
-+
-+  pedet-gpios:
-+    description: GPIO controlled connection to PEDET signal. This signal is used
-+      by the host systems to determine the communication protocol that the M.2
-+      card uses; SATA signaling (low) or PCIe signaling (high). Refer, PCI
-+      Express M.2 Specification r4.0, sec 3.3.4.2 for more details.
-+    maxItems: 1
-+
-+  led1-gpios:
-+    description: GPIO controlled connection to LED_1# signal. This signal is
-+      used by the M.2 card to indicate the card status via the system mounted
-+      LED. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.2 for more
-+      details.
-+    maxItems: 1
-+
-+  viocfg-gpios:
-+    description: GPIO controlled connection to IO voltage configuration
-+      (VIO_CFG) signal. This signal is used by the M.2 card to indicate to the
-+      host system that the card supports an independent IO voltage domain for
-+      the sideband signals. Refer, PCI Express M.2 Specification r4.0, sec
-+      3.1.15.1 for more details.
-+    maxItems: 1
-+
-+  pwrdis-gpios:
-+    description: GPIO controlled connection to Power Disable (PWRDIS) signal.
-+      This signal is used by the host system to disable power on the M.2 card.
-+      Refer, PCI Express M.2 Specification r4.0, sec 3.3.5.2 for more details.
-+    maxItems: 1
-+
-+  pln-gpios:
-+    description: GPIO controlled connection to Power Loss Notification (PLN#)
-+      signal. This signal is use to notify the M.2 card by the host system that
-+      the power loss event is expected to occur. Refer, PCI Express M.2
-+      Specification r4.0, sec 3.2.17.1 for more details.
-+    maxItems: 1
-+
-+  plas3-gpios:
-+    description: GPIO controlled connection to Power Loss Acknowledge (PLA_S3#)
-+      signal. This signal is used by the M.2 card to notify the host system, the
-+      status of the M.2 card's preparation for power loss.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - vpcie3v3-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  # PCI M.2 Key M connector for SSDs with PCIe interface
-+  - |
-+    connector {
-+        compatible = "pcie-m2-m-connector";
-+        vpcie3v3-supply = <&vreg_nvme>;
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            port@0 {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                reg = <0>;
-+
-+                endpoint@0 {
-+                    reg = <0>;
-+                    remote-endpoint = <&pcie6_port0_ep>;
-+                };
-+            };
-+        };
-+    };
+ 	pci_pwrctrl_init(&slot->ctx, dev);
+ 
+ 	ret = devm_pci_pwrctrl_device_set_ready(dev, &slot->ctx);
 
 -- 
 2.48.1
