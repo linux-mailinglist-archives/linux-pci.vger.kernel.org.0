@@ -1,124 +1,187 @@
-Return-Path: <linux-pci+bounces-42087-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42088-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE5FAC874F7
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 23:27:11 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC072C87727
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 00:19:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AA27A4E2D0D
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 22:27:10 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EE13235489C
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Nov 2025 23:18:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5317727E07E;
-	Tue, 25 Nov 2025 22:27:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 916FE2EE274;
+	Tue, 25 Nov 2025 23:18:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eciMa9XV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DR6T5z4p"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27184241679;
-	Tue, 25 Nov 2025 22:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 697D42D9EC9;
+	Tue, 25 Nov 2025 23:18:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764109626; cv=none; b=CLeOO5RID7QEj1DkUiGtsd5zjchBvXs5PxeXnu7NR6M3iGQZcIho0Kh3IE2NryYeBOO+XLagjgf1bPYWUV6uyAOcGk3B0SYx9LmsutLolAyOlYdLOXJkJGZzyPUUYlzZYeza6UjarBbyLStxM0S+uD0TNOqSoYpeNZ8OMKNjxcY=
+	t=1764112729; cv=none; b=TUDGE/RUqet0EF+NOwRuAF6prrOgSXLRqF/LGOiVW72kYuR89qSTB5cl8QEvqxdBeSwc9RnyuFxdUX2bJbxuKIkm2kDEdOH9nFyZcSaGIULPPoX68cZThAthKgO5u+RQyVBIWTFWrowps6BN+BUcRZSKikt1Q3we4sSi/V7QPb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764109626; c=relaxed/simple;
-	bh=tvzsh/T0A1Kda45r2lEQQuHG2ohIode9EkWcu2UZIek=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I3PozqHnUv3NB5r3KHkitwy5R7+t/bN7eluW90GWV7s15nmNmzJMtKxVdvuRHOjRJiw4uYG84TsDB6St+/NFd0zxIwtOziEGkDZlbs5XnSLQQAVlTSt2PCxF7WaD8XA3VEcmhb4QO7VbPzIWims/249RjH+GAPUdNQJbdyI/LK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eciMa9XV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6F1BC4CEF1;
-	Tue, 25 Nov 2025 22:27:01 +0000 (UTC)
+	s=arc-20240116; t=1764112729; c=relaxed/simple;
+	bh=RZMuzKujCtfq/0f3/HyE8UbzQWwAL0xsNRv+1kA7nCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=iG1szxWzu7qMug6u1DdnZgcMIHUHvmXFUV4RjUVxIIqjIeaPTXobHvGmsuQsqi0OIOH+fAtwj0LTdB9QjGdOHHclN0HBWV++n2KSPCamBXAopHyJUWIu2wHaqINDKkDnebvDgUNHf28HxghDCPsDsi+GrlhgEeNOn+dxa1OjC+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DR6T5z4p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C61D9C4CEF1;
+	Tue, 25 Nov 2025 23:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764109625;
-	bh=tvzsh/T0A1Kda45r2lEQQuHG2ohIode9EkWcu2UZIek=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eciMa9XVclKKM37VFqsAQNYkPQFpSQTswvL3NjyQn2x1uJX1dppNf0Zepq7DvOr/b
-	 uWR8/N2+Wv6WL7SUHLyqO4ej2wxkT4E/Q8ed6e2AZExYM/DjILvnF14b7OkilgA8mv
-	 T0yzXODjyI6lE09j42XVtiZdF/jxZ/C9fZFhEr643pQGUuiGFCmsIMuV95V2r+Eu7g
-	 BR3Mz3EaTpFApfjjzmHRMWUlSm6rnbReg9WAHOu6fatVxZcIhe2yZqcQhMY/G6NxKz
-	 09xgUG+lvZxmVc4bsw8WfvFodx8ASbPIDd2I2vHeDYThNvAWw6L5hVbsA5trkPajrY
-	 cKxbyt5+EweRw==
-From: Conor Dooley <conor@kernel.org>
-To: linux-riscv@lists.infradead.org, Conor Dooley <conor@kernel.org>,
-	=?utf-8?q?Conor_Dooley_=3Cconor+dt=40kernel=2Eorg=3E=2C_Rob_Herring_=3Cr?=@web.codeaurora.org,
-	=?utf-8?q?obh=40kernel=2Eorg=3E=2C_Krzysztof_Kozlowski_=3Ckrzk+dt=40kernel?=@web.codeaurora.org,
-	=?utf-8?q?=2Eorg=3E=2C_Palmer_Dabbelt_=3Cpalmer=40dabbelt=2Ecom=3E=2C_Paul_?=@web.codeaurora.org,
-	=?utf-8?q?Walmsley_=3Cpjw=40kernel=2Eorg=3E=2C_Albert_Ou_=3Caou=40eecs=2Ebe?=@web.codeaurora.org,
-	=?utf-8?q?rkeley=2Eedu=3E=2C_=22Rafael_J_=2E_Wysocki=22_=3Crafael=40kernel?=@web.codeaurora.org,
-	=?utf-8?q?=2Eorg=3E=2C_Viresh_Kumar_=3Cviresh=2Ekumar=40linaro=2Eorg=3E=2C_?=@web.codeaurora.org,
-	=?utf-8?q?Lorenzo_Pieralisi_=3Clpieralisi=40kernel=2Eorg=3E=2C_Krzysztof_Wi?=@web.codeaurora.org,
-	=?utf-8?q?lczy=C5=84ski_=3Ckwilczynski=40kernel=2Eorg=3E=2C_Manivannan_Sadh?=@web.codeaurora.org,
-	=?utf-8?q?asivam_=3Cmani=40kernel=2Eorg=3E=2C_Bjorn_Helgaas_=3Cbhelgaas=40g?=@web.codeaurora.org,
-	=?utf-8?q?oogle=2Ecom=3E=2C_Liam_Girdwood_=3Clgirdwood=40gmail=2Ecom=3E=2C_?=@web.codeaurora.org,
-	=?utf-8?q?Mark_Brown_=3Cbroonie=40kernel=2Eorg=3E=2C_Emil_Renner_Berthing_?=@web.codeaurora.org,
-	=?utf-8?q?=3Cemil=2Erenner=2Eberthing=40canonical=2Ecom=3E=2C_Heinrich_Schu?=@web.codeaurora.org,
-	=?utf-8?q?chardt_=3Cheinrich=2Eschuchardt=40canonical=2Ecom=3E=2C_E_Shattow?=@web.codeaurora.org,
-	=?utf-8?q?_=3Ce=40freeshell=2Ede=3E=2C_Hal_Feng_=3Chal=2Efeng=40starfivetec?=@web.codeaurora.org,
-	=?utf-8?q?h=2Ecom=3E?=@web.codeaurora.org
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH v4 0/6] Add support for StarFive VisionFive 2 Lite board
-Date: Tue, 25 Nov 2025 22:24:39 +0000
-Message-ID: <20251125-backfield-stuck-9791aa31b94f@spud>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251125075604.69370-1-hal.feng@starfivetech.com>
-References: <20251125075604.69370-1-hal.feng@starfivetech.com>
+	s=k20201202; t=1764112727;
+	bh=RZMuzKujCtfq/0f3/HyE8UbzQWwAL0xsNRv+1kA7nCg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=DR6T5z4pLDrZICkFIX6twECM7v7aOuTb/ZhXLFhSiUFXljPe2ZEJwUhX7PdOspjnd
+	 xc+3x/e6BVEfgcY6Up3QjR7hFiaWkLAFXm8hjYeh301zRDjk9wp6GLx0mcZuBjkUor
+	 Wf5fnuw7KPYBQBXua2rZ4qM10BzH/jp/DoDgZo6t3lLg/EgvUHBFZ29wAjMap9ewvU
+	 CeVLjUiO26+0A+6O/rUXhKpN/CTPyKia5pwFaKXEQIsV42DzUj5x3cdZQYAB3/I3O4
+	 KY1Udk/kAVP/Bf+ej2gtJVCGjpoPeVlefpSgNDTTnYVqFkxY8i2B5/lsP1oKTEg12u
+	 rFK9mC8iBU4zQ==
+Date: Tue, 25 Nov 2025 17:18:46 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Riana Tauro <riana.tauro@intel.com>,
+	"Sean C. Dardis" <sean.c.dardis@intel.com>,
+	Farhan Ali <alifm@linux.ibm.com>,
+	Benjamin Block <bblock@linux.ibm.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Alek Du <alek.du@intel.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] PCI/PM: Reinstate clearing state_saved in legacy
+ and !pm codepaths
+Message-ID: <20251125231846.GA2767905@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1329; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=0VlMxwnrLqIMfMFpXWFwozvLls36noetgFAV71V4+bo=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJlqOkuKcxZoBhqaBzWnLKk5qjt1/trmj9xzrQXE1ujP2 TbxT+bkjlIWBjEuBlkxRZbE230tUuv/uOxw7nkLM4eVCWQIAxenAEwkW5aRYaHo+7IVC2Yf+Tfz a2nOg+tvq+taWUvPXbGUOFL9/f/nHzyMDFMFyjgMXd42v9qv/z+o/eupypvZvatOLz2p+nS/V+B NBQYA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <094f2aad64418710daf0940112abe5a0afdc6bce.1763483367.git.lukas@wunner.de>
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On Wed, Nov 19, 2025 at 09:50:01AM +0100, Lukas Wunner wrote:
+> When a PCI device is suspended, it is normally the PCI core's job to save
+> Config Space and put the device into a low power state.  However drivers
+> are allowed to assume these responsibilities.  When they do, the PCI core
+> can tell by looking at the state_saved flag in struct pci_dev:  The flag
+> is cleared before commencing the suspend sequence and it is set when
+> pci_save_state() is called.  If the PCI core finds the flag set late in
+> the suspend sequence, it refrains from calling pci_save_state() itself.
 
-On Tue, 25 Nov 2025 15:55:58 +0800, Hal Feng wrote:
-> VisionFive 2 Lite is a mini SBC based on the StarFive JH7110S industrial
-> SoC which can run at -40~85 degrees centigrade and up to 1.25GHz.
+This has been applied already, no issue there.  I have a few questions
+to help come up with a short higher-level merge commit log.
+
+> But there are two corner cases where the PCI core neglects to clear the
+> flag before commencing the suspend sequence:
 > 
-> Board features:
-> - JH7110S SoC
-> - 4/8 GiB LPDDR4 DRAM
-> - AXP15060 PMIC
-> - 40 pin GPIO header
-> - 1x USB 3.0 host port
-> - 3x USB 2.0 host port
-> - 1x M.2 M-Key (size: 2242)
-> - 1x MicroSD slot (optional non-removable 64GiB eMMC)
-> - 1x QSPI Flash
-> - 1x I2C EEPROM
-> - 1x 1Gbps Ethernet port
-> - SDIO-based Wi-Fi & UART-based Bluetooth
-> - 1x HDMI port
-> - 1x 2-lane DSI
-> - 1x 2-lane CSI
+> * If a driver has legacy PCI PM callbacks, pci_legacy_suspend() neglects
+>   to clear the flag.  The (stale) flag is subsequently queried by
+>   pci_legacy_suspend() itself and pci_legacy_suspend_late().
 > 
-> [...]
+> * If a device has no driver or its driver has no PCI PM callbacks,
+>   pci_pm_freeze() neglects to clear the flag.  The (stale) flag is
+>   subsequently queried by pci_pm_freeze_noirq().
+> 
+> The flag may be set prior to suspend if the device went through error
+> recovery:  Drivers commonly invoke pci_restore_state() + pci_save_state()
+> to restore Config Space after reset.
 
-Applied to riscv-dt-for-next, thanks! No patch 1 of course, since that's
-for PCI land.
+I guess the only point of pci_save_state() in this case is to set
+state_saved again so a future pci_restore_state() will work, right?
 
-[2/6] dt-bindings: riscv: Add StarFive JH7110S SoC and VisionFive 2 Lite board
-      https://git.kernel.org/conor/c/7a1e15b248d6
-[3/6] riscv: dts: starfive: jh7110-common: Move out some nodes to the board dts
-      https://git.kernel.org/conor/c/84853940a733
-[4/6] riscv: dts: starfive: Add common board dtsi for VisionFive 2 Lite variants
-      https://git.kernel.org/conor/c/2ad6d71a0de8
-[5/6] riscv: dts: starfive: Add VisionFive 2 Lite board device tree
-      https://git.kernel.org/conor/c/900b32fd601b
-[6/6] riscv: dts: starfive: Add VisionFive 2 Lite eMMC board device tree
-      https://git.kernel.org/conor/c/ae264ae12442
+The actual state being *saved* is pointless, assuming pci_save_state()
+saves exactly the same data that pci_restore_state() restored.
 
-Thanks,
-Conor.
+And these are the pci_save_state() calls you removed with "treewide:
+Drop pci_save_state() after pci_restore_state()".  Too bad we have to
+document the behavior we're about to change, but that's what we need
+to do.  It's just a little clutter to keep in mind for this release.
+
+> The flag may also be set if drivers call pci_save_state() on probe to
+> allow for recovery from subsequent errors.
+> 
+> The result is that pci_legacy_suspend_late() and pci_pm_freeze_noirq()
+> don't call pci_save_state() and so the state that will be restored on
+> resume is the one recorded on last error recovery or on probe, not the one
+> that the device had on suspend.  If the two states happen to be identical,
+> there's no problem.
+
+So IIUC the effect is that after this change and the "treewide"
+change,
+
+  - If the driver uses legacy PM, the state restored on resume will be
+    the state from suspend instead of the state on probe.
+
+  - For devices with no driver or a driver without PM, if the device
+    has already been runtime-suspended, we avoid a pointless
+    pci_save_state(), so it's an optimization and not logically
+    related to the legacy PM case.
+
+Right?
+
+I'm thinking of something like this for the merge commit and eventual
+pull request; please correct me if this isn't right:
+
+  Restore the suspend config state, not the state from probe or error
+  recovery, for drivers using legacy PCI suspend.
+
+  Avoid saving config state again for devices without driver PM if
+  their state was already saved by runtime suspend.
+
+> Reinstate clearing the flag in pci_legacy_suspend() and pci_pm_freeze().
+> The two functions used to do that until commit 4b77b0a2ba27 ("PCI: Clear
+> saved_state after the state has been restored") deemed it unnecessary
+> because it assumed that it's sufficient to clear the flag on resume in
+> pci_restore_state().  The commit seemingly did not take into account that
+> pci_save_state() and pci_restore_state() are not only used by power
+> management code, but also for error recovery.
+> 
+> Devices without driver or whose driver has no PCI PM callbacks may be in
+> runtime suspend when pci_pm_freeze() is called.  Their state has already
+> been saved, so don't clear the flag to skip a pointless pci_save_state()
+> in pci_pm_freeze_noirq().
+> 
+> None of the drivers with legacy PCI PM callbacks seem to use runtime PM,
+> so clear the flag unconditionally in their case.
+> 
+> Fixes: 4b77b0a2ba27 ("PCI: Clear saved_state after the state has been restored")
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Cc: stable@vger.kernel.org # v2.6.32+
+> ---
+>  drivers/pci/pci-driver.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 302d61783f6c..327b21c48614 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -629,6 +629,8 @@ static int pci_legacy_suspend(struct device *dev, pm_message_t state)
+>  	struct pci_dev *pci_dev = to_pci_dev(dev);
+>  	struct pci_driver *drv = pci_dev->driver;
+>  
+> +	pci_dev->state_saved = false;
+> +
+>  	if (drv && drv->suspend) {
+>  		pci_power_t prev = pci_dev->current_state;
+>  		int error;
+> @@ -1036,6 +1038,8 @@ static int pci_pm_freeze(struct device *dev)
+>  
+>  	if (!pm) {
+>  		pci_pm_default_suspend(pci_dev);
+> +		if (!pm_runtime_suspended(dev))
+> +			pci_dev->state_saved = false;
+>  		return 0;
+>  	}
+>  
+> -- 
+> 2.51.0
+> 
 
