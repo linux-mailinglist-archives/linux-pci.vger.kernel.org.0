@@ -1,264 +1,217 @@
-Return-Path: <linux-pci+bounces-42139-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42140-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AAD7C8B136
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 17:55:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B2FEC8B2E4
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 18:22:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id DA16B357641
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 16:55:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 14E0D3B071E
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 17:22:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ADE433BBA7;
-	Wed, 26 Nov 2025 16:54:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DC13274B48;
+	Wed, 26 Nov 2025 17:22:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="MZY4AyZv"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="NAsy67xM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013011.outbound.protection.outlook.com [40.93.201.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FDD281376;
-	Wed, 26 Nov 2025 16:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764176099; cv=fail; b=QocEb7PNXU8nMBA4tgXOLq5g6aPAylQfzP7SwQMiR3ZzBPhFsKF0+jlXzlsKJLCzQ8Dtrx/LbMhLSc9mJF9MxN5wz6L9J8QTp63FxMxpW+2Zo6p8+wPQBxRZsszriZSXPR/2lZLG26H1aHZJims1domHLPnARAjPk9T619IQDpQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764176099; c=relaxed/simple;
-	bh=woANp83cOU0Y78wCEJhBYtTFYz7ZlP3bioSPotYcSeE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=lXJAOm8ggEBPoeXTTz7BCued5iokJF0SXewJCS2fYfbA4JM3/Y4ac8lZJz3+lMlZG+XWIr3Y+kkr4kaCXuN5YumzyymQjtGNG/x+SCVsFZdIYAQRqLAA21TSOgxZoBawy1weDe66uyhHmtcj5ca5rZgILM9rjN8mTjvUas2V/Vk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=MZY4AyZv; arc=fail smtp.client-ip=40.93.201.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ANwyrfTbxgoTDTn6t6ZqtURLtFKqlbkfViH/1iLtXohtHXF9XO+zzvPl0v25juh8kCOITltiFcxTY4UYVPVDjAwbUNPHbESX88wDv5JlFG5Tpb0h7wW3gE05lQNkr+Wpz+zYlbCiFtv73mMHPwgW64dJ/gJbsLx9WVuY1+h/1++r2fI1YdkhBZtXTMiJwDeLdnCY5cMX0DPirYYui28uIukjiXEeL6Vcz3It8Uzn1Ms+xUGVKHgzP5Mjde6YTazwrw6vExy4BpMk9JYJJ9qjjoNd/aRRmgoKCRPKXPPiSZpfqxsboYNnC29bLWwFlP8hOgMyL21i15s2OyA7GTiGlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xxZEkH5e2YVADb/xtty+0fsMHBrfT0hSD/MS5Fnx1KY=;
- b=RAYzlTNwmf5GUkLl6nd/Sqr4QuOkjHIHtgPftkfuHG6zhYnJG10yAwCSRIFoFYYCV69ttUV3tJOvL6AVWu7XQZqAT+2ErD/Xy3EVhfoNiRB4cV1Tsxrldikzxrsr/mEhW+XqVeXWSp/pDUNKN5EQ/C9xJYPn75VMasv8fgLvv0K5VJ//8aTeONm16dkD9pQovMmSJkR45MW2hG4wa8FY38I0FWbZH/aIvtGoKL2hIHseCK5TCvMcJqiBnyuOHD2AqKTfToG9Tl7QmjevPr5Mi6UN5tk/EBtm/mCLaydBBRC7iJEsNsKjZwopAoSJUZ4p5iz8W3164gJrvqW7nYjJ3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xxZEkH5e2YVADb/xtty+0fsMHBrfT0hSD/MS5Fnx1KY=;
- b=MZY4AyZvTpHNfT6rXopKbGuGRhcg1qGyb20ANGEJaWHR8ptiY+l9JLjCjLC3zFT7DiEP3nw6zKJDg9NoFPLB7prjGFzkERFb6TW5r+eZjP8Om+EWELMhsdXMIROunPHe57ugrdTFc2UggtJFOyZ6n6sH+Cg4tktkxPp4P4/Y4lo0nNlhsLjuikYxl1e3o5JLMfcGOV3YQBnXmpnteK8mpcXsMq/CUdEJfz8M4ws+VC9IXf256WwoV56D5zVpKmdiAi1LTv8zoStvehOQc07owflPYTFqvER3P4dA0ckd6uqQN4hudis5HZYj/bJ2PzCVHA+R0/nyVujiwSPk1RzpYA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB3613.namprd12.prod.outlook.com (2603:10b6:208:c1::17)
- by DS7PR12MB6046.namprd12.prod.outlook.com (2603:10b6:8:85::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.12; Wed, 26 Nov
- 2025 16:54:54 +0000
-Received: from MN2PR12MB3613.namprd12.prod.outlook.com
- ([fe80::1b3b:64f5:9211:608b]) by MN2PR12MB3613.namprd12.prod.outlook.com
- ([fe80::1b3b:64f5:9211:608b%4]) with mapi id 15.20.9343.009; Wed, 26 Nov 2025
- 16:54:53 +0000
-Date: Wed, 26 Nov 2025 12:54:53 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Alex Mastro <amastro@fb.com>
-Cc: Pranjal Shrivastava <praan@google.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Nicolin Chen <nicolinc@nvidia.com>
-Subject: Re: [PATCH v9 06/11] dma-buf: provide phys_vec to scatter-gather
- mapping routine
-Message-ID: <20251126165453.GJ520526@nvidia.com>
-References: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
- <20251120-dmabuf-vfio-v9-6-d7f71607f371@nvidia.com>
- <aSZHO6otK0Heh+Qj@devgpu015.cco6.facebook.com>
- <aSb8yH6fSlwk1oZZ@google.com>
- <aScl+LCPN2TiN7Pd@devgpu015.cco6.facebook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aScl+LCPN2TiN7Pd@devgpu015.cco6.facebook.com>
-X-ClientProxiedBy: BL1PR13CA0399.namprd13.prod.outlook.com
- (2603:10b6:208:2c2::14) To MN2PR12MB3613.namprd12.prod.outlook.com
- (2603:10b6:208:c1::17)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251F627056F
+	for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 17:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764177736; cv=none; b=I6cjWdt1bBUujflhLrJFURcg91+9HV4uoPsrvjMdUgGV8jFqIPO21fTJEeMpE92eN7AcN/mNWoN6phniJvPhFrIM+k/F2J2qkxBFr/wf5jcWJT1rJXeL0ZAhJKHev+X4xJERlUjCEO0SqHoFVFDcFEc/XzOYBj77K1JjxL/h6yI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764177736; c=relaxed/simple;
+	bh=wOW9mr8lkvb1dXWEhI4QVzanyGbtM+zavyrY1/ZkNe4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p2/rBJ/lsZzYSjhpgBBF0nPF1odU1aCfTO8jfSJyFyXiiGeFOoY6O1qfUFT5UU8wiFlT/R9KDgbc9NamIqhju9rGiMgko15LiDaKSs3azdfRGBCxEMoNIAwkmH6xLm0tik1wGonJYF96Q3TGp48zeTL5Wa66HJDsKsUFQ/SY+tM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=NAsy67xM; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-477770019e4so57759165e9.3
+        for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 09:22:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1764177732; x=1764782532; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iMbAlPYdoISwPLiWW5sRnyteylPcxj4Xm9aY2it0S+E=;
+        b=NAsy67xMd2XMwexj7wKUsyD+WCvDYM8wrNYzOK8dManO7VtZc9mgyN/9kqEWqrYS41
+         yKGDmy0l7D9HI2R1zAqYhIamolDIajtSjz3HSZWMflJwDlU+CSqxhAq3+1MPdbqSWvdJ
+         C6ZmG7GMVtDdcO+8e6BjDZpw41m5dPpcwMFTVIfytpaLAArPNc+zqMWZshGfkMcDzwn8
+         GeDJ5RMKOJKrS40wYMsj1/ThQpvzRNBMFKl4zqZQweMxmRYBEiCM4OnfNzwhbQSYEbtY
+         uZxEkcYyT0Mujod8s6QewbQprGSU0H2uwTsObNH6HEvYx9e0yCbU1S52tEORUWjwJ29w
+         a4bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764177732; x=1764782532;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iMbAlPYdoISwPLiWW5sRnyteylPcxj4Xm9aY2it0S+E=;
+        b=pZaSI7aUSuwuHaV6M6Y+Ikzmczv0x+6MXesXTy8dSRZoygNddatps1JDuSkhiscFYk
+         gUirlq7YpoCjr4K8luGRDo9x8IDLA+uWx1igM/F+Sak1z3keLbtorbQ7Jiu+IqzG7XrU
+         P+G2F0eDg7V0NSXGQAae8/61X+Ca4a2LaJxgqT8KDqL/NLBHaeIg8MzzRLogL6iPmsCU
+         QAqDBi4Jjzt4qhhCWgilmmRVKFWVvXrsdU8Y8o/5DAUn5RkUOe2F+rIJ0ozTnX/JoGXV
+         MbbY+o7flK8JXXKUSCzTpszaZSRn2v3Pj7fDwaAl5jE8km6qygAQxpydwU0ybloga9zp
+         G4ig==
+X-Forwarded-Encrypted: i=1; AJvYcCUUUn97aeajPiO7ICs0HDRIgQyCKkxhmDHCvqF4VTmIGTEeOQY3N1/4UZVDh/Bq7bNs4HqvxLmGX6Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw52CtkMl6JnxOZ5WSjEREl/ff+XyNKi2b/LuMTNM1n9x23qNoY
+	eFnm/gg8yoIaHXFrxezR1G2HynOK5AKEpI3Vlj5UuUlvRB/wT+DnUdSwWyKkKwjre90=
+X-Gm-Gg: ASbGncusyH1hREWBn7Wk0WsmgpOzfHwd2v2FJysrb2wOYNCItmT5a6HhnIH/ScrBD4z
+	0FKTSjdG3T39Ew7F9x69lDsp0dND6gs6WgdhPSXKm8BrhZexjt89tZkpt7tJCQofywl/g5m0ulW
+	M6pVRBEPsyRVUN2tVa0jY2Vp6c8VvKUkOh0YVprK+/Qe9mxpnw1Q7zMQi4sZh3NzIDfpYkKerwY
+	QQoA3IlwHl6DAixEyn3WzDMqPXJACDMJDQHHK4z+s1cGEkUFRKyIKuTB0zs7/d72pFRyc3n2o6p
+	UcxlS/RvUvReDA9oCb3hBvpyxMsJUZ3T13rXbf2zv1LN34p5af077KSmNFV14dK3i025F6JghF4
+	AIVgHcMhQe2osB2x6i+rE5VaHUpWA+AKj4OSxywiCl5hP0WjpnbgpHGI+3JUNONDasnYsvoMzYE
+	/1nHFZOhTlYnoWlOlJY4M=
+X-Google-Smtp-Source: AGHT+IFveJWow1MlKZhvBvDFWET9HTrn614Fkdf0VqG8AOTAuNxSS7l7a/cBAeHUgCNj8XRXHc1RFQ==
+X-Received: by 2002:a05:600c:1f0f:b0:477:1af2:f40a with SMTP id 5b1f17b1804b1-47904b1b27bmr75298265e9.17.1764177731802;
+        Wed, 26 Nov 2025 09:22:11 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.134])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4790b0c44dcsm52202665e9.11.2025.11.26.09.22.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Nov 2025 09:22:11 -0800 (PST)
+Message-ID: <2e7ecbc0-6ce5-403a-b794-93aaff1ddf39@tuxon.dev>
+Date: Wed, 26 Nov 2025 19:22:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3613:EE_|DS7PR12MB6046:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9ff12cb8-cfa7-461d-43c2-08de2d0c8584
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?b8rfNG3d6XXMf9rzORqAtbEuW99wCf87baKMReiYdns6w9nI15hAEOqfGutl?=
- =?us-ascii?Q?GwA+crP2tY78qaUAWmztk33u0E3Tne8RKF6TuK6SjLLdIBy6s5v3ew6/+AsF?=
- =?us-ascii?Q?OHQaYTGWbsYB/l55aiBdcwetnp0bAi9F+kcDH5944mdc3oa7CP2pPJ81STEy?=
- =?us-ascii?Q?kNPGDjQP+UsmLaUiHsTj9X9Dfi0q5EXEyoVSOrsiUZ7t8peCLRN22vuH372m?=
- =?us-ascii?Q?DZner46KuFMLJWhxIbuPfzvUulemNRhiEa5sL49+I2HnjtDHL/7NiMxMma56?=
- =?us-ascii?Q?a2yItfWhRIB+UAOTfjPlhIqafgigpfvrEkk4AbCY60sZNegOT1iJaU+Lygc7?=
- =?us-ascii?Q?+3j7+hfMTF9W3ZwR0hBBgyiSkhUfkrbnserFPNe208gREV51NhMm36Yhhx+y?=
- =?us-ascii?Q?7O8M0gBz8MI8/P3/eTmQ0OYz26O1TLANCXoS5gK7+XFsuaGpITO7hpYmlYuz?=
- =?us-ascii?Q?9o5FQ2UIgdQeMMECcOM0a/akF4nI659Oasgx7OR+nCe8S+5PIPvONH4tPdD2?=
- =?us-ascii?Q?KM0IwROM6RPKEHgM/tOtd9ZRY+NHIciljPBJ2k8qzslfQaXUbD0bbY/jcNIi?=
- =?us-ascii?Q?Hr20zS/3QFmrfbt/HaaVQ3SBGEgsqy/32GNhlv2oissmIdu768gUG9emgSv0?=
- =?us-ascii?Q?8h8Q9EVLIP5lfxCrgLD0yqNKENxktpGEorW2RNdvOhmb9Xb8S+hiA6HvhMp3?=
- =?us-ascii?Q?Iy9c2U9bsd3araoi4qwwioUDWi8wJ5dHfS/LEzEh2XS2RYawb0JVt+SZxRN0?=
- =?us-ascii?Q?un7/57bh/JMNhEbdb+sCpXeGbGZcRBwqCTQL+Dh+trLzL3A8P6lEesvmq16z?=
- =?us-ascii?Q?zxXWb+fY4DEaLSyC9d0FKC2KL+MvM3DMbY5QJsElv2WQIk76/7x6Elri2ZFf?=
- =?us-ascii?Q?ZAgLrjD50uTehbF6Klls53N9yrpxjlGyUdOXsrSS4jrkXZRv8NUa5UnB72e8?=
- =?us-ascii?Q?qfo6IBULw85pJFgO9RiU1mNN8yTsecysRU+qe3tY7XF0RM3fToUQWvC8xEnq?=
- =?us-ascii?Q?ho97WCD5KH37KHqw6Pn6B6jR71uUjwX+SGNK7hbRrb7E6DVkkFJhsUG9VH2h?=
- =?us-ascii?Q?DkGWM0boLCIK2jC/Lckjfq2x1Fe9Ea7QVMcizMPg1j8j0c5EvpGRDsGqpUhD?=
- =?us-ascii?Q?KT01lVv3LhBOsAlqxP72BG0QKGPNCH14acJSU4Nn/Yyx2FNokboSnFvUGfuR?=
- =?us-ascii?Q?t4Xv65TDj5rcYzi0tjU+bbND8JzqvlNgF9/y7j5NTXjr8dry06JLYBTlLE1s?=
- =?us-ascii?Q?EeLHZhy+Hv666HjpRwSNyR0l3qtHMM+1hEj0y2ocqTVr2bTZV2FanMMKTJqF?=
- =?us-ascii?Q?sbNCxJmz2xb2ABaxQD9Zc4HcgbEWv1oOSxGfTV2y/Orijt9msQ4X0RiJ/WJ9?=
- =?us-ascii?Q?Hb78/tx0Ub7xpBT1cKcet0MafeT8KyAVtPlzHfoB50Ntx9IgVJH5gc82iP3F?=
- =?us-ascii?Q?nhLIBr+X2JFbxTjHwGqK2B6eLD1hcbOm?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3613.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Rr8/UggYXFoFXLH6yEBfemvBdigD6gjrHpj6l0/muxh/bDF9QDLG7Eox1fon?=
- =?us-ascii?Q?MWI2n5bEKDU3I8owz1yRQLWnNz9CB5yAHUbqU2PKiY7kC+VmsNR3kijP2TVI?=
- =?us-ascii?Q?/UXumx64nqN1h3VoO1yKLXeqaJKwQGwGWOiPAZL1pNryM8zUbLLiqXMHowT3?=
- =?us-ascii?Q?Hvb5b3HLKGFBoel7lT1v42zZuxJXIVdKXCPIWEcbinmk51lQ3KbTRTHAZTM0?=
- =?us-ascii?Q?kQQWbwgsLddcqN53QD+nNTXbil4nxDJEMffgCUQs+zFPO5l8kvAKRXW3Qu8U?=
- =?us-ascii?Q?dSTV4BPuwv33vqUuzH9vaOgRO9RHTh9T5Y803/gRFWMk/ui1shqBlZ4SEMfZ?=
- =?us-ascii?Q?bKMSTdtR4UDMDE/am3m+ot/eI9VKQ+k8l6Ww+p5gaIwntFAksAn4yjrfr4Pk?=
- =?us-ascii?Q?TqqmuGSB5HvvfcbMs0nB5kFnwaqUh46+BJoL6MqBUr5m0LbmYcbhy8/ZLfss?=
- =?us-ascii?Q?lHPT7Ow//qNK4JgAgKnxFiRtNhujYDSKa2pS7rZz0uCQ87tFQP+zgbfrlaMy?=
- =?us-ascii?Q?DxhJg9ZLsZHg1dElHg5OKrlU8xlHA6tyUAgOdESngs2dl8qHh7NeHA3H+g6s?=
- =?us-ascii?Q?qVDDmFUBcyxI/VFKjf65ttKgpJcCigDYLF6rKBA27YELdymqzXIXYgar8sXj?=
- =?us-ascii?Q?mw8MheK0uxobw2uQwp/OcfhtSha6dB5D4DS/6iLEJBoyP0iGmiCoEuyHztio?=
- =?us-ascii?Q?VxxN3Aq3AA9Ghyi/VZzTiNPQBCxLj6bXgQz1IC7yc6bTofh1OGXsXeF2anS5?=
- =?us-ascii?Q?McXKDIsnkvDBabHHfsZ/isS4t6+QI1AGO3th0rHYM1kZ6zQuGfd+j9rgLinU?=
- =?us-ascii?Q?ETh7J84liJcB21ZbbqNNvC0sVTll6SsX1Xt1oQr2ik+4e6j1Rgz9kx41AWlS?=
- =?us-ascii?Q?4S6YyrKf87Zc5DsUbZLrSKL5/4AjC65OB+7arzM7L3RUm19awUzIsquK3HUd?=
- =?us-ascii?Q?NL+qt9k36dusrhKpD42IrWcqWsavSsw6ZaNshrWIgvff4YL0B9Wv/i4VkoRd?=
- =?us-ascii?Q?a8B4drYr0lG3yXn+puYFc9ZyCoOulFTj0S0wOPMzlhmJoHZGIkmDDxfH0LyK?=
- =?us-ascii?Q?ic6FLXAtDpb0jMrttMk4GgGDGaACDnj996YAKFx5yWrTmpvShBzGDYjVwYWB?=
- =?us-ascii?Q?opKDqMLnQbdomSAyuD5ms2Rw3eaifysuyhGjYRV6ScWjS8HSB59U2qm6wO6C?=
- =?us-ascii?Q?8GhF4cuaE4ouxAnSvgPviMEI4ZJ7gwsHXMGcn6c7Z79FsTv9xnKiQ1/Jm31m?=
- =?us-ascii?Q?jrBVOld83YVu89xcqMIxap19tLnC97GH1/YHYPIXY78iwC1+nUF/25T3T64N?=
- =?us-ascii?Q?AZ3b6lCliKQUDXxjaZ96rmKarcMJK/SmQPWlNde8U2vpfsSe81iM8wNJifG5?=
- =?us-ascii?Q?DBpAjg7MZKGuX6nVm8Ic1+D2P/HdkpMTDHnt/yJVSR56gxykmfyx7ZDfTVKZ?=
- =?us-ascii?Q?zdZxVBQ1mwMZxL1wEDG5UNwfEig2a80XSFLGkZSkxIxRMKEBjsJSbJoDyfNs?=
- =?us-ascii?Q?9J7Xaqw11T6Dcwt+zL03AOsZLG/LNJhVNDfzfDG9BXlYJQlJOBXCaFBBBRGE?=
- =?us-ascii?Q?nTd+61lGY2kln3WycCs=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ff12cb8-cfa7-461d-43c2-08de2d0c8584
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3613.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2025 16:54:53.8261
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: e/NLpBmrNNvioecHTBoir7ABAKXX8pH0Xx7Ti8jplfDNwnzvTkUxfFFNlu6zyfIr
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6046
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 2/6] PCI: rzg3s-host: Add Renesas RZ/G3S SoC host
+ driver
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+ mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ geert+renesas@glider.be, magnus.damm@gmail.com, p.zabel@pengutronix.de,
+ linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+References: <20251125183754.GA2755815@bhelgaas>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <20251125183754.GA2755815@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 26, 2025 at 08:08:24AM -0800, Alex Mastro wrote:
-> On Wed, Nov 26, 2025 at 01:12:40PM +0000, Pranjal Shrivastava wrote:
-> > On Tue, Nov 25, 2025 at 04:18:03PM -0800, Alex Mastro wrote:
-> > > On Thu, Nov 20, 2025 at 11:28:25AM +0200, Leon Romanovsky wrote:
-> > > > +static struct scatterlist *fill_sg_entry(struct scatterlist *sgl, size_t length,
-> > > > +					 dma_addr_t addr)
-> > > > +{
-> > > > +	unsigned int len, nents;
-> > > > +	int i;
-> > > > +
-> > > > +	nents = DIV_ROUND_UP(length, UINT_MAX);
-> > > > +	for (i = 0; i < nents; i++) {
-> > > > +		len = min_t(size_t, length, UINT_MAX);
-> > > > +		length -= len;
-> > > > +		/*
-> > > > +		 * DMABUF abuses scatterlist to create a scatterlist
-> > > > +		 * that does not have any CPU list, only the DMA list.
-> > > > +		 * Always set the page related values to NULL to ensure
-> > > > +		 * importers can't use it. The phys_addr based DMA API
-> > > > +		 * does not require the CPU list for mapping or unmapping.
-> > > > +		 */
-> > > > +		sg_set_page(sgl, NULL, 0, 0);
-> > > > +		sg_dma_address(sgl) = addr + i * UINT_MAX;
-> > > 
-> > > (i * UINT_MAX) happens in 32-bit before being promoted to dma_addr_t for
-> > > addition with addr. Overflows for i >=2 when length >= 8 GiB. Needs a cast:
-> > > 
-> > > 		sg_dma_address(sgl) = addr + (dma_addr_t)i * UINT_MAX;
+Hi, Bjorn,
 
-Yeah, and i should not be signed.
-
-> > > Discovered this while debugging why dma-buf import was failing for
-> > > an 8 GiB dma-buf using my earlier toy program [1]. It was surfaced by
-> > > ib_umem_find_best_pgsz() returning 0 due to malformed scatterlist, which bubbles
-> > > up as an EINVAL.
-> > >
-> > 
-> > Thanks a lot for testing & reporting this!
-> > 
-> > However, I believe the casting approach is a little fragile (and
-> > potentially prone to issues depending on how dma_addr_t is sized on
-> > different platforms). Thus, approaching this with accumulation seems
-> > better as it avoids the multiplication logic entirely, maybe something
-> > like the following (untested) diff ?
+On 11/25/25 20:37, Bjorn Helgaas wrote:
+> On Wed, Nov 19, 2025 at 04:35:19PM +0200, Claudiu wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+>> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+>> only as a root complex, with a single-lane (x1) configuration. The
+>> controller includes Type 1 configuration registers, as well as IP
+>> specific registers (called AXI registers) required for various adjustments.
 > 
-> If the function input range is well-formed, then all values in
-> [addr..addr+length) must be expressible by dma_addr_t, so I don't think overflow
-> after casting is possible as long as nents is valid.
+>> +/* Serialization is provided by 'pci_lock' in drivers/pci/access.c */
+>> +static int rzg3s_pcie_root_write(struct pci_bus *bus, unsigned int devfn,
+>> +				 int where, int size, u32 val)
+>> +{
+>> +	struct rzg3s_pcie_host *host = bus->sysdata;
+>> +	int ret;
+>> +
+>> +	/* Enable access control to the CFGU */
+>> +	writel_relaxed(RZG3S_PCI_PERM_CFG_HWINIT_EN,
+>> +		       host->axi + RZG3S_PCI_PERM);
+> 
+> I suppose this has been asked and answered already, but it's curious
+> that you need this for config writes but not for reads.  Obviously it
+> must *work*, but it's unusual and might warrant a comment.  "Access
+> control" must be a hint, but only means something to experts.
 
-It is probably not perfect, but validate_dmabuf_input() limits length
-to a valid size_t
+After initialization, some PCI registers are read only. To enable write
+access to these registers after initialization, the access control need to
+be enabled.
 
-The signature is:
+This is the quote from the HW manual: "Some registers with the RO attribute
+stated in the PCI Express Base Specification are writable at the time of
+initialization.
+ When writing to these registers, CFG_HWINIT_EN (Permission Register
+(offset: H’300) bit[2]) must be set to 1b."
 
-bool dma_iova_try_alloc(struct device *dev, struct dma_iova_state *state,
-		phys_addr_t phys, size_t size)
+> 
+>> +	ret = pci_generic_config_write(bus, devfn, where, size, val);
+>> +
+>> +	/* Disable access control to the CFGU */
+>> +	writel_relaxed(0, host->axi + RZG3S_PCI_PERM);
+>> +
+>> +	return ret;
+>> +}
+> 
+>> +static irqreturn_t rzg3s_pcie_msi_irq(int irq, void *data)
+>> +{
+>> +	u8 regs = RZG3S_PCI_MSI_INT_NR / RZG3S_PCI_MSI_INT_PER_REG;
+>> +	DECLARE_BITMAP(bitmap, RZG3S_PCI_MSI_INT_NR);
+>> +	struct rzg3s_pcie_host *host = data;
+>> +	struct rzg3s_pcie_msi *msi = &host->msi;
+>> +	unsigned long bit;
+>> +	u32 status;
+>> +
+>> +	status = readl_relaxed(host->axi + RZG3S_PCI_PINTRCVIS);
+>> +	if (!(status & RZG3S_PCI_PINTRCVIS_MSI))
+>> +		return IRQ_NONE;
+>> +
+>> +	/* Clear the MSI */
+>> +	rzg3s_pcie_update_bits(host->axi, RZG3S_PCI_PINTRCVIS,
+>> +			       RZG3S_PCI_PINTRCVIS_MSI,
+>> +			       RZG3S_PCI_PINTRCVIS_MSI);
+> 
+> Other writes to RZG3S_PCI_PINTRCVIS are guarded by host->hw_lock.  Is this
+> one safe without it?
 
-And that function should fail if size is too large. I think it mostly
-does, but it looks like there are a few little misses:
+It should be safe as RZG3S_PCI_PINTRCVIS is a R/W1C type of register.
 
-			iova_align(iovad, size + iova_off),
-	return ALIGN(size, iovad->granule);
+HW manual describes R/W1C registers for PCIe as "Write-1-to-clear status
+. It can be cleared to 0b by writing 1b with a readable register.
+ Writing 0b does not change anything."
 
-etc are all unchecked math that could overflow.
+With this, it should be safe to drop the guard from rzg3s_pcie_intx_irq_ack().
 
-> That said, `nents = DIV_ROUND_UP(length, UINT_MAX)` is simply broken on any
-> system where size_t is 32b. I don't know if that's a practical consideration for
-> these code paths though.
+> 
+>> +	rzg3s_pcie_update_bits(host->axi, RZG3S_PCI_MSGRCVIS,
+>> +			       RZG3S_PCI_MSGRCVIS_MRI, RZG3S_PCI_MSGRCVIS_MRI);
+>> +
+>> +	for (u8 reg_id = 0; reg_id < regs; reg_id++) {
+>> +		status = readl_relaxed(host->axi + RZG3S_PCI_MSIRS(reg_id));
+>> +		bitmap_write(bitmap, status, reg_id * RZG3S_PCI_MSI_INT_PER_REG,
+>> +			     RZG3S_PCI_MSI_INT_PER_REG);
+>> +	}
+>> +
+>> +	for_each_set_bit(bit, bitmap, RZG3S_PCI_MSI_INT_NR) {
+>> +		int ret;
+>> +
+>> +		ret = generic_handle_domain_irq(msi->domain, bit);
+>> +		if (ret) {
+>> +			u8 reg_bit = bit % RZG3S_PCI_MSI_INT_PER_REG;
+>> +			u8 reg_id = bit / RZG3S_PCI_MSI_INT_PER_REG;
+>> +
+>> +			/* Unknown MSI, just clear it */
+>> +			writel_relaxed(BIT(reg_bit),
+>> +				       host->axi + RZG3S_PCI_MSIRS(reg_id));
+> 
+> Other writes to RZG3S_PCI_MSIRS are guarded by host->hw_lock.  Is this
+> one safe without it?
 
-Yeah, that's a good point.
+RZG3S_PCI_MSIRS is also a R/W1C type of register. With it, it should be
+safe to drop the guard from rzg3s_pcie_msi_irq_ack() as well.
 
-Casting to u64 will trigger 64 bit device errors on 32 bit too.
+I'm going to prepare a follow up patch to drop the guard on
+rzg3s_pcie_intx_irq_ack() and rzg3s_pcie_msi_irq_ack(). Please let me know
+if you have something against.
 
-// DIV_ROUND_UP that is safe at the type limits
-nents = size / UINT_MAX;
-if (size % UINT_MAX)
-   nents++;
+I can also prepare a patch to detail in a comment the "enable access
+control to the CFGU" operation in rzg3s_pcie_root_write(), if you prefer.
 
-Compiler should turn the % into bit math.
-
-Jason
+Thank you for your review,
+Claudiu
 
