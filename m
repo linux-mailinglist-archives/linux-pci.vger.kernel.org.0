@@ -1,207 +1,218 @@
-Return-Path: <linux-pci+bounces-42090-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42091-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18996C8790E
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 01:17:32 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CAD3C8791A
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 01:19:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7BE4F352942
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 00:17:31 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id F22A44E063E
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 00:18:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B15B92B9B9;
-	Wed, 26 Nov 2025 00:17:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CAEB188713;
+	Wed, 26 Nov 2025 00:18:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q5Niu53A"
+	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b="W+AKvPIc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45D4F50F
-	for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 00:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7273595D;
+	Wed, 26 Nov 2025 00:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764116247; cv=none; b=R5LG0D+N1ZPbkxeYsD2FWm52zs6JAo/DVAH8r4KAYnc+SpeoxioxLn0kzQA7gPkLsNjdhI9W2SU+u7qumpx0EyoFGdg3b2HVKrEMddzoj59OI1BT4MlmZ9BTvnmwP818jxbeMpYVbyOXwaB/JIlY5OS/GPQyA+vA2+oMEkb85Ug=
+	t=1764116337; cv=none; b=X0UpguotiXezDmp1gJAbu4PiLqw1tpt6O1y5L5piMnCIoBZeXXR2U5ZwpjbejDpeO+dYSJuEocwDQ6+yHpQdvOgDfnXcLDwhu0iuoEETujVdRHoA+1RsLHXww81YzRwTUPDewR1bMl+WazLlaeSzWrpgZhTnq95vw+Quv4RfMKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764116247; c=relaxed/simple;
-	bh=DyJWEtcelEk7d2YG4PorqtYV4gx5rPiXpTLN9f/E370=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=fcR1C+qyseclxAC1b77gnZ/M2HTjYpn1bxMcEkTmqh/e5EenEoFsAauX1mBW6oh9Yr0z5jSLN2pN8qmaICo1wfE4+qTSY7c3PqMYVt8zopf6xvte8E8NQuvGVIev9Jle+WoRm6VZhf0vsYY9R5Q3RCBOUnmyQ07G9t/rYgEg/rY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q5Niu53A; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764116246; x=1795652246;
-  h=date:from:to:cc:subject:message-id;
-  bh=DyJWEtcelEk7d2YG4PorqtYV4gx5rPiXpTLN9f/E370=;
-  b=Q5Niu53Af3ayuAA2zvEcA21A8HPTaGiCgVsBuXTqpojTaBAx/JqFPynf
-   LnGYbCH9n0+f9nH/yHtDYJ+wbxANXhq6Iv7/uIaciTUYhMnNRECvQZZSL
-   crn30MPnzdOk7F7oo8MNnzX8AwZcSRNu/T9JSX5Du0X/UNU/hVKLLcd/g
-   3Vb+YPoMAFOJgLQQXkwU0WIttTLl1jK8sdeV1/KvxPSO9L5NFhDdS+RLD
-   E+xf8jbtpWOhagJLHno94U1aFJVQcszkOVBS+4uzFft/gd0M+fO87TZ/Z
-   xXnne7afP5jnpxK1QPGyB+byLxoqdG/JgDz+h4JYcX95Dgb4/VgpxFKKt
-   A==;
-X-CSE-ConnectionGUID: L7ruO3WARCOXzisxwwPKCA==
-X-CSE-MsgGUID: 0j7Naa/hQ9yvGjJfkJZpIA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="69769450"
-X-IronPort-AV: E=Sophos;i="6.20,227,1758610800"; 
-   d="scan'208";a="69769450"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 16:17:25 -0800
-X-CSE-ConnectionGUID: KGbH1/AlQFuIbgoAcli9kA==
-X-CSE-MsgGUID: f9NWuYUSSfa32z4LkwoW5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,227,1758610800"; 
-   d="scan'208";a="216140621"
-Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 25 Nov 2025 16:17:24 -0800
-Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vO3Dl-000000002Nd-33Ji;
-	Wed, 26 Nov 2025 00:17:21 +0000
-Date: Wed, 26 Nov 2025 08:17:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:pwrctrl-tc9563] BUILD SUCCESS
- 4c9c7be47310c1dbd7b6d37d45986123f5b133b4
-Message-ID: <202511260806.815GD51l-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1764116337; c=relaxed/simple;
+	bh=gwii+iVdBVKbWCyCdr/+zthLuTAXebNs8mhXSw/5DRY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uhYN7UrKDcWDvpjp3/K6SAxCcl3yX/XEguV7lgNTb0Fr4ebsDBAg6PNiZk+xVTk3UXFgimlzxhqG/fKj6G2A/ek4ZguPF4BBbrFvIz9N5VzLKXzRhxF/UU9Kk+42wJiA8cFfu6OABwK7jrDi5nUJ/3P6e02n/McHdMWOpKATu9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b=W+AKvPIc; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5APKA97n1087396;
+	Tue, 25 Nov 2025 16:18:10 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
+	 bh=qGBFfom64ubwAcHLmi0kGY4idgptPgMMsGDiFpmxSnI=; b=W+AKvPIcq+Gs
+	i3tYYc6MNSXntK0NmrX6mDMiJh2f1He+waI1tJUFw9eep8toqFOiXcXgv1d9N8HG
+	PGdbn6/fGl6qS46R20vtpCyrMHLj0wH4JK9pXWvIXkrNgijhiczlYtlomrwOthSj
+	zml1ieuFYLYIUzuWZ91PR3D7DWCyaUSc0LCurvPCQxAzzat402xRMP4oyeWdz0ty
+	1EYyma4UMfnDB7SWN7UNyv49rng7qo94JM/vlLrbdULgh6NjCeHD1lakMZtk49rg
+	EGdIyMsuzoL8EN2ERVeIEmaZ0+aXHHcjPKQINfA5NEORkyA0TfReyUgtpSsOkjBL
+	M3cSvkYsxQ==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4ank8qsk46-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 25 Nov 2025 16:18:10 -0800 (PST)
+Received: from devgpu015.cco6.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.29; Wed, 26 Nov 2025 00:18:08 +0000
+Date: Tue, 25 Nov 2025 16:18:03 -0800
+From: Alex Mastro <amastro@fb.com>
+To: Leon Romanovsky <leon@kernel.org>
+CC: Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe
+	<logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
+        Robin Murphy
+	<robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon
+	<will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jason
+ Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan
+ Corbet <corbet@lwn.net>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian
+ =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Kees Cook
+	<kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Ankit
+ Agrawal <ankita@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
+        Shameer
+ Kolothum <skolothumtho@nvidia.com>,
+        Kevin Tian <kevin.tian@intel.com>, Alex
+ Williamson <alex@shazbot.org>,
+        Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs
+	<mochs@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <iommu@lists.linux.dev>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>, <kvm@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, Nicolin Chen <nicolinc@nvidia.com>,
+        Jason
+ Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v9 06/11] dma-buf: provide phys_vec to scatter-gather
+ mapping routine
+Message-ID: <aSZHO6otK0Heh+Qj@devgpu015.cco6.facebook.com>
+References: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
+ <20251120-dmabuf-vfio-v9-6-d7f71607f371@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251120-dmabuf-vfio-v9-6-d7f71607f371@nvidia.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI2MDAwMCBTYWx0ZWRfX4aU+4yoxvGRI
+ fn5uIgo4phoyJLcsXRpkIiEbPHjmDvXjee+0hL5hZTnMf7KiIbVFpuPgNNxmzJnPoXlqYrYFVCb
+ EPyFD9HoNuq9bFWOWGD9jm+tH6jYX1bWvVVFfP7wmtxUCfM6nyWp9RhEW4F3WyT2gvOl06d0Lit
+ II5EZrklZ4kZ6ZccZ6uI5fnA2fhf1sXF7BU/xkJ1DrQkkrbuth2BkU2ET85sZ92FJE5mmeSgTwT
+ 8QOBncjhE4/DUMlusLJDyljY4I1YOkD69BDnY6LZhPAqbK1Ws3OXJ/OhGSqPOvK63g6mktQG9A/
+ 4TjZvhvYG6pYNypXlNsc0JrFDrM/97nZlDYVEtn7wlUXLxFDOXnHdS+vQBslO6M76Dlb+/Whxi6
+ 97TQYdVHP7oL0xprhG3cL4XfcOc0nA==
+X-Proofpoint-ORIG-GUID: 5DCeEKEPh0Lq0c0QeLIVINEpDK6-Nmfl
+X-Proofpoint-GUID: 5DCeEKEPh0Lq0c0QeLIVINEpDK6-Nmfl
+X-Authority-Analysis: v=2.4 cv=VfT6/Vp9 c=1 sm=1 tr=0 ts=69264742 cx=c_pps
+ a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=3j4BkbkPAAAA:8 a=qThf3vN7FU90BnacfoAA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-25_02,2025-11-25_01,2025-10-01_01
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pwrctrl-tc9563
-branch HEAD: 4c9c7be47310c1dbd7b6d37d45986123f5b133b4  PCI: pwrctrl: Add power control driver for TC9563
+On Thu, Nov 20, 2025 at 11:28:25AM +0200, Leon Romanovsky wrote:
+> +static struct scatterlist *fill_sg_entry(struct scatterlist *sgl, size_t length,
+> +					 dma_addr_t addr)
+> +{
+> +	unsigned int len, nents;
+> +	int i;
+> +
+> +	nents = DIV_ROUND_UP(length, UINT_MAX);
+> +	for (i = 0; i < nents; i++) {
+> +		len = min_t(size_t, length, UINT_MAX);
+> +		length -= len;
+> +		/*
+> +		 * DMABUF abuses scatterlist to create a scatterlist
+> +		 * that does not have any CPU list, only the DMA list.
+> +		 * Always set the page related values to NULL to ensure
+> +		 * importers can't use it. The phys_addr based DMA API
+> +		 * does not require the CPU list for mapping or unmapping.
+> +		 */
+> +		sg_set_page(sgl, NULL, 0, 0);
+> +		sg_dma_address(sgl) = addr + i * UINT_MAX;
 
-elapsed time: 1547m
+(i * UINT_MAX) happens in 32-bit before being promoted to dma_addr_t for
+addition with addr. Overflows for i >=2 when length >= 8 GiB. Needs a cast:
 
-configs tested: 114
-configs skipped: 6
+		sg_dma_address(sgl) = addr + (dma_addr_t)i * UINT_MAX;
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Discovered this while debugging why dma-buf import was failing for
+an 8 GiB dma-buf using my earlier toy program [1]. It was surfaced by
+ib_umem_find_best_pgsz() returning 0 due to malformed scatterlist, which bubbles
+up as an EINVAL.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                   randconfig-001-20251125    gcc-9.5.0
-arc                   randconfig-002-20251125    gcc-8.5.0
-arm                               allnoconfig    clang-22
-arm                   randconfig-002-20251125    gcc-10.5.0
-arm                   randconfig-003-20251125    gcc-10.5.0
-arm                   randconfig-004-20251125    gcc-8.5.0
-arm                           tegra_defconfig    gcc-15.1.0
-arm                       versatile_defconfig    gcc-15.1.0
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20251125    gcc-11.5.0
-arm64                 randconfig-002-20251125    gcc-13.4.0
-arm64                 randconfig-003-20251125    gcc-8.5.0
-arm64                 randconfig-004-20251125    gcc-11.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20251125    gcc-11.5.0
-csky                  randconfig-002-20251125    gcc-15.1.0
-hexagon                           allnoconfig    clang-22
-hexagon               randconfig-001-20251125    clang-19
-hexagon               randconfig-002-20251125    clang-22
-i386                              allnoconfig    gcc-14
-i386        buildonly-randconfig-001-20251125    gcc-14
-i386        buildonly-randconfig-003-20251125    gcc-14
-i386        buildonly-randconfig-004-20251125    gcc-14
-i386        buildonly-randconfig-005-20251125    gcc-14
-i386        buildonly-randconfig-006-20251125    clang-20
-i386                  randconfig-001-20251125    gcc-12
-i386                  randconfig-002-20251125    gcc-14
-i386                  randconfig-003-20251125    gcc-14
-i386                  randconfig-004-20251125    gcc-14
-i386                  randconfig-005-20251125    gcc-14
-i386                  randconfig-006-20251125    gcc-14
-i386                  randconfig-007-20251125    gcc-14
-i386                  randconfig-011-20251126    gcc-14
-i386                  randconfig-012-20251126    gcc-14
-i386                  randconfig-013-20251126    clang-20
-i386                  randconfig-014-20251126    gcc-14
-i386                  randconfig-015-20251126    clang-20
-i386                  randconfig-016-20251126    gcc-14
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251125    gcc-15.1.0
-loongarch             randconfig-002-20251125    gcc-12.5.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-microblaze                      mmu_defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                        qi_lb60_defconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251125    gcc-8.5.0
-nios2                 randconfig-002-20251125    gcc-11.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20251125    gcc-13.4.0
-parisc                randconfig-002-20251125    gcc-10.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc               randconfig-001-20251125    clang-19
-powerpc               randconfig-002-20251125    gcc-8.5.0
-powerpc64             randconfig-001-20251125    clang-16
-powerpc64             randconfig-002-20251125    gcc-15.1.0
-riscv                             allnoconfig    gcc-15.1.0
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20251125    gcc-8.5.0
-riscv                 randconfig-002-20251125    gcc-13.4.0
-s390                              allnoconfig    clang-22
-s390                                defconfig    clang-22
-s390                  randconfig-001-20251125    gcc-8.5.0
-s390                  randconfig-002-20251125    gcc-14.3.0
-sh                                allnoconfig    gcc-15.1.0
-sh                        apsh4ad0a_defconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20251125    gcc-15.1.0
-sh                    randconfig-002-20251125    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251125    gcc-14.3.0
-sparc                 randconfig-002-20251125    gcc-13.4.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20251125    clang-22
-sparc64               randconfig-002-20251125    gcc-8.5.0
-um                               alldefconfig    clang-22
-um                                allnoconfig    clang-22
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251125    clang-22
-um                    randconfig-002-20251125    clang-22
-um                           x86_64_defconfig    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64      buildonly-randconfig-001-20251126    clang-20
-x86_64      buildonly-randconfig-002-20251126    gcc-14
-x86_64      buildonly-randconfig-003-20251126    clang-20
-x86_64      buildonly-randconfig-004-20251126    clang-20
-x86_64      buildonly-randconfig-005-20251126    gcc-14
-x86_64      buildonly-randconfig-006-20251126    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20251126    clang-20
-x86_64                randconfig-002-20251126    gcc-14
-x86_64                randconfig-004-20251126    gcc-14
-x86_64                randconfig-013-20251126    gcc-14
-x86_64                randconfig-071-20251126    clang-20
-x86_64                randconfig-072-20251126    gcc-14
-x86_64                randconfig-073-20251126    clang-20
-x86_64                randconfig-074-20251126    gcc-14
-x86_64                randconfig-075-20251126    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20251125    gcc-8.5.0
-xtensa                randconfig-002-20251125    gcc-8.5.0
+$ ./test_dmabuf 0000:05:00.0 3 4 0 0x200000000
+opening 0000:05:00.0 via /dev/vfio/56
+allocating dma_buf bar_idx=4, bar_offset=0x0, size=0x200000000
+allocated dma_buf fd=6
+discovered 4 ibv devices: mlx5_0 mlx5_1 mlx5_2 mlx5_3
+opened ibv device 3: mlx5_3
+test_dmabuf.c:154 Condition failed: 'mr' (errno=22: Invalid argument)
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+$ sudo retsnoop -e mlx5_ib_reg_user_mr_dmabuf -a 'mlx5*' -a 'ib_umem*' -a '*umr*' -a 'vfio_pci*' -a 'dma_buf_*' -x EINVAL -T
+Receiving data...
+13:56:22.257907 -> 13:56:22.258275 TID/PID 948895/948895 (test_dmabuf/test_dmabuf):
+FUNCTION CALLS                                 RESULT                 DURATION
+--------------------------------------------   --------------------  ---------
+→ mlx5_ib_reg_user_mr_dmabuf
+    ↔ mlx5r_umr_resource_init                  [0]                     2.224us
+    → ib_umem_dmabuf_get
+        → ib_umem_dmabuf_get_with_dma_device
+            ↔ dma_buf_get                      [0xff11012a6a098c00]    0.972us
+            → dma_buf_dynamic_attach
+                ↔ vfio_pci_dma_buf_attach      [0]                     2.003us
+            ← dma_buf_dynamic_attach           [0xff1100012793e400]   10.566us
+        ← ib_umem_dmabuf_get_with_dma_device   [0xff110127a6c74480]   15.794us
+    ← ib_umem_dmabuf_get                       [0xff110127a6c74480]   25.258us
+    → mlx5_ib_init_dmabuf_mr
+        → ib_umem_dmabuf_map_pages
+            → dma_buf_map_attachment
+                → vfio_pci_dma_buf_map
+                    ↔ dma_buf_map              [0xff1100012977f700]    4.918us
+                ← vfio_pci_dma_buf_map         [0xff1100012977f700]    8.362us
+            ← dma_buf_map_attachment           [0xff1100012977f700]   10.956us
+        ← ib_umem_dmabuf_map_pages             [0]                    17.336us
+        ↔ ib_umem_find_best_pgsz               [0]                     6.280us
+        → ib_umem_dmabuf_unmap_pages
+            → dma_buf_unmap_attachment
+                → vfio_pci_dma_buf_unmap
+                    ↔ dma_buf_unmap            [void]                  2.023us
+                ← vfio_pci_dma_buf_unmap       [void]                  6.700us
+            ← dma_buf_unmap_attachment         [void]                  8.142us
+        ← ib_umem_dmabuf_unmap_pages           [void]                 14.953us
+    ← mlx5_ib_init_dmabuf_mr                   [-EINVAL]              67.272us
+    → mlx5r_umr_revoke_mr
+        → mlx5r_umr_post_send_wait
+            → mlx5r_umr_post_send
+                ↔ mlx5r_begin_wqe              [0]                     1.703us
+                ↔ mlx5r_finish_wqe             [void]                  1.633us
+                ↔ mlx5r_ring_db                [void]                  1.312us
+            ← mlx5r_umr_post_send              [0]                    27.451us
+        ← mlx5r_umr_post_send_wait             [0]                   126.541us
+    ← mlx5r_umr_revoke_mr                      [0]                   141.925us
+    → ib_umem_release
+        → ib_umem_dmabuf_release
+            ↔ ib_umem_dmabuf_revoke            [void]                  1.582us
+            ↔ dma_buf_detach                   [void]                  3.765us
+            ↔ dma_buf_put                      [void]                  0.531us
+        ← ib_umem_dmabuf_release               [void]                 23.315us
+    ← ib_umem_release                          [void]                 40.301us
+← mlx5_ib_reg_user_mr_dmabuf                   [-EINVAL]             363.280us
+
+[1] https://lore.kernel.org/all/aQkLcAxEn4qmF3c4@devgpu015.cco6.facebook.com/
+
+Alex
 
