@@ -1,195 +1,222 @@
-Return-Path: <linux-pci+bounces-42112-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42113-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AC9DC89DC3
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 13:49:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A9CB6C89E0E
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 13:56:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 90C1D4E3E85
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 12:49:20 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7A6F74E5B94
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 12:56:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08F32326D77;
-	Wed, 26 Nov 2025 12:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88DD4328B70;
+	Wed, 26 Nov 2025 12:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BMYuePZR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010031.outbound.protection.outlook.com [52.101.193.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B2F1DBB3A;
-	Wed, 26 Nov 2025 12:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764161358; cv=none; b=dojw2FWAbYfOPalqaqQFVPlZ8ZxktLZpIcTTmCQD8XFDopo/Nmeh21I15vkHZUWXkozoO9OEQ2DmqXBPIOvIiDciLs0xUlUl3hbCDyBTS6ckvhW+uo5a0iSpBeMx+LYr4GAa/vSEVdnxktxdh0GXCARuHlT0astY+zcqJh6jODM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764161358; c=relaxed/simple;
-	bh=vC1+W7/sn5EyGnqDGVHwUKcbOEY7S2fXuXfE40ZvZuA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AwQbvdLDvDG3f6XKNCq7LWycbY05rboQvKWwy9J4srR9/U7ghF4GFBkTI+AETaCFy1Xrn2Fz7gkM0KSZ2y5y4toDXouyoh3206rSW9kPi/UGc4pS/SUh+sqab8eYVPc05CgHWIJupVSFTCh/kSu5ftrl7NLNYN1gzFnHbjCyi9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id DD2972C02BBD;
-	Wed, 26 Nov 2025 13:49:06 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 9F6761D658; Wed, 26 Nov 2025 13:49:06 +0100 (CET)
-Date: Wed, 26 Nov 2025 13:49:06 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Riana Tauro <riana.tauro@intel.com>,
-	"Sean C. Dardis" <sean.c.dardis@intel.com>,
-	Farhan Ali <alifm@linux.ibm.com>,
-	Benjamin Block <bblock@linux.ibm.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Alek Du <alek.du@intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] PCI/PM: Reinstate clearing state_saved in legacy
- and !pm codepaths
-Message-ID: <aSb3Qt6n55Fsl7IF@wunner.de>
-References: <094f2aad64418710daf0940112abe5a0afdc6bce.1763483367.git.lukas@wunner.de>
- <20251125231846.GA2767905@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841C3328B54;
+	Wed, 26 Nov 2025 12:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.31
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764161749; cv=fail; b=kYJfL1E8Dtb1SJi4jyMavRth/VUbCJaY8VBZfGCH+1ixZlmMH2xIv2d/WrT918kg2y0yKQiqqvFGVO7QX8d2UcNgJo9L4B8gosr9raWOGeS5GIAqm0QQIpBv9plSaRwKW7eTdJiafdcfUBY80bNkmgsYSMp55Mx0nfZNBs2wV/8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764161749; c=relaxed/simple;
+	bh=VCtlqcnHQLbKsZTS/w3g0Azg1oIMjc8zUiG6lqqQyIY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=BXo9DbOI0LJQ+y52xc+aOkQ+IBRVuA52uMzTrEnruX+pMpenfjPHnsIaWrchCE1cqob6Lj23YT6dJL8VT8C8icdYJNnWf1dQBvIsitUyMgn6GbYBTdcgb3ghWpuugUZtCkiD3YkrowZkhVKxOjk7eu9JsCJ0XrEfGUCxB/+PAU8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BMYuePZR; arc=fail smtp.client-ip=52.101.193.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yEogWjZXqSXsNWuVqgRu29Y0+TKJmRdTrimnZuyKRO8x2F02gWXZB2hgugjAyd48KfjXE002dFgtrCp5NrSE3qUjUhN+KyLoO82Ag5OFs8kv9yWyYRK53TjpEgjxEAqi2JqktKtI0fepPYR6GhJDVMTowjpgdIbto26Y02SGyaIHwuI7jSdZAdwDgAQA0k15LqSvqGCXBT7vBs26Y6awGNO3nmUUt20lFik1P2ro07Ar9ZFT58Jhb7McFMTVTGy+9ULXgh/Qf2ZfhAvkNmnvETBo/hmtHU11YdGUa0PrNhNE6sDvx8cZ9DPpAuZ/LqaDXy9vQIhDHkvk2z4urg2/6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OOLbz5T6j9f0/FMeiqQGZRnFda1JEt/ver6zFmLEIHI=;
+ b=ngk6Ilz4zFP/55Xp6b0MT2iJQAzHFhkYixsTAwB0qQGxRW+ZZF9NItlzqX6TIxGPvT/+WgIrdgV+FyFobtKBZbHS/Q+O/BUFvGFn9hjer3oEAUeEk7+kDkc2bW9UjMWbQeUil6aWx9HBpbP9LIbz954VUZwNup0Qk4CxBz6jfowliX26CgQWK4s9hpG8RzMg9/2SorOoVIRi/QXoXMuRDime9atzgIJYLS0iOOvZuRt9p6NdBrVDwp5C1zla9RhvuL57WWqcrPpqH/S/4SYsksYjvDWUCMhuLnojoowcumzhE3TQJcsDLjq7WTPwOxNSNyn99HvIAerVpaizx1BRjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=nvidia.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OOLbz5T6j9f0/FMeiqQGZRnFda1JEt/ver6zFmLEIHI=;
+ b=BMYuePZR4M6LFsU+hgQN1T0bUORVbyt19mMLgDnw/nDFr3by+LEfTW5CwffB5J8TvHSEaBn6RqSp+lr5Csf+a1KNJqooowVkQYRM+iIRQ4PurwEx/8bRHqWZajOdGEaI73YzaZJjZ18ejdIp7dyDTmcVmiqVvaPiQWKfjkyoByw=
+Received: from SJ0PR03CA0204.namprd03.prod.outlook.com (2603:10b6:a03:2ef::29)
+ by DM6PR12MB4300.namprd12.prod.outlook.com (2603:10b6:5:21a::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.12; Wed, 26 Nov
+ 2025 12:55:41 +0000
+Received: from SJ1PEPF00001CE1.namprd05.prod.outlook.com
+ (2603:10b6:a03:2ef:cafe::5d) by SJ0PR03CA0204.outlook.office365.com
+ (2603:10b6:a03:2ef::29) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9366.11 via Frontend Transport; Wed,
+ 26 Nov 2025 12:55:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ1PEPF00001CE1.mail.protection.outlook.com (10.167.242.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9366.7 via Frontend Transport; Wed, 26 Nov 2025 12:55:40 +0000
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 26 Nov
+ 2025 06:55:40 -0600
+Received: from [10.252.200.251] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Wed, 26 Nov 2025 04:55:34 -0800
+Message-ID: <1f65de37-db9f-4807-a3ff-6cd377c855a5@amd.com>
+Date: Wed, 26 Nov 2025 18:25:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251125231846.GA2767905@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/5] iommu: Lock group->mutex in
+ iommu_deferred_attach()
+To: Nicolin Chen <nicolinc@nvidia.com>, <joro@8bytes.org>, <afael@kernel.org>,
+	<bhelgaas@google.com>, <alex@shazbot.org>, <jgg@nvidia.com>
+CC: <will@kernel.org>, <robin.murphy@arm.com>, <lenb@kernel.org>,
+	<kevin.tian@intel.com>, <baolu.lu@linux.intel.com>,
+	<linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
+	<patches@lists.linux.dev>, <pjaroszynski@nvidia.com>, <vsethi@nvidia.com>,
+	<helgaas@kernel.org>, <etzhao1900@gmail.com>
+References: <cover.1763775108.git.nicolinc@nvidia.com>
+ <a7ebae88c78e81e7ff0d14788ddff2e6a9fcecd3.1763775108.git.nicolinc@nvidia.com>
+Content-Language: en-US
+From: "Srivastava, Dheeraj Kumar" <dhsrivas@amd.com>
+In-Reply-To: <a7ebae88c78e81e7ff0d14788ddff2e6a9fcecd3.1763775108.git.nicolinc@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE1:EE_|DM6PR12MB4300:EE_
+X-MS-Office365-Filtering-Correlation-Id: 25291961-492c-4892-72e5-08de2ceb1ab3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Zm1hSWY2S0w2ejhWT1NHOFZMdXJWdC94S041c1VBS3lLWGJ3a2lodXhuc2tu?=
+ =?utf-8?B?anNNSndzN0N0T3ZIZVV5NWY0eU1oVURrSUZkR0JkVWtxOGpsdHlsTjZxcy9V?=
+ =?utf-8?B?dWp2YlJtN1Y3bVZwcWVSRlUwcEYvek1BM0d3Y09JY0RPREwzQWQwbHhudWVm?=
+ =?utf-8?B?RExUckFjL0tjREhTTjY5ZUNlYUl0WGFMcVdUdXpRMDN6TURoaGtMN2p5cmNi?=
+ =?utf-8?B?THVQRTJJNEV4Y3VPbTdkdDVDZFZWdkN3dkJWWEszWUlyM3N5bG1yTURhdnFh?=
+ =?utf-8?B?endRNjAyU3NWUXlzcFV5b1Rhb0JrRDdadUxlN1dzMkJZUDNKUkpzVjZsa3JK?=
+ =?utf-8?B?ZFZ5d3poZmRDN0pIa0lBaTVMdm91VFFsNXFydFZBcXRuVlc5b2dvU3NNQ3gz?=
+ =?utf-8?B?RUNIdUFwR29MaGlQc3U2T2llWGtFVEZDd1NLUHVKYW5sWHRIS2VsTTJORjdy?=
+ =?utf-8?B?NVN5UWloZFlKVkRqNnl1MGhMU3gyc1BNM3JxZjlKY3VUZ0VOblUvelNtTkJL?=
+ =?utf-8?B?Ukw4ejgvVmNYQ3dhaXphL3ZEai9vbmdhaDg1eGFPSklHbzBibEJaeWhZd01I?=
+ =?utf-8?B?anlML0dMMnVocTAvckNvZzQzY1VjQmxPaVNEd1V2OERvWmxja3JHZWo0dDVv?=
+ =?utf-8?B?bVRTRFg4Qkx3VnhQclBsQk9adEt1R1ZYdmt5Y2ZHVUpSTnhQT2dyZ3QvRVht?=
+ =?utf-8?B?Z1FKSkJPTXRUWElzTlZ0MzhoVjYvblNHVkdaczZIcGNBQUJIS1puamJRdVRP?=
+ =?utf-8?B?VERYamVlTkdNRzI2MjVuckhMczI3UWFQVFlxOElFRzlsMVJQcHcvcitmTnp5?=
+ =?utf-8?B?MzVqbS9uNHBRUzFMZ0M1SVF0cndxUERvdTltenpxNWdZNDV5NU8wTURPSHJk?=
+ =?utf-8?B?SFBEVHorMFA2MWlpSmQ2dkJyMVg5Y1dyV0lXbXhVcUYvOEF5ODlTc0NlRHVH?=
+ =?utf-8?B?QjFYdk5zdWV2U1EvOW5vVTRCMkIzS0drN2huZkVBbkw0QW02WTE4YjNSUU5O?=
+ =?utf-8?B?QXZXSVhoVSsvR0xZTDgvV1RoZDY1NDVTZGk3b1NXaVRoZDI0UEM2RzZMZ1E5?=
+ =?utf-8?B?Q0lIWVVsS3BtSFdKalFia2tVR0xyVHRXY1NFT01aaldsQUNxbWhCZEZvcElV?=
+ =?utf-8?B?MlpQazdlazhkRlhScWlKekt6QTZ0RXZSWTFEbEJZRFprclMwdThhUmJ6dTkr?=
+ =?utf-8?B?VllHMlhGRmxCK01sT205am5tM01ab2VpYzhDbFhuS0ppdTY2R01oYlJWSUxR?=
+ =?utf-8?B?eFJGZ2lLWmg0NG95dzRNalRHY2xCWFd3QjIwd0R1dUhpckZvUEFJRk1MQ0hH?=
+ =?utf-8?B?c09GTnNHcmpuWWV0TWVlVlFOcVl6VllGM013NGcwcHB2UU5ZUk5MQXA0UnNu?=
+ =?utf-8?B?YlFVRUQ3QXhDT2JXSm93RnlXd0tLeC9KMWE4cmpmWU1waWVJV1BrN0xkcldq?=
+ =?utf-8?B?VUpFTWh0MG45eEkyQ1NIVkNvRkI1alRnQXB0NDNkaWo3OWZod3hOT2xwTjdD?=
+ =?utf-8?B?V3BMZU81T2ZLZGhockVRbmJEOHU3QVp1MDVvREhwZ1J2VXdxM21JNGhuNXdn?=
+ =?utf-8?B?Q2JZWWNSSm5XQ2owZEJwM3ZlWjJneVp2cDdPZjJXa2Rpak1qSUUwK3htZU5Y?=
+ =?utf-8?B?TCt1NkFMN3h3U01nRDQvRU5FOXJNZkFSemNKSlpZcTdaVWk3WWVIc2lRTWpH?=
+ =?utf-8?B?TUFnWXRNUk1LZGRnMGdESjJEdCt1VUdXeTZ3ZktDMnoxTFNpMDM5cHU5c3Bq?=
+ =?utf-8?B?TU1ka2R1LzZZNVhna244R1c2V01iY2M5M1ExMGFkTU9pZHpBOXI4SHlLS3JC?=
+ =?utf-8?B?azdtMHBsdUlaVXVTeUF0enFrQldHS2tlUVVza3gvVDE1K09uNHRDVkM1TE84?=
+ =?utf-8?B?cDdKd2I5MGFOdEFkeS9PeEZzQ0RJeThUUDg3UW5ScXlDOVRrVFBDSHE1Tktv?=
+ =?utf-8?B?LzlaVjVrQTdOYmo4NFJjb1h5OHlpUjNsSXhnZG15b05acWtwWEJqQ1BIK1hI?=
+ =?utf-8?B?YnJvMDdIczJ3bk42T0Y3STRaNWxnbzBjSHRRU1AzNXYvdVdLYU9id29kUkNj?=
+ =?utf-8?B?OVdWMjBpZWdJZjI4VERkeGMvTG1GUStuK3dyZWRicmlEdmZBOHMrQklMWUQ4?=
+ =?utf-8?Q?7QbY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2025 12:55:40.8724
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25291961-492c-4892-72e5-08de2ceb1ab3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CE1.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4300
 
-On Tue, Nov 25, 2025 at 05:18:46PM -0600, Bjorn Helgaas wrote:
-> On Wed, Nov 19, 2025 at 09:50:01AM +0100, Lukas Wunner wrote:
-> > But there are two corner cases where the PCI core neglects to clear the
-> > flag before commencing the suspend sequence:
-> > 
-> > * If a driver has legacy PCI PM callbacks, pci_legacy_suspend() neglects
-> >   to clear the flag.  The (stale) flag is subsequently queried by
-> >   pci_legacy_suspend() itself and pci_legacy_suspend_late().
-> > 
-> > * If a device has no driver or its driver has no PCI PM callbacks,
-> >   pci_pm_freeze() neglects to clear the flag.  The (stale) flag is
-> >   subsequently queried by pci_pm_freeze_noirq().
-> > 
-> > The flag may be set prior to suspend if the device went through error
-> > recovery:  Drivers commonly invoke pci_restore_state() + pci_save_state()
-> > to restore Config Space after reset.
+Hi,
+
+On 11/22/2025 7:27 AM, Nicolin Chen wrote:
+> The iommu_deferred_attach() function invokes __iommu_attach_device(), but
+> doesn't hold the group->mutex like other __iommu_attach_device() callers.
 > 
-> I guess the only point of pci_save_state() in this case is to set
-> state_saved again so a future pci_restore_state() will work, right?
+> Though there is no pratical bug being triggered so far, it would be better
+> to apply the same locking to this __iommu_attach_device(), since the IOMMU
+> drivers nowaday are more aware of the group->mutex -- some of them use the
+> iommu_group_mutex_assert() function that could be potentially in the path
+> of an attach_dev callback function invoked by the __iommu_attach_device().
 > 
-> The actual state being *saved* is pointless, assuming pci_save_state()
-> saves exactly the same data that pci_restore_state() restored.
+> Worth mentioning that the iommu_deferred_attach() will soon need to check
+> group->resetting_domain that must be locked also.
 > 
-> And these are the pci_save_state() calls you removed with "treewide:
-> Drop pci_save_state() after pci_restore_state()".  Too bad we have to
-> document the behavior we're about to change, but that's what we need
-> to do.  It's just a little clutter to keep in mind for this release.
-
-Yes.  All of your comments above are correct.
-
-> > The flag may also be set if drivers call pci_save_state() on probe to
-> > allow for recovery from subsequent errors.
-> > 
-> > The result is that pci_legacy_suspend_late() and pci_pm_freeze_noirq()
-> > don't call pci_save_state() and so the state that will be restored on
-> > resume is the one recorded on last error recovery or on probe, not the one
-> > that the device had on suspend.  If the two states happen to be identical,
-> > there's no problem.
+> Thus, grab the mutex to guard __iommu_attach_device() like other callers.
 > 
-> So IIUC the effect is that after this change and the "treewide"
-> change,
+
+Tested the series with PCI reset on PFs and VFs, including device 
+pass-through to a Linux guest. All scenarios worked as expected.
+
+Tested-by: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
+
+Thanks
+Dheeraj
+
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>   drivers/iommu/iommu.c | 13 ++++++++++---
+>   1 file changed, 10 insertions(+), 3 deletions(-)
 > 
->   - If the driver uses legacy PM, the state restored on resume will be
->     the state from suspend instead of the state on probe.
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 2ca990dfbb884..170e522b5bda4 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -2185,10 +2185,17 @@ EXPORT_SYMBOL_GPL(iommu_attach_device);
+>   
+>   int iommu_deferred_attach(struct device *dev, struct iommu_domain *domain)
+>   {
+> -	if (dev->iommu && dev->iommu->attach_deferred)
+> -		return __iommu_attach_device(domain, dev, NULL);
+> +	/*
+> +	 * This is called on the dma mapping fast path so avoid locking. This is
+> +	 * racy, but we have an expectation that the driver will setup its DMAs
+> +	 * inside probe while being single threaded to avoid racing.
+> +	 */
+> +	if (!dev->iommu || !dev->iommu->attach_deferred)
+> +		return 0;
+>   
+> -	return 0;
+> +	guard(mutex)(&dev->iommu_group->mutex);
+> +
+> +	return __iommu_attach_device(domain, dev, NULL);
+>   }
+>   
+>   void iommu_detach_device(struct iommu_domain *domain, struct device *dev)
 
-Right.
-
-> 
->   - For devices with no driver or a driver without PM, if the device
->     has already been runtime-suspended, we avoid a pointless
->     pci_save_state(), so it's an optimization and not logically
->     related to the legacy PM case.
-
-It's slightly different:
-
-  - For devices with no driver or a driver without PM, the state restored
-    on "thaw" and "restore" will be the state from "freeze" instead of the
-    state on probe.
-
-So the same problem that we have for drivers using legacy PM, we also
-have for devices with no driver or a driver without (modern) PM callbacks,
-but only in the "freeze" codepath (for hibernation).
-
-In the patch, I made the "pci_dev->state_saved = false" assignment
-conditional on !pm_runtime_suspended() in the "freeze" codepath.
-I didn't do the same in the legacy codepath because none of the
-drivers using legacy PM callbacks seem to be using runtime PM.
-
-The purpose of making it conditional on !pm_runtime_suspended()
-is just that we'd otherwise call pci_save_state() twice:  Once in
-pci_pm_runtime_suspend() and once more in pci_pm_freeze().
-That would be pointless.
-
-In the commit message, I provided a rationale for the conditionality,
-but inadvertently caused confusion.
-
-> I'm thinking of something like this for the merge commit and eventual
-> pull request; please correct me if this isn't right:
-> 
->   Restore the suspend config state, not the state from probe or error
->   recovery, for drivers using legacy PCI suspend.
-> 
->   Avoid saving config state again for devices without driver PM if
->   their state was already saved by runtime suspend.
-
-I'd suggest instead (feel free to wordsmith as you see fit):
-
-  Restore the suspend config state, not the state from probe or error
-  recovery, for drivers using legacy PCI suspend.   [ <- unmodified ]
-
-  Same for devices with no driver or a driver without PM callbacks
-  when the system is hibernated.                   [ <- replacement ]
-
-Mentioning the runtime PM conditionality in the high-level changelog
-is probably not worth it.
-
-Was I able to clarify all questions?  Please ask again if not.
-
-Also, in case the meaning of "freeze", "thaw", "restore" isn't clear,
-here's the order of a hibernation sequence (suspend to disk):
-
-  pci_pm_prepare()
-  pci_pm_freeze()
-  pci_pm_freeze_noirq()
-  <system image is generated>
-  pci_pm_thaw_noirq()
-  pci_pm_thaw()
-  pci_pm_complete()
-  pci_pm_prepare()
-  pci_pm_poweroff()
-  pci_pm_poweroff_late()
-  pci_pm_poweroff_noirq()
-  <system is asleep, then restarted with boot kernel>
-  pci_pm_prepare()
-  pci_pm_freeze()
-  pci_pm_freeze_noirq()
-  <system image is restored, replacing the boot kernel>
-  pci_pm_restore_noirq()
-  pci_pm_restore()
-  pci_pm_complete()
-
-Note that "freeze" happens twice in the whole sequence.
-
-Thanks,
-
-Lukas
 
