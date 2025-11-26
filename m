@@ -1,273 +1,163 @@
-Return-Path: <linux-pci+bounces-42102-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42103-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4211BC889CE
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 09:20:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DF9EC88B9B
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 09:48:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 286474E2B7E
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 08:20:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D98963A56D0
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 08:47:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54EDC29D269;
-	Wed, 26 Nov 2025 08:20:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6436A2C236B;
+	Wed, 26 Nov 2025 08:47:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B5J6Nj+M"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UB6Bd9EI";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="frY8lBc4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E191E30FC1D
-	for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 08:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFED30EF6B
+	for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 08:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764145253; cv=none; b=nhWQuYe9s9J4YOhUxhyWmlpm9lxatt6O0xT1EBIbRZ+EbhkVMKOGiyz3BouHR8sl97JTW2Z64agmD36bKLJr09KuL2iLnHRgtQgvfn6y0kvAEDdPsLzXb2qTlmqhAG0X7m7ocWYk/FUM+Gr4MOYZPiMgcBzDgu47WisgMDR7qBo=
+	t=1764146865; cv=none; b=sSyHAbE5/vimkU5dcUIhwPIcPWD04pFLdb/e9AQY3ieu75FOWKvZJCMOEN/3OsPimlC3x+fAUzRHYSMdHa9oTbB6VqU4QmVFp+1ATMfjwcAXhBQJyUULnk/YOse3Xv1PBI2pB74ZX2Ue5uVGb1bbLZ6MxtnIiLFTs8JN7lLR2dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764145253; c=relaxed/simple;
-	bh=UNsPNZTcOByZ2yZ42dLf78QHyh4z6PJR1pD9m1BmZYc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VdY74fG6GhHqIWemsM7Al05PIm2hCgeZxv7sgKbvvhL5rz+Bl5bx4vJ8aDk/X0rd/Mv5G4Kw0Gx6ytpooZgZLVXTkzCDdqLnnQNMZpGiECQ0flZPhrolOIau9BMeMkZQPCRTYyRVTFxwlJVEv0vjYwPh4u4MoVEGNgMV7Dj3ek0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B5J6Nj+M; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764145251; x=1795681251;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=UNsPNZTcOByZ2yZ42dLf78QHyh4z6PJR1pD9m1BmZYc=;
-  b=B5J6Nj+Mlxr0LgVxxUl0nvS9X4mgHz4ussdwkh2eh19cSnl6LZjZkW1R
-   7Ru6Dz1EbmbRnpvx5kHXHy/WpoIqI1glwscMroH8lFXZQ2w82PWk9UTyh
-   2plX2aVHv1loM5i+AQXFROS/mIc5EN2jXmdGwjZCUimouW7lf/usCyBgZ
-   PGHeDtpOXZq/xVYHN5aYlFR9AkhwnclyFGGfAYcJqnFayTLJ89/gw3DEx
-   maF0TSQKkayzBr3QfINFUzWierTU4W9I3WLq4sqzAbt5NpapxiHq1opzN
-   BA5i6CjiFZdnQnkqpa5lLmxjW73DFO7seT1id8Y4kJhWuPNhJ7cC/2486
-   w==;
-X-CSE-ConnectionGUID: XllTSIs3RtK5gPiBgstzOQ==
-X-CSE-MsgGUID: kKh8SkndTPSj4C8OinaI2Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="65362403"
-X-IronPort-AV: E=Sophos;i="6.20,228,1758610800"; 
-   d="scan'208";a="65362403"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 00:20:50 -0800
-X-CSE-ConnectionGUID: 25oy/Mx1QEaOsMv1BYAKpQ==
-X-CSE-MsgGUID: HGZPxo2BRNCpzlWekvhwSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,228,1758610800"; 
-   d="scan'208";a="197197376"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.97])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 00:20:48 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 26 Nov 2025 10:20:44 +0200 (EET)
-To: Guanghui Feng <guanghuifeng@linux.alibaba.com>
-cc: bhelgaas@google.com, linux-pci@vger.kernel.org, kanie@linux.alibaba.com, 
-    alikernel-developer@linux.alibaba.com
-Subject: Re: [PATCH] PCI: Fix PCIe SBR dev/link wait error
-In-Reply-To: <20251124104502.777141-1-guanghuifeng@linux.alibaba.com>
-Message-ID: <bcc2c523-ed9e-59a7-d6f1-b39f4b2e8e30@linux.intel.com>
-References: <20251124104502.777141-1-guanghuifeng@linux.alibaba.com>
+	s=arc-20240116; t=1764146865; c=relaxed/simple;
+	bh=Y2lKCts5CJPNH0MSL8iowT5ojUWvEug7hDEUecBfUVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gKYc5pssuHiZ8ul4e5CGvW6GU7MkySP5+hKMKANuQCRhdlwpCwEj/l3LYRKIR/1SxhJbn1dO4QgzMJ9eQlRS4t+1wOYiUJBakjP7ZdF0uvdFKyjeP/H9yWRw/WYc9rZWrGtUnFBm/7qsUY/PyUhw3VUwv25qmLaX+XPv447AuKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UB6Bd9EI; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=frY8lBc4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AQ3AgA93707407
+	for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 08:47:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=SA1QjlGJ7UYJoW3bkSJoRtZs
+	L6FcyH/jM6IDdNF5+J8=; b=UB6Bd9EI6P8muNVAQscUaIaGfC7kuMC49BYKjbei
+	1V1/iosNN6MIkLMh6DKABUch95CiOD5jUzz7iv9IMIFvytw0M4hpRPFVG2uaFlcc
+	nO+sV03z77Q/k7BJN5SQwoCLAqAgwqeEx2A1WjI91UcKKa4oUr77MqPahXDpRzg/
+	xYa4tZeAuKBm9NatR8pnp36yy9ejrzs3wY34wtnNDUrsGvXTniwESyc0ecP1LLZ/
+	ufWXURD0CaUhJEWi0ubGkSpHAex/grcajiUBdFwEwgXN3+teQ1tL7cr2q4GNMqE5
+	G0uJIJHHerP3JiHBdv5RM9biDu9Yo6Bn8nJOW5ynj4ro9Q==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4anduftrm0-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 08:47:42 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8b2ea3d12fcso1432516085a.0
+        for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 00:47:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1764146862; x=1764751662; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SA1QjlGJ7UYJoW3bkSJoRtZsL6FcyH/jM6IDdNF5+J8=;
+        b=frY8lBc4vePUvaBX7FO/Xg3QH50IpD5akvcLvNUOx8WppzKrGYjNmF4tJarnQb93+2
+         nCe9yOfxkE67u+rSotV0NVUJt7acdqEcO30UA8fCZAESBhd+6I+Gp/czXWKjeNW7xVQE
+         u9W9x8AhVOjzXlkxZ4cCcgk37rQJHXITn1YqidOEdy2x+9y/bjHLSW0DQ0UC6qZeoeId
+         04n9TgYfz5nPeMZOiaxrYypOj0ckJ7VoxBoQMf+64M/Hl8peeUtpXINxt+S+TrloM4KG
+         ebWYO0/MeWOs9ZA3VWxmAPjFLez5JEorS8Hlql8gO3bqcrAA1xAiiUnmr/NVWeaKyA0w
+         yXEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764146862; x=1764751662;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SA1QjlGJ7UYJoW3bkSJoRtZsL6FcyH/jM6IDdNF5+J8=;
+        b=cqueneFUE6Kc5WcC3zrOZRuxxSM25Q6Tbw0A1iwZnExGKERERvB5e8kx6SGWkFgloF
+         ojoJHTuAUQooxi4bkhGB2rBYhU+ca8sKL7LZzSSiUeCqEq1m0sPZo/3kx78DuK6SFumt
+         SISb+7bF0IuseBnLMJVHRoV8siFAaPFyW+Yx5F53rE/bDsackY2EpuNmC5SKsngALv39
+         43dWqGKcZK/7IVp1Rippuy7W8YtXAW9/X17AmczmiTKOhZalspFecJQ66lbIfUBsLJBU
+         yU45KxHSQthZg7Kmt+Z7Jnl0T1GURwv31CKku0bv2QUpfnZSPeTn87oY9c2ssh122SR/
+         j/Lg==
+X-Forwarded-Encrypted: i=1; AJvYcCVD41lbkNiYUAIQz2C5ea7LCp1w51TD254iMpIOWR5wLQ0olmVdUeKqVJ1yqxdirWaYKRSgtlKqG4Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCs0CTG8ysYHp892sM4qceEAkfvd2unL5h44CJuL/1BFdIvZLD
+	uOJC/J+KNRHhgEYKnvAXf9GjhsqYGhGPcnTb5+quduUCFg58xGqbFUnCMkxYnnM4E5+NzoPVulB
+	50qu6FqU/uIKSrsC93b/NlYgfAFblkb3qwKRlu7eWnMYgNY9b57S+BxCjrS/PDfk=
+X-Gm-Gg: ASbGncvDy9ZqhFevg/OIIfbrns6U77wPw0VQOS13lcSAv4vOJE43eNrGLM5Qazf09V5
+	Y6oZ6o07QkPVqFAfzVNx9LY1KnavVJ5JN2/akwywrNbx6+N1lpAzyHEawU45DgRtivhEgNzVit7
+	XE6t5+G8y46fy4jZ5M1phOH3ZIRsKSxkLpKvc484ADA9NWUdGhFVQqHwzH//K8zSdHj+m8ISLRV
+	whwvYc6wwQYb1mPKzN+Rm4S6JTPDUtU/04kitIuQ3Ud1WNd+zG9+1XbdSZFkRGcbi3/rFH4fMyw
+	IfAaP0C3YLij+sZl5DTBvXxR5xAnTauf1cSjV6e1DHRhwMZ6Io6ur5/GXld/LaPNDPRhKMnudTV
+	W7drASReLsw94/0flrNA23ZC+yTl248pKxeQ+AHNFkIJKGIw8jMqg9z0ZreWeOy7ffk5Sa0xB5M
+	kCYtGtWWSfFctTnSFWR4g1diI=
+X-Received: by 2002:a05:620a:4102:b0:8b2:f0dd:2a89 with SMTP id af79cd13be357-8b33d1f009dmr2299921185a.37.1764146861906;
+        Wed, 26 Nov 2025 00:47:41 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE8s5j5+VqMpqJZ/EsYjx8m89SW1+XSyVuNt5iFdlq1JMKVOVOpsI8Wuj3Hse5mJd69888Rcg==
+X-Received: by 2002:a05:620a:4102:b0:8b2:f0dd:2a89 with SMTP id af79cd13be357-8b33d1f009dmr2299919485a.37.1764146861487;
+        Wed, 26 Nov 2025 00:47:41 -0800 (PST)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5969dbc5be9sm5716685e87.81.2025.11.26.00.47.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Nov 2025 00:47:40 -0800 (PST)
+Date: Wed, 26 Nov 2025 10:47:39 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Cc: mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+        bhelgaas@google.com, robh@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom: Clear ASPM L0s CAP for MSM8996 SoC
+Message-ID: <utecia46qscniiapbki6nonn24pr7rimxh5mkptkbj27ohvgsv@6fftnshj3rjs>
+References: <20251126081718.8239-1-mani@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251126081718.8239-1-mani@kernel.org>
+X-Authority-Analysis: v=2.4 cv=C53kCAP+ c=1 sm=1 tr=0 ts=6926beae cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=vqDPTjLrrVU5Klh6hrwA:9 a=CjuIK1q_8ugA:10
+ a=zZCYzV9kfG8A:10 a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI2MDA3MSBTYWx0ZWRfXxhcxu0eOQUK9
+ fxW3lbJHURRjSOqlz0A2dUUweSpU/64GgFuQjyGr3BQrZRlXTDBW9tS4uVUbCBV9v+hdM29VVQB
+ FqsgFzz/OgUtRowV0t7VZOLH9esW9Ckzj6/09Oiz/+Gn0ExKinLeYq3gme0EHhN5YtCSIw6XbpU
+ Ip16dNVD8sVuuzdlbLJ3W0NYqQNh3CkHMBXaPAWorzIYfh6hPCzUEm1DWlxlws6hKdqZlUd78yF
+ 6TF0ZlPNbfYJDScxBalF4g4xuNGVtcvRMz4/o02YmuOOPz66/V4dyWya9wX+EMY66cYP6Z+y0br
+ IgKX/H12HvNWQs30eYu0zQ/OpaCkMKzkpdiMtKSJVv6XFvXXS96yGYI6P8npVN2nbyxLwYGfR+d
+ CveVylE/FGbGNHEcY+mNiVdBy3N+Kg==
+X-Proofpoint-ORIG-GUID: gU0oHcQUbcQFG0d0VenX59ANtWWmYeCZ
+X-Proofpoint-GUID: gU0oHcQUbcQFG0d0VenX59ANtWWmYeCZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-25_02,2025-11-25_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 priorityscore=1501 suspectscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1015 adultscore=0 phishscore=0 spamscore=0
+ malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2510240001
+ definitions=main-2511260071
 
-On Mon, 24 Nov 2025, Guanghui Feng wrote:
-
-> When executing a PCIe secondary bus reset, all downstream switches and
-> endpoints will generate reset events. Simultaneously, all PCIe links
-> will undergo retraining, and each link will independently re-execute the
-> LTSSM state machine training. Therefore, after executing the SBR, it is
-> necessary to wait for all downstream links and devices to complete
-> recovery. Otherwise, after the SBR returns, accessing devices with some
-> links or endpoints not yet fully recovered may result in driver errors,
-> or even trigger device offline issues.
+On Wed, Nov 26, 2025 at 01:47:18PM +0530, Manivannan Sadhasivam wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 > 
-> Signed-off-by: Guanghui Feng <guanghuifeng@linux.alibaba.com>
-> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+> Though I couldn't confirm the ASPM L0s support with the Qcom hardware team,
+> bug report from Dmitry suggests that L0s is broken on this legacy SoC.
+> Hence, clear the L0s CAP for the Root Ports in this SoC.
+> 
+> Since qcom_pcie_clear_aspm_l0s() is now used by more than one SoC config,
+> call it from qcom_pcie_host_init() instead.
+> 
+> Reported-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Closes: https://lore.kernel.org/linux-pci/4cp5pzmlkkht2ni7us6p3edidnk25l45xrp6w3fxguqcvhq2id@wjqqrdpkypkf
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 > ---
->  drivers/pci/pci.c | 112 ++++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 94 insertions(+), 18 deletions(-)
+>  drivers/pci/controller/dwc/pcie-qcom.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b14dd064006c..9cf13fe69d94 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4788,9 +4788,74 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
->  	return max(min_delay, max_delay);
->  }
->  
-> +int __pci_bridge_wait_for_secondary_bus(struct pci_dev *, unsigned long, char *);
-> +
-> +static int pci_dev_wait_child(struct pci_dev *pdev, unsigned long start_t, int timeout,
-> +				char *reset_type)
-> +{
-> +	struct pci_dev *child, **dev = NULL;
-> +	int ct = 0, i = 0, ret = 0, left = 1;
-> +	unsigned long dev_start_t;
-> +
-> +	down_read(&pci_bus_sem);
-> +
-> +	list_for_each_entry(child, &pdev->subordinate->devices, bus_list)
-> +		ct++;
-> +
-> +	if (ct) {
-> +		dev = kzalloc(sizeof(struct pci_dev *) * ct, GFP_KERNEL);
-> +
-> +		if(!dev) {
-> +			pci_err(pdev, "dev mem alloc err\n");
-> +			up_read(&pci_bus_sem);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		list_for_each_entry(child, &pdev->subordinate->devices, bus_list)
-> +			dev[i++] = pci_dev_get(child);
-> +	}
-> +
-> +	up_read(&pci_bus_sem);
-> +
-> +	for (i = 0; i < ct; ++i) {
-> +		left = 1;
-> +
-> +dev_wait:
-> +		dev_start_t = jiffies;
-> +		ret = pci_dev_wait(dev[i], reset_type, left);
-> +		timeout -= jiffies_to_msecs(jiffies - dev_start_t);
-> +
-> +		if (ret) {
-> +			if (pci_dev_is_disconnected(dev[i]))
-> +				continue;
-> +
-> +			if (timeout <= 0)
-> +				goto end;
-> +
-> +			left <<= 1;
-> +			left = timeout > left ? left : timeout;
-> +			goto dev_wait;
-> +		}
-> +	}
-> +
-> +	for (i = 0; i < ct; ++i) {
-> +		ret = __pci_bridge_wait_for_secondary_bus(dev[i], start_t, reset_type);
 
-Does this add recursion without restoring config space on each level 
-before starting the child wait?
+Tested-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +end:
-> +	for (i = 0; i < ct; ++i)
-> +		pci_dev_put(dev[i]);
-> +
-> +	kfree(dev);
-> +	return ret;
-> +}
-> +
->  /**
-> - * pci_bridge_wait_for_secondary_bus - Wait for secondary bus to be accessible
-> + * __pci_bridge_wait_for_secondary_bus - Wait for secondary bus to be accessible
->   * @dev: PCI bridge
-> + * @start_t: wait start jiffies time
->   * @reset_type: reset type in human-readable form
->   *
->   * Handle necessary delays before access to the devices on the secondary
-> @@ -4804,10 +4869,9 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
->   * Return 0 on success or -ENOTTY if the first device on the secondary bus
->   * failed to become accessible.
->   */
-> -int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
-> +int __pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, unsigned long start_t, char *reset_type)
->  {
-> -	struct pci_dev *child __free(pci_dev_put) = NULL;
-> -	int delay;
-> +	int delay, left;
->  
->  	if (pci_dev_is_disconnected(dev))
->  		return 0;
-> @@ -4835,8 +4899,6 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  		return 0;
->  	}
->  
-> -	child = pci_dev_get(list_first_entry(&dev->subordinate->devices,
-> -					     struct pci_dev, bus_list));
->  	up_read(&pci_bus_sem);
->  
->  	/*
-> @@ -4844,8 +4906,12 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  	 * accessing the device after reset (that is 1000 ms + 100 ms).
->  	 */
->  	if (!pci_is_pcie(dev)) {
-> -		pci_dbg(dev, "waiting %d ms for secondary bus\n", 1000 + delay);
-> -		msleep(1000 + delay);
-> +		left = 1000 + delay - jiffies_to_msecs(jiffies - start_t);
-> +		pci_dbg(dev, "waiting %d ms for secondary bus\n", left > 0 ? left : 0);
-> +
-> +		if (left > 0)
-> +			msleep(left);
-> +
->  		return 0;
->  	}
->  
-> @@ -4870,10 +4936,14 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
->  		u16 status;
->  
-> -		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
-> -		msleep(delay);
-> +		left = delay - jiffies_to_msecs(jiffies - start_t);
-> +		pci_dbg(dev, "waiting %d ms for downstream link\n", left > 0 ? left : 0);
-> +
-> +		if (left > 0)
-> +			msleep(left);
->  
-> -		if (!pci_dev_wait(child, reset_type, PCI_RESET_WAIT - delay))
-> +		left = PCI_RESET_WAIT - jiffies_to_msecs(jiffies - start_t);
-> +		if(!pci_dev_wait_child(dev, start_t, left > 0 ? left : 0, reset_type))
->  			return 0;
->  
->  		/*
-> @@ -4888,20 +4958,26 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  		if (!(status & PCI_EXP_LNKSTA_DLLLA))
->  			return -ENOTTY;
->  
-> -		return pci_dev_wait(child, reset_type,
-> -				    PCIE_RESET_READY_POLL_MS - PCI_RESET_WAIT);
-> +		left = PCIE_RESET_READY_POLL_MS - jiffies_to_msecs(jiffies - start_t);
-> +		return pci_dev_wait_child(dev, start_t, left > 0 ? left : 0, reset_type);
->  	}
->  
-> -	pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
-> -		delay);
-> -	if (!pcie_wait_for_link_delay(dev, true, delay)) {
-> +	left = delay - jiffies_to_msecs(jiffies - start_t);
-> +	pci_dbg(dev, "waiting %d ms for downstream link, after activation\n", left > 0 ? left : 0);
-> +
-> +	if (!pcie_wait_for_link_delay(dev, true, left > 0 ? left : 0)) {
->  		/* Did not train, no need to wait any further */
->  		pci_info(dev, "Data Link Layer Link Active not set in %d msec\n", delay);
->  		return -ENOTTY;
->  	}
->  
-> -	return pci_dev_wait(child, reset_type,
-> -			    PCIE_RESET_READY_POLL_MS - delay);
-> +	left = PCIE_RESET_READY_POLL_MS - jiffies_to_msecs(jiffies - start_t);
-> +	return pci_dev_wait_child(dev, start_t, left > 0 ? left : 0, reset_type);
-> +}
-> +
-> +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
-> +{
-> +	return __pci_bridge_wait_for_secondary_bus(dev, jiffies, reset_type);
->  }
->  
->  void pci_reset_secondary_bus(struct pci_dev *dev)
-> 
+Thanks!
 
 -- 
- i.
-
+With best wishes
+Dmitry
 
