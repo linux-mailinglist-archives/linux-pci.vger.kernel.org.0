@@ -1,218 +1,299 @@
-Return-Path: <linux-pci+bounces-42091-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42092-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CAD3C8791A
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 01:19:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5183DC879D7
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 01:43:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id F22A44E063E
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 00:18:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09BB33B3870
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 00:43:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CAEB188713;
-	Wed, 26 Nov 2025 00:18:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3277A26E6E8;
+	Wed, 26 Nov 2025 00:43:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b="W+AKvPIc"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="eDS+ta7f"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013023.outbound.protection.outlook.com [40.93.196.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7273595D;
-	Wed, 26 Nov 2025 00:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764116337; cv=none; b=X0UpguotiXezDmp1gJAbu4PiLqw1tpt6O1y5L5piMnCIoBZeXXR2U5ZwpjbejDpeO+dYSJuEocwDQ6+yHpQdvOgDfnXcLDwhu0iuoEETujVdRHoA+1RsLHXww81YzRwTUPDewR1bMl+WazLlaeSzWrpgZhTnq95vw+Quv4RfMKQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764116337; c=relaxed/simple;
-	bh=gwii+iVdBVKbWCyCdr/+zthLuTAXebNs8mhXSw/5DRY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uhYN7UrKDcWDvpjp3/K6SAxCcl3yX/XEguV7lgNTb0Fr4ebsDBAg6PNiZk+xVTk3UXFgimlzxhqG/fKj6G2A/ek4ZguPF4BBbrFvIz9N5VzLKXzRhxF/UU9Kk+42wJiA8cFfu6OABwK7jrDi5nUJ/3P6e02n/McHdMWOpKATu9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b=W+AKvPIc; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5APKA97n1087396;
-	Tue, 25 Nov 2025 16:18:10 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=qGBFfom64ubwAcHLmi0kGY4idgptPgMMsGDiFpmxSnI=; b=W+AKvPIcq+Gs
-	i3tYYc6MNSXntK0NmrX6mDMiJh2f1He+waI1tJUFw9eep8toqFOiXcXgv1d9N8HG
-	PGdbn6/fGl6qS46R20vtpCyrMHLj0wH4JK9pXWvIXkrNgijhiczlYtlomrwOthSj
-	zml1ieuFYLYIUzuWZ91PR3D7DWCyaUSc0LCurvPCQxAzzat402xRMP4oyeWdz0ty
-	1EYyma4UMfnDB7SWN7UNyv49rng7qo94JM/vlLrbdULgh6NjCeHD1lakMZtk49rg
-	EGdIyMsuzoL8EN2ERVeIEmaZ0+aXHHcjPKQINfA5NEORkyA0TfReyUgtpSsOkjBL
-	M3cSvkYsxQ==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4ank8qsk46-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 25 Nov 2025 16:18:10 -0800 (PST)
-Received: from devgpu015.cco6.facebook.com (2620:10d:c085:108::4) by
- mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.29; Wed, 26 Nov 2025 00:18:08 +0000
-Date: Tue, 25 Nov 2025 16:18:03 -0800
-From: Alex Mastro <amastro@fb.com>
-To: Leon Romanovsky <leon@kernel.org>
-CC: Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe
-	<logang@deltatee.com>, Jens Axboe <axboe@kernel.dk>,
-        Robin Murphy
-	<robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon
-	<will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jason
- Gunthorpe <jgg@ziepe.ca>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan
- Corbet <corbet@lwn.net>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian
- =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Kees Cook
-	<kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Ankit
- Agrawal <ankita@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
-        Shameer
- Kolothum <skolothumtho@nvidia.com>,
-        Kevin Tian <kevin.tian@intel.com>, Alex
- Williamson <alex@shazbot.org>,
-        Krishnakant Jaju <kjaju@nvidia.com>, Matt Ochs
-	<mochs@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <iommu@lists.linux.dev>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>, <kvm@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, Nicolin Chen <nicolinc@nvidia.com>,
-        Jason
- Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v9 06/11] dma-buf: provide phys_vec to scatter-gather
- mapping routine
-Message-ID: <aSZHO6otK0Heh+Qj@devgpu015.cco6.facebook.com>
-References: <20251120-dmabuf-vfio-v9-0-d7f71607f371@nvidia.com>
- <20251120-dmabuf-vfio-v9-6-d7f71607f371@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB4426ED29;
+	Wed, 26 Nov 2025 00:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.23
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764117809; cv=fail; b=q2Lv89ylcCX0PCRc3Z+lt2dyj+FoQb3++HGcYQWtUXkUyMlzn9zYaf7p3IUFfa/jwg+plv1RFwnLQc2GAin4GVhGl3/RCxO/SaKrx4YWsxNreo/QRKy9+jp0oqn8qHHg8eKVdSx30FuXF85CmjxMSdN9iLIUVC1Ewm+uWyLdWe8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764117809; c=relaxed/simple;
+	bh=fd+0FYu96XELdxaBrFyJpbttxi4+7HMtXWodScB6q84=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=n/Bi1zdqGDpWzdHnldGuLj3kCEXC9XkvXItL+pLF3sf2+S6xyWJ59Ipw/dlLT4avoLCWKQP4SkVqz8fTojDSblQ4NrhB8hJRT8rUg8vRPT9/Tc5QkyM8KJ9CMht+HTX1wHPtH1EElpyKfJCUSvJMEU22gWfj3E90alh/s4jwXiA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=eDS+ta7f; arc=fail smtp.client-ip=40.93.196.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hDqpWsXgEec4yuyz5lK/Ip6elv2M7glweEDph4x4k+fuLLwACIfUK3gH3Uti3nlGIOmUTTRgWJTeLjsPJ6n2S6x6R7HZzsywWkIIMR5i59nfN0ezXGBnW8Qogybe6efCHab3VC53KnY57aVuxdoyG5NRwCpJMPt4hu9qF4x5G5+akNFKfnBsUv6s1166Oupnmnb9TKSmANqfFqZ2I//c0s/Smt9uXpV0u5JTmDXqj6jpPmiWSAqi3VZu90f0Pl0cPbQ3/dQGnw6hdmQ+L0vxwPqzAirhiGTTG5+GP5fwCbTwGjEH5gCXtYgUM5jUzcPlWzTWpInMY9NFqO+hLBPlbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Os0PE/xG8W1OdflXfyNboWWF68ihJvb2UxSW96JU9TE=;
+ b=kwbFRy2b38J3CfocDWApqMtAv5taW3e1MDQt5GeqYq/tEnEOe4GbJZ20uYBqWlNI0J1CSyzgztEfewY5VCjuD7ZoSCV6tn+SFykVuoISYMITVBrKrfyHi8itsXc+Ab34V4MeaDHxOTGlE4gaQQdrQ+zTTQIjeIWRdck/kj1TnvWr7b7btGbHoAuu4tnUkWn60Le8KmwxG9cmVCldo14kMYgPyN7oQ+U+V9F/9WBgW8uY7z1J1PihZQ0HHRB/O378DcmkPuk6M8GXTZ5qQWCbgx0elFOb97bTEiM7JKELQLuzJR3pDK5AIo0ZfNra3lj4Qo8GuiyylHuOfqIbb+F/tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Os0PE/xG8W1OdflXfyNboWWF68ihJvb2UxSW96JU9TE=;
+ b=eDS+ta7fT3PT7PD9RFbRDjPtXF4yMzcKZDSjn2oLatk500AQ+eKCvKLALlQ9LBEwW3Wl+oqoR+aYWzXLT1S9oA8n+2xKKh5buJ+jHilZfo9tngsOGtfmoCecmbbmccCdsBSr26utOFbzHPaxrafPdGaNFWldAG6iZGLewoUXZ7U/80vCjYHs2x3ZPcq+2QrxI6TbCAB2eu2HRqvQ4cVzq+uU8Sgo7S7ErRLdeSJJCgiJLzp+Or38aKaW0/0BDcmZKHLbFANm8c+IdMe6rpaQfReF2vnFvtnic9DpA4q9zXkt9vAlw37ijs380ss2kPO1nTbCpguSINeCyKaYSFeJJw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by CY8PR12MB7338.namprd12.prod.outlook.com (2603:10b6:930:52::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.17; Wed, 26 Nov
+ 2025 00:43:23 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::7de1:4fe5:8ead:5989]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::7de1:4fe5:8ead:5989%6]) with mapi id 15.20.9343.016; Wed, 26 Nov 2025
+ 00:43:23 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 26 Nov 2025 09:43:18 +0900
+Message-Id: <DEI7KGLC4AOM.2I3ZMD21X08TO@nvidia.com>
+Cc: "Zhi Wang" <zhiw@nvidia.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <dakr@kernel.org>, <bhelgaas@google.com>, <kwilczynski@kernel.org>,
+ <ojeda@kernel.org>, <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>,
+ <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <lossin@kernel.org>,
+ <a.hindborg@kernel.org>, <tmgross@umich.edu>, <markus.probst@posteo.de>,
+ <helgaas@kernel.org>, <cjia@nvidia.com>, <smitra@nvidia.com>,
+ <ankita@nvidia.com>, <aniketa@nvidia.com>, <kwankhede@nvidia.com>,
+ <targupta@nvidia.com>, <joelagnelf@nvidia.com>, <jhubbard@nvidia.com>,
+ <zhiwang@kernel.org>
+Subject: Re: [PATCH v7 3/6] rust: io: factor common I/O helpers into Io
+ trait
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Alice Ryhl" <aliceryhl@google.com>, "Alexandre Courbot"
+ <acourbot@nvidia.com>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20251119112117.116979-1-zhiw@nvidia.com>
+ <20251119112117.116979-4-zhiw@nvidia.com> <aSB1Hcqr6W7EEjjK@google.com>
+ <DEHTK1CK84WO.28LTX338E4PXQ@nvidia.com> <aSXD-I8bYUA-72vi@google.com>
+In-Reply-To: <aSXD-I8bYUA-72vi@google.com>
+X-ClientProxiedBy: TYCPR01CA0208.jpnprd01.prod.outlook.com
+ (2603:1096:405:7a::16) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251120-dmabuf-vfio-v9-6-d7f71607f371@nvidia.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI2MDAwMCBTYWx0ZWRfX4aU+4yoxvGRI
- fn5uIgo4phoyJLcsXRpkIiEbPHjmDvXjee+0hL5hZTnMf7KiIbVFpuPgNNxmzJnPoXlqYrYFVCb
- EPyFD9HoNuq9bFWOWGD9jm+tH6jYX1bWvVVFfP7wmtxUCfM6nyWp9RhEW4F3WyT2gvOl06d0Lit
- II5EZrklZ4kZ6ZccZ6uI5fnA2fhf1sXF7BU/xkJ1DrQkkrbuth2BkU2ET85sZ92FJE5mmeSgTwT
- 8QOBncjhE4/DUMlusLJDyljY4I1YOkD69BDnY6LZhPAqbK1Ws3OXJ/OhGSqPOvK63g6mktQG9A/
- 4TjZvhvYG6pYNypXlNsc0JrFDrM/97nZlDYVEtn7wlUXLxFDOXnHdS+vQBslO6M76Dlb+/Whxi6
- 97TQYdVHP7oL0xprhG3cL4XfcOc0nA==
-X-Proofpoint-ORIG-GUID: 5DCeEKEPh0Lq0c0QeLIVINEpDK6-Nmfl
-X-Proofpoint-GUID: 5DCeEKEPh0Lq0c0QeLIVINEpDK6-Nmfl
-X-Authority-Analysis: v=2.4 cv=VfT6/Vp9 c=1 sm=1 tr=0 ts=69264742 cx=c_pps
- a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=3j4BkbkPAAAA:8 a=qThf3vN7FU90BnacfoAA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-25_02,2025-11-25_01,2025-10-01_01
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|CY8PR12MB7338:EE_
+X-MS-Office365-Filtering-Correlation-Id: f965c03d-469f-413d-9eb8-08de2c84cd83
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|10070799003|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MTFEZkt5cnhnYUEyT2ZBWVEzZ2JVVm9MMUVOUzNib3lyZTlaaWx6YmR5eXd3?=
+ =?utf-8?B?ellYOGFjbVQvaEZ0K2prMVZUN0U2QlpUM1A4TDZLUUhoaGwwdnVCYkFyYkVU?=
+ =?utf-8?B?RWVaazJweWRkNnJQdEVKMy8yeUhCQ3Z6ZDVuTlFnbEhsTE84SVhiTVBqRFhw?=
+ =?utf-8?B?Zk01eTdZSXhib2h2OW0wTE1TNHhjZWNlVGh2ZS91bUFrUjdDK3AzR29BT2ta?=
+ =?utf-8?B?VUZ0RDluZzNsOGFBcFJhOWdIZysrWlFqSjRtYkRGTjF1OTZmMlhQTUVrMWpj?=
+ =?utf-8?B?SloxYStyTUl2SGRKc2hUQ0FXbTk0QndLUUwreFkrN2g3M0liRHU2N3VqbUxo?=
+ =?utf-8?B?VE9vckFyd3lOTHhJY1VJUUFkN1RnNm96Um52SlBUcHB2Q2xUbkN5MFBRSkpn?=
+ =?utf-8?B?ZXBab0FucXYyTVFTK0JGVHdqZ2oyQm9qbDdvTzhpN0hhNkN3L1prUWdhc2w2?=
+ =?utf-8?B?WXlKcVBuT1B1MjVuV01XR05mbzd2S2RaRFJqcWdHYWU2NU4rRFVQR3ZmZHph?=
+ =?utf-8?B?aDdib01PelR3dThxNy9ZS2NmVDg1OW54TnNUK2JKRnovSm9DTzlTaUJCUmIw?=
+ =?utf-8?B?ekwyWERPSmMrVTZNZTVhK0NQVHYwOXlNMzhnT2NPamNuQ0NHaXdYSlFCZEtu?=
+ =?utf-8?B?dnVGc1B0c2VpdFFzQnpYcFAyZ0RJbERDdkhENE5Hb05ja2V3T05EcFNxejhJ?=
+ =?utf-8?B?R0dhRGFkcnpJeFNEemVkc2xqbmJiTlpyNm9DL1lnK01pTXYyRkhwWWRydjlN?=
+ =?utf-8?B?aU41S0dSVnVlQk5BQVJXOVRkMG9oeTViTDBkbFVwZ0N1cG5kOUF2UUdsU28y?=
+ =?utf-8?B?YjVxM0IrWWkxMDA1L0FQZy9FNm5UR0lIVGhPb2RRd2IwbnRtVmIvQXVpTzRC?=
+ =?utf-8?B?aWR6c2ZBZG1MS0YvWDk1ZkY1NWt0SnMyN3YwTzRHUTQvNDk0aFNqTHJqYmZG?=
+ =?utf-8?B?OHFzTkgwVnJYcnV5dWhzckxlQ1h1UkNyMkx5TC9ZK1lqa0t5cVpvZ1pITlc4?=
+ =?utf-8?B?elBqN0ZuaS9HZGVoT0E0dDgvOFA5NnJnbzZScFE3N09VM0cwTGVCc09CRW4w?=
+ =?utf-8?B?RWdsK3laRlF3em91RUZGYVI4YWphYWZsaXBwblJjQUM4WkhFa1Q5SWdFNW9p?=
+ =?utf-8?B?dHI4Q0NJTmEwYlVEbzltSzlhNWdqUjQ3Y09CdVV5MlB0RDFmWUl3RFhlSU9G?=
+ =?utf-8?B?ODgwOWtqUkt2bmwvY2hUb0pKVWdYV2NyVHg1NVhhMmFaZkhpSUI3ajdEMjZW?=
+ =?utf-8?B?Z0VUUCthYi9GbDNIZnFNdUl1NEhYVEpWVkx4c0hFRUJ1OEhGNWZZc1N4Yk1q?=
+ =?utf-8?B?UzQrMjdxRm9uNmdJYjFleVV3Y1ZuaTBxelJUcisyQldvRWkvOTROek5QK1p6?=
+ =?utf-8?B?MGNZaUl3SjNCdUFFejhYRXVJWGFJeW1lTk1jUUdTRFg5R3BuRzEwWGZxWERq?=
+ =?utf-8?B?UG5lNU00d1l6V0NoQWxYM1lqd1lBTlUrYlNpdkQ1UzlkbDFqOEx6WU9EU3BY?=
+ =?utf-8?B?T2djUlg0bnMyRDN5SW5IL2ZQM1kxaUk5K29NWXdMNVBhWU1DWjFWZS9JcmRh?=
+ =?utf-8?B?QlducjVITU1EdDBJTU0xSWpRaklCUUI0Yk5lYllXTmVtUXQ2bitRLytjZEhY?=
+ =?utf-8?B?SzBHT0NtUlhNNEprcUJ0N29DWWxRZFlabmNDYWJ2NGpjVjc1U2dqZUI1bURY?=
+ =?utf-8?B?T0RPTURvQVpvTDBqZmZ1YXk5aGpXM1JMOFFyY1JpcVdxK3phckc2SWZmNDNm?=
+ =?utf-8?B?QVBndXhhOWs1cEJ0dFlLejNFbDRtSHQ3akdhd3N6TWxDcHkxYlVtM3pGNXNh?=
+ =?utf-8?B?VFJPM3ZSclkxRkVHdVY1V3M0dll3d3U0aDd3SEw0d1ZIMTArRUx5NENLbzZt?=
+ =?utf-8?B?T2ZUSW50TjBxeTJYdlp1YnZQWkpYbE9zbnFJeTBIbUFKYjNLQzlMYUIzTXVK?=
+ =?utf-8?B?QVJpWWlsUE5iQVVmRXZEV2ljK0NEZUJmSW53TXRnWnBkLzVPYlFMbXcxbHBU?=
+ =?utf-8?B?RHY1M1ppdXdBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(10070799003)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YzBvZ1VFWXBTNVZoOGZuY0svMVc0c1JVSHJCQnYyZzBPeGw2ZnZtK3NKcTg2?=
+ =?utf-8?B?d3RTdGNJZnpLclRtNGZTZTRPL2p1NGtVNE5sTnlQeEpGcTBLZUpKNmhkMkRL?=
+ =?utf-8?B?c1RxaVhLdnFxYSszeXA0Q0RDV0pZazR4MXY2bkxBbkl5Y3hobUJ2bXVOQUJz?=
+ =?utf-8?B?cGd5dTFYY3hvMldzYVNSVmxKNzZXSTZxTURsYnRtZ0VHclgxMFNNaWQ1dEtX?=
+ =?utf-8?B?aUlqeWl5djAvTWw1eG9namZMaDhEbmhoSE1EeDg4cFg5ZmVxWERUcWhjL3dj?=
+ =?utf-8?B?MW5sTE1aNmNVUVIvdVF4enBxRjFrTjVNSExQeWt4ZkdKVWFWbUkya295TGo0?=
+ =?utf-8?B?TFZDc3RsRyt5NzJ4TjNSb2dkQTZJYlN1OGZlVndvVUlkV3JmTkRTK3lMbUVR?=
+ =?utf-8?B?NmNJY1doTzZHclVoblFCUnphVGdmUHhycCtxK0tBakF5OUhlcVU0VU9DY3ZJ?=
+ =?utf-8?B?M0V1TEZOM21JS3ltRGp3Q01uMDhFK3BZUUpQS0YrT01qSnA5QmExU0RXYjBH?=
+ =?utf-8?B?SDk1WU5oZWxjcDJtby9KWkdDTDJ5RW5naFZ6M3FqSEIzNmNSeGxSeEw3Ym5H?=
+ =?utf-8?B?NE5WQlM0QXhRK3F0bFF1b1ZSazlORHlucVBVMVQxc2g1RnNBd0duTERZMUd6?=
+ =?utf-8?B?Vzdwd3JuckRsQ0xYRWlHQ2Y2QnBCRHRTOTVRU0l5d0NRQjNhRzZpZDd4czE1?=
+ =?utf-8?B?SzZkOVF0Nml2RlBGbWZYdTFUcGpFS1UyVHdLcVFnSjhCdGZNakRTdXNvUWgx?=
+ =?utf-8?B?bjZiem9zZ1dxTDE4MDVQZVR2V1pzMXNQbmwzS2dqNUk5YjZwYVdCUUEwN3RC?=
+ =?utf-8?B?cUNRZzA1MWhNUjdwbTdzUlBFcGxEblExbGN0WHJjYWc0dW42bXdwY1RJVmd4?=
+ =?utf-8?B?cktqNEFGWVRFdHFsR1J0Y0c0UjhlNy92Qzdqc3FwTDI3RVc5L2pnbFNMSldr?=
+ =?utf-8?B?Z1VJM0NlQStGck9QZUh1NFZVTk9saDFPaHhHNFZHSi9uQVpNK2tJQ0hwNmht?=
+ =?utf-8?B?N2hDc21jWm5oajdTSFlrZ0lMVGJZekE3TDZ3cmxXZG5wTjVSQ1ZGYTNRek53?=
+ =?utf-8?B?cEpiL0VESThodUh2SHpkVEZUd0NyZTU4WVh3aHNJc1lraUtBcnJNVUV2Uk1Q?=
+ =?utf-8?B?WnBYR2tVQk5ESjYrQytrN2w4SHZ6eFAxMDg1cXFXMDc3cjVKNDZmczlPNDh6?=
+ =?utf-8?B?OW9JcS95V0lUeDFWbmJNdVAwbmVESWtKUi9JNmsyV01PN3ZLbFZZeFZyWWh2?=
+ =?utf-8?B?Z3dIallsU0tSemgvQVFDcUlUZHNuWWI1SmlRMFFZNXVjV3YwUTJqRU1NTndR?=
+ =?utf-8?B?eUI3dURpZ0M2TG9sbnFtbCtsakgyWmtReUxKaXJpSnBQa21vODEvNTNJN2lp?=
+ =?utf-8?B?U0VCZ1ZHK3U0bFpvVkZXKzM0VTlDbDRrRkkvOTdoWTgvelYvSWRmcnI5MVdH?=
+ =?utf-8?B?NmNUMTcrTHR0cHBCTjdha1lvV1g3Qll2VWt0U0xlRFE5Z3llUzNLdnRlRDY5?=
+ =?utf-8?B?cFRjTUdaekFBaGZPNHdXNXZRenpNMmFpSE9pNDR1WG9OWlFtYnRKZXVqRkdH?=
+ =?utf-8?B?UlVzbnAyRG4yRUpQanNwY3p4YzFzWXZ6ZWZhaDlNcWpVOERSOE1TLzlPekxk?=
+ =?utf-8?B?R2oxSGhIOGx0Y1VoY0VkUEg2eFU3OUpXcStGa2kwc2NhdVRCRHVMQmd4UEtz?=
+ =?utf-8?B?YkRBZXRNQktkdnY3SnRqZ0lseU0xU2JBdW1CVE4wMkY4a2ZlOXhRMTZmQnEw?=
+ =?utf-8?B?a0JaWEJIcjRrd0JiUmtqMXcyZ1FXOW9PZUM4K09mTUFYTis5YkhOam1ydWJj?=
+ =?utf-8?B?VnpvcGlkM1BTZi9SWTZQWkNJQW5hWTdRR0lYOVJpSHJYZUE2QkoxakV6YXln?=
+ =?utf-8?B?SVVGS0RyYzhmQWRNNWk1WlVZZmR4RXhYbzNZWVV0Z2NnTk9lMDh0WkloZmlK?=
+ =?utf-8?B?Q1QxN1BPYnJjK3FzalcwVEZCRG1Ld2UxRmlCcEY1OUkvZjBtN0txZFhBVDU5?=
+ =?utf-8?B?QVRYRHNHa1ZqRTR4T3lIRitXNiswNGhRakJHQjNyb1lQdFByQ1VqVEpPWmov?=
+ =?utf-8?B?ODJ0a3Z1bHJzY1ZHUnZPMzB1MmtlcDZsWFlTRUpndGFXdXFLaDlHOG11MXN3?=
+ =?utf-8?B?Rks3N0FqajQyMDM2L1B2V0lRaVpFdmNLVUZPbnZqa1JYVkNzb0dMdWdqczZN?=
+ =?utf-8?Q?ESJR+KkmaiQWpO1ZqR2UpNwv4u+/X6P6AwhPtZfLTWrf?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f965c03d-469f-413d-9eb8-08de2c84cd83
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2025 00:43:23.2040
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Dm7iHRcONOl/lYTk1s1SH+1uTaoF0fJWCRlPnR4Yrh+POEPAgrJBShK13bnZonLcaFqpdqqHSPFpFw055dqWpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7338
 
-On Thu, Nov 20, 2025 at 11:28:25AM +0200, Leon Romanovsky wrote:
-> +static struct scatterlist *fill_sg_entry(struct scatterlist *sgl, size_t length,
-> +					 dma_addr_t addr)
-> +{
-> +	unsigned int len, nents;
-> +	int i;
-> +
-> +	nents = DIV_ROUND_UP(length, UINT_MAX);
-> +	for (i = 0; i < nents; i++) {
-> +		len = min_t(size_t, length, UINT_MAX);
-> +		length -= len;
-> +		/*
-> +		 * DMABUF abuses scatterlist to create a scatterlist
-> +		 * that does not have any CPU list, only the DMA list.
-> +		 * Always set the page related values to NULL to ensure
-> +		 * importers can't use it. The phys_addr based DMA API
-> +		 * does not require the CPU list for mapping or unmapping.
-> +		 */
-> +		sg_set_page(sgl, NULL, 0, 0);
-> +		sg_dma_address(sgl) = addr + i * UINT_MAX;
+On Tue Nov 25, 2025 at 11:58 PM JST, Alice Ryhl wrote:
+> On Tue, Nov 25, 2025 at 10:44:29PM +0900, Alexandre Courbot wrote:
+>> On Fri Nov 21, 2025 at 11:20 PM JST, Alice Ryhl wrote:
+>> > On Wed, Nov 19, 2025 at 01:21:13PM +0200, Zhi Wang wrote:
+>> >> The previous Io<SIZE> type combined both the generic I/O access helpe=
+rs
+>> >> and MMIO implementation details in a single struct.
+>> >>=20
+>> >> To establish a cleaner layering between the I/O interface and its con=
+crete
+>> >> backends, paving the way for supporting additional I/O mechanisms in =
+the
+>> >> future, Io<SIZE> need to be factored.
+>> >>=20
+>> >> Factor the common helpers into new {Io, Io64} traits, and move the
+>> >> MMIO-specific logic into a dedicated Mmio<SIZE> type implementing tha=
+t
+>> >> trait. Rename the IoRaw to MmioRaw and update the bus MMIO implementa=
+tions
+>> >> to use MmioRaw.
+>> >>=20
+>> >> No functional change intended.
+>> >>=20
+>> >> Cc: Alexandre Courbot <acourbot@nvidia.com>
+>> >> Cc: Alice Ryhl <aliceryhl@google.com>
+>> >> Cc: Bjorn Helgaas <helgaas@kernel.org>
+>> >> Cc: Danilo Krummrich <dakr@kernel.org>
+>> >> Cc: John Hubbard <jhubbard@nvidia.com>
+>> >> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
+>> >
+>> > I said this on a previous version, but I still don't buy the split
+>> > into IoFallible and IoInfallible.
+>> >
+>> > For one, we're never going to have a method that can accept any Io - w=
+e
+>> > will always want to accept either IoInfallible or IoFallible, so the
+>> > base Io trait serves no purpose.
+>> >
+>> > For another, the docs explain that the distinction between them is
+>> > whether the bounds check is done at compile-time or runtime. That is n=
+ot
+>> > the kind of capability one normally uses different traits to distingui=
+sh
+>> > between. It makes sense to have additional traits to distinguish
+>> > between e.g.:
+>> >
+>> > * Whether IO ops can fail for reasons *other* than bounds checks.
+>> > * Whether 64-bit IO ops are possible.
+>> >
+>> > Well ... I guess one could distinguish between whether it's possible t=
+o
+>> > check bounds at compile-time at all. But if you can check them at
+>> > compile-time, it should always be possible to check at runtime too, so
+>> > one should be a sub-trait of the other if you want to distinguish
+>> > them. (And then a trait name of KnownSizeIo would be more idiomatic.)
+>> >
+>> > And I'm not really convinced that the current compile-time checked
+>> > traits are a good idea at all. See:
+>> > https://lore.kernel.org/all/DEEEZRYSYSS0.28PPK371D100F@nvidia.com/
+>> >
+>> > If we want to have a compile-time checked trait, then the idiomatic wa=
+y
+>> > to do that in Rust would be to have a new integer type that's guarante=
+ed
+>> > to only contain integers <=3D the size. For example, the Bounded integ=
+er
+>> > being added elsewhere.
+>>=20
+>> Would that be so different from using an associated const value though?
+>> IIUC the bounded integer type would play the same role, only slightly
+>> differently - by that I mean that if the offset is expressed by an
+>> expression that is not const (such as an indexed access), then the
+>> bounded integer still needs to rely on `build_assert` to be built.
+>
+> I mean something like this:
+>
+> trait Io {
+>     const SIZE: usize;
+>     fn write(&mut self, i: Bounded<Self::SIZE>);
+> }
+>
+> You know that Bounded<SIZE> contains a number less than SIZE, so you
+> know it's in-bounds without any build_assert required.
+>
+> Yes, if there's a constructor for Bounded that utilizes build_assert,
+> then you end up with a build_assert to create it. But I think in many
+> cases it's avoidable depending on where the index comes from.
+>
+> For example if you iterate all indices 0..SIZE, there could be a way to
+> directly create Bounded<SIZE> values from an iterator. Or if the index
+> comes from an ioctl, then you probably runtime check the integer at the
+> ioctl entrypoint, in which case you want the runtime-checked
+> constructor.
 
-(i * UINT_MAX) happens in 32-bit before being promoted to dma_addr_t for
-addition with addr. Overflows for i >=2 when length >= 8 GiB. Needs a cast:
+Thanks for elaborating. I really like this idea.
 
-		sg_dma_address(sgl) = addr + (dma_addr_t)i * UINT_MAX;
+You are right that is would drastically reduce the number of times we
+need to rely on `build_assert`, as well as concentrating its use to a
+single point (bounded int constructor) instead of having to sprinkle
+extra invocations in the Io module.
 
-Discovered this while debugging why dma-buf import was failing for
-an 8 GiB dma-buf using my earlier toy program [1]. It was surfaced by
-ib_umem_find_best_pgsz() returning 0 due to malformed scatterlist, which bubbles
-up as an EINVAL.
+Now I would also like to also keep the ability to define "integers which
+only X LSBs represent the value", so I guess we could have a distinct
+type for "integers within a lower and higher bound", since the latter
+requires two generic constants vs one for the former.
 
-$ ./test_dmabuf 0000:05:00.0 3 4 0 0x200000000
-opening 0000:05:00.0 via /dev/vfio/56
-allocating dma_buf bar_idx=4, bar_offset=0x0, size=0x200000000
-allocated dma_buf fd=6
-discovered 4 ibv devices: mlx5_0 mlx5_1 mlx5_2 mlx5_3
-opened ibv device 3: mlx5_3
-test_dmabuf.c:154 Condition failed: 'mr' (errno=22: Invalid argument)
+Maybe we could derive the current `Bounded` and that new type from a
+more generic "constrained integer" type, which constraint rule itself is
+given as a generic argument? From this we could then easily build all
+sort of funny things. That could turn into quite an undertaking though.
 
-$ sudo retsnoop -e mlx5_ib_reg_user_mr_dmabuf -a 'mlx5*' -a 'ib_umem*' -a '*umr*' -a 'vfio_pci*' -a 'dma_buf_*' -x EINVAL -T
-Receiving data...
-13:56:22.257907 -> 13:56:22.258275 TID/PID 948895/948895 (test_dmabuf/test_dmabuf):
-FUNCTION CALLS                                 RESULT                 DURATION
---------------------------------------------   --------------------  ---------
-→ mlx5_ib_reg_user_mr_dmabuf
-    ↔ mlx5r_umr_resource_init                  [0]                     2.224us
-    → ib_umem_dmabuf_get
-        → ib_umem_dmabuf_get_with_dma_device
-            ↔ dma_buf_get                      [0xff11012a6a098c00]    0.972us
-            → dma_buf_dynamic_attach
-                ↔ vfio_pci_dma_buf_attach      [0]                     2.003us
-            ← dma_buf_dynamic_attach           [0xff1100012793e400]   10.566us
-        ← ib_umem_dmabuf_get_with_dma_device   [0xff110127a6c74480]   15.794us
-    ← ib_umem_dmabuf_get                       [0xff110127a6c74480]   25.258us
-    → mlx5_ib_init_dmabuf_mr
-        → ib_umem_dmabuf_map_pages
-            → dma_buf_map_attachment
-                → vfio_pci_dma_buf_map
-                    ↔ dma_buf_map              [0xff1100012977f700]    4.918us
-                ← vfio_pci_dma_buf_map         [0xff1100012977f700]    8.362us
-            ← dma_buf_map_attachment           [0xff1100012977f700]   10.956us
-        ← ib_umem_dmabuf_map_pages             [0]                    17.336us
-        ↔ ib_umem_find_best_pgsz               [0]                     6.280us
-        → ib_umem_dmabuf_unmap_pages
-            → dma_buf_unmap_attachment
-                → vfio_pci_dma_buf_unmap
-                    ↔ dma_buf_unmap            [void]                  2.023us
-                ← vfio_pci_dma_buf_unmap       [void]                  6.700us
-            ← dma_buf_unmap_attachment         [void]                  8.142us
-        ← ib_umem_dmabuf_unmap_pages           [void]                 14.953us
-    ← mlx5_ib_init_dmabuf_mr                   [-EINVAL]              67.272us
-    → mlx5r_umr_revoke_mr
-        → mlx5r_umr_post_send_wait
-            → mlx5r_umr_post_send
-                ↔ mlx5r_begin_wqe              [0]                     1.703us
-                ↔ mlx5r_finish_wqe             [void]                  1.633us
-                ↔ mlx5r_ring_db                [void]                  1.312us
-            ← mlx5r_umr_post_send              [0]                    27.451us
-        ← mlx5r_umr_post_send_wait             [0]                   126.541us
-    ← mlx5r_umr_revoke_mr                      [0]                   141.925us
-    → ib_umem_release
-        → ib_umem_dmabuf_release
-            ↔ ib_umem_dmabuf_revoke            [void]                  1.582us
-            ↔ dma_buf_detach                   [void]                  3.765us
-            ↔ dma_buf_put                      [void]                  0.531us
-        ← ib_umem_dmabuf_release               [void]                 23.315us
-    ← ib_umem_release                          [void]                 40.301us
-← mlx5_ib_reg_user_mr_dmabuf                   [-EINVAL]             363.280us
-
-[1] https://lore.kernel.org/all/aQkLcAxEn4qmF3c4@devgpu015.cco6.facebook.com/
-
-Alex
 
