@@ -1,292 +1,232 @@
-Return-Path: <linux-pci+bounces-42164-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42165-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EB55C8BABE
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 20:45:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E67F6C8BB0C
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 20:48:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id ABBDD4ED812
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 19:42:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 365053A71B1
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 19:43:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01021342526;
-	Wed, 26 Nov 2025 19:36:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C7F333F8DC;
+	Wed, 26 Nov 2025 19:43:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WWTiWNxf"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="IJZUgyCa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012002.outbound.protection.outlook.com [52.101.66.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D072234D925
-	for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 19:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764185807; cv=none; b=t6TRG1x/3cYF0svLDg9i+rJ5hjQxcSXduPClvX/VsPrEcNfo9pmezD9+LAajcAqt7XLvzg36YOAELx8M/4QnPESM3D6uaayvJzcAplerMEHPq+0QIezAQsNXmfpQ+zeoORLFyg7Y/DI2CYrGlcZKpYowrsQFZJT4vCvC6bFaGtw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764185807; c=relaxed/simple;
-	bh=KlrakXRYDAwae9AantcdeyMmPCGsY3ONeKbMm2nz5i0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HiGn0OEXdMrpSmJJUWM3du+Yb/igTy4STuFoA7FLsTqdRUQ3sUWa+KS5nk5nKGtMsGsYOikiWk7W1ICZbBT7F1CR9UAn11dmzLkK6DvTs2XKyVeVtz+qOnYwlNnsV3x66cQCOkKSFMpsKlvCKJlw7fmBlw9y+yTHOUSdrngNUGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dmatlack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WWTiWNxf; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dmatlack.bounces.google.com
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7aa9f595688so88438b3a.2
-        for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 11:36:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764185804; x=1764790604; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=F4HruGk4w1YQ8UWc4dTnuGXBMMZoDm4CrvXWdnupA6c=;
-        b=WWTiWNxfaNnX+oBcLgUNkYafPNVUbL0RUQAhNMs6LbIoWTkYvBzvKvGou9CwkxQdEl
-         hix409K4K9TiANobe19fQJCMJhc3QJzPv6hqy8QJJkmTtBBkvh/NMgul1tb4TnhnzsON
-         YCf2Ug00lvbBFF3qZcsInQB6+bcuXS9XJ0gXVgKExcMWgfU5mQ76v9VuM2t0Ft0UpPC6
-         pJ1djSga2WnvBHAxMskx2fxW42RE/5NJqhHN5Bqa39DdNiM+27DnOC/CqdJLi9dvwq9z
-         L8suHOGkhtCOw4A/gZ6CXYFE4ZAsaI/7ldJqg0FwLUTHmoRtUoRjrCOnovelx/T13YHR
-         RuDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764185804; x=1764790604;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F4HruGk4w1YQ8UWc4dTnuGXBMMZoDm4CrvXWdnupA6c=;
-        b=LkNRXk1odCWhn8inAmJCcvuNrmU092mipaCxw7cMrJ6xHHBOGMO01OM/4izWqyftxD
-         jjPmvxp/kONeAPhh2erYKdGu3xrNgRPFxrQ8knS2efMw5eUC/lY29D3YYhw45GgYR9dG
-         Qwmqd63lyy9+eEkGBZbo1T5SSlNWfvXOPJbR3Tq8OhN4/SdwVrTA+mbm+3gZpH5QzAwH
-         AX1eiuFStSMAYmvQN1fz69oEGKNfwCpsiXjGdKyCwPDu6syROLtd3HOgasFKapeWdtd4
-         XKG2G09WxUmmgE1AcY/9yHvYL/DquA7NIaWsGrO9cHRUZEWLtPC5cf6vulunq2SqLJki
-         6/2w==
-X-Forwarded-Encrypted: i=1; AJvYcCU/eUCpBXKILnbqGbsVaGCTq115ztnK1uSEKpWqxwqCSWc8wGWDNwVoDJdEhKhMTDkYQaVa3wo/k78=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXbpE9kmaCC5AJJ4HS/e7QZZe7O1Sr00RXIIipidxLAFLIIEtb
-	wIc8nOiablAXzIinEqTar3Bh+qsGRCfe4YKuFh3NMipGDSmacbBlYG6ImiAQOSrv0mPrItKWo/h
-	urK1iZU88J6l8pw==
-X-Google-Smtp-Source: AGHT+IEBIWWppu0CTBFQwqlZd62yUWkoTSQEwzYofKMCO8/xCUHYiOx68XHiZKglrx1LrJ62PFpPkJgu1NINKA==
-X-Received: from pfbei35.prod.google.com ([2002:a05:6a00:80e3:b0:7be:dfde:de14])
- (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:3ca8:b0:35f:c643:105e with SMTP id adf61e73a8af0-3614eda6de1mr22522832637.34.1764185804103;
- Wed, 26 Nov 2025 11:36:44 -0800 (PST)
-Date: Wed, 26 Nov 2025 19:36:08 +0000
-In-Reply-To: <20251126193608.2678510-1-dmatlack@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3069311969;
+	Wed, 26 Nov 2025 19:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.2
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764186191; cv=fail; b=naOeQvpm6oVMvszjsTrdyIOOLaNb6qfpBBQcSYuQmX6ndgYv0Xq/stI5olGMJTdL+hMam2zyHuwPhp5Ij4cv4tggSYVKL9qG5mljQfprKDDVTcLZIiY9ArMMSIoKUHfSJs03SFnk6bOOgIHJtbDDlNviH6JQdA49lVxMRiMdhiM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764186191; c=relaxed/simple;
+	bh=ZEdDLbStlNu+RjMbcnmy8asFY6t7UOr4H/SwDxjJjLg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=nw72hzl9u/8nazYXzmNvHB1h2CzoBM8OKopXIlFM8GEO4T1IBS06R32MOXj9EYa2S+2L02nnceOOYoLRVycVKhTXmXdwC3kGci7vWhB5OTuMxI6J8gYE+zoSlFftM6c8GKvcsqw+G5jeUT1S/qNvU9faqqeLfiTgit1ha8OYEh8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=IJZUgyCa; arc=fail smtp.client-ip=52.101.66.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZMklfARzdoUsMMgpxLyT3ak4nvyNKF0QzjexUExef6u/Q+0HYoOpATNjRygMkivZAmVx/bCAZT11CZWn1eM+fKsyUi4cRx8oF5UDd5lN/ZslVTE2KDtb5vG0lqTr1Am5IlWBMyplWm9h6oVJgZ4BPN3tAjF0MzKghB2FxWIivK+Hb9x/DL/mNCQVw/ENj5ZdHzCy8WwWjctdtrTOuP1fdn7pni0AIrsF8RNzqGuDqmHpoI7e0QK9eIl2HB5VVJqNU3L+zA4bZikrM7bFvsksbh/rMbVgGoZbxu2TtSybwnQXs5vDeUp0zIj0gzctNrswc0eFwAqnweWmUu4PNeCtzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WaG+j5sxiF4efnKmizh9hodyhROzHgwI2tCbvUmkeUo=;
+ b=yCrHKv0OuZNKC7tH6fpSC2Vqw3grusLVSwtn3JbIvsiSaZ6h8IMuflx4zAicFf78mF2JhNEYCGhGYbtuGjBo7FI8iZq1kODvxWVv38wjcVRHphLusY+hBXnlzlC/efxfukIo2HrGTzkxpxpjCJj5qoYikUlYY1QQnRbW5qxktV/BABwR3t4MEKCiamicdWXqhkQ24C3M5cx7eIC8EvD8Pc1JpzkwEEdSfGVCtc7lMgx/ShIiBQWcUMvnbjPNeNlwEHbZhoGt8ebIWM9IeVlaYKRk0YinQDcG5t9GgwnQa3avWiDgFC9Yee6lQ99nGM0SSSGRV93FSPHGQtoI0QED2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WaG+j5sxiF4efnKmizh9hodyhROzHgwI2tCbvUmkeUo=;
+ b=IJZUgyCabC6rgprDpR2GwmqS+YUxvaCMOpzzA0PIhzVM05qW7dvv1FNd8M9dcC3qlbMWe8/+Vi4Eu0bagLOnjaUI7bQCrCeUuuLYKlRAGw+/d9CWOlrUaZZ/iROut0atuAg8B6/ATC7YWds8l0WIMvsFk9qJxy9LSAGHJY+eKbZbYvshxm6Dyjba8qV7OAWAEK6VA0pvmPwiy5e8Xi8QZxZkUY0oZKwqBZTyCX97s30++JEi6sxHPL2PrN0B15BZvV+HzEVQqG1fmqiybtfc5PHDWLtowmallijlQWSAxeudEetjWCNrsk1XA2q/9xD++pryhh0Evk3upMH/HArpRw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU2PR04MB8582.eurprd04.prod.outlook.com (2603:10a6:10:2d9::24)
+ by DB8PR04MB6779.eurprd04.prod.outlook.com (2603:10a6:10:11b::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.13; Wed, 26 Nov
+ 2025 19:43:05 +0000
+Received: from DU2PR04MB8582.eurprd04.prod.outlook.com
+ ([fe80::eab4:5469:3643:fa12]) by DU2PR04MB8582.eurprd04.prod.outlook.com
+ ([fe80::eab4:5469:3643:fa12%6]) with mapi id 15.20.9366.009; Wed, 26 Nov 2025
+ 19:43:05 +0000
+Message-ID: <f38396c7-0605-4876-9ea6-0a179d6577c7@oss.nxp.com>
+Date: Wed, 26 Nov 2025 13:42:57 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4 v5] MAINTAINERS: Add MAINTAINER for NXP S32G PCIe
+ driver
+Content-Language: en-GB
+To: Vincent Guittot <vincent.guittot@linaro.org>, chester62515@gmail.com,
+ mbrugger@suse.com, s32@nxp.com, bhelgaas@google.com, jingoohan1@gmail.com,
+ lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ Ionut.Vicovan@nxp.com, larisa.grigore@nxp.com, Ghennadi.Procopciuc@nxp.com,
+ ciprianmarian.costea@nxp.com, bogdan.hamciuc@nxp.com, Frank.li@nxp.com,
+ linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, ciprianmarian.costea@oss.nxp.com
+Cc: cassel@kernel.org
+References: <20251118160238.26265-1-vincent.guittot@linaro.org>
+ <20251118160238.26265-5-vincent.guittot@linaro.org>
+From: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
+In-Reply-To: <20251118160238.26265-5-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PH7P222CA0030.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:510:33a::13) To DU2PR04MB8582.eurprd04.prod.outlook.com
+ (2603:10a6:10:2d9::24)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251126193608.2678510-1-dmatlack@google.com>
-X-Mailer: git-send-email 2.52.0.487.g5c8c507ade-goog
-Message-ID: <20251126193608.2678510-22-dmatlack@google.com>
-Subject: [PATCH 21/21] vfio: selftests: Add continuous DMA to vfio_pci_liveupdate_kexec_test
-From: David Matlack <dmatlack@google.com>
-To: Alex Williamson <alex@shazbot.org>
-Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alex Mastro <amastro@fb.com>, 
-	Alistair Popple <apopple@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
-	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
-	Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, 
-	kvm@vger.kernel.org, Leon Romanovsky <leonro@nvidia.com>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org, 
-	Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Philipp Stanner <pstanner@redhat.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>, 
-	Yi Liu <yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>, 
-	Zhu Yanjun <yanjun.zhu@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8582:EE_|DB8PR04MB6779:EE_
+X-MS-Office365-Filtering-Correlation-Id: d85c4944-a43f-4b04-51ea-08de2d24043a
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|19092799006|376014|7416014|1800799024|7053199007|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QUZWMk0zaU1uWlppaG9EYmw5N2N0Q09oWVBRT3dveUxyMVlaekppMU1NYXBq?=
+ =?utf-8?B?MThDUS9sQ3JWRUJNUjU1NlRTYStJSmZ4dUdlS0xTTEpDa3F5MEcyR1k4RmVI?=
+ =?utf-8?B?Zlh1TGNlQzVKQUhHRzlxV2Z3ZGNkSGsycUJxa0t5TzFSd2s0NzBhMnhzbjhW?=
+ =?utf-8?B?UzhlTnpiVURXY0RDNnp6WGtUampFT1RSTmhiVUFyNU9MWWxpSk16NGx4cVAx?=
+ =?utf-8?B?S29NbkYrNWRSK0RycEdrQjJyekdmcFNwTWJ3T0FCbnA0Lyt5aXZEWUpmc3Jo?=
+ =?utf-8?B?dDVxQ3VLRlVpM1hDZ1FZNFphMVpCdHBqMEg1MmQ3ZCtBWnZ6UzQ4dVpQNlpj?=
+ =?utf-8?B?am00TVNvdDUwWkpyS0JtYXh3a1ZacW9HS0lUY0lnL1dqcldEZElnM2ZDSU9E?=
+ =?utf-8?B?dTNWWmkweU5aYjExMU5SLzlOUklGa2hXbUQ2NnhUVmNZdmRjdEZvenJuLzZE?=
+ =?utf-8?B?OERJM0NlTG9lU0I3dkM1VE1uN2pPRHllelhNQU1VN3VaNGQ5UVdJNDRobUpD?=
+ =?utf-8?B?cW1ldXYrd2RsSHJCUTlBNVVOcXY0aG81MTRJK1F0bXFKTS9YTTR1VzJadjRm?=
+ =?utf-8?B?anV0ejdQTnZWeDlUUkZhQVAvdVJSVlkrL3JZM1FqSzBPTFczenIrQXZxdW5n?=
+ =?utf-8?B?dUprTUZSK3NZWUt6SGZHVHQxYzlrengvMkM1aFgySVZpOVNtRkpDdVQvL2NL?=
+ =?utf-8?B?Wit1SGZRTE1VNDVPY3UrQjFRRG5kOFpUMTlBU0FIRFU5UXhYVUZlNnBYejZr?=
+ =?utf-8?B?MzlwM0QvNi9QQXVHUUNCMWcySWdpMXZvUTcrbENFNFFDUWhTZ3oxeEFQSWtD?=
+ =?utf-8?B?dTE0U25FWkxRUWdKWmlqMWIzbm9xR2N3bEw1cEtNMGdMU1R1SUdqMjR1OURT?=
+ =?utf-8?B?T3prSGFhcjd3bHNZdVdIaWZYSFIyZ1BiZzdPdDZsQVptRjJDTGJQNjBxY014?=
+ =?utf-8?B?WERpRjhSM2cxYjNrejMzTEFkTGt4WVRHajBIdkpVTnBMNUNmdjd2cWtQVTJN?=
+ =?utf-8?B?TE4vbU9UcU9EWXBhaVdSUzBybU9QMjI4ZzVPTXFsR0V1NnRuZXhxdU9LWkJk?=
+ =?utf-8?B?cWQreFMzSU9QcmE5c2hKdUFETHRZNGhNa3pGMjM1bGlpYkxTL1J6M3B4aXQ1?=
+ =?utf-8?B?TnJDa0dKOVpvZitldjdGbGIrVU5mT21yRVd1dnFGNGdCMDhwMUtCYUhOU3lJ?=
+ =?utf-8?B?V2ZhaTRiaXRhVW1DclVkOVhQTjJjZ3MveVpRKzB0WmRpTjRwRXN4MmUydG14?=
+ =?utf-8?B?TGppK0c4d2M3cnRHWnZoenJUK1FSU01hUzFoaDZ3UzM3SjdFcDBNbk5DQkZq?=
+ =?utf-8?B?WnpvWUpOaUpzaEV4SW9LOFdzR0FNNEtYNTlDVlh2MHBIRHZoMDdpWFJ4Nlp4?=
+ =?utf-8?B?MEpPV3ZxOGxjRmNVKzY3OHhQNjNFMVdJaXNNSjNxQmpuM1haZHZJYnFlZU9p?=
+ =?utf-8?B?TFFGVEJ4cDhjckExaFRhVHNIejNIazdBUzFHUEgvcVdWd1VEVVFUa0lJSHVR?=
+ =?utf-8?B?RkxsQVZKeVlFSzV3V0RTSk5uTEQ3QmlXditkTWVSUWV0ekRRSFpPZDI1REtZ?=
+ =?utf-8?B?WVlCOXNNWDRzTVpRNlZQdlVFK2pVUG9CbndyNWErZlB0RXVnaEswZitwL2JW?=
+ =?utf-8?B?VWhJNkVQSlZVS1R5SGUrUlEwUTM5bmJWTFZZTGdpSkR4eHRBRThYRG51dGtK?=
+ =?utf-8?B?OHJoTzF6VklRS2d4d2JHbFZBcmhOZEVzZy9SZXgwYkFxMmE2RGlMVHFETkM3?=
+ =?utf-8?B?dTFpemcwVTFodnEyaWpTaFQ4bDJRY0xXcjJjSzQwN3dTTFVsamR5UndicXdl?=
+ =?utf-8?B?MUVvalZZK0dxcEhlQ1d0YUl1ZTgzS280T0ZVMWV1OVV6MUIydWUzNFFtZzJt?=
+ =?utf-8?B?Y0IvWnUyd2RuZnNiTHBteW4zb0ovUFFxcW1FNDMwZTBaYWd3S0xiOER5cE9x?=
+ =?utf-8?B?emlmMGJLd2xrWjhlOFhabWQ4YnZqcHhVRkJhTWRmR2U4bzlsbUVPVElWTzM1?=
+ =?utf-8?Q?yT1CnzuViv5/Egm5GpS03UoI3LXoU8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8582.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(19092799006)(376014)(7416014)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OU5LeE5TaEhwZVBucnJKTjFGSkJSNVR2QjNyejk2d0dtRGgydE5uSEVxU0hV?=
+ =?utf-8?B?THVEa3pMMjRwUitEOHBiREFPd0dzOTNXaEZtbzBrcVN5NUxlMTEreTV2ZTcx?=
+ =?utf-8?B?cDZISGtuSTFtMStwSnJLby9KZWxaTW1jOEVsd0hkamduZ2FOMXZJcmVnenBR?=
+ =?utf-8?B?aG1JREVVZXJsSjF0N2VIOElSVTZkbklIbUQzaUE1Ny84NnYvTmdVNjhxWDFo?=
+ =?utf-8?B?enRGUVFhNFVFM09YOXBBNVErWnBCK01zUmhHWGdhWXZKR3hzbC9xdlFpcVJZ?=
+ =?utf-8?B?ZzZjMnFEeWw3UXd2VGV5OEZlb2hLSEpJQzFKYWx5Yko3SnlwK2VCeUVyTDA4?=
+ =?utf-8?B?VjZQb2FYNmY1RmloQlZBcmxld1RRaC9iZmVLTUNleXRGMGRKaHFXTEtwZ0dt?=
+ =?utf-8?B?a1llVUUzN25EemNKa1N6bWM2dDA4THZTdFNoUUZHdUV0T0NwOFhVUmgva2tC?=
+ =?utf-8?B?YzNNK2phN1NxdXg2bVpiVU9GWjkwZkROY1lvUWFEYUVZKzhiMXZWVUFOVFRh?=
+ =?utf-8?B?K3JIU2lBUUN4OGdTUzVzOFZqM1FRWnZmL1ViK3FxbXZZNzRqS255eWJKMVpS?=
+ =?utf-8?B?bkROSXk3Yzd2S2JjNTZXakE2R3pBZVRpZU9BRGtCNGdPM0x5aGJNc0svaWN5?=
+ =?utf-8?B?Nk91ZEZ2Skl5OVJuV2lTOFh5Rml6T01YSnVqVERxb2txS3RoSGhrNTNJZERp?=
+ =?utf-8?B?Z3ppYjlHQStNZUNKTThSb2F4aWdwWjRabWdoMU1NYm5xTG5NeWN0NHhUN2Qw?=
+ =?utf-8?B?SnN0a1RmcytUUEcycUdNbmVpN25ieThqckF2ZGdlSUJQTVZmWGlIVE9LaHdy?=
+ =?utf-8?B?aVV4NFlnNmRHQWZ5bUtJWnc2b3pmVWltSDloZ1JicFl3WW5WKy9kY1pwZm93?=
+ =?utf-8?B?dWc0aVJQMzFNSFR4YWVuWTdydWtzbjdZVW55cm9HYk1XbHVHYVpybW5CQjZB?=
+ =?utf-8?B?cHh1SVlvMTdRa1AyeHNmWUgybTM0LzZEZ0VSM3VFOW5QNWV3K1hZNmtmbVJM?=
+ =?utf-8?B?S0JCWUNPNVcxMmVocy8zYUJQeHZlQ0hlL2pVNkU1YmR3UGRVY09Nd1VzdGRh?=
+ =?utf-8?B?OXY1S3JWejZ6MXhMcmM5WGx1bVllOEhtOWpNdVVITFNLR3JZZjgrWmx0czln?=
+ =?utf-8?B?M2I1NE9kWG90NWJoK3QrVERjSnRIaWt1b3ZPMTR2ZTVWb3VNYlVMdUhuMkJt?=
+ =?utf-8?B?T01RNWthRVNBMWdOSStuOFJjYXMwaHFwTS9ySzVYUjVaU1JQS1VWdTZnVVRM?=
+ =?utf-8?B?MTVNalRaTlJaY3ZhNWxKbU1MVkFqbm95b3RUVTd3eEZNQ1Fyd1hvVVN0VHFp?=
+ =?utf-8?B?czlGUkx3ZlF0bG9adWIrbFJ6a01ZdDdLN2hPYmRNS0swNmxGWWtDcSt3c1E3?=
+ =?utf-8?B?KzV0UXVzZXlzOXNqWjZvMExmUlM5ZEo5WFI2OEYzWkJ3OGp0MERvQ0VwNlhT?=
+ =?utf-8?B?bERuNW1kTFVmRklBZnFNVXlIcDVsNmlMYmJkNXVCL1RDODMwSDJEUVJDVlov?=
+ =?utf-8?B?ZXNkclM2Wm51V3AzU3lGdTRmRVpQWnVWSU9QNkJWYTI0TlNKb2U3dXYwb04v?=
+ =?utf-8?B?TkNjMDdRVjJLUEQ5U2FwbkQ5OWNqL1hac0ROYVF6VStabXhzNHQ4WFRHN0dF?=
+ =?utf-8?B?b1prb2ZiQ2JEWFhQTzZUWTRVRGVxQTIxbmJZSWg2QzZCUVZhOHZuK3U3ZWFq?=
+ =?utf-8?B?TjhBbWZUWXk1SGVSTUNYcmdla0Q5TjNEVEIzaG1qaWd5VUxQWUJ2ZlplcTVS?=
+ =?utf-8?B?Nks5YlQwWUYrVWkzQ3Y2UWtlKzk4S0EzUmkwem1teW5LME5oaldwekFFMkpH?=
+ =?utf-8?B?bjN3bytqWXBnTGwvY0p0bFRVdVRweUhsTXdJeUdobGVyNFlyZXgxMHM5Y1VM?=
+ =?utf-8?B?NWorNjNvY2Q2S2czVzZRS1cyR1JqRkErbDdPL0p3ZDBVdkR2VTA2cFJZMFYx?=
+ =?utf-8?B?dlp3WXlBS1VYV3ZwbWhSUFBiemE2MFVJSklsMDBIWWxvckwyQ1ZvbW50a01l?=
+ =?utf-8?B?ZC9JdTY0Y0NtOU5pYUx3WmtabmE5cUtaTTcwQ0tHcTlVVkpSZmtyb0diSEYz?=
+ =?utf-8?B?ckdCSHlTa3A4bkVYZlFuOGpjZ2FIeXFBODNwQmlHSHpOcHlUOUFzeWVVcndL?=
+ =?utf-8?B?UFVyU0NGNTFyK2I4QkdWak14Qk1ENzFNb2g5UlBTU1JTMjl2ejRJMjMzak5y?=
+ =?utf-8?B?Z0E9PQ==?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d85c4944-a43f-4b04-51ea-08de2d24043a
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8582.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2025 19:43:04.9694
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ImD4EYAbZ2X2WHVAko9TcgGVfQaO8gYFdkDaBFZmVQjIGpQhWXBLhw3Gd4p4HUFu4vqqLN4F4EoWbcO0gdq5CzFuvN/JDfTVJIpTxwHwxsI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6779
 
-Add a long-running DMA memcpy operation to
-vfio_pci_liveupdate_kexec_test so that the device attempts to perform
-DMAs continuously during the Live Update.
+On 11/18/2025 10:02 AM, Vincent Guittot wrote:
+> Add a new entry for S32G PCIe driver.
+> 
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  MAINTAINERS | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e64b94e6b5a9..bec5d5792a5f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3137,6 +3137,15 @@ F:	arch/arm64/boot/dts/freescale/s32g*.dts*
+>  F:	drivers/pinctrl/nxp/
+>  F:	drivers/rtc/rtc-s32g.c
+>  
+> +ARM/NXP S32G PCIE CONTROLLER DRIVER
+> +M:	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
+> +R:	NXP S32 Linux Team <s32@nxp.com>
+> +L:	imx@lists.linux.dev
+> +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/pci/nxp,s32g-pcie.yaml
+> +F:	drivers/pci/controller/dwc/pcie-nxp-s32g*
 
-At this point iommufd preservation is not supported and bus mastering is
-not kept enabled on the device during across the kexec, so most of these
-DMAs will be dropped. However this test ensures that the current device
-preservation support does not lead to system instability or crashes if
-the device is active. And once iommufd and bus mastering are preserved,
-this test can be relaxed to check that the DMA operations completed
-successfully.
+Hi Vincent,
 
-Signed-off-by: David Matlack <dmatlack@google.com>
----
- .../vfio/vfio_pci_liveupdate_kexec_test.c     | 135 ++++++++++++++++++
- 1 file changed, 135 insertions(+)
+Thank you for proposing me as the maintainer for PCIe on S32G.
 
-diff --git a/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c b/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
-index 925c5fc30d56..3af50110a65d 100644
---- a/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
-+++ b/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
-@@ -1,8 +1,16 @@
- // SPDX-License-Identifier: GPL-2.0-only
- 
-+#include <linux/sizes.h>
-+#include <sys/mman.h>
-+
- #include <libliveupdate.h>
- #include <libvfio.h>
- 
-+#define MEMCPY_SIZE SZ_1G
-+#define DRIVER_SIZE SZ_1M
-+#define MEMFD_SIZE (MEMCPY_SIZE + DRIVER_SIZE)
-+
-+static struct dma_region memcpy_region;
- static const char *device_bdf;
- 
- #define STATE_SESSION "567e1b8d-daf1-4a4a-ac13-35d6d275f646"
-@@ -11,8 +19,100 @@ static const char *device_bdf;
- enum {
- 	STATE_TOKEN,
- 	DEVICE_TOKEN,
-+	MEMFD_TOKEN,
- };
- 
-+static void dma_memcpy_one(struct vfio_pci_device *device)
-+{
-+	void *src = memcpy_region.vaddr, *dst;
-+	u64 size;
-+
-+	size = min_t(u64, memcpy_region.size / 2, device->driver.max_memcpy_size);
-+	dst = src + size;
-+
-+	memset(src, 1, size);
-+	memset(dst, 0, size);
-+
-+	printf("Kicking off 1 DMA memcpy operations of size 0x%lx...\n", size);
-+	vfio_pci_driver_memcpy(device,
-+			       to_iova(device, src),
-+			       to_iova(device, dst),
-+			       size);
-+
-+	VFIO_ASSERT_EQ(memcmp(src, dst, size), 0);
-+}
-+
-+static void dma_memcpy_start(struct vfio_pci_device *device)
-+{
-+	void *src = memcpy_region.vaddr, *dst;
-+	u64 count, size;
-+
-+	size = min_t(u64, memcpy_region.size / 2, device->driver.max_memcpy_size);
-+	dst = src + size;
-+
-+	/*
-+	 * Rough Math: If we assume the device will perform memcpy at a rate of
-+	 * 30GB/s then 7200GB of transfers will run for about 4 minutes.
-+	 */
-+	count = (u64)7200 * SZ_1G / size;
-+	count = min_t(u64, count, device->driver.max_memcpy_count);
-+
-+	memset(src, 1, size / 2);
-+	memset(dst, 0, size / 2);
-+
-+	printf("Kicking off %lu DMA memcpy operations of size 0x%lx...\n", count, size);
-+	vfio_pci_driver_memcpy_start(device,
-+				     to_iova(device, src),
-+				     to_iova(device, dst),
-+				     size, count);
-+}
-+
-+static void dma_memfd_map(struct vfio_pci_device *device, int fd)
-+{
-+	void *vaddr;
-+
-+	vaddr = mmap(NULL, MEMFD_SIZE, PROT_WRITE, MAP_SHARED, fd, 0);
-+	VFIO_ASSERT_NE(vaddr, MAP_FAILED);
-+
-+	memcpy_region.iova = SZ_4G;
-+	memcpy_region.size = MEMCPY_SIZE;
-+	memcpy_region.vaddr = vaddr;
-+	iommu_map(device->iommu, &memcpy_region);
-+
-+	device->driver.region.iova = memcpy_region.iova + memcpy_region.size;
-+	device->driver.region.size = DRIVER_SIZE;
-+	device->driver.region.vaddr = vaddr + memcpy_region.size;
-+	iommu_map(device->iommu, &device->driver.region);
-+}
-+
-+static void dma_memfd_setup(struct vfio_pci_device *device, int session_fd)
-+{
-+	int fd, ret;
-+
-+	fd = memfd_create("dma-buffer", 0);
-+	VFIO_ASSERT_GE(fd, 0);
-+
-+	ret = fallocate(fd, 0, 0, MEMFD_SIZE);
-+	VFIO_ASSERT_EQ(ret, 0);
-+
-+	printf("Preserving memfd of size 0x%x in session\n", MEMFD_SIZE);
-+	ret = luo_session_preserve_fd(session_fd, fd, MEMFD_TOKEN);
-+	VFIO_ASSERT_EQ(ret, 0);
-+
-+	dma_memfd_map(device, fd);
-+}
-+
-+static void dma_memfd_restore(struct vfio_pci_device *device, int session_fd)
-+{
-+	int fd;
-+
-+	printf("Retrieving memfd from LUO\n");
-+	fd = luo_session_retrieve_fd(session_fd, MEMFD_TOKEN);
-+	VFIO_ASSERT_GE(fd, 0);
-+
-+	dma_memfd_map(device, fd);
-+}
-+
- static void before_kexec(int luo_fd)
- {
- 	struct vfio_pci_device *device;
-@@ -32,6 +132,27 @@ static void before_kexec(int luo_fd)
- 	ret = luo_session_preserve_fd(session_fd, device->fd, DEVICE_TOKEN);
- 	VFIO_ASSERT_EQ(ret, 0);
- 
-+	dma_memfd_setup(device, session_fd);
-+
-+	/*
-+	 * If the device has a selftests driver, kick off a long-running DMA
-+	 * operation to exercise the device trying to DMA during a Live Update.
-+	 * Since iommufd preservation is not supported yet, these DMAs should be
-+	 * dropped. So this is just looking to verify that the system does not
-+	 * fall over and crash as a result of a busy device being preserved.
-+	 */
-+	if (device->driver.ops) {
-+		vfio_pci_driver_init(device);
-+		dma_memcpy_start(device);
-+
-+		/*
-+		 * Disable interrupts on the device or freeze() will fail.
-+		 * Unfortunately there isn't a way to easily have a test for
-+		 * that here since the check happens during shutdown.
-+		 */
-+		vfio_pci_msix_disable(device);
-+	}
-+
- 	close(luo_fd);
- 	daemonize_and_wait();
- }
-@@ -106,9 +227,23 @@ static void after_kexec(int luo_fd, int state_session_fd)
- 	 */
- 	device = __vfio_pci_device_init(device_bdf, iommu, device_fd);
- 
-+	dma_memfd_restore(device, session_fd);
-+
- 	printf("Finishing the session\n");
- 	VFIO_ASSERT_EQ(luo_session_finish(session_fd), 0);
- 
-+	/*
-+	 * Once iommufd preservation is supported and the device is kept fully
-+	 * running across the Live Update, this should wait for the long-
-+	 * running DMA memcpy operation kicked off in before_kexec() to
-+	 * complete. But for now we expect the device to be reset so just
-+	 * trigger a single memcpy to make sure it's still functional.
-+	 */
-+	if (device->driver.ops) {
-+		vfio_pci_driver_init(device);
-+		dma_memcpy_one(device);
-+	}
-+
- 	vfio_pci_device_cleanup(device);
- 	iommu_cleanup(iommu);
- }
+While I consider myself reasonably experienced with the S32G platform, I
+am definitely not a PCIe expert. Therefore, I would prefer Ciprian
+Marian Costea (<ciprianmarian.costea@oss.nxp.com>) to maintain this
+component, given his expertise in PCIe on S32G.
+
+> +
+>  ARM/NXP S32G/S32R DWMAC ETHERNET DRIVER
+>  M:	Jan Petrous <jan.petrous@oss.nxp.com>
+>  R:	s32@nxp.com
+
+
 -- 
-2.52.0.487.g5c8c507ade-goog
-
+Regards,
+Ghennadi
 
