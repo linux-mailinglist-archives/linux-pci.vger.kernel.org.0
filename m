@@ -1,229 +1,335 @@
-Return-Path: <linux-pci+bounces-42110-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42111-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id E864AC89BE6
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 13:23:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B5ECC89CCA
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 13:37:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A997B4E3627
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 12:23:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 138423B20A2
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 12:37:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3266132721E;
-	Wed, 26 Nov 2025 12:23:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D81F22DD60E;
+	Wed, 26 Nov 2025 12:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MYZqBc5W"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (l-sdnproxy.icoremail.net [20.188.111.126])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAA5B3277AF;
-	Wed, 26 Nov 2025 12:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.188.111.126
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8652FFDF3
+	for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 12:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764159827; cv=none; b=pUZr94lRHx8vkUoI3juZWZf3kGX9CZLdat9DY0+0tRSka0KD88pUXH2rmmfP9HW4KspvORi4j5Oq9h/eKY6LKkthcGVWwBZY3gCssz3tlK11QsnRy98QEhQdJu+PFX+ua/dStgIcRcar4u7FeNEXwxzJfXOVj3fFjVTr3MAVOJU=
+	t=1764160632; cv=none; b=rmeZaUkBQXey0eddsrMgld7ovi/c1pvqqkP/I1DfJCyjqm7Xmm2Vn/1Uc9nJzmPR8dMTzpvN5BwXfLuiEWI+aaPjFu3vUh/Pkd58kKOfx5w3ChhHrJwTCWfw5kD/cCtyduHuz2ZbTnhVIUDp6VwPgJ9s2Jc2oUcKNJX3pOR+Dao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764159827; c=relaxed/simple;
-	bh=4IVzDH3vDYwxKn5QacTZd+f1dke2NWIDEzhYAQ00CuI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=dKX9xMng8E36R7yia+u7wH3eYwYgcZHl3rzlL6nJWVa06u/GKmtk1hUPQaBbyYOixQcshLmZLKJOq4KOUNON3T8ANzdbShjd8n4+JT5ye1rmF+MYarJ6FHkeY9oFIIfIDbBWOaS60rD0EgQnYTHqybD+xC4VOoKIuDouEOtxU2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=20.188.111.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
- ajax-webmail-app2 (Coremail) ; Wed, 26 Nov 2025 20:23:08 +0800 (GMT+08:00)
-Date: Wed, 26 Nov 2025 20:23:08 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-To: "Shawn Lin" <shawn.lin@rock-chips.com>
-Cc: bhelgaas@google.com, mani@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	robh@kernel.org, p.zabel@pengutronix.de, jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com,
-	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
-	thippeswamy.havalige@amd.com, inochiama@gmail.com,
-	ningyu@eswincomputing.com, linmin@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com,
-	Frank.li@nxp.com
-Subject: Re: Re: [PATCH v6 2/3] PCI: eic7700: Add Eswin PCIe host controller
- driver
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <d3cb2c6b-5f96-4e2e-9f72-97643e607faa@rock-chips.com>
-References: <20251120101018.1477-1-zhangsenchuan@eswincomputing.com>
- <20251120101206.1518-1-zhangsenchuan@eswincomputing.com>
- <d3cb2c6b-5f96-4e2e-9f72-97643e607faa@rock-chips.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1764160632; c=relaxed/simple;
+	bh=NncvZ3DXIM6EPNOPuutaOoSMrLGzuL0Hu9EsP2urgmw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NR0iIvmsq7aSi4UzHBHmA93iJBy7fh9lxGBh3ywClByXfoXL1NnZgvqOLRkdKg/PgZMkpdS9xkBKHz6x4+RUhFHMlhkJnU2EtrE0I0VRLP94uE5XkJ/U3oWjiDA7JHFLUuaOHhGYVQ8Rw/rupGcW+8KO3tPdhqmhDGFYgXjcW9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MYZqBc5W; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764160630; x=1795696630;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=NncvZ3DXIM6EPNOPuutaOoSMrLGzuL0Hu9EsP2urgmw=;
+  b=MYZqBc5WEHgNVEt45kv1FSXzQMHqMdJPklht3LPgrK9qUebLdoanEamw
+   9e1faK29zWtNHZHMVhAWDa2bu+EiXnly6CF0Xse+odo6D1LmGSmpj3gii
+   xKx5GhfKE+bM0OuFz+himwf7nlTEkWonigmvLdXOb7V6Cb3Mei8e8tqEG
+   tb/uMwe/0cA6aMWapAuIsgaolktMJdK+DEH5HYLArEz1kHvfS47KSr6JU
+   O2uZRAzrDcU1y/fVLUItEAr0yBznkqE42TdMEHJ8eRfrGyxWI41CL+KVC
+   j4Isan4/ZngH1F4yBnEKz3ZBUpkRDkcs6otkqA3QBmksjMENAY3w7vtiL
+   g==;
+X-CSE-ConnectionGUID: zyshCA7ZTSGt6H7d5gBmAA==
+X-CSE-MsgGUID: bjWjJuhpTqmthXhoAa9p4Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="76820472"
+X-IronPort-AV: E=Sophos;i="6.20,228,1758610800"; 
+   d="scan'208";a="76820472"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 04:37:09 -0800
+X-CSE-ConnectionGUID: NyjW48IqRbqaG9ucBQ9nKg==
+X-CSE-MsgGUID: ZcuxRuD5S8ioQPC75jCTtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,228,1758610800"; 
+   d="scan'208";a="192070353"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.97])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 04:37:07 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 26 Nov 2025 14:37:03 +0200 (EET)
+To: "guanghui.fgh" <guanghuifeng@linux.alibaba.com>
+cc: bhelgaas <bhelgaas@google.com>, linux-pci <linux-pci@vger.kernel.org>, 
+    kanie <kanie@linux.alibaba.com>, 
+    alikernel-developer <alikernel-developer@linux.alibaba.com>
+Subject: Re: [PATCH] PCI: Fix PCIe SBR dev/link wait error
+In-Reply-To: <aad7547b-5486-45af-88fe-8697fa288299.guanghuifeng@linux.alibaba.com>
+Message-ID: <4f982c78-05ab-5e54-cead-a6d876f14ac0@linux.intel.com>
+References: <20251124104502.777141-1-guanghuifeng@linux.alibaba.com>,<bcc2c523-ed9e-59a7-d6f1-b39f4b2e8e30@linux.intel.com> <aad7547b-5486-45af-88fe-8697fa288299.guanghuifeng@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4e3a959c.9ca.19ac01e156f.Coremail.zhangsenchuan@eswincomputing.com>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:TQJkCgC3+q0s8SZpypF+AA--.1902W
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAgESBmkl2
-	ngpgQAAsR
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Type: multipart/mixed; BOUNDARY="8323328-944046392-1764159513=:968"
+Content-ID: <8ce15bea-3629-97dc-010e-cd4cce69a406@linux.intel.com>
 
-CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiU2hhd24gTGluIiA8c2hh
-d24ubGluQHJvY2stY2hpcHMuY29tPgo+IFNlbmQgdGltZTpUaHVyc2RheSwgMjAvMTEvMjAyNSAy
-MToxOTo0MAo+IFRvOiB6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbSwgYmhlbGdhYXNA
-Z29vZ2xlLmNvbSwgbWFuaUBrZXJuZWwub3JnLCBrcnprK2R0QGtlcm5lbC5vcmcsIGNvbm9yK2R0
-QGtlcm5lbC5vcmcsIGxwaWVyYWxpc2lAa2VybmVsLm9yZywga3dpbGN6eW5za2lAa2VybmVsLm9y
-Zywgcm9iaEBrZXJuZWwub3JnLCBwLnphYmVsQHBlbmd1dHJvbml4LmRlLCBqaW5nb29oYW4xQGdt
-YWlsLmNvbSwgZ3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb20sIGxpbnV4LXBjaUB2Z2VyLmtl
-cm5lbC5vcmcsIGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnLCBsaW51eC1rZXJuZWxAdmdlci5r
-ZXJuZWwub3JnLCBjaHJpc3RpYW4uYnJ1ZWxAZm9zcy5zdC5jb20sIG1heWFuay5yYW5hQG9zcy5x
-dWFsY29tbS5jb20sIHNocmFkaGEudEBzYW1zdW5nLmNvbSwga3Jpc2huYS5jaHVuZHJ1QG9zcy5x
-dWFsY29tbS5jb20sIHRoaXBwZXN3YW15LmhhdmFsaWdlQGFtZC5jb20sIGlub2NoaWFtYUBnbWFp
-bC5jb20KPiBDYzogc2hhd24ubGluQHJvY2stY2hpcHMuY29tLCBuaW5neXVAZXN3aW5jb21wdXRp
-bmcuY29tLCBsaW5taW5AZXN3aW5jb21wdXRpbmcuY29tLCBwaW5rZXNoLnZhZ2hlbGFAZWluZm9j
-aGlwcy5jb20sIG91eWFuZ2h1aUBlc3dpbmNvbXB1dGluZy5jb20sIEZyYW5rLmxpQG54cC5jb20K
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHY2IDIvM10gUENJOiBlaWM3NzAwOiBBZGQgRXN3aW4gUENJ
-ZSBob3N0IGNvbnRyb2xsZXIgZHJpdmVyCj4gCj4g5ZyoIDIwMjUvMTEvMjAg5pif5pyf5ZubIDE4
-OjEyLCB6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbSDlhpnpgZM6Cj4gPiBGcm9tOiBT
-ZW5jaHVhbiBaaGFuZyA8emhhbmdzZW5jaHVhbkBlc3dpbmNvbXB1dGluZy5jb20+Cj4gPiAKPiA+
-IEFkZCBkcml2ZXIgZm9yIHRoZSBFc3dpbiBFSUM3NzAwIFBDSWUgaG9zdCBjb250cm9sbGVyLCB3
-aGljaCBpcyBiYXNlZCBvbgo+ID4gdGhlIERlc2lnbldhcmUgUENJZSBjb3JlLCBJUCByZXZpc2lv
-biA2LjAwYS4gVGhlIFBDSWUgR2VuLjMgY29udHJvbGxlcgo+ID4gc3VwcG9ydHMgYSBkYXRhIHJh
-dGUgb2YgOCBHVC9zIGFuZCA0IGNoYW5uZWxzLCBzdXBwb3J0IElOVHggYW5kIE1TSQo+ID4gaW50
-ZXJydXB0cy4KPiA+IAo+IAo+IERvbid0IG5lZWQgYW55IHN0dWZmIHJlZ2FyZGluZyB0byBQSFkg
-aW4gdGhlIGRyaXZlcj8KClRoYW5rIHlvdSBmb3IgeW91ciBjb21tZW50LCBTaGF3bgoKQ2xhcmlm
-aWNhdGlvbgpUaGUgcGh5IGlzIGF1dG9tYXRpY2FsbHkgY29uZmlndXJlZCBieSB0aGUgaGFyZHdh
-cmUsIGFuZCB0aGVyZSBhcmUgcHJvY2Vzc2VzIAppbiB0aGUgY29kZSB3YWl0aW5nIGZvciB0aGUg
-cGh5IHRvIGJlIGluaXRpYWxpemVkLgoKPiAKPiA+IFNpZ25lZC1vZmYtYnk6IFl1IE5pbmcgPG5p
-bmd5dUBlc3dpbmNvbXB1dGluZy5jb20+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBZYW5naHVpIE91IDxv
-dXlhbmdodWlAZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gU2lnbmVkLW9mZi1ieTogU2VuY2h1YW4g
-WmhhbmcgPHpoYW5nc2VuY2h1YW5AZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gLS0tCj4gPiAgIGRy
-aXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL0tjb25maWcgICAgICAgIHwgIDExICsKPiA+ICAgZHJp
-dmVycy9wY2kvY29udHJvbGxlci9kd2MvTWFrZWZpbGUgICAgICAgfCAgIDEgKwo+ID4gICBkcml2
-ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWVpYzc3MDAuYyB8IDM4NyArKysrKysrKysrKysr
-KysrKysrKysrCj4gPiAgIDMgZmlsZXMgY2hhbmdlZCwgMzk5IGluc2VydGlvbnMoKykKPiA+ICAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZWljNzcw
-MC5jCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9LY29u
-ZmlnIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvS2NvbmZpZwo+ID4gaW5kZXggMzQ5ZDQ2
-NTczOTNjLi42NjU2OGVmYjMyNGYgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9s
-bGVyL2R3Yy9LY29uZmlnCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9LY29u
-ZmlnCj4gPiBAQCAtOTMsNiArOTMsMTcgQEAgY29uZmlnIFBDSUVfQlQxCj4gPiAgIAkgIEVuYWJs
-ZXMgc3VwcG9ydCBmb3IgdGhlIFBDSWUgY29udHJvbGxlciBpbiB0aGUgQmFpa2FsLVQxIFNvQyB0
-byB3b3JrCj4gPiAgIAkgIGluIGhvc3QgbW9kZS4gSXQncyBiYXNlZCBvbiB0aGUgU3lub3BzeXMg
-RFdDIFBDSWUgdjQuNjBhIElQLWNvcmUuCj4gPiAgIAo+ID4gK2NvbmZpZyBQQ0lFX0VJQzc3MDAK
-PiA+ICsJYm9vbCAiRXN3aW4gRUlDNzcwMCBQQ0llIGNvbnRyb2xsZXIiCj4gPiArCWRlcGVuZHMg
-b24gQVJDSF9FU1dJTiB8fCBDT01QSUxFX1RFU1QKPiA+ICsJZGVwZW5kcyBvbiBQQ0lfTVNJCj4g
-PiArCXNlbGVjdCBQQ0lFX0RXX0hPU1QKPiA+ICsJaGVscAo+ID4gKwkgIFNheSBZIGhlcmUgaWYg
-eW91IHdhbnQgUENJZSBjb250cm9sbGVyIHN1cHBvcnQgZm9yIHRoZSBFc3dpbiBFSUM3NzAwLgo+
-ID4gKwkgIFRoZSBQQ0llIGNvbnRyb2xsZXIgb24gRUlDNzcwMCBpcyBiYXNlZCBvbiBEZXNpZ25X
-YXJlIGhhcmR3YXJlLAo+ID4gKwkgIGVuYWJsZXMgc3VwcG9ydCBmb3IgdGhlIFBDSWUgY29udHJv
-bGxlciBpbiB0aGUgRUlDNzcwMCBTb0MgdG8gd29yayBpbgo+ID4gKwkgIGhvc3QgbW9kZS4KPiA+
-ICsKPiA+ICAgY29uZmlnIFBDSV9JTVg2Cj4gPiAgIAlib29sCj4gPiAgIAo+ID4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxlIGIvZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9kd2MvTWFrZWZpbGUKPiA+IGluZGV4IDdhZTI4ZjNiMGZiMy4uMDRmNzUxYzQ5ZWJh
-IDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvTWFrZWZpbGUKPiA+
-ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxlCj4gPiBAQCAtNiw2ICs2
-LDcgQEAgb2JqLSQoQ09ORklHX1BDSUVfRFdfRVApICs9IHBjaWUtZGVzaWdud2FyZS1lcC5vCj4g
-PiAgIG9iai0kKENPTkZJR19QQ0lFX0RXX1BMQVQpICs9IHBjaWUtZGVzaWdud2FyZS1wbGF0Lm8K
-PiA+ICAgb2JqLSQoQ09ORklHX1BDSUVfQU1EX01EQikgKz0gcGNpZS1hbWQtbWRiLm8KPiA+ICAg
-b2JqLSQoQ09ORklHX1BDSUVfQlQxKSArPSBwY2llLWJ0MS5vCj4gPiArb2JqLSQoQ09ORklHX1BD
-SUVfRUlDNzcwMCkgKz0gcGNpZS1laWM3NzAwLm8KPiA+ICAgb2JqLSQoQ09ORklHX1BDSV9EUkE3
-WFgpICs9IHBjaS1kcmE3eHgubwo+ID4gICBvYmotJChDT05GSUdfUENJX0VYWU5PUykgKz0gcGNp
-LWV4eW5vcy5vCj4gPiAgIG9iai0kKENPTkZJR19QQ0lFX0ZVNzQwKSArPSBwY2llLWZ1NzQwLm8K
-PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWVpYzc3MDAu
-YyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZWljNzcwMC5jCj4gPiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi4yMzlmZGJjNTAxZmUKPiA+IC0t
-LSAvZGV2L251bGwKPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZWlj
-NzcwMC5jCj4gPiBAQCAtMCwwICsxLDM4NyBAQAo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlm
-aWVyOiBHUEwtMi4wCj4gPiArLyoKPiA+ICsgKiBFU1dJTiBFSUM3NzAwIFBDSWUgcm9vdCBjb21w
-bGV4IGRyaXZlcgo+ID4gKyAqCj4gPiArICogQ29weXJpZ2h0IDIwMjUsIEJlaWppbmcgRVNXSU4g
-Q29tcHV0aW5nIFRlY2hub2xvZ3kgQ28uLCBMdGQuCj4gPiArICoKPiA+ICsgKiBBdXRob3JzOiBZ
-dSBOaW5nIDxuaW5neXVAZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gKyAqICAgICAgICAgIFNlbmNo
-dWFuIFpoYW5nIDx6aGFuZ3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbT4KPiA+ICsgKiAgICAg
-ICAgICBZYW5naHVpIE91IDxvdXlhbmdodWlAZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gKyAqLwo+
-ID4gKwo+ID4gKyNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4KPiA+ICsjaW5jbHVkZSA8bGlu
-dXgvaW9wb2xsLmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+ID4gKyNpbmNsdWRl
-IDxsaW51eC9vZi5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9wY2kuaD4KPiA+ICsjaW5jbHVkZSA8
-bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L3Jlc291cmNlLmg+
-Cj4gPiArI2luY2x1ZGUgPGxpbnV4L3Jlc2V0Lmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L3R5cGVz
-Lmg+Cj4gPiArCj4gPiArI2luY2x1ZGUgInBjaWUtZGVzaWdud2FyZS5oIgo+ID4gKwo+ID4gKy8q
-IEVMQkkgcmVnaXN0ZXJzICovCj4gPiArI2RlZmluZSBQQ0lFRUxCSV9DVFJMMF9PRkZTRVQJCTB4
-MAo+ID4gKyNkZWZpbmUgUENJRUVMQklfU1RBVFVTMF9PRkZTRVQJCTB4MTAwCj4gPiArCj4gPiAr
-LyogTFRTU00gcmVnaXN0ZXIgZmllbGRzICovCj4gPiArI2RlZmluZSBQQ0lFRUxCSV9BUFBfTFRT
-U01fRU5BQkxFCUJJVCg1KQo+ID4gKwo+ID4gKy8qIEFQUF9IT0xEX1BIWV9SU1QgcmVnaXN0ZXIg
-ZmllbGRzICovCj4gPiArI2RlZmluZSBQQ0lFRUxCSV9BUFBfSE9MRF9QSFlfUlNUCUJJVCg2KQo+
-ID4gKwo+ID4gKy8qIFBNX1NFTF9BVVhfQ0xLIHJlZ2lzdGVyIGZpZWxkcyAqLwo+ID4gKyNkZWZp
-bmUgUENJRUVMQklfUE1fU0VMX0FVWF9DTEsJCUJJVCgxNikKPiA+ICsKPiA+ICsvKiBERVZfVFlQ
-RSByZWdpc3RlciBmaWVsZHMgKi8KPiA+ICsjZGVmaW5lIFBDSUVFTEJJX0NUUkwwX0RFVl9UWVBF
-CQlHRU5NQVNLKDMsIDApCj4gPiArCj4gPiArLyogVmVuZG9yIGFuZCBkZXZpY2UgSUQgdmFsdWUg
-Ki8KPiA+ICsjZGVmaW5lIFBDSV9WRU5ET1JfSURfRVNXSU4JCTB4MWZlMQo+ID4gKyNkZWZpbmUg
-UENJX0RFVklDRV9JRF9FU1dJTgkJMHgyMDMwCj4gCj4gSXQgd291bGQgYmUgYmV0dGVyIHRvIGJl
-IG1vdmVkIHRvIHBjaV9pZHMuaCA/CgpObyB2ZW5kb3IgdXNpbmcgU3lub3BzeXMgSVAgd2FzIGZv
-dW5kIGluIHRoZSBwY2lfaWRzLmggZmlsZSB0byBoYXZlIAp0aGVpciBWRU5ET1JfSUQgYW5kIERF
-VklDRV9JRC4gTWFuaSBhbmQgYmpvcm4gbWF5IGhhdmUgYWdyZWVkIHRvIGtlZXAgCnRoZSBWRU5E
-T1JfSUQgYW5kIERFVklDRV9JRCBpbiBvdXIgb3duIGZpbGUuCgo+IAo+ID4gKwo+ID4gKyNkZWZp
-bmUgRUlDNzcwMF9OVU1fUlNUUwkJQVJSQVlfU0laRShlaWM3NzAwX3BjaWVfcnN0cykKPiAKPiBJ
-ZiB1c2luZyBkZXZtX3Jlc2V0X2NvbnRyb2xfYXJyYXlfZ2V0X2V4Y2x1c2l2ZSwgeW91IGRvbid0
-IG5lZWQgdGhpcwo+IGF0IGFsbC4KClRoZSBtYWludGFpbmVyIG9mIHRoZSByZXNldCBtb2R1bGUs
-IFBoaWxpcHAsIHJlY29tbWVuZGVkIApkZXZtX3Jlc2V0X2NvbnRyb2xfYnVsa19nZXRfZXhjbHVz
-aXZlKCkgdG8gbWUgaW4gdGhlIHY0IHBhdGNoLiBNYXliZSAKaGUgaGFkIG90aGVyIGNvbnNpZGVy
-YXRpb25zLgoKPiAKPiA+ICsKPiA+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IGVpYzc3MDBf
-cGNpZV9yc3RzW10gPSB7Cj4gPiArCSJwd3IiLAo+ID4gKwkiZGJpIiwKPiA+ICt9Owo+ID4gKwo+
-IAo+IERpdHRvLgo+IAo+ID4gK3N0cnVjdCBlaWM3NzAwX3BjaWVfZGF0YSB7Cj4gPiArCWJvb2wg
-bXNpeF9jYXA7Cj4gPiArCWJvb2wgbm9fc3VzcHBvcnRfTDI7Cj4gPiArfTsKPiA+ICsKPiA+ICtz
-dHJ1Y3QgZWljNzcwMF9wY2llX3BvcnQgewo+ID4gKwlzdHJ1Y3QgbGlzdF9oZWFkIGxpc3Q7Cj4g
-PiArCXN0cnVjdCByZXNldF9jb250cm9sICpwZXJzdDsKPiA+ICsJaW50IG51bV9sYW5lczsKPiA+
-ICt9Owo+ID4gKwo+ID4gK3N0cnVjdCBlaWM3NzAwX3BjaWUgewo+ID4gKwlzdHJ1Y3QgZHdfcGNp
-ZSBwY2k7Cj4gPiArCXN0cnVjdCBjbGtfYnVsa19kYXRhICpjbGtzOwo+ID4gKwlzdHJ1Y3QgcmVz
-ZXRfY29udHJvbF9idWxrX2RhdGEgcmVzZXRzW0VJQzc3MDBfTlVNX1JTVFNdOwo+ID4gKwlzdHJ1
-Y3QgbGlzdF9oZWFkIHBvcnRzOwo+ID4gKwljb25zdCBzdHJ1Y3QgZWljNzcwMF9wY2llX2RhdGEg
-KmRhdGE7Cj4gPiArCWludCBudW1fY2xrczsKPiA+ICt9Owo+ID4gKwo+ID4gKyNkZWZpbmUgdG9f
-ZWljNzcwMF9wY2llKHgpIGRldl9nZXRfZHJ2ZGF0YSgoeCktPmRldikKPiA+ICsKPiA+ICtzdGF0
-aWMgaW50IGVpYzc3MDBfcGNpZV9zdGFydF9saW5rKHN0cnVjdCBkd19wY2llICpwY2kpCj4gPiAr
-ewo+ID4gKwl1MzIgdmFsOwo+ID4gKwo+ID4gKwkvKiBFbmFibGUgTFRTU00gKi8KPiA+ICsJdmFs
-ID0gcmVhZGxfcmVsYXhlZChwY2ktPmVsYmlfYmFzZSArIFBDSUVFTEJJX0NUUkwwX09GRlNFVCk7
-Cj4gPiArCXZhbCB8PSBQQ0lFRUxCSV9BUFBfTFRTU01fRU5BQkxFOwo+ID4gKwl3cml0ZWxfcmVs
-YXhlZCh2YWwsIHBjaS0+ZWxiaV9iYXNlICsgUENJRUVMQklfQ1RSTDBfT0ZGU0VUKTsKPiA+ICsK
-PiA+ICsJcmV0dXJuIDA7Cj4gPiArfQo+ID4gKwo+ID4gK3N0YXRpYyBib29sIGVpYzc3MDBfcGNp
-ZV9saW5rX3VwKHN0cnVjdCBkd19wY2llICpwY2kpCj4gPiArewo+ID4gKwl1MTYgb2Zmc2V0ID0g
-ZHdfcGNpZV9maW5kX2NhcGFiaWxpdHkocGNpLCBQQ0lfQ0FQX0lEX0VYUCk7Cj4gPiArCXUxNiB2
-YWwgPSByZWFkdyhwY2ktPmRiaV9iYXNlICsgb2Zmc2V0ICsgUENJX0VYUF9MTktTVEEpOwo+IAo+
-IGR3X3BjaWVfcmVhZGxfZGJpKCk/CgpPa2V5LCB0aGFua3M6KQoKPiAKPiA+ICsKPiA+ICsJcmV0
-dXJuIHZhbCAmIFBDSV9FWFBfTE5LU1RBX0RMTExBOwo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMg
-aW50IGVpYzc3MDBfcGNpZV9wZXJzdF9kZWFzc2VydChzdHJ1Y3QgZWljNzcwMF9wY2llX3BvcnQg
-KnBvcnQsCj4gPiArCQkJCSAgICAgICBzdHJ1Y3QgZWljNzcwMF9wY2llICpwY2llKQo+ID4gK3sK
-PiA+ICsJaW50IHJldDsKPiA+ICsKPiA+ICsJcmV0ID0gcmVzZXRfY29udHJvbF9hc3NlcnQocG9y
-dC0+cGVyc3QpOwo+ID4gKwlpZiAocmV0KSB7Cj4gPiArCQlkZXZfZXJyKHBjaWUtPnBjaS5kZXYs
-ICJGYWlsZWQgdG8gYXNzZXJ0IFBFUlNUI1xuIik7Cj4gPiArCQlyZXR1cm4gcmV0Owo+ID4gKwl9
-Cj4gPiArCj4gPiArCS8qIEVuc3VyZSB0aGF0IFBFUlNUIyBoYXMgYmVlbiBhc3NlcnRlZCBmb3Ig
-YXQgbGVhc3QgMTAwIG1zICovCj4gPiArCW1zbGVlcChQQ0lFX1RfUFZQRVJMX01TKTsKPiA+ICsK
-PiA+ICsJcmV0ID0gcmVzZXRfY29udHJvbF9kZWFzc2VydChwb3J0LT5wZXJzdCk7Cj4gPiArCWlm
-IChyZXQpIHsKPiA+ICsJCWRldl9lcnIocGNpZS0+cGNpLmRldiwgIkZhaWxlZCB0byBkZWFzc2Vy
-dCBQRVJTVCNcbiIpOwo+ID4gKwkJcmV0dXJuIHJldDsKPiA+ICsJfQo+ID4gKwo+ID4gKwlyZXR1
-cm4gMDsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGludCBlaWM3NzAwX3BjaWVfcGFyc2VfcG9y
-dChzdHJ1Y3QgZWljNzcwMF9wY2llICpwY2llLAo+ID4gKwkJCQkgICBzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKm5vZGUpCj4gPiArewo+ID4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSBwY2llLT5wY2kuZGV2
-Owo+ID4gKwlzdHJ1Y3QgZWljNzcwMF9wY2llX3BvcnQgKnBvcnQ7Cj4gPiArCj4gPiArCXBvcnQg
-PSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKnBvcnQpLCBHRlBfS0VSTkVMKTsKPiA+ICsJaWYg
-KCFwb3J0KQo+ID4gKwkJcmV0dXJuIC1FTk9NRU07Cj4gPiArCj4gPiArCXBvcnQtPnBlcnN0ID0g
-b2ZfcmVzZXRfY29udHJvbF9nZXRfZXhjbHVzaXZlKG5vZGUsICJwZXJzdCIpOwo+ID4gKwlpZiAo
-SVNfRVJSKHBvcnQtPnBlcnN0KSkgewo+ID4gKwkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZ2V0
-IFBFUlNUIyByZXNldFxuIik7Cj4gPiArCQlyZXR1cm4gUFRSX0VSUihwb3J0LT5wZXJzdCk7Cj4g
-PiArCX0KPiA+ICsKPiA+ICsJLyoKPiA+ICsJICogVE9ETzogU2luY2UgdGhlIFJvb3QgUG9ydCBu
-b2RlIGlzIHNlcGFyYXRlZCBvdXQgYnkgcGNpZSBkZXZpY2V0cmVlLAo+ID4gKwkgKiB0aGUgRFdD
-IGNvcmUgaW5pdGlhbGl6YXRpb24gY29kZSBjYW4ndCBwYXJzZSB0aGUgbnVtLWxhbmVzIGF0dHJp
-YnV0ZQo+ID4gKwkgKiBpbiB0aGUgUm9vdCBQb3J0LiBCZWZvcmUgZW50ZXJpbmcgdGhlIERXQyBj
-b3JlIGluaXRpYWxpemF0aW9uIGNvZGUsCj4gPiArCSAqIHRoZSBwbGF0Zm9ybSBkcml2ZXIgY29k
-ZSBwYXJzZXMgdGhlIFJvb3QgUG9ydCBub2RlLiBUaGUgRUlDNzcwMCBvbmx5Cj4gPiArCSAqIHN1
-cHBvcnRzIG9uZSBSb290IFBvcnQgbm9kZSwgYW5kIHRoZSBudW0tbGFuZXMgYXR0cmlidXRlIGlz
-IHN1aXRhYmxlCj4gPiArCSAqIGZvciB0aGUgY2FzZSBvZiBvbmUgUm9vdCBSb3J0Lgo+ID4gKwkg
-Ki8KPiA+ICsJaWYgKCFvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAibnVtLWxhbmVzIiwgJnBv
-cnQtPm51bV9sYW5lcykpCj4gPiArCQlwY2llLT5wY2kubnVtX2xhbmVzID0gcG9ydC0+bnVtX2xh
-bmVzOwo+ID4gKwo+IAo+IGR3X3BjaWVfZ2V0X3Jlc291cmNlcygpIGtub3dzIGl0LgoKVGhlIG51
-bS1sYW5lcyBvZiB0aGUgcm9vdCBwb3J0IG5vZGUgY2Fubm90IGJlIHBhcnNlZCBpbiBkd19wY2ll
-X2dldF9yZXNvdXJjZXMuCk91ciBkZXZpY2UgdHJlZSBoYXMgc2VwYXJhdGVkIHRoZSByb290IHBv
-cnQgbm9kZS4KCktpbmQgcmVnYXJkcywKU2VuY2h1YW4gWmhhbmcKCg==
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-944046392-1764159513=:968
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <3cc137e9-45d5-c79f-138d-e296a1be462e@linux.intel.com>
+
+On Wed, 26 Nov 2025, guanghui.fgh wrote:
+
+> 1. Does this add recursion without restoring config space on each level=
+=20
+> before starting the child wait?
+>=20
+> Yes
+> The current implementation does not require restoring the PCIe device=20
+> configuration space. The status is determined during the waiting=20
+> process, either based on software-recorded status or on the device's RO=
+=20
+> and HWINIT type registers.
+
+What guarantees a link even come up without restoring the config space
+first (it may work in your case but is that true universally)?
+
+The commit 3e40aa29d47e ("PCI: Wait for Link before restoring Downstream=20
+Buses") tried to address this sub-hierarchy wait issue within the=20
+recursive bus restore (without me ever encountering this problem for=20
+real). So I don't understand why you had to add the recursion to the wait=
+=20
+side as well?
+
+--=20
+ i.
+
+> > When executing a PCIe secondary bus reset, all downstream switches and
+> > endpoints will generate reset events. Simultaneously, all PCIe links
+> > will undergo retraining, and each link will independently re-execute th=
+e
+> > LTSSM state machine training. Therefore, after executing the SBR, it is
+> > necessary to wait for all downstream links and devices to complete
+> > recovery. Otherwise, after the SBR returns, accessing devices with some
+> > links or endpoints not yet fully recovered may result in driver errors,
+> > or even trigger device offline issues.
+> >=20
+> > Signed-off-by: Guanghui Feng <guanghuifeng@linux.alibaba.com>
+> > Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+> > ---
+> >=A0 drivers/pci/pci.c | 112 ++++++++++++++++++++++++++++++++++++++------=
+--
+> >=A0 1 file changed, 94 insertions(+), 18 deletions(-)
+> >=20
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index b14dd064006c..9cf13fe69d94 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -4788,9 +4788,74 @@ static int pci_bus_max_d3cold_delay(const struct=
+ pci_bus *bus)
+> > =A0 return max(min_delay, max_delay);
+> >=A0 }
+> >=A0=20
+> > +int __pci_bridge_wait_for_secondary_bus(struct pci_dev *, unsigned lon=
+g, char *);
+> > +
+> > +static int pci_dev_wait_child(struct pci_dev *pdev, unsigned long star=
+t_t, int timeout,
+> > +=A0 =A0 char *reset_type)
+> > +{
+> > + struct pci_dev *child, **dev =3D NULL;
+> > + int ct =3D 0, i =3D 0, ret =3D 0, left =3D 1;
+> > + unsigned long dev_start_t;
+> > +
+> > + down_read(&pci_bus_sem);
+> > +
+> > + list_for_each_entry(child, &pdev->subordinate->devices, bus_list)
+> > +=A0 ct++;
+> > +
+> > + if (ct) {
+> > +=A0 dev =3D kzalloc(sizeof(struct pci_dev *) * ct, GFP_KERNEL);
+> > +
+> > +=A0 if(!dev) {
+> > + =A0 pci_err(pdev, "dev mem alloc err\n");
+> > + =A0 up_read(&pci_bus_sem);
+> > + =A0 return -ENOMEM;
+> > +=A0 }
+> > +
+> > +=A0 list_for_each_entry(child, &pdev->subordinate->devices, bus_list)
+> > + =A0 dev[i++] =3D pci_dev_get(child);
+> > + }
+> > +
+> > + up_read(&pci_bus_sem);
+> > +
+> > + for (i =3D 0; i < ct; ++i) {
+> > +=A0 left =3D 1;
+> > +
+> > +dev_wait:
+> > +=A0 dev_start_t =3D jiffies;
+> > +=A0 ret =3D pci_dev_wait(dev[i], reset_type, left);
+> > +=A0 timeout -=3D jiffies_to_msecs(jiffies - dev_start_t);
+> > +
+> > +=A0 if (ret) {
+> > + =A0 if (pci_dev_is_disconnected(dev[i]))
+> > +=A0 =A0 continue;
+> > +
+> > + =A0 if (timeout <=3D 0)
+> > +=A0 =A0 goto end;
+> > +
+> > + =A0 left <<=3D 1;
+> > + =A0 left =3D timeout > left ? left : timeout;
+> > + =A0 goto dev_wait;
+> > +=A0 }
+> > + }
+> > +
+> > + for (i =3D 0; i < ct; ++i) {
+> > +=A0 ret =3D __pci_bridge_wait_for_secondary_bus(dev[i], start_t, reset=
+_type);
+>=20
+> Does this add recursion without restoring config space on each level=20
+> before starting the child wait?
+>=20
+> > +=A0 if (ret)
+> > + =A0 break;
+> > + }
+> > +
+> > +end:
+> > + for (i =3D 0; i < ct; ++i)
+> > +=A0 pci_dev_put(dev[i]);
+> > +
+> > + kfree(dev);
+> > + return ret;
+> > +}
+> > +
+> >=A0 /**
+> > - * pci_bridge_wait_for_secondary_bus - Wait for secondary bus to be ac=
+cessible
+> > + * __pci_bridge_wait_for_secondary_bus - Wait for secondary bus to be =
+accessible
+> > =A0 * @dev: PCI bridge
+> > + * @start_t: wait start jiffies time
+> > =A0 * @reset_type: reset type in human-readable form
+> > =A0 *
+> > =A0 * Handle necessary delays before access to the devices on the secon=
+dary
+> > @@ -4804,10 +4869,9 @@ static int pci_bus_max_d3cold_delay(const struct=
+ pci_bus *bus)
+> > =A0 * Return 0 on success or -ENOTTY if the first device on the seconda=
+ry bus
+> > =A0 * failed to become accessible.
+> > =A0 */
+> > -int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset=
+_type)
+> > +int __pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, unsigned =
+long start_t, char *reset_type)
+> >=A0 {
+> > - struct pci_dev *child __free(pci_dev_put) =3D NULL;
+> > - int delay;
+> > + int delay, left;
+> >=A0=20
+> > =A0 if (pci_dev_is_disconnected(dev))
+> >=A0 =A0 return 0;
+> > @@ -4835,8 +4899,6 @@ int pci_bridge_wait_for_secondary_bus(struct pci_=
+dev *dev, char *reset_type)
+> >=A0 =A0 return 0;
+> > =A0 }
+> >=A0=20
+> > - child =3D pci_dev_get(list_first_entry(&dev->subordinate->devices,
+> > -=A0 =A0 =A0 =A0 =A0 struct pci_dev, bus_list));
+> > =A0 up_read(&pci_bus_sem);
+> >=A0=20
+> > =A0 /*
+> > @@ -4844,8 +4906,12 @@ int pci_bridge_wait_for_secondary_bus(struct pci=
+_dev *dev, char *reset_type)
+> >=A0 =A0 * accessing the device after reset (that is 1000 ms + 100 ms).
+> >=A0 =A0 */
+> > =A0 if (!pci_is_pcie(dev)) {
+> > -=A0 pci_dbg(dev, "waiting %d ms for secondary bus\n", 1000 + delay);
+> > -=A0 msleep(1000 + delay);
+> > +=A0 left =3D 1000 + delay - jiffies_to_msecs(jiffies - start_t);
+> > +=A0 pci_dbg(dev, "waiting %d ms for secondary bus\n", left > 0 ? left =
+: 0);
+> > +
+> > +=A0 if (left > 0)
+> > + =A0 msleep(left);
+> > +
+> >=A0 =A0 return 0;
+> > =A0 }
+> >=A0=20
+> > @@ -4870,10 +4936,14 @@ int pci_bridge_wait_for_secondary_bus(struct pc=
+i_dev *dev, char *reset_type)
+> > =A0 if (pcie_get_speed_cap(dev) <=3D PCIE_SPEED_5_0GT) {
+> >=A0 =A0 u16 status;
+> >=A0=20
+> > -=A0 pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
+> > -=A0 msleep(delay);
+> > +=A0 left =3D delay - jiffies_to_msecs(jiffies - start_t);
+> > +=A0 pci_dbg(dev, "waiting %d ms for downstream link\n", left > 0 ? lef=
+t : 0);
+> > +
+> > +=A0 if (left > 0)
+> > + =A0 msleep(left);
+> >=A0=20
+> > -=A0 if (!pci_dev_wait(child, reset_type, PCI_RESET_WAIT - delay))
+> > +=A0 left =3D PCI_RESET_WAIT - jiffies_to_msecs(jiffies - start_t);
+> > +=A0 if(!pci_dev_wait_child(dev, start_t, left > 0 ? left : 0, reset_ty=
+pe))
+> > =A0 =A0 return 0;
+> >=A0=20
+> >=A0 =A0 /*
+> > @@ -4888,20 +4958,26 @@ int pci_bridge_wait_for_secondary_bus(struct pc=
+i_dev *dev, char *reset_type)
+> >=A0 =A0 if (!(status & PCI_EXP_LNKSTA_DLLLA))
+> > =A0 =A0 return -ENOTTY;
+> >=A0=20
+> > -=A0 return pci_dev_wait(child, reset_type,
+> > -=A0 =A0 =A0 =A0 PCIE_RESET_READY_POLL_MS - PCI_RESET_WAIT);
+> > +=A0 left =3D PCIE_RESET_READY_POLL_MS - jiffies_to_msecs(jiffies - sta=
+rt_t);
+> > +=A0 return pci_dev_wait_child(dev, start_t, left > 0 ? left : 0, reset=
+_type);
+> > =A0 }
+> >=A0=20
+> > - pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
+> > -=A0 delay);
+> > - if (!pcie_wait_for_link_delay(dev, true, delay)) {
+> > + left =3D delay - jiffies_to_msecs(jiffies - start_t);
+> > + pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",=
+ left > 0 ? left : 0);
+> > +
+> > + if (!pcie_wait_for_link_delay(dev, true, left > 0 ? left : 0)) {
+> >=A0 =A0 /* Did not train, no need to wait any further */
+> >=A0 =A0 pci_info(dev, "Data Link Layer Link Active not set in %d msec\n"=
+, delay);
+> >=A0 =A0 return -ENOTTY;
+> > =A0 }
+> >=A0=20
+> > - return pci_dev_wait(child, reset_type,
+> > - =A0 =A0 =A0 PCIE_RESET_READY_POLL_MS - delay);
+> > + left =3D PCIE_RESET_READY_POLL_MS - jiffies_to_msecs(jiffies - start_=
+t);
+> > + return pci_dev_wait_child(dev, start_t, left > 0 ? left : 0, reset_ty=
+pe);
+> > +}
+> > +
+> > +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset=
+_type)
+> > +{
+> > + return __pci_bridge_wait_for_secondary_bus(dev, jiffies, reset_type);
+> >=A0 }
+> >=A0=20
+> >=A0 void pci_reset_secondary_bus(struct pci_dev *dev)
+> >=20
+>=20
+> --=20
+>  i.
+>=20
+--8323328-944046392-1764159513=:968--
 
