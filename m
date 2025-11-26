@@ -1,276 +1,321 @@
-Return-Path: <linux-pci+bounces-42142-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42143-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6C24C8B8D2
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 20:19:46 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D293C8B97E
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 20:36:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8D7FD4E1B30
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 19:19:45 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 31E384E4F0C
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 19:36:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7292133F381;
-	Wed, 26 Nov 2025 19:19:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB9C233EAE9;
+	Wed, 26 Nov 2025 19:36:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NoNF69k6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S8ur7mVI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402A333C1A5;
-	Wed, 26 Nov 2025 19:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC01029E110
+	for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 19:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764184782; cv=none; b=AFzpkhrbtwIolHKy9X1dYw7eVZBHapK5ySftWdFeiEYsS2dWqrFr2jXsM5+0nEXICx0YDlimMmeNgITSpd9Phb2rrPG+B+P4AelFaZD05PyzMrVlYUy6F3fcyEBnZLMhagxYEfXqwo5x3wtyIbUAjXppBHKFcC2ulhfpLQE/RbE=
+	t=1764185773; cv=none; b=K+Cmm9Z9w9AxQJTzUie4Q0AAtUq92W8UclTIeztSmxWYBENTXVCqLZBH32hAg+w1cPYkdE9W/fvTf/13LoB/31khPrnh19SSMG6JWG+oHx+sFrL/jpfHOKfXajwuNd/rckcoRDrwx9NHuC2kUspPkYlASLiMnsRg6dOrVPRqGJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764184782; c=relaxed/simple;
-	bh=VyhkBsbKgM8Jwl990qCjZDqmXJMpUaoQ7/jOnNEGodg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ZnbpEdHVzoOzTxL5bigj3t1gK3aNswmtvne6DrOGwzqZG+E9P17oFilzNr9d6lhb4nV6sMrodgc6XmV3SSlB9vCXKlueBkn9xx70ndrd5BS8oIuWxMzDqnLdxRyOOns/s/Z1pYRr4XN5JNjtEVPixcHO1OGG9q06bsXA+K0uFWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NoNF69k6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80E3DC4CEF7;
-	Wed, 26 Nov 2025 19:19:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764184781;
-	bh=VyhkBsbKgM8Jwl990qCjZDqmXJMpUaoQ7/jOnNEGodg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=NoNF69k6CkbiXUp2YmUxdHHI7hDDF1yd6CBC3j3D4rh4fj5EOlHMsGNzDM7d/ndSC
-	 tDLlyuNk5Yi15C+ok7bx9FkcyfRcWr+h9G3NdfwiHMaPioaZ9/MFhMpopnjMz30Nqy
-	 skw/7CtiJ7BkOYaGEsUHB9vL0fodC30O7MiYmNTDBe0E+J8+tW1B4n+skoVIW9NI6h
-	 Kc+Nqrd7HT3/fgc06RhHxcsmN0M5Q7q3ao/rc09L2GCW1hRVj/4ZFQseP4TX1P07iw
-	 xSVdWfb4jUL+C80Sjf7UM+/Xw9NBV2vOgRfbz8WUB2w1keeeXXp+P6Jxnj/b8uEq+y
-	 vzNN617zRP06g==
-Date: Wed, 26 Nov 2025 13:19:40 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
-	p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: Re: [PATCH v8 2/6] PCI: rzg3s-host: Add Renesas RZ/G3S SoC host
- driver
-Message-ID: <20251126191940.GA2831320@bhelgaas>
+	s=arc-20240116; t=1764185773; c=relaxed/simple;
+	bh=wdiTzfoiWi8flXhWTee2uq/9lBs376X8MQrM5Xh2PIE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ZHJ2ayS+7fGKsi9g235BD87PIQJApGNzqj35ilwF7aEKIl9rYRuuXpVQrTEshG7ePLt555GmTmGgUSnlF6cvjQDN8ed9oKBqVkRZOHv65YjXTTBW+3Ymt3EGg+amCe5gMlM9KNOJP7zPO/8hm/xfup6cwvhj3VxQE+L7zZg2REc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dmatlack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S8ur7mVI; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dmatlack.bounces.google.com
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7b9c91b814cso186021b3a.2
+        for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 11:36:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764185771; x=1764790571; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=e4TlWrAe/4n7yxCRwObEG+IsI5t1kC6kq4+FowfY9Ic=;
+        b=S8ur7mVITy2gcoG+j4MgxqZlyIle9uj/LKpZCBMskhN1QOyWcT4E17uoqATwvtK46g
+         ZIGPkN7q7c4HCxmSvzPjEn37Iy8Gz4MwCwZzaZgWzHIPlll66nuSHu6vAkdGVvy337lt
+         s0V9YXWAmeKdpHIGbIx2K+nDkevGo7LNaAnCZIBfk1B02LVMJulFObJ4Z4qA5Y802YFt
+         9h8l6miobIB78DtD8id+zFHcQrQ4wtx7fjwCzy3cJbrEkmVnED16Tr7tW+F4mMZQw7UV
+         /lt+xSwp2TleDbQt5UAO2YMDI8vtjW1TwUCUZzT7Yt9hEiVgD1VB9U+B42j7F2Fjs3TY
+         zf9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764185771; x=1764790571;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e4TlWrAe/4n7yxCRwObEG+IsI5t1kC6kq4+FowfY9Ic=;
+        b=dYiUoEBFsnZsYtZh6/JGTe8qS0olWT7RXPoqT96bv1vQJSxobXehhUiIghcDSe97yp
+         m2Cz5TykdJWZB3LrCn0Mhoo+iGavQTCQNuXCUHcMRPdzcY+2SNAYSf/OB81/pNWAx9N2
+         zd8a8BxSchQzLMeku7BuU6MgjLaoMLSQI5fuOffjkq66gdXLtxCDTsrMdIQVXFS1oNzn
+         88V/NUhSAYImTHJvUYz6Y7KJsmnoJeHaaFC/wLxz6JOviZYNe3AaS5/li8F1iI0rbR0Z
+         E47tlkpLaX+o2WCrnpU5a996n2NaPQWMdt2wykW7eXunNeze70FvXQntQPnXUP49JUlN
+         8Jfw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6LlQe5Ih7oRI8M0WzaAlg7+cfd0cjXkIgQi5A5M+PgvBwr9OLVBqcC9CZDdLgyTyux0jPT4ODtrM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2ahRYsqkql9q2te0uzEy5ffyC8qlsndwPxjVovPQ4oAFSJCRE
+	IlzIMlLSktmtC/AY4RZ99zMPKqWkiJmuDa0ET6J+nTsbttvwJKMiFaY4dHHYuUjf8AxSom/plRH
+	yXuM2PQuBBxbjLA==
+X-Google-Smtp-Source: AGHT+IEHbsigKIplHHxqv3Y5oFPoEosqidqUdTdsObyZw4vOpd3yAV5ZgTmjD2o7uDOT9sLmmm0JWWf8SQqwug==
+X-Received: from pfbly20.prod.google.com ([2002:a05:6a00:7594:b0:7b9:55bc:4970])
+ (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:2d9a:b0:7b6:363b:c678 with SMTP id d2e1a72fcca58-7ca8760d166mr9728241b3a.6.1764185770882;
+ Wed, 26 Nov 2025 11:36:10 -0800 (PST)
+Date: Wed, 26 Nov 2025 19:35:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e7ecbc0-6ce5-403a-b794-93aaff1ddf39@tuxon.dev>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.52.0.487.g5c8c507ade-goog
+Message-ID: <20251126193608.2678510-1-dmatlack@google.com>
+Subject: [PATCH 00/21] vfio/pci: Base support to preserve a VFIO device file
+ across Live Update
+From: David Matlack <dmatlack@google.com>
+To: Alex Williamson <alex@shazbot.org>
+Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alex Mastro <amastro@fb.com>, 
+	Alistair Popple <apopple@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
+	Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, 
+	kvm@vger.kernel.org, Leon Romanovsky <leonro@nvidia.com>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org, 
+	Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Philipp Stanner <pstanner@redhat.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <shuah@kernel.org>, 
+	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>, 
+	Yi Liu <yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>, 
+	Zhu Yanjun <yanjun.zhu@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Nov 26, 2025 at 07:22:09PM +0200, Claudiu Beznea wrote:
-> On 11/25/25 20:37, Bjorn Helgaas wrote:
-> > On Wed, Nov 19, 2025 at 04:35:19PM +0200, Claudiu wrote:
-> >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >>
-> >> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
-> >> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
-> >> only as a root complex, with a single-lane (x1) configuration. The
-> >> controller includes Type 1 configuration registers, as well as IP
-> >> specific registers (called AXI registers) required for various adjustments.
-> > 
-> >> +/* Serialization is provided by 'pci_lock' in drivers/pci/access.c */
-> >> +static int rzg3s_pcie_root_write(struct pci_bus *bus, unsigned int devfn,
-> >> +				 int where, int size, u32 val)
-> >> +{
-> >> +	struct rzg3s_pcie_host *host = bus->sysdata;
-> >> +	int ret;
-> >> +
-> >> +	/* Enable access control to the CFGU */
-> >> +	writel_relaxed(RZG3S_PCI_PERM_CFG_HWINIT_EN,
-> >> +		       host->axi + RZG3S_PCI_PERM);
-> > 
-> > I suppose this has been asked and answered already, but it's curious
-> > that you need this for config writes but not for reads.  Obviously it
-> > must *work*, but it's unusual and might warrant a comment.  "Access
-> > control" must be a hint, but only means something to experts.
-> 
-> After initialization, some PCI registers are read only. To enable write
-> access to these registers after initialization, the access control need to
-> be enabled.
+This series adds the base support to preserve a VFIO device file across
+a Live Update. "Base support" means that this allows userspace to
+safetly preserve a VFIO device file with LIVEUPDATE_SESSION_PRESERVE_FD
+and retrieve a preserved VFIO device file with
+LIVEUPDATE_SESSION_RETRIEVE_FD, but the device itself is not preserved
+in a fully running state across Live Update.
 
-rzg3s_pcie_root_write() is a config accessor.  All the users of this
-expect the semantics documented by the PCI/PCIe spec.  Registers
-documented as read-only *should* be read-only in those situations.
+This series unblocks 2 parallel but related streams of work:
 
-BIOS and native host bridge drivers like this one may need to
-initialize registers that are read-only to the OS.  Some hardware
-supports that initialization via device-specific addresses outside of
-normal config space.
+ - iommufd preservation across Live Update. This work spans iommufd,
+   the IOMMU subsystem, and IOMMU drivers [1]
 
-It looks like this hardware supports that initialization using the
-PCI/PCIe-documented config addresses, but uses RZG3S_PCI_PERM to
-control whether things are read-only or not.  It's used that way in
-rzg3s_pcie_host_init_port(), rzg3s_pcie_config_init(), etc.
+ - Preservation of VFIO device state across Live Update (config space,
+   BAR addresses, power state, SR-IOV state, etc.). This work spans both
+   VFIO and the core PCI subsystem.
 
-That's perfectly fine, as long as this all happens before the OS sees
-the devices.  If writes to read-only registers happen *after* the OS
-starts enumerating devices, then we have a problem because the OS may
-cache the values of read-only registers.
+While we need all of the above to fully preserve a VFIO device across a
+Live Update without disrupting the workload on the device, this series
+aims to be functional and safe enough to merge as the first incremental
+step toward that goal.
 
-Bottom line, I think:
+Areas for Discussion
+--------------------
 
-  - rzg3s_pcie_root_write() should *not* use RZG3S_PCI_PERM at all.
-    In fact, it should not exist, and rzg3s_pcie_root_ops.write should
-    be pci_generic_config_write().
+BDF Stability across Live Update
 
-  - rzg3s_pcie_config_init() should use RZG3S_PCI_PERM to update
-    RZG3S_PCI_CFG_BARMSK00, but should *not* need it to update the
-    bus info because those registers are read/write per spec.
+  The PCI support for tracking preserved devices across a Live Update to
+  prevent auto-probing relies on PCI segment numbers and BDFs remaining
+  stable. For now I have disallowed VFs, as the BDFs assigned to VFs can
+  vary depending on how the kernel chooses to allocate bus numbers. For
+  non-VFs I am wondering if there is any more needed to ensure BDF
+  stability across Live Update.
 
-The other users look like they do need RZG3S_PCI_PERM to initialize
-the Vendor and Device IDs (which are read-only per spec) and PHY
-registers (which are not part of the programming model documented by
-the PCIe spec).
+  While we would like to support many different systems and
+  configurations in due time (including preserving VFs), I'd like to
+  keep this first serses constrained to simple use-cases.
 
-rzg3s_pcie_config_init() looks like a problem because it's called from
-rzg3s_pcie_resume_noirq(), which happens after the OS owns the PCI
-hardware.  The OS may have updated the bus numbers, and
-rzg3s_pcie_config_init() will overwrite them with whatever it got from
-DT.  With a single Root Port, it's not *likely* that the OS would
-change the secondary or subordinate bus numbers, but you can't assume
-they are fixed.
+FLB Locking
 
-I don't know if the hardware loses the bus numbers when it is
-suspended.  If it does, I think you would need to capture them during
-suspend, save them somewhere like rzg3s_pcie_port, and restore them
-during resume.
+  I don't see a way to properly synchronize pci_flb_finish() with
+  pci_liveupdate_incoming_is_preserved() since the incoming FLB mutex is
+  dropped by liveupdate_flb_get_incoming() when it returns the pointer
+  to the object, and taking pci_flb_incoming_lock in pci_flb_finish()
+  could result in a deadlock due to reversing the lock ordering.
 
-You should be able to verify that this is a problem by booting the
-kernel, decreasing the subordinate bus number via setpci, suspending
-and resuming, and checking the subordinate bus number with lspci.  I
-think you'll see that setpci update lost.
+FLB Retrieving
 
-> >> +static irqreturn_t rzg3s_pcie_msi_irq(int irq, void *data)
-> >> +{
-> >> +	u8 regs = RZG3S_PCI_MSI_INT_NR / RZG3S_PCI_MSI_INT_PER_REG;
-> >> +	DECLARE_BITMAP(bitmap, RZG3S_PCI_MSI_INT_NR);
-> >> +	struct rzg3s_pcie_host *host = data;
-> >> +	struct rzg3s_pcie_msi *msi = &host->msi;
-> >> +	unsigned long bit;
-> >> +	u32 status;
-> >> +
-> >> +	status = readl_relaxed(host->axi + RZG3S_PCI_PINTRCVIS);
-> >> +	if (!(status & RZG3S_PCI_PINTRCVIS_MSI))
-> >> +		return IRQ_NONE;
-> >> +
-> >> +	/* Clear the MSI */
-> >> +	rzg3s_pcie_update_bits(host->axi, RZG3S_PCI_PINTRCVIS,
-> >> +			       RZG3S_PCI_PINTRCVIS_MSI,
-> >> +			       RZG3S_PCI_PINTRCVIS_MSI);
-> > 
-> > Other writes to RZG3S_PCI_PINTRCVIS are guarded by host->hw_lock.  Is this
-> > one safe without it?
-> 
-> It should be safe as RZG3S_PCI_PINTRCVIS is a R/W1C type of register.
-> 
-> HW manual describes R/W1C registers for PCIe as "Write-1-to-clear status
-> . It can be cleared to 0b by writing 1b with a readable register.
->  Writing 0b does not change anything."
-> 
-> With this, it should be safe to drop the guard from rzg3s_pcie_intx_irq_ack().
-> 
-> > 
-> >> +	rzg3s_pcie_update_bits(host->axi, RZG3S_PCI_MSGRCVIS,
-> >> +			       RZG3S_PCI_MSGRCVIS_MRI, RZG3S_PCI_MSGRCVIS_MRI);
-> >> +
-> >> +	for (u8 reg_id = 0; reg_id < regs; reg_id++) {
-> >> +		status = readl_relaxed(host->axi + RZG3S_PCI_MSIRS(reg_id));
-> >> +		bitmap_write(bitmap, status, reg_id * RZG3S_PCI_MSI_INT_PER_REG,
-> >> +			     RZG3S_PCI_MSI_INT_PER_REG);
-> >> +	}
-> >> +
-> >> +	for_each_set_bit(bit, bitmap, RZG3S_PCI_MSI_INT_NR) {
-> >> +		int ret;
-> >> +
-> >> +		ret = generic_handle_domain_irq(msi->domain, bit);
-> >> +		if (ret) {
-> >> +			u8 reg_bit = bit % RZG3S_PCI_MSI_INT_PER_REG;
-> >> +			u8 reg_id = bit / RZG3S_PCI_MSI_INT_PER_REG;
-> >> +
-> >> +			/* Unknown MSI, just clear it */
-> >> +			writel_relaxed(BIT(reg_bit),
-> >> +				       host->axi + RZG3S_PCI_MSIRS(reg_id));
-> > 
-> > Other writes to RZG3S_PCI_MSIRS are guarded by host->hw_lock.  Is this
-> > one safe without it?
-> 
-> RZG3S_PCI_MSIRS is also a R/W1C type of register. With it, it should be
-> safe to drop the guard from rzg3s_pcie_msi_irq_ack() as well.
-> 
-> I'm going to prepare a follow up patch to drop the guard on
-> rzg3s_pcie_intx_irq_ack() and rzg3s_pcie_msi_irq_ack(). Please let me know
-> if you have something against.
+  The first patch of this series includes a fix to prevent an FLB from
+  being retrieved again it is finished. I am wondering if this is the
+  right approach or if subsystems are expected to stop calling
+  liveupdate_flb_get_incoming() after an FLB is finished.
 
-Sounds good.  Maybe add a comment at RZG3S_PCI_PINTRCVIS and
-RZG3S_PCI_MSIRS about them being R/W1C as a hint that they don't need
-locking.
+Testing
+-------
 
-> I can also prepare a patch to detail in a comment the "enable access
-> control to the CFGU" operation in rzg3s_pcie_root_write(), if you prefer.
+The patches at the end of this series provide comprehensive selftests
+for the new code added by this series. The selftests have been validated
+in both a VM environment using a virtio-net PCIe device, and in a
+baremetal environment on an Intel EMR server with an Intel DSA device.
 
-I think you should do the patch below.
+Here is an example of how to run the new selftests:
 
-And also investigate the question about resume and the bus numbers.
-If it is an issue, you'll have to figure out how to fix that.
+vfio_pci_liveupdate_uapi_test:
 
-diff --git a/drivers/pci/controller/pcie-rzg3s-host.c b/drivers/pci/controller/pcie-rzg3s-host.c
-index 667e6d629474..547cbe676a25 100644
---- a/drivers/pci/controller/pcie-rzg3s-host.c
-+++ b/drivers/pci/controller/pcie-rzg3s-host.c
-@@ -439,28 +439,9 @@ static void __iomem *rzg3s_pcie_root_map_bus(struct pci_bus *bus,
- 	return host->pcie + where;
- }
- 
--/* Serialized by 'pci_lock' */
--static int rzg3s_pcie_root_write(struct pci_bus *bus, unsigned int devfn,
--				 int where, int size, u32 val)
--{
--	struct rzg3s_pcie_host *host = bus->sysdata;
--	int ret;
--
--	/* Enable access control to the CFGU */
--	writel_relaxed(RZG3S_PCI_PERM_CFG_HWINIT_EN,
--		       host->axi + RZG3S_PCI_PERM);
--
--	ret = pci_generic_config_write(bus, devfn, where, size, val);
--
--	/* Disable access control to the CFGU */
--	writel_relaxed(0, host->axi + RZG3S_PCI_PERM);
--
--	return ret;
--}
--
- static struct pci_ops rzg3s_pcie_root_ops = {
- 	.read		= pci_generic_config_read,
--	.write		= rzg3s_pcie_root_write,
-+	.write		= pci_generic_config_write,
- 	.map_bus	= rzg3s_pcie_root_map_bus,
- };
- 
-@@ -1065,14 +1046,14 @@ static int rzg3s_pcie_config_init(struct rzg3s_pcie_host *host)
- 	writel_relaxed(0xffffffff, host->pcie + RZG3S_PCI_CFG_BARMSK00L);
- 	writel_relaxed(0xffffffff, host->pcie + RZG3S_PCI_CFG_BARMSK00U);
- 
-+	/* Disable access control to the CFGU */
-+	writel_relaxed(0, host->axi + RZG3S_PCI_PERM);
-+
- 	/* Update bus info */
- 	writeb_relaxed(primary_bus, host->pcie + PCI_PRIMARY_BUS);
- 	writeb_relaxed(secondary_bus, host->pcie + PCI_SECONDARY_BUS);
- 	writeb_relaxed(subordinate_bus, host->pcie + PCI_SUBORDINATE_BUS);
- 
--	/* Disable access control to the CFGU */
--	writel_relaxed(0, host->axi + RZG3S_PCI_PERM);
--
- 	return 0;
- }
- 
+  $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
+  $ tools/testing/selftests/vfio/vfio_pci_liveupdate_uapi_test 0000:00:04.0
+  $ tools/testing/selftests/vfio/scripts/cleanup.sh
+
+vfio_pci_liveupdate_kexec_test:
+
+  $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
+  $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 1 0000:00:04.0
+  $ kexec [...]  # NOTE: distro-dependent
+
+  $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
+  $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 2 0000:00:04.0
+  $ tools/testing/selftests/vfio/scripts/cleanup.sh
+
+Dependencies
+------------
+
+This series was constructed on top of several in-flight series and on
+top of mm-nonmm-unstable [2].
+
+  +-- This series
+  |
+  +-- [PATCH v2 00/18] vfio: selftests: Support for multi-device tests
+  |    https://lore.kernel.org/kvm/20251112192232.442761-1-dmatlack@google.com/
+  |
+  +-- [PATCH v3 0/4] vfio: selftests: update DMA mapping tests to use queried IOVA ranges
+  |   https://lore.kernel.org/kvm/20251111-iova-ranges-v3-0-7960244642c5@fb.com/
+  |
+  +-- [PATCH v8 0/2] Live Update: File-Lifecycle-Bound (FLB) State
+  |   https://lore.kernel.org/linux-mm/20251125225006.3722394-1-pasha.tatashin@soleen.com/
+  |
+  +-- [PATCH v8 00/18] Live Update Orchestrator
+  |   https://lore.kernel.org/linux-mm/20251125165850.3389713-1-pasha.tatashin@soleen.com/
+  |
+
+To simplify checking out the code, this series can be found on GitHub:
+
+  https://github.com/dmatlack/linux/tree/liveupdate/vfio/cdev/v1
+
+Changelog
+---------
+
+v1:
+ - Rebase series on top of LUOv8 and VFIO selftests improvements
+ - Drop commits to preserve config space fields across Live Update.
+   These changes require changes to the PCI layer. For exmaple,
+   preserving rbars could lead to an inconsistent device state until
+   device BARs addresses are preserved across Live Update.
+ - Drop commits to preserve Bus Master Enable on the device. There's no
+   reason to preserve this until iommufd preservation is fully working.
+   Furthermore, preserving Bus Master Enable could lead to memory
+   corruption when the device if the device is bound to the default
+   identity-map domain after Live Update.
+ - Drop commits to preserve saved PCI state. This work is not needed
+   until we are ready to preserve the device's config space, and
+   requires more thought to make the PCI state data layout ABI-friendly.
+ - Add support to skip auto-probing devices that are preserved by VFIO
+   to avoid them getting bound to a different driver by the next kernel.
+ - Restrict device preservation further (no VFs, no intel-graphics).
+ - Various refactoring and small edits to improve readability and
+   eliminate code duplication.
+
+rfc: https://lore.kernel.org/kvm/20251018000713.677779-1-vipinsh@google.com/
+
+Cc: Saeed Mahameed <saeedm@nvidia.com>
+Cc: Adithya Jayachandran <ajayachandra@nvidia.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Parav Pandit <parav@nvidia.com>
+Cc: Leon Romanovsky <leonro@nvidia.com>
+Cc: William Tu <witu@nvidia.com>
+Cc: Jacob Pan <jacob.pan@linux.microsoft.com>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>
+Cc: Samiullah Khawaja <skhawaja@google.com>
+Cc: Chris Li <chrisl@kernel.org>
+Cc: Josh Hilke <jrhilke@google.com>
+Cc: David Rientjes <rientjes@google.com>
+
+[1] https://lore.kernel.org/linux-iommu/20250928190624.3735830-1-skhawaja@google.com/
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/log/?h=mm-nonmm-unstable
+
+David Matlack (12):
+  liveupdate: luo_flb: Prevent retrieve() after finish()
+  PCI: Add API to track PCI devices preserved across Live Update
+  PCI: Require driver_override for incoming Live Update preserved
+    devices
+  vfio/pci: Notify PCI subsystem about devices preserved across Live
+    Update
+  vfio: Enforce preserved devices are retrieved via
+    LIVEUPDATE_SESSION_RETRIEVE_FD
+  vfio/pci: Store Live Update state in struct vfio_pci_core_device
+  vfio: selftests: Add Makefile support for TEST_GEN_PROGS_EXTENDED
+  vfio: selftests: Add vfio_pci_liveupdate_uapi_test
+  vfio: selftests: Expose iommu_modes to tests
+  vfio: selftests: Expose low-level helper routines for setting up
+    struct vfio_pci_device
+  vfio: selftests: Verify that opening VFIO device fails during Live
+    Update
+  vfio: selftests: Add continuous DMA to vfio_pci_liveupdate_kexec_test
+
+Vipin Sharma (9):
+  vfio/pci: Register a file handler with Live Update Orchestrator
+  vfio/pci: Preserve vfio-pci device files across Live Update
+  vfio/pci: Retrieve preserved device files after Live Update
+  vfio/pci: Skip reset of preserved device after Live Update
+  selftests/liveupdate: Move luo_test_utils.* into a reusable library
+  selftests/liveupdate: Add helpers to preserve/retrieve FDs
+  vfio: selftests: Build liveupdate library in VFIO selftests
+  vfio: selftests: Initialize vfio_pci_device using a VFIO cdev FD
+  vfio: selftests: Add vfio_pci_liveupdate_kexec_test
+
+ MAINTAINERS                                   |   1 +
+ drivers/pci/Makefile                          |   1 +
+ drivers/pci/liveupdate.c                      | 248 ++++++++++++++++
+ drivers/pci/pci-driver.c                      |  12 +-
+ drivers/vfio/device_cdev.c                    |  25 +-
+ drivers/vfio/group.c                          |   9 +
+ drivers/vfio/pci/Makefile                     |   1 +
+ drivers/vfio/pci/vfio_pci.c                   |  11 +-
+ drivers/vfio/pci/vfio_pci_core.c              |  23 +-
+ drivers/vfio/pci/vfio_pci_liveupdate.c        | 278 ++++++++++++++++++
+ drivers/vfio/pci/vfio_pci_priv.h              |  16 +
+ drivers/vfio/vfio.h                           |  13 -
+ drivers/vfio/vfio_main.c                      |  22 +-
+ include/linux/kho/abi/pci.h                   |  53 ++++
+ include/linux/kho/abi/vfio_pci.h              |  45 +++
+ include/linux/liveupdate.h                    |   3 +
+ include/linux/pci.h                           |  38 +++
+ include/linux/vfio.h                          |  51 ++++
+ include/linux/vfio_pci_core.h                 |   7 +
+ kernel/liveupdate/luo_flb.c                   |   4 +
+ tools/testing/selftests/liveupdate/.gitignore |   1 +
+ tools/testing/selftests/liveupdate/Makefile   |  14 +-
+ .../include/libliveupdate.h}                  |  11 +-
+ .../selftests/liveupdate/lib/libliveupdate.mk |  20 ++
+ .../{luo_test_utils.c => lib/liveupdate.c}    |  43 ++-
+ .../selftests/liveupdate/luo_kexec_simple.c   |   2 +-
+ .../selftests/liveupdate/luo_multi_session.c  |   2 +-
+ tools/testing/selftests/vfio/Makefile         |  23 +-
+ .../vfio/lib/include/libvfio/iommu.h          |   2 +
+ .../lib/include/libvfio/vfio_pci_device.h     |   8 +
+ tools/testing/selftests/vfio/lib/iommu.c      |   4 +-
+ .../selftests/vfio/lib/vfio_pci_device.c      |  60 +++-
+ .../vfio/vfio_pci_liveupdate_kexec_test.c     | 255 ++++++++++++++++
+ .../vfio/vfio_pci_liveupdate_uapi_test.c      |  93 ++++++
+ 34 files changed, 1313 insertions(+), 86 deletions(-)
+ create mode 100644 drivers/pci/liveupdate.c
+ create mode 100644 drivers/vfio/pci/vfio_pci_liveupdate.c
+ create mode 100644 include/linux/kho/abi/pci.h
+ create mode 100644 include/linux/kho/abi/vfio_pci.h
+ rename tools/testing/selftests/liveupdate/{luo_test_utils.h => lib/include/libliveupdate.h} (80%)
+ create mode 100644 tools/testing/selftests/liveupdate/lib/libliveupdate.mk
+ rename tools/testing/selftests/liveupdate/{luo_test_utils.c => lib/liveupdate.c} (89%)
+ create mode 100644 tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+ create mode 100644 tools/testing/selftests/vfio/vfio_pci_liveupdate_uapi_test.c
+
+-- 
+2.52.0.487.g5c8c507ade-goog
+
 
