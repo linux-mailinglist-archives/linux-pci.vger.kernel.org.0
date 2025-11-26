@@ -1,62 +1,60 @@
-Return-Path: <linux-pci+bounces-42173-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42174-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00568C8C608
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 00:46:09 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B350C8C636
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 00:54:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A2DD73AE585
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 23:46:08 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D44834E26F3
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Nov 2025 23:54:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 943B529BD85;
-	Wed, 26 Nov 2025 23:46:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A5392E0B71;
+	Wed, 26 Nov 2025 23:54:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HWxIZAIv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RQCfpfeZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A815248F51;
-	Wed, 26 Nov 2025 23:46:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711DE26A0DB;
+	Wed, 26 Nov 2025 23:54:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764200765; cv=none; b=hOMMOoVHdvYRMjpIhHHdQCtiixj+TjTMEPq6vunWBTw1g/r5gby+GAgL6RsUY/fsPMzBiDFo+dBOk+RLIr6pTgJKQTLtn8NbZFo8Rk02i/3wcDM3aXiBz2Apg6Gskn/bIq/C9pUQafCTsTf22EpzLvRMgFm/jBQJm7BpTD8nWMk=
+	t=1764201274; cv=none; b=lsERUQsJU2bVT5wSOC8ovilihGiidWIYwEdVnzHztR2cWwRgzN2tQmlx9Az9N87k9p1ZEGyb06NoEUsiudGaNMJ/ud2e92U+rgkZgtbAO+oxYhm0JAQS57eJ2A72tNjgj7ygE5rfv8ERmYLn0cZWNFjqPE0CBmu/dweBIltUYbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764200765; c=relaxed/simple;
-	bh=jLSo+HaqFDdXCrl+AzMOfDRdPEoc0iJrUIlW7wVPTAo=;
+	s=arc-20240116; t=1764201274; c=relaxed/simple;
+	bh=g9nM4cO2Nu/TJJjgqtJ77MJB0fTDSxhxd0RQ+LzrMi4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jBON1T3Y6ihB6FzUsbOWSyY60B5Y7YGeG9l6AgKL4o+6uSYrdg+pFbR1k08NlO71nY4AxO05gLL3cQHsEW9/SATLUosWu3X6f/gnQSuWWmvm+DNoTDVfWW+IPqxOVK9H58k7yW5XqNoiHqmYfv+g82c+Syqfg22WqETP8DvHdFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HWxIZAIv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3D66C4CEF7;
-	Wed, 26 Nov 2025 23:46:04 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=SASIGtRfrLe3gJ7PS0GQniRKXxdc0YNiaY0o/NxK45V8aCAMo6e/Vq7j725ZncpYbS0q4LZvjLNToWaQvhfbqKDgCOp65LhDxYjECLoUUs809OMbNHQNgIFTQjXMwEaxuhGGy+I7yTNnV/fIZM5GQkke9FqfujYXMqi3rariEQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RQCfpfeZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5A68C4CEF7;
+	Wed, 26 Nov 2025 23:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764200765;
-	bh=jLSo+HaqFDdXCrl+AzMOfDRdPEoc0iJrUIlW7wVPTAo=;
+	s=k20201202; t=1764201273;
+	bh=g9nM4cO2Nu/TJJjgqtJ77MJB0fTDSxhxd0RQ+LzrMi4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HWxIZAIv7DqHXVOIWKg0XqGmcA/cw760bg7EOuLUqfbnON0a2r98gNBTz0B1B3sFn
-	 q+QdMqL+0xR4iLicVYTxUdNcPAu1wUanrVk71GPSJ7pA+W7jtR9864FPLJgddNXb6e
-	 u8EHh9Oc2OcD97pAWdQ0EkLCIw3nC2bu7G3Cp9/h4H3RdDFeXNE9MkzGl/iIIGG4Hl
-	 +9GiB82Jgps53tHtwrewVL3erFApaNs5llhDIafDhise/G4foSILF/dhxtvKrN2a18
-	 gbvz3V2UGpy7ug9xF2IVn8xTsavKE+q0KSWomVXN0jjWmkcOk+0YWbcxz5NbXBpdFj
-	 BKQfu2uhCgqiA==
-Date: Wed, 26 Nov 2025 17:46:03 -0600
+	b=RQCfpfeZnsMlL2sUCsmFtjvqUATIhGbpQyu2dIi70gm8+BkN4dpSOM8JiXvAM5ZkP
+	 BoBfquJLzroZc5wGIAhoeSIkCUnY0qS/5icO4JnicFJ0PPsD5DfEBBC7hBmvplQj5F
+	 ri2lDTXygjlNAnWYiAyrbQd22ZR9ML4QDBiPfJIqcB9nPwDfqKnpAU2yVmhPKxrPRg
+	 2EumjNk/YuuXvFGVk84zVWHzVu4QY6ZGevOp5ULfj/A+7wtKaM0W8Gbch+y00woMe/
+	 yBcP4f8YtTSAWZMVLl6ZP0I+y/MtkKXo+hfPfxFy9bKI4FmbV42CSLYgrYvTEV6ahp
+	 pmVD44qu7aO0w==
+Date: Wed, 26 Nov 2025 17:54:32 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Riana Tauro <riana.tauro@intel.com>,
-	"Sean C. Dardis" <sean.c.dardis@intel.com>,
-	Farhan Ali <alifm@linux.ibm.com>,
-	Benjamin Block <bblock@linux.ibm.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Alek Du <alek.du@intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver OHalloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] PCI/PM: Reinstate clearing state_saved in legacy
- and !pm codepaths
-Message-ID: <20251126234603.GA2832326@bhelgaas>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	heiko@sntech.de, mani@kernel.org, yue.wang@amlogic.com,
+	pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com, cassel@kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v6 1/2] PCI: Configure Root Port MPS during host probing
+Message-ID: <20251126235432.GA2726707@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,169 +63,83 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aSb3Qt6n55Fsl7IF@wunner.de>
+In-Reply-To: <20251104165125.174168-2-18255117159@163.com>
 
-On Wed, Nov 26, 2025 at 01:49:06PM +0100, Lukas Wunner wrote:
-> On Tue, Nov 25, 2025 at 05:18:46PM -0600, Bjorn Helgaas wrote:
-> > On Wed, Nov 19, 2025 at 09:50:01AM +0100, Lukas Wunner wrote:
-> > > But there are two corner cases where the PCI core neglects to clear the
-> > > flag before commencing the suspend sequence:
-> > > 
-> > > * If a driver has legacy PCI PM callbacks, pci_legacy_suspend() neglects
-> > >   to clear the flag.  The (stale) flag is subsequently queried by
-> > >   pci_legacy_suspend() itself and pci_legacy_suspend_late().
-> > > 
-> > > * If a device has no driver or its driver has no PCI PM callbacks,
-> > >   pci_pm_freeze() neglects to clear the flag.  The (stale) flag is
-> > >   subsequently queried by pci_pm_freeze_noirq().
-> > > 
-> > > The flag may be set prior to suspend if the device went through error
-> > > recovery:  Drivers commonly invoke pci_restore_state() + pci_save_state()
-> > > to restore Config Space after reset.
-> > 
-> > I guess the only point of pci_save_state() in this case is to set
-> > state_saved again so a future pci_restore_state() will work, right?
-> > 
-> > The actual state being *saved* is pointless, assuming pci_save_state()
-> > saves exactly the same data that pci_restore_state() restored.
-> > 
-> > And these are the pci_save_state() calls you removed with "treewide:
-> > Drop pci_save_state() after pci_restore_state()".  Too bad we have to
-> > document the behavior we're about to change, but that's what we need
-> > to do.  It's just a little clutter to keep in mind for this release.
+On Wed, Nov 05, 2025 at 12:51:24AM +0800, Hans Zhang wrote:
+> Current PCIe initialization logic may leave Root Ports (root bridges)
+> operating with non-optimal Maximum Payload Size (MPS) settings. Existing
+> code in pci_configure_mps() returns early for devices without an upstream
+> bridge (!bridge) which includes Root Ports, so their MPS values remain
+> at firmware/hardware defaults. This fails to utilize the controller's full
+> capabilities, leading to suboptimal data transfer efficiency across the
+> PCIe hierarchy.
 > 
-> Yes.  All of your comments above are correct.
+> With this patch, during the host controller probing phase:
+> - When PCIe bus tuning is enabled (not PCIE_BUS_TUNE_OFF), and
+> - The device is a Root Port without an upstream bridge (!bridge),
+> The Root Port's MPS is set to its hardware-supported maximum value
+> (128 << dev->pcie_mpss).
 > 
-> > > The flag may also be set if drivers call pci_save_state() on probe to
-> > > allow for recovery from subsequent errors.
-> > > 
-> > > The result is that pci_legacy_suspend_late() and pci_pm_freeze_noirq()
-> > > don't call pci_save_state() and so the state that will be restored on
-> > > resume is the one recorded on last error recovery or on probe, not the one
-> > > that the device had on suspend.  If the two states happen to be identical,
-> > > there's no problem.
-> > 
-> > So IIUC the effect is that after this change and the "treewide"
-> > change,
-> > 
-> >   - If the driver uses legacy PM, the state restored on resume will be
-> >     the state from suspend instead of the state on probe.
+> Note that this initial maximum MPS setting may be reduced later, during
+> downstream device enumeration, if any downstream device does not suppor
+> the Root Port's maximum MPS.
 > 
-> Right.
-> 
-> >   - For devices with no driver or a driver without PM, if the device
-> >     has already been runtime-suspended, we avoid a pointless
-> >     pci_save_state(), so it's an optimization and not logically
-> >     related to the legacy PM case.
-> 
-> It's slightly different:
-> 
->   - For devices with no driver or a driver without PM, the state restored
->     on "thaw" and "restore" will be the state from "freeze" instead of the
->     state on probe.
-> 
-> So the same problem that we have for drivers using legacy PM, we also
-> have for devices with no driver or a driver without (modern) PM callbacks,
-> but only in the "freeze" codepath (for hibernation).
-> 
-> In the patch, I made the "pci_dev->state_saved = false" assignment
-> conditional on !pm_runtime_suspended() in the "freeze" codepath.
-> I didn't do the same in the legacy codepath because none of the
-> drivers using legacy PM callbacks seem to be using runtime PM.
+> This change ensures Root Ports are properly initialized before downstream
+> devices negotiate MPS, while maintaining backward compatibility via the
+> PCIE_BUS_TUNE_OFF check.
 
-Maybe it's moot because we hope there will be no new users of PCI
-legacy PM with runtime PM, but I don't think there's anything to
-*prevent* that or to protect against out-of-tree drivers.
+"Properly" is sort of a junk word for me because all it really says is
+we were stupid before, and we're smarter now, but it doesn't explain
+exactly *what* was wrong and why this new thing is "proper."
 
-The implicit assumption that there are no such drivers makes it look
-like there's something magic involving state_saved, legacy PM, and
-runtime PM.  It might be worth doing the same in the legacy PM path
-just for readability.
+It's obvious that the Max_Payload_Size power-on default (128 bytes) is
+suboptimal in some situations, so you don't even need to say that.
+And I think 128 bytes *is* optimal in the PCIE_BUS_PEER2PEER case.
 
-> The purpose of making it conditional on !pm_runtime_suspended()
-> is just that we'd otherwise call pci_save_state() twice:  Once in
-> pci_pm_runtime_suspend() and once more in pci_pm_freeze().
-> That would be pointless.
+s/Root Ports (root bridges)/Root Ports/
+s/bridge (!bridge)/bridge/     # a couple times
+s/hardware-supported//         # unnecessary
+s/(128 << dev->pcie_mpss)//    # we can read the spec
+s/suppor/support/
+
+> Suggested-by: Niklas Cassel <cassel@kernel.org>
+> Suggested-by: Manivannan Sadhasivam <mani@kernel.org>
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  drivers/pci/probe.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> In the commit message, I provided a rationale for the conditionality,
-> but inadvertently caused confusion.
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 0ce98e18b5a8..2459def3af9b 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2196,6 +2196,18 @@ static void pci_configure_mps(struct pci_dev *dev)
+>  		return;
+>  	}
+>  
+> +	/*
+> +	 * Unless MPS strategy is PCIE_BUS_TUNE_OFF (don't touch MPS at all),
+> +	 * start off by setting Root Ports' MPS to MPSS. This only applies to
+> +	 * Root Ports without an upstream bridge (root bridges), as other Root
+> +	 * Ports will have downstream bridges.
+
+I can't parse this sentence.  *No* Root Port has an upstream bridge.
+So I don't know what "other Root Ports" would be or why they would
+have downstream bridges (any Root Port is likely to have downstream
+endpoints or bridges).
+
+> +	   ... Depending on the MPS strategy
+> +	 * and MPSS of downstream devices, the Root Port's MPS may be
+> +	 * overridden later.
+> +	 */
+> +	if (!bridge && pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
+> +	    pcie_bus_config != PCIE_BUS_TUNE_OFF)
+> +		pcie_set_mps(dev, 128 << dev->pcie_mpss);
+> +
+>  	if (!bridge || !pci_is_pcie(bridge))
+>  		return;
+>  
+> -- 
+> 2.34.1
 > 
-> > I'm thinking of something like this for the merge commit and eventual
-> > pull request; please correct me if this isn't right:
-> > 
-> >   Restore the suspend config state, not the state from probe or error
-> >   recovery, for drivers using legacy PCI suspend.
-> > 
-> >   Avoid saving config state again for devices without driver PM if
-> >   their state was already saved by runtime suspend.
-> 
-> I'd suggest instead (feel free to wordsmith as you see fit):
-> 
->   Restore the suspend config state, not the state from probe or error
->   recovery, for drivers using legacy PCI suspend.   [ <- unmodified ]
-> 
->   Same for devices with no driver or a driver without PM callbacks
->   when the system is hibernated.                   [ <- replacement ]
-
-Stepping back, I guess that when drivers use generic PM, we already
-save config state during suspend and restore that state during resume,
-and do the same when entering/leaving hibernation.
-
-And the point of this patch is to do the same when drivers lack PM or
-use legacy PCI PM, or when devices have no driver?
-
-Maybe third try is the charm?
-
-  For drivers using PCI legacy suspend, save config state at suspend
-  so that state, not any earlier state from enumeration, probe, or
-  error recovery, will be restored when resuming.
-
-  For devices with no driver or a driver that lacks PM, save config
-  state at hibernate so that state, not any earlier state from
-  enumeration, probe, or error recovery, will be restored when
-  resuming.
-
-IIUC, after "Ensure error recoverability", the PCI core will always
-save the state during enumeration, so drivers shouldn't use
-pci_save_state() at all unless they make config changes that they want
-restored during error recovery?
-
-Or, I guess (sigh) if they do their own power management?
-
-> Mentioning the runtime PM conditionality in the high-level changelog
-> is probably not worth it.
-> 
-> Was I able to clarify all questions?  Please ask again if not.
-> 
-> Also, in case the meaning of "freeze", "thaw", "restore" isn't clear,
-> here's the order of a hibernation sequence (suspend to disk):
-> 
->   pci_pm_prepare()
->   pci_pm_freeze()
->   pci_pm_freeze_noirq()
->   <system image is generated>
->   pci_pm_thaw_noirq()
->   pci_pm_thaw()
->   pci_pm_complete()
->   pci_pm_prepare()
->   pci_pm_poweroff()
->   pci_pm_poweroff_late()
->   pci_pm_poweroff_noirq()
->   <system is asleep, then restarted with boot kernel>
->   pci_pm_prepare()
->   pci_pm_freeze()
->   pci_pm_freeze_noirq()
->   <system image is restored, replacing the boot kernel>
->   pci_pm_restore_noirq()
->   pci_pm_restore()
->   pci_pm_complete()
-> 
-> Note that "freeze" happens twice in the whole sequence.
-
-Thanks, this is extremely helpful.  Copied into my notes.  I guess
-this is essentially condensed from
-Documentation/driver-api/pm/devices.rst, but it's very helpful to see
-the bare bones and your annotations.
-
-Bjorn
 
