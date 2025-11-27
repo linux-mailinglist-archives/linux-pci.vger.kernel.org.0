@@ -1,92 +1,92 @@
-Return-Path: <linux-pci+bounces-42205-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42206-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03365C8E99A
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 14:51:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EA49C8EA49
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 14:57:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 48C5F4E8FCF
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 13:49:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0ED603ABF8B
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 13:53:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B89D2D8DB5;
-	Thu, 27 Nov 2025 13:49:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63F5F27FD68;
+	Thu, 27 Nov 2025 13:53:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="uLj1JFNa"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Dnu4my3I"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28EC3299A8E
-	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 13:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2804328B60
+	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 13:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764251364; cv=none; b=edDh8hi0X92q7iMR0Q2TfDUubZSjjyKL9pSKPCBqbFTQdIEsazl2tPN3GDUTH9X24z/JQMG/BKwYzJsPzaBONOn7Lvrg08GYQKqOTH2uqaJfaWADWcBdvNdrbTdMB6mvYZCWqKvKCUqkwPRGGAt0E/LJMaSDh6Ez5/+48OUhRtU=
+	t=1764251584; cv=none; b=rfvKN3DTDWR+gVNxGUmmuaFlWyIOH+87xYgECuvbJmtX9isKJ4rOfc1NapElr8qRt9jDY4ByfQCevL2mFX0+lNwLaOPml6Igg6M7zgIiLNn9OW8UtDY+axjZmoH84HOel91mSAmXzF1gV0I93JcJL/vYDS6H22Q3ZwnADq3OgDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764251364; c=relaxed/simple;
-	bh=djx46A/t4g9tFTNKTkwprP+1rBHg+hljQCYzR5C8ROA=;
+	s=arc-20240116; t=1764251584; c=relaxed/simple;
+	bh=uvWSUnAueiEOoFOEIl2JYdtmpK89idUnhb83TwQALwc=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZrVUNaTNHGv8CJDu8nLNp6PH7AH6EQmnIUHZ6q2v0aplE6NlWD4vwrTOpO1mqOBLOgfzKI1DHqOOEPQdviPyDGJtWYPRI3ZWG5lo5bIlSWtS/Btg6w9TjDTa6yYxrO76G02bXb7nnnTsxLSmBjWLTxMRxDewjj2y/Llu9SM+7Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=uLj1JFNa; arc=none smtp.client-ip=209.85.167.52
+	 To:Cc:Content-Type; b=eEL8BvZUOhkvzSFte6ZWhQtLMctdA2DuXsdDDKlROsFwXqXAFNi9Tj2lYTk5j08Qqcv0Xo+mIiZd4fKiedvY1rQyx3nfZldeHf1iNsTTCs4JQ+kMFrrCoM9DGo1XC6lbJyy5LtzLKNH75S2e0by3YzZMQfd0l4D4FfpjjrClNKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Dnu4my3I; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5957f617ff0so1022657e87.2
-        for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 05:49:21 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5957e017378so1033260e87.3
+        for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 05:53:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764251360; x=1764856160; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764251580; x=1764856380; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=djx46A/t4g9tFTNKTkwprP+1rBHg+hljQCYzR5C8ROA=;
-        b=uLj1JFNaKbDfbxo09KGuxHCMyfKejpCJ1WTapAbhCouqWGf7nWZMdnozs59WqDSOOe
-         pKh+xItKdnpSkz+ie4zbDtWnGqjhIUj5iJcN4GZc3r9OWWFjUDbtmIDFnDxS7kQs52N5
-         o7zRwL9XMpj0ovWUukkXhdxO+Oom/eQ0xP1Bqhns1G3+RLZvbuTMbuE9wi0OoxAuFS/a
-         PPG6CyfX81DIu4rzuUmZ0n2d7PklxBj89vNtazQQpqPzyAkP9MVXbw8pmaXbiQRlQAok
-         Je2FL5kvoXJ0r70ZgvakShfVpiV4HBUa4RGJc9S0isAgm4GJ9jVZ2ODpt7XqWEIKhhNw
-         jhPg==
+        bh=pN64heDHbxqZ2OKQxyJVBsdd0gJZEzFf6zoPDx6GqoA=;
+        b=Dnu4my3Ic1+uyfUIZlX9r952UDUx4Un5aKBPAnOVnWX73cFuzv4Tkz8I9uXsjRJwDy
+         MifpyoIwNOgbL1pELe3kXR/zFqhGUIl3TqjztPcB48bz1ldm4CK7cW0DbdNTve9VIq7P
+         SmrjS9T50H7epBqEQbscoqdLnpPNqiU0laDWV91fA/BfQd7nM0zQKlPMhi9wOxRuytPs
+         pW7vG1oxg9wvtBLXoFuCIc3VDceGbrtGz4hgzfYdTCUe5bBoRDor1kb65LH9mSQsiJ5V
+         XdzxXXZdjPjLFSGngOt53q+/dEXCODNSz3+fNLs1aR99Vz2500fGNy4qAKLDTWsENyVa
+         /eWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764251360; x=1764856160;
+        d=1e100.net; s=20230601; t=1764251580; x=1764856380;
         h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
          :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=djx46A/t4g9tFTNKTkwprP+1rBHg+hljQCYzR5C8ROA=;
-        b=aARtzOyFlhonw0wpNzO3lTtZx5RcY/S1KcU9p6nLoHDWwboyNJirZYnJ7wOEoaDK9s
-         LbkNlg7TypeommiEWcOsf7WoCHN34F6Z22pS4iSHFWoVBw6R+KKnv4S6Gx6opMbJ5C+x
-         jY3i2xWndIcd16NRFnVOnhGF2dfeEVfbpHfUAOBfubj+3zpLGC7wrMvwny0TK9O88X9v
-         otPnBudMCq2TcyP3OZVgvrgzpINOowOewtfdX/iTDefMdq4ckTBz6UT3viecpvpeUarf
-         iygGl2rgEl/fbqlarVb/ixyqG/d2/q3Gj2jMDBrPqkvd9X1uoydqeCHcUAt4aNv9aWdx
-         Ku8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWtQ9rc0YB9yJ0C+LaSjoQqhy/ixMk9F/JHI4n4BARYLR5b70RKLucDQzdhxcatAZap6FUnJQMhd+A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNlN3219oy27Izkpb5+JTzoaJr01CUaGuu7yPq/bALgxuw0Z16
-	RpgLtHZoNYY52ZgjI6hNhekhnjmcO7TTRc3pYzzLBuYZYX3ndhTqKHOU7iGzM3Q8icFoMh3lT/S
-	y1hMH3AN8JJuhFQaVvKUSwT7MpooHbUDH6/T/OzxXxg==
-X-Gm-Gg: ASbGncuPo9Iahj2VRfxbZto8LzVppXEXlrc7ser5n5wSMvVGnOefNI7H3xian8S7UDi
-	RyI8Wn7u1gv0n6xs26OxYkJOjlgk/uqwv1nC+zlPz9a+caC8TlJ1St5jU7diHqRltFEBKn1UStk
-	CLoC3NbWtc8HxXx9w2hhlHhSRdWDXjTYAFD/HLNsU1h/tHaBRzpeefbl199OK4hZ8+T7SCGz/mg
-	q5gKzm7eMXo7wov0JL03d4C2nZnrer25Ak/z/yGD3BCawuPdhGJY3Op1bVbJuZM/K4SA/oJVu4Z
-	t4Ina1AACn2mr30H1G9bGwHP1hg=
-X-Google-Smtp-Source: AGHT+IH+CDUfKujPpotwtmLcmyLVWHWVuqtFgSXM/kqLIDQE6VNVNZAmDKJw5gKN9s8jiNvQgCQtNi8buZoDHFa0ulg=
-X-Received: by 2002:a05:6512:800c:20b0:596:a540:c95f with SMTP id
- 2adb3069b0e04-596a540cb59mr5729287e87.19.1764251360301; Thu, 27 Nov 2025
- 05:49:20 -0800 (PST)
+        bh=pN64heDHbxqZ2OKQxyJVBsdd0gJZEzFf6zoPDx6GqoA=;
+        b=MZFdbETKl20GoKnhScb2QkOU3LylbPihYz66jz8St0zBLqwUk4H1AUxO6YZLefbfsr
+         rkRYGKCEbqDViRJG3TsM0yi+Bf5w2G4zR5ipJCMXw/l0agYzkjGPDY9ydc0hgSgtzBSN
+         04qZSfeVL5LMs+NU5mUgAgIUxPUc8Ga1tVwai1FSmL/v+LMxSLMVce1AdCjHSI6DdjN3
+         /H3xUFdOe7GoGqPm7BnZ5UBSguVh9J1DjpShfZ36mo7OCVaEjoxM/Ksbn/PAhZQQeiWw
+         LQqpE1GTdrjxlsrXPuCdteE+tTHd/Iap43CjObyilxwwPHuIj/V/28wkDyMEokALY5RD
+         iUpA==
+X-Forwarded-Encrypted: i=1; AJvYcCU05e1C5v1D0f2xTsF7OOOxKAfc47hW592E4+7a4bxHazazaftrxAKqKzzVasuYPVkIYPB1yS8TWXY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT7HfRHZw+Ofc6xcyg7L1aL9dqsqYIM7mCfAt3YYswnS9mblmI
+	3A4Rdqxq2S2xXW8OHi015FRh9Qh2GktCRxNk4kf3mSUwJfnXvbSPirBJX8b0NCKJ0nVagClzRLu
+	RC9okSOScL00ORcO+eNuYgqnsOh4VDR4TuY0yz9BBzw==
+X-Gm-Gg: ASbGncuSZ7EzZmazgjU7jtAwVm2XwPi4d4i/SQm01jXHFVPHcLDyNK5U5rg3dDr3iF8
+	WnDFkpAw+mM8rXFEBS18E/Jf0/e30FmdCpKgUaj1VZyLMPotgFB3UnV9pchOwk651VrqXv+57JZ
+	SNxef7hFOpL6fFW09+p/fe5LVj1sVzWoTppySuRbEqYQnxurv0rQO+2n5fzeL+0w86v+Hq5uoVI
+	kN47UC3XT3vhOll9DGPN0UO9D7TMn/2/DMhBnamTpsKVyHJH99fS0p70xeDyV81CacKYvXr24WN
+	M+ZZO46Syrik87zaCj0OYohkiXc=
+X-Google-Smtp-Source: AGHT+IG6PL+Jiezoh/uDW8dnWLihyDKxT0NJj0K3mdDXkbk6oKkhSmfyJZwok91yAbizDOVups9BJ+4+9Gf5UTlIkv4=
+X-Received: by 2002:a05:6512:2351:b0:594:93b8:88b6 with SMTP id
+ 2adb3069b0e04-596a3eed692mr7226030e87.38.1764251580020; Thu, 27 Nov 2025
+ 05:53:00 -0800 (PST)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 27 Nov 2025 05:49:19 -0800
+ HTTPREST; Thu, 27 Nov 2025 07:52:58 -0600
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 27 Nov 2025 05:49:19 -0800
+ HTTPREST; Thu, 27 Nov 2025 07:52:58 -0600
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <20251125-pci-m2-e-v2-9-32826de07cc5@oss.qualcomm.com>
+In-Reply-To: <20251125-pci-m2-e-v2-4-32826de07cc5@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251125-pci-m2-e-v2-0-32826de07cc5@oss.qualcomm.com> <20251125-pci-m2-e-v2-9-32826de07cc5@oss.qualcomm.com>
-Date: Thu, 27 Nov 2025 05:49:19 -0800
-X-Gm-Features: AWmQ_bmLrPADj6DoaQnC1ZJGmDNpk5NRcjPDulR-pWqLbapX0f-JV3TGd0Beet4
-Message-ID: <CAMRc=McQO4OKra4S+goHsrq75HJbO1U=pfOg_8RrGFxNwy_-pw@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] Bluetooth: hci_qca: Add support for WCN7850 PCIe
- M.2 card
+References: <20251125-pci-m2-e-v2-0-32826de07cc5@oss.qualcomm.com> <20251125-pci-m2-e-v2-4-32826de07cc5@oss.qualcomm.com>
+Date: Thu, 27 Nov 2025 07:52:58 -0600
+X-Gm-Features: AWmQ_bmPoMOTBlwPqpCqq0qp_ZAAK68AQ2h724JshuQcjnDCyPKjaA9BdddHSek
+Message-ID: <CAMRc=MeOfpFME0LL+WDSM3ZVUOiqTCHQN-E3=PZ_qTMLWDKaKQ@mail.gmail.com>
+Subject: Re: [PATCH v2 04/10] serdev: Add an API to find the serdev controller
+ associated with the devicetree node
 To: manivannan.sadhasivam@oss.qualcomm.com
 Cc: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>, 
 	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -104,18 +104,82 @@ Cc: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualco
 	Bartosz Golaszewski <brgl@bgdev.pl>
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 25 Nov 2025 15:45:13 +0100, Manivannan Sadhasivam via B4 Relay
+On Tue, 25 Nov 2025 15:45:08 +0100, Manivannan Sadhasivam via B4 Relay
 <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> said:
 > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 >
-> The WCN7850 PCIe M.2 card connected to the UART controller exposes the
-> 'WCN7850' serdev device and is controlled using the pwrseq framework.
->
-> Hence, add support for it in the driver. It reuses the existing
-> 'qca_soc_data_wcn7850' driver data.
+> Add of_find_serdev_controller_by_node() API to find the serdev controller
+> device associated with the devicetree node.
 >
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 > ---
+>  drivers/tty/serdev/core.c | 16 ++++++++++++++++
+>  include/linux/serdev.h    |  9 +++++++++
+>  2 files changed, 25 insertions(+)
+>
+> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> index 76b89dd0720f..f90095cb778f 100644
+> --- a/drivers/tty/serdev/core.c
+> +++ b/drivers/tty/serdev/core.c
+> @@ -530,6 +530,22 @@ struct serdev_controller *serdev_controller_alloc(struct device *host,
+>  }
+>  EXPORT_SYMBOL_GPL(serdev_controller_alloc);
+>
+> +/**
+> + * of_find_serdev_controller_by_node() - Find the serdev controller associated
+> + *					 with the devicetree node
+> + * @node:	Devicetree node
+> + *
+> + * Return: Pointer to the serdev controller associated with the node. NULL if
+> + * the controller is not found.
+> + */
+> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
+> +{
+> +	struct device *dev = bus_find_device_by_of_node(&serdev_bus_type, node);
+> +
+> +	return (dev && dev->type == &serdev_ctrl_type) ? to_serdev_controller(dev) : NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(of_find_serdev_controller_by_node);
+> +
+>  static int of_serdev_register_devices(struct serdev_controller *ctrl)
+>  {
+>  	struct device_node *node;
+> diff --git a/include/linux/serdev.h b/include/linux/serdev.h
+> index ffc6eb13f44b..fa235c92592a 100644
+> --- a/include/linux/serdev.h
+> +++ b/include/linux/serdev.h
+> @@ -337,4 +337,13 @@ static inline bool serdev_acpi_get_uart_resource(struct acpi_resource *ares,
+>  }
+>  #endif /* CONFIG_ACPI */
+>
+> +#ifdef CONFIG_OF
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+You can make it independent from OF if you base the code on fwnode like:
+
+struct serdev_controller find_serdev_controller_by_fwnode(struct
+fwnode_handle *fwnode);
+{
+	struct device *dev = bus_find_device_by_fwnode(&serdev_bus_type, node);
+
+	(...)
+}
+
+Users can always convert OF nodes to firmware nodes.
+
+Bart
+
+> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node);
+> +#else
+> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
+> +{
+> +	return NULL;
+> +}
+> +#endif /* CONFIG_OF */
+> +
+>  #endif /*_LINUX_SERDEV_H */
+>
+> --
+> 2.48.1
+>
+>
 
