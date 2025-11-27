@@ -1,289 +1,291 @@
-Return-Path: <linux-pci+bounces-42230-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42231-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CFDAC90482
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 23:14:47 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id B129EC90506
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 23:58:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E3F03AA47C
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 22:14:46 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 876BB4E0F46
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 22:58:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBB2631E0FA;
-	Thu, 27 Nov 2025 22:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC159315D23;
+	Thu, 27 Nov 2025 22:58:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mxXJsiNx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Om3JjTXA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D4131A069
-	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 22:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205AF296BBC
+	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 22:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764281680; cv=none; b=D6TpqoNwT3++Ht0krUmqmg7vSYt4u6x0VPKRrxyJjcYXL4MpZcjSq/OEz55kD5VezNcKKoNUOC+tjKRTaKBpnxa5QayBqphBID2PCdQKdCDXJq0586Jw3z92/dQ5HPaxzAteafLz4O3Mi2/r7zeJ+7GlTx6yZhOORqENfzU1rx4=
+	t=1764284325; cv=none; b=DwR8/7ika4Ep9I6m+1XNWk+xtf5xPEu6YoErboY+C91/W3xfb43l2T4X2f3lIJiag5cuVpVbdSMEz6K8Kdf50DHqrZm5+ObuTYKmT02WKFiIgUk0lZYx51WBrSmS3Q7OfNud+6DWnA7PQjRGigHFnPaypikF1mMDXR7w5r7SH5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764281680; c=relaxed/simple;
-	bh=eBS0CUizpUI0IUV5eENk604ryPB8tzKxAgoT6Iv/rNI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tZGClp/5SsBrW11WYW+A3Q2rs5m59cH+uealki6S2mq3K8QSJ0cHrid7R0MA/mKSgI1LvtBLer9a4hEYMDroSCTBDnOtotj/dg03GOxUv3wacuRXEvuXupOumJtn0WkZBzxFERvcEXWwOjjvXp1vK8mxKVmIddEH+j6mmGomaK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mxXJsiNx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93EA0C113D0
-	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 22:14:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764281680;
-	bh=eBS0CUizpUI0IUV5eENk604ryPB8tzKxAgoT6Iv/rNI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mxXJsiNxhN1S4+aaL4NbV6VQmJPpBrqirZIT11lmoiHRFXWYqOdHgLT8nO/dex4lu
-	 b7GrvOOExqharqQdAnDFbOwJ2/6KIKAoGI8Ov0Jz1/eH7uCa4i3sUatetNWNmLla/b
-	 gmKseYf9lrbt/ekwpRBQ+j5p9AvkGXK0MueOr/uY+Bcmk8YsZ3jw+EmPr5EM9Xyyal
-	 w1SmZZ/DOWEfb+N8J8aZQSBGaoJh/eg6OzG5nfJN1KPSC3nC0ViYIRVVicAehr2FDP
-	 LCDRlTMMeoJ5ENTrtfXzS6KAU7rPSkbbhwwkQO9+40ZZb5aHdlQzERXU+RPoNg/4Gr
-	 IufmTo+X4LXXQ==
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-65366485678so469258eaf.2
-        for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 14:14:40 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX4wOHP2uJ8Q03zqifw/H8XV+OjwceCi8ul/Pj1XEITNnUxxctALOOvfCT52p045P7GPg3+UWh6HIM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3sdRA1TbhxOQZ/ZkqpPidGKGzcE5d+ZZAkokxGhashH0MKxyv
-	RsWBRlNzA9++NAI0XITb6u5i64fSEArPJRuvcwaJtlBFhBSA78PCEEsF5CE7cxuTrN98N0UXkSI
-	zZqHZYGORHro0AlTzQqrd+iOKHmmuM9s=
-X-Google-Smtp-Source: AGHT+IFwPll0f82sEFyAgxPzXsJ3Sz08LKmddouqPj3T99a8UMq1Mqm0U4kLPk1yoT7JDPl2CGsyiJV/R33trqfiRI4=
-X-Received: by 2002:a05:6820:2982:b0:657:60b8:b07c with SMTP id
- 006d021491bc7-657bdae7b8bmr3877565eaf.2.1764281679535; Thu, 27 Nov 2025
- 14:14:39 -0800 (PST)
+	s=arc-20240116; t=1764284325; c=relaxed/simple;
+	bh=osPt1OwYCeGRiDAFR+jC3NuwGq1YNO9rNjse/VJ9OX0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=tnw6FY1NSR5qqj5CItSVHUQFGT1dQwNS67tOu/z32up8RU8nQrA7RX9tDf+sonTM6oaZdPDRunBNV9O2OhX8f54qXjd0lfodWJKEXTa0abKltNakxFgLySCl1KXEFGLPanlP+/1RpNFEZHP2XWqRcJKc10uiOMSURZIdTu9Rs5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Om3JjTXA; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764284324; x=1795820324;
+  h=date:from:to:cc:subject:message-id;
+  bh=osPt1OwYCeGRiDAFR+jC3NuwGq1YNO9rNjse/VJ9OX0=;
+  b=Om3JjTXAwZ5XteMiprgRaEPg8k2IE4PpV7ZiA58E1dNqDl+iiNLUg8Aw
+   +JAU4Q18utE2T2HCehzgCEAo84ZMv6EG+PjdhYYEnVtbeE1eMWGjzii1V
+   sBt7W+ON3ka4LH4rJTnKFBw9+fziFYrW9crU5UFQG7Kc2JNAY5SDelTjK
+   +C/XbINkx0XXs6XS1O6nJotlLVYSnDADly/fESjGDvWSA/nmzkg77bFbx
+   h+8CgYb3HkDU7dDPp3A3mmNOOQceEKpSb1WwbIzrPrGzwlFoggX5HCfcE
+   G7ogF0jgfvXRutMdNkp5XtPNfuPuiQoJ4P23dTyWw/c7hbywdWXCZ/jTw
+   A==;
+X-CSE-ConnectionGUID: 7iwxDb9cRZeC2R3zb2yfQw==
+X-CSE-MsgGUID: 1SNlsmvVT2+udAvJg6i56g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11626"; a="66216260"
+X-IronPort-AV: E=Sophos;i="6.20,232,1758610800"; 
+   d="scan'208";a="66216260"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 14:58:44 -0800
+X-CSE-ConnectionGUID: TqJ0vEdeQXuq+hmR+TGn9g==
+X-CSE-MsgGUID: kF7ENSaJQUu5nGk++8g+IA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,232,1758610800"; 
+   d="scan'208";a="193769305"
+Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 27 Nov 2025 14:58:42 -0800
+Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vOkwi-000000005oP-1LPC;
+	Thu, 27 Nov 2025 22:58:40 +0000
+Date: Fri, 28 Nov 2025 06:58:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/s32g] BUILD SUCCESS
+ c7533471578ece15dd206585444446f8caa2d2f8
+Message-ID: <202511280622.NEhtYDf7-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20251120-thermal-device-v1-0-bbdad594d57a@gmx.de>
- <CAJZ5v0jOPrBcozzJMsB1eE12MuZRWDAV-+=jfrhJbi=S0p5J9Q@mail.gmail.com>
- <5f3ef610-4024-4ca0-a934-2649f5d25f40@gmx.de> <CAJZ5v0hdqY-=O5Ai6c5qjMr_pRFc+SDyV1QruM=ZeHH9Z=guSg@mail.gmail.com>
- <cf86344b-d9f1-4d3c-9fe9-deeb4ade9304@gmx.de>
-In-Reply-To: <cf86344b-d9f1-4d3c-9fe9-deeb4ade9304@gmx.de>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 27 Nov 2025 23:14:27 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0iH8jkqJaSNtqaTHxt_305DeiEq0AqQCo4Eho5hMKkU4Q@mail.gmail.com>
-X-Gm-Features: AWmQ_bnDEMFFW397UhskjKnrkd8ZW685Q6DyeE8xXCdq63xxksrcXk6fCdtHXQ8
-Message-ID: <CAJZ5v0iH8jkqJaSNtqaTHxt_305DeiEq0AqQCo4Eho5hMKkU4Q@mail.gmail.com>
-Subject: Re: [PATCH RFC RESEND 0/8] thermal: core: Allow setting the parent
- device of thermal zone/cooling devices
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Len Brown <lenb@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-tegra@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-doc@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, ath10k@lists.infradead.org, 
-	ath11k@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
-	linux-pci@vger.kernel.org, imx@lists.linux.dev, 
-	linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 27, 2025 at 9:29=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
->
-> Am 27.11.25 um 19:22 schrieb Rafael J. Wysocki:
->
-> > On Sat, Nov 22, 2025 at 3:18=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wro=
-te:
-> >> Am 21.11.25 um 21:35 schrieb Rafael J. Wysocki:
-> >>
-> >>> On Thu, Nov 20, 2025 at 4:41=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> w=
-rote:
-> > [...]
-> >
-> >>>> ---
-> >>>> Armin Wolf (8):
-> >>>>         thermal: core: Allow setting the parent device of cooling de=
-vices
-> >>>>         thermal: core: Set parent device in thermal_of_cooling_devic=
-e_register()
-> >>>>         ACPI: processor: Stop creating "device" sysfs link
-> >>> That link is not to the cooling devices' parent, but to the ACPI
-> >>> device object (a struct acpi_device) that corresponds to the parent.
-> >>> The parent of the cooling device should be the processor device, not
-> >>> its ACPI companion, so I'm not sure why there would be a conflict.
-> >>   From the perspective of the Linux device core, a parent device does =
-not have to be
-> >> a "physical" device. In the case of the ACPI processor driver, the ACP=
-I device is used,
-> >> so the cooling device registered by said driver belongs to the ACPI de=
-vice.
-> > Well, that's a problem.  A struct acpi_device should not be a parent
-> > of anything other than a struct acpi_device.
->
-> Understandable, in this case we should indeed use the the CPU device, esp=
-ecially since the fwnode
-> associated with it already points to the correct ACPI processor object (a=
-t least on my machine).
->
-> >> I agree that using the Linux processor device would make more sense, b=
-ut this will require
-> >> changes inside the ACPI processor driver.
-> > So be it.
->
-> OK.
->
-> >> As for the "device" symlink: The conflict would be a naming conflict, =
-as both "device" symlinks
-> >> (the one created by the ACPI processor driver and the one created by t=
-he device core) will
-> >> be created in the same directory (which is the directory of the coolin=
-g device).
-> > I see.
-> >
-> > But why is the new symlink needed in the first place?  If the device
-> > has a parent, it will appear under that parent in /sys/devices/, won't
-> > it?
-> >
-> > Currently, all of the thermal class devices appear under
-> > /sys/devices/virtual/thermal/ because they have no parents and they
-> > all get a class parent kobject under /sys/devices/virtual/, as that's
-> > what get_device_parent() does.
-> >
-> > If they have real parents, they will appear under those parents, so
-> > why will the parents need to be pointed to additionally?
->
-> The "device" smylink is a comfort feature provided by the device core its=
-elf to allow user space
-> application to traverse the device tree from bottom to top, like a double=
--linked list. We cannot
-> disable the creation of this symlink, nor should we.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/s32g
+branch HEAD: c7533471578ece15dd206585444446f8caa2d2f8  MAINTAINERS: Add NXP S32G PCIe controller driver maintainer
 
-I think you mean device_add_class_symlinks(), but that's just for
-class devices.  Of course, thermal devices are class devices, so
-they'll get those links if they get parents.  Fair enough.
+elapsed time: 1463m
 
-> > BTW, this means that the layout of /sys/devices/ will change when
-> > thermal devices get real parents.  I'm not sure if this is a problem,
-> > but certainly something to note.
->
-> I know, most applications likely use /sys/class/thermal/, so they are not=
- impacted by this. I will
-> note this in the cover letter of the next revision.
->
-> >>>>         ACPI: fan: Stop creating "device" sysfs link
-> >>>>         ACPI: video: Stop creating "device" sysfs link
-> >>> Analogously in the above two cases AFAICS.
-> >>>
-> >>> The parent of a cooling device should be a "physical" device object,
-> >>> like a platform device or a PCI device or similar, not a struct
-> >>> acpi_device (which in fact is not a device even).
-> >>   From the perspective of the Linux device core, a ACPI device is a pe=
-rfectly valid device.
-> > The driver core is irrelevant here.
-> >
-> > As I said before, a struct acpi_device object should not be a parent
-> > of anything other than a struct acpi_device object.  Those things are
-> > not devices and they cannot be used for representing PM dependencies,
-> > for example.
-> >
-> >> I agree that using a platform device or PCI device is better, but this=
- already happens
-> >> inside the ACPI fan driver (platform device).
-> > So it should not happen there.
->
-> I meant that the ACPI fan driver already uses the platform device as the =
-parent device of the
-> cooling device, so the ACPI device is only used for interacting with the =
-ACPI control methods
-> (and registering sysfs attributes i think).
+configs tested: 198
+configs skipped: 1
 
-OK
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> >> Only the ACPI video driver created a "device" sysfs link that points t=
-o the ACPI device
-> >> instead of the PCI device. I just noticed that i accidentally changed =
-this by using the
-> >> PCI device as the parent device for the cooling device.
-> >>
-> >> If you want then we can keep this change.
-> > The PCI device should be its parent.
->
-> Alright, i will note this in the patch description.
->
-> >>>>         thermal: core: Set parent device in thermal_cooling_device_r=
-egister()
-> >>>>         ACPI: thermal: Stop creating "device" sysfs link
-> >>> And this link is to the struct acpi_device representing the thermal z=
-one itself.
-> >> Correct, the ACPI thermal zone driver is a ACPI driver, meaning that h=
-e binds to
-> >> ACPI devices. Because of this all (thermal zone) devices created by an=
- instance of
-> >> said driver are descendants of the ACPI device said instance is bound =
-to.
-> >>
-> >> We can of course convert the ACPI thermal zone driver into a platform =
-driver, but
-> >> this would be a separate patch series.
-> > If you want parents, this needs to be done first, but I'm still not
-> > sure what the parent of a thermal zone would represent.
-> >
-> > In the ACPI case it is kind of easy - it would be the (platform)
-> > device corresponding to a given ThermalZone object in the ACPI
-> > namespace - but it only has a practical meaning if that device has a
-> > specific parent.  For example, if the corresponding ThermalZone object
-> > is present in the \_SB scope, the presence of the thermal zone parent
-> > won't provide any additional information.
->
-> To the device core it will, as the platform device will need to be suspen=
-ded
-> after the thermal zone device has been suspended, among other things.
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    clang-19
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    clang-19
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    clang-19
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20251127    gcc-15.1.0
+arc                   randconfig-001-20251128    gcc-8.5.0
+arc                   randconfig-002-20251127    gcc-8.5.0
+arc                   randconfig-002-20251128    gcc-8.5.0
+arm                               allnoconfig    clang-22
+arm                               allnoconfig    gcc-15.1.0
+arm                                 defconfig    gcc-15.1.0
+arm                   randconfig-001-20251127    clang-22
+arm                   randconfig-001-20251128    gcc-8.5.0
+arm                   randconfig-002-20251127    clang-22
+arm                   randconfig-002-20251128    gcc-8.5.0
+arm                   randconfig-003-20251127    clang-22
+arm                   randconfig-003-20251128    gcc-8.5.0
+arm                   randconfig-004-20251127    gcc-10.5.0
+arm                   randconfig-004-20251128    gcc-8.5.0
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20251128    gcc-15.1.0
+arm64                 randconfig-002-20251128    gcc-15.1.0
+arm64                 randconfig-003-20251128    gcc-15.1.0
+arm64                 randconfig-004-20251128    gcc-15.1.0
+csky                             allmodconfig    gcc-15.1.0
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20251128    gcc-15.1.0
+csky                  randconfig-002-20251128    gcc-15.1.0
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    clang-22
+hexagon                           allnoconfig    gcc-15.1.0
+hexagon                             defconfig    gcc-15.1.0
+hexagon               randconfig-001-20251127    clang-22
+hexagon               randconfig-001-20251128    clang-22
+hexagon               randconfig-002-20251127    clang-18
+hexagon               randconfig-002-20251128    clang-22
+i386                              allnoconfig    gcc-14
+i386                              allnoconfig    gcc-15.1.0
+i386        buildonly-randconfig-001-20251128    gcc-13
+i386        buildonly-randconfig-002-20251128    gcc-13
+i386        buildonly-randconfig-003-20251128    gcc-13
+i386        buildonly-randconfig-004-20251128    gcc-13
+i386        buildonly-randconfig-005-20251128    gcc-13
+i386        buildonly-randconfig-006-20251128    gcc-13
+i386                                defconfig    gcc-15.1.0
+i386                  randconfig-001-20251128    gcc-14
+i386                  randconfig-002-20251128    gcc-14
+i386                  randconfig-003-20251128    gcc-14
+i386                  randconfig-004-20251128    gcc-14
+i386                  randconfig-005-20251128    gcc-14
+i386                  randconfig-006-20251128    gcc-14
+i386                  randconfig-007-20251128    gcc-14
+i386                  randconfig-011-20251128    gcc-14
+i386                  randconfig-012-20251128    gcc-14
+i386                  randconfig-013-20251128    gcc-14
+i386                  randconfig-014-20251128    gcc-14
+i386                  randconfig-015-20251128    gcc-14
+i386                  randconfig-016-20251128    gcc-14
+i386                  randconfig-017-20251128    gcc-14
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20251127    clang-22
+loongarch             randconfig-001-20251128    clang-22
+loongarch             randconfig-002-20251127    gcc-15.1.0
+loongarch             randconfig-002-20251128    clang-22
+m68k                             allmodconfig    clang-19
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    clang-19
+m68k                                defconfig    clang-19
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    clang-19
+mips                             allmodconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                             allyesconfig    gcc-15.1.0
+mips                      loongson1_defconfig    clang-18
+mips                          rb532_defconfig    clang-18
+nios2                            allmodconfig    clang-22
+nios2                             allnoconfig    clang-22
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    clang-19
+nios2                 randconfig-001-20251127    gcc-8.5.0
+nios2                 randconfig-001-20251128    clang-22
+nios2                 randconfig-002-20251127    gcc-11.5.0
+nios2                 randconfig-002-20251128    clang-22
+openrisc                         allmodconfig    clang-22
+openrisc                          allnoconfig    clang-22
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    clang-22
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20251127    gcc-8.5.0
+parisc                randconfig-001-20251128    clang-22
+parisc                randconfig-002-20251127    gcc-15.1.0
+parisc                randconfig-002-20251128    clang-22
+parisc64                            defconfig    clang-19
+powerpc                    adder875_defconfig    clang-18
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    clang-22
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                      arches_defconfig    clang-18
+powerpc                      pcm030_defconfig    clang-18
+powerpc               randconfig-001-20251127    clang-22
+powerpc               randconfig-001-20251128    clang-22
+powerpc               randconfig-002-20251127    gcc-13.4.0
+powerpc               randconfig-002-20251128    clang-22
+powerpc                         wii_defconfig    clang-18
+powerpc64             randconfig-001-20251127    clang-20
+powerpc64             randconfig-001-20251128    clang-22
+powerpc64             randconfig-002-20251127    gcc-14.3.0
+powerpc64             randconfig-002-20251128    clang-22
+riscv                             allnoconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                               defconfig    gcc-15.1.0
+riscv                 randconfig-001-20251127    gcc-12.5.0
+riscv                 randconfig-001-20251128    gcc-15.1.0
+riscv                 randconfig-002-20251127    clang-22
+riscv                 randconfig-002-20251128    gcc-15.1.0
+s390                             alldefconfig    clang-18
+s390                             allmodconfig    gcc-15.1.0
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    gcc-15.1.0
+s390                  randconfig-001-20251127    gcc-11.5.0
+s390                  randconfig-001-20251128    gcc-15.1.0
+s390                  randconfig-002-20251127    clang-22
+s390                  randconfig-002-20251128    gcc-15.1.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    clang-22
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-14
+sh                    randconfig-001-20251127    gcc-15.1.0
+sh                    randconfig-001-20251128    gcc-15.1.0
+sh                    randconfig-002-20251127    gcc-12.5.0
+sh                    randconfig-002-20251128    gcc-15.1.0
+sh                          sdk7780_defconfig    clang-18
+sparc                             allnoconfig    clang-22
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20251127    gcc-13.4.0
+sparc                 randconfig-001-20251128    clang-22
+sparc                 randconfig-002-20251127    gcc-11.5.0
+sparc                 randconfig-002-20251128    clang-22
+sparc64                          allmodconfig    clang-22
+sparc64                             defconfig    gcc-14
+sparc64               randconfig-001-20251127    gcc-15.1.0
+sparc64               randconfig-001-20251128    clang-22
+sparc64               randconfig-002-20251128    clang-22
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    clang-19
+um                                  defconfig    gcc-14
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20251127    gcc-14
+um                    randconfig-001-20251128    clang-22
+um                    randconfig-002-20251127    clang-22
+um                    randconfig-002-20251128    clang-22
+um                           x86_64_defconfig    gcc-14
+x86_64                            allnoconfig    clang-20
+x86_64                            allnoconfig    clang-22
+x86_64      buildonly-randconfig-001-20251128    clang-20
+x86_64      buildonly-randconfig-002-20251128    clang-20
+x86_64      buildonly-randconfig-003-20251128    clang-20
+x86_64      buildonly-randconfig-004-20251128    clang-20
+x86_64      buildonly-randconfig-005-20251128    clang-20
+x86_64      buildonly-randconfig-006-20251128    clang-20
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20251128    gcc-14
+x86_64                randconfig-002-20251128    gcc-14
+x86_64                randconfig-003-20251128    gcc-14
+x86_64                randconfig-004-20251128    gcc-14
+x86_64                randconfig-005-20251128    gcc-14
+x86_64                randconfig-006-20251128    gcc-14
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-14
+x86_64                          rhel-9.4-func    clang-20
+x86_64                    rhel-9.4-kselftests    clang-20
+x86_64                         rhel-9.4-kunit    gcc-14
+x86_64                           rhel-9.4-ltp    gcc-14
+xtensa                            allnoconfig    clang-22
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                           allyesconfig    clang-22
+xtensa                randconfig-001-20251127    gcc-11.5.0
+xtensa                randconfig-001-20251128    clang-22
+xtensa                randconfig-002-20251127    gcc-10.5.0
+xtensa                randconfig-002-20251128    clang-22
 
-Let's set suspend aside for now, I think I've explained my viewpoint
-on this enough elsewhere.
-
-> > Unfortunately, the language in the specification isn't particularly
-> > helpful here: "Thermal zone objects should appear in the namespace
-> > under the portion of the system that comprises the thermal zone. For
-> > example, a thermal zone that is isolated to a docking station should
-> > be defined within the scope of the docking station device."  To me
-> > "the portion of the system" is not too meaningful unless it is just
-> > one device without children.  That's why _TZD has been added AFAICS.
->
-> I think you are confusing the parent device of the ThermalZone ACPI devic=
-e
-> with the parent device of the struct thermal_zone_device.
-
-No, I'm not.
-
-> I begin to wonder if mentioning the ACPI ThermalZone device together with=
- the
-> struct thermal_zone_device was a bad idea on my side xd.
-
-Maybe.
-
-> >>>>         thermal: core: Allow setting the parent device of thermal zo=
-ne devices
-> >>> I'm not sure if this is a good idea, at least until it is clear what
-> >>> the role of a thermal zone parent device should be.
-> >> Take a look at my explanation with the Intel Wifi driver.
-> > I did and I think that you want the parent to be a device somehow
-> > associated with the thermal zone, but how exactly?  What should that
-> > be in the Wifi driver case, the PCI device or something else?
-> >
-> > And what if the thermal zone affects multiple devices?  Which of them
-> > (if any) would be its parent?  And would it be consistent with the
-> > ACPI case described above?
-> >
-> > All of that needs consideration IMV.
->
-> I agree, but there is a difference between "this struct thermal_zone_devi=
-ce depends on
-> device X to be operational" and "this thermal zone affects device X, devi=
-ce Y and device Z".
-
-Yes, there is.
-
-> This patch series exclusively deals with telling the driver core that "th=
-is struct thermal_zone_device
-> depends on device X to be operational".
-
-Maybe let's take care of cooling devices first and get back to this later?
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
