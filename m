@@ -1,208 +1,147 @@
-Return-Path: <linux-pci+bounces-42176-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42177-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EA34C8C6F1
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 01:39:38 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFA1BC8C86D
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 02:18:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 04CAE35005E
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 00:39:38 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 581B14E5920
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 01:18:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACC0D21E091;
-	Thu, 27 Nov 2025 00:39:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BB6E22157E;
+	Thu, 27 Nov 2025 01:18:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L144wKNq"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="JMxRlQgq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71D61E9B0B
-	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 00:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3481FF7C8
+	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 01:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764203974; cv=none; b=WO+ASpl7YFuoSPM/tr3JgBjJoPNBiK4B8uALZlWrVBkyoScJ9n4jsqbUWN18vka8dmxC5KXcHQKcf02bUn0C8Bwfthlr1rJyg+ipzYslazDIJm8+2SvFsD0eNnqfPj5VUR4SaEQiFq69N8IfhMdOnzkcloBx76C9Tnh95qx36UY=
+	t=1764206301; cv=none; b=CBQb5jBZXeUIsdB2D9fG6g/yJpnBDwzyPP/c+RgQhGncySp9OJRYwG5xdVxCMJCzMkxnuj5k49qSzrZnxnrecHJIEhUqy0tFec0ubfpniR3HVLE3WGcv/DwuaKhvVr/j9GNN7o8yh6dtPd7Aeti7s4XiY1yzWKwgeI+oZs+JyH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764203974; c=relaxed/simple;
-	bh=QFgkZmK061LT0SfE6dtkVP7bWuVD5Fg3FYf5yCt3Jqk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=XNTft6lgsKeNVzevpQkZX09dhv8/kD713BwS04NIMutBKbAVOyCPDRcPU7SC4tHfUs057exhRZ4CaengHjUrUnTjMRDdkSUx36H8znUlFICfBS1McjbmHOLTbspZiNXQzXQGeFHqnls0j9Q0B8huU795ZJZt85ELfcOyRaTUAG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L144wKNq; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764203972; x=1795739972;
-  h=date:from:to:cc:subject:message-id;
-  bh=QFgkZmK061LT0SfE6dtkVP7bWuVD5Fg3FYf5yCt3Jqk=;
-  b=L144wKNqrHiT6jXtSSxAgerZb6ZDcklLUJJ0BiuV2aw0bxcEgt9bz4Vj
-   RIhw95OwHjyuL0pUNbp+bfQbRIuQXDTxn9rKEkBTWlFbOuxLxGI40dcxA
-   VT3N8zlyvNdbwPTiAPdkU1Z34kljzoMqaPZVjdEbA4ZvvNXjuRZhwWycl
-   WmLohRKgHj6eFnrQ2EXL+9C4LyPXbQKKSqQv7S6F2Zv+7Ygz7kwKZi/9h
-   tVq+Jnx8EKLqZl1sibuen2pp6y3t1uHwiymABPUjwcsrg81pQfmjEzV47
-   dZWZLRs3R5JxxWxMbMiayKAKEa+7HxvtrNlSdTKFCYROPzqngy0+szE2t
-   g==;
-X-CSE-ConnectionGUID: qoZ4k7kYSfi1pHgQFsAhkg==
-X-CSE-MsgGUID: jXPBuTCDT6+LDA7I48d1HA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11625"; a="66324117"
-X-IronPort-AV: E=Sophos;i="6.20,229,1758610800"; 
-   d="scan'208";a="66324117"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 16:39:32 -0800
-X-CSE-ConnectionGUID: Q+gqkMD5S5ulnouDIYARFw==
-X-CSE-MsgGUID: 8Gw67Uz1Svmh/HCS8/09lw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,229,1758610800"; 
-   d="scan'208";a="224043758"
-Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 26 Nov 2025 16:39:31 -0800
-Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vOQ2i-000000003Vn-4A4e;
-	Thu, 27 Nov 2025 00:39:28 +0000
-Date: Thu, 27 Nov 2025 08:39:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- e8c5d2fd85975099d6db1336319d3a2f04018d47
-Message-ID: <202511270811.uFXq6UWC-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1764206301; c=relaxed/simple;
+	bh=GQVRD0kDLnRr8PlGCc+5Hnmo5Omwya0ZZMgiPEA57KI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iah7HOvV9xbAmyCjEZ4DwYNU2zKzKALaohNZQ1715n4zKz/MkVOywUEIyho6rfkCiOHkRnD7RmP6vQZD83K9ch5QpAvdKCsEvgjl8cOHwjvdmSb37blCP+eEGcugZgtAyjgbs8jFL0a9+MnjrA+EBTXeEbwIj9HxMf+Dp/ZlUmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JMxRlQgq; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4779ce2a624so2465095e9.2
+        for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 17:18:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1764206298; x=1764811098; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:date:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HKgOFooMWN6cAHuCEA8Jqj3i0BZ6TtQryqGYElbczIg=;
+        b=JMxRlQgqJV81zARc+UmZ8Yx75jfyYOkeJj/362TMiAkwyKCfIpRWooE0QbExftrBnR
+         n0kFaOP4QWjIP9jfTFiTg6NkGeqGWUUknZNkkbp+9CZel31jLfMgrTI93NqSCj2MbPnn
+         SZ180e9rEn4C+M3cnexGEmWUES+B0xf223fHxCH6GuyS7ctvUBQuHv0RK99GQc+wBxZZ
+         H1tHOkNFIDdWdcLrboTrnFHjD99uMicQlGDWnm7lB8qBTnNzWoZBRqAw8LNmHoqX5h1i
+         4pxspkoaEDCqv9Y2zuoK2qDR4/5Yv2M/d4ha7GCPpYUPyHx9tf9SNnS4jRaxIgyw9SZp
+         h08Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764206298; x=1764811098;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=HKgOFooMWN6cAHuCEA8Jqj3i0BZ6TtQryqGYElbczIg=;
+        b=aCTjcmsYwnvAQxQ3ikdl1IOscE2+vfoI+EJ9VZsSwE00ad5/iamxjvXMqwP1s6CdbX
+         A/vzsSUSWIBXJDwZwfubL+XngVafGZMtw6/bDMpvjspQBb9Ntj1FuQ7YtwDppb3icdJQ
+         lV1po9t3ai5pc700sU5gUKIPnvnkmM51CzQcUYxqmDO423Z4fb1dR14M+t1DYuiXiQFK
+         QV+OKUAsmE4qswzq8GgYHX/jnVYsYEhECVdbw689cAPv5MCT9Z/ZV4yB069k2rzjg1fx
+         rGhW22s+V5c62F5wEsdVHuB4KD1WE4saFhQvWWpj1mp0iMMFXtI7upI3AyMAfavzOmvg
+         4hPw==
+X-Forwarded-Encrypted: i=1; AJvYcCXJHd9G6g+e1gPK79YbguGkmxFzWpOTF9QltI8eOgjhQb8kiBt6G/Peia/OzI9m9EJMfEcplQWUMcA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHWtf1W4fKIqQ2MgvB/4gcKM+uMET6SAODjJBFuEvSG8Nzauk+
+	eDkCwC6e5Dq3hjRndphAWpDFV6wKDGMlLJDgsdWEPrMgDRO3h64Um6pcGrD0P2euRLs=
+X-Gm-Gg: ASbGnctwZHwFZ+6WeF0Tu/qRfiNWj+DaQdFYUL83ORcZEqyOopGYhotDZRcYFKQym/6
+	Xs/Pxz1fHnmZqRATx1m9EBTsI8A/uCNRvpF3RSxqSD/V3WLJ59dp8zC3o15j39RbiS8wJzaBC3a
+	/cQICqI4DMZESohZoJGMZoczJ1hjHNC48BjFqTxHO8bLShntMtDND0zZF5zPHb/sa2G3Q6CEpts
+	tX3x6XvfN1U1WFtj+RosvmuQkcIQSAN7mV/OMWffkAFMBRCrKxoVpYneQnVFxFeU9pVp3BQp1Tt
+	tqbcoY8Ho5hPNr55Qjc/hhRby010edvZE4zr/jCrmrL3l/0Y/gWb+xIqaDGEZ14dyll9vTY+Y9U
+	/3HCjXgRD0ciOUGaesd/o09HdP1y96ASgbwpmZ9sRFe5/h6hMfaLIv9Q3Mj2x2XSRd/kvA/q+Vk
+	ifcwwW/ehWVaowvy5C0+eYlDWJLQaUS4c2
+X-Google-Smtp-Source: AGHT+IHKRsRzIcI/YdpyjCx/e6RWPSP3syqAgwQHcfAEZoMWkqQomccWOuW4YSvp5SYEElJFnjRGrw==
+X-Received: by 2002:a05:600c:19ce:b0:477:79c7:8994 with SMTP id 5b1f17b1804b1-47904b25e63mr87066215e9.30.1764206297510;
+        Wed, 26 Nov 2025 17:18:17 -0800 (PST)
+Received: from r1chard (1-169-246-18.dynamic-ip.hinet.net. [1.169.246.18])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b1075ddsm207261215ad.3.2025.11.26.17.18.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Nov 2025 17:18:17 -0800 (PST)
+From: Richard Lyu <richard.lyu@suse.com>
+X-Google-Original-From: Richard Lyu <r1chard@r1chard>
+Date: Thu, 27 Nov 2025 09:18:09 +0800
+To: Thomas Zimmermann <tzimmermann@suse.de>, ardb@kernel.org,
+	javierm@redhat.com, arnd@arndb.de, helgaas@kernel.org
+Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH v3 3/9] sysfb: Add struct sysfb_display_info
+Message-ID: <aSem0a7jTfCNTdX-@r1chard>
+References: <20251126160854.553077-1-tzimmermann@suse.de>
+ <20251126160854.553077-4-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251126160854.553077-4-tzimmermann@suse.de>
+User-Agent: Mutt/2.2.13 (2024-03-09)
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: e8c5d2fd85975099d6db1336319d3a2f04018d47  Merge branch 'pci/misc'
 
-elapsed time: 1504m
+Reviewed-by: Richard Lyu <richard.lyu@suse.com>
 
-configs tested: 115
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                         haps_hs_defconfig    gcc-15.1.0
-arc                   randconfig-001-20251126    gcc-13.4.0
-arc                   randconfig-002-20251126    gcc-11.5.0
-arm                               allnoconfig    clang-22
-arm                                 defconfig    clang-22
-arm                         orion5x_defconfig    clang-22
-arm                   randconfig-001-20251126    clang-22
-arm                   randconfig-002-20251126    clang-22
-arm                   randconfig-003-20251126    clang-19
-arm                   randconfig-004-20251126    clang-22
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20251127    gcc-8.5.0
-arm64                 randconfig-002-20251127    clang-22
-arm64                 randconfig-003-20251127    gcc-9.5.0
-arm64                 randconfig-004-20251127    gcc-14.3.0
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20251127    gcc-15.1.0
-csky                  randconfig-002-20251127    gcc-15.1.0
-hexagon                           allnoconfig    clang-22
-hexagon                             defconfig    clang-22
-hexagon               randconfig-001-20251126    clang-22
-hexagon               randconfig-002-20251126    clang-22
-i386                              allnoconfig    gcc-14
-i386                                defconfig    clang-20
-i386                  randconfig-001-20251127    gcc-14
-i386                  randconfig-002-20251127    gcc-14
-i386                  randconfig-003-20251127    clang-20
-i386                  randconfig-004-20251127    gcc-12
-i386                  randconfig-005-20251127    clang-20
-i386                  randconfig-006-20251127    clang-20
-i386                  randconfig-007-20251127    clang-20
-i386                  randconfig-011-20251127    gcc-13
-i386                  randconfig-012-20251127    gcc-14
-i386                  randconfig-013-20251127    clang-20
-i386                  randconfig-014-20251127    clang-20
-i386                  randconfig-015-20251127    gcc-14
-i386                  randconfig-016-20251127    clang-20
-i386                  randconfig-017-20251127    gcc-14
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251126    gcc-15.1.0
-loongarch             randconfig-002-20251126    clang-22
-m68k                              allnoconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                      bmips_stb_defconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251126    gcc-11.5.0
-nios2                 randconfig-002-20251126    gcc-9.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20251126    gcc-8.5.0
-parisc                randconfig-002-20251126    gcc-15.1.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                      chrp32_defconfig    clang-19
-powerpc                        fsp2_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20251126    gcc-10.5.0
-powerpc               randconfig-002-20251126    gcc-8.5.0
-powerpc64             randconfig-001-20251126    clang-19
-powerpc64             randconfig-002-20251126    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20251126    gcc-10.5.0
-s390                              allnoconfig    clang-22
-s390                                defconfig    clang-22
-s390                  randconfig-001-20251126    gcc-8.5.0
-s390                  randconfig-002-20251126    gcc-8.5.0
-sh                                allnoconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20251126    gcc-14.3.0
-sh                    randconfig-002-20251126    gcc-11.5.0
-sh                      rts7751r2d1_defconfig    gcc-15.1.0
-sh                          sdk7780_defconfig    gcc-15.1.0
-sh                            titan_defconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251126    gcc-8.5.0
-sparc                 randconfig-002-20251126    gcc-14.3.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20251126    gcc-8.5.0
-sparc64               randconfig-002-20251126    clang-22
-um                                allnoconfig    clang-22
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-002-20251126    clang-22
-um                           x86_64_defconfig    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64      buildonly-randconfig-001-20251126    clang-20
-x86_64      buildonly-randconfig-002-20251126    gcc-14
-x86_64      buildonly-randconfig-003-20251126    clang-20
-x86_64      buildonly-randconfig-004-20251126    clang-20
-x86_64      buildonly-randconfig-005-20251126    gcc-14
-x86_64      buildonly-randconfig-006-20251126    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-071-20251127    gcc-12
-x86_64                randconfig-072-20251127    gcc-14
-x86_64                randconfig-073-20251127    clang-20
-x86_64                randconfig-074-20251127    gcc-14
-x86_64                randconfig-075-20251127    gcc-14
-x86_64                randconfig-076-20251127    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20251126    gcc-14.3.0
-xtensa                randconfig-002-20251126    gcc-10.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On 2025/11/26 17:03, Thomas Zimmermann wrote:
+> Add struct sysfb_display_info to wrap display-related state. For now
+> it contains only the screen's video mode. Later EDID will be added as
+> well.
+> 
+> This struct will be helpful for passing display state to sysfb drivers
+> or from the EFI stub library.
+> 
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  include/linux/sysfb.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/include/linux/sysfb.h b/include/linux/sysfb.h
+> index 8527a50a5290..8b37247528bf 100644
+> --- a/include/linux/sysfb.h
+> +++ b/include/linux/sysfb.h
+> @@ -8,6 +8,7 @@
+>   */
+>  
+>  #include <linux/err.h>
+> +#include <linux/screen_info.h>
+>  #include <linux/types.h>
+>  
+>  #include <linux/platform_data/simplefb.h>
+> @@ -60,6 +61,10 @@ struct efifb_dmi_info {
+>  	int flags;
+>  };
+>  
+> +struct sysfb_display_info {
+> +	struct screen_info screen;
+> +};
+> +
+>  #ifdef CONFIG_SYSFB
+>  
+>  void sysfb_disable(struct device *dev);
+> -- 
+> 2.51.1
+> 
 
