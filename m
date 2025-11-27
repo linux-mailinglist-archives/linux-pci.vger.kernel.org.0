@@ -1,102 +1,56 @@
-Return-Path: <linux-pci+bounces-42226-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42227-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C825C8FEE9
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 19:42:10 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id E83C2C90178
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 21:07:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2602134DE58
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 18:42:09 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4AF3A4E658D
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 20:07:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB4D12ED15F;
-	Thu, 27 Nov 2025 18:42:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D30E30DD38;
+	Thu, 27 Nov 2025 20:06:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ezx5v5T7";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="SpgFZMvj"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MC9NUiiw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA112773DE
-	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 18:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED36C30CD9D;
+	Thu, 27 Nov 2025 20:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764268925; cv=none; b=DyW2CuflkN32PaX7TqjSMPCqzUlIl4l3UPtMTzUOCz9CIadIojpNMudFy6bEbZGaOOEyTulf0akeio1jaMXqyPUyfQwrY3/kborggyW6ZiXNIzL/gj1vxyeRwFOMZ3sjJDogigWVlxOCi0T1Q9CY7oYU8t0SE+oDJP+J0GAq6g0=
+	t=1764274014; cv=none; b=dwpe6IGqZNrJj2Xk6LyvAGjiqUo22yFOSqng97+U7nxVsXJ2dRyaATHfU1ES1Ukl5o+qF2BHfWSAroteavy7dU0vVsIFe0CC+kBCXR17fsRmIpMYJXgxnh+gfN3cTGTrNB6tKdfIPfLGIcky8aWoZiCG4WWVvFY/Goj035AHATs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764268925; c=relaxed/simple;
-	bh=ZsGbQVcS26VTwSvSnGlyFKtXU0OolouKxBBV1FeIQDI=;
+	s=arc-20240116; t=1764274014; c=relaxed/simple;
+	bh=kmziTo5y8zdElb0EB4CVsIM4ogWx2JclsshT6e3vxDc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LWvtVRfxSQKx75UThaNbe7I55adT2jubIkwY6Yp7YCnWCPNe6rTQ7PjazlhaqzPUgTfG58XzR7AIvfre+fp3ZCqCoK6wQnZtdk+iLWi5h9oiU9wdZn5l12Xrsv77gE1svM+S740f7C8BsEnGbH6PjSPUY+ATkTUpsnnBE/HHo1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ezx5v5T7; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=SpgFZMvj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5ARBVXLi721976
-	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 18:42:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bc7ZTn1qkuWTcAJu1RFCx05g1Ppub4MaJlxQKXGqiro=; b=ezx5v5T7e1UTNMlq
-	V7SetDafvvgfnyyyJVgvJQnDtyKALvR8XmskUNP1dmt2SOe0lNCIvOVZ8fRYlKNA
-	lcLdp8MbEI8azD7FPXggqslIbUsS9R0B1aM48+PBNwSaWdEe9aB4wmat4bHspo6Q
-	zWdIquKfTKidhAxPq8IZo3dFHn3Ou2PYUrEkU/iqjUg1xQleSqlCq5v6xECdSBdl
-	+yoK3uMKOo+JHqnyUSyRc7g5w+QU0SdkyIJDO/j6xKyznBZCuMUp8zxaFBYzZQVR
-	WamnOhZNXWljyDvhaw/Kym8Q532zYGBhTRcr2aN0HP3JM27ICPAt3DXW9RFMMatb
-	49y/Qw==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4apnud8xv2-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 18:42:03 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8b29f90f9fdso29416385a.1
-        for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 10:42:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1764268922; x=1764873722; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bc7ZTn1qkuWTcAJu1RFCx05g1Ppub4MaJlxQKXGqiro=;
-        b=SpgFZMvjaK7vgRPzmdv7uJOR5fwSenu8LKTJwkFHF5O3cvE6UE2s1oRgskCJlD4E2q
-         nhc3mZyItAaTqQ94ba72qGIT7FNpg/RrXEWFxdBrzgOdgLKmGdyMdDyTvZYc11tlANJX
-         8MV5j1d3p5tJgHjoQyGMcdQgeE+32+PQpAh8ij0e4srGA+A8uqMEUf+J81+lh34wmg0F
-         8KesgB3iJCQ7GKUjKcN5uKM3fgX8CxRtqs3MK70PB+dMlmdOExio91bjaJ31aYzP5pw7
-         fa+nO5sfQHhTuN//yr8i6zTWW1FRNANkVQTfcjXdRNj88qspKZ1VPpfLAt+Y5R4sDEO6
-         Bv+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764268922; x=1764873722;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bc7ZTn1qkuWTcAJu1RFCx05g1Ppub4MaJlxQKXGqiro=;
-        b=CsI6mkCoNZftu2nu0dR1KicC61CcJ/XX/yq1zaRBmYmedJp6EJF8+Eo5ccSrrgXqz8
-         YZn3MazSD4rPa7x3VycXP/1/oVMk3WQFd2nj4IxMG6XqWsIwUOYg9d6b8Qiw14Lv9g/E
-         rzbicw0NYKymw0JXGeeND8F4sj+sx+AJbaSzXdB0RzGskS6GrjzkEMCX1MbnhuQI/sdz
-         WlrXnbqCDszXHkDn1BWtsWNeRz0H/XiD9/ElVruEjoHNJH2oYo751bNt7//nm+CL8nPq
-         d7+VtVa4gAKhO5v5IWZKCmhOZZn7C855Nt3mK4FGabAVruUnZo+T8ODMw73Z7WnEQZih
-         YCZw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpUP34J7ySv1u6cZf9O1VKOVtd0oFGIeWlLSLjlJHiephKr1XbMZHPKMNTkf7ZSIXGjK5C1tc/Kqs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYNwE3VEKQiMqMKMTj8HAGj6DikSfL86zVMTEAE9GnUHApb1LK
-	MRazX9guP2vjI9uWUD1YCB4I639BvrtVp3lP7JNlh2l63Y2LzpizfSPgApcOcOy+H2UuEd5vvz2
-	mYdFSMCbezdrx8XqgczIDftvfRzhKOhh+FNg6igkk0IxG3pfH1v9K2YeZIiFpO1E=
-X-Gm-Gg: ASbGncvOsnGy70Kg2XkjL8EvaMCCbPY4ejrtP/Lsv5VRrYMkyUrrc2dM8Lth4aVBg/x
-	sWhKegSwfyfKkxn6tgZgEY/djIg0U4M+GnaThOm6ELsEjMopd0IoD8m6ptgIjZ7gwbxVBkpKMGg
-	gPrPelJcm7cH6otSAQAAKirgcb3hhPLvs9YEjiff9n3fWpdtqbEhhYdjy4zdMgzR+GnnKzcrn0m
-	RHzBLHCndEjLc3tc8hbp754ItntLdRICsDYa1a/rX2LaaKe8XdLyxpcp3OCpc2qei4tws7M7QFp
-	zskOpQZzhY8RnUmLOvtPLo+AnG0UPEHqzTgzyXvsOHiII2EOz0hSFtNoVJ/wB8fUbb7GPFQWJEq
-	IRtvMHZX6PSUPmgg6ks0Lneju+wJpa6+jSWiqfYXYYFQKKXSCvUswrEhmBKpsmtj/DBQ=
-X-Received: by 2002:a05:620a:404e:b0:8b2:e704:55fe with SMTP id af79cd13be357-8b33d4a1be5mr2446319985a.10.1764268922417;
-        Thu, 27 Nov 2025 10:42:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFy9tWdsztrijXycv5GZobtK94WUmjhNKC+reMeWq2COGJIUarj58EUVr9t6Y6xmo95jQhwPA==
-X-Received: by 2002:a05:620a:404e:b0:8b2:e704:55fe with SMTP id af79cd13be357-8b33d4a1be5mr2446316185a.10.1764268921883;
-        Thu, 27 Nov 2025 10:42:01 -0800 (PST)
-Received: from [192.168.119.202] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b76f5162d26sm238403266b.3.2025.11.27.10.41.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Nov 2025 10:42:00 -0800 (PST)
-Message-ID: <a35eb89e-fcd0-4af1-a0d0-655362a2b0d1@oss.qualcomm.com>
-Date: Thu, 27 Nov 2025 19:41:58 +0100
+	 In-Reply-To:Content-Type; b=R4NM6krEM1KNe1WwtRl2bWSn1/QhaVfPTDCB77iUAJPVAAdYSBWwq7TD4HN4bkpFbI1X3T0F6FgZozYjdpeIESM0KQiy2eSMTtxke9ZL9PpcAGtUM04sOc3mmB5CZDw528o0GKS/+lC0THLjEXOd5GGKo2oe9lTNsIcXXy6//tY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MC9NUiiw; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1764274009; x=1764878809; i=w_armin@gmx.de;
+	bh=WUU4mZbFVrnnf2LiPJ1TJXYw/lX0h1Ny7ZDtLDeojvI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=MC9NUiiwcmT6gTK3GZXM5pUNHJ9QsxL4kNixBRuaA2WDsHhKEJeLzA5R/UPjHFgi
+	 CEoAKdYSliF82rA5vJI6ycV7vvU+r4rh2g+6r0mRQpZOj7PkIp3NLfGk1O/UoTCma
+	 1XgI2z7UbCEp0YVGRaOSIB4ADLoVaZbnJ3bI3ybI7bDUqMnS1FUieCoWzNiTd5Bfx
+	 PQfN41Xsa+h1Mbao7DiI8Kxid0oCU3DPpiQbxgNjxRQg3ROgK8WF9JBpJuBfPanyT
+	 eJGXLPL3YTel6aIyV45PwxwWlj+pYuuHSQSG4wXlUCfo2TFRfbnJFZ2qD/SiPqU7n
+	 5Wm7DMlbKA6lewgAUA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([93.202.247.91]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MK3Rm-1vfobm3ICs-00VeXg; Thu, 27
+ Nov 2025 21:06:49 +0100
+Message-ID: <e360b9b3-ada4-4cd1-8971-097484cf3f5f@gmx.de>
+Date: Thu, 27 Nov 2025 21:06:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -104,102 +58,439 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: Add quirk to disable ASPM L1 for Sandisk SN740
- NVMe SSDs
-To: Alexey Bogoslavsky <Alexey.Bogoslavsky@sandisk.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jeffrey Lien <Jeff.Lien@sandisk.com>,
-        Avinash M N <Avinash.M.N@sandisk.com>
-References: <20251120161253.189580-1-mani@kernel.org>
- <20251124235307.GA2725632@bhelgaas>
- <tiadpmogdxom5h2bquct2ch6hoc6ozh6bgnzdmnj3mia22vtue@c5yjxbx65lsm>
- <BY5PR16MB339612035106C16822855A5A92D1A@BY5PR16MB3396.namprd16.prod.outlook.com>
+Subject: Re: [PATCH RFC RESEND 0/8] thermal: core: Allow setting the parent
+ device of thermal zone/cooling devices
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+ Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-tegra@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+ linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
+ ath11k@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+ linux-pci@vger.kernel.org, imx@lists.linux.dev,
+ linux-renesas-soc@vger.kernel.org
+References: <20251120-thermal-device-v1-0-bbdad594d57a@gmx.de>
+ <CAJZ5v0jOPrBcozzJMsB1eE12MuZRWDAV-+=jfrhJbi=S0p5J9Q@mail.gmail.com>
+ <5f3ef610-4024-4ca0-a934-2649f5d25f40@gmx.de>
+ <CAJZ5v0iJVV=kf-aJBx8F8dtGfaZpGVyhfi6DBWEg4j3c_nH8_A@mail.gmail.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <BY5PR16MB339612035106C16822855A5A92D1A@BY5PR16MB3396.namprd16.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: EZBIFXiZhMl0NVK1dKDo3rkj6ZjQoLS5
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI3MDE0MCBTYWx0ZWRfX2vQzFlLSYzSp
- KEO8keiWLBCqFzf3r/Ae8I1sFqsQePvsrqFUJ9wG9f8obJt80zfP3Eb6FqivhhZP4n+B8CFlw2m
- Tody5kwfX5NOntaeeHgrTwBl1jlEzswVUZ5WB55c9sQjqmBjhgmEO+IjYMvyr6DwVeABQB5IGyr
- oQCbDm0KyMtDveZ6abH/EgsZihVBXiV2g/fMhOlV5ugB1Cz+u0qIsP0Aa40uhU2CBWrFKqu8jvX
- jCL8bWon6iWVEwMjAwtQL08cCV/JVXyg0Xorq43ROkcwLKgb1AiKiMpkszDm9euyE1o68ngEZ3D
- DYWwgoV0LSTybS2Xuk6yynqXdq8VC8ehxQ0up7Vm98VW2wNT0slbUzRMXEJ9pGDm5fxD2C3a8MC
- Cq9cIXl4RM72Il/gA22JSdxEXcULng==
-X-Proofpoint-ORIG-GUID: EZBIFXiZhMl0NVK1dKDo3rkj6ZjQoLS5
-X-Authority-Analysis: v=2.4 cv=MKNtWcZl c=1 sm=1 tr=0 ts=69289b7b cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=Kae-gO-dM5og4_8gfLYA:9 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-25_02,2025-11-27_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 adultscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 malwarescore=0 impostorscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511270140
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <CAJZ5v0iJVV=kf-aJBx8F8dtGfaZpGVyhfi6DBWEg4j3c_nH8_A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:qrki6SOqEIGLFWPBMhPwnNJPJELXsbzR7Mzi70IAb7Hal0cIpzD
+ 86osgu5I5WgLE9eEK5yTzGT6IrUhTR33bDmHS28/7MzijGxJgwNlSLE2vnSoJaTCXZnFQ3+
+ tTM2X8QdFOEHbNO1cWBfDkuu6uOwwUAp0Uan56yjcEO5W8xK9JmFKqyr6CMz+zZ3jiePJtS
+ Nk4ECuwZE0m4704Ww5xjw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:OkEAKy+/qnQ=;/CjZRdJUeTV5qr5KByOdmRF/uS1
+ 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
+ N1Pk3q0vecj2iKehtXK7HNcJhJV1o
 
-On 11/25/25 4:30 PM, Alexey Bogoslavsky wrote:
-> On Mon, Nov 24, 2025 at 05:53:07PM -0600, Bjorn Helgaas wrote:
->>> [+cc Alexey, Jeffrey, Avinash]
+Am 27.11.25 um 18:41 schrieb Rafael J. Wysocki:
+
+> On Sat, Nov 22, 2025 at 3:18=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrot=
+e:
+>> Am 21.11.25 um 21:35 schrieb Rafael J. Wysocki:
+>>
+>>> On Thu, Nov 20, 2025 at 4:41=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wr=
+ote:
+>>>> Drivers registering thermal zone/cooling devices are currently unable
+>>>> to tell the thermal core what parent device the new thermal zone/
+>>>> cooling device should have, potentially causing issues with suspend
+>>>> ordering
+>>> This is one potential class of problems that may arise, but I would
+>>> like to see a real example of this.
 >>>
->>> On Thu, Nov 20, 2025 at 09:42:53PM +0530, Manivannan Sadhasivam wrote:
->>>> The Sandisk SN740 NVMe SSDs cause below AER errors on the upstream 
->>>> Root Port of PCIe controller in Microsoft Surface Laptop 7, when 
->>>> ASPM L1 is
->>>> enabled:
+>>> As it stands today, thermal_class has no PM callbacks, so there are no
+>>> callback execution ordering issues with devices in that class and what
+>>> other suspend/resume ordering issues are there?
+>> Correct, that is why i said "potentially".
+>>
+>>> Also, the suspend and resume of thermal zones is handled via PM
+>>> notifiers.  Is there a problem with this?
+>> The problem with PM notifiers is that thermal zones stop working even b=
+efore
+>> user space is frozen. Freezing user space might take a lot of time, so =
+having
+>> no thermal management during this period is less than ideal.
+> This can be addressed by doing thermal zone suspend after freezing
+> tasks and before starting to suspend devices.  Accordingly, thermal
+> zones could be resumed after resuming devices and before thawing
+> tasks.  That should not be an overly complex change to make.
+
+AFAIK this is only possible by using dev_pm_ops, the PM notifier is trigge=
+red before
+tasks are frozen during suspend and after they are thawed during resume.
+
+Using dev_pm_ops would also ensure that thermal zone devices are resumed a=
+fter their
+parent devices, so no additional changes inside the pm core would be neede=
+d.
+
+>> This problem would not occur when using dev_pm_ops, as thermal zones wo=
+uld be
+>> suspended after user space has been frozen successfully. Additionally, =
+when using
+>> dev_pm_ops we can get rid of thermal_pm_suspended, as the device core a=
+lready mandates
+>> that no new devices (including thermal zones and cooling devices) be re=
+gistered during
+>> a suspend/resume cycle.
+>>
+>> Replacing the PM notifiers with dev_pm_ops would of course be a optimiz=
+ation with
+>> its own patch series.
+> Honestly, I don't see much benefit from using dev_pm_ops for thermal
+> zone devices and cooling devices.  Moreover, I actually think that
+> they could be "no PM" devices that are not even put on the
+> suspend-resume device list.  Technically, they are just interfaces on
+> top of some other devices allowing the user space to interact with the
+> latter and combining different pieces described by the platform
+> firmware.  They by themselves have no PM capabilities.
+
+Correct, thermal zone devices are virtual devices representing thermal man=
+agement
+aspects of the underlying parent device. This however does not mean that t=
+hermal zone
+devices have no PM capabilities, because they contain state. Some part of =
+this state
+(namely TZ_STATE_FLAG_SUSPENDED and TZ_STATE_FLAG_RESUMING) is affected by=
+ power management,
+so we should tell the device core about this by using dev_pm_ops instead o=
+f the PM notifier.
+
+>>>> and making it impossible for user space applications to
+>>>> associate a given thermal zone device with its parent device.
+>>> Why does user space need to know the parent of a given cooling device
+>>> or thermal zone?
+>> Lets say that we have two thermal zones registered by two instances of =
+the
+>> Intel Wifi driver. User space is currently unable to find out which the=
+rmal zone
+>> belongs to which Wifi adapter, as both thermal zones have the (nearly) =
+same type string ("iwlwifi[0-X]").
+> But the "belong" part is not quite well defined here.  I think that
+> what user space needs to know is what devices are located in a given
+> thermal zone, isn't it?  Knowing the parent doesn't necessarily
+> address this.
+
+The device exposing a given thermal zone device is not always a member of =
+the thermal zone itself.
+In case of the Intel Wifi adapters, the individual Wifi adapters are indee=
+d members of the thermal zone
+associated with their thermal zone device. But thermal zones created thru =
+a system management controller
+for example might only cover devices like the CPUs and GPUs, not the syste=
+m management controller device itself.
+
+The parent device of a child device is the upstream device of the child de=
+vice. The connection between parent
+and child can be physical (SMBus controller (parent) -> i2c device (child)=
+) or purely logical
+(PCI device (parent) -> thermal zone device (child)). There exists a paren=
+t-child dependency between a parent
+and a child device (the child device cannot function without its parent be=
+ing operational), and user space
+might want to be able to discover such dependencies.
+
+>> This problem would be solved once we populate the parent device pointer=
+ inside the thermal zone
+>> device, as user space can simply look at the "device" symlink to determ=
+ine the parent device behind
+>> a given thermal zone device.
+> I'm not convinced about this.
+>
+>> Additionally, being able to access the acpi_handle of the parent device=
+ will be necessary for the
+>> ACPI thermal zone driver to support cooling devices other than ACPI fan=
+s and ACPI processors.
+> I guess by the "parent" you mean the device represented in the ACPI
+> namespace by a ThermalZone object, right?  But this is not the same as
+> the "parent" in the Wifi driver context, is it?
+
+In the context of a ACPI ThermalZone, the parent device of the thermal coo=
+ling device would currently
+be the ACPI device bound to the "thermal" ACPI driver. In the context of t=
+he Intel Wifi card, the parent
+device would be PCI device bound to the corresponding Intel Wifi driver.
+
+I think you misunderstood what kind of parent device i was referring to. Y=
+ou likely though that i was referring
+to the parent device of the ACPI ThermalZone, right? That however is not t=
+he case , with "parent device" i was
+referring to the device responsible for creating a given struct thermal_zo=
+ne_device instance.
+
+>>>> This patch series aims to fix this issue by extending the functions
+>>>> used to register thermal zone/cooling devices to also accept a parent
+>>>> device pointer. The first six patches convert all functions used for
+>>>> registering cooling devices, while the functions used for registering
+>>>> thermal zone devices are converted by the remaining two patches.
 >>>>
->>>>   pcieport 0006:00:00.0: AER: Correctable error message received from 0006:01:00.0
->>>>   nvme 0006:01:00.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
->>>>   nvme 0006:01:00.0:   device [15b7:5015] error status/mask=00000001/0000e000
->>>>   nvme 0006:01:00.0:    [ 0] RxErr
->>>
->>> Do we have any information about whether this error happens with the
->>> SN740 on platforms other than the Surface Laptop 7?  Or whether it 
->>> happens on the Surface with other endpoints?
->>>
-> 
->> This device comes pre installed with the Surface Laptop 7 I believe. It is not very convenient to replace the NVMe in a laptop for testing.
-> 
->>> I'm a little hesitant about quirking devices and claiming they are 
->>> defective without a solid root cause.
->>>
-> 
->> There are a couple of points that made me convince myself:
-> 
->> * Other X1E laptops are working fine with ASPM L1.
->> * This laptop has WCN785x WiFi/BT combo card connected to the other controller instance and L1 is working fine for it.
->> * There is no known issue with ASPM L1 in X1E chipsets.
-> 
->> Because of these, I was so certain that the NVMe is the fault here.
-> 
->>> Sandisk folks, do you have any insight into this?  Any known errata or 
->>> possibility of looking into this with an analyzer?
->>>
-> 
->> I don't think Konrad has access to the analyzer, neither any of us.
-> 
->> If you are still hesitant, I'd suggest adding the platform check so that this quirk is only limited to the Surface Laptop 7:
-> 
-> We at Sandisk are currently checking and double-checking the issue on several platforms and with several devices.
-> We haven't reached final conclusions yet, but what's clear is that quirking out SN740 unconditionally, for all platforms,
-> is definitely an overkill. The device performs normally on vast majority of platforms. Applying the quirk for the combination
-> of SN740 and Surface Laptop 7, as you suggested, is definitely a better choice. Still, we'd like to check a few more
-> platform / device combinations so we cover everything that needs to be covered while sparing the rest of combinations.
+>>>> I tested this series on various devices containing (among others):
+>>>> - ACPI thermal zones
+>>>> - ACPI processor devices
+>>>> - PCIe cooling devices
+>>>> - Intel Wifi card
+>>>> - Intel powerclamp
+>>>> - Intel TCC cooling
+>>> What exactly did you do to test it?
+>> I tested:
+>> - the thermal zone temperature readout
+>> - correctness of the new sysfs links
+>> - suspend/resume
+>>
+>> I also verified that ACPI thermal zones still bind with the ACPI fans.
+> I see, thanks.
+>
+>>>> I also compile-tested the remaining affected drivers, however i would
+>>>> still be happy if the relevant maintainers (especially those of the
+>>>> mellanox ethernet switch driver) could take a quick glance at the
+>>>> code and verify that i am using the correct device as the parent
+>>>> device.
+>>> I think that the above paragraph is not relevant any more?
+>> You are right, however i originally meant to CC the mellanox maintainer=
+s as
+>> i was a bit unsure about the changes i made to their driver. I will rew=
+ork
+>> this section in the next revision and CC the mellanox maintainers.
+>>
+>>>> This work is also necessary for extending the ACPI thermal zone drive=
+r
+>>>> to support the _TZD ACPI object in the future.
+>>> I'm still unsure why _TZD support requires the ability to set a
+>>> thermal zone parent device.
+>> _TZD allows the ACPI thermal zone to bind to cooling devices other than=
+ ACPI fans
+>> and ACPI processors, like ACPI batteries.
+> No, it is not for cooling devices if my reading of the specification
+> is correct.  It says:
+>
+> "_TZD (Thermal Zone Devices)
+>
+> This optional object evaluates to a package of device names. Each name
+> corresponds to a device in the ACPI namespace that is associated with
+> the thermal zone. The temperature reported by the thermal zone is
+> roughly correspondent to that of each of the devices."
+>
+> And then
+>
+> "The list of devices returned by the control method need not be a
+> complete and absolute list of devices affected by the thermal zone.
+> However, the package should at least contain the devices that would
+> uniquely identify where this thermal zone is located in the machine.
+> For example, a thermal zone in a docking station should include a
+> device in the docking station, a thermal zone for the CD-ROM bay,
+> should include the CD-ROM."
+>
+> So IIUC this is a list of devices allowing the location of the thermal
+> zone to be figured out.  There's nothing about cooling in this
+> definition.
 
-Can we interpret that as "SN740 doesn't have L1 issues on at least one
-other platform"?
+Using _TZD to figure out the location of a given thermal zone is another u=
+sage
+of this ACPI control method, but lets take a look at section 11.6:
 
-In that case Mani, is there a chance we omitted some related tunable in
-pci-qcom that only seems to matter for some PCI devices and not others?
+- If _PSV is defined then either the _PSL or _TZD objects must exist. The =
+_PSL and _TZD objects may both exist.
+- If _PSV is defined and _PSL is not defined then at least one device in t=
+hermal zone, as indicated by either the
+   _TZD device list or devices=E2=80=99 _TZM objects, must support device =
+performance states.
 
-Konrad
+So according to my understanding, _TZD can also be used to discover additi=
+onal cooling devices used for passive cooling.
+This makes sense as _PSL is defined to only contain processor objects (see=
+ section 11.4.10), so _TZD can act like an
+extension of _PSL for things like ACPI control method batteries (see 10.2.=
+2.12).
+
+Microsoft also follows this approach (see https://learn.microsoft.com/en-u=
+s/windows-hardware/design/device-experiences/design-guide
+section "Thermally managed devices" paragraph "Processor aggregator").
+
+>> This however will currently not work as
+>> the ACPI thermal zone driver uses the private drvdata of the cooling de=
+vice to
+>> determine if said cooling device should bind. This only works for ACPI =
+fans and
+>> processors due to the fact that those drivers store a ACPI device point=
+er inside
+>> drvdata, something the ACPI thermal zone expects.
+> I'm not sure I understand the above.
+>
+> There is a list of ACPI device handles per trip point, as returned by
+> either _PSL or _ALx.  Devices whose handles are in that list will be
+> bound to the thermal zone, so long as there are struct acpi_device
+> objects representing them which is verified with the help of the
+> devdata field in struct thermal_cooling_device.
+
+AFAIK devdata is meant to be used by the thermal zone device callbacks to =
+access the state
+container struct of the associated device driver instance. Assuming that a=
+ given device driver
+will populate devdata with a pointer to is ACPI companion device is an imp=
+lementation-specific
+detail that does not apply to all cooling device implementations. It just =
+so happens that the
+ACPI processor and fan driver do this, likely because they where designed =
+specifically to work
+with the ACPI thermal zone driver.
+
+The documentation of thermal_cooling_device_register() even describes devd=
+ata as "device private data", so any meaning of devdata purely depends on =
+the=20
+given device driver.
+
+> IOW, cooling device drivers that create struct thermal_cooling_device
+> objects representing them are expected to set devdata in those objects
+> to point to struct acpi_device objects corresponding to their ACPI
+> handles, but in principle acpi_thermal_should_bind_cdev() might as
+> well just use the handles themselves.  It just needs to know that
+> there is a cooling driver on the other side of the ACPI handle.
+>
+> The point is that a cooling device to be bound to an ACPI thermal zone
+> needs an ACPI handle in the first place to be listed in _PSL or _ALx.
+
+Correct, i merely change the way the ACPI thermal zone driver retrieves th=
+e
+ACPI handle associated with a given cooling device.
+
+>> As we cannot require all cooling devices to store an ACPI device pointe=
+r inside
+>> their drvdata field in order to support ACPI,
+> Cooling devices don't store ACPI device pointers in struct
+> thermal_cooling_device objects, ACPI cooling drivers do, and there are
+> two reasons to do that: (1) to associate a given struct
+> thermal_cooling_device with an ACPI handle and (2) to let
+> acpi_thermal_should_bind_cdev() know that the cooling device is
+> present and functional.
+>
+> This can be changed to store an ACPI handle in struct
+> thermal_cooling_device and acpi_thermal_should_bind_cdev() may just
+> verify that the device is there by itself.
+
+I can of course extend thermal_cooling_device_register() to accept a fwnod=
+e_handle that
+can be used for both ACPI and OF based cooling device identification, if t=
+his is what you
+prefer.
+
+This patch series would then turn into a cleanup series, focusing on prope=
+rly adding
+thermal zone devices and cooling devices into the global device hierarchy.
+
+>> we must use a more generic approach.
+> I'm not sure what use case you are talking about.
+>
+> Surely, devices with no representation in the ACPI namespace cannot be
+> bound to ACPI thermal zones.  For devices that have a representation
+> in the ACPI namespace, storing an ACPI handle in devdata should not be
+> a problem.
+
+See my above explanations for details, drvdata is defined to hold device p=
+rivate data,
+nothing more.
+
+>> I was thinking about using the acpi_handle of the parent device instead=
+ of messing
+>> with the drvdata field, but this only works if the parent device pointe=
+r of the
+>> cooling device is populated.
+>>
+>> (Cooling devices without a parent device would then be ignored by the A=
+CPI thermal
+>> zone driver, as such cooling devices cannot be linked to ACPI).
+> It can be arranged this way, but what's the practical difference?
+> Anyone who creates a struct thermal_cooling_device and can set its
+> parent pointer to a device with an ACPI companion, may as well set its
+> devdata to point to that companion directly - or to its ACPI handle if
+> that's preferred.
+
+Yes, but this would require explicit support for ACPI in every driver that=
+ registers cooling devices.
+Using the parent device to retrieve the acpi_handle or allowing all driver=
+s to just submit a fwnode_handle
+of their choice when creating a cooling device will fix this.
+
+Thanks,
+Armin Wolf
+
 
