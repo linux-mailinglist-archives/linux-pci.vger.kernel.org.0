@@ -1,222 +1,192 @@
-Return-Path: <linux-pci+bounces-42181-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42182-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CD13C8CA67
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 03:20:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 26E73C8CC36
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 04:40:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 270734E1703
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 02:20:40 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 098A54E0525
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 03:40:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B1E325783C;
-	Thu, 27 Nov 2025 02:20:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5B6529B799;
+	Thu, 27 Nov 2025 03:40:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DqVsP5/1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G2kh4BTF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23D923373D
-	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 02:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF391391
+	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 03:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764210034; cv=none; b=QDr6kXBs4Mz388oV5j6A+sfCX3gKigbGClCgHDfNo+Ouqldl1eoana2VT2zfUaqmof8D9bfFpA6S3gecCiTuR75S+lCpnU5EEgQHAsJgG5kC9jBDmzzA9IB3JUN+TckTgHGAC0otWFOUn+B5KPYOEK3A8i7+XqNEEa87g07VfPg=
+	t=1764214842; cv=none; b=pLMPvCGAfOkbZyILnCfP/HhVhoeei89A2WQmt+0zV9+o+0UosgBpXZ//0iQkJ3QdDss3crQXzbEgPUNN/AAERPRj9ZStF4TLSZYxRszZR9Nr0tjjvDSM+WYc7HxZLxeqUqadLaoc1zXNwTxOLeECXYSHTY//K/fJiZac2AUfg10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764210034; c=relaxed/simple;
-	bh=O5+FwqoY/zKpG5o8W+7yvGXAPlP0E+ecret6xMCqLzA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cQsQHd0KQp7hbc4JxYV8ytC+SrlmnDVZxMGfThzMyEozrHpIKrVxZFjuryWg8ARnqNYlkAcDvXvtMPYhqS9pDSM1GIpzbdtQnsvvP3N3nmhogAwc/FCCY3tqozjL9kMFy72qIs4QRTBuwEZEsfjq+bNrLlPGJdMmHhX5wEN4Fk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DqVsP5/1; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-477b198f4bcso1681775e9.3
-        for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 18:20:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1764210029; x=1764814829; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:date:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K4URCfDbXaJDpqc3Jy/ygM5tnfYeP0a6DjdNrUnYNok=;
-        b=DqVsP5/1cU0UgBXytfZJCMR7JVyL6LKJEnUvhD5SsNp78Oj2kUl775cO9xn5nblNLm
-         SqcnG4a7aPCruqgOMMR1kGd4uvip517CNPJpMmV0C/ogJVwSITCjTWqIwV7SsO7me10o
-         8gfMhs7WXxJ8fk+CQ663gB3yXHp4qlcyAmAqiflp4DUOmyeO907avn7fzdrxi7CqezAE
-         dHOv9/pajYIu1BkXXpGVScKwDNyIaJ46vloWBW/hNdER6fcoTg5pCiZ2SWnINzRkFD4f
-         lSvjKknDVOuAcxiNbBS3OpDqO233o16SvPAPf0Sm7cPju4YlLPrjzqZPXF4zIsDs4fVA
-         gnkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764210029; x=1764814829;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=K4URCfDbXaJDpqc3Jy/ygM5tnfYeP0a6DjdNrUnYNok=;
-        b=Wdam7+3uCEgAXz9nIavhTIHKc2/zf+OLo20xq5q/uPIx5h9JNUJmE46Y7poiPhIMkS
-         Im62BbJpwUYtBVHarABM7O74CN99wDVq36qrKKeMZQEXlW5Gjt9VMRWxFGfCxwQSk3to
-         4ytFAViTlyKmB5ZUVLqW27jtyzgaWDsllAgylkLiU1QLw6aHYIUdDRqpZDqJJf/UU0PA
-         Qm6GDLcwHoHppNA39HSxtV442InsusmzLqo5hWfSgksZc3Jto5j7Y3dKsb/qHL6jE8s8
-         XBDcyJ8YYEv0r92IK9+4K3dVDVCXIv2+d1maZrlSHcXcHheuXKXQNmcJODTK74QuRqhM
-         iM6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVodWKQ0KeaguV+pe4bg+B5YSq8D4676lY3qYCkprit765HvmS04XgY7yoWmkvppMqlH919fZatKlQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxn/juSpbQydv5NHknbQyYEScM4M7z6N/80dIzKBssFVNkM/z6e
-	gTj5zoitwPBTH6z/xq0mMSiPS/nbhkMpMPdjteXYKEd79Qv5al8vXqZ7W+ZYGCUK0V4=
-X-Gm-Gg: ASbGncv+tlwNnWlN/xRWDUf7mj25F1nkI5LHnJGuAeSuOj64Pc8m2S5qFnkBNZkjVGf
-	U4nt7J4HRkn9O76kvOGaLR9Ia/04oF7Wrk1n7bF2j1eKahppVeLfTHi/Cwe3N55CUinbY1yMiHo
-	/P5LjgsIaI0wBC6J2uAbOI6Ylzu2hwzFQ1VhmYTlJF5zC2tJVzTlP+9FRxmsxNjhwD+mek20oTx
-	w5b3d/DobVaA5zxr2lxWZesk7i/abUVa5XDeDCVtmulM8z0ipMVPMoCgEKh9yrm/OX+Zu8OF+4e
-	1EFSfoL47juRnfS6lzMb2QZJBuAAGq7PHfaJZW5mIzl4rq+L0+f0U1cxqSx/TQMA9lr2VQP4bub
-	TGA+VeXe2ND3p2vSdXY/JzclsBjrnPR6OyKqcoIDDaZLtKMLwpZxjDf2cpdVu76vNKSyXXlX+58
-	QsMA5jRY8Q1NJnp7rwsec0sUoKzMlSq1qM
-X-Google-Smtp-Source: AGHT+IGspC1YV2yyiMXXnAe8/Td7EsFQhaqJU5qYzu5f0NQl+Us+ioM0vDMgGxEbw6PNx9+MNqPMRQ==
-X-Received: by 2002:a05:600c:474b:b0:477:9dc1:b706 with SMTP id 5b1f17b1804b1-477c01b494fmr204934695e9.19.1764210029052;
-        Wed, 26 Nov 2025 18:20:29 -0800 (PST)
-Received: from r1chard (1-169-246-18.dynamic-ip.hinet.net. [1.169.246.18])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3477b20b5d6sm67743a91.6.2025.11.26.18.20.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Nov 2025 18:20:28 -0800 (PST)
-From: Richard Lyu <richard.lyu@suse.com>
-X-Google-Original-From: Richard Lyu <r1chard@r1chard>
-Date: Thu, 27 Nov 2025 10:20:20 +0800
-To: Thomas Zimmermann <tzimmermann@suse.de>, ardb@kernel.org,
-	javierm@redhat.com, arnd@arndb.de, helgaas@kernel.org
-Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v3 0/9] arch,sysfb,efi: Support EDID on non-x86 EFI
- systems
-Message-ID: <aSe1ZBXa3JBidhem@r1chard>
-References: <20251126160854.553077-1-tzimmermann@suse.de>
+	s=arc-20240116; t=1764214842; c=relaxed/simple;
+	bh=etI4iqhtrj6xnrVB0/Wq0X9YFSffOX1UHFhqMBPoNGs=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=gmGp1ctJvK55oeJyPgCAKrugMW4EyQsxLuHBRG59/4W+4fNDmajqPvGef5BnEJa8D5Dg3rP9F62RmXOWn9stSQiJb1YceISubBJfs0qM5YosANCE0pZoThXFx1GdSuWXAkzn+LHA2qoaUiiDucJbr1cyCbsTwDTTzNrTAaWOy1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G2kh4BTF; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764214841; x=1795750841;
+  h=date:from:to:cc:subject:message-id;
+  bh=etI4iqhtrj6xnrVB0/Wq0X9YFSffOX1UHFhqMBPoNGs=;
+  b=G2kh4BTF4goKPkWI3Lw1jXeM/YMFhue3AJfDXxv0tRF08CFdqj/58nld
+   JxYh5AMmkQqa7+An1H6MHcX71UHNd7T2m+cplCDgc+uS7ni8bX4Wiyx2D
+   9bZWkzR7OkdHfJswJwZYQN+JAse43NvQMs5aVlIZC545Zp1ojsC3X3Vji
+   YM1gLfMMsRcy8WJp640mEIwNk5tWk3WGaYzTZNtDRjAK4BHK7BBjDGMiM
+   llL6mW5Q1uH245Wc2hiBh31WJxAwyloFut1VJOoyApjorTy2nMF63wL7n
+   PolnLPlfTNTY2MtHcI1ScgZuKDVH8qaevlguF7PXcxJ8so2Cbh7qosCWm
+   w==;
+X-CSE-ConnectionGUID: NPBHXUD2R4+yrLkhk2MiFQ==
+X-CSE-MsgGUID: RgiSHmJtQEagitZmF0S06Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11625"; a="66206672"
+X-IronPort-AV: E=Sophos;i="6.20,230,1758610800"; 
+   d="scan'208";a="66206672"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 19:40:41 -0800
+X-CSE-ConnectionGUID: LJtzB1kMTR+KBFYzW0mnKw==
+X-CSE-MsgGUID: yz5JBd1NSRWoTdR0sSMSuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,230,1758610800"; 
+   d="scan'208";a="193342203"
+Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 26 Nov 2025 19:40:39 -0800
+Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vOSs0-000000003dp-3USo;
+	Thu, 27 Nov 2025 03:40:36 +0000
+Date: Thu, 27 Nov 2025 11:40:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/sky1] BUILD SUCCESS
+ d8c47a898e1061520e6c7d72c02da9f5ba3125aa
+Message-ID: <202511271130.aKZ2Rutc-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251126160854.553077-1-tzimmermann@suse.de>
-User-Agent: Mutt/2.2.13 (2024-03-09)
 
-Hi Thomas,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/sky1
+branch HEAD: d8c47a898e1061520e6c7d72c02da9f5ba3125aa  MAINTAINERS: Add entry for CIX Sky1 PCIe driver
 
-I am attempting to test this patch series but encountered merge conflicts when applying it to various trees.
-Could you please clarify the specific base commit (or branch/tag) this series was generated against?
+elapsed time: 2062m
 
-When testing on the next branch on commits 7a2ff00 and e41ef37, I hit a conflict on PATCH v3 4/9:
-patching file drivers/pci/vgaarb.c
-Hunk #2 FAILED at 557.
-1 out of 2 hunks FAILED -- rejects in file drivers/pci/vgaarb.c
+configs tested: 99
+configs skipped: 6
 
-When testing against 3a86608 (Linux 6.18-rc1), the following conflicts occurred:
-patching file drivers/gpu/drm/sysfb/efidrm.c
-Hunk #1 FAILED at 24.
-1 out of 2 hunks FAILED -- rejects in file drivers/gpu/drm/sysfb/efidrm.c
-patching file drivers/gpu/drm/sysfb/vesadrm.c
-Hunk #1 FAILED at 25.
-1 out of 2 hunks FAILED -- rejects in file drivers/gpu/drm/sysfb/vesadrm.c
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Please let me know the correct base, and I will retest.
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20251126    gcc-13.4.0
+arc                   randconfig-002-20251126    gcc-11.5.0
+arm                               allnoconfig    clang-22
+arm                         lpc18xx_defconfig    clang-22
+arm                   randconfig-002-20251126    clang-22
+arm                         wpcm450_defconfig    gcc-15.1.0
+arm64                            alldefconfig    gcc-15.1.0
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20251126    gcc-8.5.0
+arm64                 randconfig-002-20251126    clang-19
+arm64                 randconfig-003-20251126    clang-22
+arm64                 randconfig-004-20251126    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20251126    gcc-11.5.0
+csky                  randconfig-002-20251126    gcc-15.1.0
+hexagon                           allnoconfig    clang-22
+i386                              allnoconfig    gcc-14
+i386        buildonly-randconfig-001-20251126    clang-20
+i386        buildonly-randconfig-002-20251126    gcc-14
+i386        buildonly-randconfig-003-20251126    clang-20
+i386        buildonly-randconfig-004-20251126    clang-20
+i386        buildonly-randconfig-005-20251126    clang-20
+i386        buildonly-randconfig-006-20251126    gcc-14
+i386                                defconfig    clang-20
+i386                  randconfig-001-20251126    clang-20
+i386                  randconfig-002-20251126    clang-20
+i386                  randconfig-003-20251126    gcc-14
+i386                  randconfig-004-20251126    clang-20
+i386                  randconfig-005-20251126    gcc-14
+i386                  randconfig-006-20251126    gcc-14
+i386                  randconfig-011-20251127    gcc-13
+i386                  randconfig-012-20251127    gcc-14
+i386                  randconfig-013-20251127    clang-20
+i386                  randconfig-014-20251127    clang-20
+i386                  randconfig-015-20251127    gcc-14
+loongarch                         allnoconfig    clang-22
+loongarch                           defconfig    clang-19
+m68k                              allnoconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20251126    gcc-11.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20251126    gcc-8.5.0
+parisc                randconfig-002-20251126    gcc-15.1.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                     kmeter1_defconfig    gcc-15.1.0
+powerpc                     mpc83xx_defconfig    clang-22
+powerpc               randconfig-001-20251126    gcc-10.5.0
+powerpc               randconfig-002-20251126    gcc-8.5.0
+powerpc64             randconfig-001-20251126    clang-19
+powerpc64             randconfig-002-20251126    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                               defconfig    clang-22
+s390                              allnoconfig    clang-22
+s390                                defconfig    clang-22
+sh                                allnoconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20251126    gcc-8.5.0
+sparc                 randconfig-002-20251126    gcc-14.3.0
+sparc                       sparc32_defconfig    gcc-15.1.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20251126    gcc-8.5.0
+sparc64               randconfig-002-20251126    clang-22
+um                                allnoconfig    clang-22
+um                                  defconfig    clang-22
+um                             i386_defconfig    gcc-14
+um                           x86_64_defconfig    clang-22
+x86_64                            allnoconfig    clang-20
+x86_64                              defconfig    gcc-14
+x86_64                randconfig-003-20251127    gcc-14
+x86_64                randconfig-011-20251127    clang-20
+x86_64                randconfig-012-20251127    gcc-14
+x86_64                randconfig-013-20251127    gcc-14
+x86_64                randconfig-014-20251127    gcc-14
+x86_64                randconfig-015-20251127    gcc-14
+x86_64                randconfig-016-20251127    gcc-14
+x86_64                randconfig-071-20251126    clang-20
+x86_64                randconfig-072-20251126    gcc-14
+x86_64                randconfig-073-20251126    clang-20
+x86_64                randconfig-074-20251126    gcc-14
+x86_64                randconfig-075-20251126    clang-20
+x86_64                randconfig-076-20251126    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                  audio_kc705_defconfig    gcc-15.1.0
 
-Thanks,
-Richard Lyu
-
-On 2025/11/26 17:03, Thomas Zimmermann wrote:
-> Replace screen_info and edid_info with sysfb_primary_device of type
-> struct sysfb_display_info. Update all users. Then implement EDID support
-> in the kernel EFI code.
-> 
-> Sysfb DRM drivers currently fetch the global edid_info directly, when
-> they should get that information together with the screen_info from their
-> device. Wrapping screen_info and edid_info in sysfb_primary_display and
-> passing this to drivers enables this.
-> 
-> Replacing both with sysfb_primary_display has been motivate by the EFI
-> stub. EFI wants to transfer EDID via config table in a single entry.
-> Using struct sysfb_display_info this will become easily possible. Hence
-> accept some churn in architecture code for the long-term improvements.
-> 
-> Patches 1 and 2 reduce the exposure of screen_info in EFI-related code.
-> 
-> Patch 3 adds struct sysfb_display_info.
-> 
-> Patch 4 replaces scren_info with sysfb_primary_display. This results in
-> several changes throught the kernel, but is really just a refactoring.
-> 
-> Patch 5 updates sysfb to transfer sysfb_primary_display to the related
-> drivers.
-> 
-> Patch 6 moves edid_info into sysfb_primary_display. This resolves some
-> drivers' reference to the global edid_info, but also makes the EDID data
-> available on non-x86 architectures.
-> 
-> Patches 7 and 8 add support for EDID transfers on non-x86 EFI systems.
-> 
-> Patch 9 cleans up the config-table allocation to be easier to understand.
-> 
-> v3:
-> - replace SCREEN_INFO table entry (Ard)
-> - merge libstub patch into kernel patch
-> v2:
-> - combine v1 of the series at [1] plus changes from [2] and [3].
-> 
-> [1] https://lore.kernel.org/dri-devel/20251121135624.494768-1-tzimmermann@suse.de/
-> [2] https://lore.kernel.org/dri-devel/20251015160816.525825-1-tzimmermann@suse.de/
-> [3] https://lore.kernel.org/linux-efi/20251119123011.1187249-5-ardb+git@google.com/
-> 
-> Thomas Zimmermann (9):
->   efi: earlycon: Reduce number of references to global screen_info
->   efi: sysfb_efi: Reduce number of references to global screen_info
->   sysfb: Add struct sysfb_display_info
->   sysfb: Replace screen_info with sysfb_primary_display
->   sysfb: Pass sysfb_primary_display to devices
->   sysfb: Move edid_info into sysfb_primary_display
->   efi: Refactor init_primary_display() helpers
->   efi: Support EDID information
->   efi: libstub: Simplify interfaces for primary_display
-> 
->  arch/arm64/kernel/image-vars.h                |  2 +-
->  arch/loongarch/kernel/efi.c                   | 38 ++++-----
->  arch/loongarch/kernel/image-vars.h            |  2 +-
->  arch/riscv/kernel/image-vars.h                |  2 +-
->  arch/x86/kernel/kexec-bzimage64.c             |  4 +-
->  arch/x86/kernel/setup.c                       | 16 ++--
->  arch/x86/video/video-common.c                 |  4 +-
->  drivers/firmware/efi/earlycon.c               | 42 +++++-----
->  drivers/firmware/efi/efi-init.c               | 46 ++++++-----
->  drivers/firmware/efi/efi.c                    |  4 +-
->  drivers/firmware/efi/libstub/Makefile         |  2 +-
->  drivers/firmware/efi/libstub/efi-stub-entry.c | 36 +++++++--
->  drivers/firmware/efi/libstub/efi-stub.c       | 49 +++++++----
->  drivers/firmware/efi/libstub/efistub.h        |  7 +-
->  .../firmware/efi/libstub/primary_display.c    | 41 ++++++++++
->  drivers/firmware/efi/libstub/screen_info.c    | 53 ------------
->  drivers/firmware/efi/libstub/zboot.c          |  6 +-
->  drivers/firmware/efi/sysfb_efi.c              | 81 ++++++++++---------
->  drivers/firmware/sysfb.c                      | 13 +--
->  drivers/firmware/sysfb_simplefb.c             |  2 +-
->  drivers/gpu/drm/sysfb/efidrm.c                | 14 ++--
->  drivers/gpu/drm/sysfb/vesadrm.c               | 14 ++--
->  drivers/hv/vmbus_drv.c                        |  6 +-
->  drivers/pci/vgaarb.c                          |  4 +-
->  drivers/video/Kconfig                         |  8 +-
->  drivers/video/fbdev/core/fbmon.c              |  8 +-
->  drivers/video/fbdev/efifb.c                   | 10 ++-
->  drivers/video/fbdev/vesafb.c                  | 10 ++-
->  drivers/video/fbdev/vga16fb.c                 |  8 +-
->  drivers/video/screen_info_pci.c               |  5 +-
->  include/linux/efi.h                           |  9 ++-
->  include/linux/screen_info.h                   |  2 -
->  include/linux/sysfb.h                         | 23 ++++--
->  include/video/edid.h                          |  4 -
->  34 files changed, 321 insertions(+), 254 deletions(-)
->  create mode 100644 drivers/firmware/efi/libstub/primary_display.c
->  delete mode 100644 drivers/firmware/efi/libstub/screen_info.c
-> 
-> 
-> base-commit: d724c6f85e80a23ed46b7ebc6e38b527c09d64f5
-> -- 
-> 2.51.1
-> 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
