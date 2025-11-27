@@ -1,290 +1,222 @@
-Return-Path: <linux-pci+bounces-42180-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42181-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E0D1C8C9AA
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 02:54:58 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CD13C8CA67
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 03:20:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4539334ADBF
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 01:54:57 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 270734E1703
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 02:20:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC6E823D7C0;
-	Thu, 27 Nov 2025 01:54:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B1E325783C;
+	Thu, 27 Nov 2025 02:20:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nj3THp1r"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DqVsP5/1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858711F12E0
-	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 01:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23D923373D
+	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 02:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764208487; cv=none; b=k4YYWTYCSiv6vs3s9Ai6ZH1tA4pC4J1l1GbvWoTrxdhG36wn2RXtGx+x0DrOz9fVsuMIM/v/1H8F4HYveSu059yJBrbcspb2S1toKq7a3p0WzC1P+hFzGarSPaR4xsb29mJKhOZyHQoffetKpCW8czX0al9JKh38glcoGUlle7M=
+	t=1764210034; cv=none; b=QDr6kXBs4Mz388oV5j6A+sfCX3gKigbGClCgHDfNo+Ouqldl1eoana2VT2zfUaqmof8D9bfFpA6S3gecCiTuR75S+lCpnU5EEgQHAsJgG5kC9jBDmzzA9IB3JUN+TckTgHGAC0otWFOUn+B5KPYOEK3A8i7+XqNEEa87g07VfPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764208487; c=relaxed/simple;
-	bh=f0EdgUznNZO54LZecInfA4y5+ELOv8o96l9SDsv2F0k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uocZ5L3VRbbeiYTgxpgL4nP3FfArnDnMT7+EvYGbCh6sJROul3ns2OEmAoSjw+TSyVXAkq1gzQEiosfn/Ruhdp0d8DadGWD0Lq/aGwsEej57Wh0LUuHxJeVf2SYRcy3jqjzkotPvVK+5aWKeHTR2AaSuwBJH2qSosP6GiIvr18g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nj3THp1r; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C8CCC116B1
-	for <linux-pci@vger.kernel.org>; Thu, 27 Nov 2025 01:54:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764208487;
-	bh=f0EdgUznNZO54LZecInfA4y5+ELOv8o96l9SDsv2F0k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nj3THp1rcpdtkT3yeXdFSYqGpgv4f9R30RUyhSfbiRBL5j4fSFBJGV9VaWkwF3qsG
-	 zjwZicy5NFkSmZ+nh5sUNhme+2Du/zWh08fMSK9ccFupeg1GTOvgOKD8KZFDah6CUJ
-	 6HALQe+7g7tX2MuM8bLQMVGhbivIOnMTmyMqFWkDrQ0K9xX85qs+Bk0VT0YJLuIl0n
-	 B1HnKUGG/X1C0TBEVeSMLOB5qS2VjlhqolPOeEU3DGPUvW5cxrrsVID7XRsdVMMHfv
-	 h7dSQtqgellJgUSuYj5mjpBSeqjWtGSXBa6sTkOGztkNJu25mxLtzN7zIXmdh+tHvw
-	 N2CFz124qpgKg==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-640a3317b89so632085a12.0
-        for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 17:54:47 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW6xuYhCkxa48sZzawmLQYC2ekDD+ptbgZsaJNTeTeHHyoVcanh6ISE8j6l+loiZ8wAsitS1NkQdNY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPzXos2inU/+aEJfPoAGx1tMI3PUu3RvZVUFTK8LmQl/rEvDNz
-	EsnUwJ8T6uBSO3enxoaAc8TTxfUuhdJAwosdAZD9qu+ji9GC8MX8Ip8/A/1qKnL+p0/HjtFQQvl
-	G3WevYOFa5m6CHsRplraWQYsJKc8pLg==
-X-Google-Smtp-Source: AGHT+IEKWFjQTeH/gw4l8j+96xvyDrFErJSXFFFwjwYJm2zw06q8mwVDlJH1+0djMgauaqAXyS9qMnoqGjEF33qExow=
-X-Received: by 2002:a05:6402:2803:b0:634:ce70:7c5 with SMTP id
- 4fb4d7f45d1cf-645eb2b8003mr8895933a12.17.1764208485058; Wed, 26 Nov 2025
- 17:54:45 -0800 (PST)
+	s=arc-20240116; t=1764210034; c=relaxed/simple;
+	bh=O5+FwqoY/zKpG5o8W+7yvGXAPlP0E+ecret6xMCqLzA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cQsQHd0KQp7hbc4JxYV8ytC+SrlmnDVZxMGfThzMyEozrHpIKrVxZFjuryWg8ARnqNYlkAcDvXvtMPYhqS9pDSM1GIpzbdtQnsvvP3N3nmhogAwc/FCCY3tqozjL9kMFy72qIs4QRTBuwEZEsfjq+bNrLlPGJdMmHhX5wEN4Fk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DqVsP5/1; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-477b198f4bcso1681775e9.3
+        for <linux-pci@vger.kernel.org>; Wed, 26 Nov 2025 18:20:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1764210029; x=1764814829; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:date:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K4URCfDbXaJDpqc3Jy/ygM5tnfYeP0a6DjdNrUnYNok=;
+        b=DqVsP5/1cU0UgBXytfZJCMR7JVyL6LKJEnUvhD5SsNp78Oj2kUl775cO9xn5nblNLm
+         SqcnG4a7aPCruqgOMMR1kGd4uvip517CNPJpMmV0C/ogJVwSITCjTWqIwV7SsO7me10o
+         8gfMhs7WXxJ8fk+CQ663gB3yXHp4qlcyAmAqiflp4DUOmyeO907avn7fzdrxi7CqezAE
+         dHOv9/pajYIu1BkXXpGVScKwDNyIaJ46vloWBW/hNdER6fcoTg5pCiZ2SWnINzRkFD4f
+         lSvjKknDVOuAcxiNbBS3OpDqO233o16SvPAPf0Sm7cPju4YlLPrjzqZPXF4zIsDs4fVA
+         gnkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764210029; x=1764814829;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=K4URCfDbXaJDpqc3Jy/ygM5tnfYeP0a6DjdNrUnYNok=;
+        b=Wdam7+3uCEgAXz9nIavhTIHKc2/zf+OLo20xq5q/uPIx5h9JNUJmE46Y7poiPhIMkS
+         Im62BbJpwUYtBVHarABM7O74CN99wDVq36qrKKeMZQEXlW5Gjt9VMRWxFGfCxwQSk3to
+         4ytFAViTlyKmB5ZUVLqW27jtyzgaWDsllAgylkLiU1QLw6aHYIUdDRqpZDqJJf/UU0PA
+         Qm6GDLcwHoHppNA39HSxtV442InsusmzLqo5hWfSgksZc3Jto5j7Y3dKsb/qHL6jE8s8
+         XBDcyJ8YYEv0r92IK9+4K3dVDVCXIv2+d1maZrlSHcXcHheuXKXQNmcJODTK74QuRqhM
+         iM6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVodWKQ0KeaguV+pe4bg+B5YSq8D4676lY3qYCkprit765HvmS04XgY7yoWmkvppMqlH919fZatKlQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn/juSpbQydv5NHknbQyYEScM4M7z6N/80dIzKBssFVNkM/z6e
+	gTj5zoitwPBTH6z/xq0mMSiPS/nbhkMpMPdjteXYKEd79Qv5al8vXqZ7W+ZYGCUK0V4=
+X-Gm-Gg: ASbGncv+tlwNnWlN/xRWDUf7mj25F1nkI5LHnJGuAeSuOj64Pc8m2S5qFnkBNZkjVGf
+	U4nt7J4HRkn9O76kvOGaLR9Ia/04oF7Wrk1n7bF2j1eKahppVeLfTHi/Cwe3N55CUinbY1yMiHo
+	/P5LjgsIaI0wBC6J2uAbOI6Ylzu2hwzFQ1VhmYTlJF5zC2tJVzTlP+9FRxmsxNjhwD+mek20oTx
+	w5b3d/DobVaA5zxr2lxWZesk7i/abUVa5XDeDCVtmulM8z0ipMVPMoCgEKh9yrm/OX+Zu8OF+4e
+	1EFSfoL47juRnfS6lzMb2QZJBuAAGq7PHfaJZW5mIzl4rq+L0+f0U1cxqSx/TQMA9lr2VQP4bub
+	TGA+VeXe2ND3p2vSdXY/JzclsBjrnPR6OyKqcoIDDaZLtKMLwpZxjDf2cpdVu76vNKSyXXlX+58
+	QsMA5jRY8Q1NJnp7rwsec0sUoKzMlSq1qM
+X-Google-Smtp-Source: AGHT+IGspC1YV2yyiMXXnAe8/Td7EsFQhaqJU5qYzu5f0NQl+Us+ioM0vDMgGxEbw6PNx9+MNqPMRQ==
+X-Received: by 2002:a05:600c:474b:b0:477:9dc1:b706 with SMTP id 5b1f17b1804b1-477c01b494fmr204934695e9.19.1764210029052;
+        Wed, 26 Nov 2025 18:20:29 -0800 (PST)
+Received: from r1chard (1-169-246-18.dynamic-ip.hinet.net. [1.169.246.18])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3477b20b5d6sm67743a91.6.2025.11.26.18.20.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Nov 2025 18:20:28 -0800 (PST)
+From: Richard Lyu <richard.lyu@suse.com>
+X-Google-Original-From: Richard Lyu <r1chard@r1chard>
+Date: Thu, 27 Nov 2025 10:20:20 +0800
+To: Thomas Zimmermann <tzimmermann@suse.de>, ardb@kernel.org,
+	javierm@redhat.com, arnd@arndb.de, helgaas@kernel.org
+Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v3 0/9] arch,sysfb,efi: Support EDID on non-x86 EFI
+ systems
+Message-ID: <aSe1ZBXa3JBidhem@r1chard>
+References: <20251126160854.553077-1-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-2-herve.codina@bootlin.com> <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
- <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
- <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com> <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
- <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
-In-Reply-To: <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 26 Nov 2025 19:54:33 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
-X-Gm-Features: AWmQ_bmOuLhKUl5W5zrcj5AQOjs5kC_X5Om5_otgYtq0JTdMygrEymDVT57WU48
-Message-ID: <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT overlays"
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Kalle Niemi <kaleposti@gmail.com>, Herve Codina <herve.codina@bootlin.com>, 
-	Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251126160854.553077-1-tzimmermann@suse.de>
+User-Agent: Mutt/2.2.13 (2024-03-09)
 
-On Tue, Nov 25, 2025 at 12:43=E2=80=AFAM Matti Vaittinen
-<mazziesaccount@gmail.com> wrote:
->
-> On 24/11/2025 19:01, Rob Herring wrote:
-> > On Mon, Nov 24, 2025 at 10:44=E2=80=AFAM Kalle Niemi <kaleposti@gmail.c=
-om> wrote:
-> >>
-> >>
-> >> On 11/24/25 16:53, Rob Herring wrote:
-> >>> On Mon, Nov 24, 2025 at 8:48=E2=80=AFAM Kalle Niemi <kaleposti@gmail.=
-com> wrote:
-> >>>> On 10/15/25 10:13, Herve Codina wrote:
-> >>>>> From: Saravana Kannan <saravanak@google.com>
-> >>>>>
-> >>>>> This reverts commit 1a50d9403fb90cbe4dea0ec9fd0351d2ecbd8924.
-> >>>>>
-> >>>>> While the commit fixed fw_devlink overlay handling for one case, it
-> >>>>> broke it for another case. So revert it and redo the fix in a separ=
-ate
-> >>>>> patch.
-> >>>>>
-> >>>>> Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overla=
-ys")
-> >>>>> Reported-by: Herve Codina <herve.codina@bootlin.com>
-> >>>>> Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_=
-rJgyo8x6=3D9F9rZ+-KzjOg@mail.gmail.com/
-> >>>>> Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin=
-.com/
-> >>>>> Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootli=
-n.com/
-> >>>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> >>>>> Link: https://lore.kernel.org/lkml/20240411235623.1260061-2-saravan=
-ak@google.com/
-> >>>>> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> >>>>> Acked-by: Mark Brown <broonie@kernel.org>
-> >>>>> ---
-> >>>>>     drivers/bus/imx-weim.c    | 6 ------
-> >>>>>     drivers/i2c/i2c-core-of.c | 5 -----
-> >>>>>     drivers/of/dynamic.c      | 1 -
-> >>>>>     drivers/of/platform.c     | 5 -----
-> >>>>>     drivers/spi/spi.c         | 5 -----
-> >>>>>     5 files changed, 22 deletions(-)
-> >>>>>
-> >>>>> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
-> >>>>> index 83d623d97f5f..87070155b057 100644
-> >>>>> --- a/drivers/bus/imx-weim.c
-> >>>>> +++ b/drivers/bus/imx-weim.c
-> >>>>> @@ -327,12 +327,6 @@ static int of_weim_notify(struct notifier_bloc=
-k *nb, unsigned long action,
-> >>>>>                                  "Failed to setup timing for '%pOF'=
-\n", rd->dn);
-> >>>>>
-> >>>>>                 if (!of_node_check_flag(rd->dn, OF_POPULATED)) {
-> >>>>> -                     /*
-> >>>>> -                      * Clear the flag before adding the device so=
- that
-> >>>>> -                      * fw_devlink doesn't skip adding consumers t=
-o this
-> >>>>> -                      * device.
-> >>>>> -                      */
-> >>>>> -                     rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DE=
-VICE;
-> >>>>>                         if (!of_platform_device_create(rd->dn, NULL=
-, &pdev->dev)) {
-> >>>>>                                 dev_err(&pdev->dev,
-> >>>>>                                         "Failed to create child dev=
-ice '%pOF'\n",
-> >>>>> diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-> >>>>> index eb7fb202355f..30b48a428c0b 100644
-> >>>>> --- a/drivers/i2c/i2c-core-of.c
-> >>>>> +++ b/drivers/i2c/i2c-core-of.c
-> >>>>> @@ -176,11 +176,6 @@ static int of_i2c_notify(struct notifier_block=
- *nb, unsigned long action,
-> >>>>>                         return NOTIFY_OK;
-> >>>>>                 }
-> >>>>>
-> >>>>> -             /*
-> >>>>> -              * Clear the flag before adding the device so that fw=
-_devlink
-> >>>>> -              * doesn't skip adding consumers to this device.
-> >>>>> -              */
-> >>>>> -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
-> >>>>>                 client =3D of_i2c_register_device(adap, rd->dn);
-> >>>>>                 if (IS_ERR(client)) {
-> >>>>>                         dev_err(&adap->dev, "failed to create clien=
-t for '%pOF'\n",
-> >>>>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> >>>>> index 2eaaddcb0ec4..b5be7484fb36 100644
-> >>>>> --- a/drivers/of/dynamic.c
-> >>>>> +++ b/drivers/of/dynamic.c
-> >>>>> @@ -225,7 +225,6 @@ static void __of_attach_node(struct device_node=
- *np)
-> >>>>>         np->sibling =3D np->parent->child;
-> >>>>>         np->parent->child =3D np;
-> >>>>>         of_node_clear_flag(np, OF_DETACHED);
-> >>>>> -     np->fwnode.flags |=3D FWNODE_FLAG_NOT_DEVICE;
-> >>>>>
-> >>>>>         raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> >>>>>
-> >>>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> >>>>> index f77cb19973a5..ef9445ba168b 100644
-> >>>>> --- a/drivers/of/platform.c
-> >>>>> +++ b/drivers/of/platform.c
-> >>>>> @@ -739,11 +739,6 @@ static int of_platform_notify(struct notifier_=
-block *nb,
-> >>>>>                 if (of_node_check_flag(rd->dn, OF_POPULATED))
-> >>>>>                         return NOTIFY_OK;
-> >>>>>
-> >>>>> -             /*
-> >>>>> -              * Clear the flag before adding the device so that fw=
-_devlink
-> >>>>> -              * doesn't skip adding consumers to this device.
-> >>>>> -              */
-> >>>>> -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
-> >>>>>                 /* pdev_parent may be NULL when no bus platform dev=
-ice */
-> >>>>>                 pdev_parent =3D of_find_device_by_node(parent);
-> >>>>>                 pdev =3D of_platform_device_create(rd->dn, NULL,
-> >>>>> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> >>>>> index 2e0647a06890..b22944a207c9 100644
-> >>>>> --- a/drivers/spi/spi.c
-> >>>>> +++ b/drivers/spi/spi.c
-> >>>>> @@ -4791,11 +4791,6 @@ static int of_spi_notify(struct notifier_blo=
-ck *nb, unsigned long action,
-> >>>>>                         return NOTIFY_OK;
-> >>>>>                 }
-> >>>>>
-> >>>>> -             /*
-> >>>>> -              * Clear the flag before adding the device so that fw=
-_devlink
-> >>>>> -              * doesn't skip adding consumers to this device.
-> >>>>> -              */
-> >>>>> -             rd->dn->fwnode.flags &=3D ~FWNODE_FLAG_NOT_DEVICE;
-> >>>>>                 spi =3D of_register_spi_device(ctlr, rd->dn);
-> >>>>>                 put_device(&ctlr->dev);
-> >>>>>
-> >>>> Sorry, some of you will receive this message now for second time. Fi=
-rst
-> >>>> message was sent to older series of patches.
-> >>>> -
-> >>>>
-> >>>> Hello,
-> >>>>
-> >>>> Test system testing drivers for ROHM ICs bisected this commit to cau=
-se
-> >>>> BD71847 drivers probe to not be called.
-> >>> This driver (and overlay support) is in linux-next or something out o=
-f
-> >>> tree on top of linux-next?
-> >>>
-> >>> Rob
-> >>
-> >> Yes the driver is in mainline linux: /drivers/mfd/rohm-bd718x7.c
-> >
-> > I don't see any support to apply overlays in that driver.
->
-> Ah. Sorry for the confusion peeps. I asked Kalle to report this without
-> proper consideration. 100% my bad.
->
-> While the bd718x7 drive indeed is mainline (and tested), the actual
-> 'glue-code' doing the overlay is part of the downstream test
-> infrastructure. So yes, this is not a bug in upstream kernel - this
-> falls in the category of an upstream change causing downstream things to
-> break. So, feel free to say: "Go fix your code" :)
->
-> Now that this is sorted, if someone is still interested in helping us to
-> get our upstream drivers tested - the downstream piece is just taking
-> the compiled device-tree overlay at runtime (via bin-attribute file),
-> and applying it using the of_overlay_fdt_apply(). The approach is
-> working for our testing purposes when the device is added to I2C/SPI
-> node which is already enabled. However, in case where we have the I2C
-> disabled, and enable it in the same overlay where we add the new device
-> - then the new device does not get probed.
->
-> I would be really grateful if someone had a pointer for us.
+Hi Thomas,
 
-Seems to be fw_devlink related. I suppose if you turn it off it works?
-There's info about the dependencies in sysfs or maybe debugfs. I don't
-remember the details, but that should help to tell you why things
-aren't probing.
+I am attempting to test this patch series but encountered merge conflicts when applying it to various trees.
+Could you please clarify the specific base commit (or branch/tag) this series was generated against?
 
-I've dropped the changes for 6.18 for now. No one really seems to be
-in need of them yet AFAICT.
+When testing on the next branch on commits 7a2ff00 and e41ef37, I hit a conflict on PATCH v3 4/9:
+patching file drivers/pci/vgaarb.c
+Hunk #2 FAILED at 557.
+1 out of 2 hunks FAILED -- rejects in file drivers/pci/vgaarb.c
 
-Rob
+When testing against 3a86608 (Linux 6.18-rc1), the following conflicts occurred:
+patching file drivers/gpu/drm/sysfb/efidrm.c
+Hunk #1 FAILED at 24.
+1 out of 2 hunks FAILED -- rejects in file drivers/gpu/drm/sysfb/efidrm.c
+patching file drivers/gpu/drm/sysfb/vesadrm.c
+Hunk #1 FAILED at 25.
+1 out of 2 hunks FAILED -- rejects in file drivers/gpu/drm/sysfb/vesadrm.c
+
+Please let me know the correct base, and I will retest.
+
+Thanks,
+Richard Lyu
+
+On 2025/11/26 17:03, Thomas Zimmermann wrote:
+> Replace screen_info and edid_info with sysfb_primary_device of type
+> struct sysfb_display_info. Update all users. Then implement EDID support
+> in the kernel EFI code.
+> 
+> Sysfb DRM drivers currently fetch the global edid_info directly, when
+> they should get that information together with the screen_info from their
+> device. Wrapping screen_info and edid_info in sysfb_primary_display and
+> passing this to drivers enables this.
+> 
+> Replacing both with sysfb_primary_display has been motivate by the EFI
+> stub. EFI wants to transfer EDID via config table in a single entry.
+> Using struct sysfb_display_info this will become easily possible. Hence
+> accept some churn in architecture code for the long-term improvements.
+> 
+> Patches 1 and 2 reduce the exposure of screen_info in EFI-related code.
+> 
+> Patch 3 adds struct sysfb_display_info.
+> 
+> Patch 4 replaces scren_info with sysfb_primary_display. This results in
+> several changes throught the kernel, but is really just a refactoring.
+> 
+> Patch 5 updates sysfb to transfer sysfb_primary_display to the related
+> drivers.
+> 
+> Patch 6 moves edid_info into sysfb_primary_display. This resolves some
+> drivers' reference to the global edid_info, but also makes the EDID data
+> available on non-x86 architectures.
+> 
+> Patches 7 and 8 add support for EDID transfers on non-x86 EFI systems.
+> 
+> Patch 9 cleans up the config-table allocation to be easier to understand.
+> 
+> v3:
+> - replace SCREEN_INFO table entry (Ard)
+> - merge libstub patch into kernel patch
+> v2:
+> - combine v1 of the series at [1] plus changes from [2] and [3].
+> 
+> [1] https://lore.kernel.org/dri-devel/20251121135624.494768-1-tzimmermann@suse.de/
+> [2] https://lore.kernel.org/dri-devel/20251015160816.525825-1-tzimmermann@suse.de/
+> [3] https://lore.kernel.org/linux-efi/20251119123011.1187249-5-ardb+git@google.com/
+> 
+> Thomas Zimmermann (9):
+>   efi: earlycon: Reduce number of references to global screen_info
+>   efi: sysfb_efi: Reduce number of references to global screen_info
+>   sysfb: Add struct sysfb_display_info
+>   sysfb: Replace screen_info with sysfb_primary_display
+>   sysfb: Pass sysfb_primary_display to devices
+>   sysfb: Move edid_info into sysfb_primary_display
+>   efi: Refactor init_primary_display() helpers
+>   efi: Support EDID information
+>   efi: libstub: Simplify interfaces for primary_display
+> 
+>  arch/arm64/kernel/image-vars.h                |  2 +-
+>  arch/loongarch/kernel/efi.c                   | 38 ++++-----
+>  arch/loongarch/kernel/image-vars.h            |  2 +-
+>  arch/riscv/kernel/image-vars.h                |  2 +-
+>  arch/x86/kernel/kexec-bzimage64.c             |  4 +-
+>  arch/x86/kernel/setup.c                       | 16 ++--
+>  arch/x86/video/video-common.c                 |  4 +-
+>  drivers/firmware/efi/earlycon.c               | 42 +++++-----
+>  drivers/firmware/efi/efi-init.c               | 46 ++++++-----
+>  drivers/firmware/efi/efi.c                    |  4 +-
+>  drivers/firmware/efi/libstub/Makefile         |  2 +-
+>  drivers/firmware/efi/libstub/efi-stub-entry.c | 36 +++++++--
+>  drivers/firmware/efi/libstub/efi-stub.c       | 49 +++++++----
+>  drivers/firmware/efi/libstub/efistub.h        |  7 +-
+>  .../firmware/efi/libstub/primary_display.c    | 41 ++++++++++
+>  drivers/firmware/efi/libstub/screen_info.c    | 53 ------------
+>  drivers/firmware/efi/libstub/zboot.c          |  6 +-
+>  drivers/firmware/efi/sysfb_efi.c              | 81 ++++++++++---------
+>  drivers/firmware/sysfb.c                      | 13 +--
+>  drivers/firmware/sysfb_simplefb.c             |  2 +-
+>  drivers/gpu/drm/sysfb/efidrm.c                | 14 ++--
+>  drivers/gpu/drm/sysfb/vesadrm.c               | 14 ++--
+>  drivers/hv/vmbus_drv.c                        |  6 +-
+>  drivers/pci/vgaarb.c                          |  4 +-
+>  drivers/video/Kconfig                         |  8 +-
+>  drivers/video/fbdev/core/fbmon.c              |  8 +-
+>  drivers/video/fbdev/efifb.c                   | 10 ++-
+>  drivers/video/fbdev/vesafb.c                  | 10 ++-
+>  drivers/video/fbdev/vga16fb.c                 |  8 +-
+>  drivers/video/screen_info_pci.c               |  5 +-
+>  include/linux/efi.h                           |  9 ++-
+>  include/linux/screen_info.h                   |  2 -
+>  include/linux/sysfb.h                         | 23 ++++--
+>  include/video/edid.h                          |  4 -
+>  34 files changed, 321 insertions(+), 254 deletions(-)
+>  create mode 100644 drivers/firmware/efi/libstub/primary_display.c
+>  delete mode 100644 drivers/firmware/efi/libstub/screen_info.c
+> 
+> 
+> base-commit: d724c6f85e80a23ed46b7ebc6e38b527c09d64f5
+> -- 
+> 2.51.1
+> 
 
