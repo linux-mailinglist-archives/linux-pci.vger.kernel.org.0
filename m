@@ -1,44 +1,45 @@
-Return-Path: <linux-pci+bounces-42222-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42221-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7427C8F9C2
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 18:11:09 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6C7CC8F9BF
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 18:10:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 964384E2AC9
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 17:11:05 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 52ED44E3E67
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Nov 2025 17:10:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A8B42E06ED;
-	Thu, 27 Nov 2025 17:10:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BAA62DF146;
+	Thu, 27 Nov 2025 17:10:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WxY1kTW5"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="HPevv09x"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A192DF122;
-	Thu, 27 Nov 2025 17:10:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1FD2DF132;
+	Thu, 27 Nov 2025 17:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764263457; cv=none; b=lkJ8hDQQ49UzLYg+/eAB1dKvgRt/avNABi7Bc8cNNHpH61AXBpYesY6vRdUy+m06JJxvK1wryiyyaHXWYV4feFO88+ZCFcGZag+akS0UOLDVxwuFHsXi6HM85ApyjXNaevbJOASNg6auZ297k6tVNP8ig9FMm1uO3tdSxwJdNe8=
+	t=1764263454; cv=none; b=PJ3DDC9sfHIL9meZNwe6jULyufZoTjH06Nas3zD+3rcRuLAxAuZayP8Op9xk9SAfBxegzsuYvBQLhj5w8Lag4Fse42VChrigMda2/4Lq+solM6vk2sqzGe4DQJglzMQJlJ/wMWi0jIrweGtDaA3mcoX4N09wCpOhR+KbkcltxCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764263457; c=relaxed/simple;
-	bh=CnskS1wN7i6SMb9kqlFVUccnd5J9geTwIwEMN0h5WUc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Br1pA7izLlLd7vfUGJiX3duOKHIjff+fJZhTt9DRrXzVuYbNkOm85eFLVW8FOtW2mam6K3s9rvFD/iECJ9sg8ktEj2Ah1MkQ/dlIc7QVHgY+HiGPa+M4aY9p2cbgWLKAbFN3wourNaXnN9N7P527yqP5XVBqFfOBHZSaHX1Mx6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WxY1kTW5; arc=none smtp.client-ip=117.135.210.5
+	s=arc-20240116; t=1764263454; c=relaxed/simple;
+	bh=ShWsDxbS9rMHO4Rz2R/xGxd1y8sow72GpKgcMYmFCGU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Vvvt+QH4b5Gd94nVZlMDDL3b+kg6A2v8HyqIsed3ANU4NQ9ayA0I4u2vASYhgOswPQHu1auE0Ey6lJcCAmWxdiPVl1fr7/0EHTZg1Ai5y53cnf3AuPVLwGv191v3mfZya3wZeYRB/nWtK7z7kqlwoLo7nwAxsrHFee/OrSsZtZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=HPevv09x; arc=none smtp.client-ip=117.135.210.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=V/
-	pS6w4rFfk/7ExZrmkUZsh7BR5ggFxkvqiAgus5FlI=; b=WxY1kTW5iD9Tag5MVL
-	3PylHmgbmRIRcRPR6+vagTaDcVMoEPC5XqUe4bxk0/ooFObo+PjdSxQjd0lt3qrm
-	Ko9ErzZE/EBVpHEGXNoArMyB8r0Z+rDevDBDdy1YZ6MRy4G9AstEZ+3UH8l/S4uR
-	L5ErgPhHu6fGR5W3q5YNnzauA=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=p4
+	BEwT/W3XQBlce+4mMjg1k8Az7t6B/IA1oEwR7bxT4=; b=HPevv09xcNHbDY2eOg
+	1Rf/8YCvaecuIRMb7ZFfrihMYAcMaBYOXZftMvF+9CZRbAH9rQ5e69LQa2iM0ESw
+	EMCAV0+/TjKJ343vJmy2vI5MCqzrahW3Of4mWqy3amrcEl/DBj/TpCzVfLA8WzPH
+	m3t96BHgcbyp1bpBnUsaA/xj4=
 Received: from zhb.. (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDX71K2hShpkFjfDA--.43603S2;
-	Fri, 28 Nov 2025 01:09:11 +0800 (CST)
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDX71K2hShpkFjfDA--.43603S3;
+	Fri, 28 Nov 2025 01:09:13 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: lpieralisi@kernel.org,
 	kwilczynski@kernel.org,
@@ -60,11 +61,15 @@ Cc: pali@kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-amlogic@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v7 0/2] PCI: Configure Root Port MPS during host probing
-Date: Fri, 28 Nov 2025 01:09:06 +0800
-Message-Id: <20251127170908.14850-1-18255117159@163.com>
+	Hans Zhang <18255117159@163.com>,
+	Mahesh Vaidya <mahesh.vaidya@altera.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH v7 1/2] PCI: Configure Root Port MPS during host probing
+Date: Fri, 28 Nov 2025 01:09:07 +0800
+Message-Id: <20251127170908.14850-2-18255117159@163.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20251127170908.14850-1-18255117159@163.com>
+References: <20251127170908.14850-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -72,89 +77,68 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDX71K2hShpkFjfDA--.43603S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCw1DXr45CF1fAr1kGr1DAwb_yoW5urWkpF
-	WFgws3Gr4xGF15Ga9rGa1jkFy5Xas7GFW3GrZ8GwnxZan0vF1UXryv9a1Fyry7XrWS9a12
-	vr9FqryxC3Wqva7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEtCzPUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbCxBjzl2kohbgRVAAA3B
+X-CM-TRANSID:_____wDX71K2hShpkFjfDA--.43603S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WF1DCr43Xr1rAr4DKFy7Awb_yoW8KFyDpa
+	yUWanYyFn7GF43ZanrA3W0vFyYqF93ArW3GrZYv34qvan8AryDJrW7ta95Jwn7GrWI9Fya
+	vFn8try7CasFvF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piPCztUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOh4To2kohTEP5AAAsK
 
-Current PCIe initialization exhibits a key optimization gap: Root Ports
-may operate with non-optimal Maximum Payload Size (MPS) settings. While
-downstream device configuration is handled during bus enumeration, Root
-Port MPS values inherited from firmware or hardware defaults often fail
-to utilize the full capabilities supported by controller hardware. This
-results in suboptimal data transfer efficiency throughout the PCIe
-hierarchy.
+Current PCIe initialization logic may leave Root Ports operating with
+non-optimal Maximum Payload Size (MPS) settings. The existing code in
+pci_configure_mps() returns early for devices without an upstream bridge
+which includes Root Ports, so their MPS values remain at firmware
+defaults. This fails to utilize the controller's full capabilities,
+leading to suboptimal data transfer efficiency across the PCIe hierarchy.
 
-This patch series addresses this by:
+With this patch, during the host controller probing phase:
+- When PCIe bus tuning is enabled (not PCIE_BUS_TUNE_OFF) and not
+  PCIE_BUS_PEER2PEER (which requires the default 128 bytes for optimal
+  peer-to-peer operation), and
+- The device is a Root Port, the Root Port's MPS is set to its maximum
+  supported value.
 
-1. Core PCI enhancement (Patch 1):
-- Proactively configures Root Port MPS during host controller probing
-- Sets initial MPS to hardware maximum (128 << dev->pcie_mpss)
-- Conditional on PCIe bus tuning being enabled (PCIE_BUS_TUNE_OFF unset)
-  and not in PCIE_BUS_PEER2PEER mode (which requires default 128 bytes)
-- Maintains backward compatibility via PCIE_BUS_TUNE_OFF check
-- Preserves standard MPS negotiation during downstream enumeration
+Note that this initial maximum MPS setting may be reduced later, during
+downstream device enumeration, if any downstream device does not support
+the Root Port's maximum MPS.
 
-2. Driver cleanup (Patch 2):
-- Removes redundant MPS configuration from Meson PCIe controller driver
-- Functionality is now centralized in PCI core
-- Simplifies driver maintenance long-term
+This change ensures Root Ports are initialized to their maximum MPS before
+downstream devices negotiate MPS, while maintaining backward compatibility
+via the PCIE_BUS_TUNE_OFF check and not interfering with the
+PCIE_BUS_PEER2PEER strategy.
 
+Suggested-by: Niklas Cassel <cassel@kernel.org>
+Suggested-by: Manivannan Sadhasivam <mani@kernel.org>
+Signed-off-by: Hans Zhang <18255117159@163.com>
+Tested-by: Mahesh Vaidya <mahesh.vaidya@altera.com>
+Tested-by: Shawn Lin <shawn.lin@rock-chips.com>
 ---
-Changes in v7:
-- Exclude PCIE_BUS_PEER2PEER mode from Root Port MPS configuration
-- Remove redundant check for upstream bridge (Root Ports don't have one)
-- Improve commit message and code comments as per Bjorn.
+ drivers/pci/probe.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Changes for v6:
-https://patchwork.kernel.org/project/linux-pci/patch/20251104165125.174168-1-18255117159@163.com/
-
-- Modify the commit message and comments. (Bjorn)
-- Patch 1/2 code logic: Add !bridge check to configure MPS only for Root Ports
-  without an upstream bridge (root bridges), avoiding incorrect handling of
-  non-root-bridge Root Ports (Niklas).
-
-Changes for v5:
-https://patchwork.kernel.org/project/linux-pci/patch/20250620155507.1022099-1-18255117159@163.com/
-
-- Use pcie_set_mps directly instead of pcie_write_mps.
-- The patch 1 commit message were modified.
-
-Changes for v4:
-https://patchwork.kernel.org/project/linux-pci/patch/20250510155607.390687-1-18255117159@163.com/
-
-- The patch [v4 1/2] add a comment to explain why it was done this way.
-- The patch [v4 2/2] have not been modified.
-- Drop patch [v3 3/3]. The Maintainer of the pci-aardvark.c file suggests
-  that this patch cannot be submitted. In addition, Mani also suggests
-  dropping this patch until this series of issues is resolved.
-
-Changes for v3:
-https://patchwork.kernel.org/project/linux-pci/patch/20250506173439.292460-1-18255117159@163.com/
-
-- The new split is patch 2/3 and 3/3.
-- Modify the patch 1/3 according to Niklas' suggestion.
-
-Changes for v2:
-https://patchwork.kernel.org/project/linux-pci/patch/20250425095708.32662-1-18255117159@163.com/
-
-- According to the Maintainer's suggestion, limit the setting of MPS
-  changes to platforms with controller drivers.
-- Delete the MPS code set by the SOC manufacturer.
----
-
-Hans Zhang (2):
-  PCI: Configure Root Port MPS during host probing
-  PCI: dwc: Remove redundant MPS configuration
-
- drivers/pci/controller/dwc/pci-meson.c | 17 -----------------
- drivers/pci/probe.c                    | 12 ++++++++++++
- 2 files changed, 12 insertions(+), 17 deletions(-)
-
-
-base-commit: 765e56e41a5af2d456ddda6cbd617b9d3295ab4e
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 9cd032dff31e..3970d964d868 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2203,6 +2203,18 @@ static void pci_configure_mps(struct pci_dev *dev)
+ 		return;
+ 	}
+ 
++	/*
++	 * Unless MPS strategy is PCIE_BUS_TUNE_OFF (don't touch MPS at all) or
++	 * PCIE_BUS_PEER2PEER (use minimum MPS for peer-to-peer), set Root Ports'
++	 * MPS to their maximum supported value. Depending on the MPS strategy
++	 * and MPSS of downstream devices, a Root Port's MPS may be reduced
++	 * later during device enumeration.
++	 */
++	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
++	    pcie_bus_config != PCIE_BUS_TUNE_OFF &&
++	    pcie_bus_config != PCIE_BUS_PEER2PEER)
++		pcie_set_mps(dev, 128 << dev->pcie_mpss);
++
+ 	if (!bridge || !pci_is_pcie(bridge))
+ 		return;
+ 
 -- 
 2.34.1
 
