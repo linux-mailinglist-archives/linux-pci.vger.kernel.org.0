@@ -1,148 +1,344 @@
-Return-Path: <linux-pci+bounces-42236-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42237-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24B83C90BD1
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 04:17:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CE8BC90DB4
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 05:56:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C3A2C34D6A2
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 03:17:18 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3006134BCFA
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 04:56:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B45523D7F7;
-	Fri, 28 Nov 2025 03:17:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A82963A1DB;
+	Fri, 28 Nov 2025 04:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rbHVlZ0y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF2ABC2EA;
-	Fri, 28 Nov 2025 03:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9C72F85B
+	for <linux-pci@vger.kernel.org>; Fri, 28 Nov 2025 04:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764299834; cv=none; b=huApmMJuARszjQXIXnFx+AD8JPIdZ61DG0smqerPVXT/wJQgpU0dEqvEEnn+nJVPzpaItIvmRk5M2PGj2OnEndfbpmRgPqxpJTuvQuGCZviyRRnsya58b4Wm6V3IhqrINhfaXIN/zy2/QDN0SEolJ8kYYq5aejDgEsCRRyb+yWI=
+	t=1764305783; cv=none; b=NBplV9WuNZ4KRvRDMamcI7m4l3JXIiVOs8oSM1qxU5NWCz+nO5rbJM1dFlLHZ9JGH2J7oE8ne9iWv20aCHNXGltmoUgo+V+HSdMAzdT6/o+DiH/iQAqSgV8+ARNa9iIR9y7SJPhJdAVcbeXp2YUtmEOR8XdbQRk9JK9+RUOZG9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764299834; c=relaxed/simple;
-	bh=3cEwNUAXvWTaaLNF33BLpSaYoUG3JvuH9NaqbFnzv28=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ccKukGt4Ik9cNc1VjPsrvnkoM5uVmZ5VdmWkWhsciJtW1ylqGW0fpSQbVGyzN5GRdyNmlJEWqjR3flgoePfpVjBc0yHN+0Xs/6JdO0UoMhLEFdejIGNdeGOFYwS4GqzUR5gEiUieYadz1jfjRTRkXdPryEwiDx+9wZIGhbrl9ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 9082B92009C; Fri, 28 Nov 2025 04:17:02 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 8C79F92009B;
-	Fri, 28 Nov 2025 03:17:02 +0000 (GMT)
-Date: Fri, 28 Nov 2025 03:17:02 +0000 (GMT)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Manivannan Sadhasivam <mani@kernel.org>
-cc: Jingoo Han <jingoohan1@gmail.com>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-    Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-    Krzysztof Kozlowski <krzk@kernel.org>, 
-    Alim Akhtar <alim.akhtar@samsung.com>, 
-    Jonathan Chocron <jonnyc@amazon.com>, linux-pci@vger.kernel.org, 
-    linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-    Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: Re: [PATCH v9 4/4] PCI: dwc: Support ECAM mechanism by enabling iATU
- 'CFG Shift Feature'
-In-Reply-To: <20250909-controller-dwc-ecam-v9-4-7d5b651840dd@kernel.org>
-Message-ID: <alpine.DEB.2.21.2511280256260.36486@angie.orcam.me.uk>
-References: <20250909-controller-dwc-ecam-v9-0-7d5b651840dd@kernel.org> <20250909-controller-dwc-ecam-v9-4-7d5b651840dd@kernel.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1764305783; c=relaxed/simple;
+	bh=A4tEGFUsOB0gOg41WwTxn+4fX53errqkR5fTg410RkY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OFFhO1R1kSb2j4XFO/m/vYH3OuPtMSL7GjnlNHa2z0bOmkq6TqvB9FCFZ7h5DO9pTp+23bkl4lnQ2OFm1HapoQM+cL3fqf9sh7kXrvEv8noqw9KSwEFdmT6vV1TN8zb5UBvMIs11X7R7q54pfT0MlNXnY82RTUtkc784p2O5k5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rbHVlZ0y; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <dadaeeb9-4008-4450-8b61-e147a2af38b2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1764305777;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9ebe88bfWoc62+PfzelpNg5aEt1ZBEBssiBk/kK4cFg=;
+	b=rbHVlZ0yroFH/DlKqTUNzmLAn9D6nHCb5fndBzDYy8StGkcuVE3gEQcwO+ZVD34IAg+6pA
+	u2HA+GUMN/MLGuZyrghkL62KCSQw1gqW4QvWfIHMUTzCmEZNdn4erRb3wQX29hWTVAA31X
+	JyjBSnQuoePAK8gtOh/Imk7G3j+X3no=
+Date: Thu, 27 Nov 2025 20:56:06 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH 00/21] vfio/pci: Base support to preserve a VFIO device
+ file across Live Update
+To: David Matlack <dmatlack@google.com>, Alex Williamson <alex@shazbot.org>
+Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
+ Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+ David Rientjes <rientjes@google.com>,
+ Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Josh Hilke <jrhilke@google.com>,
+ Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org,
+ Leon Romanovsky <leonro@nvidia.com>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org,
+ Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>,
+ Parav Pandit <parav@nvidia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Philipp Stanner <pstanner@redhat.com>, Pratyush Yadav <pratyush@kernel.org>,
+ Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>,
+ Shuah Khan <shuah@kernel.org>, Tomita Moeko <tomitamoeko@gmail.com>,
+ Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+ Yi Liu <yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>
+References: <20251126193608.2678510-1-dmatlack@google.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20251126193608.2678510-1-dmatlack@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 9 Sep 2025, Manivannan Sadhasivam wrote:
 
-> From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> 
-> Designware databook r5.20a, sec 3.10.10.3 documents the 'CFG Shift Feature'
-> of the internal Address Translation Unit (iATU). When this feature is
-> enabled, it shifts/maps the BDF contained in the bits [27:12] of the target
-> address in MEM TLP to become BDF of the CFG TLP. This essentially
-> implements the Enhanced Configuration Address Mapping (ECAM) mechanism as
-> defined in PCIe r6.0, sec 7.2.2.
+在 2025/11/26 11:35, David Matlack 写道:
+> This series adds the base support to preserve a VFIO device file across
+> a Live Update. "Base support" means that this allows userspace to
+> safetly preserve a VFIO device file with LIVEUPDATE_SESSION_PRESERVE_FD
+> and retrieve a preserved VFIO device file with
+> LIVEUPDATE_SESSION_RETRIEVE_FD, but the device itself is not preserved
+> in a fully running state across Live Update.
+>
+> This series unblocks 2 parallel but related streams of work:
+>
+>   - iommufd preservation across Live Update. This work spans iommufd,
+>     the IOMMU subsystem, and IOMMU drivers [1]
+>
+>   - Preservation of VFIO device state across Live Update (config space,
+>     BAR addresses, power state, SR-IOV state, etc.). This work spans both
+>     VFIO and the core PCI subsystem.
+>
+> While we need all of the above to fully preserve a VFIO device across a
+> Live Update without disrupting the workload on the device, this series
+> aims to be functional and safe enough to merge as the first incremental
+> step toward that goal.
+>
+> Areas for Discussion
+> --------------------
+>
+> BDF Stability across Live Update
+>
+>    The PCI support for tracking preserved devices across a Live Update to
+>    prevent auto-probing relies on PCI segment numbers and BDFs remaining
+>    stable. For now I have disallowed VFs, as the BDFs assigned to VFs can
+>    vary depending on how the kernel chooses to allocate bus numbers. For
+>    non-VFs I am wondering if there is any more needed to ensure BDF
+>    stability across Live Update.
+>
+>    While we would like to support many different systems and
+>    configurations in due time (including preserving VFs), I'd like to
+>    keep this first serses constrained to simple use-cases.
+>
+> FLB Locking
+>
+>    I don't see a way to properly synchronize pci_flb_finish() with
+>    pci_liveupdate_incoming_is_preserved() since the incoming FLB mutex is
+>    dropped by liveupdate_flb_get_incoming() when it returns the pointer
+>    to the object, and taking pci_flb_incoming_lock in pci_flb_finish()
+>    could result in a deadlock due to reversing the lock ordering.
+>
+> FLB Retrieving
+>
+>    The first patch of this series includes a fix to prevent an FLB from
+>    being retrieved again it is finished. I am wondering if this is the
+>    right approach or if subsystems are expected to stop calling
+>    liveupdate_flb_get_incoming() after an FLB is finished.
+>
+> Testing
+> -------
+>
+> The patches at the end of this series provide comprehensive selftests
+> for the new code added by this series. The selftests have been validated
+> in both a VM environment using a virtio-net PCIe device, and in a
+> baremetal environment on an Intel EMR server with an Intel DSA device.
+>
+> Here is an example of how to run the new selftests:
 
- So this broke a parallel port on my HiFive Unmatched machine (a SiFive 
-FU740-C000 based system), the driver no longer registers the device, no 
-/dev/parport0 anymore.
+Hi, David
 
- I've had to bisect it with commit a1978b692a39 ("PCI: dwc: Use custom 
-pci_ops for root bus DBI vs ECAM config access") and commit fc2bc2623e3a 
-("Revert "PCI: qcom: Prepare for the DWC ECAM enablement"") applied on top 
-and it's affirmative it's this change, i.e. upstream commit 0da48c5b2fa7 
-("PCI: dwc: Support ECAM mechanism by enabling iATU 'CFG Shift Feature'").
+ERROR: modpost: "liveupdate_register_file_handler" 
+[drivers/vfio/pci/vfio-pci-core.ko] undefined!
 
- Here's the relevant part of a diff between bootstrap logs:
+ERROR: modpost: "vfio_pci_ops" [drivers/vfio/pci/vfio-pci-core.ko] 
+undefined!
+ERROR: modpost: "liveupdate_enabled" [drivers/vfio/pci/vfio-pci-core.ko] 
+undefined!
+ERROR: modpost: "liveupdate_unregister_file_handler" 
+[drivers/vfio/pci/vfio-pci-core.ko] undefined!
+ERROR: modpost: "vfio_device_fops" [drivers/vfio/pci/vfio-pci-core.ko] 
+undefined!
+ERROR: modpost: "vfio_pci_is_intel_display" 
+[drivers/vfio/pci/vfio-pci-core.ko] undefined!
+ERROR: modpost: "vfio_pci_liveupdate_init" 
+[drivers/vfio/pci/vfio-pci.ko] undefined!
+ERROR: modpost: "vfio_pci_liveupdate_cleanup" 
+[drivers/vfio/pci/vfio-pci.ko] undefined!
+make[4]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
+make[3]: *** [Makefile:1960: modpost] Error 2
 
---- dmesg-good.log	2025-11-28 03:41:18.943097032 +0100
-+++ dmesg-bad.log	2025-11-28 03:47:29.582049781 +0100
-@@ -1,5 +1,5 @@
--Booting Linux on hartid 3
--Linux version 6.17.0-rc1-00008-g4660e50cf818-dirty (macro@angie) (riscv64-linux-gnu-gcc (GCC) 13.0.0 20220602 (experimental), GNU ld (GNU Binutils) 2.38.50.20220503) #19 SMP Fri Nov 28 02:37:51 GMT 2025
-+Booting Linux on hartid 1
-+Linux version 6.17.0-rc1-00009-g0da48c5b2fa7-dirty (macro@angie) (riscv64-linux-gnu-gcc (GCC) 13.0.0 20220602 (experimental), GNU ld (GNU Binutils) 2.38.50.20220503) #20 SMP Fri Nov 28 02:43:00 GMT 2025
- Machine model: SiFive HiFive Unmatched A00
- SBI specification v0.3 detected
- SBI implementation ID=0x1 Version=0x9
-@@ -61,7 +61,7 @@
- EFI services will not be available.
- smp: Bringing up secondary CPUs ...
- smp: Brought up 1 node, 4 CPUs
--Memory: 16383064K/16777216K available (10746K kernel code, 2200K rwdata, 4972K rodata, 537K init, 371K bss, 389448K reserved, 0K cma-reserved)
-+Memory: 16383064K/16777216K available (10746K kernel code, 2200K rwdata, 4972K rodata, 536K init, 371K bss, 389448K reserved, 0K cma-reserved)
- devtmpfs: initialized
- clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
- posixtimers hash table entries: 2048 (order: 3, 32768 bytes, linear)
-@@ -161,6 +161,7 @@
- fu740-pcie e00000000.pcie:       IO 0x0060080000..0x006008ffff -> 0x0060080000
- fu740-pcie e00000000.pcie:      MEM 0x0060090000..0x007fffffff -> 0x0060090000
- fu740-pcie e00000000.pcie:      MEM 0x2000000000..0x3fffffffff -> 0x2000000000
-+fu740-pcie e00000000.pcie: ECAM at [mem 0xdf0000000-0xdffffffff] for [bus 00-ff]
- fu740-pcie e00000000.pcie: Using 256 MSI vectors
- fu740-pcie e00000000.pcie: iATU: unroll T, 8 ob, 8 ib, align 4K, limit 4096G
- fu740-pcie e00000000.pcie: cap_exp at 70
-@@ -655,7 +656,7 @@
- usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 6.17
- usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
- usb usb1: Product: xHCI Host Controller
--usb usb1: Manufacturer: Linux 6.17.0-rc1-00008-g4660e50cf818-dirty xhci-hcd
-+usb usb1: Manufacturer: Linux 6.17.0-rc1-00009-g0da48c5b2fa7-dirty xhci-hcd
- usb usb1: SerialNumber: 0000:04:00.0
- hub 1-0:1.0: USB hub found
- hub 1-0:1.0: 2 ports detected
-@@ -663,7 +664,7 @@
- usb usb2: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice= 6.17
- usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
- usb usb2: Product: xHCI Host Controller
--usb usb2: Manufacturer: Linux 6.17.0-rc1-00008-g4660e50cf818-dirty xhci-hcd
-+usb usb2: Manufacturer: Linux 6.17.0-rc1-00009-g0da48c5b2fa7-dirty xhci-hcd
- usb usb2: SerialNumber: 0000:04:00.0
- hub 2-0:1.0: USB hub found
- hub 2-0:1.0: 2 ports detected
-@@ -735,8 +736,6 @@
- pcieport 0000:06:01.0: enabling bus mastering
- parport_pc 0000:07:00.0: enabling device (0000 -> 0001)
- PCI parallel port detected: 1415:c118, I/O at 0x1000(0x1008), IRQ 35
--parport0: PC-style at 0x1000 (0x1008), irq 35, using FIFO [PCSPP,TRISTATE,EPP,ECP]
--lp0: using parport0 (interrupt-driven).
- parport_pc 0000:07:00.0: vgaarb: pci_notify
- serial 0000:07:00.3: vgaarb: pci_notify
- serial 0000:07:00.3: assign IRQ: got 40
+After I git clone the source code from the link 
+https://github.com/dmatlack/linux/tree/liveupdate/vfio/cdev/v1,
 
-and then it goes on with insignificant changes only owing to differences 
-in the order of messages produced, the kernel version ID or date stamps.  
-As you can see the PCIe parallel port device continues being accessible, 
-it's only the driver that doesn't pick up the device anymore.
+I found the above errors when I built the source code.
 
- I'm stumped as to where it might be coming from.  Any ideas?
+Perhaps the above errors can be solved by EXPORT_SYMBOL.
 
-  Maciej
+But I am not sure if a better solution can solve the above problems or not.
+
+Thanks,
+
+Yanjun.Zhu
+
+>
+> vfio_pci_liveupdate_uapi_test:
+>
+>    $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
+>    $ tools/testing/selftests/vfio/vfio_pci_liveupdate_uapi_test 0000:00:04.0
+>    $ tools/testing/selftests/vfio/scripts/cleanup.sh
+>
+> vfio_pci_liveupdate_kexec_test:
+>
+>    $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
+>    $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 1 0000:00:04.0
+>    $ kexec [...]  # NOTE: distro-dependent
+>
+>    $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
+>    $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 2 0000:00:04.0
+>    $ tools/testing/selftests/vfio/scripts/cleanup.sh
+>
+> Dependencies
+> ------------
+>
+> This series was constructed on top of several in-flight series and on
+> top of mm-nonmm-unstable [2].
+>
+>    +-- This series
+>    |
+>    +-- [PATCH v2 00/18] vfio: selftests: Support for multi-device tests
+>    |    https://lore.kernel.org/kvm/20251112192232.442761-1-dmatlack@google.com/
+>    |
+>    +-- [PATCH v3 0/4] vfio: selftests: update DMA mapping tests to use queried IOVA ranges
+>    |   https://lore.kernel.org/kvm/20251111-iova-ranges-v3-0-7960244642c5@fb.com/
+>    |
+>    +-- [PATCH v8 0/2] Live Update: File-Lifecycle-Bound (FLB) State
+>    |   https://lore.kernel.org/linux-mm/20251125225006.3722394-1-pasha.tatashin@soleen.com/
+>    |
+>    +-- [PATCH v8 00/18] Live Update Orchestrator
+>    |   https://lore.kernel.org/linux-mm/20251125165850.3389713-1-pasha.tatashin@soleen.com/
+>    |
+>
+> To simplify checking out the code, this series can be found on GitHub:
+>
+>    https://github.com/dmatlack/linux/tree/liveupdate/vfio/cdev/v1
+>
+> Changelog
+> ---------
+>
+> v1:
+>   - Rebase series on top of LUOv8 and VFIO selftests improvements
+>   - Drop commits to preserve config space fields across Live Update.
+>     These changes require changes to the PCI layer. For exmaple,
+>     preserving rbars could lead to an inconsistent device state until
+>     device BARs addresses are preserved across Live Update.
+>   - Drop commits to preserve Bus Master Enable on the device. There's no
+>     reason to preserve this until iommufd preservation is fully working.
+>     Furthermore, preserving Bus Master Enable could lead to memory
+>     corruption when the device if the device is bound to the default
+>     identity-map domain after Live Update.
+>   - Drop commits to preserve saved PCI state. This work is not needed
+>     until we are ready to preserve the device's config space, and
+>     requires more thought to make the PCI state data layout ABI-friendly.
+>   - Add support to skip auto-probing devices that are preserved by VFIO
+>     to avoid them getting bound to a different driver by the next kernel.
+>   - Restrict device preservation further (no VFs, no intel-graphics).
+>   - Various refactoring and small edits to improve readability and
+>     eliminate code duplication.
+>
+> rfc: https://lore.kernel.org/kvm/20251018000713.677779-1-vipinsh@google.com/
+>
+> Cc: Saeed Mahameed <saeedm@nvidia.com>
+> Cc: Adithya Jayachandran <ajayachandra@nvidia.com>
+> Cc: Jason Gunthorpe <jgg@nvidia.com>
+> Cc: Parav Pandit <parav@nvidia.com>
+> Cc: Leon Romanovsky <leonro@nvidia.com>
+> Cc: William Tu <witu@nvidia.com>
+> Cc: Jacob Pan <jacob.pan@linux.microsoft.com>
+> Cc: Lukas Wunner <lukas@wunner.de>
+> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Cc: Pratyush Yadav <pratyush@kernel.org>
+> Cc: Samiullah Khawaja <skhawaja@google.com>
+> Cc: Chris Li <chrisl@kernel.org>
+> Cc: Josh Hilke <jrhilke@google.com>
+> Cc: David Rientjes <rientjes@google.com>
+>
+> [1] https://lore.kernel.org/linux-iommu/20250928190624.3735830-1-skhawaja@google.com/
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/log/?h=mm-nonmm-unstable
+>
+> David Matlack (12):
+>    liveupdate: luo_flb: Prevent retrieve() after finish()
+>    PCI: Add API to track PCI devices preserved across Live Update
+>    PCI: Require driver_override for incoming Live Update preserved
+>      devices
+>    vfio/pci: Notify PCI subsystem about devices preserved across Live
+>      Update
+>    vfio: Enforce preserved devices are retrieved via
+>      LIVEUPDATE_SESSION_RETRIEVE_FD
+>    vfio/pci: Store Live Update state in struct vfio_pci_core_device
+>    vfio: selftests: Add Makefile support for TEST_GEN_PROGS_EXTENDED
+>    vfio: selftests: Add vfio_pci_liveupdate_uapi_test
+>    vfio: selftests: Expose iommu_modes to tests
+>    vfio: selftests: Expose low-level helper routines for setting up
+>      struct vfio_pci_device
+>    vfio: selftests: Verify that opening VFIO device fails during Live
+>      Update
+>    vfio: selftests: Add continuous DMA to vfio_pci_liveupdate_kexec_test
+>
+> Vipin Sharma (9):
+>    vfio/pci: Register a file handler with Live Update Orchestrator
+>    vfio/pci: Preserve vfio-pci device files across Live Update
+>    vfio/pci: Retrieve preserved device files after Live Update
+>    vfio/pci: Skip reset of preserved device after Live Update
+>    selftests/liveupdate: Move luo_test_utils.* into a reusable library
+>    selftests/liveupdate: Add helpers to preserve/retrieve FDs
+>    vfio: selftests: Build liveupdate library in VFIO selftests
+>    vfio: selftests: Initialize vfio_pci_device using a VFIO cdev FD
+>    vfio: selftests: Add vfio_pci_liveupdate_kexec_test
+>
+>   MAINTAINERS                                   |   1 +
+>   drivers/pci/Makefile                          |   1 +
+>   drivers/pci/liveupdate.c                      | 248 ++++++++++++++++
+>   drivers/pci/pci-driver.c                      |  12 +-
+>   drivers/vfio/device_cdev.c                    |  25 +-
+>   drivers/vfio/group.c                          |   9 +
+>   drivers/vfio/pci/Makefile                     |   1 +
+>   drivers/vfio/pci/vfio_pci.c                   |  11 +-
+>   drivers/vfio/pci/vfio_pci_core.c              |  23 +-
+>   drivers/vfio/pci/vfio_pci_liveupdate.c        | 278 ++++++++++++++++++
+>   drivers/vfio/pci/vfio_pci_priv.h              |  16 +
+>   drivers/vfio/vfio.h                           |  13 -
+>   drivers/vfio/vfio_main.c                      |  22 +-
+>   include/linux/kho/abi/pci.h                   |  53 ++++
+>   include/linux/kho/abi/vfio_pci.h              |  45 +++
+>   include/linux/liveupdate.h                    |   3 +
+>   include/linux/pci.h                           |  38 +++
+>   include/linux/vfio.h                          |  51 ++++
+>   include/linux/vfio_pci_core.h                 |   7 +
+>   kernel/liveupdate/luo_flb.c                   |   4 +
+>   tools/testing/selftests/liveupdate/.gitignore |   1 +
+>   tools/testing/selftests/liveupdate/Makefile   |  14 +-
+>   .../include/libliveupdate.h}                  |  11 +-
+>   .../selftests/liveupdate/lib/libliveupdate.mk |  20 ++
+>   .../{luo_test_utils.c => lib/liveupdate.c}    |  43 ++-
+>   .../selftests/liveupdate/luo_kexec_simple.c   |   2 +-
+>   .../selftests/liveupdate/luo_multi_session.c  |   2 +-
+>   tools/testing/selftests/vfio/Makefile         |  23 +-
+>   .../vfio/lib/include/libvfio/iommu.h          |   2 +
+>   .../lib/include/libvfio/vfio_pci_device.h     |   8 +
+>   tools/testing/selftests/vfio/lib/iommu.c      |   4 +-
+>   .../selftests/vfio/lib/vfio_pci_device.c      |  60 +++-
+>   .../vfio/vfio_pci_liveupdate_kexec_test.c     | 255 ++++++++++++++++
+>   .../vfio/vfio_pci_liveupdate_uapi_test.c      |  93 ++++++
+>   34 files changed, 1313 insertions(+), 86 deletions(-)
+>   create mode 100644 drivers/pci/liveupdate.c
+>   create mode 100644 drivers/vfio/pci/vfio_pci_liveupdate.c
+>   create mode 100644 include/linux/kho/abi/pci.h
+>   create mode 100644 include/linux/kho/abi/vfio_pci.h
+>   rename tools/testing/selftests/liveupdate/{luo_test_utils.h => lib/include/libliveupdate.h} (80%)
+>   create mode 100644 tools/testing/selftests/liveupdate/lib/libliveupdate.mk
+>   rename tools/testing/selftests/liveupdate/{luo_test_utils.c => lib/liveupdate.c} (89%)
+>   create mode 100644 tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+>   create mode 100644 tools/testing/selftests/vfio/vfio_pci_liveupdate_uapi_test.c
+>
+-- 
+Best Regards,
+Yanjun.Zhu
+
 
