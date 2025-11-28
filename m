@@ -1,209 +1,219 @@
-Return-Path: <linux-pci+bounces-42247-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42249-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC027C918F8
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 11:03:15 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7291AC91B66
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 11:50:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 11BF434CCB7
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 10:03:15 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0995534CC08
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 10:50:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C07523054D0;
-	Fri, 28 Nov 2025 10:03:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD1CD30DD37;
+	Fri, 28 Nov 2025 10:49:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="GbOlW/IH"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OA5l8Xnh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m1973175.qiye.163.com (mail-m1973175.qiye.163.com [220.197.31.75])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504713002D7;
-	Fri, 28 Nov 2025 10:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073D42DEA95;
+	Fri, 28 Nov 2025 10:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764324189; cv=none; b=q0nP35M93YTvqInH2DevDjIcvQx5xx10iN45Y6Q86csrQ3fFVoZqWUpgSAh4iepwnM9ypVkxI3bdze9Do4pn8ootrFWvuEdUQ/F4hqjhqpeafXJ3l4rTOTYEXdGzj8TEoYPJ58QATlllW09xeYNDoQ4whjHZLl92KaRm3crhiYc=
+	t=1764326989; cv=none; b=aVs/vMkZXNJhi0EQf9Zw6MzbajHPSPI+abgSIvUWHFQd4EVEV0Z+6pJa0C2bvo4qVyBBz14/Z2HGiQwvdU6iEoJaGPC+jkzbeXvIB4VHCOSn2X5qPzmm9lzRMZSSe8iaj4dA95iKxpJiV1f9DvAEw4h/e97BOBXxJJYkCFmYogs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764324189; c=relaxed/simple;
-	bh=Av2+/muJiBJ/UxJApjUl1cE96TDlyTztxtrF+MWKLAQ=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fTeyAlFESjLxrW3hLmhgxKU7WljhueZqTUjnFNV5A3o+UeHkzSUHZtrxZAOJLMpzs9MaJuv3MNauwMbeFhdSCoMTkvn9pA/ussetoeAADkeIWQk0X/rPMGdazs7EIzsL45TzI+i/G5YhVPLDhRtj/nJGt7Q/mchm4cyp2t/UkVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=GbOlW/IH; arc=none smtp.client-ip=220.197.31.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.14] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 2b435546d;
-	Fri, 28 Nov 2025 18:02:54 +0800 (GMT+08:00)
-Message-ID: <5b5d0ac2-72b4-4641-a0ef-a34c20ce8729@rock-chips.com>
-Date: Fri, 28 Nov 2025 18:02:50 +0800
+	s=arc-20240116; t=1764326989; c=relaxed/simple;
+	bh=XgYHgTJif0Kt4tQ0ots92qx7+sf8k9cuvqs9xCd4zvQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RFHo8V15shbIUXb8J2jK0kcgasU4KCbQsEnKIkSIoJvnLf+V1aEQmR4Eq2DwMyGstvlHHpv39zcBxrLEgxKl3hxI1+hIg09cMeS5hEGc6iA40dDLAErTP8tsXAntBmQAewwLVzxDiajMJz1KQQj5zY0b4Y/Gq+yyvKEdTKjFWS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OA5l8Xnh; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AS8NvIR4191713;
+	Fri, 28 Nov 2025 10:49:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=VnO1XI5Z6djcuLYGOcp4ZXXOOQJxWEIAn6r
+	C1Y2MO8c=; b=OA5l8XnhuT5GWNkgEdwViVcXjUBdKMT8E6aDpYakaXQ46/XGPkY
+	ogESpyttv9reK8Wnjd9BMA31WWhKMmfmvyuye9tba8iV0Z9gRjbsXBXX/VV6m1zJ
+	Oo5LjDRpXsrTTAJXVNamIYJdXcWRTbxNvEiaYU4qQSUyo/tUxiV4bsqWR7D9edjc
+	KUCwzI99NacRa5t9aX3zfLkiH9aco+dUilO8cF/SFU4cA8yNyu65PUvt4a7iieoC
+	3pZTpkGckL0wJvbUSvwC7UKm+gcz91jSqof0mQg73ASJ9hC3B2Yrek5BS2F9Berx
+	zZgaRsxCevTwsMwpF8j0JK010lXTJAk9AIQ==
+Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4aq58fgwhc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Nov 2025 10:49:37 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5ASAnYqF023536;
+	Fri, 28 Nov 2025 10:49:34 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 4ak68mwd7h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Nov 2025 10:49:34 +0000
+Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5ASAnXw1023524;
+	Fri, 28 Nov 2025 10:49:33 GMT
+Received: from cse-cd02-lnx.ap.qualcomm.com (cse-cd02-lnx.qualcomm.com [10.64.75.246])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 5ASAnX3T023515
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Nov 2025 10:49:33 +0000
+Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
+	id 189C676F; Fri, 28 Nov 2025 18:49:32 +0800 (CST)
+From: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
+To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
+        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+        bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
+        kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+        kw@linux.com
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>,
+        Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Subject: [PATCH v15 0/6] pci: qcom: Add QCS8300 PCIe support
+Date: Fri, 28 Nov 2025 18:49:22 +0800
+Message-Id: <20251128104928.4070050-1-ziyue.zhang@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, Manivannan Sadhasivam <mani@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 3/5] PCI: dwc: Remove MSI/MSIX capability if iMSI-RX is
- used as MSI controller
-To: Qiang Yu <qiang.yu@oss.qualcomm.com>
-References: <20251109-remove_cap-v1-0-2208f46f4dc2@oss.qualcomm.com>
- <20251109-remove_cap-v1-3-2208f46f4dc2@oss.qualcomm.com>
- <dc8fb64e-fcb1-4070-9565-9b4c014a548f@rock-chips.com>
- <7d4xj3tguhf6yodhhwnsqp5s4gvxxtmrovzwhzhrvozhkidod7@j4w2nexd5je2>
- <3ac0d6c5-0c49-45fd-b855-d9b040249096@rock-chips.com>
- <aSlx91D1MczvUUdV@hu-qianyu-lv.qualcomm.com>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <aSlx91D1MczvUUdV@hu-qianyu-lv.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9ac9ea6c1009cckunm7ad65ca470101b
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQxhIGVZKSxkfQkkeTUJOGB9WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=GbOlW/IHwyRixsVP1CIDoCLIfiF9/sbDA4p2SPkYJtYT5xGAmdP8SU0hdmueSJMlck38zdY2N8qJXHe7IQQFHZ74//nU7YtA0pni6J1G0sJdN+cqKkJFrNT/w2d06p1V61g+ltGqp2MvIzEjOqpzJdFMQWoMl1gFE9P7v6xUYZE=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=HzeuSFODqOQQndAd/qKh98myiRiX8TIis0dhMbPG8PI=;
-	h=date:mime-version:subject:message-id:from;
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: pKyA0y3VMVUaOLvbIzSGhU7Y_4eX1dDo
+X-Proofpoint-ORIG-GUID: pKyA0y3VMVUaOLvbIzSGhU7Y_4eX1dDo
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI4MDA3OCBTYWx0ZWRfX/132emUBaExB
+ PSkCdRtoc2SOS7ThQplK3IZqtMVEtOvRNqCcy61rep2CQDdGImFa8rN8gS4Lxx6qYEeEYQWqtN7
+ lyUTCmGGkyJ41UixOkORmE2IqXTIxXq9u/GYfL/NDu5bEQyTCGKS9Go4jlKgF5YgtvLXpBaurM+
+ SUN5wae6vMt0R0Ps49uMV6LaIQGL2zbtJ05K1aU7RYikxgrcjj7GdJQ9Z1BCekzgVQIBxX5wnND
+ T0H5aRQnzWYHAluOVvH2pOmqfa5iA4GuU438jCc7teupJ3c5QykLTwh8MR8rTI9OUnFL6U6DJIc
+ VGAvx2yENXRV9+XezRvgjZpKkED+UPstk8S0nD2kwvQumY05w0BEq2x/FPAh37V/abDoUwhzzid
+ K2f2QIhw/YO9sJ63m3vjKHV7DJsbDA==
+X-Authority-Analysis: v=2.4 cv=E6DAZKdl c=1 sm=1 tr=0 ts=69297e41 cx=c_pps
+ a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=COk6AnOGAAAA:8 a=QyXUC8HyAAAA:8 a=0l7i4LX0jF_Ij28KvGoA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-28_03,2025-11-27_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 phishscore=0 adultscore=0 lowpriorityscore=0
+ spamscore=0 clxscore=1015 impostorscore=0 priorityscore=1501 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511280078
 
-在 2025/11/28 星期五 17:57, Qiang Yu 写道:
-> On Fri, Nov 21, 2025 at 12:04:09PM +0800, Shawn Lin wrote:
->> 在 2025/11/21 星期五 1:00, Manivannan Sadhasivam 写道:
->>> On Thu, Nov 20, 2025 at 10:06:03PM +0800, Shawn Lin wrote:
->>>> 在 2025/11/10 星期一 14:59, Qiang Yu 写道:
->>>>> Some platforms may not support ITS (Interrupt Translation Service) and
->>>>> MBI (Message Based Interrupt), or there are not enough available empty SPI
->>>>> lines for MBI, in which case the msi-map and msi-parent property will not
->>>>> be provided in device tree node. For those cases, the DWC PCIe driver
->>>>> defaults to using the iMSI-RX module as MSI controller. However, due to
->>>>> DWC IP design, iMSI-RX cannot generate MSI interrupts for Root Ports even
->>>>> when MSI is properly configured and supported as iMSI-RX will only monitor
->>>>> and intercept incoming MSI TLPs from PCIe link, but the memory write
->>>>> generated by Root Port are internal system bus transactions instead of
->>>>> PCIe TLPs, so they are ignored.
->>>>>
->>>>> This leads to interrupts such as PME, AER from the Root Port not received
->>>>
->>>> This's true which also stops Rockchip's dwc IP from working with AER
->>>> service. But my platform can't work with AER service even with ITS support.
->>>>
->>>>> on the host and the users have to resort to workarounds such as passing
->>>>> "pcie_pme=nomsi" cmdline parameter.
->>>>
->>>> ack.
->>>>
->>>>>
->>>>> To ensure reliable interrupt handling, remove MSI and MSI-X capabilities
->>>>> from Root Ports when using iMSI-RX as MSI controller, which is indicated
->>>>> by has_msi_ctrl == true. This forces a fallback to INTx interrupts,
->>>>> eliminating the need for manual kernel command line workarounds.
->>>>>
->>>>> With this behavior:
->>>>> - Platforms with ITS/MBI support use ITS/MBI MSI for interrupts from all
->>>>>      components.
->>>>> - Platforms without ITS/MBI support fall back to INTx for Root Ports and
->>>>>      use iMSI-RX for other PCI devices.
->>>>>
->>>>> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
->>>>> ---
->>>>>     drivers/pci/controller/dwc/pcie-designware-host.c | 10 ++++++++++
->>>>>     1 file changed, 10 insertions(+)
->>>>>
->>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> index 20c9333bcb1c4812e2fd96047a49944574df1e6f..3724aa7f9b356bfba33a6515e2c62a3170aef1e9 100644
->>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> @@ -1083,6 +1083,16 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
->>>>>     	dw_pcie_dbi_ro_wr_dis(pci);
->>>>> +	/*
->>>>> +	 * If iMSI-RX module is used as the MSI controller, remove MSI and
->>>>> +	 * MSI-X capabilities from PCIe Root Ports to ensure fallback to INTx
->>>>> +	 * interrupt handling.
->>>>> +	 */
->>>>> +	if (pp->has_msi_ctrl) {
->>>>
->>>> Isn't has_msi_ctrl means you have something like GIC-ITS
->>>> support instead of iMSI module? Am I missing anything?
->>>>
->>>
->>> It is the other way around. Presence of this flag means, iMSI-RX is used. But I
->>> think the driver should clear the CAPs irrespective of this flag.
->>
->> Thanks for correcting me. Yeap, how can I make such a mistake. :(
->>
->> Anyway, this patch works for me:
->>
->> root@debian:/userdata# ./aer-inject aer.txt
->> [   17.764272] pcieport 0000:00:00.0: aer_inject: Injecting errors
->> 00000040/00000000 into device 0000:01:00.0
->> [   17.765178] aer_isr ! #log I added in aer_isr
->> [   17.765394] pcieport 0000:00:00.0: AER: Correctable error message
->> received from 0000:01:00.0
->> [   17.766211] nvme 0000:01:00.0: PCIe Bus Error: severity=Correctable,
->> type=Data Link Layer, (Receiver ID)
->> root@debian:/userdata# [   17.767045] nvme 0000:01:00.0:   device
->> [144d:a80a] error status/mask=00000040/0000e000
->> [   17.767980] nvme 0000:01:00.0:    [ 6] BadTLP
->>
->> root@debian:/userdata# cat /proc/interrupts | grep aerdrv
->>   60:      0      0      0      0      0      0     0     0     INTx   0 Edge
->> PCIe PME, aerdrv, PCIe bwctrl
->>   63:      0      0      0      1      0      0     0     0     INTx   0 Edge
->> PCIe PME, aerdrv
->> 110:      0      0      0      0      0      0     0     0     INTx   0 Edge
->> PCIe PME, aerdrv
->>
->>>
->>>>> +		dw_pcie_remove_capability(pci, PCI_CAP_ID_MSI);
->>>>> +		dw_pcie_remove_capability(pci, PCI_CAP_ID_MSIX);
->>>>
->>>> Will it make all devices connected to use INTx only?
->>>>
->>>
->>> Nah, it is just for the Root Port. The MSI/MSI-X from endpoint devices will
->>> continue to work as usual.
->>
->> Qiang Yu,
->>
->> Could you please help your IP version with below patch?
->> It's in hex format, you could convert each pair of hex
->> characters to ASCII, i.g, 0x3437302a is 4.70a. The reason
->> is we asked Synopsys to help check this issue before, then
->> we were informed that they have supported it at least since
->> IP version 6.0x. So we may have to limit the version first.
->>
-> 
-> Hi Shawn,
-> 
-> I checked the IP version of PCIe core on glymur, it is 6.00a (0x3630302A)
-> and iMSI-RX still can't generate MSI for rootport.
-> 
+This series adds document, phy, configs support for PCIe in QCS8300.
+It also adds 'link_down' reset for sa8775p.
 
-Thanks for let me know. I have no doubt about this patch, it works
-for me as well.
+Have follwing changes:
+	- Add dedicated schema for the PCIe controllers found on QCS8300.
+	- Add compatible for qcs8300 platform.
+	- Add configurations in devicetree for PCIe0, including registers, clocks, interrupts and phy setting sequence.
+	- Add configurations in devicetree for PCIe1, including registers, clocks, interrupts and phy setting sequence.
 
-> - Qiang Yu
->> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->> @@ -1057,6 +1057,10 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
->>
->>          dw_pcie_msi_init(pp);
->>
->> +#define PORT_LOGIC_PCIE_VERSION_NUMBER_OFF 0x8f8
->> +       val = dw_pcie_readl_dbi(pci, PORT_LOGIC_PCIE_VERSION_NUMBER_OFF);
->> +       printk("version = 0x%x\n", val);
->> +
->>
->>
->>
-> 
-> 
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+---
+Changes in v15:
+- rebase patches
+- fix incorrect indentation (Dmitry)
+- Add patches for monaco-evk enablement
+- Link to v14: https://lore.kernel.org/all/20251024095609.48096-1-ziyue.zhang@oss.qualcomm.com/
+
+Changes in v14:
+- rebase patches
+- Link to v13: https://lore.kernel.org/all/20250908073848.3045957-1-ziyue.zhang@oss.qualcomm.com/
+
+Changes in v13:
+- Fix dtb error
+- Link to v12: https://lore.kernel.org/all/20250905071448.2034594-1-ziyue.zhang@oss.qualcomm.com/
+
+Changes in v12:
+- rebased pcie phy bindings
+- Link to v11: https://lore.kernel.org/all/20250826091205.3625138-1-ziyue.zhang@oss.qualcomm.com/
+
+Changes in v11:
+- move phy/perst/wake to pcie bridge node (Mani)
+- Link to v10: https://lore.kernel.org/all/20250811071131.982983-1-ziyue.zhang@oss.qualcomm.com/
+
+Changes in v10:
+- Update PHY max_items (Johan)
+- Link to v9: https://lore.kernel.org/all/20250725104037.4054070-1-ziyue.zhang@oss.qualcomm.com/
+
+Changes in v9:
+- Fix DTB error (Vinod)
+- Link to v8: https://lore.kernel.org/all/20250714081529.3847385-1-ziyue.zhang@oss.qualcomm.com/
+
+Changes in v8:
+- rebase sc8280xp-qmp-pcie-phy change to solve conflicts.
+- Add Fixes tag to phy change (Johan)
+- Link to v7: https://lore.kernel.org/all/20250625092539.762075-1-quic_ziyuzhan@quicinc.com/
+
+Changes in v7:
+- rebase qcs8300-ride.dtsi change to solve conflicts.
+- Link to v6: https://lore.kernel.org/all/20250529035635.4162149-1-quic_ziyuzhan@quicinc.com/
+
+Changes in v6:
+- move the qcs8300 and sa8775p phy compatibility entry into the list of PHYs that require six clocks
+- Update QCS8300 and sa8775p phy dt, remove aux clock.
+- Fixed compile error found by kernel test robot
+- Link to v5: https://lore.kernel.org/all/20250507031019.4080541-1-quic_ziyuzhan@quicinc.com/
+
+Changes in v5:
+- Add QCOM PCIe controller version in commit msg (Mani)
+- Modify platform dts change subject (Dmitry)
+- Fixed compile error found by kernel test robot
+- Link to v4: https://lore.kernel.org/linux-phy/20241220055239.2744024-1-quic_ziyuzhan@quicinc.com/
+
+Changes in v4:
+- Add received tag
+- Fixed compile error found by kernel test robot
+- Link to v3: https://lore.kernel.org/lkml/202412211301.bQO6vXpo-lkp@intel.com/T/#mdd63e5be39acbf879218aef91c87b12d4540e0f7
+
+Changes in v3:
+- Add received tag(Rob & Dmitry)
+- Update pcie_phy in gcc node to soc dtsi(Dmitry & Konrad)
+- remove pcieprot0 node(Konrad & Mani)
+- Fix format comments(Konrad)
+- Update base-commit to tag: next-20241213(Bjorn)
+- Corrected of_device_id.data from 1.9.0 to 1.34.0.
+- Link to v2: https://lore.kernel.org/all/20241128081056.1361739-1-quic_ziyuzhan@quicinc.com/
+
+Changes in v2:
+- Fix some format comments and match the style in x1e80100(Konrad)
+- Add global interrupt for PCIe0 and PCIe1(Konrad)
+- split the soc dtsi and the platform dts into two changes(Konrad)
+- Link to v1: https://lore.kernel.org/all/20241114095409.2682558-1-quic_ziyuzhan@quicinc.com/
+
+Sushrut Shree Trivedi (1):
+  arm64: dts: qcom: monaco-evk: Enable PCIe0 and PCIe1.
+
+Ziyue Zhang (5):
+  dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
+    for qcs8300
+  arm64: dts: qcom: qcs8300: enable pcie0
+  arm64: dts: qcom: qcs8300-ride: enable pcie0 interface
+  arm64: dts: qcom: qcs8300: enable pcie1
+  arm64: dts: qcom: qcs8300-ride: enable pcie1 interface
+
+ .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |  17 +-
+ arch/arm64/boot/dts/qcom/monaco-evk.dts       |  85 ++++
+ arch/arm64/boot/dts/qcom/monaco.dtsi          | 374 +++++++++++++++++-
+ arch/arm64/boot/dts/qcom/qcs8300-ride.dts     |  84 ++++
+ 4 files changed, 543 insertions(+), 17 deletions(-)
+
+-- 
+2.34.1
 
 
