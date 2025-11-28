@@ -1,336 +1,272 @@
-Return-Path: <linux-pci+bounces-42244-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42245-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16464C91400
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 09:41:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B013EC918B4
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 10:57:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 537D34E8F8F
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 08:37:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 924FC3ACDAA
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 09:57:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C50B32E718B;
-	Fri, 28 Nov 2025 08:37:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3773E17BA6;
+	Fri, 28 Nov 2025 09:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ph0bkRlG";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="HwnOHixS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA1E52E717B;
-	Fri, 28 Nov 2025 08:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88A8308F11
+	for <linux-pci@vger.kernel.org>; Fri, 28 Nov 2025 09:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764319061; cv=none; b=ZvgTdsw6MVzRUewKRXeyZgJ2nwRTsULqz1yLaRvAYN6iB/7Y5Cxui+6amhLa4TOAn6RZeMIGy85ULVmFrLJKUr3f3Yz1QasM/JJv7RIrtJpx9Pvyq6uzaliTD9xol8Fj/hWUeJ1xu/O4Em67o9FAJhh/G/QNV10YHwkOy5MParQ=
+	t=1764323842; cv=none; b=YsX8fPa4jb9DRw7UrIU5oBdTTrX75OzGdVogLIf4jFK8Fr4ZnILdczD/9xOXsbH6AJzMhyvB8wcasuDAgk8Kwv1pG8gEQbJbvXl32N4bCAjQhyj9JwODiv4oPRyB44Xn9QpoSG5PoC6QAx4hlOYgVlAK6cCRbENkBfgPM4oGR3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764319061; c=relaxed/simple;
-	bh=LzaZPndV+LZZpptTFu16O3sbnBjDliJh2pt+/pUPrcU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FITHNorTMdObHFJDrn7YLP+VRHrAL4b1j/YkP7bCXOHg8rlnZZLylRAyjrGuK++k8/ZK1R32KRzbRDX1ajXukFb9naMyNfw0Ix2hibnavFczwZYBSKZvzk4kqYKSmat+qRdYKob8CztsI1CfIbxxsQRys1OHnsAFM92yXZnDaUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 15FF392009C; Fri, 28 Nov 2025 09:37:37 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 0EFEF92009B;
-	Fri, 28 Nov 2025 08:37:37 +0000 (GMT)
-Date: Fri, 28 Nov 2025 08:37:36 +0000 (GMT)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-cc: Manivannan Sadhasivam <mani@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-    Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-    Krzysztof Kozlowski <krzk@kernel.org>, 
-    Alim Akhtar <alim.akhtar@samsung.com>, 
-    Jonathan Chocron <jonnyc@amazon.com>, linux-pci@vger.kernel.org, 
-    linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v9 4/4] PCI: dwc: Support ECAM mechanism by enabling iATU
- 'CFG Shift Feature'
-In-Reply-To: <c7aea2b3-6984-40f5-8234-14d265dabefc@oss.qualcomm.com>
-Message-ID: <alpine.DEB.2.21.2511280755440.36486@angie.orcam.me.uk>
-References: <20250909-controller-dwc-ecam-v9-0-7d5b651840dd@kernel.org> <20250909-controller-dwc-ecam-v9-4-7d5b651840dd@kernel.org> <alpine.DEB.2.21.2511280256260.36486@angie.orcam.me.uk> <c7aea2b3-6984-40f5-8234-14d265dabefc@oss.qualcomm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1764323842; c=relaxed/simple;
+	bh=ZCQ+X6CcJNnx+pPiStYcloaCorZ3vkX6wLFtfUvufdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MFwvzv0ZJLayG3CpJioBPWFu52qlrbKBLwSeY/o+oiEa9NrF1NInDpYA6optBR8nEp9BgyNAs2M7SRE2tRxRzHtAAK1bLNnE+FRy4RXHICs1DCrG3M06pfPkz8v4ji9aTz89YGSfaSWgjGcA+XjkHcX3e67EzAhADmPSJYFUD58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ph0bkRlG; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=HwnOHixS; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AS8rmUv3989819
+	for <linux-pci@vger.kernel.org>; Fri, 28 Nov 2025 09:57:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	MOyTbwOeGqQB5EkYD/6KseST7rH0TIy381RauUT9o68=; b=ph0bkRlGju6I6WaS
+	dgjo1eSQxVWS38oBGdjQjX32fg31UwKBxtWTqeCmLvx5lFkwIWuJZj6UwQvFl5aP
+	CObMWbSviY/Vu85tQV5jLpLqw8yzQCmatAm0ReFm7ARLqweLlSQVjIYRZVVN3LE7
+	oKWr4+4xLLf6Otti8shnRIkvhuzFfN/X4rmuxQWiofIuo0cxOzMNzzOK+pcMvfuK
+	sZdHR2FYMoO7UVa/xUlgSv9UIOk9/xNEuuC3Rdg1P0eFyWKMDzyyT1mgneT0jDe/
+	e1vyZOPrAh8pt3A7LMUOvcqtrjWgIzAeNiSWJtZ545UGPftc6tm2U8+MGbD/XnHX
+	hMpn2g==
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4aq8mm86yt-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 28 Nov 2025 09:57:15 +0000 (GMT)
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-bddf9ce4935so1414866a12.1
+        for <linux-pci@vger.kernel.org>; Fri, 28 Nov 2025 01:57:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1764323835; x=1764928635; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MOyTbwOeGqQB5EkYD/6KseST7rH0TIy381RauUT9o68=;
+        b=HwnOHixSz9kVW0sHphIdZR7hq/ezA57aaF0cb6n8ukM6I0jZy8SHBmN5lfc9SDwGmT
+         nTytnAu5Nvt555+PbrWpBSFgJcJU+KYBieYH/S0Nrpv1AmHyOyMZubhUkJB5zvJrNNyR
+         m0dam8zlLPjJ8oqJvsbT9itT4kJhOlV9k95oZHbaxuzH3GR0crhGqAUNLb+MeRRfH7pb
+         Yxk09gJayK+Tf7YYaE1eD5L8O0/PAneWsOmgSfInrksKvgQW8SS5A8ZX1iyGb3yFf+L0
+         WuCbC96pb92qKgxhfAO6wNEaHDfuiemRGOOrZTGXM15qmI8eARasjKpH3AiVV1hyUoi8
+         4YnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764323835; x=1764928635;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MOyTbwOeGqQB5EkYD/6KseST7rH0TIy381RauUT9o68=;
+        b=WOFjzss1GWdA4Jm0tHmAr3K/DfVehFeD68ZWNdC08+sJ+f+wHvtfWA1D5bMwZTDGtd
+         xyfsltXpUqOG8ZM5Iz73FOuFumQDasVwtpmcT8bOZB29xRhVD4hYbH6G7/BIf2cOQIrm
+         kWuXZUV0HU6eoqs0BQMFIfid85Q+3nI3DotjVo4VZsS50jJz3jUJpvkVwSAHwQWSil9e
+         /xa79RXNSm/XZNRvTYPa57QurcZI0Fg4pZkVS8qa4+SQvXuiS2l6Cv7LLdtFMiFYaf+f
+         cWG7sWi8KaV6fg7KHxSVj/BlyyvPS9C0UL08MfVPtCSNwLRv+UFOIAAVtHeC5RQrdw+C
+         B+9g==
+X-Forwarded-Encrypted: i=1; AJvYcCWLl6EXfNxyIuEzUARlYWK50LhViZOEdc612zQZE9f35JeGvUUr2CzePmq9kIhgEcMKGjMMkXFoEmQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywr6nD+zDKKmwhdl52EPdU4AfyRhQ8LaHooVW+EXaSMjT/0rFw7
+	ce5dfqIKbh1xJh6dsOVyctPtPrWRkg6fcA6bPp16AH7BzqSDPkMC7E99FWtMy/j6NGHdFNy8t5K
+	5yPSR4hTBgl5J86cK5qR1QwlWe3JYz/YOytiuUjYuWfLDFOkUmv9RNTx8MPMPbD4=
+X-Gm-Gg: ASbGncu5BwY3QPdkLCcrHGpKBZejIdGzMX91fa5KXHpBpn9/f8/TTtxTDjLS42YocUl
+	NT3s947WlhGvBCbV+XvTiK1PJ06OWyhTDuJhQmjDKgpTPPLG0vstUV3myjANAzZQo7ejwacEd5r
+	eomiIJexKFgMZyc7BTndzfZV1QY7as5lC9CjsZxdbrDHmqdWIKaDX8fP4dRje/OnPx+RbVGngXJ
+	MSimjYb5WsqEc8hidL3E9Qrj1KjUU+WeQUrvogUTSJTqaJJTDh8Fyej8JI/6AX8UZ11+OUF4h8L
+	KtHGkDTmRrizeUNcvk9SraTxeU2YokyZRkwGZztWekZmAq/ARdEbOpfXTg1/1bV3LHc9WkaS1qw
+	+6yHQMgrb04HXBzQ9+QuPhTVnGNwxhh4S+fccdZRRxx9iXA8h81VO/r/f
+X-Received: by 2002:a05:693c:248b:b0:2a4:5c3b:e2b0 with SMTP id 5a478bee46e88-2a94176125dmr8165223eec.25.1764323834412;
+        Fri, 28 Nov 2025 01:57:14 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHocW7i1Sn9KTPY4QfjJZylauhsGHMC3Tm4JYoMU9NxglbeedCvSs5CRZc2eN/HIdaKiy39SQ==
+X-Received: by 2002:a05:693c:248b:b0:2a4:5c3b:e2b0 with SMTP id 5a478bee46e88-2a94176125dmr8165205eec.25.1764323833621;
+        Fri, 28 Nov 2025 01:57:13 -0800 (PST)
+Received: from hu-qianyu-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2a9653ca11esm13697351eec.0.2025.11.28.01.57.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Nov 2025 01:57:12 -0800 (PST)
+Date: Fri, 28 Nov 2025 01:57:11 -0800
+From: Qiang Yu <qiang.yu@oss.qualcomm.com>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 3/5] PCI: dwc: Remove MSI/MSIX capability if iMSI-RX is
+ used as MSI controller
+Message-ID: <aSlx91D1MczvUUdV@hu-qianyu-lv.qualcomm.com>
+References: <20251109-remove_cap-v1-0-2208f46f4dc2@oss.qualcomm.com>
+ <20251109-remove_cap-v1-3-2208f46f4dc2@oss.qualcomm.com>
+ <dc8fb64e-fcb1-4070-9565-9b4c014a548f@rock-chips.com>
+ <7d4xj3tguhf6yodhhwnsqp5s4gvxxtmrovzwhzhrvozhkidod7@j4w2nexd5je2>
+ <3ac0d6c5-0c49-45fd-b855-d9b040249096@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="-2058476832-340985022-1764318020=:36486"
-Content-ID: <alpine.DEB.2.21.2511280821060.36486@angie.orcam.me.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3ac0d6c5-0c49-45fd-b855-d9b040249096@rock-chips.com>
+X-Proofpoint-ORIG-GUID: J2xC_7cRQ22gFW0zKbDv9traZyGTrdwO
+X-Proofpoint-GUID: J2xC_7cRQ22gFW0zKbDv9traZyGTrdwO
+X-Authority-Analysis: v=2.4 cv=Cvqys34D c=1 sm=1 tr=0 ts=692971fb cx=c_pps
+ a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=8BFNsxKPdyf3tXGkzS8A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=_Vgx9l1VpLgwpw_dHYaR:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI4MDA3MSBTYWx0ZWRfX2BpHtkU4refA
+ +p9kmRD3LishZmzLQU4vju4H2rR9rr0I2aH49DcS2UthcoYec8UPjzKDFchECcS/jv3uX8xQL9c
+ weEcBkLQh8oi1pXBvn/Wb4DNX+N2vu2wtizzt+7gXYbPEh6glTH7o5rTLhfZ5YH7OflD2H/wigN
+ HLk8ivyYHrRICJMhCobPsTCVTyfBXcqxEYnAhgQw8e7LAuo6OYJYGmwQ6sBtBdpthUSrWoNIGTo
+ L2X1FObKwU6VuQJCdzDhMAFiU32KM4WtgLY1z9Y7vD6vqkc0hZU+jmUmlHU6MFlUuf7bUCimCgv
+ mSxDDcOfN+DBqw54b7CS2OEwjhR8sFA5Z8s8aFkCGMNZ72/Djg/UKApY4XwDnlDO2vOnaeBCkpC
+ lqjuui8nVVOjv/jgfDxNo60xIlTa3w==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-28_03,2025-11-27_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 adultscore=0 priorityscore=1501 malwarescore=0 impostorscore=0
+ suspectscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511280071
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, Nov 21, 2025 at 12:04:09PM +0800, Shawn Lin wrote:
+> 在 2025/11/21 星期五 1:00, Manivannan Sadhasivam 写道:
+> > On Thu, Nov 20, 2025 at 10:06:03PM +0800, Shawn Lin wrote:
+> > > 在 2025/11/10 星期一 14:59, Qiang Yu 写道:
+> > > > Some platforms may not support ITS (Interrupt Translation Service) and
+> > > > MBI (Message Based Interrupt), or there are not enough available empty SPI
+> > > > lines for MBI, in which case the msi-map and msi-parent property will not
+> > > > be provided in device tree node. For those cases, the DWC PCIe driver
+> > > > defaults to using the iMSI-RX module as MSI controller. However, due to
+> > > > DWC IP design, iMSI-RX cannot generate MSI interrupts for Root Ports even
+> > > > when MSI is properly configured and supported as iMSI-RX will only monitor
+> > > > and intercept incoming MSI TLPs from PCIe link, but the memory write
+> > > > generated by Root Port are internal system bus transactions instead of
+> > > > PCIe TLPs, so they are ignored.
+> > > > 
+> > > > This leads to interrupts such as PME, AER from the Root Port not received
+> > > 
+> > > This's true which also stops Rockchip's dwc IP from working with AER
+> > > service. But my platform can't work with AER service even with ITS support.
+> > > 
+> > > > on the host and the users have to resort to workarounds such as passing
+> > > > "pcie_pme=nomsi" cmdline parameter.
+> > > 
+> > > ack.
+> > > 
+> > > > 
+> > > > To ensure reliable interrupt handling, remove MSI and MSI-X capabilities
+> > > > from Root Ports when using iMSI-RX as MSI controller, which is indicated
+> > > > by has_msi_ctrl == true. This forces a fallback to INTx interrupts,
+> > > > eliminating the need for manual kernel command line workarounds.
+> > > > 
+> > > > With this behavior:
+> > > > - Platforms with ITS/MBI support use ITS/MBI MSI for interrupts from all
+> > > >     components.
+> > > > - Platforms without ITS/MBI support fall back to INTx for Root Ports and
+> > > >     use iMSI-RX for other PCI devices.
+> > > > 
+> > > > Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+> > > > ---
+> > > >    drivers/pci/controller/dwc/pcie-designware-host.c | 10 ++++++++++
+> > > >    1 file changed, 10 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > index 20c9333bcb1c4812e2fd96047a49944574df1e6f..3724aa7f9b356bfba33a6515e2c62a3170aef1e9 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > @@ -1083,6 +1083,16 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
+> > > >    	dw_pcie_dbi_ro_wr_dis(pci);
+> > > > +	/*
+> > > > +	 * If iMSI-RX module is used as the MSI controller, remove MSI and
+> > > > +	 * MSI-X capabilities from PCIe Root Ports to ensure fallback to INTx
+> > > > +	 * interrupt handling.
+> > > > +	 */
+> > > > +	if (pp->has_msi_ctrl) {
+> > > 
+> > > Isn't has_msi_ctrl means you have something like GIC-ITS
+> > > support instead of iMSI module? Am I missing anything?
+> > > 
+> > 
+> > It is the other way around. Presence of this flag means, iMSI-RX is used. But I
+> > think the driver should clear the CAPs irrespective of this flag.
+> 
+> Thanks for correcting me. Yeap, how can I make such a mistake. :(
+> 
+> Anyway, this patch works for me:
+> 
+> root@debian:/userdata# ./aer-inject aer.txt
+> [   17.764272] pcieport 0000:00:00.0: aer_inject: Injecting errors
+> 00000040/00000000 into device 0000:01:00.0
+> [   17.765178] aer_isr ! #log I added in aer_isr
+> [   17.765394] pcieport 0000:00:00.0: AER: Correctable error message
+> received from 0000:01:00.0
+> [   17.766211] nvme 0000:01:00.0: PCIe Bus Error: severity=Correctable,
+> type=Data Link Layer, (Receiver ID)
+> root@debian:/userdata# [   17.767045] nvme 0000:01:00.0:   device
+> [144d:a80a] error status/mask=00000040/0000e000
+> [   17.767980] nvme 0000:01:00.0:    [ 6] BadTLP
+> 
+> root@debian:/userdata# cat /proc/interrupts | grep aerdrv
+>  60:      0      0      0      0      0      0     0     0     INTx   0 Edge
+> PCIe PME, aerdrv, PCIe bwctrl
+>  63:      0      0      0      1      0      0     0     0     INTx   0 Edge
+> PCIe PME, aerdrv
+> 110:      0      0      0      0      0      0     0     0     INTx   0 Edge
+> PCIe PME, aerdrv
+> 
+> > 
+> > > > +		dw_pcie_remove_capability(pci, PCI_CAP_ID_MSI);
+> > > > +		dw_pcie_remove_capability(pci, PCI_CAP_ID_MSIX);
+> > > 
+> > > Will it make all devices connected to use INTx only?
+> > > 
+> > 
+> > Nah, it is just for the Root Port. The MSI/MSI-X from endpoint devices will
+> > continue to work as usual.
+> 
+> Qiang Yu,
+> 
+> Could you please help your IP version with below patch?
+> It's in hex format, you could convert each pair of hex
+> characters to ASCII, i.g, 0x3437302a is 4.70a. The reason
+> is we asked Synopsys to help check this issue before, then
+> we were informed that they have supported it at least since
+> IP version 6.0x. So we may have to limit the version first.
+>
 
----2058476832-340985022-1764318020=:36486
-Content-Type: text/plain; CHARSET=US-ASCII
-Content-ID: <alpine.DEB.2.21.2511280821061.36486@angie.orcam.me.uk>
+Hi Shawn,
 
-On Fri, 28 Nov 2025, Krishna Chaitanya Chundru wrote:
+I checked the IP version of PCIe core on glymur, it is 6.00a (0x3630302A)
+and iMSI-RX still can't generate MSI for rootport.
 
-> > > Designware databook r5.20a, sec 3.10.10.3 documents the 'CFG Shift
-> > > Feature'
-> > > of the internal Address Translation Unit (iATU). When this feature is
-> > > enabled, it shifts/maps the BDF contained in the bits [27:12] of the
-> > > target
-> > > address in MEM TLP to become BDF of the CFG TLP. This essentially
-> > > implements the Enhanced Configuration Address Mapping (ECAM) mechanism as
-> > > defined in PCIe r6.0, sec 7.2.2.
-> >   So this broke a parallel port on my HiFive Unmatched machine (a SiFive
-> > FU740-C000 based system), the driver no longer registers the device, no
-> > /dev/parport0 anymore.
-> Hi Maciej, can you share us lspci -vvv o/p with working & non working case and
-> also can you point us parport driver. - Krishna Chaitanya.
-
- I'm not sure what you mean as to the parport driver; it's standard stuff:
-
-$ zgrep PARPORT /proc/config.gz
-CONFIG_PARPORT=y
-CONFIG_PARPORT_PC=y
-# CONFIG_PARPORT_SERIAL is not set
-CONFIG_PARPORT_PC_FIFO=y
-CONFIG_PARPORT_1284=y
-# CONFIG_PATA_PARPORT is not set
-# CONFIG_I2C_PARPORT is not set
-# CONFIG_USB_SERIAL_MOS7715_PARPORT is not set
-$ 
-
-I've attached output from `lspci -xxxx' so that you can decode it yourself 
-however you need, though I fail to see anything standing out there.
-
- If you can't figure out what's going on here, then I'll try to poke at 
-the driver to see what exactly it is that causes it to fail there, but I'm 
-a little constrained on the resources and completely unfamiliar with the 
-ECAM feature (and the lack of documentation for the DW IP does not help).
-
- I have no slightest idea why it should cause a regression such as this, 
-it seems totally unrelated.  Yet it's 100% reproducible.  Could this be 
-because it's the only device in the system that actually uses PCI/e port 
-I/O?
-
-# cat /proc/ioports
-00000000-0000ffff : pcie@e00000000
-  00001000-00002fff : PCI Bus 0000:01
-    00001000-00002fff : PCI Bus 0000:02
-      00001000-00002fff : PCI Bus 0000:05
-        00001000-00002fff : PCI Bus 0000:06
-          00001000-00001fff : PCI Bus 0000:07
-          00001000-00001007 : 0000:07:00.0
-          00001000-00001002 : parport0
-          00001003-00001007 : parport0
-          00001008-0000100b : 0000:07:00.0
-          00001008-0000100a : parport0
-          00002000-00002fff : PCI Bus 0000:08
-          00002000-00002fff : PCI Bus 0000:09
-          00002000-000020ff : 0000:09:01.0
-          00002100-0000217f : 0000:09:02.0
-# 
-
-(Hmm, indentation does not appear correct to me for buses below 0000:07.)
-
-  Maciej
----2058476832-340985022-1764318020=:36486
-Content-Type: application/x-xz; NAME=pci-xxxx-good.log.xz
-Content-Transfer-Encoding: BASE64
-Content-ID: <alpine.DEB.2.21.2511280820200.36486@angie.orcam.me.uk>
-Content-Description: 
-Content-Disposition: ATTACHMENT; FILENAME=pci-xxxx-good.log.xz
-
-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
-AARZWg==
-
----2058476832-340985022-1764318020=:36486
-Content-Type: application/x-xz; NAME=pci-xxxx-bad.log.xz
-Content-Transfer-Encoding: BASE64
-Content-ID: <alpine.DEB.2.21.2511280820201.36486@angie.orcam.me.uk>
-Content-Description: 
-Content-Disposition: ATTACHMENT; FILENAME=pci-xxxx-bad.log.xz
-
-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
-Acog5LcNALyGRZ6xxGf7AgAAAAAEWVo=
-
----2058476832-340985022-1764318020=:36486--
+- Qiang Yu
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -1057,6 +1057,10 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
+> 
+>         dw_pcie_msi_init(pp);
+> 
+> +#define PORT_LOGIC_PCIE_VERSION_NUMBER_OFF 0x8f8
+> +       val = dw_pcie_readl_dbi(pci, PORT_LOGIC_PCIE_VERSION_NUMBER_OFF);
+> +       printk("version = 0x%x\n", val);
+> +
+> 
+> 
+> 
 
