@@ -1,404 +1,384 @@
-Return-Path: <linux-pci+bounces-42266-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42267-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFF51C922D2
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 14:48:04 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3DE7C9267C
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 16:07:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 76E9D3AA54E
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 13:48:03 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 39CF534AF7B
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 15:07:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00AAD2264C0;
-	Fri, 28 Nov 2025 13:48:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF34132E745;
+	Fri, 28 Nov 2025 15:07:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ess.eu header.i=@ess.eu header.b="q7yAG2yZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7kgq84Y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11022139.outbound.protection.outlook.com [52.101.66.139])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAD922156A;
-	Fri, 28 Nov 2025 13:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.139
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764337680; cv=fail; b=fljZIPJl6D3tCz7ZuTr20/FM+wkc+7nTUF+9jsTH5Cg8KhmV7g/wb16g5PaJgd1Utgcm4/5/ZBxDbrC4tp53QMltnng+nOhIr4PftifrFFSfl5bxPcyG2UzfNfBfmENoWV++Hcc8TuELndGIKUBuPY3ira2iizU8XqDLDzvpK1s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764337680; c=relaxed/simple;
-	bh=Ec0opaoJa4ysuawfG16UyhRPo9dwJl/Ev/6HxlyGlac=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=sMeJ6pqM8bFxDMq2X9iaAk1EPzgMky06tzdZvDAEFXDCAuOpCdngs1IUrTcK9il5l3TIoluJkPeNerjy13EKvhum5dTDNKKZPf1BpdpbUe8bWi5/JwRSCN9pM++2Zme2l+IMkw8jkQdozzV5UNcYnw7iBqB1Vdn2H+W4X1wMhYk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ess.eu; spf=pass smtp.mailfrom=ess.eu; dkim=pass (1024-bit key) header.d=ess.eu header.i=@ess.eu header.b=q7yAG2yZ; arc=fail smtp.client-ip=52.101.66.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ess.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ess.eu
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b8TvW9YVYzZRhneFAZOqN241vgLc2gh3Pb71rqthmu0gLIXljeH9/et4UlPkwy/CFwMpeffgQecVqpIp/RRwTQtks+Bqb90dm0R+vBjJrle2KxSxgxE4T2tfU66PZ6ic9bTC3UYDTBJ6SNWnB9p1jEzw/p0/l5fRfGqtoFJ9T4aHE1YtzUVjn1ari63FFzdcgJnPYoUT9tl6yGJ+8OeLejK+BI2K513DMcmxFfHZHlTBnDGP9AtAHyoB6Kk6snwsMVxjE1lhRRa1M+3URl7GdXzLbr2w2m8iV0zBEw0zTkhzaWb45YzRG7muQ7Rw5qWhq61lm8dYHqZtchAytOjX3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ec0opaoJa4ysuawfG16UyhRPo9dwJl/Ev/6HxlyGlac=;
- b=ljkQ511rcFtZV6s/lEwkiGwCUqfw/hYWDCxtd6U62KBihtfMzMm2tOyiZnQnVzG8KLMB1xYGviGfH2mrMlC0P5Oj1nqOSlFcFIxYgYQ9l0lQuL1g69DGIUyIsW7PIe2QX15/EDUWXo1yKuVIvAJqCd9qMIq4rraloz848727WpzcsDCIMXe32aJcJUXI3d8S9i82a/o2Q0g9WKuh3Mc3pGE5C9U2XSQGdw+HurFipy6hLJhJuZ6/h5/dN2o8Fwual73SXxgroyBfAKVknOncCPTJQ+EgjSj7AZ1vOzolJLujxFtiA2LPNCpDler5Rv28goPccVVZ+ztnfW1SLXporA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ess.eu; dmarc=pass action=none header.from=ess.eu; dkim=pass
- header.d=ess.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ess.eu; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ec0opaoJa4ysuawfG16UyhRPo9dwJl/Ev/6HxlyGlac=;
- b=q7yAG2yZG1QcJG7SMnfJnwOGLVE3boldDlifQOFEiWnYVF8PCBz1fu450km8NS2vPwxpylsqLhR26HltxITq+AnPGyxx/wL1CgnvNzzuE55OKvXxKgu5vL5xGJyNa5EoOVHnm+w71b4p0w696GGj+kbxHbGRMYpyh2igo+UQKyQ=
-Received: from GV2PR10MB6672.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:150:b9::13)
- by MRWPR10MB9604.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:501:96::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Fri, 28 Nov
- 2025 13:47:51 +0000
-Received: from GV2PR10MB6672.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::1c2:41c:c92e:c4ea]) by GV2PR10MB6672.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::1c2:41c:c92e:c4ea%4]) with mapi id 15.20.9366.012; Fri, 28 Nov 2025
- 13:47:50 +0000
-From: Hinko Kocevar <Hinko.Kocevar@ess.eu>
-To: =?utf-8?B?SWxwbyBKw6RydmluZW4=?= <ilpo.jarvinen@linux.intel.com>
-CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [BUG] PCIe hotplug behind PEX8748: bridge window allocation
- failures when moving AMC between adjacent downstream ports
-Thread-Topic: [BUG] PCIe hotplug behind PEX8748: bridge window allocation
- failures when moving AMC between adjacent downstream ports
-Thread-Index: AQHcXUUk/s9POsoqtUSUQOgd3YB2DrUCM9GAgAXsTOQ=
-Date: Fri, 28 Nov 2025 13:47:50 +0000
-Message-ID:
- <GV2PR10MB66728BB22371B73CEECD4DB183DCA@GV2PR10MB6672.EURPRD10.PROD.OUTLOOK.COM>
-References:
- <GV2PR10MB6672E198F632F5903E27AEF283D0A@GV2PR10MB6672.EURPRD10.PROD.OUTLOOK.COM>
- <7468e936-1a16-3971-283a-9d4d77fe3b35@linux.intel.com>
-In-Reply-To: <7468e936-1a16-3971-283a-9d4d77fe3b35@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=ess.eu;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: GV2PR10MB6672:EE_|MRWPR10MB9604:EE_
-x-ms-office365-filtering-correlation-id: 7305b802-8254-4a8a-2bb9-08de2e84b913
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|19092799006|366016|13003099007|38070700021;
-x-microsoft-antispam-message-info:
- =?utf-8?B?eGdINElhWFRqdjRPY2FLWlQ2dDdRYVlSdFFqNWhiRzcrSm5hT01xVGdXb3ZI?=
- =?utf-8?B?S3N3MHdEcklxMTNTTm15UERBL01QMDdWa2UxZjJYUTFDRVQyODE2eHlONEsy?=
- =?utf-8?B?dThaMXl4OXBWdVZzb2RqcjgzMTc3ZnhiamZ5d2xndHVhNUtONTJhbll3eU9J?=
- =?utf-8?B?bTRVaXlxcms2VU9pSVR5S1B4aWxCcHpTdWp3NkpRUnNuYmZWc0x3d3lLQWpT?=
- =?utf-8?B?eGRML2tTUTNtWk51UDJ3amcrak1KdFdqekVXb2tZUlpTNlVXaW93VmlRQnA5?=
- =?utf-8?B?NUZya2tHd1E3Z3djbWNGbi95REMwaXBiaWN3L1R5SlgyeklvYWRRMjdEbXFs?=
- =?utf-8?B?alVQd2EyWDVQWG1OQkpOZGM5ZEtWVkVuaCs5T0Y2cEJsZjRDYjAzM1pYbndR?=
- =?utf-8?B?ZVNqM0ZCVDVyT2Z6Tkp3NUtkVTVyRnlTdFlOc21jOE5uVFJQb3E0dlVkTTJW?=
- =?utf-8?B?OGVRa2xrUStnSWpuRTZDSVZuN1dTM3BYRi9lem5oY2k5TC9CaWpKV00rRml6?=
- =?utf-8?B?Lzd6ZzBkVWlqOXk4RkQ5VGxSYlc3U2hFVldkM3RIaUNZanVBTFlBVnRCWFBE?=
- =?utf-8?B?TElFTVlnV0NwYXRLRkpzSmU2cmlnbzl6dDhMZTRFV01XMGNZaW02VkM3eWhr?=
- =?utf-8?B?S0lDMmVSWjRRYWd5cW5OWW5TMjBjSUUxTGxTK0xMQW5DcnoyQzRsRjU4eDlk?=
- =?utf-8?B?NldPY3dPV1ZneWZCQ3lETDBod25ybmFVaENJQXVuMkcwK1NLNmtMQ0tzSWw5?=
- =?utf-8?B?MTNaM1I3eFhrMHVuUmRob25ITklqUVV3U0JSNVF3QVBQNVI2NUxkNW82NjZM?=
- =?utf-8?B?OXFDVVpwZlpqT01UcEdRVjJTbGZlQ2I0TUcrRUk0a1gwZCs0WmZ4c0hvcjNt?=
- =?utf-8?B?L0J5dTlITmVyajlpU0Y0ODlJZURNWlZpakkvUW1sbGI1Zm5lSlhOT3FvejhP?=
- =?utf-8?B?Z3JKT3lKSWJTRllTVStYMk5wNFI2bmM5TUtZL3ZabExiVVBJeCs3TWN1UEVh?=
- =?utf-8?B?VjFacVdaMENoY1dzNFowNHhKT0ZFSnFZaGkzZWN0NzY5cEpXVURtaDY1TWZQ?=
- =?utf-8?B?clhZQ3dtOGc3ODZtOERKNHZMVE1xR1RzR1pXR0RWWGZ6RGdXbXF6MFpaY1VM?=
- =?utf-8?B?K2o4dlg1ZmRrdnc5UXRib1kxdHZaV2FiNERtaGNINTl6bnZtaVpjNmpNRitP?=
- =?utf-8?B?VHg5MC82NXRjZDVaSG9kK2dkZGZCZStUY2ZCcGU3SnRYMnJwUDRMeEZTeUNX?=
- =?utf-8?B?Rm5NOG5wTTJnZG9qditVbmZ5L0RqY0VHVWVqbzFPMTFZWmxQV2RIWVJEaGJE?=
- =?utf-8?B?TCtMR01SL0xlWGY1a0x3dUpzd2YyQ0xjTDhRNHdlVCthRnJLQStoV0M2b1BS?=
- =?utf-8?B?WXY1Z1dPZ3JHZkpIWUpWU1JhcFRoZ3EzcGxqZzdleHpObzRWMEZLVmxHYmo5?=
- =?utf-8?B?VUQyNnhEMVJNczhxa2xBam1LcWZnVmZ3cm1oQnhDc1gzc2pFWXRhcGliQi9x?=
- =?utf-8?B?eHNjY0FlWTl2VXQ1Q0F1QndKdDdNZmVRQWJ4ZWw0WkVZektLUmlEenM4MGln?=
- =?utf-8?B?QzBFUzRDMHVycjV5V2xRWi8zMGlHNWJqT3lpQWJhVmlkU09xeWllbEU5VDJF?=
- =?utf-8?B?Rmk2SjlpbGxDOVMyUEtkN1QvLzN4OGl2bjAyWjZMWVB2VTVrR1VldER3RFgy?=
- =?utf-8?B?Wm1IeXBTT1lhQXdubUo0TFpjY3V5RFB4dEZHd2NkaGtzQkxTMWl1WWY0TGRJ?=
- =?utf-8?B?UUdCSTh6dCswck1BVzdKbURIYnd5YW9ZWDhCT3FaUWNXaTFBVlY3bWIwV1I3?=
- =?utf-8?B?b2VRQTBnaXkxaURORGpsYng2RWRqK2NTbUhnRk9yQVg4cGtSMkJLRnozSWNI?=
- =?utf-8?B?aTBtcFM2STByWi8vbHUrU3k4M0Rkd1p1ZFNKcHFOdzZqUFhmcWl4SlVuTW9t?=
- =?utf-8?B?aHlnNFo5OWNyNDF1dGxKdkFvUlhObTlPQmxSR0ZvZHVDSmRBNDRYWkJQRjJD?=
- =?utf-8?B?c00yZ3EydWxKL3RiUmdBUGMxdExCSG9nQ2tBSGkranRyc1crSk9nTTFTUGYr?=
- =?utf-8?Q?G+YMCa?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR10MB6672.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(19092799006)(366016)(13003099007)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?blhlV29wUWV3VmJsUDBqaVJScFJOcGNWMVpNRDU2UnlMMVR3ZkVUN2dIaWNo?=
- =?utf-8?B?d3RFb1ZTOW44bEIxdCs5M1RBdHBPWVNBamdaWU5zTXRabEU2ZW90NFV0cVhR?=
- =?utf-8?B?dHNpUVY2bU1xQjlCcmRmTUF4WUJDNTQwbnNOYVFrdzNheElxSDZnRmJIVWZC?=
- =?utf-8?B?UTNNaklaUlZkVFEvZlNZVFVkTGlOdTc4cjdEUkpyTHhncEl2L21CYUhCSUxa?=
- =?utf-8?B?eVNSa2JTdThSR2pBUzJtU1Ftc3JROHA3dlVTd3YzTUVOeCt2aWNWSGdhQnVF?=
- =?utf-8?B?TnpoRm5reXRRTTN3QUpBVTVBL3JwQys3aXQxQkN1Yk5DMkNMdFM1MjdIdGVW?=
- =?utf-8?B?OTBPUHIyVGYvZnFtRklDVUF6NjIxUmxScE1UaUZMcmNwSlAxRHY5elFFUkd5?=
- =?utf-8?B?alVpbkxscmJEK01EVlRBczJPVk9mN0pMdnBieXVhMDBTMGRVQnY3WlVsVDNE?=
- =?utf-8?B?aGZQViswVzhrUTZDSlNOS3ZhRlhQRmpubTFKaEVLNWZpLzZDTEFHSjdWY2FC?=
- =?utf-8?B?WitrbHV1TlppSVRIUVZvV283QWpXc2dEaHNzZTRzTVpSdVlGYjBla21SQmJD?=
- =?utf-8?B?S3hXblBQYWxCSlZ6Q040YkFuNEwwUUc3bkFVTlZZbHh1b1QrR3JRYTgzMnRn?=
- =?utf-8?B?cm9zaEd3NjFRR3Mwd2Vvd2FDcnNzRHIrRm1RUExiVDV6Zms3MXlCQXluRERw?=
- =?utf-8?B?NGowT1c1ZU5ibld2RUhCWE5tZ2NJOVRvNFdnSlJTZjZQaFRuL2poMDNwYjZw?=
- =?utf-8?B?UnFVU3ZkYUdnZ1dFTGFnd3dqQUFCZ3ZrZ0dVMng0VWV5RmpIa0M1UHFOUUxM?=
- =?utf-8?B?SzBUREhkUENSS2doZDJFb0gybXM2allMc2VjSTMxN0taWC80OVE1aWpjZXlz?=
- =?utf-8?B?OUpSU0s3WXR5YXNqaUxobi9OemhNK1RyYW9jZFQyRTlDZnpyK3NmOU1NdGlW?=
- =?utf-8?B?MlJxcVRSSkpFcnR5K0RtdzJQVlpnSzI1TDVnWVlZd2FYNEs4UWJ6YVR3anNn?=
- =?utf-8?B?UTFXU0RFVXc5SjdUcGZ5TGxQelNKREhDRU9BZFJDNkRhaGJQUmh6LzJXRHVU?=
- =?utf-8?B?QVF0OVdsZkdBV21pc2tQbXdOZmlObDJDaW0xQXYrWFpPMVJIdkQ5SHlqUkR6?=
- =?utf-8?B?M1VJM3paeDRWVFMyaHNncmhhZFV2RW12c1I1ODVtaWVHOUZHOENod2V3dDhQ?=
- =?utf-8?B?Y3JBQmhlcVZQSERoaFI4R0ZSU2RUNmpncjVUa2RrQVJoV2tQTlFvZWptMHFP?=
- =?utf-8?B?cDVEQnRkSUtGL3RGMitQQWtsUHkyR0xHQTgrYnFhL1FRTHl3ZXhUS3RDcTZw?=
- =?utf-8?B?WGNnMHpxcjY5TmI2cVMrbXBsNFZGUHFUaXZGbDh6TkZFNWh5Uys4NUk4MTd0?=
- =?utf-8?B?OGxrTmE1R2VtY3JxbjZSejRlemR1S1pqNHFiTHNGRExmdXFMMDZubHpIVUc4?=
- =?utf-8?B?bFZHRDh1RGc3Z1V0WlJ5N0UzV0pmQUtkU2F4eXlodmk4M3IvMFIwamoyNHJq?=
- =?utf-8?B?TDJNam41QXR4SnR4RDcxVkpRWHh5dm1uZWZsZ3M2KzdaNk5oRFJRRHdoWk1U?=
- =?utf-8?B?bUc3TzlGZWhBcFl2VXFXMStVYm1GODBXUDZsMHVOdmtQSEFxN3gxaEVweWNO?=
- =?utf-8?B?SFJGaEh4OU9WQ3pua1RnUmZXaTU1UGJGVlkzRjIxZUNQM2szTFdKay85S1hN?=
- =?utf-8?B?T3BnaXFkLy91OXQ5bHloUkt0TERNUkt3Um1EMm1oZEZkMG9RU0tGRGJzVi9l?=
- =?utf-8?B?ekhNdVV5VVRIdy9kTEVmU2ZZTUY3a2dpcVAreVduSDhIM0UwWjRCVXFVbUpX?=
- =?utf-8?B?alllaTd3YVhHZncyZDhLK2pPSnpVa0hwUUlYUEs3V0l1eDcvMGJEbTlobDk2?=
- =?utf-8?B?Y0dHNnFOYmV6bkNJMkhYNUJhZTAzbUQyTHZzYXRXd3VTeUpEY3ZqUjlaR0tL?=
- =?utf-8?B?THIwaHBYeHg0L0N0eDJBVXJWZkVmUWM5cUVSdHZYNzk1YmtrajVXcnArYXpW?=
- =?utf-8?B?VUdRTlVLWGNyTWxNbU9CcGtFK2hib1F6OXY4N2l4YXpPeFF1N3UxQlpxNnF3?=
- =?utf-8?B?ZHQyUUw1bWNpeVlTYnhOQTVieW5USG5RcU5rRHBXQ1cwOTMwNTc1NmlWWEZU?=
- =?utf-8?Q?xmNc4bSa3UZ+LBcOEC6Xja5iL?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1FB27F16C;
+	Fri, 28 Nov 2025 15:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764342446; cv=none; b=ZiGZIrl1rOIFqAlqECMMOrxNFy0D67xT1yTfUW1eH1IhQscQGZjOftkvv/YQLAFJx1Bu129Etb8zr5nXQOQsMIq7Oyj3zdZofRDejE6t266ygS/HvBrxcH4rqh4KeWC85VG82TTJkjsjJKMVFhz3q/bTONqlgbVTcwdGOFjj9I4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764342446; c=relaxed/simple;
+	bh=GrbE07r2E073o3pD0gBlXX3rA7I9NgkjmY0FvJaiPbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KeYl+8bgyQs0UuDCTyycThaoMCbBf9+awhDuJtIeRgKeyNtEFH0cGbcuRDqJlAkLLzjhdfokeVY+mbClopJde1rmX3zs8NchNGXPWLCbbW7OFc6ZmUHxrz+mc7A3GzARX17foN5JdvDwHqXc0lIihQUiAC5jVWYXTLBpx1u3ZcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7kgq84Y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 965EBC4CEF1;
+	Fri, 28 Nov 2025 15:07:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764342446;
+	bh=GrbE07r2E073o3pD0gBlXX3rA7I9NgkjmY0FvJaiPbA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j7kgq84YXr6/d3ixxfg1FImVbo8sZV4VvRRhuNvKPKdzSyqvjcy+e1YQiRsBZazAP
+	 HXcyoAVp3N8Dw6KziDzCxYnPyn/BPkdcq7ZtgeGqz8cTdgf2N6jSZSeKw0p2crRsF0
+	 zpRAarLchO9c/NlejFh5i2hY9eNgBx24igpAMnoVuW9x0adROSxrPHCmPvuUXu4Br2
+	 yYZ6QqGzIDe3B3UA8p03viWYzs7MWaPlOaTEXkHBx6U9arF7vW7rbZXnjnMIwg2ZIy
+	 FW8x4bM1plC38avzbRnKp30ykcFp8ox03wm+Tllv+sY2puzhRTCkoD4iLgv5D+TlGL
+	 a1t+qlM6VeWng==
+Date: Fri, 28 Nov 2025 20:37:07 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: zhangsenchuan <zhangsenchuan@eswincomputing.com>
+Cc: bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, p.zabel@pengutronix.de, 
+	jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, christian.bruel@foss.st.com, 
+	mayank.rana@oss.qualcomm.com, shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com, 
+	thippeswamy.havalige@amd.com, inochiama@gmail.com, ningyu@eswincomputing.com, 
+	linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com, 
+	Frank.li@nxp.com
+Subject: Re: [PATCH v6 2/3] PCI: eic7700: Add Eswin PCIe host controller
+ driver
+Message-ID: <xkfoddg6n3fr26maq4a647y36tbigjpivsz2n3tqfmxi3wmwo3@fhajg6zgl2wv>
+References: <20251120101018.1477-1-zhangsenchuan@eswincomputing.com>
+ <20251120101206.1518-1-zhangsenchuan@eswincomputing.com>
+ <uijg47suvluvamftyxwc65kl34eo2eu2af2o5aia4nu45hanqc@grcr2bjgph2i>
+ <63945b54.9c7.19ac016ce19.Coremail.zhangsenchuan@eswincomputing.com>
+ <vuguabbekf7fhippxgyedi25qctnhsuzdxscgc7andlpt2euyz@obhdxmcyssp3>
+ <3fb8b957.b81.19ac991e9f5.Coremail.zhangsenchuan@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: ess.eu
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR10MB6672.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7305b802-8254-4a8a-2bb9-08de2e84b913
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Nov 2025 13:47:50.8554
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a9ead30c-5c0f-4c3b-af05-d9e685cccc43
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: G5ZkyPYY2iZaHovESNNQNCRQDZcvHOJinrI4nF/mdxv6vgSem8UEsV6E2vnmj0GktaEQJ+SCgCvt6y9hCe0d1Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MRWPR10MB9604
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3fb8b957.b81.19ac991e9f5.Coremail.zhangsenchuan@eswincomputing.com>
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcm9tOiBJbHBvIErDpHJ2
-aW5lbiA8aWxwby5qYXJ2aW5lbkBsaW51eC5pbnRlbC5jb20+ClNlbnQ6IE1vbmRheSwgTm92ZW1i
-ZXIgMjQsIDIwMjUgODoxOCBQTQpUbzogSGlua28gS29jZXZhcgpDYzogbGludXgtcGNpQHZnZXIu
-a2VybmVsLm9yZzsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsgbGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZwpTdWJqZWN0OiBSZTogW0JVR10gUENJZSBob3RwbHVnIGJlaGluZCBQRVg4NzQ4OiBicmlk
-Z2Ugd2luZG93IGFsbG9jYXRpb24gZmFpbHVyZXMgd2hlbiBtb3ZpbmcgQU1DIGJldHdlZW4gYWRq
-YWNlbnQgZG93bnN0cmVhbSBwb3J0cwoKT24gTW9uLCAyNCBOb3YgMjAyNSwgSGlua28gS29jZXZh
-ciB3cm90ZToKCj4gSGVsbG8sCj4KPiBJIGFtIG9ic2VydmluZyByZXByb2R1Y2libGUgUENJZSBo
-b3RwbHVnIHJlc291cmNlIGFsbG9jYXRpb24gZmFpbHVyZXMgb24KPiBMaW51eCA2LjE4LjAtcmM3
-IGluIGEgTWljcm9UQ0Egc3lzdGVtIHdpdGggYW4gSW50ZWwgUTE3MC1iYXNlZCBDUFUgYm9hcmQK
-PiBhbmQgYSBQTFggUEVYODcyNSAvIFBFWDg3NDggUENJZSBzd2l0Y2ggaGllcmFyY2h5LiBFYXJs
-aWVyIHN0b2NrCj4gdmVyc2lvbnMgb2YgdGhlIGtlcm5lbCAoNi4xMSwgNi44KSBmYWlsIHdpdGgg
-c2ltaWxhciBzeW1wdG9tcy4KPgo+IEFuIEFNQyBjYXJkIHdpdGggYSBzbWFsbCAyNTYgS2lCIEJB
-UiB3b3JrcyBjb3JyZWN0bHkgYXQgYm9vdCwgYW5kIGFsc28KPiB3b3JrcyB3aGVuIGhvdC1yZW1v
-dmVkIGFuZCByZWluc2VydGVkIGludG8gdGhlICpzYW1lKiBzbG90LiBIb3dldmVyLAo+IHdoZW4g
-cmVpbnNlcnRlZCBpbnRvIGFuIGFkamFjZW50IHNsb3QsIHRoZSBrZXJuZWwgZmFpbHMgdG8gYXNz
-aWduIGV2ZW4gYQo+IDI1NiBLaUIgQkFSLCB3aXRoIHJlcGVhdGVkIG1lc3NhZ2VzIG9mOgo+Cj4g
-YnJpZGdlIHdpbmRvdyBbbWVtIHNpemUgWF06IGNhbid0IGFzc2lnbjsgbm8gc3BhY2UKPiBwY2kg
-PGVuZHBvaW50PjogQkFSIDAgWy4uLl0gZmFpbGVkIHRvIGFzc2lnbgo+Cj4KPiBUaGlzIG9jY3Vy
-cyB3aXRoIHZhbmlsbGEgTGludXggYnVpbHQgZnJvbSBnaXQsIHdpdGggbm8gcGNpPSBjbWRsaW5l
-Cj4gb3B0aW9ucywgYW5kIHdpdGggQWJvdmUtNEcgZGVjb2RpbmcgZW5hYmxlZCBpbiBDUFUgQklP
-Uy4KPgo+IEkgaGF2ZSAoc2VlIGF0dGFjaGVkIGZpbGUgZm9yIGRldGFpbHMgb24gUENJIHJlc291
-cmNlcyk6Cj4KPiAqIENQVSBib2FyZDogSW50ZWwgUTE3MCBjaGlwc2V0Cj4gKiBSb290IHBvcnQg
-4oaSIFBFWDg3MjUgKDAxOjAwLjApIOKGkiBQRVg4NzQ4ICgwMzowMC4wKSDihpIgZG93bnN0cmVh
-bSBwb3J0cyAwNDowMC4wIC4uIDA0OjEyLjAKPiAqIEFNQyBjYXJkIHVuZGVyIHRlc3Q6Cj4gICAq
-IDEwZWU6NzAxMSwgWGlsaW54IDctU2VyaWVzIFBDSWUgZW5kcG9pbnQKPiAgICogU2luZ2xlIEJB
-UjAgb2YgMHg0MDAwMCBieXRlcwo+Cj4gVGhpcyBBTUMgd29ya3Mgbm9ybWFsbHkgYXQgYm9vdCBh
-bmQgZnVuY3Rpb25zIHVuZGVyIHRoZSBgbXJmLXBjaWAgZHJpdmVyLgo+Cj4gUmVwcm9kdWNlIGVy
-cm9yIHNlcXVlbmNlOgo+Cj4gMS4gUmVtb3ZlIEFNQwo+Cj4gWyAgODQwLjM3MTQzMl0gcGNpZXBv
-cnQgMDAwMDowNDowYi4wOiBwY2llaHA6IFNsb3QoMTIpOiBCdXR0b24gcHJlc3M6IHdpbGwgcG93
-ZXIgb2ZmIGluIDUgc2VjCj4gWyAgODQ1LjQ0ODI0Ml0gbXJmLXBjaSAwMDAwOjBjOjAwLjA6IE1S
-RiBDbGVhbmVkIHVwCj4KPiAyLiBSZWluc2VydCBpbnRvIFNBTUUgc2xvdCAoU2xvdCAxMikg4oaS
-IFNVQ0NFU1MKPgo+IFRoZSBrZXJuZWwgY2Fubm90IGFsbG9jYXRlIElPIHdpbmRvd3MsIGJ1dCAq
-QkFSIDAgaXMgc3VjY2Vzc2Z1bGx5IGFzc2lnbmVkKjoKPgo+IFsgIDg2NS42ODkyNzZdIHBjaWVw
-b3J0IDAwMDA6MDQ6MGIuMDogcGNpZWhwOiBTbG90KDEyKTogTGluayBVcAo+IFsgIDg2Ni42ODc3
-OTddIHBjaSAwMDAwOjBjOjAwLjA6IFsxMGVlOjcwMTFdCj4gWyAgODY2LjY4Nzk1Ml0gcGNpIDAw
-MDA6MGM6MDAuMDogQkFSIDAgW21lbSAweDAwMDAwMDAwLTB4MDAwM2ZmZmZdCj4KPiBbICA4NjYu
-Njg4NTI4XSBwY2kgMDAwMDowYzowMC4wOiBCQVIgMCBbbWVtIDB4ZGYwMDAwMDAtMHhkZjAzZmZm
-Zl06IGFzc2lnbmVkCj4KPiBbICA4NjYuNjg5NTM5XSBtcmYtcGNpIDAwMDA6MGM6MDAuMDogTVJG
-IFNldHVwIGNvbXBsZXRlCj4KPiBUaGUgZGV2aWNlIGlzIG9wZXJhdGlvbmFsLgo+Cj4gMy4gUmVt
-b3ZlIEFNQyBhbmQgaW5zZXJ0IGludG8gQURKQUNFTlQgc2xvdCAoU2xvdCAxMSkg4oaSIEZBSUxV
-UkUKPgo+IFdoZW4gbW92ZWQgdG8gYSBuZWlnaGJvcmluZyBkb3duc3RyZWFtIFBFWDg3NDggcG9y
-dCwgQkFSIGFzc2lnbm1lbnQgZmFpbHMgcmVwZWF0ZWRseToKPgo+IFsgIDk1Mi4yNjgyNjBdIHBj
-aWVwb3J0IDAwMDA6MDQ6MDkuMDogcGNpZWhwOiBTbG90KDExKTogQ2FyZCBwcmVzZW50Cj4gWyAg
-OTUzLjM2Nzg3Nl0gcGNpIDAwMDA6MGE6MDAuMDogWzEwZWU6NzAxMV0KPiBbICA5NTMuMzY4MDA4
-XSBwY2kgMDAwMDowYTowMC4wOiBCQVIgMCBbbWVtIDB4MDAwMDAwMDAtMHgwMDAzZmZmZl0KPgo+
-IFsgIDk1My4zNjg1MDZdIHBjaWVwb3J0IDAwMDA6MDQ6MDkuMDogYnJpZGdlIHdpbmRvdyBbbWVt
-IHNpemUgMHgwMDIwMDAwMF06IGNhbid0IGFzc2lnbjsgbm8gc3BhY2UKPiBbICA5NTMuMzY4NTE1
-XSBwY2llcG9ydCAwMDAwOjA0OjA5LjA6IGJyaWRnZSB3aW5kb3cgW21lbSBzaXplIDB4MDAyMDAw
-MDAgNjRiaXQgcHJlZl06IGNhbid0IGFzc2lnbjsgbm8gc3BhY2UKPiBbICA5NTMuMzY4NTQ0XSBw
-Y2kgMDAwMDowYTowMC4wOiBCQVIgMCBbbWVtIHNpemUgMHgwMDA0MDAwMF06IGNhbid0IGFzc2ln
-bjsgbm8gc3BhY2UKPiBbICA5NTMuMzY4NTUzXSBwY2kgMDAwMDowYTowMC4wOiBCQVIgMCBbbWVt
-IHNpemUgMHgwMDA0MDAwMF06IGZhaWxlZCB0byBhc3NpZ24KPgo+IFsgIDk1My4zNjkwNDhdIG1y
-Zi1wY2kgMDAwMDowYTowMC4wOiBjYW4ndCBpb3JlbWFwIEJBUiAwOiBbPz8/IDB4MDAwMDAwMDAg
-ZmxhZ3MgMHgwXQo+IFsgIDk1My4zNjkwNTRdIG1yZi1wY2kgMDAwMDowYTowMC4wOiBGYWlsZWQg
-dG8gbWFwIEJBUlMhCj4KPgo+IFRoZSBrZXJuZWwgcmVwZWF0ZWRseSB0cmllcyB0byByZXNlcnZl
-IDIgTWlCIGJyaWRnZSB3aW5kb3dzIGZvciB0aGlzCj4gcG9ydCAoc2l6ZSAweDAwMjAwMDAwKSwg
-ZXZlbiB0aG91Z2ggdGhlIG9ubHkgcmVxdWlyZWQgcmVzb3VyY2UgaXMgYSAyNTYKPiBLaUIgRVAg
-QkFSLgo+Cj4gV2h5IHRoaXMgYXBwZWFycyB0byBiZSBhIGtlcm5lbCBidWc/Cj4KPiAqIFRoZSBl
-bmRwb2ludCBCQVIgaXMgc21hbGwgKDI1NiBLaUIpLgo+ICogSG90cGx1ZyBpbnRvIHRoZSBzYW1l
-IHNsb3Qgc3VjY2VlZHMuCj4gKiBIb3RwbHVnIGludG8gYW4gYWRqYWNlbnQgc2xvdCBmYWlscywg
-d2l0aCBvdmVyc2l6ZWQgYnJpZGdlIHdpbmRvd3MgcmVxdWVzdGVkLgo+ICogQ29sZCBib290IGFs
-d2F5cyBzdWNjZWVkcy4KPiAqIFRoZSBob3RwbHVnIHNpemluZyBsb2dpYyBzZWVtcyB0byByZXF1
-ZXN0IHdpbmRvd3MgbXVjaCBsYXJnZXIgdGhhbiBuZWNlc3NhcnkuCgpIaSwKClRoZXJlIGFyZSB0
-d28gdGhpbmdzIHdoaWNoIGNhbiBtYWtlIGtlcm5lbCB0byByZXF1ZXN0IG1vcmUgbWVtb3J5IHRo
-YW4KbmVlZGVkOgoKLSB3aW5kb3cgcmVzZXJ2ZWQgZm9yIGhvdHBsdWcgdGhhdCBjYW4gYmUgY29u
-dHJvbGxlZCB3aXRoIHBjaT1ocG1taW9zaXplPQpvbiB0aGUga2VybmVsJ3MgY29tbWFuZCBsaW5l
-IChkZWZhdWx0cyB0byBERUZBVUxUX0hPVFBMVUdfTU1JT19TSVpFIHdoaWNoIGlzIDJNKQoKLSBv
-bGRfc2l6ZSBpbiBjYWxjdWxhdGVfbWVtc2l6ZSgpLgoKSSBkaWQgYSBwYXRjaCB0byByZW1vdmUg
-b2xkX3NpemUsIGl0IGlzIGhlcmUgKG5vdCBzdXJlIHlldCBpZiBpdCB3aWxsIGdvCm1haW5saW5l
-IGluIHRoaXMgZm9ybSBhcyB0aGVyZSdzIHNvbWUgcmVncmVzc2lvbiBwb3RlbnRpYWwpOgoKaHR0
-cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtcGNpLzkyMmIxZjY4LWE2YTItMjY5Yi04ODBjLWQ1
-OTRmOWNhNmJkZUBsaW51eC5pbnRlbC5jb20vCgpwY2k9cmVhbGxvYyBtaWdodCBoZWxwIHRob3Vn
-aCAoYnV0IGl0J3MgYWxzbyBwb3NzaWJsZSBpdCBicmVha3MKdGhpbmdzIGJlY2F1c2UgaXQncyBy
-b2xsYmFjayBpc24ndCBhcyByb2J1c3QgYXMgSSdkIGxpa2UpLgoKCkxvb2tpbmcgeW91ciBsb2cs
-IGl0J3MgdW5jbGVhciB3aHkgdGhpcyBhbGxvY2F0aW9uIGlzIHNvIHNtYWxsOgoKWyAgICAwLjQy
-NDc0OF0gcGNpIDAwMDA6MDE6MDAuMDogYnJpZGdlIHdpbmRvdyBbbWVtIDB4MDAxMDAwMDAtMHgw
-MGNmZmZmZiA2NGJpdCBwcmVmXSB0byBbYnVzIDAyLTEzXSBhZGRfc2l6ZSAxODAwMDAwIGFkZF9h
-bGlnbiAxMDAwMDAKLi4uClsgICAgMC40MjQ4MTFdIHBjaSAwMDAwOjAxOjAwLjA6IGJyaWRnZSB3
-aW5kb3cgW21lbSAweDkwMDAwMDAwLTB4OTBiZmZmZmYgNjRiaXQgcHJlZl06IGFzc2lnbmVkCgpJ
-dCBzZWVtcyB0byBub3QgaW5jbHVkZSB0aGF0IGFkZF9zaXplIGZvciBzb21lIHJlYXNvbiB3aGls
-ZSBtYWtpbmcgdGhlCmFsbG9jYXRpb24gKGFzc2lnbm1lbnQpLiBfX2Fzc2lnbl9yZXNvdXJjZXNf
-c29ydGVkKCkgc2hvdWxkIHRyeSB0byBhcHBseQp0aGUgYWRkX3NpemVzIGludG8gdGhlIHJlc291
-cmNlcyAoaXQncyBmaXJzdCBsb29wKSBiZWZvcmUgYXNzaWduaW5nIHRoZW0uCkl0IHNlZW1zIHRv
-IHdvcmsgZm9yIHRoaXM6CgpbICAgIDAuNDI0NzgwXSBwY2kgMDAwMDowMDowMS4wOiBicmlkZ2Ug
-d2luZG93IFttZW0gMHg5MDAwMDAwMC0weDkyM2ZmZmZmIDY0Yml0IHByZWZdOiBhc3NpZ25lZAoK
-QnV0IG5vdCBmb3IgdGhlIDAwMDA6MDE6MDAuMCBmb3Igc29tZSByZWFzb24uIFlvdSBtaWdodCB3
-YW50IHRvIGZpZ3VyZQp0aGF0IG91dCBzb21laG93LCBlLmcuLCBieSBhZGRpbmcgc29tZSBwY2lf
-KigpIHByaW50cyBoZXJlIGFuZCB0aGVyZS4KCkhpLAoKVGhhbmtzIGZvciB0aGUgcG9pbnRlcnMu
-IEkgZHVnIGludG8gdGhpcyBvbiB0aGUgc2FtZSBQRVg4NzI1Lzg3NDggc3RhY2sgYW5kIGZvdW5k
-IHRoZSBob3RwbHVnIHNpemluZyB3YXMgYXNraW5nIGZvciBmYXIgbW9yZSBzcGFjZSB0aGFuIHRo
-ZSBlbmRwb2ludHMgbmVlZGVkLiBFdmVuIHRob3VnaCB0aGUgZGVmYXVsdHMgaW4gcGNpLmMgYXJl
-IDLigK9NaUIsIGJ5IHRoZSB0aW1lIHBjaWVocCByZXNjYW5uZWQgYSBkb3duc3RyZWFtIHBvcnQg
-dGhlIGdsb2JhbHMgdXNlZCBieSBwY2lfYnVzX3NpemVfYnJpZGdlcygpIGhhZCBncm93biAocHJl
-ZiBoZWFkcm9vbSB3YXMgMTI44oCvTWlCLCBub24tcHJlZiB+NjTigK9NaUIpLCBzbyBob3RwbHVn
-IHRyaWVkIHRvIGluZmxhdGUgdGhlIDA0Onh4IGJyaWRnZSB3aW5kb3dzIGFuZCBmYWlsZWQuCgpX
-aGF0IHdvcmtlZCBmb3IgbWU6CgoqIEtlZXAgdGhlIGRvd25zdHJlYW0gUEVYODc0OCBwb3J0cyBh
-cyBob3RwbHVnIGJyaWRnZXMsIGJ1dCBwcmUtc2l6ZSBvbmx5IHRoZSBub24tcHJlZiB3aW5kb3cg
-dG8gMzLigK9NaUIgZm9yIHRoZSBBTUMgc2xvdHMgKHRoZSByZWFzb24gZm9yIHN1Y2ggYSBiaWcg
-bnVtYmVyIGlzIHRoYXQgdGhlcmUgYXJlIHNvbWUgQU1DcyB3aXRoIDE2IE1CIEJBUiBpbiB1c2Ug
-aGVyZSkuCiogWmVybyB0aGUgcHJlZiBob3RwbHVnIGJ1ZGdldCBzbyBwY2llaHAgZG9lc27igJl0
-IGNoYXNlIGEgbGFyZ2VyIHByZWYgd2luZG93LgoqIEVuc3VyZSB0aGUgbm9uLXByZWYgaG90cGx1
-ZyBidWRnZXQgaXMgYXQgbGVhc3QgMzLigK9NaUIgc28gd2luZG93cyBkb27igJl0IGNvbGxhcHNl
-IHRvIDLigK9NaUIuCgpXaXRoIHRoaXMsIGNvbGRib290ICsgaG90cGx1ZyBhY3Jvc3MgYW55IGRv
-d25zdHJlYW0gcG9ydCBzdWNjZWVkcyBmb3IgYSAxNuKAr01pQiBub24tcHJlZiBCQVIgQU1DIChh
-bmQgc21hbGxlciBCQVJzKS4gVXBzdHJlYW0gd2luZG93cyBzaXplIGNvcnJlY3RseTsgcHJlZiB3
-aW5kb3dzIHN0YXkgZGlzYWJsZWQuCgpJIHRyaWVkIHVzaW5nIGh0dHBzOi8vbG9yZS5rZXJuZWwu
-b3JnL2xpbnV4LXBjaS85MjJiMWY2OC1hNmEyLTI2OWItODgwYy1kNTk0ZjljYTZiZGVAbGludXgu
-aW50ZWwuY29tLyBidXQgaXQgZGlkIG5vdCBoZWxwIG11Y2ggd2l0aCBsYXJnZSBCQVIgQU1DOyBJ
-IHdhcyBjb25zdGFudGx5IHNlZWluZyBzbWFsbCB3aW5kb3dzLgoKSWYgdGhlcmXigJlzIGEgYmV0
-dGVyIHVwc3RyZWFtYWJsZSBhcHByb2FjaCAoZS5nLiwgcGVyLWRldmljZSBob3RwbHVnIGJ1ZGdl
-dHMgaW5zdGVhZCBvZiB0b3VjaGluZyB0aGUgZ2xvYmFscyksIEnigJlkIGFwcHJlY2lhdGUgZmVl
-ZGJhY2suCgpUaGUgdGVzdGluZyBzbyBmYXIgaGFzIHNob3dlZCB0aGF0IEkgY2FuIGJvb3Qgd2l0
-aG91dCBhbnkgQU1DcyBpbnNlcnRlZCBhbmQgdGhlbiBob3RwbHVnIHRoZSBBTUMgd2l0aCBsYXJn
-ZSBCQVIgd2l0aCBzdWNjZXNzLiBCdXQgSSBtb3JlIHRpbWUgYW5kIGNhcmRzIHRoYXQgSSBkbyBu
-b3QgaGF2ZSBhdCB0aGUgbW9tZW50IHRvIGJlIG1vcmUgY29uZmlkZW50IHRoYXQgdGhpcyBpcyBz
-b2x2ZWQgZm9yIG1lLgoKS2VybmVsIGNtZGxpbmUgd2FzIG9ubHkgOiBwY2k9cmVhbGxvYz1vbgoK
-VGhpcyBpcyBob3cgdGhlIG1lbW9yeSB3aW5kb3cgbG9va3MgbGlrZSB3aXRoIHRoZSBxdWlya3Mg
-YmVsb3c6CgpEZXZpY2U6IDAwOjAxLjAKCU1lbW9yeSBiZWhpbmQgYnJpZGdlOiA5MDAwMDAwMC1h
-ODFmZmZmZiBbc2l6ZT0zODZNXSBbMzItYml0XQoJUHJlZmV0Y2hhYmxlIG1lbW9yeSBiZWhpbmQg
-YnJpZGdlOiBbZGlzYWJsZWRdIFs2NC1iaXRdCkRldmljZTogMDE6MDAuMAoJTWVtb3J5IGJlaGlu
-ZCBicmlkZ2U6IDkwMDAwMDAwLWE4MGZmZmZmIFtzaXplPTM4NU1dIFszMi1iaXRdCglQcmVmZXRj
-aGFibGUgbWVtb3J5IGJlaGluZCBicmlkZ2U6IFtkaXNhYmxlZF0gWzY0LWJpdF0KRGV2aWNlOiAw
-MzowMC4wCglNZW1vcnkgYmVoaW5kIGJyaWRnZTogOTAwMDAwMDAtYTVmZmZmZmYgW3NpemU9MzUy
-TV0gWzMyLWJpdF0KCVByZWZldGNoYWJsZSBtZW1vcnkgYmVoaW5kIGJyaWRnZTogW2Rpc2FibGVk
-XSBbNjQtYml0XQpEZXZpY2U6IDA0OjAwLjAKCU1lbW9yeSBiZWhpbmQgYnJpZGdlOiA5MDAwMDAw
-MC05MWZmZmZmZiBbc2l6ZT0zMk1dIFszMi1iaXRdCglQcmVmZXRjaGFibGUgbWVtb3J5IGJlaGlu
-ZCBicmlkZ2U6IFtkaXNhYmxlZF0gWzY0LWJpdF0KRGV2aWNlOiAwNDowMS4wCglNZW1vcnkgYmVo
-aW5kIGJyaWRnZTogOTIwMDAwMDAtOTNmZmZmZmYgW3NpemU9MzJNXSBbMzItYml0XQoJUHJlZmV0
-Y2hhYmxlIG1lbW9yeSBiZWhpbmQgYnJpZGdlOiBbZGlzYWJsZWRdIFs2NC1iaXRdCkRldmljZTog
-MDQ6MDIuMAoJTWVtb3J5IGJlaGluZCBicmlkZ2U6IDk0MDAwMDAwLTk1ZmZmZmZmIFtzaXplPTMy
-TV0gWzMyLWJpdF0KCVByZWZldGNoYWJsZSBtZW1vcnkgYmVoaW5kIGJyaWRnZTogW2Rpc2FibGVk
-XSBbNjQtYml0XQpEZXZpY2U6IDA0OjAzLjAKCU1lbW9yeSBiZWhpbmQgYnJpZGdlOiA5NjAwMDAw
-MC05N2ZmZmZmZiBbc2l6ZT0zMk1dIFszMi1iaXRdCglQcmVmZXRjaGFibGUgbWVtb3J5IGJlaGlu
-ZCBicmlkZ2U6IFtkaXNhYmxlZF0gWzY0LWJpdF0KRGV2aWNlOiAwNDowOC4wCglNZW1vcnkgYmVo
-aW5kIGJyaWRnZTogOTgwMDAwMDAtOTlmZmZmZmYgW3NpemU9MzJNXSBbMzItYml0XQoJUHJlZmV0
-Y2hhYmxlIG1lbW9yeSBiZWhpbmQgYnJpZGdlOiBbZGlzYWJsZWRdIFs2NC1iaXRdCkRldmljZTog
-MDQ6MDkuMAoJTWVtb3J5IGJlaGluZCBicmlkZ2U6IDlhMDAwMDAwLTliZmZmZmZmIFtzaXplPTMy
-TV0gWzMyLWJpdF0KCVByZWZldGNoYWJsZSBtZW1vcnkgYmVoaW5kIGJyaWRnZTogW2Rpc2FibGVk
-XSBbNjQtYml0XQpEZXZpY2U6IDA0OjBhLjAKCU1lbW9yeSBiZWhpbmQgYnJpZGdlOiA5YzAwMDAw
-MC05ZGZmZmZmZiBbc2l6ZT0zMk1dIFszMi1iaXRdCglQcmVmZXRjaGFibGUgbWVtb3J5IGJlaGlu
-ZCBicmlkZ2U6IFtkaXNhYmxlZF0gWzY0LWJpdF0KRGV2aWNlOiAwNDowYi4wCglNZW1vcnkgYmVo
-aW5kIGJyaWRnZTogOWUwMDAwMDAtOWZmZmZmZmYgW3NpemU9MzJNXSBbMzItYml0XQoJUHJlZmV0
-Y2hhYmxlIG1lbW9yeSBiZWhpbmQgYnJpZGdlOiBbZGlzYWJsZWRdIFs2NC1iaXRdCkRldmljZTog
-MDQ6MTAuMAoJTWVtb3J5IGJlaGluZCBicmlkZ2U6IGEwMDAwMDAwLWExZmZmZmZmIFtzaXplPTMy
-TV0gWzMyLWJpdF0KCVByZWZldGNoYWJsZSBtZW1vcnkgYmVoaW5kIGJyaWRnZTogW2Rpc2FibGVk
-XSBbNjQtYml0XQpEZXZpY2U6IDA0OjExLjAKCU1lbW9yeSBiZWhpbmQgYnJpZGdlOiBhMjAwMDAw
-MC1hM2ZmZmZmZiBbc2l6ZT0zMk1dIFszMi1iaXRdCglQcmVmZXRjaGFibGUgbWVtb3J5IGJlaGlu
-ZCBicmlkZ2U6IFtkaXNhYmxlZF0gWzY0LWJpdF0KRGV2aWNlOiAwNDoxMi4wCglNZW1vcnkgYmVo
-aW5kIGJyaWRnZTogYTQwMDAwMDAtYTVmZmZmZmYgW3NpemU9MzJNXSBbMzItYml0XQoJUHJlZmV0
-Y2hhYmxlIG1lbW9yeSBiZWhpbmQgYnJpZGdlOiBbZGlzYWJsZWRdIFs2NC1iaXRdCgoKVGhhbmtz
-IGZvciB5b3VyIGhlbHAsCkhpbmtvCgoKUXVpcmsgZGlmZiAoYm9hcmQtc3BlY2lmaWM6IFBFWDg3
-NDggZG93bnN0cmVhbSBvbiBidXMgMDQpOgoKZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9x
-dWlya3MuYyBiL2FyY2gveDg2L2tlcm5lbC9xdWlya3MuYwppbmRleCBhOTJmMThkYjkuLjMyODAx
-NDA1YiAxMDA2NDQKLS0tIGEvYXJjaC94ODYva2VybmVsL3F1aXJrcy5jCisrKyBiL2FyY2gveDg2
-L2tlcm5lbC9xdWlya3MuYwpAQCAtNjY0LDYgKzY2NCwyNSBAQCBERUNMQVJFX1BDSV9GSVhVUF9F
-QVJMWShQQ0lfVkVORE9SX0lEX0lOVEVMLCAweDIwODMsIHF1aXJrX2ludGVsX3B1cmxleV94ZW9u
-X3JhcwogYm9vbCB4ODZfYXBwbGVfbWFjaGluZTsKIEVYUE9SVF9TWU1CT0woeDg2X2FwcGxlX21h
-Y2hpbmUpOwogCisvKgorICogRm9yY2UgdGhlIDAwOjAxLjAgcm9vdCBwb3J0IHRvIGJlIHRyZWF0
-ZWQgYXMgaG90cGx1Zy1jYXBhYmxlIHNvIHRoZSBQQ0kKKyAqIHNpemluZyBjb2RlIGFsbG9jYXRl
-cyBhZGRpdGlvbmFsIHdpbmRvdyBzcGFjZSBmb3IgdGhlIGxhcmdlIGRvd25zdHJlYW0KKyAqIFBM
-WCBmYW5vdXQuIFVzZSB0aGUgc3Vic3lzdGVtIElEIHRvIGF2b2lkIHRvdWNoaW5nIG90aGVyIHJv
-b3QgcG9ydHMuCisgKi8KK3N0YXRpYyB2b2lkIHF1aXJrX2ludGVsX3Jvb3RfcG9ydF9ob3RwbHVn
-KHN0cnVjdCBwY2lfZGV2ICpkZXYpCit7CisJaWYgKGRldi0+c3Vic3lzdGVtX3ZlbmRvciAhPSBQ
-Q0lfVkVORE9SX0lEX0lOVEVMIHx8CisJICAgIGRldi0+c3Vic3lzdGVtX2RldmljZSAhPSAweDIw
-MTUpCisJCXJldHVybjsKKworCWRldl9pbmZvKCZkZXYtPmRldiwKKwkgICAgIlBDSSBxdWlyazog
-cm9vdCBwb3J0IGlzIGhvdHBsdWdnYWJsZVxuIik7CisKKwlkZXYtPmlzX2hvdHBsdWdfYnJpZGdl
-ID0gMTsKK30KK0RFQ0xBUkVfUENJX0ZJWFVQX0hFQURFUihQQ0lfVkVORE9SX0lEX0lOVEVMLCAw
-eDE5MDEsCisJCQkgcXVpcmtfaW50ZWxfcm9vdF9wb3J0X2hvdHBsdWcpOworCiB2b2lkIF9faW5p
-dCBlYXJseV9wbGF0Zm9ybV9xdWlya3Modm9pZCkKIHsKIAl4ODZfYXBwbGVfbWFjaGluZSA9IGRt
-aV9tYXRjaChETUlfU1lTX1ZFTkRPUiwgIkFwcGxlIEluYy4iKSB8fApkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9wY2kvcXVpcmtzLmMgYi9kcml2ZXJzL3BjaS9xdWlya3MuYwppbmRleCBiOWMyNTJhYTYu
-LmM4NjI3ZWFiOCAxMDA2NDQKLS0tIGEvZHJpdmVycy9wY2kvcXVpcmtzLmMKKysrIGIvZHJpdmVy
-cy9wY2kvcXVpcmtzLmMKQEAgLTYzNDEsMyArNjM0MSw1OSBAQCBzdGF0aWMgdm9pZCBwY2lfbWFz
-a19yZXBsYXlfdGltZXJfdGltZW91dChzdHJ1Y3QgcGNpX2RldiAqcGRldikKIERFQ0xBUkVfUENJ
-X0ZJWFVQX0ZJTkFMKFBDSV9WRU5ET1JfSURfR0xJLCAweDk3NTAsIHBjaV9tYXNrX3JlcGxheV90
-aW1lcl90aW1lb3V0KTsKIERFQ0xBUkVfUENJX0ZJWFVQX0ZJTkFMKFBDSV9WRU5ET1JfSURfR0xJ
-LCAweDk3NTUsIHBjaV9tYXNrX3JlcGxheV90aW1lcl90aW1lb3V0KTsKICNlbmRpZgorCisvKgor
-ICogQU1DIGNhcmRzIGJlaGluZCBQTFggUEVYODc0OCBoYXZlIDE2IE1CIG5vbi1wcmVmZXRjaGFi
-bGUgQkFSLgorICogU2l6ZSB0aGUgbWVtb3J5IHdpbmRvdyBvbiBQRVg4NzQ4IGRvd25zdHJlYW0g
-cG9ydHMgZm9yIHByb3BlciBvcGVyYXRpb24uCisgKi8KKyNkZWZpbmUgUExYX1BFWDg3NDggICAg
-ICAgIDB4ODc0OAorI2RlZmluZSBQTFhfQU1DX01JTl9NTUlPICAgKDMyVUwgKiAxMDI0ICogMTAy
-NCkgLyogMzIgTWlCIG5vbi1wcmVmICovCisKK3N0YXRpYyB2b2lkIHF1aXJrX3BseF9hbWNfcHJl
-Zl8zMm0oc3RydWN0IHBjaV9kZXYgKmRldikKK3sKKwlzdHJ1Y3QgcmVzb3VyY2UgKm1taW87CisJ
-cmVzb3VyY2Vfc2l6ZV90IG1taW9faGF2ZSwgbW1pb193YW50ID0gUExYX0FNQ19NSU5fTU1JTzsK
-KworCS8qIE9ubHkgYnJpZGdlcywgYW5kIG9ubHkgUEVYODc0OCBkb3duc3RyZWFtIHBvcnRzIG9u
-IGJ1cyAwNDp4eC4gKi8KKwlpZiAoKGRldi0+Y2xhc3MgPj4gMTYpICE9IFBDSV9CQVNFX0NMQVNT
-X0JSSURHRSB8fAorCSAgICBkZXYtPmRldmljZSAhPSBQTFhfUEVYODc0OCB8fCBkZXYtPmJ1cy0+
-bnVtYmVyICE9IDQpCisJCXJldHVybjsKKworCS8qIFRyZWF0IHRoZXNlIGFzIGhvdHBsdWcgYnJp
-ZGdlcyBzbyBzaXppbmcgY29kZSBrZWVwcyB0aGVtIGxhcmdlLiAqLworCWRldi0+aXNfaG90cGx1
-Z19icmlkZ2UgPSAxOworCisJLyogV2Ugb25seSB3YW50IG5vbi1wcmVmIHNpemluZzsgZHJvcCBh
-bnkgcHJlZiBob3RwbHVnIGFzay4gKi8KKwlwY2lfaG90cGx1Z19tbWlvX3ByZWZfc2l6ZSA9IDA7
-CisKKwkvKiBFbnN1cmUgdGhlIGhvdHBsdWcgbm9uLXByZWYgYnVkZ2V0IGlzIGF0IGxlYXN0IG91
-ciAzMiBNaUIgd2luZG93LiAqLworCWlmIChwY2lfaG90cGx1Z19tbWlvX3NpemUgPCBtbWlvX3dh
-bnQpCisJCXBjaV9ob3RwbHVnX21taW9fc2l6ZSA9IG1taW9fd2FudDsKKworCS8qIE5vbi1wcmVm
-ZXRjaGFibGUgYnJpZGdlIHdpbmRvdyBmb3IgMzItYml0IEJBUnMuICovCisJbW1pbyA9ICZkZXYt
-PnJlc291cmNlW1BDSV9CUklER0VfUkVTT1VSQ0VTXTsKKworCWlmICghKG1taW8tPmZsYWdzICYg
-SU9SRVNPVVJDRV9NRU0pKSB7CisJCW1taW8tPnN0YXJ0ID0gMDsKKwkJbW1pby0+ZW5kICAgPSBt
-bWlvX3dhbnQgLSAxOworCQltbWlvLT5mbGFncyA9IElPUkVTT1VSQ0VfTUVNIHwgSU9SRVNPVVJD
-RV9XSU5ET1cgfCBJT1JFU09VUkNFX01FTV82NDsKKworCQlkZXZfaW5mbygmZGV2LT5kZXYsCisJ
-CQkgIlBMWCBBTUMgcXVpcms6IGNyZWF0aW5nICVsbHUgTWlCIG5vbi1wcmVmIHdpbmRvdyB0ZW1w
-bGF0ZVxuIiwKKwkJCSAodW5zaWduZWQgbG9uZyBsb25nKShtbWlvX3dhbnQgPj4gMjApKTsKKwl9
-IGVsc2UgeworCQltbWlvX2hhdmUgPSByZXNvdXJjZV9zaXplKG1taW8pOworCQlpZiAobW1pb19o
-YXZlIDwgbW1pb193YW50KSB7CisJCQltbWlvLT5lbmQgPSBtbWlvLT5zdGFydCArIG1taW9fd2Fu
-dCAtIDE7CisJCQlkZXZfaW5mbygmZGV2LT5kZXYsCisJCQkJICJQTFggQU1DIHF1aXJrOiBlbmxh
-cmdpbmcgbm9uLXByZWYgd2luZG93IGZyb20gJWxsdSB0byAlbGx1IE1pQlxuIiwKKwkJCQkgKHVu
-c2lnbmVkIGxvbmcgbG9uZykobW1pb19oYXZlID4+IDIwKSwKKwkJCQkgKHVuc2lnbmVkIGxvbmcg
-bG9uZykobW1pb193YW50ID4+IDIwKSk7CisJCX0KKwl9Cit9CisKKy8qIFJ1biBlYXJseSBlbm91
-Z2ggdGhhdCBicmlkZ2Ugc2l6aW5nIHNlZXMgdGhlIDMyIE1pQiB3aW5kb3dzLiAqLworREVDTEFS
-RV9QQ0lfRklYVVBfSEVBREVSKAorCVBDSV9WRU5ET1JfSURfUExYLAkvKiAweDEwYjUgKi8KKwlQ
-TFhfUEVYODc0OCwJCS8qIDB4ODc0OCAqLworCXF1aXJrX3BseF9hbWNfcHJlZl8zMm0pOwoKCj4g
-KiBUaGUgc3dpdGNoIGhpZXJhcmNoeSBpcyBjb21wbGV4IGJ1dCBzdGF0aWMgYW5kIHN0YWJsZTsg
-b25seSB0aGUgZW5kcG9pbnQgbW92ZXMuCj4KPiBHaXZlbiB0aGlzIHBhdHRlcm4sIGl0IGFwcGVh
-cnMgdGhhdCB0aGUgYnJpZGdlLXdpbmRvdyBzaXppbmcgcG9saWN5Cj4gZHVyaW5nIGhvdHBsdWcg
-aXMgdG9vIGNvbnNlcnZhdGl2ZSBmb3Igc3dpdGNoLWRlbnNlIHRvcG9sb2dpZXMgbGlrZQo+IFBF
-WDg3NDgsIGFuZCB0aGUgcmVzdWx0IGlzIGFuIGluYWJpbGl0eSB0byBhbGxvY2F0ZSByZXNvdXJj
-ZXMgZm9yCj4gcGVyZmVjdGx5IG5vcm1hbCBkZXZpY2VzLgo+Cj4gSSBhbSBoYXBweSB0byBydW4g
-ZnVydGhlciB0ZXN0cywgZW5hYmxlIGtlcm5lbCBkZWJ1ZyBvcHRpb25zLCBvciB0cnkgcGF0Y2hl
-cy4KPgo+IEknbSBhbHNvIGF0dGFjaGluZyB0aGUgZnVsbCBkbWVzZyBhbmQgbHNwY2kgb3V0cHV0
-Lgo+Cj4gVGhhbmtzIGZvciBhbnkgZ3VpZGFuY2Ugb3Igc3VnZ2VzdGlvbnMuCgoKLS0KIGkuCg==
+On Fri, Nov 28, 2025 at 04:26:14PM +0800, zhangsenchuan wrote:
+> 
+> 
+> 
+> > -----Original Messages-----
+> > From: "Manivannan Sadhasivam" <mani@kernel.org>
+> > Send time:Wednesday, 26/11/2025 21:14:54
+> > To: zhangsenchuan <zhangsenchuan@eswincomputing.com>
+> > Cc: bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, p.zabel@pengutronix.de, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com, shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com, thippeswamy.havalige@amd.com, inochiama@gmail.com, ningyu@eswincomputing.com, linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com, Frank.li@nxp.com
+> > Subject: Re: [PATCH v6 2/3] PCI: eic7700: Add Eswin PCIe host controller driver
+> > 
+> > On Wed, Nov 26, 2025 at 08:15:11PM +0800, zhangsenchuan wrote:
+> > > 
+> > > 
+> > > 
+> > > > -----Original Messages-----
+> > > > From: "Manivannan Sadhasivam" <mani@kernel.org>
+> > > > Send time:Thursday, 20/11/2025 20:43:47
+> > > > To: zhangsenchuan@eswincomputing.com
+> > > > Cc: bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, p.zabel@pengutronix.de, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com, shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com, thippeswamy.havalige@amd.com, inochiama@gmail.com, ningyu@eswincomputing.com, linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com, Frank.li@nxp.com
+> > > > Subject: Re: [PATCH v6 2/3] PCI: eic7700: Add Eswin PCIe host controller driver
+> > > > 
+> > > > On Thu, Nov 20, 2025 at 06:12:06PM +0800, zhangsenchuan@eswincomputing.com wrote:
+> > > > > From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+> > > > > 
+> > > > > Add driver for the Eswin EIC7700 PCIe host controller, which is based on
+> > > > > the DesignWare PCIe core, IP revision 6.00a. The PCIe Gen.3 controller
+> > > > > supports a data rate of 8 GT/s and 4 channels, support INTx and MSI
+> > > > > interrupts.
+> > > > > 
+> > > > > Signed-off-by: Yu Ning <ningyu@eswincomputing.com>
+> > > > > Signed-off-by: Yanghui Ou <ouyanghui@eswincomputing.com>
+> > > > > Signed-off-by: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+> > > > > ---
+> > > > >  drivers/pci/controller/dwc/Kconfig        |  11 +
+> > > > >  drivers/pci/controller/dwc/Makefile       |   1 +
+> > > > >  drivers/pci/controller/dwc/pcie-eic7700.c | 387 ++++++++++++++++++++++
+> > > > >  3 files changed, 399 insertions(+)
+> > > > >  create mode 100644 drivers/pci/controller/dwc/pcie-eic7700.c
+> > > > > 
+> > > > > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > > > > index 349d4657393c..66568efb324f 100644
+> > > > > --- a/drivers/pci/controller/dwc/Kconfig
+> > > > > +++ b/drivers/pci/controller/dwc/Kconfig
+> > > > > @@ -93,6 +93,17 @@ config PCIE_BT1
+> > > > >  	  Enables support for the PCIe controller in the Baikal-T1 SoC to work
+> > > > >  	  in host mode. It's based on the Synopsys DWC PCIe v4.60a IP-core.
+> > > > >  
+> > > > > +config PCIE_EIC7700
+> > > > > +	bool "Eswin EIC7700 PCIe controller"
+> > > > 
+> > > > You can make it tristate as you've used builtin_platform_driver() which
+> > > > guarantees that this driver won't be removed once loaded.
+> > > 
+> > > Okey, thanks
+> > > 
+> > > > 
+> > > > > +	depends on ARCH_ESWIN || COMPILE_TEST
+> > > > > +	depends on PCI_MSI
+> > > > > +	select PCIE_DW_HOST
+> > > > > +	help
+> > > > > +	  Say Y here if you want PCIe controller support for the Eswin EIC7700.
+> > > > > +	  The PCIe controller on EIC7700 is based on DesignWare hardware,
+> > > > > +	  enables support for the PCIe controller in the EIC7700 SoC to work in
+> > > > > +	  host mode.
+> > > > > +
+> > > > >  config PCI_IMX6
+> > > > >  	bool
+> > > > >  
+> > > > > diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> > > > > index 7ae28f3b0fb3..04f751c49eba 100644
+> > > > > --- a/drivers/pci/controller/dwc/Makefile
+> > > > > +++ b/drivers/pci/controller/dwc/Makefile
+> > > > > @@ -6,6 +6,7 @@ obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
+> > > > >  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+> > > > >  obj-$(CONFIG_PCIE_AMD_MDB) += pcie-amd-mdb.o
+> > > > >  obj-$(CONFIG_PCIE_BT1) += pcie-bt1.o
+> > > > > +obj-$(CONFIG_PCIE_EIC7700) += pcie-eic7700.o
+> > > > >  obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+> > > > >  obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+> > > > >  obj-$(CONFIG_PCIE_FU740) += pcie-fu740.o
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-eic7700.c b/drivers/pci/controller/dwc/pcie-eic7700.c
+> > > > > new file mode 100644
+> > > > > index 000000000000..239fdbc501fe
+> > > > > --- /dev/null
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-eic7700.c
+> > > > > @@ -0,0 +1,387 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > +/*
+> > > > > + * ESWIN EIC7700 PCIe root complex driver
+> > > > > + *
+> > > > > + * Copyright 2025, Beijing ESWIN Computing Technology Co., Ltd.
+> > > > > + *
+> > > > > + * Authors: Yu Ning <ningyu@eswincomputing.com>
+> > > > > + *          Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+> > > > > + *          Yanghui Ou <ouyanghui@eswincomputing.com>
+> > > > > + */
+> > > > > +
+> > > > > +#include <linux/interrupt.h>
+> > > > > +#include <linux/iopoll.h>
+> > > > > +#include <linux/module.h>
+> > > > > +#include <linux/of.h>
+> > > > > +#include <linux/pci.h>
+> > > > > +#include <linux/platform_device.h>
+> > > > > +#include <linux/resource.h>
+> > > > > +#include <linux/reset.h>
+> > > > > +#include <linux/types.h>
+> > > > > +
+> > > > > +#include "pcie-designware.h"
+> > > > > +
+> > > > > +/* ELBI registers */
+> > > > > +#define PCIEELBI_CTRL0_OFFSET		0x0
+> > > > > +#define PCIEELBI_STATUS0_OFFSET		0x100
+> > > > > +
+> > > > > +/* LTSSM register fields */
+> > > > > +#define PCIEELBI_APP_LTSSM_ENABLE	BIT(5)
+> > > > > +
+> > > > > +/* APP_HOLD_PHY_RST register fields */
+> > > > > +#define PCIEELBI_APP_HOLD_PHY_RST	BIT(6)
+> > > > > +
+> > > > > +/* PM_SEL_AUX_CLK register fields */
+> > > > > +#define PCIEELBI_PM_SEL_AUX_CLK		BIT(16)
+> > > > > +
+> > > > > +/* DEV_TYPE register fields */
+> > > > > +#define PCIEELBI_CTRL0_DEV_TYPE		GENMASK(3, 0)
+> > > > > +
+> > > > > +/* Vendor and device ID value */
+> > > > > +#define PCI_VENDOR_ID_ESWIN		0x1fe1
+> > > > > +#define PCI_DEVICE_ID_ESWIN		0x2030
+> > > > > +
+> > > > > +#define EIC7700_NUM_RSTS		ARRAY_SIZE(eic7700_pcie_rsts)
+> > > > > +
+> > > > > +static const char * const eic7700_pcie_rsts[] = {
+> > > > > +	"pwr",
+> > > > > +	"dbi",
+> > > > > +};
+> > > > > +
+> > > > > +struct eic7700_pcie_data {
+> > > > > +	bool msix_cap;
+> > > > > +	bool no_suspport_L2;
+> > > > 
+> > > > support?
+> > > 
+> > > Okey, spelling mistake:)
+> > > 
+> > > mani, by the way, our controller cannot broadcast PME_Turn_Off. Previously,
+> > > i skip broadcast PME_Turn_Off in our controller code. Frank suggested that 
+> > > set the flag bit to skip in the public code. At present, do you think it's 
+> > > okay for me to add no_support_L2?
+> > > 
+> > 
+> > This sounds weird. As per the spec r6.0, sec 5.2, "L2/L3 Ready transition
+> > protocol support is required." So this means the controller has to support
+> > PME_Turn_Off broadcast. Are you saying that your controller is not spec
+> > compliant? and the link can only enter L3 (power off) abruptly?
+> 
+> Hi, Mani
+> 
+> Clarification
+> After confirmation with the hardware team, L2/L3 low-power link state is not 
+> supported, and cannot be controlled to enter L2/L3 through trigger 
+> PME_turn_off/PME_To-Ack handshake, because this function is not implemented in 
+> hardware, nor is the Vmain/Vaux power domain implemented to implement L2/L3 
+> low-power wake-up mechanism.
+> 
+
+Ok, thanks for checking.
+
+> Our PCIe only implements L0s/L1/L1.1 low-power mode. if want to put PCIe into 
+> a more energy-efficient state, only power down PCIe. Although the PCIe Spec 
+> requires the implementation of L2/L3 ready state, it is regrettable that we
+> have not been able to match the protocol requirements at this point. We will
+> gradually improve more features required by the Spec in future products.
+> 
+> Regarding the handling of skipping PME_Turn_Off broadcast, should I add a 
+> flag bit to skip it in Synopsys public code or register a callback function 
+> to skip it in our platform driver? Which approach is better? I'd like to hear
+> your suggestions. Thanks!
+> 
+
+I'd prefer a flag, like, 'struct dw_pcie::no_pme_handshake'.
+
+> Kind regards,
+> Senchuan Zhang
+> 
+> > 
+> > > > > +static void eic7700_pcie_hide_broken_msix_cap(struct dw_pcie *pci)
+> > > > > +{
+> > > > > +	u16 offset, val;
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * Hardware doesn't support MSI-X but it advertises MSI-X capability,
+> > > > > +	 * to avoid this problem, the MSI-X capability in the PCIe capabilities
+> > > > > +	 * linked-list needs to be disabled. Since the PCI Express capability
+> > > > > +	 * structure's next pointer points to the MSI-X capability, and the
+> > > > > +	 * MSI-X capability's next pointer is null (00H), so only the PCI
+> > > > > +	 * Express capability structure's next pointer needs to be set 00H.
+> > > > > +	 */
+> > > > > +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> > > > > +	val = dw_pcie_readl_dbi(pci, offset);
+> > > > > +	val &= ~PCI_CAP_LIST_NEXT_MASK;
+> > > > > +	dw_pcie_writel_dbi(pci, offset, val);
+> > > > 
+> > > > I hate to enforce dependency for your series, but this is properly handled here:
+> > > > https://lore.kernel.org/linux-pci/20251109-remove_cap-v1-2-2208f46f4dc2@oss.qualcomm.com
+> > > 
+> > > Okey, then I can rely on this patch to solve the problem of the missing MSI-X. 
+> > > Thank you for the reminder.
+> > > 
+> > > > 
+> > > > > +}
+> > > > > +
+> > > > > +static int eic7700_pcie_host_init(struct dw_pcie_rp *pp)
+> > > > > +{
+> > > > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > > > +	struct eic7700_pcie *pcie = to_eic7700_pcie(pci);
+> > > > > +	struct eic7700_pcie_port *port;
+> > > > > +	u8 msi_cap;
+> > > > > +	u32 val;
+> > > > > +	int ret;
+> > > > > +
+> > > > > +	pcie->num_clks = devm_clk_bulk_get_all_enabled(pci->dev, &pcie->clks);
+> > > > > +	if (pcie->num_clks < 0)
+> > > > > +		return dev_err_probe(pci->dev, pcie->num_clks,
+> > > > > +				     "Failed to get pcie clocks\n");
+> > > > > +
+> > > > > +	ret = reset_control_bulk_deassert(EIC7700_NUM_RSTS, pcie->resets);
+> > > > 
+> > > > I think this is being called too early.
+> > > 
+> > > Before accessing the register. I need to deassert, otherwise, there will
+> > > be problems with register access.
+> > > 
+> > > > 
+> > > > > +	if (ret) {
+> > > > > +		dev_err(pcie->pci.dev, "Failed to deassert resets\n");
+> > > > > +		return ret;
+> > > > > +	}
+> > > > > +
+> > > > > +	/* Configure Root Port type */
+> > > > > +	val = readl_relaxed(pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
+> > > > > +	val &= ~PCIEELBI_CTRL0_DEV_TYPE;
+> > > > > +	val |= FIELD_PREP(PCIEELBI_CTRL0_DEV_TYPE, PCI_EXP_TYPE_ROOT_PORT);
+> > > > > +	writel_relaxed(val, pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
+> > > > > +
+> > > > > +	list_for_each_entry(port, &pcie->ports, list) {
+> > > > > +		ret = eic7700_pcie_perst_deassert(port, pcie);
+> > > > > +		if (ret)
+> > > > > +			goto err_perst;
+> > > > > +	}
+> > > > > +
+> > > > > +	/* Configure app_hold_phy_rst */
+> > > > > +	val = readl_relaxed(pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
+> > > > > +	val &= ~PCIEELBI_APP_HOLD_PHY_RST;
+> > > > > +	writel_relaxed(val, pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
+> > > > > +
+> > > > > +	/* The maximum waiting time for the clock switch lock is 20ms */
+> > > > > +	ret = readl_poll_timeout(pci->elbi_base + PCIEELBI_STATUS0_OFFSET,
+> > > > > +				 val, !(val & PCIEELBI_PM_SEL_AUX_CLK), 1000,
+> > > > > +				 20000);
+> > > > > +	if (ret) {
+> > > > > +		dev_err(pci->dev, "Timeout waiting for PM_SEL_AUX_CLK ready\n");
+> > > > > +		goto err_phy_init;
+> > > > > +	}
+> > > > 
+> > > > You seem to be configuring the PHY reset and Aux clock, which should come before
+> > > > deasserting PERST# IMO. PERST# deassertion indicates that the power and clock
+> > > > are stable and the endpoint can start its operation. I don't know the impact of
+> > > > these configurations, but it is safe to do them earlier.
+> > > 
+> > > I think your understanding is correct. Unfortunately, in our hardware design, we 
+> > > need to deassert perst first before we can operate the configuration of the phy.
+> > > 
+> > 
+> > Sorry, I don't understand how it is possible, unless this reset is not PERST#.
+> > PERST# is just an indication to the component and has no relation with the
+> > controller.
+> 
+> After confirmation with the hardware team, Clarification as follows:
+> 
+> The power and reference clk of phy for our product PCIe are provided by the power
+> module and reference clock crystal oscillator on the board, and the power and 
+> reference clk of phy for the remote EP are also provided by the power and reference
+> clock crystal oscillator on the board through slots, using PCIe common reference 
+> clock mode. 
+>    
+> PERST# is sent to the local PCIe through the configuration register inside our 
+> chip, and this PERST# is also sent to the remote EP through the slot. Therefore,
+> in order to deassert PERST#, we first need our system to boot and configure it
+> through software, hen app_hold_phy_rst can be configured through software, the 
+> entire chip is already in a stable state, including the stability of power and 
+> reference clock.
+> 
+> Both our PCIe controller and phy require PERST# as the primary reset source, 
+> the configuration of app_hold_phy_rst is controlled by the controller to control
+> the state of phy through the pipe_raneX_powerdown signal in the pipe interface. 
+> Therefore, it is necessary to first deassert PERST# release controller and phy's 
+> Perst_n before configuring app_hold_phy_rst to allow the controller to control 
+> the pipe_raneX_powerdown signal.
+> 
+
+It looks crazy (using PERST# for both controller and the endpoint). Anyway, you
+should include this information in the comment above
+reset_control_bulk_deassert().
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
