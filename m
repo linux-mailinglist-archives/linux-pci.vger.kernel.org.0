@@ -1,56 +1,56 @@
-Return-Path: <linux-pci+bounces-42272-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42273-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id E64FEC92D7E
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 18:51:29 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AB22C92E14
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 19:08:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D8D364E59BC
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 17:51:22 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5C2584E2271
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Nov 2025 18:08:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B722C32ED3D;
-	Fri, 28 Nov 2025 17:51:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4BAC2D781E;
+	Fri, 28 Nov 2025 18:08:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="JLkiHJgR"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="cQMWT3gX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972652C030E;
-	Fri, 28 Nov 2025 17:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECC525487C;
+	Fri, 28 Nov 2025 18:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764352280; cv=pass; b=dDzVjdwowFJG5W3rI9d0LZC/GnOVY7YfSOCfNUYG3Pj7zypfUf3JlA9VpOtTLPiruyXLabs12LKmMpEEvIwgd/N0BHtN52ahTOb1HyJuW4Pz6otFVu4qcEkJbbqM+d2eR/2z+AJeLJGDbYNDB0CchKe+fgK0Cvyn1+/tm8wxx9U=
+	t=1764353290; cv=pass; b=ngelhNR13B89nik0NWSzZiVeIPJ56+7kODg/TU5l8yw7T6qgw/7abTY0XXIEjjieEhKEqEWssPDBVPV60MYkoKN/EmEOw6Lu+YHJHd/xtQYk8I0GTcEMjuJHZBUSgPrTnfGXSEIbDbpVo/u1Hsygw5P85TjfpqRuVKKNogJntxE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764352280; c=relaxed/simple;
-	bh=G9TaF18+b9gVs6g2UJus3J79mfgPZhN/PNb4rQNmNVQ=;
+	s=arc-20240116; t=1764353290; c=relaxed/simple;
+	bh=1IOmn5zMIOoJIKH2+9kJqRMZHEuUrVDmT9SeQuZ9Qho=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=hFiAZs5LAOaoeuOhHY20hi1hbofDxZnNX3xln0Sf73Of1QcrY0tojQ5VWHsF+v+eaiyEyraqbozGKnwn/Mtv9Xd7FSC1WJqA2+l1HMXY1a844UOptGJfd1G9Hm4f7oeBWCcRDiQCmlKWJM9y7jcH0hcK9gZ4FL0/umXxAuSzGg8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=JLkiHJgR; arc=pass smtp.client-ip=136.143.184.112
+	 Message-Id:References:To; b=Te8C9L/pGwJ+pLcNXM2bPElfV67YOBTOu1bF8w5hEvrj3fPwuiINGwIvWJIE7XumHAHLSeQMlz/k6YqbybiGvGkq3aFq7RaV2zXWMbYk3PE6cBP0Whv+yD82CZghPm/mO1ZRxsSzCbjumpUTprlxNyACJY3TU0c+RtPC0FmLNZs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=cQMWT3gX; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1764352242; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1764353224; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=jD1ZKYLI2d1J3n7Nn8PEelO5qXEL36eak47f/IL7PSnywyFON56Cz6XgCW6BAIRpNIh7z8XrJq41OJJmJMPAuyS7xa4B/oc8hxL4cIZy57+klHWD4IyeeRtIHckf1Eizx9HROuF9ooTM0ogOD94O51JZQjj7uM3etGKFsh/RmCU=
+	b=RtG3ndtV6UjdVmNEugxfkY/hNqTZyTalZN9NIiBwE13LjiiQGrfVvqMIlCMsp2cR2P2V3BZjxj7axPKgJYr0fDdbSPxN1GTBWASZjGJdnONZS/yezjkw7I+//rihzgbrikAiSqC0HZUafMyQak5Jd2CE5YoCDUpLUmhT/Bwk/ls=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1764352242; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=CSvU9cF2EFsAjALyezUXtFWtkOVH0bcqxKUZhyUrvCM=; 
-	b=hlWt7Ul8JWfnS5es+gdb3ogNyD1wyqlkaLaWdMm61GW/7kBYctfSbVqSjj9RNklpyw4fYmQA4s6Iv8VAeihZgRkxkO9HkOVZopXkloqHJzRaGg9fN/jroBYneUN8K6/E3/RQVYeEv/UUkp2f5jCJ8LPncQis3ZHBpGQYbcGGvks=
+	t=1764353224; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=7hCtVdIpYmvpIaG2Tepwl9t2OZhg+JztbnabjHdsDXw=; 
+	b=j1uXW3P5csnn5xBO8uGG/CYg16oq3me8gSQnLQlVJw5JE02U+XwW4CcPu0JMcCgNqtIU2mo2h22ckClb0Jn1u9EElgTUDqT6AtpOVux93CVzTAVQxFiCCkw700f5K+85rR3/6OM9haHQvh01rQ+nxQr11SX9m5R4Brfuh/mGa0Q=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
 	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1764352242;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1764353224;
 	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
 	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=CSvU9cF2EFsAjALyezUXtFWtkOVH0bcqxKUZhyUrvCM=;
-	b=JLkiHJgRDZgOdpKVEbGaoTfTGM7cuUbG17mJn/6NMuYT6u06OPec0sZe6nT3/+Fo
-	lhUdjv/UJIHSKjH8Cqh4iCDSYbq56Gg4UDmparCStPUdkcm/T1803IpgjoIH0GBQaSi
-	6b4WuqAHjpec+TxDUK+qmFyq8X158V9inSAayWOk=
-Received: by mx.zohomail.com with SMTPS id 1764352240347383.8438430122677;
-	Fri, 28 Nov 2025 09:50:40 -0800 (PST)
+	bh=7hCtVdIpYmvpIaG2Tepwl9t2OZhg+JztbnabjHdsDXw=;
+	b=cQMWT3gX69SgMPgVmoZ3O2F61xD0U8uLT41OSthjMpSgkT6ymH/aampfZQsduSSJ
+	Mnh+iUhoZu+90ceDRcdZMCKNINIP8yBhJvbThj8X8Y41Uz621+skz9GV68ZLyGGmayr
+	QO5jhfvm8In7Rn6Yhul0L9K3CuiAYR5Tg8wuvLZg=
+Received: by mx.zohomail.com with SMTPS id 1764353222335519.628984308173;
+	Fri, 28 Nov 2025 10:07:02 -0800 (PST)
 Content-Type: text/plain;
 	charset=utf-8
 Precedence: bulk
@@ -59,11 +59,10 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
-Subject: Re: [PATCH v13 3/4] rust: Add missing SAFETY documentation for `ARef`
- example
+Subject: Re: [PATCH v13 4/4] rust: Add `OwnableRefCounted`
 From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20251117-unique-ref-v13-3-b5b243df1250@pm.me>
-Date: Fri, 28 Nov 2025 14:50:21 -0300
+In-Reply-To: <20251117-unique-ref-v13-4-b5b243df1250@pm.me>
+Date: Fri, 28 Nov 2025 15:06:42 -0300
 Cc: Miguel Ojeda <ojeda@kernel.org>,
  Alex Gaynor <alex.gaynor@gmail.com>,
  Boqun Feng <boqun.feng@gmail.com>,
@@ -107,64 +106,318 @@ Cc: Miguel Ojeda <ojeda@kernel.org>,
  linux-pci@vger.kernel.org,
  linux-security-module@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <06C410F4-8534-43B4-8DE1-039F70B26E5A@collabora.com>
+Message-Id: <A5A7C4C9-1504-439C-B4FF-C28482AF7444@collabora.com>
 References: <20251117-unique-ref-v13-0-b5b243df1250@pm.me>
- <20251117-unique-ref-v13-3-b5b243df1250@pm.me>
+ <20251117-unique-ref-v13-4-b5b243df1250@pm.me>
 To: Oliver Mangold <oliver.mangold@pm.me>
 X-Mailer: Apple Mail (2.3826.700.81)
 X-ZohoMailClient: External
 
-
+Hi Oliver,
 
 > On 17 Nov 2025, at 07:08, Oliver Mangold <oliver.mangold@pm.me> wrote:
 >=20
-> SAFETY comment in rustdoc example was just 'TODO'. Fixed.
+> Types implementing one of these traits can safely convert between an
+> `ARef<T>` and an `Owned<T>`.
+>=20
+> This is useful for types which generally are accessed through an =
+`ARef`
+> but have methods which can only safely be called when the reference is
+> unique, like e.g. `block::mq::Request::end_ok()`.
 >=20
 > Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
 > Co-developed-by: Andreas Hindborg <a.hindborg@kernel.org>
 > Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
 > ---
-> rust/kernel/sync/aref.rs | 10 ++++++----
-> 1 file changed, 6 insertions(+), 4 deletions(-)
+> rust/kernel/owned.rs     | 138 =
+++++++++++++++++++++++++++++++++++++++++++++---
+> rust/kernel/sync/aref.rs |  11 +++-
+> rust/kernel/types.rs     |   2 +-
+> 3 files changed, 141 insertions(+), 10 deletions(-)
 >=20
+> diff --git a/rust/kernel/owned.rs b/rust/kernel/owned.rs
+> index a26747cbc13b..26ab2b00ada0 100644
+> --- a/rust/kernel/owned.rs
+> +++ b/rust/kernel/owned.rs
+> @@ -5,6 +5,7 @@
+> //! These pointer types are useful for C-allocated objects which by =
+API-contract
+> //! are owned by Rust, but need to be freed through the C API.
+>=20
+> +use crate::sync::aref::{ARef, RefCounted};
+> use core::{
+>     mem::ManuallyDrop,
+>     ops::{Deref, DerefMut},
+> @@ -14,14 +15,16 @@
+>=20
+> /// Type allocated and destroyed on the C side, but owned by Rust.
+> ///
+> -/// Implementing this trait allows types to be referenced via the =
+[`Owned<Self>`] pointer type. This
+> -/// is useful when it is desirable to tie the lifetime of the =
+reference to an owned object, rather
+> -/// than pass around a bare reference. [`Ownable`] types can define =
+custom drop logic that is
+> -/// executed when the owned reference [`Owned<Self>`] pointing to the =
+object is dropped.
+> +/// Implementing this trait allows types to be referenced via the =
+[`Owned<Self>`] pointer type.
+> +///  - This is useful when it is desirable to tie the lifetime of an =
+object reference to an owned
+> +///    object, rather than pass around a bare reference.
+> +///  - [`Ownable`] types can define custom drop logic that is =
+executed when the owned reference
+> +///    of type [`Owned<_>`] pointing to the object is dropped.
+> ///
+> /// Note: The underlying object is not required to provide internal =
+reference counting, because it
+> /// represents a unique, owned reference. If reference counting (on =
+the Rust side) is required,
+> -/// [`RefCounted`](crate::types::RefCounted) should be implemented.
+> +/// [`RefCounted`] should be implemented. [`OwnableRefCounted`] =
+should be implemented if conversion
+> +/// between unique and shared (reference counted) ownership is =
+needed.
+> ///
+> /// # Safety
+> ///
+> @@ -143,9 +146,7 @@ impl<T: Ownable> Owned<T> {
+>     ///   mutable reference requirements. That is, the kernel will not =
+mutate or free the underlying
+>     ///   object and is okay with it being modified by Rust code.
+>     pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
+> -        Self {
+> -            ptr,
+> -        }
+> +        Self { ptr }
+>     }
+
+Unrelated change?
+
+>=20
+>     /// Consumes the [`Owned`], returning a raw pointer.
+> @@ -193,3 +194,124 @@ fn drop(&mut self) {
+>         unsafe { T::release(self.ptr) };
+>     }
+> }
+> +
+> +/// A trait for objects that can be wrapped in either one of the =
+reference types [`Owned`] and
+> +/// [`ARef`].
+> +///
+> +/// # Examples
+> +///
+> +/// A minimal example implementation of [`OwnableRefCounted`], =
+[`Ownable`] and its usage with
+> +/// [`ARef`] and [`Owned`] looks like this:
+> +///
+> +/// ```
+> +/// # #![expect(clippy::disallowed_names)]
+> +/// # use core::cell::Cell;
+> +/// # use core::ptr::NonNull;
+> +/// # use kernel::alloc::{flags, kbox::KBox, AllocError};
+> +/// # use kernel::sync::aref::{ARef, RefCounted};
+> +/// # use kernel::types::{Owned, Ownable, OwnableRefCounted};
+> +///
+> +/// // Example internally refcounted struct.
+
+nit: IMHO the wording could improve ^
+
+> +/// //
+> +/// // # Invariants
+> +/// //
+> +/// // - `refcount` is always non-zero for a valid object.
+> +/// // - `refcount` is >1 if there are more than 1 Rust reference to =
+it.
+> +/// //
+> +/// struct Foo {
+> +///     refcount: Cell<usize>,
+> +/// }
+> +///
+> +/// impl Foo {
+> +///     fn new() -> Result<Owned<Self>, AllocError> {
+> +///         // We are just using a `KBox` here to handle the actual =
+allocation, as our `Foo` is
+> +///         // not actually a C-allocated object.
+> +///         let result =3D KBox::new(
+> +///             Foo {
+> +///                 refcount: Cell::new(1),
+> +///             },
+> +///             flags::GFP_KERNEL,
+> +///         )?;
+> +///         let result =3D NonNull::new(KBox::into_raw(result))
+> +///             .expect("Raw pointer to newly allocation KBox is =
+null, this should never happen.");
+> +///         // SAFETY: We just allocated the `Self`, thus it is valid =
+and there cannot be any other
+> +///         // Rust references. Calling `into_raw()` makes us =
+responsible for ownership and
+> +///         // we won't use the raw pointer anymore, thus we can =
+transfer ownership to the `Owned`.
+> +///         Ok(unsafe { Owned::from_raw(result) })
+> +///     }
+> +/// }
+> +///
+> +/// // SAFETY: We increment and decrement each time the respective =
+function is called and only free
+> +/// // the `Foo` when the refcount reaches zero.
+> +/// unsafe impl RefCounted for Foo {
+> +///     fn inc_ref(&self) {
+> +///         self.refcount.replace(self.refcount.get() + 1);
+> +///     }
+> +///
+> +///     unsafe fn dec_ref(this: NonNull<Self>) {
+> +///         // SAFETY: By requirement on calling this function, the =
+refcount is non-zero,
+> +///         // implying the underlying object is valid.
+> +///         let refcount =3D unsafe { &this.as_ref().refcount };
+> +///         let new_refcount =3D refcount.get() - 1;
+> +///         if new_refcount =3D=3D 0 {
+> +///             // The `Foo` will be dropped when `KBox` goes out of =
+scope.
+> +///             // SAFETY: The [`KBox<Foo>`] is still alive as the =
+old refcount is 1. We can pass
+> +///             // ownership to the [`KBox`] as by requirement on =
+calling this function,
+> +///             // the `Self` will no longer be used by the caller.
+> +///             unsafe { KBox::from_raw(this.as_ptr()) };
+> +///         } else {
+> +///             refcount.replace(new_refcount);
+> +///         }
+> +///     }
+> +/// }
+> +///
+> +/// impl OwnableRefCounted for Foo {
+> +///     fn try_from_shared(this: ARef<Self>) -> Result<Owned<Self>, =
+ARef<Self>> {
+> +///         if this.refcount.get() =3D=3D 1 {
+> +///             // SAFETY: The `Foo` is still alive and has no other =
+Rust references as the refcount
+> +///             // is 1.
+> +///             Ok(unsafe { Owned::from_raw(ARef::into_raw(this)) })
+> +///         } else {
+> +///             Err(this)
+> +///         }
+> +///     }
+> +/// }
+> +///
+
+We wouldn=E2=80=99t need this implementation if we added a =
+=E2=80=9Crefcount()=E2=80=9D
+member to this trait. This lets you abstract away this logic for all
+implementors, which has the massive upside of making sure we hardcode =
+(and thus
+enforce) the refcount =3D=3D 1 check.
+
+
+> +/// // SAFETY: This implementation of `release()` is safe for any =
+valid `Self`.
+> +/// unsafe impl Ownable for Foo {
+> +///     unsafe fn release(this: NonNull<Self>) {
+> +///         // SAFETY: Using `dec_ref()` from [`RefCounted`] to =
+release is okay, as the refcount is
+> +///         // always 1 for an [`Owned<Foo>`].
+> +///         unsafe{ Foo::dec_ref(this) };
+> +///     }
+> +/// }
+> +///
+> +/// let foo =3D Foo::new().expect("Failed to allocate a Foo. This =
+shouldn't happen");
+
+All these =E2=80=9Cexpects()=E2=80=9D and custom error strings would go =
+away if you
+place this behind a fictional function that returns Result.
+
+> +/// let mut foo =3D ARef::from(foo);
+> +/// {
+> +///     let bar =3D foo.clone();
+> +///     assert!(Owned::try_from(bar).is_err());
+> +/// }
+> +/// assert!(Owned::try_from(foo).is_ok());
+> +/// ```
+> +pub trait OwnableRefCounted: RefCounted + Ownable + Sized {
+> +    /// Checks if the [`ARef`] is unique and convert it to an =
+[`Owned`] it that is that case.
+> +    /// Otherwise it returns again an [`ARef`] to the same underlying =
+object.
+> +    fn try_from_shared(this: ARef<Self>) -> Result<Owned<Self>, =
+ARef<Self>>;
+
+Again, this method can go way if we add a method to expose the refcount.
+
+> +
+> +    /// Converts the [`Owned`] into an [`ARef`].
+> +    fn into_shared(this: Owned<Self>) -> ARef<Self> {
+> +        // SAFETY: Safe by the requirements on implementing the =
+trait.
+> +        unsafe { ARef::from_raw(Owned::into_raw(this)) }
+> +    }
+> +}
+> +
+> +impl<T: OwnableRefCounted> TryFrom<ARef<T>> for Owned<T> {
+> +    type Error =3D ARef<T>;
+> +    /// Tries to convert the [`ARef`] to an [`Owned`] by calling
+> +    /// [`try_from_shared()`](OwnableRefCounted::try_from_shared). In =
+case the [`ARef`] is not
+> +    /// unique, it returns again an [`ARef`] to the same underlying =
+object.
+> +    fn try_from(b: ARef<T>) -> Result<Owned<T>, Self::Error> {
+> +        T::try_from_shared(b)
+> +    }
+> +}
 > diff --git a/rust/kernel/sync/aref.rs b/rust/kernel/sync/aref.rs
-> index 4226119d5ac9..937dcf6ed5de 100644
+> index 937dcf6ed5de..2dbffe2ed1b8 100644
 > --- a/rust/kernel/sync/aref.rs
 > +++ b/rust/kernel/sync/aref.rs
-> @@ -129,12 +129,14 @@ pub unsafe fn from_raw(ptr: NonNull<T>) -> Self =
-{
->     /// # Examples
->     ///
->     /// ```
-> -    /// use core::ptr::NonNull;
-> -    /// use kernel::sync::aref::{ARef, RefCounted};
-> +    /// # use core::ptr::NonNull;
-> +    /// # use kernel::sync::aref::{ARef, RefCounted};
->     ///
->     /// struct Empty {}
->     ///
-> -    /// # // SAFETY: TODO.
-> +    /// // SAFETY: The `RefCounted` implementation for `Empty` does =
-not count references and
-> +    /// // never frees the underlying object. Thus we can act as =
-having a refcount on the object
+> @@ -30,7 +30,10 @@
+> /// Note: Implementing this trait allows types to be wrapped in an =
+[`ARef<Self>`]. It requires an
+> /// internal reference count and provides only shared references. If =
+unique references are required
+> /// [`Ownable`](crate::types::Ownable) should be implemented which =
+allows types to be wrapped in an
+> -/// [`Owned<Self>`](crate::types::Owned).
+> +/// [`Owned<Self>`](crate::types::Owned). Implementing the trait
+> +/// [`OwnableRefCounted`](crate::types::OwnableRefCounted) allows to =
+convert between unique and
+> +/// shared references (i.e. [`Owned<Self>`](crate::types::Owned) and
+> +/// [`ARef<Self>`](crate::types::Owned)).
+> ///
+> /// # Safety
+> ///
+> @@ -180,6 +183,12 @@ fn from(b: &T) -> Self {
+>     }
+> }
+>=20
+> +impl<T: crate::types::OwnableRefCounted> From<crate::types::Owned<T>> =
+for ARef<T> {
+> +    fn from(b: crate::types::Owned<T>) -> Self {
+> +        T::into_shared(b)
+> +    }
+> +}
+> +
 
-nit: perhaps saying =E2=80=9Can increment on the refcount=E2=80=9D is =
-clearer?
+Not sure why we=E2=80=99re using fully-qualified names here if we can =
+import them, but your call.
 
-> +    /// // that we pass to the newly created `ARef`.
->     /// unsafe impl RefCounted for Empty {
->     ///     fn inc_ref(&self) {}
->     ///     unsafe fn dec_ref(_obj: NonNull<Self>) {}
-> @@ -142,7 +144,7 @@ pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
->     ///
->     /// let mut data =3D Empty {};
->     /// let ptr =3D NonNull::<Empty>::new(&mut data).unwrap();
-> -    /// # // SAFETY: TODO.
-> +    /// // SAFETY: We keep `data` around longer than the `ARef`.
->     /// let data_ref: ARef<Empty> =3D unsafe { ARef::from_raw(ptr) };
->     /// let raw_ptr: NonNull<Empty> =3D ARef::into_raw(data_ref);
->     ///
+> impl<T: RefCounted> Drop for ARef<T> {
+>     fn drop(&mut self) {
+>         // SAFETY: The type invariants guarantee that the `ARef` owns =
+the reference we're about to
+> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> index 8ef01393352b..a9b72709d0d3 100644
+> --- a/rust/kernel/types.rs
+> +++ b/rust/kernel/types.rs
+> @@ -11,7 +11,7 @@
+> };
+> use pin_init::{PinInit, Wrapper, Zeroable};
+>=20
+> -pub use crate::owned::{Ownable, Owned};
+> +pub use crate::owned::{Ownable, OwnableRefCounted, Owned};
+>=20
+> pub use crate::sync::aref::{ARef, AlwaysRefCounted, RefCounted};
+>=20
 >=20
 > --=20
 > 2.51.2
@@ -172,5 +425,5 @@ clearer?
 >=20
 >=20
 
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>=
+=E2=80=94 Daniel=
 
