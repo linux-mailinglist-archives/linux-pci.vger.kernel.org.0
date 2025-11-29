@@ -1,214 +1,237 @@
-Return-Path: <linux-pci+bounces-42279-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42280-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C004BC9369B
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Nov 2025 03:24:49 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4279C936E9
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Nov 2025 03:46:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 660A63A256E
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Nov 2025 02:24:48 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 452654E0794
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Nov 2025 02:46:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E6BFD27E;
-	Sat, 29 Nov 2025 02:24:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC13D9463;
+	Sat, 29 Nov 2025 02:46:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZALh4Pgc";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="XPNEh+RI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ixs0BTDN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00A436D50E
-	for <linux-pci@vger.kernel.org>; Sat, 29 Nov 2025 02:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806CA79CF;
+	Sat, 29 Nov 2025 02:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764383086; cv=none; b=HeNeJrn9ttWTxFpjaoaHsp4VFfGJHYPZUxX0gVkKIX9PW2V1KgIkc+UodliQ3lmPvflhDmcMvGMDFpGOoK55GzaTpZvZVHuzQQyAfGbOfBaUNiQHcaC3OXdcK4UF9AceO5fYb4HuxpNgLPzihl0Wwo7up68N3DUlNz+ZxCyfc44=
+	t=1764384386; cv=none; b=H8LONDTkC89yUhO6y8MYtHvhakLrAOkmeL5dVxZmjOOwDSm5O3Ns0UJIrPN7p1tGZKA2ApLxCFRRlKMK4ehq9kKdiQzNjFeQ5v3NfS+Os4YbdUVGialfqaDd4CNlwYFBnSpeWGr6WbfEGcGvueAura1jFT3Y3ewqfmY/oa+r7s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764383086; c=relaxed/simple;
-	bh=TUv7Oe2UKTAu+JIdqW78JWt8UxQDxDD0peTNXsINvvM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FBW62jD9+8WD89fqrt4UYYQXgdoEHU64JDxOhz9ONkRhnqBiyzLtm48l91Q7EGCd0tyF5Q7NmbZjHfhmmvYaU9OuzQqDI+J+sH7pCxcZNJKGs8GBT+oG1KbwA3pUQxkI8XVtBMw/AInHocHkJfHXUDm8H+OpIfLsLOo5ou4C3rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZALh4Pgc; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=XPNEh+RI; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AT1nNpa1594989
-	for <linux-pci@vger.kernel.org>; Sat, 29 Nov 2025 02:24:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LwkbFZLKD9aKeC3WKC6OPnPkUZ3sWv42q7KMB+JxdX8=; b=ZALh4Pgcd8YVKgP+
-	fN0REEvqQUhyynIAaVR7UNxqaYTXjuvxBkRg+zmy1wtOwMHLTannk9Qe/dEuYVjh
-	NtotnQuuhIJybxaFmG4qKnYXSkH7vfsKuIHpWUpn62qx/ErVGb6FWhcYiQbwxAiY
-	TiSzF9GoMw+fqvRH+OAzedJSvSMo/cTV4aEFaQPDy7rm+REIQS0uf5B5WKIwrmXa
-	YMfaX5cQC6NRedarveoSEBgodtt1eOq9EF2roeELSgB5PTTVukVPGnUGXiravc54
-	5CBpHgINJLw7PNM2SoGY57Uo3p40m9ParY0orVWnfZjyyBBWBNvAF+c7DIIVWqhh
-	FvBtvw==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4aqdnr95n4-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Sat, 29 Nov 2025 02:24:44 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3437863d0easo3465350a91.0
-        for <linux-pci@vger.kernel.org>; Fri, 28 Nov 2025 18:24:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1764383083; x=1764987883; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LwkbFZLKD9aKeC3WKC6OPnPkUZ3sWv42q7KMB+JxdX8=;
-        b=XPNEh+RIAtYPadhiOoZwojN/LfHcfgMKnAb65XP75X/FTOzquojll9/UQ/A+4JVhGj
-         n8etJhuH0KeD8n917VWPChRbsqSv2+g0EwTKEwlh7ZTdQ0v6BQuKfGSY93i0sxlOqSII
-         Ho0DKhdZhX1Y9t2t2kFlx9ab2ljx0zJ/mXIUa6pDfLNo5uj8AKFWw4B+rXdh79PDO72J
-         nYKpmVpQROIyo4YN52hhcPk126ILUOtKlDy7RBC+3iFKuoah1ZqKMFFWHTMDYI0xgWQD
-         KzZ4hWzB4XfBw6D01gSodbvZVEhwfb1peGv/95KLuiUU8i6rsn6kaUf7sK/Yy9M/2p1K
-         VO3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764383083; x=1764987883;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LwkbFZLKD9aKeC3WKC6OPnPkUZ3sWv42q7KMB+JxdX8=;
-        b=qIlvl1+D60Afj1cUguOUrHhcOC+hlGp9ncGjXaGHYpRQuzr8TIX3c0PFjuh1TOdA1K
-         DLZ27UEyO2oUVHnVDhahG7kz0bM7HBFUwMsD1tiRdeCzSqeJh6FfCgJkUEEwfkz1ksQN
-         bGmF5gtj4BK3dNFgOuBPpYW6h+GSnmI6/LBOPNgoUGmI7tr08j6hJtiLa97+M5+Aq0qJ
-         +eVY6ys2fO68ub+KhuZcFc4KOT9abcL44ZXNlWhYfIzGDBDxYA0RfZpC75+usz+xmn86
-         G18YKYqtfSIADbroN0vXRALElaWLI/nEcMWxdTU/3t/aQKNYKfv9hYvBwI2F/eD58nSU
-         8Tmw==
-X-Forwarded-Encrypted: i=1; AJvYcCXKotGU9XbdEPlg8XxasxZbYEYymXTs5V/xbfjOyvNoi0A3wPg2KRBZzK/JBjWJeIaBoGQYAUoWFLs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcBSy58z0KZ0oAcd/4qm4puiS8JpYD44vpbT+9M8ghrk16NESR
-	Jt0ZmriTpaAw4vYvQBiqgpTZ/R/AKIL+BCn/hBGS4y5Oe9WuvRhP0HSU81Mzoj/d8wwVFqIQ+ha
-	w4hysA9u1i0BbhcnClWxKwl0X7RGfblw/vRI0Ifaipdz4rvKbVESS3SmJcfnlVF0=
-X-Gm-Gg: ASbGncvA267cKqV4WZu5SMvxT6laRD11aNfBWHIEoFVCMk9PXfuQL8nrBacnyhvrTdD
-	ahGGXCSQVMt8ImJRh3ratPxbnPUtwHw/xL1mYmzQL36obS5t+dChi0NvyfWJXiCoss5vFKb8nfu
-	DfNe3DtVifM2xz7vzDXICW0OnnDFtYHCP40f+8q+4G6X1W0ti29gbIVtekdkmjZFwIZ7WEH/Ct7
-	oDwbDyHviPQnfjRmqEAoZzH698lIjJH+fDwp2TIzZY7GTVLOL2RGZJPnyCIF+X24ib+fV7SJLri
-	fZqOQ7omNHPFFHxME7FZ51NDHpAvs4sfbbXpzGY/9KsLa9tgsB8mrT1hYj0UMROcf9/mcR2/Ge/
-	pj69asv6EWDWMAeJJhJIjcfntkWt1DXZU19XqbaSJMHMy
-X-Received: by 2002:a17:90b:3f44:b0:336:b563:993a with SMTP id 98e67ed59e1d1-34733f241bamr28027490a91.23.1764383083408;
-        Fri, 28 Nov 2025 18:24:43 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEuS9uBDENp+8fKPMnRbGGtrFWsMhy+XKSLqbm+LJ7zW7xyYkOcTCKFSJdCUmmv6bSYkyVlxQ==
-X-Received: by 2002:a17:90b:3f44:b0:336:b563:993a with SMTP id 98e67ed59e1d1-34733f241bamr28027455a91.23.1764383082897;
-        Fri, 28 Nov 2025 18:24:42 -0800 (PST)
-Received: from [192.168.29.63] ([49.43.225.110])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7d15f080beasm6276026b3a.47.2025.11.28.18.24.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Nov 2025 18:24:42 -0800 (PST)
-Message-ID: <a4c6d47f-28b5-40d3-bc82-10aeb14f8e78@oss.qualcomm.com>
-Date: Sat, 29 Nov 2025 07:54:35 +0530
+	s=arc-20240116; t=1764384386; c=relaxed/simple;
+	bh=8M3yX65ypMdiMxR/qKNl+diy5p+taSLqXZ3DZap8wlY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=olBtIwF7YAHW/aUV6FhmmPmgd0XIYhszex7rfxdQzsfNLaDHgU2XJee2548Z+91WxWBU9wgmafL1t7MTNz+2//W+YGNQ4YbfXq+dpW6n+DRCsDdcbCde5YICD4tWIVe+hfBjOyHYzKX0LeKUGPE4yu3V3oa4zZyZ7AzKO1QApQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ixs0BTDN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBFCAC4CEF1;
+	Sat, 29 Nov 2025 02:46:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764384386;
+	bh=8M3yX65ypMdiMxR/qKNl+diy5p+taSLqXZ3DZap8wlY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ixs0BTDNnQoMs4wasQT1k2w3pVRZNP7mCWJC4A7dVoAS84f8d5E5DBCEogUg7Twf3
+	 IeEF+7chsMhG0GGg58PGJetAJTFpRMmy7dR/YcM1KYQqxHaw7Eaaph/DqnGc+GDtCq
+	 Lw6nWGKw/lMBNqpfGX4yOd6xkWRWq32Kd/orDQ92dKQjmpRf3VfZdm8yIp/7o3aLiO
+	 feZiUUNaBmyS/0/c22/fv7bH+1JTOHgPuS+aQ21Ha2pBAm09WOrj+uPQfQdJPxWQM7
+	 2bMa53D8ximYFvIcjBPDrLPL8WwJNERTBcWAVgKugeCfkXQ9BOv7RBSWEYr/wEbDa5
+	 jgROW+sYs1fOQ==
+Date: Sat, 29 Nov 2025 08:16:12 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Heiko Stuebner <heiko@sntech.de>, FUKAUMI Naoki <naoki@radxa.com>, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: Make Link Up IRQ logic handle already powered
+ on PCIe switches
+Message-ID: <x6nhj6maseucclrhvpyiknxqqxaobgvfuaaljohbl3hnkiwayi@elgihi5dqc5y>
+References: <20251127134318.3655052-2-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 4/4] PCI: dwc: Support ECAM mechanism by enabling iATU
- 'CFG Shift Feature'
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-        Jingoo Han
- <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alim Akhtar
- <alim.akhtar@samsung.com>,
-        Jonathan Chocron <jonnyc@amazon.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20250909-controller-dwc-ecam-v9-0-7d5b651840dd@kernel.org>
- <20250909-controller-dwc-ecam-v9-4-7d5b651840dd@kernel.org>
- <alpine.DEB.2.21.2511280256260.36486@angie.orcam.me.uk>
- <c7aea2b3-6984-40f5-8234-14d265dabefc@oss.qualcomm.com>
- <alpine.DEB.2.21.2511280755440.36486@angie.orcam.me.uk>
- <cabf4c20-095b-4579-adc1-146a566b19b9@oss.qualcomm.com>
- <alpine.DEB.2.21.2511281714030.36486@angie.orcam.me.uk>
-Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <alpine.DEB.2.21.2511281714030.36486@angie.orcam.me.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI5MDAxNyBTYWx0ZWRfX15HQaJ7yzbqm
- gw2q+Vl3nV7KzS/nLktILs0xViOuaD+P4DFqlGuprNUVqGCsbjEpTHCpH4C3nHXkJVlvCkU9VQa
- rUxTlKcGY1cjo6E6mK8S6z7sLtL4Rgg0W2YXs0cplbEcDjPNgo3JdkxT5bDLB0na2rTQHX6qSfr
- pF78qy5AZnq1PBfsjKjo3t/5NmOGnXci1+OCpptGr4ObikrOWuEnzYs5BOUi2++HMDq3I4yXt5Z
- 2YU8Sw/dNLPMYwlshOpejIbcGmbx7ZbxgYTrz9W7Z3Eb7LM4EH95Zrh+LDl+8wOzqF8FN1Cccfb
- 6MfiebNBRWWWWD9asWrnH5OjjEC/3KqfHqaomlntdMXyP5m/DPv2zlOTf6AJJQpDBajVABXf08z
- Xw5V3NnbZDThmbQiVjp+sjkqY3WLCw==
-X-Authority-Analysis: v=2.4 cv=E5bAZKdl c=1 sm=1 tr=0 ts=692a596c cx=c_pps
- a=vVfyC5vLCtgYJKYeQD43oA==:117 a=5EZHiQk+3i9I38XJ8QjOGQ==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=guimUsFpNTjNUuBwESwA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=rl5im9kqc5Lf4LNbBjHf:22
-X-Proofpoint-GUID: q29Mio8VJOHNEQn0uN6qZX_J-KbsYXFo
-X-Proofpoint-ORIG-GUID: q29Mio8VJOHNEQn0uN6qZX_J-KbsYXFo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-28_08,2025-11-27_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 suspectscore=0 impostorscore=0 phishscore=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
- clxscore=1015 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2510240001
- definitions=main-2511290017
+In-Reply-To: <20251127134318.3655052-2-cassel@kernel.org>
 
+On Thu, Nov 27, 2025 at 02:43:18PM +0100, Niklas Cassel wrote:
+> The DWC glue drivers always call pci_host_probe() during probe(), which
+> will allocate upstream bridge resources and enumerate the bus.
+> 
+> For controllers without Link Up IRQ support, pci_host_probe() is called
+> after dw_pcie_wait_for_link(), which will also wait the time required by
+> the PCIe specification before performing PCI Configuration Space reads.
+> 
+> For controllers with Link Up IRQ support, the pci_host_probe() call (which
+> will perform PCI Configuration Space reads) is done without any of the
+> delays mandated by the PCIe specification.
+> 
+> For controllers with Link Up IRQ support, since the pci_host_probe() call
+> is done without any delay (link training might still be ongoing), it is
+> very unlikely that this scan will find any devices. Once the Link Up IRQ
+> triggers, the Link Up IRQ handler will call pci_rescan_bus().
+> 
+> This works fine for PCIe endpoints connected to the Root Port, since they
+> don't extend the bus. However, if the pci_rescan_bus() call detects a PCIe
+> switch, then there will be a problem when the downstream busses starts
+> showing up, because the PCIe controller is not hotplug capable, so we are
+> not allowed to extend the subordinate bus number after the initial scan,
+> resulting in error messages such as:
+> 
+> pci_bus 0004:43: busn_res: can not insert [bus 43-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci_bus 0004:43: busn_res: [bus 43-41] end is updated to 43
+> pci_bus 0004:43: busn_res: can not insert [bus 43] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci 0004:42:00.0: devices behind bridge are unusable because [bus 43] cannot be assigned for them
+> pci_bus 0004:44: busn_res: can not insert [bus 44-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci_bus 0004:44: busn_res: [bus 44-41] end is updated to 44
+> pci_bus 0004:44: busn_res: can not insert [bus 44] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci 0004:42:02.0: devices behind bridge are unusable because [bus 44] cannot be assigned for them
+> pci_bus 0004:45: busn_res: can not insert [bus 45-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci_bus 0004:45: busn_res: [bus 45-41] end is updated to 45
+> pci_bus 0004:45: busn_res: can not insert [bus 45] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci 0004:42:06.0: devices behind bridge are unusable because [bus 45] cannot be assigned for them
+> pci_bus 0004:46: busn_res: can not insert [bus 46-41] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci_bus 0004:46: busn_res: [bus 46-41] end is updated to 46
+> pci_bus 0004:46: busn_res: can not insert [bus 46] under [bus 42-41] (conflicts with (null) [bus 42-41])
+> pci 0004:42:0e.0: devices behind bridge are unusable because [bus 46] cannot be assigned for them
+> pci_bus 0004:42: busn_res: [bus 42-41] end is updated to 46
+> pci_bus 0004:42: busn_res: can not insert [bus 42-46] under [bus 41] (conflicts with (null) [bus 41])
+> pci 0004:41:00.0: devices behind bridge are unusable because [bus 42-46] cannot be assigned for them
+> pcieport 0004:40:00.0: bridge has subordinate 41 but max busn 46
+> 
+> While we would like to set the is_hotplug_bridge flag
+> (quirk_hotplug_bridge()), many embedded SoCs that use the DWC controller
+> have synthesized the controller without hot-plug support.
+> Thus, the Link Up IRQ logic is only mimicking hot-plug functionality, i.e.
+> it is not compliant with the PCI Hot-Plug Specification, so we cannot make
+> use of the is_hotplug_bridge flag.
+> 
+> In order to let the Link Up IRQ logic handle PCIe switches that are already
+> powered on (PCIe switches that not powered on already need to implement a
+> pwrctrl driver), don't perform a pci_host_probe() call during probe()
+> (which disregards the delays required by the PCIe specification).
+> 
+> Instead let the first Link Up IRQ call pci_host_probe(). Any follow up
+> Link Up IRQ will call pci_rescan_bus().
+> 
+> Fixes: ec9fd499b9c6 ("PCI: dw-rockchip: Don't wait for link since we can detect Link Up")
+> Fixes: 0e0b45ab5d77 ("PCI: dw-rockchip: Enumerate endpoints based on dll_link_up IRQ")
+> Reported-by: FUKAUMI Naoki <naoki@radxa.com>
+> Closes: https://lore.kernel.org/linux-pci/1E8E4DB773970CB5+5a52c9e1-01b8-4872-99b7-021099f04031@radxa.com/
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> ---
+>  .../pci/controller/dwc/pcie-designware-host.c | 70 ++++++++++++++++---
+>  drivers/pci/controller/dwc/pcie-designware.h  |  5 ++
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c |  5 +-
+>  drivers/pci/controller/dwc/pcie-qcom.c        |  5 +-
+>  4 files changed, 68 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index e92513c5bda51..8654346729574 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -565,6 +565,59 @@ static int dw_pcie_host_get_resources(struct dw_pcie_rp *pp)
+>  	return 0;
+>  }
+>  
+> +static int dw_pcie_host_initial_scan(struct dw_pcie_rp *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct pci_host_bridge *bridge = pp->bridge;
+> +	int ret;
+> +
+> +	ret = pci_host_probe(bridge);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (pp->ops->post_init)
+> +		pp->ops->post_init(pp);
+> +
+> +	dwc_pcie_debugfs_init(pci, DW_PCIE_RC_TYPE);
+> +
+> +	return 0;
+> +}
+> +
+> +void dw_pcie_handle_link_up_irq(struct dw_pcie_rp *pp)
+> +{
+> +	if (!pp->initial_linkup_irq_done) {
+> +		int ret;
+> +
+> +		ret = dw_pcie_host_initial_scan(pp);
+> +		if (ret) {
+> +			struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +			struct device *dev = pci->dev;
+> +
+> +			dev_err(dev, "Initial scan from IRQ failed: %d\n", ret);
+> +
+> +			dw_pcie_stop_link(pci);
+> +
+> +			dw_pcie_edma_remove(pci);
+> +
+> +			if (pp->has_msi_ctrl)
+> +				dw_pcie_free_msi(pp);
+> +
+> +			if (pp->ops->deinit)
+> +				pp->ops->deinit(pp);
+> +
+> +			if (pp->cfg)
+> +				pci_ecam_free(pp->cfg);
+> +		} else {
+> +			pp->initial_linkup_irq_done = true;
+> +		}
+> +	} else {
+> +		/* Rescan the bus to enumerate endpoint devices */
+> +		pci_lock_rescan_remove();
+> +		pci_rescan_bus(pp->bridge->bus);
+> +		pci_unlock_rescan_remove();
+> +	}
+> +}
+> +
+>  int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> @@ -669,18 +722,17 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  	 * If there is no Link Up IRQ, we should not bypass the delay
+>  	 * because that would require users to manually rescan for devices.
+>  	 */
+> -	if (!pp->use_linkup_irq)
+> +	if (!pp->use_linkup_irq) {
+>  		/* Ignore errors, the link may come up later */
+>  		dw_pcie_wait_for_link(pci);
+>  
+> -	ret = pci_host_probe(bridge);
+> -	if (ret)
+> -		goto err_stop_link;
+> -
+> -	if (pp->ops->post_init)
+> -		pp->ops->post_init(pp);
+> -
+> -	dwc_pcie_debugfs_init(pci, DW_PCIE_RC_TYPE);
+> +		/*
+> +		 * For platforms with Link Up IRQ, initial scan will be done
+> +		 * on first Link Up IRQ.
+> +		 */
+> +		if (dw_pcie_host_initial_scan(pp))
+> +			goto err_stop_link;
 
+This is causing NULL ptr dereference on Qcom platforms as 'pp->bridge->bus' is
+dereferenced after dw_pcie_host_init() for registering the IRQ.
 
-On 11/28/2025 10:46 PM, Maciej W. Rozycki wrote:
-> On Fri, 28 Nov 2025, Krishna Chaitanya Chundru wrote:
->
->>>    I have no slightest idea why it should cause a regression such as this,
->>> it seems totally unrelated.  Yet it's 100% reproducible.  Could this be
->>> because it's the only device in the system that actually uses PCI/e port
->>> I/O?
->> Hi Maciej, Can you try attached patch and let me know if that is helping you
->> or not. - Krishna Chaitanya.
->   No change, it's still broken, sorry.
-HI Maciej,
-For the previous patch can you apply this diff and share me dmesg o/p
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -448,7 +448,6 @@ static int dw_pcie_config_ecam_iatu(struct 
-dw_pcie_rp *pp)
-         if (ret)
-                 return ret;
+I still feel that a revert would be the safest option.
 
--
-         bus_range_max = resource_size(bus->res);
+- Mani
 
-         if (bus_range_max < 2)
-@@ -456,6 +455,8 @@ static int dw_pcie_config_ecam_iatu(struct 
-dw_pcie_rp *pp)
-
-         pp->ob_atu_index++;
-
-+       dev_err(pci->dev, "Current iATU OB index %d\n", pp->ob_atu_index);
-+
-         /* Configure remaining buses in type 1 iATU configuration */
-         atu.index = pp->ob_atu_index;
-         atu.type = PCIE_ATU_TYPE_CFG1;
-@@ -931,6 +932,7 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
-                 }
-         }
-
-+       dev_err(pci->dev, "Current iATU OB index %d\n", i);
-         if (pp->io_size) {
-                 if (pci->num_ob_windows > ++i) {
-                         atu.index = i;
-@@ -946,6 +948,7 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
-                                 return ret;
-                         }
-                 } else {
-+                       dev_err(pci->dev, "Using shared io index %d\n", i);
-                         pp->cfg0_io_shared = true;
-                 }
-         }
-
-- Krishna Chaitanya.
->    Maciej
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
