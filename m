@@ -1,144 +1,173 @@
-Return-Path: <linux-pci+bounces-42320-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42321-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9DE8C94A18
-	for <lists+linux-pci@lfdr.de>; Sun, 30 Nov 2025 02:21:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AF7B1C94AB7
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Nov 2025 03:48:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 638244E1368
-	for <lists+linux-pci@lfdr.de>; Sun, 30 Nov 2025 01:21:18 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8EBB94E06D4
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Nov 2025 02:48:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5B4B21B9FD;
-	Sun, 30 Nov 2025 01:21:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C22901E1DF0;
+	Sun, 30 Nov 2025 02:48:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="VqWJ3r3O"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="JzLWIGZ1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m49251.qiye.163.com (mail-m49251.qiye.163.com [45.254.49.251])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195151E0DCB
-	for <linux-pci@vger.kernel.org>; Sun, 30 Nov 2025 01:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1909B1E0DCB;
+	Sun, 30 Nov 2025 02:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.251
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764465674; cv=none; b=dZ/oAQDj6tQpFfyx4v+fqZjSnAimE9DP67c46v9cdLXFi4P5SLkfo0aFpWM0K7aOTH2mhMzusUQ8eIcwqZc2TAJnX4xiO3T+xC2CNF/HLxrC5souP49zbGU4QqJSx1tnyXX8lfz8ZGoQJHzLIrmR0istBDYWSxoNSDUiFope+nU=
+	t=1764470920; cv=none; b=MMcCN3REmKFZwSDINC+wrvhMvSdTfCT8sm7qdZ6Nwhp319FiXb11r1cT3tw4yNcCmoeBPF8HKUzqZBgv/vs4WEdncOeq9o0dnnH2sf7gA0zE1SXQfZ1sM/ehPzO6l4I5wzal2Pt6+Xcx2zMeZzYhz++kt+RMUmNUrDII0jhtz7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764465674; c=relaxed/simple;
-	bh=jAhYjdaKuYSZjBr3rUm2bCg6GZ1D33HJLbxkB+qPEuk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gR45Mukot/F/BKweqsNH8L56d6YrdSo4deLkqp5HW2SUjhw2PIPE3L0/U2HQXM0TMOsNhgdnjr91r9iYnaflGbq0uJd25GhUyU4045U96OyxeAGG7xnkb1kqzD7GTkcEhMC0yRcIqbKEgLnpFA1EkaMMgOHXa93S3mav85bJiV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b=VqWJ3r3O; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-64175dfc338so5884326a12.0
-        for <linux-pci@vger.kernel.org>; Sat, 29 Nov 2025 17:21:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1764465671; x=1765070471; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7E6fYjyrHrj8FHDr7BSv9EzmTP9fSPz38dXVeQSmbss=;
-        b=VqWJ3r3OV199kgmWWd4B68VywP+BhnnLiCdocCvjXG/gnMFSD1bFiG9jS8tN2BbW9h
-         THrqDBGcJM9nMdqoLNvq93kNR2dLFXodP7TjzVU8p9fTvWnnirrJVk5/UWwwFNNr8NNV
-         FUvsTCSuTi4WvObu+0T60al3CGnp72BoAcH7r75sxqYhYkcp9CDj59Avb9B/j6NqiZXv
-         H4igEIDZGOK55pCcFF5DdXe0ZzGKZov9SnCru8TRent00f++6DyDBB/IYwgFc6lYispX
-         cacaasgXhnR1GkCFZpWbC8w/YItucwEw3qeYBtel1nsAxs2h1mZbiMb3KB7hov90GvHL
-         sdCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764465671; x=1765070471;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7E6fYjyrHrj8FHDr7BSv9EzmTP9fSPz38dXVeQSmbss=;
-        b=Zr2JCdGmRzpvbApWFCRX01L/l8Skg4OCCyB/xansl4a9z+u9wHJttiDpPRZCy/nKqb
-         mDwXO0CwftCMAjyXAUmABc18AaiTGtUUQgRVO8Cw71hdmtNJ5qy5TM4l/N6KSJED03dM
-         U2hT5IwdG9ZWqJElmTn7z+maCwpw1YnLm8b0mmxiKOWKUjgAoF0kRt/8CQ+djR/HOq1r
-         0XYXy3dZwe8I+5p9MKEr074fIYMkohTp5nc5Y9UJ3hk6qr8yg+xu5YsQCVWPfOo7kIn1
-         jPgF4DN00aN4xlk9FvEx0fMF80geeMePcb7Bl9cNe1ixdvnx9kUzPjvQc6TT/zi7yTl7
-         Aijw==
-X-Forwarded-Encrypted: i=1; AJvYcCW7JM2PuO0600MVO0TIsSQHf1vgYSFh9+gCBRJMwHSBXAVZ2cebc61sxJ3g0kScxH+8YRHVEmNoE2o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJUwW4eZL3civsFs93Ne3PqfwuY7FsmhZ9ssZj5BtyYwapwb5A
-	cI6CUllUMxyrq0/PClfWkLLy8aEUBUjGyymsRGYc24vOTB4Y0z7dkTEVJkIM5PSB/4czm7AFP78
-	NnAvAO+mXLig/RoKKuTUCvDDgvdMfKBd4g37KT9fstA==
-X-Gm-Gg: ASbGncvzdwhD0xiq0SF8WsfZ02oLG0/J8Zx3G72ABk3yxEa3V3t/fY3XwnSdp6l2ahQ
-	ALL0qNjig0AnBiSU+1sdLWXqtLVw5nX/Jemvq7LN6XTs30EEH9nzkeDWWHtFs4152pA+WsowjZ9
-	2MWglopbMM1mWBLzKBa2Bb3gbjrWBRnLqqwV0hKkop4dRaXBgaYc+6flvgPz8MpUUKKS+jBDLlQ
-	JDhYdTq7165pBXOlPklKEpt8kL1YPPJbNmYSkfhcv63TsOPZQuslP7+r6dijvoXu6Pl
-X-Google-Smtp-Source: AGHT+IEVrWVW0MSDEofN7HKOGJ5FYge7stDIhKBoTb11CcnSv0VSQnPuBhKj+NsQY8Xozbru60feKYwF32lJK34nCfo=
-X-Received: by 2002:a05:6402:1ed6:b0:640:9aed:6ab6 with SMTP id
- 4fb4d7f45d1cf-6455468d38amr27395965a12.24.1764465671412; Sat, 29 Nov 2025
- 17:21:11 -0800 (PST)
+	s=arc-20240116; t=1764470920; c=relaxed/simple;
+	bh=1k+cWOYAukKSkK+vW0sOtzTEkK3a4VTiXYlOWmwlxyM=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DmzWy3U5thELLqrJEs+krrJWvy9aiT+88DKTw+UukLCoCzZ1qxPd/Smov0SepXlI8ak16/UnXGS/ynAzdygZM8SXZog02VjY20wVZCI0TjMNQ7I+iWNrreMpoiEdk61lrsAtyVM1NTIT6gIxrO8bTo8YFal0bzTT8vSjw/JTpqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=JzLWIGZ1; arc=none smtp.client-ip=45.254.49.251
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.14] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2b625e1cc;
+	Sun, 30 Nov 2025 10:43:15 +0800 (GMT+08:00)
+Message-ID: <c43b637a-a0c1-4106-b37b-df389c085057@rock-chips.com>
+Date: Sun, 30 Nov 2025 10:43:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251126193608.2678510-1-dmatlack@google.com> <20251126193608.2678510-3-dmatlack@google.com>
- <aSrMSRd8RJn2IKF4@wunner.de> <20251130005113.GB760268@nvidia.com>
-In-Reply-To: <20251130005113.GB760268@nvidia.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Sat, 29 Nov 2025 20:20:34 -0500
-X-Gm-Features: AWmQ_bn87weFbkyc-Mkm1TN7PwvGfMaEQTTGstPfXUIJUeSyXtPiICJqz9kg5cs
-Message-ID: <CA+CK2bB0V9jdmrcNjgsmWHmSFQpSpxdVahf1pb3Bz2WA3rKcng@mail.gmail.com>
-Subject: Re: [PATCH 02/21] PCI: Add API to track PCI devices preserved across
- Live Update
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Lukas Wunner <lukas@wunner.de>, David Matlack <dmatlack@google.com>, 
-	Alex Williamson <alex@shazbot.org>, Adithya Jayachandran <ajayachandra@nvidia.com>, Alex Mastro <amastro@fb.com>, 
-	Alistair Popple <apopple@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
-	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
-	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org, 
-	Leon Romanovsky <leonro@nvidia.com>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org, 
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
-	Philipp Stanner <pstanner@redhat.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>, 
-	Yi Liu <yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>, 
-	Zhu Yanjun <yanjun.zhu@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com,
+ Sushrut Shree Trivedi <sushrut.trivedi@oss.qualcomm.com>,
+ Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, cros-qcom-dts-watchers@chromium.org,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI: dwc: Program device-id
+To: Manivannan Sadhasivam <mani@kernel.org>
+References: <20251127-program-device-id-v1-0-31ad36beda2c@quicinc.com>
+ <20251127-program-device-id-v1-1-31ad36beda2c@quicinc.com>
+ <09aed728-51ca-42dd-b680-f6597e0ac00a@rock-chips.com>
+ <mp67n7jw3azihax25yw2u25f6nrjl237exw2t66fz3bpt3wzdt@2j4ooqdfgp2l>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <mp67n7jw3azihax25yw2u25f6nrjl237exw2t66fz3bpt3wzdt@2j4ooqdfgp2l>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9ad2a49dc509cckunm63e59fb97e5053
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGR4dHVYYHUlDQx1MSU8YTUhWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=JzLWIGZ17NOIFOI3ayh5vO6VXFQPw2MCOVDn39SpmB8L8zxnnBzRvZIT1oguG9PvfEPcyT802IjS+J4n0Bvs7szki6SXYoeFaQjkbwfd2UiIMU0zaB8ifvl0ryyHRJ7R+NrRBXZ0wVmDRtiRhH79cKNYJdI2zKpWXu0D9GvnyDU=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=AnhHjeoEZhWmtIMeV/a+xErbeAW6DGW2H4faPusNFPI=;
+	h=date:mime-version:subject:message-id:from;
 
-On Sat, Nov 29, 2025 at 7:51=E2=80=AFPM Jason Gunthorpe <jgg@nvidia.com> wr=
-ote:
->
-> On Sat, Nov 29, 2025 at 11:34:49AM +0100, Lukas Wunner wrote:
-> > On Wed, Nov 26, 2025 at 07:35:49PM +0000, David Matlack wrote:
-> > > Add an API to enable the PCI subsystem to track all devices that are
-> > > preserved across a Live Update, including both incoming devices (pass=
-ed
-> > > from the previous kernel) and outgoing devices (passed to the next
-> > > kernel).
-> > >
-> > > Use PCI segment number and BDF to keep track of devices across Live
-> > > Update. This means the kernel must keep both identifiers constant acr=
-oss
-> > > a Live Update for any preserved device.
-> >
-> > While bus numbers will *usually* stay the same across next and previous
-> > kernel, there are exceptions.  E.g. if "pci=3Dassign-busses" is specifi=
-ed
-> > on the command line, the kernel will re-assign bus numbers on every boo=
-t.
->
-> Stuff like this has to be disabled for this live update stuff, if the
-> bus numbers are changed it will break the active use of the iommu
-> across the kexec.
->
-> So while what you say is all technically true, I'm not sure this is
-> necessary.
+在 2025/11/29 星期六 15:34, Manivannan Sadhasivam 写道:
+> On Fri, Nov 28, 2025 at 09:03:52AM +0800, Shawn Lin wrote:
+>> 在 2025/11/27 星期四 23:30, Sushrut Shree Trivedi 写道:
+>>> For some controllers, HW doesn't program the correct device-id
+>>> leading to incorrect identification in lspci. For ex, QCOM
+>>> controller SC7280 uses same device id as SM8250. This would
+>>> cause issues while applying controller specific quirks.
+>>>
+>>> So, program the correct device-id after reading it from the
+>>> devicetree.
+>>>
+>>> Signed-off-by: Sushrut Shree Trivedi <sushrut.trivedi@oss.qualcomm.com>
+>>> ---
+>>>    drivers/pci/controller/dwc/pcie-designware-host.c | 7 +++++++
+>>>    drivers/pci/controller/dwc/pcie-designware.h      | 2 ++
+>>>    2 files changed, 9 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> index e92513c5bda5..e8b975044b22 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> @@ -619,6 +619,9 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>>>    		}
+>>>    	}
+>>> +	pp->device_id = 0xffff;
+>>> +	of_property_read_u32(np, "device-id", &pp->device_id);
+>>> +
+>>>    	dw_pcie_version_detect(pci);
+>>>    	dw_pcie_iatu_detect(pci);
+>>> @@ -1094,6 +1097,10 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
+>>>    	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0);
+>>> +	/* Program correct device id */
+>>> +	if (pp->device_id != 0xffff)
+>>> +		dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, pp->device_id);
+>>> +
+>>>    	/* Program correct class for RC */
+>>>    	dw_pcie_writew_dbi(pci, PCI_CLASS_DEVICE, PCI_CLASS_BRIDGE_PCI);
+>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>>> index e995f692a1ec..eff6da9438c4 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>>> @@ -431,6 +431,8 @@ struct dw_pcie_rp {
+>>>    	struct pci_config_window *cfg;
+>>>    	bool			ecam_enabled;
+>>>    	bool			native_ecam;
+>>> +	u32			vendor_id;
+>>
+>> I don't see where vendor_id is used.
+>> And why should dwc core take care of per HW bugs, could someone else
+>> will argue their HW doesn't program correct vender id/class code, then
+>> we add more into dw_pcie_rp to fix these?
+>>
+> 
+> Device ID and Vendor ID are PCI generic properties and many controllers specify
+> them in devicetree due to the default values being wrong or just hardcode them
+> in the driver. There is nothing wrong in DWC core programming these values if
+> they are available in devicetree.
+> 
+>> How about do it in the defective HW drivers?
+>>
+> 
+> If the issue is a vendor DWC wrapper specific, for sure it should be added to
+> the relevant controller driver. But this issue is pretty common among the DWC
+> wrapper implementations.
+> 
 
-I agree. However, Lukas's comment made me wonder about the future: if
-we eventually need to preserve non-PCI devices (like a TPM), should we
-be designing a common identification mechanism for all buses now? Or
-should we settle on BDF for PCI and invent stable identifiers for
-other bus types as they become necessary?
+I think there are already some dwc instances working around this kind of 
+defects in their relevant condroller driver.
 
-Pasha
+drivers/pci/controller/dwc/pci-keystone.c:806:  dw_pcie_writew_dbi(pci, 
+PCI_VENDOR_ID, id & PCIE_VENDORID_MASK);
 
->
-> Jason
+drivers/pci/controller/dwc/pcie-spacemit-k1.c:146: 
+dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, PCI_VENDOR_ID_SPACEMIT);
+
+drivers/pci/controller/dwc/pcie-spear13xx.c:139: 
+dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, 0x104A);
+
+drivers/pci/controller/dwc/pci-keystone.c:807:  dw_pcie_writew_dbi(pci, 
+PCI_DEVICE_ID, id >> PCIE_DEVICEID_SHIFT);
+
+drivers/pci/controller/dwc/pcie-spacemit-k1.c:147: 
+dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, PCI_DEVICE_ID_SPACEMIT_K1);
+
+drivers/pci/controller/dwc/pcie-spear13xx.c:140: 
+dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, 0xCD80);
+
+If this patch applied, there are two non-consistent apporaches to work
+around this situation. Could dwc core provide a common helper for 
+them(this qcom instance inclueded) to call without bothering the dwc core?
+
+> - Mani
+> 
+
 
