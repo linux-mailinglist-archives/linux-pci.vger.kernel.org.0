@@ -1,171 +1,183 @@
-Return-Path: <linux-pci+bounces-42387-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42388-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD689C988DD
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 18:39:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0012C98922
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 18:44:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4E894344A38
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 17:39:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B9E533A424C
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 17:44:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 686BD3191A2;
-	Mon,  1 Dec 2025 17:39:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CBF6335062;
+	Mon,  1 Dec 2025 17:43:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gj715R1T"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="iaXlWHOw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BA1313E02;
-	Mon,  1 Dec 2025 17:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49F4336EF4
+	for <linux-pci@vger.kernel.org>; Mon,  1 Dec 2025 17:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764610776; cv=none; b=UUxnPtDxm2ytUxujtvyucBnwhlj7ZytI0+p3tlAGMDBxtTtuP/bcYGXaU3mN8p2+fiSIyxtMgEhoN3OB21CIR5Zbow3MY005YGIbOLnNri3Tb5xauD0MAOLA3OzOPdFEJiuQyhkF8GdNC3oeeBiHeVFmGZJ9oALbNzC7n20f2zc=
+	t=1764611035; cv=none; b=rUQ4j/GQMHUw5tMufZ5/ZymGpIsFrbTn1NafjnA5n83SxypEBrPf7ODd7c6JVjMx8Qvh2xIGH3Qpmd59MW9lHK7RTGR1s8cDoCCC1VxHnMTRl4+114Ur4i60Gs6Bb4fLIW+RgAftu9Uf4a7WYzIVjzsfBwE0Z68zWRz19+TGYoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764610776; c=relaxed/simple;
-	bh=q4Tne7+Z3cnF9CErHyNzETIaPtPF3wDSr+O1s+ZenOY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q3NYTvaU++1NujMzH0LTcwozVAHosroyqfTk/f9wJKJ7xrSyjlXsVmanM9M17O0bybeOELm8GrfbMNJFysho8GUl6mcbYF3Kbss5PIQFeCSin/E5LhLIab2Pq583ul9v1sBcP1BBZRAkGQLogYkCf8UPvmTfMhpQU4cl6wsEusU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gj715R1T; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764610775; x=1796146775;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=q4Tne7+Z3cnF9CErHyNzETIaPtPF3wDSr+O1s+ZenOY=;
-  b=gj715R1THBGg9sEpqLaYIDsOqc3s9Zgj2vmZTmgo17caqZQneuTiZsv3
-   0xGt+Rbt8dDG7q/VKCfck44tijUZytCmrJcMuilsSQhuKVAdcU6GYmnvX
-   uRwtCD7hIph44jUS6zbUnvP3P0RgnbbbCpHqH5F/5C+lSx932d6I20jv8
-   NCoJK3FMZtLzZTgB9aEHJnnuqGJpHy2QD016duLR81B/lcx+RqYhtgLtb
-   d0UoByt2tzfq254wkWQ3zkqYsjaqD3pIgdBOcP6yoybRsRSgbs+rhgb4K
-   8rCH126sCX+nKGiT40QopoXlqxKGJWZTnjM5KDjHDl9KUQMPUsu8Ssx0V
-   Q==;
-X-CSE-ConnectionGUID: 8TVrBl32QBGgduEa7oNevw==
-X-CSE-MsgGUID: lFM9fnAtRrScT1nyrWEd1Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11630"; a="66452789"
-X-IronPort-AV: E=Sophos;i="6.20,241,1758610800"; 
-   d="scan'208";a="66452789"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 09:39:34 -0800
-X-CSE-ConnectionGUID: HWl2HESBTIygqrvRGVBfYA==
-X-CSE-MsgGUID: HszrL6w+RcCQ+Ni0oXKbRg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,241,1758610800"; 
-   d="scan'208";a="231443296"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.111.117]) ([10.125.111.117])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 09:39:32 -0800
-Message-ID: <2d4fb1ce-176c-404a-852f-987a9481046d@intel.com>
-Date: Mon, 1 Dec 2025 09:39:32 -0800
+	s=arc-20240116; t=1764611035; c=relaxed/simple;
+	bh=vjOMJrWFQpr1l88g7CIRlvPS5Pmc7X/YX9VtAzCpaCQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gY1ta7YnjDUm5No9FMRawUQjka6R5Pn3/ZN3VByM1r0K5mwMyZluIGAp0vRfzR/vzsX1jFXxI0Obt8D37TesALKdCSsbAA4/4HaNImcst9Ct/RopmXyXFlGHQ1pquV3SSh7sDOw07ZzsE4wbOV2juoVmPwIH2B9v5bL27ULe0MA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=iaXlWHOw; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5B1GBLqU1785999
+	for <linux-pci@vger.kernel.org>; Mon, 1 Dec 2025 09:43:53 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
+	 bh=Nx2UlxPjAHEeAyLfVRPlU3Hm4xB6ZJ8PKySSxUXhnfs=; b=iaXlWHOwfkel
+	ZJyZWL/esQTbnTK2151OSIX+o4Ji9ep+FASbSPTccT4Y5mvR9IEpPZkeyzE3Ea+l
+	3ClIwG9JOppInwWJ8n2Bzmg3dLc0QfFtgalJY/MG0w+GgVMqkIgmrwZAzksKS9hk
+	RtXb5q8UeFodFCw3FIQskN/2L5TBfLrnVTZHJdpCsOEoo+etXKoe7KV4TMKbJGhl
+	TD5wN32YnjPfjuhSus+Q6hXqScQEMTzE3qij7fc0cjLeUMx+6IAA3G4fSX5kq7pI
+	hbUhkuYiUwirqYXiWMelCltG4y5F8yeNRtdPaMHU8DtCJtoHTTqgaGdvhx4ptxdF
+	odq9tbll5g==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4aseargy05-5
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 01 Dec 2025 09:43:52 -0800 (PST)
+Received: from twshared24723.01.snb1.facebook.com (2620:10d:c0a8:1b::30) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.29; Mon, 1 Dec 2025 17:43:49 +0000
+Received: by devbig259.ftw1.facebook.com (Postfix, from userid 664516)
+	id 7C26BCBE0463; Mon,  1 Dec 2025 09:43:39 -0800 (PST)
+From: Zhiping Zhang <zhipingz@meta.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Bjorn
+ Helgaas <bhelgaas@google.com>, <linux-rdma@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Keith Busch
+	<kbusch@kernel.org>, Yochai Cohen <yochai@nvidia.com>,
+        Yishai Hadas
+	<yishaih@nvidia.com>
+Subject: Re: [RFC 1/2] Set steering-tag directly for PCIe P2P memory access
+Date: Mon, 1 Dec 2025 09:43:20 -0800
+Message-ID: <20251201174339.1852344-1-zhipingz@meta.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20251124212753.GA2714985@bhelgaas>
+References: <20251124212753.GA2714985@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/kaslr: P2PDMA is one of a class of ZONE_DEVICE-KASLR
- collisions
-To: Dan Williams <dan.j.williams@intel.com>, dave.hansen@linux.intel.com,
- peterz@infradead.org
-Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
- Balbir Singh <balbirs@nvidia.com>, Ingo Molnar <mingo@kernel.org>,
- Kees Cook <kees@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Andy Lutomirski <luto@kernel.org>, Logan Gunthorpe <logang@deltatee.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>
-References: <20251108023215.2984031-1-dan.j.williams@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20251108023215.2984031-1-dan.j.williams@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+X-Authority-Analysis: v=2.4 cv=Ja6xbEKV c=1 sm=1 tr=0 ts=692dd3d8 cx=c_pps
+ a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=S7gPgYD2AAAA:8 a=VabnemYjAAAA:8 a=8hobeDgTnmXHB3sxjRwA:9 a=QEXdDO2ut3YA:10
+ a=1f8SinR9Uz0LDa1zYla5:22 a=gKebqoRLp9LExxC7YDUY:22
+X-Proofpoint-GUID: RABHbjKZ764nOedL6ae8eBTHts9w8mOw
+X-Proofpoint-ORIG-GUID: RABHbjKZ764nOedL6ae8eBTHts9w8mOw
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjAxMDE0NCBTYWx0ZWRfX3J+y2gyzZGa5
+ ZaBwyRfEjWSTg3B+HRWaO0O+5iBG3WfNJLTUNKzstLGhNN9IMcKOZUNhQmYCSEFYm6xaelDfJtW
+ XM1MTOAayfUbjzxeNe3wbJG88RGomcBKARmGUToYxrWJbpWga+9q3YQ4CqWHfsyJTREX2dAl4E8
+ caElKeTXBdbIJH2rgiSOg+s7whFwE2b7+85wHcbwjFWD/bs5sax0g1TuJxzW40nVDFvkEvtDCrK
+ DsXZKXJwbltU7iBa5OisEsyWlImyAgLss5V92f9OdoJTM54uUqxMsHmu1gqkpYGWvuylAT37CDW
+ qN7gWfeKMjg+i5zSL8iRvKCiKjZgHse+vudJrLRFOYD8TlNISwTellR7d95qdSad9yUrNFEBNpM
+ 3VXGrer0sNXE2ZFcf+/wncPV+9mNNQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-28_08,2025-11-27_02,2025-10-01_01
 
-The subject probably wants to be something along the lines of:
+> On Mon, 24 Nov 2025 15:27:53 -0600, Bjorn Helgaas wrote:
+> > PCIe: Add a memory type for P2P memory access
 
-	x86/kaslr: Recognize all ZONE_DEVICE users as physaddr consumers
+> This should be in the Subject: line.
 
-On 11/7/25 18:32, Dan Williams wrote:
-> Commit 7ffb791423c7 ("x86/kaslr: Reduce KASLR entropy on most x86 systems")
-> is too narrow. ZONE_DEVICE, in general, lets any physical address be added
-> to the direct-map. I.e. not only ACPI hotplug ranges, CXL Memory Windows,
-> or EFI Specific Purpose Memory, but also any PCI MMIO range for the
-> CONFIG_DEVICE_PRIVATE and CONFIG_PCI_P2PDMA cases.
+> It should also start with "PCI/TPH: ..." (not "PCIe") to match
+> previous history.
 
-This should probably also mention the fact that:
+Thanks, ack! I will update the subject line.
 
-	config PCI_P2PDMA
-		depends on ZONE_DEVICE
+> > The current tph memory type definition applies for CPU use cases. For=
+ device
+> > memory accessed in the peer-to-peer (P2P) manner, we need another mem=
+ory
+> > type.
 
-It would also be nice to point out how the "too narrow" check had an
-impact on real ZONE_DEVICE but !PCI_P2PDMA users. This isn't just a
-theoretical problem, right?
+> s/tph/TPH/
 
-> A potential path to recover entropy would be to walk ACPI and determine the
-> limits for hotplug and PCI MMIO before kernel_randomize_memory(). On
-> smaller systems that could yield some KASLR address bits. This needs
-> additional investigation to determine if some limited ACPI table scanning
-> can happen this early without an open coded solution like
-> arch/x86/boot/compressed/acpi.c needs to deploy.
+> Make this say what the patch does (not just that we *need* another
+> memory type, that we actually *add* one).
 
-Yeah, a more flexible runtime solution would be highly preferred over
-the existing solution built around config options. But this is really
-orthogonal to the bug fix here.
+> The subject line should also say what the patch does.  I don't think
+> this patch actually changes the *setting* of the steering tag (I could
+> be wrong, I haven't looked carefully).
 
-With the changelog fixes above:
+Sure, I=E2=80=99ll correct and revise the commit message to clearly state=
+ what the
+patch does.
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-
-Oh, and does this need to be cc:stable@?
+> > Signed-off-by: Zhiping Zhang <zhipingz@meta.com>
+> > ---
+> >  drivers/pci/tph.c       | 4 ++++
+> >  include/linux/pci-tph.h | 4 +++-
+> >  2 files changed, 7 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
+> > index cc64f93709a4..d983c9778c72 100644
+> > --- a/drivers/pci/tph.c
+> > +++ b/drivers/pci/tph.c
+> > @@ -67,6 +67,8 @@ static u16 tph_extract_tag(enum tph_mem_type mem_ty=
+pe, u8 req_type,
+> > 			if (info->pm_st_valid)
+> > 				return info->pm_st;
+> > 			break;
+> > +		default:
+> > +			return 0;
+> > 		}
+> > 		break;
+> > 	case PCI_TPH_REQ_EXT_TPH: /* 16-bit tag */
+> > @@ -79,6 +81,8 @@ static u16 tph_extract_tag(enum tph_mem_type mem_ty=
+pe, u8 req_type,
+> > 			if (info->pm_xst_valid)
+> > 				return info->pm_xst;
+> > 			break;
+> > +		default:
+> > +			return 0;
+> > 		}
+> >  		break;
+> >  	default:
+> > diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
+> > index 9e4e331b1603..b989302b6755 100644
+> > --- a/include/linux/pci-tph.h
+> > +++ b/include/linux/pci-tph.h
+> > @@ -14,10 +14,12 @@
+> >   * depending on the memory type: Volatile Memory or Persistent Memor=
+y. When a
+> >   * caller query about a target's Steering Tag, it must provide the t=
+arget's
+> >   * tph_mem_type. ECN link: https://members.pcisig.com/wg/PCI-SIG/doc=
+ument/15470.
+> > + * Add a new tph type for PCI peer-to-peer access use case.
+> >   */
+> >  enum tph_mem_type {
+> >  	TPH_MEM_TYPE_VM,	/* volatile memory */
+> > -	TPH_MEM_TYPE_PM		/* persistent memory */
+> > +	TPH_MEM_TYPE_PM,	/* persistent memory */
+> > +	TPH_MEM_TYPE_P2P	/* peer-to-peer accessable memory */
+> >  };
+> > =20
+> >  #ifdef CONFIG_PCIE_TPH
+> > --=20
+> > 2.47.3
+> >=20
 
