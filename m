@@ -1,356 +1,233 @@
-Return-Path: <linux-pci+bounces-42372-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42373-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA3F3C97DE4
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 15:38:29 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FB01C97E3B
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 15:45:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A3CD3A28B5
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 14:38:28 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A4160342CD0
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 14:45:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 061B631A568;
-	Mon,  1 Dec 2025 14:38:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D5C531BCBC;
+	Mon,  1 Dec 2025 14:45:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h5BwSWHs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pMtGdgGY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C499831A056;
-	Mon,  1 Dec 2025 14:38:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4692B302152
+	for <linux-pci@vger.kernel.org>; Mon,  1 Dec 2025 14:45:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764599905; cv=none; b=YeHuvp1ThsEiGk2G9RI5CDJwRni9w372MGXFm8zf4xjOwWu++xrS48SZRjhBicUrVDf6/b/lMobjGoQaLZAYfaNuVXZhNPQftmtj9CtyAP+OmW3bhWXnQmz2rxf7DhGILA3VQQhBLK2KqosdceW2o1UvSZ5ycmZyDg+d1vQ5dU4=
+	t=1764600314; cv=none; b=Vacatvu7wXvROCyZtijOSf2Ku4goV7xATlhn8XHz/OIPAjPLLDVk9xO4uMJXs33js8V8je3LMcr9NArMwvJpwFNy9d0DbYRDis/15I8+3CVUteW37XJk4bmTSmAwS6ozHTJ1F27OG3DSs2aD/j4enuH0WZ8ceSJgFPMkkqAbFhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764599905; c=relaxed/simple;
-	bh=EHvypyuHfYXIwS659rxHGpzozRLtcucDtPLHNKO3ggs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fL8kO9jGnKuanwR/P9Gf4ZYIxqLk9qUnPtDeOqL4xCZ255syPBbjyZQPEU/Woy17PXZsd89VA4lv28ac6FowwdzNO2lJ6WmUn511DTppBZBqZKhx2NHTUKxatcBXgENBIQ62jsx+SwlJ+FV0xK+vq7sOGE8WYlf1Q+RIqRIkum8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h5BwSWHs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23016C16AAE;
-	Mon,  1 Dec 2025 14:38:18 +0000 (UTC)
+	s=arc-20240116; t=1764600314; c=relaxed/simple;
+	bh=VrFNoeObgkWMawA3WMEOayqdOmEdgYgazeErRriF79g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fK/HST9w1pf2tm+LYspF4/YdA4XBItzp6lvM0I72Tzqf6I7i54pXBNysxL5h3+p54LCIbk47Gup83cfQy72iEVytjjIl578GLccQAJBzdm4wltvCS3hvZDFr7D5MEuYTfAxYouQ1Yu9kZ8cjSUPWSUXUEV7hfgSkwHlmiKkkYM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pMtGdgGY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CECE8C2BC86
+	for <linux-pci@vger.kernel.org>; Mon,  1 Dec 2025 14:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764599905;
-	bh=EHvypyuHfYXIwS659rxHGpzozRLtcucDtPLHNKO3ggs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h5BwSWHsHAdsoiOK2nrzyMN9Cbi9OBkZVIuBUQm5Vwk7rVb0cz2+yWsLLQdV4gsW1
-	 GQ+R71uPj37/xw0g8aUXRzwnD+DTZQVziPyuxJTz8udH3jZntzcQdFpYertYNqqzHy
-	 8tksG5UxTwDp0ZfbzUGhTO91yXQJExglEDdcBO9h8y/G08L6kV4CtgdLPBLzY342vX
-	 PcnUgWxuiftUAVzFHZTjl5WNh2dvGnIqcqFespyHHpdtKBVSKmwunMGzeP0/VBbpJs
-	 eL35umdGxETT98TzCGgZRMU1dxqImvXLHYRpiPmj8d5o3tv7LdY7eg7+xPeTBiQwSm
-	 SCwv8bCWWlGlw==
-Date: Mon, 1 Dec 2025 20:08:12 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-	Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Jonathan Chocron <jonnyc@amazon.com>, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v9 4/4] PCI: dwc: Support ECAM mechanism by enabling iATU
- 'CFG Shift Feature'
-Message-ID: <syg7vpbt3w53s24hgl7b6w64odmif5bq557lwlvzlbvgkukwcn@66jtzzc3vtiu>
-References: <20250909-controller-dwc-ecam-v9-0-7d5b651840dd@kernel.org>
- <20250909-controller-dwc-ecam-v9-4-7d5b651840dd@kernel.org>
- <alpine.DEB.2.21.2511280256260.36486@angie.orcam.me.uk>
- <c7aea2b3-6984-40f5-8234-14d265dabefc@oss.qualcomm.com>
- <alpine.DEB.2.21.2511280755440.36486@angie.orcam.me.uk>
- <cabf4c20-095b-4579-adc1-146a566b19b9@oss.qualcomm.com>
- <alpine.DEB.2.21.2511281714030.36486@angie.orcam.me.uk>
- <a4c6d47f-28b5-40d3-bc82-10aeb14f8e78@oss.qualcomm.com>
- <alpine.DEB.2.21.2511290428340.36486@angie.orcam.me.uk>
- <h7pgm3lqolm53sb4wrcpcurk4ghz4tulqnr7vgd7rzxy4hscue@jcn5tepevlwl>
+	s=k20201202; t=1764600313;
+	bh=VrFNoeObgkWMawA3WMEOayqdOmEdgYgazeErRriF79g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pMtGdgGYwdrVDOSl2W0+qrRlgCLEgaU7IGTTU/12gN3UCsgQdN+opGIHo8pRpP1Kj
+	 4uFFBFd5xWbKWS7tfxvmb1ZVmd57if+tPFmv0fMt9mI5S/RXPQRA6+faMaJR8PyV75
+	 9Ty6CdzF6NvKUyWcctl2LTW416EfLkwkLsr8ga+CuCixVG7ECRTUg+MG/fslgmirAT
+	 B9+3SGVI7IUmKml3EUsja2vs3gmFEfv3WBF3q9rC3ni68WRUZQeYNItrYJSyl10Hw4
+	 o6pGv+GnWtnNOKml9KDYLFmsQnSwSHS36gvhbA5c1otnuNjOTE964RUCKhngh9i2O7
+	 jgoiPJr8yljqw==
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b73161849e1so1042515166b.2
+        for <linux-pci@vger.kernel.org>; Mon, 01 Dec 2025 06:45:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU46oWSkYIJHU+kfiSJ/2De/CGIr8VvPxNjUwYOULz1sjjgosoICnUSKdYdCDtud8ydTSUUBoXXeWY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7/7qy17X6bkPAsywBIy3aN04qx6wHyC3r9mZPNKu6E4kwCtCb
+	V9hfzyHGDNBtWQXfft9sXn0Ue2+0lNNU1qKyG8DgZU422+OtZZeGzVM+cbD0GvB5Tew3WIAoDPJ
+	UT/wlm0bdjPIZB0Q996pLOuicFjUKvEk=
+X-Google-Smtp-Source: AGHT+IFy91U2+uB01Gsp4un0xk6Bx6Yj25pytNj/dKusTxKAoaiBEv1+Gw6wMtj2qwcVruVrp4FxT1g3aKbozzQQv8I=
+X-Received: by 2002:a17:906:c115:b0:b72:b8a9:78f4 with SMTP id
+ a640c23a62f3a-b7671701537mr4016410666b.39.1764600312258; Mon, 01 Dec 2025
+ 06:45:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="4taha6h4y7ppae6c"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <h7pgm3lqolm53sb4wrcpcurk4ghz4tulqnr7vgd7rzxy4hscue@jcn5tepevlwl>
+References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
+ <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com> <CAAhV-H6qqppoX_G5KrWmPor16bXfvNTE2x8Xx6yajAYPqxpigw@mail.gmail.com>
+ <958ef380be4ea488698fab05245d631998c32a48.camel@linux.ibm.com>
+ <CAAhV-H7iMKmLnisD-874D2ZC919sDYeWy3tw=+eUqifK--6-Dg@mail.gmail.com>
+ <8dd0f3df4b18a6c9f8b49ede7bc2ab71e40fd8f9.camel@linux.ibm.com>
+ <CAAhV-H4MNSiUqYpE919YcCaC-_-Q3GBwxRL13ggjsyLahQ-t1A@mail.gmail.com>
+ <7385677843a7790e01158644f63ae4dbb3353bfe.camel@linux.ibm.com> <298aaf6b2815e59d1a94efffdd0e3b002c000cea.camel@linux.ibm.com>
+In-Reply-To: <298aaf6b2815e59d1a94efffdd0e3b002c000cea.camel@linux.ibm.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 1 Dec 2025 22:45:07 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7fgaZUuFSpE0VsMtptnrUTzh0TS=B9ZBUZ_=TH-XjKtg@mail.gmail.com>
+X-Gm-Features: AWmQ_blvZ9XPwC0XmqlAg5tMbfsMq-rVhkV9GFeSBfFXHYYgnWYh4mGTV8zI8aE
+Message-ID: <CAAhV-H7fgaZUuFSpE0VsMtptnrUTzh0TS=B9ZBUZ_=TH-XjKtg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] PCI: Fix isolated PCI function probing with ARI
+ and SR-IOV
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
+	linux-s390 <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev, 
+	Farhan Ali <alifm@linux.ibm.com>, Matthew Rosato <mjrosato@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Gerd Bayer <gbayer@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Nov 28, 2025 at 9:30=E2=80=AFPM Niklas Schnelle <schnelle@linux.ibm=
+.com> wrote:
+>
+> On Mon, 2025-11-10 at 14:08 +0100, Niklas Schnelle wrote:
+> > On Fri, 2025-11-07 at 15:19 +0800, Huacai Chen wrote:
+> > > On Wed, Nov 5, 2025 at 5:46=E2=80=AFPM Niklas Schnelle <schnelle@linu=
+x.ibm.com> wrote:
+> > > >
+> > > > On Wed, 2025-11-05 at 09:01 +0800, Huacai Chen wrote:
+> > > > > On Mon, Nov 3, 2025 at 7:23=E2=80=AFPM Niklas Schnelle <schnelle@=
+linux.ibm.com> wrote:
+> > > > > >
+> > > > > > On Mon, 2025-11-03 at 17:50 +0800, Huacai Chen wrote:
+> > > > > > > Hi, Niklas,
+> > > > > > >
+> > > > > > > On Wed, Oct 29, 2025 at 5:42=E2=80=AFPM Niklas Schnelle <schn=
+elle@linux.ibm.com> wrote:
+> --- snip ---
+> > > > > > > >
+> > > > > > > > Still especially the first issue prevents correct detection=
+ of ARI and
+> > > > > > > > the second might be a problem for other users of isolated f=
+unction
+> > > > > > > > probing. Fix both issues by keeping things as simple as pos=
+sible. If
+> > > > > > > > isolated function probing is enabled simply scan every poss=
+ible devfn.
+> > > > > > > I'm very sorry, but applying this patch on top of commit a02f=
+d05661d7
+> > > > > > > ("PCI: Extend isolated function probing to LoongArch") we fai=
+l to
+> > > > > > > boot.
+> > > > > > >
+> > > > > > > Boot log:
+> > > > > > >
+> --- snip ---
+> > > > > >
+> > > > > >
+> > > > > > This looks like a warning telling us that AHCI enable failed / =
+timed
+> > > > > > out. Do you have Panic on Warn on that this directly causes a b=
+oot
+> > > > > > failure? The only relation I can see with my patch is that mayb=
+e this
+> > > > > > AHCI device wasn't probed before and somehow isn't working?
+> > > > > The rootfs is on the AHCI controller, so AHCI failure causes the =
+boot
+> > > > > failure, without this patch no boot problems.
+> > > > >
+> > > > > Huacai
+> > > > >
+> > > >
+> > > > Ok, I'm going to need more details to make sense of this. Can you t=
+ell
+> > > > me if ARI is enabled for that bus? Did you test with both patches o=
+r
+> > > > just this one? Could you provide lspci -vv from a good boot and can=
+ you
+> > > > tell which AHCI device the root device is on? Also could you clarif=
+y
+> > > > why you set hypervisor_isolated_pci_functions() in particular this
+> > > > seems like a bare metal boot, right? When running in KVM do you pas=
+s-
+> > > > through individual PCI functions with the guest seeing a devfn othe=
+r
+> > > > than 0 alone, i.e. a missing devfn 0? Or do you need this for bare
+> > > > metal for some reason? If you don't need it for bare metal, does th=
+e
+> > > > boot work if you return 0 from hypervisor_isolated_pci_functions() =
+with
+> > > > this patch?
+> > > 1. ARI isn't enabled.
+> > > 2. Only test the first patch.
+> > > 3. This is a bare metal boot.
+> > > 4. If hypervisor_isolated_pci_functions() return 0 then boot is OK
+> > > 5. PCI information please see the attachment.
+> > >
+> > > Huacai
+> >
+> > Thanks for the input. As far as I can see the lspci from a good boot
+> > shows no holes in your devfn space so this particular system doesn't
+> > seem to need the isolated function probing at all. But even then using
+> > it should only try out all devfns and thus never skip one that is found
+> > without isolated function probing.
+> >
+> > To sanity check this, I just booted my personal AMD Ryzen 3900X system
+> > with this series plus a two-liner to unconditionally enable isolated
+> > function probing also on x86_64 and it came up fine including AMD
+> > graphics and my Intel NIC with enabled SR-IOV.
+> >
+> > So I'm really perplexed and coming back to the thought that a device on
+> > your system is misbehaving when probing is attempted and maybe due to a
+> > similar issue as what I saw with SR-IOV it wasn't probed so far but
+> > really should be probed if isolated function probing is enabled. I also
+> > still don't understand your use-case. If it is for VMs then maybe you
+> > could limit it to those? Otherwise it feels like this is just a hack to
+> > probe an odd topology and I wonder if you should rather set
+> > PCI_SCAN_ALL_PCIE_DEVS to find those?
+> >
+> > Thanks,
+> > Niklas
+>
+> Hi LoongArch Maintainers, Hi Bjorn,
+>
+> Sorry for the ping but I'd really like to somehow get this unstuck and
+> I haven't heard back on my previous questions. From my testing on s390
+> this patch fixes a real logic error which prevents the scanning of some
+> devfns which I believe should be scanned if isolated functions are
+> possible. And in all my testing, including on x86 as stated in the
+> previous mail, the code does exactly what I think it is supposed to do.
+> So to me it really looks like something goes wrong with your use of
+> hypervisor_isolated_pci_functions() on your specific hardware.
+>
+> One idea I had is if maybe you need to somehow exclude known empty
+> slots in you config space accessors?
+>
+> And just in general I'd really like to better understand your use-case
+> for the isolated PCI functions. And speaking of that, I'm sorry for
+> having been so blunt in my last mail saying that it felt like a hack.
+> I'm just worried, that we've run into incompatible interpretations or
+> uses of this feature that now prevent us from fixing actual bugs.
+Sorry for the late reply, Let me describe what problem LoongArch has.
+
+You said that "it feels like this is just a hack to probe an odd
+topology". Yes, to some extent you are right.
+
+1, One of our SoC (LS2K3000) has a special device which has func1 but
+without func0. To let the PCI core scan func1 we can only make
+hypervisor_isolated_pci_functions() return true.
+2, In the above case, PCI_SCAN_ALL_PCIE_DEVS has no help.
+3, Though we change hypervisor_isolated_pci_functions() to resolve the
+above problem, it also lets us pass isolated PCI functions to a guest
+OS instance.
+
+As a summary, for real machines commit a02fd05661d73a850 is a hack to
+probe an odd device, for virtual machines it allows passing isolated
+PCI functions.
 
 
---4taha6h4y7ppae6c
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 01, 2025 at 05:21:50PM +0530, Manivannan Sadhasivam wrote:
-> On Sat, Nov 29, 2025 at 06:04:24AM +0000, Maciej W. Rozycki wrote:
-> > On Sat, 29 Nov 2025, Krishna Chaitanya Chundru wrote:
-> > 
-> > > > > Hi Maciej, Can you try attached patch and let me know if that is helping
-> > > > > you
-> > > > > or not. - Krishna Chaitanya.
-> > > >   No change, it's still broken, sorry.
-> > > HI Maciej,
-> > > For the previous patch can you apply this diff and share me dmesg o/p
-> > 
-> >  Your patch came though garbled, likely due to:
-> > 
-> > Content-Type: text/plain; charset=UTF-8; format=flowed
-> > 
-> > Please refer Documentation/process/email-clients.rst and reconfigure your 
-> > e-mail client if possible.
-> > 
-> >  Regardless, I've fixed it up by hand and the only difference in the log, 
-> > except for usual noise which I removed, is this:
-> > 
-> > --- dmesg-bad.log	2025-11-28 03:47:29.582049781 +0100
-> > +++ dmesg-debug.log	2025-11-29 05:41:23.384645926 +0100
-> > @@ -164,6 +164,8 @@
-> >  fu740-pcie e00000000.pcie: ECAM at [mem 0xdf0000000-0xdffffffff] for [bus 00-ff]
-> >  fu740-pcie e00000000.pcie: Using 256 MSI vectors
-> >  fu740-pcie e00000000.pcie: iATU: unroll T, 8 ob, 8 ib, align 4K, limit 4096G
-> > +fu740-pcie e00000000.pcie: Current iATU OB index 2
-> > +fu740-pcie e00000000.pcie: Current iATU OB index 4
-> >  fu740-pcie e00000000.pcie: cap_exp at 70
-> >  fu740-pcie e00000000.pcie: PCIe Gen.1 x8 link up
-> >  fu740-pcie e00000000.pcie: changing speed back to original
-> > 
-> > I've attached a full copy of the debug log too.  I hope this helps you 
-> > narrow the issue down or otherwise let me know what to try next.
-> > 
-> >  NB I note that code you've been poking at only refers resources of the 
-> > IORESOURCE_MEM type.  What about IORESOURCE_IO, which seems more relevant 
-> > here?
-> > 
-> >  Also as a quick check I've now reconfigured the defxx driver for PCI port 
-> > I/O (which is a one-liner; the mapping used to be selectable by hand, but 
-> > distributions got it wrong for systems w/o PCI port I/O, so I switched the 
-> > driver to an automatic choice a few years ago, but the logic remains):
-> > 
-> > # cat /proc/ioports
-> > 00000000-0000ffff : pcie@e00000000
-> >   00001000-00002fff : PCI Bus 0000:01
-> >     00001000-00002fff : PCI Bus 0000:02
-> >       00001000-00002fff : PCI Bus 0000:05
-> >         00001000-00002fff : PCI Bus 0000:06
-> >           00001000-00001fff : PCI Bus 0000:07
-> >           00001000-00001007 : 0000:07:00.0
-> >           00001000-00001002 : parport0
-> >           00001003-00001007 : parport0
-> >           00001008-0000100b : 0000:07:00.0
-> >           00001008-0000100a : parport0
-> >           00002000-00002fff : PCI Bus 0000:08
-> >           00002000-00002fff : PCI Bus 0000:09
-> >           00002000-000020ff : 0000:09:01.0
-> >           00002100-0000217f : 0000:09:02.0
-> >           00002100-0000217f : defxx
-> > # 
-> > 
-> > and:
-> > 
-> > defxx 0000:09:02.0: assign IRQ: got 40
-> > defxx: v1.12 2021/03/10  Lawrence V. Stefani and others
-> > defxx 0000:09:02.0: enabling device (0000 -> 0003)
-> > defxx 0000:09:02.0: enabling bus mastering
-> > 0000:09:02.0: DEFPA at I/O addr = 0x2100, IRQ = 40, Hardware addr = 00-60-6d-xx-xx-xx
-> > 0000:09:02.0: registered as fddi0
-> > 
-> > (as at commit 4660e50cf818) and likewise it has stopped working here from 
-> > commit 0da48c5b2fa7 onwards:
-> > 
-> > defxx 0000:09:02.0: assign IRQ: got 40
-> > defxx: v1.12 2021/03/10  Lawrence V. Stefani and others
-> > defxx 0000:09:02.0: enabling device (0000 -> 0003)
-> > defxx 0000:09:02.0: enabling bus mastering
-> > 0000:09:02.0: Could not read adapter factory MAC address!
-> > 
-> > So it's definitely nothing specific to the parport driver, but rather a 
-> > general issue with PCI/e port I/O not working anymore.  I do hope these 
-> > observations will let you address the issue now.  You might be able to 
-> > reproduce it with hardware you have available even.
-> > 
-> 
-> Yes, looks like the I/O port access is not working with the CFG Shift feature.
-> The spec says that both I/O and MEM TLPs should be handled by this feature, so
-> we are currently unsure why MEM works, but not I/O.
-> 
-> The issue you reported with parport_pc driver is that the driver gets probed,
-> but it fails to detect the parallel ports on the device. More precisely, it
-> fails due to the parport_SPP_supported() check in drivers/parport/parport_pc.c.
-> This function performs some read/write checks to make sure that the port exists,
-> but most likely the read value doesn't match the written one. And since there is
-> no log printed in this function, it just failed silently.
-> 
-> We will check why I/O access fails with ECAM mode and revert back asap. Since
-> the merge window is now open, it becomes difficult to revert the CFG shift
-> feature cleanly. The timing of the report also made it difficult to fix the
-> issue in v6.18. Hopefully, we can backport the fix once we identify the culprit.
-> 
+Huacai
 
-Can you try the attached patch? It is a reworked version of Krishna's patch. I
-just moved things around to check potential override issue.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
-
---4taha6h4y7ppae6c
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0001-PCI-qcom-Enable-iATU-mapping-for-memory-IO-regions.patch"
-
-From b35d92c71d40d3f6471900372f73e07079f8ee34 Mon Sep 17 00:00:00 2001
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Fri, 28 Nov 2025 16:44:17 +0530
-Subject: [PATCH] PCI: qcom: Enable iATU mapping for memory & IO regions
-
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
----
- .../pci/controller/dwc/pcie-designware-host.c | 37 +++++++++++--------
- drivers/pci/controller/dwc/pcie-designware.c  |  3 ++
- drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
- 3 files changed, 26 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index e92513c5bda5..cffd66d51d02 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -36,6 +36,7 @@ static struct pci_ops dw_child_pcie_ops;
- 
- #define IS_256MB_ALIGNED(x) IS_ALIGNED(x, SZ_256M)
- 
-+static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp);
- static const struct msi_parent_ops dw_pcie_msi_parent_ops = {
- 	.required_flags		= DW_PCIE_MSI_FLAGS_REQUIRED,
- 	.supported_flags	= DW_PCIE_MSI_FLAGS_SUPPORTED,
-@@ -433,7 +434,7 @@ static int dw_pcie_config_ecam_iatu(struct dw_pcie_rp *pp)
- 	 * Immediate bus under Root Bus, needs type 0 iATU configuration and
- 	 * remaining buses need type 1 iATU configuration.
- 	 */
--	atu.index = 0;
-+	atu.index = pp->ob_atu_index;
- 	atu.type = PCIE_ATU_TYPE_CFG0;
- 	atu.parent_bus_addr = pp->cfg0_base + SZ_1M;
- 	/* 1MiB is to cover 1 (bus) * 32 (devices) * 8 (functions) */
-@@ -448,14 +449,20 @@ static int dw_pcie_config_ecam_iatu(struct dw_pcie_rp *pp)
- 	if (bus_range_max < 2)
- 		return 0;
- 
-+	pp->ob_atu_index++;
-+
- 	/* Configure remaining buses in type 1 iATU configuration */
--	atu.index = 1;
-+	atu.index = pp->ob_atu_index;
- 	atu.type = PCIE_ATU_TYPE_CFG1;
- 	atu.parent_bus_addr = pp->cfg0_base + SZ_2M;
- 	atu.size = (SZ_1M * bus_range_max) - SZ_2M;
- 	atu.ctrl2 = PCIE_ATU_CFG_SHIFT_MODE_ENABLE;
- 
--	return dw_pcie_prog_outbound_atu(pci, &atu);
-+	ret = dw_pcie_prog_outbound_atu(pci, &atu);
-+	if (!ret)
-+		pp->ob_atu_index++;
-+
-+	return ret;
- }
- 
- static int dw_pcie_create_ecam_window(struct dw_pcie_rp *pp, struct resource *res)
-@@ -630,14 +637,6 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
- 	if (ret)
- 		goto err_free_msi;
- 
--	if (pp->ecam_enabled) {
--		ret = dw_pcie_config_ecam_iatu(pp);
--		if (ret) {
--			dev_err(dev, "Failed to configure iATU in ECAM mode\n");
--			goto err_free_msi;
--		}
--	}
--
- 	/*
- 	 * Allocate the resource for MSG TLP before programming the iATU
- 	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
-@@ -942,7 +941,7 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
- 		dev_warn(pci->dev, "Ranges exceed outbound iATU size (%d)\n",
- 			 pci->num_ob_windows);
- 
--	pp->msg_atu_index = i;
-+	pp->ob_atu_index = i;
- 
- 	i = 0;
- 	resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
-@@ -1086,12 +1085,20 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- 	 * the platform uses its own address translation component rather than
- 	 * ATU, so we should not program the ATU here.
- 	 */
--	if (pp->bridge->child_ops == &dw_child_pcie_ops) {
-+	if (pp->bridge->child_ops == &dw_child_pcie_ops || pp->ecam_enabled) {
- 		ret = dw_pcie_iatu_setup(pp);
- 		if (ret)
- 			return ret;
- 	}
- 
-+	if (pp->ecam_enabled) {
-+		ret = dw_pcie_config_ecam_iatu(pp);
-+		if (ret) {
-+			dev_err(pci->dev, "Failed to configure iATU in ECAM mode\n");
-+			return ret;
-+		}
-+	}
-+
- 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0);
- 
- 	/* Program correct class for RC */
-@@ -1113,7 +1120,7 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
- 	void __iomem *mem;
- 	int ret;
- 
--	if (pci->num_ob_windows <= pci->pp.msg_atu_index)
-+	if (pci->num_ob_windows <= pci->pp.ob_atu_index)
- 		return -ENOSPC;
- 
- 	if (!pci->pp.msg_res)
-@@ -1123,7 +1130,7 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
- 	atu.routing = PCIE_MSG_TYPE_R_BC;
- 	atu.type = PCIE_ATU_TYPE_MSG;
- 	atu.size = resource_size(pci->pp.msg_res);
--	atu.index = pci->pp.msg_atu_index;
-+	atu.index = pci->pp.ob_atu_index;
- 
- 	atu.parent_bus_addr = pci->pp.msg_res->start - pci->parent_bus_offset;
- 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index c644216995f6..d27b469b417b 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -478,6 +478,9 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
- 
- 	limit_addr = parent_bus_addr + atu->size - 1;
- 
-+	if (atu->index > pci->num_ob_windows)
-+		return -ENOSPC;
-+
- 	if ((limit_addr & ~pci->region_limit) != (parent_bus_addr & ~pci->region_limit) ||
- 	    !IS_ALIGNED(parent_bus_addr, pci->region_align) ||
- 	    !IS_ALIGNED(atu->pci_addr, pci->region_align) || !atu->size) {
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index e995f692a1ec..69d0bd8b3c57 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -423,8 +423,8 @@ struct dw_pcie_rp {
- 	struct pci_host_bridge  *bridge;
- 	raw_spinlock_t		lock;
- 	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
-+	int			ob_atu_index;
- 	bool			use_atu_msg;
--	int			msg_atu_index;
- 	struct resource		*msg_res;
- 	bool			use_linkup_irq;
- 	struct pci_eq_presets	presets;
--- 
-2.48.1
-
-
---4taha6h4y7ppae6c--
+>
+> Thanks in advance,
+> Niklas Schnelle
 
