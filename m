@@ -1,53 +1,82 @@
-Return-Path: <linux-pci+bounces-42370-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42371-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CA49C97BCA
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 14:55:37 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id A07DCC97CB7
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 15:14:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0B553A1FCB
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 13:55:35 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3DC30341374
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 14:14:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A3B22F6918;
-	Mon,  1 Dec 2025 13:55:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41632318152;
+	Mon,  1 Dec 2025 14:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="fLHGQTB2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 670F52EE608;
-	Mon,  1 Dec 2025 13:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C198F315789;
+	Mon,  1 Dec 2025 14:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764597334; cv=none; b=Q8z/Uv5GHJrEiQkBD2qh6RR+cevad4rjf9sxzP2J7D1QuG543G+VI++1ug1vro7IqaSPJpRT5t5Z2QX6Gk07H5j+hX1GjFp1+e3nIbplieB//t9pg7OXIzAq+EKlvuo10+B+7w3RolNGSe3efvdqwGgIxTXOvyu9QnQSF79MuIo=
+	t=1764598470; cv=none; b=Su0sIR7fVz8QSq/MvRSLAWzMF++MPkoA7sXhO1lzcMQbN7+RNiSCwYNurn+KtzKdUorZH9DkYnec5vvfzC9GCWsQ/GPyc+CEuNZ/kZVuPN8mXiK3ILclLDpkaRjXzvkREu7oPvUDlzeRayK49EcStmulnE2k/w4TLhB4HxdFcic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764597334; c=relaxed/simple;
-	bh=Zc6de4I7EFyBKpWEuBZLIq/0pk6ssLENEwS36Arf/a0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=M3QsBSWxe+4HtuGUIjeLrfI5lZqXvNc77ImEreqKH+wwRLALT7dXcKA1L2NBMmYwYBZDjSKXjjUqA1ovnXHZTtSwsuUBg0/mK8k/x2riqCXvIrP6tGEiMu8UD3h0Dyh8vlOPDDQjTQcacaQLXJUlLHmN/YMcRIWwhrP3rI/0Dkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id BFCA892009D; Mon,  1 Dec 2025 14:55:29 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id BCEE492009C;
-	Mon,  1 Dec 2025 13:55:29 +0000 (GMT)
-Date: Mon, 1 Dec 2025 13:55:29 +0000 (GMT)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-cc: Bjorn Helgaas <bhelgaas@google.com>, 
-    Matthew W Carlis <mattc@purestorage.com>, 
-    ALOK TIWARI <alok.a.tiwari@oracle.com>, ashishk@purestorage.com, 
-    msaggi@purestorage.com, sconnor@purestorage.com, 
-    Lukas Wunner <lukas@wunner.de>, Jiwei <jiwei.sun.bj@qq.com>, 
-    guojinhui.liam@bytedance.com, ahuang12@lenovo.com, sunjw10@lenovo.com, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: Always lift 2.5GT/s restriction in PCIe failed link
- retraining
-In-Reply-To: <440e7c29-bee1-29f3-afa8-7b5905fd6cf2@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.2512011319590.49654@angie.orcam.me.uk>
-References: <alpine.DEB.2.21.2511290245460.36486@angie.orcam.me.uk> <440e7c29-bee1-29f3-afa8-7b5905fd6cf2@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1764598470; c=relaxed/simple;
+	bh=4jcweNi6psPpjlZDmC6qZ/Q4mO7N38WsRkszImaw/p0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ugT5gVk4HEgalqNNYUGzwMViIAUTWtX+EwiyqrPnDXQhAgcOhQYt4J64EYPBH0pD76M1iA7h3g9U4DHLks8lpD/VIw2/V2o7RWaqdcp3eSup/jZZHIrgpRfc6OytjQ48ii4LA50hwxN/Y3R/MjI9wO5WlMq2zDpX2j3/q7o2gu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=fLHGQTB2; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version:
+	Content-Type; bh=4jcweNi6psPpjlZDmC6qZ/Q4mO7N38WsRkszImaw/p0=;
+	b=fLHGQTB2wwpyAu5ym/trd8UA27IhVG8yhhJGQFFZO+C46/FSaJA398a3OGiE8y
+	oFIgx/AYYq+CfIXUNiV56NthlUeuQ5u/Rzhktg0uOuS5P0rXaxxtf2RRu0oaXWnC
+	dhNBE1cSq399PRWZNKq/vhKcLL4cdIKcBq8vAySanWS1Q=
+Received: from emily-VMware-Virtual-Platform.. (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PigvCgC3Ha9Qoi1p2MM7GA--.20690S2;
+	Mon, 01 Dec 2025 22:12:34 +0800 (CST)
+From: huyuye <huyuye812@163.com>
+To: sunilvl@ventanamicro.com
+Cc: ajones@ventanamicro.com,
+	anup@brainfault.org,
+	aou@eecs.berkeley.edu,
+	atishp@rivosinc.com,
+	bhelgaas@google.com,
+	catalin.marinas@arm.com,
+	conor.dooley@microchip.com,
+	dfustini@tenstorrent.com,
+	haibo1.xu@intel.com,
+	lenb@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	palmer@dabbelt.com,
+	rafael@kernel.org,
+	robert.moore@intel.com,
+	samuel.holland@sifive.com,
+	tglx@linutronix.de,
+	will@kernel.org,
+	dai.hualiang@zte.com.cn,
+	deng.weixian@zte.com.cn,
+	guo.chang2@zte.com.cn,
+	liu.qingtao2@zte.com.cn,
+	wu.jiabao@zte.com.cn,
+	lin.yongchun@zte.com.cn,
+	hu.yuye@zte.com.cn,
+	zhang.longxiang@zte.com.cn,
+	huyuye <huyuye812@163.com>
+Subject: Re:[PATCH v7 08/17] ACPI: pci_link: Clear the dependencies after probe
+Date: Mon,  1 Dec 2025 22:12:29 +0800
+Message-ID: <20251201141230.12656-1-huyuye812@163.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240729142241.733357-9-sunilvl@ventanamicro.com>
+References: <20240729142241.733357-9-sunilvl@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,40 +84,29 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PigvCgC3Ha9Qoi1p2MM7GA--.20690S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7JF4DWr1ruFy8AFWkArykGrg_yoWfuwc_Kr
+	1kAFyDZw4fK3W7tFy3GFykJFW3K3yagr9xGayIq392kw43Zan8Cws29r4Iyr45CFWxGrn0
+	kr13Zw47K34a9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7VUjVOptUUUUU==
+X-CM-SenderInfo: 5kx135bhyrjqqrwthudrp/1tbioBkXCGktloy9jAADsK
 
-On Mon, 1 Dec 2025, Ilpo Järvinen wrote:
+> Hi, sunilvl
 
-> > +	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
-> > +	if ((lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT &&
-> > +	    (lnkcap & PCI_EXP_LNKCAP_SLS) != PCI_EXP_LNKCAP_SLS_2_5GB) {
-> 
-> I'm trying to recall, if there was some particular reason why 
-> ->supported_speeds couldn't be used in this function. It would avoid the 
-> need to read LinkCap at all.
+> Based on the above patch, I understand that you previously >resolved dependencies between Link devices and PCI Host Bridges by >calling acpi_dev_clear_dependencies(device). I would like to ask: >on RISC‑V platforms, if we need to manage dependencies between >multiple PCI Host Bridges, could this be addressed by adding a >call to acpi_dev_clear_dependencies(device) at the end of the >acpi_pci_root_add enumeration function?
 
- Thanks for the hint.  There's probably none and it's just me missing some 
-of the zillion bits and pieces.  I'll wait a couple of days for any other 
-people to chime in and respin with this update included if everyone is 
-otherwise happy to proceed with this update.
+> Initialization order dependencies can be defined via the ACPI >_DEP method in the DSDT. For example, if host bridge B depends on >host bridge A, bridge B should not be enumerated until bridge A is >fully initialized.
 
-> > +		if (ret)
-> > +			goto err;
-> >  	}
-> >  
-> >  	return ret;
-> 
-> return 0;
+> Yes, that should work.
+> Regards,
+> Sunil
 
- It can still return -ENOTTY if neither of the two latter conditionals 
-matched, meaning the quirk was not applicable after all.  ISTR you had 
-issues with the structure of this code before; I am not sure if it can 
-be made any better in a reasonable way.  It is not a failure per se, so 
-the newly-added common error path does not apply.  This is the case for: 
-"Return an error if retraining was not needed[...]" from the introductory 
-comment.
+Hi,Sunil
 
- Shall I add a comment above the return statement referring to this?
+I'm truly honored by your affirmation of my answer.Do you think this solution has a chance of being accepted into the upstream kernel? Are there any unintended side effects we may have overlooked?
 
-  Maciej
+Regards,
+Yuye
+
 
