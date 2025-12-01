@@ -1,241 +1,171 @@
-Return-Path: <linux-pci+bounces-42386-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42387-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2CC1C988BC
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 18:36:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CD689C988DD
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 18:39:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 43B55342658
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 17:36:51 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4E894344A38
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 17:39:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7072A3358DA;
-	Mon,  1 Dec 2025 17:36:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 686BD3191A2;
+	Mon,  1 Dec 2025 17:39:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qU5Q7CCJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gj715R1T"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C405D3191A2
-	for <linux-pci@vger.kernel.org>; Mon,  1 Dec 2025 17:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BA1313E02;
+	Mon,  1 Dec 2025 17:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764610607; cv=none; b=YuThfZzYLAGxcRZiOB/Mw2TxGB9dsam+MtGaT0rM6XuebVMy4mJozQaEqK3d/DpKb78ACbIiqt0Xd22hYIGTQxukYOd5BdrjJS5KQ13LtTED+Q+SEbF6Hx5V3DAFzKAoJ5xi9jxvodp+sAeolO3EWDFH5B3GDUdsYuJinjjgkNs=
+	t=1764610776; cv=none; b=UUxnPtDxm2ytUxujtvyucBnwhlj7ZytI0+p3tlAGMDBxtTtuP/bcYGXaU3mN8p2+fiSIyxtMgEhoN3OB21CIR5Zbow3MY005YGIbOLnNri3Tb5xauD0MAOLA3OzOPdFEJiuQyhkF8GdNC3oeeBiHeVFmGZJ9oALbNzC7n20f2zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764610607; c=relaxed/simple;
-	bh=OYq063x/kWzolRkbiS0sRgj7g8DeK/P7vo8HUfxzrvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L7BZRUi2wTiGVNe6CXHeQj6hBuSiH/GWvZ5SAMZUg4Gy5Ci0+N+YDRhirno4WW6stFaV+BWm8i+oK16r7CSlfcRP8clLqTCgSibCIdHbztYzTf/1C7K/Q5p/fucLMewC2wCqF2LyqxBvspTNNitwzJhnpUv8CJX3OtgeNsfVIKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qU5Q7CCJ; arc=none smtp.client-ip=209.85.214.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-29812589890so53196755ad.3
-        for <linux-pci@vger.kernel.org>; Mon, 01 Dec 2025 09:36:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764610605; x=1765215405; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yOls94FUtGD6Qyq6JZRmBlpF7rbm3X6QAjMJEPTNkM0=;
-        b=qU5Q7CCJFHR6Jip8eTXb1OUvXcoRmd1DbEL1PGCQvTCDbLeEGCiDNz3pSnVoCq7o8u
-         IT1dUJKU3caUQMDZkEqaP8VBe5eRpybch7bzM7t+hyF06xeMbOSxlyftw6BXByKdWXWb
-         mUdsx05QI/LBYGVSg+Ry35Stuw96LBIX6G+oXvuOpzN/eegg7QHZxEuMmpW1J+vzClT5
-         nLJLi7j5E/a0tc1o0CpEqKKSobbmvFOZy1ktvcrgD66v9+g+8CCOTB++dbQ2xICoFLzJ
-         A34r8/YorzDjFme4V7QrBJTPSi0Osj5QFSkZPivL1W9givcHR+sx5AExhOXfkEW+lO01
-         DaoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764610605; x=1765215405;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yOls94FUtGD6Qyq6JZRmBlpF7rbm3X6QAjMJEPTNkM0=;
-        b=AcrHg2Phl3vLOzR+/VBCsZrXbDNG1Q9D/F/hHIgheOAWMNBxQypXQ3pb70VrcALZJL
-         RlABT0Zi0TUG5MhRubCkQEZQ45/ovUpZmBhBMV94348ABxrPYPnlAOL82ZL2lNYn9sDN
-         HhTLtyIO9O007+ZocICj0OHubcKhjnEljojjImuUaxcbZhlAjxJR/fKyztF6iQeJ7n9+
-         KYWukssALmQSCPe1zOeqgCmBYeuuBCORelSo0nf6xuwNO4IwcVyLxyzrs0ce2BKs886V
-         CS4fIXPM2mwwSwy5b3MgZNOhS+62BnxutR+kNeR4pffFDLp5hogb3RcVcZ0bk6hA5mdw
-         2LCA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/HF/eQvbYw8KBMZDdlSenjAKbu6qmLbDH0LQ2jpI04dD9oOG8EZWCYDinUS3Vg6HB/iaN43i3Lak=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQHLH2T4jV/c5sYLlpSMyRIC9QFe9Qt8ya11XAn03PCe8yhGB4
-	i69z3g4KrufxaLB3OYPfrExGPLNbE/Hk2dnwwy7nj3QNrePF4XTtoTSL8Scu3rXKfA==
-X-Gm-Gg: ASbGnctudEdYIcQE7jBgAh1/XdPSyLVtOaqXIH354ZEK67Z7IDLeitkmJn0L0JdIFRN
-	LLAfkZDOIiDs4dlL7PI5+GCgb9ZNcaNRJA/1AuI6rcPLroyy/puMDzSX//YzC7b7UJMXsAg/CVv
-	tWzRjRqIQLwO5FlRd7XTPt1M8mAxIGNuQVo1p7S1sI/bFVv8bNS9W+XfdXFIUZ7TpKZlm9KdraR
-	Wd2WoWmyJ/mFCQIeCp7Rf6r7eT9cMwZRHDsYutBhSe8eAXWoRDhzV/adfgQW4Rn+yEgAedtPwD8
-	miqYloIov5VmsMpgSyJaS1xMJJotzcNGChsDD3cRYWpFipCnKTTGEJCVkmM3NSSzZopbcRoAZzM
-	uDhyCSZdDAILhJN7F0w3xEmod+CxDTR3VnIU+Br+EJp4ndAm54GXpmRWgjz0zF1mMwHZSh3nCL5
-	/wRrJi0yWRa5b7VEV4TRj0bNBFyqR3I+2qV038OZr/qkNh5VY=
-X-Google-Smtp-Source: AGHT+IHxNL4zVA4YwR2Gk5dBAeB2uwQdYit3oH3bwVFcnVNWz9JhOvi5wb83c3kF4oupUBwnEmP3sQ==
-X-Received: by 2002:a17:90b:4b03:b0:340:29a1:1b0c with SMTP id 98e67ed59e1d1-34733e6c8aamr43027950a91.7.1764610604811;
-        Mon, 01 Dec 2025 09:36:44 -0800 (PST)
-Received: from google.com (28.29.230.35.bc.googleusercontent.com. [35.230.29.28])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3476a54705csm17545241a91.2.2025.12.01.09.36.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Dec 2025 09:36:43 -0800 (PST)
-Date: Mon, 1 Dec 2025 17:36:39 +0000
-From: David Matlack <dmatlack@google.com>
-To: Zhu Yanjun <yanjun.zhu@linux.dev>
-Cc: Alex Williamson <alex@shazbot.org>,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>,
-	kvm@vger.kernel.org, Leon Romanovsky <leonro@nvidia.com>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <shuah@kernel.org>, Tomita Moeko <tomitamoeko@gmail.com>,
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>
-Subject: Re: [PATCH 00/21] vfio/pci: Base support to preserve a VFIO device
- file across Live Update
-Message-ID: <aS3SJxAjVT-ZH1YT@google.com>
-References: <20251126193608.2678510-1-dmatlack@google.com>
- <dadaeeb9-4008-4450-8b61-e147a2af38b2@linux.dev>
- <46bbdad1-486d-4cb1-915f-577b00de827f@linux.dev>
- <CALzav=eigAYdw5-hzk1MAHWBU29yJK4_WWTd0dyoBN91bnRoZQ@mail.gmail.com>
- <4998497c-87e8-4849-8442-b7281c627884@linux.dev>
- <aS3RF6ROa7uZsviv@google.com>
+	s=arc-20240116; t=1764610776; c=relaxed/simple;
+	bh=q4Tne7+Z3cnF9CErHyNzETIaPtPF3wDSr+O1s+ZenOY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q3NYTvaU++1NujMzH0LTcwozVAHosroyqfTk/f9wJKJ7xrSyjlXsVmanM9M17O0bybeOELm8GrfbMNJFysho8GUl6mcbYF3Kbss5PIQFeCSin/E5LhLIab2Pq583ul9v1sBcP1BBZRAkGQLogYkCf8UPvmTfMhpQU4cl6wsEusU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gj715R1T; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764610775; x=1796146775;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=q4Tne7+Z3cnF9CErHyNzETIaPtPF3wDSr+O1s+ZenOY=;
+  b=gj715R1THBGg9sEpqLaYIDsOqc3s9Zgj2vmZTmgo17caqZQneuTiZsv3
+   0xGt+Rbt8dDG7q/VKCfck44tijUZytCmrJcMuilsSQhuKVAdcU6GYmnvX
+   uRwtCD7hIph44jUS6zbUnvP3P0RgnbbbCpHqH5F/5C+lSx932d6I20jv8
+   NCoJK3FMZtLzZTgB9aEHJnnuqGJpHy2QD016duLR81B/lcx+RqYhtgLtb
+   d0UoByt2tzfq254wkWQ3zkqYsjaqD3pIgdBOcP6yoybRsRSgbs+rhgb4K
+   8rCH126sCX+nKGiT40QopoXlqxKGJWZTnjM5KDjHDl9KUQMPUsu8Ssx0V
+   Q==;
+X-CSE-ConnectionGUID: 8TVrBl32QBGgduEa7oNevw==
+X-CSE-MsgGUID: lFM9fnAtRrScT1nyrWEd1Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11630"; a="66452789"
+X-IronPort-AV: E=Sophos;i="6.20,241,1758610800"; 
+   d="scan'208";a="66452789"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 09:39:34 -0800
+X-CSE-ConnectionGUID: HWl2HESBTIygqrvRGVBfYA==
+X-CSE-MsgGUID: HszrL6w+RcCQ+Ni0oXKbRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,241,1758610800"; 
+   d="scan'208";a="231443296"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.111.117]) ([10.125.111.117])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 09:39:32 -0800
+Message-ID: <2d4fb1ce-176c-404a-852f-987a9481046d@intel.com>
+Date: Mon, 1 Dec 2025 09:39:32 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aS3RF6ROa7uZsviv@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/kaslr: P2PDMA is one of a class of ZONE_DEVICE-KASLR
+ collisions
+To: Dan Williams <dan.j.williams@intel.com>, dave.hansen@linux.intel.com,
+ peterz@infradead.org
+Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+ Balbir Singh <balbirs@nvidia.com>, Ingo Molnar <mingo@kernel.org>,
+ Kees Cook <kees@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Andy Lutomirski <luto@kernel.org>, Logan Gunthorpe <logang@deltatee.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>
+References: <20251108023215.2984031-1-dan.j.williams@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20251108023215.2984031-1-dan.j.williams@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-12-01 05:32 PM, David Matlack wrote:
-> On 2025-12-01 09:16 AM, Zhu Yanjun wrote:
-> > 
-> > 在 2025/12/1 9:10, David Matlack 写道:
-> > > On Mon, Dec 1, 2025 at 7:49 AM Zhu Yanjun <yanjun.zhu@linux.dev> wrote:
-> > > > 在 2025/11/27 20:56, Zhu Yanjun 写道:
-> > > > > Hi, David
-> > > > > 
-> > > > > ERROR: modpost: "liveupdate_register_file_handler" [drivers/vfio/pci/
-> > > > > vfio-pci-core.ko] undefined!
-> > > > > 
-> > > > > ERROR: modpost: "vfio_pci_ops" [drivers/vfio/pci/vfio-pci-core.ko]
-> > > > > undefined!
-> > > > > ERROR: modpost: "liveupdate_enabled" [drivers/vfio/pci/vfio-pci-core.ko]
-> > > > > undefined!
-> > > > > ERROR: modpost: "liveupdate_unregister_file_handler" [drivers/vfio/pci/
-> > > > > vfio-pci-core.ko] undefined!
-> > > > > ERROR: modpost: "vfio_device_fops" [drivers/vfio/pci/vfio-pci-core.ko]
-> > > > > undefined!
-> > > > > ERROR: modpost: "vfio_pci_is_intel_display" [drivers/vfio/pci/vfio-pci-
-> > > > > core.ko] undefined!
-> > > > > ERROR: modpost: "vfio_pci_liveupdate_init" [drivers/vfio/pci/vfio-
-> > > > > pci.ko] undefined!
-> > > > > ERROR: modpost: "vfio_pci_liveupdate_cleanup" [drivers/vfio/pci/vfio-
-> > > > > pci.ko] undefined!
-> > > > > make[4]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
-> > > > > make[3]: *** [Makefile:1960: modpost] Error 2
-> > > > > 
-> > > > > After I git clone the source code from the link https://github.com/
-> > > > > dmatlack/linux/tree/liveupdate/vfio/cdev/v1,
-> > > > > 
-> > > > > I found the above errors when I built the source code.
-> > > > > 
-> > > > > Perhaps the above errors can be solved by EXPORT_SYMBOL.
-> > > > > 
-> > > > > But I am not sure if a better solution can solve the above problems or not.
-> > > > I reviewed this patch series in detail. If I’m understanding it
-> > > > correctly, there appears to be a cyclic dependency issue. Specifically,
-> > > > some functions in kernel module A depend on kernel module B, while at
-> > > > the same time certain functions in module B depend on module A.
-> > > > 
-> > > > I’m not entirely sure whether this constitutes a real problem or if it’s
-> > > > intentional design.
-> > > Thanks for your report. Can you share the .config file you used to
-> > > generate these errors?
-> > 
-> > 
-> > IIRC, I used FC 42 default config. Perhaps you can make tests with it. If
-> > this problem can not be reproduced, I will share my config with you.
-> > 
-> 
-> What does "FC 42 default config" mean?
-> 
-> Either way I was able to reproduce the errors you posted above by
-> changing CONFIG_VFIO_PCI{_CORE} from "y" to "m".
-> 
-> To unblock building and testing this series you can change these configs
-> from "m" to "y", or the following patch (which fixed things for me):
+The subject probably wants to be something along the lines of:
 
-Oops, sorry, something went wrong when I posted that diff. Here's the
-correct diff:
+	x86/kaslr: Recognize all ZONE_DEVICE users as physaddr consumers
 
-diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
-index 929df22c079b..c2cca16e99a8 100644
---- a/drivers/vfio/pci/Makefile
-+++ b/drivers/vfio/pci/Makefile
-@@ -2,11 +2,11 @@
+On 11/7/25 18:32, Dan Williams wrote:
+> Commit 7ffb791423c7 ("x86/kaslr: Reduce KASLR entropy on most x86 systems")
+> is too narrow. ZONE_DEVICE, in general, lets any physical address be added
+> to the direct-map. I.e. not only ACPI hotplug ranges, CXL Memory Windows,
+> or EFI Specific Purpose Memory, but also any PCI MMIO range for the
+> CONFIG_DEVICE_PRIVATE and CONFIG_PCI_P2PDMA cases.
 
- vfio-pci-core-y := vfio_pci_core.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
- vfio-pci-core-$(CONFIG_VFIO_PCI_ZDEV_KVM) += vfio_pci_zdev.o
--vfio-pci-core-$(CONFIG_LIVEUPDATE) += vfio_pci_liveupdate.o
- obj-$(CONFIG_VFIO_PCI_CORE) += vfio-pci-core.o
+This should probably also mention the fact that:
 
- vfio-pci-y := vfio_pci.o
- vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
-+vfio-pci-$(CONFIG_LIVEUPDATE) += vfio_pci_liveupdate.o
- obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
+	config PCI_P2PDMA
+		depends on ZONE_DEVICE
 
- obj-$(CONFIG_MLX5_VFIO_PCI)           += mlx5/
-diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
-index c5b5eb509474..b9805861763a 100644
---- a/drivers/vfio/vfio_main.c
-+++ b/drivers/vfio/vfio_main.c
-@@ -1386,6 +1386,7 @@ const struct file_operations vfio_device_fops = {
-        .show_fdinfo    = vfio_device_show_fdinfo,
- #endif
- };
-+EXPORT_SYMBOL_GPL(vfio_device_fops);
+It would also be nice to point out how the "too narrow" check had an
+impact on real ZONE_DEVICE but !PCI_P2PDMA users. This isn't just a
+theoretical problem, right?
 
- /**
-  * vfio_file_is_valid - True if the file is valid vfio file
-diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
-index 69298d82f404..c7a0c9c3b6a8 100644
---- a/kernel/liveupdate/luo_core.c
-+++ b/kernel/liveupdate/luo_core.c
-@@ -256,6 +256,7 @@ bool liveupdate_enabled(void)
- {
-        return luo_global.enabled;
- }
-+EXPORT_SYMBOL_GPL(liveupdate_enabled);
+> A potential path to recover entropy would be to walk ACPI and determine the
+> limits for hotplug and PCI MMIO before kernel_randomize_memory(). On
+> smaller systems that could yield some KASLR address bits. This needs
+> additional investigation to determine if some limited ACPI table scanning
+> can happen this early without an open coded solution like
+> arch/x86/boot/compressed/acpi.c needs to deploy.
 
- /**
-  * DOC: LUO ioctl Interface
-diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-index fca3806dae28..9baa88966f04 100644
---- a/kernel/liveupdate/luo_file.c
-+++ b/kernel/liveupdate/luo_file.c
-@@ -868,6 +868,7 @@ int liveupdate_register_file_handler(struct liveupdate_file_handler *fh)
-        luo_session_resume();
-        return err;
- }
-+EXPORT_SYMBOL_GPL(liveupdate_register_file_handler);
+Yeah, a more flexible runtime solution would be highly preferred over
+the existing solution built around config options. But this is really
+orthogonal to the bug fix here.
 
- /**
-  * liveupdate_unregister_file_handler - Unregister a liveupdate file handler
-@@ -913,3 +914,4 @@ int liveupdate_unregister_file_handler(struct liveupdate_file_handler *fh)
-        liveupdate_test_register(fh);
-        return err;
- }
-+EXPORT_SYMBOL_GPL(liveupdate_unregister_file_handler);
+With the changelog fixes above:
+
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+
+Oh, and does this need to be cc:stable@?
 
