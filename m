@@ -1,186 +1,575 @@
-Return-Path: <linux-pci+bounces-42358-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42359-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA091C971F9
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 12:51:55 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 674C6C97276
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 12:58:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97F9B3A4144
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 11:51:53 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 986714E2937
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 11:57:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3F5A2F25E3;
-	Mon,  1 Dec 2025 11:51:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18D542F5A37;
+	Mon,  1 Dec 2025 11:57:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cxxVMSdR"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="O4MyJXYB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010032.outbound.protection.outlook.com [52.101.193.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF6E2F1FCF;
-	Mon,  1 Dec 2025 11:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764589910; cv=none; b=bQYfXqjLv2TtCXxwEK3DwEr1Gw4DOA2jYNYiu8O0QubKDu/NnwU/lXQKVsuYvOExWemaaGjWzdfthZhX7vBDw/F4liOmOCn70lb+APnCGoAnFBtAM/rp5UmykLgl0iISx6QHqSk3El8a6GLyI55m2kwH2UiJ03S9T1AO2Y3qRSE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764589910; c=relaxed/simple;
-	bh=3HC8X3QnxHsDdV1qdXMUkclAd82ZLov/gFh81kRCVuM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GOG5ICaCve+ve/ilTtJN69zLo2ABI/V1FI7lvHmQAWsVAGVYXPHZeiyg7XLNfk7eIR2komYNUsSqHFVJXG5FV3a5/4b5cSfIr+jQAGcdvcL6XXM1KrBV5pIIDYBOiY3gRmH0n2i+b5Lu7a75QBTVYCP4acNU70+9uaSIFQS3eUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cxxVMSdR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D1CFC4CEF1;
-	Mon,  1 Dec 2025 11:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764589910;
-	bh=3HC8X3QnxHsDdV1qdXMUkclAd82ZLov/gFh81kRCVuM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cxxVMSdRYaTGz7G2omN0JBxOHZ3CcZ9mhrs//pSijQsiiPaJIso1SqReYJBs0jEpm
-	 XJpNxdIivIO2KdC2D7r944Fc7aTMl2XqBp4nhQ3ZBsgPyA0KYWJjibmcdLv8OKdcEm
-	 EQrebsr6Uo47RM4k86dE15Gq3XH1CmGgW5zI4ZcNpjr/Rog/9FMG9ASYnaVvIH92ky
-	 oF+GDmFTqYRQTkZQTbJj3jFrOef62kmz9pbOq2jRuImXtQOMJDm1oZXfHEwSHxDfzP
-	 1hw/WpaH1eAnFKF14GTxAfvCtBXjc4Hw+UQuIG7cisBjI536GiDTCgWbjCeS+FcA4J
-	 8+O4GNY101p6g==
-Date: Mon, 1 Dec 2025 17:21:33 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-	Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Jonathan Chocron <jonnyc@amazon.com>, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v9 4/4] PCI: dwc: Support ECAM mechanism by enabling iATU
- 'CFG Shift Feature'
-Message-ID: <h7pgm3lqolm53sb4wrcpcurk4ghz4tulqnr7vgd7rzxy4hscue@jcn5tepevlwl>
-References: <20250909-controller-dwc-ecam-v9-0-7d5b651840dd@kernel.org>
- <20250909-controller-dwc-ecam-v9-4-7d5b651840dd@kernel.org>
- <alpine.DEB.2.21.2511280256260.36486@angie.orcam.me.uk>
- <c7aea2b3-6984-40f5-8234-14d265dabefc@oss.qualcomm.com>
- <alpine.DEB.2.21.2511280755440.36486@angie.orcam.me.uk>
- <cabf4c20-095b-4579-adc1-146a566b19b9@oss.qualcomm.com>
- <alpine.DEB.2.21.2511281714030.36486@angie.orcam.me.uk>
- <a4c6d47f-28b5-40d3-bc82-10aeb14f8e78@oss.qualcomm.com>
- <alpine.DEB.2.21.2511290428340.36486@angie.orcam.me.uk>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50C028DB46;
+	Mon,  1 Dec 2025 11:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764590240; cv=fail; b=Wgx5gn1CzGoFNa4JgIfonA7mnSFfM0ZBP6a95PyMp4W8FAveX6NRYWO8g2HP3MTkw7GGrfNJZ/Uhsy+g0UL35JsRpozVAFEaeJT9POsbpL7jNdwMv1AiQxFP0gpL1YRPCIfo2lb0M1aocIdeo67Cj/GWqOKZsz0Ka+tMrImQZxE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764590240; c=relaxed/simple;
+	bh=44pBIZZIfRaQgZoBKbz2YDSrvWocdWOKvTITT5j1SuE=;
+	h=Content-Type:Date:Message-Id:From:To:Cc:Subject:References:
+	 In-Reply-To:MIME-Version; b=P6h2Yg3hoV+k2Xb+HcGnbwDm1k36xev/81r4b9OYGpwY5KvaVq+xx2Bj2jANHNV2JY6eA8atlWLATVI32AHs63AZWOd+pxGv3iXXCNv2EzAs5SZNFRDymidSnY05oc6RHXH0u89dNCGzeH54J/+uLdPXMe+jSYkylhdjGg8YQfw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=O4MyJXYB; arc=fail smtp.client-ip=52.101.193.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uM0JSAmLo2JrAMdaoeThwxTlBzP5ZEiTVItyHd8eN6nMecvpOqmmr6+HX1in5YKWMvt1lI1rPeNHbBdEuapvjUTdyW2A8VksYxEJKurEfbgFC5qtcZjjU5pLoQ0IJrcblrdy3EG/rE4ZAebAvPZ6wkmc/my5EJBguw3g8fIaU/GBvrijFempCXArkyT9/Ym00pT0XL7CwRAMW7bD58vWjySf9gA2bmqtSc6MujgUuLlrU4A50jiCHi/Ql6gOOXStYHYULXITq4RP0u4FSL5F23neP3PB5iff57wl6Y2yg//zUZySeOTWKxvgEGYWWc7cQWJziCnOFuH1rgjttaQaQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Z6yyu1a/a74oaOEdSoMzSvpOxeV8b0rG2j3KNU3mwJo=;
+ b=XiPM/2NgLxuCnXAVu6ujrMQbtj13FBaRTwjooKPmTGkYwEYVNZWBPPDNWG4lX/qDWDzIbU1LWZ3w34uwG3dJLMiGWKpP3PP6+2k5eynE/FOP/ft3xc1sTQJlbK+ayi81i6oOrfayQtTZ82FF9SAffp1wcrti9LyF7Dy/5qqdr9r2rKDq5Lgyc22sLl9E+ZJaxdHeCsWr5KkNZajCRECHk+jqj9DYmbAwhCWM13qKG7jbEZxI39ovX7OSoFw0J8gTR6Y3YcSB1TQZN9VQq9R2X80XMtY4YM6HTv413/5EJMj0zrhWjJQwTi/25EvXPIxBcqu2MBKlEfcJVpbnPh8vrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z6yyu1a/a74oaOEdSoMzSvpOxeV8b0rG2j3KNU3mwJo=;
+ b=O4MyJXYB6QOeokgvaq3ZDKPAblnrXpTOciUrrY9WmGqW9TSMeumWpaaRLqr4mQJeT/ao3P6zaPrJMhKyeraZIw1ab9XMcDm2xfjyQ9sT0rsLFN533rzftgZXVv/7KGmh2MouJrGfQHbKeD8NwLV3stdYRU3gPDEd/72Oo8kjrS0Mp2kdeQB985cYwxYspgQ/NKVq0YhBuofuPQOhspV3bvQVsNGJBaZ51VvImpqcsGURpmO3GKFb8De/8eFWftIJK8Phm6HgIDBEgY6pSVfO81z4aXLi2tPsuJAeDdf49WRDcG0NGv6AL4HTXPVx3PGEa4sYEhGY55fJ1WBv0V4TPw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by SJ2PR12MB7822.namprd12.prod.outlook.com (2603:10b6:a03:4ca::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Mon, 1 Dec
+ 2025 11:57:13 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::7de1:4fe5:8ead:5989]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::7de1:4fe5:8ead:5989%6]) with mapi id 15.20.9366.012; Mon, 1 Dec 2025
+ 11:57:13 +0000
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 01 Dec 2025 20:57:09 +0900
+Message-Id: <DEMV14GBQWMC.28TXT8E5YO5NW@nvidia.com>
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Zhi Wang" <zhiw@nvidia.com>, "Alice Ryhl" <aliceryhl@google.com>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <dakr@kernel.org>, <bhelgaas@google.com>,
+ <kwilczynski@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <lossin@kernel.org>, <a.hindborg@kernel.org>, <tmgross@umich.edu>,
+ <markus.probst@posteo.de>, <helgaas@kernel.org>, <cjia@nvidia.com>,
+ <smitra@nvidia.com>, <ankita@nvidia.com>, <aniketa@nvidia.com>,
+ <kwankhede@nvidia.com>, <targupta@nvidia.com>, <joelagnelf@nvidia.com>,
+ <jhubbard@nvidia.com>, <zhiwang@kernel.org>
+Subject: Re: [PATCH v7 3/6] rust: io: factor common I/O helpers into Io
+ trait
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20251119112117.116979-1-zhiw@nvidia.com>
+ <20251119112117.116979-4-zhiw@nvidia.com> <aSB1Hcqr6W7EEjjK@google.com>
+ <DEHTK1CK84WO.28LTX338E4PXQ@nvidia.com> <aSXD-I8bYUA-72vi@google.com>
+ <DEIGORHCX5VR.2EIPZECA0XGVH@nvidia.com> <aSbNddXgvv5AXqkU@google.com>
+ <DEIO1A8N2C66.11BXTCZW4MKWZ@nvidia.com>
+In-Reply-To: <DEIO1A8N2C66.11BXTCZW4MKWZ@nvidia.com>
+X-ClientProxiedBy: TYCPR01CA0084.jpnprd01.prod.outlook.com
+ (2603:1096:405:3::24) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <alpine.DEB.2.21.2511290428340.36486@angie.orcam.me.uk>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|SJ2PR12MB7822:EE_
+X-MS-Office365-Filtering-Correlation-Id: 35af7d19-3a2b-4172-8ebe-08de30d0c3ec
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|10070799003|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?V05uSTZKSTdTZ1ZaN3l1eldkNGxvcTF0MHRhbW5xbnNiWU5DN1V1WEM3N2h1?=
+ =?utf-8?B?NDRYN25TdmJvVkcrL3RlUWJSNE5KZTVHNjBhWnJjdmZvZ3ZGTHUwc2FYaXYw?=
+ =?utf-8?B?RXgvR2pvMkFSanBaMWkyckhZYS9kMVUyWk93QVRjRHpxL1FoazJaejVySit2?=
+ =?utf-8?B?RHhVdi93UnZ1L01OTEZCdlpIaThWMGgvTS82SWlTUmFyd2k5bUlON1ZvSFNt?=
+ =?utf-8?B?M0FQZC80UjFCTlNUQ2l5RWRVT2Y4S0hsS3NNajBPT0g2QjJKM3prRlh5L1hn?=
+ =?utf-8?B?Y1c3UzMwWGJ3cGdZNHZkb2pCUURRZzE1TjFnR3ZMRFJTdHRPUFk1SmR6aUlI?=
+ =?utf-8?B?TEtlaDRFSWR2eG94TktBMlJlWHBuSFVOZ3RaVGVKdzVhaWZ1M1VpamFWcmNs?=
+ =?utf-8?B?cWlpMFRVamk1blhxSVVPYmdhZ2Qvbm9FSnN3blFHazBrdnRmTW5LM290WE5Q?=
+ =?utf-8?B?YVNUTjhSaVoyaW9paktqWlVzbFlHZ04vOElMRDl2VVM4SU9UZWlLWjFwc0lL?=
+ =?utf-8?B?Z3gyRytzYkdUdERYWVJyNFBMbU5UclNBSUFjTm1mUzcyYUJQRHRWajZLVEM2?=
+ =?utf-8?B?d2owY0sxOW5vZGxHRmI2REVROTRnWnVraHR2SGFLa0d4Ui91K1pjWnJwTzAz?=
+ =?utf-8?B?SlREK29vNlF2SkJIY3lBcnlUNUNLcWpVazlJK2JQNXhYOTlPb3pxMkRlMDFT?=
+ =?utf-8?B?aWthSm4yRW1HcU5UZHpkajc5MjBNNzl5ZlhPSXcvQWM4dDBhYk03b0FNL0dr?=
+ =?utf-8?B?Vk5tUXc3M2J0YnIxVVRQUGgzdlR4cm0xM1M0dE9Mb0g4cFNqenNZdVZZNnVy?=
+ =?utf-8?B?MU0xNkQ1ck1DRUYyOTRBZkZwSHcrSFg5TUEwMlVpdTgzbml0QndBanJvZ2Rq?=
+ =?utf-8?B?ZEZ2UVlrYk81TVIxUlgvYkhjVk52M0Z1WWRVRGR0Nmd2MUZpN0VIWXJoRGZG?=
+ =?utf-8?B?WXdyVmo5N05RZzVlNlY1NW84RjhZQnNkMEpudk1oRlhhSHk4L1RPdXlYMlZY?=
+ =?utf-8?B?bVoyQUhmT0ZaamVwT2NoeXZaMXFyOEl3NlRDNnBMa0VuMlp3TjlFV3NpVWF1?=
+ =?utf-8?B?RGFWWGpOaWxuWGxvTVc1M2U1NFVMZkc3cmhWTFBCTXE4cC9UZFNiZGpQRGNP?=
+ =?utf-8?B?Ri9HY3hieVJVc083MHVtUEw5MFFzdC9UcURCOXYxNWZmUHBvdUgyM01zOXVU?=
+ =?utf-8?B?VE9GYTB2a3VWeTF4TUFibFZDekdzSndGMlNjdDNBdWNaazFNOHV2Nk5NZXg4?=
+ =?utf-8?B?YncvQzVuOVByZlJkRWR0Wmh4eDRLdGtCTkZjS0hWREM4TmV2NzBPYW0vQnFl?=
+ =?utf-8?B?UHZtWGh2UnhOZDBnWE51UXpGR1p0SUlqUURJUjN5anF3a2hFOWFEK1VEQmdv?=
+ =?utf-8?B?L0hlS1hCMXB5WmxySnBGRGphcTlLczh1dVRybXJsZTZ4UERCQUpZRmc1UDBM?=
+ =?utf-8?B?T25HRlFKbmIvS2h4R2xmYnRwVjlnV0ZJMWJEcmg1V3VjbUYwRkdGYll1RmRJ?=
+ =?utf-8?B?L1RwR2NuVkF4REozd2g3RjlmZFQ5VG0xalhBa3BYTW4rTjBtV2hpZTRwWUVR?=
+ =?utf-8?B?WXdTY2xQMDdNaDBIRmUvMjVWL3gzd0p6VXZWYVlsRTQrVjNaSW1mSzdRdEVH?=
+ =?utf-8?B?T3VzcnZqYUZkU3I4OHNZSmJwQUtSaDk2N0c0NzE5em5pVDl0QzQ0QlNWaTY1?=
+ =?utf-8?B?Uk0wTnY3angzVUxhWVM4a0N1cU1paUc1UXBTNmx1aDlOSGNXL3FmcGxMRTNK?=
+ =?utf-8?B?ejltZkdCMGZrdmU1bFpaQS9HQ2lsS0pucjMya1RPMVREWi9INUl2cU5KZCs2?=
+ =?utf-8?B?YVZxdDN4eEVkWHNNOW5SSzViZW1SZTFCTDBDem9xSmVLZVNqeGIwd2phei85?=
+ =?utf-8?B?N0tCd1RaemRyeXJpc0prUGNVK2lCbTA5dUtxYmlDdEdJY1NrTTd2UXI5V2sr?=
+ =?utf-8?B?Mmd0REtLNlZwYzZLVSs1WnVET2VITkVXeVMyQ3l4UkFvenRzMkpVQXd4TEw3?=
+ =?utf-8?B?ZXdUSXhzWFZRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(10070799003)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RWd1dHRDd3h4VkQxQTVxN3hya3pLVUl2Wk5BWUY4eWladzFWNCtaNjVyMmVS?=
+ =?utf-8?B?bFAvUlJLV0tVU3BvZ3pEQzhQZ1RxeVRQRFRRREtCeit1dUh5V1RQSmNWb01E?=
+ =?utf-8?B?emgwRFU4RzFqTHRKekdBNFRIRVZkc3Flbzk5LzhMQmRoVDlWcXpncmt1SHcv?=
+ =?utf-8?B?L0pSY1VlTVpmbEpTeTRlWXdZOU1EeE5lTnpYdDRiUnNvZWJXMFppRU53SG8x?=
+ =?utf-8?B?K29vcHh4UkJ5R3VFVkNaQU05OHRxTTRFWDVLVmJJSjBhd3RVTktmalhjVllC?=
+ =?utf-8?B?aFkzUCtaVm5KRjZvWjZmd3FhdkE3cTBHb3Y2YnplODhHNFpRUndqMmxMSWFG?=
+ =?utf-8?B?UzhmTTNZYWgyU1lud2xJRitUV2N6WDlmUzhyVzVpSndGRDRnMWdvdlR4OWhR?=
+ =?utf-8?B?ZGlYVDYyTTBwR0tJTERZdzFZaU1CQzMyaE1QT0NWaG1lZTlZZVdxOEVRYTM0?=
+ =?utf-8?B?a2duaWJDelNyUk9mNE9SQ0dKSWZMazdlK0RpbVRlOHhYSzFhY1RiYUFaNHF3?=
+ =?utf-8?B?aGtLZGFHeGxNNHZubWJKaGN4RjBINk5EYVlERmFkd2NqejlzcWpCZ1V1Nkp6?=
+ =?utf-8?B?MHFrODZyb293Vno3UlhzSFFpS0dmcWc2bGU1SERvRU54bSthU0prc2x4c2li?=
+ =?utf-8?B?ZGxKbHRjN3VCSmZwTm0yZUE5cjMxQXo1NjdtTjBYbWw2ZytwOURhYzkwS3hl?=
+ =?utf-8?B?bGNQeE9kR2NzancrNDB0OUJobkR0WFFDbnRYaE1GSWlkcUhzbWw2RlkyMTRk?=
+ =?utf-8?B?N1lQL1BPeUZkQllTdFV3cDR2akpaRE5kS1B1eFlOYm5pbWJlT1k1RitKQmxy?=
+ =?utf-8?B?VFhTeUM0RzA1ZjVISWJ1R3VReldpVStCb1B0NTJYcjBoZ0pEU0pGODJ3ODJC?=
+ =?utf-8?B?VTNhT3VSa1ZwdEQwVXpxZ2cxb0ppMUdOZE4zdlFDMHY2ZnpCeW01Sm9LRHJj?=
+ =?utf-8?B?WlhSVEh1MnVBMVlWcHFqdzNPZm5QNU9sMTJFNUJnZmd5aS82VldQWlpzbDRq?=
+ =?utf-8?B?bnRySXh4SXptbWJIRnRGUHlLaDIvS1dXUUpSS21JM3cvcVNNYzkvMEJWVGYx?=
+ =?utf-8?B?OHN4THVkVktBbTEvM21FSS9qS1dLekM4bmliaHdrTVVRUW8weGVENE5LeE9Y?=
+ =?utf-8?B?WGtPWmRwQ2M2K2Q4LzZVV0hDWkM3dDF4SEtHTlF4aE0xa1B6WG1pMkF1clJV?=
+ =?utf-8?B?bVlMTTE1MW9zOGo4RUNKZzhOdTFqRHZIL1Y0OU9RaE5abm1DVWxuQUEyUkJB?=
+ =?utf-8?B?WU5nbks0L1gzUUVNWjQ1dmZQa3NXK0JoQmtZMHRBamZSSmF6RldCVlhFQksy?=
+ =?utf-8?B?ZWhsTlAzQ1dHOHFkWUFoaXdlZnhMSlNhaEZUN0hLMU9LNWZ6ZXZzRFA1OERl?=
+ =?utf-8?B?a1d4MGRMUVRwQVZPc0dpbnVpTXpFKzlaSlJ2M3AvM1lzUHhUeldTcnhxdWVs?=
+ =?utf-8?B?NFhYU3g4SU5nc0w5THM5UEpmTDZKZTM5aXFNbzgvN0V6bGNIMkJWNWtvSnN3?=
+ =?utf-8?B?QVVLcXlGNEIvVHIwZ0tLQ3JrcDRKeGpORHMzMDI1NXZJZHovMWFHcUxSL0Fh?=
+ =?utf-8?B?c1dzcXRYeHFENEx2UnlaVS9LUk9hZnVhSTF4Q1VVYktyODg1UWdDb2hPZnM4?=
+ =?utf-8?B?cU9tTDFycENnL1I1QVVSMFFPTkVxNHYyWnM1Nm1xNzFMQVRVWmxVUmduZ2lv?=
+ =?utf-8?B?ZG5kZHgxL0dVbGlFSEltN01JZTE4bzV3UktEb2daUDk5eVluTU5nR1paeG84?=
+ =?utf-8?B?eHd6UVp0aWpZU001MWU2L2R1OEhuMzU5c3RLYmFyZlVaSUVQYnpQTVM3MTh5?=
+ =?utf-8?B?VVczOFdnME9abjZ4Z1MwaEJ1YnVxZURmdkpOcTZCTWlqODl2Q0crWk1MTk1x?=
+ =?utf-8?B?M250V1BqQy96cEp1cWZIbmJ0cmVYMXMxZnNuNGNXUENCcWFpVElXbEsreldE?=
+ =?utf-8?B?VUQydFhoY053d29jaXRCYzBmZTMvQlJJNjNuL09NZWh2YVFoMGFLMTRRS1U1?=
+ =?utf-8?B?NThmNExqb1lyUUNhQWtOUFA3VWUrSzFJSGY5ZlRxYzdmZXF5cFdVejR0Mm9h?=
+ =?utf-8?B?U0JtRnJ1QmxoWGV0OVJnZm5NeGR1dUZaS29UN0JLbmpnZ2tOTXcyZ3h3bFll?=
+ =?utf-8?B?Vi9FZ0p0c1lOK3AzRjJqd2NFc3lKNktRY3pWMmwzWkNVdHZ1R0FFcStydnJU?=
+ =?utf-8?Q?M8Uw3cYWOO7B3szF2V3RYxDmqsZfjv7FEcOLtmU0nKyW?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35af7d19-3a2b-4172-8ebe-08de30d0c3ec
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2025 11:57:13.4246
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jauC8X2Hxs4tnlj5Pko1ZO/9CiQLx1iH9H6VwpJUaxIIdoPEOoC1e9WvHhb6HFK8MpPhyX8pYJWztIexrsATNQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7822
 
-On Sat, Nov 29, 2025 at 06:04:24AM +0000, Maciej W. Rozycki wrote:
-> On Sat, 29 Nov 2025, Krishna Chaitanya Chundru wrote:
-> 
-> > > > Hi Maciej, Can you try attached patch and let me know if that is helping
-> > > > you
-> > > > or not. - Krishna Chaitanya.
-> > >   No change, it's still broken, sorry.
-> > HI Maciej,
-> > For the previous patch can you apply this diff and share me dmesg o/p
-> 
->  Your patch came though garbled, likely due to:
-> 
-> Content-Type: text/plain; charset=UTF-8; format=flowed
-> 
-> Please refer Documentation/process/email-clients.rst and reconfigure your 
-> e-mail client if possible.
-> 
->  Regardless, I've fixed it up by hand and the only difference in the log, 
-> except for usual noise which I removed, is this:
-> 
-> --- dmesg-bad.log	2025-11-28 03:47:29.582049781 +0100
-> +++ dmesg-debug.log	2025-11-29 05:41:23.384645926 +0100
-> @@ -164,6 +164,8 @@
->  fu740-pcie e00000000.pcie: ECAM at [mem 0xdf0000000-0xdffffffff] for [bus 00-ff]
->  fu740-pcie e00000000.pcie: Using 256 MSI vectors
->  fu740-pcie e00000000.pcie: iATU: unroll T, 8 ob, 8 ib, align 4K, limit 4096G
-> +fu740-pcie e00000000.pcie: Current iATU OB index 2
-> +fu740-pcie e00000000.pcie: Current iATU OB index 4
->  fu740-pcie e00000000.pcie: cap_exp at 70
->  fu740-pcie e00000000.pcie: PCIe Gen.1 x8 link up
->  fu740-pcie e00000000.pcie: changing speed back to original
-> 
-> I've attached a full copy of the debug log too.  I hope this helps you 
-> narrow the issue down or otherwise let me know what to try next.
-> 
->  NB I note that code you've been poking at only refers resources of the 
-> IORESOURCE_MEM type.  What about IORESOURCE_IO, which seems more relevant 
-> here?
-> 
->  Also as a quick check I've now reconfigured the defxx driver for PCI port 
-> I/O (which is a one-liner; the mapping used to be selectable by hand, but 
-> distributions got it wrong for systems w/o PCI port I/O, so I switched the 
-> driver to an automatic choice a few years ago, but the logic remains):
-> 
-> # cat /proc/ioports
-> 00000000-0000ffff : pcie@e00000000
->   00001000-00002fff : PCI Bus 0000:01
->     00001000-00002fff : PCI Bus 0000:02
->       00001000-00002fff : PCI Bus 0000:05
->         00001000-00002fff : PCI Bus 0000:06
->           00001000-00001fff : PCI Bus 0000:07
->           00001000-00001007 : 0000:07:00.0
->           00001000-00001002 : parport0
->           00001003-00001007 : parport0
->           00001008-0000100b : 0000:07:00.0
->           00001008-0000100a : parport0
->           00002000-00002fff : PCI Bus 0000:08
->           00002000-00002fff : PCI Bus 0000:09
->           00002000-000020ff : 0000:09:01.0
->           00002100-0000217f : 0000:09:02.0
->           00002100-0000217f : defxx
-> # 
-> 
-> and:
-> 
-> defxx 0000:09:02.0: assign IRQ: got 40
-> defxx: v1.12 2021/03/10  Lawrence V. Stefani and others
-> defxx 0000:09:02.0: enabling device (0000 -> 0003)
-> defxx 0000:09:02.0: enabling bus mastering
-> 0000:09:02.0: DEFPA at I/O addr = 0x2100, IRQ = 40, Hardware addr = 00-60-6d-xx-xx-xx
-> 0000:09:02.0: registered as fddi0
-> 
-> (as at commit 4660e50cf818) and likewise it has stopped working here from 
-> commit 0da48c5b2fa7 onwards:
-> 
-> defxx 0000:09:02.0: assign IRQ: got 40
-> defxx: v1.12 2021/03/10  Lawrence V. Stefani and others
-> defxx 0000:09:02.0: enabling device (0000 -> 0003)
-> defxx 0000:09:02.0: enabling bus mastering
-> 0000:09:02.0: Could not read adapter factory MAC address!
-> 
-> So it's definitely nothing specific to the parport driver, but rather a 
-> general issue with PCI/e port I/O not working anymore.  I do hope these 
-> observations will let you address the issue now.  You might be able to 
-> reproduce it with hardware you have available even.
-> 
+On Wed Nov 26, 2025 at 10:37 PM JST, Alexandre Courbot wrote:
+> On Wed Nov 26, 2025 at 6:50 PM JST, Alice Ryhl wrote:
+>> On Wed, Nov 26, 2025 at 04:52:05PM +0900, Alexandre Courbot wrote:
+>>> On Tue Nov 25, 2025 at 11:58 PM JST, Alice Ryhl wrote:
+>>> > On Tue, Nov 25, 2025 at 10:44:29PM +0900, Alexandre Courbot wrote:
+>>> >> On Fri Nov 21, 2025 at 11:20 PM JST, Alice Ryhl wrote:
+>>> >> > On Wed, Nov 19, 2025 at 01:21:13PM +0200, Zhi Wang wrote:
+>>> >> >> The previous Io<SIZE> type combined both the generic I/O access h=
+elpers
+>>> >> >> and MMIO implementation details in a single struct.
+>>> >> >>=20
+>>> >> >> To establish a cleaner layering between the I/O interface and its=
+ concrete
+>>> >> >> backends, paving the way for supporting additional I/O mechanisms=
+ in the
+>>> >> >> future, Io<SIZE> need to be factored.
+>>> >> >>=20
+>>> >> >> Factor the common helpers into new {Io, Io64} traits, and move th=
+e
+>>> >> >> MMIO-specific logic into a dedicated Mmio<SIZE> type implementing=
+ that
+>>> >> >> trait. Rename the IoRaw to MmioRaw and update the bus MMIO implem=
+entations
+>>> >> >> to use MmioRaw.
+>>> >> >>=20
+>>> >> >> No functional change intended.
+>>> >> >>=20
+>>> >> >> Cc: Alexandre Courbot <acourbot@nvidia.com>
+>>> >> >> Cc: Alice Ryhl <aliceryhl@google.com>
+>>> >> >> Cc: Bjorn Helgaas <helgaas@kernel.org>
+>>> >> >> Cc: Danilo Krummrich <dakr@kernel.org>
+>>> >> >> Cc: John Hubbard <jhubbard@nvidia.com>
+>>> >> >> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
+>>> >> >
+>>> >> > I said this on a previous version, but I still don't buy the split
+>>> >> > into IoFallible and IoInfallible.
+>>> >> >
+>>> >> > For one, we're never going to have a method that can accept any Io=
+ - we
+>>> >> > will always want to accept either IoInfallible or IoFallible, so t=
+he
+>>> >> > base Io trait serves no purpose.
+>>> >> >
+>>> >> > For another, the docs explain that the distinction between them is
+>>> >> > whether the bounds check is done at compile-time or runtime. That =
+is not
+>>> >> > the kind of capability one normally uses different traits to disti=
+nguish
+>>> >> > between. It makes sense to have additional traits to distinguish
+>>> >> > between e.g.:
+>>> >> >
+>>> >> > * Whether IO ops can fail for reasons *other* than bounds checks.
+>>> >> > * Whether 64-bit IO ops are possible.
+>>> >> >
+>>> >> > Well ... I guess one could distinguish between whether it's possib=
+le to
+>>> >> > check bounds at compile-time at all. But if you can check them at
+>>> >> > compile-time, it should always be possible to check at runtime too=
+, so
+>>> >> > one should be a sub-trait of the other if you want to distinguish
+>>> >> > them. (And then a trait name of KnownSizeIo would be more idiomati=
+c.)
+>>> >> >
+>>> >> > And I'm not really convinced that the current compile-time checked
+>>> >> > traits are a good idea at all. See:
+>>> >> > https://lore.kernel.org/all/DEEEZRYSYSS0.28PPK371D100F@nvidia.com/
+>>> >> >
+>>> >> > If we want to have a compile-time checked trait, then the idiomati=
+c way
+>>> >> > to do that in Rust would be to have a new integer type that's guar=
+anteed
+>>> >> > to only contain integers <=3D the size. For example, the Bounded i=
+nteger
+>>> >> > being added elsewhere.
+>>> >>=20
+>>> >> Would that be so different from using an associated const value thou=
+gh?
+>>> >> IIUC the bounded integer type would play the same role, only slightl=
+y
+>>> >> differently - by that I mean that if the offset is expressed by an
+>>> >> expression that is not const (such as an indexed access), then the
+>>> >> bounded integer still needs to rely on `build_assert` to be built.
+>>> >
+>>> > I mean something like this:
+>>> >
+>>> > trait Io {
+>>> >     const SIZE: usize;
+>>> >     fn write(&mut self, i: Bounded<Self::SIZE>);
+>>> > }
+>>>=20
+>>> I have experimented a bit with this idea, and unfortunately expressing
+>>> `Bounded<Self::SIZE>` requires the generic_const_exprs feature and is
+>>> not doable as of today.
+>>>=20
+>>> Bounding an integer with an upper/lower bound also proves to be more
+>>> demanding than the current `Bounded` design. For the `MIN` and `MAX`
+>>> constants must be of the same type as the wrapped `T` type, which again
+>>> makes rustc unhappy ("the type of const parameters must not depend on
+>>> other generic parameters"). A workaround would be to use a macro to
+>>> define individual types for each integer type we want to support - or t=
+o
+>>> just limit this to `usize`.
+>>>=20
+>>> But the requirement for generic_const_exprs makes this a non-starter I'=
+m
+>>> afraid. :/
+>>
+>> Can you try this?
+>>
+>> trait Io {
+>>     type IdxInt: Int;
+>>     fn write(&mut self, i: Self::IdxInt);
+>> }
+>>
+>> then implementers would write:
+>>
+>> impl Io for MyIo {
+>>     type IdxInt =3D Bounded<17>;
+>> }
+>>
+>> instead of:
+>> impl Io for MyIo {
+>>     const SIZE =3D 17;
+>> }
+>
+> The following builds (using the existing `Bounded` type for
+> demonstration purposes):
+>
+>     trait Io {
+>         // Type containing an index guaranteed to be valid for this IO.
+>         type IdxInt: Into<usize>;
+>
+>         fn write(&mut self, i: Self::IdxInt);
+>     }
+>
+>     struct FooIo;
+>
+>     impl Io for FooIo {
+>         type IdxInt =3D Bounded<usize, 8>;
+>
+>         fn write(&mut self, i: Self::IdxInt) {
+>             let idx: usize =3D i.into();
+>
+>             // Now do the IO knowing that `idx` is a valid index.
+>         }
+>     }
+>
+> That looks promising, and I like how we can effectively use a wider set
+> of index types - even, say, a `u16` if a particular I/O happens to have
+> a guaranteed size of 65536!
+>
+> I suspect it also changes how we would design the Io interfaces, but I
+> am not sure how yet. Maybe `IoKnownSize` being built on top of `Io`, and
+> either unwrapping the result of its fallible methods or using some
+> `unchecked` accessors?
 
-Yes, looks like the I/O port access is not working with the CFG Shift feature.
-The spec says that both I/O and MEM TLPs should be handled by this feature, so
-we are currently unsure why MEM works, but not I/O.
+Mmm, one important point I have neglected is that the index type will
+have to validate not only the range, but also the alignment of the
+index! And the valid alignment is dependent on the access width. So
+getting this right is going to take some time and some experimenting I'm
+afraid.
 
-The issue you reported with parport_pc driver is that the driver gets probed,
-but it fails to detect the parallel ports on the device. More precisely, it
-fails due to the parport_SPP_supported() check in drivers/parport/parport_pc.c.
-This function performs some read/write checks to make sure that the port exists,
-but most likely the read value doesn't match the written one. And since there is
-no log printed in this function, it just failed silently.
+Meanwhile, it would be great if we could agree (and proceed) with the
+split of the I/O interface into a trait, as other work depends on it.
+Changing the index type of compile-time checked bounds is I think an
+improvement that is orthogonal to this task.
 
-We will check why I/O access fails with ECAM mode and revert back asap. Since
-the merge window is now open, it becomes difficult to revert the CFG shift
-feature cleanly. The timing of the report also made it difficult to fix the
-issue in v6.18. Hopefully, we can backport the fix once we identify the culprit.
+I have been thinking a bit (too much? ^_^;) about the general design for
+this interface, how it would work with the `register!` macro, and how we
+could maybe limit the boilerplate. Sorry in advance for this is going to
+be a long post.
 
-Sorry for the inconvenience!
+IIUC there are several aspects we need to tackle with the I/O interface:
 
-- Mani
+- Raw IO access. Given an address, perform the IO operation without any
+  check. Depending on the bus, this might return the data directly (e.g.
+  `Mmio`), or a `Result` (e.g. the PCI `ConfigSpace`). The current
+  implementation ignores the bus error, which we probably shouldn't.
+  Also the raw access is reimplemented twice, in both the build-time and
+  runtime accessors, a fact that is mostly hidden by the use of macros.
+- Access with dynamic bounds check. This can return `EINVAL` if the
+  provided index is invalid (out-of-bounds or not aligned), on top of
+  the bus errors, if any.
+- Access with build-time index check. Same as above, but the error
+  occurs at build time if the index is invalid. Otherwise the return
+  type of the raw IO accessor is returned.
 
--- 
-மணிவண்ணன் சதாசிவம்
+At the moment we have two traits for build-time and runtime index
+checks. What bothers me a bit about them is that they basically
+re-implement the same raw I/O accessors. This strongly hints that we
+should implement the raw accessors as a base trait, which the
+user-facing API would call into:
+
+  pub trait Io {
+      /// Error type returned by IO accessors. Can be `Infallible` for e.g.=
+ `Mmio`.
+      type Error: Into<Error>;
+
+      /// Returns the base address of this mapping.
+      fn addr(&self) -> usize;
+
+      /// Returns the maximum size of this mapping.
+      fn maxsize(&self) -> usize;
+
+      unsafe fn try_read8_unchecked(&self, addr: usize) -> Result<u8, Self:=
+:Error>;
+      unsafe fn try_write8_unchecked(&self, value: u8, addr: usize) -> Resu=
+lt<(), Self::Error>;
+      // etc. for 16/32 bits accessors.
+  }
+
+Then we could build the current `IoFallible` trait on top of it:
+
+  pub trait IoFallible: Io {
+      fn io_addr<U>(&self, offset: usize) -> Result<usize> {
+          if !offset_valid::<U>(offset, self.maxsize()) {
+              return Err(EINVAL);
+          }
+
+          self.addr().checked_add(offset).ok_or(EINVAL)
+      }
+
+      /// 8-bit read with runtime bounds check.
+      fn try_read8_checked(&self, offset: usize) -> Result<u8> {
+          let addr =3D self.io_addr::<u8>(offset)?;
+
+          unsafe { self.try_read8_unchecked(addr) }.map_err(Into::into)
+      }
+
+      /// 8-bit write with runtime bounds check.
+      fn try_write8_checked(&self, value: u8, offset: usize) -> Result {
+          let addr =3D self.io_addr::<u8>(offset)?;
+
+          unsafe { self.try_write8_unchecked(value, addr) }.map_err(Into::i=
+nto)
+      }
+  }
+
+Note how this trait is now auto-implemented. Making it available for all
+implementers of `Io` is as simple as:
+
+  impl<IO: Io> IoFallible for IO {}
+
+(... which hints that maybe it should simply be folded into `Io`, as
+Alice previously suggested)
+
+`IoKnownSize` also calls into the base `Io` trait:
+
+  /// Trait for IO with a build-time known valid range.
+  pub unsafe trait IoKnownSize: Io {
+      /// Minimum usable size of this region.
+      const MIN_SIZE: usize;
+
+      #[inline(always)]
+      fn io_addr_assert<U>(&self, offset: usize) -> usize {
+          build_assert!(offset_valid::<U>(offset, Self::MIN_SIZE));
+
+          self.addr() + offset
+      }
+
+      /// 8-bit read with compile-time bounds check.
+      #[inline(always)]
+      fn try_read8(&self, offset: usize) -> Result<u8, Self::Error> {
+          let addr =3D self.io_addr_assert::<u8>(offset);
+
+          unsafe { self.try_read8_unchecked(addr) }
+      }
+
+      /// 8-bit write with compile-time bounds check.
+      #[inline(always)]
+      fn try_write8(&self, value: u8, offset: usize) -> Result<(), Self::Er=
+ror> {
+          let addr =3D self.io_addr_assert::<u8>(offset);
+
+          unsafe { self.try_write8_unchecked(value, addr) }
+      }
+  }
+
+Its accessors now return the error type of the bus, which is good for
+safety, but not for ergonomics when dealing with e.g. code that works
+with `Mmio`, which we know is infallible. But we can provide an extra
+set of methods in this trait for this case:
+
+      /// Infallible 8-bit read with compile-time bounds check.
+      #[inline(always)]
+      fn read8(&self, offset: usize) -> u8
+      where
+          Self: Io<Error =3D Infallible>,
+      {
+          self.read8(offset).unwrap_or_else(|e| match e {})
+      }
+
+      /// Infallible 8-bit write with compile-time bounds check.
+      #[inline(always)]
+      fn write8(&self, value: u8, offset: usize)
+      where
+          Self: Io<Error =3D Infallible>,
+      {
+          self.write8(value, offset).unwrap_or_else(|e| match e {})
+      }
+
+`Mmio`'s impl blocks are now reduced to the following:
+
+  impl<const SIZE: usize> Io for Mmio<SIZE> {
+      type Error =3D core::convert::Infallible;
+
+      #[inline]
+      fn addr(&self) -> usize {
+          self.0.addr()
+      }
+
+      #[inline]
+      fn maxsize(&self) -> usize {
+          self.0.maxsize()
+      }
+
+      unsafe fn try_read8_unchecked(&self, addr: usize) -> Result<u8, Self:=
+:Error> {
+          Ok(unsafe { bindings::readb(addr as *const c_void) })
+      }
+
+      unsafe fn try_write8_unchecked(&self, value: u8, addr: usize) -> Resu=
+lt<(), Self::Error> {
+          Ok(unsafe { bindings::writeb(value, addr as *mut c_void) })
+      }
+  }
+
+  unsafe impl<const SIZE: usize> IoKnownSize for Mmio<SIZE> {
+      const MIN_SIZE: usize =3D SIZE;
+  }
+
+... and that's enough to provide everything we had so far - all of the
+accessors called by users are already implemented in the base traits.
+Note also the lack of macros.
+
+Another point that I noticed was the relaxed MMIO accessors. They are
+currently implemented as a set of dedicated methods (e.g.
+`read8_relaxed`) that are not part of a trait. This results in a lot of
+additional methods, and limits their usefulness as the same generic
+function could not be used with both regular and relaxed accesses.
+
+So I'd propose to implement them using a relaxed wrapper type:
+
+  /// Wrapper for [`Mmio`] that performs relaxed I/O accesses.
+  pub struct RelaxedMmio<'a, const SIZE: usize>(&'a Mmio<SIZE>);
+
+  impl<'a, const SIZE: usize> RelaxedMmio<'a, SIZE> {
+    pub fn new(mmio: &'a Mmio<SIZE>) -> Self {
+        Self(mmio)
+    }
+  }
+
+  impl<'a, const SIZE: usize> Io for RelaxedMmio<'a, SIZE> {
+    fn addr(&self) -> usize {
+        self.0.addr()
+    }
+
+    fn maxsize(&self) -> usize {
+        self.0.maxsize()
+    }
+
+    type Error =3D <Mmio as Io>::Error;
+
+    unsafe fn try_read8_unchecked(&self, addr: usize) -> Result<u8, Self::E=
+rror> {
+        Ok(unsafe { bindings::readb_relaxed(addr as *const c_void) })
+    }
+
+    unsafe fn try_write8_unchecked(&self, value: u8, addr: usize) -> Result=
+<(), Self::Error> {
+        Ok(unsafe { bindings::writeb_relaxed(value, addr as *mut c_void) })
+    }
+
+    // SAFETY: `MIN_SIZE` is the same as the wrapped type, which also imple=
+ments `IoKnownSize`.
+    unsafe impl<'a, const SIZE: usize> IoKnownSize for RelaxedMmio<'a, SIZE=
+> {
+        const MIN_SIZE: usize =3D SIZE;
+    }
+  }
+
+This way, when you need to do I/O using a register, you can either pass
+the `Mmio` instance or derive a `RelaxedMmio` from it, if that access
+pattern is more adequate.
+
+How does this sound? I can share a branch with a basic implementation
+of this idea if that helps.
 
