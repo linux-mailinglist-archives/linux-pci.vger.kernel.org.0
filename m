@@ -1,72 +1,78 @@
-Return-Path: <linux-pci+bounces-42350-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42351-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDFB8C965E7
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 10:25:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 429EDC96721
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 10:46:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6BEFE4E03ED
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 09:25:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 06DA03A3FE4
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 09:46:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 641942D97A9;
-	Mon,  1 Dec 2025 09:24:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC7DA3002CA;
+	Mon,  1 Dec 2025 09:45:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W5CORQfq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SciG9jOQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8AE1FDA
-	for <linux-pci@vger.kernel.org>; Mon,  1 Dec 2025 09:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B0330170C;
+	Mon,  1 Dec 2025 09:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764581099; cv=none; b=lDKqo1Tzi88OvzGNH3OJqzKCE5ASm2/btYAWJ8Tss6sHwRXbLRHd3QZTUkEOcTVVVxyiwXiNLlj5pcleGqip+HxaHAJ7ULoqNAIq2NMBXjLkyRKPhmDO/szuZY0IzVjHmIudCioyzeYCszCk7YwyXuHrHhfymmbBYuljkig9+GE=
+	t=1764582340; cv=none; b=ZrxkfhkNnP2vV48Qp22gLnVkp21v3v1QikMzczaz+6PS0Vlvq/jKafPTZoj3XoIl7ptICHP1YXXTsGUKrwjUQI12n4IV0gWsItTC0bHtKAyGovlq6Rv1AddrBjzmE2sBL7elyRYzuD70PBwcziTdolKlncc+qZP54xdcdjweBrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764581099; c=relaxed/simple;
-	bh=rEsItsVqH3cXcNraoFgLVgV3/Rr/bC0qaGDyAZ8/J9U=;
+	s=arc-20240116; t=1764582340; c=relaxed/simple;
+	bh=LVq+9/5cspg+92u9dMeDbFkSwVC27IuNYD4W/eM5Mo8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=q9fBBAna9s9w2elNkn3ME/ERb8/E8L1Sl+LJV+rYzXy4J7p2LPZ2UWp5R2OieJA1vs6ZNhBa8gn9l9azXTyb2m+Z+3QuoMpjpZRyO/cZ72lyoenPn4YrPQAiRq8ZuBFOD9cg1Fphgl1AFlsseq+CqaLEQRVH28zXt4JCzFi9GCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W5CORQfq; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=qBgi6HR6sIjVUFNK07WDgAaDsYLz0Z2ca9hSCCEK+dqApoEEEERWKT04Oj+xJAiQ2lUamSc41Yc2X+ByhIqrHS2Plc81rQhdLZqIlw3aWbpaO3IEwtRRSQ44l4NJTv+Jg62oMebwCC5y2xldltAwEgxfFq0i1XsxQW3gZosYlJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SciG9jOQ; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764581097; x=1796117097;
+  t=1764582339; x=1796118339;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=rEsItsVqH3cXcNraoFgLVgV3/Rr/bC0qaGDyAZ8/J9U=;
-  b=W5CORQfqJp13air81fxOachz6a2ta9SQEMLwzxQ3LTf2IgPL7DpaAFaK
-   1DfNHN3H1UzjX+au+QHAQz/Jvve6arTMIdkfoia753rxmDML506cByZp0
-   tQil/fOnxuJUh/zM38vSqWed3/uKf8fIqvmG0em//wtTTIZoQOQVH4bro
-   A9RlCEt2n6Fen3JLrRxIAtZsaNFxRDCxRBzDvdfUAvKqnl6jwxpiu0DcP
-   MrdqudXB/zfKRwIjsf39WE3iVitceiYZ2BUCDzY3V1+zBHP/epLJwq1Hp
-   /R2s/Z0A9u5f9mSFu9qpgvW1jIZZ2Udg9vPZRj3lI3y4cGY1pe64uHopx
-   Q==;
-X-CSE-ConnectionGUID: P6nTnxwQTdiKWXOMxoJoWw==
-X-CSE-MsgGUID: 4gI4YcUMRBu5UpRI7Qb5Cw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11629"; a="70126922"
+  bh=LVq+9/5cspg+92u9dMeDbFkSwVC27IuNYD4W/eM5Mo8=;
+  b=SciG9jOQ0Yuw/UkCyvYNP3ZyZWITsWx+5HHor/VTMVmI1SOBVW2X9GOs
+   CktUjfcUol5OH9TNIggxzj48FCfzoFX6oo6f5WvxrgyPZUhShdowfJBD5
+   H9vIPDTGA4p7Gcvr7fjFZD9uWLAmGjRirNR2i6Vxzd2BA5bW1WGBrCnkc
+   nhZoaJXDjM3xgTsErx925e3J2JF1N2mp6JJ0V9Dxu9DlexmwvSmRlAgb+
+   gN2K9On2W3T+AlQ9t04df+Xf+FO14NcSiApvWv1w2Q5WoZqJ7I6nHHGDV
+   e59E7rNMEJknmZ6LkjsDG84ZStcpdUPVhLb3fBq9WIkLKw9sxghzeV5C3
+   w==;
+X-CSE-ConnectionGUID: F9YLRbndQLqjHbD9kOuBcg==
+X-CSE-MsgGUID: pmLp1FcFSYmcQqsXgbYtjA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11629"; a="83904407"
 X-IronPort-AV: E=Sophos;i="6.20,240,1758610800"; 
-   d="scan'208";a="70126922"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 01:24:57 -0800
-X-CSE-ConnectionGUID: VsK7u9QXQGGT948UiQxcMQ==
-X-CSE-MsgGUID: H99B5n/pQw+c3MydUre9ug==
+   d="scan'208";a="83904407"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 01:45:38 -0800
+X-CSE-ConnectionGUID: eQTCE5n4SwqGJSbvQFWvDQ==
+X-CSE-MsgGUID: pqI9JhVkS+26dacxPa+kIA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,240,1758610800"; 
-   d="scan'208";a="198218320"
+   d="scan'208";a="217388554"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.202])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 01:24:55 -0800
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 01:45:32 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 1 Dec 2025 11:24:51 +0200 (EET)
-To: Guanghui Feng <guanghuifeng@linux.alibaba.com>
-cc: bhelgaas@google.com, linux-pci@vger.kernel.org, 
-    alikernel-developer@linux.alibaba.com
-Subject: Re: [PATCH v3] PCI: Fix PCIe SBR dev/link wait error
-In-Reply-To: <20251130051735.3123755-1-guanghuifeng@linux.alibaba.com>
-Message-ID: <1086aed0-584b-4ab3-1b84-687e53ddddf9@linux.intel.com>
-References: <2e3a1e6b-40ae-3878-e237-fb9032796af8@linux.intel.com> <20251130051735.3123755-1-guanghuifeng@linux.alibaba.com>
+Date: Mon, 1 Dec 2025 11:45:28 +0200 (EET)
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+cc: Bjorn Helgaas <bhelgaas@google.com>, 
+    Matthew W Carlis <mattc@purestorage.com>, 
+    ALOK TIWARI <alok.a.tiwari@oracle.com>, ashishk@purestorage.com, 
+    bamstadt@purestorage.com, msaggi@purestorage.com, sconnor@purestorage.com, 
+    Lukas Wunner <lukas@wunner.de>, Jiwei <jiwei.sun.bj@qq.com>, 
+    guojinhui.liam@bytedance.com, ahuang12@lenovo.com, sunjw10@lenovo.com, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI: Always lift 2.5GT/s restriction in PCIe failed link
+ retraining
+In-Reply-To: <alpine.DEB.2.21.2511290245460.36486@angie.orcam.me.uk>
+Message-ID: <440e7c29-bee1-29f3-afa8-7b5905fd6cf2@linux.intel.com>
+References: <alpine.DEB.2.21.2511290245460.36486@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,244 +81,125 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Sun, 30 Nov 2025, Guanghui Feng wrote:
+On Mon, 1 Dec 2025, Maciej W. Rozycki wrote:
 
-> When executing a PCIe secondary bus reset, all downstream switches and
-> endpoints will generate reset events. Simultaneously, all PCIe links
-> will undergo retraining, and each link will independently re-execute the
-> LTSSM state machine training. Therefore, after executing the SBR, it is
-> necessary to wait for all downstream links and devices to complete
-> recovery. Otherwise, after the SBR returns, accessing devices with some
-> links or endpoints not yet fully recovered may result in driver errors,
-> or even trigger device offline issues.
+> Discard Vendor:Device ID matching in the PCIe failed link retraining 
+> quirk and ignore the link status for the removal of the 2.5GT/s speed 
+> clamp, whether applied by the quirk itself or the firmware earlier on.  
+> Revert to the original target link speed if this final link retraining 
+> has failed.
 > 
-> Signed-off-by: Guanghui Feng <guanghuifeng@linux.alibaba.com>
-> Reviewed-by: Guixin Liu <kanie@linux.alibaba.com>
+> This is so that link training noise in hot-plug scenarios does not make 
+> a link remain clamped to the 2.5GT/s speed where an event race has led 
+> the quirk to apply the speed clamp for one device, only to leave it in 
+> place for a subsequent device to be plugged in.
+> 
+> Fixes: a89c82249c37 ("PCI: Work around PCIe link training failures")
+> Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
+> Cc: <stable@vger.kernel.org> # v6.5+
 > ---
+>  drivers/pci/quirks.c |   50 ++++++++++++++++++--------------------------------
+>  1 file changed, 18 insertions(+), 32 deletions(-)
+> 
+> linux-pcie-failed-link-retrain-unclamp-always.diff
+> Index: linux-macro/drivers/pci/quirks.c
+> ===================================================================
+> --- linux-macro.orig/drivers/pci/quirks.c
+> +++ linux-macro/drivers/pci/quirks.c
+> @@ -79,11 +79,10 @@ static bool pcie_lbms_seen(struct pci_de
+>   * Restrict the speed to 2.5GT/s then with the Target Link Speed field,
+>   * request a retrain and check the result.
+>   *
+> - * If this turns out successful and we know by the Vendor:Device ID it is
+> - * safe to do so, then lift the restriction, letting the devices negotiate
+> - * a higher speed.  Also check for a similar 2.5GT/s speed restriction the
+> - * firmware may have already arranged and lift it with ports that already
+> - * report their data link being up.
+> + * If this turns out successful, or where a 2.5GT/s speed restriction has
+> + * been previously arranged by the firmware and the port reports its link
+> + * already being up, lift the restriction, in a hope it is safe to do so,
+> + * letting the devices negotiate a higher speed.
+>   *
+>   * Otherwise revert the speed to the original setting and request a retrain
+>   * again to remove any residual state, ignoring the result as it's supposed
+> @@ -94,52 +93,39 @@ static bool pcie_lbms_seen(struct pci_de
+>   */
+>  int pcie_failed_link_retrain(struct pci_dev *dev)
+>  {
+> -	static const struct pci_device_id ids[] = {
+> -		{ PCI_VDEVICE(ASMEDIA, 0x2824) }, /* ASMedia ASM2824 */
+> -		{}
+> -	};
+> -	u16 lnksta, lnkctl2;
+> +	u16 lnksta, lnkctl2, oldlnkctl2;
+>  	int ret = -ENOTTY;
+> +	u32 lnkcap;
+>  
+>  	if (!pci_is_pcie(dev) || !pcie_downstream_port(dev) ||
+>  	    !pcie_cap_has_lnkctl2(dev) || !dev->link_active_reporting)
+>  		return ret;
+>  
+>  	pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+> +	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &oldlnkctl2);
+>  	if (!(lnksta & PCI_EXP_LNKSTA_DLLLA) && pcie_lbms_seen(dev, lnksta)) {
+> -		u16 oldlnkctl2;
+> -
+>  		pci_info(dev, "broken device, retraining non-functional downstream link at 2.5GT/s\n");
+>  
+> -		pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &oldlnkctl2);
+>  		ret = pcie_set_target_speed(dev, PCIE_SPEED_2_5GT, false);
+> -		if (ret) {
+> -			pci_info(dev, "retraining failed\n");
+> -			pcie_set_target_speed(dev, PCIE_LNKCTL2_TLS2SPEED(oldlnkctl2),
+> -					      true);
+> -			return ret;
+> -		}
+> -
+> -		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+> +		if (ret)
+> +			goto err;
+>  	}
+>  
+>  	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
+> -
+> -	if ((lnksta & PCI_EXP_LNKSTA_DLLLA) &&
+> -	    (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT &&
+> -	    pci_match_id(ids, dev)) {
+> -		u32 lnkcap;
+> -
+> +	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
+> +	if ((lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT &&
+> +	    (lnkcap & PCI_EXP_LNKCAP_SLS) != PCI_EXP_LNKCAP_SLS_2_5GB) {
 
-The review comment I gave to v2 still stands to this v3 as well.
+I'm trying to recall, if there was some particular reason why 
+->supported_speeds couldn't be used in this function. It would avoid the 
+need to read LinkCap at all.
 
-Please don't send new versions too rapidly but give people time to comment 
-on the previous version. And please remember to explain what you changed 
-in each version (below the -- line).
+>  		pci_info(dev, "removing 2.5GT/s downstream link speed restriction\n");
+> -		pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
+>  		ret = pcie_set_target_speed(dev, PCIE_LNKCAP_SLS2SPEED(lnkcap), false);
+> -		if (ret) {
+> -			pci_info(dev, "retraining failed\n");
+> -			return ret;
+> -		}
+> +		if (ret)
+> +			goto err;
+>  	}
+>  
+>  	return ret;
+
+return 0;
+
+> +err:
+> +	pci_info(dev, "retraining failed\n");
+> +	pcie_set_target_speed(dev, PCIE_LNKCTL2_TLS2SPEED(oldlnkctl2), true);
+> +	return ret;
+>  }
+>  
+>  static ktime_t fixup_debug_start(struct pci_dev *dev,
+> 
 
 -- 
  i.
-
->  drivers/pci/pci.c | 141 +++++++++++++++++++++++++++++++++-------------
->  1 file changed, 101 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b14dd064006c..d91c65145739 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4788,6 +4788,63 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
->  	return max(min_delay, max_delay);
->  }
->  
-> +static int pci_readiness_check(struct pci_dev *pdev, struct pci_dev *child,
-> +		unsigned long start_t, char *reset_type)
-> +{
-> +	int elapsed = jiffies_to_msecs(jiffies - start_t);
-> +
-> +	if (pci_dev_is_disconnected(pdev) || pci_dev_is_disconnected(child))
-> +		return 0;
-> +
-> +	if (pcie_get_speed_cap(pdev) <= PCIE_SPEED_5_0GT) {
-> +		u16 status;
-> +
-> +		pci_dbg(pdev, "waiting %d ms for downstream link\n", elapsed);
-> +
-> +		if (!pci_dev_wait(child, reset_type, 0))
-> +			return 0;
-> +
-> +		if (PCI_RESET_WAIT > elapsed)
-> +			return PCI_RESET_WAIT - elapsed;
-> +
-> +		/*
-> +		 * If the port supports active link reporting we now check
-> +		 * whether the link is active and if not bail out early with
-> +		 * the assumption that the device is not present anymore.
-> +		 */
-> +		if (!pdev->link_active_reporting)
-> +			return -ENOTTY;
-> +
-> +		pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &status);
-> +		if (!(status & PCI_EXP_LNKSTA_DLLLA))
-> +			return -ENOTTY;
-> +
-> +		if (!pci_dev_wait(child, reset_type, 0))
-> +			return 0;
-> +
-> +		if (PCIE_RESET_READY_POLL_MS > elapsed)
-> +			return PCIE_RESET_READY_POLL_MS - elapsed;
-> +
-> +		return -ENOTTY;
-> +	}
-> +
-> +	pci_dbg(pdev, "waiting %d ms for downstream link, after activation\n",
-> +		elapsed);
-> +	if (!pcie_wait_for_link_delay(pdev, true, 0)) {
-> +		/* Did not train, no need to wait any further */
-> +		pci_info(pdev, "Data Link Layer Link Active not set in %d msec\n", elapsed);
-> +		return -ENOTTY;
-> +	}
-> +
-> +	if (!pci_dev_wait(child, reset_type, 0))
-> +		return 0;
-> +
-> +	if (PCIE_RESET_READY_POLL_MS > elapsed)
-> +		return PCIE_RESET_READY_POLL_MS - elapsed;
-> +
-> +	return -ENOTTY;
-> +}
-> +
->  /**
->   * pci_bridge_wait_for_secondary_bus - Wait for secondary bus to be accessible
->   * @dev: PCI bridge
-> @@ -4802,12 +4859,14 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
->   * 4.3.2.
->   *
->   * Return 0 on success or -ENOTTY if the first device on the secondary bus
-> - * failed to become accessible.
-> + * failed to become accessible or a value greater than 0 indicates the
-> + * left required waiting time..
->   */
-> -int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
-> +static int __pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, unsigned long start_t,
-> +		char *reset_type)
->  {
-> -	struct pci_dev *child __free(pci_dev_put) = NULL;
-> -	int delay;
-> +	struct pci_dev *child;
-> +	int delay, ret, elapsed = jiffies_to_msecs(jiffies - start_t);
->  
->  	if (pci_dev_is_disconnected(dev))
->  		return 0;
-> @@ -4835,8 +4894,6 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  		return 0;
->  	}
->  
-> -	child = pci_dev_get(list_first_entry(&dev->subordinate->devices,
-> -					     struct pci_dev, bus_list));
->  	up_read(&pci_bus_sem);
->  
->  	/*
-> @@ -4844,8 +4901,10 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  	 * accessing the device after reset (that is 1000 ms + 100 ms).
->  	 */
->  	if (!pci_is_pcie(dev)) {
-> -		pci_dbg(dev, "waiting %d ms for secondary bus\n", 1000 + delay);
-> -		msleep(1000 + delay);
-> +		if (1000 + delay > elapsed)
-> +			return 1000 + delay - elapsed;
-> +
-> +		pci_dbg(dev, "waiting %d ms for secondary bus\n", elapsed);
->  		return 0;
->  	}
->  
-> @@ -4867,41 +4926,45 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  	if (!pcie_downstream_port(dev))
->  		return 0;
->  
-> -	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
-> -		u16 status;
-> -
-> -		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
-> -		msleep(delay);
-> -
-> -		if (!pci_dev_wait(child, reset_type, PCI_RESET_WAIT - delay))
-> -			return 0;
-> +	if (delay > elapsed)
-> +		return delay - elapsed;
->  
-> +	down_read(&pci_bus_sem);
-> +	list_for_each_entry(child, &dev->subordinate->devices, bus_list) {
->  		/*
-> -		 * If the port supports active link reporting we now check
-> -		 * whether the link is active and if not bail out early with
-> -		 * the assumption that the device is not present anymore.
-> +		 * Check if all devices under the same bus have completed
-> +		 * the reset process, including multifunction devices in
-> +		 * the same bus.
->  		 */
-> -		if (!dev->link_active_reporting)
-> -			return -ENOTTY;
-> +		ret = pci_readiness_check(dev, child, start_t, reset_type);
->  
-> -		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
-> -		if (!(status & PCI_EXP_LNKSTA_DLLLA))
-> -			return -ENOTTY;
-> +		if (ret == 0 && child->subordinate)
-> +			ret = __pci_bridge_wait_for_secondary_bus(child, start_t, reset_type);
->  
-> -		return pci_dev_wait(child, reset_type,
-> -				    PCIE_RESET_READY_POLL_MS - PCI_RESET_WAIT);
-> +		if(ret)
-> +			break;
->  	}
-> +	up_read(&pci_bus_sem);
->  
-> -	pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
-> -		delay);
-> -	if (!pcie_wait_for_link_delay(dev, true, delay)) {
-> -		/* Did not train, no need to wait any further */
-> -		pci_info(dev, "Data Link Layer Link Active not set in %d msec\n", delay);
-> -		return -ENOTTY;
-> +	return ret;
-> +}
-> +
-> +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
-> +{
-> +	int res, gap = 1;
-> +	unsigned long start_t = jiffies;
-> +
-> +	res = __pci_bridge_wait_for_secondary_bus(dev, start_t, reset_type);
-> +
-> +	while (res > 0) {
-> +		gap = gap < res ? gap : res;
-> +		msleep(gap);
-> +		gap <<= 1;
-> +
-> +		res = __pci_bridge_wait_for_secondary_bus(dev, start_t, reset_type);
->  	}
->  
-> -	return pci_dev_wait(child, reset_type,
-> -			    PCIE_RESET_READY_POLL_MS - delay);
-> +	return res;
->  }
->  
->  void pci_reset_secondary_bus(struct pci_dev *dev)
-> @@ -5542,10 +5605,8 @@ static void pci_bus_restore_locked(struct pci_bus *bus)
->  
->  	list_for_each_entry(dev, &bus->devices, bus_list) {
->  		pci_dev_restore(dev);
-> -		if (dev->subordinate) {
-> -			pci_bridge_wait_for_secondary_bus(dev, "bus reset");
-> +		if (dev->subordinate)
->  			pci_bus_restore_locked(dev->subordinate);
-> -		}
->  	}
->  }
->  
-> @@ -5575,14 +5636,14 @@ static void pci_slot_restore_locked(struct pci_slot *slot)
->  {
->  	struct pci_dev *dev;
->  
-> +	pci_bridge_wait_for_secondary_bus(slot->bus->self, "slot reset");
-> +
->  	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
->  		if (!dev->slot || dev->slot != slot)
->  			continue;
->  		pci_dev_restore(dev);
-> -		if (dev->subordinate) {
-> -			pci_bridge_wait_for_secondary_bus(dev, "slot reset");
-> +		if (dev->subordinate)
->  			pci_bus_restore_locked(dev->subordinate);
-> -		}
->  	}
->  }
->  
-> 
 
 
