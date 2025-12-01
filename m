@@ -1,216 +1,275 @@
-Return-Path: <linux-pci+bounces-42392-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42393-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06BE7C98C3D
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 19:52:10 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 624A1C98C67
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 19:54:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 713EB343F36
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 18:52:09 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4F5EE4E031E
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 18:54:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDAF4207DE2;
-	Mon,  1 Dec 2025 18:52:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B562D21D3F4;
+	Mon,  1 Dec 2025 18:54:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Kza3YnSx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rJrdc4my"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011009.outbound.protection.outlook.com [40.107.130.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85E91C8FBA;
-	Mon,  1 Dec 2025 18:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764615124; cv=fail; b=mCYJ9wI6hCzKtdUMdIefaK5zyGoJteiJ5UQYP+2hB/9VoC/ORKZkrRKFLLETfL5G4ZqCVdlhia60D5wTt1HoNQXhlKH/KcoFAqnnPsP3M2MA9q+WxGKfLgLIKVbMUqwpuBw57Xul7JV3nas3iWxvkfM+93KJpDpF4/oHs1X6+no=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764615124; c=relaxed/simple;
-	bh=a87RIkVCviprR6gJg6o3KN0wbzS/2oveY9d3mFn7Oqc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Z+oW7It4s7MF1oTcS8mCkzXmg4bZqrSuHTU0seED3RrFPEClbRNFktuxANBYjpC5Yzu/VKKpJvQBVdh2RzDPvxcf2b8/bJ1b0wjhWh3Hr6TVXbj5OAD9+t5h8hCCFZmq7OPvd1uzibHJdjkcu01aT5sW2NyhIay47WXg819TPCs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Kza3YnSx; arc=fail smtp.client-ip=40.107.130.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gQougm2nm3sT5LIxNmNYdgEqDKiyOWc9gYrxnU7II3WjV66JwcXfbTbd3ENSZI8I//PqGBfiCh0B9kYVLf+zcHgovRDsKG4+bv7Ls9K9x7JGFIrtA9QS5DQ61mxbtBoZf7LCtnFwkznX5tWtXJij7Kbodf2gV0e2o1/TP4ufzrIAzwHCXxrCk8ZJddS7iPYBXcxM/WsvZzagX1uRr73fd/9T7Q2LE7uN3RTvENEVY5kqODxPXF6ghIzoo12tQ/rHF+ACk36nw1QjuzQaxCo5gDmcxd6leRIGMRMOzOQtThRv5Ikz0h+fLQwoS+pAZm+N7R3tEhw8omBq7kPQujDvug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fuFgZk9JLRtDp/6ABqN1eW1GSx1RsTOPRbreWR9NmCQ=;
- b=gB/aTUnhcbIKOgyVddaCoVWTi218hu9LSldTYtkUqOe6wZXInmb13gPVMy/QVBu88a6XoemvfIPnnmerfVlYcOAm0gn2Pc47q7QWU1OtQexhPTVhlIeE58N1EtZOW6zrnFZ8H/wHoudcn4rkDKWCQzQaH1gKm2kDP8jQDTkVG05/dsuf1SM338wGDt/2uzeTUlMb7oHrSEU4I2J4Lza3kMuQ1BAvUeUY9UH3znwqKhg07dpSrVTI8svSYR5MsoQuDoz7jDMiUc4nhFjBy2axSA7TAMu9I5UF+vWvJ1mZCx0wpDOZv2+HVwumJBEkhIs1XYDCF0cYO4bdWeSw5OEA7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fuFgZk9JLRtDp/6ABqN1eW1GSx1RsTOPRbreWR9NmCQ=;
- b=Kza3YnSxcRSx/StDURpAa/fYC49kkhHP2xHRBmz+bOLFrtuRUEbiDWtBz2PnWT9nwcCIdWoe8OfeW+Y8QvJH7hY0ZHKGBSns0+jXSRTC+AtRpkjJHrP0dXQmuG9Fb/Qw89hLj5zAiMxjiefsmB27x+KpliC81qM43cGuru2c/LUbNzXPkWr8hn0jHGtbjnrWCODvSRgMkJffGVEc8sdbEn+4yNF7DQiSKqYV+2xXfyUN+r7QtDs8dzY54FNa8NvAn2/VjcWbCXjOG/YakdDU80dCSTLAb3S/yD66+qS9VWofyS+LVVqO69IX24XAeBm1dKaH9O6MtO8KbAtDAekmaA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22)
- by PAXPR04MB8893.eurprd04.prod.outlook.com (2603:10a6:102:20c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Mon, 1 Dec
- 2025 18:51:58 +0000
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196]) by DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196%4]) with mapi id 15.20.9366.012; Mon, 1 Dec 2025
- 18:51:58 +0000
-Date: Mon, 1 Dec 2025 13:51:49 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Koichiro Den <den@valinux.co.jp>
-Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jdmason@kudzu.us,
-	dave.jiang@intel.com, allenbh@gmail.com, mani@kernel.org,
-	kwilczynski@kernel.org, kishon@kernel.org, bhelgaas@google.com,
-	jbrunet@baylibre.com, lpieralisi@kernel.org, yebin10@huawei.com,
-	geert+renesas@glider.be, arnd@arndb.de, stable@vger.kernel.org
-Subject: Re: [PATCH v3 6/7] PCI: endpoint: pci-epf-vntb: Switch
- vpci_scan_bus() to use pci_scan_root_bus()
-Message-ID: <aS3jxR1YvjWZKYYO@lizhi-Precision-Tower-5810>
-References: <20251130151100.2591822-1-den@valinux.co.jp>
- <20251130151100.2591822-7-den@valinux.co.jp>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251130151100.2591822-7-den@valinux.co.jp>
-X-ClientProxiedBy: SJ0PR05CA0152.namprd05.prod.outlook.com
- (2603:10b6:a03:339::7) To DU2PR04MB8951.eurprd04.prod.outlook.com
- (2603:10a6:10:2e2::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B0836D513
+	for <linux-pci@vger.kernel.org>; Mon,  1 Dec 2025 18:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764615259; cv=none; b=SQBSAyGrGeNt3XRv6fbxfDYVMaQoXYIpCyhgvW9jqW3DLfXqUwB0HwvBQ0I/Gsj/2+VlNH9mu/olLarllD2X37chuFd4IY/trYrCwG+vp7YOcZdnlaFkBEMHj9AF2BHGHkLgcn9Ab/5Kw/kuTggetl3uYPr79j8TPHqZR6ohGhY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764615259; c=relaxed/simple;
+	bh=xdQFSPwBDitJJbj4YFqv8oX69ifcmN2sMzq3HiUxFog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eXazZe1GK3pt+3OKxr5EeWTF09gr0EDp/J3aMk6gsJfDlakEatYUBUjGC/QowZfSauHV9ZRcBTOzSLkgVj6RD+3CuPIq/FCEbnVPGa3p5NR8NEr7wp2WGL5kKazp74p9ciIp7DD72QRy85nz97K9uvVIp4rbvfVi9aDjV6uXs3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rJrdc4my; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3438231df5fso5251097a91.2
+        for <linux-pci@vger.kernel.org>; Mon, 01 Dec 2025 10:54:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764615257; x=1765220057; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=NZR7hK5x4THTBId2vxyDYOqgCYL0BSheMqFuUmlt+Jw=;
+        b=rJrdc4myLwh5sTna1PuJYPc/KOILdlLOmqy97IzQq1WNI+gRSTu77M/5mUVqJe26pv
+         Vxb029p44Gag8/bWe00oXbZS+Ftp8ymQhnMHBs0Mgc0eWQR8LrXlvW2YHAB6ppq9lKwb
+         IOPkaCW2XSW5iDBk2JJ9IZ6iPoGc5oHjY2G3qx45Nd5gl+h0yGZtsXoiFIZ7LnF00WyA
+         gH6sz/VIsim6SU9HLb3wzF66lBxUhWTAcLkW+wVKIzwkTCJPKgaHFQ/FDahBRzZqhE8k
+         2YzM19tyU6JMfTgzRM6MM41Q8wMrQbaQ+z52Glxjqs4v2dLDivW/WfQ3JViz9u7AuU3u
+         wLJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764615257; x=1765220057;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NZR7hK5x4THTBId2vxyDYOqgCYL0BSheMqFuUmlt+Jw=;
+        b=Gvb4wy1qfadEfo9LNdmacg0PJFxxLejtCfwNUOv7WnHvibA3jsH07udu65wPGscjpC
+         IPSjzFwNkJ6N+L50tk4ZQL8RTwdYzU3NnSe4lMN/nXKztELnFfs2WqI7VEp5E6OVwT8n
+         3JRZoA/zDj0aaTlopSGHpFaN+DDs2jRdcdyt8qPUe3Meyc7kO173GHNIRyNJoD+g6voA
+         37AdglgiUtJ8P1EWn7R+1FIP4qtalPlGOWArsRx3RYwXY0KDa9hENHpOUvR9dnoYp2cJ
+         yJDYUpe3x/5SklaBBkDmmpKn9zAOWXoWboLfIADb8cTG1vnlYToZC1pC0VmP1PJOmgkC
+         lUvA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTB7do9XoeX2RhFA2Ry2NdAlIPRjvtfBQ6xvGi2YwpcenK0FZay+fiq+76bvuPrvXWRhCrtFjTFII=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywqs1mMbMTyzJKUu8iWsdeIK801x1AA1ryy0o8M1/+ZXpi8cbfR
+	g+IP6iMInXzLXtE7699qjX7dG9p2vdHx3p2oNU7i1uIfAMyGOsG4xHC9rSWMeKW23A==
+X-Gm-Gg: ASbGncstMn+3cuK1jnqmlhvxHod2AxbViKAmICQ5lpXobS76FCt7owd+aj1YIUreIXH
+	xcLLgEjPTYS7KNNUotW4+LNVrBcxF42NuS+kB0ojZWBCdtp8o7vqI++2Gri/eoxbzPiWWthN59n
+	xYVCs96+tiPMnCp+LRKcxqEMuXwnTtdc20N2V+pikWrseUSracv/YR5S4jy1MsVszHm/nj7XyEH
+	Kf9LsOfLEquqrBFy7GQuPijZp99hTqvGaukdzXMF3Hq6aEF71NSrD5fH08oEQ7QmH6z56lmmBC5
+	CHWkAglCQoAjJUeAWKE4y/hZv+7gTsIDaTvAzYEJexUNHVzHnlmO9qQAjarYh7cE61eelXvFm0V
+	50aRpsGzw4jZlsucwuQPAoubGp/jQOUCtvM8lg2nQeKm+XMY7SbCdLNWZr6BCMFgm5cookEEpYa
+	qp3d/m6b9TLPK2pnit+sGYa4eRFca3jfzrYQOYL/8mN9KCVds=
+X-Google-Smtp-Source: AGHT+IEiFxvWkfPP9po3hvukZ9ksCP0VDwl+C6gb0NjWaMPZyH9tph+K1Sdl9eUHW9tCV4/voZXr4g==
+X-Received: by 2002:a17:90b:53c3:b0:33f:ebc2:634 with SMTP id 98e67ed59e1d1-3475ebe8173mr23598831a91.9.1764615256953;
+        Mon, 01 Dec 2025 10:54:16 -0800 (PST)
+Received: from google.com (28.29.230.35.bc.googleusercontent.com. [35.230.29.28])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3475e952efbsm8216852a91.1.2025.12.01.10.54.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Dec 2025 10:54:16 -0800 (PST)
+Date: Mon, 1 Dec 2025 18:54:11 +0000
+From: David Matlack <dmatlack@google.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Lukas Wunner <lukas@wunner.de>, Alex Williamson <alex@shazbot.org>,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>,
+	kvm@vger.kernel.org, Leon Romanovsky <leonro@nvidia.com>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-pci@vger.kernel.org, Mike Rapoport <rppt@kernel.org>,
+	Parav Pandit <parav@nvidia.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <shuah@kernel.org>, Tomita Moeko <tomitamoeko@gmail.com>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>,
+	Zhu Yanjun <yanjun.zhu@linux.dev>
+Subject: Re: [PATCH 02/21] PCI: Add API to track PCI devices preserved across
+ Live Update
+Message-ID: <aS3kUwlVV_WGT66w@google.com>
+References: <20251126193608.2678510-1-dmatlack@google.com>
+ <20251126193608.2678510-3-dmatlack@google.com>
+ <aSrMSRd8RJn2IKF4@wunner.de>
+ <20251130005113.GB760268@nvidia.com>
+ <CA+CK2bB0V9jdmrcNjgsmWHmSFQpSpxdVahf1pb3Bz2WA3rKcng@mail.gmail.com>
+ <20251201132934.GA1075897@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|PAXPR04MB8893:EE_
-X-MS-Office365-Filtering-Correlation-Id: cc507eb8-fdf7-418d-8390-08de310ab48d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|52116014|19092799006|1800799024|366016|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?aVRLPZ75AYCIJDLIJT2b7E0nIeyjUnNQk0yt/oSBhevgCF6D8RwWP5Xc2Ssm?=
- =?us-ascii?Q?Fo/UD9clcZ06qEnFDBwK4lTmbe7/BLZcjAL1cFfp7gAoTVjxYhdcMaf/YZjA?=
- =?us-ascii?Q?yhcauMZk6FRPatTm85bOhFoxLDITdKBtVexl+q5tuFNp1RK0CWh27F6ch5dN?=
- =?us-ascii?Q?1drXbUmKdRQmJShFozbOPH0RoBYBJcBowP9iDQYpcM+GuvzoDdtsoeakQuk5?=
- =?us-ascii?Q?2Na9gZKSGKGJiLXL93PPFpaJOgrgjBqz3aH63E8h0wIXDGwFOoSzpvhDZemZ?=
- =?us-ascii?Q?/UMpREabx6ObdiFnvpfzU7l4S1ce/l7Mo/agzQGF+sp5x63HhiR3MEk6k3e6?=
- =?us-ascii?Q?IcFJMOOtjTKh3EOZVBVYdbtDnj92RMHLziLmdL/JOMn4dnQdLWrT8dluYcRN?=
- =?us-ascii?Q?s0xU8eJf5+OkIKE+fR/qC8e7sjrOAomTyZYryTW292RLqMirRz8fmbXJxVgY?=
- =?us-ascii?Q?kB7am53ByrK9TJoN/CRWJDwRqDcGkhnfwCw/c8L4PqWOrGl2yTNize2XhWLE?=
- =?us-ascii?Q?+VmVJg67qWJvFcvkLi2Ken5TjFydnOj+dlRciEpY3k/dLS49BOyWQF2bgfIB?=
- =?us-ascii?Q?RcG2hgp7iKC/ofBSaM+tI8hUO/O6vnrSpwmUqRDimZo2b/d2kjiZklQ7F0eE?=
- =?us-ascii?Q?HL3O0SXAIf3tBGCLwfT14lJs391I8XSeowRbab2Y6d6p/C3+MWZyTN6hOC8R?=
- =?us-ascii?Q?m0PtKzD0+FUxMEVizSp++wVWVPi0Am0vvPKHJajhtPWX2gzV4wQ2Ztw2YnH3?=
- =?us-ascii?Q?tvdAiOxPoX5N+kVId9a78ywRSmBEWtK6AHVbKfRU52eyLlhR8SEK0yPQRMcg?=
- =?us-ascii?Q?AdUaDlDNV5KP7fw/A5TbDPtLcVbcgUjyaJg3NhRe7JaTwgK55Z9JthZBYxGC?=
- =?us-ascii?Q?+0OsCysEiotbonmtrYGHebe5zcnM0k1Fr+cEauUSWNMQIH5zZ8BuLcIGDVjc?=
- =?us-ascii?Q?Hxn1z/H7UmAE4sonxqHbS4bffQ6EbLhcllon8m15rZtCyYIzrAm30dpAViDX?=
- =?us-ascii?Q?LkApK+GNHR9LPsZkr3X86qDz0tv7cG/AV8p5vf9Y9YGam/0/3nt4i9yIbA0/?=
- =?us-ascii?Q?ykRACoGs1l1ouOqNetMCcrscLeyKK/DaAyEYpGQmmnP1TlLRjc1ubjPhORsx?=
- =?us-ascii?Q?8dWjd9/QDMmPq8Sl+dKalwCfZI+L7XCWuxfhqTPxAdVfOmdVWrgrXCfEJ/3A?=
- =?us-ascii?Q?GoeCUdk4LgfyC1A6LUfsB+UHg8FYbqxi+cRffAGCrvoVwME51HKfkcxzbIOG?=
- =?us-ascii?Q?2ER1WWGOEH5lf80NXV7GJ1cUujPcwEP1aZwuaUtsPNYgHHrCti7a3EVd8qel?=
- =?us-ascii?Q?j3PA0X0rQWe365Mbv81Vvzbnz66MFl0/Fc6rK+SBwHl0bD+xUQr3TIFYFYXU?=
- =?us-ascii?Q?xKSM2EbIMhd1vsufd6qQDvyH2k+5vvTnOpYNo8w6Vcok9E2kWvdqh/ULLrh+?=
- =?us-ascii?Q?AvhBfFwbgwuvyPRLYylGkwPOutI8UD+t+GVts/NbFTcA5byWJjCzLJN+5ZmS?=
- =?us-ascii?Q?DqCAXldyVyQVWQUsy0xgqF3eOzfvCVlY7ywo?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(19092799006)(1800799024)(366016)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?kgnd4Ir//u8lI7clotgxH+PKn6x1WDS0VprIlfBOZYNjdyd3kJ2+O+Zxtvma?=
- =?us-ascii?Q?xR8EOfcMkdkFPdpAj/XsVTSrHfAky9fXwRw/64+Xqk+Uejnnd8VSxkeQiy4m?=
- =?us-ascii?Q?r4ngh0DqZNbY7hJpPVlJZz0cowfkTgkCG+nmVZ3BOc+iIEH2oGPCpw7jKVti?=
- =?us-ascii?Q?ANVj1XFzP87J+bt0aBWOlFbp/Mw0LsuL+KgNRAtzuZ1gub2wOGE7rm79KwPz?=
- =?us-ascii?Q?Tp1Ax4vLgQj8TVfj8tN/ubJM8gDG1FQHrA2j87k2aHrRfCL3LUx18+12GfOY?=
- =?us-ascii?Q?TQIKH98OhuLMf/meVwjTWVYfxfB773PZiQU10lfIlEW8rdj9x2AnBY49EhXt?=
- =?us-ascii?Q?e/xpWWptDa06pg4KRkWCD229JNKFuFsPPg/XVhgNeQSdA7pHCq+9CSu/aF1l?=
- =?us-ascii?Q?CiAdljG0Ft4NU4Wko/Jq5+MipRNS7O9r+oBVk8N77I8px7V6MGV4DvwpniVT?=
- =?us-ascii?Q?n0GtjORzbSgaXFrIJiT+3a5U1xKkG7mxmyyIwI/K5CVS34nFSuxZy0g5NV1F?=
- =?us-ascii?Q?2Ly5JbxEJzeSiTVbQiwYgKoDS67fPZudt+OaqhNQBrLb2kh69pXeqTYaj1xb?=
- =?us-ascii?Q?/t6yD5Vl6AXkSdab5MTGjhqMU+hi/W9Tq0vaOGCxaAUMEarZMxwlWScB3WRf?=
- =?us-ascii?Q?N9CDVDWZ+bL/DQniBY6DQbIXqRL1oeubeRMVAimfUa2bu4Ojv7XsMSO/u9wn?=
- =?us-ascii?Q?yaq9ag+XyLFb2mvsV7Orr0nb30i7Bnq9VqrtAhvU3mmu6RqF3t0NUlSvVI74?=
- =?us-ascii?Q?1/YeAtbI0viB4dX26oc3OBasaQEob9HGs41+pt1eY61ta4XqEjv1KEJAFfhK?=
- =?us-ascii?Q?jYhZbOYeXlfkk168wCruBeZ17IYadk/Jxmt4K9VKsO+OlBAWEQEWz8YSPjcf?=
- =?us-ascii?Q?seBAWjxFSS/EWoIJBg/XcGdV1Opw05Ti2GV7LgFFt3CBNv5mmqJzH4UgaORJ?=
- =?us-ascii?Q?QZtDKAPoEit5U5QiR9hH7qdlMTNz9v5gO4JDKbZdkZAPBtOw1iDIyxCx2CVH?=
- =?us-ascii?Q?M9UX0ZvkeI7AzrimxdzRW2fEdmrbayAVArFSlF8dOFmgWya00/oXIx9PEIPs?=
- =?us-ascii?Q?o2fgZFOTeZDVEWXFzJThmHwwncLr+y96zt92gwqbLz0ilipfXbSQbpA+TrWl?=
- =?us-ascii?Q?7OD248Y3U97RJhE+FvqFRDm2a7H4TjhVT7VHlJKYdoPz/GzSJXQpOCXGdyDM?=
- =?us-ascii?Q?o0g91XQS2lWKAzKNFzxmPYRfAEBQi0sxRJBJ8qz0jEz4bdjTEHer7bjqwfl3?=
- =?us-ascii?Q?GgXvENGbb7hdGpnBF4Pu1wKu577dJEjSA3VtWm7gwDb9sk4qB+Fv1IhMTcek?=
- =?us-ascii?Q?aYNZcy0uJe/SL5nuzQitDiJrpJ0ZI4ToWtZ8N5EyhlAOhp3+ZCshDVnAMu6J?=
- =?us-ascii?Q?qJb94X1VErkvYlRuAnN5ps5qOuR+hMNUi5nm20OKWvGNrrL2mHLsWgy+8iOh?=
- =?us-ascii?Q?vwny0KHdaKXRqqJMliwyVEl6S0CmbkuqUReewAb4z0D20emlME9jx2BYunjB?=
- =?us-ascii?Q?T0NpsUy7TFcO4d9ccKBdzaM/OsxkghJpw5GnzCN8pFNiALjOTHM2Y48L9qVi?=
- =?us-ascii?Q?7riBv3gX34usDxTlRAXe6DUKtAtX+9YldTN1p0DL?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc507eb8-fdf7-418d-8390-08de310ab48d
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8951.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2025 18:51:58.3136
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OiXm7OM3/ay1nxH4WM/Gz64wzyo1Xy/D8itNPtcUXpJahQDUSNiY3Gb4Z8g9JMhPyAPsTm2sbaghV4h1gCdFVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8893
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251201132934.GA1075897@nvidia.com>
 
-On Mon, Dec 01, 2025 at 12:10:59AM +0900, Koichiro Den wrote:
-> vpci_scan_bus() currently uses pci_scan_bus(), which creates a root bus
-> without a parent struct device. In a subsequent change we want to tear
-> down the virtual PCI root bus using pci_remove_root_bus(). For that to
-> work correctly, the root bus must be associated with a parent device,
-> similar to what the removed pci_scan_bus_parented() helper used to do.
->
-> Switch vpci_scan_bus() to use pci_scan_root_bus() and pass
-> &ndev->epf->epc->dev as the parent. Build the resource list in the same
-> way as pci_scan_bus(), so the behavior is unchanged except that the
-> virtual root bus now has a proper parent device. This avoids crashes in
-> the pci_epf_unbind() -> epf_ntb_unbind() -> pci_remove_root_bus() ->
-> pci_bus_release_domain_nr() path once we start removing the root bus in
-> a follow-up patch.
->
-> Signed-off-by: Koichiro Den <den@valinux.co.jp>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-vntb.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> index 750a246f79c9..af0651c03b20 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> @@ -1098,7 +1098,19 @@ static int vpci_scan_bus(void *sysdata)
->  	struct pci_bus *vpci_bus;
->  	struct epf_ntb *ndev = sysdata;
->
+On 2025-12-01 09:29 AM, Jason Gunthorpe wrote:
+> On Sat, Nov 29, 2025 at 08:20:34PM -0500, Pasha Tatashin wrote:
+> > On Sat, Nov 29, 2025 at 7:51 PM Jason Gunthorpe <jgg@nvidia.com> wrote:
+> > >
+> > > On Sat, Nov 29, 2025 at 11:34:49AM +0100, Lukas Wunner wrote:
+> > > > On Wed, Nov 26, 2025 at 07:35:49PM +0000, David Matlack wrote:
+> > > > > Add an API to enable the PCI subsystem to track all devices that are
+> > > > > preserved across a Live Update, including both incoming devices (passed
+> > > > > from the previous kernel) and outgoing devices (passed to the next
+> > > > > kernel).
+> > > > >
+> > > > > Use PCI segment number and BDF to keep track of devices across Live
+> > > > > Update. This means the kernel must keep both identifiers constant across
+> > > > > a Live Update for any preserved device.
+> > > >
+> > > > While bus numbers will *usually* stay the same across next and previous
+> > > > kernel, there are exceptions.  E.g. if "pci=assign-busses" is specified
+> > > > on the command line, the kernel will re-assign bus numbers on every boot.
+> > >
+> > > Stuff like this has to be disabled for this live update stuff, if the
+> > > bus numbers are changed it will break the active use of the iommu
+> > > across the kexec.
+> > >
+> > > So while what you say is all technically true, I'm not sure this is
+> > > necessary.
+> > 
+> > I agree. However, Lukas's comment made me wonder about the future: if
+> > we eventually need to preserve non-PCI devices (like a TPM), should we
+> > be designing a common identification mechanism for all buses now? Or
+> > should we settle on BDF for PCI and invent stable identifiers for
+> > other bus types as they become necessary?
+> 
+> Well, at least PCI subsystem should use BDF..
+> 
+> You are probably right that the matching of preserved data to a struct
+> device should be more general though.
 
-next patch's remove empty line should be in this patch.
+Lukas' suggestion would also make it more reliable to detect bus numbers
+changing during a Live Update. We can play whack-a-mole with things like
+assign-busses, but there will be a risk that we miss something or
+something changes in the future.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Perhaps it would make sense to rely on BDF in the PCI subsystem in the
+short term and enforce bus number stability manually (e.g. see patch at
+the bottom), and then explore stable device paths as a future
+improvement to make PCI device preservation more reliable and also to
+enable other bus types?
 
-Frank
-> -	vpci_bus = pci_scan_bus(ndev->vbus_number, &vpci_ops, sysdata);
-> +	LIST_HEAD(resources);
-> +	static struct resource busn_res = {
-> +		.start = 0,
-> +		.end = 255,
-> +		.flags = IORESOURCE_BUS,
-> +	};
-> +
-> +	pci_add_resource(&resources, &ioport_resource);
-> +	pci_add_resource(&resources, &iomem_resource);
-> +	pci_add_resource(&resources, &busn_res);
-> +
-> +	vpci_bus = pci_scan_root_bus(&ndev->epf->epc->dev, ndev->vbus_number,
-> +				     &vpci_ops, sysdata, &resources);
->  	if (!vpci_bus) {
->  		pr_err("create pci bus failed\n");
->  		return -EINVAL;
-> --
-> 2.48.1
->
+To handle pci=assign-busses, perhaps something like this? Are there any
+other places where the kernel could change busses?
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 0ce98e18b5a8..2e1e1aa385a8 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1331,6 +1331,20 @@ static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
+ 	return true;
+ }
+ 
++static bool pci_assign_all_busses(void)
++{
++	/*
++	 * During a Live Update, do not assign new bus numbers. Use bus numbers
++	 * assigned by the firmware and the previous kernel. Bus numbers must
++	 * remain constant so that devices preserved across the Live Update can
++	 * use the IOMMU uninterrupted.
++	 */
++	if (liveupdate_count())
++		return false;
++
++	return pcibios_assign_all_busses();
++}
++
+ /*
+  * pci_scan_bridge_extend() - Scan buses behind a bridge
+  * @bus: Parent bus the bridge is on
+@@ -1404,7 +1418,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 	pci_write_config_word(dev, PCI_BRIDGE_CONTROL,
+ 			      bctl & ~PCI_BRIDGE_CTL_MASTER_ABORT);
+ 
+-	if ((secondary || subordinate) && !pcibios_assign_all_busses() &&
++	if ((secondary || subordinate) && !pci_assign_all_busses() &&
+ 	    !is_cardbus && !broken) {
+ 		unsigned int cmax, buses;
+ 
+@@ -1441,13 +1455,16 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 		if (subordinate > max)
+ 			max = subordinate;
+ 	} else {
++		pci_WARN_ONCE(dev, liveupdate_count(),
++			      "Assigning new bus numbers during a Live Update! [%u %u %u %u]\n",
++			      secondary, subordinate, is_cardbus, broken);
+ 
+ 		/*
+ 		 * We need to assign a number to this bus which we always
+ 		 * do in the second pass.
+ 		 */
+ 		if (!pass) {
+-			if (pcibios_assign_all_busses() || broken || is_cardbus)
++			if (pci_assign_all_busses() || broken || is_cardbus)
+ 
+ 				/*
+ 				 * Temporarily disable forwarding of the
+@@ -1522,7 +1539,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 							max+i+1))
+ 					break;
+ 				while (parent->parent) {
+-					if ((!pcibios_assign_all_busses()) &&
++					if ((!pci_assign_all_busses()) &&
+ 					    (parent->busn_res.end > max) &&
+ 					    (parent->busn_res.end <= max+i)) {
+ 						j = 1;
+diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
+index b913d63eab5f..87a4982d0eb1 100644
+--- a/include/linux/liveupdate.h
++++ b/include/linux/liveupdate.h
+@@ -219,6 +219,7 @@ struct liveupdate_flb {
+ 
+ /* Return true if live update orchestrator is enabled */
+ bool liveupdate_enabled(void);
++int liveupdate_count(void);
+ 
+ /* Called during kexec to tell LUO that entered into reboot */
+ int liveupdate_reboot(void);
+@@ -241,6 +242,11 @@ static inline bool liveupdate_enabled(void)
+ 	return false;
+ }
+ 
++static inline int liveupdate_count(void)
++{
++	return 0;
++}
++
+ static inline int liveupdate_reboot(void)
+ {
+ 	return 0;
+diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
+index 69298d82f404..2f273397bd41 100644
+--- a/kernel/liveupdate/luo_core.c
++++ b/kernel/liveupdate/luo_core.c
+@@ -256,6 +256,13 @@ bool liveupdate_enabled(void)
+ {
+ 	return luo_global.enabled;
+ }
++EXPORT_SYMBOL_GPL(liveupdate_enabled);
++
++int liveupdate_count(void)
++{
++	return luo_global.liveupdate_num;
++}
++EXPORT_SYMBOL_GPL(liveupdate_count);
+ 
+ /**
+  * DOC: LUO ioctl Interface
 
