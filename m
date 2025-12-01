@@ -1,81 +1,237 @@
-Return-Path: <linux-pci+bounces-42384-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42385-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77F5AC98810
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 18:23:17 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD166C9888B
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 18:32:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 22223344BF4
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 17:23:17 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B49B24E1C52
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 17:32:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 856933375CB;
-	Mon,  1 Dec 2025 17:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 854DB336EED;
+	Mon,  1 Dec 2025 17:32:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TFyxWPbs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3DAda23i"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CE7335BDB;
-	Mon,  1 Dec 2025 17:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B9984A35
+	for <linux-pci@vger.kernel.org>; Mon,  1 Dec 2025 17:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764609793; cv=none; b=LQ503NWrvo/13k+52eTNJrgddIVPlWRVfOZTe7l4IAMkm+iNuZxlAo1vKFSIN4kNUb3WnJHywvoVa5qIP1eZNeNFpE5RerkQ3u21rFktlARHK5YIh21aZK31uULCjvZIt0zxXVM4FDcIA/MXaivV6hHuHqptfO3h1lTRZqY+p9A=
+	t=1764610338; cv=none; b=VNAAjgKf/HEChpnFBauFZIqOHyyx3NTkZr1G4BdrKlzQ8yDylbNoLV7IPlVWvL2Zn47oVBcWuW3JIoMqtLxWFDZt19+PkH2DjPUnNlj+OlsTWmWfwl3hmQ2BbLWf0rLD/I9RLI2162FQYVMby0QbmDffs5byfRg7fqRpdJly0Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764609793; c=relaxed/simple;
-	bh=RJqVXuXdZWxWnmtU+9QZzBV2awZeBUdtgRFh+O6fgH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=P0AVW2jiCMtr//D46se7XeoUHQcT070tk++vBv8abFK4YprfCqjhiPg9H+LONcLVlTrxK6Oir8MitGIsSRWm8c6zrXKorB4nh/U9YmBYiAkbU6eGXUqGhAPsBepqM9QcdY+G/kmADk7c4UowbZIceVqLvEOW5kxYjBD0vxUd6lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TFyxWPbs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 000F7C4CEF1;
-	Mon,  1 Dec 2025 17:23:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764609793;
-	bh=RJqVXuXdZWxWnmtU+9QZzBV2awZeBUdtgRFh+O6fgH0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TFyxWPbs2px1Iud+65mS2POX82bsaaYnqJkjRmi3xOWBZ7wALmu9o1wfevS+xXMQe
-	 LqyDxEajoCTCeM/SNrpd29LgxJz23eZE9JjB0xQbb496euGav8iP65KR7ZMFDqsJbT
-	 wd67r0ewzxvsY/7S+CDRcZI9xgUbRTRjvIaQ+8xKhggDZtEXePjDNpWmLvO7aiSot0
-	 jOxUJNXMOc/dweF8EcE/1FmM/Innu4k8IxAytXDZpC+ryU4hvNcY2O5GElqGlwPfMX
-	 QInhJqUmdsJzdxQYZVaO9EbQTruezBJUejdPHRkhSFsZp4qkE6ttt4dkkscealv4LU
-	 Sx9Jeu9/4QwFA==
-Date: Mon, 1 Dec 2025 11:23:11 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	linux-pci@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
-	NXP S32 Linux Team <s32@nxp.com>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: linux-next: Tree for Nov 28
- (drivers/pci/controller/dwc/pcie-nxp-s32g.o)
-Message-ID: <20251201172311.GA3019571@bhelgaas>
+	s=arc-20240116; t=1764610338; c=relaxed/simple;
+	bh=VDZGToZCwGbyT+LPOSKi0X+Ra5o2pIHsXNFLFhM4doA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ap6d/Ram2/cbYuTi1NtXccaUFZrU2OU7/W7EPY5NlOGHLxCnncZAMCzXOGSZr0t3suASrxKR/MUUelVH9VBSXY5ThGd6bqYQoaIFvpEg1FbiOa1jNp5SDufg677YtKlOazIFkWneDQ6+oaU8x1P5MsL6uHidZPrkGaaTZFpFmbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3DAda23i; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-2981f9ce15cso51694995ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 01 Dec 2025 09:32:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764610336; x=1765215136; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KY4xp3ZNY6XzsRcxr8jQOIjKB1zKw6LB85WN39mV5fA=;
+        b=3DAda23ifJG8etQ6AmhHyV2tOHj7xS+4A9ZWI05KXDjUjzAT890NiuhRRDfW0dCIX5
+         ch/Zjvz2nHr103gB9gvsdEsJ2+HirvOCJLjO3I3xzBzQ7IZlOFkOo4YkinZwAk8aGbzc
+         tThR3IE6DSGooM6mlSGCyWadnyB5OeYplMNoSNVsXasNVlfxqo2SCZ1R1a9PZTjgDQ1p
+         bLFaTAAr0Rh4p49HYgI2o2Ju9bvEzqlovXYHBJbIIPkZjWenpZIT+ZkB4SaDx2Y+613x
+         +zRi22Vx3GEyZ+ByyzhPulczc8xpZpWR31uQO3jIujz37MEPftagR8cqJoNuYXeeVC0w
+         5xIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764610336; x=1765215136;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KY4xp3ZNY6XzsRcxr8jQOIjKB1zKw6LB85WN39mV5fA=;
+        b=G3nwHC3cuVSdMzT+3ZMdbgwZubijnxzEiWTah9lM9B/FqwhLMRh02F+bG/nOpgWQBz
+         45J0aX9PKR4mPUeYZhB8tWGV95AnO7ZRb3j80CeMLAJdOJovxGMEL5d5X+CdHTIxPGb3
+         s7zkTf/XoWTM0rSVhFC9DddsMcW1hoM8oKUH9WdH387Km8cDctexXEr8uxd+femMUP7A
+         YjP+zE1F0abZEPnu2dtK2tUCX3mLtQM1UXBnvz7pGaQ99+my+PsNVkqs+GHfnOgv33vI
+         3aju5f49oL73snBIGfIujY/wKHNYEf8h5/fhNHIYMK1mrTJlwyZ6hjEJKuPSXzIPrSyB
+         coXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5OtIiFd3Tc5Yvb93iZocc+3wOEsQUF3Kzi1xPZKYSlryUco0PG63VWOKIdDptE3ErOtK375hXxrM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKYDgwRAvCAzjeNblUL74zMnc9vyE/Ur4zJbU++TGsnRwSrStL
+	nl8i18LvF9nypVd4xA8pfb4IhS6CXEBOz1UtDfF2kMsw9B6JYtBNsF3PNn56w7WSFw==
+X-Gm-Gg: ASbGncsyqnVi861nk/FItqqLnTesaAtI8FYOIB5yCzHxc7lJW+XDzc6fQHxRLetuk4g
+	2ttEHkjioha0m5YLJ/LiZqIlnpdW1z+Jy9aCPGiGn5j2Cc6oUlGiGiChRR0Z1JRcp2rWXEQHlQi
+	j9LH9blZ/bhdLQU//aV7Brp5WISV4GJcznrGafF6oG1rGMKOHBBLCh4uRsCOIUy/Nj7AjKug0W9
+	b2kCL+mQTzH6LrLdEtzJBYxutRNx6uCZ+02BesJ4JNrSvOlwr0zQBsHG+ivk3SlHuodmBXVRoT+
+	KQ+YBBi7Lb62gFCoc/hG5zrjvpGOuJYr0zsnfBb0pqksUp33osJikmnRTAGCWLdZ4M7BCSnABK9
+	iilykFh689iCs5HHfYpkFU16UO+G0aeHTZR4/2eXCijFyLrNX7HV6U+OkPGmH6hups4NUG7notH
+	5NFRDKkObn0oXWQFO7soM4DPbjJccXtDr6hrGScAjlO6STLqo=
+X-Google-Smtp-Source: AGHT+IGokN2bwEae7Qbklk2bN7QI5ZgncXFMn6WS0kMGjsOhcqcWPHmUhLGTZo0eFJtMt3cgT78wcw==
+X-Received: by 2002:a17:902:ef45:b0:298:3aa6:c034 with SMTP id d9443c01a7336-29b6bf3bc3fmr399752055ad.32.1764610333144;
+        Mon, 01 Dec 2025 09:32:13 -0800 (PST)
+Received: from google.com (28.29.230.35.bc.googleusercontent.com. [35.230.29.28])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29bce416f00sm128222615ad.4.2025.12.01.09.32.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Dec 2025 09:32:11 -0800 (PST)
+Date: Mon, 1 Dec 2025 17:32:07 +0000
+From: David Matlack <dmatlack@google.com>
+To: Zhu Yanjun <yanjun.zhu@linux.dev>
+Cc: Alex Williamson <alex@shazbot.org>,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>,
+	kvm@vger.kernel.org, Leon Romanovsky <leonro@nvidia.com>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <shuah@kernel.org>, Tomita Moeko <tomitamoeko@gmail.com>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>
+Subject: Re: [PATCH 00/21] vfio/pci: Base support to preserve a VFIO device
+ file across Live Update
+Message-ID: <aS3RF6ROa7uZsviv@google.com>
+References: <20251126193608.2678510-1-dmatlack@google.com>
+ <dadaeeb9-4008-4450-8b61-e147a2af38b2@linux.dev>
+ <46bbdad1-486d-4cb1-915f-577b00de827f@linux.dev>
+ <CALzav=eigAYdw5-hzk1MAHWBU29yJK4_WWTd0dyoBN91bnRoZQ@mail.gmail.com>
+ <4998497c-87e8-4849-8442-b7281c627884@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <63e1daf7-f9a3-463e-8a1b-e9b72581c7af@infradead.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4998497c-87e8-4849-8442-b7281c627884@linux.dev>
 
-On Sat, Nov 29, 2025 at 07:00:04PM -0800, Randy Dunlap wrote:
-> On 11/27/25 9:29 PM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20251127:
-> > 
+On 2025-12-01 09:16 AM, Zhu Yanjun wrote:
 > 
-> on i386 (allmodconfig):
+> 在 2025/12/1 9:10, David Matlack 写道:
+> > On Mon, Dec 1, 2025 at 7:49 AM Zhu Yanjun <yanjun.zhu@linux.dev> wrote:
+> > > 在 2025/11/27 20:56, Zhu Yanjun 写道:
+> > > > Hi, David
+> > > > 
+> > > > ERROR: modpost: "liveupdate_register_file_handler" [drivers/vfio/pci/
+> > > > vfio-pci-core.ko] undefined!
+> > > > 
+> > > > ERROR: modpost: "vfio_pci_ops" [drivers/vfio/pci/vfio-pci-core.ko]
+> > > > undefined!
+> > > > ERROR: modpost: "liveupdate_enabled" [drivers/vfio/pci/vfio-pci-core.ko]
+> > > > undefined!
+> > > > ERROR: modpost: "liveupdate_unregister_file_handler" [drivers/vfio/pci/
+> > > > vfio-pci-core.ko] undefined!
+> > > > ERROR: modpost: "vfio_device_fops" [drivers/vfio/pci/vfio-pci-core.ko]
+> > > > undefined!
+> > > > ERROR: modpost: "vfio_pci_is_intel_display" [drivers/vfio/pci/vfio-pci-
+> > > > core.ko] undefined!
+> > > > ERROR: modpost: "vfio_pci_liveupdate_init" [drivers/vfio/pci/vfio-
+> > > > pci.ko] undefined!
+> > > > ERROR: modpost: "vfio_pci_liveupdate_cleanup" [drivers/vfio/pci/vfio-
+> > > > pci.ko] undefined!
+> > > > make[4]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
+> > > > make[3]: *** [Makefile:1960: modpost] Error 2
+> > > > 
+> > > > After I git clone the source code from the link https://github.com/
+> > > > dmatlack/linux/tree/liveupdate/vfio/cdev/v1,
+> > > > 
+> > > > I found the above errors when I built the source code.
+> > > > 
+> > > > Perhaps the above errors can be solved by EXPORT_SYMBOL.
+> > > > 
+> > > > But I am not sure if a better solution can solve the above problems or not.
+> > > I reviewed this patch series in detail. If I’m understanding it
+> > > correctly, there appears to be a cyclic dependency issue. Specifically,
+> > > some functions in kernel module A depend on kernel module B, while at
+> > > the same time certain functions in module B depend on module A.
+> > > 
+> > > I’m not entirely sure whether this constitutes a real problem or if it’s
+> > > intentional design.
+> > Thanks for your report. Can you share the .config file you used to
+> > generate these errors?
 > 
-> WARNING: modpost: vmlinux: section mismatch in reference: s32g_init_pcie_controller+0x2b (section: .text) -> memblock_start_of_DRAM (section: .init.text)
+> 
+> IIRC, I used FC 42 default config. Perhaps you can make tests with it. If
+> this problem can not be reproduced, I will share my config with you.
+> 
 
-Thanks, I'll drop the pci/controller/s32g branch until this is
-resolved.
+What does "FC 42 default config" mean?
+
+Either way I was able to reproduce the errors you posted above by
+changing CONFIG_VFIO_PCI{_CORE} from "y" to "m".
+
+To unblock building and testing this series you can change these configs
+from "m" to "y", or the following patch (which fixed things for me):
+
+diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
+index 929df22c079b..c2cca16e99a8 100644
+--- a/drivers/vfio/pci/Makefile
++++ b/drivers/vfio/pci/Makefile
+@@ -2,11 +2,11 @@
+
+ vfio-pci-core-y := vfio_pci_core.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
+ vfio-pci-core-$(CONFIG_VFIO_PCI_ZDEV_KVM) += vfio_pci_zdev.o
+diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
+index 929df22c079b..c2cca16e99a8 100644
+--- a/drivers/vfio/pci/Makefile
++++ b/drivers/vfio/pci/Makefile
+@@ -2,11 +2,11 @@
+
+ vfio-pci-core-y := vfio_pci_core.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
+ vfio-pci-core-$(CONFIG_VFIO_PCI_ZDEV_KVM) += vfio_pci_zdev.o
+-vfio-pci-core-$(CONFIG_LIVEUPDATE) += vfio_pci_liveupdate.o
+ obj-$(CONFIG_VFIO_PCI_CORE) += vfio-pci-core.o
+
+ vfio-pci-y := vfio_pci.o
+ vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
++vfio-pci-$(CONFIG_LIVEUPDATE) += vfio_pci_liveupdate.o
+ obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
+
+ obj-$(CONFIG_MLX5_VFIO_PCI)           += mlx5/
+diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
+index c5b5eb509474..b9805861763a 100644
+--- a/drivers/vfio/vfio_main.c
++++ b/drivers/vfio/vfio_main.c
+@@ -1386,6 +1386,7 @@ const struct file_operations vfio_device_fops = {
+        .show_fdinfo    = vfio_device_show_fdinfo,
+ #endif
+ };
++EXPORT_SYMBOL_GPL(vfio_device_fops);
+
+ /**
+  * vfio_file_is_valid - True if the file is valid vfio file
+diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
+index 69298d82f404..c7a0c9c3b6a8 100644
+--- a/kernel/liveupdate/luo_core.c
++++ b/kernel/liveupdate/luo_core.c
+@@ -256,6 +256,7 @@ bool liveupdate_enabled(void)
+ {
+        return luo_global.enabled;
+ }
++EXPORT_SYMBOL_GPL(liveupdate_enabled);
+
+ /**
+  * DOC: LUO ioctl Interface
+diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
+index fca3806dae28..9baa88966f04 100644
+--- a/kernel/liveupdate/luo_file.c
++++ b/kernel/liveupdate/luo_file.c
+@@ -868,6 +868,7 @@ int liveupdate_register_file_handler(struct liveupdate_file_handler *fh)
+        luo_session_resume();
+        return err;
+ }
++EXPORT_SYMBOL_GPL(liveupdate_register_file_handler);
+
 
