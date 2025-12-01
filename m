@@ -1,176 +1,195 @@
-Return-Path: <linux-pci+bounces-42407-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42408-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id A68FCC99168
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 21:52:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 294EDC99230
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 22:08:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7EF814E2034
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 20:52:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0B9F3A3539
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 21:08:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F0C525EFBB;
-	Mon,  1 Dec 2025 20:52:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D04F3257843;
+	Mon,  1 Dec 2025 21:08:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="flM4qaUt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MKPar0LM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21EF0223DEF;
-	Mon,  1 Dec 2025 20:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C712080C8;
+	Mon,  1 Dec 2025 21:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764622358; cv=none; b=XbEmO0B/Rq7DqbZi6dleeLnDeCqyo/0FyFPox3DzGjhDzXkMQvbnt9vyRc8e51AxyJuExHIrKxMLzLQD9Mj1Q7fljjP5PGDKoq0jAPQeypCBRxnraybvC1CtEJ66wzePc0D/VJFBtwlJvIJs99Bq6AlzwGfeDCkfjcO1ozhyCvo=
+	t=1764623301; cv=none; b=jNFrasx2gm93u4vylVyuzUPCpTUrwSnVdxLIQhpDHoC3hGcA1eGY6NNtqCSgsx8ZhtH1zF2rjhZXlB9Rp0DSN8Tt5lMUXB3K544DFncvttnNXx9x3Lug/l7wVxZO0HuSlIC/GImjMhjwEMQMcY/chtVIVmwFFrqJZuJ3KgYF+CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764622358; c=relaxed/simple;
-	bh=NfUf5GelDLoSxFZm9Aq5VnHYa1989YAat0QJXEF+m1o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=L2VYal13jXi2JWuVceVqLGON0i8dztAM9YKmqNVcwDp4mNjil01jiW2CD9Ca1A7eAnDIdW/OuquOooWvbQm+rW38UNkUwNC9XqUZyCsn0w6dkTI/q2VoG8z+rrlwvbieuUPBb40EZ+bbSyNN7EilStF/IYRys2WSHKjhKgu/rRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=flM4qaUt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76CEDC4CEF1;
-	Mon,  1 Dec 2025 20:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764622357;
-	bh=NfUf5GelDLoSxFZm9Aq5VnHYa1989YAat0QJXEF+m1o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=flM4qaUtRnVkA245t9hWpzI2WtWTW69oK283WqPcLVlPcVRBC8VVXtARaL1n1BBYa
-	 3s40COrlLhU6Nm61pQBCxfJGKVp0KrtKP7H3Iboto596cplV0whgs+D1f74O1m6cEh
-	 x435DaCiChed1BgzkqsQBSanWcecFfio5HAbEQGpt0lF9r4wuHdd1sTi4qgrRytT6E
-	 7KZv+M64NSKvLqktC0vj13JaGJtUaxNkTSJSiPI33XmnenZfGBp3227bmicDm/TUkr
-	 ZGc7wyChoCp3+sB6qW2KPkQJHzp/t8c0a/I4HDsMvrQsU4DSE8GQ88zrhwoVeUGF07
-	 usGTycGmGlGYQ==
-Date: Mon, 1 Dec 2025 14:52:36 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hal Feng <hal.feng@starfivetech.com>
-Cc: Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
-	E Shattow <e@freeshell.de>, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Kevin Xie <kevin.xie@starfivetech.com>
-Subject: Re: [PATCH v4 1/6] PCI: starfive: Use regulator APIs instead of GPIO
- APIs to enable the 3V3 power supply of PCIe slots
-Message-ID: <20251201205236.GA3023515@bhelgaas>
+	s=arc-20240116; t=1764623301; c=relaxed/simple;
+	bh=b+hVwcYZOl3pSJVCSR5ZKI5i2jwmT7T/w8L34wZGTXo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c7y7OfjqLgFrI6jhtepjA2Xkqfg/Y8OCLLZsM7994Pqk1JYYRWAqF6qbVlMP4Q8+byG+Q39tgJZKr+wGILAfZZVCpOMdCZIlHlIT3wQXVpMUaUX+g5jvNex8TOggpHQkufwlM7zSJON+1qoYkFHKcYSR57IFlRdpAWifoS71iaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MKPar0LM; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764623300; x=1796159300;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=b+hVwcYZOl3pSJVCSR5ZKI5i2jwmT7T/w8L34wZGTXo=;
+  b=MKPar0LMoRLuTEsBPqyTICnjdErcljfAnpLCETX90UVNWKnWzBIjyMj1
+   dLlh6gdglsBqKfV+Fx3IlnrQE6Z9Req2fGe64jWrPIyXiQ2Ky0c5hZNMk
+   a/EMfoeZZiu6mjVDrV6H4if5t/e+kA6f+YIEcckIB/uX7MB6PttMh0HSu
+   XsLuH30vRU+qQ2RTIDwBmIGnDH1cv++zbHDpMbsa4dOUQxIM3XcR2xTX0
+   bbHBojg8S7QBq+qm9Ud6wjv5lxHU5y8zXH2sbXNOwIwOG5mjYCECcrVYy
+   Kuaa9XhCp1bh425E5WaExNGe8+NA88iwSeEtSmiWJw3SbBT77G4yWIN9y
+   Q==;
+X-CSE-ConnectionGUID: MiPB8iR5RY+pCzKBHqORMw==
+X-CSE-MsgGUID: h2SI00N0TBOOrRo7/xpB3g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11630"; a="77925318"
+X-IronPort-AV: E=Sophos;i="6.20,241,1758610800"; 
+   d="scan'208";a="77925318"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 13:08:18 -0800
+X-CSE-ConnectionGUID: 5Qj+ktSJSS2FhOVG1xTirQ==
+X-CSE-MsgGUID: Q3S5ZokuTo6GlYSndpvbHA==
+X-ExtLoop1: 1
+Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.125.111.120]) ([10.125.111.120])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 13:08:15 -0800
+Message-ID: <8b209241-99a7-42c0-8025-e75a11176f1b@intel.com>
+Date: Mon, 1 Dec 2025 14:08:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251125075604.69370-2-hal.feng@starfivetech.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 10/27] NTB: core: Add .get_pci_epc() to ntb_dev_ops
+To: Koichiro Den <den@valinux.co.jp>, ntb@lists.linux.dev,
+ linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Frank.Li@nxp.com
+Cc: mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org,
+ bhelgaas@google.com, corbet@lwn.net, vkoul@kernel.org, jdmason@kudzu.us,
+ allenbh@gmail.com, Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
+ kurt.schwemmer@microsemi.com, logang@deltatee.com, jingoohan1@gmail.com,
+ lpieralisi@kernel.org, robh@kernel.org, jbrunet@baylibre.com,
+ fancer.lancer@gmail.com, arnd@arndb.de, pstanner@redhat.com,
+ elfring@users.sourceforge.net
+References: <20251129160405.2568284-1-den@valinux.co.jp>
+ <20251129160405.2568284-11-den@valinux.co.jp>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20251129160405.2568284-11-den@valinux.co.jp>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-[+cc Kevin, pcie-starfive.c maintainer; will need his ack]
 
-Subject line is excessively long.
 
-On Tue, Nov 25, 2025 at 03:55:59PM +0800, Hal Feng wrote:
-> The "enable-gpio" property is not documented in the dt-bindings and
-> using GPIO APIs is not a standard method to enable or disable PCIe
-> slot power, so use regulator APIs to replace them.
-
-I can't tell from this whether existing DTs will continue to work
-after this change.  It looks like previously we looked for an
-"enable-gpios" or "enable-gpio" property and now we'll look for a
-"vpcie3v3-supply" regulator property.
-
-I don't see "enable-gpios" or "enable-gpio" mentioned in any of the DT
-patches in this series, so maybe that property was never actually used
-before, and the code for pcie->power_gpio was actually dead?
-
-Please add something here about how we know this won't break any
-existing setups using DTs that are already in the field.
-
-> Tested-by: Matthias Brugger <mbrugger@suse.com>
-> Fixes: 39b91eb40c6a ("PCI: starfive: Add JH7110 PCIe controller")
-
-Based on the cover letter, it looks like the point of this is to add
-support for a new device, which I don't think really qualifies as a
-"fix".
-
-> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+On 11/29/25 9:03 AM, Koichiro Den wrote:
+> Add an optional get_pci_epc() callback to retrieve the underlying
+> pci_epc device associated with the NTB implementation.
+> 
+> Signed-off-by: Koichiro Den <den@valinux.co.jp>
 > ---
->  drivers/pci/controller/plda/pcie-starfive.c | 25 ++++++++++++---------
->  1 file changed, 15 insertions(+), 10 deletions(-)
+>  drivers/ntb/hw/epf/ntb_hw_epf.c | 11 +----------
+>  include/linux/ntb.h             | 21 +++++++++++++++++++++
+>  2 files changed, 22 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/plda/pcie-starfive.c b/drivers/pci/controller/plda/pcie-starfive.c
-> index 3caf53c6c082..298036c3e7f9 100644
-> --- a/drivers/pci/controller/plda/pcie-starfive.c
-> +++ b/drivers/pci/controller/plda/pcie-starfive.c
-> @@ -55,7 +55,7 @@ struct starfive_jh7110_pcie {
->  	struct reset_control *resets;
->  	struct clk_bulk_data *clks;
->  	struct regmap *reg_syscon;
-> -	struct gpio_desc *power_gpio;
-> +	struct regulator *vpcie3v3;
->  	struct gpio_desc *reset_gpio;
->  	struct phy *phy;
+> diff --git a/drivers/ntb/hw/epf/ntb_hw_epf.c b/drivers/ntb/hw/epf/ntb_hw_epf.c
+> index a3ec411bfe49..d55ce6b0fad4 100644
+> --- a/drivers/ntb/hw/epf/ntb_hw_epf.c
+> +++ b/drivers/ntb/hw/epf/ntb_hw_epf.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-epf.h>
+>  #include <linux/slab.h>
+>  #include <linux/ntb.h>
 >  
-> @@ -153,11 +153,13 @@ static int starfive_pcie_parse_dt(struct starfive_jh7110_pcie *pcie,
->  		return dev_err_probe(dev, PTR_ERR(pcie->reset_gpio),
->  				     "failed to get perst-gpio\n");
+> @@ -49,16 +50,6 @@
 >  
-> -	pcie->power_gpio = devm_gpiod_get_optional(dev, "enable",
-> -						   GPIOD_OUT_LOW);
-> -	if (IS_ERR(pcie->power_gpio))
-> -		return dev_err_probe(dev, PTR_ERR(pcie->power_gpio),
-> -				     "failed to get power-gpio\n");
-> +	pcie->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
-> +	if (IS_ERR(pcie->vpcie3v3)) {
-> +		if (PTR_ERR(pcie->vpcie3v3) != -ENODEV)
-> +			return dev_err_probe(dev, PTR_ERR(pcie->vpcie3v3),
-> +					     "failed to get vpcie3v3 regulator\n");
-> +		pcie->vpcie3v3 = NULL;
-> +	}
+>  #define NTB_EPF_COMMAND_TIMEOUT	1000 /* 1 Sec */
 >  
->  	return 0;
+> -enum pci_barno {
+> -	NO_BAR = -1,
+> -	BAR_0,
+> -	BAR_1,
+> -	BAR_2,
+> -	BAR_3,
+> -	BAR_4,
+> -	BAR_5,
+> -};
+> -
+>  enum epf_ntb_bar {
+>  	BAR_CONFIG,
+>  	BAR_PEER_SPAD,
+> diff --git a/include/linux/ntb.h b/include/linux/ntb.h
+> index d7ce5d2e60d0..04dc9a4d6b85 100644
+> --- a/include/linux/ntb.h
+> +++ b/include/linux/ntb.h
+> @@ -64,6 +64,7 @@ struct ntb_client;
+>  struct ntb_dev;
+>  struct ntb_msi;
+>  struct pci_dev;
+> +struct pci_epc;
+>  
+>  /**
+>   * enum ntb_topo - NTB connection topology
+> @@ -256,6 +257,7 @@ static inline int ntb_ctx_ops_is_valid(const struct ntb_ctx_ops *ops)
+>   * @msg_clear_mask:	See ntb_msg_clear_mask().
+>   * @msg_read:		See ntb_msg_read().
+>   * @peer_msg_write:	See ntb_peer_msg_write().
+> + * @get_pci_epc:	See ntb_get_pci_epc().
+>   */
+>  struct ntb_dev_ops {
+>  	int (*port_number)(struct ntb_dev *ntb);
+> @@ -331,6 +333,7 @@ struct ntb_dev_ops {
+>  	int (*msg_clear_mask)(struct ntb_dev *ntb, u64 mask_bits);
+>  	u32 (*msg_read)(struct ntb_dev *ntb, int *pidx, int midx);
+>  	int (*peer_msg_write)(struct ntb_dev *ntb, int pidx, int midx, u32 msg);
+> +	struct pci_epc *(*get_pci_epc)(struct ntb_dev *ntb);
+
+Seems very specific call to this particular hardware instead of something generic for the NTB dev ops. Maybe it should be something like get_private_data() or something like that?
+
+DJ
+
+
+>  };
+>  
+>  static inline int ntb_dev_ops_is_valid(const struct ntb_dev_ops *ops)
+> @@ -393,6 +396,9 @@ static inline int ntb_dev_ops_is_valid(const struct ntb_dev_ops *ops)
+>  		/* !ops->msg_clear_mask == !ops->msg_count	&& */
+>  		!ops->msg_read == !ops->msg_count		&&
+>  		!ops->peer_msg_write == !ops->msg_count		&&
+> +
+> +		/* Miscellaneous optional callbacks */
+> +		/* ops->get_pci_epc			&& */
+>  		1;
 >  }
-> @@ -270,8 +272,8 @@ static void starfive_pcie_host_deinit(struct plda_pcie_rp *plda)
->  		container_of(plda, struct starfive_jh7110_pcie, plda);
 >  
->  	starfive_pcie_clk_rst_deinit(pcie);
-> -	if (pcie->power_gpio)
-> -		gpiod_set_value_cansleep(pcie->power_gpio, 0);
-> +	if (pcie->vpcie3v3)
-> +		regulator_disable(pcie->vpcie3v3);
->  	starfive_pcie_disable_phy(pcie);
+> @@ -1567,6 +1573,21 @@ static inline int ntb_peer_msg_write(struct ntb_dev *ntb, int pidx, int midx,
+>  	return ntb->ops->peer_msg_write(ntb, pidx, midx, msg);
 >  }
 >  
-> @@ -304,8 +306,11 @@ static int starfive_pcie_host_init(struct plda_pcie_rp *plda)
->  	if (ret)
->  		return ret;
->  
-> -	if (pcie->power_gpio)
-> -		gpiod_set_value_cansleep(pcie->power_gpio, 1);
-> +	if (pcie->vpcie3v3) {
-> +		ret = regulator_enable(pcie->vpcie3v3);
-> +		if (ret)
-> +			dev_err_probe(dev, ret, "failed to enable vpcie3v3 regulator\n");
-> +	}
->  
->  	if (pcie->reset_gpio)
->  		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-> -- 
-> 2.43.2
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> +/**
+> + * ntb_get_pci_epc() - get backing PCI endpoint controller if possible.
+> + * @ntb:	NTB device context.
+> + *
+> + * Get the backing PCI endpoint controller representation.
+> + *
+> + * Return: A pointer to the pci_epc instance if available. or %NULL if not.
+> + */
+> +static inline struct pci_epc __maybe_unused *ntb_get_pci_epc(struct ntb_dev *ntb)
+> +{
+> +	if (!ntb->ops->get_pci_epc)
+> +		return NULL;
+> +	return ntb->ops->get_pci_epc(ntb);
+> +}
+> +
+>  /**
+>   * ntb_peer_resource_idx() - get a resource index for a given peer idx
+>   * @ntb:	NTB device context.
+
 
