@@ -1,62 +1,62 @@
-Return-Path: <linux-pci+bounces-42391-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42392-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id B36FCC98C34
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 19:50:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 06BE7C98C3D
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 19:52:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EABCD343F1D
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 18:50:14 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 713EB343F36
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 18:52:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 741A936D513;
-	Mon,  1 Dec 2025 18:50:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDAF4207DE2;
+	Mon,  1 Dec 2025 18:52:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="mo81w2HO"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Kza3YnSx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013062.outbound.protection.outlook.com [40.107.159.62])
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011009.outbound.protection.outlook.com [40.107.130.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A3C1C8FBA;
-	Mon,  1 Dec 2025 18:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85E91C8FBA;
+	Mon,  1 Dec 2025 18:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.9
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764615012; cv=fail; b=iQ/+AwBFlkvOYLQcZt7PHtUhc/qxaLzb6CoAkMVHbKmjVFwMZH2fdbkgnfkcpcdjjJnWcz/pamEa42yW9oQgb6kgzBY13gwcmHWxu5M+nNdgKJdo2s8LRa7CpvdU2pT7+5OnH/w+BDld54C6BnuGNoj4O0p0O8UIVl+8Kdo+cs0=
+	t=1764615124; cv=fail; b=mCYJ9wI6hCzKtdUMdIefaK5zyGoJteiJ5UQYP+2hB/9VoC/ORKZkrRKFLLETfL5G4ZqCVdlhia60D5wTt1HoNQXhlKH/KcoFAqnnPsP3M2MA9q+WxGKfLgLIKVbMUqwpuBw57Xul7JV3nas3iWxvkfM+93KJpDpF4/oHs1X6+no=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764615012; c=relaxed/simple;
-	bh=lultBoYLZCwCvddn0McKX1BtuVn/i96euq9pBnEJ4BM=;
+	s=arc-20240116; t=1764615124; c=relaxed/simple;
+	bh=a87RIkVCviprR6gJg6o3KN0wbzS/2oveY9d3mFn7Oqc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=stbrwkk2tH8w6WZUi2Mj3kYptdyFny4qktlMYvlC8juVFCU6ETb09p0c6udf7UNPcsTKxy3yGKKcaK4T96VJHMUn6xA9S0EXyxUuJ8p2qb/U1pWOTxHlRxP41DrZeSasS5ttOGo6er3OVMHIoX8ElLCgOZjl3an8AfFNupSyRzI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=mo81w2HO; arc=fail smtp.client-ip=40.107.159.62
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Z+oW7It4s7MF1oTcS8mCkzXmg4bZqrSuHTU0seED3RrFPEClbRNFktuxANBYjpC5Yzu/VKKpJvQBVdh2RzDPvxcf2b8/bJ1b0wjhWh3Hr6TVXbj5OAD9+t5h8hCCFZmq7OPvd1uzibHJdjkcu01aT5sW2NyhIay47WXg819TPCs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Kza3YnSx; arc=fail smtp.client-ip=40.107.130.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Nn7dMuGfW+YnyPwDKiLOpPo5kmPNgUyVwxonys6mP4o/KnK57rStCDFVKGjVIkeoJKcRRVlx5q50OB6opVromUwytAvYYUFODZi8DyImKW2Ozwhg2JDKa49FKDWYBntuHAXP2RV6kOjXFEiPNCfHctrD7oU0YcnWFjs91kjX08gdGa4i9LvTK2LiqjD6dbDwUMGLnxge/WBV1Bpvnw6l4kyDODF+Zz5RfgGaI5yTae16On7Ng5OWCX34mqWrKjHsTdwB0Bv20wh5w5fA0C14Fo+xlpHr7FD9upZyOONgx22a79Da6CFk/08mKOJcwyAFJchVw/i4klr/lTNjKt7G0A==
+ b=gQougm2nm3sT5LIxNmNYdgEqDKiyOWc9gYrxnU7II3WjV66JwcXfbTbd3ENSZI8I//PqGBfiCh0B9kYVLf+zcHgovRDsKG4+bv7Ls9K9x7JGFIrtA9QS5DQ61mxbtBoZf7LCtnFwkznX5tWtXJij7Kbodf2gV0e2o1/TP4ufzrIAzwHCXxrCk8ZJddS7iPYBXcxM/WsvZzagX1uRr73fd/9T7Q2LE7uN3RTvENEVY5kqODxPXF6ghIzoo12tQ/rHF+ACk36nw1QjuzQaxCo5gDmcxd6leRIGMRMOzOQtThRv5Ikz0h+fLQwoS+pAZm+N7R3tEhw8omBq7kPQujDvug==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hnDY6ECxyQJ6Qb1TXENhku6YK8hg26cLbYPAVxdDS3c=;
- b=P4pnGVSuBboThK+FvBqguU+X1SFup6lZxKNrqx3RN2KDooMWyDgV6KxJnt7Q26voezYgGcTVSIdf3xAGErXXJDhOCUUMocqo7nPO+xQr+K0RXdyEQy95FXDlO/FL2GIejVpd+C9JE27naQ4pi5TMj1uOrTeFJY0TrKYQOZJVk33Wv2c/zwnYQGwJTF1Rb/HA4ftnewqy0igE53t1w2uO7svU1m4jm3ZmT06cflOPhSIv7wtn4I77cTx6Kln5MqNIELE6xxbOZAORLSuYOU9W8uLvpDuwggSivhNCy8zgnKvV0uvUZbZtPLe/eMs/JxdrypHIgT0wMJzcRKVUsXuQhg==
+ bh=fuFgZk9JLRtDp/6ABqN1eW1GSx1RsTOPRbreWR9NmCQ=;
+ b=gB/aTUnhcbIKOgyVddaCoVWTi218hu9LSldTYtkUqOe6wZXInmb13gPVMy/QVBu88a6XoemvfIPnnmerfVlYcOAm0gn2Pc47q7QWU1OtQexhPTVhlIeE58N1EtZOW6zrnFZ8H/wHoudcn4rkDKWCQzQaH1gKm2kDP8jQDTkVG05/dsuf1SM338wGDt/2uzeTUlMb7oHrSEU4I2J4Lza3kMuQ1BAvUeUY9UH3znwqKhg07dpSrVTI8svSYR5MsoQuDoz7jDMiUc4nhFjBy2axSA7TAMu9I5UF+vWvJ1mZCx0wpDOZv2+HVwumJBEkhIs1XYDCF0cYO4bdWeSw5OEA7w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hnDY6ECxyQJ6Qb1TXENhku6YK8hg26cLbYPAVxdDS3c=;
- b=mo81w2HOZ4LVBa4OHEQkxSomZzkwA020phQQFtPXneoX54LIpWBxoNNgWM7qDlxJyiYdcQWszCl9e0aslH1MKonzMo1Mpk+UbU05nl9m5LXTpDIwjaFr79oxOjwRAdQ4cYQcus02NOzUYJqbMl6QtBS5pakngr6Mmyrz+ltQdvZFMYcznyxDEtWwlWSerZJS4H1YP/YmRSV0d821wkrz8/E/RNDxdwdCglNTj3mGom+HFEVn1cvu3LyWgxsMcWNq6F9iQFmX6YOJgUEh43tXjDVys/lsB89jQIeAJQMMbB/VSc9W5T2IDvDP2oMym3pVfva+6MCrrqVS4H0tTTAT2Q==
+ bh=fuFgZk9JLRtDp/6ABqN1eW1GSx1RsTOPRbreWR9NmCQ=;
+ b=Kza3YnSxcRSx/StDURpAa/fYC49kkhHP2xHRBmz+bOLFrtuRUEbiDWtBz2PnWT9nwcCIdWoe8OfeW+Y8QvJH7hY0ZHKGBSns0+jXSRTC+AtRpkjJHrP0dXQmuG9Fb/Qw89hLj5zAiMxjiefsmB27x+KpliC81qM43cGuru2c/LUbNzXPkWr8hn0jHGtbjnrWCODvSRgMkJffGVEc8sdbEn+4yNF7DQiSKqYV+2xXfyUN+r7QtDs8dzY54FNa8NvAn2/VjcWbCXjOG/YakdDU80dCSTLAb3S/yD66+qS9VWofyS+LVVqO69IX24XAeBm1dKaH9O6MtO8KbAtDAekmaA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22)
  by PAXPR04MB8893.eurprd04.prod.outlook.com (2603:10a6:102:20c::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Mon, 1 Dec
- 2025 18:50:05 +0000
+ 2025 18:51:58 +0000
 Received: from DU2PR04MB8951.eurprd04.prod.outlook.com
  ([fe80::753c:468d:266:196]) by DU2PR04MB8951.eurprd04.prod.outlook.com
  ([fe80::753c:468d:266:196%4]) with mapi id 15.20.9366.012; Mon, 1 Dec 2025
- 18:50:05 +0000
-Date: Mon, 1 Dec 2025 13:49:56 -0500
+ 18:51:58 +0000
+Date: Mon, 1 Dec 2025 13:51:49 -0500
 From: Frank Li <Frank.li@nxp.com>
 To: Koichiro Den <den@valinux.co.jp>
 Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org,
@@ -65,16 +65,16 @@ Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org,
 	kwilczynski@kernel.org, kishon@kernel.org, bhelgaas@google.com,
 	jbrunet@baylibre.com, lpieralisi@kernel.org, yebin10@huawei.com,
 	geert+renesas@glider.be, arnd@arndb.de, stable@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] PCI: endpoint: pci-epf-vntb: Manage ntb_dev
- lifetime and fix vpci bus teardown
-Message-ID: <aS3jVC5//QYT0DfL@lizhi-Precision-Tower-5810>
+Subject: Re: [PATCH v3 6/7] PCI: endpoint: pci-epf-vntb: Switch
+ vpci_scan_bus() to use pci_scan_root_bus()
+Message-ID: <aS3jxR1YvjWZKYYO@lizhi-Precision-Tower-5810>
 References: <20251130151100.2591822-1-den@valinux.co.jp>
- <20251130151100.2591822-8-den@valinux.co.jp>
+ <20251130151100.2591822-7-den@valinux.co.jp>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251130151100.2591822-8-den@valinux.co.jp>
-X-ClientProxiedBy: SJ0PR13CA0228.namprd13.prod.outlook.com
- (2603:10b6:a03:2c1::23) To DU2PR04MB8951.eurprd04.prod.outlook.com
+In-Reply-To: <20251130151100.2591822-7-den@valinux.co.jp>
+X-ClientProxiedBy: SJ0PR05CA0152.namprd05.prod.outlook.com
+ (2603:10b6:a03:339::7) To DU2PR04MB8951.eurprd04.prod.outlook.com
  (2603:10a6:10:2e2::22)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -84,210 +84,132 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|PAXPR04MB8893:EE_
-X-MS-Office365-Filtering-Correlation-Id: c414de15-a30f-4f74-886d-08de310a70cd
+X-MS-Office365-Filtering-Correlation-Id: cc507eb8-fdf7-418d-8390-08de310ab48d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|7416014|376014|52116014|19092799006|1800799024|366016|7053199007|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?FaR+VOgk1PXNf7FDedAECqrxKL+g5ZYrPWUrnhHr1+T6caNL1kdd2rrDmsAH?=
- =?us-ascii?Q?vk/AWCZNRCjEQE8FTWWF7RgbPKGqAu+COGronrzHz3niPlw2ItruDAJaswOY?=
- =?us-ascii?Q?+7aY2FzEBLMRzpWGM3Tv3Y7dGS6kS9TrNKUAw3e3Kbv3oQHxI0DitjQ4wFPs?=
- =?us-ascii?Q?1W/ez5qpSQ2FOzc1OlvJRJwty3QPC0NYChoei23gzWZl/ZgKgUJ0grpGoQz4?=
- =?us-ascii?Q?G943e3t5Zsm5vmHNYwqFTIposyg7rbJAeRRKWVMfeabDQskuJ3aGKsdd+VKZ?=
- =?us-ascii?Q?elOQUeq5q7B6a7eqbBAqb2pGk9OFeOWgxoh6gNWDduhZoKd2aCTMltF0uNGE?=
- =?us-ascii?Q?X1BRAD7ec5dSOh6IFyIyHTMPlgs5iW4ADFiRDNrRtjTQKKDi9XO9+22gCoGl?=
- =?us-ascii?Q?WsoeoaZ77PF92BFyr43VOOdSOvFZKMeY6Hq2x/xKEsz2hqj8pY0vOASTErXA?=
- =?us-ascii?Q?3VLByNOI9IQqeY7VXY0pgr5BciRVoDmygP5nxDgNBqG8OW2NtmjUt8DzpJwr?=
- =?us-ascii?Q?mNzxO5y73TIwINuLT9WdD7c1EB7LgcsAzasaMJQxzGmYXeQaa+PrMb+EjZLh?=
- =?us-ascii?Q?Nb9PDxdedw/JQE3LZU9JTjZQTMKqf3cRVHGkpLPgXASce3ChjiFA9RAEHLH9?=
- =?us-ascii?Q?f8SHla9UE1rAMTMB8skR5djX7oDaOZwtDoYHeEKlyCm7JIem1r5CbqQy2Jnd?=
- =?us-ascii?Q?ZRTDdKR07cCWa3nDql2cjw0LzmC1ctz9IXS8IbzAbjYQu4dqkmuEzJ9mmkxz?=
- =?us-ascii?Q?70lORiTC7TaHO0djkkkxxPdLatC7Wub+U+YbIxUt+Zud+Ot8GV4YT5JPjENF?=
- =?us-ascii?Q?ci/Bt0PIkEQlKXur4YdI2Xsqn+4+Z7MPbNCWS9pN+FlIdXtcjrTEGsCRL+08?=
- =?us-ascii?Q?5pY1c2F/AhAOBzoJaJ9zLxWm5dbh2uB9Y1EQmG8Cc4le5SgimlPp8h4kVxTV?=
- =?us-ascii?Q?sqQtZYWRbUJMMD4+/Nbql0YKlzjJLhpsyx23T1fSMLmM9Yyvmu0I6L7vTGRW?=
- =?us-ascii?Q?aNGpW0xDrCsCp798Z2FYFMWyx9iL0gt4dSpin7wXDhZfBx2ISDL1OGHrFVWh?=
- =?us-ascii?Q?6thwed+C2x2S3AIt0AxZ8bnAqL9cwbjuLA1PJedwpBlVQ+foAwag2fiZToQ0?=
- =?us-ascii?Q?AisX9qfRP54qNlkcXZG7/c62p1uCU1PnfpZHILxFMUrKKYK/gXoQhCSgJhOW?=
- =?us-ascii?Q?u6VMjmcxFdXrX7A1rCGr4YKW25KdO5CJzpJtD8FjboXxDEUqZT6Uv9AhgZXf?=
- =?us-ascii?Q?w1E3eMz3du7/P5r+KMD3RHvM91urIpdgXNgiUoD+mpVdZ349yyg+tP/VUSO2?=
- =?us-ascii?Q?dl3wzwmxG4qxtjv7JQwLbfz1lB4rqbKg8ow6ehoPY//GLuE+dwpdwA2eJzaz?=
- =?us-ascii?Q?k7EBBE9s7eBlv3NQ92TVCjcm5Kv6fKWnCz0KPpfwu5OjTTc4ZDw1bTZodUzb?=
- =?us-ascii?Q?UR2ZiRCHSPK8/ojBm/Mm/LfY4up2f0/jlfNgQfqiLMPv0wcxtRBeM1dAY2H+?=
- =?us-ascii?Q?kIIytTVXgGmq0JAh8PS8Gzrs99j5Os5UdRZZ?=
+	=?us-ascii?Q?aVRLPZ75AYCIJDLIJT2b7E0nIeyjUnNQk0yt/oSBhevgCF6D8RwWP5Xc2Ssm?=
+ =?us-ascii?Q?Fo/UD9clcZ06qEnFDBwK4lTmbe7/BLZcjAL1cFfp7gAoTVjxYhdcMaf/YZjA?=
+ =?us-ascii?Q?yhcauMZk6FRPatTm85bOhFoxLDITdKBtVexl+q5tuFNp1RK0CWh27F6ch5dN?=
+ =?us-ascii?Q?1drXbUmKdRQmJShFozbOPH0RoBYBJcBowP9iDQYpcM+GuvzoDdtsoeakQuk5?=
+ =?us-ascii?Q?2Na9gZKSGKGJiLXL93PPFpaJOgrgjBqz3aH63E8h0wIXDGwFOoSzpvhDZemZ?=
+ =?us-ascii?Q?/UMpREabx6ObdiFnvpfzU7l4S1ce/l7Mo/agzQGF+sp5x63HhiR3MEk6k3e6?=
+ =?us-ascii?Q?IcFJMOOtjTKh3EOZVBVYdbtDnj92RMHLziLmdL/JOMn4dnQdLWrT8dluYcRN?=
+ =?us-ascii?Q?s0xU8eJf5+OkIKE+fR/qC8e7sjrOAomTyZYryTW292RLqMirRz8fmbXJxVgY?=
+ =?us-ascii?Q?kB7am53ByrK9TJoN/CRWJDwRqDcGkhnfwCw/c8L4PqWOrGl2yTNize2XhWLE?=
+ =?us-ascii?Q?+VmVJg67qWJvFcvkLi2Ken5TjFydnOj+dlRciEpY3k/dLS49BOyWQF2bgfIB?=
+ =?us-ascii?Q?RcG2hgp7iKC/ofBSaM+tI8hUO/O6vnrSpwmUqRDimZo2b/d2kjiZklQ7F0eE?=
+ =?us-ascii?Q?HL3O0SXAIf3tBGCLwfT14lJs391I8XSeowRbab2Y6d6p/C3+MWZyTN6hOC8R?=
+ =?us-ascii?Q?m0PtKzD0+FUxMEVizSp++wVWVPi0Am0vvPKHJajhtPWX2gzV4wQ2Ztw2YnH3?=
+ =?us-ascii?Q?tvdAiOxPoX5N+kVId9a78ywRSmBEWtK6AHVbKfRU52eyLlhR8SEK0yPQRMcg?=
+ =?us-ascii?Q?AdUaDlDNV5KP7fw/A5TbDPtLcVbcgUjyaJg3NhRe7JaTwgK55Z9JthZBYxGC?=
+ =?us-ascii?Q?+0OsCysEiotbonmtrYGHebe5zcnM0k1Fr+cEauUSWNMQIH5zZ8BuLcIGDVjc?=
+ =?us-ascii?Q?Hxn1z/H7UmAE4sonxqHbS4bffQ6EbLhcllon8m15rZtCyYIzrAm30dpAViDX?=
+ =?us-ascii?Q?LkApK+GNHR9LPsZkr3X86qDz0tv7cG/AV8p5vf9Y9YGam/0/3nt4i9yIbA0/?=
+ =?us-ascii?Q?ykRACoGs1l1ouOqNetMCcrscLeyKK/DaAyEYpGQmmnP1TlLRjc1ubjPhORsx?=
+ =?us-ascii?Q?8dWjd9/QDMmPq8Sl+dKalwCfZI+L7XCWuxfhqTPxAdVfOmdVWrgrXCfEJ/3A?=
+ =?us-ascii?Q?GoeCUdk4LgfyC1A6LUfsB+UHg8FYbqxi+cRffAGCrvoVwME51HKfkcxzbIOG?=
+ =?us-ascii?Q?2ER1WWGOEH5lf80NXV7GJ1cUujPcwEP1aZwuaUtsPNYgHHrCti7a3EVd8qel?=
+ =?us-ascii?Q?j3PA0X0rQWe365Mbv81Vvzbnz66MFl0/Fc6rK+SBwHl0bD+xUQr3TIFYFYXU?=
+ =?us-ascii?Q?xKSM2EbIMhd1vsufd6qQDvyH2k+5vvTnOpYNo8w6Vcok9E2kWvdqh/ULLrh+?=
+ =?us-ascii?Q?AvhBfFwbgwuvyPRLYylGkwPOutI8UD+t+GVts/NbFTcA5byWJjCzLJN+5ZmS?=
+ =?us-ascii?Q?DqCAXldyVyQVWQUsy0xgqF3eOzfvCVlY7ywo?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(19092799006)(1800799024)(366016)(7053199007)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Mk5xNA2Qtyc9kKkhZeT0vSjC1dLw9bDZ8cgsaoG/3qDO6sNAciEWCEup3gIq?=
- =?us-ascii?Q?m4FU8JM1JvpqGjkMMPClXd1X9Jsaw1IBaNFmFIGK+GaaCokVFL8rO3uqRKuu?=
- =?us-ascii?Q?hVZhS1V9myTLAhe+2yrIN6kuA/2WCZtNoidYUkG/tefYZL1kpKSc0Awe0B+i?=
- =?us-ascii?Q?At+zR67yo/f2xIqNlUoemQ8Z6iZk+dHSj1EjwI6gKazxeOgU2Gtpdfh+eWEa?=
- =?us-ascii?Q?8wnEa7PmrN4MyOw7XHMDwzvwx5P6YnMBAbMDwXB7L5OOHbVX8+aPnFMvuXDe?=
- =?us-ascii?Q?Rt6dRcvZSy9VQc+l5KehIvKmncdWv9sAyEEQMkSgeEtnHefbvjiJ11eBckcE?=
- =?us-ascii?Q?NdiD3DBU882/XBErdJkgKwe4oBMv3bUS4OrFOu3jrbPAVNi0d4TUh2I4YN0R?=
- =?us-ascii?Q?TKrtuSDWsIsuq2/BR9QtywCpRhrEEyuVHdiJ669Bcd1bWpSk/nDzHPCc9fUY?=
- =?us-ascii?Q?XhY+/VxZxIrYJkjRtL4ITR+ojqLjZZ1ZVlceBFEz1fRGdh1a8kIEYTT0h1vG?=
- =?us-ascii?Q?HZj1kVvsBiMXNEfVPJWiQwlgR39mUHHLEBGY/53cfeCtrA+RkLf4EoYrbWuu?=
- =?us-ascii?Q?zKPpbF05O2/wlAD4xIB7B11uxar4fvOdAxN+gtpU2INZx+U0jAS09GXaRgaD?=
- =?us-ascii?Q?BadBQta3FrkApZDurJvYiBltkOcJlaGZtnd65pa3Cf82HlD6TgFSk3f6gLli?=
- =?us-ascii?Q?0Z+FQutvTHE2fgvJVD0FwUi+/nS/S/uSxT3asn5J5E5Mpx1v2eCiPjC+I5dA?=
- =?us-ascii?Q?yFct+356qlDcA6C02z2DGFjOoYMGX/YW9y86ADBRxWaRjwyH+3Bhc3UX7XA8?=
- =?us-ascii?Q?4xjrm+8IVZUr9Ah4jvnpn8yRuwwH7bhSV6IiBspA/4UxW40oeN0MbYQCWRcI?=
- =?us-ascii?Q?WFDMjtSmc1Kj22CGqjqoQdDjxRI4PQvk3d3k9HnyL/GISE3tuiE9/jXDz3GG?=
- =?us-ascii?Q?df4VJWkAyUBsUZxyho9UuTaqB3p1yP2pViJh+F8zQAnU3Nx8x3JEFzn6APoY?=
- =?us-ascii?Q?E8jmEYhS0YeKPulsdBCbiFupX5QJGTfLmX1VYCb+RaIY4oQcTKX9uwCQeJNS?=
- =?us-ascii?Q?zU4q87YOuvTpexTMD7sz1VlRN4lv+L1wtbvhf3Tz4u2EsuieRzKBTimXexxb?=
- =?us-ascii?Q?RU3YZS+bVdHYHVfRtdxjxgKqBr0iDxgVTtD1SgfZoiInqY8VaX+/svUqU072?=
- =?us-ascii?Q?nVQnApEH20DI0ZLe1Vnl9HexBctoy66FR7novBG3nxEAdgtZdx9RXu2ydgiJ?=
- =?us-ascii?Q?K05/vuFVvwywD8QsHTlUwho2wr6tRaWWd7iv4QiKS23AbWa4eJp575u+KBfm?=
- =?us-ascii?Q?SRRbrZrotPRx2gc+XP4A+lwL843jmy0AiIbLDEGuW2Fsra8pIueSx/gmNVrA?=
- =?us-ascii?Q?EE+T9Lq0JBRJXPvwRSadolNgCMmfIf/ZJCtVXGcHyXDBriPVWPlgYrcMfiKs?=
- =?us-ascii?Q?zQBSPsErxY+PYCjEtt0/TDAdSTJFyf4YRYk9T9eWn7rOkKK/i4Rzo7ldTFO+?=
- =?us-ascii?Q?BvGD8BDyORE2JY8YsWA3WwtQwPpMWFVu7oefLlX/hKDBAYKZ+amL+2JoAWBb?=
- =?us-ascii?Q?3DnjZ5V7ypo4l3RF3GPrl+ECI/a5qvIcxe6HvYzv?=
+	=?us-ascii?Q?kgnd4Ir//u8lI7clotgxH+PKn6x1WDS0VprIlfBOZYNjdyd3kJ2+O+Zxtvma?=
+ =?us-ascii?Q?xR8EOfcMkdkFPdpAj/XsVTSrHfAky9fXwRw/64+Xqk+Uejnnd8VSxkeQiy4m?=
+ =?us-ascii?Q?r4ngh0DqZNbY7hJpPVlJZz0cowfkTgkCG+nmVZ3BOc+iIEH2oGPCpw7jKVti?=
+ =?us-ascii?Q?ANVj1XFzP87J+bt0aBWOlFbp/Mw0LsuL+KgNRAtzuZ1gub2wOGE7rm79KwPz?=
+ =?us-ascii?Q?Tp1Ax4vLgQj8TVfj8tN/ubJM8gDG1FQHrA2j87k2aHrRfCL3LUx18+12GfOY?=
+ =?us-ascii?Q?TQIKH98OhuLMf/meVwjTWVYfxfB773PZiQU10lfIlEW8rdj9x2AnBY49EhXt?=
+ =?us-ascii?Q?e/xpWWptDa06pg4KRkWCD229JNKFuFsPPg/XVhgNeQSdA7pHCq+9CSu/aF1l?=
+ =?us-ascii?Q?CiAdljG0Ft4NU4Wko/Jq5+MipRNS7O9r+oBVk8N77I8px7V6MGV4DvwpniVT?=
+ =?us-ascii?Q?n0GtjORzbSgaXFrIJiT+3a5U1xKkG7mxmyyIwI/K5CVS34nFSuxZy0g5NV1F?=
+ =?us-ascii?Q?2Ly5JbxEJzeSiTVbQiwYgKoDS67fPZudt+OaqhNQBrLb2kh69pXeqTYaj1xb?=
+ =?us-ascii?Q?/t6yD5Vl6AXkSdab5MTGjhqMU+hi/W9Tq0vaOGCxaAUMEarZMxwlWScB3WRf?=
+ =?us-ascii?Q?N9CDVDWZ+bL/DQniBY6DQbIXqRL1oeubeRMVAimfUa2bu4Ojv7XsMSO/u9wn?=
+ =?us-ascii?Q?yaq9ag+XyLFb2mvsV7Orr0nb30i7Bnq9VqrtAhvU3mmu6RqF3t0NUlSvVI74?=
+ =?us-ascii?Q?1/YeAtbI0viB4dX26oc3OBasaQEob9HGs41+pt1eY61ta4XqEjv1KEJAFfhK?=
+ =?us-ascii?Q?jYhZbOYeXlfkk168wCruBeZ17IYadk/Jxmt4K9VKsO+OlBAWEQEWz8YSPjcf?=
+ =?us-ascii?Q?seBAWjxFSS/EWoIJBg/XcGdV1Opw05Ti2GV7LgFFt3CBNv5mmqJzH4UgaORJ?=
+ =?us-ascii?Q?QZtDKAPoEit5U5QiR9hH7qdlMTNz9v5gO4JDKbZdkZAPBtOw1iDIyxCx2CVH?=
+ =?us-ascii?Q?M9UX0ZvkeI7AzrimxdzRW2fEdmrbayAVArFSlF8dOFmgWya00/oXIx9PEIPs?=
+ =?us-ascii?Q?o2fgZFOTeZDVEWXFzJThmHwwncLr+y96zt92gwqbLz0ilipfXbSQbpA+TrWl?=
+ =?us-ascii?Q?7OD248Y3U97RJhE+FvqFRDm2a7H4TjhVT7VHlJKYdoPz/GzSJXQpOCXGdyDM?=
+ =?us-ascii?Q?o0g91XQS2lWKAzKNFzxmPYRfAEBQi0sxRJBJ8qz0jEz4bdjTEHer7bjqwfl3?=
+ =?us-ascii?Q?GgXvENGbb7hdGpnBF4Pu1wKu577dJEjSA3VtWm7gwDb9sk4qB+Fv1IhMTcek?=
+ =?us-ascii?Q?aYNZcy0uJe/SL5nuzQitDiJrpJ0ZI4ToWtZ8N5EyhlAOhp3+ZCshDVnAMu6J?=
+ =?us-ascii?Q?qJb94X1VErkvYlRuAnN5ps5qOuR+hMNUi5nm20OKWvGNrrL2mHLsWgy+8iOh?=
+ =?us-ascii?Q?vwny0KHdaKXRqqJMliwyVEl6S0CmbkuqUReewAb4z0D20emlME9jx2BYunjB?=
+ =?us-ascii?Q?T0NpsUy7TFcO4d9ccKBdzaM/OsxkghJpw5GnzCN8pFNiALjOTHM2Y48L9qVi?=
+ =?us-ascii?Q?7riBv3gX34usDxTlRAXe6DUKtAtX+9YldTN1p0DL?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c414de15-a30f-4f74-886d-08de310a70cd
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc507eb8-fdf7-418d-8390-08de310ab48d
 X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8951.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2025 18:50:05.0131
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2025 18:51:58.3136
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yX5sWP8Vasj+CD+5wDZGc36dqqaLOLVnUk9NJt6PPRO9HokUACVWiq4M2i+yZictEf0jDOdMFMVqkCqxmD96dw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: OiXm7OM3/ay1nxH4WM/Gz64wzyo1Xy/D8itNPtcUXpJahQDUSNiY3Gb4Z8g9JMhPyAPsTm2sbaghV4h1gCdFVA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8893
 
-On Mon, Dec 01, 2025 at 12:11:00AM +0900, Koichiro Den wrote:
-> Currently ntb_dev is embedded in epf_ntb, while configfs allows starting
-> or stopping controller and linking or unlinking functions as you want.
-> In fact, re-linking and re-starting is not possible with the embedded
-> design and leads to oopses.
+On Mon, Dec 01, 2025 at 12:10:59AM +0900, Koichiro Den wrote:
+> vpci_scan_bus() currently uses pci_scan_bus(), which creates a root bus
+> without a parent struct device. In a subsequent change we want to tear
+> down the virtual PCI root bus using pci_remove_root_bus(). For that to
+> work correctly, the root bus must be associated with a parent device,
+> similar to what the removed pci_scan_bus_parented() helper used to do.
 >
-> Allocate ntb_dev with devm and add a .remove callback to the pci driver
-> that calls ntb_unregister_device(). This allows a fresh device to be
-> created on the next .bind call.
->
-> With these changes, the controller can now be stopped, a function
-> unlinked, configfs settings updated, and the controller re-linked and
-> restarted without rebooting the endpoint, as long as the underlying
-> pci_epc_ops .stop() operation is non-destructive, and .start() can
-> restore normal operations.
+> Switch vpci_scan_bus() to use pci_scan_root_bus() and pass
+> &ndev->epf->epc->dev as the parent. Build the resource list in the same
+> way as pci_scan_bus(), so the behavior is unchanged except that the
+> virtual root bus now has a proper parent device. This avoids crashes in
+> the pci_epf_unbind() -> epf_ntb_unbind() -> pci_remove_root_bus() ->
+> pci_bus_release_domain_nr() path once we start removing the root bus in
+> a follow-up patch.
 >
 > Signed-off-by: Koichiro Den <den@valinux.co.jp>
 > ---
->  drivers/pci/endpoint/functions/pci-epf-vntb.c | 52 ++++++++++++++-----
->  1 file changed, 39 insertions(+), 13 deletions(-)
-...
-> @@ -1097,7 +1103,6 @@ static int vpci_scan_bus(void *sysdata)
->  {
+>  drivers/pci/endpoint/functions/pci-epf-vntb.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> index 750a246f79c9..af0651c03b20 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> @@ -1098,7 +1098,19 @@ static int vpci_scan_bus(void *sysdata)
 >  	struct pci_bus *vpci_bus;
 >  	struct epf_ntb *ndev = sysdata;
-> -
+>
 
-Unneccsary change here.
+next patch's remove empty line should be in this patch.
 
-Frank Li
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
->  	LIST_HEAD(resources);
->  	static struct resource busn_res = {
->  		.start = 0,
-> @@ -1115,6 +1120,7 @@ static int vpci_scan_bus(void *sysdata)
+Frank
+> -	vpci_bus = pci_scan_bus(ndev->vbus_number, &vpci_ops, sysdata);
+> +	LIST_HEAD(resources);
+> +	static struct resource busn_res = {
+> +		.start = 0,
+> +		.end = 255,
+> +		.flags = IORESOURCE_BUS,
+> +	};
+> +
+> +	pci_add_resource(&resources, &ioport_resource);
+> +	pci_add_resource(&resources, &iomem_resource);
+> +	pci_add_resource(&resources, &busn_res);
+> +
+> +	vpci_bus = pci_scan_root_bus(&ndev->epf->epc->dev, ndev->vbus_number,
+> +				     &vpci_ops, sysdata, &resources);
+>  	if (!vpci_bus) {
 >  		pr_err("create pci bus failed\n");
 >  		return -EINVAL;
->  	}
-> +	ndev->vpci_bus = vpci_bus;
->
->  	pci_bus_add_devices(vpci_bus);
->
-> @@ -1159,7 +1165,7 @@ static int vntb_epf_mw_set_trans(struct ntb_dev *ndev, int pidx, int idx,
->  	int ret;
->  	struct device *dev;
->
-> -	dev = &ntb->ntb.dev;
-> +	dev = &ntb->ntb->dev;
->  	barno = ntb->epf_ntb_bar[BAR_MW1 + idx];
->  	epf_bar = &ntb->epf->bar[barno];
->  	epf_bar->phys_addr = addr;
-> @@ -1259,7 +1265,7 @@ static int vntb_epf_peer_db_set(struct ntb_dev *ndev, u64 db_bits)
->  	ret = pci_epc_raise_irq(ntb->epf->epc, func_no, vfunc_no,
->  				PCI_IRQ_MSI, interrupt_num + 1);
->  	if (ret)
-> -		dev_err(&ntb->ntb.dev, "Failed to raise IRQ\n");
-> +		dev_err(&ntb->ntb->dev, "Failed to raise IRQ\n");
->
->  	return ret;
->  }
-> @@ -1346,9 +1352,12 @@ static int pci_vntb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	struct epf_ntb *ndev = (struct epf_ntb *)pdev->sysdata;
->  	struct device *dev = &pdev->dev;
->
-> -	ndev->ntb.pdev = pdev;
-> -	ndev->ntb.topo = NTB_TOPO_NONE;
-> -	ndev->ntb.ops =  &vntb_epf_ops;
-> +	ndev->ntb = devm_kzalloc(dev, sizeof(*ndev->ntb), GFP_KERNEL);
-> +	if (!ndev->ntb)
-> +		return -ENOMEM;
-> +	ndev->ntb->pdev = pdev;
-> +	ndev->ntb->topo = NTB_TOPO_NONE;
-> +	ndev->ntb->ops = &vntb_epf_ops;
->
->  	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
->  	if (ret) {
-> @@ -1356,7 +1365,7 @@ static int pci_vntb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  		return ret;
->  	}
->
-> -	ret = ntb_register_device(&ndev->ntb);
-> +	ret = ntb_register_device(ndev->ntb);
->  	if (ret) {
->  		dev_err(dev, "Failed to register NTB device\n");
->  		return ret;
-> @@ -1366,6 +1375,17 @@ static int pci_vntb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	return 0;
->  }
->
-> +static void pci_vntb_remove(struct pci_dev *pdev)
-> +{
-> +	struct epf_ntb *ndev = (struct epf_ntb *)pdev->sysdata;
-> +
-> +	if (!ndev || !ndev->ntb)
-> +		return;
-> +
-> +	ntb_unregister_device(ndev->ntb);
-> +	ndev->ntb = NULL;
-> +}
-> +
->  static struct pci_device_id pci_vntb_table[] = {
->  	{
->  		PCI_DEVICE(0xffff, 0xffff),
-> @@ -1377,6 +1397,7 @@ static struct pci_driver vntb_pci_driver = {
->  	.name           = "pci-vntb",
->  	.id_table       = pci_vntb_table,
->  	.probe          = pci_vntb_probe,
-> +	.remove         = pci_vntb_remove,
->  };
->
->  /* ============ PCIe EPF Driver Bind ====================*/
-> @@ -1459,10 +1480,15 @@ static void epf_ntb_unbind(struct pci_epf *epf)
->  {
->  	struct epf_ntb *ntb = epf_get_drvdata(epf);
->
-> +	pci_unregister_driver(&vntb_pci_driver);
-> +
-> +	pci_lock_rescan_remove();
-> +	pci_stop_root_bus(ntb->vpci_bus);
-> +	pci_remove_root_bus(ntb->vpci_bus);
-> +	pci_unlock_rescan_remove();
-> +
->  	epf_ntb_epc_cleanup(ntb);
->  	epf_ntb_config_spad_bar_free(ntb);
-> -
-> -	pci_unregister_driver(&vntb_pci_driver);
->  }
->
->  // EPF driver probe
 > --
 > 2.48.1
 >
