@@ -1,357 +1,258 @@
-Return-Path: <linux-pci+bounces-42417-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42418-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37879C99497
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 23:03:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D355C994E5
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 23:08:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB5743A4289
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 22:03:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2A1073A4A80
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 22:08:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86EBF288C3F;
-	Mon,  1 Dec 2025 22:03:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 727D6283FD9;
+	Mon,  1 Dec 2025 22:08:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="k+AHfBLl"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="X+3rZY6r"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013070.outbound.protection.outlook.com [52.101.72.70])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7FA281369;
-	Mon,  1 Dec 2025 22:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764626594; cv=fail; b=T+K3OEutO7wRaVKLFr1f0z9oqu4kMeYg4rEUV/WFtTMfl69U36t4tfHsTpjMrXH8E+UNm8PvibEEQXoHLdeT4IyI1o7Ubw+1xmvnnKutwSC3kkXEhcyhoalB2H/BuTNFvsdQ7Ek6OyAZwPzHwx/+bTEA2GiB/I0QzLUCw3FWLVI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764626594; c=relaxed/simple;
-	bh=FVcWEGl+JIfHz4aaJutnoY9uVZ6rktedg4U0hweynPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=oeofY51osq2Qds6gEOPLq+EHacXzBZp+d0QtRInVMvzB1VFq8nl1J67v2meXtf8LJ4ZRYCVVPCqFgt8GNyieJu59JOFUe5TGddqa35i5a9ZIUIQPORf7LewnXHEgGssBJMCstm1XsDejULEsxaf2b4EAshVc6lsT6nxeZQVtuDg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=k+AHfBLl; arc=fail smtp.client-ip=52.101.72.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=g7L4gmnSrVATZWGXvsM5qRhUamYAEDqCbhFuvRHoOke+GnRt9yqSXcoQzJGkHXyYOeZ6TPkEaOEs+uzzMlzOmtC1GtRD4TDTp6RSwhWINUiCqM42SozVgOjLKQcDoCVv+Q9pdStXCYYWCM8aSbFJpM5pwbATpHJkQzlPe/fh0KtWSeiACAkepNpN8i9pf+dvN799uCr3Ap9oToNWgFjs0HPiPLP61/aNAcAbUtgV0x3K+1lQbvpy8g/pYpzd0XvV9CYiHKiIyGYLnj+jLWZiQ+RvUYZK51rXxhJC/hyYpTCAroZ51uKmbuWOMblK3hWevjpN3+ru6O/tsTxCac80Tw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vHsQvLyKE/D9CkkhXNOByovjzuuzAFMXNPHjrE2Bss4=;
- b=Zea7rFNp9wwh2RQXnLndxMHTiEaJevNNGcLWCSPfY3ihkTD1susCBLKuVMDvE6JEO0rY1hI+FZUNeparsotUfrdmVuXaavLQmQ8yevS7ETK8FeDnCQioJC/vWkTSHrRXxOzV+E8iradApui/z6MzpYUA41Kxp4bApW1x69mJoDomxUgTU3F/HoBDfP/b11yz1EFi5ijJC/ekL2c+nwqOUO0SLCjpBnrucu7EVZyWnTkijROGETQTSXq+dh6WtH2WcPEjgVUrMtXHpyNSUINWPN74FDaC+AO7XZoyuhfb3I7X4OsERB3VgOsCX+mJlNxLZJqfwXEWX3QWzoaG2kf58A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vHsQvLyKE/D9CkkhXNOByovjzuuzAFMXNPHjrE2Bss4=;
- b=k+AHfBLl5Fm6Al+GFK7smBHTrSsZiJVW86wuiUdsRCBBWlzZ2T35DeRv/npqS/vZfsEhRBop0AX42uNJvNuTjSG07bW9U/jJA1NafyrQdvYs/vY0A68mo7XQ0atVrZZ6+ChhK8+8771fH6nYZPPXvmsLUL/Jzn7lnSmj/FL68whJotrB5TVhLObkZ0ld2Ufrs6BBZPxn/R9v7rWqa2OoEed2al6k6gJ6g7XEOYTIIKpjImk5CRqtYKDNMX0pqQUp9kVT7JH0rsaYbFL4hCN7H7LlYE/BAGUq6/6MqHJn4kxFxu0E/zko8eBhMiKNN7SCNLLuzXtZ80/DBCxlmmdnZA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22)
- by AS5PR04MB10017.eurprd04.prod.outlook.com (2603:10a6:20b:67c::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Mon, 1 Dec
- 2025 22:03:08 +0000
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196]) by DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196%4]) with mapi id 15.20.9366.012; Mon, 1 Dec 2025
- 22:03:08 +0000
-Date: Mon, 1 Dec 2025 17:02:57 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Koichiro Den <den@valinux.co.jp>
-Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org,
-	bhelgaas@google.com, corbet@lwn.net, vkoul@kernel.org,
-	jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com,
-	Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
-	kurt.schwemmer@microsemi.com, logang@deltatee.com,
-	jingoohan1@gmail.com, lpieralisi@kernel.org, robh@kernel.org,
-	jbrunet@baylibre.com, fancer.lancer@gmail.com, arnd@arndb.de,
-	pstanner@redhat.com, elfring@users.sourceforge.net
-Subject: Re: [RFC PATCH v2 00/27] NTB transport backed by remote DW eDMA
-Message-ID: <aS4QkYn+aKphlRFm@lizhi-Precision-Tower-5810>
-References: <20251129160405.2568284-1-den@valinux.co.jp>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251129160405.2568284-1-den@valinux.co.jp>
-X-ClientProxiedBy: BY3PR03CA0022.namprd03.prod.outlook.com
- (2603:10b6:a03:39a::27) To DU2PR04MB8951.eurprd04.prod.outlook.com
- (2603:10a6:10:2e2::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B579A2522B6;
+	Mon,  1 Dec 2025 22:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764626916; cv=none; b=DkmeDH/Wff4Reju77wg9lGN5aJotnXwhUjxLQe3v9sOrKK2xTrwpswAdbS5l59DCaO/Slergz7EXLLnGydAnZ1DwDJaxACYx6FNX6WxhsRk2VvRoQLuqO3jWDgusdXcFOcNTgcJBOTE/tak+Qtvk5rSZjcp2Z/eP1e3ll6I9PxM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764626916; c=relaxed/simple;
+	bh=tb6J3tGf6rrsKG+p/YwHLpGk6g6eWTYDsCM2M9uj7Jg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lj4xpbmcRC3O9OjNSkKopfz3WNDaQc1LQoYOe5NN7j5bN6OO7iHyCa+mwVAKQpJcaTnK4OPJb2cdbO/CsoUPyOrD64Nqt3J8eAvBBnzaH3eeuPHaF66X5wftUkeS7GAs4199BuEm5KOaPE/+lRTPplNX0uFjICmkLJtyVNt7rfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=X+3rZY6r; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B1HB5qp018671;
+	Mon, 1 Dec 2025 22:08:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=IRINHZIxl5daeoM8Sv1Ii4EZWtSyWPpdd+emN+/Qw
+	7Y=; b=X+3rZY6rxwZ5VrEQ2VarMkLVD3UbnQ1tAKy0Z3m3wjQ1AhwfIWP5tpQjG
+	4lVoGBsK/j03l3fgUGQnD3i9u+JCJBNp+pfDMXeQKpqjfaAP4XJGKJ6RIzDbW/rk
+	nDJzP+JlpskvhsGN0Ijtt6tCnTukO+aNrTE5H5e35auysBkaCM+jFvIzBZ6ddAbC
+	Yz3nPS/ZlxPYbdO7m3YrkPltZ9yXtnemIgmhU3Xoxs4/R4OGpK4lG2aPbH0LIevK
+	h+KLiz3+lRrIWB/qVFyx5+djaueiz/UemY5wdrLxbwLVUJeeDI+dQdiXSgiQ0VOC
+	uROdX+aJ8PTyy3ip5q43oRCRxlv8Q==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqrbg1s8p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Dec 2025 22:08:28 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B1M1Z09024111;
+	Mon, 1 Dec 2025 22:08:27 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4arb5s93bp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Dec 2025 22:08:27 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B1M8AQJ31654642
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 1 Dec 2025 22:08:10 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1E19F58056;
+	Mon,  1 Dec 2025 22:08:25 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ED3345803F;
+	Mon,  1 Dec 2025 22:08:23 +0000 (GMT)
+Received: from IBM-D32RQW3.ibm.com (unknown [9.61.245.160])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  1 Dec 2025 22:08:23 +0000 (GMT)
+From: Farhan Ali <alifm@linux.ibm.com>
+To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Cc: helgaas@kernel.org, lukas@wunner.de, alex@shazbot.org, clg@redhat.com,
+        stable@vger.kernel.org, alifm@linux.ibm.com, schnelle@linux.ibm.com,
+        mjrosato@linux.ibm.com
+Subject: [PATCH v6 0/9] Error recovery for vfio-pci devices on s390x
+Date: Mon,  1 Dec 2025 14:08:14 -0800
+Message-ID: <20251201220823.3350-1-alifm@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|AS5PR04MB10017:EE_
-X-MS-Office365-Filtering-Correlation-Id: 80149a78-bdb1-41fc-612a-08de31256957
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|19092799006|366016|7416014|1800799024|376014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/Cvq4MyjgBI5rKDHnXirbzDZJQEmxVrA9EA8qKYndvaWI0nz0vCP2xSSzQS7?=
- =?us-ascii?Q?F/fOzk6NRJFJUFSr2oyQjotUDIuBkPi3EHDdmpacnMDNjr7ELzhT6QojPbsq?=
- =?us-ascii?Q?q1Fk0hEiW2xX+Ptn/pVUF/ZBDkoXPxFQxeK/FyYa5e2fLEIQXkzZBrTQaa6K?=
- =?us-ascii?Q?KInPqhNeUsGS7TSht9vIfI8cBvTRs4FbNf2LikSxuw9AX+ZvB1icICy5zdfi?=
- =?us-ascii?Q?vu1hFIX9G+wyPsc87us3XzilU+Z4aLKjq0mor/f57w4zf3eiewWHh/8r/FXR?=
- =?us-ascii?Q?XIn9Sx9/mWirb+nFVKpYyetOI7QgZm7Z4meWhUVbvDqgbzWh9iBrJhRPJXIv?=
- =?us-ascii?Q?wqY8OyK/Jlya1XgHALag/HnoHA9xuq/MFgfIUnHMgmvyavKSJ+PNgBAd6WEM?=
- =?us-ascii?Q?lUT4p5IqI/NlPnTqNlZ8a/kCqM/V9gYCKYhqcfvsa+9AwR+WChNFYxONQ6/L?=
- =?us-ascii?Q?BNR6WaUazLYElGKP4AXMXVtE8YWetMwIDZynX0VfsKhrgXcld58hFE0pRTgX?=
- =?us-ascii?Q?AESaztVe2c3NGGuOjJL6YwgRnl3q2o08WRvYRbrxBvsfnQY33bkxJahv+Ty/?=
- =?us-ascii?Q?ARIsowFpUUHxbdY92M3KRDT+sxgjwbhI88L8yAQaJSUYLFElkiJbehwfHjJG?=
- =?us-ascii?Q?df68ySi/TCEK7uwo48FhspBrNu0OkEM/aAxdKFA+Bsi6zaZ1S7CMq12rVXiS?=
- =?us-ascii?Q?Jw6W5ZJtzXRXUWoVU+xj1C3S6Dr6S3tSjBEgCtmeZf2klg1zmHE56LW1MHRO?=
- =?us-ascii?Q?k8p6IkpqlPfYxH0DgkT8N9XeF3uN1ZRzzk4aDr2MB2iVIl0XBnHVjCeSnZ82?=
- =?us-ascii?Q?9yFPQX/+M3fph3a1Sh2TdaTvwh8PBIpzH4EpaWaavEoBhYRQV3M0aGiLYe/4?=
- =?us-ascii?Q?0SU/bIL8MHD4b9FxgnmquHwjfPNwqtr3g1Ytx8XpUES1lvt0uVxgLqn3rFMs?=
- =?us-ascii?Q?RWZkLdlGAkRzOoU2j1/jtXvQNV2XKa09snrC04NVHyqai1kbgvjFxrAqgwMo?=
- =?us-ascii?Q?U6OTKg1fgGPWZi5lwoJg/udRk4Erh6qighY5TQEbsxdVzRCsIT/3V3nzef06?=
- =?us-ascii?Q?5DRYj3uGI7205WfnvgwjrOAnWTUIwRd4e6yVC6/SjyTVIhTelpun2rsuuFrm?=
- =?us-ascii?Q?TC7iKXkevLrFVC8Vve2hX7p5tAVu/vbJAJ+ogCpVGgGxZXU+HUrnTQkgQ+lO?=
- =?us-ascii?Q?kfmRQU1Ov/MynpH4CcLSyAnLZJZeXTKeSmYdj1+seYe54a4WbomBh5n9NAnU?=
- =?us-ascii?Q?o6eVjs6MArlMokHpZrCdfE6zPkf3oheGDdFOR3Yw/Ui/7LmDGjYUtpw0xrju?=
- =?us-ascii?Q?Yt66L4J4AZQeX02E+f5z51yXERmxcn6DxJcQFqkFjQ4ZPt9hL55Ua+jtIY0F?=
- =?us-ascii?Q?f27St+Kw5RD2vgecNqV9ShTF+58fEsPuBsSEKT7J2crpWQ5WqIaaRP0H15N6?=
- =?us-ascii?Q?CKyQ0h6e84/St99u5DnbvVYO6mHUCqFcsgk0kUghw+tP4cJvXarm2BA9/UXT?=
- =?us-ascii?Q?m42ROhZmnYE4dXsTyHHbmkPByaolYObBPLiC?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(366016)(7416014)(1800799024)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?smTAkW8j7MRkEoMMetkOb4cFQHRkD4Il8XTnzaHoTezkPDjeHalBQ/G8DeFm?=
- =?us-ascii?Q?8T5PMDxwj5LPByCkQWcEXyqMCrx+3yboziBEWrpT/zyoQAfhOjeXis9sRqOP?=
- =?us-ascii?Q?TbI2whHgwI83bZcaan/zFoMCRFEi/59mKHdZtVFLXJOc7mRw71mvfqABtZLb?=
- =?us-ascii?Q?qjYNW0nDbg0f1Y47Ldtyco1fVVXoEjM46CNHn5rWRp8k+hapDFSE0zykjos/?=
- =?us-ascii?Q?/VirYeo71yEO8qNaN4rO4S86L6UJXTYckiXrTOn2M/TEMmtqCy+OAq2zbw0P?=
- =?us-ascii?Q?8YNA1xXDKuWWy2y0NYKNzu5HDkB0SQCc1WmlMXFOXdLUWuic65ynBmT+d0wh?=
- =?us-ascii?Q?jhIke6OCRyyZhhGvtzqXPUbh7FS49dS26h6mb/GRSqSvgZkUDqE3c8gMkng7?=
- =?us-ascii?Q?QciLRVabFRx4LKwQWVn3kqVGqyHfsrNWevZTr7K8J9v2H8iP0CP1YjLXX+Nq?=
- =?us-ascii?Q?ct7g0MToQlWOJJWB8xmm5RnXMDZt08wGuNWSFwWSS21KC5y4n064mftfIbrr?=
- =?us-ascii?Q?K2sJIMQ6hGUQi4EDFOijKzuR5g83eTEbsF7FT3J8Nkgo4SEXSOPutcarhnSc?=
- =?us-ascii?Q?gYO5NLUSjBPiOmXzCY3z7SwB71AX6sYXkDG5at6kXj+/zKMHTfaN8K3d955l?=
- =?us-ascii?Q?4DHEZ7Vw60CdoEGt9/wVOlRRxpXYKA8PBufVw3iDAtv0emkBMKWt0fNwJOD6?=
- =?us-ascii?Q?32vBh2HBhW22tRrZ9BsEd33HAYiVxzHKnuT4jP4uovCeCniQPanMZLG+1+cF?=
- =?us-ascii?Q?lISW7vlXdvRRaCsJMNg8uabGje6wKCfp8tLg6cHmDqPnpLia6s4IqKNOxrR2?=
- =?us-ascii?Q?RHMV2i2/mptqFGj19TiB5+c37okPzhoaY+HRzPFtGSRVa1uXbU5aZN8qmmQu?=
- =?us-ascii?Q?yO/x/X1BDtlCpT5lynpRsfWu2XHlx7nfpTDnSikFRpCUA1DHuWYMiajSfjFw?=
- =?us-ascii?Q?jNuokudeATMFdqu0WpUHia892CwLLU7jEYJnpCdlJpDNICcvJZJY1TUxysrw?=
- =?us-ascii?Q?Epu2/1Q8rV9BnxVy0/TwsfMOe6Yojvbfm81D2GleIFvn2QExsv074Ih0ZdlV?=
- =?us-ascii?Q?aY/eAl+vtnXa6CTMEbezDnHhg/5xvQJOMDJgKwaj/DyWxyW6aSZplNE2GpZr?=
- =?us-ascii?Q?0hEPAo7AhWz1jQRgSD0vL6YxwR8djNmgC4F0QaVtmma/d0sT0BcokaNdfVUG?=
- =?us-ascii?Q?Orj6x6+HluKCltFE3vaMdeTYIMcgFiVLAzlY4U6VuZ5gPAmMoQVkRqLBPKB0?=
- =?us-ascii?Q?ij3KIZb/ReBmJat69IFQ81j4t5dAR+VvLh/z68IvGT483hvoly7d/Upip4TA?=
- =?us-ascii?Q?BPOpH/0ba9HdKKHK/OzFRX6Bo8YdqYuMFi9wx05GlEeFPmqxA27dx0I9Yd39?=
- =?us-ascii?Q?PrrmhHiW3i7mVMCYCHN6/NkrBILF/4ZCWiDsxipwiYuX7qTgKVEMjd9rRKU+?=
- =?us-ascii?Q?ewibT5zw8QHctxscvjvyVdbKnlnT9jdgQDcsedLV3eEBkudlNk78/z5FjruA?=
- =?us-ascii?Q?iwfzMSiQjwKNYI8F1aGMTql5vsGkxAz2AQuwms1yJN9KxRo5HWuE4PFkknzk?=
- =?us-ascii?Q?r5XimkJCTVh3A6TG4IU=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80149a78-bdb1-41fc-612a-08de31256957
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8951.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2025 22:03:08.6001
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XMFOUGjlSeBQFQzRkQX1Kr6XURUcIxKRE1JDQ8W3S1n5+dpZOOS+BsflUuRnAQKqQUD/QU2RZXore+c/z47/tw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB10017
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: ElSPdOsgyPp-4IwxPTTKyzT2ZQQaeZiM
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI5MDAxNiBTYWx0ZWRfX0wFNnhhLnKlo
+ K6rM9S1eK3n9kIRSoZE9UyCsOy12vrE+Xr+KDnl7akckoGJ+XoYZzD6RdA+x3y2pUeZjbnpIA6K
+ xsOktxxBwWicBOLqF5evtzc5GFkW0PfErKdd4gRcexHHvhiEibSyU1UV6UT0neGYLva9okjImX6
+ 72t0M/Sq5LgVRs4N77kZEfQabhA61GseHEPk4TSeF07Lk3TM94RtP+gSdqJSZ9Q+mhnLbUu1dmm
+ FhvC48U71R+0zTqP1hX4yxPha2Rlo+/HhUkv57WBIdNMv9y7s/IUmOwaYIqFmjIDmoQRKBxp5oy
+ 897x05OzeDDYi8W7yyBEsq9/IGCCsQ40tXVXOn/9r0tXvNWkoXO6Lq0VX3GNYorsZqMbiuP1ebc
+ vsiZ+CTk5RCz+LNjrnDkaaDe5Bkw2g==
+X-Authority-Analysis: v=2.4 cv=UO7Q3Sfy c=1 sm=1 tr=0 ts=692e11dc cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
+ a=Qtm5l5LcizsofoGoYxAA:9
+X-Proofpoint-GUID: ElSPdOsgyPp-4IwxPTTKyzT2ZQQaeZiM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-28_08,2025-11-27_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 spamscore=0 phishscore=0 clxscore=1015 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511290016
 
-On Sun, Nov 30, 2025 at 01:03:38AM +0900, Koichiro Den wrote:
-> Hi,
->
-> This is RFC v2 of the NTB/PCI series for Renesas R-Car S4. The ultimate
-> goal is unchanged, i.e. to improve performance between RC and EP
-> (with vNTB) over ntb_transport, but the approach has changed drastically.
-> Based on the feedback from Frank Li in the v1 thread, in particular:
-> https://lore.kernel.org/all/aQEsip3TsPn4LJY9@lizhi-Precision-Tower-5810/
-> this RFC v2 instead builds an NTB transport backed by remote eDMA
-> architecture and reshapes the series around it. The RC->EP interruption
-> is now achieved using a dedicated eDMA read channel, so the somewhat
-> "hack"-ish approach in RFC v1 is no longer needed.
->
-> Compared to RFC v1, this v2 series enables NTB transport backed by
-> remote DW eDMA, so the current ntb_transport handling of Memory Window
-> is no longer needed, and direct DMA transfers between EP and RC are
-> used.
->
-> I realize this is quite a large series. Sorry for the volume, but for
-> the RFC stage I believe presenting the full picture in a single set
-> helps with reviewing the overall architecture. Once the direction is
-> agreed, I will respin it split by subsystem and topic.
->
->
-...
->
-> - Before this change:
->
->   * ping
->     64 bytes from 10.0.0.11: icmp_seq=1 ttl=64 time=12.3 ms
->     64 bytes from 10.0.0.11: icmp_seq=2 ttl=64 time=6.58 ms
->     64 bytes from 10.0.0.11: icmp_seq=3 ttl=64 time=1.26 ms
->     64 bytes from 10.0.0.11: icmp_seq=4 ttl=64 time=7.43 ms
->     64 bytes from 10.0.0.11: icmp_seq=5 ttl=64 time=1.39 ms
->     64 bytes from 10.0.0.11: icmp_seq=6 ttl=64 time=7.38 ms
->     64 bytes from 10.0.0.11: icmp_seq=7 ttl=64 time=1.42 ms
->     64 bytes from 10.0.0.11: icmp_seq=8 ttl=64 time=7.41 ms
->
->   * RC->EP (`sudo iperf3 -ub0 -l 65480 -P 2`)
->     [ ID] Interval           Transfer     Bitrate         Jitter    Lost/Total Datagrams
->     [  5]   0.00-10.01  sec   344 MBytes   288 Mbits/sec  3.483 ms  51/5555 (0.92%)  receiver
->     [  6]   0.00-10.01  sec   342 MBytes   287 Mbits/sec  3.814 ms  38/5517 (0.69%)  receiver
->     [SUM]   0.00-10.01  sec   686 MBytes   575 Mbits/sec  3.648 ms  89/11072 (0.8%)  receiver
->
->   * EP->RC (`sudo iperf3 -ub0 -l 65480 -P 2`)
->     [  5]   0.00-10.03  sec   334 MBytes   279 Mbits/sec  3.164 ms  390/5731 (6.8%)  receiver
->     [  6]   0.00-10.03  sec   334 MBytes   279 Mbits/sec  2.416 ms  396/5741 (6.9%)  receiver
->     [SUM]   0.00-10.03  sec   667 MBytes   558 Mbits/sec  2.790 ms  786/11472 (6.9%)  receiver
->
->     Note: with `-P 2`, the best total bitrate (receiver side) was achieved.
->
-> - After this change (use_remote_edma=1) [1]:
->
->   * ping
->     64 bytes from 10.0.0.11: icmp_seq=1 ttl=64 time=1.48 ms
->     64 bytes from 10.0.0.11: icmp_seq=2 ttl=64 time=1.03 ms
->     64 bytes from 10.0.0.11: icmp_seq=3 ttl=64 time=0.931 ms
->     64 bytes from 10.0.0.11: icmp_seq=4 ttl=64 time=0.910 ms
->     64 bytes from 10.0.0.11: icmp_seq=5 ttl=64 time=1.07 ms
->     64 bytes from 10.0.0.11: icmp_seq=6 ttl=64 time=0.986 ms
->     64 bytes from 10.0.0.11: icmp_seq=7 ttl=64 time=0.910 ms
->     64 bytes from 10.0.0.11: icmp_seq=8 ttl=64 time=0.883 ms
->
->   * RC->EP (`sudo iperf3 -ub0 -l 65480 -P 4`)
->     [  5]   0.00-10.01  sec  3.54 GBytes  3.04 Gbits/sec  0.030 ms  0/58007 (0%)  receiver
->     [  6]   0.00-10.01  sec  3.71 GBytes  3.19 Gbits/sec  0.453 ms  0/60909 (0%)  receiver
->     [  9]   0.00-10.01  sec  3.85 GBytes  3.30 Gbits/sec  0.027 ms  0/63072 (0%)  receiver
->     [ 11]   0.00-10.01  sec  3.26 GBytes  2.80 Gbits/sec  0.070 ms  1/53512 (0.0019%)  receiver
->     [SUM]   0.00-10.01  sec  14.4 GBytes  12.3 Gbits/sec  0.145 ms  1/235500 (0.00042%)  receiver
->
->   * EP->RC (`sudo iperf3 -ub0 -l 65480 -P 4`)
->     [  5]   0.00-10.03  sec  3.40 GBytes  2.91 Gbits/sec  0.104 ms  15467/71208 (22%)  receiver
->     [  6]   0.00-10.03  sec  3.08 GBytes  2.64 Gbits/sec  0.176 ms  12097/62609 (19%)  receiver
->     [  9]   0.00-10.03  sec  3.38 GBytes  2.90 Gbits/sec  0.270 ms  17212/72710 (24%)  receiver
->     [ 11]   0.00-10.03  sec  2.56 GBytes  2.19 Gbits/sec  0.200 ms  11193/53090 (21%)  receiver
+Hi,
 
-Almost 10x fast, 2.9G vs 279M? high light this one will bring more peopole
-interesting about this topic.
+This Linux kernel patch series introduces support for error recovery for
+passthrough PCI devices on System Z (s390x). 
 
->     [SUM]   0.00-10.03  sec  12.4 GBytes  10.6 Gbits/sec  0.188 ms  55969/259617 (22%)  receiver
->
->   [1] configfs settings:
->       # modprobe pci_epf_vntb dyndbg=+pmf
->       # cd /sys/kernel/config/pci_ep/
->       # mkdir functions/pci_epf_vntb/func1
->       # echo 0x1912 >   functions/pci_epf_vntb/func1/vendorid
->       # echo 0x0030 >   functions/pci_epf_vntb/func1/deviceid
->       # echo 32 >       functions/pci_epf_vntb/func1/msi_interrupts
->       # echo 16 >       functions/pci_epf_vntb/func1/pci_epf_vntb.0/db_count
->       # echo 128 >      functions/pci_epf_vntb/func1/pci_epf_vntb.0/spad_count
->       # echo 2 >        functions/pci_epf_vntb/func1/pci_epf_vntb.0/num_mws
->       # echo 0xe0000 >  functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw1
->       # echo 0x20000 >  functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw2
->       # echo 0xe0000 >  functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw2_offset
+Background
+----------
+For PCI devices on s390x an operating system receives platform specific
+error events from firmware rather than through AER.Today for
+passthrough/userspace devices, we don't attempt any error recovery and
+ignore any error events for the devices. The passthrough/userspace devices
+are managed by the vfio-pci driver. The driver does register error handling
+callbacks (error_detected), and on an error trigger an eventfd to
+userspace.  But we need a mechanism to notify userspace
+(QEMU/guest/userspace drivers) about the error event. 
 
-look like, you try to create sub-small mw windows.
+Proposal
+--------
+We can expose this error information (currently only the PCI Error Code)
+via a device feature. Userspace can then obtain the error information 
+via VFIO_DEVICE_FEATURE ioctl and take appropriate actions such as driving 
+a device reset.
 
-Is it more clean ?
+This is how a typical flow for passthrough devices to a VM would work:
+For passthrough devices to a VM, the driver bound to the device on the host 
+is vfio-pci. vfio-pci driver does support the error_detected() callback 
+(vfio_pci_core_aer_err_detected()), and on an PCI error s390x recovery 
+code on the host will call the vfio-pci error_detected() callback. The 
+vfio-pci error_detected() callback will notify userspace/QEMU via an 
+eventfd, and return PCI_ERS_RESULT_CAN_RECOVER. At this point the s390x 
+error recovery on the host will skip any further action(see patch 6) and 
+let userspace drive the error recovery.
 
-echo 0xe0000 >  functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw1.0
-echo 0x20000 >  functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw1.1
+Once userspace/QEMU is notified, it then injects this error into the VM 
+so device drivers in the VM can take recovery actions. For example for a 
+passthrough NVMe device, the VM's OS NVMe driver will access the device. 
+At this point the VM's NVMe driver's error_detected() will drive the 
+recovery by returning PCI_ERS_RESULT_NEED_RESET, and the s390x error 
+recovery in the VM's OS will try to do a reset. Resets are privileged 
+operations and so the VM will need intervention from QEMU to perform the 
+reset. QEMU will invoke the VFIO_DEVICE_RESET ioctl to now notify the 
+host that the VM is requesting a reset of the device. The vfio-pci driver 
+on the host will then perform the reset on the device to recover it.
 
-so wm1.1 natively continue from prevous one.
 
-Frank
+Thanks
+Farhan
 
->       # echo 0x1912 >   functions/pci_epf_vntb/func1/pci_epf_vntb.0/vntb_vid
->       # echo 0x0030 >   functions/pci_epf_vntb/func1/pci_epf_vntb.0/vntb_pid
->       # echo 0x10 >     functions/pci_epf_vntb/func1/pci_epf_vntb.0/vbus_number
->       # echo 0 >        functions/pci_epf_vntb/func1/pci_epf_vntb.0/ctrl_bar
->       # echo 4 >        functions/pci_epf_vntb/func1/pci_epf_vntb.0/db_bar
->       # echo 2 >        functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw1_bar
->       # echo 2 >        functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw2_bar
->       # ln -s controllers/e65d0000.pcie-ep functions/pci_epf_vntb/func1/primary/
->       # echo 1 > controllers/e65d0000.pcie-ep/start
->
->
-> Thanks for taking a look.
->
->
-> Koichiro Den (27):
->   PCI: endpoint: pci-epf-vntb: Use array_index_nospec() on mws_size[]
->     access
->   PCI: endpoint: pci-epf-vntb: Add mwN_offset configfs attributes
->   NTB: epf: Handle mwN_offset for inbound MW regions
->   PCI: endpoint: Add inbound mapping ops to EPC core
->   PCI: dwc: ep: Implement EPC inbound mapping support
->   PCI: endpoint: pci-epf-vntb: Use pci_epc_map_inbound() for MW mapping
->   NTB: Add offset parameter to MW translation APIs
->   PCI: endpoint: pci-epf-vntb: Propagate MW offset from configfs when
->     present
->   NTB: ntb_transport: Support offsetted partial memory windows
->   NTB: core: Add .get_pci_epc() to ntb_dev_ops
->   NTB: epf: vntb: Implement .get_pci_epc() callback
->   damengine: dw-edma: Fix MSI data values for multi-vector IMWr
->     interrupts
->   NTB: ntb_transport: Use seq_file for QP stats debugfs
->   NTB: ntb_transport: Move TX memory window setup into setup_qp_mw()
->   NTB: ntb_transport: Dynamically determine qp count
->   NTB: ntb_transport: Introduce get_dma_dev() helper
->   NTB: epf: Reserve a subset of MSI vectors for non-NTB users
->   NTB: ntb_transport: Introduce ntb_transport_backend_ops
->   PCI: dwc: ep: Cache MSI outbound iATU mapping
->   NTB: ntb_transport: Introduce remote eDMA backed transport mode
->   NTB: epf: Provide db_vector_count/db_vector_mask callbacks
->   ntb_netdev: Multi-queue support
->   NTB: epf: Add per-SoC quirk to cap MRRS for DWC eDMA (128B for R-Car)
->   iommu: ipmmu-vmsa: Add PCIe ch0 to devices_allowlist
->   iommu: ipmmu-vmsa: Add support for reserved regions
->   arm64: dts: renesas: Add Spider RC/EP DTs for NTB with remote DW PCIe
->     eDMA
->   NTB: epf: Add an additional memory window (MW2) barno mapping on
->     Renesas R-Car
->
->  arch/arm64/boot/dts/renesas/Makefile          |    2 +
->  .../boot/dts/renesas/r8a779f0-spider-ep.dts   |   46 +
->  .../boot/dts/renesas/r8a779f0-spider-rc.dts   |   52 +
->  drivers/dma/dw-edma/dw-edma-core.c            |   28 +-
->  drivers/iommu/ipmmu-vmsa.c                    |    7 +-
->  drivers/net/ntb_netdev.c                      |  341 ++-
->  drivers/ntb/Kconfig                           |   11 +
->  drivers/ntb/Makefile                          |    3 +
->  drivers/ntb/hw/amd/ntb_hw_amd.c               |    6 +-
->  drivers/ntb/hw/epf/ntb_hw_epf.c               |  177 +-
->  drivers/ntb/hw/idt/ntb_hw_idt.c               |    3 +-
->  drivers/ntb/hw/intel/ntb_hw_gen1.c            |    6 +-
->  drivers/ntb/hw/intel/ntb_hw_gen1.h            |    2 +-
->  drivers/ntb/hw/intel/ntb_hw_gen3.c            |    3 +-
->  drivers/ntb/hw/intel/ntb_hw_gen4.c            |    6 +-
->  drivers/ntb/hw/mscc/ntb_hw_switchtec.c        |    6 +-
->  drivers/ntb/msi.c                             |    6 +-
->  drivers/ntb/ntb_edma.c                        |  628 ++++++
->  drivers/ntb/ntb_edma.h                        |  128 ++
->  .../{ntb_transport.c => ntb_transport_core.c} | 1829 ++++++++++++++---
->  drivers/ntb/test/ntb_perf.c                   |    4 +-
->  drivers/ntb/test/ntb_tool.c                   |    6 +-
->  .../pci/controller/dwc/pcie-designware-ep.c   |  287 ++-
->  drivers/pci/controller/dwc/pcie-designware.h  |    7 +
->  drivers/pci/endpoint/functions/pci-epf-vntb.c |  229 ++-
->  drivers/pci/endpoint/pci-epc-core.c           |   44 +
->  include/linux/ntb.h                           |   39 +-
->  include/linux/ntb_transport.h                 |   21 +
->  include/linux/pci-epc.h                       |   11 +
->  29 files changed, 3415 insertions(+), 523 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a779f0-spider-ep.dts
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a779f0-spider-rc.dts
->  create mode 100644 drivers/ntb/ntb_edma.c
->  create mode 100644 drivers/ntb/ntb_edma.h
->  rename drivers/ntb/{ntb_transport.c => ntb_transport_core.c} (59%)
->
-> --
-> 2.48.1
->
+ChangeLog
+---------
+v5 series https://lore.kernel.org/all/20251113183502.2388-1-alifm@linux.ibm.com/
+v5 -> v6
+   - Rebase on 6.18 + Lukas's PCI: Universal error recoverability of
+   devices series (https://lore.kernel.org/all/cover.1763483367.git.lukas@wunner.de/)
+
+   - Re-work config space accessibility check to pci_dev_save_and_disable() (patch 3).
+   This avoids saving the config space, in the reset path, if the device's config space is
+   corrupted or inaccessible.
+
+v4 series https://lore.kernel.org/all/20250924171628.826-1-alifm@linux.ibm.com/
+v4 -> v5
+    - Rebase on 6.18-rc5
+
+    - Move bug fixes to the beginning of the series (patch 1 and 2). These patches
+    were posted as a separate fixes series 
+https://lore.kernel.org/all/a14936ac-47d6-461b-816f-0fd66f869b0f@linux.ibm.com/
+
+    - Add matching pci_put_dev() for pci_get_slot() (patch 6).
+
+v3 series https://lore.kernel.org/all/20250911183307.1910-1-alifm@linux.ibm.com/
+v3 -> v4
+    - Remove warn messages for each PCI capability not restored (patch 1)
+
+    - Check PCI_COMMAND and PCI_STATUS register for error value instead of device id 
+    (patch 1)
+
+    - Fix kernel crash in patch 3
+
+    - Added reviewed by tags
+
+    - Address comments from Niklas's (patches 4, 5, 7)
+
+    - Fix compilation error non s390x system (patch 8)
+
+    - Explicitly align struct vfio_device_feature_zpci_err (patch 8)
+
+
+v2 series https://lore.kernel.org/all/20250825171226.1602-1-alifm@linux.ibm.com/
+v2 -> v3
+   - Patch 1 avoids saving any config space state if the device is in error
+   (suggested by Alex)
+
+   - Patch 2 adds additional check only for FLR reset to try other function 
+     reset method (suggested by Alex).
+
+   - Patch 3 fixes a bug in s390 for resetting PCI devices with multiple
+     functions. Creates a new flag pci_slot to allow per function slot.
+
+   - Patch 4 fixes a bug in s390 for resource to bus address translation.
+
+   - Rebase on 6.17-rc5
+
+
+v1 series https://lore.kernel.org/all/20250813170821.1115-1-alifm@linux.ibm.com/
+v1 - > v2
+   - Patches 1 and 2 adds some additional checks for FLR/PM reset to 
+     try other function reset method (suggested by Alex).
+
+   - Patch 3 fixes a bug in s390 for resetting PCI devices with multiple
+     functions.
+
+   - Patch 7 adds a new device feature for zPCI devices for the VFIO_DEVICE_FEATURE 
+     ioctl. The ioctl is used by userspace to retriece any PCI error
+     information for the device (suggested by Alex).
+
+   - Patch 8 adds a reset_done() callback for the vfio-pci driver, to
+     restore the state of the device after a reset.
+
+   - Patch 9 removes the pcie check for triggering VFIO_PCI_ERR_IRQ_INDEX.
+
+
+Farhan Ali (9):
+  PCI: Allow per function PCI slots
+  s390/pci: Add architecture specific resource/bus address translation
+  PCI: Avoid saving config space state if inaccessible
+  PCI: Add additional checks for flr reset
+  s390/pci: Update the logic for detecting passthrough device
+  s390/pci: Store PCI error information for passthrough devices
+  vfio-pci/zdev: Add a device feature for error information
+  vfio: Add a reset_done callback for vfio-pci driver
+  vfio: Remove the pcie check for VFIO_PCI_ERR_IRQ_INDEX
+
+ arch/s390/include/asm/pci.h       |  29 ++++++++
+ arch/s390/pci/pci.c               |  75 +++++++++++++++++++++
+ arch/s390/pci/pci_event.c         | 107 +++++++++++++++++-------------
+ drivers/pci/host-bridge.c         |   4 +-
+ drivers/pci/pci.c                 |  19 +++++-
+ drivers/pci/slot.c                |  25 ++++++-
+ drivers/vfio/pci/vfio_pci_core.c  |  20 ++++--
+ drivers/vfio/pci/vfio_pci_intrs.c |   3 +-
+ drivers/vfio/pci/vfio_pci_priv.h  |   9 +++
+ drivers/vfio/pci/vfio_pci_zdev.c  |  45 ++++++++++++-
+ include/linux/pci.h               |   1 +
+ include/uapi/linux/vfio.h         |  15 +++++
+ 12 files changed, 291 insertions(+), 61 deletions(-)
+
+-- 
+2.43.0
+
 
