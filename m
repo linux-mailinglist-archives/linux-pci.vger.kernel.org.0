@@ -1,73 +1,72 @@
-Return-Path: <linux-pci+bounces-42349-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42350-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 572EAC965C6
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 10:22:03 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDFB8C965E7
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 10:25:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0CB453A10FE
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 09:22:02 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6BEFE4E03ED
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 09:25:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEC382FDC41;
-	Mon,  1 Dec 2025 09:21:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 641942D97A9;
+	Mon,  1 Dec 2025 09:24:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZDHjRXPk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W5CORQfq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A9E2E3B0D;
-	Mon,  1 Dec 2025 09:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8AE1FDA
+	for <linux-pci@vger.kernel.org>; Mon,  1 Dec 2025 09:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764580918; cv=none; b=hxA/FPtZVZV7uKCB/lHiE1SVDCDiVLFhFHaK3P+MSYhYG15Ii89GJBQOZ5dcDZ0EjZ3fpMYxgs6Mbrez3min7ahz/XXr/mPCEVxq0iuRETTBZasTVimMvg7cKL8E9ULhXd+BrPYpwaa1MZ84z4bvcTY/H7/IFMJv9Iy/66a1C7Y=
+	t=1764581099; cv=none; b=lDKqo1Tzi88OvzGNH3OJqzKCE5ASm2/btYAWJ8Tss6sHwRXbLRHd3QZTUkEOcTVVVxyiwXiNLlj5pcleGqip+HxaHAJ7ULoqNAIq2NMBXjLkyRKPhmDO/szuZY0IzVjHmIudCioyzeYCszCk7YwyXuHrHhfymmbBYuljkig9+GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764580918; c=relaxed/simple;
-	bh=4qUQcY3n/X7tkTCxTI3G1RUjLz3EyoGpcWk36bM6XMA=;
+	s=arc-20240116; t=1764581099; c=relaxed/simple;
+	bh=rEsItsVqH3cXcNraoFgLVgV3/Rr/bC0qaGDyAZ8/J9U=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=nglNDjxrs95BZ/31OpWHlgHdEIecF668wg8XShrTvSjoz40MzOXfBNEIH/7ViYSisEsfH/ycvE5MDdc2eIUXbxqJ8l3Cv3d1LtBCLuxz1OAoCB8Tkv7CHMMCCSBAkWlhqBqmigovPCvEHBKcK9mu6DHCnJXddzvgQksSbc/6c08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZDHjRXPk; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version:Content-Type; b=q9fBBAna9s9w2elNkn3ME/ERb8/E8L1Sl+LJV+rYzXy4J7p2LPZ2UWp5R2OieJA1vs6ZNhBa8gn9l9azXTyb2m+Z+3QuoMpjpZRyO/cZ72lyoenPn4YrPQAiRq8ZuBFOD9cg1Fphgl1AFlsseq+CqaLEQRVH28zXt4JCzFi9GCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W5CORQfq; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764580916; x=1796116916;
+  t=1764581097; x=1796117097;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=4qUQcY3n/X7tkTCxTI3G1RUjLz3EyoGpcWk36bM6XMA=;
-  b=ZDHjRXPkF3IPYX2mSa1haJRtQN6itkjh+201RygqlhYr0DLJFTM8NXvX
-   TqtDBdY52lU9vYEqZ+fEuxt/KaQqKYqqkRpgcmxiF00dfZ8unttLf3BON
-   7B7dvCJ5PiYQEWR95DP1D3BPkVtZFhCh0GozmVdaUuALhRuxrYj6qoNqO
-   n7IpEuPoXOlPcnYI+0ibYEUUFqHGKo49Mf2XO2faatqAxYWml7b1EzA8A
-   2J6Ajk+uaIT2Q8FYfQMAYnCDGdnVMGDfHXV2QYiCUA3CdRVCta007Hr4k
-   e85JWe5pSn/67ZCXF84JcS/Nrfr4syjuPpfp0IpveBD6DSuLQjmtL23Q+
-   A==;
-X-CSE-ConnectionGUID: TRNgzXA8Ss2CPhVdr3KbXQ==
-X-CSE-MsgGUID: 3RlHBNh6QaSIw//Mq59GIA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11629"; a="65520508"
+  bh=rEsItsVqH3cXcNraoFgLVgV3/Rr/bC0qaGDyAZ8/J9U=;
+  b=W5CORQfqJp13air81fxOachz6a2ta9SQEMLwzxQ3LTf2IgPL7DpaAFaK
+   1DfNHN3H1UzjX+au+QHAQz/Jvve6arTMIdkfoia753rxmDML506cByZp0
+   tQil/fOnxuJUh/zM38vSqWed3/uKf8fIqvmG0em//wtTTIZoQOQVH4bro
+   A9RlCEt2n6Fen3JLrRxIAtZsaNFxRDCxRBzDvdfUAvKqnl6jwxpiu0DcP
+   MrdqudXB/zfKRwIjsf39WE3iVitceiYZ2BUCDzY3V1+zBHP/epLJwq1Hp
+   /R2s/Z0A9u5f9mSFu9qpgvW1jIZZ2Udg9vPZRj3lI3y4cGY1pe64uHopx
+   Q==;
+X-CSE-ConnectionGUID: P6nTnxwQTdiKWXOMxoJoWw==
+X-CSE-MsgGUID: 4gI4YcUMRBu5UpRI7Qb5Cw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11629"; a="70126922"
 X-IronPort-AV: E=Sophos;i="6.20,240,1758610800"; 
-   d="scan'208";a="65520508"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 01:21:56 -0800
-X-CSE-ConnectionGUID: 8piECG3kQf+SM1t8B0foJA==
-X-CSE-MsgGUID: r6yjjQdNQNGfLW5yfvsg4A==
+   d="scan'208";a="70126922"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 01:24:57 -0800
+X-CSE-ConnectionGUID: VsK7u9QXQGGT948UiQxcMQ==
+X-CSE-MsgGUID: H99B5n/pQw+c3MydUre9ug==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,240,1758610800"; 
-   d="scan'208";a="198506606"
+   d="scan'208";a="198218320"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.202])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 01:21:53 -0800
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 01:24:55 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 1 Dec 2025 11:21:49 +0200 (EET)
+Date: Mon, 1 Dec 2025 11:24:51 +0200 (EET)
 To: Guanghui Feng <guanghuifeng@linux.alibaba.com>
 cc: bhelgaas@google.com, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, kanie@linux.alibaba.com, 
     alikernel-developer@linux.alibaba.com
-Subject: Re: [PATCH v2] PCI: Fix PCIe SBR dev/link wait error
-In-Reply-To: <20251129163631.2908340-1-guanghuifeng@linux.alibaba.com>
-Message-ID: <74bcafc2-9d36-06d0-5ed4-66694356588d@linux.intel.com>
-References: <2e3a1e6b-40ae-3878-e237-fb9032796af8@linux.intel.com> <20251129163631.2908340-1-guanghuifeng@linux.alibaba.com>
+Subject: Re: [PATCH v3] PCI: Fix PCIe SBR dev/link wait error
+In-Reply-To: <20251130051735.3123755-1-guanghuifeng@linux.alibaba.com>
+Message-ID: <1086aed0-584b-4ab3-1b84-687e53ddddf9@linux.intel.com>
+References: <2e3a1e6b-40ae-3878-e237-fb9032796af8@linux.intel.com> <20251130051735.3123755-1-guanghuifeng@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,16 +90,20 @@ On Sun, 30 Nov 2025, Guanghui Feng wrote:
 > Reviewed-by: Guixin Liu <kanie@linux.alibaba.com>
 > ---
 
-Hi,
+The review comment I gave to v2 still stands to this v3 as well.
 
-In future, when posting an update, please always explain here 
-below the --- line what was changed between the versions.
+Please don't send new versions too rapidly but give people time to comment 
+on the previous version. And please remember to explain what you changed 
+in each version (below the -- line).
 
->  drivers/pci/pci.c | 138 ++++++++++++++++++++++++++++++++--------------
->  1 file changed, 97 insertions(+), 41 deletions(-)
+-- 
+ i.
+
+>  drivers/pci/pci.c | 141 +++++++++++++++++++++++++++++++++-------------
+>  1 file changed, 101 insertions(+), 40 deletions(-)
 > 
 > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b14dd064006c..76afecb11164 100644
+> index b14dd064006c..d91c65145739 100644
 > --- a/drivers/pci/pci.c
 > +++ b/drivers/pci/pci.c
 > @@ -4788,6 +4788,63 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
@@ -208,7 +211,7 @@ below the --- line what was changed between the versions.
 >  		return 0;
 >  	}
 >  
-> @@ -4867,41 +4926,40 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+> @@ -4867,41 +4926,45 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
 >  	if (!pcie_downstream_port(dev))
 >  		return 0;
 >  
@@ -256,27 +259,31 @@ below the --- line what was changed between the versions.
 > -		/* Did not train, no need to wait any further */
 > -		pci_info(dev, "Data Link Layer Link Active not set in %d msec\n", delay);
 > -		return -ENOTTY;
-> -	}
 > +	return ret;
 > +}
+> +
+> +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+> +{
+> +	int res, gap = 1;
+> +	unsigned long start_t = jiffies;
+> +
+> +	res = __pci_bridge_wait_for_secondary_bus(dev, start_t, reset_type);
+> +
+> +	while (res > 0) {
+> +		gap = gap < res ? gap : res;
+> +		msleep(gap);
+> +		gap <<= 1;
+> +
+> +		res = __pci_bridge_wait_for_secondary_bus(dev, start_t, reset_type);
+>  	}
 >  
 > -	return pci_dev_wait(child, reset_type,
 > -			    PCIE_RESET_READY_POLL_MS - delay);
-> +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
-> +{
-> +	int res = 0;
-> +	unsigned long start_t = jiffies;
-> +
-> +	do {
-> +		msleep(res);
-> +		res = __pci_bridge_wait_for_secondary_bus(dev, start_t, reset_type);
-> +	} while (res > 0);
-> +
 > +	return res;
 >  }
 >  
 >  void pci_reset_secondary_bus(struct pci_dev *dev)
-> @@ -5542,10 +5600,8 @@ static void pci_bus_restore_locked(struct pci_bus *bus)
+> @@ -5542,10 +5605,8 @@ static void pci_bus_restore_locked(struct pci_bus *bus)
 >  
 >  	list_for_each_entry(dev, &bus->devices, bus_list) {
 >  		pci_dev_restore(dev);
@@ -287,14 +294,8 @@ below the --- line what was changed between the versions.
 > -		}
 >  	}
 >  }
-
-???
-
-Unfortunately, this takes a wrong turn and is very much against the 
-feedback I gave to you.
-
 >  
-> @@ -5575,14 +5631,14 @@ static void pci_slot_restore_locked(struct pci_slot *slot)
+> @@ -5575,14 +5636,14 @@ static void pci_slot_restore_locked(struct pci_slot *slot)
 >  {
 >  	struct pci_dev *dev;
 >  
@@ -309,9 +310,9 @@ feedback I gave to you.
 > +		if (dev->subordinate)
 >  			pci_bus_restore_locked(dev->subordinate);
 > -		}
-
-
--- 
- i.
+>  	}
+>  }
+>  
+> 
 
 
