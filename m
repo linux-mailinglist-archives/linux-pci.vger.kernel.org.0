@@ -1,139 +1,81 @@
-Return-Path: <linux-pci+bounces-42383-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42384-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2266C9877A
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 18:16:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 77F5AC98810
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 18:23:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0AD7B344C16
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 17:16:50 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 22223344BF4
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 17:23:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B2F636D514;
-	Mon,  1 Dec 2025 17:16:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 856933375CB;
+	Mon,  1 Dec 2025 17:23:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jgxtlOKw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TFyxWPbs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E34133468D
-	for <linux-pci@vger.kernel.org>; Mon,  1 Dec 2025 17:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CE7335BDB;
+	Mon,  1 Dec 2025 17:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764609399; cv=none; b=R1XzdktVGYd6YDXi9J9Gse6Tkbj0+84AiJ8I0yT/AMeCYjjsr6CBRt7Jea7g22lqBmqPvSSk0EQqWQz8GOPhMbmCfxJqYknfyeGPy27eghZNZblYgcqnbzmpRtyGMceZJ6c6TEdvwpTawmB9Yheeb4WkJUEmkWAq9BVCSyhG+38=
+	t=1764609793; cv=none; b=LQ503NWrvo/13k+52eTNJrgddIVPlWRVfOZTe7l4IAMkm+iNuZxlAo1vKFSIN4kNUb3WnJHywvoVa5qIP1eZNeNFpE5RerkQ3u21rFktlARHK5YIh21aZK31uULCjvZIt0zxXVM4FDcIA/MXaivV6hHuHqptfO3h1lTRZqY+p9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764609399; c=relaxed/simple;
-	bh=FcZez0vJBRGMJ/poINzC1pRyP+0B4+mCXgXuuSiE1+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U++JwVp3w/7c/TIlZXL3fA40RHQISCAtCoY3Cu8oVoZ6j7oEdOHOLWoAppC9B6cC4TmFaFuWSO6wfw/WNvJyRUm/A5XA7z7FdIi8paBe1y3/MRwugQ/ybvLbRPJ8+l8bLvUBZuYSbAKvEkOsWkt5e9fN8xyQL1EwFofIynIEpwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jgxtlOKw; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <4998497c-87e8-4849-8442-b7281c627884@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1764609385;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y4emLxERSU432DRVgYdwZZc/maGKs+hdetkw753wwn8=;
-	b=jgxtlOKwgj97JRRLqqH3Yvfd9oiUN0W+lJIH2imQAVg1NZSJldxAdMDOyOWnHbq9iouFwl
-	IHgXoLDiucZlxUhMAcjj5+tIROfX4kBnJPGEeLIQSjJNex3aXdbTBnjKbCUuHMT6mD4/mf
-	pGmXSSvxKylNyHc8pGxqNCnI9/0FIFs=
-Date: Mon, 1 Dec 2025 09:16:06 -0800
+	s=arc-20240116; t=1764609793; c=relaxed/simple;
+	bh=RJqVXuXdZWxWnmtU+9QZzBV2awZeBUdtgRFh+O6fgH0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=P0AVW2jiCMtr//D46se7XeoUHQcT070tk++vBv8abFK4YprfCqjhiPg9H+LONcLVlTrxK6Oir8MitGIsSRWm8c6zrXKorB4nh/U9YmBYiAkbU6eGXUqGhAPsBepqM9QcdY+G/kmADk7c4UowbZIceVqLvEOW5kxYjBD0vxUd6lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TFyxWPbs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 000F7C4CEF1;
+	Mon,  1 Dec 2025 17:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764609793;
+	bh=RJqVXuXdZWxWnmtU+9QZzBV2awZeBUdtgRFh+O6fgH0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=TFyxWPbs2px1Iud+65mS2POX82bsaaYnqJkjRmi3xOWBZ7wALmu9o1wfevS+xXMQe
+	 LqyDxEajoCTCeM/SNrpd29LgxJz23eZE9JjB0xQbb496euGav8iP65KR7ZMFDqsJbT
+	 wd67r0ewzxvsY/7S+CDRcZI9xgUbRTRjvIaQ+8xKhggDZtEXePjDNpWmLvO7aiSot0
+	 jOxUJNXMOc/dweF8EcE/1FmM/Innu4k8IxAytXDZpC+ryU4hvNcY2O5GElqGlwPfMX
+	 QInhJqUmdsJzdxQYZVaO9EbQTruezBJUejdPHRkhSFsZp4qkE6ttt4dkkscealv4LU
+	 Sx9Jeu9/4QwFA==
+Date: Mon, 1 Dec 2025 11:23:11 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	linux-pci@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
+	NXP S32 Linux Team <s32@nxp.com>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: linux-next: Tree for Nov 28
+ (drivers/pci/controller/dwc/pcie-nxp-s32g.o)
+Message-ID: <20251201172311.GA3019571@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 00/21] vfio/pci: Base support to preserve a VFIO device
- file across Live Update
-To: David Matlack <dmatlack@google.com>
-Cc: Alex Williamson <alex@shazbot.org>,
- Adithya Jayachandran <ajayachandra@nvidia.com>, Alex Mastro
- <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
- David Rientjes <rientjes@google.com>,
- Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Josh Hilke <jrhilke@google.com>,
- Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org,
- Leon Romanovsky <leonro@nvidia.com>, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org,
- Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>,
- Parav Pandit <parav@nvidia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- Philipp Stanner <pstanner@redhat.com>, Pratyush Yadav <pratyush@kernel.org>,
- Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>,
- Shuah Khan <shuah@kernel.org>, Tomita Moeko <tomitamoeko@gmail.com>,
- Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
- Yi Liu <yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>
-References: <20251126193608.2678510-1-dmatlack@google.com>
- <dadaeeb9-4008-4450-8b61-e147a2af38b2@linux.dev>
- <46bbdad1-486d-4cb1-915f-577b00de827f@linux.dev>
- <CALzav=eigAYdw5-hzk1MAHWBU29yJK4_WWTd0dyoBN91bnRoZQ@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <CALzav=eigAYdw5-hzk1MAHWBU29yJK4_WWTd0dyoBN91bnRoZQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63e1daf7-f9a3-463e-8a1b-e9b72581c7af@infradead.org>
 
+On Sat, Nov 29, 2025 at 07:00:04PM -0800, Randy Dunlap wrote:
+> On 11/27/25 9:29 PM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20251127:
+> > 
+> 
+> on i386 (allmodconfig):
+> 
+> WARNING: modpost: vmlinux: section mismatch in reference: s32g_init_pcie_controller+0x2b (section: .text) -> memblock_start_of_DRAM (section: .init.text)
 
-在 2025/12/1 9:10, David Matlack 写道:
-> On Mon, Dec 1, 2025 at 7:49 AM Zhu Yanjun <yanjun.zhu@linux.dev> wrote:
->> 在 2025/11/27 20:56, Zhu Yanjun 写道:
->>> Hi, David
->>>
->>> ERROR: modpost: "liveupdate_register_file_handler" [drivers/vfio/pci/
->>> vfio-pci-core.ko] undefined!
->>>
->>> ERROR: modpost: "vfio_pci_ops" [drivers/vfio/pci/vfio-pci-core.ko]
->>> undefined!
->>> ERROR: modpost: "liveupdate_enabled" [drivers/vfio/pci/vfio-pci-core.ko]
->>> undefined!
->>> ERROR: modpost: "liveupdate_unregister_file_handler" [drivers/vfio/pci/
->>> vfio-pci-core.ko] undefined!
->>> ERROR: modpost: "vfio_device_fops" [drivers/vfio/pci/vfio-pci-core.ko]
->>> undefined!
->>> ERROR: modpost: "vfio_pci_is_intel_display" [drivers/vfio/pci/vfio-pci-
->>> core.ko] undefined!
->>> ERROR: modpost: "vfio_pci_liveupdate_init" [drivers/vfio/pci/vfio-
->>> pci.ko] undefined!
->>> ERROR: modpost: "vfio_pci_liveupdate_cleanup" [drivers/vfio/pci/vfio-
->>> pci.ko] undefined!
->>> make[4]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
->>> make[3]: *** [Makefile:1960: modpost] Error 2
->>>
->>> After I git clone the source code from the link https://github.com/
->>> dmatlack/linux/tree/liveupdate/vfio/cdev/v1,
->>>
->>> I found the above errors when I built the source code.
->>>
->>> Perhaps the above errors can be solved by EXPORT_SYMBOL.
->>>
->>> But I am not sure if a better solution can solve the above problems or not.
->> I reviewed this patch series in detail. If I’m understanding it
->> correctly, there appears to be a cyclic dependency issue. Specifically,
->> some functions in kernel module A depend on kernel module B, while at
->> the same time certain functions in module B depend on module A.
->>
->> I’m not entirely sure whether this constitutes a real problem or if it’s
->> intentional design.
-> Thanks for your report. Can you share the .config file you used to
-> generate these errors?
-
-
-IIRC, I used FC 42 default config. Perhaps you can make tests with it. 
-If this problem can not be reproduced, I will share my config with you.
-
-Yanjun.Zhu
-
-
--- 
-Best Regards,
-Yanjun.Zhu
-
+Thanks, I'll drop the pci/controller/s32g branch until this is
+resolved.
 
