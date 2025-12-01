@@ -1,107 +1,185 @@
-Return-Path: <linux-pci+bounces-42336-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42337-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05861C95AE3
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 04:55:05 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB482C95CD7
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 07:29:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96BE13A1C18
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 03:55:03 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 522DA342C9B
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 06:29:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56BA51A3179;
-	Mon,  1 Dec 2025 03:55:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AA83279DCA;
+	Mon,  1 Dec 2025 06:29:27 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD0F07081F;
-	Mon,  1 Dec 2025 03:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDAC4278753;
+	Mon,  1 Dec 2025 06:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764561300; cv=none; b=WsRklvsu+zK4WKBrS/8rkECtTZKzz2rvNWDqhmYNG7jg9EMRN/GLT8Kdf3ApR6FFxTBtXuY1S0mk71AgeGILd3lryXfqKeHDFXvJ1DDqOkGxzikteArqBahypZBCZTooYSeac4A3YrZgAEOPV2tJvO6+szyWsS6O4Sr2hJ/r/q0=
+	t=1764570567; cv=none; b=Pv9ypTcLF5PvEyAmncG2yLitpR29aXfk8LMb0uaNfgzyW3gJvibM2E66IoTy4oax4yoLpN/cRX6NtVs8WpqUZ4tI7xdB/G+L0nnTY9RaGw+ZIG13AkkSwkVZ7AJdi/Uww6lYK4cBIHlvUeT6qf1NF+z7GYV1e+QJIfBCemIK9LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764561300; c=relaxed/simple;
-	bh=SgvSydZmOtxlJUgPSJeXTvUYWIV8Q+0yBOxEd7EhJ0U=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=L8AB9oDpUtl+0Pvc+Tn6cS3jJJgiYxT0QJwHVl5oaSyWrRf63xYQkMS2rftiX38+0P+spQ6OIpdhLozSDi0urcbzGl8VlTNxQxt8/Z7Hr8dRTDKNOrCJWFD+hRjXfM5JaodnYdTgpuQCTXBktQOUTHyeNOO6zwWlS1JVwNa9qfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 8D6C492009E; Mon,  1 Dec 2025 04:54:57 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 8691092009B;
-	Mon,  1 Dec 2025 03:54:57 +0000 (GMT)
-Date: Mon, 1 Dec 2025 03:54:57 +0000 (GMT)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>
-cc: Lukas Wunner <lukas@wunner.de>, 
-    =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-    Bjorn Helgaas <bhelgaas@google.com>, Jiwei <jiwei.sun.bj@qq.com>, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    guojinhui.liam@bytedance.com, Bjorn Helgaas <helgaas@kernel.org>, 
-    ahuang12@lenovo.com, sunjw10@lenovo.com
-Subject: Re: [External] : Re: [PATCH 2/2] PCI: Fix the PCIe bridge decreasing
- to Gen 1 during hotplug testing
-In-Reply-To: <d4e5b6d8-c69f-4fbc-8da6-bc2c2fb2a550@oracle.com>
-Message-ID: <alpine.DEB.2.21.2511290112150.36486@angie.orcam.me.uk>
-References: <tencent_B9290375427BDF73A2DC855F50397CC9FA08@qq.com> <3fe7b527-5030-c916-79fe-241bf37e4bab@linux.intel.com> <tencent_4514111F8A3EF9408C50D9379FE847610206@qq.com> <3d7c3904-a52e-9602-3ad2-29b5981729c7@linux.intel.com> <Z4eLh24IkDrAm6cm@wunner.de>
- <d4e5b6d8-c69f-4fbc-8da6-bc2c2fb2a550@oracle.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1764570567; c=relaxed/simple;
+	bh=PYc7RKtTrKYB/n8rcchUdu0GnArVjz+/Dm3h2uX0+i4=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=iN5v8bIADbmI83A/hqqqifHfTxr4ynh7aClFgyO52PxMCXr7dJ+acx4arwN5Pp7TNLk2fN2kaXj02boHUSIRh0i8ks6wWJPHoU/Gz+Msn5h1qnbVni9DprJhGknAXmbjo7+0Uh2mNzt2neWfMg4eL51vXZh+InstkgOcP+LGgfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Mon, 1 Dec
+ 2025 14:29:16 +0800
+Received: from [127.0.1.1] (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Mon, 1 Dec 2025 14:29:16 +0800
+From: Jacky Chou <jacky_chou@aspeedtech.com>
+Subject: [PATCH v6 0/7] Add ASPEED PCIe Root Complex support
+Date: Mon, 1 Dec 2025 14:29:10 +0800
+Message-ID: <20251201-upstream_pcie_rc-v6-0-8c8800c56b16@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALY1LWkC/43QQW7DIBCF4atErIs1wzAGd9V7VJVFMKlpldgCx
+ 0oU+e4hXtSLLNLlQ/r+kbiJHFIMWbzvbiKFOeY4nMqo33bC9+70HWTsyhYKFCMCyfOYpxTcsR1
+ 9DG3y0mrNhptub5FEYWMKh3hZk59fZfcxT0O6rhdmfLyuMaiRgAgAK0KmmoxE+eP877X1/XD+c
+ HkMoZuC7ys/HMWjNKtNG2QgTQoqxUz2P5o23QACc6NUhUUzw2ut/zSCMtCwVVyhRazxNeYNI5r
+ nP5xZgtxrh41lUzt/eKosy3IHIntzS6wBAAA=
+X-Change-ID: 20251103-upstream_pcie_rc-8445759db813
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, "Andrew
+ Jeffery" <andrew@codeconstruct.com.au>, Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Manivannan
+ Sadhasivam" <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+CC: <linux-aspeed@lists.ozlabs.org>, <linux-pci@vger.kernel.org>,
+	<linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	Andrew Jeffery <andrew@aj.id.au>, <openbmc@lists.ozlabs.org>,
+	<linux-gpio@vger.kernel.org>, Jacky Chou <jacky_chou@aspeedtech.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1764570556; l=5149;
+ i=jacky_chou@aspeedtech.com; s=20251031; h=from:subject:message-id;
+ bh=PYc7RKtTrKYB/n8rcchUdu0GnArVjz+/Dm3h2uX0+i4=;
+ b=uRcfSGhjD7whqD1XeVr1g7UGZxa8lZrhPpg7xE+9FtUCo3zPezpdK44JKgXLgYdm4src5LK7n
+ 7jPU9tj2zLeA2+GBEcaLc98QK4VQHAHgoWLG2rNUGxVqMuryWvziy7y
+X-Developer-Key: i=jacky_chou@aspeedtech.com; a=ed25519;
+ pk=8XBx7KFM1drEsfCXTH9QC2lbMlGU4XwJTA6Jt9Mabdo=
 
-On Wed, 26 Nov 2025, ALOK TIWARI wrote:
+This patch series adds support for the ASPEED PCIe Root Complex,
+including device tree bindings, pinctrl support, and the PCIe host controller
+driver. The patches introduce the necessary device tree nodes, pinmux groups,
+and driver implementation to enable PCIe functionality on ASPEED platforms.
+Currently, the ASPEED PCIe Root Complex only supports a single port.
 
-> We are testing hot-add/hot-remove behavior and observed the same issue as,
-> mentioned where the PCIe bridge link speed drops from 32 GT/s to 2.5 GT/s.
-> 
-> My understanding is that pcie_failed_link_retrain should only apply to devices
-> matched by PCI_VDEVICE(ASMEDIA, 0x2824),
-> but the current implementation appears to affect all devices that take longer
-> to establish a link.
+Summary of changes:
+- Add device tree binding documents for ASPEED PCIe PHY, PCIe Config, and PCIe RC
+- Update MAINTAINERS for new bindings and driver
+- Add PCIe RC node and PERST control pin to aspeed-g6 device tree
+- Implement ASPEED PCIe PHY driver
+- Implement ASPEED PCIe Root Complex host controller driver
 
- Thank you for your report.
+This series has been tested on AST2600/AST2700 platforms and enables PCIe device
+enumeration and operation.
 
- No, there seems nothing wrong with said device by itself and the problem 
-is either with the downstream device (which obviously cannot be discovered 
-until a link has been actually established), or the particular device pair 
-or setup.  I've originally implemented matching for this particular device 
-out of the abundance of caution, in case the removal of speed restriction 
-for other upstream devices (in case the quirk triggered there) would cause 
-the link to go back into the infinite retraining loop.
+Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+---
+Changes in v6:
+- Refer to pci-cpi-bridge.yaml to update aspeed,ast2600-pcie.yaml and
+  the pcie node of aspeed-g6.dtsi.
+- 'dt-bindings: pinctrl: aspeed,ast2600-pinctrl: Add PCIe RC PERST#
+  group' have applied, remove it from this version.
+- Adjust the defnitions in pci.h. 
+- Link to v5: https://lore.kernel.org/r/20251117-upstream_pcie_rc-v5-0-b4a198576acf@aspeedtech.com
 
-> We are unsure if this is intentional, but it effectively allows such
-> devices to continue operating at a reduced speed.
+Changes in v5:
+- Remove legacy-interrupt-controller and the INTx points to pcie node itself.
+- Correct bar mapping description and implementation to PCIe address
+  configuration in pcie-aspeed.c driver.
+- Link to v4: https://lore.kernel.org/r/20251027095825.181161-1-jacky_chou@aspeedtech.com/
 
- It was intentional, but didn't take into account noisy hot-plug scenarios 
-which are not a part of my lab setup.
+Changes in v4:
+- Remove aspeed,ast2700-pcie-cfg.yaml
+- Add more descriptions for AST2600 PCIe RC in aspeed,ast2600-pcie.yaml
+- Change interrupt-controller to legacy-interrupt-controller in yaml
+  and dtsi
+- Remove msi-parent property in yaml and dtsi
+- Modify the bus range to starting from 0x00 in aspeed-g6.dtsi
+- Fixed the typo on MODULE_DEVICE_TABLE() in phy-aspeed-pcie.c
+- Add PCIE_CPL_STS_SUCCESS definition in pci/pci.h
+- Add prefix ASPEED_ for register definition in RC driver
+- Add a flag to indicate clear msi status twice for AST2700 workaround
+- Remove getting domain number
+- Remove scanning AST2600 HOST bridge on device number 0
+- Remove all codes about CONFIG_PCI_MSI
+- Get root but number from resouce list by IORESOURCE_BUS
+- Change module_platform_driver to builtin_platform_driver
+- Link to v3: https://lore.kernel.org/r/20250901055922.1553550-1-jacky_chou@aspeedtech.com/
 
-> If we extend PCIE_LINK_RETRAIN_TIMEOUT_MS to 3000 ms, these slower devices are
-> able to complete link training,
-> and the problem is no longer observed in our testing. Therefore, increasing
-> PCIE_LINK_RETRAIN_TIMEOUT_MS to 3000 ms seems to resolve the issue for us.
-> 
-> Would it be acceptable to increase PCIE_LINK_RETRAIN_TIMEOUT_MS, from 1000 to
-> 3000 ms in this case?
+Changes in v3:
+- Add ASPEED PCIe PHY driver
+- Remove the aspeed,pciecfg property from AST2600 RC node, merged into RC node
+- Update the binding doc for aspeed,ast2700-pcie-cfg to reflect the changes
+- Update the binding doc for aspeed,ast2600-pcie to reflect the changes
+- Update the binding doc for aspeed,ast2600-pinctrl to reflect the changes
+- Update the device tree source to reflect the changes
+- Adjusted the use of mutex in RC drivers to use GRAND
+- Updated from reviewer comments
+- Link to v2: https://lore.kernel.org/r/20250715034320.2553837-1-jacky_chou@aspeedtech.com/
 
- FWIW my understanding is this goes beyond the spec actually.
+Changes in v2:
+- Moved ASPEED PCIe PHY yaml binding to `soc/aspeed` directory and
+  changed it as syscon
+- Added `MAINTAINERS` entry for the new PCIe RC driver
+- Updated device tree bindings to reflect the new structure
+- Refactored configuration read and write functions to main bus and
+  child bus ops
+- Refactored initialization to implement multiple ports support
+- Added PCIe FMT and TYPE definitions for TLP header in
+  `include/uapi/linux/pci_regs.h`
+- Updated from reviewer comments
+- Link to v1: https://lore.kernel.org/r/20250613033001.3153637-1-jacky_chou@aspeedtech.com/
 
- However given other reports I've given more thought to my idea previously 
-shared, which has sadly received no feedback to motivate me further, and 
-implemented yet more simplified an approach, where the 2.5GT/s speed clamp 
-is always removed regardless of the link state and if that fails, then any 
-original clamp as at the entry to the quirk is restored.  This I hope will 
-prove robust enough not to cause further issues with hot-plug scenarios.
+---
+Jacky Chou (7):
+      dt-bindings: phy: aspeed: Add ASPEED PCIe PHY
+      dt-bindings: PCI: Add ASPEED PCIe RC support
+      ARM: dts: aspeed-g6: Add PCIe RC and PCIe PHY node
+      PHY: aspeed: Add ASPEED PCIe PHY driver
+      PCI: Add FMT, TYPE and CPL status definition for TLP header
+      PCI: aspeed: Add ASPEED PCIe RC driver
+      MAINTAINERS: Add ASPEED PCIe RC driver
 
- Please give it a try and let me know if it's fixed your issue:
+ .../bindings/pci/aspeed,ast2600-pcie.yaml          |  150 +++
+ .../bindings/phy/aspeed,ast2600-pcie-phy.yaml      |   42 +
+ MAINTAINERS                                        |   12 +
+ arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi    |    5 +
+ arch/arm/boot/dts/aspeed/aspeed-g6.dtsi            |   51 +
+ drivers/pci/controller/Kconfig                     |   16 +
+ drivers/pci/controller/Makefile                    |    1 +
+ drivers/pci/controller/pcie-aspeed.c               | 1117 ++++++++++++++++++++
+ drivers/pci/pci.h                                  |   15 +
+ drivers/phy/Kconfig                                |    1 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/aspeed/Kconfig                         |   15 +
+ drivers/phy/aspeed/Makefile                        |    2 +
+ drivers/phy/aspeed/phy-aspeed-pcie.c               |  209 ++++
+ 14 files changed, 1637 insertions(+)
+---
+base-commit: e1afacb68573c3cd0a3785c6b0508876cd3423bc
+change-id: 20251103-upstream_pcie_rc-8445759db813
 
-<https://lore.kernel.org/r/alpine.DEB.2.21.2511290245460.36486@angie.orcam.me.uk/>
+Best regards,
+-- 
+Jacky Chou <jacky_chou@aspeedtech.com>
 
-  Maciej
 
