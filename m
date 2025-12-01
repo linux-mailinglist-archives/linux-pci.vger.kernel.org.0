@@ -1,376 +1,466 @@
-Return-Path: <linux-pci+bounces-42375-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42376-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DB5EC981A3
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 16:50:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B55C7C981E8
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 16:52:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2D0634E165B
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 15:50:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E81793A1E21
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 15:52:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D10633291A;
-	Mon,  1 Dec 2025 15:50:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93E1630AACB;
+	Mon,  1 Dec 2025 15:52:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pbCZG1NE"
+	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="RaJPuljq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022078.outbound.protection.outlook.com [52.101.96.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D77430AACB
-	for <linux-pci@vger.kernel.org>; Mon,  1 Dec 2025 15:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764604201; cv=none; b=rnoJ+efB25uJtISUGKrKZkhamx/SWEDMipzw3ouI5peDWjvmo1MODGX60e10HqWTqzsAekkkt3KZTQCrkTaheXT9T1qZ6J2A1Orb6rMRH/c14Uot/ZcT3IEi774d7uWulxMAWcKxmDVUcVcobQbFCZ0CdGpBRJasDRlSnO2o5Es=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764604201; c=relaxed/simple;
-	bh=v01Qvgga6OXteBWDw+kls9otNx1pMqsvpx7DRGBLwMQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=g6NYcsNKaF5sKQfqZIO0+YGHiuf++yltoVUOxaT19irxV/gJFx8ng3lDySPboxOIerVZwbUIs5ryJ49Rof1AYm2jkrbk2BpX2Dx3anY1NQC6z7cRtqwYL1k4Ur7ObTyYBsT3m7DHEREskHHmJJiUHK+MSkHTbQXvB6PDKIOkZIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pbCZG1NE; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <46bbdad1-486d-4cb1-915f-577b00de827f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1764604196;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iNdyhBHo3D4OnRy1wZmBFCIJGMu0S5cEULbP0D0MVr8=;
-	b=pbCZG1NEEjsbYbkE1CbqudioNGhnvbma1ChEsab4zS+H8FQlOiStnLQb39eH1bDpbZYxiV
-	17+7DEo2zCD+nD0KNs/ENeveVXuZyguJPfXwSacm/3fSmBi6WgwAVQ9QKAvG/gCPslQ3cU
-	4XcEqh+dxAdNWPXFjLavbNjrgkONm2E=
-Date: Mon, 1 Dec 2025 07:49:44 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C2132C954;
+	Mon,  1 Dec 2025 15:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764604340; cv=fail; b=TozeVpCSYHkFCY8qpY3IH4bhGE39qcEVUw6VWqe82/5lOj5Ny23dsz6/fgbUQjKSVYIdxiXnEpJdti3hXempJkELBTzZZ0BhPiSQMrRJtyjWpUPi1tJsC9xeB7UThmqtv2jOyb6wpEYClZwJzVVHm+vwWdBlLzWi8uS3sXRP/+E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764604340; c=relaxed/simple;
+	bh=dVyTuLzNaS6//FcSTcIeDCjHcSwC4mwF1BzrvWTF/D8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pee4dTzdDoPMEZUJNQ2swAFdOeM/dSg2y1n9L7jUtYDYsXjZ6nNlIRvvsXTAav6T9tduETV4IN95Sa4xVSZ18ND/zFlXiCxwRQcfKfRKe0Ot+QxQ3akx9P1S1QQctWBTy7Zy2RrUJLhhdaxBRsKS4mjlHPJOiUrzDx0pTVhjQUQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=RaJPuljq; arc=fail smtp.client-ip=52.101.96.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mqFHEVuJWbjvns/K6VaKAsvpFB6uzTKDBH16qySoyrvKy/HBVCcEgjz8YvArJvFIOF+5yk5vF1Ccu6PAsL4dONU7aJmjhCgdrFfRpiCDcWGeR/00W9NOvy0vCGZfe+dW3QtyjVEXx57rKFNzj4cll1FCxcwy50lPYRaNAFSAZGX/4uapqvKsCZiy75Fal8MYW6KtLmcSS68dkgISocMX0rNkvOTZIIQiStUJKHftQzG87WSGvgprnyKvv9+mVE1Ymmh2Zn16nW9xVIj7RLqBjuM1M1QyTBHgVfvDLjPDHKq8fPMx3aZpx0otOr+9c7jZxUsspXQg4kV3e3c/IHIdfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yD2S1HBeD/bedjfJuhqL+EJUmOtnnWMbqabmR8I80QE=;
+ b=x605bbFBjwYbBTDzd4PKdGdefgtUaodJrfXqfjDkxFJilxp/WzOqmQxzK5QTZsI/kY6enSwJoNeLC32TNfknQOy5mwNN3i0QAlhaHe0Ty2fnxpnfL/2rZ2eCVlsghJZv7MF/l7sSwFdqcdK1lPzS2Myb/JHL9hGH1+gyI/y0OerCUToWBgin85CBhg0IWbsEaHKCKk0pQSeqJ8IkexgqDy1eg90F7nyu/4Pzj6O1bAFvI6giW5h6fPCp/TKW9XLt2Umd69QBj6w1BnUH94akDZ8x7nsIUFoEWoj6/fM5+2Y2pMxSc85jb7kE+bluO6qVp/ufr5wadkHW14v2ilJm1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
+ dkim=pass header.d=garyguo.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yD2S1HBeD/bedjfJuhqL+EJUmOtnnWMbqabmR8I80QE=;
+ b=RaJPuljqFoVwajI23uUbP2+O/oaWDfDRqahiz7tiOlABmlYUaJ/ZvdvijJNpu+fYzHo80I+vqv9GWHJVdM/0xX8JP3FhYsZMdrCu9gxX0ERpHNH6rJlfg3lspR+Ktjj4yF9QCTj6/VC5jO7gilsNudDIOCrGMec0d4z5cVr0b9E=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=garyguo.net;
+Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:253::10)
+ by CWLP265MB5849.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:1a2::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Mon, 1 Dec
+ 2025 15:52:13 +0000
+Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1818:a2bf:38a7:a1e7]) by LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1818:a2bf:38a7:a1e7%6]) with mapi id 15.20.9366.012; Mon, 1 Dec 2025
+ 15:52:13 +0000
+Date: Mon, 1 Dec 2025 15:51:35 +0000
+From: Gary Guo <gary@garyguo.net>
+To: Oliver Mangold <oliver.mangold@pm.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, =?UTF-8?B?QmrDtnJu?= Roy Baron
+ <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
+ Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Benno Lossin
+ <lossin@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Dave Ertman <david.m.ertman@intel.com>, Ira
+ Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Lorenzo
+ Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth
+ Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kwilczynski@kernel.org>, Paul Moore <paul@paul-moore.com>, Serge Hallyn
+ <sergeh@kernel.org>, Asahi Lina <lina+kernel@asahilina.net>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v13 1/4] rust: types: Add Ownable/Owned types
+Message-ID: <20251201155135.2b9c4084.gary@garyguo.net>
+In-Reply-To: <20251117-unique-ref-v13-1-b5b243df1250@pm.me>
+References: <20251117-unique-ref-v13-0-b5b243df1250@pm.me>
+	<20251117-unique-ref-v13-1-b5b243df1250@pm.me>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO2P265CA0073.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:8::13) To LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:253::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 00/21] vfio/pci: Base support to preserve a VFIO device
- file across Live Update
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-To: David Matlack <dmatlack@google.com>, Alex Williamson <alex@shazbot.org>
-Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
- Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
- David Rientjes <rientjes@google.com>,
- Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Josh Hilke <jrhilke@google.com>,
- Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org,
- Leon Romanovsky <leonro@nvidia.com>, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org,
- Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>,
- Parav Pandit <parav@nvidia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- Philipp Stanner <pstanner@redhat.com>, Pratyush Yadav <pratyush@kernel.org>,
- Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>,
- Shuah Khan <shuah@kernel.org>, Tomita Moeko <tomitamoeko@gmail.com>,
- Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
- Yi Liu <yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>
-References: <20251126193608.2678510-1-dmatlack@google.com>
- <dadaeeb9-4008-4450-8b61-e147a2af38b2@linux.dev>
-In-Reply-To: <dadaeeb9-4008-4450-8b61-e147a2af38b2@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LO2P265MB5183:EE_|CWLP265MB5849:EE_
+X-MS-Office365-Filtering-Correlation-Id: d1ddfebd-59cd-4508-5f17-08de30f1983d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|7416014|376014|1800799024|366016|3122999012|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?GA7e2tg/Ytoo+Hfdu50wTUInucqXqNT6ORjR17hsDx1cX5OPh9HdLWRiNSYl?=
+ =?us-ascii?Q?w+cuc29LhaEck9P7o7wAuKeo1wFLiZ5bGpOK74iYJ06qZIxsOJFkJ9RWy73G?=
+ =?us-ascii?Q?h0DHJH7hfZb0iqCv2S8q98186ABAmFHiZ77CjoOse5bvwKRvj6n0JBsiRzZ9?=
+ =?us-ascii?Q?tTC0gEqCxzhaHGYLZ94Jgi9n5kLpnxIjtItOuePcgnmT31iT6mp8gkDul79T?=
+ =?us-ascii?Q?XuP8eglImYRM1/90t4Y3vgcUgb1UBAjvbTss+33cR02r24txhiJp/O73n/0Q?=
+ =?us-ascii?Q?AcgEtnbkNlCC3wF0zgbsTn5Jxl991APHUY+WXzBF40wilDMiE+hWABB1a75D?=
+ =?us-ascii?Q?Adp0tV3QOyfdWQm8E09EjmUiepWdEDxH3OtC0iDy4iAPO5/Dkiph8d3PQf2x?=
+ =?us-ascii?Q?LvdGcOpifOVn65Y/HrpfUzDXXg51911WKdPxvhml4+cTqgKFnLADLXel7F5l?=
+ =?us-ascii?Q?liUh9Az9O4IdG8HjeHVMmJSAdvtai255V2sHG6L6vP7YDAFovRx7cxdU+XFG?=
+ =?us-ascii?Q?fupDNgCmzkUxBgTwdBMcZ4QijpVAUcGPWrgJDz0nbLNml9OPDDUyfKhJ6A/s?=
+ =?us-ascii?Q?hwh5vaydZU+9np5Tb0ZTkgUMACkznWMFzKRuoR1xMyDnmSOvu0ctKHdlueKY?=
+ =?us-ascii?Q?0SHi3O1YDQ5hjtY4JKfjhVo+rG2zp75nJ3qWdELZ68Qb3JolwALpX59ZMalC?=
+ =?us-ascii?Q?kzEQKfxSetPjKmU2QmSvC5MmT2PT8Iw1lnyRURbFHT+VgNeA21bxqmsoWzid?=
+ =?us-ascii?Q?azCnYa7by93r9rfpld4w3L4UMswemVfh+rdSRqwJZtHgwDCRABe/DrLNks4N?=
+ =?us-ascii?Q?P+opGnZqBqeeCQ5jtXwdEHXYuawjPgfE4E7J/ojA5dvmnxJClj0ciWL6BNVK?=
+ =?us-ascii?Q?r/iruwQnHChrKECwshrVAd2sxG6Np7sOLBEvew3WqYEvbtP/P9iRHMZZVSJD?=
+ =?us-ascii?Q?9bmMoJy6jjmrXPT10BVf40nOz55swW/BeJlYF5ExZBXliTVMy8vAwTY5Nmci?=
+ =?us-ascii?Q?baUXOzYTxuj5m2ZWA14DUpQO5MyakKbT8D7ghlmRVIcig+vgpGQ+efZHuFQM?=
+ =?us-ascii?Q?hLfRXZ8JtsBLBI+c9BuvBUd568Z3i3286PBJFmNEIdh9vfGbcQnjSSbRZAqy?=
+ =?us-ascii?Q?F2yQzVVuwSU35bCI0+RoM+iuqxnlLdnnI6NmAFDsKxCKL+Tx8r+QvFQ8na5x?=
+ =?us-ascii?Q?md+KUpwrfvj5AJGbIppFFU6mQGW80UxNxHV5eC6jIpIgakOwW7mSZ1LOpQIP?=
+ =?us-ascii?Q?NiAOdweCx7E0U5LcJ7Vd37g6HPK6V1JKxrcEL19ANHh38SYo/zXMKBxJ63oV?=
+ =?us-ascii?Q?6iwoSiwIqr+P2Fe8W0N4ScwZsTvcvCnkXsuKrkvyZoP4+DQRRoeddQan35jI?=
+ =?us-ascii?Q?4gOjwlyQyuT68n25pC0B58LxzVK9pufbgl/xVhrBAzDtQB41YGXji1xQh4pe?=
+ =?us-ascii?Q?LL2DF9Xz1kTwhmr11JEiyUsGVBI5OI7tLcFdF/UYQcLbOepYBOspuQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(7416014)(376014)(1800799024)(366016)(3122999012)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?a8xqpq/th68idGw536TGMFrQM+4K9iFxGwnwWisk1WF57vGcGvZNUtLvfVVC?=
+ =?us-ascii?Q?hh97C2swgriDsnFDsEpPYxyIYZd3vX4AGE82PTgmj6vegcjBWYXR7BcVYREp?=
+ =?us-ascii?Q?53A/yfNUHhJgwI1LmRSGDN5Ei678JC9smcAIeAPJUYCv4BiBNav/2bzWWjub?=
+ =?us-ascii?Q?HA5+pWzi7Sw/h1ZImwho8pNgD/w4bPVuG/Cd5DVcNviNQVUMZd9AuQM48Z3z?=
+ =?us-ascii?Q?tK/Ew3VpX1tvZs7wZ6TossTxWQgoxlmWwsNMxYS/YQwHQhKIkzSnT+64g5Xc?=
+ =?us-ascii?Q?RxGonXGp1fbJ/gOFCn3Ef+ckkRINi/C1SakIDmwtfgUyd3p+o/ydxVi4S6Gt?=
+ =?us-ascii?Q?UMRoR0ZmYk7AGD/VZ/5g+/LipPwfr1Ps3nruzj113k3q8qqnkeQNv5VJc+v6?=
+ =?us-ascii?Q?4LjZ+s5XBUur6hPfMTsyIsQAUu0+dRHKRqy3vk+LpFyuYSD2LyTh2mgCSy/l?=
+ =?us-ascii?Q?hAw9Qd3b45FWsLfc/KML0G/vKagtHI9cC4xoLaKiKmt3RyK62gnGVsSbpMqe?=
+ =?us-ascii?Q?LaGREWrCLdY2+n/2hk3jZYGKmJUqcLZN1Ee5LMslG3dKyk935+yalM9zRcfj?=
+ =?us-ascii?Q?xviAYIFabrLHrMmAwOqMrDqOeTsVWbROl/5aAD1ciSfkcoZsGnT0YNEMJvSB?=
+ =?us-ascii?Q?4c4suaYIGRypt2hXUzqR5nPlPclyFwvdq+SgkfO0jeCwOdL0JweQCDwTp6p6?=
+ =?us-ascii?Q?MQ6yk7Hucxz6THEU+WKiXAzN9xs+emlp2TKLygVM34GXBQ+0Rz3dTi9wOFG/?=
+ =?us-ascii?Q?+jTV/Z57yZ/o01396iS7m5NCjnsso9r8L2BQL6Iuo5zDdf4/mTkDD3th/EMm?=
+ =?us-ascii?Q?VNXkZNiTWwhr0Hv+ACRwPqHl6YPjVQmLkNR8Kz+0gQENBln5WQCZIFeP4CIB?=
+ =?us-ascii?Q?/uPbeaHXtbCWgueddCsOM1vsfN5uFKyayA2F+6EdNtjhnk+wGfWBkIpg94SM?=
+ =?us-ascii?Q?+TbQenTkRVNaOMs416B6R9doPoXk9i5IkZMlEXeJzL3tOmBwUJGi5bHnJM9D?=
+ =?us-ascii?Q?ZN1T9IZ6evSHnx1YXKmzm2xKmhDaBGG1q2rKIqq8cb21KYHQm7P29KFcvyOP?=
+ =?us-ascii?Q?TlvRrzkuIymIRbsNEbNsZDhyDXOoP3FgmC1IowRKt8n1ep929kJirsAD58a8?=
+ =?us-ascii?Q?3zzaFaiX+9M7ddbYKos83iSWkzTAd+fve57GCVD1+0+sOef/asusk6XPUDBF?=
+ =?us-ascii?Q?NMAT54BPLpEHOhqAhjD2vf5IQ3T1+hKRDuN5NjeT3FHd5+3W12vnccTXKN8p?=
+ =?us-ascii?Q?Ym8gD6Ls3pNXDMEzDCMD5v3HohCEx2V5/Bf4iCmd3q1+twe5J75bm2x4dfFN?=
+ =?us-ascii?Q?vzHTgSHFF9xTSmLnnfmK7kejAcW2JdM46lM4PQtfyEovMuu8BXpQ1OY/s4jF?=
+ =?us-ascii?Q?9vKZRf1NjZ6JlFpbWTyeDhcc0VDfro9La7oUrypFNw7Hk+Hzql77JUg17mJS?=
+ =?us-ascii?Q?lmQ14aWsJM/L8zQg2H7f8za3uB+MqWDwWqYADrR7ntsFBoxytjF3pm9B2YOW?=
+ =?us-ascii?Q?RjzfnmbQWUVP/N3asYkVSRQdun5OerI9zEgaSvTheHFAN1UsCIQ/8A8mMzk8?=
+ =?us-ascii?Q?i2UDiOIF9ZZ4OJa6JzQLSyxqJct0zh8i+r949KC2?=
+X-OriginatorOrg: garyguo.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1ddfebd-59cd-4508-5f17-08de30f1983d
+X-MS-Exchange-CrossTenant-AuthSource: LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2025 15:52:13.4113
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: u4kXx0u3rR3zZpOc/2BkBe44T7o86gBgAmAjb+Sd1KEUa8dhp45dCM6WuHnet5tItAL8ez3d9WYCRvhvAz3LUA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWLP265MB5849
+
+On Mon, 17 Nov 2025 10:07:40 +0000
+Oliver Mangold <oliver.mangold@pm.me> wrote:
+
+> From: Asahi Lina <lina+kernel@asahilina.net>
+> 
+> By analogy to `AlwaysRefCounted` and `ARef`, an `Ownable` type is a
+> (typically C FFI) type that *may* be owned by Rust, but need not be. Unlike
+> `AlwaysRefCounted`, this mechanism expects the reference to be unique
+> within Rust, and does not allow cloning.
+> 
+> Conceptually, this is similar to a `KBox<T>`, except that it delegates
+> resource management to the `T` instead of using a generic allocator.
+> 
+> [ om:
+>   - Split code into separate file and `pub use` it from types.rs.
+>   - Make from_raw() and into_raw() public.
+>   - Remove OwnableMut, and make DerefMut dependent on Unpin instead.
+>   - Usage example/doctest for Ownable/Owned.
+>   - Fixes to documentation and commit message.
+> ]
+> 
+> Link: https://lore.kernel.org/all/20250202-rust-page-v1-1-e3170d7fe55e@asahilina.net/
+> Signed-off-by: Asahi Lina <lina+kernel@asahilina.net>
+> Co-developed-by: Oliver Mangold <oliver.mangold@pm.me>
+> Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
+> Co-developed-by: Andreas Hindborg <a.hindborg@kernel.org>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  rust/kernel/lib.rs       |   1 +
+>  rust/kernel/owned.rs     | 195 +++++++++++++++++++++++++++++++++++++++++++++++
+>  rust/kernel/sync/aref.rs |   5 ++
+>  rust/kernel/types.rs     |   2 +
+>  4 files changed, 203 insertions(+)
+> 
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index 3dd7bebe7888..e0ee04330dd0 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -112,6 +112,7 @@
+>  pub mod of;
+>  #[cfg(CONFIG_PM_OPP)]
+>  pub mod opp;
+> +pub mod owned;
+>  pub mod page;
+>  #[cfg(CONFIG_PCI)]
+>  pub mod pci;
+> diff --git a/rust/kernel/owned.rs b/rust/kernel/owned.rs
+> new file mode 100644
+> index 000000000000..a2cdd2cb8a10
+> --- /dev/null
+> +++ b/rust/kernel/owned.rs
+> @@ -0,0 +1,195 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Unique owned pointer types for objects with custom drop logic.
+> +//!
+> +//! These pointer types are useful for C-allocated objects which by API-contract
+> +//! are owned by Rust, but need to be freed through the C API.
+> +
+> +use core::{
+> +    mem::ManuallyDrop,
+> +    ops::{Deref, DerefMut},
+> +    pin::Pin,
+> +    ptr::NonNull,
+> +};
+> +
+> +/// Type allocated and destroyed on the C side, but owned by Rust.
+
+The example given in the documentation below shows a valid way of
+defining a type that's handled on the Rust side, so I think this
+message is somewhat inaccurate.
+
+Perhaps something like
+
+	Types that specify their own way of performing allocation and
+	destruction. Typically, this trait is implemented on types from
+	the C side.
+
+?
+
+> +///
+> +/// Implementing this trait allows types to be referenced via the [`Owned<Self>`] pointer type. This
+> +/// is useful when it is desirable to tie the lifetime of the reference to an owned object, rather
+> +/// than pass around a bare reference. [`Ownable`] types can define custom drop logic that is
+> +/// executed when the owned reference [`Owned<Self>`] pointing to the object is dropped.
+> +///
+> +/// Note: The underlying object is not required to provide internal reference counting, because it
+> +/// represents a unique, owned reference. If reference counting (on the Rust side) is required,
+> +/// [`AlwaysRefCounted`](crate::types::AlwaysRefCounted) should be implemented.
+> +///
+> +/// # Safety
+> +///
+> +/// Implementers must ensure that the [`release()`](Self::release) function frees the underlying
+> +/// object in the correct way for a valid, owned object of this type.
+> +///
+> +/// # Examples
+> +///
+> +/// A minimal example implementation of [`Ownable`] and its usage with [`Owned`] looks like this:
+> +///
+> +/// ```
+> +/// # #![expect(clippy::disallowed_names)]
+> +/// # use core::cell::Cell;
+> +/// # use core::ptr::NonNull;
+> +/// # use kernel::sync::global_lock;
+> +/// # use kernel::alloc::{flags, kbox::KBox, AllocError};
+> +/// # use kernel::types::{Owned, Ownable};
+> +///
+> +/// // Let's count the allocations to see if freeing works.
+> +/// kernel::sync::global_lock! {
+> +///     // SAFETY: we call `init()` right below, before doing anything else.
+> +///     unsafe(uninit) static FOO_ALLOC_COUNT: Mutex<usize> = 0;
+> +/// }
+> +/// // SAFETY: We call `init()` only once, here.
+> +/// unsafe { FOO_ALLOC_COUNT.init() };
+> +///
+> +/// struct Foo {
+> +/// }
+> +///
+> +/// impl Foo {
+> +///     fn new() -> Result<Owned<Self>, AllocError> {
+> +///         // We are just using a `KBox` here to handle the actual allocation, as our `Foo` is
+> +///         // not actually a C-allocated object.
+> +///         let result = KBox::new(
+> +///             Foo {},
+> +///             flags::GFP_KERNEL,
+> +///         )?;
+> +///         let result = NonNull::new(KBox::into_raw(result))
+> +///             .expect("Raw pointer to newly allocation KBox is null, this should never happen.");
+> +///         // Count new allocation
+> +///         *FOO_ALLOC_COUNT.lock() += 1;
+> +///         // SAFETY: We just allocated the `Self`, thus it is valid and there cannot be any other
+> +///         // Rust references. Calling `into_raw()` makes us responsible for ownership and we won't
+> +///         // use the raw pointer anymore. Thus we can transfer ownership to the `Owned`.
+> +///         Ok(unsafe { Owned::from_raw(result) })
+> +///     }
+> +/// }
+> +///
+> +/// // SAFETY: What out `release()` function does is safe of any valid `Self`.
+
+I can't parse this sentence. Is "out" supposed to be a different word?
+
+> +/// unsafe impl Ownable for Foo {
+> +///     unsafe fn release(this: NonNull<Self>) {
+> +///         // The `Foo` will be dropped when `KBox` goes out of scope.
+
+I would just write `drop(unsafe { ... })` to make drop explicit instead
+of commenting about the implicit drop.
+
+> +///         // SAFETY: The [`KBox<Self>`] is still alive. We can pass ownership to the [`KBox`], as
+> +///         // by requirement on calling this function, the `Self` will no longer be used by the
+> +///         // caller.
+> +///         unsafe { KBox::from_raw(this.as_ptr()) };
+> +///         // Count released allocation
+> +///         *FOO_ALLOC_COUNT.lock() -= 1;
+> +///     }
+> +/// }
+> +///
+> +/// {
+> +///    let foo = Foo::new().expect("Failed to allocate a Foo. This shouldn't happen");
+> +///    assert!(*FOO_ALLOC_COUNT.lock() == 1);
+> +/// }
+> +/// // `foo` is out of scope now, so we expect no live allocations.
+> +/// assert!(*FOO_ALLOC_COUNT.lock() == 0);
+> +/// ```
+> +pub unsafe trait Ownable {
+> +    /// Releases the object.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers must ensure that:
+> +    /// - `this` points to a valid `Self`.
+> +    /// - `*this` is no longer used after this call.
+> +    unsafe fn release(this: NonNull<Self>);
+> +}
+> +
+> +/// An owned reference to an owned `T`.
+> +///
+> +/// The [`Ownable`] is automatically freed or released when an instance of [`Owned`] is
+> +/// dropped.
+> +///
+> +/// # Invariants
+> +///
+> +/// - The [`Owned<T>`] has exclusive access to the instance of `T`.
+> +/// - The instance of `T` will stay alive at least as long as the [`Owned<T>`] is alive.
+> +pub struct Owned<T: Ownable> {
+> +    ptr: NonNull<T>,
+> +}
+> +
+> +// SAFETY: It is safe to send an [`Owned<T>`] to another thread when the underlying `T` is [`Send`],
+> +// because of the ownership invariant. Sending an [`Owned<T>`] is equivalent to sending the `T`.
+> +unsafe impl<T: Ownable + Send> Send for Owned<T> {}
+> +
+> +// SAFETY: It is safe to send [`&Owned<T>`] to another thread when the underlying `T` is [`Sync`],
+> +// because of the ownership invariant. Sending an [`&Owned<T>`] is equivalent to sending the `&T`.
+> +unsafe impl<T: Ownable + Sync> Sync for Owned<T> {}
+> +
+> +impl<T: Ownable> Owned<T> {
+> +    /// Creates a new instance of [`Owned`].
+> +    ///
+> +    /// It takes over ownership of the underlying object.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers must ensure that:
+> +    /// - `ptr` points to a valid instance of `T`.
+> +    /// - Ownership of the underlying `T` can be transferred to the `Self<T>` (i.e. operations
+> +    ///   which require ownership will be safe).
+> +    /// - No other Rust references to the underlying object exist. This implies that the underlying
+> +    ///   object is not accessed through `ptr` anymore after the function call (at least until the
+> +    ///   the `Self<T>` is dropped.
+
+Is this correct? If `Self<T>` is dropped then `T::release` is called so
+the pointer should also not be accessed further?
+
+> +    /// - The C code follows the usual shared reference requirements. That is, the kernel will never
+> +    ///   mutate or free the underlying object (excluding interior mutability that follows the usual
+> +    ///   rules) while Rust owns it.
+
+The concept "interior mutability" doesn't really exist on the C side.
+Also, use of interior mutability (by UnsafeCell) would be incorrect if
+the type is implemented in the rust side (as this requires a
+UnsafePinned).
+
+Interior mutability means things can be mutated behind a shared
+reference -- however in this case, we have a mutable reference (either
+`Pin<&mut Self>` or `&mut Self`)!
+
+Perhaps together with the next line, they could be just phrased like
+this?
+
+- The underlying object must not be accessed (read or mutated) through
+  any pointer other than the created `Owned<T>`.
+  Opt-out is still possbile similar to a mutable reference (e.g. by
+  using p`Opaque`]). 
+
+I think we should just tell the user "this is just a unique reference
+similar to &mut". They should be able to deduce that all the `!Unpin`
+that opts out from uniqueness of mutable reference applies here too.
 
 
+> +    /// - In case `T` implements [`Unpin`] the previous requirement is extended from shared to
+> +    ///   mutable reference requirements. That is, the kernel will not mutate or free the underlying
+> +    ///   object and is okay with it being modified by Rust code.
 
-在 2025/11/27 20:56, Zhu Yanjun 写道:
-> 
-> 在 2025/11/26 11:35, David Matlack 写道:
->> This series adds the base support to preserve a VFIO device file across
->> a Live Update. "Base support" means that this allows userspace to
->> safetly preserve a VFIO device file with LIVEUPDATE_SESSION_PRESERVE_FD
->> and retrieve a preserved VFIO device file with
->> LIVEUPDATE_SESSION_RETRIEVE_FD, but the device itself is not preserved
->> in a fully running state across Live Update.
->>
->> This series unblocks 2 parallel but related streams of work:
->>
->>   - iommufd preservation across Live Update. This work spans iommufd,
->>     the IOMMU subsystem, and IOMMU drivers [1]
->>
->>   - Preservation of VFIO device state across Live Update (config space,
->>     BAR addresses, power state, SR-IOV state, etc.). This work spans both
->>     VFIO and the core PCI subsystem.
->>
->> While we need all of the above to fully preserve a VFIO device across a
->> Live Update without disrupting the workload on the device, this series
->> aims to be functional and safe enough to merge as the first incremental
->> step toward that goal.
->>
->> Areas for Discussion
->> --------------------
->>
->> BDF Stability across Live Update
->>
->>    The PCI support for tracking preserved devices across a Live Update to
->>    prevent auto-probing relies on PCI segment numbers and BDFs remaining
->>    stable. For now I have disallowed VFs, as the BDFs assigned to VFs can
->>    vary depending on how the kernel chooses to allocate bus numbers. For
->>    non-VFs I am wondering if there is any more needed to ensure BDF
->>    stability across Live Update.
->>
->>    While we would like to support many different systems and
->>    configurations in due time (including preserving VFs), I'd like to
->>    keep this first serses constrained to simple use-cases.
->>
->> FLB Locking
->>
->>    I don't see a way to properly synchronize pci_flb_finish() with
->>    pci_liveupdate_incoming_is_preserved() since the incoming FLB mutex is
->>    dropped by liveupdate_flb_get_incoming() when it returns the pointer
->>    to the object, and taking pci_flb_incoming_lock in pci_flb_finish()
->>    could result in a deadlock due to reversing the lock ordering.
->>
->> FLB Retrieving
->>
->>    The first patch of this series includes a fix to prevent an FLB from
->>    being retrieved again it is finished. I am wondering if this is the
->>    right approach or if subsystems are expected to stop calling
->>    liveupdate_flb_get_incoming() after an FLB is finished.
->>
->> Testing
->> -------
->>
->> The patches at the end of this series provide comprehensive selftests
->> for the new code added by this series. The selftests have been validated
->> in both a VM environment using a virtio-net PCIe device, and in a
->> baremetal environment on an Intel EMR server with an Intel DSA device.
->>
->> Here is an example of how to run the new selftests:
-> 
-> Hi, David
-> 
-> ERROR: modpost: "liveupdate_register_file_handler" [drivers/vfio/pci/ 
-> vfio-pci-core.ko] undefined!
-> 
-> ERROR: modpost: "vfio_pci_ops" [drivers/vfio/pci/vfio-pci-core.ko] 
-> undefined!
-> ERROR: modpost: "liveupdate_enabled" [drivers/vfio/pci/vfio-pci-core.ko] 
-> undefined!
-> ERROR: modpost: "liveupdate_unregister_file_handler" [drivers/vfio/pci/ 
-> vfio-pci-core.ko] undefined!
-> ERROR: modpost: "vfio_device_fops" [drivers/vfio/pci/vfio-pci-core.ko] 
-> undefined!
-> ERROR: modpost: "vfio_pci_is_intel_display" [drivers/vfio/pci/vfio-pci- 
-> core.ko] undefined!
-> ERROR: modpost: "vfio_pci_liveupdate_init" [drivers/vfio/pci/vfio- 
-> pci.ko] undefined!
-> ERROR: modpost: "vfio_pci_liveupdate_cleanup" [drivers/vfio/pci/vfio- 
-> pci.ko] undefined!
-> make[4]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
-> make[3]: *** [Makefile:1960: modpost] Error 2
-> 
-> After I git clone the source code from the link https://github.com/ 
-> dmatlack/linux/tree/liveupdate/vfio/cdev/v1,
-> 
-> I found the above errors when I built the source code.
-> 
-> Perhaps the above errors can be solved by EXPORT_SYMBOL.
-> 
-> But I am not sure if a better solution can solve the above problems or not.
+- If `T` implements [`Unpin`], the structure must not be mutated for
+  the entire lifetime of `Owned<T>`.
 
-I reviewed this patch series in detail. If I’m understanding it 
-correctly, there appears to be a cyclic dependency issue. Specifically, 
-some functions in kernel module A depend on kernel module B, while at 
-the same time certain functions in module B depend on module A.
+> +    pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
 
-I’m not entirely sure whether this constitutes a real problem or if it’s 
-intentional design.
+This needs a (rather trivial) INVARIANT comment.
 
-Yanjun.Zhu
+> +        Self {
+> +            ptr,
+> +        }
+> +    }
+> +
+> +    /// Consumes the [`Owned`], returning a raw pointer.
+> +    ///
+> +    /// This function does not actually relinquish ownership of the object. After calling this
 
-> 
-> Thanks,
-> 
-> Yanjun.Zhu
-> 
->>
->> vfio_pci_liveupdate_uapi_test:
->>
->>    $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
->>    $ tools/testing/selftests/vfio/vfio_pci_liveupdate_uapi_test 
->> 0000:00:04.0
->>    $ tools/testing/selftests/vfio/scripts/cleanup.sh
->>
->> vfio_pci_liveupdate_kexec_test:
->>
->>    $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
->>    $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test -- 
->> stage 1 0000:00:04.0
->>    $ kexec [...]  # NOTE: distro-dependent
->>
->>    $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
->>    $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test -- 
->> stage 2 0000:00:04.0
->>    $ tools/testing/selftests/vfio/scripts/cleanup.sh
->>
->> Dependencies
->> ------------
->>
->> This series was constructed on top of several in-flight series and on
->> top of mm-nonmm-unstable [2].
->>
->>    +-- This series
->>    |
->>    +-- [PATCH v2 00/18] vfio: selftests: Support for multi-device tests
->>    |    https://lore.kernel.org/kvm/20251112192232.442761-1- 
->> dmatlack@google.com/
->>    |
->>    +-- [PATCH v3 0/4] vfio: selftests: update DMA mapping tests to use 
->> queried IOVA ranges
->>    |   https://lore.kernel.org/kvm/20251111-iova-ranges- 
->> v3-0-7960244642c5@fb.com/
->>    |
->>    +-- [PATCH v8 0/2] Live Update: File-Lifecycle-Bound (FLB) State
->>    |   https://lore.kernel.org/linux-mm/20251125225006.3722394-1- 
->> pasha.tatashin@soleen.com/
->>    |
->>    +-- [PATCH v8 00/18] Live Update Orchestrator
->>    |   https://lore.kernel.org/linux-mm/20251125165850.3389713-1- 
->> pasha.tatashin@soleen.com/
->>    |
->>
->> To simplify checking out the code, this series can be found on GitHub:
->>
->>    https://github.com/dmatlack/linux/tree/liveupdate/vfio/cdev/v1
->>
->> Changelog
->> ---------
->>
->> v1:
->>   - Rebase series on top of LUOv8 and VFIO selftests improvements
->>   - Drop commits to preserve config space fields across Live Update.
->>     These changes require changes to the PCI layer. For exmaple,
->>     preserving rbars could lead to an inconsistent device state until
->>     device BARs addresses are preserved across Live Update.
->>   - Drop commits to preserve Bus Master Enable on the device. There's no
->>     reason to preserve this until iommufd preservation is fully working.
->>     Furthermore, preserving Bus Master Enable could lead to memory
->>     corruption when the device if the device is bound to the default
->>     identity-map domain after Live Update.
->>   - Drop commits to preserve saved PCI state. This work is not needed
->>     until we are ready to preserve the device's config space, and
->>     requires more thought to make the PCI state data layout ABI-friendly.
->>   - Add support to skip auto-probing devices that are preserved by VFIO
->>     to avoid them getting bound to a different driver by the next kernel.
->>   - Restrict device preservation further (no VFs, no intel-graphics).
->>   - Various refactoring and small edits to improve readability and
->>     eliminate code duplication.
->>
->> rfc: https://lore.kernel.org/kvm/20251018000713.677779-1- 
->> vipinsh@google.com/
->>
->> Cc: Saeed Mahameed <saeedm@nvidia.com>
->> Cc: Adithya Jayachandran <ajayachandra@nvidia.com>
->> Cc: Jason Gunthorpe <jgg@nvidia.com>
->> Cc: Parav Pandit <parav@nvidia.com>
->> Cc: Leon Romanovsky <leonro@nvidia.com>
->> Cc: William Tu <witu@nvidia.com>
->> Cc: Jacob Pan <jacob.pan@linux.microsoft.com>
->> Cc: Lukas Wunner <lukas@wunner.de>
->> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
->> Cc: Mike Rapoport <rppt@kernel.org>
->> Cc: Pratyush Yadav <pratyush@kernel.org>
->> Cc: Samiullah Khawaja <skhawaja@google.com>
->> Cc: Chris Li <chrisl@kernel.org>
->> Cc: Josh Hilke <jrhilke@google.com>
->> Cc: David Rientjes <rientjes@google.com>
->>
->> [1] https://lore.kernel.org/linux-iommu/20250928190624.3735830-1- 
->> skhawaja@google.com/
->> [2] https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/log/? 
->> h=mm-nonmm-unstable
->>
->> David Matlack (12):
->>    liveupdate: luo_flb: Prevent retrieve() after finish()
->>    PCI: Add API to track PCI devices preserved across Live Update
->>    PCI: Require driver_override for incoming Live Update preserved
->>      devices
->>    vfio/pci: Notify PCI subsystem about devices preserved across Live
->>      Update
->>    vfio: Enforce preserved devices are retrieved via
->>      LIVEUPDATE_SESSION_RETRIEVE_FD
->>    vfio/pci: Store Live Update state in struct vfio_pci_core_device
->>    vfio: selftests: Add Makefile support for TEST_GEN_PROGS_EXTENDED
->>    vfio: selftests: Add vfio_pci_liveupdate_uapi_test
->>    vfio: selftests: Expose iommu_modes to tests
->>    vfio: selftests: Expose low-level helper routines for setting up
->>      struct vfio_pci_device
->>    vfio: selftests: Verify that opening VFIO device fails during Live
->>      Update
->>    vfio: selftests: Add continuous DMA to vfio_pci_liveupdate_kexec_test
->>
->> Vipin Sharma (9):
->>    vfio/pci: Register a file handler with Live Update Orchestrator
->>    vfio/pci: Preserve vfio-pci device files across Live Update
->>    vfio/pci: Retrieve preserved device files after Live Update
->>    vfio/pci: Skip reset of preserved device after Live Update
->>    selftests/liveupdate: Move luo_test_utils.* into a reusable library
->>    selftests/liveupdate: Add helpers to preserve/retrieve FDs
->>    vfio: selftests: Build liveupdate library in VFIO selftests
->>    vfio: selftests: Initialize vfio_pci_device using a VFIO cdev FD
->>    vfio: selftests: Add vfio_pci_liveupdate_kexec_test
->>
->>   MAINTAINERS                                   |   1 +
->>   drivers/pci/Makefile                          |   1 +
->>   drivers/pci/liveupdate.c                      | 248 ++++++++++++++++
->>   drivers/pci/pci-driver.c                      |  12 +-
->>   drivers/vfio/device_cdev.c                    |  25 +-
->>   drivers/vfio/group.c                          |   9 +
->>   drivers/vfio/pci/Makefile                     |   1 +
->>   drivers/vfio/pci/vfio_pci.c                   |  11 +-
->>   drivers/vfio/pci/vfio_pci_core.c              |  23 +-
->>   drivers/vfio/pci/vfio_pci_liveupdate.c        | 278 ++++++++++++++++++
->>   drivers/vfio/pci/vfio_pci_priv.h              |  16 +
->>   drivers/vfio/vfio.h                           |  13 -
->>   drivers/vfio/vfio_main.c                      |  22 +-
->>   include/linux/kho/abi/pci.h                   |  53 ++++
->>   include/linux/kho/abi/vfio_pci.h              |  45 +++
->>   include/linux/liveupdate.h                    |   3 +
->>   include/linux/pci.h                           |  38 +++
->>   include/linux/vfio.h                          |  51 ++++
->>   include/linux/vfio_pci_core.h                 |   7 +
->>   kernel/liveupdate/luo_flb.c                   |   4 +
->>   tools/testing/selftests/liveupdate/.gitignore |   1 +
->>   tools/testing/selftests/liveupdate/Makefile   |  14 +-
->>   .../include/libliveupdate.h}                  |  11 +-
->>   .../selftests/liveupdate/lib/libliveupdate.mk |  20 ++
->>   .../{luo_test_utils.c => lib/liveupdate.c}    |  43 ++-
->>   .../selftests/liveupdate/luo_kexec_simple.c   |   2 +-
->>   .../selftests/liveupdate/luo_multi_session.c  |   2 +-
->>   tools/testing/selftests/vfio/Makefile         |  23 +-
->>   .../vfio/lib/include/libvfio/iommu.h          |   2 +
->>   .../lib/include/libvfio/vfio_pci_device.h     |   8 +
->>   tools/testing/selftests/vfio/lib/iommu.c      |   4 +-
->>   .../selftests/vfio/lib/vfio_pci_device.c      |  60 +++-
->>   .../vfio/vfio_pci_liveupdate_kexec_test.c     | 255 ++++++++++++++++
->>   .../vfio/vfio_pci_liveupdate_uapi_test.c      |  93 ++++++
->>   34 files changed, 1313 insertions(+), 86 deletions(-)
->>   create mode 100644 drivers/pci/liveupdate.c
->>   create mode 100644 drivers/vfio/pci/vfio_pci_liveupdate.c
->>   create mode 100644 include/linux/kho/abi/pci.h
->>   create mode 100644 include/linux/kho/abi/vfio_pci.h
->>   rename tools/testing/selftests/liveupdate/{luo_test_utils.h => lib/ 
->> include/libliveupdate.h} (80%)
->>   create mode 100644 tools/testing/selftests/liveupdate/lib/ 
->> libliveupdate.mk
->>   rename tools/testing/selftests/liveupdate/{luo_test_utils.c => lib/ 
->> liveupdate.c} (89%)
->>   create mode 100644 tools/testing/selftests/vfio/ 
->> vfio_pci_liveupdate_kexec_test.c
->>   create mode 100644 tools/testing/selftests/vfio/ 
->> vfio_pci_liveupdate_uapi_test.c
->>
+Perhaps "relinquish" isn't the best word here? In my mental model
+this function is pretty much relinquishing ownership as `Owned<T>` no
+longer exists. It just doesn't release the object.
 
--- 
-Best Regards,
-Yanjun.Zhu
+> +    /// function, the caller is responsible for ownership previously managed
+> +    /// by the [`Owned`].
+> +    pub fn into_raw(me: Self) -> NonNull<T> {
+> +        ManuallyDrop::new(me).ptr
+> +    }
+> +
+> +    /// Get a pinned mutable reference to the data owned by this `Owned<T>`.
+> +    pub fn get_pin_mut(&mut self) -> Pin<&mut T> {
+> +        // SAFETY: The type invariants guarantee that the object is valid, and that we can safely
+> +        // return a mutable reference to it.
+> +        let unpinned = unsafe { self.ptr.as_mut() };
+> +
+> +        // SAFETY: We never hand out unpinned mutable references to the data in
+> +        // `Self`, unless the contained type is `Unpin`.
+> +        unsafe { Pin::new_unchecked(unpinned) }
+> +    }
+> +}
+
+Best,
+Gary
+
 
 
