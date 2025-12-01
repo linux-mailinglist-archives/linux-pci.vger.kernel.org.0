@@ -1,106 +1,104 @@
-Return-Path: <linux-pci+bounces-42364-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42366-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 036ECC97747
-	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 14:02:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4337DC978C1
+	for <lists+linux-pci@lfdr.de>; Mon, 01 Dec 2025 14:18:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63DD83A0FD3
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 12:56:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0EE33A9977
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Dec 2025 13:11:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 017382F5A28;
-	Mon,  1 Dec 2025 12:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A51BF30FC39;
+	Mon,  1 Dec 2025 13:09:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="JFD1/qPQ"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LmEAuJIA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE31B30DEC8
-	for <linux-pci@vger.kernel.org>; Mon,  1 Dec 2025 12:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E592F2603;
+	Mon,  1 Dec 2025 13:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764593779; cv=none; b=KqQOR3yW4t5BlYAViup/+/ti0YIF4ucG5rdSmX/QCQeUZLcAEylIm/z50/3nlHT4R/Sed3wh3GBiM2l6cn7op32m+MG4b9hnQsh2NJjECHUJOutqSr2tDIAT5xiwWx5Mzlmj9aN7psdB+ubb8JJZ7jCDDj17ryPZRDxqXA+3TRE=
+	t=1764594599; cv=none; b=F2s1h4dGpFLD+FCSQLqelVJaTgOezOvtqu/xNwm8o3AYmoSLZW/kDtlvhqyrvIsuMFqfNY8H9y8YsZthSr76kcPRhSyaQqgZHIk/+Y/YKo/85IPWlTgUSr5821aHtrufJxE1KIR8ltUdcMhVYGeYOEM/P9nZmiN3CD/TXZDrz1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764593779; c=relaxed/simple;
-	bh=GAP2xMHkHqaBfkFB94IisYBWx2GIIvZhS7tNMKXpImg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O3V8dN5U8vtsQbaXnA5vGICMrIxL5pBzeSJgpgDlprDVJ1A21VOn5e0mcydd1JZq6RwMLfWvd5yoEu1+jAERmotxZ+71SHQ4skiokTdk+SvXtsUbNopJLHCecUTY7x8YFzUR/a4GPHeRgBZdMeez2hvOcx6IXSNAxa/aMKFjCOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=JFD1/qPQ; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1764593772; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=tNfFxOjWQl6zEhCNLR1qyJDyReiS0qRLG188Vv0o2Xw=;
-	b=JFD1/qPQg81ctKr2lTXVN0WOSw42C10AkTkfzVO56NddbyxpfkWApKJ+1Y18inKYuEUiAc+GIFA68iyCpHYJO8FXbCi4E3xkIJtXH5BTsfMLNC1GQGelFYV05ZApP9GtdsuavLinWl/bCRsUHSBn7WNeiBGKSzSrkyYW7IifH6g=
-Received: from 30.221.129.232(mailfrom:guanghuifeng@linux.alibaba.com fp:SMTPD_---0WtrTiYr_1764593771 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 01 Dec 2025 20:56:12 +0800
-Message-ID: <969657a9-ea6b-44a8-a06c-c2af52212493@linux.alibaba.com>
-Date: Mon, 1 Dec 2025 20:56:10 +0800
+	s=arc-20240116; t=1764594599; c=relaxed/simple;
+	bh=zg2mBZ9w8LQ344DKjJnn30Gx+/5hAbRUGgtojX6y6sg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ljgVl1f9R8dQqt49xYZBWcLQ6Rw00G6m0URko2Lg09kSs2XSmLWvCc81HYRlchizVL6kKRcVFwjZrxw3lFvqKO44orfS11zoY7LALFRcLx8mOYLxu9HcdXQ6lmHF7yEfKRMf+AQYIDS7SqGWddswZIoZAHnjaNsSLYIAHMH5iNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=LmEAuJIA; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version:
+	Content-Type; bh=zg2mBZ9w8LQ344DKjJnn30Gx+/5hAbRUGgtojX6y6sg=;
+	b=LmEAuJIAIde6QXYHQ81OHgJz/63qNbztwo7RKc9HSU2kL+6HQUmsIwmwTzY61b
+	24JKl6HgbWpx+FHYgqa1uOXnjRjezS2c/iu7CqODxB3RUNKIQPe7mFVaHkM4W2OW
+	RCQMMEfJL2NStEMEqXO59/rG6HG9VW+iDV9WWWRP4ck+A=
+Received: from emily-VMware-Virtual-Platform.. (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wBHrZAvky1pnbQPDw--.3674S2;
+	Mon, 01 Dec 2025 21:08:01 +0800 (CST)
+From: huyuye <huyuye812@163.com>
+To: sunilvl@ventanamicro.com
+Cc: ajones@ventanamicro.com,
+	anup@brainfault.org,
+	aou@eecs.berkeley.edu,
+	atishp@rivosinc.com,
+	bhelgaas@google.com,
+	catalin.marinas@arm.com,
+	conor.dooley@microchip.com,
+	dfustini@tenstorrent.com,
+	haibo1.xu@intel.com,
+	lenb@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	palmer@dabbelt.com,
+	rafael@kernel.org,
+	robert.moore@intel.com,
+	samuel.holland@sifive.com,
+	tglx@linutronix.de,
+	will@kernel.org,
+	dai.hualiang@zte.com.cn,
+	deng.weixian@zte.com.cn,
+	guo.chang2@zte.com.cn,
+	liu.qingtao2@zte.com.cn,
+	wu.jiabao@zte.com.cn,
+	lin.yongchun@zte.com.cn,
+	hu.yuye@zte.com.cn,
+	zhang.longxiang@zte.com.cn,
+	huyuye <huyuye812@163.com>
+Subject: Re:[PATCH v7 08/17] ACPI: pci_link: Clear the dependencies after probe
+Date: Mon,  1 Dec 2025 21:07:55 +0800
+Message-ID: <20251201130757.7032-1-huyuye812@163.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240729142241.733357-9-sunilvl@ventanamicro.com>
+References: <20240729142241.733357-9-sunilvl@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Fix PCIe SBR dev/link wait error
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci
- <linux-pci@vger.kernel.org>, kanie <kanie@linux.alibaba.com>,
- alikernel-developer <alikernel-developer@linux.alibaba.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-References: <20251124104502.777141-1-guanghuifeng@linux.alibaba.com>
- <20251124235858.GA2726643@bhelgaas>
- <a4a2a5ee-1f4e-4560-b8cf-c9c10ae475dd.guanghuifeng@linux.alibaba.com>
- <aS1oArFHeo9FAuv-@wunner.de>
-From: "guanghuifeng@linux.alibaba.com" <guanghuifeng@linux.alibaba.com>
-In-Reply-To: <aS1oArFHeo9FAuv-@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBHrZAvky1pnbQPDw--.3674S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7JFyUZF13Kw4xAry7Cw48WFg_yoWxZFbEgr
+	n5AFyDZw4ftw17Gry3WF97JFW3K3y29r9xGa4xXrZ7Gw4fAa1DCan7Cr12vr15GF4xGr4a
+	kr15uw47GwsI9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7VUjVOptUUUUU==
+X-CM-SenderInfo: 5kx135bhyrjqqrwthudrp/xtbBzwgXCGktkDVHogAAsc
 
+Hi, sunilvl
 
-在 2025/12/1 18:03, Lukas Wunner 写道:
-> On Tue, Nov 25, 2025 at 02:20:10PM +0800, guanghui.fgh wrote:
->> After __pci_reset_slot/__pci_reset_bus calls
->> pci_bridge_wait_for_secondary_bus, the device will be restored via
->> pci_dev_restore. However, when a multifunction PCIe device is connected,
->> executing pci_bridge_wait_for_secondary_bus only guarantees the restoration
->> of a random device. For other devices that are still restoring, executing
->> pci_dev_restore cannot restore the device state normally, resulting in
->> errors or even device offline.
-> PCIe is point-to-point, i.e. at the two ends of a link there's only a
-> single physical device.  So if there are multiple pci_dev's on a bus,
-> they're additional functions or VFs of the same physical device.
->
-> The expectation is that if the first device on the bus is accessible,
-> all other functions of the same physical device are accessible as well.
-> That's why we only wait for the first device to become accessible.
->
-> It seems highly unusual that the different functions of the same physical
-> device require different delays until they're accessible.  I don't think
-> we can accept such a sweeping change wholesale without more details,
-> so please share what the topology looks like (lspci -tv), what devices are
-> involved (lspci -vvv) and which device requires extra wait time for some
-> of its functions.
->
-> Thanks,
->
-> Lukas
+Based on the above patch, I understand that you previously resolved dependencies between Link devices and PCI Host Bridges by calling acpi_dev_clear_dependencies(device). I would like to ask: on RISC‑V platforms, if we need to manage dependencies between multiple PCI Host Bridges, could this be addressed by adding a call to acpi_dev_clear_dependencies(device) at the end of the acpi_pci_root_add enumeration function?
 
-1. For PCIe end-to-end/point-to-point connections, PCIe multifunctions 
-do indeed share the same PCIe links/lanes.
-2. However, the functions within a PCIe multifunction device have 
-different functionalities and complexities.
+Initialization order dependencies can be defined via the ACPI _DEP method in the DSDT. For example, if host bridge B depends on host bridge A, bridge B should not be enumerated until bridge A is fully initialized.
 
-    During the hot reset process, each function requires a different 
-recovery time. Therefore, after confirming
-
-    that the PCIe links are functioning correctly, it is necessary to 
-further check to ensure that each function has completed its recovery.
+Best regards,
+Yuye
 
 
