@@ -1,185 +1,221 @@
-Return-Path: <linux-pci+bounces-42486-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42487-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B8EEC9BC52
-	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 15:24:12 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3740CC9BD9D
+	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 15:49:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0274E3490E0
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 14:23:50 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1EFFC4E115F
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 14:49:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F3E1325731;
-	Tue,  2 Dec 2025 14:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60CCE1F1534;
+	Tue,  2 Dec 2025 14:49:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NIdvMNWc";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="CmZpTjVN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QjJ7J0sQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353F232572D
-	for <linux-pci@vger.kernel.org>; Tue,  2 Dec 2025 14:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A669E19A2A3;
+	Tue,  2 Dec 2025 14:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764685400; cv=none; b=YFi4stwZNq6dzjiSH8e4b10vfBXBO/9Sob+ESiGT9wzEH3MvUaOPTvLqMaexHkUY8n1643VlverXg84qINChyq/CxT48d7hljcszNV6+yjkRQny0pxbT++LPS3GL3AhWt9TRb+07LHOavQTLa5G6nctyG2BsbyUVYAs8A7nz9M8=
+	t=1764686955; cv=none; b=QtDb6CBNUtGpkzXFPVruFNhZbwClunDZe6Qeo/7NSZA7tOBrVe0e9iAwWqNhWDLrGZZ+SCrh10YXPXuvxhxyfg+kiMd7NqOgCj2hbFTf6jnq5xHc7iByc2Ky+O850ba4wsaCIT96XbDLPhii1pa/PXs/SVMFLUauHekJv39VnZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764685400; c=relaxed/simple;
-	bh=pRTmIB6LMS2I/NMlLkQVrAoVSoFyYgoyBRTO1H+wJzk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UtLdlSFIICy+yIgy04g01gpvYkMJO1KHaNTshOHmF3rL78+qR1xB+Ae9d1+7YVL2mvtHupuSXuI9LL7ML0Yo39nswHNQwZJkLWJpdYkHHB2Oicg1hqQAL6tw0NjwzXf9luGS12x4OWdJr/hqlXZeoWR35g+txfy9aR2fZzJ/b8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NIdvMNWc; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=CmZpTjVN; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5B2AVdH03660575
-	for <linux-pci@vger.kernel.org>; Tue, 2 Dec 2025 14:23:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	QIIBjNvOJPz0nM8jdNic3VTJoyxgBAw5GlTLZa5uxBY=; b=NIdvMNWcCR/aQmkb
-	MqL6WBVnr3oz06JX+toYuEG71wniyOjm/mZRuSEixxKK0NTD4lovOmLzdA2HNg4o
-	obDxWEAPmNgGORQxULkxRwbIq/o2KKaCkfJv+pBVXCnXQ3aDnA0/oWMMSSv647Tb
-	TMfIoLmMGfC0xtPkQHubK1Tt/CyvE5a8ogIPHUh1Bu9jy1OCSwT2upFhJwxVLm40
-	er4qLIgumDnxyrOMXcpG4a6haiY9LkPPr6qSzNTi8m/fsx1R/ADboncP+74NyHlq
-	Xq6k85ebm62SdkMzvr5prP7wuY1xtC6YEnkwGBSFWfZMJ0CmmL6kGiuYSSmryFGj
-	Oeo8ew==
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4asxeegnsv-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Tue, 02 Dec 2025 14:23:16 +0000 (GMT)
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-7b4933bc4aeso4337547b3a.2
-        for <linux-pci@vger.kernel.org>; Tue, 02 Dec 2025 06:23:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1764685396; x=1765290196; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QIIBjNvOJPz0nM8jdNic3VTJoyxgBAw5GlTLZa5uxBY=;
-        b=CmZpTjVNk8AWdYF7bwFSKJRJnSmkwdWNboi7vq+X+H+oWUkPf/7eiaBme6iL0evxdI
-         EVHHm2lDcpY+zpMGJ9QbqM+cEG9xPRGn+0CoKhDaVHT2Pm396mwLypNyRN10e1ApEyr5
-         qnTv92YHeGNa+wQGSgsYpQHaNssQk5TqR99kxMWoAov0SLLAsg6NuDhmFnji5BptJdmd
-         ZEeOZ/WpxDV/U614ZmtFGx4rgF68Gr8F+8OZHTnlngnMBW/XLT3PmQaxKm3IY1GwZv/t
-         LpLe2RybGCthll0An3mCSXy5gt8N2lx8RJEOaEtkB6BUpzRVbP18rsgc32l3vsxNBJCc
-         SiLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764685396; x=1765290196;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QIIBjNvOJPz0nM8jdNic3VTJoyxgBAw5GlTLZa5uxBY=;
-        b=sUiCdZtvpeKVZ2w/HJSf7oAENWKOsWU7plDvyxbOr5FUPsFa3yzapbS4AFQKcn9Tfm
-         GUP2NpdpTZRRVRk7ifxKy2oTLPFGKKX7U4FfGf/d2sZtuHMyNgXVEueG05+8I8cBtIbe
-         3ru0X7OxCs5ZsjQ8CJ4DFGave6t5IzlQUhDUh8DwCjU0qxpFOtJsVAjiOVupNgUJaGxe
-         xhocCnJDfRANIdRbDpr7KLSScYDV9RSfjI1fOeUNE2YjfQ2qer7P66n46WjWAG6YaK8e
-         UJKKMDziqv7i5ER2/VVeU2k84Ba8j2yy5rcW3lywVnVBQQgtAkvlw34q647GZUZCsg2u
-         kS3A==
-X-Gm-Message-State: AOJu0YwwZJcZ4r8GjdnRB9Eid3J1IadmUnQsJC3cD460wdn4q1M3Z4sy
-	x2TBVVEFsfiqufF2+2rpmRTMOdhSugbu+0sGDyt3MqZtDXnbwM26RSMbGHUfy50IqHixjObiHmz
-	dwui8D4v1wSgOj66zAIE8s9UX1qCyb1+GeF+WPGylHFmmEvvZC7KE3FHPBx5wkmo=
-X-Gm-Gg: ASbGncvoCNIV0hod9/dKRm6BM4WWZ5ZPE2Iv+2q7Hkil+LfgD7XvPGR9QAaMa9dbHpT
-	l3KtmD74UDzZ/iX4Y20uEkPByXztlQ/OSTanAJXBSETPwA50GU04h0KvGi24CAtnDu82OU+oZLV
-	FzqXxNJJblhoqk9BdV9V88FtSjLnpRNkLLY1pU7XqL0mdZo4PqkcpbHKUPIlW3goE37vAlBSSOQ
-	w1b/2/kWAYh2+ut+lkjs4310XFkLnLp7b3wVCWJNV2HIyJSGFmRfkvML1ipGqFJ7FFMNa3/MwTj
-	KsSIviCC/rSWAfIa3QoIqBk3wNHYn8tP92TbG7Vu1YvV2kLwodqXf9KHbVxqAdo/RxtYprFpWG6
-	ejwmJygQXgkg3MdEyrXokQv9zOu+Wp0+z5p5WiZU=
-X-Received: by 2002:a05:6a20:a125:b0:341:e79b:9495 with SMTP id adf61e73a8af0-3637e0bd69fmr31557248637.54.1764685395928;
-        Tue, 02 Dec 2025 06:23:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEXg3DjQM/4ZIRpcDRT/tJi4qz/yVH4IAtQoIwviN0V/oe5Yh00yD0sJ44YqA3xpq26CgNZuw==
-X-Received: by 2002:a05:6a20:a125:b0:341:e79b:9495 with SMTP id adf61e73a8af0-3637e0bd69fmr31557219637.54.1764685395435;
-        Tue, 02 Dec 2025 06:23:15 -0800 (PST)
-Received: from [192.168.1.102] ([120.60.68.196])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-be5095a4821sm15659084a12.29.2025.12.02.06.23.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Dec 2025 06:23:15 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Date: Tue, 02 Dec 2025 19:52:51 +0530
-Subject: [PATCH v2 4/4] PCI: Extend the pci_disable_acs_sv quirk for one
- more IDT switch
+	s=arc-20240116; t=1764686955; c=relaxed/simple;
+	bh=Cl1k5I7XFkRThZI4D+HTvkvuadLAhicPx5RXTab3AAE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dM1uEpZamw5fxkwHTuj579izGSIyfsDPqjyfBJDPIUGpsBAr8nG83K/6PgDl/yORqp32o2PPe84JnOljNpfczcOOd2O5kMDHuWecmFSM50E/vNJYO5NDS+6kuoZ2FTeFFPgegYmB6KPR374h2A/E0dLiUxIPYkobVceNEyVsRgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QjJ7J0sQ; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764686954; x=1796222954;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Cl1k5I7XFkRThZI4D+HTvkvuadLAhicPx5RXTab3AAE=;
+  b=QjJ7J0sQM4G8ooFFwzNNtyaSeX2fMJAEVGzqftm4lQoiu/YZGmuQw4WN
+   IoVneX14Z8GUoFrUugEC8/wp6OcLtSD//uYXDIO2gQqBQa5cV0Hmk1k2K
+   AVAAsSb0QRolExNWfZskxdXumh4gikO/bqw1TUsdj5K6YCf1XtvI/ffSO
+   Ttme4kO3euhnpwlK2u4vObqRVaRlx4jG3geoL6Vxu3j10G4iBZE+wSZtm
+   GNWYASs8j0LHOFuGSRbj6SYlnTn2rKFbaEv7Hv8J5EnTQbCBmAXLFRYGm
+   Hl2h86BBGcO1yG6PCy/9qA9EkbnWgUJEVNJXaNh4q8tNkRaJVAwwd0H/b
+   Q==;
+X-CSE-ConnectionGUID: UmPZivXMS9a0Ar3TBpgM6g==
+X-CSE-MsgGUID: lyMhj+saQB+UZIbXTLb5Tw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11630"; a="84254301"
+X-IronPort-AV: E=Sophos;i="6.20,243,1758610800"; 
+   d="scan'208";a="84254301"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2025 06:49:12 -0800
+X-CSE-ConnectionGUID: qZsDMbeQRwuFhyaAK5ZcAQ==
+X-CSE-MsgGUID: QT4IPoTwQZCJjZbFD53fUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,243,1758610800"; 
+   d="scan'208";a="225356200"
+Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.111.202]) ([10.125.111.202])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2025 06:49:10 -0800
+Message-ID: <3c07161d-f1df-4409-a11c-b4a60afda226@intel.com>
+Date: Tue, 2 Dec 2025 07:49:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 10/27] NTB: core: Add .get_pci_epc() to ntb_dev_ops
+To: Koichiro Den <den@valinux.co.jp>
+Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, Frank.Li@nxp.com,
+ mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org,
+ bhelgaas@google.com, corbet@lwn.net, vkoul@kernel.org, jdmason@kudzu.us,
+ allenbh@gmail.com, Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
+ kurt.schwemmer@microsemi.com, logang@deltatee.com, jingoohan1@gmail.com,
+ lpieralisi@kernel.org, robh@kernel.org, jbrunet@baylibre.com,
+ fancer.lancer@gmail.com, arnd@arndb.de, pstanner@redhat.com,
+ elfring@users.sourceforge.net
+References: <20251129160405.2568284-1-den@valinux.co.jp>
+ <20251129160405.2568284-11-den@valinux.co.jp>
+ <8b209241-99a7-42c0-8025-e75a11176f1b@intel.com>
+ <f6jo2z4dnk23dun7g7d6d4ul2rw7do2cugb7jtq4tfb4vixzsw@lmpl5p4kqxc6>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <f6jo2z4dnk23dun7g7d6d4ul2rw7do2cugb7jtq4tfb4vixzsw@lmpl5p4kqxc6>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251202-pci_acs-v2-4-5d2759a71489@oss.qualcomm.com>
-References: <20251202-pci_acs-v2-0-5d2759a71489@oss.qualcomm.com>
-In-Reply-To: <20251202-pci_acs-v2-0-5d2759a71489@oss.qualcomm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux.dev, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Pavankumar Kondeti <quic_pkondeti@quicinc.com>,
-        Xingang Wang <wangxingang5@huawei.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1085;
- i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=pRTmIB6LMS2I/NMlLkQVrAoVSoFyYgoyBRTO1H+wJzk=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpLvZAherrBpCOwOposcs2baS4ADrcU3EnqXe/b
- RPhSEm4to+JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaS72QAAKCRBVnxHm/pHO
- 9boTB/4mlbW8TW6gVy8o/sK2KC32UFLRsRusBG+Y5HF7v5PnfVZjhehuZQqeWahB6SG8PnCnNMw
- p1vnghlQYA6p+k9uZBX7i8lvjrTHSfECP81eQX6mOTdd/SS7Q/bG5VkaSdJs0G0BmKOMonBiwCo
- tkJc6Bw58gWszhaKmKiioql2hYnCu1EZ/DL3tkCLQmoDdOXfdCWJB2TLgRnuxDZQYyTXQGMbKmc
- RHLwb9U9uX0DK6GBP9dlHYIq3XgDLJQ9F3sljaBUPu68lnZhQ/TJblV9XocY82GhQVbw2y5faTh
- f9OgdJktdiR0udcHpUW6jMF8aNAtqmC9uRgAr4HYTy/yvtS0
-X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
-X-Proofpoint-GUID: 67smYM5LJKGJYZJhkVG5t5vWRKp881W9
-X-Authority-Analysis: v=2.4 cv=TMRIilla c=1 sm=1 tr=0 ts=692ef654 cx=c_pps
- a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=8ziBJk15IZ5r+wOU3RLduA==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=2xi2RfK-dtapqwj757MA:9
- a=QEXdDO2ut3YA:10 a=OpyuDcXvxspvyRM73sMx:22
-X-Proofpoint-ORIG-GUID: 67smYM5LJKGJYZJhkVG5t5vWRKp881W9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjAyMDExNSBTYWx0ZWRfX9N/6e7CaLiuv
- 3J/6w02dEhxdE6RhhDWxdF6adq0mBj8DFYImAN/d1hfqk+bV01RNz1vaU0iwmQvshGfQxaLW3cI
- AL+X28bYhcZtRTgpG8FSdW5EQryqYBK3LcVB9CutxMB9W6KIqyE2LJg9XXoQ4dw0jD6RMe/XKiQ
- OcHaqhieVE7R33yVVI4EFagHOgeVwB3iIaOLOId00EpfX0X8XqHYR1ZO+WCou/LadL43gsDtoRF
- tWT8UqgNCrYenkGJ3mftNVZL1wyKUdYkQ7tNydVfTO0Kud+7PsxFb/ZcKPp71/XK/t4gdSUxuMc
- 5QhSHX36Bem/9gc6Pzq6cfaOTszulUQppWSOREHKoJDsEC35X4dr6lmPPaV4kG4rVXpelKu/FtR
- 1kILahII7hjdgRCNcwjE5x3IjRrTLw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-01_01,2025-11-27_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 phishscore=0 suspectscore=0 priorityscore=1501 spamscore=0
- clxscore=1015 bulkscore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512020115
 
-The IDT switch with Device ID 0x8090 used in the ARM Juno R2 development
-board incorrectly raises an ACS Source Validation error on Completions for
-Config Read Requests, even though PCIe r6.0, sec 6.12.1.1, says that
-Completions are never affected by ACS Source Validation.
 
-This is already handled by the pci_disable_acs_sv() quirk for one of the
-IDT switch 0x80b5. Hence, extend the quirk for this device too.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
----
- drivers/pci/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+On 12/1/25 11:32 PM, Koichiro Den wrote:
+> On Mon, Dec 01, 2025 at 02:08:14PM -0700, Dave Jiang wrote:
+>>
+>>
+>> On 11/29/25 9:03 AM, Koichiro Den wrote:
+>>> Add an optional get_pci_epc() callback to retrieve the underlying
+>>> pci_epc device associated with the NTB implementation.
+>>>
+>>> Signed-off-by: Koichiro Den <den@valinux.co.jp>
+>>> ---
+>>>  drivers/ntb/hw/epf/ntb_hw_epf.c | 11 +----------
+>>>  include/linux/ntb.h             | 21 +++++++++++++++++++++
+>>>  2 files changed, 22 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/drivers/ntb/hw/epf/ntb_hw_epf.c b/drivers/ntb/hw/epf/ntb_hw_epf.c
+>>> index a3ec411bfe49..d55ce6b0fad4 100644
+>>> --- a/drivers/ntb/hw/epf/ntb_hw_epf.c
+>>> +++ b/drivers/ntb/hw/epf/ntb_hw_epf.c
+>>> @@ -9,6 +9,7 @@
+>>>  #include <linux/delay.h>
+>>>  #include <linux/module.h>
+>>>  #include <linux/pci.h>
+>>> +#include <linux/pci-epf.h>
+>>>  #include <linux/slab.h>
+>>>  #include <linux/ntb.h>
+>>>  
+>>> @@ -49,16 +50,6 @@
+>>>  
+>>>  #define NTB_EPF_COMMAND_TIMEOUT	1000 /* 1 Sec */
+>>>  
+>>> -enum pci_barno {
+>>> -	NO_BAR = -1,
+>>> -	BAR_0,
+>>> -	BAR_1,
+>>> -	BAR_2,
+>>> -	BAR_3,
+>>> -	BAR_4,
+>>> -	BAR_5,
+>>> -};
+>>> -
+>>>  enum epf_ntb_bar {
+>>>  	BAR_CONFIG,
+>>>  	BAR_PEER_SPAD,
+>>> diff --git a/include/linux/ntb.h b/include/linux/ntb.h
+>>> index d7ce5d2e60d0..04dc9a4d6b85 100644
+>>> --- a/include/linux/ntb.h
+>>> +++ b/include/linux/ntb.h
+>>> @@ -64,6 +64,7 @@ struct ntb_client;
+>>>  struct ntb_dev;
+>>>  struct ntb_msi;
+>>>  struct pci_dev;
+>>> +struct pci_epc;
+>>>  
+>>>  /**
+>>>   * enum ntb_topo - NTB connection topology
+>>> @@ -256,6 +257,7 @@ static inline int ntb_ctx_ops_is_valid(const struct ntb_ctx_ops *ops)
+>>>   * @msg_clear_mask:	See ntb_msg_clear_mask().
+>>>   * @msg_read:		See ntb_msg_read().
+>>>   * @peer_msg_write:	See ntb_peer_msg_write().
+>>> + * @get_pci_epc:	See ntb_get_pci_epc().
+>>>   */
+>>>  struct ntb_dev_ops {
+>>>  	int (*port_number)(struct ntb_dev *ntb);
+>>> @@ -331,6 +333,7 @@ struct ntb_dev_ops {
+>>>  	int (*msg_clear_mask)(struct ntb_dev *ntb, u64 mask_bits);
+>>>  	u32 (*msg_read)(struct ntb_dev *ntb, int *pidx, int midx);
+>>>  	int (*peer_msg_write)(struct ntb_dev *ntb, int pidx, int midx, u32 msg);
+>>> +	struct pci_epc *(*get_pci_epc)(struct ntb_dev *ntb);
+>>
+>> Seems very specific call to this particular hardware instead of something generic for the NTB dev ops. Maybe it should be something like get_private_data() or something like that?
+> 
+> Thank you for the suggestion.
+> 
+> I also felt that it's too specific, but I couldn't come up with a clean
+> generic interface at the time, so I left it in this form.
+> 
+> .get_private_data() might indeed be better. In the callback doc comment we
+> could describe it as "may be used to obtain a backing PCI controller
+> pointer"?
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index a5956726a49f..314aacf5a309 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5798,6 +5798,7 @@ static void pci_disable_acs_sv(struct pci_dev *dev)
- 	dev->acs_broken_cap |= PCI_ACS_SV;
- }
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_IDT, 0x80b5, pci_disable_acs_sv);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_IDT, 0x8090, pci_disable_acs_sv);
- 
- /*
-  * Microsemi Switchtec NTB uses devfn proxy IDs to move TLPs between
+I would add that comment in the defined callback for the hardware driver. For the actual API, it would be something like "for retrieving private data specific to the hardware driver"?
 
--- 
-2.48.1
+DJ
+
+> 
+> -Koichiro
+> 
+>>
+>> DJ
+>>
+>>
+>>>  };
+>>>  
+>>>  static inline int ntb_dev_ops_is_valid(const struct ntb_dev_ops *ops)
+>>> @@ -393,6 +396,9 @@ static inline int ntb_dev_ops_is_valid(const struct ntb_dev_ops *ops)
+>>>  		/* !ops->msg_clear_mask == !ops->msg_count	&& */
+>>>  		!ops->msg_read == !ops->msg_count		&&
+>>>  		!ops->peer_msg_write == !ops->msg_count		&&
+>>> +
+>>> +		/* Miscellaneous optional callbacks */
+>>> +		/* ops->get_pci_epc			&& */
+>>>  		1;
+>>>  }
+>>>  
+>>> @@ -1567,6 +1573,21 @@ static inline int ntb_peer_msg_write(struct ntb_dev *ntb, int pidx, int midx,
+>>>  	return ntb->ops->peer_msg_write(ntb, pidx, midx, msg);
+>>>  }
+>>>  
+>>> +/**
+>>> + * ntb_get_pci_epc() - get backing PCI endpoint controller if possible.
+>>> + * @ntb:	NTB device context.
+>>> + *
+>>> + * Get the backing PCI endpoint controller representation.
+>>> + *
+>>> + * Return: A pointer to the pci_epc instance if available. or %NULL if not.
+>>> + */
+>>> +static inline struct pci_epc __maybe_unused *ntb_get_pci_epc(struct ntb_dev *ntb)
+>>> +{
+>>> +	if (!ntb->ops->get_pci_epc)
+>>> +		return NULL;
+>>> +	return ntb->ops->get_pci_epc(ntb);
+>>> +}
+>>> +
+>>>  /**
+>>>   * ntb_peer_resource_idx() - get a resource index for a given peer idx
+>>>   * @ntb:	NTB device context.
+>>
 
 
