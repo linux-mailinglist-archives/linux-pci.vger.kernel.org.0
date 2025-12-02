@@ -1,153 +1,114 @@
-Return-Path: <linux-pci+bounces-42468-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42469-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id C82A2C9ADED
-	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 10:32:32 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39344C9B006
+	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 10:58:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BAF174E24DB
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 09:32:31 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 186B6347B07
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 09:57:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5BAE3081B8;
-	Tue,  2 Dec 2025 09:32:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4DB330F553;
+	Tue,  2 Dec 2025 09:53:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9HSMYxa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FYE3zYYo"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E1221770B;
-	Tue,  2 Dec 2025 09:32:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8566D30C343;
+	Tue,  2 Dec 2025 09:53:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764667947; cv=none; b=hBdYWk4eAu+9+NfoKrIXHkfUSOiolfg49Ud4ToQCV/b3YXOmPRR9NZ1PjQs5og+ZBiuwPOX6oJdBjc2Di+dwYCl9EAYeefMM8jaq9K3BMpVqUKRqpboSzBb0VVjbEzgwtRiHk43mwaE9/qUsXfI8Ac/goSq22BlAXGP7FJBhlrE=
+	t=1764669203; cv=none; b=DICZ8jWZRRa/LcwYO8eHTH+/opf6ni+Lt5ddEoyWnJjkQaiALlJDwfGBpNMlEU6oz3y9jAdO1YgWuckJPIDhVH+SzuPljJuElFqQdR3LVk1E+rT8gPB288iFgLQ1esRTzmro1LOZx3ymMAV62PNzxAaDD1Ei4j7l/EyDVmY5Z8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764667947; c=relaxed/simple;
-	bh=cH6Bwn7z9r2z9m08O1SwvgWAiLz178mtM9yKwmWkowc=;
+	s=arc-20240116; t=1764669203; c=relaxed/simple;
+	bh=/AhUc5pNDMIB+MxG8tAbE5vEZvLdVKtKwk2LjUvq2j4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qg4DNRyH00vi1wwvrFBcS6OgTTJ56Ap/PiyNzcwfmZt+IWX3DZYtqPBaKSUU/aukRAjlkiP93petkPREzQ7qj9csWaaXV0y8TxEm36r87Wp343PuHKCOSCej7hRyyGIpXdHn9mkoEQGd8Zhup/l5raXg3hPaq8NP+CkKLsDhntM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9HSMYxa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F20FAC4CEF1;
-	Tue,  2 Dec 2025 09:32:21 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZVfX99j6ulsPi/ykQ8LUdS3wjSobDRkp7EjXZYCOxlQzKSHtrVMBA//xFgeOxQ2Nkp+rKxRq3D9I8aXTTnrdXm+NoyL3BwG7fEUVY1F4B/P1CqlL6WD9bQK5D11CLieU+pXN5/LZFolWdoxjdNYqpLk8gnW8fr7TVpaCpMo6LvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FYE3zYYo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D95D4C4CEF1;
+	Tue,  2 Dec 2025 09:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764667947;
-	bh=cH6Bwn7z9r2z9m08O1SwvgWAiLz178mtM9yKwmWkowc=;
+	s=k20201202; t=1764669203;
+	bh=/AhUc5pNDMIB+MxG8tAbE5vEZvLdVKtKwk2LjUvq2j4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H9HSMYxadUXzH9OEBq5dZ1GxtURPzhnNzTZ4Z/v563Gs9P1bMgN4G8bEg40xIBarx
-	 is2IycG+ZYg7QEiAWwbFeCRYTJP0U7GJubQB1KF5VjH+RLOmCdK+Y6vncMeO38jXSA
-	 FVyjIfehECBQxXU65Uxz/Hawqeu/cwsaTuigxoAkqp1gKZ6BrchdfoFJ6wsam7VZtR
-	 yWw/KaS+EWkGG/udG3WLgBPU9j8TH70wM6KtPZNljGT3YiXUi1bOPPLMPkiNpSc/In
-	 8Y7FnlGnRHfEllELPJ4r6QDeGD79/JJxuwYKHhzrh8FjE6IdgeClY8XydN0g1HtLB+
-	 JsQTBU5GwBEPg==
-Date: Tue, 2 Dec 2025 10:32:19 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Koichiro Den <den@valinux.co.jp>
-Cc: Frank Li <Frank.li@nxp.com>, ntb@lists.linux.dev,
-	linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mani@kernel.org,
-	kwilczynski@kernel.org, kishon@kernel.org, bhelgaas@google.com,
-	corbet@lwn.net, vkoul@kernel.org, jdmason@kudzu.us,
-	dave.jiang@intel.com, allenbh@gmail.com, Basavaraj.Natikar@amd.com,
-	Shyam-sundar.S-k@amd.com, kurt.schwemmer@microsemi.com,
-	logang@deltatee.com, jingoohan1@gmail.com, lpieralisi@kernel.org,
-	robh@kernel.org, jbrunet@baylibre.com, fancer.lancer@gmail.com,
-	arnd@arndb.de, pstanner@redhat.com, elfring@users.sourceforge.net,
-	Damien Le Moal <dlemoal@kernel.org>
-Subject: Re: [RFC PATCH v2 19/27] PCI: dwc: ep: Cache MSI outbound iATU
- mapping
-Message-ID: <aS6yIz94PgikWBXf@ryzen>
-References: <20251129160405.2568284-1-den@valinux.co.jp>
- <20251129160405.2568284-20-den@valinux.co.jp>
- <aS39gkJS144og1d/@lizhi-Precision-Tower-5810>
- <ddriorsgyjs6klcb6d7pi2u3ah3wxlzku7v2dpyjlo6tmalvfw@yj5dczlkggt6>
+	b=FYE3zYYo5Vf0etfLhw7gf+HgO4jDdia94Of7xcMn3TvSPUR5Xn0P9uVqMwBZjY3O+
+	 vOcLfblHAfxA4wsR205oEiC/MYd6Tgmoq2FwAFb26Ky1prZedcELZIuV0j6GyZWz3U
+	 s4+vlqBGevYEfKCVMhSzYggbwm/bdM2PjJYu9tGjH/6g+lVLMl5iXG8206RkTLeh1L
+	 Gv/CZ17AmVfLwFGmpamjbiFBqn+ezSkCLiIByjsovx/zd3m9+/pTGyVDE/ZoGG6/L0
+	 PX2mA7ZthsKOu8/grMPOrRA1WMYrrGgeWCFUWRtBQ5cOEoLDSy3srOH0govZhVMNYB
+	 h/mETuUTem8eg==
+Date: Tue, 2 Dec 2025 15:23:11 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Linux Next Mailing List <linux-next@vger.kernel.org>, 
+	linux-pci@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, NXP S32 Linux Team <s32@nxp.com>, 
+	"imx@lists.linux.dev" <imx@lists.linux.dev>, linux-arm-kernel@lists.infradead.org, 
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: linux-next: Tree for Nov 28
+ (drivers/pci/controller/dwc/pcie-nxp-s32g.o)
+Message-ID: <vb6pcyaue6pqpx626ytfr2aif4luypopywqoazjsvy4crh6zic@gfv75ar7musy>
+References: <20251128162928.36eec2d6@canb.auug.org.au>
+ <63e1daf7-f9a3-463e-8a1b-e9b72581c7af@infradead.org>
+ <ykmo5qv46mo7f3srblxoi2fvghz722fj7kpm77ozpflaqup6rk@ttvhbw445pgu>
+ <CAKfTPtA-wir5GzU7aTywe7SZG18Aj8Z9g1wjV-Y8vKoyKF1Mkg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ddriorsgyjs6klcb6d7pi2u3ah3wxlzku7v2dpyjlo6tmalvfw@yj5dczlkggt6>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKfTPtA-wir5GzU7aTywe7SZG18Aj8Z9g1wjV-Y8vKoyKF1Mkg@mail.gmail.com>
 
-Hello Koichiro,
-
-On Tue, Dec 02, 2025 at 03:35:36PM +0900, Koichiro Den wrote:
-> On Mon, Dec 01, 2025 at 03:41:38PM -0500, Frank Li wrote:
-> > On Sun, Nov 30, 2025 at 01:03:57AM +0900, Koichiro Den wrote:
-> > > dw_pcie_ep_raise_msi_irq() currently programs an outbound iATU window
-> > > for the MSI target address on every interrupt and tears it down again
-> > > via dw_pcie_ep_unmap_addr().
-> > >
-> > > On systems that heavily use the AXI bridge interface (for example when
-> > > the integrated eDMA engine is active), this means the outbound iATU
-> > > registers are updated while traffic is in flight. The DesignWare
-> > > endpoint spec warns that updating iATU registers in this situation is
-> > > not supported, and the behavior is undefined.
-> > >
-> > > Under high MSI and eDMA load this pattern results in occasional bogus
-> > > outbound transactions and IOMMU faults such as:
-> > >
-> > >   ipmmu-vmsa eed40000.iommu: Unhandled fault: status 0x00001502 iova 0xfe000000
-> > >
-> > 
-> > I agree needn't map/unmap MSI every time. But I think there should be
-> > logic problem behind this. IOMMU report error means page table already
-> > removed, but you still try to access it after that. You'd better find where
-> > access MSI memory after dw_pcie_ep_unmap_addr().
+On Tue, Dec 02, 2025 at 09:54:24AM +0100, Vincent Guittot wrote:
+> On Tue, 2 Dec 2025 at 05:24, Manivannan Sadhasivam <mani@kernel.org> wrote:
+> >
+> > + Vincent
 > 
-> I don't see any other callers that access the MSI region after
-> dw_pcie_ep_unmap_addr(), but I might be missing something. Also, even if I
-> serialize dw_pcie_ep_raise_msi_irq() invocations, the problem still
-> appears.
+> Thanks for looping me in.
+> >
+> > On Sat, Nov 29, 2025 at 07:00:04PM -0800, Randy Dunlap wrote:
+> > >
+> > >
+> > > On 11/27/25 9:29 PM, Stephen Rothwell wrote:
+> > > > Hi all,
+> > > >
+> > > > Changes since 20251127:
+> > > >
+> > >
+> > > on i386 (allmodconfig):
+> > >
+> > > WARNING: modpost: vmlinux: section mismatch in reference: s32g_init_pcie_controller+0x2b (section: .text) -> memblock_start_of_DRAM (section: .init.text)
 > 
-> A couple of details I forgot to describe in the commit message:
-> (1). The IOMMU error is only reported on the RC side.
-> (2). Sometimes there is no IOMMU error printed and the board just freezes (becomes unresponsive).
+> Are there details to reproduce the warning ? I don't have such warning
+> when compiling allmodconfig locally
 > 
-> The faulting iova is 0xfe000000. The iova 0xfe000000 is the base of
-> "addr_space" for R-Car S4 in EP mode:
-> https://github.com/jonmason/ntb/blob/68113d260674/arch/arm64/boot/dts/renesas/r8a779f0.dtsi#L847
+> s32 pcie can only be built in but I may have to use
+> builtin_platform_driver_probe() instead of builtin_platform_driver()
 > 
-> So it looks like the EP sometimes issue MWr at "addr_space" base (offset 0),
-> the RC forwards it to its IOMMU (IPMMUHC) and that faults. My working theory
-> is that when the iATU registers are updated under heavy DMA load, the DAR of
-> some in-flight transfer can get corrupted to 0xfe000000. That would match one
-> possible symptom of the undefined behaviour that the DW EPC spec warns about
-> when changing iATU configuration under load.
 
-For your information, in the NVMe PCI EPF driver:
-https://github.com/torvalds/linux/blob/v6.18/drivers/nvme/target/pci-epf.c#L389-L429
+The is due to calling a function belonging to the __init section from non-init
+function. Ideally, functions prefixed with __init like memblock_start_of_DRAM()
+should be called from the module init functions.
 
-We take a mutex around the dmaengine_slave_config() and dma_sync_wait() calls,
-because without a mutex, we noticed that having multiple outstanding transfers,
-since the dmaengine_slave_config() specifies the src/dst address, the function
-call would affect other concurrent DMA transfers, leading to corruption because
-of invalid src/dst addresses.
+One way to fix would be to call memblock_start_of_DRAM() in probe(), and
+annotate probe() with __init. Since there is no remove, you could use
+builtin_platform_driver_probe().
 
-Having a mutex so that we can only have one outstanding transfer solves these
-issues, but is obviously very bad for performance.
+This also makes me wonder if we really should be using memblock_start_of_DRAM()
+in the driver. I know that this was suggested to you during reviews, but I would
+prefer to avoid it, especially due to this being the __init function.
 
+- Mani
 
-I did try to add DMA_MEMCPY support to the dw-edma driver:
-https://lore.kernel.org/linux-pci/20241217160448.199310-4-cassel@kernel.org/
-
-Since that would allow us to specify both the src and dst address in a single
-dmaengine function call (so that we would no longer need a mutex).
-However, because the eDMA hardware (at least for EDMA_LEGACY_UNROLL) does not
-support transfers between PCI to PCI, only PCI to local DDR or local DDR to
-PCI, using prep_memcpy() is wrong, as it does not take a direction:
-https://lore.kernel.org/linux-pci/Z4jf2s5SaUu3wdJi@ryzen/
-
-If we want to improve the dw-edma driver, so that an EPF driver can have
-multiple outstanding transfers, I think the best way forward would be to create
-a new _prep_slave_memcpy() or similar, that does take a direction, and thus
-does not require dmaengine_slave_config() to be called before every
-_prep_slave_memcpy() call.
-
-
-Kind regards,
-Niklas
+-- 
+மணிவண்ணன் சதாசிவம்
 
