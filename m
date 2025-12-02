@@ -1,125 +1,176 @@
-Return-Path: <linux-pci+bounces-42534-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42535-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4CEFC9D1BD
-	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 22:42:01 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17913C9D1EA
+	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 22:54:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 936FC3A1749
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 21:41:59 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CE3044E02FD
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 21:54:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE9232DC352;
-	Tue,  2 Dec 2025 21:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30F332F691E;
+	Tue,  2 Dec 2025 21:54:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Op5VRHid"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IxRhsdzb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C290EA55
-	for <linux-pci@vger.kernel.org>; Tue,  2 Dec 2025 21:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3F2222597
+	for <linux-pci@vger.kernel.org>; Tue,  2 Dec 2025 21:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764711716; cv=none; b=Dxo5fmFHU+eVEsQdkKK1A3cPCaufCQqrfomrLeDViZYRrnUjh7j10MGSxercN+jXUvLO7swxA6cCKJnMiv5Dk8ISb3GCmj98RC0dtdM4p/dLQqz56cQ/Yt6wHHx+0eaaITjpZ5vZGJkhcgEwIWeA6SeqVAQHPEw3qgl8Gi4VeUs=
+	t=1764712445; cv=none; b=MUho/1kzVNKdPBjO4c+N9L8YjYhNPLi8CF6uJFhMKpxaM17Tuj7EqEzZ0h+terMh2vrdpxRRnZ/4lu/rLi+QmSx8mdk2qsFgzbfjugNbdeUv4og8tyUM6QCZDE2vnJXoyERuFaPbCla7cYC7KN0wlxrIQdoKKFQlXzN4YEAupIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764711716; c=relaxed/simple;
-	bh=bK1bgqioLqPqNCUbFDzXCG7JyoMoUTbDQKJcABIxh2w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XlpL576HEMDNGvT/7dz1lfY+NWbrk5tf4KkRy5QzuTmfzjGYVpOlY8TKqJgophBKrJaJttFwMPyHhBL5HqJ4FtaewtEPNrS6KiBiPzpA0gsF9Y3Gfb1gZqA4WI8vlwxAeDuaD+yhcp4FJFaNNd18jtYXGJqwPyyZJScJDDDGNrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b=Op5VRHid; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-640c1fda178so11261655a12.1
-        for <linux-pci@vger.kernel.org>; Tue, 02 Dec 2025 13:41:54 -0800 (PST)
+	s=arc-20240116; t=1764712445; c=relaxed/simple;
+	bh=W0V7P93neIn2iB64a++B6hESjcI5jM/+kLB2CBVwbE8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hq5h53vzv6+szlEy/ToI7piVyH4wwMw2l65zQ8DTK0DTNuwZvXEA8nFOUpMGfD/+OwaaHk/CI1azQrrmWDAkRAsxGmIEff9Z0MJWUsY6E8a31CJX77kBqpfiddXl7yOLpcAdIuvg1fg6VxTM16unq6PBoUj0bWaXpEQXbdKdMOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IxRhsdzb; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-bc09b3d3b06so3349109a12.2
+        for <linux-pci@vger.kernel.org>; Tue, 02 Dec 2025 13:54:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1764711713; x=1765316513; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BBy8J1XDJHjmvX+Es4TFPSfzkazm1BSKmXhHEtk+CP0=;
-        b=Op5VRHid8eH8ab8VEX0QPXgsFu0URtp8bXZp/H8ljdQMHABjoPeqMIU6h/A5GYp09O
-         KZ5CJiq1zG2ZcYTiSuZL8G0HA7ePok6V34mVi4UsUQK1mZxHsBufcTh95QTs0z2ihO9K
-         tul2bvvQ5hdy8L1+JKgxMlJ+AOV2OxXlnOLcOjQ+85y1ot0k98PVhHPZiiqQMk6K08n6
-         WNGL8ukYm6/qJrI6EynDO9OHFaoqeIRrK7YKnrvMut71cFGvIs9qYblyM7l6+yODBLjJ
-         f+kzAAZBOXpVBv2JJwnoBkpwjQTpeE7PG0BVbxTnw1VjhZV5e9z3joJfWgH9xun4FFo2
-         zWYg==
+        d=chromium.org; s=google; t=1764712443; x=1765317243; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cCirGjV3/DFcYbsMad4kR06svckBi7sOFnowquKvHe8=;
+        b=IxRhsdzbjnlBqrmLK6HY6DG20Kt9moUsiravYscYmyxRjkrlDfBwizHlsYmFAM6FZ1
+         4iTBgb3x9R0cro4QdNG3y1vD4IYRm5wNQXJSyh/fyF+rfegb9RuCtNaFPg0pGS/U0a2N
+         lfmKDF+J5W6leG57b+3OL3Q1YzjNoHFL41n34=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764711713; x=1765316513;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BBy8J1XDJHjmvX+Es4TFPSfzkazm1BSKmXhHEtk+CP0=;
-        b=MUsY7Bxy7UxiueLcvFzE1AHzFqp+BSD29SfmZGKQxU2E9A56ZYShcDobCtO+5L+B8M
-         vLfFCgaB890Ch6dYuntbgNdcZEhlgrDbkhDgRJTLGYyZUvG3nTJ5X0xTr7YsdfQ4siNW
-         4Zyi0R3w+Prs8c62mfU0/2+AAp0aT9ljDJS4ucIIl+8W+QKTGZ61L4EZv62xxYzhf7kq
-         u7dpm7ttuU2KJp4Ki7LdDOFRn+mv4VwFhIfWW2IxOibzrIHPPB2W6ht0beTFsGDIPcaB
-         BLH/RS533F6CQBqDGIWyy33Odk6SJpzIufZIJlNt1LwjDWwCRz2tLypisTQwMpN9berp
-         7W0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXpFdEQtneYZgmaP365Y8RsbsTHGwAgauVwvug71Nri65Wkiyn5vzYd6g/XeGaZ+dTk+t0hsG8CyEM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUGEdO7dYfRg12PcS45b+FlctuAPUQyLM1X2Igrnim1VUkf9pu
-	yBu7QYaV5Tyy+kg/LgoPyK3XvYCLm3Msmg/2TJ9RwB+EMVZQXTtvrPH+Zg+L99/OtSKKymdwjWx
-	vF8WrPne0k8aKpa3lztY/ZSj/QVqFZlc4EXAmwBJllQ==
-X-Gm-Gg: ASbGncvjYtE2t95iu16IND84XoXQxEJdnZpgWFXiYPrsFfMfUViVKuPgDSqXo3v+Ijy
-	L/zWQJ/URgug+USYOu/UvLmnE9adutd/LNlj1vCju++lmsrbd59sBSVxBFoECx5tD0+ZMW2Zzlm
-	kGx8jDvExTBXLxZDyQLNltflqsfMs4KRDWAr9dN9IaxWB5SzJQyNghsgFb8XvMzOPLVBKjRXmoe
-	D9jwBc4JNJkdq98Wb9y9LZjvWr1lR6vLhBB80I6o8Z4f2LYbJINVV5koDt1w5MhvzKRHY7QaMve
-	mcE=
-X-Google-Smtp-Source: AGHT+IHWLpn7rUj8mxZXJ9rMfRKD6U7DeusV73jTTRLFZkQI3y5z61JVyECIWb2QWdSzz1X1Lv1zjhKD+XOAMt/wgfo=
-X-Received: by 2002:a05:6402:455b:b0:643:129f:9d8e with SMTP id
- 4fb4d7f45d1cf-64794f33cc3mr841742a12.8.1764711712986; Tue, 02 Dec 2025
- 13:41:52 -0800 (PST)
+        d=1e100.net; s=20230601; t=1764712443; x=1765317243;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cCirGjV3/DFcYbsMad4kR06svckBi7sOFnowquKvHe8=;
+        b=or3Q6L6CIxgD6KYmKFGbvhtluTDzH4ASTKvmV4Kr5dUV7/xZy+6B3sFbTPtqtWDtBE
+         8zBPyqtg7eIcia4Mm3GPvxmvWk4ThyIDbmZzDIOye6VhI/X4YQtTktQzMSe360m0U08t
+         rH6B+xa6IP8rKCIhWvazhfKjoUrOph5tI3ww682eyQKxcxe4HR8rxDgFdow/LY+G8kra
+         r7D1xuNZd/V2vHG3EDvUyrOXjWW2kdW0SKLNii8IPV56ZuQyLOskShmSi1e5OFUnHQDP
+         XOT9JGEXDhQ9bbsmfY3Qpxf2Vm7+j3eD78D2WpQfX+EiK72h+YT2h6KxN0Bqqoob4RY/
+         0TTw==
+X-Forwarded-Encrypted: i=1; AJvYcCVolWQ5mcOVD9QkDwOkSXWd/HQUol7M3S6iTIKP2FDuWbVvUgwkRgUMWheASbGLfwKEsbLuTRbZ65w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxmb5G1NgF2dQdVhBV0/Qmxw3u5V4PS0PqvY+GoMSFG4B2UC8Up
+	1HczOkSB/FwHNVmaOhn895cNAMV4hMK8bY2cCw3vMRBenAC+D/nDV+wVYMhB5+uMXQ==
+X-Gm-Gg: ASbGnctwPpJscx+eKmktzhrosXluC8fB14Cz9FR7d6y2xGqHh/Z3f+EoLGUyjBCKEKj
+	oQShXzC5Kz5xs1HaQfsa1fRoUqwtD5msZqdQLXRDF6UL2Xz5chgSv3R4n7CQmIoHqUV4JBxsFKB
+	ire+yey4qI5yv6FwHrCNCvmm244rfLtUnipBG7FhCWhNoljK3uWIP0mXVTz6Aq/Odzc1HfHVlO+
+	zcKlN4AcP+YCf9t+DQrK492SORXO571Pu4Sqr6u8T5qDpUV7Cxu7NpvXThVifk2u+BHv+z09Ixk
+	fKICxvvs19wYaG4FXlw3rg6XHHv/tlLCr0qT5tG7PGMyOZDTXmC4ljNZY7dCiv80sP5nYegfvJ2
+	LYGlOmIxE2Xqyyd642sk59xLH6BDvteSeXFiLvTF7xQoaJDw2jb3QVl3KVUneF5YYuI8jASJhjX
+	KbTHLYB9fM5fFKDJ2j8i3bzq/hsKGcrJRbAXxHQUfx3i1dqh2/OA==
+X-Google-Smtp-Source: AGHT+IHnvrGhJjf68XCIDP9snnMvR3mnikEUomrgLZk61aCRBp4DY9aPnTFoOtshoIIKWOLqNcEWbQ==
+X-Received: by 2002:a05:7300:e8b0:b0:2a4:3593:468a with SMTP id 5a478bee46e88-2ab92f7e159mr37332eec.38.1764712442741;
+        Tue, 02 Dec 2025 13:54:02 -0800 (PST)
+Received: from localhost ([2a00:79e0:2e7c:8:eb2b:1140:65a2:dd2e])
+        by smtp.gmail.com with UTF8SMTPSA id 5a478bee46e88-2a9653ca11esm57570220eec.0.2025.12.02.13.54.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Dec 2025 13:54:02 -0800 (PST)
+Date: Tue, 2 Dec 2025 13:54:00 -0800
+From: Brian Norris <briannorris@chromium.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: =?iso-8859-1?Q?Ren=E9?= Rebe <rene@exactco.de>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Riccardo Mottola <riccardo.mottola@libero.it>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH] PCI: Fix PCI bridges not to go to D3Hot on older RISC
+ systems
+Message-ID: <aS9f-K_MN0uYUCYx@google.com>
+References: <20251202.174007.745614442598214100.rene@exactco.de>
+ <20251202172837.GA3078292@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251126193608.2678510-1-dmatlack@google.com> <CA+CK2bC3EgL5r7myENVgJ9Hq2P9Gz0axnNqy3e6E_YKVRM=-ng@mail.gmail.com>
- <86bjkhm0tp.fsf@kernel.org> <CALzav=es=RKMsRUdpX03m+2Eq4SVxPZSZuy1fLXV+dv=rhDhaw@mail.gmail.com>
-In-Reply-To: <CALzav=es=RKMsRUdpX03m+2Eq4SVxPZSZuy1fLXV+dv=rhDhaw@mail.gmail.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 2 Dec 2025 16:41:15 -0500
-X-Gm-Features: AWmQ_bnrPyeCqV6AbWIFTsaIoktB-kTeS5xKZG_PhpHyIHste-GfTWjRKtK6tnk
-Message-ID: <CA+CK2bBWB_+SOf6EgFm0nfovQd0-KPHQCRkqbWWTq4Yx2wAL7A@mail.gmail.com>
-Subject: Re: [PATCH 00/21] vfio/pci: Base support to preserve a VFIO device
- file across Live Update
-To: David Matlack <dmatlack@google.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>, Alex Williamson <alex@shazbot.org>, 
-	Adithya Jayachandran <ajayachandra@nvidia.com>, Alex Mastro <amastro@fb.com>, 
-	Alistair Popple <apopple@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
-	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Josh Hilke <jrhilke@google.com>, 
-	Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org, 
-	Leon Romanovsky <leonro@nvidia.com>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org, 
-	Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
-	Philipp Stanner <pstanner@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>, 
-	Yi Liu <yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>, 
-	Zhu Yanjun <yanjun.zhu@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251202172837.GA3078292@bhelgaas>
 
-> > >> FLB Retrieving
-> > >>
-> > >>   The first patch of this series includes a fix to prevent an FLB from
-> > >>   being retrieved again it is finished. I am wondering if this is the
-> > >>   right approach or if subsystems are expected to stop calling
-> > >>   liveupdate_flb_get_incoming() after an FLB is finished.
-> >
-> > IMO once the FLB is finished, LUO should make sure it cannot be
-> > retrieved, mainly so subsystem code is simpler and less bug-prone.
->
-> +1, and I think Pasha is going to do that in the next version of FLB.
+On Tue, Dec 02, 2025 at 11:28:37AM -0600, Bjorn Helgaas wrote:
+> I think we need some kind of analysis of what is happening to the PCI
+> devices here.  I don't know why the CPU architecture per se would be
+> related to PCI power management.
 
-Yes, I will add this change in the next version of FLB; however, I
-will send the next version of FLB only once list_private.h [1] is
-added to linux-next, so I can replace luo_list_for_each_private() with
-list_private_for_each_entry().
+Agreed, and I think it will be very hard to ever make any traction on
+modernizing the PM stack here if we can't any sort of "why?" answer out
+of the systems that don't work. The last time this came up, the answer
+was essentially:
 
-Pasha
+https://lore.kernel.org/all/CAJZ5v0j_6jeMAQ7eFkZBe5Yi+USGzysxAgfemYh=-zq4h5W+Qg@mail.gmail.com/
 
-[1] https://lore.kernel.org/all/20251126185725.4164769-1-pasha.tatashin@soleen.com
+  The DMI check at the end of pci_bridge_d3_possible() is really
+  something to the effect of "there is no particular reason to prevent
+  this bridge from going into D3, but try to avoid platforms where it
+  may not work".
+
+i.e., no specific reason, but a vague understanding that there is some
+old HW that doesn't work. That's not very helpful for supporting non-DMI
+systems that don't have a programmatic notion of "old."
+
+OTOH, I sympathize with Rene, that it's hard to dig into what amounts to
+new development on old platforms, and yet, they do remain broken.
+
+> pci_bridge_d3_possible() is already a barely maintainable hodge podge
+> of random things that work and don't work.  Generally speaking most of
+> those cases relate to firmware.  
+
+I wonder if we could take a different approach that helps straddle the
+uncertain boundary here a bit:
+
+ 1) be more aggressive at *permitting* runtime PM / D3 for bridges
+ (i.e., if we think a bridge might be OK to go to D3, then manage its
+ get()/put() properly); and
+
+ 2) be less aggressive about default-enabling runtime suspend / D3
+ (i.e., only call pm_runtime_allow() in drivers/pci/pcie/portdrv.c in
+ limited circumstances).
+
+For #2, that would actually match the documentation:
+
+  Documentation/power/pci.rst
+
+  The driver itself should not call pm_runtime_allow(), though.  Instead, it
+  should let user space or some platform-specific code do that (user space can
+  do it via sysfs as stated above), but it must be prepared to handle the
+  runtime PM of the device correctly as soon as pm_runtime_allow() is called
+  (which may happen at any time, even before the driver is loaded).
+
+So instead of portdrv.c calling pm_runtime_allow(), we'd leave that
+decision to user space (i.e., udev or similar). That will help limit the
+impact of getting #1 "wrong." And it's possible the bad systems didn't
+really want aggressive PM anyway, so it's not worth much trouble.
+
+For #1, that means pci_bridge_d3_possible() would become more like
+pci_bridge_d3_impossible(). We could leave it as-is, or at least ensure
+it fails toward the "possible" side.
+
+IOW, user space can choose to opt in by way of:
+
+  echo auto > /sys/bus/pci/devices/[port device]/power/control
+
+That might require some new udev rules if existing x86 systems are
+supposed to retain their old behavior.
+
+Personally, I care more about #1 (that the kernel manages pm_runtime_*()
+refcounts properly, so that my systems *can* opt into aggressive PM),
+and less about #2 (it's a fact of life that PM policy often requires
+careful udev / sysfs management, and that the defaults will not
+necessarily give the best power savings).
+
+This might leave some old unmaintained systems as "D3 possible", but we
+don't actually exercise it if user space doesn't poke
+/sys/bus/pci/devices/[port device]/power/control.
+
+Brian
 
