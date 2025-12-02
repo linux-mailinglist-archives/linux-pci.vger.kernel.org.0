@@ -1,34 +1,35 @@
-Return-Path: <linux-pci+bounces-42463-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42464-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3147BC9AC6B
-	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 10:03:04 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id B40ECC9AC80
+	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 10:04:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D4A013A33BD
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 09:03:02 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B61574E2A14
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 09:04:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 054523081C1;
-	Tue,  2 Dec 2025 09:02:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4110A308F11;
+	Tue,  2 Dec 2025 09:04:05 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C68824886E;
-	Tue,  2 Dec 2025 09:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [4.193.249.245])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D22AE307AC3;
+	Tue,  2 Dec 2025 09:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.193.249.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764666178; cv=none; b=MUyFmyxCl5SgjVfT+MB5Pk6s23hUptH+Oju4KiB9hrKHs3yPOiKRVZ5+MfOtiujSQ8mS1UqwzIat7YDP3F32WAYGFlioEbFu0313jy8mSuol8FdOxWfJTulJi3YfARDLsa+s7TRY6izT4DMftpSLKXPxkulIl2GHOdxedAdsYl4=
+	t=1764666245; cv=none; b=ClyApSaqvKRBfkMPiqRigRvPAyalq2zWRABFR0UzTy9xqwFrxOxEt0m0fe2McE/tvgRnbVP8tAiRTZt5mW/h/1XDxauO90SsI3ZmzKbjNaqDYNusTklXtyxo4ot01AloE9LXScwVMdfi2EoWIPKB4Rce9OcRMGh6jbVYiNOu09M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764666178; c=relaxed/simple;
-	bh=h7ZoQjuWhdmCGHSE/XUKH3hEFh4JXH7DJ8Xl1KgKgLE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Anbnv1kHVVYtSEtUwjCWJWqkxmSWp1HLdm95noB+E3XFoOmbWfS2OijKKGXcWnIEvqSQyxNZQbTVKNuT/h2lG0RDI2lINy/nbsVqN1yIS8eSR5cjoiPO6wBwMot92LB5qKDoue4QgkYKralSJwPGR9krEnEN1Cm61FX1cgnE6Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=129.150.39.64
+	s=arc-20240116; t=1764666245; c=relaxed/simple;
+	bh=Pbcq19isPFypswc9lypP49kdkmbWbx9SJexhiFp73zc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aMTH38AKAhD2oU31v38xzuCYQw2bqD6QkAeGfj7UJWa9hJo7bClVgvqu/CumttNP8N8vVQTL+tJvmG+lbnqE2IVI/08s2xp17sMecfrfp+B3jiV3FC7rz6ttaScKvFdEa31VlXWT2Gl6J4F4v+T9HuPseMQ/T7qDfjjrOd77Jas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=4.193.249.245
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
 Received: from E0004758DT.eswin.cn (unknown [10.12.96.83])
-	by app2 (Coremail) with SMTP id TQJkCgC3+awkqy5pppiAAA--.51518S2;
-	Tue, 02 Dec 2025 17:02:31 +0800 (CST)
+	by app2 (Coremail) with SMTP id TQJkCgBHi65qqy5pt5iAAA--.58919S2;
+	Tue, 02 Dec 2025 17:03:39 +0800 (CST)
 From: zhangsenchuan@eswincomputing.com
 To: bhelgaas@google.com,
 	mani@kernel.org,
@@ -55,10 +56,12 @@ Cc: ningyu@eswincomputing.com,
 	pinkesh.vaghela@einfochips.com,
 	ouyanghui@eswincomputing.com,
 	Senchuan Zhang <zhangsenchuan@eswincomputing.com>
-Subject: [PATCH v7 0/3] Add driver support for Eswin EIC7700 SoC PCIe controller
-Date: Tue,  2 Dec 2025 17:02:25 +0800
-Message-ID: <20251202090225.1602-1-zhangsenchuan@eswincomputing.com>
+Subject: [PATCH v7 1/3] dt-bindings: PCI: eic7700: Add Eswin PCIe host controller
+Date: Tue,  2 Dec 2025 17:03:34 +0800
+Message-ID: <20251202090334.1619-1-zhangsenchuan@eswincomputing.com>
 X-Mailer: git-send-email 2.49.0.windows.1
+In-Reply-To: <20251202090225.1602-1-zhangsenchuan@eswincomputing.com>
+References: <20251202090225.1602-1-zhangsenchuan@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,202 +69,214 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgC3+awkqy5pppiAAA--.51518S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3AryfGw47tw45CFyftryUtrb_yoWfZrW8pa
-	yvkFWjkFn8Jr1xZFs7AF4F9F4fXFsxZFyYkw1Ig34UZa12q3s7tryvkFW3tasrArZ3ZrWY
-	va12qanYkF1DAFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:TQJkCgBHi65qqy5pt5iAAA--.58919S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxZw4UKr1kCFW5Gr4fGrWfKrg_yoWrArW5pF
+	ZrCFW8Wr48Xr1fAw4UJF1jkF13Ja1vkFnYyr1xW3W3t3s5ta4qqr43KF13J345Gr4jq34Y
+	gFnIv34xtw17A3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
 	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
 	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
 	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
 	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
 	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r4a6rW5MxkIecxEwVCm-wCF04
 	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
 	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr4
 	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
 	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
-	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRkwIhUUUUU=
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRuHqcUUUUU=
 X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/
 
 From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
 
-Changes in v7:
-- Updates: eswin,eic7700-pcie.yaml
-  - None
+Add Device Tree binding documentation for the Eswin EIC7700 PCIe
+controller module, the PCIe controller enables the core to correctly
+initialize and manage the PCIe bus and connected devices.
 
-- Updates: pcie-eic7700.c
-  - Update "config PCIE_EIC7700" bool to tristate.
-  - Remove fix MSI-X code, depend on new commit [1].
-  - Add set no_pme_handshake flag.
-  - Update -EINVAL to -ENODATA and add PM runtime function.
-  - Add ".probe_type = PROBE_PREFER_ASYNCHRONOUS,".
-  - Update eic7700_pcie_perst_deassert function name to
-    eic7700_pcie_perst_reset.
-  - Update readw to dw_pcie_readw_dbi function.
-  - Add comments above reset_control_bulk_deassert function.
-
-- Updates: pcie-designware.h pcie-designware-host.c
- -  The ESWIN EIC7700 SoC lacks hardware support for the L2/L3 low-power
-    link states. It cannot enter the L2/L3 ready state through the
-    PME_Turn_Off/PME_To_Ack handshake protocol. To address this, add a
-    no_pme_handshake flag skip PME_Turn_Off broadcast and link state check
-    code, other driver can reuse this flag if meet the similar situation.
-- Link to V6: https://lore.kernel.org/linux-pci/20251120101018.1477-1-zhangsenchuan@eswincomputing.com/
-- Link to: https://lore.kernel.org/linux-pci/20251109-remove_cap-v1-3-2208f46f4dc2@oss.qualcomm.com/ [1]
-
-Changes in v6:
-- Updates: eswin,eic7700-pcie.yaml
-  - Add Reviewed-by: Rob Herring (Arm) <robh@kernel.org>.
-
-- Updates: pcie-eic7700.c
-  - Remove pci_root_ports_have_device function judgment during suspend.
-  - Remove eic7700_pcie_pme_turn_off and eic7700_pcie_get_ltssm function.
-  - Add set no_suspport_L2 flag.
-
-- Updates: pcie-designware.h pcie-designware-host.c
- - The ESWIN EIC7700 soc does not support enter L2 link state. Therefore
-   add no_suspport_L2 flag skip PME_Turn_Off broadcast and link state
-   check code, other driver can reuse this flag if meet the similar
-   situation.
-- Link to V5: https://lore.kernel.org/all/20251110090716.1392-1-zhangsenchuan@eswincomputing.com/
-- Link to: https://lore.kernel.org/all/e7plmtwtkkd4ymrt2hkztcqdx4ugfjk64oksjyf6lpi2oui53d@vhuo5occyref/
-
-Changes in v5:
-- Updates: eswin,eic7700-pcie.yaml
-  - Modify reg-names: update mgmt to elbi.
-  - Modify clock-names: update pclk to phy_reg.
-  - Modify reset-names: update powerup to pwr.
-  - Remove powerup modify in "snps,dw-pcie-common.yaml" file.
-
-- Updates: pcie-eic7700.c
-  - Update the driver submission comment, mention EIC7700 in the
-    "config PCIE_EIC7700" and in the driver title.
-  - Update some comments, for examples: "s/PME_TURN_OFF/PME_Turn_Off/",
-    "s/INTX/INTx/", "s/PERST/PERST#/", "s/perst/PERST#/", "s/id/ID/".
-  - Update "struct *_pcie" name and function name, add the eic7700 prefix.
-  - Use PCIEELBI_CTRL0_DEV_TYPE macro and update comment, use FIELD_PREP.
-  - Add eic7700_pcie_data pointer in struct eic7700_pcie.
-  - Update .deinit callback function name and removed the dw_pcie_link_up
-    judgment, add pci_root_ports_have_device function judgment.
-  - Remove devm_platform_ioremap_resource_byname function get mgmt, use
-    platform_get_resource_byname function get elbi in "pcie-designware.c".
-  - Update of_reset_control_get to of_reset_control_get_exclusive, use
-    devm_reset_control_bulk_get_exclusive function get resets, update use
-    reset_control_bulk_assert/reset_control_bulk_deassert function.
-- Link to V4: https://lore.kernel.org/all/20251030082900.1304-1-zhangsenchuan@eswincomputing.com/
-- Link to https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/tree/?h=controller/dwc
-
-Changes in v4:
-- Updates: eswin,eic7700-pcie.yaml
-  - Use snps,dw-pcie.yaml instead pci-host-bridge.yaml.
-
-- Updates: snps,dw-pcie-common.yaml
-  - Add powerup reset property, our powerup property is somewhat different
-    from the general attributes defined by Synopsys DWC binding.
-
-- Updates: pcie-eic7700.c
-  - Update the driver submission comment.
-  - Alphabetize so the menuconfig entries remain sorted by vendor.
-  - Update use PCI_CAP_LIST_NEXT_MASK macro.
-  - Use readl_poll_timeout function.
-  - Update eswin_pcie_suspend/eswin_pcie_resume name to
-    eswin_pcie_suspend_noirq/eswin_pcie_resume_noirq.
-  - PM use dw_pcie_suspend_noirq and dw_pcie_resume_noirq function and add
-    eswin_pcie_get_ltssm, eswin_pcie_pme_turn_off, eswin_pcie_host_exit
-    function adapt to PM.
-- Link to V3: https://lore.kernel.org/linux-pci/20250923120946.1218-1-zhangsenchuan@eswincomputing.com/
-
-Changes in v3:
-- Updates: eswin,eic7700-pcie.yaml
-  - Based on the last patch yaml file, devicetree separates the root port
-    node, changing it significantly. Therefore, "Reviewed-by: Krzysztof
-    Kozlowski <krzysztof.kozlowski@linaro.org>" is not added.
-  - Clock and reset drivers are under review. In yaml, macro definitions
-    used in clock and reset can only be replaced by constant values.
-  - Move the num-lanes and perst resets to the PCIe Root Port node, make
-    it easier to support multiple Root Ports in future versions of the
-    hardware.
-  - Update the num-lanes attribute and modify define num-lanes as decimal.
-  - Optimize the ranges attribute and clear the relocatable flag (bit 31)
-    for any regions.
-  - Update comment: inte~inth are actual interrupts and these names align
-    with the interrupt names in the hardware IP, inte~inth interrupts
-    corresponds to Deassert_INTA~Deassert_INTD.
-  - Add Signed-off-by: Yanghui Ou <ouyanghui@eswincomputing.com>.
-
-- Updates: pcie-eic7700.c
-  - Update the submission comment and add DWC IP revision, data rate, lane
-    information.
-  - Optimize the "config PCIE_EIC7700" configuration.
-  - Optimize the macro definition, add bitfield definition for the mask,
-    and remove redundant comments. optimize comments, make use of 80
-    columns for comments.
-  - Use the dw_pcie_find_capability function to obtain the offset by
-    traversing the function list.
-  - Remove the sets MPS code and configure it by PCI core.
-  - Alphabetize so the menuconfig entries remain sorted by vendor.
-  - Configure ESWIN VID:DID for Root Port as the default values are
-	invalid,and remove the redundant lane config.
-  - Use reverse Xmas order for all local variables in this driver
-  - Hardware doesn't support MSI-X but it advertises MSI-X capability, set
-    a flag and clear it conditionally.
-  - Resets are all necessary, Update the interface function for resets.
-  - Since driver does not depend on any parent to power on any resource,
-    the pm runtime related functions are removed.
-  - Remove "eswin_pcie_shutdown" function, our comment on the shutdown
-    function is incorrect. Moreover, when the host powers reboots,it will
-    enter the shutdown function, we are using host reset and do not need
-    to assert perst. Therefore, the shutdown function is not necessary.
-  - remove "eswin_pcie_remove", because it is not safe to remove it during
-    runtime, and this driver has been modified to builtin_platform_driver
-    and does not support hot plugging, therefore, the remove function is
-    not needed.
-  - The Suspend function adds link state judgment, and for controllers
-    with active devices, resources cannot be turned off.
-  - Add Signed-off-by: Yanghui Ou <ouyanghui@eswincomputing.com>.
-- Link to V2: https://lore.kernel.org/linux-pci/20250829082021.49-1-zhangsenchuan@eswincomputing.com/
-
-Changes in v2:
-- Updates: eswin,eic7700-pcie.yaml
-  - Optimize the naming of "clock-names" and "reset-names".
-  - Add a reference to "$ref: /schemas/pci/pci-host-bridge.yaml#".
-    (The name of the reset attribute in the "snps,dw-pcie-common.yaml"
-    file is different from our reset attribute and "snps,dw-pcie.yaml"
-    file cannot be directly referenced)
-  - Follow DTS coding style to optimize yaml attributes.
-  - Remove status = "disabled" from yaml.
-
-- Updates: pcie-eic7700.c
-  - Remove unnecessary imported header files.
-  - Use dev_err instead of pr_err and remove the WARN_ON function.
-  - The eswin_evb_socket_power_on function is removed and not supported.
-  - The eswin_pcie_remove function is placed after the probe function.
-  - Optimize function alignment.
-  - Manage the clock using the devm_clk_bulk_get_all_enabled function.
-  - Handle the release of resources after the dw_pcie_host_init function
-    call fails.
-  - Remove the dev_dbg function and remove __exit_p.
-  - Add support for the system pm function.
-- Link to V1: https://lore.kernel.org/all/20250516094057.1300-1-zhangsenchuan@eswincomputing.com/
-
-Senchuan Zhang (3):
-  dt-bindings: PCI: eic7700: Add Eswin PCIe host controller
-  PCI: eic7700: Add Eswin PCIe host controller driver
-  PCI: dwc: Add no_pme_handshake flag and skip PME_Turn_Off broadcast
-
- .../bindings/pci/eswin,eic7700-pcie.yaml      | 167 ++++++++
- drivers/pci/controller/dwc/Kconfig            |  11 +
- drivers/pci/controller/dwc/Makefile           |   1 +
- .../pci/controller/dwc/pcie-designware-host.c |   4 +
- drivers/pci/controller/dwc/pcie-designware.h  |   1 +
- drivers/pci/controller/dwc/pcie-eic7700.c     | 378 ++++++++++++++++++
- 6 files changed, 562 insertions(+)
+Signed-off-by: Yu Ning <ningyu@eswincomputing.com>
+Signed-off-by: Yanghui Ou <ouyanghui@eswincomputing.com>
+Signed-off-by: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ .../bindings/pci/eswin,eic7700-pcie.yaml      | 167 ++++++++++++++++++
+ 1 file changed, 167 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pci/eswin,eic7700-pcie.yaml
- create mode 100644 drivers/pci/controller/dwc/pcie-eic7700.c
 
---
+diff --git a/Documentation/devicetree/bindings/pci/eswin,eic7700-pcie.yaml b/Documentation/devicetree/bindings/pci/eswin,eic7700-pcie.yaml
+new file mode 100644
+index 000000000000..9c0150834e6d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/eswin,eic7700-pcie.yaml
+@@ -0,0 +1,167 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/eswin,eic7700-pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Eswin EIC7700 PCIe host controller
++
++maintainers:
++  - Yu Ning <ningyu@eswincomputing.com>
++  - Senchuan Zhang <zhangsenchuan@eswincomputing.com>
++  - Yanghui Ou <ouyanghui@eswincomputing.com>
++
++description:
++  Eswin EIC7700 SoC PCIe root complex controller is based on the Synopsys
++  DesignWare PCIe IP.
++
++properties:
++  compatible:
++    const: eswin,eic7700-pcie
++
++  reg:
++    maxItems: 3
++
++  reg-names:
++    items:
++      - const: dbi
++      - const: config
++      - const: elbi
++
++  ranges:
++    maxItems: 3
++
++  '#interrupt-cells':
++    const: 1
++
++  interrupt-names:
++    items:
++      - const: msi
++      - const: inta
++      - const: intb
++      - const: intc
++      - const: intd
++
++  interrupt-map:
++    maxItems: 4
++
++  interrupt-map-mask:
++    items:
++      - const: 0
++      - const: 0
++      - const: 0
++      - const: 7
++
++  clocks:
++    maxItems: 4
++
++  clock-names:
++    items:
++      - const: mstr
++      - const: dbi
++      - const: phy_reg
++      - const: aux
++
++  resets:
++    maxItems: 2
++
++  reset-names:
++    items:
++      - const: dbi
++      - const: pwr
++
++patternProperties:
++  "^pcie@":
++    type: object
++    $ref: /schemas/pci/pci-pci-bridge.yaml#
++
++    properties:
++      reg:
++        maxItems: 1
++
++      num-lanes:
++        maximum: 4
++
++      resets:
++        maxItems: 1
++
++      reset-names:
++        items:
++          - const: perst
++
++    required:
++      - reg
++      - ranges
++      - num-lanes
++      - resets
++      - reset-names
++
++    unevaluatedProperties: false
++
++required:
++  - compatible
++  - reg
++  - ranges
++  - interrupts
++  - interrupt-names
++  - interrupt-map-mask
++  - interrupt-map
++  - '#interrupt-cells'
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++
++allOf:
++  - $ref: /schemas/pci/snps,dw-pcie.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        pcie@54000000 {
++            compatible = "eswin,eic7700-pcie";
++            reg = <0x0 0x54000000 0x0 0x4000000>,
++                  <0x0 0x40000000 0x0 0x800000>,
++                  <0x0 0x50000000 0x0 0x100000>;
++            reg-names = "dbi", "config", "elbi";
++            #address-cells = <3>;
++            #size-cells = <2>;
++            #interrupt-cells = <1>;
++            ranges = <0x01000000 0x0 0x40800000 0x0 0x40800000 0x0 0x800000>,
++                     <0x02000000 0x0 0x41000000 0x0 0x41000000 0x0 0xf000000>,
++                     <0x43000000 0x80 0x00000000 0x80 0x00000000 0x2 0x00000000>;
++            bus-range = <0x00 0xff>;
++            clocks = <&clock 144>,
++                     <&clock 145>,
++                     <&clock 146>,
++                     <&clock 147>;
++            clock-names = "mstr", "dbi", "phy_reg", "aux";
++            resets = <&reset 97>,
++                     <&reset 98>;
++            reset-names = "dbi", "pwr";
++            interrupts = <220>, <179>, <180>, <181>, <182>, <183>, <184>, <185>, <186>;
++            interrupt-names = "msi", "inta", "intb", "intc", "intd";
++            interrupt-parent = <&plic>;
++            interrupt-map-mask = <0x0 0x0 0x0 0x7>;
++            interrupt-map = <0x0 0x0 0x0 0x1 &plic 179>,
++                            <0x0 0x0 0x0 0x2 &plic 180>,
++                            <0x0 0x0 0x0 0x3 &plic 181>,
++                            <0x0 0x0 0x0 0x4 &plic 182>;
++            device_type = "pci";
++            pcie@0 {
++                reg = <0x0 0x0 0x0 0x0 0x0>;
++                #address-cells = <3>;
++                #size-cells = <2>;
++                ranges;
++                device_type = "pci";
++                num-lanes = <4>;
++                resets = <&reset 99>;
++                reset-names = "perst";
++            };
++        };
++    };
+-- 
 2.25.1
 
 
