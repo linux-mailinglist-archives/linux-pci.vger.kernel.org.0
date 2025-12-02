@@ -1,112 +1,202 @@
-Return-Path: <linux-pci+bounces-42520-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42521-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B9A1C9CA52
-	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 19:33:16 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51308C9CB46
+	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 20:00:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4F84C4E3E2C
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 18:33:15 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 391F14E39A8
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 19:00:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 420DF2D6E42;
-	Tue,  2 Dec 2025 18:29:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A8F22D6400;
+	Tue,  2 Dec 2025 19:00:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=exactco.de header.i=@exactco.de header.b="TpcFTgyr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f1kheNMz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from exactco.de (exactco.de [176.9.10.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100122D6E53;
-	Tue,  2 Dec 2025 18:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.10.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451192D595F
+	for <linux-pci@vger.kernel.org>; Tue,  2 Dec 2025 19:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764700152; cv=none; b=ckOPjfFUv3TcuVHyRMnR+MAVc36BULRsZ5TN48p2XSaM0TYUJF2eBc/ihpTTfvlyi/t3ZDnnQ+3s+1po1t7ieZXbsPAhso7jRolWDcUxRCA0g5i5rWInG1VbToqItBvo5RDnnP5Uy4xsJpap0eMhsV/gtzfbG8UG2FjBu/mKukI=
+	t=1764702003; cv=none; b=LrQ7XUyVMCSbGsW669u/mtTFoYOH0eDffXT5yCcdxhsYT9ETdSMNq9JCb0/OqgrLqFPCprQ4eOGesarOj1jzYNb5pGUXBVLky0PtCppamF4Ry0XDpUYF0pvzB8XobyxZFrXKPUdAr0ICOs9TlMwJAsRnoyxRvp7KS4TZANujMHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764700152; c=relaxed/simple;
-	bh=wk4yxGr0/+pyZT+wL0wqcmszXVOhAoyGdxG+jVn9Vuw=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=AWOY4DmFYCGmo23N8o8nkd1Qeia7Lf1fDiJ21nqbkB74FY3bN9jhfdlCWGwQh4GuFq1Haviv9UOaFwNgmZuKWdUeyfygnUTbrOwUZv0cFcVHWp+Ai5MmXC3AIEyAfrJohBeDym01mty3urOZsQSfwf6vR7B041JnL9EuluCQgr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=exactco.de; spf=pass smtp.mailfrom=exactco.de; dkim=pass (2048-bit key) header.d=exactco.de header.i=@exactco.de header.b=TpcFTgyr; arc=none smtp.client-ip=176.9.10.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=exactco.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=exactco.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=exactco.de;
-	s=x; h=Content-Transfer-Encoding:Content-Type:Mime-Version:References:
-	In-Reply-To:From:Subject:Cc:To:Message-Id:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=tXLj+f1VRI7R92WJGrEm3i50jVYICvoJ+ng9AQ5CjDc=; b=TpcFTgyrfXW+0h49uIBTcA9xnf
-	N9edIZLgAh3Lkb5oCe37iDvKhPKCkR5MQqlIVoVhTbJiX18pXx4Fgve9mMrG82xSt0yUAWf6Y2B4D
-	2zm6KtUjQ92wJ0blCWlw4B7mRNVQ0rgeaY5QzlkFvqNkLzLPUnjryouvIydzey4U4zLtVySwh+1Hc
-	BQymeJBielq/lPHYsE0ziACGuhpBGOJ8bei02X/NXHaUStsxHEjx+FJmtStFnmZACe5MtYYE+AfXe
-	PMCRut+p3gop5jnDiLKLZYvMMPyEq9YI94gn/Fn97N7iWP0U865KsX2PGTme0qXocYdRvouL6rENs
-	KQkvTXsg==;
-Date: Tue, 02 Dec 2025 19:29:07 +0100 (CET)
-Message-Id: <20251202.192907.1946164892504460809.rene@exactco.de>
-To: ilpo.jarvinen@linux.intel.com
-Cc: glaubitz@physik.fu-berlin.de, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, bhelgaas@google.com,
- riccardo.mottola@libero.it
-Subject: Re: PCI bridge window issue
-From: =?iso-8859-1?Q?Ren=E9?= Rebe <rene@exactco.de>
-In-Reply-To: <9c120cee-dadf-e5e4-3e27-f817499d27ec@linux.intel.com>
-References: <05c588754dcb83badaec6930499392fdd26be539.camel@physik.fu-berlin.de>
-	<20251202.180451.409161725628042305.rene@exactco.de>
-	<9c120cee-dadf-e5e4-3e27-f817499d27ec@linux.intel.com>
-X-Mailer: Mew version 6.10 on Emacs 30.2
+	s=arc-20240116; t=1764702003; c=relaxed/simple;
+	bh=+8Kx/RKSMtWNWinBZiYyu99NjKMRNv0M7BAuSI3w5lk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AHdKsDXP0ebp2DlGkU1ukT+UXt5DJfxxmZ9+jlDsYrMIrAVgcfEsV1mVseMr3ZH4fPVb0XgdLJtaBtg/xrrp2cf6MBoVIp10cmJU48T1O/30K1aSzh6qhDNNVzY+6ioU/OsxsNGi0g2ITQVJz4d1eTNeHtZL4O8594g/5L4VjT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f1kheNMz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01586C4AF09
+	for <linux-pci@vger.kernel.org>; Tue,  2 Dec 2025 19:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764702003;
+	bh=+8Kx/RKSMtWNWinBZiYyu99NjKMRNv0M7BAuSI3w5lk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=f1kheNMzinnAeRsRuLZUDsI17v8fl8+SsartwZ1ExFU9dao9kOfUPcp7BjUyaAndd
+	 wrFkscdQhHD3bi9bL4r+Yb36wtdFum3TKR8Xsf7B0VLeqEJ+19+AzgU1XkqA7foaIQ
+	 WJb1yI7U3CwHuqv/FjGE/FnE+dnnrYlvqM01M8hENY2NLzHu48jpr7t12Y6GsD6fw8
+	 ukkRFdtVVrkpcvwNWRkfxrHEqGcVWuivR+VCHQ96jQ7N1mrlTyc2RpC18WAdsP16eD
+	 bgq95x2m+3mtoIDRUKg5pa1d3bWKe9kVmJnAr91OZhXKWx7yzsdv9+1SP4ZvMwEbtc
+	 pjZnsMEnz3Asg==
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-6574d7e451dso2673074eaf.0
+        for <linux-pci@vger.kernel.org>; Tue, 02 Dec 2025 11:00:02 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXqk29CeNo+sF4PqxcMw0O7b1oJy+0E5p29MhVXBrdGYzOEPLEa7/JT+YNM7TXDZoGt36sGWNFt8IU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzpdx/67is3lhMDx7zRci9xZzayWdHlp91vTMCyx0TxgHAhkq8o
+	4C62bc9KO2jO/YJ0QPeu9tQWhfSuAyrwBqQMSInnQ5hfOGJAJ8ZSEqzdvhbw6XuJUCN+XxyY0nl
+	bigc7vGrr2TlQgDijQPfqE5FweVk3hBQ=
+X-Google-Smtp-Source: AGHT+IEhCqFcFogXA5HjK9wwNUYLHjHQW9N42O9EWpD5onKx8P72+r9ukp7b2fv8+HVHKpkbfrYhHCIcrIYbbzosgOM=
+X-Received: by 2002:a05:6820:3083:b0:657:5f31:31b1 with SMTP id
+ 006d021491bc7-6579086d973mr17943998eaf.0.1764702002069; Tue, 02 Dec 2025
+ 11:00:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20251006120944.7880-1-spasswolf@web.de> <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
+ <4903e7c36adf377bcca289dbd3528055dc6cfb32.camel@web.de> <4a8302a0-209f-446a-9825-36cb267c1718@kernel.org>
+ <25f36fa7-d1d6-4b81-a42f-64c445d6f065@amd.com> <1853e2af7f70cf726df278137b6d2d89d9d9dc82.camel@web.de>
+ <f18bafacbd8316c9623658e2935f8fc3b276af64.camel@web.de> <26bf82303f661cdd34e4e8c16997e33eb21d1ee4.camel@web.de>
+ <635b6cb19b5969bed7432dfd1cd651124e63aebb.camel@web.de> <18e472a0489ee5337465d5dc26685cebaf7c4f8d.camel@web.de>
+ <3772b8f5-6d1a-403e-ad27-99a711e78902@kernel.org> <0cb75fae3a9cdb8dd82ca82348f4df919d34844d.camel@web.de>
+ <ab51bd58919a31107caf8f8753804cb2dbfa791d.camel@web.de> <0719d985-1c09-4039-84c1-8736a1ca5e2d@amd.com>
+ <3f790ee59129e5e49dd875526cb308cc4d97b99d.camel@web.de> <CAJZ5v0iRaYBU+1S4rqYR7D6XC+rfQ2+0hgbodweV5JsFr8EEnQ@mail.gmail.com>
+ <b1fadb15d1869bde81315be7488c50dbbc9f7dbd.camel@web.de> <CAJZ5v0iAJN4eTdp9S=CKbMnVn78R7UnBKbLjBTdRhHebE0i7dA@mail.gmail.com>
+ <8273a7755f90a3e41782f1d820dd9f0c22be78b7.camel@web.de> <CAJZ5v0i2T7HpV4jN6NJk=ruBvjecPRU2PyuYf0_TSPQU6FZ5rg@mail.gmail.com>
+ <e807ca71fdef97c931fd9f92eda0f7551aa3ef7b.camel@web.de>
+In-Reply-To: <e807ca71fdef97c931fd9f92eda0f7551aa3ef7b.camel@web.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 2 Dec 2025 19:59:50 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0heOKxk8=4kwXcRLFfKhxYBX+ze_Dc2w90xrM14jvCirg@mail.gmail.com>
+X-Gm-Features: AWmQ_blQf6Cws6WQHYHF5iTFRkdPJhmJxQN6vHdBwn-J7AI31AHzA8_SA8MDzbI
+Message-ID: <CAJZ5v0heOKxk8=4kwXcRLFfKhxYBX+ze_Dc2w90xrM14jvCirg@mail.gmail.com>
+Subject: Re: Crash during resume of pcie bridge due to infinite loop in ACPICA
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	"Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-next@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, acpica-devel@lists.linux.dev, 
+	Robert Moore <robert.moore@intel.com>, Saket Dumbre <saket.dumbre@intel.com>
+Content-Type: multipart/mixed; boundary="000000000000f7df120644fcb38c"
 
-Hi Ilpo,
+--000000000000f7df120644fcb38c
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2 Dec 2025 20:20:09 +0200 (EET), Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
+On Fri, Nov 28, 2025 at 9:47=E2=80=AFPM Bert Karwatzki <spasswolf@web.de> w=
+rote:
+>
+> This is not an ACPICA problem after all:
+>
+> I did some more monitoring:
+> https://gitlab.freedesktop.org/spasswolf/linux-stable/-/commits/amdgpu_su=
+spend_resume?ref_type=3Dheads
+> and I still get a crash, but perhaps due to the delays the printk()s caus=
+ed I actually get a helpful error message in netconsole:
+>
+> T5971;ACPI BIOS Error (bug): Could not resolve symbol [\x5cM013.VARR], AE=
+_NOT_FOUND (20240827/psargs-332)
+> T5971;acpi_ps_complete_op returned 0x5
+> T5971;acpi_ps_parse_aml_debug: parse loop returned =3D 0x5
+> T5971;ACPI Error: Aborting method \x5cM013 due to previous error (AE_NOT_=
+FOUND) (20240827/psparse-935)
+> T5971;ACPI Error: Aborting method \x5cM017 due to previous error (AE_NOT_=
+FOUND) (20240827/psparse-935)
+> T5971;ACPI Error: Aborting method \x5cM019 due to previous error (AE_NOT_=
+FOUND) (20240827/psparse-935)
+> T5971;ACPI Error: Aborting method \x5c_SB.PCI0.GPP0.M439 due to previous =
+error (AE_NOT_FOUND) (20240827/psparse-935)
+> T5971;ACPI Error: Aborting method \x5c_SB.PCI0.GPP0.M241 due to previous =
+error (AE_NOT_FOUND) (20240827/psparse-935)
+> T5971;ACPI Error: Aborting method \x5c_SB.PCI0.GPP0.M237._ON due to previ=
+ous error (AE_NOT_FOUND) (20240827/psparse-935)
+> T5971;acpi_ps_parse_aml_debug: after walk loop
+> T5971;acpi_ps_execute_method_debug 331
+> T5971;acpi_ns_evaluate_debug 475 METHOD
+> T5971;acpi_evaluate_object_debug 255
+> T5971;__acpi_power_on_debug 369
+> T5971;acpi_power_on_unlocked_debug 442
+> T5971;acpi_power_on_unlocked_debug 446
+> T5971;acpi_power_on_debug 471
+> T5971;acpi_power_on_list_debug 649: result =3D -19
+> T5971;pcieport 0000:00:01.1: pci_pm_default_resume_early 568#012 SUBSYSTE=
+M=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
+> T5971;pcieport 0000:00:01.1: broken device, retraining non-functional dow=
+nstream link at 2.5GT/s#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
+> T5971;pcieport 0000:00:01.1: retraining failed#012 SUBSYSTEM=3Dpci#012 DE=
+VICE=3D+pci:0000:00:01.1
+> T5971;pcieport 0000:00:01.1: Data Link Layer Link Active not set in 1000 =
+msec#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:00:01.1
+> T5971;pcieport 0000:01:00.0: Unable to change power state from D3cold to =
+D0, device inaccessible#012 SUBSYSTEM=3Dpci#012 DEVICE=3D+pci:0000:01:00.0
+>
+> This shows that there seems to be no problem with ACPICA, and acpi_power_=
+on_list(_debug)() returns -ENODEV,
+> the crash occurs later.
+>
+> This leaves two question:
+> 1. Is this crash avoidable by different error handling in the pci code?
+> 2. If the crash is not avoidable, can we at least modify the error handli=
+ng in such a way that
+> we get an error message through netconsole by default? (perhaps a little =
+delay will suffice)
 
-> On Tue, 2 Dec 2025, René Rebe wrote:
-> 
-> > s390x. Maybe users of those want to allow list after testing? Now that
-> > I think about it I was wondering why ALSA RAD1 audio is not longer
-> > working in my Sgi Octane with the PCI window not being enabled. Would
-> > not suprise me it was some change like this, too. Should bisect next
-> 
-> Hi René,
-> 
-> Could you please send me a dmesg and contents of the /proc/iomem (taken 
-> with root right so it shows the real addresses) so I can look at this PCI 
-> bridge window issue. If you know a working kernel, having logs from 
-> working and broken case would be very helpful to easily locate the 
-> differences.
+I'm not sure how far this is going to get you, but you may try the
+attached patch.
 
-Thank you so much for offering help with that different
-issue. Sgi/Octane IP30 only went upstream some years ago. I only have
-the likewise not upstream snd-rad1 working with much older out of tree
-kernels. Thanks you for the hints, I'll try to find some time to to
-further debug this soon to bring the snd-rad1 ALSA driver upstream,
-too.
+--000000000000f7df120644fcb38c
+Content-Type: text/x-patch; charset="US-ASCII"; name="pci-pm-default-resume-early.patch"
+Content-Disposition: attachment; 
+	filename="pci-pm-default-resume-early.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mioxywk40>
+X-Attachment-Id: f_mioxywk40
 
-> At this point, no need to bisect as I might be able to figure it out even 
-> without pinpointing the commit. To avoid spending on issues that are 
-> already know and have a fix, please check you're not running somewhat old 
-> kernel as I've already fixed a few things that have gotten broken due to 
-> recent made PCI bridge window fitting and assignment algorithm changes.
-
-I can not easily bisect mips64 sgi-ip30 anyway. As it was out of tree
-for 20y and the uptreamed code changed a lot during cleanup for
-merging.
-
-Good to have a contact to look into this next.
-
-Thanks!
-	René
-
--- 
-René Rebe, ExactCODE GmbH, Berlin, Germany
-https://exactco.de • https://t2linux.com • https://patreon.com/renerebe
+LS0tCiBkcml2ZXJzL3BjaS9wY2ktZHJpdmVyLmMgfCAgIDI3ICsrKysrKysrKysrKysrKysrKysr
+Ky0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0p
+CgotLS0gYS9kcml2ZXJzL3BjaS9wY2ktZHJpdmVyLmMKKysrIGIvZHJpdmVycy9wY2kvcGNpLWRy
+aXZlci5jCkBAIC01NTUsMTEgKzU1NSwxNiBAQCBzdGF0aWMgdm9pZCBwY2lfcG1fZGVmYXVsdF9y
+ZXN1bWUoc3RydWN0CiAJcGNpX2VuYWJsZV93YWtlKHBjaV9kZXYsIFBDSV9EMCwgZmFsc2UpOwog
+fQogCi1zdGF0aWMgdm9pZCBwY2lfcG1fZGVmYXVsdF9yZXN1bWVfZWFybHkoc3RydWN0IHBjaV9k
+ZXYgKnBjaV9kZXYpCitzdGF0aWMgaW50IHBjaV9wbV9kZWZhdWx0X3Jlc3VtZV9lYXJseShzdHJ1
+Y3QgcGNpX2RldiAqcGNpX2RldikKIHsKIAlwY2lfcG1fcG93ZXJfdXBfYW5kX3ZlcmlmeV9zdGF0
+ZShwY2lfZGV2KTsKKwkvKiBCYWlsIG91dCBpZiB0aGUgZGV2aWNlIGlzIG5vdCBhY2Nlc3NpYmxl
+LiAqLworCWlmIChwY2lfZGV2LT5jdXJyZW50X3N0YXRlID09IFBDSV9EM2NvbGQpCisJCXJldHVy
+biAtRU5PREVWOworCiAJcGNpX3Jlc3RvcmVfc3RhdGUocGNpX2Rldik7CiAJcGNpX3BtZV9yZXN0
+b3JlKHBjaV9kZXYpOworCXJldHVybiAwOwogfQogCiBzdGF0aWMgdm9pZCBwY2lfcG1fYnJpZGdl
+X3Bvd2VyX3VwX2FjdGlvbnMoc3RydWN0IHBjaV9kZXYgKnBjaV9kZXYpCkBAIC05NTgsOCArOTYz
+LDExIEBAIHN0YXRpYyBpbnQgcGNpX3BtX3Jlc3VtZV9ub2lycShzdHJ1Y3QgZGUKIAkgKiBjb25m
+aWd1cmF0aW9uIGhlcmUgYW5kIGF0dGVtcHRpbmcgdG8gcHV0IHRoZW0gaW50byBEMCBhZ2FpbiBp
+cwogCSAqIHBvaW50bGVzcywgc28gYXZvaWQgZG9pbmcgdGhhdC4KIAkgKi8KLQlpZiAoIShza2lw
+X2J1c19wbSAmJiBwbV9zdXNwZW5kX25vX3BsYXRmb3JtKCkpKQotCQlwY2lfcG1fZGVmYXVsdF9y
+ZXN1bWVfZWFybHkocGNpX2Rldik7CisJaWYgKCEoc2tpcF9idXNfcG0gJiYgcG1fc3VzcGVuZF9u
+b19wbGF0Zm9ybSgpKSkgeworCQlpbnQgZXJyb3IgPSBwY2lfcG1fZGVmYXVsdF9yZXN1bWVfZWFy
+bHkocGNpX2Rldik7CisJCWlmIChlcnJvcikKKwkJCXJldHVybiBlcnJvcjsKKwl9CiAKIAlwY2lf
+Zml4dXBfZGV2aWNlKHBjaV9maXh1cF9yZXN1bWVfZWFybHksIHBjaV9kZXYpOwogCXBjaWVfcG1l
+X3Jvb3Rfc3RhdHVzX2NsZWFudXAocGNpX2Rldik7CkBAIC0xMjIxLDggKzEyMjksMTIgQEAgc3Rh
+dGljIGludCBwY2lfcG1fcmVzdG9yZV9ub2lycShzdHJ1Y3QgZAogewogCXN0cnVjdCBwY2lfZGV2
+ICpwY2lfZGV2ID0gdG9fcGNpX2RldihkZXYpOwogCWNvbnN0IHN0cnVjdCBkZXZfcG1fb3BzICpw
+bSA9IGRldi0+ZHJpdmVyID8gZGV2LT5kcml2ZXItPnBtIDogTlVMTDsKKwlpbnQgZXJyb3I7CisK
+KwllcnJvciA9IHBjaV9wbV9kZWZhdWx0X3Jlc3VtZV9lYXJseShwY2lfZGV2KTsKKwlpZiAoZXJy
+b3IpCisJCXJldHVybiBlcnJvcjsKIAotCXBjaV9wbV9kZWZhdWx0X3Jlc3VtZV9lYXJseShwY2lf
+ZGV2KTsKIAlwY2lfZml4dXBfZGV2aWNlKHBjaV9maXh1cF9yZXN1bWVfZWFybHksIHBjaV9kZXYp
+OwogCiAJaWYgKHBjaV9oYXNfbGVnYWN5X3BtX3N1cHBvcnQocGNpX2RldikpCkBAIC0xMzM5LDE0
+ICsxMzUxLDE3IEBAIHN0YXRpYyBpbnQgcGNpX3BtX3J1bnRpbWVfcmVzdW1lKHN0cnVjdAogCXN0
+cnVjdCBwY2lfZGV2ICpwY2lfZGV2ID0gdG9fcGNpX2RldihkZXYpOwogCWNvbnN0IHN0cnVjdCBk
+ZXZfcG1fb3BzICpwbSA9IGRldi0+ZHJpdmVyID8gZGV2LT5kcml2ZXItPnBtIDogTlVMTDsKIAlw
+Y2lfcG93ZXJfdCBwcmV2X3N0YXRlID0gcGNpX2Rldi0+Y3VycmVudF9zdGF0ZTsKLQlpbnQgZXJy
+b3IgPSAwOworCWludCBlcnJvcjsKIAogCS8qCiAJICogUmVzdG9yaW5nIGNvbmZpZyBzcGFjZSBp
+cyBuZWNlc3NhcnkgZXZlbiBpZiB0aGUgZGV2aWNlIGlzIG5vdCBib3VuZAogCSAqIHRvIGEgZHJp
+dmVyIGJlY2F1c2UgYWx0aG91Z2ggd2UgbGVmdCBpdCBpbiBEMCwgaXQgbWF5IGhhdmUgZ29uZSB0
+bwogCSAqIEQzY29sZCB3aGVuIHRoZSBicmlkZ2UgYWJvdmUgaXQgcnVudGltZSBzdXNwZW5kZWQu
+CiAJICovCi0JcGNpX3BtX2RlZmF1bHRfcmVzdW1lX2Vhcmx5KHBjaV9kZXYpOworCWVycm9yID0g
+cGNpX3BtX2RlZmF1bHRfcmVzdW1lX2Vhcmx5KHBjaV9kZXYpOworCWlmIChlcnJvcikKKwkJcmV0
+dXJuIGVycm9yOworCiAJcGNpX3Jlc3VtZV9wdG0ocGNpX2Rldik7CiAKIAlpZiAoIXBjaV9kZXYt
+PmRyaXZlcikK
+--000000000000f7df120644fcb38c--
 
