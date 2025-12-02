@@ -1,176 +1,144 @@
-Return-Path: <linux-pci+bounces-42535-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42536-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17913C9D1EA
-	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 22:54:08 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92A03C9D342
+	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 23:23:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CE3044E02FD
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 21:54:06 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7C1A54E3752
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 22:23:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30F332F691E;
-	Tue,  2 Dec 2025 21:54:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8AF62F9D8C;
+	Tue,  2 Dec 2025 22:23:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IxRhsdzb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZbnahQjR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3F2222597
-	for <linux-pci@vger.kernel.org>; Tue,  2 Dec 2025 21:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552342F90CD
+	for <linux-pci@vger.kernel.org>; Tue,  2 Dec 2025 22:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764712445; cv=none; b=MUho/1kzVNKdPBjO4c+N9L8YjYhNPLi8CF6uJFhMKpxaM17Tuj7EqEzZ0h+terMh2vrdpxRRnZ/4lu/rLi+QmSx8mdk2qsFgzbfjugNbdeUv4og8tyUM6QCZDE2vnJXoyERuFaPbCla7cYC7KN0wlxrIQdoKKFQlXzN4YEAupIk=
+	t=1764714208; cv=none; b=P0VbWfV/XxqeulFmSJKKVPPlDADKeawdDEiJabvfOmaWiYS/uA9IiYkkK+9KoZCXeSId0oqq9jt5DdTBjPtFzlDYsV3qLXmaSerBuFQkbT85AQV+KskKyycbgMVjwUTnmPPa9Lt/sl+vskTZFxqIMUJclZ1UMzpO47I8zZuhLg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764712445; c=relaxed/simple;
-	bh=W0V7P93neIn2iB64a++B6hESjcI5jM/+kLB2CBVwbE8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hq5h53vzv6+szlEy/ToI7piVyH4wwMw2l65zQ8DTK0DTNuwZvXEA8nFOUpMGfD/+OwaaHk/CI1azQrrmWDAkRAsxGmIEff9Z0MJWUsY6E8a31CJX77kBqpfiddXl7yOLpcAdIuvg1fg6VxTM16unq6PBoUj0bWaXpEQXbdKdMOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IxRhsdzb; arc=none smtp.client-ip=209.85.215.169
+	s=arc-20240116; t=1764714208; c=relaxed/simple;
+	bh=lansFPWa8a8i9MtzvmNIvbKm2tfyDv9hIhtaM5rOO88=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V5G2KGAIn+b8zvvHkmqIVu/huV5ucusx232UlMIyziImiBbV6A45GwhxUspaLDsC95xcYZy+g5hwYN9GNM7SaSHbWwiwOolq8rHkMNlj4AgRI5x9X78nzyM7n+LYMUydZ2zh2/+T8mwdX1QVJOaS7Fz0A83SBT2FIrwODoREOVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZbnahQjR; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-bc09b3d3b06so3349109a12.2
-        for <linux-pci@vger.kernel.org>; Tue, 02 Dec 2025 13:54:03 -0800 (PST)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-29812589890so71859605ad.3
+        for <linux-pci@vger.kernel.org>; Tue, 02 Dec 2025 14:23:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1764712443; x=1765317243; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cCirGjV3/DFcYbsMad4kR06svckBi7sOFnowquKvHe8=;
-        b=IxRhsdzbjnlBqrmLK6HY6DG20Kt9moUsiravYscYmyxRjkrlDfBwizHlsYmFAM6FZ1
-         4iTBgb3x9R0cro4QdNG3y1vD4IYRm5wNQXJSyh/fyF+rfegb9RuCtNaFPg0pGS/U0a2N
-         lfmKDF+J5W6leG57b+3OL3Q1YzjNoHFL41n34=
+        d=chromium.org; s=google; t=1764714206; x=1765319006; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BWRcZibZvKcAdZFQm9zANwrWSXsw9mMjGu/qDQSEZf8=;
+        b=ZbnahQjRLmQxl79zUQUzr2185OVL1YI91iQo2Ic7NODQAO3hrxvgcH4jiTMpIi10hg
+         9mnZeRhj49FUHEfpxjqbl0aoZIyYZFHLGCwMX1CXXmx76IiK/+c3sBzqZ3kuD9i8ldSj
+         2I0d738uRJj4q8DgWNGhc1VAxFqOX3G2ZxCG8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764712443; x=1765317243;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cCirGjV3/DFcYbsMad4kR06svckBi7sOFnowquKvHe8=;
-        b=or3Q6L6CIxgD6KYmKFGbvhtluTDzH4ASTKvmV4Kr5dUV7/xZy+6B3sFbTPtqtWDtBE
-         8zBPyqtg7eIcia4Mm3GPvxmvWk4ThyIDbmZzDIOye6VhI/X4YQtTktQzMSe360m0U08t
-         rH6B+xa6IP8rKCIhWvazhfKjoUrOph5tI3ww682eyQKxcxe4HR8rxDgFdow/LY+G8kra
-         r7D1xuNZd/V2vHG3EDvUyrOXjWW2kdW0SKLNii8IPV56ZuQyLOskShmSi1e5OFUnHQDP
-         XOT9JGEXDhQ9bbsmfY3Qpxf2Vm7+j3eD78D2WpQfX+EiK72h+YT2h6KxN0Bqqoob4RY/
-         0TTw==
-X-Forwarded-Encrypted: i=1; AJvYcCVolWQ5mcOVD9QkDwOkSXWd/HQUol7M3S6iTIKP2FDuWbVvUgwkRgUMWheASbGLfwKEsbLuTRbZ65w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxmb5G1NgF2dQdVhBV0/Qmxw3u5V4PS0PqvY+GoMSFG4B2UC8Up
-	1HczOkSB/FwHNVmaOhn895cNAMV4hMK8bY2cCw3vMRBenAC+D/nDV+wVYMhB5+uMXQ==
-X-Gm-Gg: ASbGnctwPpJscx+eKmktzhrosXluC8fB14Cz9FR7d6y2xGqHh/Z3f+EoLGUyjBCKEKj
-	oQShXzC5Kz5xs1HaQfsa1fRoUqwtD5msZqdQLXRDF6UL2Xz5chgSv3R4n7CQmIoHqUV4JBxsFKB
-	ire+yey4qI5yv6FwHrCNCvmm244rfLtUnipBG7FhCWhNoljK3uWIP0mXVTz6Aq/Odzc1HfHVlO+
-	zcKlN4AcP+YCf9t+DQrK492SORXO571Pu4Sqr6u8T5qDpUV7Cxu7NpvXThVifk2u+BHv+z09Ixk
-	fKICxvvs19wYaG4FXlw3rg6XHHv/tlLCr0qT5tG7PGMyOZDTXmC4ljNZY7dCiv80sP5nYegfvJ2
-	LYGlOmIxE2Xqyyd642sk59xLH6BDvteSeXFiLvTF7xQoaJDw2jb3QVl3KVUneF5YYuI8jASJhjX
-	KbTHLYB9fM5fFKDJ2j8i3bzq/hsKGcrJRbAXxHQUfx3i1dqh2/OA==
-X-Google-Smtp-Source: AGHT+IHnvrGhJjf68XCIDP9snnMvR3mnikEUomrgLZk61aCRBp4DY9aPnTFoOtshoIIKWOLqNcEWbQ==
-X-Received: by 2002:a05:7300:e8b0:b0:2a4:3593:468a with SMTP id 5a478bee46e88-2ab92f7e159mr37332eec.38.1764712442741;
-        Tue, 02 Dec 2025 13:54:02 -0800 (PST)
+        d=1e100.net; s=20230601; t=1764714206; x=1765319006;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BWRcZibZvKcAdZFQm9zANwrWSXsw9mMjGu/qDQSEZf8=;
+        b=fcnp0bf3xP2z9AT/iAk1P1GWT3XyrCvedN0eUxQdLxMGWqQEg64bKdfyd6cZO+9N0L
+         nQhlJ6KOW3i7f0h2Waae8Oa0oQcUVWs8B26y4RPeBfKVbktpkBqfADe3uo0gcKf6hDhv
+         PfLGhozceWfOEqQF1G7bHMITZLhn8datryI+7y4O9+xKlOKx3ZjrjqcUn3A+LnqSwf3N
+         dxGyXHEer6QcxBxJpvbD6KarcCRQ/uTOUQmOOpfbOwu4wR5hCYnHyRUwY3Xx+Wt2K40o
+         vSI5pHlcIQq8d6xHBS6rglzn210m/ZpY8GBvopGUVmWHA6dlHuCy4Cu/CX15+lmT2X7s
+         WCcw==
+X-Gm-Message-State: AOJu0YxyQcV3YK+Ta5WJYugVSqJVVPJ74h2Sz0it8siw3i0k69y1NMLj
+	pz6yjfKTX3mDvTvaBsJONYZ4eIAfw4VcGRZCaLi22ADvbSphcSMG5t8/40y69cTfMA==
+X-Gm-Gg: ASbGncsMc1XKdn92b+3TE6339f0MboTSc62eFQltcvOLwqzAs7y0EdsTYjCQ+UVIxqF
+	HxELrwYQMuhecMsKQpjbJGnlhmaM5Ziu0vH1ILhgXZO7+1s2uWYni7AYSCJBwBc4c2FzHnyxil/
+	bBqx5YffhXE5x9GO2fT2N7bVL6ymbZziih12JA7pKudCqHPArxVZlQG6fo3PlL0r8qHw7coZcYv
+	o6cF2K2+vVwomHEhCF3jwh7or4sYWSi1rVXJWjNWp5IyCr99kS1rzcP8+h46/JRiuts/p3UYR7x
+	g9yYYSaMV7JIgYEBjEye3QqwSRORHwljwPBTyEOCq4PMSqF7YCrTUaaxHDe/7/nRZnAeD4hILcb
+	GJ0i1FdmItHeLkhnXopex+1tJwJZDd7fqa9+KI80sAM1s1216nYcuvInqkGI7YzsX1PvQQVQIcp
+	vbsomn01+d8hRZEvwEI903sLWXcGmIZCn3Szi2Bjh6wulAdlptMEh+L3xnX4vW
+X-Google-Smtp-Source: AGHT+IEZ4t98e3McIXvA087J+RzIVfq5DO8Mk7SHDo0b01kfLReZdqadUVOa6n+b9FV4HtS5YlTPkA==
+X-Received: by 2002:a05:7022:6b82:b0:119:e569:fb9e with SMTP id a92af1059eb24-11df0be2f34mr230780c88.13.1764714206495;
+        Tue, 02 Dec 2025 14:23:26 -0800 (PST)
 Received: from localhost ([2a00:79e0:2e7c:8:eb2b:1140:65a2:dd2e])
-        by smtp.gmail.com with UTF8SMTPSA id 5a478bee46e88-2a9653ca11esm57570220eec.0.2025.12.02.13.54.01
+        by smtp.gmail.com with UTF8SMTPSA id a92af1059eb24-11dcb067088sm53125115c88.10.2025.12.02.14.23.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Dec 2025 13:54:02 -0800 (PST)
-Date: Tue, 2 Dec 2025 13:54:00 -0800
+        Tue, 02 Dec 2025 14:23:25 -0800 (PST)
 From: Brian Norris <briannorris@chromium.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: =?iso-8859-1?Q?Ren=E9?= Rebe <rene@exactco.de>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Riccardo Mottola <riccardo.mottola@libero.it>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH] PCI: Fix PCI bridges not to go to D3Hot on older RISC
- systems
-Message-ID: <aS9f-K_MN0uYUCYx@google.com>
-References: <20251202.174007.745614442598214100.rene@exactco.de>
- <20251202172837.GA3078292@bhelgaas>
+To: =?UTF-8?q?Martin=20Mare=C5=A1?= <mj@ucw.cz>
+Cc: linux-pci@vger.kernel.org,
+	Brian Norris <briannorris@google.com>
+Subject: [PATCH pciutils] dump: Support `lspci -F -` for stdin
+Date: Tue,  2 Dec 2025 14:23:12 -0800
+Message-ID: <20251202222315.2548516-1-briannorris@chromium.org>
+X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251202172837.GA3078292@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 02, 2025 at 11:28:37AM -0600, Bjorn Helgaas wrote:
-> I think we need some kind of analysis of what is happening to the PCI
-> devices here.  I don't know why the CPU architecture per se would be
-> related to PCI power management.
+From: Brian Norris <briannorris@google.com>
 
-Agreed, and I think it will be very hard to ever make any traction on
-modernizing the PM stack here if we can't any sort of "why?" answer out
-of the systems that don't work. The last time this came up, the answer
-was essentially:
+It can be useful to pipe raw config registers (lspci -x) from one system
+to another, so the latter system can do the parsing (lspci -vv -F ...).
+For example, one might do this if the former has a more limited / older
+version of lspci. Today, one has to write the contents to a file.
 
-https://lore.kernel.org/all/CAJZ5v0j_6jeMAQ7eFkZBe5Yi+USGzysxAgfemYh=-zq4h5W+Qg@mail.gmail.com/
+Support stdin via "-", so it's easier to run it through a pipeline, such
+as:
 
-  The DMI check at the end of pci_bridge_d3_possible() is really
-  something to the effect of "there is no particular reason to prevent
-  this bridge from going into D3, but try to avoid platforms where it
-  may not work".
+  ssh ${remote_host} old_lspci -xxx | new_lspci -vv -F -
 
-i.e., no specific reason, but a vague understanding that there is some
-old HW that doesn't work. That's not very helpful for supporting non-DMI
-systems that don't have a programmatic notion of "old."
+A dash (-) is a common convention used by many other tools. If one
+really expected to access a file named "-", one can use "./-" or similar
+to disambiguate.
 
-OTOH, I sympathize with Rene, that it's hard to dig into what amounts to
-new development on old platforms, and yet, they do remain broken.
+Signed-off-by: Brian Norris <briannorris@google.com>
+---
 
-> pci_bridge_d3_possible() is already a barely maintainable hodge podge
-> of random things that work and don't work.  Generally speaking most of
-> those cases relate to firmware.  
+ lib/dump.c | 4 +++-
+ lspci.man  | 4 ++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-I wonder if we could take a different approach that helps straddle the
-uncertain boundary here a bit:
+diff --git a/lib/dump.c b/lib/dump.c
+index 00ebc9e3e782..65d8dd5d7b55 100644
+--- a/lib/dump.c
++++ b/lib/dump.c
+@@ -66,7 +66,9 @@ dump_init(struct pci_access *a)
+ 
+   if (!name)
+     a->error("dump: File name not given.");
+-  if (!(f = fopen(name, "r")))
++  if (!strcmp(name, "-"))
++    f = stdin;
++  else if (!(f = fopen(name, "r")))
+     a->error("dump: Cannot open %s: %s", name, strerror(errno));
+   while (fgets(buf, sizeof(buf)-1, f))
+     {
+diff --git a/lspci.man b/lspci.man
+index 7907aeb8a5dc..9281e8a3edb1 100644
+--- a/lspci.man
++++ b/lspci.man
+@@ -204,6 +204,10 @@ Use direct hardware access via Intel configuration mechanism 2.
+ .B -F <file>
+ Instead of accessing real hardware, read the list of devices and values of their
+ configuration registers from the given file produced by an earlier run of lspci -x.
++If
++.I file
++is a single dash (\fB-\fP), read the contents from stdin.
++.IP
+ This is very useful for analysis of user-supplied bug reports, because you can display
+ the hardware configuration in any way you want without disturbing the user with
+ requests for more dumps.
+-- 
+2.52.0.158.g65b55ccf14-goog
 
- 1) be more aggressive at *permitting* runtime PM / D3 for bridges
- (i.e., if we think a bridge might be OK to go to D3, then manage its
- get()/put() properly); and
-
- 2) be less aggressive about default-enabling runtime suspend / D3
- (i.e., only call pm_runtime_allow() in drivers/pci/pcie/portdrv.c in
- limited circumstances).
-
-For #2, that would actually match the documentation:
-
-  Documentation/power/pci.rst
-
-  The driver itself should not call pm_runtime_allow(), though.  Instead, it
-  should let user space or some platform-specific code do that (user space can
-  do it via sysfs as stated above), but it must be prepared to handle the
-  runtime PM of the device correctly as soon as pm_runtime_allow() is called
-  (which may happen at any time, even before the driver is loaded).
-
-So instead of portdrv.c calling pm_runtime_allow(), we'd leave that
-decision to user space (i.e., udev or similar). That will help limit the
-impact of getting #1 "wrong." And it's possible the bad systems didn't
-really want aggressive PM anyway, so it's not worth much trouble.
-
-For #1, that means pci_bridge_d3_possible() would become more like
-pci_bridge_d3_impossible(). We could leave it as-is, or at least ensure
-it fails toward the "possible" side.
-
-IOW, user space can choose to opt in by way of:
-
-  echo auto > /sys/bus/pci/devices/[port device]/power/control
-
-That might require some new udev rules if existing x86 systems are
-supposed to retain their old behavior.
-
-Personally, I care more about #1 (that the kernel manages pm_runtime_*()
-refcounts properly, so that my systems *can* opt into aggressive PM),
-and less about #2 (it's a fact of life that PM policy often requires
-careful udev / sysfs management, and that the defaults will not
-necessarily give the best power savings).
-
-This might leave some old unmaintained systems as "D3 possible", but we
-don't actually exercise it if user space doesn't poke
-/sys/bus/pci/devices/[port device]/power/control.
-
-Brian
 
