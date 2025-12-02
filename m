@@ -1,216 +1,188 @@
-Return-Path: <linux-pci+bounces-42514-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42513-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 303F7C9C640
-	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 18:29:18 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E48FC9C628
+	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 18:28:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD50C3A3A42
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 17:29:16 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2872734337E
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 17:28:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489512C11E6;
-	Tue,  2 Dec 2025 17:29:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFE442C032C;
+	Tue,  2 Dec 2025 17:28:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JXgL/7g8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FDiIhZlq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977152C0F70;
-	Tue,  2 Dec 2025 17:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7653287503;
+	Tue,  2 Dec 2025 17:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764696545; cv=none; b=SExadeegH8rLvc25FQSDxsWAQx5VkJAAASFWcPRjx15yTImbuj5lFT6rAMNpDFZq0/n1nJI7Oy10RHHjGRaMwv+ZPkLVGROmbwmULxFbHkWhdaXIgRFfEueVZgrPKC54suKhyLWjwHtOV94WFADlhCWrug8bnBEqN9JUSVmBNW8=
+	t=1764696518; cv=none; b=Jw/vvl3OhKkV/1GNzsKmEbRlXPuNCce/fmOhU4GGluSyFPFNmdy2kz64XuHP6PJqznDjguYg2zbybG0RvGyvrwmu1mgXvzPNvu5YhRrvJadLNwTzipk/RWYfu5vhbm1brpKNWecVm7JQiKRKSkbiGdz/geg62WkIC5ujfeODAg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764696545; c=relaxed/simple;
-	bh=0CWgiXQjHQ+aAB2ksEpI1/F3O3ikreeGDOLzHq6IPXs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LUFdpOPgQoalc1FN02wcRcxkhJEzj2T0CVhRsrC/b1ARQi05DUWZ6YIgK7U6cPTv/uPEa8y0xTKTkYqVZIfGZy0k5mwW3i5tItCZzQPDfIKp3GulhxjmIC9q3ympAWGZ+LjGkcF0v+27UZUSeb4mez52U78lmngrqKsCfkI+acc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JXgL/7g8; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id D227A1A1EDC;
-	Tue,  2 Dec 2025 17:29:00 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 9EB6160706;
-	Tue,  2 Dec 2025 17:29:00 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9122811919DC9;
-	Tue,  2 Dec 2025 18:28:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1764696536; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=4BQ1XtM/oSaifBg16TjvVJ4//gt59MDXZf9Ix2wTO1g=;
-	b=JXgL/7g8k9S4vyskm8xyx1v29w1Me/J6AytYr7l55uyR3/5yDOXjtNyXEpR4wnxzYATmyM
-	vHSSeoX3hQa4vzJXXb6fc5ZendC+ixZc9ZsDBq5nvDbybqEuvHLSPd6L1sl+qyeFU7MMzF
-	Pakz/1p9eIVtQHV4cEBWcCm34HvitG+eThoA2ZyRWEjJuwS9JIrY+uH0GWqHJhx7YDau78
-	0rJqXrBVIAcZoW1khXUNBI6hJAnO3V31IUdVOOPz3tTjjTANzVp+WhhiUK2qKCKK6iRk1y
-	Qi0+GI7U02463lZtkJONer2Ox9Cl+afa+OUmpY8ymeUYGSefeooQJPNbGx16sg==
-Date: Tue, 2 Dec 2025 18:28:34 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Kalle Niemi <kaleposti@gmail.com>, Rob Herring <robh@kernel.org>, Matti
- Vaittinen <mazziesaccount@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich
- <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi Shyti
- <andi.shyti@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Charles
- Keepax <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
- <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
- Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Mark Brown <broonie@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, Davidlohr
- Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Alison Schofield
- <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
- overlays"
-Message-ID: <20251202182834.65d7f0a1@bootlin.com>
-In-Reply-To: <CAMuHMdXogrkTAm=4pC0B+Sybr=PR3XovnBgmiEyTvUMmJHvBRA@mail.gmail.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
-	<20251015071420.1173068-2-herve.codina@bootlin.com>
-	<f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
-	<CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
-	<5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
-	<CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
-	<072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
-	<CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
-	<55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
-	<20251202102619.5cd971cc@bootlin.com>
-	<CAMuHMdXogrkTAm=4pC0B+Sybr=PR3XovnBgmiEyTvUMmJHvBRA@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1764696518; c=relaxed/simple;
+	bh=GqQQSgnYZ8aaYHuZ+ILVfOybpniJ02xbNm53/IV6GOs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=n/sks8eyR9Zi9rl798IEwXAGCwfK4lGf3whRBhL6cFyr54DHruUyFP1+oM7qtLpkkwkQA7ZkeDdmgHd7+R1vZazvj+FdzV1mPWFMNlc7X4TwKw67WDaCvqSHpcuMaO0JhaeQazFRIOmNWYxl/SOsZTqKV1SUHzzPNd6EgkwZHJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FDiIhZlq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B805C4CEF1;
+	Tue,  2 Dec 2025 17:28:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764696518;
+	bh=GqQQSgnYZ8aaYHuZ+ILVfOybpniJ02xbNm53/IV6GOs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FDiIhZlqHMGzH7pG/KaIlD65WuyGf6W8qKDT5Vi7pbtBZSelGTPbiw/ggMYjNosD5
+	 D1D4GbBpU6UQMVpaDMVYgB5BYC0zwsAgJPX9Izx0OBBvwIxdOHzaygbHCNI4ctTz3r
+	 IYWjhtl+0XLYjfckRqFSHdW10T12VmEkM0y1W6WO4qBxbvB0JlNfAgF+aYPCuvkxE/
+	 RZudXDjyEtov6iXkoGwP/2i9lLFesVgiS1ptVloEtkME+AdJQjuHlsAJANA4siMcAE
+	 gRV3M4ouEHkjmeJ5jj83QxnxND91UGl8h5mggqOwDuuDP/5QB44Ik0Sv8tm379Qry6
+	 uF+TyneON/xyQ==
+Date: Tue, 2 Dec 2025 11:28:37 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: =?utf-8?B?UmVuw6k=?= Rebe <rene@exactco.de>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Riccardo Mottola <riccardo.mottola@libero.it>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Brian Norris <briannorris@chromium.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH] PCI: Fix PCI bridges not to go to D3Hot on older RISC
+ systems
+Message-ID: <20251202172837.GA3078292@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <20251202.174007.745614442598214100.rene@exactco.de>
 
-Hi Geert,
+[+cc Mani, Brian (a5fb3ff63287 authors), Rafael, Lukas, Mario]
 
-On Tue, 2 Dec 2025 17:35:35 +0100
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Tue, Dec 02, 2025 at 05:40:07PM +0100, René Rebe wrote:
+> Commit a5fb3ff63287 ("PCI: Allow PCI bridges to go to D3Hot on all
+> non-x86") was bisected to break various non-x86 RISC Unix systems,
+> e.g. sparc64, see two example oopses below. Fix by only allowing D3Hot
+> on modern ARM64, PPC64 and RISCV ISAs besides new enough x86.
 
-> Hi Hervé,
-> 
-> On Tue, 2 Dec 2025 at 10:26, Herve Codina <herve.codina@bootlin.com> wrote:
-> > On Fri, 28 Nov 2025 10:34:57 +0200
-> > Kalle Niemi <kaleposti@gmail.com> wrote:  
-> > > >>>>>> Test system testing drivers for ROHM ICs bisected this commit to cause
-> > > >>>>>> BD71847 drivers probe to not be called.  
-> > > >>>>> This driver (and overlay support) is in linux-next or something out of
-> > > >>>>> tree on top of linux-next?
-> > > >>>>>
-> > > >>>>> Rob  
-> > > >>>> Yes the driver is in mainline linux: /drivers/mfd/rohm-bd718x7.c  
-> > > >>> I don't see any support to apply overlays in that driver.  
-> > > >> Ah. Sorry for the confusion peeps. I asked Kalle to report this without
-> > > >> proper consideration. 100% my bad.
-> > > >>
-> > > >> While the bd718x7 drive indeed is mainline (and tested), the actual
-> > > >> 'glue-code' doing the overlay is part of the downstream test
-> > > >> infrastructure. So yes, this is not a bug in upstream kernel - this
-> > > >> falls in the category of an upstream change causing downstream things to
-> > > >> break. So, feel free to say: "Go fix your code" :)
-> > > >>
-> > > >> Now that this is sorted, if someone is still interested in helping us to
-> > > >> get our upstream drivers tested - the downstream piece is just taking
-> > > >> the compiled device-tree overlay at runtime (via bin-attribute file),
-> > > >> and applying it using the of_overlay_fdt_apply(). The approach is
-> > > >> working for our testing purposes when the device is added to I2C/SPI
-> > > >> node which is already enabled. However, in case where we have the I2C
-> > > >> disabled, and enable it in the same overlay where we add the new device
-> > > >> - then the new device does not get probed.
-> > > >>
-> > > >> I would be really grateful if someone had a pointer for us.  
-> > > > Seems to be fw_devlink related. I suppose if you turn it off it works?
-> > > > There's info about the dependencies in sysfs or maybe debugfs. I don't
-> > > > remember the details, but that should help to tell you why things
-> > > > aren't probing.  
-> >
-> > Rob reverted patches but I plan to continue my work on it.
-> > On my side, I need the reverted patches but I fully understand that, on
-> > your side, you need a working system.
-> >
-> > In order to move forward and find a solution for my next iteration, can you
-> > send your overlay (dtso) used in your working and non working cases?  
-> 
-> Hmm, I must have missed when Rob applied (part of) this series, as I
-> do an overlay test (using the out-of-tree configfs) on top of every
-> (bi-weekly) renesas-drivers release, and saw no issues during the last
-> few months.
-> 
-> So I applied this series and tested loading my SPI EEPROM overlay.
-> And it indeed breaks, with the culprit being this particular patch.
-> 
-> Interestingly, quoting from this patch:
-> 
->    "While the commit fixed fw_devlink overlay handling for one case, it
->     broke it for another case. So revert it and redo the fix in a separate
->     patch."
-> 
-> Where is the separate patch that redid the fix? I assume it is "[PATCH
-> v4 03/29] of: dynamic: Fix overlayed devices not probing because
-> of fw_devlink"?  Unfortunately that doesn't fix the issue for me.
-> 
-> Quoting more from this patch:
-> 
->    "Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgyo8x6=9F9rZ+-KzjOg@mail.gmail.com/"
-> 
-> Strange that it claims to fix the issue reported there, as the failure
-> mode I am seeing is exactly the same as documented in that report?
-> 
-> Do you know what is wrong? The overlay I am using is referenced in
-> the bug report linked above.
+I think we need some kind of analysis of what is happening to the PCI
+devices here.  I don't know why the CPU architecture per se would be
+related to PCI power management.
 
-The first patch "Fix probing of devices in DT overlays" didn't fix all cases
-and so Saravana reverted this patch and proposed "of: dynamic: Fix overlayed
-devices not probing because of fw_devlink".
+pci_bridge_d3_possible() is already a barely maintainable hodge podge
+of random things that work and don't work.  Generally speaking most of
+those cases relate to firmware.  
 
-This second patch was needed to fix my use case even if more modification were
-needed to have my use case fully fixed (other patches in my series).
+> Sun Blade 1000:
+> ERROR(0): Cheetah error trap taken afsr[0010080005000000] afar[000007f900800000] TL1(0)
+> ERROR(0): TPC[100a05a4] TNPC[100a05a8] O7[42acc8] TSTATE[4411001603]
+> ERROR(0):
+> TPC<MakeIocReady+0xc/0x278 [mptbase]>
+> ERROR(0): M_SYND(0),  E_SYND(0), Privileged
+> ERROR(0): Highest priority error (0000080000000000) "Bus error response from system bus"
+> ERROR(0): D-cache idx[0] tag[0000000000000000] utag[0000000000000000] stag[0000000000000000]
+> ERROR(0): D-cache data0[0000000000000000] data1[0000000000000000] data2[0000000000000000] data3[0000000000000000]
+> ERROR(0): I-cache idx[0] tag[0000000000000000] utag[0000000000000000] stag[0000000000000000] u[0000000000000000] l[0000000000000000]
+> ERROR(0): I-cache INSN0[0000000000000000] INSN1[0000000000000000] INSN2[0000000000000000] INSN3[0000000000000000]
+> ERROR(0): I-cache INSN4[0000000000000000] INSN5[0000000000000000] INSN6[0000000000000000] INSN7[0000000000000000]
+> ERROR(0): E-cache idx[b08040] tag[000000001e008fa0]
+> ERROR(0): E-cache data0[0000000000000000] data1[0000000000000000] data2[0000000000000000] data3[ffffffffffffffff]
+> Kernel panic - not syncing: Irrecoverable deferred error trap.
+> CPU: 0 UID: 0 PID: 46 Comm: (udev-worker) Not tainted 6.14.0-rc1-00001-ga5fb3ff63287 #18
+> Call Trace:
+> [<00000000004294b0>] panic+0xf0/0x370
+> [<0000000000435bc4>] cheetah_deferred_handler+0x2c8/0x2d8
+> [<0000000000405e88>] c_deferred+0x18/0x24
+> [<00000000100a05a4>] MakeIocReady+0xc/0x278 [mptbase]
 
-Rob applied those first patches from my series and some systems were broken.
-The breakage has been reported my Kalle and Matti and led to a revert of culprit
-patches.
+I assume both of these crashes are related to the
+CHIPREG_READ32(&ioc->chip->Doorbell) in mpt_GetIocState(), e.g., maybe
+that PCI read failed because an upstream bridge was not in D0 and
+therefore treated the read as an unsupported request.
 
-I tried to understand what was wrong. I am pretty convinced that modification
-done in "of: dynamic: Fix overlayed devices not probing because of fw_devlink"
-are really better than modification available in "treewide: Fix probing of
-devices in DT overlays".
-
-I proposed an update [0] and I will be glad if you can also test this update 
-on your side and give me your feedback.
-
-[0] https://lore.kernel.org/lkml/20251202175836.747593c0@bootlin.com/
-
-Best regards,
-Hervé
+> [<00000000100a089c>] mpt_do_ioc_recovery+0x8c/0x1054 [mptbase]
+> [<000000001009f2d4>] mpt_attach+0x920/0xa68 [mptbase]
+> [<000000001012424c>] mptsas_probe+0x8/0x3e8 [mptsas]
+> [<0000000000788308>] local_pci_probe+0x24/0x70
+> [<0000000000788dac>] pci_device_probe+0x1c0/0x1d0
+> [<000000000082633c>] really_probe+0x13c/0x29c
+> [<0000000000826590>] __driver_probe_device+0xf4/0x104
+> [<0000000000826614>] driver_probe_device+0x24/0xa0
+> [<000000000082683c>] __driver_attach+0xe8/0x104
+> [<0000000000824da0>] bus_for_each_dev+0x58/0x84
+> [<0000000000825508>] bus_add_driver+0xdc/0x1f8
+> [<0000000000827110>] driver_register+0x70/0x120
+> 
+> Niagara T1:
+> mptsas 0000:07:00.0: Unable to change power state from D3cold to D0, device inaccessible
+> NON-RESUMABLE ERROR: Reporting on cpu 31
+> NON-RESUMABLE ERROR: TPC [0x0000000010184034] <MakeIocReady+0x10/0x298 [mptbase]>
+> NON-RESUMABLE ERROR: RAW [1f10000000000007:0000000e3179235c:0000000202000004:000000ea00300000
+> NON-RESUMABLE ERROR: 00000000001f0000:0000000000000000:0000000000000000:0000000000000000]
+> NON-RESUMABLE ERROR: handle [0x1f10000000000007] stick [0x0000000e3179235c]
+> NON-RESUMABLE ERROR: type [precise nonresumable]
+> NON-RESUMABLE ERROR: attrs [0x02000004] < PIO sp-faulted priv >
+> NON-RESUMABLE ERROR: raddr [0x000000ea00300000]
+> Kernel panic - not syncing: Non-resumable error.
+> CPU: 31 UID: 0 PID: 367 Comm: (udev-worker) Not tainted 6.16.12+3-sparc64-smp #1 NONE  Debian 6.16.12-2+sparc64.1
+> Call Trace:
+> [<00000000004373c4>] dump_stack+0x8/0x18
+> [<0000000000429540>] panic+0xf4/0x398
+> [<000000000043afcc>] sun4v_nonresum_error+0x16c/0x240
+> [<0000000000406eb8>] sun4v_nonres_mondo+0xc8/0xd8
+> [<0000000010184034>] MakeIocReady+0x10/0x298 [mptbase]
+> [<00000000101844b4>] mpt_do_ioc_recovery+0x9c/0x1110 [mptbase]
+> [<00000000101836f8>] mpt_attach+0xb58/0xd20 [mptbase]
+> [<0000000010287f30>] mptsas_probe+0x10/0x440 [mptsas]
+> [<0000000000b3fab0>] local_pci_probe+0x30/0x80
+> [<0000000000b405d4>] pci_device_probe+0xb4/0x240
+> [<0000000000bfd348>] really_probe+0xc8/0x400
+> [<0000000000bfd70c>] __driver_probe_device+0x8c/0x160
+> [<0000000000bfd8c8>] driver_probe_device+0x28/0x100
+> [<0000000000bfdb7c>] __driver_attach+0xbc/0x1e0
+> [<0000000000bfacfc>] bus_for_each_dev+0x5c/0xc0
+> [<0000000000bfcafc>] driver_attach+0x1c/0x40
+> Press Stop-A (L1-A) from sun keyboard or send break
+> twice on console to return to the boot prom
+> 
+> Fixes: a5fb3ff63287 ("PCI: Allow PCI bridges to go to D3Hot on all non-x86")
+> Signed-off-by: René Rebe <rene@exactco.de>
+> ---
+> Tested on Sun Blade 1000, and shipping in all T2/Linux builds since 2025-08-01
+> ---
+>  drivers/pci/pci.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b14dd064006c..7619d2cfa66d 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3033,9 +3033,9 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>  
+>  		/*
+>  		 * Out of caution, we only allow PCIe ports from 2015 or newer
+> -		 * into D3 on x86.
+> +		 * into D3 or other modern ISAs only.
+>  		 */
+> -		if (!IS_ENABLED(CONFIG_X86) || dmi_get_bios_year() >= 2015)
+> +		if (IS_ENABLED(CONFIG_ARM64) || IS_ENABLED(CONFIG_PPC64) || IS_ENABLED(CONFIG_RISCV) || dmi_get_bios_year() >= 2015)
+>  			return true;
+>  		break;
+>  	}
+> -- 
+> 2.52.0
+> 
+> -- 
+> René Rebe, ExactCODE GmbH, Berlin, Germany
+> https://exactco.de • https://t2linux.com • https://patreon.com/renerebe
 
