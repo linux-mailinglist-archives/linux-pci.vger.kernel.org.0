@@ -1,293 +1,219 @@
-Return-Path: <linux-pci+bounces-42433-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42435-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C08E4C9A02E
-	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 05:32:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27A1DC9A21E
+	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 06:50:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C2703A52F8
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 04:32:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D41543A522F
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 05:50:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBE3D1D618E;
-	Tue,  2 Dec 2025 04:32:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 361711F130A;
+	Tue,  2 Dec 2025 05:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ixj5P9C6"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pX8gdY/x"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446C11A23A6
-	for <linux-pci@vger.kernel.org>; Tue,  2 Dec 2025 04:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7ED146D5A
+	for <linux-pci@vger.kernel.org>; Tue,  2 Dec 2025 05:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764649946; cv=none; b=j7PSdfhjv39VD87NXFfZFYX4SC0j/QhLZkIJgYXE5CU3pkBzyWI8MAlzKRRv0vmnXN1J74P8G1rHZTRUcJGW1hbbeddl2KPsMJ8n1MkUepmRJG+gfWYAhzh42jt+KKMMCxj7MK2NxCyuqi7mHWy/hIv7a1PTivZHgUfvN8b2VBM=
+	t=1764654638; cv=none; b=HzdBQYd9Jl1dBowSOeLhEdIoT57izQxbd3kfzUA7zE6Q54zJT/SGrTl5HdKq9LyvjPM+A0GHJ5WA94V8JUFmy6lWJYd+G9VZiVLJsCPCERhHQgMwEMmW58F83kfUoShSe2P4QustdKPKYwCN1qMhPR5Gv9QKR6PCmCCD/ejpFwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764649946; c=relaxed/simple;
-	bh=Kj7hWsdAis1KwIFgGWjWH6We7WMDDLF4AY4+G8fzcNY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OhwnBi8/rPizRejRzomQ3TWx8cg4kerpyoyXBYtdRD+eTwqJvAfk9yeISRS7CQ3Wk/QwJ660EXJbZsCBm4pTv+1trAGi/Am78IKYTHlHj5o0jla7x8BdsOs4Z63J/Oc914CD8dBoJ3dkhsN9Wfr6mRVVJaU+pqLDpFYzylvjLRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ixj5P9C6; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1764649940; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=wluPgiVNcPw138dWo0O3QKrhq1dSsVltZX1fH9uX2m4=;
-	b=ixj5P9C6SI8YKRbJn6UOvOOWVo+qF7fLrVnRl8ejkMs8cXTAUXfmsyR4yRwZ1yAy1iF38sEBpUhP5k1ZFNtmM7LDPpQNPmQo9sBVmey/kwvPHtU2csAlfzSzc4TUnT6ieKbGGmZeywfbrBur+++okRGncAg5mBGjpqNLfd0h86M=
-Received: from VM20241011-104.tbsite.net(mailfrom:guanghuifeng@linux.alibaba.com fp:SMTPD_---0WtuzBGr_1764649940 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 02 Dec 2025 12:32:20 +0800
-From: Guanghui Feng <guanghuifeng@linux.alibaba.com>
-To: bhelgaas@google.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: linux-pci@vger.kernel.org,
-	alikernel-developer@linux.alibaba.com
-Subject: [PATCH v4 v4 1/1] PCI: Fix PCIe SBR dev/link wait error
-Date: Tue,  2 Dec 2025 12:32:07 +0800
-Message-ID: <20251202043207.3924714-2-guanghuifeng@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20251202043207.3924714-1-guanghuifeng@linux.alibaba.com>
-References: <d285f1b6-8758-efd3-da0e-6448033519fc@linux.intel.com>
- <20251202043207.3924714-1-guanghuifeng@linux.alibaba.com>
+	s=arc-20240116; t=1764654638; c=relaxed/simple;
+	bh=Vtmdw++S7pqLLxm6FQ7plKkNTdcUA34ahTlwE9H91Iw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kNaCiIK70iVKw5OJ0ooQaJEO9yStTdDXM+NuZf+tUJrdPzR+HaxQckKuCRZ9MF9zZKizJu/SWNeoyz9esriW1pVR9Nv8rCu6GxlAH+vMCgSCgEV/Wj6v0Z2cx8L9FXhn1IA/yNEfd5CNUql/d+iAbo/o3/sp3M4/GuRkYdIB83w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pX8gdY/x; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <daf0f7a1-8791-4d3a-a4f2-66143a591466@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1764654631;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9h2CEg1WlZv1tOClOsV7Bzwrbcdvp6pClSclnRZaoeI=;
+	b=pX8gdY/xTVUzgvR9DePNJG2wOT7qLHG5qKcBunbua3QmAQwQyqqx6CIjdufPJuYSxAkCVd
+	BP2liEVb1kVbVUFtnPO4+ohs17oRfV+oVfxVjmuJSBkYuz4ZDLoNHYbq3UVcZMCfGcFlVv
+	QRNdR3k2SfnG/s4WDyc2cb7eoleXRVw=
+Date: Mon, 1 Dec 2025 21:50:20 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH 00/21] vfio/pci: Base support to preserve a VFIO device
+ file across Live Update
+To: David Matlack <dmatlack@google.com>
+Cc: Alex Williamson <alex@shazbot.org>,
+ Adithya Jayachandran <ajayachandra@nvidia.com>, Alex Mastro
+ <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+ David Rientjes <rientjes@google.com>,
+ Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Josh Hilke <jrhilke@google.com>,
+ Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org,
+ Leon Romanovsky <leonro@nvidia.com>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org,
+ Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>,
+ Parav Pandit <parav@nvidia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Philipp Stanner <pstanner@redhat.com>, Pratyush Yadav <pratyush@kernel.org>,
+ Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>,
+ Shuah Khan <shuah@kernel.org>, Tomita Moeko <tomitamoeko@gmail.com>,
+ Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+ Yi Liu <yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>
+References: <20251126193608.2678510-1-dmatlack@google.com>
+ <dadaeeb9-4008-4450-8b61-e147a2af38b2@linux.dev>
+ <46bbdad1-486d-4cb1-915f-577b00de827f@linux.dev>
+ <CALzav=eigAYdw5-hzk1MAHWBU29yJK4_WWTd0dyoBN91bnRoZQ@mail.gmail.com>
+ <4998497c-87e8-4849-8442-b7281c627884@linux.dev>
+ <aS3RF6ROa7uZsviv@google.com> <aS3SJxAjVT-ZH1YT@google.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <aS3SJxAjVT-ZH1YT@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-When executing a PCIe secondary bus reset, all downstream switches and
-endpoints will generate reset events. Simultaneously, all PCIe links
-will undergo retraining, and each link will independently re-execute the
-LTSSM state machine training. Therefore, after executing the SBR, it is
-necessary to wait for all downstream links and devices to complete
-recovery. Otherwise, after the SBR returns, accessing devices with some
-links or endpoints not yet fully recovered may result in driver errors,
-or even trigger device offline issues.
 
-Signed-off-by: Guanghui Feng <guanghuifeng@linux.alibaba.com>
-Reviewed-by: Guixin Liu <kanie@linux.alibaba.com>
----
- drivers/pci/pci.c | 143 +++++++++++++++++++++++++++++++++-------------
- 1 file changed, 103 insertions(+), 40 deletions(-)
+在 2025/12/1 9:36, David Matlack 写道:
+> On 2025-12-01 05:32 PM, David Matlack wrote:
+>> On 2025-12-01 09:16 AM, Zhu Yanjun wrote:
+>>> 在 2025/12/1 9:10, David Matlack 写道:
+>>>> On Mon, Dec 1, 2025 at 7:49 AM Zhu Yanjun <yanjun.zhu@linux.dev> wrote:
+>>>>> 在 2025/11/27 20:56, Zhu Yanjun 写道:
+>>>>>> Hi, David
+>>>>>>
+>>>>>> ERROR: modpost: "liveupdate_register_file_handler" [drivers/vfio/pci/
+>>>>>> vfio-pci-core.ko] undefined!
+>>>>>>
+>>>>>> ERROR: modpost: "vfio_pci_ops" [drivers/vfio/pci/vfio-pci-core.ko]
+>>>>>> undefined!
+>>>>>> ERROR: modpost: "liveupdate_enabled" [drivers/vfio/pci/vfio-pci-core.ko]
+>>>>>> undefined!
+>>>>>> ERROR: modpost: "liveupdate_unregister_file_handler" [drivers/vfio/pci/
+>>>>>> vfio-pci-core.ko] undefined!
+>>>>>> ERROR: modpost: "vfio_device_fops" [drivers/vfio/pci/vfio-pci-core.ko]
+>>>>>> undefined!
+>>>>>> ERROR: modpost: "vfio_pci_is_intel_display" [drivers/vfio/pci/vfio-pci-
+>>>>>> core.ko] undefined!
+>>>>>> ERROR: modpost: "vfio_pci_liveupdate_init" [drivers/vfio/pci/vfio-
+>>>>>> pci.ko] undefined!
+>>>>>> ERROR: modpost: "vfio_pci_liveupdate_cleanup" [drivers/vfio/pci/vfio-
+>>>>>> pci.ko] undefined!
+>>>>>> make[4]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
+>>>>>> make[3]: *** [Makefile:1960: modpost] Error 2
+>>>>>>
+>>>>>> After I git clone the source code from the link https://github.com/
+>>>>>> dmatlack/linux/tree/liveupdate/vfio/cdev/v1,
+>>>>>>
+>>>>>> I found the above errors when I built the source code.
+>>>>>>
+>>>>>> Perhaps the above errors can be solved by EXPORT_SYMBOL.
+>>>>>>
+>>>>>> But I am not sure if a better solution can solve the above problems or not.
+>>>>> I reviewed this patch series in detail. If I’m understanding it
+>>>>> correctly, there appears to be a cyclic dependency issue. Specifically,
+>>>>> some functions in kernel module A depend on kernel module B, while at
+>>>>> the same time certain functions in module B depend on module A.
+>>>>>
+>>>>> I’m not entirely sure whether this constitutes a real problem or if it’s
+>>>>> intentional design.
+>>>> Thanks for your report. Can you share the .config file you used to
+>>>> generate these errors?
+>>>
+>>> IIRC, I used FC 42 default config. Perhaps you can make tests with it. If
+>>> this problem can not be reproduced, I will share my config with you.
+>>>
+>> What does "FC 42 default config" mean?
+>>
+>> Either way I was able to reproduce the errors you posted above by
+>> changing CONFIG_VFIO_PCI{_CORE} from "y" to "m".
+>>
+>> To unblock building and testing this series you can change these configs
+>> from "m" to "y", or the following patch (which fixed things for me):
+> Oops, sorry, something went wrong when I posted that diff. Here's the
+> correct diff:
+>
+> diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
+> index 929df22c079b..c2cca16e99a8 100644
+> --- a/drivers/vfio/pci/Makefile
+> +++ b/drivers/vfio/pci/Makefile
+> @@ -2,11 +2,11 @@
+>
+>   vfio-pci-core-y := vfio_pci_core.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
+>   vfio-pci-core-$(CONFIG_VFIO_PCI_ZDEV_KVM) += vfio_pci_zdev.o
+> -vfio-pci-core-$(CONFIG_LIVEUPDATE) += vfio_pci_liveupdate.o
+>   obj-$(CONFIG_VFIO_PCI_CORE) += vfio-pci-core.o
+>
+>   vfio-pci-y := vfio_pci.o
+>   vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
+> +vfio-pci-$(CONFIG_LIVEUPDATE) += vfio_pci_liveupdate.o
+>   obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
+>
+>   obj-$(CONFIG_MLX5_VFIO_PCI)           += mlx5/
+> diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
+> index c5b5eb509474..b9805861763a 100644
+> --- a/drivers/vfio/vfio_main.c
+> +++ b/drivers/vfio/vfio_main.c
+> @@ -1386,6 +1386,7 @@ const struct file_operations vfio_device_fops = {
+>          .show_fdinfo    = vfio_device_show_fdinfo,
+>   #endif
+>   };
+> +EXPORT_SYMBOL_GPL(vfio_device_fops);
+>
+>   /**
+>    * vfio_file_is_valid - True if the file is valid vfio file
+> diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
+> index 69298d82f404..c7a0c9c3b6a8 100644
+> --- a/kernel/liveupdate/luo_core.c
+> +++ b/kernel/liveupdate/luo_core.c
+> @@ -256,6 +256,7 @@ bool liveupdate_enabled(void)
+>   {
+>          return luo_global.enabled;
+>   }
+> +EXPORT_SYMBOL_GPL(liveupdate_enabled);
+>
+>   /**
+>    * DOC: LUO ioctl Interface
+> diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
+> index fca3806dae28..9baa88966f04 100644
+> --- a/kernel/liveupdate/luo_file.c
+> +++ b/kernel/liveupdate/luo_file.c
+> @@ -868,6 +868,7 @@ int liveupdate_register_file_handler(struct liveupdate_file_handler *fh)
+>          luo_session_resume();
+>          return err;
+>   }
+> +EXPORT_SYMBOL_GPL(liveupdate_register_file_handler);
+>
+>   /**
+>    * liveupdate_unregister_file_handler - Unregister a liveupdate file handler
+> @@ -913,3 +914,4 @@ int liveupdate_unregister_file_handler(struct liveupdate_file_handler *fh)
+>          liveupdate_test_register(fh);
+>          return err;
+>   }
+> +EXPORT_SYMBOL_GPL(liveupdate_unregister_file_handler);
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index b14dd064006c..9cf0e58ef23f 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4788,6 +4788,63 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
- 	return max(min_delay, max_delay);
- }
- 
-+static int pci_readiness_check(struct pci_dev *pdev, struct pci_dev *child,
-+		unsigned long start_t, char *reset_type)
-+{
-+	int elapsed = jiffies_to_msecs(jiffies - start_t);
-+
-+	if (pci_dev_is_disconnected(pdev) || pci_dev_is_disconnected(child))
-+		return 0;
-+
-+	if (pcie_get_speed_cap(pdev) <= PCIE_SPEED_5_0GT) {
-+		u16 status;
-+
-+		pci_dbg(pdev, "waiting %d ms for downstream link\n", elapsed);
-+
-+		if (!pci_dev_wait(child, reset_type, 0))
-+			return 0;
-+
-+		if (PCI_RESET_WAIT > elapsed)
-+			return PCI_RESET_WAIT - elapsed;
-+
-+		/*
-+		 * If the port supports active link reporting we now check
-+		 * whether the link is active and if not bail out early with
-+		 * the assumption that the device is not present anymore.
-+		 */
-+		if (!pdev->link_active_reporting)
-+			return -ENOTTY;
-+
-+		pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &status);
-+		if (!(status & PCI_EXP_LNKSTA_DLLLA))
-+			return -ENOTTY;
-+
-+		if (!pci_dev_wait(child, reset_type, 0))
-+			return 0;
-+
-+		if (PCIE_RESET_READY_POLL_MS > elapsed)
-+			return PCIE_RESET_READY_POLL_MS - elapsed;
-+
-+		return -ENOTTY;
-+	}
-+
-+	pci_dbg(pdev, "waiting %d ms for downstream link, after activation\n",
-+		elapsed);
-+	if (!pcie_wait_for_link_delay(pdev, true, 0)) {
-+		/* Did not train, no need to wait any further */
-+		pci_info(pdev, "Data Link Layer Link Active not set in %d msec\n", elapsed);
-+		return -ENOTTY;
-+	}
-+
-+	if (!pci_dev_wait(child, reset_type, 0))
-+		return 0;
-+
-+	if (PCIE_RESET_READY_POLL_MS > elapsed)
-+		return PCIE_RESET_READY_POLL_MS - elapsed;
-+
-+	return -ENOTTY;
-+}
-+
- /**
-  * pci_bridge_wait_for_secondary_bus - Wait for secondary bus to be accessible
-  * @dev: PCI bridge
-@@ -4802,12 +4859,14 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
-  * 4.3.2.
-  *
-  * Return 0 on success or -ENOTTY if the first device on the secondary bus
-- * failed to become accessible.
-+ * failed to become accessible or a value greater than 0 indicates the
-+ * left required waiting time..
-  */
--int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
-+static int __pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, unsigned long start_t,
-+		char *reset_type)
- {
--	struct pci_dev *child __free(pci_dev_put) = NULL;
--	int delay;
-+	struct pci_dev *child;
-+	int delay, ret, elapsed = jiffies_to_msecs(jiffies - start_t);
- 
- 	if (pci_dev_is_disconnected(dev))
- 		return 0;
-@@ -4835,8 +4894,6 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 		return 0;
- 	}
- 
--	child = pci_dev_get(list_first_entry(&dev->subordinate->devices,
--					     struct pci_dev, bus_list));
- 	up_read(&pci_bus_sem);
- 
- 	/*
-@@ -4844,8 +4901,10 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 	 * accessing the device after reset (that is 1000 ms + 100 ms).
- 	 */
- 	if (!pci_is_pcie(dev)) {
--		pci_dbg(dev, "waiting %d ms for secondary bus\n", 1000 + delay);
--		msleep(1000 + delay);
-+		if (1000 + delay > elapsed)
-+			return 1000 + delay - elapsed;
-+
-+		pci_dbg(dev, "waiting %d ms for secondary bus\n", elapsed);
- 		return 0;
- 	}
- 
-@@ -4867,41 +4926,47 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 	if (!pcie_downstream_port(dev))
- 		return 0;
- 
--	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
--		u16 status;
--
--		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
--		msleep(delay);
--
--		if (!pci_dev_wait(child, reset_type, PCI_RESET_WAIT - delay))
--			return 0;
-+	if (delay > elapsed)
-+		return delay - elapsed;
- 
-+	down_read(&pci_bus_sem);
-+	list_for_each_entry(child, &dev->subordinate->devices, bus_list) {
- 		/*
--		 * If the port supports active link reporting we now check
--		 * whether the link is active and if not bail out early with
--		 * the assumption that the device is not present anymore.
-+		 * Check if all devices under the same bus have completed
-+		 * the reset process, including multifunction devices in
-+		 * the same bus.
- 		 */
--		if (!dev->link_active_reporting)
--			return -ENOTTY;
-+		ret = pci_readiness_check(dev, child, start_t, reset_type);
- 
--		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
--		if (!(status & PCI_EXP_LNKSTA_DLLLA))
--			return -ENOTTY;
-+		if (ret == 0 && child->subordinate) {
-+			pci_restore_config_space(child);
-+			ret = __pci_bridge_wait_for_secondary_bus(child, start_t, reset_type);
-+		}
- 
--		return pci_dev_wait(child, reset_type,
--				    PCIE_RESET_READY_POLL_MS - PCI_RESET_WAIT);
-+		if(ret)
-+			break;
- 	}
-+	up_read(&pci_bus_sem);
- 
--	pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
--		delay);
--	if (!pcie_wait_for_link_delay(dev, true, delay)) {
--		/* Did not train, no need to wait any further */
--		pci_info(dev, "Data Link Layer Link Active not set in %d msec\n", delay);
--		return -ENOTTY;
-+	return ret;
-+}
-+
-+int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
-+{
-+	int res, gap = 1;
-+	unsigned long start_t = jiffies;
-+
-+	res = __pci_bridge_wait_for_secondary_bus(dev, start_t, reset_type);
-+
-+	while (res > 0) {
-+		gap = gap < res ? gap : res;
-+		msleep(gap);
-+		gap <<= 1;
-+
-+		res = __pci_bridge_wait_for_secondary_bus(dev, start_t, reset_type);
- 	}
- 
--	return pci_dev_wait(child, reset_type,
--			    PCIE_RESET_READY_POLL_MS - delay);
-+	return res;
- }
- 
- void pci_reset_secondary_bus(struct pci_dev *dev)
-@@ -5542,10 +5607,8 @@ static void pci_bus_restore_locked(struct pci_bus *bus)
- 
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
- 		pci_dev_restore(dev);
--		if (dev->subordinate) {
--			pci_bridge_wait_for_secondary_bus(dev, "bus reset");
-+		if (dev->subordinate)
- 			pci_bus_restore_locked(dev->subordinate);
--		}
- 	}
- }
- 
-@@ -5575,14 +5638,14 @@ static void pci_slot_restore_locked(struct pci_slot *slot)
- {
- 	struct pci_dev *dev;
- 
-+	pci_bridge_wait_for_secondary_bus(slot->bus->self, "slot reset");
-+
- 	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
- 		if (!dev->slot || dev->slot != slot)
- 			continue;
- 		pci_dev_restore(dev);
--		if (dev->subordinate) {
--			pci_bridge_wait_for_secondary_bus(dev, "slot reset");
-+		if (dev->subordinate)
- 			pci_bus_restore_locked(dev->subordinate);
--		}
- 	}
- }
- 
+Hi, David
+
+Thanks. The above changes resolve the EXPORT_SYMBOL_GPL issue as well as 
+the cyclic dependency problem.
+
+I recommend submitting this as a new commit, as it effectively addresses 
+the issues present in the patch series.
+
+Yanjun.Zhu
+
 -- 
-2.32.0.3.gf3a3e56d6
+Best Regards,
+Yanjun.Zhu
 
 
