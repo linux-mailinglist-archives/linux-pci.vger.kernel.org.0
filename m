@@ -1,144 +1,189 @@
-Return-Path: <linux-pci+bounces-42536-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42537-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92A03C9D342
-	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 23:23:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C4A0C9D3AD
+	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 23:38:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7C1A54E3752
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 22:23:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29D5D3A94DA
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 22:38:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8AF62F9D8C;
-	Tue,  2 Dec 2025 22:23:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABF6F2F1FFE;
+	Tue,  2 Dec 2025 22:37:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZbnahQjR"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GUHPoTSQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552342F90CD
-	for <linux-pci@vger.kernel.org>; Tue,  2 Dec 2025 22:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5582D6E7C;
+	Tue,  2 Dec 2025 22:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764714208; cv=none; b=P0VbWfV/XxqeulFmSJKKVPPlDADKeawdDEiJabvfOmaWiYS/uA9IiYkkK+9KoZCXeSId0oqq9jt5DdTBjPtFzlDYsV3qLXmaSerBuFQkbT85AQV+KskKyycbgMVjwUTnmPPa9Lt/sl+vskTZFxqIMUJclZ1UMzpO47I8zZuhLg4=
+	t=1764715078; cv=none; b=L5cGGwsqDf1FQqjstgbQMotl1xnWRixYRcHlodEqc+ts8/lP4ThY23MtrS3e0a8bhgcjCaZFYqZKMRUfTCTSYavajz8kwk88DrUiFRiopogNskAVfLG7qvbE+zKEwm0dMS4l9JDPhsjEwMzdYZa11uViHcA6IcVIyI+c1h6G9o8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764714208; c=relaxed/simple;
-	bh=lansFPWa8a8i9MtzvmNIvbKm2tfyDv9hIhtaM5rOO88=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V5G2KGAIn+b8zvvHkmqIVu/huV5ucusx232UlMIyziImiBbV6A45GwhxUspaLDsC95xcYZy+g5hwYN9GNM7SaSHbWwiwOolq8rHkMNlj4AgRI5x9X78nzyM7n+LYMUydZ2zh2/+T8mwdX1QVJOaS7Fz0A83SBT2FIrwODoREOVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZbnahQjR; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-29812589890so71859605ad.3
-        for <linux-pci@vger.kernel.org>; Tue, 02 Dec 2025 14:23:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1764714206; x=1765319006; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BWRcZibZvKcAdZFQm9zANwrWSXsw9mMjGu/qDQSEZf8=;
-        b=ZbnahQjRLmQxl79zUQUzr2185OVL1YI91iQo2Ic7NODQAO3hrxvgcH4jiTMpIi10hg
-         9mnZeRhj49FUHEfpxjqbl0aoZIyYZFHLGCwMX1CXXmx76IiK/+c3sBzqZ3kuD9i8ldSj
-         2I0d738uRJj4q8DgWNGhc1VAxFqOX3G2ZxCG8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764714206; x=1765319006;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BWRcZibZvKcAdZFQm9zANwrWSXsw9mMjGu/qDQSEZf8=;
-        b=fcnp0bf3xP2z9AT/iAk1P1GWT3XyrCvedN0eUxQdLxMGWqQEg64bKdfyd6cZO+9N0L
-         nQhlJ6KOW3i7f0h2Waae8Oa0oQcUVWs8B26y4RPeBfKVbktpkBqfADe3uo0gcKf6hDhv
-         PfLGhozceWfOEqQF1G7bHMITZLhn8datryI+7y4O9+xKlOKx3ZjrjqcUn3A+LnqSwf3N
-         dxGyXHEer6QcxBxJpvbD6KarcCRQ/uTOUQmOOpfbOwu4wR5hCYnHyRUwY3Xx+Wt2K40o
-         vSI5pHlcIQq8d6xHBS6rglzn210m/ZpY8GBvopGUVmWHA6dlHuCy4Cu/CX15+lmT2X7s
-         WCcw==
-X-Gm-Message-State: AOJu0YxyQcV3YK+Ta5WJYugVSqJVVPJ74h2Sz0it8siw3i0k69y1NMLj
-	pz6yjfKTX3mDvTvaBsJONYZ4eIAfw4VcGRZCaLi22ADvbSphcSMG5t8/40y69cTfMA==
-X-Gm-Gg: ASbGncsMc1XKdn92b+3TE6339f0MboTSc62eFQltcvOLwqzAs7y0EdsTYjCQ+UVIxqF
-	HxELrwYQMuhecMsKQpjbJGnlhmaM5Ziu0vH1ILhgXZO7+1s2uWYni7AYSCJBwBc4c2FzHnyxil/
-	bBqx5YffhXE5x9GO2fT2N7bVL6ymbZziih12JA7pKudCqHPArxVZlQG6fo3PlL0r8qHw7coZcYv
-	o6cF2K2+vVwomHEhCF3jwh7or4sYWSi1rVXJWjNWp5IyCr99kS1rzcP8+h46/JRiuts/p3UYR7x
-	g9yYYSaMV7JIgYEBjEye3QqwSRORHwljwPBTyEOCq4PMSqF7YCrTUaaxHDe/7/nRZnAeD4hILcb
-	GJ0i1FdmItHeLkhnXopex+1tJwJZDd7fqa9+KI80sAM1s1216nYcuvInqkGI7YzsX1PvQQVQIcp
-	vbsomn01+d8hRZEvwEI903sLWXcGmIZCn3Szi2Bjh6wulAdlptMEh+L3xnX4vW
-X-Google-Smtp-Source: AGHT+IEZ4t98e3McIXvA087J+RzIVfq5DO8Mk7SHDo0b01kfLReZdqadUVOa6n+b9FV4HtS5YlTPkA==
-X-Received: by 2002:a05:7022:6b82:b0:119:e569:fb9e with SMTP id a92af1059eb24-11df0be2f34mr230780c88.13.1764714206495;
-        Tue, 02 Dec 2025 14:23:26 -0800 (PST)
-Received: from localhost ([2a00:79e0:2e7c:8:eb2b:1140:65a2:dd2e])
-        by smtp.gmail.com with UTF8SMTPSA id a92af1059eb24-11dcb067088sm53125115c88.10.2025.12.02.14.23.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Dec 2025 14:23:25 -0800 (PST)
-From: Brian Norris <briannorris@chromium.org>
-To: =?UTF-8?q?Martin=20Mare=C5=A1?= <mj@ucw.cz>
-Cc: linux-pci@vger.kernel.org,
-	Brian Norris <briannorris@google.com>
-Subject: [PATCH pciutils] dump: Support `lspci -F -` for stdin
-Date: Tue,  2 Dec 2025 14:23:12 -0800
-Message-ID: <20251202222315.2548516-1-briannorris@chromium.org>
-X-Mailer: git-send-email 2.52.0.158.g65b55ccf14-goog
+	s=arc-20240116; t=1764715078; c=relaxed/simple;
+	bh=HR0YJi9mmcUYSXhB+a1IUnAGSFfyK8SPaU1Ih3LCPhU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tKRfgFIpiCOplPLklH2LERpgW8Fc/C73JoiAv3WBhy6vRBAYM6t3e7F5Ws7OQKRch4DBxq9iLyCdz1oON5WVSLwRWsMFIt56SBhH8Z6O9sf87BSgZ/FRLnGqbi4uIovfxQGyRwCfZW+hTAkLGvgi6uUQA0LK6DbsOHzN6YenfDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GUHPoTSQ; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=H2Uo/+AoQ5NQJdx5MNHBMbHN+4OzPRgqvPH+BTOYJTA=; b=GUHPoTSQS/sVFkKit/c/I1TzDP
+	f3gFt8pVLBw4dNUzyjmdY/lHwAsJJvyQ+NUwhyYYsUh5ElV8EJTNBPh4f1sa8S7EIgf4HEHVz58ZE
+	E+VCb3rU66tGD70YLk0xs3wPfcHM7ex5wYTv/rQhv97+zzR3kKJldotBiOBLvb5yE8kwm3NGVVTQK
+	U7h48ZNJJyeMtlN2Yfs2xN//y4VyGGBKFf0i7dInoaY3KPkwdpLxvj1o9gil5EpEglOhkwNQE5cPO
+	RuYuwDVtpA57+SujZjFSRYKDMLhTVuSyrc0UB0k9G9zosEu4JSuY95ijJgceI1KPDaQlR/SG2d7SN
+	DhgrCM/Q==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vQZ0M-00000005uGP-0aLZ;
+	Tue, 02 Dec 2025 22:37:54 +0000
+Message-ID: <77bad218-9120-49d5-9d5a-7b1dcebf09b2@infradead.org>
+Date: Tue, 2 Dec 2025 14:37:53 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for Nov 28
+ (drivers/pci/controller/dwc/pcie-nxp-s32g.o)
+To: Manivannan Sadhasivam <mani@kernel.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ linux-pci@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
+ NXP S32 Linux Team <s32@nxp.com>, "imx@lists.linux.dev"
+ <imx@lists.linux.dev>, linux-arm-kernel@lists.infradead.org,
+ Bjorn Helgaas <helgaas@kernel.org>
+References: <20251128162928.36eec2d6@canb.auug.org.au>
+ <63e1daf7-f9a3-463e-8a1b-e9b72581c7af@infradead.org>
+ <ykmo5qv46mo7f3srblxoi2fvghz722fj7kpm77ozpflaqup6rk@ttvhbw445pgu>
+ <CAKfTPtA-wir5GzU7aTywe7SZG18Aj8Z9g1wjV-Y8vKoyKF1Mkg@mail.gmail.com>
+ <vb6pcyaue6pqpx626ytfr2aif4luypopywqoazjsvy4crh6zic@gfv75ar7musy>
+ <CAKfTPtCKmj_dHGU-2WPsEevf7CR-isRiyM0+oftCrMy5MswE4A@mail.gmail.com>
+ <6ulzkdgd6j35ptu5mesgtgh2xa6fwalcmkgcxr2fdjwwfvzhrf@4dtcadsl2mvm>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <6ulzkdgd6j35ptu5mesgtgh2xa6fwalcmkgcxr2fdjwwfvzhrf@4dtcadsl2mvm>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-From: Brian Norris <briannorris@google.com>
 
-It can be useful to pipe raw config registers (lspci -x) from one system
-to another, so the latter system can do the parsing (lspci -vv -F ...).
-For example, one might do this if the former has a more limited / older
-version of lspci. Today, one has to write the contents to a file.
 
-Support stdin via "-", so it's easier to run it through a pipeline, such
-as:
+On 12/2/25 2:12 AM, Manivannan Sadhasivam wrote:
+> On Tue, Dec 02, 2025 at 11:03:07AM +0100, Vincent Guittot wrote:
+>> On Tue, 2 Dec 2025 at 10:53, Manivannan Sadhasivam <mani@kernel.org> wrote:
+>>>
+>>> On Tue, Dec 02, 2025 at 09:54:24AM +0100, Vincent Guittot wrote:
+>>>> On Tue, 2 Dec 2025 at 05:24, Manivannan Sadhasivam <mani@kernel.org> wrote:
+>>>>>
+>>>>> + Vincent
+>>>>
+>>>> Thanks for looping me in.
+>>>>>
+>>>>> On Sat, Nov 29, 2025 at 07:00:04PM -0800, Randy Dunlap wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 11/27/25 9:29 PM, Stephen Rothwell wrote:
+>>>>>>> Hi all,
+>>>>>>>
+>>>>>>> Changes since 20251127:
+>>>>>>>
+>>>>>>
+>>>>>> on i386 (allmodconfig):
+>>>>>>
+>>>>>> WARNING: modpost: vmlinux: section mismatch in reference: s32g_init_pcie_controller+0x2b (section: .text) -> memblock_start_of_DRAM (section: .init.text)
+>>>>
+>>>> Are there details to reproduce the warning ? I don't have such warning
+>>>> when compiling allmodconfig locally
+>>>>
+>>>> s32 pcie can only be built in but I may have to use
+>>>> builtin_platform_driver_probe() instead of builtin_platform_driver()
+>>>>
+>>>
+>>> The is due to calling a function belonging to the __init section from non-init
+>>> function. Ideally, functions prefixed with __init like memblock_start_of_DRAM()
+>>> should be called from the module init functions.
+>>>
+>>> One way to fix would be to call memblock_start_of_DRAM() in probe(), and
+>>> annotate probe() with __init. Since there is no remove, you could use
+>>> builtin_platform_driver_probe().
+>>>
+>>> This also makes me wonder if we really should be using memblock_start_of_DRAM()
+>>> in the driver. I know that this was suggested to you during reviews, but I would
+>>> prefer to avoid it, especially due to this being the __init function.
+>>
+>> yeah, I suppose I can directly define the value in the driver has
+>> there is only one memory config for now anyway
+>>
+>> /* Boundary between peripheral space and physical memory space */
+>> #define S32G_MEMORY_BOUNDARY_ADDR 0x80000000
+>>
+> 
+> Ok. I fixed it up myself with below diff:
 
-  ssh ${remote_host} old_lspci -xxx | new_lspci -vv -F -
+Thanks.
+Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-A dash (-) is a common convention used by many other tools. If one
-really expected to access a file named "-", one can use "./-" or similar
-to disambiguate.
+> diff --git a/drivers/pci/controller/dwc/pcie-nxp-s32g.c b/drivers/pci/controller/dwc/pcie-nxp-s32g.c
+> index eacf0229762c..70b1dc404bbe 100644
+> --- a/drivers/pci/controller/dwc/pcie-nxp-s32g.c
+> +++ b/drivers/pci/controller/dwc/pcie-nxp-s32g.c
+> @@ -7,7 +7,6 @@
+>  
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+> -#include <linux/memblock.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+>  #include <linux/of_address.h>
+> @@ -35,6 +34,9 @@
+>  #define PCIE_S32G_PE0_INT_STS                  0xE8
+>  #define HP_INT_STS                             BIT(6)
+>  
+> +/* Boundary between peripheral space and physical memory space */
+> +#define S32G_MEMORY_BOUNDARY_ADDR              0x80000000
+> +
+>  struct s32g_pcie_port {
+>         struct list_head list;
+>         struct phy *phy;
+> @@ -99,10 +101,10 @@ static struct dw_pcie_ops s32g_pcie_ops = {
+>  };
+>  
+>  /* Configure the AMBA AXI Coherency Extensions (ACE) interface */
+> -static void s32g_pcie_reset_mstr_ace(struct dw_pcie *pci, u64 ddr_base_addr)
+> +static void s32g_pcie_reset_mstr_ace(struct dw_pcie *pci)
+>  {
+> -       u32 ddr_base_low = lower_32_bits(ddr_base_addr);
+> -       u32 ddr_base_high = upper_32_bits(ddr_base_addr);
+> +       u32 ddr_base_low = lower_32_bits(S32G_MEMORY_BOUNDARY_ADDR);
+> +       u32 ddr_base_high = upper_32_bits(S32G_MEMORY_BOUNDARY_ADDR);
+>  
+>         dw_pcie_dbi_ro_wr_en(pci);
+>         dw_pcie_writel_dbi(pci, COHERENCY_CONTROL_3_OFF, 0x0);
+> @@ -149,7 +151,7 @@ static int s32g_init_pcie_controller(struct dw_pcie_rp *pp)
+>          * Make sure we use the coherency defaults (just in case the settings
+>          * have been changed from their reset values)
+>          */
+> -       s32g_pcie_reset_mstr_ace(pci, memblock_start_of_DRAM());
+> +       s32g_pcie_reset_mstr_ace(pci);
+>  
+>         dw_pcie_dbi_ro_wr_en(pci);
+> 
+> - Mani
+> 
 
-Signed-off-by: Brian Norris <briannorris@google.com>
----
-
- lib/dump.c | 4 +++-
- lspci.man  | 4 ++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/lib/dump.c b/lib/dump.c
-index 00ebc9e3e782..65d8dd5d7b55 100644
---- a/lib/dump.c
-+++ b/lib/dump.c
-@@ -66,7 +66,9 @@ dump_init(struct pci_access *a)
- 
-   if (!name)
-     a->error("dump: File name not given.");
--  if (!(f = fopen(name, "r")))
-+  if (!strcmp(name, "-"))
-+    f = stdin;
-+  else if (!(f = fopen(name, "r")))
-     a->error("dump: Cannot open %s: %s", name, strerror(errno));
-   while (fgets(buf, sizeof(buf)-1, f))
-     {
-diff --git a/lspci.man b/lspci.man
-index 7907aeb8a5dc..9281e8a3edb1 100644
---- a/lspci.man
-+++ b/lspci.man
-@@ -204,6 +204,10 @@ Use direct hardware access via Intel configuration mechanism 2.
- .B -F <file>
- Instead of accessing real hardware, read the list of devices and values of their
- configuration registers from the given file produced by an earlier run of lspci -x.
-+If
-+.I file
-+is a single dash (\fB-\fP), read the contents from stdin.
-+.IP
- This is very useful for analysis of user-supplied bug reports, because you can display
- the hardware configuration in any way you want without disturbing the user with
- requests for more dumps.
 -- 
-2.52.0.158.g65b55ccf14-goog
-
+~Randy
 
