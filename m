@@ -1,310 +1,347 @@
-Return-Path: <linux-pci+bounces-42474-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42475-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A845C9B4B4
-	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 12:21:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A0BE4C9B584
+	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 12:45:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C7C4C3A2675
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 11:21:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C97B63A6174
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 11:44:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C49EB30FF04;
-	Tue,  2 Dec 2025 11:21:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D30F31076B;
+	Tue,  2 Dec 2025 11:44:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikWyO8kh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XWPsL1ju"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BF730F93B
-	for <linux-pci@vger.kernel.org>; Tue,  2 Dec 2025 11:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082A2296BA5;
+	Tue,  2 Dec 2025 11:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764674483; cv=none; b=ogkzrxNdIFjGXJ+bO8XJEmNRRKks7TcMXC5RdbPhfkOKRI53uj8pSqTJUcr1bWgY2wi4umZvpr/55DVxShjEaIK+vaN6Sr1GthvrUJGbJw0U6FykOVxl/00fthcyhmct38tRzlXUPeIu2gXzKCtIOTGjMjkLBgtE+OaglmZVoro=
+	t=1764675886; cv=none; b=ia26F42vqfSPv7VO5CF011+ORZNUAWYd79vv2guH33zBFhLC0ybD/CMOSz4r+KxCW+aiPGFFICIQ+T/KPhID9y7CH29vlfodX0YZBhsWiZ13MgRmcJM4/g0o7S2gHL5Rn151aNPDBjt/w6jHxAeUcngkYpo43Fho2LqSEFj6RPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764674483; c=relaxed/simple;
-	bh=ebI41iK5gjq0L5IRa7e/P/x9OhOy/cqTUUejIoRXkM0=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To; b=BkOtop7H9ob7JRSUaJWwTFtJEKqMkYRyVlYrXNLVxrVXbO7G5cDzZYDF+2aqyzCVgYZ1jbhnabtv/hhbEE0mXLUIAVHwlk45b+/EBwNVGKRzcjwwufL3dZD2ePza1Cz57P3Yf+Jb9PCycBsrccJBECqyyTugOg+0lWpnvmOZVJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ikWyO8kh; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-37a2dced861so51572501fa.1
-        for <linux-pci@vger.kernel.org>; Tue, 02 Dec 2025 03:21:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764674480; x=1765279280; darn=vger.kernel.org;
-        h=in-reply-to:from:content-language:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FHGvFJa75lB1s5FOVY85+WmT8K+iTuEMFLumjxbx42M=;
-        b=ikWyO8khZwe/qLfkusvEeIK9GVQGgt/sEtx7wdjlZaWa+/51MLaRa2wXNChRwbj3Cd
-         V2lvMgM8hImInF3Cogr8oJ4jClQ2AXEK3JndZH2GW2ma+GM7h/gjLb6/gB+EfRjh5byP
-         j796Eh5MQko0sFSTz3ruiHGLRJ3wNZZTTKv5Pwc9old9Dqnb9pjwkM6xRhzv/0G8MrLl
-         ioYSPIpcgw7J3Aa1AEmFjeVWAj7+IgsB0oBglt2jD3M4n19eWtIRdwAEf3NzLH9qViW/
-         XKhBrPA+U1A5VuxMWgJpVXkpVd55gUflHxwsfcWSjEQYbjT7qRfNzJJyUJNDCtMsKSB5
-         A6GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764674480; x=1765279280;
-        h=in-reply-to:from:content-language:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FHGvFJa75lB1s5FOVY85+WmT8K+iTuEMFLumjxbx42M=;
-        b=ela15Or4/FFVIlIauX33OpVL9wm17/XmA9dsj8wj5No16byBRIJX6wQ4l8HYUodSC9
-         SmfaViaecjXcEdERYxiU/BeTFcuZpc0/bUHcB/ZNDTNX8dQ2xZg579jkwDHnYBtKV040
-         46ouTt/PQ65UdNqdhNGelH+ADn3enxVp3xsgkPfRUwoBg6m6aVfy5guYfVe0MUTv8mzY
-         XXlIVTYiCoyitupabpAbjP9AUDKTF4TKWej/I5zGwTvf1k05sZW/1zdju7m7JdItGrNz
-         rmobXXJV/ho69pvPWayE7rNEPrrZeWeJ5iRK7msAFR3MafvdSWuRBBzPS6qcvFFDBzBG
-         dQmA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6ljW3jmCS9Tg2eXlB7zC9J4eumFLWdA0Tkz70VZ7hC65kt5J8adnBWg5GsX5AqDwWQ8/P45nMQ9g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzi8A5gfrOmvHLVcrp9te3oD0vnP3dczL80A8/JvKwTh9z8FruS
-	z2Bkq9ps8xlJcUjIrEQN02hBW4rFPFXoWjBTtpy0ayGweov+QNQFRbv/
-X-Gm-Gg: ASbGncuQgdatl/SWYTXd0p8dRkPEBcPD8c1HrrpOLgzzeEvUEWqoqc+1xcD0hGzeEFC
-	2+3MYArS1RGGJgrv1TKSCo/AQeXvl40JLs1uH2bxQSHOfjlvZBF0C0NBaYLc+VwlU8/pKj4LqYG
-	IQ7K8dCh629v4lsAAlS5FPYY0OpaYoKXMtnh0RQWy4nkN+Txv2TsSmAt6cS0/MwQWRwvUE0MokX
-	VPg1jNu/s5xBkCaXg69MFKsNHNnruO5w0dKkpc76c4mwnTpugvSO9qZvXofQGzcjGExvocHKpOq
-	I0a38IzkJOu5+wBQ3GkEF4G1fDzTQGRxRK2LKzdK1I4UIxEDr+fw9lNvYq6HqZyEUx2CSQxlUy+
-	yy4HeOSCore8pKDgMGq0JGyXxpDKEgMIVTBXp2ptQUZdCspy6kdXMT4+wpK9PVJqu8RZPrTAcnN
-	h2q+AhxSho1bCBQA==
-X-Google-Smtp-Source: AGHT+IEAmVx71ofDJnqXMWdm5SDHhZDccJOhKRMoK+tDdSkd1NpTk5tba5l1eQx6flbKeCAUi9zshw==
-X-Received: by 2002:a2e:9546:0:b0:37e:5208:e2d7 with SMTP id 38308e7fff4ca-37e58e4f776mr5336841fa.19.1764674479321;
-        Tue, 02 Dec 2025 03:21:19 -0800 (PST)
-Received: from [10.38.18.76] ([213.255.186.37])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-37d236efc92sm37487261fa.19.2025.12.02.03.21.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Dec 2025 03:21:18 -0800 (PST)
-Content-Type: multipart/mixed; boundary="------------RTMpC01dN2Tts0K0800P0dVv"
-Message-ID: <088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com>
-Date: Tue, 2 Dec 2025 13:21:16 +0200
+	s=arc-20240116; t=1764675886; c=relaxed/simple;
+	bh=A2OtBjHKMPsv5ieu0X0QAARKlZkIcWNozF8zp2T2n7c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EQ0QxSkuzTe8JlZBZvDKBJwVllHLmrlB9MgY64k6jRfi1EY48VHKkeEF9ks8K54iKWykUfj2UnVm9ZpknkeZl3ZgW2GZNKP33VElCjIE71He6K0MxEddRAxxQJAvB/s+anR7qd1G+RyQaFGFyOJTu7H/s4myxLH3bQF3jcHsjME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XWPsL1ju; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E566C4CEF1;
+	Tue,  2 Dec 2025 11:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764675885;
+	bh=A2OtBjHKMPsv5ieu0X0QAARKlZkIcWNozF8zp2T2n7c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XWPsL1juzkH3Cy///Ny5yKw9iel0mf0OoPe7j9SDtdwUYKGAqWZTLKIL+6DIganYy
+	 rboC8MZXuN2GKqELrn9+ubeSNSZF+aXY7SUfNuPAf5CEwj3tkMAWQuRBTcRcKemsiN
+	 hEhqNdJUuKmqq+gDN8y5XNBvvS24gCT8JszlIjNz6SW+y+KfaA9wjJMdMHg7Gbe4J4
+	 MjNKDTsgoSV2ZMxRO3y06JdAi4gaM4+HxFKFIY2MuXHdThj5i0eG1jY7DvYmn4G7qG
+	 WHN8Diy6D5uTFusOcg8mDMs7MQUnvqge8y3jk2zGUghVC5HWetCsknCUxEkG2ekQsg
+	 ZWv9UFaYK5Dew==
+Date: Tue, 2 Dec 2025 17:14:31 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Jonathan Chocron <jonnyc@amazon.com>, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v9 4/4] PCI: dwc: Support ECAM mechanism by enabling iATU
+ 'CFG Shift Feature'
+Message-ID: <ps5jjiqv5mw2g3exzvfcfsa4bcda7hois2h6riarwb2d2son4u@2onu4bibw2hb>
+References: <alpine.DEB.2.21.2511280256260.36486@angie.orcam.me.uk>
+ <c7aea2b3-6984-40f5-8234-14d265dabefc@oss.qualcomm.com>
+ <alpine.DEB.2.21.2511280755440.36486@angie.orcam.me.uk>
+ <cabf4c20-095b-4579-adc1-146a566b19b9@oss.qualcomm.com>
+ <alpine.DEB.2.21.2511281714030.36486@angie.orcam.me.uk>
+ <a4c6d47f-28b5-40d3-bc82-10aeb14f8e78@oss.qualcomm.com>
+ <alpine.DEB.2.21.2511290428340.36486@angie.orcam.me.uk>
+ <h7pgm3lqolm53sb4wrcpcurk4ghz4tulqnr7vgd7rzxy4hscue@jcn5tepevlwl>
+ <syg7vpbt3w53s24hgl7b6w64odmif5bq557lwlvzlbvgkukwcn@66jtzzc3vtiu>
+ <alpine.DEB.2.21.2512011617250.49654@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
- overlays"
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>, Matti Vaittinen
- <mazziesaccount@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
- Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Charles Keepax <ckeepax@opensource.cirrus.com>,
- Richard Fitzgerald <rf@opensource.cirrus.com>,
- David Rhodes <david.rhodes@cirrus.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
- Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>,
- Steen Hegelund <steen.hegelund@microchip.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <20251015071420.1173068-2-herve.codina@bootlin.com>
- <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
- <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
- <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
- <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
- <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
- <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
- <55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
- <20251202102619.5cd971cc@bootlin.com>
-Content-Language: en-US
-From: Kalle Niemi <kaleposti@gmail.com>
-In-Reply-To: <20251202102619.5cd971cc@bootlin.com>
+Content-Type: multipart/mixed; boundary="3my6bnxaowecwlhh"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <alpine.DEB.2.21.2512011617250.49654@angie.orcam.me.uk>
 
-This is a multi-part message in MIME format.
---------------RTMpC01dN2Tts0K0800P0dVv
-Content-Type: text/plain; charset=UTF-8; format=flowed
+
+--3my6bnxaowecwlhh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
-On 12/2/25 11:26, Herve Codina wrote:
-> Hi Kalle,
+On Mon, Dec 01, 2025 at 04:42:42PM +0000, Maciej W. Rozycki wrote:
+> On Mon, 1 Dec 2025, Manivannan Sadhasivam wrote:
 > 
-> On Fri, 28 Nov 2025 10:34:57 +0200
-> Kalle Niemi <kaleposti@gmail.com> wrote:
+> > > > So it's definitely nothing specific to the parport driver, but rather a 
+> > > > general issue with PCI/e port I/O not working anymore.  I do hope these 
+> > > > observations will let you address the issue now.  You might be able to 
+> > > > reproduce it with hardware you have available even.
+> > > > 
+> > > 
+> > > Yes, looks like the I/O port access is not working with the CFG Shift feature.
+> > > The spec says that both I/O and MEM TLPs should be handled by this feature, so
+> > > we are currently unsure why MEM works, but not I/O.
 > 
-> ...
->>>>>>>>
->>>>>>>> Hello,
->>>>>>>>
->>>>>>>> Test system testing drivers for ROHM ICs bisected this commit to cause
->>>>>>>> BD71847 drivers probe to not be called.
->>>>>>> This driver (and overlay support) is in linux-next or something out of
->>>>>>> tree on top of linux-next?
->>>>>>>
->>>>>>> Rob
->>>>>> Yes the driver is in mainline linux: /drivers/mfd/rohm-bd718x7.c
->>>>> I don't see any support to apply overlays in that driver.
->>>> Ah. Sorry for the confusion peeps. I asked Kalle to report this without
->>>> proper consideration. 100% my bad.
->>>>
->>>> While the bd718x7 drive indeed is mainline (and tested), the actual
->>>> 'glue-code' doing the overlay is part of the downstream test
->>>> infrastructure. So yes, this is not a bug in upstream kernel - this
->>>> falls in the category of an upstream change causing downstream things to
->>>> break. So, feel free to say: "Go fix your code" :)
->>>>
->>>> Now that this is sorted, if someone is still interested in helping us to
->>>> get our upstream drivers tested - the downstream piece is just taking
->>>> the compiled device-tree overlay at runtime (via bin-attribute file),
->>>> and applying it using the of_overlay_fdt_apply(). The approach is
->>>> working for our testing purposes when the device is added to I2C/SPI
->>>> node which is already enabled. However, in case where we have the I2C
->>>> disabled, and enable it in the same overlay where we add the new device
->>>> - then the new device does not get probed.
->>>>
->>>> I would be really grateful if someone had a pointer for us.
->>> Seems to be fw_devlink related. I suppose if you turn it off it works?
->>> There's info about the dependencies in sysfs or maybe debugfs. I don't
->>> remember the details, but that should help to tell you why things
->>> aren't probing.
+>  As I say, last time I checked (for another reason) documentation was not 
+> available to the general public, so I can't help with that.
 > 
-> Rob reverted patches but I plan to continue my work on it.
-> On my side, I need the reverted patches but I fully understand that, on
-> your side, you need a working system.
+
+Sure. I know that the DWC documentation is well secured behind firewalls. So not
+asking for help here.
+
+> > > The issue you reported with parport_pc driver is that the driver gets probed,
+> > > but it fails to detect the parallel ports on the device. More precisely, it
+> > > fails due to the parport_SPP_supported() check in drivers/parport/parport_pc.c.
+> > > This function performs some read/write checks to make sure that the port exists,
+> > > but most likely the read value doesn't match the written one. And since there is
+> > > no log printed in this function, it just failed silently.
 > 
-> In order to move forward and find a solution for my next iteration, can you
-> send your overlay (dtso) used in your working and non working cases?
+>  Whatever the exact transaction conditions are port I/O TLPs seem not to 
+> make it through to the requested target device anymore.
 > 
-> Best regards,
-> Hervé
+>  FWIW the defxx driver issues a command to the device's command register 
+> and wants to see a successful completion status in the status register 
+> before retrieving the MAC address via the data register.  So it's not a 
+> simple case of poking at a register and reading it back, but the end 
+> result is the same: the device cannot be talked to.
+> 
+> > > We will check why I/O access fails with ECAM mode and revert back asap. Since
+> > > the merge window is now open, it becomes difficult to revert the CFG shift
+> > > feature cleanly. The timing of the report also made it difficult to fix the
+> > > issue in v6.18. Hopefully, we can backport the fix once we identify the culprit.
+> 
+>  No worries, I've been around for long enough (short of 30 years) to know 
+> the process.
+> 
+>  FWIW the original change would've best been reverted for 6.18 as a fatal 
+> regression, however port I/O is uncommon enough nowadays we can defer any 
+> final decision to 6.19 I suppose.  I'm glad I've tripped over this in the 
+> first place as I'm not eager to upgrade all my lab devices all the time, 
+> and it was owing to another issue only that I chose this moment to move 
+> forward, not so long after the original commit.
+> 
+> > Can you try the attached patch? It is a reworked version of Krishna's patch. I
+> > just moved things around to check potential override issue.
+> 
+>  No change in behaviour, sorry.  I suppose it's this range of host address 
+> decoding:
+> 
+> fu740-pcie e00000000.pcie:       IO 0x0060080000..0x006008ffff -> 0x0060080000
+> 
+> aka:
+> 
+> pci_bus 0000:00: root bus resource [io  0x0000-0xffff] (bus address [0x60080000-0x6008ffff])
+> 
+> that you're after.  Are you sure your code discovers it correctly?  As I 
+> say I can only see IORESOURCE_MEM references and no IORESOURCE_IO ones as 
+> would be appropriate for the root bus resource quoted.
+> 
 
-Hello Hervé,
+The I/O resource is discovered by the driver correctly as seen from the logs:
 
-I have attached the overlay source file: bd71847_overlay.dts
+pci_bus 0000:00: root bus resource [io  0x0000-0xffff] (bus address [0x60080000-0x6008ffff])
+pci_bus 0000:00: root bus resource [mem 0x60090000-0x7fffffff]
+pci_bus 0000:00: root bus resource [mem 0x2000000000-0x3fffffffff pref]
 
-BR
-Kalle
+But we believe that the iATU is not programmed for the I/O port, resulting in
+the I/O access not going out to the device.
 
---------------RTMpC01dN2Tts0K0800P0dVv
-Content-Type: audio/vnd.dts; name="bd71847_overlay.dts"
-Content-Disposition: attachment; filename="bd71847_overlay.dts"
-Content-Transfer-Encoding: base64
+Krishna found an issue in the previous patch that got shared. So I've attached a
+new one. Could you please try and let us know? If it didn't help, please share
+the dmesg log that will have some more info.
 
-L2R0cy12MS87Ci9wbHVnaW4vOwoKL3sgLyogdGhpcyBpcyBvdXIgZGV2aWNlIHRyZWUgb3Zl
-cmxheSByb290IG5vZGUgKi8KCgljb21wYXRpYmxlID0gInRpLGJlYWdsZWJvbmUiLCAidGks
-YmVhZ2xlYm9uZS1ibGFjayI7CglwYXJ0LW51bWJlciA9ICJCQkItSTJDMSI7IC8vIHlvdSBj
-YW4gY2hvb3NlIGFueSBuYW1lIGhlcmUgYnV0IGl0IHNob3VsZCBiZSBtZW1vcmFibGUKIAl2
-ZXJzaW9uID0gIjAwQTAiOwoKCWZyYWdtZW50QDAgewoJCXRhcmdldCA9IDwmYW0zM3h4X3Bp
-bm11eD47IC8vIHRoaXMgaXMgYSBsaW5rIHRvIGFuIGFscmVhZHkgZGVmaW5lZCBub2RlIGlu
-IHRoZSBkZXZpY2UgdHJlZSwgc28gdGhhdCBub2RlIGlzIG92ZXJsYXllZCB3aXRoIG91ciBt
-b2RpZmljYXRpb24KCgkJX19vdmVybGF5X18gewoJCQlpMmMxX3BpbnM6IHBpbm11eF9pMmMx
-X3BpbnMgewoJCQkJcGluY3RybC1zaW5nbGUscGlucyA9IDwKICAgICAgICAgIAkJCTB4MTU4
-IDB4NzIgLyogc3BpMF9kMS5pMmMxX3NkYSAqLyAKICAgICAgICAgIAkJCTB4MTVDIDB4NzIg
-Lyogc3BpMF9jczAuaTJjMV9zZGwgKi8KICAgICAgICAJCQk+OwoJCQl9OwoJCX07Cgl9OwoJ
-ZnJhZ21lbnRAMSB7CgkJdGFyZ2V0LXBhdGggPSAiLyI7CgkJX19vdmVybGF5X18gewoJCQkv
-KiBleHRlcm5hbCBvc2NpbGxhdG9yICovCgkJCW9zYzogb3NjaWxsYXRvciB7CgkJCQljb21w
-YXRpYmxlID0gImZpeGVkLWNsb2NrIjsKCQkJCSNjbG9jay1jZWxscyA9IDwxPjsKCQkJCWNs
-b2NrLWZyZXF1ZW5jeSAgPSA8MzI3Njg+OwoJCQkJY2xvY2stb3V0cHV0LW5hbWVzID0gIm9z
-YyI7CgkJCX07CgkJfTsKCX07CgoJZnJhZ21lbnRAMiB7CgkJdGFyZ2V0ID0gPCZpMmMxPjsK
-CgkJX19vdmVybGF5X18gewoJCQlwaW5jdHJsLTAgPSA8JmkyYzFfcGlucz47CgkJCWNsb2Nr
-LWZyZXF1ZW5jeSA9IDwxMDAwMDA+OwoJCQlzdGF0dXMgPSAib2theSI7CgoKCgkJCXBtaWM6
-IHBtaWNANGIgeyAvKiB0aGUgInRlc3QiIGRlZmluZWQgYXMgY2hpbGQgb2YgdGhlIGkyYzEg
-YnVzICovCgkJCQljb21wYXRpYmxlID0gInJvaG0sYmQ3MTg0NyI7CgkJCQlyZWcgPSA8MHg0
-Yj47CgkJCQkvKiBMZXQncyB0cnkgdXNpbmcgR1BJTzFfMjkgYXMgaXJxIHBpbiAqLwoJCQkJ
-aW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzE+OwoJCQkJaW50ZXJydXB0cyA9IDwyOSA4PjsK
-CQkJCWNsb2NrcyA9IDwmb3NjIDA+OwoJCQkJI2Nsb2NrLWNlbGxzID0gPDA+OwoJCQkJY2xv
-Y2stb3V0cHV0LW5hbWVzID0gImJkNzE4NDctMzJrLW91dCI7CgkJCQkvKiAxNTAwIG1zIGNv
-bGQgcmVzZXQgKi8KCQkJCXJvaG0scmVzZXQtZGVsYXkgPSA8MTUwMD47CgoJCQkJcmVndWxh
-dG9ycyB7CgkJCQkJYnVjazE6IEJVQ0sxIHsKCQkJCQkJcmVndWxhdG9yLW5hbWUgPSAiYnVj
-azEiOwoJCQkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw3MDAwMDA+OwoJCQkJCQly
-ZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxMzAwMDAwPjsKCQkJCQkJLy9yZWd1bGF0b3It
-Ym9vdC1vbjsKCQkJCQkJLy9yZWd1bGF0b3ItYWx3YXlzLW9uOwpyZWd1bGF0b3ItcmFtcC1k
-ZWxheSA9IDwxMDAwMD47CgkJCQkJCXJlZ3VsYXRvci1vdi1wcm90ZWN0aW9uLW1pY3Jvdm9s
-dCA9IDwxPjsKCQkJCQkJcmVndWxhdG9yLXV2LXByb3RlY3Rpb24tbWljcm92b2x0ID0gPDE+
-OwoJCQkJCX07CgkJCQkJYnVjazI6IEJVQ0syIHsKCQkJCQkJcmVndWxhdG9yLW5hbWUgPSAi
-YnVjazIiOwoJCQkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw3MDAwMDA+OwoJCQkJ
-CQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxMzAwMDAwPjsKCQkJCQkJcmVndWxhdG9y
-LWJvb3Qtb247CgkJCQkJCXJlZ3VsYXRvci1hbHdheXMtb247CnJlZ3VsYXRvci1yYW1wLWRl
-bGF5ID0gPDUwMDA+OwoJCQkJCQlyZWd1bGF0b3Itb3YtcHJvdGVjdGlvbi1taWNyb3ZvbHQg
-PSA8MT47CgkJCQkJCXJlZ3VsYXRvci11di1wcm90ZWN0aW9uLW1pY3Jvdm9sdCA9IDwxPjsK
-CQkJCQl9OwoJCQkJCWJ1Y2szOiBCVUNLMyB7CgkJCQkJCXJlZ3VsYXRvci1uYW1lID0gImJ1
-Y2szIjsKCQkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw1NTAwMDA+OwoJCQkJCQly
-ZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxMzUwMDAwPjsKCQkJCQkJLy9yZWd1bGF0b3It
-Ym9vdC1vbjsKCQkJCQkJcm9obSxuby1yZWd1bGF0b3ItZW5hYmxlLWNvbnRyb2w7CgkJCQkJ
-CXJlZ3VsYXRvci1vdi1wcm90ZWN0aW9uLW1pY3Jvdm9sdCA9IDwxPjsKCQkJCQkJcmVndWxh
-dG9yLXV2LXByb3RlY3Rpb24tbWljcm92b2x0ID0gPDE+OwoJCQkJCX07CgoJCQkJCUJVQ0s0
-OiBCVUNLNCB7CgkJCQkJCXJlZ3VsYXRvci1uYW1lID0gImJ1Y2s0IjsKCQkJCQkJcmVndWxh
-dG9yLW1pbi1taWNyb3ZvbHQgPSA8MjYwMDAwMD47CgkJCQkJCXJlZ3VsYXRvci1tYXgtbWlj
-cm92b2x0ID0gPDMzMDAwMDA+OwoJCQkJCQlyZWd1bGF0b3ItYm9vdC1vbjsKCQkJCQkJcmVn
-dWxhdG9yLW92LXByb3RlY3Rpb24tbWljcm92b2x0ID0gPDE+OwoJCQkJCQlyZWd1bGF0b3It
-dXYtcHJvdGVjdGlvbi1taWNyb3ZvbHQgPSA8MT47CgkJCQkJfTsKCgkJCQkJYnVjazU6IEJV
-Q0s1IHsKCQkJCQkJcmVndWxhdG9yLW5hbWUgPSAiYnVjazUiOwoJCQkJCQlyZWd1bGF0b3It
-bWluLW1pY3Jvdm9sdCA9IDwxNjA1MDAwPjsKCQkJCQkJcmVndWxhdG9yLW1heC1taWNyb3Zv
-bHQgPSA8MTk5NTAwMD47CgkJCQkJCXJlZ3VsYXRvci1ib290LW9uOwoJCQkJCQlyZWd1bGF0
-b3Itb3YtcHJvdGVjdGlvbi1taWNyb3ZvbHQgPSA8MT47CgkJCQkJCXJlZ3VsYXRvci11di1w
-cm90ZWN0aW9uLW1pY3Jvdm9sdCA9IDwxPjsKCQkJCQl9OwoJCQoJCQkJCWJ1Y2s2OiBCVUNL
-NiB7CgkJCQkJCXJlZ3VsYXRvci1uYW1lID0gImJ1Y2s2IjsKCQkJCQkJcmVndWxhdG9yLW1p
-bi1taWNyb3ZvbHQgPSA8ODAwMDAwPjsKCQkJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQg
-PSA8MTQwMDAwMD47CgkJCQkJCXJlZ3VsYXRvci1vdi1wcm90ZWN0aW9uLW1pY3Jvdm9sdCA9
-IDwxPjsKCQkJCQkJcmVndWxhdG9yLXV2LXByb3RlY3Rpb24tbWljcm92b2x0ID0gPDE+OwoJ
-CQkJCX07CgkJCQovKiBMRE8xIGFuZCBMRE8yIGFyZSBlbmFibGVkIGJ5IEhXIHdoZW4gUE1J
-QyB0dXJucyBmcm9tIFJFQURZIHRvIFNOVlMgc3RhdGUgKi8KCQkJCQlsZG8xOiBMRE8xIHsK
-CQkJCQkJcmVndWxhdG9yLW5hbWUgPSAibGRvMSI7CgkJCQkJCXJlZ3VsYXRvci1taW4tbWlj
-cm92b2x0ID0gPDE2MDAwMDA+OwoJCQkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwz
-MzAwMDAwPjsKCQkJCQkJcmVndWxhdG9yLWJvb3Qtb247CgkJCQkJCS8vcmVndWxhdG9yLWFs
-d2F5cy1vbjsKCQkJCQkJcmVndWxhdG9yLXV2LXByb3RlY3Rpb24tbWljcm92b2x0ID0gPDE+
-OwoJCQkJCX07CgoJCQkJCWxkbzI6IExETzIgewoJCQkJCQlyZWd1bGF0b3ItbmFtZSA9ICJs
-ZG8yIjsKCQkJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8ODAwMDAwPjsKCQkJCQkJ
-cmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8OTAwMDAwPjsKCQkJCQkJcmVndWxhdG9yLWJv
-b3Qtb247CgkJCQkJCS8vcmVndWxhdG9yLWFsd2F5cy1vbjsKCQkJCQkJcmVndWxhdG9yLXV2
-LXByb3RlY3Rpb24tbWljcm92b2x0ID0gPDE+OwoJCQkJCX07CgoJCQkJCWxkbzM6IExETzMg
-ewoJCQkJCQlyZWd1bGF0b3ItbmFtZSA9ICJsZG8zIjsKCQkJCQkJcmVndWxhdG9yLW1pbi1t
-aWNyb3ZvbHQgPSA8MTgwMDAwMD47CgkJCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0g
-PDMzMDAwMDA+OwoJCQkJCQlyZWd1bGF0b3ItdXYtcHJvdGVjdGlvbi1taWNyb3ZvbHQgPSA8
-MT47CgkJCQkJfTsKCgkJCQkJbGRvNDogTERPNCB7CgkJCQkJCXJlZ3VsYXRvci1uYW1lID0g
-ImxkbzQiOwoJCQkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw5MDAwMDA+OwoJCQkJ
-CQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsKCQkJCQkJcmVndWxhdG9y
-LXV2LXByb3RlY3Rpb24tbWljcm92b2x0ID0gPDE+OwoJCQkJCQkvL3JlZ3VsYXRvci1ib290
-LW9uOwoJCQkJCX07CgoJCQkJCWxkbzU6IExETzUgewoJCQkJCQlyZWd1bGF0b3ItbmFtZSA9
-ICJsZG81IjsKCQkJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8ODAwMDAwPjsKCQkJ
-CQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47CgkJCQkJCXJvaG0sbm8t
-cmVndWxhdG9yLWVuYWJsZS1jb250cm9sOwoJCQkJCQlyZWd1bGF0b3ItdXYtcHJvdGVjdGlv
-bi1taWNyb3ZvbHQgPSA8MT47CgkJCQkJfTsKCgkJCQkJbGRvNjogTERPNiB7CgkJCQkJCXJl
-Z3VsYXRvci1uYW1lID0gImxkbzYiOwoJCQkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9
-IDw5MDAwMDA+OwoJCQkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsK
-CQkJCQkJcmVndWxhdG9yLWJvb3Qtb247CgkJCQkJCS8qIFRoaXMgc2hvdWxkIGZhaWwgYXMg
-TERPcyBkbyBub3Qgc3VwcG9ydCBPVlAgKi8KCQkJCQkJcmVndWxhdG9yLW92LXByb3RlY3Rp
-b24tbWljcm92b2x0ID0gPDE+OwoJCQkJCQlyZWd1bGF0b3ItdXYtcHJvdGVjdGlvbi1taWNy
-b3ZvbHQgPSA8MT47CgkJCQkJfTsKCQkJCX07CgkJCX07CgkJfTsKCX07CgoJZnJhZ21lbnRA
-MyB7CgkJdGFyZ2V0LXBhdGggPSAiLyI7CgkJX19vdmVybGF5X18gewoJCQlpcnF0ZXN0OiBk
-dW1teSB7CgkJCQljb21wYXRpYmxlID0gInJvaG0sY2xrdGVzdC1iZDcxODQ3IjsKLyoKCQkJ
-CWNvbXBhdGlibGUgPSAicm9obSxmb28tYmQ3MTg0Ny1pcnEiOwoJCQkJaW50ZXJydXB0LXBh
-cmVudCA9IDwmcG1pYz47CgkJCQlpbnRlcnJ1cHRzID0gPDA+LCA8MT4sIDwyPiwgPDM+LCA8
-ND4sIDw1PiwgPDY+OwoJCQkJaW50ZXJydXB0LW5hbWVzID0gImlycS1idG4iLCAiaXJxLWJ0
-bi1zIiwgImlycS1idG4tbCIsICJpcnEtc3dyc3QiLCAiaXJxLXdkb2ciLCAiaXJxLW9uIiwg
-ImlycS1zdGIiOwoqLwoJCQkJY2xvY2tzID0gPCZwbWljPjsKCQkJCWNsb2NrLW5hbWVzID0g
-ImZvby1pbiI7CgkJCX07CgkJfTsKCX07Cn07IC8qIHJvb3Qgbm9kZSBlbmQgKi8K
+- Mani
 
---------------RTMpC01dN2Tts0K0800P0dVv--
+-- 
+மணிவண்ணன் சதாசிவம்
+
+--3my6bnxaowecwlhh
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-PCI-qcom-Enable-iATU-mapping-for-memory-IO-regions.patch"
+
+From 5acab1289f8fd20ecead7c517e7e282584946ff0 Mon Sep 17 00:00:00 2001
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Date: Fri, 28 Nov 2025 16:44:17 +0530
+Subject: [PATCH] PCI: qcom: Enable iATU mapping for memory & IO regions
+
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+---
+ .../pci/controller/dwc/pcie-designware-host.c | 42 ++++++++++++-------
+ drivers/pci/controller/dwc/pcie-designware.c  |  3 ++
+ drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
+ 3 files changed, 31 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index e92513c5bda5..d977bb92cf3b 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -36,6 +36,7 @@ static struct pci_ops dw_child_pcie_ops;
+ 
+ #define IS_256MB_ALIGNED(x) IS_ALIGNED(x, SZ_256M)
+ 
++static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp);
+ static const struct msi_parent_ops dw_pcie_msi_parent_ops = {
+ 	.required_flags		= DW_PCIE_MSI_FLAGS_REQUIRED,
+ 	.supported_flags	= DW_PCIE_MSI_FLAGS_SUPPORTED,
+@@ -433,7 +434,7 @@ static int dw_pcie_config_ecam_iatu(struct dw_pcie_rp *pp)
+ 	 * Immediate bus under Root Bus, needs type 0 iATU configuration and
+ 	 * remaining buses need type 1 iATU configuration.
+ 	 */
+-	atu.index = 0;
++	atu.index = pp->ob_atu_index;
+ 	atu.type = PCIE_ATU_TYPE_CFG0;
+ 	atu.parent_bus_addr = pp->cfg0_base + SZ_1M;
+ 	/* 1MiB is to cover 1 (bus) * 32 (devices) * 8 (functions) */
+@@ -448,14 +449,20 @@ static int dw_pcie_config_ecam_iatu(struct dw_pcie_rp *pp)
+ 	if (bus_range_max < 2)
+ 		return 0;
+ 
++	pp->ob_atu_index++;
++
+ 	/* Configure remaining buses in type 1 iATU configuration */
+-	atu.index = 1;
++	atu.index = pp->ob_atu_index;
+ 	atu.type = PCIE_ATU_TYPE_CFG1;
+ 	atu.parent_bus_addr = pp->cfg0_base + SZ_2M;
+ 	atu.size = (SZ_1M * bus_range_max) - SZ_2M;
+ 	atu.ctrl2 = PCIE_ATU_CFG_SHIFT_MODE_ENABLE;
+ 
+-	return dw_pcie_prog_outbound_atu(pci, &atu);
++	ret = dw_pcie_prog_outbound_atu(pci, &atu);
++	if (!ret)
++		pp->ob_atu_index++;
++
++	return ret;
+ }
+ 
+ static int dw_pcie_create_ecam_window(struct dw_pcie_rp *pp, struct resource *res)
+@@ -630,14 +637,6 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+ 	if (ret)
+ 		goto err_free_msi;
+ 
+-	if (pp->ecam_enabled) {
+-		ret = dw_pcie_config_ecam_iatu(pp);
+-		if (ret) {
+-			dev_err(dev, "Failed to configure iATU in ECAM mode\n");
+-			goto err_free_msi;
+-		}
+-	}
+-
+ 	/*
+ 	 * Allocate the resource for MSG TLP before programming the iATU
+ 	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
+@@ -919,6 +918,8 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+ 		}
+ 	}
+ 
++	dev_info(pci->dev, "%s: %d MEM index: %d", __func__, __LINE__, i);
++
+ 	if (pp->io_size) {
+ 		if (pci->num_ob_windows > ++i) {
+ 			atu.index = i;
+@@ -936,13 +937,16 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+ 		} else {
+ 			pp->cfg0_io_shared = true;
+ 		}
++
++		dev_info(pci->dev, "%s: %d I/O index: %d", __func__, __LINE__, i);
+ 	}
+ 
+ 	if (pci->num_ob_windows <= i)
+ 		dev_warn(pci->dev, "Ranges exceed outbound iATU size (%d)\n",
+ 			 pci->num_ob_windows);
+ 
+-	pp->msg_atu_index = i;
++	pp->ob_atu_index = ++i;
++	dev_info(pci->dev, "%s: %d Final index: %d", __func__, __LINE__, i);
+ 
+ 	i = 0;
+ 	resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
+@@ -1086,12 +1090,20 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
+ 	 * the platform uses its own address translation component rather than
+ 	 * ATU, so we should not program the ATU here.
+ 	 */
+-	if (pp->bridge->child_ops == &dw_child_pcie_ops) {
++	if (pp->bridge->child_ops == &dw_child_pcie_ops || pp->ecam_enabled) {
+ 		ret = dw_pcie_iatu_setup(pp);
+ 		if (ret)
+ 			return ret;
+ 	}
+ 
++	if (pp->ecam_enabled) {
++		ret = dw_pcie_config_ecam_iatu(pp);
++		if (ret) {
++			dev_err(pci->dev, "Failed to configure iATU in ECAM mode\n");
++			return ret;
++		}
++	}
++
+ 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0);
+ 
+ 	/* Program correct class for RC */
+@@ -1113,7 +1125,7 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
+ 	void __iomem *mem;
+ 	int ret;
+ 
+-	if (pci->num_ob_windows <= pci->pp.msg_atu_index)
++	if (pci->num_ob_windows <= pci->pp.ob_atu_index)
+ 		return -ENOSPC;
+ 
+ 	if (!pci->pp.msg_res)
+@@ -1123,7 +1135,7 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
+ 	atu.routing = PCIE_MSG_TYPE_R_BC;
+ 	atu.type = PCIE_ATU_TYPE_MSG;
+ 	atu.size = resource_size(pci->pp.msg_res);
+-	atu.index = pci->pp.msg_atu_index;
++	atu.index = pci->pp.ob_atu_index;
+ 
+ 	atu.parent_bus_addr = pci->pp.msg_res->start - pci->parent_bus_offset;
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index c644216995f6..d27b469b417b 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -478,6 +478,9 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
+ 
+ 	limit_addr = parent_bus_addr + atu->size - 1;
+ 
++	if (atu->index > pci->num_ob_windows)
++		return -ENOSPC;
++
+ 	if ((limit_addr & ~pci->region_limit) != (parent_bus_addr & ~pci->region_limit) ||
+ 	    !IS_ALIGNED(parent_bus_addr, pci->region_align) ||
+ 	    !IS_ALIGNED(atu->pci_addr, pci->region_align) || !atu->size) {
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index e995f692a1ec..69d0bd8b3c57 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -423,8 +423,8 @@ struct dw_pcie_rp {
+ 	struct pci_host_bridge  *bridge;
+ 	raw_spinlock_t		lock;
+ 	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
++	int			ob_atu_index;
+ 	bool			use_atu_msg;
+-	int			msg_atu_index;
+ 	struct resource		*msg_res;
+ 	bool			use_linkup_irq;
+ 	struct pci_eq_presets	presets;
+-- 
+2.48.1
+
+
+--3my6bnxaowecwlhh--
 
