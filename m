@@ -1,123 +1,223 @@
-Return-Path: <linux-pci+bounces-42504-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42507-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 130E6C9C362
-	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 17:31:22 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7471AC9C45B
+	for <lists+linux-pci@lfdr.de>; Tue, 02 Dec 2025 17:43:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B09583431B3
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 16:31:21 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CB6D64E4D57
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 16:43:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C265D212B0A;
-	Tue,  2 Dec 2025 16:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eDDhsgxA"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60703290DBB;
+	Tue,  2 Dec 2025 16:43:10 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E763FC2;
-	Tue,  2 Dec 2025 16:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7E328D8ED
+	for <linux-pci@vger.kernel.org>; Tue,  2 Dec 2025 16:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764693076; cv=none; b=J5Fsv2IIeGmr5h1eM4aWpejqr2uW0G3+UGfdHq0v2L9xhDf8gzX8BKkwTvBQIIFrOeD8gegZ1M7XBesIjwuDjtXRdFUdzsE7jmTJtNe0SUd6DH3xG8nyPvBYNvnuQqd41o2uHLwyPN17yRpPYOAaFnUJWMnsfkQA5CSDE7nr/Tc=
+	t=1764693790; cv=none; b=A5iHLeosNe0VSSC5/X5INGx+uzmJX633NqseTPRgcmcU96KOZsddLwTSodlp1KofYCyfoLJmOCJ8FsPe66v1geqKQkYpYUUhOt0z7RAXljEAAzMIbWPyAqe30qQ9KcpMW2RLrVwZ5Gd+QU5pBTfET7+b8ZsWdmRalr7nJo2BSoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764693076; c=relaxed/simple;
-	bh=sYyyeu01r9nTnopkdoe3Q+H+YBGvXq9b3XEXUU2b3LA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=WGYJSBluFzx1h30AibFf5lgmmo2izfRjnXB8RgvwI2ppy2m5m15k0mtfWur/E0Ih5Kgorp+l8Ba6arWezdFxdxGexevyNnkMsT22oITvNnjHyYhX1dwm3qgBfPNWPl0fZRud2CPISrb9bq9LcEBq8RJQZ+JBOCHDycHWQTU5haE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eDDhsgxA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDFCBC4CEF1;
-	Tue,  2 Dec 2025 16:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764693076;
-	bh=sYyyeu01r9nTnopkdoe3Q+H+YBGvXq9b3XEXUU2b3LA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=eDDhsgxAJq/061wE/XBrP2wIWjI0YVdZXK3gcIEa2959edzNaO3yDn2i1k8guLIq4
-	 mFsJv/HRIUue/z5UPcELnk4OQz9Fpee3kDyZfGC2lbeLCPc0uhjrgL82k2naFX2tYS
-	 prt9gF4R4sz2KNKeUG2A/XZG1wSXNAjVCQf6fd44ZT2hgvfg5L0LrXKybTkVPtKnBK
-	 R9rDH/T6n0dHHTVE+xptn54ucazdNbYMG9JAPTDbQEFg9aVuPmBob0FlUuVdwdLX6H
-	 l7VXa1arMYc6jg6J4L6mjHBhXns42MfUlGL58lu+AUtHc+u8uopUlG/Wj1ywzZvNsw
-	 DZTlHCc4QG82Q==
-Date: Tue, 2 Dec 2025 10:31:14 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kevin Xie <kevin.xie@starfivetech.com>
-Cc: Hal Feng <hal.feng@starfivetech.com>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
-	E Shattow <e@freeshell.de>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/6] PCI: starfive: Use regulator APIs instead of GPIO
- APIs to enable the 3V3 power supply of PCIe slots
-Message-ID: <20251202163114.GA3075889@bhelgaas>
+	s=arc-20240116; t=1764693790; c=relaxed/simple;
+	bh=7JWQpNMMWls0pEOEbb/qFxvVCdKg8LNQq2xwgx7Zjik=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YYQnt+O/s6QVgXmsgF1nCO/5FiAT7ouJKIKUqBIyTEanCojRDbEjw6zSZUU5frorh2q3Z0CefHvGix0548KgbpqFvdZYtl657o0tPRSCRko627DvAxCQFEuhInxcCm5Fbq9WvT1sClcRjXHDuLt8BX5bDTk99ZOiS8lo+yx3qIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-88249766055so64841056d6.1
+        for <linux-pci@vger.kernel.org>; Tue, 02 Dec 2025 08:43:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764693787; x=1765298587;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yo/Q77iM2dxCsDJX0wSMsdkdBK/3CM2tnqmsgemQ55M=;
+        b=dFPXP8rIX3kiixUbpo3kbHFScwePy0roBhGomMROXjemJq8+DiBHBO1bcpfUgjh+p4
+         j1+fVn95zrbuaL+gvAHCuMTvt1QNBY49gC8P1j58zL5qfJQZ2kOxNi+QR6h7i53yiacp
+         xb7nsJ18agaz2SiL2qvRxSE1kEqI2IKFqA+EBzgph3Q2dMNV6TzzPHPsZDcBqAW0Ze80
+         Hevt7HoKSsVLH0p9ejiRqYmcGJPCzdyre0eKwBDyVLBuEICZ2rsQSCAXcaIgRjkfZXhB
+         ByHKkVyRR3j8Qb83HBm1rqFa1DQ+UcS7CSneKvDe6wdXxnLDIipHky3YtSXuP37VsKdS
+         nFsA==
+X-Forwarded-Encrypted: i=1; AJvYcCWHDNUdzmT5neSxygd7FyLNilyiun3ioAuaKbSRbUz2GHdy71XUYOxGemnhQll1rpNAekbjc52zdpk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNSkFc+ZOojejXHE8gjNwfKBzuSxS34AyO6DxUrbYR8oq2iIKw
+	MSumDJYKxGdFQEvVWwXUPh5bC34G5J2wj9cBghPbx2RXmMo5+GfzUTWs8QlLkSM8
+X-Gm-Gg: ASbGnctNyqMYtwFKGTvtxYm61CM/lsKkCXiBcqVqEYFN1DDMkj0BWnGHIYTC3VBnrtC
+	k8AyPtgNO0rYCT5x/lUneym7pOpMvKFcFvaSQepH+d6dhBmB3opO1ZS/FzKFOSA9v+t5z0qv8R1
+	MtHiJ0smKm6MZ6///7vLyJYfweYTE/3gji/0L99T4kCv60qmNavkXqVrLvvPXp6ONScECEd053H
+	D3+B4tPrEgZ/filh/ArloVgmSpLNpfxbgl7Rs1jZwsNPrQ3r9Y75DrzF+9B8mfGBNI7suhMLa2F
+	3RTcs0eVTEvj4uow2bViK1xPsKw2hqaKej9ZhMUrGHxrrbQ2UrWBatne5iHoXsdVo4NnjpNyBfw
+	lUvJnn/BsXDAiQaxG0VkxEnSJuZrIeVC4mlgr5RRr7P13XSrxz50HKoaD/bqM4baMBQGvWGFggN
+	bHF3Gymk6N+nd/z5jgPLaC5lAqswGTqEBlYoQFjOI/X4GHEEsy
+X-Google-Smtp-Source: AGHT+IFmrcHdhcMjv9ZZdOZUrv6TkOWbwdNafexd0/CO2XDOXZh6dNqIjmh8hsGE1WGIHjCdPkFeJg==
+X-Received: by 2002:a05:6214:caa:b0:882:51e0:6429 with SMTP id 6a1803df08f44-8847c535c69mr647211466d6.47.1764693787173;
+        Tue, 02 Dec 2025 08:43:07 -0800 (PST)
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com. [209.85.219.44])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-886524af19fsm106768116d6.11.2025.12.02.08.43.06
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Dec 2025 08:43:07 -0800 (PST)
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-88051279e87so56658846d6.3
+        for <linux-pci@vger.kernel.org>; Tue, 02 Dec 2025 08:43:06 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXLXjxBCObdxBzji4qHgi9/L4SB6ZNPNWL4nCgXz3Et9GzpmOMV+bcJh7lF+6OYzJ9kbY4vql4n8+8=@vger.kernel.org
+X-Received: by 2002:a05:6102:3048:b0:5db:20ea:2329 with SMTP id
+ ada2fe7eead31-5e1de370617mr15734527137.35.1764693347428; Tue, 02 Dec 2025
+ 08:35:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZQ0PR01MB09816DBC8A88CEC939C8968482D82@ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <20251015071420.1173068-2-herve.codina@bootlin.com> <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
+ <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
+ <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com> <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+ <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com> <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+ <55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com> <20251202102619.5cd971cc@bootlin.com>
+In-Reply-To: <20251202102619.5cd971cc@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 2 Dec 2025 17:35:35 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXogrkTAm=4pC0B+Sybr=PR3XovnBgmiEyTvUMmJHvBRA@mail.gmail.com>
+X-Gm-Features: AWmQ_blh_df1oI4YfJoUHGn7ADOVOwmOm5bT6QJUN9usi3sbU4oWN1R6RdMkuuY
+Message-ID: <CAMuHMdXogrkTAm=4pC0B+Sybr=PR3XovnBgmiEyTvUMmJHvBRA@mail.gmail.com>
+Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT overlays"
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Kalle Niemi <kaleposti@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Matti Vaittinen <mazziesaccount@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 02, 2025 at 03:02:48AM +0000, Kevin Xie wrote:
-> ...
+Hi Herv=C3=A9,
 
-> > > On Tue, Nov 25, 2025 at 03:55:59PM +0800, Hal Feng wrote:
-> > > > The "enable-gpio" property is not documented in the dt-bindings and
-> > > > using GPIO APIs is not a standard method to enable or disable PCIe
-> > > > slot power, so use regulator APIs to replace them.
-> > >
-> > > I can't tell from this whether existing DTs will continue to work
-> > > after this change.  It looks like previously we looked for an
-> > > "enable-gpios" or "enable-gpio" property and now we'll look for a
-> > > "vpcie3v3-supply" regulator property.
-> > >
-> > > I don't see "enable-gpios" or "enable-gpio" mentioned in any of the DT
-> > > patches in this series, so maybe that property was never actually used
-> > > before, and the code for pcie->power_gpio was actually dead?
-> > 
-> > pcie->power_gpio is used in the our JH7110 EVB, it share the same
-> > pcie pcie->controller driver with VisionFive2 board. Although
-> > JH7110 was not upstreamed, we still hope to maintain the
-> > compatibility of the driver.
-> 
-> Sorry, I missed the background information regarding replacing
-> enable_gpio with regulator APIs. I agree with this change.
+On Tue, 2 Dec 2025 at 10:26, Herve Codina <herve.codina@bootlin.com> wrote:
+> On Fri, 28 Nov 2025 10:34:57 +0200
+> Kalle Niemi <kaleposti@gmail.com> wrote:
+> > >>>>>> Test system testing drivers for ROHM ICs bisected this commit to=
+ cause
+> > >>>>>> BD71847 drivers probe to not be called.
+> > >>>>> This driver (and overlay support) is in linux-next or something o=
+ut of
+> > >>>>> tree on top of linux-next?
+> > >>>>>
+> > >>>>> Rob
+> > >>>> Yes the driver is in mainline linux: /drivers/mfd/rohm-bd718x7.c
+> > >>> I don't see any support to apply overlays in that driver.
+> > >> Ah. Sorry for the confusion peeps. I asked Kalle to report this with=
+out
+> > >> proper consideration. 100% my bad.
+> > >>
+> > >> While the bd718x7 drive indeed is mainline (and tested), the actual
+> > >> 'glue-code' doing the overlay is part of the downstream test
+> > >> infrastructure. So yes, this is not a bug in upstream kernel - this
+> > >> falls in the category of an upstream change causing downstream thing=
+s to
+> > >> break. So, feel free to say: "Go fix your code" :)
+> > >>
+> > >> Now that this is sorted, if someone is still interested in helping u=
+s to
+> > >> get our upstream drivers tested - the downstream piece is just takin=
+g
+> > >> the compiled device-tree overlay at runtime (via bin-attribute file)=
+,
+> > >> and applying it using the of_overlay_fdt_apply(). The approach is
+> > >> working for our testing purposes when the device is added to I2C/SPI
+> > >> node which is already enabled. However, in case where we have the I2=
+C
+> > >> disabled, and enable it in the same overlay where we add the new dev=
+ice
+> > >> - then the new device does not get probed.
+> > >>
+> > >> I would be really grateful if someone had a pointer for us.
+> > > Seems to be fw_devlink related. I suppose if you turn it off it works=
+?
+> > > There's info about the dependencies in sysfs or maybe debugfs. I don'=
+t
+> > > remember the details, but that should help to tell you why things
+> > > aren't probing.
+>
+> Rob reverted patches but I plan to continue my work on it.
+> On my side, I need the reverted patches but I fully understand that, on
+> your side, you need a working system.
+>
+> In order to move forward and find a solution for my next iteration, can y=
+ou
+> send your overlay (dtso) used in your working and non working cases?
 
-OK, thanks.  I would still like to have something added to the commit
-log to the effect that this change will break any DTs that use
-"enable-gpios" or "enable-gpio", but that's not a problem because such
-DTs were only internal to StarFive and we are OK with updating them
-and dealing with the fact that the DT is rev-locked with the kernel
-version (old kernels would require an old DT with "enable-gpio" and
-new kernels require an updated DT with "vpcie3v3-supply").  Or DTs
-using "enable-gpio" never existed in the first place.
+Hmm, I must have missed when Rob applied (part of) this series, as I
+do an overlay test (using the out-of-tree configfs) on top of every
+(bi-weekly) renesas-drivers release, and saw no issues during the last
+few months.
 
-Or whatever.  I just want the commit log to be clear that
-"enable-gpio" is no longer supported and "vpcie3v3-supply" must be
-included instead, AND that you are aware of the breaking nature of the
-change and here is why that's not an issue.
+So I applied this series and tested loading my SPI EEPROM overlay.
+And it indeed breaks, with the culprit being this particular patch.
 
-We can't make kernel changes that require end users to upgrade the DT
-when they update the kernel or downgrade the DT when rolling back.
+Interestingly, quoting from this patch:
 
-Bjorn
+   "While the commit fixed fw_devlink overlay handling for one case, it
+    broke it for another case. So revert it and redo the fix in a separate
+    patch."
+
+Where is the separate patch that redid the fix? I assume it is "[PATCH
+v4 03/29] of: dynamic: Fix overlayed devices not probing because
+of fw_devlink"?  Unfortunately that doesn't fix the issue for me.
+
+Quoting more from this patch:
+
+   "Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgy=
+o8x6=3D9F9rZ+-KzjOg@mail.gmail.com/"
+
+Strange that it claims to fix the issue reported there, as the failure
+mode I am seeing is exactly the same as documented in that report?
+
+Do you know what is wrong? The overlay I am using is referenced in
+the bug report linked above.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
