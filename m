@@ -1,219 +1,185 @@
-Return-Path: <linux-pci+bounces-42560-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42561-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45846C9EEEC
-	for <lists+linux-pci@lfdr.de>; Wed, 03 Dec 2025 13:05:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B97BEC9F069
+	for <lists+linux-pci@lfdr.de>; Wed, 03 Dec 2025 13:55:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E56644E1155
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Dec 2025 12:05:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 79DDE3A4492
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Dec 2025 12:55:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8A9E2EC579;
-	Wed,  3 Dec 2025 12:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9252C86334;
+	Wed,  3 Dec 2025 12:55:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JUA42Bwb"
+	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b="QWDOnEqy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E654204E
-	for <linux-pci@vger.kernel.org>; Wed,  3 Dec 2025 12:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EC37260D;
+	Wed,  3 Dec 2025 12:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764763508; cv=none; b=hKPQknlMPnfFzSUlnxXCrCyuiXXajNyABdreU72ZCSTQDqK2x6xvr+nVfeSQhOj7dlja+EAjm/oYk63YE+l6bXaKst0BFMq/m1XRlp4Oz/UUJ30VDEl6FgU8myTfjyuWmvg//bZnihwklPgKtPjR/yM2S/yc/F1J5MUP1oOA4rs=
+	t=1764766543; cv=none; b=RF3kLHQLxOr/0qB2dwAt3wxmHiqh0ew5JvgD6gxu35yVzegIlxgytIa6DIAfeIwHGtQCvaMZu8u7ZOI+UzcIbeYE2JRp9UOD8fQGmBWzxbE/fg5eb8jZ22b6drN9YQQFI5cuShuKgNQDkS568USFIfCLbcJSX9HSvMCMqob5MqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764763508; c=relaxed/simple;
-	bh=JPVFLqhEZJPJ7liEc9TnEJuy8fMXfENHxEBM3wZd0FE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=Q9HXG2kJSSk76qR7oAY9l+iiyX0IECkkOfrOzv4Ra3F8drKLKItPSEx4Su71QXjVAq3eQJgzcUdxu4ov/YlPZOSBbpinKeE4nsCU92j33jDaIW2DLw78JhQh+3pPVM9bJGgVX0+u+E6xSgXc2dFdhtLL4A/d3CFG7DWX8L9j6Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JUA42Bwb; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20251203120456euoutp014658fbfb6322ec87a01e5ea1298f7721~9swzjY6pZ2576625766euoutp01X
-	for <linux-pci@vger.kernel.org>; Wed,  3 Dec 2025 12:04:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20251203120456euoutp014658fbfb6322ec87a01e5ea1298f7721~9swzjY6pZ2576625766euoutp01X
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1764763496;
-	bh=8Lm1JFgA0RgCgPJubzMFPeHm2HDOzZK5ceUHRU00oUI=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=JUA42BwbdhDGhx12U2clGk6Mlws2wCdTyX7vAjQxknSW8XC3jfP3/gmuxSdW0ESKR
-	 hpT1bZZXDXyJzzucbg4sIB2j8AWXUEDiRaI7OHwk1tVnrvTtgZ6B8IiZaYLCFoZqk2
-	 6UljWjp7ck+mhYskDhkNMON+FF47SorKL9uRGbV0=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20251203120455eucas1p1821cccef8c9e4cb84548fa1540f04e1b~9swyXJAR40846108461eucas1p1s;
-	Wed,  3 Dec 2025 12:04:55 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20251203120454eusmtip149db0194da1d9b734703cdd8edf31335~9swxcy5lC1394713947eusmtip1B;
-	Wed,  3 Dec 2025 12:04:54 +0000 (GMT)
-Message-ID: <b63ec0aa-7a4a-4f8d-9b93-e724f3f2a9d1@samsung.com>
-Date: Wed, 3 Dec 2025 13:04:53 +0100
+	s=arc-20240116; t=1764766543; c=relaxed/simple;
+	bh=A67kbvF2gvs/0PbJlohrMN1IYAC9BkPaNJFQsQ1Cwmo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G04f9txTXkwxJmvbfAE8KJb7Sv+EkGp96uVzbIz/oUKziRRSShhK1k6GOOFdfEGKSrD07yXXn4ikBC/nA8Z/LpUT+ETM4R/0qZACso2MYnlGg+opDQZz2LiOhtpxHnCciZtwFXC5c6e3uErNlWgtqGS1u6oZoLwwUNowQeAmh7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b=QWDOnEqy; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5B33Z2VV4182368;
+	Wed, 3 Dec 2025 04:55:24 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=s2048-2025-q2; bh=Jfct4EAJvCyhCvbDDprb
+	kw35ReXHMdFtL/6WitwSITg=; b=QWDOnEqyR3OiImxSGcSXU89FTD5Xbv58oiAW
+	KkVqppaz1iWaU2p1sTkP7OhHr2AgTbAcTPULysGnZBxGh9xwWCgBzUKsnltyzc5s
+	1zX80gCG6EGTm2d6ZEQH3eyU1AwGdL0s/jvPtYfq58MG+tb2qFndDo4y7QfXkCLK
+	zuLXQmDk1okfu9yZzRDyEyD2OlfRiLFhJ0gbsGHnOou5YKxiS+ZoAFXOBi7AUFzo
+	kNiExMdgBnuI7Pqo49nB8umWgQdD3V/ap/ATBUJ/pgY0QuL3wlRfr2TO8nMX1azf
+	eVBc0f3dmeROsMFkpVna1KTrKkKg39XsGKSRFbqZ/wwrzYAY/w==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4atde52q3f-5
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 03 Dec 2025 04:55:24 -0800 (PST)
+Received: from devgpu015.cco6.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.29; Wed, 3 Dec 2025 12:55:17 +0000
+Date: Wed, 3 Dec 2025 04:55:13 -0800
+From: Alex Mastro <amastro@fb.com>
+To: David Matlack <dmatlack@google.com>
+CC: Alex Williamson <alex@shazbot.org>,
+        Adithya Jayachandran
+	<ajayachandra@nvidia.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Andrew
+ Morton <akpm@linux-foundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Jacob Pan
+	<jacob.pan@linux.microsoft.com>,
+        Jason Gunthorpe <jgg@nvidia.com>, Jason
+ Gunthorpe <jgg@ziepe.ca>,
+        Josh Hilke <jrhilke@google.com>, Kevin Tian
+	<kevin.tian@intel.com>,
+        <kvm@vger.kernel.org>, Leon Romanovsky
+	<leonro@nvidia.com>,
+        <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, Lukas Wunner
+	<lukas@wunner.de>,
+        Mike Rapoport <rppt@kernel.org>, Parav Pandit
+	<parav@nvidia.com>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Philipp
+ Stanner <pstanner@redhat.com>,
+        Pratyush Yadav <pratyush@kernel.org>,
+        Saeed
+ Mahameed <saeedm@nvidia.com>,
+        Samiullah Khawaja <skhawaja@google.com>,
+        Shuah
+ Khan <shuah@kernel.org>, Tomita Moeko <tomitamoeko@gmail.com>,
+        Vipin Sharma
+	<vipinsh@google.com>, William Tu <witu@nvidia.com>,
+        Yi Liu
+	<yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>,
+        Zhu Yanjun
+	<yanjun.zhu@linux.dev>
+Subject: Re: [PATCH 06/21] vfio/pci: Retrieve preserved device files after
+ Live Update
+Message-ID: <aTAzMUa7Gcm+7j9D@devgpu015.cco6.facebook.com>
+References: <20251126193608.2678510-1-dmatlack@google.com>
+ <20251126193608.2678510-7-dmatlack@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH v2 0/4] PCI: Fix ACS enablement for Root Ports in OF
- platforms
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, Bjorn
-	Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Pavankumar Kondeti <quic_pkondeti@quicinc.com>, Xingang Wang
-	<wangxingang5@huawei.com>, Robin Murphy <robin.murphy@arm.com>, Jason
-	Gunthorpe <jgg@ziepe.ca>, Manivannan Sadhasivam <mani@kernel.org>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20251202-pci_acs-v2-0-5d2759a71489@oss.qualcomm.com>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20251203120455eucas1p1821cccef8c9e4cb84548fa1540f04e1b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20251202142307eucas1p12a15e5656bb53f48f445c3056d4e3166
-X-EPHeader: CA
-X-CMS-RootMailID: 20251202142307eucas1p12a15e5656bb53f48f445c3056d4e3166
-References: <CGME20251202142307eucas1p12a15e5656bb53f48f445c3056d4e3166@eucas1p1.samsung.com>
-	<20251202-pci_acs-v2-0-5d2759a71489@oss.qualcomm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20251126193608.2678510-7-dmatlack@google.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjAzMDEwMyBTYWx0ZWRfX+wfgkvof1LGR
+ EOPqlstLZoEN1vuMttPOaZpsW7YDfwalJv/6wS5DMWDd8/K4YcaYVYziz5jvoduzsTHRwCQnAal
+ BsiELT9k6B/Cp5eKkpzX8O+cvlsxPcIZdOhYt7IUTefOtoI5V4bFb0jsj7Xki5FKVQFU0z6OZD8
+ SKUtwVbJpVuQOEosF1cpyUXhkoxAtJ3Oe1iny3dXolad607MOuWJixgmbR2xYvA568Dms4nBOBi
+ 4DFo2LKZrA3cUycOYJ/u8YOZ3un9Dqfs5nrONMXAOStac0/vNp902sDGEbC9HzTxchzOeGPVwPV
+ qCphKGRiC+z84XiDHYueeIHTvvgB+hMt3JweVvRC5r5DFGp+giLfzyudLBqneLrMM9uSahKeKaE
+ xf0VYkR5Z7ZwBTNn6WqieBi23UlitQ==
+X-Proofpoint-GUID: R3PHzrqbtk3rjG9YYMn5Ya8cy_oQeVKP
+X-Authority-Analysis: v=2.4 cv=a6c9NESF c=1 sm=1 tr=0 ts=6930333c cx=c_pps
+ a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+ a=kj9zAlcOel0A:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=1XWaLZrsAAAA:8 a=fytXDJm0AeOLzV9KF_sA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: R3PHzrqbtk3rjG9YYMn5Ya8cy_oQeVKP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-03_01,2025-11-27_02,2025-10-01_01
 
-On 02.12.2025 15:22, Manivannan Sadhasivam wrote:
-> This series fixes the long standing issue with ACS in OF platforms. There are
-> two fixes in this series, both fixing independent issues on their own, but both
-> are needed to properly enable ACS on OF platforms.
->
-> Issue(s) background
-> ===================
->
-> Back in 2021, Xingang Wang first noted a failure in attaching the HiSilicon SEC
-> device to QEMU ARM64 pci-root-port device [1]. He then tracked down the issue to
-> ACS not being enabled for the QEMU Root Port device and he proposed a patch to
-> fix it [2].
->
-> Once the patch got applied, people reported PCIe issues with linux-next on the
-> ARM Juno Development boards, where they saw failure in enumerating the endpoint
-> devices [3][4]. So soon, the patch got dropped, but the actual issue with the
-> ARM Juno boards was left behind.
->
-> Fast forward to 2024, Pavan resubmitted the same fix [5] for his own usecase,
-> hoping that someone in the community would fix the issue with ARM Juno boards.
-> But the patch was rightly rejected, as a patch that was known to cause issues
-> should not be merged to the kernel. But again, no one investigated the Juno
-> issue and it was left behind again.
->
-> Now it ended up in my plate and I managed to track down the issue with the help
-> of Naresh who got access to the Juno boards in LKFT. The Juno issue was with the
-> PCIe switch from Microsemi/IDT, which triggers ACS Source Validation error on
-> Completions received for the Configuration Read Request from a device connected
-> to the downstream port that has not yet captured the PCIe bus number. As per the
-> PCIe spec r6.0 sec 2.2.6.2, "Functions must capture the Bus and Device Numbers
-> supplied with all Type 0 Configuration Write Requests completed by the Function
-> and supply these numbers in the Bus and Device Number fields of the Requester ID
-> for all Requests". So during the first Configuration Read Request issued by the
-> switch downstream port during enumeration (for reading Vendor ID), Bus and
-> Device numbers will be unknown to the device. So it responds to the Read Request
-> with Completion having Bus and Device number as 0. The switch interprets the
-> Completion as an ACS Source Validation error and drops the completion, leading
-> to the failure in detecting the endpoint device. Though the PCIe spec r6.0, sec
-> 6.12.1.1, states that "Completions are never affected by ACS Source Validation".
-> This behavior is in violation of the spec.
->
-> Solution
-> ========
->
-> In September, I submitted a series [6] to fix both issues. For the IDT issue,
-> I reused the existing quirk in the PCI core which does a dummy config write
-> before issuing the first config read to the device. And for the ACS enablement
-> issue, I just resubmitted the original patch from Xingang which called
-> pci_request_acs() from devm_of_pci_bridge_init().
->
-> But during the review of the series, several comments were received and they
-> required the series to be reworked completely. Hence, in this version, I've
-> incorported the comments as below:
->
-> 1. For the ACS enablement issue, I've moved the pci_enable_acs() call from
-> pci_acs_init() to pci_dma_configure().
->
-> 2. For the IDT issue, I've cached the ACS capabilities (RO) in 'pci_dev',
-> collected the broken capability for the IDT switches in the quirk and used it to
-> disable the capability in the cache. This also allowed me to get rid of the
-> earlier workaround for the switch.
->
-> [1] https://lore.kernel.org/all/038397a6-57e2-b6fc-6e1c-7c03b7be9d96@huawei.com
-> [2] https://lore.kernel.org/all/1621566204-37456-1-git-send-email-wangxingang5@huawei.com
-> [3] https://lore.kernel.org/all/01314d70-41e6-70f9-e496-84091948701a@samsung.com
-> [4] https://lore.kernel.org/all/CADYN=9JWU3CMLzMEcD5MSQGnaLyDRSKc5SofBFHUax6YuTRaJA@mail.gmail.com
-> [5] https://lore.kernel.org/linux-pci/20241107-pci_acs_fix-v1-1-185a2462a571@quicinc.com
-> [6] https://lore.kernel.org/linux-pci/20250910-pci-acs-v1-0-fe9adb65ad7d@oss.qualcomm.com
->
-Thanks for this patchset! I've tested it on my ARM Juno R1 and it looks 
-that it almost works fine. This patchset even fixed some issues with PCI 
-devices probe, as I again see SATA and GBit ethernet devices, which were 
-missing since Linux v6.14 (it looks that I've also missed this in my tests).
+On Wed, Nov 26, 2025 at 07:35:53PM +0000, David Matlack wrote:
+> From: Vipin Sharma <vipinsh@google.com>
+>  static int vfio_pci_liveupdate_retrieve(struct liveupdate_file_op_args *args)
+>  {
+> -	return -EOPNOTSUPP;
+> +	struct vfio_pci_core_device_ser *ser;
+> +	struct vfio_device *device;
+> +	struct folio *folio;
+> +	struct file *file;
+> +	int ret;
+> +
+> +	folio = kho_restore_folio(args->serialized_data);
+> +	if (!folio)
+> +		return -ENOENT;
 
-# lspci
-00:00.0 PCI bridge: PLDA PCI Express Core Reference Design (rev 01)
-01:00.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 8090 
-(rev 02)
-02:01.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 8090 
-(rev 02)
-02:02.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 8090 
-(rev 02)
-02:03.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 8090 
-(rev 02)
-02:0c.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 8090 
-(rev 02)
-02:10.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 8090 
-(rev 02)
-02:1f.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 8090 
-(rev 02)
-03:00.0 Mass storage controller: Silicon Image, Inc. SiI 3132 Serial ATA 
-Raid II Controller (rev 01)
-08:00.0 Ethernet controller: Marvell Technology Group Ltd. 88E8057 PCI-E 
-Gigabit Ethernet Controller
+Should this be consistent with the behavior of pci_flb_retrieve() which panics
+on failure? The short circuit failure paths which follow leak the folio,
+which seems like a hygiene issue, but the practical significance is moot if
+vfio_pci_liveupdate_retrieve() failure is catastrophic anyways?
 
-However there is also a regression. After applying this patchset system 
-suspend/resume stopped working. This is probably related to this message:
-
-pcieport 0000:02:1f.0: Unable to change power state from D0 to D3hot, 
-device inaccessible
-
-which appears after calling 'rtcwake -s10 -mmem'. This might not be 
-related to this patchset, so I probably need to apply it on older kernel 
-releases and check.
-
-
-> Changes in v2:
->
-> * Reworked the patches completely as mentioned above.
-> * Rebased on top of v6.18-rc7
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> ---
-> Manivannan Sadhasivam (4):
->        PCI: Enable ACS only after configuring IOMMU for OF platforms
->        PCI: Cache ACS capabilities
->        PCI: Disable ACS SV capability for the broken IDT switches
->        PCI: Extend the pci_disable_acs_sv quirk for one more IDT switch
->
->   drivers/pci/pci-driver.c |  8 +++++++
->   drivers/pci/pci.c        | 33 ++++++++++++--------------
->   drivers/pci/pci.h        |  2 +-
->   drivers/pci/probe.c      | 12 ----------
->   drivers/pci/quirks.c     | 62 ++++++++++++------------------------------------
->   include/linux/pci.h      |  2 ++
->   6 files changed, 41 insertions(+), 78 deletions(-)
-> ---
-> base-commit: ac3fd01e4c1efce8f2c054cdeb2ddd2fc0fb150d
-> change-id: 20251201-pci_acs-b15aa3947289
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+> +
+> +	ser = folio_address(folio);
+> +
+> +	device = vfio_find_device(ser, match_device);
+> +	if (!device)
+> +		return -ENODEV;
+> +
+> +	/*
+> +	 * During a Live Update userspace retrieves preserved VFIO cdev files by
+> +	 * issuing an ioctl on /dev/liveupdate rather than by opening VFIO
+> +	 * character devices.
+> +	 *
+> +	 * To handle that scenario, this routine simulates opening the VFIO
+> +	 * character device for userspace with an anonymous inode. The returned
+> +	 * file has the same properties as a cdev file (e.g. operations are
+> +	 * blocked until BIND_IOMMUFD is called), aside from the inode
+> +	 * association.
+> +	 */
+> +	file = anon_inode_getfile_fmode("[vfio-device-liveupdate]",
+> +					&vfio_device_fops, NULL,
+> +					O_RDWR, FMODE_PREAD | FMODE_PWRITE);
+> +
+> +	if (IS_ERR(file)) {
+> +		ret = PTR_ERR(file);
+> +		goto out;
+> +	}
+> +
+> +	ret = __vfio_device_fops_cdev_open(device, file);
+> +	if (ret) {
+> +		fput(file);
+> +		goto out;
+> +	}
+> +
+> +	args->file = file;
+> +
+> +out:
+> +	/* Drop the reference from vfio_find_device() */
+> +	put_device(&device->device);
+> +
+> +	return ret;
+> +}
 
