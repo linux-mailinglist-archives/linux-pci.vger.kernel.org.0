@@ -1,153 +1,115 @@
-Return-Path: <linux-pci+bounces-42583-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42584-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B74BCA105F
-	for <lists+linux-pci@lfdr.de>; Wed, 03 Dec 2025 19:35:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 14C6DCA15C7
+	for <lists+linux-pci@lfdr.de>; Wed, 03 Dec 2025 20:25:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D24553163D07
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Dec 2025 17:34:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BC5CB306A522
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Dec 2025 19:02:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 540253161AC;
-	Wed,  3 Dec 2025 17:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e05Yi1Na"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0E8B311C0C;
+	Wed,  3 Dec 2025 19:02:10 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C8A2561AE
-	for <linux-pci@vger.kernel.org>; Wed,  3 Dec 2025 17:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA41230276C;
+	Wed,  3 Dec 2025 19:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764783002; cv=none; b=i0ikuCdkUfyN3FLfzZTr0SNlKt61opnr7FUCwdr13Yzd2l/0tW7W/osrf3Vf2V81fkHQSgwZ+5f/l3qp1oHcL+w9Jfy8g9UYKcuOUIc3BezfPVQFvjiN2Vu9wvVPZKuxg6lE2++zJ2LgYEcFTtEChNJppz8nvumizcBR7JxRNjA=
+	t=1764788530; cv=none; b=dFsUNAF2Q6Rb1nn9NJ53XjwlwVwUezd4ys2HpkUZeM11h/YlLAfLAf21w3ENWFTdW4tnGyJA9dgnMYLasFISN1FTM0kXXS1HL1RlAJqKTZAHqeRR6/Ls39gDXzVDpHT3b/HRyQ0hZCz1Bf1yz2/olKBFe0KsgejdazynsyFJEjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764783002; c=relaxed/simple;
-	bh=yhp8ueLBj5nMHyuDgH/VoEo8DFq7np5eB5KjSi/CnnE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OI4zTynIwnrtdKW+nivFQltSs1JM8hVnqDVDQKNJg/lGEawUWhKjrDIuM2L2b/OVyPBG/2E9v9aW5x2cX4hcDTnibfkJm7nLp6JffwaGEOzrAvRsjI5ZLCg08IJ7No2dcMD6hrnwgybigvtA1Ywczvoac28UeQ5F8ZfJaYo6soA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e05Yi1Na; arc=none smtp.client-ip=209.85.217.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-5dfae681ff8so38391137.1
-        for <linux-pci@vger.kernel.org>; Wed, 03 Dec 2025 09:29:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764782998; x=1765387798; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0ymOu3D/5TCeHMIJLeG6oQI7EFVuJhBKpf9gV9hN/6k=;
-        b=e05Yi1NaNRV8feWkf1J/QH59rCYoZQ6JkcAy9gnt899o6YqCHo5nSZelPOvenVle9X
-         UIsyKuPLD+6BQkm1vr2+9GH3MooHpBxU+avgmntqcW/XZqF1KBFjvkGTts7mQqEwZT8Y
-         QZQfx8rTTAM9ZJwbXpSNjt2pgocSxD29eG83aKeappBCinu50F2x3L5nzhK33JfQ0JKh
-         dWtAn6t6o0RKDdmDUkYtpJI9xO69c892LrgsCFI3oJKgTLTQ9pXauxKpzbnt4uozrzOu
-         EMML3pzMNu9unwBx7P4KfxAZeRhrjA/xMAEbImSWDPuBoYBr0PipXWXD8iOievzLFFBp
-         5JXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764782998; x=1765387798;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0ymOu3D/5TCeHMIJLeG6oQI7EFVuJhBKpf9gV9hN/6k=;
-        b=jos3DPVsdCcuxq+t9uPasu2DY6I4nRJ+/YwR3Ev2SrBvSprqJPX0X9YYLkkaoT/cDe
-         4sW+hgagykDUcGhyfiR/RRyy7uDJfzVLESSmhk5vyMTi1Ho0thkisjYeGKaMWIc7mZQf
-         44q+6djVasVXfAOa4m2xkK+ofFnEmN+B6FMp1ViGtPCjse2mC4EHiNuJ8qgog7VtM7Vv
-         1ceMtsT4wcFHuAZf11aEaPv31zJ2g2/EIV0r5bofikGcDVyLmzgTl133FgFIy6iwoJg+
-         B0ygmXhchpcBHgWG+oiztR5bdhwut3qomqfs2mn2OHDJpxhaI1K5lInFTrcHMnHGyxoD
-         VKvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXn6Ye8S02Z+OB4wOIbxUfpnhcJTyTU+mNOD0mnTolU2Z0x8w+4TlYB93fLUq5AeHH7ISWYcqbq3H4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwqS1ru7s9Xevlxs/JXUndZP70EIb+u/hA78mX8eyexmUHkF+i
-	WgELWVgcbfdYUMo70TcOuK+aK83kEw9Fe4OizOF0mUCfwtxHnv2BbQAqoi7jChuKIjTDsHpjhK9
-	StgVgd8dPhlhyIulseAsW0cohsdPo57rWrPVYfP9y
-X-Gm-Gg: ASbGncvRirUbplABiJn8BTg1XbQugRzcZo5MqR6C6hWnyeB6e8IUw0fnkXOUQSV6Od+
-	zd4sXF5L0hqaxxWrdwNh13vPiv74qnI0uwmvTFH3Mj+bCsNtI1w6FhpLvF09Au1AlTabUgvdXyP
-	a5iaq6K8wmQkzaLmBVhNL+cMQ34wKl+c1T82liucyH6dRgfwpHKR7D8kZdJswGNbHLc6B3CKoyO
-	imzc6EbyPQA0E5r/skIQvZ/kNQ/0XT13qEr95EEn69AU0a6QxoYfmWFyQcIlOEtxwmfrvQn
-X-Google-Smtp-Source: AGHT+IEKqmK3kDwhNospqoV4M7zNXECVKB1pEuoEfSUxYUNClHBKew01QVDNB+pfOa2oWX8T4XdL5cKkx6qlappJfPQ=
-X-Received: by 2002:a05:6102:162a:b0:5db:f5d1:5799 with SMTP id
- ada2fe7eead31-5e48e36e069mr1205132137.33.1764782998176; Wed, 03 Dec 2025
- 09:29:58 -0800 (PST)
+	s=arc-20240116; t=1764788530; c=relaxed/simple;
+	bh=go3957KV9/2wa+Ez/UqBIDGHcNXCQlNNb4ypCcMVKIA=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JufVWv1PRBed2MzbNamVF5cwXo56eygq0vAXjstJLMQRCBHFG5iccvplOKC/CQJ4Y5OzR0/ChtFZrZ55IKGtQ1rpDjLdPJRvzWHUw3f/VHtATWKI3jciFGsY4SEmEzpNjaofZzh1Qn+UcqVIN6OE44O2zMC6TiSwcK6m8nXWCaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 8CDB092009C; Wed,  3 Dec 2025 20:01:57 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 86A5A92009B;
+	Wed,  3 Dec 2025 19:01:57 +0000 (GMT)
+Date: Wed, 3 Dec 2025 19:01:57 +0000 (GMT)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+cc: ALOK TIWARI <alok.a.tiwari@oracle.com>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    Matthew W Carlis <mattc@purestorage.com>, ashishk@purestorage.com, 
+    msaggi@purestorage.com, sconnor@purestorage.com, 
+    Lukas Wunner <lukas@wunner.de>, Jiwei <jiwei.sun.bj@qq.com>, 
+    guojinhui.liam@bytedance.com, ahuang12@lenovo.com, sunjw10@lenovo.com, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [External] : [PATCH] PCI: Always lift 2.5GT/s restriction in
+ PCIe failed link retraining
+In-Reply-To: <b92ab615-75f6-8606-cb3b-75fe03a1d9a9@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.2512031836150.49654@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2511290245460.36486@angie.orcam.me.uk> <3be03057-2a83-46e5-b120-bb041208c694@oracle.com> <b92ab615-75f6-8606-cb3b-75fe03a1d9a9@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251126193608.2678510-1-dmatlack@google.com> <20251126193608.2678510-7-dmatlack@google.com>
- <aTAzMUa7Gcm+7j9D@devgpu015.cco6.facebook.com> <CA+CK2bDbOQ=aGPZVP4L-eYobUyR0bQA0Ro6Q7pwQ_84UxVHnEw@mail.gmail.com>
-In-Reply-To: <CA+CK2bDbOQ=aGPZVP4L-eYobUyR0bQA0Ro6Q7pwQ_84UxVHnEw@mail.gmail.com>
-From: David Matlack <dmatlack@google.com>
-Date: Wed, 3 Dec 2025 09:29:27 -0800
-X-Gm-Features: AWmQ_blKPsDeMnCOujpZmsX70hbna-86oi6Hxpla3VI0D7Ue5d4-IEmochk7nSM
-Message-ID: <CALzav=ciz4kV+u3B5bMzZzVY+cMs-G=q9c5O-jKPz+E4LUdx7g@mail.gmail.com>
-Subject: Re: [PATCH 06/21] vfio/pci: Retrieve preserved device files after
- Live Update
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Alex Mastro <amastro@fb.com>, Alex Williamson <alex@shazbot.org>, 
-	Adithya Jayachandran <ajayachandra@nvidia.com>, Alistair Popple <apopple@nvidia.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Chris Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>, 
-	Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, 
-	kvm@vger.kernel.org, Leon Romanovsky <leonro@nvidia.com>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org, 
-	Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
-	Philipp Stanner <pstanner@redhat.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>, 
-	Yi Liu <yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>, 
-	Zhu Yanjun <yanjun.zhu@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-On Wed, Dec 3, 2025 at 7:46=E2=80=AFAM Pasha Tatashin <pasha.tatashin@solee=
-n.com> wrote:
->
-> On Wed, Dec 3, 2025 at 7:55=E2=80=AFAM Alex Mastro <amastro@fb.com> wrote=
-:
-> >
-> > On Wed, Nov 26, 2025 at 07:35:53PM +0000, David Matlack wrote:
-> > > From: Vipin Sharma <vipinsh@google.com>
-> > >  static int vfio_pci_liveupdate_retrieve(struct liveupdate_file_op_ar=
-gs *args)
-> > >  {
-> > > -     return -EOPNOTSUPP;
-> > > +     struct vfio_pci_core_device_ser *ser;
-> > > +     struct vfio_device *device;
-> > > +     struct folio *folio;
-> > > +     struct file *file;
-> > > +     int ret;
-> > > +
-> > > +     folio =3D kho_restore_folio(args->serialized_data);
-> > > +     if (!folio)
-> > > +             return -ENOENT;
-> >
-> > Should this be consistent with the behavior of pci_flb_retrieve() which=
- panics
-> > on failure? The short circuit failure paths which follow leak the folio=
-,
+On Tue, 2 Dec 2025, Ilpo Järvinen wrote:
 
-Thanks for catching the leaked folio. I'll fix that in the next version.
+> > > linux-pcie-failed-link-retrain-unclamp-always.diff
+> > > Index: linux-macro/drivers/pci/quirks.c
+> > > ===================================================================
+> > > --- linux-macro.orig/drivers/pci/quirks.c
+> > > +++ linux-macro/drivers/pci/quirks.c
+> > 
+> > Thanks a lot for your patch.
+> > The patch works, and the issue has been resolved in our testing.
 
-> > which seems like a hygiene issue, but the practical significance is moo=
-t if
-> > vfio_pci_liveupdate_retrieve() failure is catastrophic anyways?
->
-> pci_flb_retrieve() is used during boot. If it fails, we risk DMA
-> corrupting any memory region, so a panic makes sense. In contrast,
-> this retrieval happens once we are already in userspace, allowing the
-> user to decide how to handle the failure to recover the preserved
-> cdev.
+ Great, thanks for running the verification!
 
-This is what I was thinking as well. vfio_pci_liveupdate_retrieve()
-runs in the context of the ioctl LIVEUPDATE_SESSION_RETRIEVE_FD, so we
-can just return an error up to userspace if anything goes wrong and
-let userspace initiate the reboot to recover the device if/when it's
-ready.
+> > However, this patch does not cleanly apply to the 6.12 LTS kernel.
+> > To apply the fix cleanly, a series of patches is required.
+> > 
+> > PCI: Always lift 2.5GT/s restriction in PCIe failed link retraining
+> > 2389d8dc38fee PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_SEEN flag
+> > 15b8968dcb90f PCI/bwctrl: Fix NULL pointer deref on unbind and bind
+> > e3f30d563a388 PCI: Make pci_destroy_dev() concurrent safe
+> > 667f053b05f00 PCI/bwctrl: Fix NULL pointer dereference on bus number
+> > exhaustion
+> > e93d9fcfd7dc6 PCI: Refactor pcie_update_link_speed()
+> > 9989e0ca7462c PCI: Fix link speed calculation on retrain failure
+> > b85af48de3ece PCI: Adjust the position of reading the Link Control 2 register
+> > 026e4bffb0af9 PCI/bwctrl: Fix pcie_bwctrl_select_speed() return type
+> > d278b098282d1 thermal: Add PCIe cooling driver
+> > de9a6c8d5dbfe PCI/bwctrl: Add pcie_set_target_speed() to set PCIe Link Speed
+> > 665745f274870 PCI/bwctrl: Re-add BW notification portdrv as PCIe BW controller
+> > 3491f50966686 PCI: Abstract LBMS seen check into pcie_lbms_seen()
 
-OTOH, pci_flb_retrieve() gets called by the kernel during early boot
-to determine what devices the previous kernel preserved. If the kernel
-can't determine which devices were preserved by the previous kernel
-and once the kernel starts preserving I/O page tables, that could lead
-to corruption, so panicking is warranted.
+ Thank you for identifying the dependencies.  Clearly the majority of the 
+changes is not functionally related to this fix at all and any need for 
+them is purely mechanical.
+
+> As the change has a Fixes tag, stable maintainers will eventually get to 
+> it (after the change has progressed into Linus' tree).
+> 
+> As per usual, if the patch won't apply to some old kernel version cleanly, 
+> stable maintainers will decide themselves whether they end up taking some
+> extra changes or ask for a backport from the submitter of the original 
+> change.
+
+ Dependencies can be listed if need be along with a backport request.  
+However in this case there have been lots of syntactic updates to this 
+function, which do not necessarily qualify for backporting, as that is 
+supposed to include critical fixes only.  Certainly changes to prevent 
+systems from breaking do qualify, but helper macros and functions, or code 
+restructuring do not.
+
+ Since I'm going to wait for further feedback and respin anyway, I will 
+check if there are critical dependencies required that are missing on the 
+stable branches and list any along with the backport request.  Then any 
+remaining syntactic sugar can, as you say, be handled on a case by case 
+basis in the backport process.
+
+  Maciej
 
