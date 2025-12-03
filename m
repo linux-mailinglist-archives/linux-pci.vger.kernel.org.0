@@ -1,55 +1,174 @@
-Return-Path: <linux-pci+bounces-42538-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42539-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7937FC9D5C5
-	for <lists+linux-pci@lfdr.de>; Wed, 03 Dec 2025 00:44:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A76B9C9D848
+	for <lists+linux-pci@lfdr.de>; Wed, 03 Dec 2025 02:47:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6B11A4E0223
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Dec 2025 23:44:41 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 527CA4E4AE6
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Dec 2025 01:47:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5982302CAE;
-	Tue,  2 Dec 2025 23:44:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A5E623B60A;
+	Wed,  3 Dec 2025 01:47:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FrCPifiT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLpulbdH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797B43009FC;
-	Tue,  2 Dec 2025 23:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498243207
+	for <linux-pci@vger.kernel.org>; Wed,  3 Dec 2025 01:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764719079; cv=none; b=ELBWDMGViZEkUkbupTave+Zv2YlaED1H1TMeNfTBT6Vhb5dKWCejncLDbJf39BN+oM+gz4XIyI485O0FDE5VIUfL37CtWGb+KCgbO3KIWIyH6ZEAWqI1WIP1M315jKQG4KG9oAxE8C7FKxMii/dGwy0CltQ6bwimrZELluwLPRI=
+	t=1764726430; cv=none; b=gbP4T8kAqqHGRvkwkufbyXtpWejQF8cmzTY3WSpDNDy+3mbx+JxxT0T6qpmUDETE6uDtKFpHDkCIC7JmahzYSfbV9OOYmV6YY0DiDQlhqok2rAdyVey+pO4u/oV0MM15hYAqY4n4aYgJVI0qAsuH05l+NHsrv1PtmmZB5D6IlSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764719079; c=relaxed/simple;
-	bh=RPPsGXG/goo2TScWBKowvKavIkqW/P5ObuG8brhUpa8=;
+	s=arc-20240116; t=1764726430; c=relaxed/simple;
+	bh=3nO+YcV9+oE4XpniiLIyxdEaMIE8lYstD85AACwuLDo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o9gLv/pjgsyeBEWhk+CFsWrtyyEGffU0jalnNKEjpJHS1+bHVvlnsNdpeCXnwYdIrsXr9baOoMqKEQpxO48TaT1bNOH4ftOwaX+q2J4Bx8UoD/g3S+l52qZ5dnGP076GZ3VIaEIxyev7IgFX/ksbVm1VqrR4w1jcJcgnZZ1Pxzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FrCPifiT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA6BDC4CEF1;
-	Tue,  2 Dec 2025 23:44:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764719079;
-	bh=RPPsGXG/goo2TScWBKowvKavIkqW/P5ObuG8brhUpa8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FrCPifiTxCVTM6AudIDNinw2f9F2ilywFu57kZaCe1EeWWFglTM1dG/nCw/0+UAEe
-	 3SKvgVryRs3K68WE9m4jqu5Umye2Kj5i9ngKIb+Cv7kLn9dEtR5QiDzDa4hVQqZUq4
-	 /nrndOUZ1O7aURCDgkdwTt6XuCkjs1avKOdrG1k8kkCwDTqVkQwd8OjqxlZkc/Oe7a
-	 5F6iUJFs/locvAjADygjmIqncgfTa8cLcPOLLhSx48hrPMxG/lJll7Q7H/QhaBspuG
-	 hWmERbMywbWBFpySJPHYuiPrxv58PmAHOBURqgD3HAQFXhgCsyxlWMm1kZJVH6m4PP
-	 HRp1yFyJ2XoYw==
-Date: Tue, 2 Dec 2025 16:44:35 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-pci@vger.kernel.org, linux-coco@lists.linux.dev,
-	Jonathan.Cameron@huawei.com, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 1/8] drivers/virt: Drop VIRT_DRIVERS build dependency
-Message-ID: <20251202234435.GA1692217@ax162>
-References: <20251113021446.436830-1-dan.j.williams@intel.com>
- <20251113021446.436830-2-dan.j.williams@intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rC926p+GupvtH1+3fgF0ty+3qAcRUxfWxVLOEBzlU2wvbCjYuiqgV4zqNee2dXXtp1vvoRVoMvVQt4UxTKNP6kaffT6S9oaN36tBIO7yHl6gNcab7PORWWXzjVlKxpgB3isBuitUWNm3l6S0BoNzgFI5QWDT8mQUV4nbkCOPQ4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZLpulbdH; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-8b144ec3aa8so572196585a.2
+        for <linux-pci@vger.kernel.org>; Tue, 02 Dec 2025 17:47:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764726426; x=1765331226; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OtH1a85NzPXIElQyhEPKVrfDvnNRb+rvBUgIUrut7Kw=;
+        b=ZLpulbdHFBuz7J52MuyOIQ1Y3U8SB9lTC6264JsyNnqSRuJj7m0PZ8y7eKvMPM3Sol
+         rLVKMu1G7YfuxL5shNUWpOdxFn47imeoQ6KUY0AX9rlMudYEQsYNJo0X760eiWPXsFmp
+         jXbJuWOc+QKgkXBDBPJKuAHezVJEyIL0mC/AgQ/1SXp5PTfThL8Dvh8S/GiBYGibeUZy
+         KQJczWyAAovaz4St/568241YXbC56ygndDWzni8BqfwZZkY1JRsUwgNXrj9AtGdF1m1v
+         JAbaR73Joqe1miRLsL0NbyzJl/zgU1deueDJNhf4b5XJ2+AziBjqymuQhQuZcXHN/GE0
+         aoZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764726426; x=1765331226;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=OtH1a85NzPXIElQyhEPKVrfDvnNRb+rvBUgIUrut7Kw=;
+        b=L7Kv24DkfZ55bKfo5+YJyhgmcF0pFb2z+uT2iCZRyISuiVfa8lYHfQD2yHkHiAku8u
+         Edq0aLex1rppcnwnGr6jrRt2QI8+Q/HeRXa8VvXfs09kxZ1IqZt1im9jbTIeIfUQuKlc
+         v4uVt+ywUa3f50zT6b3cMaVyrejR8G1P/zD1xMrM4seIfqxVsID5RVvJFj9SJdQJsSrd
+         DLSvdBy3gLEHnqZDskyDmJW7EeMTh5s7ecGATQFeAGjy2wq/RSAyEpzpUK1ysYW2w81F
+         XcLoQqT9ASzCmoBNSH4fZ10gX+32TR6ThI2SsnPwFNP5g8uytJLEXBRHTdsaVVqqCEdl
+         xdXA==
+X-Forwarded-Encrypted: i=1; AJvYcCUN6q45mzGDldxu2Y7Wg21CPwchDeeyH9/tvMTfTDOq/hNoZMq/bVI2Gk+43BFdJlMqv0vLHq9yIJg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyIy2VonRVbm46D9WW3tpgxnnD65bkfUWdnQ3NPbSVY06nHTtF
+	jO8kaJNIylCf2taOoU2Cc5d0bGdBSrQmclNl2CNXff+NzI9vqKX4U8Be
+X-Gm-Gg: ASbGncvBhFVRRGseOGMLmlmjF4awPTyg8xRybbfZCqTsKlk4B7azK5t9H6m2fvkRLRx
+	3blbFXZ8j97gHSYMiLZxzgzJOM1CZj4kHXOWma0jHn04tfLrz0/c8rsYCtUvrqaryaduMaLhp8t
+	RMfBPZarpvvqJky0FjGaS058PUP1Z7QDBFOiFstq13iN8D7zAEYz/FVMrcEejbs2MABBHjfHwbK
+	/pA9+wsMzI5uWCyNEY23w/JNR1Zj+UKq9RA7ZnIjeDnDCjfzWVv6OP4bAH1WuJSKZcGDu60rYrw
+	Gf9/3CkXkKt0/8LqQk3mvEsAY5YTxSZ1pk0RJTrxaUAOHQFtHyH4uuBDArxp+CBBlyHCcx/Yf4P
+	a0cAYdbVPmZa18hfS/8yuukc0SQe9Jzx/zGlld7OdmzpmMk3Ti57qfXJ20BfTGg7Q6Shqd67x9O
+	Gcv9wm9zp8tuYLqwHx5L1SkZcWYnkWk0i1W+lQmdB+8EO708ZKnjhW9UDa7DJS6SVX6ERHBFVFd
+	jIGbVopMFL9U3qDToaBKGZkJA==
+X-Google-Smtp-Source: AGHT+IFeMR+oSVn09EJ3IDZOwhh2uiS4UVZ0hp1HU+YMpxzfU9ogbzDHH3W62a3tJUAdySWBH37uAw==
+X-Received: by 2002:a05:620a:2805:b0:8b2:d56a:f2f1 with SMTP id af79cd13be357-8b5e47cfdaamr99382185a.12.1764726426099;
+        Tue, 02 Dec 2025 17:47:06 -0800 (PST)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-886524b1aa6sm119441246d6.8.2025.12.02.17.47.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Dec 2025 17:47:05 -0800 (PST)
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id ACD9EF40079;
+	Tue,  2 Dec 2025 20:47:04 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Tue, 02 Dec 2025 20:47:04 -0500
+X-ME-Sender: <xms:mJYvaaDmnK-eQoA_EF5dIKBTmJFKJG6JnnoegiOnZKVT8CNUG_YZFg>
+    <xme:mJYvadSJ45vWYeQ9F5mL5h1nMVY-8bU-OaEP6MA5NELkAMhxMnC3oTCpPE77lCBHK
+    7T7DCcgyxDTJotNCxAXaXhpptJ3QWP-MaGb6ZrIeVNqxosuK0JF82c>
+X-ME-Received: <xmr:mJYvafxcm6YlRM-vftTxYa0HsgC9YSewKe3-7hU6gkHJFIR9j-dqDET8mDz9W_yI4jfLTFLmfy4EJaHEsee2Ieq8FtBpB-e8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduheelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgv
+    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
+    hnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueevieduffeivden
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquh
+    hnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudej
+    jeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrd
+    hnrghmvgdpnhgspghrtghpthhtohepkedupdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopegrlhhitggvrhihhhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehruhhsth
+    dqfhhorhdqlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehl
+    ihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    hgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopegu
+    rghvihgurdhmrdgvrhhtmhgrnhesihhnthgvlhdrtghomhdprhgtphhtthhopehirhgrrd
+    ifvghinhihsehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvohhnsehkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtph
+    htthhopegvlhhlvgesfigvrghthhgvrhgvugdqshhtvggvlhdruggvvh
+X-ME-Proxy: <xmx:mJYvafm1w4VDhZtfL-vbtABRjhTNIcFLz8_RoOmFJXiaSOHOJFRUsA>
+    <xmx:mJYvaTW4xPwqaL8AsLZ0eWuclQx3vE9Zqhyto1-mcNhBpI554zsuvg>
+    <xmx:mJYvaXX2hT3SDveYJ-poTdQsJ8M2nsxtzyvAAaEGn-Ah6ycumKDy0w>
+    <xmx:mJYvaS9D9MkMxArS_FuKXUpeU0lMFKOAD8JwuBHAD4qUAR-XYoc_nw>
+    <xmx:mJYvaaBq2FcntQ00GFur5OcCdB2TqHkbOovvZlruCm-nWJGwWixyD_zx>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 2 Dec 2025 20:47:03 -0500 (EST)
+Date: Tue, 2 Dec 2025 17:47:03 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dave Ertman <david.m.ertman@intel.com>,	Ira Weiny <ira.weiny@intel.com>,
+ Leon Romanovsky <leon@kernel.org>,	Peter Zijlstra <peterz@infradead.org>,
+	Elle Rhumsaa <elle@weathered-steel.dev>,
+	Carlos Llamas <cmllamas@google.com>,	Yury Norov <yury.norov@gmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,	linux-block@vger.kernel.org,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+	Benno Lossin <lossin@kernel.org>,	Danilo Krummrich <dakr@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+	Paul Moore <paul@paul-moore.com>, Serge Hallyn <sergeh@kernel.org>,
+	linux-security-module@vger.kernel.org,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Lyude Paul <lyude@redhat.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	linux-kselftest@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Andrew Ballance <andrewjballance@gmail.com>,
+	maple-tree@lists.infradead.org, linux-mm@kvack.org,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vitaly Wool <vitaly.wool@konsulko.se>,	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?iso-8859-1?Q?Wilczy=B4nski?= <kwilczynski@kernel.org>,
+	linux-pci@vger.kernel.org, Remo Senekowitsch <remo@buenzli.dev>,
+	"Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
+	Will Deacon <will@kernel.org>, Fiona Behrens <me@kloenk.dev>,
+	Gary Guo <gary@garyguo.net>, Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,	Alexandre Courbot <acourbot@nvidia.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,	Ingo Molnar <mingo@redhat.com>,
+ Waiman Long <longman@redhat.com>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	John Stultz <jstultz@google.com>, linux-usb@vger.kernel.org,
+	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Tamir Duberstein <tamird@gmail.com>
+Subject: Re: [PATCH 00/46] Allow inlining C helpers into Rust when using LTO
+Message-ID: <aS-WlwsvGrbGYIYs@tardis.local>
+References: <20251202-define-rust-helper-v1-0-a2e13cbc17a6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,81 +177,66 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251113021446.436830-2-dan.j.williams@intel.com>
+In-Reply-To: <20251202-define-rust-helper-v1-0-a2e13cbc17a6@google.com>
 
-Hi Dan,
-
-On Wed, Nov 12, 2025 at 06:14:39PM -0800, Dan Williams wrote:
-> All of the objects in drivers/virt/ have their own configuration symbols to
-> gate compilation. I.e. nothing gets added to the kernel with
-> CONFIG_VIRT_DRIVERS=y in isolation.
+On Tue, Dec 02, 2025 at 07:37:24PM +0000, Alice Ryhl wrote:
+> This patch series adds __rust_helper to every single rust helper. The
+> patches do not depend on each other, so maintainers please go ahead and
+> pick up any patches relevant to your subsystem! Or provide your Acked-by
+> so that Miguel can pick them up.
 > 
-> Unconditionally descend into drivers/virt/ so that consumers do not need to
-> add an additional CONFIG_VIRT_DRIVERS dependency.
+> These changes were generated by adding __rust_helper and running
+> ClangFormat. Unrelated formatting changes were removed manually.
 > 
-> Fix warnings of the form:
+> Why is __rust_helper needed?
+> ============================
 > 
->     Kconfig warnings: (for reference only)
->        WARNING: unmet direct dependencies detected for TSM
->        Depends on [n]: VIRT_DRIVERS [=n]
->        Selected by [y]:
->        - PCI_TSM [=y] && PCI [=y]
+> Currently, C helpers cannot be inlined into Rust even when using LTO
+> because LLVM detects slightly different options on the codegen units.
+> 
+> * LLVM doesn't want to inline functions compiled with
+>   `-fno-delete-null-pointer-checks` with code compiled without. The C
+>   CGUs all have this enabled and Rust CGUs don't. Inlining is okay since
+>   this is one of the hardening features that does not change the ABI,
+>   and we shouldn't have null pointer dereferences in these helpers.
+> 
+> * LLVM doesn't want to inline functions with different list of builtins. C
+>   side has `-fno-builtin-wcslen`; `wcslen` is not a Rust builtin, so
+>   they should be compatible, but LLVM does not perform inlining due to
+>   attributes mismatch.
+> 
+> * clang and Rust doesn't have the exact target string. Clang generates
+>   `+cmov,+cx8,+fxsr` but Rust doesn't enable them (in fact, Rust will
+>   complain if `-Ctarget-feature=+cmov,+cx8,+fxsr` is used). x86-64
+>   always enable these features, so they are in fact the same target
+>   string, but LLVM doesn't understand this and so inlining is inhibited.
+>   This can be bypassed with `--ignore-tti-inline-compatible`, but this
+>   is a hidden option.
+> 
+> (This analysis was written by Gary Guo.)
+> 
+> How is this fixed?
+> ==================
+> 
+> To fix this we need to add __always_inline to all helpers when compiling
+> with LTO. However, it should not be added when running bindgen as
+> bindgen will ignore functions marked inline. To achieve this, we are
+> using a #define called __rust_helper that is defined differently
+> depending on whether bindgen is running or not.
+> 
+> Note that __rust_helper is currently always #defined to nothing.
+> Changing it to __always_inline will happen separately in another patch
+> series.
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-I can still trigger this warning on next-20251202, which contains this
-change as commit 110c155e8a68 ("drivers/virt: Drop VIRT_DRIVERS build
-dependency").
+For the whole series:
 
-  $ git merge-base --is-ancestor 110c155e8a684d8b2423a72cfde147903881f765 HEAD
-    echo $status
-  0
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
 
-  $ make -skj"$(nproc)" ARCH=arm64 CROSS_COMPILE=aarch64-linux- clean defconfig
+Regards,
+Boqun
 
-  $ scripts/config -e PCI_TSM
-
-  $ make -skj"$(nproc)" ARCH=arm64 CROSS_COMPILE=aarch64-linux- olddefconfig
-  WARNING: unmet direct dependencies detected for TSM
-    Depends on [n]: VIRT_DRIVERS [=n]
-    Selected by [y]:
-    - PCI_TSM [=y] && PCI [=y]
-
-I would think you would need something like this avoid the problem but I
-am not sure if it would be acceptable, hence just the report.
-
-Cheers,
-Nathan
-
-diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
-index d8c848cf09a6..52eb7e4ba71f 100644
---- a/drivers/virt/Kconfig
-+++ b/drivers/virt/Kconfig
-@@ -47,6 +47,6 @@ source "drivers/virt/nitro_enclaves/Kconfig"
- 
- source "drivers/virt/acrn/Kconfig"
- 
--source "drivers/virt/coco/Kconfig"
--
- endif
-+
-+source "drivers/virt/coco/Kconfig"
-diff --git a/drivers/virt/coco/Kconfig b/drivers/virt/coco/Kconfig
-index bb0c6d6ddcc8..df1cfaf26c65 100644
---- a/drivers/virt/coco/Kconfig
-+++ b/drivers/virt/coco/Kconfig
-@@ -3,6 +3,7 @@
- # Confidential computing related collateral
- #
- 
-+if VIRT_DRIVERS
- source "drivers/virt/coco/efi_secret/Kconfig"
- 
- source "drivers/virt/coco/pkvm-guest/Kconfig"
-@@ -14,6 +15,7 @@ source "drivers/virt/coco/tdx-guest/Kconfig"
- source "drivers/virt/coco/arm-cca-guest/Kconfig"
- 
- source "drivers/virt/coco/guest/Kconfig"
-+endif
- 
- config TSM
- 	bool
+> ---
+[...]
 
