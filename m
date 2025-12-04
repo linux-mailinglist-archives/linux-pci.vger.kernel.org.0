@@ -1,122 +1,122 @@
-Return-Path: <linux-pci+bounces-42597-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42598-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B76BCA2196
-	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 02:27:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 05697CA21E7
+	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 02:41:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E0D24301F5D7
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 01:27:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 154EC30358DF
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 01:41:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D6BC2222AA;
-	Thu,  4 Dec 2025 01:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48C9B242D7B;
+	Thu,  4 Dec 2025 01:40:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AP+Vz5GY"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="ItWbvHj2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94ED1221F24
-	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 01:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA7B242D70
+	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 01:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764811662; cv=none; b=cM+nuCz5Z5aLO4RYpN8gl+QLtdeeiXLJw/jxbTbXd63N2caFa/vWwLGonOULtpErltk4y8BKv2RnpCC/pnrbSQPxCwRjVxcDgM7QwbOah3Xh+ShEA8Nvu05CM+1S5pGwXHCNdei+uMyJzmDNXd538JJYg6juxLKgv9qJ4s/D+CE=
+	t=1764812459; cv=none; b=s84ENie5tomQDh4rycqVbBYnxoJAFG6MTzNrjRJf1kSUqywOfniQ52d64jeSEQq50zVnC5E7/f1izgZ/yn9Z2HpT97hCqKpLGWol/vyxddhj7sFWUwlzvSNilQoYoUK0TQi39fkqoFuiwWGI08j3UbWOFmYam8TXEnyH+ehKC9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764811662; c=relaxed/simple;
-	bh=caI45ddFp7kt1eiulmsrdTdVREDPt3hsmYyUZLW4NTA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m3RtPlrNp/zPTWbXxXmEnvTJIkoyrS1iiyDsYBuKAPDQWL8609dJDbeyVylpCYHEY79tMQ0q9v31d6IbdS/VlKwNyFh97jzv6fLYjanjv/Kcu1iIKrQDFImTvC/zYxEQmLU0nkYlhOdpzPpWkohFSSMMa4KJflyycx+6VlOdY9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AP+Vz5GY; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-bb2447d11ceso225860a12.0
-        for <linux-pci@vger.kernel.org>; Wed, 03 Dec 2025 17:27:41 -0800 (PST)
+	s=arc-20240116; t=1764812459; c=relaxed/simple;
+	bh=BM99yA5zKxdKG26bL4c4KmFejVDQUbVH43COraIGd8M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cV7PVsPfWENI5QSXfGBh7y8l7vXWDmakCRrwpY32H2IrxD11UgPY1V7wRktW5URD7+RSA/H5U8/8gE0k9/ZFNtfyIcyiffpFUIyV/FCtfFuNlG2pqLOHyohWb4/YJ1oASSTfdM4tHB8s6x+NsSxLEadsLHD/NK5IQPQUG674gX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=ItWbvHj2; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-640c1fda178so655585a12.1
+        for <linux-pci@vger.kernel.org>; Wed, 03 Dec 2025 17:40:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1764811661; x=1765416461; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XAHtRoQcOO7NiXo5ZlsacuTJK3Wmi01LBywsFsm8Aic=;
-        b=AP+Vz5GYhac6gmwq2Oc3OtC/+YiFyQ7QTtBJlSuzAEzD2KB4hhDuxd89U0yLJj9h3M
-         GSonvxXquhkjjB8+0SXwUe0fvoJ/L2prtvShb9u9C/m57iZ5TY3Dz9T9b17yKGOowtBN
-         NdvNJ0jVPf64OTLuIO2c6y87C2+kfMyguQBuY=
+        d=purestorage.com; s=google2022; t=1764812456; x=1765417256; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=usCVZbWwv9v8DM+VA7vraEXPn/PrzYHVW6BELku9usQ=;
+        b=ItWbvHj2XKNJ4cj3LloXOXDRuwpyjjVNC/OfMovOWqOaZOcJbVA7idkL1KRx550e7q
+         zO/F5ZlH6XKjkjNW7eSeQvY/BT2JItibpGrOzAxiLNYDTHK58yebXLaQLhcC/DGNDX5S
+         i3ireRa/fvbN0N3dPSvUYRcnOlHXrqHAd0MH1gbtFW1TVQYgEclJ3ISdsU9C957spbZB
+         B05XxbNwIqJ8B5QacCNwBObU5n6CjYqNtbNVdVLggWbgi4SSVO4cp/Cx88SOARuF64rD
+         5dT+X5owsHjteIsOU2ua4zbjQKxCd4TtIa0ChI8ErlBJUK9CbgWaMYuM5jmZLP9EkU07
+         iBJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764811661; x=1765416461;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XAHtRoQcOO7NiXo5ZlsacuTJK3Wmi01LBywsFsm8Aic=;
-        b=ffiQ7/QTdM5jf8cRDhmATkG12qxS5qMsG5oGfXhG35w9++QA9M0UV6/39IzzcR3Db4
-         NecSoMBVXcTbtefESKq/ZTBSH6rXytHsX0vYq/OV6079Kh+JhS8i6Ih5SDjtSBYL2Lbn
-         1lUwl0O94Il4/MTGnTZzoWsgI5ttggshW3yUt4p/E9S7NKsvc3zUjrDJAkdWsxfYvvbR
-         2ehf9M4XfT/0tWKa8MdaqkY6xVoqOyQfXpHSV8xhjgUnOfdE7gl1A6d5jsGATmEFsbE+
-         1hVFKfkzibKr4tRoekrKm/IagbmfCoetWY3qZb9XFCA6qrHYAoz+Vsn5vwjmYkS+sLxi
-         YTVw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvjAgz5s5X7zk1rbKz6uHNqBI1kI/eh3+aCEcCxwN2h1ExyQdGkc/lQv9tGt/IaPIL3ldBtsCrpbw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBsoAa4iFVD5Cm7pHvvgHPhb/9vIe1QP4mxS2aVyjlTi6GOqvU
-	0e6jpCCBIeoOwTlpe9M1Sdm2jfJ7nsqs0+jJObzwD4TC2Nf5BNq9jYY0glmNZ9SV8Q==
-X-Gm-Gg: ASbGncsVtI2Lwmv+bg53bKUy+zD+XrXqPzH7AoKl9WVxmeDo1GI4VXLJGknw/eZfM9A
-	Td0lluWvoT+gT6cDANVmKdQPrwsZlG3zdOldA3nQ92tBh9v/APlYGI+yvhDuVvJ04J5c/rnU8e7
-	tzp+ugArzvgY80yLSkykXzk6kOY691XRdMkAqzy+qd5QxsCQvWJGoNO7eZ6cszvK1sTOCYDl5wf
-	PoNDfMmyLg64SZ0LLcQ8sxu1+JmDuSvCUJYutOH3cpJR5kU+Bg0m2g6AfLBvc2Ns0fwVvsdQVAo
-	UqRbcIj5gcXdU84JAXzdKCCFq2m+DROKX2evTwT4CtfMBrPXZMx0DzqBw6rvnrdHHEOOUJ8Otbt
-	5WD7HSyHhxSZaxuR+Dp6HqznkFvqH+rY6ZAt9uJTPuynx/J+E74yWHUilPd16qwpUiBT2HwO7ju
-	5g/BfzhuZRopoiMIusqb4Wozbcy4hMgnUxHjiZt0mcJmUVIaob7A==
-X-Google-Smtp-Source: AGHT+IEmVrLEnwUtLOLcC4IYa/+PZl3WtmNmhtN08fPYo+um0/KXKXOwOqQoGis6U4DMtTDFddSBKw==
-X-Received: by 2002:a05:7301:f2e:b0:2a4:809d:9a8b with SMTP id 5a478bee46e88-2aba44fba7bmr708793eec.20.1764811660700;
-        Wed, 03 Dec 2025 17:27:40 -0800 (PST)
-Received: from localhost ([2a00:79e0:2e7c:8:e953:f750:77d0:7f01])
-        by smtp.gmail.com with UTF8SMTPSA id 5a478bee46e88-2aba8395d99sm991052eec.1.2025.12.03.17.27.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Dec 2025 17:27:39 -0800 (PST)
-Date: Wed, 3 Dec 2025 17:27:38 -0800
-From: Brian Norris <briannorris@chromium.org>
-To: Qiang Yu <qiang.yu@oss.qualcomm.com>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 3/5] PCI: dwc: Remove MSI/MSIX capability if iMSI-RX is
- used as MSI controller
-Message-ID: <aTDjihgJgKAw1nis@google.com>
-References: <20251109-remove_cap-v1-0-2208f46f4dc2@oss.qualcomm.com>
- <20251109-remove_cap-v1-3-2208f46f4dc2@oss.qualcomm.com>
- <dc8fb64e-fcb1-4070-9565-9b4c014a548f@rock-chips.com>
- <7d4xj3tguhf6yodhhwnsqp5s4gvxxtmrovzwhzhrvozhkidod7@j4w2nexd5je2>
- <3ac0d6c5-0c49-45fd-b855-d9b040249096@rock-chips.com>
- <aSlx91D1MczvUUdV@hu-qianyu-lv.qualcomm.com>
+        d=1e100.net; s=20230601; t=1764812456; x=1765417256;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=usCVZbWwv9v8DM+VA7vraEXPn/PrzYHVW6BELku9usQ=;
+        b=Op7Ev0JKRhwmLGWwUWiWe1f5cOS80P4Qbqd2D4N6W9jCetdfqt0nww/ZQoS+3elWjn
+         6VNXpr3iFAg532LtmtsHYyGLMAH/MJuLeV+d2xGEGP80iWY7Ii1zN+fndAsxeXrpNvMG
+         P9PC059PRo7IzxMIYQ4j+uyY583M+D9giSNVvrdam271OFq9ntaYx8zLpTXpmuARFuw3
+         cPagLB2UTTkg9mgTiUVOTXurU+GXKQkPW6XnFx518F+RZq24scA5O/xY19XYuXsmhsJY
+         mg5Ke0bIEWGyXsxfAL40ISY9co/sE9q/YNmMg4arB6QJdv9G/i+a19ndEqUkNCz/uxEZ
+         NSIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcicMiC1Xlsxl4ScyiLPx/rUkiWB2o8wj1oiuy7YoZynL1XXD4oCM7d6tyaQXg6buDvGq7/grVzXo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymjbtRZFsQTWMU+aza96pFtNVHn3/wlWdExSAFWQuwjqo8J4wQ
+	y2m/8KHfKNJgftL+gprCuDyYVwybPFZBGNCPvEORTfV8E6qPs36CrMMbUhJPkyHzeqw=
+X-Gm-Gg: ASbGncuwZuTPJlJc18Ij4IN5hMUIfKldfZJ9WzLgAeOkTdcvIEocGAtBLSR6t0zBUf6
+	TEoCQSXcEde8susXd0Dl0xRSsewwB0+waJ4NQbnQz+801zKwRLLeSy2B3ssYnxEo2crvP6YDJga
+	6hCgCQ6zrDYQXI5NrV8D0zuhbM8gnwBpKdGq6MPM8RlY3Tfb4ueTPD1pQAYF0fr3eRKvExsuOvj
+	pa3YjIDriw29uWU6z8WzMqhVh2p5AUh68je1lv548SGsLj9e1H6VupyUk/tNbuOCP7XmCLFUp9J
+	koqPXWzG2Udv9L1kYmpiyOeir5tw1Fz9YbD6jSBrVS6Hf19ZNVfWK0sTdmrb9R98++XOhCvB4aD
+	HUTi2W88K69zvlWJICqbCy1YrA6a35RmVw044lcWiXq/7sPhHcWFpkGSM4sAf89n9fkrNiCxfUV
+	lzke8EjFuXsoqu1aMjTFJuKR6SK3qusgImas+MTzdu/6NYO04=
+X-Google-Smtp-Source: AGHT+IGfRE0y5OoQoEAxk9F/9R4hL3hkUmJWKifR9VWkvr8jbHYDQJhShb60/e1UsyObLpRQHJd9SQ==
+X-Received: by 2002:a05:6402:2749:b0:63b:f22d:9254 with SMTP id 4fb4d7f45d1cf-6479c516959mr3524977a12.23.1764812455779;
+        Wed, 03 Dec 2025 17:40:55 -0800 (PST)
+Received: from dev-mattc2.dev.purestorage.com ([208.88.159.129])
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-647b2ec3019sm80170a12.4.2025.12.03.17.40.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Dec 2025 17:40:54 -0800 (PST)
+From: Matthew W Carlis <mattc@purestorage.com>
+To: macro@orcam.me.uk
+Cc: ahuang12@lenovo.com,
+	alok.a.tiwari@oracle.com,
+	ashishk@purestorage.com,
+	bamstadt@purestorage.com,
+	bhelgaas@google.com,
+	guojinhui.liam@bytedance.com,
+	ilpo.jarvinen@linux.intel.com,
+	jiwei.sun.bj@qq.com,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lukas@wunner.de,
+	mattc@purestorage.com,
+	msaggi@purestorage.com,
+	sconnor@purestorage.com,
+	sunjw10@lenovo.com
+Subject: Re: [PATCH 2/2] PCI: Fix the PCIe bridge decreasing to Gen 1 during hotplug testing
+Date: Wed,  3 Dec 2025 18:40:20 -0700
+Message-ID: <20251204014020.1426-1-mattc@purestorage.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <alpine.DEB.2.21.2511290245460.36486@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2511290245460.36486@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aSlx91D1MczvUUdV@hu-qianyu-lv.qualcomm.com>
 
-On Fri, Nov 28, 2025 at 01:57:11AM -0800, Qiang Yu wrote:
-> On Fri, Nov 21, 2025 at 12:04:09PM +0800, Shawn Lin wrote:
-> > 在 2025/11/21 星期五 1:00, Manivannan Sadhasivam 写道:
-> > Could you please help your IP version with below patch?
-> > It's in hex format, you could convert each pair of hex
-> > characters to ASCII, i.g, 0x3437302a is 4.70a. The reason
-> > is we asked Synopsys to help check this issue before, then
-> > we were informed that they have supported it at least since
-> > IP version 6.0x. So we may have to limit the version first.
-> >
-> 
-> Hi Shawn,
-> 
-> I checked the IP version of PCIe core on glymur, it is 6.00a (0x3630302A)
-> and iMSI-RX still can't generate MSI for rootport.
+On  Mon, 1 Dec 2025, Maciej W. Rozycki wrote:
 
-Same here, I have chips with 0x3630302A / 6.00a, and MSI does not work
-for the root port. This series tests out fine for me, so:
+> Discard Vendor:Device ID matching in the PCIe failed link retraining 
+> quirk and ignore the link status for the removal of the 2.5GT/s speed 
+> clamp, whether applied by the quirk itself or the firmware earlier on.  
+> Revert to the original target link speed if this final link retraining 
+> has failed.
 
-Tested-by: Brian Norris <briannorris@chromium.org>
+I think we should either remove the quirk or only execute the quirk when the
+downstream port is the specific ASMedia 0x2824. Hardware companies that
+develop PCIe devices rely on the linux kernel for a significant amount of
+their testing & the action taken by this quirk is going to introduce
+noise into those tests by initiating unexpected speed changes etc.
+
+As long as we have this quirk messing with link speeds we'll just
+continue to see issue reports over time in my opinion.
 
