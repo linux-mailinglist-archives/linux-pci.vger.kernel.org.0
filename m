@@ -1,132 +1,101 @@
-Return-Path: <linux-pci+bounces-42619-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42620-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5457CA3285
-	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 11:10:41 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 167B3CA33A5
+	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 11:30:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A28413019BCA
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 10:06:03 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 15ACA3027E03
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 10:30:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 781F8334C06;
-	Thu,  4 Dec 2025 10:06:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F04D42DC328;
+	Thu,  4 Dec 2025 10:30:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Osh22c/g"
+	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b="pEWGGucE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6A11A9FAF;
-	Thu,  4 Dec 2025 10:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B72F2EDD6B;
+	Thu,  4 Dec 2025 10:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764842762; cv=none; b=H6dB8SmvBQer6o8lAwopJdD89PJ07qOeD2OT9Ht0OU8yJN0dia7pOyqU9x154aOUXWgTqHf8KszhNnWL6XZRIIkG4a5dKzojIE1z4pY/FvtSaT6NW9NZcq/tdXWu3i/0eybv/1ZMoScJCsuXGBB1Tz1WsBm1+WI4uDO2T+76x0s=
+	t=1764844237; cv=none; b=If0r2ujWlhan71/JW3LvTDVi2j8PalhMIRc+doTfyHrAmtXHoecVnEZsrdWDbbpDWNMSNXPSbqQbt+aavsDa2ZWdZbX0NXajfDBHtToGXTm8M5WZUycLBqNWV/D4fCkR8vmE+IkYtRXqBTpYD5nD0JWIgqs4H/yX/AwNgDV4V0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764842762; c=relaxed/simple;
-	bh=HdxuyW48hjewxA37dD/zbSml/Oj0HqVBN0P1TbtJSfw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hu1oU3fCB3QYOBT/z4oPmr8VBoHZZLin1tam1oVq0OgnxFonGxb/7ROpXEeNreG8I2zXxA190KbPIlTp5nEd7QYbUrlpR7oKiWmhAFWmLucaVQY3gKTHE52seiQ8wdWqhos80eSi16CVQI/Ki8Nr3wjhFGMoePFPBBHASr8D0z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Osh22c/g; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C558BC4CEFB;
-	Thu,  4 Dec 2025 10:05:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764842761;
-	bh=HdxuyW48hjewxA37dD/zbSml/Oj0HqVBN0P1TbtJSfw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Osh22c/gHyR+VPM2kPcT0dPiD6K9BvVhe5Ewzn9HXTkYe8a046bP8uE4VgCP19aDi
-	 K7xBIYI24RyUjLFUPu8Jsurggk4oUE//29xVfPPkiZv362d67AnRunbs4b5rs1+Gjw
-	 YS2XQ/6kgerJ6XOyYneyYfkre1v2DNabxE2eCArlBtO1fZs0/9oUkgnRGacd11N388
-	 /GqZScuD1gNPgkWGXr8EGPBS8fC6oU43ADwQuKp3i8wBSNVTdMRqREmWXwUbXqmGUE
-	 ffmQYPQtEzvEiW/FXBg4sDYheO7g+t6NXrH78pesoPO/l7JrqMckbFuomSJrJhGli1
-	 QsAy+pTCZPGgA==
-From: Christian Brauner <brauner@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Elle Rhumsaa <elle@weathered-steel.dev>,
-	Carlos Llamas <cmllamas@google.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	linux-block@vger.kernel.org,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	linux-clk@vger.kernel.org,
-	Benno Lossin <lossin@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	linux-pm@vger.kernel.org,
-	Paul Moore <paul@paul-moore.com>,
-	Serge Hallyn <sergeh@kernel.org>,
-	linux-security-module@vger.kernel.org,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Lyude Paul <lyude@redhat.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>,
-	linux-kselftest@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Andrew Ballance <andrewjballance@gmail.com>,
-	maple-tree@lists.infradead.org,
-	linux-mm@kvack.org,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vitaly Wool <vitaly.wool@konsulko.se>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	devicetree@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-pci@vger.kernel.org,
-	Remo Senekowitsch <remo@buenzli.dev>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	rcu@vger.kernel.org,
-	Will Deacon <will@kernel.org>,
-	Fiona Behrens <me@kloenk.dev>,
-	Gary Guo <gary@garyguo.net>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Christoph Lameter <cl@gentwo.org>,
-	David Rientjes <rientjes@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Waiman Long <longman@redhat.com>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	John Stultz <jstultz@google.com>,
-	linux-usb@vger.kernel.org,
-	Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Rae Moar <raemoar63@gmail.com>,
-	rust-for-linux@vger.kernel.org
-Subject: Re: (subset) [PATCH 00/46] Allow inlining C helpers into Rust when using LTO
-Date: Thu,  4 Dec 2025 11:05:29 +0100
-Message-ID: <20251204-denkbar-stinktier-8a7c07650891@brauner>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251202-define-rust-helper-v1-0-a2e13cbc17a6@google.com>
-References: <20251202-define-rust-helper-v1-0-a2e13cbc17a6@google.com>
+	s=arc-20240116; t=1764844237; c=relaxed/simple;
+	bh=ysf94GMNybiLAZWcFcB1EF1Url6FvxYvZ/M/8JdfLsA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OMLujLDQAYhD19wB5hDA87KAQfDomtz13XDS9OAmu9spBuv25O5wQ4nRGpmGOBncjyBbv9TzpKf1qoyEAGQAs0WvV5k6avWKuLxE4fmfW69+o+gMsNbBUXV9Xm6tdSG1rYFdUuX+DlZcZXfSxW8S2NVSHzJVaq/GYLohxW90EpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b=pEWGGucE; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5B40FYer3422550;
+	Thu, 4 Dec 2025 02:30:13 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
+	 bh=Z0FeDaJvPNNP9cJoyQRzGhFjjDU/oP6BWMa5kNfSnOU=; b=pEWGGucEUU/u
+	UgEn4Iuu39OVbxPlPS81jIwk1zXu0nGmT5QW/ejw4fhVcfHZgnzz63x/o/lHsfPa
+	U/DIw/EWOEfhUpwJb8jukEBX2qdDHtPYcEN0fTQYkj4vvcHf1FuJA1DLAjeVgKVL
+	n+6M89pR0w9kCl4/ViGqHpZeucAGrBPfsTSLU7GKPDmt4tVQ81aCSy778tmCAgLk
+	NcLrD7NtUU63+cyqeovzbvPW4gk1gtbnQHqcX5806Bd6Lgdv/Oly9PChPU+ada8N
+	a3W3gPXvQfRPYhDF3SrjfJkaLjvJJ1HdpXXjtjc0BUPzpO3VxKpp7Du5fxksy2ru
+	IS0/HVhWRQ==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4atykrtw3n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 04 Dec 2025 02:30:13 -0800 (PST)
+Received: from devgpu015.cco6.facebook.com (2620:10d:c0a8:1b::2d) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.29; Thu, 4 Dec 2025 10:30:10 +0000
+Date: Thu, 4 Dec 2025 02:30:05 -0800
+From: Alex Mastro <amastro@fb.com>
+To: David Matlack <dmatlack@google.com>
+CC: Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Alex Williamson
+	<alex@shazbot.org>,
+        Adithya Jayachandran <ajayachandra@nvidia.com>,
+        Alistair
+ Popple <apopple@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bjorn
+ Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+        David Rientjes
+	<rientjes@google.com>,
+        Jacob Pan <jacob.pan@linux.microsoft.com>,
+        Jason
+ Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Josh Hilke
+	<jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>,
+        <kvm@vger.kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
+        <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Mike Rapoport
+	<rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+        Philipp Stanner
+	<pstanner@redhat.com>,
+        Pratyush Yadav <pratyush@kernel.org>,
+        Saeed Mahameed
+	<saeedm@nvidia.com>,
+        Samiullah Khawaja <skhawaja@google.com>,
+        Shuah Khan
+	<shuah@kernel.org>, Tomita Moeko <tomitamoeko@gmail.com>,
+        Vipin Sharma
+	<vipinsh@google.com>, William Tu <witu@nvidia.com>,
+        Yi Liu
+	<yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>,
+        Zhu Yanjun
+	<yanjun.zhu@linux.dev>
+Subject: Re: [PATCH 06/21] vfio/pci: Retrieve preserved device files after
+ Live Update
+Message-ID: <aTFirYPI5vlIhvCK@devgpu015.cco6.facebook.com>
+References: <20251126193608.2678510-1-dmatlack@google.com>
+ <20251126193608.2678510-7-dmatlack@google.com>
+ <aTAzMUa7Gcm+7j9D@devgpu015.cco6.facebook.com>
+ <CA+CK2bDbOQ=aGPZVP4L-eYobUyR0bQA0Ro6Q7pwQ_84UxVHnEw@mail.gmail.com>
+ <CALzav=ciz4kV+u3B5bMzZzVY+cMs-G=q9c5O-jKPz+E4LUdx7g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -134,40 +103,72 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1456; i=brauner@kernel.org; h=from:subject:message-id; bh=HdxuyW48hjewxA37dD/zbSml/Oj0HqVBN0P1TbtJSfw=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQaxnzoC5KPC9BQ6Xq2IqjgffnvpRpvskU9368/659bp HtRXnNJRykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwESuWjAyXDA8eVezNuVTq5R5 o8gOmf3FN+71+Ire2yjd+7GFVzhvPyPDbR6JQvt2uT/tr3YuKJvw1D1B7vuZ55NmCNlPeyuwRvU UKwA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALzav=ciz4kV+u3B5bMzZzVY+cMs-G=q9c5O-jKPz+E4LUdx7g@mail.gmail.com>
+X-Authority-Analysis: v=2.4 cv=SNxPlevH c=1 sm=1 tr=0 ts=693162b5 cx=c_pps
+ a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=7ipKWUHlAAAA:8 a=FOH2dFAWAAAA:8 a=1XWaLZrsAAAA:8 a=ixZimci8kvJ5QYfzRTQA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=gpc5p9EgBqZVLdJeV_V1:22
+X-Proofpoint-GUID: n8n5PTxlXRsZxiZfi3xHEEXHsmaBKvmP
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA0MDA4NSBTYWx0ZWRfX5SzhQcWn8aro
+ 2JPwHDOspOxJcOs9K7vSq+5jKWdbKxbqhtR3PVxczlXamIH1/EQFRaZRhc2LhtLXgtb98zMKKHV
+ 4+BT4+dRGSK+hpEOf5G5mQHQOIIUEZVTu4apA3OX0+zM3v5lXU14yG+EH5bt28CaOc3wu0mDqp3
+ 7X0UamN+ToNLaLqfBIhlCg9c7QYB9s52wJYyNhEo8+mReQLvrcdFS7LKjZ24YrosV9i6xluloiU
+ EhR8GCEiFjvYHVhuYrJ/YC9xLlyO4CX78b7ELLkS4t2uPp/nmJhGx0LxIWXPHUddpx6odf7Io1a
+ ktCdVZHmD7Lek0GKjNg0iiq4PA/TuMrRqIKGveVB5ByEt1ybzDvuRTXWO/atckU1W5oHkxaQQ83
+ ZV4I/Go6ATIT5C+EpsxogAG5jU7q/g==
+X-Proofpoint-ORIG-GUID: n8n5PTxlXRsZxiZfi3xHEEXHsmaBKvmP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-04_02,2025-12-03_02,2025-10-01_01
 
-On Tue, 02 Dec 2025 19:37:24 +0000, Alice Ryhl wrote:
-> This patch series adds __rust_helper to every single rust helper. The
-> patches do not depend on each other, so maintainers please go ahead and
-> pick up any patches relevant to your subsystem! Or provide your Acked-by
-> so that Miguel can pick them up.
+On Wed, Dec 03, 2025 at 09:29:27AM -0800, David Matlack wrote:
+> On Wed, Dec 3, 2025 at 7:46 AM Pasha Tatashin <pasha.tatashin@soleen.com> wrote:
+> >
+> > On Wed, Dec 3, 2025 at 7:55 AM Alex Mastro <amastro@fb.com> wrote:
+> > >
+> > > On Wed, Nov 26, 2025 at 07:35:53PM +0000, David Matlack wrote:
+> > > > From: Vipin Sharma <vipinsh@google.com>
+> > > >  static int vfio_pci_liveupdate_retrieve(struct liveupdate_file_op_args *args)
+> > > >  {
+> > > > -     return -EOPNOTSUPP;
+> > > > +     struct vfio_pci_core_device_ser *ser;
+> > > > +     struct vfio_device *device;
+> > > > +     struct folio *folio;
+> > > > +     struct file *file;
+> > > > +     int ret;
+> > > > +
+> > > > +     folio = kho_restore_folio(args->serialized_data);
+> > > > +     if (!folio)
+> > > > +             return -ENOENT;
+> > >
+> > > Should this be consistent with the behavior of pci_flb_retrieve() which panics
+> > > on failure? The short circuit failure paths which follow leak the folio,
 > 
-> These changes were generated by adding __rust_helper and running
-> ClangFormat. Unrelated formatting changes were removed manually.
+> Thanks for catching the leaked folio. I'll fix that in the next version.
 > 
-> [...]
+> > > which seems like a hygiene issue, but the practical significance is moot if
+> > > vfio_pci_liveupdate_retrieve() failure is catastrophic anyways?
+> >
+> > pci_flb_retrieve() is used during boot. If it fails, we risk DMA
+> > corrupting any memory region, so a panic makes sense. In contrast,
+> > this retrieval happens once we are already in userspace, allowing the
+> > user to decide how to handle the failure to recover the preserved
+> > cdev.
+> 
+> This is what I was thinking as well. vfio_pci_liveupdate_retrieve()
+> runs in the context of the ioctl LIVEUPDATE_SESSION_RETRIEVE_FD, so we
+> can just return an error up to userspace if anything goes wrong and
+> let userspace initiate the reboot to recover the device if/when it's
+> ready.
+> 
+> OTOH, pci_flb_retrieve() gets called by the kernel during early boot
+> to determine what devices the previous kernel preserved. If the kernel
+> can't determine which devices were preserved by the previous kernel
+> and once the kernel starts preserving I/O page tables, that could lead
+> to corruption, so panicking is warranted.
 
-Applied to the vfs-6.20.rust branch of the vfs/vfs.git tree.
-Patches in the vfs-6.20.rust branch should appear in linux-next soon.
-
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.20.rust
-
-[18/46] rust: fs: add __rust_helper to helpers
-        https://git.kernel.org/vfs/vfs/c/02c444cc60e5
-[27/46] rust: pid_namespace: add __rust_helper to helpers
-        https://git.kernel.org/vfs/vfs/c/f28a178408e4
-[29/46] rust: poll: add __rust_helper to helpers
-        https://git.kernel.org/vfs/vfs/c/de98ed59d678
+Make sense, thanks for elaborating David and Pasha. 
 
