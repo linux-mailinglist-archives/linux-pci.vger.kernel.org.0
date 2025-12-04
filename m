@@ -1,168 +1,172 @@
-Return-Path: <linux-pci+bounces-42610-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42611-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B9F3CA2A19
-	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 08:28:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5D44CA2AA1
+	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 08:40:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 3610730039FA
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 07:28:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 638CB308696C
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 07:39:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEAC81D5178;
-	Thu,  4 Dec 2025 07:27:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 256C93002C6;
+	Thu,  4 Dec 2025 07:39:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=teika@gmx.com header.b="SHVONeQs"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PtQg8yrU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3472B9BA
-	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 07:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8512F9998
+	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 07:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764833279; cv=none; b=M7cyeGSD3PG0fJKVuvI1yU8YUB6vHuyqP6kDrfX9VDAebcWIQdtfRN4dapvT7e8NnPfPLA2/ZyH1FDPX/JKro2d0DnozDF1USgLKFj1pa1K2+0iUbdJH7qkMUUoeaDJtWLdMWpi6+p/XTAOwpp+H1ioAgXwIy+YObNtxqVBmd2U=
+	t=1764833955; cv=none; b=DDQRS7H5eYX6TlJJdisTKoPbYRPtOXvxKPuoMUVUF9Mj7re6mRUBEE32Kg5lPbyHtqo4IKgBcyBL21GpNRMVowzj2LOLYkFyNKltYTwG3fOn+l17kqE8rd3L5NhbZi70RCu7Vs51IpG4eRmi6ZvE1zAvTKK5lLhqkJpLMkkmhMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764833279; c=relaxed/simple;
-	bh=gWV3pxGfOpwnrXJzKvmTsk76VRdhRoDfaxivespj/U4=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=sBqDGnQ+FZpRzXFetV5NgcN/+tya5y+ATZ0rFVG3J3JL6pglwoijIhEEgfee5CEt2EAsxwMXTVEnNHzbCnhwjHVCjPu0dG1lDHEHhcZaYXtjrW1t5ERWp/n/U7xNov2RGHEW2P/IrWMYgo8s4pmG7pRsejHj5WaTbAnF8d3IWOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=teika@gmx.com header.b=SHVONeQs; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
-	s=s31663417; t=1764833265; x=1765438065; i=teika@gmx.com;
-	bh=gWV3pxGfOpwnrXJzKvmTsk76VRdhRoDfaxivespj/U4=;
-	h=X-UI-Sender-Class:Date:Message-Id:To:Cc:Subject:From:In-Reply-To:
-	 References:Mime-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=SHVONeQs+Rpf6Ma0F5spwRHDT5oSiUGN/NrkRvjNl1z9eLCs/kg+JIM8U7JtEinh
-	 ATotFCCalNzKinB5dQNL6QUywWtFezy2eFr59vVPiRIEK61AySgzb0BMfBY63ShpC
-	 gYOA14VQMhPr9qytbD+QL/Kp3lklHkI+zzSpEiHXgasEvYXNHbNFI3Olf4HqaKr1I
-	 6tykQYxNE9/w/VU/l4SmRCtPPnPRlMHFihUYA0cMKeDs0v3BYKxdwPghwHeMz6JKn
-	 NFdPKgqbzUql13zGHzELJjR/C2RshGdHH/etMrvQItWulfYHcXe6hZP24hB2WVm22
-	 SZegmCs5Z761S2Dr3A==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost ([153.161.204.57]) by mail.gmx.net (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MKbkM-1vm1z22eFQ-00QQ1r; Thu, 04
- Dec 2025 08:27:45 +0100
-Date: Thu, 04 Dec 2025 16:27:26 +0900 (JST)
-Message-Id: <20251204.162726.629872510136678985.teika@gmx.com>
-To: helgaas@kernel.org
-Cc: linux-pci@vger.kernel.org, aros@gmx.com, superm1@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Subject: Re: [bugzilla-daemon@kernel.org: [Bug 220729] dmesg flooded with
- "PME: Spurious native interrupt". AMD, related to audio.]
-From: Teika Kazura <teika@gmx.com>
-In-Reply-To: <20251104200516.GA1866276@bhelgaas>
-References: <20251104200516.GA1866276@bhelgaas>
+	s=arc-20240116; t=1764833955; c=relaxed/simple;
+	bh=ZBbFP2u19PYaompzZPpRS3munLLvOSa0dafo71gqR4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NEreAi9mV0iFcxdzg4Rcui4lFNywqwZUKKpn022EarDJ1An29+wrq1a+jAx4kjchpOkbIGayIt3iWTtxT8b1DLPRnMtdpjt+1gQgCOX5i0hAyJFp3oxMPHGedxm4tb7vhN3p0x8UjrMOy7lSLVjc8LJUJG4UWhCBKbGdgMHLdjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PtQg8yrU; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id BE43F4E41A23
+	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 07:39:03 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 830D060731;
+	Thu,  4 Dec 2025 07:39:03 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B9D2611921EB0;
+	Thu,  4 Dec 2025 08:38:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1764833941; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=k7CE06tyTx4yxeiWtpPuf1dnd1n3hRXeTtqv9aVcNzw=;
+	b=PtQg8yrUoGAKG/Uii8S7XQtskQAWYlZadXyZzx8jkUIfm66LC9Z6ad4cKNE4THRD7VoZSf
+	VpOBLrkjXDpI5hwZCvijtYB2Vy5ZG58J80S2F53J9dwWk7dpTNG30pcf/51U93DGiwEgRT
+	fQpgrXdq5ncqdGM17SDz8p09cF/kH78uKk1HPXF2geoo/Iq2hdicWw0z1OcT8qIlGWX4io
+	9e/70u+5e6wZE/l9cV4otQ1JJW0py/fWZuwlCOsKVDmZydp44Fq5GitqLtJS5kFRhZ2OUd
+	f1Zx5ECtIQ4aGzbOVCxCdOdmcvN4wJ599iZIa+qSHKGSWZgKnUBDj/ecIp/4rQ==
+Date: Thu, 4 Dec 2025 08:38:39 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Kalle Niemi <kaleposti@gmail.com>, Rob Herring <robh@kernel.org>, Matti
+ Vaittinen <mazziesaccount@gmail.com>, Geert Uytterhoeven
+ <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
+ Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
+ Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, Bjorn
+ Helgaas <bhelgaas@google.com>, Charles Keepax
+ <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
+ <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Mark Brown <broonie@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, Davidlohr
+ Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+ <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
+ Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
+ overlays"
+Message-ID: <20251204083839.4fb8a4b1@bootlin.com>
+In-Reply-To: <dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+	<20251015071420.1173068-2-herve.codina@bootlin.com>
+	<f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
+	<CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
+	<5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
+	<CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+	<072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
+	<CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+	<55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
+	<20251202102619.5cd971cc@bootlin.com>
+	<088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com>
+	<20251202175836.747593c0@bootlin.com>
+	<dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:7GqBwkbcW3c/BVKGEx0O1dSnPAY/qWu5XiQ1FpOwcbTZtvHQeC9
- F3Pe6pmvG2dUv/gU7tn9XLBGnLDc/6SKn0X2LRiQ2HanRj7ATS+TvLVzziQXLk01/5vC+Ji
- AOpTOjiMAhkJKHSLj/J24fk2hkaVSSTNw/0USgaQLdtvuZ+FdgZR08mzVYCD1qaLX5JFPhW
- ji4S5YIsUvHJpri/xIvlA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:0jMkwxuWQGw=;d8SRUk2BuaGU4Snm1wu0swW2scb
- A9CyKArzbudiuWYTe7fiAzgXG7JQ0mEPg/RVXWDfbuXzc/YjvXE8m73XOorILys0SE1p8iHkS
- +smhwyqe7ewgE3VZ7xJmD/YRESjQ0QwV95S8Tl4e8KrtJak7aM4egB3ToDG+IViSOn6/FsT1y
- w57p/FKySDsJtxIlaZzdSohE4H5lMxdU9sZr+68tbm5RTpnEpRpxYoN6UIB7ZDqwPu+bhsty6
- +VeGLyDVHcpeuqIns0vm9SZe2ao1d8VJn6VPIsgAC7VHVhDetKgxGUJFJ8jXxyXsLNQoHivFC
- OzBavZEcm3Jp05ZTBhfMuUPHxAiEmrO8FSzh7A878YT8kF/tpwNxrbvD9g2en+EA8W3LH2wVP
- A4SvGlIZBgfTMwAhD9EzQseeo+hN4woLagBC2HqeenIIdyE5Mrmqi0r2+hvPBC2dq2FulxXEs
- MEJ33rcg+6H8xp1LtZBFRcKiwvuHmUYpIJpiPBrRRzcWB9pCSCBtYliamodQW7yGJvUQ7DU6B
- 6ZjOQp7Nv6P5iy/3BcFWaBPtM8pFtX2BRf48vDA0Hz9PiAx0I5cHxioITNUneQLGFHKGRfIJ4
- WscihS9UCQccxyYOwAp4aK/RiAtilJxYTcoc0+JdmjbKasSKg6nSO2t2emKxVUYdK5Yib278s
- e9AJ1iV1YSxlcJwuh0jIdif5QHKBLEf3XGzyiKWLP0vjVAHJN4bk1WZ4N17eZ6QPbNwsZHQrX
- gfEotpoANZZE+sXZlsy1i6TVZUL00ASddyteS98kG6YcaCjAOAsqi5cNN4F+nYJxopf/Eyi6e
- LNpEiC728anH+O8L2jHBx2Y+u5xMhBkJxj/6GTC+OEg/1VePGhmapWuyupfPd8s03zJJEl5sR
- 9JowJhJ7fy5/eKvMdq9XmXCeXaJUdXnAaJgkPyWfxKH0lhvhgopiKBppveqqr2qnnMZu+OE3Z
- BdHpYjcYgU6UXez0f66oGsMTJkIlASKFruByrubtaQskOelavxrDU2gbyvaegWpt63TML+6a5
- jyZbkd6Ol5Q5/HfXZ619Wz9JeXZfKGcvdWRk4C85fAO46lEkvPmm8F8QAlha81zjwsCKDiAPh
- 61LhZ5z40Ppwko96nwH1fsfrba2YwCITUeQS17ywZQg5YDEYmp1nkjF1dWuAy8qOYRsSoePLL
- B7HjDKepm8I4CHwy5qB/0Zq68fzQt3Wws3QOL3CFpE8M4zUMBUl5Wh+q/xR3+VyyqQdYF8ceI
- SUmmGZXwYIsEe2W/rapzcg26RLKdukaY6B8t1DlDj/u09aliIf2tkrPLOe9jNDJIgC0A8RgVf
- +58ddqeh6LIJoZ4cVck0jE/onUB7oyIEy3pwfJwTwQvi04df5f9aB4ioEztGgYqAnzvE8Kksg
- 7Ryra6A4TXmT446IGViCQBwobThTyPKwtOwZp9NIScfp0qRd1BZk6X8lrEBKzOcFJIiQcFOkg
- DybXO4Ijbzq0C2pHMjj9THE1FCN5slNEX2Uwr6fLcLBrSi+QVrOfF2ZdfFr6Zx4aNawy8iIqR
- Mlciqfh+QBJOjSIHtrvAl+kXTjkSSv4uFrOoH0relU5vuT7Je9ClYlhWDUnjSMW9y/inItafB
- LJsxNIQETFqeOUBOYOHFLcgHjEKQIuwHdKvrgDEaGBYjFyvjhGe8aIcZ0Rjh+LWeRS68vMhGr
- ASsghkNDfASW4hCJipq/3/1VXV31Ish5ASguBohP2ZSgdepHlMbdOrDTa0yUW70Bxahgih/Vx
- dOn2TJnKBPH9eX8Drre5JlJMS5odUtYyFpc8JTpfOaSD1UkspZS+e9SVtVlrkh9+28kdOm7YP
- NM4oGYz5qZJH3M0r/GBXcjWwJvZ/6LMTTec5RrIjwJlWO+w3ZHsRME4JZ26CyYH5t+dqzQs58
- OlojMnKAWr6yy/7AkjeHsmiitU0SkjndROHhw/ZuoZmdKLI+8mm0OTEBVdJSsMRtQymSHB8dd
- iiQBJLvdnK8ugRP7Rk9XM//CpCK0WT/zlHmjvkZQFuIKlGdA9cwct7rBuUqelXIZ8/k+oNxkx
- Sgyva7gaxzSnmCfq5DBk2ucOW5fV/5Oa3I+WL59y1UuIB9ze8upTWwB50cysswg2eTNepDxML
- SEWFcG2hLR3/I+pXxlEUtkAr+3rPqy3c70qcDRkPg9ktvuMofa5AB78EyLtuV7KGGUBWOxLFE
- A8fQgUasjBMC8jr/0y1Dk1uvEtLjHc9vWt1ZRJQyS930fNHImJFvBh+rd/UaRLHAE6lh5jfWn
- 7fOVkxJhx/GKYqWjOaZ3ZTXiLbIQ3tTHy28QueUVf+vULM2Z5ac2ozmSD0bJ4Gt8kq7FvNLJt
- DdbS/8C3OeggiI/t+iiSt2zCAVUIj5DckMAcG1Kxs25LDJEMT//SpROH2Ju9CwQumeh0f2j/U
- tgGurowjpv7O3lbfDJZRBcDix1HUXax2xKOPytRoDawjHSpvMtHCh6+Thj7eqtAJUMtQgtq5z
- nCbETVwSUXY6eicmPXi1+E7plcfZi2/8j1FCRHkNvL14jlx+y8mm8IX8n4omcnhSDcfOkF7gM
- 9QUa2ZxXZQnommJLcDelhIffiEKX5C0FQKVtt6Tu+x4SBkSpMDvA2H9dpurunljFJWtIFIXyu
- 8tVKf5KGSajw88e3XpSxXywQ1Rvj4IsRzoqv9wW1SCGdZxzoW5G4QnIZ2zsYiVSfHP8TTTbTt
- Cn9Wg057inZflgJt/QTidPwC4dvGq0shk3HqlayjCc2e6v7KpOnH2s1zafVCGNDA1LnbdDopS
- SfsVgKqTsapBh5mZoxx1dB7vg/edmcYeDJcUFrRx1vYfaktTPNQMiEJ03wS0eom2Rx5RGCAXG
- jS9ht27DIlRNOYGoNTJ9Gn7ERth0he6kq+Wd/DLhnnPMavQiTKZ1CUIpYFjKJrVV11PXFsNEP
- 7wiaq5d78hwxw7mp0pDdgaM26r3piiS8a8jEI/hftIxuxl83XLNctC5UGRwV288CPNQfq5G8U
- Z08N/lgfg6L0TxHuWsncMbpfZeBjPeQ1PqHKEdfhyaNHx0kDsA7ts8+ADBd+YnZkEpDovuh/7
- Xc4nWwBH1/lJ8dJ7MjvuC2ppp/QCrC7NjkwxyqzSOjiSjfXF+gPLIFJd8auuGzdCym6PpgG3n
- Ui1MS5yxbCcYhWU7jtMRMNCi8Zsz3KoKHHHF/TQVzBuV9OnSlMf6gC0Vlb00zw03a9wn5ZwnW
- LbXbNyjbSpC+Cewqgefd6uUdY4tv3TG304+2baFaNUQtzxP7og1HruNnk/Ix933UcdSX4E8UX
- 7w46PHmmQEd0Gx1416NRaSxVdTEZzWpMKFIBduRFV74RHEOJBOXyI0ecRSf0/xvt4/d9i3Tgj
- nktTR0nAoWCPVePUgOb5ZVom6+bs3xJulZ7wYk0qjL5cq1IYUtYcKL5H3ltEEAlb4HPwS+bbj
- 27d0qMY1zqwEeAVKLUA+uZdTYQE1VLzWaZZmCaStTYKlH2qgimujdDKSKkl3kWKcM6nzObQzB
- mUGzTwD37UEW/xUod5p1/tg5FeaEzr7c5V8SvkleSVWUGHT6bSkhy5hVH3pPWcknRnvIhrCJa
- bL0LJj9KF2adFfA02pklvXG+j7tA+Tey0v5gHQgEjS7gjocVxLPCVaCEALul3bdxdeXmxo3ML
- Zz1wnlLAWVDCww7OIXJHrhgbFZsCe8bv0USOmFdxekbffKFmKNlgCetJARGFp5Rw6xDie4zUe
- SE2kuoL5i4iZMlJTlal0oSRvi51lEoDvUgvlwieSb9rqrcvGTSmkUQ3g4yKL65gr7iZGzkoyW
- +x7DeKIdTEOuP5usz60jqpNZ344DUJzgltR/3e4VIHXAqxHcr3ozxM9YulR9Ko2OCrhM80rq7
- N4Xk/knMbwjXF7jVc277Kzp00sjyLIiY3USpTZGuSBUEvVqRqTKVemFegY76uUcWEN9qnHhux
- tjr4hjsLYRyWDQi9bybCAL+80VriFJMg4N9pYqUaTqHZUobAy0/fymd+8MLCH1g/9+bM7Hvo6
- tadSWUMEUEeJn4zuCIjuR9eR58YLy1V1j6yT4X3pjeusK2U1vNILuwCxaYM9OsIqJJVztxtpv
- x8d29Us3dU0gk7BlsPxByTfe5L8i9J0PQTu8+hawFB6LvF9XpmlbUESBvbnhznNQy0t4NBcP3
- CVJ66lTxvX9ARWPym9lt7f7MGTk0kqd8tV2TwxY56P11LBmRERD7aU+lH+QVCMRRPkIdvuz9d
- cZNBUB3P6O5hD/yXcKIdWGDENWwTwjRWj0Y03TuciEoPZYPrM/C5ZHImNF76RfV833is0ihys
- zux2ai24J5dxYt16vIUS4kkxh6AeI+wQYTAz6FX+RdnxdUdqFisYzgm1vNMezsPfUWi6A7f+q
- 8AUqwAs8QOz8k6EQTjfnpdNvZ4G5iPKzC5mZW19I5Xe+TqCLtDxbHzrK0AOquC/M1Z54aF6ky
- Zkthr0OY6Ytk+OuGmW66EBgexd773afGgUz8lzUxdLhAVOc3qfX+VySwskPxe/PxGJfX0YB8O
- 8KZOMpHQNA1UypPmqI52Yg237ZnLFhziKYnCRTkwFFTidP9Zu0+tQ1LzX/mG5KFfu7XAZRxRo
- nZEOw4ywFn/HSkf3Kp7CtWHLve2Uou6vKddKt6Q7cqi8SA+XCwFAx+l4QGdyeSBO3nMZOdoqV
- HtaQj3PwDU1LRp8kpo28k/s1IqUa9vNfL+ZUJo5hANDDri14ECC6dnwJ/dJZHBap1NJdRlNQK
- GCeHQ8WcU54UGiy6NX+GpcmBj0dBcHVihSX++FXWm2b8j4AFIj9UdTyq2fMmqQUr/Xe2g/WLi
- 7bhOGRCnHY4elFAJO+RNZ57tXTZPkuItvBa5Z3CJmmKHzYGrAR7ktalrKTVYacJ20KcmT/93e
- sQuTtuABB55PDenF3UqM8Bw1H3H9bn2NSl/Tao0rkV2OMsB+Szpt0U2juUqrWc4kE8AcLBvLa
- Wf3lx8w/8u7bxC45faTEisbhXKSfg2eDc3atOADnuRBnyRLgdlpBzGP/Ki16soSCxTA7PiEWh
- nNtlMrBVXA+wXz6abbnQw0/esm/yu/o3apvm/h97FXQGzWjymYktjKmNpgcoOHwAtT54ikHE7
- m0Rm5fYRqNI+h9WVi5Qb9lFk81YIVSnyzmJA5ETsJotEWaq/BCaDJ/6aQ2deauGlZwpLqJ6ja
- TS5Mb/VG3aQ0vTQgyI/dotqihjbeZEBF9x5SOeoSujPqC7MQZPonTFznwlFJwSdiG+oNyuOCp
- Gdsa14p10SZZUWDrY0G46tbNIR/do+MXzLhtz8dQdaF1zplPO9g==
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: [bugzilla-daemon@kernel.org: [Bug 220729] dmesg flooded with "PME: Spurious native interrupt". AMD, related to audio.]
-Date: Tue, 4 Nov 2025 14:05:16 -0600
+Hi Kalle,
 
-> It looks like PME and bwctrl share the interrupt; Teika, if it's easy
-> for you, you might see if this is reproducible without bwctrl.
-> There's no direct config option for it, but I think you could remove
-> bwctrl.o from drivers/pci/pcie/Makefile.
+On Wed, 3 Dec 2025 12:11:45 +0200
+Kalle Niemi <kaleposti@gmail.com> wrote:
 
-Unfortunately, compilation fails, like this:
-------------------------------------------------------------------------
-ld: vmlinux.o: in function `pcie_retrain_link':
-/usr/src/linux-6.17.9-gentoo/drivers/pci/pci.c:4746:(.text+0x9fdfb1): undefined reference to `pcie_reset_lbms'
-ld: vmlinux.o: in function `pcie_failed_link_retrain':
-/usr/src/linux-6.17.9-gentoo/drivers/pci/quirks.c:135:(.text+0xa27105): undefined reference to `pcie_set_target_speed'
 ...
--------------------------------------------------------------------------
-Ok, let us give up this route. This bug is not fatal. Thanks a lot for your reply.
+> 
+> I tried this patch on next-20251127 by manually adding the added lines 
+> to /drivers/of/overlay.c, and it did not solve the issue. I will 
+> continue to test this.
+> 
+
+Did you observe same traces reported by Geert?
+
+To move forward, I think I will need help.
+
+Indeed, Kalle, Geert, I don't have your hardware, your related overlay or
+a similar one that could be used for test and also I don't have your out of
+tree code used to handle this overlay.
+
+I know overlays and fw_devlink have issues. Links created by fw_devlink
+when an overlay is applied were not correct on my side.
+
+Can you check your <supplier>--<consumer> links with 'ls /sys/class/devlinks'
+
+On my side, without my patches some links were not correct.
+They linked to the parent of the supplier instead of the supplier itself.
+The consequence is a kernel crash, use after free, refcounting failure, ...
+when the supplier device is removed.
+
+Indeed, with wrong links consumers were not removed before suppliers they
+used.
+
+Looking at Geert traces:
+--- 8< ---
+rcar_sound ec500000.sound: Failed to create device link (0x180) with
+supplier soc for /soc/sound@ec500000/rcar_sound,src/src-0
+rcar_sound ec500000.sound: Failed to create device link (0x180) with
+supplier soc for /soc/sound@ec500000/rcar_sound,src/src-1
+[...]
+--- 8< ---
+
+Even if it is not correct, why the soc device cannot be a provider?
+I don't have the answer to this question yet.
+
+Without having the exact tree structure of the base device-tree, the overlay
+and the way it is applied, and so without been able to reproduce the issue
+on my side, investigating the issue is going to be difficult.
+
+I hope to find some help to move forward and fix the issue.
+
+Saravana's email (Saravana Kannan <saravanak@google.com>) seems incorrect.
+Got emails delivery failure with this email address.
 
 Best regards,
-Teika
+Hervé
 
