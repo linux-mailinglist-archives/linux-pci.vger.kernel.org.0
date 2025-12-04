@@ -1,173 +1,251 @@
-Return-Path: <linux-pci+bounces-42626-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42627-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1C7FCA3AF0
-	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 13:56:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E18B9CA3BCE
+	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 14:13:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 424B93007C55
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 12:52:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 752F630DE355
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 13:09:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D2F432AAA5;
-	Thu,  4 Dec 2025 12:52:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDBE5335089;
+	Thu,  4 Dec 2025 13:09:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HsH2H5X0";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="JmtRnAJf"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cGeMRVWi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC38A2DEA87
-	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 12:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFA2342534;
+	Thu,  4 Dec 2025 13:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764852725; cv=none; b=psOmzq9w6rMBo3S35rFHVl4kut/fKP3pED+9QxUzQYNcG2xB/Jlea3KFSkqHnzytlmdTgNtRNr77CT71X0abIqIfc/gvZuVwMJ/usrmNs4IfEKvXnMUMiMIAwq5Z4nsAEwvv71hqcCua95yarVF8GpaaApjpdpPDnjII1htGuxs=
+	t=1764853749; cv=none; b=VS/p8QxFB4cPwab4oNvKdzRkMCUIBAkT89YvdRQYeLpNlj9DyFeQFeRQtbsF6rZyGGuKAjaqLQdx0eKmC9sMkl7HI4cpkSuGhp5qdfFcvhJDjSP+NT7441XMzxH2mwBrFnIZ39nCA+wPm0N8+TwmxQIgY6MiJLDSN3uW0FcQhlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764852725; c=relaxed/simple;
-	bh=fR/wz95v+ab2M/jnCBU6UtLaH1ljn/M4mc9nbjw8hoI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A45UVX43IT1fBHMvBbXEfZKSFHaxQP3XyTsoQ4GhFUicjqAxw2kUXfCePYsXop+kYUepAnFuU+GjW83JcJxyP5ypUQx9JIXGz26fVUxJC8AASC4jzypA+YqPXImZRUVi7jNKLwlrf1l9YYYC4/Ge4S49Z5zmwU7sKE7NhQqrHy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HsH2H5X0; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=JmtRnAJf; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5B4AEuXW1159694
-	for <linux-pci@vger.kernel.org>; Thu, 4 Dec 2025 12:52:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	kj9xyiYEYQQhKupjG/NGhtwvNM64eXefSge44gZ7fUY=; b=HsH2H5X008CupkBy
-	uT34Kp4knCJnpvl8H1VJgRKqWk58vg8O/d2yvvoYbZ9ADT+8mVxTnu2Dxa1RYyqW
-	rT5UPIj3IDFb9BZ36JWZ0dKbbSE0YE259DNtFNhAbDwa9IYgOCFZch8RrLszWR0C
-	GWSUKHr9uNPgwykA6RJF+VQbncbLvroy9ZqalD5iPKek6CLmJtFmKmFyB7X0/ZTI
-	esb58LzoLo3hjzidBlPAlSu8Bb8JNMUM7ZLJiN5IoTUhDUFjaorSrpog1FaFK/xj
-	z07/++mhpgye659F5rXt+3d2AVgt7s+tY9ubIHtQVMAG3AEcGOgGwOsqbETkoJjR
-	obAUpA==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4atu3h2tdb-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Thu, 04 Dec 2025 12:52:02 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4ed767bf637so649491cf.1
-        for <linux-pci@vger.kernel.org>; Thu, 04 Dec 2025 04:52:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1764852722; x=1765457522; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kj9xyiYEYQQhKupjG/NGhtwvNM64eXefSge44gZ7fUY=;
-        b=JmtRnAJfsUb2iH2isl+xWs06G8Y8UsFPPc6sblgC5jWMVdm2J56X3paX34PnpsAdDF
-         SVnZFe4T0kXK9uEnUzdAlD3e1fvImz8lNVgaVsa2KcAQu+EEnsYE2h2jvqF7LoUoVy/f
-         OEUJAuhEhEPR3RC9jL3vvMLs6y836v+WTA5oCcoM1QBURRuNv7c/ZBFQ8xSVBJhkpWoV
-         pjgObQ6pl5+A8PGgxvca69aL5PREI9GnQ++gRgUb+9myJs9nYxF1YvBVbE3ICtX6mdZO
-         /hLttKvH/5bcYMN4BlDFwwOsptwMKYFlT2PD4606/R4JdkUat4uyFh5wUva1Q30E1MOE
-         gy5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764852722; x=1765457522;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kj9xyiYEYQQhKupjG/NGhtwvNM64eXefSge44gZ7fUY=;
-        b=wcR16MMS+iLRF0ppY3cUj04hCDycjkVTcEGdTJPYMzjH6K+M0pCabJB/Zz7cuP6jqE
-         z3b2zG14CXthCe4UAN4nMv8fYJAnJj4tySemb5pocqz/teksMrKsr1cXN/hOwjIhwBcd
-         s435neHLq+kRtQP9a9av+zQgyxPr46AEcLggvNyS1t8BlvO8dVDgY4vhfjLeM1ZDmbp9
-         zEAWhOYV5AC9TMNTBgv5vyLa+kAx/HCvcjJV7uvCFJLa8bVxJ7Gn5N1no0MnsknEnLSc
-         cxRo4McuU8KEws9drcrGNOQAyZieUXZ0gk5LT12V1n3aNSTdxkE0QQEDyHRmB4Qf2M4R
-         45qw==
-X-Forwarded-Encrypted: i=1; AJvYcCWUoLbtfedzSV6JIa3QbN4j+RQcsXRu8oiA8L3SitHdWSF8eWfsu248/FKu9DzB9xSsHZgm62jmlsY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWB3FxSXW55ETi/CkM422jsv71LKE/iZR50qQCFSDPVDwDMHRH
-	MD0hZwuaOpC7CojhDBznkHAEpsXZ2m5qqvJEXw/hzgvCWByfoLgyTXMIHD0pHsu3xe5tPmVQcWT
-	R9pHGn+N+KkuHjZ68Z0+Ta7g++GnUZ8IaxVsMYjZfY4qxIWlX/kKnA5BqFtfIXPI=
-X-Gm-Gg: ASbGnctufqdXrPfFb6JHNspiAPBYvAqLGu8Z7P+rayQG9zjPKnGX2SQOdlHAXbLAu/R
-	J1BSjh54ABcJhhrRNcnAXEN7i1AjPWCn4O5xyc+HRFt6r9LPt9mq0zP2Bmvb4engyspVIdixcQn
-	FGsx9RlbIDoYNoS9c94j2bh1uctfU4JIua74BKBQVYkkkzmCvvbM3zBdWR6sph5T9ZQB9v9KXqZ
-	jWsmGEXI2ojzK7fZEiSg7xXA2mTyYCwatzJL69y1X9Q4vUGTCqUGkDZyIC/HzyHuJi/9LztOmeT
-	foznkzO8CpvwzDZlsAtr81N+tuj7XGpwhfBvbFuxRrawhUK57+jYQzcM/98SSk8NMh4LZ+L62pp
-	+RE5wq7Tyt4Has15Gfv8iJYCB4u10K+hQNIR9kMp3ZuDg5oAGGKgJkfaf+i76Mf3dfA==
-X-Received: by 2002:a05:622a:14d4:b0:4ed:b7f0:c76e with SMTP id d75a77b69052e-4f01b39e3f2mr52687841cf.8.1764852721960;
-        Thu, 04 Dec 2025 04:52:01 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE0bLdgdxO5Xx7VpBTNWQVdPb4PGrfj4fxevUAaWvvwerQ9JsZj8ppP5fqoZwFHpJwan5XAcA==
-X-Received: by 2002:a05:622a:14d4:b0:4ed:b7f0:c76e with SMTP id d75a77b69052e-4f01b39e3f2mr52687521cf.8.1764852721485;
-        Thu, 04 Dec 2025 04:52:01 -0800 (PST)
-Received: from [192.168.119.72] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b79f44d3db6sm127856366b.29.2025.12.04.04.51.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Dec 2025 04:52:00 -0800 (PST)
-Message-ID: <6c45abe8-6c1c-4cf1-b538-abf65edefba5@oss.qualcomm.com>
-Date: Thu, 4 Dec 2025 13:51:59 +0100
+	s=arc-20240116; t=1764853749; c=relaxed/simple;
+	bh=/vhJp4Era/lCT7cwvDoW8hENCXitZDB/pJNpWJ/xu5Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lfDyW1GUJkkEcwmfVMEWSqUEOEDTK3Rdbbuf22ftTOJgeZD+Zje9IlBL2oDwHcPcY84et4nn7RVf0rXcMd+1RH+6selbbTzQf/LRMjnEiouRsiy/PvPQm+eQf7FZAvGk0aQGpb+kq7KHoPSl99XCdfipm0gl4OrPBxNj51M+rr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cGeMRVWi; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B40qlD4021132;
+	Thu, 4 Dec 2025 13:09:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=/vhJp4
+	Era/lCT7cwvDoW8hENCXitZDB/pJNpWJ/xu5Y=; b=cGeMRVWiFSgAVYnEhb23py
+	ijN3mFS5mvG93fcyz11xk/0tzRTkv2ZUw1hvcRwQQZLc2DlfkPgVefaiZPkK2Wz0
+	r/afe35gigu10BkOlOrcurFIc1UIGGcM33RegdRPDyH+7iPbvaBxPdkduPKTzTtk
+	viCL2LXJZUGeKa9NCBPHXvdjICxAKszlLJoXYpPB1t79hRZ8wWzFTwMthNtiG2P2
+	c9FZap5Lg3Z/+ORqmORHD5WvQQrmSKZpbZLK3jXLbJtP34teo+NIpwgDZTx6kpsc
+	DZk4MEUyC8apzlvOFIvuQQOpQkbXqN/rvsTPzdQ/ZEqGPWEnA/eWpJxCDCgYWVDg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqq8uyv10-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Dec 2025 13:09:06 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5B4D96FM014368;
+	Thu, 4 Dec 2025 13:09:06 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqq8uyv0v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Dec 2025 13:09:06 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B4Bs5j5010292;
+	Thu, 4 Dec 2025 13:09:05 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4arcnkfsfw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Dec 2025 13:09:05 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B4D94oF28705390
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 4 Dec 2025 13:09:04 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7173F5805D;
+	Thu,  4 Dec 2025 13:09:04 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EF01258055;
+	Thu,  4 Dec 2025 13:09:01 +0000 (GMT)
+Received: from [9.111.38.114] (unknown [9.111.38.114])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  4 Dec 2025 13:09:01 +0000 (GMT)
+Message-ID: <f49c568303ec861a721969251da9b686cc051303.camel@linux.ibm.com>
+Subject: Re: [PATCH v3] PCI: s390: Expose the UID as an arch specific PCI
+ slot attribute
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Gerd Bayer <gbayer@linux.ibm.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Lukas Wunner <lukas@wunner.de>
+Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Christian Borntraeger	
+ <borntraeger@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Heiko
+ Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander
+ Gordeev	 <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Julian Ruess	 <julianr@linux.ibm.com>,
+        Peter Oberparleiter
+ <oberpar@linux.ibm.com>,
+        Ramesh Errabolu <ramesh@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Date: Thu, 04 Dec 2025 14:09:01 +0100
+In-Reply-To: <c66fe13cf2dbe9def72cbd5ae703538dcb770d7b.camel@linux.ibm.com>
+References: <20251015-uid_slot-v3-1-44389895c1bb@linux.ibm.com>
+	 <c66fe13cf2dbe9def72cbd5ae703538dcb770d7b.camel@linux.ibm.com>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: Add quirk to disable ASPM L1 for Sandisk SN740
- NVMe SSDs
-To: Val Packett <val@packett.cool>, Manivannan Sadhasivam <mani@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexey Bogoslavsky <Alexey.Bogoslavsky@sandisk.com>,
-        Jeffrey Lien <Jeff.Lien@sandisk.com>,
-        Avinash M N <Avinash.M.N@sandisk.com>
-References: <20251120161253.189580-1-mani@kernel.org>
- <20251124235307.GA2725632@bhelgaas>
- <tiadpmogdxom5h2bquct2ch6hoc6ozh6bgnzdmnj3mia22vtue@c5yjxbx65lsm>
- <9a9280e7-d29a-475a-83fa-671acfab9d92@packett.cool>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <9a9280e7-d29a-475a-83fa-671acfab9d92@packett.cool>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA0MDEwNSBTYWx0ZWRfX2OXxfd2eKrYy
- TnF93L2HEr6gtppag2zdKGkzERwzidVNm+8/rqpzNizoY5BM9OViS5QRfVUeASCMPqn6dQUmFJ1
- 9+8lbXfAZzxYtNDHwhTPcuHAZ4YcyfOcNhK7pb9aa0T/D+y9p/VBUZiXC5G4mVOAo8emqWkJVh5
- bjE57r0ZNe9oCZDnJPP1phqDtOWVk0E14ZE/8yClq+uL37kS7d3fcJ/dKXY+UIKCIsf2/GggS4H
- jeHVCKeUqqypXPVTir0o6hMSdaJ8qzzybcDXYUlQldfxJuATG61QebCoqUON6LmZUj5PAfSjRgj
- C73/cWC+hbMM5GC8I1sTEdKMMbvO7sne0H/hHaESEEIxECWs+ussOQMgHDUw51qucnhgiXhn5yZ
- mnVt0M3i4kiAn97zlNAgrk4Bqd6p+A==
-X-Proofpoint-GUID: eihcpa3LvBVyah_f4X7JaNumTYl5_6HS
-X-Authority-Analysis: v=2.4 cv=KJxXzVFo c=1 sm=1 tr=0 ts=693183f3 cx=c_pps
- a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=gvLC6PIGuGH4zeNmEhwA:9 a=QEXdDO2ut3YA:10
- a=a_PwQJl-kcHnX1M80qC6:22
-X-Proofpoint-ORIG-GUID: eihcpa3LvBVyah_f4X7JaNumTYl5_6HS
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: dLYNHFuJPZXyohLucuu6DGpz4VqXPQss
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI5MDAwOCBTYWx0ZWRfX+lwHBp/btG+m
+ FeAbPsngqQx/K5HC52q1sO0r1osqeLnIgeEXv8qUlTo5mF05MoZ1IrAdYSsYdwqGY2ArvRJofwU
+ Wl2qe/GbCu4CTJz7QOox48PTKZSbj3RZLyAf72VXx9386CcgfrOcWqaRZ9V097FeOuGcY/NXwPp
+ NrUc/nJBA2/OpZSL7QZmTbAl7LSnn7iLYJSc/RQuJ5aCMSs+ULaiXNnfPeSmHhDUx29Lhz1CPNo
+ P9hHPZrYEJPY+EsEqZAnyS0AZ5iSqSuckFFHeXsVkYFNdXDP2sphmeGQv/BKw160Amla/yZZlzP
+ lETBBW4oICL/dRCqfMlf0n+HJaD3UrqLP95noz8hZt/IzMK5c/e9+w+Nf0Qr0RDrfWIQ1ZQOp3T
+ OaO9t+AqKJyCcX8OAjb5HDBw3uu3EA==
+X-Authority-Analysis: v=2.4 cv=Scz6t/Ru c=1 sm=1 tr=0 ts=693187f2 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VnNF1IyMAAAA:8 a=loEuMJwbk0X0rLMOwskA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: BnPuDKurt7NUTjmKWVxx4Lwvi3YXCcFt
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-12-04_03,2025-12-03_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 adultscore=0 impostorscore=0 phishscore=0 priorityscore=1501
- suspectscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0
+ clxscore=1015 spamscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512040105
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511290008
 
-On 12/1/25 7:48 AM, Val Packett wrote:
-> 
-> On 11/25/25 2:21 AM, Manivannan Sadhasivam wrote:
->> [..]
->> There are a couple of points that made me convince myself:
->>
->> * Other X1E laptops are working fine with ASPM L1.
->> * This laptop has WCN785x WiFi/BT combo card connected to the other controller
->> instance and L1 is working fine for it.
->> * There is no known issue with ASPM L1 in X1E chipsets.
->>
->> Because of these, I was so certain that the NVMe is the fault here.
-> 
-> There is *a* known issue with ASPM L1 on X1E, reported by maaaany users on #aarch64-laptops, that we discussed in another thread..
-> 
-> But it is a full system freeze, **not** a correctable AER message, and it definitely happens with a bunch of various SSDs on various laptops. I personally have had it happen both with the SN740 and an SK Hynix drive, on a Latitude 7455. It's an SSD-only issue (disabling ASPM just for the drive, but keeping it on for the WiFi, was enough to get to month-long uptime) but not specific to any SSD model.
+On Thu, 2025-12-04 at 13:45 +0100, Gerd Bayer wrote:
+> On Wed, 2025-10-15 at 15:42 +0200, Niklas Schnelle wrote:
+> > On s390, an individual PCI function can generally be identified by two
+> > identifiers, the FID and the UID. Which identifier is used depends on
+> > the scope and the platform configuration.
+> >=20
+> > The first identifier, the FID, is always available and identifies a PCI
+> > device uniquely within a machine. The FID may be virtualized by
+> > hypervisors, but on the LPAR level, the machine scope makes it
+> > impossible to create the same configuration based on FIDs on two
+> > different LPARs of the same machine, and difficult to reuse across
+> > machines.
+> >=20
+> > Such matching LPAR configurations are useful, though, allowing
+> > standardized setups and booting a Linux installation on different LPARs=
+.
+> > To this end the UID, or user-defined identifier, was introduced. While
+> > it is only guaranteed to be unique within an LPAR and only if indicated
+> > by firmware, it allows users to replicate PCI device setups.
+> >=20
+> > On s390, which uses a machine hypervisor, a per PCI function hotplug
+> > model is used. The shortcoming with the UID then is, that it is not
+> > visible to the user without first attaching the PCI function and
+> > accessing the "uid" device attribute. The FID, on the other hand, is
+> > used as the slot name and is thus known even with the PCI function in
+> > standby.
+> >=20
+> > Remedy this shortcoming by providing the UID as an attribute on the slo=
+t
+> > allowing the user to identify a PCI function based on the UID without
+> > having to first attach it. Do this via a macro mechanism analogous to
+> > what was introduced by commit 265baca69a07 ("s390/pci: Stop usurping
+> > pdev->dev.groups") for the PCI device attributes.
+>=20
+> Hi Niklas,
+>=20
+> I like this addition a lot. Also, Lukas' method to add arch-specific
+> attributes to sysfs. Is there a reason why you didn't apply that
+> mechanism 1-to-1?
 
-Are the steps to reproduce roughly
+I considered that and actually had basically the same as your diff in
+an intermediate version. To me it looked cleaner with the #ifdef in the
+attribute_group array initialization as I feel that it is more obvious
+if the macroed elements are used. This may be because my editor grays
+out the code between unused #ifdef or just because "it's in one place"
+either way just a matter of taste. Also the comma gave me checkpatch
+complaints.
 
-* boot without disabling ASPM
-* wait
-* system reboots on its own (or just freezes?)
+>=20
+> >=20
+> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> > ---
+> > Note: I considered adding the UID as a generic "index" via the hotplug
+> > slot driver but felt like there is probably too little commonality on
+> > format and usage patterns
+>=20
+> Sorry for my ignorance but how is the hotplug slot driver defining an
+> "index" or how is used?
+>=20
 
-?
-
-Konrad
+It's not. I meant that I considered that the UID could be turned into a
+generic "index" attribute in the same way that the UID is used as
+/sys/bus/pci/devices/<dev>/index on s390 while the same attribute is an
+SMBIOS index thing on x86 and others.
 
