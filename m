@@ -1,190 +1,185 @@
-Return-Path: <linux-pci+bounces-42616-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42617-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C487CA3004
-	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 10:31:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 41AD1CA317E
+	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 10:52:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7365A308A3AC
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 09:27:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CFC6330365AD
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 09:48:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A0B729D26C;
-	Thu,  4 Dec 2025 09:27:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD4522D060D;
+	Thu,  4 Dec 2025 09:48:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QyYszx8K"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="g+hjvLbk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFD21F1313;
-	Thu,  4 Dec 2025 09:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D995823EA8B;
+	Thu,  4 Dec 2025 09:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764840461; cv=none; b=N0pIPW22DuQRVNZcVaM91vbX/fSqSwKayRSNXLJbFYaSCtVs/A9TvN+WR1aueq+bOKTsCReDf34jjFSHC0L8xzQ9LlmO5gpnM1vjTneegC7//IO5OoByGmyp+kaMY0MRrZ3q47DyZemYoz0ppf6wT7itws0D1jDy5wJDZZeqPQY=
+	t=1764841716; cv=none; b=G/WzGi3sjI0oKToCjRYeP6VMtUod19kjKveNhVk26dQWQCDLIN+YE3PP4Zkz5NEGVMsvXRA82kaVaKV9wdMVqvhvFIciR4Nmu5CUsAmivP7Y3aFAkZgUMUtzOly0kNR70uEcY4A1ANvhcjca88bKdIFgWKGn6U7e8bYu7CBLDO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764840461; c=relaxed/simple;
-	bh=4R0/kdq1kDrH9rlTa5HdrwtuUwjK5q8Niro2tS5+znQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=BHuuIKpcAZwaPb9P/j/srHIyHU4KN/QeZ2N88gL4AJ7XKNcgfSYDr4qRjFaQULep3mU2jYZCCftAOV69zfHwDk5LPwEcqTlA8NDKvQLwrewMETZ/Xh3CZAgkJ1U5Oa706/vaTBa1GMh9lUDvd/Rokrc0gz6Ac5tVqYeoTOq6OIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QyYszx8K; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1764841716; c=relaxed/simple;
+	bh=iV9twZbY3TkcSLCeoHXIgzu/v5cRoaIRH64xXhx5gnM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Bf7ttytADC2nJ4Xvk4p6cA/mlYp+FiTmC1c6Ox+at5ImE6UJ+WtwtuVJ7cGRJEaIWxbAR9rln1obABVRZ+Lmv2AMiHlK0gy7rgQhCEP5T9bR4qifWp2y/COtxQEj/cG+Lb5Ydx9eQBmTl2knE7e146l3s7VG5Nct7XpKTYMHddM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=g+hjvLbk; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B3LWijQ021298;
-	Thu, 4 Dec 2025 09:27:38 GMT
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B43gdRW012481;
+	Thu, 4 Dec 2025 09:48:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=4R0/kd
-	q1kDrH9rlTa5HdrwtuUwjK5q8Niro2tS5+znQ=; b=QyYszx8KTiaD9h4BvwUnQ+
-	Z4FyOmD966/EslMl+SHtkZA0Zl2t6ZjcqDXF3fjAso0S8V5OzD2nB4muf0wOJtbM
-	dc3Ee7mtiixgD4zGiMhQI+Q5eq5ijLPd1RetEvIXtJt6ypkAL5LftEom3F8pDAMA
-	tPhhk4cj0LFOPNwR3VefkNVIEBMLeKMd0mQaShXe4kN22eAdLiZj5+9vGw0CouwG
-	N/9JKv9185CqXYinofmCoxn4Wyup8py/qme6iq+C3oH3w24gaWuVK6AiUWps7iIY
-	LJqs8g3AYHK+roqL6K68KOGOsTFcPP+5HzlOvBvSjuFFNuCjFeSGx3RWxKRuRXwA
+	:message-id:mime-version:references:subject:to; s=pp1; bh=XOM4sv
+	zLMvisUsoB3nUABMFovFe+7g2COBGqy+Qh/GA=; b=g+hjvLbkjdZaXSNlffG/vR
+	BsY63Va+T5bXVupLwVO0PHmahnmyI6dk7fURxmSguC2mKe5Hakmuo+ojTp1f+yYo
+	Kb4qerLbovogkOxsEG4KkvIgNiA3Y1hH2/y4e5pnazwcQECm0lL8Hk4BV6XZEd1R
+	ACWOq7WSB+P3rZDCIBs2ErQNOZsHdmie78zAcBEy3rzXwyFidSusl0ZoebSFImE7
+	uXh1VMQnBERZBgeu0YJgpco3DmYHQFgY00Vq/oCqstMZGtWD4yJW2hLCYZEy16MD
+	uimYOC/3DdrMLc2qmuqp5eWzHjkw1KJOOzmls7qngSpitgrRu+WhxaLyxiPBCsyw
 	==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqrh77jqe-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqrg5q0nn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Dec 2025 09:27:38 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5B49Q6Eq030902;
-	Thu, 4 Dec 2025 09:27:38 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqrh77jq9-1
+	Thu, 04 Dec 2025 09:48:22 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5B49XlEZ013734;
+	Thu, 4 Dec 2025 09:48:21 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqrg5q0nh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Dec 2025 09:27:37 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B49HVqV003853;
-	Thu, 4 Dec 2025 09:27:37 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ardcjxr22-1
+	Thu, 04 Dec 2025 09:48:21 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B47VCBj019133;
+	Thu, 4 Dec 2025 09:48:21 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4arbhy73kk-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Dec 2025 09:27:37 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B49RXUN10617280
+	Thu, 04 Dec 2025 09:48:21 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B49mHMg20185402
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 4 Dec 2025 09:27:33 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3993E2004B;
-	Thu,  4 Dec 2025 09:27:33 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5D46A20043;
-	Thu,  4 Dec 2025 09:27:32 +0000 (GMT)
-Received: from localhost (unknown [9.111.15.26])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  4 Dec 2025 09:27:32 +0000 (GMT)
+	Thu, 4 Dec 2025 09:48:17 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F310B20043;
+	Thu,  4 Dec 2025 09:48:16 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7D36F20040;
+	Thu,  4 Dec 2025 09:48:16 +0000 (GMT)
+Received: from [9.155.208.229] (unknown [9.155.208.229])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  4 Dec 2025 09:48:16 +0000 (GMT)
+Message-ID: <502727b0ad4a9bc34afb421d465646248c69f7d4.camel@linux.ibm.com>
+Subject: Re: [PATCH net] net/mlx5: Fix double unregister of HCA_PORTS
+ component
+From: Gerd Bayer <gbayer@linux.ibm.com>
+To: Moshe Shemesh <moshe@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky	 <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
+        Mark
+ Bloch	 <mbloch@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S.
+ Miller"	 <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski	 <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Shay Drory
+ <shayd@nvidia.com>,
+        Simon Horman <horms@kernel.org>
+Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
+Date: Thu, 04 Dec 2025 10:48:16 +0100
+In-Reply-To: <7ae1ae03-b62d-4c49-9718-f01ac8713872@nvidia.com>
+References: <20251202-fix_lag-v1-1-59e8177ffce0@linux.ibm.com>
+	 <7ae1ae03-b62d-4c49-9718-f01ac8713872@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 04 Dec 2025 10:27:32 +0100
-Message-Id: <DEPBQ734VDZG.34XHQ5Z0KKLLQ@linux.ibm.com>
-Cc: "Gerald Schaefer" <gerald.schaefer@linux.ibm.com>,
-        "Christian
- Borntraeger" <borntraeger@linux.ibm.com>,
-        "Gerd Bayer"
- <gbayer@linux.ibm.com>,
-        "Matthew Rosato" <mjrosato@linux.ibm.com>,
-        "Heiko
- Carstens" <hca@linux.ibm.com>,
-        "Vasily Gorbik" <gor@linux.ibm.com>,
-        "Alexander Gordeev" <agordeev@linux.ibm.com>,
-        "Sven Schnelle"
- <svens@linux.ibm.com>,
-        "Julian Ruess" <julianr@linux.ibm.com>,
-        "Peter
- Oberparleiter" <oberpar@linux.ibm.com>,
-        "Ramesh Errabolu"
- <ramesh@linux.ibm.com>,
-        <linux-s390@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3] PCI: s390: Expose the UID as an arch specific PCI
- slot attribute
-From: "Julian Ruess" <julianr@linux.ibm.com>
-To: "Niklas Schnelle" <schnelle@linux.ibm.com>,
-        "Bjorn Helgaas"
- <bhelgaas@google.com>,
-        "Lukas Wunner" <lukas@wunner.de>
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20251015-uid_slot-v3-1-44389895c1bb@linux.ibm.com>
-In-Reply-To: <20251015-uid_slot-v3-1-44389895c1bb@linux.ibm.com>
+MIME-Version: 1.0
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=dK+rWeZb c=1 sm=1 tr=0 ts=6931540a cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+X-Proofpoint-ORIG-GUID: JJSND5uVGuc-Yy0807UaM-DeeUylZ_QY
+X-Authority-Analysis: v=2.4 cv=Ir0Tsb/g c=1 sm=1 tr=0 ts=693158e6 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=nQX62fO2evfF4vuxvpEA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: gsZTTdGf4k7COCdSwmJNW6dWDAADTqLE
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI5MDAyMCBTYWx0ZWRfX7XEpTzeQE4I8
- aCh8tT6Y1Sg3eIWWgeQFpKyMl18IoPTl6MS4Z1pRAN4jA6HjEvJa923W+ly/9RZfWykeStYBI6D
- LrOu5rXM3KezFxb0FXVjxovP4bRVieHPDsN/tKCdxI71pir11HfoAqSBbZ4+pnX/pgMgtHyiwZh
- fPGVcmbEY8ijSrscwTmpu38TVGh3FAiHhh8BXbYoEwo3SG9ICH70SEfAeMUIMqcw74V/sBGoCxv
- NNaKKLe4j3zqxGEyfwa2zXVzwAw73EBGS5d7aikxrH2I2ZXphsXJR/VU+77oiPpQ0j9l4WGW1fP
- cfFtLGSA/3IAZPG9B+JCNvSxbrdzza77347F+3BcgiugbQhiHCneQu7gPuLhsv4dYb16LP1H07L
- rdLMlryz9Spy8shDgSkPbM8zxnIvZA==
-X-Proofpoint-ORIG-GUID: TsS-lKvLY2UzPSwCKxngYMulZrmYrWzL
+ a=P-IC7800AAAA:8 a=VnNF1IyMAAAA:8 a=Ikd4Dj_1AAAA:8 a=OJPCkwSMBkLYAhJ8JKsA:9
+ a=QEXdDO2ut3YA:10 a=d3PnA9EDa4IxuAV0gXij:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI5MDAyMCBTYWx0ZWRfX41ZGyV7J5+Wa
+ yw50YFUfl08xts+vRD7keIZwd5ly4a22CjXsuCBVslm6S6DHmiOvk3Wrt01ldNKZkZ+YkEVsEPO
+ H6EJnVy288wsG85cnW956xgqN0OfyFUFTVDCtLgQmpQwTqSjoT3sTYIIi/U5mpE/xkAs4Vs/XUz
+ X+wCF56x0Io+mXBsHHbLVo6HoetQWXPV9SafYH1PtZlAA3yB7BY6p0ljkDqbMNIESfP5G+KNzPa
+ 4yUBS5imfmvQ2qJi/E09twb7lHeu4sga/eK/bvnlKzO2WPpk93Z4kZ7kk5zTEwtNxIWX89f0fb1
+ O9iLEieMmq6M0BATM6QjjWvp28McGhTDTFTGUTh/y/pmeKicWr8oh930BtC+aQRET7wErAvip8/
+ rVMhPXdG1Pc1HLxzM30E1Q6VXBjZSg==
+X-Proofpoint-GUID: HcopXBNN5_rUn80shxyC5RXmAxRB7BIN
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-12-04_02,2025-12-03_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 lowpriorityscore=0 clxscore=1011 priorityscore=1501
- bulkscore=0 adultscore=0 phishscore=0 impostorscore=0 spamscore=0
- malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
- definitions=main-2511290020
+ malwarescore=0 adultscore=0 impostorscore=0 clxscore=1011 priorityscore=1501
+ bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511290020
 
-On Wed Oct 15, 2025 at 3:42 PM CEST, Niklas Schnelle wrote:
-> On s390, an individual PCI function can generally be identified by two
-> identifiers, the FID and the UID. Which identifier is used depends on
-> the scope and the platform configuration.
->
-> The first identifier, the FID, is always available and identifies a PCI
-> device uniquely within a machine. The FID may be virtualized by
-> hypervisors, but on the LPAR level, the machine scope makes it
-> impossible to create the same configuration based on FIDs on two
-> different LPARs of the same machine, and difficult to reuse across
-> machines.
->
-> Such matching LPAR configurations are useful, though, allowing
-> standardized setups and booting a Linux installation on different LPARs.
-> To this end the UID, or user-defined identifier, was introduced. While
-> it is only guaranteed to be unique within an LPAR and only if indicated
-> by firmware, it allows users to replicate PCI device setups.
->
-> On s390, which uses a machine hypervisor, a per PCI function hotplug
-> model is used. The shortcoming with the UID then is, that it is not
-> visible to the user without first attaching the PCI function and
-> accessing the "uid" device attribute. The FID, on the other hand, is
-> used as the slot name and is thus known even with the PCI function in
-> standby.
->
-> Remedy this shortcoming by providing the UID as an attribute on the slot
-> allowing the user to identify a PCI function based on the UID without
-> having to first attach it. Do this via a macro mechanism analogous to
-> what was introduced by commit 265baca69a07 ("s390/pci: Stop usurping
-> pdev->dev.groups") for the PCI device attributes.
->
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> ---
-> Note: I considered adding the UID as a generic "index" via the hotplug
-> slot driver but felt like there is probably too little commonality on
-> format and usage patterns.
->
-> v2->v3:
-> - Rebase on v6.18-rc1 and resolve conflict with recent s390 PCI sysfs cha=
-nge
-> - Link to v2: https://lore.kernel.org/r/20251008-uid_slot-v2-1-ef22cef277=
-41@linux.ibm.com
-> ---
+On Wed, 2025-12-03 at 17:14 +0200, Moshe Shemesh wrote:
+>=20
+> On 12/2/2025 1:12 PM, Gerd Bayer wrote:
+> >=20
 
--- snip --
+  [ ... snip ... ]
 
-Feel free to add my
-Reviewed-by: Julian Ruess <julianr@linux.ibm.com>
+> >=20
+> > Fixes: 5a977b5833b7 ("net/mlx5: Lag, move devcom registration to LAG la=
+yer")
+> > Signed-off-by: Gerd Bayer <gbayer@linux.ibm.com>
+>=20
+> Reviewed-by: Moshe Shemesh <moshe@nvidia.com>> ---
+> > Hi Shay et al,
+> >=20
+>=20
+> Hi Gerd,
+>   I stepped on this bug recently too, without s390 and was about to=20
+> submit same fix :) So as you wrote it is unrelated to Lukas' patches and=
+=20
+> this fix is correct.
+
+Good to hear. I wonder if you could share how you got to run into this?
+
+>=20
+> >=20
+> > I've spotted two additional places where the devcom reference is not
+> > cleared after calling mlx5_devcom_unregister_component() in
+> > drivers/net/ethernet/mellanox/mlx5/core/lib/sd.c that I have not
+> > addressed with a patch, since I'm unclear about how to test these
+> > paths.
+>=20
+> As for the other cases, we had the patch 664f76be38a1 ("net/mlx5: Fix=20
+> IPsec cleanup over MPV device") and two other cases on shared clock and=
+=20
+> SD but I don't see any flow the shared clock or SD can fail,=20
+> specifically mlx5_sd_cleanup() checks sd pointer at beginning of the=20
+> function and nullify it right after sd_unregister() that free devcom.
+
+I didn't locate any calls to mxl5_devcom_unregister_component() in
+"shared clock" - is that not yet upstream?
+
+Regarding SD, I follow that sd_cleanup() is followed immediately after
+sd_unregister() and does the clean-up. One path remains uncovered
+though: The error exit at
+https://elixir.bootlin.com/linux/v6.18/source/drivers/net/ethernet/mellanox=
+/mlx5/core/lib/sd.c#L265
+
+Not sure, how likely that is...
 
 Thanks,
-Julian
+Gerd
 
