@@ -1,124 +1,104 @@
-Return-Path: <linux-pci+bounces-42653-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42654-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25D1DCA51D4
-	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 20:24:41 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C291CA52FB
+	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 20:54:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 95A54300B306
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 19:24:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 692B2308ED0F
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 19:54:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C35FC21CA03;
-	Thu,  4 Dec 2025 19:24:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E851A3446DB;
+	Thu,  4 Dec 2025 19:54:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kIq+Qxzr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CRDyqcy+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE0DDDAB
-	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 19:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25102D5C74;
+	Thu,  4 Dec 2025 19:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764876275; cv=none; b=rU707m0YlB2IFvxpgRwtHT6dKsmQDO8uDYK7gw7EFCJfrI1o2o6mDeYZFm6dhrX8tMMj9xg3p7UN5T/tZgO4THAGBNxOur015E9K61waeYI63+dOCxfxoaRLCpGS+xDhTa0y7iZFfGaZkuHMtl4K2Tp+4F1lS1KvYFb7vAhChyM=
+	t=1764878040; cv=none; b=oEKDBtzl1ihY89n4wTAXtY7mHsB4dqGkwn/BRsAxp/4HpIb6qBwjaqPt8JjRIvT7dzuZpZufBx/4YaBiV2hdtifWFRzx/v4iT9xkvffBCctvhEKeRO8vTL32V9B6RW9OXbGms5KvbpY7GqQUaz9Rwf/B/vtbLEVGxhO0BPeE+us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764876275; c=relaxed/simple;
-	bh=tJMgXJV68ALNhmWSxtStFXgTvJoZgcTTAFRTpvUH7Iw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=A07zzU7k9+4cA4EjrJ//QBSzrmCT4mmybR7JF5AvCnrZYU64hDrpPSpjME3MAfU3oauPLvZfjZhaKFlFhZcr2zKrZfM5gtoXwY4ZwmqJi2eIC9fwP96y93uGat3BF8qdQM4pU7QFj/ZlFE/Wk+tp+EV9YmjbgZmr0hPKeuwTWfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kIq+Qxzr; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764876274; x=1796412274;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=tJMgXJV68ALNhmWSxtStFXgTvJoZgcTTAFRTpvUH7Iw=;
-  b=kIq+QxzrvU+4jyhNmgbV/YsuNSrhHPXCuLCUORBmtwtGt2+YoaxN5lfN
-   3NDwsT+/Uvbv1WP+Elevm+vmuSumfdAVEALpH0awPsz7iLYdb7HcCCvWj
-   Vu8K10PK9qQPy/35PJnAQxJYDFoHHoQPepQTZRNEif2Ep+hhglI5/alf8
-   maZGPeK4HHeTd419kdCK6IMYb+A1WYQ44NNU8kMHYgP9HKmyizhrH0cfK
-   UCrxvB/tQ3SzS213AoMZ+e0M2LYCi4kQYx8Osnop+nGIqjiH7WSpC0Mq4
-   kCexr8z38Rz6LUAZs3YhtwV4iBT2UP55bT2BN6kAsV7F7+n7GROUxs2fk
-   Q==;
-X-CSE-ConnectionGUID: bSnwCz58Qtu1zvJiUbLs1w==
-X-CSE-MsgGUID: jaEs9Pn+RkOKxMPQYfkAzA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11632"; a="77591693"
-X-IronPort-AV: E=Sophos;i="6.20,249,1758610800"; 
-   d="scan'208";a="77591693"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2025 11:24:33 -0800
-X-CSE-ConnectionGUID: Cy9bm9gURduPyiPKt5iogg==
-X-CSE-MsgGUID: nhjwzbrpQZyMQ0B7LhACig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,249,1758610800"; 
-   d="scan'208";a="226038617"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.3])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2025 11:24:31 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 4 Dec 2025 21:24:27 +0200 (EET)
-To: Teika Kazura <teika@gmx.com>, helgaas@kernel.org
-cc: linux-pci@vger.kernel.org, aros@gmx.com, superm1@kernel.org
-Subject: Re: [bugzilla-daemon@kernel.org: [Bug 220729] dmesg flooded with
- "PME: Spurious native interrupt". AMD, related to audio.]
-In-Reply-To: <20251204.162726.629872510136678985.teika@gmx.com>
-Message-ID: <52ef10ee-f276-3927-2d0d-6a361ee34376@linux.intel.com>
-References: <20251104200516.GA1866276@bhelgaas> <20251204.162726.629872510136678985.teika@gmx.com>
+	s=arc-20240116; t=1764878040; c=relaxed/simple;
+	bh=IlWhPGE3xUkVs9noGqN8k3YfY0Ubf/0Tz/7YbiNoNOw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IVJiXX0/uT8tUNJ/NiCiZdOiuumOj8CkFuASH/qkmuGk2hZVLAULl5P/jCJxt8kWz0uEjwZiSIQlKl1qaEhvPKqjvEcUrLTTVLmAsqeWoTdETHaCXO/b10U98UqKBcm8E2NoFoVkbRAl6swdipDJ90qZ2zYUi3OV6MjFJ5uTwKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CRDyqcy+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DC75C4CEFB;
+	Thu,  4 Dec 2025 19:53:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764878038;
+	bh=IlWhPGE3xUkVs9noGqN8k3YfY0Ubf/0Tz/7YbiNoNOw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CRDyqcy+7t1NqBpjwfvt6EVa8fBQkxIXQGm3UhSM6pF/wQO2GB/GsLsPVU/5x5GEi
+	 ISuzg0kUbHZykMWfUetqINwESVLOMc5Fmkby09hgB/u7SERCzYnp0wawyGV2PlT7/n
+	 5l87bi2MeH9BDcFb4RYVZv5QJbaJ1y96IceT5JXqsVQb4D3G9VqtQmvZmKYyR8TlJc
+	 Kvw7JWiTUYPVYuFB9UIihbWz7Pzyesd0xuz9ohN9oj0Fd4ZSSgOfGwZqBkdh2dU7D4
+	 SjUBhWCsYAnJLC6nKdnqRUem9TAlPRZT3hfEV3yMJUy6kE89pMlaWtQcaBAKjIyVu9
+	 WVBxr11PatfhA==
+Date: Thu, 4 Dec 2025 13:53:55 -0600
+From: Rob Herring <robh@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v6 0/7] Add ASPEED PCIe Root Complex support
+Message-ID: <20251204195355.GA1975043-robh@kernel.org>
+References: <20251201-upstream_pcie_rc-v6-0-8c8800c56b16@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251201-upstream_pcie_rc-v6-0-8c8800c56b16@aspeedtech.com>
 
-On Thu, 4 Dec 2025, Teika Kazura wrote:
-
-> From: Bjorn Helgaas <helgaas@kernel.org>
-> Subject: [bugzilla-daemon@kernel.org: [Bug 220729] dmesg flooded with "PME: Spurious native interrupt". AMD, related to audio.]
-> Date: Tue, 4 Nov 2025 14:05:16 -0600
+On Mon, Dec 01, 2025 at 02:29:10PM +0800, Jacky Chou wrote:
+> This patch series adds support for the ASPEED PCIe Root Complex,
+> including device tree bindings, pinctrl support, and the PCIe host controller
+> driver. The patches introduce the necessary device tree nodes, pinmux groups,
+> and driver implementation to enable PCIe functionality on ASPEED platforms.
+> Currently, the ASPEED PCIe Root Complex only supports a single port.
 > 
-> > It looks like PME and bwctrl share the interrupt; Teika, if it's easy
-> > for you, you might see if this is reproducible without bwctrl.
-> > There's no direct config option for it, but I think you could remove
-> > bwctrl.o from drivers/pci/pcie/Makefile.
+> Summary of changes:
+> - Add device tree binding documents for ASPEED PCIe PHY, PCIe Config, and PCIe RC
+> - Update MAINTAINERS for new bindings and driver
+> - Add PCIe RC node and PERST control pin to aspeed-g6 device tree
+> - Implement ASPEED PCIe PHY driver
+> - Implement ASPEED PCIe Root Complex host controller driver
 > 
-> Unfortunately, compilation fails, like this:
-> ------------------------------------------------------------------------
-> ld: vmlinux.o: in function `pcie_retrain_link':
-> /usr/src/linux-6.17.9-gentoo/drivers/pci/pci.c:4746:(.text+0x9fdfb1): undefined reference to `pcie_reset_lbms'
-> ld: vmlinux.o: in function `pcie_failed_link_retrain':
-> /usr/src/linux-6.17.9-gentoo/drivers/pci/quirks.c:135:(.text+0xa27105): undefined reference to `pcie_set_target_speed'
-> ...
-> -------------------------------------------------------------------------
-> Ok, let us give up this route. This bug is not fatal. Thanks a lot for your reply.
+> This series has been tested on AST2600/AST2700 platforms and enables PCIe device
+> enumeration and operation.
+> 
+> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+> ---
+> Changes in v6:
+> - Refer to pci-cpi-bridge.yaml to update aspeed,ast2600-pcie.yaml and
+>   the pcie node of aspeed-g6.dtsi.
 
-You could instead change the flags in pcie_bwnotif_enable().
-If you replace this:
+Where is this? You don't describe the root port and its properties at 
+all now.
 
-        pcie_capability_set_word(port, PCI_EXP_LNKCTL,
-                                 PCI_EXP_LNKCTL_LBMIE | PCI_EXP_LNKCTL_LABIE);
-
-With this:
-
-	pcie_capability_set_word(port, PCI_EXP_LNKCTL, 0);
-
-The bandwidth notifications should no longer cause any interrupts. If that 
-works, you can try with one flag at a time to see if it breaks because of 
-PCI_EXP_LNKCTL_LBMIE or PCI_EXP_LNKCTL_LABIE.
-
-There's also a series adding tracing to bwctrl events that might be able 
-to provide clues if there are some odd bw notifications coming in (it's 
-not readily available in your kernel though):
-
-https://lore.kernel.org/linux-pci/20251025114158.71714-1-xueshuai@linux.alibaba.com/
-
-
-BTW Bjorn, that series is still sitting unapplied I think.
-
-
--- 
- i.
-
+> - 'dt-bindings: pinctrl: aspeed,ast2600-pinctrl: Add PCIe RC PERST#
+>   group' have applied, remove it from this version.
+> - Adjust the defnitions in pci.h. 
+> - Link to v5: https://lore.kernel.org/r/20251117-upstream_pcie_rc-v5-0-b4a198576acf@aspeedtech.com
 
