@@ -1,250 +1,212 @@
-Return-Path: <linux-pci+bounces-42630-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42634-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0299FCA3BE2
-	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 14:14:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04FFFCA4344
+	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 16:18:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id AA1983008496
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 13:13:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0AF0E3089445
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 15:05:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4296034252B;
-	Thu,  4 Dec 2025 13:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pFAixUks"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A5822D47E8;
+	Thu,  4 Dec 2025 15:05:21 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2099.outbound.protection.partner.outlook.cn [139.219.17.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2C13396FE
-	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 13:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764854039; cv=none; b=K1wCbMvnoN9uik8N5EQbPwdPHUj9okMZXyvCMb3a7wTmQpZK9UKLQv/eEmVYNodfFsPDrXhoUnG8SvInufrzt1PBd20tHhMkVpjHNCVwt1uoLdbnuLlSqf3BPymS7uqSOtCjEIUg9B+MvI39hsOvzgSKUhS6bsiKKNGjVPGHyPk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764854039; c=relaxed/simple;
-	bh=t3Bnpz+avM0HDsIK2c6aRt7hjY3/SE76r3tU+199wfM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:In-Reply-To:
-	 Content-Type:References; b=R+r693wyETCSi06BYg69VW9w7pUf8PeYOr+8nKmCUTS74P/1CNUBN6j3RpncCL3R85LloFQ4hhD8zgv2IHZZHkiaGIGfvQgHgYFl2BPkMc2/4kcABOv1IGcWa/9wiKeovBtozEQ5kdxnrfJiPz11msI5BlMtaU9r/bQlfJYWb9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=pFAixUks; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20251204131348euoutp02544eeba872b5c4c41424d9150510b19e~_BWN5DAPx2671426714euoutp02C
-	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 13:13:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20251204131348euoutp02544eeba872b5c4c41424d9150510b19e~_BWN5DAPx2671426714euoutp02C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1764854028;
-	bh=Gy5jTRlG1BOYeQhQOMMh3NCOscTG3v7BR1Xhg1G1ERU=;
-	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=pFAixUksRC2Wdoz8LmLhVOPqgFcvzR/pVJFofqaBd0/qroFWSRkVRApnglKilhBs9
-	 YdG4DOVQdX7jMQVkDcz3pZD6nPZ4ub3UiPPpPds+jLhmvmTAbbs5vLe723rLYKaEtI
-	 beG0RPRuwYdWPaKhEDst57IG9Go0cDevD4eC1PoY=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20251204131348eucas1p25ae62f3b5284465e01fccd48040b0e78~_BWNqJoKD1811618116eucas1p2Z;
-	Thu,  4 Dec 2025 13:13:48 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20251204131347eusmtip1a586babc772de7476d6c338c6efce3e4~_BWMlcNB01787117871eusmtip1N;
-	Thu,  4 Dec 2025 13:13:47 +0000 (GMT)
-Message-ID: <de80df44-f797-4e8c-a411-09ed3c1286a3@samsung.com>
-Date: Thu, 4 Dec 2025 14:13:45 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDC02D0C99;
+	Thu,  4 Dec 2025 15:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.99
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764860721; cv=fail; b=qwQJ3580W+/UP1OLqBp092FR+2tLoO+Fb+eIhwFpRgPdhT1rPZIZ/5+eAopVnGbnDqvjQFTaVQpgoy3+0GMFZ2MXFT1ZwffE/hyVbYnQgEjtJ/XrdR939MwyXEwTs3X+xE/VJvu0yqRvizFQDTDKQJKAeLaWEsJuWwgpdECnEM4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764860721; c=relaxed/simple;
+	bh=PF+49HlI3kQqiHbLn8cNX2VAUx7gzusgARq3dq01/Bk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NqFTd40/t+tSJYgCpbSpjpCjwr1D3jmPQy4hKto/+5BePRwTVc6Q0l4Vq1T90oOBCzkVhY6HF0Nzn8g1vnPXDNRK5KVdL5QpKTprHEd9AjVhTk6JxJdBHtJtrtZED6Yw7OH4ofa1eDAsp33vlZ3WwEYCja2+wkfC4kDyytd4oFw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+Received: from ZQ2PR01MB1146.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:11::10) by ZQ0PR01MB1142.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.11; Thu, 4 Dec
+ 2025 14:50:44 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TsJIlV3LFX4YIuBcuIMoj/e2pE3r188zkvw0V0lXpxON+5cHhwUcS25+Xs9V8XSmudkq2ZUaO2wK4/NZbiNa4Pcyg7NfNx/MZifhlkxlXTb8v/NfwUEtgA102qlyJe4iBHgYNAUGU9UvXnroGHEtiL8tAyjBtMDpg6/4hMZDfS7SSdLLqn1E0N93SB5xCGqqOJy9Wg+XESi8A5YqvrVAoBr6G17MRLGT0jRX+guN+DMwnuGQNbox3wskjsLSV3ZBzoJG4v7wskc4aqjcADigIadyIIe8ABNxDJcgDbkZEinYiScyxmwA67XGMmzKga9PCEWg0wWugn9yeWemeYxVLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eUZkoO7Bs4QaiscVoESsOSi3d4yEvOR4YrK1LaEQuD8=;
+ b=f5rhDKYHOcIVl/HEJ5cJvnHgpmDFxLBzU8ZwPOOlgsZzr4GNcyX3rD9xxNAKi5EDJY1bItN221LfPRuAbcl73gV7iFgkkH0UPE8LilRKjCkGlbrQTsEtdpzR949wkn/H3BpO9tdObClLQf6BnNnBcOHuakZnhenmtUyNCOuYIVEzXjU6TeB5xnvEEBlgGm2mrAPXP1/ehQeufiWrqP3KJvgZkfF5e56AgqhUHEsCFjFmowynfRpAdk+dyVQJwphvpl/mBuJJdFebeI1npClnebYByHAUElDPcs7G+POjt0dgEol2JZah5n1LcL5cigIPBmCwrrr1q6KplJFTRb7/9Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:7::14) by ZQ2PR01MB1146.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:11::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Thu, 4 Dec
+ 2025 13:19:53 +0000
+Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ ([fe80::2595:ef4d:fae:37d7]) by ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ ([fe80::2595:ef4d:fae:37d7%4]) with mapi id 15.20.9388.009; Thu, 4 Dec 2025
+ 13:19:53 +0000
+From: Hal Feng <hal.feng@starfivetech.com>
+To: Bjorn Helgaas <helgaas@kernel.org>, Kevin Xie <kevin.xie@starfivetech.com>
+CC: Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Palmer Dabbelt
+	<palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>, Albert Ou
+	<aou@eecs.berkeley.edu>, "Rafael J . Wysocki" <rafael@kernel.org>, Viresh
+ Kumar <viresh.kumar@linaro.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, Manivannan
+ Sadhasivam <mani@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Liam
+ Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Emil Renner
+ Berthing <emil.renner.berthing@canonical.com>, Heinrich Schuchardt
+	<heinrich.schuchardt@canonical.com>, E Shattow <e@freeshell.de>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4 1/6] PCI: starfive: Use regulator APIs instead of GPIO
+ APIs to enable the 3V3 power supply of PCIe slots
+Thread-Topic: [PATCH v4 1/6] PCI: starfive: Use regulator APIs instead of GPIO
+ APIs to enable the 3V3 power supply of PCIe slots
+Thread-Index: AQHcXeD4WDMn2zfogkuoU7yPusoik7UNTRYAgABR2wCAABWUAIAA4d8AgAEvWPA=
+Date: Thu, 4 Dec 2025 13:19:53 +0000
+Message-ID:
+ <ZQ2PR01MB1307A6D1E4B93A716EFFDC25E6A62@ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn>
+References:
+ <ZQ0PR01MB09816DBC8A88CEC939C8968482D82@ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn>
+ <20251202163114.GA3075889@bhelgaas>
+In-Reply-To: <20251202163114.GA3075889@bhelgaas>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic:
+	ZQ2PR01MB1307:EE_|ZQ2PR01MB1146:EE_|ZQ0PR01MB1142:EE_
+x-ms-office365-filtering-correlation-id: bc961581-2834-4d15-5ad4-08de3337cfaf
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|41320700013|1800799024|366016|7416014|38070700021;
+x-microsoft-antispam-message-info:
+ XBteslkwDAJjEzkRjSLegtF+yZe08DkiWODSxA92QMFcztQ+2cjW6Vitv3i2+9QBL+RmndgTFs+TyL4exmcBsLm7XLWA9UDXxlV3D4lGgIbpScLdKgk+Dl8f9KVdiXvFhXVGstrY2v2h9wd2nBjIYhigiXKuEJZ0Bs6qE5vz1QBG9/3BzAJw/Xq1Q1tmAQC9776xUzScqAPXGKRBYEDg8m0afcfznBqrKdcDxDR3TUAEcrXHYAh+ICV86MCQoTsxOlKcSNFmO8MI89xRk3QvAcZSRiywY6FhoY4CtNf/sdr0huqmvX3knghmFHLrtC4st0x5Yfblm5kSJipnEJqFImZPcJVIxLy7d19hD5G+iums+6MjhV9QkJ4l5xFbDywHL9Qb/pMFS2BKkdd5i9wkgXVFT/0E5kX9BWIGZIkQ6GC0ExlB4PT2Bfaf4w1ZYAu1ZO2BxOCz34vgNjVTrDm6PN9hGhiISQAlrZbS8R2J1XB0mh6JTW27hHiGOWsbFk7bZ6IiZpfK8mvsOsmDCO+5fZ16QQUj4IElZ9vH3PWbJpKHiP4u1Ed6l5dNfU0ttjMVpyL3xNQcIYUdIMn02kgc7j8JVxPvElrU/gVeJKyaaJM=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(41320700013)(1800799024)(366016)(7416014)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?NgQ/M5ArXGFUAgkEWRFB/vsED3+xGkqlpi9Z3kmYuyvRt5NimPixXpIyuU?=
+ =?iso-8859-2?Q?iWRvl7KpmUzqizPqSIV25E+/FIhpXDVLsqUXuUDeHBix7Ljh9yWTD5ResT?=
+ =?iso-8859-2?Q?T+uVW2UniHwtZgYrjL6caJSvjNJ46oxVRh2LYXx8xiHvzOXhT31k6bvSUR?=
+ =?iso-8859-2?Q?r+XVSyOv4b+Hmk4vmgVNYXYrEhhox8/Lhe7PJFmzeW8XOu5h4loXCzGMhr?=
+ =?iso-8859-2?Q?kw/hpyHTebvtIrrHodFC5+1gjSOxD2vX5d08jkfXv9RUhs3TjI7dxP/YUE?=
+ =?iso-8859-2?Q?x2x8ADB//VyDgUyXNfFH4x5uUaLOuN0gRSE2JZvPLFnx0Y9ruXMFbg4Pag?=
+ =?iso-8859-2?Q?ynb2db6pBKetFQpxQESad48m2RxCXy1ERIWzAI2YUpoyAYqdoVk16Hz8bO?=
+ =?iso-8859-2?Q?vcGXvfpKCuNHKfTsMNiQ/2Cd1wRLeufUagCjoYFzfa8oRE3xZQDRd5rVK5?=
+ =?iso-8859-2?Q?lKiYr+jGATcaeGjxPnYa4KaROmkK7HN/VJKL+qZimvIBjb/WTo7l0ygIdK?=
+ =?iso-8859-2?Q?qbtcqu4ci77ROv/Zy3d8/P49kguQNPlaXKZL4CxtZ4oeyWBKO+VHIzjDiG?=
+ =?iso-8859-2?Q?fuPBNn8jEcIAfdn/M5/7O1erXpWvTxOwy2wQH1W46sgzk6QvZM7n/5bPoQ?=
+ =?iso-8859-2?Q?u+0dfH2E9/70Kg8O9GdLdXjwM0EBFmaa+FFpVfUbXPbalQ71eM6o0d11Rd?=
+ =?iso-8859-2?Q?P8C+M1FYCwvBoIvdmm6VnveaC0g35sX/NUA8cBwT7vXarVOTSxZUQaRmdF?=
+ =?iso-8859-2?Q?4B2XUBHcV5MBxABj+kKiuRdR1CwZtotCtbMmV5byp991ownR2pld4p4KcB?=
+ =?iso-8859-2?Q?0niazg5r6Vvb3xhgnZ3ft9lS3s6eY1Up5/sg3V75nQ/Lc0NNv5bzfZ0sMP?=
+ =?iso-8859-2?Q?JSgYI2pwAKnDnShWNqXAGqpCkPNG+EqlNjcPve0VABzb5hNM2Ar38zwFqU?=
+ =?iso-8859-2?Q?lT5aDA3ruDWVevvBFU3So5G3a4VOOBrmZ6711Vuv9/w/DKAyo/ZuOEO/1q?=
+ =?iso-8859-2?Q?2wHpj63ZXnjkIoiNVafkB/JdgMD9AeGMO+wJo/f6PUvgnmgfwu1nbF6/HX?=
+ =?iso-8859-2?Q?eG/ykWeaaCdFWW/lEJGupJ4AdN7T1y3xvu+KHkP//PQ0hDiqJhPCU4J1tu?=
+ =?iso-8859-2?Q?4WXyIaaqt5CMHTSR0iyfVS3ClHmtzNfGYsBj0drMfqxx+gv5QXrm1gQQ3e?=
+ =?iso-8859-2?Q?9CIiqFkwnzYwi6MD9QSMKYIvRu0Y3sFU1T4s7hekpHyC7vm7gIE95R3C1S?=
+ =?iso-8859-2?Q?ogQ2bVHv6QKfTQGlkyUhEoDNcvhmNrhXLT/1wulPjdRxy59zsJ6UFOaXmC?=
+ =?iso-8859-2?Q?0VLUaB+vmtf0KwhwxDkRgf/cZk29FuZLjJUZc9sWaEHNuXTM1t+DLhq7BL?=
+ =?iso-8859-2?Q?H5gwayWEwHVmkgFWS0K4mnA6I7NOEpCIAXoyvtfD4JzTMTax4++wD+V07q?=
+ =?iso-8859-2?Q?ioDQYWPZ06YBA+L9GD2TVfSxWPPKi5IbOI67vFMZHWszXvK1njOHq5MdKn?=
+ =?iso-8859-2?Q?aWt3U5sJjfjz4Z3BMvyoKaIKP+zbUz9/ljaUYcl2xtOIb/CE6dAW1ClYcL?=
+ =?iso-8859-2?Q?GmZQOGeDkoc8dZlQC9uDTqqbNF2rhU9U7qeRW7dSUqlWnYrSPvouu7AIT6?=
+ =?iso-8859-2?Q?tS+1u90qx/DVTGEtHL5uE0kRiMTDOnPZvD?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH v2 0/4] PCI: Fix ACS enablement for Root Ports in OF
- platforms
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, Bjorn
-	Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Pavankumar Kondeti <quic_pkondeti@quicinc.com>, Xingang Wang
-	<wangxingang5@huawei.com>, Robin Murphy <robin.murphy@arm.com>, Jason
-	Gunthorpe <jgg@ziepe.ca>, Manivannan Sadhasivam <mani@kernel.org>
-Content-Language: en-US
-In-Reply-To: <b63ec0aa-7a4a-4f8d-9b93-e724f3f2a9d1@samsung.com>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20251204131348eucas1p25ae62f3b5284465e01fccd48040b0e78
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20251202142307eucas1p12a15e5656bb53f48f445c3056d4e3166
-X-EPHeader: CA
-X-CMS-RootMailID: 20251202142307eucas1p12a15e5656bb53f48f445c3056d4e3166
-References: <CGME20251202142307eucas1p12a15e5656bb53f48f445c3056d4e3166@eucas1p1.samsung.com>
-	<20251202-pci_acs-v2-0-5d2759a71489@oss.qualcomm.com>
-	<b63ec0aa-7a4a-4f8d-9b93-e724f3f2a9d1@samsung.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc961581-2834-4d15-5ad4-08de3337cfaf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2025 13:19:53.3723
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cKncWoJwdlm7Tg8NGUHcg2R9SIFkYQTua6JV5pdgxdhmnL0FEbEU4dpSypTNPGa08EyoGqDLZcOO+h+UGzEQe3CYCN7B7Mdqn7K9F7jS2rE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ2PR01MB1146
+X-OriginatorOrg: starfivetech.com
 
-On 03.12.2025 13:04, Marek Szyprowski wrote:
-> On 02.12.2025 15:22, Manivannan Sadhasivam wrote:
->> This series fixes the long standing issue with ACS in OF platforms. 
->> There are
->> two fixes in this series, both fixing independent issues on their 
->> own, but both
->> are needed to properly enable ACS on OF platforms.
->>
->> Issue(s) background
->> ===================
->>
->> Back in 2021, Xingang Wang first noted a failure in attaching the 
->> HiSilicon SEC
->> device to QEMU ARM64 pci-root-port device [1]. He then tracked down 
->> the issue to
->> ACS not being enabled for the QEMU Root Port device and he proposed a 
->> patch to
->> fix it [2].
->>
->> Once the patch got applied, people reported PCIe issues with 
->> linux-next on the
->> ARM Juno Development boards, where they saw failure in enumerating 
->> the endpoint
->> devices [3][4]. So soon, the patch got dropped, but the actual issue 
->> with the
->> ARM Juno boards was left behind.
->>
->> Fast forward to 2024, Pavan resubmitted the same fix [5] for his own 
->> usecase,
->> hoping that someone in the community would fix the issue with ARM 
->> Juno boards.
->> But the patch was rightly rejected, as a patch that was known to 
->> cause issues
->> should not be merged to the kernel. But again, no one investigated 
->> the Juno
->> issue and it was left behind again.
->>
->> Now it ended up in my plate and I managed to track down the issue 
->> with the help
->> of Naresh who got access to the Juno boards in LKFT. The Juno issue 
->> was with the
->> PCIe switch from Microsemi/IDT, which triggers ACS Source Validation 
->> error on
->> Completions received for the Configuration Read Request from a device 
->> connected
->> to the downstream port that has not yet captured the PCIe bus number. 
->> As per the
->> PCIe spec r6.0 sec 2.2.6.2, "Functions must capture the Bus and 
->> Device Numbers
->> supplied with all Type 0 Configuration Write Requests completed by 
->> the Function
->> and supply these numbers in the Bus and Device Number fields of the 
->> Requester ID
->> for all Requests". So during the first Configuration Read Request 
->> issued by the
->> switch downstream port during enumeration (for reading Vendor ID), 
->> Bus and
->> Device numbers will be unknown to the device. So it responds to the 
->> Read Request
->> with Completion having Bus and Device number as 0. The switch 
->> interprets the
->> Completion as an ACS Source Validation error and drops the 
->> completion, leading
->> to the failure in detecting the endpoint device. Though the PCIe spec 
->> r6.0, sec
->> 6.12.1.1, states that "Completions are never affected by ACS Source 
->> Validation".
->> This behavior is in violation of the spec.
->>
->> Solution
->> ========
->>
->> In September, I submitted a series [6] to fix both issues. For the 
->> IDT issue,
->> I reused the existing quirk in the PCI core which does a dummy config 
->> write
->> before issuing the first config read to the device. And for the ACS 
->> enablement
->> issue, I just resubmitted the original patch from Xingang which called
->> pci_request_acs() from devm_of_pci_bridge_init().
->>
->> But during the review of the series, several comments were received 
->> and they
->> required the series to be reworked completely. Hence, in this 
->> version, I've
->> incorported the comments as below:
->>
->> 1. For the ACS enablement issue, I've moved the pci_enable_acs() call 
->> from
->> pci_acs_init() to pci_dma_configure().
->>
->> 2. For the IDT issue, I've cached the ACS capabilities (RO) in 
->> 'pci_dev',
->> collected the broken capability for the IDT switches in the quirk and 
->> used it to
->> disable the capability in the cache. This also allowed me to get rid 
->> of the
->> earlier workaround for the switch.
->>
->> [1] 
->> https://lore.kernel.org/all/038397a6-57e2-b6fc-6e1c-7c03b7be9d96@huawei.com
->> [2] 
->> https://lore.kernel.org/all/1621566204-37456-1-git-send-email-wangxingang5@huawei.com
->> [3] 
->> https://lore.kernel.org/all/01314d70-41e6-70f9-e496-84091948701a@samsung.com
->> [4] 
->> https://lore.kernel.org/all/CADYN=9JWU3CMLzMEcD5MSQGnaLyDRSKc5SofBFHUax6YuTRaJA@mail.gmail.com
->> [5] 
->> https://lore.kernel.org/linux-pci/20241107-pci_acs_fix-v1-1-185a2462a571@quicinc.com
->> [6] 
->> https://lore.kernel.org/linux-pci/20250910-pci-acs-v1-0-fe9adb65ad7d@oss.qualcomm.com
->>
-> Thanks for this patchset! I've tested it on my ARM Juno R1 and it 
-> looks that it almost works fine. This patchset even fixed some issues 
-> with PCI devices probe, as I again see SATA and GBit ethernet devices, 
-> which were missing since Linux v6.14 (it looks that I've also missed 
-> this in my tests).
->
-> # lspci
-> 00:00.0 PCI bridge: PLDA PCI Express Core Reference Design (rev 01)
-> 01:00.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 
-> 8090 (rev 02)
-> 02:01.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 
-> 8090 (rev 02)
-> 02:02.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 
-> 8090 (rev 02)
-> 02:03.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 
-> 8090 (rev 02)
-> 02:0c.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 
-> 8090 (rev 02)
-> 02:10.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 
-> 8090 (rev 02)
-> 02:1f.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 
-> 8090 (rev 02)
-> 03:00.0 Mass storage controller: Silicon Image, Inc. SiI 3132 Serial 
-> ATA Raid II Controller (rev 01)
-> 08:00.0 Ethernet controller: Marvell Technology Group Ltd. 88E8057 
-> PCI-E Gigabit Ethernet Controller
->
-> However there is also a regression. After applying this patchset 
-> system suspend/resume stopped working. This is probably related to 
-> this message:
->
-> pcieport 0000:02:1f.0: Unable to change power state from D0 to D3hot, 
-> device inaccessible
->
-> which appears after calling 'rtcwake -s10 -mmem'. This might not be 
-> related to this patchset, so I probably need to apply it on older 
-> kernel releases and check.
+> On 03.12.25 00:31, Bjorn Helgaas wrote:
+> On Tue, Dec 02, 2025 at 03:02:48AM +0000, Kevin Xie wrote:
+> > ...
+>=20
+> > > > On Tue, Nov 25, 2025 at 03:55:59PM +0800, Hal Feng wrote:
+> > > > > The "enable-gpio" property is not documented in the dt-bindings
+> > > > > and using GPIO APIs is not a standard method to enable or
+> > > > > disable PCIe slot power, so use regulator APIs to replace them.
+> > > >
+> > > > I can't tell from this whether existing DTs will continue to work
+> > > > after this change.  It looks like previously we looked for an
+> > > > "enable-gpios" or "enable-gpio" property and now we'll look for a
+> > > > "vpcie3v3-supply" regulator property.
+> > > >
+> > > > I don't see "enable-gpios" or "enable-gpio" mentioned in any of
+> > > > the DT patches in this series, so maybe that property was never
+> > > > actually used before, and the code for pcie->power_gpio was actuall=
+y
+> dead?
+> > >
+> > > pcie->power_gpio is used in the our JH7110 EVB, it share the same
+> > > pcie pcie->controller driver with VisionFive2 board. Although
+> > > JH7110 was not upstreamed, we still hope to maintain the
+> > > compatibility of the driver.
+> >
+> > Sorry, I missed the background information regarding replacing
+> > enable_gpio with regulator APIs. I agree with this change.
+>=20
+> OK, thanks.  I would still like to have something added to the commit log=
+ to the
+> effect that this change will break any DTs that use "enable-gpios" or "en=
+able-
+> gpio", but that's not a problem because such DTs were only internal to St=
+arFive
+> and we are OK with updating them and dealing with the fact that the DT is=
+ rev-
+> locked with the kernel version (old kernels would require an old DT with
+> "enable-gpio" and new kernels require an updated DT with "vpcie3v3-
+> supply").  Or DTs using "enable-gpio" never existed in the first place.
+>=20
+> Or whatever.  I just want the commit log to be clear that "enable-gpio" i=
+s no
+> longer supported and "vpcie3v3-supply" must be included instead, AND that
+> you are aware of the breaking nature of the change and here is why that's=
+ not
+> an issue.
 
+OK. I send another patch [1] today and add the some description to the comm=
+it
+log accordingly. Please check it. Thanks for your review.
 
-Just one more information - I've applied this patchset on top of v6.16 
-and it works perfectly on ARM Juno R1. SATA and GBit ethernet are 
-visible again and system suspend/resume works too, so the issue with the 
-latter on top of v6.18 seems not to be directly related to $subject 
-patchset. I will try to bisect this issue when I have some spare time.
+[1] https://lore.kernel.org/all/20251204064956.118747-1-hal.feng@starfivete=
+ch.com/
 
-Feel free to add:
+Best regards,
+Hal
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+>=20
+> We can't make kernel changes that require end users to upgrade the DT whe=
+n
+> they update the kernel or downgrade the DT when rolling back.
+>=20
+> Bjorn
 
