@@ -1,172 +1,208 @@
-Return-Path: <linux-pci+bounces-42611-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42612-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5D44CA2AA1
-	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 08:40:12 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC920CA2C2A
+	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 09:11:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 638CB308696C
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 07:39:15 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 262223007749
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 08:11:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 256C93002C6;
-	Thu,  4 Dec 2025 07:39:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B01730103F;
+	Thu,  4 Dec 2025 08:11:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PtQg8yrU"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="fyRCOBpy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8512F9998
-	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 07:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC69A2F7ADF
+	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 08:11:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764833955; cv=none; b=DDQRS7H5eYX6TlJJdisTKoPbYRPtOXvxKPuoMUVUF9Mj7re6mRUBEE32Kg5lPbyHtqo4IKgBcyBL21GpNRMVowzj2LOLYkFyNKltYTwG3fOn+l17kqE8rd3L5NhbZi70RCu7Vs51IpG4eRmi6ZvE1zAvTKK5lLhqkJpLMkkmhMQ=
+	t=1764835892; cv=none; b=Si+2Cp2u3HK3bRLK6JOhnYBcpeNjSIUms5D6DEwecf8TkzR71dfTrLpY7Kn4teucRBnJbL0B2/iveBTCwxidmwUhuH5pf3H7XRylGIk0sbDW8BUG8CYEULeqkVf7ha9hGIL67DqrKfTWFMKB65Xn6ILDQ3zNmsPzxUEdecOyWJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764833955; c=relaxed/simple;
-	bh=ZBbFP2u19PYaompzZPpRS3munLLvOSa0dafo71gqR4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NEreAi9mV0iFcxdzg4Rcui4lFNywqwZUKKpn022EarDJ1An29+wrq1a+jAx4kjchpOkbIGayIt3iWTtxT8b1DLPRnMtdpjt+1gQgCOX5i0hAyJFp3oxMPHGedxm4tb7vhN3p0x8UjrMOy7lSLVjc8LJUJG4UWhCBKbGdgMHLdjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PtQg8yrU; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id BE43F4E41A23
-	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 07:39:03 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 830D060731;
-	Thu,  4 Dec 2025 07:39:03 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B9D2611921EB0;
-	Thu,  4 Dec 2025 08:38:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1764833941; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=k7CE06tyTx4yxeiWtpPuf1dnd1n3hRXeTtqv9aVcNzw=;
-	b=PtQg8yrUoGAKG/Uii8S7XQtskQAWYlZadXyZzx8jkUIfm66LC9Z6ad4cKNE4THRD7VoZSf
-	VpOBLrkjXDpI5hwZCvijtYB2Vy5ZG58J80S2F53J9dwWk7dpTNG30pcf/51U93DGiwEgRT
-	fQpgrXdq5ncqdGM17SDz8p09cF/kH78uKk1HPXF2geoo/Iq2hdicWw0z1OcT8qIlGWX4io
-	9e/70u+5e6wZE/l9cV4otQ1JJW0py/fWZuwlCOsKVDmZydp44Fq5GitqLtJS5kFRhZ2OUd
-	f1Zx5ECtIQ4aGzbOVCxCdOdmcvN4wJ599iZIa+qSHKGSWZgKnUBDj/ecIp/4rQ==
-Date: Thu, 4 Dec 2025 08:38:39 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Kalle Niemi <kaleposti@gmail.com>, Rob Herring <robh@kernel.org>, Matti
- Vaittinen <mazziesaccount@gmail.com>, Geert Uytterhoeven
- <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org
-Cc: Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
- Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, Bjorn
- Helgaas <bhelgaas@google.com>, Charles Keepax
- <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
- <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
- Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Mark Brown <broonie@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, Davidlohr
- Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Alison Schofield
- <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
- Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
- Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
- overlays"
-Message-ID: <20251204083839.4fb8a4b1@bootlin.com>
-In-Reply-To: <dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
-	<20251015071420.1173068-2-herve.codina@bootlin.com>
-	<f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
-	<CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
-	<5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
-	<CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
-	<072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
-	<CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
-	<55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
-	<20251202102619.5cd971cc@bootlin.com>
-	<088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com>
-	<20251202175836.747593c0@bootlin.com>
-	<dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1764835892; c=relaxed/simple;
+	bh=DGXIKSWSyIMgUWpRteBTNa/XMA2SaRhyxSPqWU/ROVE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lyBSx0t/MdIGO/2Jno6O7PAwMubIXLAWfR+fkmtAqG3Rd1qLfmZ6dZW52gfyoUdvas02XtK/5Jwa7BdOiK0PsdGhk5BzKFDYIueT8BccyILaKcegxNEtCu31UGWV5/Fo9zeRomB1XsmlTgJMxlhhpzHPJfvLcTU3RphVx+XY8E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=fyRCOBpy; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+	by m0089730.ppops.net (8.18.1.11/8.18.1.11) with ESMTP id 5B3LdC0d1273862
+	for <linux-pci@vger.kernel.org>; Thu, 4 Dec 2025 00:11:29 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
+	 bh=7MPRysJOVUlQ0qt4ZjKDZkV1oM9qOCbvfSMlkApW+X8=; b=fyRCOBpyWqyP
+	pBDCaTOxrpCvnqqVqsTqLm+lxA45vIOZYKgRCWBS/Wf5OlRNCU9IEfgYQkyNMKeY
+	itnmuci3XZV2jOLoDMcLfz9oWj3VRNgh/pGnMTffdyrhWYlDyCe6Cj7Cr93T5QKa
+	EaXOVlFVrXszqd/W4M0BjJLk0mah5bwjDHDB9GO4lPHROwNBcIMCsQ+ONNmn+dJe
+	s2uoO5Cm8AljACqgArqfZxPC2g69ERpwNDcpk2UC2WJ9C2wKUOQkGsxRivU4Ge7r
+	LPVi9b2N0xgSA2NFqECiLQn9l2Un+Ud2GyOIPg6MpOfZszhqHE5GZ7yI88dpGIj/
+	DB3uPNj4nQ==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by m0089730.ppops.net (PPS) with ESMTPS id 4atwadb8c4-4
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Thu, 04 Dec 2025 00:11:29 -0800 (PST)
+Received: from twshared13861.04.snb2.facebook.com (2620:10d:c085:208::7cb7) by
+ mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.29; Thu, 4 Dec 2025 08:11:26 +0000
+Received: by devbig259.ftw1.facebook.com (Postfix, from userid 664516)
+	id 9A8A4CD93C85; Thu,  4 Dec 2025 00:11:17 -0800 (PST)
+From: Zhiping Zhang <zhipingz@meta.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+CC: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-rdma@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <netdev@vger.kernel.org>, Keith Busch <kbusch@kernel.org>,
+        Yochai Cohen
+	<yochai@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>
+Subject: Re: [RFC 2/2] Set steering-tag directly for PCIe P2P memory access
+Date: Thu, 4 Dec 2025 00:10:58 -0800
+Message-ID: <20251204081117.1987227-1-zhipingz@meta.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20251120131140.GT17968@ziepe.ca>
+References: <20251120131140.GT17968@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+X-Proofpoint-ORIG-GUID: 1XQZZW0pJFIMHjMlVKI1BysKHLgbeJS3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA0MDA2NSBTYWx0ZWRfX2VipyUkn9I2v
+ fQlPyoFet/vBYOzJfDRNRzttpt6/65WV7GaGXpD0cCzTT5r5ED6V4bV/MKVJvocoe/rMRH954La
+ QDvTkUug11E3PRSEN1ATxs4FPAmyr+keh1DfVfdoRaGu7m9qMAGyyhxq6rVlv3jVHJQt3FJldb+
+ Lnln9Z4TiWph8MUQOGVcRnBhzv8L9xls+NYsmGiZv1RsImFD/+98t2H0Q9k50hMwYV5JqkSDJAx
+ DibF5V+BFzOOccNdegOLUU8iyyQKFpbxJvEy2tShFoyK+HXeopxU6O7UkFx9EyypPGWwa+9m96E
+ nwWGSAidkPPc+bQDR/02X015PW9Bvi4NWR5AUjJFIry3clsuWEfxB4uMmcSK//5Us6Ni6NjIopd
+ h0JAh5R+g72LiOGRMbhVlJ6l4VZC1w==
+X-Authority-Analysis: v=2.4 cv=K6Yv3iWI c=1 sm=1 tr=0 ts=69314231 cx=c_pps
+ a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=Ikd4Dj_1AAAA:8 a=VabnemYjAAAA:8 a=buVF335sMQSAnXPDUfMA:9
+ a=QEXdDO2ut3YA:10 a=gKebqoRLp9LExxC7YDUY:22
+X-Proofpoint-GUID: 1XQZZW0pJFIMHjMlVKI1BysKHLgbeJS3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-04_02,2025-12-03_02,2025-10-01_01
 
-Hi Kalle,
+On Monday 2025-11-20 13:11 UTC, Jason Gunthorpe wrote:
+>
+> Re: [RFC 2/2] Set steering-tag directly for PCIe P2P memory access
+>
+> On Wed, Nov 19, 2025 at 11:24:40PM -0800, Zhiping Zhang wrote:
+> > On Monday, November 17, 2025 at 8:00=E2=80=AFAM, Jason Gunthorpe wrot=
+e:
+> > > Re: [RFC 2/2] Set steering-tag directly for PCIe P2P memory access
+> > >
+> > > On Thu, Nov 13, 2025 at 01:37:12PM -0800, Zhiping Zhang wrote:
+> > > > RDMA: Set steering-tag value directly in DMAH struct for DMABUF M=
+R
+> > > >
+> > > > This patch enables construction of a dma handler (DMAH) with the =
+P2P memory type
+> > > > and a direct steering-tag value. It can be used to register a RDM=
+A memory
+> > > > region with DMABUF for the RDMA NIC to access the other device's =
+memory via P2P.
+> > > >
+> > > > Signed-off-by: Zhiping Zhang <zhipingz@meta.com>
+> > > > ---
+> > > > .../infiniband/core/uverbs_std_types_dmah.c   | 28 ++++++++++++++=
++++++
+> > > > drivers/infiniband/core/uverbs_std_types_mr.c |  3 ++
+> > > > drivers/infiniband/hw/mlx5/dmah.c             |  5 ++--
+> > > > .../net/ethernet/mellanox/mlx5/core/lib/st.c  | 12 +++++---
+> > > > include/linux/mlx5/driver.h                   |  4 +--
+> > > > include/rdma/ib_verbs.h                       |  2 ++
+> > > > include/uapi/rdma/ib_user_ioctl_cmds.h        |  1 +
+> > > > 7 files changed, 46 insertions(+), 9 deletions(-)
+> > > >
+> > > > diff --git a/drivers/infiniband/core/uverbs_std_types_dmah.c b/dr=
+ivers/infiniband/core/uverbs_std_types_dmah.c
+> > > > index 453ce656c6f2..1ef400f96965 100644
+> > > > --- a/drivers/infiniband/core/uverbs_std_types_dmah.c
+> > > > +++ b/drivers/infiniband/core/uverbs_std_types_dmah.c
+> > > > @@ -61,6 +61,27 @@ static int UVERBS_HANDLER(UVERBS_METHOD_DMAH_A=
+LLOC)(
+> > > >               dmah->valid_fields |=3D BIT(IB_DMAH_MEM_TYPE_EXISTS=
+);
+> > > >       }
+> > > >
+> > > > +     if (uverbs_attr_is_valid(attrs, UVERBS_ATTR_ALLOC_DMAH_DIRE=
+CT_ST_VAL)) {
+> > > > +             ret =3D uverbs_copy_from(&dmah->direct_st_val, attr=
+s,
+> > > > +                                    UVERBS_ATTR_ALLOC_DMAH_DIREC=
+T_ST_VAL);
+> > > > +             if (ret)
+> > > > +                     goto err;
+> > >
+> > > This should not come from userspace, the dmabuf exporter should
+> > > provide any TPH hints as part of the attachment process.
+> > >=20
+> > > We are trying not to allow userspace raw access to the TPH values, =
+so
+> > > this is not a desirable UAPI here.
+> > >=20
+> > Thanks for your feedback!
+> >=20
+> > I understand the concern about not exposing raw TPH values to
+> > userspace.  To clarify, would it be acceptable to use an index-based
+> > mapping table, where userspace provides an index and the kernel
+> > translates it to the appropriate TPH value? Given that the PCIe spec
+> > allows up to 16-bit TPH values, this could require a mapping table
+> > of up to 128KB. Do you see this as a reasonable approach, or is
+> > there a preferred alternative?
+>
+> ?
+>
+> The issue here is to secure the TPH. The kernel driver that owns the
+> exporting device should control what TPH values an importing driver
+> will use.
+>
+> I don't see how an indirection table helps anything, you need to add
+> an API to DMABUF to retrieve the tph.
 
-On Wed, 3 Dec 2025 12:11:45 +0200
-Kalle Niemi <kaleposti@gmail.com> wrote:
+I see, thanks for the clarification. Yes we can add and use another new
+API(s) for this purpose.
 
-...
-> 
-> I tried this patch on next-20251127 by manually adding the added lines 
-> to /drivers/of/overlay.c, and it did not solve the issue. I will 
-> continue to test this.
-> 
+Sorry for the delay: I was waiting for the final version of Leon's
+vfio-dmabuf patch series and plan to follow that for implementing the new
+API(s) needed.
+(https://lore.kernel.org/all/20251120-dmabuf-vfio-v9-6-d7f71607f371@nvidi=
+a.com/).
 
-Did you observe same traces reported by Geert?
+>
+> > Additionally, in cases where the dmabuf exporter device can handle al=
+l possible 16-bit
+> > TPH values  (i.e., it has its own internal mapping logic or table), s=
+hould this still be
+> > entirely abstracted away from userspace?
+>
+> I imagine the exporting device provides the raw on the wire TPH value
+> it wants the importing device to use and the importing device is
+> responsible to program it using whatever scheme it has.
+>
+> Jason
 
-To move forward, I think I will need help.
+Can you suggest or elaborate a bit on the schmes you see feasible?
 
-Indeed, Kalle, Geert, I don't have your hardware, your related overlay or
-a similar one that could be used for test and also I don't have your out of
-tree code used to handle this overlay.
+When the exporting device supports all or multiple TPH values, it is
+desirable to have userspace processes select which TPH values to use
+for the dmabuf at runtime. Actually that is the main use case of this
+patch: the user can select the TPH values to associate desired P2P
+operations on the dmabuf. The difficulty is how we can provide this
+flexibility while still aligning with kernel and security best
+practices.
 
-I know overlays and fw_devlink have issues. Links created by fw_devlink
-when an overlay is applied were not correct on my side.
+Zhiping
 
-Can you check your <supplier>--<consumer> links with 'ls /sys/class/devlinks'
 
-On my side, without my patches some links were not correct.
-They linked to the parent of the supplier instead of the supplier itself.
-The consequence is a kernel crash, use after free, refcounting failure, ...
-when the supplier device is removed.
-
-Indeed, with wrong links consumers were not removed before suppliers they
-used.
-
-Looking at Geert traces:
---- 8< ---
-rcar_sound ec500000.sound: Failed to create device link (0x180) with
-supplier soc for /soc/sound@ec500000/rcar_sound,src/src-0
-rcar_sound ec500000.sound: Failed to create device link (0x180) with
-supplier soc for /soc/sound@ec500000/rcar_sound,src/src-1
-[...]
---- 8< ---
-
-Even if it is not correct, why the soc device cannot be a provider?
-I don't have the answer to this question yet.
-
-Without having the exact tree structure of the base device-tree, the overlay
-and the way it is applied, and so without been able to reproduce the issue
-on my side, investigating the issue is going to be difficult.
-
-I hope to find some help to move forward and fix the issue.
-
-Saravana's email (Saravana Kannan <saravanak@google.com>) seems incorrect.
-Got emails delivery failure with this email address.
-
-Best regards,
-Hervé
 
