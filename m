@@ -1,122 +1,200 @@
-Return-Path: <linux-pci+bounces-42598-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42599-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05697CA21E7
-	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 02:41:55 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 909B6CA220B
+	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 02:51:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 154EC30358DF
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 01:41:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5D08D302CF4F
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 01:51:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48C9B242D7B;
-	Thu,  4 Dec 2025 01:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C488123817F;
+	Thu,  4 Dec 2025 01:51:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="ItWbvHj2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cvXTMHmS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA7B242D70
-	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 01:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8D81FE471
+	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 01:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764812459; cv=none; b=s84ENie5tomQDh4rycqVbBYnxoJAFG6MTzNrjRJf1kSUqywOfniQ52d64jeSEQq50zVnC5E7/f1izgZ/yn9Z2HpT97hCqKpLGWol/vyxddhj7sFWUwlzvSNilQoYoUK0TQi39fkqoFuiwWGI08j3UbWOFmYam8TXEnyH+ehKC9w=
+	t=1764813071; cv=none; b=L7O54IoErXT1XTlbNvDHmP9ITBi5BNTFaZtA/W+TkFmxExBDEV4xTqqh5mojx620FfjFmwr163y4gN+RErognFffyMYGLu/t/6ONPHYANCuxu89QqPvUaHBoyO9w4cVO8ll9LcPsSoUEuoUv0qRkYRH1JBVomR6AQqivB/B3wP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764812459; c=relaxed/simple;
-	bh=BM99yA5zKxdKG26bL4c4KmFejVDQUbVH43COraIGd8M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cV7PVsPfWENI5QSXfGBh7y8l7vXWDmakCRrwpY32H2IrxD11UgPY1V7wRktW5URD7+RSA/H5U8/8gE0k9/ZFNtfyIcyiffpFUIyV/FCtfFuNlG2pqLOHyohWb4/YJ1oASSTfdM4tHB8s6x+NsSxLEadsLHD/NK5IQPQUG674gX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=ItWbvHj2; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-640c1fda178so655585a12.1
-        for <linux-pci@vger.kernel.org>; Wed, 03 Dec 2025 17:40:57 -0800 (PST)
+	s=arc-20240116; t=1764813071; c=relaxed/simple;
+	bh=TpUHAqE6UBhu4MruTFC47ZTyk/LHpXVEfQESeX+Zs/o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hXog5nBUiliNe29vIJ+k8+AL9F0FfFcaK6m6wVlZXki0JlDrKfOOWtCLLrvaQ8h8rAxNvu03ZYpm9HwOeILObGEsZd2aoTL1DweNigUzn+AGPQek1kUOcoAvli4eeLdLOLP+GJG2lYqe6Z2FbaA/KIbXUzwNo1mhuntb5N/7EWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cvXTMHmS; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-bc0e89640b9so247756a12.1
+        for <linux-pci@vger.kernel.org>; Wed, 03 Dec 2025 17:51:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1764812456; x=1765417256; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=usCVZbWwv9v8DM+VA7vraEXPn/PrzYHVW6BELku9usQ=;
-        b=ItWbvHj2XKNJ4cj3LloXOXDRuwpyjjVNC/OfMovOWqOaZOcJbVA7idkL1KRx550e7q
-         zO/F5ZlH6XKjkjNW7eSeQvY/BT2JItibpGrOzAxiLNYDTHK58yebXLaQLhcC/DGNDX5S
-         i3ireRa/fvbN0N3dPSvUYRcnOlHXrqHAd0MH1gbtFW1TVQYgEclJ3ISdsU9C957spbZB
-         B05XxbNwIqJ8B5QacCNwBObU5n6CjYqNtbNVdVLggWbgi4SSVO4cp/Cx88SOARuF64rD
-         5dT+X5owsHjteIsOU2ua4zbjQKxCd4TtIa0ChI8ErlBJUK9CbgWaMYuM5jmZLP9EkU07
-         iBJQ==
+        d=chromium.org; s=google; t=1764813069; x=1765417869; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=99z3TXuiGKnUbdI716ISNYmEuYSPxRxRHOFkHrMKwBU=;
+        b=cvXTMHmSURRCSaXrLX/lOvWtr1Lc1MiCqLWpxR3J0OmERTnuX/dDdBl52gV+5IOTxW
+         /yxK9WBqD3QOltZKS+MDz1LAzPj5AVzbi1uz6LQKkGLLBpwulrMw1EOzOb8Be+9FJdDg
+         zotx5dlAwQyNR3lBnCnQwk+A22svDyB/dedOY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764812456; x=1765417256;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=usCVZbWwv9v8DM+VA7vraEXPn/PrzYHVW6BELku9usQ=;
-        b=Op7Ev0JKRhwmLGWwUWiWe1f5cOS80P4Qbqd2D4N6W9jCetdfqt0nww/ZQoS+3elWjn
-         6VNXpr3iFAg532LtmtsHYyGLMAH/MJuLeV+d2xGEGP80iWY7Ii1zN+fndAsxeXrpNvMG
-         P9PC059PRo7IzxMIYQ4j+uyY583M+D9giSNVvrdam271OFq9ntaYx8zLpTXpmuARFuw3
-         cPagLB2UTTkg9mgTiUVOTXurU+GXKQkPW6XnFx518F+RZq24scA5O/xY19XYuXsmhsJY
-         mg5Ke0bIEWGyXsxfAL40ISY9co/sE9q/YNmMg4arB6QJdv9G/i+a19ndEqUkNCz/uxEZ
-         NSIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcicMiC1Xlsxl4ScyiLPx/rUkiWB2o8wj1oiuy7YoZynL1XXD4oCM7d6tyaQXg6buDvGq7/grVzXo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymjbtRZFsQTWMU+aza96pFtNVHn3/wlWdExSAFWQuwjqo8J4wQ
-	y2m/8KHfKNJgftL+gprCuDyYVwybPFZBGNCPvEORTfV8E6qPs36CrMMbUhJPkyHzeqw=
-X-Gm-Gg: ASbGncuwZuTPJlJc18Ij4IN5hMUIfKldfZJ9WzLgAeOkTdcvIEocGAtBLSR6t0zBUf6
-	TEoCQSXcEde8susXd0Dl0xRSsewwB0+waJ4NQbnQz+801zKwRLLeSy2B3ssYnxEo2crvP6YDJga
-	6hCgCQ6zrDYQXI5NrV8D0zuhbM8gnwBpKdGq6MPM8RlY3Tfb4ueTPD1pQAYF0fr3eRKvExsuOvj
-	pa3YjIDriw29uWU6z8WzMqhVh2p5AUh68je1lv548SGsLj9e1H6VupyUk/tNbuOCP7XmCLFUp9J
-	koqPXWzG2Udv9L1kYmpiyOeir5tw1Fz9YbD6jSBrVS6Hf19ZNVfWK0sTdmrb9R98++XOhCvB4aD
-	HUTi2W88K69zvlWJICqbCy1YrA6a35RmVw044lcWiXq/7sPhHcWFpkGSM4sAf89n9fkrNiCxfUV
-	lzke8EjFuXsoqu1aMjTFJuKR6SK3qusgImas+MTzdu/6NYO04=
-X-Google-Smtp-Source: AGHT+IGfRE0y5OoQoEAxk9F/9R4hL3hkUmJWKifR9VWkvr8jbHYDQJhShb60/e1UsyObLpRQHJd9SQ==
-X-Received: by 2002:a05:6402:2749:b0:63b:f22d:9254 with SMTP id 4fb4d7f45d1cf-6479c516959mr3524977a12.23.1764812455779;
-        Wed, 03 Dec 2025 17:40:55 -0800 (PST)
-Received: from dev-mattc2.dev.purestorage.com ([208.88.159.129])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-647b2ec3019sm80170a12.4.2025.12.03.17.40.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Dec 2025 17:40:54 -0800 (PST)
-From: Matthew W Carlis <mattc@purestorage.com>
-To: macro@orcam.me.uk
-Cc: ahuang12@lenovo.com,
-	alok.a.tiwari@oracle.com,
-	ashishk@purestorage.com,
-	bamstadt@purestorage.com,
-	bhelgaas@google.com,
-	guojinhui.liam@bytedance.com,
-	ilpo.jarvinen@linux.intel.com,
-	jiwei.sun.bj@qq.com,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lukas@wunner.de,
-	mattc@purestorage.com,
-	msaggi@purestorage.com,
-	sconnor@purestorage.com,
-	sunjw10@lenovo.com
-Subject: Re: [PATCH 2/2] PCI: Fix the PCIe bridge decreasing to Gen 1 during hotplug testing
-Date: Wed,  3 Dec 2025 18:40:20 -0700
-Message-ID: <20251204014020.1426-1-mattc@purestorage.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <alpine.DEB.2.21.2511290245460.36486@angie.orcam.me.uk>
-References: <alpine.DEB.2.21.2511290245460.36486@angie.orcam.me.uk>
+        d=1e100.net; s=20230601; t=1764813069; x=1765417869;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=99z3TXuiGKnUbdI716ISNYmEuYSPxRxRHOFkHrMKwBU=;
+        b=wAVJxfCMhnq0Hb3PywJWEj0enC5oSiGWWtCToEp08uFbyONQgNjljllD4T3vVsR3jT
+         pb2f433IvxDVvToB40wKUb/Qco5w5qaKBtF+meXhjHMnhHhPVftEx1vlrCNsBuBlKGMN
+         kNMvudxaUxb52Rx59Iu0+aYva5Z5KxlF4eaHTLryZUNsetlIHKAhoUtBwDZzex9JCz6o
+         I2h1CgD3UYjt3YZVH47TkGpr+OIKM0VELaCgU75KiASTMlSNORjdiZ6Uy06S7vw7t+jk
+         5Rd5Z4PIyDIKDxub4RXZT2XDPn8M5JBsI/2O0DR3463N5c+p0KmclXjGpZOrD2N1s7W6
+         CMxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7GSMWnJhBOrHLBazHjVxJfIeS1H9T0ogaMrL0uYYopxZInxveMEADhoZK++SuixE4NtBtyKVAUZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyk7KW2ekjjmerejf9D04njKnXzmIj9zAW6FLpQqdzPGf83l+8j
+	C9nFiAImkaQGUaX5pEjFladQusTTrZET43rnWzKX/43j0WeWWT8tjcUe3jWoLpqUmw==
+X-Gm-Gg: ASbGncuobmzd5Wp1eNH2cQfnjHYclbY8HBheQl3Xo/CQ49hqVGg+L5WabGCbJg+F+9f
+	AkLPA1BdskBuvOLkJn/Uw10I1CYBe4xAWMV+A4xcOsCgDQM0JRDkwNaxeCfz+H7yNW9pHYoFZ3Y
+	PK2X+QL0LuxZihkFWQUYWvc5YrREU0Yl+TnTxXmpGO515L2DOoinZIaENEIyQSbzblSaa/YvAK7
+	R2VRF3Gc2mqkiVEj94a20r38hAIjei2wOL7Qr/J2S28QZre15AmpIaeAjgMJyFPiJrBwPXZOBZd
+	P1NB+dq06iLoqoSKrLLenV90XBcRKdRBCE+WGOA6Dkg5ZaJfnB6zbeECrnctMTTwo0LIPh0IMRq
+	Ljc/Qs6NSYqcNcY0fPw2J0RI4sUhCoAa/jsT63bUE3tnwTC1tW2KZU7v8HTiH6ni9FPGLOKH+No
+	2m1IpPli1VM5vrTjVP17YodkMgd7EwOdDm1d8cuj0R7iCzPBHflg==
+X-Google-Smtp-Source: AGHT+IFvnri2mh9npGsPKxAY3C1HmUov4Cgkz8425q7v12Udu1UK+pVLvAsk8UXu+jiHgwDvDcmvpQ==
+X-Received: by 2002:a05:7300:dc8e:b0:2a4:3594:72d4 with SMTP id 5a478bee46e88-2ab92d545b0mr2673849eec.3.1764813069154;
+        Wed, 03 Dec 2025 17:51:09 -0800 (PST)
+Received: from localhost ([2a00:79e0:2e7c:8:e953:f750:77d0:7f01])
+        by smtp.gmail.com with UTF8SMTPSA id 5a478bee46e88-2aba83d2a5fsm712051eec.2.2025.12.03.17.51.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Dec 2025 17:51:08 -0800 (PST)
+Date: Wed, 3 Dec 2025 17:51:06 -0800
+From: Brian Norris <briannorris@chromium.org>
+To: Qiang Yu <qiang.yu@oss.qualcomm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 3/5] PCI: dwc: Remove MSI/MSIX capability if iMSI-RX is
+ used as MSI controller
+Message-ID: <aTDpCpLUzxnAmvt6@google.com>
+References: <20251109-remove_cap-v1-0-2208f46f4dc2@oss.qualcomm.com>
+ <20251109-remove_cap-v1-3-2208f46f4dc2@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251109-remove_cap-v1-3-2208f46f4dc2@oss.qualcomm.com>
 
-On  Mon, 1 Dec 2025, Maciej W. Rozycki wrote:
+Hi,
 
-> Discard Vendor:Device ID matching in the PCIe failed link retraining 
-> quirk and ignore the link status for the removal of the 2.5GT/s speed 
-> clamp, whether applied by the quirk itself or the firmware earlier on.  
-> Revert to the original target link speed if this final link retraining 
-> has failed.
+On Sun, Nov 09, 2025 at 10:59:42PM -0800, Qiang Yu wrote:
+> Some platforms may not support ITS (Interrupt Translation Service) and
+> MBI (Message Based Interrupt), or there are not enough available empty SPI
+> lines for MBI, in which case the msi-map and msi-parent property will not
+> be provided in device tree node. For those cases, the DWC PCIe driver
+> defaults to using the iMSI-RX module as MSI controller. However, due to
+> DWC IP design, iMSI-RX cannot generate MSI interrupts for Root Ports even
+> when MSI is properly configured and supported as iMSI-RX will only monitor
+> and intercept incoming MSI TLPs from PCIe link, but the memory write
+> generated by Root Port are internal system bus transactions instead of
+> PCIe TLPs, so they are ignored.
+> 
+> This leads to interrupts such as PME, AER from the Root Port not received
+> on the host and the users have to resort to workarounds such as passing
+> "pcie_pme=nomsi" cmdline parameter.
+> 
+> To ensure reliable interrupt handling, remove MSI and MSI-X capabilities
+> from Root Ports when using iMSI-RX as MSI controller, which is indicated
+> by has_msi_ctrl == true. This forces a fallback to INTx interrupts,
 
-I think we should either remove the quirk or only execute the quirk when the
-downstream port is the specific ASMedia 0x2824. Hardware companies that
-develop PCIe devices rely on the linux kernel for a significant amount of
-their testing & the action taken by this quirk is going to introduce
-noise into those tests by initiating unexpected speed changes etc.
+But "has_msi_ctrl == false" does not necessarily mean it's using an
+external MSI controller, does it? It could just mean that there's some
+per-SoC customization needed via the .msi_init() hook.
 
-As long as we have this quirk messing with link speeds we'll just
-continue to see issue reports over time in my opinion.
+In practice, that's only pci-keystone.c though, and it's not really
+clear if that's some modified version of iMSI-RX, or something else
+entirely. At any rate, I suppose it's best to only tweak the things we
+know about -- unmodified DWC iMSI-RX support.
+
+> eliminating the need for manual kernel command line workarounds.
+> 
+> With this behavior:
+> - Platforms with ITS/MBI support use ITS/MBI MSI for interrupts from all
+>   components.
+> - Platforms without ITS/MBI support fall back to INTx for Root Ports and
+>   use iMSI-RX for other PCI devices.
+> 
+> Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 20c9333bcb1c4812e2fd96047a49944574df1e6f..3724aa7f9b356bfba33a6515e2c62a3170aef1e9 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -1083,6 +1083,16 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
+>  
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+>  
+> +	/*
+> +	 * If iMSI-RX module is used as the MSI controller, remove MSI and
+> +	 * MSI-X capabilities from PCIe Root Ports to ensure fallback to INTx
+> +	 * interrupt handling.
+> +	 */
+
+Personally, I'd suggest including more of the "why?" in this comment, as
+the "why?" is pretty perplexing to an uninitiated reader.
+
+Maybe:
+
+	/*
+	 * The iMSI-RX module does not support MSI or MSI-X generated by
+	 * the root port. If iMSI-RX is used as the MSI controller,
+	 * remove the MSI and MSI-X capabilities to fall back to INTx
+	 * instead.
+	 */
+
+> +	if (pp->has_msi_ctrl) {
+> +		dw_pcie_remove_capability(pci, PCI_CAP_ID_MSI);
+> +		dw_pcie_remove_capability(pci, PCI_CAP_ID_MSIX);
+
+Removing the capability structure is a neat idea. I had prototyped
+solving this problem by adding a new PCI_MSI_FLAGS_* quirk, but that was
+a lot more invasive. I like this idea instead!
+
+This looks good to me, although maybe the comment could be updated. Feel
+free to carry my:
+
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+
+I'd also note, not all devices currently actually define their INTx
+interrupts (such as ... my current test devices :( ), and so
+pcie_init_service_irqs() / portdrv.c may fail entirely, since it can't
+really provide any services if there are no IRQs for those services.
+That does have at least one bad side effect: that the port won't be
+configured for runtime PM and won't ever enter D3.
+
+I wonder if we should allow pcie_port_device_register() to succeed even
+if it ends up with an empty 'capabilities' / no services.
+
+Brian
+
+> +	}
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
+> 
+> -- 
+> 2.34.1
+> 
+> 
 
