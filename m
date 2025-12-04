@@ -1,228 +1,168 @@
-Return-Path: <linux-pci+bounces-42609-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42610-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35A82CA2A14
-	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 08:27:15 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B9F3CA2A19
+	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 08:28:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4664D3061A42
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 07:24:51 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3610730039FA
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 07:28:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCE67290D81;
-	Thu,  4 Dec 2025 07:24:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEAC81D5178;
+	Thu,  4 Dec 2025 07:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=teika@gmx.com header.b="SHVONeQs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2134.outbound.protection.partner.outlook.cn [139.219.146.134])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B139A1D5178;
-	Thu,  4 Dec 2025 07:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764833059; cv=fail; b=h5OlhcZq3Tpf6WwYTLswkb/xa8ou0BG79nPBW3KaOOW2e1EU6I3fN4chtAm/IIV7plLuXpIoKilVqv+ea55Hem3DdU5W+CRLp/21l1lB1VmqLkxOrRdF8/4DlAeSUqeDxJKPChA7VqJ9Uqt6vPP2wo17anV82M26VDQ49hEQRJM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764833059; c=relaxed/simple;
-	bh=KMlYyyvjbdJt7z+5XjMbTWoAqmJSb1jizRw160hlUcE=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=du4TlBefh5hDM4RwHbdCzoCMMtX7kTplUSNoLmU6pLrYH+1ISLFX7U+OIdQBGKBL0Ifk+SQFMCbjBHC02h+fLtYRq5f/MxJ2LqAlDBUdTFmPyKBW2VrDRYO6u2S3sCNa7WTDbigXqzfIhgklFgmyrcjzi8T3HRsBU2QjQNpEEtU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y1xVEDDiBXtUWhID6B5olwj0yZZxE8y9HxnDI7mYNvQduMG9JDb1LvUro7FziRcKD9zQ3Z5/dy/YwqwbIMoxOk1F9oTW34rT2TRboEj0xKsgFjn0XFt/k1PpkBXo4H/Xdzi6FCbr7TG1foIQSxdHcjbY4p7Dtbn/vCFiAiGnpE/sGf8rZVtdh1byQHr7lV/Qc0hYmuPpxUrgOWbEZhxhC8jDKVJTas5LPxrF5fjYyubw/WZzPLXe+80b4VlZvS0fCDVFVcT4UxDn8vIKbmPVMFFyI+1wmvd5QRdbwM+8TytoeaE2lDbZOiF67hitTemXbDyYjgCkY4cv+Y1GrqQrQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nrtQpqutb6dEmd3h6Mri5cv+6tXN5+VePqSXFXKxy7w=;
- b=IABO/EuFWhhpvUTxv5YRv/ZCr3I+21zn3cipQT1ShHskHJkASWEEWS1IktYoio3X3H/yt3FsTDMdM5V3E2jCgtlHoO5DsbKHqszMgskcLPs3ZSwbxMXCVbT2OjR1nbGeg4qgXyk0Bjt8ESqskTxo/Ml4e3Eq9cI8xm4R8hJhy5JINhdGlYzNz5jWUbHPGayPf5kHiwUbLeFGSIWxnvTR/WyrfdQVxSX8tjcOBbxOomTZS7C4Z6jhtmKZVitj84VY5u6DF3aZPLqX3p9SuUMGy3q1ppmFanFB+BBjDGhBF4y+YwOi0x07zIbMn5pCSAGkCMYlXr0TUNrsiDMNhkLbhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:7::14) by ZQ2PR01MB1162.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:11::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.11; Thu, 4 Dec
- 2025 06:50:04 +0000
-Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- ([fe80::2595:ef4d:fae:37d7]) by ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- ([fe80::2595:ef4d:fae:37d7%4]) with mapi id 15.20.9388.009; Thu, 4 Dec 2025
- 06:50:04 +0000
-From: Hal Feng <hal.feng@starfivetech.com>
-To: Kevin Xie <kevin.xie@starfivetech.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
-	E Shattow <e@freeshell.de>
-Cc: Hal Feng <hal.feng@starfivetech.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] PCI: starfive: Use regulator APIs instead of GPIO APIs to control the 3V3 power supply of PCIe slots
-Date: Thu,  4 Dec 2025 14:49:56 +0800
-Message-ID: <20251204064956.118747-1-hal.feng@starfivetech.com>
-X-Mailer: git-send-email 2.43.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: NT0PR01CA0020.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:c::16) To ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:7::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3472B9BA
+	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 07:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764833279; cv=none; b=M7cyeGSD3PG0fJKVuvI1yU8YUB6vHuyqP6kDrfX9VDAebcWIQdtfRN4dapvT7e8NnPfPLA2/ZyH1FDPX/JKro2d0DnozDF1USgLKFj1pa1K2+0iUbdJH7qkMUUoeaDJtWLdMWpi6+p/XTAOwpp+H1ioAgXwIy+YObNtxqVBmd2U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764833279; c=relaxed/simple;
+	bh=gWV3pxGfOpwnrXJzKvmTsk76VRdhRoDfaxivespj/U4=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=sBqDGnQ+FZpRzXFetV5NgcN/+tya5y+ATZ0rFVG3J3JL6pglwoijIhEEgfee5CEt2EAsxwMXTVEnNHzbCnhwjHVCjPu0dG1lDHEHhcZaYXtjrW1t5ERWp/n/U7xNov2RGHEW2P/IrWMYgo8s4pmG7pRsejHj5WaTbAnF8d3IWOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=teika@gmx.com header.b=SHVONeQs; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
+	s=s31663417; t=1764833265; x=1765438065; i=teika@gmx.com;
+	bh=gWV3pxGfOpwnrXJzKvmTsk76VRdhRoDfaxivespj/U4=;
+	h=X-UI-Sender-Class:Date:Message-Id:To:Cc:Subject:From:In-Reply-To:
+	 References:Mime-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=SHVONeQs+Rpf6Ma0F5spwRHDT5oSiUGN/NrkRvjNl1z9eLCs/kg+JIM8U7JtEinh
+	 ATotFCCalNzKinB5dQNL6QUywWtFezy2eFr59vVPiRIEK61AySgzb0BMfBY63ShpC
+	 gYOA14VQMhPr9qytbD+QL/Kp3lklHkI+zzSpEiHXgasEvYXNHbNFI3Olf4HqaKr1I
+	 6tykQYxNE9/w/VU/l4SmRCtPPnPRlMHFihUYA0cMKeDs0v3BYKxdwPghwHeMz6JKn
+	 NFdPKgqbzUql13zGHzELJjR/C2RshGdHH/etMrvQItWulfYHcXe6hZP24hB2WVm22
+	 SZegmCs5Z761S2Dr3A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost ([153.161.204.57]) by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MKbkM-1vm1z22eFQ-00QQ1r; Thu, 04
+ Dec 2025 08:27:45 +0100
+Date: Thu, 04 Dec 2025 16:27:26 +0900 (JST)
+Message-Id: <20251204.162726.629872510136678985.teika@gmx.com>
+To: helgaas@kernel.org
+Cc: linux-pci@vger.kernel.org, aros@gmx.com, superm1@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Subject: Re: [bugzilla-daemon@kernel.org: [Bug 220729] dmesg flooded with
+ "PME: Spurious native interrupt". AMD, related to audio.]
+From: Teika Kazura <teika@gmx.com>
+In-Reply-To: <20251104200516.GA1866276@bhelgaas>
+References: <20251104200516.GA1866276@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZQ2PR01MB1307:EE_|ZQ2PR01MB1162:EE_
-X-MS-Office365-Filtering-Correlation-Id: f5f259c0-3c75-4723-b58e-08de33015a72
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|52116014|7416014|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	MKadG4YDzjslP6dVyjcuQKolLnYNK8EGKjmAa8gzN6UWl5RjqhfgDN8ehFoeCGs3/XlfNRK7qc6zp9uw0mDsz84nWu4trPaNXxodFOaVvfGlpggHY/tpgDj2BvwmfxiSHkGHmE6qvsNU2ZajR85LAqk+GKOIQ4aorvMPWeekMhQSxKHkd8bNdg/jw7Triyd7t9cXCVoE8yW+LHAuhZqpzAlrxd0zlxCh8z0p/pW80hPG9IQu26BNT4nGVdfM+AaDdi8Cqd0Qhd2nnOuFtFNCdz7d8brGades2B7XomiKqHZ6rnMxACYG5SSFm3jAYsxNq23oZPQdpmB+iA0mIZQsj3RGo5rlcL9YiLAz0Vntd1BqxY34fAO5AHXGya9ldb7zWgysUYJpZxIFiG3aq7ffR6g1d5WCUZaSKyeduTU9dP5HGtUlOpc9fRCeFAG9IxUDG3mjGUd5Ux+rTnXCUr9lXCDE5mEXMoGs3ONnI0RUnUpJ4xb9u4DdnBzcLUiI5k+J6EDQMTSuuiAvQEB3ZfMwlKG4GEtxwgykVTGOkzY6tGpPFtow47RlJU8V4X2aS5T/U3BhW/l4yag/9ch7LJoQYBwtF1yV5U8X/S3Z6bh+rkQ=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(7416014)(921020)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9sRYfUSqNiwPRsHmi5e9oOkh68rXSXBopz4VEXbLs++jTFze5gtOWR4zIwgQ?=
- =?us-ascii?Q?58/DDDAkbedEvqRMHlWIAvDW5xd5TcbZIjJsDUrfAJuh6KtHrl72eqhbOk/T?=
- =?us-ascii?Q?4VaoXkR7k+G1ZWr4bk4bGVPPyNxHZjQeLi56unwNOM03EzzfisID4r7XxrfV?=
- =?us-ascii?Q?2Z97V6JaXo5a++XU0rMygZgnz/Q7vj+qUv5sXjxQLyqxQGFJehucc5+MQmaP?=
- =?us-ascii?Q?b2NTONI8clgFvpKVafeCk1zp2UunnwrrORuSKxXnDfJ5/WllsDquC3CXcOIh?=
- =?us-ascii?Q?6c2OCAkz30d2MU+u5D9QY0BKqqwG4TqSjVvT0DOFeb0d6YlbBMGGyHrxmEwL?=
- =?us-ascii?Q?iXuvixzk4z9uXnvmeqpPTonEp5+4nSzQXkF/wSCXIratpuDkwFzukrhM9SSz?=
- =?us-ascii?Q?TH/8il97KKTnP43J9lU+lm3q17sHh2jIXnB7OhiT61+SpVOhezV0to1M/Mjn?=
- =?us-ascii?Q?6q2IhzlGXcxAYuVR1Fo9P8sSHkqEH6V8G4wDOLgTfgUlyN+Jy2VEMYG6ScGy?=
- =?us-ascii?Q?jj4txBtfwpZXns1YRL0u8lhhivOuU9sHjbM6sOx+lgtg4SdmyGLMM2bRJsAK?=
- =?us-ascii?Q?bUAshUJU+vaBHkyZmRDwmK/wCxW9mfT2p0OO2X15s2EoER5a3Z/pxPgKE8y9?=
- =?us-ascii?Q?kCj65rcRAPgG3OQ4MUWC2GZQG+97iBdopBQtrwQPDpHJB4EGx9B7a0it1mgp?=
- =?us-ascii?Q?rM2i4cdyhxvyhekFJ4Q0/yAA/70ie32uAW93h/TRaoHarykRCunuXTNxGFtq?=
- =?us-ascii?Q?RbERIcKjB1pwkaR8ZWSH6Nw8Io0//YjYDq8imFefnnXwhjPWSql4wutGWQb4?=
- =?us-ascii?Q?U8MGt10qvnaDg3/ghOxhiH/nTJl618YuYIDjUeWO6wG1TSxwyokaWuuNDWNa?=
- =?us-ascii?Q?R/WV22TvufQWLtoJ12SWjv1RTaQ/bS+y3YzQ+9bNVN/Ns5cp0iic9t47OuHu?=
- =?us-ascii?Q?s437zboo6QqaYM76AonDiHxRzbtPmWViIPGLllVzEJn3n/l8Mv/05nKu/eI/?=
- =?us-ascii?Q?auYVLltS/mOMuIt9Qnhl3VQxCNTNFPE8PZ95Etc4o7v0Tn9d2l15JSL9Yw3k?=
- =?us-ascii?Q?Du3Mro+9o5nrGfSo2QLwav4HC9vU4Bk7BpCxcVp/DcBP3c0Fk6q5QjQhpPjD?=
- =?us-ascii?Q?BXEME3QD/qhaQ938mn7OpVCETyxIAhdeyHbXTkd1puP5B5b5dqa5FWsjYDIv?=
- =?us-ascii?Q?fGe/pauECVZJr8Zz3EAYVhDeKhL9tSz9zUU9gx92h/aRid8Z33s8kLV3w2S4?=
- =?us-ascii?Q?HECH5n6UygUv2p8PjRJf2ZkMS5Fm46KoZ/VUYXAydS/3Il/PM+c7g+oBBXS+?=
- =?us-ascii?Q?uPic0xwpL8x+j8TdCCF1nRoC5dprCLmn0XgFXNkQPhc+uljjNcnYfIRxt6lN?=
- =?us-ascii?Q?9g9JRWpXhkyNpC5+poPWwn42mHqoX/Skeiz85hmjIRboFomg59wadDytwtNf?=
- =?us-ascii?Q?S4GYh1C2d+X/UyrY8vlktMbnKn6BQ24m0TxNBlHyZQlJvfASzQoeuo60kYWe?=
- =?us-ascii?Q?quHFjJ+0MpWqpMyhiHj3ycQ30IjRyj9kNj+ZHQ7tyan9KAGISa4Dc4XhQJsc?=
- =?us-ascii?Q?WDyHVgWuZIyf/Hk47TY7nHMX28e9Nb9HEYfuZMD6/4JvEkKVsEwxO3EXOrft?=
- =?us-ascii?Q?qg=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5f259c0-3c75-4723-b58e-08de33015a72
-X-MS-Exchange-CrossTenant-AuthSource: ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2025 06:50:04.0031
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WrxsVvLIv7kTm2fiGS/GM4VoeC6hx7bRwUZ/6E4Tqo+0ug/QjO7on70vcNk7dOhJG8819HULN9llmWDoOB0ZrxTM5CHAW9cMxx7hX34xrgg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ2PR01MB1162
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:7GqBwkbcW3c/BVKGEx0O1dSnPAY/qWu5XiQ1FpOwcbTZtvHQeC9
+ F3Pe6pmvG2dUv/gU7tn9XLBGnLDc/6SKn0X2LRiQ2HanRj7ATS+TvLVzziQXLk01/5vC+Ji
+ AOpTOjiMAhkJKHSLj/J24fk2hkaVSSTNw/0USgaQLdtvuZ+FdgZR08mzVYCD1qaLX5JFPhW
+ ji4S5YIsUvHJpri/xIvlA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:0jMkwxuWQGw=;d8SRUk2BuaGU4Snm1wu0swW2scb
+ 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
 
-The "enable-gpio" property is obtained to control the 3V3 power supply
-of PCIe slots but it is not documented in the dt-bindings and using
-GPIO APIs is not a standard method to control PCIe slot power, so
-use "vpcie3v3-supply" property and regulator APIs to replace them.
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: [bugzilla-daemon@kernel.org: [Bug 220729] dmesg flooded with "PME: Spurious native interrupt". AMD, related to audio.]
+Date: Tue, 4 Nov 2025 14:05:16 -0600
 
-This change will break the DTs which add "enable-gpio" or "enable-gpios"
-property under the node with compatible "starfive,jh7110-pcie".
-Fortunately, there are no such DTs in the upstream mainline, so this
-change has no impact on the upstream mainline.
-If you have used "enable-gpio" or "enable-gpios" property in your
-downstream DTs, please update it with "vpcie3v3-supply" after applying
-this commit.
+> It looks like PME and bwctrl share the interrupt; Teika, if it's easy
+> for you, you might see if this is reproducible without bwctrl.
+> There's no direct config option for it, but I think you could remove
+> bwctrl.o from drivers/pci/pcie/Makefile.
 
-Acked-by: Kevin Xie <kevin.xie@starfivetech.com>
-Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
----
+Unfortunately, compilation fails, like this:
+------------------------------------------------------------------------
+ld: vmlinux.o: in function `pcie_retrain_link':
+/usr/src/linux-6.17.9-gentoo/drivers/pci/pci.c:4746:(.text+0x9fdfb1): undefined reference to `pcie_reset_lbms'
+ld: vmlinux.o: in function `pcie_failed_link_retrain':
+/usr/src/linux-6.17.9-gentoo/drivers/pci/quirks.c:135:(.text+0xa27105): undefined reference to `pcie_set_target_speed'
+...
+-------------------------------------------------------------------------
+Ok, let us give up this route. This bug is not fatal. Thanks a lot for your reply.
 
-This patch is derived from the reply of Manivannan [1].
-And the previous version is [2].
-
-Changes since [2]:
-- Improve the commit messages. Add description to explain the impact of
-  this patch.
-- Remove the Fixes tag and the Tested-by tag.
-
-[1] https://lore.kernel.org/all/xxswzi4v6gpuqbe3cczj2yjmprhvln26fl5ligsp5vkiogrnwk@hpifxivaps6j/
-[2] https://lore.kernel.org/all/20251125075604.69370-2-hal.feng@starfivetech.com/
-
----
- drivers/pci/controller/plda/pcie-starfive.c | 25 ++++++++++++---------
- 1 file changed, 15 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/pci/controller/plda/pcie-starfive.c b/drivers/pci/controller/plda/pcie-starfive.c
-index 3caf53c6c082..298036c3e7f9 100644
---- a/drivers/pci/controller/plda/pcie-starfive.c
-+++ b/drivers/pci/controller/plda/pcie-starfive.c
-@@ -55,7 +55,7 @@ struct starfive_jh7110_pcie {
- 	struct reset_control *resets;
- 	struct clk_bulk_data *clks;
- 	struct regmap *reg_syscon;
--	struct gpio_desc *power_gpio;
-+	struct regulator *vpcie3v3;
- 	struct gpio_desc *reset_gpio;
- 	struct phy *phy;
- 
-@@ -153,11 +153,13 @@ static int starfive_pcie_parse_dt(struct starfive_jh7110_pcie *pcie,
- 		return dev_err_probe(dev, PTR_ERR(pcie->reset_gpio),
- 				     "failed to get perst-gpio\n");
- 
--	pcie->power_gpio = devm_gpiod_get_optional(dev, "enable",
--						   GPIOD_OUT_LOW);
--	if (IS_ERR(pcie->power_gpio))
--		return dev_err_probe(dev, PTR_ERR(pcie->power_gpio),
--				     "failed to get power-gpio\n");
-+	pcie->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
-+	if (IS_ERR(pcie->vpcie3v3)) {
-+		if (PTR_ERR(pcie->vpcie3v3) != -ENODEV)
-+			return dev_err_probe(dev, PTR_ERR(pcie->vpcie3v3),
-+					     "failed to get vpcie3v3 regulator\n");
-+		pcie->vpcie3v3 = NULL;
-+	}
- 
- 	return 0;
- }
-@@ -270,8 +272,8 @@ static void starfive_pcie_host_deinit(struct plda_pcie_rp *plda)
- 		container_of(plda, struct starfive_jh7110_pcie, plda);
- 
- 	starfive_pcie_clk_rst_deinit(pcie);
--	if (pcie->power_gpio)
--		gpiod_set_value_cansleep(pcie->power_gpio, 0);
-+	if (pcie->vpcie3v3)
-+		regulator_disable(pcie->vpcie3v3);
- 	starfive_pcie_disable_phy(pcie);
- }
- 
-@@ -304,8 +306,11 @@ static int starfive_pcie_host_init(struct plda_pcie_rp *plda)
- 	if (ret)
- 		return ret;
- 
--	if (pcie->power_gpio)
--		gpiod_set_value_cansleep(pcie->power_gpio, 1);
-+	if (pcie->vpcie3v3) {
-+		ret = regulator_enable(pcie->vpcie3v3);
-+		if (ret)
-+			dev_err_probe(dev, ret, "failed to enable vpcie3v3 regulator\n");
-+	}
- 
- 	if (pcie->reset_gpio)
- 		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-
-base-commit: b2c27842ba853508b0da00187a7508eb3a96c8f7
--- 
-2.43.2
-
+Best regards,
+Teika
 
