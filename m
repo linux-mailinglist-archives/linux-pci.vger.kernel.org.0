@@ -1,151 +1,268 @@
-Return-Path: <linux-pci+bounces-42624-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42625-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA8FCCA38A9
-	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 13:07:56 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AE6ECA3A60
+	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 13:46:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DFA2E3080AEC
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 12:07:03 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 61BEF303267B
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 12:46:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0908B33CE87;
-	Thu,  4 Dec 2025 12:07:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 705FC19F12D;
+	Thu,  4 Dec 2025 12:46:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="myUB8jID"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="m/epDn9K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B69D338F2F;
-	Thu,  4 Dec 2025 12:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68F01758B;
+	Thu,  4 Dec 2025 12:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764850022; cv=none; b=o/sAasjcvCExFeQadeFdNwz44n/BG6yMXAsI9zgmEAqCh4dSAvvantBWA+DTuBzKqFtbcs2OZobkuQSCXLPjfvvy0en7asNdX9JYsyeYjyaFX784IcftcjNWuefDPBkv3GwHOR/txd6db0YnDgHZ1/NffOA9emvu6Ooq7xmFnhQ=
+	t=1764852360; cv=none; b=K+DrTY93l2ypW7OOtX4drHAS374QKFloxVFIqNIa26pPOqLCe/cdMSwTcUIfBA1a35WDU7Adtb1eNwgPDumGw6u2lYBXDo8FAPSfYBAvDFZtOcJJISYNjRHaXky7crwtKV3tluKOkT8GtXaHyVLc7j6mxGYxm4/q/iyoVVCqZ14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764850022; c=relaxed/simple;
-	bh=AACMBGkOYNpC0wc7dBl/A97+VH5lB0jqIQofcJw+rV4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IRrOG2nNswGJOJaEYohaRkU+zDkHPl9BOQ1/VisnELKKRMp3NjphZzB8NkZ08m/SxWf2jFI6L2jFmxYI6QxCbw54oxy8FkBiArE0UN6QTOqEcAl3YzI3UsMgr795fAtk4XrbZ/FL9z7P9Y2ZfgNyUbTCUVm1VF+8kdGzbqYH4f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=myUB8jID; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764850022; x=1796386022;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AACMBGkOYNpC0wc7dBl/A97+VH5lB0jqIQofcJw+rV4=;
-  b=myUB8jIDTuWr5LLPyVT9Xwr5rRaMwCi+AafuBgaztdtGXHEqoi1+2Ist
-   yuTNIp/kCZ/XQEUMRyMzeY0MeSs5gxW7dtA1uk7Pi70oCfiHZ5zAN+3px
-   s6KA14IS3y+o/Xcprve+uB2glMPp3WmrnJHCGav3gPgqqFfPgLfcRKQoT
-   aBZmGb1tH5ehp52ROwUPBJUNhSZImWwCOLZS++uXI55HLz0TjE9fhKjb8
-   je3Sug5yNMWdOG4ciHJGhQSikqGjNak9U9DFUXDux3R11Fgvz3yg9Qzn7
-   vf9dHTqeMIFTwuZViFuqUcIumG3hLiRisIp7RuxLkAlTXQLq0qxAxeGwl
-   w==;
-X-CSE-ConnectionGUID: ujoGBIBbTQa4rMxZLNs3Xw==
-X-CSE-MsgGUID: z6PPv4ESQiKHyZ6rE1lvGQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11631"; a="66753252"
-X-IronPort-AV: E=Sophos;i="6.20,248,1758610800"; 
-   d="scan'208";a="66753252"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2025 04:06:58 -0800
-X-CSE-ConnectionGUID: cFBEIPl6S9m77mLooVMGkg==
-X-CSE-MsgGUID: zwed11zQRAih9YysX+gTQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,248,1758610800"; 
-   d="scan'208";a="225924104"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.222])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2025 04:06:46 -0800
-Date: Thu, 4 Dec 2025 14:06:44 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Herve Codina <herve.codina@bootlin.com>,
-	Kalle Niemi <kaleposti@gmail.com>, Rob Herring <robh@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Len Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
- overlays"
-Message-ID: <aTF5VN2YSpj5uJsr@smile.fi.intel.com>
-References: <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
- <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
- <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
- <55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
- <20251202102619.5cd971cc@bootlin.com>
- <088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com>
- <20251202175836.747593c0@bootlin.com>
- <dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
- <20251204083839.4fb8a4b1@bootlin.com>
- <CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
+	s=arc-20240116; t=1764852360; c=relaxed/simple;
+	bh=vEDPUwn+d/bVyKI+wm1SSV1kgLUwIpYpI4mcq8LBLkU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cAMlKb7SPoz3FwVykS+P1chLoROcPbGCZ+05uACM3dSRwCqs1eh0+Sfp4wsPYXZF2WcFguRyVNO38ajVKi2sIsnY6iCC/Gpm/PMB+1cPFC3/9AOwtdAsrHWsS0hsRZ4TK+49WH7GpRwFdWfAYQHblxMHsRUlewU+vQjQaZpVfbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=m/epDn9K; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B4ABZoC031345;
+	Thu, 4 Dec 2025 12:45:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=NdUAjK
+	EacxILa48+rMzoE9raxluSaeAb05u/4dKSpvY=; b=m/epDn9Kwvg2tSE1a/SpnZ
+	JHDsl/8XLawh4CWp4XD7N28MlLhfGWp3jZTVUUTEn+dcAIe3KV836ST3ZfQunB7U
+	E8o6H9xKq00BT28V8o+RmGPU6CDDqe32UCf7UYuzLg+vRWxwhQW+AfT3xJi6MbBE
+	bRG1g5EPF+QeilvLyvihGkaFdK9Gwui1H0EtCRMAOCFKNJJNFqnOtRxJOP12kclU
+	aiAI+tCof/JdxKF65Ey8u1xmTjFvD80+cA/t5FxZMaTWg+rM/i9h4g6s50NMm/St
+	xSNQdITWuj5Wc6yWkkl1o6xP0Z68hx52XNMRhfSgPu+yHg16/6opsVadxqx0dJ/w
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqp8q7x1e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Dec 2025 12:45:57 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5B4CYpS5020581;
+	Thu, 4 Dec 2025 12:45:56 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqp8q7x1b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Dec 2025 12:45:56 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B4BUxkc019035;
+	Thu, 4 Dec 2025 12:45:56 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4arbhy7tkh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Dec 2025 12:45:55 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B4Cjpe727263472
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 4 Dec 2025 12:45:51 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C0B112004D;
+	Thu,  4 Dec 2025 12:45:51 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7AAD42004B;
+	Thu,  4 Dec 2025 12:45:51 +0000 (GMT)
+Received: from [9.155.208.229] (unknown [9.155.208.229])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  4 Dec 2025 12:45:51 +0000 (GMT)
+Message-ID: <c66fe13cf2dbe9def72cbd5ae703538dcb770d7b.camel@linux.ibm.com>
+Subject: Re: [PATCH v3] PCI: s390: Expose the UID as an arch specific PCI
+ slot attribute
+From: Gerd Bayer <gbayer@linux.ibm.com>
+To: Niklas Schnelle <schnelle@linux.ibm.com>,
+        Bjorn Helgaas
+	 <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>
+Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Christian Borntraeger	
+ <borntraeger@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Heiko
+ Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander
+ Gordeev	 <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Julian Ruess	 <julianr@linux.ibm.com>,
+        Peter Oberparleiter
+ <oberpar@linux.ibm.com>,
+        Ramesh Errabolu <ramesh@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Date: Thu, 04 Dec 2025 13:45:51 +0100
+In-Reply-To: <20251015-uid_slot-v3-1-44389895c1bb@linux.ibm.com>
+References: <20251015-uid_slot-v3-1-44389895c1bb@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI5MDAwMCBTYWx0ZWRfX5qh+4vafL3RR
+ b272ppoR5FHEM+SNtpFBnizgLmnBVf6GWsIhvsWDWFh98qOjHhA3+x+jBDqNz/RQAxDfv9ySHNh
+ 1T+agEx9emF7B+uLv7g5Aeakx0u1tqmP86Oqt4izawUJo78v4X1EWvfDloZ/uhV+A9OZgyW2NaY
+ 0xGcFNc8yi6tW0ZcmEMbN8VeXhNNs4slNxjdOr+OyxDp7CTsRZ812C7M4kYBDxYqOPfHYX3FSU1
+ lYIK/RtED8Z36HY0J51XZ8dNhCS2iyIQWguZWQRs9A+fh4N4y/b9/3NkJZaC/n6B2wCmtNXXUY7
+ a24fhFtJOkgbR57Cc30hQyFs6ZO+EnZm9v5nOQKAmkHPq4Br9wHiZhKoaSEyw1iYF1IkpvQLxuE
+ v7e7caKCbavii7uhuHjW7imSUJgFWQ==
+X-Authority-Analysis: v=2.4 cv=dIerWeZb c=1 sm=1 tr=0 ts=69318285 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=aYzX5jylc00JjIcdlWIA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: r_xGcC1VKhUQETblzt9LFXfxICZ07ZQx
+X-Proofpoint-GUID: OMShF7CRcss18cak0RtUhzOvAk7V2ZKA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-04_03,2025-12-03_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 lowpriorityscore=0 clxscore=1015 spamscore=0
+ malwarescore=0 suspectscore=0 adultscore=0 bulkscore=0 impostorscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2511290000
 
-On Thu, Dec 04, 2025 at 11:49:13AM +0100, Geert Uytterhoeven wrote:
-> On Thu, 4 Dec 2025 at 08:39, Herve Codina <herve.codina@bootlin.com> wrote:
+On Wed, 2025-10-15 at 15:42 +0200, Niklas Schnelle wrote:
+> On s390, an individual PCI function can generally be identified by two
+> identifiers, the FID and the UID. Which identifier is used depends on
+> the scope and the platform configuration.
+>=20
+> The first identifier, the FID, is always available and identifies a PCI
+> device uniquely within a machine. The FID may be virtualized by
+> hypervisors, but on the LPAR level, the machine scope makes it
+> impossible to create the same configuration based on FIDs on two
+> different LPARs of the same machine, and difficult to reuse across
+> machines.
+>=20
+> Such matching LPAR configurations are useful, though, allowing
+> standardized setups and booting a Linux installation on different LPARs.
+> To this end the UID, or user-defined identifier, was introduced. While
+> it is only guaranteed to be unique within an LPAR and only if indicated
+> by firmware, it allows users to replicate PCI device setups.
+>=20
+> On s390, which uses a machine hypervisor, a per PCI function hotplug
+> model is used. The shortcoming with the UID then is, that it is not
+> visible to the user without first attaching the PCI function and
+> accessing the "uid" device attribute. The FID, on the other hand, is
+> used as the slot name and is thus known even with the PCI function in
+> standby.
+>=20
+> Remedy this shortcoming by providing the UID as an attribute on the slot
+> allowing the user to identify a PCI function based on the UID without
+> having to first attach it. Do this via a macro mechanism analogous to
+> what was introduced by commit 265baca69a07 ("s390/pci: Stop usurping
+> pdev->dev.groups") for the PCI device attributes.
 
-...
+Hi Niklas,
 
-> > Saravana's email (Saravana Kannan <saravanak@google.com>) seems incorrect.
-> > Got emails delivery failure with this email address.
-> 
-> Yeah, he moved company.
-> He is still alive, I met him in the LPC Training Session yesterday ;-)
+I like this addition a lot. Also, Lukas' method to add arch-specific
+attributes to sysfs. Is there a reason why you didn't apply that
+mechanism 1-to-1?
 
-Usually people update the MAINTAINERS and/or .mailcapain such a case.
-Can you ping him about this?
+>=20
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
+> Note: I considered adding the UID as a generic "index" via the hotplug
+> slot driver but felt like there is probably too little commonality on
+> format and usage patterns
 
--- 
-With Best Regards,
-Andy Shevchenko
+Sorry for my ignorance but how is the hotplug slot driver defining an
+"index" or how is used?
 
 
+> v2->v3:
+> - Rebase on v6.18-rc1 and resolve conflict with recent s390 PCI sysfs cha=
+nge
+> - Link to v2: https://lore.kernel.org/r/20251008-uid_slot-v2-1-ef22cef277=
+41@linux.ibm.com
+> ---
+>  arch/s390/include/asm/pci.h |  4 ++++
+>  arch/s390/pci/pci_sysfs.c   | 20 ++++++++++++++++++++
+>  drivers/pci/slot.c          | 13 ++++++++++++-
+>  3 files changed, 36 insertions(+), 1 deletion(-)
+>=20
+
+  [ ... snip ... ]
+
+> diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+> index 50fb3eb595fe65e271b6b339d43c9677c61b1e45..b09e7852c33ed4957432ac73b=
+36d181ecd8283a1 100644
+> --- a/drivers/pci/slot.c
+> +++ b/drivers/pci/slot.c
+> @@ -96,7 +96,18 @@ static struct attribute *pci_slot_default_attrs[] =3D =
+{
+>  	&pci_slot_attr_cur_speed.attr,
+>  	NULL,
+>  };
+> -ATTRIBUTE_GROUPS(pci_slot_default);
+> +
+> +static const struct attribute_group pci_slot_default_group =3D {
+> +	.attrs =3D pci_slot_default_attrs,
+> +};
+> +
+> +static const struct attribute_group *pci_slot_default_groups[] =3D {
+> +	&pci_slot_default_group,
+> +#ifdef ARCH_PCI_SLOT_GROUPS
+> +	ARCH_PCI_SLOT_GROUPS,
+> +#endif
+> +	NULL,
+> +};
+> =20
+
+With the following diff you could avoid the #ifdef directive in the
+middle of the definition of the attribute_group - shamelessly stolen
+from Lukas' patch
+
+
+diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+index 8e5e0f995e91..1d8105c4d2a6 100644
+--- a/arch/s390/include/asm/pci.h
++++ b/arch/s390/include/asm/pci.h
+@@ -208,7 +208,7 @@ extern const struct attribute_group
+zpci_ident_attr_group;
+=20
+ extern const struct attribute_group zpci_slot_attr_group;
+=20
+-#define ARCH_PCI_SLOT_GROUPS (&zpci_slot_attr_group)
++#define ARCH_PCI_SLOT_GROUPS &zpci_slot_attr_group,
+=20
+ extern unsigned int s390_pci_force_floating __initdata;
+ extern unsigned int s390_pci_no_rid;
+diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+index b09e7852c33e..9ba7fc0066bf 100644
+--- a/drivers/pci/slot.c
++++ b/drivers/pci/slot.c
+@@ -11,6 +11,10 @@
+ #include <linux/err.h>
+ #include "pci.h"
+=20
++#ifndef ARCH_PCI_SLOT_GROUPS
++#define ARCH_PCI_SLOT_GROUPS
++#endif
++
+ struct kset *pci_slots_kset;
+ EXPORT_SYMBOL_GPL(pci_slots_kset);
+=20
+@@ -103,9 +107,7 @@ static const struct attribute_group
+pci_slot_default_group =3D {
+=20
+ static const struct attribute_group *pci_slot_default_groups[] =3D {
+        &pci_slot_default_group,
+-#ifdef ARCH_PCI_SLOT_GROUPS
+-       ARCH_PCI_SLOT_GROUPS,
+-#endif
++       ARCH_PCI_SLOT_GROUPS
+        NULL,
+ };
+
+Thanks,
+Gerd
 
