@@ -1,234 +1,212 @@
-Return-Path: <linux-pci+bounces-42659-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42660-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 907AFCA5606
-	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 21:50:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21D81CA56EA
+	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 22:17:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D18D3300BFBD
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 20:50:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1736931351CC
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 21:16:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64857322DC1;
-	Thu,  4 Dec 2025 20:50:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D71D82FB978;
+	Thu,  4 Dec 2025 21:07:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NHbvjj+Q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S0TOghw2";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="NY6C1llK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E84320CB1;
-	Thu,  4 Dec 2025 20:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764881418; cv=fail; b=YcOM1BX5+uzeETCMidLS3Pf6IV2+f+5GJ05jR7kbz8j2DGNtISisSlqVLQ85W0kI0pwlIMBilvciGnNYenTCtLmObdL3JbAiISYQglw1ZI4eVTw+NF7unzk/TbrBHH38l5qlH7GxTBn9t5oombSwARDp1J1uY04Zxh65XLeEmhM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764881418; c=relaxed/simple;
-	bh=7QkFZ/A+7CCAtSR898nWFmQcknP9nsaCDNPjWhXLVsI=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=Ab7PntggEmTfE9LziCarmTRME4MrZyH+2lR6HQisNRZ7WCBDgZvYVIRh1YjeeRKyYasjHMC+zG+wF5O/XIKGi6ngjR+QD9RvW2nDVIjDPrHTG5xnq4u2W3C80CerqwehPvYc0JAkp3UGcqG/SoXXjM4YCoYBwtZW3sTnqn/YPUA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NHbvjj+Q; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764881416; x=1796417416;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=7QkFZ/A+7CCAtSR898nWFmQcknP9nsaCDNPjWhXLVsI=;
-  b=NHbvjj+QO4tFXkOmKxqSrVle0lxD67qXQa2j2PnwSsjbyhXfDRNq7Qti
-   Z/7ADc9X+9JIuVF2QFPd/TGk49TFQ/55vKkA9zY9dmntxAVQrpzV5bGp3
-   ihkL83hLli60N2F9Gys6yrlp3a0i9x5A2YPwywl7n4V7JSL6DrUUuc+gg
-   iZOSIesOWZ8Kb7shr2ci9e/h2z6+qq04pATMEeyR5sm236DGa7ZX+ZB51
-   VWfthnAELLNrPLICBM7RGnUm4dGNJ2yY+bHjevBQzotmPwjn/N1uwj6Km
-   ajxsP5DqZt6UX/DmeZnIf6UrNYZhxFTw5e9R1zBFOXM1mFXYLlXDarSmp
-   Q==;
-X-CSE-ConnectionGUID: c4yugw/MRVS4mtW7b4AEQw==
-X-CSE-MsgGUID: 21zfmN/WSOK47jz3CpA5Fw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11632"; a="65912863"
-X-IronPort-AV: E=Sophos;i="6.20,250,1758610800"; 
-   d="scan'208";a="65912863"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2025 12:50:13 -0800
-X-CSE-ConnectionGUID: NaNejIfmTrOC+j91dmU3ig==
-X-CSE-MsgGUID: ZuZJkM4wTkGhxw1QsZBhGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,250,1758610800"; 
-   d="scan'208";a="194747056"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2025 12:50:13 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Thu, 4 Dec 2025 12:50:12 -0800
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29 via Frontend Transport; Thu, 4 Dec 2025 12:50:12 -0800
-Received: from BYAPR05CU005.outbound.protection.outlook.com (52.101.85.51) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Thu, 4 Dec 2025 12:50:12 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fvJoMGX76z3bFGWI4c2LYM5jJKg+/uVrozY49h58EkvdSjKZBA7XEYcJSragvGgm+L4//zgGS+Rt6F+NXo/tTKgINVCxiLJCHj92q0WoQqOFuICEvrjTrh6TjWoX0mm4SdzHeR3k9vw5NKfrLuk6X0bmmelOLWGD2WDzj4oWS4M5tWODIdGVx60Her++Wylfn16G54dsJIsh6WWV54PrDG2oJHRqToirlzO64hJxuH1rbx8UF9qLKpQAjzEK9Ja1ccm3WdyPyfU/0MHY801aeVFYeFifpXA0VqMvQncCPs3WkDUWW7qiFhF0CtjgMdV1pLIkt+C9EuivLtfV6emtAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7rRVX6l/vrtt89AE+fUxzavCSefDzl2JPP8t7vcmp4M=;
- b=mg0S3q+Y7LGO9DJt5Uf6DgiRt5CHjgJfWnOGCA2Dpj7i/rzlEy6x5QkSrHNR7zsEFDSGLT6S3Jk6dodGz5ts8xlP8Q5ycfpfCpuL0P1krobfTgp1BnQOVMs0UtHwils7VNp/9+PNU6oGuqtc4R3mE8WRyzJp5SpakGRlaPnoT8OjGphMZ77jNxtYjaA5GuomPpSzpQkjX5loO6y+jBvLzXyx1T1SOnCjdFYmXdD0bdvR+HtvvqX1QEBu7UoGIrc/T+e8/yWuHXiQS9HmLmQDlbAXKBvuEHGnCZ3KLYryrF94fRjNbBeNpF902PP5/vGKxY7jdQw1b6nhqCQxcl6YYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DS4PPF551321A38.namprd11.prod.outlook.com (2603:10b6:f:fc02::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.9; Thu, 4 Dec
- 2025 20:50:08 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff%4]) with mapi id 15.20.9366.012; Thu, 4 Dec 2025
- 20:50:05 +0000
-From: <dan.j.williams@intel.com>
-Date: Thu, 4 Dec 2025 12:50:03 -0800
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>, Dan Williams
-	<dan.j.williams@intel.com>, <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <alison.schofield@intel.com>,
-	<terry.bowman@amd.com>, <alejandro.lucero-palau@amd.com>,
-	<linux-pci@vger.kernel.org>, <Jonathan.Cameron@huawei.com>, Alejandro Lucero
-	<alucerop@amd.com>
-Message-ID: <6931f3fbae919_1e0210062@dwillia2-mobl4.notmuch>
-In-Reply-To: <4e4e19e2-8aff-44a1-ba4d-2a4519745a3d@amd.com>
-References: <20251204022136.2573521-1-dan.j.williams@intel.com>
- <20251204022136.2573521-5-dan.j.williams@intel.com>
- <4e4e19e2-8aff-44a1-ba4d-2a4519745a3d@amd.com>
-Subject: Re: [PATCH 4/6] cxl/mem: Convert devm_cxl_add_memdev() to
- scope-based-cleanup
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR16CA0029.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::42) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BFB1DE89A
+	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 21:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764882472; cv=none; b=upq2vTjKOd1h4QsaIVmmS61S+OftulpUPEZP6s8vI9FcPlv0HPzUFq4Pa0jSgWbFKNt/EmcYDnS/Pk5Uj3tJE3BCPq1SWx/5QdBsIQY0nNqm9oeLi409NObcj3PV0+wopNlQxhW8uKXwa70xJSeUZGg7Nxhi5sc7V3lY7u7mRcM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764882472; c=relaxed/simple;
+	bh=NW9cQQoEAaaq3AA9nc6mb/b5UPvD+lPeMPRsPYxJB4c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DrDnlo8PjD5sagi8WJt1n3/5k4YserhdFNDwmSRmZ4d9xraNHEwgFHPFBXcKYc+EUbX+0DoF0249gy2kegnCGanX8plmQN4Gj8aCxnNVz38OoOhAlmwHsHdcltvGGQKAVgTYYjwjiiHP7MA8RnQwb/nDwMFRZRhTRZ4nWQFImRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S0TOghw2; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=NY6C1llK; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764882466;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Utloqd78xIty0AP3e9N1+0oedDpwpptC21lH5x2/t7g=;
+	b=S0TOghw2s7GXjQTgb4HjaZKJzmM6eJnrQ8h39y5+KcGWz+sqgFI+Z18LV1UbLeltQ7XClS
+	Yl1xxPoHSASL0p6TjEW3ws2h28QAIJ3kuYhL2NSc9LCgT8zsEFLrdWVyVJVtybopzHqeLg
+	eOUgkKgYsA36kt06RPtkH2oJFH/47ls=
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
+ [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-632-J4WND92pMXOA_pvu4Gvb8A-1; Thu, 04 Dec 2025 16:07:45 -0500
+X-MC-Unique: J4WND92pMXOA_pvu4Gvb8A-1
+X-Mimecast-MFC-AGG-ID: J4WND92pMXOA_pvu4Gvb8A_1764882464
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-787fdf1b574so18129457b3.1
+        for <linux-pci@vger.kernel.org>; Thu, 04 Dec 2025 13:07:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1764882464; x=1765487264; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Utloqd78xIty0AP3e9N1+0oedDpwpptC21lH5x2/t7g=;
+        b=NY6C1llKcFZU4lpB7Ky26vProTmAssitVaxaRYty7JGkBpyvIlbLeWGlwv3aYxzeb3
+         Wa+3HLbiXSdYRCrl6mDzh59YPmV4nHJje2NJ+g5X+LG+x3KR3eqq/ZnevjVpMishaWX+
+         gj1HNYKCNTMsyVEfdCAhrZsF3eNzaOWKsac0gEuw7McJkFtrk50ws4CgmnhQpuhesDNt
+         iCzZNfel5lRGE81pibVyYV01LSEx1bWYGS8KDGBpY3mt5RO0tFJIFOAfp0XULI1Fto20
+         4LKE233AmeGU8rzoEyPDf8QIz9RI8HVPak+ak7r/9KTNrXTpUB9HFn52u2c6cd11B/Cj
+         XhaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764882464; x=1765487264;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Utloqd78xIty0AP3e9N1+0oedDpwpptC21lH5x2/t7g=;
+        b=PdeZzZaTbZYbJ2YZpb+nl5vJ73ltI6j88/nkbbLdK5xeC25scP9bgBf91vdcZidaR6
+         zBcJdXyfCskTpk759HqL9WyLOngyuVi2tWPBrBCtbPjYqlHVu0rasULm2njIMTyzgBAD
+         3DovlLUo+vzO83RhAcoEX+sp3QoTr3e6XkTt7/jTGEkejsTbJWjHiiKXj8qVT4OZCNPK
+         jeDzq+nRLh7sS3r/u5/tmPIUPR7fbsABXicczJZTQzQ05d5IkMXGUSFffK9xHcwJTsho
+         0F1hm2o8bvQN9NJzLm0CN3dmp4fO2h3pSd2KIOkEzyVOUTfNmeOVlnNmTDFYBGcgus7u
+         bggQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0s7Dk7kDHBpCEV8nXFcfmNT3UwuiWpUqC6EobrwMZAKqMuCXResizGbBQp0u/LGCmX+6VoS3ALsI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKAhI6fXo9wIkVTnlTNqEDG+GtfxqW25kMb1YTI6QD7Y11Rtsw
+	ifanfi6I8prErdZwNBBostXg6mr2BZ5Fsgl4gMYb4nODPgHon9uS5QB9UQZtK7KyTmxA8GxuQPD
+	J1fxpUpimyKd+Q2oNtyvmQOI+Uyop/wvtAfmHMOCX+xkx12hHSdASQ/kcpsRWNA==
+X-Gm-Gg: ASbGncuLhFfhMABnklgkT+5hHh6+mzGzaiaeWwZL+xuzIqHckaLDHfPqoGYAHGGHcow
+	faSlIs1+unmA5ZWcm4YAmbqBhJHw7tPIE/W2NhmKBBuVbPIsg9z/aJgNcRsjQpbmYWItVoqmsmn
+	dOoU0FPMg8P753k3/OAm7P+Rml1oQIM4aF6qFoSlClowliB3HpXK/m73tnLChhREd7s6pjwWqdR
+	h76IW72JJXJKhK8fW8wADWbqFkgBbDFy5jKj6noUN4kXLjUcYr9D3dnBHZBTUachK3Ks+FO2zot
+	9oMAcNWFdpDOkPn8uBCvnVTKEe4AYjRNyQSEAWm1obYPhq1jZ/5bHRYV4VuMUiWLFLV+LWN81mn
+	UYuo+TalAzQ==
+X-Received: by 2002:a05:690c:1e:b0:786:5789:57ce with SMTP id 00721157ae682-78c0bffa67bmr64181327b3.43.1764882464273;
+        Thu, 04 Dec 2025 13:07:44 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHm82XKkqw4kfk5U49CAGJ/i+43HgaWocHH822ewl7ru2nz49+bzl9Zv11OSszH0Ut14YtklA==
+X-Received: by 2002:a05:690c:1e:b0:786:5789:57ce with SMTP id 00721157ae682-78c0bffa67bmr64180817b3.43.1764882463673;
+        Thu, 04 Dec 2025 13:07:43 -0800 (PST)
+Received: from localhost ([2607:f2c0:b021:e700:58e4:f7ce:31b9:7841])
+        by smtp.gmail.com with UTF8SMTPSA id 00721157ae682-78c1b7a72dcsm9479027b3.52.2025.12.04.13.07.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Dec 2025 13:07:43 -0800 (PST)
+Date: Thu, 4 Dec 2025 16:07:42 -0500
+From: Peter Colberg <pcolberg@redhat.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>, Zhi Wang <zhiw@nvidia.com>
+Subject: Re: [PATCH 7/8] rust: pci: add physfn(), to return PF device for VF
+ device
+Message-ID: <aTH4HifpRnqWA6X8@earendel>
+Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>, Zhi Wang <zhiw@nvidia.com>
+References: <20251119-rust-pci-sriov-v1-0-883a94599a97@redhat.com>
+ <20251119-rust-pci-sriov-v1-7-883a94599a97@redhat.com>
+ <20251121232642.GG233636@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS4PPF551321A38:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0dfe921d-db5b-45cb-b289-08de3376b42b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?VFlJTFdneGMvY05NUnUvVW10LzJSRG83WkI1R0I1R1p3ZE54SGw4ZGdBTjA2?=
- =?utf-8?B?L3ppbzFJQnQ0U1k2RTkwM2VTcnYxR3FIei8yL3RacEJiN3dHeUpFMVRaeDEv?=
- =?utf-8?B?Z1lzcWhrdGsyeUIzbElYSTN1VjhGcWEzZzVIdHlHL0NxaGVaOEVXZmpKSHF3?=
- =?utf-8?B?cEhEUjZ2R0xsMWhQRTRxcCswZzhZOWREWTFvMDVHcVM2dTZUbVVESHpIeVAw?=
- =?utf-8?B?dnVYNlNWRnhMT3BrTU1Gb1J5Z2RCTmdzMGlMSm1hbDRpZWxPODJOZExVT3dW?=
- =?utf-8?B?SGZvR3kvNHA1OFJZU3BsdVVFb2NqQktGWkZsOGVxSWhYS0JVaVlQWStxbDEv?=
- =?utf-8?B?WXI5ZVVmZ3QzeVRMSTZiNFlieVlVUFF2L2QwU3N3R0pQYzNTK1dvcEp0L0NN?=
- =?utf-8?B?RjhhelNSclM4WS9TT0IyNU4wS2xGdnFVYytMOVJ6Ung4eXllWjAvenRyVkxl?=
- =?utf-8?B?a29OWUs4a3NkSGVrRThhMUpxeEJCcWx4anNkam9Ba3RPOFVJUWthMkg4b0dI?=
- =?utf-8?B?Snh4K2NDUGlaK2NRMGZEVkNSa3hWMm1iOG1iUXJLNEM3dkQxdDRvWDk1QTYr?=
- =?utf-8?B?SGw1QzlmUVNaMTRqZjkrN2prZkJuQlc2V1duTCtRSXhLaU1Wd3pCb1FqRWNx?=
- =?utf-8?B?YmZCSFlUQXJ6dHRhSGxpbUZDR1hadjYwd21NenE1WWNCSXBmRGxKdjJ6OHRh?=
- =?utf-8?B?TDJpbUpudVNzY2tTNjJ0aFdRUkdqeWIyeXNaVE5MZWlWb1BqWFVoR0NHdTc4?=
- =?utf-8?B?S2N0VG5rQWFhQzErdk92VW5pM3FRNytPcUJIdFNiR3o4ZFlUR3hMTzMrRHBK?=
- =?utf-8?B?bzEyNE1UUStOaFM1RnM0eTJKZmtTb2Z4WUZEN01hT2NBbEd4K1FpMi9kT1Vo?=
- =?utf-8?B?WlFyY2crelptaklzY2ZTdEswTU80a2JQcUo0TFFINE1GUnRRUmRMbGZOemM4?=
- =?utf-8?B?Q1dacHY3VTBka2xCQXJlRTRLTUtER0dJZFBydDJrOFh3dVJyTGp6a09TMjIv?=
- =?utf-8?B?b1BmWlJOV3dyYjY3TlZYM3NpWlR1WCtLYzFXVGx6K2tPY0tKMDk4bkdPUVh1?=
- =?utf-8?B?SHZvS0Z0Q2tKZzI2dFBVSU1XVVF2QVZTalE5cnc1VnpxMFlSRkZDNUg1dXhv?=
- =?utf-8?B?QW5JZWtVdDBVLzNqK2NRUUNIQUNYWTBxUFV5RmNmZ09ldWRsWUxMaTEyRDBz?=
- =?utf-8?B?cDhGMGdGcEh0RWNQd1AzNXF5Rm55Mi9jNVJVWngxTlJHcnBHRktPMDR3SXdK?=
- =?utf-8?B?MDNJN3dvNlF3N0JSN0FxOTh5Z2hhUlF1VjQ3a0l1SG9ZZURCNVpNd0tYMFpv?=
- =?utf-8?B?RGhjZFJUMlBtZVBOOXZQcTY5UDYrUUlXK2VTUVVTUEhBS25CSi95YjM4cTdy?=
- =?utf-8?B?MUVpQ3h6SnhCYzlOSUdHcDdQaG1PUWdSTzVxUlJRQUI3N2VvbkRlN2NUdXFQ?=
- =?utf-8?B?a25ibkR6V1RCTTh0WlhYeVI5WE1PTE5ESWI4cUVIQWxtMklzUUMxL1hsR2hx?=
- =?utf-8?B?L2pnS29DWDdqaUl2Ykt2bExqVW5BdjdJWnh2eUZ5VWFHTUxvNTFOZTNRSi92?=
- =?utf-8?B?TldBcE14cFYyc01DdDFVTDdLdWdGdmZFR21iWFlvVFZqNTNFQndjQmd0NzBX?=
- =?utf-8?B?UlozK1BOOHZqejMwUXI1S1RGUjhyeEhRUm55cjlmaGdYd05jcmp6RTdvdGFq?=
- =?utf-8?B?ZVc2VEVZajN1Q1dVWEg4NTVzSTF4aU1ISlpBOTNYanZUVVZzWktSdm4yQ0s4?=
- =?utf-8?B?TDVlbHl1cUFVZjFMRnNMMXRidG9iRmE4WDc0THlwUnN1ZnZ6L3lxZXM0bk9i?=
- =?utf-8?B?Qm9WaHNYbjhWNGdOZEhFdmtBbUVjWWx5OUtGSEt1aHUxVW9QUE5lYWdZRk53?=
- =?utf-8?B?Y2IxQUNlZW9vL0V0RnZhRGx2U2RFRXJEOEltMGVKMERSU3dKWW41OEV3YkRo?=
- =?utf-8?Q?PD6d+DWYV8Q4tDkBLxA7GKwqlDYVYu7I?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bDRYSlI2aExTMWFtMWhOc3J6aEZZbEJwY21uYU5TZVVQMGtFRG1FSnlHYmkv?=
- =?utf-8?B?TEFCQ3RxYTV2ZGF0QXVJRmkzSjVNL1ViZUp0TGwvQkpscGpyYVF0MUxLS2xI?=
- =?utf-8?B?dHdVZmVocUVwQ2dhTE1LVnNYdU1yMjlwdlZrQnkxa0VWOEFaeUkzVFNDZzcv?=
- =?utf-8?B?SnFWeFI4dHF2T01TTnBkRlM1WG5KT2Zza0JGRWNzbVJrYit1Z0VCTzcrMVJZ?=
- =?utf-8?B?ZTY2Qk1RS2MvQUtzdVlmdm1wN1J4RnFmbFVScENNZkMrNzRTVTRFbzh5WEpt?=
- =?utf-8?B?VXcxREJRZHZiWkg0SFloUjBlNWkzVy9PRFpmb085VXYydk9TbGV5ZW9RalBx?=
- =?utf-8?B?c3A4Mkwvelp6M3lscDZHL0RJeStYNTNPZFZvNDZmRlUvT3FvaGtnYlB3b1pS?=
- =?utf-8?B?RllYZkh2a3VJQWFhRk5PM09KazhKOFpGR2EyOC9pR2N2UnI4TUVsUTZOajZQ?=
- =?utf-8?B?elJZbmN5NjlHcDA0b05MR0dFNHpJOTV3SkNuOER5dTZkQ051WkpQY1Vkb0F5?=
- =?utf-8?B?S1dhc0F2VDN1dXNURWlnSkJ3RG9NR0pNUFN1NnR4RjgzeGU5YnBqa0RMaUVr?=
- =?utf-8?B?Tzdyd0gxZ2RLNytjVUdzUmdlMEIyN1IxNy9SclFtb1VDVzlmMm96dWM4Vyty?=
- =?utf-8?B?TlVHMG9ieGUyMFpxb2NhalNacnFtZWhQNmFtbWs5UGNOenpIbW9HQnNUelRl?=
- =?utf-8?B?UVltelJndCtpRnVlRWo0U0EyN0xUdVE3cklvVXFVa00zWnhxTWNTai9LNjY2?=
- =?utf-8?B?QlFkRzRRUUxqd2Rvb05LazlGMDlhVkwydlNxdnRXM2plTEV6RVJsbGZ0QitE?=
- =?utf-8?B?SGZINTlya0N3RmZYa29ncnV2enFkM3Q5U1FLRTduWEdEeGZrWG16cHlYZm8w?=
- =?utf-8?B?dnFXZ0J3by83aFhzcmZPemRBZlZmMUxMS29sdm9jaXJLb2RSSlpKWTd6akVK?=
- =?utf-8?B?SjFodlRmQ0dzbjQvRGVybml0enFjTTR3d1hKN3dUVmFWUmY3NnhDZytFV0V5?=
- =?utf-8?B?Y3dBdkVBV1dpNjhTeEZ1MXQrTnBZS1NlcDc2WXAzeEdSYXRaWkd5MWswbURh?=
- =?utf-8?B?b3d5SjYzeTd0dmY2ei9HSVJIakVHa0V2N0xYUHArb0NRSHZHWFMwalI2TlZE?=
- =?utf-8?B?WUw2MFBIN0tWWVRCTE16TXJLdDdnOGVtV1dJa1V1TVdWMmlqV3lRZ3lqMlpt?=
- =?utf-8?B?aEVKVkdSNFIzTC9mV3NGbGdJVHRiZE02U3FidGxyVUxNT2Y1MGEzTkRNMVJs?=
- =?utf-8?B?L3BYNWV0U0IzdDVxOUJQTXAzU1hpcW5rUko1Y01iVWt4ZWd1VXN5N3N1a2sw?=
- =?utf-8?B?T2lZZ29JV2xwSlVrTTNNQmlueUR1T2hVYllIelpBU2RNc2w4UGNtdUlNcXlC?=
- =?utf-8?B?RFZUQ0pXR1pxV0JWTElqWDRnZGM2VlBWNE45RjZiNzRZOHoyZWlySkJGQUdo?=
- =?utf-8?B?ZjA5a3FwM0JraTBNeTFSUUU4VUxLcXN5SFZFWStReEhZS0NkK25jZkxtdEEw?=
- =?utf-8?B?S2RjMWFuTElBd2ZSejRqd01HMUxaeVdYVktVQjBEZlhlSHpjcS9vbndPZitN?=
- =?utf-8?B?MHArZUZiQzhKT3grWHBqbnFDdTByRzJ5ZG5Ib3YraXB2T2oyOTJ5NzNLWC9u?=
- =?utf-8?B?aDdGWHp6T3E0dGlKanJkUU5PNkpjWUNmRERsUXYvN2p4a0tIdG9TMzBxVG5o?=
- =?utf-8?B?ZlN3bE9EMFRBd3kwYjh1QVo0R1A0cHNqbFNoOHpIVTZJNXFJNkJTc2xoL0Vs?=
- =?utf-8?B?cjJkc3I3Slo5SjlBMkZha3plaDdQeGpVMUlmdmtCYlVYbFRXaVhNdFMwN2E3?=
- =?utf-8?B?c0ttcU9zYk5IUzlUbHJPbUdxcVdmSis4K0xSYndnRlQzSGJudGEvUURyMDNH?=
- =?utf-8?B?eWxUYnA0WmR2TG9nZkpWYTFDY3czazRMbVUxYWJNak0xdkdvZWwraGlSc2oy?=
- =?utf-8?B?dUVybzQxY2s2TCtUS1ZDYVpaTXFqc3htcVNKV1pQM29OeU1Nek12TjZnUGp5?=
- =?utf-8?B?VE9qYjdISk02QldpR1BzWGtLa2s1TVRZRGVpZzhpQS9JbnY2ZlhIZmdaMWFq?=
- =?utf-8?B?aXZqTTFqRGVrUEdVMUZmOVF4MitYZHQ0YlFUMk5ydFlsQnpBd2FaQ3I0T2Vi?=
- =?utf-8?B?VUlYbmcyNWllRURTZmVTOEVEQkhKdVF4b1pPNTV6dGJiWlYwbzVuRlRTQzB6?=
- =?utf-8?B?clE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0dfe921d-db5b-45cb-b289-08de3376b42b
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2025 20:50:05.6457
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Fi9kDQ4gZW1cFOOVuM0Hv+r4C2LEwT+jNiuX3lPOcTRZzie1SxFKcf9ECsYpgk8/BRFPexb5j21sbsc8MOhwSGR1xm1WPh5toDo7AyqVJZg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PPF551321A38
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251121232642.GG233636@ziepe.ca>
 
-Cheatham, Benjamin wrote:
-[..]
-> > -	rc = devm_add_action_or_reset(host, cxl_memdev_unregister, cxlmd);
-> > +	rc = devm_add_action_or_reset(host, cxl_memdev_unregister,
-> > +				      no_free_ptr(cxlmd));
-> >  	if (rc)
-> >  		return ERR_PTR(rc);
-> >  	return cxlmd;
+On Fri, Nov 21, 2025 at 07:26:42PM -0400, Jason Gunthorpe wrote:
+> On Wed, Nov 19, 2025 at 05:19:11PM -0500, Peter Colberg wrote:
+> > Add a method to return the Physical Function (PF) device for a Virtual
+> > Function (VF) device in the bound device context.
+> > 
+> > Unlike for a PCI driver written in C, guarantee that when a VF device is
+> > bound to a driver, the underlying PF device is bound to a driver, too.
 > 
-> Isn't cxlmd zeroed out by no_free_ptr() above? I think what needs to happen here is:
+> You can't do this as an absolutely statement from rust code alone,
+> this statement is confused.
 > 
-> 	rc = devm_add_action_or_reset(host, cxl_memdev_unregister, cxlmd);
-> 	if (rc) {
-> 		no_free_ptr(cxlmd);
-> 		return ERR_PTR(rc);
-> 	}
+> > When a device with enabled VFs is unbound from a driver, invoke the
+> > sriov_configure() callback to disable SR-IOV before the unbind()
+> > callback. To ensure the guarantee is upheld, call disable_sriov()
+> > to remove all VF devices if the driver has not done so already.
 > 
-> 	return_ptr(cxlmd);
+> This doesn't seem like it should be in this patch.
 > 
-> Looking ahead, this gets nullified in patch 6/6 so I guess it's only an issue if
-> someone is in the middle of a bisect (or doesn't pick up patch 6/6 for some reason).
+> Good drivers using the PCI APIs should be calling pci_disable_sriov()
+> during their unbind. 
+> 
+> The prior patch #3 should not have added "safe" bindings for
+> enable_sriov that allow this lifetime rule to be violated.
+> 
+> > +    #[cfg(CONFIG_PCI_IOV)]
+> > +    pub fn physfn(&self) -> Result<&Device<device::Bound>> {
+> > +        if !self.is_virtfn() {
+> > +            return Err(EINVAL);
+> > +        }
+> > +        // SAFETY:
+> > +        // `self.as_raw` returns a valid pointer to a `struct pci_dev`.
+> > +        //
+> > +        // `physfn` is a valid pointer to a `struct pci_dev` since self.is_virtfn() is `true`.
+> > +        //
+> > +        // `physfn` may be cast to a `Device<device::Bound>` since `pci::Driver::remove()` calls
+> > +        // `disable_sriov()` to remove all VF devices, which guarantees that the underlying
+> > +        // PF device is always bound to a driver when the VF device is bound to a driver.
+> 
+> Wrong safety statement. There are drivers that don't call
+> disable_sriov(). You need to also check that the driver attached to
+> the PF is actually working properly.
 
-Good catch! ...and no, I should not leave that bisect problem in the set.
+Thank you for the review. I missed the obvious case where the
+PF driver is a C driver that does not disable SR-IOV on unbind
+and the VF driver is a Rust driver that invokes physfn().
 
-Will pull the cxl_memdev_autoremove() change forward for that.
+> I do not like to see this attempt to open code the tricky login of
+> pci_iov_get_pf_drvdata() in rust without understanding the issues :(
+
+I will work on a proper solution based on Danilo's proposal [1].
+
+[1] https://lore.kernel.org/all/DEFL4TG0WX1C.2GLH4417EPU3V@kernel.org/
+
+Thanks,
+Peter
+
 
