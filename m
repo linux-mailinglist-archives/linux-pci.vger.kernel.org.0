@@ -1,80 +1,80 @@
-Return-Path: <linux-pci+bounces-42613-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42614-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6662CA2D06
-	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 09:29:30 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5796FCA2E11
+	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 10:00:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F1B56309D032
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 08:27:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 63C94305F329
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 09:00:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9B27335568;
-	Thu,  4 Dec 2025 08:27:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71BCC3346AA;
+	Thu,  4 Dec 2025 09:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDwPM5S0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NU38EzOr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAB82FB627
-	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 08:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F96433122B
+	for <linux-pci@vger.kernel.org>; Thu,  4 Dec 2025 09:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764836849; cv=none; b=Q2ImZsF7Kdg665Loo4CzoJmTmzfOkFOaW/xfVuqjpdxTA/4irAjbixXEnYz0KhVRAucU8c9+y8aaX4JJl4oPB7EEEp37f04mERBXOxyIW3eUQAtiUmiblIfiR99uR83G36twGDuA98qAkpvlcemHVFqRxjsduwUrV2VvKvKTOIM=
+	t=1764838815; cv=none; b=oyt1hv5KGher1856tAhTfyxxkDSuLEF6CL65Mar5txzq3G9nkHhceY3l6wPj2BzQ2BIPQ0/LC4PEADv88/3xNMQ3BjhlZUCabPuAlSXWsOLNg5wzgAV7doKzDcSqzjEQldiMecKY6+oMGPsefJGhqdF76UXtWDl32IjHGrof40g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764836849; c=relaxed/simple;
-	bh=+mJapQUcgIG/gMfIXcsKANm2CElCwdjZuVxCtHLEwxY=;
+	s=arc-20240116; t=1764838815; c=relaxed/simple;
+	bh=q+LoIUfzJ18p1AvuqPRtbQ36awNa8jT+GpAg4XKdlv8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dvOFQGBNDLfuRO3gqvHcSXDkEz2uYodpoAsxCZYJzPzXzP1zi/p8+ASGWrw8edvvAnG9ClN/Hcy7G7LdqaVtC5fER/aqDFV9+3rzDnySRodsHv84bd71ciywOoULzMA5gy56nbRkK/XvrMXg1yXPBj3/Wk0GXTE23ldVl6r/HnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CDwPM5S0; arc=none smtp.client-ip=209.85.221.52
+	 In-Reply-To:Content-Type; b=DadZuCBCee+A9+EDMTMKfi3heYS+iz1BxSN2KuIwJhMGTHZ7qioYuWQ+teY+4eyhOtJuRRv0+jwvH4TSSLZBH1PkCHsI39N11eAxlHD4L3/66nP2t2ijkM6iwcJ7Gn/P71koyClDsr9WFwkIDmQnRzvT42P0hwqPpmsB5vcp9xM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NU38EzOr; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-42f762198cbso408583f8f.3
-        for <linux-pci@vger.kernel.org>; Thu, 04 Dec 2025 00:27:27 -0800 (PST)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-47774d3536dso6451065e9.0
+        for <linux-pci@vger.kernel.org>; Thu, 04 Dec 2025 01:00:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764836846; x=1765441646; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1764838811; x=1765443611; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=kk4Me8kGllHr/VDwvtsYkc5klFKItoxmBTnZhaBfwbM=;
-        b=CDwPM5S08fh9JhPXyvVPbvm2Pw9U39wGIKSNwVHgCsQAXg9PMLSSZuqMYQvvNSC3I8
-         UBgFCo12qkaz9VnC4HsBIcqfXy7KpXGvFMg+AyLWTXS3pmr5LTF7oJ1t+2AfaybgjiGK
-         n7HBboT9VvquQlMaSxJyN04HtIi3LaG8wf/ubSYSzrS3mqJjzKa0rtrRNKxVtgePjKnf
-         Ub3cECCfVs7KvxyNhf+MXV8rFFUpOGzLyd6SDAxy8HMR2hOk3fMN+9mUqlWtOkFipTIk
-         QtkPp9+NRsy34tSog+hGmJupf/fUSr97qPtNoYPSzcQEz9uvkXiHdvjUeqrgLK8gnL+X
-         i77A==
+        bh=O0N1lMmbauFOWlZlRSXcG6h3Jmv0DRpHx+qvG3J8bOA=;
+        b=NU38EzOrKXpV1QRnwNWD+ih4rHCjqevHViUcDUVHrBe2k8vplKxvUkMkMXYmq0EEO8
+         Wb1Uf7FTnLpWR6fJdkP8HNZntWSzjAtKS3OC4O6vSkof6AWiisNwf9LSI03r+iaobv6Z
+         LYtD0GBjp5uOBFCJhWwX9AYL+K/+RgfYCWVdpP3bXsw7+Gb8O9f7X+TkbxpccaKF1soJ
+         UlMBG7MtHd1lftqdCS2MvMk8zZ7X/NHH2i/T6OKlarYnzFgs3UGFhM33JM0aBPk5R+oi
+         h0Kxu7YtzGd4ESfXGYPX87JRacBCMe8vM7DjGFv5HQbTZ3WYegu6AOfCLtRKJnWv0Ide
+         5OUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764836846; x=1765441646;
+        d=1e100.net; s=20230601; t=1764838811; x=1765443611;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kk4Me8kGllHr/VDwvtsYkc5klFKItoxmBTnZhaBfwbM=;
-        b=o/vm/nhGRTJ8upWKxOVgpsyZ+1MeZVYoZhvIldHaEqBUubYh65BkZVsqnBTEyQw6fD
-         Ni4vpeLSfqLx1Njqpsemlt7gDIXyMVxH5nfe1Tqkruj5Sapq9IQnDwNmeBLXfrUtz4+7
-         YkAIPEgAS12+SNZ+6tyX/GiHDRv+N4T2A4IOHxxSnxG6U4+k4oXM9Bb9ZCMFO4k2D24d
-         gA4Z6RHLb9AZs+PRfBDg7TjR7Qo9s9/6BZREkup9IJUlocl0G+BA2eQFWclO8Tttpdjo
-         dOvLUTP62qi+x/dHbZ0S4ZdAdjFVjFDu5yVE6Hkvch6ptSb9Dp+v/n7N4h0N6+BKGJjP
-         t03A==
-X-Forwarded-Encrypted: i=1; AJvYcCW1VUyBt5giSaCj3NOUue5s/XORVbSN6czNJ54pzwH0RSFm8Sci/ryJwkcMO3BI2/HC403KjsG5QyM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfV523VJ0aaiNEROzJrX30f+zlNXIlZUoPueRr5ZYqYjWnUa9e
-	Z4in2SAujuiXrls/Y2H2JsBzy3VZQLCWMweNK0uehQZhZbeFOhCqRBeY
-X-Gm-Gg: ASbGncviyIWpSw4OEq24TZkWcrr6QsF456b7drcRhIdgGnkiBT3P3yFlazhVbD3zm/v
-	3oSawHEq+8KH4iNzTJMhHXyJUaTwOudyaIOdJNSe4VnAkEmyqLqh7yHuDc12kUzNFGybhFO/09D
-	1PrSSF9ZUnlMOM8sto2I6OWZ9jx3g0JDWGCJnQ7MyXo8HHRQViNzXECApPVQgiXaW9dtpJeluIh
-	Xasz5fgKmyB6fYQXMTxZg3z37tgzPCPqjDmfr9xOg7eQePWiOyGD2ohUFDe96WBlJSCYpx6cMIl
-	/xqNBHNss3Kq+lFV3uxV7DhzX1q4ocCr1GFYNFk7jimjGQmbozormn7HZWeFDgHZHGfU1rhXuab
-	vg1tnJZUWwjLl7i0BiMlzCP6lyyBpCigk873e5fftQnCWxmcVgG3cP0ccHQFWA+x3yYXeK1Icul
-	beGA4yq4xf8fsDGGyjKIhTtJbrdGCOKVDemQQ=
-X-Google-Smtp-Source: AGHT+IH0YMI90ZQb6ct+nat8DtXdZsUN3AYv/eA+GemdRzLIQywet3ITexoNTtRP65Z6ow9GuR0Ipw==
-X-Received: by 2002:a05:6000:24c6:b0:42b:394a:9b1 with SMTP id ffacd0b85a97d-42f79841510mr1872635f8f.37.1764836845435;
-        Thu, 04 Dec 2025 00:27:25 -0800 (PST)
+        bh=O0N1lMmbauFOWlZlRSXcG6h3Jmv0DRpHx+qvG3J8bOA=;
+        b=iG+E5gi1B6tgiDFJWU8riXQQelU+mWqAsm9ImOLYJMfpM7EeSikVAd+XIizmVlOt0s
+         WL6+aHBJdJgYdAxcnDm5O/xJHyDrZLdI1OLzdlK9tD10lpkilPWDUAZMlQKW4fVMVtrV
+         rxVrxbgUwt5QhQKA992UeeRY8V54PVWZlOGMslv85Nh1Be5Taun6UM+cVeR2fwbS36oa
+         /WttT4fPxUnXpEIYaTe00Tv6Chp8wqta8VXF/pUq3w8/TNcmfjlkd44U4KDldU74ZfF9
+         I46o4VnAMLf8hAZzoLxJlG3KThE2k3/IS44Y2UrdfQ7iiVVRW14k133CzfSM7zuexGS4
+         zpzA==
+X-Forwarded-Encrypted: i=1; AJvYcCXqIWIl3hfS/6XllAYNEl0wjJV6xEtGXYCOWGbyJK9nmR25XHoR6C5qInojk1ga3QuQ7f7RnFBPQ0A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCtjDul1ubSJ1DKQcQtHXoJZwuGvOM6WXXHF4wljRDMIfiqXnQ
+	BzjXNvv65YtHYVmJRPYgVkwcM9vCJWFVQVTYFMsuOYccfjwYY0mmBunV
+X-Gm-Gg: ASbGncvo3H4oMJ6o5Xdi/QY6AXnW+KwoSK2zrp59iiUm0VaVRuz+9//UfE/rTBKxIkW
+	75s0ii8tDDWGA5NNg5j2NHq8frO0VTSE9/suy+UNSyj1d/FTuzfun/Qs0khm442dXJWmUZnLCvD
+	KcL8C+33bbwv8/3Lh3QRaqFGlU4aEoIgiiYqBjuX93iKFb3WedMhy4V7PvWoEAkk6wd565eM31G
+	t+ItHCIBQUk0ODU9Aqz7Gzib0pcN5WLTAy5pmGyafL3yZkjOKd+r7kCQv8Vah4ilbu584KtOuZM
+	xQ/+9kt4m67wbFCdDIwa2pI9Tv68kM9iQ7oyj7T6qMDVb6672kRPiwr8/1akZrskAKBVbbwIrid
+	fKBFDrWK6GChn1nIqN/2VghP30ekPAVxPyIetlUYFBeJx/EwEGdNGnAKrhknCqbTbfdysnYltzV
+	PXDrtyFi2y1lN3yGIGVEO6PcBFVLOwlvmwf5Q=
+X-Google-Smtp-Source: AGHT+IEZI+dBTeR4Ak8g8nW+sjyLOTD0PlMW1hfxTxArztZFbDdkrdMe37KP4yjwsiEfaEvbmxRqVw==
+X-Received: by 2002:a05:600c:4504:b0:477:a289:d854 with SMTP id 5b1f17b1804b1-4792eb223a2mr26071405e9.5.1764838809635;
+        Thu, 04 Dec 2025 01:00:09 -0800 (PST)
 Received: from [10.221.198.188] ([165.85.126.46])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbe90f0sm1864164f8f.9.2025.12.04.00.27.23
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4792b02e7fbsm33545725e9.2.2025.12.04.01.00.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Dec 2025 00:27:24 -0800 (PST)
-Message-ID: <825efa1d-363a-4e82-8dc1-d7520c413414@gmail.com>
-Date: Thu, 4 Dec 2025 10:27:24 +0200
+        Thu, 04 Dec 2025 01:00:09 -0800 (PST)
+Message-ID: <affc62bb-a824-4433-b746-45bb8dd3654b@gmail.com>
+Date: Thu, 4 Dec 2025 11:00:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -84,154 +84,124 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH net] net/mlx5: Fix double unregister of HCA_PORTS
  component
-To: Farhan Ali <alifm@linux.ibm.com>, Gerd Bayer <gbayer@linux.ibm.com>,
- Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
- Tariq Toukan <tariqt@nvidia.com>, Mark Bloch <mbloch@nvidia.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+To: Gerd Bayer <gbayer@linux.ibm.com>, Saeed Mahameed <saeedm@nvidia.com>,
+ Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
+ Mark Bloch <mbloch@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
  Shay Drory <shayd@nvidia.com>, Simon Horman <horms@kernel.org>
 Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
- Niklas Schnelle <schnelle@linux.ibm.com>, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
+ Niklas Schnelle <schnelle@linux.ibm.com>, Farhan Ali <alifm@linux.ibm.com>,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ linux-pci@vger.kernel.org
 References: <20251202-fix_lag-v1-1-59e8177ffce0@linux.ibm.com>
- <99db437a-be91-4e85-a201-ec3a890900c8@linux.ibm.com>
 Content-Language: en-US
 From: Tariq Toukan <ttoukan.linux@gmail.com>
-In-Reply-To: <99db437a-be91-4e85-a201-ec3a890900c8@linux.ibm.com>
+In-Reply-To: <20251202-fix_lag-v1-1-59e8177ffce0@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 03/12/2025 23:10, Farhan Ali wrote:
+On 02/12/2025 13:12, Gerd Bayer wrote:
+> Clear hca_devcom_comp in device's private data after unregistering it in
+> LAG teardown. Otherwise a slightly lagging second pass through
+> mlx5_unload_one() might try to unregister it again and trip over
+> use-after-free.
 > 
-> On 12/2/2025 3:12 AM, Gerd Bayer wrote:
->> Clear hca_devcom_comp in device's private data after unregistering it in
->> LAG teardown. Otherwise a slightly lagging second pass through
->> mlx5_unload_one() might try to unregister it again and trip over
->> use-after-free.
->>
->> On s390 almost all PCI level recovery events trigger two passes through
->> mxl5_unload_one() - one through the poll_health() method and one through
->> mlx5_pci_err_detected() as callback from generic PCI error recovery.
->> While testing PCI error recovery paths with more kernel debug features
->> enabled, this issue reproducibly led to kernel panics with the following
->> call chain:
->>
->>   Unable to handle kernel pointer dereference in virtual kernel 
->> address space
->>   Failing address: 6b6b6b6b6b6b6000 TEID: 6b6b6b6b6b6b6803 ESOP-2 FSI
->>   Fault in home space mode while using kernel ASCE.
->>   AS:00000000705c4007 R3:0000000000000024
->>   Oops: 0038 ilc:3 [#1]SMP
->>
->>   CPU: 14 UID: 0 PID: 156 Comm: kmcheck Kdump: loaded Not tainted
->>        6.18.0-20251130.rc7.git0.16131a59cab1.300.fc43.s390x+debug #1 
->> PREEMPT
->>
->>   Krnl PSW : 0404e00180000000 0000020fc86aa1dc 
->> (__lock_acquire+0x5c/0x15f0)
->>              R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
->>   Krnl GPRS: 0000000000000000 0000020f00000001 6b6b6b6b6b6b6c33 
->> 0000000000000000
->>              0000000000000000 0000000000000000 0000000000000001 
->> 0000000000000000
->>              0000000000000000 0000020fca28b820 0000000000000000 
->> 0000010a1ced8100
->>              0000010a1ced8100 0000020fc9775068 0000018fce14f8b8 
->> 0000018fce14f7f8
->>   Krnl Code: 0000020fc86aa1cc: e3b003400004        lg      %r11,832
->>              0000020fc86aa1d2: a7840211           brc     
->> 8,0000020fc86aa5f4
->>             *0000020fc86aa1d6: c09000df0b25       larl    
->> %r9,0000020fca28b820
->>             >0000020fc86aa1dc: d50790002000       clc     0(8,%r9),0(%r2)
->>              0000020fc86aa1e2: a7840209           brc     
->> 8,0000020fc86aa5f4
->>              0000020fc86aa1e6: c0e001100401       larl    
->> %r14,0000020fca8aa9e8
->>              0000020fc86aa1ec: c01000e25a00       larl    
->> %r1,0000020fca2f55ec
->>              0000020fc86aa1f2: a7eb00e8           aghi    %r14,232
->>
->>   Call Trace:
->>    __lock_acquire+0x5c/0x15f0
->>    lock_acquire.part.0+0xf8/0x270
->>    lock_acquire+0xb0/0x1b0
->>    down_write+0x5a/0x250
->>    mlx5_detach_device+0x42/0x110 [mlx5_core]
->>    mlx5_unload_one_devl_locked+0x50/0xc0 [mlx5_core]
->>    mlx5_unload_one+0x42/0x60 [mlx5_core]
->>    mlx5_pci_err_detected+0x94/0x150 [mlx5_core]
->>    zpci_event_attempt_error_recovery+0xcc/0x388
->>
->> Fixes: 5a977b5833b7 ("net/mlx5: Lag, move devcom registration to LAG 
->> layer")
->> Signed-off-by: Gerd Bayer <gbayer@linux.ibm.com>
->> ---
->> Hi Shay et al,
->>
->> while checking for potential regressions by Lukas Wunner's recent work
->> on pci_save/restore_state() for the recoverability of mlx5 functions I
->> consistently hit this bug. (Bjorn has queued this up for 6.19, according
->> to [0] and [1])
->>
->> Apparently, the issue is unrelated to Lukas' work but can be reproduced
->> with master. It appears to be timing-sensitive, since it shows up only
->> when I use s390's debug_defconfig, but I think needs fixing anyhow, as
->> timing can change for other reasons, too.
->>
->> I've spotted two additional places where the devcom reference is not
->> cleared after calling mlx5_devcom_unregister_component() in
->> drivers/net/ethernet/mellanox/mlx5/core/lib/sd.c that I have not
->> addressed with a patch, since I'm unclear about how to test these
->> paths.
->>
->> Thanks,
->> Gerd
->>
->> [0] https://lore.kernel.org/all/cover.1760274044.git.lukas@wunner.de/
->> [1] https://lore.kernel.org/linux-pci/ 
->> cover.1763483367.git.lukas@wunner.de/
->> ---
->>   drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c b/ 
->> drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c
->> index 
->> 3db0387bf6dcb727a65df9d0253f242554af06db..8ec04a5f434dd4f717d6d556649fcc2a584db847 100644
->> --- a/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c
->> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c
->> @@ -1413,6 +1413,7 @@ static int __mlx5_lag_dev_add_mdev(struct 
->> mlx5_core_dev *dev)
->>   static void mlx5_lag_unregister_hca_devcom_comp(struct mlx5_core_dev 
->> *dev)
->>   {
->>       mlx5_devcom_unregister_component(dev->priv.hca_devcom_comp);
->> +    dev->priv.hca_devcom_comp = NULL;
->>   }
+> On s390 almost all PCI level recovery events trigger two passes through
+> mxl5_unload_one() - one through the poll_health() method and one through
+> mlx5_pci_err_detected() as callback from generic PCI error recovery.
+> While testing PCI error recovery paths with more kernel debug features
+> enabled, this issue reproducibly led to kernel panics with the following
+> call chain:
 > 
-> Though this fix looks correct to me in freeing hca_devcom_comp (not too 
-> familiar with mlx5 internals), I wonder if it would be better to just 
-> set devcom = NULL in devcom_free_comp_dev() after the kfree? This would 
-> also take care of other places where devcom is not set to NULL?
+>   Unable to handle kernel pointer dereference in virtual kernel address space
+>   Failing address: 6b6b6b6b6b6b6000 TEID: 6b6b6b6b6b6b6803 ESOP-2 FSI
+>   Fault in home space mode while using kernel ASCE.
+>   AS:00000000705c4007 R3:0000000000000024
+>   Oops: 0038 ilc:3 [#1]SMP
 > 
-
-Setting NULL after the kfree will have no impact, it won't nullify the 
-original field, but the function parameter copy (by-value).
-
-devcom_free_comp_dev() and mlx5_devcom_unregister_component() get struct 
-mlx5_devcom_comp_dev *devcom to work with, they can't nullify it for the 
-caller context.
-
-
-
-> Thanks
+>   CPU: 14 UID: 0 PID: 156 Comm: kmcheck Kdump: loaded Not tainted
+>        6.18.0-20251130.rc7.git0.16131a59cab1.300.fc43.s390x+debug #1 PREEMPT
 > 
-> Farhan
+>   Krnl PSW : 0404e00180000000 0000020fc86aa1dc (__lock_acquire+0x5c/0x15f0)
+>              R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
+>   Krnl GPRS: 0000000000000000 0000020f00000001 6b6b6b6b6b6b6c33 0000000000000000
+>              0000000000000000 0000000000000000 0000000000000001 0000000000000000
+>              0000000000000000 0000020fca28b820 0000000000000000 0000010a1ced8100
+>              0000010a1ced8100 0000020fc9775068 0000018fce14f8b8 0000018fce14f7f8
+>   Krnl Code: 0000020fc86aa1cc: e3b003400004        lg      %r11,832
+>              0000020fc86aa1d2: a7840211           brc     8,0000020fc86aa5f4
+>             *0000020fc86aa1d6: c09000df0b25       larl    %r9,0000020fca28b820
+>             >0000020fc86aa1dc: d50790002000       clc     0(8,%r9),0(%r2)
+>              0000020fc86aa1e2: a7840209           brc     8,0000020fc86aa5f4
+>              0000020fc86aa1e6: c0e001100401       larl    %r14,0000020fca8aa9e8
+>              0000020fc86aa1ec: c01000e25a00       larl    %r1,0000020fca2f55ec
+>              0000020fc86aa1f2: a7eb00e8           aghi    %r14,232
 > 
+>   Call Trace:
+>    __lock_acquire+0x5c/0x15f0
+>    lock_acquire.part.0+0xf8/0x270
+>    lock_acquire+0xb0/0x1b0
+>    down_write+0x5a/0x250
+>    mlx5_detach_device+0x42/0x110 [mlx5_core]
+>    mlx5_unload_one_devl_locked+0x50/0xc0 [mlx5_core]
+>    mlx5_unload_one+0x42/0x60 [mlx5_core]
+>    mlx5_pci_err_detected+0x94/0x150 [mlx5_core]
+>    zpci_event_attempt_error_recovery+0xcc/0x388
+> 
+> Fixes: 5a977b5833b7 ("net/mlx5: Lag, move devcom registration to LAG layer")
+> Signed-off-by: Gerd Bayer <gbayer@linux.ibm.com>
+> ---
+> Hi Shay et al,
+> 
+> while checking for potential regressions by Lukas Wunner's recent work
+> on pci_save/restore_state() for the recoverability of mlx5 functions I
+> consistently hit this bug. (Bjorn has queued this up for 6.19, according
+> to [0] and [1])
+> 
+> Apparently, the issue is unrelated to Lukas' work but can be reproduced
+> with master. It appears to be timing-sensitive, since it shows up only
+> when I use s390's debug_defconfig, but I think needs fixing anyhow, as
+> timing can change for other reasons, too.
+> 
+> I've spotted two additional places where the devcom reference is not
+> cleared after calling mlx5_devcom_unregister_component() in
+> drivers/net/ethernet/mellanox/mlx5/core/lib/sd.c that I have not
+> addressed with a patch, since I'm unclear about how to test these
+> paths.
+> 
+> Thanks,
+> Gerd
+> 
+> [0] https://lore.kernel.org/all/cover.1760274044.git.lukas@wunner.de/
+> [1] https://lore.kernel.org/linux-pci/cover.1763483367.git.lukas@wunner.de/
+> ---
+>   drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c b/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c
+> index 3db0387bf6dcb727a65df9d0253f242554af06db..8ec04a5f434dd4f717d6d556649fcc2a584db847 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lag/lag.c
+> @@ -1413,6 +1413,7 @@ static int __mlx5_lag_dev_add_mdev(struct mlx5_core_dev *dev)
+>   static void mlx5_lag_unregister_hca_devcom_comp(struct mlx5_core_dev *dev)
+>   {
+>   	mlx5_devcom_unregister_component(dev->priv.hca_devcom_comp);
+> +	dev->priv.hca_devcom_comp = NULL;
+>   }
+>   
+>   static int mlx5_lag_register_hca_devcom_comp(struct mlx5_core_dev *dev)
+> 
+> ---
+> base-commit: 4a26e7032d7d57c998598c08a034872d6f0d3945
+> change-id: 20251202-fix_lag-6a59b39a0b3c
+> 
+> Best regards,
+
+Thanks for your patch.
+Acked-by: Tariq Toukan <tariqt@nvidia.com>
 
 
