@@ -1,79 +1,78 @@
-Return-Path: <linux-pci+bounces-42608-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42609-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84D77CA2683
-	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 06:29:55 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35A82CA2A14
+	for <lists+linux-pci@lfdr.de>; Thu, 04 Dec 2025 08:27:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 75F9C303370C
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 05:29:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4664D3061A42
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Dec 2025 07:24:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 096782FA0D3;
-	Thu,  4 Dec 2025 05:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="N8T0JlPq"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCE67290D81;
+	Thu,  4 Dec 2025 07:24:19 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011071.outbound.protection.outlook.com [52.101.52.71])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2134.outbound.protection.partner.outlook.cn [139.219.146.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B33C2C21DA;
-	Thu,  4 Dec 2025 05:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B139A1D5178;
+	Thu,  4 Dec 2025 07:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.134
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764826191; cv=fail; b=NjAh4AwpzZAETBMQ5OVGt4i2b0U5Tw8XJ0eQBO5kLoBbcHhxFjo4pMif4q7LB8+n0Z/5LdVJTKIpSZKtOCb8zk7YRpGGXog6N/rmasdbHdsXFKC+mhkios8jKqtZTPDav2mbiQJW8EK+1JSXmBgvzt/LmPtmAavq0J/0NOhYK64=
+	t=1764833059; cv=fail; b=h5OlhcZq3Tpf6WwYTLswkb/xa8ou0BG79nPBW3KaOOW2e1EU6I3fN4chtAm/IIV7plLuXpIoKilVqv+ea55Hem3DdU5W+CRLp/21l1lB1VmqLkxOrRdF8/4DlAeSUqeDxJKPChA7VqJ9Uqt6vPP2wo17anV82M26VDQ49hEQRJM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764826191; c=relaxed/simple;
-	bh=xxit2n9QK0jXLBigAQWMVvwrPFibofmNQ7B03V1X6jg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qNp6KaNuodua1AOWrqcfIll8mfwXhtTXsnO7NVZ+9wockIDA8otSIiZH/RoiyHHRnPqCVfW+onOT+Evg8FYASWlKIyQCE6zeEqoNHwTKDQ0O0b5A+jN7ulPCW67sNj1q740F41aEnFyVxclEc/41N+FJoj4r+Es/H9EnvXyzmeI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=N8T0JlPq; arc=fail smtp.client-ip=52.101.52.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xY/XmeYBxjNj2diFfR9KioIKR1lWIaduL76nz4x2JWa3FZZ1xzT5UaU692CeoIaNKroYJFBnd1ntNRmfCjahFoDcejLGbdEQnE2LYBiNrEgRp+pLfeZ3NCg2YPMrUZdJj0SAVr2xllg+eydz0+QT5YAlpJ1PslifY+uuTOlJrf/hbDH83psbbvq2gAFNoGLp7t72A8N75WZGINvIGFsA+gR3BeY67i/vAm9nUKvn4p3LGXGqYZYw0AqKGC5V+AEldaittOiCaAuLDBrleBA7W/Ga1Z1bkebVwfGUwDoA2IIr8vpncnjlMAic1TP29iNw1BBsKj1RERjXhJHRJPBjTQ==
+	s=arc-20240116; t=1764833059; c=relaxed/simple;
+	bh=KMlYyyvjbdJt7z+5XjMbTWoAqmJSb1jizRw160hlUcE=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=du4TlBefh5hDM4RwHbdCzoCMMtX7kTplUSNoLmU6pLrYH+1ISLFX7U+OIdQBGKBL0Ifk+SQFMCbjBHC02h+fLtYRq5f/MxJ2LqAlDBUdTFmPyKBW2VrDRYO6u2S3sCNa7WTDbigXqzfIhgklFgmyrcjzi8T3HRsBU2QjQNpEEtU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y1xVEDDiBXtUWhID6B5olwj0yZZxE8y9HxnDI7mYNvQduMG9JDb1LvUro7FziRcKD9zQ3Z5/dy/YwqwbIMoxOk1F9oTW34rT2TRboEj0xKsgFjn0XFt/k1PpkBXo4H/Xdzi6FCbr7TG1foIQSxdHcjbY4p7Dtbn/vCFiAiGnpE/sGf8rZVtdh1byQHr7lV/Qc0hYmuPpxUrgOWbEZhxhC8jDKVJTas5LPxrF5fjYyubw/WZzPLXe+80b4VlZvS0fCDVFVcT4UxDn8vIKbmPVMFFyI+1wmvd5QRdbwM+8TytoeaE2lDbZOiF67hitTemXbDyYjgCkY4cv+Y1GrqQrQw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
+ s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hjJnGCYV6S0Dv/eNffstGfh/u51RzLHiEgZy/OhvSYg=;
- b=f1ciNhSIILP2b7T1gDWefO2+/i1JQG2Du9axc8lBFaiaBXwHzLjhOaPU9zobPBPXUsrIRQcUQ38qCdToRlc+z/V+K7/NgiKh1Xt2DMSasBf7dz2NOFh07adKFmL4w0tpJHmFsbRpKv+AA6vjmfSHPB6rRjl8aSSXS2/ueiADqS3zbzMtu0IHW6XdW8b51FEj0yLS0oIe+iU7QxLFrrdWkGdAdpMausMw0xLsqYqkkiWAT70beqfwau0dxDndfqWL3lgXgvYKrLdPxjb++3ODLzesxHPSKwlA6OHz/qo1kIfOQA9QG2bBeAfTdV1cJeFEdvW2wQrI/fJm5QHTn0BdsQ==
+ bh=nrtQpqutb6dEmd3h6Mri5cv+6tXN5+VePqSXFXKxy7w=;
+ b=IABO/EuFWhhpvUTxv5YRv/ZCr3I+21zn3cipQT1ShHskHJkASWEEWS1IktYoio3X3H/yt3FsTDMdM5V3E2jCgtlHoO5DsbKHqszMgskcLPs3ZSwbxMXCVbT2OjR1nbGeg4qgXyk0Bjt8ESqskTxo/Ml4e3Eq9cI8xm4R8hJhy5JINhdGlYzNz5jWUbHPGayPf5kHiwUbLeFGSIWxnvTR/WyrfdQVxSX8tjcOBbxOomTZS7C4Z6jhtmKZVitj84VY5u6DF3aZPLqX3p9SuUMGy3q1ppmFanFB+BBjDGhBF4y+YwOi0x07zIbMn5pCSAGkCMYlXr0TUNrsiDMNhkLbhQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hjJnGCYV6S0Dv/eNffstGfh/u51RzLHiEgZy/OhvSYg=;
- b=N8T0JlPqcv9c/75mhm/2y9rL3hUZz9gbtkESNpP9KQSBd+foLAzjS2zAhccqkPRPe1YcB4rOKTEyStN/7Y0Awmh+2k7XreizTxVxIyohAzF1w2ppnYm/FigitvCWSaEcWlQ84kXCQtgFs+KvxKNRq/n3TzeV48AHHA7GinrMCDE=
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CH2PR12MB4232.namprd12.prod.outlook.com (2603:10b6:610:a4::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.9; Thu, 4 Dec
- 2025 05:29:44 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.9366.012; Thu, 4 Dec 2025
- 05:29:44 +0000
-Message-ID: <222da706-19c5-485c-be90-2ebda20c1142@amd.com>
-Date: Wed, 3 Dec 2025 23:29:42 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PROBLEM] c5.metal on AWS fails to kexec after "PCI: Explicitly
- put devices into D0 when initializing"
-To: Matthew Ruffell <matthew.ruffell@canonical.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- lkml <linux-kernel@vger.kernel.org>,
- Jay Vosburgh <jay.vosburgh@canonical.com>
-References: <CAKAwkKvmdKxRRA4cR=jJEdyadon6uKXe+aFXaGSe=PNSgwDf9g@mail.gmail.com>
- <cecdf440-ec7b-4d7f-9121-cf44332702d4@amd.com>
- <CAKAwkKvmZUGi+gEhr1nw5MV+rfyVP=Exu4AW1_WOPHDH6tSYug@mail.gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <CAKAwkKvmZUGi+gEhr1nw5MV+rfyVP=Exu4AW1_WOPHDH6tSYug@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR07CA0041.namprd07.prod.outlook.com
- (2603:10b6:5:74::18) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:7::14) by ZQ2PR01MB1162.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:11::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.11; Thu, 4 Dec
+ 2025 06:50:04 +0000
+Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ ([fe80::2595:ef4d:fae:37d7]) by ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ ([fe80::2595:ef4d:fae:37d7%4]) with mapi id 15.20.9388.009; Thu, 4 Dec 2025
+ 06:50:04 +0000
+From: Hal Feng <hal.feng@starfivetech.com>
+To: Kevin Xie <kevin.xie@starfivetech.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
+	E Shattow <e@freeshell.de>
+Cc: Hal Feng <hal.feng@starfivetech.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] PCI: starfive: Use regulator APIs instead of GPIO APIs to control the 3V3 power supply of PCIe slots
+Date: Thu,  4 Dec 2025 14:49:56 +0800
+Message-ID: <20251204064956.118747-1-hal.feng@starfivetech.com>
+X-Mailer: git-send-email 2.43.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: NT0PR01CA0020.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:c::16) To ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:7::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -81,204 +80,149 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH2PR12MB4232:EE_
-X-MS-Office365-Filtering-Correlation-Id: e3c95288-094a-46a8-4dd0-08de32f621c1
+X-MS-TrafficTypeDiagnostic: ZQ2PR01MB1307:EE_|ZQ2PR01MB1162:EE_
+X-MS-Office365-Filtering-Correlation-Id: f5f259c0-3c75-4723-b58e-08de33015a72
 X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|52116014|7416014|921020|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bldIeHZ4WWh5ZkVnbjRtWHJEOFRWNkkxMVlHeXNBc2JsbzJRTzBmZVN4V3gw?=
- =?utf-8?B?ZnBRQ2g1QXRmdFdJMGRWVlhVY1doMjZJSEpuTE5IYlZLTzBFeWt2bndTeUZN?=
- =?utf-8?B?WDJwRC9uSVlST1lWSmNidEZGV1JFVHoxMk8razg3TDJoQ0pYa280ejJYM2pQ?=
- =?utf-8?B?aWt3TFJhNGpHS0pKWm1GY0NMRHdkQm1DOXdBRTdUWERGVkR4Kzg4QlYwNUtr?=
- =?utf-8?B?TER1ZjRKWlJ2Y2wycWUxNlFaM0xPcllwYmtVYTZSM0pUOHVONjVlMVg5VGpH?=
- =?utf-8?B?RFhJa3ozU2tKUVZJR0JOMW9INWFqcnRNdmhPYjJoemUvZzhhd0pxenEveklJ?=
- =?utf-8?B?WnE5dm81c29ud2lnK3ZKWlFMTHJhR29yZklUbkNhREJvYXJKb2QzZU1JeVUz?=
- =?utf-8?B?U1ZoK0ovZkhwM2pKQ3NBQTZ2K3dYRmdoSmY3Qy9MQXAwL1Zqbm84czVkT2Q5?=
- =?utf-8?B?NEFLcndVS0JhWlgraGZPUnU4UlQ4aFptTVUxMU91MVFiTFBURTV5Um51bkV3?=
- =?utf-8?B?dklrY1Vza0ZMUHpHaVNlUVFmYndCQ1gxbytXUVdxSDJNYVpiTFdWM05UZnRC?=
- =?utf-8?B?NlN0V1VXUTVPY0JFRFhodXVMbFpIWWhESjk3YmhZN1NEY3ZRcytrUkxCTC9U?=
- =?utf-8?B?V3IrOXY2TE01Q3VuQXNWOXM3WGlUeHlBVmp4dWRYaFRoVmRsaXVLelphaU5N?=
- =?utf-8?B?WFk3YkcxQU1iVWU4eS9rRFdURStCT3Q3U3pNTFByeTg5K2lkQnM3bmdDaWNH?=
- =?utf-8?B?cFFJaENGd2tidVRjVkpFZ2pMSzR4ZGsrQTNvZFVNZzkwY3V6ZFRpZ0xHRUVY?=
- =?utf-8?B?S0Z6a3NzcVlBWmd5YW5ZbEFxWGg3cHlGMXkxMEVKSUNFYkFVRkhua1YwS1pz?=
- =?utf-8?B?cDdWV3p2RUFqN1VZcTlRU3V0VGdyTVdSK3B4OWswOENETWhVemphNHU1OGZP?=
- =?utf-8?B?K0RjbEpQaGJGRGhidmdpQXA2ZW82TnJHZU56Y0kvT0VXRWxzSWQ5WEF5ZEw3?=
- =?utf-8?B?L3BDV3FIMEdWaWJ3aHhLckZqR0tRR2QrNlVRbkRFMm5kaUhpcHp4QVQ1VE53?=
- =?utf-8?B?M3JrM2xub1I2S3h5eDZmamx1Z0Z2aU1ZbUFsaW05NW8vOHRLK3JCNUY4SkF2?=
- =?utf-8?B?V1ZFMEhsbzJSU0d5R0IvOXNsT25UUVl5NFVOSkRkdVdXWlJzQ1poall4ZklF?=
- =?utf-8?B?T3crRENnWXJES3lSbGlNU3drclU1WldNWjhGbjljMmdBQngxQlhjblNSQVY2?=
- =?utf-8?B?MEo1WmNCdXJGTEZJVTZtS1YzNTBSdDZ4WnRkWlREV1gwazVtZUtmZ2ZCQ3Bt?=
- =?utf-8?B?N05MVllaYzFHMzkzY0xwdndMUFdzdDBYZnNCYTEwdHJ6dkl6V3FwMnZDUUl3?=
- =?utf-8?B?a2xVdzAyRmdQdU5NRVo3anpWTkg3UFBpWGh1ZFJlR0JRcHZ1L2NIQUNMOVNN?=
- =?utf-8?B?ZFZSbG1pM3NKbnZ4eUk4QjZPWk1Wb1dZdjBMazdHV1BRWjhBeTRvMU5zNEN6?=
- =?utf-8?B?a3N1UmJ2NC8yY1FmS2owZ2Vic3M3bGUrc1JCdkg0NjJ1R3dUZlF1ajZNWC9o?=
- =?utf-8?B?MmFCS3UzdXJXT0t0K2F2YW5mdGxhOS9KS3hMcW82eFpCMXc5K3REU256RlBD?=
- =?utf-8?B?Mkl1elYrL2pzUi80dnVCV1Zad3I0ZGpWQy9SaWY1RUg4WG82WU9RVzJSeXBO?=
- =?utf-8?B?WVptVmlRR1BFUEtXNXNYeGZ2aWtabVhMd2xCcTJUV1FDREJXbHp2NHN5RHpT?=
- =?utf-8?B?dm85VUtnZjEwZE13NVh2eks5Z1RoYXJaVVFzSWtaM1R6b3crUjM3OXA4d01p?=
- =?utf-8?B?RVFKSWJFODZ0RHpQekIzWHRsWit2SXZTSE5LK1A5dzVyaVJudHRXZEF0NUdu?=
- =?utf-8?B?Nys5ZW1Cb1RKeHlLVGdvaXQyMUoxVzZubnpJelQybHkwMStmS1ExYlIrdWt1?=
- =?utf-8?Q?uGDf7QDkXOAWn/+an11iTX+q/Zl+1pje?=
+	MKadG4YDzjslP6dVyjcuQKolLnYNK8EGKjmAa8gzN6UWl5RjqhfgDN8ehFoeCGs3/XlfNRK7qc6zp9uw0mDsz84nWu4trPaNXxodFOaVvfGlpggHY/tpgDj2BvwmfxiSHkGHmE6qvsNU2ZajR85LAqk+GKOIQ4aorvMPWeekMhQSxKHkd8bNdg/jw7Triyd7t9cXCVoE8yW+LHAuhZqpzAlrxd0zlxCh8z0p/pW80hPG9IQu26BNT4nGVdfM+AaDdi8Cqd0Qhd2nnOuFtFNCdz7d8brGades2B7XomiKqHZ6rnMxACYG5SSFm3jAYsxNq23oZPQdpmB+iA0mIZQsj3RGo5rlcL9YiLAz0Vntd1BqxY34fAO5AHXGya9ldb7zWgysUYJpZxIFiG3aq7ffR6g1d5WCUZaSKyeduTU9dP5HGtUlOpc9fRCeFAG9IxUDG3mjGUd5Ux+rTnXCUr9lXCDE5mEXMoGs3ONnI0RUnUpJ4xb9u4DdnBzcLUiI5k+J6EDQMTSuuiAvQEB3ZfMwlKG4GEtxwgykVTGOkzY6tGpPFtow47RlJU8V4X2aS5T/U3BhW/l4yag/9ch7LJoQYBwtF1yV5U8X/S3Z6bh+rkQ=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(7416014)(921020)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aTVoV0oyRFBZSkRYVDdLaTNVcDNGTWlxZ3h4c3JaclNHT3F0a3REWUo1OTRV?=
- =?utf-8?B?MFF0NnVndVRIVUtNc3RHc1ZTMjRPelc3UnZwVDltUFJiOXQzNmM0VkhlZ3hO?=
- =?utf-8?B?Wm5mdzVHMHZnYi8wWnJTRFhuUDdnMzNRakZhREpnYjVXdU42dkkwZ2o0cmZI?=
- =?utf-8?B?cU9RVzBxK0VaS1BVYkZSdHpiQUQySmxWeks1LzFnd2FFcGEvK1RoRGlTK3JO?=
- =?utf-8?B?WGlaK0VOZjhhWXhQdWdRYW9DWEVWb2cyZlpuVUxmNURzMGNsTWZQTEorMDFm?=
- =?utf-8?B?MTFkcTdtQWRxQjQwWTBVWktTR3NDdFVPRS9ad1pSUGFwWGRTQUxIN0lTOGVK?=
- =?utf-8?B?MXVQYi9WWUZaU3hIem9IMldlTU9tV2ZTczBNLzFEZ3doL3hna05uakg4K2o5?=
- =?utf-8?B?aDdGV081aHpLMjdnT0NRb1FwSnd5V3U0RG1OVEtvTXk1SW5QTmZ0bEpyMEpr?=
- =?utf-8?B?ZFFvNXltY1h6MzVGSVVmMjJVSGd4djJGcnRZNnE1ajByVUc4SGxmVmhock1L?=
- =?utf-8?B?MkdNMVoxQzJDYWVySmlLWW5qL1JLYjczbForRUN5cXEyclpIakJxdGVQWjVa?=
- =?utf-8?B?ZDUxK1pSZHZsNEhIeDN6SHVzSlFFRjVTY0xNbkdnMCt2VytacVpnRUhDYWF5?=
- =?utf-8?B?c3NWMVk5ZFY3aThqTWMwbEJoaTRDWGtpbEhHNDdvMTdGZjlwcnltNWMxVjRs?=
- =?utf-8?B?RGpHYWZubDBqNi9PbTM3QmZ3Z3hydzBFTFRMcFlzWllkZjFPOWl6Vk9YeTQ5?=
- =?utf-8?B?OWFPY0xmMjU2R1FzMU5XQnFXMGxCVlgxQlV2UjdVMk9BRUJYdy9sOFlQQmEz?=
- =?utf-8?B?bDlNTTUyUFBTMG9zTjFod0hlZVV4Rnhlb3NrSnZiM056a3hiSE5ZZTFlUnFi?=
- =?utf-8?B?aTB3UE02ZFZTUlMzYjVJVXFwUFNzak9PNVZrQ1pDWGI4c0oxYXFoY3dDa3dK?=
- =?utf-8?B?M2FSRHAwekd4bEM0dEIyNVVEdHFKM3F6dlZ2Q3RkT2hseEcxbzlMbE11OG05?=
- =?utf-8?B?cWdnUFh0dnBVTy9oa2hHREpaeHh3dUs3ditBZnBJeGVyaXdvTGdhTmZLMU5j?=
- =?utf-8?B?NlJvTitFRFpvbGl3WTdQK3prZEJsR2hrdm1SYTFXclNnNHJvbDZpN2I2V0J0?=
- =?utf-8?B?YXQ2RFVuRHhpUTZJNXNlK0FyWEpYRTZOcit1d1VINmNDTkhQdWtDZ08rSXdZ?=
- =?utf-8?B?cFZYRnZGT2VXVXp3T0VqNS9XdWhXdFlUNTdFb2hRc0JxSjZrTEJEa2tzc2pr?=
- =?utf-8?B?SjFCVFh0UmM5bFNMbTRucDNnd0pjYXB2aHl6ZlJJNFEvQjVtQXBSa2VrYUxX?=
- =?utf-8?B?T092SVAydTMyNFVNR21sQkZ2cUoyajQxeVhYVjlDUnordjR4R3hFR2dFRlpJ?=
- =?utf-8?B?WVZDcVpXRVduSklIc3hSMnUrb3hvOGJKK08rcUExdjlpRldyYVhpQ0xaLzVr?=
- =?utf-8?B?Y0FXcW9NZ1lEQlY3eklFczVONm45aHQvT2psSzVrWG4xQmFHdFNUVS9vT3ha?=
- =?utf-8?B?N1hNeEJCRkFCOUlnYllJRGZnTlFtOEpCcTMxSERpK3oyU0c3ODZnTEtILzdP?=
- =?utf-8?B?a1ZDMEZpeDZab1Y1Qmd2YStMemlDUGZtNUdZRC9OWmFLZ1ZLQUZPUzl0VmU4?=
- =?utf-8?B?M0RhSHBDN3QwR1FwRVAwNDJNYk1LYkV6b0tlMmZ3c1cvOEhieVN3UFo4VHow?=
- =?utf-8?B?R25reW53RGhMYkVNQmgyZk92cytEeEpqTmZiOUh3ZGFUcGYwKzFhN0FQdTc0?=
- =?utf-8?B?K21ONzY3SEtYNEFwUzIxbkhmRGVNb3RKcjhQSVMrbk5vTWE4NEVRUmpSLzVS?=
- =?utf-8?B?U0h3dlprc203a3FQcExVYWpvZnpqZkdDcnJhdjg0S2M3VEFlMFNmSGNpQjRi?=
- =?utf-8?B?dUFad3B4U0lqWkVVVTMwL1VCYnd0Y2oyQVBDQmVLaXlVQ0x1M2wvand3NVN3?=
- =?utf-8?B?L2hrUVdXb0JYQld1YXBTcm12dHhrcWFqMldUZ3VyUW55MWFKOUg0Y2dGMzFJ?=
- =?utf-8?B?b0hTVUVaWWR1eFhOTHpIMEo3UDJGbmFsUkgyNzJJTjcraTIvTzNRb1pGS1FU?=
- =?utf-8?B?U2Z1dzFnZ3dzYW10VDhMc29tcWdtOWZlbGQ1eFBUYlJoNi9ITTR6VWZlOGlX?=
- =?utf-8?Q?Fp2PT8fQWQK59QtNwdrhtN+91?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3c95288-094a-46a8-4dd0-08de32f621c1
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+	=?us-ascii?Q?9sRYfUSqNiwPRsHmi5e9oOkh68rXSXBopz4VEXbLs++jTFze5gtOWR4zIwgQ?=
+ =?us-ascii?Q?58/DDDAkbedEvqRMHlWIAvDW5xd5TcbZIjJsDUrfAJuh6KtHrl72eqhbOk/T?=
+ =?us-ascii?Q?4VaoXkR7k+G1ZWr4bk4bGVPPyNxHZjQeLi56unwNOM03EzzfisID4r7XxrfV?=
+ =?us-ascii?Q?2Z97V6JaXo5a++XU0rMygZgnz/Q7vj+qUv5sXjxQLyqxQGFJehucc5+MQmaP?=
+ =?us-ascii?Q?b2NTONI8clgFvpKVafeCk1zp2UunnwrrORuSKxXnDfJ5/WllsDquC3CXcOIh?=
+ =?us-ascii?Q?6c2OCAkz30d2MU+u5D9QY0BKqqwG4TqSjVvT0DOFeb0d6YlbBMGGyHrxmEwL?=
+ =?us-ascii?Q?iXuvixzk4z9uXnvmeqpPTonEp5+4nSzQXkF/wSCXIratpuDkwFzukrhM9SSz?=
+ =?us-ascii?Q?TH/8il97KKTnP43J9lU+lm3q17sHh2jIXnB7OhiT61+SpVOhezV0to1M/Mjn?=
+ =?us-ascii?Q?6q2IhzlGXcxAYuVR1Fo9P8sSHkqEH6V8G4wDOLgTfgUlyN+Jy2VEMYG6ScGy?=
+ =?us-ascii?Q?jj4txBtfwpZXns1YRL0u8lhhivOuU9sHjbM6sOx+lgtg4SdmyGLMM2bRJsAK?=
+ =?us-ascii?Q?bUAshUJU+vaBHkyZmRDwmK/wCxW9mfT2p0OO2X15s2EoER5a3Z/pxPgKE8y9?=
+ =?us-ascii?Q?kCj65rcRAPgG3OQ4MUWC2GZQG+97iBdopBQtrwQPDpHJB4EGx9B7a0it1mgp?=
+ =?us-ascii?Q?rM2i4cdyhxvyhekFJ4Q0/yAA/70ie32uAW93h/TRaoHarykRCunuXTNxGFtq?=
+ =?us-ascii?Q?RbERIcKjB1pwkaR8ZWSH6Nw8Io0//YjYDq8imFefnnXwhjPWSql4wutGWQb4?=
+ =?us-ascii?Q?U8MGt10qvnaDg3/ghOxhiH/nTJl618YuYIDjUeWO6wG1TSxwyokaWuuNDWNa?=
+ =?us-ascii?Q?R/WV22TvufQWLtoJ12SWjv1RTaQ/bS+y3YzQ+9bNVN/Ns5cp0iic9t47OuHu?=
+ =?us-ascii?Q?s437zboo6QqaYM76AonDiHxRzbtPmWViIPGLllVzEJn3n/l8Mv/05nKu/eI/?=
+ =?us-ascii?Q?auYVLltS/mOMuIt9Qnhl3VQxCNTNFPE8PZ95Etc4o7v0Tn9d2l15JSL9Yw3k?=
+ =?us-ascii?Q?Du3Mro+9o5nrGfSo2QLwav4HC9vU4Bk7BpCxcVp/DcBP3c0Fk6q5QjQhpPjD?=
+ =?us-ascii?Q?BXEME3QD/qhaQ938mn7OpVCETyxIAhdeyHbXTkd1puP5B5b5dqa5FWsjYDIv?=
+ =?us-ascii?Q?fGe/pauECVZJr8Zz3EAYVhDeKhL9tSz9zUU9gx92h/aRid8Z33s8kLV3w2S4?=
+ =?us-ascii?Q?HECH5n6UygUv2p8PjRJf2ZkMS5Fm46KoZ/VUYXAydS/3Il/PM+c7g+oBBXS+?=
+ =?us-ascii?Q?uPic0xwpL8x+j8TdCCF1nRoC5dprCLmn0XgFXNkQPhc+uljjNcnYfIRxt6lN?=
+ =?us-ascii?Q?9g9JRWpXhkyNpC5+poPWwn42mHqoX/Skeiz85hmjIRboFomg59wadDytwtNf?=
+ =?us-ascii?Q?S4GYh1C2d+X/UyrY8vlktMbnKn6BQ24m0TxNBlHyZQlJvfASzQoeuo60kYWe?=
+ =?us-ascii?Q?quHFjJ+0MpWqpMyhiHj3ycQ30IjRyj9kNj+ZHQ7tyan9KAGISa4Dc4XhQJsc?=
+ =?us-ascii?Q?WDyHVgWuZIyf/Hk47TY7nHMX28e9Nb9HEYfuZMD6/4JvEkKVsEwxO3EXOrft?=
+ =?us-ascii?Q?qg=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5f259c0-3c75-4723-b58e-08de33015a72
+X-MS-Exchange-CrossTenant-AuthSource: ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2025 05:29:44.4376
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2025 06:50:04.0031
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kk2IyH8GfeO0c3eWwgM8tIYCBfEw5LGx/EO1m5AIFC/M74cwqFutsoWavKU4U3XlaV1T91otGQ/TVkJ/eG1ZOg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4232
+X-MS-Exchange-CrossTenant-UserPrincipalName: WrxsVvLIv7kTm2fiGS/GM4VoeC6hx7bRwUZ/6E4Tqo+0ug/QjO7on70vcNk7dOhJG8819HULN9llmWDoOB0ZrxTM5CHAW9cMxx7hX34xrgg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ2PR01MB1162
 
+The "enable-gpio" property is obtained to control the 3V3 power supply
+of PCIe slots but it is not documented in the dt-bindings and using
+GPIO APIs is not a standard method to control PCIe slot power, so
+use "vpcie3v3-supply" property and regulator APIs to replace them.
 
+This change will break the DTs which add "enable-gpio" or "enable-gpios"
+property under the node with compatible "starfive,jh7110-pcie".
+Fortunately, there are no such DTs in the upstream mainline, so this
+change has no impact on the upstream mainline.
+If you have used "enable-gpio" or "enable-gpios" property in your
+downstream DTs, please update it with "vpcie3v3-supply" after applying
+this commit.
 
-On 12/3/2025 11:04 PM, Matthew Ruffell wrote:
-> Hi Mario,
-> 
-> I thank you for your prompt reply, and apologise for my delayed reply.
-> Answers inline.
-> 
->> When you say AWS specific patches, can you be more specific?  What is
->> missing from a mainline kernel to use this hardware?  IE; how do I know
->> there aren't Ubuntu specific patches *causing* this issue.
-> 
-> I can reproduce the issue with the current HEAD of Linus's tree, with no
-> additional patches applied. My current HEAD for testing is the 6.19 merge
-> window, commit 51ab33fc0a8bef9454849371ef897a1241911b37.
-> To get the mainline build to work on c5.metal on AWS I needed to edit a few
-> config parameters, and I have attached the config I used.
-> 
->> Now I've never used AWS - do you have an opportunity to do "regular"
->> reboots, or only kexec reboots?
->>
->> This issue only happens with a kexec reboot, right?
-> 
-> We can do regular and kexec reboots with the c5.metal instance type. The issue
-> only happens with a kexec reboot.
-> 
->> The first thing that jumps out at me is the code in
->> pci_device_shutdown() that clears bus mastering for a kexec reboot.
->> If you comment that out what happens?
-> 
-> I commented out the code that clears bus mastering, diff below, and kexec boots
-> correctly now, and the NVME drive appears just as it did before
-> "4d4c10f PCI: Explicitly put devices into D0 when initializing".
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 302d61783f6c..0cb14ff32475 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -517,8 +517,9 @@ static void pci_device_shutdown(struct device *dev)
->           * If it is not a kexec reboot, firmware will hit the PCI
->           * devices with big hammer and stop their DMA any way.
->           */
-> -       if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
-> -               pci_clear_master(pci_dev);
-> +/*     if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
-> + *             pci_clear_master(pci_dev);
-> + */
->   }
-> 
->   #ifdef CONFIG_PM_SLEEP
-> 
-> Since this works, does that mean that the bus master bit isn't being set on the
-> NVME device on the other side of kexec?
+Acked-by: Kevin Xie <kevin.xie@starfivetech.com>
+Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+---
 
-That's at least what it seems like.  And I guess trying to set D0 
-without bus mastering enabling is causing a problem.
+This patch is derived from the reply of Manivannan [1].
+And the previous version is [2].
 
-Could you try adding a pci_set_master() call to pci_power_up()?  This is 
-what I have in mind (only compile tested):
+Changes since [2]:
+- Improve the commit messages. Add description to explain the impact of
+  this patch.
+- Remove the Fixes tag and the Tested-by tag.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index b14dd064006c..68661e333032 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1323,6 +1323,7 @@ int pci_power_up(struct pci_dev *dev)
-                 return -EIO;
-         }
+[1] https://lore.kernel.org/all/xxswzi4v6gpuqbe3cczj2yjmprhvln26fl5ligsp5vkiogrnwk@hpifxivaps6j/
+[2] https://lore.kernel.org/all/20251125075604.69370-2-hal.feng@starfivetech.com/
 
-+       pci_set_master(dev);
-         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-         if (PCI_POSSIBLE_ERROR(pmcsr)) {
-                 pci_err(dev, "Unable to change power state from %s to 
-D0, device inaccessible\n",
+---
+ drivers/pci/controller/plda/pcie-starfive.c | 25 ++++++++++++---------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
-> 
->> The next thing I would wonder if if you're compiling with
->> CONFIG_KEXEC_JUMP and if that has an impact to your issue.  When this is
->> defined there is a device suspend sequence in kernel_kexec() that is run
->> which will run various suspend related callbacks.  Maybe the issue is
->> actually in one of those callbacks.
-> 
-> Yes, Ubuntu kernels set CONFIG_KEXEC_JUMP=y. I did a build with
-> CONFIG_KEXEC_JUMP=n and it has the same symptoms.
-> 
->> A possible way to determine this would be to run rtcwake to suspend and
->> resume and see if the drive survives.  If it doesn't, it's a hint that
->> there is something going on with power management in this drive or the
->> bridge it's connected to.  Maybe one of them isn't handling D3 very well.
-> 
-> Unfortunately, this c5.metal instance type doesn't support rtcwake with mode mem
-> or disk, as hibernation is disabled on these instance types. But since
-> CONFIG_KEXEC_JUMP=n doesn't help,
-> 
-> I'm going to add some debug statements to pci_device_shutdown() to see what
-> state the NVME device is in with and without
-> "4d4c10f PCI: Explicitly put devices into D0 when initializing".
-> 
-> Thanks,
-> Matthew
+diff --git a/drivers/pci/controller/plda/pcie-starfive.c b/drivers/pci/controller/plda/pcie-starfive.c
+index 3caf53c6c082..298036c3e7f9 100644
+--- a/drivers/pci/controller/plda/pcie-starfive.c
++++ b/drivers/pci/controller/plda/pcie-starfive.c
+@@ -55,7 +55,7 @@ struct starfive_jh7110_pcie {
+ 	struct reset_control *resets;
+ 	struct clk_bulk_data *clks;
+ 	struct regmap *reg_syscon;
+-	struct gpio_desc *power_gpio;
++	struct regulator *vpcie3v3;
+ 	struct gpio_desc *reset_gpio;
+ 	struct phy *phy;
+ 
+@@ -153,11 +153,13 @@ static int starfive_pcie_parse_dt(struct starfive_jh7110_pcie *pcie,
+ 		return dev_err_probe(dev, PTR_ERR(pcie->reset_gpio),
+ 				     "failed to get perst-gpio\n");
+ 
+-	pcie->power_gpio = devm_gpiod_get_optional(dev, "enable",
+-						   GPIOD_OUT_LOW);
+-	if (IS_ERR(pcie->power_gpio))
+-		return dev_err_probe(dev, PTR_ERR(pcie->power_gpio),
+-				     "failed to get power-gpio\n");
++	pcie->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
++	if (IS_ERR(pcie->vpcie3v3)) {
++		if (PTR_ERR(pcie->vpcie3v3) != -ENODEV)
++			return dev_err_probe(dev, PTR_ERR(pcie->vpcie3v3),
++					     "failed to get vpcie3v3 regulator\n");
++		pcie->vpcie3v3 = NULL;
++	}
+ 
+ 	return 0;
+ }
+@@ -270,8 +272,8 @@ static void starfive_pcie_host_deinit(struct plda_pcie_rp *plda)
+ 		container_of(plda, struct starfive_jh7110_pcie, plda);
+ 
+ 	starfive_pcie_clk_rst_deinit(pcie);
+-	if (pcie->power_gpio)
+-		gpiod_set_value_cansleep(pcie->power_gpio, 0);
++	if (pcie->vpcie3v3)
++		regulator_disable(pcie->vpcie3v3);
+ 	starfive_pcie_disable_phy(pcie);
+ }
+ 
+@@ -304,8 +306,11 @@ static int starfive_pcie_host_init(struct plda_pcie_rp *plda)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (pcie->power_gpio)
+-		gpiod_set_value_cansleep(pcie->power_gpio, 1);
++	if (pcie->vpcie3v3) {
++		ret = regulator_enable(pcie->vpcie3v3);
++		if (ret)
++			dev_err_probe(dev, ret, "failed to enable vpcie3v3 regulator\n");
++	}
+ 
+ 	if (pcie->reset_gpio)
+ 		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
 
-Thanks for the updates.
+base-commit: b2c27842ba853508b0da00187a7508eb3a96c8f7
+-- 
+2.43.2
 
-I have a relatively ignorant question.  Can you reproduce with kdump and 
-a crash too?
-
-I don't actually know if you configure kdump and then crash the kernel 
-(say magic sys-rq key), does pci_device_shutdown() get called in order 
-to do the kexec?  Or because the kernel is already in a crash state is 
-there just a jump into the crash kernel image location?
 
