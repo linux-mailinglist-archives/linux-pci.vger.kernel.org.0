@@ -1,50 +1,39 @@
-Return-Path: <linux-pci+bounces-42683-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42685-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBA79CA74EC
-	for <lists+linux-pci@lfdr.de>; Fri, 05 Dec 2025 12:09:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 75492CA76C1
+	for <lists+linux-pci@lfdr.de>; Fri, 05 Dec 2025 12:33:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E3052343B73E
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Dec 2025 08:07:07 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id DBAE4362B54D
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Dec 2025 08:35:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE20E345CAC;
-	Fri,  5 Dec 2025 07:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 567873469F5;
+	Fri,  5 Dec 2025 08:07:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=freeshell.de header.i=@freeshell.de header.b="BQLgiN4Y"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Le2aIywW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from freeshell.de (freeshell.de [116.202.128.144])
+Received: from mail-m19731115.qiye.163.com (mail-m19731115.qiye.163.com [220.197.31.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF4D34C811;
-	Fri,  5 Dec 2025 07:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.128.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A663533EAFF
+	for <linux-pci@vger.kernel.org>; Fri,  5 Dec 2025 08:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764920263; cv=none; b=p3WW1wssDEHiDk8C3e4SWa5Z7fHjm9v23AtTtXkzarHNBLGBn47lU17IVb3fABQVcCnr29e27geeWn6SQUWHSB0zUMk6aNPNw8ySRPQysmPI/LBOXOKoD8WIdUm87tbxvSk34oAWMUr9e6t1lR99Ry3xy/jdq6uWQABkpCHMj2M=
+	t=1764922026; cv=none; b=V8xVLaFMJxuWkAbFWVTSSHcAJ9oAuHS4oQvvcPGMbMEjszl9w7Orkrh4IGVIh4CLPHFlSLbvylsT7ir3LJINzuf+LV6bYpE6BC/DJIhoTZseLXfvhahAzI1NQVINKnP3mFdT1CwxMoeppeKayxOPwWx/CoT0oKm6g/Yxql0M+KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764920263; c=relaxed/simple;
-	bh=dUB8I7YCp4sncsMDpbgJ4sxN6eZ47vyU/c54pyCYhPc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q/oTkY+eqDfw5u1qni+6/mFHQeA/LgyyKNi+flboQqTJrUOi9u1W50oNav4dAR4bljA5CNAQCqRdEwhzs/+o+uBLPELldrvs0J3/AAKLp0DBDbBfAXTWfo+SPjIgilNJO6gWP8C+Kqf+c+7Vba7lX0mHMGulmkhGnmWNLEx8nzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=freeshell.de; spf=pass smtp.mailfrom=freeshell.de; dkim=pass (2048-bit key) header.d=freeshell.de header.i=@freeshell.de header.b=BQLgiN4Y; arc=none smtp.client-ip=116.202.128.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=freeshell.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freeshell.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=freeshell.de;
-	s=s2025; t=1764919826;
-	bh=dPQlBy9bP0uCp0f8xzuAly/jIN+QVZE/QzkPoToIR0E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BQLgiN4Ypn2XIuJBDBsG2T95NfTpHXAXZ8y3aKRybJyBqGzRN48aVWiznrV/zv5LG
-	 z2BpmPfG/q+518F2XXyvzde0huclOLz1gawF5QUXjxVA720eaaeM5nUYn/eyifBzo4
-	 JzNonO70XQwv8rui2bPZ+DbFjNqjZaFuEYmO7/OfnD0qcXx7+BzvzcqU0ODsU/gTG1
-	 qYXtChTpkIIoYMDyY+gg7L9s1F33GAiP+HctzWXHui7Dqg5FNGkJlDuGKwhUOJPOT7
-	 v90yiVQYEK4j/bMdK2lJhck9G+yNBZPlu3OLRcHcg1cMiqVCaqK0MSPuTtHFq2IEDy
-	 SAhzdGF6W50LA==
-Received: from [192.168.2.54] (unknown [98.97.27.25])
-	(Authenticated sender: e)
-	by freeshell.de (Postfix) with ESMTPSA id A331FB220603;
-	Fri,  5 Dec 2025 08:30:21 +0100 (CET)
-Message-ID: <72318f65-a360-4be0-baee-7f94b7cbf949@freeshell.de>
-Date: Thu, 4 Dec 2025 23:30:19 -0800
+	s=arc-20240116; t=1764922026; c=relaxed/simple;
+	bh=7j4H05TorvxkdY34RqxVUrXKrsx2EyEpYf6gsywsA64=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=czzmUxx0q1EjID5qAzYKbhde4OqHb0M+LaABRkBKijCxkj3GZifO/B4vgZyCiLhuuPijlXIr3EgOydV6Orkh8qfqIfIkVqKq3/NZUNHpc+SPU/z8Ln1RKE5hZDgZTfNMSUQ0GiSvjKtMmKBJzYVHHHc2rjoIvypn9THYNiJiCNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Le2aIywW; arc=none smtp.client-ip=220.197.31.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.14] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2c1c00fbe;
+	Fri, 5 Dec 2025 15:31:27 +0800 (GMT+08:00)
+Message-ID: <0a4e73d2-a474-493d-8827-8e4b46fd7081@rock-chips.com>
+Date: Fri, 5 Dec 2025 15:31:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,113 +41,150 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/6] riscv: dts: starfive: Add common board dtsi for
- VisionFive 2 Lite variants
-To: Maud Spierings <maud_spierings@hotmail.com>, linux.amoon@gmail.com
-Cc: aou@eecs.berkeley.edu, bhelgaas@google.com, broonie@kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org,
- emil.renner.berthing@canonical.com, hal.feng@starfivetech.com,
- heinrich.schuchardt@canonical.com, krzk+dt@kernel.org,
- kwilczynski@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
- lpieralisi@kernel.org, mani@kernel.org, palmer@dabbelt.com, pjw@kernel.org,
- rafael@kernel.org, robh@kernel.org, viresh.kumar@linaro.org,
- sandie.cao@deepcomputing.io
-References: <CANAwSgQSBB_yTw5rDz2w6utvjUueWJi9tWUY9oZcpNAT8Wm8iA@mail.gmail.com>
- <AM7P189MB1009B900894F02496519B2F4E3A7A@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From: E Shattow <e@freeshell.de>
-In-Reply-To: <AM7P189MB1009B900894F02496519B2F4E3A7A@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8
+Cc: shawn.lin@rock-chips.com,
+ "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
+ <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>
+Subject: Re: RFC: Is pci_wake_from_d3(true) allowed to be called in EP
+ drivers' .shutdown()?
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+References: <a6dae914-972e-45c4-90be-b52615edafa4@rock-chips.com>
+ <5fbf0df7-4835-4765-9cdd-36e252f166cb@oss.qualcomm.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <5fbf0df7-4835-4765-9cdd-36e252f166cb@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9aed6c441b09cckunmd22d2441b8d753
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQh1JSVZJSEofT05MTUoZGBpWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=Le2aIywWq2bwd6eZCWL/06H0ql5RaUGCDw/8MNy9GVNeNEwm/m2IolhMfmdiOrRFXSrkd9JUsqvyhjDhWAAxR3P7rJvD3LEQIxpYtFTHzYhDRz4s1+7lL2/cxN6Jj7KJmM9KTspiC9AjubGfoTl11+3j9cgUuan9llN1BdZ66Qk=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=KQPUlV6M1na/NozU9MOD0ei79QG8Cy3jCTKY2Q45bbM=;
+	h=date:mime-version:subject:message-id:from;
+
+Hi Krishna,
+
+在 2025/12/05 星期五 11:42, Krishna Chaitanya Chundru 写道:
+> 
+> 
+> On 12/4/2025 6:56 PM, Shawn Lin wrote:
+>> Hi folks,
+>>
+>> I ran into an occasional system hang when adding .shutdown() support 
+>> to pcie-dw-rockchip.c. Here's what I found.
+>>
+>> The Problem:
+>>
+>> During shutdown, my system would sometimes just hang. The call trace 
+>> shows a race between a NIC driver's shutdown and the PCIe host 
+>> driver's shutdown.
+>>
+>> What's Happening:
+>>
+>> My NIC driver (like r8168) calls pci_wake_from_d3(pdev, true)in 
+>> its .shutdown().
+>>
+>> This eventually queues a delayed work with a 1-second delay 
+>> (queue_delayed_work(pci_pme_work, PME_TIMEOUT)).
+>>
+>> pci_wake_from_d3(pdev, true)
+>>      -> pci_enable_wake(true)
+>>        -> __pci_enable_wake(true)
+>>          -> pci_pme_active(dev, true)
+>>            -> queue_delayed_work(pci_pme_work, PME_TIMEOUT) #1 second
+>>
+>> After the NIC driver finishes, the PCIe host driver's .shutdown() 
+>> kicks in. It starts cleaning up – gating clocks, powering down the IP, 
+>> etc.
+>>
+>> The Race:​ If that 1-second delayed work runs after the host 
+>> controller has begun its cleanup, it tries to read the PCI config 
+>> space. But the hardware might already be partially down, causing a hang.
+> As you are keeping PCIe link in D3cold, you should inform PCI framework 
+> that you are keeping link in D3cold whether you are in shutdown call or 
+> normal call.
+> Before gatting clocks and powering down the IP inform the PCI framework 
+> that you are going to D3cold by updating the Dstate to D3cold with this API
+> pci_bus_set_current_state(pp->bridge->bus, PCI_D3cold);
 
 
+Good point. Indeed, none of the existing native PCIe host drivers call 
+this function in their .shutdown()path. But as they break the link, the 
+common issue likely exists. Thanks for the suggestion, I'll investigate 
+this.
 
-On 12/4/25 23:23, Maud Spierings wrote:
+> 
+> - Krishna Chaitanya.
 >>
->> Hi Hal,
+>> Here are the actual logs from a hung system showing the two sides of 
+>> the race:
 >>
->> On Tue, 25 Nov 2025 at 13:27, Hal Feng <hal.feng@starfivetech.com> wrote:
->>>
->>> Add a common board dtsi for use by VisionFive 2 Lite and
->>> VisionFive 2 Lite eMMC.
->>>
->>> Acked-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
->>> Tested-by: Matthias Brugger <mbrugger@suse.com>
->>> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
->>> ---
->>>  .../jh7110-starfive-visionfive-2-lite.dtsi    | 161 ++++++++++++++++++
->>>  1 file changed, 161 insertions(+)
->>>  create mode 100644 arch/riscv/boot/dts/starfive/jh7110-starfive-
->>> visionfive-2-lite.dtsi
->>>
->>> diff --git a/arch/riscv/boot/dts/starfive/jh7110-starfive-
->>> visionfive-2-lite.dtsi b/arch/riscv/boot/dts/starfive/jh7110-
->>> starfive-visionfive-2-lite.dtsi
->>> new file mode 100644
->>> index 000000000000..f8797a666dbf
->>> --- /dev/null
->>> +++ b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2-
->>> lite.dtsi
->>> @@ -0,0 +1,161 @@
->>> +// SPDX-License-Identifier: GPL-2.0 OR MIT
->>> +/*
->>> + * Copyright (C) 2025 StarFive Technology Co., Ltd.
->>> + * Copyright (C) 2025 Hal Feng <hal.feng@starfivetech.com>
->>> + */
->>> +
->>> +/dts-v1/;
->>> +#include "jh7110-common.dtsi"
->>> +
->>> +/ {
->>> +       vcc_3v3_pcie: regulator-vcc-3v3-pcie {
->>> +               compatible = "regulator-fixed";
->>> +               enable-active-high;
->>> +               gpio = <&sysgpio 27 GPIO_ACTIVE_HIGH>;
->>> +               regulator-name = "vcc_3v3_pcie";
->>> +               regulator-min-microvolt = <3300000>;
->>> +               regulator-max-microvolt = <3300000>;
->>> +       };
->>> +};
+>> Log 1: NIC driver setting up the work during shutdown
 >>
->> The vcc_3v3_pcie regulator node is common to all JH7110 development
->> boards.
->> and it is enabled through the PWREN_H signal (PCIE0_PWREN_H_GPIO32).
+>> [ 49.961836][ T1] Hardware name: Rockchip RK3588 Decenta OPS C41 V10 
+>> Board (DT)
+>> [ 49.962494][ T1] Call trace:
+>> [ 49.962782][ T1] dump_backtrace+0xf4/0x114
+>> [ 49.963188][ T1] show_stack+0x18/0x24
+>> [ 49.963555][ T1] dump_stack_lvl+0x6c/0x90
+>> [ 49.963945][ T1] dump_stack+0x18/0x38
+>> [ 49.964301][ T1] pci_pme_active+0x80/0x1dc
+>> [ 49.964701][ T1] pci_wake_from_d3+0xc8/0x100
+>> [ 49.965111][ T1] rtl8168_shutdown+0x15c/0x194 [r8168]
+>> [ 49.965705][ T1] pci_device_shutdown+0x34/0x44
+>> [ 49.966138][ T1] device_shutdown+0x164/0x21c
+>> [ 49.966551][ T1] kernel_power_off+0x3c/0x14c
+>> [ 49.966961][ T1] __arm64_sys_reboot+0x268/0x270
+>> [ 49.967391][ T1] invoke_syscall+0x40/0x104
+>> [ 49.967791][ T1] el0_svc_common+0xb8/0x164
+>> [ 49.968190][ T1] do_el0_svc+0x1c/0x28
+>> [ 49.968556][ T1] el0_svc+0x1c/0x48
+>> [ 49.968890][ T1] el0t_64_sync_handler+0x68/0xb4
+>> [ 49.969320][ T1] el0t_64_sync+0x164/0x168
 >>
->> VisionFive 2 Product Design Schematics below
->> [1] https://doc-en.rvspace.org/VisionFive2/PDF/
->> SCH_RV002_V1.2A_20221216.pdf
+>> Log 2: The delayed work trying to run after host cleanup, causing the 
+>> hang
 >>
->> Mars_Hardware_Schematics
->> [2] https://github.com/milkv-mars/mars-files/blob/main/
->> Mars_Hardware_Schematics/Milk-V_Mars_SCH_V1.21_2024-0510.pdf
+>> [ 51.258983][ T1] Call trace:
+>> [ 51.259261][ T1] dump_backtrace+0xf4/0x114
+>> [ 51.259663][ T1] show_stack+0x18/0x24
+>> [ 51.260020][ T1] dump_stack_lvl+0x6c/0x90
+>> [ 51.260409][ T1] dump_stack+0x18/0x38
+>> [ 51.260764][ T1] pci_generic_config_read+0x30/0xd0
+>> [ 51.261229][ T1] dw_pcie_rd_other_conf+0x18/0x5c
+>> [ 51.261673][ T1] pci_bus_read_config_word+0x74/0xd4
+>> [ 51.262136][ T1] pci_read_config_word+0x40/0x4c
+>> [ 51.262568][ T1] pci_pme_list_scan+0xd8/0x180
+>> [ 51.262989][ T1] process_one_work+0x1a8/0x3b8
+>> [ 51.263411][ T1] worker_thread+0x24c/0x420
+>> [ 51.263810][ T1] kthread+0xe8/0x1b4
+>> [ 51.264156][ T1] ret_from_fork+0x10/0x20
+>>
+>>
+>> This seems common as I found several upstream  PCI NIC drivers that call
+>> pci_wake_from_d3 during shutdown (like in igb_main.c, i40e_main.c, 
+>> atl1.c). Also, 7 other PCIe host drivers already implement .shutdown. 
+>> For example, pci-imx6.cresets the controller in its shutdown – I'm not 
+>> sure what happens on imx platforms, but it definitely causes hangs on 
+>> Rockchip.
+>>
+>> My main question is:
+>>
+>> Is it really a good idea for NIC drivers to call 
+>> pci_wake_from_d3(true) in .shutdown()? This queues a delayed work that 
+>> needs to access PCI config space, but the host controller might be 
+>> shutting down at the same time. This feels like a risky pattern. Are 
+>> these drivers doing the right thing? Or should this wake-up setup 
+>> happen differently to avoid this race?
+>>
+>> Would love to hear your thoughts on how to properly fix this.
 >>
 > 
-> I'm not sure if this also holds true for the deepcomputing fml13v01,
-> sadly as far as I know there is no schematics available for that.
-> 
-> the downstream dts [3] doesn't contain any evidence of it, neither does
-> upstream.
-> 
-> I wouldn't be surprised if it is there but just not present in the dts,
-> but it may be nice to get some feedback from someone at deepcomputing.
-> 
-> adding Sandie Cao who did some of the upstreaming work.
-> 
-> Link: https://github.com/DC-DeepComputing/fml13v01-linux/
-> blob/97c64fe2832b6826914b6da7aa4febcdd4d3d444/arch/riscv/boot/dts/
-> starfive/jh7110-deepcomputing-fml13v01.dts#L416-L432 [3]
-> 
-> kind regards,
-> Maud
 > 
 
-I asked (to DeepComputing sales e-mail address) for schematics 28th July
-2025, the reply was "There is no plan to public it by now." I also got
-some generic response when I asked a technical question about RGPIO3
-connection to look at the DeepComputing repo on github.
-
-No schematics and no help to developers.
-
--E
 
