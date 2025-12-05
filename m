@@ -1,200 +1,251 @@
-Return-Path: <linux-pci+bounces-42678-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42679-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA594CA6056
-	for <lists+linux-pci@lfdr.de>; Fri, 05 Dec 2025 04:38:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C1CB1CA6074
+	for <lists+linux-pci@lfdr.de>; Fri, 05 Dec 2025 04:42:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8247231986C9
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Dec 2025 03:38:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BD4A53098FB9
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Dec 2025 03:42:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F422C221DB3;
-	Fri,  5 Dec 2025 03:38:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34C3318DB1E;
+	Fri,  5 Dec 2025 03:42:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Of4uxHDW"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IJfjPI9A";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Pwi/j1dz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6649A18DB1E;
-	Fri,  5 Dec 2025 03:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764905915; cv=fail; b=NQH4nI/v01M4CGQwj+QqXW90AqG4bBbXtyWpn+tFmL87Y7YkYskiWGVT3U/6DVn9HAujW1/Lf3Pt+xx/197YGo+fE29DuM9wuOVGaRd2PMTFMnodJMTXBtOsL8QDMAt4zqKiB1DddrTGcF13V8nCxpLehur8PWFNzlYAo1iXOp0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764905915; c=relaxed/simple;
-	bh=shJnbhdCP0RtUejNDZ4Wn6wdxye6pXAylKntrMTYEck=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=XscXW2cs89dSaoiOSuSR9VlYlutv+Q1H+juDQ4vhBeoyi0G7S83DXgBLKlB2ohBosa4p6LOVNUBlHJWcPdHj+HcovkOkKmEaxcUqyAqxfIKRgI4kDONw0/7+9/XDwdkSeleynh9AE4NWsCUWrQeJKvD5R7oUBrpNgkp+H8d9PFo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Of4uxHDW; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764905914; x=1796441914;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=shJnbhdCP0RtUejNDZ4Wn6wdxye6pXAylKntrMTYEck=;
-  b=Of4uxHDWg140n3EuqAmPqaqufXjcrdWDbKFIObVgBjud4u90VR2mD8+a
-   HlrhMll+RQjAOEQGZfcBfS+j2rElhzYaGb23VvE27aoypUX5kvmlM1eM6
-   Wr15HWIhBqDWp9oprEZRIwCre5OSBB/GiFOMadE5dy8STO14okfXDfp2T
-   tv14XUQSxSpUAJJKOCDMWkaRIWncMTrR10ENqGz3UwmXFCQuY8/HcZYtG
-   xKdRpdamDV4UppXvRMrHVYIJ9+C8cQ3s6X3fpJu9teMjT2KcnVhOUCTKJ
-   /R0+Px6DtOE9oMmfgFDJAiE0CYh7k1CcFaPOfQKJxOHPmPq34TMLc5VUe
-   A==;
-X-CSE-ConnectionGUID: KYyu2OMORTuyPDyPMJSXKQ==
-X-CSE-MsgGUID: qhF+zfeOTfiE6r7lmCRZ/A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11632"; a="69532156"
-X-IronPort-AV: E=Sophos;i="6.20,250,1758610800"; 
-   d="scan'208";a="69532156"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2025 19:38:33 -0800
-X-CSE-ConnectionGUID: 8sYldC9CQCiMI0X5cH2iSQ==
-X-CSE-MsgGUID: u8hRq2rDRi6exv2xjcg99w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,250,1758610800"; 
-   d="scan'208";a="232523199"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2025 19:38:33 -0800
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Thu, 4 Dec 2025 19:38:33 -0800
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29 via Frontend Transport; Thu, 4 Dec 2025 19:38:33 -0800
-Received: from CO1PR03CU002.outbound.protection.outlook.com (52.101.46.68) by
- edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Thu, 4 Dec 2025 19:38:32 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fNnyY7boybdggMwDop6Cblemkc06A8YN9bqlZ/kXeoKrlHJQ3EbNnLNHwn7nv9q/uEs3Y+arf3sfKoZfff42KcrdEebtdfGTL16Uh0LVhxQRJuKy+62B9Yj3mApMmsXoiSajoMpY7J7+9RGsQ05df9Wf4SQTIYWZyJcTLuAG3DTItLlCSlB7D2m1QSAx83uHNmYu00HvnURg5gON6DNfEYDGNhwXceAGkLqN2nJQcFFKZ2jQZjANsJEK78Q/0KSMUQUAxJlYk/DyE0p7NLK1zDAjdh1Z6ZtdhheowxBYL679mU9crcQKHi1LDZVKyyU8/0Jj7LR8JIAYGRam5fsg9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KHhfJjT0uOzKwNxuy5LhhUtf420Uuh7jFcH0Z+cHQ0A=;
- b=HcsZK+ji/qF0wYnNlhRhmONcZWoXIWhuDH3TsG1eEiJ30GQ6IiBGE8q7NUD+FMb6u+TSfIxveuUbB1fpmtUUs7/YFb3mfmbD7v37lxss1wYe8NTXrqd3vf7zSD72sjF+PW0TIOs0eyuEh6/DjjCQ7i2wwG4ndSgv0JInG/NK04MzeHQJjUfZ3aPZXEpD05eL1TpEQhKl5k2jXdmN6uzRg98VJjDNEY/9ruWeEB5DVsKOk1nFUqdAOhFIDSBbFMgC35X4JFHjzBcfeqs5BbH7vy7z+W7beQbf8hf87qt+MOD2VofSyFxWJ3MPBxCBDHyyPj/DM0hXeV8XBI9vOhV9UQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by DM3PR11MB8681.namprd11.prod.outlook.com (2603:10b6:0:49::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9366.17; Fri, 5 Dec 2025 03:38:26 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::46c9:7f71:993d:8aee]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::46c9:7f71:993d:8aee%8]) with mapi id 15.20.9388.003; Fri, 5 Dec 2025
- 03:38:26 +0000
-Date: Thu, 4 Dec 2025 19:38:21 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<terry.bowman@amd.com>, <alejandro.lucero-palau@amd.com>,
-	<linux-pci@vger.kernel.org>, <Jonathan.Cameron@huawei.com>, Alejandro Lucero
-	<alucerop@amd.com>
-Subject: Re: [PATCH 5/6] cxl/mem: Drop @host argument to devm_cxl_add_memdev()
-Message-ID: <aTJTrfxAT3P07CP9@aschofie-mobl2.lan>
-References: <20251204022136.2573521-1-dan.j.williams@intel.com>
- <20251204022136.2573521-6-dan.j.williams@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20251204022136.2573521-6-dan.j.williams@intel.com>
-X-ClientProxiedBy: BYAPR07CA0052.namprd07.prod.outlook.com
- (2603:10b6:a03:60::29) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67656233149
+	for <linux-pci@vger.kernel.org>; Fri,  5 Dec 2025 03:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764906142; cv=none; b=VhamExgkCDc0VCdiTdRYknXyVQFr2lU6bbW1C4bPnb9I2hrQ58LVP1ZfQZf21YsxgkYSRuDOFrIYOaOIbCm1li1ZUzp9bd5phTjY+2nnHE6Kzzn8+BXi0rZGenGYQo0gdHq5+KUyWwSfRIG3DHx2g68iRRF9PtL2YdPt/sNqo2Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764906142; c=relaxed/simple;
+	bh=/ffm5dZNqs18Wlxx6m8Q6HFpgn/Q+O/7HMn8oStQdlY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CzyOr2ejY1eb3iErxuKiTuUIgxpGW+ImGNSpZ6dMTLgTzS8PmIn0oa3otZiSxtrNA8B/fejP6jItstWEXCNOPBPzzuWsGbN9a02QXhfpsF4OQPJu6hembEuiA+7TRJIutwPyv0Zyg6SG6xG9p8B3exNH98AuKFZUBKUcdF1PexA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IJfjPI9A; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Pwi/j1dz; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5B52er2U3173559
+	for <linux-pci@vger.kernel.org>; Fri, 5 Dec 2025 03:42:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	6aaPuXoGDbI2EMcYjuuqwUlc3QiA4RI2K0QZyobNsNI=; b=IJfjPI9A0GViqOCM
+	e6aV2XMRvWFt81uGPCyhEFzejzZmJLQ9BiXCawit6DNrUtMEA9kRghKpOD6Vfgoj
+	ond6yfqQUvDXYAUpyXqWET1/93i1R1+b1REA4t0EB2ylA22JGkEEeMOzJG0VhrKb
+	F7t/3DxcFJXEYexcG3HdmpQEgOwAKZoIcNfTHSnKoj8hOtajhHqq2ejfUb8Gk45H
+	3wqu588By9vhJ5FvSFnfUZEGqJ6P+92Ax9F08aX1HVClRtyFpJd+ShVpuYmpc65t
+	r4W16bb/lJFO++f+i0DPeX/pIqwaBY/SqMMW86EYIKB8DrULMNRCf4N2ETxLBw/g
+	FHsHZw==
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4auptqr4xf-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 05 Dec 2025 03:42:18 +0000 (GMT)
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-7c240728e2aso3080548b3a.3
+        for <linux-pci@vger.kernel.org>; Thu, 04 Dec 2025 19:42:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1764906138; x=1765510938; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6aaPuXoGDbI2EMcYjuuqwUlc3QiA4RI2K0QZyobNsNI=;
+        b=Pwi/j1dzI16Xr37s9l8Il/mf5OB27eA4GqZi3lZnk3+gKspWzl8/HZqXwARydMGvqU
+         q1e1TYaNsRxJLhODI3y22KTasXm2B2U69Edv29wh34bPk2XJGEUu/roKgiaz0XDA1Ftv
+         0QPGehtEljo++DI/ZTL6O94nfLNFkbPwRwgGPBHHbI4a7ixFPdO468I15QsdBj760sUa
+         1ll/b5PuPN9JfgMCHKEsYmrOTIy28nt5hK8kHARzh5AmEr81QjHyfC1jxJa2YutkwZnx
+         mNaZQtC85Jmdkj/hVwOuX1zfXz+v/HTKnU0Agl3na+pGwOSbvPmM7bU6iy57g1B/N6KE
+         9EJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764906138; x=1765510938;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6aaPuXoGDbI2EMcYjuuqwUlc3QiA4RI2K0QZyobNsNI=;
+        b=klP23dhrWeGpnUal+Qs/bhpwkZ3oR45jDs+BleF7Nv+8/WDDji2G/7uZxgT4YGCLeF
+         584g4OHcxalAVO+iW/QoYr2e3zD0RbaBalDPO+Skwd8HKkM3VkaQJEqI1COZOyp5ZBzg
+         qi2q5Q4jl0HE/XcI8nj7Xw8ILydvZPyWgfPEJmmEUlRNF5Ps/mk8xcvI5PWijNLE1UyD
+         baKhumPtzNMm/tTtX0YawFFXDEhZVd+LDp3A95Kuiqixmm1q/IXyHp/gMGBXCrweN5Ez
+         sv4s6LR7feyi/kQhGZclJzlljVpEaa11gMgP6h5jzYeE41aMW3H5KXxP17GbVuGBf+XW
+         Z+Ew==
+X-Gm-Message-State: AOJu0YwlQctgISjvs6ISnBpb1kPQopCDwiv2KRMlf1NqzzK7quYJmoR7
+	nQNLHuMJXMK+8D50oSEPf76ktcx4kAbZxQnoU3MYuQbXNpCY3KcOIKdCaomg0ZvUtezekEC/9fM
+	OHfwMN3JqpNeX/m3QRyo7+VJWpzx+Vo/JciyHLkTDTB4P2bCoRHyVrMy84jOL34Q=
+X-Gm-Gg: ASbGnctdZ900WXv/hEmYBmAMTS4j2G6l/etDQeVBURcCr5wLqFlOds5T9UUvoBgUPnD
+	SU2hfksxFO5rrJTbCM18jSmqAmQSldo0wF17hJKiZ6CssyrGpqVpiHxXNwBdYmLuwl1mdZdGZQS
+	CmZP8qSOI76DxHPi7sk6vq7YdjoHK73/shn6uSUOVn9TBZCDuGWIaEmYVMDu0BapniH5AMuTTuk
+	eWP2b9k9FhyizkPaatdUsyolxEK4/lts8mym0vy1LDPZC9jdQ9dZIWQNzwpaXCKaHQuTnRoj8nT
+	1UF3GkcljruENSFF7p8A+o7qnHVg6nz1gHFz11v3TNHwdZ0vPNffsVXNzlSAQjMNML7TI4FdIna
+	20gdrd5mMvHo9X+RMlxKQ4ZpN78+FFZ61Jf22gvnzJw==
+X-Received: by 2002:a05:6a00:a24:b0:7b9:ea7a:9cbb with SMTP id d2e1a72fcca58-7e00dfd6852mr9164248b3a.19.1764906137967;
+        Thu, 04 Dec 2025 19:42:17 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGRpzgdFxqVuZybaCj+GLxuQEQ14N0ibK94hedbAxWGSqAIIA0h1b61VknRRo6n5vnKTpjhSA==
+X-Received: by 2002:a05:6a00:a24:b0:7b9:ea7a:9cbb with SMTP id d2e1a72fcca58-7e00dfd6852mr9164216b3a.19.1764906137426;
+        Thu, 04 Dec 2025 19:42:17 -0800 (PST)
+Received: from [10.218.35.45] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7e2adc5bf26sm3602015b3a.39.2025.12.04.19.42.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Dec 2025 19:42:17 -0800 (PST)
+Message-ID: <5fbf0df7-4835-4765-9cdd-36e252f166cb@oss.qualcomm.com>
+Date: Fri, 5 Dec 2025 09:12:13 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DM3PR11MB8681:EE_
-X-MS-Office365-Filtering-Correlation-Id: cedd4c6d-a516-42d1-e6fc-08de33afbfab
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?xycuC62WhXgtSDB50ZPWQar1izdLaHqmgoV6BgHlecUKmDHu8cHzceRFxmPt?=
- =?us-ascii?Q?7WGazSI4Iqc4+B2fmozX4MIP5Km61L8u98nFuLiXUKM9+KWGqMb9HTaUy032?=
- =?us-ascii?Q?KZiC26GP5spLl11UUwD1RaqUEoAR92hNnZ28NBWOwp6K2AVRnszJXT4i14rx?=
- =?us-ascii?Q?SfZohy5XODrPhUE8s+4y7CTAvicnZRJhrxsfKd+8/OOjDl1g0aEwd1EUfyGZ?=
- =?us-ascii?Q?Mg2L1RdBLfMx22VdzwwbZaFrRS+Qf8jOHsrl6hfuTRAqNyY8kS3IKH/DZCjl?=
- =?us-ascii?Q?6SuW94YJs1n+t/vZHwMGP5rKMQHiJ1RLaxbQIk/plDIDiXlxTy2IaKvI2RT8?=
- =?us-ascii?Q?nkcNIqG3toHHJUAU3PlVwkZUnQj/mJr6sxrKl/Ef0I4jwN+3BgY8iIzAQgF7?=
- =?us-ascii?Q?bVT6YIq3CtwZh+8nl6Iz0LX5g3efIGDFku4CkAKgjvoZoj2ZVNtX6NKU9YUa?=
- =?us-ascii?Q?NTQpIlo1MRd4Tr+Yfad4bjG6EogxYQJw0ir0cckqrELr3SE4ePWbspkELiLA?=
- =?us-ascii?Q?vQMlJ6i40EQVWNv58BZi0kBIDGYXSnFu0lccFIBpdRBA4dkYKqo0F3bclYcZ?=
- =?us-ascii?Q?p7HzCG3+Pg7UpCrfI9QO7Q1HwSvHh5KZyDJqP6rGUdwjMavu3V42Zy5+LgmM?=
- =?us-ascii?Q?Hmwf3vz2jvEeZn8B4SsLJTH4tX5EaL9Ozqx5kRa28Xnb7oQeA9SA3eWJWuoj?=
- =?us-ascii?Q?Bwa9nKA5AoXD0mAWPrjvaYGe9bi8vKIVYk2kghsdKw9/IdcWjJDq9EtStA4+?=
- =?us-ascii?Q?ZZ28ARiXinNcBtTF88Y4hWTrJquLkEStGGXsMUXBpLf1SWsIh+m/sWNkdSeQ?=
- =?us-ascii?Q?n0IPMQlRUwxii8hUMs2r4zfAu8dG2KPqMwiaI5KbppdS2oyMyk8v0S0biHB5?=
- =?us-ascii?Q?kjCYnz3dCWykbdxl/6CU0QPIfdC2EdDQ2fuw94/vAOYbfgiXYPvMD3w4YqpX?=
- =?us-ascii?Q?IvUqbYBAKZ3sftIO+jarFICEQGC3vxUSBoiD+Wt7TbTRdj9gTWyV8qEjsFWZ?=
- =?us-ascii?Q?M3X5Z0+S/+fTJDdijn83BqujzkFUeesOmV+yyUhFwG9haNJlKnVkxzRVAwml?=
- =?us-ascii?Q?xq2I2f96HaKjt3vgtIb2k6ZdByBVjkzeRhFUYAzUr1GhxZXCWhPXgahw8yKk?=
- =?us-ascii?Q?iLge91pIF2eVkriWpefFVfP1DXhlj1MC6n6bfudmyJWDyA10JKVIevjqAYkP?=
- =?us-ascii?Q?gSIrNyAPIm7bF/gMjNHyPEJ9XDNuqs5o2xjITCVkXo/drW0hJr6l3PmUJ/pO?=
- =?us-ascii?Q?lBSdXYdwPgAzZ4rVdpPbxK2iiZrNClqkYaVk3lZdyNHkJZmIQorp7+r+MoTj?=
- =?us-ascii?Q?9wP/Yj90npM/+TOCoBMg9qnd+P/EfKJr8JzWUFt9IL6f9Z++esrkIcq0668g?=
- =?us-ascii?Q?fojeYKhQqBRAjxNRMyqmaYy+Cc7JiCVWYR7ueH7Hh+rSWFmgqiPnDeRh1J2q?=
- =?us-ascii?Q?6OV1EPp0M1EN1jbo2b4/Nxl+K7eZZiXl?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?+0Mydl+1JjmUTDJED98fxAS7DXICQxreLdUrqh2lw21bHqL16nmRs0ZhOSr9?=
- =?us-ascii?Q?u3tuxyrzvXw+21FFXC264gcTyE2ZGBdOhyNlN0M2/2HlXdOv5jjPNK6RCc5t?=
- =?us-ascii?Q?AgBwDQFz5Kp2o/pZq3d3MQ8ZDuu2qw5nuKlvR8UbzCM6UJC+XpydMiWCgQme?=
- =?us-ascii?Q?a2wNG5JPrL5kpyU1isvHZQRKZNOYo/xfnXMUUQFHnC9skes3FlQOFxcfpw8R?=
- =?us-ascii?Q?+xE0+BvUYFtVohRGT0vX6cmVn/KcIou0eVxDPVXaJpjuiFqDVJgJlcs9m1VH?=
- =?us-ascii?Q?acbDC+0eadAF7hhqxJBv2oc3TgpRfAj/6YFpEP1iGaOVkc2D7V4+Cb7OuF//?=
- =?us-ascii?Q?WDtVE/xY3G4vZEXCf2SQe1VJ6U67wS4Dd2Cku+tRcYgX2PwpQzYXohdumbQF?=
- =?us-ascii?Q?dg7Gxpej+2T1gJAJdqhSPXvVOUYGCzCLGR77PJqsGEfZ6TZJ0bu8fiUkSNjX?=
- =?us-ascii?Q?RvTjADwHFYuxlaGj00m3QdS9kfp/nJY8sAdxuiylqkXbXy2s+VNJN+p1jTti?=
- =?us-ascii?Q?6P78F2kMxO4i1o+htFowBpVJDyq/Ed3EHq/OsgH/9GRg5gu+64e+5sO4G8tP?=
- =?us-ascii?Q?KrTvHt1NqPO5QAatIDMxqiZfDBSRuikVsZHLWnMrcCrBxddZJhWGX5/SNnfM?=
- =?us-ascii?Q?6B/cRdGhf9o50+iI2lLewyFV0Y5/uWIBGDwUrasQ0d30zfinDXpQOUpMXFeL?=
- =?us-ascii?Q?WMbZ9L7spSwtajAyYyagILnJoNp5aE1CfkcJ2ekM8Onz4G9557XwqYZjdUjD?=
- =?us-ascii?Q?nvGa/4AAB4Y5vFcTjT0OjMSL6pNPTHJ+UW1K//iTfe3Zi6bfdfjbrzm0Yvm+?=
- =?us-ascii?Q?pylzH3MBu0zDmn0OWH3YWAEH5Mg49+UMZhSjVH2RP41jqyqvnR5ICnYa0Pt1?=
- =?us-ascii?Q?Fry0gB1Prfx10eHvF0CxH6H3HIVvTOpLtH3/bHljgPG8+wjemYm2SVakYp6Z?=
- =?us-ascii?Q?z2tIgS7i6WMU0L3h0sAm+T/eANS1jACMidGnDFMsDeBcu0nRUu5cs2mN8iE0?=
- =?us-ascii?Q?t3xWOni1T0Z2jfT4F8Ibdkick+VWAmMAQYscladJ7aD9ergoXx4U6DtC2ZTd?=
- =?us-ascii?Q?Jsdbg04MvR16MNFw2Sf1H4FrlK0KsSONVA6KeJULnNLeNxvdKD8O7scMLbg+?=
- =?us-ascii?Q?vKIphcd+S93trvABN7Zdiblsy1TS6F+XhVPrgh/cEwFn6G7i6zn5PuC+cPrP?=
- =?us-ascii?Q?ketY1rGmS/1FGDRXa6CoRovrfzBFARmAIiINEr/b8kGVL6+P2tF6uONBlNtd?=
- =?us-ascii?Q?6I9INMRfs+1Oe4V1q5t7GaKzx5Xhy71eTnPwgHLNViJt45jHQn64nwoFXwQo?=
- =?us-ascii?Q?EKVREbuHkSLjjFJQgh+JmGfIDzLZC3CeoYu8Q6pfCjlVYC+vk5fTA7+RmCCT?=
- =?us-ascii?Q?bTyEDRuwIKI69fEk4xJhaELTv28MddBewZR8ijQDhywp7l4dmoQNXQIAq9ky?=
- =?us-ascii?Q?vDGCKJeAlkc00a5evPu8hSUpMbjO9Y0P0kNP0rH8F/b3TTIKwfc3fWPUruz7?=
- =?us-ascii?Q?B0QA3KLFJ1sWcntz1tPmG9MbeIlaEtrMBOt4wZoscKMv9uV0zzNX04rsMXlz?=
- =?us-ascii?Q?TtjwQZSUBo8UJUJuG2wQF5ZLjARml59hWjmtFEvRqGi8scY2YIR1rXoKbpLc?=
- =?us-ascii?Q?gg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: cedd4c6d-a516-42d1-e6fc-08de33afbfab
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2025 03:38:26.4053
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gXqnu8c+caaHaAv6cb4AD7PjESghjRkkqSsEChTWT8WAzc6LQo1xrlzD9uk24uTjKsA0+iJ8bhbwngebHJKYij6Yjha2Nx/CEGCveU/pdSw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR11MB8681
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: RFC: Is pci_wake_from_d3(true) allowed to be called in EP
+ drivers' .shutdown()?
+To: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas
+ <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>
+Cc: "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
+ <linux-pci@vger.kernel.org>
+References: <a6dae914-972e-45c4-90be-b52615edafa4@rock-chips.com>
+Content-Language: en-US
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <a6dae914-972e-45c4-90be-b52615edafa4@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: alLq3E-434--_H_3GsDcOyGLz9XxwtyR
+X-Proofpoint-ORIG-GUID: alLq3E-434--_H_3GsDcOyGLz9XxwtyR
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA1MDAyOCBTYWx0ZWRfXzRj9+AuoEXj9
+ OBVTxBDv/unBgWJ2GYfez0LIZQWS/0wxhmsNL9aPdbdxXG4lLJhZQXvb/o3WFL2R+oXqM3yhdqO
+ 3/UHMzEOOpCgyZBMsSY/5OyWEOCBPEFA0z+upt486FlajnYvkBmIGuBeY6xLK39guInnQ3HUnF3
+ n4vScTEOw5WQ3xCmIJbvyBI0f1PjC6mum4KPsNwBngQArF38PZ//XImilnHMBf6I9oNkwghhig0
+ w/VuMicvcekRa8FdXb0PWAKVTPzc2m/5bcyAvs92Uo4IsKP8BIBdzKEhapSYOXAWhB8FsfwzC4N
+ L2jCP5pZ0SBKTc2/jBsFtuKLYgxv15ihIdW2sdWXJkgkcRD3G/ugYbJqJwbJIb3l3b4xqczttwO
+ EaZUyRWN9gjrHdEhXWL14aF74cpQ2Q==
+X-Authority-Analysis: v=2.4 cv=fKQ0HJae c=1 sm=1 tr=0 ts=6932549b cx=c_pps
+ a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=GxtLFK48VY7HqebBNooA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=OpyuDcXvxspvyRM73sMx:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-05_01,2025-12-04_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 bulkscore=0 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 adultscore=0 phishscore=0 impostorscore=0 spamscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2510240001
+ definitions=main-2512050028
 
-On Wed, Dec 03, 2025 at 06:21:35PM -0800, Dan Williams wrote:
-> In all cases the device that created the 'struct cxl_dev_state' instance is
-> also the device to host the devm cleanup of devm_cxl_add_memdev(). This
-> simplifies the function prototype, and limits a degree of freedom of the
-> API.
-> 
-> Cc: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> Cc: Alejandro Lucero <alucerop@amd.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+
+On 12/4/2025 6:56 PM, Shawn Lin wrote:
+> Hi folks,
+>
+> I ran into an occasional system hang when adding .shutdown() support 
+> to pcie-dw-rockchip.c. Here's what I found.
+>
+> The Problem:
+>
+> During shutdown, my system would sometimes just hang. The call trace 
+> shows a race between a NIC driver's shutdown and the PCIe host 
+> driver's shutdown.
+>
+> What's Happening:
+>
+> My NIC driver (like r8168) calls pci_wake_from_d3(pdev, true)in its 
+> .shutdown().
+>
+> This eventually queues a delayed work with a 1-second delay 
+> (queue_delayed_work(pci_pme_work, PME_TIMEOUT)).
+>
+> pci_wake_from_d3(pdev, true)
+>      -> pci_enable_wake(true)
+>        -> __pci_enable_wake(true)
+>          -> pci_pme_active(dev, true)
+>            -> queue_delayed_work(pci_pme_work, PME_TIMEOUT) #1 second
+>
+> After the NIC driver finishes, the PCIe host driver's .shutdown() 
+> kicks in. It starts cleaning up – gating clocks, powering down the IP, 
+> etc.
+>
+> The Race:​ If that 1-second delayed work runs after the host 
+> controller has begun its cleanup, it tries to read the PCI config 
+> space. But the hardware might already be partially down, causing a hang.
+As you are keeping PCIe link in D3cold, you should inform PCI framework 
+that you are keeping link in D3cold whether you are in shutdown call or 
+normal call.
+Before gatting clocks and powering down the IP inform the PCI framework 
+that you are going to D3cold by updating the Dstate to D3cold with this API
+pci_bus_set_current_state(pp->bridge->bus, PCI_D3cold);
+
+- Krishna Chaitanya.
+>
+> Here are the actual logs from a hung system showing the two sides of 
+> the race:
+>
+> Log 1: NIC driver setting up the work during shutdown
+>
+> [ 49.961836][ T1] Hardware name: Rockchip RK3588 Decenta OPS C41 V10 
+> Board (DT)
+> [ 49.962494][ T1] Call trace:
+> [ 49.962782][ T1] dump_backtrace+0xf4/0x114
+> [ 49.963188][ T1] show_stack+0x18/0x24
+> [ 49.963555][ T1] dump_stack_lvl+0x6c/0x90
+> [ 49.963945][ T1] dump_stack+0x18/0x38
+> [ 49.964301][ T1] pci_pme_active+0x80/0x1dc
+> [ 49.964701][ T1] pci_wake_from_d3+0xc8/0x100
+> [ 49.965111][ T1] rtl8168_shutdown+0x15c/0x194 [r8168]
+> [ 49.965705][ T1] pci_device_shutdown+0x34/0x44
+> [ 49.966138][ T1] device_shutdown+0x164/0x21c
+> [ 49.966551][ T1] kernel_power_off+0x3c/0x14c
+> [ 49.966961][ T1] __arm64_sys_reboot+0x268/0x270
+> [ 49.967391][ T1] invoke_syscall+0x40/0x104
+> [ 49.967791][ T1] el0_svc_common+0xb8/0x164
+> [ 49.968190][ T1] do_el0_svc+0x1c/0x28
+> [ 49.968556][ T1] el0_svc+0x1c/0x48
+> [ 49.968890][ T1] el0t_64_sync_handler+0x68/0xb4
+> [ 49.969320][ T1] el0t_64_sync+0x164/0x168
+>
+> Log 2: The delayed work trying to run after host cleanup, causing the 
+> hang
+>
+> [ 51.258983][ T1] Call trace:
+> [ 51.259261][ T1] dump_backtrace+0xf4/0x114
+> [ 51.259663][ T1] show_stack+0x18/0x24
+> [ 51.260020][ T1] dump_stack_lvl+0x6c/0x90
+> [ 51.260409][ T1] dump_stack+0x18/0x38
+> [ 51.260764][ T1] pci_generic_config_read+0x30/0xd0
+> [ 51.261229][ T1] dw_pcie_rd_other_conf+0x18/0x5c
+> [ 51.261673][ T1] pci_bus_read_config_word+0x74/0xd4
+> [ 51.262136][ T1] pci_read_config_word+0x40/0x4c
+> [ 51.262568][ T1] pci_pme_list_scan+0xd8/0x180
+> [ 51.262989][ T1] process_one_work+0x1a8/0x3b8
+> [ 51.263411][ T1] worker_thread+0x24c/0x420
+> [ 51.263810][ T1] kthread+0xe8/0x1b4
+> [ 51.264156][ T1] ret_from_fork+0x10/0x20
+>
+>
+> This seems common as I found several upstream  PCI NIC drivers that call
+> pci_wake_from_d3 during shutdown (like in igb_main.c, i40e_main.c, 
+> atl1.c). Also, 7 other PCIe host drivers already implement .shutdown. 
+> For example, pci-imx6.cresets the controller in its shutdown – I'm not 
+> sure what happens on imx platforms, but it definitely causes hangs on 
+> Rockchip.
+>
+> My main question is:
+>
+> Is it really a good idea for NIC drivers to call 
+> pci_wake_from_d3(true) in .shutdown()? This queues a delayed work that 
+> needs to access PCI config space, but the host controller might be 
+> shutting down at the same time. This feels like a risky pattern. Are 
+> these drivers doing the right thing? Or should this wake-up setup 
+> happen differently to avoid this race?
+>
+> Would love to hear your thoughts on how to properly fix this.
+>
 
 
