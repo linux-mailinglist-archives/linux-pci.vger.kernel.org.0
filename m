@@ -1,226 +1,186 @@
-Return-Path: <linux-pci+bounces-42697-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42698-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69864CA7D4F
-	for <lists+linux-pci@lfdr.de>; Fri, 05 Dec 2025 14:49:31 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37309CA80BE
+	for <lists+linux-pci@lfdr.de>; Fri, 05 Dec 2025 15:59:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 59162304B000
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Dec 2025 13:48:47 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 76F3931861E3
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Dec 2025 13:58:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6894F32F765;
-	Fri,  5 Dec 2025 13:48:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FB4E3D3B3;
+	Fri,  5 Dec 2025 13:58:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hpm84jhi";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="WriCZaT4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJVUuWiV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55ACF32ABF9
-	for <linux-pci@vger.kernel.org>; Fri,  5 Dec 2025 13:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE6D1B6D1A
+	for <linux-pci@vger.kernel.org>; Fri,  5 Dec 2025 13:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764942522; cv=none; b=l7hR+yYeYlbJoXgWXTMJu6saeF5Zkoc06WILlEJD91qkFfmc+T/BF1TdF7Xsacpyj+cvmNrnQOEJKEAJ9OdhBkQBH/pCe3u/co/0v7woCsP15/9SNNZ4MjphHa6MfKJVYx1/1jUyVRZx/33aOyVFFlIY5zlgMSoHgkp8mOKrvEM=
+	t=1764943103; cv=none; b=W0wcblq2vwZ/O8uoGJQAVlHOATulBRjvHS1VjJqD+Nu2c/8kjfsODmoAmoLOZa6GyrwvX6AoPPfg63llnNvKaTMHJP2YKcrFI5WtPIUmNKy+m5ey6JVkAAJBxYDC3vdL9Jio4rMiqOeBn+pba1uF7Xvi9cBwlK+N7cOZ3Fe6kNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764942522; c=relaxed/simple;
-	bh=TdsDIHramvOAs0qqLjdcDkHodXMcXYV/oLEbuXapvUw=;
+	s=arc-20240116; t=1764943103; c=relaxed/simple;
+	bh=LZShE+5oGM6dzJ5O4BH/G2vZR20NIcB6Y38rm346EWc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GIDoDKi0RjiTr3mIq0CbmiV8AHPx5CwtZySbwwoG+5HWOIHVTo+GpRyG+t1U0jWdeVqt+Yk0BUJl39wgcarwnH7AJvA2FlEBrq/VghOliJ5FeY8KNmgB2cd8WYneNy4Nkz8k8t2Jouubbu/wC8nhcifAJh+8QhwU7rkUdamEp9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hpm84jhi; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=WriCZaT4; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5B597idx2896539
-	for <linux-pci@vger.kernel.org>; Fri, 5 Dec 2025 13:48:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	IiMsicvrr8diIe0M5OoR4hIKRYKTzc0ne3OgurpEA+s=; b=hpm84jhiFntJXaz7
-	BLEAz6UGYECRlZ4zNUKK4DGFFkjP/dktRO7c70NGICezQKYGeIKIzlGvp0Cvs6nY
-	+y4hJFxuS5Tg1Q1Zt9iMGan2s4wnZY18mtTrnaTvhrdUYY600SomQweHCeHHb0YM
-	rsnKrkXQmeiunh6nS+71CE3RLkZc8mA8nghlq22CD6HIyoGFVQAPf8Trhcj8JAUw
-	20Ds5VX63TrnT0OTpk4oAdUQVS0A31Bx734Y13q4mTIlz4eT7cm0SzO8yMsB3urG
-	1CH69Hcx+cNttN0++ACRDsrJkxXeGBLh0pgMpuOO60SeLG71o/hxeDbgwtPYdi05
-	egCI+A==
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com [209.85.167.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4aukmj25bg-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 05 Dec 2025 13:48:36 +0000 (GMT)
-Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-450da1dcd2dso4123521b6e.1
-        for <linux-pci@vger.kernel.org>; Fri, 05 Dec 2025 05:48:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1764942516; x=1765547316; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IiMsicvrr8diIe0M5OoR4hIKRYKTzc0ne3OgurpEA+s=;
-        b=WriCZaT4boBA6pa2RatEykyFnJYpokz03yFyO4yRigKmmcdpyn5YlWMm6bmKoQRJ+f
-         a8sJwNL5JTY3l55rn/pGE/C4DD5Eq7zjURpdLmjTyOKfrcqBqU3mIprgmORWeYixc2aE
-         BYJjSy3OxLxv/5wv1n5qtzHC9pscaD6n6tS1atJRU0vw5Qd5xC7FY93QF3KllgcySURP
-         JZaJe5ErWqiQmkZjStDdY0D+ELe8s5U7wdeC5o7jzrIobANg78ru2nJdSmBmGE4W2cGC
-         VVakKcmbddCBwF/L23sNyTVKLVKeGI4eSNyz2crJGGQZ1clDeFWKC6rAZX9p2FK+av55
-         AE6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764942516; x=1765547316;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=IiMsicvrr8diIe0M5OoR4hIKRYKTzc0ne3OgurpEA+s=;
-        b=AoMuFhe/+GFgAHsJ8dvnAJ4J5kT+enH+dUNxAi/LNIfRTZxC55oHpoaH/hhaKn1fgX
-         nYrGADYix23H4H6J3220ARJKK3Fym+iTYfDZLfV2DMj+6GaOZn8EAl7MR3uXrANNMzod
-         NIIEfU+ImjwCGk1HiLdqi/4H5POv54zNd7ANVUb5HSdpFgUcqp6rtWDHvb49QasDgKL4
-         tVFaHgsda7ClNTvjSr56CCAmFhzVf4d0qqqvAXDgGOfJ0HJAtY89FOjqBLrmtkZKa/9U
-         Nk3+0oZbhIOMylhft2b3Tsea2050aj2fFCRsX3olsqIXnisMwrCXaUznQhH9BAxHGJ/b
-         wPYw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7dN1drtirGnM3BodInJB/d2rR3G5mAE88YnvcjNnOwaqXZNBu0vMbFQ8Jd+zojSdPEQ9kP/9GcgM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2SVBbvqPfjXwXk18oobi+aNSNcpXZcnY3QLBXgfPH9j6UGPU/
-	uCmfD7uO3Ew1kGny/RQdaH0KNalrtAsUyYzNqdHK3CBuusyChmLYZ67eW3Ev8vEb8yBgbtWomoU
-	nbyB0Fnbr63ZyLjI4/eFfiu3SwCvwmJlnod/Tt1SBYyD+gj26gFFtzIFHSAaLNMPKpQDqiZ7G/b
-	UPnlocPRZz1C4i8ozrzaVq8+ocVZLjnMXNKuPWVA3eNzqngFl3
-X-Gm-Gg: ASbGncs/kZRtgL8YjsUpjOBc8xtgMSX3/YOkN8etNbKC5n8nl1is1zwmLeRjcz+yJYJ
-	Klx4yGcefujZnS+MVh9CjuZsozO8ttc5QAhida3f1LmGGVE5J/KGxZkBdBO2Vu9Zw3WmOf1JJVy
-	xTFTy3O8MUo7yhfzUhlS9r5xrfcTo2lN4P43ChOpDqXoKz60RxHl6+UU4Pg146hPzkwJYM
-X-Received: by 2002:a05:6808:3010:b0:450:b249:71bb with SMTP id 5614622812f47-45378f06f2fmr3805972b6e.19.1764942515856;
-        Fri, 05 Dec 2025 05:48:35 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG766SJ1fSjtRDbZOh8Wb8u90yiVoRAIMUkghojiquxEfkbj3EbLyJWgVfhUp4VNaCcs+C8cydwXQQVzNsrpn4=
-X-Received: by 2002:a05:6808:3010:b0:450:b249:71bb with SMTP id
- 5614622812f47-45378f06f2fmr3805957b6e.19.1764942515528; Fri, 05 Dec 2025
- 05:48:35 -0800 (PST)
+	 To:Cc:Content-Type; b=tnYs2VONKIeUYxGRHhQIycu8oMj1ABmOJgfM2SX2gFCZ62Nc8WJavIJ7GjP/3yW/aM8Z781t+FW5QUQb8aMEWbwgQHHdI1pcX99w+XxtWcVhTH8iTIpKpT9KBsVvU8aZWj/ymrz1o181ERnQRJtrIq7fbOoP8nNzt4LH+cDAwkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJVUuWiV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9BDDC4AF0B
+	for <linux-pci@vger.kernel.org>; Fri,  5 Dec 2025 13:58:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764943102;
+	bh=LZShE+5oGM6dzJ5O4BH/G2vZR20NIcB6Y38rm346EWc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WJVUuWiVbtSdew8OXH/EvWAwLN4T0AG1WL0rYqBetYjUTIZieDdlFbR4Xui8e3IIL
+	 GUUYxtlzVsfITqpgMIm2aenKFyUNQ3ZwueKA1XXxOxn63/ciETHkPLtY/kLUkeeErd
+	 KcSLaapAVvU/Va558j9LrmC+1j63EWUeTjy5Pz373efqKzOE+Oc99S4KB2Q3izWl9/
+	 eZE5PGMeyXvFdGxJt4csfftqn9wDi3lF5u/mDii2CqCzk4YIHH971IDZGY18D4CmkY
+	 HgTA1wDCsFX63QRLilVxSu3Z7zzV/YxUSZEiRj6v/p8IwF5tGGozpGlZ+30a0GwVN+
+	 hNMFRz+v/rb7Q==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-63c489f1e6cso3448673a12.1
+        for <linux-pci@vger.kernel.org>; Fri, 05 Dec 2025 05:58:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVUKr4Cj3WgSwj6mNc+moyUNKI6064lKBPypO8Z2z2nLkr8rXSkxJ9hjqo5m3m2rK1RL2iiZNXotoY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYOsevh0nYS8fIWq+ETnqXn++yiOvH5OYcLSEoWT2n74oEGbrP
+	jLfjDOG8VD6Vc1P2Ei438UKFx1bPvTPV1f5RIcv7u5/V68Gx2ruM2rAfsw8pUJ3hIbKtuFq6LmB
+	MUZ3ge0wx7GgzTQaJeQzBONKXKi0rMw==
+X-Google-Smtp-Source: AGHT+IFj7IYZAObfwZ/125eKIdXSf31gFFV6NtcE6OruMiZbOn5ppciv1VJr3lX1pOezbXFsILgw/7cff0xX0mcpaHw=
+X-Received: by 2002:a05:6402:2219:b0:62f:9091:ff30 with SMTP id
+ 4fb4d7f45d1cf-647a69e3e89mr4681028a12.3.1764943101507; Fri, 05 Dec 2025
+ 05:58:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251203-firmware_managed_ep-v1-0-295977600fa5@oss.qualcomm.com>
- <20251203-firmware_managed_ep-v1-1-295977600fa5@oss.qualcomm.com>
- <20251205-majestic-guillemot-of-criticism-80c18b@quoll> <CAMyL0qO2FPBe7N6Q=hW-ymeiGDhABsU+VCj25jzcoQRhBoWbDA@mail.gmail.com>
- <8bb852ac-1736-49db-be94-f6be9e500f74@kernel.org>
-In-Reply-To: <8bb852ac-1736-49db-be94-f6be9e500f74@kernel.org>
-From: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
-Date: Fri, 5 Dec 2025 19:18:23 +0530
-X-Gm-Features: AWmQ_bmuQdHWQvQj--3LmjNlkO7QoUm0_1jFk5YFWGBEAMX-x2uCNHN3HRIdyeU
-Message-ID: <CAMyL0qMyRzpum2xeQ6rFGE+KR7jnEfQfyOQHb+5766tkOcBDrA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: qcom,pcie-ep-sa8255p: Document
- firmware managed PCIe endpoint
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@oss.qualcomm.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        quic_vbadigan@quicinc.com, quic_shazhuss@quicinc.com,
-        konrad.dybcio@oss.qualcomm.com, Rama Krishna <quic_ramkri@quicinc.com>,
-        Ayiluri Naga Rashmi <quic_nayiluri@quicinc.com>,
-        Nitesh Gupta <quic_nitegupt@quicinc.com>
+References: <20251106182708.03cfb6c6@bootlin.com> <20251106175016.GA1960490@bhelgaas>
+ <aQ28s57R0YfrqwdG@apocalypse> <20251107125828.18a034de@bootlin.com>
+In-Reply-To: <20251107125828.18a034de@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 5 Dec 2025 07:58:10 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ_gCu_A2YqX4r2UMWssJ=4FprsM_Os3Zw=V8yCTGubdA@mail.gmail.com>
+X-Gm-Features: AQt7F2r0HNuBdQmC_0MZ5QKG3yBW-kQ8XLP5zEy97eqMnTsBQFsB1b5aAna8aSY
+Message-ID: <CAL_JsqJ_gCu_A2YqX4r2UMWssJ=4FprsM_Os3Zw=V8yCTGubdA@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: of: Downgrade error message on missing of_root node
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrea della Porta <andrea.porta@suse.com>, Bjorn Helgaas <helgaas@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mbrugger@suse.com, guillaume.gardet@arm.com, 
+	tiwai@suse.com, Lizhi Hou <lizhi.hou@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Authority-Analysis: v=2.4 cv=bYtmkePB c=1 sm=1 tr=0 ts=6932e2b4 cx=c_pps
- a=AKZTfHrQPB8q3CcvmcIuDA==:117 a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=gEfo2CItAAAA:8 a=VwQbUJbxAAAA:8
- a=GzXPYxtLnhddMOALZxQA:9 a=QEXdDO2ut3YA:10 a=pF_qn-MSjDawc0seGVz6:22
- a=sptkURWiP4Gy88Gu7hUp:22
-X-Proofpoint-ORIG-GUID: hk8BP2fv7AeS9ym_GZiQm-CnRF_N7MiP
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA1MDA5OCBTYWx0ZWRfX3NgH1TP4LfxM
- Vz5dzzZWXmkCuDjbVf0VKET/kbARhBWkkDrMPIT/khIkHXG8Wnya20bfjUNPZEi0EppCHBWk9Rf
- TNCHixe3ZpUHIvA8uUNf6/GJ+Tuz9ZWD86BpBC0dwNUPRuqZa31P2biX3jC8TVJ03ZJgyHAMA9c
- 4v7rVsc3r7QyTA/fLUZCpC6WMnhT+WjfJBtd2LZDKSUJ0qVaJnLVXCHxqr0wOWxiGzn9XPaOU0R
- uWMLg/WTxHVxQ36mKgo79STw02GuKXcNkxDkECVdKUM5YNIyla4qZmAw0qEQcfdQvOvrwfIqWJO
- 0alTUVI+Fp0ysXHfxgHWIdBqeUfygM2otMGUnQJch2EweJj0QuNV2J3mHuidvm382jrK5jzbM51
- I2L3jiOeFICTDHsGvIriSSu8aQlB+w==
-X-Proofpoint-GUID: hk8BP2fv7AeS9ym_GZiQm-CnRF_N7MiP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-05_04,2025-12-04_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 spamscore=0 adultscore=0 suspectscore=0 priorityscore=1501
- bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512050098
 
-On Fri, Dec 5, 2025 at 6:44=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
+On Fri, Nov 7, 2025 at 5:58=E2=80=AFAM Herve Codina <herve.codina@bootlin.c=
+om> wrote:
 >
-> On 05/12/2025 13:58, Mrinmay Sarkar wrote:
-> >>>  1 file changed, 114 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep-sa825=
-5p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep-sa8255p.yaml
-> >>> new file mode 100644
-> >>> index 0000000000000000000000000000000000000000..970f65d46c8e2fa4c4466=
-5cb7a346dea1dc9e06a
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep-sa8255p.yaml
-> >>> @@ -0,0 +1,114 @@
-> >>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >>> +%YAML 1.2
-> >>> +---
-> >>> +$id: http://devicetree.org/schemas/pci/qcom,pcie-ep-sa8255p.yaml#
-> >>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>> +
-> >>> +title: Qualcomm firmware managed PCIe Endpoint Controller
-> >>> +
-> >>> +description:
-> >>> +  Qualcomm SA8255p SoC PCIe endpoint controller is based on the Syno=
-psys
-> >>> +  DesignWare PCIe IP which is managed by firmware.
-> >>> +
-> >>> +maintainers:
-> >>> +  - Manivannan Sadhasivam <mani@kernel.org>
-> >>> +
-> >>> +properties:
-> >>> +  compatible:
-> >>> +    const: qcom,sa8255p-pcie-ep
-> >>> +
-> >>> +  reg:
-> >>> +    minItems: 6
-> >>
-> >> Why is this flexible?
+> Hi Andrea, Bjorn,
+>
+> On Fri, 7 Nov 2025 10:32:35 +0100
+> Andrea della Porta <andrea.porta@suse.com> wrote:
+>
+> > Hi Bjorn,
 > >
-> > The reason for `minItems: 6` is that the DMA register space can be
-> > skipped if DMA is not used.
->
-> But the hardware has this anyway, so this must be here. You do not write
-> bindings depending how drivers use them in your use case.
->
-> Either drop minItems (fixed size of array) or provide rationale in terms
-> of hardware in commit msg.
->
-> ...
+> > On 11:50 Thu 06 Nov     , Bjorn Helgaas wrote:
+> > > On Thu, Nov 06, 2025 at 06:27:08PM +0100, Herve Codina wrote:
+> > > > On Thu, 6 Nov 2025 16:21:47 +0100
+> > > > Andrea della Porta <andrea.porta@suse.com> wrote:
+> > > > > On 13:18 Thu 06 Nov     , Herve Codina wrote:
+> > > > > > On Thu, 6 Nov 2025 12:04:07 +0100
+> > > > > > Andrea della Porta <andrea.porta@suse.com> wrote:
+> > > > > > > On 18:23 Wed 05 Nov     , Bjorn Helgaas wrote:
+> > > > > > > > On Wed, Nov 05, 2025 at 07:33:40PM +0100, Andrea della Port=
+a wrote:
+> > > Patch at https://lore.kernel.org/r/955bc7a9b78678fad4b705c428e8b45aeb=
+0cbf3c.1762367117.git.andrea.porta@suse.com,
+> > > added back for reference:
+> > >
+> > >   diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > >   index 3579265f1198..872c36b195e3 100644
+> > >   --- a/drivers/pci/of.c
+> > >   +++ b/drivers/pci/of.c
+> > >   @@ -775,7 +775,7 @@ void of_pci_make_host_bridge_node(struct pci_ho=
+st_bridge *bridge)
+> > >
+> > >       /* Check if there is a DT root node to attach the created node =
+*/
+> > >       if (!of_root) {
+> > >   -               pr_err("of_root node is NULL, cannot create PCI hos=
+t bridge node\n");
+> > >   +               pr_info("Missing DeviceTree, cannot create PCI host=
+ bridge node\n");
+> > >               return;
+> > >       }
+> > >
+> > > > > > > > > When CONFIG_PCI_DYNAMIC_OF_NODES is enabled, an error
+> > > > > > > > > message is generated if no 'of_root' node is defined.
+> > > > > > > > >
+> > > > > > > > > On DT-based systems, this cannot happen as a root DT node
+> > > > > > > > > is always present. On ACPI-based systems, this is not a
+> > > > > > > > > true error because a DT is not used.
+> > > > > > > > >
+> > > > > > > > > Downgrade the pr_err() to pr_info() and reword the messag=
+e
+> > > > > > > > > text to be less context specific.
+> > > > > > > >
+> > > > > > > > of_pci_make_host_bridge_node() is called in the very generi=
+c
+> > > > > > > > pci_register_host_bridge() path.  Does that mean every boot
+> > > > > > > > of a kernel with CONFIG_PCI_DYNAMIC_OF_NODES on a non-DT
+> > > > > > > > system will see this message?
+> > > > > > >
+> > > > > > > This is the case, indeed. That's why downgrading to info seem=
+s
+> > > > > > > sensible.
+> > > > > > >
+> > > > > > > > This message seems like something that will generate user
+> > > > > > > > questions.  Or is this really an error, and we were suppose=
+d
+> > > > > > > > to have created of_root somewhere but it failed?  If so, I
+> > > > > > > > would expect a message where the of_root creation failed.
+> > >
+> > > I think we should just remove the message completely.  I don't want
+> > > users to enable CONFIG_PCI_DYNAMIC_OF_NODES out of curiosity or
+> > > willingness to test, and then ask about this message.
 
-Thanks Krzysztof for the feedback.
+No, please keep it. Anyone that enables CONFIG_PCI_DYNAMIC_OF_NODES
+should know what they are doing. I was thinking it should be hidden
+behind EXPERT perhaps.
 
- As per your suggestion, I will drop the `minItems` property for
-`reg`, `reg-names`, `interrupts`, and `interrupt-names` since the
-hardware always exposes all regions and interrupt lines.
-
-I will use a fixed-size array with `items` only.
-
--Mrinmay
->
->
-> >>> +
-> >>> +  dma-coherent: true
-> >>> +
-> >>> +  num-lanes:
-> >>> +    default: 2
-> >>
-> >> Isn't this deducible from the compatible? Do you have have different
-> >> PCIe controllers with different lanes?
 > >
-> > SA8255p has 2 pcie controllers(pcie0 and pcie1).
-> > pcie0 supports 2 lanes, and pcie1 supports 4 lanes.
+> > Agreed. This would be the easy solution, the other being creating the
+> > empty DT so that the message will never be printed. But this require so=
+me
+> > careful thought. The latter solution will be needed if we'll ever want =
+to
+> > make drivers like RP1 or lan96xx (which uses the runtime overlay) to wo=
+rk.
+> >
+> > >
+> > > "You can avoid the message by also enabling CONFIG_OF_EARLY_FLATTREE"
+> > > is not a very satisfactory answer.
+> >
+> > Unfortunately this would work on x86, but not on arm. And who knows on
+> > other platforms.
+> >
+> > >
+> > > A message at the point of *needing* this, i.e., when loading an
+> > > overlay fails for lack of this dynamic DT, is fine.
+> >
+> > It seems fine to me.
+> >
 >
-> That's ok, thanks.
->
->
-> Best regards,
-> Krzysztof
+> Ok, even if I would prefer having an empty (or not) of_node available on =
+all
+> platforms, what is proposed makes sense especially in regards to potentia=
+l
+> users questions.
+
+Having a DT always available was the original intent, but the arm64
+maintainers resisted so that's a fight for another day when someone
+really wants to use this on an ACPI system. Now riscv has done the
+same thing unfortunately.
+
+Rob
 
