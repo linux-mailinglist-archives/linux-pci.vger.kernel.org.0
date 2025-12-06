@@ -1,124 +1,132 @@
-Return-Path: <linux-pci+bounces-42719-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42720-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80CC0CAA3DF
-	for <lists+linux-pci@lfdr.de>; Sat, 06 Dec 2025 11:14:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 87203CAA639
+	for <lists+linux-pci@lfdr.de>; Sat, 06 Dec 2025 13:38:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7B9F4300A6F6
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Dec 2025 10:14:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 31E2C300EDF1
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Dec 2025 12:38:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 739A82DECA8;
-	Sat,  6 Dec 2025 10:14:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5A242F548C;
+	Sat,  6 Dec 2025 12:38:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=exactco.de header.i=@exactco.de header.b="t9suDVTk"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HBebihtm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from exactco.de (exactco.de [176.9.10.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB312D9ED1;
-	Sat,  6 Dec 2025 10:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.10.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0332D979B
+	for <linux-pci@vger.kernel.org>; Sat,  6 Dec 2025 12:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765016059; cv=none; b=aBRjQhN/G6C3Yxq1gdh5HAe0HpZwUDBIhbizMDf05Zj7FJxZfTQISxM9q0L5o5JvFCoGubWo3HfuUrnnWtOk7zPfTx+4XTB4a4D1BXPnRqE+1BImjDSdohFRaUK1JKiXtsxeWzS1W/0MrbGtk79kVi4MiPTNVDTR27IeNOjUu18=
+	t=1765024685; cv=none; b=PfLpewX1EReo0B7QcRM8DAiCMUUKc+pgclDahNoO/g2P7akKv1B5ZUuFMTwWfqRobWr2Bn1azY04kRXEnBDWCLpD9SDA8kNM/GiLOubiLT3F2DHoSgoJUXr0fatACVFSRpDdDlO20wrVYZcMUg1A4lvTrkGue3ojJxlBMUTPnJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765016059; c=relaxed/simple;
-	bh=RvXY1mK21fMf76rVzO0xfzxgkltUDfNA1Ma7vJmuDSw=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=TiYDxRNtCNkIP4bUuABHl7m3TCp12v+GCC2/Z0EPSYN7cKJ9p8R6AKWxfu1sRhSxRxNabB4D5CQdaPm/g04EBRokC+lB3LdtR6Kmprr6ypJAmOqLNhmxHC8thX6rICyEsk2/n3x98OLH/oolkCNAdharYvcCPoRqQ7+e4Ce1Y4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=exactco.de; spf=pass smtp.mailfrom=exactco.de; dkim=pass (2048-bit key) header.d=exactco.de header.i=@exactco.de header.b=t9suDVTk; arc=none smtp.client-ip=176.9.10.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=exactco.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=exactco.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=exactco.de;
-	s=x; h=To:References:Message-Id:Content-Transfer-Encoding:Cc:Date:In-Reply-To
-	:From:Subject:Mime-Version:Content-Type:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=FUeR/pdT2p/5K9RdNPtaaovNOMCb4BxH4cinQgeLprI=; b=t9suDVTk6RCEte9MQKNP4yFKs1
-	TEmP5E6YeDbbVZVq/s29cR0EJjmqXAlxNGnJd4C+jGOUbPk9GzDWunHrZdwml7u/+uOpzjTpEZ8Ev
-	pIHnBY7O3DLQC6LPo9X3J9NeFS8AISVYlNEDNMKbs/1dwoaA46o6Hg1b/73vNucdTQcAPJjbXEOPd
-	Ys3U7fc9ScZ6LTX/7ffovd3ZdNjP5nre6QW7lIR3+7ZZvWCWr9qoIvcLUQwAUqtm00LtDo0mGBZHB
-	1umLHfQXig1F5SbfpQTzFALdTY5x7oh2RGjhWjx893KGnwTic/B1zfEQ8tCNp8YhCXFUrh38dvy86
-	hNYTg3Pw==;
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1765024685; c=relaxed/simple;
+	bh=dQnyqDL2E6KxQw5j/cho2jt9A1HkjdETEU5NRTOj/WQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YsC7zF7TEL8kFmKbnaSaceygO5PLDUfwGTShY00aNd3WBDc+xR+yPsZbtoHAHBYAnmT4LSBP3G9494HkzL9QisQuxRE2p8VWU/DjhUwcdPuWew106LZZBH7Sh2HEW1wrFHyheA25+4zwFRbb/7f4ULOe1hx6SwGRpYrTzOliby0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HBebihtm; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4775ae5684fso15649105e9.1
+        for <linux-pci@vger.kernel.org>; Sat, 06 Dec 2025 04:38:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1765024681; x=1765629481; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OIhBd1LCJj7xifV0MwkBjxJ1HTu8zyeSnrj0t6qAKpo=;
+        b=HBebihtmh99pNLvZ02Bz44OY8b3o54Fq3S8BxE1+VoqBIpayrMv9z8OXvewl/Jo5Wb
+         jUqqRiItImsROBuKcU2d1JHpGnlRRuhPE/YV94tPqMeemVgPfihNXwdEI+/8OBHS8SUN
+         BCwk5BZ26mfmU8ThtAz/i1Eal9/G1yH5GVOnr5zC8ruK9KXVnb4CfYivWp78zKWet1ww
+         YZJoDOyOxROlgGpFLX31almNqeP2bR7OM09FpO6zl8GWlTupOHTMH57OUb+EDCrhDTyp
+         rGroJwxmt6aeHC/AQIE0Ty/KFjT0V6G7zoqLQdTOE6EDLslWXKMTUhhhDx5o6Dpegcn3
+         h/Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765024681; x=1765629481;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OIhBd1LCJj7xifV0MwkBjxJ1HTu8zyeSnrj0t6qAKpo=;
+        b=pLKzg6Ibz2DNXIqEyO0JYQtsphOYf0tGbpSAMMFkyHH2T+lJeJhjBAeoH4FXhl8cCr
+         U7HSOqOvaDIqudRBlGqyN2tQAgulWGpTmUG4LnmQBG9HtophNkXPyHPpHXaHS26rgjaw
+         kle3+EfQzWgpqK7Ad0BGTyZE6KbqcvguGbOpovzWdeuqQqc2gj4O235nhJci0ErXx7V4
+         AnAQO4B8XoFrmoFULkP15Q53kSz2CKdjPEifPjFcVGSw0GEVI3q6VBYuUcw/4ZFfIw6S
+         pNwZlmKjN/lDUWJRpQd/eVk7JyW2+r6NKrVfs3azWYlLMZotL1FFCBdeKA1H0iSfuam+
+         Echg==
+X-Forwarded-Encrypted: i=1; AJvYcCWpvosc0sfYeCZYb7/SBOvFX1QrZZoQCANzL+OGtP/vDYJpv9FMuJ0qSHxGYfnBz0gC7pG1FEQwB0M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDtK4kgjrL+qTY1qD9w6QpURijLdvyKnSDxp9v7rM+dLAXlFAM
+	iX+ALxwr7wVX5r1WtZkqSU4sIdQ2QZVGLdlwbsOMdgcSr/+mISa2wFHspz6WJtvHiwY=
+X-Gm-Gg: ASbGncttYvgnwegai03GYKMIKVXaoeqf12wlZP1Bxerj6qraYygq/wVW5v6L54jDl5S
+	FpGqVWkjh73W/OMC0EBlUGUprcRyfYLjtK7uf8L0QKeO6YyheNnKEb7+IRUsFQWh73Z40FQQlLA
+	Jx0wzU5Mw2FiNc81w2N+8cMeGobIYXF0Sskc6bu3vCeDRyORZKQwXomO5Hsze7sr1KDTk5/DrED
+	O4OTlMVbcH8m6eNpDk/3B6QH8xYrsj0NWO0aGR56pI3hFPyPDEMK5J1lAShgOOWxJRu5JuEhvlg
+	Uk2ifKElNCcVMtDi14wTzNQlv4ceDkBNAuHpDX4VeflAJCIJQibzsof548XsXud7R0K4X9Pumdx
+	ZXgBzBA9TlVZtz5bto0kX/de8LWX5/Uw+ZRXUaDx9jqFuJ4RpcNraDY1Oq1Zg435/GCXDehhs2k
+	SKQmgyEBoHeKUx8CORJhSYgbRsRauod5a39gz0Y6/3b9O6TSb3rB8YxN+VXcR/flINrklFefw7c
+	enD
+X-Google-Smtp-Source: AGHT+IFV+g5YZB4l+nX4K2VIKP4qPmTDVcLGCOU1922bmbKhf91LhPwj9RJnC4HZ2/LZ3K6Js5WD8w==
+X-Received: by 2002:a05:6000:2583:b0:42b:2fb5:73c9 with SMTP id ffacd0b85a97d-42f89f70894mr2310830f8f.58.1765024680716;
+        Sat, 06 Dec 2025 04:38:00 -0800 (PST)
+Received: from [192.168.1.138] (241.85-85-167.dynamic.clientes.euskaltel.es. [85.85.167.241])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbe90fdsm13756855f8f.3.2025.12.06.04.37.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 06 Dec 2025 04:38:00 -0800 (PST)
+Message-ID: <f9cc4a7e-c71a-439f-9e71-8cba4986ceb7@suse.com>
+Date: Sat, 6 Dec 2025 13:37:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH] PCI: Fix PCI bridges not to go to D3Hot on older RISC
- systems
-From: =?utf-8?Q?Ren=C3=A9_Rebe?= <rene@exactco.de>
-In-Reply-To: <alpine.DEB.2.21.2512050237490.49654@angie.orcam.me.uk>
-Date: Sat, 6 Dec 2025 11:14:05 +0100
-Cc: glaubitz@physik.fu-berlin.de,
- linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>,
- riccardo.mottola@libero.it
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6FB48A2F-A8E9-4E1D-8052-568FB1E72643@exactco.de>
-References: <20251202.174007.745614442598214100.rene@exactco.de>
- <05c588754dcb83badaec6930499392fdd26be539.camel@physik.fu-berlin.de>
- <20251202.180451.409161725628042305.rene@exactco.de>
- <alpine.DEB.2.21.2512050237490.49654@angie.orcam.me.uk>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/6] PCI: starfive: Use regulator APIs instead of GPIO
+ APIs to enable the 3V3 power supply of PCIe slots
+Content-Language: en-GB
+To: Conor Dooley <conor@kernel.org>, Hal Feng <hal.feng@starfivetech.com>
+Cc: Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
+ Albert Ou <aou@eecs.berkeley.edu>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,
+ Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+ Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
+ E Shattow <e@freeshell.de>, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20251125075604.69370-1-hal.feng@starfivetech.com>
+ <20251125075604.69370-2-hal.feng@starfivetech.com>
+ <20251125-encourage-junkie-f80e6933b3af@spud>
+From: Matthias Brugger <mbrugger@suse.com>
+In-Reply-To: <20251125-encourage-junkie-f80e6933b3af@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 25/11/25 21:00, Conor Dooley wrote:
+> On Tue, Nov 25, 2025 at 03:55:59PM +0800, Hal Feng wrote:
+>> The "enable-gpio" property is not documented in the dt-bindings and
+>> using GPIO APIs is not a standard method to enable or disable PCIe
+>> slot power, so use regulator APIs to replace them.
+>>
+>> Tested-by: Matthias Brugger <mbrugger@suse.com>
+> 
+> Is this actually a valid tag?
+> He provided one for the series on v3, which didn't include this patch.
+> 
 
-> On 6. Dec 2025, at 02:07, Maciej W. Rozycki <macro@orcam.me.uk> wrote:
->=20
-> On Tue, 2 Dec 2025, Ren=C3=A9 Rebe wrote:
->=20
->>> Is there actually a justification to restrict the use of D3 to =
-ARM64,
->>> PPC64 and RISCV? What about MIPS, LoongArch or s390x?
->>=20
->> Because the ones I picked are more modern, and thus more likely to
->> work. MIPS is very old. [...]
->=20
-> How old is "very old?"
->=20
-> Granted, the newest MIPS CPU/system controller (aka host bridge) I own =
-is
-> from 2013 and conventional PCI only, but that is just because the core =
-was=20
-> synthesised for interfacing a conventional PCI base board I have the =
-core=20
-> card plugged into.  Is it very old already or just somewhat old?
->=20
-> Chips continue being manufactured to date and I'm not sure as to new =
-core
-> designs, but those went through to at least 2018 and I'd expect some =
-were=20
-> combined with PCIe system controller IP.
->=20
-> So this seems like something that needs to be keyed off perhaps the=20
-> capabilities of the system controller/host bridge?  If you give me a =
-shell=20
-> recipe to trigger the issue you came across, then I can see what =
-happens=20
-> with some of my MIPS systems.  I've got a bunch of options with =
-PCI-PCIe=20
-> reverse bridges and PCIe switches I could try.
+No it is not. As I only tested v3. But I was able to test v4 as well, so 
+for the whole series:
 
-Just booting a kernel with or since a5fb3ff63287 ("PCI: Allow PCI =
-bridges to go
-to D3Hot on all non-x86=E2=80=9D) should be enough. The systems that =
-fail for me do
-so instantly booting, usually earlier than later. e.g. when a storage, =
-network or
-system controller driver initializes.
+Tested-by: Matthias Brugger <mbrugger@suse.com>
 
-Best,
-	Ren=C3=A9
-
---=20
-https://exactco.de =E2=80=A2 https://t2linux.com =E2=80=A2 =
-https://patreon.com/renerebe
-
+Regards,
+Matthias
 
