@@ -1,230 +1,184 @@
-Return-Path: <linux-pci+bounces-42751-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42752-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A816FCACD73
-	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 11:18:48 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AFE8CACFDF
+	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 12:26:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 698E93005023
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 10:18:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8BC33300C296
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 11:25:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D64BA227B8E;
-	Mon,  8 Dec 2025 10:18:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DB0B288C96;
+	Mon,  8 Dec 2025 11:25:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vslo0nXg"
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="eYu7jvbJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.35.192.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBC3231A55;
-	Mon,  8 Dec 2025 10:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F402E7BAD;
+	Mon,  8 Dec 2025 11:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.35.192.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765189123; cv=none; b=iaLr7AlyV9zsFdfboa7dv0/L4NWDXCho+U4RvmbgVHY7rqwm1yEjnf2nIjkwoI0u+M8wGb90telgCQafVoGkNVP/Yhi6ebb8Ipa2dXT5x8G1vNwb/SZ4CHFGByn8EFa7oCzLiHsLJiuonsuwTu8lI6leAinMIwzOh9AEU7p9stY=
+	t=1765193154; cv=none; b=rsFEZvOe52iUldwW3kd19HfNnnpJchb5WyLVITA+oYlJYs8qXwxMaD3aVy8qe6amBz8RResRIkcPc1YSM0FOajl4LApnyh4yxfQvVE25KaMsnoc/QU72/HYU5sT3/FgQhN+lJ4+ZVn9/LK7V9CoYFn8qZjnH6+aMr65WBeiOdbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765189123; c=relaxed/simple;
-	bh=p/uK0bPG4yk2qCRM4cLvNdKCcpfdEnaQ0rGXZZeRTnc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nmcu0qZ2icgVGkBC7aFl2aOqVrXLc727BkZdGt4KnB3sYtx3gvX5H36q8s/YiW6QABCmpqS1wsMpIuZRu3Qu7OoMcu0MgMbGutn/5bmHhBo3ziRZr/MKseEyrCc4Ia5hFJAgQ0Sj32iV/UCUGtm/kfK3exF8Bui4qg4LS4Qm/4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vslo0nXg; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765189121; x=1796725121;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=p/uK0bPG4yk2qCRM4cLvNdKCcpfdEnaQ0rGXZZeRTnc=;
-  b=Vslo0nXg4ZRKGfULNfwcSww7bjbh+4Pwd2yrnCF0E9F2Vyko7lZ0LJNO
-   sfdQeeOitieAAvHtrqbsw3R3h01ZQCjGgphX2Ldu7duQHVYB/QKDk6pPP
-   zgrXMnD2uCuQYCFeGNeLMqC7ir05VNm4d6V9k0nwzkK+d5aKKIUh/arFM
-   q7pNIcIkQ8yvwTvt2zFd8WjIim+SoEwRujp1ZD+AvEJm4Os0JW65GWNny
-   0nCaWAUEQ5dUx+a5UBPKNtKcPlkZp869knbMLZtJ5Jv9Jss3y8U/vp1zX
-   Hc6WsPPiVr6ifVpYWVZUBlOdPKMieq/tB86DpkcSi7E7fzwv7eeos+dPl
+	s=arc-20240116; t=1765193154; c=relaxed/simple;
+	bh=DI8qZzuUSOdjLaLVXCGX/uS5aAgFMSDRnm16ZSY/j8Y=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kaCwXgiprd4RKEicnXen+3bfCV7OmHEklWt5DhX0Q2Jcm0afXbzy3RoU1rZYnLkTjvDeJrQJEgY+vPhnF5lJRmG+um/0BkrUp8nsI7mZ3NRjzpxc1lijt26OxdUF7DJ4Fy9NNwiazh9A1JQ2TELRNirK66YtbUXP/RtJJ/2U+Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=eYu7jvbJ; arc=none smtp.client-ip=52.35.192.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1765193152; x=1796729152;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=yY/+q4jL+fBrDO9LBa1ME+SOU9sZ1Zd90D3EKAt7wNw=;
+  b=eYu7jvbJ46S+Y5La9q4LNQelXDpC69npY16IglZwClZw2PWSRw1I5DGd
+   T2F5zj4HAwrQ8c2Oxj/3tzLW1AqXpPQ05nxeWrggUmlddP4CT4jZybMoR
+   wgZcX6o90geim94sPA7QQi6dGxT8uFoEya7QJTjvP8F8dDi2bmYhV+mG0
+   SwNfAosgTVpNbic7vkWPUifK2kI4BgWIwxcYc97msSgdcUpitffr76Qqa
+   DEiZSbVcaqtNlCkacTl1fmU5wCb2N5rr7VFVfVrw4Ujva31jv7zK/dg2W
+   FV0HBPL+3vNU1V1iAzUNexwaPxwP/CBzmJnkABYehqO/wLmWtj/Tti3om
    Q==;
-X-CSE-ConnectionGUID: ryM/HSsnTYStYoj27WAYFg==
-X-CSE-MsgGUID: JW+s46HqSomZ/xBD1WaB2A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="70970768"
-X-IronPort-AV: E=Sophos;i="6.20,258,1758610800"; 
-   d="scan'208";a="70970768"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2025 02:18:39 -0800
-X-CSE-ConnectionGUID: 6gvQ/84JTKGlUXOV2I9U3A==
-X-CSE-MsgGUID: +pXVwHBKSeeJTQE4HZVi7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,258,1758610800"; 
-   d="scan'208";a="201024668"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa005.jf.intel.com with ESMTP; 08 Dec 2025 02:18:36 -0800
-Date: Mon, 8 Dec 2025 18:02:52 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: linux-coco@lists.linux.dev, linux-pci@vger.kernel.org,
-	chao.gao@intel.com, dave.jiang@intel.com, baolu.lu@linux.intel.com,
-	yilun.xu@intel.com, zhenzhong.duan@intel.com, kvm@vger.kernel.org,
-	rick.p.edgecombe@intel.com, dave.hansen@linux.intel.com,
-	dan.j.williams@intel.com, kas@kernel.org, x86@kernel.org
-Subject: Re: [PATCH v1 08/26] x86/virt/tdx: Add tdx_enable_ext() to enable of
- TDX Module Extensions
-Message-ID: <aTaiTGsmPBgnan9J@yilunxu-OptiPlex-7050>
-References: <20251117022311.2443900-1-yilun.xu@linux.intel.com>
- <20251117022311.2443900-9-yilun.xu@linux.intel.com>
- <cfcfb160-fcd2-4a75-9639-5f7f0894d14b@intel.com>
- <aRyphEW2jpB/3Ht2@yilunxu-OptiPlex-7050>
- <62bec236-4716-4326-8342-1863ad8a3f24@intel.com>
- <aR6ws2yzwQumApb9@yilunxu-OptiPlex-7050>
- <13e894a8-474f-465a-a13a-5d892efbfadb@intel.com>
- <aSBg+5rS1Y498gHx@yilunxu-OptiPlex-7050>
- <ca331aa3-6304-4e07-9ed9-94dc69726382@intel.com>
+X-CSE-ConnectionGUID: Cok2AnuESk+hLIx9HDxLqw==
+X-CSE-MsgGUID: Rp0Z0VsdQ7GF7LC9mBnNnA==
+X-IronPort-AV: E=Sophos;i="6.20,258,1758585600"; 
+   d="scan'208";a="8433698"
+Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
+  by internal-pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2025 11:25:49 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [205.251.233.234:8199]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.10.104:2525] with esmtp (Farcaster)
+ id 5f4200bb-089a-4fa6-a38b-304468f38ee6; Mon, 8 Dec 2025 11:25:49 +0000 (UTC)
+X-Farcaster-Flow-ID: 5f4200bb-089a-4fa6-a38b-304468f38ee6
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.29;
+ Mon, 8 Dec 2025 11:25:49 +0000
+Received: from dev-dsk-darnshah-1c-a4c7d5e9.eu-west-1.amazon.com (172.19.90.4)
+ by EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.29;
+ Mon, 8 Dec 2025 11:25:47 +0000
+From: Darshit Shah <darnshah@amazon.de>
+To: <lukas@wunner.de>
+CC: <Jonthan.Cameron@huawei.com>, <bhelgaas@google.com>, <darnir@gnu.org>,
+	<darnshah@amazon.de>, <feng.tang@linux.alibaba.com>,
+	<kwilczynski@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nh-open-source@amazon.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v2 0/1] Re: [PATCH] drivers/pci: Allow attaching AER to non-RP devices that support MSI
+Date: Mon, 8 Dec 2025 11:25:44 +0000
+Message-ID: <20251208112545.21315-1-darnshah@amazon.de>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <aSnWyePbCKPvjpKq@wunner.de>
+References: <aSnWyePbCKPvjpKq@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ca331aa3-6304-4e07-9ed9-94dc69726382@intel.com>
+X-ClientProxiedBy: EX19D044UWB003.ant.amazon.com (10.13.139.168) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-> >>> --- a/arch/x86/virt/vmx/tdx/tdx.h
-> >>> +++ b/arch/x86/virt/vmx/tdx/tdx.h
-> >>> @@ -46,6 +46,7 @@
-> >>>  #define TDH_PHYMEM_PAGE_WBINVD         41
-> >>>  #define TDH_VP_WR                      43
-> >>>  #define TDH_SYS_CONFIG                 45
-> >>> +#define TDH_SYS_CONFIG_V1              (TDH_SYS_CONFIG | (1ULL << TDX_VERSION_SHIFT))
-> >>>
-> >>> And if a SEAMCALL needs export, add new tdh_foobar() helper. Anyway
-> >>> the parameter list should be different.
-> >>
-> >> I'd need quite a bit of convincing that this is the right way.
-> >>
-> >> What is the scenario where there's a:
-> >>
-> >> 	TDH_SYS_CONFIG_V1
-> >> and
-> >> 	TDH_SYS_CONFIG_V2
-> >>
-> >> in the tree at the same time?
-> > 
-> > I assume you mean TDH_SYS_CONFIG & TDH_SYS_CONFIG_V1.
+On 28.11.25 18:07, Lukas Wunner wrote:
+> On Fri, Nov 28, 2025 at 12:20:53PM +0000, Darshit Shah wrote:
+>> Previously portdrv tried to prevent non-Root Port (RP) and non-Root
+>> Complex Event Collector (RCEC) devices from enabling AER capability.
+>> This was done because some switches enable AER but do not support MSI.
 > 
-> Sure. But I wasn't being that literal about it. My point was whether we
-> need two macros for two simultaneous uses of the same seamcall.
+> The AER driver only binds to RPs and RCECs, see aer_probe():
 > 
-> > If you want to enable optional features via this seamcall, you must use
-> > v1, otherwise v0 & v1 are all good. Mm... I suddenly don't see usecase
-> > they must co-exist. Unconditionally use v1 is fine. So does TDH_VP_INIT.
-> > 
-> > Does that mean we don't have to keep versions, always use the latest is
-> > good? (Proper Macro to be used...)
-> > 
-> >  -#define TDH_SYS_CONFIG                 45
-> >  +#define TDH_SYS_CONFIG                 (45 | (1ULL << TDX_VERSION_SHIFT))
+> 	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
+> 	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
+> 		return -ENODEV;
 > 
-> That's my theory: we don't need to keep versions.
+> So there's no point in adding PCIE_PORT_SERVICE_AER to "services"
+> for other port types (as your patch does).
 
-Sorry, I found we have to keep versions for backward compatibility. The
-old TDX Modules reject v1.
+I agree that adding PCIE_PORT_SERVICE_AER to "services" for switches is
+not useful.
 
-Here is my change, including TDH_SYS_CONFIG & TDH_VP_INIT. Will break
-them down in formal patches.
+> 
+>> However, it is possible to have switches upstream of an endpoint that
+>> support MSI and AER. Without AER capability being enabled on such
+>> a switch, portdrv will refuse to enable the DPC capability as well,
+>> preventing a PCIe error on an endpoint from being handled by the switch.
+> 
+> I assume you're referring to this clause in get_port_device_capability():
+> 
+> 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+> 	    pci_aer_available() &&
+> 	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+> 		services |= PCIE_PORT_SERVICE_DPC;
+> 
+> Presumably on your system, BIOS doesn't grant AER handling to the OS
+> upon _OSC negotiation?  Is there a BIOS knob to change that?
 
------8<-------
+On my system, BIOS does grant AER handling to the OS with _OSC negotiation.
 
-diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-index 3b4d7cb25164..1e0a174dfb57 100644
---- a/arch/x86/virt/vmx/tdx/tdx.c
-+++ b/arch/x86/virt/vmx/tdx/tdx.c
-@@ -1330,6 +1330,7 @@ static __init int config_tdx_module(struct tdmr_info_list *tdmr_list,
-                                    u64 global_keyid)
- {
-        struct tdx_module_args args = {};
-+       u64 seamcall_fn = TDH_SYS_CONFIG;
-        u64 *tdmr_pa_array;
-        size_t array_sz;
-        int i, ret;
-@@ -1354,7 +1355,14 @@ static __init int config_tdx_module(struct tdmr_info_list *tdmr_list,
-        args.rcx = __pa(tdmr_pa_array);
-        args.rdx = tdmr_list->nr_consumed_tdmrs;
-        args.r8 = global_keyid;
--       ret = seamcall_prerr(TDH_SYS_CONFIG, &args);
-+
-+       if (tdx_sysinfo.features.tdx_features0 & TDX_FEATURES0_TDXCONNECT) {
-+               args.r9 |= TDX_FEATURES0_TDXCONNECT;
-+               args.r11 = ktime_get_real_seconds();
-+               seamcall_fn = TDH_SYS_CONFIG_V1;
-+       }
-+
-+       ret = seamcall_prerr(seamcall_fn, &args);
+2025-12-06 23:15:40.172000 kern INFO [    0.590601] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
+2025-12-06 23:15:40.172000 kern INFO [    0.590607] acpi PNP0A08:00: _OSC: platform does not support [LTR]
+2025-12-06 23:15:40.172000 kern INFO [    0.590610] acpi PNP0A08:00: _OSC: OS now controls [PME AER PCIeCapability]
 
-        /* Free the array as it is not required anymore. */
-        kfree(tdmr_pa_array);
-@@ -2153,7 +2166,7 @@ u64 tdh_vp_init(struct tdx_vp *vp, u64 initial_rcx, u32 x2apicid)
-        };
+> Alternatively, does passing "pcie_ports=dpc-native" fix the issue?
+> If it does, why do you need the patch instead of using the command line
+> option?
 
-        /* apicid requires version == 1. */
--       return seamcall(TDH_VP_INIT | (1ULL << TDX_VERSION_SHIFT), &args);
-+       return seamcall(TDH_VP_INIT_V1, &args);
- }
- EXPORT_SYMBOL_GPL(tdh_vp_init);
+Given that my firmware correctly negotiates and hands over control of AER
+to Linux, we should not need to use a quirk to enable DPC support.
 
-diff --git a/arch/x86/virt/vmx/tdx/tdx.h b/arch/x86/virt/vmx/tdx/tdx.h
-index 4370d3d177f6..835ea2f08fe2 100644
---- a/arch/x86/virt/vmx/tdx/tdx.h
-+++ b/arch/x86/virt/vmx/tdx/tdx.h
-@@ -2,6 +2,7 @@
- #ifndef _X86_VIRT_TDX_H
- #define _X86_VIRT_TDX_H
+What seems to be happening instead is that portdrv has misinterpreted the
+Implementation Note in PCIe r5.0 6.2.10 that states:
+  "It is recommended that platform firmware and operating systems always link
+  the control of DPC to the control of Advanced Error Reporting"
 
-+#include <linux/bitfield.h>
- #include <linux/bits.h>
+This does not mean that AER is working on each PCIe device that wants to enable
+DPC. Rather that the OS is considered to have control over DPC, if it also has
+control over AER for the host bridge upstream of the device.
 
- /*
-@@ -11,6 +12,18 @@
-  * architectural definitions come first.
-  */
+Thus, I claim that the following checks are incorrect:
 
-+/*
-+ * SEAMCALL leaf:
-+ *
-+ * Bit 15:0    Leaf number
-+ * Bit 23:16   Version number
-+ */
-+#define SEAMCALL_LEAF                  GENMASK(15, 0)
-+#define SEAMCALL_VER                   GENMASK(23, 16)
-+
-+#define SEAMCALL_LEAF_VER(l, v)                (FIELD_PREP(SEAMCALL_LEAF, l) | \
-+                                        FIELD_PREP(SEAMCALL_VER, v))
-+
- /*
-  * TDX module SEAMCALL leaf functions
-  */
-@@ -31,7 +44,7 @@
- #define TDH_VP_CREATE                  10
- #define TDH_MNG_KEY_FREEID             20
- #define TDH_MNG_INIT                   21
--#define TDH_VP_INIT                    22
-+#define TDH_VP_INIT_V1                 SEAMCALL_LEAF_VER(22, 1)
- #define TDH_PHYMEM_PAGE_RDMD           24
- #define TDH_VP_RD                      26
- #define TDH_PHYMEM_PAGE_RECLAIM                28
-@@ -46,14 +59,7 @@
- #define TDH_PHYMEM_PAGE_WBINVD         41
- #define TDH_VP_WR                      43
- #define TDH_SYS_CONFIG                 45
--
--/*
-- * SEAMCALL leaf:
-- *
-- * Bit 15:0    Leaf number
-- * Bit 23:16   Version number
-- */
--#define TDX_VERSION_SHIFT              16
-+#define TDH_SYS_CONFIG_V1              SEAMCALL_LEAF_VER(TDH_SYS_CONFIG, 1)
+	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+	    pci_aer_available() &&
+	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+		services |= PCIE_PORT_SERVICE_DPC;
 
- /* TDX page types */
- #define        PT_NDA          0x0
+PCIE_PORT_SERVICE_AER will only ever be enabled on RP and RCEC devices.
+However, PCIE_PORT_SERVICE_DPC should be allowed on non-RP devices. In fact,
+that is exactly where it is needed, since the switch upstream of an endpoint
+device is required to generate the DPC signal. A fixed version of this check
+would instead look like:
 
+	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+	    pci_aer_available() &&
+	    (pcie_ports_dpc_native || host->native_aer)
+		services |= PCIE_PORT_SERVICE_DPC;
+
+That is, we should allow binding PCIE_PORT_SERVICE_DPC to a device, if:
+
+* The device advertises the DPC capability
+* AER has not been disabled for Linux through the command line
+* Linux has control of AER (and DPC) for the host bridge above the device
+  * _OR_ `pcie_ports=dpc-native` was used on the command line
+
+Coming next is an updated patch based on this.
+
+-- 
+2.47.3
+
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Christof Hellmis
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
 
 
