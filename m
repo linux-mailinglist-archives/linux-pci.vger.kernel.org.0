@@ -1,209 +1,309 @@
-Return-Path: <linux-pci+bounces-42745-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42746-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B4B1CABE51
-	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 04:01:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C14BCAC134
+	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 06:25:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4A7D73002A71
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 03:01:23 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2FE99300EDCD
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 05:25:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C5632DC795;
-	Mon,  8 Dec 2025 03:01:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB1E230F7E2;
+	Mon,  8 Dec 2025 05:25:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="aMLMyKX7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FHW8I8V6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023111.outbound.protection.outlook.com [40.107.44.111])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B156C2DC33B;
-	Mon,  8 Dec 2025 03:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.111
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765162881; cv=fail; b=WV1GHDv6VhYXfG+qbNcgqEV/XxThBtE7kMaNTrXWz0N0xFFRAnAm5saZFZAiyCBwJlAQf4uIsonEZG78Dugt5rHttIKA2YQ6P1BEzCR4PjVT7TGgs++CWdvjO3HFJ4XjA93slrskkn1xjhYTR4k1Vq2EO+HKivyDAG8RWOjX1D8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765162881; c=relaxed/simple;
-	bh=bnbTk9iLus2ZklY1/85r1lcN5ljcyNCWJy0QkSv962s=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=bg8QDwl5pfAt8x9tbdLOB0fmuHrHYh6ZUBkQv4b95nDsJbK1RYma55Ar2fwZgaGGOV+iqWGfIjDjyCbSu0i65yHsy36Yn+cwHaWDszuLzzQ+VZsiwx5Ut7yvCiyeqnjQ3gDg+TL/V1S0Bx2a0W/SLLkIywkmv5BO+1ipKUFrlOk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=aMLMyKX7; arc=fail smtp.client-ip=40.107.44.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QdO7b5d5h4yP5YzeSKzCFXJP3z435ZsrusZhgYOMhQqH+QYpzH3ooYnD1/eJS8+vGR78/Syo5SCl4pKB594yK3ki6fanTrsmfhYzcCf7qePI99YW+zdX+55Vf2+qKbgjuiA6coN98bJuXCfyo9ks/cgroA2jgMHXpFILUPPj05Hh1vtgABNrPGVlljWmdJyzC9SzUlHanyLeHzLxJYG6AHf4VGPxWQc6DuvfVUgjwAL83mYJ7Y3tzMnaVcnkRwOkpakxQbadrIhlUoOb0DSuN4OlHboof02eYgqvhieHnt5KDwjD+LqHW1M5u4adOaPEd9VZV4uSMScDEDP3/0MOZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3I9dKimTgugioqie75MSgImFGG7/wA1ZV/Sd8PMYly0=;
- b=ft3dBxPiBnuAA8HFea7iTNkCFR6OL5/67RMRPOX5avD/JVv/K1Q4mWW2vSv06mE7UOMHVEsL6MJJvf/lkGFzfGP78J/mTS0uQUG7fqlxwFWhb7S7GzOtabSiTiCnmKcuGVDr4MaGRF56L91OsCE9Q1s8oyd4Vm1ZvTIOqTdTlURPwWjJFjH9EohL9sHoYPj9lbuOtT4vchYBrKE+Ii6JFWeSBBCOt7z7/hioDKcMAkESSkyiqKimu3ndWETQUW7vqBIucyjfMqXXN9Ji7dKKIzZz9PxNqn+4+hOLkU2Y0GtKBYJbjEng9I6ZEUq4pfVhJE+F4FThJeLAAeKb7zEqTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3I9dKimTgugioqie75MSgImFGG7/wA1ZV/Sd8PMYly0=;
- b=aMLMyKX7CVI2bta4bvrXUf2E5fUBTRlk3BIKFj05Ib4jIgEZ4WfQ1UxDsVyPjfNDZOtu3E38aE8V0aOqe8a2gCPxm1G0L4LfIbalOWEXOb34ufbMr5K+TGH5P1Z5ym0ztz/bZnw0gTh2rXUC00ZY2Nirs9VywLZZWPUnVceNGdhNUS8rgjhgeDIjsONo7rKusNUKo8COcFajMDxWPBhRKxp5GWgWYRLhBkiU2vF1Vx3PtWZ4s7OpstuM68nyl5yUrq6/RxMDeT1GcI03AMUFfCVk9Fh0uzknLKzYKzWgDv5eeaYmZ3tG4sFfR2itlbgRR60CwoiNJ78+VMnh9GbApw==
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
- by KL1PR06MB5969.apcprd06.prod.outlook.com (2603:1096:820:ca::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.14; Mon, 8 Dec
- 2025 03:01:12 +0000
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28%6]) with mapi id 15.20.9388.009; Mon, 8 Dec 2025
- 03:01:10 +0000
-From: Jacky Chou <jacky_chou@aspeedtech.com>
-To: Rob Herring <robh@kernel.org>
-CC: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?=
-	<kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Linus
- Walleij <linus.walleij@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: [PATCH v6 0/7] Add ASPEED PCIe Root Complex support
-Thread-Topic: [PATCH v6 0/7] Add ASPEED PCIe Root Complex support
-Thread-Index: AQHcYovTiOKpFL2Yzky+VI550x/5ybUR6lmAgABEAbCAAZVZAIADVKuw
-Date: Mon, 8 Dec 2025 03:01:10 +0000
-Message-ID:
- <SEYPR06MB5134B4BF81E81717379797649DA2A@SEYPR06MB5134.apcprd06.prod.outlook.com>
-References: <20251201-upstream_pcie_rc-v6-0-8c8800c56b16@aspeedtech.com>
- <20251204195355.GA1975043-robh@kernel.org>
- <SEYPR06MB5134D0D5911E3C86D869151E9DA7A@SEYPR06MB5134.apcprd06.prod.outlook.com>
- <20251206000806.GA969079-robh@kernel.org>
-In-Reply-To: <20251206000806.GA969079-robh@kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|KL1PR06MB5969:EE_
-x-ms-office365-filtering-correlation-id: 6d84798e-9e95-45f6-5373-08de36060a9d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700021;
-x-microsoft-antispam-message-info:
- =?iso-8859-2?Q?yndl0PeFMBYCZzCuar0ELV71htupn4Y5Ez5TABjezM8KyeoAJ4OuoVQw8X?=
- =?iso-8859-2?Q?DdFFMLPjeNts2nwctEwz8WU7wbE0IgHl9DvQ8nwuRjUq1x3T3FXG+THgHr?=
- =?iso-8859-2?Q?ZMW54TLuUXmHyt3hgCXXv0+jJPXMVwRKFqB9xfvv9O2FVHEVMJgfGK+LGB?=
- =?iso-8859-2?Q?B/KuXCa329NiUALkLZuOH+nfiHl5/iJdUTd48hx1FRAlrmDYVv7WcqmlwY?=
- =?iso-8859-2?Q?QRKcoiWBZrMtjSWOUbd9M1aqt8KIQHrZ0fEInC9OXFd5efbcvJjBJL9/FG?=
- =?iso-8859-2?Q?/9gvNa8RRsilwDsJISZNtDR473KRlWeAzNzln487Y2VG0Btz9Q/RWs9jXt?=
- =?iso-8859-2?Q?8Y1TVO8Vb8SCrhdJauoYpklH/dJbd6aWSl8Tbr+b2LimmFqv5ePZUx8VEC?=
- =?iso-8859-2?Q?p2A45DsYDsKOrZVMGsq410t3+FzjoWLQWlJqNtiZbc9ZDnx8FrsFuE/J/p?=
- =?iso-8859-2?Q?2LKS1jRu0Jh2HzvAUuzm6R/89h1G4cpfavS1vgPhi4ufIaFGi852yA2VyC?=
- =?iso-8859-2?Q?igylDhg+PqVuQmEfQWcGKTJN2qKdSnmfC3KyRDeXn5VO+WEnWvLFz+odY0?=
- =?iso-8859-2?Q?OHuMTDQQ5sQvUUnxaJD8+1EzLIXjOYh79p6mcXuDKl116Sd9ZHexr9N3zd?=
- =?iso-8859-2?Q?kSZr+Lz+BZ+LgcPwJ6n6h4STp4tBi8Ey6gOdIkyl0goCTFU11HaJBEmya1?=
- =?iso-8859-2?Q?DVOJ+7L1zHG/yKnazH+0BzKkMDGY9N0XgunLVnTssLS1WrOX/b5zMvNor8?=
- =?iso-8859-2?Q?ddcvqJZ12Wx/vMMtu80Kh52VLxyyfL5BoVe/SGYHNyHHLOr4yhNXZd7/da?=
- =?iso-8859-2?Q?U9D4UJTkoebOLOOrB84bkpdQZWzKc06f76V4yZXryJsBNcqyOZFRZ9Gw/A?=
- =?iso-8859-2?Q?fGunGiupQVdfyZxCQ+HrK7zDUrwzbpi0EwW9R4AQv/zUmiIIMdFADvjpFw?=
- =?iso-8859-2?Q?AMarH+GwIhjLMMhy2b4sFLhwQCrBeDYEEz84Y0LVjyg5LkHOMOBSjR7E0Y?=
- =?iso-8859-2?Q?i3Ep0JUq0qbnbooGk9rjWYOa9KFrrkXPIA7WKQWld++PYAM0MtLI1bRDhp?=
- =?iso-8859-2?Q?e8A4V/C9SIMPE98e7UO30LPy5+9VehCV6wM72D0HwHrb6Z+KJFkvX8yuNx?=
- =?iso-8859-2?Q?qRQWihGC19nj/7I2mofdkBOF0rDhzEsZtMOMAyXaymQ/2LBvdPb5ypof1v?=
- =?iso-8859-2?Q?M6+yhxrbVsxGu+nYHYutvgfYBf5ZwsHWxEurt3c2hEm0A4RLpRfza4m3s2?=
- =?iso-8859-2?Q?NoYhDA1EJSykq29CE/eOxbF/wAbt5zaklHWdmx6ewYq0FZ5JrWQABZHy6W?=
- =?iso-8859-2?Q?qVPWNvZvR9bb9haR/y6blhUURxAeP7zD6HVkmm6z+/DKlsZ5N86ofh6XsS?=
- =?iso-8859-2?Q?HEzUBRQv/wtxWkQXKeRx9JSnghQ4xzA7LOv5OMg90lL9R5Vr5acKIgagbN?=
- =?iso-8859-2?Q?/oCBuoRZyMaHfKfHxdskNRaUlxWJ7dNmtEBQrDeRuQ38aWiP1zLJHJNx2D?=
- =?iso-8859-2?Q?j3zfMF56WTqYZVU6evVqlNGEdOv1q635oh1hBo+rjBzlbqDPrW/IlU4pnA?=
- =?iso-8859-2?Q?CZgDbDI7VJG9FpA9vGXLlDk81y9B?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?hanIPWLPuGxjAdrrf3ZZYacyPCcyzmWZZNbD7nALcezJiEGjDz4bBPNtfj?=
- =?iso-8859-2?Q?eaw+aMsC+lHJo8+ieuFpFUn9YXWt6B7rP3xzxIKIokGP/6uZ8ucG+Gzihm?=
- =?iso-8859-2?Q?+R9a6FmqP5lmBLveJII+ZZsqMrmt0DDQW3hLk0I6cNxD16Mfm2JKPbQTHW?=
- =?iso-8859-2?Q?HwCQsGrz2k9Fg3zbf+vBIODvF2hlxg8nsoKf6lyjSJrJqwczo0W2QSp2sz?=
- =?iso-8859-2?Q?ENlgG1/J1mzaL7MoGBvXg/Wyg+lGQzuVKEvKcbB54sWqPLC+KvTXbuhVVM?=
- =?iso-8859-2?Q?C2SRXiCDVD4fGBVakggOCwZc1zVDpgWJmQZwb0y2ik6dZIeAHvGp2J1o9U?=
- =?iso-8859-2?Q?GEokymeTcHH34Wws//cArQAWlzNrF2b7UowU6TScRg77Fm2J4Fja7MrD06?=
- =?iso-8859-2?Q?G/luq+WixuoObY3ZGT79TzxyKrYOU/MVhprCUPv7A0sr50/Y685G9IZ/hv?=
- =?iso-8859-2?Q?Rta7MJHe6JImODCqvaj0Dl5EMqWd7A0SH4SEfCAV6dPdX+4+ZzKeu5nGPV?=
- =?iso-8859-2?Q?1C3DmyAX0X4ZqsFlVQEpkA9gGpB0+a3RthD/hmBE0MI6lsZ+STSBLrw/3w?=
- =?iso-8859-2?Q?Xje9mIw7UowmIjQR0rHzpOE/d4IKurezXbeq1Z+Bfhv4vxUjwj0EXpNHX1?=
- =?iso-8859-2?Q?LOJw29r5DH9A+2lq9srmmFKVefqeudc/FG336GRxt6KryGkCoDm1mpyA+A?=
- =?iso-8859-2?Q?N6ZmW9YboBRJOkmMSJE7FxIWYUUyBzjrdiz9GMOkXkzOewRUovZH3yPELP?=
- =?iso-8859-2?Q?i1xIfvRUON24tT9LTJMUgtJWXqcX62H4XAeVEzB3Dz5SLPtPtdTOGUg7OL?=
- =?iso-8859-2?Q?4AZyQHJXYkZWObKt8oaf6oB8CvXdXasqjQH9PWPWOdJPGLRmH4odeRjKnj?=
- =?iso-8859-2?Q?0plAA8qlqo+Whvj6dttmbwb9LeMMbkFEfWCvtybCzD65xzkpJQ8jbhdQX1?=
- =?iso-8859-2?Q?4gmr9eoUXVZtO11tfwNiG2UQqjWfU9vpdv7B5yimM0WGpp/AoU4Taeu9mr?=
- =?iso-8859-2?Q?Bu147ShF8Vxs9bAnDNj2WsQG1obD2HHa4LB8W6y6V33FxmUcMEB8kugfjz?=
- =?iso-8859-2?Q?rvwk01ZWmc8wJcim8aDfOZ2O4nW+qKyAfPM/q3arEoD+MAKoQS4kwWXLlJ?=
- =?iso-8859-2?Q?UenUxByG8IvQFoZ0D4F1JPSIsLXFocOWYVJGoHH0v+ufAz47vBkb8XwqHp?=
- =?iso-8859-2?Q?2rmz0kO/YSvkm5uLy6t+yIWLQw9kN+MLVokKpLroivPhbVxTGnCjS179ue?=
- =?iso-8859-2?Q?1h4xDbi9x98322uGMa9jPC4ukk/EuUhWQF/pPaLMMyTjjXzBtb3Iy+pY9U?=
- =?iso-8859-2?Q?Gwrs1kjVaCVmaCQpKxr43Gm6bVzX3SG9bUdy6UGOtq+vl4sboq6PVpmaAU?=
- =?iso-8859-2?Q?zbxAM/a2rQ89e2Kc6ZzyYeaS4bK+I7UNlUmxY2ho5QSiYGDkk7Y/8CmPxY?=
- =?iso-8859-2?Q?snVxmVAM1xRas1L02NBt6YoDo2yAcp9FsvGOyrUPBfyPfaCkfcCEPQtl/D?=
- =?iso-8859-2?Q?MgbAszkIO8Ur0bcvcEVm5prUZ67HTB1GUkUKutjzp//tDvsJ3MaihpYLpC?=
- =?iso-8859-2?Q?qL1y5g15+mHLFTg/5M8Lb7vZhStUJ+ZWbF+686IMuZZ/4F2BszjrrHo0XB?=
- =?iso-8859-2?Q?zC6x6SLp9d/8RZmHuvyhIrG9zW1WOKTTMW?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C37823D7FF;
+	Mon,  8 Dec 2025 05:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765171504; cv=none; b=a+mpl9KMqBtd7XXHakxFQHCXqz8MbSLvlkAs085yhfLe/Dwl/3DPayG0C10Qqs9a2rj7IMFu+WYGmS0mnCqB7pXuz9FDRfF133WDXlz0EB3wA8XeQ3G7yBlfRBSyIM1cwo8A2+eaa1HLuIovI8oILshZr/MHm+463e0X+TgrpFY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765171504; c=relaxed/simple;
+	bh=CRqGM3mlqvssa8zI9yHaLFtOha6nu0lWV7LG+NCLI/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B3P8HFfy3kZawx/H4W/4hsjxnPuj99ZBOXyR2UZCr9TYS9pxsMlKfv5Le5hxvUwSyJoQ4t4qrGjKyJrHO3OjAIuwJmfw3RYdwoMqx4XKY7b4dWIbdTlXPkG4gj1mxEICnS4qX1X77qcbbQE99zRFUP7smQl5xO/bh5ywmwtGNcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FHW8I8V6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06710C4CEF1;
+	Mon,  8 Dec 2025 05:25:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765171504;
+	bh=CRqGM3mlqvssa8zI9yHaLFtOha6nu0lWV7LG+NCLI/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FHW8I8V6c81PB9W517Zzjr2fl/BDWVGnDUQBh40KmZUbHLlztDA+ycz3TXaVjGXcO
+	 fmak+Nvjr1SbTRj+bzxYOR09HX4gPuilTwm5ebaxOhBay+cpb/RdsyeZ3jx4lHzUNJ
+	 Je0ZsD1oxr5KyjqrVq6s+q0O5TLJtrcEDf9QlczVmIRTSb9kktw06VyijEDugAcemH
+	 O2RkO/EkyQgnIgsNJ9a9BkQrND17pCCf+3rqB9RFdI4MCNtfV/ukfXyfjj152SpDiy
+	 46O9ouh/BUYkGwmrTG0wqY3fIVrogzPuzpZGcmD5VbqS+Xe936P6POuP7OeAwH9Yks
+	 VXhsGlxtHJYBw==
+Date: Mon, 8 Dec 2025 14:24:55 +0900
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Devendra K Verma <devendra.verma@amd.com>
+Cc: bhelgaas@google.com, vkoul@kernel.org, dmaengine@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@amd.com
+Subject: Re: [PATCH RESEND v6 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint
+ Support
+Message-ID: <4zdl6m4u3i3zjqubzqoirzi53psjt7k7pmhensly322ucgcbon@vouphvvxf22a>
+References: <20251121113455.4029-1-devendra.verma@amd.com>
+ <20251121113455.4029-2-devendra.verma@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d84798e-9e95-45f6-5373-08de36060a9d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Dec 2025 03:01:10.8594
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aKHpnT6eacba53+JKRriRNq5Sm20mdc0ZY9xeVbvZVOkE95yr8L0pFimBcd1YIJN/cnbGGylg+Tze2zjSW4NCbLLcZKudjvpW1EzLfzO2Vw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB5969
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251121113455.4029-2-devendra.verma@amd.com>
 
-> > May I confirm whether the pcie@8,0 in aspeed-g6.dtsi is not considered
-> > the root port? From my understanding, that node represents the root
-> > port, so I want to make sure I'm aligning with your expectation before
-> updating the binding.
->=20
-> I believe you told me it was the root port.
->=20
-> > Could you help clarify how you would like the root port and its
-> > properties to be described in the schema?
->=20
-> properties:
->   pcie@8,0:
->     $ref: /schemas/pci/pci-pci-bridge.yaml#
->     unevaluatedProperties: false
->=20
->     properties:
->=20
-> And then add all the properties you have which are not defined in
-> pci-pci-bridge.yaml (and pci-device.yaml by reference) (i.e. clocks, rese=
-ts, phys,
-> etc.).
->=20
+On Fri, Nov 21, 2025 at 05:04:54PM +0530, Devendra K Verma wrote:
+> AMD MDB PCIe endpoint support. For AMD specific support
+> added the following
+>   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
+>   - AMD MDB specific driver data
+>   - AMD MDB specific VSEC capability to retrieve the device DDR
+>     base address.
+> 
+> Signed-off-by: Devendra K Verma <devendra.verma@amd.com>
+> ---
+> Changes in v6:
+> Included "sizes.h" header and used the appropriate
+> definitions instead of constants.
+> 
+> Changes in v5:
+> Added the definitions for Xilinx specific VSEC header id,
+> revision, and register offsets.
+> Corrected the error type when no physical offset found for
+> device side memory.
+> Corrected the order of variables.
+> 
+> Changes in v4:
+> Configured 8 read and 8 write channels for Xilinx vendor
+> Added checks to validate vendor ID for vendor
+> specific vsec id.
+> Added Xilinx specific vendor id for vsec specific to Xilinx
+> Added the LL and data region offsets, size as input params to
+> function dw_edma_set_chan_region_offset().
+> Moved the LL and data region offsets assignment to function
+> for Xilinx specific case.
+> Corrected comments.
+> 
+> Changes in v3:
+> Corrected a typo when assigning AMD (Xilinx) vsec id macro
+> and condition check.
+> 
+> Changes in v2:
+> Reverted the devmem_phys_off type to u64.
+> Renamed the function appropriately to suit the
+> functionality for setting the LL & data region offsets.
+> 
+> Changes in v1:
+> Removed the pci device id from pci_ids.h file.
+> Added the vendor id macro as per the suggested method.
+> Changed the type of the newly added devmem_phys_off variable.
+> Added to logic to assign offsets for LL and data region blocks
+> in case more number of channels are enabled than given in
+> amd_mdb_data struct.
+> ---
+>  drivers/dma/dw-edma/dw-edma-pcie.c | 139 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 137 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> index 3371e0a7..3d7247c 100644
+> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> @@ -14,15 +14,31 @@
+>  #include <linux/pci-epf.h>
+>  #include <linux/msi.h>
+>  #include <linux/bitfield.h>
+> +#include <linux/sizes.h>
+>  
+>  #include "dw-edma-core.h"
+>  
+> +/* Synopsys */
+>  #define DW_PCIE_VSEC_DMA_ID			0x6
+>  #define DW_PCIE_VSEC_DMA_BAR			GENMASK(10, 8)
+>  #define DW_PCIE_VSEC_DMA_MAP			GENMASK(2, 0)
+>  #define DW_PCIE_VSEC_DMA_WR_CH			GENMASK(9, 0)
+>  #define DW_PCIE_VSEC_DMA_RD_CH			GENMASK(25, 16)
+>  
+> +/* AMD MDB (Xilinx) specific defines */
+> +#define DW_PCIE_XILINX_MDB_VSEC_DMA_ID		0x6
+> +#define DW_PCIE_XILINX_MDB_VSEC_ID		0x20
+> +#define PCI_DEVICE_ID_AMD_MDB_B054		0xb054
+> +#define DW_PCIE_AMD_MDB_INVALID_ADDR		(~0ULL)
+> +#define DW_PCIE_XILINX_LL_OFF_GAP		0x200000
+> +#define DW_PCIE_XILINX_LL_SIZE			0x800
+> +#define DW_PCIE_XILINX_DT_OFF_GAP		0x100000
+> +#define DW_PCIE_XILINX_DT_SIZE			0x800
+> +#define DW_PCIE_XILINX_MDB_VSEC_HDR_ID		0x20
+> +#define DW_PCIE_XILINX_MDB_VSEC_REV		0x1
+> +#define DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG_HIGH	0xc
+> +#define DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG_LOW	0x8
+> +
+>  #define DW_BLOCK(a, b, c) \
+>  	{ \
+>  		.bar = a, \
+> @@ -50,6 +66,7 @@ struct dw_edma_pcie_data {
+>  	u8				irqs;
+>  	u16				wr_ch_cnt;
+>  	u16				rd_ch_cnt;
+> +	u64				devmem_phys_off;
+>  };
+>  
+>  static const struct dw_edma_pcie_data snps_edda_data = {
+> @@ -90,6 +107,64 @@ struct dw_edma_pcie_data {
+>  	.rd_ch_cnt			= 2,
+>  };
+>  
+> +static const struct dw_edma_pcie_data amd_mdb_data = {
+> +	/* MDB registers location */
+> +	.rg.bar				= BAR_0,
+> +	.rg.off				= SZ_4K,	/*  4 Kbytes */
+> +	.rg.sz				= SZ_8K,	/*  8 Kbytes */
+> +
+> +	/* Other */
+> +	.mf				= EDMA_MF_HDMA_NATIVE,
+> +	.irqs				= 1,
+> +	.wr_ch_cnt			= 8,
+> +	.rd_ch_cnt			= 8,
+> +};
+> +
+> +static void dw_edma_set_chan_region_offset(struct dw_edma_pcie_data *pdata,
+> +					   enum pci_barno bar, off_t start_off,
+> +					   off_t ll_off_gap, size_t ll_size,
+> +					   off_t dt_off_gap, size_t dt_size)
+> +{
+> +	u16 wr_ch = pdata->wr_ch_cnt;
+> +	u16 rd_ch = pdata->rd_ch_cnt;
+> +	off_t off;
+> +	u16 i;
+> +
+> +	off = start_off;
+> +
+> +	/* Write channel LL region */
+> +	for (i = 0; i < wr_ch; i++) {
+> +		pdata->ll_wr[i].bar = bar;
+> +		pdata->ll_wr[i].off = off;
+> +		pdata->ll_wr[i].sz = ll_size;
+> +		off += ll_off_gap;
+> +	}
+> +
+> +	/* Read channel LL region */
+> +	for (i = 0; i < rd_ch; i++) {
+> +		pdata->ll_rd[i].bar = bar;
+> +		pdata->ll_rd[i].off = off;
+> +		pdata->ll_rd[i].sz = ll_size;
+> +		off += ll_off_gap;
+> +	}
+> +
+> +	/* Write channel data region */
+> +	for (i = 0; i < wr_ch; i++) {
+> +		pdata->dt_wr[i].bar = bar;
+> +		pdata->dt_wr[i].off = off;
+> +		pdata->dt_wr[i].sz = dt_size;
+> +		off += dt_off_gap;
+> +	}
+> +
+> +	/* Read channel data region */
+> +	for (i = 0; i < rd_ch; i++) {
+> +		pdata->dt_rd[i].bar = bar;
+> +		pdata->dt_rd[i].off = off;
+> +		pdata->dt_rd[i].sz = dt_size;
+> +		off += dt_off_gap;
+> +	}	
+> +}
+> +
+>  static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
+>  {
+>  	return pci_irq_vector(to_pci_dev(dev), nr);
+> @@ -120,9 +195,24 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
+>  	u32 val, map;
+>  	u16 vsec;
+>  	u64 off;
+> +	int cap;
+> +
+> +	/*
+> +	 * Synopsys and AMD (Xilinx) use the same VSEC ID for the purpose
 
-I understand your point now. I will update the binding and the correspondin=
-g DT=20
-node accordingly in the next revision.
+Same or different?
 
-Thanks again for your guidance.
+> +	 * of map, channel counts, etc.
+> +	 */
+> +	switch (pdev->vendor) {
+> +	case PCI_VENDOR_ID_SYNOPSYS:
+> +		cap = DW_PCIE_VSEC_DMA_ID;
+> +		break;
+> +	case PCI_VENDOR_ID_XILINX:
+> +		cap = DW_PCIE_XILINX_MDB_VSEC_DMA_ID;
+> +		break;
+> +	default:
+> +		return;
+> +	}
+>  
+> -	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
+> -					DW_PCIE_VSEC_DMA_ID);
+> +	vsec = pci_find_vsec_capability(pdev, pdev->vendor, cap);
+>  	if (!vsec)
+>  		return;
+>  
+> @@ -155,6 +245,28 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
+>  	off <<= 32;
+>  	off |= val;
+>  	pdata->rg.off = off;
+> +
+> +	/* Xilinx specific VSEC capability */
+> +	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
+> +					DW_PCIE_XILINX_MDB_VSEC_ID);
+> +	if (!vsec)
+> +		return;
+> +
+> +	pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
+> +	if (PCI_VNDR_HEADER_ID(val) != DW_PCIE_XILINX_MDB_VSEC_HDR_ID ||
+> +	    PCI_VNDR_HEADER_REV(val) != DW_PCIE_XILINX_MDB_VSEC_REV)
+> +		return;
+> +
+> +	pci_read_config_dword(pdev,
+> +			      vsec + DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG_HIGH,
+> +			      &val);
+> +	off = val;
+> +	pci_read_config_dword(pdev,
+> +			      vsec + DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG_LOW,
+> +			      &val);
+> +	off <<= 32;
+> +	off |= val;
+> +	pdata->devmem_phys_off = off;
+>  }
+>  
+>  static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> @@ -179,6 +291,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  	}
+>  
+>  	memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
+> +	vsec_data->devmem_phys_off = DW_PCIE_AMD_MDB_INVALID_ADDR;
+>  
+>  	/*
+>  	 * Tries to find if exists a PCIe Vendor-Specific Extended Capability
+> @@ -186,6 +299,26 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  	 */
+>  	dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
+>  
+> +	if (pdev->vendor == PCI_VENDOR_ID_XILINX) {
+> +		/*
+> +		 * There is no valid address found for the LL memory
+> +		 * space on the device side.
+> +		 */
+> +		if (vsec_data->devmem_phys_off == DW_PCIE_AMD_MDB_INVALID_ADDR)
+> +			return -ENOMEM;
 
-Thanks,
-Jacky
+Move this check to dw_edma_pcie_get_vsec_dma_data() and return -ENOMEM directly.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
