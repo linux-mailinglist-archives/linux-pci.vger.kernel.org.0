@@ -1,629 +1,338 @@
-Return-Path: <linux-pci+bounces-42761-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42762-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C38CCAD6F2
-	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 15:24:25 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 269E2CAD844
+	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 16:01:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3A7F4301AD26
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 14:24:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E8E0E3018F47
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 14:57:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DF243242D8;
-	Mon,  8 Dec 2025 14:13:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97161328B4C;
+	Mon,  8 Dec 2025 14:19:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="neNOQta5";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="WkBn77iB"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4Oq9cjGx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012027.outbound.protection.outlook.com [52.101.48.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BEB322B74
-	for <linux-pci@vger.kernel.org>; Mon,  8 Dec 2025 14:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765203208; cv=none; b=VOYMie4BrBFTvIbgRRaIG0nHlC+J9dU1lsZb1ms5ra6hmWVTnrbPKlGBOEhHeiHPWZXUIz1qnZEo+gwqaZ0FMrrUrgQG4MAJBfGBtZnxFUzWLjRhtmcp9mIwOrTdbb+blRsgI2kVsnZ0Z0jt1uYcqV2emHpZygbechJitK77Y0c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765203208; c=relaxed/simple;
-	bh=ytirfMs6LBZtmFYUFQ6lfTQQmBlHoM6OaI7NHO8VMEQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IBHBYE/LlbKIZrckjm48OtpAl3q0ydbToWsTGhXT2MA0wIgwHC8Koi3zukf/KH0uAFi1yRVWJJ0CpeX66cn/zXqu44Ej8j6pKAvqlOZ6uQ5oKxPDckUU+lgYXOVV5LTuR8NRzbRoUtu8NQSpa9vWE7QDZFMpxLLYpK2X0vfL6z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=neNOQta5; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=WkBn77iB; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5B87hOTY3468228
-	for <linux-pci@vger.kernel.org>; Mon, 8 Dec 2025 14:13:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	z6rzsvvF5HtthUluTQRDJMQ+X7XcpNikOC2hFmShBwU=; b=neNOQta5CYrBJNzZ
-	i4TIqN93r4UPydex4pAqy9L7XuabxaXluifrUv6FTGc93pj2/2lu7/me3RN53lHw
-	kra+Yrwa2lsYj4v0H7NknZHlcLrUyBlz2KBSSuNuqKFL1lrXRHVA+z8z1QhPySRr
-	dQBfAr3ySS5I5I5ZyuvDpIQwatSM+gu5teHbn67iGsaEWSyD6RPNXZvn4tjBUS4H
-	W4gWSd7X5tjffnNI7fmdXF7PPUI5JZQ0xYqsJV5GLdCd7oSxU4seRELCQIQKqroZ
-	OVLifuw+OCFSUkenvXRzF/FOxkljNvfzlb+vJMIElbdUX1OXJl30u8tQm4/8CbtM
-	RuE/Ig==
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4awthp95je-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Mon, 08 Dec 2025 14:13:23 +0000 (GMT)
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-7b82c2c2ca2so7674536b3a.1
-        for <linux-pci@vger.kernel.org>; Mon, 08 Dec 2025 06:13:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1765203202; x=1765808002; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z6rzsvvF5HtthUluTQRDJMQ+X7XcpNikOC2hFmShBwU=;
-        b=WkBn77iB1y0zkwqwtwVzWC6RNWKMRbUKYPb/uJhPFuwfXxLLskfcoNo8ZLKKYK3Ur8
-         Wpvi/rcznymSHonUEyjn0onAWps2xxHQS8m4Lmw1qHtjIedsaK1jvnvxD/eM+JFlfbCG
-         ji9vHJ5wABlHh4PFixVZj5jWonVlRUB3RNQhO8z1+LfanVN+ikDTrdalj3R3un5k/zDV
-         VixEPmFNqQHv8EI3fp7wH/k8I9mRvHyOmsBcUqYWKzQicfZqelpln1vL4QOsYesm8qiI
-         ksOAYKbqX0d/zTKsqZ22KMN8ED50o5E5gC+CXjCzbo6wi4pt7k2KmyoffeVWzuU722aF
-         PTZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765203202; x=1765808002;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z6rzsvvF5HtthUluTQRDJMQ+X7XcpNikOC2hFmShBwU=;
-        b=gHrfEG67SzS8X5/K8HSJOvRWy7Q27NMgP9SSM4ciyhtwZemvNirQvIKrRaBGzgA9P0
-         n6IegndSCyBty2qJXKTC2d9DxNtd6R0BmgUzLKgAxTqDh0+VykKBxulEd8s9yv/g6gMV
-         PBR/xr2viirelrtJYjTO/JErIi1H+o0bNzN1ZpNQ8jsKQOgQ1bRRxWBMyP6XeGHUKWWK
-         7Ag2dwQUP+ODyTQI7osN+Uk3G/DIkqeoX42DSssyf3FdUVs2qRP7hj2tZQ4EbQr4Rd2u
-         pxvrdnYWQwTE2NvKwY5QFfat/bZtBAKKum+0hiq+bhMv4bAgO4/BTfA9eVyICHmyIX8L
-         dw9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVe22nKmd3Xg21ufO+eMtqT21GDCHiro3nwqftkIbO8cNX+ZzM0k/goE4JfppUAeoKZw80E8IZpvXQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgDtBFVJJsKy0NehpU6Z+5kxHEdVOqRuuFxfBjqIQsXKN+rq3q
-	8Iy0tozwmRiHrn6nWsbRKE+ZacI/Yrg5giQW9oJkjGIZgTbVRF8kuO8oszNArQ2INJ+EHzKhsos
-	gUaxwTZh/eqxXw88Wgow5Rr7hFX7+8L+ri1xntHSXB8FIt6UK2ltcDVbSDrxY8z8=
-X-Gm-Gg: ASbGncu1xYK7+n2CvOKFjmJxSG9DOpkYEeN21mu/k8ykbXl9Qvrt5KMYETBHybamNq1
-	2zvxhLAhhWnuBezUq9Tj4vkVPDD9ADA8lVd0GIvZp5+aPbD2h5g5Pz6P/GLpf55aISzKCrC9kQF
-	z9AcOOEhk4GrB28j58JGPGJM1p56NTquiwOnKaYwi3WSLufoNnvVw25drg+Rf7w12fxy5fvqb7o
-	mAC305pEcaI2xyphg5dAQfL0fFPpOeZxDrvXth7KbiRg0XMONy3ENau8hyLUgog5TMXvanTRBd2
-	eums79Yxa8vJtLtXAzdN6vMATrd1mTXMiX2MMbMi/TpetSr0G9/rmguKGPENDc57C5PFpkhBZo7
-	cmtcEKkMPvFuUv4Xwt6hg/zE6MHmB9olLK5bE2LBoQg==
-X-Received: by 2002:a05:6a00:2309:b0:7e8:4471:ae5a with SMTP id d2e1a72fcca58-7e8c504449dmr6460614b3a.38.1765203202246;
-        Mon, 08 Dec 2025 06:13:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEAsjw/39f/0w4PnDymHCDuzuqcqa351Aw2dOxeaysh3O/vUrr6GyZlcakIGUHjDqe8FHnyjw==
-X-Received: by 2002:a05:6a00:2309:b0:7e8:4471:ae5a with SMTP id d2e1a72fcca58-7e8c504449dmr6460588b3a.38.1765203201710;
-        Mon, 08 Dec 2025 06:13:21 -0800 (PST)
-Received: from [192.168.29.63] ([49.43.226.9])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7e2ae032ff8sm13329084b3a.31.2025.12.08.06.13.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Dec 2025 06:13:21 -0800 (PST)
-Message-ID: <ae4592d3-872a-4e47-ac71-b5a4e43d246b@oss.qualcomm.com>
-Date: Mon, 8 Dec 2025 19:43:13 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27539328631;
+	Mon,  8 Dec 2025 14:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.27
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765203555; cv=fail; b=bNHtdWEnqWzT/gAWXj8eDTmDGnxqxhkwWGVfLIiCmAf63WeMmZdqLFl6xvNXgFbef3rlNYhj62OzzUAcV7YtFLySr6RC0dMT3jJKiHEda0BQlrXa+ijHSH4dPLy/yawBJfdQKzEyM8bJ2ErRRgoLFFLnFxy6Pm5e28Q31JelkWA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765203555; c=relaxed/simple;
+	bh=KC4MgrXHWqjuSGOLJEbEjDoe2lOPKutyG+KvkJPUjAc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=JIpFU5sENW8gavGzWzxYbSvC9u9ggKmyU0FN9JFJs869JBL1lPdAYzN5TCi9hu+A05o6fJv/h5cbcYMc8pdhSea0i++DjsLKQA35FWPxJXJm0eSb/qIf/H6bRcvFswtm5Tew7a3IW7JyBZYaLwkmXxan6hFxCCeJuAzri8pxGyU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4Oq9cjGx; arc=fail smtp.client-ip=52.101.48.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=stIHgT6ESUbuznbvGLfx2lXmCTh6zdG4rLVvECGLJb+agVb7oAnxHqyOZkyrZLIq7W5cCEFQfR+u/pyVHVW/M/r0585Gkhu4u37iNjVD5Pa9AsysGxzTcaf0FYnx41VaIZXVBxmYlrIrOeLLRnvQ2SUbWzmWwNtNYT3jCU3QQEsQRlm5lLhxf6zoBVAMd7ON3nYYydZ2imTh0TtvY8Yn0QG8L2CXQ+TDkdvh9eYBbMyZV4ghexkSmGvpAW3J6G2+akpSWJBrA63llDDDZ/Z8xgs5wvfhNI9BdonvFnwsr+b3XYnTOKhnNn6y01L7TCx2r8q6KAtGy4/SKm+izvuM1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Wl3atE5TkpeVUhkyDuCwW3zLkAjzF6WjWiIdkzYnhgw=;
+ b=Hgkl6nNtpK9IQaO81o2ZkwOnqgUULcTzoPU5qjVMzotoCSaX/rtFUE3EMgLb5Azkoc3o45u4bqvFvgbD/sQZJFqjyQjsLbFrCgw5B1Khcr7+VGzkbYhp3oRG9rD61rHksyiFdYlNy92g/AAYDXGXVTEfkiRp3g4KA41F+0gMASfpu96MuKeV2Nlpg/XpzADTUlYYQOPTKQRUtgRWRz4BY4rw/xB+/FZQHApcQ98fj7NmsPkcasMqmE8ChR+bGMo7w+09pIGB9Xiqd8KTrCrN+xXCSa+MkRLBYt0x7UPytNuwaQ3U8YIAoJ21GIA0GyZxkyztuDvZgUOdrH0k05yosQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Wl3atE5TkpeVUhkyDuCwW3zLkAjzF6WjWiIdkzYnhgw=;
+ b=4Oq9cjGxfhs8NMDIE5AWYEcm636P+gMFwTBHvZhwQ/A53CTYGgU5nn9oHwp/AwqHz+nzQ1VYfeJH4fu2NigqDEzqNyz2hVzMLO1WDlU5VfoFTU7jLSWWjk1Ueak5QyTklFXNwhGmqFyY3yB2PHfYLJUClEbYT27Gdp5DEim9dPg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by CY5PR12MB6369.namprd12.prod.outlook.com (2603:10b6:930:21::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.14; Mon, 8 Dec
+ 2025 14:19:10 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.9388.013; Mon, 8 Dec 2025
+ 14:19:10 +0000
+Message-ID: <5bd14207-cc7c-4fec-8340-e8a98330d628@amd.com>
+Date: Mon, 8 Dec 2025 14:19:06 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] cxl/mem: Fix devm_cxl_memdev_edac_release() confusion
+Content-Language: en-US
+To: Dan Williams <dan.j.williams@intel.com>, dave.jiang@intel.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Smita.KoralahalliChannabasappa@amd.com, alison.schofield@intel.com,
+ terry.bowman@amd.com, alejandro.lucero-palau@amd.com,
+ linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
+ Shiju Jose <shiju.jose@huawei.com>
+References: <20251204022136.2573521-1-dan.j.williams@intel.com>
+ <20251204022136.2573521-2-dan.j.williams@intel.com>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <20251204022136.2573521-2-dan.j.williams@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DUZP191CA0031.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:10:4f8::23) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/3] PCI: eic7700: Add Eswin PCIe host controller
- driver
-To: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-Cc: bhelgaas@google.com, mani@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-        robh@kernel.org, p.zabel@pengutronix.de, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com,
-        shradha.t@samsung.com, thippeswamy.havalige@amd.com,
-        inochiama@gmail.com, Frank.li@nxp.com, ningyu@eswincomputing.com,
-        linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com,
-        ouyanghui@eswincomputing.com
-References: <20251202090225.1602-1-zhangsenchuan@eswincomputing.com>
- <20251202090406.1636-1-zhangsenchuan@eswincomputing.com>
- <a1b692f6-6abd-4edd-8498-9ca00cd8fc13@oss.qualcomm.com>
- <1ee0a7a9.1022.19afdf7ee9f.Coremail.zhangsenchuan@eswincomputing.com>
-Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <1ee0a7a9.1022.19afdf7ee9f.Coremail.zhangsenchuan@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA4MDEyMCBTYWx0ZWRfXwM2rAUpIK6vl
- 9gW1g48j+AEUMXyykQh/W+v7Mn8od81UpRqQMG1i9k0P06OyBTEv3Vu9ETgnA8ivMKQTrsoWblA
- qRvIcxzhtEy3bKAZbl5IRILIve1SKI0Wms4rr4gEGmbPiNLubcN8pmuk32jMuGXb3VM3k9Nh/7V
- pdz+veXMIbr4mtlLXlBmTRKuruW0Him8XiOnQLPClU8+7d+3ccq7g55gzQa+tGk0aGAP6C6/dE+
- l24vP3YdQLqeidaAt9iOouWpv12MIhi6N/xfXlYXTPSreo604tbIa/QoFSylJJzNx5Vah7SAzfF
- icL7kcAO2ajy+HvFxCJy9ddB2/NjTRTwTS5+HTpOL5OhapJWRME2a9RQheei376FmhaOSrPr0hp
- E6cK0bhtLvgjqD0oIaQSGxHAWg6+JQ==
-X-Proofpoint-GUID: qzL8Z3pjQ-_nk95TQyxRCvLop0lCwLr2
-X-Authority-Analysis: v=2.4 cv=AL1K5/Xh c=1 sm=1 tr=0 ts=6936dd03 cx=c_pps
- a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=gtzuW6mAKwlXd79hODmrug==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=h4SL0BZ7AAAA:8 a=1XWaLZrsAAAA:8
- a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=jIQo8A4GAAAA:8 a=8b9GpE9nAAAA:8
- a=hD80L64hAAAA:8 a=zd2uoN0lAAAA:8 a=8AirrxEcAAAA:8 a=mpWPMT4aAAAA:8
- a=K40APJVsHsXcEorBktYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=zc0IvFSfCIW2DFIPzwfm:22 a=Cfupvnr7wbb3QRzVG_cV:22 a=T3LWEMljR5ZiDmsYVIUa:22
- a=ST-jHhOKWsTCqRlWije3:22 a=v37LFXLKhGMj9cfQ2Zw7:22
-X-Proofpoint-ORIG-GUID: qzL8Z3pjQ-_nk95TQyxRCvLop0lCwLr2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-06_02,2025-12-04_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 malwarescore=0 clxscore=1015 spamscore=0 phishscore=0
- adultscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2510240001
- definitions=main-2512080120
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|CY5PR12MB6369:EE_
+X-MS-Office365-Filtering-Correlation-Id: 19b3cfb3-cd36-4134-12d1-08de3664c199
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VndhZTJ3a212UktrOGdRTUo3YW91cHpvM0RQM2E3VXBZODdPVy9CNy9iOENy?=
+ =?utf-8?B?WUczNU85QVlrZVVkY3Q4VVcyNVlzMlFBNFZxV0VkQzdlaFRFNCtFRWFVVlBO?=
+ =?utf-8?B?aTdmOHpUcEc3bzZEcmRLWmNER3JWdzRQc0VoTnFOMXZ1L05vVFVZSzdWMEtI?=
+ =?utf-8?B?MUpTZVlDT2lGdGQ1VHp6eDJ4OVFwY0JpL1J6NGhLc29XWEZWNlRZZ0ZkR05m?=
+ =?utf-8?B?T2F6aHlkVnZCbW8wbW0rSUJQMFdkQStLTDhHZmlESjBRdFg5cjh5S2JvVVVR?=
+ =?utf-8?B?N1VFb0hlZUdVOWpSdk5VUUJEUytOcGZKWDVmdVZnM0cwZUFIRkZDMkVxd1dJ?=
+ =?utf-8?B?OFpyUzdCT1J3eWdJaGQ2QVB4c0RaMkJzcXRURW5HZnBPaDR1SjAzMUk1bThB?=
+ =?utf-8?B?SWVEbHFFZFhuUTArQlFwT2JXS0JDdXpuNzZFK3BDeUpnT2lieHZ1R05yTktZ?=
+ =?utf-8?B?R3ZBWXU5M2FyUHBYT01SdCtYMENZaGQ1dk9tRkFrYVZpVzZsTHE0UWtFSmFS?=
+ =?utf-8?B?VTQ1OFZtU0xKanc5VWs3T3ozWW54dmdFcVZGRWdYd0RqVVptOUNTWWJSL0ZR?=
+ =?utf-8?B?TGlPcjBlbVVhQ24rbHdJa1YwdVg5cUVGaG9DSE94d1NENHFNSmd4V0pMVUFZ?=
+ =?utf-8?B?M2tXUHg2SUtYbWNHaE5KVkFaL1ZTSlltYVExTVZqRURoaHk3TGpvNkE1MEtH?=
+ =?utf-8?B?RnBDZmE1d3BqakFaTHZjT3kvbFFNRjBZcHA4TnVjT2J1ekNZWTM2OWg0N0RT?=
+ =?utf-8?B?UjZQemNCS05xRU5oU3k5b0dGeTIzZnBkN2pmMDY4UHA5aXpMSm43elRLeWxL?=
+ =?utf-8?B?UEJtR0g3VXhFWEV4cVhNWXlHNERSVEJZUzRvNWFzSks4aTB3TytpczFuYUUw?=
+ =?utf-8?B?REUvWEltZTNDcTNxWXhWZlFZZlZvODh5MHdncmxOZzVjS21NOTdSeDFwQ1NG?=
+ =?utf-8?B?M2dGSWN2LzBEaHJpcnNmb1M0STZjV1lIclBiNUxYd3UwTEo2S0tkTXZZbW44?=
+ =?utf-8?B?cDVFbTE0b1ZacWhtNWJCckc0cEJMOElTTlpuUkxVaVJCNVdQVE9rbFFvZS9G?=
+ =?utf-8?B?bmszYjNVK3ZhOGVtaXYycmlEOWo2clZqVmh5b0pTczBFUDJVZ01BcDBCSWs4?=
+ =?utf-8?B?RXhsYlB4SitxbzVnZkFTaU1COXo0aFBxQ2tGYy9NemFDd0t1Q05DSVFaK0ZO?=
+ =?utf-8?B?QjlNSkZoSFM1QjZvdmVNSFVER21FVE9ZM1JsZmUvZDcvOC94ejVLUDBrSDN3?=
+ =?utf-8?B?N2o0N3dsK1FmUkJwaTRVTGRYMEhRcFpoaWhrT1lnLzhFZ2FRZ3g4bE9MM2Iz?=
+ =?utf-8?B?TDhLN0oreEpxdjhLMTkvQyswT1h4a0xMU3NzbWN1ZHFqWU5OK1BWKzVMTDVL?=
+ =?utf-8?B?czlVZGZISFFidnJGV1MyU3M4L2ljcHRqVjBKbXJzUzJudnpPZTRkK0wyRFd4?=
+ =?utf-8?B?Q0VicmJkVHdzNWhzMWgwUmdjUWlFcmZCcWlPUDFsSVpmcDRDQkMya1ZNL2Ry?=
+ =?utf-8?B?bHdrN0FqclVvMlFNcWZIOGppNDY2MEREWm5aVHVnM3F2Ui9IS2g0cUs2S2Qr?=
+ =?utf-8?B?dTMwR3FIUkhwMG1FNnVpelVWdzM5a3FpU0QvS3IzV0tMajVhRHB0b2FCTFBo?=
+ =?utf-8?B?NTZteHZFZVNrWVcwOGVnZEpZK3J6Zm1IM3hUUWYzeEJtMGQ1dHFLUXNaeGpW?=
+ =?utf-8?B?eDlzTURBMUl2dG9uU3puaWR3dTdCQ2pzNCs5U3VTMXArcExzS3JkREdYOFlr?=
+ =?utf-8?B?WE5QUCtOejdvS3N4MDhRNzYzclAxOFZDL25sSjQ3UXBJT1JjckVBM1A1NnZa?=
+ =?utf-8?B?YVNISFFybFpNSmdVdERjYmh3VCt2WXQyWXJOTW1DSHlPT2Uwb1hCMWdxVnFP?=
+ =?utf-8?B?V1kvRmtCaFFiWnVmbzc1VmJhNEhGb2lRYkRhckVVNnFlTDdUdW1JTDV4MkY4?=
+ =?utf-8?Q?YjzURhevq4qZaTg3L6oz7IrBKK7Tjy6A?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OFpYSllDWVV3RHpaZ2huYnZwT2pnS3RwdmhYNExGSkRGdmNoK0FDUnIvK2dS?=
+ =?utf-8?B?a29UaTFhQm91L296RTBmOHdTcEUzUCtWaUVsT1d6Yklrcnp5UTZZL1JjSjht?=
+ =?utf-8?B?bEhFSmlUWDMveXM5TGcycDltWUNoOUsrdmxLSXJHVVpPaVJQbG41THFKenFr?=
+ =?utf-8?B?cytFamFGRUYyRHJKaGo2Y2lOejhhanZLWjJXaGRQOUlWUlAzQitDOUI4NlJq?=
+ =?utf-8?B?cGQ0ZW1abVQzeUVhZlEvSUNjUFhVUXV4S0VQM2FKcTVXWjBWcWQ2WjFuY2J1?=
+ =?utf-8?B?OW5BNTlGV1B3MW9mNERmS08yMHdmM1hXVXc1VTJ4V053OXAydHMwdVlWcGgv?=
+ =?utf-8?B?dG81OGdOQkdUMmJvcG9KSHRxOEFrTDV3aklhdzJkWGQ1dWh5dDNLYWNmemFy?=
+ =?utf-8?B?MFJhRDlzQ1BqM2xZK1B5QXlsVjFCN1VTSVVlK2Nsc2lVdHNkOW5rZmNCY25M?=
+ =?utf-8?B?NyttTDBleTdBN0F3V3g1YWVFbGVZbjBWbWRtKytIR3ZvYVptN0pVQ0EzaVRF?=
+ =?utf-8?B?Mnp0bVhHTnNIL25BS0NGK0xYL2lHTG5HM01SOTJJOEJUMGFOc2ZnaVFYbjNa?=
+ =?utf-8?B?TXZWUXBjMWNrczlFNGlySjV5ZVlkeW95YWh3em16Z3hMTld0QTJjUE1wT1FL?=
+ =?utf-8?B?MHQwZEVuWjFGV0hOMmk5cW80K0pDQkpkM1h4WExLS3F2cDNKdFdkM2dlSjhS?=
+ =?utf-8?B?a0hjdmpGR3Z1NUtIeS8xZndxSC9oSVpyczlpK1dYRi9GaDkwbGw2aWRKcDl0?=
+ =?utf-8?B?N3NYVTN1UFRhajNjaEo5amVyR0RtSW4yNU55MTNZS0pnMmdTb3YwdVdyUVd5?=
+ =?utf-8?B?S0xNV0t6VStleEpyemlqWFYwTFA5cDVJS1VXUmRkc0tIWEhSazNRTDh5SHFB?=
+ =?utf-8?B?OVF2Qy9HV0VmTDBITmxVbHFGb0NEMlNVTHZQbFZiZjB0alh0dldkRVZaM3Vu?=
+ =?utf-8?B?RHhXblFrcUxBQm5qNG43UVJjWVBTVUZMaS9idzU0VC9ZcVJ5QU9mRjZ1V1ZI?=
+ =?utf-8?B?Y2xxa0ZWOVZWMXdtaWczb0NkN2xyWTJZc2NDNW9oWmlwOStrUzhoSExjQ0sr?=
+ =?utf-8?B?U1RYRlF1eDFCUERTWGpPL2hCbndsSW9rUlhxUGlibU9PdUh4Y3F4MGVaSnBV?=
+ =?utf-8?B?enErODFzeVA1SndaMEl5eHY2aER5YnJqVjFKWjFmVU1wOTdLQ0djTGJjQ0Fo?=
+ =?utf-8?B?YTFzWUNDbTJrVnZGS1JSNFJJUDYyVUx5RUZ3N1BNSFB2WmdHZisyTzk5c1hV?=
+ =?utf-8?B?T2JkRlhpbmlKaUtaWlMzUkxCeGVIUGlXRGw0QklEb1NWS1NveVBaaDZyRGpR?=
+ =?utf-8?B?eU00aUxlR1VYbVE4WjU2VmRXMk85aUxzZ0g5dHc2dGhGSUtPdndGRXk1amlM?=
+ =?utf-8?B?NS9mdDRkMURPeS9DbzN1eU9Eb0ltOFFpSGNWT0d3YnlGZ1N2L21tRlZNbnZT?=
+ =?utf-8?B?WGZZYW9LVlVIWjBJZHhRcU9uc3BLTWpYaUVXRnZXbVdHZFVSR0QxeVhXbjZU?=
+ =?utf-8?B?aHlKTmNLWThUWEJwVlB1dWFGQk95MVN0VEcvdjljWUpqbkl6UEhoVjc3OWk0?=
+ =?utf-8?B?Sk1jVzlVU0RQRFZzQ3V0UWxnWUU3M1RYaDQ0THBxNkxxTnpubUNyNXBtTmhL?=
+ =?utf-8?B?bE5IRm1mZVk4NU5qUSsrUG02YzdEWnZ2c1RTdGlzSnBtRnBha3JXUGRiTmdh?=
+ =?utf-8?B?L21MbEhyc0dTaHFNM1UvbUovSG9tNGRjbXBLMDNLRlFoYkNUdzBaWGFFUVVY?=
+ =?utf-8?B?d0tNbTNiR1oyRUpscG1yWjFKRlhEK2NodHdjNEEzMTZlRXY4U2xuc1JsWEhH?=
+ =?utf-8?B?ZnkyVHhXZ0RhakxYSnRMNFd2MVB4aXR1b3Z2aDc5dDFwSlB6bzZOZy9IZFZk?=
+ =?utf-8?B?NnBqTFV6d250QU1XSGdFM3duRWpaWU9sWm9wR1p2U3lXR3l0RENWa0dicUJZ?=
+ =?utf-8?B?UDcyenNuWGxHU3hiekFaem40V2pmUzR5U1hzSFJ2Y0p2RjdZRUxYMG9YdWZT?=
+ =?utf-8?B?NEN6dmE4am90cWg1UVdBeEEzTmphcWk0U0hCZmQ3bjI1Y283M1pyaEhkc2Y0?=
+ =?utf-8?B?VHFhYXRZSzBKRUk3NWlrWTFDZGNtLzFZMmN1UlhieE5Ob3JDTElEcjM1M1Jj?=
+ =?utf-8?Q?70cCt/699RNcLZmIt/CtcN1eC?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19b3cfb3-cd36-4134-12d1-08de3664c199
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2025 14:19:10.8407
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Tf8qgQXvE46imivix2GfbJUuAnM/cBRGPAwd+DAoe+OYZBJ2s1zTWY3dqhbUZpn7YPeUjOEpVe+HjiGsPNZgsg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6369
 
 
+On 12/4/25 02:21, Dan Williams wrote:
+> A device release method is only for undoing allocations on the path to
+> preparing the device for device_add(). In contrast, devm allocations are
 
-On 12/8/2025 6:07 PM, zhangsenchuan wrote:
->
->
->> -----Original Messages-----
->> From: "Krishna Chaitanya Chundru" <krishna.chundru@oss.qualcomm.com>
->> Send time:Friday, 05/12/2025 20:40:53
->> To: zhangsenchuan@eswincomputing.com, bhelgaas@google.com, mani@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, p.zabel@pengutronix.de, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com, shradha.t@samsung.com, thippeswamy.havalige@amd.com, inochiama@gmail.com, Frank.li@nxp.com
->> Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com
->> Subject: Re: [PATCH v7 2/3] PCI: eic7700: Add Eswin PCIe host controller driver
->>
->>
->>
->> On 12/2/2025 2:34 PM, zhangsenchuan@eswincomputing.com wrote:
->>> From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
->>>
->>> Add driver for the Eswin EIC7700 PCIe host controller, which is based on
->>> the DesignWare PCIe core, IP revision 5.96a. The PCIe Gen.3 controller
->>> supports a data rate of 8 GT/s and 4 channels, support INTx and MSI
->>> interrupts.
->>>
->>> Signed-off-by: Yu Ning <ningyu@eswincomputing.com>
->>> Signed-off-by: Yanghui Ou <ouyanghui@eswincomputing.com>
->>> Signed-off-by: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
->>> ---
->>>    drivers/pci/controller/dwc/Kconfig        |  11 +
->>>    drivers/pci/controller/dwc/Makefile       |   1 +
->>>    drivers/pci/controller/dwc/pcie-eic7700.c | 378 ++++++++++++++++++++++
->>>    3 files changed, 390 insertions(+)
->>>    create mode 100644 drivers/pci/controller/dwc/pcie-eic7700.c
->>>
->>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
->>> index 519b59422b47..c837cb5947b6 100644
->>> --- a/drivers/pci/controller/dwc/Kconfig
->>> +++ b/drivers/pci/controller/dwc/Kconfig
->>> @@ -93,6 +93,17 @@ config PCIE_BT1
->>>    	  Enables support for the PCIe controller in the Baikal-T1 SoC to work
->>>    	  in host mode. It's based on the Synopsys DWC PCIe v4.60a IP-core.
->>>    
->>> +config PCIE_EIC7700
->>> +	tristate "Eswin EIC7700 PCIe controller"
->>> +	depends on ARCH_ESWIN || COMPILE_TEST
->>> +	depends on PCI_MSI
->>> +	select PCIE_DW_HOST
->>> +	help
->>> +	  Say Y here if you want PCIe controller support for the Eswin EIC7700.
->>> +	  The PCIe controller on EIC7700 is based on DesignWare hardware,
->>> +	  enables support for the PCIe controller in the EIC7700 SoC to work in
->>> +	  host mode.
->>> +
->>>    config PCI_IMX6
->>>    	bool
->>>    
->>> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
->>> index 67ba59c02038..7c5a5186ea83 100644
->>> --- a/drivers/pci/controller/dwc/Makefile
->>> +++ b/drivers/pci/controller/dwc/Makefile
->>> @@ -6,6 +6,7 @@ obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
->>>    obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
->>>    obj-$(CONFIG_PCIE_AMD_MDB) += pcie-amd-mdb.o
->>>    obj-$(CONFIG_PCIE_BT1) += pcie-bt1.o
->>> +obj-$(CONFIG_PCIE_EIC7700) += pcie-eic7700.o
->>>    obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
->>>    obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
->>>    obj-$(CONFIG_PCIE_FU740) += pcie-fu740.o
->>> diff --git a/drivers/pci/controller/dwc/pcie-eic7700.c b/drivers/pci/controller/dwc/pcie-eic7700.c
->>> new file mode 100644
->>> index 000000000000..cb7cdea6a94b
->>> --- /dev/null
->>> +++ b/drivers/pci/controller/dwc/pcie-eic7700.c
->>> @@ -0,0 +1,378 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * ESWIN EIC7700 PCIe root complex driver
->>> + *
->>> + * Copyright 2025, Beijing ESWIN Computing Technology Co., Ltd.
->>> + *
->>> + * Authors: Yu Ning <ningyu@eswincomputing.com>
->>> + *          Senchuan Zhang <zhangsenchuan@eswincomputing.com>
->>> + *          Yanghui Ou <ouyanghui@eswincomputing.com>
->>> + */
->>> +
->>> +#include <linux/interrupt.h>
->>> +#include <linux/iopoll.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of.h>
->>> +#include <linux/pci.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/pm_runtime.h>
->>> +#include <linux/resource.h>
->>> +#include <linux/reset.h>
->>> +#include <linux/types.h>
->>> +
->>> +#include "pcie-designware.h"
->>> +
->>> +/* ELBI registers */
->>> +#define PCIEELBI_CTRL0_OFFSET		0x0
->>> +#define PCIEELBI_STATUS0_OFFSET		0x100
->>> +
->>> +/* LTSSM register fields */
->>> +#define PCIEELBI_APP_LTSSM_ENABLE	BIT(5)
->>> +
->>> +/* APP_HOLD_PHY_RST register fields */
->>> +#define PCIEELBI_APP_HOLD_PHY_RST	BIT(6)
->>> +
->>> +/* PM_SEL_AUX_CLK register fields */
->>> +#define PCIEELBI_PM_SEL_AUX_CLK		BIT(16)
->>> +
->>> +/* DEV_TYPE register fields */
->>> +#define PCIEELBI_CTRL0_DEV_TYPE		GENMASK(3, 0)
->>> +
->>> +/* Vendor and device ID value */
->>> +#define PCI_VENDOR_ID_ESWIN		0x1fe1
->>> +#define PCI_DEVICE_ID_ESWIN		0x2030
->>> +
->>> +#define EIC7700_NUM_RSTS		ARRAY_SIZE(eic7700_pcie_rsts)
->>> +
->>> +static const char * const eic7700_pcie_rsts[] = {
->>> +	"pwr",
->>> +	"dbi",
->>> +};
->>> +
->>> +struct eic7700_pcie_data {
->>> +	bool no_pme_handshake;
->>> +};
->>> +
->>> +struct eic7700_pcie_port {
->>> +	struct list_head list;
->>> +	struct reset_control *perst;
->>> +	int num_lanes;
->>> +};
->>> +
->>> +struct eic7700_pcie {
->>> +	struct dw_pcie pci;
->>> +	struct clk_bulk_data *clks;
->>> +	struct reset_control_bulk_data resets[EIC7700_NUM_RSTS];
->>> +	struct list_head ports;
->>> +	const struct eic7700_pcie_data *data;
->>> +	int num_clks;
->>> +};
->>> +
->>> +#define to_eic7700_pcie(x) dev_get_drvdata((x)->dev)
->>> +
->>> +static int eic7700_pcie_start_link(struct dw_pcie *pci)
->>> +{
->>> +	u32 val;
->>> +
->>> +	/* Enable LTSSM */
->>> +	val = readl_relaxed(pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
->>> +	val |= PCIEELBI_APP_LTSSM_ENABLE;
->>> +	writel_relaxed(val, pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static bool eic7700_pcie_link_up(struct dw_pcie *pci)
->>> +{
->>> +	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->>> +	u16 val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
->>> +
->>> +	return val & PCI_EXP_LNKSTA_DLLLA;
->>> +}
->>> +
->>> +static int eic7700_pcie_perst_reset(struct eic7700_pcie_port *port,
->>> +				    struct eic7700_pcie *pcie)
->>> +{
->>> +	int ret;
->>> +
->>> +	ret = reset_control_assert(port->perst);
->>> +	if (ret) {
->>> +		dev_err(pcie->pci.dev, "Failed to assert PERST#\n");
->>> +		return ret;
->>> +	}
->>> +
->>> +	/* Ensure that PERST# has been asserted for at least 100 ms */
->>> +	msleep(PCIE_T_PVPERL_MS);
->>> +
->>> +	ret = reset_control_deassert(port->perst);
->>> +	if (ret) {
->>> +		dev_err(pcie->pci.dev, "Failed to deassert PERST#\n");
->>> +		return ret;
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int eic7700_pcie_parse_port(struct eic7700_pcie *pcie,
->>> +				   struct device_node *node)
->>> +{
->>> +	struct device *dev = pcie->pci.dev;
->>> +	struct eic7700_pcie_port *port;
->>> +
->>> +	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
->>> +	if (!port)
->>> +		return -ENOMEM;
->>> +
->>> +	port->perst = of_reset_control_get_exclusive(node, "perst");
->>> +	if (IS_ERR(port->perst)) {
->>> +		dev_err(dev, "Failed to get PERST# reset\n");
->>> +		return PTR_ERR(port->perst);
->>> +	}
->>> +
->>> +	/*
->>> +	 * TODO: Since the Root Port node is separated out by pcie devicetree,
->>> +	 * the DWC core initialization code can't parse the num-lanes attribute
->>> +	 * in the Root Port. Before entering the DWC core initialization code,
->>> +	 * the platform driver code parses the Root Port node. The EIC7700 only
->>> +	 * supports one Root Port node, and the num-lanes attribute is suitable
->>> +	 * for the case of one Root Rort.
->>> +	 */
->>> +	if (!of_property_read_u32(node, "num-lanes", &port->num_lanes))
->>> +		pcie->pci.num_lanes = port->num_lanes;
->>> +
->>> +	INIT_LIST_HEAD(&port->list);
->>> +	list_add_tail(&port->list, &pcie->ports);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int eic7700_pcie_parse_ports(struct eic7700_pcie *pcie)
->>> +{
->>> +	struct eic7700_pcie_port *port, *tmp;
->>> +	struct device *dev = pcie->pci.dev;
->>> +	int ret;
->>> +
->>> +	for_each_available_child_of_node_scoped(dev->of_node, of_port) {
->>> +		ret = eic7700_pcie_parse_port(pcie, of_port);
->>> +		if (ret)
->>> +			goto err_port;
->>> +	}
->>> +
->>> +	return 0;
->>> +
->>> +err_port:
->>> +	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
->>> +		list_del(&port->list);
->>> +
->>> +	return ret;
->>> +}
->>> +
->>> +static int eic7700_pcie_host_init(struct dw_pcie_rp *pp)
->>> +{
->>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>> +	struct eic7700_pcie *pcie = to_eic7700_pcie(pci);
->>> +	struct eic7700_pcie_port *port;
->>> +	u32 val;
->>> +	int ret;
->>> +
->>> +	pcie->num_clks = devm_clk_bulk_get_all_enabled(pci->dev, &pcie->clks);
->>> +	if (pcie->num_clks < 0)
->>> +		return dev_err_probe(pci->dev, pcie->num_clks,
->>> +				     "Failed to get pcie clocks\n");
->>> +
->>> +	/*
->>> +	 * The PWR and DBI Reset signals are respectively used to reset the
->>> +	 * PCIe controller and the DBI registers.
->>> +	 * The PERST# signal is a reset signal that simultaneously controls the
->>> +	 * PCIe controller, PHY, and Endpoint.
->>> +	 * Before configuring the PHY, the PERST# signal must first be
->>> +	 * deasserted.
->>> +	 * The external reference clock is supplied simultaneously to the PHY
->>> +	 * and EP. When the PHY is configurable, the entire chip already has
->>> +	 * stable power and reference clock.
->>> +	 * The PHY will be ready within 20ms after writing app_hold_phy_rst
->>> +	 * register of ELBI register space.
->>> +	 */
->>> +	ret = reset_control_bulk_deassert(EIC7700_NUM_RSTS, pcie->resets);
->>> +	if (ret) {
->>> +		dev_err(pcie->pci.dev, "Failed to deassert resets\n");
->>> +		return ret;
->>> +	}
->>> +
->>> +	/* Configure Root Port type */
->>> +	val = readl_relaxed(pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
->>> +	val &= ~PCIEELBI_CTRL0_DEV_TYPE;
->>> +	val |= FIELD_PREP(PCIEELBI_CTRL0_DEV_TYPE, PCI_EXP_TYPE_ROOT_PORT);
->>> +	writel_relaxed(val, pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
->>> +
->>> +	list_for_each_entry(port, &pcie->ports, list) {
->>> +		ret = eic7700_pcie_perst_reset(port, pcie);
->>> +		if (ret)
->>> +			goto err_perst;
->>> +	}
->>> +
->>> +	/* Configure app_hold_phy_rst */
->>> +	val = readl_relaxed(pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
->>> +	val &= ~PCIEELBI_APP_HOLD_PHY_RST;
->>> +	writel_relaxed(val, pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
->>> +
->>> +	/* The maximum waiting time for the clock switch lock is 20ms */
->>> +	ret = readl_poll_timeout(pci->elbi_base + PCIEELBI_STATUS0_OFFSET,
->>> +				 val, !(val & PCIEELBI_PM_SEL_AUX_CLK), 1000,
->>> +				 20000);
->>> +	if (ret) {
->>> +		dev_err(pci->dev, "Timeout waiting for PM_SEL_AUX_CLK ready\n");
->>> +		goto err_phy_init;
->>> +	}
->>> +
->>> +	/*
->>> +	 * Configure ESWIN VID:DID for Root Port as the default values are
->>> +	 * invalid.
->>> +	 */
->> we need to make dbi registers writeable before this through this API
->> dw_pcie_dbi_ro_wr_en().
-> Hi, Krishna Chaitanya
->
-> Thank you for your comment.
-> When our driver initialization starts, the BIT(0) of the
-> PCIE_MISC_CONTROL_1_OFF address defaults to 1, allowing for the reading
-> and writing of dbi registers.
-Thanks for the info, then in that case do we need to clear it before 
-enumeration?
 
--  Krishna Chaitanya.
->>> +	dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, PCI_VENDOR_ID_ESWIN);
->>> +	dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, PCI_DEVICE_ID_ESWIN);
->>> +
->>> +	return 0;
->>> +
->>> +err_phy_init:
->>> +	list_for_each_entry(port, &pcie->ports, list)
->>> +		reset_control_assert(port->perst);
->>> +err_perst:
->>> +	reset_control_bulk_assert(EIC7700_NUM_RSTS, pcie->resets);
->>> +
->>> +	return ret;
->>> +}
->>> +
->>> +static void eic7700_pcie_host_deinit(struct dw_pcie_rp *pp)
->>> +{
->>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>> +	struct eic7700_pcie *pcie = to_eic7700_pcie(pci);
->>> +	struct eic7700_pcie_port *port;
->>> +
->>> +	list_for_each_entry(port, &pcie->ports, list)
->>> +		reset_control_assert(port->perst);
->>> +	reset_control_bulk_assert(EIC7700_NUM_RSTS, pcie->resets);
->>> +	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
->>> +}
->>> +
->>> +static const struct dw_pcie_host_ops eic7700_pcie_host_ops = {
->>> +	.init = eic7700_pcie_host_init,
->>> +	.deinit = eic7700_pcie_host_deinit,
->>> +};
->>> +
->>> +static const struct dw_pcie_ops dw_pcie_ops = {
->>> +	.start_link = eic7700_pcie_start_link,
->>> +	.link_up = eic7700_pcie_link_up,
->>> +};
->>> +
->>> +static int eic7700_pcie_probe(struct platform_device *pdev)
->>> +{
->>> +	const struct eic7700_pcie_data *data;
->>> +	struct eic7700_pcie_port *port, *tmp;
->>> +	struct device *dev = &pdev->dev;
->>> +	struct eic7700_pcie *pcie;
->>> +	struct dw_pcie *pci;
->>> +	int ret, i;
->>> +
->>> +	data = of_device_get_match_data(dev);
->>> +	if (!data)
->>> +		return dev_err_probe(dev, -ENODATA, "OF data missing\n");
->>> +
->>> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
->>> +	if (!pcie)
->>> +		return -ENOMEM;
->>> +
->>> +	INIT_LIST_HEAD(&pcie->ports);
->>> +
->>> +	pci = &pcie->pci;
->>> +	pci->dev = dev;
->>> +	pci->ops = &dw_pcie_ops;
->>> +	pci->pp.ops = &eic7700_pcie_host_ops;
->>> +	pcie->data = data;
->>> +	pci->no_pme_handshake = pcie->data->no_pme_handshake;
->>> +
->>> +	for (i = 0; i < EIC7700_NUM_RSTS; i++)
->>> +		pcie->resets[i].id = eic7700_pcie_rsts[i];
->>> +
->>> +	ret = devm_reset_control_bulk_get_exclusive(dev, EIC7700_NUM_RSTS,
->>> +						    pcie->resets);
->>> +	if (ret)
->>> +		return dev_err_probe(dev, ret, "Failed to get resets\n");
->>> +
->>> +	ret = eic7700_pcie_parse_ports(pcie);
->>> +	if (ret)
->>> +		return dev_err_probe(dev, ret,
->>> +				     "Failed to parse Root Port: %d\n", ret);
->>> +
->>> +	platform_set_drvdata(pdev, pcie);
->>> +
->>> +	pm_runtime_no_callbacks(dev);
->>> +	devm_pm_runtime_enable(dev);
->>> +	ret = pm_runtime_get_sync(dev);
->>> +	if (ret < 0)
->>> +		goto err_pm_runtime_put;
->> Any specific reason why we are enabling runtime pm and doing
->> pm_runtime_get_sync()
-> To avoid warnings when the driver starts, pm_runtime_get_sync()
-> has been added. Warnings as follows:
->
-> "pci0000:00: runtime PM trying to activate child device pci0000:00
-> but parent (54000000.pcie) is not active"
->
-> Kind regards,
-> Senchuan Zhang
->
->>> +
->>> +	ret = dw_pcie_host_init(&pci->pp);
->>> +	if (ret) {
->>> +		dev_err(dev, "Failed to initialize host\n");
->>> +		goto err_init;
->>> +	}
->>> +
->>> +	return 0;
->>> +
->>> +err_init:
->>> +	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
->>> +		list_del(&port->list);
->>> +		reset_control_put(port->perst);
->>> +	}
->>> +err_pm_runtime_put:
->>> +	pm_runtime_put(dev);
->>> +
->>> +	return ret;
->>> +}
->>> +
->>> +static int eic7700_pcie_suspend_noirq(struct device *dev)
->>> +{
->>> +	struct eic7700_pcie *pcie = dev_get_drvdata(dev);
->>> +
->>> +	return dw_pcie_suspend_noirq(&pcie->pci);
->>> +}
->>> +
->>> +static int eic7700_pcie_resume_noirq(struct device *dev)
->>> +{
->>> +	struct eic7700_pcie *pcie = dev_get_drvdata(dev);
->>> +
->>> +	return dw_pcie_resume_noirq(&pcie->pci);
->>> +}
->>> +
->>> +static const struct dev_pm_ops eic7700_pcie_pm_ops = {
->>> +	NOIRQ_SYSTEM_SLEEP_PM_OPS(eic7700_pcie_suspend_noirq,
->>> +				  eic7700_pcie_resume_noirq)
->>> +};
->>> +
->>> +static const struct eic7700_pcie_data eic7700_data = {
->>> +	.no_pme_handshake = true,
->>> +};
->>> +
->>> +static const struct of_device_id eic7700_pcie_of_match[] = {
->>> +	{ .compatible = "eswin,eic7700-pcie", .data = &eic7700_data },
->>> +	{},
->>> +};
->>> +
->>> +static struct platform_driver eic7700_pcie_driver = {
->>> +	.probe = eic7700_pcie_probe,
->>> +	.driver = {
->>> +		.name = "eic7700-pcie",
->>> +		.of_match_table = eic7700_pcie_of_match,
->>> +		.suppress_bind_attrs = true,
->>> +		.pm = &eic7700_pcie_pm_ops,
->>> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
->>> +	},
->>> +};
->>> +builtin_platform_driver(eic7700_pcie_driver);
->>> +
->>> +MODULE_DESCRIPTION("Eswin EIC7700 PCIe host controller driver");
->>> +MODULE_AUTHOR("Yu Ning <ningyu@eswincomputing.com>");
->>> +MODULE_AUTHOR("Senchuan Zhang <zhangsenchuan@eswincomputing.com>");
->>> +MODULE_AUTHOR("Yanghui Ou <ouyanghui@eswincomputing.com>");
->>> +MODULE_LICENSE("GPL");
+Should this not be referencing to device_del() instead?
 
+
+> post device_add(), are acquired during / after ->probe() and are released
+> synchronous with ->remove().
+>
+> So, a "devm" helper in a "release" method is a clear anti-pattern.
+>
+> Move this devm release action where it belongs, an action created at edac
+> object creation time. Otherwise, this leaks resources until
+> cxl_memdev_release() time which may be long after these xarray and error
+> record caches have gone idle.
+>
+> Note, this also fixes up the type of @cxlmd->err_rec_array which needlessly
+> dropped type-safety.
+>
+> Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Shiju Jose <shiju.jose@huawei.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>   drivers/cxl/cxlmem.h      |  5 +--
+>   drivers/cxl/core/edac.c   | 64 ++++++++++++++++++++++-----------------
+>   drivers/cxl/core/memdev.c |  1 -
+>   3 files changed, 38 insertions(+), 32 deletions(-)
+>
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 434031a0c1f7..c12ab4fc9512 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -63,7 +63,7 @@ struct cxl_memdev {
+>   	int depth;
+>   	u8 scrub_cycle;
+>   	int scrub_region_id;
+> -	void *err_rec_array;
+> +	struct cxl_mem_err_rec *err_rec_array;
+>   };
+>   
+>   static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
+> @@ -877,7 +877,6 @@ int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd);
+>   int devm_cxl_region_edac_register(struct cxl_region *cxlr);
+>   int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt);
+>   int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt);
+> -void devm_cxl_memdev_edac_release(struct cxl_memdev *cxlmd);
+>   #else
+>   static inline int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
+>   { return 0; }
+> @@ -889,8 +888,6 @@ static inline int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd,
+>   static inline int cxl_store_rec_dram(struct cxl_memdev *cxlmd,
+>   				     union cxl_event *evt)
+>   { return 0; }
+> -static inline void devm_cxl_memdev_edac_release(struct cxl_memdev *cxlmd)
+> -{ return; }
+>   #endif
+>   
+>   #ifdef CONFIG_CXL_SUSPEND
+> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+> index 79994ca9bc9f..81160260e26b 100644
+> --- a/drivers/cxl/core/edac.c
+> +++ b/drivers/cxl/core/edac.c
+> @@ -1988,6 +1988,40 @@ static int cxl_memdev_soft_ppr_init(struct cxl_memdev *cxlmd,
+>   	return 0;
+>   }
+>   
+> +static void err_rec_free(void *_cxlmd)
+> +{
+> +	struct cxl_memdev *cxlmd = _cxlmd;
+> +	struct cxl_mem_err_rec *array_rec = cxlmd->err_rec_array;
+> +	struct cxl_event_gen_media *rec_gen_media;
+> +	struct cxl_event_dram *rec_dram;
+> +	unsigned long index;
+> +
+> +	cxlmd->err_rec_array = NULL;
+> +	xa_for_each(&array_rec->rec_dram, index, rec_dram)
+> +		kfree(rec_dram);
+> +	xa_destroy(&array_rec->rec_dram);
+> +
+> +	xa_for_each(&array_rec->rec_gen_media, index, rec_gen_media)
+> +		kfree(rec_gen_media);
+> +	xa_destroy(&array_rec->rec_gen_media);
+> +	kfree(array_rec);
+> +}
+> +
+> +static int devm_cxl_memdev_setup_err_rec(struct cxl_memdev *cxlmd)
+> +{
+> +	struct cxl_mem_err_rec *array_rec =
+> +		kzalloc(sizeof(*array_rec), GFP_KERNEL);
+> +
+> +	if (!array_rec)
+> +		return -ENOMEM;
+> +
+> +	xa_init(&array_rec->rec_gen_media);
+> +	xa_init(&array_rec->rec_dram);
+> +	cxlmd->err_rec_array = array_rec;
+> +
+> +	return devm_add_action_or_reset(&cxlmd->dev, err_rec_free, cxlmd);
+> +}
+> +
+>   int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
+>   {
+>   	struct edac_dev_feature ras_features[CXL_NR_EDAC_DEV_FEATURES];
+> @@ -2038,15 +2072,9 @@ int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
+>   		}
+>   
+>   		if (repair_inst) {
+> -			struct cxl_mem_err_rec *array_rec =
+> -				devm_kzalloc(&cxlmd->dev, sizeof(*array_rec),
+> -					     GFP_KERNEL);
+> -			if (!array_rec)
+> -				return -ENOMEM;
+> -
+> -			xa_init(&array_rec->rec_gen_media);
+> -			xa_init(&array_rec->rec_dram);
+> -			cxlmd->err_rec_array = array_rec;
+> +			rc = devm_cxl_memdev_setup_err_rec(cxlmd);
+> +			if (rc)
+> +				return rc;
+>   		}
+>   	}
+>   
+> @@ -2088,22 +2116,4 @@ int devm_cxl_region_edac_register(struct cxl_region *cxlr)
+>   }
+>   EXPORT_SYMBOL_NS_GPL(devm_cxl_region_edac_register, "CXL");
+>   
+> -void devm_cxl_memdev_edac_release(struct cxl_memdev *cxlmd)
+> -{
+> -	struct cxl_mem_err_rec *array_rec = cxlmd->err_rec_array;
+> -	struct cxl_event_gen_media *rec_gen_media;
+> -	struct cxl_event_dram *rec_dram;
+> -	unsigned long index;
+> -
+> -	if (!IS_ENABLED(CONFIG_CXL_EDAC_MEM_REPAIR) || !array_rec)
+> -		return;
+> -
+> -	xa_for_each(&array_rec->rec_dram, index, rec_dram)
+> -		kfree(rec_dram);
+> -	xa_destroy(&array_rec->rec_dram);
+>   
+> -	xa_for_each(&array_rec->rec_gen_media, index, rec_gen_media)
+> -		kfree(rec_gen_media);
+> -	xa_destroy(&array_rec->rec_gen_media);
+> -}
+> -EXPORT_SYMBOL_NS_GPL(devm_cxl_memdev_edac_release, "CXL");
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index e370d733e440..4dff7f44d908 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -27,7 +27,6 @@ static void cxl_memdev_release(struct device *dev)
+>   	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+>   
+>   	ida_free(&cxl_memdev_ida, cxlmd->id);
+> -	devm_cxl_memdev_edac_release(cxlmd);
+>   	kfree(cxlmd);
+>   }
+>   
 
