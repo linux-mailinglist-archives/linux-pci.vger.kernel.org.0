@@ -1,257 +1,255 @@
-Return-Path: <linux-pci+bounces-42787-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42788-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CFF4CAE0D2
-	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 20:11:18 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27D9BCAE0EF
+	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 20:20:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1C90F30210F7
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 19:11:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6C0C5302CF64
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 19:20:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7281E2E228C;
-	Mon,  8 Dec 2025 19:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlB8DKtG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A4331E7C18;
+	Mon,  8 Dec 2025 19:20:25 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0AB242D79;
-	Mon,  8 Dec 2025 19:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679182E6CA8;
+	Mon,  8 Dec 2025 19:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765221073; cv=none; b=YJZXuasRga2CIj7JYVkjcq3j0FB20JtD4VHSqK2+YlrWVzWgQRcNCqRYOhPe2qWhKH3wpOVJ+F9YMOHUKxmXFLfSBVjadmL3hztUmL5DXhlXIP8XWfcg3HvXABVGe7Qq1hmQxEreCYJuvl5tAvkYREOa7xfbjnFI/Uic5C98C/g=
+	t=1765221624; cv=none; b=E507CT0AIq7BZecWQgUT3C5UPwzn0RiqaNPmLr58ROIyWnAmFh9mtZOPiwC6cGYrAd57EXSxcGPcUKgOOpvoZIITUYxmqWERv4br9R0BXHJQi+bAWJZt8/tL63xbtEKv9tD59hwVy5S6OW4CTzYShsfyM9HU6idpiCC5vwkVSKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765221073; c=relaxed/simple;
-	bh=qA200K7aoJ1D07Oig2GNEZ+7d43xuiwI5ZAaPd2N0HA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LqllsJrkKRuXeB7M2LheG90xeJ3povGuq8OwNgKoy4g1wIiPDFfr7Y0N5t466R4X/XWK/En/LrHteJH4K5ngas5W0iZvBhAQOmxsmqOvPm2F8SjGz825nGtNiJLzKwE+QFkbyg6yIhO3UFFjDL1t7PH9Z+a4nRsraGvfegDh03I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlB8DKtG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80883C4CEF1;
-	Mon,  8 Dec 2025 19:11:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765221072;
-	bh=qA200K7aoJ1D07Oig2GNEZ+7d43xuiwI5ZAaPd2N0HA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NlB8DKtGOG0T/XaVEoYJGV41lqPuxUliaXSAh1m3LBjHCG6y33dMW1qqoMr+d84de
-	 GGLhfiNORkGWPD5mPVzwNQBy24CbI4SkpUupBD4NJ8OjLad4JjqEDLK7WkdisD2Lwf
-	 U9DMY2unyh3P8VfF0j5KF8Ww65syU2rKPi1A5k3/CL6+uH2RbEdGuHf6oxk9qhTsfW
-	 4ShgPVynPhzLFaZ2G3CtaublU6x48EgQHvEAl5dxo2LPmIiLtGoX/3T0WX6O5Cxohl
-	 I5Dwz9ErdGUNH4l1W1qvWRAcPISV7e0I9G+p5YlJGjWVesGr47HXcP0nKqLlxROlcb
-	 1CHlIRQlGjIIA==
-Date: Mon, 8 Dec 2025 13:11:10 -0600
-From: Rob Herring <robh@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	linux-pm@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: connector: Add PCIe M.2 Mechanical
- Key M connector
-Message-ID: <20251208191110.GA2473021-robh@kernel.org>
-References: <20251125-pci-m2-v3-0-c528042aea47@oss.qualcomm.com>
- <20251125-pci-m2-v3-1-c528042aea47@oss.qualcomm.com>
+	s=arc-20240116; t=1765221624; c=relaxed/simple;
+	bh=ZvzubhbjaPPIB27TBG+LgkPEThq3zam8An+ceJQtgSk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NyQBeD6XWmWHMry66V96Si73QQxoBaWpc1LPPCbkqo/aL/YS3L1bLUahpo8bivbM7gyLNwL4g1c+nGFtVZsIKG/aGdvvORApuDp1gPELs7JLQBXQw2w4osiURg6Y+ABPilHqUdyaLiSU+8jWLmUp2vXWtfI+++RW25feuEXoCXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.150])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dQBdF1BVYzJ468L;
+	Tue,  9 Dec 2025 03:20:01 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4D2D840565;
+	Tue,  9 Dec 2025 03:20:16 +0800 (CST)
+Received: from dubpeml100008.china.huawei.com (7.214.145.227) by
+ dubpeml500005.china.huawei.com (7.214.145.207) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 8 Dec 2025 19:20:15 +0000
+Received: from dubpeml100008.china.huawei.com ([7.214.145.227]) by
+ dubpeml100008.china.huawei.com ([7.214.145.227]) with mapi id 15.02.1544.036;
+ Mon, 8 Dec 2025 19:20:15 +0000
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Smita.KoralahalliChannabasappa@amd.com"
+	<Smita.KoralahalliChannabasappa@amd.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "terry.bowman@amd.com" <terry.bowman@amd.com>,
+	"alejandro.lucero-palau@amd.com" <alejandro.lucero-palau@amd.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>
+Subject: RE: [PATCH 1/6] cxl/mem: Fix devm_cxl_memdev_edac_release() confusion
+Thread-Topic: [PATCH 1/6] cxl/mem: Fix devm_cxl_memdev_edac_release()
+ confusion
+Thread-Index: AQHcZMSxU6y9BCMwtEyyE/sQ3sAKtbUYJCZQ
+Date: Mon, 8 Dec 2025 19:20:15 +0000
+Message-ID: <4a489f66af1c4f83b0ece5d54ef35fc9@huawei.com>
+References: <20251204022136.2573521-1-dan.j.williams@intel.com>
+ <20251204022136.2573521-2-dan.j.williams@intel.com>
+In-Reply-To: <20251204022136.2573521-2-dan.j.williams@intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251125-pci-m2-v3-1-c528042aea47@oss.qualcomm.com>
 
-On Tue, Nov 25, 2025 at 04:42:26PM +0530, Manivannan Sadhasivam wrote:
-> Add the devicetree binding for PCIe M.2 Mechanical Key M connector defined
-> in the PCI Express M.2 Specification, r4.0, sec 5.3. This connector
-> provides interfaces like PCIe and SATA to attach the Solid State Drives
-> (SSDs) to the host machine along with additional interfaces like USB, and
-> SMB for debugging and supplementary features. At any point of time, the
-> connector can only support either PCIe or SATA as the primary host
-> interface.
-> 
-> The connector provides a primary power supply of 3.3v, along with an
-> optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating at
-> 1.8v sideband signaling.
-> 
-> The connector also supplies optional signals in the form of GPIOs for fine
-> grained power management.
-> 
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> ---
->  .../bindings/connector/pcie-m2-m-connector.yaml    | 141 +++++++++++++++++++++
->  1 file changed, 141 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
-> new file mode 100644
-> index 000000000000..f65a05d93735
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
-> @@ -0,0 +1,141 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/connector/pcie-m2-m-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: PCIe M.2 Mechanical Key M Connector
-> +
-> +maintainers:
-> +  - Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> +
-> +description:
-> +  A PCIe M.2 M connector node represents a physical PCIe M.2 Mechanical Key M
-> +  connector. The Mechanical Key M connectors are used to connect SSDs to the
-> +  host system over PCIe/SATA interfaces. These connectors also offer optional
-> +  interfaces like USB, SMB.
-> +
-> +properties:
-> +  compatible:
-> +    const: pcie-m2-m-connector
-> +
-> +  vpcie3v3-supply:
-> +    description: A phandle to the regulator for 3.3v supply.
-> +
-> +  vpcie1v8-supply:
-> +    description: A phandle to the regulator for VIO 1.8v supply.
-> +
-> +  ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +    description: OF graph bindings modeling the interfaces exposed on the
-> +      connector. Since a single connector can have multiple interfaces, every
-> +      interface has an assigned OF graph port number as described below.
-> +
-> +    properties:
-> +      port@0:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Host interfaces of the connector
-> +
-> +        properties:
-> +          endpoint@0:
-> +            $ref: /schemas/graph.yaml#/properties/endpoint
-> +            description: PCIe interface
-> +
-> +          endpoint@1:
-> +            $ref: /schemas/graph.yaml#/properties/endpoint
-> +            description: SATA interface
+>-----Original Message-----
+>From: Dan Williams <dan.j.williams@intel.com>
+>Sent: 04 December 2025 02:22
+>To: dave.jiang@intel.com
+>Cc: linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org;
+>Smita.KoralahalliChannabasappa@amd.com; alison.schofield@intel.com;
+>terry.bowman@amd.com; alejandro.lucero-palau@amd.com; linux-
+>pci@vger.kernel.org; Jonathan Cameron <jonathan.cameron@huawei.com>;
+>Shiju Jose <shiju.jose@huawei.com>
+>Subject: [PATCH 1/6] cxl/mem: Fix devm_cxl_memdev_edac_release() confusion
+>
+>A device release method is only for undoing allocations on the path to pre=
+paring
+>the device for device_add(). In contrast, devm allocations are post device=
+_add(),
+>are acquired during / after ->probe() and are released synchronous with -
+>>remove().
+>
+>So, a "devm" helper in a "release" method is a clear anti-pattern.
+>
+>Move this devm release action where it belongs, an action created at edac =
+object
+>creation time. Otherwise, this leaks resources until
+>cxl_memdev_release() time which may be long after these xarray and error
+>record caches have gone idle.
+>
+>Note, this also fixes up the type of @cxlmd->err_rec_array which needlessl=
+y
+>dropped type-safety.
+>
+>Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation
+>attributes from the current boot")
+>Cc: Dave Jiang <dave.jiang@intel.com>
+>Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>Cc: Shiju Jose <shiju.jose@huawei.com>
+>Cc: Alison Schofield <alison.schofield@intel.com>
+>Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
+Tested-by: Shiju Jose <shiju.jose@huawei.com>
+Reviewed-by: Shiju Jose <shiju.jose@huawei.com>
+>---
+> drivers/cxl/cxlmem.h      |  5 +--
+> drivers/cxl/core/edac.c   | 64 ++++++++++++++++++++++-----------------
+> drivers/cxl/core/memdev.c |  1 -
+> 3 files changed, 38 insertions(+), 32 deletions(-)
+>
+>diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h index
+>434031a0c1f7..c12ab4fc9512 100644
+>--- a/drivers/cxl/cxlmem.h
+>+++ b/drivers/cxl/cxlmem.h
+>@@ -63,7 +63,7 @@ struct cxl_memdev {
+> 	int depth;
+> 	u8 scrub_cycle;
+> 	int scrub_region_id;
+>-	void *err_rec_array;
+>+	struct cxl_mem_err_rec *err_rec_array;
+> };
+>
+> static inline struct cxl_memdev *to_cxl_memdev(struct device *dev) @@ -87=
+7,7
+>+877,6 @@ int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd);
+>int devm_cxl_region_edac_register(struct cxl_region *cxlr);  int
+>cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt);  =
+int
+>cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt); -void
+>devm_cxl_memdev_edac_release(struct cxl_memdev *cxlmd);  #else  static
+>inline int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)  { retu=
+rn
+>0; } @@ -889,8 +888,6 @@ static inline int cxl_store_rec_gen_media(struct
+>cxl_memdev *cxlmd,  static inline int cxl_store_rec_dram(struct cxl_memdev
+>*cxlmd,
+> 				     union cxl_event *evt)
+> { return 0; }
+>-static inline void devm_cxl_memdev_edac_release(struct cxl_memdev *cxlmd)=
+ -
+>{ return; }  #endif
+>
+> #ifdef CONFIG_CXL_SUSPEND
+>diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c index
+>79994ca9bc9f..81160260e26b 100644
+>--- a/drivers/cxl/core/edac.c
+>+++ b/drivers/cxl/core/edac.c
+>@@ -1988,6 +1988,40 @@ static int cxl_memdev_soft_ppr_init(struct
+>cxl_memdev *cxlmd,
+> 	return 0;
+> }
+>
+>+static void err_rec_free(void *_cxlmd)
+>+{
+>+	struct cxl_memdev *cxlmd =3D _cxlmd;
+>+	struct cxl_mem_err_rec *array_rec =3D cxlmd->err_rec_array;
+>+	struct cxl_event_gen_media *rec_gen_media;
+>+	struct cxl_event_dram *rec_dram;
+>+	unsigned long index;
+>+
+>+	cxlmd->err_rec_array =3D NULL;
+>+	xa_for_each(&array_rec->rec_dram, index, rec_dram)
+>+		kfree(rec_dram);
+>+	xa_destroy(&array_rec->rec_dram);
+>+
+>+	xa_for_each(&array_rec->rec_gen_media, index, rec_gen_media)
+>+		kfree(rec_gen_media);
+>+	xa_destroy(&array_rec->rec_gen_media);
+>+	kfree(array_rec);
+>+}
+>+
+>+static int devm_cxl_memdev_setup_err_rec(struct cxl_memdev *cxlmd) {
+>+	struct cxl_mem_err_rec *array_rec =3D
+>+		kzalloc(sizeof(*array_rec), GFP_KERNEL);
+>+
+>+	if (!array_rec)
+>+		return -ENOMEM;
+>+
+>+	xa_init(&array_rec->rec_gen_media);
+>+	xa_init(&array_rec->rec_dram);
+>+	cxlmd->err_rec_array =3D array_rec;
+>+
+>+	return devm_add_action_or_reset(&cxlmd->dev, err_rec_free, cxlmd); }
+>+
+> int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)  {
+> 	struct edac_dev_feature ras_features[CXL_NR_EDAC_DEV_FEATURES];
+>@@ -2038,15 +2072,9 @@ int devm_cxl_memdev_edac_register(struct
+>cxl_memdev *cxlmd)
+> 		}
+>
+> 		if (repair_inst) {
+>-			struct cxl_mem_err_rec *array_rec =3D
+>-				devm_kzalloc(&cxlmd->dev, sizeof(*array_rec),
+>-					     GFP_KERNEL);
+>-			if (!array_rec)
+>-				return -ENOMEM;
+>-
+>-			xa_init(&array_rec->rec_gen_media);
+>-			xa_init(&array_rec->rec_dram);
+>-			cxlmd->err_rec_array =3D array_rec;
+>+			rc =3D devm_cxl_memdev_setup_err_rec(cxlmd);
+>+			if (rc)
+>+				return rc;
+> 		}
+> 	}
+>
+>@@ -2088,22 +2116,4 @@ int devm_cxl_region_edac_register(struct
+>cxl_region *cxlr)  }  EXPORT_SYMBOL_NS_GPL(devm_cxl_region_edac_register,
+>"CXL");
+>
+>-void devm_cxl_memdev_edac_release(struct cxl_memdev *cxlmd) -{
+>-	struct cxl_mem_err_rec *array_rec =3D cxlmd->err_rec_array;
+>-	struct cxl_event_gen_media *rec_gen_media;
+>-	struct cxl_event_dram *rec_dram;
+>-	unsigned long index;
+>-
+>-	if (!IS_ENABLED(CONFIG_CXL_EDAC_MEM_REPAIR) || !array_rec)
+>-		return;
+>-
+>-	xa_for_each(&array_rec->rec_dram, index, rec_dram)
+>-		kfree(rec_dram);
+>-	xa_destroy(&array_rec->rec_dram);
+>
+>-	xa_for_each(&array_rec->rec_gen_media, index, rec_gen_media)
+>-		kfree(rec_gen_media);
+>-	xa_destroy(&array_rec->rec_gen_media);
+>-}
+>-EXPORT_SYMBOL_NS_GPL(devm_cxl_memdev_edac_release, "CXL"); diff --git
+>a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c index
+>e370d733e440..4dff7f44d908 100644
+>--- a/drivers/cxl/core/memdev.c
+>+++ b/drivers/cxl/core/memdev.c
+>@@ -27,7 +27,6 @@ static void cxl_memdev_release(struct device *dev)
+> 	struct cxl_memdev *cxlmd =3D to_cxl_memdev(dev);
+>
+> 	ida_free(&cxl_memdev_ida, cxlmd->id);
+>-	devm_cxl_memdev_edac_release(cxlmd);
+> 	kfree(cxlmd);
+> }
+>
+>--
+>2.51.1
+>
 
-Where's the binding changes to allow graph nodes on SATA and PCIe 
-bindings? I suppose Thunderbolt/USB4 on USB-C connectors will need that 
-too.
-
-> +
-> +        anyOf:
-> +          - required:
-> +              - endpoint@0
-> +          - required:
-> +              - endpoint@1
-> +
-> +      port@1:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: USB 2.0 interface
-> +
-> +      port@2:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: SMB interface
-
-SMB is SMBus? There's no graph support for I2C either. For that, we use 
-'i2c-parent'.
-
-> +
-> +    required:
-> +      - port@0
-> +
-> +  clocks:
-> +    description: 32.768 KHz Suspend Clock (SUSCLK) input from the host system to
-> +      the M.2 card. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.1 for
-> +      more details.
-> +    maxItems: 1
-> +
-> +  pedet-gpios:
-> +    description: GPIO controlled connection to PEDET signal. This signal is used
-
-Instead of 'controlled connection' use just input or output. Arguably an 
-input isn't GPIO controlled.
-
-> +      by the host systems to determine the communication protocol that the M.2
-> +      card uses; SATA signaling (low) or PCIe signaling (high). Refer, PCI
-> +      Express M.2 Specification r4.0, sec 3.3.4.2 for more details.
-> +    maxItems: 1
-> +
-> +  led1-gpios:
-> +    description: GPIO controlled connection to LED_1# signal. This signal is
-> +      used by the M.2 card to indicate the card status via the system mounted
-> +      LED. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.2 for more
-> +      details.
-> +    maxItems: 1
-> +
-> +  viocfg-gpios:
-> +    description: GPIO controlled connection to IO voltage configuration
-> +      (VIO_CFG) signal. This signal is used by the M.2 card to indicate to the
-> +      host system that the card supports an independent IO voltage domain for
-> +      the sideband signals. Refer, PCI Express M.2 Specification r4.0, sec
-> +      3.1.15.1 for more details.
-> +    maxItems: 1
-> +
-> +  pwrdis-gpios:
-> +    description: GPIO controlled connection to Power Disable (PWRDIS) signal.
-> +      This signal is used by the host system to disable power on the M.2 card.
-> +      Refer, PCI Express M.2 Specification r4.0, sec 3.3.5.2 for more details.
-> +    maxItems: 1
-> +
-> +  pln-gpios:
-> +    description: GPIO controlled connection to Power Loss Notification (PLN#)
-> +      signal. This signal is use to notify the M.2 card by the host system that
-> +      the power loss event is expected to occur. Refer, PCI Express M.2
-> +      Specification r4.0, sec 3.2.17.1 for more details.
-> +    maxItems: 1
-> +
-> +  plas3-gpios:
-> +    description: GPIO controlled connection to Power Loss Acknowledge (PLA_S3#)
-> +      signal. This signal is used by the M.2 card to notify the host system, the
-> +      status of the M.2 card's preparation for power loss.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - vpcie3v3-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # PCI M.2 Key M connector for SSDs with PCIe interface
-> +  - |
-> +    connector {
-> +        compatible = "pcie-m2-m-connector";
-> +        vpcie3v3-supply = <&vreg_nvme>;
-> +
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            port@0 {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                reg = <0>;
-> +
-> +                endpoint@0 {
-> +                    reg = <0>;
-> +                    remote-endpoint = <&pcie6_port0_ep>;
-> +                };
-> +            };
-> +        };
-> +    };
-> 
-> -- 
-> 2.48.1
-> 
 
