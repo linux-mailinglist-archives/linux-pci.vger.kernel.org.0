@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-42780-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42781-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA0F9CADF60
-	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 19:06:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 48535CADFFD
+	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 19:34:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5A84730495A3
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 18:06:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E5987308D59C
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 18:33:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19034228CA9;
-	Mon,  8 Dec 2025 18:06:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08CF92E8B66;
+	Mon,  8 Dec 2025 18:33:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IjHQxoS5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pe4Hyj11"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF2F770FE;
-	Mon,  8 Dec 2025 18:06:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DD82E88B0;
+	Mon,  8 Dec 2025 18:33:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765217186; cv=none; b=Sjy+b2p0YFenWcI1adDOCRTN4DJW6fimY1RmRDe1DZpmcl9acyxAPhp24yzf8WEkgAQhd+xUI16v0K4TDcWYSACOFNkGEi6zy7ZFEt6l8a8K3xRoryF8M7w9NkbNhBOyqWB+pW6wniX9uehcGyKwu1O5Qgc/fPotu5/CoTojGlg=
+	t=1765218837; cv=none; b=EeMImex5Wf4rOAO3zSidu5bGk8v1y7NJqG3olJPXtgZEz2xR/Jo1lh8u16v0PXjVPtY9vb9ghHZfeyRw5WYfz5CwZ+jzbSIZRsDtiHDhmdKU4hXWMYL4WvB+ouKLMRHb10pwvzw+vGNjxWk0vqMnRSx8b25m2bZKXfnoEfkEQCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765217186; c=relaxed/simple;
-	bh=5L9j+bDMmpipf6t2OXyZSTWQkiHdOPheH8Bn3XAGC4I=;
+	s=arc-20240116; t=1765218837; c=relaxed/simple;
+	bh=e93eqfKxDXqA0fX+liok92bIMbKM7F3uE4csfNfPsBM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Vy0kQk9/h59UjB0lXvOqh3b6MdGomaiGF53GRhYYeUISYoFxjKvTWA5LECdyfHsa9+Pb/+03cuI18J+DJcx9AyaA/NvfR3MJ0HTVALWGKosGtddLM5x7HuMFcXSaBk6kMgjg3Du5ROUi4LGSLwSfdP4ktmVPBFQIEY9MPxDfLQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IjHQxoS5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BAB1C4CEF1;
-	Mon,  8 Dec 2025 18:06:25 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=BBmhz0p3nzbRbiWUnGyZUiYw8TKZSj+Ce1LNwTpkrn+lgX19ck5LX7yh1gy1DvKGCaP2lvmTpicnwyj+fpXSHqQacuO5HMxlWTfDk0LsZjA+gVsq0q5EUAmpZ/akhtivfS3vL+/9FtGijnNwGk0u5N7wMmDrJyT8Q1LwVDPdDlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pe4Hyj11; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47C9BC4CEF1;
+	Mon,  8 Dec 2025 18:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765217185;
-	bh=5L9j+bDMmpipf6t2OXyZSTWQkiHdOPheH8Bn3XAGC4I=;
+	s=k20201202; t=1765218837;
+	bh=e93eqfKxDXqA0fX+liok92bIMbKM7F3uE4csfNfPsBM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=IjHQxoS5maBYA0O0Hnww0yf8yFG5PKbOCjml5d9LQSMEjK1SDwgQit95c80ucV+yj
-	 5K+O73vm5wfHeOI/XrvXpyGO+1B4Qz9+2ftyrpNUSkkXsDy8/dIbfEzsWz+9gUipFg
-	 seZ2mipC8whUVRo7NAQwO5CpUDlAvmOgqkxlWXTJ9qBKjPKr1fitAmREcxcL4EGGmg
-	 1r6/4mwMyyG7bFxwrAzlot4j5EWMPjtOhEL1wS7FkqeR/shJWw3e4QAmPGQyVROQhb
-	 RmncvcYStBH67rnVTgFmIw3TPFqjcTSQbNz6LavAZLwbLzoHlaF5Rvxzozw3deitYZ
-	 eUQJ9P6Z2O7eA==
-Date: Mon, 8 Dec 2025 12:06:24 -0600
+	b=pe4Hyj116aZ8thm13O3TvZyAAVeWw8IKnIX0GZJsAjqEjKpo8ViznoXm7738XWsHK
+	 r+OGjO05kLha1zsW2zi06zIlp2xU6hVBD9tQjw1tVnhrw67hftKF1eCtLrWwHfeujT
+	 yY0BKANf1YOgZ6jPvk6ETBgAG4qnCotmsK/8M6Xx+WK6h0L2a0ceiGu/XzU/Z4NNoO
+	 CdXnwhrUP5DdFMN0AV4HBAGwp+TteET35j9PDFGMXCLxVZ8PaqJh9b/3TnoDzySgYC
+	 a/9Gys/xQ/bIHfitiLVHazcXQMIvGpU7TBeHgD+I7MHpfuyuqKZJ1oKB5S5dyGhfRS
+	 5wUYxnLxhvApQ==
+Date: Mon, 8 Dec 2025 12:33:56 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Terry Bowman <terry.bowman@amd.com>
+To: "Bowman, Terry" <terry.bowman@amd.com>
 Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
 	alison.schofield@intel.com, dan.j.williams@intel.com,
 	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
@@ -51,9 +51,8 @@ Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
 	sathyanarayanan.kuppuswamy@linux.intel.com,
 	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v13 08/25] CXL/AER: Move AER drivers RCH error handling
- into pcie/aer_cxl_rch.c
-Message-ID: <20251208180624.GA3300935@bhelgaas>
+Subject: Re: [PATCH v13 02/25] PCI/CXL: Introduce pcie_is_cxl()
+Message-ID: <20251208183356.GA3416294@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,99 +61,84 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251104001001.3833651-9-terry.bowman@amd.com>
+In-Reply-To: <a5d4f527-1a66-4c1e-9311-b8f3fe3badf1@amd.com>
 
-I vote for a subject like:
+On Mon, Dec 08, 2025 at 09:26:29AM -0600, Bowman, Terry wrote:
+> On 12/5/2025 6:45 PM, Bjorn Helgaas wrote:
+> > On Mon, Nov 03, 2025 at 06:09:38PM -0600, Terry Bowman wrote:
+> >> CXL and AER drivers need the ability to identify CXL devices.
+> >>
+> >> Introduce set_pcie_cxl() with logic checking for CXL.mem or CXL.cache
+> >> status in the CXL Flexbus DVSEC status register. The CXL Flexbus DVSEC
+> >> presence is used because it is required for all the CXL PCIe devices.[1]
 
-  PCI/AER: Move CXL RCH error handling to aer_cxl_rch.c
+Spec usage seems to be "Flex Bus", which would help searches.
 
-I think stuff in drivers/pci should have a PCI/... prefix.  "CXL" is
-really its own major subsystem, not a feature of PCI.
+> >> Add boolean 'struct pci_dev::is_cxl' with the purpose to cache the CXL
+> >> CXL.cache and CXl.mem status.
+> >>
+> >> In the case the device is an EP or USP, call set_pcie_cxl() on behalf of
+> >> the parent downstream device. Once a device is created there is
+> >> possibilty the parent training or CXL state was updated as well. This
+> >> will make certain the correct parent CXL state is cached.
+> ...
 
-On Mon, Nov 03, 2025 at 06:09:44PM -0600, Terry Bowman wrote:
-> The restricted CXL Host (RCH) AER error handling logic currently resides
-> in the AER driver file, drivers/pci/pcie/aer.c. CXL specific changes are
-> conditionally compiled using #ifdefs.
+> >> +		pci_read_config_word(dev, dvsec + PCI_DVSEC_CXL_FLEXBUS_STATUS_OFFSET, &cap);
+> >> +
+> >> +		dev->is_cxl = FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_STATUS_CACHE_MASK, cap) ||
+> >> +			FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_STATUS_MEM_MASK, cap);
 
-s|the AER driver file, drivers/pci/pcie/aer.c|aer.c|
-
-> Improve the AER driver maintainability by separating the RCH specific logic
-> from the AER driver's core functionality and removing the ifdefs. Introduce
-> drivers/pci/pcie/aer_cxl_rch.c for moving the RCH AER logic into.
-> Conditionally compile the file using the CONFIG_CXL_RCH_RAS Kconfig.
+> > Not sure the "_MASK" and "_OFFSET" on the end of all these #defines is
+> > really needed.  Other items in pci_regs.h typically don't include
+> > them, and these names get really long.  
 > 
-> Move the CXL logic into the new file but leave helper functions in aer.c
-> for now as they will be moved in future patch for CXL virtual hierarchy
-> handling. Export the handler functions as needed. Export
-> pci_aer_unmask_internal_errors() allowing for all subsystems to use.
-> Avoid multiple declaration moves and export cxl_error_is_native() now to
-> allow access from cxl_core.
+> These were moved over from local CXL header. As a result they are not 
+> consistent in the usage of offset and mask. Would you like for this to 
+> be made the same ? This would be to change all points where used.
+
+I think it's worth dropping "_MASK" and "_OFFSET" to reduce the
+length.
+
+> >> +	 * Update parent's CXL state because alternate protocol training
+> >> +	 * may have changed
+> > 
+> > What is the event that changes alternate protocol training?  The
+> > commit log says "once a device is created", but I don't know what that
+> > means in terms of hardware.
 > 
-> Inorder to maintain compilation after the move other changes are required.
-> Change cxl_rch_handle_error() & cxl_rch_enable_rcec() to be non-static
-> inorder for accessing from the AER driver in aer.c.
+> There is potential an upstream device (switch) was hotpluged and in
+> the case of the alt training retries may not be correctly cached in
+> pci_dev::is_cxl.
 
-s/Inorder to/In order to/  (or just "To maintain ...")
-/inorder for accessing from the AER driver in/so they can be used by/
+I assume this refers to the Alternate Protocol Negotiation (PCIe r7.0,
+seg 4.2.5.2), which happens during link training.
 
-> Update the new file with the SPDX and 2023 AMD copyright notations because
-> the RCH bits were initally contributed in 2023 by AMD.
+IIUC, the problem here is that we may enumerate a bridge before its
+secondary link has trained.  In that case, the Cache_Enabled and
+Mem_Enabled bits in the bridge's Flex Bus Port Status may be zero.
+After the secondary link has trained, those bits may be set based on
+the alternate protocol negotiation, so we need to re-read the bridges
+Port Status.  Annoying that these are documented as RO when they don't
+really seem to be read-only.
 
-Maybe cite the commit that did this so it's easy to check.
+Maybe there's no point in reading the bridge Flex Bus Port Status at
+all until we enumerate a device *below* the bridge, e.g, something
+like this:
 
-> +++ b/drivers/pci/pci.h
+  if (!pci_is_pcie(dev))
+    return;
 
-> +#ifdef CONFIG_CXL_RAS
-> +bool is_internal_error(struct aer_err_info *info);
-> +#else
-> +static inline bool is_internal_error(struct aer_err_info *info) { return false; }
+  if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ENDPOINT ||
+	pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM))
+    return;
 
-This used to be static and internal.  "is_internal_error()" seems a
-little too generic now that it's not static; probably should include
-"aer".  Maybe rename it in a preliminary patch so the move is more of
-a pure move.
+  /* Parent's CXL status only valid when link to child has trained */
+  bridge = pci_upstream_bridge(dev);
+  dvsec = pci_find_dvsec_capability(bridge, PCI_VENDOR_ID_CXL,
+                                    PCI_DVSEC_CXL_FLEXBUS_PORT);
+  if (!dvsec)
+    return;
 
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1130,7 +1130,7 @@ static bool find_source_device(struct pci_dev *parent,
->   * Note: AER must be enabled and supported by the device which must be
->   * checked in advance, e.g. with pcie_aer_is_native().
->   */
-> -static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
-> +void pci_aer_unmask_internal_errors(struct pci_dev *dev)
->  {
->  	int aer = dev->aer_cap;
->  	u32 mask;
-> @@ -1143,116 +1143,25 @@ static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
->  	mask &= ~PCI_ERR_COR_INTERNAL;
->  	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
->  }
-> +EXPORT_SYMBOL_GPL(pci_aer_unmask_internal_errors);
-
-Not sure why these EXPORTs are needed.  Is there a caller that can be
-a module?  The callers I see look like they would be builtin.  If you
-add callers later that need this, the export can be done then.
-
-> +++ b/include/linux/aer.h
-> @@ -56,12 +56,20 @@ struct aer_capability_regs {
->  #if defined(CONFIG_PCIEAER)
->  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->  int pcie_aer_is_native(struct pci_dev *dev);
-> +void pci_aer_unmask_internal_errors(struct pci_dev *dev);
->  #else
->  static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->  {
->  	return -EINVAL;
->  }
->  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
-> +static inline void pci_aer_unmask_internal_errors(struct pci_dev *dev) { }
-> +#endif
-> +
-> +#ifdef CONFIG_CXL_RAS
-> +bool cxl_error_is_native(struct pci_dev *dev);
-> +#else
-> +static inline bool cxl_error_is_native(struct pci_dev *dev) { return false; }
-
-These include/linux/aer.h changes look like a separate patch.  Moving
-code from aer.c to aer_cxl_rch.c doesn't add any callers outside
-drivers/pci, so these shouldn't need to be in include/linux/.
+  pci_read_config_word(bridge, dvsec + PCI_DVSEC_CXL_FLEXBUS_STATUS_OFFSET, &cap);
+  ...
 
