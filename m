@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-42778-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42779-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44AB1CADF51
-	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 19:04:16 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85D28CADF5A
+	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 19:05:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 110B73056C7B
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 18:04:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2AC5C30505A2
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 18:05:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6913C228CA9;
-	Mon,  8 Dec 2025 18:04:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5820E23D7D2;
+	Mon,  8 Dec 2025 18:05:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nW4deBHs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2bl04yD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE48770FE;
-	Mon,  8 Dec 2025 18:04:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5A6770FE;
+	Mon,  8 Dec 2025 18:05:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765217054; cv=none; b=i6dJpBxDOB8nYdLZ9e+PX16MEcJ9zUIDLwgfsXa8WEeT1Z3AQJ9xa4qDt5K99WCq9zI10FeDHRak7M4SArlJgllUykaOB8w+7gyvKbhIn7mQFHpg/Irz0CCBOKbZv6QtUDWVT4XG/IcNAP0Ukgv7Iz+hVAZNzX02rnV3wkSDOkI=
+	t=1765217157; cv=none; b=m/9WNqdSeuVDqJwQbd2jOxABfT5rXXqGCU+U/KaiGfjlVOsqtGeKjrrezgESfEFkqWROAEQEvBFfo3YHT4HOGO2JpYjGw1qf3YzOKqxEyULJyzZHCOu4GZjixdseFzGLzJ80sCG+fdKK5FPiHduZ70P3TIEy7nzvSkGi1xtmDkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765217054; c=relaxed/simple;
-	bh=4ShYtDf0Bj1VibKVOieKtO1uL5tTIxKr4zCRGt1m3eM=;
+	s=arc-20240116; t=1765217157; c=relaxed/simple;
+	bh=CrjLRrbnJFqFyI6pg+42Uh4bZv6Rqw60ANZsc9xBeuU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JviQJcwbbB0q3QZfmuqo2zcllSp+PbUfOt9/fUrNX0r7rW2/NMLtVj20eRkgm9U/YDLQaO0zciDMSgcAmTtVASUZzwzQOHz+hwsVR4aC7wKe/FXAEGpCu8oWCG6fb2BnnzLbvJ6EltTFcsrpoJsIv2u1GGIdawtx/o7axltTvtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nW4deBHs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1B58C4CEF1;
-	Mon,  8 Dec 2025 18:04:13 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=jej2yuz3LfVNqu3VpJS6KGGzwkrGatqe0e/Tq+uyFbntt+BAT2rFUdBwgHYV8xkbrctaygHk6zZSBECjJYCTglpR+K1EmUsuey2QN3fxl7waFrz3Q4ONgIY8xH9QytdGB9qdPuYAzFERkYVS7ZqtfTuAScVZimBQTJwtjFq548A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2bl04yD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2CD7C4CEF1;
+	Mon,  8 Dec 2025 18:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765217054;
-	bh=4ShYtDf0Bj1VibKVOieKtO1uL5tTIxKr4zCRGt1m3eM=;
+	s=k20201202; t=1765217157;
+	bh=CrjLRrbnJFqFyI6pg+42Uh4bZv6Rqw60ANZsc9xBeuU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=nW4deBHsH1dTXxsUEXGw8xlLlNVkobzb4CNgCvE6scNtT5rmjtNq/eZP58hRBd4OY
-	 cMY9X1860iFJxwr0rJkF+es8LukPI41OcKzw7mGFNUAUbWvr1OybEak1g5R4ZW51X/
-	 n6bsj3Jkd7VUucHAWkeGu0zFetZqM8Hi+mtCNCsfvHVHXx71Ucw+xwQ8Cv83eUp/vj
-	 rvOg3fYe1AResJlof9m8TCOI2sVew14ioRK2q5gZGDiTTlX2WTYR25clL29d7WIEpg
-	 odE5riyad07LOnNVidpIwN8F4tlr6bkZ/oCM8Ozshkm2cQfbCfN13Qyvn7JrURk/dS
-	 ofSwqZ6i+qp3A==
-Date: Mon, 8 Dec 2025 12:04:12 -0600
+	b=N2bl04yDZKXwqJjtS3w66qAyBaRWt+3QAc81zz/aKklw6qsRHM4nSHW2e5PdTZFKX
+	 iZV5Y0mT+eLNGSnKaOGJGDk6vagvX+oogcXAfhV2+tUcRgCmn1uHQtmC6nVmS3pxht
+	 45GYVMI+OEisijiK8/QaEah58NBPMtG1Bnb4iVHdd4IfzJL3NoVXXiwpQwIwBU0Ryv
+	 PRP+xnT91weCYYTeJt7613QgYPBgo8PEhbWhqucqk1Lj73vx/DDGaNJ641Pr3edR7i
+	 d8+XUF/RAYVxRqJszaM2t0DSXqrV8dN3aWDRHybCZCUjZ7ZciND6HHWyZqO57uIaBi
+	 CikAJOlcCi0xw==
+Date: Mon, 8 Dec 2025 12:05:55 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Terry Bowman <terry.bowman@amd.com>
 Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
@@ -51,9 +51,9 @@ Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
 	sathyanarayanan.kuppuswamy@linux.intel.com,
 	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [RESEND v13 01/25] CXL/PCI: Move CXL DVSEC definitions into
- uapi/linux/pci_regs.h
-Message-ID: <20251208180412.GA3419469@bhelgaas>
+Subject: Re: [PATCH v13 07/25] CXL/AER: Replace device_lock() in
+ cxl_rch_handle_error_iter() with guard() lock
+Message-ID: <20251208180555.GA3300834@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,47 +62,55 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251104170305.4163840-2-terry.bowman@amd.com>
+In-Reply-To: <20251104001001.3833651-8-terry.bowman@amd.com>
 
-On Tue, Nov 04, 2025 at 11:02:41AM -0600, Terry Bowman wrote:
-> The CXL DVSECs are currently defined in cxl/core/cxlpci.h. These are not
-> accessible to other subsystems. Move these to uapi/linux/pci_regs.h.
-> 
-> Change DVSEC name formatting to follow the existing PCI format in
-> pci_regs.h. The current format uses CXL_DVSEC_XYZ and the CXL defines must
-> be changed to be PCI_DVSEC_CXL_XYZ to match existing pci_regs.h. Leave
-> PCI_DVSEC_CXL_PORT* defines as-is because they are already defined and may
-> be in use by userspace application(s).
-> 
-> Update existing usage to match the name change.
-> 
-> Update the inline documentation to refer to latest CXL spec version.
+On Mon, Nov 03, 2025 at 06:09:43PM -0600, Terry Bowman wrote:
+> cxl_rch_handle_error_iter() includes a call to device_lock() using a goto
+> for multiple return paths. Improve readability and maintainability by
+> using the guard() lock variant.
 
-Regrettably, r3.2 is no longer the latest ;)
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1244,9 +1244,64 @@
->  /* Deprecated old name, replaced with PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE */
->  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE
+I would reorder this patch to be after you move the function to
+aer_cxl_rch.c.  Then the subjects could be more like this, which would
+be a better match for the history:
+
+  PCI/AER: Move CXL RCH error handling to aer_cxl_rch.c
+  PCI/AER: Use guard() in cxl_rch_handle_error_iter()
+
+I expect CXL content in drivers/pci/ to be mostly incidental, so I
+think prefixes like "PCI/AER" or "PCI/ERR" are probably appropriate,
+and "CXL" can appear in the rest of the line if relevant.
+
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1187,12 +1187,11 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+>  	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
+>  		return 0;
 >  
-> -/* Compute Express Link (CXL r3.1, sec 8.1.5) */
-> -#define PCI_DVSEC_CXL_PORT				3
-> -#define PCI_DVSEC_CXL_PORT_CTL				0x0c
-> -#define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
-> +/* Compute Express Link (CXL r3.2, sec 8.1)
-> + *
-> + * Note that CXL DVSEC id 3 and 7 to be ignored when the CXL link state
-> + * is "disconnected" (CXL r3.2, sec 9.12.3). Re-enumerate these
-> + * registers on downstream link-up events.
-> + */
-> +
-> +#define PCI_DVSEC_HEADER1_LENGTH_MASK  __GENMASK(31, 20)
+> -	/* Protect dev->driver */
 
-I think PCI_DVSEC_HEADER1_LEN() could be used instead of adding a new
-definition.
+The comment seems worth keeping.
 
-> +/* CXL 3.2 8.1.3: PCIe DVSEC for CXL Device */
-
-Can you use "CXL r4.0, sec 8.1.3" and similar so it refers to the most
-recent revision and matches the typical style for PCIe spec references?
+> -	device_lock(&dev->dev);
+> +	guard(device)(&dev->dev);
+>  
+>  	err_handler = dev->driver ? dev->driver->err_handler : NULL;
+>  	if (!err_handler)
+> -		goto out;
+> +		return 0;
+>  
+>  	if (info->severity == AER_CORRECTABLE) {
+>  		if (err_handler->cor_error_detected)
+> @@ -1203,8 +1202,6 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+>  		else if (info->severity == AER_FATAL)
+>  			err_handler->error_detected(dev, pci_channel_io_frozen);
+>  	}
+> -out:
+> -	device_unlock(&dev->dev);
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.34.1
+> 
 
