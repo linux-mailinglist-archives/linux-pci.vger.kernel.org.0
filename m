@@ -1,437 +1,84 @@
-Return-Path: <linux-pci+bounces-42747-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42748-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1977CAC149
-	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 06:30:13 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE92ACAC17A
+	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 06:46:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4D0333011A90
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 05:30:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 202EB300B82B
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 05:46:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6046930F7ED;
-	Mon,  8 Dec 2025 05:30:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 400AC3B8D7E;
+	Mon,  8 Dec 2025 05:46:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBLGde/I"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lCUkO5wH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B6F30F7F5;
-	Mon,  8 Dec 2025 05:30:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177E73B8D68;
+	Mon,  8 Dec 2025 05:46:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765171806; cv=none; b=gdkavr1h7lH4DeA3y9nGj1kTPGbM3Z175Wa5yshbnywU0vA0RtoxXMuocmskgq0Ak4gpjcFiYaQ/b1GvFRUuIaTQLBAfi9lTGCTt/+Q6h4CgSlbJ28xIn8HOSLXqvyG4L/HtQYsaipXTttBc+OmA6hG53CUphctPYtIRsARZMSA=
+	t=1765172765; cv=none; b=e0NHPQ5VRgEthTKL01fWDTmCTi16lKFJjcCZRpVCP/BhCSWBXj90DcTdGPWjO3xyL3tiyG+wXiaaylogLV6LOMykxs0tNdNsb4qeYNiBqyqV04/gAfm/KVNUMxVzm7lb5rKRoChQvU8TLd5R/Vbt4YTxohXXd7KeKjlD1tDh2j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765171806; c=relaxed/simple;
-	bh=RsRYzXvZB64dbIZACUU/FMVHj2kAs3lZVsORLh0+mGw=;
+	s=arc-20240116; t=1765172765; c=relaxed/simple;
+	bh=4oPFnaKOuwa795QouzAkLdFmxipO+zRI6ijexJF2Dxw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TxySVpw6ToEMKyiy1pdcYzR5LXvHeCdrTrDIY+EL0irifPeN8yJjcy/+9JxypRxooSBOV+fRvEcgQqQ+fjH2VwfEh3FQWiQ8k00QtjXW5ix1N9ytWbeb8d7pKAoL2DiDBOTtCznyxvBftllLO8mhXkNgaHWVBaNiTgxQMFydXOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBLGde/I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E62FC4CEF1;
-	Mon,  8 Dec 2025 05:30:03 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=m/GitTG7m9BC1iEcjAcuh2EAP2oI2t6aXgBFzscFIfbiA1ss3knQu9wkjO5sIAfoZLBtGFx8p/ZJ4HQ2NGAaObm8eMH0hL5hQ9Vn5UwvrG0kTKNnTqN78Il4hg/t5xO1PZL6icqMtMLe7Lb6Z//n9xfX5slF7kjoC653IwPh0xM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lCUkO5wH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C384C4CEF1;
+	Mon,  8 Dec 2025 05:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765171805;
-	bh=RsRYzXvZB64dbIZACUU/FMVHj2kAs3lZVsORLh0+mGw=;
+	s=k20201202; t=1765172764;
+	bh=4oPFnaKOuwa795QouzAkLdFmxipO+zRI6ijexJF2Dxw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mBLGde/I9NBt3k3psZRhWssEL5mVP4OZOq0Gh3Jh/K/CYFCfAe1pd+nZGOCkDURL0
-	 7h62Z+g3RdrvdAvNbQfrQZ5vaPxVtN9QrJk7o1tmUysaEQFWXoRXY4ZrsBzcBtblMh
-	 xw+GpGiuxuQzvGS6M+LP9oQAUMHt8eQKk1ms0FOE/RQGQ5tvuGFkEC9KIjGGhFtOpY
-	 B+zzUmFKncEzOrVC9o3jdfSu+CDltZpWW7QTM6Kck90gsK1uiwRKQbdAaLLMYJ+2Mr
-	 BAq42R8fZgWNEWwbiDjVpWUu/aOOVfkJFDDL2X+4fhM3O0ayPFk4m2/mAV0xe/xS//
-	 YHpE+/Ek9IfGQ==
-Date: Mon, 8 Dec 2025 14:29:57 +0900
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Devendra K Verma <devendra.verma@amd.com>
-Cc: bhelgaas@google.com, vkoul@kernel.org, dmaengine@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@amd.com
-Subject: Re: [PATCH RESEND v6 2/2] dmaengine: dw-edma: Add non-LL mode
-Message-ID: <pcyikziojphmgcyeicjegmbpdpktsay5n5q3xvsexifziesxmx@wpcdf77lowo4>
-References: <20251121113455.4029-1-devendra.verma@amd.com>
- <20251121113455.4029-3-devendra.verma@amd.com>
+	b=lCUkO5wHsKZaS1oV3YA4xJ+CuE3qQlV6O/izT24g2LwTzWQM0yWZDfrfXf8XszMZM
+	 pU7zjfUPgjvYmGK5EGD/fuhch+Ncj7uAQH/atF4qnUZpN/Zgfb5MtnJAPYXmYWlGdR
+	 ecR1dkvQK7j0zb22jeMacLyxp0uqmxqs8jS333sRUmep9+h4otHPN2oyZdOtsai0+P
+	 6fOmtKSOJ6BRwDZxmrNJb6jFgjopig9uDBC7tMPvRkQA7r4poQaIWDEur1i4fx9W84
+	 hsb5RlkxjqfzLp/7IylsogbO5hf7pae/x2S4Zlba4P+0aiJ+uDNLuNM3jR6xIJKzbM
+	 L3Rhlaf8d62oQ==
+Date: Mon, 8 Dec 2025 06:45:59 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: FUKAUMI Naoki <naoki@radxa.com>, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: dwc: Make Link Up IRQ logic handle already
+ powered on PCIe switches
+Message-ID: <aTZmF5AEJQhQld4Y@ryzen>
+References: <20251201063634.4115762-2-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251121113455.4029-3-devendra.verma@amd.com>
+In-Reply-To: <20251201063634.4115762-2-cassel@kernel.org>
 
-On Fri, Nov 21, 2025 at 05:04:55PM +0530, Devendra K Verma wrote:
-> AMD MDB IP supports Linked List (LL) mode as well as non-LL mode.
-> The current code does not have the mechanisms to enable the
-> DMA transactions using the non-LL mode. The following two cases
-> are added with this patch:
-> - When a valid physical base address is not configured via the
->   Xilinx VSEC capability then the IP can still be used in non-LL
->   mode. The default mode for all the DMA transactions and for all
->   the DMA channels then is non-LL mode.
-> - When a valid physical base address is configured but the client
->   wants to use the non-LL mode for DMA transactions then also the
->   flexibility is provided via the peripheral_config struct member of
->   dma_slave_config. In this case the channels can be individually
->   configured in non-LL mode. This use case is desirable for single
->   DMA transfer of a chunk, this saves the effort of preparing the
->   Link List. This particular scenario is applicable to AMD as well
->   as Synopsys IP.
-> 
+On Mon, Dec 01, 2025 at 07:36:35AM +0100, Niklas Cassel wrote:
 
-Which in-kernel DMA client is using this non-LL mode?
+Mani, could you perhaps try this series on Qcom?
 
-- Mani
+I personally prefer this series over a revert because:
+It allows to us to still use a PCIe endpoint that comes up after the
+main system has booted, e.g. when the PCIe endpoint is a board running
+pci-epf-test, without the need for a manual rescan on be bus.
 
-> Signed-off-by: Devendra K Verma <devendra.verma@amd.com>
-> ---
-> Changes in v6
->   Gave definition to bits used for channel configuration.
->   Removed the comment related to doorbell.
-> 
-> Changes in v5
->   Variable name 'nollp' changed to 'non_ll'.
->   In the dw_edma_device_config() WARN_ON replaced with dev_err().
->   Comments follow the 80-column guideline.
-> 
-> Changes in v4
->   No change
-> 
-> Changes in v3
->   No change
-> 
-> Changes in v2
->   Reverted the function return type to u64 for
->   dw_edma_get_phys_addr().
-> 
-> Changes in v1
->   Changed the function return type for dw_edma_get_phys_addr().
->   Corrected the typo raised in review.
-> ---
->  drivers/dma/dw-edma/dw-edma-core.c    | 41 ++++++++++++++++++++---
->  drivers/dma/dw-edma/dw-edma-core.h    |  1 +
->  drivers/dma/dw-edma/dw-edma-pcie.c    | 44 +++++++++++++++++--------
->  drivers/dma/dw-edma/dw-hdma-v0-core.c | 61 ++++++++++++++++++++++++++++++++++-
->  drivers/dma/dw-edma/dw-hdma-v0-regs.h |  1 +
->  include/linux/dma/edma.h              |  1 +
->  6 files changed, 130 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index b43255f..60a3279 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -223,8 +223,31 @@ static int dw_edma_device_config(struct dma_chan *dchan,
->  				 struct dma_slave_config *config)
->  {
->  	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
-> +	int non_ll = 0;
-> +
-> +	if (config->peripheral_config &&
-> +	    config->peripheral_size != sizeof(int)) {
-> +		dev_err(dchan->device->dev,
-> +			"config param peripheral size mismatch\n");
-> +		return -EINVAL;
-> +	}
->  
->  	memcpy(&chan->config, config, sizeof(*config));
-> +
-> +	/*
-> +	 * When there is no valid LLP base address available then the default
-> +	 * DMA ops will use the non-LL mode.
-> +	 * Cases where LL mode is enabled and client wants to use the non-LL
-> +	 * mode then also client can do so via providing the peripheral_config
-> +	 * param.
-> +	 */
-> +	if (config->peripheral_config)
-> +		non_ll = *(int *)config->peripheral_config;
-> +
-> +	chan->non_ll = false;
-> +	if (chan->dw->chip->non_ll || (!chan->dw->chip->non_ll && non_ll))
-> +		chan->non_ll = true;
-> +
->  	chan->configured = true;
->  
->  	return 0;
-> @@ -353,7 +376,7 @@ static void dw_edma_device_issue_pending(struct dma_chan *dchan)
->  	struct dw_edma_chan *chan = dchan2dw_edma_chan(xfer->dchan);
->  	enum dma_transfer_direction dir = xfer->direction;
->  	struct scatterlist *sg = NULL;
-> -	struct dw_edma_chunk *chunk;
-> +	struct dw_edma_chunk *chunk = NULL;
->  	struct dw_edma_burst *burst;
->  	struct dw_edma_desc *desc;
->  	u64 src_addr, dst_addr;
-> @@ -419,9 +442,11 @@ static void dw_edma_device_issue_pending(struct dma_chan *dchan)
->  	if (unlikely(!desc))
->  		goto err_alloc;
->  
-> -	chunk = dw_edma_alloc_chunk(desc);
-> -	if (unlikely(!chunk))
-> -		goto err_alloc;
-> +	if (!chan->non_ll) {
-> +		chunk = dw_edma_alloc_chunk(desc);
-> +		if (unlikely(!chunk))
-> +			goto err_alloc;
-> +	}
->  
->  	if (xfer->type == EDMA_XFER_INTERLEAVED) {
->  		src_addr = xfer->xfer.il->src_start;
-> @@ -450,7 +475,13 @@ static void dw_edma_device_issue_pending(struct dma_chan *dchan)
->  		if (xfer->type == EDMA_XFER_SCATTER_GATHER && !sg)
->  			break;
->  
-> -		if (chunk->bursts_alloc == chan->ll_max) {
-> +		/*
-> +		 * For non-LL mode, only a single burst can be handled
-> +		 * in a single chunk unlike LL mode where multiple bursts
-> +		 * can be configured in a single chunk.
-> +		 */
-> +		if ((chunk && chunk->bursts_alloc == chan->ll_max) ||
-> +		    chan->non_ll) {
->  			chunk = dw_edma_alloc_chunk(desc);
->  			if (unlikely(!chunk))
->  				goto err_alloc;
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-> index 71894b9..c8e3d19 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.h
-> +++ b/drivers/dma/dw-edma/dw-edma-core.h
-> @@ -86,6 +86,7 @@ struct dw_edma_chan {
->  	u8				configured;
->  
->  	struct dma_slave_config		config;
-> +	bool				non_ll;
->  };
->  
->  struct dw_edma_irq {
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index 3d7247c..e7e95df 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -269,6 +269,15 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
->  	pdata->devmem_phys_off = off;
->  }
->  
-> +static u64 dw_edma_get_phys_addr(struct pci_dev *pdev,
-> +				 struct dw_edma_pcie_data *pdata,
-> +				 enum pci_barno bar)
-> +{
-> +	if (pdev->vendor == PCI_VENDOR_ID_XILINX)
-> +		return pdata->devmem_phys_off;
-> +	return pci_bus_address(pdev, bar);
-> +}
-> +
->  static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  			      const struct pci_device_id *pid)
->  {
-> @@ -278,6 +287,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	struct dw_edma_chip *chip;
->  	int err, nr_irqs;
->  	int i, mask;
-> +	bool non_ll = false;
->  
->  	vsec_data = kmalloc(sizeof(*vsec_data), GFP_KERNEL);
->  	if (!vsec_data)
-> @@ -302,21 +312,24 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	if (pdev->vendor == PCI_VENDOR_ID_XILINX) {
->  		/*
->  		 * There is no valid address found for the LL memory
-> -		 * space on the device side.
-> +		 * space on the device side. In the absence of LL base
-> +		 * address use the non-LL mode or simple mode supported by
-> +		 * the HDMA IP.
->  		 */
->  		if (vsec_data->devmem_phys_off == DW_PCIE_AMD_MDB_INVALID_ADDR)
-> -			return -ENOMEM;
-> +			non_ll = true;
->  
->  		/*
->  		 * Configure the channel LL and data blocks if number of
->  		 * channels enabled in VSEC capability are more than the
->  		 * channels configured in amd_mdb_data.
->  		 */
-> -		dw_edma_set_chan_region_offset(vsec_data, BAR_2, 0,
-> -					       DW_PCIE_XILINX_LL_OFF_GAP,
-> -					       DW_PCIE_XILINX_LL_SIZE,
-> -					       DW_PCIE_XILINX_DT_OFF_GAP,
-> -					       DW_PCIE_XILINX_DT_SIZE);
-> +		if (!non_ll)
-> +			dw_edma_set_chan_region_offset(vsec_data, BAR_2, 0,
-> +						       DW_PCIE_XILINX_LL_OFF_GAP,
-> +						       DW_PCIE_XILINX_LL_SIZE,
-> +						       DW_PCIE_XILINX_DT_OFF_GAP,
-> +						       DW_PCIE_XILINX_DT_SIZE);
->  	}
->  
->  	/* Mapping PCI BAR regions */
-> @@ -364,6 +377,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	chip->mf = vsec_data->mf;
->  	chip->nr_irqs = nr_irqs;
->  	chip->ops = &dw_edma_pcie_plat_ops;
-> +	chip->non_ll = non_ll;
->  
->  	chip->ll_wr_cnt = vsec_data->wr_ch_cnt;
->  	chip->ll_rd_cnt = vsec_data->rd_ch_cnt;
-> @@ -372,7 +386,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	if (!chip->reg_base)
->  		return -ENOMEM;
->  
-> -	for (i = 0; i < chip->ll_wr_cnt; i++) {
-> +	for (i = 0; i < chip->ll_wr_cnt && !non_ll; i++) {
->  		struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
->  		struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
->  		struct dw_edma_block *ll_block = &vsec_data->ll_wr[i];
-> @@ -383,7 +397,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  			return -ENOMEM;
->  
->  		ll_region->vaddr.io += ll_block->off;
-> -		ll_region->paddr = pci_bus_address(pdev, ll_block->bar);
-> +		ll_region->paddr = dw_edma_get_phys_addr(pdev, vsec_data,
-> +							 ll_block->bar);
->  		ll_region->paddr += ll_block->off;
->  		ll_region->sz = ll_block->sz;
->  
-> @@ -392,12 +407,13 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  			return -ENOMEM;
->  
->  		dt_region->vaddr.io += dt_block->off;
-> -		dt_region->paddr = pci_bus_address(pdev, dt_block->bar);
-> +		dt_region->paddr = dw_edma_get_phys_addr(pdev, vsec_data,
-> +							 dt_block->bar);
->  		dt_region->paddr += dt_block->off;
->  		dt_region->sz = dt_block->sz;
->  	}
->  
-> -	for (i = 0; i < chip->ll_rd_cnt; i++) {
-> +	for (i = 0; i < chip->ll_rd_cnt && !non_ll; i++) {
->  		struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
->  		struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
->  		struct dw_edma_block *ll_block = &vsec_data->ll_rd[i];
-> @@ -408,7 +424,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  			return -ENOMEM;
->  
->  		ll_region->vaddr.io += ll_block->off;
-> -		ll_region->paddr = pci_bus_address(pdev, ll_block->bar);
-> +		ll_region->paddr = dw_edma_get_phys_addr(pdev, vsec_data,
-> +							 ll_block->bar);
->  		ll_region->paddr += ll_block->off;
->  		ll_region->sz = ll_block->sz;
->  
-> @@ -417,7 +434,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  			return -ENOMEM;
->  
->  		dt_region->vaddr.io += dt_block->off;
-> -		dt_region->paddr = pci_bus_address(pdev, dt_block->bar);
-> +		dt_region->paddr = dw_edma_get_phys_addr(pdev, vsec_data,
-> +							 dt_block->bar);
->  		dt_region->paddr += dt_block->off;
->  		dt_region->sz = dt_block->sz;
->  	}
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> index e3f8db4..ee31c9a 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> @@ -225,7 +225,7 @@ static void dw_hdma_v0_sync_ll_data(struct dw_edma_chunk *chunk)
->  		readl(chunk->ll_region.vaddr.io);
->  }
->  
-> -static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> +static void dw_hdma_v0_core_ll_start(struct dw_edma_chunk *chunk, bool first)
->  {
->  	struct dw_edma_chan *chan = chunk->chan;
->  	struct dw_edma *dw = chan->dw;
-> @@ -263,6 +263,65 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
->  	SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
->  }
->  
-> +static void dw_hdma_v0_core_non_ll_start(struct dw_edma_chunk *chunk)
-> +{
-> +	struct dw_edma_chan *chan = chunk->chan;
-> +	struct dw_edma *dw = chan->dw;
-> +	struct dw_edma_burst *child;
-> +	u32 val;
-> +
-> +	list_for_each_entry(child, &chunk->burst->list, list) {
-> +		SET_CH_32(dw, chan->dir, chan->id, ch_en, HDMA_V0_CH_EN);
-> +
-> +		/* Source address */
-> +		SET_CH_32(dw, chan->dir, chan->id, sar.lsb,
-> +			  lower_32_bits(child->sar));
-> +		SET_CH_32(dw, chan->dir, chan->id, sar.msb,
-> +			  upper_32_bits(child->sar));
-> +
-> +		/* Destination address */
-> +		SET_CH_32(dw, chan->dir, chan->id, dar.lsb,
-> +			  lower_32_bits(child->dar));
-> +		SET_CH_32(dw, chan->dir, chan->id, dar.msb,
-> +			  upper_32_bits(child->dar));
-> +
-> +		/* Transfer size */
-> +		SET_CH_32(dw, chan->dir, chan->id, transfer_size, child->sz);
-> +
-> +		/* Interrupt setup */
-> +		val = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
-> +				HDMA_V0_STOP_INT_MASK |
-> +				HDMA_V0_ABORT_INT_MASK |
-> +				HDMA_V0_LOCAL_STOP_INT_EN |
-> +				HDMA_V0_LOCAL_ABORT_INT_EN;
-> +
-> +		if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL)) {
-> +			val |= HDMA_V0_REMOTE_STOP_INT_EN |
-> +			       HDMA_V0_REMOTE_ABORT_INT_EN;
-> +		}
-> +
-> +		SET_CH_32(dw, chan->dir, chan->id, int_setup, val);
-> +
-> +		/* Channel control setup */
-> +		val = GET_CH_32(dw, chan->dir, chan->id, control1);
-> +		val &= ~HDMA_V0_LINKLIST_EN;
-> +		SET_CH_32(dw, chan->dir, chan->id, control1, val);
-> +
-> +		SET_CH_32(dw, chan->dir, chan->id, doorbell,
-> +			  HDMA_V0_DOORBELL_START);
-> +	}
-> +}
-> +
-> +static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> +{
-> +	struct dw_edma_chan *chan = chunk->chan;
-> +
-> +	if (!chan->non_ll)
-> +		dw_hdma_v0_core_ll_start(chunk, first);
-> +	else
-> +		dw_hdma_v0_core_non_ll_start(chunk);
-> +}
-> +
->  static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
->  {
->  	struct dw_edma *dw = chan->dw;
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-regs.h b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> index eab5fd7..7759ba9 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> @@ -12,6 +12,7 @@
->  #include <linux/dmaengine.h>
->  
->  #define HDMA_V0_MAX_NR_CH			8
-> +#define HDMA_V0_CH_EN				BIT(0)
->  #define HDMA_V0_LOCAL_ABORT_INT_EN		BIT(6)
->  #define HDMA_V0_REMOTE_ABORT_INT_EN		BIT(5)
->  #define HDMA_V0_LOCAL_STOP_INT_EN		BIT(4)
-> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> index 3080747..78ce31b 100644
-> --- a/include/linux/dma/edma.h
-> +++ b/include/linux/dma/edma.h
-> @@ -99,6 +99,7 @@ struct dw_edma_chip {
->  	enum dw_edma_map_format	mf;
->  
->  	struct dw_edma		*dw;
-> +	bool			non_ll;
->  };
->  
->  /* Export to the platform drivers */
-> -- 
-> 1.8.3.1
-> 
+If we go with revert instead, this very nice feature would be gone,
+and the user would need to do a manual rescan of the bus.
 
--- 
-மணிவண்ணன் சதாசிவம்
+One could even argue that that is a user visible regression.
+
+
+Kind regards,
+Niklas
 
