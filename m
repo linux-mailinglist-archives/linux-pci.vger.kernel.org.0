@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-42783-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42784-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2DC04CAE00F
-	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 19:38:05 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BF58CAE015
+	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 19:38:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 621703095E5E
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 18:37:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id CB5B93020CFF
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 18:38:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A669B1D88B4;
-	Mon,  8 Dec 2025 18:37:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 422362C86D;
+	Mon,  8 Dec 2025 18:38:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6z7oDXF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SOwaMTSB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4262AF00;
-	Mon,  8 Dec 2025 18:37:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13CB818C2C;
+	Mon,  8 Dec 2025 18:38:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765219070; cv=none; b=D5RvPkHSVZd30XRe0IQaywqM4oUkia7ZxAGdyh+726sZqQ3GI+VTGgz8o0VI2eOykaV9z4YAPBZ7o4Gm+56bPGtMMuq1eOlVLf5SgOObAK9QOeNNiH1vfAdIiyiQkrKZLYl7ftZdJMCYytcb6nYMz6uY/JW/rEvfquItaj6aLg8=
+	t=1765219109; cv=none; b=Z7gOqcWPq3ajUpXltiJi4p6YBWuR2RgM+80NTftpV2h8MY0OcWQi1S2I7kyZqE+KuuWCyI3Oj/FQ/s15NhQb2Tmbzy5IL9HFgkAsubKmbmTnvJIbe6CjHaDqTdQSPY/oQJGy73iV0NBcoQ6H98GQeY+LHR5321ILy10q9q2X3rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765219070; c=relaxed/simple;
-	bh=hi9gRa6o37XxNGib7CawRtphGJivyzFOSr/XvNdW4B0=;
+	s=arc-20240116; t=1765219109; c=relaxed/simple;
+	bh=ydaXZ0ra8rkEeltRN93me3dxfoWL9lsW5ThJWQjlveg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=U7g8b5/jCoU0X474JoD+Q7O0ICDkUwFAXXZLwgm1GqGUv1HpBBS/4eqJgFStSUmQHqIqI/3E/zqtdRuyIRJ8qNWbAq0AeEh/IJ/Zi/B7fctodzoOhQcEQt8Z0Rph+zokvTGxI5ocy+rZlq2Vfby1DpN6cXPBkDg8GQn9XPJLgPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6z7oDXF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DC1BC4CEF1;
-	Mon,  8 Dec 2025 18:37:50 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=sb47VJh+1vq+kLjRn1FguvqpsIrxghKZa+tzQHmMLMptSCZfHRfW5yjdzJ30tGXOtLlC+vaxhUigxDJVzeLiSEWx/n6tl5XK5GejNvJJRy5g2ugE/7gDndDpaDFHUa2kN5iew/RctpMMZisEyf7uJ5KGlhymHn48t2XIL1tzrDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SOwaMTSB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B1F2C4CEF1;
+	Mon,  8 Dec 2025 18:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765219070;
-	bh=hi9gRa6o37XxNGib7CawRtphGJivyzFOSr/XvNdW4B0=;
+	s=k20201202; t=1765219108;
+	bh=ydaXZ0ra8rkEeltRN93me3dxfoWL9lsW5ThJWQjlveg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=B6z7oDXFhdanIzaYqRFT0yrHq3xVM5bXUOK120dHnGI+C4CsrhMWh1EJFyENqMrxr
-	 G3mf1rVIqILwWcNlHAyumFwoTEXskjFu+XVjTwC3DiTU2WDHjwYS2XrpRzj6Iukyn8
-	 OUGhcka1pj0vSDJELlW/0xvCqIzstrSPGWThXzzF+021OsKQdF2lMvqzXAxpOJ5WBk
-	 hgnKNBM9YgQcmgS+//Q86GalHX73O0fm1zjdkEBlDCfX9UeDLJy1+fLF2PGkefNy1K
-	 QC8MttqLh1wii1w8idL6j8BPwjyg+c7WqxjY2HzXI5fPENh9nduvxonXQTvChukMrZ
-	 QDNPKRdDKzCVQ==
-Date: Mon, 8 Dec 2025 12:37:49 -0600
+	b=SOwaMTSBKAlrJ0yOjzj46ftmlRv8HbzvDyH0uk4GAYs0D0t9J0deWuG8S2sbIJpnx
+	 jFuacSTgyDTqYiQKb2OFcf2NC5tlunD4w/sJS/rSHIB3U2M9KPfokmSOeDM3wiP5jb
+	 Au0j5VtNVSETSuc0VRuP7OM4MlGn5d0Rw7hGb4i7jD0IBFpiUIUYbg2r4uM5XibzyR
+	 8ALIHBYSuiXtdARM2y8x5F5xF/OEuk97nZpfAtHR4xD95gVbuFrbYqSBI7BWN64A+y
+	 YRjMyVmT1LfwCbvo1uRIUFEVCxyWNOl2rge9w1V5qJBQiaGqMptSyHgd75KRN9eEI+
+	 +fk2GwU+B56Ig==
+Date: Mon, 8 Dec 2025 12:38:27 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Terry Bowman <terry.bowman@amd.com>
 Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
@@ -51,9 +51,9 @@ Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
 	sathyanarayanan.kuppuswamy@linux.intel.com,
 	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v13 20/25] CXL/PCI: Introduce CXL Port protocol error
- handlers
-Message-ID: <20251208183749.GA3302551@bhelgaas>
+Subject: Re: [PATCH v13 22/25] CXL/PCI: Export and rename merge_result() to
+ pci_ers_merge_result()
+Message-ID: <20251208183827.GA3302770@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,62 +62,51 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251104001001.3833651-21-terry.bowman@amd.com>
+In-Reply-To: <20251104001001.3833651-23-terry.bowman@amd.com>
 
-On Mon, Nov 03, 2025 at 06:09:56PM -0600, Terry Bowman wrote:
-> Add CXL protocol error handlers for CXL Port devices (Root Ports,
-> Downstream Ports, and Upstream Ports). Implement cxl_port_cor_error_detected()
-> and cxl_port_error_detected() to handle correctable and uncorrectable errors
-> respectively.
+Possible subject:
+
+  PCI/ERR: Rename merge_result() to pcie_ers_merge_result()
+
+since there's no CXL content here.
+
+On Mon, Nov 03, 2025 at 06:09:58PM -0600, Terry Bowman wrote:
+> CXL uncorrectable errors (UCE) will soon be handled separately from the PCI
+> AER handling. The merge_result() function can be made common to use in both
+> handling paths.
 > 
-> Introduce cxl_get_ras_base() to retrieve the cached RAS register base
-> address for a given CXL port. This function supports CXL Root Ports,
-> Downstream Ports, and Upstream Ports by returning their previously mapped
-> RAS register addresses.
-> 
-> Add device lock assertions to protect against concurrent device or RAS
-> register removal during error handling. The port error handlers require
-> two device locks:
-> 
-> 1. The port's CXL parent device - RAS registers are mapped using devm_*
->    functions with the parent port as the host. Locking the parent prevents
->    the RAS registers from being unmapped during error handling.
-> 
-> 2. The PCI device (pdev->dev) - Locking prevents concurrent modifications
->    to the PCI device structure during error handling.
-> 
-> The lock assertions added here will be satisfied by device locks introduced
-> in a subsequent patch.
+> Rename the PCI subsystem's merge_result() to be pci_ers_merge_result().
+> Export pci_ers_merge_result() to make available for the CXL and other
+> drivers to use.
 
-Weird.  Can't you add the lock assertions at the same time you add the
-locks?
+Still dubious about exporting this.
 
-> Introduce get_pci_cxl_host_dev() to return the device responsible for
-> managing the RAS register mapping. This function increments the reference
-> count on the host device to prevent premature resource release during error
-> handling. The caller is responsible for decrementing the reference count.
-> For CXL endpoints, which manage resources without a separate host device,
-> this function returns NULL.
-> 
-> Update the AER driver's is_cxl_error() to recognize CXL Port devices in
-> addition to CXL Endpoints, as both now have CXL-specific error handlers.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Update pci_ers_merge_result() to support recently introduced PCI_ERS_RESULT_PANIC
+> result.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Code is pcie_ers_merge_result(), not pci_ers_merge_result().
 
-> @@ -1573,6 +1573,7 @@ static struct cxl_port *find_cxl_port_by_uport(struct device *uport_dev)
->  		return to_cxl_port(dev);
->  	return NULL;
->  }
-> +EXPORT_SYMBOL_NS_GPL(find_cxl_port_by_uport, "CXL");
+But I actually think "pci" might be more appropriate because I think
+this is used in generic PCI paths that can be exercised for non-PCIe.
+Either way, make them all consistent.
 
-The usual export question: is there a modular caller()?
+> +++ b/drivers/pci/pcie/err.c
+> @@ -21,9 +21,12 @@
+>  #include "portdrv.h"
+>  #include "../pci.h"
+>  
+> -static pci_ers_result_t merge_result(enum pci_ers_result orig,
+> -				  enum pci_ers_result new)
+> +pci_ers_result_t pcie_ers_merge_result(enum pci_ers_result orig,
+> +				       enum pci_ers_result new)
+>  {
+> +	if (new == PCI_ERS_RESULT_PANIC)
+> +		return PCI_ERS_RESULT_PANIC;
 
-> +	dev_warn_once(dev, "Error: Unsupported device type (%X)", pci_pcie_type(pdev));
+I think this should be squashed with the "CXL/PCI: Introduce
+PCI_ERS_RESULT_PANIC" patch and called:
 
-Maybe "%#x" (add 0x prefix and use lower-case hex, unless there's a
-different CXL convention)?
+  PCI/ERR: Add PCI_ERS_RESULT_PANIC
+
+so the new functionality is all together and the rename is separate.
 
