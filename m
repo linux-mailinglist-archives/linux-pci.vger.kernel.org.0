@@ -1,259 +1,274 @@
-Return-Path: <linux-pci+bounces-42789-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42760-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3243CCAE0F5
-	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 20:21:42 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1AA0CAD5D1
+	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 15:06:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 03F4230A957C
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 19:20:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id DFDC23020CD1
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 14:06:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77A5F20A5C4;
-	Mon,  8 Dec 2025 19:20:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5431F31283D;
+	Mon,  8 Dec 2025 14:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FOrvqosZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2096.outbound.protection.partner.outlook.cn [139.219.17.96])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013034.outbound.protection.outlook.com [40.93.196.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E64A1F3BA2;
-	Mon,  8 Dec 2025 19:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.96
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBA22C08D4;
+	Mon,  8 Dec 2025 14:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.34
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765221653; cv=fail; b=nZ+n+QbaDTLMD1acsu1mr/9Mr/uQ+X51UZnLtqSOiJA24v+nDDPAJ94Pdhfi7SiNjQr9ZSSdt/WNWmknMufqqzlapM2sfbUpnA3ITclEks81/Iq0OFIzB36bZ+uN9konS/aPO5LGy4HZsBSdgVw8Q2QY7vPCNCu24jNP34a/vw8=
+	t=1765202770; cv=fail; b=Mg+hlr7tCDGfxTIK2sJc0m55z+YbVyRiwR205+JD/+BuWstDJRNyr9n593WtpMJ4533FgXH1sG+FjKQjhDIA9FIWRlsTG1s8Sz1r8woImDI4YZqHoZPuJmNDK/oFXZmNwIjVnVGA78fCIMdwrhTnJoXdIzky3Yf83chBYF/61aE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765221653; c=relaxed/simple;
-	bh=jATWi9rXvZ0cQ2V2zHz+ol25bdEwTe3ApXeDjyesgxs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=D6XBwvfdlTgyrnM4Y7jbevHiLKzLS286gSD8jrR2UE2F85f5lBs7z2mv0Uyq1gtf8ebEMEjAE6ABz3aXms4yUdD7uCylkkxbNKwvceHAbqtbhsqLLThhDHRSqRMTCX7iNqxYQo9IxCjrAUo6Mty8sgbrtqS3W2gziD8EkYH8HM4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GFSQHqr0m3ZtRziY4Xem1Mu9zLzFoqfLI7h2jJbCFETroxIybzjV/QfFQca4PxtfvdHpAXTjxfuyou4sqp6W/dUxcVLKNMnQSYpjHzPKWcw6ljQh2fdcHpAFWUKz5bHB4ROy0Dc04P7k8WuCeU55VJFSmWf29qCyMN0w3D3RJ5VSRwpT1JAGIi11x/PImkB+f73WtUMoACfvtyOVYEqQMBGAc/FgB1mgEKJQFXBisJY1t1DLgvSZZuKDWfj+LRHMI5/E5XoVLCWHp1AR5ybEtXlRXbqb5i9unhWI2SUpit0Bgp6BpHznaVAsuGV8C+t/NUG+5M9tI6GR/bVBD65S2g==
+	s=arc-20240116; t=1765202770; c=relaxed/simple;
+	bh=5wIujHsfVtUbEkv3fHQXvXhA9Nv3HPqPKmTKZxyDvOE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=poQ5T3gTANEcfT0IQy/13diY8TwiGDDbmsUU4YCwcBx2S/VYUak+qPE7/0RPtJaLyVwPMjgx+/SBzgN+/RQNsV19vi4H7M1y3Z1edZ8aJ1wN6gKjjNfyRlT+UYG9hbN19jHKLpDw1b61Fb32QV9xpeWM+8Kp7wUjhxg6jLiXmAw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FOrvqosZ; arc=fail smtp.client-ip=40.93.196.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Cy4QWKIXp83OnLpI5k7aiE6fsOMLg9KAqCWAL3zBlI7u0FyaqgYczlMb6qumTfdCHbOphZZasWqss/JPYPHf2I2q0S9EchNM5v5BT7TuOodTGQGooxywAe7mbQbolJ+Cz/wRNKjdzY1+MCvA9GayBnSY08b5Wo6eCCpWeCjlIrXyLEU+ZClTJd4As8bEtY1nZ1i9r536nraThXKaJWBBfHot6GThufJGf7hWFK+yIN/pL68ZDvQkb02ZIQSlwda7ZnXp5DTKOWn1Lr0nX+YuxQJwUGV+w0iuMZvRyVAAnXGQgwezg8KBSE9z1uv1I2hQANH+DoEJ6B/V7uEL/AmDHA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
+ s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q1UiJ9mEm5EbYIaUMzHEoOzIxnu7gRcL/qN4HTtuDkg=;
- b=N9p1F/XvUTAyDTH+BCfXt2JLKf1kXyN1u7HzoRtkFmaQNKbE6dC5jNXbwipr81j5Lk9uoVEBYPdZ9gL45JNVQb+fo126MIy5PbPvLgc3R8qVNepTbG/bLtEdQY8FYMk9xfiaeeWNIyCCpoO3a99bIIQrjQpumVpuhL7HMvpJctRfFa+aT9kvOlIxLNwOqKW1ESJxSfdkFmbgzCsO9YGlpP0yiv4Ew9+A1SLrzSxXwTrRsjME08JByxjL6HyW9tzgj4g9R+TB4lnFGGxQpLEGUNoBg21GReR/OYgZ/8a0bVfwTK3gtUzChkZw5ComKWic56DYZKJ53v8xliIblfdTvw==
+ bh=aTQZ2xRSpBcuuVZApaEdkbm27CmJGDO007AndhgVigc=;
+ b=N5kDFdnOmX9WD8AjE4fhueClL1+UzYyKPQE09cDek7Y3POBMDeH+2CWQB5hFS9ekXbpPJQBDC3PVrUe7lg861iQd8U9aYVZx1r5qKxhYyqYkrEH7sm0XvmbQmO8rS2nEcS1S8/3q+HRgt512krW+vZQ1OxxjX8kO2oVLYjtzImvmU3nG6IdYPnbIOv8+vjyWSfivY1oe+K8cZGPaTWuwHs8gqKfepuLOh0+gRaSS8YYTYmePkPTYZgGyTc15FTmQEbPymYL7sHn7jyhrV6w3Gi8JrKaj/iV+w5qg5KGWbk5QcM3s5tS++9ZYtQOJm6oqZab43bgoHSvT9u9g3LwzBQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:7::14) by ZQ2PR01MB1292.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:12::7) with Microsoft SMTP Server (version=TLS1_2,
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aTQZ2xRSpBcuuVZApaEdkbm27CmJGDO007AndhgVigc=;
+ b=FOrvqosZ+wLje/7I5A2UP++grBkPGqeHDoupB6m4p09S/C2LDR3nidpepmrMrHeHBTbz+j/jQn3FdmspZwsG0+WufY68SaOmDVyXNXFX1C7EhsewDU+OwGRbZNEh45B9NyrfxiumR798rQxojy+OC4TgNX1CDh+nL+59Ntqw49o=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by DS7PR12MB6334.namprd12.prod.outlook.com (2603:10b6:8:95::19) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.14; Mon, 8 Dec
- 2025 13:47:43 +0000
-Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- ([fe80::2595:ef4d:fae:37d7]) by ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- ([fe80::2595:ef4d:fae:37d7%4]) with mapi id 15.20.9388.013; Mon, 8 Dec 2025
- 13:47:43 +0000
-From: Hal Feng <hal.feng@starfivetech.com>
-To: Kevin Xie <kevin.xie@starfivetech.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?=
-	<kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark
- Brown <broonie@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Emil Renner
- Berthing <emil.renner.berthing@canonical.com>, Heinrich Schuchardt
-	<heinrich.schuchardt@canonical.com>, E Shattow <e@freeshell.de>, Bjorn
- Helgaas <helgaas@kernel.org>
-CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1] PCI: starfive: Use regulator APIs instead of GPIO APIs
- to control the 3V3 power supply of PCIe slots
-Thread-Topic: [PATCH v1] PCI: starfive: Use regulator APIs instead of GPIO
- APIs to control the 3V3 power supply of PCIe slots
-Thread-Index: AQHcZOo44Tf6DvT2HE6+dAB7NzR28bUXhI/Q
-Date: Mon, 8 Dec 2025 13:47:43 +0000
-Message-ID:
- <ZQ2PR01MB13076269AF954AF603B347D9E6A22@ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn>
-References: <20251204064956.118747-1-hal.feng@starfivetech.com>
-In-Reply-To: <20251204064956.118747-1-hal.feng@starfivetech.com>
-Accept-Language: zh-CN, en-US
+ 2025 14:04:52 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%5]) with mapi id 15.20.9388.013; Mon, 8 Dec 2025
+ 14:04:51 +0000
+Message-ID: <f45b11fc-270d-4047-8149-75081399b2ed@amd.com>
+Date: Mon, 8 Dec 2025 14:04:47 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] cxl: Initialization reworks in support Soft Reserve
+ Recovery and Accelerator Memory
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ2PR01MB1307:EE_|ZQ2PR01MB1292:EE_
-x-ms-office365-filtering-correlation-id: 0a232aba-c11b-46c8-2de9-08de36605cc4
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|366016|1800799024|921020|38070700021;
-x-microsoft-antispam-message-info:
- 2ffpMZaS5/MFpwGCrFL9jAZYFgofuJ6/LZGR3SYJ8mU6J3ewsf+35FAi9irVQksSlLnD6C8CU6iFaWINYiQhOJ8yme6IVg8SPdtkaBc0zdVG5E4EXxfGFsnq22fFs7/sZTR7E/HhMWAoMX7nw3xyQ6dSybL0UUu/wbwLYuQ62b7mGl1EkscunpzQoOy6kQYw6cdTMZBlCPs9NzPUaLQrmBMcn3Exuwi/eRSgA1h4Dg7/0N596/Mesl0E4yDWMA/rMXow+b6mg2gjq8m/kNjNHUdwJWj7gnM4dpPu5AjucfZyRz/ZT96ORJVggb5lPDmQQowiZgHRmJj6r2W92xVszr5W0d3Ml0oUt4/2Sc7sUUnTHpOobpljzCba1t6fqAEvshJtXH96kFAXfySKTBO1JQ+N1W+4cc4oN0t3RXh0MKNArYPhIRI0stwxERpW56BUavD6ggeSRDvF9vUVQvHV16qD0qqJzTaoa5hdT+wRR7HmgZFmYFVUgYAL9at84/eV837oJcqssuTxGaMIzmrGOvSA6th6XO/kNYGR7G04vRd921xHmq9C+XfFwjhqKXKvl76FeMUEoAr9j2A1ZSP8bzNlKqSX3r9LGXFxzzkU49s=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(921020)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?s7lrSp42wXFUrwgEBmPeHU66xF9uIE71t3Z2InJxxj/Imt6+pE/nTnIx8N?=
- =?iso-8859-2?Q?GEFzCdaSwW6U9LkB6mEJ8RBDSdr5nWOL+EzCmDSkAkgkMIdcXO7dqG5/AI?=
- =?iso-8859-2?Q?tfHvbuNWHK8EYJilnhtvdclxqhnlJp5LIci0l4z4mqgiCzaK0G1X/03DKj?=
- =?iso-8859-2?Q?LGJTIwsdpiEaaO18sKzdoSYr8aKaysJrfo5Xx1S4mVIrB0rtI9fdHPMr7r?=
- =?iso-8859-2?Q?9iT+DeBI9qmb1ysTPOyjbBJKM71wGzwoGuO/GTtd178RNPVH5tHK49Dq1o?=
- =?iso-8859-2?Q?CDpS/3nCvw6Z72bigxHl+J71VlKmBz8g/6+jBoZ9g0YMoXptpBX0CKpP2c?=
- =?iso-8859-2?Q?DxKsqR9IUVp2aso+6+t3iu5P3VKg+vGVuaCUxBbXUAeN8AIDKX8ZpWiHp8?=
- =?iso-8859-2?Q?eiKJvui/bH/t2JK/Kub0OsbAnySMtB7ctq1qXlW0beipbFrK6zyegwOs7A?=
- =?iso-8859-2?Q?PcTzgzgw8NAnAPRe06ud5/6ut+puZ4MOU+g5JZZRmO5RUrPcyOu4jJoSUO?=
- =?iso-8859-2?Q?jbekMH1ijUZOb1oaS+8L/0cjjtOSFanvfoiNUGLTKAQFSj1rWZmQbk8o7j?=
- =?iso-8859-2?Q?HUihwUJEwXtFV59+EPGt6BUJfXcUiPVJGdTZ3eiQpQKgd/LyLZQAd3M8u/?=
- =?iso-8859-2?Q?qUkw3dk/f+VRa/Uv3ZU2p7XS7wGYhPRaTld6FG0qFoYvtvjadoLTGQBo/C?=
- =?iso-8859-2?Q?1HfgIK5YxMb66psTj3yGT8Y6YYr1PReDzJBoYUhF5qWokIylvCCC/fBEDT?=
- =?iso-8859-2?Q?kW5y7b5LV3Fsfl+FJSVcTk+4q9c3DbGMJ+cD/yb84MkTpEbDtwazSDsQjj?=
- =?iso-8859-2?Q?1iiNdfO/C4Qg0Qvm1iI9nR2cIEZ4SQ2163RLpb3FxS/klHnrqbJKj7vfyO?=
- =?iso-8859-2?Q?fqaWqIYlV5YLCHmgOqlf5kYTur6k8HSk+HOSk40/PgQW9nEzuX91LaEHDk?=
- =?iso-8859-2?Q?wUX3qi5Bh3ulL0TjrB2YTr8vI3rIZD6hFSCYhsfYS+TmS9Tg5nFrxS3lnr?=
- =?iso-8859-2?Q?vXdLrWgxUemjjkU3J05icPEOYU458NT1sGYJhc1uHMZT4hhUkBxH9uAAyx?=
- =?iso-8859-2?Q?PfBJxuzX0LQJZ+Y1nQWhs0SCndpBtkierSP/UwKVr4ksGs4oemAQgaajZq?=
- =?iso-8859-2?Q?FcezC30Dd1KiJqfJmXUvrtvXpw6K00GtqxoyTDzXRcdbgIfaxbdJ4Bo76A?=
- =?iso-8859-2?Q?x7J+ITR6Jmt1Pjebd4TOF7pjW7PaIiYGQ6gybBYJP6LIKF+BKzXSV+qSKL?=
- =?iso-8859-2?Q?Gof+movxknSJ6i8JEhNCnEQIKi2dKyKYnHiiz3islCyDItaDEmYX47wh+u?=
- =?iso-8859-2?Q?ivsXtkOrHF83akYKGyNXZDggK+AHguPcCEFGcuCpeRrZvJhE0ER8CxUmTZ?=
- =?iso-8859-2?Q?xdpmQ/2K8i2RHWUrVi41qmyysggitXIoRh9T2GQcY+dFut0AZ/314KlSz3?=
- =?iso-8859-2?Q?cMFvjC1liJEeoUIWr7o+/DGqSInn3WzdGk0NZKUYKxkc+9LgVqmvogeXA9?=
- =?iso-8859-2?Q?+YgR+S1Wc8tzm5aj85/srI0phbiKZW+MhxNEVnx1QNXQTZbXpU/RQ57bBC?=
- =?iso-8859-2?Q?F8O4832aVOpcn/nczc3Es2aclSpf8o2n+F5Oz3pf5ebBmHwepejI1Fqaek?=
- =?iso-8859-2?Q?41+xmA3J9mNFCCe5J2GDk4MUKElOomFael?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+To: dan.j.williams@intel.com, dave.jiang@intel.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Smita.KoralahalliChannabasappa@amd.com, alison.schofield@intel.com,
+ terry.bowman@amd.com, alejandro.lucero-palau@amd.com,
+ linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
+ Shiju Jose <shiju.jose@huawei.com>
+References: <20251204022136.2573521-1-dan.j.williams@intel.com>
+ <143deecb-aa53-42e6-b7eb-91fb392e7502@amd.com>
+ <69334c038705b_1b2e100b5@dwillia2-mobl4.notmuch>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <69334c038705b_1b2e100b5@dwillia2-mobl4.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DUZPR01CA0027.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:46b::14) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|DS7PR12MB6334:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1327b76c-107f-4da3-00fe-08de3662c13f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RzFiZ2RwSVl0a1YvQzlCNlloVUpJSFhBU3RDdlQ2L1VhZDFtL3k5K2VpRkJY?=
+ =?utf-8?B?VVlROHpmR2wxQ3Y3U0ZTbDN3azR1WVFBL3lkWnhwRGM1ZCt6K09JYzl1N2Nu?=
+ =?utf-8?B?MFYraWFHS2RwZDlxNWltT29teVBSVEMrTEI0cDR4b3cxNU9MSVdpSFNmaHRG?=
+ =?utf-8?B?dXNqbVYzZHRTaXFkMnRLRStGUEJDclF1NzIva1E1cVJXNVpqamhBQnQ5aUpj?=
+ =?utf-8?B?amhIZ0RmTDI3UytvZ3hBY0NjWkdqd0FJdVFGcFd3T2xlRG1kSmJQejlWQTg1?=
+ =?utf-8?B?MmRPeVpGUSttdWlDQTRnYlh3WlJjNVRKR0xVNU43ZmJ4NmN6RTdEb20rbFRU?=
+ =?utf-8?B?dkcyT0t4MGcwTzllRXJxbUVTUUNvdngxNHJ2MW51NkgvRmU1L0NHS2JHM0ZM?=
+ =?utf-8?B?QVFub25KM1FvVkN5WVFXQWo4U08wTU5JVmJqakdjZEJQcHdLdUl4TGMwbEoz?=
+ =?utf-8?B?ZGVwdjVhTXhQSlNPV09OVlFjUmxrbDQ1QTFXM3JwNHp4NUFCblE5WE54Y0Ry?=
+ =?utf-8?B?WmpYRTJ1clNidEsvby9vZXFBdjFxREhOYkpFWWFHN3l1K0tNNW5EbHU3dnBa?=
+ =?utf-8?B?dkxRY29FRUtvNi9CbHlVTUZsM0haWXJKT21sQWd6aXVFOUZHMkJTRHd1ZXRV?=
+ =?utf-8?B?blNDNjlVeWc3YlQ4dDM5TFFCTkFKRnRtUk5ENS9GN09VSEVtZ2FvR3pOem1z?=
+ =?utf-8?B?dXV1ZUZLV3hzQjB2cTVZTVRDUmZ4Y29YZUEwaGhSSm1Yc1dBaHJ4UGtFRXNM?=
+ =?utf-8?B?NUlsZVNRTDZQUzkxbnhCUzFhTENaZi8ydDdtSGdkL2d0VkVYR1VUUlcwMFZW?=
+ =?utf-8?B?bTZhblJjMm5mV2t1SEhiS1JqazdoaHhFdTZoNXZjWEIvWU1KV0VSZE9ILzFE?=
+ =?utf-8?B?dUd3RlRwR2g4NXZxam80TFZMWVRacFpsTjRLelN3M3E4VmFLYjZzSXFEdGRC?=
+ =?utf-8?B?eDkvaHdtNTRYMDdKbEZEb1Evc1l0SmRSVDNTUyt0c3VRZXBUNDlPY09UeWJY?=
+ =?utf-8?B?QTRqaGFYU2xsckRwZmtOUFoxU3psaU41UDlTcHBvU3VXWWVvMWZaSGpCVDFP?=
+ =?utf-8?B?bGswYWFOVTltZ0pMMm4waXVrYlYzbE9hbHlYQk5qZGNGbUpZYmhSS3JkVU01?=
+ =?utf-8?B?Qm01ZThFbzJZMDY1SlA0N2dxQ2tuVjZFNUo2TXVWS2xnOFlSTHhnY2dYNDFH?=
+ =?utf-8?B?QmZHSHNaWWdFaCs4Qll5NGVZTERCOE1ObjZhNk9QbCtlWUo3TVFqa2ZCTWFk?=
+ =?utf-8?B?QlBTVW9WWU9QK1l0TERBeXlzVmNyL0QxcWlWdkJZaE9DL21JeXh6WnY3SWVZ?=
+ =?utf-8?B?SXd3UW1NNWJROFpMenBqekRLVjEyZks0dnAyL21NYTJld0pUam5ic0ZyVHdD?=
+ =?utf-8?B?a25TMkFKL1NFWkxzV21KNi82Tlh6Uit2WWVQL1JjckIrdldMSGdXeG9ZTXk4?=
+ =?utf-8?B?ZitRM3FBY3BHUzlCNjhpOWcwWEF2amtWQnVaOVJ1cTlTaTkwL0paL2tndXhB?=
+ =?utf-8?B?SDBSeDYwUVdnRGZDUjRNQjRFZHBQSG1JUGlYVkVmV2VMV25hZDBUbDJKQm1S?=
+ =?utf-8?B?dnBGalZaNFF5TXdITSttRTJqNnp3TFc4R2F4R3FzSThyNkpHTU8zRXpta0pz?=
+ =?utf-8?B?MW1zTmdRZmRQQU1iU0RBNjlUWHN3ekM3V2hiZkxPTHVqUUUrY0NUL2I2eEsz?=
+ =?utf-8?B?aStXUUxwNG85RDhJNnFqTTBybFBEU3FseUs5Z2JNZHBaRkR6R1BjeStwMGtM?=
+ =?utf-8?B?ZmRTR2lqUkMxZFBuYkkrTGtqK3lFTUk3aUd6RDBHdjhUVlBMM0ZpN2xsOGRz?=
+ =?utf-8?B?TysvbUFjNm4xV0JUZFN3aDJtcjlISGxDc2NuQ3gwQ3JDRkNOZ2t1WGxJRXhp?=
+ =?utf-8?B?c3Z1bEt3Q2Q0SGRpcXg0a1lDeEhyZmZpelc0SmQvMytrQ0FRcjFCZG1hbmZh?=
+ =?utf-8?B?ZFkzbGozQnVpbGNtWGJDSlNkQTZsZ3BMaDdIV1EzcEs1WUhqcUlxTCtvMWNI?=
+ =?utf-8?B?QzJERzlQejJ3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VWJsWWF0WW9rRlpBbGxGbytuS0JFbEo0RUk0VWZOWHozTE9BOHlQSXJ4WGFY?=
+ =?utf-8?B?YXRNalZVc2ZqQlZhelZJVjkyQU1ZSUlJWXlaRndVbjcwTmhxUFN6OUhhbnlr?=
+ =?utf-8?B?MUljWXdGUFFSTUtadUJ3ZExOLzFhQUk4bjdBcFNlWldNQ0RReVFmQUVBS0F4?=
+ =?utf-8?B?Q1dFV1F5bUpzSjdqT25BaEdjcDg0bDVmbTNWWnllOGxtZ094eXc4U1BMYVdB?=
+ =?utf-8?B?c0RBL1NXeFlNM05TM25xVG5TeTBkclV0OVc0Mmk0MHFUbFlWQXlNT1VqZStC?=
+ =?utf-8?B?V3o5ejRIbGkybkwzcGFuSXQrdkVmWnZ4eXRsaERxYm1FVStja3JVQllkVVpD?=
+ =?utf-8?B?dm5UMFVpTytGbmVlY1JPUVprUmxSRFBSSDVjWkRGcVdpdExBUUJKSjZuT0Jv?=
+ =?utf-8?B?Z0xiYkhpYU1ENmxPZDdiNUpvVkc0VTFWVmVhbEowRzBWRG5ucUVNVERmUDVD?=
+ =?utf-8?B?K1pRaTBvRVJqSHFhbWRKNG5CcXJva3JkaVBUdVhHMzRja2kzQmNQREpoYWww?=
+ =?utf-8?B?aUNYaVY0NWJhd1o0aFAzLzdOVitzWFRaZi8wVEdnYnEzZU5xZmlrVVdhMkE2?=
+ =?utf-8?B?V0FXNkZtbUNZdjVqcFN0ODJySGRxSE1Ca2RPWlZkMUF0RGxKTXhmYmhqekd1?=
+ =?utf-8?B?alAvSzhtenNONlR4WExab0ZtMGNOZ3pRQkZONkpwZ2NqbDd6UEtWdmtsbnBF?=
+ =?utf-8?B?ZGlUcGpSaFQ2MXhvcExGVVpsbXBzU1FLektRZ0lkVndJQXdtbVovQnVPemhL?=
+ =?utf-8?B?OGtqSldpMjFmUUVyaWlpV1gzZVY2UU5mSHBPZk5KaE1OalhsSjFtcllmYUJs?=
+ =?utf-8?B?cGpSRjAzUkxkM0NGZkNyTk5QVHdVOGczSTgxeHZTdWFmci9KeGxxSTduYU9s?=
+ =?utf-8?B?NWhzb1lmdXhHeWxRMnEwLzhiOExKdjlWQklOVUdvcUUyQllZQW5EK1g3V2Mv?=
+ =?utf-8?B?b2plWXpXQ2Z3NWFNRXRzdThqaldFTTN6d2oyN0g5NFlKK3V3cy82UDBlVUZU?=
+ =?utf-8?B?VzRJVi91OFo0WERTNTdDdW02cUdreGg3NDVhRG84Qmt6ZEo1cGsvdDkwQ1h6?=
+ =?utf-8?B?MEVHNURINW8wQmg4aHJ2QU9VdEVWMXFaNm9HWnYyVUFiQyttUGxyWEVkNzNG?=
+ =?utf-8?B?blM1MVlUOS9pV2Z2QysvUmxUdzFzYitQc2hTOG5PeldVZGdOVXhTL0RjR3Mx?=
+ =?utf-8?B?QmxkdTFmbW9rdzFNSzR1R1duMEhIekliMjIra3YrZEtWMFVxd1RVVERsRGFt?=
+ =?utf-8?B?Zy9XNW9zUndVcDg4cVR5RHl4bXk1TDRpTHYycnYvVlhSNWFObEwzeGg2UjV0?=
+ =?utf-8?B?ZWo4eENDSld6NndjRHd6QUdqV3p5bVcwZmU2THd4aTlhbE43WjNMdDJLZ2Ex?=
+ =?utf-8?B?VWdkdlovc1NTMks1ZGdmWk95MzJnVHMyajhOOFp6ZDBaUkx0cTM1ekJaQkt1?=
+ =?utf-8?B?RUZmV2YrejFKT3NJd1d4Rk9aU0xQK2pxb0FROW5ZWlMzY3RBeHlrNG9zemFk?=
+ =?utf-8?B?QU5vM1YzdDkwMEhlWER5ZnlIbjFtMVlwa2tkS1k5TDhXYlZKc1Bud3dBck80?=
+ =?utf-8?B?UDNHMmFYVWN0cUZ0bnAzcVpTWDRZbjdNdUQvcUtraHQwNUZubHZZYVlnKzRR?=
+ =?utf-8?B?SVJ0YzNuYVpxTjl5L0RscWt0ZkltbHRuemVkcEE2WXJlR0x5dTBMb3hVOVYw?=
+ =?utf-8?B?a3FvZWVOUUxYTnVuaTlvYmltTmRtOW5WRjBFR016a3RJbXR2TGxoUEkzNXd4?=
+ =?utf-8?B?a0Z4N3EvTWtuVTQ1Y3hXRmtXdWxYdFhKVUF0dnVEWWh4RHgyMkVsck85OE1P?=
+ =?utf-8?B?bkFxWWtLTUVNeFhUTkV4UGxCS2E5bDdZczhGdVI4MUZSWEErWVl6YmVIb1Bn?=
+ =?utf-8?B?UnlPRFFpUDVVWHZkRFVlQWFOU1dYVDRBc0RFK0kvVWw0TnF3bFY3WS9rWVNx?=
+ =?utf-8?B?MkdZcFFEamlOcEFOeDRIbUFuMmxuV1VXVVFpQjhzN09ha2t5b2hvekpVMTc1?=
+ =?utf-8?B?aWtveXV5QTlsMS9JMkkwbmpWVDc5ZUpsYlZVQnVveDVscUZDZFpWK3VSYTRS?=
+ =?utf-8?B?UzhiYVlMeXRyekoxa2pEaVNyVnA3L29QZFlDL2NRSDVxa3l6Skx5dVY0c3BM?=
+ =?utf-8?Q?PsHyOhWn/ceXoPKyLNmzEKlWu?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1327b76c-107f-4da3-00fe-08de3662c13f
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a232aba-c11b-46c8-2de9-08de36605cc4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Dec 2025 13:47:43.4069
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2025 14:04:51.1830
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dPjsaSZ3xH/1oZs4DWpUUebozDSnKi9161P7yAxE7oMkS2E7mR23NwZQaGyxsOMvpS9ph9mbSND2zd5v5QAn8GWFxQ4kO6vfWaJ6rnpxGGI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ2PR01MB1292
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mxeZcw3yolGQpCH2UOWsLvIfVLXBGzMvDmnBXJtj65fVc+jX8cdQXSeplDI7JxGAspXrvUVv9rn/fUxNp1pZCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6334
 
-> On 04.12.25 14:50, Hal Feng wrote:
-> The "enable-gpio" property is obtained to control the 3V3 power supply of
-> PCIe slots but it is not documented in the dt-bindings and using GPIO API=
-s is
-> not a standard method to control PCIe slot power, so use "vpcie3v3-supply=
-"
-> property and regulator APIs to replace them.
->=20
-> This change will break the DTs which add "enable-gpio" or "enable-gpios"
-> property under the node with compatible "starfive,jh7110-pcie".
-> Fortunately, there are no such DTs in the upstream mainline, so this chan=
-ge
-> has no impact on the upstream mainline.
-> If you have used "enable-gpio" or "enable-gpios" property in your
-> downstream DTs, please update it with "vpcie3v3-supply" after applying th=
-is
-> commit.
->=20
-> Acked-by: Kevin Xie <kevin.xie@starfivetech.com>
-> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
 
-Hi, Bjorn, Manivannan and the other PCI maintainers,
+On 12/5/25 21:17, dan.j.williams@intel.com wrote:
+> Alejandro Lucero Palau wrote:
+> [..]
+>>> For "Accelerator Memory", the driver is not cxl_pci, but any potential
+>>> PCI driver that wants to use the devm_cxl_add_memdev() ABI to attach to
+>>> the CXL memory domain. Those drivers want to know if the CXL link is
+>>> live end-to-end (from endpoint, through switches, to the host bridge)
+>>> and CXL memory operations are enabled. If not, a CXL accelerator may be
+>>> able to fall back to PCI-only operation. Similar to the "Soft Reserve
+>>> Memory" it needs to know that the CXL subsystem had a chance to probe
+>>> the ancestor topology of the device and let that driver make a
+>>> synchronous decision about CXL operation.
+>>
+>> IMO, this is not the problem with accelerators, because this can not be
+>> dynamically done, or not easily.
+> Hmm, what do you mean can not be dynamically done? The observation is
+> that a CXL card and its driver have no idea if the card is going to be
+> plugged into a PCIe only slot.
 
-Could you please pick up this patch for the coming v6.19rc? So the VisionFi=
-ve 2 Lite board
-can be fully supported in v6.19. If anything needed to change, please let m=
-e know and I am
-willing to send v2 in time. Thanks.
 
-Best regards,
-Hal
+Right.
 
-> ---
->=20
-> This patch is derived from the reply of Manivannan [1].
-> And the previous version is [2].
->=20
-> Changes since [2]:
-> - Improve the commit messages. Add description to explain the impact of
->   this patch.
-> - Remove the Fixes tag and the Tested-by tag.
->=20
-> [1]
-> https://lore.kernel.org/all/xxswzi4v6gpuqbe3cczj2yjmprhvln26fl5ligsp5vkio=
-g
-> rnwk@hpifxivaps6j/
-> [2] https://lore.kernel.org/all/20251125075604.69370-2-
-> hal.feng@starfivetech.com/
->=20
-> ---
->  drivers/pci/controller/plda/pcie-starfive.c | 25 ++++++++++++---------
->  1 file changed, 15 insertions(+), 10 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/plda/pcie-starfive.c
-> b/drivers/pci/controller/plda/pcie-starfive.c
-> index 3caf53c6c082..298036c3e7f9 100644
-> --- a/drivers/pci/controller/plda/pcie-starfive.c
-> +++ b/drivers/pci/controller/plda/pcie-starfive.c
-> @@ -55,7 +55,7 @@ struct starfive_jh7110_pcie {
->  	struct reset_control *resets;
->  	struct clk_bulk_data *clks;
->  	struct regmap *reg_syscon;
-> -	struct gpio_desc *power_gpio;
-> +	struct regulator *vpcie3v3;
->  	struct gpio_desc *reset_gpio;
->  	struct phy *phy;
->=20
-> @@ -153,11 +153,13 @@ static int starfive_pcie_parse_dt(struct
-> starfive_jh7110_pcie *pcie,
->  		return dev_err_probe(dev, PTR_ERR(pcie->reset_gpio),
->  				     "failed to get perst-gpio\n");
->=20
-> -	pcie->power_gpio =3D devm_gpiod_get_optional(dev, "enable",
-> -						   GPIOD_OUT_LOW);
-> -	if (IS_ERR(pcie->power_gpio))
-> -		return dev_err_probe(dev, PTR_ERR(pcie->power_gpio),
-> -				     "failed to get power-gpio\n");
-> +	pcie->vpcie3v3 =3D devm_regulator_get_optional(dev, "vpcie3v3");
-> +	if (IS_ERR(pcie->vpcie3v3)) {
-> +		if (PTR_ERR(pcie->vpcie3v3) !=3D -ENODEV)
-> +			return dev_err_probe(dev, PTR_ERR(pcie->vpcie3v3),
-> +					     "failed to get vpcie3v3
-> regulator\n");
-> +		pcie->vpcie3v3 =3D NULL;
-> +	}
->=20
->  	return 0;
->  }
-> @@ -270,8 +272,8 @@ static void starfive_pcie_host_deinit(struct
-> plda_pcie_rp *plda)
->  		container_of(plda, struct starfive_jh7110_pcie, plda);
->=20
->  	starfive_pcie_clk_rst_deinit(pcie);
-> -	if (pcie->power_gpio)
-> -		gpiod_set_value_cansleep(pcie->power_gpio, 0);
-> +	if (pcie->vpcie3v3)
-> +		regulator_disable(pcie->vpcie3v3);
->  	starfive_pcie_disable_phy(pcie);
->  }
->=20
-> @@ -304,8 +306,11 @@ static int starfive_pcie_host_init(struct plda_pcie_=
-rp
-> *plda)
->  	if (ret)
->  		return ret;
->=20
-> -	if (pcie->power_gpio)
-> -		gpiod_set_value_cansleep(pcie->power_gpio, 1);
-> +	if (pcie->vpcie3v3) {
-> +		ret =3D regulator_enable(pcie->vpcie3v3);
-> +		if (ret)
-> +			dev_err_probe(dev, ret, "failed to enable vpcie3v3
-> regulator\n");
-> +	}
->=20
->  	if (pcie->reset_gpio)
->  		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
->=20
-> base-commit: b2c27842ba853508b0da00187a7508eb3a96c8f7
-> --
-> 2.43.2
+
+>
+> At runtime the driver only finds out the CXL is not there from the
+> result of devm_cxl_add_memdev().
+
+
+If there is no CXL properly initialized, what also implies a PCI-only 
+slot, the driver can know looking at the CXL.mem and CXL.cache status in 
+the CXL control register. That is what sfc driver does now using Terry's 
+patchset instead of only checking CXL DVSEC and trying further CXL 
+initialization using the CXL core API for Type2. Neither call to create 
+cxl dev state nor memdev is needed to figure out. Of course, those calls 
+can point to another kind of problem, but the driver can find out 
+without using them.
+
+
+>> The HW will support CXL or PCI, and if
+>> CXL mem is not enabled by the firmware, likely due to a
+>> negotiation/linking problem, the driver can keep going with CXL.io.
+> Right, I think we are in violent agreement.
+>
+>> Of course, this is from my experience with sfc driver/hardware. Note
+>> sfc driver added the check for CXL availability based on Terry's v13.
+> Note that Terry's check for CXL availabilty is purely a hardware
+> detection, there are still software reasons why cxl_acpi and cxl_mem
+> can prevent devm_cxl_add_memdev() success.
+>
+>> But this is useful for solving the problem of module removal which can
+>> leave the type2 driver without the base for doing any unwinding. Once a
+>> type2 uses code from those other cxl modules explicitly, the problem is
+>> avoided. You seem to have forgotten about this problem, what I think it
+>> is worth to describe.
+> What problem exactly? If it needs to be captured in these changelogs or
+> code comments, let me know.
+
+
+It is a surprise you not remembering this ...
+
+
+v17 tried to fix this problem which was pointed out in v16 by you in 
+several patches.
+
+
+v17:
+
+https://lore.kernel.org/linux-cxl/6887b72724173_11968100cb@dwillia2-mobl4.notmuch/
+
+
+Next my reply to another comment from you trying to clarify/enumerate 
+different problems which were getting intertwined creating confusion (at 
+least to me). Sadly none did comment further, likely none read my 
+explanation ... even if I asked for it with another email and 
+specifically in one community meeting:
+
+https://lore.kernel.org/linux-cxl/836d06d6-a36f-4ba3-b7c9-ba8687ba2190@amd.com/
+
+
+Next discussion about trying to solve the modules removal adding a 
+callback by the driver which you did not like:
+
+https://lore.kernel.org/linux-cxl/6892325deccdb_55f09100fb@dwillia2-xfh.jf.intel.com.notmuch/
+
+
+Here, v16, you stated specifically about cxl kernel modules removed 
+while a Type2 driver is using cxl:
+
+https://lore.kernel.org/linux-cxl/682e2a0b9b15b_1626e10088@dwillia2-xfh.jf.intel.com.notmuch/
+
+https://lore.kernel.org/linux-cxl/682e300371a0_1626e1003@dwillia2-xfh.jf.intel.com.notmuch/
+
+https://lore.kernel.org/linux-cxl/682e3f3343977_1626e100b0@dwillia2-xfh.jf.intel.com.notmuch/
+
 
 
