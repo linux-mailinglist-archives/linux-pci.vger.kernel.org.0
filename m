@@ -1,152 +1,257 @@
-Return-Path: <linux-pci+bounces-42786-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42787-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85962CAE048
-	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 19:42:59 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CFF4CAE0D2
+	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 20:11:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id A9DB530153AE
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 18:42:53 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1C90F30210F7
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 19:11:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16EDC287518;
-	Mon,  8 Dec 2025 18:42:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7281E2E228C;
+	Mon,  8 Dec 2025 19:11:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNQ/lhFQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlB8DKtG"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE9C1E1A3B;
-	Mon,  8 Dec 2025 18:42:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0AB242D79;
+	Mon,  8 Dec 2025 19:11:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765219372; cv=none; b=TZw+8ORzenZH4MrW+/+PWv+nhklMGA74rnC+iFVsADa9Q6yGK9tTRLtaLievdWmdGDudAJfGy9csyUn1uCbzlpx1nsB+1jey3dGC+bB+FzpP60yjbFsDITMRJE+LfmXSxI/DjQniShNdThIr2D49gTcNe/T6WnKVO/zzo618OUM=
+	t=1765221073; cv=none; b=YJZXuasRga2CIj7JYVkjcq3j0FB20JtD4VHSqK2+YlrWVzWgQRcNCqRYOhPe2qWhKH3wpOVJ+F9YMOHUKxmXFLfSBVjadmL3hztUmL5DXhlXIP8XWfcg3HvXABVGe7Qq1hmQxEreCYJuvl5tAvkYREOa7xfbjnFI/Uic5C98C/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765219372; c=relaxed/simple;
-	bh=jWA1csN2NaMy1biIHW07S62YLP09S/Y53pVeDtyETO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rnpJ1LFfUWkcyr7uh6RCNE7zMkZzHfPYX/OFcpoNOhzFuYFtJnhTT25mMr2V5NmDSzgxGjP7/pfH45wW+DS7MztIDIY+v4yXleGELOVOkg/JDd7yNxW3L3NMKFhrha1b/MFNdojADp/9kZ94zxjYnXusJdIFXwKSoSkrtv5tdeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNQ/lhFQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BB1BC4CEF1;
-	Mon,  8 Dec 2025 18:42:51 +0000 (UTC)
+	s=arc-20240116; t=1765221073; c=relaxed/simple;
+	bh=qA200K7aoJ1D07Oig2GNEZ+7d43xuiwI5ZAaPd2N0HA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LqllsJrkKRuXeB7M2LheG90xeJ3povGuq8OwNgKoy4g1wIiPDFfr7Y0N5t466R4X/XWK/En/LrHteJH4K5ngas5W0iZvBhAQOmxsmqOvPm2F8SjGz825nGtNiJLzKwE+QFkbyg6yIhO3UFFjDL1t7PH9Z+a4nRsraGvfegDh03I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlB8DKtG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80883C4CEF1;
+	Mon,  8 Dec 2025 19:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765219371;
-	bh=jWA1csN2NaMy1biIHW07S62YLP09S/Y53pVeDtyETO4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=mNQ/lhFQt2Pe2XN8D5Sspg/H7Xd6ijJtscUPjYKtOEqVv8JIB8aU1mM6Ack7KPb0V
-	 a9cSIHMCE+0lIh8tidR9tnstjKY6/6s7LlNQ3D6GO7NEM4v0csZYyA6VF1AH58G4UX
-	 3hHFkaKbZYXoa3ak/YT6UOdBBn1p22t9a8M10MmmQXFZWro4FPEMpOe5SQHFymeCHc
-	 Hv8EDBjYHD1fQUf4Vb5qyAIdF23wk4ZjDR7QGxjSi0S/oqk9RuGPWtHqO5SwQHAi9T
-	 AVwAo8+cjtNpUUcTrjA2u/hiMJUTHlj4eSCHQnu4TAVQtrjGNblsS58zACMlBK/EIu
-	 +GLl+c14mAZ8A==
-Date: Mon, 8 Dec 2025 12:42:50 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, shiju.jose@huawei.com, ming.li@zohomail.com,
-	Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
-	dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
-	lukas@wunner.de, Benjamin.Cheatham@amd.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	linux-cxl@vger.kernel.org, alucerop@amd.com, ira.weiny@intel.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [RESEND v13 00/25] Enable CXL PCIe Port Protocol Error handling
- and logging
-Message-ID: <20251208184250.GA3299436@bhelgaas>
+	s=k20201202; t=1765221072;
+	bh=qA200K7aoJ1D07Oig2GNEZ+7d43xuiwI5ZAaPd2N0HA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NlB8DKtGOG0T/XaVEoYJGV41lqPuxUliaXSAh1m3LBjHCG6y33dMW1qqoMr+d84de
+	 GGLhfiNORkGWPD5mPVzwNQBy24CbI4SkpUupBD4NJ8OjLad4JjqEDLK7WkdisD2Lwf
+	 U9DMY2unyh3P8VfF0j5KF8Ww65syU2rKPi1A5k3/CL6+uH2RbEdGuHf6oxk9qhTsfW
+	 4ShgPVynPhzLFaZ2G3CtaublU6x48EgQHvEAl5dxo2LPmIiLtGoX/3T0WX6O5Cxohl
+	 I5Dwz9ErdGUNH4l1W1qvWRAcPISV7e0I9G+p5YlJGjWVesGr47HXcP0nKqLlxROlcb
+	 1CHlIRQlGjIIA==
+Date: Mon, 8 Dec 2025 13:11:10 -0600
+From: Rob Herring <robh@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	linux-pm@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: connector: Add PCIe M.2 Mechanical
+ Key M connector
+Message-ID: <20251208191110.GA2473021-robh@kernel.org>
+References: <20251125-pci-m2-v3-0-c528042aea47@oss.qualcomm.com>
+ <20251125-pci-m2-v3-1-c528042aea47@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <00537640-96a1-4476-afd4-c8c4894d7931@amd.com>
+In-Reply-To: <20251125-pci-m2-v3-1-c528042aea47@oss.qualcomm.com>
 
-On Thu, Dec 04, 2025 at 11:30:45AM -0600, Bowman, Terry wrote:
-> On 11/4/2025 4:12 PM, Bjorn Helgaas wrote:
-> > On Tue, Nov 04, 2025 at 03:54:21PM -0600, Bowman, Terry wrote:
-> >>
-> >>
-> >> On 11/4/2025 1:11 PM, Bjorn Helgaas wrote:
-> >>> On Tue, Nov 04, 2025 at 11:02:40AM -0600, Terry Bowman wrote:
-> >>>> This patchset updates CXL Protocol Error handling for CXL Ports and CXL
-> >>>> Endpoints (EP). Previous versions of this series can be found here:
-> >>>> https://lore.kernel.org/linux-cxl/20250925223440.3539069-1-terry.bowman@amd.com/
-> >>>> ...
-> >>>> Terry Bowman (24):
-> >>>>   CXL/PCI: Move CXL DVSEC definitions into uapi/linux/pci_regs.h
-> >>>>   PCI/CXL: Introduce pcie_is_cxl()
-> >>>>   cxl/pci: Remove unnecessary CXL Endpoint handling helper functions
-> >>>>   cxl/pci: Remove unnecessary CXL RCH handling helper functions
-> >>>>   cxl: Move CXL driver's RCH error handling into core/ras_rch.c
-> >>>>   CXL/AER: Replace device_lock() in cxl_rch_handle_error_iter() with
-> >>>>     guard() lock
-> >>>>   CXL/AER: Move AER drivers RCH error handling into pcie/aer_cxl_rch.c
-> >>>>   PCI/AER: Report CXL or PCIe bus error type in trace logging
-> >>>>   cxl/pci: Update RAS handler interfaces to also support CXL Ports
-> >>>>   cxl/pci: Log message if RAS registers are unmapped
-> >>>>   cxl/pci: Unify CXL trace logging for CXL Endpoints and CXL Ports
-> >>>>   cxl/pci: Update cxl_handle_cor_ras() to return early if no RAS errors
-> >>>>   cxl/pci: Map CXL Endpoint Port and CXL Switch Port RAS registers
-> >>>>   CXL/PCI: Introduce PCI_ERS_RESULT_PANIC
-> >>>>   CXL/AER: Introduce pcie/aer_cxl_vh.c in AER driver for forwarding CXL
-> >>>>     errors
-> >>>>   cxl: Introduce cxl_pci_drv_bound() to check for bound driver
-> >>>>   cxl: Change CXL handlers to use guard() instead of scoped_guard()
-> >>>>   cxl/pci: Introduce CXL protocol error handlers for Endpoints
-> >>>>   CXL/PCI: Introduce CXL Port protocol error handlers
-> >>>>   PCI/AER: Dequeue forwarded CXL error
-> >>>>   CXL/PCI: Export and rename merge_result() to pci_ers_merge_result()
-> >>>>   CXL/PCI: Introduce CXL uncorrectable protocol error recovery
-> >>>>   CXL/PCI: Enable CXL protocol errors during CXL Port probe
-> >>>>   CXL/PCI: Disable CXL protocol error interrupts during CXL Port cleanup
-> >>> Is the mix of "CXL/PCI" vs "cxl/pci" in the above telling me
-> >>> something, or should they all match?
-> >>>
-> >>> As a rule of thumb, I'm going to look at things that start with "PCI"
-> >>> and skip most of the rest on the assumption that the rest only have
-> >>> incidental effects on PCI.
-> >>
-> >> I think there was logic behind the (un)capitalized but I forget the
-> >> reasoning. It's  better to keep it simple. I'll change to use
-> >> PCI/CXL and AER/CXL.
-> > 
-> > I don't know what "AER/CXL" means.  I think "PCI" and "CXL" are the
-> > big chunks here and one of them should be first in the prefix.
-> > 
-> > I do think there's value in using "PCI/AER" for things specific to AER
-> > and "PCI/ERR" for more generic PCI error handling, and maybe "PCI/CXL"
-> > for significant CXL-related things in drivers/pci/.
+On Tue, Nov 25, 2025 at 04:42:26PM +0530, Manivannan Sadhasivam wrote:
+> Add the devicetree binding for PCIe M.2 Mechanical Key M connector defined
+> in the PCI Express M.2 Specification, r4.0, sec 5.3. This connector
+> provides interfaces like PCIe and SATA to attach the Solid State Drives
+> (SSDs) to the host machine along with additional interfaces like USB, and
+> SMB for debugging and supplementary features. At any point of time, the
+> connector can only support either PCIe or SATA as the primary host
+> interface.
 > 
-> I was informed any patch touching PCI files requires a PCI maintainer 
-> review or acknowledgment. I misunderstood how to communicate this.
+> The connector provides a primary power supply of 3.3v, along with an
+> optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating at
+> 1.8v sideband signaling.
 > 
-> In my workflow, I used uppercase tags like PCI or AER to indicate that 
-> a patch needed PCI review or ack. For example, when I wrote CXL/PCI, I 
-> intended to signal that the patch was primarily CXL-related but in a 
-> PCI context, and therefore might need PCI review.
+> The connector also supplies optional signals in the form of GPIOs for fine
+> grained power management.
 > 
-> To avoid confusion in the future, can you advise on the best way to 
-> indicate a patch needs your PCI review—even if the PCI changes are
-> minor and don’t warrant leading with the PCI label?
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+>  .../bindings/connector/pcie-m2-m-connector.yaml    | 141 +++++++++++++++++++++
+>  1 file changed, 141 insertions(+)
 > 
-> Also, can you review the following patches?
-> [RESEND v13 01/25] CXL-PCI-Move-CXL-DVSEC-definitions-into-uapi-lin
-> [RESEND v13 02/25] PCI-CXL-Introduce-pcie_is_cxl
-> [RESEND v13 07/25] CXL-AER-Replace-device_lock-in-cxl_rch_handle_er
-> [RESEND v13 08/25] CXL-AER-Move-AER-drivers-RCH-error-handling-into
-> [RESEND v13 16/25] CXL-AER-Introduce-pcie-aer_cxl_vh.c-in-AER-drive
-> [RESEND v13 20/25] CXL-PCI-Introduce-CXL-Port-protocol-error-handle
-> [RESEND v13 22/25] CXL-PCI-Export-and-rename-merge_result-to-pci_er
-> [RESEND v13 23/25] CXL-PCI-Introduce-CXL-uncorrectable-protocol-err
-> [RESEND v13 25/25] CXL-PCI-Disable-CXL-protocol-error-interrupts-du
+> diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
+> new file mode 100644
+> index 000000000000..f65a05d93735
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
+> @@ -0,0 +1,141 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/connector/pcie-m2-m-connector.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: PCIe M.2 Mechanical Key M Connector
+> +
+> +maintainers:
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> +
+> +description:
+> +  A PCIe M.2 M connector node represents a physical PCIe M.2 Mechanical Key M
+> +  connector. The Mechanical Key M connectors are used to connect SSDs to the
+> +  host system over PCIe/SATA interfaces. These connectors also offer optional
+> +  interfaces like USB, SMB.
+> +
+> +properties:
+> +  compatible:
+> +    const: pcie-m2-m-connector
+> +
+> +  vpcie3v3-supply:
+> +    description: A phandle to the regulator for 3.3v supply.
+> +
+> +  vpcie1v8-supply:
+> +    description: A phandle to the regulator for VIO 1.8v supply.
+> +
+> +  ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
+> +    description: OF graph bindings modeling the interfaces exposed on the
+> +      connector. Since a single connector can have multiple interfaces, every
+> +      interface has an assigned OF graph port number as described below.
+> +
+> +    properties:
+> +      port@0:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description: Host interfaces of the connector
+> +
+> +        properties:
+> +          endpoint@0:
+> +            $ref: /schemas/graph.yaml#/properties/endpoint
+> +            description: PCIe interface
+> +
+> +          endpoint@1:
+> +            $ref: /schemas/graph.yaml#/properties/endpoint
+> +            description: SATA interface
 
-Sorry, I responded to most of the first v13 series because I didn't
-notice the resend, so this got a little fragmented.  Let me know if
-there's more I should look at.
 
-Bjorn
+Where's the binding changes to allow graph nodes on SATA and PCIe 
+bindings? I suppose Thunderbolt/USB4 on USB-C connectors will need that 
+too.
+
+> +
+> +        anyOf:
+> +          - required:
+> +              - endpoint@0
+> +          - required:
+> +              - endpoint@1
+> +
+> +      port@1:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description: USB 2.0 interface
+> +
+> +      port@2:
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +        description: SMB interface
+
+SMB is SMBus? There's no graph support for I2C either. For that, we use 
+'i2c-parent'.
+
+> +
+> +    required:
+> +      - port@0
+> +
+> +  clocks:
+> +    description: 32.768 KHz Suspend Clock (SUSCLK) input from the host system to
+> +      the M.2 card. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.1 for
+> +      more details.
+> +    maxItems: 1
+> +
+> +  pedet-gpios:
+> +    description: GPIO controlled connection to PEDET signal. This signal is used
+
+Instead of 'controlled connection' use just input or output. Arguably an 
+input isn't GPIO controlled.
+
+> +      by the host systems to determine the communication protocol that the M.2
+> +      card uses; SATA signaling (low) or PCIe signaling (high). Refer, PCI
+> +      Express M.2 Specification r4.0, sec 3.3.4.2 for more details.
+> +    maxItems: 1
+> +
+> +  led1-gpios:
+> +    description: GPIO controlled connection to LED_1# signal. This signal is
+> +      used by the M.2 card to indicate the card status via the system mounted
+> +      LED. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.2 for more
+> +      details.
+> +    maxItems: 1
+> +
+> +  viocfg-gpios:
+> +    description: GPIO controlled connection to IO voltage configuration
+> +      (VIO_CFG) signal. This signal is used by the M.2 card to indicate to the
+> +      host system that the card supports an independent IO voltage domain for
+> +      the sideband signals. Refer, PCI Express M.2 Specification r4.0, sec
+> +      3.1.15.1 for more details.
+> +    maxItems: 1
+> +
+> +  pwrdis-gpios:
+> +    description: GPIO controlled connection to Power Disable (PWRDIS) signal.
+> +      This signal is used by the host system to disable power on the M.2 card.
+> +      Refer, PCI Express M.2 Specification r4.0, sec 3.3.5.2 for more details.
+> +    maxItems: 1
+> +
+> +  pln-gpios:
+> +    description: GPIO controlled connection to Power Loss Notification (PLN#)
+> +      signal. This signal is use to notify the M.2 card by the host system that
+> +      the power loss event is expected to occur. Refer, PCI Express M.2
+> +      Specification r4.0, sec 3.2.17.1 for more details.
+> +    maxItems: 1
+> +
+> +  plas3-gpios:
+> +    description: GPIO controlled connection to Power Loss Acknowledge (PLA_S3#)
+> +      signal. This signal is used by the M.2 card to notify the host system, the
+> +      status of the M.2 card's preparation for power loss.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - vpcie3v3-supply
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  # PCI M.2 Key M connector for SSDs with PCIe interface
+> +  - |
+> +    connector {
+> +        compatible = "pcie-m2-m-connector";
+> +        vpcie3v3-supply = <&vreg_nvme>;
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            port@0 {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                reg = <0>;
+> +
+> +                endpoint@0 {
+> +                    reg = <0>;
+> +                    remote-endpoint = <&pcie6_port0_ep>;
+> +                };
+> +            };
+> +        };
+> +    };
+> 
+> -- 
+> 2.48.1
+> 
 
