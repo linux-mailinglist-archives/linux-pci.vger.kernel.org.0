@@ -1,52 +1,53 @@
-Return-Path: <linux-pci+bounces-42755-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42754-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 843D9CAD1AB
-	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 13:23:06 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2B59CAD1A8
+	for <lists+linux-pci@lfdr.de>; Mon, 08 Dec 2025 13:23:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C34E0301FA6B
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 12:22:34 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id ECF94300960E
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Dec 2025 12:22:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3E343148A1;
-	Mon,  8 Dec 2025 12:13:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A101313271;
+	Mon,  8 Dec 2025 12:13:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZj7lVaq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i5RNLntV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7474931283F;
-	Mon,  8 Dec 2025 12:13:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0690A31283F;
+	Mon,  8 Dec 2025 12:13:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765196003; cv=none; b=Vr0C6W+BZ2rJGi9iQ0QM8kNXIX8jCW31HqnZEDhxUtNQ0Z8g4YRL32NULtg3X3tEmLjlGAX/FDAHrNYU/HMURjJkSvmkGz1YQwtdLmsik5CPmCxnNbWzK4jUViOItK2RXONRKNNXOWT8YQnoHZUMjuYeU59Nhq0TLuI1d7EJK1A=
+	t=1765195999; cv=none; b=j2HJYnz1eQmOFY+jgy1ls3lU9+4e8ixjpzk7I6YkFFPcs+T+wGt2QtFhnsRW9q78wRiOxKQcgRhQ3cAu9f46TpUf8sU6onRqdWcwR9RizWbEFQRq65JRncvl45ki126Tpata+SobIkAl2+nCYsNKLBqOMdwvMjsGeEJdTDWwWkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765196003; c=relaxed/simple;
-	bh=ASVeNch6NVSrs2aabRZhcx75igT46batyF3W0+Gk/TA=;
+	s=arc-20240116; t=1765195999; c=relaxed/simple;
+	bh=/Z0hGBldSIp0RNPQfFKQcDun+u8smCEcE6s1NtsTlgQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cyhv8f1H3cDY9dRvp8yYBLk0KHhTY8kLgDmi7+4qXhDLZiWgj5ZsIBN3eXkRTPgHW6qOzKdOzptkZ5N/n7Uyv4fP8srHuMDdHYRtT+UvaNX60SkymIBJhjmYqy6X/MIcKPdB59HEr9gyQ8PXu7UDkuw/PT7dA+ZfjQkoq7Dde7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZj7lVaq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58FEBC16AAE;
-	Mon,  8 Dec 2025 12:13:21 +0000 (UTC)
+	 MIME-Version:Content-Type; b=iuY8+bsDdXTm4kbEGeGICJPeKN95z27X1o/oHa5XoJV3rMtf4ITZaVD00e+G8JxJM3vpV9cTwlByedsy9OPw9IxSNa0G0zUjeYAnzs+p+Hj61ifIrRg3O/+l4jvSeM+3es9nRfL0Wjd1yIeMtgjJjYYLSdgRemCxWnr8A1OvVvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i5RNLntV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12431C4CEF1;
+	Mon,  8 Dec 2025 12:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765196003;
-	bh=ASVeNch6NVSrs2aabRZhcx75igT46batyF3W0+Gk/TA=;
+	s=k20201202; t=1765195998;
+	bh=/Z0hGBldSIp0RNPQfFKQcDun+u8smCEcE6s1NtsTlgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EZj7lVaqTp9ahV8EbipyvwBP9KJvYlypBKDCfcGIZoQ7NrkDfUNxgKW/TaRGLOJ8e
-	 svJIpS2i7dIi0z1ChJQOphknS+CK1p/OZOI15w9SKhCqu8wAPdJq7567FJjYoGiGU1
-	 fW4CEGHWsxqebxWniBNVfKO3slsmP3Ar31/J+fT01nP89iahEGF5nbrr7wswhLvVBQ
-	 /8dJftVESid7Hcpjo5cHioKfaZKXmQcK4d6MVpbUJdznPgjTTF0nz2xwTFclkiPlby
-	 OImCEFvrqWbwdHQArddPio/O5NbjCfSe469TT+eJ1qAm0XRVZ1usvzwfRARppXwrLy
-	 5oPDYHx4IZ5EQ==
+	b=i5RNLntVx+d4TxAGfgy44zXFNRWNAiuNzRl/Cxz/Flz+T3qKomGRU7RyyByP1pu0g
+	 X6YtIr69mEFZmkLkvOM8Fa16g1Y2Pdl9fu1zKw5mcLn0wwaNwNBOmcJSi+SbfmfMyZ
+	 hdaNFVXR1QJuUcfdREDFTwaMXdV29GwVtUFDouclqGvSeMJLEjaUwOjhEnjN41sUHt
+	 pgXJeYGFZyJudh3nFhZ1zEEFYGxDDTSNqIJ3gX40PTm4N8ITQULd3vMY6Zwvtv7y1B
+	 zR6w/i/9FNemwvaQdw1o6LB9QUcjh7NTFrAxMOrcJesAJ50tNk2t9g7cXh+szvnBs+
+	 tRkTYLnxALFPA==
 From: "Rafael J. Wysocki" <rafael@kernel.org>
 To: Linux ACPI <linux-acpi@vger.kernel.org>
 Cc: Linux PM <linux-pm@vger.kernel.org>,
  Linux PCI <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
  Bjorn Helgaas <helgaas@kernel.org>, Armin Wolf <w_armin@gmx.de>
-Subject: [PATCH v1 1/2] PCI: ACPI: PM: Rework root bus notification setup
-Date: Mon, 08 Dec 2025 13:11:58 +0100
-Message-ID: <2249851.irdbgypaU6@rafael.j.wysocki>
+Subject:
+ [PATCH v1 2/2] ACPI: PM: Register wakeup sources under physical devices
+Date: Mon, 08 Dec 2025 13:13:01 +0100
+Message-ID: <3024338.e9J7NaK4W3@rafael.j.wysocki>
 Organization: Linux Kernel Development
 In-Reply-To: <2395536.ElGaqSPkdT@rafael.j.wysocki>
 References: <2395536.ElGaqSPkdT@rafael.j.wysocki>
@@ -61,87 +62,37 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Since pci_acpi_add_bus_pm_notifier() is only suitable for adding ACPI
-PM notifiers to root buses, rename it to pci_acpi_add_root_pm_notifier()
-and modify it to take an additional "root" argument, which is then used
-for passing a PCI root bridge device pointer to acpi_add_pm_notifier().
+Currently, acpi_add_pm_notifier() registers wakeup sources under
+ACPI companions of the devices affected by the handling of wakeup
+events which goes against the rule that a struct acpi_device
+can only be a parent of another struct acpi_device.
 
-That function uses it to populate the "dev" field in the context
-structure attached to the ACPI device object that will receive the
-ACPI "wake" notifications on behalf of the given PCI root bus.  The
-context structure in question is passed to pci_acpi_wake_bus(), so
-the latter can be simplified quite a bit now because the target PCI
-host bridge structure address can be derived from "dev".
+Moreover, it would be more logically consistent to register wakeup
+sources under the devices affected by wakeup events handling which
+would cause them to appear in more suitable places in sysfs and would
+help to identify the devices they are associated with more easily.
 
-No intentional functional impact.
-
-This change will also facilitate a subsequent update related to the
-registration of wakeup sources.
+Accordingly, update acpi_add_pm_notifier() to register wakeup sources
+under the "target" devices directly instead of registering them under
+the ACPI companions of those devices.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/pci_root.c  |    2 +-
- drivers/pci/pci-acpi.c   |   15 ++++++---------
- include/linux/pci-acpi.h |    3 ++-
- 3 files changed, 9 insertions(+), 11 deletions(-)
+ drivers/acpi/device_pm.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -738,7 +738,7 @@ static int acpi_pci_root_add(struct acpi
- 	if (no_aspm)
- 		pcie_no_aspm();
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -586,8 +586,7 @@ acpi_status acpi_add_pm_notifier(struct
+ 		goto out;
  
--	pci_acpi_add_bus_pm_notifier(device);
-+	pci_acpi_add_root_pm_notifier(device, root);
- 	device_set_wakeup_capable(root->bus->bridge, device->wakeup.flags.valid);
- 
- 	if (hotadd) {
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -847,12 +847,7 @@ bool shpchp_is_native(struct pci_dev *br
-  */
- static void pci_acpi_wake_bus(struct acpi_device_wakeup_context *context)
- {
--	struct acpi_device *adev;
--	struct acpi_pci_root *root;
--
--	adev = container_of(context, struct acpi_device, wakeup.context);
--	root = acpi_driver_data(adev);
--	pci_pme_wakeup_bus(root->bus);
-+	pci_pme_wakeup_bus(to_pci_host_bridge(context->dev)->bus);
- }
- 
- /**
-@@ -885,12 +880,14 @@ static void pci_acpi_wake_dev(struct acp
- }
- 
- /**
-- * pci_acpi_add_bus_pm_notifier - Register PM notifier for root PCI bus.
-+ * pci_acpi_add_root_pm_notifier - Register PM notifier for root PCI bus.
-  * @dev: PCI root bridge ACPI device.
-+ * @pci_root: PCI root corresponding to @dev.
-  */
--acpi_status pci_acpi_add_bus_pm_notifier(struct acpi_device *dev)
-+acpi_status pci_acpi_add_root_pm_notifier(struct acpi_device *dev,
-+					  struct acpi_pci_root *root)
- {
--	return acpi_add_pm_notifier(dev, NULL, pci_acpi_wake_bus);
-+	return acpi_add_pm_notifier(dev, root->bus->bridge, pci_acpi_wake_bus);
- }
- 
- /**
---- a/include/linux/pci-acpi.h
-+++ b/include/linux/pci-acpi.h
-@@ -12,7 +12,8 @@
- #include <linux/acpi.h>
- 
- #ifdef CONFIG_ACPI
--extern acpi_status pci_acpi_add_bus_pm_notifier(struct acpi_device *dev);
-+extern acpi_status pci_acpi_add_root_pm_notifier(struct acpi_device *dev,
-+						 struct acpi_pci_root *pci_root);
- static inline acpi_status pci_acpi_remove_bus_pm_notifier(struct acpi_device *dev)
- {
- 	return acpi_remove_pm_notifier(dev);
+ 	mutex_lock(&acpi_pm_notifier_lock);
+-	adev->wakeup.ws = wakeup_source_register(&adev->dev,
+-						 dev_name(&adev->dev));
++	adev->wakeup.ws = wakeup_source_register(dev, dev_name(&adev->dev));
+ 	adev->wakeup.context.dev = dev;
+ 	adev->wakeup.context.func = func;
+ 	adev->wakeup.flags.notifier_present = true;
 
 
 
