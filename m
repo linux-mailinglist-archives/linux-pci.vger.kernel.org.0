@@ -1,279 +1,250 @@
-Return-Path: <linux-pci+bounces-42852-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42853-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1012CCB05B7
-	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 16:05:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 53A5DCB0615
+	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 16:17:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DBFA130528F7
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 15:04:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2DD953001863
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 15:17:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 197B42FE575;
-	Tue,  9 Dec 2025 15:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 457152D4811;
+	Tue,  9 Dec 2025 15:17:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ac7HoN4R"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QcbG2dE4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011060.outbound.protection.outlook.com [52.101.52.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52291E8332;
-	Tue,  9 Dec 2025 15:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765292691; cv=none; b=dVudkusUukeT3duwr9ZjJubZNrEpbUPM0NmBFVCXWIJNYqNhf9NgRmZhAj54DNQj5M8WFjfEeTH8M/cSiVRspwo2a4kSCh5DRXSLwcUKMwsocwsM9FqtZ76hc2yXXu4Dqw9m8BYoRo0b4yh8pQJ4BEAM273w2B8WszHX9RWNmDg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765292691; c=relaxed/simple;
-	bh=1UBopjtk7ZBbpZOBiD36vUxARE759QXi7aFEEAeiIlM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NyyfstItv9Po9NJepTVS6q7BNhEgNRRQn2v1AXBORwJN1DX5jaa2X+Y/Jx6kyZc5kHpMzais6kzmxYmpBjK7CAw4RHFCJztqpqlxwA7ZK5VshhwZjnKsBJJc9vYI7q5CKEiJU4oJypuGw8JL9YLycjHVCWRKXxKqgHOrD5EjT5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ac7HoN4R; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C503C4CEF5;
-	Tue,  9 Dec 2025 15:04:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765292690;
-	bh=1UBopjtk7ZBbpZOBiD36vUxARE759QXi7aFEEAeiIlM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ac7HoN4R9h+8h8masl9d7Nb8fwyt1pQDU7FoW9yKI/d4Pq2XP8K2iiyyVNV9hTPyJ
-	 Ep+GgcZWdVjv78+vBQ7AH5EwbOvAv+dXd+suvynhY7swzPxSgxn2LYvpoGtgKXGvkD
-	 NmRJx9p096YzIkNMPzVophRhpAlgWGZz3rRA9bJ+OzovNWnEaT0JNkqSMTYkVMZI1v
-	 cacMiCankcmJ08bWfVtTOfxxHXD3QQwaN1tBaYxMwlzbM7uhxOpJ+1w1mb0lFhHmeH
-	 xJFWotsK1Zes+g8mkkbRopdb1VVW0E0aulksErlag8ZPLA2YkAqh3Jgu1gWFputUiO
-	 GlzlTFvVdptpA==
-Date: Wed, 10 Dec 2025 00:04:41 +0900
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	iommu@lists.linux.dev, Naresh Kamboju <naresh.kamboju@linaro.org>, 
-	Pavankumar Kondeti <quic_pkondeti@quicinc.com>, Xingang Wang <wangxingang5@huawei.com>, 
-	Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH v2 0/4] PCI: Fix ACS enablement for Root Ports in OF
- platforms
-Message-ID: <xofyj6bjbpsxjpgnw6vyfpekpvsmhxcoaqm5k26yuyc2dashux@4nro7bppnwhs>
-References: <CGME20251202142307eucas1p12a15e5656bb53f48f445c3056d4e3166@eucas1p1.samsung.com>
- <20251202-pci_acs-v2-0-5d2759a71489@oss.qualcomm.com>
- <b63ec0aa-7a4a-4f8d-9b93-e724f3f2a9d1@samsung.com>
- <de80df44-f797-4e8c-a411-09ed3c1286a3@samsung.com>
- <cae5cb24-a8b0-4088-bacd-14368f32bdc5@samsung.com>
- <26a93564-fcdd-4e90-b28d-8cc84cedeaa8@samsung.com>
- <4clyxcy5pwqaz6uguxnjei4hnxsree6k2uz5upro7khuvklfyo@nc5ebeicuqw4>
- <0ee48f4a-2341-4967-aca5-3fe6b4cd5fe2@samsung.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7761C26B75B;
+	Tue,  9 Dec 2025 15:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765293448; cv=fail; b=KLB2Ub2XyaFBVVxgEdxEktacajM7ltx6yWGmtPTZsbVHDPXSLUlEjQna3Zc0I1pxpugZ50ea074auU6tZiWdmTz71YX/78cOTdT6W0xj+SoRCzXB7Dmlq8eyFgrWzC1eaG3W2DG+N70YCxaqNNJdv3Fx1ppNhE8py5B7HmUI7j0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765293448; c=relaxed/simple;
+	bh=qljsHoi8Y/ujmFxVucVy9znAKMG/jtcOLSK8rDYpdV4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=swyh8Pc3gbwJjWErBdBuwaDD8qJH6FxCD05Tb6o9YN2zW3n/czS7dgH2LTgjG6xO/mya51p33zz+B1gmMka8EnvdVkMIfbhAmvhBcaGXBEmnBqCxHzVwRCDmd7a4VK+1UMaDJwNx2sNeFbSOLcymufAHyLEV/PrUL4dyARwmA+A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QcbG2dE4; arc=fail smtp.client-ip=52.101.52.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Axmazxg55eJ6oeXkIvmsC+GsWvGfcZ27sxk0J5m/uBNS0bIKRLRDyb3BnIShO8T8NTX32WMqohq9GjdBP2iRWtAz3f0RoinsOczow/tZZF9dPRjwhakBhdj388lQBnxpEe6XHHFYJP+hoxozftseib+o7RHdBRVgkVtYsZKVPopOMSN+Rek91AddAx/nLmoKF7o3ILxVXWaEszuRRACzmc8DYokUuqKyhRomnFB8+paym+VAIUThjSIQiMp7qyAmAUbLbZ0P82qZCIKSqZ/9j43uSlHp/tX1/s5I5nN4WqT8b7+IGg0L/glqkcMrSWsQsy9qG5gZkbKG/euzxxcOzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HaVrIGt3cXiMQy92eaJXxp5hHRlUwiD19d4/Y4m//Co=;
+ b=xFu7sIEPuSxR974hEgza2fe1N5T9qrAqgFoBUBCFB1TpdZvHy9olfBMsYkyl5LDbEGtZxKypxkG+rBADhyeb8H2toyHTeyqTVRUrS2RCeZCPp7UBWgvtjyocDypJxHSaSB3PEXqFeaSv/ECd/jRXH+RtX03H+k30ZoKjr0j9EwM/VA1KR8IdecRbgSUDHO8HE2WvFLo4HlqPbmdLhaelsr06qOWe10VHxKU8QoDrztWXT9KKr2Cvu8CS9ARm/dWtFjs2yd9JT+z8VP30bGwc5d1bAhJ5rkJuuxFtgaYhWlFVJcNsal5D5LcLI7CuCeXwJJ4pvC596riFDxmpEXswxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HaVrIGt3cXiMQy92eaJXxp5hHRlUwiD19d4/Y4m//Co=;
+ b=QcbG2dE4EbAHb/PA1muAjTr3WJ8lgxosT6Cw2NiQPTiqMJn2pAZ/j4aSYUHJCp4FEHpaHLCsMAnKbIWICUUznpHANMX/e54oYcGnOF0sY9q8rDqKtud0XjoCIepaHHd4YGM8xAdH8pM5tUKmqCs5+fk/AJ1w+3F6vAVZQJyaF8A=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH8PR12MB9766.namprd12.prod.outlook.com (2603:10b6:610:2b6::10)
+ by SA5PPF50009C446.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8c8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.14; Tue, 9 Dec
+ 2025 15:17:20 +0000
+Received: from CH8PR12MB9766.namprd12.prod.outlook.com
+ ([fe80::499:541e:a7d8:8c14]) by CH8PR12MB9766.namprd12.prod.outlook.com
+ ([fe80::499:541e:a7d8:8c14%5]) with mapi id 15.20.9412.005; Tue, 9 Dec 2025
+ 15:17:19 +0000
+Message-ID: <2413985e-ef5f-48c2-a2d1-1cce91965752@amd.com>
+Date: Tue, 9 Dec 2025 09:17:15 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 20/25] CXL/PCI: Introduce CXL Port protocol error
+ handlers
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
+ shiju.jose@huawei.com, ming.li@zohomail.com,
+ Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+ dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+ lukas@wunner.de, Benjamin.Cheatham@amd.com,
+ sathyanarayanan.kuppuswamy@linux.intel.com, linux-cxl@vger.kernel.org,
+ alucerop@amd.com, ira.weiny@intel.com, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20251208183749.GA3302551@bhelgaas>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <20251208183749.GA3302551@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR03CA0024.namprd03.prod.outlook.com
+ (2603:10b6:806:20::29) To CH8PR12MB9766.namprd12.prod.outlook.com
+ (2603:10b6:610:2b6::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0ee48f4a-2341-4967-aca5-3fe6b4cd5fe2@samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH8PR12MB9766:EE_|SA5PPF50009C446:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9ed0111b-c719-45c9-5dc1-08de37360b52
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QjlpZnZDK0dJQjJXS3h0QU9jYVlpdFJFMXIzQkV1T0xIZ3I4VDIyQ2xTRDNr?=
+ =?utf-8?B?aWtkYlBYQVFWRFE2ZVZ3SHVpR2pFWGViTHZHa2cvdzc1dGx2QWNpcHVUVFBG?=
+ =?utf-8?B?VGE0NlFRSGV5RS8yVEhHR2RKblZ3UkdBSzJIK1Nkd0ZYNndZdmRqMHJqbk5R?=
+ =?utf-8?B?R0tETHRBdFhXUGhPVUZueVJ2VjVwSFJDS1lDUHhDY21CK1htT25PRHpPcWs3?=
+ =?utf-8?B?YjAyMGpBV2ZqY0NkOVBqUGNOTzNQekVxVlJSSXFlb0YxaVVRWmVsbEhPODJr?=
+ =?utf-8?B?ZWhMU3dweks4Y2hCMUVFMW0vRE9CdEZMMlBTY3I5SldESGtNM2hDTDlZbjFZ?=
+ =?utf-8?B?d3l6bTZBQzRRR3dnVUFnZm1zMEpZVW5xRHVwelY4elZ4TGdjMm5zbXU3c0RC?=
+ =?utf-8?B?Ujk0QmNORTJYc0pTZ0FEcU94anI2N3NuU3dDOFZ5QURkTEdIdWRYYjJ3Qk9N?=
+ =?utf-8?B?OGJFSkVtcGZaQWJQczZ6azNsa3I0L1RPUi85Rm1tTmlsWXZjK0plOEwyN28w?=
+ =?utf-8?B?alB4VURreFBZcml1WXg3bjhLKzBxUnk1cVBkWlJ1RkVvcWVpNVd6eTVPUjg3?=
+ =?utf-8?B?Szd2ek1EaUE3RFdyNldkTmVLenl1eS9qcWZYcmhad3IrL2drTHpQYllLVW5M?=
+ =?utf-8?B?b3ZMUTNWcmVYTEhjR1Z3VlJGYUhublZoVDRtYjlFZE1nTVZoUUxwQnRtUUZU?=
+ =?utf-8?B?WFA4dDUwZnNXbEJ2QmVqc1pjZUtpNTUvY3FBYUUwbnpzeGp0YUgzRFc1eWdk?=
+ =?utf-8?B?MFJYc2QrbHBWS0M0ZzBBNWkyUFdMRS9ickphVE0zRnhLaGtTNFdPaHg4WldT?=
+ =?utf-8?B?aDQ4N1k5MEg1Rzl0UUFJcW40bzM0dnV4bGd4dWpONVNGbmJ5MWhpbTN5Q0N5?=
+ =?utf-8?B?eTEvZkVKdU4wa1k1SnY1NGN6Wm94eUlLZkw2NkF0UWRPKzF2VGVubVIxaEUz?=
+ =?utf-8?B?WWhKcHY4SUFxaTVDbC9Fc0hEZVFBNEczeVk1aUt0KzR0TU1HUFJ1VDMrQURN?=
+ =?utf-8?B?aTVqbWNPRkZzdDA5c0dSalRNRnpObHF1OHQ1TVBCZjY3azh3dGc5YjFmaVFl?=
+ =?utf-8?B?ekl2UnRtQ1R2am5rVXhWTENNNndJYStBaHVaaFZVYW5uL1FiOS9qblhWMTNI?=
+ =?utf-8?B?V2ovZVV0ZHdJcGxiV0hSNlFndUJlbFVCNlIxMCtZWGdid05PcUU3cHVDS3JJ?=
+ =?utf-8?B?VFMrb1pLMlRIWjFFb3BEQ2tjMWlRTkxiN0JvRzErV0pQMmNsa3c2ZURUQ2h0?=
+ =?utf-8?B?TTJ2WmJQbHVOOStGVk9GMCtydGRiVEwvU3Nlb1lmcGhmRTJIcS9BTjFVeExX?=
+ =?utf-8?B?U0JUVzZtb2VjZ3JuaWxmTVd0UHh5OE45SFpvL3RtN0pqeVliY2ZFYmFWempY?=
+ =?utf-8?B?MVlDRWlKbVZVSTg4Zng5cmlZRWdZT2QreDhtQWEvMWw0TjJpN0RPZEgyWWNW?=
+ =?utf-8?B?aDlDaE9BaU1Cem5BenpheTFnc3o5dDZtU0RGcFd4TjM1Y3lZQ1FTTno5dW9z?=
+ =?utf-8?B?SGd2MkIzdmNUcnpqOFZLSXd3QnBpY1M0VmhHYTR6WVBqZjZxSFVsNTdsYXpU?=
+ =?utf-8?B?YjN4dnRiLzhlVVlHR3NqK0FZZ2x4anFBUURjdU04NVlRdzVYMC9la0ZOOU10?=
+ =?utf-8?B?RzNiV3JCRHR1b2UxOE9IQTVrbDAwUjh4SVFoRk9DNGpvaHcvUXN1eW5lK1Br?=
+ =?utf-8?B?amVzTUM5anV0dDB6RytzV0dJaUxib09EaEVleGxEUzV6M0xjN1NlNEcraUp4?=
+ =?utf-8?B?eG5yeCtzSHdWSnU0QVVIMC9URUtnUXlpT2dlcmpydG8wcU0yRXVLTkoyQVNN?=
+ =?utf-8?B?dGNhbzdCcktydjZLNVVoRVNXNTVQM3RCL1lvVGtEdTJSQ3R6QzNZVGNUUngz?=
+ =?utf-8?B?dFBpV2V1OHBmTkVGYWxvK3g3Y2IzY2o0RS94dDBLZkN2Nm1JMkNHeW84RkJO?=
+ =?utf-8?Q?M7/BiNxB1geQ9q4qqv2tqt59DG1w6I1I?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH8PR12MB9766.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?M1o4d050WmpmdHdUelpTdTR1OW00OHQ3eVY1Z1hRWWcvTTMxbDYwcVoycis3?=
+ =?utf-8?B?R1k2eFJNazJPeHNybE9kZzB2QThBQTB0RW5aS0w3WXFhU1gvcy9LMHNqQ0xk?=
+ =?utf-8?B?bnc4bUhyV0ROWDFpQk54aDZuZWE5bkd5MXFWMWdXOU9Xd2VyMlZpZGNSU2ZF?=
+ =?utf-8?B?c2I3TFhJOGhFa0l2ajFqeEd5NmlPUlNaWVRRS1pKNGRJTnhQK2liN2pZcUdW?=
+ =?utf-8?B?QzFvTWpRZ2hEdDJ3emtLd0R4L3ZhOFhKdjY2VE5hRVd5K1dQeTdnMnJER0JC?=
+ =?utf-8?B?dk1NZnFLU0hRd1JmYlQ1a1Y5VncyMHJHaEw2S1hpRW1zQ2tGL2JYUTlZc3ZM?=
+ =?utf-8?B?Sjl4Ukt5TDVVSEZ3MzB3eHN6NlpaQmFhRWRnWWI3dHRUdHM2MWc2ME1HYklP?=
+ =?utf-8?B?K3k4YkhXTVpHZ3E3Q0RaQitodkxiOFlSV1RwakhGSXlCN3FuTUgrY2g5WmtN?=
+ =?utf-8?B?aDRQV2o1RDVBTit1Mk9hKy9jblQzc2cxVS93NmlSV0pyR01Sd0FESytrQytu?=
+ =?utf-8?B?MlBybE16TzJBMm9kWmQ0amVuVUJOaVJQS0RZaGkvanRBbUM1STRhUGlaSnZE?=
+ =?utf-8?B?d1BINU41RnA3dTZLVGtQaklyN0RCT0hkWUZjaEdEQlc3RUpleU1VOVE0c0w1?=
+ =?utf-8?B?Tzk3UEo5Y0x5dm5Hbnh0cmhMWWFXTkxGQ0ZRc0hBb0lGSUlNRjdXTE1zajl4?=
+ =?utf-8?B?cE9UeVU0dWNydnlvaHA3ak5UamN6VExwaVB5bFZ5RVlicGk0TjFTUmc1VmlS?=
+ =?utf-8?B?TTh2akZEOUZ3UEJUV0ZybDFGVFY3S0hrY2lpMXdHZFZ0Wk04ZGN3RWI5cS9z?=
+ =?utf-8?B?UHJPSjR6c3B2ZFg0WGpjK3ZBNDJONWNNekJOd3dWeXRMcXJocTJvSStzQTQr?=
+ =?utf-8?B?a0gxdi9yN0J3c3BhNFRvck9vVysyeGFwK1QvbTc0SmZjdnpVNVIxdTB5dnZj?=
+ =?utf-8?B?M2VBdm9IMG9QV0Y2b3dJRFFnTEFTaVRMbkxKc2VQNUYrcUE5Vk5Lbjc0K2Q2?=
+ =?utf-8?B?QWtyaWlQdk9vRkEya3hTYWRHbisrc3Y4b1Y0ZEs4ZzFKV0Uybk5kcFUyTVAz?=
+ =?utf-8?B?amFsTUNEY3VmTGxwTUZDSGJGV0ZkTHdQRnlzYmMyKytWRWlUTlBJU0FXcTk1?=
+ =?utf-8?B?blpUdGx6RUVjZ3RtZTNidHRlZVhHYmpFZVZkVEJ3MmlNOXZMUC8xai9zaGpU?=
+ =?utf-8?B?RlY5MEoxbnZyMXQxd0VOV2NJOVhzV1kxc1dZRjV6eDFNVDhnS1FyQUJGRDhH?=
+ =?utf-8?B?dktMWUF0THREYXA3TlQ4MlhsQ1Q3OStzQWVCQTBsdXpiSHRkME9UeVpIaVh1?=
+ =?utf-8?B?bm5RdW9scGZkR3BVcG9nZ04vdWJKQjMzRGZtU1RaaDZoQkNTWWc5bGJ2L2hS?=
+ =?utf-8?B?aEsvVndDU1ZlMkNwbHJkSFQzY0dMTytFUlUybHFQcDhKYkJ5VTFPMkIwVTg5?=
+ =?utf-8?B?NG1WMUVZQlljR090b3BUNW1SSG1FTmV3NU5NcE9ZKzkwaU9HbkZsZFh3K0g0?=
+ =?utf-8?B?Q3Z0d0UzZFRucmdDQ1J4T0FLOWFWMCtLYllzRm9IY3NyWWxTb2ZYekZOVTJS?=
+ =?utf-8?B?UkhnLzRTQzNGR3hWY2pmQUVlNnd5U0NnRUNwNUowN0tMbFRxYW4vTFhTN294?=
+ =?utf-8?B?NDk3dTV6T0FrOG9SbVJKSjltUHRkWExBTTMzSWg4MkZTd3BWbGNNNW5aMHht?=
+ =?utf-8?B?djR6VmJSWWM0eUNvWGFKdTFpMjJyaDE1dlBoOHhMUVlRQ040NTFjcnlscDA1?=
+ =?utf-8?B?T0hJTWFOOUcxMjIvZnV6ZVhtcWRyQVhQVHdWOWlEa09lSWVaMG54QWU4eXAx?=
+ =?utf-8?B?dWtKekJpYW5nSE1rMnhrODRRM0NyWXdNT1hnVDZHNmpMVkhuRkpiTXJrWlJP?=
+ =?utf-8?B?cWJJcHVDOEVHTnhENDJYRWdmeGVXdkdwZmZtNkl0eHFsaDMvYkQ0ZmRWTW0y?=
+ =?utf-8?B?cElSQTdGZ2FZanQwK1dyczNEQWowSmxGRkZoNEhUWVFkOVRybDByMmN0UEpl?=
+ =?utf-8?B?SmF6WG1FL1NBWjJFUjh5UEF3UFBaWitudy9rZVQ4em5zd2hnQTJtb1JHN3dS?=
+ =?utf-8?B?b2gzS09nR2wreCtVeEhLUHlzUHd6SjZnSVBDek5UYS9sMzVXaDg2RVMrNGhV?=
+ =?utf-8?Q?dGTM7fRizXVvk4wWy60h0WfkB?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ed0111b-c719-45c9-5dc1-08de37360b52
+X-MS-Exchange-CrossTenant-AuthSource: CH8PR12MB9766.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2025 15:17:19.2573
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CHH+EAYR8TFo1PUKWeE+jyQpLUb7udN9PavUHPobwJ1e4JxSHaNaR8EmfoZA4X7sr7NJGuDIueyuq4Ja2EYG+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPF50009C446
 
-On Tue, Dec 09, 2025 at 01:00:55PM +0100, Marek Szyprowski wrote:
-> On 09.12.2025 12:15, Manivannan Sadhasivam wrote:
-> > On Tue, Dec 09, 2025 at 09:28:38AM +0100, Marek Szyprowski wrote:
-> >> On 09.12.2025 08:31, Marek Szyprowski wrote:
-> >>> On 04.12.2025 14:13, Marek Szyprowski wrote:
-> >>>> On 03.12.2025 13:04, Marek Szyprowski wrote:
-> >>>>> On 02.12.2025 15:22, Manivannan Sadhasivam wrote:
-> >>>>>> This series fixes the long standing issue with ACS in OF platforms.
-> >>>>>> There are
-> >>>>>> two fixes in this series, both fixing independent issues on their
-> >>>>>> own, but both
-> >>>>>> are needed to properly enable ACS on OF platforms.
-> >>>>>>
-> >>>>>> Issue(s) background
-> >>>>>> ===================
-> >>>>>>
-> >>>>>> Back in 2021, Xingang Wang first noted a failure in attaching the
-> >>>>>> HiSilicon SEC
-> >>>>>> device to QEMU ARM64 pci-root-port device [1]. He then tracked down
-> >>>>>> the issue to
-> >>>>>> ACS not being enabled for the QEMU Root Port device and he proposed
-> >>>>>> a patch to
-> >>>>>> fix it [2].
-> >>>>>>
-> >>>>>> Once the patch got applied, people reported PCIe issues with
-> >>>>>> linux-next on the
-> >>>>>> ARM Juno Development boards, where they saw failure in enumerating
-> >>>>>> the endpoint
-> >>>>>> devices [3][4]. So soon, the patch got dropped, but the actual
-> >>>>>> issue with the
-> >>>>>> ARM Juno boards was left behind.
-> >>>>>>
-> >>>>>> Fast forward to 2024, Pavan resubmitted the same fix [5] for his
-> >>>>>> own usecase,
-> >>>>>> hoping that someone in the community would fix the issue with ARM
-> >>>>>> Juno boards.
-> >>>>>> But the patch was rightly rejected, as a patch that was known to
-> >>>>>> cause issues
-> >>>>>> should not be merged to the kernel. But again, no one investigated
-> >>>>>> the Juno
-> >>>>>> issue and it was left behind again.
-> >>>>>>
-> >>>>>> Now it ended up in my plate and I managed to track down the issue
-> >>>>>> with the help
-> >>>>>> of Naresh who got access to the Juno boards in LKFT. The Juno issue
-> >>>>>> was with the
-> >>>>>> PCIe switch from Microsemi/IDT, which triggers ACS Source
-> >>>>>> Validation error on
-> >>>>>> Completions received for the Configuration Read Request from a
-> >>>>>> device connected
-> >>>>>> to the downstream port that has not yet captured the PCIe bus
-> >>>>>> number. As per the
-> >>>>>> PCIe spec r6.0 sec 2.2.6.2, "Functions must capture the Bus and
-> >>>>>> Device Numbers
-> >>>>>> supplied with all Type 0 Configuration Write Requests completed by
-> >>>>>> the Function
-> >>>>>> and supply these numbers in the Bus and Device Number fields of the
-> >>>>>> Requester ID
-> >>>>>> for all Requests". So during the first Configuration Read Request
-> >>>>>> issued by the
-> >>>>>> switch downstream port during enumeration (for reading Vendor ID),
-> >>>>>> Bus and
-> >>>>>> Device numbers will be unknown to the device. So it responds to the
-> >>>>>> Read Request
-> >>>>>> with Completion having Bus and Device number as 0. The switch
-> >>>>>> interprets the
-> >>>>>> Completion as an ACS Source Validation error and drops the
-> >>>>>> completion, leading
-> >>>>>> to the failure in detecting the endpoint device. Though the PCIe
-> >>>>>> spec r6.0, sec
-> >>>>>> 6.12.1.1, states that "Completions are never affected by ACS Source
-> >>>>>> Validation".
-> >>>>>> This behavior is in violation of the spec.
-> >>>>>>
-> >>>>>> Solution
-> >>>>>> ========
-> >>>>>>
-> >>>>>> In September, I submitted a series [6] to fix both issues. For the
-> >>>>>> IDT issue,
-> >>>>>> I reused the existing quirk in the PCI core which does a dummy
-> >>>>>> config write
-> >>>>>> before issuing the first config read to the device. And for the ACS
-> >>>>>> enablement
-> >>>>>> issue, I just resubmitted the original patch from Xingang which called
-> >>>>>> pci_request_acs() from devm_of_pci_bridge_init().
-> >>>>>>
-> >>>>>> But during the review of the series, several comments were received
-> >>>>>> and they
-> >>>>>> required the series to be reworked completely. Hence, in this
-> >>>>>> version, I've
-> >>>>>> incorported the comments as below:
-> >>>>>>
-> >>>>>> 1. For the ACS enablement issue, I've moved the pci_enable_acs()
-> >>>>>> call from
-> >>>>>> pci_acs_init() to pci_dma_configure().
-> >>>>>>
-> >>>>>> 2. For the IDT issue, I've cached the ACS capabilities (RO) in
-> >>>>>> 'pci_dev',
-> >>>>>> collected the broken capability for the IDT switches in the quirk
-> >>>>>> and used it to
-> >>>>>> disable the capability in the cache. This also allowed me to get
-> >>>>>> rid of the
-> >>>>>> earlier workaround for the switch.
-> >>>>>>
-> >>>>>> [1]
-> >>>>>> https://lore.kernel.org/all/038397a6-57e2-b6fc-6e1c-7c03b7be9d96@huawei.com
-> >>>>>> [2]
-> >>>>>> https://lore.kernel.org/all/1621566204-37456-1-git-send-email-wangxingang5@huawei.com
-> >>>>>> [3]
-> >>>>>> https://lore.kernel.org/all/01314d70-41e6-70f9-e496-84091948701a@samsung.com
-> >>>>>> [4]
-> >>>>>> https://lore.kernel.org/all/CADYN=9JWU3CMLzMEcD5MSQGnaLyDRSKc5SofBFHUax6YuTRaJA@mail.gmail.com
-> >>>>>> [5]
-> >>>>>> https://lore.kernel.org/linux-pci/20241107-pci_acs_fix-v1-1-185a2462a571@quicinc.com
-> >>>>>> [6]
-> >>>>>> https://lore.kernel.org/linux-pci/20250910-pci-acs-v1-0-fe9adb65ad7d@oss.qualcomm.com
-> >>>>>>
-> >>>>> Thanks for this patchset! I've tested it on my ARM Juno R1 and it
-> >>>>> looks that it almost works fine. This patchset even fixed some
-> >>>>> issues with PCI devices probe, as I again see SATA and GBit ethernet
-> >>>>> devices, which were missing since Linux v6.14 (it looks that
-> >>>>> I've also missed this in my tests).
-> >>>>>
-> >>>>> # lspci
-> >>>>> 00:00.0 PCI bridge: PLDA PCI Express Core Reference Design (rev 01)
-> >>>>> 01:00.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
-> >>>>> 8090 (rev 02)
-> >>>>> 02:01.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
-> >>>>> 8090 (rev 02)
-> >>>>> 02:02.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
-> >>>>> 8090 (rev 02)
-> >>>>> 02:03.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
-> >>>>> 8090 (rev 02)
-> >>>>> 02:0c.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
-> >>>>> 8090 (rev 02)
-> >>>>> 02:10.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
-> >>>>> 8090 (rev 02)
-> >>>>> 02:1f.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
-> >>>>> 8090 (rev 02)
-> >>>>> 03:00.0 Mass storage controller: Silicon Image, Inc. SiI 3132 Serial
-> >>>>> ATA Raid II Controller (rev 01)
-> >>>>> 08:00.0 Ethernet controller: Marvell Technology Group Ltd. 88E8057
-> >>>>> PCI-E Gigabit Ethernet Controller
-> >>>>>
-> >>>>> However there is also a regression. After applying this patchset
-> >>>>> system suspend/resume stopped working. This is probably related to
-> >>>>> this message:
-> >>>>>
-> >>>>> pcieport 0000:02:1f.0: Unable to change power state from D0 to
-> >>>>> D3hot, device inaccessible
-> >>>>>
-> >>>>> which appears after calling 'rtcwake -s10 -mmem'. This might not be
-> >>>>> related to this patchset, so I probably need to apply it on older
-> >>>>> kernel releases and check.
-> >>>>
-> >>>> Just one more information - I've applied this patchset on top of
-> >>>> v6.16 and it works perfectly on ARM Juno R1. SATA and GBit ethernet
-> >>>> are visible again and system suspend/resume works too, so the issue
-> >>>> with the latter on top of v6.18 seems not to be directly related to
-> >>>> $subject patchset. I will try to bisect this issue when I have some
-> >>>> spare time.
-> >>>>
-> >>>> Feel free to add:
-> >>>>
-> >>>> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> >>>
-> >>> I spent some time analyzing this regression on Juno R1 and found that:
-> >>>
-> >>> 1. SATA and GBit Ethernet stopped working after commit bcb81ac6ae3c
-> >>> ("iommu: Get DT/ACPI parsing into the proper probe path") merged to
-> >>> v6.15-rc1.
-> >>>
-> >>> 2. With $subject patch applied to enable SATA & GBit ethernet again,
-> >>> system suspend/resume stopped working after commit f3ac2ff14834
-> >>> ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree
-> >>> platforms") merged to v6.18-rc1.
-> >>>
-> > Yes, this was expected as if you don't disable ACS, it will cause issues in
-> > detecting the devices.
-> >
-> >>> If I got it right, according to the latter commit message, some quirks
-> >>> have to be added to fix the suspend/resume issue. Unfortunately I have
-> >>> no idea if this is the Juno R1 or the given PCI devices specific issue.
-> >>
-> >> And one more note, commit df5192d9bb0e ("PCI/ASPM: Enable only L0s and
-> >> L1 for devicetree platforms") doesn't fix the suspend/resume issue
-> >> either (with $subject patchset applied on top of it).
-> >>
-> > Interesting. Can you do:
-> >
-> > echo performance > /sys/module/pcie_aspm/parameters/policy
-> >
-> > and then suspend?
+On 12/8/2025 12:37 PM, Bjorn Helgaas wrote:
+> On Mon, Nov 03, 2025 at 06:09:56PM -0600, Terry Bowman wrote:
+>> Add CXL protocol error handlers for CXL Port devices (Root Ports,
+>> Downstream Ports, and Upstream Ports). Implement cxl_port_cor_error_detected()
+>> and cxl_port_error_detected() to handle correctable and uncorrectable errors
+>> respectively.
+>>
+>> Introduce cxl_get_ras_base() to retrieve the cached RAS register base
+>> address for a given CXL port. This function supports CXL Root Ports,
+>> Downstream Ports, and Upstream Ports by returning their previously mapped
+>> RAS register addresses.
+>>
+>> Add device lock assertions to protect against concurrent device or RAS
+>> register removal during error handling. The port error handlers require
+>> two device locks:
+>>
+>> 1. The port's CXL parent device - RAS registers are mapped using devm_*
+>>    functions with the parent port as the host. Locking the parent prevents
+>>    the RAS registers from being unmapped during error handling.
+>>
+>> 2. The PCI device (pdev->dev) - Locking prevents concurrent modifications
+>>    to the PCI device structure during error handling.
+>>
+>> The lock assertions added here will be satisfied by device locks introduced
+>> in a subsequent patch.
 > 
-> After the above command, system suspend/resume works again.
+> Weird.  Can't you add the lock assertions at the same time you add the
+> locks?
 > 
 
-Ok, so ASPM L0s/L1 seems to be the issue. But I'm not quite sure why it causes
-issue during suspend/resume. If the device/controller doesn't play well with
-ASPM L0s/L1, it should atleast cause the issue before entering suspend.
+It is a bit. I will try to fix this. I might try adding adding the lockdep() 
+checks in the later later patch.
 
-I'm clueless here atm...
+>> Introduce get_pci_cxl_host_dev() to return the device responsible for
+>> managing the RAS register mapping. This function increments the reference
+>> count on the host device to prevent premature resource release during error
+>> handling. The caller is responsible for decrementing the reference count.
+>> For CXL endpoints, which manage resources without a separate host device,
+>> this function returns NULL.
+>>
+>> Update the AER driver's is_cxl_error() to recognize CXL Port devices in
+>> addition to CXL Endpoints, as both now have CXL-specific error handlers.
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
 
-- Mani
+Thanks.
 
--- 
-மணிவண்ணன் சதாசிவம்
+>> @@ -1573,6 +1573,7 @@ static struct cxl_port *find_cxl_port_by_uport(struct device *uport_dev)
+>>  		return to_cxl_port(dev);
+>>  	return NULL;
+>>  }
+>> +EXPORT_SYMBOL_NS_GPL(find_cxl_port_by_uport, "CXL");
+> 
+> The usual export question: is there a modular caller()?
+>
+
+This should be non-static and non-exported. I'll change.
+ 
+>> +	dev_warn_once(dev, "Error: Unsupported device type (%X)", pci_pcie_type(pdev));
+> 
+> Maybe "%#x" (add 0x prefix and use lower-case hex, unless there's a
+> different CXL convention)?
+
+Ok
+
+-Terry
 
