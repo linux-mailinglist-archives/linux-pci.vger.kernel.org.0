@@ -1,300 +1,166 @@
-Return-Path: <linux-pci+bounces-42826-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42827-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26613CAF1C6
-	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 08:19:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 50970CAF1E1
+	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 08:21:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CF872301E140
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 07:19:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B83CF3025327
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 07:20:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DBFB168BD;
-	Tue,  9 Dec 2025 07:19:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2EC5281376;
+	Tue,  9 Dec 2025 07:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oHzYXiy2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/jVDiia"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E93DF76
-	for <linux-pci@vger.kernel.org>; Tue,  9 Dec 2025 07:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25AE19CCF7;
+	Tue,  9 Dec 2025 07:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765264742; cv=none; b=d9eczf1EzQ822xzXTU48jAOxlEmJKYzZA2fhSKEYV/vi+dwSevxVkkkPqBZcgpZR5HFTdqEj3TXiIWaQPI4heS8+K+oda6iH2ne0MhfQciIszW4CIrCBW13m++Y7EZYFXJy2yjPInIIyQd3eEdc6Q/VCO3q/riKcPOfo+RnjwQs=
+	t=1765264809; cv=none; b=lBwFuvzjAXS1wndkqW35ixy7ifzYQiCldK/gXgY1/9QqOvihFOsjf8CdgLitRp+DXA2bk6/xab3bppEpEwo7I9jR+029fC6LjXs1L1F5iTgFGtPtVWPCOMWYjVsJGv4j0EANScjMWQOUbQaS6ANqIBlVtnWqBT8VwqsN13tn5WU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765264742; c=relaxed/simple;
-	bh=aYiYXVhlxqkiQMwUlvNEq1Y3+dYQOwRuM5xyi/g7Olw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=HZSFdFYYydpOOI4VoypVaO2fWjFKqe5LJ8FcjUuf2FSVF6J/fqJZF7IKoqYXotUD2qyzU1EUURgsvVqPTznV0RB8z4bWC410ZfSDkgB7Jf+HRqiNG9alCVZof+6dhixiPv31RHOucSrZgjJlqIQJwqCgFVBRxN2WxS2aVHH+0kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oHzYXiy2; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765264739; x=1796800739;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=aYiYXVhlxqkiQMwUlvNEq1Y3+dYQOwRuM5xyi/g7Olw=;
-  b=oHzYXiy2DZIA4w8jB5WNxf+pSSLPhhWM+/7pN5UE5aUbveZt/ttO9sqT
-   o4LaG7ArtYYKcUCBZgvYixu+wQ25ZuJKjalakdOominV2wWMi+ZYxRcuO
-   58M78mY5f8FBrxivrgOoEAxZBSylS0lrX/dBqXadJhHWEliEUljOHTVgT
-   bgaASct2QlSF0uSAfBrSBnr28dnhPOFlirez5VcIUigjAiApf3gvRDWup
-   r/hplpzbfZNNFQeOvOydl4PBw7akuy4FWkuP9ON0uOzqBdLAXGeIcv8HT
-   lAZllTiRyWO+1MS2dH84J53vRSb/WeVOQopurtgSShwoyFcidpuIn6GnO
-   g==;
-X-CSE-ConnectionGUID: Lq0uFvnWQt220+UEabfsXQ==
-X-CSE-MsgGUID: qH2yNxgcSKaQ944YLp+ZSw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11636"; a="66940160"
-X-IronPort-AV: E=Sophos;i="6.20,260,1758610800"; 
-   d="scan'208";a="66940160"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2025 23:18:59 -0800
-X-CSE-ConnectionGUID: PaDUKGCxQDqsbewC1g2EfQ==
-X-CSE-MsgGUID: l4jCzTrHT6i0dLWPcQ+oWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,260,1758610800"; 
-   d="scan'208";a="195230404"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.139])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2025 23:18:57 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 9 Dec 2025 09:18:53 +0200 (EET)
-To: Guixin Liu <kanie@linux.alibaba.com>
-cc: Bjorn Helgaas <bhelgaas@google.com>, 
-    Andy Shevchenko <andriy.shevchenko@intel.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH RESEND v5] PCI: Check rom header and data structure addr
- before accessing
-In-Reply-To: <20251209055114.66392-1-kanie@linux.alibaba.com>
-Message-ID: <5c2fb339-80df-3cbd-4477-05b2773b45d3@linux.intel.com>
-References: <20251209055114.66392-1-kanie@linux.alibaba.com>
+	s=arc-20240116; t=1765264809; c=relaxed/simple;
+	bh=2+RBfirrXuFnkMRxDw7t0EtfDZroa6uDXyUspwpTeIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a96dkxOQClkof4kcvL77GbAJ6Uou34WKxUZm/wGMBX3LcrOfGMJGRYC2MrN5gLLUltAtBktZ7wKQ3tnavb03VIv8MwneZS3b0EBaLRa/++QpivpTpu/uqpwU8jmENsKNC6QrAoUvCRHrUelBA29k9faL/PHvKFXiTLRwAWapM8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/jVDiia; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 137C4C4CEFB;
+	Tue,  9 Dec 2025 07:20:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765264809;
+	bh=2+RBfirrXuFnkMRxDw7t0EtfDZroa6uDXyUspwpTeIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n/jVDiia6Xt689ozubWpINb6zPps2GAGN4ovKR+yZJbb1pZ3FqoiGlaESeOnFGwnC
+	 oFohj1jB3EQDwexnuAimLRCSTAIkMcqqUUp/Ppk00eblJIMiI/hUSM5ZqNuoxKDqZy
+	 qgunAerivYkbJNWMeG6MbaGPRLrk4rTDm8kPpdrvVO6pUGQ3o1l5c+0pYQxttsTsb0
+	 s+gzBg72oPYzw/GIwTiMssFxRpmpM6CU76gMyTDS9l6ARdgm0Y7ac8cxoaqmsswcKH
+	 AwmLtUYjLUKVPw9RIwCOxo2ni4xc0MAgPG9bSbJcD8Qiv+TID/luQz8wBjVO8pFKff
+	 fxdkxqKFXombQ==
+Date: Tue, 9 Dec 2025 08:20:01 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Koichiro Den <den@valinux.co.jp>, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-nvme@lists.infradead.org, mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
+Subject: Re: [PATCH 0/8] dmaengine: Add new API to combine onfiguration and
+ descriptor preparation
+Message-ID: <aTfNoU6fKBOcjL5j@ryzen>
+References: <20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com>
 
-On Tue, 9 Dec 2025, Guixin Liu wrote:
-
-> We meet a crash when running stress-ng on x86_64 machine:
+On Mon, Dec 08, 2025 at 12:09:39PM -0500, Frank Li wrote:
+> Frank Li (8):
+>       dmaengine: Add API to combine configuration and preparation (sg and single)
+>       PCI: endpoint: pci-epf-test: use new DMA API to simple code
+>       dmaengine: dw-edma: Use new .device_prep_slave_sg_config() callback
+>       dmaengine: dw-edma: Pass dma_slave_config to dw_edma_device_transfer()
+>       nvmet: pci-epf: Remove unnecessary dmaengine_terminate_sync() on each DMA transfer
+>       nvmet: pci-epf: Use dmaengine_prep_slave_single_config() API
+>       PCI: epf-mhi:Using new API dmaengine_prep_slave_single_config() to simple code.
+>       crypto: atmel: Use dmaengine_prep_slave_single_config() API
 > 
->   BUG: unable to handle page fault for address: ffa0000007f40000
->   RIP: 0010:pci_get_rom_size+0x52/0x220
->   Call Trace:
->   <TASK>
->     pci_map_rom+0x80/0x130
->     pci_read_rom+0x4b/0xe0
->     kernfs_file_read_iter+0x96/0x180
->     vfs_read+0x1b1/0x300
-> 
-> Our analysis reveals that the rom space's start address is
-> 0xffa0000007f30000, and size is 0x10000. Because of broken rom
-> space, before calling readl(pds), the pds's value is
-> 0xffa0000007f3ffff, which is already pointed to the rom space
-> end, invoking readl() would read 4 bytes therefore cause an
-> out-of-bounds access and trigger a crash.
-> Fix this by adding image header and data structure checking.
-> 
-> We also found another crash on arm64 machine:
-> 
->   Unable to handle kernel paging request at virtual address
-> ffff8000dd1393ff
->   Mem abort info:
->   ESR = 0x0000000096000021
->   EC = 0x25: DABT (current EL), IL = 32 bits
->   SET = 0, FnV = 0
->   EA = 0, S1PTW = 0
->   FSC = 0x21: alignment fault
-> 
-> The call trace is the same with x86_64, but the crash reason is
-> that the data structure addr is not aligned with 4, and arm64
-> machine report "alignment fault". Fix this by adding alignment
-> checking.
-> 
-> Fixes: 47b975d234ea ("PCI: Avoid iterating through memory outside the resource window")
-> Suggested-by: Guanghui Feng <guanghuifeng@linux.alibaba.com>
-> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+>  drivers/crypto/atmel-aes.c                    | 10 ++---
+>  drivers/dma/dw-edma/dw-edma-core.c            | 38 +++++++++++-----
+>  drivers/nvme/target/pci-epf.c                 | 21 +++------
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c  | 52 +++++++---------------
+>  drivers/pci/endpoint/functions/pci-epf-test.c |  8 +---
+>  include/linux/dmaengine.h                     | 64 ++++++++++++++++++++++++---
+>  6 files changed, 111 insertions(+), 82 deletions(-)
 > ---
-> v4 -> v5:
-> - Add Andy Shevchenko's rb tag, thanks.
-> - Change u64 to unsigned long.
-> - Change pci_rom_header_valid() to pci_rom_is_header_valid() and
-> change pci_rom_data_struct_valid() to pci_rom_is_data_struct_valid().
-> - Change rom_end from rom+size to rom+size-1 for more readble,
-> and also change header_end >= rom_end to header_end > rom_end, same
-> as data structure end.
-> - Change if(!last_image) to if (last_image)..
-> - Use U16_MAX instead of 0xffff.
-> - Split check_add_overflow() from data_len checking.
-> - Remove !!() when reading last_image, and Use BIT(7) instead of 0x80.
-> 
-> v3 -> v4:
-> - Use "u64" instead of "uintptr_t".
-> - Invert the if statement to avoid excessive indentation.
-> - Add comment for alignment checking.
-> - Change last_image's type from int to bool.
-> 
-> v2 -> v3:
-> - Add pci_rom_header_valid() helper for checking image addr and signature.
-> - Add pci_rom_data_struct_valid() helper for checking data struct add
-> and signature.
-> - Handle overflow issue when adding addr with size.
-> - Handle alignment fault when running on arm64.
-> 
-> v1 -> v2:
-> - Fix commit body problems, such as blank line in "Call Trace" both sides,
->   thanks, (Andy Shevchenko).
-> - Remove every step checking, just check the addr is in header or data struct.
-> - Add Suggested-by: Guanghui Feng <guanghuifeng@linux.alibaba.com> tag.
->  drivers/pci/rom.c | 109 ++++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 90 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
-> index e18d3a4383ba..b0de38211f39 100644
-> --- a/drivers/pci/rom.c
-> +++ b/drivers/pci/rom.c
-> @@ -69,6 +69,87 @@ void pci_disable_rom(struct pci_dev *pdev)
->  }
->  EXPORT_SYMBOL_GPL(pci_disable_rom);
->  
-> +#define PCI_ROM_HEADER_SIZE 0x1A
-> +
-> +static bool pci_rom_is_header_valid(struct pci_dev *pdev,
-> +				    void __iomem *image,
-> +				    void __iomem *rom,
-> +				    size_t size,
-> +				    bool last_image)
-> +{
-> +	unsigned long rom_end = (unsigned long)rom + size - 1;
-> +	unsigned long header_end;
-> +
-> +	/*
-> +	 * Some CPU architectures require IOMEM access addresses to
-> +	 * be aligned, for example arm64, so since we're about to
-> +	 * call readw(), we check here for 2-byte alignment.
-> +	 */
-> +	if (!IS_ALIGNED((unsigned long)image, 2))
-> +		return false;
-> +
-> +	if (check_add_overflow((unsigned long)image, PCI_ROM_HEADER_SIZE,
-> +	    &header_end))
-> +		return false;
-> +
-> +	if (image < rom || header_end > rom_end)
-> +		return false;
-> +
-> +	/* Standard PCI ROMs start out with these bytes 55 AA */
-> +	if (readw(image) == 0xAA55)
-> +		return true;
-> +
-> +	if (last_image)
-> +		pci_info(pdev, "Invalid PCI ROM header signature: expecting 0xaa55, got %#06x\n",
-> +			 readw(image));
-> +	else
-> +		pci_info(pdev, "No more image in the PCI ROM\n");
-> +
-> +	return false;
-> +}
-> +
-> +static bool pci_rom_is_data_struct_valid(struct pci_dev *pdev,
-> +					 void __iomem *pds,
-> +					 void __iomem *rom,
-> +					 size_t size)
-> +{
-> +	unsigned long rom_end = (unsigned long)rom + size - 1;
-> +	unsigned long end;
-> +	u16 data_len;
-> +
-> +	/*
-> +	 * Some CPU architectures require IOMEM access addresses to
-> +	 * be aligned, for example arm64, so since we're about to
-> +	 * call readl(), we check here for 4-byte alignment.
-> +	 */
-> +	if (!IS_ALIGNED((unsigned long)pds, 4))
-> +		return false;
-> +
-> +	/* Before reading length, check range. */
-> +	if (check_add_overflow((unsigned long)pds, 0x0B, &end))
-> +		return false;
-> +
-> +	if (pds < rom || end > rom_end)
-> +		return false;
-> +
-> +	data_len = readw(pds + 0x0A);
-> +	if (!data_len || data_len == U16_MAX)
-> +		return false;
-> +
-> +	if (check_add_overflow((unsigned long)pds, data_len, &end))
-> +		return false;
-> +
-> +	if (end > rom_end)
-> +		return false;
-> +
-> +	if (readl(pds) == 0x52494350)
-> +		return true;
-> +
-> +	pci_info(pdev, "Invalid PCI ROM data signature: expecting 0x52494350, got %#010x\n",
-> +		 readl(pds));
-> +	return false;
-> +}
-> +
->  /**
->   * pci_get_rom_size - obtain the actual size of the ROM image
->   * @pdev: target PCI device
-> @@ -84,37 +165,27 @@ static size_t pci_get_rom_size(struct pci_dev *pdev, void __iomem *rom,
->  			       size_t size)
->  {
->  	void __iomem *image;
-> -	int last_image;
-> +	bool last_image;
->  	unsigned int length;
->  
->  	image = rom;
->  	do {
->  		void __iomem *pds;
-> -		/* Standard PCI ROMs start out with these bytes 55 AA */
-> -		if (readw(image) != 0xAA55) {
-> -			pci_info(pdev, "Invalid PCI ROM header signature: expecting 0xaa55, got %#06x\n",
-> -				 readw(image));
-> +
-> +		if (!pci_rom_is_header_valid(pdev, image, rom, size, true))
->  			break;
-> -		}
-> +
->  		/* get the PCI data structure and check its "PCIR" signature */
->  		pds = image + readw(image + 24);
-> -		if (readl(pds) != 0x52494350) {
-> -			pci_info(pdev, "Invalid PCI ROM data signature: expecting 0x52494350, got %#010x\n",
-> -				 readl(pds));
-> +		if (!pci_rom_is_data_struct_valid(pdev, pds, rom, size))
->  			break;
-> -		}
-> -		last_image = readb(pds + 21) & 0x80;
-> +
-> +		last_image = readb(pds + 21) & BIT(7);
->  		length = readw(pds + 16);
->  		image += length * 512;
-> -		/* Avoid iterating through memory outside the resource window */
-> -		if (image >= rom + size)
-> +
-> +		if (!pci_rom_is_header_valid(pdev, image, rom, size, last_image))
->  			break;
-> -		if (!last_image) {
-> -			if (readw(image) != 0xAA55) {
-> -				pci_info(pdev, "No more image in the PCI ROM\n");
-> -				break;
-> -			}
-> -		}
->  	} while (length && !last_image);
->  
->  	/* never return a size larger than the PCI resource window */
-> 
+> base-commit: bc04acf4aeca588496124a6cf54bfce3db327039
+> change-id: 20251204-dma_prep_config-654170d245a2
 
-As a general comment, there seems to be lots of literals in this code
-which would be nice to convert to named defines.
+For the series (tested using drivers/nvme/target/pci-epf.c):
+Tested-by: Niklas Cassel <cassel@kernel.org>
 
--- 
- i.
+Mainline:
+  Rnd read,    4KB,  QD=1, 1 job :  IOPS=5721, BW=22.3MiB/s (23.4MB/s)
+  Rnd read,    4KB, QD=32, 1 job :  IOPS=51.8k, BW=202MiB/s (212MB/s)
+  Rnd read,    4KB, QD=32, 4 jobs:  IOPS=109k, BW=426MiB/s (447MB/s)
+  Rnd read,  128KB,  QD=1, 1 job :  IOPS=2678, BW=335MiB/s (351MB/s)
+  Rnd read,  128KB, QD=32, 1 job :  IOPS=19.1k, BW=2388MiB/s (2504MB/s)
+  Rnd read,  128KB, QD=32, 4 jobs:  IOPS=18.1k, BW=2258MiB/s (2368MB/s)
+  Rnd read,  512KB,  QD=1, 1 job :  IOPS=1388, BW=694MiB/s (728MB/s)
+  Rnd read,  512KB, QD=32, 1 job :  IOPS=4554, BW=2277MiB/s (2388MB/s)
+  Rnd read,  512KB, QD=32, 4 jobs:  IOPS=4516, BW=2258MiB/s (2368MB/s)
+  Rnd write,   4KB,  QD=1, 1 job :  IOPS=4679, BW=18.3MiB/s (19.2MB/s)
+  Rnd write,   4KB, QD=32, 1 job :  IOPS=35.1k, BW=137MiB/s (144MB/s)
+  Rnd write,   4KB, QD=32, 4 jobs:  IOPS=33.7k, BW=132MiB/s (138MB/s)
+  Rnd write, 128KB,  QD=1, 1 job :  IOPS=2490, BW=311MiB/s (326MB/s)
+  Rnd write, 128KB, QD=32, 1 job :  IOPS=4964, BW=621MiB/s (651MB/s)
+  Rnd write, 128KB, QD=32, 4 jobs:  IOPS=4966, BW=621MiB/s (651MB/s)
+  Seq read,  128KB,  QD=1, 1 job :  IOPS=2586, BW=323MiB/s (339MB/s)
+  Seq read,  128KB, QD=32, 1 job :  IOPS=17.5k, BW=2190MiB/s (2296MB/s)
+  Seq read,  512KB,  QD=1, 1 job :  IOPS=1614, BW=807MiB/s (847MB/s)
+  Seq read,  512KB, QD=32, 1 job :  IOPS=4540, BW=2270MiB/s (2381MB/s)
+  Seq read,    1MB, QD=32, 1 job :  IOPS=2283, BW=2284MiB/s (2395MB/s)
+  Seq write, 128KB,  QD=1, 1 job :  IOPS=2313, BW=289MiB/s (303MB/s)
+  Seq write, 128KB, QD=32, 1 job :  IOPS=4948, BW=619MiB/s (649MB/s)
+  Seq write, 512KB,  QD=1, 1 job :  IOPS=901, BW=451MiB/s (473MB/s)
+  Seq write, 512KB, QD=32, 1 job :  IOPS=1289, BW=645MiB/s (676MB/s)
+  Seq write,   1MB, QD=32, 1 job :  IOPS=632, BW=633MiB/s (663MB/s)
+  Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=1756, BW=880MiB/s (923MB/s)
+ IOPS=1767, BW=886MiB/s (929MB/s)
 
+
+Mainline + this series applied:
+  Rnd read,    4KB,  QD=1, 1 job :  IOPS=3681, BW=14.4MiB/s (15.1MB/s)
+  Rnd read,    4KB, QD=32, 1 job :  IOPS=54.8k, BW=214MiB/s (224MB/s)
+  Rnd read,    4KB, QD=32, 4 jobs:  IOPS=123k, BW=479MiB/s (502MB/s)
+  Rnd read,  128KB,  QD=1, 1 job :  IOPS=2132, BW=267MiB/s (280MB/s)
+  Rnd read,  128KB, QD=32, 1 job :  IOPS=19.0k, BW=2369MiB/s (2485MB/s)
+  Rnd read,  128KB, QD=32, 4 jobs:  IOPS=18.7k, BW=2341MiB/s (2454MB/s)
+  Rnd read,  512KB,  QD=1, 1 job :  IOPS=1135, BW=568MiB/s (595MB/s)
+  Rnd read,  512KB, QD=32, 1 job :  IOPS=4546, BW=2273MiB/s (2384MB/s)
+  Rnd read,  512KB, QD=32, 4 jobs:  IOPS=4708, BW=2354MiB/s (2469MB/s)
+  Rnd write,   4KB,  QD=1, 1 job :  IOPS=3369, BW=13.2MiB/s (13.8MB/s)
+  Rnd write,   4KB, QD=32, 1 job :  IOPS=31.7k, BW=124MiB/s (130MB/s)
+  Rnd write,   4KB, QD=32, 4 jobs:  IOPS=31.1k, BW=122MiB/s (127MB/s)
+  Rnd write, 128KB,  QD=1, 1 job :  IOPS=1820, BW=228MiB/s (239MB/s)
+  Rnd write, 128KB, QD=32, 1 job :  IOPS=5703, BW=713MiB/s (748MB/s)
+  Rnd write, 128KB, QD=32, 4 jobs:  IOPS=5813, BW=727MiB/s (762MB/s)
+  Seq read,  128KB,  QD=1, 1 job :  IOPS=1958, BW=245MiB/s (257MB/s)
+  Seq read,  128KB, QD=32, 1 job :  IOPS=18.8k, BW=2345MiB/s (2459MB/s)
+  Seq read,  512KB,  QD=1, 1 job :  IOPS=1319, BW=660MiB/s (692MB/s)
+  Seq read,  512KB, QD=32, 1 job :  IOPS=4542, BW=2271MiB/s (2382MB/s)
+  Seq read,    1MB, QD=32, 1 job :  IOPS=2325, BW=2325MiB/s (2438MB/s)
+  Seq write, 128KB,  QD=1, 1 job :  IOPS=2174, BW=272MiB/s (285MB/s)
+  Seq write, 128KB, QD=32, 1 job :  IOPS=5697, BW=712MiB/s (747MB/s)
+  Seq write, 512KB,  QD=1, 1 job :  IOPS=1035, BW=518MiB/s (543MB/s)
+  Seq write, 512KB, QD=32, 1 job :  IOPS=1462, BW=731MiB/s (767MB/s)
+  Seq write,   1MB, QD=32, 1 job :  IOPS=720, BW=721MiB/s (756MB/s)
+  Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=2029, BW=1018MiB/s (1067MB/s)
+ IOPS=2037, BW=1023MiB/s (1072MB/s)
+
+
+Small performance boost, but I think the nicest thing with this series is
+to be able to remove the ugly mutex in pci-epf.c.
+
+
+Kind regards,
+Niklas
 
