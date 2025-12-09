@@ -1,192 +1,307 @@
-Return-Path: <linux-pci+bounces-42856-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42857-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69DAACB0737
-	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 16:48:00 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4213FCB0C80
+	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 18:57:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 77A86300AC7E
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 15:47:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5DE9B30E51EA
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 17:56:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB4B62FFFAE;
-	Tue,  9 Dec 2025 15:47:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3745532E723;
+	Tue,  9 Dec 2025 17:56:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="VlfsMhph"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BDleoI22"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013032.outbound.protection.outlook.com [40.107.159.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8182F4A0C;
-	Tue,  9 Dec 2025 15:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765295268; cv=fail; b=LM/xeUU2DVtDHlYTPGRf6FvaxEQ9qHXLqzxLqLkJoEJdVQj7cNsaIo+BPsfYkQMGdP3l43yosr5mndH1xa040iAdR/nb6HMtFcLvhkkL5qBRIulaTaHzyVtep9OLHMBaueoXQjKKFZ1QGJ9Agi8XmpNTBG6y8gv14J8Fx62cw3Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765295268; c=relaxed/simple;
-	bh=F+XUqGsHdfBH/n+v8Mc0Zdsn5uvxRVxi3bhBrikX0m0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rPGRHtLi3vu5H/ng4VVe+8y27JhkeF7C9MrnpuNgYYqg7oagEQABgYd/JyJXCIq8V3Js1FlFRi6IwwLLTtVgbVFlSa3nEa+gb/DJKz6Rbm3uHdxqvD/fWFyCkZm6PS8O2CujuFdw+Zsx7KhHKH9pILDWbLFLnG3mJbOvHsghkMk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=VlfsMhph; arc=fail smtp.client-ip=40.107.159.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SplcYTGUpGvCbAAtQ8/1lzODb4/glURw0go4hBnzropkxv4XO4FxT5yeJJsSjyyl6uXsd3xFTePsf9GIC9V3jifW53QWbCHB/dQH4RKxLoajimzJcgMH3wn4thKBPMBcmGGxnKP8LoVfx/4KsDHLCyY7q1WugOabGnsumEWkyu1kRCcb+Ic0TjHvw1s46nneAIVQ7ZtNrrmgP6LVPxT0P/eYvtwHivblOCjalIMphkUAvWUkMl96No10BcEDsdEc8e5IliQL8e+LXG6X7+qJWDGpMsl37+ii7gUlHISfoznqbQC+OLGdGxw3RuOkrGfQ1VMzhq+AUgwUdtHfFkWpeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=F+XUqGsHdfBH/n+v8Mc0Zdsn5uvxRVxi3bhBrikX0m0=;
- b=RRk1cdwbyE0xWvwzdt1ijlwyuDAAkYuGNA6VNqa/VtyVWjctaWsA0VPQwIFBxfCM+G/WX+3OnTpoQFgi/5KswKzaB7BxtL+NeYonltO7ik/T+0tUAqxeBA6mAa1C2Bjl8CKnmykcUFIIuDUk8OwZ3TNGAWzO0+dynwfRi8jEAD48iI7KcyR5uFwnIcl2SJvnIxVoYpLL1nCEzaXb3IrcCezPg4OohwVGUpLo9OskaE1kRgbAANWI/TlQFBafqwLi4r2/xRZPQelNSOO6Ltv53tqFe2Cv54HZVJ4cHHVl1b0bchRrr4gz6NMYGykTRtO6faylHH9E3GY3V9KTBYAs0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F+XUqGsHdfBH/n+v8Mc0Zdsn5uvxRVxi3bhBrikX0m0=;
- b=VlfsMhphQuy6/29pBUBv3nLeMRbk/VkJSMCs0OPLu4kfEE4QaQRWMILfzligbEy9RCAx/DflM5UkjqtR51bqz2PUCrypwRP8Riu1kfq924CrvQswXu1I0liLt7JWD6TGExXQh9+oljLKjh0EQ5xHtedkblC5GmM1Jz1djVICYNb67bWGzI7cV7LVHEjX8UICn4mZyG7YCctAs+3qNDqEhjj6XoX1O6pOIg2aU6mUjngUm9cpEXtcK1Xx8muq7iZWFJL0P3Q5eQrkX2OgljCoHfyNGKL9E24rr4b/mqtOVq6p7qFybg33yFY7JWoZJSGeqi0MVofZ2KmQ2oM3miYogA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22)
- by PR3PR04MB7404.eurprd04.prod.outlook.com (2603:10a6:102:8f::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.14; Tue, 9 Dec
- 2025 15:47:41 +0000
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196]) by DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196%4]) with mapi id 15.20.9388.013; Tue, 9 Dec 2025
- 15:47:41 +0000
-Date: Tue, 9 Dec 2025 10:47:30 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Vinod Koul <vkoul@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90E532E69A
+	for <linux-pci@vger.kernel.org>; Tue,  9 Dec 2025 17:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765302993; cv=none; b=CWDzSns2eL0jto/wF5iIvs12qOUBH/RlZTQuaFF75P/dVTqJWLFHey7Si4rP19sDOsCH9SItiE+UxP5QkRQJTe24VB4xYoBCIplsX0x17/JnfDXOVYKiO9kHksBdgz8ySYBxS3OOX7r0SoSWQr5VRVxaNgOn5ytk/H0LJC4qvcE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765302993; c=relaxed/simple;
+	bh=OiEYg6Z619f5RYjkxD1+QWnBT9BfoZMbJdLC41xcW+I=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CXlxrRXSoJ5PYvdyIYJ+L4LQ8Kr6iX8lT8cfw6ooDA6wiR/pZLjxsZrG1QdhZDxXzQhehXOhv1NQiJK3rWOXoH1W0AwfHalmKXKjuJLCgGcFPIjab1Ipkl8Izsi0aEGEW3l7HFfQvtsBDJt6DUfvMZ/UkrRQPYyQwsPrNEAO3cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BDleoI22; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6496a8dc5a7so189451a12.2
+        for <linux-pci@vger.kernel.org>; Tue, 09 Dec 2025 09:56:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1765302989; x=1765907789; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VS+RzLACBnaDYUv6qVFgvyvNQaXuhOHqAm0J3pZTOy4=;
+        b=BDleoI226pdcI2vSr3g722G9jkoa0e4XnPaWOCuO5Gy8ob66K42Gpklpp+9WecSW4h
+         VYulnmeonYMP7omCyM8EMwpzrbkDY9bDFUXNyxKM8C/1+uaIK/cFRMc40rGPGzqmk934
+         Xx/ZNduhDNgT6JVkULpOMWAR1ZITZpQAhF9NMctuUOGT1X/5SOH49erOEovYRQdZDjLv
+         abCWAUrQorKO2wGVglLKUmguAeOKASmgoFVQP/acqtJ6savOXmNzDwY5jm3nWDHNPVkW
+         9+shILYua73ZtPBxU0CwvMHJz2/IQf2gpvq4g4dd/Oqri1WvDVW82Zs8dLLKVD1Rgj9I
+         1Q6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765302989; x=1765907789;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VS+RzLACBnaDYUv6qVFgvyvNQaXuhOHqAm0J3pZTOy4=;
+        b=rTE8fLObbuYMOkTiKdeT4U7JNcUsAHysxqJUVFOgGL2BEIBgKqz1QbBvgk4pAj8B/N
+         Gtrme0OipNVuoH7+mt2K5SBbOk4YZep/PHPqHY+aEU9DxUTzEMZ2RQkskdd/uQmYdOfT
+         GiAyTljgLj6E5lDwyL7UuWYpklWy3ns1sdmExxf891fmU51VsZgRjnrVTDxfwhJW8no5
+         IULj1u7ksVvI8ADdjPB0UYiP55vUrdbiGa19uFTb30/EW0xf0X13xSG4C1kuI15cOOup
+         3z7TwosFCXyFM0u9Z2/eVvAde5+9IM8Yu89ao2PmNBB5GShmrcm2eSEOpwq+t+q3G+bv
+         BeQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPZbmt/f366gWf/1QhM16hZYqfw5IGcU9Or7OGqvD9NTJb+dpjRjP3yTmhyjCaBx3Y/cY1AhXIYkQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6KASsz7rPU9ob/MKY9F40sWlMlxCzskferRhcsINvqJr35eMX
+	YPiZtqRHrTNJRLkuSv3p1TwRXHygu2R0RZDyGTfYQSHwNMtyq3DzIT4NZQY7Lhjr2Us=
+X-Gm-Gg: ASbGncuu2/HmDBe6isxjnGz3D5Wuxr6YEgxoj2ul4vk22ucsOTokQkrxyrdTk4w9AVa
+	Kn3m81f4ihuCTTpM8lBFeBASen2tuAHClwQSH8RVzivMVQYOj3igh5JoQG3MtLwuEBz14+HzVRS
+	Z921hvTeuytckv15y/L96kKDQzMsS/h3LNKOGof+NVnZNqBWJexLGWoe2Wghnftm9cooj2Dnyr1
+	O25SNh4E/M4c7wCQMpimlnBmPsuVEKOPOa6kIm8ByHCCL1VSxro/hA7jgRNuOcYlQSgYlFlbuLg
+	iprU+d9Sc/CdCVsNjomDEiUzyonYIUYlL3BbBLsIcWj65/dvoeKMOz2HgUXBy5c9CReZT7TLxgL
+	ZcM48HRx+cxvhii3s0ld1Hd9hISx+s+g6hniBplJpJ6zo3UqQVYjVE5i4ifRVNE8YH/sts13Y6d
+	BCB/4NLv6dgorgXgHu3MU3l/cxhfLzo0RFQlfmMYXqvDewxIZtRASg9wV/x9gBz1OD
+X-Google-Smtp-Source: AGHT+IGvw1bEvqj04ezow2gxdTDu27du8/6Xud1clcGv0XhFoxUHy3g9uZN+OOy+YeCHeDUPqPTLnA==
+X-Received: by 2002:a17:907:3c90:b0:b76:e89f:98a9 with SMTP id a640c23a62f3a-b7a2484b7c2mr1285132866b.61.1765302988299;
+        Tue, 09 Dec 2025 09:56:28 -0800 (PST)
+Received: from localhost (host-87-6-211-245.retail.telecomitalia.it. [87.6.211.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b79f49c94fbsm1430165766b.53.2025.12.09.09.56.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Dec 2025 09:56:27 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 9 Dec 2025 18:58:58 +0100
+To: Rob Herring <robh@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Koichiro Den <den@valinux.co.jp>, Niklas Cassel <cassel@kernel.org>,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
-	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH 1/8] dmaengine: Add API to combine configuration and
- preparation (sg and single)
-Message-ID: <aThEkqq79WwPvQ27@lizhi-Precision-Tower-5810>
-References: <20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com>
- <20251208-dma_prep_config-v1-1-53490c5e1e2a@nxp.com>
- <20251209063809.GA27728@lst.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251209063809.GA27728@lst.de>
-X-ClientProxiedBy: SJ0PR05CA0201.namprd05.prod.outlook.com
- (2603:10b6:a03:330::26) To DU2PR04MB8951.eurprd04.prod.outlook.com
- (2603:10a6:10:2e2::22)
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, kwilczynski@kernel.org,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, iivanov@suse.de, svarbanov@suse.de,
+	mbrugger@suse.com, Jonathan Bell <jonathan@raspberrypi.com>,
+	Phil Elwell <phil@raspberrypi.com>,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] dt-bindings: pci: brcmstb: Add rp1-nexus node to fix DTC
+ warning
+Message-ID: <aThjYt3ux0U-9-3A@apocalypse>
+References: <20250812085037.13517-1-andrea.porta@suse.com>
+ <4fee3870-f9d5-48e3-a5be-6df581d3e296@kernel.org>
+ <aKc5nMT1xXpY03ip@apocalypse>
+ <e7875f70-2b79-48e0-a63b-caf6f1fd287b@kernel.org>
+ <aLVePQRfU4IB1zK8@apocalypse>
+ <CAL_JsqJUzB71QdMcxJtNZ7raoPcK+SfTh7EVzGmk=syo8xLKQw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|PR3PR04MB7404:EE_
-X-MS-Office365-Filtering-Correlation-Id: cc4208ce-a286-4d85-bb74-08de373a4936
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|7416014|376014|19092799006|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?K3FmA/Twqt8rt9g3YK6wdB2X/vMr3WlWefjzQB20kIw75VlsHAEDzN2PJOFQ?=
- =?us-ascii?Q?Yc4OA7UrI/8sj0cq16I0Skox6C3YtHzHnP1SeBX9G3bFrnIXWjlwEjOYpp6R?=
- =?us-ascii?Q?027TRrnTgt9HIOwE32KKyK19Wf0917KFqJelXEmUxKPJYkCrNv1VBj1+bFRq?=
- =?us-ascii?Q?8O5q7z74aNVVoO20cscUWVuCJRo3WMcad0gSnd4HxbGCgBG27zVDPJnZc2VA?=
- =?us-ascii?Q?xKwuD4CtLIxkudp5RCuoZa8SLuz81uP4yqVLQ+n1E7kJ7Oi+j3fgos1XmDL1?=
- =?us-ascii?Q?OxqiwH1Ei7kCsuq6BWBXGVURJZSypAaNkvTcnJVHp7Z1HFLEaVjpmZ7qJXOu?=
- =?us-ascii?Q?e9b2u12pjq2hI8qgLAIMBkxqSLRc1ASGSwmgRip/zuZrgRCC8nB1h3t2I6Jr?=
- =?us-ascii?Q?Ubu8m0+DuO9YMLUszN2FEtkVlK7CIOOi2p178g3xpmv7njwNkWDL2JWGR6Jx?=
- =?us-ascii?Q?G5ORPWKbxB+8RcFoO7T+Ruvro2fsnKw72EpbDtrB3H7/Oj3vRCTunwRnEobO?=
- =?us-ascii?Q?7sc5wvIjprr1dxTNSV9czroKhEbUhCMnnz+oEexQx77RGXUktqgsP3UZLfl6?=
- =?us-ascii?Q?jxUZthkpAa16lOA48n3YX/FaLd2Q56OxoAZnPSQSF0c3NNTgtyjjg0DW1HHx?=
- =?us-ascii?Q?XZ0LyRfk5aSHrF3FB5dEwLB7v+TlOJfbIMWacqtJ58aFcDYVhCqwTHSGkY90?=
- =?us-ascii?Q?GJxUXSb6gMr8IvWaUoFNgfD578OKi8PNEroZJ2WyDctNk9XH0npZefXeIx2j?=
- =?us-ascii?Q?d8Nx0U1NtoIXVFxJsbSOqy5O8KQLAbQ0EugMgQS54R+iL9wX+zS9cle4Ozzq?=
- =?us-ascii?Q?Tfw7NmmKRMj4wUg5s1DkZSZ39OlaSalJHcfmGgz4831NhXzM1X5coEtcG9GI?=
- =?us-ascii?Q?WFSYpIiCNuA5d9pmAQ1fR6doZjk+JM4oe6iB4Gt9Dyii3Fqp+dUqXDDG/LuH?=
- =?us-ascii?Q?wjQb62iCnCplVPWitZAiSivh7Frw92ragCAoEQWmYKvbkz6uI3cAnMdfUZC2?=
- =?us-ascii?Q?qSTQSeLxV63sJUDgBsT1lnEXcmz4nGdG5daBxRdyI5BFc6o90Pc9uQ4hze4/?=
- =?us-ascii?Q?Hax3pmKi/EODzsflwNIPzath7+i/J8qGMa/y9g6+830uLVN1On54ulhrGseV?=
- =?us-ascii?Q?2qOV5SKMMYKUBfNp83XGojxkwvbvl/qb7sHisJQzVO+VIRyqfKNxVRsF86J2?=
- =?us-ascii?Q?d2TkGYGWSALoz38HyjYi3OHd51kryiHJ9GS7wtLolArviFJQGT15p6sKYh2S?=
- =?us-ascii?Q?4IZh1Cc6Ymy/6dT77rWE8wKIu3uAQzQ0hVJRGuQBX63aU+frEw0sKuEq9tBr?=
- =?us-ascii?Q?r3rdhR3hQiRnjVYPkl+SV8QdHBhBKfEh0fbqZ0PU8n8fZi70uZGtieZHzydj?=
- =?us-ascii?Q?QbW/zg6z3yaW9tSyJMTf4KYfztKnxYFqwpuwQeaWeAVgedgjWkae2yNrlM2T?=
- =?us-ascii?Q?XdGVPnwxzqtxMx98OIg+fHwwYzodJJYHKcXI1fq1OtrST2vczcNWznyX6bp1?=
- =?us-ascii?Q?cpLJsMSf9N0ZX6yLqPVwc+ItDhaEaqsvzZsw?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(19092799006)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?TBvHRa26AHqgoTwZdQ4Lfw9SjP1E2CjGBRGtS/0mXt+s07YypGyVwh5dOleW?=
- =?us-ascii?Q?r/eWAXdQmXYCPLd/fr2UAdIA6tIbMT5AhpSUGUuVR5FLmGTXwq063uiFBaKV?=
- =?us-ascii?Q?0YkFmKGfchujS+io+1wMuHW19v3XDvk0LEIKy4HyVxBb3iAnIxuneqOcAO60?=
- =?us-ascii?Q?FS4j7Ztk5gKncdveiVkrtXhXeIc4s5xjEdqM0yH8qWFk6Qu/LOv7ajDL2wUd?=
- =?us-ascii?Q?9y5Te4cLj1/eqRSJefsiih2hl/PaqetLPeQEzHMMOS6jLSCnygLvVehFyyOR?=
- =?us-ascii?Q?CVm9RUjo4cF/BKX27KG0Qxs2VKz8O7VdCdF65oK++QSqTbjlLhwtOcMfDeuN?=
- =?us-ascii?Q?HVb+xQ7u0UkasKS30qKESArgD+VIvkydVPAYjs/PlmJzubV2KpYeat8Yq7Lz?=
- =?us-ascii?Q?vWFMFP+eKCJ9JK/SCXL+wZZQBiZ1l4n69MSddnCZoOj1uUlIyOaTyYNAzYWk?=
- =?us-ascii?Q?7vb3eu6wmwCfsVPCYIIppdcec1amoK5cjM7D5ismLD0rxf6MNQBDYlVAS1Pz?=
- =?us-ascii?Q?LGJ239Ujp9eEX+6lkYuXjdRQKTphJfOTO1/uKbyn0k2Hq4AmwKheCzWf+IV+?=
- =?us-ascii?Q?trSi5Kk8tcDRnpD5iohSDiTBq8Ld6t3mzppOs9KQ/7ct+xd3uBZBhg8YjXpF?=
- =?us-ascii?Q?fI/6Ox7c95wHB0/Boo7l+F+h7Rzq3pucf/5UGc7biaCWrSk3zvEcHwnfP80f?=
- =?us-ascii?Q?TuX+zqmkVSGoM0CsYvMBj2iL24o2tvgaenZwEMfBFB4ST6rxDdK6WHgzp44C?=
- =?us-ascii?Q?cqJ2k75B5jO/XmkuYeJbLM7s+Io6uwnMPs9+cRMGXAGwloVnIZwYr7tBRljB?=
- =?us-ascii?Q?jRjMoxvdskM1I63eHRB03/33IjcLbaihnpm5O5AywE9YHaxkz917xq1kaTUy?=
- =?us-ascii?Q?Iwzfhm8yHVLuvCQJ7Fflgmd6/PxjZ12DgQh3Bo1R5WOTYlxVt49VKnvW6ddS?=
- =?us-ascii?Q?zDikAu7H2waQmTWw/l6op5rHonjHMBzVionUqJVKohaH3yaSwibjDjecfrEi?=
- =?us-ascii?Q?yQ8bNVuyN7hjqrCtDHDxr9l1L1TaB+HoHkFKdmtf47hfYauzeqDbGlxTfs0T?=
- =?us-ascii?Q?L8kB13Y0JCEB7adnjRMKlv4bey5QHnlMcL0WOnIk2pL73snHeZhf+B1IhylZ?=
- =?us-ascii?Q?rKdn4DUMBxneyIECMsvZ36DuZXKgAcuOFhTOkfCapnlKyR72ZftpxBnmfyN1?=
- =?us-ascii?Q?5g8WDESf/16uEA6wv3/FiBzy/2//2T9vnVreck8O7QJA/xgSLRdoW3VP/hQj?=
- =?us-ascii?Q?Q+7yTTrXjDp0OcVwrNco9HHq9ZYERDtkcpTMe+a2xxgJ1MPo36dy3GAV7ZCO?=
- =?us-ascii?Q?4PasnRb7vuomFMHSjoKNl8q1hZcMjIE4Az1/K5qMgj0crbtHK4p7kzPz5MnI?=
- =?us-ascii?Q?ob847z/nWXHpJ5qQ92YH5te/Ns/2sdbHN/t81OvuLI6bUSxvoVwRMJDtjd1R?=
- =?us-ascii?Q?cB9i82Izg8VEDiM4aadnz4Wgohusta78c9ooj/tETJd1oy30/sjp1cXFN/D7?=
- =?us-ascii?Q?7D+LSSj3dYlz1qyHnAC9lS0tqbofWyzZjQjGfAUuSUcpLL+lUe9LH36qkGC7?=
- =?us-ascii?Q?wTQy1khhSYvLvacvjtKiU0jrkVfY1bUH4fBB9aef?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc4208ce-a286-4d85-bb74-08de373a4936
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8951.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2025 15:47:41.6689
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: igtPwsRjrTvXuW8RmO9YWdsJD6GlN5qpRLcBFst/LW+tPYkxekByt/UgKE2qS2zyc45jnfY+PF9Eay/9X1jwSw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7404
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqJUzB71QdMcxJtNZ7raoPcK+SfTh7EVzGmk=syo8xLKQw@mail.gmail.com>
 
-On Tue, Dec 09, 2025 at 07:38:09AM +0100, Christoph Hellwig wrote:
-> On Mon, Dec 08, 2025 at 12:09:40PM -0500, Frank Li wrote:
-> > Previously, configuration and preparation required two separate calls. This
-> > works well when configuration is done only once during initialization.
+Hi Rob,
+
+On 11:09 Thu 04 Dec     , Rob Herring wrote:
+> On Mon, Sep 1, 2025 at 3:48 AM Andrea della Porta <andrea.porta@suse.com> wrote:
 > >
-> > However, in cases where the burst length or source/destination address must
-> > be adjusted for each transfer, calling two functions is verbose and
-> > requires additional locking to ensure both steps complete atomically.
+> > Hi Krzysztof,
 > >
-> > Add a new API and callback device_prep_slave_sg_config that combines
-> > configuration and preparation into a single operation. If the configuration
-> > argument is passed as NULL, fall back to the existing implementation.
->
-> Maybe this would be a good time to start retiring the "slave" naming
-> and come up with shorter names as a win-win situation?
+> > On 08:50 Fri 22 Aug     , Krzysztof Kozlowski wrote:
+> > > On 21/08/2025 17:22, Andrea della Porta wrote:
+> > > > Hi Krzysztof,
+> > > >
+> > > > On 10:55 Tue 12 Aug     , Krzysztof Kozlowski wrote:
+> > > >> On 12/08/2025 10:50, Andrea della Porta wrote:
+> > > >>> The devicetree compiler is complaining as follows:
+> > > >>>
+> > > >>> arch/arm64/boot/dts/broadcom/rp1-nexus.dtsi:3.11-14.3: Warning (unit_address_vs_reg): /axi/pcie@1000120000/rp1_nexus: node has a reg or ranges property, but no unit name
+> > > >>> /home/andrea/linux-torvalds/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pcie@1000120000: Unevaluated properties are not allowed ('rp1_nexus' was unexpected)
+> > > >>
+> > > >> Please trim the paths.
+> > > >
+> > > > Ack.
+> > > >
+> > > >>
+> > > >>>
+> > > >>> Add the optional node that fix this to the DT binding.
+> > > >>>
+> > > >>> Reported-by: kernel test robot <lkp@intel.com>
+> > > >>> Closes: https://lore.kernel.org/oe-kbuild-all/202506041952.baJDYBT4-lkp@intel.com/
+> > > >>> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > > >>> ---
+> > > >>>  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 9 +++++++++
+> > > >>>  1 file changed, 9 insertions(+)
+> > > >>>
+> > > >>> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > >>> index 812ef5957cfc..7d8ba920b652 100644
+> > > >>> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > >>> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > >>> @@ -126,6 +126,15 @@ required:
+> > > >>>  allOf:
+> > > >>>    - $ref: /schemas/pci/pci-host-bridge.yaml#
+> > > >>>    - $ref: /schemas/interrupt-controller/msi-controller.yaml#
+> > > >>> +  - if:
+> > > >>> +      properties:
+> > > >>> +        compatible:
+> > > >>> +          contains:
+> > > >>> +            const: brcm,bcm2712-pcie
+> > > >>> +    then:
+> > > >>> +      properties:
+> > > >>> +        rp1_nexus:
+> > > >>
+> > > >> No, you cannot document post-factum... This does not follow DTS coding
+> > > >> style.
+> > > >
+> > > > I think I didn't catch what you mean here: would that mean that
+> > > > we cannot resolve that warning since we cannot add anything to the
+> > > > binding?
+> > >
+> > > I meant, you cannot use a warning from the code you recently introduced
+> > > as a reason to use incorrect style.
+> > >
+> > > Fixing warning is of course fine and correct, but for the code recently
+> > > introduced and which bypassed ABI review it is basically like new review
+> > > of new ABI.
+> > >
+> > > This needs standard review practice, so you need to document WHY you
+> > > need such node. Warning is not the reason here why you are doing. If
+> > > this was part of original patchset, like it should have been, you would
+> > > not use some imaginary warning as reason, right?
+> > >
+> > > So provide reason why you need here this dedicated child, what is that
+> > > child representing.
+> >
+> > Ack.
+> >
+> > >
+> > > Otherwise I can suggest: drop the child and DTSO, this also solves the
+> > > warning...
+> >
+> > This would not fix the issue: it's the non overlay that needs the specific
+> > node. But I got the point, and we have a solution for that (see below).
+> >
+> > >
+> > > >
+> > > > Regarding rp1_nexus, you're right I guess it should be
+> > > > rp1-nexus as per DTS coding style.
+> > > >
+> > > >>
+> > > >> Also:
+> > > >>
+> > > >> Node names should be generic. See also an explanation and list of
+> > > >> examples (not exhaustive) in DT specification:
+> > > >> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+> > > >
+> > > > In this case it could be difficult: we need to search for a DT node
+> > >
+> > > Search like in driver? That's wrong, you should be searching by compatible.
+> >
+> > Thanks for the hint. Searching by compatble is the solution.
+> 
+> No, it is not.
 
-Yes, 'prep_sg_config' or 'prep_sg' should be enough.
+This is partly true, indeed. On one side there's the need to avoid a
+specific node name ('rp1_nexus'), so the only other unique identifier would
+be the compatible string ('pci1de4,1' in this case, which identifies that specific
+device). Unfortunately, the same compatible string is also assigned to the pci
+endpoint node filled automatically by enabling CONFIG_PCI_DYNAMIC_OF_NODES.
+We would end up with two nodes with the same compatible, which is not unique
+anymore. 
+This applies only when using 'full' dtb (bcm2712-rpi-5-b.dtb) *and* you enable
+CONFIG_PCI_DYNAMIC_OF_NODES, the latter being not necessary since the overlay dtb
+(...-ovl-rp1.dtb) is not in use here. To overcome this problem, the solutions
+I can think of are the following:
 
-Frank
->
+1- Just disable CONFIG_PCI_DYNAMIC_OF_NODES should work, but only when using the
+   full dtb version. However, if the user enable that option for debug or to use
+   the overlay dtb version, he better be sure not to use teh full dtb or it won't
+   work.
+   This solution seems really weak.
+
+2- Add another compatible string other than 'pci1de4,1', so it will be really
+   unique.
+
+> 
+> > >
+> > > > starting from the DT root and using generic names like pci@0,0 or
+> > > > dev@0,0 could possibly led to conflicts with other peripherals.
+> > > > That's why I chose a specific name.
+> > >
+> > > Dunno, depends what can be there, but you do not get a specific
+> > > (non-generic) device node name for a generic PCI device or endpoint.
+> >
+> > I would use 'port' instead of rp1-nexus. Would it work for you?
+> 
+> Do you still plan to fix this? This is broken far worse than just the node name.
+
+Yes, if we want to get rid of that nasty warning and comply with DT guidelines,
+I think I really need to fix that.
+
+> 
+> The 'rp1_nexus' node is applied to the PCI host bridge. That's wrong
+> unless this is PCI rather than PCIe. There's the root port device in
+> between.
+> 
+> The clue that things are wrong are start in the driver here:
+> 
+> rp1_node = of_find_node_by_name(NULL, "rp1_nexus");
+> if (!rp1_node) {
+>   rp1_node = dev_of_node(dev);
+>   skip_ovl = false;
+> }
+> 
+> You should not need to do this nor care what the node name is. The PCI
+> core should have populated pdev->dev.of_node for you. If not, your DT
+> is wrong. Turn on CONFIG_PCI_DYNAMIC_OF_NODES and look at the
+> resulting PCI nodes. They should also match what the hierarchy looks
+> like with lspci. I don't recommend you rely on
+> CONFIG_PCI_DYNAMIC_OF_NODES, but statically populate the nodes in the
+> DT. First, CONFIG_PCI_DYNAMIC_OF_NODES is an under development thing
+> and I hope to get rid of the config option. Second, your case is
+> static (i.e. not a PCIe card in a slot) so there is no issue
+> hardcoding the DT.
+
+The 'full' dtb (bcm2712-rpi-5-b.dtb) is indeed statically populated.
+CONFIG_PCI_DYNAMIC_OF_NODES is needed only if you use the overlay approach
+(bcm2712-rpi-5-b-ovl-rp1.dtb) and in that case the node will be
+added to the correct device node at runtime, and there won't be any node
+labeled as rp1_nexus.
+That conditional just check for teh presence of the rp1_nexus node to
+choose if the overlay should be loaded at runtime (if rp1_nexus is present,
+then we are in the static case so no overlay need to be loaded).
+
+> 
+> As far as the node name, I don't care so much as long as the driver
+> doesn't care and you don't use '_' or 'pcie?' (that's for PCI
+> bridges).
+> 
+> And why do we have drivers/misc/rp1/rp1-pci.dtso and a .dtso in
+> arch/arm64? There should not be both.
+
+drivers/misc/rp1/rp1-pci.dtso is just a wrapper over rp1-common.dtsi,
+which is to be compiled in as binary blob in the driver and loaded at
+runtime.
+rp1.dtbo is optional, it's there just for completeness in case anyone want
+to load teh overlay from the fw, as explained here:
+https://lore.kernel.org/all/ab9ab3536baf5fdf6016f2a01044f00034189291.1742418429.git.andrea.porta@suse.com/
+If it causes confusion, we can probably get rid of it with no penalty.
+
+Many thanks,
+Andrea
+
+> 
+> Rob
 
