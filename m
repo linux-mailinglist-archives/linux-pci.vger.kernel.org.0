@@ -1,271 +1,174 @@
-Return-Path: <linux-pci+bounces-42819-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42820-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A61F2CAEF81
-	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 06:51:27 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CC72CAF01A
+	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 07:18:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4CA5F3030FD0
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 05:51:26 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A43393004D0D
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 06:18:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B63826F296;
-	Tue,  9 Dec 2025 05:51:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE6421DE3B7;
+	Tue,  9 Dec 2025 06:18:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ftepztPW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RaTUZlk5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D5931ED80
-	for <linux-pci@vger.kernel.org>; Tue,  9 Dec 2025 05:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6AA79DA
+	for <linux-pci@vger.kernel.org>; Tue,  9 Dec 2025 06:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765259485; cv=none; b=bwo819NsBQjPF+Qw978Zk2JhLfvGTTFdg0czLragCsidS0+gY1CgS0RzDifLYIZcuzaifwTswS1xT9tyVjEVSYlpMeFf6xMxvPXmZ/mKc/CMORcDveiIvhQeuLB8uzRy01zqqHA21MV7/TRAgIXl04TUkFkmXNO5VEYu+k2btM4=
+	t=1765261114; cv=none; b=F9v02N7C6buqOCULW6vK5KzVO2y+jHKRAdQXBsmfusvVqSOq7XWieSLB91e2baTnPRcntyXTyU62eiB3C0kEovG4NZIHojrltJvkX2BTu1z6tIfbkoqv+BhJ2YJxb+6004p8s4Xh9CPK/60DmrbzT+3jf1uaM2h3Jg46MIJP1KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765259485; c=relaxed/simple;
-	bh=2AMcSjxozP6dAKJwja4nQgJqZCwC1TTxXyQZ7goxiss=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gv7yn0S6NT0rT9hzR5PAtsES+QtPreIOnHydG/nitpTdrejSv6o0hm1u0Z4TAXnXamT5+LlOVS3b0JzR7bDazxARS4r1X7xScYqv5aal+Zvgl+lAPUQ4K9x0mvyjsOfvk1NtauYl6fxLsJSfNxmj5L6TLNFjT9fUW2Ozjpa027U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ftepztPW; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1765259479; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=Oqa1fSl1VRU960YkLa4xiKTvgFqZNsxLfz7X/Igln84=;
-	b=ftepztPWiIuFOAxLk6z0yrTas0kiOiQHvAHC+UZbo4ttWfAo3aQxCnVQTEwaRVBxOLpBRfc+N//VKFFfLwSHwdUeygblmdncEgDhJ8tk0lbXs0Hvr7ZJKnnOggmvqz7Y4pWXwFUOWwZpkpl3LNoVMD9elDnuyZ40t6PKAKRkunk=
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0WuRS1ah_1765259474 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 09 Dec 2025 13:51:19 +0800
-From: Guixin Liu <kanie@linux.alibaba.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: linux-pci@vger.kernel.org
-Subject: [PATCH RESEND v5] PCI: Check rom header and data structure addr before accessing
-Date: Tue,  9 Dec 2025 13:51:14 +0800
-Message-ID: <20251209055114.66392-1-kanie@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1765261114; c=relaxed/simple;
+	bh=nrOEe1Q1KKKztS9JQI5wIfoekeRaSqgEGhUdFlNZvnI=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=nAJ80O6Mm32Qz0tJRheXcWOWpxTdJ4FRrPBaVrmn+m082voGEGmyV9EUfD4UCOu/OJWVog7wN2MpCSGXalLtJXiPcmHjEm1hK5SGQpcZsBT/ncj0s8whw7f7E+Z/pf04GNw6p/R9y61e8JaboaRCQlKUSDUM7Em8xiLzarUmz1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RaTUZlk5; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-29844c68068so67588985ad.2
+        for <linux-pci@vger.kernel.org>; Mon, 08 Dec 2025 22:18:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765261112; x=1765865912; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xSpG9FcTGr8H9OdU3YUlNCJNp1ODh6ENX89vc9//Z4k=;
+        b=RaTUZlk5pdLF6tCNhXC1GDnWXRODol7+ZgGiUR+KOBhBHKJzUiLQ11rHfVVzV8A2vz
+         K5Nsh+yc+NR9BUYinOSMkJYVcmuv1Tlzz9bwPBzQVen3EAnvJcgmvTu7XrQb0Wd7CFwd
+         nWBuOwKglSfVv15y/G0dA7nFHt2MWO9a4rXp+mTAtmN5ZmL5WoKhgWaVZ6fFMsboRTuV
+         JXBu1gvOLGI/24zzx/tfOMoZOalsJfH0BxTcejDZx3TIbIzfu3rZLub4bNEB5WUFexLZ
+         LVlgAdmmUaJrksZu+mH9K+WX7gHKBj+A8zusFaGUnHgZ83drP134vIqSCKTRhBihQy0Z
+         zUgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765261112; x=1765865912;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xSpG9FcTGr8H9OdU3YUlNCJNp1ODh6ENX89vc9//Z4k=;
+        b=nijgd3Yfo85HCHFr9TJoxiiGMEoD40zpX1aEA9ifoMSYGIEGchKUm1qUzO6yBe1Bqo
+         k6MWAYJaGKfN4qG9gsiWutFC1foRSGydtyRWVyk95hcTARli2en7GcQ2yil6k6h8/HL8
+         1a/C+1LVedsWTup/2rmDB3FnWDIfxGox4Yq63qfQ/sfFomNuyAMbNdQwOOoZuoFIx/R2
+         ZcqQqTMK3H8O2MT3gbEWCfRoHe1KDtpCdXyUs5Ik4caFEDM0bPg9YuoIYENQ94s3LARH
+         lhp608Oh5bbw5brYTw4fpR/Bt5d/1UjFETwMy2O5uUNH4hSkLqYWVVnqRP+PWKYdGMks
+         s2zg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEXZesBO2ow+d4iF5PpFuOTuKQbNJRW55Nihppszd+Vl1GCpUNF+4K9r4GtLT9OvHn9e9Ysi3NwaY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws0wBIVym1Mk0UxbPFreZFscGWGq6fLsT4Rphi+CCMsUsQ3LzF
+	7Gp1NsaFnChed8j1kOxk6om4LNtgFVLGP9WIgOv+pnVrT8h/hw/b5dRw
+X-Gm-Gg: ASbGncv1MHdMCmQEDPRMXBxaKqK1Uuvi4f3Z/3G9wIHgNVZJHtUgL4EQrZST7sMbleZ
+	qR5PmAPgK5u8HVyTlq3ZfiwPT6PFxMeEJLeDghHLmOdMSpHKYk0ciVWNLv3B5xcOy4qZhIJ+n/e
+	rdPSBE4MBOGVs+Wj22AN5U7JkGJWi7BosLoDnwc5vLOmcwordF6e0Afz/oY6aEE9NLsvGrlD5FN
+	1APEGujtckBZXXr9j9TsCkt0rTdU+gNRTnV2vZvsEKJPrPif1jJVEKFTxn74yW0vWlFhwiZ5gLW
+	12aCMiqDFO8fTOZdHvk6KiEzzuEPgPiq5mmBWm841PCX5jBt/s1hYbre4hq8wD1NzL5nBwagsof
+	B4pBVbtemxXgz7qh7tf6cDK69z9UExMEN8NKqhZrpBBPxUthK76f4akM9qZkI8mkPXMdfH8/ggH
+	KG4TBDUUJ4miCXHiVO4dUQBbTyv2kJiX7kM9WJKOa5qbw9oWfw0XloGoFqsGjS49QePw==
+X-Google-Smtp-Source: AGHT+IEPHmVHYlRLwG0PcIz7r8pVUrGZaRRQAJ9BL8ULdYzSdH8IEn99XoMWpMxcYnV9VeDC0U3BEA==
+X-Received: by 2002:a17:902:e752:b0:295:98a1:7ddb with SMTP id d9443c01a7336-29df6326100mr94457775ad.61.1765261112403;
+        Mon, 08 Dec 2025 22:18:32 -0800 (PST)
+Received: from localhost (p4783053-ipxg23301hodogaya.kanagawa.ocn.ne.jp. [153.209.99.53])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29dae49ca1esm141487655ad.2.2025.12.08.22.18.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Dec 2025 22:18:31 -0800 (PST)
+Date: Tue, 09 Dec 2025 15:18:17 +0900 (JST)
+Message-Id: <20251209.151817.744108529426448097.fujita.tomonori@gmail.com>
+To: rust-for-linux@vger.kernel.org
+Cc: dakr@kernel.org, ojeda@kernel.org, a.hindborg@kernel.org,
+ aliceryhl@google.com, bhelgaas@google.com, bjorn3_gh@protonmail.com,
+ boqun.feng@gmail.com, gary@garyguo.net, kwilczynski@kernel.org,
+ lossin@kernel.org, tmgross@umich.edu, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1] rust: helpers: Fix pci_free_irq_vectors() build
+ with CONFIG_PCI disabled
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <20251209014312.575940-1-fujita.tomonori@gmail.com>
+References: <20251209014312.575940-1-fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-We meet a crash when running stress-ng on x86_64 machine:
+On Tue,  9 Dec 2025 10:43:12 +0900
+FUJITA Tomonori <fujita.tomonori@gmail.com> wrote:
 
-  BUG: unable to handle page fault for address: ffa0000007f40000
-  RIP: 0010:pci_get_rom_size+0x52/0x220
-  Call Trace:
-  <TASK>
-    pci_map_rom+0x80/0x130
-    pci_read_rom+0x4b/0xe0
-    kernfs_file_read_iter+0x96/0x180
-    vfs_read+0x1b1/0x300
+> Fix the following error with CONFIG_PCI disabled:
+> 
+> In file included from linux/rust/helpers/helpers.c:40:
+> linux/rust/helpers/pci.c:36:2: error: call to undeclared function 'pci_free_irq_vectors'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+>    36 |         pci_free_irq_vectors(dev);
+>       |         ^
+> linux/rust/helpers/pci.c:36:2: note: did you mean 'pci_alloc_irq_vectors'?
+> linux/include/linux/pci.h:2208:1: note: 'pci_alloc_irq_vectors' declared here
+>  2208 | pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+>       | ^
+> 1 error generated.
+> make[3]: *** [linux/rust/Makefile:621: rust/helpers/helpers.o] Error 1
+> make[3]: *** Waiting for unfinished jobs....
+> linux/rust/helpers/pci.c:36:2: error: call to undeclared function 'pci_free_irq_vectors'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+> Unable to generate bindings: clang diagnosed error: linux/rust/helpers/pci.c:36:2: error: call to undeclared function 'pci_free_irq_vectors'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+> 
+> Fixes: 473b9f331718 ("rust: pci: fix build failure when CONFIG_PCI_MSI is disabled")
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> ---
+>  rust/helpers/pci.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Our analysis reveals that the rom space's start address is
-0xffa0000007f30000, and size is 0x10000. Because of broken rom
-space, before calling readl(pds), the pds's value is
-0xffa0000007f3ffff, which is already pointed to the rom space
-end, invoking readl() would read 4 bytes therefore cause an
-out-of-bounds access and trigger a crash.
-Fix this by adding image header and data structure checking.
+I just realized that the above leads to unresolved link warnings with
+rustdoc.
 
-We also found another crash on arm64 machine:
+Is it possible to work around the inner documentation comment in
+driver.rs?
 
-  Unable to handle kernel paging request at virtual address
-ffff8000dd1393ff
-  Mem abort info:
-  ESR = 0x0000000096000021
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x21: alignment fault
+//! For specific examples see [`auxiliary::Driver`], [`pci::Driver`] and [`platform::Driver`].
 
-The call trace is the same with x86_64, but the crash reason is
-that the data structure addr is not aligned with 4, and arm64
-machine report "alignment fault". Fix this by adding alignment
-checking.
 
-Fixes: 47b975d234ea ("PCI: Avoid iterating through memory outside the resource window")
-Suggested-by: Guanghui Feng <guanghuifeng@linux.alibaba.com>
-Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
----
-v4 -> v5:
-- Add Andy Shevchenko's rb tag, thanks.
-- Change u64 to unsigned long.
-- Change pci_rom_header_valid() to pci_rom_is_header_valid() and
-change pci_rom_data_struct_valid() to pci_rom_is_data_struct_valid().
-- Change rom_end from rom+size to rom+size-1 for more readble,
-and also change header_end >= rom_end to header_end > rom_end, same
-as data structure end.
-- Change if(!last_image) to if (last_image)..
-- Use U16_MAX instead of 0xffff.
-- Split check_add_overflow() from data_len checking.
-- Remove !!() when reading last_image, and Use BIT(7) instead of 0x80.
+The rest can be avoid with cfg_attr though.
 
-v3 -> v4:
-- Use "u64" instead of "uintptr_t".
-- Invert the if statement to avoid excessive indentation.
-- Add comment for alignment checking.
-- Change last_image's type from int to bool.
-
-v2 -> v3:
-- Add pci_rom_header_valid() helper for checking image addr and signature.
-- Add pci_rom_data_struct_valid() helper for checking data struct add
-and signature.
-- Handle overflow issue when adding addr with size.
-- Handle alignment fault when running on arm64.
-
-v1 -> v2:
-- Fix commit body problems, such as blank line in "Call Trace" both sides,
-  thanks, (Andy Shevchenko).
-- Remove every step checking, just check the addr is in header or data struct.
-- Add Suggested-by: Guanghui Feng <guanghuifeng@linux.alibaba.com> tag.
- drivers/pci/rom.c | 109 ++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 90 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
-index e18d3a4383ba..b0de38211f39 100644
---- a/drivers/pci/rom.c
-+++ b/drivers/pci/rom.c
-@@ -69,6 +69,87 @@ void pci_disable_rom(struct pci_dev *pdev)
- }
- EXPORT_SYMBOL_GPL(pci_disable_rom);
- 
-+#define PCI_ROM_HEADER_SIZE 0x1A
-+
-+static bool pci_rom_is_header_valid(struct pci_dev *pdev,
-+				    void __iomem *image,
-+				    void __iomem *rom,
-+				    size_t size,
-+				    bool last_image)
-+{
-+	unsigned long rom_end = (unsigned long)rom + size - 1;
-+	unsigned long header_end;
-+
-+	/*
-+	 * Some CPU architectures require IOMEM access addresses to
-+	 * be aligned, for example arm64, so since we're about to
-+	 * call readw(), we check here for 2-byte alignment.
-+	 */
-+	if (!IS_ALIGNED((unsigned long)image, 2))
-+		return false;
-+
-+	if (check_add_overflow((unsigned long)image, PCI_ROM_HEADER_SIZE,
-+	    &header_end))
-+		return false;
-+
-+	if (image < rom || header_end > rom_end)
-+		return false;
-+
-+	/* Standard PCI ROMs start out with these bytes 55 AA */
-+	if (readw(image) == 0xAA55)
-+		return true;
-+
-+	if (last_image)
-+		pci_info(pdev, "Invalid PCI ROM header signature: expecting 0xaa55, got %#06x\n",
-+			 readw(image));
-+	else
-+		pci_info(pdev, "No more image in the PCI ROM\n");
-+
-+	return false;
-+}
-+
-+static bool pci_rom_is_data_struct_valid(struct pci_dev *pdev,
-+					 void __iomem *pds,
-+					 void __iomem *rom,
-+					 size_t size)
-+{
-+	unsigned long rom_end = (unsigned long)rom + size - 1;
-+	unsigned long end;
-+	u16 data_len;
-+
-+	/*
-+	 * Some CPU architectures require IOMEM access addresses to
-+	 * be aligned, for example arm64, so since we're about to
-+	 * call readl(), we check here for 4-byte alignment.
-+	 */
-+	if (!IS_ALIGNED((unsigned long)pds, 4))
-+		return false;
-+
-+	/* Before reading length, check range. */
-+	if (check_add_overflow((unsigned long)pds, 0x0B, &end))
-+		return false;
-+
-+	if (pds < rom || end > rom_end)
-+		return false;
-+
-+	data_len = readw(pds + 0x0A);
-+	if (!data_len || data_len == U16_MAX)
-+		return false;
-+
-+	if (check_add_overflow((unsigned long)pds, data_len, &end))
-+		return false;
-+
-+	if (end > rom_end)
-+		return false;
-+
-+	if (readl(pds) == 0x52494350)
-+		return true;
-+
-+	pci_info(pdev, "Invalid PCI ROM data signature: expecting 0x52494350, got %#010x\n",
-+		 readl(pds));
-+	return false;
-+}
-+
- /**
-  * pci_get_rom_size - obtain the actual size of the ROM image
-  * @pdev: target PCI device
-@@ -84,37 +165,27 @@ static size_t pci_get_rom_size(struct pci_dev *pdev, void __iomem *rom,
- 			       size_t size)
- {
- 	void __iomem *image;
--	int last_image;
-+	bool last_image;
- 	unsigned int length;
- 
- 	image = rom;
- 	do {
- 		void __iomem *pds;
--		/* Standard PCI ROMs start out with these bytes 55 AA */
--		if (readw(image) != 0xAA55) {
--			pci_info(pdev, "Invalid PCI ROM header signature: expecting 0xaa55, got %#06x\n",
--				 readw(image));
-+
-+		if (!pci_rom_is_header_valid(pdev, image, rom, size, true))
- 			break;
--		}
-+
- 		/* get the PCI data structure and check its "PCIR" signature */
- 		pds = image + readw(image + 24);
--		if (readl(pds) != 0x52494350) {
--			pci_info(pdev, "Invalid PCI ROM data signature: expecting 0x52494350, got %#010x\n",
--				 readl(pds));
-+		if (!pci_rom_is_data_struct_valid(pdev, pds, rom, size))
- 			break;
--		}
--		last_image = readb(pds + 21) & 0x80;
-+
-+		last_image = readb(pds + 21) & BIT(7);
- 		length = readw(pds + 16);
- 		image += length * 512;
--		/* Avoid iterating through memory outside the resource window */
--		if (image >= rom + size)
-+
-+		if (!pci_rom_is_header_valid(pdev, image, rom, size, last_image))
- 			break;
--		if (!last_image) {
--			if (readw(image) != 0xAA55) {
--				pci_info(pdev, "No more image in the PCI ROM\n");
--				break;
--			}
--		}
- 	} while (length && !last_image);
- 
- 	/* never return a size larger than the PCI resource window */
--- 
-2.43.0
-
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index c79be2e2bfe3..a33adbb303d9 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -67,8 +67,10 @@
+ ///
+ /// # Implementing Bus Devices
+ ///
+-/// This section provides a guideline to implement bus specific devices, such as [`pci::Device`] or
+-/// [`platform::Device`].
++/// This section provides a guideline to implement bus specific devices, such as
++#[cfg_attr(CONFIG_PCI = "y", doc = "[`pci::Device`](kernel::pci::Device).")]
++#[cfg_attr(not(CONFIG_PCI = "y"), doc = "`pci::Device`.")]
++/// or [`platform::Device`].
+ ///
+ /// A bus specific device should be defined as follows.
+ ///
+@@ -160,7 +162,6 @@
+ ///
+ /// [`AlwaysRefCounted`]: kernel::types::AlwaysRefCounted
+ /// [`impl_device_context_deref`]: kernel::impl_device_context_deref
+-/// [`pci::Device`]: kernel::pci::Device
+ /// [`platform::Device`]: kernel::platform::Device
+ #[repr(transparent)]
+ pub struct Device<Ctx: DeviceContext = Normal>(Opaque<bindings::device>, PhantomData<Ctx>);
+diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
+index 84d3c67269e8..1af6eec7ec28 100644
+--- a/rust/kernel/dma.rs
++++ b/rust/kernel/dma.rs
+@@ -27,8 +27,10 @@
+ /// Trait to be implemented by DMA capable bus devices.
+ ///
+ /// The [`dma::Device`](Device) trait should be implemented by bus specific device representations,
+-/// where the underlying bus is DMA capable, such as [`pci::Device`](::kernel::pci::Device) or
+-/// [`platform::Device`](::kernel::platform::Device).
++/// where the underlying bus is DMA capable, such as
++#[cfg_attr(CONFIG_PCI = "y", doc = "[`pci::Device`](kernel::pci::Device).")]
++#[cfg_attr(not(CONFIG_PCI = "y"), doc = "`pci::Device`.")]
++/// or [`platform::Device`](::kernel::platform::Device).
+ pub trait Device: AsRef<device::Device<Core>> {
+     /// Set up the device's DMA streaming addressing capabilities.
+     ///
 
