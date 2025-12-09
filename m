@@ -1,330 +1,228 @@
-Return-Path: <linux-pci+bounces-42859-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42860-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2E58CB0D38
-	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 19:22:23 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D7D7CB0D41
+	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 19:23:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 6D9DE3019D29
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 18:22:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9082A30C9230
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 18:22:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCC5F2512F5;
-	Tue,  9 Dec 2025 18:22:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 338822FFFBC;
+	Tue,  9 Dec 2025 18:22:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwhq6b1A"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c8pe1A1n";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="mBHvIHnd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978512F7ACA
-	for <linux-pci@vger.kernel.org>; Tue,  9 Dec 2025 18:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F5D2EE262
+	for <linux-pci@vger.kernel.org>; Tue,  9 Dec 2025 18:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765304536; cv=none; b=FjUrfijhQEAQHmvbEODO/u/lPolDwyMmrv/3E8aOYjBdw3v84hLCzY/c+OZU2swRuuoadQ0X/i1lsdC288eR6kvZ+voY9uYjQtDOMONeM3N5C2Dv7/nGLHpT37sgIz9FvARRbTi3IHUZkWKsKPDSnVuebXc93QHv3QTHcnzM7rQ=
+	t=1765304574; cv=none; b=lI1vOLev8jP9UKS/1SEutbmsGh0/6gKZpqbK+uaOkbjXOsXBQS4FUJL6pgUAgadGYAM4UMT9nrk87RJQqPbCeNBoH7/VtR3pQxk6L70DoG5oWDL+3iJmJxLdlO0jgsljd3jTs4Sq2dVSoBeuwaHFvBYkHtm6xeYLqO70LkSX3J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765304536; c=relaxed/simple;
-	bh=UKzG5r6tZdd5xrvc+V6BLRMRixav8M5oPtw1A8mobcc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dct0oerE2tGqhLmc/F/cA9OWsG9U+iDPotuXH7uauYFKB1hNo18LrKUMvyZB40DR3Hie89Z1OqqO4qS8E3yia6TXKSBr16AKgm/pxJ34QuQZjU4NFKRmS1ENK6ZvQdpM3yEuFtPwqc6VHnO/2jHZhFkeiqoTl71yJ/BNJqhXw9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwhq6b1A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33257C4CEFB
-	for <linux-pci@vger.kernel.org>; Tue,  9 Dec 2025 18:22:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765304536;
-	bh=UKzG5r6tZdd5xrvc+V6BLRMRixav8M5oPtw1A8mobcc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mwhq6b1AtlP0OMsn+a/DpQEi4B0N+2sq78Dxt2pyWdfOVH2ikAvcNljGZzCzboi0K
-	 gLUku91R5oGRqNMaxrqpMo8/T+p5qtiTducBd6I/q7Ncm0K8JVkvEjSQR6Bqwka5MZ
-	 RlXa2sU0/oTmlp0p8yjSkUy//FQuiURg3pohqm+mXZixvcvWjWwqmbqIC1/GrDcbmM
-	 ZcnbZDLR1B6MBn0C1ZoGpKf+K+iPJOUWtQZXPlB9I5COD/4P3GXoa0N7fmKQTqiRye
-	 cwffOcCM1LakWN8WAqG18jNIDwsMJdyXhQ0i3dvSskdpxkt5tIaJu79KC7kskvyMt2
-	 Y5ui3XRrf2wjg==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-640e9f5951aso155053a12.1
-        for <linux-pci@vger.kernel.org>; Tue, 09 Dec 2025 10:22:16 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUo7k/DWu2NTqp2URGWY/PD5UUruiDk9GFTROanVXQoim3Iyit0FsIl1TUa4YJjeaLVmNrM2wDrpAA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyy/3I3nOMMLYnbj5rmq0wA/mWagwIjyM0++3KukYAcXmzU6Kq7
-	OwsyYu/bwVNDha94Ri+1BQ/zf3N0C3g2QXdZKiPz5komDZIZ5GkBi27GzMjsU8EgeOW7f5/gdBK
-	0ppz3SCBMY3Yusb9XHyUr1Y/WXdUMFQ==
-X-Google-Smtp-Source: AGHT+IFzTQ9Y3GxkAyIHgOyYgaZYw0NHt6leyzeMXy/GIFoBBTO/qYxLFwa+4RFxSZN6dpV1Csau5W/Nk3OxiiIm2Pg=
-X-Received: by 2002:a05:6402:2108:b0:649:21d1:9c76 with SMTP id
- 4fb4d7f45d1cf-649641309e1mr2564343a12.4.1765304534437; Tue, 09 Dec 2025
- 10:22:14 -0800 (PST)
+	s=arc-20240116; t=1765304574; c=relaxed/simple;
+	bh=EE7wXtjs9EBC1pz96zdtJaDICazZ+qtIBI35mNOiwXM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aNmXMnVJxV2fHFyglCy7HqUzZuZrkSb3MOcFEGgXOEKYq4eCA2QWzFpGYj9BErn1XX/jO2x+viGBRM1PVdfxtbn0us76HKan7vx2sfan8WEbfnO3ie14BTSeaxlbwwIrCWXUccPCrfXV6sEBTfhrt9fCEgNSiyxXn6XJ+Myrnlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c8pe1A1n; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=mBHvIHnd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1765304570;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WMOszaFVk9dmDMFq0LvRTh2fbh1Zhs/4RFuYjDJSUZI=;
+	b=c8pe1A1nGwyCqWBct88u5gpCknUn5KBS7APJZvdQ1cNSXZwlWx90eq0FSj7uLmPOdSnHhh
+	vQdL50GBroeZF1byrVnybJWELaaVGUj0Diw8b0fINNL1rd6/g9SQOILLybH/B2I+odgAwR
+	Yhh54vrvzX+N5VKOgEYktpgLV+XgZlg=
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-382-Wm6hq5RRP3KTlcr6SCHOPw-1; Tue, 09 Dec 2025 13:22:49 -0500
+X-MC-Unique: Wm6hq5RRP3KTlcr6SCHOPw-1
+X-Mimecast-MFC-AGG-ID: Wm6hq5RRP3KTlcr6SCHOPw_1765304568
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-7b80de683efso9296384b3a.3
+        for <linux-pci@vger.kernel.org>; Tue, 09 Dec 2025 10:22:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1765304568; x=1765909368; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WMOszaFVk9dmDMFq0LvRTh2fbh1Zhs/4RFuYjDJSUZI=;
+        b=mBHvIHndRo2/RD1R/K80w3VY8OW8pZr1pNhw/LamSbINatqTKmSOJlVS7/0IUaUJvj
+         gwy2vhXefWLxeKdTZsWhHrW+M5yWb4KLyS8BV9IPDzIOsyXk1vOhnUrIcLXp1PYF1rIS
+         DQnkTu8ZzPK1PH4Z7/D50zw4k+f3a5yQZhS+EWBzlle8Nc/8vNp+NiocH9s13ngllybI
+         1M0uVgDbZErT51mtK7WzZeSfSpuX0KbFt15CIVVHVeJ1VxbvrLMpxXC3Dxg2sc+vnz97
+         /QFe1bm5+QDCmN23VHDPpE+FXP9EKPMQWzf/urbXYfNWYaJTNuQrIK9O4qTmb/rTFmEa
+         BWvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765304568; x=1765909368;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WMOszaFVk9dmDMFq0LvRTh2fbh1Zhs/4RFuYjDJSUZI=;
+        b=dy3hcJ3IDmq91G3oFXlj++hpqTcMIbwb7rZKIuQItVCqlGzvuqijWToJ536DvKEWBL
+         nGAaMyFlJUMJz3WKHTZzeR1j2MJ6xXNem4iqbd+2ronUybUsRUZMjQzFm3iuZ30BbrNf
+         y9inkK7bJxepuZyiN0svgNAyM+NuLSsNPaUC/H/xNo+0jSva1wcXBBcPZpYcdI9w3+pg
+         KA+EIxujZXyw0NO2nhB0IrR4Yw9jeYqxF20k1nfQc7ENjVxBXjkUGasfKfB2nmvOa4V0
+         7r8T9Evz4s/vjGLbbUg7ooUpraDPDZDcic8gXhc4SS8kas+bydGPJ7uy+uW5tvUwUeN9
+         7a9w==
+X-Forwarded-Encrypted: i=1; AJvYcCWAIS9BMGTmCqKcj26fTRiPP2Jmu20HMCrmdM1+UubwVVLhre3Q+O/sb/hq/EgW1VWqKmagb1g2QMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9ysx9kH/c8rfFCxhE+X5SFoRRyG7vLApD6ZaszlndpN11ayg9
+	JW610w55pgeZSFSZCr+orcbaKh9eHMZnkCD2kivBCakDMK7bTbs+f/cCs7b/+nO7j+dOdoDWUbd
+	QTQb2pcO4jwgqEhJ12CUPp/zMi6ZgHiVTVNrFoiWuW1GAJW5aoy8oiVgSr6oA1Q==
+X-Gm-Gg: ASbGnctLUCwVTT0dZkqTSpOoVCbU5TvmRvO0ej1Rz/SKIQLNh+TnYGXlxN2MXzvJyT6
+	5Q4DETKqECf12iIwk8a5pGbeNF9sQ+5TjqT2ygAFuQ8QVaZxqftZxgzLoJSQ1Enj+tb5dA1ZjS6
+	ww5StRUZKZXKZwJRd8D8kEyjl8OQ8kYcNkTC+qu2mInXPxPXh7tJl/3uwCNRbQVqbzVXiW7dMey
+	Dms829ZH98HbF/A3l+MkcIRgzZUxr9j9oTqhg80EiT4KnJ4zlXUT+A09Rn5jd8k4FQEIWAO6D7r
+	RnG34edaJI8q7lV1aVq0SjOlVLATFv4n5QjqwKBJymlMBJihkk2hox4ebAlcn3KB/q0jYWqocS/
+	WOL8NfBTxAQ==
+X-Received: by 2002:a05:7022:401:b0:11d:f464:5c97 with SMTP id a92af1059eb24-11e032d86admr10001670c88.39.1765304567955;
+        Tue, 09 Dec 2025 10:22:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFDwilm5GiGAv7e/m6VA+/VyYDDyNis+KEVWPuuPoKnNewKlxbpy5fSUp7p0RlzrwnLtnLoLg==
+X-Received: by 2002:a05:7022:401:b0:11d:f464:5c97 with SMTP id a92af1059eb24-11e032d86admr10001629c88.39.1765304567147;
+        Tue, 09 Dec 2025 10:22:47 -0800 (PST)
+Received: from localhost ([2607:f2c0:b021:e700:1a3d:b7ef:5d4d:bee5])
+        by smtp.gmail.com with UTF8SMTPSA id a92af1059eb24-11f283d465csm1567525c88.14.2025.12.09.10.22.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Dec 2025 10:22:46 -0800 (PST)
+Date: Tue, 9 Dec 2025 13:22:43 -0500
+From: Peter Colberg <pcolberg@redhat.com>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>, Zhi Wang <zhiw@nvidia.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH 1/8] rust: pci: add is_virtfn(), to check for VFs
+Message-ID: <aTho82cpiQbrrCdd@earendel>
+Mail-Followup-To: Joel Fernandes <joelagnelf@nvidia.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>, Zhi Wang <zhiw@nvidia.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>
+References: <20251119-rust-pci-sriov-v1-0-883a94599a97@redhat.com>
+ <20251119-rust-pci-sriov-v1-1-883a94599a97@redhat.com>
+ <20251207062819.GA212851@joelbox2>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250812085037.13517-1-andrea.porta@suse.com> <4fee3870-f9d5-48e3-a5be-6df581d3e296@kernel.org>
- <aKc5nMT1xXpY03ip@apocalypse> <e7875f70-2b79-48e0-a63b-caf6f1fd287b@kernel.org>
- <aLVePQRfU4IB1zK8@apocalypse> <CAL_JsqJUzB71QdMcxJtNZ7raoPcK+SfTh7EVzGmk=syo8xLKQw@mail.gmail.com>
- <aThjYt3ux0U-9-3A@apocalypse>
-In-Reply-To: <aThjYt3ux0U-9-3A@apocalypse>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 9 Dec 2025 12:22:02 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJxseyQDDNE-p3_4qjXcDwN_XyxWCvQA3hznyASLO7Gvw@mail.gmail.com>
-X-Gm-Features: AQt7F2oYAUNkruYIknaJYHumHq3iwSVNlVv8exBJvESkPN0wNo4j8-yt5NPugmg
-Message-ID: <CAL_JsqJxseyQDDNE-p3_4qjXcDwN_XyxWCvQA3hznyASLO7Gvw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pci: brcmstb: Add rp1-nexus node to fix DTC warning
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Jim Quinlan <jim2101024@gmail.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, kwilczynski@kernel.org, 
-	Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, iivanov@suse.de, svarbanov@suse.de, 
-	mbrugger@suse.com, Jonathan Bell <jonathan@raspberrypi.com>, 
-	Phil Elwell <phil@raspberrypi.com>, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251207062819.GA212851@joelbox2>
 
-On Tue, Dec 9, 2025 at 11:56=E2=80=AFAM Andrea della Porta
-<andrea.porta@suse.com> wrote:
->
-> Hi Rob,
->
-> On 11:09 Thu 04 Dec     , Rob Herring wrote:
-> > On Mon, Sep 1, 2025 at 3:48=E2=80=AFAM Andrea della Porta <andrea.porta=
-@suse.com> wrote:
-> > >
-> > > Hi Krzysztof,
-> > >
-> > > On 08:50 Fri 22 Aug     , Krzysztof Kozlowski wrote:
-> > > > On 21/08/2025 17:22, Andrea della Porta wrote:
-> > > > > Hi Krzysztof,
-> > > > >
-> > > > > On 10:55 Tue 12 Aug     , Krzysztof Kozlowski wrote:
-> > > > >> On 12/08/2025 10:50, Andrea della Porta wrote:
-> > > > >>> The devicetree compiler is complaining as follows:
-> > > > >>>
-> > > > >>> arch/arm64/boot/dts/broadcom/rp1-nexus.dtsi:3.11-14.3: Warning =
-(unit_address_vs_reg): /axi/pcie@1000120000/rp1_nexus: node has a reg or ra=
-nges property, but no unit name
-> > > > >>> /home/andrea/linux-torvalds/arch/arm64/boot/dts/broadcom/bcm271=
-2-rpi-5-b.dtb: pcie@1000120000: Unevaluated properties are not allowed ('rp=
-1_nexus' was unexpected)
-> > > > >>
-> > > > >> Please trim the paths.
-> > > > >
-> > > > > Ack.
-> > > > >
-> > > > >>
-> > > > >>>
-> > > > >>> Add the optional node that fix this to the DT binding.
-> > > > >>>
-> > > > >>> Reported-by: kernel test robot <lkp@intel.com>
-> > > > >>> Closes: https://lore.kernel.org/oe-kbuild-all/202506041952.baJD=
-YBT4-lkp@intel.com/
-> > > > >>> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > > > >>> ---
-> > > > >>>  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 9 +=
-++++++++
-> > > > >>>  1 file changed, 9 insertions(+)
-> > > > >>>
-> > > > >>> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pci=
-e.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > > >>> index 812ef5957cfc..7d8ba920b652 100644
-> > > > >>> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > > >>> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > > >>> @@ -126,6 +126,15 @@ required:
-> > > > >>>  allOf:
-> > > > >>>    - $ref: /schemas/pci/pci-host-bridge.yaml#
-> > > > >>>    - $ref: /schemas/interrupt-controller/msi-controller.yaml#
-> > > > >>> +  - if:
-> > > > >>> +      properties:
-> > > > >>> +        compatible:
-> > > > >>> +          contains:
-> > > > >>> +            const: brcm,bcm2712-pcie
-> > > > >>> +    then:
-> > > > >>> +      properties:
-> > > > >>> +        rp1_nexus:
-> > > > >>
-> > > > >> No, you cannot document post-factum... This does not follow DTS =
-coding
-> > > > >> style.
-> > > > >
-> > > > > I think I didn't catch what you mean here: would that mean that
-> > > > > we cannot resolve that warning since we cannot add anything to th=
-e
-> > > > > binding?
-> > > >
-> > > > I meant, you cannot use a warning from the code you recently introd=
-uced
-> > > > as a reason to use incorrect style.
-> > > >
-> > > > Fixing warning is of course fine and correct, but for the code rece=
-ntly
-> > > > introduced and which bypassed ABI review it is basically like new r=
-eview
-> > > > of new ABI.
-> > > >
-> > > > This needs standard review practice, so you need to document WHY yo=
-u
-> > > > need such node. Warning is not the reason here why you are doing. I=
-f
-> > > > this was part of original patchset, like it should have been, you w=
-ould
-> > > > not use some imaginary warning as reason, right?
-> > > >
-> > > > So provide reason why you need here this dedicated child, what is t=
-hat
-> > > > child representing.
-> > >
-> > > Ack.
-> > >
-> > > >
-> > > > Otherwise I can suggest: drop the child and DTSO, this also solves =
-the
-> > > > warning...
-> > >
-> > > This would not fix the issue: it's the non overlay that needs the spe=
-cific
-> > > node. But I got the point, and we have a solution for that (see below=
-).
-> > >
-> > > >
-> > > > >
-> > > > > Regarding rp1_nexus, you're right I guess it should be
-> > > > > rp1-nexus as per DTS coding style.
-> > > > >
-> > > > >>
-> > > > >> Also:
-> > > > >>
-> > > > >> Node names should be generic. See also an explanation and list o=
-f
-> > > > >> examples (not exhaustive) in DT specification:
-> > > > >> https://devicetree-specification.readthedocs.io/en/latest/chapte=
-r2-devicetree-basics.html#generic-names-recommendation
-> > > > >
-> > > > > In this case it could be difficult: we need to search for a DT no=
-de
-> > > >
-> > > > Search like in driver? That's wrong, you should be searching by com=
-patible.
-> > >
-> > > Thanks for the hint. Searching by compatble is the solution.
-> >
-> > No, it is not.
->
-> This is partly true, indeed. On one side there's the need to avoid a
-> specific node name ('rp1_nexus'), so the only other unique identifier wou=
-ld
-> be the compatible string ('pci1de4,1' in this case, which identifies that=
- specific
-> device). Unfortunately, the same compatible string is also assigned to th=
-e pci
-> endpoint node filled automatically by enabling CONFIG_PCI_DYNAMIC_OF_NODE=
-S.
-> We would end up with two nodes with the same compatible, which is not uni=
-que
-> anymore.
-> This applies only when using 'full' dtb (bcm2712-rpi-5-b.dtb) *and* you e=
-nable
-> CONFIG_PCI_DYNAMIC_OF_NODES, the latter being not necessary since the ove=
-rlay dtb
-> (...-ovl-rp1.dtb) is not in use here. To overcome this problem, the solut=
-ions
-> I can think of are the following:
->
-> 1- Just disable CONFIG_PCI_DYNAMIC_OF_NODES should work, but only when us=
-ing the
->    full dtb version. However, if the user enable that option for debug or=
- to use
->    the overlay dtb version, he better be sure not to use teh full dtb or =
-it won't
->    work.
->    This solution seems really weak.
->
-> 2- Add another compatible string other than 'pci1de4,1', so it will be re=
-ally
->    unique.
+On Sun, Dec 07, 2025 at 01:28:19AM -0500, Joel Fernandes wrote:
+> On Wed, Nov 19, 2025 at 05:19:05PM -0500, Peter Colberg wrote:
+> > From: John Hubbard <jhubbard@nvidia.com>
+> > 
+> > Add a method to check if a PCI device is a Virtual Function (VF) created
+> > through Single Root I/O Virtualization (SR-IOV).
+> > 
+> > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> > Reviewed-by: Alistair Popple <apopple@nvidia.com>
+> > Signed-off-by: Peter Colberg <pcolberg@redhat.com>
+> > ---
+> > This patch was originally part of the series "rust: pci: expose
+> > is_virtfn() and reject VFs in nova-core" and modified as follows:
+> > - Replace true -> `true` in doc comment.
+> > - Shorten description and omit justification specific to nova-core.
+> > 
+> > Link: https://lore.kernel.org/rust-for-linux/20250930220759.288528-2-jhubbard@nvidia.com/
+> > ---
+> >  rust/kernel/pci.rs | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+> > index 82e128431f080fde78a06dc5c284ab12739e747e..c20b8daeb7aadbef9f6ecfc48c972436efac9a08 100644
+> > --- a/rust/kernel/pci.rs
+> > +++ b/rust/kernel/pci.rs
+> > @@ -409,6 +409,12 @@ pub fn resource_start(&self, bar: u32) -> Result<bindings::resource_size_t> {
+> >          Ok(unsafe { bindings::pci_resource_start(self.as_raw(), bar.try_into()?) })
+> >      }
+> >  
+> > +    /// Returns `true` if this device is a Virtual Function (VF).
+> > +    pub fn is_virtfn(&self) -> bool {
+> 
+> Add #[inline] here and to `is_physfn()` similar to other methods in this struct?
 
-No! Neither one. If you end up with 2 nodes when you turn on
-CONFIG_PCI_DYNAMIC_OF_NODES, then you have an error in your DT (the
-node that CONFIG_PCI_DYNAMIC_OF_NODES *didn't* create is the one in
-error).
+Thanks for your review! Where should the line be drawn for #[inline]?
 
-You need to fix the structure.
+Should these be #[inline] as well and why (not)?
 
-> >
-> > > >
-> > > > > starting from the DT root and using generic names like pci@0,0 or
-> > > > > dev@0,0 could possibly led to conflicts with other peripherals.
-> > > > > That's why I chose a specific name.
-> > > >
-> > > > Dunno, depends what can be there, but you do not get a specific
-> > > > (non-generic) device node name for a generic PCI device or endpoint=
-.
-> > >
-> > > I would use 'port' instead of rp1-nexus. Would it work for you?
-> >
-> > Do you still plan to fix this? This is broken far worse than just the n=
-ode name.
->
-> Yes, if we want to get rid of that nasty warning and comply with DT guide=
-lines,
-> I think I really need to fix that.
->
-> >
-> > The 'rp1_nexus' node is applied to the PCI host bridge. That's wrong
-> > unless this is PCI rather than PCIe. There's the root port device in
-> > between.
-> >
-> > The clue that things are wrong are start in the driver here:
-> >
-> > rp1_node =3D of_find_node_by_name(NULL, "rp1_nexus");
-> > if (!rp1_node) {
-> >   rp1_node =3D dev_of_node(dev);
-> >   skip_ovl =3D false;
-> > }
-> >
-> > You should not need to do this nor care what the node name is. The PCI
-> > core should have populated pdev->dev.of_node for you. If not, your DT
-> > is wrong. Turn on CONFIG_PCI_DYNAMIC_OF_NODES and look at the
-> > resulting PCI nodes. They should also match what the hierarchy looks
-> > like with lspci. I don't recommend you rely on
-> > CONFIG_PCI_DYNAMIC_OF_NODES, but statically populate the nodes in the
-> > DT. First, CONFIG_PCI_DYNAMIC_OF_NODES is an under development thing
-> > and I hope to get rid of the config option. Second, your case is
-> > static (i.e. not a PCIe card in a slot) so there is no issue
-> > hardcoding the DT.
->
-> The 'full' dtb (bcm2712-rpi-5-b.dtb) is indeed statically populated.
-> CONFIG_PCI_DYNAMIC_OF_NODES is needed only if you use the overlay approac=
-h
-> (bcm2712-rpi-5-b-ovl-rp1.dtb) and in that case the node will be
-> added to the correct device node at runtime, and there won't be any node
-> labeled as rp1_nexus.
-> That conditional just check for teh presence of the rp1_nexus node to
-> choose if the overlay should be loaded at runtime (if rp1_nexus is presen=
-t,
-> then we are in the static case so no overlay need to be loaded).
+- Device::num_vf()
+- Device<Core>::enable_sriov()
+- Device<Core>::disable_sriov()
 
-Checking is fine, but you are checking the wrong thing.
+Why is Device<Core>::enable_device_mem() not #[inline], while
+Device<Core>::set_master() is [1]? Is the former an oversight?
 
-> >
-> > As far as the node name, I don't care so much as long as the driver
-> > doesn't care and you don't use '_' or 'pcie?' (that's for PCI
-> > bridges).
-> >
-> > And why do we have drivers/misc/rp1/rp1-pci.dtso and a .dtso in
-> > arch/arm64? There should not be both.
->
-> drivers/misc/rp1/rp1-pci.dtso is just a wrapper over rp1-common.dtsi,
-> which is to be compiled in as binary blob in the driver and loaded at
-> runtime.
-> rp1.dtbo is optional, it's there just for completeness in case anyone wan=
-t
-> to load teh overlay from the fw, as explained here:
-> https://lore.kernel.org/all/ab9ab3536baf5fdf6016f2a01044f00034189291.1742=
-418429.git.andrea.porta@suse.com/
-> If it causes confusion, we can probably get rid of it with no penalty.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git/tree/rust/kernel/pci.rs?id=67a454e6b1c604555c04501c77b7fedc5d98a779#n433
 
-Supporting both ways is fine, but you don't need to duplicate the
-source. You can build in a .dtbo from the arch/arm64/boot/dts/...
-directories.
+Thanks,
+Peter
 
-Rob
+> 
+> With that,
+> 
+> Reviewed-by: Joel Fernandes <joelagnelf@nvidia.com>
+> 
+> thanks,
+> 
+>  - Joel
+> 
+> 
+> > +        // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_dev`.
+> > +        unsafe { (*self.as_raw()).is_virtfn() != 0 }
+> > +    }
+> > +
+> >      /// Returns the size of the given PCI BAR resource.
+> >      pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
+> >          if !Bar::index_is_valid(bar) {
+> > 
+> > -- 
+> > 2.51.1
+> > 
+> 
+
 
