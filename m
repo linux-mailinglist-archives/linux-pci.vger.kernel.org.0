@@ -1,304 +1,123 @@
-Return-Path: <linux-pci+bounces-42869-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42870-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48E65CB147D
-	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 23:18:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1FA5CB14EC
+	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 23:39:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5AFFA30BAD5F
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 22:18:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EDF5F3012BC2
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 22:38:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C4B32E2665;
-	Tue,  9 Dec 2025 22:18:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D2EE2EBB89;
+	Tue,  9 Dec 2025 22:38:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZYVl3DSq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I1Whoiqu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B102E1EEE
-	for <linux-pci@vger.kernel.org>; Tue,  9 Dec 2025 22:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE322EC090
+	for <linux-pci@vger.kernel.org>; Tue,  9 Dec 2025 22:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765318703; cv=none; b=uIHiNmcSIE4fv8uNElMdayOPfkr6FS13G2gS/ABqVREu6+526RwoSUhEKcGdyjcmOfnnxSdLhZi13IOfOmxz8NI4vPkCIDKrPF3GlpKaEdUY33k3F1SgK/eaiQxizGQHZMaLtW9vB7evT/2/NtEzjvGaMoaBcoveumYR+dF6knc=
+	t=1765319883; cv=none; b=PazDOch4XyYsAWF7p75MpJJM1LikAESAX11hhk4b89m7FCOU6Jp1oNV3bHwn+LZGYEi1U+SSVk1eHDUHNQkzWg5jug089RK7DX+m+zz4iJDSCGbWNCqa0R0IWUhXEI3Ra5gVZ6XpfYaON5HYUqPH3Un8WCKTrWuK75YbfToq1vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765318703; c=relaxed/simple;
-	bh=xBJTl5KnoTYWVQf2uwQsAY/CqxdRSZb8arP25agma/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bh5XqWk2bkIV8mYSTP6KnGFUSQu3YJkYltYnH7AqR09d/Lvikuphzy3nBYkKeWJDK5mSuEAqdI2ouuGxakxvGuJ/LgQBPqFPSlogs3+NtqsJB5ARSN7rYldM9TMGSD6tBDxaSSqMKNqu3I68i3fdGqKrDJ7qm0SunAJd1anv6Xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZYVl3DSq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20CEBC113D0
-	for <linux-pci@vger.kernel.org>; Tue,  9 Dec 2025 22:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765318703;
-	bh=xBJTl5KnoTYWVQf2uwQsAY/CqxdRSZb8arP25agma/Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZYVl3DSq4rsIDE5Y3Yo8hiaG+Z5s/kj93YUIACEIIxbYPprPCG8r05rGIj4GnJN4p
-	 3oZDgAW3I27fjl3cHGKKnfqywNhJ6PvUFQ2vJdB8bpaFwvaZhgoZa0ra69uhWnE3XL
-	 v26qI68+NQ3Txw7Mlh8IFSSXKmL1vKpIVWL2YMeAMU4tz4A0D6jNrUh/4AjIPXUp2G
-	 7KKcuUTv9NFNiQ7Uen1qnpBBB35ERat43oId7iitOTQUv+GeSfeHDa8v7g/cEVhEm0
-	 bAQ3REertRhqwWoXkQowggrXgNr0LxOOQfqLx1uChD1NNICKT2aCJizWYrigoxTi3h
-	 yJZyrLsGrXlEg==
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-656b32a0cc4so2265818eaf.1
-        for <linux-pci@vger.kernel.org>; Tue, 09 Dec 2025 14:18:23 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX6c//MZ9aubLYWN5H/WKLNN0rR9RFINyzLOLTkI20VtZ7k66EvM/NwH8wmwZK5F1jnuVW/VaPmmTw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG5CGhZveFKNJ493j0aSOANNUjPEGx2p8JhJPKf03ZPN9tQ3BD
-	5D9lXquH2YBUeFH81LXhhpF0OKeiq8b/GsTMwDdYgTDKq8SmTaUu685tPXDzZHETQIwl6KyTQkE
-	TwEbSav4LDOwAoB6MRe3ITPO2fdigdK0=
-X-Google-Smtp-Source: AGHT+IEad+Jn6q48+7s7QgpTy8nR94FyxrDyPQ9+Mq+gbbKtX5uUu2IkzFSX6etA2Y1+hAxNAg7ELwm14NXxpYO3+4k=
-X-Received: by 2002:a05:6820:824:b0:659:9a49:90c7 with SMTP id
- 006d021491bc7-65b2ad3fbfamr247750eaf.70.1765318702367; Tue, 09 Dec 2025
- 14:18:22 -0800 (PST)
+	s=arc-20240116; t=1765319883; c=relaxed/simple;
+	bh=sdXGJfBHkvwR6kjDlZOa2OqG/E8eoLySwLycL+bnfeQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Bdj4x2JaFenClUprd3DPAfQQIMbS431Uf/qBq11rTnQTkpYQuJYFjoEmT7reB84WyfikhmPYJLyzkUF3MFd8DlFjtAPywzIaDVqziusqLZpBG3Rm2ElC8WFexAaGKK0Y/OpAqETrFYzXWsVhvaSJf34b9sfZOSj7NV0pObF86vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I1Whoiqu; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b6ce1b57b9cso7215926a12.1
+        for <linux-pci@vger.kernel.org>; Tue, 09 Dec 2025 14:38:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1765319881; x=1765924681; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AMwjmsmi4mVv5vZzNSGwrM0RkjwLo+Rq8irZPLzhGz4=;
+        b=I1Whoiqu2vP9ATedkb/VpjxcZOBNbI8BNYFe+J87ZvEAYb7DuqPzkp/YEpO+DRtlj8
+         VxXVTJjvroyHEo7A21CE3LepBMWakww1uXpOvoXaFJUgDNeLUtO3xhQJ92aqzXe/ZwUv
+         zx6+iFgOEPHskCt1VW13D/dE3ZiFWsTRH+6h02VAlRRf77auEa9yaWxl0AJ1Vb/c0xrx
+         CYMW5EgA9HbBgeLzNFghj/PFAANotIuJtfV/AEvU19Fd8/5vEFdaBXsPEG9s3QwdzKtH
+         /l7DriZD9SFj8Pvl2Jdd3u3j6XJCIUIttAipj0OuK99N6p07Dfczt91B0dRT+mHiEJx/
+         QHRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765319881; x=1765924681;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AMwjmsmi4mVv5vZzNSGwrM0RkjwLo+Rq8irZPLzhGz4=;
+        b=i4DecQBIlYxHwyVQAMK2zoetxEP3nSmP/roS+FZG3IvSTViGNtDyKx7G/HPEnQqNEL
+         n1EWdlFegjT3AyVQfoAFjaDUD+3Njosl/dVqjE90vBOLQqqtrxSYqvFFAGIiRZa84v2i
+         yt0hd8iWn00zLLPNveCK7KU4NOvfyicBMV7BP1Y7aFTrFvTLuLI+3NoarO94M0kZ1c9L
+         SKuQBQ2W2qC14VDQtKahmWXMp8uA9RCZdVin204CREtZQqpuBHJ/N1+FDGkgP5QjERw2
+         M9tnjEoZz1c7rJkLerGll1E9NnJ98BGe2UhaxzE6Gn4AwNBJZuflv1FYrAf51Kd/X8CN
+         vWJw==
+X-Forwarded-Encrypted: i=1; AJvYcCWKjSQkDGjxvseUo6cMxkqbm5d8ejlO1nVWvCFi5udGK+S3c+KUJB981AavU5tdeZs47iUpw8/j1GY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoG9dd8Kn/HpurASA1+9HoteUfEd8m+qV47Ecs4OCkqwR8va82
+	BXc295nJgUZEZKkceL5On1ScwdhDeYDBHUH6gq7Pw5R3TUIim4Y9o2DmcLLKGb9I371TMbWZc1y
+	7Tv8ZjTLgpw==
+X-Google-Smtp-Source: AGHT+IGGxoI8LkWA0cg6HYhGeqQhcotQufROrVQ1zXABSXp1DJk1xVggP6NDezXDolKA1OIj/0pqvwbnikS8
+X-Received: from dycrr5.prod.google.com ([2002:a05:693c:2c85:b0:2a4:6f9d:b3cb])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:8050:b0:2a4:3593:ddf2
+ with SMTP id 5a478bee46e88-2ac05625cf7mr517110eec.31.1765319881049; Tue, 09
+ Dec 2025 14:38:01 -0800 (PST)
+Date: Tue,  9 Dec 2025 14:37:56 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <2395536.ElGaqSPkdT@rafael.j.wysocki> <ab8b770c-08e9-4cf6-bd4f-f36c951fda4c@gmx.de>
- <CAJZ5v0jAH9FZrO5AvVF90zgy-0EeM+rsB6Zf8cMf+sR8=FFuDA@mail.gmail.com>
- <168f173d-0d1a-49b0-9461-72f8fb0fc701@gmx.de> <99b0d755-3e18-4bba-b8e7-ab344e6c2592@gmx.de>
-In-Reply-To: <99b0d755-3e18-4bba-b8e7-ab344e6c2592@gmx.de>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 9 Dec 2025 23:18:10 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0ijOF+nRZrjnub9uqa_Pu54etmudWUUNWmNgiogVAwxFQ@mail.gmail.com>
-X-Gm-Features: AQt7F2qkiHmdqmGpZGoSJzRxhPH7WaT2Irn0DJNLZGPF0LhhonwhxQvPAderpgE
-Message-ID: <CAJZ5v0ijOF+nRZrjnub9uqa_Pu54etmudWUUNWmNgiogVAwxFQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] PCI: ACPI: PM: Rework root bus wakeup notification
- setup and wakeup source registration
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
-	Linux PM <linux-pm@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.52.0.223.gf5cc29aaa4-goog
+Message-ID: <20251209223756.2321578-1-irogers@google.com>
+Subject: [PATCH v1] PCI: Cadence: Avoid possible signed 64-bit truncation
+From: Ian Rogers <irogers@google.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	"=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Siddharth Vadapalli <s-vadapalli@ti.com>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Hans Zhang <18255117159@163.com>, 
+	Chen Wang <unicorn_wang@outlook.com>, Ian Rogers <irogers@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 9, 2025 at 11:00=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
->
-> Am 09.12.25 um 14:56 schrieb Armin Wolf:
->
-> > Am 09.12.25 um 12:31 schrieb Rafael J. Wysocki:
-> >
-> >> On Mon, Dec 8, 2025 at 9:01=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wro=
-te:
-> >>> Am 08.12.25 um 13:09 schrieb Rafael J. Wysocki:
-> >>>
-> >>>> Hi All,
-> >>>>
-> >>>> Patch [1/2] updates the registration of PCI root bus wakeup
-> >>>> notification setup
-> >>>> in order to simplify code in pci_acpi_wake_bus() and to prepare for
-> >>>> the other
-> >>>> change.  This is not expected to affect functionality.
-> >>>>
-> >>>> Patch [2/2] modifies the ACPI PM notifier registration to add
-> >>>> wakeup sources
-> >>>> under devices that are going to be affected by wakeup handling
-> >>>> instead of
-> >>>> registering them under ACPI companions of those devices (rationale
-> >>>> explained
-> >>>> in the patch changelog).  This will change the sysfs layout (wakeup
-> >>>> source
-> >>>> devices associated with PCI wakeup are now going to appear under
-> >>>> PCI devices
-> >>>> and the host bridge device), but it is not expected to affect user
-> >>>> space
-> >>>> adversely.
-> >>>>
-> >>>> Thanks!
-> >>> I tested both patches, and the sysfs layout changes as expected:
-> >>>
-> >>> $ readlink /sys/class/wakeup/wakeup*/device
-> >>> ../../../device:00
-> >>> ../../../device:1a
-> >>> ../../../device:1f
-> >>> ../../../device:20
-> >>> ../../../0000:00:08.1
-> >>> ../../../device:36
-> >>> ../../../device:31
-> >>> ../../../device:32
-> >>> ../../../device:3c
-> >>> ../../../0000:01:00.0
-> >>> ../../../device:3d
-> >>> ../../../PNP0C02:00
-> >>> ../../../0000:02:00.0
-> >>> ../../../device:3e
-> >>> ../../../device:3f
-> >>> ../../../device:46
-> >>> ../../../0000:04:00.0
-> >>> ../../../device:47
-> >>> ../../../0000:05:00.0
-> >>> ../../../device:57
-> >>> ../../../0000:05:08.0
-> >>> ../../../device:59
-> >>> ../../../device:01
-> >>> ../../../0000:05:09.0
-> >>> ../../../device:5b
-> >>> ../../../0000:05:0a.0
-> >>> ../../../device:5d
-> >>> ../../../0000:05:0b.0
-> >>> ../../../device:5f
-> >>> ../../../0000:05:0c.0
-> >>> ../../../device:74
-> >>> ../../../0000:05:0d.0
-> >>> ../../../device:5a
-> >>> ../../../device:3a
-> >>> ../../../device:5c
-> >>> ../../../device:60
-> >>> ../../../device:75
-> >>> ../../../LNXVIDEO:00
-> >>> ../../../device:22
-> >>> ../../../PNP0C02:02
-> >>> ../../../device:25
-> >>> ../../../device:2b
-> >>> ../../../device:24
-> >>> ../../../device:37
-> >>> ../../../0000:00:01.1
-> >>> ../../../PNP0A08:00
-> >>> ../../../LNXPWRBN:00
-> >>> ../../../AMDI0010:00
-> >>> ../../../AMDI0030:00
-> >>> ../../../00:02
-> >>> ../../../alarmtimer.0.auto
-> >>> ../../../PNP0C0C:00
-> >>> ../../../0000:0b:00.0
-> >>> ../../../AMDIF031:00
-> >>> ../../../PNP0C14:00
-> >>> ../../../device:0a
-> >>> ../../../PNP0C14:01
-> >>> ../../../PNP0C14:02
-> >>> ../../../PNP0C14:03
-> >>> ../../../0000:0e:00.3
-> >>> ../../../0000:0e:00.4
-> >>> ../../../0000:0f:00.0
-> >>> ../../../5-2
-> >>> ../../../1-5.3
-> >>> ../../hidpp_battery_0
-> >>> ../../../device:44
-> >>> ../../../0000:00:02.1
-> >>> ../../../device:76
-> >>> ../../../device:0b
-> >>>
-> >>> turns into:
-> >>>
-> >>> $ readlink /sys/class/wakeup/wakeup*/device
-> >>> ../../../0000:00:00.0
-> >>> ../../../0000:00:04.0
-> >>> ../../../0000:00:08.0
-> >>> ../../../0000:00:08.1
-> >>> ../../../0000:00:08.1
-> >>> ../../../0000:00:08.3
-> >>> ../../../0000:00:14.0
-> >>> ../../../0000:00:14.3
-> >>> ../../../0000:01:00.0
-> >>> ../../../0000:01:00.0
-> >>> ../../../0000:02:00.0
-> >>> ../../../0000:00:00.2
-> >>> ../../../0000:02:00.0
-> >>> ../../../0000:03:00.0
-> >>> ../../../0000:03:00.1
-> >>> ../../../0000:04:00.0
-> >>> ../../../0000:04:00.0
-> >>> ../../../0000:05:00.0
-> >>> ../../../0000:05:00.0
-> >>> ../../../0000:05:08.0
-> >>> ../../../0000:05:08.0
-> >>> ../../../0000:05:09.0
-> >>> ../../../0000:00:01.0
-> >>> ../../../0000:05:09.0
-> >>> ../../../0000:05:0a.0
-> >>> ../../../0000:05:0a.0
-> >>> ../../../0000:05:0b.0
-> >>> ../../../0000:05:0b.0
-> >>> ../../../0000:05:0c.0
-> >>> ../../../0000:05:0c.0
-> >>> ../../../0000:05:0d.0
-> >>> ../../../0000:05:0d.0
-> >>> ../../../0000:08:00.0
-> >>> ../../../0000:00:01.1
-> >>> ../../../0000:09:00.0
-> >>> ../../../0000:0b:00.0
-> >>> ../../../0000:0c:00.0
-> >>> ../../../0000:0e:00.0
-> >>> ../../../0000:0e:00.1
-> >>> ../../../0000:0e:00.2
-> >>> ../../../0000:0e:00.3
-> >>> ../../../0000:0e:00.4
-> >>> ../../../0000:0e:00.6
-> >>> ../../../0000:0f:00.0
-> >>> ../../../0000:00:01.1
-> >>> ../../../pci0000:00
-> >>> ../../../LNXPWRBN:00
-> >>> ../../../AMDI0010:00
-> >>> ../../../AMDI0030:00
-> >>> ../../../00:02
-> >>> ../../../alarmtimer.0.auto
-> >>> ../../../PNP0C0C:00
-> >>> ../../../0000:0b:00.0
-> >>> ../../../AMDIF031:00
-> >>> ../../../PNP0C14:00
-> >>> ../../../0000:00:02.0
-> >>> ../../../PNP0C14:01
-> >>> ../../../PNP0C14:02
-> >>> ../../../PNP0C14:03
-> >>> ../../../0000:0e:00.3
-> >>> ../../../0000:0e:00.4
-> >>> ../../../0000:0f:00.0
-> >>> ../../../5-2
-> >>> ../../../1-5.3
-> >>> ../../hidpp_battery_0
-> >>> ../../../0000:00:02.1
-> >>> ../../../0000:00:02.1
-> >>> ../../../0000:00:02.2
-> >>> ../../../0000:00:03.0
-> >>>
-> >>> The remaining ACPI devices are likely caused by device drivers based
-> >>> upon struct acpi_driver.
-> >>> I was unable to test the wakeup itself since suspend is currently
-> >>> broken due to issues with
-> >>> cpuidle,
-> >> Have you reported those?  What cpuidle driver is involved?
-> >>
-> >> If you happen to be using the ACPI idle driver, there is a regression
-> >> between 6.18-rc7 and final 6.18 due to a missing revert, but final
-> >> 6.18 should be as expected.
-> >
-> > If i remember correctly the official 6.18 kernel was not affected by
-> > this, i used the the bleeding-edge
-> > branch when building the test kernel.
-> >
-> > I will do some further debugging once i am back home.
-> >
-> > Thanks,
-> > Armin Wolf
-> >
-> Well, it turned out that the cpuidle driver was not involved in this, i j=
-ust got confused
-> by a separate stacktrace caused by the hid-roccat driver (i already repor=
-ted that).
->
-> This seems to be the real issue:
->
-> [  514.910759] ACPI Error: Aborting method \M402 due to previous error (A=
-E_AML_LOOP_TIMEOUT) (20250807/psparse-529)
-> [  514.910810] ACPI Error: Aborting method \_SB.PCI0.GPP0.M241 due to pre=
-vious error (AE_AML_LOOP_TIMEOUT) (20250807/psparse-529)
-> [  514.910890] ACPI Error: Aborting method \_SB.PCI0.GPP0.M237._OFF due t=
-o previous error (AE_AML_LOOP_TIMEOUT) (20250807/psparse-529)
+64-bit truncation to 32-bit can result in the sign of the truncated
+value changing. The cdns_pcie_host_dma_ranges_cmp is used in list_sort
+and so the truncation could result in an invalid sort order. This
+would only happen were the resource_size values large.
 
-It looks like there is a problem with turning a power resource off.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-> Sleeping itself works, it just takes a long time for the machine to actua=
-lly suspend due to the timeout.
-> I attached the acpidump of the affected machine in case you are intereste=
-d.
->
-> Since 6.18 is not affected by this i will wait till 6.19-rc1 is released =
-before i start debugging this issue.
-> Do you think that this approach is OK?
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index fffd63d6665e..e5fd02305ab6 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -414,11 +414,19 @@ static int cdns_pcie_host_dma_ranges_cmp(void *priv, const struct list_head *a,
+ 					 const struct list_head *b)
+ {
+ 	struct resource_entry *entry1, *entry2;
++	u64 size1, size2;
+ 
+-        entry1 = container_of(a, struct resource_entry, node);
+-        entry2 = container_of(b, struct resource_entry, node);
++	entry1 = container_of(a, struct resource_entry, node);
++	entry2 = container_of(b, struct resource_entry, node);
+ 
+-        return resource_size(entry2->res) - resource_size(entry1->res);
++	size1 = resource_size(entry1->res);
++	size2 = resource_size(entry2->res);
++
++	if (size1 > size2)
++		return -1;
++	if (size1 < size2)
++		return 1;
++	return 0;
+ }
+ 
+ static void cdns_pcie_host_unmap_dma_ranges(struct cdns_pcie_rc *rc)
+-- 
+2.52.0.223.gf5cc29aaa4-goog
 
-It should be fine although you may as well check my pm-6.19-rc1,
-acpi-6.19-rc1 and thermal-6.19-rc1 tags on top of 6.18.  If the
-problem is in one of them, it should be possible to find it quicker
-than by dealing with the entire 6.19-rc1.
 
