@@ -1,220 +1,279 @@
-Return-Path: <linux-pci+bounces-42851-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42852-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98F64CB04A1
-	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 15:30:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1012CCB05B7
+	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 16:05:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 48F35309D41C
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 14:29:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DBFA130528F7
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 15:04:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 095502D8378;
-	Tue,  9 Dec 2025 14:29:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 197B42FE575;
+	Tue,  9 Dec 2025 15:04:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CkTWTrsR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ac7HoN4R"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012025.outbound.protection.outlook.com [40.107.200.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70AB61F12F8;
-	Tue,  9 Dec 2025 14:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765290561; cv=fail; b=SL4ChRifHEgY/crAEzswEVLY6coEabg8bHwK8xY3v1fboPaglKlwzj5SkuKb45gEVr8CVBhuKeIg9jbE3X7Q8GZlOCoar4hBRsHvjM8KUB7TqYuGP5lweaN9LpDndOBmB+PCxuGb7MJw9pN7d766WFxKMVaHS1ImO3l06izejxg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765290561; c=relaxed/simple;
-	bh=jpJXpbfoFEnqwF1PhaAiDXXgbV90/mGxpYaAN/mQsJc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mr262RDEtEgCSkQU5E4295GvPpV3W5SZNw13Yles+9Om4gqRxa+9fe3xyV764ZUKBDTsLWKzka6tTsQh56PsOCjBMXzX48yj8+2ekFMYR0/Caj+JxBDEoMQ3f7jXLlrCbTpu5avBH99ioRxp3eELkmpkklHr5DFdfvlwI5hGVuI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CkTWTrsR; arc=fail smtp.client-ip=40.107.200.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cPkNsugdQCAdv5ei2IbJadjWwvQFaYsPhz28UAw8PTwr82UY1BZYjPhbeQA0CJMU9+COtGnxiFXmBWqlOU604dhYKDQdw89XrNui69WrS4L/3ZXL1skR8ssGZ4sRSBdIgjqLVoMiGOPeNom7PwaRD8MuTuFUymF8xBvpTLDjb3flQqmbnkkAKqyUf8B0OQX1NC3fUZ7yP+fnKdwVZHWV+1E5Bhm7zbwcuNXdKA3W4Lc7e7eTwOoAu4XN9fVZuQHwi/w+L8ls9r5+Ue57xmUvyM746j+6vA6XlkaiaKoHfDRCeG4PzX39ZdaSumrrfaYRuwT4rjijqNp3S0BVwq7qQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Lb+qqanzNhVZL1mSY4OKmFOHZ3bi9xP/28e5MRBummM=;
- b=j0hXd26j57G7WL+75klGeXkC2kYwjHGvP4i0hYWmmTQpLVmrihdrNP/2Y8SF6xiddc8reTAcjIq2M2Hc/a/XXdnqqDwPG7JJyVhCsM/E/Sr+NLNpX2QJRf6NeBHiA0MuItSGs+xRW6VnSAlNfRgFftr1uSOBcCgmHu4O7gkbtPhBpF5iBYljdI9EXyE6B9YLhs+JFKaxfHtFg9XjI0KI7Ba8uDR3DydIQZ5PQ/76dW1PLBRpZfBqk/+ashfc4IuJOnoDmd0ytmGC9OCJLNqGmVgGPPifGnl5TRjLAQKyJfnpZsN/gxlOnop6tUpT4pPAWmeiAe9UokXBtNsZ24A5ZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Lb+qqanzNhVZL1mSY4OKmFOHZ3bi9xP/28e5MRBummM=;
- b=CkTWTrsRn6lvdljdOlZ9/2v4PdgIH4WHhvkvMOMU9M7CFFjlZ1xeR50G5c6RT4fbJU15RTox9RJ99zjQVuka3C5tjiUVIsxG39Yx/3eZ2z1qz1VSlNy5hZRl+k7/a9qEKKSCAfLlVbyt4s/1xfxoy5PgeVHl6i50U87QLFWaA+vqH2qEygMvylVWr1Tv9rzwoXQw0KNvrJgXyfqS1SktpqWJ8cM1B61naIC7afUYYCBssBhU3w/lFSoE5ndTD8PxmtEZUvUAPe96UlbE4uVeJGaE/efi07LF5AIRrwymwxSxr0eaIlQJINZjbDNIm5lbk06co3QxrAh1NrE6JuL31g==
-Received: from PH7P222CA0008.NAMP222.PROD.OUTLOOK.COM (2603:10b6:510:33a::35)
- by CYXPR12MB9318.namprd12.prod.outlook.com (2603:10b6:930:de::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.14; Tue, 9 Dec
- 2025 14:29:11 +0000
-Received: from CY4PEPF0000E9DA.namprd05.prod.outlook.com
- (2603:10b6:510:33a:cafe::a8) by PH7P222CA0008.outlook.office365.com
- (2603:10b6:510:33a::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9412.7 via Frontend Transport; Tue, 9
- Dec 2025 14:29:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CY4PEPF0000E9DA.mail.protection.outlook.com (10.167.241.73) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9412.4 via Frontend Transport; Tue, 9 Dec 2025 14:29:11 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 9 Dec
- 2025 06:28:52 -0800
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 9 Dec
- 2025 06:28:52 -0800
-Received: from inno-ThinkPad-X280 (10.127.8.14) by mail.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
- Transport; Tue, 9 Dec 2025 06:28:44 -0800
-Date: Tue, 9 Dec 2025 16:28:39 +0200
-From: Zhi Wang <zhiw@nvidia.com>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-CC: Timur Tabi <ttabi@nvidia.com>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "nouveau@lists.freedesktop.org"
-	<nouveau@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "rust-for-linux@vger.kernel.org"
-	<rust-for-linux@vger.kernel.org>, Kirti Wankhede <kwankhede@nvidia.com>,
-	"a.hindborg@kernel.org" <a.hindborg@kernel.org>, "markus.probst@posteo.de"
-	<markus.probst@posteo.de>, "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
-	"Neo Jia" <cjia@nvidia.com>, "ojeda@kernel.org" <ojeda@kernel.org>, Aniket
- Agashe <aniketa@nvidia.com>, "tmgross@umich.edu" <tmgross@umich.edu>,
-	"alex.gaynor@gmail.com" <alex.gaynor@gmail.com>, "helgaas@kernel.org"
-	<helgaas@kernel.org>, "lossin@kernel.org" <lossin@kernel.org>,
-	"alex@shazbot.org" <alex@shazbot.org>, Surath Mitra <smitra@nvidia.com>,
-	"John Hubbard" <jhubbard@nvidia.com>, Ankit Agrawal <ankita@nvidia.com>,
-	"Alexandre Courbot" <acourbot@nvidia.com>, "bjorn3_gh@protonmail.com"
-	<bjorn3_gh@protonmail.com>, "Tarun Gupta (SW-GPU)" <targupta@nvidia.com>,
-	"zhiwang@kernel.org" <zhiwang@kernel.org>, "airlied@gmail.com"
-	<airlied@gmail.com>, "aliceryhl@google.com" <aliceryhl@google.com>,
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "gary@garyguo.net" <gary@garyguo.net>,
-	"dakr@kernel.org" <dakr@kernel.org>
-Subject: Re: [RFC 5/7] gpu: nova-core: set RMSetSriovMode when NVIDIA vGPU
- is enabled
-Message-ID: <20251209162839.51e2cf0e@inno-ThinkPad-X280>
-In-Reply-To: <26FAD9BC-9CFC-4BFE-9985-DD660BCD840A@nvidia.com>
-References: <20251206124208.305963-1-zhiw@nvidia.com>
-	<20251206124208.305963-6-zhiw@nvidia.com>
-	<6c2e13d934c11170edba603fb88e8f2d67a2a049.camel@nvidia.com>
-	<26FAD9BC-9CFC-4BFE-9985-DD660BCD840A@nvidia.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52291E8332;
+	Tue,  9 Dec 2025 15:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765292691; cv=none; b=dVudkusUukeT3duwr9ZjJubZNrEpbUPM0NmBFVCXWIJNYqNhf9NgRmZhAj54DNQj5M8WFjfEeTH8M/cSiVRspwo2a4kSCh5DRXSLwcUKMwsocwsM9FqtZ76hc2yXXu4Dqw9m8BYoRo0b4yh8pQJ4BEAM273w2B8WszHX9RWNmDg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765292691; c=relaxed/simple;
+	bh=1UBopjtk7ZBbpZOBiD36vUxARE759QXi7aFEEAeiIlM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NyyfstItv9Po9NJepTVS6q7BNhEgNRRQn2v1AXBORwJN1DX5jaa2X+Y/Jx6kyZc5kHpMzais6kzmxYmpBjK7CAw4RHFCJztqpqlxwA7ZK5VshhwZjnKsBJJc9vYI7q5CKEiJU4oJypuGw8JL9YLycjHVCWRKXxKqgHOrD5EjT5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ac7HoN4R; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C503C4CEF5;
+	Tue,  9 Dec 2025 15:04:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765292690;
+	bh=1UBopjtk7ZBbpZOBiD36vUxARE759QXi7aFEEAeiIlM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ac7HoN4R9h+8h8masl9d7Nb8fwyt1pQDU7FoW9yKI/d4Pq2XP8K2iiyyVNV9hTPyJ
+	 Ep+GgcZWdVjv78+vBQ7AH5EwbOvAv+dXd+suvynhY7swzPxSgxn2LYvpoGtgKXGvkD
+	 NmRJx9p096YzIkNMPzVophRhpAlgWGZz3rRA9bJ+OzovNWnEaT0JNkqSMTYkVMZI1v
+	 cacMiCankcmJ08bWfVtTOfxxHXD3QQwaN1tBaYxMwlzbM7uhxOpJ+1w1mb0lFhHmeH
+	 xJFWotsK1Zes+g8mkkbRopdb1VVW0E0aulksErlag8ZPLA2YkAqh3Jgu1gWFputUiO
+	 GlzlTFvVdptpA==
+Date: Wed, 10 Dec 2025 00:04:41 +0900
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	Pavankumar Kondeti <quic_pkondeti@quicinc.com>, Xingang Wang <wangxingang5@huawei.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH v2 0/4] PCI: Fix ACS enablement for Root Ports in OF
+ platforms
+Message-ID: <xofyj6bjbpsxjpgnw6vyfpekpvsmhxcoaqm5k26yuyc2dashux@4nro7bppnwhs>
+References: <CGME20251202142307eucas1p12a15e5656bb53f48f445c3056d4e3166@eucas1p1.samsung.com>
+ <20251202-pci_acs-v2-0-5d2759a71489@oss.qualcomm.com>
+ <b63ec0aa-7a4a-4f8d-9b93-e724f3f2a9d1@samsung.com>
+ <de80df44-f797-4e8c-a411-09ed3c1286a3@samsung.com>
+ <cae5cb24-a8b0-4088-bacd-14368f32bdc5@samsung.com>
+ <26a93564-fcdd-4e90-b28d-8cc84cedeaa8@samsung.com>
+ <4clyxcy5pwqaz6uguxnjei4hnxsree6k2uz5upro7khuvklfyo@nc5ebeicuqw4>
+ <0ee48f4a-2341-4967-aca5-3fe6b4cd5fe2@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9DA:EE_|CYXPR12MB9318:EE_
-X-MS-Office365-Filtering-Correlation-Id: e9e1dcd8-e3a8-488f-b228-08de372f51ff
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|7416014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T0pjQTZJWDQrVXFGSFJjaTFYZ0dqdHNvcDVmb3BFOWVtcGhaYnFXNFA1SlUx?=
- =?utf-8?B?K3VrdXoxazB6RDhjMkJvYndPZnZyMEtwakdDekJvaUNUNFU2UGxUUElPWVJr?=
- =?utf-8?B?V2FUNjN5dGNVSklkVFhTLzJmQzEyWk1lVVhUZHZrcFJ4VUM3Z1JUWVdSYlZ3?=
- =?utf-8?B?RWJyVi84dzExbDlwL1Ixci83SXNxQWRHVDZtbWlIMUZDN2Q3dk1tSHZFOVlT?=
- =?utf-8?B?OEFNNW1meUw3V1Bqc1VXYU9uenF4NkFuQlB3WG80alpBbTIwQ3hWS3JvTVk3?=
- =?utf-8?B?OGo5WTN6UUlRSVpNeStJZTA0YVR3Rk82a0tZMVE4d1V3VWsrSzNUcmNXdTVF?=
- =?utf-8?B?OS8yR1NwNGlha1hDLzk4QjFkSUhUblFKbnArV0Nvd3JsR3pYNDhJRzdaMXM3?=
- =?utf-8?B?NFlvR3pyMVpCNWFYb3l1c3JFMGwzNzFVUDJtWTMyVkFlc3lRc3dQYk9OK281?=
- =?utf-8?B?SDV2VGxMSWVjNzNLck9tTlBlTURKcGRrelVITy9PdmgwTHEvcUVTWDV1Y0lQ?=
- =?utf-8?B?NU95WmZRVTc2bmcweHZ4cmRacENSU3FrOWFBYWhieWlpTm1ZaHgvVHpVRFR4?=
- =?utf-8?B?Mk9uMys2UDNJUk9Dc0ZuTmhBQkU5dVlJd3owSHUyNjlhN1ZaMnN5c1hxSjc3?=
- =?utf-8?B?dFFEZ1RWQ1d5MmpaSm0rV1E4Q3g5RFBWS3owTkVnMnB1TUxaRExrTWtOWnAz?=
- =?utf-8?B?Y2RwSFl2SDdTdTlyMDhQaWY4ZWJrWWdWWVhxM2lLdm9JVEV6bTdxZ1RPTEJC?=
- =?utf-8?B?SVV6R3EvUjkwWGpnWU94c05nZTNsYlNLa0JpVE1UOHFlQi9zQk8xUWtMaW4w?=
- =?utf-8?B?WmxJR2ZFV2JtK0RZNnFOak9lKzlGRlZNQXJ0MWlVSndoUTBqZ1J3NnhRQVFN?=
- =?utf-8?B?amhFNXZ3cmVjS1JQOXE1Vzluc3Z1VUhIbDlmaThWNG9aTVpMSHFkQ21hRnp0?=
- =?utf-8?B?QU1rdW1PeURSVElKT0RucnRnYzFrSjdJeHUzbnZrZTU1QlNES01qcHR1M29V?=
- =?utf-8?B?MHZyYWJveTYyd0tISXdpS1Z2eFRVdldEazc0ZDdXR3VRMWwxS256MHBnb1lk?=
- =?utf-8?B?NlBWbURYczdUREI2SlZCWEp6eEVvRVlxTXJSRnJ3WXBSVTJESUgxU2pLS3Q5?=
- =?utf-8?B?Z0JJZDVhVmF0b2RYeXVPN2NxZEsyZzB1WFVOZmhxYk5sQ0YrTzh2Nmx1Y09D?=
- =?utf-8?B?OWdyVzdWQkZqak8vSFJwKzBzZDk3cHVhSXc1LzQrT2ZOMk9OM3NrQW5xSVRp?=
- =?utf-8?B?bUY0aWg3SXNFcmtKYWhJS25Id2toWDNUbUdJdHFXV25qZTl6RFJ6Q3dxVU9Q?=
- =?utf-8?B?c1dtMFY5QUF1ZGtFMEx3ZDYzTkVuK2orTWhDQXBQUXlRMTlCR0tSSEp4OVZG?=
- =?utf-8?B?ZmtYYVIvVWVSL0xDRHAzSjRIeG5TampoZnBIZGFsQU5DZGdGRW5udllEQzN6?=
- =?utf-8?B?RXgxdUNON05Ha1ZsMlRibHk5T1dDT29id1V1RzFWS1IyVkZvM0ptenB5Z0U5?=
- =?utf-8?B?a3RVYWNkdnlQNHBxamtSblVINVFaOVQyUFhOMUg0dFZLTlFNdG8rblZPM2ZG?=
- =?utf-8?B?L2hDMHI4NGJmMFh2N1BKMGVpNlBaYytaTmJYc2hGRXcvWFFIR1JpWURxZFhm?=
- =?utf-8?B?YkZuK3dCNGFFdS84L1NGSWVEeUtyN2JQaXVSOUtvZDFSWEZQZ2ttWjZBczhF?=
- =?utf-8?B?VnVKVzlHMXVjWWJQQXZpdmhtYmo2YU9sL1ZqL2cvYlBIRURYalpMTTJOc3Ri?=
- =?utf-8?B?Q1NDWU9lY1FEODBzSmhWeXVHQTRSaFA3ek1SMVpXZlF6TEJJV1dQY1F1TkxW?=
- =?utf-8?B?NGJTdTNZMzFkM2wvOHp3YmJoblNEdHE5aTVQVy9iQmJQRG9IaVNxU3Z5Vis1?=
- =?utf-8?B?eklvckErVHc1RkpNU1l5bllGU2ZFUEtMd2JuMy9WNTZuaFl4REhrbWFaa2E3?=
- =?utf-8?B?MTN0cW1ab3pzWW0xRVVVSmFuQzdkdzZQcWo2YkFsT3FBendDSktrWmk0a1ZS?=
- =?utf-8?B?VTJBb0pQaGZQaWJYQ1JSRklPREJ5aDZMcjJRbUVGVVVVS0pESzUrWCtWeUdw?=
- =?utf-8?B?SnpVN2dFYTRJMnRnOTFvUkhRbCtobkw3MW0rUVFZQ3RWTGZjMTd4MzBuUDdP?=
- =?utf-8?Q?SUKY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(36860700013)(7416014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2025 14:29:11.0816
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9e1dcd8-e3a8-488f-b228-08de372f51ff
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9DA.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9318
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0ee48f4a-2341-4967-aca5-3fe6b4cd5fe2@samsung.com>
 
-On Sun, 7 Dec 2025 16:57:01 +0000
-Joel Fernandes <joelagnelf@nvidia.com> wrote:
+On Tue, Dec 09, 2025 at 01:00:55PM +0100, Marek Szyprowski wrote:
+> On 09.12.2025 12:15, Manivannan Sadhasivam wrote:
+> > On Tue, Dec 09, 2025 at 09:28:38AM +0100, Marek Szyprowski wrote:
+> >> On 09.12.2025 08:31, Marek Szyprowski wrote:
+> >>> On 04.12.2025 14:13, Marek Szyprowski wrote:
+> >>>> On 03.12.2025 13:04, Marek Szyprowski wrote:
+> >>>>> On 02.12.2025 15:22, Manivannan Sadhasivam wrote:
+> >>>>>> This series fixes the long standing issue with ACS in OF platforms.
+> >>>>>> There are
+> >>>>>> two fixes in this series, both fixing independent issues on their
+> >>>>>> own, but both
+> >>>>>> are needed to properly enable ACS on OF platforms.
+> >>>>>>
+> >>>>>> Issue(s) background
+> >>>>>> ===================
+> >>>>>>
+> >>>>>> Back in 2021, Xingang Wang first noted a failure in attaching the
+> >>>>>> HiSilicon SEC
+> >>>>>> device to QEMU ARM64 pci-root-port device [1]. He then tracked down
+> >>>>>> the issue to
+> >>>>>> ACS not being enabled for the QEMU Root Port device and he proposed
+> >>>>>> a patch to
+> >>>>>> fix it [2].
+> >>>>>>
+> >>>>>> Once the patch got applied, people reported PCIe issues with
+> >>>>>> linux-next on the
+> >>>>>> ARM Juno Development boards, where they saw failure in enumerating
+> >>>>>> the endpoint
+> >>>>>> devices [3][4]. So soon, the patch got dropped, but the actual
+> >>>>>> issue with the
+> >>>>>> ARM Juno boards was left behind.
+> >>>>>>
+> >>>>>> Fast forward to 2024, Pavan resubmitted the same fix [5] for his
+> >>>>>> own usecase,
+> >>>>>> hoping that someone in the community would fix the issue with ARM
+> >>>>>> Juno boards.
+> >>>>>> But the patch was rightly rejected, as a patch that was known to
+> >>>>>> cause issues
+> >>>>>> should not be merged to the kernel. But again, no one investigated
+> >>>>>> the Juno
+> >>>>>> issue and it was left behind again.
+> >>>>>>
+> >>>>>> Now it ended up in my plate and I managed to track down the issue
+> >>>>>> with the help
+> >>>>>> of Naresh who got access to the Juno boards in LKFT. The Juno issue
+> >>>>>> was with the
+> >>>>>> PCIe switch from Microsemi/IDT, which triggers ACS Source
+> >>>>>> Validation error on
+> >>>>>> Completions received for the Configuration Read Request from a
+> >>>>>> device connected
+> >>>>>> to the downstream port that has not yet captured the PCIe bus
+> >>>>>> number. As per the
+> >>>>>> PCIe spec r6.0 sec 2.2.6.2, "Functions must capture the Bus and
+> >>>>>> Device Numbers
+> >>>>>> supplied with all Type 0 Configuration Write Requests completed by
+> >>>>>> the Function
+> >>>>>> and supply these numbers in the Bus and Device Number fields of the
+> >>>>>> Requester ID
+> >>>>>> for all Requests". So during the first Configuration Read Request
+> >>>>>> issued by the
+> >>>>>> switch downstream port during enumeration (for reading Vendor ID),
+> >>>>>> Bus and
+> >>>>>> Device numbers will be unknown to the device. So it responds to the
+> >>>>>> Read Request
+> >>>>>> with Completion having Bus and Device number as 0. The switch
+> >>>>>> interprets the
+> >>>>>> Completion as an ACS Source Validation error and drops the
+> >>>>>> completion, leading
+> >>>>>> to the failure in detecting the endpoint device. Though the PCIe
+> >>>>>> spec r6.0, sec
+> >>>>>> 6.12.1.1, states that "Completions are never affected by ACS Source
+> >>>>>> Validation".
+> >>>>>> This behavior is in violation of the spec.
+> >>>>>>
+> >>>>>> Solution
+> >>>>>> ========
+> >>>>>>
+> >>>>>> In September, I submitted a series [6] to fix both issues. For the
+> >>>>>> IDT issue,
+> >>>>>> I reused the existing quirk in the PCI core which does a dummy
+> >>>>>> config write
+> >>>>>> before issuing the first config read to the device. And for the ACS
+> >>>>>> enablement
+> >>>>>> issue, I just resubmitted the original patch from Xingang which called
+> >>>>>> pci_request_acs() from devm_of_pci_bridge_init().
+> >>>>>>
+> >>>>>> But during the review of the series, several comments were received
+> >>>>>> and they
+> >>>>>> required the series to be reworked completely. Hence, in this
+> >>>>>> version, I've
+> >>>>>> incorported the comments as below:
+> >>>>>>
+> >>>>>> 1. For the ACS enablement issue, I've moved the pci_enable_acs()
+> >>>>>> call from
+> >>>>>> pci_acs_init() to pci_dma_configure().
+> >>>>>>
+> >>>>>> 2. For the IDT issue, I've cached the ACS capabilities (RO) in
+> >>>>>> 'pci_dev',
+> >>>>>> collected the broken capability for the IDT switches in the quirk
+> >>>>>> and used it to
+> >>>>>> disable the capability in the cache. This also allowed me to get
+> >>>>>> rid of the
+> >>>>>> earlier workaround for the switch.
+> >>>>>>
+> >>>>>> [1]
+> >>>>>> https://lore.kernel.org/all/038397a6-57e2-b6fc-6e1c-7c03b7be9d96@huawei.com
+> >>>>>> [2]
+> >>>>>> https://lore.kernel.org/all/1621566204-37456-1-git-send-email-wangxingang5@huawei.com
+> >>>>>> [3]
+> >>>>>> https://lore.kernel.org/all/01314d70-41e6-70f9-e496-84091948701a@samsung.com
+> >>>>>> [4]
+> >>>>>> https://lore.kernel.org/all/CADYN=9JWU3CMLzMEcD5MSQGnaLyDRSKc5SofBFHUax6YuTRaJA@mail.gmail.com
+> >>>>>> [5]
+> >>>>>> https://lore.kernel.org/linux-pci/20241107-pci_acs_fix-v1-1-185a2462a571@quicinc.com
+> >>>>>> [6]
+> >>>>>> https://lore.kernel.org/linux-pci/20250910-pci-acs-v1-0-fe9adb65ad7d@oss.qualcomm.com
+> >>>>>>
+> >>>>> Thanks for this patchset! I've tested it on my ARM Juno R1 and it
+> >>>>> looks that it almost works fine. This patchset even fixed some
+> >>>>> issues with PCI devices probe, as I again see SATA and GBit ethernet
+> >>>>> devices, which were missing since Linux v6.14 (it looks that
+> >>>>> I've also missed this in my tests).
+> >>>>>
+> >>>>> # lspci
+> >>>>> 00:00.0 PCI bridge: PLDA PCI Express Core Reference Design (rev 01)
+> >>>>> 01:00.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
+> >>>>> 8090 (rev 02)
+> >>>>> 02:01.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
+> >>>>> 8090 (rev 02)
+> >>>>> 02:02.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
+> >>>>> 8090 (rev 02)
+> >>>>> 02:03.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
+> >>>>> 8090 (rev 02)
+> >>>>> 02:0c.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
+> >>>>> 8090 (rev 02)
+> >>>>> 02:10.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
+> >>>>> 8090 (rev 02)
+> >>>>> 02:1f.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
+> >>>>> 8090 (rev 02)
+> >>>>> 03:00.0 Mass storage controller: Silicon Image, Inc. SiI 3132 Serial
+> >>>>> ATA Raid II Controller (rev 01)
+> >>>>> 08:00.0 Ethernet controller: Marvell Technology Group Ltd. 88E8057
+> >>>>> PCI-E Gigabit Ethernet Controller
+> >>>>>
+> >>>>> However there is also a regression. After applying this patchset
+> >>>>> system suspend/resume stopped working. This is probably related to
+> >>>>> this message:
+> >>>>>
+> >>>>> pcieport 0000:02:1f.0: Unable to change power state from D0 to
+> >>>>> D3hot, device inaccessible
+> >>>>>
+> >>>>> which appears after calling 'rtcwake -s10 -mmem'. This might not be
+> >>>>> related to this patchset, so I probably need to apply it on older
+> >>>>> kernel releases and check.
+> >>>>
+> >>>> Just one more information - I've applied this patchset on top of
+> >>>> v6.16 and it works perfectly on ARM Juno R1. SATA and GBit ethernet
+> >>>> are visible again and system suspend/resume works too, so the issue
+> >>>> with the latter on top of v6.18 seems not to be directly related to
+> >>>> $subject patchset. I will try to bisect this issue when I have some
+> >>>> spare time.
+> >>>>
+> >>>> Feel free to add:
+> >>>>
+> >>>> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> >>>
+> >>> I spent some time analyzing this regression on Juno R1 and found that:
+> >>>
+> >>> 1. SATA and GBit Ethernet stopped working after commit bcb81ac6ae3c
+> >>> ("iommu: Get DT/ACPI parsing into the proper probe path") merged to
+> >>> v6.15-rc1.
+> >>>
+> >>> 2. With $subject patch applied to enable SATA & GBit ethernet again,
+> >>> system suspend/resume stopped working after commit f3ac2ff14834
+> >>> ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree
+> >>> platforms") merged to v6.18-rc1.
+> >>>
+> > Yes, this was expected as if you don't disable ACS, it will cause issues in
+> > detecting the devices.
+> >
+> >>> If I got it right, according to the latter commit message, some quirks
+> >>> have to be added to fix the suspend/resume issue. Unfortunately I have
+> >>> no idea if this is the Juno R1 or the given PCI devices specific issue.
+> >>
+> >> And one more note, commit df5192d9bb0e ("PCI/ASPM: Enable only L0s and
+> >> L1 for devicetree platforms") doesn't fix the suspend/resume issue
+> >> either (with $subject patchset applied on top of it).
+> >>
+> > Interesting. Can you do:
+> >
+> > echo performance > /sys/module/pcie_aspm/parameters/policy
+> >
+> > and then suspend?
+> 
+> After the above command, system suspend/resume works again.
+> 
 
->=20
->=20
-> > On Dec 7, 2025, at 10:55=E2=80=AFAM, Timur Tabi <ttabi@nvidia.com> wrot=
-e:
-> >=20
-> >> On Sat, 2025-12-06 at 12:42 +0000, Zhi Wang wrote:
-> >> -    pub(crate) fn new() -> Self {
-> >> +    pub(crate) fn new(vgpu_support: bool) -> Self {
-> >> +        let num_entries =3D if vgpu_support { 4 } else { 3 };
-> >=20
-> > Instead of passing a bool, and then hard-coding the length based on
-> > that bool (which would require that RMSetSriovMode always be the
-> > last entry in the array), you need to do what Nouveau does: if VGPU
-> > is enabled, then dynamically append the entry to the array.
->=20
-> Yeah, I agree with Timur.=20
->=20
+Ok, so ASPM L0s/L1 seems to be the issue. But I'm not quite sure why it causes
+issue during suspend/resume. If the device/controller doesn't play well with
+ASPM L0s/L1, it should atleast cause the issue before entering suspend.
 
-Hey Timur and Joe:
+I'm clueless here atm...
 
-Let me see how this could be solved dynamically. Probably need more
-changes on other items as well.
+- Mani
 
-Apart from this, I felt that we might need a struct GspBootConfig to
-pass around the GSP booting path, while writing these patches. As we
-already had coming items, like reserved memory size when vGPU is
-enabled or not, vGPU enabled switch, also reserved memory size on
-Hopper/Blackwell in John's patch.
-
-It seems we need a central object to host these tuning for GSP booting
-up.=20
-
-Z.
-
-> Thanks.
->=20
->=20
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
