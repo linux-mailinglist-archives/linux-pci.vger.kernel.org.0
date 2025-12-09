@@ -1,304 +1,146 @@
-Return-Path: <linux-pci+bounces-42864-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42865-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89D32CB0DE4
-	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 19:47:03 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2791CB0E46
+	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 19:58:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 440D830B1DBF
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 18:47:02 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 65BAE301B278
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 18:58:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BBA6303A04;
-	Tue,  9 Dec 2025 18:47:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9058A3043C0;
+	Tue,  9 Dec 2025 18:58:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rGqtTbR7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m50s0uIZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36337302CC0
-	for <linux-pci@vger.kernel.org>; Tue,  9 Dec 2025 18:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0894303A2C;
+	Tue,  9 Dec 2025 18:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765306020; cv=none; b=EzfU2+r/ENAh24gj5KoWWazmeqQo/HRyYaCJJwdY0Kckk/bAvIG2/laV9u8nu+UtgPxFxg56Y5C5YmYH2+qsHlfR+9zDLfFpurdQEfNxpy8zZdMMHkmFEek3MNIFDc1ZaGvOIBBP0Kgde+I8H/YPzu8GZazAprVLHvCNcr7sVQw=
+	t=1765306689; cv=none; b=D3G6S6TN++2G7EjbGU2lkynY4q2j0X6aMGIjYdbqG44CP3sreX2qF04qtMEYtEtl+Boi5DjqFdbj4xcPlcn2GIJQqm8TNZJs74QkxihGzd8n5XqL+JuVgwvUhMofUo0K4VJWeDoG9vIQY6dXBylTpf5isFSLTjfDs3BetDdTn38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765306020; c=relaxed/simple;
-	bh=RwOQrdvCZOCfPcXTjdfzp8hxiecKCqijW9ilAgKJgbw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mRQJvZ1E7/wV27JOc8Fb17+KHll7RQZfVRqj7yZQXePOKnAEQDkmOi/M+xGK3OReVbTax1nYOrRA/dNxJbFvCCqb/VQpfCsGT57Fc9P+eTRVOt0SIHCWywzJYpEqeGlL+KJfeLr8d5Thur3QzRUwAL/Z2zVoESW1FP9h/l3qq1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rGqtTbR7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8AEDC2BC86
-	for <linux-pci@vger.kernel.org>; Tue,  9 Dec 2025 18:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765306019;
-	bh=RwOQrdvCZOCfPcXTjdfzp8hxiecKCqijW9ilAgKJgbw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rGqtTbR7LKuQG0njmH2ICqOSPikT2HBarN4T1/NcNvoh+90wCIKJ8OKdy0+Q2wzhN
-	 lvCpLc1PWK+AyTP2Qcb0NK6xxYJJsFQonz1OfcpAZDHY2kPaOYjkrMn7v1UfN7zOUm
-	 fSOW+fTDTGmzSMIy+SnELERctLJjqR+11yApyaD2XkcTLrpLorCNU8qk5pe0k7pJmL
-	 Dgf4dl576c54fxpHuPnN3PLD7km/cgJR9UQN+n37ThE1HVPbU2ubQfac0Mg4en7yVs
-	 Oz6GU8klBXtH1fMyyTr/kqSaUjBS+j9de6AQhE94zB1jKBCzaNrJPm/iXuOsuN7rq3
-	 AhXh8x+pi27Mw==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-640d0ec9651so10630092a12.3
-        for <linux-pci@vger.kernel.org>; Tue, 09 Dec 2025 10:46:59 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVnpwEdpxiyiax5PqP6OtFLI9Wm4vRQSAloPGa+ETiHONsJYtGpctWMSBziT13aAQzjPce8xZY9BSk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1wA3MvpypSF61UqqquaJVh71DxEQjh7rgxJcM4vSkQzN0yFMf
-	eRr084RgE8TgUQUVOAWzzfgn3Re9z8XkeufWb8ZXKP5rWkFevppMdISM7GkHiLLuL5mtr6Rrst5
-	/+BgSj7zUQNoJkqhoMg0nSELOovBYsA==
-X-Google-Smtp-Source: AGHT+IFiQ4wJ/VE1EASUueymKfss72+4pujtua9C+jSjLvlkO3/K2JEd2eLfJpaiVceQ4TlzGIbWBFlVQfUjIUYHCnc=
-X-Received: by 2002:a05:6402:90d:b0:640:a9b1:870b with SMTP id
- 4fb4d7f45d1cf-6491a3fefffmr9632476a12.14.1765306018059; Tue, 09 Dec 2025
- 10:46:58 -0800 (PST)
+	s=arc-20240116; t=1765306689; c=relaxed/simple;
+	bh=/R2b+c2Djj+Nr/3dJwUquZPYWsnsbW4lIXCs17tYU+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YVOKALAJeb4pZvc4mKtL0z91or0X7wgWCc3Wkb/B1Bh7ilDtGB1+L1sbsB+uluqD/GIP1bKggTJ9lM0pPjohL/A4sEYcVq9MFfVWxO+7ZK7BXVRiaseF/9LobQEM0eXvTdcImSdcl5CE5h2z5EftlpKx/vKC8FWlHTvPkmZjtmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m50s0uIZ; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1765306688; x=1796842688;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/R2b+c2Djj+Nr/3dJwUquZPYWsnsbW4lIXCs17tYU+w=;
+  b=m50s0uIZZwRK8HOnFLlYBTgZbydaRXKKRhGNUZgpZZUSVhQTGaSshaP2
+   Y1aXYyIpcvqw+hEk7ETO3q2KUSn+P1G7nIJUeuLAtrMvHKa9lxju2oYEd
+   OPQNC8VJ4CY5cXdCu2C+VaDmL/aUWpKh7Gm0sSPcNBR5yhu2abAhtiD2t
+   bOVmXLJp0n1KX1g+O+QGXITFM4xhtxEtgP2kbyDeg8/AAxlfNW6+UB1G+
+   uL9EH5DoeV6dUz+mNc3YJP7D7Y8HoJvFKnR9bNPh1lbk0H4uT6WupAzwV
+   j+Mmo83GPib7WSMmfotcEqHncRz3FZNXYgmWs1elENtVtp++m1D73LuuI
+   A==;
+X-CSE-ConnectionGUID: GX618YcpRz+OTSoRTlW79w==
+X-CSE-MsgGUID: a9BR/y+FTEOtqSONrvsE3Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11637"; a="67157901"
+X-IronPort-AV: E=Sophos;i="6.20,262,1758610800"; 
+   d="scan'208";a="67157901"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2025 10:58:07 -0800
+X-CSE-ConnectionGUID: 4l+G88yhTlCH/s3aZiA6oQ==
+X-CSE-MsgGUID: FnSylMOyQkeoz9f5+WcDLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,262,1758610800"; 
+   d="scan'208";a="200727253"
+Received: from lkp-server01.sh.intel.com (HELO d335e3c6db51) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 09 Dec 2025 10:58:03 -0800
+Received: from kbuild by d335e3c6db51 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vT2uP-000000002B9-0SNj;
+	Tue, 09 Dec 2025 18:58:01 +0000
+Date: Wed, 10 Dec 2025 02:57:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tony Hutter <hutter2@llnl.gov>, Lukas Wunner <lukas@wunner.de>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, corey@minyard.net,
+	alok.a.tiwari@oracle.com, mariusz.tkaczyk@linux.intel.com,
+	minyard@acm.org, linux-pci@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7] Introduce Cray ClusterStor E1000 NVMe slot LED driver
+Message-ID: <202512100217.dWKoNRzG-lkp@intel.com>
+References: <d422a22c-a6fe-4543-ae16-67d64260e0cf@llnl.gov>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250812085037.13517-1-andrea.porta@suse.com> <4fee3870-f9d5-48e3-a5be-6df581d3e296@kernel.org>
- <aKc5nMT1xXpY03ip@apocalypse> <e7875f70-2b79-48e0-a63b-caf6f1fd287b@kernel.org>
- <aLVePQRfU4IB1zK8@apocalypse> <CAL_JsqJUzB71QdMcxJtNZ7raoPcK+SfTh7EVzGmk=syo8xLKQw@mail.gmail.com>
- <aThjYt3ux0U-9-3A@apocalypse> <aThp99OfgAfNFUX-@apocalypse>
-In-Reply-To: <aThp99OfgAfNFUX-@apocalypse>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 9 Dec 2025 12:46:45 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+VfWJtb_VEEmHCtDdKUUFWUrxw80FocuEiVwFTAM9zyg@mail.gmail.com>
-X-Gm-Features: AQt7F2rQuv1o7PzOcLYEjioegQxnHbuyX-xlEY6nKer24-O9xmckn5nOlwjXHeI
-Message-ID: <CAL_Jsq+VfWJtb_VEEmHCtDdKUUFWUrxw80FocuEiVwFTAM9zyg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pci: brcmstb: Add rp1-nexus node to fix DTC warning
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Jim Quinlan <jim2101024@gmail.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, kwilczynski@kernel.org, 
-	Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, iivanov@suse.de, svarbanov@suse.de, 
-	mbrugger@suse.com, Jonathan Bell <jonathan@raspberrypi.com>, 
-	Phil Elwell <phil@raspberrypi.com>, kernel test robot <lkp@intel.com>, 
-	Herve Codina <herve.codina@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d422a22c-a6fe-4543-ae16-67d64260e0cf@llnl.gov>
 
-On Tue, Dec 9, 2025 at 12:24=E2=80=AFPM Andrea della Porta
-<andrea.porta@suse.com> wrote:
->
-> [+cc Herve]
->
-> On 18:58 Tue 09 Dec     , Andrea della Porta wrote:
-> > Hi Rob,
-> >
-> > On 11:09 Thu 04 Dec     , Rob Herring wrote:
-> > > On Mon, Sep 1, 2025 at 3:48=E2=80=AFAM Andrea della Porta <andrea.por=
-ta@suse.com> wrote:
-> > > >
-> > > > Hi Krzysztof,
-> > > >
-> > > > On 08:50 Fri 22 Aug     , Krzysztof Kozlowski wrote:
-> > > > > On 21/08/2025 17:22, Andrea della Porta wrote:
-> > > > > > Hi Krzysztof,
-> > > > > >
-> > > > > > On 10:55 Tue 12 Aug     , Krzysztof Kozlowski wrote:
-> > > > > >> On 12/08/2025 10:50, Andrea della Porta wrote:
-> > > > > >>> The devicetree compiler is complaining as follows:
-> > > > > >>>
-> > > > > >>> arch/arm64/boot/dts/broadcom/rp1-nexus.dtsi:3.11-14.3: Warnin=
-g (unit_address_vs_reg): /axi/pcie@1000120000/rp1_nexus: node has a reg or =
-ranges property, but no unit name
-> > > > > >>> /home/andrea/linux-torvalds/arch/arm64/boot/dts/broadcom/bcm2=
-712-rpi-5-b.dtb: pcie@1000120000: Unevaluated properties are not allowed ('=
-rp1_nexus' was unexpected)
-> > > > > >>
-> > > > > >> Please trim the paths.
-> > > > > >
-> > > > > > Ack.
-> > > > > >
-> > > > > >>
-> > > > > >>>
-> > > > > >>> Add the optional node that fix this to the DT binding.
-> > > > > >>>
-> > > > > >>> Reported-by: kernel test robot <lkp@intel.com>
-> > > > > >>> Closes: https://lore.kernel.org/oe-kbuild-all/202506041952.ba=
-JDYBT4-lkp@intel.com/
-> > > > > >>> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > > > > >>> ---
-> > > > > >>>  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 9=
- +++++++++
-> > > > > >>>  1 file changed, 9 insertions(+)
-> > > > > >>>
-> > > > > >>> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-p=
-cie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > > > >>> index 812ef5957cfc..7d8ba920b652 100644
-> > > > > >>> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yam=
-l
-> > > > > >>> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yam=
-l
-> > > > > >>> @@ -126,6 +126,15 @@ required:
-> > > > > >>>  allOf:
-> > > > > >>>    - $ref: /schemas/pci/pci-host-bridge.yaml#
-> > > > > >>>    - $ref: /schemas/interrupt-controller/msi-controller.yaml#
-> > > > > >>> +  - if:
-> > > > > >>> +      properties:
-> > > > > >>> +        compatible:
-> > > > > >>> +          contains:
-> > > > > >>> +            const: brcm,bcm2712-pcie
-> > > > > >>> +    then:
-> > > > > >>> +      properties:
-> > > > > >>> +        rp1_nexus:
-> > > > > >>
-> > > > > >> No, you cannot document post-factum... This does not follow DT=
-S coding
-> > > > > >> style.
-> > > > > >
-> > > > > > I think I didn't catch what you mean here: would that mean that
-> > > > > > we cannot resolve that warning since we cannot add anything to =
-the
-> > > > > > binding?
-> > > > >
-> > > > > I meant, you cannot use a warning from the code you recently intr=
-oduced
-> > > > > as a reason to use incorrect style.
-> > > > >
-> > > > > Fixing warning is of course fine and correct, but for the code re=
-cently
-> > > > > introduced and which bypassed ABI review it is basically like new=
- review
-> > > > > of new ABI.
-> > > > >
-> > > > > This needs standard review practice, so you need to document WHY =
-you
-> > > > > need such node. Warning is not the reason here why you are doing.=
- If
-> > > > > this was part of original patchset, like it should have been, you=
- would
-> > > > > not use some imaginary warning as reason, right?
-> > > > >
-> > > > > So provide reason why you need here this dedicated child, what is=
- that
-> > > > > child representing.
-> > > >
-> > > > Ack.
-> > > >
-> > > > >
-> > > > > Otherwise I can suggest: drop the child and DTSO, this also solve=
-s the
-> > > > > warning...
-> > > >
-> > > > This would not fix the issue: it's the non overlay that needs the s=
-pecific
-> > > > node. But I got the point, and we have a solution for that (see bel=
-ow).
-> > > >
-> > > > >
-> > > > > >
-> > > > > > Regarding rp1_nexus, you're right I guess it should be
-> > > > > > rp1-nexus as per DTS coding style.
-> > > > > >
-> > > > > >>
-> > > > > >> Also:
-> > > > > >>
-> > > > > >> Node names should be generic. See also an explanation and list=
- of
-> > > > > >> examples (not exhaustive) in DT specification:
-> > > > > >> https://devicetree-specification.readthedocs.io/en/latest/chap=
-ter2-devicetree-basics.html#generic-names-recommendation
-> > > > > >
-> > > > > > In this case it could be difficult: we need to search for a DT =
-node
-> > > > >
-> > > > > Search like in driver? That's wrong, you should be searching by c=
-ompatible.
-> > > >
-> > > > Thanks for the hint. Searching by compatble is the solution.
-> > >
-> > > No, it is not.
-> >
-> > This is partly true, indeed. On one side there's the need to avoid a
-> > specific node name ('rp1_nexus'), so the only other unique identifier w=
-ould
-> > be the compatible string ('pci1de4,1' in this case, which identifies th=
-at specific
-> > device). Unfortunately, the same compatible string is also assigned to =
-the pci
-> > endpoint node filled automatically by enabling CONFIG_PCI_DYNAMIC_OF_NO=
-DES.
-> > We would end up with two nodes with the same compatible, which is not u=
-nique
-> > anymore.
-> > This applies only when using 'full' dtb (bcm2712-rpi-5-b.dtb) *and* you=
- enable
-> > CONFIG_PCI_DYNAMIC_OF_NODES, the latter being not necessary since the o=
-verlay dtb
-> > (...-ovl-rp1.dtb) is not in use here. To overcome this problem, the sol=
-utions
-> > I can think of are the following:
-> >
-> > 1- Just disable CONFIG_PCI_DYNAMIC_OF_NODES should work, but only when =
-using the
-> >    full dtb version. However, if the user enable that option for debug =
-or to use
-> >    the overlay dtb version, he better be sure not to use teh full dtb o=
-r it won't
-> >    work.
-> >    This solution seems really weak.
-> >
-> > 2- Add another compatible string other than 'pci1de4,1', so it will be =
-really
-> >    unique.
-> >
-> > >
-> > > > >
-> > > > > > starting from the DT root and using generic names like pci@0,0 =
-or
-> > > > > > dev@0,0 could possibly led to conflicts with other peripherals.
-> > > > > > That's why I chose a specific name.
-> > > > >
-> > > > > Dunno, depends what can be there, but you do not get a specific
-> > > > > (non-generic) device node name for a generic PCI device or endpoi=
-nt.
-> > > >
-> > > > I would use 'port' instead of rp1-nexus. Would it work for you?
-> > >
-> > > Do you still plan to fix this? This is broken far worse than just the=
- node name.
-> >
-> > Yes, if we want to get rid of that nasty warning and comply with DT gui=
-delines,
-> > I think I really need to fix that.
-> >
-> > >
-> > > The 'rp1_nexus' node is applied to the PCI host bridge. That's wrong
-> > > unless this is PCI rather than PCIe. There's the root port device in
-> > > between.
-> > >
-> > > The clue that things are wrong are start in the driver here:
-> > >
-> > > rp1_node =3D of_find_node_by_name(NULL, "rp1_nexus");
-> > > if (!rp1_node) {
-> > >   rp1_node =3D dev_of_node(dev);
-> > >   skip_ovl =3D false;
-> > > }
-> > >
-> > > You should not need to do this nor care what the node name is. The PC=
-I
-> > > core should have populated pdev->dev.of_node for you. If not, your DT
-> > > is wrong. Turn on CONFIG_PCI_DYNAMIC_OF_NODES and look at the
-> > > resulting PCI nodes. They should also match what the hierarchy looks
-> > > like with lspci. I don't recommend you rely on
-> > > CONFIG_PCI_DYNAMIC_OF_NODES, but statically populate the nodes in the
-> > > DT. First, CONFIG_PCI_DYNAMIC_OF_NODES is an under development thing
-> > > and I hope to get rid of the config option. Second, your case is
-> > > static (i.e. not a PCIe card in a slot) so there is no issue
-> > > hardcoding the DT.
->
-> Are you planning to get rid of the CONFIG_PCI_DYNAMIC_OF_NODES features?
-> There could be other drivers relying on that besides RP1 in overlay mode,
-> e.g. LAN966x for instance.
+Hi Tony,
 
-I only plan/want to get rid of the kconfig option, not the feature
-itself! IOW, it will be enabled/disabled at runtime based on
-something. I'm not sure what that something is.
+kernel test robot noticed the following build warnings:
 
-Rob
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.18 next-20251209]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Tony-Hutter/Introduce-Cray-ClusterStor-E1000-NVMe-slot-LED-driver/20251209-094846
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/d422a22c-a6fe-4543-ae16-67d64260e0cf%40llnl.gov
+patch subject: [PATCH v7] Introduce Cray ClusterStor E1000 NVMe slot LED driver
+config: arm-allyesconfig (https://download.01.org/0day-ci/archive/20251210/202512100217.dWKoNRzG-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251210/202512100217.dWKoNRzG-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202512100217.dWKoNRzG-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/pci/hotplug/pciehp_craye1k.c: In function 'craye1k_get_attention_status':
+>> drivers/pci/hotplug/pciehp_craye1k.c:570:25: warning: variable 'craye1k' set but not used [-Wunused-but-set-variable]
+     570 |         struct craye1k *craye1k;
+         |                         ^~~~~~~
+
+
+vim +/craye1k +570 drivers/pci/hotplug/pciehp_craye1k.c
+
+   565	
+   566	int craye1k_get_attention_status(struct hotplug_slot *hotplug_slot,
+   567					 u8 *status)
+   568	{
+   569		int rc;
+ > 570		struct craye1k *craye1k;
+   571	
+   572		if (mutex_lock_interruptible(&craye1k_lock) != 0)
+   573			return -EINTR;
+   574	
+   575		if (!craye1k_global) {
+   576			/* Driver isn't initialized yet */
+   577			mutex_unlock(&craye1k_lock);
+   578			return -EOPNOTSUPP;
+   579		}
+   580	
+   581		craye1k = craye1k_global;
+   582	
+   583		rc =  __craye1k_get_attention_status(hotplug_slot, status, true);
+   584	
+   585		mutex_unlock(&craye1k_lock);
+   586		return rc;
+   587	}
+   588	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
