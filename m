@@ -1,199 +1,355 @@
-Return-Path: <linux-pci+bounces-42843-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42844-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10E19CB01D6
-	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 14:56:24 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BD17CB01E2
+	for <lists+linux-pci@lfdr.de>; Tue, 09 Dec 2025 14:56:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5CE5530E5DDD
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 13:51:52 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0ECE43017D9B
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Dec 2025 13:56:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A219331213;
-	Tue,  9 Dec 2025 13:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42AD9288C34;
+	Tue,  9 Dec 2025 13:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="krmwnd/u"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="hJjr6clO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013017.outbound.protection.outlook.com [40.93.201.17])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781BD33120F;
-	Tue,  9 Dec 2025 13:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765287713; cv=fail; b=XmG9WR2pFO0b+fHTFfBR7kiYLaLEyV12Nb8MXRAuOmt5KHJ/XwKXoqDEtM/xWRdNtPObtuXlMJwhCGfvFE9kD2SgX9fHoaPXh7/XrJHPvqUv4FEHIEBjwASDLR6Ew7lcDZY42stm4xjsADtOhdTeWsiQ52PL2EFBSHyPGpr/EWg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765287713; c=relaxed/simple;
-	bh=cbsENvsRWdo0kEltBQN6je9HUhGH1ZrQAd79BoukfmM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lFXdGqNGw+OMYoVbe1R0o3rkNVPRoweQKCXf457qOitN9sUr388+O+3LtWUCt+tREV3BNcvCd+6pihb/ctI+qi+Ce++H+bkWmn8IGHeK0JkZW1S8ZycVj5SQPQLxxOkyBD/dIpJ5kCG+zVvPgg5jX5n24F3b9/U+LRaNtvnr+b8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=krmwnd/u; arc=fail smtp.client-ip=40.93.201.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ET7wqFL6UgjAcD26Cxl48sqA33hBJaVtByeJK8wOsK/2E0PmRjvsDX5MaBueGrp2u6mDHdVMsR2Kg6/cZG2bK0K1YbWwI9/97byb690qkGg8jYEMrAWb0SSP/VcmSSmVjnfzIUTic6VvvgjV2tJd7lXZ2gNOsLrTKS7FCt4QnQsT6WKevcu+wkyUH5YSNk4i7TB8YDVHoEUKdu3l29WOc5T0cwP6zwLhPv4mR+7mlQAzGqo5iyZyEmcEYEn4/FKxG9S8DtPczAOJk6YXhG5oBjSErt3W2pVKPL6Mn8rTmz3qyA3gGod1Dz8TGSvn9dv+tRUCLqT9tJBxy6lvQuDelw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0ZBxBEViAN3fBQ8JGVIpZSYBJsOKL/5LvBt1KF7iV20=;
- b=uqywueA8AYM4WjiLNazXYis3TQwxYFo2qX8wNnvAFOSAM8Cp5FHdDg6lq1vclBBWxGoR4E927s9t1ernWPPjdLNqZkOw6ewswh7QxSJwu35lefkknSuSdKbkBVdlIC9NYY6YueXo5On+GzOxfYvlH+Fb2O13/s1Hh6u9A6LNUaEptUKPfndjCQNgkwPUhnwXUAK9dvRTYahEURWIz6GrurYp9JfxXfxEKcEe+OONsTBdszcvK22k9xtQiwWSmux4nrrEDr4BMoCpYAzD9CbyuFiSC5hnhCmPu4E0sh0bd83S/GtebWx5HWQ1ukJNzcUYm+NxRFnKGqjcVmp47uRsFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=shazbot.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0ZBxBEViAN3fBQ8JGVIpZSYBJsOKL/5LvBt1KF7iV20=;
- b=krmwnd/u/n05AwJfI42lAFwEaUZybOqaYFv1ggb+861cSWDPLip+HZkuHWMfPdYyV5U25FM33Xj89XRnusaZ7U74cQTMmEFQixwkTv60pUXpw/xyTxjoe17cpHBbTKp6y+7SOnQ1DXL2ffjT++mZj3jhXcU24wEhFJmtXtFTpcY1y/32UDmBb86RmmWeWw27AUQbKIhju4ECOubMzI4Nn52mHGDPqDWjCVeZXgJf1ObHgaQdv3Kx6e1+mPdAUig2b7urF0E36OYDDx13OzUJJVNg3qPW2+ylrcIVclQpWNYSDAFVQB6JsdonKBWCiyFCpE0X6WK+f7xMHmGVG+KObg==
-Received: from PH8P222CA0025.NAMP222.PROD.OUTLOOK.COM (2603:10b6:510:2d7::16)
- by LV3PR12MB9188.namprd12.prod.outlook.com (2603:10b6:408:19b::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.14; Tue, 9 Dec
- 2025 13:41:45 +0000
-Received: from CY4PEPF0000EE34.namprd05.prod.outlook.com
- (2603:10b6:510:2d7:cafe::bc) by PH8P222CA0025.outlook.office365.com
- (2603:10b6:510:2d7::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9412.6 via Frontend Transport; Tue, 9
- Dec 2025 13:41:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CY4PEPF0000EE34.mail.protection.outlook.com (10.167.242.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9412.4 via Frontend Transport; Tue, 9 Dec 2025 13:41:44 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 9 Dec
- 2025 05:41:22 -0800
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 9 Dec
- 2025 05:41:21 -0800
-Received: from inno-ThinkPad-X280 (10.127.8.12) by mail.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
- Transport; Tue, 9 Dec 2025 05:41:17 -0800
-Date: Tue, 9 Dec 2025 15:41:14 +0200
-From: Zhi Wang <zhiw@nvidia.com>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-CC: <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<nouveau@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-	<airlied@gmail.com>, <dakr@kernel.org>, <aliceryhl@google.com>,
-	<bhelgaas@google.com>, <kwilczynski@kernel.org>, <ojeda@kernel.org>,
-	<alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
-	<bjorn3_gh@protonmail.com>, <lossin@kernel.org>, <a.hindborg@kernel.org>,
-	<tmgross@umich.edu>, <markus.probst@posteo.de>, <helgaas@kernel.org>,
-	<cjia@nvidia.com>, <alex@shazbot.org>, <smitra@nvidia.com>,
-	<ankita@nvidia.com>, <aniketa@nvidia.com>, <kwankhede@nvidia.com>,
-	<targupta@nvidia.com>, <acourbot@nvidia.com>, <jhubbard@nvidia.com>,
-	<zhiwang@kernel.org>
-Subject: Re: [RFC 4/7] gpu: nova-core: populate GSP_VF_INFO when vGPU is
- enabled
-Message-ID: <20251209154114.09cf245b@inno-ThinkPad-X280>
-In-Reply-To: <9cf6135e-43c4-4c31-acf5-03fbe32e2bae@nvidia.com>
-References: <20251206124208.305963-1-zhiw@nvidia.com>
-	<20251206124208.305963-5-zhiw@nvidia.com>
-	<9cf6135e-43c4-4c31-acf5-03fbe32e2bae@nvidia.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311AD13774D;
+	Tue,  9 Dec 2025 13:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765288605; cv=none; b=RGhL9xg3AbYyXm2rfAvhppebPVpkOs0ybr4cOjGq3B48B+2FeU3J6OHsqc8atxaA5vIku3qCPhHzrxGgQiyzHelTHtRr+qpf2ooXTuBpRbK9SiK9yOMTLYOIHdHs9UletUGMrQOX1dhLxlIypDssth+MLG1vxBN9+ncLnw+mV+k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765288605; c=relaxed/simple;
+	bh=ttKrI/ud2DlVrCezuXKRM0BCeucPO/3RAV3aLAtzE5k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IzAXAixVgR4eiN7k10IQiS5QJxtOSPbsa1r+WaFlKLNWL1aNST2EY/BHPqP52hv7/3KFeJqtIXpdyp6sras5aNgMoxGn56rMp7Vs7Ikp+TroeEF/qCphfGncqShC867k7MyAEyiVPc0aREC1A80nbPl2rnFOzBbFldoLwT4MFFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=hJjr6clO; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1765288597; x=1765893397; i=w_armin@gmx.de;
+	bh=EVNMjV3jmVlMTTv94C7Yeg6hKSaSksBzJaCuvJDk5gM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=hJjr6clOri5akSM9Lt55wIJMjLX8ujTHuN9pW+TBiV9vUBLMRWp5r8tgfYeSTWyt
+	 8vHsy0iz0Qsbld9cxciAY+/eW6ExOvP/rF7aStAEYSF3ra0mq2cYUh3KNn75Zj0NA
+	 cb5zcSsf4sv4yB6XiBimWBc8k0j2pNg1zuXdz+5RfSzIUCm1fqF1eadS41apl40Ck
+	 bUuMSVlr9HyCqBoZ5uu/wGhej8vJVqVgY80629bF5aN+sjst1D/wvt6crUAIgU2Ni
+	 EmsqGShfoN+taesji2Zjn0Q8REYf0+8cAbD6E2huwRW4VLmyDA4X+nCM/yD9j1inG
+	 HrLHwwY5E0XewuiIgw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [172.16.52.96] ([141.76.8.160]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M2wGi-1vRrk83zLQ-00CJTg; Tue, 09
+ Dec 2025 14:56:37 +0100
+Message-ID: <168f173d-0d1a-49b0-9461-72f8fb0fc701@gmx.de>
+Date: Tue, 9 Dec 2025 14:56:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE34:EE_|LV3PR12MB9188:EE_
-X-MS-Office365-Filtering-Correlation-Id: f59c2b4c-bd48-42e6-0e23-08de3728b162
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|36860700013|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?tlFM9EhT70kSrY/nr1EgX6lMV1aJAFX59gECyYC8Go666gqOrqFANU8SqxFs?=
- =?us-ascii?Q?V2ZZ2m0/4+3M4dyUGzMVlt3QMDaTTvQgfor3IJ6fg5PVACQ+ys8+5RfidedF?=
- =?us-ascii?Q?LEMfe074MvmQn9JvfIpt9raE+F2E9z8HW+jVxU9VLbqaSwa1eY+9DNA8hCQq?=
- =?us-ascii?Q?O+TpQgag6rQ5RI0mHPlOnK8JJaZxv00XOkL9azXb0P21gAXjgYNOC9/KM/wF?=
- =?us-ascii?Q?PIOr5Icg7sj/jVTHffExrschGa9zGGPvbiKDrCWzcBGAwkNHWev4IYShabQc?=
- =?us-ascii?Q?8I+qW1P7mgIKpnAai9cR7ztYLm+tqDZqagz498Es7o+NIpVUVRoxrPU3f4fJ?=
- =?us-ascii?Q?9QNwSkPBKOUDbovC2BQ2TNkVd1UqW4PV5sbWEH7hpEKreAw6Zgu3oz3PCeRo?=
- =?us-ascii?Q?H6AbjTMNSkpwHriLSNcxHhLc9aL5Qk2qYuaA/vqJgnmBl+l0tnRgsiZJcAM+?=
- =?us-ascii?Q?QfXP4+IqlocZOPee71c2M2HF6OlW/zr0vA4yHKGyRi8a73Y/wdpiCTRd8giP?=
- =?us-ascii?Q?oRxIHqc1enOIb1mU6QjBDXL3Ntnr4Ms4ldVhg/FIjeG+m1RAxw2Sqfa4dHMC?=
- =?us-ascii?Q?UHkHTusPxVJEYNkUggujrIMdxALmKDnTppEBOJSjhdn/1KCXKxrhmijVsAwe?=
- =?us-ascii?Q?QNscS74zspNda0+DlnERAOi0WRo5OLfS3u7a5VThw5pi85K85t0VnRJkZ3Qv?=
- =?us-ascii?Q?2x0QlpLyB3wKDdeSiFm8bXeu0LdN99yzFjQmvkVVFi3H6CdyUxliXgdrSfua?=
- =?us-ascii?Q?1ps0ABYTKF3M1PnFROcCgd1OW82fa8qovcEVKwESdHtcz40J+NqW2ZQg5ywg?=
- =?us-ascii?Q?a+qdXkH/K1nDJ06WSOzG28UNkBmRCDNSYEAFf1J9xxxouv62PrfvBQcr40tJ?=
- =?us-ascii?Q?IagjfCrHrG6YtSpV6uVNghLv/zW75abdssrBORImhCUGXtP8iwE9PJAfKUvB?=
- =?us-ascii?Q?h2vEOqacHs0fVyI7MNLCN/Ctt6ks3aUb7yXXH9obpXhJT9Ik9+ep1fOuAxN3?=
- =?us-ascii?Q?D0YCPoIGb4u9lcggQQwqi67fUXedwRmf+xc+uMaQhjOOq5KejEqbnprUg4rQ?=
- =?us-ascii?Q?2n4awMES2S5za9NxsXbYNlqwTgUmGFnCEjwn2HpdTdlmKedHI5GMQEVJSKoP?=
- =?us-ascii?Q?GKXEJCEb/EjOzX7j5QYvQtPVH1UPp6cbeaZMn7CocM3yimDxG7+v2ztJWHmK?=
- =?us-ascii?Q?tGcuVtKK7X91gR5ctQTnM1Y8FOxzJtRn4JYQcXpu/21UqNv6iEeAC+SeOPBv?=
- =?us-ascii?Q?GqPX8qqgbwcfjH8ppHstBVNM7WI+ehQyOUJvz8OOLUMpC5VUV0QCcdXQmGaa?=
- =?us-ascii?Q?/SswhO+pN1RqXdvSoTpRNmVcg3Zj0L4+3AFWsNvQgWUDDFiy92x3SaeOsYL6?=
- =?us-ascii?Q?XanKlIfsP3gPnZCs1xg4wsFx2D1co/CaEQjLhFRfxjnmtVmy1sUQOgpVLEFf?=
- =?us-ascii?Q?37nBszyL3UcyUZNK0FpoU+ers36L2mBeMIDnUhCYpbDPKMsNVmmZ2d27mktb?=
- =?us-ascii?Q?U2X05ZPZ18yJYVdxReO6MfUC5ciwXHIw7bvrAER15zTnjVD0l/It9cVTmKvs?=
- =?us-ascii?Q?yeyn7aH5Hb3kn0M+Ho4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2025 13:41:44.6487
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f59c2b4c-bd48-42e6-0e23-08de3728b162
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE34.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9188
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/2] PCI: ACPI: PM: Rework root bus wakeup notification
+ setup and wakeup source registration
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
+ Linux PM <linux-pm@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
+References: <2395536.ElGaqSPkdT@rafael.j.wysocki>
+ <ab8b770c-08e9-4cf6-bd4f-f36c951fda4c@gmx.de>
+ <CAJZ5v0jAH9FZrO5AvVF90zgy-0EeM+rsB6Zf8cMf+sR8=FFuDA@mail.gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <CAJZ5v0jAH9FZrO5AvVF90zgy-0EeM+rsB6Zf8cMf+sR8=FFuDA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:phyMCced2GrpYLVojW/Eb8QQ3+xpJK59xcncOgapqorYVJBO5yu
+ AJCaTrvFFcPV3P2SO6+y0dphaNhd2Qh6K5vPCiYo504uByFapFZ3q/z9QImxlD+5Fcoj00j
+ wd8lajTrRqDoE0chNoSYhNuUNSsw+LWIUjjW9KlNSbWJa2+CB0jyDc+YzyNbUeY0NZX6ifO
+ lYvOUY/9sbvnfKGYKAdXw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:fYV2KyC7SL0=;3NiTnvevZZ79mSGttjIZTzoLoTb
+ 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
 
-On Sat, 6 Dec 2025 21:32:51 -0500
-Joel Fernandes <joelagnelf@nvidia.com> wrote:
+Am 09.12.25 um 12:31 schrieb Rafael J. Wysocki:
 
-> Hi Zhi,
-> 
-> On 12/6/2025 7:42 AM, Zhi Wang wrote:
+> On Mon, Dec 8, 2025 at 9:01=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote=
+:
+>> Am 08.12.25 um 13:09 schrieb Rafael J. Wysocki:
+>>
+>>> Hi All,
+>>>
+>>> Patch [1/2] updates the registration of PCI root bus wakeup notificati=
+on setup
+>>> in order to simplify code in pci_acpi_wake_bus() and to prepare for th=
+e other
+>>> change.  This is not expected to affect functionality.
+>>>
+>>> Patch [2/2] modifies the ACPI PM notifier registration to add wakeup s=
+ources
+>>> under devices that are going to be affected by wakeup handling instead=
+ of
+>>> registering them under ACPI companions of those devices (rationale exp=
+lained
+>>> in the patch changelog).  This will change the sysfs layout (wakeup so=
+urce
+>>> devices associated with PCI wakeup are now going to appear under PCI d=
+evices
+>>> and the host bridge device), but it is not expected to affect user spa=
+ce
+>>> adversely.
+>>>
+>>> Thanks!
+>> I tested both patches, and the sysfs layout changes as expected:
+>>
+>> $ readlink /sys/class/wakeup/wakeup*/device
+>> ../../../device:00
+>> ../../../device:1a
+>> ../../../device:1f
+>> ../../../device:20
+>> ../../../0000:00:08.1
+>> ../../../device:36
+>> ../../../device:31
+>> ../../../device:32
+>> ../../../device:3c
+>> ../../../0000:01:00.0
+>> ../../../device:3d
+>> ../../../PNP0C02:00
+>> ../../../0000:02:00.0
+>> ../../../device:3e
+>> ../../../device:3f
+>> ../../../device:46
+>> ../../../0000:04:00.0
+>> ../../../device:47
+>> ../../../0000:05:00.0
+>> ../../../device:57
+>> ../../../0000:05:08.0
+>> ../../../device:59
+>> ../../../device:01
+>> ../../../0000:05:09.0
+>> ../../../device:5b
+>> ../../../0000:05:0a.0
+>> ../../../device:5d
+>> ../../../0000:05:0b.0
+>> ../../../device:5f
+>> ../../../0000:05:0c.0
+>> ../../../device:74
+>> ../../../0000:05:0d.0
+>> ../../../device:5a
+>> ../../../device:3a
+>> ../../../device:5c
+>> ../../../device:60
+>> ../../../device:75
+>> ../../../LNXVIDEO:00
+>> ../../../device:22
+>> ../../../PNP0C02:02
+>> ../../../device:25
+>> ../../../device:2b
+>> ../../../device:24
+>> ../../../device:37
+>> ../../../0000:00:01.1
+>> ../../../PNP0A08:00
+>> ../../../LNXPWRBN:00
+>> ../../../AMDI0010:00
+>> ../../../AMDI0030:00
+>> ../../../00:02
+>> ../../../alarmtimer.0.auto
+>> ../../../PNP0C0C:00
+>> ../../../0000:0b:00.0
+>> ../../../AMDIF031:00
+>> ../../../PNP0C14:00
+>> ../../../device:0a
+>> ../../../PNP0C14:01
+>> ../../../PNP0C14:02
+>> ../../../PNP0C14:03
+>> ../../../0000:0e:00.3
+>> ../../../0000:0e:00.4
+>> ../../../0000:0f:00.0
+>> ../../../5-2
+>> ../../../1-5.3
+>> ../../hidpp_battery_0
+>> ../../../device:44
+>> ../../../0000:00:02.1
+>> ../../../device:76
+>> ../../../device:0b
+>>
+>> turns into:
+>>
+>> $ readlink /sys/class/wakeup/wakeup*/device
+>> ../../../0000:00:00.0
+>> ../../../0000:00:04.0
+>> ../../../0000:00:08.0
+>> ../../../0000:00:08.1
+>> ../../../0000:00:08.1
+>> ../../../0000:00:08.3
+>> ../../../0000:00:14.0
+>> ../../../0000:00:14.3
+>> ../../../0000:01:00.0
+>> ../../../0000:01:00.0
+>> ../../../0000:02:00.0
+>> ../../../0000:00:00.2
+>> ../../../0000:02:00.0
+>> ../../../0000:03:00.0
+>> ../../../0000:03:00.1
+>> ../../../0000:04:00.0
+>> ../../../0000:04:00.0
+>> ../../../0000:05:00.0
+>> ../../../0000:05:00.0
+>> ../../../0000:05:08.0
+>> ../../../0000:05:08.0
+>> ../../../0000:05:09.0
+>> ../../../0000:00:01.0
+>> ../../../0000:05:09.0
+>> ../../../0000:05:0a.0
+>> ../../../0000:05:0a.0
+>> ../../../0000:05:0b.0
+>> ../../../0000:05:0b.0
+>> ../../../0000:05:0c.0
+>> ../../../0000:05:0c.0
+>> ../../../0000:05:0d.0
+>> ../../../0000:05:0d.0
+>> ../../../0000:08:00.0
+>> ../../../0000:00:01.1
+>> ../../../0000:09:00.0
+>> ../../../0000:0b:00.0
+>> ../../../0000:0c:00.0
+>> ../../../0000:0e:00.0
+>> ../../../0000:0e:00.1
+>> ../../../0000:0e:00.2
+>> ../../../0000:0e:00.3
+>> ../../../0000:0e:00.4
+>> ../../../0000:0e:00.6
+>> ../../../0000:0f:00.0
+>> ../../../0000:00:01.1
+>> ../../../pci0000:00
+>> ../../../LNXPWRBN:00
+>> ../../../AMDI0010:00
+>> ../../../AMDI0030:00
+>> ../../../00:02
+>> ../../../alarmtimer.0.auto
+>> ../../../PNP0C0C:00
+>> ../../../0000:0b:00.0
+>> ../../../AMDIF031:00
+>> ../../../PNP0C14:00
+>> ../../../0000:00:02.0
+>> ../../../PNP0C14:01
+>> ../../../PNP0C14:02
+>> ../../../PNP0C14:03
+>> ../../../0000:0e:00.3
+>> ../../../0000:0e:00.4
+>> ../../../0000:0f:00.0
+>> ../../../5-2
+>> ../../../1-5.3
+>> ../../hidpp_battery_0
+>> ../../../0000:00:02.1
+>> ../../../0000:00:02.1
+>> ../../../0000:00:02.2
+>> ../../../0000:00:03.0
+>>
+>> The remaining ACPI devices are likely caused by device drivers based up=
+on struct acpi_driver.
+>> I was unable to test the wakeup itself since suspend is currently broke=
+n due to issues with
+>> cpuidle,
+> Have you reported those?  What cpuidle driver is involved?
+>
+> If you happen to be using the ACPI idle driver, there is a regression
+> between 6.18-rc7 and final 6.18 due to a missing revert, but final
+> 6.18 should be as expected.
 
-snip
+If i remember correctly the official 6.18 kernel was not affected by this,=
+ i used the the bleeding-edge
+branch when building the test kernel.
 
- ==
-> > 0x00000004); +
-> > +            let val = bar.read32(0x88000 + 0xbfc);
-> > +            info.b64bitBar2 = u8::from((val & 0x00000006) ==
-> > 0x00000004);
-> 
-> Please no magic numbers, please use proper named constants with
-> documentation comments explaining the values.
-> 
-> Also BAR reads here need proper register macro definitions/access.
-> 
+I will do some further debugging once i am back home.
 
-That is true. :) But this is because there is no register definition in
-the OpenRM code/non OpenRM code as well. I have no idea about the name
-and bit definitions of this register.
+Thanks,
+Armin Wolf
 
-Suppose I will have to find some clues from some folks then document
-them here when going to patches request for merged. :)
-
-> Also the above code is lacking in comments. All the steps above need
-> proper comments IMO.
-> 
-> General philosophy of Nova is it is a well documented, cleanly
-> written driver with minimal/no magic numbers and abundant comments. :)
-> 
-
-Agree. :)
-
-> Thanks.
-> 
+>> but i suspect that this has nothing to do with the patch series.
+> Right, cpuidle is entirely orthogonal to this.
+>
+>> So for the whole series:
+>> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Thank you!
 
