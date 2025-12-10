@@ -1,208 +1,257 @@
-Return-Path: <linux-pci+bounces-42887-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42888-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CB45CB2DC1
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 12:55:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F1767CB2E16
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 13:23:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 051A8303C832
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 11:55:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F3E7E310B1B2
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 12:22:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 666F9318157;
-	Wed, 10 Dec 2025 11:55:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A79AC3246ED;
+	Wed, 10 Dec 2025 12:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cJYZ9xZI"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="B2lhjLv0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3243130276A;
-	Wed, 10 Dec 2025 11:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81338322C9D;
+	Wed, 10 Dec 2025 12:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765367756; cv=none; b=WmpCNfGEqxriWSpTZ8dBubxS0Re1p/ZxIInWjPf2hx2PE+2l1ZyFrHHidNNK80Mshz2YLfzAYCkueB6yd5Ap+rmHStUv2/kx5vzlt2EvVSjD6m42+h8bfeSPM9MlFe3Iya2yw7nhNoJlhjCFRBA88muvuHpDwwhvw316WbTZDBw=
+	t=1765369335; cv=none; b=cDsQo7x6Q/SqG7C1ojqVe8jecBVUfduwWxYimqmScfFFOG8P7wTQ8frPfR3wPkyligo86SUAmfZbbAyVEd5wcoFYJQsOc7t0Q4IzMV2SM0/WgTydH9mkUvL1cJwTsy0XVRimcC6MVECsWQvTe9ftEAk1VuNRYDABplih/GulROg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765367756; c=relaxed/simple;
-	bh=pegXHXohlIomiOeYaX9g6OeFf9beExXwUJfndBG+DAU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L9M/OGWSFafNRW/EKbBF1wN+eIDD3Wsf0te0uh8BriicPl64jaeQQZKNmmgqYJjKkueqDLNcHcJcGwlU6HiQ+2m24vXmd2HTrEia8Hf4/vVQT9ClFTero5Yg/59NHiWf/94y8GaCmz8Im1IFeegQlR228NOUnWlsqfchpfAPnvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cJYZ9xZI; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765367754; x=1796903754;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=pegXHXohlIomiOeYaX9g6OeFf9beExXwUJfndBG+DAU=;
-  b=cJYZ9xZISXuTbujrfLPMEVMS+Fy7qDwqn4YoWyz+HNH0KI7h5jfAH/CO
-   ZV0qF5J/Mdv6Ya5/9JGUry8b5zr8I/XuVGW1cuR0soHyjdGQSGItXDKwm
-   S8rpVoEr8SXG5aqioXJGXKOk4p2fVzqoJiHFbyWtWXERaEAPoVuvYGF2V
-   vqQxzO1FcD82cKphMMdVLcKYSBq9Z1Y035pFhis3SP80wfwbv6fAJgONd
-   UTczeYqvTiSv7WjMAv+cfyftSgp3QPgEiTnr8BSbuRprnfX21AN2juG80
-   pDsIWlXS+HJsr+RXOAWRvmdeY8MhaWIQkJDy8iB3zqzVGwSiqmfxx5Rcf
-   A==;
-X-CSE-ConnectionGUID: XL/RQnG3SpqIBWsTMhKxZg==
-X-CSE-MsgGUID: 6uAQpWROQ/yhRsOcQTM7bg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="67273280"
-X-IronPort-AV: E=Sophos;i="6.20,256,1758610800"; 
-   d="scan'208";a="67273280"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2025 03:55:53 -0800
-X-CSE-ConnectionGUID: IUe7le5MTdq30C3xjyHy8g==
-X-CSE-MsgGUID: spBFDOQDR8u7m2pl8rcbmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,263,1758610800"; 
-   d="scan'208";a="201419875"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa004.fm.intel.com with ESMTP; 10 Dec 2025 03:55:49 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 7AF3793; Wed, 10 Dec 2025 12:55:48 +0100 (CET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Takashi Iwai <tiwai@suse.de>,
-	Cezary Rojewski <cezary.rojewski@intel.com>,
-	Mark Brown <broonie@kernel.org>,
-	=?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	sound-open-firmware@alsa-project.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v1 1/1] ASoC: Fix acronym for Intel Gemini Lake
-Date: Wed, 10 Dec 2025 12:55:44 +0100
-Message-ID: <20251210115545.3028551-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1765369335; c=relaxed/simple;
+	bh=jd9K+mF97WGriGBzAJzag5o6OTccybfMhIaxrYKCKPg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pUK7I7KRP71apS/W+JKdYWJzznbYyM9IBucSaqlSZv8ayllBajhx4lVLv8WE4C2NA/xdOk69IB4oGTGMp0YACEPC4REZ7LnPby1iC0MWOk6DJidHLYFMcCKKXMZShDsjOtiDzAK4DT9urlmjT0bhPppopqWYXIAG/r9/0qdBGaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=B2lhjLv0; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 56DB1C180F6;
+	Wed, 10 Dec 2025 12:21:39 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 1E7F96072F;
+	Wed, 10 Dec 2025 12:22:03 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 12FF8119315B3;
+	Wed, 10 Dec 2025 13:21:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1765369320; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=pOlUsVypsTSlBECjYHHoMGhNKvvFlUu0wSglyApNP7w=;
+	b=B2lhjLv08HCS4nwPMQdM5rtA1PxYKChropbNXfAwuDvzNvXOVjVCwFTmvmtb2ORCVRW7Qi
+	k66+Mas8QHLL/Sd+Ps87vPuBDRCwI7saahl3amPRs7SDyRx2/03xb8vTHThuJw2ga28vUp
+	mWJuGni+C/1JJduukHwT93M8LHqErcT1tCB506+eg0lsH1ug4WelgtBydwGEI8bQLgP21q
+	xgMbfofeVReqc6sRn9VIhYltwLdn5+wRI8qcr7mp32U/cqKfXDSUrrYJn+eHIG12gJQGaT
+	OtIuCTUfZrFJAHa0b3F7XsnAhwmX5iend8orwE0uMkCFCSYS7ZIq32q+F/8bOg==
+Date: Wed, 10 Dec 2025 13:21:40 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Kalle Niemi <kaleposti@gmail.com>, Rob Herring <robh@kernel.org>, Matti
+ Vaittinen <mazziesaccount@gmail.com>, linux-arm-kernel@lists.infradead.org,
+ Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
+ Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
+ Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, Charles
+ Keepax <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
+ <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Mark Brown <broonie@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, Davidlohr
+ Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+ <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
+ Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
+ overlays"
+Message-ID: <20251210132140.32dbc3d7@bootlin.com>
+In-Reply-To: <CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+ <20251015071420.1173068-2-herve.codina@bootlin.com>
+ <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
+ <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
+ <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
+ <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+ <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
+ <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+ <55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
+ <20251202102619.5cd971cc@bootlin.com>
+ <088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com>
+ <20251202175836.747593c0@bootlin.com>
+ <dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
+ <20251204083839.4fb8a4b1@bootlin.com>
+ <CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-While the used GML is consistent with the pattern for other Intel * Lake
-SoCs, the de facto use is GLK. Update the acronym and users accordingly.
+Hi Geert, Kalle, Rob,
 
-Note, a handful of the drivers for Gemini Lake in the Linux kernel use
-GLK already (LPC, MEI, pin control, SDHCI, ...) and even some in ASoC.
-The only ones in this patch used the inconsistent one.
+On Thu, 4 Dec 2025 11:49:13 +0100
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/pci_ids.h               | 2 +-
- sound/hda/controllers/intel.c         | 2 +-
- sound/hda/core/intel-dsp-config.c     | 4 ++--
- sound/soc/intel/avs/board_selection.c | 4 ++--
- sound/soc/intel/avs/core.c            | 2 +-
- sound/soc/sof/intel/pci-apl.c         | 2 +-
- 6 files changed, 8 insertions(+), 8 deletions(-)
+> Hi Hervé,
+> 
+> On Thu, 4 Dec 2025 at 08:39, Herve Codina <herve.codina@bootlin.com> wrote:
+> > Indeed, Kalle, Geert, I don't have your hardware, your related overlay or
+> > a similar one that could be used for test and also I don't have your out of
+> > tree code used to handle this overlay.
+> >
+> > I know overlays and fw_devlink have issues. Links created by fw_devlink
+> > when an overlay is applied were not correct on my side.
+> >
+> > Can you check your <supplier>--<consumer> links with 'ls /sys/class/devlinks'
+> >
+> > On my side, without my patches some links were not correct.
+> > They linked to the parent of the supplier instead of the supplier itself.
+> > The consequence is a kernel crash, use after free, refcounting failure, ...
+> > when the supplier device is removed.
+> >
+> > Indeed, with wrong links consumers were not removed before suppliers they
+> > used.
+> >
+> > Looking at Geert traces:
+> > --- 8< ---
+> > rcar_sound ec500000.sound: Failed to create device link (0x180) with
+> > supplier soc for /soc/sound@ec500000/rcar_sound,src/src-0
+> > rcar_sound ec500000.sound: Failed to create device link (0x180) with
+> > supplier soc for /soc/sound@ec500000/rcar_sound,src/src-1
+> > [...]
+> > --- 8< ---
+> >
+> > Even if it is not correct, why the soc device cannot be a provider?
+> > I don't have the answer to this question yet.  
+> 
+> I have no idea. These failures (sound) are also not related to the
+> device I am adding through the overlay (SPI EEPROM).
+> Note that these failures appear only with your suggested fix, and are
+> not seen with just the patch in the subject of this email thread.
+> 
+> > Without having the exact tree structure of the base device-tree, the overlay
+> > and the way it is applied, and so without been able to reproduce the issue
+> > on my side, investigating the issue is going to be difficult.
+> >
+> > I hope to find some help to move forward and fix the issue.  
+> 
+> Base DTS is [1], overlay DTS is [2].
+> Applying and removing the overlay is done using OF_CONFIGFS[3],
+> and "overlay [add|rm] 25lc040"[4].
+> 
+> I assume you can reproduce the issue on any board that has an SPI
+> EEPROM, after moving the SPI bus enablement and SPI EEPROM node to an
+> overlay. Probably even with an I2C EEPROM instead.  Or even without
+> an actual EEPROM connected, as even the SPI bus fails to appear.
+> 
+> > Saravana's email (Saravana Kannan <saravanak@google.com>) seems incorrect.
+> > Got emails delivery failure with this email address.  
+> 
+> Yeah, he moved company.
+> He is still alive, I met him in the LPC Training Session yesterday ;-)
+> 
+> Thanks!
+> 
+> [1] https://web.git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/tree/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+> [2] https://web.git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/tree/arch/arm64/boot/dts/renesas/r8a77990-ebisu-cn41-msiof0-25lc040.dtso?h=topic/renesas-overlays-v6.17-rc1
+> [3] https://web.git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/overlays-v6.17-rc1
+> [4] https://elinux.org/R-Car/DT-Overlays#Helper_Script
+> [5] https://lore.kernel.org/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgyo8x6=9F9rZ+-KzjOg@mail.gmail.com/
+> 
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index a9a089566b7c..22b8cfc11add 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2950,7 +2950,7 @@
- #define PCI_DEVICE_ID_INTEL_LYNNFIELD_MC_CH2_ADDR_REV2  0x2db1
- #define PCI_DEVICE_ID_INTEL_LYNNFIELD_MC_CH2_RANK_REV2  0x2db2
- #define PCI_DEVICE_ID_INTEL_LYNNFIELD_MC_CH2_TC_REV2    0x2db3
--#define PCI_DEVICE_ID_INTEL_HDA_GML	0x3198
-+#define PCI_DEVICE_ID_INTEL_HDA_GLK	0x3198
- #define PCI_DEVICE_ID_INTEL_82855PM_HB	0x3340
- #define PCI_DEVICE_ID_INTEL_IOAT_TBG4	0x3429
- #define PCI_DEVICE_ID_INTEL_IOAT_TBG5	0x342a
-diff --git a/sound/hda/controllers/intel.c b/sound/hda/controllers/intel.c
-index 1e8e3d61291a..bb9a64d41580 100644
---- a/sound/hda/controllers/intel.c
-+++ b/sound/hda/controllers/intel.c
-@@ -2555,7 +2555,7 @@ static const struct pci_device_id azx_ids[] = {
- 	/* Apollolake (Broxton-P) */
- 	{ PCI_DEVICE_DATA(INTEL, HDA_APL, AZX_DRIVER_SKL | AZX_DCAPS_INTEL_BROXTON) },
- 	/* Gemini-Lake */
--	{ PCI_DEVICE_DATA(INTEL, HDA_GML, AZX_DRIVER_SKL | AZX_DCAPS_INTEL_BROXTON) },
-+	{ PCI_DEVICE_DATA(INTEL, HDA_GLK, AZX_DRIVER_SKL | AZX_DCAPS_INTEL_BROXTON) },
- 	/* Haswell */
- 	{ PCI_DEVICE_DATA(INTEL, HDA_HSW_0, AZX_DRIVER_HDMI | AZX_DCAPS_INTEL_HASWELL) },
- 	{ PCI_DEVICE_DATA(INTEL, HDA_HSW_2, AZX_DRIVER_HDMI | AZX_DCAPS_INTEL_HASWELL) },
-diff --git a/sound/hda/core/intel-dsp-config.c b/sound/hda/core/intel-dsp-config.c
-index c401c0658421..948fd468d2fe 100644
---- a/sound/hda/core/intel-dsp-config.c
-+++ b/sound/hda/core/intel-dsp-config.c
-@@ -154,7 +154,7 @@ static const struct config_entry config_table[] = {
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_GEMINILAKE)
- 	{
- 		.flags = FLAG_SOF,
--		.device = PCI_DEVICE_ID_INTEL_HDA_GML,
-+		.device = PCI_DEVICE_ID_INTEL_HDA_GLK,
- 		.dmi_table = (const struct dmi_system_id []) {
- 			{
- 				.ident = "Google Chromebooks",
-@@ -167,7 +167,7 @@ static const struct config_entry config_table[] = {
- 	},
- 	{
- 		.flags = FLAG_SOF,
--		.device = PCI_DEVICE_ID_INTEL_HDA_GML,
-+		.device = PCI_DEVICE_ID_INTEL_HDA_GLK,
- 		.codec_hid =  &essx_83x6,
- 	},
- #endif
-diff --git a/sound/soc/intel/avs/board_selection.c b/sound/soc/intel/avs/board_selection.c
-index 52e6266a7cb8..46723618d458 100644
---- a/sound/soc/intel/avs/board_selection.c
-+++ b/sound/soc/intel/avs/board_selection.c
-@@ -227,7 +227,7 @@ static struct snd_soc_acpi_mach avs_apl_i2s_machines[] = {
- 	{},
- };
- 
--static struct snd_soc_acpi_mach avs_gml_i2s_machines[] = {
-+static struct snd_soc_acpi_mach avs_glk_i2s_machines[] = {
- 	{
- 		.id = "INT343A",
- 		.drv_name = "avs_rt298",
-@@ -367,7 +367,7 @@ static const struct avs_acpi_boards i2s_boards[] = {
- 	AVS_MACH_ENTRY(HDA_SKL_LP,	avs_skl_i2s_machines),
- 	AVS_MACH_ENTRY(HDA_KBL_LP,	avs_kbl_i2s_machines),
- 	AVS_MACH_ENTRY(HDA_APL,		avs_apl_i2s_machines),
--	AVS_MACH_ENTRY(HDA_GML,		avs_gml_i2s_machines),
-+	AVS_MACH_ENTRY(HDA_GLK,		avs_glk_i2s_machines),
- 	AVS_MACH_ENTRY(HDA_CNL_LP,	avs_cnl_i2s_machines),
- 	AVS_MACH_ENTRY(HDA_CNL_H,	avs_cnl_i2s_machines),
- 	AVS_MACH_ENTRY(HDA_CML_LP,	avs_cnl_i2s_machines),
-diff --git a/sound/soc/intel/avs/core.c b/sound/soc/intel/avs/core.c
-index 6e0e65584c7f..1a53856c2ffb 100644
---- a/sound/soc/intel/avs/core.c
-+++ b/sound/soc/intel/avs/core.c
-@@ -897,7 +897,7 @@ static const struct pci_device_id avs_ids[] = {
- 	{ PCI_DEVICE_DATA(INTEL, HDA_KBL_H, &skl_desc) },
- 	{ PCI_DEVICE_DATA(INTEL, HDA_CML_S, &skl_desc) },
- 	{ PCI_DEVICE_DATA(INTEL, HDA_APL, &apl_desc) },
--	{ PCI_DEVICE_DATA(INTEL, HDA_GML, &apl_desc) },
-+	{ PCI_DEVICE_DATA(INTEL, HDA_GLK, &apl_desc) },
- 	{ PCI_DEVICE_DATA(INTEL, HDA_CNL_LP,	&cnl_desc) },
- 	{ PCI_DEVICE_DATA(INTEL, HDA_CNL_H,	&cnl_desc) },
- 	{ PCI_DEVICE_DATA(INTEL, HDA_CML_LP,	&cnl_desc) },
-diff --git a/sound/soc/sof/intel/pci-apl.c b/sound/soc/sof/intel/pci-apl.c
-index 0bf7ee753bc3..3241403efa60 100644
---- a/sound/soc/sof/intel/pci-apl.c
-+++ b/sound/soc/sof/intel/pci-apl.c
-@@ -86,7 +86,7 @@ static const struct sof_dev_desc glk_desc = {
- /* PCI IDs */
- static const struct pci_device_id sof_pci_ids[] = {
- 	{ PCI_DEVICE_DATA(INTEL, HDA_APL, &bxt_desc) },
--	{ PCI_DEVICE_DATA(INTEL, HDA_GML, &glk_desc) },
-+	{ PCI_DEVICE_DATA(INTEL, HDA_GLK, &glk_desc) },
- 	{ 0, }
- };
- MODULE_DEVICE_TABLE(pci, sof_pci_ids);
--- 
-2.50.1
+I did some tests with boards I have.
 
+First I used a Marvel board based on an Armada 3720.
+
+In my overlay, I added the pinmux related to the SPI controller, enabled
+this SPI controller and added a SPI flash.
+
+It didn't work with or without culprit patches from my series applied.
+Indeed, the pinctrl driver used is an MFD driver an mixed pinmux definition
+nodes with device description (a clock) node.
+
+When a new node is added, a new device is created. Indeed, because the
+driver is an MFD driver, it is a bus driver and handled by of_platform bus.
+
+My new node is considered by devlink as a node that will have a device ready
+to work (driver attached and device probed). A link is created between this
+node and the consumers of this node (i.e. the SPI controller). devlink is
+waiting for this provider to be ready before allowing the its consumer to probe.
+This node (simple pinmux description) will never lead to a device and devlink
+will never see this "provider" ready.
+
+Did a test with a Renesas RZ/N1D (r9a06g032) based board and built a similar
+overlay involving I2C controller pinmux, I2C controller and an EEPROM.
+
+Here, also the overlay didn't work but the issue is different.
+
+The pinmux definition for pinctrl (i.e. pinctrl subnodes) are looked when
+the pinctrl driver probes. Adding a new node later is not handled by the
+pinctrl driver.
+Applying the overlay leads to a simple:
+  [   16.934168] rzn1-pinctrl 40067000.pinctrl: unable to find group for node /soc/pinctrl@40067000/pins_i2c2
+
+Indeed, the 'pins_i2c2' has been added by the overlay and was not present
+when the pinctrl probed.
+
+Tried without adding a new pinmux node (pinctrl subnode) from the overlay
+and used nodes already existing in the base DT.
+
+On my Marvell Armada 3720 board, it works with or without my patches.
+No regression detected due to my patches.
+
+On my RZ/N1D board, it works also with or without my patches.
+Here also, no regression detected.
+
+Also, on my Marvell Armada 3720 board, I can plug my LAN966x PCI board.
+The LAN966x PCI driver used an overlay to describe the LAN966x PCI board.
+
+With the upstream patch not reverted, i.e. 1a50d9403fb9 ("treewide: Fix
+probing of devices in DT overlays")" applied, devlinks created for the
+LAN966x PCI board internal devices are incorrect and lead to crashes when
+the LAN966x PCI driver is removed due to wrong provider/consumer dependencies.
+
+When this patch is reverted and replaced by "of: dynamic: Fix overlayed
+devices not probing because of fw_devlink", devlinks created for the LAN966x
+PCI board internal devices are corrects and crashes are no more present on
+removal.
+
+Kalle, Geert, can you perform a test on your hardware with my patches
+applied and moving your pinmux definition from the overlay to the base
+device-tree?
+
+The kernel you can use is for instance the kernel at the next-20251127 tag.
+Needed patches for test are present in this kernel:
+    - 76841259ac092 ("of: dynamic: Fix overlayed devices not probing because of fw_devlink")
+    - 7d67ddc5f0148 ("Revert "treewide: Fix probing of devices in DT overlays"")
+
+Best regards,
+Hervé
 
