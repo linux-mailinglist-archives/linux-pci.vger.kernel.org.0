@@ -1,117 +1,159 @@
-Return-Path: <linux-pci+bounces-42911-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42912-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84C5CCB4105
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 22:30:06 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF426CB4132
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 22:39:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 000F7300FB06
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 21:30:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 113B23089E5F
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 21:39:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FF8F322B70;
-	Wed, 10 Dec 2025 21:30:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09010329E65;
+	Wed, 10 Dec 2025 21:39:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J3ELAxdY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RT/0M17v"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B722F8BD1;
-	Wed, 10 Dec 2025 21:30:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16BC302CD0;
+	Wed, 10 Dec 2025 21:39:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765402204; cv=none; b=HF3IAFi2HBJBFSZY4BadZ7I5VVjYhz0n+dLGqh1J0dSsAN61Ye4XrZ7hl2ceWlgv8K4nOLxOkQs5HAVAR0W1eoHt2zq/sLMUzunesqNIGPHrRUHk4SNZPEuc9qRJocWLmHUZJEaBKh4pMIGv9IqlsliR+tmHmLVKV2skr4r5+80=
+	t=1765402789; cv=none; b=LPEIQA36s24THg1hGOlKfbV0K97zNS/aqCiKTTP0yLAMSA+e4HNfCwkFq4e/nfDTVP/pH85xnq9BMOJHE6AFLHqSu0JH3R1OqecM71tNSHJclts3lGBLMStXnydHbLoaVd1FiDCVHr3FQQ75n5QOLDYaWGZj4bfKBLYX8zK0SAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765402204; c=relaxed/simple;
-	bh=/p4vU9wPYlH2uVTHiPk+j/EvZ4vL7UAVHTXYH0qeE5Y=;
+	s=arc-20240116; t=1765402789; c=relaxed/simple;
+	bh=5pRIxpBxRl7AulJUBlK43AxD0UvUN1i64TGtHpo8nE8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ZMvHwAOQRhsSoaTq1ABj3jlzvcBkhMaR/WX47kopX/X2g9KnBPTAcM/xbMUunYecW51gqzblsOFQmOmchGjY2R9c61AozVXdLyCnJboEgOh1JUAfNpcVWhkzOebnqXKM2bmRHpMFx/d1RU4A5IOwslQ5roGLS53aHy0Yk8o1Sqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J3ELAxdY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCA06C4CEF1;
-	Wed, 10 Dec 2025 21:30:03 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=FvaaRlsKW+SoEYy6nyIvKqmZjyK+8m/obF+zNs8nOfSNGgCNxNIo0UaO06uhLUgyTzBeRLEc9ueZA3hA2fv9h10evPC5fe99V/jKwJ0yaY6gpTU533ymPfuZH6TJsSjmzrE8w5QNXnhb+fjsayATKVDW2eSQ4jv7fCQ27BBPMCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RT/0M17v; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22FECC4CEF1;
+	Wed, 10 Dec 2025 21:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765402203;
-	bh=/p4vU9wPYlH2uVTHiPk+j/EvZ4vL7UAVHTXYH0qeE5Y=;
+	s=k20201202; t=1765402787;
+	bh=5pRIxpBxRl7AulJUBlK43AxD0UvUN1i64TGtHpo8nE8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=J3ELAxdYGsD/BqpTvio1oCkPfYBC0uVZe8OKhZVK9wWQHQfF1Z5uWXaDXqrUgDVcn
-	 QvfnUGv6Rb5xtnKNzH/Kbrg2f0QXGpWvxobMb01Fre2iHJxjhql2omSCxhcWhS9k8V
-	 wefkegR8fikoqzaZH63SkyXvuYsI2cy6z+4FlndiIgQt2+wIYra1rVGknA9uO6wj9H
-	 yRhFNGO5sUWtiMSY+VFMPhpWLvm4T/vS5qSsEK6aD0Jmwv4Di07jObBt1ED9a+zufp
-	 YDtUBFX4xOLNLligMDKmTUpBbTJgM5zPF320I8erQXiCPNd1oNFOaSTN1+1Tt59+/7
-	 mfUp3GvTYdZ2A==
-Date: Wed, 10 Dec 2025 15:30:02 -0600
+	b=RT/0M17v5pqvDKvkWhG6SvnyBVuypV2tRmP26c9Wl83/u5rWFLOS27O4ySBP7DZIP
+	 4swIvxphfWya1QIcBUwgvfmck7j3R70RQOHFuDEZnP7xbf7McDMOi7g0ZDd/Qmvr9E
+	 TGTOz3/dHk+yy7i2AK/C4WgyPogmZFmpaDZziwwdEO4BkMWtA0JMyrAKa7KJZ2fthX
+	 bqywMkgtxi0P6pQZFxq4ais/oXJ67nuwcfVJXMX2a4Y82BiRgvbUURLDJ2W8ilUArP
+	 FknpLAhMkQWlxvDDkaS7SGpCIR0KRX/Vi1hxyhZNU6AFOgppuUABjEGcEHvjcbPoHx
+	 gximRenkH8xDg==
+Date: Wed, 10 Dec 2025 15:39:45 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Christian Marangi <ansuelsmth@gmail.com>
-Subject: Re: [PATCH 1/1] PCI: Use resource_set_range() that correctly sets
- ->end
-Message-ID: <20251210213002.GA3540876@bhelgaas>
+To: Yu Zhang <zhangyu1@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	iommu@lists.linux.dev, linux-pci@vger.kernel.org, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
+	joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+	easwar.hariharan@linux.microsoft.com, jacob.pan@linux.microsoft.com,
+	nunodasneves@linux.microsoft.com, mrathor@linux.microsoft.com,
+	mhklinux@outlook.com, peterz@infradead.org,
+	linux-arch@vger.kernel.org
+Subject: Re: [RFC v1 1/5] PCI: hv: Create and export hv_build_logical_dev_id()
+Message-ID: <20251210213945.GA3541010@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251208145654.5294-1-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20251209051128.76913-2-zhangyu1@linux.microsoft.com>
 
-On Mon, Dec 08, 2025 at 04:56:54PM +0200, Ilpo Järvinen wrote:
-> __pci_read_base() sets resource start and end addresses when resource
-> is larger than 4G but pci_bus_addr_t or resource_size_t are not capable
-> of representing 64-bit PCI addresses. This creates a problematic
-> resource that has non-zero flags but the start and end addresses do not
-> yield to resource size of 0 but 1.
+On Tue, Dec 09, 2025 at 01:11:24PM +0800, Yu Zhang wrote:
+> From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
 > 
-> Replace custom resource addresses setup with resource_set_range()
-> that correctly sets end address as -1 which results in resource_size()
-> returning 0.
+> Hyper-V uses a logical device ID to identify a PCI endpoint device for
+> child partitions. This ID will also be required for future hypercalls
+> used by the Hyper-V IOMMU driver.
 > 
-> For consistency, also use resource_set_range() in the other branch that
-> does size based resource setup.
+> Refactor the logic for building this logical device ID into a standalone
+> helper function and export the interface for wider use.
 > 
-> Fixes: 23b13bc76f35 ("PCI: Fail safely if we can't handle BARs larger than 4GB")
-> Link: https://lore.kernel.org/all/20251207215359.28895-1-ansuelsmth@gmail.com/T/#m990492684913c5a158ff0e5fc90697d8ad95351b
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Cc: stable@vger.kernel.org
-> Cc: Christian Marangi <ansuelsmth@gmail.com>
+> Signed-off-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+> Signed-off-by: Yu Zhang <zhangyu1@linux.microsoft.com>
 
-Applied to pci/resource for v6.20, thanks!
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
 > ---
->  drivers/pci/probe.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+>  drivers/pci/controller/pci-hyperv.c | 28 ++++++++++++++++++++--------
+>  include/asm-generic/mshyperv.h      |  2 ++
+>  2 files changed, 22 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 124d2d309c58..b8294a2f11f9 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -287,8 +287,7 @@ int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
->  		if ((sizeof(pci_bus_addr_t) < 8 || sizeof(resource_size_t) < 8)
->  		    && sz64 > 0x100000000ULL) {
->  			res->flags |= IORESOURCE_UNSET | IORESOURCE_DISABLED;
-> -			res->start = 0;
-> -			res->end = 0;
-> +			resource_set_range(res, 0, 0);
->  			pci_err(dev, "%s: can't handle BAR larger than 4GB (size %#010llx)\n",
->  				res_name, (unsigned long long)sz64);
->  			goto out;
-> @@ -297,8 +296,7 @@ int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
->  		if ((sizeof(pci_bus_addr_t) < 8) && l) {
->  			/* Above 32-bit boundary; try to reallocate */
->  			res->flags |= IORESOURCE_UNSET;
-> -			res->start = 0;
-> -			res->end = sz64 - 1;
-> +			resource_set_range(res, 0, sz64);
->  			pci_info(dev, "%s: can't handle BAR above 4GB (bus address %#010llx)\n",
->  				 res_name, (unsigned long long)l64);
->  			goto out;
-> 
-> base-commit: 43dfc13ca972988e620a6edb72956981b75ab6b0
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 146b43981b27..4b82e06b5d93 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -598,15 +598,31 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
+>  
+>  #define hv_msi_prepare		pci_msi_prepare
+>  
+> +/**
+> + * Build a "Device Logical ID" out of this PCI bus's instance GUID and the
+> + * function number of the device.
+> + */
+> +u64 hv_build_logical_dev_id(struct pci_dev *pdev)
+> +{
+> +	struct pci_bus *pbus = pdev->bus;
+> +	struct hv_pcibus_device *hbus = container_of(pbus->sysdata,
+> +						struct hv_pcibus_device, sysdata);
+> +
+> +	return (u64)((hbus->hdev->dev_instance.b[5] << 24) |
+> +		     (hbus->hdev->dev_instance.b[4] << 16) |
+> +		     (hbus->hdev->dev_instance.b[7] << 8)  |
+> +		     (hbus->hdev->dev_instance.b[6] & 0xf8) |
+> +		     PCI_FUNC(pdev->devfn));
+> +}
+> +EXPORT_SYMBOL_GPL(hv_build_logical_dev_id);
+> +
+>  /**
+>   * hv_irq_retarget_interrupt() - "Unmask" the IRQ by setting its current
+>   * affinity.
+>   * @data:	Describes the IRQ
+>   *
+>   * Build new a destination for the MSI and make a hypercall to
+> - * update the Interrupt Redirection Table. "Device Logical ID"
+> - * is built out of this PCI bus's instance GUID and the function
+> - * number of the device.
+> + * update the Interrupt Redirection Table.
+>   */
+>  static void hv_irq_retarget_interrupt(struct irq_data *data)
+>  {
+> @@ -642,11 +658,7 @@ static void hv_irq_retarget_interrupt(struct irq_data *data)
+>  	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
+>  	params->int_entry.msi_entry.address.as_uint32 = int_desc->address & 0xffffffff;
+>  	params->int_entry.msi_entry.data.as_uint32 = int_desc->data;
+> -	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
+> -			   (hbus->hdev->dev_instance.b[4] << 16) |
+> -			   (hbus->hdev->dev_instance.b[7] << 8) |
+> -			   (hbus->hdev->dev_instance.b[6] & 0xf8) |
+> -			   PCI_FUNC(pdev->devfn);
+> +	params->device_id = hv_build_logical_dev_id(pdev);
+>  	params->int_target.vector = hv_msi_get_int_vector(data);
+>  
+>  	if (hbus->protocol_version >= PCI_PROTOCOL_VERSION_1_2) {
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> index 64ba6bc807d9..1a205ed69435 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -71,6 +71,8 @@ extern enum hv_partition_type hv_curr_partition_type;
+>  extern void * __percpu *hyperv_pcpu_input_arg;
+>  extern void * __percpu *hyperv_pcpu_output_arg;
+>  
+> +extern u64 hv_build_logical_dev_id(struct pci_dev *pdev);
+
+Curious why you would include the "extern" in this declaration?  It's
+not *wrong*, but it's not necessary, and other declarations in this
+file omit it, e.g., the ones below:
+
+>  u64 hv_do_hypercall(u64 control, void *inputaddr, void *outputaddr);
+>  u64 hv_do_fast_hypercall8(u16 control, u64 input8);
+>  u64 hv_do_fast_hypercall16(u16 control, u64 input1, u64 input2);
 > -- 
-> 2.39.5
+> 2.49.0
 > 
 
