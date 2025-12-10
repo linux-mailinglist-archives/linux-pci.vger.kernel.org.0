@@ -1,57 +1,60 @@
-Return-Path: <linux-pci+bounces-42899-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42900-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A55ECB37BD
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 17:34:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2887ECB3824
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 17:44:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2B4A33059958
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 16:32:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 67C8B3011EC7
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 16:43:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 286032D321B;
-	Wed, 10 Dec 2025 16:32:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0359F323416;
+	Wed, 10 Dec 2025 16:43:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XafJolWo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jwopFP4j"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF3B1494DB;
-	Wed, 10 Dec 2025 16:32:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48C53233E3;
+	Wed, 10 Dec 2025 16:43:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765384351; cv=none; b=ISu6QJT1SrvLWKPriUlvN8lSgu+53hj1w9pGobJFPukbMpSmPKnlgXjDUtq/kxvCiGwtPWQi4a6/7P+EzVs7a7UeScFtNAdsHw8EDC+Pb00LYdiyR+2HNG+Pxj9ivfBNyM7XV58ByfcA+I1XqM1MglPJHLjmFM92Rpom6pma+Bs=
+	t=1765385009; cv=none; b=X1TPigmBJQLD9RvwLVwpvIt6UPU71mKywL7RM0hBmKtGBX5Uy1fkZxSYS1KV2lkUvPtzeSWS/SHpvXFyNI00aTF/58VIcmvZ1MJ4lfJoXWkK1okuCLYbduXZRzWrVz5uUrC9+vQvTmfZGChfaJWpFlLH/wjAt70sOalUuTz7Eb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765384351; c=relaxed/simple;
-	bh=gU3uGmHH0y8w6wJf1aHQd4wAmRCE1fZ3jrJ9fQnI0xI=;
+	s=arc-20240116; t=1765385009; c=relaxed/simple;
+	bh=D6oMO8hz9iCEccabjb39VyXWX9MEu9ZISEEglyieFkE=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=lmHe3zdvzB9CI201Gl/SHr4goZEasAZEbq5K8ayRlg9/gX4z/M/wP6ULCmm2msna1H+kbA2TtweOYFdj0p+QrkXhM0wjQsF9mhXc6QJEefU4I7rOcLmoK2HzXeV4vX9zm9lTMjja3bX8+0HRrh39DSKboW212ZEddoB1YGtzcMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XafJolWo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56A8EC4CEF1;
-	Wed, 10 Dec 2025 16:32:30 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=AkNC6rhdTYd9G4QE5PzMv/YV/CZt0QDSlypB514LU1xFmSgsqVol8reCzQ3yMuTQMhLF2fFNkjbdU/L+X1MS8yHHyGPV0lz9NJGrObXWFF0CshLNyjoLBsLiMjdL6nlsaaDf0VGzbJ7oMurvwy2NVJn1BnDkDb/CZoZSZXQjJ5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jwopFP4j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8C9CC4CEF1;
+	Wed, 10 Dec 2025 16:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765384350;
-	bh=gU3uGmHH0y8w6wJf1aHQd4wAmRCE1fZ3jrJ9fQnI0xI=;
+	s=k20201202; t=1765385009;
+	bh=D6oMO8hz9iCEccabjb39VyXWX9MEu9ZISEEglyieFkE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=XafJolWoE7AiPbYG4zkAtPMh1NeW2lGt40anXMCKT9CYx50S5HyjXtZA4hxSvNGZw
-	 2JLQU8f482hno/MagRUmxLazJibILSHlehFt6F9tj+xvMiEeJFS0PaBfQQQnT9xxZW
-	 Kx/KwQpoR0z691bBGQviHN2Ed1dWtOfiRHfLOf3YsZ4N343V+LTZ8BIqRQ5z+sZOEB
-	 mn8Lj23CWUXrg5kEXHSj2nA3v9rZC+zK31N0+QbRcOyVZZa74/0GdS3wKkNl4/6bkQ
-	 /BLyugCSBDrllBUwV2L6fQfHDf2fw2pZSHwoqOosgfefe89HjM93WOebXAkM+B+V73
-	 4mEZPu9Lt8djw==
-Date: Wed, 10 Dec 2025 10:32:28 -0600
+	b=jwopFP4jBNqfZmSihJanQd3drbFgmVOEHv4W3zy1K53cnGquk8vxqBX3CyB4t092w
+	 Xi17V3xkxD1nSk2eZgvdYwRhIuNSeKZ8j7waJWD11k9LgM2KuLWM5cCw87OROWm0FT
+	 9nGcR8pPD3SJsH+wLpInCEcF6CM9UNkiXExjc2HlYBxLtQYiZXnKaUDSDvRKJcK8AN
+	 ZCdwaewQxLAxxk2LEwEAbWjjCuU7QN/ta9fJgaLmaphnYsfk6RoV+uGcE7qPbMWIAB
+	 nvP1mAJlwXNadfSvw8y5Lz3obfoVQ+oC4xKdtLHS2ZoqWUUNfv/vI8XZMyBdjwO8VC
+	 KapgOqfxgsc6w==
+Date: Wed, 10 Dec 2025 10:43:27 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: "Verma, Devendra" <Devendra.Verma@amd.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"vkoul@kernel.org" <vkoul@kernel.org>,
-	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Simek, Michal" <michal.simek@amd.com>
-Subject: Re: [PATCH RESEND v6 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint
- Support
-Message-ID: <20251210163228.GA3526502@bhelgaas>
+To: zhangsenchuan@eswincomputing.com
+Cc: bhelgaas@google.com, mani@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	robh@kernel.org, p.zabel@pengutronix.de, jingoohan1@gmail.com,
+	gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com,
+	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
+	thippeswamy.havalige@amd.com, inochiama@gmail.com, Frank.li@nxp.com,
+	ningyu@eswincomputing.com, linmin@eswincomputing.com,
+	pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com
+Subject: Re: [PATCH v7 2/3] PCI: eic7700: Add Eswin PCIe host controller
+ driver
+Message-ID: <20251210164327.GA3477281@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,123 +63,53 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b2s6genayrgyicxawx2scpswfji3c62vxn7cgvpzwfbm6vodtx@5dseozibsrte>
+In-Reply-To: <20251202090406.1636-1-zhangsenchuan@eswincomputing.com>
 
-On Wed, Dec 10, 2025 at 10:26:38PM +0900, Manivannan Sadhasivam wrote:
-> On Wed, Dec 10, 2025 at 11:40:04AM +0000, Verma, Devendra wrote:
-> > > -----Original Message-----
-> > > From: Manivannan Sadhasivam <mani@kernel.org>
-> > > On Fri, Nov 21, 2025 at 05:04:54PM +0530, Devendra K Verma wrote:
-> > > > AMD MDB PCIe endpoint support. For AMD specific support added the
-> > > > following
-> > > >   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
-> > > >   - AMD MDB specific driver data
-> > > >   - AMD MDB specific VSEC capability to retrieve the device DDR
-> > > >     base address.
-
-> > > > +/* Synopsys */
-> > > >  #define DW_PCIE_VSEC_DMA_ID                  0x6
-
-> > > > +/* AMD MDB (Xilinx) specific defines */
-> > > > +#define DW_PCIE_XILINX_MDB_VSEC_DMA_ID               0x6
-
-> > > > static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
-
-> > > > +      * Synopsys and AMD (Xilinx) use the same VSEC ID for the
-> > > > + purpose
-> > >
-> > > Same or different?
-> > 
-> > It is the same capability for which Synosys and AMD (Xilinx) share
-> > the common value.
+On Tue, Dec 02, 2025 at 05:04:06PM +0800, zhangsenchuan@eswincomputing.com wrote:
+> From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
 > 
-> This is confusing. You are searching for either DW_PCIE_VSEC_DMA_ID
-> or DW_PCIE_XILINX_MDB_VSEC_DMA_ID below, which means that the VSEC
-> IDs are different.
+> Add driver for the Eswin EIC7700 PCIe host controller, which is based on
+> the DesignWare PCIe core, IP revision 5.96a. The PCIe Gen.3 controller
+> supports a data rate of 8 GT/s and 4 channels, support INTx and MSI
+> interrupts.
 
-This is perennially confusing.
+> +static int eic7700_pcie_host_init(struct dw_pcie_rp *pp)
+> ...
+> +	/*
+> +	 * The PWR and DBI Reset signals are respectively used to reset the
+> +	 * PCIe controller and the DBI registers.
+> +	 * The PERST# signal is a reset signal that simultaneously controls the
+> +	 * PCIe controller, PHY, and Endpoint.
+> +	 * Before configuring the PHY, the PERST# signal must first be
+> +	 * deasserted.
+> +	 * The external reference clock is supplied simultaneously to the PHY
+> +	 * and EP. When the PHY is configurable, the entire chip already has
+> +	 * stable power and reference clock.
+> +	 * The PHY will be ready within 20ms after writing app_hold_phy_rst
+> +	 * register of ELBI register space.
 
-Since this is a "Vendor-Specific" (not a "Designated Vendor-Specific")
-capability, we must search for the per-vendor VSEC ID, i.e.,
-DW_PCIE_VSEC_DMA_ID for PCI_VENDOR_ID_SYNOPSYS devices or
-DW_PCIE_XILINX_MDB_VSEC_DMA_ID for PCI_VENDOR_ID_XILINX devices.
+Add blank lines between paragraphs.
 
-The fact that DW_PCIE_VSEC_DMA_ID == DW_PCIE_XILINX_MDB_VSEC_DMA_ID is
-a coincidence and is not relevant to the code.  The comment that
-"Synopsys and AMD (Xilinx) use the same VSEC ID for the purpose"
-should be removed because it adds confusion and the code doesn't rely
-on that.
+> +static int eic7700_pcie_probe(struct platform_device *pdev)
+> ...
+> +	pci->no_pme_handshake = pcie->data->no_pme_handshake;
 
-However, the subsequent code DOES rely on the fact that the Synopsys
-and the Xilinx VSECs have the same *registers* at the same offsets:
+This needs to go in the 3/3 "PCI: dwc: Add no_pme_handshake flag and
+skip PME_Turn_Off broadcast" patch because "no_pme_handshake" doesn't
+exist yet so this patch doesn't build by itself.
 
-        pci_read_config_dword(pdev, vsec + 0x8, &val);
-        map = FIELD_GET(DW_PCIE_VSEC_DMA_MAP, val);
-        pdata->rg.bar = FIELD_GET(DW_PCIE_VSEC_DMA_BAR, val);
+> +static const struct dev_pm_ops eic7700_pcie_pm_ops = {
+> +	NOIRQ_SYSTEM_SLEEP_PM_OPS(eic7700_pcie_suspend_noirq,
+> +				  eic7700_pcie_resume_noirq)
+> +};
 
-        pci_read_config_dword(pdev, vsec + 0xc, &val);
-        pdata->wr_ch_cnt = min_t(u16, pdata->wr_ch_cnt,
-                                 FIELD_GET(DW_PCIE_VSEC_DMA_WR_CH, val));
-        pdata->rd_ch_cnt = min_t(u16, pdata->rd_ch_cnt,
-                                 FIELD_GET(DW_PCIE_VSEC_DMA_RD_CH, val));
+Use DEFINE_NOIRQ_DEV_PM_OPS() instead.  The collection of PM-related
+macros is confusing to say the least, and they're not used
+consistently across the PCIe drivers, but I *think* the rule of thumb
+should be:
 
-        pci_read_config_dword(pdev, vsec + 0x14, &val);
-        off = val;
-
-        pci_read_config_dword(pdev, vsec + 0x10, &val);
-
-The VSEC ID *values* are not relevant, but the fact that the registers
-in the Synopsys and the Xilinx capabilities are identical *is*
-important and not obvious, so if you share the code that reads those
-registers, there should be a comment about that.
-
-The normal way to use VSEC is to look for a capability for a single
-vendor and interpret it using code for that specific vendor.  I think
-I would split this into separate dw_edma_pcie_get_synopsys_dma_data()
-and dw_edma_pcie_get_xilinx_dma_data() functions to make it obvious
-that these are indeed controlled by different vendors, e.g.,
-
-  dw_edma_pcie_get_synopsys_dma_data()
-  {
-    vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
-                                    DW_PCIE_VSEC_DMA_ID);
-    if (!vsec)
-      return;
-
-    pci_read_config_dword(pdev, vsec + 0x8, &val);
-    ...
-  }
-
-  dw_edma_pcie_get_xilinx_dma_data()
-  {
-    vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
-                                    DW_PCIE_XILINX_MDB_VSEC_DMA_ID);
-    if (!vsec)
-      return;
-
-    pci_read_config_dword(pdev, vsec + 0x8, &val);
-    ...
-
-    vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
-                                    DW_PCIE_XILINX_MDB_VSEC_ID);
-    if (!vsec)
-      return;
-    ...
-  }
-
-It's safe to call both of them for all devices like this:
-
-  dw_edma_pcie_probe
-  {
-    ...
-    dw_edma_pcie_get_synopsys_dma_data(pdev, vsec_data);
-    dw_edma_pcie_get_xilinx_dma_data(pdev, vsec_data);
-    ...
-  }
-
-Most of the code in dw_edma_pcie_get_synopsys_dma_data() would be
-duplicated, but that's OK and acknowledges the fact that Synopsys and
-Xilinx can evolve that VSEC independently.
+  Prefer DEFINE_NOIRQ_DEV_PM_OPS() over NOIRQ_SYSTEM_SLEEP_PM_OPS()
+  when possible and omit pm_sleep_ptr() and pm_ptr().
 
 Bjorn
 
