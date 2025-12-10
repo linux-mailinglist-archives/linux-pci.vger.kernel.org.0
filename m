@@ -1,323 +1,203 @@
-Return-Path: <linux-pci+bounces-42905-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42906-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDE0ECB39E8
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 18:28:29 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 949B2CB3A3F
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 18:36:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3B7813068038
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 17:26:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5E2E53063F42
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 17:35:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 693C8322B85;
-	Wed, 10 Dec 2025 17:26:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51EF71FE44A;
+	Wed, 10 Dec 2025 17:35:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JOKHyd7z"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jgWzs/nx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBD832693F
-	for <linux-pci@vger.kernel.org>; Wed, 10 Dec 2025 17:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE4730DEBC;
+	Wed, 10 Dec 2025 17:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765387596; cv=none; b=BqwFftcQa7pbTQb//nZyQp8Nn2nj0gxIUWF1M/spcP+xX3DSy9sI3d62OJ6c7mIMpMuAbwFKxdmqL6y6Uee7pFvQUCoknNljybqv4ww9FGQOrDx0g/Qx6EMrkJ8JIcVz30HNdH1iGR0YDgewlRQrcCBwSl9Trkx/fBIgEyX8kog=
+	t=1765388132; cv=none; b=Qbuc8ClInaTvbHYO2F9TieTsUYHqyX+NUhdQ+NYr0WvxS+FVM8+9b+3QtqgkpTusqsQU1oCA+WdESeYvnrXIx7QRm3nOnE55oMMQjulNBS+H3kvCO33Iqmt6c3kesccrfbGsNAqHF8KcDGpyMaJRM9d5DrPrBPvM4QUYihYbTOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765387596; c=relaxed/simple;
-	bh=dpRi1Wt2lRsAsD7QogX3l1TfBjgyb9M/+fgl7Hc88CQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=td4ReRFGRYdSJTVSC2oUbeZKn+4OKhQEbBySlKTcypxmDDLdBiDjJ4OkEYH54prwWFp6jC03wJpXMTTxH+LRC7hx5kq6EL8dYSPwTTXekBZ1AtntZF0dIy+NqMBvBAfnXOi97jt5iUa/oqP8Upz/2IZ3TButzgz1R/0b4N7B4vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JOKHyd7z; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20251210172630euoutp01c1a3e3cc56ca6b6beab341623813915c~-6qkbzNjd1862518625euoutp01M
-	for <linux-pci@vger.kernel.org>; Wed, 10 Dec 2025 17:26:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20251210172630euoutp01c1a3e3cc56ca6b6beab341623813915c~-6qkbzNjd1862518625euoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1765387591;
-	bh=ItS84h5zBLp5NS3xoKYdSwEVfzLYaOhm9j3vD23qSU8=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=JOKHyd7zHQQUzjbVOwxNCTNKxwT9ozgNa7Ra3A9FMLoLvYqKhXsKPUJSzqCH3gaeJ
-	 09cfnSLOZL2Mrtk7atzsZ4+c1vQLTvz7O/2F/6mD36IvkkQvZoC1va9opV1hwg7KAh
-	 wsB4pTroXD+FZpOpgu3U7yv2jlarxNepWPtLOb+0=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20251210172630eucas1p1db4c796906e9ceee8a3f5f520dbd19b2~-6qkNYOCT2517825178eucas1p1G;
-	Wed, 10 Dec 2025 17:26:30 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20251210172629eusmtip2e8f73f9b148013a5968c5a9569f27f40~-6qi6PRCk2892928929eusmtip2x;
-	Wed, 10 Dec 2025 17:26:29 +0000 (GMT)
-Message-ID: <3bbb99da-416c-4102-b1a7-85250b2ca578@samsung.com>
-Date: Wed, 10 Dec 2025 18:26:27 +0100
+	s=arc-20240116; t=1765388132; c=relaxed/simple;
+	bh=SrTDm+hCTOqHwCH+dUcITUYtr9IDWDc2eKPok1TWCFw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GhtlczeldQlfndQfK/Gv1VoHy5zd6myL4O4cja11mpgnDOSsi6MAWUg9tbfTupbs1X0JSjsLAhxt6EOd7TPs77FZcJrN1QJW4Bj/5Ly2/IvJDtE2PY7MsuPzplt+q+MKEf79M99kmEa5bPei9sQpwd78Yx6I+LYJzGTFbMZifUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jgWzs/nx; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5BAFmghW000330;
+	Wed, 10 Dec 2025 17:35:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=L4zQdf
+	OsBVZ1D8tqNmZjemJ1jW+qp2IfVM8Rkdj4KME=; b=jgWzs/nx1t60e6kcd+3QeF
+	aH6yQmRaZ1FP9CjqJl7zZ5Z6XGVcKp7tgaptpnIk4D4DpX82k0Kta/daioC1qMuO
+	SmnYXRox0ELHnedFqInPzNgEQBmDr13YLYpSbLZ21SnroFl21CIDgzLy0iZ4Alm2
+	l1d3S5HVkhl6WlL3YffNSoDVRo556CnFR1vFu3bsRVZXujRfG06JHfZa8fhRh30F
+	/qcD8aWl4ZLpU1VlwDUjq8JO5oXi5CSj1pBT4uhL21GyBsQTLaEEGHsctv7dp5iU
+	pAlJwDwGPQePtnkGyaO0YasvhXg+vlBZ0Iu3yocsSVhMARlUEKZ0+Dj+Blr6YiGg
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4avawvb7kh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Dec 2025 17:35:27 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5BAGjT2N002053;
+	Wed, 10 Dec 2025 17:35:26 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4aw11jhsf6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Dec 2025 17:35:26 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5BAHZMhb8913260
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 10 Dec 2025 17:35:22 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 90BAB20043;
+	Wed, 10 Dec 2025 17:35:22 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ACDF720040;
+	Wed, 10 Dec 2025 17:35:21 +0000 (GMT)
+Received: from [9.87.149.55] (unknown [9.87.149.55])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 10 Dec 2025 17:35:21 +0000 (GMT)
+Message-ID: <f16e3e775a5e46672351f03a00295b7c71d6b69a.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 1/2] Revert "PCI/IOV: Add PCI rescan-remove locking
+ when enabling/disabling SR-IOV"
+From: Gerd Bayer <gbayer@linux.ibm.com>
+To: Niklas Schnelle <schnelle@linux.ibm.com>,
+        Bjorn Helgaas
+ <helgaas@kernel.org>
+Cc: Lukas Wunner <lukas@wunner.de>, Keith Busch <kbusch@kernel.org>,
+        Matthew
+ Rosato <mjrosato@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Halil Pasic	 <pasic@linux.ibm.com>, Farhan Ali <alifm@linux.ibm.com>,
+        Julian Ruess	 <julianr@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik	 <gor@linux.ibm.com>,
+        Alexander Gordeev
+ <agordeev@linux.ibm.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date: Wed, 10 Dec 2025 18:35:21 +0100
+In-Reply-To: <20251119-revert_sriov_lock-v2-1-ea50eb1e8f96@linux.ibm.com>
+References: <20251119-revert_sriov_lock-v2-0-ea50eb1e8f96@linux.ibm.com>
+	 <20251119-revert_sriov_lock-v2-1-ea50eb1e8f96@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH v2 0/4] PCI: Fix ACS enablement for Root Ports in OF
- platforms
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, Bjorn
-	Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, Naresh Kamboju
-	<naresh.kamboju@linaro.org>, Pavankumar Kondeti <quic_pkondeti@quicinc.com>,
-	Xingang Wang <wangxingang5@huawei.com>, Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <xofyj6bjbpsxjpgnw6vyfpekpvsmhxcoaqm5k26yuyc2dashux@4nro7bppnwhs>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20251210172630eucas1p1db4c796906e9ceee8a3f5f520dbd19b2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20251202142307eucas1p12a15e5656bb53f48f445c3056d4e3166
-X-EPHeader: CA
-X-CMS-RootMailID: 20251202142307eucas1p12a15e5656bb53f48f445c3056d4e3166
-References: <CGME20251202142307eucas1p12a15e5656bb53f48f445c3056d4e3166@eucas1p1.samsung.com>
-	<20251202-pci_acs-v2-0-5d2759a71489@oss.qualcomm.com>
-	<b63ec0aa-7a4a-4f8d-9b93-e724f3f2a9d1@samsung.com>
-	<de80df44-f797-4e8c-a411-09ed3c1286a3@samsung.com>
-	<cae5cb24-a8b0-4088-bacd-14368f32bdc5@samsung.com>
-	<26a93564-fcdd-4e90-b28d-8cc84cedeaa8@samsung.com>
-	<4clyxcy5pwqaz6uguxnjei4hnxsree6k2uz5upro7khuvklfyo@nc5ebeicuqw4>
-	<0ee48f4a-2341-4967-aca5-3fe6b4cd5fe2@samsung.com>
-	<xofyj6bjbpsxjpgnw6vyfpekpvsmhxcoaqm5k26yuyc2dashux@4nro7bppnwhs>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: SYQ97Xw60bEokNZQoxYYXdoMg9G9vn-r
+X-Proofpoint-ORIG-GUID: SYQ97Xw60bEokNZQoxYYXdoMg9G9vn-r
+X-Authority-Analysis: v=2.4 cv=aY9sXBot c=1 sm=1 tr=0 ts=6939af5f cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=MQOrj0ii5XhWA5c1uIUA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA2MDAwNyBTYWx0ZWRfX19Nv77mEtEVA
+ yzNJzuqfmnFo2/N05qAPZgA+/62b0y0TeUeIutO5JTV7aqTxZAMgUVlks5V1BFnR2aysmvqXPZG
+ XyBe+/4Z8333ge2eQ1SXU6MZSqy3V7RA77wHuqqLru4Ks/0J7ENvAp2s1mxwKKiE38cwqw2Me7m
+ O1VCYR3jKeAWgmVhSTv7KAjOJwWNyQRWcPT4+8BOeVSJFbe8GJvmki0kjVJ8kC6phEgiezJmvCL
+ oeTcWc0gT0Nc/Asrr2DSoiqtqQFBX6jczeuMDdUbWmiDRMV61XNF6EH49fgbnNoNdtabdDkTmfy
+ QK1iUZMcEFNePtglYQG3ahjMaks/8LX4K6bHP+WWD9hHZ6Ywtr7QhM6m6vuTWRv+gHWLEMs6WBT
+ ie/7W+y7TflIkUhy/CqiwAOrx8Oa/A==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-10_02,2025-12-09_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0 bulkscore=0
+ adultscore=0 impostorscore=0 malwarescore=0 priorityscore=1501 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512060007
 
-On 09.12.2025 16:04, Manivannan Sadhasivam wrote:
-> On Tue, Dec 09, 2025 at 01:00:55PM +0100, Marek Szyprowski wrote:
->> On 09.12.2025 12:15, Manivannan Sadhasivam wrote:
->>> On Tue, Dec 09, 2025 at 09:28:38AM +0100, Marek Szyprowski wrote:
->>>> On 09.12.2025 08:31, Marek Szyprowski wrote:
->>>>> On 04.12.2025 14:13, Marek Szyprowski wrote:
->>>>>> On 03.12.2025 13:04, Marek Szyprowski wrote:
->>>>>>> On 02.12.2025 15:22, Manivannan Sadhasivam wrote:
->>>>>>>> This series fixes the long standing issue with ACS in OF platforms.
->>>>>>>> There are
->>>>>>>> two fixes in this series, both fixing independent issues on their
->>>>>>>> own, but both
->>>>>>>> are needed to properly enable ACS on OF platforms.
->>>>>>>>
->>>>>>>> Issue(s) background
->>>>>>>> ===================
->>>>>>>>
->>>>>>>> Back in 2021, Xingang Wang first noted a failure in attaching the
->>>>>>>> HiSilicon SEC
->>>>>>>> device to QEMU ARM64 pci-root-port device [1]. He then tracked down
->>>>>>>> the issue to
->>>>>>>> ACS not being enabled for the QEMU Root Port device and he proposed
->>>>>>>> a patch to
->>>>>>>> fix it [2].
->>>>>>>>
->>>>>>>> Once the patch got applied, people reported PCIe issues with
->>>>>>>> linux-next on the
->>>>>>>> ARM Juno Development boards, where they saw failure in enumerating
->>>>>>>> the endpoint
->>>>>>>> devices [3][4]. So soon, the patch got dropped, but the actual
->>>>>>>> issue with the
->>>>>>>> ARM Juno boards was left behind.
->>>>>>>>
->>>>>>>> Fast forward to 2024, Pavan resubmitted the same fix [5] for his
->>>>>>>> own usecase,
->>>>>>>> hoping that someone in the community would fix the issue with ARM
->>>>>>>> Juno boards.
->>>>>>>> But the patch was rightly rejected, as a patch that was known to
->>>>>>>> cause issues
->>>>>>>> should not be merged to the kernel. But again, no one investigated
->>>>>>>> the Juno
->>>>>>>> issue and it was left behind again.
->>>>>>>>
->>>>>>>> Now it ended up in my plate and I managed to track down the issue
->>>>>>>> with the help
->>>>>>>> of Naresh who got access to the Juno boards in LKFT. The Juno issue
->>>>>>>> was with the
->>>>>>>> PCIe switch from Microsemi/IDT, which triggers ACS Source
->>>>>>>> Validation error on
->>>>>>>> Completions received for the Configuration Read Request from a
->>>>>>>> device connected
->>>>>>>> to the downstream port that has not yet captured the PCIe bus
->>>>>>>> number. As per the
->>>>>>>> PCIe spec r6.0 sec 2.2.6.2, "Functions must capture the Bus and
->>>>>>>> Device Numbers
->>>>>>>> supplied with all Type 0 Configuration Write Requests completed by
->>>>>>>> the Function
->>>>>>>> and supply these numbers in the Bus and Device Number fields of the
->>>>>>>> Requester ID
->>>>>>>> for all Requests". So during the first Configuration Read Request
->>>>>>>> issued by the
->>>>>>>> switch downstream port during enumeration (for reading Vendor ID),
->>>>>>>> Bus and
->>>>>>>> Device numbers will be unknown to the device. So it responds to the
->>>>>>>> Read Request
->>>>>>>> with Completion having Bus and Device number as 0. The switch
->>>>>>>> interprets the
->>>>>>>> Completion as an ACS Source Validation error and drops the
->>>>>>>> completion, leading
->>>>>>>> to the failure in detecting the endpoint device. Though the PCIe
->>>>>>>> spec r6.0, sec
->>>>>>>> 6.12.1.1, states that "Completions are never affected by ACS Source
->>>>>>>> Validation".
->>>>>>>> This behavior is in violation of the spec.
->>>>>>>>
->>>>>>>> Solution
->>>>>>>> ========
->>>>>>>>
->>>>>>>> In September, I submitted a series [6] to fix both issues. For the
->>>>>>>> IDT issue,
->>>>>>>> I reused the existing quirk in the PCI core which does a dummy
->>>>>>>> config write
->>>>>>>> before issuing the first config read to the device. And for the ACS
->>>>>>>> enablement
->>>>>>>> issue, I just resubmitted the original patch from Xingang which called
->>>>>>>> pci_request_acs() from devm_of_pci_bridge_init().
->>>>>>>>
->>>>>>>> But during the review of the series, several comments were received
->>>>>>>> and they
->>>>>>>> required the series to be reworked completely. Hence, in this
->>>>>>>> version, I've
->>>>>>>> incorported the comments as below:
->>>>>>>>
->>>>>>>> 1. For the ACS enablement issue, I've moved the pci_enable_acs()
->>>>>>>> call from
->>>>>>>> pci_acs_init() to pci_dma_configure().
->>>>>>>>
->>>>>>>> 2. For the IDT issue, I've cached the ACS capabilities (RO) in
->>>>>>>> 'pci_dev',
->>>>>>>> collected the broken capability for the IDT switches in the quirk
->>>>>>>> and used it to
->>>>>>>> disable the capability in the cache. This also allowed me to get
->>>>>>>> rid of the
->>>>>>>> earlier workaround for the switch.
->>>>>>>>
->>>>>>>> [1]
->>>>>>>> https://lore.kernel.org/all/038397a6-57e2-b6fc-6e1c-7c03b7be9d96@huawei.com
->>>>>>>> [2]
->>>>>>>> https://lore.kernel.org/all/1621566204-37456-1-git-send-email-wangxingang5@huawei.com
->>>>>>>> [3]
->>>>>>>> https://lore.kernel.org/all/01314d70-41e6-70f9-e496-84091948701a@samsung.com
->>>>>>>> [4]
->>>>>>>> https://lore.kernel.org/all/CADYN=9JWU3CMLzMEcD5MSQGnaLyDRSKc5SofBFHUax6YuTRaJA@mail.gmail.com
->>>>>>>> [5]
->>>>>>>> https://lore.kernel.org/linux-pci/20241107-pci_acs_fix-v1-1-185a2462a571@quicinc.com
->>>>>>>> [6]
->>>>>>>> https://lore.kernel.org/linux-pci/20250910-pci-acs-v1-0-fe9adb65ad7d@oss.qualcomm.com
->>>>>>>>
->>>>>>> Thanks for this patchset! I've tested it on my ARM Juno R1 and it
->>>>>>> looks that it almost works fine. This patchset even fixed some
->>>>>>> issues with PCI devices probe, as I again see SATA and GBit ethernet
->>>>>>> devices, which were missing since Linux v6.14 (it looks that
->>>>>>> I've also missed this in my tests).
->>>>>>>
->>>>>>> # lspci
->>>>>>> 00:00.0 PCI bridge: PLDA PCI Express Core Reference Design (rev 01)
->>>>>>> 01:00.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
->>>>>>> 8090 (rev 02)
->>>>>>> 02:01.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
->>>>>>> 8090 (rev 02)
->>>>>>> 02:02.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
->>>>>>> 8090 (rev 02)
->>>>>>> 02:03.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
->>>>>>> 8090 (rev 02)
->>>>>>> 02:0c.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
->>>>>>> 8090 (rev 02)
->>>>>>> 02:10.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
->>>>>>> 8090 (rev 02)
->>>>>>> 02:1f.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
->>>>>>> 8090 (rev 02)
->>>>>>> 03:00.0 Mass storage controller: Silicon Image, Inc. SiI 3132 Serial
->>>>>>> ATA Raid II Controller (rev 01)
->>>>>>> 08:00.0 Ethernet controller: Marvell Technology Group Ltd. 88E8057
->>>>>>> PCI-E Gigabit Ethernet Controller
->>>>>>>
->>>>>>> However there is also a regression. After applying this patchset
->>>>>>> system suspend/resume stopped working. This is probably related to
->>>>>>> this message:
->>>>>>>
->>>>>>> pcieport 0000:02:1f.0: Unable to change power state from D0 to
->>>>>>> D3hot, device inaccessible
->>>>>>>
->>>>>>> which appears after calling 'rtcwake -s10 -mmem'. This might not be
->>>>>>> related to this patchset, so I probably need to apply it on older
->>>>>>> kernel releases and check.
->>>>>> Just one more information - I've applied this patchset on top of
->>>>>> v6.16 and it works perfectly on ARM Juno R1. SATA and GBit ethernet
->>>>>> are visible again and system suspend/resume works too, so the issue
->>>>>> with the latter on top of v6.18 seems not to be directly related to
->>>>>> $subject patchset. I will try to bisect this issue when I have some
->>>>>> spare time.
->>>>>>
->>>>>> Feel free to add:
->>>>>>
->>>>>> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>>>> I spent some time analyzing this regression on Juno R1 and found that:
->>>>>
->>>>> 1. SATA and GBit Ethernet stopped working after commit bcb81ac6ae3c
->>>>> ("iommu: Get DT/ACPI parsing into the proper probe path") merged to
->>>>> v6.15-rc1.
->>>>>
->>>>> 2. With $subject patch applied to enable SATA & GBit ethernet again,
->>>>> system suspend/resume stopped working after commit f3ac2ff14834
->>>>> ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree
->>>>> platforms") merged to v6.18-rc1.
->>>>>
->>> Yes, this was expected as if you don't disable ACS, it will cause issues in
->>> detecting the devices.
->>>
->>>>> If I got it right, according to the latter commit message, some quirks
->>>>> have to be added to fix the suspend/resume issue. Unfortunately I have
->>>>> no idea if this is the Juno R1 or the given PCI devices specific issue.
->>>> And one more note, commit df5192d9bb0e ("PCI/ASPM: Enable only L0s and
->>>> L1 for devicetree platforms") doesn't fix the suspend/resume issue
->>>> either (with $subject patchset applied on top of it).
->>>>
->>> Interesting. Can you do:
->>>
->>> echo performance > /sys/module/pcie_aspm/parameters/policy
->>>
->>> and then suspend?
->> After the above command, system suspend/resume works again.
->>
-> Ok, so ASPM L0s/L1 seems to be the issue. But I'm not quite sure why it causes
-> issue during suspend/resume. If the device/controller doesn't play well with
-> ASPM L0s/L1, it should atleast cause the issue before entering suspend.
->
-> I'm clueless here atm...
+On Wed, 2025-11-19 at 13:34 +0100, Niklas Schnelle wrote:
+> This reverts commit 05703271c3cd ("PCI/IOV: Add PCI rescan-remove
+> locking when enabling/disabling SR-IOV") which causes a deadlock by
+> recursively taking pci_rescan_remove_lock when sriov_del_vfs() is called
+> as part of pci_stop_and_remove_bus_device(). For example with the
+> following sequence of commands:
+>=20
+> $ echo <NUM> > /sys/bus/pci/devices/<pf>/sriov_numvfs
+> $ echo 1 > /sys/bus/pci/devices/<pf>/remove
+>=20
+> A trimmed trace of the deadlock on a mlx5 device is as below:
+>=20
+>  mutex_lock_nested+0x3c/0x50
+>  sriov_disable+0x34/0x140
+>  mlx5_sriov_disable+0x50/0x80 [mlx5_core]
+>  remove_one+0x5e/0xf0 [mlx5_core]
+>  pci_device_remove+0x3c/0xa0
+>  device_release_driver_internal+0x18e/0x280
+>  pci_stop_bus_device+0x82/0xa0
+>  pci_stop_and_remove_bus_device_locked+0x5e/0x80
+>  remove_store+0x72/0x90
 
-Definitely something gets broken during suspend, after adding 
-'no_console_suspend' to kernel command line I see the following messages:
+I just hit this recursive lock issue when running "reset" instead of
+"remove"
 
-# time rtcwake -s10 -mmem
-rtcwake: wakeup from "mem" using /dev/rtc0 at Wed Dec 10 17:04:12 2025
-PM: suspend entry (deep)
-Filesystems sync: 0.001 seconds
-Freezing user space processes
-Freezing user space processes completed (elapsed 0.005 seconds)
-OOM killer disabled.
-Freezing remaining freezable tasks
-Freezing remaining freezable tasks completed (elapsed 0.003 seconds)
-psmouse serio1: Failed to disable mouse on 1c070000.kmi
-psmouse serio0: Failed to disable mouse on 1c060000.kmi
-pcieport 0000:02:1f.0: Unable to change power state from D0 to D3hot, 
-device inaccessible
-Disabling non-boot CPUs ...
-psci: CPU5 killed (polled 0 ms)
-psci: CPU4 killed (polled 0 ms)
-psci: CPU3 killed (polled 0 ms)
-psci: CPU2 killed (polled 0 ms)
-psci: CPU1 killed (polled 4 ms)
 
-and system never wakes up.
+$ echo <NUM> > /sys/bus/pci/devices/<pf>/sriov_numvfs
+$ echo 1 > /sys/bus/pci/devices/<pf>/reset    =20
 
-I assume that this 'pcieport 0000:02:1f.0: Unable to change power state 
-from D0 to D3hot, device inaccessible' message is crucial here. It 
-doesn't appear when I change the pcie_aspm policy to performance (as You 
-suggested in previous mail).
+> This is not a complete fix as it restores the issue the cited commit
+> tried to solve.
+>=20
+> Cc: stable@vger.kernel.org
+> Fixes: 05703271c3cd ("PCI/IOV: Add PCI rescan-remove locking when enablin=
+g/disabling SR-IOV")
+> Reported-by: Benjamin Block <bblock@linux.ibm.com>
+> Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
+>  drivers/pci/iov.c | 5 -----
+>  1 file changed, 5 deletions(-)
+>=20
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index 77dee43b785838d215b58db2d22088e9346e0583..ac4375954c9479b5f4a0e666b=
+5215094fdaeefc2 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -629,18 +629,15 @@ static int sriov_add_vfs(struct pci_dev *dev, u16 n=
+um_vfs)
+>  	if (dev->no_vf_scan)
+>  		return 0;
+> =20
+> -	pci_lock_rescan_remove();
+>  	for (i =3D 0; i < num_vfs; i++) {
+>  		rc =3D pci_iov_add_virtfn(dev, i);
+>  		if (rc)
+>  			goto failed;
+>  	}
+> -	pci_unlock_rescan_remove();
+>  	return 0;
+>  failed:
+>  	while (i--)
+>  		pci_iov_remove_virtfn(dev, i);
+> -	pci_unlock_rescan_remove();
+> =20
+>  	return rc;
+>  }
+> @@ -765,10 +762,8 @@ static void sriov_del_vfs(struct pci_dev *dev)
+>  	struct pci_sriov *iov =3D dev->sriov;
+>  	int i;
+> =20
+> -	pci_lock_rescan_remove();
+>  	for (i =3D 0; i < iov->num_VFs; i++)
+>  		pci_iov_remove_virtfn(dev, i);
+> -	pci_unlock_rescan_remove();
+>  }
+> =20
+>  static void sriov_disable(struct pci_dev *dev)
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+Feel free to add my
+Acked-by: Gerd Bayer <gbayer@linux.ibm.com>
 
