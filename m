@@ -1,67 +1,62 @@
-Return-Path: <linux-pci+bounces-42914-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42915-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F29D9CB42D1
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 23:52:13 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E783ECB42DA
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 23:53:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DB4433025A7B
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 22:50:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5002F30D0EAF
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 22:51:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD9522D9482;
-	Wed, 10 Dec 2025 22:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 963472D3A70;
+	Wed, 10 Dec 2025 22:51:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DIXY6p8L"
+	dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b="QaD2TaZh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 722A926B2AD;
-	Wed, 10 Dec 2025 22:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76D9284686
+	for <linux-pci@vger.kernel.org>; Wed, 10 Dec 2025 22:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765407057; cv=none; b=NJL8FjP99Hm7/C4EO6EYpaAzuBl1wHQ4i4ba1PFSggF9F+G6GfApADVQBgno8d8DZjKVPA70zA2AW6ORcrE6z0sNiwj1teobPkn6mvlWrxN8F4u+1KsLrmGY7SXy+LRqY9HpII3h8ushkfAwBfcK7SVpcUM2Ir2dnTO4yFJgSFQ=
+	t=1765407085; cv=none; b=uJwt9x+XWblwVXkbYPMJrozyc7xshvFRZoEJUJi2jzRsnuRtO+DppccL8T94PuqKxQCl2/Y/rDn9jWPjBXKw0Di35Pzwj9IYpVwNBuH76BeKd2tAfEk/oGDDqbOTdQXZFmP1DMjbGnKRQcrjyN6guoqsYAJihlFR2cCOIotcU+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765407057; c=relaxed/simple;
-	bh=a2bzuFLMtFhycfladekqoVs0KC0eCxKrtmBPj8wRj2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=kh9rDvHOk7Y3351SUMTY9VC2yQmMWbcD4R17pa2AE2vV2a1Q66TGLm38EHprGK3czTJlCJlgAJEE+iHuIiR9qv3g/n4NuHAZO2rBza/x4W/1ux0/M5gFFl9RX1gZcTbVr85tdeVSeb0FShMIJFrmNFvbOAnWZlGTJ0sP5a7YT1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DIXY6p8L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3412EC4CEF1;
-	Wed, 10 Dec 2025 22:50:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765407057;
-	bh=a2bzuFLMtFhycfladekqoVs0KC0eCxKrtmBPj8wRj2I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=DIXY6p8LCPnJLjTXOvDC6QVcMRuMXwOKfkk9G5nBdKrdw12H04e9XOplPEaTYQEQu
-	 qN1UMXZoVsxKgTyduWwg/mc9Xz6xSe/NXPVCTOeM7MBf4Y6owfshKbx9t1FeL57Cy2
-	 kR1lMy7F3jGcTZ5QGXFtt1cKPpUdFJ+F5FhFZQzN2MQFSHx0dxlPLTtsg+oK8PfHPo
-	 ygIXiJGtF+R+PIaIV0xR8XFMAGjFsIbQiKUQV1u1tKlHVML6M48AdG14XCJC/+r2wk
-	 h/7D+HK1dFOxpErXp4kNUumDSXqEAKCch1UQ/wQKSOCvunW9qNNdFDOHLE6Zvqj23E
-	 X34k775mY3NDw==
-Date: Wed, 10 Dec 2025 16:50:55 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Koichiro Den <den@valinux.co.jp>, Niklas Cassel <cassel@kernel.org>,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
-	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH 2/8] PCI: endpoint: pci-epf-test: use new DMA API to
- simple code
-Message-ID: <20251210225055.GA3544934@bhelgaas>
+	s=arc-20240116; t=1765407085; c=relaxed/simple;
+	bh=gLZFd0X3P8YbqJjv7prlihyxrq1Bm8MnG4Rhz+JPNF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bY86EIOPr824LMlWM21d1ItfdRe6w+O/MF93GEPb1WoZAmP5O146D5kSsNwi3X/SMgxoywuAF/hSncMWumUVYXP2tSO6MXukkEX2xGZvO9G28vskE/kB/Cszurc9DX7BKTSOVb2XTIgDlfkDfQAusy1h+Vvl/PBb2df2LKjw95k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me; spf=pass smtp.mailfrom=ik.me; dkim=pass (1024-bit key) header.d=ik.me header.i=@ik.me header.b=QaD2TaZh; arc=none smtp.client-ip=185.125.25.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ik.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ik.me
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4dRWD12Ggzz1vB;
+	Wed, 10 Dec 2025 23:51:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ik.me; s=20200325;
+	t=1765407073; bh=BwZcPkwxeUAPL1DWDSRbquoxF+EJnKJ1r4hZeUQymzo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QaD2TaZhg0TFtupyfZM5xCP4WsywzUEHpzzBsYYPiXYZ/m3s0/IbmQhdF5xuMHtwd
+	 6hG6fqOqqVtSgQR4FIT5qaOacumxNSStIqR8J9JSl7ArDdXEgwuku8HaLJe917eAUl
+	 iRnKXRUjv+qpqzxJUA9EcbCe+43w/1iE7+UtrHoI=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4dRWCz43vVzwVg;
+	Wed, 10 Dec 2025 23:51:11 +0100 (CET)
+Date: Wed, 10 Dec 2025 23:51:10 +0100
+From: Ewan CHORYNSKI <ewan.chorynski@ik.me>
+To: Zhi Wang <zhiw@nvidia.com>
+Cc: rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org, 
+	nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org, airlied@gmail.com, dakr@kernel.org, 
+	aliceryhl@google.com, bhelgaas@google.com, kwilczynski@kernel.org, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	lossin@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, 
+	markus.probst@posteo.de, helgaas@kernel.org, cjia@nvidia.com, alex@shazbot.org, 
+	smitra@nvidia.com, ankita@nvidia.com, aniketa@nvidia.com, kwankhede@nvidia.com, 
+	targupta@nvidia.com, acourbot@nvidia.com, joelagnelf@nvidia.com, jhubbard@nvidia.com, 
+	zhiwang@kernel.org
+Subject: Re: [RFC 2/7] [!UPSTREAM] rust: pci: support configuration space
+ access
+Message-ID: <h5pp4aqaglql5gak2ni7pw2jrcuecjaog3fmeu72p4kbcn6vgf@pzfiofsvoxe3>
+References: <20251206124208.305963-1-zhiw@nvidia.com>
+ <20251206124208.305963-3-zhiw@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,14 +65,24 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251208-dma_prep_config-v1-2-53490c5e1e2a@nxp.com>
+In-Reply-To: <20251206124208.305963-3-zhiw@nvidia.com>
+Feedback-ID: :67b9f1ba44ebda2:ham:e74197f626dda86
+X-Infomaniak-Routing: alpha
 
-On Mon, Dec 08, 2025 at 12:09:41PM -0500, Frank Li wrote:
-> Using new API dmaengine_prep_slave_single_config() to simple code.
+On Sat, Dec 06, 2025 at 12:42:03PM +0000, Zhi Wang wrote:
+> +    /// Find the extended capability
+> +    pub fn find_ext_capability(&self, cap: i32) -> Option<u16> {
+> +        // SAFETY: `self.as_raw()` is a valid pointer to a `struct pci_dev`.
+> +        let offset = unsafe { bindings::pci_find_ext_capability(self.as_raw(), cap) };
+> +        if offset != 0 {
+> +            Some(offset as u16)
+> +        } else {
+> +            None
+> +        }
+> +    }
 
-Capitalize and include actual interface:
-
-  PCI: endpoint: pci-epf-test: Use dmaengine_prep_slave_single_config() to simplify code
-
-  Use dmaengine_prep_slave_single_config() to simplify code
+This is a good candidate to use `Option<NonZeroU16>` for the return
+type as you don't expect Some(0) to be valid. It will also enable niche
+optimisation for the Option. The whole if statement can even be replaced
+by `NonZeroU16::new(offset as 16)` which return an option directly.
 
