@@ -1,125 +1,183 @@
-Return-Path: <linux-pci+bounces-42902-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42903-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7359DCB3913
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 18:13:27 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C23FCB3928
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 18:15:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 5CCAB3016CBA
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 17:13:24 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 56FAD300BD85
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 17:15:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FB8232548C;
-	Wed, 10 Dec 2025 17:13:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BDC72FFFB6;
+	Wed, 10 Dec 2025 17:15:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G88BvYO1"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oL++Hblx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF49217F31;
-	Wed, 10 Dec 2025 17:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A6C2326D6D;
+	Wed, 10 Dec 2025 17:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765386802; cv=none; b=nDAFYVjcDQgHGnbBfkR1tYKbiutLos1spTgiWiCJGBnq1Ulz0mLaKa1dYIVU4uk3RprwvAL8FS0lKBw8Cn7wzk/17P1ArY2JuKCEIauESZXg3kYqIvka6Y+al4ItSL91MhdGYg2Jo8oABiP7OSwyL2D/bfw3aaXBYsy1T3IHu2Q=
+	t=1765386936; cv=none; b=c46V1IdR/E1H7PISyvwNCM4f+EUf4G/tLiMP8Rh9kQesxTS2WvBz4+mUsMmQWXOZerttNryNE+THJ7eTbNWAq15EdhZXHnW6d7r4FIdK3lwfCJCNxnZp5gCopw/hOfH8pDc9tPonyBHVacqF1n7UPtU5l+UWqcMK5qMyhn+NIos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765386802; c=relaxed/simple;
-	bh=pJS26ygWKx0BxFMDuxBlj7ePrti1NRj9FoI83CGRq6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=shc8fzoQCHAF3hNsLZuSweio2SzLqmD+BrqOLZyzHBNK0bSCtS/lIf5dJRUJorzAlbhxDHvNwbFgzYie1SDqxp0BX+QeINQAAbkh/L5PtVrZS5QQUy0MMZ+Mxyd6Wx7bzGAuHKkLLHIm/S1MSwLqf6RppwqbaPUvrEpYMgLQoK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G88BvYO1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 396F3C116B1;
-	Wed, 10 Dec 2025 17:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765386801;
-	bh=pJS26ygWKx0BxFMDuxBlj7ePrti1NRj9FoI83CGRq6g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=G88BvYO13k++ceLZOusrkKFuwb0efwFVR07wP7OUaQGI1alYOkWjjMsOMlsxjVEBT
-	 ESPj7ZYLrQYXEKqqYEaw2zCsIvWHZBPRkzX59WmY160LTBl1sOoGxUlpx2NrrMWiyx
-	 2K2CzfGaglEaWE/jdAx1RvHEuHQNCg+B2OH9oFHx9Gt/aPzZCb4uvhtPG41HAfa/oR
-	 4NRzJDaHJ3d5XFh2WOZeb1Opd9VEKTnQH9ieBNFoeGGCj19nxGXjb/VzHdGIS7SM0C
-	 nBEyP6ZQkbFfYN3IfuARMmvJ9FIaPcFsV+dUB5lmczL40ttoZFvLogIiQUntK142st
-	 GDVXyr/bVAI3A==
-Date: Wed, 10 Dec 2025 11:13:19 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Christian Marangi <ansuelsmth@gmail.com>
-Subject: Re: [PATCH 1/1] PCI: Use resource_set_range() that correctly sets
- ->end
-Message-ID: <20251210171319.GA3530931@bhelgaas>
+	s=arc-20240116; t=1765386936; c=relaxed/simple;
+	bh=LRNzVybuwbgBFh9YPtAbx0MGh2LsdLGYaXnP4far3EM=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=G7LjilG4WNc9hMDj/Yoeu2qe9BSk36pZsl0n/j/UCgSnWd94/6tsdAqq2F0jd7VpBWuPzU1kUMOT//1EMhv8k2Bz4/Ve49bLGPGhKlq5N+9tzlv/VcTlNJy0WE/+hp8XUopqWLYhYgszqk2OLr+q+JT5x1oIC3nMU/2NcJS/c98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=oL++Hblx; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.201.246] (unknown [4.194.122.136])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4FCF12116032;
+	Wed, 10 Dec 2025 09:15:21 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4FCF12116032
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1765386932;
+	bh=naH2dhqkC83NKYwuVneGxpeuFjL7uWm/g5PqJfAwzi8=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=oL++HblxZOe3KC+0dbwyS26fX1D4vysW+I8TvFOG8UAHeaZzn3tBtn7otA9Yep/f1
+	 39xqqimQHAr0/IdqsoA4LknRt0YA7n2CFRetNYKDJRKdghpedMCLvXq9umx51FD+Gh
+	 59tkMZ2KwY3WTMn5w1aDtmKrCFh3sopLzDubqErA=
+Message-ID: <0c34e66f-7766-4b4f-a04d-77dbc330f1fe@linux.microsoft.com>
+Date: Wed, 10 Dec 2025 09:15:18 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251208145654.5294-1-ilpo.jarvinen@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ iommu@lists.linux.dev, linux-pci@vger.kernel.org,
+ easwar.hariharan@linux.microsoft.com, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+ robh@kernel.org, bhelgaas@google.com, arnd@arndb.de, joro@8bytes.org,
+ will@kernel.org, robin.murphy@arm.com, jacob.pan@linux.microsoft.com,
+ nunodasneves@linux.microsoft.com, mrathor@linux.microsoft.com,
+ mhklinux@outlook.com, peterz@infradead.org, linux-arch@vger.kernel.org
+Subject: Re: [RFC v1 5/5] iommu/hyperv: Add para-virtualized IOMMU support for
+ Hyper-V guest
+To: Yu Zhang <zhangyu1@linux.microsoft.com>
+References: <20251209051128.76913-1-zhangyu1@linux.microsoft.com>
+ <20251209051128.76913-6-zhangyu1@linux.microsoft.com>
+From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <20251209051128.76913-6-zhangyu1@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 08, 2025 at 04:56:54PM +0200, Ilpo Järvinen wrote:
-> __pci_read_base() sets resource start and end addresses when resource
-> is larger than 4G but pci_bus_addr_t or resource_size_t are not capable
-> of representing 64-bit PCI addresses. This creates a problematic
-> resource that has non-zero flags but the start and end addresses do not
-> yield to resource size of 0 but 1.
+On 12/8/2025 9:11 PM, Yu Zhang wrote:
+> Add a para-virtualized IOMMU driver for Linux guests running on Hyper-V.
+> This driver implements stage-1 IO translation within the guest OS.
+> It integrates with the Linux IOMMU core, utilizing Hyper-V hypercalls
+> for:
+>  - Capability discovery
+>  - Domain allocation, configuration, and deallocation
+>  - Device attachment and detachment
+>  - IOTLB invalidation
 > 
-> Replace custom resource addresses setup with resource_set_range()
-> that correctly sets end address as -1 which results in resource_size()
-> returning 0.
+> The driver constructs x86-compatible stage-1 IO page tables in the
+> guest memory using consolidated IO page table helpers. This allows
+> the guest to manage stage-1 translations independently of vendor-
+> specific drivers (like Intel VT-d or AMD IOMMU).
 > 
-> For consistency, also use resource_set_range() in the other branch that
-> does size based resource setup.
-
-IIUC this fixes an ath11k regression (and probably others).  And
-typically when booting a 32-bit kernel with a device with a BAR larger
-than 4GB?
-
-Christian, is there any dmesg snippet we could include here to help
-users diagnose the problem?  I guess the "can't handle BAR larger than
-4GB" message is probably one clue.
-
-Are you able to test this and verify that it fixes the regression you
-saw?
-
-> Fixes: 23b13bc76f35 ("PCI: Fail safely if we can't handle BARs larger than 4GB")
-> Link: https://lore.kernel.org/all/20251207215359.28895-1-ansuelsmth@gmail.com/T/#m990492684913c5a158ff0e5fc90697d8ad95351b
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Cc: stable@vger.kernel.org
-> Cc: Christian Marangi <ansuelsmth@gmail.com>
+> Hyper-v consumes this stage-1 IO page table, when a device domain is
+> created and configured, and nests it with the host's stage-2 IO page
+> tables, therefore elemenating the VM exits for guest IOMMU mapping
+> operations.
+> 
+> For guest IOMMU unmapping operations, VM exits to perform the IOTLB
+> flush(and possibly the device TLB flush) is still unavoidable. For
+> now, HVCALL_FLUSH_DEVICE_DOMAIN	is used to implement a domain-selective
+> IOTLB flush. New hypercalls for finer-grained hypercall will be provided
+> in future patches.
+> 
+> Co-developed-by: Wei Liu <wei.liu@kernel.org>
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> Co-developed-by: Jacob Pan <jacob.pan@linux.microsoft.com>
+> Signed-off-by: Jacob Pan <jacob.pan@linux.microsoft.com>
+> Co-developed-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+> Signed-off-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+> Signed-off-by: Yu Zhang <zhangyu1@linux.microsoft.com>
 > ---
->  drivers/pci/probe.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+>  drivers/iommu/hyperv/Kconfig  |  14 +
+>  drivers/iommu/hyperv/Makefile |   1 +
+>  drivers/iommu/hyperv/iommu.c  | 608 ++++++++++++++++++++++++++++++++++
+>  drivers/iommu/hyperv/iommu.h  |  53 +++
+>  4 files changed, 676 insertions(+)
+>  create mode 100644 drivers/iommu/hyperv/iommu.c
+>  create mode 100644 drivers/iommu/hyperv/iommu.h
 > 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 124d2d309c58..b8294a2f11f9 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -287,8 +287,7 @@ int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
->  		if ((sizeof(pci_bus_addr_t) < 8 || sizeof(resource_size_t) < 8)
->  		    && sz64 > 0x100000000ULL) {
->  			res->flags |= IORESOURCE_UNSET | IORESOURCE_DISABLED;
-> -			res->start = 0;
-> -			res->end = 0;
-> +			resource_set_range(res, 0, 0);
->  			pci_err(dev, "%s: can't handle BAR larger than 4GB (size %#010llx)\n",
->  				res_name, (unsigned long long)sz64);
->  			goto out;
-> @@ -297,8 +296,7 @@ int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
->  		if ((sizeof(pci_bus_addr_t) < 8) && l) {
->  			/* Above 32-bit boundary; try to reallocate */
->  			res->flags |= IORESOURCE_UNSET;
-> -			res->start = 0;
-> -			res->end = sz64 - 1;
-> +			resource_set_range(res, 0, sz64);
->  			pci_info(dev, "%s: can't handle BAR above 4GB (bus address %#010llx)\n",
->  				 res_name, (unsigned long long)l64);
->  			goto out;
-> 
-> base-commit: 43dfc13ca972988e620a6edb72956981b75ab6b0
-> -- 
-> 2.39.5
-> 
+
+<snip>
+
+> +
+> +static int __init hv_iommu_init(void)
+> +{
+> +	int ret = 0;
+> +	struct hv_iommu_dev *hv_iommu = NULL;
+> +	struct hv_output_get_iommu_capabilities hv_iommu_cap = {0};
+> +
+> +	if (no_iommu || iommu_detected)
+> +		return -ENODEV;
+> +
+> +	if (!hv_is_hyperv_initialized())
+> +		return -ENODEV;
+> +
+> +	if (hv_iommu_detect(&hv_iommu_cap) ||
+> +	    !hv_iommu_present(hv_iommu_cap.iommu_cap) ||
+> +	    !hv_iommu_s1_domain_supported(hv_iommu_cap.iommu_cap))
+> +		return -ENODEV;
+> +
+> +	iommu_detected = 1;
+> +	pci_request_acs();
+> +
+> +	hv_iommu = kzalloc(sizeof(*hv_iommu), GFP_KERNEL);
+> +	if (!hv_iommu)
+> +		return -ENOMEM;
+> +
+> +	hv_init_iommu_device(hv_iommu, &hv_iommu_cap);
+> +
+> +	ret = hv_initialize_static_domains();
+> +	if (ret) {
+> +		pr_err("hv_initialize_static_domains failed: %d\n", ret);
+> +		goto err_sysfs_remove;
+
+This should be goto err_free since we haven't done the sysfs_add yet
+
+> +	}
+> +
+> +	ret = iommu_device_sysfs_add(&hv_iommu->iommu, NULL, NULL, "%s", "hv-iommu");
+> +	if (ret) {
+> +		pr_err("iommu_device_sysfs_add failed: %d\n", ret);
+> +		goto err_free;
+
+And this should be probably a goto delete_static_domains that cleans up the allocated static
+domains...
+
+> +	}
+> +
+> +
+> +	ret = iommu_device_register(&hv_iommu->iommu, &hv_iommu_ops, NULL);
+> +	if (ret) {
+> +		pr_err("iommu_device_register failed: %d\n", ret);
+> +		goto err_sysfs_remove;
+> +	}
+> +
+> +	register_syscore_ops(&hv_iommu_syscore_ops);
+> +
+> +	pr_info("Microsoft Hypervisor IOMMU initialized\n");
+> +	return 0;
+> +
+> +err_sysfs_remove:
+> +	iommu_device_sysfs_remove(&hv_iommu->iommu);
+> +err_free:
+> +	kfree(hv_iommu);
+> +	return ret;
+> +}
+> +
+> +device_initcall(hv_iommu_init);
+
+<snip>
 
