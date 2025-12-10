@@ -1,288 +1,316 @@
-Return-Path: <linux-pci+bounces-42873-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42874-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A67FCB19CE
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 02:43:05 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A074CB1AEE
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 02:58:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B3A6530CB813
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 01:43:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CA15A3135C98
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 01:56:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D06471FCFEF;
-	Wed, 10 Dec 2025 01:43:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C33D233721;
+	Wed, 10 Dec 2025 01:56:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cb2gQ4y4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wr4zfoJ1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40C31FBC8C
-	for <linux-pci@vger.kernel.org>; Wed, 10 Dec 2025 01:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265C223D7F0
+	for <linux-pci@vger.kernel.org>; Wed, 10 Dec 2025 01:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765330982; cv=none; b=fXWxN1br0cvAXtLzWcw/a1VLykAXN9p4QM1B1M9oIDmAabV2CQ9RP8laCotu7gTY2sBLQJzFGBOKDNE9Aw1Y8JBwb0/FH3unEz6d4usYmKOjPFyXJIGylL9We4CnD8UDlz6dpPTbBfXRZ/a1QgS6X5xmPuchOI9Q2iSUvJ77Apo=
+	t=1765331800; cv=none; b=I2UK+r+QgwcnHqr3t89dEnvsUTkjVg+puI/3mHSd9F1zXa9Qe1fWNBLipzs/LQwIUjH/b1WYbmelqgGjsdaFPnhggQvqLERlZCBle1Kpydyn6rP4nmXXPpOPvD/Ufg5bnIxGYDqNXS3oaOZeorQ6PVEv6hKb0OTwOW30c90i1K0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765330982; c=relaxed/simple;
-	bh=Vskog0CpTIgdsaZOMf/ddar4Qoee8OXICbY5d7Oq7lw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HE8W42QsJPY9Dq1656LoTKlTr/nZAJwjhis1WzmY5K9fgFWc3yf6woczge5vnAbKLJkj8ht0xH0B7vEi1bEVDSc1/rRhE+pX4DnUgGYY5E0e2kNSOXp7yVvDNPylQRzHdGbo9GO6txtPp+VUBIz46wc3wFSvho0mfNyj4OXvmNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cb2gQ4y4; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1765330970; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=GbFZbxv+RQ+BM8C1hp0xSy6g/BldGeHIOU69Qtm+nbM=;
-	b=cb2gQ4y4BXHpPNMr5HB05Z/aUEMoxNP4u4rX7ScDTbTgwUxxMiSi6hEBXXi9UBk0FYzQ3dEANensDCEXhPbiI6oEKSNgcEsazYUHhMGSlvv7Wjb/eRgmjmysLwVDGyfn86Dcj8efx3aekBlQulSCu17fvuBjj+WluwCM1sJJwOY=
-Received: from 30.178.82.212(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0WuUd04u_1765330969 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 10 Dec 2025 09:42:49 +0800
-Message-ID: <ba4c3c2c-6b73-4e93-a57f-51b61a13816d@linux.alibaba.com>
-Date: Wed, 10 Dec 2025 09:42:48 +0800
+	s=arc-20240116; t=1765331800; c=relaxed/simple;
+	bh=X4DJeGka0bu9RIKgKWMUJEI7buygestyhQMN3mRduqA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DMds1dXKFV4heNYVs2V4Bue0ZolyftZ+AZ2HmH/WZDwlsGvoA2CAP0aa6NQRrZqlyDxkvovxNkIRbqJZd8j7mUhaRTchijQgHMPCriTsuqyG4f4smCjPkI9hWIsEDJ+c6mxxCi9fxm6owG61ZM/atM/lfPHEXpsHJL7sjHIbxZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wr4zfoJ1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3392C19423
+	for <linux-pci@vger.kernel.org>; Wed, 10 Dec 2025 01:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765331799;
+	bh=X4DJeGka0bu9RIKgKWMUJEI7buygestyhQMN3mRduqA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Wr4zfoJ10i1/Nm2mLDBrH6HkszeMZLY9sRh8p0wqogXK0nNtD5OIydlN107B9lzN6
+	 /H6rL6l4i6kaeJ/sFUvE8kX2zfDIknjK+OdN0Yc2NgRc+8c87+0XeAmBOyB9rysLge
+	 ZaRQBNbzKrmivnBtJTKzkcnEKFvRisczreW2Alwi6oy3s5hGN8qftKJrdk9FDP0Tij
+	 hFETWRqdoWZX06DaDQ4h9lfjY4e3T2NKRoI8p0jbycgWlAMCAF5es1Lw/Lvxf8WXfg
+	 d1iP8Te0Dg2jhKoJhcSqdTkARKdyzWrhqmPHUwvjsfgiKG9XU4YhaeAzn4ocy3C3/R
+	 SqnVVhBtEycVA==
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-45090ef26c6so1867639b6e.2
+        for <linux-pci@vger.kernel.org>; Tue, 09 Dec 2025 17:56:39 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXZG5W6wNJFMnyCHDLPxJiZ90vYXxpF0IZnu5Ffsn485YA7TDGX2qEDZGyZY7dHvo5k9c93EqXBC0Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8D2CzS9lKl2OOlcAYfykZbk5vYgK9TfzjABVdrCVU8sP2EZrJ
+	cjK2Ltvyf0wJkQcZAG8HHDjH3mO5LKiGGAFpM0MIePowiiGslfzdPdTxRxopSpf0qMpjOKsdT59
+	3yQsfOcEjzYFeLovApNFV6nqmH79efE4=
+X-Google-Smtp-Source: AGHT+IG/ZLGI/rhGVj2C1m7vvSVnbJrWDnoH75WeI4uetKadw0Oo6KCLlcHazzHyMTAmDC/8cjOQW1pj87b5UKX/YlE=
+X-Received: by 2002:a05:6808:1701:b0:43f:5619:ce72 with SMTP id
+ 5614622812f47-45586345bb2mr621771b6e.4.1765331799091; Tue, 09 Dec 2025
+ 17:56:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH RESEND v5] PCI: Check rom header and data structure addr
- before accessing
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- Andy Shevchenko <andriy.shevchenko@intel.com>, linux-pci@vger.kernel.org
-References: <20251209055114.66392-1-kanie@linux.alibaba.com>
- <5c2fb339-80df-3cbd-4477-05b2773b45d3@linux.intel.com>
-From: Guixin Liu <kanie@linux.alibaba.com>
-In-Reply-To: <5c2fb339-80df-3cbd-4477-05b2773b45d3@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <2395536.ElGaqSPkdT@rafael.j.wysocki> <ab8b770c-08e9-4cf6-bd4f-f36c951fda4c@gmx.de>
+ <CAJZ5v0jAH9FZrO5AvVF90zgy-0EeM+rsB6Zf8cMf+sR8=FFuDA@mail.gmail.com>
+ <168f173d-0d1a-49b0-9461-72f8fb0fc701@gmx.de> <99b0d755-3e18-4bba-b8e7-ab344e6c2592@gmx.de>
+ <CAJZ5v0ijOF+nRZrjnub9uqa_Pu54etmudWUUNWmNgiogVAwxFQ@mail.gmail.com> <2ec8cf4c-62b2-4448-b4d6-563f519fd947@gmx.de>
+In-Reply-To: <2ec8cf4c-62b2-4448-b4d6-563f519fd947@gmx.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 10 Dec 2025 02:56:27 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0h5jWx4vvxTXus80290zu7OjQY_FobLFHqYF205WadDOQ@mail.gmail.com>
+X-Gm-Features: AQt7F2pOCjJu2JoGgngTZpYCDvO4wsUKi9Q1dLDEly8-PkeomzKbOct6nkRsgzI
+Message-ID: <CAJZ5v0h5jWx4vvxTXus80290zu7OjQY_FobLFHqYF205WadDOQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] PCI: ACPI: PM: Rework root bus wakeup notification
+ setup and wakeup source registration
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Linux PM <linux-pm@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-在 2025/12/9 15:18, Ilpo Järvinen 写道:
-> On Tue, 9 Dec 2025, Guixin Liu wrote:
+On Wed, Dec 10, 2025 at 1:29=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
 >
->> We meet a crash when running stress-ng on x86_64 machine:
->>
->>    BUG: unable to handle page fault for address: ffa0000007f40000
->>    RIP: 0010:pci_get_rom_size+0x52/0x220
->>    Call Trace:
->>    <TASK>
->>      pci_map_rom+0x80/0x130
->>      pci_read_rom+0x4b/0xe0
->>      kernfs_file_read_iter+0x96/0x180
->>      vfs_read+0x1b1/0x300
->>
->> Our analysis reveals that the rom space's start address is
->> 0xffa0000007f30000, and size is 0x10000. Because of broken rom
->> space, before calling readl(pds), the pds's value is
->> 0xffa0000007f3ffff, which is already pointed to the rom space
->> end, invoking readl() would read 4 bytes therefore cause an
->> out-of-bounds access and trigger a crash.
->> Fix this by adding image header and data structure checking.
->>
->> We also found another crash on arm64 machine:
->>
->>    Unable to handle kernel paging request at virtual address
->> ffff8000dd1393ff
->>    Mem abort info:
->>    ESR = 0x0000000096000021
->>    EC = 0x25: DABT (current EL), IL = 32 bits
->>    SET = 0, FnV = 0
->>    EA = 0, S1PTW = 0
->>    FSC = 0x21: alignment fault
->>
->> The call trace is the same with x86_64, but the crash reason is
->> that the data structure addr is not aligned with 4, and arm64
->> machine report "alignment fault". Fix this by adding alignment
->> checking.
->>
->> Fixes: 47b975d234ea ("PCI: Avoid iterating through memory outside the resource window")
->> Suggested-by: Guanghui Feng <guanghuifeng@linux.alibaba.com>
->> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
->> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
->> ---
->> v4 -> v5:
->> - Add Andy Shevchenko's rb tag, thanks.
->> - Change u64 to unsigned long.
->> - Change pci_rom_header_valid() to pci_rom_is_header_valid() and
->> change pci_rom_data_struct_valid() to pci_rom_is_data_struct_valid().
->> - Change rom_end from rom+size to rom+size-1 for more readble,
->> and also change header_end >= rom_end to header_end > rom_end, same
->> as data structure end.
->> - Change if(!last_image) to if (last_image)..
->> - Use U16_MAX instead of 0xffff.
->> - Split check_add_overflow() from data_len checking.
->> - Remove !!() when reading last_image, and Use BIT(7) instead of 0x80.
->>
->> v3 -> v4:
->> - Use "u64" instead of "uintptr_t".
->> - Invert the if statement to avoid excessive indentation.
->> - Add comment for alignment checking.
->> - Change last_image's type from int to bool.
->>
->> v2 -> v3:
->> - Add pci_rom_header_valid() helper for checking image addr and signature.
->> - Add pci_rom_data_struct_valid() helper for checking data struct add
->> and signature.
->> - Handle overflow issue when adding addr with size.
->> - Handle alignment fault when running on arm64.
->>
->> v1 -> v2:
->> - Fix commit body problems, such as blank line in "Call Trace" both sides,
->>    thanks, (Andy Shevchenko).
->> - Remove every step checking, just check the addr is in header or data struct.
->> - Add Suggested-by: Guanghui Feng <guanghuifeng@linux.alibaba.com> tag.
->>   drivers/pci/rom.c | 109 ++++++++++++++++++++++++++++++++++++++--------
->>   1 file changed, 90 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
->> index e18d3a4383ba..b0de38211f39 100644
->> --- a/drivers/pci/rom.c
->> +++ b/drivers/pci/rom.c
->> @@ -69,6 +69,87 @@ void pci_disable_rom(struct pci_dev *pdev)
->>   }
->>   EXPORT_SYMBOL_GPL(pci_disable_rom);
->>   
->> +#define PCI_ROM_HEADER_SIZE 0x1A
->> +
->> +static bool pci_rom_is_header_valid(struct pci_dev *pdev,
->> +				    void __iomem *image,
->> +				    void __iomem *rom,
->> +				    size_t size,
->> +				    bool last_image)
->> +{
->> +	unsigned long rom_end = (unsigned long)rom + size - 1;
->> +	unsigned long header_end;
->> +
->> +	/*
->> +	 * Some CPU architectures require IOMEM access addresses to
->> +	 * be aligned, for example arm64, so since we're about to
->> +	 * call readw(), we check here for 2-byte alignment.
->> +	 */
->> +	if (!IS_ALIGNED((unsigned long)image, 2))
->> +		return false;
->> +
->> +	if (check_add_overflow((unsigned long)image, PCI_ROM_HEADER_SIZE,
->> +	    &header_end))
->> +		return false;
->> +
->> +	if (image < rom || header_end > rom_end)
->> +		return false;
->> +
->> +	/* Standard PCI ROMs start out with these bytes 55 AA */
->> +	if (readw(image) == 0xAA55)
->> +		return true;
->> +
->> +	if (last_image)
->> +		pci_info(pdev, "Invalid PCI ROM header signature: expecting 0xaa55, got %#06x\n",
->> +			 readw(image));
->> +	else
->> +		pci_info(pdev, "No more image in the PCI ROM\n");
->> +
->> +	return false;
->> +}
->> +
->> +static bool pci_rom_is_data_struct_valid(struct pci_dev *pdev,
->> +					 void __iomem *pds,
->> +					 void __iomem *rom,
->> +					 size_t size)
->> +{
->> +	unsigned long rom_end = (unsigned long)rom + size - 1;
->> +	unsigned long end;
->> +	u16 data_len;
->> +
->> +	/*
->> +	 * Some CPU architectures require IOMEM access addresses to
->> +	 * be aligned, for example arm64, so since we're about to
->> +	 * call readl(), we check here for 4-byte alignment.
->> +	 */
->> +	if (!IS_ALIGNED((unsigned long)pds, 4))
->> +		return false;
->> +
->> +	/* Before reading length, check range. */
->> +	if (check_add_overflow((unsigned long)pds, 0x0B, &end))
->> +		return false;
->> +
->> +	if (pds < rom || end > rom_end)
->> +		return false;
->> +
->> +	data_len = readw(pds + 0x0A);
->> +	if (!data_len || data_len == U16_MAX)
->> +		return false;
->> +
->> +	if (check_add_overflow((unsigned long)pds, data_len, &end))
->> +		return false;
->> +
->> +	if (end > rom_end)
->> +		return false;
->> +
->> +	if (readl(pds) == 0x52494350)
->> +		return true;
->> +
->> +	pci_info(pdev, "Invalid PCI ROM data signature: expecting 0x52494350, got %#010x\n",
->> +		 readl(pds));
->> +	return false;
->> +}
->> +
->>   /**
->>    * pci_get_rom_size - obtain the actual size of the ROM image
->>    * @pdev: target PCI device
->> @@ -84,37 +165,27 @@ static size_t pci_get_rom_size(struct pci_dev *pdev, void __iomem *rom,
->>   			       size_t size)
->>   {
->>   	void __iomem *image;
->> -	int last_image;
->> +	bool last_image;
->>   	unsigned int length;
->>   
->>   	image = rom;
->>   	do {
->>   		void __iomem *pds;
->> -		/* Standard PCI ROMs start out with these bytes 55 AA */
->> -		if (readw(image) != 0xAA55) {
->> -			pci_info(pdev, "Invalid PCI ROM header signature: expecting 0xaa55, got %#06x\n",
->> -				 readw(image));
->> +
->> +		if (!pci_rom_is_header_valid(pdev, image, rom, size, true))
->>   			break;
->> -		}
->> +
->>   		/* get the PCI data structure and check its "PCIR" signature */
->>   		pds = image + readw(image + 24);
->> -		if (readl(pds) != 0x52494350) {
->> -			pci_info(pdev, "Invalid PCI ROM data signature: expecting 0x52494350, got %#010x\n",
->> -				 readl(pds));
->> +		if (!pci_rom_is_data_struct_valid(pdev, pds, rom, size))
->>   			break;
->> -		}
->> -		last_image = readb(pds + 21) & 0x80;
->> +
->> +		last_image = readb(pds + 21) & BIT(7);
->>   		length = readw(pds + 16);
->>   		image += length * 512;
->> -		/* Avoid iterating through memory outside the resource window */
->> -		if (image >= rom + size)
->> +
->> +		if (!pci_rom_is_header_valid(pdev, image, rom, size, last_image))
->>   			break;
->> -		if (!last_image) {
->> -			if (readw(image) != 0xAA55) {
->> -				pci_info(pdev, "No more image in the PCI ROM\n");
->> -				break;
->> -			}
->> -		}
->>   	} while (length && !last_image);
->>   
->>   	/* never return a size larger than the PCI resource window */
->>
-> As a general comment, there seems to be lots of literals in this code
-> which would be nice to convert to named defines.
+> Am 09.12.25 um 23:18 schrieb Rafael J. Wysocki:
 >
-Sure, I will use macro instead of magic number, changed in v6, thanks.
+> > On Tue, Dec 9, 2025 at 11:00=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wro=
+te:
+> >> Am 09.12.25 um 14:56 schrieb Armin Wolf:
+> >>
+> >>> Am 09.12.25 um 12:31 schrieb Rafael J. Wysocki:
+> >>>
+> >>>> On Mon, Dec 8, 2025 at 9:01=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> w=
+rote:
+> >>>>> Am 08.12.25 um 13:09 schrieb Rafael J. Wysocki:
+> >>>>>
+> >>>>>> Hi All,
+> >>>>>>
+> >>>>>> Patch [1/2] updates the registration of PCI root bus wakeup
+> >>>>>> notification setup
+> >>>>>> in order to simplify code in pci_acpi_wake_bus() and to prepare fo=
+r
+> >>>>>> the other
+> >>>>>> change.  This is not expected to affect functionality.
+> >>>>>>
+> >>>>>> Patch [2/2] modifies the ACPI PM notifier registration to add
+> >>>>>> wakeup sources
+> >>>>>> under devices that are going to be affected by wakeup handling
+> >>>>>> instead of
+> >>>>>> registering them under ACPI companions of those devices (rationale
+> >>>>>> explained
+> >>>>>> in the patch changelog).  This will change the sysfs layout (wakeu=
+p
+> >>>>>> source
+> >>>>>> devices associated with PCI wakeup are now going to appear under
+> >>>>>> PCI devices
+> >>>>>> and the host bridge device), but it is not expected to affect user
+> >>>>>> space
+> >>>>>> adversely.
+> >>>>>>
+> >>>>>> Thanks!
+> >>>>> I tested both patches, and the sysfs layout changes as expected:
+> >>>>>
+> >>>>> $ readlink /sys/class/wakeup/wakeup*/device
+> >>>>> ../../../device:00
+> >>>>> ../../../device:1a
+> >>>>> ../../../device:1f
+> >>>>> ../../../device:20
+> >>>>> ../../../0000:00:08.1
+> >>>>> ../../../device:36
+> >>>>> ../../../device:31
+> >>>>> ../../../device:32
+> >>>>> ../../../device:3c
+> >>>>> ../../../0000:01:00.0
+> >>>>> ../../../device:3d
+> >>>>> ../../../PNP0C02:00
+> >>>>> ../../../0000:02:00.0
+> >>>>> ../../../device:3e
+> >>>>> ../../../device:3f
+> >>>>> ../../../device:46
+> >>>>> ../../../0000:04:00.0
+> >>>>> ../../../device:47
+> >>>>> ../../../0000:05:00.0
+> >>>>> ../../../device:57
+> >>>>> ../../../0000:05:08.0
+> >>>>> ../../../device:59
+> >>>>> ../../../device:01
+> >>>>> ../../../0000:05:09.0
+> >>>>> ../../../device:5b
+> >>>>> ../../../0000:05:0a.0
+> >>>>> ../../../device:5d
+> >>>>> ../../../0000:05:0b.0
+> >>>>> ../../../device:5f
+> >>>>> ../../../0000:05:0c.0
+> >>>>> ../../../device:74
+> >>>>> ../../../0000:05:0d.0
+> >>>>> ../../../device:5a
+> >>>>> ../../../device:3a
+> >>>>> ../../../device:5c
+> >>>>> ../../../device:60
+> >>>>> ../../../device:75
+> >>>>> ../../../LNXVIDEO:00
+> >>>>> ../../../device:22
+> >>>>> ../../../PNP0C02:02
+> >>>>> ../../../device:25
+> >>>>> ../../../device:2b
+> >>>>> ../../../device:24
+> >>>>> ../../../device:37
+> >>>>> ../../../0000:00:01.1
+> >>>>> ../../../PNP0A08:00
+> >>>>> ../../../LNXPWRBN:00
+> >>>>> ../../../AMDI0010:00
+> >>>>> ../../../AMDI0030:00
+> >>>>> ../../../00:02
+> >>>>> ../../../alarmtimer.0.auto
+> >>>>> ../../../PNP0C0C:00
+> >>>>> ../../../0000:0b:00.0
+> >>>>> ../../../AMDIF031:00
+> >>>>> ../../../PNP0C14:00
+> >>>>> ../../../device:0a
+> >>>>> ../../../PNP0C14:01
+> >>>>> ../../../PNP0C14:02
+> >>>>> ../../../PNP0C14:03
+> >>>>> ../../../0000:0e:00.3
+> >>>>> ../../../0000:0e:00.4
+> >>>>> ../../../0000:0f:00.0
+> >>>>> ../../../5-2
+> >>>>> ../../../1-5.3
+> >>>>> ../../hidpp_battery_0
+> >>>>> ../../../device:44
+> >>>>> ../../../0000:00:02.1
+> >>>>> ../../../device:76
+> >>>>> ../../../device:0b
+> >>>>>
+> >>>>> turns into:
+> >>>>>
+> >>>>> $ readlink /sys/class/wakeup/wakeup*/device
+> >>>>> ../../../0000:00:00.0
+> >>>>> ../../../0000:00:04.0
+> >>>>> ../../../0000:00:08.0
+> >>>>> ../../../0000:00:08.1
+> >>>>> ../../../0000:00:08.1
+> >>>>> ../../../0000:00:08.3
+> >>>>> ../../../0000:00:14.0
+> >>>>> ../../../0000:00:14.3
+> >>>>> ../../../0000:01:00.0
+> >>>>> ../../../0000:01:00.0
+> >>>>> ../../../0000:02:00.0
+> >>>>> ../../../0000:00:00.2
+> >>>>> ../../../0000:02:00.0
+> >>>>> ../../../0000:03:00.0
+> >>>>> ../../../0000:03:00.1
+> >>>>> ../../../0000:04:00.0
+> >>>>> ../../../0000:04:00.0
+> >>>>> ../../../0000:05:00.0
+> >>>>> ../../../0000:05:00.0
+> >>>>> ../../../0000:05:08.0
+> >>>>> ../../../0000:05:08.0
+> >>>>> ../../../0000:05:09.0
+> >>>>> ../../../0000:00:01.0
+> >>>>> ../../../0000:05:09.0
+> >>>>> ../../../0000:05:0a.0
+> >>>>> ../../../0000:05:0a.0
+> >>>>> ../../../0000:05:0b.0
+> >>>>> ../../../0000:05:0b.0
+> >>>>> ../../../0000:05:0c.0
+> >>>>> ../../../0000:05:0c.0
+> >>>>> ../../../0000:05:0d.0
+> >>>>> ../../../0000:05:0d.0
+> >>>>> ../../../0000:08:00.0
+> >>>>> ../../../0000:00:01.1
+> >>>>> ../../../0000:09:00.0
+> >>>>> ../../../0000:0b:00.0
+> >>>>> ../../../0000:0c:00.0
+> >>>>> ../../../0000:0e:00.0
+> >>>>> ../../../0000:0e:00.1
+> >>>>> ../../../0000:0e:00.2
+> >>>>> ../../../0000:0e:00.3
+> >>>>> ../../../0000:0e:00.4
+> >>>>> ../../../0000:0e:00.6
+> >>>>> ../../../0000:0f:00.0
+> >>>>> ../../../0000:00:01.1
+> >>>>> ../../../pci0000:00
+> >>>>> ../../../LNXPWRBN:00
+> >>>>> ../../../AMDI0010:00
+> >>>>> ../../../AMDI0030:00
+> >>>>> ../../../00:02
+> >>>>> ../../../alarmtimer.0.auto
+> >>>>> ../../../PNP0C0C:00
+> >>>>> ../../../0000:0b:00.0
+> >>>>> ../../../AMDIF031:00
+> >>>>> ../../../PNP0C14:00
+> >>>>> ../../../0000:00:02.0
+> >>>>> ../../../PNP0C14:01
+> >>>>> ../../../PNP0C14:02
+> >>>>> ../../../PNP0C14:03
+> >>>>> ../../../0000:0e:00.3
+> >>>>> ../../../0000:0e:00.4
+> >>>>> ../../../0000:0f:00.0
+> >>>>> ../../../5-2
+> >>>>> ../../../1-5.3
+> >>>>> ../../hidpp_battery_0
+> >>>>> ../../../0000:00:02.1
+> >>>>> ../../../0000:00:02.1
+> >>>>> ../../../0000:00:02.2
+> >>>>> ../../../0000:00:03.0
+> >>>>>
+> >>>>> The remaining ACPI devices are likely caused by device drivers base=
+d
+> >>>>> upon struct acpi_driver.
+> >>>>> I was unable to test the wakeup itself since suspend is currently
+> >>>>> broken due to issues with
+> >>>>> cpuidle,
+> >>>> Have you reported those?  What cpuidle driver is involved?
+> >>>>
+> >>>> If you happen to be using the ACPI idle driver, there is a regressio=
+n
+> >>>> between 6.18-rc7 and final 6.18 due to a missing revert, but final
+> >>>> 6.18 should be as expected.
+> >>> If i remember correctly the official 6.18 kernel was not affected by
+> >>> this, i used the the bleeding-edge
+> >>> branch when building the test kernel.
+> >>>
+> >>> I will do some further debugging once i am back home.
+> >>>
+> >>> Thanks,
+> >>> Armin Wolf
+> >>>
+> >> Well, it turned out that the cpuidle driver was not involved in this, =
+i just got confused
+> >> by a separate stacktrace caused by the hid-roccat driver (i already re=
+ported that).
+> >>
+> >> This seems to be the real issue:
+> >>
+> >> [  514.910759] ACPI Error: Aborting method \M402 due to previous error=
+ (AE_AML_LOOP_TIMEOUT) (20250807/psparse-529)
+> >> [  514.910810] ACPI Error: Aborting method \_SB.PCI0.GPP0.M241 due to =
+previous error (AE_AML_LOOP_TIMEOUT) (20250807/psparse-529)
+> >> [  514.910890] ACPI Error: Aborting method \_SB.PCI0.GPP0.M237._OFF du=
+e to previous error (AE_AML_LOOP_TIMEOUT) (20250807/psparse-529)
+> > It looks like there is a problem with turning a power resource off.
+> >
+> >> Sleeping itself works, it just takes a long time for the machine to ac=
+tually suspend due to the timeout.
+> >> I attached the acpidump of the affected machine in case you are intere=
+sted.
+> >>
+> >> Since 6.18 is not affected by this i will wait till 6.19-rc1 is releas=
+ed before i start debugging this issue.
+> >> Do you think that this approach is OK?
+> > It should be fine although you may as well check my pm-6.19-rc1,
+> > acpi-6.19-rc1 and thermal-6.19-rc1 tags on top of 6.18.  If the
+> > problem is in one of them, it should be possible to find it quicker
+> > than by dealing with the entire 6.19-rc1.
+>
+> I tested all three tags atop of 6.18, and all can suspend just fine. I wi=
+ll thus wait for 6.19-rc1
+> before doing any further debugging.
 
-Best Regards,
-Guixin Liu
-
+Sounds reasonable to me.
 
