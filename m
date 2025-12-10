@@ -1,115 +1,111 @@
-Return-Path: <linux-pci+bounces-42900-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42901-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2887ECB3824
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 17:44:45 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 658F6CB38D1
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 18:03:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 67C8B3011EC7
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 16:43:31 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 364C1300A281
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Dec 2025 17:03:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0359F323416;
-	Wed, 10 Dec 2025 16:43:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7D9A23F40D;
+	Wed, 10 Dec 2025 17:03:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jwopFP4j"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="esmWhdaf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48C53233E3;
-	Wed, 10 Dec 2025 16:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33F2C28541A;
+	Wed, 10 Dec 2025 17:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765385009; cv=none; b=X1TPigmBJQLD9RvwLVwpvIt6UPU71mKywL7RM0hBmKtGBX5Uy1fkZxSYS1KV2lkUvPtzeSWS/SHpvXFyNI00aTF/58VIcmvZ1MJ4lfJoXWkK1okuCLYbduXZRzWrVz5uUrC9+vQvTmfZGChfaJWpFlLH/wjAt70sOalUuTz7Eb4=
+	t=1765386203; cv=none; b=gi9cSXvJX2hEwhluK3WwteLA8GX5kauFrgzGAcIOxpXzIJNpHezW+1Tf7r4hrUABSbEp6dVxIkmLW3/efwiNLF3SqL853hxJbyf/OaJLfm/vjdGmEyy3IHVaULxzJ69xHhhnYoi6gFJjWhHXex0/ck7LAgWff067FuXZIALeNZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765385009; c=relaxed/simple;
-	bh=D6oMO8hz9iCEccabjb39VyXWX9MEu9ZISEEglyieFkE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=AkNC6rhdTYd9G4QE5PzMv/YV/CZt0QDSlypB514LU1xFmSgsqVol8reCzQ3yMuTQMhLF2fFNkjbdU/L+X1MS8yHHyGPV0lz9NJGrObXWFF0CshLNyjoLBsLiMjdL6nlsaaDf0VGzbJ7oMurvwy2NVJn1BnDkDb/CZoZSZXQjJ5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jwopFP4j; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8C9CC4CEF1;
-	Wed, 10 Dec 2025 16:43:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765385009;
-	bh=D6oMO8hz9iCEccabjb39VyXWX9MEu9ZISEEglyieFkE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jwopFP4jBNqfZmSihJanQd3drbFgmVOEHv4W3zy1K53cnGquk8vxqBX3CyB4t092w
-	 Xi17V3xkxD1nSk2eZgvdYwRhIuNSeKZ8j7waJWD11k9LgM2KuLWM5cCw87OROWm0FT
-	 9nGcR8pPD3SJsH+wLpInCEcF6CM9UNkiXExjc2HlYBxLtQYiZXnKaUDSDvRKJcK8AN
-	 ZCdwaewQxLAxxk2LEwEAbWjjCuU7QN/ta9fJgaLmaphnYsfk6RoV+uGcE7qPbMWIAB
-	 nvP1mAJlwXNadfSvw8y5Lz3obfoVQ+oC4xKdtLHS2ZoqWUUNfv/vI8XZMyBdjwO8VC
-	 KapgOqfxgsc6w==
-Date: Wed, 10 Dec 2025 10:43:27 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: zhangsenchuan@eswincomputing.com
-Cc: bhelgaas@google.com, mani@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	robh@kernel.org, p.zabel@pengutronix.de, jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com,
-	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
-	thippeswamy.havalige@amd.com, inochiama@gmail.com, Frank.li@nxp.com,
-	ningyu@eswincomputing.com, linmin@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com
-Subject: Re: [PATCH v7 2/3] PCI: eic7700: Add Eswin PCIe host controller
- driver
-Message-ID: <20251210164327.GA3477281@bhelgaas>
+	s=arc-20240116; t=1765386203; c=relaxed/simple;
+	bh=7laRfK4nZ5KNumBLo8B0Bs64gDVcnHfmlDOtuv+qdMY=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UjLBT+cnozYSGkU5twZkRhEfENjHvHSKX8BSOx+nxEVkLekSOyFSq/GbmM0vMF5SCK/4L18zUXNPXf5OUzDMXyezlExzf+bMh+yYRexH3wisw2H2cYz3AaC/aPNSvJCzPvYECSPAt4MDMeElYY/2kidXqTfqx65pWrcjpIrOlCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=esmWhdaf; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.201.246] (unknown [4.194.122.144])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E548F2120391;
+	Wed, 10 Dec 2025 09:03:05 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E548F2120391
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1765386196;
+	bh=89vtiRRACaQWJsakzRJrzF0HLZte8XWdUGdC8EN5Ipo=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=esmWhdafmYa40uF9nWHtS8yA4fVd18d3wiB+mFkX6ErptZw63ttk/bncNxj3TjjHn
+	 tqtJ2K84F0+SIfocAYPPLaRZP78wGdwTC3/osmGYtTa9CSbw2RtIdvfres4A2DxdJo
+	 HqX4yJIbhQjs8smSTw6ePblrw9lW/WtGpMKi+zPA=
+Message-ID: <95e7c111-c5a0-498d-ab8c-a36eca2f5edb@linux.microsoft.com>
+Date: Wed, 10 Dec 2025 09:03:02 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251202090406.1636-1-zhangsenchuan@eswincomputing.com>
+User-Agent: Mozilla Thunderbird
+Cc: Yu Zhang <zhangyu1@linux.microsoft.com>, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, iommu@lists.linux.dev,
+ linux-pci@vger.kernel.org, easwar.hariharan@linux.microsoft.com,
+ kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, lpieralisi@kernel.org, kwilczynski@kernel.org,
+ mani@kernel.org, robh@kernel.org, bhelgaas@google.com, arnd@arndb.de,
+ joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+ jacob.pan@linux.microsoft.com, nunodasneves@linux.microsoft.com,
+ mrathor@linux.microsoft.com, mhklinux@outlook.com, peterz@infradead.org,
+ linux-arch@vger.kernel.org
+Subject: Re: [RFC v1 1/5] PCI: hv: Create and export hv_build_logical_dev_id()
+To: Randy Dunlap <rdunlap@infradead.org>
+References: <20251209051128.76913-1-zhangyu1@linux.microsoft.com>
+ <20251209051128.76913-2-zhangyu1@linux.microsoft.com>
+ <827c75e4-8e6c-4e98-9a1a-80ddba0de61a@infradead.org>
+From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <827c75e4-8e6c-4e98-9a1a-80ddba0de61a@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 02, 2025 at 05:04:06PM +0800, zhangsenchuan@eswincomputing.com wrote:
-> From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+On 12/8/2025 9:21 PM, Randy Dunlap wrote:
+> Hi--
 > 
-> Add driver for the Eswin EIC7700 PCIe host controller, which is based on
-> the DesignWare PCIe core, IP revision 5.96a. The PCIe Gen.3 controller
-> supports a data rate of 8 GT/s and 4 channels, support INTx and MSI
-> interrupts.
+> On 12/8/25 9:11 PM, Yu Zhang wrote:
+>> From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+>>
+>> Hyper-V uses a logical device ID to identify a PCI endpoint device for
+>> child partitions. This ID will also be required for future hypercalls
+>> used by the Hyper-V IOMMU driver.
+>>
+>> Refactor the logic for building this logical device ID into a standalone
+>> helper function and export the interface for wider use.
+>>
+>> Signed-off-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+>> Signed-off-by: Yu Zhang <zhangyu1@linux.microsoft.com>
+>> ---
+>>  drivers/pci/controller/pci-hyperv.c | 28 ++++++++++++++++++++--------
+>>  include/asm-generic/mshyperv.h      |  2 ++
+>>  2 files changed, 22 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+>> index 146b43981b27..4b82e06b5d93 100644
+>> --- a/drivers/pci/controller/pci-hyperv.c
+>> +++ b/drivers/pci/controller/pci-hyperv.c
+>> @@ -598,15 +598,31 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
+>>  
+>>  #define hv_msi_prepare		pci_msi_prepare
+>>  
+>> +/**
+>> + * Build a "Device Logical ID" out of this PCI bus's instance GUID and the
+>> + * function number of the device.
+>> + */
+> 
+> Don't use kernel-doc notation "/**" unless you are using kernel-doc comments.
+> You could just convert it to a kernel-doc style comment...
 
-> +static int eic7700_pcie_host_init(struct dw_pcie_rp *pp)
-> ...
-> +	/*
-> +	 * The PWR and DBI Reset signals are respectively used to reset the
-> +	 * PCIe controller and the DBI registers.
-> +	 * The PERST# signal is a reset signal that simultaneously controls the
-> +	 * PCIe controller, PHY, and Endpoint.
-> +	 * Before configuring the PHY, the PERST# signal must first be
-> +	 * deasserted.
-> +	 * The external reference clock is supplied simultaneously to the PHY
-> +	 * and EP. When the PHY is configurable, the entire chip already has
-> +	 * stable power and reference clock.
-> +	 * The PHY will be ready within 20ms after writing app_hold_phy_rst
-> +	 * register of ELBI register space.
+Thank you for the review, I will fix in a future revision.
 
-Add blank lines between paragraphs.
-
-> +static int eic7700_pcie_probe(struct platform_device *pdev)
-> ...
-> +	pci->no_pme_handshake = pcie->data->no_pme_handshake;
-
-This needs to go in the 3/3 "PCI: dwc: Add no_pme_handshake flag and
-skip PME_Turn_Off broadcast" patch because "no_pme_handshake" doesn't
-exist yet so this patch doesn't build by itself.
-
-> +static const struct dev_pm_ops eic7700_pcie_pm_ops = {
-> +	NOIRQ_SYSTEM_SLEEP_PM_OPS(eic7700_pcie_suspend_noirq,
-> +				  eic7700_pcie_resume_noirq)
-> +};
-
-Use DEFINE_NOIRQ_DEV_PM_OPS() instead.  The collection of PM-related
-macros is confusing to say the least, and they're not used
-consistently across the PCIe drivers, but I *think* the rule of thumb
-should be:
-
-  Prefer DEFINE_NOIRQ_DEV_PM_OPS() over NOIRQ_SYSTEM_SLEEP_PM_OPS()
-  when possible and omit pm_sleep_ptr() and pm_ptr().
-
-Bjorn
+Thanks,
+Easwar (he/him)
 
