@@ -1,60 +1,51 @@
-Return-Path: <linux-pci+bounces-42966-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42967-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B990CB66C3
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 17:07:56 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4DDFCB677D
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 17:29:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3F3543010982
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 16:07:55 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7E716300161E
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 16:29:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 261AE303A3B;
-	Thu, 11 Dec 2025 16:07:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F1692D6E6A;
+	Thu, 11 Dec 2025 16:29:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CX4bUVA3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KbSW91Af"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC72629BDB3;
-	Thu, 11 Dec 2025 16:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7382F2603
+	for <linux-pci@vger.kernel.org>; Thu, 11 Dec 2025 16:29:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765469274; cv=none; b=LUmw0DkexHzZKAwGE60fxMGBxdy56iRyavpOLGdtOh75v2OoREIg2hSr2S4ac3XifYiBS49VxN8mRN77DgoOlpohn9m0w12tqqQlwl3tysioxuMTorveAVuAuibQ08v3nmCBWktBHDNArcPu5/QGYtA7mc3gh34xNpJ75NuznYQ=
+	t=1765470594; cv=none; b=JoovqcckBDUjD4oS6SJ6MtJubBy9YD2npGV8oQ3idIHF7b0pK+c4KQafG8rzqSWf48IDmNkZhKwQWtSzcoklhCyrRurmDep32IJ7/wxNKV1RMEsvD8Fmd3yzaqnXHRCq9rHXFmRWAMS/7yM7TjJ3PWgVe8VQFucAksEzMMJqg2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765469274; c=relaxed/simple;
-	bh=N98WoACJ/uJsQv2tfbWthp3jiUs/8Mi+M4KpGmdwZj0=;
+	s=arc-20240116; t=1765470594; c=relaxed/simple;
+	bh=pePWAhUbegTiF58KkopomVFzJg4Dey8vXHM+/TnrM/A=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=uuOL2BMk0rQF5o9xtRqdLNKx/yLjujmIuDA6cZSjVezfzkBdYBn4cgxFyFOfHJU38s4Xpug3dIjt+DYess0jwVOQ54vq0/J3RrgvdSDRJuvGn5vVLY6MTGQB9l0u89/DryX46d8pz/fZqttGvQp7e/IlMRNEfZdEQQKldzbJetk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CX4bUVA3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44B1DC4CEF7;
-	Thu, 11 Dec 2025 16:07:53 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=l+vScQqZqf/3eGJHH/CNoamDI7nsNBSQlSvy+w7gsGJAUqGoeajMmsSLWW0g487211UO7F48iYryHVJCHumSnwaR7b/fcAvmow4S1Mou2/b4HyFirgKwM79J6aaDXTMyxYUf8rLOCRU8PhIZz9QkxuisSPjkH+2JiJNFe6qEEG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KbSW91Af; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F088C4CEF7;
+	Thu, 11 Dec 2025 16:29:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765469273;
-	bh=N98WoACJ/uJsQv2tfbWthp3jiUs/8Mi+M4KpGmdwZj0=;
+	s=k20201202; t=1765470593;
+	bh=pePWAhUbegTiF58KkopomVFzJg4Dey8vXHM+/TnrM/A=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=CX4bUVA3WXyVGAWRazsLSLdsCOwj4rIjG0WnBbUdl1j8Y9UGIXcpQKVmu3gbJ3lqX
-	 ZUfYU5qJMMrHQO1mGYUliAB0Af80G1z+5RkHOci76V/DcjfI4NGVQ1fZkLTsmY+AfG
-	 gluV1gElqkKrXuU4DNJ84vcP2JgoyfpZcfgvJpMnTPhiUuYVi5WUy2InoR5ngXpvf1
-	 dOkdXOTBoagUGyXVnwwZ2nre4vyzIbOzrC/Za5PibcVgC+QpSXMcKlU6UZ54LHtsZf
-	 I3+f3Bf8DRVgB0FTK6yBBtJ9s4bTfD7zy/9l3Yu4j99tB5FcsnvmRAVkdDlNjg+wCw
-	 B5xfin8/tPtkA==
-Date: Thu, 11 Dec 2025 10:07:52 -0600
+	b=KbSW91AfhvgfAAy3su1kYwsH6vNlhe/0ACfaXr4F7jsCuRtc7TL3U2F842AHK3ixO
+	 nCc2lb+pb3vyLY9EAEilB4KQw39hIEezdk771qhVIZ29xsC40NysKLdByzOFNAzpTM
+	 jMGMEOjrf6bxefaxdDKpREppCHvK9tyuEcYGqFrb3VsY4Mmk8PlPp80G3HgXLlCa28
+	 qMhv2dP2yLQVa+XhYtB5xnCp5jUNMlcq9TJkeN6tw5HsElM1JhP5EfpdRG0Bqqz89R
+	 VXMGCorV8esN6wSz2QbrBl78j3/jGKcRTIitHLHgwGIn1x5FY2JdmHPo/LVk4PsEqa
+	 wP7d77zS932Rw==
+Date: Thu, 11 Dec 2025 10:29:52 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-Cc: bhelgaas@google.com, mani@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	robh@kernel.org, p.zabel@pengutronix.de, jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com,
-	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
-	thippeswamy.havalige@amd.com, inochiama@gmail.com, Frank.li@nxp.com,
-	ningyu@eswincomputing.com, linmin@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com
-Subject: Re: Re: [PATCH v7 2/3] PCI: eic7700: Add Eswin PCIe host controller
- driver
-Message-ID: <20251211160752.GA3594705@bhelgaas>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-rockchip@lists.infradead.org,
+	Manivannan Sadhasivam <mani@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI: dwc: Add L1ss context to ltssm_status of debugfs
+Message-ID: <20251211162952.GA3595469@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,50 +54,47 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <68c6494b.1244.19b0d4d2b8c.Coremail.zhangsenchuan@eswincomputing.com>
+In-Reply-To: <1764035632-180821-1-git-send-email-shawn.lin@rock-chips.com>
 
-On Thu, Dec 11, 2025 at 08:05:19PM +0800, zhangsenchuan wrote:
-> > -----Original Messages-----
-> > From: "Bjorn Helgaas" <helgaas@kernel.org>
-> > Send time:Thursday, 11/12/2025 00:43:27
-> > To: zhangsenchuan@eswincomputing.com
-> > Cc: bhelgaas@google.com, mani@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, p.zabel@pengutronix.de, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com, shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com, thippeswamy.havalige@amd.com, inochiama@gmail.com, Frank.li@nxp.com, ningyu@eswincomputing.com, linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com
-> > Subject: Re: [PATCH v7 2/3] PCI: eic7700: Add Eswin PCIe host controller driver
+On Tue, Nov 25, 2025 at 09:53:51AM +0800, Shawn Lin wrote:
+> dwc core couldn't distinguish ltssm status among L1.0, L1.1 and L1.2.
+> But the variant driver may implement additional register to tell them
+> apart. So this patch adds two pseudo definitions for variant drivers to
+> transltae their internal L1 substates for debugfs to show.
 
-Please avoid the pointless quote of all the headers (above) if you
-can.  That just clutters the thread.  Also trim context that is not
-relevant.  More hints here: https://subspace.kernel.org/etiquette.html
+s/L1ss/L1 Substates/ in subject
+s/ltssm/LTSSM/
+s/transltae/translate/
 
-> > On Tue, Dec 02, 2025 at 05:04:06PM +0800, zhangsenchuan@eswincomputing.com wrote:
-> > > From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
-> > > 
-> > > Add driver for the Eswin EIC7700 PCIe host controller, which is based on
-> > > the DesignWare PCIe core, IP revision 5.96a. The PCIe Gen.3 controller
-> > > supports a data rate of 8 GT/s and 4 channels, support INTx and MSI
-> > > interrupts.
+Use imperative mood:
+  https://chris.beams.io/posts/git-commit/
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/maintainer-tip.rst?id=v6.14#n134
 
-> > > +static int eic7700_pcie_probe(struct platform_device *pdev)
-> > > ...
-> > > +	pci->no_pme_handshake = pcie->data->no_pme_handshake;
-> > 
-> > This needs to go in the 3/3 "PCI: dwc: Add no_pme_handshake flag and
-> > skip PME_Turn_Off broadcast" patch because "no_pme_handshake" doesn't
-> > exist yet so this patch doesn't build by itself.
+In this case, imperative mood means:
+
+  s/So this patch adds/Add/
+
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -380,6 +380,10 @@ enum dw_pcie_ltssm {
+>  	DW_PCIE_LTSSM_RCVRY_EQ2 = 0x22,
+>  	DW_PCIE_LTSSM_RCVRY_EQ3 = 0x23,
+>  
+> +	/* Variant drivers provide pseudo L1 substates from get_ltssm()*/
+
+Add space before "*/".
+
+> +	DW_PCIE_LTSSM_L1_1 = 0x141,
+> +	DW_PCIE_LTSSM_L1_2 = 0x142,
+> +
+>  	DW_PCIE_LTSSM_UNKNOWN = 0xFFFFFFFF,
+>  };
+>  
+> -- 
+> 2.43.0
 > 
-> Do I need to adjust the order of the patches?
-> 3/2 "PCI: dwc: Add no_pme_handshake flag and skip PME_Turn_Off broadcast"
-> 3/3 "PCI: eic7700: Add Eswin PCIe host controller driver"
 > 
-> Or merge Patch 2/3 and Patch 3/3?
-
-I think the best thing would be to leave dw_pcie_suspend_noirq() along
-and implement eic7700_pcie_suspend_noirq() without calling it.
-
-dw_pcie_suspend_noirq() is already problematic [1], and we don't need
-more complication there.  Even without calling
-dw_pcie_suspend_noirq(), your eic7700_pcie_suspend_noirq() will be
-pretty simple.  Just add a comment about why you don't use
-dw_pcie_suspend_noirq().
-
-[1] https://lore.kernel.org/linux-pci/20251114213540.GA2335845@bhelgaas/
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
