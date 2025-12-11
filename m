@@ -1,262 +1,143 @@
-Return-Path: <linux-pci+bounces-42957-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42958-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F215CB5F9B
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 14:07:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 31291CB6092
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 14:33:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 90D5E30155F5
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 13:04:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1F68E3045A76
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 13:32:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2F90192D8A;
-	Thu, 11 Dec 2025 13:04:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EAAB313537;
+	Thu, 11 Dec 2025 13:32:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="yC2VSMy+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KA7o499f"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E2A286418
-	for <linux-pci@vger.kernel.org>; Thu, 11 Dec 2025 13:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4402FD7D5;
+	Thu, 11 Dec 2025 13:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765458288; cv=none; b=MEwMXL27Rp8/e9toX0L5ZxX1m4pGo440g7yjF5BUj3rL6/fmcLMewD9iRMPBPqzGab6xG6G6bLqgp1OTP4fp8dTePtm7n7TTGq9Egry27EnhINmRqltkavWOVjaylVpjK9BFH2jvw0kbPxqGpLsi5BSE7MeTz14kk/JmRh39pEI=
+	t=1765459933; cv=none; b=lCNoKXiH4pQVBfnE8ZE0+Ug7mFkOuCJN0nk4cfGAOnN+EAuzciqL5ayxJiscAPHbfEjV/nHWM8ifLHXVMz5YKbbNqrKvXgQCoFntbogpX9uz5EHBVBQ/wtjRklN/oEWO0MGF6bpe840Kar9I/w/inSAuu6PPwOVPBfNtN3J2A+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765458288; c=relaxed/simple;
-	bh=JbDJCJDwlgoNXiKK2YbYjx9rH04qPwc9QeWFs8jsvsw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ci+cTZmZAq92UFqUj3fkO4//e7ci+lbmSDLuEBms1LYSeN6iNlN0kfLL6X7p2gRz32dgcVfQLdqZ7NvHSmuJuVgJAmdqCm6UDiGBynyrz4k2Enkx+ZnZaNTOtuulLLVVbm99zYAFJCfdaV9Sc0xj0Enq3/QYTohZ02+ZZLVCeI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=yC2VSMy+; arc=none smtp.client-ip=115.124.30.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1765458276; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=PUVXmZSDUy0SM1YjCddp2yinMSycmf20lebDpcijVu8=;
-	b=yC2VSMy+ujRL9C/yE5vsbp/i4mhcWqHbtQXgh3bHWfh5nNYrBMd/URwkSEgFAii4IqTST7s5hP5VUqEjWlIXhowu1cXfpAQNqP696PzK1u1hCLwaoCxOcKssB0KIiTlEaY3O4hNLiFY8C27XAnWJWUUprSx2rbMuB3Jo93559PQ=
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0WuaaUIu_1765457954 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 11 Dec 2025 20:59:18 +0800
-From: Guixin Liu <kanie@linux.alibaba.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-pci@vger.kernel.org
-Subject: [PATCH v9 2/2] PCI: Check rom header and data structure addr before accessing
-Date: Thu, 11 Dec 2025 20:59:06 +0800
-Message-ID: <20251211125906.57027-3-kanie@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251211125906.57027-1-kanie@linux.alibaba.com>
-References: <20251211125906.57027-1-kanie@linux.alibaba.com>
+	s=arc-20240116; t=1765459933; c=relaxed/simple;
+	bh=4Kl5caZ4+AMnQcEDyOlthQs+6DsrPGeFwcZXzDc+w5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PCKXMHY/s2A0T17atWyWMVpdA9rl3qO0mR1Xs72NLTbHcjfPeI3jL9lUCav0hKXfg0pg7x5+0ZKVXOGS19ma8XZFUGDzPdWaSZIbyeGLW+qux106fveuo75ZKjHhZwf/FXcEIV8ynFpJ/k6x4taFvt8GilnRA+6wNZoHCIuBlPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KA7o499f; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1765459932; x=1796995932;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4Kl5caZ4+AMnQcEDyOlthQs+6DsrPGeFwcZXzDc+w5U=;
+  b=KA7o499fbjdPpsoVmVD6M+HEv1eQneGK+h/NgM8HbNexqNrO61XggHXh
+   XyjI75UgiG+nlYMqX7jKcXRxmsrCVZ06BKmaTEEoMAhfsn+/S2qQfBrpe
+   LctdF6wN6Z722XasJJOzIL7ZGqIwUfCFYJ2l2+mUzxR5MQtXt75vmcBOM
+   qnoFFV6eNDSa9rSfSB2jp22ULh2c1V0OqFhGvR5AkaZp8iQCVlVSTC7dL
+   7HvnKfHO4KkhdYyYJFfBUx/2AdCDX9XLBg+Z1al0orRHTg72QR6XTILp5
+   qbpKDSSXT52sFkqsMrPAWk16ASqJnzOvCaatST3sDdhcaymU6Dzb9z0Ob
+   g==;
+X-CSE-ConnectionGUID: b3YgipotQQCdaacxNzp13A==
+X-CSE-MsgGUID: wd3zx8VkRbKYtjNlTwtXDw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11639"; a="71064144"
+X-IronPort-AV: E=Sophos;i="6.21,141,1763452800"; 
+   d="scan'208";a="71064144"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2025 05:32:12 -0800
+X-CSE-ConnectionGUID: BXtI3yRlSHqhvgFGmUsgeQ==
+X-CSE-MsgGUID: D+xGoUtERk+s+Q/nlumuPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,141,1763452800"; 
+   d="scan'208";a="227452347"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.250])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2025 05:32:08 -0800
+Date: Thu, 11 Dec 2025 15:32:04 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Cezary Rojewski <cezary.rojewski@intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Daniel Baluta <daniel.baluta@nxp.com>, Takashi Iwai <tiwai@suse.de>,
+	Mark Brown <broonie@kernel.org>,
+	Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org, sound-open-firmware@alsa-project.org
+Subject: Re: [PATCH v1 1/1] ASoC: Fix acronym for Intel Gemini Lake
+Message-ID: <aTrH1H4otA-cQyXa@smile.fi.intel.com>
+References: <20251210115545.3028551-1-andriy.shevchenko@linux.intel.com>
+ <2b05635f-560b-45a2-87fb-670c144b6be2@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b05635f-560b-45a2-87fb-670c144b6be2@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-We meet a crash when running stress-ng on x86_64 machine:
+On Thu, Dec 11, 2025 at 09:45:54AM +0100, Cezary Rojewski wrote:
+> On 2025-12-10 12:55 PM, Andy Shevchenko wrote:
+> > While the used GML is consistent with the pattern for other Intel * Lake
+> > SoCs, the de facto use is GLK. Update the acronym and users accordingly.
+> > 
+> > Note, a handful of the drivers for Gemini Lake in the Linux kernel use
+> > GLK already (LPC, MEI, pin control, SDHCI, ...) and even some in ASoC.
+> > The only ones in this patch used the inconsistent one.
+> 
+> A number of times I've fought for the 'GLK' to disappear from the Intel's
+> audio subsystem as clearly the "right" shortcut is 'GML'.
 
-  BUG: unable to handle page fault for address: ffa0000007f40000
-  RIP: 0010:pci_get_rom_size+0x52/0x220
-  Call Trace:
-  <TASK>
-    pci_map_rom+0x80/0x130
-    pci_read_rom+0x4b/0xe0
-    kernfs_file_read_iter+0x96/0x180
-    vfs_read+0x1b1/0x300
+Probably you were late as that boat sailed and we have the only your
+driver (and SOF which was put into position to reuse the existing ID)
+use the correct acronym.
 
-Our analysis reveals that the rom space's start address is
-0xffa0000007f30000, and size is 0x10000. Because of broken rom
-space, before calling readl(pds), the pds's value is
-0xffa0000007f3ffff, which is already pointed to the rom space
-end, invoking readl() would read 4 bytes therefore cause an
-out-of-bounds access and trigger a crash.
-Fix this by adding image header and data structure checking.
+> However, I do understand where are you coming from - the corrections came
+> late and the "mistake" has been widely spread.
 
-We also found another crash on arm64 machine:
+Yeah... With all understanding and support for the correctness, the easiest
+way to get rid of inconsistency is to change only these couple of drivers
+and not the entire world.
 
-  Unable to handle kernel paging request at virtual address
-ffff8000dd1393ff
-  Mem abort info:
-  ESR = 0x0000000096000021
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x21: alignment fault
+...
 
-The call trace is the same with x86_64, but the crash reason is
-that the data structure addr is not aligned with 4, and arm64
-machine report "alignment fault". Fix this by adding alignment
-checking.
+> > -#define PCI_DEVICE_ID_INTEL_HDA_GML	0x3198
+> > +#define PCI_DEVICE_ID_INTEL_HDA_GLK	0x3198
+> 
+> If two #defines are no-go (PCI_DEVICE_ID_INTEL_HDA_GLK and _GML), then
+> perhaps at least a comment to the right of the ID mentioning the "GML" would
+> help.
 
-Fixes: 47b975d234ea ("PCI: Avoid iterating through memory outside the resource window")
-Suggested-by: Guanghui Feng <guanghuifeng@linux.alibaba.com>
-Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
----
- drivers/pci/rom.c | 116 ++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 97 insertions(+), 19 deletions(-)
+Bjorn, are you agree on adding a comment to PCI IDs to point out that in a
+couple of Intel documents the machine's acronym is GML?
 
-diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
-index e2e37a9090f1..658536861785 100644
---- a/drivers/pci/rom.c
-+++ b/drivers/pci/rom.c
-@@ -6,9 +6,12 @@
-  * (C) Copyright 2004 Silicon Graphics, Inc. Jesse Barnes <jbarnes@sgi.com>
-  */
- 
-+#include <linux/align.h>
- #include <linux/bits.h>
--#include <linux/kernel.h>
- #include <linux/export.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/overflow.h>
- #include <linux/pci.h>
- #include <linux/slab.h>
- #include <linux/sizes.h>
-@@ -82,6 +85,91 @@ void pci_disable_rom(struct pci_dev *pdev)
- }
- EXPORT_SYMBOL_GPL(pci_disable_rom);
- 
-+static bool pci_rom_is_header_valid(struct pci_dev *pdev,
-+				    void __iomem *image,
-+				    void __iomem *rom,
-+				    size_t size,
-+				    bool last_image)
-+{
-+	unsigned long rom_end = (unsigned long)rom + size - 1;
-+	unsigned long header_end;
-+	u16 signature;
-+
-+	/*
-+	 * Some CPU architectures require IOMEM access addresses to
-+	 * be aligned, for example arm64, so since we're about to
-+	 * call readw(), we check here for 2-byte alignment.
-+	 */
-+	if (!IS_ALIGNED((unsigned long)image, 2))
-+		return false;
-+
-+	if (check_add_overflow((unsigned long)image, PCI_ROM_HEADER_SIZE,
-+				&header_end))
-+		return false;
-+
-+	if (image < rom || header_end > rom_end)
-+		return false;
-+
-+	/* Standard PCI ROMs start out with these bytes 55 AA */
-+	signature = readw(image);
-+	if (signature == PCI_ROM_IMAGE_SIGNATURE)
-+		return true;
-+
-+	if (last_image) {
-+		pci_info(pdev, "Invalid PCI ROM header signature: expecting %#06x, got %#06x\n",
-+			 PCI_ROM_IMAGE_SIGNATURE, signature);
-+	} else {
-+		pci_info(pdev, "No more image in the PCI ROM\n");
-+	}
-+
-+	return false;
-+}
-+
-+static bool pci_rom_is_data_struct_valid(struct pci_dev *pdev,
-+					 void __iomem *pds,
-+					 void __iomem *rom,
-+					 size_t size)
-+{
-+	unsigned long rom_end = (unsigned long)rom + size - 1;
-+	unsigned long end;
-+	u32 signature;
-+	u16 data_len;
-+
-+	/*
-+	 * Some CPU architectures require IOMEM access addresses to
-+	 * be aligned, for example arm64, so since we're about to
-+	 * call readl(), we check here for 4-byte alignment.
-+	 */
-+	if (!IS_ALIGNED((unsigned long)pds, 4))
-+		return false;
-+
-+	/* Before reading length, check addr range. */
-+	if (check_add_overflow((unsigned long)pds, PCI_ROM_DATA_STRUCT_LEN + 1,
-+				&end))
-+		return false;
-+
-+	if (pds < rom || end > rom_end)
-+		return false;
-+
-+	data_len = readw(pds + PCI_ROM_DATA_STRUCT_LEN);
-+	if (!data_len || data_len == U16_MAX)
-+		return false;
-+
-+	if (check_add_overflow((unsigned long)pds, data_len, &end))
-+		return false;
-+
-+	if (end > rom_end)
-+		return false;
-+
-+	signature = readl(pds);
-+	if (signature == PCI_ROM_DATA_STRUCT_SIGNATURE)
-+		return true;
-+
-+	pci_info(pdev, "Invalid PCI ROM data signature: expecting %#010x, got %#010x\n",
-+		 PCI_ROM_DATA_STRUCT_SIGNATURE, signature);
-+	return false;
-+}
-+
- /**
-  * pci_get_rom_size - obtain the actual size of the ROM image
-  * @pdev: target PCI device
-@@ -97,38 +185,28 @@ static size_t pci_get_rom_size(struct pci_dev *pdev, void __iomem *rom,
- 			       size_t size)
- {
- 	void __iomem *image;
--	int last_image;
- 	unsigned int length;
-+	bool last_image;
- 
- 	image = rom;
- 	do {
- 		void __iomem *pds;
--		/* Standard PCI ROMs start out with these bytes 55 AA */
--		if (readw(image) != PCI_ROM_IMAGE_SIGNATURE) {
--			pci_info(pdev, "Invalid PCI ROM header signature: expecting %#06x, got %#06x\n",
--				 PCI_ROM_IMAGE_SIGNATURE, readw(image));
-+
-+		if (!pci_rom_is_header_valid(pdev, image, rom, size, true))
- 			break;
--		}
-+
- 		/* get the PCI data structure and check its "PCIR" signature */
- 		pds = image + readw(image + PCI_ROM_POINTER_TO_DATA_STRUCT);
--		if (readl(pds) != PCI_ROM_DATA_STRUCT_SIGNATURE) {
--			pci_info(pdev, "Invalid PCI ROM data signature: expecting %#010x, got %#010x\n",
--				 PCI_ROM_DATA_STRUCT_SIGNATURE, readl(pds));
-+		if (!pci_rom_is_data_struct_valid(pdev, pds, rom, size))
- 			break;
--		}
-+
- 		last_image = readb(pds + PCI_ROM_LAST_IMAGE_INDICATOR) &
- 				   PCI_ROM_LAST_IMAGE_INDICATOR_BIT;
- 		length = readw(pds + PCI_ROM_IMAGE_LEN);
- 		image += length * PCI_ROM_IMAGE_LEN_UNIT_BYTES;
--		/* Avoid iterating through memory outside the resource window */
--		if (image >= rom + size)
-+
-+		if (!pci_rom_is_header_valid(pdev, image, rom, size, last_image))
- 			break;
--		if (!last_image) {
--			if (readw(image) != PCI_ROM_IMAGE_SIGNATURE) {
--				pci_info(pdev, "No more image in the PCI ROM\n");
--				break;
--			}
--		}
- 	} while (length && !last_image);
- 
- 	/* never return a size larger than the PCI resource window */
+...
+
+> > --- a/sound/soc/intel/avs/board_selection.c
+> > +++ b/sound/soc/intel/avs/board_selection.c
+
+> > -	AVS_MACH_ENTRY(HDA_GML,		avs_gml_i2s_machines),
+> > +	AVS_MACH_ENTRY(HDA_GLK,		avs_glk_i2s_machines),
+> 
+> To be honest, I'd leave 'avs_gml_i2s_machines' as is.
+
+Sure, your driver your rules :), I will not touch that in v2.
+
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
 
