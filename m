@@ -1,292 +1,271 @@
-Return-Path: <linux-pci+bounces-42950-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42951-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37A3ACB5C67
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 13:17:52 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D42A2CB5DB5
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 13:29:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 372673002933
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 12:17:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6B9303054C95
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 12:26:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42B672D0C7E;
-	Thu, 11 Dec 2025 12:17:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFEDA313289;
+	Thu, 11 Dec 2025 12:21:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gQIe56YK"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IjInWeKl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599982C11CE
-	for <linux-pci@vger.kernel.org>; Thu, 11 Dec 2025 12:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB3531327B;
+	Thu, 11 Dec 2025 12:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765455470; cv=none; b=E5xersywYSWAMAkjMC90/sWPy5ZD4pMdd4kBvhkm8B71PYt01+90jwZBRfyvq7k6HseBAldtaYBveyFL6FlB0VdXMPAJnVrq1ly06aVhkBYCp3YTS//vzOuB3YhABzWaAHhPvEMxuL+6kp1ojIzDvlFs/ALDlqzZLHoQbhafUC8=
+	t=1765455670; cv=none; b=qGl6p8QZn3CdBtZBswlNBwWFksJ/DHQZd3TgfxID6We/QBDcmM9Iv+iRnEOVygKfX171uGGHiVzZBixTMP06rMfPG5XLMI+LDMrQPIROCLabPpqS+Y+GTJbbAW61hL4Y+VMxMA5INtfjAS1VT7lAcqAJSMQ9ScVfsNbltAhKzQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765455470; c=relaxed/simple;
-	bh=T9voSQJkPi2EtytpiXoas2UEfL9fibeQUniNcbPUzfA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lJtRnOmEPSqde1FlEIPk0/W9SvjZR2aQOWPw7jdvDIHPROhYEI94HseNSQJfH+aFplZulAJDba7tE7qOhJkHHCKQG5rTtbyOz2xXyPnRL+oMkYcsXfcj5WCO64Uexxulg+Uhzq/g5b+dQUiO2e3IcgGQm2hdZ/ywwx8gLMo1uug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gQIe56YK; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765455465; x=1796991465;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=T9voSQJkPi2EtytpiXoas2UEfL9fibeQUniNcbPUzfA=;
-  b=gQIe56YKx2y9kFrml0aItDnTebasDoMPZttJOuqWHh9VH5nyk/7r/9WR
-   iO7dxjP2bZpIVS2SLx9ZsFECS01f6p9W0u7rRjNX/SOT3Ua0xU7RFuPGQ
-   sxRb8xgWDiP9gGTrnl/EiYwvpuVlGQP5zzS9ZzkZOMWB8PHdCIQd9QSsX
-   kFMP/8dpjSGvHAx5RZp0+SruGqeC+8zzZ8BsOZ9tx30T2r5EyzdNIgWNn
-   GjETXNayLXF4X+VLITToL8l5zpVE0DIG/rZst1e2rscvWKHxPIBDYZCoA
-   g8BD2zldGVN8CrbNudz5W0npDv5i/bC0OwUjaUzAhTLpc8LZu12fwprcU
-   w==;
-X-CSE-ConnectionGUID: xTXpF2riRGukXn7zbYFE/g==
-X-CSE-MsgGUID: ILTtJFgkTlmZxEi9IwG9hg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11638"; a="67167623"
-X-IronPort-AV: E=Sophos;i="6.21,265,1763452800"; 
-   d="scan'208";a="67167623"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2025 04:17:45 -0800
-X-CSE-ConnectionGUID: nd2SuqZSQqepjASeVs7YwA==
-X-CSE-MsgGUID: 15o38D0jRpeCl1cp4luElg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,265,1763452800"; 
-   d="scan'208";a="227436760"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.219])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2025 04:17:43 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 11 Dec 2025 14:17:39 +0200 (EET)
-To: Guixin Liu <kanie@linux.alibaba.com>
-cc: Bjorn Helgaas <bhelgaas@google.com>, 
-    Andy Shevchenko <andriy.shevchenko@intel.com>, 
-    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-    linux-pci@vger.kernel.org
-Subject: Re: [PATCH v8 2/2] PCI: Check rom header and data structure addr
- before accessing
-In-Reply-To: <20251211120540.3362-3-kanie@linux.alibaba.com>
-Message-ID: <53567985-e55f-0a0e-5dfb-54c387d771a4@linux.intel.com>
-References: <20251211120540.3362-1-kanie@linux.alibaba.com> <20251211120540.3362-3-kanie@linux.alibaba.com>
+	s=arc-20240116; t=1765455670; c=relaxed/simple;
+	bh=/vgpPVra5oX60x9VjkwZBWSoe+NZGWdku0olx5e7T7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mZmqaxaHTF5STog+yxIDEiQ+8rzfd9nMW9aa+qTFVyeaGJXhhtCfyX39kWFbIxP2/ikcahdwNQ82kdTnCwzf5sIpPPWRB/qdpjQPAP56NOTX0bXmAyX0mgR1FnmT+nZqOC5A51w/n/YoasMP5YyTv0v2WUVO/wshGATg0iPye28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IjInWeKl; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 4618F4E41B72;
+	Thu, 11 Dec 2025 12:21:06 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id EC92660738;
+	Thu, 11 Dec 2025 12:21:05 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0008B103C8C7B;
+	Thu, 11 Dec 2025 13:20:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1765455663; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=y60RLBstvqr0/tZgH22eIXq0hipLzZ65ZyEuPfHKBSU=;
+	b=IjInWeKlYOFPOumcxa8beepe8z3enCkm9QJK7R7eqYYjwSwLdRD40bWQDLG8p48lOccH44
+	9YU/TzCVlvVpLBH+VisZeK+QOHu4XWz8XDCzY9/UldUTvpBnpLQrY6MsRgZTW0DUcUTBe4
+	hibWIU0HY6qCZJdJqbZJP4zCLvsjmBPv4RMN/0DSBbBZnIkJWur8sOjI5FpOp2WjXFssDo
+	n6FNS6Cg4jv8sDVHEVqN/NeB1i/T29a9TQ+V4fVEVUsILjTkiBTIkC0m/ee7SA5YBVSF2y
+	zhhNHhmGfVvaoZgGD3mkjX0rl8yUEpSeXJno276hVApN2fvcwOEqe/6Na5xCoQ==
+Date: Thu, 11 Dec 2025 13:20:44 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Kalle Niemi
+ <kaleposti@gmail.com>, Rob Herring <robh@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich
+ <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi Shyti
+ <andi.shyti@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas
+ <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>,
+ Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes
+ <david.rhodes@cirrus.com>, Linus Walleij <linus.walleij@linaro.org>, Ulf
+ Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Andy
+ Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally
+ <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+ <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Alison
+ Schofield <alison.schofield@intel.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+ <dan.j.williams@intel.com>, Wolfram Sang <wsa@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
+ overlays"
+Message-ID: <20251211132044.10f5b1ea@bootlin.com>
+In-Reply-To: <c50c40cc-69f6-436c-a94e-94a3a10f6727@gmail.com>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+	<20251015071420.1173068-2-herve.codina@bootlin.com>
+	<f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
+	<CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
+	<5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
+	<CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+	<072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
+	<CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+	<55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
+	<20251202102619.5cd971cc@bootlin.com>
+	<088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com>
+	<20251202175836.747593c0@bootlin.com>
+	<dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
+	<20251204083839.4fb8a4b1@bootlin.com>
+	<CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
+	<20251210132140.32dbc3d7@bootlin.com>
+	<c50c40cc-69f6-436c-a94e-94a3a10f6727@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, 11 Dec 2025, Guixin Liu wrote:
+Hi Matti,
 
-> We meet a crash when running stress-ng on x86_64 machine:
-> 
->   BUG: unable to handle page fault for address: ffa0000007f40000
->   RIP: 0010:pci_get_rom_size+0x52/0x220
->   Call Trace:
->   <TASK>
->     pci_map_rom+0x80/0x130
->     pci_read_rom+0x4b/0xe0
->     kernfs_file_read_iter+0x96/0x180
->     vfs_read+0x1b1/0x300
-> 
-> Our analysis reveals that the rom space's start address is
-> 0xffa0000007f30000, and size is 0x10000. Because of broken rom
-> space, before calling readl(pds), the pds's value is
-> 0xffa0000007f3ffff, which is already pointed to the rom space
-> end, invoking readl() would read 4 bytes therefore cause an
-> out-of-bounds access and trigger a crash.
-> Fix this by adding image header and data structure checking.
-> 
-> We also found another crash on arm64 machine:
-> 
->   Unable to handle kernel paging request at virtual address
-> ffff8000dd1393ff
->   Mem abort info:
->   ESR = 0x0000000096000021
->   EC = 0x25: DABT (current EL), IL = 32 bits
->   SET = 0, FnV = 0
->   EA = 0, S1PTW = 0
->   FSC = 0x21: alignment fault
-> 
-> The call trace is the same with x86_64, but the crash reason is
-> that the data structure addr is not aligned with 4, and arm64
-> machine report "alignment fault". Fix this by adding alignment
-> checking.
-> 
-> Fixes: 47b975d234ea ("PCI: Avoid iterating through memory outside the resource window")
-> Suggested-by: Guanghui Feng <guanghuifeng@linux.alibaba.com>
-> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> ---
->  drivers/pci/rom.c | 116 ++++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 97 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
-> index 3cb0e94f0e86..52a89e126271 100644
-> --- a/drivers/pci/rom.c
-> +++ b/drivers/pci/rom.c
-> @@ -6,9 +6,12 @@
->   * (C) Copyright 2004 Silicon Graphics, Inc. Jesse Barnes <jbarnes@sgi.com>
->   */
->  
-> +#include <linux/align.h>
->  #include <linux/bits.h>
-> -#include <linux/kernel.h>
->  #include <linux/export.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/overflow.h>
->  #include <linux/pci.h>
->  #include <linux/slab.h>
->  
-> @@ -81,6 +84,91 @@ void pci_disable_rom(struct pci_dev *pdev)
->  }
->  EXPORT_SYMBOL_GPL(pci_disable_rom);
->  
-> +static bool pci_rom_is_header_valid(struct pci_dev *pdev,
-> +				    void __iomem *image,
-> +				    void __iomem *rom,
-> +				    size_t size,
-> +				    bool last_image)
-> +{
-> +	unsigned long rom_end = (unsigned long)rom + size - 1;
-> +	unsigned long header_end;
-> +	unsigned short signature;
+On Thu, 11 Dec 2025 10:34:46 +0200
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-Please use u16 (to match readw return type).
-
-> +
-> +	/*
-> +	 * Some CPU architectures require IOMEM access addresses to
-> +	 * be aligned, for example arm64, so since we're about to
-> +	 * call readw(), we check here for 2-byte alignment.
-> +	 */
-> +	if (!IS_ALIGNED((unsigned long)image, 2))
-> +		return false;
-> +
-> +	if (check_add_overflow((unsigned long)image, PCI_ROM_HEADER_SIZE,
-> +				&header_end))
-> +		return false;
-> +
-> +	if (image < rom || header_end > rom_end)
-> +		return false;
-> +
-> +	/* Standard PCI ROMs start out with these bytes 55 AA */
-> +	signature = readw(image);
-> +	if (signature == PCI_ROM_IMAGE_SIGNATURE)
-> +		return true;
-> +
-> +	if (last_image) {
-> +		pci_info(pdev, "Invalid PCI ROM header signature: expecting %#06x, got %#06x\n",
-> +			 PCI_ROM_IMAGE_SIGNATURE, signature);
-> +	} else {
-> +		pci_info(pdev, "No more image in the PCI ROM\n");
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static bool pci_rom_is_data_struct_valid(struct pci_dev *pdev,
-> +					 void __iomem *pds,
-> +					 void __iomem *rom,
-> +					 size_t size)
-> +{
-> +	unsigned long rom_end = (unsigned long)rom + size - 1;
-> +	unsigned int signature;
-
-u32.
-
-> +	unsigned long end;
-> +	u16 data_len;
-> +
-> +	/*
-> +	 * Some CPU architectures require IOMEM access addresses to
-> +	 * be aligned, for example arm64, so since we're about to
-> +	 * call readl(), we check here for 4-byte alignment.
-> +	 */
-> +	if (!IS_ALIGNED((unsigned long)pds, 4))
-> +		return false;
-> +
-> +	/* Before reading length, check addr range. */
-> +	if (check_add_overflow((unsigned long)pds, PCI_ROM_DATA_STRUCT_LEN + 1,
-> +				&end))
-> +		return false;
-> +
-> +	if (pds < rom || end > rom_end)
-> +		return false;
-> +
-> +	data_len = readw(pds + PCI_ROM_DATA_STRUCT_LEN);
-> +	if (!data_len || data_len == U16_MAX)
-> +		return false;
-> +
-> +	if (check_add_overflow((unsigned long)pds, data_len, &end))
-> +		return false;
-> +
-> +	if (end > rom_end)
-> +		return false;
-> +
-> +	signature = readl(pds);
-> +	if (signature == PCI_ROM_DATA_STRUCT_SIGNATURE)
-> +		return true;
-> +
-> +	pci_info(pdev, "Invalid PCI ROM data signature: expecting %#010x, got %#010x\n",
-> +		 PCI_ROM_DATA_STRUCT_SIGNATURE, signature);
-> +	return false;
-> +}
-> +
->  /**
->   * pci_get_rom_size - obtain the actual size of the ROM image
->   * @pdev: target PCI device
-> @@ -96,38 +184,28 @@ static size_t pci_get_rom_size(struct pci_dev *pdev, void __iomem *rom,
->  			       size_t size)
->  {
->  	void __iomem *image;
-> -	int last_image;
->  	unsigned int length;
-> +	bool last_image;
->  
->  	image = rom;
->  	do {
->  		void __iomem *pds;
-> -		/* Standard PCI ROMs start out with these bytes 55 AA */
-> -		if (readw(image) != PCI_ROM_IMAGE_SIGNATURE) {
-> -			pci_info(pdev, "Invalid PCI ROM header signature: expecting %#06x, got %#06x\n",
-> -				 PCI_ROM_IMAGE_SIGNATURE, readw(image));
-> +
-> +		if (!pci_rom_is_header_valid(pdev, image, rom, size, true))
->  			break;
-> -		}
-> +
->  		/* get the PCI data structure and check its "PCIR" signature */
->  		pds = image + readw(image + PCI_ROM_POINTER_TO_DATA_STRUCT);
-> -		if (readl(pds) != PCI_ROM_DATA_STRUCT_SIGNATURE) {
-> -			pci_info(pdev, "Invalid PCI ROM data signature: expecting %#010x, got %#010x\n",
-> -				 PCI_ROM_DATA_STRUCT_SIGNATURE, readl(pds));
-> +		if (!pci_rom_is_data_struct_valid(pdev, pds, rom, size))
->  			break;
-> -		}
-> +
->  		last_image = readb(pds + PCI_ROM_LAST_IMAGE_INDICATOR) &
->  				   PCI_ROM_LAST_IMAGE_INDICATOR_BIT;
->  		length = readw(pds + PCI_ROM_IMAGE_LEN);
->  		image += length * PCI_ROM_IMAGE_LEN_UNIT_SZ_512;
-> -		/* Avoid iterating through memory outside the resource window */
-> -		if (image >= rom + size)
-> +
-> +		if (!pci_rom_is_header_valid(pdev, image, rom, size, last_image))
->  			break;
-> -		if (!last_image) {
-> -			if (readw(image) != PCI_ROM_IMAGE_SIGNATURE) {
-> -				pci_info(pdev, "No more image in the PCI ROM\n");
-> -				break;
-> -			}
-> -		}
->  	} while (length && !last_image);
->  
->  	/* never return a size larger than the PCI resource window */
+> Hi Dee Ho peeps,
 > 
+> I tried to create a minimal piece of code/dts to demonstrate the issue 
+> seem in the ROHM automated testing.
+> 
+> On 10/12/2025 14:21, Herve Codina wrote:
+> > Hi Geert, Kalle, Rob,
+> > 
+> > On Thu, 4 Dec 2025 11:49:13 +0100
+> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:  
+> 
+> //snip
+> 
+> > When a new node is added, a new device is created. Indeed, because the
+> > driver is an MFD driver, it is a bus driver and handled by of_platform bus.  
+> 
+> We do also have an MFD device - but it is not a platform device but an 
+> I2C device - thus it should be probed by the I2C bus (if I'm not 
+> mistaken). So, I guess this is not bus-specific problem.
+> https://elixir.bootlin.com/linux/v6.18/source/drivers/mfd/rohm-bd718x7.c#L206
+> 
+> 
+> > My new node is considered by devlink as a node that will have a device ready
+> > to work (driver attached and device probed). A link is created between this
+> > node and the consumers of this node (i.e. the SPI controller). devlink is
+> > waiting for this provider to be ready before allowing the its consumer to probe.
+> > This node (simple pinmux description) will never lead to a device and devlink
+> > will never see this "provider" ready.  
+> 
+> I believe Kalle did see the same "probe-not-called" -problem, even when 
+> disabling the fw_devlink from the kernel commandline. (It's worth 
+> mentioning that I am not sure if Kalle tried if probe was called with 
+> "previously working" kernels when fw_devlink is disabled).
+> 
+> > Did a test with a Renesas RZ/N1D (r9a06g032) based board and built a similar
+> > overlay involving I2C controller pinmux, I2C controller and an EEPROM.
+> > 
+> > Here, also the overlay didn't work but the issue is different.
+> > 
+> > The pinmux definition for pinctrl (i.e. pinctrl subnodes) are looked when
+> > the pinctrl driver probes. Adding a new node later is not handled by the
+> > pinctrl driver.
+> > Applying the overlay leads to a simple:
+> >    [   16.934168] rzn1-pinctrl 40067000.pinctrl: unable to find group for node /soc/pinctrl@40067000/pins_i2c2
+> > 
+> > Indeed, the 'pins_i2c2' has been added by the overlay and was not present
+> > when the pinctrl probed.
+> > 
+> > Tried without adding a new pinmux node (pinctrl subnode) from the overlay
+> > and used nodes already existing in the base DT.
+> > 
+> > On my Marvell Armada 3720 board, it works with or without my patches.
+> > No regression detected due to my patches.
+> > 
+> > On my RZ/N1D board, it works also with or without my patches.
+> > Here also, no regression detected.
+> > 
+> > Also, on my Marvell Armada 3720 board, I can plug my LAN966x PCI board.
+> > The LAN966x PCI driver used an overlay to describe the LAN966x PCI board.
+> > 
+> > With the upstream patch not reverted, i.e. 1a50d9403fb9 ("treewide: Fix
+> > probing of devices in DT overlays")" applied, devlinks created for the
+> > LAN966x PCI board internal devices are incorrect and lead to crashes when
+> > the LAN966x PCI driver is removed due to wrong provider/consumer dependencies.
+> > 
+> > When this patch is reverted and replaced by "of: dynamic: Fix overlayed
+> > devices not probing because of fw_devlink", devlinks created for the LAN966x
+> > PCI board internal devices are corrects and crashes are no more present on
+> > removal.
+> > 
+> > Kalle, Geert, can you perform a test on your hardware with my patches
+> > applied and moving your pinmux definition from the overlay to the base
+> > device-tree?  
+> 
+> I got a bit lost regarding which patches to test :)
 
--- 
- i.
+The next-20251127 tag has every patches needed for the test.
+Tests you did with this kernel are perfectly valid. Many Thanks for that!
+
+> 
+> > The kernel you can use is for instance the kernel at the next-20251127 tag.
+> > Needed patches for test are present in this kernel:
+> >      - 76841259ac092 ("of: dynamic: Fix overlayed devices not probing because of fw_devlink")
+> >      - 7d67ddc5f0148 ("Revert "treewide: Fix probing of devices in DT overlays"")
+> >   
+> 
+> I did a minimal overlay test which can be ran on beaglebone black. I 
+> assume the same can be done on any board where you have 
+> (i2c/spi/xxx)-controller node with status="disabled". Doing this on BBB 
+> requires recompiling the beaglebone black (base)device-tree with -@ 
+> though, so that the overlay target nodes are found. I'll attach the 
+> files for interested.
+> 
+> overlay-test.c:
+> Is a 'device-driver' for device added in overlay. (simply a probe() with 
+> print, extracted from the bd71847 driver).
+> 
+> overlay-test.dts:
+> Is a minimal device-tree overlay describing the 'test device' matching 
+> above overlay-test driver. When this is overlaid using next-20251121 
+> (contains the 7d67ddc5f0148b3a03594a45bba5547e92640c89), probe in 
+> overlay-test.c is not called. When 
+> 7d67ddc5f0148b3a03594a45bba5547e92640c89 is reverted, the probe is called.
+> 
+> mva_overlay.c:
+> Is simplified 'glue-code' for adding an overlay to running kernel by 
+> feeding the compiled overlay to the bin_attribute - for example using:
+> 
+> dd if=/overlay-test.dtbo of=/sys/kernel/mva_overlay/overlay_add bs=4M
+> 
+> am335x-boneblack.dtb.dts.tmp and tps65217.dtsi:
+> are (intermediate) beaglebone-black device-trees which can be recompiled 
+> to a 'base device-tree' using:
+> 
+> dtc -O dtb -o am335x-boneblack.dtb -b 0 -@ am335x-boneblack.dtb.dts.tmp
+>   - but I suggest you to use the dts from your kernel build. I provided 
+> this just for the sake of the completeness.
+> 
+> Makefile:
+> Off-tree build targets to build the above DTSes and modules. Requires 
+> KERNEL_DIR and CC to be correctly set.
+> 
+> 
+> My findings:
+> The pinctrl node indeed plays a role. When the "pinctrl-0 = 
+> <&i2c1_pins>;" (and fragment0) was removed from the dts, the 
+> 'overlay-test' was probed with the "next-20251121".
+> 
+> With the pinctrl node, I see:
+> [  104.098958] probe of 4802a000.i2c returned -517 (EPROBE_DEFER I 
+> suppose) after 50 usecs
+> - and the 'overlay-test' probe is not called.
+
+Do you see the same trace with:
+- "pinctrl-0 = <&i2c1_pins>;" in your overlay
+- fragment0 removed from the overlay (i2c1_pins definition removed from
+  the overlay.
+- i2c1_pins node defined in your base DT.
+
+In other word, is the issues related to adding a pinctrl sub-node (pinctrl
+pins definition) in the overlay or is it something else?
+
+Best regards,
+Hervé
+
+
 
 
