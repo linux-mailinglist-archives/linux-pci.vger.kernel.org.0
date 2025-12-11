@@ -1,344 +1,229 @@
-Return-Path: <linux-pci+bounces-42922-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42923-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5EEDCB45C8
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 01:42:36 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99B93CB46D8
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 02:33:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7A9B53018D5A
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 00:42:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7B876305116E
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 01:31:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0599D2236EE;
-	Thu, 11 Dec 2025 00:42:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB8A826B764;
+	Thu, 11 Dec 2025 01:24:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="j4mJZWqS";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="GuKWHS2+"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="r4rDupcW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013008.outbound.protection.outlook.com [40.93.201.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62BE221F00
-	for <linux-pci@vger.kernel.org>; Thu, 11 Dec 2025 00:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765413738; cv=none; b=btNNot/bxz1UkZAztKO/8zMLxGj8cwLI5lvKqnVCS0+Zu7AWxusZHLDBG01EgKYdXpK7o6cCerIyHm6yZhkRFFAwlYPxx9ia1wZ5kp7vTHvZsmN8yspNpCtEHXdMog8Va9C4j+c55eioGjIozLq4bNI/nvtZR0OTbpWVmp6Yk18=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765413738; c=relaxed/simple;
-	bh=NOnK/W40x7knkTf4m28AQ5aw+F+jKj0hLSikZ5fNCwk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bk/WxXalcxNHlAuitenwNDau6SBcbbmLoKbTLwN5PMGd9VIdN1HlT/k5nvjoAYOZa2qw09r6bQPl1jiQzBAMYlQlZc7lXypayNujB37OJXm5wxx80WtFqwehvfGwCTF3yN9IyIu7VEFOUCLk3EXg9Fng1CcH7YblWxg/GAr9pAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=j4mJZWqS; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=GuKWHS2+; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BALP3Id4126241
-	for <linux-pci@vger.kernel.org>; Thu, 11 Dec 2025 00:42:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	EYOh9CKt3yKfImURGfqZ8xiIJqWoNk/RHXJwsQk2azs=; b=j4mJZWqSfcVh4aKm
-	0BYTQL2xT8+RI5zXkDwUo5mvDy6t2yt1WuR7aE9/Ii66XvKFFcIpJstbMtTmpE/0
-	ZcSq8T3k/j1GvBBAx4AlQiBzrI6nXFIy9ErNpS2ml7KcEWJlDPR2mw8Mq1icGQk3
-	+4IC8J36OQr0oH+Se4RhjJn7kxCeFiXEI8NxdVPaL0TqJAXnXHoZvoj2jJcfjAmC
-	v4RnOs4NT1OB3SwibsK7ALELZ7UGFUPl4w4EzlIyrmXpb8QOREjFl2DCfLAu/lzI
-	f3bxhTiMDDU5YlvT07Pj4lLRCTpSk7b4qNRk94i70M+gDuUpuS8tGm+hqix8GMrK
-	0gENtQ==
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4aybhp9ms2-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Thu, 11 Dec 2025 00:42:14 +0000 (GMT)
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-340ad9349b3so835665a91.1
-        for <linux-pci@vger.kernel.org>; Wed, 10 Dec 2025 16:42:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1765413734; x=1766018534; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EYOh9CKt3yKfImURGfqZ8xiIJqWoNk/RHXJwsQk2azs=;
-        b=GuKWHS2+PKaOtMTTKsN0p/ZBu9AdUjXxBxZfT02zPppZ+jDn4v9PJHG+xft5gNQFO2
-         mDXa1jgTl6DRjJpWArL+EkKmXTC7bFaPe495g0MMO5wk7g3dWPWhnqvya83M/3rEzkQK
-         iJrBUB6Y54wy7OjDSzvOF7LB/MNF0VpisuXrI6X1tVcJh8NDTrYD9kEA0362pqWLCLPE
-         XxdaGsS4oi9IBQB+LDdl7/DsxN4UvxGgmgJ7PnpEpjSXM/Fj/8h7PBExm3eXERo6UlQJ
-         BujRF88oXTxJbW8TVQFgLpvNWM42NafdzvmyD+pHF+1qrPyhS1oSugaG5t4pqTqkqO39
-         W6uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765413734; x=1766018534;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EYOh9CKt3yKfImURGfqZ8xiIJqWoNk/RHXJwsQk2azs=;
-        b=kk/1KtrBvIao9JojjSWsanIPgGjeiwHGT3K6Wn3nq//5neYWOxss3pvMxTpAHtcAia
-         EI2MgqucCLgClaXTDWxmLWepdJzvk7O35ARIbJtm23P4yVtJ8Wbu/hddBGiMi3IZjijF
-         jm5r39cpaKeM113a5XbtEub0IEwZ5/SdRiSI668cdg+8reXX9qm5azENjVcDPee8yVNq
-         Wu1GDMEEIdzFPG9QxnqDWg6H+l5mZFIA9qXo6hP2Im30E7jN7z1dbhuFu2TTYhSzXd6k
-         +xYaT0WEvLNWUSYh3AmQsh+N04wgope5uJ/wAJYacM+Eh0eSlLf1voET5IhttJMbT9YQ
-         ewNA==
-X-Forwarded-Encrypted: i=1; AJvYcCXuJoqDXY4GL0MkcaHH+eiMttssjbxnEJHAakT8y79ISxuo93qC1U2+tBxKAh2Oi4A0KK/eJuG3oyY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytAoKV97nGR2C8g7mloQCn08G8QR7aDqOFvW9ImFIllcjMAeE+
-	X6NCyvY7Qi18ChecbQ0coW+eKlxsmIJzvRSS2FEPZwj7MGSM87gvWpYqH80H3te83v2cPcrzAaF
-	QZew0beQpHXVXEAgKkQwLT7W9znIUO1WEYbL/IXvhPi1MMpRaaAXd8G5vcfDdJW4=
-X-Gm-Gg: AY/fxX5q+nGT0K9XIwfGlOfm81NnFhFMkl/50MtcanAmsOxGk7v4WSyhzsOEvNQ53xP
-	/bsZcuxjbt7P4K43F7GaHu+HKQSJvKCaGBtWNPw3McOuaJv7Z5M+1LsbdxudCrAvzEIk+ThAFHJ
-	l8VujjB//cfroyb5a1qI16we5BDs2SUN8sHrSd9UqSC6mlD7IWfW7ONilbjzCBZENuxL1F5b+BT
-	rEsYRq5WjAzjv8kZerxFagDixCik7CSIHI/PdATrIuggM6mmt5jg9yf9U8VpB8ONwcMjWvVcYss
-	BCHAtLC4E2D+7TcCPisquDDTY8BRaOY7CF7PJbvVNZyBFdufUNHDwvQRyG4QAbX4a0NaPJfeBxM
-	uN0te+e/yx2SgWfBDkCgL+Lb045uK7qtn+LEi6lLOlo/q
-X-Received: by 2002:a17:90b:1d04:b0:32b:9506:1780 with SMTP id 98e67ed59e1d1-34a7281a37emr4182447a91.9.1765413733695;
-        Wed, 10 Dec 2025 16:42:13 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEzVnt7zdOJV4tIVUdTd0Iljd79rdgfszDHAS9d7dWKHGfcheesKUfZDrWbLlhNo657TfxRfQ==
-X-Received: by 2002:a17:90b:1d04:b0:32b:9506:1780 with SMTP id 98e67ed59e1d1-34a7281a37emr4182413a91.9.1765413733189;
-        Wed, 10 Dec 2025 16:42:13 -0800 (PST)
-Received: from [192.168.29.63] ([49.43.227.137])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c0cd2880d96sm102560a12.2.2025.12.10.16.42.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Dec 2025 16:42:12 -0800 (PST)
-Message-ID: <925c7431-823c-45e7-b446-ac1ed98eadd5@oss.qualcomm.com>
-Date: Thu, 11 Dec 2025 06:12:06 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F2223EA83;
+	Thu, 11 Dec 2025 01:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765416295; cv=fail; b=Ld1nATb5UDrAyJAWtgBrm3xvD8K6WO2Bf1tG0Z0sjB/RvKIWQH6tIkdunw54yj0JGs2s2n1jR/orQiAEgAPHDV+lcosYUGiEILbhSDgUeTDHbd3z+SjZLaUFTuL/SveixX2BUNd3wUqNrtbgePenRq/X27tjAwnUd/uu2IU+AmY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765416295; c=relaxed/simple;
+	bh=ez9h0pJLpAxzBBFz/v/Q2NFk6NAGSbMdp6wM1t/IrK8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=aTAJ0FWRIY9LAr9qg34BeJDfMsbJziTYhy/tPQwLp/FJ8H78Kx1VPrGQ0kkF6Nm15msPe7Kb38M2brp/CXcCRK+zRRHfKtaNR+UR0cvzcxczZpfCh5+6YBZfkj8Z194x3BrcpJBZbI977k1Kiz0+yzoMPglpg/fWFMqwW0rIISg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=r4rDupcW; arc=fail smtp.client-ip=40.93.201.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Tkf7K71HFYPXK+Mcx+PcpGbXB7f2eU+/hZm4qD1sf1fQstc+qfsjM3UIVXoUIY7dGSFWT8BaLl6fDOSFiTxGZz9Ozn3UjRmLXDm6vqjUEkxaOR38HXRnTLJjpfC5hEv6FdpsbqYV2e7HIfTtrJJSonnBaL1nEXHUPO61gzD++LDdg9+Z/04M0zIsFe9R5OSVo/0Ex9P/qhj0h3sKXdNOqTGtBIbF+NPOXdmLXniHKhZKYLbW9qAxPgfWWhaIsibNdpjBCbV466UUePWpDZ9j2inWiiy1CLx26yaTiBmqmSIz8ETMoV+1a2bCcm41XKUXAbzkO7+6AbneCVyV9N143Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ez9h0pJLpAxzBBFz/v/Q2NFk6NAGSbMdp6wM1t/IrK8=;
+ b=ayABOEg3cAD033XUwwvVx1peILOVYbMpys0Ed445LHr6imanoT5x9qKXLCdFSX9y4AIGZWLKNkPo+m2obaokw+7Z7UcFkB+/XidrvykXKp2JmInVuS1yYytLqmM4j98TNvCDGjchB7DMeDltiYVexto8st2n2+iv1BC0ZD5mvXX7j1iQ/xP0caGLbTTubRW+odgkO+rYacVWmquMmzOlghLVyfGc6YNCSbFJyCvsPG4BWMp0kN/hxPT2Y5G2t7ru8gNLnbOSYhUAdoz7uDQQoqB6Ftlq6icwM/m50rkxNyNuSOPaBxT2kd20DHW9MtNmomAycmnnPtpx4WqQCCnpPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ez9h0pJLpAxzBBFz/v/Q2NFk6NAGSbMdp6wM1t/IrK8=;
+ b=r4rDupcWZRgwzAD7x3NZSj5gKmcY01NU2a76SnLeVO2RQTqEO/eY9tevPfsUBhqsJAqQ0QxAoClEb1Uc8W41GUHe8AXZEnlbR5Ze7X9zogDsgDEQL4B4mR6XOm4O7kLtFWndHGtWyGU0wjpBFuXNwrCf7iHJiVmLhWOedcZRNNIb+L8hfxswElKLx47LiUq9dreaM8o8sJ1ZIFc9j1taE65cvejJgAKhTOLWTGLjuc9Vn9IZmaA53APXSmx/OZPERMaTwcCE5ec4WOxNFPcx0BcEoGcjA9/WBbvQVmyBSS9dIjaD2XEyySmiRNeOTOZAW1gY1Es9IBYvDqQo8cs5nA==
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by PH7PR12MB8038.namprd12.prod.outlook.com (2603:10b6:510:27c::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.9; Thu, 11 Dec
+ 2025 01:24:49 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%2]) with mapi id 15.20.9412.005; Thu, 11 Dec 2025
+ 01:24:49 +0000
+From: Joel Fernandes <joelagnelf@nvidia.com>
+To: Zhi Wang <zhiw@nvidia.com>
+CC: "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"airlied@gmail.com" <airlied@gmail.com>, "dakr@kernel.org" <dakr@kernel.org>,
+	"aliceryhl@google.com" <aliceryhl@google.com>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"ojeda@kernel.org" <ojeda@kernel.org>, "alex.gaynor@gmail.com"
+	<alex.gaynor@gmail.com>, "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+	"gary@garyguo.net" <gary@garyguo.net>, "bjorn3_gh@protonmail.com"
+	<bjorn3_gh@protonmail.com>, "lossin@kernel.org" <lossin@kernel.org>,
+	"a.hindborg@kernel.org" <a.hindborg@kernel.org>, "tmgross@umich.edu"
+	<tmgross@umich.edu>, "markus.probst@posteo.de" <markus.probst@posteo.de>,
+	"helgaas@kernel.org" <helgaas@kernel.org>, Neo Jia <cjia@nvidia.com>,
+	"alex@shazbot.org" <alex@shazbot.org>, Surath Mitra <smitra@nvidia.com>,
+	Ankit Agrawal <ankita@nvidia.com>, Aniket Agashe <aniketa@nvidia.com>, Kirti
+ Wankhede <kwankhede@nvidia.com>, "Tarun Gupta (SW-GPU)"
+	<targupta@nvidia.com>, Alexandre Courbot <acourbot@nvidia.com>, John Hubbard
+	<jhubbard@nvidia.com>, "zhiwang@kernel.org" <zhiwang@kernel.org>
+Subject: Re: [RFC 7/7] gpu: nova-core: load the scrubber ucode when vGPU
+ support is enabled
+Thread-Topic: [RFC 7/7] gpu: nova-core: load the scrubber ucode when vGPU
+ support is enabled
+Thread-Index: AQHcZq3ICou07m2NR0qQln4XE6jvOLUVdFkAgAPn+oCAAlA02A==
+Date: Thu, 11 Dec 2025 01:24:49 +0000
+Message-ID: <E8245EE2-887A-447A-8576-DC845FD57DC1@nvidia.com>
+References: <20251206124208.305963-1-zhiw@nvidia.com>
+ <20251206124208.305963-8-zhiw@nvidia.com>
+ <47c05bcf-7591-4148-8783-0c107b0c3c9d@nvidia.com>
+ <20251209160515.6658881a@inno-ThinkPad-X280>
+In-Reply-To: <20251209160515.6658881a@inno-ThinkPad-X280>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN7PR12MB8059:EE_|PH7PR12MB8038:EE_
+x-ms-office365-filtering-correlation-id: 07fe6a33-f752-4872-9960-08de38541401
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|366016|7416014|38070700021;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?bVBSaTk0UXN0eXRSYWJOOFdjYnJwQUVuNTZ3K0JHTkVjemNZZ0J4WWdUbkh4?=
+ =?utf-8?B?MUJKNDBYeW5hSTk2RkwxRnR3cHZ3Z3dlb0F2Zk9iVWxCcG5vRDV0MlJXSWcy?=
+ =?utf-8?B?M0lYL0FHbHlOVGwrdmNWMU51UGZBM2NOYmlyd2hSN2pGNTdSeEE3Z09xNUFV?=
+ =?utf-8?B?NlFydzNmci9jd2E1RzdlL0pWcE1ZODljTTZXaEJZSDE2VXh6RDdBRjBtdkxH?=
+ =?utf-8?B?VmUwRkRVUzFBTG55U09sMG13cndhVm1vdzkvQTZqU21QQnYxaklydFNBNEhO?=
+ =?utf-8?B?MW96MGxhL09LbmJ3QS8xVGZwMGdGUVBDL1hsalloazR3elJoZGhESGM3S0Jn?=
+ =?utf-8?B?Ym5NZzJLWWRnTUFCZ2t4UnZBamtUSVRuV1pUYnMvc29nMVJldStaZmFOVkJL?=
+ =?utf-8?B?Q0tXUE9xQ3dIckRpNzYweDZQZzZyaUtScUtjc1Z2YzZzT0h4bXNCWmE4MVZZ?=
+ =?utf-8?B?UmdlYndsdnhhdW9nTmhmL3dQdGR6SUpTMFRoSVF2WEowbExEODNwa201L1Zv?=
+ =?utf-8?B?TC9oMmZ6b2JINmp3K09HZklscWhTV0ZYYWsxOTNUbjNBUmdrVXVKSHFWYUJV?=
+ =?utf-8?B?SDZSQmFNUnlkZWtnQ1ZBMSt3Q011S1QzZ1VXSDQ1TnFtckhFc09KdU9yWm9K?=
+ =?utf-8?B?YVkrZkVESVFFSEpKVkpZZVRZY3hJQTR1ODlpWmFQemxiNXRiU084RXEwa2hq?=
+ =?utf-8?B?MnJRdTBWb1NWRkVnU05zUjRUNjVWVlk1TS9qcmZDN2cxS2wyR3IwaWFZSHZO?=
+ =?utf-8?B?ZGE4MTIrWDg2cFMwTnVXbnZ5d0FZMTBoYlNpS08raWNHZkFHQ1pYVGF6R0Fo?=
+ =?utf-8?B?VklYWnJvWWNKODRGQ0pVTVRCUWZGUGRTczNvVmJ1Mm9zdXZlSmRZd2ZsemUr?=
+ =?utf-8?B?V0hydVJRTGtGaktFVEx1S3RaZFprWW0rMENWQnA2R2dPTTJOcjNLMGtaRTc1?=
+ =?utf-8?B?M01GdmJncXM3VUJMZi9mcEE2RkpXTERHbCtHNUlMdmx3T2VNNDN0WGIvTHZh?=
+ =?utf-8?B?NzlPMmQrZ1lCeCtDRy9LY0ZVaTZKY0RoZWRpME9tUDltZ2drZDYwY2J5d21U?=
+ =?utf-8?B?c2ZvVUtEMENPUm5zRHFRem0wUHgrQU5iTWRiQ1hUNkRJMHJpUUhnWko4Tmcx?=
+ =?utf-8?B?bGkwREVRQ1J1WjlYTndFRDlPUmJ4Y1pKb0dTNGg3OUwxdDQvMGs0UEVUMjUy?=
+ =?utf-8?B?NGJ6Kzl6OGFvb3hsVTVvZzgzcWs2L2tjNnhiM3lkVUxYMWc0dDc4aDNxeFF2?=
+ =?utf-8?B?RGdBVnp1RmJvVEZPeDZ2V1d5eGcrTnJka0IrZWNyWTdrWW9qMEhsNit5eVFu?=
+ =?utf-8?B?UytROGJuMlUrTXdLVXp6L2k0dEl4OUJUQy92MG1hSFlPZVdpYVYzbmxFYkhV?=
+ =?utf-8?B?UTVYWG5hWUQzK0MrYXBQTWdoVjVxV1RGVUo4NGpmRWlTSjRUWElzSDdwekkv?=
+ =?utf-8?B?UmU2UmEySHNwWUQxOUtSbVA2ejFNaWhtL1VrcndaTlRnbDhCbGVOMjM5aENo?=
+ =?utf-8?B?TVdFR0FOYUs4WWxmakFITWd6QU1RaEtrTXZMaUZrV3huYW1oK2pLRDdOMStH?=
+ =?utf-8?B?K1dBWmorQzl5cjlqUTNkRzBwRDFiYWV4ZXgrc1NBclVOcVpvS3lqcUZuN2ZK?=
+ =?utf-8?B?dUpnaS9IMDNSNHFQbUtDcEp1K1pMQlE1dFByNWplNkcyQ1M2M2NqRklncm52?=
+ =?utf-8?B?cGFtNDR4RjZKWmZjZ3ZLN0xvZXVacTMrRjRQeVN6T3dodXlqYUU4SjIzaUJ1?=
+ =?utf-8?B?TmVoNWtYdUhPc2gvSG1KbGtEOGd2THgzM1Jqb3RRWFl2dDlNalFLRlI0ZDc3?=
+ =?utf-8?B?OUh2K1UwOEVWVTdleUxnYWJ5NTlDQ0F2Z1FaM0FpN3dNV3dCOW1HbXVRMy9Z?=
+ =?utf-8?B?MUxmYlVWajRDVzhTOThPMmtBVE1GNUVXbGFUd2xIa1JLNXJxQW4xcDJzQlo5?=
+ =?utf-8?B?NmNnRzl0bVdBSHBES250OHlpcm04bUp2dTk0ZW9QaWxicDlnSERoR2NsWTdp?=
+ =?utf-8?B?aUFLd3pqZ2NJWStGdmlDZUM1QWxyZmdDcGxXckcyWEs2KzFBZlpwT1I0ZnR1?=
+ =?utf-8?Q?/XpTWt?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?Vk1FL3hXd25FYW1hbnZyV0ltVkhGZkFub3ZKbUdja2FoTW1jQ2wwRXJTUVph?=
+ =?utf-8?B?bXRqbTRDSmRCSk9ZQzZsbEYrNkNzYkM2ZEo0Z2ovMi9Cd2V4cmRFU0l6ZDZV?=
+ =?utf-8?B?ZEZBZHVncnY3T0Z2cjlxVVdFaHhJaDV3bjk2ci9CcFQwNGk0L0ZIVTY1dzFF?=
+ =?utf-8?B?b2E2eTJ3U0dYbXV1K1JGNXlCWG0vZCszeDBrOFFSS0trNDRHQm1sak1yK2ZI?=
+ =?utf-8?B?UDJXK0VwZUNjU3VLUHlzOXpydmZlY3ViWlVadFlzb0g2a3N4dHJCT0FlSTBV?=
+ =?utf-8?B?YU9qdzhCcm1VOVU3SFdtV25xajFQVnhMTHZIQnhFelphKzB1aDcrOFA5eDF1?=
+ =?utf-8?B?MXh4WWExRGlDZDFNT1FXQzB3SThnLytaMG9ZZktUTUoreVVENko2ZTNBMHFB?=
+ =?utf-8?B?NUZGY0o1Rkh6MU9vVEJIMlBKL1pYY1RoZnFNNGN6VmlZV2hYTWZCSSt1VytU?=
+ =?utf-8?B?TEJrZ01kUzg0MklTcFJjUlA5cG9DK3FLR0VySE10UHpjTG9OUmFRM3cyTGll?=
+ =?utf-8?B?UnFRS3FKYlRGem5HWFNEM1RDSjVxaS9YeG5oL1BxZ3VLT2NjQjVhN1ZCdEx5?=
+ =?utf-8?B?RFg5UFBYRFBmMWJFL0tzUFprbXpyWGd2b3hBUjVyaG12cTVsSUlrdVU2N3Rj?=
+ =?utf-8?B?QW1CUnFRdzhzRGhJWHY1R3FDRWJOL0pCa3NmNHJPSDdLSmFacjR6MjNBRWVE?=
+ =?utf-8?B?TklxSkJubks3NkFIWGx4cXA1SENJOWljbGN6THh1b3d4WXl5V283Tk9VWTJ2?=
+ =?utf-8?B?SW95TW1aTjlNSmVleG1valdiVCtXREl6anVRejRJSmF2QURhcnZzeE0rRUh6?=
+ =?utf-8?B?NEVvcVRYdnZFb2s2cDVFbjJXVSs0bzFWUXZqd3Y1cHRTSEo2L1EvU2ZtUFFC?=
+ =?utf-8?B?Mlo5bEtLNHVNMHBXR0NkOGF6VUpkT0RBS0JodGpBamtEeGtQdm5vbm1VU1ll?=
+ =?utf-8?B?Z1FzdG15bjlvZmxVZ3QrZnV1cVpaMm11NXV2VmswWENuNWZkNE1ISkRqQjF0?=
+ =?utf-8?B?UnV6YnRTV1RleTU5NGxLdTlGZVFvRHk2bjdnUDAvVlpHV2J6dEF4MFNBbFNr?=
+ =?utf-8?B?aXNySWJOdXRzZTRZcUljZ29GWE1IN0sxaVRHUENwZG1sNkdHekJrK2tzUEJj?=
+ =?utf-8?B?Yks0L3NGV3BFOGhOeXdLa1JRd0VnUnh6dWhIeFh2R1N4RkdjNjBlWjM1Znc0?=
+ =?utf-8?B?OWpXZE9MWkdFSlNGTHA0YTBSZnhWZERKTzRvbnBIaktlM0JadHFvczRpQWg2?=
+ =?utf-8?B?SjVtS1N0V3c4dTBrRHF5eWJPak1nUU9RUDdNZzFkVHFoNnNSQnF0RDdsS2Vv?=
+ =?utf-8?B?NGRPelhoY3ozNXQrNWVrRFl2Y2h1VlZGblRGM3lYbGthbml6M1ljVDBBMWRP?=
+ =?utf-8?B?Znl1TTA4VVZyeGQyQldhbXFzT0lSNElHNE5ia0ROU214WWZWT2xibTVzdTNB?=
+ =?utf-8?B?S2pZUEI5akJwWWUyWXRoblZpVmNzRXptLzkrcmlNS1NiblNyZzZTc2k4cEEy?=
+ =?utf-8?B?V0FHRUtnZEsyNlgwcExZcFVRbVVzbjRpb3FuYTRGaUltdkxSUStxdXB2aGhi?=
+ =?utf-8?B?Ymo5Y3ZxSHpsdVJmdnk1QlpFbWZpMEcwemQ5Mnh2K0FUd2hzQXMzVFBjdFRn?=
+ =?utf-8?B?aVh0TW1sT2I0cktiZDZsOWJwRzNMc2l0cFIvZTR2QzRZM2FRd2x5ZlV2dnBs?=
+ =?utf-8?B?M0VLMUlsem5taytmeDhaNWRsd0hreTdVN1ZhVW5qUFVoWHlHQURRRGZuMGk3?=
+ =?utf-8?B?WnNXL3NFN1Q4NkNiSHdtRGlRM3c0Ni9rQjQ5Q0J4ODVPcDMzNVpBb1ZHRmRH?=
+ =?utf-8?B?TVVjRXgwR2JKaWUzeE5hVnFCZEZzUG83czZqUFVENXhwRHA5SGtabjdSZzFW?=
+ =?utf-8?B?TldzR2tQb0pjSlhra3lyZ244Nm5FRlBqdWhZU09UbE9tS3N6RDlKb3NhNUJE?=
+ =?utf-8?B?RGNCc0xSUmFGSEdIUnc1NzRMeVM2RHNZQ3BsUmtVbUUwVEs1YnRFcDk3TXha?=
+ =?utf-8?B?S2dnVHl3OCtxTEFPMTFIdXhhSVFIT0hXN0VyOE43bGFOVHdGV3NKV2pjeEJp?=
+ =?utf-8?B?U29pZ1UycUl0d1B5WXB1dmhMb2tIMkVJQ0pERUdncjFVYUlmaHBmSmxqWFFB?=
+ =?utf-8?Q?kzLPtHpDb+tqMoggqn1x94vug?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] PCI: Add support for PCIe WAKE# interrupt
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Machek <pavel@kernel.org>, linux-pm@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org,
-        Danilo Krummrich <dakr@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>, linux-pci@vger.kernel.org,
-        linux-gpio@vger.kernel.org, quic_vbadigan@quicinc.com,
-        quic_mrana@quicinc.com, sherry.sun@nxp.com,
-        Len Brown <lenb@kernel.org>
-References: <20251127-wakeirq_support-v6-0-60f581f94205@oss.qualcomm.com>
- <20251127-wakeirq_support-v6-2-60f581f94205@oss.qualcomm.com>
-Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <20251127-wakeirq_support-v6-2-60f581f94205@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjExMDAwNCBTYWx0ZWRfX+mN74F72AtPd
- or5u7R2EBJwFnFuqxLqr+aP7lvDFkBpP2yG3i0LlVcqwVxjDzKom3y75JYgU/jG1rroK/Qqse9/
- aPfrChITZrhd46BudzYeUajFBTGf/uiNT9ysFyh0eDQgeSphyTZopzj/BxxP8bnbGNE477M6rSD
- XnHzAtYhXE91HsWtGKK0/P0y6WDvnC8nvmoRmNR2Rx0Osh5siBN4Lbit9PtsRdx7LFWXOxTVa4D
- vAQidEIBQ02aD+jV9cG9ySbMNJ5XAPXXj38zD64bo5fuqcUctE2+zusnAcm8QJccWgfIijOIHfC
- 8bK5OOy7WbJasPttUA9Ajx0Z/3cDywvHXqDuw9X+YTTcdm7TKVwXfD+SjN5wW4m7TxmRVSCgWlN
- aQNv7dyF4eJIxAjJPfgvuxqXUNMd/Q==
-X-Proofpoint-ORIG-GUID: 8tesUH8hOxhVV3BrKoyknXBvVkSw87Xc
-X-Proofpoint-GUID: 8tesUH8hOxhVV3BrKoyknXBvVkSw87Xc
-X-Authority-Analysis: v=2.4 cv=LJ9rgZW9 c=1 sm=1 tr=0 ts=693a1366 cx=c_pps
- a=RP+M6JBNLl+fLTcSJhASfg==:117 a=fqkWdzeoxvaQSXQQJMpBPw==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=NEAV23lmAAAA:8
- a=KKAkSRfTAAAA:8 a=BO740POU_6FGrjW6UNEA:9 a=QEXdDO2ut3YA:10
- a=iS9zxrgQBfv6-_F4QbHw:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-10_03,2025-12-09_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 spamscore=0 clxscore=1015 priorityscore=1501 suspectscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 adultscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512110004
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07fe6a33-f752-4872-9960-08de38541401
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2025 01:24:49.6960
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YTlWGBvlpkJBGyMlhDjOjef8pqGW86D2q7UnEcWwzA4U/YPb9xYbIUZu1E4mMUCDunEyf9t8ZkR5ByQ8AebbYg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8038
 
-Hi Bjorn,
-
-Can you review this patch?
-
-- Krishna Chaitanya.
-On 11/27/2025 6:15 PM, Krishna Chaitanya Chundru wrote:
-> According to the PCIe specification 6, sec 5.3.3.2, there are two defined
-> wakeup mechanisms: Beacon and WAKE# for the Link wakeup mechanisms to
-> provide a means of signaling the platform to re-establish power and
-> reference clocks to the components within its domain. Beacon is a hardware
-> mechanism invisible to software (PCIe r7.0, sec 4.2.7.8.1). Adding WAKE#
-> support in PCI framework.
->
-> According to the PCIe specification, multiple WAKE# signals can exist in
-> a system. In configurations involving a PCIe switch, each downstream port
-> (DSP) of the switch may be connected to a separate WAKE# line, allowing
-> each endpoint to signal WAKE# independently. From figure 5.4, WAKE# can
-> also be terminated at the switch itself. To support this, the WAKE#
-> should be described in the device tree node of the endpint/bridge. If all
-> endpoints share a single WAKE# line, then WAKE# should be defined in the
-> each node.
->
-> To support legacy devicetree in direct attach case, driver will search
-> in root port node for WAKE# if the driver doesn't find in the endpoint
-> node.
->
-> In pci_device_add(), PCI framework will search for the WAKE# in its node,
-> If not found, it searches in its upstream port only if upstream port is
-> root port to support legacy bindings. Once found, register for the wake IRQ
-> in shared mode, as the WAKE# may be shared among multiple endpoints.
->
-> When the IRQ is asserted, the handle_threaded_wake_irq() handler triggers
-> a pm_runtime_resume(). The PM framework ensures that the parent device is
-> resumed before the child i.e controller driver which can bring back device
-> state to D0.
->
-> WAKE# is added in dts schema and merged based on below links.
->
-> Link: https://lore.kernel.org/all/20250515090517.3506772-1-krishna.chundru@oss.qualcomm.com/
-> Link: https://github.com/devicetree-org/dt-schema/pull/170
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->   drivers/pci/of.c     | 58 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->   drivers/pci/pci.h    |  6 ++++++
->   drivers/pci/probe.c  |  2 ++
->   drivers/pci/remove.c |  1 +
->   include/linux/pci.h  |  2 ++
->   5 files changed, 69 insertions(+)
->
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 3579265f119845637e163d9051437c89662762f8..fc33405a7b1f001e171277434663cc9dfe57c69b 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -7,6 +7,7 @@
->   #define pr_fmt(fmt)	"PCI: OF: " fmt
->   
->   #include <linux/cleanup.h>
-> +#include <linux/gpio/consumer.h>
->   #include <linux/irqdomain.h>
->   #include <linux/kernel.h>
->   #include <linux/pci.h>
-> @@ -15,6 +16,7 @@
->   #include <linux/of_address.h>
->   #include <linux/of_pci.h>
->   #include <linux/platform_device.h>
-> +#include <linux/pm_wakeirq.h>
->   #include "pci.h"
->   
->   #ifdef CONFIG_PCI
-> @@ -586,6 +588,62 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
->   	return irq_create_of_mapping(&oirq);
->   }
->   EXPORT_SYMBOL_GPL(of_irq_parse_and_map_pci);
-> +
-> +static void pci_configure_wake_irq(struct pci_dev *pdev, struct gpio_desc *wake)
-> +{
-> +	int ret, wake_irq;
-> +
-> +	if (!wake)
-> +		return;
-> +
-> +	wake_irq = gpiod_to_irq(wake);
-> +	if (wake_irq < 0) {
-> +		dev_err(&pdev->dev, "Failed to get wake irq: %d\n", wake_irq);
-> +		return;
-> +	}
-> +
-> +	device_init_wakeup(&pdev->dev, true);
-> +
-> +	ret = dev_pm_set_dedicated_shared_wake_irq(&pdev->dev, wake_irq,
-> +						   IRQ_TYPE_EDGE_FALLING);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Failed to set wake IRQ: %d\n", ret);
-> +		device_init_wakeup(&pdev->dev, false);
-> +	}
-> +}
-> +
-> +void pci_configure_of_wake_gpio(struct pci_dev *dev)
-> +{
-> +	struct device_node *dn = pci_device_to_OF_node(dev);
-> +	struct gpio_desc *gpio;
-> +	struct pci_dev *root;
-> +
-> +	if (!dn)
-> +		return;
-> +
-> +	gpio = fwnode_gpiod_get_index(of_fwnode_handle(dn),
-> +				      "wake", 0, GPIOD_IN | GPIOD_FLAGS_BIT_NONEXCLUSIVE, NULL);
-> +	if (IS_ERR(gpio)) {
-> +		/*
-> +		 * To support legacy devicetree, search in root port for WAKE#
-> +		 * in direct attach case.
-> +		 */
-> +		root = pci_upstream_bridge(dev);
-> +		if (pci_is_root_bus(root->bus))
-> +			pci_configure_wake_irq(dev, root->wake);
-> +	} else {
-> +		dev->wake = gpio;
-> +		pci_configure_wake_irq(dev, gpio);
-> +	}
-> +}
-> +
-> +void pci_remove_of_wake_gpio(struct pci_dev *dev)
-> +{
-> +	dev_pm_clear_wake_irq(&dev->dev);
-> +	device_init_wakeup(&dev->dev, false);
-> +	gpiod_put(dev->wake);
-> +	dev->wake = NULL;
-> +}
->   #endif	/* CONFIG_OF_IRQ */
->   
->   static int pci_parse_request_of_pci_ranges(struct device *dev,
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 4492b809094b5794bd94dfbc20102cb208c3fa2f..05cb240ecdb59f9833ca6dae2357fdbd012195d6 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -1056,6 +1056,9 @@ void pci_release_of_node(struct pci_dev *dev);
->   void pci_set_bus_of_node(struct pci_bus *bus);
->   void pci_release_bus_of_node(struct pci_bus *bus);
->   
-> +void pci_configure_of_wake_gpio(struct pci_dev *dev);
-> +void pci_remove_of_wake_gpio(struct pci_dev *dev);
-> +
->   int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge);
->   bool of_pci_supply_present(struct device_node *np);
->   int of_pci_get_equalization_presets(struct device *dev,
-> @@ -1101,6 +1104,9 @@ static inline int devm_of_pci_bridge_init(struct device *dev, struct pci_host_br
->   	return 0;
->   }
->   
-> +static inline void pci_configure_of_wake_gpio(struct pci_dev *dev) { }
-> +static inline void pci_remove_of_wake_gpio(struct pci_dev *dev) { }
-> +
->   static inline bool of_pci_supply_present(struct device_node *np)
->   {
->   	return false;
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 0ce98e18b5a876afe72af35a9f4a44d598e8d500..f9b879c8e3f72a9845f60577335019aa2002dc23 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2762,6 +2762,8 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
->   	ret = device_add(&dev->dev);
->   	WARN_ON(ret < 0);
->   
-> +	pci_configure_of_wake_gpio(dev);
-> +
->   	pci_npem_create(dev);
->   
->   	pci_doe_sysfs_init(dev);
-> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> index ce5c25adef5518e5aec30c41de37ea66d682f3b0..26e9c1df51c76344a1d7f5cc7edd433780e73474 100644
-> --- a/drivers/pci/remove.c
-> +++ b/drivers/pci/remove.c
-> @@ -54,6 +54,7 @@ static void pci_destroy_dev(struct pci_dev *dev)
->   	if (pci_dev_test_and_set_removed(dev))
->   		return;
->   
-> +	pci_remove_of_wake_gpio(dev);
->   	pci_doe_sysfs_teardown(dev);
->   	pci_npem_remove(dev);
->   
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index d1fdf81fbe1e427aecbc951fa3fdf65c20450b05..cd7b5eb82a430ead2f64d903a24a5b06a1b7b17e 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -555,6 +555,8 @@ struct pci_dev {
->   	/* These methods index pci_reset_fn_methods[] */
->   	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
->   
-> +	struct gpio_desc *wake; /* Holds WAKE# gpio */
-> +
->   #ifdef CONFIG_PCIE_TPH
->   	u16		tph_cap;	/* TPH capability offset */
->   	u8		tph_mode;	/* TPH mode */
->
-
+DQo+IE9uIERlYyA5LCAyMDI1LCBhdCAxMTowNeKAr1BNLCBaaGkgV2FuZyA8emhpd0BudmlkaWEu
+Y29tPiB3cm90ZToNCj4gWy4uXQ0KPj4+ICsNCj4+PiArICAgICAgICAgICAgZGV2X2RiZyEoDQo+
+Pj4gKyAgICAgICAgICAgICAgICBwZGV2LmFzX3JlZigpLA0KPj4+ICsgICAgICAgICAgICAgICAg
+IlNFQzIgTUJPWDA6IHs6I3h9LCBNQk9YMXs6I3h9XG4iLA0KPj4+ICsgICAgICAgICAgICAgICAg
+bWJveDAsDQo+Pj4gKyAgICAgICAgICAgICAgICBtYm94MQ0KPj4+ICsgICAgICAgICAgICApOw0K
+Pj4+ICsNCj4+PiArICAgICAgICAgICAgaWYNCj4+PiAhcmVnczo6TlZfUEdDNl9CU0lfU0VDVVJF
+X1NDUkFUQ0hfMTU6OnJlYWQoYmFyKS5zY3J1YmJlcl9jb21wbGV0ZWQoKQ0KPj4+IHsNCj4+PiAr
+ICAgICAgICAgICAgICAgIHJldHVybiBFcnIoRVRJTUVET1VUKTsgIA0KPj4gDQo+PiBTbyB1bmRl
+ciB3aGljaCBzaXR1YXRpb24gZG8geW91IGdldCB0byB0aGlzIHBvaW50DQo+PiAoIXNjcnViYmVy
+X2NvbXBsZXRlZCkgPyBCYXNpY2FsbHkgSSBhbSBub3Qgc3VyZSBpZiBFVElNRURPVVQgaXMgdGhl
+DQo+PiByaWdodCBlcnJvciB0byByZXR1cm4gaGVyZSwgYmVjYXVzZSBib290KCkgYWxyZWFkeSBy
+ZXR1cm5zIEVUSU1FRE9VVA0KPj4gYnkgd2FpdGluZyBmb3IgdGhlIGhhbHQuDQo+PiANCj4+IElm
+IHlvdSBzdGlsbCB3YW50IHJldHVybiBFVElNRURPVVQgaGVyZSwgdGhlbiBpdCBzb3VuZHMgbGlr
+ZSB5b3UncmUNCj4+IHdhaXRpbmcgZm9yIHNjcnViYmluZyBiZXlvbmQgdGhlIHdhaXRpbmcgYWxy
+ZWFkeSBkb25lIGJ5IGJvb3QoKS4gSWYNCj4+IHNvLCB0aGVuIHNob3VsZG4ndCB5b3UgbmVlZCB0
+byB1c2UgcmVhZF9wb2xsX3RpbWVvdXQoKSBoZXJlPw0KPj4gDQo+PiBwZXJoYXBzIHNvbWV0aGlu
+ZyBsaWtlOg0KPj4gDQo+PiByZWFkX3BvbGxfdGltZW91dCgNCj4+ICAgICB8fA0KPj4gT2socmVn
+czo6TlZfUEdDNl9CU0lfU0VDVVJFX1NDUkFUQ0hfMTU6OnJlYWQoYmFyKS5zY3J1YmJlcl9jb21w
+bGV0ZWQoKSksDQo+PiB8dmFsOiAmYm9vbHwgKnZhbCwgRGVsdGE6OmZyb21fbWlsbGlzKDEwKSwN
+Cj4+ICAgICBEZWx0YTo6ZnJvbV9zZWNzKDUpLA0KPj4gKT87DQo+PiANCj4gDQo+IFRoaXMgaXMg
+dGhlIGlkZW50aWNhbCBpbXBsZW1lbnRhdGlvbiB0byBPcGVuUk0gWzFdLiBBY2NvcmRpbmcgdG8g
+dGhhdA0KPiBwYXJ0cyBvZiBjb2RlLCBJIHRoaW5rIHRoZSBzY3J1YmJlciBydW5zIGluIHRoZSBi
+aW5hcnkgYm9vdGluZyBwcm9jZXNzLg0KPiBXaGVuIGl0IHNpZ25hbHMgdGhlIGZpcm13YXJlIGJv
+b3Rpbmcgc3VjY2Vzc2Z1bGx5LCB0aGUgc2NydWJiaW5nIHNob3VsZA0KPiBiZSBkb25lLiBMZXQg
+bWUgY2hhbmdlIHRvIGFub3RoZXIgZXJybm8uDQo+IA0KPiBbMV1odHRwczovL2dpdGh1Yi5jb20v
+TlZJRElBL29wZW4tZ3B1LWtlcm5lbC1tb2R1bGVzL2Jsb2IvYTViZmIxMGU3NWE0MDQ2YzVkOTkx
+YzY1ZjQ5YjVkMjkxNTFlNjhjZi9zcmMvbnZpZGlhL3NyYy9rZXJuZWwvZ3B1L2dzcC9hcmNoL2Fk
+YS9rZXJuZWxfZ3NwX2FkMTAyLmMjTDQ5DQoNClN1cmUsIGl0IHdhcyBqdXN0IG1pc2xlYWRpbmcg
+aW4gdGhlIHBhdGNoIHRoYXQgd2XigJlyZSByZXR1cm5pbmcgYSB0aW1lb3V0IGVycm9yLCB3aGVu
+IHRoZSBlcnJvciBpcyBzb21ldGhpbmcgZWxzZSAobGlrZSBzY3J1YmJlciBmYWlsZWQpLiBUaGFu
+a3MgZm9yIGNvcnJlY3RpbmcgaXQuDQoNCiAtIEpvZWwNCg0K
 
