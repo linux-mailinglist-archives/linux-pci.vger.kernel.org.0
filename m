@@ -1,128 +1,114 @@
-Return-Path: <linux-pci+bounces-42945-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42946-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB7D4CB5C34
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 13:10:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 34C8CCB5C3A
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 13:11:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DA66C3008EA0
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 12:05:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6FC6C30433EE
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Dec 2025 12:05:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35E1230C342;
-	Thu, 11 Dec 2025 12:05:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E1C030BF72;
+	Thu, 11 Dec 2025 12:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="UpFgkUcM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.75.44.102])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0DF5298CC4;
-	Thu, 11 Dec 2025 12:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.75.44.102
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB3130BF63
+	for <linux-pci@vger.kernel.org>; Thu, 11 Dec 2025 12:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765454748; cv=none; b=vGXa7GMADpb/M5Z6X9BN46GS0dd+d6jD2AqZdrPgjRiCDsEImbqndQOlfvaTa0t8WKNEJ5+0KlUST2oEQeWIUilDORWXIQZr4zL2QK5M9vwR4VmAAG2eZfKtEqsGwcQw6uoWgLLLAC+ZrbIRyV/v1MMcK4uBWJZZ0PiPx5mK3Kg=
+	t=1765454750; cv=none; b=cN5wknakKMH7qORC1rcGTG9xaHQT5Ke5JYGYBLrGkCnSg3yeGQSXW3IvSXXIKYdwKNBaLfxPzscUyHiGrsVDbyk34l9TpvDnSDZKlenxqB/f7cOHPaonWUlS/4ltB3R6yyhCeb3atlH8lzj4ErdKNaMltpwsxNi5unQLIVz9GaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765454748; c=relaxed/simple;
-	bh=VCirnhUPPMmS1WMzIoagoCnV/IRHr8M0spM8q8nwpQo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=tJ7/4qfDttPzEJN+3BYdA4MwXIPXfFT9YqHqkUGOKEJ6zZyhoqMO9OvhfREgEmhAtt/noDb6u8quM1z+MyVmBDknG+PrVPT6nqtkW/FdM2EKXE1EOM/e0CEunJ5Z6y+SM6pq9O1NEUy432iY9AcdUccz+SwqFwyGMeNj7QLfQZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=13.75.44.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
- ajax-webmail-app2 (Coremail) ; Thu, 11 Dec 2025 20:05:19 +0800 (GMT+08:00)
-Date: Thu, 11 Dec 2025 20:05:19 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-To: "Bjorn Helgaas" <helgaas@kernel.org>
-Cc: bhelgaas@google.com, mani@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	robh@kernel.org, p.zabel@pengutronix.de, jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com,
-	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
-	thippeswamy.havalige@amd.com, inochiama@gmail.com, Frank.li@nxp.com,
-	ningyu@eswincomputing.com, linmin@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com
-Subject: Re: Re: [PATCH v7 2/3] PCI: eic7700: Add Eswin PCIe host controller
- driver
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2025 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <20251210164327.GA3477281@bhelgaas>
-References: <20251210164327.GA3477281@bhelgaas>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1765454750; c=relaxed/simple;
+	bh=Uane/1PKH62OJe8QWsk9f5BsuoZgsLsbeOosUJ1qLtM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Uq9ATCgRltMFTUIXzRzoB7eZzS50NADzee3ahC61q1lPMrTzXvPnhCVZVO9KGLLDq9yO2tZYGkQJjR0yOg55ccGe6gbYLnOFUCSIWtU7mcPpiNelVpfRey7W12RZPimqhPkXLNc3HlA9mt5vr3ovHrxpsiVSPgyTBcnZM9usKEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=UpFgkUcM; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1765454744; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=iqHk/qtOMRum4HLB2nlr5VTYMk+Zt881ZFFJQn7HmoM=;
+	b=UpFgkUcMeMpuG3D+2hSNQzYSRO4y+oKsufid/3v5tJXT7UgG8Mnk8DMch+jBtxwLgeZoXm+HR54cnNzd39/XbkT6KyCXZ8EK06S1T9HPJr5/L3gR5EpKsrt9SrAkrwcCJJeBwvP9dMyfgMDFfIEUg/V4mORZuygcQs+kwu0L1Pk=
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0WuaP48e_1765454740 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 11 Dec 2025 20:05:44 +0800
+From: Guixin Liu <kanie@linux.alibaba.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org
+Subject: [PATCH v8 0/2] PCI: Fix crash when access broken rom
+Date: Thu, 11 Dec 2025 20:05:38 +0800
+Message-ID: <20251211120540.3362-1-kanie@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <68c6494b.1244.19b0d4d2b8c.Coremail.zhangsenchuan@eswincomputing.com>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:TQJkCgDnK69_szpp+RKEAA--.4044W
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAgENBmk5o
-	PodHgABsA
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Transfer-Encoding: 8bit
 
-CgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2VzLS0tLS0KPiBGcm9tOiAiQmpvcm4gSGVsZ2FhcyIg
-PGhlbGdhYXNAa2VybmVsLm9yZz4KPiBTZW5kIHRpbWU6VGh1cnNkYXksIDExLzEyLzIwMjUgMDA6
-NDM6MjcKPiBUbzogemhhbmdzZW5jaHVhbkBlc3dpbmNvbXB1dGluZy5jb20KPiBDYzogYmhlbGdh
-YXNAZ29vZ2xlLmNvbSwgbWFuaUBrZXJuZWwub3JnLCBrcnprK2R0QGtlcm5lbC5vcmcsIGNvbm9y
-K2R0QGtlcm5lbC5vcmcsIGxwaWVyYWxpc2lAa2VybmVsLm9yZywga3dpbGN6eW5za2lAa2VybmVs
-Lm9yZywgcm9iaEBrZXJuZWwub3JnLCBwLnphYmVsQHBlbmd1dHJvbml4LmRlLCBqaW5nb29oYW4x
-QGdtYWlsLmNvbSwgZ3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb20sIGxpbnV4LXBjaUB2Z2Vy
-Lmtlcm5lbC5vcmcsIGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnLCBsaW51eC1rZXJuZWxAdmdl
-ci5rZXJuZWwub3JnLCBjaHJpc3RpYW4uYnJ1ZWxAZm9zcy5zdC5jb20sIG1heWFuay5yYW5hQG9z
-cy5xdWFsY29tbS5jb20sIHNocmFkaGEudEBzYW1zdW5nLmNvbSwga3Jpc2huYS5jaHVuZHJ1QG9z
-cy5xdWFsY29tbS5jb20sIHRoaXBwZXN3YW15LmhhdmFsaWdlQGFtZC5jb20sIGlub2NoaWFtYUBn
-bWFpbC5jb20sIEZyYW5rLmxpQG54cC5jb20sIG5pbmd5dUBlc3dpbmNvbXB1dGluZy5jb20sIGxp
-bm1pbkBlc3dpbmNvbXB1dGluZy5jb20sIHBpbmtlc2gudmFnaGVsYUBlaW5mb2NoaXBzLmNvbSwg
-b3V5YW5naHVpQGVzd2luY29tcHV0aW5nLmNvbQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjcgMi8z
-XSBQQ0k6IGVpYzc3MDA6IEFkZCBFc3dpbiBQQ0llIGhvc3QgY29udHJvbGxlciBkcml2ZXIKPiAK
-PiBPbiBUdWUsIERlYyAwMiwgMjAyNSBhdCAwNTowNDowNlBNICswODAwLCB6aGFuZ3NlbmNodWFu
-QGVzd2luY29tcHV0aW5nLmNvbSB3cm90ZToKPiA+IEZyb206IFNlbmNodWFuIFpoYW5nIDx6aGFu
-Z3NlbmNodWFuQGVzd2luY29tcHV0aW5nLmNvbT4KPiA+IAo+ID4gQWRkIGRyaXZlciBmb3IgdGhl
-IEVzd2luIEVJQzc3MDAgUENJZSBob3N0IGNvbnRyb2xsZXIsIHdoaWNoIGlzIGJhc2VkIG9uCj4g
-PiB0aGUgRGVzaWduV2FyZSBQQ0llIGNvcmUsIElQIHJldmlzaW9uIDUuOTZhLiBUaGUgUENJZSBH
-ZW4uMyBjb250cm9sbGVyCj4gPiBzdXBwb3J0cyBhIGRhdGEgcmF0ZSBvZiA4IEdUL3MgYW5kIDQg
-Y2hhbm5lbHMsIHN1cHBvcnQgSU5UeCBhbmQgTVNJCj4gPiBpbnRlcnJ1cHRzLgo+IAo+ID4gK3N0
-YXRpYyBpbnQgZWljNzcwMF9wY2llX2hvc3RfaW5pdChzdHJ1Y3QgZHdfcGNpZV9ycCAqcHApCj4g
-PiAuLi4KPiA+ICsJLyoKPiA+ICsJICogVGhlIFBXUiBhbmQgREJJIFJlc2V0IHNpZ25hbHMgYXJl
-IHJlc3BlY3RpdmVseSB1c2VkIHRvIHJlc2V0IHRoZQo+ID4gKwkgKiBQQ0llIGNvbnRyb2xsZXIg
-YW5kIHRoZSBEQkkgcmVnaXN0ZXJzLgo+ID4gKwkgKiBUaGUgUEVSU1QjIHNpZ25hbCBpcyBhIHJl
-c2V0IHNpZ25hbCB0aGF0IHNpbXVsdGFuZW91c2x5IGNvbnRyb2xzIHRoZQo+ID4gKwkgKiBQQ0ll
-IGNvbnRyb2xsZXIsIFBIWSwgYW5kIEVuZHBvaW50Lgo+ID4gKwkgKiBCZWZvcmUgY29uZmlndXJp
-bmcgdGhlIFBIWSwgdGhlIFBFUlNUIyBzaWduYWwgbXVzdCBmaXJzdCBiZQo+ID4gKwkgKiBkZWFz
-c2VydGVkLgo+ID4gKwkgKiBUaGUgZXh0ZXJuYWwgcmVmZXJlbmNlIGNsb2NrIGlzIHN1cHBsaWVk
-IHNpbXVsdGFuZW91c2x5IHRvIHRoZSBQSFkKPiA+ICsJICogYW5kIEVQLiBXaGVuIHRoZSBQSFkg
-aXMgY29uZmlndXJhYmxlLCB0aGUgZW50aXJlIGNoaXAgYWxyZWFkeSBoYXMKPiA+ICsJICogc3Rh
-YmxlIHBvd2VyIGFuZCByZWZlcmVuY2UgY2xvY2suCj4gPiArCSAqIFRoZSBQSFkgd2lsbCBiZSBy
-ZWFkeSB3aXRoaW4gMjBtcyBhZnRlciB3cml0aW5nIGFwcF9ob2xkX3BoeV9yc3QKPiA+ICsJICog
-cmVnaXN0ZXIgb2YgRUxCSSByZWdpc3RlciBzcGFjZS4KPiAKPiBBZGQgYmxhbmsgbGluZXMgYmV0
-d2VlbiBwYXJhZ3JhcGhzLgo+IAo+ID4gK3N0YXRpYyBpbnQgZWljNzcwMF9wY2llX3Byb2JlKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gPiAuLi4KPiA+ICsJcGNpLT5ub19wbWVfaGFu
-ZHNoYWtlID0gcGNpZS0+ZGF0YS0+bm9fcG1lX2hhbmRzaGFrZTsKPiAKPiBUaGlzIG5lZWRzIHRv
-IGdvIGluIHRoZSAzLzMgIlBDSTogZHdjOiBBZGQgbm9fcG1lX2hhbmRzaGFrZSBmbGFnIGFuZAo+
-IHNraXAgUE1FX1R1cm5fT2ZmIGJyb2FkY2FzdCIgcGF0Y2ggYmVjYXVzZSAibm9fcG1lX2hhbmRz
-aGFrZSIgZG9lc24ndAo+IGV4aXN0IHlldCBzbyB0aGlzIHBhdGNoIGRvZXNuJ3QgYnVpbGQgYnkg
-aXRzZWxmLgoKSGksIEJqb3JuCgpUaGFua3MgZm9yIHlvdXIgY29tbWVudC4KRG8gSSBuZWVkIHRv
-IGFkanVzdCB0aGUgb3JkZXIgb2YgdGhlIHBhdGNoZXM/CjMvMiAiUENJOiBkd2M6IEFkZCBub19w
-bWVfaGFuZHNoYWtlIGZsYWcgYW5kIHNraXAgUE1FX1R1cm5fT2ZmIGJyb2FkY2FzdCIKMy8zICJQ
-Q0k6IGVpYzc3MDA6IEFkZCBFc3dpbiBQQ0llIGhvc3QgY29udHJvbGxlciBkcml2ZXIiCgpPciBt
-ZXJnZSBQYXRjaCAyLzMgYW5kIFBhdGNoIDMvMz8KCktpbmQgcmVnYXJkcywKU2VuY2h1YW4gWmhh
-bmcKPiAKPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRldl9wbV9vcHMgZWljNzcwMF9wY2llX3Bt
-X29wcyA9IHsKPiA+ICsJTk9JUlFfU1lTVEVNX1NMRUVQX1BNX09QUyhlaWM3NzAwX3BjaWVfc3Vz
-cGVuZF9ub2lycSwKPiA+ICsJCQkJICBlaWM3NzAwX3BjaWVfcmVzdW1lX25vaXJxKQo+ID4gK307
-Cj4gCj4gVXNlIERFRklORV9OT0lSUV9ERVZfUE1fT1BTKCkgaW5zdGVhZC4gIFRoZSBjb2xsZWN0
-aW9uIG9mIFBNLXJlbGF0ZWQKPiBtYWNyb3MgaXMgY29uZnVzaW5nIHRvIHNheSB0aGUgbGVhc3Qs
-IGFuZCB0aGV5J3JlIG5vdCB1c2VkCj4gY29uc2lzdGVudGx5IGFjcm9zcyB0aGUgUENJZSBkcml2
-ZXJzLCBidXQgSSAqdGhpbmsqIHRoZSBydWxlIG9mIHRodW1iCj4gc2hvdWxkIGJlOgo+IAo+ICAg
-UHJlZmVyIERFRklORV9OT0lSUV9ERVZfUE1fT1BTKCkgb3ZlciBOT0lSUV9TWVNURU1fU0xFRVBf
-UE1fT1BTKCkKPiAgIHdoZW4gcG9zc2libGUgYW5kIG9taXQgcG1fc2xlZXBfcHRyKCkgYW5kIHBt
-X3B0cigpLgoKT2tleSwgdGhhbmtzLgpJIHdpbGwgdXNlIHRoZSBmb2xsb3dpbmcgY29tYmluYXRp
-b27vvJoKREVGSU5FX05PSVJRX0RFVl9QTV9PUFMoZWljNzcwMF9wY2llX3BtLCBlaWM3NzAwX3Bj
-aWVfc3VzcGVuZF9ub2lycSwKICAgICAgICAgICAgICAgICAgICAgICAgZWljNzcwMF9wY2llX3Jl
-c3VtZV9ub2lycSk7Ci5wbSA9ICZlaWM3NzAwX3BjaWVfcG0s
+v7 -> v8:
+- Ordered header files alphabetically.
+- Convert the literals too in the firt patch.
+- Use local val to save signature instead of reading twice.
+
+v6 -> v7:
+- Put all named defines to a separate patch.
+- Change PCI_ROM_IMAGE_LEN_UNIT_BYTES to PCI_ROM_IMAGE_LEN_UNIT_SZ_512.
+- Named BIT(7) to PCI_ROM_LAST_IMAGE_INDICATOR_BIT.
+- Fix all other comments from Ilpo, such as including header files,
+and aligment fault, Thanks.
+
+v5 -> v6:
+- Convert some magic number to named defines, suggested by
+Ilpo, thanks.
+
+v4 -> v5:
+- Add Andy Shevchenko's rb tag, thanks.
+- Change u64 to unsigned long.
+- Change pci_rom_header_valid() to pci_rom_is_header_valid() and
+change pci_rom_data_struct_valid() to pci_rom_is_data_struct_valid().
+- Change rom_end from rom+size to rom+size-1 for more readble,
+and also change header_end >= rom_end to header_end > rom_end, same
+as data structure end.
+- Change if(!last_image) to if (last_image)..
+- Use U16_MAX instead of 0xffff.
+- Split check_add_overflow() from data_len checking.
+- Remove !!() when reading last_image, and Use BIT(7) instead of 0x80.
+
+v3 -> v4:
+- Use "u64" instead of "uintptr_t".
+- Invert the if statement to avoid excessive indentation.
+- Add comment for alignment checking.
+- Change last_image's type from int to bool.
+
+v2 -> v3:
+- Add pci_rom_header_valid() helper for checking image addr and signature.
+- Add pci_rom_data_struct_valid() helper for checking data struct add
+and signature.
+- Handle overflow issue when adding addr with size.
+- Handle alignment fault when running on arm64.
+
+v1 -> v2:
+- Fix commit body problems, such as blank line in "Call Trace" both sides,
+  thanks, (Andy Shevchenko).
+- Remove every step checking, just check the addr is in header or data struct.
+- Add Suggested-by: Guanghui Feng <guanghuifeng@linux.alibaba.com> tag.
+
+Guixin Liu (2):
+  PCI: Introduce named defines for pci rom
+  PCI: Check rom header and data structure addr before accessing
+
+ drivers/pci/rom.c | 137 ++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 114 insertions(+), 23 deletions(-)
+
+-- 
+2.43.0
+
 
