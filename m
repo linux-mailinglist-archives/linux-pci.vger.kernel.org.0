@@ -1,60 +1,61 @@
-Return-Path: <linux-pci+bounces-42984-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42985-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D018CB7C9B
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 04:39:19 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DED7CB7CC5
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 04:52:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CFDA6302FA39
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 03:38:13 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 79DB23005515
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 03:52:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AACF22BDC33;
-	Fri, 12 Dec 2025 03:38:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2D6E2AD3D;
+	Fri, 12 Dec 2025 03:52:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X5rLjdeF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sB+P7Xpk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E29296BD8;
-	Fri, 12 Dec 2025 03:38:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875C7D27E;
+	Fri, 12 Dec 2025 03:52:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765510692; cv=none; b=IGfy7Xj1djm/p0PsGkOByJTb7ZuesQF3TtOQJYgXnleue8/fyOYS5ylMesyHLp3Jt950gPtxg71vpY42gjpN8QrHF7mz7uQ9m+wNsSzy9Uam7HOmF/vbENKGg0AKEHnLNyEjCHC6VgR0D1voEWjAkSQ99epf8uDZBlZatOS1R1Y=
+	t=1765511567; cv=none; b=CJcakAJcOV/8FAG6b8eljPb5FnoYylXU2N4vW9xkCZ61MrE3maElJmJ2+06bpQkEK8U8Od2MsFv2tOFS4pwHTKecwCPlpL0/xjBwtNYD5cQlSCI8lHa8uYhfqDRrzLV67CgjVw7pgwfxxFsJypEylsc+dQWosu71bbmjpqkOJ0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765510692; c=relaxed/simple;
-	bh=9D6zWgM275kFJjmUhT1myHE47fJbV2AAsrgk9IFLcP8=;
+	s=arc-20240116; t=1765511567; c=relaxed/simple;
+	bh=4aNjpdLHQX5WPy6vwTgIkcZd5b8rix/rORP2xiTO8Ko=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XMK//QXEcrt6YikUQsRk8v9TB/cG0mq4240o7q8Ib0q1qPxjtc/KEf92TeDBt8hHT2MjcJMixTJ0bsuMLwjCrB7S+OjUqNEajvYfY025VwVOTsMK9XLkMFSaKYLeVqAaei/zL8IkLMS7SFKJvew+4vb4QmN/z/TlYTx81TrYqiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X5rLjdeF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 605DDC4CEF1;
-	Fri, 12 Dec 2025 03:38:06 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=hJTv88PLclXuAGy0r8KRVlz08RUHxW0Q5TMf7jEIfPmAJm43H8rZ9+/cVMsIZctRWlfGYO0Bc5S4hUNi60tmDoACVocsHJc4LUXLrP0MeDd0syc3jxaswRXzQ0Anq9zQA9l+XMs+vQeecqDGOtjxV185vR1oc21DdHdKRyA9c5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sB+P7Xpk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E70FC4CEF1;
+	Fri, 12 Dec 2025 03:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765510692;
-	bh=9D6zWgM275kFJjmUhT1myHE47fJbV2AAsrgk9IFLcP8=;
+	s=k20201202; t=1765511567;
+	bh=4aNjpdLHQX5WPy6vwTgIkcZd5b8rix/rORP2xiTO8Ko=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X5rLjdeFyK1iCqTiMKDj1mu2MMFuoThjqZFKqga4z2vySOzox++N2fQ92HkLV20P/
-	 LIN6OECNEB2yU3KW3BKaMNvtnEF/3x0sDgx/n1DecKOl7CnNosKPEDzUBqKAw6WJQW
-	 4/mzuXt9JooDYzZvlvbbTpZnqPezjaGwZipWZVnqNKPFxSQs2Db+IoAHuSlPxBJA6K
-	 3abDhx8Cs9Y9StIPHlzWBNrjTh3jHQIWiZDaw796kTIcwZJhkzFuwa0KaRxpltzUJY
-	 rlZCg/NoOAiTITMqC0FJVS4y2KIjW07LhiB6Wn9/ifLaKU3AwSf54pWRUMQTrXSXIQ
-	 bFciVULY5HbGA==
-Date: Fri, 12 Dec 2025 12:38:02 +0900
+	b=sB+P7XpkJ1Dp/PpeK2FJ2O+T82CuOhDGaBXmo7cR0B8RkuP36VrBm4Uyip/QaW3nl
+	 Nz8BbXrZzSOv2bJ2nZF/plsvKTfrPge0t49z0FlNLioys59JM9vRci5O3RXq9zE+O8
+	 yz9siG0TBbYh3amgXggAN5QqXyxwe24HBeYCJxy1iALO2RgC8itcWQy7GWzVs/e+AV
+	 sbCDJv4CSM8AGQB40OnlutDHJYA5NzA0yjQ6xPL96KNZUE8JHnLHTfIoELzgDlHAkK
+	 dmaOwrweQcn2rTWhQQGpb2a8HbGD7iyovS39KVSX3NimvFxoWz4RtGBk4N9JdDEeuK
+	 Ssab2LJW4WeFw==
+Date: Fri, 12 Dec 2025 12:52:35 +0900
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Koichiro Den <den@valinux.co.jp>
-Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, Frank.Li@nxp.com, 
-	kwilczynski@kernel.org, kishon@kernel.org, bhelgaas@google.com, corbet@lwn.net, 
-	vkoul@kernel.org, jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com, 
-	Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com, kurt.schwemmer@microsemi.com, 
-	logang@deltatee.com, jingoohan1@gmail.com, lpieralisi@kernel.org, robh@kernel.org, 
-	jbrunet@baylibre.com, fancer.lancer@gmail.com, arnd@arndb.de, pstanner@redhat.com, 
-	elfring@users.sourceforge.net
-Subject: Re: [RFC PATCH v2 19/27] PCI: dwc: ep: Cache MSI outbound iATU
- mapping
-Message-ID: <qyrjma57yonkgy4ouopzssyrktcrosjs2v6hnawjkddzwcfm5e@bm5q2isynhet>
-References: <20251129160405.2568284-1-den@valinux.co.jp>
- <20251129160405.2568284-20-den@valinux.co.jp>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+	FUKAUMI Naoki <naoki@radxa.com>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: dwc: Make Link Up IRQ logic handle already
+ powered on PCIe switches
+Message-ID: <pjn2gs43rqbe3odh6zvh4qaftxxl6qvdzpm6pgpadxeeid42ko@4a2qradscaqd>
+References: <20251201063634.4115762-2-cassel@kernel.org>
+ <f1059d5d-3fa5-423a-8093-0e99b65d5f4c@oss.qualcomm.com>
+ <aTev28wihes6iJqs@dhcp-10-89-81-223>
+ <dad4957c-ca13-4742-b46d-03f0478911d5@oss.qualcomm.com>
+ <aTe1bA7lcVzFD5L7@dhcp-10-89-81-223>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,112 +65,34 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251129160405.2568284-20-den@valinux.co.jp>
+In-Reply-To: <aTe1bA7lcVzFD5L7@dhcp-10-89-81-223>
 
-On Sun, Nov 30, 2025 at 01:03:57AM +0900, Koichiro Den wrote:
-> dw_pcie_ep_raise_msi_irq() currently programs an outbound iATU window
-> for the MSI target address on every interrupt and tears it down again
-> via dw_pcie_ep_unmap_addr().
+On Tue, Dec 09, 2025 at 02:36:44PM +0900, Niklas Cassel wrote:
+> On Tue, Dec 09, 2025 at 10:57:18AM +0530, Krishna Chaitanya Chundru wrote:
+> > On 12/9/2025 10:42 AM, Niklas Cassel wrote:
+> > > 
+> > > So I don't really understand your concern with this series, at least not if
+> > > it goes on top of your series:
+> > > https://lore.kernel.org/linux-pci/20251124-pci-pwrctrl-rework-v1-0-78a72627683d@oss.qualcomm.com/
+> > Hi Niklas,
+> > 
+> > If this series goes on top of the our series i.e pwrctrl rework series, I
+> > don't have any concerns.
+> > My only concern is link up IRQ never fires if this patch goes before series.
+> > 
+> > - Krishna Chaitanya.
 > 
-> On systems that heavily use the AXI bridge interface (for example when
-> the integrated eDMA engine is active), this means the outbound iATU
-> registers are updated while traffic is in flight. The DesignWare
-> endpoint spec warns that updating iATU registers in this situation is
-> not supported, and the behavior is undefined.
-> 
-
-When claiming spec violation, you should quote the spec reference such as the
-spec version, section, and actual wording snippet.
-
-> Under high MSI and eDMA load this pattern results in occasional bogus
-> outbound transactions and IOMMU faults such as:
-> 
->   ipmmu-vmsa eed40000.iommu: Unhandled fault: status 0x00001502 iova 0xfe000000
-> 
-> followed by the system becoming unresponsive. This is the actual output
-> observed on Renesas R-Car S4, with its ipmmu_hc used with PCIe ch0.
-> 
-> There is no need to reprogram the iATU region used for MSI on every
-> interrupt. The host-provided MSI address is stable while MSI is enabled,
-> and the endpoint driver already dedicates a scratch buffer for MSI
-> generation.
-> 
-> Cache the aligned MSI address and map size, program the outbound iATU
-> once, and keep the window enabled. Subsequent interrupts only perform a
-> write to the MSI scratch buffer, avoiding dynamic iATU reprogramming in
-> the hot path and fixing the lockups seen under load.
+> This patch missed the v6.19 merge window (and so did the pwrctrl rework
+> series), so as long as Mani queues up both for v6.20 (with the pwrctrl
+> rework series getting applied first), I think we are good.
 > 
 
-iATU windows are very limited (just 8 in some cases), so I don't like allocating
-fixed windows for MSIs.
+The plan is to merge pwrctrl series to v6.20 (unless we get strong objections),
+but once that happens, Qcom doesn't need this patch.
 
-> Signed-off-by: Koichiro Den <den@valinux.co.jp>
-> ---
->  .../pci/controller/dwc/pcie-designware-ep.c   | 48 ++++++++++++++++---
->  drivers/pci/controller/dwc/pcie-designware.h  |  5 ++
->  2 files changed, 47 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 3780a9bd6f79..ef8ded34d9ab 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -778,6 +778,16 @@ static void dw_pcie_ep_stop(struct pci_epc *epc)
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  
-> +	/*
-> +	 * Tear down the dedicated outbound window used for MSI
-> +	 * generation. This avoids leaking an iATU window across
-> +	 * endpoint stop/start cycles.
-> +	 */
-> +	if (ep->msi_iatu_mapped) {
-> +		dw_pcie_ep_unmap_addr(epc, 0, 0, ep->msi_mem_phys);
-> +		ep->msi_iatu_mapped = false;
-> +	}
-> +
->  	dw_pcie_stop_link(pci);
->  }
->  
-> @@ -881,14 +891,37 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->  	msg_addr = ((u64)msg_addr_upper) << 32 | msg_addr_lower;
->  
->  	msg_addr = dw_pcie_ep_align_addr(epc, msg_addr, &map_size, &offset);
-> -	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
-> -				  map_size);
-> -	if (ret)
-> -		return ret;
->  
-> -	writel(msg_data | (interrupt_num - 1), ep->msi_mem + offset);
-> +	/*
-> +	 * Program the outbound iATU once and keep it enabled.
-> +	 *
-> +	 * The spec warns that updating iATU registers while there are
-> +	 * operations in flight on the AXI bridge interface is not
-> +	 * supported, so we avoid reprogramming the region on every MSI,
-> +	 * specifically unmapping immediately after writel().
-> +	 */
-> +	if (!ep->msi_iatu_mapped) {
-> +		ret = dw_pcie_ep_map_addr(epc, func_no, 0,
-> +					  ep->msi_mem_phys, msg_addr,
-> +					  map_size);
-> +		if (ret)
-> +			return ret;
->  
-> -	dw_pcie_ep_unmap_addr(epc, func_no, 0, ep->msi_mem_phys);
-> +		ep->msi_iatu_mapped = true;
-> +		ep->msi_msg_addr = msg_addr;
-> +		ep->msi_map_size = map_size;
-> +	} else if (WARN_ON_ONCE(ep->msi_msg_addr != msg_addr ||
-> +				ep->msi_map_size != map_size)) {
-> +		/*
-> +		 * The host changed the MSI target address or the required
-> +		 * mapping size. Reprogramming the iATU at runtime is unsafe
-> +		 * on this controller, so bail out instead of trying to update
-> +		 * the existing region.
-> +		 */
-
-I'd perfer having some sort of locking to program the iATU registers during
-runtime instead of bailing out.
+So it'd be good if you can just limit this patch to just Rockchip. Then once the
+Rockchip also moves to pwrctrl, we can revert this patch (also the whole IRQ
+based link up since the Root Port is not hotplug capable).
 
 - Mani
 
