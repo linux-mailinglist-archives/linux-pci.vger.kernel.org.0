@@ -1,434 +1,126 @@
-Return-Path: <linux-pci+bounces-42990-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42991-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D608CB81AA
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 08:25:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 31788CB8815
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 10:43:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0CF2D3016CD5
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 07:25:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AFC0B309A7EB
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 09:37:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 893642797B5;
-	Fri, 12 Dec 2025 07:25:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB5CB2DC354;
+	Fri, 12 Dec 2025 09:37:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gXH+i0Tm"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="v/elayVQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE20AD24
-	for <linux-pci@vger.kernel.org>; Fri, 12 Dec 2025 07:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2337331327B
+	for <linux-pci@vger.kernel.org>; Fri, 12 Dec 2025 09:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765524350; cv=none; b=Iichl8dODgNb07o/yHP7VO11Xh9GoZU7HREYODDf33L6I4JUKygak1P6cQGPpQIwYNgRoKcwv9QjoRI+UspQiOFTLzdz2Rf7Lo1QG/YUo3H21FTP6eWbgbfo9OZpCIPRSgrxID51O1TfKW04XwFiILjw6FSGAcS4bm1T6omrUyI=
+	t=1765532244; cv=none; b=bTz3zL4sr2/9P6YeOLkj/9FyTdkoyBIj2fWz7g2oOi2p0hIbJ8dHQQ/060Z4KFZhnZ+VKauZVSI8FpHjFGi1Gwuzc09/r0kHhG+GOKrUZIr11d05v3xFuO2sLzLeDG/7+Oo/O8X4bKe/S3Bfv5Y/9y84LrKN99NNq8y+70M3hqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765524350; c=relaxed/simple;
-	bh=LW6Q/fuVmC6oHGHjuy8oANAVor27SdbSOxdqaMgAdLs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=fNquLhS2uT+F1ATft44uGpUYqaMQKypY4m3vFJgLnY8VswUDgtH/zgVIvjmSFPWJNmtjrH3DMp4pCWZgLk+TOCwZPApm6C0OBVBLXZC6gNXbrZeRkTU5B8JDSGFTEwTk0EzTORoQEaruxdvQ+e4qSU1KGrI7oRUi3m+dyrvEDGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=gXH+i0Tm; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20251212072539euoutp0187b32c539bad550744bea555120758cf~AZwhmFHJ41272312723euoutp01T
-	for <linux-pci@vger.kernel.org>; Fri, 12 Dec 2025 07:25:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20251212072539euoutp0187b32c539bad550744bea555120758cf~AZwhmFHJ41272312723euoutp01T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1765524339;
-	bh=HvCrwglTXOTbxVj1CL/msOBSttR8rBtMDNdjb8HbA94=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=gXH+i0TmiomuM4SGfhibFgHJe+3xhxVTAuwMXROyWPbI6RXhzjt5k3VZU3rg3a8/a
-	 7R7q/srAtz0f8htusryt/Ge5EMceXAQSpLROlGlNo/zBFkOX+b/4l2mBag733LhHa2
-	 ji3nrY/jo8mcE6s2zpwZHcUQIo/TStnhfcPjMrLg=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20251212072539eucas1p12922196059364f1de841736ecf0ff36c~AZwhIfD-b1628216282eucas1p1y;
-	Fri, 12 Dec 2025 07:25:39 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20251212072537eusmtip25dbe7bed67d433692297dc17d0186dfa~AZwfyk1MI0282002820eusmtip2S;
-	Fri, 12 Dec 2025 07:25:37 +0000 (GMT)
-Message-ID: <772649b3-0a45-4231-af67-2d48af1a5eed@samsung.com>
-Date: Fri, 12 Dec 2025 08:25:36 +0100
+	s=arc-20240116; t=1765532244; c=relaxed/simple;
+	bh=FKJ/m4ulrD5X+QBNHeaAoynsXA0CGUUwyiO1MHv85gg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O8Fzpbnnd7mhvRTWEJDN66THkmWxCuPYSeibnyL2F3CfLo8LRbfyAszQx7A7tctHppFpWhrPABSTA5srHvjT8C/EQYUf32iaG12/9wSsHC8g0zwcwAkX4GSoWrA16Vf+HmDXdc9e0BUUjLyuAR90rzWC0rpwUNNu13fvhpjf/cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=v/elayVQ; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1765532235; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=0+QIxxVRH2EjZiwQWnC1Jsy6fk3l7QYFdtrsoMK7vLU=;
+	b=v/elayVQOjUg36gOAMSwE0ROLhvWDHUnpC1cCFcfqzewQCTkCSvAKKPh1Yk9vADTVspvBT2Nh8wb63pXPw2Rlxfj3j1z1Px/eyhfMsDV8uBx1kZDB/kur53AKACLha/3fjHZa3p4PxhgjBfq2C3SruFUEINfkLljB9WT4+snKlI=
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0WudrzjR_1765532231 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 12 Dec 2025 17:37:14 +0800
+From: Guixin Liu <kanie@linux.alibaba.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org
+Subject: [PATCH v10 0/2] PCI: Fix crash when access broken rom
+Date: Fri, 12 Dec 2025 17:37:08 +0800
+Message-ID: <20251212093711.36407-1-kanie@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH v2 0/4] PCI: Fix ACS enablement for Root Ports in OF
- platforms
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, Bjorn
-	Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, Naresh Kamboju
-	<naresh.kamboju@linaro.org>, Pavankumar Kondeti <quic_pkondeti@quicinc.com>,
-	Xingang Wang <wangxingang5@huawei.com>, Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <ahcz2vdqdvqlbsdjwg36h7z7br3f257dqob6cxh2ydg6jrbi7r@se2udnjbxlr7>
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20251212072539eucas1p12922196059364f1de841736ecf0ff36c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20251202142307eucas1p12a15e5656bb53f48f445c3056d4e3166
-X-EPHeader: CA
-X-CMS-RootMailID: 20251202142307eucas1p12a15e5656bb53f48f445c3056d4e3166
-References: <CGME20251202142307eucas1p12a15e5656bb53f48f445c3056d4e3166@eucas1p1.samsung.com>
-	<20251202-pci_acs-v2-0-5d2759a71489@oss.qualcomm.com>
-	<b63ec0aa-7a4a-4f8d-9b93-e724f3f2a9d1@samsung.com>
-	<de80df44-f797-4e8c-a411-09ed3c1286a3@samsung.com>
-	<cae5cb24-a8b0-4088-bacd-14368f32bdc5@samsung.com>
-	<26a93564-fcdd-4e90-b28d-8cc84cedeaa8@samsung.com>
-	<4clyxcy5pwqaz6uguxnjei4hnxsree6k2uz5upro7khuvklfyo@nc5ebeicuqw4>
-	<0ee48f4a-2341-4967-aca5-3fe6b4cd5fe2@samsung.com>
-	<xofyj6bjbpsxjpgnw6vyfpekpvsmhxcoaqm5k26yuyc2dashux@4nro7bppnwhs>
-	<3bbb99da-416c-4102-b1a7-85250b2ca578@samsung.com>
-	<ahcz2vdqdvqlbsdjwg36h7z7br3f257dqob6cxh2ydg6jrbi7r@se2udnjbxlr7>
 
-On 12.12.2025 05:02, Manivannan Sadhasivam wrote:
-> On Wed, Dec 10, 2025 at 06:26:27PM +0100, Marek Szyprowski wrote:
->> On 09.12.2025 16:04, Manivannan Sadhasivam wrote:
->>> On Tue, Dec 09, 2025 at 01:00:55PM +0100, Marek Szyprowski wrote:
->>>> On 09.12.2025 12:15, Manivannan Sadhasivam wrote:
->>>>> On Tue, Dec 09, 2025 at 09:28:38AM +0100, Marek Szyprowski wrote:
->>>>>> On 09.12.2025 08:31, Marek Szyprowski wrote:
->>>>>>> On 04.12.2025 14:13, Marek Szyprowski wrote:
->>>>>>>> On 03.12.2025 13:04, Marek Szyprowski wrote:
->>>>>>>>> On 02.12.2025 15:22, Manivannan Sadhasivam wrote:
->>>>>>>>>> This series fixes the long standing issue with ACS in OF platforms.
->>>>>>>>>> There are
->>>>>>>>>> two fixes in this series, both fixing independent issues on their
->>>>>>>>>> own, but both
->>>>>>>>>> are needed to properly enable ACS on OF platforms.
->>>>>>>>>>
->>>>>>>>>> Issue(s) background
->>>>>>>>>> ===================
->>>>>>>>>>
->>>>>>>>>> Back in 2021, Xingang Wang first noted a failure in attaching the
->>>>>>>>>> HiSilicon SEC
->>>>>>>>>> device to QEMU ARM64 pci-root-port device [1]. He then tracked down
->>>>>>>>>> the issue to
->>>>>>>>>> ACS not being enabled for the QEMU Root Port device and he proposed
->>>>>>>>>> a patch to
->>>>>>>>>> fix it [2].
->>>>>>>>>>
->>>>>>>>>> Once the patch got applied, people reported PCIe issues with
->>>>>>>>>> linux-next on the
->>>>>>>>>> ARM Juno Development boards, where they saw failure in enumerating
->>>>>>>>>> the endpoint
->>>>>>>>>> devices [3][4]. So soon, the patch got dropped, but the actual
->>>>>>>>>> issue with the
->>>>>>>>>> ARM Juno boards was left behind.
->>>>>>>>>>
->>>>>>>>>> Fast forward to 2024, Pavan resubmitted the same fix [5] for his
->>>>>>>>>> own usecase,
->>>>>>>>>> hoping that someone in the community would fix the issue with ARM
->>>>>>>>>> Juno boards.
->>>>>>>>>> But the patch was rightly rejected, as a patch that was known to
->>>>>>>>>> cause issues
->>>>>>>>>> should not be merged to the kernel. But again, no one investigated
->>>>>>>>>> the Juno
->>>>>>>>>> issue and it was left behind again.
->>>>>>>>>>
->>>>>>>>>> Now it ended up in my plate and I managed to track down the issue
->>>>>>>>>> with the help
->>>>>>>>>> of Naresh who got access to the Juno boards in LKFT. The Juno issue
->>>>>>>>>> was with the
->>>>>>>>>> PCIe switch from Microsemi/IDT, which triggers ACS Source
->>>>>>>>>> Validation error on
->>>>>>>>>> Completions received for the Configuration Read Request from a
->>>>>>>>>> device connected
->>>>>>>>>> to the downstream port that has not yet captured the PCIe bus
->>>>>>>>>> number. As per the
->>>>>>>>>> PCIe spec r6.0 sec 2.2.6.2, "Functions must capture the Bus and
->>>>>>>>>> Device Numbers
->>>>>>>>>> supplied with all Type 0 Configuration Write Requests completed by
->>>>>>>>>> the Function
->>>>>>>>>> and supply these numbers in the Bus and Device Number fields of the
->>>>>>>>>> Requester ID
->>>>>>>>>> for all Requests". So during the first Configuration Read Request
->>>>>>>>>> issued by the
->>>>>>>>>> switch downstream port during enumeration (for reading Vendor ID),
->>>>>>>>>> Bus and
->>>>>>>>>> Device numbers will be unknown to the device. So it responds to the
->>>>>>>>>> Read Request
->>>>>>>>>> with Completion having Bus and Device number as 0. The switch
->>>>>>>>>> interprets the
->>>>>>>>>> Completion as an ACS Source Validation error and drops the
->>>>>>>>>> completion, leading
->>>>>>>>>> to the failure in detecting the endpoint device. Though the PCIe
->>>>>>>>>> spec r6.0, sec
->>>>>>>>>> 6.12.1.1, states that "Completions are never affected by ACS Source
->>>>>>>>>> Validation".
->>>>>>>>>> This behavior is in violation of the spec.
->>>>>>>>>>
->>>>>>>>>> Solution
->>>>>>>>>> ========
->>>>>>>>>>
->>>>>>>>>> In September, I submitted a series [6] to fix both issues. For the
->>>>>>>>>> IDT issue,
->>>>>>>>>> I reused the existing quirk in the PCI core which does a dummy
->>>>>>>>>> config write
->>>>>>>>>> before issuing the first config read to the device. And for the ACS
->>>>>>>>>> enablement
->>>>>>>>>> issue, I just resubmitted the original patch from Xingang which called
->>>>>>>>>> pci_request_acs() from devm_of_pci_bridge_init().
->>>>>>>>>>
->>>>>>>>>> But during the review of the series, several comments were received
->>>>>>>>>> and they
->>>>>>>>>> required the series to be reworked completely. Hence, in this
->>>>>>>>>> version, I've
->>>>>>>>>> incorported the comments as below:
->>>>>>>>>>
->>>>>>>>>> 1. For the ACS enablement issue, I've moved the pci_enable_acs()
->>>>>>>>>> call from
->>>>>>>>>> pci_acs_init() to pci_dma_configure().
->>>>>>>>>>
->>>>>>>>>> 2. For the IDT issue, I've cached the ACS capabilities (RO) in
->>>>>>>>>> 'pci_dev',
->>>>>>>>>> collected the broken capability for the IDT switches in the quirk
->>>>>>>>>> and used it to
->>>>>>>>>> disable the capability in the cache. This also allowed me to get
->>>>>>>>>> rid of the
->>>>>>>>>> earlier workaround for the switch.
->>>>>>>>>>
->>>>>>>>>> [1]
->>>>>>>>>> https://lore.kernel.org/all/038397a6-57e2-b6fc-6e1c-7c03b7be9d96@huawei.com
->>>>>>>>>> [2]
->>>>>>>>>> https://lore.kernel.org/all/1621566204-37456-1-git-send-email-wangxingang5@huawei.com
->>>>>>>>>> [3]
->>>>>>>>>> https://lore.kernel.org/all/01314d70-41e6-70f9-e496-84091948701a@samsung.com
->>>>>>>>>> [4]
->>>>>>>>>> https://lore.kernel.org/all/CADYN=9JWU3CMLzMEcD5MSQGnaLyDRSKc5SofBFHUax6YuTRaJA@mail.gmail.com
->>>>>>>>>> [5]
->>>>>>>>>> https://lore.kernel.org/linux-pci/20241107-pci_acs_fix-v1-1-185a2462a571@quicinc.com
->>>>>>>>>> [6]
->>>>>>>>>> https://lore.kernel.org/linux-pci/20250910-pci-acs-v1-0-fe9adb65ad7d@oss.qualcomm.com
->>>>>>>>>>
->>>>>>>>> Thanks for this patchset! I've tested it on my ARM Juno R1 and it
->>>>>>>>> looks that it almost works fine. This patchset even fixed some
->>>>>>>>> issues with PCI devices probe, as I again see SATA and GBit ethernet
->>>>>>>>> devices, which were missing since Linux v6.14 (it looks that
->>>>>>>>> I've also missed this in my tests).
->>>>>>>>>
->>>>>>>>> # lspci
->>>>>>>>> 00:00.0 PCI bridge: PLDA PCI Express Core Reference Design (rev 01)
->>>>>>>>> 01:00.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
->>>>>>>>> 8090 (rev 02)
->>>>>>>>> 02:01.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
->>>>>>>>> 8090 (rev 02)
->>>>>>>>> 02:02.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
->>>>>>>>> 8090 (rev 02)
->>>>>>>>> 02:03.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
->>>>>>>>> 8090 (rev 02)
->>>>>>>>> 02:0c.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
->>>>>>>>> 8090 (rev 02)
->>>>>>>>> 02:10.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
->>>>>>>>> 8090 (rev 02)
->>>>>>>>> 02:1f.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device
->>>>>>>>> 8090 (rev 02)
->>>>>>>>> 03:00.0 Mass storage controller: Silicon Image, Inc. SiI 3132 Serial
->>>>>>>>> ATA Raid II Controller (rev 01)
->>>>>>>>> 08:00.0 Ethernet controller: Marvell Technology Group Ltd. 88E8057
->>>>>>>>> PCI-E Gigabit Ethernet Controller
->>>>>>>>>
->>>>>>>>> However there is also a regression. After applying this patchset
->>>>>>>>> system suspend/resume stopped working. This is probably related to
->>>>>>>>> this message:
->>>>>>>>>
->>>>>>>>> pcieport 0000:02:1f.0: Unable to change power state from D0 to
->>>>>>>>> D3hot, device inaccessible
->>>>>>>>>
->>>>>>>>> which appears after calling 'rtcwake -s10 -mmem'. This might not be
->>>>>>>>> related to this patchset, so I probably need to apply it on older
->>>>>>>>> kernel releases and check.
->>>>>>>> Just one more information - I've applied this patchset on top of
->>>>>>>> v6.16 and it works perfectly on ARM Juno R1. SATA and GBit ethernet
->>>>>>>> are visible again and system suspend/resume works too, so the issue
->>>>>>>> with the latter on top of v6.18 seems not to be directly related to
->>>>>>>> $subject patchset. I will try to bisect this issue when I have some
->>>>>>>> spare time.
->>>>>>>>
->>>>>>>> Feel free to add:
->>>>>>>>
->>>>>>>> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>>>>>> I spent some time analyzing this regression on Juno R1 and found that:
->>>>>>>
->>>>>>> 1. SATA and GBit Ethernet stopped working after commit bcb81ac6ae3c
->>>>>>> ("iommu: Get DT/ACPI parsing into the proper probe path") merged to
->>>>>>> v6.15-rc1.
->>>>>>>
->>>>>>> 2. With $subject patch applied to enable SATA & GBit ethernet again,
->>>>>>> system suspend/resume stopped working after commit f3ac2ff14834
->>>>>>> ("PCI/ASPM: Enable all ClockPM and ASPM states for devicetree
->>>>>>> platforms") merged to v6.18-rc1.
->>>>>>>
->>>>> Yes, this was expected as if you don't disable ACS, it will cause issues in
->>>>> detecting the devices.
->>>>>
->>>>>>> If I got it right, according to the latter commit message, some quirks
->>>>>>> have to be added to fix the suspend/resume issue. Unfortunately I have
->>>>>>> no idea if this is the Juno R1 or the given PCI devices specific issue.
->>>>>> And one more note, commit df5192d9bb0e ("PCI/ASPM: Enable only L0s and
->>>>>> L1 for devicetree platforms") doesn't fix the suspend/resume issue
->>>>>> either (with $subject patchset applied on top of it).
->>>>>>
->>>>> Interesting. Can you do:
->>>>>
->>>>> echo performance > /sys/module/pcie_aspm/parameters/policy
->>>>>
->>>>> and then suspend?
->>>> After the above command, system suspend/resume works again.
->>>>
->>> Ok, so ASPM L0s/L1 seems to be the issue. But I'm not quite sure why it causes
->>> issue during suspend/resume. If the device/controller doesn't play well with
->>> ASPM L0s/L1, it should atleast cause the issue before entering suspend.
->>>
->>> I'm clueless here atm...
->> Definitely something gets broken during suspend, after adding
->> 'no_console_suspend' to kernel command line I see the following messages:
->>
->> # time rtcwake -s10 -mmem
->> rtcwake: wakeup from "mem" using /dev/rtc0 at Wed Dec 10 17:04:12 2025
->> PM: suspend entry (deep)
->> Filesystems sync: 0.001 seconds
->> Freezing user space processes
->> Freezing user space processes completed (elapsed 0.005 seconds)
->> OOM killer disabled.
->> Freezing remaining freezable tasks
->> Freezing remaining freezable tasks completed (elapsed 0.003 seconds)
->> psmouse serio1: Failed to disable mouse on 1c070000.kmi
->> psmouse serio0: Failed to disable mouse on 1c060000.kmi
->> pcieport 0000:02:1f.0: Unable to change power state from D0 to D3hot,
->> device inaccessible
-> The device just got blown off the bus at this point. But it is unclear to me why
-> it happens though if we enable ASPM L0s/L1. I don't think the firmware has
-> gotten the chance to turn off the power to devices.
->
-> So maybe some actions that we do in the PCI core during system suspend is
-> affecting the device state. But can you try to access the device by doing:
->
-> lspci -vvv -s 0000:02:1f.0
->
-> before initiating system suspend. Just to make sure if the issue happens during
-> suspend or way before that.
+v9 -> v10:
+- Reorder the header files, and not touch kernel.h
+- Change PCI_ROM_IMAGE_LEN_UNIT_BYTES to PCI_ROM_IMAGE_SECTOR_SIZE.
+- Add a comment for PCI_ROM_DATA_STRUCT_SIGNATURE.
 
-Same as before:
+v8 -> v9:
+- Supplemental explanation for the commit body of the first patch.
+- Change PCI_ROM_IMAGE_LEN_UNIT_SZ_512 to PCI_ROM_IMAGE_LEN_UNIT_BYTES,
+and change it's definition to SZ_512.
+- Use u16 and u32 for signature val instead of unsigned short/int.
 
-root@target:~# lspci -vvv -s 0000:02:1f.0
-02:1f.0 PCI bridge: Integrated Device Technology, Inc. [IDT] Device 8090 
-(rev 02) (prog-if 00 [Normal decode])
-        Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx+
-        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-        Latency: 0
-        Interrupt: pin ? routed to IRQ 50
-        Bus: primary=02, secondary=08, subordinate=08, sec-latency=0
-        I/O behind bridge: 00002000-00002fff
-        Memory behind bridge: 50100000-501fffff
-        Prefetchable memory behind bridge: 
-00000000fff00000-00000000000fffff
-        Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- <SERR- <PERR-
-        BridgeCtl: Parity- SERR+ NoISA- VGA- MAbort- >Reset- FastB2B-
-                PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-        Capabilities: [40] Express (v2) Downstream Port (Slot-), MSI 00
-                DevCap: MaxPayload 2048 bytes, PhantFunc 0
-                        ExtTag+ RBE+
-                DevCtl: Report errors: Correctable+ Non-Fatal+ Fatal+ 
-Unsupported+
-                        RlxdOrd- ExtTag+ PhantFunc- AuxPwr- NoSnoop-
-                        MaxPayload 128 bytes, MaxReadReq 128 bytes
-                DevSta: CorrErr- UncorrErr- FatalErr- UnsuppReq- AuxPwr- 
-TransPend-
-                LnkCap: Port #0, Speed 5GT/s, Width x1, ASPM L0s L1, 
-Exit Latency L0s <4us, L1 <4us
-                        ClockPM- Surprise+ LLActRep+ BwNot+ ASPMOptComp-
-                LnkCtl: ASPM L0s L1 Enabled; Disabled- CommClk+
-                        ExtSynch- ClockPM- AutWidDis- BWInt+ AutBWInt+
-                LnkSta: Speed 2.5GT/s, Width x1, TrErr- Train- SlotClk+ 
-DLActive+ BWMgmt- ABWMgmt-
-                DevCap2: Completion Timeout: Not Supported, TimeoutDis-, 
-LTR-, OBFF Not Supported ARIFwd+
-                DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, 
-LTR-, OBFF Disabled ARIFwd-
-                LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance- 
-SpeedDis-, Selectable De-emphasis: -6dB
-                         Transmit Margin: Normal Operating Range, 
-EnterModifiedCompliance- ComplianceSOS-
-                         Compliance De-emphasis: -6dB
-                LnkSta2: Current De-emphasis Level: -6dB, 
-EqualizationComplete-, EqualizationPhase1-
-                         EqualizationPhase2-, EqualizationPhase3-, 
-LinkEqualizationRequest-
-        Capabilities: [c0] Power Management version 3
-                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA 
-PME(D0+,D1-,D2-,D3hot+,D3cold+)
-                Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-        Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
-                Address: 00000000fffbb040  Data: 00e7
-        Capabilities: [100 v2] Advanced Error Reporting
-                UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- 
-UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-                UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- 
-UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-                UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- 
-UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-                CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- 
-NonFatalErr-
-                CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- 
-NonFatalErr+
-                AERCap: First Error Pointer: 00, GenCap+ CGenEn- ChkCap+ 
-ChkEn-
-        Capabilities: [200 v1] Virtual Channel
-                Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
-                Arb:    Fixed- WRR32- WRR64- WRR128-
-                Ctrl:   ArbSelect=Fixed
-                Status: InProgress-
-                VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
-                        Arb:    Fixed+ WRR32- WRR64- WRR128- TWRR128- 
-WRR256-
-                        Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
-                        Status: NegoPending- InProgress-
-        Capabilities: [320 v1] Access Control Services
-                ACSCap: SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ 
-UpstreamFwd+ EgressCtrl+ DirectTrans+
-                ACSCtl: SrcValid- TransBlk- ReqRedir+ CmpltRedir+ 
-UpstreamFwd+ EgressCtrl- DirectTrans-
-        Capabilities: [330 v1] #12
-        Kernel driver in use: pcieport
+v7 -> v8:
+- Ordered header files alphabetically.
+- Convert the literals too in the firt patch.
+- Use local val to save signature instead of reading twice.
 
-root@target:~# time rtcwake -s10 -mmem
-rtcwake: wakeup from "mem" using /dev/rtc0 at Fri Dec 12 07:23:50 2025
-[  110.529810] PM: suspend entry (deep)
-[  110.532688] Filesystems sync: 0.001 seconds
-[  110.549590] Freezing user space processes
-[  110.557833] Freezing user space processes completed (elapsed 0.008 
-seconds)
-[  110.558282] OOM killer disabled.
-[  110.558296] Freezing remaining freezable tasks
-[  110.561602] Freezing remaining freezable tasks completed (elapsed 
-0.003 seconds)
-[  110.736524] psmouse serio1: Failed to disable mouse on 1c070000.kmi
-[  111.071329] psmouse serio0: Failed to disable mouse on 1c060000.kmi
-[  111.700685] pcieport 0000:02:1f.0: Unable to change power state from 
-D0 to D3hot, device inaccessible
-[  111.737951] Disabling non-boot CPUs ...
-[  111.757973] psci: CPU5 killed (polled 0 ms)
-[  111.775215] psci: CPU4 killed (polled 0 ms)
-[  111.789725] psci: CPU3 killed (polled 4 ms)
-[  111.800778] psci: CPU2 killed (polled 0 ms)
-[  111.816363] psci: CPU1 killed (polled 0 ms)
+v6 -> v7:
+- Put all named defines to a separate patch.
+- Change PCI_ROM_IMAGE_LEN_UNIT_BYTES to PCI_ROM_IMAGE_LEN_UNIT_SZ_512.
+- Named BIT(7) to PCI_ROM_LAST_IMAGE_INDICATOR_BIT.
+- Fix all other comments from Ilpo, such as including header files,
+and alignment fault, Thanks.
 
-(machine never wakes up)
+v5 -> v6:
+- Convert some magic number to named defines, suggested by
+Ilpo, thanks.
 
-Best regards
+v4 -> v5:
+- Add Andy Shevchenko's rb tag, thanks.
+- Change u64 to unsigned long.
+- Change pci_rom_header_valid() to pci_rom_is_header_valid() and
+change pci_rom_data_struct_valid() to pci_rom_is_data_struct_valid().
+- Change rom_end from rom+size to rom+size-1 for more readble,
+and also change header_end >= rom_end to header_end > rom_end, same
+as data structure end.
+- Change if(!last_image) to if (last_image)..
+- Use U16_MAX instead of 0xffff.
+- Split check_add_overflow() from data_len checking.
+- Remove !!() when reading last_image, and Use BIT(7) instead of 0x80.
+
+v3 -> v4:
+- Use "u64" instead of "uintptr_t".
+- Invert the if statement to avoid excessive indentation.
+- Add comment for alignment checking.
+- Change last_image's type from int to bool.
+
+v2 -> v3:
+- Add pci_rom_header_valid() helper for checking image addr and signature.
+- Add pci_rom_data_struct_valid() helper for checking data struct add
+and signature.
+- Handle overflow issue when adding addr with size.
+- Handle alignment fault when running on arm64.
+
+v1 -> v2:
+- Fix commit body problems, such as blank line in "Call Trace" both sides,
+  thanks, (Andy Shevchenko).
+- Remove every step checking, just check the addr is in header or data
+struct.
+- Add Suggested-by: Guanghui Feng <guanghuifeng@linux.alibaba.com> tag.
+
+Guixin Liu (2):
+  PCI: Introduce named defines for pci rom
+  PCI: Check rom header and data structure addr before accessing
+
+ drivers/pci/rom.c | 137 ++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 115 insertions(+), 22 deletions(-)
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.43.0
 
 
