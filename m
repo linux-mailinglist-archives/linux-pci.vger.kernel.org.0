@@ -1,165 +1,243 @@
-Return-Path: <linux-pci+bounces-43003-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43004-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62336CB9167
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 16:19:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 188F6CB9846
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 19:08:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E123730840D2
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 15:17:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 77D2E30596BA
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 18:08:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62AEC1FBC8C;
-	Fri, 12 Dec 2025 15:17:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8EA52F2608;
+	Fri, 12 Dec 2025 18:08:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZbCJ0lQi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vha5Ng+h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF43800
-	for <linux-pci@vger.kernel.org>; Fri, 12 Dec 2025 15:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE112D77EA;
+	Fri, 12 Dec 2025 18:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765552650; cv=none; b=HAIGu+A8blTQ2/VXPvCi2cuM/EqDf9cgzzTLQpf/2qLI42Bloqj6DBMHVrAhziJRpmGTGJKFCLfyK6GBc9a6NckOBODAQ6mNRefylOtlFdj2wc4dN5U+0eZizQWvJbz07oVTIJT7zJui5s1jJjCLDXJ3wWFFddtJBWGihHkiCAs=
+	t=1765562890; cv=none; b=sNWk0jG41lWqB/wzCExIAjqaI20WeWzBz3hrkO1LyaqqvlOGEf3BmMWSEOWHYhw/ExSZhTbmTTvHZFc7aZYp4/oJKkzdcdE1YXYlvf30Xk5o177PeZz9jRb+0Hwvm30m+V0KRfg1L5FJymZyolT3PfrYbcT9oviD4oXVPc4tZwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765552650; c=relaxed/simple;
-	bh=caC1MqA5qXge211eNNz8SUw7Glf57Kgq0Edhp09Oz0g=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lUvai/pyhdt6DpK/wcqE1E1Z7c/Iweb0cSk6Jlg08F1hqU6VQUF8TTCvGlIOgmKtTJcc4ZnTXm5ygk7QDWaodiL1ldZUd0tzBEp9PyrErGM0SQHdVac6ucRgYk5DQck6L7fdS29Ou740P7oQSaNicv1/99OpxZuE9ktWQPkX4Fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZbCJ0lQi; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765552649; x=1797088649;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=caC1MqA5qXge211eNNz8SUw7Glf57Kgq0Edhp09Oz0g=;
-  b=ZbCJ0lQilpvsEixLKwFLORe0YdK2Fut5Y9tygkSJASjJ9k8fPvNGZfjx
-   uQ7ooRZueYhF5kBZijVCOwLjXAX8cHTuvoMnITgUNNQu6+G5czIc3CNb4
-   yGOxbM2ixIam+PQVICLLCnC4MeGdrVP5oKOIQdGnVK0KaqptRF+KcG5R2
-   BnDg11AgNr/+BFwuBptPxXnYNRYS+40eXKI6FWPFZw9zjQ7d2E+kJSsDk
-   ea+q4bl6YZtGw0rxjr1wQeqTO/r4+A4zemzl5KxHx3oylwzkdPooBXFg0
-   aoys1uoqok7cpgMvtmNHjZHEoK+nexlWhU9zPrRZLbjLuuSsabAtxFsxt
-   g==;
-X-CSE-ConnectionGUID: ZLP49F8aS52BA56pdgJrog==
-X-CSE-MsgGUID: lczFVSrMS8GDgNdHJNzrjQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11640"; a="90207090"
-X-IronPort-AV: E=Sophos;i="6.21,144,1763452800"; 
-   d="scan'208";a="90207090"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2025 07:17:28 -0800
-X-CSE-ConnectionGUID: TDB0UU/DQrmqmevU0acUIw==
-X-CSE-MsgGUID: M1Y+E2EQSLaglnzcoVl4cA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,144,1763452800"; 
-   d="scan'208";a="201589472"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.141])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2025 07:17:26 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 12 Dec 2025 17:17:23 +0200 (EET)
-To: Guixin Liu <kanie@linux.alibaba.com>
-cc: Bjorn Helgaas <bhelgaas@google.com>, 
-    Andy Shevchenko <andriy.shevchenko@intel.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v10 1/2] PCI: Introduce named defines for pci rom
-In-Reply-To: <20251212093711.36407-2-kanie@linux.alibaba.com>
-Message-ID: <a3fd2c30-91da-6202-f46d-23aa66f947f2@linux.intel.com>
-References: <20251212093711.36407-1-kanie@linux.alibaba.com> <20251212093711.36407-2-kanie@linux.alibaba.com>
+	s=arc-20240116; t=1765562890; c=relaxed/simple;
+	bh=6nAtonLglnUwDYSz6eucjK8KLKabE12fM1gh78hx9Ls=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=k7rnp7Axy17A4S3g2bBWp4hQjiizJBxJ2dWJI7MLJF5oipgsvBqa75rv+fHhWhHDKRGa3GkEzzSGCcrH6NvXZ1LlObdbLzVQtZIPqHUCvLXkpLEciCXb9zOSYReiHKAJfz42ARw4BNVhjGaQ3QlCGL0omWJNhbqcOc99l6AxDZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vha5Ng+h; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB975C4CEF1;
+	Fri, 12 Dec 2025 18:08:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765562890;
+	bh=6nAtonLglnUwDYSz6eucjK8KLKabE12fM1gh78hx9Ls=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Vha5Ng+hB6Vv0e/zk2DLwmxB4mRDXwMynVoS2IT7Iv4YTTGCAEjHag+WWOvVdxcn7
+	 d1IzVcrHHIzP+8cBwltu4w6SqSVzLUPw2SsRgSIr3LYtd9EnBWwyLA9143KBIlbJho
+	 udcLYb2Mb2OfXWLBRkjM86K8bXRzbg5KpIJmewAZdbElwsBrnuxWnz8z1M8nb//RnP
+	 MTao9cCQk8eNx0eMZiGCwuKWTAif2qN2y3OqfjkTa0RnUi6E5Mn4TYMFYUqACaP5Il
+	 XabxZyQ2rI8Yx6J+fKNw+2K1YnLOHYfij3NGE0uxXPkqN0CFbrQhKcy8SC9lN9T9XQ
+	 w9dZ4Vo+y2I2g==
+Date: Fri, 12 Dec 2025 12:08:08 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Devendra K Verma <devendra.verma@amd.com>
+Cc: bhelgaas@google.com, mani@kernel.org, vkoul@kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, michal.simek@amd.com
+Subject: Re: [PATCH v7 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
+Message-ID: <20251212180808.GA3645554@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251212122056.8153-2-devendra.verma@amd.com>
 
-On Fri, 12 Dec 2025, Guixin Liu wrote:
+On Fri, Dec 12, 2025 at 05:50:55PM +0530, Devendra K Verma wrote:
+> AMD MDB PCIe endpoint support. For AMD specific support
+> added the following
+>   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
+>   - AMD MDB specific driver data
+>   - AMD MDB specific VSEC capability to retrieve the device DDR
+>     base address.
+> ...
 
-The subject still seems to have lowercase "pci rom" :-(.
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
 
--- 
- i.
+> +/* Synopsys */
+>  #define DW_PCIE_VSEC_DMA_ID			0x6
+>  #define DW_PCIE_VSEC_DMA_BAR			GENMASK(10, 8)
+>  #define DW_PCIE_VSEC_DMA_MAP			GENMASK(2, 0)
+>  #define DW_PCIE_VSEC_DMA_WR_CH			GENMASK(9, 0)
+>  #define DW_PCIE_VSEC_DMA_RD_CH			GENMASK(25, 16)
 
-> Convert the magic numbers associated with PCI ROM into named
-> definitions. Some of these definitions will be used in the second
-> fix patch.
-> 
-> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
-> ---
->  drivers/pci/rom.c | 38 +++++++++++++++++++++++++++-----------
->  1 file changed, 27 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
-> index e18d3a4383ba..4f7641b93b4b 100644
-> --- a/drivers/pci/rom.c
-> +++ b/drivers/pci/rom.c
-> @@ -5,13 +5,28 @@
->   * (C) Copyright 2004 Jon Smirl <jonsmirl@yahoo.com>
->   * (C) Copyright 2004 Silicon Graphics, Inc. Jesse Barnes <jbarnes@sgi.com>
->   */
+These should include "SYNOPSYS" since they are specific to
+PCI_VENDOR_ID_SYNOPSYS.  Add corresponding XILINX #defines below for
+the XILINX VSEC.  They'll be the same masks.
+
+> +/* AMD MDB (Xilinx) specific defines */
+> +#define DW_PCIE_XILINX_MDB_VSEC_DMA_ID		0x6
+> +#define DW_PCIE_XILINX_MDB_VSEC_ID		0x20
+> +#define PCI_DEVICE_ID_AMD_MDB_B054		0xb054
+
+Looks odd to me that PCI_DEVICE_ID_AMD_MDB_B054 goes with
+PCI_VENDOR_ID_XILINX.  To me this would make more sense as
+PCI_DEVICE_ID_XILINX_B054.  Move it so it's not in the middle of the
+VSEC-related things.
+
+> +#define DW_PCIE_AMD_MDB_INVALID_ADDR		(~0ULL)
+
+It looks like this is related to the value from
+DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG and is only used for Xilinx, so
+should be named similarly, e.g., DW_PCIE_XILINX_MDB_INVALID_ADDR, and
+moved to be next to it.
+
+> +#define DW_PCIE_XILINX_LL_OFF_GAP		0x200000
+> +#define DW_PCIE_XILINX_LL_SIZE			0x800
+> +#define DW_PCIE_XILINX_DT_OFF_GAP		0x100000
+> +#define DW_PCIE_XILINX_DT_SIZE			0x800
+
+These LL/DT gap and size #defines don't look like they're directly
+related to the VSEC, so they should at least be moved after the
+DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG #defines, since those *are* part of
+the VSEC.
+
+> +#define DW_PCIE_XILINX_MDB_VSEC_HDR_ID		0x20
+
+DW_PCIE_XILINX_MDB_VSEC_HDR_ID is pointless and should be removed.
+See below.
+
+> +#define DW_PCIE_XILINX_MDB_VSEC_REV		0x1
+> +#define DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG_HIGH	0xc
+> +#define DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG_LOW	0x8
+
+> +static const struct dw_edma_pcie_data amd_mdb_data = {
+
+This is a confusing mix of "xilinx" and "amd_mdb".  The DEVICE_ID
+#define uses "AMD_MDB".  The other #defines mostly use XILINX.  This
+data structure uses "amd_mdb".  The function uses "xilinx".
+
+Since this patch only applies to PCI_VENDOR_ID_XILINX, I would make
+this "xilinx_mdb_data".  If new devices come with a different vendor
+ID, e.g., AMD, you can add a corresponding block for that.
+
+> +static void dw_edma_pcie_get_xilinx_dma_data(struct pci_dev *pdev,
+> +					     struct dw_edma_pcie_data *pdata)
+> +{
+> +	u32 val, map;
+> +	u16 vsec;
+> +	u64 off;
 > +
-> +#include <linux/bits.h>
->  #include <linux/kernel.h>
->  #include <linux/export.h>
->  #include <linux/pci.h>
-> +#include <linux/sizes.h>
->  #include <linux/slab.h>
+> +	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
+> +					DW_PCIE_XILINX_MDB_VSEC_DMA_ID);
+> +	if (!vsec)
+> +		return;
+> +
+> +	pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
+> +	if (PCI_VNDR_HEADER_REV(val) != 0x00 ||
+> +	    PCI_VNDR_HEADER_LEN(val) != 0x18)
+> +		return;
+> +
+> +	pci_dbg(pdev, "Detected PCIe Vendor-Specific Extended Capability DMA\n");
+
+Perhaps reword this to "Detected Xilinx Vendor-Specific Extended
+Capability DMA", and the one in dw_edma_pcie_get_synopsys_dma_data()
+to similarly mention "Synopsys" to reinforce the fact that these are
+Xilinx-specific and Synopsys-specific.
+
+I think the REV and LEN checks are unnecessary; see below.
+
+> +	pci_read_config_dword(pdev, vsec + 0x8, &val);
+> +	map = FIELD_GET(DW_PCIE_VSEC_DMA_MAP, val);
+
+Should use XILINX #defines.  Another reason for adding "SYNOPSYS" to
+the #defines for the Synopsys VSEC.
+
+> +	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
+> +					DW_PCIE_XILINX_MDB_VSEC_ID);
+> +	if (!vsec)
+> +		return;
+> +
+> +	pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
+> +	if (PCI_VNDR_HEADER_ID(val) != DW_PCIE_XILINX_MDB_VSEC_HDR_ID ||
+
+pci_find_vsec_capability() already checks that PCI_VNDR_HEADER_ID() ==
+DW_PCIE_XILINX_MDB_VSEC_ID, so there's no need to check this again.
+
+> +	    PCI_VNDR_HEADER_REV(val) != DW_PCIE_XILINX_MDB_VSEC_REV)
+
+I know this is copied from dw_edma_pcie_get_vsec_dma_data(), but I
+think it's a bad idea to check for the exact revision because it
+forces a change to existing, working code if there's ever a device
+with a new revision of this VSEC ID.
+
+If there are new revisions of this VSEC, they should preserve the
+semantics of previous revisions.  If there was a rev 0 of this VSEC, I
+think we should check for PCI_VNDR_HEADER_REV() >= 1.  If rev 1 was
+the first revision, you could skip the check altogether.
+
+If rev 2 *adds* new registers or functionality, we would have to add
+new code to support that, and *that* code should check for
+PCI_VNDR_HEADER_REV() >= 2.
+
+I think the REV and LEN checking in dw_edma_pcie_get_vsec_dma_data()
+is also too aggressive.
+
+>  static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  			      const struct pci_device_id *pid)
+>  {
+> @@ -179,12 +318,34 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  	}
 >  
->  #include "pci.h"
->  
-> +#define PCI_ROM_HEADER_SIZE			0x1A
-> +#define PCI_ROM_POINTER_TO_DATA_STRUCT		0x18
-> +#define PCI_ROM_LAST_IMAGE_INDICATOR		0x15
-> +#define PCI_ROM_LAST_IMAGE_INDICATOR_BIT	BIT(7)
-> +#define PCI_ROM_IMAGE_LEN			0x10
-> +#define PCI_ROM_IMAGE_SECTOR_SIZE		SZ_512
-> +#define PCI_ROM_IMAGE_SIGNATURE			0xAA55
+>  	memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
+> +	vsec_data->devmem_phys_off = DW_PCIE_AMD_MDB_INVALID_ADDR;
+
+Seems weird to set devmem_phys_off here since it's only used for
+PCI_VENDOR_ID_XILINX.  Couldn't this be done in
+dw_edma_pcie_get_xilinx_dma_data()?
+
+> -	dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
+> +	dw_edma_pcie_get_synopsys_dma_data(pdev, vsec_data);
+> +	dw_edma_pcie_get_xilinx_dma_data(pdev, vsec_data);
 > +
-> +/* Data structure signature is "PCIR" in ASCII representation */
-> +#define PCI_ROM_DATA_STRUCT_SIGNATURE		0x52494350
-> +#define PCI_ROM_DATA_STRUCT_LEN			0x0A
+> +	if (pdev->vendor == PCI_VENDOR_ID_XILINX) {
+> +		/*
+> +		 * There is no valid address found for the LL memory
+> +		 * space on the device side.
+> +		 */
+> +		if (vsec_data->devmem_phys_off == DW_PCIE_AMD_MDB_INVALID_ADDR)
+> +			return -ENOMEM;
 > +
->  /**
->   * pci_enable_rom - enable ROM decoding for a PCI device
->   * @pdev: PCI device to enable
-> @@ -91,26 +106,27 @@ static size_t pci_get_rom_size(struct pci_dev *pdev, void __iomem *rom,
->  	do {
->  		void __iomem *pds;
->  		/* Standard PCI ROMs start out with these bytes 55 AA */
-> -		if (readw(image) != 0xAA55) {
-> -			pci_info(pdev, "Invalid PCI ROM header signature: expecting 0xaa55, got %#06x\n",
-> -				 readw(image));
-> +		if (readw(image) != PCI_ROM_IMAGE_SIGNATURE) {
-> +			pci_info(pdev, "Invalid PCI ROM header signature: expecting %#06x, got %#06x\n",
-> +				 PCI_ROM_IMAGE_SIGNATURE, readw(image));
->  			break;
->  		}
->  		/* get the PCI data structure and check its "PCIR" signature */
-> -		pds = image + readw(image + 24);
-> -		if (readl(pds) != 0x52494350) {
-> -			pci_info(pdev, "Invalid PCI ROM data signature: expecting 0x52494350, got %#010x\n",
-> -				 readl(pds));
-> +		pds = image + readw(image + PCI_ROM_POINTER_TO_DATA_STRUCT);
-> +		if (readl(pds) != PCI_ROM_DATA_STRUCT_SIGNATURE) {
-> +			pci_info(pdev, "Invalid PCI ROM data signature: expecting %#010x, got %#010x\n",
-> +				 PCI_ROM_DATA_STRUCT_SIGNATURE, readl(pds));
->  			break;
->  		}
-> -		last_image = readb(pds + 21) & 0x80;
-> -		length = readw(pds + 16);
-> -		image += length * 512;
-> +		last_image = readb(pds + PCI_ROM_LAST_IMAGE_INDICATOR) &
-> +				   PCI_ROM_LAST_IMAGE_INDICATOR_BIT;
-> +		length = readw(pds + PCI_ROM_IMAGE_LEN);
-> +		image += length * PCI_ROM_IMAGE_SECTOR_SIZE;
->  		/* Avoid iterating through memory outside the resource window */
->  		if (image >= rom + size)
->  			break;
->  		if (!last_image) {
-> -			if (readw(image) != 0xAA55) {
-> +			if (readw(image) != PCI_ROM_IMAGE_SIGNATURE) {
->  				pci_info(pdev, "No more image in the PCI ROM\n");
->  				break;
->  			}
-> 
+> +		/*
+> +		 * Configure the channel LL and data blocks if number of
+> +		 * channels enabled in VSEC capability are more than the
+> +		 * channels configured in amd_mdb_data.
+> +		 */
+> +		dw_edma_set_chan_region_offset(vsec_data, BAR_2, 0,
+> +					       DW_PCIE_XILINX_LL_OFF_GAP,
+> +					       DW_PCIE_XILINX_LL_SIZE,
+> +					       DW_PCIE_XILINX_DT_OFF_GAP,
+> +					       DW_PCIE_XILINX_DT_SIZE);
+> +	}
+
+This PCI_VENDOR_ID_XILINX block looks like maybe it would make sense
+inside dw_edma_pcie_get_xilinx_dma_data()?  That function could look
+like:
+
+  dw_edma_pcie_get_xilinx_dma_data(...)
+  {
+    if (pdev->vendor != PCI_VENDOR_ID_XILINX)
+      return;
+
+    pdata->devmem_phys_off = DW_PCIE_XILINX_MDB_INVALID_ADDR;
+    ...
+
+>  static const struct pci_device_id dw_edma_pcie_id_table[] = {
+>  	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, &snps_edda_data) },
+> +	{ PCI_VDEVICE(XILINX, PCI_DEVICE_ID_AMD_MDB_B054),
+> +	  (kernel_ulong_t)&amd_mdb_data },
 
