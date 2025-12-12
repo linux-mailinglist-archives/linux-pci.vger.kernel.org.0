@@ -1,189 +1,107 @@
-Return-Path: <linux-pci+bounces-42979-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-42980-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8CD1CB77C6
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 01:55:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F82ACB78D0
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 02:38:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id EF0F23002FF8
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 00:55:03 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7AE95300386B
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 01:38:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB34B24466B;
-	Fri, 12 Dec 2025 00:55:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E582926B0B7;
+	Fri, 12 Dec 2025 01:38:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ROygXj6M"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="fCOa2Mey"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m19731115.qiye.163.com (mail-m19731115.qiye.163.com [220.197.31.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9C2239E97;
-	Fri, 12 Dec 2025 00:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C379524DD09
+	for <linux-pci@vger.kernel.org>; Fri, 12 Dec 2025 01:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765500902; cv=none; b=cgIVPFjxG3nx0Qz6jgtKhus8UmW+jutqgeE/PWKmC1AnD3vhKqqy01qQ9aI2SOeWTtkPOScdhZbXRqRLbuN9Tgui9tJNpssnX8vFP7WuiEajc8YFaRupkERE7wlqNlZQVEVzMpar5UNTi/aazPib1o686fp/HdkZRTmDd2I1KRg=
+	t=1765503535; cv=none; b=TRhtd2qe4aelVsHSA3DOhy6rj3T9COypuzmeSJkLzXRM3pD/jvQY3Lt7WqgCe+FP6jB1B0JNarlDSM1bbfaGlsshTTcY6h5Wtb+YXi+L5aaC4MpmHTH5HAniqLbJNUOluWurceoClgvXemxnYvJSVIgb+Y+Oy4TxR78WTxKXDTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765500902; c=relaxed/simple;
-	bh=7XuU/j4oXsp3wSSPQRo5hX3AjF2tjsZ/bHzcBL+TgyA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lfa3Fav1vfc3kIMJRArNdGcuFvpuX1uVk1M3PTx1e17goYevC6GOXFkHrdSDe0y1VpgQ1qXk+q5jd2nd1Z8baaX+o3W7gOHI/mUyuoUVy03Suv/WXe+n5G1JwU6YDPQCH+fbjRLWbMio5QGH0xki9hsKX3v4YBwSFtGO1NhoXhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ROygXj6M; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 133F3C4CEF7;
-	Fri, 12 Dec 2025 00:54:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765500902;
-	bh=7XuU/j4oXsp3wSSPQRo5hX3AjF2tjsZ/bHzcBL+TgyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ROygXj6MAc06NChJEs/ZiPtJ8xwU7YF4LvcRNV1N2Geaxum3HdWA29IXTaERtJyP1
-	 BFBhdLvwBV9ecTiPCUHPhp4f2cEdAD23q8wmphA2z+rZKhAbpSrtCzdqBH8DMlyaF2
-	 5ri7H689/UzrswPpd09AKb5TaVz5YnLjH0EMH5cLj3dGsDGw1wZtTNHSFiYXD7SzPv
-	 ydB7t4pn9Xo8gFMBFtaEC4NHZRf6VH9SbHbD8zuvXZfBI3hHcTu26t7LZb36BDYsIg
-	 CvCeDkzChLYRYsRCUegKvGjix4vuzSC2UO0DxdJqeNsJ+wBvOTpd2n1Tbb0RIDhW3R
-	 EqAgtWAFtdoRA==
-Date: Fri, 12 Dec 2025 09:54:52 +0900
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "Verma, Devendra" <Devendra.Verma@amd.com>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, "vkoul@kernel.org" <vkoul@kernel.org>, 
-	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek, Michal" <michal.simek@amd.com>
-Subject: Re: [PATCH RESEND v6 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint
- Support
-Message-ID: <jtqs5hwzibkozyz5refb5wzqn3gbdoruqp3squa7ziwltj43lq@wts4vsqo4kcs>
-References: <b2s6genayrgyicxawx2scpswfji3c62vxn7cgvpzwfbm6vodtx@5dseozibsrte>
- <20251210163228.GA3526502@bhelgaas>
+	s=arc-20240116; t=1765503535; c=relaxed/simple;
+	bh=54YjvT8zadJlH/wUakOlLOjWbxtOOEqmtUDUfFTLCvE=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=Lfcw6RnmY97/FFDDUtA00UkyoUgZ0NAkIz8NDttLPnpiKC+5fK8GagSss45q/uAyKb2cx2emcmV0IIuQFF8CQMuNU5/qxUPzD6MsdJrJG4WryMEECWF6zpjyxn1nk7Jvpj6tgwtLLxxjIkCriBZxz6Gwfcwm03vTcW6TxIue+NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=fCOa2Mey; arc=none smtp.client-ip=220.197.31.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2ced0dd3b;
+	Fri, 12 Dec 2025 09:33:39 +0800 (GMT+08:00)
+From: Shawn Lin <shawn.lin@rock-chips.com>
+To: Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-rockchip@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH v2 1/2] PCI: dwc: Add L1 Substates context to ltssm_status of debugfs
+Date: Fri, 12 Dec 2025 09:33:24 +0800
+Message-Id: <1765503205-22184-1-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
+X-HM-Tid: 0a9b1031344709cckunm8cda450e102e55
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGR8eHlZMH0lJQx9JGhgfTkhWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=fCOa2MeyETAxpRKmhV6LDnR4bUUDlzZsFIbiLkG5dg168ZnD7bA23o82S7YHhb4BX+UdNwJT6sv09MofoUwMiKphzfBZ9RexaUugL51BTyt3ZOmKwCicfvp890eQFLoQjnOyefJtSNErK9MIRjG/GGh2JaFn7aI03akCWvwUmpY=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=myFdiZSeIHrA4E5OIQehoVWzGwxt0OZArwYqs8UXtI8=;
+	h=date:mime-version:subject:message-id:from;
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251210163228.GA3526502@bhelgaas>
 
-On Wed, Dec 10, 2025 at 10:32:28AM -0600, Bjorn Helgaas wrote:
-> On Wed, Dec 10, 2025 at 10:26:38PM +0900, Manivannan Sadhasivam wrote:
-> > On Wed, Dec 10, 2025 at 11:40:04AM +0000, Verma, Devendra wrote:
-> > > > -----Original Message-----
-> > > > From: Manivannan Sadhasivam <mani@kernel.org>
-> > > > On Fri, Nov 21, 2025 at 05:04:54PM +0530, Devendra K Verma wrote:
-> > > > > AMD MDB PCIe endpoint support. For AMD specific support added the
-> > > > > following
-> > > > >   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
-> > > > >   - AMD MDB specific driver data
-> > > > >   - AMD MDB specific VSEC capability to retrieve the device DDR
-> > > > >     base address.
-> 
-> > > > > +/* Synopsys */
-> > > > >  #define DW_PCIE_VSEC_DMA_ID                  0x6
-> 
-> > > > > +/* AMD MDB (Xilinx) specific defines */
-> > > > > +#define DW_PCIE_XILINX_MDB_VSEC_DMA_ID               0x6
-> 
-> > > > > static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
-> 
-> > > > > +      * Synopsys and AMD (Xilinx) use the same VSEC ID for the
-> > > > > + purpose
-> > > >
-> > > > Same or different?
-> > > 
-> > > It is the same capability for which Synosys and AMD (Xilinx) share
-> > > the common value.
-> > 
-> > This is confusing. You are searching for either DW_PCIE_VSEC_DMA_ID
-> > or DW_PCIE_XILINX_MDB_VSEC_DMA_ID below, which means that the VSEC
-> > IDs are different.
-> 
-> This is perennially confusing.
-> 
-> Since this is a "Vendor-Specific" (not a "Designated Vendor-Specific")
-> capability, we must search for the per-vendor VSEC ID, i.e.,
-> DW_PCIE_VSEC_DMA_ID for PCI_VENDOR_ID_SYNOPSYS devices or
-> DW_PCIE_XILINX_MDB_VSEC_DMA_ID for PCI_VENDOR_ID_XILINX devices.
-> 
-> The fact that DW_PCIE_VSEC_DMA_ID == DW_PCIE_XILINX_MDB_VSEC_DMA_ID is
-> a coincidence and is not relevant to the code.  The comment that
-> "Synopsys and AMD (Xilinx) use the same VSEC ID for the purpose"
-> should be removed because it adds confusion and the code doesn't rely
-> on that.
-> 
-> However, the subsequent code DOES rely on the fact that the Synopsys
-> and the Xilinx VSECs have the same *registers* at the same offsets:
-> 
->         pci_read_config_dword(pdev, vsec + 0x8, &val);
->         map = FIELD_GET(DW_PCIE_VSEC_DMA_MAP, val);
->         pdata->rg.bar = FIELD_GET(DW_PCIE_VSEC_DMA_BAR, val);
-> 
->         pci_read_config_dword(pdev, vsec + 0xc, &val);
->         pdata->wr_ch_cnt = min_t(u16, pdata->wr_ch_cnt,
->                                  FIELD_GET(DW_PCIE_VSEC_DMA_WR_CH, val));
->         pdata->rd_ch_cnt = min_t(u16, pdata->rd_ch_cnt,
->                                  FIELD_GET(DW_PCIE_VSEC_DMA_RD_CH, val));
-> 
->         pci_read_config_dword(pdev, vsec + 0x14, &val);
->         off = val;
-> 
->         pci_read_config_dword(pdev, vsec + 0x10, &val);
-> 
-> The VSEC ID *values* are not relevant, but the fact that the registers
-> in the Synopsys and the Xilinx capabilities are identical *is*
-> important and not obvious, so if you share the code that reads those
-> registers, there should be a comment about that.
-> 
-> The normal way to use VSEC is to look for a capability for a single
-> vendor and interpret it using code for that specific vendor.  I think
-> I would split this into separate dw_edma_pcie_get_synopsys_dma_data()
-> and dw_edma_pcie_get_xilinx_dma_data() functions to make it obvious
-> that these are indeed controlled by different vendors, e.g.,
-> 
->   dw_edma_pcie_get_synopsys_dma_data()
->   {
->     vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
->                                     DW_PCIE_VSEC_DMA_ID);
->     if (!vsec)
->       return;
-> 
->     pci_read_config_dword(pdev, vsec + 0x8, &val);
->     ...
->   }
-> 
->   dw_edma_pcie_get_xilinx_dma_data()
->   {
->     vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
->                                     DW_PCIE_XILINX_MDB_VSEC_DMA_ID);
->     if (!vsec)
->       return;
-> 
->     pci_read_config_dword(pdev, vsec + 0x8, &val);
->     ...
-> 
->     vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
->                                     DW_PCIE_XILINX_MDB_VSEC_ID);
->     if (!vsec)
->       return;
->     ...
->   }
-> 
-> It's safe to call both of them for all devices like this:
-> 
->   dw_edma_pcie_probe
->   {
->     ...
->     dw_edma_pcie_get_synopsys_dma_data(pdev, vsec_data);
->     dw_edma_pcie_get_xilinx_dma_data(pdev, vsec_data);
->     ...
->   }
-> 
-> Most of the code in dw_edma_pcie_get_synopsys_dma_data() would be
-> duplicated, but that's OK and acknowledges the fact that Synopsys and
-> Xilinx can evolve that VSEC independently.
-> 
+dwc core couldn't distinguish LTSSM status among L1.0, L1.1 and L1.2.
+But the variant driver may implement additional register to tell them
+apart. Add two pseudo definitions for variant drivers to translate their
+internal L1 Substates for debugfs to show.
 
-Yes, it will make it clear and obvious!
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+---
 
-- Mani
+Changes in v2:
+- fix the commit log and subject(Bjorn)
+- Add space for code comment(Bjorn)
 
+ drivers/pci/controller/dwc/pcie-designware-debugfs.c | 2 ++
+ drivers/pci/controller/dwc/pcie-designware.h         | 4 ++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+index 0fbf86c..df98fee 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
++++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+@@ -485,6 +485,8 @@ static const char *ltssm_status_string(enum dw_pcie_ltssm ltssm)
+ 	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ1);
+ 	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ2);
+ 	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ3);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L1_1);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L1_2);
+ 	default:
+ 		str = "DW_PCIE_LTSSM_UNKNOWN";
+ 		break;
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 3168595..2526664 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -388,6 +388,10 @@ enum dw_pcie_ltssm {
+ 	DW_PCIE_LTSSM_RCVRY_EQ2 = 0x22,
+ 	DW_PCIE_LTSSM_RCVRY_EQ3 = 0x23,
+ 
++	/* Variant drivers provide pseudo L1 substates from get_ltssm() */
++	DW_PCIE_LTSSM_L1_1 = 0x141,
++	DW_PCIE_LTSSM_L1_2 = 0x142,
++
+ 	DW_PCIE_LTSSM_UNKNOWN = 0xFFFFFFFF,
+ };
+ 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.7.4
+
 
