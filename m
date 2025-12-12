@@ -1,135 +1,94 @@
-Return-Path: <linux-pci+bounces-43001-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43002-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6486ACB9045
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 15:56:45 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EAC8CB9061
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 16:02:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 61E7C3007E4D
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 14:56:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7481C305A3E9
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Dec 2025 15:02:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E207F284881;
-	Fri, 12 Dec 2025 14:56:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF4191531F9;
+	Fri, 12 Dec 2025 15:02:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="jOfOv/0+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jnze0ga7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sg-1-101.ptr.blmpb.com (sg-1-101.ptr.blmpb.com [118.26.132.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FD22848A4
-	for <linux-pci@vger.kernel.org>; Fri, 12 Dec 2025 14:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F974A01
+	for <linux-pci@vger.kernel.org>; Fri, 12 Dec 2025 15:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765551403; cv=none; b=WTgGL6Z3o3XVDxA03mjm9lhLbMOoDAyMWm2vr6I4RQ1yB1TY+83JYVRd2o3yj7YR/X2jBZyrfBKcDjqfudy7MnkfdT3mxYEz7UiWRKWqXbJ/pNtn6KvX/G0gp+x5Q0CahKpLSJdhrZ9PzkCe/scXieG803kitSypP7vE2rDibiY=
+	t=1765551728; cv=none; b=WuT/dACkKnMb7Dr5pPcys9/feCmAAwiHLtoUanbCps2tGv9fRLYfPRH2MMuBdQjnK8Ohwlz/Oa1Di67CcD3mIh1ws1WWoX0hXw0EQrJigtOujA5wA+urB13cAjugddpgeLt1pYDmoR6top5/3namWqZ+OCHQ6cC2HYg2XmfTOKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765551403; c=relaxed/simple;
-	bh=R3+VFqiY9OxXKrkggbvgi4CpQ3sg8fOv5hi3AHppWCM=;
-	h=To:References:Cc:Message-Id:Content-Type:From:Date:In-Reply-To:
-	 Subject:Mime-Version; b=ZQ+fQXsLNN0XHPScG37JASCDv7xLY4W4jb6IavClmCl3zhJ9s4gpJyD7aGvRxxu5RvwVLE9vu08QSK3ZobURX59l55W5v2Jj1WBZ5G0pkwTn/8Tt1rEp8gA2AB5urEbSSTR0sUq10sKU6hBPPz9O7+49CzY3h7/R7SmFsr5iRKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=jOfOv/0+; arc=none smtp.client-ip=118.26.132.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1765551388; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=I9fko49rlyRQO9najQQGMXmxO0V3/iBIPIKXkCh1tPc=;
- b=jOfOv/0+iSc061JoBaq804yldZdcCbmRKiOX6i+MQ6L92sl4arMt1PviqZ2pf17THMiVNo
- qDqCfvriKSARO4x0QqDj7SY1DiXvoNr6K/qiDvI0++cMZdf+095hy5qnyQqlljARs3v8X8
- unDlkCsJgp9RWfEXyXe3rFWiZcd8jWf0A5s7XiSFB/0OvsRK3JkTvfYRvTkNMIgUydVqTJ
- Zh/R6nIaOxFrRfVmS0bGO0Sg9MG+5gDiOfxS/MCVilW+PyBdByQcS0uDWZAom/UvyV/LtS
- f4HxMwXOSGftfnvGU/Sm2kNSAENLIFKZo4D32BKpYqtohJJ9HIydVkxwhjBr0Q==
-To: <bhelgaas@google.com>, <dan.j.williams@intel.com>, 
-	<dave.jiang@intel.com>, <ilpo.jarvinen@linux.intel.com>, 
-	<kbusch@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-References: <20251212133737.2367-1-guojinhui.liam@bytedance.com>
-Cc: <guojinhui.liam@bytedance.com>, <linux-kernel@vger.kernel.org>, 
-	<linux-pci@vger.kernel.org>, <stable@vger.kernel.org>
-Message-Id: <20251212145528.2555-1-guojinhui.liam@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-X-Original-From: Jinhui Guo <guojinhui.liam@bytedance.com>
-From: "Jinhui Guo" <guojinhui.liam@bytedance.com>
-Date: Fri, 12 Dec 2025 22:55:28 +0800
-In-Reply-To: <20251212133737.2367-1-guojinhui.liam@bytedance.com>
-X-Mailer: git-send-email 2.17.1
-X-Lms-Return-Path: <lba+2693c2d1b+d434ae+vger.kernel.org+guojinhui.liam@bytedance.com>
-Subject: [RESEND PATCH v2] PCI: Fix incorrect unlocking in pci_slot_trylock()
+	s=arc-20240116; t=1765551728; c=relaxed/simple;
+	bh=Yo4go21aI6itIYN+C2wnrM6uZ63GALuR+evn65hRgWE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uvIK0pBMzEtQ9aMbuS8JQuxDpbZjwwsK8WQxPPAnKAXXKDfyRBjyeBxl06qQkwzlOs7embsbwWPacCdJsT5L/0HWnLm42hcNxxC8guAg8bhfgNr70qo+gy16uWYyR1cKC9B5zD1pnGt48ui+FBzW9c1ccDflf1LeK/gSdc631Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jnze0ga7; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1765551727; x=1797087727;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Yo4go21aI6itIYN+C2wnrM6uZ63GALuR+evn65hRgWE=;
+  b=jnze0ga7RGWPowuiQAnt1KEYUfP8pP2ieBN+g38cdq8eEA1+qa8U4F2W
+   7HDnuBuWJwRPMDuO7kCGTWfED8lMx98YbCHtQtWNdxZc7ySG3SpXwkAZa
+   mXIZyPrSlof1CfvS4lkQzmwB/4VJkXjeUhRgbeYWBfRo0HZ2zoy67PviT
+   F5Pq0Y5BDCQZSTVU7cxPmTgZrHfuQ+ZSAp67EjodhbOhGcsvvr531PCui
+   kIHNTtkoz1FG9kbhPoGzth9B5Jw/rMa85AKMY+FSZm/8ATphsyNC49IdW
+   l1ts3KOcUkxgdhyIlZZ9PRnlQcGHHp6gvqZMoMonJL2olH2idcMFLScGb
+   g==;
+X-CSE-ConnectionGUID: wNStKbprQQWecuL2mE6vrQ==
+X-CSE-MsgGUID: PGCw7s9oQqCKNRbzb4QSKw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11640"; a="77869320"
+X-IronPort-AV: E=Sophos;i="6.21,144,1763452800"; 
+   d="scan'208";a="77869320"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2025 07:02:06 -0800
+X-CSE-ConnectionGUID: 1WMM752zQOWY3KU2slTxvQ==
+X-CSE-MsgGUID: EjReHHOnSdeX6zAjKiT8bA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,144,1763452800"; 
+   d="scan'208";a="227776068"
+Received: from cpetruta-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.181])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2025 07:02:05 -0800
+Date: Fri, 12 Dec 2025 17:02:02 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Guixin Liu <kanie@linux.alibaba.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v10 1/2] PCI: Introduce named defines for pci rom
+Message-ID: <aTwuatZYJEerx1cL@smile.fi.intel.com>
+References: <20251212093711.36407-1-kanie@linux.alibaba.com>
+ <20251212093711.36407-2-kanie@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251212093711.36407-2-kanie@linux.alibaba.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Commit a4e772898f8b ("PCI: Add missing bridge lock to pci_bus_lock()")
-delegates the bridge device's pci_dev_trylock() to pci_bus_trylock() in
-pci_slot_trylock(), but it forgets to remove the corresponding
-pci_dev_unlock() when pci_bus_trylock() fails.
+On Fri, Dec 12, 2025 at 05:37:09PM +0800, Guixin Liu wrote:
+> Convert the magic numbers associated with PCI ROM into named
+> definitions. Some of these definitions will be used in the second
+> fix patch.
 
-Before the commit, the code did:
+Now this LGTM, thanks!
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
-  if (!pci_dev_trylock(dev)) /* <- lock bridge device */
-    goto unlock;
-  if (dev->subordinate) {
-    if (!pci_bus_trylock(dev->subordinate)) {
-      pci_dev_unlock(dev);   /* <- unlock bridge device */
-      goto unlock;
-    }
-  }
+-- 
+With Best Regards,
+Andy Shevchenko
 
-After the commit the bridge-device lock is no longer taken, but the
-pci_dev_unlock(dev) on the failure path was left in place, leading to
-the bug.
 
-This yields one of two errors:
-1. A warning that the lock is being unlocked when no one holds it.
-2. An incorrect unlock of a lock that belongs to another thread.
-
-Fix it by removing the now-redundant pci_dev_unlock(dev) on the failure
-path.
-
-Fixes: a4e772898f8b ("PCI: Add missing bridge lock to pci_bus_lock()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jinhui Guo <guojinhui.liam@bytedance.com>
----
-
-Hi, all
-
-Resent v2 to drop the Acked-by tag; no code changes. Sorry for the noise ag=
-ain.
-
-v1: https://lore.kernel.org/all/20251211123635.2215-1-guojinhui.liam@byteda=
-nce.com/
-
-Changelog in v1 -> v2
- - The v1 commit message was too brief, so I=E2=80=99ve sent v2 with more d=
-etail.
- - Remove the braces from the if (!pci_bus_trylock(dev->subordinate)) state=
-ment.
-
-Best Regards,
-Jinhui
-
- drivers/pci/pci.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 13dbb405dc31..59319e08fca6 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5346,10 +5346,8 @@ static int pci_slot_trylock(struct pci_slot *slot)
- 		if (!dev->slot || dev->slot !=3D slot)
- 			continue;
- 		if (dev->subordinate) {
--			if (!pci_bus_trylock(dev->subordinate)) {
--				pci_dev_unlock(dev);
-+			if (!pci_bus_trylock(dev->subordinate))
- 				goto unlock;
--			}
- 		} else if (!pci_dev_trylock(dev))
- 			goto unlock;
- 	}
---=20
-2.20.1
 
