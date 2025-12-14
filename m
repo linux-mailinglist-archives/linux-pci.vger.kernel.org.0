@@ -1,102 +1,109 @@
-Return-Path: <linux-pci+bounces-43023-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43024-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A458FCBBA97
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Dec 2025 13:09:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C78BCBBEDB
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Dec 2025 19:36:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 456B630056D1
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Dec 2025 12:09:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E5A6E30054BA
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Dec 2025 18:36:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A675E1624DF;
-	Sun, 14 Dec 2025 12:09:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63C43156CA;
+	Sun, 14 Dec 2025 18:36:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iruBOQtX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V/aJ2ynk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107431DDF3
-	for <linux-pci@vger.kernel.org>; Sun, 14 Dec 2025 12:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC41F513
+	for <linux-pci@vger.kernel.org>; Sun, 14 Dec 2025 18:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765714145; cv=none; b=trcFnBJt3Xw5ZKWSFjPtXYTwnXBHxCWPU/th2oj+eSSHLk1Z/zznNp1l6vb/AqtWXF0S/OFcEYRqLLxpNAIiMdfnz9TRkVnNr0vb/qteRV3M4492tKhg/DziprgvAiY2QodLfoCE+kiZJGz2Ih99TENZcmmAYGjj4L0wX1r8Xeo=
+	t=1765737375; cv=none; b=eYLPwzNe9BQH+fYtaH5T4BjYc4xToK4iBVxFeqXLMaVfD+XUyTRKYzMom6BtzIdNaiyg2KNjDbFWXht70tVmgBE+XNyndtTxgVhfu/LtA2dWjvui+0OxHwF3hcak1m/N3RLqtRw4XeJxdo+eSfoaOfAw1wdvpF9USqy8n598GgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765714145; c=relaxed/simple;
-	bh=24r3RT0blTlP4vVDhTGVzpP6593uCi9J5WSfFBxiCSM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=p5wxU5B92FGaT4XMOZYI2McV9e9Jp6LhJUIlrl7cos6JxfLhI3Wo8obg533+2iRaturEZSDbtnS4EoYTUmaG1BbHtOsi1q2ZB8Q+u9t8+3TplzNcodOh5oG4aqI1f+5b1Tc6uH90L3LGFc2ZebRKKy2jFhweMpvCyH4bWh2ebm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iruBOQtX; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5959b2f3fc9so2812029e87.2
-        for <linux-pci@vger.kernel.org>; Sun, 14 Dec 2025 04:09:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765714142; x=1766318942; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=24r3RT0blTlP4vVDhTGVzpP6593uCi9J5WSfFBxiCSM=;
-        b=iruBOQtXW/Obqca4bieXPEM75QI5TIJcvE79QuGiHpRo1KCmh5djwdKKLKjRraONFd
-         f0ZA3cgJD3IY/WscIASl0O5G473Iew5nofmphTZMK9Yx63Ld9sT3Hcbr69dqAgECLYZ8
-         ek2FeyFJmwnpDZx394wtiq/W1TbFkwqT7FcFlXQGu6lOpUPZQorg1WidXpbfqQEwhHRx
-         iv5TtoxG9iVWsm0jfmKm5AJDaq+bCEqSIz2ufpP4bJJNbYkrehRNry6jiN7+EqziWsLv
-         waII5lQNycPBJ3Egzxi3B9FXnhA6E0QuGmWLJEwl7uWqOCy1nv06FcQ58dxXw/wlq6wa
-         lLUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765714142; x=1766318942;
-        h=to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=24r3RT0blTlP4vVDhTGVzpP6593uCi9J5WSfFBxiCSM=;
-        b=ftJRg9ib3OPTIIK2NjHuJ8oS8P7V1jc6a7YeVim7IrZ6daGRJrndphCMpWqZPm4Mka
-         KAGIVbNxCP1QMf0zhRyP2Ou688oFi7wq2pdH1xi3lwxXh1aK021J5IbiDK96jZ0RvNU3
-         VbiEgdJRPUwiCco8leMnvIZoYwrfxXF7dsKm9EOXg9nlYsF5WDFNPuXPDqj8j17ZoWUq
-         s6d5eRvCr+SrOG3sTZdMsEpR4BMcLDpROdmwmaRBipjuxRb/4bpNoIyBrSK/+R+q10qh
-         8ljUBkaKltnE5Z87RQQAg78OD6ViYYiU6iUn71DMqCp61Tq6JRIAiHljkVihTVmIPusj
-         aoYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVs88DVtMOeMw0Nnlrgu1TSi3ozZ3mh+aP0VDck1DebDLODUfWuuliBCK2zuQvkHCEzHV4vgnR74XE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yya4WezI1WEAres4ovaaiU8TEsBRxkIG9A+gKJNWFvUmm6Wq17c
-	yu4Ff5nIhz4F8IsETMJy2hJwUoo5O7CEDBhK7jvO1fMTvBplEwDuW39UWtwHtW+hIq2aNmBZGN2
-	91itY1YsNTQ8UzYl+1wRnD4tISKINt2gV4w==
-X-Gm-Gg: AY/fxX6U8pb+ZzwJmYYN/4PLFyEpbFvnpebLfBaxfqzJh76JwrNrHhWXYKqEGlmaM8B
-	jpEOtY5s+9Bo0DYcbAJ0HWFRwlh1rYQA/6xh6xa/LAjo4QfLn7flvVs7DCG2Pic7LFkBygKIX3q
-	pS8nvNrnyBTLoroAouqbRdEZHPHPffaWiM4YB452mNpvQ7+iErXwYZzCTjQ3eLL9ocrgvsZbLQK
-	OczHD92AEQaXFsUzaa7lW67IwxJUtvSpwyI3Gam6bZKIgbXZGsxTnyorqsyjI+wM43rreC9
-X-Google-Smtp-Source: AGHT+IGQeGS23jf2/IRjYkwEmTG3hjsgPGVTkngw0l1GZMfZs8lGFW9i4SlZHHY27DzxN2mfYwV9wOYudRBdrR7QKHk=
-X-Received: by 2002:a05:6512:e9c:b0:598:8f91:b71d with SMTP id
- 2adb3069b0e04-598faa332e6mr2377600e87.22.1765714141973; Sun, 14 Dec 2025
- 04:09:01 -0800 (PST)
+	s=arc-20240116; t=1765737375; c=relaxed/simple;
+	bh=mnr4dkhbpZMbKpNu5iYCQzJCxuvHuB2oCHTSPewC4s4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nk5cVCF5EGmk+hxMLuctyfYNQnBBCw2vJv8S2QqFdhgahgqG4nEgQ6Fz69X2B/iH8R7DWK/bLU2JD1Q0DQ9QnzMJJlhjZ2cLfgOpRvmeOJ20zl+1wDF9eIJonyW0M0clsxOtoGOaF4FHWIojGaJzAM6Oy4+1l2qRyq1VMMe5wQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V/aJ2ynk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE836C4CEF1;
+	Sun, 14 Dec 2025 18:36:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765737372;
+	bh=mnr4dkhbpZMbKpNu5iYCQzJCxuvHuB2oCHTSPewC4s4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=V/aJ2ynke4m4cZSAnEx0lWom1xsilp/mQo0TZOUGKr2/O7oddRyUeQnh9uglz4xWf
+	 OVkCJUi0FrNxoMn0Wv4/uYy6fB4p22pyNfPxsKVI6Uzx1CPS//20L7axkwdzT1ZcPg
+	 Itg55ajTbPvdQyDUlTGUiHnnTNpq/Z/+6bBibMFMZOYdG/OfnagRz/7bD2u2RsvNmn
+	 7yWXVNX/hdCz/flNXcptdxrnAstrxPq9FKxDiJ2Fa+/yQN59IZL8VdRlnmSV8qQLwj
+	 /5Wlxk5rtlI2jwyX8HBvpDMmdRlVZ43p4X77q5FZysKTd1LTW7FJyc7eYRfqOmWYWK
+	 jnUhcQoyk42Bw==
+From: "Mario Limonciello (AMD)" <superm1@kernel.org>
+To: mario.limonciello@amd.com,
+	bhelgaas@google.com,
+	superm1@kernel.org,
+	tzimmermann@suse.de
+Cc: Aaron Erhardt <aer@tuxedocomputers.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v2] PCI/VGA: Don't assume the only VGA device on a system is `boot_vga`
+Date: Sun, 14 Dec 2025 12:35:26 -0600
+Message-ID: <20251214183602.150412-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Ajay Garg <ajaygargnsit@gmail.com>
-Date: Sun, 14 Dec 2025 17:38:50 +0530
-X-Gm-Features: AQt7F2qtF2HhY3dXg-6TqjYWOUaBnnVAOa499V6C3Uf4nKYfKkyibdNAiRAKYv8
-Message-ID: <CAHP4M8Uy7HLiKjnMCdNG+QG+0cizN82c_G87AuzDL6qDCBG5vg@mail.gmail.com>
-Subject: A lingering doubt on PCI-MMIO region of PCI-passthrough-device
-To: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi everyone.
+Some systems ship with multiple display class devices but not all
+of them are VGA devices. If the "only" VGA device on the system is not
+used for displaying the image on the screen marking it as `boot_vga`
+because nothing was found is totally wrong.
 
-Let's assume x86_64-linux host and guest, with full-virtualization and
-iommu hardware capabilities.
+This behavior actually leads to mistakes of the wrong device being
+advertised to userspace and then userspace can make incorrect decisions.
 
-Before launching vm, qemu with the help vfio "installs" "dev1" on the
-virtual-pci-root-complex of guest.
-After bootup, the guest does the usual enumeration, finds "dev1" on
-the pci-bus, and programs the BARs in its domain.
+As there is an accurate `boot_display` sysfs file stop lying about
+`boot_vga` by assuming if nothing is found it's the right device.
 
-However, there is no guarantee that guest-pci-mmio-physical-ranges
-would be identical to "what would have been"
-host-pci-mmio-physical-ranges.
-Then how does the EPT/SLAT tables get set up for correct mapping from
-GPA => HPA for dev1's-BARs-MMIO-regions ?
+Reported-by: Aaron Erhardt <aer@tuxedocomputers.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220712
+Tested-by: Aaron Erhardt <aer@tuxedocomputers.com>
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+Fixes: ad90860bd10ee ("fbcon: Use screen info to find primary device")
+Tested-by: Luke D. Jones <luke@ljones.dev>
+Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+---
+v2:
+ * Add tags
+ * Rebase on v6.19-rc1
+ * v1: https://lore.kernel.org/linux-pci/20251029185940.2499129-1-superm1@kernel.org/
+---
+ drivers/pci/vgaarb.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-Will be grateful for pointers.
+diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+index 436fa7f4c3873..baa242b140993 100644
+--- a/drivers/pci/vgaarb.c
++++ b/drivers/pci/vgaarb.c
+@@ -652,13 +652,6 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
+ 		return true;
+ 	}
+ 
+-	/*
+-	 * Vgadev has neither IO nor MEM enabled.  If we haven't found any
+-	 * other VGA devices, it is the best candidate so far.
+-	 */
+-	if (!boot_vga)
+-		return true;
+-
+ 	return false;
+ }
+ 
+-- 
+2.43.0
 
-Thanks and Regards,
-Ajay
 
