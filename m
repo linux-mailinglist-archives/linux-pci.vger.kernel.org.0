@@ -1,56 +1,56 @@
-Return-Path: <linux-pci+bounces-43041-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43042-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82AFFCBDAB2
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 13:01:40 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71BB6CBDBEB
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 13:16:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 334FB3000B2D
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 12:01:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 408F63050583
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 12:09:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2FEA330B38;
-	Mon, 15 Dec 2025 12:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81616244664;
+	Mon, 15 Dec 2025 12:09:11 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22AC331A4D;
-	Mon, 15 Dec 2025 12:00:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7C5315765;
+	Mon, 15 Dec 2025 12:09:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765800044; cv=none; b=gtYjvWdi0TEF3xClNuabKQ68WY6wJt7JeveeaXT9AwfJdIRd1hSOJAE7VHBuQxGzAAm2jnKoMzVZkKc5mpG0yGOMi9xcNBaaSc2MBXm6K2Ok7PXlre7eE4c0ah8RlCZODAzjdBMVlw80sN+gNlocbjIvvlZDlVJhTuKrI9pRrYI=
+	t=1765800550; cv=none; b=R7lq+FK1q59ZqlC6srr9XSrQron0+lFDX1o38rgqBMj0ZK7ZoTdGdKGeVqFRjcmzh0D+yHhWlOi6mUGexLqNqu1q+6yNkSlwfQKndArLpUvDnDy1Fnfpm6PbsrV40KxgOyJzeZUfh7rOKFVHZ9EDeimu4SKighPaGaCKUYRsTKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765800044; c=relaxed/simple;
-	bh=uav6bp8113k/QpSrhYu+tSV451cM/ZHs3SgRcoV/PrQ=;
+	s=arc-20240116; t=1765800550; c=relaxed/simple;
+	bh=ETShSUhHG58begoEbQgBckMzdf+LLtT24b10xbZ8bD8=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tNBw4gN6hyDuN47RzucMiyGxrlilhFZMYJqY826yujyxRhdLBTdC6cTO3o8jzZrgrLgyvtZvHjSXYCZma0qnbt8wTkbjnJ27SjfvGwMDbT/12ItTN918Zm/oLMUECfMKUpvXOfrgTAv4omL+wve/xZ1NuiFViR83j9BCsOFlwdY=
+	 MIME-Version:Content-Type; b=GKVNp26exjLC1XiQdkWTnR5eWibYbPKYvrwKd9PyRYlcVgG4K82DqzJU7M1hb0AWT8nNQbbGw5vNgjS4mLmXERCxVxI9YjS/X7PUNMC9KlXpgC594pbJ+g083745ZD1cqfuZnagthut/FGsmS9mPSAzdN69IMeDdLCi3AjksqwI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dVJXY15T9zJ4683;
-	Mon, 15 Dec 2025 20:00:13 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dVJkJ32BKzHnGcw;
+	Mon, 15 Dec 2025 20:08:40 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3423C40539;
-	Mon, 15 Dec 2025 20:00:39 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 9F2CD40086;
+	Mon, 15 Dec 2025 20:09:01 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Mon, 15 Dec
- 2025 12:00:38 +0000
-Date: Mon, 15 Dec 2025 12:00:37 +0000
+ 2025 12:09:01 +0000
+Date: Mon, 15 Dec 2025 12:08:59 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: Dan Williams <dan.j.williams@intel.com>
 CC: <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <Smita.KoralahalliChannabasappa@amd.com>,
 	<alison.schofield@intel.com>, <terry.bowman@amd.com>,
-	<alejandro.lucero-palau@amd.com>, <linux-pci@vger.kernel.org>, Shiju Jose
-	<shiju.jose@huawei.com>
-Subject: Re: [PATCH 1/6] cxl/mem: Fix devm_cxl_memdev_edac_release()
- confusion
-Message-ID: <20251215120037.000053d7@huawei.com>
-In-Reply-To: <20251204022136.2573521-2-dan.j.williams@intel.com>
+	<alejandro.lucero-palau@amd.com>, <linux-pci@vger.kernel.org>, Alejandro
+ Lucero <alucerop@amd.com>
+Subject: Re: [PATCH 2/6] cxl/mem: Arrange for always-synchronous memdev
+ attach
+Message-ID: <20251215120859.0000198d@huawei.com>
+In-Reply-To: <20251204022136.2573521-3-dan.j.williams@intel.com>
 References: <20251204022136.2573521-1-dan.j.williams@intel.com>
-	<20251204022136.2573521-2-dan.j.williams@intel.com>
+	<20251204022136.2573521-3-dan.j.williams@intel.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -63,36 +63,36 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Wed,  3 Dec 2025 18:21:31 -0800
+On Wed,  3 Dec 2025 18:21:32 -0800
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> A device release method is only for undoing allocations on the path to
-> preparing the device for device_add(). In contrast, devm allocations are
-> post device_add(), are acquired during / after ->probe() and are released
-> synchronous with ->remove().
+> In preparation for CXL accelerator drivers that have a hard dependency on
+> CXL capability initialization, arrange for cxl_mem_probe() to always run
+> synchronous with the device_add() of cxl_memdev instances. I.e.
+> cxl_mem_driver registration is always complete before the first memdev
+> creation event.
 > 
-> So, a "devm" helper in a "release" method is a clear anti-pattern.
+> At present, cxl_pci does not care about the attach state of the cxl_memdev
+> because all generic memory expansion functionality can be handled by the
+> cxl_core. For accelerators, however, that driver needs to perform driver
+> specific initialization if CXL is available, or execute a fallback to PCIe
+> only operation.
 > 
-> Move this devm release action where it belongs, an action created at edac
-> object creation time. Otherwise, this leaks resources until
-> cxl_memdev_release() time which may be long after these xarray and error
-> record caches have gone idle.
- 
-> Note, this also fixes up the type of @cxlmd->err_rec_array which needlessly
-> dropped type-safety.
+> This synchronous attach guarantee is also needed for Soft Reserve Recovery,
+> which is an effort that needs to assert that devices have had a chance to
+> attach before making a go / no-go decision on proceeding with CXL subsystem
+> initialization.
 > 
-> Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Shiju Jose <shiju.jose@huawei.com>
-> Cc: Alison Schofield <alison.schofield@intel.com>
+> By moving devm_cxl_add_memdev() to cxl_mem.ko it removes async module
+> loading as one reason that a memdev may not be attached upon return from
+> devm_cxl_add_memdev().
+> 
+> Cc: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> Cc: Alejandro Lucero <alucerop@amd.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-This change seems fine to me. The tear down occurs after unregistering the
-edac device and as the repair is via sysfs in there we shouldn't have any
-left over calls in flight.  Was an odd code pattern. Oops to missing this
-in earlier review.
+Seems fine to me as well. Even independent of the reasons that
+drove this patch set I'm keen on the simpler mental model that synchronous
+probing allows.
 
 Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-
 
