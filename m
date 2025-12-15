@@ -1,115 +1,148 @@
-Return-Path: <linux-pci+bounces-43048-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43053-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 834E5CBE23A
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 14:51:58 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 947B6CBE2EE
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 15:06:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 57BBA3077CDA
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 13:46:18 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 243513085459
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 14:00:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F216F327BF2;
-	Mon, 15 Dec 2025 13:36:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42C9030EF63;
+	Mon, 15 Dec 2025 13:59:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZNAKkxA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K0ZSvqo9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D27327202;
-	Mon, 15 Dec 2025 13:36:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF51C2DFA5B;
+	Mon, 15 Dec 2025 13:59:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765805818; cv=none; b=mNq3U8dllQK9ofHnnUVZzrpQw4aApKlp1zndOwdJ2Iu/rReTfF0t0TRxGnrTT+RvZFoblV3MUBfTgTZJXHT7Exucfs0RaLjNnbU/7F5dP3ipJYXMzWUwwLcMTzAUqx0R3Jcxx9x4TxYcJU56zOBrOWUvfDhiDZsfA5Sn0ixCFnw=
+	t=1765807154; cv=none; b=FmSeeKOoG031+F3RbQ55OVWHTBfdYY1tNbi/oQSoCwn71+rptDdZfqMBjFOrK5jsBk3/3q/xKBSvKqto77B/FLcAx2pg3dhO/lp+FGwByc+evEwR0XBHj9NX7EE64woz8ASB/b1B3kmG3lU2Ab4PNN4OewuF3QC9EXzULHTOjW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765805818; c=relaxed/simple;
-	bh=SxFIlck54wFFH4N7Ix/Ab4hh95qP/TLreCxLHycXs9s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bvRuHf01WB1nEa8qbE6d+RZX2ymJ2R0G7/+lSphXv0ZvV176RJKc87eVe353yyRH79EjUiwLo+VLnq7XX0ZZD/F76ATf89zxiNyQYmXiQTBXXbqgESWyESFHdZFUD/ksWYF/EBXH9MEoFs2AEzfJEoVz8r2y2Tn5BaslJpCDDBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZNAKkxA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28FC2C4CEF5;
-	Mon, 15 Dec 2025 13:36:56 +0000 (UTC)
+	s=arc-20240116; t=1765807154; c=relaxed/simple;
+	bh=YQ0YmiEKTBiByyCk2XIiAXJahBqdOSyVHDmgyhFstuo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=XzPmMP3YiU3w/pPj9bVYZNR37Ocfcegxmehd7SN8cNL4BDQb4jYt7QkT869spT7vDT6GvDOeML/Yzc7UevPoWIcAYHvWEyQqsVCzyc/mzihy8SaXhMAZoOdTjupu7zfNtXXM30piaX1Js/QMCOjB6e5EEKIo4C+ue3oA1QLym1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K0ZSvqo9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84039C4CEF5;
+	Mon, 15 Dec 2025 13:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765805818;
-	bh=SxFIlck54wFFH4N7Ix/Ab4hh95qP/TLreCxLHycXs9s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QZNAKkxAZpy40Lt0lmDglR67L6V96McwexlJfrn5lktJtbJPBDRFsYCwwsJt0PKw0
-	 tUZcjqlGrNvclAu8FtU8NHXjQW1LQyjyo554Js2Va1+00v8RKMc0Ae/56+jpdOeEso
-	 zk9nlHQNfVvBdwh6tYVPV2oQ13wo3wKhmk1WWedhpFCcqXjmDvfSiqpYojcHOFJd3i
-	 +oB70nQdaagJP7787lo3VI6JrZQuMHgZ/HfynWUqqdbxvuRPXXqk+pYRB19TCgHkkj
-	 cbZOfNranble9b8JRUgBUa/9tV7UHJyguPLOdr/5w8NOdV6xweI+d3lzCIkptX0v9f
-	 4GQXuN4kss42Q==
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Linux ACPI <linux-acpi@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
- Zhang Rui <rui.zhang@intel.com>, Chen Yu <yu.c.chen@intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Linux PCI <linux-pci@vger.kernel.org>, Alex Hung <alexhung@gmail.com>,
- Hans de Goede <hansg@kernel.org>,
- Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>
-Subject: [PATCH v1 4/4] ACPI: PNP: Drop acpi_nonpnp_device_ids[]
-Date: Mon, 15 Dec 2025 14:36:49 +0100
-Message-ID: <3587570.QJadu78ljV@rafael.j.wysocki>
-Organization: Linux Kernel Development
-In-Reply-To: <7888874.EvYhyI6sBW@rafael.j.wysocki>
-References: <7888874.EvYhyI6sBW@rafael.j.wysocki>
+	s=k20201202; t=1765807153;
+	bh=YQ0YmiEKTBiByyCk2XIiAXJahBqdOSyVHDmgyhFstuo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=K0ZSvqo9FNH+vPZrOVLOU5ZraIN5/Hx4lzXEVk8deQoFTzZrfVB3Sn8wUVb8UaBDT
+	 IPKJL1FeYjBc4++kymDagnMFo+aO6gmHV+UWQO7cqHTOD6VMMtizrJjRFLGRY7Ee7L
+	 w4mP9rPOGGMbKthLu+r5v9Ru7rhk3vDAc1XCmmrB5wHkqvV8acOQhuC1BVzlP5ME/H
+	 H7EzKs7+bvfSkQA41DZXMI2/LRypKRi0eSe24U8EkDVDNspUAYXac7itmfYbMOTmxv
+	 x+MHyD8AednEYtbIisGEt5V/tIfQDU8l0ImBMScwR5yt2mJk+grnKjhIaLlaCyGSER
+	 QNwLC455/HDNw==
+From: Mark Brown <broonie@kernel.org>
+To: rust-for-linux@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
+Cc: linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ Leon Romanovsky <leon@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Boqun Feng <boqun.feng@gmail.com>, Elle Rhumsaa <elle@weathered-steel.dev>, 
+ Carlos Llamas <cmllamas@google.com>, Yury Norov <yury.norov@gmail.com>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, linux-block@vger.kernel.org, 
+ FUJITA Tomonori <fujita.tomonori@gmail.com>, 
+ Miguel Ojeda <ojeda@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
+ Benno Lossin <lossin@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, 
+ Paul Moore <paul@paul-moore.com>, Serge Hallyn <sergeh@kernel.org>, 
+ linux-security-module@vger.kernel.org, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+ Robin Murphy <robin.murphy@arm.com>, Lyude Paul <lyude@redhat.com>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ linux-fsdevel@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>, 
+ Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
+ Ard Biesheuvel <ardb@kernel.org>, 
+ Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, linux-kselftest@vger.kernel.org, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Andrew Ballance <andrewjballance@gmail.com>, maple-tree@lists.infradead.org, 
+ linux-mm@kvack.org, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+ Uladzislau Rezki <urezki@gmail.com>, Vitaly Wool <vitaly.wool@konsulko.se>, 
+ Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+ devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ linux-pci@vger.kernel.org, Remo Senekowitsch <remo@buenzli.dev>, 
+ "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org, 
+ Will Deacon <will@kernel.org>, Fiona Behrens <me@kloenk.dev>, 
+ Gary Guo <gary@garyguo.net>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Alexandre Courbot <acourbot@nvidia.com>, Vlastimil Babka <vbabka@suse.cz>, 
+ Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>, 
+ Ingo Molnar <mingo@redhat.com>, Waiman Long <longman@redhat.com>, 
+ Mitchell Levy <levymitchell0@gmail.com>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+ John Stultz <jstultz@google.com>, linux-usb@vger.kernel.org, 
+ Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+ Matthew Wilcox <willy@infradead.org>, Tamir Duberstein <tamird@gmail.com>, 
+ Rae Moar <raemoar63@gmail.com>
+In-Reply-To: <20251202-define-rust-helper-v1-0-a2e13cbc17a6@google.com>
+References: <20251202-define-rust-helper-v1-0-a2e13cbc17a6@google.com>
+Subject: Re: (subset) [PATCH 00/46] Allow inlining C helpers into Rust when
+ using LTO
+Message-Id: <176580714194.161338.1959594276727103368.b4-ty@kernel.org>
+Date: Mon, 15 Dec 2025 22:59:01 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-47773
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Tue, 02 Dec 2025 19:37:24 +0000, Alice Ryhl wrote:
+> This patch series adds __rust_helper to every single rust helper. The
+> patches do not depend on each other, so maintainers please go ahead and
+> pick up any patches relevant to your subsystem! Or provide your Acked-by
+> so that Miguel can pick them up.
+> 
+> These changes were generated by adding __rust_helper and running
+> ClangFormat. Unrelated formatting changes were removed manually.
+> 
+> [...]
 
-Now that "system" devices are represented as platform devices, they
-are not claimed by the PNP ACPI scan handler any more and platform
-devices can be created for ACPI device objects listing "system"
-device IDs as their compatible device IDs.
+Applied to
 
-Accordingly, it should not be necessary any more to add device IDs
-to acpi_nonpnp_device_ids[], so drop it.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-No intentional functional impact.
+Thanks!
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/acpi_pnp.c |   16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+[35/46] rust: regulator: add __rust_helper to helpers
+        commit: 03d281f384768610bf90697bce9e35d3d596de77
 
---- a/drivers/acpi/acpi_pnp.c
-+++ b/drivers/acpi/acpi_pnp.c
-@@ -344,24 +344,10 @@ static bool acpi_pnp_match(const char *i
- 	return false;
- }
- 
--/*
-- * If one of the device IDs below is present in the list of device IDs of a
-- * given ACPI device object, the PNP scan handler will not attach to that
-- * object, because there is a proper non-PNP driver in the kernel for the
-- * device represented by it.
-- */
--static const struct acpi_device_id acpi_nonpnp_device_ids[] = {
--	{"INT3F0D"},
--	{"INTC1080"},
--	{"INTC1081"},
--	{"INTC1099"},
--	{""},
--};
--
- static int acpi_pnp_attach(struct acpi_device *adev,
- 			   const struct acpi_device_id *id)
- {
--	return !!acpi_match_device_ids(adev, acpi_nonpnp_device_ids);
-+	return true;
- }
- 
- static struct acpi_scan_handler acpi_pnp_handler = {
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
 
