@@ -1,44 +1,44 @@
-Return-Path: <linux-pci+bounces-43050-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43049-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC6DFCBE216
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 14:49:22 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 010EACBE1EC
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 14:46:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0CAAA305114A
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 13:46:11 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E0470300BA3B
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 13:46:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69EA132ED3F;
-	Mon, 15 Dec 2025 13:37:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27614329C7D;
+	Mon, 15 Dec 2025 13:37:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSj1NYem"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B3fjOKr+"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47E732D45C;
-	Mon, 15 Dec 2025 13:37:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44C13271F8;
+	Mon, 15 Dec 2025 13:37:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765805827; cv=none; b=tE7epLr4bHnx/3fWg8pGIw24zD/Dp8pGc1Nio4awH5z2LNZfV37UzNlZlZ0tYvwLD8GiiqjQZcZWG90y//ndRNk66zYFoLK/uJvDtptI3GWVUzpORtHM1hiZgqni6ehJO09Q1J7PPzI9qbSpO5qHzghGi8MWzzBEKXvGSvOVTS0=
+	t=1765805823; cv=none; b=JpmSadeqfmLk+N2FP5E/gSjAortlppnTwkz003+upUnhZjHbCbSBDIG6bCXZ1yJpkYHglrDWGjUBNfoWlc/i3dOdyOhVbW8WuXdNYyWXn73eEyeiRLrGGmXI6nGqkrVIqGkXOQiZgj2EPIraoBd2JbJctguu30A7ROuJrcn9W70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765805827; c=relaxed/simple;
-	bh=ESWItFErJjVB3S0WTRPFMd+y/OS75/Vk7cSeXbAP39k=;
+	s=arc-20240116; t=1765805823; c=relaxed/simple;
+	bh=dw7kto88kFWurDgt8zAtj6vTPTeG4AVtsVhqvtc+6bE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OavVCap7MLO0g/WEYIze+jtHtfHI0y+AebT9CV6i5mkpKTUoPugRIRRYMVZO/D83Fc3DCFMttP1NX5Vm3/8HM0cKz36ymfn37XfQKKBdixtLHOF1ASj8da94UvbolqMRqrUOCEuxInmFlh6qaCTxDQu6jmaDvSryIBNAwB81VCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSj1NYem; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4719EC4CEF5;
-	Mon, 15 Dec 2025 13:37:04 +0000 (UTC)
+	 MIME-Version:Content-Type; b=mxFHL/uuYEQtgzGRM0bcuVQfajLMLqz1T1COMHxUuA7U7NGMIPnZDo4vVIskqUPOWSnxYSsI+gRpGj/pgEiVeEU6BxQ9UQ9s6Lk1HGiARcfqK5jKIOvZMgQ4XS5Yy25eVKOMPTmtnW3ESl+fwuKvLppKwcMrIe05WXGXz6U230U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B3fjOKr+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28979C4CEFB;
+	Mon, 15 Dec 2025 13:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765805826;
-	bh=ESWItFErJjVB3S0WTRPFMd+y/OS75/Vk7cSeXbAP39k=;
+	s=k20201202; t=1765805822;
+	bh=dw7kto88kFWurDgt8zAtj6vTPTeG4AVtsVhqvtc+6bE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XSj1NYemPvGIE61tO/hOcufWRcvCOk7HhAKaDLxu4QVWlhZyrnCpXuwz16lAF49VL
-	 hO7u+0xWMkPSL1jXnMmaC6UaZ2WhXRb/6Bh3ctm3gRvgIfn91CYyY69QRS4151toYW
-	 2DpQbAtQm7+icY6lS8CEJ9JbrA3i9+OgtXhZ7cSkMcI/vJoXiGcw2UBgMjJeUSkHQK
-	 T3ozMxQE7reQWoZvdK2NIW1f1b8TB9sLki+rx6VgjJZNfHDrDgJoRip337xPQhyjvb
-	 wiD/x2/AxtgCj3lcpeVIki8/SLmMRYDEQI1+T5zPSsA6t1sXzcJSV89ux++FTH+nwo
-	 OwQDj+5JL9RAQ==
+	b=B3fjOKr+413agK/7nJKJHCXlkGOwmTVGV/Vpp7B6tGenNu5PU4yOCeq3KP8xd9XP4
+	 yWlkOukRqmv2wL1MtbX5Gp6OazvywqSsOERjFmRSi0UeFxr6MTNLGj9xjmkAjbjY9h
+	 L0oKi6fCDSStXg75Fv558+kbAh5HpdXtk2lXVL4nesAz2Kfxu6TnW86OViOUusAwnj
+	 rtE2LhST0D0mMmx+l/rGEOZfCCNoo9VEdBqLbsLuuhF9xFz8xCmdgu32Pvm/ugWXzM
+	 0l9QaqwZxVrMsA4ejsRejh9Z8KDKyLOn1I25flq9PKqVSx1MDrsT75+eO+U2tW6Pet
+	 cObMku/6JM/zg==
 From: "Rafael J. Wysocki" <rafael@kernel.org>
 To: Linux ACPI <linux-acpi@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
@@ -50,9 +50,9 @@ Cc: LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
  Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  platform-driver-x86@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>
 Subject:
- [PATCH v1 2/4] platform/x86/intel/hid: Stop creating a platform device
-Date: Mon, 15 Dec 2025 14:35:05 +0100
-Message-ID: <6115868.MhkbZ0Pkbq@rafael.j.wysocki>
+ [PATCH v1 3/4] platform/x86/intel/vbtn: Stop creating a platform device
+Date: Mon, 15 Dec 2025 14:35:44 +0100
+Message-ID: <8661724.NyiUUSuA9g@rafael.j.wysocki>
 Organization: Linux Kernel Development
 In-Reply-To: <7888874.EvYhyI6sBW@rafael.j.wysocki>
 References: <7888874.EvYhyI6sBW@rafael.j.wysocki>
@@ -69,9 +69,9 @@ From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
 Now that "system" devices are represented as platform devices, they
 are not claimed by the PNP ACPI scan handler any more and the Intel
-HID platform devices should be created by the ACPI core, so the
-driver does not need to attempt to create a platform device by
-itself.
+virtual button array platform devices should be created by the ACPI
+core, so the driver does not need to attempt to create a platform
+device by itself.
 
 Accordingly, make it stop doing so.
 
@@ -79,26 +79,15 @@ No intentional functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/platform/x86/intel/hid.c |   41 ---------------------------------------
- 1 file changed, 1 insertion(+), 40 deletions(-)
+ drivers/platform/x86/intel/vbtn.c |   30 +-----------------------------
+ 1 file changed, 1 insertion(+), 29 deletions(-)
 
---- a/drivers/platform/x86/intel/hid.c
-+++ b/drivers/platform/x86/intel/hid.c
-@@ -767,43 +767,4 @@ static struct platform_driver intel_hid_
- 	.remove = intel_hid_remove,
+--- a/drivers/platform/x86/intel/vbtn.c
++++ b/drivers/platform/x86/intel/vbtn.c
+@@ -390,32 +390,4 @@ static struct platform_driver intel_vbtn
+ 	.remove = intel_vbtn_remove,
  };
  
--/*
-- * Unfortunately, some laptops provide a _HID="INT33D5" device with
-- * _CID="PNP0C02".  This causes the pnpacpi scan driver to claim the
-- * ACPI node, so no platform device will be created.  The pnpacpi
-- * driver rejects this device in subsequent processing, so no physical
-- * node is created at all.
-- *
-- * As a workaround until the ACPI core figures out how to handle
-- * this corner case, manually ask the ACPI platform device code to
-- * claim the ACPI node.
-- */
 -static acpi_status __init
 -check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
 -{
@@ -108,27 +97,27 @@ Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 -	if (dev && acpi_match_device_ids(dev, ids) == 0)
 -		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
 -			dev_info(&dev->dev,
--				 "intel-hid: created platform device\n");
+-				 "intel-vbtn: created platform device\n");
 -
 -	return AE_OK;
 -}
 -
--static int __init intel_hid_init(void)
+-static int __init intel_vbtn_init(void)
 -{
 -	acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
 -			    ACPI_UINT32_MAX, check_acpi_dev, NULL,
--			    (void *)intel_hid_ids, NULL);
+-			    (void *)intel_vbtn_ids, NULL);
 -
--	return platform_driver_register(&intel_hid_pl_driver);
+-	return platform_driver_register(&intel_vbtn_pl_driver);
 -}
--module_init(intel_hid_init);
+-module_init(intel_vbtn_init);
 -
--static void __exit intel_hid_exit(void)
+-static void __exit intel_vbtn_exit(void)
 -{
--	platform_driver_unregister(&intel_hid_pl_driver);
+-	platform_driver_unregister(&intel_vbtn_pl_driver);
 -}
--module_exit(intel_hid_exit);
-+module_platform_driver(intel_hid_pl_driver);
+-module_exit(intel_vbtn_exit);
++module_platform_driver(intel_vbtn_pl_driver);
 
 
 
