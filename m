@@ -1,99 +1,120 @@
-Return-Path: <linux-pci+bounces-43061-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43062-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECF05CBFEAF
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 22:26:45 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id E14B1CBFFA3
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 22:40:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5F1EE301516D
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 21:25:04 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B48973011B0A
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 21:40:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55BBB327790;
-	Mon, 15 Dec 2025 21:25:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 958B43242B1;
+	Mon, 15 Dec 2025 21:40:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QPAgoKHw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qJFBVJaC"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27220325719;
-	Mon, 15 Dec 2025 21:25:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4663E283CB5;
+	Mon, 15 Dec 2025 21:40:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765833903; cv=none; b=t1oQ70D2IaqHuIIcxROvfw5l7XRneVW2iL2xLay65p3+u2Eucv66abEcRRrnuUvsS21MooGLCRAFG5/MHwA5x6k4JprD4eqm2S4hmoTKglsKEN+LIEq2aXXYcO+fP3ZJpYZDPRmIFIYUezw0UvOolfwuwnGWO/BmsuhIZXK20cM=
+	t=1765834853; cv=none; b=l4BVOQWB7e7Z+OugWCJfnO1HqpMesY2FiKYMB8pT+1Ml8KUheNRCO5YZkCUHRVyJ/h55YOWLNW/s82SpmvlG4+5oLF144UC5Oi9NnuFMeXc3+kUhP8ackpR/ZphNT3cPZOmjJqqBAKhGjP9vTG2uNNQDLhPb3EzZHCGx/Ea/tcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765833903; c=relaxed/simple;
-	bh=M7UaQpz4jW3hjZgi/W6Zm+fYN8tvjLjDw0dBDQ15e5w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Iu8eP+mq7EHy1mDzjcoAPY1Dh+8SyUrzMYoD3+ZFUC49P0E5ochdazF8x38aSn1EJ4uZB/WMXwdp76d4dTXxmtgMeNivp7k07UUc5Xlf/2x5kG5cuePr6JmB77Ex49XRRmoiHzy9Lm8eP4Z5kdPe4P4IvTFza3p4DoRwycHv94k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QPAgoKHw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70BC6C4CEF5;
-	Mon, 15 Dec 2025 21:25:02 +0000 (UTC)
+	s=arc-20240116; t=1765834853; c=relaxed/simple;
+	bh=8+QhW2cFWJDaIsuT5yDSI4nyUtquLCwiDgHnqtP3F00=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=iZa8a7r+2ylEoXN/5AMjvVHz+9Ocf5w3clQGeqvOoL6mU6WaxQPrufYZ6bmS0TTyy0qv1XHS+IX4Jjp9r7x4HS+Yru/w75me2GbY0seOLoSjNuANpxYIhUgPWfnUtkuUDJnjrHQLol4NXiGRvslMzo0SMqZwm2ACrDUOeawsdkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qJFBVJaC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C486BC4CEF5;
+	Mon, 15 Dec 2025 21:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765833902;
-	bh=M7UaQpz4jW3hjZgi/W6Zm+fYN8tvjLjDw0dBDQ15e5w=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QPAgoKHwzAjngSr7dD6jsQOt83/ddfFyPv3JcLp+nD1FckJI4CvnsyH0ZFgpTjLGO
-	 jfE4lyFoG8jArUnY7vEDdQE6T+20LPtjWSTBMmY29CCKSXb5xrIjgFPf2o62+pOd2c
-	 +2PukrEpvdz3LXC0iCGsKFcg0GTdRVlrW17CyZlcmLAhEuQGAtfP6QBhJi4d3SBs1u
-	 syk5UyqDf4svXhMQPj9igK//9DxQRDmG4uyBItLv/u/lPXbFjtohbta+HjW4iN04O+
-	 8pl0CUlAXHnkNbIBRdfszk6wuHABre1hLkIHEu7cWahjP6Q+VCoDxFa/R79kzlB9YR
-	 s0/p09t4Jog9w==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: PCI: socionext,uniphier-pcie: Fix interrupt controller node name
-Date: Mon, 15 Dec 2025 15:24:56 -0600
-Message-ID: <20251215212456.3317558-1-robh@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	s=k20201202; t=1765834852;
+	bh=8+QhW2cFWJDaIsuT5yDSI4nyUtquLCwiDgHnqtP3F00=;
+	h=Date:Cc:To:From:Subject:References:In-Reply-To:From;
+	b=qJFBVJaC0an3Wy7ck/NW3yKgi9jI3ce1I7gVQW8XUmK+OrJgE8FAW+WL7g4D9LvFe
+	 /YXSYPoFx2CSzUrpqi11o2qDr8G6z/1Di0ZaklBXTyTMLUzpgYiEXa6CG+nuC9aEPB
+	 oPLpWQpGwbvBrApASVSXJtWBeD5j9+j8eCEqoYfQukbOTAQU4/7mRVkdeQh7josQjH
+	 EqqCHJPOqdShwjRa6dHuASX87J1if9DJv4RbmhpyPx7LNZQF9y9tpD3TU8/KUvv9Fl
+	 o6XLqSg9GmBVn/+MChjQ3SmuTHxo55lUfl8ovjSyyVqKmJtl1P2uKHl4dlIN5739w4
+	 bHhzsM+PVC1lg==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 15 Dec 2025 22:40:36 +0100
+Message-Id: <DEZ47GQSH2NC.UBRRY2WDHUJJ@kernel.org>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Dave Ertman"
+ <david.m.ertman@intel.com>, "Ira Weiny" <ira.weiny@intel.com>, "Leon
+ Romanovsky" <leon@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>,
+ "Boqun Feng" <boqun.feng@gmail.com>, "Elle Rhumsaa"
+ <elle@weathered-steel.dev>, "Carlos Llamas" <cmllamas@google.com>, "Yury
+ Norov" <yury.norov@gmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ <linux-block@vger.kernel.org>, "FUJITA Tomonori"
+ <fujita.tomonori@gmail.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Michael
+ Turquette" <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>,
+ <linux-clk@vger.kernel.org>, "Benno Lossin" <lossin@kernel.org>, "Thomas
+ Gleixner" <tglx@linutronix.de>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Viresh Kumar" <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>, "Paul
+ Moore" <paul@paul-moore.com>, "Serge Hallyn" <sergeh@kernel.org>,
+ <linux-security-module@vger.kernel.org>, "Daniel Almeida"
+ <daniel.almeida@collabora.com>, "Abdiel Janulgue"
+ <abdiel.janulgue@gmail.com>, "Robin Murphy" <robin.murphy@arm.com>, "Lyude
+ Paul" <lyude@redhat.com>, "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ <linux-fsdevel@vger.kernel.org>, "Josh Poimboeuf" <jpoimboe@kernel.org>,
+ "Jason Baron" <jbaron@akamai.com>, "Steven Rostedt" <rostedt@goodmis.org>,
+ "Ard Biesheuvel" <ardb@kernel.org>, "Brendan Higgins"
+ <brendan.higgins@linux.dev>, "David Gow" <davidgow@google.com>, "Rae Moar"
+ <rmoar@google.com>, <linux-kselftest@vger.kernel.org>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ "Andrew Ballance" <andrewjballance@gmail.com>,
+ <maple-tree@lists.infradead.org>, <linux-mm@kvack.org>, "Lorenzo Stoakes"
+ <lorenzo.stoakes@oracle.com>, "Uladzislau Rezki" <urezki@gmail.com>,
+ "Vitaly Wool" <vitaly.wool@konsulko.se>, "Rob Herring" <robh@kernel.org>,
+ "Saravana Kannan" <saravanak@google.com>, <devicetree@vger.kernel.org>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ <linux-pci@vger.kernel.org>, "Remo Senekowitsch" <remo@buenzli.dev>, "Paul
+ E. McKenney" <paulmck@kernel.org>, <rcu@vger.kernel.org>, "Will Deacon"
+ <will@kernel.org>, "Fiona Behrens" <me@kloenk.dev>, "Gary Guo"
+ <gary@garyguo.net>, "Liam Girdwood" <lgirdwood@gmail.com>, "Mark Brown"
+ <broonie@kernel.org>, "Alexandre Courbot" <acourbot@nvidia.com>, "Vlastimil
+ Babka" <vbabka@suse.cz>, "Christoph Lameter" <cl@gentwo.org>, "David
+ Rientjes" <rientjes@google.com>, "Ingo Molnar" <mingo@redhat.com>, "Waiman
+ Long" <longman@redhat.com>, "Mitchell Levy" <levymitchell0@gmail.com>,
+ "Frederic Weisbecker" <frederic@kernel.org>, "Anna-Maria Behnsen"
+ <anna-maria@linutronix.de>, "John Stultz" <jstultz@google.com>,
+ <linux-usb@vger.kernel.org>, "Tejun Heo" <tj@kernel.org>, "Lai Jiangshan"
+ <jiangshanlai@gmail.com>, "Matthew Wilcox" <willy@infradead.org>, "Tamir
+ Duberstein" <tamird@gmail.com>
+To: "Alice Ryhl" <aliceryhl@google.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+Subject: Re: [PATCH 00/46] Allow inlining C helpers into Rust when using LTO
+References: <20251202-define-rust-helper-v1-0-a2e13cbc17a6@google.com>
+In-Reply-To: <20251202-define-rust-helper-v1-0-a2e13cbc17a6@google.com>
 
-The child node name in use by .dts files and the driver is
-"legacy-interrupt-controller", not "interrupt-controller".
+On Tue Dec 2, 2025 at 8:37 PM CET, Alice Ryhl wrote:
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- .../devicetree/bindings/pci/socionext,uniphier-pcie.yaml      | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Applied to driver-core-testing, thanks!
 
-diff --git a/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
-index c07b0ed51613..8a2f1eef51bd 100644
---- a/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
-@@ -51,7 +51,7 @@ properties:
-   phy-names:
-     const: pcie-phy
- 
--  interrupt-controller:
-+  legacy-interrupt-controller:
-     type: object
-     additionalProperties: false
- 
-@@ -111,7 +111,7 @@ examples:
-                         <0 0 0  3  &pcie_intc 2>,
-                         <0 0 0  4  &pcie_intc 3>;
- 
--        pcie_intc: interrupt-controller {
-+        pcie_intc: legacy-interrupt-controller {
-             #address-cells = <0>;
-             interrupt-controller;
-             #interrupt-cells = <1>;
--- 
-2.51.0
+> Alice Ryhl (46):
+>       rust: auxiliary: add __rust_helper to helpers
+>       rust: device: add __rust_helper to helpers
+>       rust: dma: add __rust_helper to helpers
+>       rust: io: add __rust_helper to helpers
+>       rust: irq: add __rust_helper to helpers
+>       rust: pci: add __rust_helper to helpers
 
+        [ Consider latest helper additions. - Danilo ]
+
+>       rust: platform: add __rust_helper to helpers
+>       rust: property: add __rust_helper to helpers
+>       rust: scatterlist: add __rust_helper to helpers
 
