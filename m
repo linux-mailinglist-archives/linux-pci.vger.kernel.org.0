@@ -1,255 +1,427 @@
-Return-Path: <linux-pci+bounces-43039-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43040-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70AA7CBD6F5
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 12:01:52 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A371CBDA8E
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 13:00:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BF31F3011F82
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 11:00:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E031830B3A1F
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Dec 2025 11:52:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E38128AB0B;
-	Mon, 15 Dec 2025 11:00:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3586F327208;
+	Mon, 15 Dec 2025 11:39:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fLq1EeH4";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="iDJoCxJv"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4DkkKgpr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011028.outbound.protection.outlook.com [52.101.52.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E942A28312F;
-	Mon, 15 Dec 2025 11:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E1C32E74A;
+	Mon, 15 Dec 2025 11:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.28
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765796402; cv=fail; b=tN+OYARNNGUn5YOv0drpDz08qNce0lYTFWzSa5bjLPf7H39Hp77D2h+V2+qqcpBC47QflvRDlC84WRotX4Drrv2rXCoSUxB1Vi91I6IDi+W/cT0XWbnJIITEwjAx//l9J+BQ8gKkAEenm0E4q4URSO+sIl+Yp85z7EN0cRsgk2E=
+	t=1765798795; cv=fail; b=RuY1S2WmQwzwcCyvyc0uc+TcZ5R4+QAAVV01sI7fwE5gw2CAyvTc+MLwm/ClVcRJHLUKitAFx2L/k0hqo5KE79mc//uHGBaGHODPKSvXAHrRvQ2EFjRqW42mYyFbuLbrnXKrjPIpTPvhKIp+RFfhFxt+u/58xj/d8iwYVLLaMXo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765796402; c=relaxed/simple;
-	bh=IKwNwfT3OKsrrj1TFqedW4AT1UL/SOpU/Wrz5J9IHc4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=W6h7a6LlNs+XhZZe/bHq21lmPbVfyHlIWN/NxkcSkkZa0tqXoPflvQVHvofl2agX6Qw1GbIcxLhYhAjI4xEYXr5E3rTT2e7J3GSVMiHnoptckxsz02nSTG9pBU7f7Z13imeTAxlX3eOsYNjF7DCTW1D7fRW5ssBtMD5/S/zqG8s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fLq1EeH4; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=iDJoCxJv; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BF9v0hE1853514;
-	Mon, 15 Dec 2025 10:59:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=PRcK05w4za6ISbkUNV0xyV4amcqJKDtUm5lEvyglvhE=; b=
-	fLq1EeH4cXInvixMTZNGiJ6nadrony7Fx8rP4NLS1dk1Q0mczaCe6fJLoeUIrNq7
-	QYB9mMmCY7593KYeKVi9vyJFgHO799A8WfEJhL5ctfBvC88ISacZjFfp4dtQJMUP
-	Prcbwu6MK+a6WRNwgls7OwG9hSGjcxdoYqf5IkJ5Genp2XVRYhMy2AvFGwDey4FW
-	fimQ9XgCBKSgTr4UyRCHnUfqdiDY7xqP0IwNO9WT5f9kG3bQ6NKYAa0UbtgtEjuU
-	pTWsIZbAHcFbhS4D+AR8voySqiZ5fXoHyANrsQe0bB6HzIomTD/bbR1ZnpYxVG2T
-	aUUTLFPuzbsExBDxUva4SA==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4b10prhsvt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Dec 2025 10:59:29 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5BF9NLYe024951;
-	Mon, 15 Dec 2025 10:59:28 GMT
-Received: from co1pr03cu002.outbound.protection.outlook.com (mail-westus2azon11010033.outbound.protection.outlook.com [52.101.46.33])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4b0xk8snbr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Dec 2025 10:59:28 +0000
+	s=arc-20240116; t=1765798795; c=relaxed/simple;
+	bh=W/fCVwyu5jGbulnz+ZKqa8fJUjcPFSwS+OuNjBNgkVM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=R5Rge57wILxhwwjWkUsyLw67ioKZ1hJE3ksgTTyp2jXgZYr7DgxVCiKFg1Y6q4MuKdzPdzB0eEQi0H4K4F1nJhptq0BHSi9zNAg8TIqYjHUspm/i8nNBzFQOZ7NyosB2pEH60Q+4e3Ebl/yN3HWDTLkgrxt24fKf7Eg2hgOXJz0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4DkkKgpr; arc=fail smtp.client-ip=52.101.52.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p50bvWo5MarbBIp+YsFAhTSBhWqNp/XlheEfJelmmPDlze6oqEcu+zI0G6sUrWJnO+i7sIiY/cI6ZHAw5DhJBkfIWiuw/eECBL+Djh+xGUrlccMk9gX1BbOEPSWU8BQUtlQOGfd4HnG91KapqOM8EtZ806wl7A2FisELOXSU4Kivux5RvURudf4W+4ns5un2HRQg/FTiYEP2D4AAx74BYveBdPRe5aZN+crvKtJomGLgwZ15zq5cH+9wMPx/S2znSTFzijV/fqNHIPcot6V6l53LULlZkTPg9SrNF6eoYJnzgW7j1mPQHLicx3zj6UXKFYblZCCoitING7e507uA5A==
+ b=xSEuREEYYTaO2J+VbeoLv4hPfbyK4VqSj+sKDqZ7M5rJ1r7j4jkJUPHo2ibnk1cJgWO4XCv/dN81SiAyoTAKsuI0669sR1YFzqr36LUp7iPgIaBJQQ4Nos8zLan23sdl86LMlhEcXvgQdK0oarfChE9WPh1kq+TMWrbz4EifbtHJaYn5kBpfC4NUtaXncLAMvfKc3h3xWdGmIfPLO+yIa8hzLS54ysckYDZdf89m0ja+tql0/j5RELyQQmDlI2a3dkXp2/nlrZpV/iGY7XOhLqBRtPlfo4JV9ANvR3pB+X/J9NzJJg2QSd5QyD+dStIP4HRgMwnwE1q9rH5hRhkIWg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PRcK05w4za6ISbkUNV0xyV4amcqJKDtUm5lEvyglvhE=;
- b=d2dSbTxQDh6VPPQ64ZJpwabCQOH3jAi4FRijGVGbXRYBI2M2lkiTYeH6AB0kF1EWVrIo4AS//nB7kEk6DlpBbeoLdSG6r277AKIomSoK9LPPxee835IizNzaKFdjNRHa/BGolKu1H61yfMWATvFzCjc2agBzaTRPlspRXGwf4E2UXCV6hP4baAYyjLlpQSiGR5W6EkYfECD8SvECKozzOgHRrEgE5il/nU1ytVTUvy/EKwZdcATEBW6TieeFQIkh/7IA7xe2ThR8u7h6il0nfTJ7BYP2zoG/GHJ5grAw77BpBoQa7h/PCKWPDFivZ7LIF0ODBbqtWCbygwWghsw/CQ==
+ bh=IOeKFysV3QWuCAKFg6nWkaW7rqpPg5nKYXyWJ+HYs8c=;
+ b=j+W3SD6U7XIVh2LreCC1gMnCu5MwwJrhms9TZTI0u7fLT21jAjHOMqAesnezvHurUbxPIx/rkKkv/2rxBv5Eo71WRrxgbc4BF7DZ56Ugv64ml2a5mD3ipIkFuazAtpfFXRtvx4//t8WcdiX7HahCtfc9mg8UEuOlX/+OdY4x9FE4KY39/iUvMsX0SFVnrMFSREsvkozcUIhnJWS+xqji3fK6DIdYwAX6H57FvgCHPq8c2norLLbOmtYKUL+dGQTPbr2tv4YFMtFgtwHs9Q/S3nbIU+t8Whpm02onShbF+vjcT+OhaoXPcDKRBWR+A954frwpYWRjaJ69sMOtdbKGgQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PRcK05w4za6ISbkUNV0xyV4amcqJKDtUm5lEvyglvhE=;
- b=iDJoCxJvpEJ+gY/CNFlom6tKnBKYVZ5ywvXOT9hV8+s38cr1OtHa1Eo3/2yAjYMnogcqKZ75XfviGsN3wQQulvoKHBmbtUn+UR/I3PmMbzNJK/4qRqHqh+56D2EsXuhY63CVyeX5iIg8aFK8mJ55Ni/DU9eClOkufcjskwATUz0=
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
- by DM6PR10MB4188.namprd10.prod.outlook.com (2603:10b6:5:21b::14) with
+ bh=IOeKFysV3QWuCAKFg6nWkaW7rqpPg5nKYXyWJ+HYs8c=;
+ b=4DkkKgprKVs7Lhu3dBn8b+Pj2DJuAXsj7LOZrStKcFKlyuUtQRuCLtflR2AHNzEWYFWnLLvQwYogPvUyNL6PsYvZ9pYzpQg6gfvbot+rfgd1cwk6dlEVQusq6UxN/RoBz2BABwSXk+YT7Bf1roODN7lnu3B7GI3zlNcN161mVZI=
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com (2603:10b6:806:331::16)
+ by LV3PR12MB9330.namprd12.prod.outlook.com (2603:10b6:408:217::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.13; Mon, 15 Dec
- 2025 10:59:25 +0000
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c%6]) with mapi id 15.20.9412.011; Mon, 15 Dec 2025
- 10:59:25 +0000
-Message-ID: <af02c6ff-3a9e-441c-9f99-0528492b56ff@oracle.com>
-Date: Mon, 15 Dec 2025 16:29:15 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] : [PATCH v8 2/2] PCI: eic7700: Add Eswin PCIe host
- controller driver
-To: zhangsenchuan@eswincomputing.com, bhelgaas@google.com, mani@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, lpieralisi@kernel.org,
-        kwilczynski@kernel.org, robh@kernel.org, p.zabel@pengutronix.de,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, christian.bruel@foss.st.com,
-        mayank.rana@oss.qualcomm.com, shradha.t@samsung.com,
-        krishna.chundru@oss.qualcomm.com, thippeswamy.havalige@amd.com,
-        inochiama@gmail.com, Frank.li@nxp.com
-Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
-        pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com
-References: <20251215095928.1712-1-zhangsenchuan@eswincomputing.com>
- <20251215100200.1752-1-zhangsenchuan@eswincomputing.com>
+ 2025 11:39:49 +0000
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::2fd:1a4e:2042:7dd3]) by SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::2fd:1a4e:2042:7dd3%5]) with mapi id 15.20.9412.011; Mon, 15 Dec 2025
+ 11:39:48 +0000
+From: "Verma, Devendra" <Devendra.Verma@amd.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "mani@kernel.org"
+	<mani@kernel.org>, "vkoul@kernel.org" <vkoul@kernel.org>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek,
+ Michal" <michal.simek@amd.com>, "Verma, Devendra" <Devendra.Verma@amd.com>
+Subject: RE: [PATCH v7 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
+Thread-Topic: [PATCH v7 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
+Thread-Index: AQHca2HPx6tzXE0g6ESpnNbmzzMaXLUeTcYAgARDlyA=
+Date: Mon, 15 Dec 2025 11:39:48 +0000
+Message-ID:
+ <SA1PR12MB81204C807C2F7C72730EC82295ADA@SA1PR12MB8120.namprd12.prod.outlook.com>
+References: <20251212122056.8153-2-devendra.verma@amd.com>
+ <20251212180808.GA3645554@bhelgaas>
+In-Reply-To: <20251212180808.GA3645554@bhelgaas>
+Accept-Language: en-US
 Content-Language: en-US
-From: ALOK TIWARI <alok.a.tiwari@oracle.com>
-In-Reply-To: <20251215100200.1752-1-zhangsenchuan@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0002.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:150::7) To DS7PR10MB5328.namprd10.prod.outlook.com
- (2603:10b6:5:3a6::12)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-12-15T11:15:05.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR12MB8120:EE_|LV3PR12MB9330:EE_
+x-ms-office365-filtering-correlation-id: ec56bcd6-60f1-4200-c931-08de3bcea6f3
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700021;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?10el4Sv047NQKdZ9DdR2auIy9r+x1m74D6/crpMCIpza5+Sci6GqqsPYX2t/?=
+ =?us-ascii?Q?vESqF6oQjlVy7GM4qv9mQ4M3dOJmw5Ugt5JIPkA7/p5zuhPFXaIDkEXSOxsB?=
+ =?us-ascii?Q?ubSuy3gpFgin4t6NzwsK480noCwI3kwQFdqwe5sm4vlBb+7XSn71dfKEXk7n?=
+ =?us-ascii?Q?rIEwQQw+SzDmwh9N6wxyopNPXtnJUHanh3CI4h5f89tlVHzVHHQT/mE7PQ/4?=
+ =?us-ascii?Q?e2dcyq0XB+mQ+b6L0vS3r7hqjcqb/l/7rUmOjWjXvUtvn3HVcwVynk/cuE8X?=
+ =?us-ascii?Q?cfj8KbmZCrRSdBP3eym7zjex7bnapb0C4dhYOVqvabxkhRxK5uEQp1+iHwHc?=
+ =?us-ascii?Q?oMsRjJqkX7TJ6VuLwWVubhUl8zl8duCa81bUqiUyQ6fZH5Oij6oWSSul5JPj?=
+ =?us-ascii?Q?ks4Auc6lQDO1dFxSWCr2/K+Soz59VPUsztDCZKMTkgdNyP6bw/Scfb0W6tYa?=
+ =?us-ascii?Q?XEJBBfPTjAndUK5bEQmQ4KIS4BTu5IOgA4QXn2E5MCBfnMA0pB9hwyrV+3zf?=
+ =?us-ascii?Q?e9PWm8LTuQaEQXyTwL4K8y6aJFLUtwoiNKkTP1FErvNkqskDS69duQKU78s2?=
+ =?us-ascii?Q?7cV0BrwSx+OmjPovm+IaqXhsDY8F8sw4L7/ijil9RDgsVSe0yBC6iOu+T+39?=
+ =?us-ascii?Q?COf1sg/opdcUleK5U5M+IWaHenpx131WnWeI5Eh6qb5XCz21oa6e+qg5NntH?=
+ =?us-ascii?Q?8GbHIaTPkbj360SJKar17WOMcfH9//hvozpN8eo6XXrxm8dIcgo+S5ZvNCYe?=
+ =?us-ascii?Q?JmqYj59tDVNl0qnCuCEQORagaGo642wGD8aWVK+lHoJ+xitmIaC8RNnhPUwV?=
+ =?us-ascii?Q?YvpBggXhmyPdbcOBQYwi8crbkb0JTGkFFliU8trTbQpWy4ziv4aqIbPRWsXe?=
+ =?us-ascii?Q?jSKIHlH9DA/F+w5uchRWs62z0HGLuxK03lkm7eB8XxHFBnMs2nANaZbvdrip?=
+ =?us-ascii?Q?jsgnoId2EYYLqr50A3aEjt6RtmX8XzqwlSUUmeuUzYDwpcmWcfxMcVbg7Fqe?=
+ =?us-ascii?Q?32bIN6tNSqsGURpmObyJqeHV94D4V/dDUHOSTq9e2W02c3j+6ETrn3RkXmg/?=
+ =?us-ascii?Q?TZd2/n56Beb0I/1tfnBqL7B1jsnyBUWvPPtZbTixpe2HuxAsugGdhfGhwKOF?=
+ =?us-ascii?Q?Wox/KI2PpwG0V+xwdVOOuC3NcmQAIdTbZItVtf+u1SZaqHpOkTmXl6TZ3vCn?=
+ =?us-ascii?Q?DkXJQvUA5wZbr6RVp1pPOr2eLOWZ8lAvZsqrBBTmiAqcgao8fZLk0++LKlWI?=
+ =?us-ascii?Q?Y0pRa6RoX1poRHo5V/TzHMMT92G7w1XHK8CT5/kd5S6tuB2NSeh25eGqeiJT?=
+ =?us-ascii?Q?TxtcA965yQ1Ha6PGbJvRALcipEx+Wuyvyft7H8lCdoz+59YCZCb8FBUPxFTf?=
+ =?us-ascii?Q?0YhD52/wZv2GUv17tPx+lRcT+bmMGBMa2OmZfj4nh4Webct/pbpfLZwOB8Ur?=
+ =?us-ascii?Q?nqAZRyzxmvkODYRCT1za2+WydcXCKtald3Z6u4jQYOdvgPOD/xNw61UWqsjY?=
+ =?us-ascii?Q?T6B0wmUz6evIqZ32OcdQ0B48Ers1CykCgjgH?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB8120.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?cI2kGxMw8ybqoQ6Y6VjQ882GddsW/vZ9tL9Ix16vulf5d39A7TmW+Knf2uzs?=
+ =?us-ascii?Q?Ssfs5HU3/VCxck/dywd6elG+xa97+n0niuGarcfY/r7o5roSPkO+B/u1+rv6?=
+ =?us-ascii?Q?HjpEOVdU2VFOOlfOXcHzlyhZyvdRv3RRIQDMwDoj4ZEARzjzmPWDnKeVEqxP?=
+ =?us-ascii?Q?+hLFxYxwkEbqOLnCN7YaZepYydHhU7+sX8OavUo78b8l6upOwQj4XFgnuOPR?=
+ =?us-ascii?Q?6a4QGTANt2y/jyRwBgo4lHqo6rpCYQLFYr4qG+NAk68Bzhi90mSvNbEONoXD?=
+ =?us-ascii?Q?HFRDRMToK5CR6rG4rcLv9bt3skEpYirVAjGEDyTeFK4efNeQie4Sc29JR4Jt?=
+ =?us-ascii?Q?qB/91HgQtYvMKiJ6HLziPO4tsBnmsqnRybyi5C2g81HtV4fISliCsF3ODGBg?=
+ =?us-ascii?Q?/5Ccohbz6RbNFkqDUeyGgXAIcc0xtYa954B/5jHRzlx5g0pic50nd80xp5eZ?=
+ =?us-ascii?Q?cre9HeLaf5k7l5m7CJh+v2NG8NAQkFQN+DieTzMY2P2Xuzpb38oPG5DZbyg1?=
+ =?us-ascii?Q?qPuztYmvCU1LEgdLe7CkhKpv2Lfe+HoSB0MEEme/surS8V5Ivcyt7GnNRwOH?=
+ =?us-ascii?Q?U66DSKCrlgmDun+QmqZeVTdyzaw90rJmpyqfS12iB4OE/P/wiU3x+oJSJ3B9?=
+ =?us-ascii?Q?y4sV4w8N16dI3soi71g2rd1KpDxY8FuCcBQQcnxhXeyu+6LmQSH6U8tsdfn8?=
+ =?us-ascii?Q?yk3ty+xbnVbw7w7F6u/UYYEOO1E8KKDgSaTAZd93Uhe6ysY02mTjBM3oMCVr?=
+ =?us-ascii?Q?mjYh3XU0cmovOUPh3ZFg/tY2YGbEy81P3fJ3vLf9AlRgBWFza48fNajYA4zB?=
+ =?us-ascii?Q?XZaDS9BVXlQw7Czo2JQiX7j4o3o8FpGwmlEXiNjO9CtyecNgUJZASuKOZCdh?=
+ =?us-ascii?Q?AwATrEmv+htz8hXjlu3Um2x4cZKtLzk+faiiln1tCpzvwCMasLAG5zTQD17l?=
+ =?us-ascii?Q?XqxXggEYEoXFeN33xWsPqiqo8EGHrL3hBlDLIWyPp8h/xuiN/FsMawrPSBqt?=
+ =?us-ascii?Q?F5TZF6pLN55MVg6C/jmfags/z3R/ouakBtXuZmIhRh6XUNpBVHkGEwxrzppD?=
+ =?us-ascii?Q?7ROq7fKLdcwiPgdR8FTe8jAQSct6IcHcvD6jKQ2kQMe6cAvMto5a3c19oWFG?=
+ =?us-ascii?Q?VYv3gz+7gBtelyaR/B6o0n32I4eZxvjp8rwRcLtyM05271+O/40hqGoHQ2VG?=
+ =?us-ascii?Q?MZVYeNFJl4WlC+g2YHCBMC22qV/e1XnJAHW5fB6aXKPsSPIWMyjjzl+LcCTJ?=
+ =?us-ascii?Q?69J3GweNM9+dWMxNXULsE2V3qjEtIHSk7VsRWco5sdIPoVQ7HtQOC3aqyp3J?=
+ =?us-ascii?Q?mf9BFSvJaKBKnUC+j9mzTKy5cEy3W0y9qvhdhP+UBQdaWLRXYgHKshQi0MBO?=
+ =?us-ascii?Q?7ruoZpNWU3g+JzM+0jhxELpUxyPqFammb75yxbrN2OlWGD3GIOehkTaA8McG?=
+ =?us-ascii?Q?HWaUabpRPMhrIhqXXnYKvl9mH+W9fYhM8pGuEk9HDZhBrNML3hJpIPHnkEln?=
+ =?us-ascii?Q?ClOXwZDGk/peMJTuWHgHlbpIZWsc8Nz9IgKll3aNb445R27YNQwBZigbRgy8?=
+ =?us-ascii?Q?W/0oz9b7jmxJC20Sh8g=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|DM6PR10MB4188:EE_
-X-MS-Office365-Filtering-Correlation-Id: 15259289-7942-4dd2-d854-08de3bc902d0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SGhST0Q1Z1RscUgzZFpiUjYxajlHQ3N0eXZ3bTFOMUp4bVViMlJReVpKcTdQ?=
- =?utf-8?B?NFdTNzdEU01IdVlhNlBpRFA5ZmE1SFBPK2tVVkxVdUxoNzkyU3N5RkVvUjhZ?=
- =?utf-8?B?Y3NUUjE2YjNBOEhoTW5sOTA2eCtlak5OR0JGb2toVkNTc3VCVGVsSnd1Sndo?=
- =?utf-8?B?Z1JBMlZsNDJXTzdJV2VUd0h3akFMcTdCczVoMnZhV1hYQWpOaG5tZ01PZFdn?=
- =?utf-8?B?OEVDdkJ6bWRwNTZRa0dveW5ZNzlUVVRWMjNKc0h6aTM0QVdiUUJPekZLOFJW?=
- =?utf-8?B?M3NJcmI5dUlsd2FxU1poY3pIdFAzQm5GZEdwWGcxU0Zjd2w1alZCa1R3ZDhO?=
- =?utf-8?B?L1h5VitwZy91OU8wNmtSRWR4a0FoVWJJRHFJUjRkcmovQjRaa1NNY0FRc2Q1?=
- =?utf-8?B?Yys3QWhxSWpIdytCcjdrR1lXTUgybXhjNVV6QlpOQ2cvaTFCWWJqVG1IK0Fr?=
- =?utf-8?B?cndXUmM2Vm9ybWM0bjJTQTk4SWUzTE9ab2dPZ0Jld2hhZW1nYkdsU3J0ZGYr?=
- =?utf-8?B?M2JsVUJMTkVIQWwzcHg2ZnpBOW1ISmJuUEs0RncvVXAvbFhFZ25IbVdmQkwy?=
- =?utf-8?B?MmNZVWlFN21RcGF4NDV1VHFhNE1JVUJWVVphTjVxS2JvUHlTM3pubG54cXhV?=
- =?utf-8?B?MHV6dUdhNEt5Y2crOVVxNmFySW5TdHByenFkMWlnUW5iQkhKOFh3eDUvWHpS?=
- =?utf-8?B?V0pOdXNqeUdidU05Zms1SWtsaTJWc0RHalhWd0xlcDIxblR0S0NtR0V0U2xD?=
- =?utf-8?B?SzZISlp2dHF6TzZaenhMWFg1K1BSYkhlSkxXYzJpL1U4S2paTC85NC9CQkpK?=
- =?utf-8?B?QVl0M0dyeEZVVEJGTEg4RTFXWnBHUEFHOTlvNHFtNSs0RVNJWVFWYlVmcmFV?=
- =?utf-8?B?YmQyMm8rVHNTZGRtREswbEhXbE5RUXJRZEhXZU9sRFJIQmd5elFibWg5RitC?=
- =?utf-8?B?L3JabVB6QWVVbkQ2akhUNjJoczRNOFdNcm44U2lPbTVyL00zMWhuZHBmUU5k?=
- =?utf-8?B?Q3k4M2FEVWZnTU9ucU8rVUVMM2tPcm1mN3NDbnNsc201Zll2T2owS2dOa2dR?=
- =?utf-8?B?UXJSc016UWtiT1hhUC9hZVJpdlE0RFBlc0Yyenp3YWhMd0p6VzBIWDNySG1X?=
- =?utf-8?B?czFHRi9LTDMzVTgwKzZ0Z0U2UXZyZDJ2Z3FrODF6aG1nYkxyY2M0SmtmMHJS?=
- =?utf-8?B?d0lMdDdtSTkvUVg1NlgyTGoyc2NYM2N4aHJNZUFhdlFOTi8wbHFnd2R6Q2pW?=
- =?utf-8?B?N3lURTFvNXBhNG5PVjd1OXEzMVdWZ3dzVjhwc3lSWUVjQnMyR2J3ZzhoOFpC?=
- =?utf-8?B?VXRaS1lma1FxbXlVZ0swRnkyaENWU0JDbGhHM2lGbzh1b3MrWk9OenlodkNa?=
- =?utf-8?B?a0tRTXllVVRTQzFTd1didDNId0VHYVV0QmgvVG1wc3dxNlFQSURNdXdza0FC?=
- =?utf-8?B?eVlLNGFsRXdYZzNVMG81NlhpQTJZeGZkRHptb0JZaUJVT1BuOTYxUlVkZHds?=
- =?utf-8?B?R0V3Mmt1VStod3ZPUU44Z3Z5K2pxaEl5dWJRUXZzMDJqcm81NFpORmhHa2tP?=
- =?utf-8?B?cnYwSVNwdC91b0lKVmlJa3RkMXJDSCsyaHRKNUVFTFBWRE9XaVRlREd3WnV5?=
- =?utf-8?B?ckJHSHJ6T013cUUyZnNQZ0Fxa1FXOCtMdDBtYzZPd2ZUZVlNMGhpcTE3QzU2?=
- =?utf-8?B?Y3RTYUdEaDdCRTNLV0tQYWZScmVEbUQxTEY2aFlOVWlwOXNFRkg0YTM5VDZi?=
- =?utf-8?B?TWlMY0J1Y2RmeEZ2TDRRRk92MEMyb2draVovc3pBUlFVYnY1YVNPSUtLQlZw?=
- =?utf-8?B?NUpPR2xXV25Rd3J1TkVMSG9nY1VuUGFmckk0bjZQazVMU0FmTVArNXlNRFdY?=
- =?utf-8?B?OXV6TktGSFZJRGtYRDJaeE53R3B0WXZpT1lITTFkQ2hmZDdjM3BMZVVYeEFG?=
- =?utf-8?B?UFNoQTRyc0xhbHBnMHFSQ3FpaDJLODJHZ2lBdms2R0NmSmdDbXpCbW5GeGYw?=
- =?utf-8?Q?OOcAsNK9kxDwo3zwiEMvj/kNy+ey8w=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cmFpTHp6SHIwVkJidTZlNzlWZFZxZmR1NloxK3Fvb1dQZTF4WkRWL25HUjNB?=
- =?utf-8?B?U0dvMVM3YlliM2o3S042YlAzcU55OUN0Q2lWYnRIakNaY1NCckwrejhKNzJZ?=
- =?utf-8?B?NjYxWlpJcFg3emc3QlFCZCswdVlTbDF0MXNyejZCNi9OK1gzWHpXd0Zwa1lJ?=
- =?utf-8?B?K2FCZG1QUDJKZzdPakpENDR0Yyt3OXE1aCsrOU9aWXNWMTdpaEpxWW96NEp6?=
- =?utf-8?B?aS8wKzZPY3k0RmFBOHgvQUdpYTVYODFyZmNmWnJXbFMreTJXc0dDN3gzNVNz?=
- =?utf-8?B?L2lDNk9WTEk0ZUhwQi9YeU1peDV3a1RiK284RFJEVyt0WC9zZGhENHBKdU9R?=
- =?utf-8?B?S0dBRm1RbUl2WWNzWG1QaVNpa1l5aWF1anRTa3N4MEcvUmhvQVBhQ0xpVmx1?=
- =?utf-8?B?VktUVlI5UlZRTnNvbEQvUXFXMmdVQUc2d2pPSnY0eW1QVGJVd1k4ZEV1Q3hh?=
- =?utf-8?B?WVZzSSsyRUdmY1p3dnQ4MU1XdnlSR3ZHMU1LaDI4MittaHV4ZzZRZFpOOFJL?=
- =?utf-8?B?MkZ2N3RxdVhudmNDU09kK2hVbG9kL1crWGFuN3FXSFhtUy9MLzZ3dDlQWHdX?=
- =?utf-8?B?MDRlVEl3T1hZVmdiU2FIUVJIMXlxc2twdFpYakN2VmRXZktHMnhKMEdUVDI0?=
- =?utf-8?B?LzVSOFNoQXJFMG0vN29TenVpWFRTbHhMR0lDY2NEN1dNc1VFZmhYOGV0K3BV?=
- =?utf-8?B?NzNXKzA5RyttNFdrQW14Tit3WDJpR3A3akZMd0NyYytnWHhkck9JSlpRR2h2?=
- =?utf-8?B?aDN4NGdMTkoyRmJCZTA5eFoxUklrZ3g2Rjd3WTU3STZiTU9NTEVNb0psRDVy?=
- =?utf-8?B?U3hjdHNpeE5KZ3kyVFM4MDRSS1pTZUVBaXozVmJJNXBrVEFMZjRza0NDS0Vk?=
- =?utf-8?B?cUJlMHFxQUptSzJRdlJNNERFYlJVeXJlMGhUUXMyQk1KMzVoNUJXNi9Uemdz?=
- =?utf-8?B?aWZzRmdKWG5MN0V3WHN6OUE0SWEwOUNHRXgxdXZCYWR1dngyNk9paUZ4NGZz?=
- =?utf-8?B?emdJdVh4Qml3ZUU2VVRTMmNEYlJmRldWam5zNUNqWXQwOGtQd2t5dmhwSmd5?=
- =?utf-8?B?bmYwd0JYWGY1bk1WVkZxdmxEc21zQWZrQkxIUmg2RUpTRzJ1Z0FsOUNObW9T?=
- =?utf-8?B?aGNvNGdBVUE2Vzl4azVpK3JPaUswZWcyQkRsZWliK1NIQkJLWW5BVnVRV3c4?=
- =?utf-8?B?RktUMkJRR0duZkdXRDc5YmZZWTVtUGptaHlNZXJNY1pTcC9ybGVtdldxMk9j?=
- =?utf-8?B?Ylk0TEIvL3l4UHkyWTNNS1JWai80ZjM4ZTYvQ1VXVTc3dmk0NFlHSU1kZTN3?=
- =?utf-8?B?c3J1MVoyMjRZRWEwQUxQMWdUa1d2SHR1OWNQTFpVREVPdkszTUR1Q3ljNENv?=
- =?utf-8?B?MTRYNDlMV0tTeUhBc2kyR0JZUFJZbWFJVVFVWnU1NWFqaFdpRDl5bkg5ejNu?=
- =?utf-8?B?K2J4R0E5RCtvd2ZsK2NQUlgzUnkyNjlHOTQydlRQWEtGUy9OcllQanZ0T2ZQ?=
- =?utf-8?B?dWJIL1NQejdnOVZhNGxDeU41UkdoZnFrLzdXQXBpZEZaL0RQa0QvclJ5dmVX?=
- =?utf-8?B?R0JkaEdSQ3RxMEJhZ2FneWZUZjRtVms3azlKWGFMZTQvZitqQmV6ejlFVzcr?=
- =?utf-8?B?R2MxbnlJOTlDaDZQM05sUjZQRHFwdy9kMDIzekJ1N2YrcTBSUjJFRUVieldO?=
- =?utf-8?B?TEhZQWNTZERsamx5a3FZN3FSRWkrOStLUXVKVmZ3eklKNURDZDJCRDM5Rms5?=
- =?utf-8?B?Y1daM1NVbUorSFZpS0h4SW5ibzFNbGZnZHhKY3F0Z0VHVDNoaEdqQnBDNVhz?=
- =?utf-8?B?TEpyNWczaDhXbE9RY1pGNjRscGxnVEFTTUFoWVljZnREV1FEcGVKTis1bC8y?=
- =?utf-8?B?c25TRm9iRUU0Q0hFVU9OR3dxclNneTlLMWwyN0RHUWNMc2k2MTljVjZMZXV5?=
- =?utf-8?B?aUdpSDRXcTBOS0xSUWFiRVJWNmZBSTNQbURmanV3dUUyd2tSWjJXdEhuUllS?=
- =?utf-8?B?VnhSMkhXSVI0alRJaTUwSEM0Z0k2L09lcDdIa0pJaUp3ejZ6Qm1nVUZMeTEv?=
- =?utf-8?B?ald4RTNCTHBDS0RQV21iS0xmaGlCWUlvVlRmUkZMdGJvSkU5ODl6Z3MrSFB1?=
- =?utf-8?B?ME9ydHMrZlZMemxwWm9rSHZKV2dTZmMveDVwWVh2SnlhZWxpbysrcWZyWjkz?=
- =?utf-8?B?K1E9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	ip5uqEFuh6rGGyaErPHXlbBLrILQtOznnMBzkumlAOeh91N1+sBflsPC2O25TDszysxh+KFqZN0q3g04KNFIvGZxkE8SGvaOdRtMjxFjpKb9M/5qPH3bCti96cV9rgytcEfABvWKi5xOIDJJHrrhgZxq5blBof0rwxE6ii4yfBBy7vb5B+FAHcoC83hSdgRLDkqZmjvGpSrMI6hBS0RlxjOpZs5nrg0NE7mV7adL3Vto4n9tQ4G41OmL9H7an29Sp5n2ne0/QkXDS0Ncrbd7bsPxFQvjtss/qgMvvJoU1oWy4o/L/D3PBT7zuyflpMaBWJsLH7iZDj4c2elnxoGjB/4Uc1slQ+YZk51IDxGiEbzrG5hg3uQP4NQmC74/AriZkBW4WO+D+4wcOF3Gz27owt5iDMQNwKJ5goB7gDofolwivnGHpnzcwy7x9aWuLJHtKVyb6fsciaZYaqxWbVXMWDZwid2dLh4fhoF+0/ug7WQT3Xq0wRlAftAxL97/rMTzhR5czxWXugavlqEclFbQVcVrxTwSCctQEHykMwqC9f5PVLcte8xsf7qE1z64fmzgI9vzIS/yDKzUst7Sj8n+5pF7zPMwSrUP6Edh176PiBE=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15259289-7942-4dd2-d854-08de3bc902d0
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
+X-OriginatorOrg: amd.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Dec 2025 10:59:25.7881
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB8120.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec56bcd6-60f1-4200-c931-08de3bcea6f3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Dec 2025 11:39:48.3156
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: r4CjvP+BAnXpMA9WgbV6gzd6zkI0McKurXAie9gLr6c6p2njFL5Zec6nAZg0vpJHVqvgPS6NgCmn94AfJWMZcT2q9mTy95eX2iVxSTOA9lA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB4188
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-15_02,2025-12-15_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 spamscore=0
- bulkscore=0 suspectscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
- definitions=main-2512150094
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE1MDA5MyBTYWx0ZWRfX9+jVvBzx3WgN
- l6AY/gQpGAqGnmAahjCj5lFmGrbNMW4w6qXd4H8OniV1fTRICNvDEI7s+/XPbTvb1wiyxsyE5jp
- fbaZa/OgSsRJqni3r1Un4agKV7+YFJpi85TiRHtI6SsgnKUxLz9StYj6IvF71KCIFPIPa8jSXDL
- o8Ru0vG0SZe+euqKl6kMZZjPeuEIceLggLNZKy28M79O53OCBRTRAUdvesDo/03vszhoeWF2rHR
- NIq2Vudlgfs64toxM9Jc3BGYJe7ZgcnXtJ6y7Map5AF9V5JQ/akIN2GpAndthsfzKeuDywOlqAY
- rlUg0+kKbdcmHlHwX9SuNk4bQwq/5yPKh3pQl4kC7XY+pfLRW0uQhe7/PFG6pVWEbS1dgs/mKU3
- tTFevSL4YtWrIYUo20Ld0EfjwUD8Dw==
-X-Proofpoint-GUID: Ttrplaq0cQ9U5G29pIH3VJd4I54YU98I
-X-Proofpoint-ORIG-GUID: Ttrplaq0cQ9U5G29pIH3VJd4I54YU98I
-X-Authority-Analysis: v=2.4 cv=dParWeZb c=1 sm=1 tr=0 ts=693fea11 b=1 cx=c_pps
- a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=wP3pNCr1ah4A:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=h4SL0BZ7AAAA:8 a=5N3NIffLigoG6rt-7kMA:9 a=QEXdDO2ut3YA:10
- a=Cfupvnr7wbb3QRzVG_cV:22
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qLGeVpJ7BSPMhzOhpJ4oZ9/UXJ0/CR4JGnAXTy91bmDkxgPBAwhclAPmJ4XDlHJ+CSMgXUVBmsgeBT+gdkdcGg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9330
 
+[AMD Official Use Only - AMD Internal Distribution Only]
 
+Hi Bjorn
 
-On 12/15/2025 3:32 PM, zhangsenchuan@eswincomputing.com wrote:
-> +	/*
-> +	 * TODO: Since the Root Port node is separated out by pcie devicetree,
-> +	 * the DWC core initialization code can't parse the num-lanes attribute
-> +	 * in the Root Port. Before entering the DWC core initialization code,
-> +	 * the platform driver code parses the Root Port node. The EIC7700 only
-> +	 * supports one Root Port node, and the num-lanes attribute is suitable
-> +	 * for the case of one Root Rort.
+Thank you for your illustrative inputs and suggestions.
+Please find my responses inline.
 
-Rort -> Port
+Regards,
+Devendra
 
-> +	 */
-> +	if (!of_property_read_u32(node, "num-lanes", &port->num_lanes))
-> +		pcie->pci.num_lanes = port->num_lanes;
-> +
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Friday, December 12, 2025 11:38 PM
+> To: Verma, Devendra <Devendra.Verma@amd.com>
+> Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
+> dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
+> Subject: Re: [PATCH v7 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint
+> Support
+>
+> Caution: This message originated from an External Source. Use proper
+> caution when opening attachments, clicking links, or responding.
+>
+>
+> On Fri, Dec 12, 2025 at 05:50:55PM +0530, Devendra K Verma wrote:
+> > AMD MDB PCIe endpoint support. For AMD specific support added the
+> > following
+> >   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
+> >   - AMD MDB specific driver data
+> >   - AMD MDB specific VSEC capability to retrieve the device DDR
+> >     base address.
+> > ...
+>
+> > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+>
+> > +/* Synopsys */
+> >  #define DW_PCIE_VSEC_DMA_ID                  0x6
+> >  #define DW_PCIE_VSEC_DMA_BAR                 GENMASK(10, 8)
+> >  #define DW_PCIE_VSEC_DMA_MAP                 GENMASK(2, 0)
+> >  #define DW_PCIE_VSEC_DMA_WR_CH                       GENMASK(9, 0)
+> >  #define DW_PCIE_VSEC_DMA_RD_CH                       GENMASK(25, 16)
+>
+> These should include "SYNOPSYS" since they are specific to
+> PCI_VENDOR_ID_SYNOPSYS.  Add corresponding XILINX #defines below for
+> the XILINX VSEC.  They'll be the same masks.
+>
+> > +/* AMD MDB (Xilinx) specific defines */
+> > +#define DW_PCIE_XILINX_MDB_VSEC_DMA_ID               0x6
+> > +#define DW_PCIE_XILINX_MDB_VSEC_ID           0x20
+> > +#define PCI_DEVICE_ID_AMD_MDB_B054           0xb054
+>
+> Looks odd to me that PCI_DEVICE_ID_AMD_MDB_B054 goes with
+> PCI_VENDOR_ID_XILINX.  To me this would make more sense as
+> PCI_DEVICE_ID_XILINX_B054.  Move it so it's not in the middle of the VSEC=
+-
+> related things.
+>
+> > +#define DW_PCIE_AMD_MDB_INVALID_ADDR         (~0ULL)
+>
+> It looks like this is related to the value from
+> DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG and is only used for Xilinx, so
+> should be named similarly, e.g., DW_PCIE_XILINX_MDB_INVALID_ADDR, and
+> moved to be next to it.
+>
 
+Agreed on renaming the variables to match the name with the product vendor =
+rather
+than the product owner to maintain consistency. The local defines will use =
+the name
+DW_PCIE_XILINX_MDB_<VAR-NAME>. The
 
-Thanks,
-Alok
+> > +#define DW_PCIE_XILINX_LL_OFF_GAP            0x200000
+> > +#define DW_PCIE_XILINX_LL_SIZE                       0x800
+> > +#define DW_PCIE_XILINX_DT_OFF_GAP            0x100000
+> > +#define DW_PCIE_XILINX_DT_SIZE                       0x800
+>
+> These LL/DT gap and size #defines don't look like they're directly relate=
+d to
+> the VSEC, so they should at least be moved after the
+> DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG #defines, since those *are* part
+> of the VSEC.
+>
+> > +#define DW_PCIE_XILINX_MDB_VSEC_HDR_ID               0x20
+>
+> DW_PCIE_XILINX_MDB_VSEC_HDR_ID is pointless and should be removed.
+> See below.
+>
+
+Agreed, this will be removed in next revision.
+
+> > +#define DW_PCIE_XILINX_MDB_VSEC_REV          0x1
+> > +#define DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG_HIGH       0xc
+> > +#define DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG_LOW        0x8
+>
+> > +static const struct dw_edma_pcie_data amd_mdb_data =3D {
+>
+> This is a confusing mix of "xilinx" and "amd_mdb".  The DEVICE_ID #define
+> uses "AMD_MDB".  The other #defines mostly use XILINX.  This data structu=
+re
+> uses "amd_mdb".  The function uses "xilinx".
+>
+> Since this patch only applies to PCI_VENDOR_ID_XILINX, I would make this
+> "xilinx_mdb_data".  If new devices come with a different vendor ID, e.g.,
+> AMD, you can add a corresponding block for that.
+>
+
+Agreed for this, the variable names should have relation with the product v=
+endor
+rather than the product owner.
+
+> > +static void dw_edma_pcie_get_xilinx_dma_data(struct pci_dev *pdev,
+> > +                                          struct dw_edma_pcie_data
+> > +*pdata) {
+> > +     u32 val, map;
+> > +     u16 vsec;
+> > +     u64 off;
+> > +
+> > +     vsec =3D pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
+> > +                                     DW_PCIE_XILINX_MDB_VSEC_DMA_ID);
+> > +     if (!vsec)
+> > +             return;
+> > +
+> > +     pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
+> > +     if (PCI_VNDR_HEADER_REV(val) !=3D 0x00 ||
+> > +         PCI_VNDR_HEADER_LEN(val) !=3D 0x18)
+> > +             return;
+> > +
+> > +     pci_dbg(pdev, "Detected PCIe Vendor-Specific Extended Capability
+> > + DMA\n");
+>
+> Perhaps reword this to "Detected Xilinx Vendor-Specific Extended Capabili=
+ty
+> DMA", and the one in dw_edma_pcie_get_synopsys_dma_data()
+> to similarly mention "Synopsys" to reinforce the fact that these are Xili=
+nx-
+> specific and Synopsys-specific.
+>
+> I think the REV and LEN checks are unnecessary; see below.
+>
+> > +     pci_read_config_dword(pdev, vsec + 0x8, &val);
+> > +     map =3D FIELD_GET(DW_PCIE_VSEC_DMA_MAP, val);
+>
+> Should use XILINX #defines.  Another reason for adding "SYNOPSYS" to the
+> #defines for the Synopsys VSEC.
+>
+
+Agreed, for the reason mentioned above.
+
+> > +     vsec =3D pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
+> > +                                     DW_PCIE_XILINX_MDB_VSEC_ID);
+> > +     if (!vsec)
+> > +             return;
+> > +
+> > +     pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
+> > +     if (PCI_VNDR_HEADER_ID(val) !=3D DW_PCIE_XILINX_MDB_VSEC_HDR_ID
+> ||
+>
+> pci_find_vsec_capability() already checks that PCI_VNDR_HEADER_ID() =3D=
+=3D
+> DW_PCIE_XILINX_MDB_VSEC_ID, so there's no need to check this again.
+>
+> > +         PCI_VNDR_HEADER_REV(val) !=3D DW_PCIE_XILINX_MDB_VSEC_REV)
+>
+> I know this is copied from dw_edma_pcie_get_vsec_dma_data(), but I think
+> it's a bad idea to check for the exact revision because it forces a chang=
+e to
+> existing, working code if there's ever a device with a new revision of th=
+is VSEC
+> ID.
+>
+> If there are new revisions of this VSEC, they should preserve the semanti=
+cs of
+> previous revisions.  If there was a rev 0 of this VSEC, I think we should=
+ check
+> for PCI_VNDR_HEADER_REV() >=3D 1.  If rev 1 was the first revision, you c=
+ould
+> skip the check altogether.
+>
+> If rev 2 *adds* new registers or functionality, we would have to add new =
+code
+> to support that, and *that* code should check for
+> PCI_VNDR_HEADER_REV() >=3D 2.
+>
+> I think the REV and LEN checking in dw_edma_pcie_get_vsec_dma_data() is
+> also too aggressive.
+>
+
+Agreed. Revision and header check will be removed.
+
+> >  static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >                             const struct pci_device_id *pid)  { @@
+> > -179,12 +318,34 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >       }
+> >
+> >       memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
+> > +     vsec_data->devmem_phys_off =3D DW_PCIE_AMD_MDB_INVALID_ADDR;
+>
+> Seems weird to set devmem_phys_off here since it's only used for
+> PCI_VENDOR_ID_XILINX.  Couldn't this be done in
+> dw_edma_pcie_get_xilinx_dma_data()?
+>
+
+This will be moved to  dw_edma_pcie_get_xilinx_dma_data() function.
+
+> > -     dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
+> > +     dw_edma_pcie_get_synopsys_dma_data(pdev, vsec_data);
+> > +     dw_edma_pcie_get_xilinx_dma_data(pdev, vsec_data);
+> > +
+> > +     if (pdev->vendor =3D=3D PCI_VENDOR_ID_XILINX) {
+> > +             /*
+> > +              * There is no valid address found for the LL memory
+> > +              * space on the device side.
+> > +              */
+> > +             if (vsec_data->devmem_phys_off =3D=3D
+> DW_PCIE_AMD_MDB_INVALID_ADDR)
+> > +                     return -ENOMEM;
+> > +
+> > +             /*
+> > +              * Configure the channel LL and data blocks if number of
+> > +              * channels enabled in VSEC capability are more than the
+> > +              * channels configured in amd_mdb_data.
+> > +              */
+> > +             dw_edma_set_chan_region_offset(vsec_data, BAR_2, 0,
+> > +                                            DW_PCIE_XILINX_LL_OFF_GAP,
+> > +                                            DW_PCIE_XILINX_LL_SIZE,
+> > +                                            DW_PCIE_XILINX_DT_OFF_GAP,
+> > +                                            DW_PCIE_XILINX_DT_SIZE);
+> > +     }
+>
+> This PCI_VENDOR_ID_XILINX block looks like maybe it would make sense
+> inside dw_edma_pcie_get_xilinx_dma_data()?  That function could look
+> like:
+>
+>   dw_edma_pcie_get_xilinx_dma_data(...)
+>   {
+>     if (pdev->vendor !=3D PCI_VENDOR_ID_XILINX)
+>       return;
+>
+>     pdata->devmem_phys_off =3D DW_PCIE_XILINX_MDB_INVALID_ADDR;
+>     ...
+>
+
+In the above suggestion, having dw_edma_set_chan_region_offset() in the
+current function makes sense as when checked along patch 2/2 of the same
+series. Moreover, the function is setting up some offsets, doing so in a *g=
+et*
+function does not look justified just because they are related to same vend=
+or.
+Similar thing is being done when setting up the ll and dt virt / phys addre=
+sses
+In the same probe() function which is after *getting* the vsec data and
+then *setting* up the next data based on the retrieved info. I also followe=
+d
+the similar approach, for Xilinx, of *getting* vsec data, *setting* up offs=
+ets
+and then move ahead with final *settings* of ll and dt regions.
+
+> >  static const struct pci_device_id dw_edma_pcie_id_table[] =3D {
+> >       { PCI_DEVICE_DATA(SYNOPSYS, EDDA, &snps_edda_data) },
+> > +     { PCI_VDEVICE(XILINX, PCI_DEVICE_ID_AMD_MDB_B054),
+> > +       (kernel_ulong_t)&amd_mdb_data },
 
