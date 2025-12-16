@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-43074-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43075-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B746CC0642
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 01:56:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3D7ECC065A
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 01:56:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 07FFA30220ED
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 00:55:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F178A30275F6
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 00:55:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7315F280023;
-	Tue, 16 Dec 2025 00:55:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 376A22848A1;
+	Tue, 16 Dec 2025 00:55:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j1CKDVO/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OiLnKeg3"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE522701B8;
-	Tue, 16 Dec 2025 00:55:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328EC224891;
+	Tue, 16 Dec 2025 00:55:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765846536; cv=none; b=QqlXl2H3k4AbC5ZalAuSxeD3VXQPVK0Sf69XQ/zaIfS16o34VQiPe1ZZIGKQMq3GyFOgID0EnrUW78IJx82CSH8L/Fg8inUZKhgVHXEtsrbIFhN/c5m6iBQSTncfDfYRVSLReR12wFQmLzWrsVf/ZWRLXRI6a7K9/OoLUxrq7pk=
+	t=1765846537; cv=none; b=fBEELipG8Ms0RKoioZHgR72EOFlUC/wiiMgnlCIGMsAJE6Ed1IorR1sJ8OkbcpnyZCMI51IQl+qdEdTf6TWbipn0HfzrDtb5B+If0xHZflcaZiDdiMgTr7PQFQLS2spSTMs36ZqU+J2Yn3vl0d1WN+Ko9291SX34NN/U9wyzcEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765846536; c=relaxed/simple;
-	bh=wHO7V2oELIaRdDJ1ZRbnM7/nWHFm2hlak1HFVK1ad+c=;
+	s=arc-20240116; t=1765846537; c=relaxed/simple;
+	bh=227I6CJV9ocBGsFP/LsCYQMuN5o0I8rj+s7ym38P2+0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aDLXF2krwv65h+nJitMGdeJc+p7Fd9jHwznu4DckHR63fo0iPmq4kfU9MEExBlk/6NePua13wMpJDtPdwqzvcan7vG4Qvta0+Wsd56lKzQV6KSLRIQL7tHrx7JoQriIxcclAGRgq5QEfObe+ohBlDMzJ96oCmdg+K7fIUgxgorQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j1CKDVO/; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=tFIuZTBV5ITkjOxJkarO1Q9cd2924U9GLYhWt9vxKuzMNl2ekeH+bUJh6zurV8CHXolR7+3Tsov3uE/F/bIfhbPgRBrWdyK0JQmTAyAG+eK7myJZdUZ2i2gPBAzfNrFRJ7/zDphm8WE6wTHhFgdfOzbf4RcMVDRCLfUpAaH6AZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OiLnKeg3; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765846535; x=1797382535;
+  t=1765846536; x=1797382536;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wHO7V2oELIaRdDJ1ZRbnM7/nWHFm2hlak1HFVK1ad+c=;
-  b=j1CKDVO/6+7SrlUlMzoO4ZhlO45SOwJopbru+OeR06z9R5uUol5nunVa
-   cD5XW+NQ1JnQRs+Lwz2Xgc0z39SQxgu1Boa8aXPn5KZl+CJLgS8veafUV
-   nYuKvuZzAtT6Sd9ZK/5Z3+nNShKrcYUJC44EhMmeVsRVvKQtIFiON0M8I
-   cjnLktF6WU9wkPWv0S5VUw0uourJ7hX1P3SeA0bBxeRiZZovRz/faab+p
-   iHOozjTCDfxQW+YF+eFUyVHt2jjKRHLxZ4H1/mj8R9JckdVm9sUpfj+xx
-   TWWSmb/gXYocGBSSshxFmy9RQY0BQf7ql6dYJsViE150D6P/C2QWjuvP1
-   g==;
-X-CSE-ConnectionGUID: s2ea93RwTVi0AfxMicDp6Q==
-X-CSE-MsgGUID: 19zFchiTSgmL4GHTUzTM/g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11643"; a="79215480"
+  bh=227I6CJV9ocBGsFP/LsCYQMuN5o0I8rj+s7ym38P2+0=;
+  b=OiLnKeg34BIm/aXMvm42pu6ST2bD86BMMNX83YvIDgNJZ7H4TiMCcMrl
+   g/jogDUfhDSG2YzkwoObbdm6Ei59lh5u7yMCkpLk03sb7XFIVdZLIftTC
+   8dO3StYyVlgShyD+Wids3uCT/OwC54uiMe31eKlXztibRwy/yw5nDJiXH
+   haCWOxgsNbxY9uIZ7gd1Ini0wADC6bOSvLXt2R8/MxsPNiofdThcaNG8B
+   k483bRVTcTNAKwx03DxdSS3PkjblUf7PAJcFDQ1rapU+APMFIKZHm1WZ1
+   RUL6T0PtHfYO5OJGHfKwnI8nwzno/4NgEOWiPir9C4TrHLAnLTVzxLTBt
+   A==;
+X-CSE-ConnectionGUID: 4mz2pVzPTouVWTFzTGoidw==
+X-CSE-MsgGUID: 2ZZ3QqDQSL2siLmAzDNUQA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11643"; a="79215484"
 X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
-   d="scan'208";a="79215480"
+   d="scan'208";a="79215484"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
   by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2025 16:55:33 -0800
-X-CSE-ConnectionGUID: kmT8rWGRQEyf/1becGAl0A==
-X-CSE-MsgGUID: Yw7GjjbDQuSMs3mrqwNkUA==
+X-CSE-ConnectionGUID: 6ZXeJJmnQSa8D2fkNgB7QQ==
+X-CSE-MsgGUID: V8hmgQ9FSUq7ZjI+9ccEPQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
-   d="scan'208";a="198131531"
+   d="scan'208";a="198131535"
 Received: from dwillia2-desk.jf.intel.com ([10.88.27.145])
   by fmviesa008.fm.intel.com with ESMTP; 15 Dec 2025 16:55:32 -0800
 From: Dan Williams <dan.j.williams@intel.com>
@@ -66,12 +66,11 @@ Cc: linux-cxl@vger.kernel.org,
 	alejandro.lucero-palau@amd.com,
 	linux-pci@vger.kernel.org,
 	Jonathan.Cameron@huawei.com,
-	Alejandro Lucero <alucerop@amd.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Ben Cheatham <benjamin.cheatham@amd.com>
-Subject: [PATCH v2 3/6] cxl/port: Arrange for always synchronous endpoint attach
-Date: Mon, 15 Dec 2025 16:56:13 -0800
-Message-ID: <20251216005616.3090129-4-dan.j.williams@intel.com>
+	Ben Cheatham <benjamin.cheatham@amd.com>,
+	Alejandro Lucero <alucerop@amd.com>
+Subject: [PATCH v2 4/6] cxl/mem: Convert devm_cxl_add_memdev() to scope-based-cleanup
+Date: Mon, 15 Dec 2025 16:56:14 -0800
+Message-ID: <20251216005616.3090129-5-dan.j.williams@intel.com>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251216005616.3090129-1-dan.j.williams@intel.com>
 References: <20251216005616.3090129-1-dan.j.williams@intel.com>
@@ -83,157 +82,124 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Make it so that upon return from devm_cxl_add_endpoint() that
-cxl_mem_probe() can assume that the endpoint has had a chance to complete
-cxl_port_probe().  I.e. cxl_port module loading has completed prior to
-device registration.
+In preparation for adding more setup steps, convert the current
+implementation to scope-based cleanup.
 
-Delete the MODULE_SOFTDEP() as it is not sufficient for this purpose, but a
-hard link-time dependency is reliable. Specifically MODULE_SOFTDEP() does
-not guarantee that the module loading has completed prior to the completion
-of the current module's init.
+The cxl_memdev_shutdown() is only required after cdev_device_add(). With
+that moved to a helper function it precludes the need to add
+scope-based-handler for that cleanup if devm_add_action_or_reset() fails.
 
 Cc: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc: Alejandro Lucero <alucerop@amd.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Tested-by: Alison Schofield <alison.schofield@intel.com>
 Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
 Tested-by: Alejandro Lucero <alucerop@amd.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/cxl.h  |  2 ++
- drivers/cxl/mem.c  | 43 -------------------------------------------
- drivers/cxl/port.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 42 insertions(+), 43 deletions(-)
+ drivers/cxl/core/memdev.c | 70 ++++++++++++++++++++++++---------------
+ 1 file changed, 44 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index ba17fa86d249..c796c3db36e0 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -780,6 +780,8 @@ struct cxl_port *devm_cxl_add_port(struct device *host,
- 				   struct cxl_dport *parent_dport);
- struct cxl_root *devm_cxl_add_root(struct device *host,
- 				   const struct cxl_root_ops *ops);
-+int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
-+			  struct cxl_dport *parent_dport);
- struct cxl_root *find_cxl_root(struct cxl_port *port);
- 
- DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_device(&_T->port.dev))
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 55883797ab2d..d62931526fd4 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -45,44 +45,6 @@ static int cxl_mem_dpa_show(struct seq_file *file, void *data)
- 	return 0;
- }
- 
--static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
--				 struct cxl_dport *parent_dport)
--{
--	struct cxl_port *parent_port = parent_dport->port;
--	struct cxl_port *endpoint, *iter, *down;
--	int rc;
--
--	/*
--	 * Now that the path to the root is established record all the
--	 * intervening ports in the chain.
--	 */
--	for (iter = parent_port, down = NULL; !is_cxl_root(iter);
--	     down = iter, iter = to_cxl_port(iter->dev.parent)) {
--		struct cxl_ep *ep;
--
--		ep = cxl_ep_load(iter, cxlmd);
--		ep->next = down;
--	}
--
--	/* Note: endpoint port component registers are derived from @cxlds */
--	endpoint = devm_cxl_add_port(host, &cxlmd->dev, CXL_RESOURCE_NONE,
--				     parent_dport);
--	if (IS_ERR(endpoint))
--		return PTR_ERR(endpoint);
--
--	rc = cxl_endpoint_autoremove(cxlmd, endpoint);
--	if (rc)
--		return rc;
--
--	if (!endpoint->dev.driver) {
--		dev_err(&cxlmd->dev, "%s failed probe\n",
--			dev_name(&endpoint->dev));
--		return -ENXIO;
--	}
--
--	return 0;
--}
--
- static int cxl_debugfs_poison_inject(void *data, u64 dpa)
- {
- 	struct cxl_memdev *cxlmd = data;
-@@ -275,8 +237,3 @@ MODULE_DESCRIPTION("CXL: Memory Expansion");
- MODULE_LICENSE("GPL v2");
- MODULE_IMPORT_NS("CXL");
- MODULE_ALIAS_CXL(CXL_DEVICE_MEMORY_EXPANDER);
--/*
-- * create_endpoint() wants to validate port driver attach immediately after
-- * endpoint registration.
-- */
--MODULE_SOFTDEP("pre: cxl_port");
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index 51c8f2f84717..7937e7e53797 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -156,10 +156,50 @@ static struct cxl_driver cxl_port_driver = {
- 	.probe = cxl_port_probe,
- 	.id = CXL_DEVICE_PORT,
- 	.drv = {
-+		.probe_type = PROBE_FORCE_SYNCHRONOUS,
- 		.dev_groups = cxl_port_attribute_groups,
- 	},
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index 7a4153e1c6a7..18efbf294db5 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -1050,6 +1050,45 @@ static const struct file_operations cxl_memdev_fops = {
+ 	.llseek = noop_llseek,
  };
  
-+int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
-+			  struct cxl_dport *parent_dport)
++/*
++ * Activate ioctl operations, no cxl_memdev_rwsem manipulation needed as this is
++ * ordered with cdev_add() publishing the device.
++ */
++static int cxlmd_add(struct cxl_memdev *cxlmd, struct cxl_dev_state *cxlds)
 +{
-+	struct cxl_port *parent_port = parent_dport->port;
-+	struct cxl_port *endpoint, *iter, *down;
 +	int rc;
 +
-+	/*
-+	 * Now that the path to the root is established record all the
-+	 * intervening ports in the chain.
-+	 */
-+	for (iter = parent_port, down = NULL; !is_cxl_root(iter);
-+	     down = iter, iter = to_cxl_port(iter->dev.parent)) {
-+		struct cxl_ep *ep;
++	cxlmd->cxlds = cxlds;
++	cxlds->cxlmd = cxlmd;
 +
-+		ep = cxl_ep_load(iter, cxlmd);
-+		ep->next = down;
-+	}
-+
-+	/* Note: endpoint port component registers are derived from @cxlds */
-+	endpoint = devm_cxl_add_port(host, &cxlmd->dev, CXL_RESOURCE_NONE,
-+				     parent_dport);
-+	if (IS_ERR(endpoint))
-+		return PTR_ERR(endpoint);
-+
-+	rc = cxl_endpoint_autoremove(cxlmd, endpoint);
-+	if (rc)
++	rc = cdev_device_add(&cxlmd->cdev, &cxlmd->dev);
++	if (rc) {
++		/*
++		 * The cdev was briefly live, shutdown any ioctl operations that
++		 * saw that state.
++		 */
++		cxl_memdev_shutdown(&cxlmd->dev);
 +		return rc;
-+
-+	if (!endpoint->dev.driver) {
-+		dev_err(&cxlmd->dev, "%s failed probe\n",
-+			dev_name(&endpoint->dev));
-+		return -ENXIO;
 +	}
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_FOR_MODULES(devm_cxl_add_endpoint, "cxl_mem");
 +
- static int __init cxl_port_init(void)
++DEFINE_FREE(put_cxlmd, struct cxl_memdev *,
++	    if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev);)
++
++static struct cxl_memdev *cxl_memdev_autoremove(struct cxl_memdev *cxlmd)
++{
++	int rc;
++
++	rc = devm_add_action_or_reset(cxlmd->cxlds->dev, cxl_memdev_unregister,
++				      cxlmd);
++	if (rc)
++		return ERR_PTR(rc);
++
++	return cxlmd;
++}
++
+ /*
+  * Core helper for devm_cxl_add_memdev() that wants to both create a device and
+  * assert to the caller that upon return cxl_mem::probe() has been invoked.
+@@ -1057,45 +1096,24 @@ static const struct file_operations cxl_memdev_fops = {
+ struct cxl_memdev *__devm_cxl_add_memdev(struct device *host,
+ 					 struct cxl_dev_state *cxlds)
  {
- 	return cxl_driver_register(&cxl_port_driver);
+-	struct cxl_memdev *cxlmd;
+ 	struct device *dev;
+-	struct cdev *cdev;
+ 	int rc;
+ 
+-	cxlmd = cxl_memdev_alloc(cxlds, &cxl_memdev_fops);
++	struct cxl_memdev *cxlmd __free(put_cxlmd) =
++		cxl_memdev_alloc(cxlds, &cxl_memdev_fops);
+ 	if (IS_ERR(cxlmd))
+ 		return cxlmd;
+ 
+ 	dev = &cxlmd->dev;
+ 	rc = dev_set_name(dev, "mem%d", cxlmd->id);
+ 	if (rc)
+-		goto err;
+-
+-	/*
+-	 * Activate ioctl operations, no cxl_memdev_rwsem manipulation
+-	 * needed as this is ordered with cdev_add() publishing the device.
+-	 */
+-	cxlmd->cxlds = cxlds;
+-	cxlds->cxlmd = cxlmd;
+-
+-	cdev = &cxlmd->cdev;
+-	rc = cdev_device_add(cdev, dev);
+-	if (rc)
+-		goto err;
++		return ERR_PTR(rc);
+ 
+-	rc = devm_add_action_or_reset(host, cxl_memdev_unregister, cxlmd);
++	rc = cxlmd_add(cxlmd, cxlds);
+ 	if (rc)
+ 		return ERR_PTR(rc);
+-	return cxlmd;
+ 
+-err:
+-	/*
+-	 * The cdev was briefly live, shutdown any ioctl operations that
+-	 * saw that state.
+-	 */
+-	cxl_memdev_shutdown(dev);
+-	put_device(dev);
+-	return ERR_PTR(rc);
++	return cxl_memdev_autoremove(no_free_ptr(cxlmd));
+ }
+ EXPORT_SYMBOL_FOR_MODULES(__devm_cxl_add_memdev, "cxl_mem");
+ 
 -- 
 2.51.1
 
