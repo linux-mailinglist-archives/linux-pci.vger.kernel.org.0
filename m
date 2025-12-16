@@ -1,164 +1,176 @@
-Return-Path: <linux-pci+bounces-43111-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43112-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 462ACCC20AA
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 11:58:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F72CCC2196
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 12:17:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B8925301F277
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 10:58:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 614793026AE5
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 11:15:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B3D932939B;
-	Tue, 16 Dec 2025 10:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iNd4ZHM7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C8C62BE7AB;
+	Tue, 16 Dec 2025 11:15:54 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C332D47ED;
-	Tue, 16 Dec 2025 10:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B831E25FA10;
+	Tue, 16 Dec 2025 11:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765882685; cv=none; b=luUII7rjFHkUT7/QMLHzZLtB1xzJ8SgeTvR5aXKLILXYMibF1VUlJK8cwIOZfbKEqshiNn9uI/Sw/VGajJBknIa6qRjZpszOl94+fGsKR9EGgpnvtBK+JMLwOnChHX6MksObnEZ+bNT1I3BxZNtehVaRf6GSGJZcIq6jzGNZfzo=
+	t=1765883754; cv=none; b=rzq9Z6OPKRf1oGBkaSx/IQdBBl2vnbila0KI6/1LlyJxbQVTk8y+BnfwkgaXOIkHq4EgXRiUAwdAo1jh7vbuDcdBJ2j2Ih1DDDSppBEFneJJxQHQIKXKp+fxzXbuYvFYxGR/NnMfCt/0JIRxHKUaSudeb3oiYH1OK+Rma6bEhlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765882685; c=relaxed/simple;
-	bh=yitx9KrNMYRbnX2q+dZyRl9jZxh4Qie+gSSn0r8or1E=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=uk5o6HKwLVzuRpWPOaUwICjdBHt9/Rh4XScqF3QprX23YLukYLtFETKjHu49YeusWhwv0RCGMOubmHnVHAsKgW1mz2Vl8rYaPYYbjLZZNxTf2XeB/Zjp4iWr7wipNNY9CtGBWPyT+RkVUFdBjuIcgZrJzRkcczrVeUfFBP7J6IU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iNd4ZHM7; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765882683; x=1797418683;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=yitx9KrNMYRbnX2q+dZyRl9jZxh4Qie+gSSn0r8or1E=;
-  b=iNd4ZHM7DT2sBIhjGDnMTUlt5yVeEKAV+7agwU1V7kKRoiwX0QRAbDdp
-   G4XVrQhGzlzqltuNbjbioYZ2zJA/D+oaUAGDoAivMSvgz5GLWzkRBH2uV
-   C6498bgv1utgXn/etz+E+wqmhdK8CF2v9/aekhbdQ1yQnF/drEgA7Trcd
-   QronUy5fQjEbD7W/7ZCduWKDz8yEWZOXKaQ2arpsKAyifhILG14JX4EQw
-   TyugZ1pKxsYe8jN43qW4Mhb5QhcfG74xfRoJWMr9rutiPyQykJGfOhuG6
-   6MnHX1JHW+NbnXYsCvGq/EdFY/nBL1X+gELPpivl8tp+SPLUDIhsqPK9L
-   Q==;
-X-CSE-ConnectionGUID: o+ATET2JSFOpgB558h549w==
-X-CSE-MsgGUID: fua+3jChScGFWfRB44fw+g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="67736854"
-X-IronPort-AV: E=Sophos;i="6.20,256,1758610800"; 
-   d="scan'208";a="67736854"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 02:57:45 -0800
-X-CSE-ConnectionGUID: EBcy7O3uTMa+iV1f1Ydxlw==
-X-CSE-MsgGUID: ZAvpDHK9Q+uV8Pe21LcDvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,153,1763452800"; 
-   d="scan'208";a="197971207"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.4])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 02:57:42 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 16 Dec 2025 12:57:38 +0200 (EET)
-To: Ziming Du <duziming2@huawei.com>
-cc: bhelgaas@google.com, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, chrisw@redhat.com, 
-    jbarnes@virtuousgeek.org, alex.williamson@redhat.com, 
-    liuyongqiang13@huawei.com
-Subject: Re: [PATCH 3/3] PCI: Prevent overflow in proc_bus_pci_write()
-In-Reply-To: <20251216083912.758219-4-duziming2@huawei.com>
-Message-ID: <47ccdb75-7134-b86a-e8bb-eebb9f1e0b47@linux.intel.com>
-References: <20251216083912.758219-1-duziming2@huawei.com> <20251216083912.758219-4-duziming2@huawei.com>
+	s=arc-20240116; t=1765883754; c=relaxed/simple;
+	bh=Ijo7toULNvnZgCTdYht4vHYXtGN2ktNEVS888Tz+JB4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HN2qaGkygCGsGq3SDv5i3Fr6rSJMqFYR5RsUTfYvZh4CHe6xvvUqCkH/54qjOhKFWZ44JLFscX6KJw+MEQW4LRd1nFUEk1Kd966oiHbkyzDmLLnswsl9AvOLaASn7E9NPG4QRE1KJRhRkdFvYW3DaVHsyCY2nW0cOENsCqfAvQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
+	by mailgw1.hygon.cn (Postfix) with ESMTP id 4dVvVY055dz2fTX;
+	Tue, 16 Dec 2025 19:15:33 +0800 (CST)
+Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
+	by mailgw1.hygon.cn (Postfix) with ESMTP id 4dVvVV3fvczvMCD;
+	Tue, 16 Dec 2025 19:15:30 +0800 (CST)
+Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
+	by maildlp2.hygon.cn (Postfix) with ESMTPS id 1A5BC300B6F1;
+	Tue, 16 Dec 2025 19:11:09 +0800 (CST)
+Received: from mars.hygon.cn (172.18.228.93) by cncheex04.Hygon.cn
+ (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Tue, 16 Dec
+ 2025 19:15:29 +0800
+From: Yang Zhang <zhangz@hygon.cn>
+To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <bhelgaas@google.com>
+CC: <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, Yang Zhang <zhangz@hygon.cn>
+Subject: [PATCH] X86/PCI: Prioritize MMCFG access to hardware registers
+Date: Tue, 16 Dec 2025 19:15:13 +0800
+Message-ID: <20251216111513.7698-1-zhangz@hygon.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: cncheex05.Hygon.cn (172.23.18.115) To cncheex04.Hygon.cn
+ (172.23.18.114)
 
-On Tue, 16 Dec 2025, Ziming Du wrote:
+As CPU performance demands increase, the configuration of some internal CPU
+registers needs to be dynamically configured in the program, such as
+configuring memory controller strategies within specific time windows.
+These configurations place high demands on the efficiency of the
+configuration instructions themselves, requiring them to retire and
+take effect as quickly as possible.
 
-> When the value of ppos over the INT_MAX, the pos will be
+However, the current kernel code forces the use of the IO Port method for
+PCI accesses with domain=0 and offset less than 256. The IO Port method is
+more like a legacy from historical reasons, and its performance is lower
+than that of the MMCFG method. We conducted comparative tests on AMD and
+Hygon CPUs respectively, even without considering the impact of indirect
+access (IO Ports use 0xCF8 and 0xCFC), simply comparing the performance of
+the following two code:
 
-is over
+1)outl(0x400702,0xCFC);
 
-> set a negtive value which will be pass to get_user() or
+2)mmio_config_writel(data_addr,0x400702);
 
-set to a negative value which will be passed
+while both codes access the same register. The results shows the MMCFG
+(400+ cycle per access) method outperforms the IO Port (1000+ cycle
+per access) by twice.
 
-> pci_user_write_config_dword(). And unexpected behavior
+Through PMC/PMU event statistics within the AMD/Hygon microarchitecture,
+we found IO Port access causes more stalls within the CPU's internal
+dispatch module, and these stalls are mainly due to the front-end's
+inability to decode the corresponding uops in a timely manner.
+Therefore the main reason for the performance difference between the
+two access methods is that the in/out instructions corresponding to
+the IO Port access belong to microcode, and therefore their decoding
+efficiency is lower than that of mmcfg.
 
-Please start the sentence with something else than And.
+For CPUs that support both MMCFG and IO Port access methods, if a hardware
+register only supports IO Port access, this configuration may lead to
+illegal access. However, we think registers that support I/O Port access
+have corresponding MMCFG addresses. Even we test several AMD/Hygon CPUs
+with this patch and found no problems, we still cannot rule out the
+possibility that all CPUs are problem-free, especially older CPUs. To
+address this risk, we have created a new macro, PREFER MMCONFIG, allowing
+users to choose whether or not to enable this feature.
 
-Hmm, the lines look rather short too, can you please reflow the changelog 
-paragraphs to 75 characters.
+Signed-off-by: Yang Zhang <zhangz@hygon.cn>
+---
+ arch/x86/Kconfig      | 15 +++++++++++++++
+ arch/x86/pci/common.c | 14 ++++++++++++++
+ 2 files changed, 29 insertions(+)
 
-> such as a softlock happens:
-> 
->  watchdog: BUG: soft lockup - CPU#0 stuck for 130s! [syz.3.109:3444]
->  Modules linked in:
->  CPU: 0 PID: 3444 Comm: syz.3.109 Not tainted 6.6.0+ #33
->  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
->  RIP: 0010:_raw_spin_unlock_irq+0x17/0x30
->  Code: cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 e8 52 12 00 00 90 fb 65 ff 0d b1 a1 86 6d <74> 05 e9 42 52 00 00 0f 1f 44 00 00 c3 cc cc cc cc 0f 1f 84 00 00
->  RSP: 0018:ffff88816851fb50 EFLAGS: 00000246
->  RAX: 0000000000000001 RBX: 0000000000000000 RCX: ffffffff927daf9b
->  RDX: 0000000000000cfc RSI: 0000000000000046 RDI: ffffffff9a7c7400
->  RBP: 00000000818bb9dc R08: 0000000000000001 R09: ffffed102d0a3f59
->  R10: 0000000000000003 R11: 0000000000000000 R12: 0000000000000000
->  R13: ffff888102220000 R14: ffffffff926d3b10 R15: 00000000210bbb5f
->  FS:  00007ff2d4e56640(0000) GS:ffff8881f5c00000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 00000000210bbb5b CR3: 0000000147374002 CR4: 0000000000772ef0
->  PKRU: 00000000
->  Call Trace:
->   <TASK>
->   pci_user_write_config_dword+0x126/0x1f0
->   ? __get_user_nocheck_8+0x20/0x20
->   proc_bus_pci_write+0x273/0x470
->   proc_reg_write+0x1b6/0x280
->   do_iter_write+0x48e/0x790
->   ? import_iovec+0x47/0x90
->   vfs_writev+0x125/0x4a0
->   ? futex_wake+0xed/0x500
->   ? __pfx_vfs_writev+0x10/0x10
->   ? userfaultfd_ioctl+0x131/0x1ae0
->   ? userfaultfd_ioctl+0x131/0x1ae0
->   ? do_futex+0x17e/0x220
->   ? __pfx_do_futex+0x10/0x10
->   ? __fget_files+0x193/0x2b0
->   __x64_sys_pwritev+0x1e2/0x2a0
->   ? __pfx___x64_sys_pwritev+0x10/0x10
->   do_syscall_64+0x59/0x110
->   entry_SYSCALL_64_after_hwframe+0x78/0xe2
-
-Could you please trim the dump so it only contains things relevant to this 
-issue () (also check trimming in the other patches).
-
-> Fix this by use unsigned int for the pos.
-> 
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
-> Signed-off-by: Ziming Du <duziming2@huawei.com>
-> ---
->  drivers/pci/proc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-> index 9348a0fb8084..dbec1d4209c9 100644
-> --- a/drivers/pci/proc.c
-> +++ b/drivers/pci/proc.c
-> @@ -113,7 +113,7 @@ static ssize_t proc_bus_pci_write(struct file *file, const char __user *buf,
->  {
->  	struct inode *ino = file_inode(file);
->  	struct pci_dev *dev = pde_data(ino);
-> -	int pos = *ppos;
-> +	unsigned int pos = *ppos;
->  	int size = dev->cfg_size;
->  	int cnt, ret;
-
-So this still throws away some bits compared with the original ppos ?
-
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 80527299f..10dfd2b4e 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2932,6 +2932,21 @@ config PCI_MMCONFIG
+ 
+ 	  Say Y otherwise.
+ 
++config PREFER_MMCONFIG
++        bool "Prefer to use mmconfig over IO Port"
++        depends on PCI_MMCONFIG
++        help
++          This setting will prioritize the use of mmcfg, which is superior to
++          io port from a performance perspective, mainly for the following reasons:
++          1) io port is an indirect access; 2) io port instructions are decoded
++          by microcode, which is more likely to cause CPU front-end bound compared
++          to mmcfg using mov instructions.
++
++          For CPUs that support both MMCFG and IO Port access methods, if a
++          hardware register only supports IO Port access, this configuration
++          may lead to illegal access. Therefore, users must ensure that the
++          configuration will not cause any exceptions before enabling it.
++
+ config PCI_OLPC
+ 	def_bool y
+ 	depends on PCI && OLPC && (PCI_GOOLPC || PCI_GOANY)
+diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+index ddb798603..8bde5d1df 100644
+--- a/arch/x86/pci/common.c
++++ b/arch/x86/pci/common.c
+@@ -40,20 +40,34 @@ const struct pci_raw_ops *__read_mostly raw_pci_ext_ops;
+ int raw_pci_read(unsigned int domain, unsigned int bus, unsigned int devfn,
+ 						int reg, int len, u32 *val)
+ {
++#ifdef CONFIG_PREFER_MMCONFIG
++	if (raw_pci_ext_ops)
++		return raw_pci_ext_ops->read(domain, bus, devfn, reg, len, val);
++	if (domain == 0 && reg < 256 && raw_pci_ops)
++		return raw_pci_ops->read(domain, bus, devfn, reg, len, val);
++#else
+ 	if (domain == 0 && reg < 256 && raw_pci_ops)
+ 		return raw_pci_ops->read(domain, bus, devfn, reg, len, val);
+ 	if (raw_pci_ext_ops)
+ 		return raw_pci_ext_ops->read(domain, bus, devfn, reg, len, val);
++#endif
+ 	return -EINVAL;
+ }
+ 
+ int raw_pci_write(unsigned int domain, unsigned int bus, unsigned int devfn,
+ 						int reg, int len, u32 val)
+ {
++#ifdef CONFIG_PREFER_MMCONFIG
++	if (raw_pci_ext_ops)
++		return raw_pci_ext_ops->write(domain, bus, devfn, reg, len, val);
++	if (domain == 0 && reg < 256 && raw_pci_ops)
++		return raw_pci_ops->write(domain, bus, devfn, reg, len, val);
++#else
+ 	if (domain == 0 && reg < 256 && raw_pci_ops)
+ 		return raw_pci_ops->write(domain, bus, devfn, reg, len, val);
+ 	if (raw_pci_ext_ops)
+ 		return raw_pci_ext_ops->write(domain, bus, devfn, reg, len, val);
++#endif
+ 	return -EINVAL;
+ }
+ 
 -- 
- i.
+2.34.1
+
 
 
