@@ -1,200 +1,265 @@
-Return-Path: <linux-pci+bounces-43108-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43109-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF758CC1E8E
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 11:09:01 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19407CC1ECD
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 11:15:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 870843011767
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 10:09:00 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3E8533022B48
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 10:15:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA18C30CDA9;
-	Tue, 16 Dec 2025 10:08:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02E97339B4A;
+	Tue, 16 Dec 2025 10:15:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W1jEsbB5"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qQ+D9/AG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010017.outbound.protection.outlook.com [40.93.198.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF1D56B81;
-	Tue, 16 Dec 2025 10:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765879738; cv=none; b=KKAXcNJbKRIq1ScJfTLrybNxv/NWHK4YZd9F1Zcv5ez6/82ZH/MctHXKQdrLuBKoTHstSyA7bObzDSPx+LxXXHfQy3CBxnYv0OdbIt4Fz8i38oHKlgaVtFrnYa9quTxOdeoHu2xrYg4mv9T447A8wQ9vk3YVG2rROkREsjr8sWU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765879738; c=relaxed/simple;
-	bh=f9lktMn2hmftIx9aAqVPfp8+So+x81HfeCQwCl/V8ds=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=N1Xx3KWwgWgb/8O9H3HAkCTdps7qVxM2Qb5NqXO7tKkWwDaMcJLtsvBaZ5PCe7hNtzx3IrZvQclunFxSZ4ZqlrubG0+FlQO85lY7lplBFrsQJlXpBEsqVJjwlZv1pwqWx4kWq0mKypHVoRIj9MBlV2ndMkI8Q/KviYuUxQvZ/UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W1jEsbB5; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765879736; x=1797415736;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=f9lktMn2hmftIx9aAqVPfp8+So+x81HfeCQwCl/V8ds=;
-  b=W1jEsbB5mxPBo461kFThfSI5Wu/AFoWBumb8QWPdtcspOdP/lxdqroHL
-   aKkSirvudA+7UTudZnYqiWYahwu6dAF/fTWpwiGzE9HhacM7M06BNeAwS
-   sadIhD4oNauQ8rAH5PMZn+4pQWgtuTFjf51dKgCjHoXU/vvc1aO/mXrRm
-   3ONnTulNwy5nbb/x5iMMgn7/EwMUIPdDKKLwjduQwPZeufXz+t6srnP2H
-   WIRY1z2nFuwKUs9pbZQSBPfiKUo7TP9HVx87EHuOrwa/DoiYuXxMpJexA
-   E77EZBRH9T9lGMH5Un8Ppvu0rx2qr1WI2e5LG7Z/1KEVN2SSaqw48jPTG
-   Q==;
-X-CSE-ConnectionGUID: AFSUaXZLQaOxJuuSaLazJg==
-X-CSE-MsgGUID: Rq/wdW1iSS2uvFEE2A4dMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="67733428"
-X-IronPort-AV: E=Sophos;i="6.20,256,1758610800"; 
-   d="scan'208";a="67733428"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 02:08:56 -0800
-X-CSE-ConnectionGUID: 1g3NbFcASx6Wn08fZ2c28g==
-X-CSE-MsgGUID: spWL6yb8S1ajjzjlfZdVPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
-   d="scan'208";a="197873334"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.4])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 02:08:51 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 16 Dec 2025 12:08:48 +0200 (EET)
-To: Yang Zhang <zhangz@hygon.cn>
-cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-    dave.hansen@linux.intel.com, hpa@zytor.com, bhelgaas@google.com, 
-    x86@kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-pci@vger.kernel.org
-Subject: Re: [PATCH] X86/PCI: Prioritize MMCFG access to hardware registers
-In-Reply-To: <20251216100332.6610-1-zhangz@hygon.cn>
-Message-ID: <07428f84-5fa3-713f-caac-f69c0e92c779@linux.intel.com>
-References: <20251216100332.6610-1-zhangz@hygon.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1BB338F38;
+	Tue, 16 Dec 2025 10:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765880137; cv=fail; b=LVrj9nvjxGsvMsLHnGd2e9uQvefKK7ytB0tl3Pe6QvHUWvis9ofVFEqzi7aBi8kJrBSycYhYS4u/HxLqtassWfchCfIZvV1ctTGe6S0dGJM3qgW2lp6lRtFd0rmt6dgAP9pYBtpu7RPjhlJJ61FviKF3n0ZsrWC1omqhkT8qky4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765880137; c=relaxed/simple;
+	bh=eiEHu0gpHqv9Wq/XTq+nysZdeHbt94aiffF9nV6wUpI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=F+/ZDuyV3kyr/qS9HV8LlyF0nU77iznfGDS9WFyqBEUuSv0fByaKQk42QGo9JlKrxB6x9VgkXCi9Pp8uES48WeGZ7nez1Mx88qShE2wc2K3dOE7GMvRrBapGk564TCD3e7x1xYKE23+vk7JrZ4WdnDfY/zxemJBeRNU6zXg0Aos=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qQ+D9/AG; arc=fail smtp.client-ip=40.93.198.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MlL7kvuHBN2sjVxY0V4maQk+2Q/4b03OGljTspm6qimnP35nGNAGzaIAp4N1l++kCVqSYUugmGQnYAMsVajyPl5XjzM8VFG+hi1WCEp6HA/DkR/i6ap9bYZlTA2vjrRP9A3Vs9iZ7lf58dgcrT3jpt8CdDk+aZEI9oEKrix+trmzzxkvtmJ67Y6wSwL+8wzloRhLTH9tHA5tRNlm/XUopNqrKSMbwjFEu4UgOi2uOuwP4PLMq4MKLlKS9ezHjSk7TUsjyI+kXia6OygGq8f88zytkP09oc1/ik5bPWf5+zitV28A/SbwyY1Orq5a0fC4fDFooTYEBksQaNvdb19Tkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DRrTRviCKiPB0Z73bCNOfEIrtn+5hU3naKfCivaTuBY=;
+ b=ORW8vm3Xc2o89w8ujkdWhuq9W0MNNk5dCU9gpKnALCs9an7zItSC+QdHEBQDPqP23ieonjbhQYxcj5ay1K3yC0iViDK8R5d+9knbTl6NLJgD34y9P3RpgRTSu+V56yR3UfRUBcg+DMlyLJUlSEwnA88TAOXLb5UM1RGfTYu1BmYw2+VTFGWONpYWgEBUt+c3WDqvGcD55zkH3BTpiFsoRxo3UwjhBYN1nqyAsS1amG58rckrB+dT3YlRGLHwtTG5PefHjhmP1m9G7DCie5QytmNCkj+b4kSUJUDX2VuZsjryLGL1dS2pbfPB3+uK/dOSBPCluSUUBNwVXok4nQ3qWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DRrTRviCKiPB0Z73bCNOfEIrtn+5hU3naKfCivaTuBY=;
+ b=qQ+D9/AGF9tSHUQ+7NKtl8Snu2ZIlhjG/7OzHG02pR+j+VidVK9g5gJ4QsmqQQKlBSe1Ew/SyX1p4ralX/frhy5JTqZQ38nYpecOrFlo9e4753oMaoqmxYlOvp8fPaiZg47fA58q+g3gMqK2Z+iAkUhkC8O0vjHxmVPUsEWQA5s=
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com (2603:10b6:806:331::16)
+ by CH8PR12MB9741.namprd12.prod.outlook.com (2603:10b6:610:27a::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.6; Tue, 16 Dec
+ 2025 10:15:34 +0000
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::2fd:1a4e:2042:7dd3]) by SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::2fd:1a4e:2042:7dd3%5]) with mapi id 15.20.9412.011; Tue, 16 Dec 2025
+ 10:15:34 +0000
+From: "Verma, Devendra" <Devendra.Verma@amd.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "mani@kernel.org"
+	<mani@kernel.org>, "vkoul@kernel.org" <vkoul@kernel.org>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek,
+ Michal" <michal.simek@amd.com>, "Verma, Devendra" <Devendra.Verma@amd.com>
+Subject: RE: [PATCH v7 2/2] dmaengine: dw-edma: Add non-LL mode
+Thread-Topic: [PATCH v7 2/2] dmaengine: dw-edma: Add non-LL mode
+Thread-Index: AQHca2HPzgtqx97sLEy+fRS/FbbYFLUeUYsAgAV6cSA=
+Date: Tue, 16 Dec 2025 10:15:34 +0000
+Message-ID:
+ <SA1PR12MB8120306AAE9B655A8F8273B795AAA@SA1PR12MB8120.namprd12.prod.outlook.com>
+References: <20251212122056.8153-3-devendra.verma@amd.com>
+ <20251212182138.GA3649445@bhelgaas>
+In-Reply-To: <20251212182138.GA3649445@bhelgaas>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-12-16T06:01:10.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR12MB8120:EE_|CH8PR12MB9741:EE_
+x-ms-office365-filtering-correlation-id: c175f6ff-5f46-4a3b-e109-08de3c8c0cfd
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700021;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?QRKRl/6iOk0Dmz2ZIEyf9CxdPG1AqUqr1RM+2WjlnzxszW0gUorbbzzcq4iB?=
+ =?us-ascii?Q?c3IfQkVc89Kwh8DRqcsHD+xTJ8RN5BhQ4snedb/4Lq3dkBin7Z+CeUHnzMOL?=
+ =?us-ascii?Q?j/E3n9m9lTZWm0Oe0PSFcTwkbfCSAnDuLWTZni9ypAQ93ufxEJXqSYrrKxfL?=
+ =?us-ascii?Q?z71naQ/ap8XGOTSIJKHrR268JQAkFW++MSZkjWBPmyobangQ9UduK7kqEjGL?=
+ =?us-ascii?Q?RNPeG+S5qRaJdrZG1Bzas3zfA/0XPpUsJOBKeYpzgFNLtUSw/EcuUPZZaSSQ?=
+ =?us-ascii?Q?Z2YHLxKbqvvgX/XxGtL2K4AwnLWUSh3J/uIh4ZlRBf8AY8dqtHRqwTjWH+ao?=
+ =?us-ascii?Q?1IZs+IzAIF+wZ9WOqa5OVnHsmAbynFyNV8fV3wElvSWXwwygzwRctST5CrVN?=
+ =?us-ascii?Q?ChaAjMipHNZMhuQVoVYSdWAlq0bR+plYoEFF/huN+eOG5jjRTG5v2vox/cCl?=
+ =?us-ascii?Q?XSfyFKyiAI1UZpKU3tEqtnxp38Bg39VJENnwcHL0gwBytHxMyttPP87GYUCB?=
+ =?us-ascii?Q?Ui2XQw8PP1FOOeSOh+YW2KZd8kpNQ1VlMuKSK/BrFR+PuhDlCC9S4ICP94+6?=
+ =?us-ascii?Q?d6kt3kBhhs7d53eiTmEEzOByyFO6CMz4TxXPd7E5EXXoWYNv5NmHv5qy1xXf?=
+ =?us-ascii?Q?+zQHiW28W4AULmtvAWiMg8OELVcXU7OyqUfOdFil+r29EbEpWeJfnKeX9Am/?=
+ =?us-ascii?Q?sY+I2vUE/kFI93cwL+n9xeKokmjkrppKW7Xi6R5/0X23mw9EZF6H20CMgfn/?=
+ =?us-ascii?Q?3f10a0N85C+gtBD+GlCwFqn305a18se2xQKfS2skLGhYj1GSErcmlxeNQkEh?=
+ =?us-ascii?Q?XkjNV+NoZGwr6xQj2ZngkOtpX6nVSY0Tm2mjzuR8+VZ0kGywHN2ayc5q3xm5?=
+ =?us-ascii?Q?OkbNfqUk65PL0z0w6kaSuFASDULCKmEsR4oIf/tRyuEL4rRrRB0fZ558on38?=
+ =?us-ascii?Q?qFAPmYELgKPopcaIC3mtNT/i6xp4P1/49Jkq2DEC+TPQh7pmNXDbmyEoXjyO?=
+ =?us-ascii?Q?B8Ts3z5ZxqfS07GB8Wt20hJBVQSDlt9BNWlSr7xwvLquyndbiiyqitzqiSlY?=
+ =?us-ascii?Q?nHNRoAtDoZ0wr/enMiFbD3sKMtwxAve0PoCeV7hTz7FbPFb5+JhXjv4asC0t?=
+ =?us-ascii?Q?oZ6jrmLs/IfxtgG2fzwnIzxCVggvekn/1zAhWPrKvXOoUcwU1RaAEtoJdvVr?=
+ =?us-ascii?Q?1f2c8jxHMnczIwG4STlGvF1mUaLvcvWyB+xiV16906cCkPN2xd/T3vZyQXEL?=
+ =?us-ascii?Q?ZsueOoYEjL5Q2NogUar5QJv5lo+kdaz0R1uc6aUOwE28kj0Ga9a/0hJ/3xe2?=
+ =?us-ascii?Q?N9rh2vWH9PZfYCF5A6V1SjmV2GE5wpsV/GEd0j1z9ntXPfs/FGqxkbEQAZ9T?=
+ =?us-ascii?Q?49HCHDX5Kfl6yL9spX0UDAFX4bdkKvkawOBiAOTJy+9sbyNazQm511UfphxV?=
+ =?us-ascii?Q?6hA9o3/5a4iDMX+6Z+iJDE3uZkKPl4LVP1wZoDq1WqdnNnNtNgqVttxTvJQN?=
+ =?us-ascii?Q?vcQzTdi5bL3rqJIfKxDULqtkUX6y3MuK4Jeg?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB8120.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?7fyB2ikSjG/bWUv6EaX5LdK8bZBKRnik1h2dWJ/149qdNgPFYFzGYHlQwyY0?=
+ =?us-ascii?Q?B+Cw5ZBQC1fMA8JB36Me2WERnVZeV36tZQvzbjFZtEbq3+3TdhKdfUPSUGh4?=
+ =?us-ascii?Q?3/Y/pLWeFKD8x4jJ3v9GhQLSYWll30dbM4HZUPIq1ELW7zfE5VlcLtZ4+VHm?=
+ =?us-ascii?Q?7fx9iU2757Hsth0k3TZ0VP0blYrxp2sWMtuUNCxZ/uZ+da1pXia5KJLo83Dc?=
+ =?us-ascii?Q?EgZsoAmpYDKAbua2ppyF7TwMl74MB2xLe2SuwsbGYTCv+veOCpw/w14YpICD?=
+ =?us-ascii?Q?wIZe99uTacECHTEuj3MjRi3cPXe8259inCS6IVMZOPsJ81fzQYox4nzXeVs7?=
+ =?us-ascii?Q?icJ3B0vUDfXdYnHJ4HzJnYmhYlRMrJqB6KgO19U2w+KS2iGtcCkM1ODBiQsf?=
+ =?us-ascii?Q?zEvg0UPynuiJsLZJH2X9sBsw0wBtFcUFsRZ/5s3WwKLtBKzOC8uY5hmCnKWZ?=
+ =?us-ascii?Q?UrMYs+IZfGfPh9fy0W3Jtk5SfllWcQOAj8byNRRbumnalIFtknCte90IsyaV?=
+ =?us-ascii?Q?AbjwvemymjIou1M40AUIbvs1EnNiAj+g4srYrlzfOqAfDulp7+nsc1552IiK?=
+ =?us-ascii?Q?v/TllA1HMQEF+xdt7mIb2gKmFBFYnSeIAeSeAyAUT91qiEfoDQ3egXg/zLnr?=
+ =?us-ascii?Q?gYKhCt1Ik2+BUbSx3ndI6bUtO7fJYcJAWDGa1byYuE66TiHY+XGOrr4rGeEq?=
+ =?us-ascii?Q?1EPMsFGhHpXgk/wrlEcbUt4eG2eu1M/6uPIDYRflHVUcbwXp8mI72/NdzkA/?=
+ =?us-ascii?Q?xlN8hkJQ8oIdn21kut3qi0XTf3fIOiWw2aVvRoqdG//54f/m76Kumndnrdfw?=
+ =?us-ascii?Q?ybvMdtHv/fSD8BTkSKNFzaNpeRIPAlco2qpBQjBT8XUMs5DLzkYJeNW30KcH?=
+ =?us-ascii?Q?VnY1EgDNHx/xRfOT3u6upPsTIKwzjvEJhwC12Q7OYL4jRtyNcRp1pgNcIxX2?=
+ =?us-ascii?Q?06OBUjDcNCqDU+9Vl/dtK8YkqtUpc6hwFkEWjYhEgpCey3B0cc0WGQmiKdWA?=
+ =?us-ascii?Q?xoeV1QrUt9+fF6H8mQiPts/1Vj19ZQ+YNdyOlc5Iqf/1rfPI7/s4esLzw07H?=
+ =?us-ascii?Q?yEeXC041dXRBgMBHrEbA4cC2pXpv8HRiGsm/vTfSf5oMgLTsgD3PYffttwKV?=
+ =?us-ascii?Q?Ba++pIBJLfI2t7HU0C0sASV091JLTCDSdCFGX1TYrkWHg2Dacs109kvjyvSr?=
+ =?us-ascii?Q?DHWo3EX0JSw6XI3hqRP1T9ArDbyYxCDe4OvLgDdwYiwxOCS/GEEgTYLmZxPA?=
+ =?us-ascii?Q?9EWK3are5nehCShFw5AHQ7C+s8qKKGlQrQLcqOGQbm2/t/NNTbWh8vlrGOlL?=
+ =?us-ascii?Q?KX3OWYhzTt3j5nCrEbabTUc2Ml/36aPdbtToIFDW1uBi/Zm/Ot0U5lwUaS24?=
+ =?us-ascii?Q?qOVMCGRe6/wf64c+42oJH83WibKt5aabUM8wEZi4daqtIP+PJy1GuV/WVdpq?=
+ =?us-ascii?Q?BC5QSvElP1VHhK4JJoA9cPhWPyW2j6Zh1a+0p7O3AcBPTT9exgBXU3kYmCAN?=
+ =?us-ascii?Q?IIM3hsEI4IjTIlRx+FvZBbGCY2fams9bDDVykMPU3h6BY8AHZCB+d9vn6Oa0?=
+ =?us-ascii?Q?pnewYwO1WU8h9s9RktI=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB8120.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c175f6ff-5f46-4a3b-e109-08de3c8c0cfd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2025 10:15:34.3763
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: a/o38qpwA6uhCxxO5WDQDkE/IE6yT+iaPIDI6fGChGmvCs8qi2gSvPFuhI9L6ZfewthEU8ZXJeW3vOS45G50IQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH8PR12MB9741
 
-On Tue, 16 Dec 2025, Yang Zhang wrote:
+[AMD Official Use Only - AMD Internal Distribution Only]
 
-> As CPU performance demands increase, the configuration of some internal CPU
-> registers needs to be dynamically configured in the program, such as
-> configuring memory controller strategies within specific time windows.
-> These configurations place high demands on the efficiency of the
-> configuration instructions themselves, requiring them to retire and
-> take effect as quickly as possible.
-> 
-> However, the current kernel code forces the use of the IO Port method for
-> PCI accesses with domain=0 and offset less than 256. The IO Port method is
-> more like a legacy from historical reasons, and its performance is lower
-> than that of the MMCFG method. We conducted comparative tests on AMD and
-> Hygon CPUs respectively, even without considering the impact of indirect
-> access (IO Ports use 0xCF8 and 0xCFC), simply comparing the performance of
-> the following two code:
-> 
-> 1)outl(0x400702,0xCFC);
-> 
-> 2)mmio_config_writel(data_addr,0x400702);
-> 
-> while both codes access the same register. The results shows the MMCFG
-> (400+ cycle per access) method outperforms the IO Port (1000+ cycle
-> per access) by twice.
-> 
-> Through PMC/PMU event statistics within the AMD/Hygon microarchitecture,
-> we found IO Port access causes more stalls within the CPU's internal
-> dispatch module, and these stalls are mainly due to the front-end's
-> inability to decode the corresponding uops in a timely manner.
-> Therefore the main reason for the performance difference between the
-> two access methods is that the in/out instructions corresponding to
-> the IO Port access belong to microcode, and therefore their decoding
-> efficiency is lower than that of mmcfg.
-> 
-> For CPUs that support both MMCFG and IO Port access methods, if a hardware
-> register only supports IO Port access, this configuration may lead to
-> illegal access. However, we think registers that support I/O Port access
-> have corresponding MMCFG addresses. Even we test several AMD/Hygon CPUs
-> with this patch and found no problems, we still cannot rule out the
-> possibility that all CPUs are problem-free, especially older CPUs. To
-> address this risk, we have created a new macro, PREFER MMCONFIG, allowing
-> users to choose whether or not to enable this feature.
-> 
-> Signed-off-by: Yang Zhang <zhangz@hygon.cn>
-> ---
->  arch/x86/Kconfig      | 15 +++++++++++++++
->  arch/x86/pci/common.c | 14 ++++++++++++++
->  2 files changed, 29 insertions(+)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 80527299f..037d56690 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -2932,6 +2932,21 @@ config PCI_MMCONFIG
->  
->  	  Say Y otherwise.
->  
-> +config PREFER_MMCONFIG
-> +        bool "Perfer to use mmconfig over IO Port"
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Friday, December 12, 2025 11:52 PM
+> To: Verma, Devendra <Devendra.Verma@amd.com>
+> Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
+> dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
+> Subject: Re: [PATCH v7 2/2] dmaengine: dw-edma: Add non-LL mode
+>
+> Caution: This message originated from an External Source. Use proper
+> caution when opening attachments, clicking links, or responding.
+>
+>
+> On Fri, Dec 12, 2025 at 05:50:56PM +0530, Devendra K Verma wrote:
+> > AMD MDB IP supports Linked List (LL) mode as well as non-LL mode.
+> > The current code does not have the mechanisms to enable the DMA
+> > transactions using the non-LL mode. The following two cases are added
+> > with this patch:
+> > - For the AMD (Xilinx) only, when a valid physical base address of
+> >   the device side DDR is not configured, then the IP can still be
+> >   used in non-LL mode. For all the channels DMA transactions will
+> >   be using the non-LL mode only. This, the default non-LL mode,
+> >   is not applicable for Synopsys IP with the current code addition.
+> >
+> > - If the default mode is LL-mode, for both AMD (Xilinx) and Synosys,
+> >   and if user wants to use non-LL mode then user can do so via
+> >   configuring the peripheral_config param of dma_slave_config.
+> > ...
+>
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -223,8 +223,31 @@ static int dw_edma_device_config(struct
+> dma_chan *dchan,
+> >                                struct dma_slave_config *config)  {
+> >       struct dw_edma_chan *chan =3D dchan2dw_edma_chan(dchan);
+> > +     int non_ll =3D 0;
+>
+> Other "non_ll" uses below are bool, so a little bit of an int/bool mix.
+>
+> The name also leads to a lot of double negative use ("!non_ll", etc), whi=
+ch is
+> hard to read.  I suppose "non-LL" corresponds to some spec language, but =
+it
+> would be nice if we could avoid some of the negation by testing for "ll_m=
+ode"
+> or calling the other mode "single_burst" or similar.
+>
 
-Prefer
+Yes, non-LL is being referred in the Synosys databook extensively to differ=
+entiate
+between LL and non-LL mode.
+I agree with the concern raised here but, at the moment, this is the only s=
+uitable
+term that can handle the following cases:
+1) Choice of variable of the DMA client to use non-LL mode,
+2) Establish flow for the non-LL use-case in the driver.
 
--- 
- i.
+Before, using the term with negation (non_ll), the possibility was explored
+to use a term which does not result in double negation, eg, ll or ll_mode.
+But this again breaks the above either one or both use-cases.
+If using ll_mode as a variable, then with this, DMA client shall
+either provide ll_mode=3Dfalse or non_ll=3Dtrue.
 
-> +        depends on PCI_MMCONFIG
-> +        help
-> +          This setting will prioritize the use of mmcfg, which is superior to
-> +          io port from a performance perspective, mainly for the following reasons:
-> +          1) io port is an indirect access; 2) io port instructions are decoded
-> +          by microcode, which is more likely to cause CPU front-end bound compared
-> +          to mmcfg using mov instructions.
-> +
-> +          For CPUs that support both MMCFG and IO Port access methods, if a
-> +          hardware register only supports IO Port access, this configuration
-> +          may lead to illegal access. Therefore, users must ensure that the
-> +          configuration will not cause any exceptions before enabling it.
-> +
->  config PCI_OLPC
->  	def_bool y
->  	depends on PCI && OLPC && (PCI_GOOLPC || PCI_GOANY)
-> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-> index ddb798603..8bde5d1df 100644
-> --- a/arch/x86/pci/common.c
-> +++ b/arch/x86/pci/common.c
-> @@ -40,20 +40,34 @@ const struct pci_raw_ops *__read_mostly raw_pci_ext_ops;
->  int raw_pci_read(unsigned int domain, unsigned int bus, unsigned int devfn,
->  						int reg, int len, u32 *val)
->  {
-> +#ifdef CONFIG_PREFER_MMCONFIG
-> +	if (raw_pci_ext_ops)
-> +		return raw_pci_ext_ops->read(domain, bus, devfn, reg, len, val);
-> +	if (domain == 0 && reg < 256 && raw_pci_ops)
-> +		return raw_pci_ops->read(domain, bus, devfn, reg, len, val);
-> +#else
->  	if (domain == 0 && reg < 256 && raw_pci_ops)
->  		return raw_pci_ops->read(domain, bus, devfn, reg, len, val);
->  	if (raw_pci_ext_ops)
->  		return raw_pci_ext_ops->read(domain, bus, devfn, reg, len, val);
-> +#endif
->  	return -EINVAL;
->  }
->  
->  int raw_pci_write(unsigned int domain, unsigned int bus, unsigned int devfn,
->  						int reg, int len, u32 val)
->  {
-> +#ifdef CONFIG_PREFER_MMCONFIG
-> +	if (raw_pci_ext_ops)
-> +		return raw_pci_ext_ops->write(domain, bus, devfn, reg, len, val);
-> +	if (domain == 0 && reg < 256 && raw_pci_ops)
-> +		return raw_pci_ops->write(domain, bus, devfn, reg, len, val);
-> +#else
->  	if (domain == 0 && reg < 256 && raw_pci_ops)
->  		return raw_pci_ops->write(domain, bus, devfn, reg, len, val);
->  	if (raw_pci_ext_ops)
->  		return raw_pci_ext_ops->write(domain, bus, devfn, reg, len, val);
-> +#endif
->  	return -EINVAL;
->  }
->  
-> 
+When ll_mode=3Dfalse. This option would be as good as
+passing a valid reference to peripheral_config pointer as
+the value of ll_mode would never be used for ll_mode=3Dtrue
+due to default mode being LL.
+On the basis of ll_mode=3Dtrue, the DMA client given option, no code
+is impacted with these patches.
 
+When DMA client gives non_ll=3Dtrue; this causes confusion,
+DMA client does right but internally ll_mode as a variable is set
+to establish the flow for non-LL mode. The different variable is
+used for establishing the non-LL mode inside the driver code.
+Also, it uses the combination of double negation variable.
+
+Though, the use of non_ll, raises concern due to double
+negation but its use fits the use-case from both DMA client
+and in the driver to establish the non-LL flow. Additionally,
+The use of non_ll also aligns with the documentation of the
+vendor making it easier to follow.
+Please let me know your thoughts on this.
+
+> > +      * When there is no valid LLP base address available then the def=
+ault
+> > +      * DMA ops will use the non-LL mode.
+> > +      * Cases where LL mode is enabled and client wants to use the non=
+-LL
+> > +      * mode then also client can do so via providing the peripheral_c=
+onfig
+> > +      * param.
+>
+> Add blank line between paragraphs.
+
+Sure, will take care of this.
+
+Regards,
+Devendra
 
