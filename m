@@ -1,44 +1,44 @@
-Return-Path: <linux-pci+bounces-43147-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43146-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7289BCC515E
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 21:19:27 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA9B2CC5149
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 21:18:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7B602304A29B
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 20:19:00 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7581D30021D7
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 20:18:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A548E3346A0;
-	Tue, 16 Dec 2025 20:18:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C3C225785D;
+	Tue, 16 Dec 2025 20:18:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aq2mnlOk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L/1J/EmA"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7998F212552;
-	Tue, 16 Dec 2025 20:18:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49891212552;
+	Tue, 16 Dec 2025 20:18:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765916338; cv=none; b=fdBul32/a1h8+jiKaKIPN2x2nuUBlSyVP0JN7QtNpx97pri7E/2VCo1AHtLKL/B+DK85A5Jgh3shZdbtt8037OJ4Myz2be5RRLmIIgSj9kq1ikcG4mz4xE/eVjrjeRxOoGcTWbf8sfzG2L56BiZnAiKQ73Y6P2gKVk8YLGPzLsI=
+	t=1765916335; cv=none; b=MKW6Uwaw229faqmAot0cQZ92Q3D9TdxwNsKmAQwY+I7PJjyZtCzurb4ds+2/V8mnG5DtxJy+RRqT/gV+mNFZHAYRkZwaR5YcoOdnyhj2Cpy3EdvIc3U2G2/W/aGzenhzBfEfI6KNuQ/jP02HBnqeB5IkXIO94PYzspTJEPRKYEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765916338; c=relaxed/simple;
-	bh=5cd8Ans3am9z/gkhPuWlJI1KgxuV7qh/0MzugBTYAJA=;
+	s=arc-20240116; t=1765916335; c=relaxed/simple;
+	bh=2s0sPyBtRnYTM5LGWzEOa2qJbCQASXMLLhvp7EDkT/g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t8sLamkbZw0CjQRXjzzhCsaqnPoF+MAF18p/Odtd4ggC5NWeLrsdFMmFUo1oMHs76ev4Tmlu5y+pD514yGvfU3K2z3BS0wVahcW1wm8X/9+debVXoUpTZIQaL6pfwzd/C7kN2OzRC0LnKGt9or/sqYO9Y9jo6YzzsceVjEVcQWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aq2mnlOk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC353C4CEF1;
-	Tue, 16 Dec 2025 20:18:56 +0000 (UTC)
+	 MIME-Version:Content-Type; b=mCupkIu4NBrDPCMWyRYeo+RLuWiDal0bnkeeN0uQdIPL0KhzxHAkI3+MAm2EibS0eKGrK509JyNy3CpxDRdqGjevhXdANlpTcLMFoP5cmACjP9B0JYwoH26XE7lf482hZqH8/0RpBV5SE8mwWf9IBg9iCs7Dg3BGpdvS6+eI8j0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L/1J/EmA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D11C4CEF1;
+	Tue, 16 Dec 2025 20:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765916338;
-	bh=5cd8Ans3am9z/gkhPuWlJI1KgxuV7qh/0MzugBTYAJA=;
+	s=k20201202; t=1765916334;
+	bh=2s0sPyBtRnYTM5LGWzEOa2qJbCQASXMLLhvp7EDkT/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aq2mnlOkGImqitF1prNu579YahoEhkl02xMmm1TcFD1Rk7fsY2wpyhxShisGOunr4
-	 srePulKZPY+C8OE+0FaqnGLKNnJ6Zz0Q2wtFrkB/OxoEwPf7uGSK3gNJ7kgloOojRg
-	 RHbs/dxR87aEVTAy/GB/6kY1tX8z3Su2FIrdxwM4bwFbSfg8fOBXCAnPxekL8PfC4E
-	 Yvkl0hG6DP06od7NoW1oyNrM7tgEPVCPZGRo5TITvkI6ztTsCCIAmUof+7G0HvIgnL
-	 i3KJ7c/uLCMsgsPPNQLdDG+XBTMW3n5VrpLrAoTtI2L5+7g5J/Ue8gEifkKWjtodwZ
-	 +hJkJ80QALNtQ==
+	b=L/1J/EmATRkWtSekpzzpVhCFQIfqFXfNxBEB4LOCK/IToRI5P3sedqM7xGjFNtnrW
+	 epUYnaY2eKJgQTEE4SipQMs2j0O//UK6IGl4XeTkOGhq5b+AhJ7iQcbyhDUn0ZH8K3
+	 Y5L/gGZoL1EhBIUmvMOKAuxctP+miS6tGqQ0P+mv9eeYooqp90KQWSyJoiFrHgrHe1
+	 QTfS2Hq8PO/Q+ee9I+ZO6tnJhISMn+PRrdGQk9OM8gghiw4tZQIgrVH4sWgePHdGwK
+	 HCZ7mMT40RKnCOGcRujDwdIlshD7Yh2fSvBEet2SsRCTTceYsq52lprB83G0vzFmrP
+	 s4iDb1jp2xUDg==
 From: "Rafael J. Wysocki" <rafael@kernel.org>
 To: Linux ACPI <linux-acpi@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>,
@@ -46,9 +46,10 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
  Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
  Hans de Goede <hansg@kernel.org>,
  Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v1 1/2] ACPI: bus: Adjust error handling in acpi_run_osc()
-Date: Tue, 16 Dec 2025 21:17:06 +0100
-Message-ID: <6225184.lOV4Wx5bFT@rafael.j.wysocki>
+Subject:
+ [PATCH v1 2/2] ACPI: bus: Adjust acpi_bus_osc_negotiate_platform_control()
+Date: Tue, 16 Dec 2025 21:18:27 +0100
+Message-ID: <4703755.LvFx2qVVIh@rafael.j.wysocki>
 Organization: Linux Kernel Development
 In-Reply-To: <12803663.O9o76ZdvQC@rafael.j.wysocki>
 References: <12803663.O9o76ZdvQC@rafael.j.wysocki>
@@ -63,71 +64,76 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Some platform firmware incorrectly sets the OSC_CAPABILITIES_MASK_ERROR
-bit in its _OSC return buffer even if no support bits have been actually
-masked, which causes acpi_run_osc() to return an error when executed
-with OSC_QUERY_ENABLE clear in the OC capabilities buffer.  As a result,
-the OS assumes that the _OSC evaluation has failed and the platform has
-not acknowledged any capabilities, while the platform assumes that it
-actually has acknowledged some of them.  This confusion may lead to
-missing functionality (and possibly other issues) down the road.
-
-To address this problem, adjust acpi_run_osc() to avoid returning an
-error when OSC_CAPABILITIES_MASK_ERROR is set in the return buffer
-and OSC_QUERY_ENABLE is clear in the OC capabilities, but all of the
-bits in the support mask supplied by the OS are also set in the bit
-mask returned by the platform firmware.
+Remove checks that have become redundant after a previous change from
+acpi_bus_osc_negotiate_platform_control(), add a debug statement
+regarding the negotiated support bit mask to it and add an empty
+code line to it for more clarity.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/bus.c |   23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ drivers/acpi/bus.c |   28 +++++++++++-----------------
+ 1 file changed, 11 insertions(+), 17 deletions(-)
 
 --- a/drivers/acpi/bus.c
 +++ b/drivers/acpi/bus.c
-@@ -240,9 +240,13 @@ acpi_status acpi_run_osc(acpi_handle han
- 		status = AE_TYPE;
- 		goto out_kfree;
- 	}
-+	if (out_obj->buffer.length <= OSC_SUPPORT_DWORD) {
-+		status = AE_BAD_DATA;
-+		goto out_kfree;
-+	}
- 	/* Need to ignore the bit0 in result code */
- 	errors = *((u32 *)out_obj->buffer.pointer) & ~(1 << 0);
--	if (errors) {
-+	if (errors & ~OSC_CAPABILITIES_MASK_ERROR) {
- 		if (errors & OSC_REQUEST_ERROR)
- 			acpi_print_osc_error(handle, context,
- 				"_OSC request failed");
-@@ -252,17 +256,20 @@ acpi_status acpi_run_osc(acpi_handle han
- 		if (errors & OSC_INVALID_REVISION_ERROR)
- 			acpi_print_osc_error(handle, context,
- 				"_OSC invalid revision");
--		if (errors & OSC_CAPABILITIES_MASK_ERROR) {
--			if (((u32 *)context->cap.pointer)[OSC_QUERY_DWORD]
--			    & OSC_QUERY_ENABLE)
--				goto out_success;
-+		status = AE_ERROR;
-+		goto out_kfree;
-+	}
-+	if (errors) {
-+		u32 retbuf = ((u32 *)out_obj->buffer.pointer)[OSC_SUPPORT_DWORD];
-+		u32 capbuf = ((u32 *)context->cap.pointer)[OSC_SUPPORT_DWORD];
-+		u32 querybuf = ((u32 *)context->cap.pointer)[OSC_QUERY_DWORD];
+@@ -319,7 +319,7 @@ bool osc_sb_cppc2_support_acked;
+ static u8 sb_uuid_str[] = "0811B06E-4A27-44F9-8D60-3CBBC22E7B48";
+ static void acpi_bus_osc_negotiate_platform_control(void)
+ {
+-	u32 capbuf[2], *capbuf_ret;
++	u32 capbuf[2], *capbuf_ret, ret_support;
+ 	struct acpi_osc_context context = {
+ 		.uuid_str = sb_uuid_str,
+ 		.rev = 1,
+@@ -371,6 +371,7 @@ static void acpi_bus_osc_negotiate_platf
+ 
+ 	if (!ghes_disable)
+ 		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_APEI_SUPPORT;
 +
-+		/* OSC_CAPABILITIES_MASK_ERROR is set in errors. */
-+		if (!(querybuf & OSC_QUERY_ENABLE) && (capbuf & retbuf) != capbuf) {
- 			status = AE_SUPPORT;
- 			goto out_kfree;
- 		}
--		status = AE_ERROR;
--		goto out_kfree;
- 	}
--out_success:
- 	context->ret.length = out_obj->buffer.length;
- 	context->ret.pointer = kmemdup(out_obj->buffer.pointer,
- 				       context->ret.length, GFP_KERNEL);
+ 	if (ACPI_FAILURE(acpi_get_handle(NULL, "\\_SB", &handle)))
+ 		return;
+ 
+@@ -378,10 +379,9 @@ static void acpi_bus_osc_negotiate_platf
+ 		return;
+ 
+ 	capbuf_ret = context.ret.pointer;
+-	if (context.ret.length <= OSC_SUPPORT_DWORD) {
+-		kfree(context.ret.pointer);
+-		return;
+-	}
++
++	acpi_handle_debug(handle, "Negotiated _OSC mask [%04x]\n",
++			  capbuf_ret[OSC_SUPPORT_DWORD]);
+ 
+ 	/*
+ 	 * Now run _OSC again with query flag clear and with the caps
+@@ -395,20 +395,14 @@ static void acpi_bus_osc_negotiate_platf
+ 		return;
+ 
+ 	capbuf_ret = context.ret.pointer;
+-	if (context.ret.length > OSC_SUPPORT_DWORD) {
++	ret_support = capbuf_ret[OSC_SUPPORT_DWORD];
+ #ifdef CONFIG_ACPI_CPPC_LIB
+-		osc_sb_cppc2_support_acked = capbuf_ret[OSC_SUPPORT_DWORD] & OSC_SB_CPCV2_SUPPORT;
++	osc_sb_cppc2_support_acked = ret_support & OSC_SB_CPCV2_SUPPORT;
+ #endif
+-
+-		osc_sb_apei_support_acked =
+-			capbuf_ret[OSC_SUPPORT_DWORD] & OSC_SB_APEI_SUPPORT;
+-		osc_pc_lpi_support_confirmed =
+-			capbuf_ret[OSC_SUPPORT_DWORD] & OSC_SB_PCLPI_SUPPORT;
+-		osc_sb_native_usb4_support_confirmed =
+-			capbuf_ret[OSC_SUPPORT_DWORD] & OSC_SB_NATIVE_USB4_SUPPORT;
+-		osc_cpc_flexible_adr_space_confirmed =
+-			capbuf_ret[OSC_SUPPORT_DWORD] & OSC_SB_CPC_FLEXIBLE_ADR_SPACE;
+-	}
++	osc_sb_apei_support_acked = ret_support & OSC_SB_APEI_SUPPORT;
++	osc_pc_lpi_support_confirmed = ret_support & OSC_SB_PCLPI_SUPPORT;
++	osc_sb_native_usb4_support_confirmed = ret_support & OSC_SB_NATIVE_USB4_SUPPORT;
++	osc_cpc_flexible_adr_space_confirmed = ret_support & OSC_SB_CPC_FLEXIBLE_ADR_SPACE;
+ 
+ 	kfree(context.ret.pointer);
+ }
 
 
 
