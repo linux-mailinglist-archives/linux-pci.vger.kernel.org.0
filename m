@@ -1,95 +1,177 @@
-Return-Path: <linux-pci+bounces-43070-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43071-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7957ECC0624
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 01:54:55 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3303CC0633
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 01:55:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 836783014118
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 00:54:54 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 1F6C9300310E
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 00:55:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A848E3B1B3;
-	Tue, 16 Dec 2025 00:54:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F3E2269CE1;
+	Tue, 16 Dec 2025 00:55:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TE03njbb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TtyvDH8c"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219072DF68
-	for <linux-pci@vger.kernel.org>; Tue, 16 Dec 2025 00:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3157E23B61B;
+	Tue, 16 Dec 2025 00:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765846492; cv=none; b=Ry7UjxeVQpSIhxaPeRewWdGZHbfa+KX81CVWu3FZEybN2DjyM5cuxAYumU+Qs0U4KgK2iwox6jrlP6K+nO2zaRAJU/W8/9Dm0mymUKCh7acNTwUN2BA5e4G8xjLC9OBqceUVX14gR1yMPSiB+0X/SeLf18PbhT3xVG/qjdgHFv4=
+	t=1765846534; cv=none; b=p90CXG+5KlOWdx0gOUq6fcNz+gmdVyn/obOXRD2uioOdWPWhH4z2krmrC3/Cm/vPenJyK+JVMfsQakwvEjXffJgF9RMp68Z++uM7nonROoBSItw3ThZqx82Ioy+7l/O5TB7haIq8wJrZNZB8hsjwRhg1sDkGP+IYbO7xOCFvHgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765846492; c=relaxed/simple;
-	bh=Zp3LVoQGqhCuciLMYb1NTjbULyVlauJWW4qhU4UobKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=F1OIybhKxrnA8WTJra/0yKX0vXOsADqawIWd+aUUjaTSw3v+8FmgjrqQSSX6ebnPOW72qgI9HJyUQUTZuoB5vHS5VYyLtm4wzegYwfZL2i7hD92erbgqBWz2Uk7FPHt4c71zAnIqfnmVarRz6UcZgYl+mogMAVqrJBiF7s/qxXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TE03njbb; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-8b2627269d5so412350185a.2
-        for <linux-pci@vger.kernel.org>; Mon, 15 Dec 2025 16:54:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765846489; x=1766451289; darn=vger.kernel.org;
-        h=user-agent:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cN60CPknruvImi7D36lxZ9ebhSHEOAt45uyBFYcamSg=;
-        b=TE03njbbzId7Cn2NpT/xlXswALK6wypv1/ScMYlti2Ufpx8WJAvYXfsZJUCuQ3cRy6
-         XkQVI9tcjmFh0pp3ifbP6aBpYIv04B7q4fob2qp9BwAKQOR0Y19HUDgGLbwInSGPA95u
-         cQYbmhbohaMhnIVGiVpso3IFoeKK6lYdVN8XC1wO1IlC0AmYWtKOh2RgMucF41PWuJLm
-         +1p2HrhuypIFlDcS0jeKek93N4t3bB/0WlvaITNQf2rzTA/LY8sNMFS4oBFoPWC3srZx
-         e8Xl4uo640A8Z+B2sunJ4GsxzkrouJnPlGWpplK4rs1fIHvwBHQNbnQVxl/bPpnK5hsF
-         01dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765846489; x=1766451289;
-        h=user-agent:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cN60CPknruvImi7D36lxZ9ebhSHEOAt45uyBFYcamSg=;
-        b=jG+z7t2Bn9MFSlh2yzb1Um8qF1/fLrWMoji3XYpbCJwaAOK1zzHf62Mtd544qp2Izw
-         vHbg0u0r16RlghB91X5VmKvlQnXcAuuhchNy2nogFjv7z56FhVutUSwphQdBsCsy6hHs
-         nna9OuDbfIdJRMtn83CN9a2mQlDZI/Avdc7vWmst+KUnJLryRNm7FtihYpZJykNfWkCg
-         eFcw8hHcJwG/anynpoxCaN/98SfHUkjNZDuNZU5i2jRmWSz9wVXbd993pmdWm7DsX6ug
-         gD/QGiCwTu+BMOl3nK2UbT7PQqUYrI9P36QSynq8QakUD26pRijQVgQjGvrPPTJFBTll
-         /KtQ==
-X-Gm-Message-State: AOJu0YxFWcaQKHNCr2k4Ok3ZLpSoKuu/R8QkT9otLQGB0BoisRF4RRRh
-	nLnTGqqNHBSsDoPFY/8Y12HjITBbgJbgAkA2E9e4u8JtsNR8IPHf3bqz3CIaqA==
-X-Gm-Gg: AY/fxX77vyc6XBb5+ylL5tr8SKxDa6wo+kM8WEglQEfVDDWk8kbBPKhYPBn75WQ2Fnb
-	x3Xn72o/XDkBEe8blHTyhSyjsnbLeZ1/e/hiQY2N09AJuUGPVWFN0H5E87ZNBGUw33iMjJY/yl0
-	+kKd7oS+GhXoF8SSezR8vvX+kgC9IgR4iXGp3oL50T2mUNCpNawSKHpKNkXjicWAsDr+pomf+jY
-	h2j3lDBANnpOIahO1CQh3/BOfTP1dtgymNCquJvJdX+9JgWLDoz1KZ9IOJCPZF+qRt/ogWTKCee
-	lJ6Fpe/9yXgIgRV3Fq6hytkL9cRf/BGzWBSkxZVxYo9Zs5tqL4gqUH5uGfinUvC9YWElpP5C6hZ
-	iBuK3My6BGQK21ont6Lm6CslDsfuOhNEd6Vbkjv1P9cYwzeh7A+iAtNvXgyH6DaY98Cm9zkbWzy
-	RV0yiddHPoIV1DndzT1wocT/MPTXdiFxbyVADnBv6kuptjVUAWtUudIXpSpRtwazo=
-X-Google-Smtp-Source: AGHT+IFJmPCllxyvP4bwrSt7wGM8mW9MVqnGLqc7xboFj/lLbvtJmheubFIgt6eNqFCUukkDfcdL7g==
-X-Received: by 2002:a05:620a:444d:b0:8b2:e5da:d302 with SMTP id af79cd13be357-8bb399dc119mr1734994785a.18.1765846488913;
-        Mon, 15 Dec 2025 16:54:48 -0800 (PST)
-Received: from eggsbenedict (ip-74-215-254-164.dynamic.fuse.net. [74.215.254.164])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8be30e986cesm70948585a.24.2025.12.15.16.54.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Dec 2025 16:54:48 -0800 (PST)
-Date: Mon, 15 Dec 2025 19:54:46 -0500
-From: Adam Stylinski <kungfujesus06@gmail.com>
-To: linux-pci@vger.kernel.org
-Cc: bhelgaas@google.com
-Subject: Kernel regression in 6.13
-Message-ID: <aUCt1tHhm_-XIVvi@eggsbenedict>
+	s=arc-20240116; t=1765846534; c=relaxed/simple;
+	bh=RnzOt9FEnaC4JRME7P7aiV2XUEmMcM5aYimByXbJ1D4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hDj797tKlFFdvMf1GD8JvQzJuZgO+DcYOatBdmiTvOVoLvG4VEFSRgslWKwifwXaM98IDAkpepwLc6AZ9tYo9JQyml1UCEhAFqZ9MZaowKLXoPDp0AHHjREFNtzX2JAxkdLhokv8kdkHX4ruN3TygoS80gf2OfT1wNqL58IY0Eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TtyvDH8c; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1765846532; x=1797382532;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=RnzOt9FEnaC4JRME7P7aiV2XUEmMcM5aYimByXbJ1D4=;
+  b=TtyvDH8ca3pXue32qY0iDZFGDywm4EkFeQ4Hr4BkA/2xSb+p9fBKqLcx
+   GRtcDjPE8ovhE0JC38/cSp9jZKwSTRCFNJdI4bc0Wmh5Ev6Fwk9ojeKEY
+   gj+ikIgnyi/SXenlima3EZhmao0tfwfly/F60M9LgWvodAqX6lhpKRkfE
+   9yCPkXVpC/7MO6Ly61uebj6uHUkvhSZf0aGUT1srHEGqSeyFRrCEa0YcQ
+   Vz0Vb4QaO7esotV6HnjKZkSh2aCNEdkpUxEoDnsKYn4NGCzRjo5Z/82ao
+   zcPIP7l+c9UgYFSBMvP3CZ1V2Ddt5rdWD1gXb/IRmnT2i2aikxzH/3kq3
+   w==;
+X-CSE-ConnectionGUID: Za6GSwApSqu069I7O34Kng==
+X-CSE-MsgGUID: Mqn/cBGRT9yuF0hgc9Jfbw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11643"; a="79215468"
+X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
+   d="scan'208";a="79215468"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2025 16:55:32 -0800
+X-CSE-ConnectionGUID: OxuWOxpESuC/qBuxrkugOA==
+X-CSE-MsgGUID: naH12D/3QteIK0IX8a3Xmw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
+   d="scan'208";a="198131518"
+Received: from dwillia2-desk.jf.intel.com ([10.88.27.145])
+  by fmviesa008.fm.intel.com with ESMTP; 15 Dec 2025 16:55:31 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: dave.jiang@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Smita.KoralahalliChannabasappa@amd.com,
+	alison.schofield@intel.com,
+	terry.bowman@amd.com,
+	alejandro.lucero-palau@amd.com,
+	linux-pci@vger.kernel.org,
+	Jonathan.Cameron@huawei.com
+Subject: [PATCH v2 0/6] cxl: Initialization reworks to support Soft Reserve Recovery and Accelerator Memory
+Date: Mon, 15 Dec 2025 16:56:10 -0800
+Message-ID: <20251216005616.3090129-1-dan.j.williams@intel.com>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/2.2.14 (2025-02-20)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Changes since v1 [1]:
+- Introduce cxl_memdev_autoremove() one patch earlier in the series to
+  fix no_free_ptr() induced NULL pointer de-reference bisect bug. (Ben)
+- Drop returning a custom error code via @cxlmd->endpoint that can be
+  added back by the accelerator enabling series if needed. (Ben)
+- Document how providing @attach changes the semantics of
+  devm_cxl_add_memdev(). (Ben)
+- Rename @ops to @attach
+- Add support to release an accelerator driver when the logical CXL link
+  drops.
+- Pick up test and review tags from Alison, Ben, Jonathan, Dave, and
+  Alejandro.
 
-I seem to be encountering a regression that prevents my system from booting.  The regression occurred between 6.12 and 6.13.  I've bisected it to this commit:
-665745f274870c921020f610e2c99a3b1613519b
+[1]: http://lore.kernel.org/20251204022136.2573521-1-dan.j.williams@intel.com
 
-Some info about this system: it's ancient. It's a Q9650 that I used as a mythbackend/frontend for over a decade. This booting failure on newer kernels finally forced my hand to buy new a "new" PCI Express based tuner and upgrade the system into the modern age. It boots via MBR on a P45 based chipset (A P5Q Plus board, to be precise).  Given the age, I chalked the issue up to possibly some failing hardware or memory corruption that happened at compile time. I recently pulled the system back out again to do some performance testing in zlib-ng only to find out it hangs on the latest Ubuntu server ISO. I figured at this point it wasn't something specific to my kernel config / compilation and it's likely a regression. It's also old enough that I may be in the position of the only one having this problem, so I took it upon myself to bisect what was going on. Let me know if there's anything you'd like me to test or try.
+Original Cover:
+===============
+
+The CXL subsystem is modular. That modularity is a benefit for
+separation of concerns and testing. It is generally appropriate for this
+class of devices that support hotplug and can dynamically add a CXL
+personality alongside their PCI personality. However, a cost of modules
+is ambiguity about when devices (cxl_memdevs, cxl_ports, cxl_regions)
+have had a chance to attach to their corresponding drivers on
+@cxl_bus_type.
+
+This problem of not being able to reliably determine when a device has
+had a chance to attach to its driver vs still waiting for the module to
+load, is a common problem for the "Soft Reserve Recovery" [2], and
+"Accelerator Memory" [3] enabling efforts.
+
+For "Soft Reserve Recovery" it wants to use wait_for_device_probe() as a
+sync point for when CXL devices present at boot have had a chance to
+attach to the cxl_pci driver (generic CXL memory expansion class
+driver). That breaks down if wait_for_device_probe() only flushes PCI
+device probe, but not the cxl_mem_probe() of the cxl_memdev that
+cxl_pci_probe() creates.
+
+For "Accelerator Memory", the driver is not cxl_pci, but any potential
+PCI driver that wants to use the devm_cxl_add_memdev() ABI to attach to
+the CXL memory domain. Those drivers want to know if the CXL link is
+live end-to-end (from endpoint, through switches, to the host bridge)
+and CXL memory operations are enabled. If not, a CXL accelerator may be
+able to fall back to PCI-only operation. Similar to the "Soft Reserve
+Memory" it needs to know that the CXL subsystem had a chance to probe
+the ancestor topology of the device and let that driver make a
+synchronous decision about CXL operation.
+
+In support of those efforts:
+
+* Clean up some resource lifetime issues in the current code
+* Move some object creation symbols (devm_cxl_add_memdev() and
+  devm_cxl_add_endpoint()) into the cxl_mem.ko and cxl_port.ko objects.
+  Implicitly guarantee that cxl_mem_driver and cxl_port_driver have been
+  registered prior to any device objects being registered. This is
+  preferred over explicit open-coded request_module().
+* Use scoped-based-cleanup before adding more resource management in
+  devm_cxl_add_memdev()
+* Give an accelerator the opportunity to run setup operations in
+  cxl_mem_probe() so it can further probe if the CXL configuration matches
+  its needs.
+
+Some of these previously appeared on a branch as an RFC [4] and left
+"Soft Reserve Recovery" and "Accelerator Memory" to jockey for ordering.
+Instead, create a shared topic branch for both of those efforts to
+import. The main changes since that RFC are fixing a bug and reducing
+the amount of refactoring (which contributed to hiding the bug).
+
+[2]: http://lore.kernel.org/20251120031925.87762-1-Smita.KoralahalliChannabasappa@amd.com
+[3]: http://lore.kernel.org/20251119192236.2527305-1-alejandro.lucero-palau@amd.com
+[4]: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=for-6.18/cxl-probe-order
+
+Dan Williams (6):
+  cxl/mem: Fix devm_cxl_memdev_edac_release() confusion
+  cxl/mem: Arrange for always-synchronous memdev attach
+  cxl/port: Arrange for always synchronous endpoint attach
+  cxl/mem: Convert devm_cxl_add_memdev() to scope-based-cleanup
+  cxl/mem: Drop @host argument to devm_cxl_add_memdev()
+  cxl/mem: Introduce cxl_memdev_attach for CXL-dependent operation
+
+ drivers/cxl/Kconfig          |   2 +-
+ drivers/cxl/cxl.h            |   2 +
+ drivers/cxl/cxlmem.h         |  17 ++++--
+ drivers/cxl/core/edac.c      |  64 +++++++++++---------
+ drivers/cxl/core/memdev.c    | 109 +++++++++++++++++++++++++----------
+ drivers/cxl/mem.c            |  73 ++++++++++-------------
+ drivers/cxl/pci.c            |   2 +-
+ drivers/cxl/port.c           |  40 +++++++++++++
+ tools/testing/cxl/test/mem.c |   2 +-
+ 9 files changed, 200 insertions(+), 111 deletions(-)
+
+
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+-- 
+2.51.1
+
 
