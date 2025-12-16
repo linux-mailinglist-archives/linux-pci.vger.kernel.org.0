@@ -1,200 +1,150 @@
-Return-Path: <linux-pci+bounces-43142-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43144-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0380CCC498E
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 18:13:30 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D96B0CC4A22
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 18:21:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AF6ED3072E21
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 17:05:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4E459305F30D
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 17:18:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E9F2325727;
-	Tue, 16 Dec 2025 17:04:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B45B30F55B;
+	Tue, 16 Dec 2025 17:18:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eFO4iROr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J9Z0adoY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEE2314D2C;
-	Tue, 16 Dec 2025 17:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165113A1E8E;
+	Tue, 16 Dec 2025 17:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765904695; cv=none; b=s+u7GZJYp7hP5vnHkKiT1gvw3Ho7kd6XvrpLvGxLgNIDcy8SCgbC60FdJWa9H8xYR7HQsRKhERxHcXWHegEIGF4pQPjf1R0wnNhiE4+/PM6Dx8/wYr3cr2vnaotse90PxnYfovfsxk3KLMQB0vG0Njx2+Pkv41OkBKpjd918YH0=
+	t=1765905482; cv=none; b=dRqxTIfM7sVVPn1N4zJFpXmeZbvLzYeI2KxRqe6UyPOd9cNb+tQ+KXAJx1rpw06hxRpTZUiv0kOdxX6zkm6RC223hb/VxE1ML59bqrrO28UAH/nLyjlMsjWP0E+SP3RV+CAL3g+tx2JpU1aQGvKLr/Zp1dzkjLnQ5CpwYIkbLkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765904695; c=relaxed/simple;
-	bh=TNCEN9La+c9VAV7oXpPjJraBV3JMiSg1tGrqqcuXm5c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AQ+U28iUjvZtsNmOfWr6LNcMO7EQZAFauuAWnI/LdGGWs+cq1m9cA7uHD6QkF1zghzidm5AAinS1U6aG/Nu7uvDrKUYDGsl3+owLTc/QALxDu+iK5LdfU0KwJo9sN1bcVE37Br4Cz/v/fvM7nKDEJqU4Q7Cv7aS1/KHDcvmoAAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eFO4iROr; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5BG7ufU3012702;
-	Tue, 16 Dec 2025 17:04:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=fURsAN
-	FeKHQry+xcqzO1VzzWnCROACP8eg6bRsOwbYc=; b=eFO4iROrgGwrshhJm0y7Vs
-	L2ux9CgztUD6XN37voH2D4igIYswSVjTeb226jne6qpRfDPGe96vfd8X3hMDPjYB
-	2vhOBNS86oAx+ueasv0zlHtB1KtOnx11KekdOG9iDUToQuY80KNQwe63/BcmUzvy
-	Ig0oLsw5jA+mXZCFSYS71U9wZunbOhPwV2VuLs3VM2SfY2j7fFo21PYVNEaaBgeC
-	RNPaBfRunXCF8WMMIJ/s8l3kcxKptKyLm/aLczMlOq6ofEp65X9wA2BQclFTh9rP
-	2YyS0W8JOxerpKcpqXerY16OJkdrc2V0ybBHb4NvxRWnZCu5Pwa8gqc9UK2EpItA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4b0xjkytsj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Dec 2025 17:04:48 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5BGH4mra029655;
-	Tue, 16 Dec 2025 17:04:48 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4b0xjkytsb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Dec 2025 17:04:48 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5BGFr17M026803;
-	Tue, 16 Dec 2025 17:04:47 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4b1jfsdtae-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Dec 2025 17:04:47 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5BGH4hVO43450674
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Dec 2025 17:04:43 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CD00B20040;
-	Tue, 16 Dec 2025 17:04:43 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A66042004E;
-	Tue, 16 Dec 2025 17:04:43 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 16 Dec 2025 17:04:43 +0000 (GMT)
-From: Gerd Bayer <gbayer@linux.ibm.com>
-Date: Tue, 16 Dec 2025 18:04:43 +0100
-Subject: [PATCH v2 2/2] PCI: AtomicOps: Fix logic in enable function
+	s=arc-20240116; t=1765905482; c=relaxed/simple;
+	bh=cppGG9PT+JpiVSfKeuzy9K48JaGezXDa3T4Yw7/QjLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EUwLg5Woq+qGxztFBNIJR0pYysNiCVthb1oGSGlT2gaG8qooQgm5WEF0SkDn5ovnph7DCjvZjAAmyzU9xQ2JPyosYRGhameol7v1YcKBx4gYw/MvLPgnOvfiOw50J66hNtGBUKs56F0MbnRfHjGfD6tvAxzHZ1wkcLi+YJayw7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J9Z0adoY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3909C113D0;
+	Tue, 16 Dec 2025 17:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765905481;
+	bh=cppGG9PT+JpiVSfKeuzy9K48JaGezXDa3T4Yw7/QjLM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J9Z0adoYBmlbmaIqmD79zYatnS+Nt9uvNPpMDj8zX/H9mOuYbV48DmY7Rh8YVw9qd
+	 kPaz6lUutNxyvoq7ZvVMPOvsgYTAzuBlktLuvQ5j5I6V5g7piqDfxgXGt8ewBWaV99
+	 KVhZfzc6hJz1AFyIDWQlGEPMQlWZ23GklILkeYlwlpyezVASDJn8Y3tC+h9+7ViXMV
+	 F6TWaAZvDP6hyZlZdErrsnkbI/f8almng8GM1fBYyZOmchVnX0pKgBMiqUi4HiCeSf
+	 uiFFuy6zg2Y5TNiUPlnOgcsviidlVs2UFXR0qo2C805X9YA13sjqyc7PDY5fLzXDrQ
+	 dyBmhKeBtDjFQ==
+Date: Tue, 16 Dec 2025 22:47:57 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Koichiro Den <den@valinux.co.jp>, Niklas Cassel <cassel@kernel.org>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH 0/8] dmaengine: Add new API to combine onfiguration and
+ descriptor preparation
+Message-ID: <aUGURVuW33WSTuyI@vaman>
+References: <20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com>
+ <aUFUX0e_h7RGAecz@vaman>
+ <aUF2SX/6bV2lHtF0@lizhi-Precision-Tower-5810>
+ <aUF-C8iUCs-dYXGm@vaman>
+ <aUGA7tmDYm1MhRXn@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251216-fix_pciatops-v2-2-d013e9b7e2ee@linux.ibm.com>
-References: <20251216-fix_pciatops-v2-0-d013e9b7e2ee@linux.ibm.com>
-In-Reply-To: <20251216-fix_pciatops-v2-0-d013e9b7e2ee@linux.ibm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>, Jay Cornwall <Jay.Cornwall@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>
-Cc: Niklas Schnelle <schnelle@linux.ibm.com>,
-        Alexander Schmidt <alexs@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gerd Bayer <gbayer@linux.ibm.com>, stable@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: XIZgrjMmIy5IgMHp3x1QqXOEnpTQajSx
-X-Authority-Analysis: v=2.4 cv=CLgnnBrD c=1 sm=1 tr=0 ts=69419130 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=ud980_RLCRqylQVSWKAA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: CO2Bokk8N1kGnRsN3C-TFQffGrqzY7pI
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjEzMDAwOSBTYWx0ZWRfX7ya0nj8HlcZC
- +ZqvTPg1oFASz2bxIbspg1VqrYKXkdQ6Kglk1gIp9RcZecOqnpdYlSAtKrNZVzcLhO0gkVGyYzY
- SRU5YIc8eXGF8qjlg7VKb7IvG86J+/d6/9R/tH473AHxvj5W4E2dV3RwBAmNxh5L2L3X9egyWt7
- EP1CguCQn5DisIWlekuyE0NiNe39kI01K3/3AKVRprkQp2IyNkL9WXKvns8fqktInQRXVc4I+mP
- Mas8wp2Al0IkznwsoChTOvRxmJD9E7DVIQvYYz245GTQPa/gn5plFwQ/zNFhy/8gVQo1Fgiq5ul
- 0WHXqiwkjZIQePPqbK0LL5ofw0gTIFG352JXNeVYQlFa3orhAJEsEaQuICOhqSa73gpbR+IiQyC
- E8uZR6LARlhRVea4qnDcl6Z1YYla3A==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-16_02,2025-12-16_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0 suspectscore=0
- phishscore=0 priorityscore=1501 bulkscore=0 impostorscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512130009
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aUGA7tmDYm1MhRXn@lizhi-Precision-Tower-5810>
 
-Move the check for root port requirements past the loop within
-pci_enable_atomic_ops_to_root() that checks on potential switch
-(up- and downstream) ports.
+On 16-12-25, 10:55, Frank Li wrote:
+> On Tue, Dec 16, 2025 at 09:13:07PM +0530, Vinod Koul wrote:
+> > On 16-12-25, 10:10, Frank Li wrote:
+> > > On Tue, Dec 16, 2025 at 06:15:19PM +0530, Vinod Koul wrote:
+> > > > On 08-12-25, 12:09, Frank Li wrote:
+> > > >
+> > > > Spell check on subject please :-)
+> > > >
+> > > > > Previously, configuration and preparation required two separate calls. This
+> > > > > works well when configuration is done only once during initialization.
+> > > > >
+> > > > > However, in cases where the burst length or source/destination address must
+> > > > > be adjusted for each transfer, calling two functions is verbose.
+> > > > >
+> > > > > 	if (dmaengine_slave_config(chan, &sconf)) {
+> > > > > 		dev_err(dev, "DMA slave config fail\n");
+> > > > > 		return -EIO;
+> > > > > 	}
+> > > > >
+> > > > > 	tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
+> > > > >
+> > > > > After new API added
+> > > > >
+> > > > > 	tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags, &sconf);
+> > > >
+> > > > Nak, we cant change the API like this.
+> > >
+> > > Sorry, it is typo here. in patch
+> > > 	dmaengine_prep_slave_single_config(chan, dma_local, len, dir, flags, &sconf);
+> > >
+> > > > I agree that you can add a new way to call dmaengine_slave_config() and
+> > > > dmaengine_prep_slave_single() together.
+> > > > maybe dmaengine_prep_config_perip_single() (yes we can go away with slave, but
+> > > > cant drop it, as absence means something else entire).
+> > >
+> > > how about dmaengine_prep_peripheral_single() and dmaengine_prep_peripheral_sg()
+> > > to align recent added "dmaengine_prep_peripheral_dma_vec()"
+> >
+> > It doesnt imply config has been done, how does it differ from usual
+> > prep_ calls. I see confusions can be caused!
+> 
+> dmaengine_prep_peripheral_single(.., &sconf) and
+> dmaengine_prep_peripheral_sg(..., &sconf).
+> 
+> The above two funcitions have pass down &sconf.
+> 
+> The usual prep_ call have not sconf argument, which need depend on previous
+> config.
+> 
+> further, If passdown NULL for config, it means use previuos config.
 
-Inside the loop traversing the PCI tree upwards, prepend the switch case
-to validate the routing capability on any port with a fallthrough-case
-that does the additional check for Atomic Ops not being blocked on
-upstream ports.
+I know it is bit longer but somehow I would feel better for the API to
+imply config as well please
 
-Do not enable Atomic Op Requests if nothing can be learned about how the
-device is attached - e.g. if it is on an "isolated" bus, as in s390.
+> 
+> >
+> > > I think "peripheral" also is reduntant. dmaengine_prep_single() and
+> > > dmaengine_prep_sg() should be enough because
+> >
+> > Then you are missing the basic premises of dmaengine that we have memcpy
+> > ops and peripheral dma ops (aka slave) Absence of peripheral always
+> > implies that it is memcpy
+> 
+> Okay, it is not big deal. is dmaengine_prep_dma_cyclic() exception? which
+> have not "peripheral" or "slave", but it is not for memcpy.
 
-Reported-by: Alexander Schmidt <alexs@linux.ibm.com>
-Cc: stable@vger.kernel.org
-Fixes: 430a23689dea ("PCI: Add pci_enable_atomic_ops_to_root()")
-Signed-off-by: Gerd Bayer <gbayer@linux.ibm.com>
----
- drivers/pci/pci.c | 30 ++++++++++++++----------------
- 1 file changed, 14 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d2261ac964316f3fc3efc4d5b30cf821ac46d75d..5d25d42eece1bbaf16197068d7b6206937e9c3a0 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3675,7 +3675,7 @@ void pci_acs_init(struct pci_dev *dev)
- int pci_enable_atomic_ops_to_root(struct pci_dev *dev, u32 cap_mask)
- {
- 	struct pci_bus *bus = dev->bus;
--	struct pci_dev *bridge;
-+	struct pci_dev *bridge = NULL;
- 	u32 cap, ctl2;
- 
- 	/*
-@@ -3713,29 +3713,27 @@ int pci_enable_atomic_ops_to_root(struct pci_dev *dev, u32 cap_mask)
- 		switch (pci_pcie_type(bridge)) {
- 		/* Ensure switch ports support AtomicOp routing */
- 		case PCI_EXP_TYPE_UPSTREAM:
--		case PCI_EXP_TYPE_DOWNSTREAM:
--			if (!(cap & PCI_EXP_DEVCAP2_ATOMIC_ROUTE))
--				return -EINVAL;
--			break;
--
--		/* Ensure root port supports all the sizes we care about */
--		case PCI_EXP_TYPE_ROOT_PORT:
--			if ((cap & cap_mask) != cap_mask)
--				return -EINVAL;
--			break;
--		}
--
--		/* Ensure upstream ports don't block AtomicOps on egress */
--		if (pci_pcie_type(bridge) == PCI_EXP_TYPE_UPSTREAM) {
-+			/* Upstream ports must not block AtomicOps on egress */
- 			pcie_capability_read_dword(bridge, PCI_EXP_DEVCTL2,
- 						   &ctl2);
- 			if (ctl2 & PCI_EXP_DEVCTL2_ATOMIC_EGRESS_BLOCK)
- 				return -EINVAL;
-+			fallthrough;
-+		/* All switch ports need to route AtomicOps */
-+		case PCI_EXP_TYPE_DOWNSTREAM:
-+			if (!(cap & PCI_EXP_DEVCAP2_ATOMIC_ROUTE))
-+				return -EINVAL;
-+			break;
- 		}
--
- 		bus = bus->parent;
- 	}
- 
-+	/* Finally, last bridge must be root port and support requested sizes */
-+	if ((!bridge) ||
-+	    (pci_pcie_type(bridge) != PCI_EXP_TYPE_ROOT_PORT) ||
-+	    ((cap & cap_mask) != cap_mask))
-+		return -EINVAL;
-+
- 	pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
- 				 PCI_EXP_DEVCTL2_ATOMIC_REQ);
- 	return 0;
+Cyclic by definition implies a cyclic dma over a peripheral
 
 -- 
-2.51.0
-
+~Vinod
 
