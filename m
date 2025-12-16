@@ -1,113 +1,190 @@
-Return-Path: <linux-pci+bounces-43079-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43080-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 369B8CC06FC
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 02:21:17 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FB4ECC080D
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 02:50:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3D9023014D93
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 01:21:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C54C63014DB8
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 01:50:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38C0723C516;
-	Tue, 16 Dec 2025 01:21:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 906B826A088;
+	Tue, 16 Dec 2025 01:50:11 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9715F21D3C0;
-	Tue, 16 Dec 2025 01:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD3D1487F6;
+	Tue, 16 Dec 2025 01:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765848068; cv=none; b=P54DBFRfc7p0zAPl2ijojuvTUZBYuhheod7Wsru0WFWp89Dk1KbsT4g0TCUV6KZZFtGKnQPHP8Mu7N5c1udvyfOoQrxZmQdRu9ClkArfOOdK0loVpGWOZzyM6SBm1qcBjemzveGrei1D11RWr78X5Mg02XYr9pt9Hrj96TeVkJQ=
+	t=1765849811; cv=none; b=u5XxlxwyCzxnPtHileDGa4szE626M4BqO1eEgHwsvENaCXpS6tR3b9QhCWaLx9Xpgl6NdYI8MPN6W+DAKKjQRx8N59HKf1qc9SLqB2Bp0dBdgAmjgE6emojvkfILVSuEV7TSTUk2S1s+MshBW41Zpd4VkjCDBF7OMaSazayWQKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765848068; c=relaxed/simple;
-	bh=kGpfbrbMVheGJSnH0LAKgtj8UxEkHf/npB2J4NcjsFs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X/J/GJHzPor7NEH1mxiLe9khR4viwD4q8Ry4AMlq2BW0W1E02jC2CAOfdnIHdha0lBoFJ7cXzgUB+4dPsCdgiP4OdsxFEELiLHlMy/cf3KfVxF0n2s4VUiFrz/X6lixOlU6mKT/8Y1c0kBiXf3OiHQnpznsRIUR8StaBl7SjZM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
-Received: from unknown (HELO kinkan3-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 16 Dec 2025 10:21:04 +0900
-Received: from mail.mfilter.local (mail-arc02.css.socionext.com [10.213.46.40])
-	by kinkan3-ex.css.socionext.com (Postfix) with ESMTP id 1C6372069FC4;
-	Tue, 16 Dec 2025 10:21:04 +0900 (JST)
-Received: from iyokan3.css.socionext.com ([172.31.9.53]) by m-FILTER with ESMTP; Tue, 16 Dec 2025 10:21:04 +0900
-Received: from [10.212.247.110] (unknown [10.212.247.110])
-	by iyokan3.css.socionext.com (Postfix) with ESMTP id 56FA910A00E;
-	Tue, 16 Dec 2025 10:21:03 +0900 (JST)
-Message-ID: <3f1b7852-1494-4a73-8783-b578f9ad5d40@socionext.com>
-Date: Tue, 16 Dec 2025 10:21:06 +0900
+	s=arc-20240116; t=1765849811; c=relaxed/simple;
+	bh=cJwhKYW1mmF+nLh+Mx/yy2wJXAjZzNw2SxwR3VWI+Sw=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=bcQO77Yc5vBh3QLbZ9l2IH9sxDOtf/mGFb2htKGiyXrZxRoh7kCt7Ft6cwuM4D05lE8Ih5e4l7uVLTgpKm3DBtszWhjl0SEDniZHqu9IhPXnkZbgNPPFAI80TokRFTVj+S2p9SPT4A0kuXRfoJultuY0pSbAPNbNh1Ms9Rt3VUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 16 Dec
+ 2025 09:50:00 +0800
+Received: from [127.0.1.1] (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Tue, 16 Dec 2025 09:50:00 +0800
+From: Jacky Chou <jacky_chou@aspeedtech.com>
+Subject: [PATCH v7 0/7] Add ASPEED PCIe Root Complex support
+Date: Tue, 16 Dec 2025 09:49:59 +0800
+Message-ID: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: PCI: socionext,uniphier-pcie: Fix interrupt
- controller node name
-To: "Rob Herring (Arm)" <robh@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20251215212456.3317558-1-robh@kernel.org>
-Content-Language: en-US
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-In-Reply-To: <20251215212456.3317558-1-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMe6QGkC/43QQWrDMBCF4asErSszo/FIcle9RylGlpVaLYmN5
+ JiG4LtXyaJeJJAun+D7B3QROaQYsnjdXUQKS8xxPJZhXnbCD+74GWTsyxYKFCMCydOU5xTcoZ1
+ 8DG3y0tY1G276ziKJwqYU9vHnlnz/KHuIeR7T+XZhwevrLQYaCYgAsCJk0mQkyi/nv8+tH8bTm
+ 8tTCP0c/FD58SCupUVt2iAD1aSgUsxk/6Np0w0gMDdKVVg0MzzX9Z9GUAYatoortIgan2PeMKK
+ 5/8OFJciudthYNtr5/cOK3ioK8EFFl4r11gJ41h3qu8q6rr+L85hu8gEAAA==
+X-Change-ID: 20251103-upstream_pcie_rc-8445759db813
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, "Andrew
+ Jeffery" <andrew@codeconstruct.com.au>, Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Manivannan
+ Sadhasivam" <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, Neil Armstrong
+	<neil.armstrong@linaro.org>
+CC: <linux-aspeed@lists.ozlabs.org>, <linux-pci@vger.kernel.org>,
+	<linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	Andrew Jeffery <andrew@aj.id.au>, <openbmc@lists.ozlabs.org>,
+	<linux-gpio@vger.kernel.org>, Jacky Chou <jacky_chou@aspeedtech.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1765849800; l=5397;
+ i=jacky_chou@aspeedtech.com; s=20251031; h=from:subject:message-id;
+ bh=cJwhKYW1mmF+nLh+Mx/yy2wJXAjZzNw2SxwR3VWI+Sw=;
+ b=3J44svCb+SFxYbW4PGjsRszZw90/97HE2keEtgn1pIzkD+ujyFhSIgcg+p2up1Vuciv7OLd2Y
+ uay+YUp3FkDCJG+wnPwpHVxGTrNYfjgGn6NCLm0JVtlr7kyfCUZcrfz
+X-Developer-Key: i=jacky_chou@aspeedtech.com; a=ed25519;
+ pk=8XBx7KFM1drEsfCXTH9QC2lbMlGU4XwJTA6Jt9Mabdo=
 
-Hi Rob,
+This patch series adds support for the ASPEED PCIe Root Complex,
+including device tree bindings, pinctrl support, and the PCIe host controller
+driver. The patches introduce the necessary device tree nodes, pinmux groups,
+and driver implementation to enable PCIe functionality on ASPEED platforms.
+Currently, the ASPEED PCIe Root Complex only supports a single port.
 
-Thank you for pointing out.
+Summary of changes:
+- Add device tree binding documents for ASPEED PCIe PHY and PCIe RC
+- Update MAINTAINERS for new bindings and driver
+- Implement ASPEED PCIe PHY driver
+- Implement ASPEED PCIe Root Complex host controller driver
 
-On 2025/12/16 6:24, Rob Herring (Arm) wrote:
-> The child node name in use by .dts files and the driver is
-> "legacy-interrupt-controller", not "interrupt-controller".
-After your change commit bcd7ec2cd720 were merged, it was a long time
-before I realized I needed to fix it.
+This series has been tested on AST2600/AST2700 platforms and enables PCIe device
+enumeration and operation.
 
-"interrupt-controller" is included in the list of Generic Names
-Recommendation. Would it be better to apply (i.e. restore) this,
-or fix the PCI driver and .dts?
+Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+---
+Changes in v7:
+- Add PCIe port into aspeed,ast2600-pci.yaml.
+- Remove aspeed_pcie_init_ports() and merge aspeed_pcie_port_init() to
+  aspeed_pcie_parse_port()
+- Refactor aspeed remap pcie addr to aspeed_pcie_map_ranges()
+- Link to v6: https://lore.kernel.org/r/20251201-upstream_pcie_rc-v6-0-8c8800c56b16@aspeedtech.com
 
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->   .../devicetree/bindings/pci/socionext,uniphier-pcie.yaml      | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
-> b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
-> index c07b0ed51613..8a2f1eef51bd 100644
-> --- a/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
-> @@ -51,7 +51,7 @@ properties:
->     phy-names:
->       const: pcie-phy
->   
-> -  interrupt-controller:
-> +  legacy-interrupt-controller:
->       type: object
->       additionalProperties: false
->   
-> @@ -111,7 +111,7 @@ examples:
->                           <0 0 0  3  &pcie_intc 2>,
->                           <0 0 0  4  &pcie_intc 3>;
->   
-> -        pcie_intc: interrupt-controller {
-> +        pcie_intc: legacy-interrupt-controller {
->               #address-cells = <0>;
->               interrupt-controller;
->               #interrupt-cells = <1>;
+Changes in v6:
+- Refer to pci-cpi-bridge.yaml to update aspeed,ast2600-pcie.yaml and
+  the pcie node of aspeed-g6.dtsi.
+- 'dt-bindings: pinctrl: aspeed,ast2600-pinctrl: Add PCIe RC PERST#
+  group' have applied, remove it from this version.
+- Adjust the defnitions in pci.h. 
+- Link to v5: https://lore.kernel.org/r/20251117-upstream_pcie_rc-v5-0-b4a198576acf@aspeedtech.com
 
-Thank you,
+Changes in v5:
+- Remove legacy-interrupt-controller and the INTx points to pcie node itself.
+- Correct bar mapping description and implementation to PCIe address
+  configuration in pcie-aspeed.c driver.
+- Link to v4: https://lore.kernel.org/r/20251027095825.181161-1-jacky_chou@aspeedtech.com/
+
+Changes in v4:
+- Remove aspeed,ast2700-pcie-cfg.yaml
+- Add more descriptions for AST2600 PCIe RC in aspeed,ast2600-pcie.yaml
+- Change interrupt-controller to legacy-interrupt-controller in yaml
+  and dtsi
+- Remove msi-parent property in yaml and dtsi
+- Modify the bus range to starting from 0x00 in aspeed-g6.dtsi
+- Fixed the typo on MODULE_DEVICE_TABLE() in phy-aspeed-pcie.c
+- Add PCIE_CPL_STS_SUCCESS definition in pci/pci.h
+- Add prefix ASPEED_ for register definition in RC driver
+- Add a flag to indicate clear msi status twice for AST2700 workaround
+- Remove getting domain number
+- Remove scanning AST2600 HOST bridge on device number 0
+- Remove all codes about CONFIG_PCI_MSI
+- Get root but number from resouce list by IORESOURCE_BUS
+- Change module_platform_driver to builtin_platform_driver
+- Link to v3: https://lore.kernel.org/r/20250901055922.1553550-1-jacky_chou@aspeedtech.com/
+
+Changes in v3:
+- Add ASPEED PCIe PHY driver
+- Remove the aspeed,pciecfg property from AST2600 RC node, merged into RC node
+- Update the binding doc for aspeed,ast2700-pcie-cfg to reflect the changes
+- Update the binding doc for aspeed,ast2600-pcie to reflect the changes
+- Update the binding doc for aspeed,ast2600-pinctrl to reflect the changes
+- Update the device tree source to reflect the changes
+- Adjusted the use of mutex in RC drivers to use GRAND
+- Updated from reviewer comments
+- Link to v2: https://lore.kernel.org/r/20250715034320.2553837-1-jacky_chou@aspeedtech.com/
+
+Changes in v2:
+- Moved ASPEED PCIe PHY yaml binding to `soc/aspeed` directory and
+  changed it as syscon
+- Added `MAINTAINERS` entry for the new PCIe RC driver
+- Updated device tree bindings to reflect the new structure
+- Refactored configuration read and write functions to main bus and
+  child bus ops
+- Refactored initialization to implement multiple ports support
+- Added PCIe FMT and TYPE definitions for TLP header in
+  `include/uapi/linux/pci_regs.h`
+- Updated from reviewer comments
+- Link to v1: https://lore.kernel.org/r/20250613033001.3153637-1-jacky_chou@aspeedtech.com/
 
 ---
-Best Regards
-Kunihiko Hayashi
+Jacky Chou (7):
+      dt-bindings: phy: aspeed: Add ASPEED PCIe PHY
+      dt-bindings: PCI: Add ASPEED PCIe RC support
+      ARM: dts: aspeed-g6: Add PCIe RC and PCIe PHY node
+      PHY: aspeed: Add ASPEED PCIe PHY driver
+      PCI: Add FMT, TYPE and CPL status definition for TLP header
+      PCI: aspeed: Add ASPEED PCIe RC driver
+      MAINTAINERS: Add ASPEED PCIe RC driver
+
+ .../bindings/pci/aspeed,ast2600-pcie.yaml          |  182 ++++
+ .../bindings/phy/aspeed,ast2600-pcie-phy.yaml      |   42 +
+ MAINTAINERS                                        |   12 +
+ arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi    |    5 +
+ arch/arm/boot/dts/aspeed/aspeed-g6.dtsi            |   51 +
+ drivers/pci/controller/Kconfig                     |   16 +
+ drivers/pci/controller/Makefile                    |    1 +
+ drivers/pci/controller/pcie-aspeed.c               | 1111 ++++++++++++++++++++
+ drivers/pci/pci.h                                  |   15 +
+ drivers/phy/Kconfig                                |    1 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/aspeed/Kconfig                         |   15 +
+ drivers/phy/aspeed/Makefile                        |    2 +
+ drivers/phy/aspeed/phy-aspeed-pcie.c               |  209 ++++
+ 14 files changed, 1663 insertions(+)
+---
+base-commit: 50455515d2364d7f4397b9db98515a1028558295
+change-id: 20251103-upstream_pcie_rc-8445759db813
+
+Best regards,
+-- 
+Jacky Chou <jacky_chou@aspeedtech.com>
+
 
