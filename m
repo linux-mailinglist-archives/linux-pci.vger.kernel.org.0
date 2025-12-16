@@ -1,159 +1,137 @@
-Return-Path: <linux-pci+bounces-43114-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43115-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8699CC2B4A
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 13:26:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86C06CC33F9
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 14:34:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6106931E1AA5
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 12:16:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3D2D2308E169
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 13:27:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F9253559C6;
-	Tue, 16 Dec 2025 12:14:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F19A5387B17;
+	Tue, 16 Dec 2025 12:31:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwArkI3A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4Zld+O+"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745FB34DB48;
-	Tue, 16 Dec 2025 12:14:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4871387B02;
+	Tue, 16 Dec 2025 12:31:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765887249; cv=none; b=Qq/0iXyrThfXb8cWWAppHAkkX3CSNBj/XtQ50FwQlPcED4s/gnwNX/gqOYRjh0WWFocsJPttEXK0jhhhD+7AjV+irogHoMd9UgmJWJmLhsZQDpfk1LOgLXdgTjTDD8NSuDOt0gPT/KB2ypMSUIdMeFVD6t4wmeg/u0GGwU4QKHk=
+	t=1765888299; cv=none; b=EmxhDHBplpCZwC6LgBcH92U60+HyvJ9anh3vRqkEuQpUjRFTeOyjMUdSS+CXY19pNxU3a7GRo2/Hg9zunfND7yXFbqWAmlfuodM5o1LoETWlmp8SRedTtTdZtymxJHjA+hX1+WrsrMJos/kG16TbHrp2oyTiy8Lr/xMJZr6CXm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765887249; c=relaxed/simple;
-	bh=pZP2BYvtE9bxefV3Xhyf3JysEWckorGNQUlBT4sl0HE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
-	 References:In-Reply-To; b=ujd9hTfGS2HK/gEaEyOJ0q9w7kwmP1g0T+1cEqS62V6GNjCEbU+CWPesXwaq0MVadsdmMHE84RXW1OibEMuMDbvLxvBZAJ6jfWdjEdkTQXXQZzkI/8jQCw4ddkv3dxaJV5z37BC2SXMXXXXrUORBTh2CRjitC69gYLpy4Szr2HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwArkI3A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 448E7C4CEF5;
-	Tue, 16 Dec 2025 12:14:02 +0000 (UTC)
+	s=arc-20240116; t=1765888299; c=relaxed/simple;
+	bh=XP0feOgRpLuibd3rSzZPRlfbENTwYiPsBB68qu7tHf4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LL3z8O52bLy97uoUuY4Tn2hdMbBrGOvpJBS5OwdBXZv7CqNNWjnKEKhP0Pg41FXF4DkPGbBHLvgy32CgPzzgu2B2PLbXYY6mAFS5R47PXlw/3C6u5sxQu4Fx3xmuOEf4Bnnei5dzMYm6L0LQjq2uwIeqjVl381hgC+bU1q0B24c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4Zld+O+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D44B8C4CEF5;
+	Tue, 16 Dec 2025 12:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765887247;
-	bh=pZP2BYvtE9bxefV3Xhyf3JysEWckorGNQUlBT4sl0HE=;
-	h=Date:To:From:Subject:Cc:References:In-Reply-To:From;
-	b=mwArkI3A22We2dV9k1nt+llKSV/PdjOlNKOSh58EWc2WT3tKVntnnU6I/YiUggG3i
-	 Tqh2Avr7N+p89KUHE18Db1eNRQr79btWxbHXefSDfhZbHyPA/X5xWRI6d6bq8M/40R
-	 iV8mM+xU+ytME+2AjSpNZGzkx0IfVa7eE8uf0+3iDgrlmtU4sIq2ms8QUuDz+/wK8P
-	 m4yWOoT3dvUDqi/WRJE4SvI7m8geXpOuHNWA1S5VFcizIh/UM8imRRxIg0GS8i499V
-	 jjoKi9KwaPezhIb7cI2YtgnG3oibWCi65T41bi5MZzcwoSs2uqWgnMrLLbCZakN2of
-	 +r0DoPlVFuRgg==
+	s=k20201202; t=1765888299;
+	bh=XP0feOgRpLuibd3rSzZPRlfbENTwYiPsBB68qu7tHf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X4Zld+O+Z25jRIvFa7MfxTZ0lBhpu75h+zR9TcR+Ijbcz2ZP5IWPR+mAFQjz+h88z
+	 P0g/7BSRYY4/xSBAgk78PK+ZqIOor5M/zrSazu3vBVvltSn6tYp++63AdhSkMYkLVI
+	 vOdpbWPqYRGS8PpFldywnPud2D8FkdZ5pOWfbzakfZngECD+bJoz3DI+41cuVMZ4ae
+	 LdDX4ztna3SLZ1XLqfoYJduyGBgz1fbgffDCkqqEGYIwbQatcwG2BM2W49eh54P+Oe
+	 vl4BenMAgPxuKIyeVGaeoVwTE+etKj7jKBmC47BBuPTrzR3i9185kw5k/b/sKTxEwj
+	 fo7vtIsfXidtQ==
+Date: Tue, 16 Dec 2025 18:01:36 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Devendra K Verma <devendra.verma@amd.com>
+Cc: bhelgaas@google.com, mani@kernel.org, dmaengine@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com
+Subject: Re: [PATCH v7 2/2] dmaengine: dw-edma: Add non-LL mode
+Message-ID: <aUFRKDCglF3NbNLZ@vaman>
+References: <20251212122056.8153-1-devendra.verma@amd.com>
+ <20251212122056.8153-3-devendra.verma@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 16 Dec 2025 13:14:00 +0100
-Message-Id: <DEZMS6Y4A7XE.XE7EUBT5SJFJ@kernel.org>
-To: "Alexandre Courbot" <acourbot@nvidia.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH 1/7] rust: pci: pass driver data by value to `unbind`
-Cc: "Alice Ryhl" <aliceryhl@google.com>, "David Airlie" <airlied@gmail.com>,
- "Simona Vetter" <simona@ffwll.ch>, "Bjorn Helgaas" <bhelgaas@google.com>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Miguel
- Ojeda" <ojeda@kernel.org>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Trevor Gross" <tmgross@umich.edu>,
- "John Hubbard" <jhubbard@nvidia.com>, "Alistair Popple"
- <apopple@nvidia.com>, "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur
- Tabi" <ttabi@nvidia.com>, "Edwin Peer" <epeer@nvidia.com>, "Eliot Courtney"
- <ecourtney@nvidia.com>, <nouveau@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-References: <20251216-nova-unload-v1-0-6a5d823be19d@nvidia.com>
- <20251216-nova-unload-v1-1-6a5d823be19d@nvidia.com>
-In-Reply-To: <20251216-nova-unload-v1-1-6a5d823be19d@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251212122056.8153-3-devendra.verma@amd.com>
 
-On Tue Dec 16, 2025 at 6:13 AM CET, Alexandre Courbot wrote:
-> When unbinding a PCI driver, the `T::unbind` callback is invoked by the
-> driver framework, passing the driver data as a `Pin<&T>`.
->
-> This artificially restricts what the driver can do, as it cannot mutate
-> any state on the data. This becomes a problem in e.g. Nova, which needs
-> to invoke mutable methods when unbinding.
->
-> `remove_callback` retrieves the driver data by value, and drops it right
-> after the call to `T::unbind`, meaning it is the only reference to the
-> driver data by the time `T::unbind` is called.
->
-> There is thus no reason for not granting full ownership of the data to
-> `T::unbind`, so do it.
+On 12-12-25, 17:50, Devendra K Verma wrote:
+> AMD MDB IP supports Linked List (LL) mode as well as non-LL mode.
+> The current code does not have the mechanisms to enable the
+> DMA transactions using the non-LL mode. The following two cases
+> are added with this patch:
+> - For the AMD (Xilinx) only, when a valid physical base address of
+>   the device side DDR is not configured, then the IP can still be
+>   used in non-LL mode. For all the channels DMA transactions will
+>   be using the non-LL mode only. This, the default non-LL mode,
+>   is not applicable for Synopsys IP with the current code addition.
+> 
+> - If the default mode is LL-mode, for both AMD (Xilinx) and Synosys,
+>   and if user wants to use non-LL mode then user can do so via
+>   configuring the peripheral_config param of dma_slave_config.
+> 
+> Signed-off-by: Devendra K Verma <devendra.verma@amd.com>
+> ---
+> Changes in v7
+>   No change
+> 
+> Changes in v6
+>   Gave definition to bits used for channel configuration.
+>   Removed the comment related to doorbell.
+> 
+> Changes in v5
+>   Variable name 'nollp' changed to 'non_ll'.
+>   In the dw_edma_device_config() WARN_ON replaced with dev_err().
+>   Comments follow the 80-column guideline.
+> 
+> Changes in v4
+>   No change
+> 
+> Changes in v3
+>   No change
+> 
+> Changes in v2
+>   Reverted the function return type to u64 for
+>   dw_edma_get_phys_addr().
+> 
+> Changes in v1
+>   Changed the function return type for dw_edma_get_phys_addr().
+>   Corrected the typo raised in review.
+> ---
+>  drivers/dma/dw-edma/dw-edma-core.c    | 41 ++++++++++++++++++++---
+>  drivers/dma/dw-edma/dw-edma-core.h    |  1 +
+>  drivers/dma/dw-edma/dw-edma-pcie.c    | 44 +++++++++++++++++--------
+>  drivers/dma/dw-edma/dw-hdma-v0-core.c | 61 ++++++++++++++++++++++++++++++++++-
+>  drivers/dma/dw-edma/dw-hdma-v0-regs.h |  1 +
+>  include/linux/dma/edma.h              |  1 +
+>  6 files changed, 130 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index b43255f..60a3279 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -223,8 +223,31 @@ static int dw_edma_device_config(struct dma_chan *dchan,
+>  				 struct dma_slave_config *config)
+>  {
+>  	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
+> +	int non_ll = 0;
+> +
+> +	if (config->peripheral_config &&
+> +	    config->peripheral_size != sizeof(int)) {
+> +		dev_err(dchan->device->dev,
+> +			"config param peripheral size mismatch\n");
+> +		return -EINVAL;
+> +	}
 
-There are multiple reasons I did avoid this for:
+Hmm, what is this config param used for. I dont like people using this
+in opaque manner. Can you explain why this needs to be passed from
+client. What does non ll mean and how would client decide to use this or
+not..?
 
-(1) Race conditions
-
-A driver can call Device::drvdata() and obtain a reference to the driver's
-device private data as long as it has a &Device<Bound> and asserts the corr=
-ect
-type of the driver's device private data [1].
-
-Assume you have an IRQ registration, for instance, that lives within this d=
-evice
-private data.  Within the IRQ handler, nothing prevents us from calling
-Device::drvdata() given that the IRQ handler has a Device<Bound> reference.
-
-Consequently, with passing the device private data by value to unbind() it =
-can
-happen that we have both a mutable and immutable reference at of the device
-private data at the same time.
-
-The same is true for a lot of other cases, such as work items or workqueues=
- that
-are scoped to the Device being bound living within the device private data.
-
-More generally, you can't take full ownership of the device private data as=
- long
-as the device is not yet fully unbound (which is not yet the case in unbind=
-()).
-
-(2) Design
-
-It is intentional that the device private data has a defined lifetime that =
-ends
-with the device being unbound from its driver. This way we get the guarante=
-e
-that any object stored in the device private data won't survive device / dr=
-iver
-unbind. If we give back the ownership to the driver, this guarantee is lost=
-.
-
-Conclusion:
-
-Having that said, if you need mutable access to the fields of the device pr=
-ivate
-data within unbind() the corresponding field(s) should be protected by a lo=
-ck.
-
-Alternatively, you have mutable access within the destructor as well, but t=
-here
-you don't have a bound device anymore. Which is only consequent, since we c=
-an't
-call the destructor of the device private data before the device is fully
-unbound.
-
-(In fact, as by now, there is a bug with this, which I noticed a few days a=
-go
-when I still was on vacation: The bus implementations call the destructor o=
-f the
-device private data too early, i.e. when the device is not fully unbound ye=
-t.
-
-I'm working on a fix for this. Luckily, as by now, this is not a real bug i=
-n
-practice, yet it has to be fixed.)
-
-From your end you don't have to worry about this though. nova-core should j=
-ust
-employ a lock for this, as we will need it in the future anyways, since we =
-will
-have concurrent access to the GSP.
-
-[1] https://rust.docs.kernel.org/kernel/device/struct.Device.html#method.dr=
-vdata
+-- 
+~Vinod
 
