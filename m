@@ -1,43 +1,44 @@
-Return-Path: <linux-pci+bounces-43148-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43147-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98E14CC5155
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 21:19:14 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7289BCC515E
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 21:19:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5D8E530378A0
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 20:19:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7B602304A29B
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 20:19:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A48992F362D;
-	Tue, 16 Dec 2025 20:19:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A548E3346A0;
+	Tue, 16 Dec 2025 20:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QP2eiHw5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aq2mnlOk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A70263F52;
-	Tue, 16 Dec 2025 20:19:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7998F212552;
+	Tue, 16 Dec 2025 20:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765916342; cv=none; b=MSxPwBOdGnXZuF7TyT8EEwVq8hjvyd4nWOU/YLg1Xya/wIdkCT8CPnp1ILak0meI4Lib1koiydczu8G691oYIxDwIjkCD+o0+0dmWsOGpwLlt3lG8m8qIamED84oqiv94wFdceoTlwgEmr9yojJBfGfz2rmc/pvr1rVwZVjYm+A=
+	t=1765916338; cv=none; b=fdBul32/a1h8+jiKaKIPN2x2nuUBlSyVP0JN7QtNpx97pri7E/2VCo1AHtLKL/B+DK85A5Jgh3shZdbtt8037OJ4Myz2be5RRLmIIgSj9kq1ikcG4mz4xE/eVjrjeRxOoGcTWbf8sfzG2L56BiZnAiKQ73Y6P2gKVk8YLGPzLsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765916342; c=relaxed/simple;
-	bh=LMochKQTfRhgFAfE0enCos5C4dlpZ5n0Zl0nq/fJS2o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o3x5XaaF6K8tEErA6KaEvSPdCqFjlIqK+ObhYvhKqBUlfEIrkNH3KzFOJThrbW7KDHBy/s5Q1XjWlNoy+Jqnj9tZuUudwAdqsGoz0TDlrvn/k3oSzaycMXrMn5jK7NdaQNwZnlD84ChxyTdOjMFG1eW8LxEFI9ZS3lHOye14KcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QP2eiHw5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B36C4CEF1;
-	Tue, 16 Dec 2025 20:18:59 +0000 (UTC)
+	s=arc-20240116; t=1765916338; c=relaxed/simple;
+	bh=5cd8Ans3am9z/gkhPuWlJI1KgxuV7qh/0MzugBTYAJA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t8sLamkbZw0CjQRXjzzhCsaqnPoF+MAF18p/Odtd4ggC5NWeLrsdFMmFUo1oMHs76ev4Tmlu5y+pD514yGvfU3K2z3BS0wVahcW1wm8X/9+debVXoUpTZIQaL6pfwzd/C7kN2OzRC0LnKGt9or/sqYO9Y9jo6YzzsceVjEVcQWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aq2mnlOk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC353C4CEF1;
+	Tue, 16 Dec 2025 20:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765916341;
-	bh=LMochKQTfRhgFAfE0enCos5C4dlpZ5n0Zl0nq/fJS2o=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QP2eiHw5vljJFWYCkhqRTZMexs4sMFhf7CbCaaNaXL7mugkvlST0dk4h58OcK0Anq
-	 X1ptBAIs6OP9+Zsk2v02aQCfVONROLFPanNCZ6Yr9q2KVEOmNt1lPV5w4yDexzSOlZ
-	 wZLABN5gmcODsrpGwzc/bcRteFUzXPNrtKp8mm57D7fLHqfYEK0CUZzLFuie0nsEmH
-	 gJ9Cntn05JS4auxzR0nRElHGEDFCvASfrgKWB8MdSvJRo2+G3V1d2M86bHiPBhO5fA
-	 HwwTDWSuUPs22wSS2CDkwMvDTpXXhFk3TOA4EQQire0KPhQS4x+cqap+BLs4gJ/inN
-	 qjfw/LuM5S/RQ==
+	s=k20201202; t=1765916338;
+	bh=5cd8Ans3am9z/gkhPuWlJI1KgxuV7qh/0MzugBTYAJA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=aq2mnlOkGImqitF1prNu579YahoEhkl02xMmm1TcFD1Rk7fsY2wpyhxShisGOunr4
+	 srePulKZPY+C8OE+0FaqnGLKNnJ6Zz0Q2wtFrkB/OxoEwPf7uGSK3gNJ7kgloOojRg
+	 RHbs/dxR87aEVTAy/GB/6kY1tX8z3Su2FIrdxwM4bwFbSfg8fOBXCAnPxekL8PfC4E
+	 Yvkl0hG6DP06od7NoW1oyNrM7tgEPVCPZGRo5TITvkI6ztTsCCIAmUof+7G0HvIgnL
+	 i3KJ7c/uLCMsgsPPNQLdDG+XBTMW3n5VrpLrAoTtI2L5+7g5J/Ue8gEifkKWjtodwZ
+	 +hJkJ80QALNtQ==
 From: "Rafael J. Wysocki" <rafael@kernel.org>
 To: Linux ACPI <linux-acpi@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>,
@@ -45,10 +46,12 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
  Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
  Hans de Goede <hansg@kernel.org>,
  Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v1 0/2] ACPI: bus: Adjustments related to \_SB._OSC
-Date: Tue, 16 Dec 2025 21:15:34 +0100
-Message-ID: <12803663.O9o76ZdvQC@rafael.j.wysocki>
+Subject: [PATCH v1 1/2] ACPI: bus: Adjust error handling in acpi_run_osc()
+Date: Tue, 16 Dec 2025 21:17:06 +0100
+Message-ID: <6225184.lOV4Wx5bFT@rafael.j.wysocki>
 Organization: Linux Kernel Development
+In-Reply-To: <12803663.O9o76ZdvQC@rafael.j.wysocki>
+References: <12803663.O9o76ZdvQC@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,15 +61,73 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
 
-Hi All,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-The first patch works around a platform firmware issue causing
-acpi_run_osc() to return an error when run with "query enable" bit
-clear after negotiating the supported feature mask.
+Some platform firmware incorrectly sets the OSC_CAPABILITIES_MASK_ERROR
+bit in its _OSC return buffer even if no support bits have been actually
+masked, which causes acpi_run_osc() to return an error when executed
+with OSC_QUERY_ENABLE clear in the OC capabilities buffer.  As a result,
+the OS assumes that the _OSC evaluation has failed and the platform has
+not acknowledged any capabilities, while the platform assumes that it
+actually has acknowledged some of them.  This confusion may lead to
+missing functionality (and possibly other issues) down the road.
 
-The second one is a cleanup on top of the first one.
+To address this problem, adjust acpi_run_osc() to avoid returning an
+error when OSC_CAPABILITIES_MASK_ERROR is set in the return buffer
+and OSC_QUERY_ENABLE is clear in the OC capabilities, but all of the
+bits in the support mask supplied by the OS are also set in the bit
+mask returned by the platform firmware.
 
-Thanks!
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/bus.c |   23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
+
+--- a/drivers/acpi/bus.c
++++ b/drivers/acpi/bus.c
+@@ -240,9 +240,13 @@ acpi_status acpi_run_osc(acpi_handle han
+ 		status = AE_TYPE;
+ 		goto out_kfree;
+ 	}
++	if (out_obj->buffer.length <= OSC_SUPPORT_DWORD) {
++		status = AE_BAD_DATA;
++		goto out_kfree;
++	}
+ 	/* Need to ignore the bit0 in result code */
+ 	errors = *((u32 *)out_obj->buffer.pointer) & ~(1 << 0);
+-	if (errors) {
++	if (errors & ~OSC_CAPABILITIES_MASK_ERROR) {
+ 		if (errors & OSC_REQUEST_ERROR)
+ 			acpi_print_osc_error(handle, context,
+ 				"_OSC request failed");
+@@ -252,17 +256,20 @@ acpi_status acpi_run_osc(acpi_handle han
+ 		if (errors & OSC_INVALID_REVISION_ERROR)
+ 			acpi_print_osc_error(handle, context,
+ 				"_OSC invalid revision");
+-		if (errors & OSC_CAPABILITIES_MASK_ERROR) {
+-			if (((u32 *)context->cap.pointer)[OSC_QUERY_DWORD]
+-			    & OSC_QUERY_ENABLE)
+-				goto out_success;
++		status = AE_ERROR;
++		goto out_kfree;
++	}
++	if (errors) {
++		u32 retbuf = ((u32 *)out_obj->buffer.pointer)[OSC_SUPPORT_DWORD];
++		u32 capbuf = ((u32 *)context->cap.pointer)[OSC_SUPPORT_DWORD];
++		u32 querybuf = ((u32 *)context->cap.pointer)[OSC_QUERY_DWORD];
++
++		/* OSC_CAPABILITIES_MASK_ERROR is set in errors. */
++		if (!(querybuf & OSC_QUERY_ENABLE) && (capbuf & retbuf) != capbuf) {
+ 			status = AE_SUPPORT;
+ 			goto out_kfree;
+ 		}
+-		status = AE_ERROR;
+-		goto out_kfree;
+ 	}
+-out_success:
+ 	context->ret.length = out_obj->buffer.length;
+ 	context->ret.pointer = kmemdup(out_obj->buffer.pointer,
+ 				       context->ret.length, GFP_KERNEL);
 
 
 
