@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-43102-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43104-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 067F6CC1866
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 09:24:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D1B0CC18BE
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 09:27:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AE126304F13D
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 08:23:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 06B46307D457
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Dec 2025 08:23:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0041349B15;
-	Tue, 16 Dec 2025 08:13:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93F8C34A3CD;
+	Tue, 16 Dec 2025 08:13:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="WFvvD/fe"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="dSZ4pUwR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
+Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF1F347FD2;
-	Tue, 16 Dec 2025 08:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005253396E6;
+	Tue, 16 Dec 2025 08:13:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765872803; cv=none; b=Ufysem3HZW9BCwoJjIH98bgphYYzH+FGkKQq/37Mop227LAnw9yHZpa+GbUiokzjHOuyitTXT9sR/D6elCwkl2MbHgUddWebnRI655CR/Zs4dSk4T9zxf5qXCS3Hzfqarpa6/D2L0ay3x0LbxJmNtQecbrtD+wYjhXUogW9G7Yg=
+	t=1765872804; cv=none; b=Ux/wBPge2v8UwFKsJ89l2CTbf4Hnbe5vRY1r61M2QtE1cOPFjWEiZcp5D3c7YF3F47IrRUvMzo9hRiiHHznI4ekHomkwnO3pwC7JqUtf4H+FMFxZP5sLhGZtC9RtT96sTK71VwnM+PyB+OF0nl7I82YSh51iM0HfRubKFacPF0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765872803; c=relaxed/simple;
-	bh=MuTAF4fOLJk3khpF9NmDB9Q/WyViABe0U7dwSkkBHeU=;
+	s=arc-20240116; t=1765872804; c=relaxed/simple;
+	bh=wzNfrMznYfIxFRzv7t8rOb83igwXFEhzsVvHJ6bhp/s=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=czfinxhHTUKC1w/mfuNnjD/xKDZBakyTv2GIzzsdDt9R7QYQ/7aiOho235qp3iXZ4vrIV8bfn71CBeAv7TG0MLfi6iWdE5MFLtES0UPVuIVYh9lpF8Vcn1QrgtyB065hN8DKTO83ARzSORFYvL/q8V/mqd6j3ejrUSPm7f0x+2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=WFvvD/fe; arc=none smtp.client-ip=113.46.200.220
+	 MIME-Version:Content-Type; b=fsUT2VXrJ5QQqijBcv+lx9BnLPhvplFaxS39fJlzkhRd9HNRnipaW9p1XW6vX5n3TABmzTR2F43PnoKQb56S0eenKFVnBtTDVEMI4/JBN4vnGMVjUT+ddYLHjJWnRMhdhfICsKYBAVhR7oXDx+XXrQ3y5opmloY63rrfEvcSbbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=dSZ4pUwR; arc=none smtp.client-ip=113.46.200.223
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=BbVtg0J6THxhxcDCFoLlMEcYnobUuiVC/Whu7LrnJVI=;
-	b=WFvvD/feMqWMFktjsNUYtn7DnS5lmWEo5JbfZgsHErgVC6j6Srr2GSSHjrZ/7fm/5FfOV94GA
-	DiVUU8Z3ARP+aHHasuOhJjriL24j6RQqOuruH11NMZzSc9cciwb2hvyB8Rg/dfQOApvWL9WRFL7
-	CxpkXmx5k8NYbLrj/TDjT0I=
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4dVqPg4Zyxz12LDy;
-	Tue, 16 Dec 2025 16:11:03 +0800 (CST)
+	bh=i4pBlUvu9eAYZ9wvnIMycmlVw5ryVXRu/Fa9NgFdJp4=;
+	b=dSZ4pUwRjoOurpG8aLxHgli4vqTkfLCCwPpR5nnH7QIp4gNKBt46dM6/kD1l6SBz93V4RA9LF
+	m9NCp6oSXTq/qeZ45FOY+ag0Kx8Pn4WMaXg4GbITvQaRpNscJDdb2Z6A8P19M3hB2P0nmVzUK7r
+	eACabNV6AKbFTK1iVUJPVLU=
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4dVqPy1N9fzmV69;
+	Tue, 16 Dec 2025 16:11:18 +0800 (CST)
 Received: from kwepemr500012.china.huawei.com (unknown [7.202.195.23])
-	by mail.maildlp.com (Postfix) with ESMTPS id ED90A1402C8;
-	Tue, 16 Dec 2025 16:13:17 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 5A1041800B2;
+	Tue, 16 Dec 2025 16:13:18 +0800 (CST)
 Received: from localhost.localdomain (10.50.85.180) by
  kwepemr500012.china.huawei.com (7.202.195.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
@@ -52,9 +52,9 @@ CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<chrisw@redhat.com>, <jbarnes@virtuousgeek.org>,
 	<alex.williamson@redhat.com>, <liuyongqiang13@huawei.com>,
 	<duziming2@huawei.com>
-Subject: [PATCH 1/3] PCI/sysfs: fix null pointer dereference during PCI hotplug
-Date: Tue, 16 Dec 2025 16:39:10 +0800
-Message-ID: <20251216083912.758219-2-duziming2@huawei.com>
+Subject: [PATCH 2/3] PCI/sysfs: Prohibit unaligned access to I/O port on non-x86
+Date: Tue, 16 Dec 2025 16:39:11 +0800
+Message-ID: <20251216083912.758219-3-duziming2@huawei.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251216083912.758219-1-duziming2@huawei.com>
 References: <20251216083912.758219-1-duziming2@huawei.com>
@@ -69,98 +69,97 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
  kwepemr500012.china.huawei.com (7.202.195.23)
 
-During the concurrent process of creating and rescanning in VF, the resource
-files for the same "pci_dev" may be created twice. The second creation attempt
-fails, resulting the "res_attr" in "pci_dev" to 'kfree', but the pointer is not
-set to NULL. This will subsequently lead to dereferencing a null pointer when
-removing the device.
+From: Yongqiang Liu <liuyongqiang13@huawei.com>
 
-When we perform the following operation:
-"echo $vfcount > /sys/class/net/"$pfname"/device/sriov_numvfs &
- sleep 0.5
- echo 1 > /sys/bus/pci/rescan
- pci_remove "$pfname" "
-system will crash as follows:
+Unaligned access is harmful for non-x86 archs such as arm64. When we
+use pwrite or pread to access the I/O port resources with unaligned
+offset, system will crash as follows:
 
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-Mem abort info:
-ESR = 0x0000000096000004
-EC = 0x25: DABT (current EL), IL = 32 bits
-SET = 0, FnV = 0
-EA = 0, S1PTW = 0
-FSC = 0x04: level 0 translation fault
-Data abort info:
-ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-user pgtable: 4k pages, 48-bit VAs, pgdp=000020400d47b000
-0000000000000000 pgd=0000000000000000, p4d=0000000000000000
-Internal error: Oops: 0000000096000004 #1 SMP
-CPU: 115 PID: 13659 Comm: testEL_vf_resca Kdump: loaded Tainted: G W E 6.6.0 #9
-Hardware name: Huawei TaiShan 2280 V2/BC82AMDD, BIOS 0.98 08/25/2019
-pstate: 80400009 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : __pi_strlen+0x14/0x150
-lr : kernfs_name_hash+0x24/0xa8
-sp : ffff8001425c38f0
-x29: ffff8001425c38f0 x28: ffff204021a21540 x27: 0000000000000000
-x26: 0000000000000000 x25: 0000000000000000 x24: ffff20400f97fad0
-x23: ffff20403145a0c0 x22: 0000000000000000 x21: 0000000000000000
-x20: 0000000000000000 x19: 0000000000000000 x18: ffffffffffffffff
-x17: 2f35322f38302038 x16: 392e3020534f4942 x15: 00000000fffffffd
-x14: 0000000000000000 x13: 30643378302f3863 x12: 3378302b636e7973
-x11: 00000000ffff7fff x10: 0000000000000000 x9 : ffff800100594b3c
-x8 : 0101010101010101 x7 : 0000000000210d00 x6 : 67241f72241f7224
-x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000000
-x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000000
+Unable to handle kernel paging request at virtual address fffffbfffe8010c1
+Internal error: Oops: 0000000096000061 [#1] SMP
+Modules linked in:
+CPU: 1 PID: 44230 Comm: syz.1.10955 Not tainted 6.6.0+ #1
+Hardware name: linux,dummy-virt (DT)
+pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : __raw_writew arch/arm64/include/asm/io.h:33 [inline]
+pc : _outw include/asm-generic/io.h:594 [inline]
+pc : logic_outw+0x54/0x218 lib/logic_pio.c:305
+lr : _outw include/asm-generic/io.h:593 [inline]
+lr : logic_outw+0x40/0x218 lib/logic_pio.c:305
+sp : ffff800083097a30
+x29: ffff800083097a30 x28: ffffba71ba86e130 x27: 1ffff00010612f93
+x26: ffff3bae63b3a420 x25: ffffba71bbf585d0 x24: 0000000000005ac1
+x23: 00000000000010c1 x22: ffff3baf0deb6488 x21: 0000000000000002
+x20: 00000000000010c1 x19: 0000000000ffbffe x18: 0000000000000000
+x17: 0000000000000000 x16: ffffba71b9f44b48 x15: 00000000200002c0
+x14: 0000000000000000 x13: 0000000000000000 x12: ffff6775ca80451f
+x11: 1fffe775ca80451e x10: ffff6775ca80451e x9 : ffffba71bb78cf2c
+x8 : 0000988a357fbae2 x7 : ffff3bae540228f7 x6 : 0000000000000001
+x5 : 1fffe775e2b43c78 x4 : dfff800000000000 x3 : ffffba71b9a00000
+x2 : ffff80008d22a000 x1 : ffffc58ec6600000 x0 : fffffbfffe8010c1
 Call trace:
-__pi_strlen+0x14/0x150
-kernfs_find_ns+0x54/0x120
-kernfs_remove_by_name_ns+0x58/0xf0
-sysfs_remove_bin_file+0x24/0x38
-pci_remove_resource_files+0x44/0x90
-pci_remove_sysfs_dev_files+0x28/0x40
-pci_stop_bus_device+0xb8/0x118
-pci_stop_and_remove_bus_device+0x20/0x40
-pci_iov_remove_virtfn+0xb8/0x138
-sriov_disable+0xbc/0x190
-pci_disable_sriov+0x30/0x48
-hinic_pci_sriov_disable+0x54/0x138 [hinic]
-hinic_remove+0x140/0x290 [hinic]
-pci_device_remove+0x4c/0xf8
-device_remove+0x54/0x90
-device_release_driver_internal+0x1d4/0x238
-device_release_driver+0x20/0x38
-pci_stop_bus_device+0xa8/0x118
-pci_stop_and_remove_bus_device_locked+0x28/0x50
-remove_store+0x128/0x208
+ _outw include/asm-generic/io.h:594 [inline]
+ logic_outw+0x54/0x218 lib/logic_pio.c:305
+ pci_resource_io drivers/pci/pci-sysfs.c:1157 [inline]
+ pci_write_resource_io drivers/pci/pci-sysfs.c:1191 [inline]
+ pci_write_resource_io+0x208/0x260 drivers/pci/pci-sysfs.c:1181
+ sysfs_kf_bin_write+0x188/0x210 fs/sysfs/file.c:158
+ kernfs_fop_write_iter+0x2e8/0x4b0 fs/kernfs/file.c:338
+ call_write_iter include/linux/fs.h:2085 [inline]
+ new_sync_write fs/read_write.c:493 [inline]
+ vfs_write+0x7bc/0xac8 fs/read_write.c:586
+ ksys_write+0x12c/0x270 fs/read_write.c:639
+ __do_sys_write fs/read_write.c:651 [inline]
+ __se_sys_write fs/read_write.c:648 [inline]
+ __arm64_sys_write+0x78/0xb8 fs/read_write.c:648
+ __invoke_syscall arch/arm64/kernel/syscall.c:37 [inline]
+ invoke_syscall+0x8c/0x2e0 arch/arm64/kernel/syscall.c:51
+ el0_svc_common.constprop.0+0x200/0x2a8 arch/arm64/kernel/syscall.c:134
+ do_el0_svc+0x4c/0x70 arch/arm64/kernel/syscall.c:176
+ el0_svc+0x44/0x1d8 arch/arm64/kernel/entry-common.c:806
+ el0t_64_sync_handler+0x100/0x130 arch/arm64/kernel/entry-common.c:844
+ el0t_64_sync+0x3c8/0x3d0 arch/arm64/kernel/entry.S:757
 
-Fix this by set the pointer to NULL after releasing 'res_attr' immediately.
+Powerpc seems affected as well, so prohibit the unaligned access
+on non-x86 archs.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Fixes: 8633328be242 ("PCI: Allow read/write access to sysfs I/O port resources")
+Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
 Signed-off-by: Ziming Du <duziming2@huawei.com>
 ---
- drivers/pci/pci-sysfs.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/pci-sysfs.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index c2df915ad2d2..7e697b82c5e1 100644
+index 7e697b82c5e1..6fa3c9d0e97e 100644
 --- a/drivers/pci/pci-sysfs.c
 +++ b/drivers/pci/pci-sysfs.c
-@@ -1222,12 +1222,14 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
- 		if (res_attr) {
- 			sysfs_remove_bin_file(&pdev->dev.kobj, res_attr);
- 			kfree(res_attr);
-+			pdev->res_attr[i] = NULL;
- 		}
- 
- 		res_attr = pdev->res_attr_wc[i];
- 		if (res_attr) {
- 			sysfs_remove_bin_file(&pdev->dev.kobj, res_attr);
- 			kfree(res_attr);
-+			pdev->res_attr_wc[i] = NULL;
- 		}
- 	}
+@@ -1141,6 +1141,13 @@ static int pci_mmap_resource_wc(struct file *filp, struct kobject *kobj,
+ 	return pci_mmap_resource(kobj, attr, vma, 1);
  }
+ 
++#if !defined(CONFIG_X86)
++static bool is_unaligned(unsigned long port, size_t size)
++{
++	return port & (size - 1);
++}
++#endif
++
+ static ssize_t pci_resource_io(struct file *filp, struct kobject *kobj,
+ 			       const struct bin_attribute *attr, char *buf,
+ 			       loff_t off, size_t count, bool write)
+@@ -1158,6 +1165,11 @@ static ssize_t pci_resource_io(struct file *filp, struct kobject *kobj,
+ 	if (port + count - 1 > pci_resource_end(pdev, bar))
+ 		return -EINVAL;
+ 
++#if !defined(CONFIG_X86)
++	if (is_unaligned(port, count))
++		return -EFAULT;
++#endif
++
+ 	switch (count) {
+ 	case 1:
+ 		if (write)
 -- 
 2.43.0
 
