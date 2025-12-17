@@ -1,123 +1,174 @@
-Return-Path: <linux-pci+bounces-43167-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43168-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90212CC7662
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 12:44:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A9FCFCC7920
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 13:22:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4883F30C68F5
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 11:40:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6FF7F31252BB
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 12:16:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 718B633CEA4;
-	Wed, 17 Dec 2025 11:32:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54FEF3446BD;
+	Wed, 17 Dec 2025 12:15:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QsLd3koP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZk1DshR"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D25432ABF6;
-	Wed, 17 Dec 2025 11:32:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F44F34405E
+	for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 12:15:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765971122; cv=none; b=JouwqBPaQERzpbYfcqtY+QbV/0Cw4tsH5ePfyJyo0mHv3OfK+uz0a0+LCfolRrERfNLNR41mO83HDY6nU0j4gqafMyhGRHAqXsDExsy0LSsh2fG9WWrvrAcAnypeScXdR4wnRiajUpJFdhqWL9x1gdwVrnrWskZ+HT2zz4BiTwY=
+	t=1765973727; cv=none; b=lBTm0qxbrjxOM8dRTgvuPjnalpIPWND80EKsQokd+comIq2QN/FSdRrEnMcOWmV21SFXkEPTgUS9V1LTOrGFWBEyaSUAGdpQjivvwslB1w+/T/86IJKyuTK70829w/dlM5F9wSFHXkVUllRz3vSD2gpme8+Zeq5leDw2e2RqNg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765971122; c=relaxed/simple;
-	bh=3dqfqIyIPLev54CZ6uE58tgsfI2/7I7WNdCX5laUzmQ=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=tuhZwKw5xQcmjrAAw+nxlbx4DEFoPdjGfSc1gFV4XoaeIG3m56F+o/ZVdfNOL5FmGOTw/hSYiloLbQ3RtXkG2U1RxFf9aTXjFo7Wm2EnWBO/EugR6POaCs/9eN8qRRtMfOJTi1JlvpFBloywW02+wLecfLk+PEklpyFavmT1L+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QsLd3koP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5CDFC113D0;
-	Wed, 17 Dec 2025 11:32:00 +0000 (UTC)
+	s=arc-20240116; t=1765973727; c=relaxed/simple;
+	bh=/V8ME6f+TcgocYWeUfh3JcmMnxNfhnvIgnWS2xnaweE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ucw+8geRBQsRorL6MzZrbvKi/KUxuM3kS0l1xjwgBWxqcXjrEgLaObpPm8PT49hHVed9wdT6o47R0GqWHrChMcANOnmxWMKqEl67uvPQc6+aVw//fkNfWKvzp6lgn5TDZ+3npLWId5TbevpzYjlHCEt1zgTG5LZfLo7iWtkeouQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WZk1DshR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0A9FC116B1
+	for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 12:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765971121;
-	bh=3dqfqIyIPLev54CZ6uE58tgsfI2/7I7WNdCX5laUzmQ=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=QsLd3koPmVP+cLQxVZfeWNiT94p7LMqhdDJunz0ylkw7vLoznd7bXzcJV/d6QdVzY
-	 oiXLzW1gY04d0uztqIRIef3/v/iSBuADsT/d3F9zvUXRzQ3SJBufeUNG8ABpsedbHC
-	 rqfS7XK2qQx9Wz+FjtDRtEheYj98KRXjvxfgtrPha3D2JtI8k3p9oEYz1XBeUtqTa7
-	 5Yg7AzBfhZiSG1P2E9FloxClEUdORqjumcD7Xah0qPmxJJ70ytm0slzoSTpInPlmzi
-	 tFdGP6i/6aPW2NnZVVjdRgAOP2jl51cTDs+8/zDvirYP7bCtTSKM9BgvTpu/ixXru6
-	 pLrIdNrqXSAZQ==
-Date: Wed, 17 Dec 2025 05:31:58 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1765973726;
+	bh=/V8ME6f+TcgocYWeUfh3JcmMnxNfhnvIgnWS2xnaweE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WZk1DshRF4J8H62SIWCs+GT0cHE9p8SDp+FfTS1QjiVp/HeNxOw5xWp4IY4a8Vpzt
+	 TZQft9cB1IDI8t5gAli9IFhZVKg9F7WAwv8i9exLJnyHFKEOE1suY9JJ5XzAnmXwO7
+	 aBEsb0WN2iO8c3cmxO6KN5jLp3xzrxiExdwwzXS2qD+BwvkLSePR+KyCu9nunBF+rZ
+	 fBD30EDyqY57UPe7RS1wHs0GBdwy1RLLwCgRE8+P4lMm0UrDKlHa5wEWkG/yZwiNJg
+	 6JWpCBQ920XRKV+qYSycQUXJxNkqRsmG5JrmL5C8AW+g5LAajpm35IIkxK0QfOzNSI
+	 JGt/8bRPGFEFg==
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-7c75fc222c3so2749810a34.0
+        for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 04:15:26 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVJUN0WSCYR1PRkmJ/L2f9RfHrYA/6Vee3SZiDg4rgWvWwXtt0nzNnLG2MW/QY1jrnzse0pc011f18=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxX/UHxIFbj5JwJRDVCPhvkKaI1ZACDpSV1VqO1v9Q4nyBlrszr
+	AqVvosjYKCl+gYrGoz/Og04FQ3zWngxg5jzGeqNF7ZVvn3EoLEcj3bjNO4xgqueiw95z9gXpG2B
+	n8dXrsV00UPk1Z9Egj0W+ZZtym9o3aow=
+X-Google-Smtp-Source: AGHT+IFyPbK46RYLF3hgXBIkJIBqNyWVP/G0zIpkadF1YIRRTqJbQ/yhJ/sPg9kgC4x6e6vBet5QlpdwjzUpLYOVIYQ=
+X-Received: by 2002:a05:6820:229c:b0:659:9a49:8e54 with SMTP id
+ 006d021491bc7-65b451c58bdmr8367653eaf.36.1765973725926; Wed, 17 Dec 2025
+ 04:15:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Rama Krishna <quic_ramkri@quicinc.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, Ayiluri Naga Rashmi <quic_nayiluri@quicinc.com>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, 
- quic_shazhuss@quicinc.com, 
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
- linux-pci@vger.kernel.org, konrad.dybcio@oss.qualcomm.com, 
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
- Nitesh Gupta <quic_nitegupt@quicinc.com>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- quic_vbadigan@quicinc.com
-To: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
-In-Reply-To: <20251217-firmware_managed_ep-v3-1-ff871ba688fb@oss.qualcomm.com>
-References: <20251217-firmware_managed_ep-v3-0-ff871ba688fb@oss.qualcomm.com>
- <20251217-firmware_managed_ep-v3-1-ff871ba688fb@oss.qualcomm.com>
-Message-Id: <176597111816.570337.1780092644304118894.robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: qcom,pcie-ep-sa8255p:
- Document firmware managed PCIe endpoint
+References: <12803663.O9o76ZdvQC@rafael.j.wysocki> <6225184.lOV4Wx5bFT@rafael.j.wysocki>
+ <5536fc1a-4bc9-413e-a903-08090217979b@amd.com>
+In-Reply-To: <5536fc1a-4bc9-413e-a903-08090217979b@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 17 Dec 2025 13:15:14 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0iaH9eU1A7d0TmJC4cktO=zh1r998R-59FyDQa1xJOCrQ@mail.gmail.com>
+X-Gm-Features: AQt7F2pYJy-v4RTgH2Xseqt9He4niysrExACC7GMuG2cmFyoAqN6C3IhQFnIKEY
+Message-ID: <CAJZ5v0iaH9eU1A7d0TmJC4cktO=zh1r998R-59FyDQa1xJOCrQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] ACPI: bus: Adjust error handling in acpi_run_osc()
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
+	Bjorn Helgaas <helgaas@kernel.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Hans de Goede <hansg@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Dec 16, 2025 at 11:04=E2=80=AFPM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+>
+>
+> On 12/16/2025 2:17 PM, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Some platform firmware incorrectly sets the OSC_CAPABILITIES_MASK_ERROR
+> > bit in its _OSC return buffer even if no support bits have been actuall=
+y
+> > masked, which causes acpi_run_osc() to return an error when executed
+> > with OSC_QUERY_ENABLE clear in the OC capabilities buffer.  As a result=
+,
+> > the OS assumes that the _OSC evaluation has failed and the platform has
+> > not acknowledged any capabilities, while the platform assumes that it
+> > actually has acknowledged some of them.  This confusion may lead to
+> > missing functionality (and possibly other issues) down the road.
+> >
+> > To address this problem, adjust acpi_run_osc() to avoid returning an
+> > error when OSC_CAPABILITIES_MASK_ERROR is set in the return buffer
+> > and OSC_QUERY_ENABLE is clear in the OC capabilities, but all of the
+> > bits in the support mask supplied by the OS are also set in the bit
+> > mask returned by the platform firmware.
+>
+> If possible can you add some more context to explain which _OSC was
+> behaving this way?
 
-On Wed, 17 Dec 2025 15:42:45 +0530, Mrinmay Sarkar wrote:
-> Document the required configuration to enable the PCIe Endpoint controller
-> on SA8255p which is managed by firmware using power-domain based handling.
-> 
-> Signed-off-by: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
-> ---
->  .../bindings/pci/qcom,pcie-ep-sa8255p.yaml         | 110 +++++++++++++++++++++
->  1 file changed, 110 insertions(+)
-> 
+\_SB._OSC
 
-My bot found errors running 'make dt_binding_check' on your patch:
+>  And if it's production hardware what hardware was affected?
 
-yamllint warnings/errors:
+No, it isn't, but this was not caught by Windows validation, so it is
+likely that Linux will be exposed to this again.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-ep-sa8255p.example.dtb: pcie-ep@1c10000 (qcom,pcie-ep-sa8255p): compatible: 'oneOf' conditional failed, one must be fixed:
-	'qcom,pcie-ep-sa8255p' does not match '^qcom,(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sc|sd[amx]|sm|x1[ep])[0-9]+(pro)?-.*$'
-	'qcom,pcie-ep-sa8255p' does not match '^qcom,sar[0-9]+[a-z]?-.*$'
-	'qcom,pcie-ep-sa8255p' does not match '^qcom,(sa|sc)8[0-9]+[a-z][a-z]?-.*$'
-	'qcom,pcie-ep-sa8255p' does not match '^qcom,(glymur|milos)-.*$'
-	'qcom,pcie-ep-sa8255p' does not match '^qcom,[ak]pss-wdt-(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sc|sd[amx]|sm)[0-9]+.*$'
-	'qcom,pcie-ep-sa8255p' does not match '^qcom,gcc-(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sc|sd[amx]|sm)[0-9]+.*$'
-	'qcom,pcie-ep-sa8255p' does not match '^qcom,mmcc-(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sc|sd[amx]|sm)[0-9]+.*$'
-	'qcom,pcie-ep-sa8255p' does not match '^qcom,pcie-(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sc|sd[amx]|sm|x1[ep])[0-9]+.*$'
-	'qcom,pcie-ep-sa8255p' does not match '^qcom,rpm-(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sc|sd[amx]|sm)[0-9]+.*$'
-	'qcom,pcie-ep-sa8255p' does not match '^qcom,scm-(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sc|sd[amx]|sm|x1[ep])[0-9]+.*$'
-	'qcom,pcie-ep-sa8255p' is not one of ['qcom,dsi-ctrl-6g-qcm2290', 'qcom,gpucc-sdm630', 'qcom,gpucc-sdm660', 'qcom,lcc-apq8064', 'qcom,lcc-ipq8064', 'qcom,lcc-mdm9615', 'qcom,lcc-msm8960', 'qcom,lpass-cpu-apq8016', 'qcom,usb-ss-ipq4019-phy', 'qcom,usb-hs-ipq4019-phy', 'qcom,vqmmc-ipq4019-regulator']
-	'qcom,pcie-ep-sa8255p' is not one of ['qcom,ipq806x-gmac', 'qcom,ipq806x-nand', 'qcom,ipq806x-sata-phy', 'qcom,ipq806x-usb-phy-ss', 'qcom,ipq806x-usb-phy-hs']
-	from schema $id: http://devicetree.org/schemas/arm/qcom-soc.yaml
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.kernel.org/project/devicetree/patch/20251217-firmware_managed_ep-v3-1-ff871ba688fb@oss.qualcomm.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+> It sounds like a viable workaround, I just want to make sure that if we
+> have to change this again later we have more information to look back upo=
+n.
+>
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >   drivers/acpi/bus.c |   23 +++++++++++++++--------
+> >   1 file changed, 15 insertions(+), 8 deletions(-)
+> >
+> > --- a/drivers/acpi/bus.c
+> > +++ b/drivers/acpi/bus.c
+> > @@ -240,9 +240,13 @@ acpi_status acpi_run_osc(acpi_handle han
+> >               status =3D AE_TYPE;
+> >               goto out_kfree;
+> >       }
+> > +     if (out_obj->buffer.length <=3D OSC_SUPPORT_DWORD) {
+> > +             status =3D AE_BAD_DATA;
+> > +             goto out_kfree;
+> > +     }
+> >       /* Need to ignore the bit0 in result code */
+> >       errors =3D *((u32 *)out_obj->buffer.pointer) & ~(1 << 0);
+> > -     if (errors) {
+> > +     if (errors & ~OSC_CAPABILITIES_MASK_ERROR) {
+> >               if (errors & OSC_REQUEST_ERROR)
+> >                       acpi_print_osc_error(handle, context,
+> >                               "_OSC request failed");
+> > @@ -252,17 +256,20 @@ acpi_status acpi_run_osc(acpi_handle han
+> >               if (errors & OSC_INVALID_REVISION_ERROR)
+> >                       acpi_print_osc_error(handle, context,
+> >                               "_OSC invalid revision");
+> > -             if (errors & OSC_CAPABILITIES_MASK_ERROR) {
+> > -                     if (((u32 *)context->cap.pointer)[OSC_QUERY_DWORD=
+]
+> > -                         & OSC_QUERY_ENABLE)
+> > -                             goto out_success;
+> > +             status =3D AE_ERROR;
+> > +             goto out_kfree;
+> > +     }
+> > +     if (errors) {
+> > +             u32 retbuf =3D ((u32 *)out_obj->buffer.pointer)[OSC_SUPPO=
+RT_DWORD];
+> > +             u32 capbuf =3D ((u32 *)context->cap.pointer)[OSC_SUPPORT_=
+DWORD];
+> > +             u32 querybuf =3D ((u32 *)context->cap.pointer)[OSC_QUERY_=
+DWORD];
+> > +
+> > +             /* OSC_CAPABILITIES_MASK_ERROR is set in errors. */
+> > +             if (!(querybuf & OSC_QUERY_ENABLE) && (capbuf & retbuf) !=
+=3D capbuf) {
+> >                       status =3D AE_SUPPORT;
+> >                       goto out_kfree;
+> >               }
+> > -             status =3D AE_ERROR;
+> > -             goto out_kfree;
+> >       }
+> > -out_success:
+> >       context->ret.length =3D out_obj->buffer.length;
+> >       context->ret.pointer =3D kmemdup(out_obj->buffer.pointer,
+> >                                      context->ret.length, GFP_KERNEL);
+> >
+> >
+> >
+>
 
