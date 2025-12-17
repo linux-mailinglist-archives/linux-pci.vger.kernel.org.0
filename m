@@ -1,154 +1,198 @@
-Return-Path: <linux-pci+bounces-43155-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43156-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F9C7CC64F3
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 07:55:28 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9414FCC6A83
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 09:52:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7C3F63016004
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 06:55:27 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 55EF1301B12D
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 08:52:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7D3D33508E;
-	Wed, 17 Dec 2025 06:55:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D84C434A78A;
+	Wed, 17 Dec 2025 08:52:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDwPl1Ms"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BoE1QrtK";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="LshYq+z8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92730335086
-	for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 06:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DDF34A76D
+	for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 08:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765954525; cv=none; b=oEe7NOS/rS9Hg4OTzWaRf8s4PJxsylryhXNJfIhRgqX358VUGWWWsEKagq02gO1bZ83JO/Nckxo2B5L+qisFv64nrSmoQsOfObm3iteG2iD0/BzmWhpJ+pw6nWSbgIUqlFx1mJaGgEQ/DAuGAV9CWYBR1598ViSRkbjtF6NqpdU=
+	t=1765961554; cv=none; b=CQpNnlaQErfc8aO5HVJQJwm3+Pp3pSr7Vet+Im3l+mI4y9w0VoJtLF9boAFx6j+2FQ4pJeAgE0eyKmKhtxv0kNEMS1sSTx8juRwafVJ64cAk8f+SB9O6z3g69oT0ojL+scCv/0toD67+uePA72A5/tQihUPTJCI+3HXsiXZQfH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765954525; c=relaxed/simple;
-	bh=0euWenUD/rLqI7KHSnqNWVT/rtVB0phrpjP0vEqV39M=;
+	s=arc-20240116; t=1765961554; c=relaxed/simple;
+	bh=zG31ZDDK3P3Y+9nGe+SlkTBlHBz+s+y443iDZhxPtI8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JkLPhixzAKqVoMmHghnAO8t0JEHQtaDNawsaKD1yiQ1Rzvhw3Xi1Wl2LONw4dKoAtjpnuQxcJF7KB9DUTzqiQ+XUcemegxt+9Nsf1LHnzGMIG2v0O8dHQvAX23QVAKFG+OB3rhO4TLVo4b4futOAFevY4to2THHNhy7Hp0Dg6Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDwPl1Ms; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51531C2BC9E
-	for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 06:55:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765954525;
-	bh=0euWenUD/rLqI7KHSnqNWVT/rtVB0phrpjP0vEqV39M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UDwPl1MsHTxdQV+Ax597mgm/hZr1ynxXPC2wG2Ikizz8bE4smZn5CM21G3u6fFil+
-	 3P0WbseKs3zpK96T+t6cjr5cEfoLL/CFWg8Igu/agDbyFgpu/2kvEWZz/TeOpYsPq8
-	 plqzD6F6U/gBBHgZkYkokZOhXf/lSEnXdmUHQXP/H4EgrafeZifpd4To+86URlAws+
-	 etppb+w6yi86+vxRlWkFmR0EmOyexvovu5nG4t75l7ZLWI1MD7wGkbMqmcSbUBvLwi
-	 XM4FBBvi4KU/jfytUBv+YNkEn2L32UffYaz44FZxX7MYPPAuBTuyNfartVzfwJ3RJx
-	 xrGa9SUPv4fmA==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b7ffbf4284dso166161566b.3
-        for <linux-pci@vger.kernel.org>; Tue, 16 Dec 2025 22:55:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXBsG4GnGrg7LwZhbPgLq1/lQfYi+t3w3dqEBnI02b5QqCtc3h+tSPfy1jei8zHSu6RTqo7b8ig8fM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBH/8gzusxfbuMfoRPKY6GhEAmt0NmvlicXpiBsWxalVVqe+Df
-	1tQXpb0PrdY9wwy8DzgrZvKbKMBa5tQN0w+7fZ5PqVMTtP+fMjFLXzlaet6sX1uWcF33Qwq0FOE
-	goIMVR47n3kuCH2WL79WpQ8wavGo9sV8=
-X-Google-Smtp-Source: AGHT+IEORLRdPBP/v0qwTwrl9rsa2vM3x1Jalt/3BfBNuYFsSiqui/I50cEEFyEiU5SwgUbYfma1vOsgdfJqpwcGEug=
-X-Received: by 2002:a17:907:1ca1:b0:b76:bfa9:5ae7 with SMTP id
- a640c23a62f3a-b7d236bcc17mr1645242166b.29.1765954523680; Tue, 16 Dec 2025
- 22:55:23 -0800 (PST)
+	 To:Cc:Content-Type; b=cZxvTvOlHGEXwRCjvyyupVrIgysK1X2/eF2ZUDabPW4rpU+ChrNdCkMFyUqV4w5YbphU79ygwwCJ3rD4PE+o42H4DJesO6PUjuaoTNSyB0pUcP2zAwH+Daq4L+iAjecL4c/wxFkK9uug7HF3BljuWMomDPfzaRiPV1TrhtPxTj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BoE1QrtK; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=LshYq+z8; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BH3F1ll869291
+	for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 08:52:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0lZHu0zP8AY39KyBo9sp8qu30vPSnqw8T8jcXq8Wpr0=; b=BoE1QrtK+5SjbELs
+	GPBrC448NlVtSFhugS7AiO74IccNYDDsC4PcMcaUWmJzWaBFbpJiIwVVJ6SSoXEi
+	f4BPVF/7C8IW0YGWiR+X7XMQ+XtMNgwsykU1pwraOaqlof8/T9Pe6Cx3aAmxHdbA
+	vel2sB3sjZxYtumyFBWZF/JGEBJAnQ+dvFe06zcPv1neOcj9PmmuClEEvfI4vmWQ
+	9Rt5LZxbpM6CvCFTOAf5rPq820HS7qlj56yFHc/t97BsKVSBrJY+EQ7GbnaGfIep
+	l2ZYEfovDZQ/HXyZXXU1cgl7p44rd75F02JuIHG3BMZ1ovvF8vw+7jvkJIpWUJll
+	7BJTNg==
+Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com [209.85.161.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b3fj1sqbv-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 08:52:31 +0000 (GMT)
+Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-6574475208eso4241812eaf.3
+        for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 00:52:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1765961550; x=1766566350; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0lZHu0zP8AY39KyBo9sp8qu30vPSnqw8T8jcXq8Wpr0=;
+        b=LshYq+z8bwjnhtdqP/0WlYt6XYEm0jRnJjFTqi5iEo4CNdq74JN//5G/YR1f9qj/xl
+         uBetjaAFrOhm8QyAZFXP6bNob1nZtVgkgj1/lBxbhRMguIE6HFv1GgXpVWH2J9KUrS5w
+         5K6XlaD29YeioqVkGBRKpt59lgeGmP/uEf3F2HhbNa0rl/pLUegMqT4k+ciQMKEMxS+T
+         rETr910MN464ZkUBgJyi0MBlwb38ENRUy6xyW7iqb+fF1NcvpVZ9QUWtqT4AOufcJ0MM
+         ebg0hvKfnWSa0iTTA/FAaNKe160eio5vGNhi1sqYf572O0L7VVEh9sAfOL9r2/3hXXh0
+         3iow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765961550; x=1766566350;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0lZHu0zP8AY39KyBo9sp8qu30vPSnqw8T8jcXq8Wpr0=;
+        b=ej/COneQAldQZVxj4GJljmOss4ZYR1oASmYbZu1xQgb53CC9I6xewzaHuaRIk40nlp
+         ACjLh5O4y9BV+60rRVAq6PRqIt+j32IUa0xHb7Bo72yghMML7vFawp2vKNhOIUk29jdc
+         0qTI8Qzo7lTe2DpmQijMOcpYt5FPI0pWF4Ei/yUku2aIKHpwpFviUzKNuojajc1YGVmE
+         a9WHplndnw+YejEEIi8My1MUFRDE668YUCjEc/D+Jg7TVWWJqDR4FmB39fhcgUgyvQMm
+         j1CqM56CAKR6MMCRu1zBO0s1dvZNehXdw3MAa2b/rY4tNvh1MAQZWTqH7e/lv4aq9UB1
+         qnzQ==
+X-Gm-Message-State: AOJu0Yyyd51vmdVSdJWpJC7U9JoiOqyq3G5Kpf6EqnqCCjR3veH1o46c
+	I6teCpUhi8QZZ3eSmaV5jmzkEHLBcYpqjeA7jZM2W/MP9m0n/6z1SlqCr3eG74slns6B8beL3Z4
+	Jht1vmmCVBWJcgthgj33aVafZBt9lfygkGrP2xo6m9XSW2tlok6DN+KtFKnD78GY2W2lNx6PX3M
+	adY8duGm36Ko3ttqssxR8YZ8qN4joh3WfoU+Q+hg==
+X-Gm-Gg: AY/fxX5P/iUtAyDkSQYXpqlxH7eH+pmpyofscQeD+d+L2pfJm8JZF8AViazHDdutP9P
+	TZX1GfvhQmEl5nmizc8h7QsQrQVPPH4FHic2c2MHzHr7/drciL9Dp6qSIhguq5i3CrxzOSvpwWr
+	RMrASYFQxmx2weEiv+YzGDiVA87fU0vDj32+zEfH/J636SDInqdKvKBgXluhEX39MIpTw=
+X-Received: by 2002:a05:6820:1987:b0:659:9a49:90c0 with SMTP id 006d021491bc7-65b451ee568mr7568568eaf.63.1765961550258;
+        Wed, 17 Dec 2025 00:52:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHtnLL3IuK8y7pqftlVXJ4xn5wbP+GPsuHHu7bSkjSTPXumGhvAiUyKkzFMIAYqgHnz64D4MjwSKhWE2LCDOKc=
+X-Received: by 2002:a05:6820:1987:b0:659:9a49:90c0 with SMTP id
+ 006d021491bc7-65b451ee568mr7568550eaf.63.1765961549888; Wed, 17 Dec 2025
+ 00:52:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
- <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com> <CAAhV-H6qqppoX_G5KrWmPor16bXfvNTE2x8Xx6yajAYPqxpigw@mail.gmail.com>
- <958ef380be4ea488698fab05245d631998c32a48.camel@linux.ibm.com>
- <CAAhV-H7iMKmLnisD-874D2ZC919sDYeWy3tw=+eUqifK--6-Dg@mail.gmail.com>
- <8dd0f3df4b18a6c9f8b49ede7bc2ab71e40fd8f9.camel@linux.ibm.com>
- <CAAhV-H4MNSiUqYpE919YcCaC-_-Q3GBwxRL13ggjsyLahQ-t1A@mail.gmail.com>
- <7385677843a7790e01158644f63ae4dbb3353bfe.camel@linux.ibm.com>
- <298aaf6b2815e59d1a94efffdd0e3b002c000cea.camel@linux.ibm.com>
- <CAAhV-H7fgaZUuFSpE0VsMtptnrUTzh0TS=B9ZBUZ_=TH-XjKtg@mail.gmail.com> <ba63ea826472b4f2d2a318784b710ee91fdca202.camel@linux.ibm.com>
-In-Reply-To: <ba63ea826472b4f2d2a318784b710ee91fdca202.camel@linux.ibm.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 17 Dec 2025 14:55:36 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6GE3q4qaPo9OvNkYOzatR-8BMYeGQ8hdmvKVZXbQF2rw@mail.gmail.com>
-X-Gm-Features: AQt7F2qiIW0tFThs3sCWqUchKuIiqrXyQONRE7SXBTuAyRJjZ97vPUQx-OL6RF0
-Message-ID: <CAAhV-H6GE3q4qaPo9OvNkYOzatR-8BMYeGQ8hdmvKVZXbQF2rw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] PCI: Fix isolated PCI function probing with ARI
- and SR-IOV
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	linux-s390 <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev, 
-	Farhan Ali <alifm@linux.ibm.com>, Matthew Rosato <mjrosato@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Gerd Bayer <gbayer@linux.ibm.com>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
+References: <20251216-firmware_managed_ep-v2-0-7a731327307f@oss.qualcomm.com>
+ <20251216-firmware_managed_ep-v2-1-7a731327307f@oss.qualcomm.com> <176589894648.2511603.9461849499751093485.robh@kernel.org>
+In-Reply-To: <176589894648.2511603.9461849499751093485.robh@kernel.org>
+From: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
+Date: Wed, 17 Dec 2025 14:22:19 +0530
+X-Gm-Features: AQt7F2rECtOrhS1bZFzhQl40G4gW_mCmIgD8HnISW_4IDdXYwYsXpZifcb6GWwo
+Message-ID: <CAMyL0qNwZxysUGJu7YowPn2CpmdPrUwnCOeVjm_2M-ik4s+kgQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: qcom,pcie-ep-sa8255p: Document
+ firmware managed PCIe endpoint
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-pci@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        konrad.dybcio@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
+        quic_shazhuss@quicinc.com, Bjorn Helgaas <bhelgaas@google.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rama Krishna <quic_ramkri@quicinc.com>, quic_vbadigan@quicinc.com,
+        Nitesh Gupta <quic_nitegupt@quicinc.com>,
+        Ayiluri Naga Rashmi <quic_nayiluri@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>, devicetree@vger.kernel.org,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE3MDA2OSBTYWx0ZWRfX+uQogBcTND2B
+ LHjh6XJCorZ4oFxGkjjU3YfGW6adF+v5+jlBWcwJXTys0Vmvr+CodQzM1v4Jtl63r9WKoSCDtdJ
+ A587e2Xxd3Euw9mMn84HIKEm6Eas6RQ2wYDz4SHqyjgtr6Gjq1mi9JyHU6Aw8e0l/qj5eMmBTMn
+ CBKNSHjfps17WH0roGYf4Ks9SUSa+g+wOU0/+4UxH+BubcNBmK8mrbFJu70DjYSjBs3FffP9/l4
+ 7FmPDa3OR57udEZDBFz4Lld9oYO1LBRBZhljaGsAKHHlTH03Oyv70oyZEK+M1krSG5eBCNhvURS
+ G42/EMwxdnKTbVR2lgtMKLB8K2RTR41GRpZBXDBLxnHJmL3pa7up7iOXXz7aiW9P7pcR27LXDA0
+ p+P/QevUfBnojXQKQOQIMPvkOk3Fsw==
+X-Proofpoint-ORIG-GUID: Wog-AlehnmLqRm96H-GFmnB0JsZK07kG
+X-Proofpoint-GUID: Wog-AlehnmLqRm96H-GFmnB0JsZK07kG
+X-Authority-Analysis: v=2.4 cv=edgwvrEH c=1 sm=1 tr=0 ts=69426f4f cx=c_pps
+ a=V4L7fE8DliODT/OoDI2WOg==:117 a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10
+ a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=QcnDgq45NsFIHwn4wVcA:9 a=QEXdDO2ut3YA:10 a=WZGXeFmKUf7gPmL3hEjn:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-17_01,2025-12-16_05,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 spamscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
+ adultscore=0 priorityscore=1501 phishscore=0 bulkscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512170069
 
-On Thu, Dec 4, 2025 at 5:45=E2=80=AFAM Niklas Schnelle <schnelle@linux.ibm.=
-com> wrote:
+On Tue, Dec 16, 2025 at 8:59=E2=80=AFPM Rob Herring (Arm) <robh@kernel.org>=
+ wrote:
 >
-> On Mon, 2025-12-01 at 22:45 +0800, Huacai Chen wrote:
+>
+> On Tue, 16 Dec 2025 19:19:17 +0530, Mrinmay Sarkar wrote:
+> > Document the required configuration to enable the PCIe Endpoint control=
+ler
+> > on SA8255p which is managed by firmware using power-domain based handli=
+ng.
 > >
-> --- snip ---
-> > You said that "it feels like this is just a hack to probe an odd
-> > topology". Yes, to some extent you are right.
+> > Signed-off-by: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
+> > ---
+> >  .../bindings/pci/qcom,pcie-ep-sa8255p.yaml         | 110 +++++++++++++=
+++++++++
+> >  1 file changed, 110 insertions(+)
 > >
-> > 1, One of our SoC (LS2K3000) has a special device which has func1 but
-> > without func0. To let the PCI core scan func1 we can only make
-> > hypervisor_isolated_pci_functions() return true.
-> > 2, In the above case, PCI_SCAN_ALL_PCIE_DEVS has no help.
-> > 3, Though we change hypervisor_isolated_pci_functions() to resolve the
-> > above problem, it also lets us pass isolated PCI functions to a guest
-> > OS instance.
-> >
-> > As a summary, for real machines commit a02fd05661d73a850 is a hack to
-> > probe an odd device, for virtual machines it allows passing isolated
-> > PCI functions.
 >
-> Ok, thanks for the answer. So let's see how we can debug this and get
-> to a solution that works for both of us. Looking around a bit I see
-> that your pci_loongson_map_bus() has some special handling for trying
-> not to access non-existent devices added by your commit 2410e3301fcc
-> ("PCI: loongson: Don't access non-existent devices"). I wonder if with
-> this patch applied we're running into this same issue but with a devfn
-> that was previously not tried and is not covered by your checks? And
-> maybe since your root complex doesn't return 0xff for these non-
-> existent devices we could end up trying to probe AHCI on such an empty
-> slot misinterpreting whatever it returns as matching device/vendor?
-Commit 2410e3301fcc seems to have no relationship with current problems.
-
-The LS2K3000 problem that commit a02fd05661d73 want to resolve is we
-have such a device:
-bus=3D0, device=3D6,  fun=3D0,  GPU
-bus=3D0, device=3D6,  fun=3D1,  DC
-The GPU part can be disabled and in which case there is a device
-without func0, so need a hack.
-
+> My bot found errors running 'make dt_binding_check' on your patch:
 >
-> And looking at pdev_may_exist() does the "device <=3D 20" really make
-> sense with 20 in decimal? If I pull in the negation I get "device > 19"
-> But if it was 0x20 I'd get "device > 0x1f" which would match the
-> maximum value of PCI_SLOT(), though then the check would be redundant
-> since the device value already comes out of PCI_SLOT().
-I have confirmed that 20 in decimal is right. Devices between dev-20
-and dev-0x20 are completely sane.
-
+> yamllint warnings/errors:
 >
-> Could you try redoing the test with the AHCI hang but add a print of
-> the affected bus/device/function that AHCI thinks it is probing? Then
-> if the above theory applies we should see it trying to probe on a
-> device that is missing in the correctly booted case and got past your
-> existing checks.
-By redoing this test we found there is only one AHCI detected, and the
-BDF is: bus=3D0, device=3D8, fun=3D0.
-
-With or without this patch, only one AHCI. But without this patch, the
-AHCI initialization doesn't hang.
-
-Huacai
-
+> dtschema/dtc warnings/errors:
+> Documentation/devicetree/bindings/pci/qcom,pcie-ep-sa8255p.example.dtb: /=
+example-0/soc/pcie-ep@1c10000: failed to match any schema with compatible: =
+['qcom,sa8255p-pcie-ep']
 >
-> Thanks,
-> Niklas Schnelle
+> doc reference errors (make refcheckdocs):
+>
+> See https://patchwork.kernel.org/project/devicetree/patch/20251216-firmwa=
+re_managed_ep-v2-1-7a731327307f@oss.qualcomm.com
+>
+> The base for the series is generally the latest rc1. A different dependen=
+cy
+> should be noted in *this* patch.
+>
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+>
+> pip3 install dtschema --upgrade
+>
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your sch=
+ema.
+>
+Thanks Rob for sharing this.
+
+I already ran 'make dt_binding_check' but somehow I didn't see this error.
+Maybe I need to upgrade all the tools ..
+
+I will resolve this and submit again.
+
+Thanks,
+Mrinmay
 
