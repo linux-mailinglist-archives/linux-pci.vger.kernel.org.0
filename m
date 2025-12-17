@@ -1,231 +1,170 @@
-Return-Path: <linux-pci+bounces-43237-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43239-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81C8DCC968A
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 20:23:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F1C1BCCA125
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 03:19:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A404A303DD02
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 19:21:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C1162301A1E8
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 02:19:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C60C5272E41;
-	Wed, 17 Dec 2025 19:21:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A210277CB8;
+	Thu, 18 Dec 2025 02:19:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="pMmc/a98"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="omw7lPak"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011018.outbound.protection.outlook.com [52.101.62.18])
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010008.outbound.protection.outlook.com [52.101.85.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CF22DF6E9;
-	Wed, 17 Dec 2025 19:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABBB274B55;
+	Thu, 18 Dec 2025 02:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.8
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765999307; cv=fail; b=T90+617xUm4GEEDtThm23p7T6qAbQsywymZv6O9FcWnWZMs3vCMq3yPmZLcLgSMqdQCwwYzWDiaJju/5u60SYZ/nST1ip2eKF/cMS/gYVnXf9CsGyHTqst+ryRVQ1HUheyS/alNVny6EldhATzl3LcrQ8IhJJSMxt4Ld80rw46s=
+	t=1766024351; cv=fail; b=Rqzsqr6M5vjg6aw4JkeONNYx9fHOAVbYFWmxHM0fvJ/fGWLh548JzBtjFhzWXMHA4/F+107wfMk8YzkO0k0IHpNnazU6CdXhJSU8g0p7SFdZ4abniAmvLGYSAXdywyXr2j/A5GXLADs9GEf4HnqMGVcqfkA05hMC/CDh7PzflHY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765999307; c=relaxed/simple;
-	bh=OD+0i4nzFKb13ZkFrJlq6nQogr5qYAJ6TS8UaJd0DFk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TGl5N8p6WWlnkcs2exIrzOXnwa1GeHw6ALOcnrfftInilrej70KdEPSemSC4V1zWn0NSygr8IC6a0iZ3UEzyXI2TDpPMOP8BnNgi1Ct0MnVvuABAbDtgEC5khByIoEcNK3oRH3i92grUUFKecVUKngd1t2iXA22uHTwulZciOPw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=pMmc/a98; arc=fail smtp.client-ip=52.101.62.18
+	s=arc-20240116; t=1766024351; c=relaxed/simple;
+	bh=k8Ehoda6h5tcsD9iTv/R8Zbxzk+F3xR0YiKLsN9qiXo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=A6nKV6DSJR8GfO49z7ssle49G06K+Z07XhaONeK2IPAeIOApYwcnHfMPBW5oEhVMAwGdOMrmHYtzKihosK1TGDpBR6b1w7YhiuUHO0Kl1JHkrbuzQKyX2IO91W9+ncAz+4PxSSj3B0rQu06VuLGOMrnycJh9LXl72527mhl7Rqk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=omw7lPak; arc=fail smtp.client-ip=52.101.85.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=osfa8nCltYA5OWb131nxKAQpiaZVgNXMQ3ypX1YmKMnCicTzrWMfh0dwgdp78NB8iOGSB6wML5iYFgS3F0LVJ+8LihukdOjLCp6Lni/Ck1E4d2kc3hrc01HWZg7As1iScpeLiao8aZDP1cEU5pAO6DwMv/LbSQSNIaHCyTIa/Jn+ioSN341kosHAdHkwNcqcBAzCDcmftXgpAbrn1E7hHyeuWlLZ9OF66gnNFCvIg4RL/BVY5cCk6+mPTE3zqmlNEx97A7s5iY8OXjgaJgRAV4s9udfJk2KJ3CpcBn7NvxlVhnw3fF9ETFJWo8rRvbFLx7US3LGwi8Qg4VesBDTe5g==
+ b=JNfH0DYpFYtwl/16RNNZS1HnJsNasSBgKiw8ZYei4g8td01pqD1BUZpAWaxEvVwLXK6gMRcz7FY7JFaVQGqwZmDpByw5+MF4cVP/ZRLWZLh6TpuKuUWizi23Gji9lgioMVHqZnlw+DswtZfzzVN7YHYwP8tx/tFQ2BCt+k0e2AR7GoKzU4WEjiBh2wKGjMisl3ByIk6+HzWt4eo5thf0/a7K2MFgm7CvB4XzlrycXe9erAnAoHJLDQVKW61fI996rosJX6X6hHbiDZ2xWChuaP0+7eUnFAR0fxfDk+uXp5wKL7A7wTYhfIYCX4AYTAeo1AmPzbQ1uAgTX9IPmW9HgQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wxAzLJo882LZYtEv0hQIYEW7daS4BbT18Q+40xRBUjY=;
- b=fqqomXFHT2+YXgxnctmtkRSJMnn3ISbxhY31GNOPtOwm3QvvP8afOzS2AWlHcxqcYdclN8A4lq9SBRHzfmrBCodPfrx+jb+2rYNRWWmWgf0WfniPsg2MYG/C8NMubYotqQ43vFGCPrOA26S4boUX2D5P6ahkNH9CE+2r5sNzEktXlsZKoP9iqV8fRFzNyKE9EmDylsOQTkSNRgzis62XSP9gCE88kcpnc3pzK6mMbK/mm/lNtXKnIjYX1TRcW5UrUFF20zY82LaXV7TvV3Hx9Fza1udkFKgaW+jWbJP6k9ZqRHFM6h7DGk0vJ4lJ4tWbjNqd95sRtkp1fgEUGs89fQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
+ bh=tqS0ouOtnxsiUwxrfY6Jto+jgkQn/4xgDBJNMOqVZPo=;
+ b=fM/wyPTbsOZvDs8L15SjoRSQNqAc87NlNdkJsQPxAbqQ353XYXOo4YZ7s4/47Ss0bh5630MT1GQIWVT8HsNNbn0Tc/ucnWVDkGdYYbvuUZ7+3URiaCng/8E2emteS7Os28p+q1otQaTW6UwGFeU6e2cE4xVzPezm2eh5BBh55OF4Vrb4d0T0Mlnupe5bGsA2Bi4+7V5aoPqzU8mKaAGxtfnlhrE3VylxVYrJtQSpRF3pBnfslFaDMAJKKA6eqT6acimQgg0YRUNHRoinIbGG8awHXTnwS5b6fLC+hx2ushnGzRnWU3BeOuVuz9JaXHguWmsh3u1N4iZ8RldtxFrhHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wxAzLJo882LZYtEv0hQIYEW7daS4BbT18Q+40xRBUjY=;
- b=pMmc/a98zp9CfimOqudJkQTBeqjehE1+UIUfy290bc59jsd3zkP9hiIQUEyIeYeGcs5R9+PTMV69ph1XDdOCBxgKMiIpjUWD2vdmEEckVlpr8+N1DAbzCrHpSzVejnFr+p2G2hghBglXKl7OmzQiF6CWiaUVp3hrCpV6+VwbyZCK3Yu1x8KRc/eMlPE+7PtDLsYnN/+/ACAqmffeypC9EgSEvmgLOz6IdVTJwaRFN29sUgo8UzXltdGh/8+mSlDEOqVJaeIdUC3sZURvwwT1y0xw6WO/FlSA5IkqH8Rf7w9+aI/ZTbJOvmrgRliwpe5iZNTUsWVXrVY0Gh99hQKZiQ==
-Received: from CH5P221CA0011.NAMP221.PROD.OUTLOOK.COM (2603:10b6:610:1f2::21)
- by DM6PR12MB4355.namprd12.prod.outlook.com (2603:10b6:5:2a3::21) with
+ bh=tqS0ouOtnxsiUwxrfY6Jto+jgkQn/4xgDBJNMOqVZPo=;
+ b=omw7lPakWHy3g68jwglzTeBknWeOxLx0O/JabbBkLioS9fu2MixzWLqZ1x+ZNtAoQMxpl8oRcsvc0xuAqgwDuMWbsdlfxEttc+llTBMHExOuxkwJPxI8foxhBOHra+vRDplsWAf9tQCnZSke2FJc7psrm3xUq5gB0lrolwEb8RmHj7fTwSVui0ylT2jt7xaMuCoE+Xpkv3L1eeBhU1XdodVHFA3M7S9lnxQkM93Y+cFZxhd1vPgqzfA4KKzbWzir2cFxCt5DdUDfUF7M0UjrK64wL++oaMF+mGv1o8jzwQkbCvNNHxK5GuORct4Y4MlAncWExjVsx1xT1icknL72gA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by PH7PR12MB7210.namprd12.prod.outlook.com (2603:10b6:510:205::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.6; Wed, 17 Dec
- 2025 15:46:08 +0000
-Received: from CH3PEPF00000011.namprd21.prod.outlook.com
- (2603:10b6:610:1f2:cafe::86) by CH5P221CA0011.outlook.office365.com
- (2603:10b6:610:1f2::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9434.7 via Frontend Transport; Wed,
- 17 Dec 2025 15:46:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CH3PEPF00000011.mail.protection.outlook.com (10.167.244.116) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9456.0 via Frontend Transport; Wed, 17 Dec 2025 15:46:08 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 17 Dec
- 2025 07:45:45 -0800
-Received: from 82875d6-lcedt.nvidia.com (10.126.231.35) by
- rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.20; Wed, 17 Dec 2025 07:45:44 -0800
-From: Nirmoy Das <nirmoyd@nvidia.com>
-To: Bjorn Helgaas <bhelgaas@google.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Robin Murphy
-	<robin.murphy@arm.com>, Jason Gunthorpe <jgg@nvidia.com>, Will Deacon
-	<will@kernel.org>, Joerg Roedel <joro@8bytes.org>, <iommu@lists.linux.dev>,
-	<jammy_huang@aspeedtech.com>, <mochs@nvidia.com>, Nirmoy Das
-	<nirmoyd@nvidia.com>
-Subject: [PATCH v2 2/2] PCI: Add PCI_BRIDGE_NO_ALIASES quirk for ASPEED AST1150
-Date: Wed, 17 Dec 2025 07:45:29 -0800
-Message-ID: <20251217154529.377586-2-nirmoyd@nvidia.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251217154529.377586-1-nirmoyd@nvidia.com>
+ 2025 15:47:24 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c%3]) with mapi id 15.20.9434.001; Wed, 17 Dec 2025
+ 15:47:23 +0000
+Date: Wed, 17 Dec 2025 11:47:22 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Nirmoy Das <nirmoyd@nvidia.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+	Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+	iommu@lists.linux.dev, jammy_huang@aspeedtech.com, mochs@nvidia.com
+Subject: Re: [PATCH v2 1/2] PCI: Add ASPEED vendor ID to pci_ids.h
+Message-ID: <20251217154722.GP6079@nvidia.com>
 References: <20251217154529.377586-1-nirmoyd@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251217154529.377586-1-nirmoyd@nvidia.com>
+X-ClientProxiedBy: BL0PR1501CA0018.namprd15.prod.outlook.com
+ (2603:10b6:207:17::31) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF00000011:EE_|DM6PR12MB4355:EE_
-X-MS-Office365-Filtering-Correlation-Id: 809cccd5-ef42-4d6a-a1f0-08de3d83653d
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|PH7PR12MB7210:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd8c4c69-feb0-4140-f98d-08de3d8391fc
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?iGN2QMrQYqK8OpfJUmWTwvPFjNvW4gGULrHRgLOiOn0ixgFx3YIAyrmySF9H?=
- =?us-ascii?Q?h9ORVLl9Yyz7RK+qTi59Vyyo392OR9mDtCkpPwykGtUrxjLnCrTKZEE8yLna?=
- =?us-ascii?Q?cQvSqZMQ9mQv60U9JODrs3EjIHxGqZLWx83I/sPRWER8XPmukF+lk3nTseTF?=
- =?us-ascii?Q?odHgpO0Y1JZjAAKWikcsPHlZOfqCJIx+09jFSNUgUfrYZN6Btl0JtrpEm3iN?=
- =?us-ascii?Q?lVhCB4TBryswZzekEc0iIodvlUohJORrEYWFYlzpFRiM+/W1BH4d1E45JFsh?=
- =?us-ascii?Q?cFbbjU/jO01otV0GR9V6WtkOj8xZq0DV0bz4ZOr+lhlSchJcOZ9DJ7Tz9STP?=
- =?us-ascii?Q?ghPtuwxQ8Omp5LipMq2+Y3HUhViPWRKIuw5t5rLtLPKfLPVfYw4UnBQ+H/0p?=
- =?us-ascii?Q?evqCJ7Res1i8AhAi1n6MmXzj6Ld7o0LqwCAPyo6AG9TES2EinfZAM5WKS9hn?=
- =?us-ascii?Q?QxfHZPld9+njK5FJEOm8dUzybUASrxSJKEY+3NUB5NlN0DVkV76uCBD93miQ?=
- =?us-ascii?Q?xXND0xb22FrZSRF6zZvUOIn6WKYjrXfI8q9UECCIJZh0GOcMDFk1UhN3OIOr?=
- =?us-ascii?Q?rN2MTjET97e9hc+GriN0bjPD32s2Zsp3655vTPjT/WZGAPciQNgYhXoXmyLA?=
- =?us-ascii?Q?IYHXoRsarf8loYrjTVoTSYAHSDajZD5iKYWEFmHqQszz8Of9nY3qMRK7dYJ0?=
- =?us-ascii?Q?uQodf4Kwny04laJkJqeDuAACTGizSAprYC7ULcXf+i+2D5UngDtUMGsXbTKd?=
- =?us-ascii?Q?mdmJ4E2ekg6a3shQFng82DI8mWTSpKmkZyfJ1qrvn11E/nGjuPhl63T6lDPW?=
- =?us-ascii?Q?Gxlf+sGDS88aHQW6P8vfx6wZjKjdsglmlCHoz3Hugcu3xWjqc+/qxDMe5Msy?=
- =?us-ascii?Q?wVRYWfTx10dU+Knob2mTPvT52S1Fjn1MjFalPlfRZlQqtIuR2ORXc3GhuiPD?=
- =?us-ascii?Q?pMiPXoadrv2ceRFF5qxOPdoKzyIwKtACvcUR6dsx9oj0XKv+AMFgrGNqkgci?=
- =?us-ascii?Q?L1hUDjtDjE0N6oWvNc6mJHNEovrAhtyS5fMwrjxuiZeATtGOPuADMiH5Wtwg?=
- =?us-ascii?Q?ZCI/Rn0xwxHeeBY490xwjp/iHU55eI8qNgOFJGzjJ6MasSbHYrbK/gbsk7Cv?=
- =?us-ascii?Q?M6/zDq+BPFXK2TcorsVsn72g+/Jnv10o8HPJPdXM/Ufsecr5Gl4XF17Qi6LC?=
- =?us-ascii?Q?lxtC7gXSYtMA90MSFqXQk+vSTxwxpA4C3orWY4EbijKaUbtbA2ViAQ6Zaydl?=
- =?us-ascii?Q?LiscfEsMQFlb5BIjp404ylpWKSHLLm0IC2vqxv/t4IgzpvQeKHdbFO9fMOMc?=
- =?us-ascii?Q?hgn09HP/Dh7KjA7SHztOCuddIlUsqLtzwdlMiehAhqW9Cn+9kkr5u95Fcu7X?=
- =?us-ascii?Q?BR+k7bntfsYSFuM50cH10LaUXz8YQfeG+ngpk0qCEPFqKZlxutLQXfMzQ76Q?=
- =?us-ascii?Q?FFN4vKQLiSe7IjM69YRrN5JA+qvDcljj1mKRzJPKN10fxDOdcpW2FFgd2kl3?=
- =?us-ascii?Q?Jspd7DHA9nmPPggIteSc0kctX05bF1LJWYlBGDwbsyw1rgeDYPvr1+boAZkz?=
- =?us-ascii?Q?kMlL7OAT07+ir6JbNSo=3D?=
+ =?us-ascii?Q?H0cQmfX/pICX3Y8aAFJpEQqH4/jcPEqSLxhLV73aev7xstBUpgLJsvD8SjCZ?=
+ =?us-ascii?Q?0FuUAayhNEoJJbhu7sPyEdVauD0QW/YZV1lkNVcwSPgurUgOhW/YRG5YInOS?=
+ =?us-ascii?Q?62SUPYLl73vynSAhfggn8tjgbEErHGK0pY0UhHOL/XOtagLOyATHjwXGejpX?=
+ =?us-ascii?Q?Vr4ysp40SwMUqyhz2LKdJQVbuoWBj4heqNRfuLsxl98HCU77UGoPofywJ72g?=
+ =?us-ascii?Q?8YSfNsx7fGa4cuE1lRNbNlfyQu11/ap7JYpR4KMmwpoFOuE+8y+rXinNocRM?=
+ =?us-ascii?Q?Jh9NKwwWWlZZrSH1gOAZyCMgPN1iASvlYDJDhzRp0w2P1292hpNag3MLHaz4?=
+ =?us-ascii?Q?qlyXzh8hnahtuzwPZ+s9dHIwPzFb7k5ZJW3RLX6exKOqjWw/lrwF93pZOGSz?=
+ =?us-ascii?Q?+VtwxDpNmpI62RZk3ooADNlmgTcLUBHoSxBCa1GFCFsJgAYGJVNSxWrX9B3j?=
+ =?us-ascii?Q?kNJEsvwuzL0dmlsCMI6SukGCNgXnf8wDtyw4MrarLwJjLrmnqQ98DZDZ+H8f?=
+ =?us-ascii?Q?qY+ANDAzz7tPg2oN/x7oIUmkL9ssXtqlEtv5r5S+K5itfN+eH6z5Alz6jo5a?=
+ =?us-ascii?Q?M08Gh34R0ZhkTYuixw6S7a56CNf8Gxywnl7eHZ2xq8+PWyLLeHwRGKtQ/OON?=
+ =?us-ascii?Q?MhiOqOKVF+lzsobHRcpoBrgMQ78yhKKsPd2qoqzwfFsu+icGqR+gBv+8p86b?=
+ =?us-ascii?Q?miNtq8xiydyuDMEwyMduUHJGuNDhaKoLfC1K7y0LjODGNuIpRgK1BH3Vomei?=
+ =?us-ascii?Q?Ej1OfdQnnWpO5lFCPyzB6k6iydy/9zA+gxHq8KWmsgCXR5YWH8GvphDckh1t?=
+ =?us-ascii?Q?PTOBF0rNFUSgh3cec1teyOoPrQ0SrfygUzu3oUaXJKmWdAb4C+uQYVOAP1QV?=
+ =?us-ascii?Q?qj2mv42N/Y0qbHtaYCHVIRtcfUFr7G5jCSToULp12P5s2bWftKPwCr6hLdmH?=
+ =?us-ascii?Q?LGVTij1A7rnY3KKwSe21opv0RVhUv5mr50WPokS/Anu2OH+/ZbnXtzSuEipd?=
+ =?us-ascii?Q?OmJUXB9ZCA9dfGpAxuVHQjtwH5l/uDR6LkV9pROUcJUXVpuK1gUF91oGI1lo?=
+ =?us-ascii?Q?jynmDDKI2LwG7OaoUY8vXkro93JybodaN49SMSjF8Tbfwvo7Z0qyqtH1vEN7?=
+ =?us-ascii?Q?D9K8hfsuG8kshPKDmBR07uJivKJIqI7cONfUGUxRDF62Ff4lbcDi1lMdVSwm?=
+ =?us-ascii?Q?m5RyUGWpHzX0kXef7bnMVN0piau7WLm6H82mhROFQ0H/yyHjgd5WY1dmL8VI?=
+ =?us-ascii?Q?eHjjiiIynx8DM1ecROq1Fg/9uQP5yAX8Up+GXTUiMkiBmyHV1FJr4V0GnpZt?=
+ =?us-ascii?Q?QeW0APOtFGXve6VtMBn4IaKRPAOygv/vK/M2/x8dE08Gc/VJA1iaIJw298+p?=
+ =?us-ascii?Q?0M+Xp5U+Aeds0F1SDQBwyyckP+LnETiv3gMp3NS2RbaLhZs7y2gc7hFXZIZ+?=
+ =?us-ascii?Q?Rpwy069pYURtjTk66MRMtfaRZcCLqQYW?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?/MRh3pakr4nXUaIKFnqZgQ8MOiwAWXjLozPX5RP6hHg1zsgqfqhkavDmTaVb?=
+ =?us-ascii?Q?ZyktrdOOq5tOWuByMFbppE4Uncg2Dfccqz6fw+wTS2QbDwUeGhTtY1tkLkmi?=
+ =?us-ascii?Q?vw1fuJWPkr3XOFL/LKAhqWMl/Twnu/t486zJXGHCRvu/Ec1SyEmzTtOF/ThC?=
+ =?us-ascii?Q?QjbYy7J/9rC16SPGFvzcqy+v1rFhK/2NgbFF1pB51AAvN7vm4ocF713hCgFT?=
+ =?us-ascii?Q?5vu1ACZs2kj3ttH4meYKUeRZ2CoPPGP0/HPV/0wuh7TRFA+WUj/0O5C9gBTS?=
+ =?us-ascii?Q?CnA6tVN0waKPdC+x2/CmVgnxnojOZGTBA70smJO1cbbFxqCbH+DCC9XMNVh7?=
+ =?us-ascii?Q?K8F0xqcwKjJ+Z6ZrKk8nMijkYreWm4B/ChULmOMZwcmwJ9A8UVyomJV7T1bM?=
+ =?us-ascii?Q?ujSMrAgmRhzOiWQf2QGDMs9Fvmnd3wfu/KpTV/MpqV8Y0F/cypTL7Er3Q652?=
+ =?us-ascii?Q?QFbeIqLtbAc1tmramJsIip6tSsVjaL0ETSrQpv9idA0RMR69W8xqdxfRCGxs?=
+ =?us-ascii?Q?7ZbVRqJPgC/6jmfiQGwqTmRJaxxKgGaET11kKf6igFpqkGpkByn/A1kFi0NV?=
+ =?us-ascii?Q?uXoVDKUc9OjtqrKU8WXKM4oSzuLpKgDV8lLgUi/uzKrBcTxLV+gGwAlw7wi/?=
+ =?us-ascii?Q?GQDst6rPvdAPLReGwJzG9iju/M1+k8QNKmf+D8nmPLMAwRw62D2MewtBDgCg?=
+ =?us-ascii?Q?8uSWXOOb++aayXviRYzfzysTyIEeRAw3BqyR0qHkRGlHy6T/C4lfbIJHLDre?=
+ =?us-ascii?Q?BmQC9IjN32Fryc7P2pMzTFWVOOfD9drO5JMe5Y8rjixfxndR4sr84BcwuJNy?=
+ =?us-ascii?Q?tEWQvoPwlT2liyZ/XnbTHsE9PQKyxSiigMvoEDeZy8wuPoHVMXoaPxmJSnbR?=
+ =?us-ascii?Q?d7HtTAC6IzcvjkdRQsosumEAMb4OlYtsI8xDQHK/F3jJPoTYpDRqZtuGxoMq?=
+ =?us-ascii?Q?uB3zlMk0p8024r00ZIKrTIRdYSeyTniiWqrLVRoHNaohlapvjFf45Tq/PIkW?=
+ =?us-ascii?Q?oMfooKnghdv+eIgECoLtfaKn+xRgZ3AZG43lKofLXBUmixIW39aav9xI4VmB?=
+ =?us-ascii?Q?2qm2CpblzHgnePRCKkssedRTNSbgTnWEhLGggnPQaie/euuF62yOdqDflOmf?=
+ =?us-ascii?Q?U89UQqp+PDXXKy3BfEt9JcqEadO4AsxFTCCc2P/uLlT+m94M8wpIsCFRrXYz?=
+ =?us-ascii?Q?T80sJwxbO7/Gn/bhYA7m0C5elI6Nk+ZB/2nFExvV7R6lemv77NL080V0ejm3?=
+ =?us-ascii?Q?mu97PHlJLhnRPi31+huudE1SjiTbqGOW1EAoW8LLv//fQ4b3zKD3vZ1LWMX5?=
+ =?us-ascii?Q?XMZgcXODBkHxFsB/vX2deipv3BC9Xe9HZUWdWHm024UbOQIZSlOrQR60GDwo?=
+ =?us-ascii?Q?HTbhJn6AYqdFJDr8M0bvM4Wp+HTyhAvLkcdCDxGAfEszaVhQoX5aeyTip/mh?=
+ =?us-ascii?Q?yT/cflf4wwiJuE1H9I0N3HJN416ctj2uJ72DgaH3szeqScdycF3e1pxehbNx?=
+ =?us-ascii?Q?P/utEHPeOuyy2U4AliDvn/TM6RgiN5yP+EDxGfFpAIUPsjECqLd1pAUb1IIR?=
+ =?us-ascii?Q?FoOhsUuJe5LNru48O9I=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2025 15:46:08.0117
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd8c4c69-feb0-4140-f98d-08de3d8391fc
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2025 15:47:23.4178
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 809cccd5-ef42-4d6a-a1f0-08de3d83653d
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH3PEPF00000011.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4355
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qLBCSL25NlukLDmNoG/L9QpbgDkOkK8RCvu0fNh6Xpqz3Ruz+WUlkkebuBnJPRNU
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7210
 
-ASPEED BMC controllers have VGA and USB functions behind a PCIe-to-PCI
-bridge that causes them to share the same stream ID:
+On Wed, Dec 17, 2025 at 07:45:28AM -0800, Nirmoy Das wrote:
+> Add PCI_VENDOR_ID_ASPEED to the shared pci_ids.h header and remove the
+> duplicate local definition from ehci-pci.c.
+> 
+> This prepares for adding a PCI quirk for ASPEED devices.
+> 
+> Signed-off-by: Nirmoy Das <nirmoyd@nvidia.com>
+> ---
+>  drivers/usb/host/ehci-pci.c | 1 -
+>  include/linux/pci_ids.h     | 2 ++
+>  2 files changed, 2 insertions(+), 1 deletion(-)
 
-  [e0]---00.0-[e1-e2]----00.0-[e2]--+-00.0  ASPEED Graphics Family
-                                    \-02.0  ASPEED USB Controller
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-Both devices get stream ID 0x5e200 due to bridge aliasing, causing the
-USB controller to be rejected with 'Aliasing StreamID unsupported'.
-
-Per ASPEED, the AST1150 doesn't use a real PCI bus and always forwards
-the original requester ID from downstream devices rather than replacing
-it with any alias.
-
-Add a new PCI_DEV_FLAGS_PCI_BRIDGE_NO_ALIASES flag and apply it to the
-AST1150.
-
-Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Nirmoy Das <nirmoyd@nvidia.com>
----
-v2:
-  - Use new PCI_DEV_FLAGS_PCI_BRIDGE_NO_ALIASES flag instead of
-    PCI_DEV_FLAGS_BRIDGE_XLATE_ROOT to only skip aliasing at this
-    bridge, not stop the entire upstream alias walk (Jason Gunthorpe)
-
- drivers/pci/quirks.c | 10 ++++++++++
- drivers/pci/search.c |  2 ++
- include/linux/pci.h  |  5 +++++
- 3 files changed, 17 insertions(+)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b9c252aa6fe0..a37b7305ae5f 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4453,6 +4453,16 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_BROADCOM, 0x9000,
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_BROADCOM, 0x9084,
- 				quirk_bridge_cavm_thrx2_pcie_root);
- 
-+/*
-+ * AST1150 doesn't use a real PCI bus and always forwards the requester ID
-+ * from downstream devices.
-+ */
-+static void quirk_aspeed_pci_bridge_no_aliases(struct pci_dev *pdev)
-+{
-+	pdev->dev_flags |= PCI_DEV_FLAGS_PCI_BRIDGE_NO_ALIASES;
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ASPEED, 0x1150, quirk_aspeed_pci_bridge_no_aliases);
-+
- /*
-  * Intersil/Techwell TW686[4589]-based video capture cards have an empty (zero)
-  * class code.  Fix it.
-diff --git a/drivers/pci/search.c b/drivers/pci/search.c
-index 53840634fbfc..2f44444ae22f 100644
---- a/drivers/pci/search.c
-+++ b/drivers/pci/search.c
-@@ -86,6 +86,8 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
- 			case PCI_EXP_TYPE_DOWNSTREAM:
- 				continue;
- 			case PCI_EXP_TYPE_PCI_BRIDGE:
-+				if (tmp->dev_flags & PCI_DEV_FLAGS_PCI_BRIDGE_NO_ALIASES)
-+					continue;
- 				ret = fn(tmp,
- 					 PCI_DEVID(tmp->subordinate->number,
- 						   PCI_DEVFN(0, 0)), data);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index b16127c6a7b4..963da06ef193 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -248,6 +248,11 @@ enum pci_dev_flags {
- 	PCI_DEV_FLAGS_HAS_MSI_MASKING = (__force pci_dev_flags_t) (1 << 12),
- 	/* Device requires write to PCI_MSIX_ENTRY_DATA before any MSIX reads */
- 	PCI_DEV_FLAGS_MSIX_TOUCH_ENTRY_DATA_FIRST = (__force pci_dev_flags_t) (1 << 13),
-+	/*
-+	 * PCIe to PCI bridge does not create RID aliases because the bridge is
-+	 * integrated with the downstream devices and doesn't use real PCI.
-+	 */
-+	PCI_DEV_FLAGS_PCI_BRIDGE_NO_ALIASES = (__force pci_dev_flags_t) (1 << 14),
- };
- 
- enum pci_irq_reroute_variant {
--- 
-2.43.0
-
+Jason
 
