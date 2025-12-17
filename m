@@ -1,104 +1,154 @@
-Return-Path: <linux-pci+bounces-43154-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43155-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9533CC6019
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 06:10:37 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F9C7CC64F3
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 07:55:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2368C3025A6D
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 05:10:34 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7C3F63016004
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 06:55:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE556225A34;
-	Wed, 17 Dec 2025 05:10:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7D3D33508E;
+	Wed, 17 Dec 2025 06:55:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcJmWWfK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDwPl1Ms"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D1D1BEF8A;
-	Wed, 17 Dec 2025 05:10:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92730335086
+	for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 06:55:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765948232; cv=none; b=iaKrufj689Jt3FdEUBGs/k0W8c7jPsnF5eVdJ0vgfePm4lZdP4kYopG/TdzD9pc5wDH46Uc8cUruWmprC5/k3a0I1Mlujkkr0HcMzHv6A1X0SRPpJJG663K0pg8KayYBhzf6sAB4hoobG5zthuP5KUCRHx0ZU07jyM7XesGASdw=
+	t=1765954525; cv=none; b=oEe7NOS/rS9Hg4OTzWaRf8s4PJxsylryhXNJfIhRgqX358VUGWWWsEKagq02gO1bZ83JO/Nckxo2B5L+qisFv64nrSmoQsOfObm3iteG2iD0/BzmWhpJ+pw6nWSbgIUqlFx1mJaGgEQ/DAuGAV9CWYBR1598ViSRkbjtF6NqpdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765948232; c=relaxed/simple;
-	bh=bLaK2gFWACWyalrEyaiMmZm2YYU4Bq1urmASnlDm6Os=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lMvYE7ZyFPFtIz+qYF9MKWRqBHxRIhj8qjKrs8kjCdxiiIH7lM865R8op07J1Q/lAFTdd8jIjrJfzkJZJfzPTHogaPY+qpNcp3W0ASKOYQRcChs4tUdf/3MeTAZ9T7xuyaSkcUSXIu4WK3Ntmj1bhSe99MVmY84HiH1c+Ujo/pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcJmWWfK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C1DCC19421;
-	Wed, 17 Dec 2025 05:10:30 +0000 (UTC)
+	s=arc-20240116; t=1765954525; c=relaxed/simple;
+	bh=0euWenUD/rLqI7KHSnqNWVT/rtVB0phrpjP0vEqV39M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JkLPhixzAKqVoMmHghnAO8t0JEHQtaDNawsaKD1yiQ1Rzvhw3Xi1Wl2LONw4dKoAtjpnuQxcJF7KB9DUTzqiQ+XUcemegxt+9Nsf1LHnzGMIG2v0O8dHQvAX23QVAKFG+OB3rhO4TLVo4b4futOAFevY4to2THHNhy7Hp0Dg6Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDwPl1Ms; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51531C2BC9E
+	for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 06:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765948231;
-	bh=bLaK2gFWACWyalrEyaiMmZm2YYU4Bq1urmASnlDm6Os=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BcJmWWfK33MwnybWoQwekHilGr5zCy1560YIq82bx13SaA1+NQhhGq6QhzHPOtbEe
-	 g76xucoHWrhcqeg8jb5VE05l6kNRJqy8dzrHM71a0cQhnkMbxx8WNSdtD/xq6p5DJh
-	 bLHZ6CrHbnrrdiA/lniK+9rvYDMqboXAwilsS0aU54t6HtaaMkb9cupJ0QxHomVxV2
-	 yEKUZaMdsykL/s2wdfPiua3AQCBlcTtdYyxETlm+DBvrPfzz8JejKbsd8W5e+SNrmX
-	 GIQpG0as5/ipXXQUCNwIQXZKMAJ3whyWGdWsrBeHqTqlltwGj8NOqaddzfTt/pb5xg
-	 F3WTKkjID57OQ==
-Date: Wed, 17 Dec 2025 10:40:28 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Koichiro Den <den@valinux.co.jp>, Niklas Cassel <cassel@kernel.org>,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
-	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH 0/8] dmaengine: Add new API to combine onfiguration and
- descriptor preparation
-Message-ID: <aUI7RJvQUx3m2IRf@vaman>
-References: <20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com>
- <aUFUX0e_h7RGAecz@vaman>
- <aUF2SX/6bV2lHtF0@lizhi-Precision-Tower-5810>
- <aUF-C8iUCs-dYXGm@vaman>
- <aUGA7tmDYm1MhRXn@lizhi-Precision-Tower-5810>
- <aUGURVuW33WSTuyI@vaman>
- <aUGWtarjFNNy2KyZ@lizhi-Precision-Tower-5810>
+	s=k20201202; t=1765954525;
+	bh=0euWenUD/rLqI7KHSnqNWVT/rtVB0phrpjP0vEqV39M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UDwPl1MsHTxdQV+Ax597mgm/hZr1ynxXPC2wG2Ikizz8bE4smZn5CM21G3u6fFil+
+	 3P0WbseKs3zpK96T+t6cjr5cEfoLL/CFWg8Igu/agDbyFgpu/2kvEWZz/TeOpYsPq8
+	 plqzD6F6U/gBBHgZkYkokZOhXf/lSEnXdmUHQXP/H4EgrafeZifpd4To+86URlAws+
+	 etppb+w6yi86+vxRlWkFmR0EmOyexvovu5nG4t75l7ZLWI1MD7wGkbMqmcSbUBvLwi
+	 XM4FBBvi4KU/jfytUBv+YNkEn2L32UffYaz44FZxX7MYPPAuBTuyNfartVzfwJ3RJx
+	 xrGa9SUPv4fmA==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b7ffbf4284dso166161566b.3
+        for <linux-pci@vger.kernel.org>; Tue, 16 Dec 2025 22:55:25 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXBsG4GnGrg7LwZhbPgLq1/lQfYi+t3w3dqEBnI02b5QqCtc3h+tSPfy1jei8zHSu6RTqo7b8ig8fM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBH/8gzusxfbuMfoRPKY6GhEAmt0NmvlicXpiBsWxalVVqe+Df
+	1tQXpb0PrdY9wwy8DzgrZvKbKMBa5tQN0w+7fZ5PqVMTtP+fMjFLXzlaet6sX1uWcF33Qwq0FOE
+	goIMVR47n3kuCH2WL79WpQ8wavGo9sV8=
+X-Google-Smtp-Source: AGHT+IEORLRdPBP/v0qwTwrl9rsa2vM3x1Jalt/3BfBNuYFsSiqui/I50cEEFyEiU5SwgUbYfma1vOsgdfJqpwcGEug=
+X-Received: by 2002:a17:907:1ca1:b0:b76:bfa9:5ae7 with SMTP id
+ a640c23a62f3a-b7d236bcc17mr1645242166b.29.1765954523680; Tue, 16 Dec 2025
+ 22:55:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aUGWtarjFNNy2KyZ@lizhi-Precision-Tower-5810>
+References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
+ <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com> <CAAhV-H6qqppoX_G5KrWmPor16bXfvNTE2x8Xx6yajAYPqxpigw@mail.gmail.com>
+ <958ef380be4ea488698fab05245d631998c32a48.camel@linux.ibm.com>
+ <CAAhV-H7iMKmLnisD-874D2ZC919sDYeWy3tw=+eUqifK--6-Dg@mail.gmail.com>
+ <8dd0f3df4b18a6c9f8b49ede7bc2ab71e40fd8f9.camel@linux.ibm.com>
+ <CAAhV-H4MNSiUqYpE919YcCaC-_-Q3GBwxRL13ggjsyLahQ-t1A@mail.gmail.com>
+ <7385677843a7790e01158644f63ae4dbb3353bfe.camel@linux.ibm.com>
+ <298aaf6b2815e59d1a94efffdd0e3b002c000cea.camel@linux.ibm.com>
+ <CAAhV-H7fgaZUuFSpE0VsMtptnrUTzh0TS=B9ZBUZ_=TH-XjKtg@mail.gmail.com> <ba63ea826472b4f2d2a318784b710ee91fdca202.camel@linux.ibm.com>
+In-Reply-To: <ba63ea826472b4f2d2a318784b710ee91fdca202.camel@linux.ibm.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 17 Dec 2025 14:55:36 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6GE3q4qaPo9OvNkYOzatR-8BMYeGQ8hdmvKVZXbQF2rw@mail.gmail.com>
+X-Gm-Features: AQt7F2qiIW0tFThs3sCWqUchKuIiqrXyQONRE7SXBTuAyRJjZ97vPUQx-OL6RF0
+Message-ID: <CAAhV-H6GE3q4qaPo9OvNkYOzatR-8BMYeGQ8hdmvKVZXbQF2rw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] PCI: Fix isolated PCI function probing with ARI
+ and SR-IOV
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
+	linux-s390 <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev, 
+	Farhan Ali <alifm@linux.ibm.com>, Matthew Rosato <mjrosato@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Gerd Bayer <gbayer@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 16-12-25, 12:28, Frank Li wrote:
-> On Tue, Dec 16, 2025 at 10:47:57PM +0530, Vinod Koul wrote:
-> > On 16-12-25, 10:55, Frank Li wrote:
-> > > The usual prep_ call have not sconf argument, which need depend on previous
-> > > config.
-> > >
-> > > further, If passdown NULL for config, it means use previuos config.
+On Thu, Dec 4, 2025 at 5:45=E2=80=AFAM Niklas Schnelle <schnelle@linux.ibm.=
+com> wrote:
+>
+> On Mon, 2025-12-01 at 22:45 +0800, Huacai Chen wrote:
 > >
-> > I know it is bit longer but somehow I would feel better for the API to
-> > imply config as well please
-> 
-> I can use you suggested dmaengine_prep_config_perip_single().
-> 
-> But how about use dmaengine_prep_config_single(), which little bit shorter
-> and use "config" to imply it is for periperal? (similar to cyclic case?)
+> --- snip ---
+> > You said that "it feels like this is just a hack to probe an odd
+> > topology". Yes, to some extent you are right.
+> >
+> > 1, One of our SoC (LS2K3000) has a special device which has func1 but
+> > without func0. To let the PCI core scan func1 we can only make
+> > hypervisor_isolated_pci_functions() return true.
+> > 2, In the above case, PCI_SCAN_ALL_PCIE_DEVS has no help.
+> > 3, Though we change hypervisor_isolated_pci_functions() to resolve the
+> > above problem, it also lets us pass isolated PCI functions to a guest
+> > OS instance.
+> >
+> > As a summary, for real machines commit a02fd05661d73a850 is a hack to
+> > probe an odd device, for virtual machines it allows passing isolated
+> > PCI functions.
+>
+> Ok, thanks for the answer. So let's see how we can debug this and get
+> to a solution that works for both of us. Looking around a bit I see
+> that your pci_loongson_map_bus() has some special handling for trying
+> not to access non-existent devices added by your commit 2410e3301fcc
+> ("PCI: loongson: Don't access non-existent devices"). I wonder if with
+> this patch applied we're running into this same issue but with a devfn
+> that was previously not tried and is not covered by your checks? And
+> maybe since your root complex doesn't return 0xff for these non-
+> existent devices we could end up trying to probe AHCI on such an empty
+> slot misinterpreting whatever it returns as matching device/vendor?
+Commit 2410e3301fcc seems to have no relationship with current problems.
 
-Yes that is a good idea. config does imply peripheral cases. Please make
-sure API documentation marks that clearly
+The LS2K3000 problem that commit a02fd05661d73 want to resolve is we
+have such a device:
+bus=3D0, device=3D6,  fun=3D0,  GPU
+bus=3D0, device=3D6,  fun=3D1,  DC
+The GPU part can be disabled and in which case there is a device
+without func0, so need a hack.
 
-BR
--- 
-~Vinod
+>
+> And looking at pdev_may_exist() does the "device <=3D 20" really make
+> sense with 20 in decimal? If I pull in the negation I get "device > 19"
+> But if it was 0x20 I'd get "device > 0x1f" which would match the
+> maximum value of PCI_SLOT(), though then the check would be redundant
+> since the device value already comes out of PCI_SLOT().
+I have confirmed that 20 in decimal is right. Devices between dev-20
+and dev-0x20 are completely sane.
+
+>
+> Could you try redoing the test with the AHCI hang but add a print of
+> the affected bus/device/function that AHCI thinks it is probing? Then
+> if the above theory applies we should see it trying to probe on a
+> device that is missing in the correctly booted case and got past your
+> existing checks.
+By redoing this test we found there is only one AHCI detected, and the
+BDF is: bus=3D0, device=3D8, fun=3D0.
+
+With or without this patch, only one AHCI. But without this patch, the
+AHCI initialization doesn't hang.
+
+Huacai
+
+>
+> Thanks,
+> Niklas Schnelle
 
