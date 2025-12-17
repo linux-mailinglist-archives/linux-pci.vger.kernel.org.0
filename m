@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-43157-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43158-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA54DCC6CF3
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 10:33:20 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0860CC7085
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 11:18:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CCDEB300BA00
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 09:33:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 415323109898
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 10:12:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6008333B949;
-	Wed, 17 Dec 2025 09:33:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94693342529;
+	Wed, 17 Dec 2025 09:47:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="uwuE4hxu"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="XMQIrcYP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E7033B6D7;
-	Wed, 17 Dec 2025 09:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.224
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A56341AAF;
+	Wed, 17 Dec 2025 09:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765963996; cv=none; b=URjIIlEWJMSkALIijK4HWdLXxUUnH1hWkNpgpEX/875UGwqyBbx2fiuV/hUWdLbRF4/HSwQ4zx365dqivPj8q2dk0nEqKZBIzXALUkX06v+3mUXDQ74eim6E002741ZoOYidx/O29v32AL9vOYZZYEBGX+57a9XOyg7FsJ7ekEM=
+	t=1765964863; cv=none; b=tFmFC80CbxBnuwNBqsBqbl8HICeGQXr8b5j94lveOLtaHg+xWuVyd1ipreG1hg8J3fjostOyDLiCu074DInLSCkf0dLaTYPFA3wL1DPlN2YkCmxrlNgJZTqpZZIWoTAV3Po4biuzRu/2RoNVhvOKbJ/jXmBAF53svYrovBMfg+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765963996; c=relaxed/simple;
-	bh=ZGRs2pcLuixLt5s7rTmxagUvSzbPPvpp1VsSAXcuED0=;
+	s=arc-20240116; t=1765964863; c=relaxed/simple;
+	bh=xdj2dOafBgFbUnGcj+EiAB/dKWHz+XPBCerKpx/HE6U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Q8YjyT6awVzq5E9sM/BX/60hL5nVhAoLpZI/QqTC5Ep8uaFazcJR6K889IVB+c13Z2u+kTxkm0u1iRZ7bmXya5OzTUKdmTcRDNsXPoiENmv2iebi3Z8yq0BtWmZKHbUIULy/zxFkAO9ZSr7+v1h9mWXCbIfEdHSJIbWNkf2DwU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=uwuE4hxu; arc=none smtp.client-ip=113.46.200.224
+	 In-Reply-To:Content-Type; b=n8eNEhghtYwsy73xTCeP5YjYMLkjDopAgGQnqdJOKQmpWQKuc2D7yzGoyDWwfBevgA41d5kc3ayOgQItDM0FSYsMAdiZHhj80pYeTe00k/bokXqR5oE2G8gHVycMSu3rRFm1p8QegcasL/JpRc24i8eEP9apdRnCX91UdfoEkXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=XMQIrcYP; arc=none smtp.client-ip=113.46.200.218
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=0gdo0wfOTVQDq1jL/5AEFLdrE4ZMkHZAdq3trl2BrkA=;
-	b=uwuE4hxuxRXoBHXHhYNUJH7R2C2iFzBC/RVIUiovldJYNkJIoMrZk9T7AfYwkalpDROcsUZY8
-	8xIX3rtwdUPM37kKbadSaDeTLEHGbzgTxkLGvPuApoqMyWSBTuys/hnITvzpoJH1b7vtVqE+ytC
-	eliTPEzwBGgJJCbdl6aaPc8=
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4dWT6S4J78z1cyPb;
-	Wed, 17 Dec 2025 17:30:08 +0800 (CST)
+	bh=ZQ9EAf6urRQxQaV20GCoVkxo1RVP74p1WDO98ViQaBw=;
+	b=XMQIrcYPjH1uPWtTWrUwg7QGl7Sf8lgCE2r/nrbPEUlWB6YN811its5DaYSrkAZ7sq3zCT7mv
+	ZW5eaHXhVabj8SScKzn+/qGFb7V1xC5bHvC+QMiROry7JxiwCR8hhlsZsYMcJMSrkEbqFkPgudm
+	dRfrOaWJfPKlObw5706rBJA=
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4dWTRK3Q8hzpStQ;
+	Wed, 17 Dec 2025 17:44:45 +0800 (CST)
 Received: from kwepemr500012.china.huawei.com (unknown [7.202.195.23])
-	by mail.maildlp.com (Postfix) with ESMTPS id C12F3140157;
-	Wed, 17 Dec 2025 17:33:10 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 3D2261804F2;
+	Wed, 17 Dec 2025 17:47:29 +0800 (CST)
 Received: from [100.103.109.72] (100.103.109.72) by
  kwepemr500012.china.huawei.com (7.202.195.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 17 Dec 2025 17:33:10 +0800
-Message-ID: <df3dba86-e6c3-484a-b384-6c6197afcfe3@huawei.com>
-Date: Wed, 17 Dec 2025 17:33:09 +0800
+ 15.2.1544.11; Wed, 17 Dec 2025 17:47:28 +0800
+Message-ID: <e954fe32-4a6b-458f-97a7-d9fbefc48144@huawei.com>
+Date: Wed, 17 Dec 2025 17:47:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,112 +55,153 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] PCI: Prevent overflow in proc_bus_pci_write()
+Subject: Re: [PATCH 2/3] PCI/sysfs: Prohibit unaligned access to I/O port on
+ non-x86
 To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 CC: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, LKML
 	<linux-kernel@vger.kernel.org>, <chrisw@redhat.com>,
 	<jbarnes@virtuousgeek.org>, <alex.williamson@redhat.com>,
 	<liuyongqiang13@huawei.com>
 References: <20251216083912.758219-1-duziming2@huawei.com>
- <20251216083912.758219-4-duziming2@huawei.com>
- <47ccdb75-7134-b86a-e8bb-eebb9f1e0b47@linux.intel.com>
+ <20251216083912.758219-3-duziming2@huawei.com>
+ <43e40c50-e23b-0ebc-9f82-986b2ea55943@linux.intel.com>
 From: duziming <duziming2@huawei.com>
-In-Reply-To: <47ccdb75-7134-b86a-e8bb-eebb9f1e0b47@linux.intel.com>
+In-Reply-To: <43e40c50-e23b-0ebc-9f82-986b2ea55943@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
  kwepemr500012.china.huawei.com (7.202.195.23)
 
 
-在 2025/12/16 18:57, Ilpo Järvinen 写道:
+在 2025/12/16 18:43, Ilpo Järvinen 写道:
 > On Tue, 16 Dec 2025, Ziming Du wrote:
 >
->> When the value of ppos over the INT_MAX, the pos will be
-> is over
->
->> set a negtive value which will be pass to get_user() or
-> set to a negative value which will be passed
->
->> pci_user_write_config_dword(). And unexpected behavior
-> Please start the sentence with something else than And.
->
-> Hmm, the lines look rather short too, can you please reflow the changelog
-> paragraphs to 75 characters.
-
-Thanks for the review. I'll reflow the changelog to 75-character lines 
-and avoid
-
-starting sentences with 'And' in the next revision.
-
->> such as a softlock happens:
+>> From: Yongqiang Liu <liuyongqiang13@huawei.com>
 >>
->>   watchdog: BUG: soft lockup - CPU#0 stuck for 130s! [syz.3.109:3444]
->>   Modules linked in:
->>   CPU: 0 PID: 3444 Comm: syz.3.109 Not tainted 6.6.0+ #33
->>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
->>   RIP: 0010:_raw_spin_unlock_irq+0x17/0x30
->>   Code: cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 e8 52 12 00 00 90 fb 65 ff 0d b1 a1 86 6d <74> 05 e9 42 52 00 00 0f 1f 44 00 00 c3 cc cc cc cc 0f 1f 84 00 00
->>   RSP: 0018:ffff88816851fb50 EFLAGS: 00000246
->>   RAX: 0000000000000001 RBX: 0000000000000000 RCX: ffffffff927daf9b
->>   RDX: 0000000000000cfc RSI: 0000000000000046 RDI: ffffffff9a7c7400
->>   RBP: 00000000818bb9dc R08: 0000000000000001 R09: ffffed102d0a3f59
->>   R10: 0000000000000003 R11: 0000000000000000 R12: 0000000000000000
->>   R13: ffff888102220000 R14: ffffffff926d3b10 R15: 00000000210bbb5f
->>   FS:  00007ff2d4e56640(0000) GS:ffff8881f5c00000(0000) knlGS:0000000000000000
->>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>   CR2: 00000000210bbb5b CR3: 0000000147374002 CR4: 0000000000772ef0
->>   PKRU: 00000000
->>   Call Trace:
->>    <TASK>
->>    pci_user_write_config_dword+0x126/0x1f0
->>    ? __get_user_nocheck_8+0x20/0x20
->>    proc_bus_pci_write+0x273/0x470
->>    proc_reg_write+0x1b6/0x280
->>    do_iter_write+0x48e/0x790
->>    ? import_iovec+0x47/0x90
->>    vfs_writev+0x125/0x4a0
->>    ? futex_wake+0xed/0x500
->>    ? __pfx_vfs_writev+0x10/0x10
->>    ? userfaultfd_ioctl+0x131/0x1ae0
->>    ? userfaultfd_ioctl+0x131/0x1ae0
->>    ? do_futex+0x17e/0x220
->>    ? __pfx_do_futex+0x10/0x10
->>    ? __fget_files+0x193/0x2b0
->>    __x64_sys_pwritev+0x1e2/0x2a0
->>    ? __pfx___x64_sys_pwritev+0x10/0x10
->>    do_syscall_64+0x59/0x110
->>    entry_SYSCALL_64_after_hwframe+0x78/0xe2
-> Could you please trim the dump so it only contains things relevant to this
-> issue () (also check trimming in the other patches).
-Thanks for pointing that out, we'll make sure to only keep the relevant 
-stacks in future patches.
->> Fix this by use unsigned int for the pos.
+>> Unaligned access is harmful for non-x86 archs such as arm64. When we
+>> use pwrite or pread to access the I/O port resources with unaligned
+>> offset, system will crash as follows:
 >>
->> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+>> Unable to handle kernel paging request at virtual address fffffbfffe8010c1
+>> Internal error: Oops: 0000000096000061 [#1] SMP
+>> Modules linked in:
+>> CPU: 1 PID: 44230 Comm: syz.1.10955 Not tainted 6.6.0+ #1
+>> Hardware name: linux,dummy-virt (DT)
+>> pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>> pc : __raw_writew arch/arm64/include/asm/io.h:33 [inline]
+>> pc : _outw include/asm-generic/io.h:594 [inline]
+>> pc : logic_outw+0x54/0x218 lib/logic_pio.c:305
+>> lr : _outw include/asm-generic/io.h:593 [inline]
+>> lr : logic_outw+0x40/0x218 lib/logic_pio.c:305
+>> sp : ffff800083097a30
+>> x29: ffff800083097a30 x28: ffffba71ba86e130 x27: 1ffff00010612f93
+>> x26: ffff3bae63b3a420 x25: ffffba71bbf585d0 x24: 0000000000005ac1
+>> x23: 00000000000010c1 x22: ffff3baf0deb6488 x21: 0000000000000002
+>> x20: 00000000000010c1 x19: 0000000000ffbffe x18: 0000000000000000
+>> x17: 0000000000000000 x16: ffffba71b9f44b48 x15: 00000000200002c0
+>> x14: 0000000000000000 x13: 0000000000000000 x12: ffff6775ca80451f
+>> x11: 1fffe775ca80451e x10: ffff6775ca80451e x9 : ffffba71bb78cf2c
+>> x8 : 0000988a357fbae2 x7 : ffff3bae540228f7 x6 : 0000000000000001
+>> x5 : 1fffe775e2b43c78 x4 : dfff800000000000 x3 : ffffba71b9a00000
+>> x2 : ffff80008d22a000 x1 : ffffc58ec6600000 x0 : fffffbfffe8010c1
+>> Call trace:
+>>   _outw include/asm-generic/io.h:594 [inline]
+>>   logic_outw+0x54/0x218 lib/logic_pio.c:305
+>>   pci_resource_io drivers/pci/pci-sysfs.c:1157 [inline]
+>>   pci_write_resource_io drivers/pci/pci-sysfs.c:1191 [inline]
+>>   pci_write_resource_io+0x208/0x260 drivers/pci/pci-sysfs.c:1181
+>>   sysfs_kf_bin_write+0x188/0x210 fs/sysfs/file.c:158
+>>   kernfs_fop_write_iter+0x2e8/0x4b0 fs/kernfs/file.c:338
+>>   call_write_iter include/linux/fs.h:2085 [inline]
+>>   new_sync_write fs/read_write.c:493 [inline]
+>>   vfs_write+0x7bc/0xac8 fs/read_write.c:586
+>>   ksys_write+0x12c/0x270 fs/read_write.c:639
+>>   __do_sys_write fs/read_write.c:651 [inline]
+>>   __se_sys_write fs/read_write.c:648 [inline]
+>>   __arm64_sys_write+0x78/0xb8 fs/read_write.c:648
+>>   __invoke_syscall arch/arm64/kernel/syscall.c:37 [inline]
+>>   invoke_syscall+0x8c/0x2e0 arch/arm64/kernel/syscall.c:51
+>>   el0_svc_common.constprop.0+0x200/0x2a8 arch/arm64/kernel/syscall.c:134
+>>   do_el0_svc+0x4c/0x70 arch/arm64/kernel/syscall.c:176
+>>   el0_svc+0x44/0x1d8 arch/arm64/kernel/entry-common.c:806
+>>   el0t_64_sync_handler+0x100/0x130 arch/arm64/kernel/entry-common.c:844
+>>   el0t_64_sync+0x3c8/0x3d0 arch/arm64/kernel/entry.S:757
+>>
+>> Powerpc seems affected as well, so prohibit the unaligned access
+>> on non-x86 archs.
+>>
+>> Fixes: 8633328be242 ("PCI: Allow read/write access to sysfs I/O port resources")
 >> Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
 >> Signed-off-by: Ziming Du <duziming2@huawei.com>
 >> ---
->>   drivers/pci/proc.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>   drivers/pci/pci-sysfs.c | 12 ++++++++++++
+>>   1 file changed, 12 insertions(+)
 >>
->> diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
->> index 9348a0fb8084..dbec1d4209c9 100644
->> --- a/drivers/pci/proc.c
->> +++ b/drivers/pci/proc.c
->> @@ -113,7 +113,7 @@ static ssize_t proc_bus_pci_write(struct file *file, const char __user *buf,
->>   {
->>   	struct inode *ino = file_inode(file);
->>   	struct pci_dev *dev = pde_data(ino);
->> -	int pos = *ppos;
->> +	unsigned int pos = *ppos;
->>   	int size = dev->cfg_size;
->>   	int cnt, ret;
-> So this still throws away some bits compared with the original ppos ?
-
-The current approach may lose some precision compared to the original 
-ppos, but a later check ensures  pos
-
-remains valid—so any potential information loss is handled safely.
-
+>> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+>> index 7e697b82c5e1..6fa3c9d0e97e 100644
+>> --- a/drivers/pci/pci-sysfs.c
+>> +++ b/drivers/pci/pci-sysfs.c
+>> @@ -1141,6 +1141,13 @@ static int pci_mmap_resource_wc(struct file *filp, struct kobject *kobj,
+>>   	return pci_mmap_resource(kobj, attr, vma, 1);
+>>   }
+>>   
+>> +#if !defined(CONFIG_X86)
+>> +static bool is_unaligned(unsigned long port, size_t size)
+>> +{
+>> +	return port & (size - 1);
+>> +}
+>> +#endif
+>> +
+>>   static ssize_t pci_resource_io(struct file *filp, struct kobject *kobj,
+>>   			       const struct bin_attribute *attr, char *buf,
+>>   			       loff_t off, size_t count, bool write)
+>> @@ -1158,6 +1165,11 @@ static ssize_t pci_resource_io(struct file *filp, struct kobject *kobj,
+>>   	if (port + count - 1 > pci_resource_end(pdev, bar))
+>>   		return -EINVAL;
+>>   
+>> +#if !defined(CONFIG_X86)
+>> +	if (is_unaligned(port, count))
+>> +		return -EFAULT;
+>> +#endif
+>> +
+> This changes return value from -EINVAL -> -EFAULT for some values of count
+> which seems not justified.
 >
+> To me it's not clear why even x86 should allow unaligned access. This
+> interface is very much geared towards natural alignment and sizing of the
+> reads (e.g. count = 3 leads to -EINVAL), so it feels somewhat artificial
+> to make x86 behave different here from the others.
+
+Thanks for your review! We verify that when count = 3, the return value 
+will not be
+
+-EFAULT; It will only return -EFAULT in cases of unaligned access.
+
+We conduct a POC on QEMU with the ARM architecture as follows:
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+int main()
+{
+         int fd = open("/sys/bus/pci/devices/0000:00:01.0/resource0", 
+O_RDWR);
+         char buf[] = "1233333";
+         if (fd < 0) {
+                 printf("open failed\n");
+                 return 1;
+         }
+
+         pwrite(fd, buf, 2, 1);
+
+         return 0;
+}
+
+On x86, this does not trigger a kernel panic.
+
+>>   	switch (count) {
+>>   	case 1:
+>>   		if (write)
+>>
 
