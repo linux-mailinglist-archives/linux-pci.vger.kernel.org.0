@@ -1,207 +1,198 @@
-Return-Path: <linux-pci+bounces-43158-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43159-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0860CC7085
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 11:18:19 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 690BECC724B
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 11:45:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 415323109898
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 10:12:10 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 519E03000B0E
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Dec 2025 10:45:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94693342529;
-	Wed, 17 Dec 2025 09:47:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DA7A34B66B;
+	Wed, 17 Dec 2025 10:12:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="XMQIrcYP"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="O/Rs8yNz";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ORbGIfRq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A56341AAF;
-	Wed, 17 Dec 2025 09:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BBF34B41C
+	for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 10:12:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765964863; cv=none; b=tFmFC80CbxBnuwNBqsBqbl8HICeGQXr8b5j94lveOLtaHg+xWuVyd1ipreG1hg8J3fjostOyDLiCu074DInLSCkf0dLaTYPFA3wL1DPlN2YkCmxrlNgJZTqpZZIWoTAV3Po4biuzRu/2RoNVhvOKbJ/jXmBAF53svYrovBMfg+M=
+	t=1765966377; cv=none; b=oY3cmdEC87JQ1Mt3TODgwyXBVjW+B7PzVNT124nyjm/XWbK35b/xp47w/ixEd8G4eDBX47R7NciQ8PIT/wKHE/8/5GNOFElaYmgORjvQEEY9w99PYHjJGsZISR7enl4Rano0+ErdO0mxhz48OW5ogm16ps5RhyBWjCEmbp974n8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765964863; c=relaxed/simple;
-	bh=xdj2dOafBgFbUnGcj+EiAB/dKWHz+XPBCerKpx/HE6U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=n8eNEhghtYwsy73xTCeP5YjYMLkjDopAgGQnqdJOKQmpWQKuc2D7yzGoyDWwfBevgA41d5kc3ayOgQItDM0FSYsMAdiZHhj80pYeTe00k/bokXqR5oE2G8gHVycMSu3rRFm1p8QegcasL/JpRc24i8eEP9apdRnCX91UdfoEkXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=XMQIrcYP; arc=none smtp.client-ip=113.46.200.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=ZQ9EAf6urRQxQaV20GCoVkxo1RVP74p1WDO98ViQaBw=;
-	b=XMQIrcYPjH1uPWtTWrUwg7QGl7Sf8lgCE2r/nrbPEUlWB6YN811its5DaYSrkAZ7sq3zCT7mv
-	ZW5eaHXhVabj8SScKzn+/qGFb7V1xC5bHvC+QMiROry7JxiwCR8hhlsZsYMcJMSrkEbqFkPgudm
-	dRfrOaWJfPKlObw5706rBJA=
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4dWTRK3Q8hzpStQ;
-	Wed, 17 Dec 2025 17:44:45 +0800 (CST)
-Received: from kwepemr500012.china.huawei.com (unknown [7.202.195.23])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3D2261804F2;
-	Wed, 17 Dec 2025 17:47:29 +0800 (CST)
-Received: from [100.103.109.72] (100.103.109.72) by
- kwepemr500012.china.huawei.com (7.202.195.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 17 Dec 2025 17:47:28 +0800
-Message-ID: <e954fe32-4a6b-458f-97a7-d9fbefc48144@huawei.com>
-Date: Wed, 17 Dec 2025 17:47:27 +0800
+	s=arc-20240116; t=1765966377; c=relaxed/simple;
+	bh=5rBsnC6utLZsn2mQZMwtrLnMQmTQlPNyGuYb+c6RNjg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SoVu3EqPQDGCQHpIfhGSzg/wyZ89tBvEnnfVC1Mo2CXUSnP8If4u88N+CVzV/0D8R5ebhJzLt93wnykDDgqMfsMxIT14S9dsvXyjJ8aInp28TZ0PnbDsdut8j+ZCgl7Fc3+9odJpDuKj52qyNYH0+1bQegGvQO4JztZp1PvF/0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=O/Rs8yNz; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ORbGIfRq; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BH9pNvk009013
+	for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 10:12:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=ZRVTa9XJTMzPZAgPVHT1Zy
+	tYbf8W6P5h6oM1d+Nwy4o=; b=O/Rs8yNzb8czEq+9HqvD7FBpb3n5X7Y89e4w7c
+	cnnhL3yNqys8PTPbLpMI8HzLS79FuZMUcdhwRHKg5nXxUqjoR1zheMxb+P3pPlwa
+	L7Q+E2VKS2gQQeC9fOv9g/tckAVgye3qXka7jGw+5kU+IBg5jgjpOTLmaZING7xX
+	djEICLaotweq37/kmxA11r7r0KgiuQM6V0SxKRK4mra56Mz1HwobOr9JPlcLA9y6
+	54AaeitdWEmPuF9/GhWqNtDqXaQ0DSXD2Tpe+1QY5U6Ak1W8Lh/epuIVDMa4AORI
+	pJtQJHGq5gPA2FOEpGQV3wgu3EfFo8OgZl4dl3T79Zt2Bn6A==
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b3t8e02h4-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 10:12:55 +0000 (GMT)
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-7c7957d978aso5892940b3a.1
+        for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 02:12:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1765966374; x=1766571174; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZRVTa9XJTMzPZAgPVHT1ZytYbf8W6P5h6oM1d+Nwy4o=;
+        b=ORbGIfRq7DBSHEqj93BvoNue1hOExGP+sG5XqlsGcgsRcOA/OiD4245muxlzJgL+UU
+         61Ob/XZCSP0gKi0rOU+POKgrRqiExhp930u2AKAaZT+ub/2J+a2AS6T15tmNaQGABMpl
+         XaQD3Yhy8uk0YZG+EMPRl2DvZr6Rk0H4F3lK0GZPi75GaYJazs6iBB+0Wbvh3B21rFHu
+         Y2TyIMvtC1bfUy83oITG0u0DBbOZ6q5FxOe++8yzTyM/z0AriuRzknHQgSEfYww+1tzW
+         m10DytyiFFBJmE2r4RB4QArKkfM0fjuDa47bIxPcjoQid6g4Hw0evPxGinohvUIP6vfb
+         fc0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765966374; x=1766571174;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZRVTa9XJTMzPZAgPVHT1ZytYbf8W6P5h6oM1d+Nwy4o=;
+        b=nHMbg00VpL1V6akZY/7rlcRiFibr2zECoZcQDj0K8SmTidUHVJHbQ9l3zwtZ3DR8Mr
+         S3sMMMzsHzyv/dOImUadZNL9bnyKQa74J2uZFHtLgGEInG2syepmFF+0L81B05ZbQuD2
+         V2WiSj4+4c7HsVxM+ifcxYwCy4rPOinBbWnkL/15CK9UukCieegEffFKueHOQWzGXSpO
+         7qjQBBsEyMM85AKUIhj8ii+zp4zhUjHCtq2t9ncnlrZMjS/1PrN2oQiqtldlZhcFMyXP
+         AON3s2Ucsr9U8Qfgi6ig+B5ab1+aMkhvbLoLBWkZxMSTnpX3LUzcZ8JC8EanZ7d+WcIh
+         yo2w==
+X-Forwarded-Encrypted: i=1; AJvYcCXuooiorI7CsFtkZsin2jHd3SNsEzFgo2IFeoZ9IGrSl7X6oNRnuji6Iyp4PWhHcpyMTDVfcE/3K4Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWh49tJnNEwL+iiVbnd1RGZ11XELZ+MPkiYFRNJALVsdvFZSCl
+	PNhMxaxPHbxpdD/OllaO7lYaIvA2ikckdqoxW6l/t5cISiK278txYs1qJz6Y+r1Y/47xKlqtv8A
+	OLXva0WD3HPFpZ+tbLia68y4wRhwmy/dHCX6XGNo+EIEzCoE4LrykJvr+ztw29t0=
+X-Gm-Gg: AY/fxX6rbr8KoHLymm+gQLJOBuwJEnCJvVx5FSain62TJzJIqHSrt1d9uZG1HDxdTtP
+	LR6FivhIgZqkAu+kNWVnmhrLmOeX4Z/jH2sYe9gQn0wwXtT39KTEWLHU/UZ31wzR5Kvgv2Z4Kgb
+	goW8Z8HWO5ipZymCvUsgfSX2/XkPo9OKzuP8hm0Y8X+cjS+7dlbgHLO7tpmHuFjRZ4fiP1YZpSo
+	fAc26x6U7UDItkPb0p6CUDZBZ/A5hVTvqJbAKScq43vyhyhvz06aa51Xlbf8/dgaSEjx48Iyehv
+	yEV9cilQINq/E8cNKHgEXGEXtWmWIJsxEWYMV9D51NmwYcGWvZlMNrKD/NrVsI/ZPb3MauaEkHa
+	1cl1TYYUKMmv6cYUgaGHb4K0YC2wHwr6BVCHE+qM8Wp4=
+X-Received: by 2002:a05:6a00:bc10:b0:7b9:a27:3516 with SMTP id d2e1a72fcca58-7f667d197a4mr15423579b3a.21.1765966374229;
+        Wed, 17 Dec 2025 02:12:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFrpEe+uxrRokPBJn7XzwGhKI67ALGEa/WRrX51YtyFdWdUzUfbYWywNtpNWjS7RzstaL3EBA==
+X-Received: by 2002:a05:6a00:bc10:b0:7b9:a27:3516 with SMTP id d2e1a72fcca58-7f667d197a4mr15423541b3a.21.1765966373746;
+        Wed, 17 Dec 2025 02:12:53 -0800 (PST)
+Received: from hu-msarkar-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7fcbb11ee42sm2290347b3a.43.2025.12.17.02.12.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Dec 2025 02:12:53 -0800 (PST)
+From: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
+Subject: [PATCH v3 0/2] Add firmware-managed PCIe Endpoint support for
+ SA8255P
+Date: Wed, 17 Dec 2025 15:42:44 +0530
+Message-Id: <20251217-firmware_managed_ep-v3-0-ff871ba688fb@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] PCI/sysfs: Prohibit unaligned access to I/O port on
- non-x86
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, LKML
-	<linux-kernel@vger.kernel.org>, <chrisw@redhat.com>,
-	<jbarnes@virtuousgeek.org>, <alex.williamson@redhat.com>,
-	<liuyongqiang13@huawei.com>
-References: <20251216083912.758219-1-duziming2@huawei.com>
- <20251216083912.758219-3-duziming2@huawei.com>
- <43e40c50-e23b-0ebc-9f82-986b2ea55943@linux.intel.com>
-From: duziming <duziming2@huawei.com>
-In-Reply-To: <43e40c50-e23b-0ebc-9f82-986b2ea55943@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemr500012.china.huawei.com (7.202.195.23)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAByCQmkC/32NQQqDMBREryJ/3YhJGiNd9R5FJOiPfmiMJq1tk
+ dy9qQfoZuANzJsdIgbCCJdih4AbRfJzBnkqoJ/MPCKjITOISigueM0sBfcyATtnZjPi0OHCrFW
+ D4s25VqqBvFwCWnof1lubeaL48OFznGzi1/73bYJVTBstuRRaVtpefYzl+jT33jtX5oA2pfQFD
+ eoTdb0AAAA=
+X-Change-ID: 20251216-firmware_managed_ep-ff5d51846558
+To: Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Bjorn Andersson <andersson@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        quic_vbadigan@quicinc.com, quic_shazhuss@quicinc.com,
+        konrad.dybcio@oss.qualcomm.com,
+        Mrinmay sarkar <mrinmay.sarkar@oss.qualcomm.com>,
+        Rama Krishna <quic_ramkri@quicinc.com>,
+        Ayiluri Naga Rashmi <quic_nayiluri@quicinc.com>,
+        Nitesh Gupta <quic_nitegupt@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1765966367; l=1555;
+ i=mrinmay.sarkar@oss.qualcomm.com; s=20250423; h=from:subject:message-id;
+ bh=5rBsnC6utLZsn2mQZMwtrLnMQmTQlPNyGuYb+c6RNjg=;
+ b=bhMD0EZn6lZhNm9tPwqKHbNWVYzuVGXU1nxrUzhsX5DUpX87Pl1/IMKgfzNI+13iuoREGfkVj
+ XSpKYeMpjpiBrTKm9WZ+7Xm8x2zDqABiPO15dGzU2kzu1zUmNO0yF9A
+X-Developer-Key: i=mrinmay.sarkar@oss.qualcomm.com; a=ed25519;
+ pk=5D8s0BEkJAotPyAnJ6/qmJBFhCjti/zUi2OMYoferv4=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE3MDA4MSBTYWx0ZWRfX2+nT5f/jz3QK
+ ufR80Odl7jjRAe0OVZnzAkbNel6APnp9KgMgRX/++Z6CJL7wWUpTRIFMEWoJ1uPe/x1WztspXIN
+ W6yCswpoO9eXqkaSNySg3gPZwmnXW68LyZ2kXsW0AhdcHmnDFBviEBDCIcC855jtvZea/ghmnpa
+ zWLcBRuFnJAj1jsG+MtAhQBtkvR6En4+8sJ6Bl+HBT3wdTqGjIhVqSiBYwIlFUGEXu4rjULLEyv
+ TeIF61iiuq0dy5jA0vgYNuHNkkXhAkHpTtq3ol6a/Jvxx7xzz9bgopVnkLGjELm5YRTvfOR4ua6
+ nZ1+7j0pKKuScbCNthYun113SmxO1xL16Qk8P88N314+gjxvaKZEoHd/5O9qOZnn1tz3SqrTJsc
+ xd5Z9Q5FHLBFqtFnxwaHwrvbJlgGLA==
+X-Proofpoint-GUID: ompoUOnuucOOwzUXFwRAv8OUzhiYZvcp
+X-Proofpoint-ORIG-GUID: ompoUOnuucOOwzUXFwRAv8OUzhiYZvcp
+X-Authority-Analysis: v=2.4 cv=EsHfbCcA c=1 sm=1 tr=0 ts=69428227 cx=c_pps
+ a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=KnNq_94ptiHzTE3zWj8A:9 a=QEXdDO2ut3YA:10 a=OpyuDcXvxspvyRM73sMx:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-17_01,2025-12-16_05,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 bulkscore=0 priorityscore=1501 suspectscore=0 impostorscore=0
+ clxscore=1015 lowpriorityscore=0 phishscore=0 spamscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512170081
 
+This patch series introduces support for Qualcomm SA8255P platform
+where PCIe Endpoint resources are managed by firmware instead of
+Linux driver. So the Linux driver should avoid redundant resource
+management and relies on runtime PM calls to inform firmware for
+resource management.
 
-在 2025/12/16 18:43, Ilpo Järvinen 写道:
-> On Tue, 16 Dec 2025, Ziming Du wrote:
->
->> From: Yongqiang Liu <liuyongqiang13@huawei.com>
->>
->> Unaligned access is harmful for non-x86 archs such as arm64. When we
->> use pwrite or pread to access the I/O port resources with unaligned
->> offset, system will crash as follows:
->>
->> Unable to handle kernel paging request at virtual address fffffbfffe8010c1
->> Internal error: Oops: 0000000096000061 [#1] SMP
->> Modules linked in:
->> CPU: 1 PID: 44230 Comm: syz.1.10955 Not tainted 6.6.0+ #1
->> Hardware name: linux,dummy-virt (DT)
->> pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->> pc : __raw_writew arch/arm64/include/asm/io.h:33 [inline]
->> pc : _outw include/asm-generic/io.h:594 [inline]
->> pc : logic_outw+0x54/0x218 lib/logic_pio.c:305
->> lr : _outw include/asm-generic/io.h:593 [inline]
->> lr : logic_outw+0x40/0x218 lib/logic_pio.c:305
->> sp : ffff800083097a30
->> x29: ffff800083097a30 x28: ffffba71ba86e130 x27: 1ffff00010612f93
->> x26: ffff3bae63b3a420 x25: ffffba71bbf585d0 x24: 0000000000005ac1
->> x23: 00000000000010c1 x22: ffff3baf0deb6488 x21: 0000000000000002
->> x20: 00000000000010c1 x19: 0000000000ffbffe x18: 0000000000000000
->> x17: 0000000000000000 x16: ffffba71b9f44b48 x15: 00000000200002c0
->> x14: 0000000000000000 x13: 0000000000000000 x12: ffff6775ca80451f
->> x11: 1fffe775ca80451e x10: ffff6775ca80451e x9 : ffffba71bb78cf2c
->> x8 : 0000988a357fbae2 x7 : ffff3bae540228f7 x6 : 0000000000000001
->> x5 : 1fffe775e2b43c78 x4 : dfff800000000000 x3 : ffffba71b9a00000
->> x2 : ffff80008d22a000 x1 : ffffc58ec6600000 x0 : fffffbfffe8010c1
->> Call trace:
->>   _outw include/asm-generic/io.h:594 [inline]
->>   logic_outw+0x54/0x218 lib/logic_pio.c:305
->>   pci_resource_io drivers/pci/pci-sysfs.c:1157 [inline]
->>   pci_write_resource_io drivers/pci/pci-sysfs.c:1191 [inline]
->>   pci_write_resource_io+0x208/0x260 drivers/pci/pci-sysfs.c:1181
->>   sysfs_kf_bin_write+0x188/0x210 fs/sysfs/file.c:158
->>   kernfs_fop_write_iter+0x2e8/0x4b0 fs/kernfs/file.c:338
->>   call_write_iter include/linux/fs.h:2085 [inline]
->>   new_sync_write fs/read_write.c:493 [inline]
->>   vfs_write+0x7bc/0xac8 fs/read_write.c:586
->>   ksys_write+0x12c/0x270 fs/read_write.c:639
->>   __do_sys_write fs/read_write.c:651 [inline]
->>   __se_sys_write fs/read_write.c:648 [inline]
->>   __arm64_sys_write+0x78/0xb8 fs/read_write.c:648
->>   __invoke_syscall arch/arm64/kernel/syscall.c:37 [inline]
->>   invoke_syscall+0x8c/0x2e0 arch/arm64/kernel/syscall.c:51
->>   el0_svc_common.constprop.0+0x200/0x2a8 arch/arm64/kernel/syscall.c:134
->>   do_el0_svc+0x4c/0x70 arch/arm64/kernel/syscall.c:176
->>   el0_svc+0x44/0x1d8 arch/arm64/kernel/entry-common.c:806
->>   el0t_64_sync_handler+0x100/0x130 arch/arm64/kernel/entry-common.c:844
->>   el0t_64_sync+0x3c8/0x3d0 arch/arm64/kernel/entry.S:757
->>
->> Powerpc seems affected as well, so prohibit the unaligned access
->> on non-x86 archs.
->>
->> Fixes: 8633328be242 ("PCI: Allow read/write access to sysfs I/O port resources")
->> Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
->> Signed-off-by: Ziming Du <duziming2@huawei.com>
->> ---
->>   drivers/pci/pci-sysfs.c | 12 ++++++++++++
->>   1 file changed, 12 insertions(+)
->>
->> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
->> index 7e697b82c5e1..6fa3c9d0e97e 100644
->> --- a/drivers/pci/pci-sysfs.c
->> +++ b/drivers/pci/pci-sysfs.c
->> @@ -1141,6 +1141,13 @@ static int pci_mmap_resource_wc(struct file *filp, struct kobject *kobj,
->>   	return pci_mmap_resource(kobj, attr, vma, 1);
->>   }
->>   
->> +#if !defined(CONFIG_X86)
->> +static bool is_unaligned(unsigned long port, size_t size)
->> +{
->> +	return port & (size - 1);
->> +}
->> +#endif
->> +
->>   static ssize_t pci_resource_io(struct file *filp, struct kobject *kobj,
->>   			       const struct bin_attribute *attr, char *buf,
->>   			       loff_t off, size_t count, bool write)
->> @@ -1158,6 +1165,11 @@ static ssize_t pci_resource_io(struct file *filp, struct kobject *kobj,
->>   	if (port + count - 1 > pci_resource_end(pdev, bar))
->>   		return -EINVAL;
->>   
->> +#if !defined(CONFIG_X86)
->> +	if (is_unaligned(port, count))
->> +		return -EFAULT;
->> +#endif
->> +
-> This changes return value from -EINVAL -> -EFAULT for some values of count
-> which seems not justified.
->
-> To me it's not clear why even x86 should allow unaligned access. This
-> interface is very much geared towards natural alignment and sizing of the
-> reads (e.g. count = 3 leads to -EINVAL), so it feels somewhat artificial
-> to make x86 behave different here from the others.
+And documents the new compatible string "qcom,pcie-ep-sa8255p" for
+SA8255P platforms in the device tree bindings.
 
-Thanks for your review! We verify that when count = 3, the return value 
-will not be
+Tested on Qualcomm SA8255P platform.
 
--EFAULT; It will only return -EFAULT in cases of unaligned access.
+Signed-off-by: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
+---
+Changes in v3:
+- Updated compatible string in dt binding example node.
+- Link to v2: https://lore.kernel.org/r/20251216-firmware_managed_ep-v2-0-7a731327307f@oss.qualcomm.com
 
-We conduct a POC on QEMU with the ARM architecture as follows:
+Changes in v2:
+- Updated dt binding as suggested by Krzysztof.
+- Updated compatible string to match file name and compatible.
+- Updated driver as suggested by bjorn.
+- Link to v1: https://lore.kernel.org/r/20251203-firmware_managed_ep-v1-0-295977600fa5@oss.qualcomm.com
 
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
+---
+Mrinmay Sarkar (2):
+      dt-bindings: PCI: qcom,pcie-ep-sa8255p: Document firmware managed PCIe endpoint
+      PCI: qcom-ep: Add support for firmware-managed PCIe Endpoint
 
-int main()
-{
-         int fd = open("/sys/bus/pci/devices/0000:00:01.0/resource0", 
-O_RDWR);
-         char buf[] = "1233333";
-         if (fd < 0) {
-                 printf("open failed\n");
-                 return 1;
-         }
+ .../bindings/pci/qcom,pcie-ep-sa8255p.yaml         | 110 +++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          |  82 +++++++++++----
+ 2 files changed, 172 insertions(+), 20 deletions(-)
+---
+base-commit: 563c8dd425b59e44470e28519107b1efc99f4c7b
+change-id: 20251216-firmware_managed_ep-ff5d51846558
 
-         pwrite(fd, buf, 2, 1);
+Best regards,
+-- 
+Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
 
-         return 0;
-}
-
-On x86, this does not trigger a kernel panic.
-
->>   	switch (count) {
->>   	case 1:
->>   		if (write)
->>
 
