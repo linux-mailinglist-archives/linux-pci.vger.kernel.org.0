@@ -1,264 +1,164 @@
-Return-Path: <linux-pci+bounces-43249-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43250-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C7D1CCA909
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 08:00:49 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4968CCCA95D
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 08:07:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 017743026BF7
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 07:00:33 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id ECA1B3014F68
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 07:07:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7261E331A5E;
-	Thu, 18 Dec 2025 06:52:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93882239E9B;
+	Thu, 18 Dec 2025 07:07:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="SjjoudJo"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dltcYNCp";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="R2Q89NSv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011028.outbound.protection.outlook.com [52.101.125.28])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E772A1BB;
-	Thu, 18 Dec 2025 06:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.28
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766040755; cv=fail; b=ppR7ISxbfNBiKC0nSih+lyia1Ob564XKGY21a4Mdpa8y6jRwO4LIdgGLsS5fI/SHxaP7dLYCtZS4ZcE36+K8egju9Qc24LOVYvQU5YSQ8CsDDWOIDSZsCsViSQcAf+39ccGEGLaCLW0EuH0WMbpx7DFPSizF+ag7sH6By4CCWuY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766040755; c=relaxed/simple;
-	bh=BQ3ioxZJzc2TAxDQvt1MJhGPo8gsvvIaHeWhWFtKz+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Zyy5TOu4+6zMcLn303J6e/iRzLXE8ZtyqsR2ftWYJ9znhj220UceTv4eKAS8uZ/V7jMTtrFpi9e5Trdc5uunOzNI9Kn9ZYiq1q6G1FIAvLnIbfZ/+u/9mq7diniirdsoXeHMR5xdnCg4BEucBioKTLtWghEkoiY+QtViaVE/5kY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=SjjoudJo; arc=fail smtp.client-ip=52.101.125.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hn+phdNpdl6QUGUT6PTHV6dytZWa7aocnK5EGzeFjdiVR7A97iAY3DVXQZmAq5oqC5uIs+MOVnwWA3T0y3mN0RzQ0o0Rl1+3xAZt+ds6m7YN5VmqAxWGE58GcnuG1froONujhpUcUePmZ+1RBJmlTkAnD6z+hzlcPSL1nZuSyzbqWoLm6u2Q3sFxLgmcTFOh0KTtgEgfCkI53yIkakHP1wAKCx/lx+pZByqykLCT1TvK47ovp8ROvC++Xz3kXx/gEpS9vH5vl4XSUH7tOmbbs5foMwLzCuNkPez4sdCYBnUedMG5IeTMYi1cbcMmVYWhoLRsXYHv+DWs5186cUPg2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ffUOBP+DDtoY+EQPzJZuNlvp8S3dTMNScq7vxsmpagk=;
- b=tCV2kG4zWc7lBltYz+lClyGQZ2lX/LOn78mV6NkZ96ExK6hsw6zjX/hjq5HR6HSg9e1qrUb4hA4Ec4QcXlPL7ClwmVbJJqXO2pcvAePnQCUtmg5Ybi+G90UIGlLGUS79riOUJI6qnxUn2cjXTxXEKtUOwgPrTyUVlyxPRIh5AaWJ4imC+m0Jo9XLJ3VNYv/ciRIWOcHvpsLjdkQCFtG6rF7w043UBrslN8rb0hIlSZ6JpRDA6ALpM89nWt8h1TStrvzMKU3bHzOdc/JBYH1h6sTZCDkujpZniu9E0fpe0PV9dXj8gBn2cchb0VBtOt2Xr9KfN8lKoqivSQZbqHxO1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
- header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ffUOBP+DDtoY+EQPzJZuNlvp8S3dTMNScq7vxsmpagk=;
- b=SjjoudJos6mXI2CPAo77oF+PvF3uUjoUWqO7nAu76+xzxrAYw50nNswWagAYCPlc45SmZANA9I9/Foim/OiAzDcfZLWczz5BSHIwUTzr7iY6BtiCOzLe9/k2W1I/gN70o6cpJnHKBqHeXA3QujdEDpWgMM0Tep5pFczrdW0O4v8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=valinux.co.jp;
-Received: from TY3P286MB2708.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:257::10)
- by OS9P286MB4382.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:2c2::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.7; Thu, 18 Dec
- 2025 06:52:29 +0000
-Received: from TY3P286MB2708.JPNP286.PROD.OUTLOOK.COM
- ([fe80::b17b:8311:62f:5639]) by TY3P286MB2708.JPNP286.PROD.OUTLOOK.COM
- ([fe80::b17b:8311:62f:5639%3]) with mapi id 15.20.9434.001; Thu, 18 Dec 2025
- 06:52:29 +0000
-Date: Thu, 18 Dec 2025 15:52:27 +0900
-From: Koichiro Den <den@valinux.co.jp>
-To: Frank Li <Frank.li@nxp.com>
-Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, mani@kernel.org, 
-	kwilczynski@kernel.org, kishon@kernel.org, bhelgaas@google.com, corbet@lwn.net, 
-	vkoul@kernel.org, jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com, 
-	Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com, kurt.schwemmer@microsemi.com, 
-	logang@deltatee.com, jingoohan1@gmail.com, lpieralisi@kernel.org, robh@kernel.org, 
-	jbrunet@baylibre.com, fancer.lancer@gmail.com, arnd@arndb.de, pstanner@redhat.com, 
-	elfring@users.sourceforge.net
-Subject: Re: [RFC PATCH v2 12/27] damengine: dw-edma: Fix MSI data values for
- multi-vector IMWr interrupts
-Message-ID: <immlt7jck44hs5srgmodjnghufivfxpok7r4gfdhoqnfzx3omx@6yvdjmoahjwh>
-References: <20251129160405.2568284-1-den@valinux.co.jp>
- <20251129160405.2568284-13-den@valinux.co.jp>
- <aS3wo94XbxTCkm25@lizhi-Precision-Tower-5810>
- <n77eybnm2lyzujpwlszcd4dlfxvs44scedvh2rzlity25svlq4@2vucqeqby2op>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <n77eybnm2lyzujpwlszcd4dlfxvs44scedvh2rzlity25svlq4@2vucqeqby2op>
-X-ClientProxiedBy: TYCP286CA0252.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:456::10) To TY3P286MB2708.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:257::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82B422D781
+	for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 07:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766041668; cv=none; b=oiD7DQKKRQjOTOOwkaMzoWfGdqeKEjzJS6vc9hMFSvZgWY/qS0S1qlG4egZF36NA7u0Wy8qHVu4gDyKKwnCkH1i9/hpH0Y9KSKmI1Jzqt+GyBtEa2fagee/zNq4uy/fXN/Guqz6blmx/ynvmwAa/t/jFuyYKefv38Q40c5AjBc4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766041668; c=relaxed/simple;
+	bh=zhIWfIAbeRifEEK08wUVDmcfjUSY5wqTdVr2XzFL9uQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=rHChyXKCsUOfHrumMwYSGyp7Su3bS2iw+EUbXzH3UI+IvZ+pQcY7g4GWGPI8VqKimnaMIDwDtS8twUQGqMRlULOQ4T4OoM9/SLSfHPcjHpIYZNG96BYfr+USn6QlSBFT4yr80QoaoaX0dLicIEFvHx5cGmTZUGwfIRJrC2G4tNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dltcYNCp; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=R2Q89NSv; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BI1YcT2813844
+	for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 07:07:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	hh2VG3YFSe+FK0FMXraIExmjgFSAV/hqrMaw0XzNRPg=; b=dltcYNCp/PU8uew2
+	7QjACqjs/kgLAhW472Y8MDYOyYoHFUmOefcrMjc4ISATDgFH+gAtePSKBFwVTKE4
+	faCjmCGYNSoRwhBB4aYF5ZuPFjCJgfkEvLXjkel14Ro+NnGD0A+gR7HA5PkMTj8u
+	8hWl8lTDK3ZltRfLD8O2z66i92bwTZjuMbMk3vjB1/IjQgT3Pm5+lVz7fnNfPCoi
+	UB2nlV29AZ3S3Su5PJfjYBDeHjfa8yceZfF9rVDEMBN/idLZIP28wr0tThTm/dwb
+	coGuc5Rr2HmtULJ4MMQ9QV9r6W3eQ8gXt4CKpU30WJEi/i+j/TiXbrYJhJB8Xa0L
+	toeR/g==
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b40v7a08k-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 07:07:45 +0000 (GMT)
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-7bb2303fe94so496491b3a.3
+        for <linux-pci@vger.kernel.org>; Wed, 17 Dec 2025 23:07:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1766041665; x=1766646465; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hh2VG3YFSe+FK0FMXraIExmjgFSAV/hqrMaw0XzNRPg=;
+        b=R2Q89NSvsfSijFQj6BO/p3AqjZXAu2vBqFYGTAdXxIrlQzVQ1j9xheAcQxFgPC1HpJ
+         fkdfMJlOWEu6ltxYhhObxjCS8QexecsKlZdwgwyCY44QejJC7pv9BZETKjzBmsa7ppDO
+         bYuVE40E6dJYO+q5AaLOSLOTy1XLHv/ODIjiWeidd6xaSfUs6ZrCkyRoU9BclN40FUP7
+         WkzWiIE1177JVwmYTK5n4K/S6KTbShtJXqjzKrmMjgTO20G9zMFT4eORg4wJazyWECuZ
+         vwppSdmzvtIuxu8wrBnMleR1KxCSZPke+KMP84ntku/UIMj05/nfwIjZ+5bYDunhATDu
+         mZcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766041665; x=1766646465;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=hh2VG3YFSe+FK0FMXraIExmjgFSAV/hqrMaw0XzNRPg=;
+        b=kNlVUwHaaOqrdn+6JSwp7pzGyBVurhmTJbvpG0cICVdOGeYuNNfLquzqw8tnVB2/ck
+         7hwYXNv0CK1GhA+R2pOU9Yg0GkNODpM41JmK+MxaSjolAPcrLeyM5UDKrb5/428B37+i
+         6jEsFjnzY0mUBFLuag9eSRj/KBHJiIJtXUOGnbLRfTYibgc8PQy+DVy7j503Fv82vMhE
+         VloDl7Td9R1g4AtGu+PZ/sTqi6jeknoZJqsrUuzl/pNcDsY9PS7W+7cVQM1O8z7L5psC
+         QZ4yDJatD9Mk3lYM5WNxDqXs5MsdLu4FPyfyHqp1iK0RB+zcWhG8pFQ0s0YaRWSca8Xa
+         APEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWc7kUQQNOq0cuFSdQC+dS1Sgh/Nl6KDizh9LRjCiUuc3bc6qTYQlWWufP6B23I6HVHhsq5f03P04s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd2ZuCkMJBLMMSDx7kHyM73WbwVzx8jkOwDieW+Z3Js6L1jWDf
+	hg9Ty+GAjyThaLLQbyrrhcTJzRkpwhZSeIGH7/pBNx/yerYCJt/pKEvCw4UJ+VaH8T92SUuu8lw
+	o5Qmv0wrkF1iJ4p8YYTIcwFqHo7cDHKLNDasUvg5EkIWFt6z+sD6VScEpT9mgNaU=
+X-Gm-Gg: AY/fxX546PAJN4M5r/KBiV1qCeKgulbMNpTQJoCOXekbwjTJIAZAO+LAGy4ePmM28mS
+	2OgN6Z7+5Vt9I9sWDstWFSYX+PhkUAEwckBRhYrZzY8pa0POskl8NYVcQEg4UgyRNOn8703ffCN
+	83BdBnZ35tkXXL65ba8zFleFZHKSx0LA5Sq4J9QnHGiutdVfp07Gqd1bnHvDQZ1jh/rdLCj8aDt
+	dDqk/mht9hyU6bk2bime2dAiivjOSDSLcxd+NG2M6Ri4H9rIsMNPI+nRBEXgAAS6gtZCa7h0qbA
+	xGyqsCRp8lEhVMQhA6hQ+i7idlDcUD+0BGntCNgdMyadTZAtc1YUbLdcOkDS9iJ5QtoOt6TglCx
+	f3OQkkTfVGVA=
+X-Received: by 2002:a05:6a00:bb84:b0:7e8:4471:8e4 with SMTP id d2e1a72fcca58-7f66a470cd1mr19278069b3a.69.1766041664691;
+        Wed, 17 Dec 2025 23:07:44 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFFe3idJUw0yYXcoiRiACrwrk0j6tYdjgrteRDIaFEJ8ebk4f1vPq+K+YB7SnXBa2btwDjYWQ==
+X-Received: by 2002:a05:6a00:bb84:b0:7e8:4471:8e4 with SMTP id d2e1a72fcca58-7f66a470cd1mr19278038b3a.69.1766041664194;
+        Wed, 17 Dec 2025 23:07:44 -0800 (PST)
+Received: from [192.168.1.102] ([117.193.213.102])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7fe1185704fsm1558626b3a.13.2025.12.17.23.07.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Dec 2025 23:07:43 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+X-Google-Original-From: Manivannan Sadhasivam <mani@kernel.org>
+To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        ntb@lists.linux.dev, Marco Crivellari <marco.crivellari@suse.com>
+Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Michal Hocko <mhocko@suse.com>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
+        Krzysztof Wilczynski <kwilczynski@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+In-Reply-To: <20251107142526.234685-1-marco.crivellari@suse.com>
+References: <20251107142526.234685-1-marco.crivellari@suse.com>
+Subject: Re: [PATCH] PCI: endpoint: add WQ_PERCPU to alloc_workqueue users
+Message-Id: <176604166015.697128.10969426809262148398.b4-ty@kernel.org>
+Date: Thu, 18 Dec 2025 12:37:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY3P286MB2708:EE_|OS9P286MB4382:EE_
-X-MS-Office365-Filtering-Correlation-Id: 67d6c07c-e700-427c-457f-08de3e0202f8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|10070799003|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?My1HNiOvpl2fO6eluZjAnzwxNBZM7FuHG/nMEiwgTzJd10605HHrrg7Q8ppi?=
- =?us-ascii?Q?gcPLncs6tnBHRWQUpd56s3CrCe6EVBCcM973cK7LqN2oXdZaUzqVUQgsQaTg?=
- =?us-ascii?Q?o4nLXdyRsBRJ5IyuwVKvRdad7ZXLRsgiPLezi6jI+7Bbk2kAgA0H7qEVRGlQ?=
- =?us-ascii?Q?xAwosEeteZ4Pdb3fxIbh5FNjM72dSfpuNPP7NQ1ewE1qR70JhYL65hsWQsSU?=
- =?us-ascii?Q?odhlLVfEZC0QVd1aPFv1l29lnSdfZTCZA65syEQx2mS+/ncSoAWbjM232BtX?=
- =?us-ascii?Q?Uf4ow2Rmr/BuWY2Hw1dmIsh04AiSYFk7j3iOjRgW6hkhuiu/BjMe5sULJfPM?=
- =?us-ascii?Q?ekRV+1teCt8NLgyAtKBdj1sehWtzP/wOXbXl+r6NlcnFtmqcpy5Hk1Dfw/cO?=
- =?us-ascii?Q?22H8uixADlTpombCuizRnV9u65d6CoyGnbQ4NmuqbfJRFDWHbMPtCxKUwb9t?=
- =?us-ascii?Q?T/C+eVFrd4K/Jb3OJUvGxu2yJphzGO0/6ln3G6LV+fhmvPkTU2TLg/aDUtRC?=
- =?us-ascii?Q?JGcWBEa9G/o/cPheZTmpwVkSjnCPOaVv1Y4DGl5E2Wtk5OVTSCoxkhlwZ6yD?=
- =?us-ascii?Q?+In3LvoFahJ4lyb/V9ynkQxY3GSyh0jLBfiMHD5TOT3xq9wePa/UdjxnWwVC?=
- =?us-ascii?Q?0DoEm+0Slnxksu6Z8AKgwa6BibdOu6h9kJQNSYGi0pqFQkt4/5BRFYliLnBb?=
- =?us-ascii?Q?C2jRIlKnnBMJ80jR0KTNmYE1ho7RSn6jHIRKwTVYjtBAtpo3haKFgGDFLFhM?=
- =?us-ascii?Q?CD43h+IXYkEXVvD+BVOmigJus81vjbr+pI9BQjI+58rcjiXQ+NVbW/KBWyg5?=
- =?us-ascii?Q?0n08gWHpw+5+4m/lxvtlOh2jWXVFLV2sWgqViUiIOqCHTa/JkLRvtBfvSDFF?=
- =?us-ascii?Q?DdGwJ4Wwg0inKypDKq9Ot6P5rAJy8yEZNqqSdB/L26oc0Tii9T8O5hrz2/Fh?=
- =?us-ascii?Q?MkifTF5b5yWo9PFdLTUBiEqc+8/QveTp/gcrfoyHBoGE4hksIYPaVOrHhEB3?=
- =?us-ascii?Q?nc72e7CQQ+ChBvKjscJFfOYkOAOWTt4o9z/7ik3570uarGqLN0JP5K3h86Ob?=
- =?us-ascii?Q?fn5NajxbNWhMy1e6Ui9LfS0vZ6wqlNPN2NfYOYZVrvFGSEKH9BV3kxg7vSAP?=
- =?us-ascii?Q?cmbPZU83hm7ffA8bFMKK03EctDK/nJIDDJhaH9LF3Ck9OENBkRHBQMb/m1Oc?=
- =?us-ascii?Q?nDP++xbdEneyIq3RrJ/RZBF05MNXPxrdsD3v+Altol2imJQ3gSSNJYKjPxLS?=
- =?us-ascii?Q?EX8VUNCijnwpIWVPKcauglX8axNVns77NsOHhsqPp2GV727orpd8teEeINky?=
- =?us-ascii?Q?NVs0RMUw0dh7ClP0gi6QGUGhYrqUKvb5TUQLPEyI6MJgv53mzZFjXUbbhFXo?=
- =?us-ascii?Q?uwJa2um7iq3tNoER3tP9XQb5pTMHYlBU+TxxUKQPXF3ak4BycL2UlW0Z/RHs?=
- =?us-ascii?Q?h/aNRjUO23RKI8Ica6O6AqfHUYyp0r8s?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3P286MB2708.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(10070799003)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9nbeIWaZ8QHYwE/gtuAPtBNLfn2Jg9q0djKl5XgtS8gMen0gehb76EdIFo2x?=
- =?us-ascii?Q?APh7CscmT5o7+RDR8VQC+SbImmuODuQvZqpqnNVikqrxsV8U6MLLnLF2r7la?=
- =?us-ascii?Q?bRAfYHUZKIBzESlVLFTXezGx9wDpqTyDdpx46oVG6Ne42PLGLLjDavrIeMiU?=
- =?us-ascii?Q?7NNnSLvb0J5CF7/Qdgo18cVtlFgIeVXGVsz+Vfid2Tw/b3fYGy080RDtasiD?=
- =?us-ascii?Q?KQ2C/DOjxgzsZXAIEZhWyXCsNLlJiKalKDcV+21jnrdo58ktp8lxcElWq0ls?=
- =?us-ascii?Q?hmnCq04QYH+KEnxXUU6929aYkWvne8HpvJkM3u77XgHZMhBnuPSWZSJ3bw88?=
- =?us-ascii?Q?9cKJOT+w9OGyqthekT5BoJYbi8tA4uWwpcBnj/dvyKcmC+rtQbZm5esCsdss?=
- =?us-ascii?Q?I3VYNi6rMcONIa7qJfihdgyRWvLqkfF4Kgtah08Q3g78G2qKsY2bduEg3CKE?=
- =?us-ascii?Q?qz6qn0ynbGqRS1EnxiLdP0XsdqhrIW0h8pUi7sFeykE8DFodtwN/mELFTMf7?=
- =?us-ascii?Q?6jrJ0WCuaOwSfs9Xije7svVeeceA/B+t1o48zS8z905zHtlp6QDR4kMVVV5X?=
- =?us-ascii?Q?Ix3jm1UfB4tAv8UwfqlIl7+t7lgRacA7WZCNT0nsFqTaFiQy4yivzY/wYSUP?=
- =?us-ascii?Q?iNdGL87lrjuiuSs6lhGz6YyLwZKVfDphL6jMBmd9irD7cYRxv1surgQaR9Wb?=
- =?us-ascii?Q?aiwKFc9aJ1XI5WkYnDtyus7SZGiM0M8shC9QjGf1QJ0Gq/eTXd62I8NZs2TF?=
- =?us-ascii?Q?U4bUw7UgLagreOLvwWaFgYYCjBPEZx8y03kp7bAPMpj6Hy3g8JuYDiyQkVCB?=
- =?us-ascii?Q?JjA2ICf8lZdJta9QVM4KxHqZ+S39uh3cgzCdjvkKzQsxo5UUG0i4T2FoZLlJ?=
- =?us-ascii?Q?He+7rTL7GpLCEJ75PqHh92t0vYPBBm33QBvEEE9HhQuTt21B83iuwTm/5ms0?=
- =?us-ascii?Q?n1hFA8gUU18iHLTMGWUyzpZI9eXsYxRMVdqjMLKSfAgwaIN4t+zxdtefhyup?=
- =?us-ascii?Q?0V938Anl0DMcMfbXitxwPBR/j2QkoTJfGSobGwXLXp6Fts5t1ossGsCgKnE+?=
- =?us-ascii?Q?hQDVSNJUGK0EZ6IfDpjUvN1N/tR7tB0PTKul0kTZ5vtvbi5Jnau9RwFWOaDb?=
- =?us-ascii?Q?I9j93Kc0oimsueRmUmDSSKXP6Kes+RqvgBCHDnHoVB32Sof6KYWKWxuDnAXI?=
- =?us-ascii?Q?WN1Ex89sImfA0gTZkOL9RuDxNkPwy5CdiEtaoVV4ScLfTd4Zr+cw+IzpW3p6?=
- =?us-ascii?Q?1x/CP4smeZ5dfcU4Ah41xEeYVtagbP6OMs7yPfkU93Gw9PUEBMbc87iDuyDt?=
- =?us-ascii?Q?HrbdNznaYY6ZLd4mfPgvgD/b8KdJ7J50NiULBAUcmg+3Uy9HDq2GhuN04oWB?=
- =?us-ascii?Q?j8s1rSJQoS9Lxsu1hJDbdib5UHMiOrCP6jWC2d+nQThvjWBs5QbOVynZjkPm?=
- =?us-ascii?Q?5G8bcOmTstXj/36ZbmFaG9Ijgw08GBmILQQmNbwISCDoriWUbGGjc85w7InG?=
- =?us-ascii?Q?ni/6RCzkBRbV0rlISKBQPrEcw7ukrvIg2Q8kGb0DEeOpFYLObMjbMQXTO6R3?=
- =?us-ascii?Q?3VpeN4dL2cQCcSptPQe/WV4K1v/yB0gZHXiRtGSlpNSFRDOFUFvQSO3f4YPs?=
- =?us-ascii?Q?WfRQk5qx7ou6cCXq+7JR8SU=3D?=
-X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67d6c07c-e700-427c-457f-08de3e0202f8
-X-MS-Exchange-CrossTenant-AuthSource: TY3P286MB2708.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2025 06:52:29.6942
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JgwZA14aTqf5oQHem4sRZqLmZIwl3HXuPtXH9C39wEjCGobzOdbpaM+k65Iy8xVSHKw3osqSfT7M8qxc93bnIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9P286MB4382
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
+X-Proofpoint-ORIG-GUID: rPr0759HQxsapZ7nw9U--RiEPcsagXY5
+X-Proofpoint-GUID: rPr0759HQxsapZ7nw9U--RiEPcsagXY5
+X-Authority-Analysis: v=2.4 cv=f8JFxeyM c=1 sm=1 tr=0 ts=6943a841 cx=c_pps
+ a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=PLOdWElDzbaVVj/XHNhp9A==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=_suGTTe_43wmAZudwJ8A:9
+ a=QEXdDO2ut3YA:10 a=zc0IvFSfCIW2DFIPzwfm:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE4MDA1NiBTYWx0ZWRfX8bo9/zbtovxA
+ HI9RYhLJE0jLjrB/wf1WCbbXUNfNU3sy+FTqxmfeqf2ChZLY1Hav6niN8UTnVkCUGtxnw8/krdw
+ uT1BfClzrPlkxieYd8Hlua8mkDJJWZUuVtn/MfsDE2qrS/bUWzGj5BQTHvozfkfD3T/Afp8eTRq
+ bLq8PWew81RviI89bDDgm3HD9PXc8lbGBZMqkpVWMbX4b/v2KJmu9rM5OXkBbEBlJYLTRSWegFT
+ LHE2lss8c9pY00ncrD1QhyhaAWTuCFW593NSYAp9qRlw+2FlZ41en3PvomKflcXM2WAVujy6DQ3
+ Bwtp1IR+1Cyx9o9MciyLg1lvvdTfh530LRBbYa8U5F1EspkVzrwAuA63egx7XWNdU8NFWcCInIi
+ B/HykSYh9E8yDd9ZwFh0s7MgHv3S8g==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-18_01,2025-12-17_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 adultscore=0 clxscore=1015 suspectscore=0 phishscore=0
+ impostorscore=0 bulkscore=0 malwarescore=0 priorityscore=1501 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512180056
 
-On Tue, Dec 02, 2025 at 03:32:49PM +0900, Koichiro Den wrote:
-> On Mon, Dec 01, 2025 at 02:46:43PM -0500, Frank Li wrote:
-> > On Sun, Nov 30, 2025 at 01:03:50AM +0900, Koichiro Den wrote:
-> > > When multiple MSI vectors are allocated for the DesignWare eDMA, the
-> > > driver currently records the same MSI message for all IRQs by calling
-> > > get_cached_msi_msg() per vector. For multi-vector MSI (as opposed to
-> > > MSI-X), the cached message corresponds to vector 0 and msg.data is
-> > > supposed to be adjusted by the IRQ index.
-> > >
-> > > As a result, all eDMA interrupts share the same MSI data value and the
-> > > interrupt controller cannot distinguish between them.
-> > >
-> > > Introduce dw_edma_compose_msi() to construct the correct MSI message for
-> > > each vector. For MSI-X nothing changes. For multi-vector MSI, derive the
-> > > base IRQ with msi_get_virq(dev, 0) and OR in the per-vector offset into
-> > > msg.data before storing it in dw->irq[i].msi.
-> > >
-> > > This makes each IMWr MSI vector use a unique MSI data value.
-> > >
-> > > Signed-off-by: Koichiro Den <den@valinux.co.jp>
-> > > ---
-> > >  drivers/dma/dw-edma/dw-edma-core.c | 28 ++++++++++++++++++++++++----
-> > >  1 file changed, 24 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > > index 8e5f7defa6b6..3542177a4a8e 100644
-> > > --- a/drivers/dma/dw-edma/dw-edma-core.c
-> > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > > @@ -839,6 +839,28 @@ static inline void dw_edma_add_irq_mask(u32 *mask, u32 alloc, u16 cnt)
-> > >  		(*mask)++;
-> > >  }
-> > >
-> > > +static void dw_edma_compose_msi(struct device *dev, int irq, struct msi_msg *out)
-> > > +{
-> > > +	struct msi_desc *desc = irq_get_msi_desc(irq);
-> > > +	struct msi_msg msg;
-> > > +	unsigned int base;
-> > > +
-> > > +	if (!desc)
-> > > +		return;
-> > > +
-> > > +	get_cached_msi_msg(irq, &msg);
-> > > +	if (!desc->pci.msi_attrib.is_msix) {
-> > > +		/*
-> > > +		 * For multi-vector MSI, the cached message corresponds to
-> > > +		 * vector 0. Adjust msg.data by the IRQ index so that each
-> > > +		 * vector gets a unique MSI data value for IMWr Data Register.
-> > > +		 */
-> > > +		base = msi_get_virq(dev, 0);
-> > > +		msg.data |= (irq - base);
-> > 
-> > why "|=", not "=" here?
+
+On Fri, 07 Nov 2025 15:25:26 +0100, Marco Crivellari wrote:
+> Currently if a user enqueues a work item using schedule_delayed_work() the
+> used wq is "system_wq" (per-cpu wq) while queue_delayed_work() use
+> WORK_CPU_UNBOUND (used when a cpu is not specified). The same applies to
+> schedule_work() that is using system_wq and queue_work(), that makes use
+> again of WORK_CPU_UNBOUND.
+> This lack of consistency cannot be addressed without refactoring the API.
 > 
-> "=" is better and safe here. Thanks for pointing it out, I'll fix it.
+> [...]
 
-I forgot to add a follow-up comment before sending RFC v3. Here I was too
-distracted, it was intentional to apply OR to the base value, which was
-cached. So [RFC PATCH v3 10/35] remains unchanged.
-https://lore.kernel.org/all/20251217151609.3162665-11-den@valinux.co.jp/
+Applied, thanks!
 
-Thanks,
-Koichiro
+[1/1] PCI: endpoint: add WQ_PERCPU to alloc_workqueue users
+      commit: 8b2ff37c6b50cbe722ebd780aac40f92c4f8efd3
 
-> 
-> Koichiro
-> 
-> > 
-> > Frank
-> > 
-> > > +	}
-> > > +	*out = msg;
-> > > +}
-> > > +
-> > >  static int dw_edma_irq_request(struct dw_edma *dw,
-> > >  			       u32 *wr_alloc, u32 *rd_alloc)
-> > >  {
-> > > @@ -869,8 +891,7 @@ static int dw_edma_irq_request(struct dw_edma *dw,
-> > >  			return err;
-> > >  		}
-> > >
-> > > -		if (irq_get_msi_desc(irq))
-> > > -			get_cached_msi_msg(irq, &dw->irq[0].msi);
-> > > +		dw_edma_compose_msi(dev, irq, &dw->irq[0].msi);
-> > >
-> > >  		dw->nr_irqs = 1;
-> > >  	} else {
-> > > @@ -896,8 +917,7 @@ static int dw_edma_irq_request(struct dw_edma *dw,
-> > >  			if (err)
-> > >  				goto err_irq_free;
-> > >
-> > > -			if (irq_get_msi_desc(irq))
-> > > -				get_cached_msi_msg(irq, &dw->irq[i].msi);
-> > > +			dw_edma_compose_msi(dev, irq, &dw->irq[i].msi);
-> > >  		}
-> > >
-> > >  		dw->nr_irqs = i;
-> > > --
-> > > 2.48.1
-> > >
+Best regards,
+-- 
+Manivannan Sadhasivam <mani@kernel.org>
+
 
