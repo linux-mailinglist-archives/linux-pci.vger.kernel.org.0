@@ -1,242 +1,429 @@
-Return-Path: <linux-pci+bounces-43305-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43306-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EC77CCC00B
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 14:29:09 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9214CCC1F6
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 14:55:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B96A4301912C
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 13:29:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 83816300BED8
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 13:54:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C3AC34104C;
-	Thu, 18 Dec 2025 13:29:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 153CA3451BF;
+	Thu, 18 Dec 2025 13:54:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OTgO9f8Z";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="MsZOjVgc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XIbQ5ZsQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED6033F8A1
-	for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 13:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE1F332EAA
+	for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 13:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766064543; cv=none; b=gUH/pRRUDZTF+FIp0CfccLVdsGGvUvXz7/aBjZ9xBM+VfJj7OodT8XSLra0+h+2DxUtrj8W98TYd3e96n2JkG0FiKD3fN2U6RNasV9X5hVLgy8kP634iUorX6mnbWSLcOBz95m+ts8p/8K+8aBBVGMk8hfFSDfCwFSPcKVaD/aU=
+	t=1766066080; cv=none; b=IV6SgahvFIIJOAHxgeeqM7BAV3a1zbHhwDpd/WUfvln/1aP6Lu4zRtWyzCQI0oNxR9k0sNtRjnaeX+evsY4aD9qeLV/OPWv5he44JG0Ur52wKUiM8/SOwwUPRYURTqgDU4K4JuhV9p6yxYmgsSokUukQnV+09RGzGRoCJ4Y6zrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766064543; c=relaxed/simple;
-	bh=VDCahGofHHWitV3AbKaCYA9eLErNsu+V5RIxWhottrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZJx3IJSfr2+OUyxJ1UCG74kUoAGAtQjWRYE+VSN4CIqq+tJHILN8cTkPgvTNtj59jRxWPAHWv+lTixOyguBOgMvkuCwTf4T0f9AFQz6xD84jR0nNyvyrtgCGWrXq6/Icija3i4jpgoSCC7NNfMi+Y+ixF43ddjLSuQw6xRNZZb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OTgO9f8Z; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=MsZOjVgc; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BIB5M741334760
-	for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 13:29:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4d8nE/j4LG4aJ1litu/i0JqfT3L0+tYvMgLM3qO1rYg=; b=OTgO9f8ZgnPq43NJ
-	iH8x5DyWxdTrKcKhXKH6ljaFKIRq3gx5PoH6jldoG29y4f18aNxE8eymfBdpmXIA
-	mITh48kRj06X1REqxan+I2mc8i5/+OT1ZpTn9psN+sGc/ZcdObUk6kE3+06dyw4P
-	HZGvdVV4EpLiDtecMp3KBr5mgWTsrLY8H5s1afRo+Av1qkH5ACzHGcYNcBXveYZp
-	ntecnRpY+dccT15ePoEGZDrcp3nwVEKmp75g+tAbn3PP+81Ty44mpQMg3vsqhDZL
-	7LcxmonEtw3DxTke97P/Ivr4+YtWvjs8eMk4nUrMlAPlc4UAXNsnOL5aCbLX8oMR
-	aSrjdA==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b4gec0dxu-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 13:29:01 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2a0f47c0e60so15845005ad.3
-        for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 05:29:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1766064541; x=1766669341; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4d8nE/j4LG4aJ1litu/i0JqfT3L0+tYvMgLM3qO1rYg=;
-        b=MsZOjVgccfr8fM+Uo3ZeC4WOjISOocWWdReL7ZmcJE6bMMEgCOecdcdnOFb1rxKDLU
-         4qLZta5hP2OU5C61RwsDbLVjYT5V1sDxbKthBrG5s3DZ/H6Nf1tqGp559cMLeQDNG3p3
-         alIhAC8z83AsCeSS0HA1ZjdNst/+CJ7y0dEB4Botnh7TreA/VrGr/XzSLpAzxFlN+RG8
-         3agRyvMJrFiWAp6XCaJ3sW7d0jcT4t4j8hB7RK4VAYYm8gfT5aRmbBMDJ4SAvE2rtOHv
-         tiLqoJp1qWJq3sJ56IBcnfqfdpF+K0+AWL/FKvDVnpNbqfYF2V3loFMWD19i0O/+a37w
-         Z6nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766064541; x=1766669341;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4d8nE/j4LG4aJ1litu/i0JqfT3L0+tYvMgLM3qO1rYg=;
-        b=Z5LztGtTRkszZLbWiZhHSaDd4NGdEtuVlwdHjteY+FUKKtcXraoVAIR6PW/3cijfr9
-         N96B6Mjc/iRFLig+09CU5VGMY5ZoPxTiEm6fGTd4C1EFneR8XD6N/Mse475UWn99bxhP
-         4XHYtvFeswGY6KtR5YojddzX9hKkuYdBhj1Eq1wP9un2PKhmLfgZwUt159H8Lt09q+fH
-         lBPFs/JLkLAaqvoICchH/1tf/JbblvN0NiUDl6q7dDOexQ1immWICfPSG7AgcQ3LHjlu
-         YNtdNzUVCaMkZil8esmDf1UrxuzkaQ6nntYBvPTxLg3JK8/wOdWzo4IpLNqmDT8y0ysY
-         Vkbw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/tGhb4XuzRV3E1O6kDRnq3w0w9XqB9R+/t/lZ1gfr5PuvuOc5GoWZnrFo6S1Z/oWALjr7fRnpycA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1/H6QzP+Ay9Tjn7ywnYfqI1ZWsjZEz0+jg6pJqLWh/cM9dvLW
-	k/6DH4NBJTjSXV7i7HpeXBGjnF453AsDaZaZMo4KSwtbbbsF5mW3UGrFagExPIxz5DXmLxxAYEf
-	E5YY6p1/++b0qmm8OJjLf9AFu6xTVkJ2378Wvee9EYwtufGQ7p9lioM6kaqyTFYg=
-X-Gm-Gg: AY/fxX5BaUWZ4YrYKVn4VD+iPjO3s3FCLsNmDlVnveMwnCX2fBBg5b70a3txruHN4Yy
-	fDhnWRmR1amKgcBKDQRkJp+9Bgw7Tzm2OKOM6fzlMXDG8F2yahuPy13E30d7cAFdJT9pJ0qEQSL
-	ByF84vm/zq/1JnDPDCVj7IuSKYFMtH0QUXecw0v0IjD1VCDRnOWS6dJ3sri0tSZICrspu7AYnvF
-	GuZFl71PvYUu+YdZWKzbaL1VUvbelQ3J6PXf9plFhBhVEa2iuGIJuazwNoozHHnfZI5VjpP53kH
-	CjXFCtN5VdABHlKWEQJAZzaax/2PIsCb1si5tpODNhINCE9BU6JbpFK1LEPAQ7RQ8I8UsPfWggM
-	uVGj+pjXcK/UZOJOSMRpXdPpdgYcuXxgzqz3irBfwdQ==
-X-Received: by 2002:a17:903:3bcf:b0:2a0:ad09:750b with SMTP id d9443c01a7336-2a0ad097797mr111644805ad.9.1766064540594;
-        Thu, 18 Dec 2025 05:29:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG77qDSkD3kryCSvCIG59mV8qh7r2baMVQ19jpUBB75/MHMpbN0RDu4znUHAN1JCuGy853T5w==
-X-Received: by 2002:a17:903:3bcf:b0:2a0:ad09:750b with SMTP id d9443c01a7336-2a0ad097797mr111644495ad.9.1766064540046;
-        Thu, 18 Dec 2025 05:29:00 -0800 (PST)
-Received: from [10.218.35.45] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2d161278dsm25817335ad.48.2025.12.18.05.28.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Dec 2025 05:28:59 -0800 (PST)
-Message-ID: <7a72f708-3f1a-421d-9299-e4ebb112f1ea@oss.qualcomm.com>
-Date: Thu, 18 Dec 2025 18:58:55 +0530
+	s=arc-20240116; t=1766066080; c=relaxed/simple;
+	bh=Dgh2zwe6hGntmCd3HwqGuHvNWUpLbcTpeoZ6zxpF4Sw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Lzy0E5krPvTJc7pxDn5THOAJ1AjvyshHQjtjMm6wiwplFp5uDdrnkAghzu7YZ9PC36Fl0l+QSnFHp5wZ322hR5C5ydzaLIu8gErLQ63kQwE4A6aX/zjQxgsH/4eicbsaWvNoL/A1ew9GTxduJbEog2HElwg2xX4N2clOLaW1Nd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XIbQ5ZsQ; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1766066078; x=1797602078;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Dgh2zwe6hGntmCd3HwqGuHvNWUpLbcTpeoZ6zxpF4Sw=;
+  b=XIbQ5ZsQijnVxed7C1/dpvOKzbvdf/erHW9TWMIcXzh5WcuUjc14tdY6
+   2nITsQOr3Zfi2sf3kSJW27Upq/yY4BOkjwgKaASK913+B2R61gxgCcsFJ
+   kLkAef1ORSjkHC75LQAHJtnX8LowDaN5N5noqj2SUPzRU9jteVTbyIUgM
+   GU8M0u1HA/4G4GKBfWViz+yUt7QeEmNHnj9Q0TfbzPC34vhIBDa3WulBK
+   0H8lDW+IAy9gFzWT4LSJOsVfssf9shj6eAq8bNxedvU6COZPkarS8deC2
+   hAeHVVeYrgXzRQQm1lvA5TDneU86vzATJlhdO6CJk2v9yMlTK6I/lORYK
+   Q==;
+X-CSE-ConnectionGUID: /FHiTH9CRTiHdmwOJ2gJkw==
+X-CSE-MsgGUID: D5ievWWqTxOSgmhyNR0GIg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11646"; a="68057765"
+X-IronPort-AV: E=Sophos;i="6.21,158,1763452800"; 
+   d="scan'208";a="68057765"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2025 05:54:37 -0800
+X-CSE-ConnectionGUID: VNDLAWCBQhCstlwjZ4L5yg==
+X-CSE-MsgGUID: 3oVu1CIHTCujD65wZ+N1DQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,158,1763452800"; 
+   d="scan'208";a="198193195"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.70])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2025 05:54:35 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 18 Dec 2025 15:54:32 +0200 (EET)
+To: Adam Stylinski <kungfujesus06@gmail.com>
+cc: linux-pci@vger.kernel.org, bhelgaas@google.com
+Subject: Re: Kernel regression in 6.13
+In-Reply-To: <aUFreCbbgfb-5Wh1@eggsbenedict>
+Message-ID: <fcf1a483-8ef8-7450-2e9e-f82be527a49d@linux.intel.com>
+References: <aUCt1tHhm_-XIVvi@eggsbenedict> <09dc94cd-6247-231a-7bcc-27aaeb3b5176@linux.intel.com> <aUFlNgmLA5sI0FaJ@eggsbenedict> <3c61a43d-2a2f-0cd7-eafc-e34fb36f2274@linux.intel.com> <aUFreCbbgfb-5Wh1@eggsbenedict>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] PCI: dwc: Do not return failure if link is in
- Detect.Quiet/Active states
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: manivannan.sadhasivam@oss.qualcomm.com, Jingoo Han
- <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vincent.guittot@linaro.org, zhangsenchuan@eswincomputing.com
-References: <20251218-pci-dwc-suspend-rework-v2-0-5a7778c6094a@oss.qualcomm.com>
- <20251218-pci-dwc-suspend-rework-v2-2-5a7778c6094a@oss.qualcomm.com>
- <237606b2-783a-4e11-854b-fed787e2903d@oss.qualcomm.com>
- <isbb3bng27ibc3xddvjvlgbtz7skbbpd4q3a6rdqul7ghmmsyy@ze72f2hs4kb3>
- <c4aedf62-633d-4871-9dfa-af021e9a8e42@oss.qualcomm.com>
- <bawi2oioatfrmxuwd26xlvytmtuo2mhf3yunbwrzam22y57wvm@3l4hdbzjjske>
-Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <bawi2oioatfrmxuwd26xlvytmtuo2mhf3yunbwrzam22y57wvm@3l4hdbzjjske>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: 1Bn4zeqSsFFSHCkFiNkRFs2iNqfP35SZ
-X-Authority-Analysis: v=2.4 cv=V51wEOni c=1 sm=1 tr=0 ts=6944019d cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=x01hJFTKM_06UH880ogA:9
- a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE4MDExMCBTYWx0ZWRfX/1hOeVDLKfFP
- 0LL8KvitcHTCMxGYPuGXmnmJRiKd9Q10gsj9Hqy5zrflGEIoVCXWwsxnYiJQtUCvgIIx9epJD2H
- /nSL0d4tgk9Td4fg4iW70eT0zUn7bdoU/LKQS5c5zTtcoSiHO9vp6KwN9KR+Fgeu+gbefRZ94nf
- bKfBZCsIXxzvjMhvuHqojkymQZ5VQ/6YQZWhsnaXWsqeFQ23j2HRzWy4nG9roMmPJXwTv9jqFzR
- Cv6cL+chLF2YOQSMiyGEdIVmaXneb+WGB5ot8kcX1Xis6MYkx13gX8UifQAF5bIDy8ywS3HGiww
- JClYJhpl4xl7L4M/4Y0M2w0AYl1jjZjz9p5H6slHV11tQeXQtguyeHxCPMalbhAzT8Fttnsphzz
- c/spLPSXQzD8IBneAgzMQE20eQK0Nw==
-X-Proofpoint-GUID: 1Bn4zeqSsFFSHCkFiNkRFs2iNqfP35SZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-18_02,2025-12-17_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0 malwarescore=0
- lowpriorityscore=0 spamscore=0 suspectscore=0 adultscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512180110
+Content-Type: multipart/mixed; boundary="8323328-2101671776-1766066072=:959"
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323328-2101671776-1766066072=:959
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On 12/18/2025 6:30 PM, Manivannan Sadhasivam wrote:
-> On Thu, Dec 18, 2025 at 06:26:12PM +0530, Krishna Chaitanya Chundru wrote:
->>
->> On 12/18/2025 6:16 PM, Manivannan Sadhasivam wrote:
->>> On Thu, Dec 18, 2025 at 05:57:30PM +0530, Krishna Chaitanya Chundru wrote:
->>>> On 12/18/2025 5:34 PM, Manivannan Sadhasivam via B4 Relay wrote:
->>>>> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
->>>>>
->>>>> dw_pcie_wait_for_link() API waits for the link to be up and returns failure
->>>>> if the link is not up within the 1 second interval. But if there was no
->>>>> device connected to the bus, then the link up failure would be expected.
->>>>> In that case, the callers might want to skip the failure in a hope that the
->>>>> link will be up later when a device gets connected.
->>>>>
->>>>> One of the callers, dw_pcie_host_init() is currently skipping the failure
->>>>> irrespective of the link state, in an assumption that the link may come up
->>>>> later. But this assumption is wrong, since LTSSM states other than
->>>>> Detect.Quiet and Detect.Active during link training phase are considered to
->>>>> be fatal and the link needs to be retrained.
->>>>>
->>>>> So to avoid callers making wrong assumptions, skip returning failure from
->>>>> dw_pcie_wait_for_link() only if the link is in Detect.Quiet or
->>>>> Detect.Active states after timeout and also check the return value of the
->>>>> API in dw_pcie_host_init().
->>>>>
->>>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
->>>>> ---
->>>>>     drivers/pci/controller/dwc/pcie-designware-host.c |  8 +++++---
->>>>>     drivers/pci/controller/dwc/pcie-designware.c      | 12 +++++++++++-
->>>>>     2 files changed, 16 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> index 43d091128ef7..ef6d9ae6eddb 100644
->>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> @@ -670,9 +670,11 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->>>>>     	 * If there is no Link Up IRQ, we should not bypass the delay
->>>>>     	 * because that would require users to manually rescan for devices.
->>>>>     	 */
->>>>> -	if (!pp->use_linkup_irq)
->>>>> -		/* Ignore errors, the link may come up later */
->>>>> -		dw_pcie_wait_for_link(pci);
->>>>> +	if (!pp->use_linkup_irq) {
->>>>> +		ret = dw_pcie_wait_for_link(pci);
->>>>> +		if (ret)
->>>>> +			goto err_stop_link;
->>>>> +	}
->>>>>     	ret = pci_host_probe(bridge);
->>>>>     	if (ret)
->>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
->>>>> index 75fc8b767fcc..b58baf26ce58 100644
->>>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
->>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->>>>> @@ -641,7 +641,7 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index)
->>>>>     int dw_pcie_wait_for_link(struct dw_pcie *pci)
->>>>>     {
->>>>> -	u32 offset, val;
->>>>> +	u32 offset, val, ltssm;
->>>>>     	int retries;
->>>>>     	/* Check if the link is up or not */
->>>>> @@ -653,6 +653,16 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
->>>>>     	}
->>>>>     	if (retries >= PCIE_LINK_WAIT_MAX_RETRIES) {
->>>>> +		/*
->>>>> +		 * If the link is in Detect.Quiet or Detect.Active state, it
->>>>> +		 * indicates that no device is detected. So return success to
->>>>> +		 * allow the device to show up later.
->>>>> +		 */
->>>>> +		ltssm = dw_pcie_get_ltssm(pci);
->>>>> +		if (ltssm == DW_PCIE_LTSSM_DETECT_QUIET ||
->>>>> +		    ltssm == DW_PCIE_LTSSM_DETECT_ACT)
->>>>> +			return 0;
->>>>> +
->>>>>     		dev_info(pci->dev, "Phy link never came up\n");
->>>> Can you move this print above, as this print is useful for the user to know
->>>> that, link is not up yet.
->>>>
->>> If the device is not connected to the bus, what information does this log
->>> provide to the user?
->> Not every user is aware that device is not connected, at-least this log will
->> give info
->> that there is no device connected.
->>
-> Users won't grep the dmesg log to check whether the device is connected to the
-> bus or not. They will use lspci.
-ack.
+On Tue, 16 Dec 2025, Adam Stylinski wrote:
+> On Tue, Dec 16, 2025 at 04:14:10PM +0200, Ilpo J=E4rvinen wrote:
+> > On Tue, 16 Dec 2025, Adam Stylinski wrote:
+> >=20
+> > > On Tue, Dec 16, 2025 at 11:49:45AM +0200, Ilpo J=E4rvinen wrote:
+> > > > On Mon, 15 Dec 2025, Adam Stylinski wrote:
+> > > >=20
+> > > > > Hello,
+> > > > >=20
+> > > > > I seem to be encountering a regression that prevents my system fr=
+om=20
+> > > > > booting.  The regression occurred between 6.12 and 6.13.  I've bi=
+sected=20
+> > > > > it to this commit:
+> > > > > 665745f274870c921020f610e2c99a3b1613519b
+> > > > >=20
+> > > > > Some info about this system: it's ancient. It's a Q9650 that I us=
+ed as a=20
+> > > > > mythbackend/frontend for over a decade. This booting failure on n=
+ewer=20
+> > > > > kernels finally forced my hand to buy new a "new" PCI Express bas=
+ed=20
+> > > > > tuner and upgrade the system into the modern age. It boots via MB=
+R on a=20
+> > > > > P45 based chipset (A P5Q Plus board, to be precise).  Given the a=
+ge, I=20
+> > > > > chalked the issue up to possibly some failing hardware or memory=
+=20
+> > > > > corruption that happened at compile time. I recently pulled the s=
+ystem=20
+> > > > > back out again to do some performance testing in zlib-ng only to =
+find=20
+> > > > > out it hangs on the latest Ubuntu server ISO. I figured at this p=
+oint it=20
+> > > > > wasn't something specific to my kernel config / compilation and i=
+t's=20
+> > > > > likely a regression. It's also old enough that I may be in the po=
+sition=20
+> > > > > of the only one having this problem, so I took it upon myself to =
+bisect=20
+> > > > > what was going on. Let me know if there's anything you'd like me =
+to test=20
+> > > > > or try.
+> > > >=20
+> > > > Hi,
+> > > >=20
+> > > > Thanks for the report.
+> > > >=20
+> > > > In pcie_bwnotif_enable() there's pcie_capability_set_word() that en=
+ables
+> > > > bandwidth notifications:
+> > > >=20
+> > > > =09        pcie_capability_set_word(port, PCI_EXP_LNKCTL,
+> > > >                                  PCI_EXP_LNKCTL_LBMIE | PCI_EXP_LNK=
+CTL_LABIE);
+> > > >=20
+> > > > So as the first step change those PCI_EXP_LNKCTL_LBMIE |=20
+> > > > PCI_EXP_LNKCTL_LABIE into 0 to see if not enabling the bandwitdh=20
+> > > > notification allows the system to come up.
+> > > >=20
+> > > > I suggest not trying this directly at the top of 665745f27487=20
+> > > > ("PCI/bwctrl: Re-add BW notification portdrv as PCIe BW controller"=
+)=20
+> > > > but on a kernel that is expected to have fixes since 665745f27487=
+=20
+> > > > including those made to the other PCIe service drivers that share=
+=20
+> > > > interrupt handler with bwctrl (so basically some stable version).
+> > > >=20
+> > > > If that works try to enable those bits one at a time.
+> > > >=20
+> > > > Please also send lspci -vvv.
+> > > >=20
+> > > > --=20
+> > > >  i.
+> > > >=20
+> > >=20
+> > > I'll try changing those values atop of the 6.18 tagged commit and let=
+ you know how it goes.  Thanks for looking into this.
+> > > The privileged lspci -vv output is below:
+> > >=20
+> > > 00:00.0 Host bridge: Intel Corporation 4 Series Chipset DRAM Controll=
+er (rev 03)
+> > > =09Subsystem: ASUSTeK Computer Inc. P5Q Deluxe Motherboard
+> > > =09Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr=
+- Stepping- SERR- FastB2B- DisINTx-
+> > > =09Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=3Dfast >TAbort- <=
+TAbort- <MAbort+ >SERR- <PERR- INTx-
+> > > =09Latency: 0
+> > > =09Capabilities: [e0] Vendor Specific Information: Intel <unknown>
+> > >=20
+> > > 00:01.0 PCI bridge: Intel Corporation 4 Series Chipset PCI Express Ro=
+ot Port (rev 03) (prog-if 00 [Normal decode])
+> > > =09Subsystem: ASUSTeK Computer Inc. P5Q Deluxe Motherboard
+> > > =09Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr=
+- Stepping- SERR+ FastB2B- DisINTx+
+> > > =09Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- <=
+TAbort- <MAbort- >SERR- <PERR- INTx-
+> > > =09Latency: 0, Cache Line Size: 32 bytes
+> > > =09Interrupt: pin A routed to IRQ 24
+> > > =09Bus: primary=3D00, secondary=3D01, subordinate=3D01, sec-latency=
+=3D0
+> > > =09I/O behind bridge: c000-cfff [size=3D4K] [16-bit]
+> > > =09Memory behind bridge: fd000000-fe9fffff [size=3D26M] [32-bit]
+> > > =09Prefetchable memory behind bridge: c0000000-dfffffff [size=3D512M]=
+ [32-bit]
+> > > =09Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- <=
+TAbort- <MAbort- <SERR- <PERR-
+> > > =09BridgeCtl: Parity- SERR+ NoISA- VGA+ VGA16+ MAbort- >Reset- FastB2=
+B-
+> > > =09=09PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+> > > =09Capabilities: [88] Subsystem: ASUSTeK Computer Inc. P5Q Deluxe Mot=
+herboard
+> > > =09Capabilities: [80] Power Management version 3
+> > > =09=09Flags: PMEClk- DSI- D1- D2- AuxCurrent=3D0mA PME(D0+,D1-,D2-,D3=
+hot+,D3cold+)
+> > > =09=09Status: D0 NoSoftRst+ PME-Enable- DSel=3D0 DScale=3D0 PME-
+> > > =09Capabilities: [90] MSI: Enable+ Count=3D1/1 Maskable- 64bit-
+> > > =09=09Address: fee02000  Data: 0020
+> > > =09Capabilities: [a0] Express (v2) Root Port (Slot+), IntMsgNum 0
+> > > =09=09DevCap:=09MaxPayload 128 bytes, PhantFunc 0
+> > > =09=09=09ExtTag- RBE+ TEE-IO-
+> > > =09=09DevCtl:=09CorrErr- NonFatalErr- FatalErr- UnsupReq-
+> > > =09=09=09RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
+> > > =09=09=09MaxPayload 128 bytes, MaxReadReq 128 bytes
+> > > =09=09DevSta:=09CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- Tra=
+nsPend-
+> > > =09=09LnkCap:=09Port #2, Speed 5GT/s, Width x16, ASPM L0s, Exit Laten=
+cy L0s <256ns
+> > > =09=09=09ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp-
+> > > =09=09LnkCtl:=09ASPM Disabled; RCB 64 bytes, LnkDisable- CommClk+
+> > > =09=09=09ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt- FltModeDis-
+> > > =09=09LnkSta:=09Speed 2.5GT/s, Width x16
+> > > =09=09=09TrErr- Train- SlotClk+ DLActive- BWMgmt+ ABWMgmt+
+> >=20
+> > At least this Root Port has both BWMgmt and ABWMgmt asserted (not a=20
+> > problem in itself, necessarily).
+> >=20
+> > If you get the system working by changing that set_word call, it's wort=
+h=20
+> > to check if these got reasserted (bwctrl tries to clear them right afte=
+r=20
+> > the set word call but it could be they get reasserted).
+> >=20
+> > --=20
+> >  i.
+>=20
+> Yes, I was able to boot after forcing those flags to zero.  Here's lspci =
+-vvv after booting into 6.18:
+>=20
+> 00:00.0 Host bridge: Intel Corporation 4 Series Chipset DRAM Controller (=
+rev 03)
+> =09Subsystem: ASUSTeK Computer Inc. P5Q Deluxe Motherboard
+> =09Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- St=
+epping- SERR- FastB2B- DisINTx-
+> =09Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=3Dfast >TAbort- <TAbo=
+rt- <MAbort+ >SERR- <PERR- INTx-
+> =09Latency: 0
+> =09Capabilities: [e0] Vendor Specific Information: Intel <unknown>
+> lspci: Unable to load libkmod resources: error -2
+>=20
+> 00:01.0 PCI bridge: Intel Corporation 4 Series Chipset PCI Express Root P=
+ort (rev 03) (prog-if 00 [Normal decode])
+> =09Subsystem: ASUSTeK Computer Inc. P5Q Deluxe Motherboard
+> =09Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- St=
+epping- SERR+ FastB2B- DisINTx+
+> =09Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- <TAbo=
+rt- <MAbort- >SERR- <PERR- INTx-
+> =09Latency: 0, Cache Line Size: 32 bytes
+> =09Interrupt: pin A routed to IRQ 24
+> =09Bus: primary=3D00, secondary=3D01, subordinate=3D01, sec-latency=3D0
+> =09I/O behind bridge: c000-cfff [size=3D4K] [16-bit]
+> =09Memory behind bridge: fd000000-fe9fffff [size=3D26M] [32-bit]
+> =09Prefetchable memory behind bridge: c0000000-dfffffff [size=3D512M] [32=
+-bit]
+> =09Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- <TAbo=
+rt- <MAbort- <SERR- <PERR-
+> =09BridgeCtl: Parity- SERR+ NoISA- VGA+ VGA16+ MAbort- >Reset- FastB2B-
+> =09=09PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+> =09Capabilities: [88] Subsystem: ASUSTeK Computer Inc. P5Q Deluxe Motherb=
+oard
+> =09Capabilities: [80] Power Management version 3
+> =09=09Flags: PMEClk- DSI- D1- D2- AuxCurrent=3D0mA PME(D0+,D1-,D2-,D3hot+=
+,D3cold+)
+> =09=09Status: D0 NoSoftRst+ PME-Enable- DSel=3D0 DScale=3D0 PME-
+> =09Capabilities: [90] MSI: Enable+ Count=3D1/1 Maskable- 64bit-
+> =09=09Address: fee02000  Data: 0020
+> =09Capabilities: [a0] Express (v2) Root Port (Slot+), IntMsgNum 0
+> =09=09DevCap:=09MaxPayload 128 bytes, PhantFunc 0
+> =09=09=09ExtTag- RBE+ TEE-IO-
+> =09=09DevCtl:=09CorrErr- NonFatalErr- FatalErr- UnsupReq-
+> =09=09=09RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
+> =09=09=09MaxPayload 128 bytes, MaxReadReq 128 bytes
+> =09=09DevSta:=09CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPe=
+nd-
+> =09=09LnkCap:=09Port #2, Speed 5GT/s, Width x16, ASPM L0s, Exit Latency L=
+0s <256ns
+> =09=09=09ClockPM- Surprise- LLActRep- BwNot+ ASPMOptComp-
+> =09=09LnkCtl:=09ASPM Disabled; RCB 64 bytes, LnkDisable- CommClk+
+> =09=09=09ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt- FltModeDis-
+> =09=09LnkSta:=09Speed 2.5GT/s, Width x16
+> =09=09=09TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+> =09=09SltCap:=09AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug- Surprise=
+-
+> =09=09=09Slot #0, PowerLimit 75W; Interlock- NoCompl-
+> =09=09SltCtl:=09Enable: AttnBtn- PwrFlt- MRL- PresDet- CmdCplt- HPIrq- Li=
+nkChg-
+> =09=09=09Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
+> =09=09SltSta:=09Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet+ Interlo=
+ck-
+> =09=09=09Changed: MRL- PresDet+ LinkState-
+> =09=09RootCap: CRSVisible-
+> =09=09RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna- CRSVisi=
+ble-
+> =09=09RootSta: PME ReqID 0000, PMEStatus- PMEPending-
+> =09=09DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- L=
+TR-
+> =09=09=09 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPre=
+fix-
+> =09=09=09 EmergencyPowerReduction Not Supported, EmergencyPowerReductionI=
+nit-
+> =09=09=09 FRS- LN System CLS Not Supported, TPHComp- ExtTPHComp- ARIFwd-
+> =09=09=09 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
+> =09=09DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- ARIFwd-
+> =09=09=09 AtomicOpsCtl: ReqEn- EgressBlck-
+> =09=09=09 IDOReq- IDOCompl- LTR- EmergencyPowerReductionReq-
+> =09=09=09 10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
+> =09=09LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance- SpeedDis-
+> =09=09=09 Transmit Margin: Normal Operating Range, EnterModifiedComplianc=
+e- ComplianceSOS-
+> =09=09=09 Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
+> =09=09LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete- Equ=
+alizationPhase1-
+> =09=09=09 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest=
+-
+> =09=09=09 Retimer- 2Retimers- CrosslinkRes: unsupported, FltMode-
+> =09Capabilities: [100 v1] Virtual Channel
+> =09=09Caps:=09LPEVC=3D0 RefClk=3D100ns PATEntryBits=3D1
+> =09=09Arb:=09Fixed- WRR32- WRR64- WRR128-
+> =09=09Ctrl:=09ArbSelect=3DFixed
+> =09=09Status:=09InProgress-
+> =09=09VC0:=09Caps:=09PATOffset=3D00 MaxTimeSlots=3D1 RejSnoopTrans-
+> =09=09=09Arb:=09Fixed+ WRR32- WRR64- WRR128- TWRR128- WRR256-
+> =09=09=09Ctrl:=09Enable+ ID=3D0 ArbSelect=3DFixed TC/VC=3D01
+> =09=09=09Status:=09NegoPending- InProgress-
+> =09Capabilities: [140 v1] Root Complex Link
+> =09=09Desc:=09PortNumber=3D02 ComponentID=3D01 EltType=3DConfig
+> =09=09Link0:=09Desc:=09TargetPort=3D00 TargetComponent=3D01 AssocRCRB- Li=
+nkType=3DMemMapped LinkValid+
+> =09=09=09Addr:=0900000000fed19000
+> =09Kernel driver in use: pcieport
 
-- Krishna Chaitanya.
-> - Mani
->
+Hi.
 
+Here's a quirk patch to disable bwctrl on this Root Port, assuming I=20
+guessed the PCI device ID for it right, please check it matches to 00:01.0=
+=20
+(I should have asked lspci with -n to see the raw number but you can=20
+easily correct it yourself too before compiling the kernel).
+
+From=201e13651f8789fb9df060269a7b7c396211d910f8 Mon Sep 17 00:00:00 2001
+From: =3D?UTF-8?q?Ilpo=3D20J=3DC3=3DA4rvinen?=3D <ilpo.jarvinen@linux.intel=
+=2Ecom>
+Date: Thu, 18 Dec 2025 15:45:25 +0200
+Subject: [PATCH 1/1] PCI/bwctrl: Disable BW controller on Intel P45 using a=
+ quirk
+MIME-Version: 1.0
+Content-Type: text/plain; charset=3DUTF-8
+Content-Transfer-Encoding: 8bit
+
+The commit 665745f27487 ("PCI/bwctrl: Re-add BW notification portdrv as
+PCIe BW controller") was found to lead to a boot hang on a Intel P45
+system. Testing without setting Link Bandwidth Management Interrupt
+Enable (LBMIE) and Link Autonomous Bandwidth Interrupt Enable (LABIE)
+(PCIe r7.0, sec. 7.5.3.7) in bwctrl allowed system to come up.
+
+Add no_bw_notif into the struct pci_dev and quirk Intel P45 Root Port
+with it.
+
+Reported-by: Adam Stylinski <kungfujesus06@gmail.com>
+Link: https://lore.kernel.org/linux-pci/aUCt1tHhm_-XIVvi@eggsbenedict/
+Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/pcie/bwctrl.c |  3 +++
+ drivers/pci/quirks.c      | 10 ++++++++++
+ include/linux/pci.h       |  1 +
+ 3 files changed, 14 insertions(+)
+
+diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+index 36f939f23d34..4ae92c9f912a 100644
+--- a/drivers/pci/pcie/bwctrl.c
++++ b/drivers/pci/pcie/bwctrl.c
+@@ -250,6 +250,9 @@ static int pcie_bwnotif_probe(struct pcie_device *srv)
+ =09struct pci_dev *port =3D srv->port;
+ =09int ret;
+=20
++=09if (port->no_bw_notif)
++=09=09return -ENODEV;
++
+ =09/* Can happen if we run out of bus numbers during enumeration. */
+ =09if (!port->subordinate)
+ =09=09return -ENODEV;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index b9c252aa6fe0..6ef42a2c4831 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -1359,6 +1359,16 @@ static void quirk_transparent_bridge(struct pci_dev =
+*dev)
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,=09PCI_DEVICE_ID_INTEL_82380F=
+B,=09quirk_transparent_bridge);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_TOSHIBA,=090x605,=09quirk_transpare=
+nt_bridge);
+=20
++/*
++ * Enabling Link Bandwidth Management Interrupts (BW notifications) can ca=
+use
++ * boot hangs on P45.
++ */
++static void quirk_p45_bw_notifications(struct pci_dev *dev)
++{
++=09dev->no_bw_notif =3D 1;
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2e21, quirk_p45_bw_notific=
+ations);
++
+ /*
+  * Common misconfiguration of the MediaGX/Geode PCI master that will reduc=
+e
+  * PCI bandwidth from 70MB/s to 25MB/s.  See the GXM/GXLV/GX1 datasheets
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 864775651c6f..3a556cd749e3 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -406,6 +406,7 @@ struct pci_dev {
+ =09=09=09=09=09=09      user sysfs */
+ =09unsigned int=09clear_retrain_link:1;=09/* Need to clear Retrain Link
+ =09=09=09=09=09=09   bit manually */
++=09unsigned int=09no_bw_notif:1;=09/* BW notifications may cause issues */
+ =09unsigned int=09d3hot_delay;=09/* D3hot->D0 transition time in ms */
+ =09unsigned int=09d3cold_delay;=09/* D3cold->D0 transition time in ms */
+=20
+
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+--=20
+2.39.5
+
+--8323328-2101671776-1766066072=:959--
 
