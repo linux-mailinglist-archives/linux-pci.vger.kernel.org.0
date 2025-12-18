@@ -1,142 +1,196 @@
-Return-Path: <linux-pci+bounces-43272-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43273-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7A7CCCB512
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 11:14:28 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39BB0CCB524
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 11:15:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C5E72301819B
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 10:13:23 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 06749302AAAD
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 10:15:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53FFB33CEA1;
-	Thu, 18 Dec 2025 10:13:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1846F331221;
+	Thu, 18 Dec 2025 10:15:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="pIsna1Jw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rg678wxJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail1.manjaro.org (mail1.manjaro.org [142.132.176.110])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A662F3621;
-	Thu, 18 Dec 2025 10:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=142.132.176.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD5E23A994;
+	Thu, 18 Dec 2025 10:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766052802; cv=none; b=Y74WDuhMRlO100CzgaQEdbNjnORxDLNvXOpadn7RlCOoIWD5C4TTGhs7hkb8XKLEUlfbNrWQHSU56dMbTEX+gUD9o+H10KPWy28wrLvQOS5ZENEnFecJXKNz7zSDPcKd3dR/ot5S2RaYKJnhSr83akF51ut6yQMLqN9nlPktgRo=
+	t=1766052905; cv=none; b=oi3nGtbblx/hCVCDpV46No6nTyy6BPavNyueQghwwmBCkH5/9bG1iHtPZqyvSKx6GY7VnlW0jUkU6Do86jbJrgQkN0nh5tTvmgKOaFotPUmwwGlSKXGT7e4ec6cXj2KzxWJumUKsUPAK6QLwbctfSK/pifUZ89DRH+t8mW8+plU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766052802; c=relaxed/simple;
-	bh=AluQXahrkuxDalkkn365wmM3+k/GQwCu4bWiiV3a2Ww=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=lJsnL/WdhfqQFImkPGE6rbxtcvJ4jDAx6U/zGDF/ft5TakGRgwvhVrB3NzxvnVOCwsDI+K4yVZvB6jxZNrTg7OkDWIX2RJER3Ufv4wb5C4GiaHfFl/b338eunr0aDK0SYzAYqvpG8t5vzn8b3u1zztArP33YxPvImTfbj4ddeik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=pIsna1Jw; arc=none smtp.client-ip=142.132.176.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPA id A7CEF417D6;
-	Thu, 18 Dec 2025 11:13:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=dkim;
-	t=1766052793; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=qem8ZP+yDudSM4rWioIewZLF1OHQf2ievkUplCtY2mM=;
-	b=pIsna1JwNg8vU0xABStqy6mAATplVrqC1O7JmOuFKXA0z/Oy/TC5FMsv4ynfcA0uVNw0K/
-	VY6H1SPK/uguUuDIGU88wgsm3tVsjd4J31+G7RDI90yaeALyO6HeMPC3zkn3hqMhyt6/Wc
-	zgev/YylCGFOg64bEg/b1h5lgvFMzgdWlQYvJq15Xh1KEwtykuc4kvPsDz2QJk1/+5+q85
-	UBG26lGzzWmk//X0BNCQK/k2ytYZwR9DPwFen6tgleqnyPHZJ2wiuTKgDDAUeRzt9bBhYD
-	KUFXU6MZg7OuSejxmT/UQrflxq1U36sKWnHgbAzrYjxLGZ8eB+2bNEt0psbvng==
-From: "Dragan Simic" <dsimic@manjaro.org>
-In-Reply-To: <DF197NIRHLIJ.3LIG9GJGJQLQX@cknow-tech.com>
-Content-Type: text/plain; charset="utf-8"
-References: <cover.1763415705.git.geraldogabriel@gmail.com>
- <eaa9c75ca02a53f8bcc293b8bc73d013e26ec253.1763415706.git.geraldogabriel@gmail.com> <qncj72c3owrw7rvnj6jit2sbn4ojyr3kztcjailfxtdboan6sy@ddh5g7v4fcvt> <3ea8ac20-6332-0c0c-645b-36ca4231c109@manjaro.org> <DF197NIRHLIJ.3LIG9GJGJQLQX@cknow-tech.com>
-Date: Thu, 18 Dec 2025 11:13:10 +0100
-Cc: "Manivannan Sadhasivam" <mani@kernel.org>, "Geraldo Nascimento" <geraldogabriel@gmail.com>, "Shawn Lin" <shawn.lin@rock-chips.com>, "Lorenzo Pieralisi" <lpieralisi@kernel.org>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Rob Herring" <robh@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>, "Heiko Stuebner" <heiko@sntech.de>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Johan Jonker" <jbx6244@gmail.com>, linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-To: "Diederik de Haas" <diederik@cknow-tech.com>
+	s=arc-20240116; t=1766052905; c=relaxed/simple;
+	bh=bUrOudaBNEyNMrDDCs/9pJg9ZvlHYmUGDr+eXIjrMyo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Au+jorhSbfUBydshPTuT9Mdo1MzdlrVEs57O1Ak9pnjeDYPSB9PiXmJp7fvzVjxfj4NPL7cTCfenNr3pJVNBO6E3JaMy54Hd+0hY7RetiDq+/kI8BAId/+P/ClXceqG46njGkGq8YnLVdSd2I5Tk7NnCpNVyXNiJDo+qrt+62VY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rg678wxJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C99C0C4CEFB;
+	Thu, 18 Dec 2025 10:14:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766052904;
+	bh=bUrOudaBNEyNMrDDCs/9pJg9ZvlHYmUGDr+eXIjrMyo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Rg678wxJlwP2XtXO1kbmDVfmPFRvx3qUSeWXchI0F55x5wmP53dUVUIXohf5Zbu+n
+	 ZfIsju8wp3+Y4bDyqpgBhNRR0H8cIkzilNOtzeh9QI4DMxbEFMCeZDHDAp5wyYjl+n
+	 xNrZp+D0ETul3gohzeUtwdl+celqsdWG7rEEBX8Ak4+rlZdcCLLeBK6+eV5mQWV0oE
+	 A1F+SaXu5/TZhB9hSM+K0GOhqkK6BsEKaajGX4B9jqGPx6ZwoBKKo1Vp+cwSObHrby
+	 1aHe8SRtbr7EAFu8WLs/oHY8uCBUKdAzqD9nbVB/0J9A8fXZD29doqSZb+l0G9ADeu
+	 7w8nMhIlAva+w==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: [PATCH v2 0/7] irqchip/gic-v5: Code first ACPI boot support
+Date: Thu, 18 Dec 2025 11:14:26 +0100
+Message-Id: <20251218-gicv5-host-acpi-v2-0-eec76cd1d40b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <656e9b4e-c350-f808-701e-e49e8dad7062@manjaro.org>
-Subject: =?utf-8?q?Re=3A?= [PATCH v2 1/4] =?utf-8?q?PCI=3A?==?utf-8?q?_rockchip=3A?= 
- limit RK3399 to =?utf-8?q?2=2E5?= GT/s to prevent damage
-User-Agent: SOGoMail 5.12.3
-Content-Transfer-Encoding: quoted-printable
-X-Last-TLS-Session-Version: None
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAALUQ2kC/2WNQQrCMBBFr1Jm7UgSSa2ueg/pIibTZlCSkpSgl
+ N7dWHDl8j3476+QKTFluDYrJCqcOYYK6tCA9SZMhOwqgxJKS6EUTmyLRh/zgsbOjE5fXGulOzl
+ xhrqaE4382ou3obLnvMT03g+K/Npfq/trFYkChTRdq0a6a2v6B6VAz2NMEwzbtn0AzUKfja8AA
+ AA=
+X-Change-ID: 20251022-gicv5-host-acpi-d59d6c1d3d07
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+ Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, 
+ Marc Zyngier <maz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-pci@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Jose Marinho <jose.marinho@arm.com>
+X-Mailer: b4 0.14.3
 
-Hello Diederik,
+The ACPI and ACPI IORT specifications were updated to support bindings
+required to describe GICv5 based systems.
 
-On Thursday, December 18, 2025 11:01 CET, "Diederik de Haas" <diederik@=
-cknow-tech.com> wrote:
-> On Thu Dec 18, 2025 at 10:47 AM CET, Dragan Simic wrote:
-> > On Thursday, December 18, 2025 09:05 CET, Manivannan Sadhasivam <ma=
-ni@kernel.org> wrote:
-> >> On Mon, Nov 17, 2025 at 06:47:05PM -0300, Geraldo Nascimento wrote=
-:
-> >> > Shawn Lin from Rockchip has reiterated that there may be danger =
-in using
-> >> > their PCIe with 5.0 GT/s speeds. Warn the user if they make a DT=
- change
-> >> > from the default and drive at 2.5 GT/s only, even if the DT
-> >> > max-link-speed property is invalid or inexistent.
-> >> >=20
-> >> > This change is corroborated by RK3399 official datasheet [1], wh=
-ich
-> >> > says maximum link speed for this platform is 2.5 GT/s.
-> >> >=20
-> >> > [1] https://opensource.rock-chips.com/images/d/d7/Rockchip=5FRK3=
-399=5FDatasheet=5FV2.1-20200323.pdf
-> >> >=20
-> >> > Fixes: 956cd99b35a8 ("PCI: rockchip: Separate common code from R=
-C driver")
-> >> > Link: https://lore.kernel.org/all/ffd05070-9879-4468-94e3-b88968=
-b4c21b@rock-chips.com/
-> >> > Cc: stable@vger.kernel.org
-> >> > Reported-by: Dragan Simic <dsimic@manjaro.org>
-> >> > Reported-by: Shawn Lin <shawn.lin@rock-chips.com>
-> >> > Reviewed-by: Dragan Simic <dsimic@manjaro.org>
-> >> > Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
-> >> > ---
-> >> >  drivers/pci/controller/pcie-rockchip.c | 10 ++++++++--
-> >> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> >> >=20
-> >> > diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pc=
-i/controller/pcie-rockchip.c
-> >> > index 0f88da378805..992ccf4b139e 100644
-> >> > --- a/drivers/pci/controller/pcie-rockchip.c
-> >> > +++ b/drivers/pci/controller/pcie-rockchip.c
-> >> > @@ -66,8 +66,14 @@ int rockchip=5Fpcie=5Fparse=5Fdt(struct rockc=
-hip=5Fpcie *rockchip)
-> >> >  	}
-> >> > =20
-> >> >  	rockchip->link=5Fgen =3D of=5Fpci=5Fget=5Fmax=5Flink=5Fspeed(n=
-ode);
-> >> > -	if (rockchip->link=5Fgen < 0 || rockchip->link=5Fgen > 2)
-> >> > -		rockchip->link=5Fgen =3D 2;
-> >> > +	if (rockchip->link=5Fgen < 0 || rockchip->link=5Fgen > 2) {
-> >> > +		rockchip->link=5Fgen =3D 1;
-> >> > +		dev=5Fwarn(dev, "invalid max-link-speed, set to 2.5 GT/s\n");
-> >> > +	}
-> >> > +	else if (rockchip->link=5Fgen =3D=3D 2) {
-> >> > +		rockchip->link=5Fgen =3D 1;
-> >> > +		dev=5Fwarn(dev, "5.0 GT/s is dangerous, set to 2.5 GT/s\n");
-> >>=20
-> >> What does 'danger' really mean here? Link instability or something=
- else?
-> >> Error messages should be precise and not fearmongering.
-> >
-> > I agree that the original wording is a bit suboptimal, and I'd sugg=
-est
-> > to Geraldo that the produced warning message is changed to
-> >
-> >   "5.0 GT/s may cause data corruption, limited to to 2.5 GT/s\n"
-> >
-> > or something similar, to better reflect the actual underlying issue=
-.
->=20
-> s/limited to to/therefore limit speed to/ ?
+The ACPI specification GICv5 bindings ECR [1] were approved and the
+required changes merged in the ACPICA upstream repository[5].
 
-That would work well in a book or an article, while slightly terse
-wording is usually preferred in the messages produced by the kernel,
-or in log messages in general.  Such an approach compacts as much
-information as possible in as few words as possible, while still
-remaining (mostly) grammatically correct.
+The Arm IORT specification [2] has been updated to include GICv5 IWB
+specific bindings in revision E.g.
+
+Implement kernel code that - based on the aforementioned bindings - adds
+support for GICv5 ACPI probing.
+
+ACPICA changes supporting the bindings are posted with the series; they
+were cherry-picked from the upcoming ACPICA Linuxised release patches
+and they should _not_ be merged in any upstream branch because the
+full set of Linuxised ACPICA changes will be subsequently posted in
+order to be merged, I added the two ACPICA patches to make the series
+self-contained.
+
+The ACPI bindings were prototyped in edk2 - code available in these
+branches [3][4].
+
+===========================
+Kernel implementation notes
+===========================
+
+IRS and ITS probing is triggered using the standard irqchip ACPI probing
+mechanism - there is no significant difference compared to previous GIC
+versions other.
+
+The only difference that is worth noting is that GICv3/4 systems include a
+single MADT component describing the interrupt controller (ie GIC distributor)
+whereas GICv5 systems include one or more IRSes. The probing code is
+implemented so that an MADT IRS detection triggers probing for all IRSes
+in one go.
+
+The IWB driver probes like any other ACPI device. IORT code is updated so
+that a deviceID for the IWB can be detected.
+
+The only major change compared to GICv3/4 systems is the GSI namespace that
+is split between PPI/SPI IRQs and IWB backed IRQs.
+
+The main GSI handle - to map an IRQ - has to detect whether to look-up
+using the top level GSI domain or an IWB domain in that the two IRQ
+namespaces are decoupled.
+
+IORT code implements the logic to retrieve an IWB domain by looking up its
+IWB frame id, as described in [1].
+
+Most important implementation detail worth noting is that - at this stage -
+ACPI code is not capable of handling devices probe order IRQ dependency on
+the interrupt controller driver their IRQ is routed to.
+
+This is not an issue on GICv3/4 systems in that the full GIC hierarchy
+probes earlier than any other device, so by the time IRQs mappings have to
+be carried out (ie acpi_register_gsi()) the GIC drivers have already
+probed.
+
+On GICv5 systems, the IWB is modelled as a device and its device driver
+probes at device_initcall time. That's when the IWB IRQ domain is actually
+registered - which poses problems for devices whose IRQs are IWB routed and
+require to resolve the IRQ mapping before the IWB driver has a chance to
+probe.
+
+Work on resolving devices<->IWB probe order dependency has started in
+parallel with this series and will be posted shortly.
+
+For PPI/SPI/LPI backed IRQs the probe dependency is not a problem because
+in GICv5 systems the IRSes and ITSes probe early so their IRQ domain are
+set in place before devices require IRQ mappings.
+
+ACPICA patches are a Linuxised version of ACPICA GICv5 upstream changes
+[5] and should not be considered for merging because they would conflict
+with the full ACPICA release changes patchset that will be posted later
+in this dev cycle (owing to patch dependencies in the ACPICA commit
+history) they are there so that the patch series is self-contained.
+
+[1] https://github.com/tianocore/edk2/issues/11148
+[2] https://developer.arm.com/documentation/den0049/eg
+[3] https://github.com/LeviYeoReum/edk2/tree/levi/gicv5_patch
+[4] https://github.com/LeviYeoReum/edk2-platforms/tree/levi/gicv5_patch
+[5] https://github.com/acpica/acpica/commits/master/
+
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+---
+Changes in v2:
+- Cherry-picked ACPICA upstream changes
+- Minor editorial changes
+- Removed the "not for merging" tag because now ACPI specs are approved
+- Rebased against v6.19-rc1
+- Link to v1: https://lore.kernel.org/r/20251028-gicv5-host-acpi-v1-0-01a862feb5ca@kernel.org
+
+---
+Jose Marinho (2):
+      ACPICA: Add GICv5 MADT structures
+      ACPICA: Add Arm IORT IWB node definitions
+
+Lorenzo Pieralisi (5):
+      irqdomain: Add parent field to struct irqchip_fwid
+      PCI/MSI: Make the pci_msi_map_rid_ctlr_node() interface firmware agnostic
+      irqchip/gic-v5: Add ACPI IRS probing
+      irqchip/gic-v5: Add ACPI ITS probing
+      irqchip/gic-v5: Add ACPI IWB probing
+
+ drivers/acpi/arm64/iort.c                | 190 +++++++++++++++++++-----
+ drivers/acpi/bus.c                       |   3 +
+ drivers/irqchip/irq-gic-its-msi-parent.c |  43 +++---
+ drivers/irqchip/irq-gic-v5-irs.c         | 246 ++++++++++++++++++++++++-------
+ drivers/irqchip/irq-gic-v5-its.c         | 132 ++++++++++++++++-
+ drivers/irqchip/irq-gic-v5-iwb.c         |  42 ++++--
+ drivers/irqchip/irq-gic-v5.c             | 138 ++++++++++++++---
+ drivers/pci/msi/irqdomain.c              |  24 ++-
+ include/acpi/actbl2.h                    |  56 ++++++-
+ include/linux/acpi.h                     |   1 +
+ include/linux/acpi_iort.h                |  11 +-
+ include/linux/irqchip/arm-gic-v5.h       |   8 +
+ include/linux/irqdomain.h                |  30 +++-
+ include/linux/msi.h                      |   3 +-
+ kernel/irq/irqdomain.c                   |  14 +-
+ 15 files changed, 784 insertions(+), 157 deletions(-)
+---
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+change-id: 20251022-gicv5-host-acpi-d59d6c1d3d07
+
+Best regards,
+-- 
+Lorenzo Pieralisi <lpieralisi@kernel.org>
 
 
