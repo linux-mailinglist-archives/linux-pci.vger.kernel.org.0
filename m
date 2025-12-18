@@ -1,392 +1,145 @@
-Return-Path: <linux-pci+bounces-43280-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43281-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE749CCB606
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 11:30:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BE55CCB5EF
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 11:29:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2008530CB781
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 10:26:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BC8E530AEE9A
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 10:26:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E63433F392;
-	Thu, 18 Dec 2025 10:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC2E62701DC;
+	Thu, 18 Dec 2025 10:17:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVGVHrKa"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PzXR76ji"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205C033F37B;
-	Thu, 18 Dec 2025 10:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E4F334C13
+	for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 10:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766052939; cv=none; b=qB+YO1P4kcwBvmht4Uj6+L5ANj/ykpxKvAUj9tpnFV6kmb705TVJf3EEXWKy/sfTkW4w4hMZuLg9sm7OYa14wpPVfxEOUFd21LPe3QHkmEbOW4JzMN2ixewQewbj3o+ckjBCRDFC7OUF1AV3mURR3HKEp16FY36ZTd4t38LNvOA=
+	t=1766053023; cv=none; b=n6wq/ipsEEhIjndGURJFH38Z/hihx+JlsN3KRm8cNXZWwv6gaiBRPQ/Ia8RwE1NNSVI0dQWEnmPt3EI+ayrS7JazvDnWmZ7OExLDw1nGRSmhmZ3x/QhsctLY4OmcGi5zN12sxcWZ7QLOlu4ZhI2ebWWTeg0a6pfguwRKd0hDDk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766052939; c=relaxed/simple;
-	bh=nTj9AwGWa68OxCQB2ktt6UeErE1xFTjgXOQwZaEU084=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=t1XKLFomQb4RzUN0SNS1iDjMz2VhmG1Vdu207OawflNTm+5wRodLE0+uGUoaapEP4OaHgyHoxKJqekk3pDcBIaTnuOJGD2BjwVv/cB6sjf34pPSBzOjXpxrf2M819dzRMoCSgho55UyuvgNRQ5qHBMUcgdnUVEnrjRXCnQEKqrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVGVHrKa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDA6CC116C6;
-	Thu, 18 Dec 2025 10:15:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766052939;
-	bh=nTj9AwGWa68OxCQB2ktt6UeErE1xFTjgXOQwZaEU084=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=iVGVHrKankckqVetezOf6ZpRVgN2+0U+Ps7lIpaDUegsDIKXYDF/QqPxOa40l9FJI
-	 xcw2vbI3gged1gJ7N95KwKPdw/r/cHgOnpKTXZTQf4PZlRNBnaTPHW8IjsFmU+5h/1
-	 VxLzD/ynhiKwn1VwaHAiyhOwxGBuGzQfk4e2U8CxqmO50syPhk9EgF+sixO0sWL8AA
-	 NXAAsHk6w77vB4iUpAa7zFbvr2hNJ+Om4ymdVxoisca2EWJ5PSb//KA8mb6YXg6HjU
-	 BLlopX6cOV902Frm4RnAKpWeIuW2KFOXZNbwgbPQUsog0grGnYPmdfx73GWdkQxjQb
-	 zOEYxrRSVLbAQ==
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Thu, 18 Dec 2025 11:14:33 +0100
-Subject: [PATCH v2 7/7] irqchip/gic-v5: Add ACPI IWB probing
+	s=arc-20240116; t=1766053023; c=relaxed/simple;
+	bh=EAkSjlqjmEY22zjkNQzyGAWi5UkkUgqMyVWox52S5uk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rnhX2i/BgrJXlWh+qMiNCXq+Kq8Z44ImeyUgwdU7Sbq9Ikt4NLXCvfXRjjr2ri83DsK6Z6FxplVtrLJFxVXzaffdaTaq+gp8WfkxPOOb8IOh6pLHo4/7hdwO+zXYM62d+WaMUeogQ0vIBemM8uIqWqp8xh0SdOLyhWw3FmObze4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PzXR76ji; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-37b983fbd45so3293771fa.3
+        for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 02:17:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1766053020; x=1766657820; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3xZgigcPYCTe787T1RP1QJQQl9rmrKyQCyFERX1ZCJg=;
+        b=PzXR76ji83U+4mfOf9EEhlso7Q8kfRtTQtze7W7sKlfBuxKhtmllT3wxmKyXyYc7Iv
+         WYSXynIclSOcZ4k5gfbJtiaCgJXEuKrNEFz7A/fU7k8BeOB6V//XXgpYeEgslSJzS+PJ
+         bQ0exmvTTfX62OEkoKR/iMzBJW+HyLHilYW78=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766053020; x=1766657820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3xZgigcPYCTe787T1RP1QJQQl9rmrKyQCyFERX1ZCJg=;
+        b=SNiWndTUa3ASB+ZV2RcR40eMEcHKu+IindemfS2giNdc8Qe06D3o9Svs/9ZkcM/OJP
+         FVZ8xmrkZNjW9McLT7xoRfK3oW2fplM4AQC0/o+taXRwM3BhQA9hi0bpTcMAVDnolaCH
+         nc7lIWyVKfHZrvkLw+fPVpOQ2ZvP/VbX6D2PARlIzE7ksWMVI2CcqyIltaB7S/bq178D
+         Gu9154gsVs5ClDhkybk/DpwrNh35xq2AC5X2IDmXpSWUEAPwC1z7T1r34DSjkYpzkZSs
+         rUZ4TiyIlA5+6tAG6jYvRbh9Puc6kbvcLBqGb7mwIGMc6x/hLMd1Hh6aaJp4xnQBK88f
+         +Yog==
+X-Forwarded-Encrypted: i=1; AJvYcCUqImZzMQKLZ130ocOoBaH/47/7gJ/8zjUD2l+wHC7uE2G/CJusZ7iryKp+w5C67AGTJeInf4o+6Y4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4J408SON8H3zDLAqfkZlQOzaBV+5afy5YtBsqjsUpTIflKb6/
+	X2eimJ1Gn02U5jhKMBUuSJ+id6cMbwfWgD58V3hMFV2W2+cAmuAT+M3ZiA/o8W/NCb+h19WBxNJ
+	rw4dK+lM3DF119GWhGlqdrmXtFp9tcF7Mwh+PriC6
+X-Gm-Gg: AY/fxX5jRCOxlaEALxkn3dm7LFqfUhZbOWTfJL55aueWkXJol4jQ92n71iR4W9xDAEy
+	dE7HdL8pLqqzr8pqPB1ms5d5hu87caEJ64tCzbaUNySwXpmykdM5USvaDQV9tzJmKQ1xkyoCcei
+	HJ1IRpQXIAHaX66IpAg8kU56Tvyh50Rbql7TlUl3RQeXOzyDzl+jX3MuOtCeMLd2Avutm21SCOe
+	XBhgdXSMLvmKxofha2s4yhoMnlKK49F1w13zO9smTSHvP2BZ/IcTMwZTYlISv8cH03ApsvRo5ZE
+	VZqEluX5LbZ/b8yRzO0VIO+nLg==
+X-Google-Smtp-Source: AGHT+IHB81Hph8P7HruRVDQAIKOQdKRNQiGl+MjA+C8Ci7aTBMAjTA2jqbR6yldsfAEZEnO2RaJwd1MZhXG0cwE2BsE=
+X-Received: by 2002:a05:651c:e17:b0:37c:cf34:536c with SMTP id
+ 38308e7fff4ca-37fd071a3bamr62956651fa.3.1766053019890; Thu, 18 Dec 2025
+ 02:16:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251218-gicv5-host-acpi-v2-7-eec76cd1d40b@kernel.org>
-References: <20251218-gicv5-host-acpi-v2-0-eec76cd1d40b@kernel.org>
-In-Reply-To: <20251218-gicv5-host-acpi-v2-0-eec76cd1d40b@kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
- Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
- Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, 
- Marc Zyngier <maz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-pci@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>
-X-Mailer: b4 0.14.3
+References: <20251105062815.966716-1-wenst@chromium.org> <2qojq77l7xeivmvt4mqjpdelj2ph2rht44qzkaf3ikq5qpq6gp@tj542kt77dkg>
+In-Reply-To: <2qojq77l7xeivmvt4mqjpdelj2ph2rht44qzkaf3ikq5qpq6gp@tj542kt77dkg>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Thu, 18 Dec 2025 18:16:48 +0800
+X-Gm-Features: AQt7F2pYozdj3ewu2whsibplWc-nkUoD49f-6hqeRMBbrfWkPAqi5mARhpOxjHs
+Message-ID: <CAGXv+5E1qc7UDUPBz9htA5RC18cPDGeRt1wW5exkoAkUuFxpSA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: mediatek-gen3: Ignore link up timeout
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Ryder Lee <ryder.lee@mediatek.com>, Jianjun Wang <jianjun.wang@mediatek.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-To probe an IWB in an ACPI based system it is required:
+On Thu, Dec 18, 2025 at 2:11=E2=80=AFPM Manivannan Sadhasivam <mani@kernel.=
+org> wrote:
+>
+> On Wed, Nov 05, 2025 at 02:28:14PM +0800, Chen-Yu Tsai wrote:
+> > As mentioned in commit 886a9c134755 ("PCI: dwc: Move link handling into
+> > common code") come up later" in the code, it is possible for link up to
+> > occur later:
+> >
+> >   Let's standardize this to succeed as there are usecases where devices
+> >   (and the link) appear later even without hotplug. For example, a
+> >   reconfigured FPGA device.
+> >
+> > Another case for this is the new PCIe power control stuff. The power
+> > control mechanism only gets triggered in the PCI core after the driver
+> > calls into pci_host_probe(). The power control framework then triggers
+> > a bus rescan. In most driver implementations, this sequence happens
+> > after link training. If the driver errors out when link training times
+> > out, it will never get to the point where the device gets turned on.
+> >
+> > Ignore the link up timeout, and lower the error message down to a
+> > warning.
+> >
+> > This makes PCIe devices that have not-always-on power rails work.
+> > However there may be some reversal of PCIe power sequencing, since now
+> > the PERST# and clocks are enabled in the driver, while the power is
+> > applied afterwards.
+> >
+> > Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+> > ---
+> > The change works to get my PCIe WiFi device working, but I wonder if
+> > the driver should expose more fine grained controls for the link clock
+> > and PERST# (when it is owned by the controller and not just a GPIO) to
+> > the power control framework. This applies not just to this driver.
+> >
+> > The PCI standard says that PERST# should hold the device in reset until
+> > the power rails are valid or stable, i.e. at their designated voltages.
+>
+> I believe this patch is no longer necessary once you adopt to the new pwr=
+ctrl
+> APIs proposed here: https://lore.kernel.org/linux-pci/20251216-pci-pwrctr=
+l-rework-v2-0-745a563b9be6@oss.qualcomm.com/
 
-- to implement the IORT functions handling the IWB IORT node and create
-  functions to retrieve IWB firmware information
-- to augment the driver to match the DSDT ACPI "ARMH0003" device and
-  retrieve the IWB wire and trigger mask from the GSI interrupt descriptor
-  in the IWB msi_domain_ops.msi_translate() function
+That's right. I already have changes locally based on v1.
 
-Make the required driver changes to enable IWB probing in ACPI systems.
+> I plan to get this series merged asap for v6.20 so that we can apply mtk =
+changes
+> on top once you send them.
 
-The GICv5 GSI format requires special handling for IWB routed IRQs.
+Great news!
 
-Add IWB GSI detection to the top level driver gic_v5_get_gsi_domain_id()
-function so that the correct IRQ domain for a GSI can be detected by
-parsing the GSI and check whether it is an IWB-backed IRQ or not.
 
-Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Hanjun Guo <guohanjun@huawei.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>
----
- drivers/acpi/arm64/iort.c          | 95 ++++++++++++++++++++++++++++++++------
- drivers/irqchip/irq-gic-v5-iwb.c   | 42 +++++++++++++----
- drivers/irqchip/irq-gic-v5.c       |  4 ++
- include/linux/acpi_iort.h          |  1 +
- include/linux/irqchip/arm-gic-v5.h |  6 +++
- 5 files changed, 123 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index 17dbe66da804..4b0b753db738 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -264,39 +264,47 @@ static acpi_status iort_match_node_callback(struct acpi_iort_node *node,
- 	struct device *dev = context;
- 	acpi_status status = AE_NOT_FOUND;
- 
--	if (node->type == ACPI_IORT_NODE_NAMED_COMPONENT) {
-+	if (node->type == ACPI_IORT_NODE_NAMED_COMPONENT ||
-+	    node->type == ACPI_IORT_NODE_IWB) {
- 		struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER, NULL };
--		struct acpi_device *adev;
- 		struct acpi_iort_named_component *ncomp;
--		struct device *nc_dev = dev;
-+		struct acpi_iort_iwb *iwb;
-+		struct device *cdev = dev;
-+		struct acpi_device *adev;
-+		const char *device_name;
- 
- 		/*
- 		 * Walk the device tree to find a device with an
- 		 * ACPI companion; there is no point in scanning
--		 * IORT for a device matching a named component if
-+		 * IORT for a device matching a named component or IWB if
- 		 * the device does not have an ACPI companion to
- 		 * start with.
- 		 */
- 		do {
--			adev = ACPI_COMPANION(nc_dev);
-+			adev = ACPI_COMPANION(cdev);
- 			if (adev)
- 				break;
- 
--			nc_dev = nc_dev->parent;
--		} while (nc_dev);
-+			cdev = cdev->parent;
-+		} while (cdev);
- 
- 		if (!adev)
- 			goto out;
- 
- 		status = acpi_get_name(adev->handle, ACPI_FULL_PATHNAME, &buf);
- 		if (ACPI_FAILURE(status)) {
--			dev_warn(nc_dev, "Can't get device full path name\n");
-+			dev_warn(cdev, "Can't get device full path name\n");
- 			goto out;
- 		}
- 
--		ncomp = (struct acpi_iort_named_component *)node->node_data;
--		status = !strcmp(ncomp->device_name, buf.pointer) ?
--							AE_OK : AE_NOT_FOUND;
-+		if (node->type == ACPI_IORT_NODE_NAMED_COMPONENT) {
-+			ncomp = (struct acpi_iort_named_component *)node->node_data;
-+			device_name = ncomp->device_name;
-+		} else {
-+			iwb = (struct acpi_iort_iwb *)node->node_data;
-+			device_name = iwb->device_name;
-+		}
-+		status = !strcmp(device_name, buf.pointer) ?  AE_OK : AE_NOT_FOUND;
- 		acpi_os_free(buf.pointer);
- 	} else if (node->type == ACPI_IORT_NODE_PCI_ROOT_COMPLEX) {
- 		struct acpi_iort_root_complex *pci_rc;
-@@ -317,12 +325,28 @@ static acpi_status iort_match_node_callback(struct acpi_iort_node *node,
- 	return status;
- }
- 
-+static acpi_status iort_match_iwb_callback(struct acpi_iort_node *node, void *context)
-+{
-+	acpi_status status = AE_NOT_FOUND;
-+	u32 *id = context;
-+
-+	if (node->type == ACPI_IORT_NODE_IWB) {
-+		struct acpi_iort_iwb *iwb;
-+
-+		iwb = (struct acpi_iort_iwb *)node->node_data;
-+		status = iwb->iwb_index == *id ? AE_OK : AE_NOT_FOUND;
-+	}
-+
-+	return status;
-+}
-+
- static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
- 		       u32 *rid_out, bool check_overlap)
- {
- 	/* Single mapping does not care for input id */
- 	if (map->flags & ACPI_IORT_ID_SINGLE_MAPPING) {
- 		if (type == ACPI_IORT_NODE_NAMED_COMPONENT ||
-+		    type == ACPI_IORT_NODE_IWB		   ||
- 		    type == ACPI_IORT_NODE_PCI_ROOT_COMPLEX) {
- 			*rid_out = map->output_base;
- 			return 0;
-@@ -392,6 +416,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
- 
- 	if (map->flags & ACPI_IORT_ID_SINGLE_MAPPING) {
- 		if (node->type == ACPI_IORT_NODE_NAMED_COMPONENT ||
-+		    node->type == ACPI_IORT_NODE_IWB ||
- 		    node->type == ACPI_IORT_NODE_PCI_ROOT_COMPLEX ||
- 		    node->type == ACPI_IORT_NODE_SMMU_V3 ||
- 		    node->type == ACPI_IORT_NODE_PMCG) {
-@@ -562,9 +587,14 @@ static struct acpi_iort_node *iort_find_dev_node(struct device *dev)
- 			return node;
- 		/*
- 		 * if not, then it should be a platform device defined in
--		 * DSDT/SSDT (with Named Component node in IORT)
-+		 * DSDT/SSDT (with Named Component node in IORT) or an
-+		 * IWB device in the DSDT/SSDT.
- 		 */
--		return iort_scan_node(ACPI_IORT_NODE_NAMED_COMPONENT,
-+		node = iort_scan_node(ACPI_IORT_NODE_NAMED_COMPONENT,
-+				      iort_match_node_callback, dev);
-+		if (node)
-+			return node;
-+		return iort_scan_node(ACPI_IORT_NODE_IWB,
- 				      iort_match_node_callback, dev);
- 	}
- 
-@@ -756,6 +786,35 @@ struct irq_domain *iort_get_device_domain(struct device *dev, u32 id,
- 	return irq_find_matching_fwnode(handle, bus_token);
- }
- 
-+struct fwnode_handle *iort_iwb_handle(u32 iwb_id)
-+{
-+	struct fwnode_handle *fwnode;
-+	struct acpi_iort_node *node;
-+	struct acpi_device *device;
-+	struct acpi_iort_iwb *iwb;
-+	acpi_status status;
-+	acpi_handle handle;
-+
-+	/* find its associated IWB node */
-+	node = iort_scan_node(ACPI_IORT_NODE_IWB, iort_match_iwb_callback, &iwb_id);
-+	if (!node)
-+		return NULL;
-+
-+	iwb = (struct acpi_iort_iwb *)node->node_data;
-+	status = acpi_get_handle(NULL, iwb->device_name, &handle);
-+	if (ACPI_FAILURE(status))
-+		return NULL;
-+
-+	device = acpi_get_acpi_dev(handle);
-+	if (!device)
-+		return NULL;
-+
-+	fwnode = acpi_fwnode_handle(device);
-+	acpi_put_acpi_dev(device);
-+
-+	return fwnode;
-+}
-+
- static void iort_set_device_domain(struct device *dev,
- 				   struct acpi_iort_node *node)
- {
-@@ -816,8 +875,14 @@ static struct irq_domain *iort_get_platform_device_domain(struct device *dev)
- 	/* find its associated iort node */
- 	node = iort_scan_node(ACPI_IORT_NODE_NAMED_COMPONENT,
- 			      iort_match_node_callback, dev);
--	if (!node)
--		return NULL;
-+	if (!node) {
-+		/* find its associated iort node */
-+		node = iort_scan_node(ACPI_IORT_NODE_IWB,
-+				      iort_match_node_callback, dev);
-+
-+		if (!node)
-+			return NULL;
-+	}
- 
- 	/* then find its msi parent node */
- 	for (i = 0; i < node->mapping_count; i++) {
-diff --git a/drivers/irqchip/irq-gic-v5-iwb.c b/drivers/irqchip/irq-gic-v5-iwb.c
-index ad9fdc14d1c6..c7d5fd34d053 100644
---- a/drivers/irqchip/irq-gic-v5-iwb.c
-+++ b/drivers/irqchip/irq-gic-v5-iwb.c
-@@ -4,6 +4,7 @@
-  */
- #define pr_fmt(fmt)	"GICv5 IWB: " fmt
- 
-+#include <linux/acpi.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/msi.h>
-@@ -136,18 +137,31 @@ static int gicv5_iwb_irq_domain_translate(struct irq_domain *d, struct irq_fwspe
- 					  irq_hw_number_t *hwirq,
- 					  unsigned int *type)
- {
--	if (!is_of_node(fwspec->fwnode))
--		return -EINVAL;
-+	if (is_of_node(fwspec->fwnode)) {
- 
--	if (fwspec->param_count < 2)
--		return -EINVAL;
-+		if (fwspec->param_count < 2)
-+			return -EINVAL;
- 
--	/*
--	 * param[0] is be the wire
--	 * param[1] is the interrupt type
--	 */
--	*hwirq = fwspec->param[0];
--	*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-+		/*
-+		 * param[0] is be the wire
-+		 * param[1] is the interrupt type
-+		 */
-+		*hwirq = fwspec->param[0];
-+		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-+	}
-+
-+	if (is_acpi_device_node(fwspec->fwnode)) {
-+
-+		if (fwspec->param_count < 2)
-+			return -EINVAL;
-+
-+		/*
-+		 * Extract the wire from param[0]
-+		 * param[1] is the interrupt type
-+		 */
-+		*hwirq = FIELD_GET(GICV5_GSI_IWB_WIRE, fwspec->param[0]);
-+		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-+	}
- 
- 	return 0;
- }
-@@ -265,10 +279,18 @@ static const struct of_device_id gicv5_iwb_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, gicv5_iwb_of_match);
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id iwb_acpi_match[] = {
-+	{ "ARMH0003", 0 },
-+	{}
-+};
-+#endif
-+
- static struct platform_driver gicv5_iwb_platform_driver = {
- 	.driver = {
- 		.name			= "GICv5 IWB",
- 		.of_match_table		= gicv5_iwb_of_match,
-+		.acpi_match_table	= ACPI_PTR(iwb_acpi_match),
- 		.suppress_bind_attrs	= true,
- 	},
- 	.probe				= gicv5_iwb_device_probe,
-diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-index 23fd551c4347..da867dd2e77d 100644
---- a/drivers/irqchip/irq-gic-v5.c
-+++ b/drivers/irqchip/irq-gic-v5.c
-@@ -5,6 +5,7 @@
- 
- #define pr_fmt(fmt)	"GICv5: " fmt
- 
-+#include <linux/acpi_iort.h>
- #include <linux/cpuhotplug.h>
- #include <linux/idr.h>
- #include <linux/irqdomain.h>
-@@ -1187,6 +1188,9 @@ static struct fwnode_handle *gsi_domain_handle;
- 
- static struct fwnode_handle *gic_v5_get_gsi_domain_id(u32 gsi)
- {
-+	if (FIELD_GET(GICV5_GSI_IC_TYPE, gsi) == GICV5_GSI_IWB_TYPE)
-+		return iort_iwb_handle(FIELD_GET(GICV5_GSI_IWB_FRAME_ID, gsi));
-+
- 	return gsi_domain_handle;
- }
- 
-diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
-index 2d22268677a9..17bb3374f4ca 100644
---- a/include/linux/acpi_iort.h
-+++ b/include/linux/acpi_iort.h
-@@ -27,6 +27,7 @@ int iort_register_domain_token(int trans_id, phys_addr_t base,
- 			       struct fwnode_handle *fw_node);
- void iort_deregister_domain_token(int trans_id);
- struct fwnode_handle *iort_find_domain_token(int trans_id);
-+struct fwnode_handle *iort_iwb_handle(u32 iwb_id);
- 
- #ifdef CONFIG_ACPI_IORT
- u32 iort_msi_map_id(struct device *dev, u32 id);
-diff --git a/include/linux/irqchip/arm-gic-v5.h b/include/linux/irqchip/arm-gic-v5.h
-index 334b6986435c..3da1ad80fc9d 100644
---- a/include/linux/irqchip/arm-gic-v5.h
-+++ b/include/linux/irqchip/arm-gic-v5.h
-@@ -265,6 +265,12 @@
- 
- #define GICV5_IWB_WENABLE_STATUSR_IDLE		BIT(0)
- 
-+#define GICV5_GSI_IC_TYPE			GENMASK(31, 29)
-+#define GICV5_GSI_IWB_TYPE			0x7
-+
-+#define GICV5_GSI_IWB_FRAME_ID			GENMASK(28, 16)
-+#define GICV5_GSI_IWB_WIRE			GENMASK(15, 0)
-+
- /*
-  * Global Data structures and functions
-  */
-
--- 
-2.50.1
-
+Thanks
+ChenYu
 
