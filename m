@@ -1,441 +1,242 @@
-Return-Path: <linux-pci+bounces-43304-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43305-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29F20CCC03B
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 14:32:13 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EC77CCC00B
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 14:29:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B414B30612B0
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 13:28:20 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B96A4301912C
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Dec 2025 13:29:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EDF133F8D7;
-	Thu, 18 Dec 2025 13:28:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C3AC34104C;
+	Thu, 18 Dec 2025 13:29:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dIpkRhVF"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OTgO9f8Z";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="MsZOjVgc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012067.outbound.protection.outlook.com [40.93.195.67])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C65133F8A1;
-	Thu, 18 Dec 2025 13:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766064488; cv=fail; b=exeQ8tHbSMiOCrNlYEQqAUKxt6Gcn36RWIEpUOXdiwU276YNXSZpwgd4IOSyMVqeLFmHbZSpxCchEnZOKMVX2XktFUfp/+W2pHOTpBMACgJQBsqASKmi5xJjISAzl5vr4W3QjOO4c7/RyK62FgfOIR5KHsWt67sAvROKEhOVTEI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766064488; c=relaxed/simple;
-	bh=U20AOvnzHdYRAj544Sz40vXJxGxVMB+bnTtDmaRXxWI=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=mLTAYkh7cz8NbFwhHKTv+QGV9Ejq25bLhcnghWkVA0/DFGXfKyofsVfhAucGEE2U2uE5bi/gSmb9Y2LUbyuONF2RNQLenGFpakJWhlMmFBwsHa2lzv+HjMS/u9UeZXx/3NF6ncOQFH/zRGO5nXqZkEAUpiIqepJQqC92mQir+Dw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dIpkRhVF; arc=fail smtp.client-ip=40.93.195.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=osVGLCKDA2BTxiaJhcJx2SjRUuQu74e8V0fK04WmBjXtM4Bx4pZD20iahgaiIyNxpK7va6evokzqy/93kVTsfdHJdjWsnW2ENCfDe9beCVJe95A7ZaVEasEpoxurS6W7ynZNE8Nu4KefePIkyj0MfLfNvS32YDtRffDTmxLA0P4wx5tQ0gCNlQ+50QVECexrqg/819VKEIbD0DHHArCH/3rKgY65i/Hk9WWXNqdEV85HucFkA5767xpej+Q5vy+YGY54qLvN15Sf3AOpVcSxfCrbeOJZxQ+wqORdC1oR/0MBUiaC1C+wx290QQGxI6sdd1XqLqR9EdolelTrsuq8Mg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5rFzKHsDaZ3RJcr6S1R91nXKIyUD9DkwKR71jQxND8k=;
- b=tgibJ2wWEmoBsE4EGIlbx2ZvEN54FZm5QTmw/NAQtEZtfuwoUGMIZHkWIJQ/FJFmsA0S3RmE6Ph5vOguPL24hc6DFPYCxm3G8FOtTQgi9cNkp3RkPCJu5Dls8F6iK2dRuO5wtX6tCw4oraHsaLSDgIWLGwJaOzoymKvBOclDGVof2ver932ITIxLJztIltGGwnkPIIH+/UNg4Qi6zsmBGwFvyxJIUy87c4oUgQZqUgqAQe9+xmsLrTKuFbYz9INJlWZf/KWg3+dYfrDJEUa3XxuspiaI+ZsXyOFZ4reRYG1mxzcri75NJjMxETdlWitDhuqriLc0+aseZvwvq/NiaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5rFzKHsDaZ3RJcr6S1R91nXKIyUD9DkwKR71jQxND8k=;
- b=dIpkRhVFDpustSx+WM37wNn5vvbQAIGcDyaS8PgrbjLkRZOLF8uhZtjgiLLNyZIAxbtFyKAp0NuLXpO4hksImvaA9/aDp7gUdRao7t3U8q+Kr40alubtuLDzqqkqSpdykgcLvtYJsM4RCX4TUreGKYzeTRz431IAs+kQgN8S826+GcsRPjJ0lLN3D/vF1mjF3RQ2D9HZpj4y+5GaM70BNC6uaBhK/bqcXM9kyPPnsOgfvwI5hfyZBp+zl4zvIIy5NSc/mrQTMNWdi2pbnZMhsmnzbzF9SHB2rZ0xpIY9sne+6Ss+76nXy7p/HFbScrqeFHS3bVirwCv7qLp4bmWIlQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by DM4PR12MB9069.namprd12.prod.outlook.com (2603:10b6:8:b8::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.8; Thu, 18 Dec
- 2025 13:28:00 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::7de1:4fe5:8ead:5989]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::7de1:4fe5:8ead:5989%6]) with mapi id 15.20.9434.001; Thu, 18 Dec 2025
- 13:28:00 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 18 Dec 2025 22:27:57 +0900
-Message-Id: <DF1DLWE9OOR6.2P43ATQYNAU3A@nvidia.com>
-Cc: "Danilo Krummrich" <dakr@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Simona Vetter" <simona@ffwll.ch>, "Bjorn Helgaas"
- <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Trevor
- Gross" <tmgross@umich.edu>, "Alistair Popple" <apopple@nvidia.com>, "Eliot
- Courtney" <ecourtney@nvidia.com>, "nouveau@lists.freedesktop.org"
- <nouveau@lists.freedesktop.org>, "dri-devel@lists.freedesktop.org"
- <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
- <linux-pci@vger.kernel.org>, "rust-for-linux@vger.kernel.org"
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH 6/7] gpu: nova-core: send UNLOADING_GUEST_DRIVER GSP
- command GSP upon unloading
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Joel Fernandes" <joelagnelf@nvidia.com>, "Alexandre Courbot"
- <acourbot@nvidia.com>
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20251216-nova-unload-v1-0-6a5d823be19d@nvidia.com>
- <20251216-nova-unload-v1-6-6a5d823be19d@nvidia.com>
- <C890CCBB-76C0-4E70-A7B8-846E34DABECE@nvidia.com>
-In-Reply-To: <C890CCBB-76C0-4E70-A7B8-846E34DABECE@nvidia.com>
-X-ClientProxiedBy: TYCP301CA0053.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:400:384::20) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED6033F8A1
+	for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 13:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766064543; cv=none; b=gUH/pRRUDZTF+FIp0CfccLVdsGGvUvXz7/aBjZ9xBM+VfJj7OodT8XSLra0+h+2DxUtrj8W98TYd3e96n2JkG0FiKD3fN2U6RNasV9X5hVLgy8kP634iUorX6mnbWSLcOBz95m+ts8p/8K+8aBBVGMk8hfFSDfCwFSPcKVaD/aU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766064543; c=relaxed/simple;
+	bh=VDCahGofHHWitV3AbKaCYA9eLErNsu+V5RIxWhottrI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZJx3IJSfr2+OUyxJ1UCG74kUoAGAtQjWRYE+VSN4CIqq+tJHILN8cTkPgvTNtj59jRxWPAHWv+lTixOyguBOgMvkuCwTf4T0f9AFQz6xD84jR0nNyvyrtgCGWrXq6/Icija3i4jpgoSCC7NNfMi+Y+ixF43ddjLSuQw6xRNZZb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OTgO9f8Z; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=MsZOjVgc; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BIB5M741334760
+	for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 13:29:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4d8nE/j4LG4aJ1litu/i0JqfT3L0+tYvMgLM3qO1rYg=; b=OTgO9f8ZgnPq43NJ
+	iH8x5DyWxdTrKcKhXKH6ljaFKIRq3gx5PoH6jldoG29y4f18aNxE8eymfBdpmXIA
+	mITh48kRj06X1REqxan+I2mc8i5/+OT1ZpTn9psN+sGc/ZcdObUk6kE3+06dyw4P
+	HZGvdVV4EpLiDtecMp3KBr5mgWTsrLY8H5s1afRo+Av1qkH5ACzHGcYNcBXveYZp
+	ntecnRpY+dccT15ePoEGZDrcp3nwVEKmp75g+tAbn3PP+81Ty44mpQMg3vsqhDZL
+	7LcxmonEtw3DxTke97P/Ivr4+YtWvjs8eMk4nUrMlAPlc4UAXNsnOL5aCbLX8oMR
+	aSrjdA==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b4gec0dxu-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 13:29:01 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2a0f47c0e60so15845005ad.3
+        for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 05:29:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1766064541; x=1766669341; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4d8nE/j4LG4aJ1litu/i0JqfT3L0+tYvMgLM3qO1rYg=;
+        b=MsZOjVgccfr8fM+Uo3ZeC4WOjISOocWWdReL7ZmcJE6bMMEgCOecdcdnOFb1rxKDLU
+         4qLZta5hP2OU5C61RwsDbLVjYT5V1sDxbKthBrG5s3DZ/H6Nf1tqGp559cMLeQDNG3p3
+         alIhAC8z83AsCeSS0HA1ZjdNst/+CJ7y0dEB4Botnh7TreA/VrGr/XzSLpAzxFlN+RG8
+         3agRyvMJrFiWAp6XCaJ3sW7d0jcT4t4j8hB7RK4VAYYm8gfT5aRmbBMDJ4SAvE2rtOHv
+         tiLqoJp1qWJq3sJ56IBcnfqfdpF+K0+AWL/FKvDVnpNbqfYF2V3loFMWD19i0O/+a37w
+         Z6nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766064541; x=1766669341;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4d8nE/j4LG4aJ1litu/i0JqfT3L0+tYvMgLM3qO1rYg=;
+        b=Z5LztGtTRkszZLbWiZhHSaDd4NGdEtuVlwdHjteY+FUKKtcXraoVAIR6PW/3cijfr9
+         N96B6Mjc/iRFLig+09CU5VGMY5ZoPxTiEm6fGTd4C1EFneR8XD6N/Mse475UWn99bxhP
+         4XHYtvFeswGY6KtR5YojddzX9hKkuYdBhj1Eq1wP9un2PKhmLfgZwUt159H8Lt09q+fH
+         lBPFs/JLkLAaqvoICchH/1tf/JbblvN0NiUDl6q7dDOexQ1immWICfPSG7AgcQ3LHjlu
+         YNtdNzUVCaMkZil8esmDf1UrxuzkaQ6nntYBvPTxLg3JK8/wOdWzo4IpLNqmDT8y0ysY
+         Vkbw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/tGhb4XuzRV3E1O6kDRnq3w0w9XqB9R+/t/lZ1gfr5PuvuOc5GoWZnrFo6S1Z/oWALjr7fRnpycA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1/H6QzP+Ay9Tjn7ywnYfqI1ZWsjZEz0+jg6pJqLWh/cM9dvLW
+	k/6DH4NBJTjSXV7i7HpeXBGjnF453AsDaZaZMo4KSwtbbbsF5mW3UGrFagExPIxz5DXmLxxAYEf
+	E5YY6p1/++b0qmm8OJjLf9AFu6xTVkJ2378Wvee9EYwtufGQ7p9lioM6kaqyTFYg=
+X-Gm-Gg: AY/fxX5BaUWZ4YrYKVn4VD+iPjO3s3FCLsNmDlVnveMwnCX2fBBg5b70a3txruHN4Yy
+	fDhnWRmR1amKgcBKDQRkJp+9Bgw7Tzm2OKOM6fzlMXDG8F2yahuPy13E30d7cAFdJT9pJ0qEQSL
+	ByF84vm/zq/1JnDPDCVj7IuSKYFMtH0QUXecw0v0IjD1VCDRnOWS6dJ3sri0tSZICrspu7AYnvF
+	GuZFl71PvYUu+YdZWKzbaL1VUvbelQ3J6PXf9plFhBhVEa2iuGIJuazwNoozHHnfZI5VjpP53kH
+	CjXFCtN5VdABHlKWEQJAZzaax/2PIsCb1si5tpODNhINCE9BU6JbpFK1LEPAQ7RQ8I8UsPfWggM
+	uVGj+pjXcK/UZOJOSMRpXdPpdgYcuXxgzqz3irBfwdQ==
+X-Received: by 2002:a17:903:3bcf:b0:2a0:ad09:750b with SMTP id d9443c01a7336-2a0ad097797mr111644805ad.9.1766064540594;
+        Thu, 18 Dec 2025 05:29:00 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG77qDSkD3kryCSvCIG59mV8qh7r2baMVQ19jpUBB75/MHMpbN0RDu4znUHAN1JCuGy853T5w==
+X-Received: by 2002:a17:903:3bcf:b0:2a0:ad09:750b with SMTP id d9443c01a7336-2a0ad097797mr111644495ad.9.1766064540046;
+        Thu, 18 Dec 2025 05:29:00 -0800 (PST)
+Received: from [10.218.35.45] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2d161278dsm25817335ad.48.2025.12.18.05.28.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Dec 2025 05:28:59 -0800 (PST)
+Message-ID: <7a72f708-3f1a-421d-9299-e4ebb112f1ea@oss.qualcomm.com>
+Date: Thu, 18 Dec 2025 18:58:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|DM4PR12MB9069:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b229ae2-4d3f-4348-8de6-08de3e3943ad
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|366016|376014|10070799003|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cGt0c1FidkhBT2hkR0VhcHd5VDBwMjBvZ2c2U0JwcU1QejRDaGlsWDJUZXEz?=
- =?utf-8?B?UytXWnlCLzNkNHZ0Rk9pWmRXOStlOWlvaC9jYVFXajgvNTNnNGY3ZVZwTXRO?=
- =?utf-8?B?SVZ6TXhCMW5WcUVZYXJvM2M4bXVxOW1LcEwyUXUzSW1SMGpzeFZHVUh2bmVZ?=
- =?utf-8?B?Y0QxeThiMTJGVGRFUytzeEkvMVNSSkwveFkzK2ZJbVg5R0VFb3BsZis0RVZp?=
- =?utf-8?B?eXUrNHBGc29uNm9FV0Mwb3pwVlM3SndKRjZWUEtOT0hJL0F3T0d4ZkJzWVNm?=
- =?utf-8?B?cjlVZzFEdWxqeWE0WERLdURIOGpvMi94Nmdvc0xOK05nY1h1T3VWemhuRXJa?=
- =?utf-8?B?Nmw1SXVPYnhDMzN4Q1RKOWd2SmFHWEJtcllzUkEzRFEwL1lxbStmV2Q4SkxQ?=
- =?utf-8?B?OENiaHdudG91UVpEaG42Rk5PcUhheVdyWUZYaFFWNFdrSTRnVGVZZFJNTVlr?=
- =?utf-8?B?anlycnQvQ1FJNUhHaW1SQ29aR3h2b1RNU0gxMWRyUmJFdFFIS3BjcityVlp0?=
- =?utf-8?B?dUxOaS9sckc2aWZIckJXTStEcUh1anREZ2M4NW82SmtnWmMrTm1BZ2FONEsx?=
- =?utf-8?B?ZDVZOWZQL1BFOWRQK3Q3c0RHbFIvTWVuTG96WlRZQ2JyR1d0b2dLRGxkL05q?=
- =?utf-8?B?VkNSNDNFV0g4QktTRytLekZ1K2IrRmROL2hJVzdHc3BlSTFpZzNXQXhtbG5m?=
- =?utf-8?B?WTZIcisvMENWbyszeVdnWkhXb0Y2V24wWHU0SjdXZ1BPSi95eHllaXUwZzJL?=
- =?utf-8?B?d1UrQzBLOEJaNVFLdEJ4UEM5RUlBdHNKR3IwN2FlWVJhTUx0cG5XUGtYWElO?=
- =?utf-8?B?RmFNcHZYYkJIazBJUUZsSDlQeEM2TDJoOXovRlRodVVZREhyemxRZnpGZHgy?=
- =?utf-8?B?QlhzS2NLWDZ5Uk02UFl5Z3VVSCtKVW10UnB0T1p0WGJmSlNiZHNzcERqQXZa?=
- =?utf-8?B?Rlk1Z1lYS1N1bzBjNnJCREg0OEsvR3cxUnkrSGdvV3BhcFJXbWtkRTBFSjNJ?=
- =?utf-8?B?S3FSak5ncWNqV1JHL0RXMTNRdlZ0dFhrendtRnJxd2hQOFU4REE0NFFOYWdW?=
- =?utf-8?B?UXRlUFRmMWVqeWppWWZ4Ym94dXJQMlB0WGlrdlB3QWJqMHlnRXFYeTUyaDRw?=
- =?utf-8?B?V0ZuQmFlbUtaWGtucjAwS1U0TElEUC9Ic2dzRll5UU9ZaENyUE5pL3NDQnl6?=
- =?utf-8?B?cXNndyt4WXkwNHNETnN3aGJUaklOcFVlL3JTWnFpa2JTZktaSTJLZkRLTGVx?=
- =?utf-8?B?d2tHcVlSRUo5MEtMUHN2YlpORjU3Z1ZHRXVxbmgvTDNlalBMOUJzaEJ2MDFw?=
- =?utf-8?B?TWwyS2JoVVg1b05ZYlQzNFlvcnZiSjhKT2U2Z3NheldTd2REMHFrdjhnRUdK?=
- =?utf-8?B?N0Zyc1pQeW5wUE1MNlRNWlZ2bWFiWkJkUmVhK01ZOEZMRVVkUW1LWW5tY3RY?=
- =?utf-8?B?aTFhUHJPVVV0eTFXVVJJR1NlM2JZMzBhZ242TjhyR1FaekxyVVFEYkZmSHVm?=
- =?utf-8?B?U1FVVHlnMnRBZDJTR3dvaE9DTzlibjNvRElVVUVRdnJFVlZpZk1TNnhEZnBL?=
- =?utf-8?B?UTZja3lMWGxBQUppMm9VclhjYVdNRFFMM1RvV3A1RUIwY3ZzY1Y1RDFaUHBh?=
- =?utf-8?B?b2YxUXJibmtXbkRNWGdqazhQdENOZEFaY2dHN0xySVhLM1FrYnYvd1I4cVdr?=
- =?utf-8?B?MkJ5SXpPZEJnWWQxYzhHU0JmZzVsM1B4NFA5STlWWUhxVGNYVjB6a2pvZ0JN?=
- =?utf-8?B?NXE3dGYzcC9teU1jK01tWkhHNWM2eHc3SGlyZ2ZnME5FTnhVeEZFcHUrbGdz?=
- =?utf-8?B?VjFYV0lNdkQ3QTZpRnY2N0pkZFBLVmpFY0p0TUJpT2N3T1RxQ0tUaFlvcEhq?=
- =?utf-8?B?QTg5MTNJaVRSK25sUkJZWHlKQkdMbWx0bE84VHJxVVoweHNtb1BHbE5FZzMz?=
- =?utf-8?Q?k+iFwsUlxjrt3wY/MWz8Ycti4i/SOHXv?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(10070799003)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VlVKbjNUQUtEdnl3T2IvaXpLekxST3FOS2hVd3llanJ2Ni9KSEZWejg4VnEy?=
- =?utf-8?B?MmlCNGdLVkQyVitmcnpRR2pKZnhoZ041K1pzc1lXdjdFTVNZOVMwMGFJOTBh?=
- =?utf-8?B?Yy83V1ltT1oxbHNGcUZhNUJSdld4VlNJVFl2ZVQ1VzNzeUE3cms4bmdhZHhk?=
- =?utf-8?B?dko4ZWU5MktwZEtMRVF1UHJEdW9kNHpKYk9pQkN0VU54S0hOYWZKZFlyWVY3?=
- =?utf-8?B?SGpNZDcwUHNsa2FQbUdiUWZNSFRxY0x6UVd0R0lDcUJDVjZ2T0ZGejQ4RHls?=
- =?utf-8?B?QjZ0Q05WSHRTc2J1ZXNTNXFFNDhEdFhrdklacm9iTG9jRXl6eitrU2FncnlT?=
- =?utf-8?B?Rmx5K1JHeXhHVzE5L1FxQi9pdXgwdVEvQjEyeGpTakFaVitWTmJxcEtNWUVR?=
- =?utf-8?B?eThwSURiL3UySkpFc2ZkZExneG1DRUdmbXNrQWZXeXIyM1A5dWthSUdDYkZE?=
- =?utf-8?B?bUczTjNjRGVQNjQ3YTZqUzBpQjBzSDBIZ0xxNFE5ZjZLeG5XRmlEMmFlRFpD?=
- =?utf-8?B?TGhEUTFvaEtuUDJZT2VtWVlEQU43ZXdOYnVTQlZCNnZ3U05lbW9ZTFNUazhx?=
- =?utf-8?B?c3NwTzJnMHpzS2VNNVRQVkNuVVI5MHNWV3dwS1RTb3hsRVFjUm9xTDJBbTk4?=
- =?utf-8?B?TGI0WHkxOUNLcXlYU3hMWVlTSEx0MGl2Zk01eHZsODJzL1NKVW00SVdaSlVn?=
- =?utf-8?B?Y216WnVYbXYzNWZpRUwvbmxNN0x0Ry9Ud3dtMEp3ZEtxd2V4eVVwZ2FFWWNR?=
- =?utf-8?B?eDF2amRaSDBpbUZPQ1UxMm9VZy93cWg4bnRMUnl3d2R5U2tIaU9uRjhwV0tQ?=
- =?utf-8?B?QkQ3N0VLWDlrakFlUGthR2FXN1dmc2k0aldsNXdOZmxuQVY2djNsSWkzZmJJ?=
- =?utf-8?B?NTFMZzBjLzNhMFMvQVhsbnRYd2k4TmlPY01CbDlIRVhGTmF6OWNTbkNNVFl0?=
- =?utf-8?B?a2c3U1FWck9sSEErK1ZYVUxKeHM1S2FMTDRwMXM5cUk2dUpPWEc0QUpDNjhV?=
- =?utf-8?B?RmYybHBRR25CTlFEc0p2RkQ1dmNvY2Y1ak5kTkRpaW5KSDN1TThDbS9aSEdG?=
- =?utf-8?B?L1VtQ1BhV2J0MUhaa3hYU1VlWjFydk5hR2MrOVBCY1YrTmFzZ05venFPU0ZZ?=
- =?utf-8?B?ZkJjWTZCNEUyWVluRmpZU21xM0ZTUEV6TkNZWFdyUVVxZFF0dndDcDJ4ajZV?=
- =?utf-8?B?eVhXMEk4aEMyTEsvMlh0Y0s5Um9sbnd6bS9zOXc2MWNDK3VCS0liNys1dTlD?=
- =?utf-8?B?VENaaS9BVVBjMUQxMm9EMndEaVdTY3FETTJLQmNsSEJWaUxBZGtOVWJoQy92?=
- =?utf-8?B?R2Z3dmNpV3Zab2x3ZkYzODRIWEpmY3YxTVU4THhiV3NFMGF3c1ZqdnBhYXlk?=
- =?utf-8?B?TXpNeDZETTZnMGloYW9KMFBBczNIT2Raa0dqUlR0NVY2UTF1MjlIUmtjN3d4?=
- =?utf-8?B?NTI1enFlUnJyOVliazJ0V1JwSVoyNFY1N3FmMGFqSkZRR2d1UkQ2cHJCTkdU?=
- =?utf-8?B?TGxoZXZsUkZ4aWJPa0NiNkVrMkdWaXBETHpGQ3d1eXdBa3pycTNnTVkvekZn?=
- =?utf-8?B?RWFjeEZBZGdYUm1FRXNhVys4ZEhZbDZ5TmVScXM2eE9TZ2tVRnhBZGR6bFB6?=
- =?utf-8?B?UW1tN29Mbnl5TUVJR3hNSDRHaXlKU0ZDTGFTYnJuRElaaVFOTXAvYUFzOEdL?=
- =?utf-8?B?OGZyM2Z3RCtoNlVmSjg4emFuV0xEeDVyT1F4NW5hNTJITGtvQ1Vqd3JFL3Y0?=
- =?utf-8?B?bzA1YUpOdUNlNnZhZWpzd1VWVDBiSjJQMndlQUpmY2owa3V0R0NzRWQ5blZE?=
- =?utf-8?B?K2F4Q2JjeUxlaExKck5ISHkySGZkTXVLVTZrcE1sSzU3RjBiYWZNVERIRmJu?=
- =?utf-8?B?eUhZbWllYzhiSkxuUE5pQW9XbEpGRTd3ak9FVGNhUzI5SHB2VWlTdDhtd05p?=
- =?utf-8?B?UVJJWkZaRmY4cEI3dUN1dkJMd0pYS2hjZkNTcStudGU0T2dwcmFyazYrS2Nl?=
- =?utf-8?B?L1V4TzhLcE9MSkNwNG9zVzNVWXc2WkVwc0lleFRDUUZPYmttZ3o3UUFBOVRX?=
- =?utf-8?B?UXpyRnRjaXk5MkQwOHd5STJRckhtYk5ZRm0vU1FlcEJwR2ZqRGlidTQ4VzZh?=
- =?utf-8?B?cmNsbWtNZzNtMDZaSjJPZEVUQk1uNU03bE9wakxCT3NmNmRYZXdhMnRkb3Np?=
- =?utf-8?Q?iqWR8DhD3F5RYFQGKLuXF8QNinRH/H4mpWW211JmhJ2Y?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b229ae2-4d3f-4348-8de6-08de3e3943ad
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2025 13:28:00.6514
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 02Px0BN0bjKFmb6CGLzVbePgGP8VHu5jSLLlU+nfP0VPJfTOE1o+vnpt7hnE1uMq9U9C2ZFISGhoQELXw11MRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB9069
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] PCI: dwc: Do not return failure if link is in
+ Detect.Quiet/Active states
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com, Jingoo Han
+ <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vincent.guittot@linaro.org, zhangsenchuan@eswincomputing.com
+References: <20251218-pci-dwc-suspend-rework-v2-0-5a7778c6094a@oss.qualcomm.com>
+ <20251218-pci-dwc-suspend-rework-v2-2-5a7778c6094a@oss.qualcomm.com>
+ <237606b2-783a-4e11-854b-fed787e2903d@oss.qualcomm.com>
+ <isbb3bng27ibc3xddvjvlgbtz7skbbpd4q3a6rdqul7ghmmsyy@ze72f2hs4kb3>
+ <c4aedf62-633d-4871-9dfa-af021e9a8e42@oss.qualcomm.com>
+ <bawi2oioatfrmxuwd26xlvytmtuo2mhf3yunbwrzam22y57wvm@3l4hdbzjjske>
+Content-Language: en-US
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <bawi2oioatfrmxuwd26xlvytmtuo2mhf3yunbwrzam22y57wvm@3l4hdbzjjske>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: 1Bn4zeqSsFFSHCkFiNkRFs2iNqfP35SZ
+X-Authority-Analysis: v=2.4 cv=V51wEOni c=1 sm=1 tr=0 ts=6944019d cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=x01hJFTKM_06UH880ogA:9
+ a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE4MDExMCBTYWx0ZWRfX/1hOeVDLKfFP
+ 0LL8KvitcHTCMxGYPuGXmnmJRiKd9Q10gsj9Hqy5zrflGEIoVCXWwsxnYiJQtUCvgIIx9epJD2H
+ /nSL0d4tgk9Td4fg4iW70eT0zUn7bdoU/LKQS5c5zTtcoSiHO9vp6KwN9KR+Fgeu+gbefRZ94nf
+ bKfBZCsIXxzvjMhvuHqojkymQZ5VQ/6YQZWhsnaXWsqeFQ23j2HRzWy4nG9roMmPJXwTv9jqFzR
+ Cv6cL+chLF2YOQSMiyGEdIVmaXneb+WGB5ot8kcX1Xis6MYkx13gX8UifQAF5bIDy8ywS3HGiww
+ JClYJhpl4xl7L4M/4Y0M2w0AYl1jjZjz9p5H6slHV11tQeXQtguyeHxCPMalbhAzT8Fttnsphzz
+ c/spLPSXQzD8IBneAgzMQE20eQK0Nw==
+X-Proofpoint-GUID: 1Bn4zeqSsFFSHCkFiNkRFs2iNqfP35SZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-18_02,2025-12-17_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0 malwarescore=0
+ lowpriorityscore=0 spamscore=0 suspectscore=0 adultscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512180110
 
-On Wed Dec 17, 2025 at 12:39 AM JST, Joel Fernandes wrote:
-> Hi Alex,
->
-> Just did a quick pass, will do a proper review later:
->
->> On Dec 16, 2025, at 12:13=E2=80=AFAM, Alexandre Courbot <acourbot@nvidia=
-.com> wrote:
->>=20
->> =EF=BB=BFCurrently, the GSP is left running after the driver is unbound.=
- This is
->> not great for several reasons, notably that it can still access shared
->> memory areas that the kernel will now reclaim (especially problematic on
->> setups without an IOMMU).
->>=20
->> Fix this by sending the `UNLOADING_GUEST_DRIVER` GSP command when
->> unbinding. This stops the GSP and let us proceed with the rest of the
->> unbind sequence in the next patch.
->>=20
->> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
->> ---
->> drivers/gpu/nova-core/gpu.rs                      |  5 +++
->> drivers/gpu/nova-core/gsp/boot.rs                 | 42 +++++++++++++++++=
-++++++
->> drivers/gpu/nova-core/gsp/commands.rs             | 42 +++++++++++++++++=
-++++++
->> drivers/gpu/nova-core/gsp/fw.rs                   |  4 +++
->> drivers/gpu/nova-core/gsp/fw/commands.rs          | 27 +++++++++++++++
->> drivers/gpu/nova-core/gsp/fw/r570_144/bindings.rs |  8 +++++
->> 6 files changed, 128 insertions(+)
->>=20
->> diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
->> index ef6ceced350e..b94784f57b36 100644
->> --- a/drivers/gpu/nova-core/gpu.rs
->> +++ b/drivers/gpu/nova-core/gpu.rs
->> @@ -291,6 +291,9 @@ pub(crate) fn new<'a>(
->>=20
->>     /// Called when the corresponding [`Device`](device::Device) is unbo=
-und.
->>     ///
->> +    /// Prepares the GPU for unbinding by shutting down the GSP and unr=
-egistering the sysmem flush
->> +    /// memory page.
->> +    ///
->>     /// Note: This method must only be called from `Driver::unbind`.
->>     pub(crate) fn unbind(self: Pin<&mut Self>, dev: &device::Device<devi=
-ce::Core>) {
->>         let this =3D self.project();
->> @@ -299,6 +302,8 @@ pub(crate) fn unbind(self: Pin<&mut Self>, dev: &dev=
-ice::Device<device::Core>) {
->>             return;
->>         };
->>=20
->> +        let _ =3D kernel::warn_on_err!(this.gsp.unload(dev, bar, this.g=
-sp_falcon,));
->> +
->>         this.sysmem_flush.unregister(bar);
->>     }
->> }
->> diff --git a/drivers/gpu/nova-core/gsp/boot.rs b/drivers/gpu/nova-core/g=
-sp/boot.rs
->> index ca7efdaa753b..e12e1d3fd53f 100644
->> --- a/drivers/gpu/nova-core/gsp/boot.rs
->> +++ b/drivers/gpu/nova-core/gsp/boot.rs
->> @@ -32,6 +32,7 @@
->>     },
->>     gpu::Chipset,
->>     gsp::{
->> +        cmdq::Cmdq,
->>         commands,
->>         sequencer::{
->>             GspSequencer,
->> @@ -231,4 +232,45 @@ pub(crate) fn boot(
->>=20
->>         Ok(())
->>     }
->> +
->> +    /// Shutdowns the GSP and wait until it is offline.
->> +    fn shutdown_gsp(
->> +        cmdq: &mut Cmdq,
->> +        bar: &Bar0,
->> +        gsp_falcon: &Falcon<Gsp>,
->> +        suspend: bool,
->> +    ) -> Result<()> {
->> +        // Send command to shutdown GSP and wait for response.
->> +        commands::unload_guest_driver(cmdq, bar, suspend)?;
->> +
->> +        // Wait until GSP signals it is suspended.
->> +        const LIBOS_INTERRUPT_PROCESSOR_SUSPENDED: u32 =3D 0x8000_0000;
->> +        read_poll_timeout(
->> +            || Ok(gsp_falcon.read_mailbox0(bar)),
->> +            |&mb0| mb0 =3D=3D LIBOS_INTERRUPT_PROCESSOR_SUSPENDED,
->> +            Delta::ZERO,
->> +            Delta::from_secs(5),
->> +        )
->> +        .map(|_| ())
->> +    }
->> +
->> +    /// Attempts to unload the GSP firmware.
->> +    ///
->> +    /// This stops all activity on the GSP.
->> +    pub(crate) fn unload(
->> +        self: Pin<&mut Self>,
->> +        dev: &device::Device<device::Bound>,
->> +        bar: &Bar0,
->> +        gsp_falcon: &Falcon<Gsp>,
->> +    ) -> Result {
->> +        let this =3D self.project();
->> +
->> +        /* Shutdown the GSP */
->> +
->> +        Self::shutdown_gsp(this.cmdq, bar, gsp_falcon, false)
->> +            .inspect_err(|e| dev_err!(dev, "unload guest driver failed:=
- {:?}", e))?;
->> +        dev_dbg!(dev, "GSP shut down\n");
->> +
->> +        Ok(())
->> +    }
->> }
->> diff --git a/drivers/gpu/nova-core/gsp/commands.rs b/drivers/gpu/nova-co=
-re/gsp/commands.rs
->> index 2050771f9b53..0bcfca8c7e42 100644
->> --- a/drivers/gpu/nova-core/gsp/commands.rs
->> +++ b/drivers/gpu/nova-core/gsp/commands.rs
->> @@ -225,3 +225,45 @@ pub(crate) fn get_gsp_info(cmdq: &mut Cmdq, bar: &B=
-ar0) -> Result<GetGspStaticIn
->>         }
->>     }
->> }
->> +
->> +impl CommandToGsp for UnloadingGuestDriver {
->> +    const FUNCTION: MsgFunction =3D MsgFunction::UnloadingGuestDriver;
->> +    type Command =3D Self;
->> +    type InitError =3D Infallible;
->> +
->> +    fn init(&self) -> impl Init<Self::Command, Self::InitError> {
->> +        *self
->> +    }
->> +}
->> +
->> +pub(crate) struct UnloadingGuestDriverReply;
->> +
->> +impl MessageFromGsp for UnloadingGuestDriverReply {
->> +    const FUNCTION: MsgFunction =3D MsgFunction::UnloadingGuestDriver;
->> +    type InitError =3D Infallible;
->> +    type Message =3D ();
->> +
->> +    fn read(
->> +        _msg: &Self::Message,
->> +        _sbuffer: &mut SBufferIter<array::IntoIter<&[u8], 2>>,
->> +    ) -> Result<Self, Self::InitError> {
->> +        Ok(UnloadingGuestDriverReply)
->> +    }
->> +}
->> +
->> +/// Send the [`UnloadingGuestDriver`] command to the GSP and await the =
-reply.
->> +pub(crate) fn unload_guest_driver(
->> +    cmdq: &mut Cmdq,
->> +    bar: &Bar0,
->> +    suspend: bool,
->> +) -> Result<UnloadingGuestDriverReply> {
->> +    cmdq.send_command(bar, UnloadingGuestDriver::new(suspend))?;
->> +
->> +    loop {
->> +        match cmdq.receive_msg::<UnloadingGuestDriverReply>(Delta::from=
-_secs(5)) {
->> +            Ok(resp) =3D> return Ok(resp),
->> +            Err(ERANGE) =3D> continue,
->> +            Err(e) =3D> return Err(e),
->> +        }
->
-> This outer loop can go on infinitely, lets bound it?
->
-> Either outer timeout or bounded number of tries. Bounded tries better sin=
-ce it has inner timeout.
 
-Yes. And what we really want is a more generic way to do this, because
-this pattern occurs with several commands so far (and more to come).
 
->
->> +    }
->> +}
->> diff --git a/drivers/gpu/nova-core/gsp/fw.rs b/drivers/gpu/nova-core/gsp=
-/fw.rs
->> index 09549f7db52d..228464fd47a0 100644
->> --- a/drivers/gpu/nova-core/gsp/fw.rs
->> +++ b/drivers/gpu/nova-core/gsp/fw.rs
->> @@ -209,6 +209,7 @@ pub(crate) enum MsgFunction {
->>     GspInitPostObjGpu =3D bindings::NV_VGPU_MSG_FUNCTION_GSP_INIT_POST_O=
-BJGPU,
->>     GspRmControl =3D bindings::NV_VGPU_MSG_FUNCTION_GSP_RM_CONTROL,
->>     GetStaticInfo =3D bindings::NV_VGPU_MSG_FUNCTION_GET_STATIC_INFO,
->> +    UnloadingGuestDriver =3D bindings::NV_VGPU_MSG_FUNCTION_UNLOADING_G=
-UEST_DRIVER,
->>=20
->>     // Event codes
->>     GspInitDone =3D bindings::NV_VGPU_MSG_EVENT_GSP_INIT_DONE,
->> @@ -249,6 +250,9 @@ fn try_from(value: u32) -> Result<MsgFunction> {
->>             }
->>             bindings::NV_VGPU_MSG_FUNCTION_GSP_RM_CONTROL =3D> Ok(MsgFun=
-ction::GspRmControl),
->>             bindings::NV_VGPU_MSG_FUNCTION_GET_STATIC_INFO =3D> Ok(MsgFu=
-nction::GetStaticInfo),
->> +            bindings::NV_VGPU_MSG_FUNCTION_UNLOADING_GUEST_DRIVER =3D> =
-{
->> +                Ok(MsgFunction::UnloadingGuestDriver)
->> +            }
->>             bindings::NV_VGPU_MSG_EVENT_GSP_INIT_DONE =3D> Ok(MsgFunctio=
-n::GspInitDone),
->>             bindings::NV_VGPU_MSG_EVENT_GSP_RUN_CPU_SEQUENCER =3D> {
->>                 Ok(MsgFunction::GspRunCpuSequencer)
->> diff --git a/drivers/gpu/nova-core/gsp/fw/commands.rs b/drivers/gpu/nova=
--core/gsp/fw/commands.rs
->> index 85465521de32..c7df4783ad21 100644
->> --- a/drivers/gpu/nova-core/gsp/fw/commands.rs
->> +++ b/drivers/gpu/nova-core/gsp/fw/commands.rs
->> @@ -125,3 +125,30 @@ unsafe impl AsBytes for GspStaticConfigInfo {}
->> // SAFETY: This struct only contains integer types for which all bit pat=
-terns
->> // are valid.
->> unsafe impl FromBytes for GspStaticConfigInfo {}
->> +
->> +/// Payload of the `UnloadingGuestDriver` command and message.
->> +#[repr(transparent)]
->> +#[derive(Clone, Copy, Debug, Zeroable)]
->> +pub(crate) struct UnloadingGuestDriver {
->> +    inner: bindings::rpc_unloading_guest_driver_v1F_07,
->> +}
->> +
->> +impl UnloadingGuestDriver {
->> +    pub(crate) fn new(suspend: bool) -> Self {
->> +        Self {
->> +            inner: bindings::rpc_unloading_guest_driver_v1F_07 {
->
-> We should go through intermediate firmware representation than direct bin=
-dings access?
+On 12/18/2025 6:30 PM, Manivannan Sadhasivam wrote:
+> On Thu, Dec 18, 2025 at 06:26:12PM +0530, Krishna Chaitanya Chundru wrote:
+>>
+>> On 12/18/2025 6:16 PM, Manivannan Sadhasivam wrote:
+>>> On Thu, Dec 18, 2025 at 05:57:30PM +0530, Krishna Chaitanya Chundru wrote:
+>>>> On 12/18/2025 5:34 PM, Manivannan Sadhasivam via B4 Relay wrote:
+>>>>> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+>>>>>
+>>>>> dw_pcie_wait_for_link() API waits for the link to be up and returns failure
+>>>>> if the link is not up within the 1 second interval. But if there was no
+>>>>> device connected to the bus, then the link up failure would be expected.
+>>>>> In that case, the callers might want to skip the failure in a hope that the
+>>>>> link will be up later when a device gets connected.
+>>>>>
+>>>>> One of the callers, dw_pcie_host_init() is currently skipping the failure
+>>>>> irrespective of the link state, in an assumption that the link may come up
+>>>>> later. But this assumption is wrong, since LTSSM states other than
+>>>>> Detect.Quiet and Detect.Active during link training phase are considered to
+>>>>> be fatal and the link needs to be retrained.
+>>>>>
+>>>>> So to avoid callers making wrong assumptions, skip returning failure from
+>>>>> dw_pcie_wait_for_link() only if the link is in Detect.Quiet or
+>>>>> Detect.Active states after timeout and also check the return value of the
+>>>>> API in dw_pcie_host_init().
+>>>>>
+>>>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+>>>>> ---
+>>>>>     drivers/pci/controller/dwc/pcie-designware-host.c |  8 +++++---
+>>>>>     drivers/pci/controller/dwc/pcie-designware.c      | 12 +++++++++++-
+>>>>>     2 files changed, 16 insertions(+), 4 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>> index 43d091128ef7..ef6d9ae6eddb 100644
+>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>> @@ -670,9 +670,11 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>>>>>     	 * If there is no Link Up IRQ, we should not bypass the delay
+>>>>>     	 * because that would require users to manually rescan for devices.
+>>>>>     	 */
+>>>>> -	if (!pp->use_linkup_irq)
+>>>>> -		/* Ignore errors, the link may come up later */
+>>>>> -		dw_pcie_wait_for_link(pci);
+>>>>> +	if (!pp->use_linkup_irq) {
+>>>>> +		ret = dw_pcie_wait_for_link(pci);
+>>>>> +		if (ret)
+>>>>> +			goto err_stop_link;
+>>>>> +	}
+>>>>>     	ret = pci_host_probe(bridge);
+>>>>>     	if (ret)
+>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>>>>> index 75fc8b767fcc..b58baf26ce58 100644
+>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>>>>> @@ -641,7 +641,7 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index)
+>>>>>     int dw_pcie_wait_for_link(struct dw_pcie *pci)
+>>>>>     {
+>>>>> -	u32 offset, val;
+>>>>> +	u32 offset, val, ltssm;
+>>>>>     	int retries;
+>>>>>     	/* Check if the link is up or not */
+>>>>> @@ -653,6 +653,16 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+>>>>>     	}
+>>>>>     	if (retries >= PCIE_LINK_WAIT_MAX_RETRIES) {
+>>>>> +		/*
+>>>>> +		 * If the link is in Detect.Quiet or Detect.Active state, it
+>>>>> +		 * indicates that no device is detected. So return success to
+>>>>> +		 * allow the device to show up later.
+>>>>> +		 */
+>>>>> +		ltssm = dw_pcie_get_ltssm(pci);
+>>>>> +		if (ltssm == DW_PCIE_LTSSM_DETECT_QUIET ||
+>>>>> +		    ltssm == DW_PCIE_LTSSM_DETECT_ACT)
+>>>>> +			return 0;
+>>>>> +
+>>>>>     		dev_info(pci->dev, "Phy link never came up\n");
+>>>> Can you move this print above, as this print is useful for the user to know
+>>>> that, link is not up yet.
+>>>>
+>>> If the device is not connected to the bus, what information does this log
+>>> provide to the user?
+>> Not every user is aware that device is not connected, at-least this log will
+>> give info
+>> that there is no device connected.
+>>
+> Users won't grep the dmesg log to check whether the device is connected to the
+> bus or not. They will use lspci.
+ack.
 
-Only if the size of the bindings justifies it - here having an opaque
-wrapper just just well, and spares us some code down the line as we
-would have to initialize the bindings anyway.
-
+- Krishna Chaitanya.
+> - Mani
 >
->
->> +                bInPMTransition: if suspend { 1 } else { 0 },
->
-> Then this can just be passed as a bool.
->
->> +                bGc6Entering: 0,
->> +                newLevel: if suspend { 3 } else { 0 },
-
-Note to self to figure out these magic numbers. :)
 
 
