@@ -1,143 +1,252 @@
-Return-Path: <linux-pci+bounces-43342-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43343-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 244CECCE40C
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 03:17:01 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56FDACCE519
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 04:08:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 6B96E3011FA2
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 02:17:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DDA763030585
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 03:08:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8298814A4F9;
-	Fri, 19 Dec 2025 02:16:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21D8029AB15;
+	Fri, 19 Dec 2025 03:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="I9CV/qmd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013001.outbound.protection.outlook.com [52.101.83.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCA53D76;
-	Fri, 19 Dec 2025 02:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766110618; cv=none; b=tGfGE8A+0Upba5My9gFfksGE7qga6BS3Hc0ff2Fh+Lg9rtyWvCGAZiyQ/lTizB9PLP5zHsQIeorOc2+m7YOKf1FYMvFd/I6sa6dTquQY1uS5gq6EW3qqG85Bv2wgdNnuoG06zet2t6X9vJCHsv3JrsKafmaKQJ+R1KjsSyEcK2c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766110618; c=relaxed/simple;
-	bh=YGkjBjt+uzxJPYSxbryV4F0YgpdbOxHWJuEcdO+Yrpk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BcMgGtwmziYGzMa+xYwUsqIYqcRLG/1Q/ob3i42zP4wfzakISWiD5KzoyNzB7zRpf8uf3kQaossSxqBoiBjULmfyddL0s7oaHeLYnA6rwWv2QXiFgOO3pDcdP54a1PSGAp6rbETCdsMN42RCzA7cWAfcW1D7mdU4kFqFog4a880=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from DESKTOP-L0HPE2S (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowACHGAyFtURp2kMjAQ--.22672S2;
-	Fri, 19 Dec 2025 10:16:39 +0800 (CST)
-From: Haotian Zhang <vulab@iscas.ac.cn>
-To: lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	mani@kernel.org
-Cc: robh@kernel.org,
-	bhelgaas@google.com,
-	michal.simek@amd.com,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Haotian Zhang <vulab@iscas.ac.cn>
-Subject: [PATCH v3] PCI: xilinx: Fix INTx IRQ domain leak in error paths
-Date: Fri, 19 Dec 2025 10:16:15 +0800
-Message-ID: <20251219021615.965-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.50.1.windows.1
-In-Reply-To: <20251119033301.518-1-vulab@iscas.ac.cn>
-References: <20251119033301.518-1-vulab@iscas.ac.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D301DF261;
+	Fri, 19 Dec 2025 03:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.1
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766113704; cv=fail; b=WQNvwH1vpSdphNQ3vc0Y9wBnBpPhIe+ZWH0YgVpxK5cn4BDZFUDnfQVxqE8OWX6Zf2z03Ke3ACopDH1sBQn400G3UkKh/N9rEFAI4RFFI1CQYb0lj02YdGqxNmmqP+JRKM3yTxNs/u2o+fvNUiSYnG4Jfmw1B/eiioMv+U6kRNk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766113704; c=relaxed/simple;
+	bh=yYwNNUnp3ksxUjc3eywOS6CmoUFupJVOZtZXHoAM04E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=R2wzJbp0GeVs7wVsv7BvWKZatBm2N0vOUMsL/V8BnkX8wh0j+RnICBS9qAxvuXlIF7UWl3tDLmJHMybflQ2XO6uZrbaqLFbqeE9q+EG/tz0mHmEWMVeHlzUTI+q/9onZdOL9tM7IHSkFXSZWulKCqO/sA7Z+sYJt0ACcmIWM5D8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=I9CV/qmd; arc=fail smtp.client-ip=52.101.83.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gE76pHvuIMMTM/8Y/UU0qEH1Yrilvj/90z1otJOe/ETSAm+wyBxfwYIKNU6kbz/uwjhG+xp3Y8NUZwURsQHEZnIrGOmGI01yWvZCZ2Z+SDGh8Aj1NDHMUrSKSaBYvUtDAkDuPnOAX5kldUaXix25gEkgxc0bIUWlBv6Q7AyDCVsUQ8HFIInfHW0WWA6b3jMA71/RQWiF0pfgFxXDQbNn/AXnU1mmcfC/0g+1MKMzcrz00HpXIgeVIi19iFqVYFUagBFCR1Y+6ugt+MJOoXw+fspNb2aUgGNStH+3DhSO3kIxq+nrWdzdlqx0R8xWDECmCltso/wuImTLW8DM2QmxLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K45RTTvc5NVXW2T9zTYJO756ddXzRjrSgDf4zLfPuEg=;
+ b=ryzzaXxVb2U23rOt1QjN0pKFhLtYUYN+5yDoeXieMMAUa0TzgkwY01Xt0CIQcqWwLXxm8o6VTUnv5Yks2qr0F2ehqkF7ULP4Bz20I/a3Cw3phM8h/PcMTOxkUXjLCFaO1x1whMCDMbTdWRv2/52T5gBtvk3+IX2443QaUvTb3eJpO4dtmpbkLPiXAKbuqYgrrcqRftic/tYZSZAgBMowLwt98ARWD+j3BknlOQK7KuDLiNO+paxp2gGzRJeYrTaB5tDuRiG217dq3fE/PgDEemVDp4X22x/rsvA+VWub4ut+n4imIHDXSUQo4QaY4yF1hlnf9HTOfo5LEbD63s4Bzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K45RTTvc5NVXW2T9zTYJO756ddXzRjrSgDf4zLfPuEg=;
+ b=I9CV/qmd2pn7lGflVaCwKCW9k/lu5Uqb39kiRiiaeERJLVv63qh//NQ82cAoozmk0oNbMwD32RWT0RrxlNC9ucxEPKAPr1yxB17YJo+O09al3nBxZV479UtTyQD9xdPyLPjRs3kv5kgdHixk54nWGmK+jkHsO+Lz+A7hjrSxOwxW59JZCIFNEjdvwUTBa4yeK/vKRf9LzPoBQBE5o/hw5wHxd4fqmFiTTbkOxPCqSIrzgTpsqUHxFIRt8LHK3AF9XZ2CTgQXlPnnxlwKYSFOBl9Q5Hlkj3ghPozGi0x7PoQALLWAY05xt9KcQWtEM+NRvaUToClQKUMuhV1q+jDexQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22)
+ by PAXPR04MB8720.eurprd04.prod.outlook.com (2603:10a6:102:21f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.8; Fri, 19 Dec
+ 2025 03:08:16 +0000
+Received: from DU2PR04MB8951.eurprd04.prod.outlook.com
+ ([fe80::753c:468d:266:196]) by DU2PR04MB8951.eurprd04.prod.outlook.com
+ ([fe80::753c:468d:266:196%4]) with mapi id 15.20.9434.001; Fri, 19 Dec 2025
+ 03:08:16 +0000
+Date: Thu, 18 Dec 2025 22:08:02 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Koichiro Den <den@valinux.co.jp>
+Cc: dave.jiang@intel.com, ntb@lists.linux.dev, linux-pci@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org,
+	bhelgaas@google.com, corbet@lwn.net, geert+renesas@glider.be,
+	magnus.damm@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, vkoul@kernel.org, joro@8bytes.org,
+	will@kernel.org, robin.murphy@arm.com, jdmason@kudzu.us,
+	allenbh@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
+	kurt.schwemmer@microsemi.com, logang@deltatee.com,
+	jingoohan1@gmail.com, lpieralisi@kernel.org, utkarsh02t@gmail.com,
+	jbrunet@baylibre.com, dlemoal@kernel.org, arnd@arndb.de,
+	elfring@users.sourceforge.net
+Subject: Re: [RFC PATCH v3 01/35] PCI: endpoint: pci-epf-vntb: Use
+ array_index_nospec() on mws_size[] access
+Message-ID: <aUTBkr83isZfmE3x@lizhi-Precision-Tower-5810>
+References: <20251217151609.3162665-1-den@valinux.co.jp>
+ <20251217151609.3162665-2-den@valinux.co.jp>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251217151609.3162665-2-den@valinux.co.jp>
+X-ClientProxiedBy: PH0P220CA0021.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:d3::9) To DU2PR04MB8951.eurprd04.prod.outlook.com
+ (2603:10a6:10:2e2::22)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowACHGAyFtURp2kMjAQ--.22672S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr4UXr17CrWxtr4xuryrCrg_yoW5JF1rpF
-	4DCw47uF4UJFWUuF47G3W5uFy3Wa9Fk34qy3yYgwnrZr13CrWDCF10qFnakF4FvFW8Jr18
-	Ar1xt3Wruw47CFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIda
-	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCREAA2lEGBxvagABs2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|PAXPR04MB8720:EE_
+X-MS-Office365-Filtering-Correlation-Id: d934932a-0924-4557-f9d0-08de3eabda99
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|52116014|1800799024|366016|19092799006|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?NYqwfsF37cppaaB+z9dOiSP5o9Mug3bIvLLADNY5p6EJCQKwL3I7mX67DsVj?=
+ =?us-ascii?Q?ZrnllFkL8+VzpO1VeOL+/F8cd3f/8hzbJYCKtEYOqi5PEoWxLBmykUBYY4Ei?=
+ =?us-ascii?Q?tmk1YZFBqUviM7ht8tz/shDZKEkH/UvxWSHCx0olbDL6jtykdy9OD7fbIarB?=
+ =?us-ascii?Q?pw3gshpbd+t6uFpGuLRFDnQ2doYrg3Tjo2HW5dyJ5lTkkh03AeUlZoHUoK1B?=
+ =?us-ascii?Q?MlGTq6tbACcYZTYYB6oT65hWz6rf9Hin612dfSYtJs7HChcpBTt9GFy5mgAY?=
+ =?us-ascii?Q?2DmrRtB960OdAiorqjcbmom5EB0d0eRY+3HneP8e5lgers+4v//Z4YX9tKKI?=
+ =?us-ascii?Q?xrEhf7rNFUYsOVV6sfmOPCy07bqJPDNmA0IYvYxCQkcPjwDfdbWzR6NdI/SK?=
+ =?us-ascii?Q?s9FhodnL5BX6gxIeTwJmwNRdhWta+s5lGgYXpheWFLmdXT7b8BbhgheNQhxQ?=
+ =?us-ascii?Q?ycPD191zJakfJ/yVpdty8sV5Mv7C+z+CLBl9Cnc3LpZ2opvwSWegXdTFTxab?=
+ =?us-ascii?Q?Yd0uAnrxgpg5WkjqfB9exUr+bT7bxFalNw3w1aTUgTTuoIhVxTr+YLmJqweX?=
+ =?us-ascii?Q?sqlZ9bcb+wPjNI5KE37DvvgjAQRTSqlv85q1nRydI+bqZjVpeVoQR+N+7re4?=
+ =?us-ascii?Q?N4U1GUQgkg6N5FNwuU4ChEcEwDCmuBc93N11MYPhZPj2QrdKpM5uiRrAfxjV?=
+ =?us-ascii?Q?f2EOv9Jp90vs3UpFNDi6k15/W/vzZYvZXhSn4UkKbFTJVrMQIIUvgl0osMo4?=
+ =?us-ascii?Q?6wMmI3Y0bXk5iEagIgRrsj97B4gZxnfHdsu0q2KVJaPF9141HqQBd3znNK97?=
+ =?us-ascii?Q?mwwSlVU22ctLHdQO/Sb9KaQPazuwPndKHaMgm09kX1yZd+R6ndXk3fe5A2bY?=
+ =?us-ascii?Q?F9S1emeeUoLwmMvs+R3828LspgACsJ2TbkCkfzKXZ6cky8b/SBGK3NBrNZ77?=
+ =?us-ascii?Q?zoa+OiZTDfF4ijBPMNWHTeNCdmb3s1YClc7o+rHd+eTtIFLk5u6OU9I5P9o8?=
+ =?us-ascii?Q?RJ2rUn1j3C69HrOfvtx2MzdgJhrigF8DWVIET0OYKeoke6AqABWDT47B4HKf?=
+ =?us-ascii?Q?833JMQLYziz3gkraXl75bpOZT79nYZaB07b4vhnzkcX1s3jo+j1ym3JGX76t?=
+ =?us-ascii?Q?6FZXGNg3n0MWdP73x1yYFeix2Fq3Ws4sBuu1OxLeMDmVLfFbWdmUTGGrG5D7?=
+ =?us-ascii?Q?xhQdCgrKhxq7DXnDWrm+F7gprUbzAa0CQKD1ZI4P0wqZqnSOzFHNMMHKNcn4?=
+ =?us-ascii?Q?/Z32WlYW1bGHPD3tC44qmxXtg0NVu8sgUH7FPa7xuD/uEyk8TGd5j/q2tNk/?=
+ =?us-ascii?Q?JwXazsEOyTVawXgFpiKixRRHDpuZteUWhk2moK5oaakhXhSXKCuLEzgzGkOw?=
+ =?us-ascii?Q?Y/vY6Dgr4v2MpYehJbTjRAGwO2dNVHTC5JPoU24loEzfpBYGDMAsBUym328x?=
+ =?us-ascii?Q?IcIcHzo+nGrBIsn7aKiQvjHYD5/Ohn1w/n1p2mIeSDda+7byMGGKW3YFBub7?=
+ =?us-ascii?Q?YJjqpZ46qTQZi6vjljPpEJEEejXVW2whRDd2?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(1800799024)(366016)(19092799006)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?7NEDQ3uttEZyIoFhpcfYH73SiGrloHbY+k1E6eE18CwGwkBLMtAzpo/dLCLh?=
+ =?us-ascii?Q?uApfk9e1fI07ozdeshNYUA1XNFwcsbaQ6UBB6JZnpwMlSkFDL8/zPknwjN6c?=
+ =?us-ascii?Q?B03eERRencTJEPZHI8HdaByULaR3As6mB6eWxUMjflwsbc0Mwhf9+LSIbYh+?=
+ =?us-ascii?Q?BcF6yCo/jZ/c+18NfiH+n1WdP1P4BaBS2zNTnaoRp1NuRClalNzaABZY15aa?=
+ =?us-ascii?Q?wTg9JzjyTdMUfmFAY1J+8iQrUkOnNJwKZkow9caRn3xQado/4ENQ0ybChfGz?=
+ =?us-ascii?Q?wqDdORQeuDxyAkC57p0XmLaGC7m2CpoZPUfHtWPPrjZt5V70WK80ST+kayUY?=
+ =?us-ascii?Q?rzYnQzykIADPmJCoD+osEK3PWlG/6+oUJ6A12OkqE/mTXAHU9Ycrd9BRV2gd?=
+ =?us-ascii?Q?WLSfBkZkRZvxCpj2tLXqeq6Mfzy7HEPTgWUnEPDCVhiLfwn3jOJLjeJ1illx?=
+ =?us-ascii?Q?+fzC7Rrf/5kW37AE7yJhPa0DPT5ZX3PefBQ4txX8+EJ0S33s5rVlflmdv6m7?=
+ =?us-ascii?Q?6nUhY2hDnsqs9VWjkMBeXVOGZSfQCln2GQ/T1c06UIxKWMbOP0JGhASa8w79?=
+ =?us-ascii?Q?5/LJRu7rdRJC4qhFCYOtHFwKCyaoSVDMNf6rwNnkNu5XEwm/8FgPb9yaLsVq?=
+ =?us-ascii?Q?elV4rIYiGBBwW38L1CSwDjr5VlneAq7NnbBcOCy0FeM5qy5Ew7+SjyI9dzNh?=
+ =?us-ascii?Q?5MVoHlhO4G85OOajLtKM3jVbhfMyTSqOWHYxG2hFp165kn++/XwV6NXUSCSE?=
+ =?us-ascii?Q?srdqZGMz/ZI/Ph3nvUUY74fu8KZCA3EJGKJon17ocpL1yKxbOo98y9EQ3DAI?=
+ =?us-ascii?Q?es+hdjetJz7vYmAa4+AxHYc5WpPTfj3NmQ65diPzSlp0aziamJNaKUXuFw7C?=
+ =?us-ascii?Q?O2YAClyhdUabR1F1dxnUkyXcZz8G0PSyJ008wJmQ2vmiSl/SaHzAl/+5Bvmq?=
+ =?us-ascii?Q?EBA+DEn0D93MxFgZ3bN1CDEaVBOM3NTYztEEqGjCCVXuE6rT5snB6DbFQJOI?=
+ =?us-ascii?Q?iBhtdL7stTQ5Lp3H8+GH7SnTYPKtcPlLCrOWg/5oE6doI4GF8fHnrvATQunY?=
+ =?us-ascii?Q?Xv3biVXERH8WOzb3ZxPUOQ9XTbywk0eOdy1lgzbTuzvwZi1dIxm+BdVqpZ1v?=
+ =?us-ascii?Q?Zki7VaiEwGAdZKYxZ7/Y+rV90QFon/FhTQz9sRz+LJQlQyUbck7lrxf1hrYs?=
+ =?us-ascii?Q?zL1kSyYsN1YpoYOPfAR0IYIBi+EQ95HLNqjUJ76MFqkVG2CrW25PAr+jPm5Y?=
+ =?us-ascii?Q?xJCU8Sk6Jiq7yXTvsrxY5kKrTYfQRwJvpbvC35UOun7IkxMpw19h9BGrQ5bZ?=
+ =?us-ascii?Q?s2bqL1saNortNr/3O4olEyh+qOlGR12yeHBfBWwWlvkc0Av+Zh49dqLoqVBI?=
+ =?us-ascii?Q?0FE9y5/Fs6Nv7s8dtOdpgoyM6mtWSuUxsGh52HlrouxWOZec1ool7wReUcpH?=
+ =?us-ascii?Q?WXqmrRrAYlXnFzfP+7ylNl7oH7J4CguQppAMHY4qFCGht4bk7XSqer+S2Sh4?=
+ =?us-ascii?Q?mAnA+jKoRFH4p/D3JL4l8d029Wbzv9o6gWcumCOGCoU5b8uldV2ikJxpkkHw?=
+ =?us-ascii?Q?ly/DtUuHeaQS2Yqxdd0=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d934932a-0924-4557-f9d0-08de3eabda99
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8951.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Dec 2025 03:08:16.3797
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Q1bTuzyy8JDZizCW8BMZodYh8EB95ReLXyM0LcVcKJvdRpH4D0C2cB2I/1zDOFTeGvuFBEhJvjh2qxjx15zrgQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8720
 
-In xilinx_pcie_init_irq_domain(), if xilinx_allocate_msi_domains()
-fails after pcie->leg_domain has been successfully created via
-irq_domain_create_linear(), the function returns directly without
-cleaning up the allocated IRQ domain, resulting in a resource leak.
-In xilinx_free_msi_domains(), pcie->leg_domain is also neglected.
+On Thu, Dec 18, 2025 at 12:15:35AM +0900, Koichiro Den wrote:
+> Follow common kernel idioms for indices derived from configfs attributes
+> and suppress Smatch warnings:
+>
+>   epf_ntb_mw1_show() warn: potential spectre issue 'ntb->mws_size' [r]
+>   epf_ntb_mw1_store() warn: potential spectre issue 'ntb->mws_size' [w]
+>
+> Also fix the error message for out-of-range MW indices and %lld format
+> for unsigned values.
+>
+> Signed-off-by: Koichiro Den <den@valinux.co.jp>
+> ---
 
-Add irq_domain_remove() call in the error path to properly release the
-IRQ domain before returning the error. Rename xilinx_free_msi_domains()
-to xilinx_free_irq_domains() and add the release of pcie->leg_domain
-in the function.
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-Fixes: 313b64c3ae52 ("PCI: xilinx: Convert to MSI domains")
-Suggested-by: Manivannan Sadhasivam <mani@kernel.org>
-Signed-off-by: Haotian Zhang <vulab@iscas.ac.cn>
----
-Changes in v3:
-  - Rename xilinx_free_msi_domains() to xilinx_free_irq_domains()
-    and add the release of pcie->leg_domain in the function as
-    suggested by Manivannan Sadhasivam.
----
-Changes in v2:
-  - Correct the Fixes tag to point to the commit that introduced the
-    legacy IRQ domain leak on MSI allocation failure.
----
- drivers/pci/controller/pcie-xilinx.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
-index 937ea6ae1ac4..4aa139abac16 100644
---- a/drivers/pci/controller/pcie-xilinx.c
-+++ b/drivers/pci/controller/pcie-xilinx.c
-@@ -302,9 +302,10 @@ static int xilinx_allocate_msi_domains(struct xilinx_pcie *pcie)
- 	return 0;
- }
- 
--static void xilinx_free_msi_domains(struct xilinx_pcie *pcie)
-+static void xilinx_free_irq_domains(struct xilinx_pcie *pcie)
- {
- 	irq_domain_remove(pcie->msi_domain);
-+	irq_domain_remove(pcie->leg_domain);
- }
- 
- /* INTx Functions */
-@@ -480,8 +481,10 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie *pcie)
- 		phys_addr_t pa = ALIGN_DOWN(virt_to_phys(pcie), SZ_4K);
- 
- 		ret = xilinx_allocate_msi_domains(pcie);
--		if (ret)
-+		if (ret) {
-+			irq_domain_remove(pcie->leg_domain);
- 			return ret;
-+		}
- 
- 		pcie_write(pcie, upper_32_bits(pa), XILINX_PCIE_REG_MSIBASE1);
- 		pcie_write(pcie, lower_32_bits(pa), XILINX_PCIE_REG_MSIBASE2);
-@@ -600,7 +603,7 @@ static int xilinx_pcie_probe(struct platform_device *pdev)
- 
- 	err = pci_host_probe(bridge);
- 	if (err)
--		xilinx_free_msi_domains(pcie);
-+		xilinx_free_irq_domains(pcie);
- 
- 	return err;
- }
--- 
-2.50.1.windows.1
-
+> Note: I noticed [RFC PATCH v2 01/27] resurrected the Smatch warnings
+> https://lore.kernel.org/all/20251129160405.2568284-2-den@valinux.co.jp/
+> This RFC v3 version therefore reverts to the RFC v1 style, with one
+> additional fix to correct the sprintf format specifier (%lld->%llu).
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-vntb.c | 24 +++++++++++--------
+>  1 file changed, 14 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> index 3ecc5059f92b..56aab5d354d6 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> @@ -995,17 +995,19 @@ static ssize_t epf_ntb_##_name##_show(struct config_item *item,		\
+>  	struct config_group *group = to_config_group(item);		\
+>  	struct epf_ntb *ntb = to_epf_ntb(group);			\
+>  	struct device *dev = &ntb->epf->dev;				\
+> -	int win_no;							\
+> +	int win_no, idx;						\
+>  									\
+>  	if (sscanf(#_name, "mw%d", &win_no) != 1)			\
+>  		return -EINVAL;						\
+>  									\
+> -	if (win_no <= 0 || win_no > ntb->num_mws) {			\
+> -		dev_err(dev, "Invalid num_nws: %d value\n", ntb->num_mws); \
+> +	idx = win_no - 1;						\
+> +	if (idx < 0 || idx >= ntb->num_mws) {				\
+> +		dev_err(dev, "MW%d out of range (num_mws=%d)\n",	\
+> +			win_no, ntb->num_mws);				\
+>  		return -EINVAL;						\
+>  	}								\
+> -									\
+> -	return sprintf(page, "%lld\n", ntb->mws_size[win_no - 1]);	\
+> +	idx = array_index_nospec(idx, ntb->num_mws);			\
+> +	return sprintf(page, "%llu\n", ntb->mws_size[idx]);		\
+>  }
+>
+>  #define EPF_NTB_MW_W(_name)						\
+> @@ -1015,7 +1017,7 @@ static ssize_t epf_ntb_##_name##_store(struct config_item *item,	\
+>  	struct config_group *group = to_config_group(item);		\
+>  	struct epf_ntb *ntb = to_epf_ntb(group);			\
+>  	struct device *dev = &ntb->epf->dev;				\
+> -	int win_no;							\
+> +	int win_no, idx;						\
+>  	u64 val;							\
+>  	int ret;							\
+>  									\
+> @@ -1026,12 +1028,14 @@ static ssize_t epf_ntb_##_name##_store(struct config_item *item,	\
+>  	if (sscanf(#_name, "mw%d", &win_no) != 1)			\
+>  		return -EINVAL;						\
+>  									\
+> -	if (win_no <= 0 || win_no > ntb->num_mws) {			\
+> -		dev_err(dev, "Invalid num_nws: %d value\n", ntb->num_mws); \
+> +	idx = win_no - 1;						\
+> +	if (idx < 0 || idx >= ntb->num_mws) {				\
+> +		dev_err(dev, "MW%d out of range (num_mws=%d)\n",	\
+> +			win_no, ntb->num_mws);				\
+>  		return -EINVAL;						\
+>  	}								\
+> -									\
+> -	ntb->mws_size[win_no - 1] = val;				\
+> +	idx = array_index_nospec(idx, ntb->num_mws);			\
+> +	ntb->mws_size[idx] = val;					\
+>  									\
+>  	return len;							\
+>  }
+> --
+> 2.51.0
+>
 
