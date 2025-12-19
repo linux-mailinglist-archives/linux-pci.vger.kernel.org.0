@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-43443-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43444-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95305CD1CF6
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 21:43:57 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87BC3CD1CDD
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 21:41:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7A73D30111AB
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 20:41:42 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 01A7F30019C3
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 20:41:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E6F32EB862;
-	Fri, 19 Dec 2025 20:41:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 750072EB5CD;
+	Fri, 19 Dec 2025 20:41:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hN3SPY4V"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="jbVe5Fqz"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A11A2DD608;
-	Fri, 19 Dec 2025 20:41:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5AE2ED848;
+	Fri, 19 Dec 2025 20:41:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766176902; cv=none; b=Xe0aWCW1Uz17EPT4RS1y/k7B4SSv05WzY+Mz32xbGmwB537fZ7eydXPAh83aYw+OJ9KtVEN03/PnScIMiRGy7cYCW7Q2mq0n+0dIhp4pKx9DL4LavFbJVQUG8eDS6nB29vUYplz8q3cyaMebScwFcjYYbnQZfI5AT6UNH87J0uw=
+	t=1766176917; cv=none; b=jQRYomxZRzWWfnfinNtW/jFqJ/3IqFpjVCazNSNnThVxQQVo03vbpADkncABHmfA3DglRADF5M3tt/FSaCzVkexcVZ59x12g9n8oo7HhafJcrYUlDLao6qwbB1x1ZdZhJIddvuOqOZaG3vrZjHao7XB+DTpA+Hq68lW+Uy2SynI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766176902; c=relaxed/simple;
-	bh=F6AvpRw/MS+EMd7zNmk9+zup2u4TQEOBAZJYKN+n5mQ=;
+	s=arc-20240116; t=1766176917; c=relaxed/simple;
+	bh=ISXl7+FiT7byRIA7yYlu/U9Iqy0ggNUZUeAGmjheuUI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kbdQIuoX+VpqQoEcmIWYNaIA+t6fjW0DMPZqcH5ndl2/x2Yk7NuC6ErzjmsUByAjU0azwTFz/ra5uKBBdxvy/YqEpdNN1T+i2NFu89q9knvN4AJpD1S/JUUFlPaqPQdn9n1uYsTMfE2dUF/xDp4zxr06dIT6uNLybNS9YBnDMso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=hN3SPY4V; arc=none smtp.client-ip=192.19.144.205
+	 MIME-Version; b=PbQ6xTWuOPO3+mKTCjGcsOIedCz+Xk4IlZOyuJJEiRX16ZjWFh/BTZ7KaEu88pLGV+PyIan8up3wsAeY5q5CSkqfITXNLskGKxRb2rqlAD4haz6GHs8rFHEsb1KQy+nnV2ISjL38nGBslNq0XPORYMSjQC4Dv4N+rSHeRfdoTAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=jbVe5Fqz; arc=none smtp.client-ip=192.19.144.205
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 6B375C00153A;
-	Fri, 19 Dec 2025 12:41:39 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 6B375C00153A
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 753E6C00151C;
+	Fri, 19 Dec 2025 12:41:54 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 753E6C00151C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1766176899;
-	bh=F6AvpRw/MS+EMd7zNmk9+zup2u4TQEOBAZJYKN+n5mQ=;
+	s=dkimrelay; t=1766176914;
+	bh=ISXl7+FiT7byRIA7yYlu/U9Iqy0ggNUZUeAGmjheuUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hN3SPY4VMQFePNoId8up7rtjSG/XVnq48CvD6yIfl8w1JS1pagUq8WbAxhbObSU/f
-	 D8U1UdEXDgAGWV7luud3TXbyRPx2yQOZKzEnj4XwvIWCeY3pMr5KCHoF+txcflBv/N
-	 qYbT+0X0o/B2/O9TBKdz1mfhnhJXziYRZ/IKHPoE=
+	b=jbVe5Fqztrfkb/eY1o38OKuFhq5Pm9ZRhrEECWFJfRKpWe1UU7G/HPOfT0+SqbGwj
+	 7oSmYuXG/v7ZH81/JTBINZQwqrNhN4F00+Bauc3KhQ43QvkxMorb3/jAQaVs7B0eMU
+	 zHsjC87m7TBUB/orZPOvuM/VI9YNF2POBbtgMAMI=
 Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 019B5A340;
-	Fri, 19 Dec 2025 12:41:38 -0800 (PST)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 079DCA340;
+	Fri, 19 Dec 2025 12:41:54 -0800 (PST)
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 To: bcm-kernel-feedback-list@broadcom.com,
 	Andrea della Porta <andrea.porta@suse.com>,
@@ -64,12 +64,12 @@ To: bcm-kernel-feedback-list@broadcom.com,
 	mbrugger@suse.com,
 	Phil Elwell <phil@raspberrypi.com>
 Cc: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 3/4] arm64: dts: broadcom: bcm2712: fix RP1 endpoint PCI topology
-Date: Fri, 19 Dec 2025 12:41:38 -0800
-Message-ID: <20251219204138.1015487-1-florian.fainelli@broadcom.com>
+Subject: Re: [PATCH 4/4] arm64: dts: broadcom: rp1: drop RP1 overlay
+Date: Fri, 19 Dec 2025 12:41:53 -0800
+Message-ID: <20251219204153.1015582-1-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <827b12ba48bb47bc77a0f5e5617aea961c8bc6b5.1766077285.git.andrea.porta@suse.com>
-References: <cover.1766077285.git.andrea.porta@suse.com> <827b12ba48bb47bc77a0f5e5617aea961c8bc6b5.1766077285.git.andrea.porta@suse.com>
+In-Reply-To: <85167b815d41ed9ed690ad239a19de5cd2e8be1c.1766077285.git.andrea.porta@suse.com>
+References: <cover.1766077285.git.andrea.porta@suse.com> <85167b815d41ed9ed690ad239a19de5cd2e8be1c.1766077285.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -80,16 +80,11 @@ Content-Transfer-Encoding: 8bit
 
 From: Florian Fainelli <f.fainelli@gmail.com>
 
-On Thu, 18 Dec 2025 20:09:08 +0100, Andrea della Porta <andrea.porta@suse.com> wrote:
-> The node describing the RP1 endpoint currently uses a specific name
-> ('rp1_nexus') that does not correctly reflect the PCI topology.
+On Thu, 18 Dec 2025 20:09:09 +0100, Andrea della Porta <andrea.porta@suse.com> wrote:
+> RP1 support loaded from overlay has been dropped from the driver and
+> the DTB intended to be loaded with the overlay no longer exists.
 > 
-> Update the DT with the correct topology and use generic node names.
-> 
-> Additionally, since the driver dropped overlay support in favor of a
-> fully described DT, rename '...-ovl-rp1.dts' to '...-base.dtsi' for
-> inclusion in the board DTB, as it is no longer compiled as a
-> standalone DTB.
+> Drop unused include file and overlay.
 > 
 > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 > ---
