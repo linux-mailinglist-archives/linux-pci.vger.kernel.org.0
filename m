@@ -1,72 +1,71 @@
-Return-Path: <linux-pci+bounces-43417-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43418-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4635ECD1340
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 18:43:30 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A37FCD1313
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 18:41:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 68D8730AFBE2
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 17:41:06 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 57A5A303A32F
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 17:41:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E236231C567;
-	Fri, 19 Dec 2025 17:41:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC05431C567;
+	Fri, 19 Dec 2025 17:41:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AdZW13Mm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pl7ZmB81"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74482F7AB0;
-	Fri, 19 Dec 2025 17:41:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E716C2550CD;
+	Fri, 19 Dec 2025 17:41:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766166065; cv=none; b=XI0i5OAn/U6YPXaRrA/cwZuLW3SDoo7yNVf3wKiDYCp8ejNrDUtgeSC8l3b6/TKmAuikzLm0cmM/kvWZXDsN3IwT9/HU5XWvtSO2kuJ26cybk6QptJo2MRtMqOcZQ80OZHLNh032QBEpH58QUjIAI1WdJFBgQ7Uo11U/TgDfSRQ=
+	t=1766166072; cv=none; b=CDWBGxhLi7bmTHPaDABs1BzS37R+Q068t0aKFsn6WCp1OjkChbrJmTJH4cu1zdTaiotFU+Nl4y0vXKWliuWvkeJZNJ9Hdl3L4dahr7Z3vK9GQ4zaXSmZVsVMdP5vLuRwdXx8alAR3XJE464wCf2rliC27d8mMpfuZuJXtFABY/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766166065; c=relaxed/simple;
-	bh=iDk5PDFyCbkxThYZSXCCggnIbQTec9fz3huwZNw1Nfg=;
+	s=arc-20240116; t=1766166072; c=relaxed/simple;
+	bh=t30lVJQEU6WT/a/Bxul6FfcQqHWRcb1g3HQCiYFMj0Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HiZxAw0DAT9SmadAZMhrh9ZxFMI8i7p5kBrO71xrheba+U08tzYyK+aFCoxSgDr6mKX6tExrpMVvHwkhD1j9TcyXN5ORuO8wY9+XlDB7nrW76FyJhKci7ttC5IOJZf5m0gm61G2vY/IFdSM459pPGP5GYgq3mJZBuTFQLBKjxfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AdZW13Mm; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version:Content-Type; b=JKaNcqaQpYtq2+12VTXhgEjHbTvtBa0TN4STnlvheqyHT/BSKAKO1dFVi6H4KPJzATBI7h8l3WG0RTRiFlhZ7ubaCaXxTW5Nh2Ag/XaddDePzJvzcz6v06/mpb0wZOntiXvF2YHRpdTAZa+fc3to8DdvTxsqrS5GkJw19KLopeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pl7ZmB81; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766166064; x=1797702064;
+  t=1766166071; x=1797702071;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=iDk5PDFyCbkxThYZSXCCggnIbQTec9fz3huwZNw1Nfg=;
-  b=AdZW13Mm+t0yKW0fcd7uN1Lq8JKb0LNrZ3ASbjzAjg6Y+1Y2Nlu5AkUz
-   aJybeH2mL4AOZcPrs5QrfuqOVK3LN6+Cq0V2pbBDV3gM5fy3WFs5xZGFQ
-   4pTaO+FFt8fekPz2mvCOLOO/Qmcgz/jbGBn+BKccwsDkRX23mWC3TaTis
-   gtrhSzAFLBYj0NmhSTOrKzYZFd0YkRrIkanjflZDZUOyd899P3kAEdT5i
-   oc9HbRWdfT8MBL5PsOiYcTOkX/DakbU4gMHBVX8qjFD+Bq9DdwCvmvHtK
-   O/FDJaHAO668Aoq2JoKAq0HN8uA2H7/7aqyLyUQmbTYxFOqBW6VSu4Aj7
-   A==;
-X-CSE-ConnectionGUID: wX+rZM77Qd6Hbk6y53mmxg==
-X-CSE-MsgGUID: a+CwPzFrRb6DxbedzunCqA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11647"; a="68173796"
+  bh=t30lVJQEU6WT/a/Bxul6FfcQqHWRcb1g3HQCiYFMj0Y=;
+  b=Pl7ZmB81WOzPnvsXz4YjpMe5mH1S8vcRXJRVnC9AwCBXwmFlYyzdAKnH
+   rNWyKXTYJIAodZIy8O7MLZejs1ZLFPGjs/lCRR787kBJcPC+pvURG6Oz4
+   G+nSAQL8cN8gNvWhGV2W6YNcXg4N+crarIkREl3Cb+iIKC+9du/8MMKLb
+   3EcHmJBMHiXTFX48Ine02t2KT7vrs7XSq6VY1pXQpU8XHJAW2UIiie+cl
+   Yoq980nmno3sGWHbzkxTqF36jtRWiutrS7omQRJqH29yUq+6Z9TZk6xQS
+   AIJ31OwHJI8St0QYcPGCbtWcw5A2ktV0lEIB8OFY8RIp3RkKg4aWyhpWN
+   w==;
+X-CSE-ConnectionGUID: TYTj+lz1Rumi56wFb2cb8w==
+X-CSE-MsgGUID: K5lXugAWQamRzLUEDeI/gQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11647"; a="68173812"
 X-IronPort-AV: E=Sophos;i="6.21,161,1763452800"; 
-   d="scan'208";a="68173796"
+   d="scan'208";a="68173812"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2025 09:41:03 -0800
-X-CSE-ConnectionGUID: FGM9Y0nBQKWT7mp1g/DL1A==
-X-CSE-MsgGUID: YdgUYVN6SHS1IN/srEpldw==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2025 09:41:11 -0800
+X-CSE-ConnectionGUID: YBmqRLY5TF6KTNaL629YKg==
+X-CSE-MsgGUID: 3sfBLDXpSZS5YWxDhadX/A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,161,1763452800"; 
-   d="scan'208";a="198974810"
+   d="scan'208";a="198974833"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.61])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2025 09:41:00 -0800
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2025 09:41:08 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Dominik Brodowski <linux@dominikbrodowski.net>,
 	linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	=?UTF-8?q?Malte=20Schr=C3=B6der?= <malte+lkml@tnxip.de>,
-	stable@vger.kernel.org
-Subject: [PATCH 02/23] PCI: Rewrite bridge window head alignment function
-Date: Fri, 19 Dec 2025 19:40:15 +0200
-Message-Id: <20251219174036.16738-3-ilpo.jarvinen@linux.intel.com>
+	=?UTF-8?q?Malte=20Schr=C3=B6der?= <malte+lkml@tnxip.de>
+Subject: [PATCH 03/23] PCI: Stop over-estimating bridge window size
+Date: Fri, 19 Dec 2025 19:40:16 +0200
+Message-Id: <20251219174036.16738-4-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20251219174036.16738-1-ilpo.jarvinen@linux.intel.com>
 References: <20251219174036.16738-1-ilpo.jarvinen@linux.intel.com>
@@ -79,176 +78,160 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The calculation of bridge window head alignment is done by
-calculate_mem_align() [*]. With the default bridge window alignment, it
-is used for both head and tail alignment.
+New way to calculate the bridge window head alignment produces
+tight-fit, that is, it does not leave any gaps between the resources.
+Similarly, relaxed tail alignment does not leave extra tail room.
 
-The selected head alignment does not always result in tight-fitting
-resources (gap at d4f00000-d4ffffff):
+Start to use bridge window calculation that does not over-estimate
+the size of the required window.
 
-    d4800000-dbffffff : PCI Bus 0000:06
-      d4800000-d48fffff : PCI Bus 0000:07
-        d4800000-d4803fff : 0000:07:00.0
-          d4800000-d4803fff : nvme
-      d4900000-d49fffff : PCI Bus 0000:0a
-        d4900000-d490ffff : 0000:0a:00.0
-          d4900000-d490ffff : r8169
-        d4910000-d4913fff : 0000:0a:00.0
-      d4a00000-d4cfffff : PCI Bus 0000:0b
-        d4a00000-d4bfffff : 0000:0b:00.0
-          d4a00000-d4bfffff : 0000:0b:00.0
-        d4c00000-d4c07fff : 0000:0b:00.0
-      d4d00000-d4dfffff : PCI Bus 0000:15
-        d4d00000-d4d07fff : 0000:15:00.0
-          d4d00000-d4d07fff : xhci-hcd
-      d4e00000-d4efffff : PCI Bus 0000:16
-        d4e00000-d4e7ffff : 0000:16:00.0
-        d4e80000-d4e803ff : 0000:16:00.0
-          d4e80000-d4e803ff : ahci
-      d5000000-dbffffff : PCI Bus 0000:0c
+pbus_upstream_space_available() can be removed.
 
-This has not been caused problems (for years) with the default bridge
-window tail alignment that grossly over-estimates the required tail
-alignment leaving more tail room than necessary. With the introduction
-of relaxed tail alignment that leaves no extra tail room whatsoever,
-any gaps will immediately turn into assignment failures.
-
-Introduce head alignment calculation that ensures no gaps are left and
-apply the new approach when using relaxed alignment. We may want to
-consider using it for the normal alignment eventually, but as the first
-step, solve only the problem with the relaxed tail alignment.
-
-([*] I don't understand the algorithm in calculate_mem_align().)
-
-Fixes: 5d0a8965aea9 ("[PATCH] 2.5.14: New PCI allocation code (alpha, arm, parisc) [2/2]")
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220775
-Reported-by: Malte Schröder <malte+lkml@tnxip.de>
 Tested-by: Malte Schröder <malte+lkml@tnxip.de>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc: stable@vger.kernel.org
 ---
-
-Little annoyingly, there's difference in what aligns array contains
-between the legacy alignment approach (which I dare not to touch as I
-really don't understand what the algorithm tries to do) and this new
-head aligment algorithm, both consuming stack space. After making the
-new approach the only available approach in the follow-up patch, only
-one array remains (however, that follow-up change is also somewhat
-riskier when it comes to regressions).
-
-That being said, the new head alignment could work with the same aligns
-array as the legacy approach, it just won't necessarily produce an
-optimal (the smallest possible) head alignment when if (r_size <=
-align) condition is used. Just let me know if that approach is
-preferred (to save some stack space).
----
- drivers/pci/setup-bus.c | 53 ++++++++++++++++++++++++++++++++++-------
- 1 file changed, 44 insertions(+), 9 deletions(-)
+ drivers/pci/setup-bus.c | 97 +++--------------------------------------
+ 1 file changed, 5 insertions(+), 92 deletions(-)
 
 diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 4b918ff4d2d8..80e5a8fc62e7 100644
+index 80e5a8fc62e7..612288716ba8 100644
 --- a/drivers/pci/setup-bus.c
 +++ b/drivers/pci/setup-bus.c
-@@ -1228,6 +1228,45 @@ static inline resource_size_t calculate_mem_align(resource_size_t *aligns,
- 	return min_align;
+@@ -1267,68 +1267,6 @@ static resource_size_t calculate_head_align(resource_size_t *aligns,
+ 	return head_align;
  }
  
-+/*
-+ * Calculate bridge window head alignment that leaves no gaps in between
-+ * resources.
-+ */
-+static resource_size_t calculate_head_align(resource_size_t *aligns,
-+					    int max_order)
-+{
-+	resource_size_t head_align = 1;
-+	resource_size_t remainder = 0;
-+	int order;
-+
-+	/* Take the largest alignment as the starting point. */
-+	head_align <<= max_order + __ffs(SZ_1M);
-+
-+	for (order = max_order - 1; order >= 0; order--) {
-+		resource_size_t align1 = 1;
-+
-+		align1 <<= order + __ffs(SZ_1M);
-+
-+		/*
-+		 * Account smaller resources with alignment < max_order that
-+		 * could be used to fill head room if alignment less than
-+		 * max_order is used.
-+		 */
-+		remainder += aligns[order];
-+
-+		/*
-+		 * Test if head fill is enough to satisfy the alignment of
-+		 * the larger resources after reducing the alignment.
-+		 */
-+		while ((head_align > align1) && (remainder >= head_align / 2)) {
-+			head_align /= 2;
-+			remainder -= head_align;
-+		}
-+	}
-+
-+	return head_align;
-+}
-+
+-/**
+- * pbus_upstream_space_available - Check no upstream resource limits allocation
+- * @bus:	The bus
+- * @res:	The resource to help select the correct bridge window
+- * @size:	The size required from the bridge window
+- * @align:	Required alignment for the resource
+- *
+- * Check that @size can fit inside the upstream bridge resources that are
+- * already assigned. Select the upstream bridge window based on the type of
+- * @res.
+- *
+- * Return: %true if enough space is available on all assigned upstream
+- * resources.
+- */
+-static bool pbus_upstream_space_available(struct pci_bus *bus,
+-					  struct resource *res,
+-					  resource_size_t size,
+-					  resource_size_t align)
+-{
+-	struct resource_constraint constraint = {
+-		.max = RESOURCE_SIZE_MAX,
+-		.align = align,
+-	};
+-	struct pci_bus *downstream = bus;
+-
+-	while ((bus = bus->parent)) {
+-		if (pci_is_root_bus(bus))
+-			break;
+-
+-		res = pbus_select_window(bus, res);
+-		if (!res)
+-			return false;
+-		if (!res->parent)
+-			continue;
+-
+-		if (resource_size(res) >= size) {
+-			struct resource gap = {};
+-
+-			if (find_resource_space(res, &gap, size, &constraint) == 0) {
+-				gap.flags = res->flags;
+-				pci_dbg(bus->self,
+-					"Assigned bridge window %pR to %pR free space at %pR\n",
+-					res, &bus->busn_res, &gap);
+-				return true;
+-			}
+-		}
+-
+-		if (bus->self) {
+-			pci_info(bus->self,
+-				 "Assigned bridge window %pR to %pR cannot fit 0x%llx required for %s bridging to %pR\n",
+-				 res, &bus->busn_res,
+-				 (unsigned long long)size,
+-				 pci_name(downstream->self),
+-				 &downstream->busn_res);
+-		}
+-
+-		return false;
+-	}
+-
+-	return true;
+-}
+-
  /**
-  * pbus_upstream_space_available - Check no upstream resource limits allocation
-  * @bus:	The bus
-@@ -1315,13 +1354,13 @@ static void pbus_size_mem(struct pci_bus *bus, unsigned long type,
- {
+  * pbus_size_mem() - Size the memory window of a given bus
+  *
+@@ -1355,7 +1293,6 @@ static void pbus_size_mem(struct pci_bus *bus, unsigned long type,
  	struct pci_dev *dev;
  	resource_size_t min_align, win_align, align, size, size0, size1 = 0;
--	resource_size_t aligns[28]; /* Alignments from 1MB to 128TB */
-+	resource_size_t aligns[28] = {}; /* Alignments from 1MB to 128TB */
-+	resource_size_t aligns2[28] = {};/* Alignments from 1MB to 128TB */
+ 	resource_size_t aligns[28] = {}; /* Alignments from 1MB to 128TB */
+-	resource_size_t aligns2[28] = {};/* Alignments from 1MB to 128TB */
  	int order, max_order;
  	struct resource *b_res = pbus_select_window_for_type(bus, type);
  	resource_size_t children_add_size = 0;
- 	resource_size_t children_add_align = 0;
- 	resource_size_t add_align = 0;
--	resource_size_t relaxed_align;
- 	resource_size_t old_size;
- 
- 	if (!b_res)
-@@ -1331,7 +1370,6 @@ static void pbus_size_mem(struct pci_bus *bus, unsigned long type,
- 	if (b_res->parent)
- 		return;
- 
--	memset(aligns, 0, sizeof(aligns));
- 	max_order = 0;
- 	size = 0;
- 
-@@ -1382,6 +1420,7 @@ static void pbus_size_mem(struct pci_bus *bus, unsigned long type,
- 			 */
- 			if (r_size <= align)
- 				aligns[order] += align;
-+			aligns2[order] += align;
+@@ -1414,13 +1351,8 @@ static void pbus_size_mem(struct pci_bus *bus, unsigned long type,
+ 				continue;
+ 			}
+ 			size += max(r_size, align);
+-			/*
+-			 * Exclude ranges with size > align from calculation of
+-			 * the alignment.
+-			 */
+-			if (r_size <= align)
+-				aligns[order] += align;
+-			aligns2[order] += align;
++
++			aligns[order] += align;
  			if (order > max_order)
  				max_order = order;
  
-@@ -1406,9 +1445,7 @@ static void pbus_size_mem(struct pci_bus *bus, unsigned long type,
+@@ -1434,38 +1366,19 @@ static void pbus_size_mem(struct pci_bus *bus, unsigned long type,
  
- 	if (bus->self && size0 &&
- 	    !pbus_upstream_space_available(bus, b_res, size0, min_align)) {
--		relaxed_align = 1ULL << (max_order + __ffs(SZ_1M));
--		relaxed_align = max(relaxed_align, win_align);
--		min_align = min(min_align, relaxed_align);
-+		min_align = calculate_head_align(aligns2, max_order);
- 		size0 = calculate_memsize(size, min_size, 0, 0, old_size, win_align);
+ 	old_size = resource_size(b_res);
+ 	win_align = window_alignment(bus, b_res->flags);
+-	min_align = calculate_mem_align(aligns, max_order);
++	min_align = calculate_head_align(aligns, max_order);
+ 	min_align = max(min_align, win_align);
+-	size0 = calculate_memsize(size, min_size, 0, 0, old_size, min_align);
++	size0 = calculate_memsize(size, min_size, 0, 0, old_size, win_align);
+ 
+ 	if (size0) {
  		resource_set_range(b_res, min_align, size0);
- 		pci_info(bus->self, "bridge window %pR to %pR requires relaxed alignment rules\n",
-@@ -1422,9 +1459,7 @@ static void pbus_size_mem(struct pci_bus *bus, unsigned long type,
+ 		b_res->flags &= ~IORESOURCE_DISABLED;
+ 	}
  
- 		if (bus->self && size1 &&
- 		    !pbus_upstream_space_available(bus, b_res, size1, add_align)) {
--			relaxed_align = 1ULL << (max_order + __ffs(SZ_1M));
--			relaxed_align = max(relaxed_align, win_align);
--			min_align = min(min_align, relaxed_align);
-+			min_align = calculate_head_align(aligns2, max_order);
- 			size1 = calculate_memsize(size, min_size, add_size, children_add_size,
- 						  old_size, win_align);
- 			pci_info(bus->self,
+-	if (bus->self && size0 &&
+-	    !pbus_upstream_space_available(bus, b_res, size0, min_align)) {
+-		min_align = calculate_head_align(aligns2, max_order);
+-		size0 = calculate_memsize(size, min_size, 0, 0, old_size, win_align);
+-		resource_set_range(b_res, min_align, size0);
+-		pci_info(bus->self, "bridge window %pR to %pR requires relaxed alignment rules\n",
+-			 b_res, &bus->busn_res);
+-	}
+-
+ 	if (realloc_head && (add_size > 0 || children_add_size > 0)) {
+ 		add_align = max(min_align, add_align);
+ 		size1 = calculate_memsize(size, min_size, add_size, children_add_size,
+-					  old_size, add_align);
+-
+-		if (bus->self && size1 &&
+-		    !pbus_upstream_space_available(bus, b_res, size1, add_align)) {
+-			min_align = calculate_head_align(aligns2, max_order);
+-			size1 = calculate_memsize(size, min_size, add_size, children_add_size,
+-						  old_size, win_align);
+-			pci_info(bus->self,
+-				 "bridge window %pR to %pR requires relaxed alignment rules\n",
+-				 b_res, &bus->busn_res);
+-		}
++					  old_size, win_align);
+ 	}
+ 
+ 	if (!size0 && !size1) {
 -- 
 2.39.5
 
