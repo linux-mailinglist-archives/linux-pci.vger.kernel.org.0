@@ -1,248 +1,143 @@
-Return-Path: <linux-pci+bounces-43341-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43342-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05966CCE2EE
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 02:48:42 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 244CECCE40C
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 03:17:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C9CBB300A1C7
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 01:48:40 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6B96E3011FA2
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 02:17:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FD251D5CDE;
-	Fri, 19 Dec 2025 01:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rUcBP/tH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8298814A4F9;
+	Fri, 19 Dec 2025 02:16:58 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010045.outbound.protection.outlook.com [52.101.61.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930314503B;
-	Fri, 19 Dec 2025 01:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766108920; cv=fail; b=fjRiW3ZXG6ChLoPdn1y5r28SE2cRssnv0aP5hfEa1mw/yANno+04rVzG9PxT1hDKCBS/AN5Ef04va7O7V4Zb9G7yvuF1JoG6vt0H7dPyoOXOL2f+Px1HBKGFikO5KhcrgiDYC0IBCbTx4kS1cqEamVpwOeX2mSAizr8mCH+b8dU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766108920; c=relaxed/simple;
-	bh=s+5a1/LG0rtOmW98hwzmTmovuwByzjgrNiZpNDaNjUg=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=QsOxGAodaXaxAjpo9x5EjArtT9LtuteYswliNobZGafgNC7UjiTdkJMKDGBr15+DHd0Bmz2LjMDtBQ964CSFEdmy8R55s3eWv7owECMneyChyEVK7XS8oP8981qGjuKyXuLsEkSADe9F4bgfdNKDMJDb1ZfBY2opwmN+7QKTIGA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rUcBP/tH; arc=fail smtp.client-ip=52.101.61.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ONYiKKXYztekgTlrb/Uh7EfOtP0Gjt+pQLhdeNvQlXgQBqZZG+C15vk5Ziph2YlAVpJW7Scpd56xL2sGBq2xoFaZdsSvotTgQy7+0ZZjTLngxFRb7cwteMvXyxg02h/Jg7Oxb2bhN4XpkHw4/GO3mEMG0J+PlEE3IKIoRGTuoOwYLMj8yesXjRqSSV8dy8wqdr2y+5V2jgv08Qxt+8wqUv/GO+KSNr3tfxQhvIj6xN2rJ61UUp/Fqr3ihIb5UwfQfH39HEeS8RNXrW0FzpbrzdEhJ+o3bHqb7dsnY7LBJO1lPbc61ypVsQwuLHUGQ4Js4xCk4p/c6w1AvbFThh5yng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AxAkija4PwjxNcY4UtgJkvyRkYJoRAuVlLgFPZJ4Wi0=;
- b=Z9Snq51oSokCydTnSHeFau/vDfnaudHzZrbkdtmiCi/L3nlYQARfnNmaCmZcrOtkBh5Rllch5eEcJ0OfTCwXCesG5x2Xott+/A6JHHOZGL1YGCZWVlXYWhWhHoIKLlf6v19xLfGtXXwrjYyl36y1yWX3898RpbvIiWLk81GEocCsBWUkw+5kVt3JNAJnd/464VCqKvp6Q3uKCkLYAz9x8mAVl3fgtAuUO0GcCa372cHM1rbUPVIC139lFrZmiy+NtpulH2Rj1kwU6586HBDUl/MPHKHF6/cRh1Swkd+Kz+EnuE7SF5z3CKCXKR0SwKexyulquUWR3+RP9VRt1OYJ7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AxAkija4PwjxNcY4UtgJkvyRkYJoRAuVlLgFPZJ4Wi0=;
- b=rUcBP/tHXLWBZx6x4jBxupEmwuaoKVmMqONRs01L59EG5nyrSQ/bkTlt2Q0ubnFcRnHY8LfjGMv8lZm5XfwZYbcWM4rOllxnIosnj8tjnpTIKgNlt1VwThHTJig+gr8+jDIoyJAeYqc+Keg21T+xBTO9S7EAGz5cc08fqFkHulPfpt8lJiUR+OlmycRMnvlOsxLLFUoHF6asK7W/5MEQKuDh5RHkSC02Nn666p+/V3+U1tT5x0uxKfcL3kqlHH0yuOvLUZFRY4qFW+N2OdvYVtA1oblZUsPeKbDl/6AqrQI4VfAqBcH8noEdTUxujDDDunjTUPtuwn9O5y9rtvj0kg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by MW4PR12MB7189.namprd12.prod.outlook.com (2603:10b6:303:224::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.9; Fri, 19 Dec
- 2025 01:48:35 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%2]) with mapi id 15.20.9434.009; Fri, 19 Dec 2025
- 01:48:35 +0000
-Message-ID: <0614d2ab-5e0b-4a0b-8347-9bb3339634c0@nvidia.com>
-Date: Thu, 18 Dec 2025 20:48:33 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/7] gpu: nova-core: send UNLOADING_GUEST_DRIVER GSP
- command GSP upon unloading
-From: Joel Fernandes <joelagnelf@nvidia.com>
-To: Timur Tabi <ttabi@nvidia.com>
-Cc: "gary@garyguo.net" <gary@garyguo.net>,
- "lossin@kernel.org" <lossin@kernel.org>,
- "a.hindborg@kernel.org" <a.hindborg@kernel.org>,
- "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
- "ojeda@kernel.org" <ojeda@kernel.org>, "simona@ffwll.ch" <simona@ffwll.ch>,
- "tmgross@umich.edu" <tmgross@umich.edu>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
- "bjorn3_gh@protonmail.com" <bjorn3_gh@protonmail.com>,
- Eliot Courtney <ecourtney@nvidia.com>,
- "aliceryhl@google.com" <aliceryhl@google.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
- Alexandre Courbot <acourbot@nvidia.com>, "dakr@kernel.org"
- <dakr@kernel.org>, Alistair Popple <apopple@nvidia.com>
-References: <20251216-nova-unload-v1-0-6a5d823be19d@nvidia.com>
- <20251216-nova-unload-v1-6-6a5d823be19d@nvidia.com>
- <C890CCBB-76C0-4E70-A7B8-846E34DABECE@nvidia.com>
- <DF1DLWE9OOR6.2P43ATQYNAU3A@nvidia.com>
- <1369611d0014a4e5b630462d66790939b0f564c0.camel@nvidia.com>
- <F72EBB64-BB07-4FFA-85C9-3EDE9AEE3C48@nvidia.com>
- <e3fcbf9b9165da51c05dd2837adaa0be2ae1f05d.camel@nvidia.com>
- <7ef64473-cad7-4618-8f30-be3d5308443e@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <7ef64473-cad7-4618-8f30-be3d5308443e@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BLAPR05CA0006.namprd05.prod.outlook.com
- (2603:10b6:208:36e::9) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCA53D76;
+	Fri, 19 Dec 2025 02:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766110618; cv=none; b=tGfGE8A+0Upba5My9gFfksGE7qga6BS3Hc0ff2Fh+Lg9rtyWvCGAZiyQ/lTizB9PLP5zHsQIeorOc2+m7YOKf1FYMvFd/I6sa6dTquQY1uS5gq6EW3qqG85Bv2wgdNnuoG06zet2t6X9vJCHsv3JrsKafmaKQJ+R1KjsSyEcK2c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766110618; c=relaxed/simple;
+	bh=YGkjBjt+uzxJPYSxbryV4F0YgpdbOxHWJuEcdO+Yrpk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BcMgGtwmziYGzMa+xYwUsqIYqcRLG/1Q/ob3i42zP4wfzakISWiD5KzoyNzB7zRpf8uf3kQaossSxqBoiBjULmfyddL0s7oaHeLYnA6rwWv2QXiFgOO3pDcdP54a1PSGAp6rbETCdsMN42RCzA7cWAfcW1D7mdU4kFqFog4a880=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from DESKTOP-L0HPE2S (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowACHGAyFtURp2kMjAQ--.22672S2;
+	Fri, 19 Dec 2025 10:16:39 +0800 (CST)
+From: Haotian Zhang <vulab@iscas.ac.cn>
+To: lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	mani@kernel.org
+Cc: robh@kernel.org,
+	bhelgaas@google.com,
+	michal.simek@amd.com,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Haotian Zhang <vulab@iscas.ac.cn>
+Subject: [PATCH v3] PCI: xilinx: Fix INTx IRQ domain leak in error paths
+Date: Fri, 19 Dec 2025 10:16:15 +0800
+Message-ID: <20251219021615.965-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.50.1.windows.1
+In-Reply-To: <20251119033301.518-1-vulab@iscas.ac.cn>
+References: <20251119033301.518-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|MW4PR12MB7189:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7527dd77-77f2-4b15-8240-08de3ea0b8c3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?M0dwNlZrdkZJcmFVdFJxNWV6ek5WVis0ckVuUW9RLzBQVjFJWHltNEY3NmVB?=
- =?utf-8?B?RzNjSjNGeE5kUGMzUnZQL3IxdUlLM3AvL3BsSmJReHV5REJnbTZWU3FDMVc4?=
- =?utf-8?B?d0VNSXgzYVREdFplYy8vZ3NMeWJmLzdUVFU2MWFQSDM4cnFWUWtRYUJUbFly?=
- =?utf-8?B?YVJtYWwzNHV4Q2lSOTh6c09HZy9OWUxmTDN1SVBMcXN1a0FEQkpZQnZuUEFC?=
- =?utf-8?B?UVZ6dXR0UkUzcVFDMGpBcWIrY0FMRUtkU0RBY2RsNHFaczZ2TDFObmdxMjVR?=
- =?utf-8?B?eVVOMTVRbDJFRUVZejZxV3pueG8xc0xwL2lTT1dYbWJCdTQvV2FMNmpZV0tk?=
- =?utf-8?B?T2Q3VVdMdTBYQmErTjcvbngrREo5dFZkbGtWM2lqTkVzTkdFUDNsNWVxVnIz?=
- =?utf-8?B?ZzJmOFBZcmwzbUIrcFJLdERDbEQ4aUpDVm03ZWhYRnJ2ZndiWFVhUVpYUFQ0?=
- =?utf-8?B?aTB3Wk16Sm9aV3ZlWGZVdzFlRWs1V3lVVHV1M2ZNdks5RDdXckJEWHZpbmVt?=
- =?utf-8?B?cGZkc3duZ2tGNEVQWS9sUzY5dzFReXoyRTluZWNTaG9wU2R2aExuS1hGMWs1?=
- =?utf-8?B?elN4VjRNa1RpbGg5cHVPaUZKOGRsYi9zSUZuMXZMcnlaOU9BZDZ2bXhvcGhi?=
- =?utf-8?B?UzArUmsrbHVscDdmYWZxVFNwdVhHbUZlYTNsLytZWldNeWJXWmJ5QkM4WUNI?=
- =?utf-8?B?NGZLYms0Z1AxdHczT0c5cHhCWDRjZ1VNQTQra0tqYzMrY01IMVMxVUNhTU5a?=
- =?utf-8?B?eTN3QVdsOEdSaEFJUUQ2VkIrL0t1MDNiVi9pVWFkQ0UzcUlJRGdiVCtpYlh0?=
- =?utf-8?B?VFFlUDlpK3lQMU5VZWw1ZXErYkoyZ3I5MFY5NW1GR1ByMFNSbXFHUmFsSkc3?=
- =?utf-8?B?Nkk5RVhxUC9vV0hMaFU5SW43QWtDczdlN3J5dWxGVVBBRXZMUmVhQjh5QzVt?=
- =?utf-8?B?VWc3VTFHaUZWRWRKT1pMY2F6R0YxV1d0Q3VtMjAvRUVaeDFvYm1mZUNpdkNI?=
- =?utf-8?B?amJ5d0ZjSHJKVDVLL2F5cE1FTTM4MXlNMEpNU0kzKzR1cWk5Yjg1UWZzZkx6?=
- =?utf-8?B?Q3Fvd1ZRaGNIc2NhN1N1WEg3ekc0V05NeS9HeFlJTTZubFRZZG1IK1pmcGNW?=
- =?utf-8?B?YzVJb28zRnNaNmxXa2I2TERLdzNLLzRlZThWUytFd3ZmRzZzeEpvNWxJQ2FI?=
- =?utf-8?B?dG1hK2ZrVFZsQWRSc2N2Z3lhY3lTQnpnUFRFN0QzTW1OajVOSVNYQmpiTnA2?=
- =?utf-8?B?dlg3RnNhb1dzaTlGQXJEME5Va0hnV29KZUNVcEVUeEVRK1BCU2lSUTV1ZzdP?=
- =?utf-8?B?bUFZVkc0NGdVUTUvZ2ZCdFVHdW1QRk5FKzRRVncwa1AzeisxRThhNzVjaTVv?=
- =?utf-8?B?Uk9IUDBuU1ExeHE4RUFKV2o0NlRKY3RSKzVHcjR2RTVhenVLNm94RG9seFVL?=
- =?utf-8?B?WUlmVlhLL2wrK2tzTWRHeWFWSEE1OFZkQk01QXROY2lBS3g1V29yRnhOOEVX?=
- =?utf-8?B?TVpYZVBCaEtiSmovRzhnZlFUcng3UFdEaytnVmlqZ3VLU3VaUXhtT281QnV2?=
- =?utf-8?B?ZVVocmV2NHc5dFJ3czR5MU8xMW9NZFAwaUR0TkxzdjV5akJCODNWaU1JcWE3?=
- =?utf-8?B?WElnNkN4dE9MUzZkUjJrYVRYd0JDNlhoZEdZSHY0RmxnSFhaM3A3SzkzUzdq?=
- =?utf-8?B?dXFwQ3VVM3lDc1gwdGdLQ2dDcjRjZzE4TGlQMHYrakZvZk41aFpkcWxWWVk5?=
- =?utf-8?B?Mnc1V1FKdlR4M2Y4ejFsMmtKekdLbDB3QmVlYzhEcTZLL3FWQUgwUTVKUy9O?=
- =?utf-8?B?OHplNDRCQUtuazVrYXhLYWlZNnpmYWw1Y0pMZTB2NmlZMzZ6S0ZrUHQwN3RQ?=
- =?utf-8?B?bTRxVkFiQUJXOTBoVzBQWTR5YmZyZ2toUW9qeC9EOERsajJlaEoydGJYVWtO?=
- =?utf-8?Q?2ygU+YXjTBpMJaKfGVKVXYCDc1vTnqtA?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MDluWDlBZWlNZ2thcFdJVlAzYUVtWmdBaEdFSjZoUnp0NTBkZ0VxdjIrZ0d5?=
- =?utf-8?B?NmJrbDlvajFVTTVRVWVISFJ6Q3FmeHN3TDNyVnF4SVNRNGZlOUR5QXpWY2RY?=
- =?utf-8?B?SERqYXFrRGl1L1Naa2k1Z1pQKzhVa2FzWjFQcE0xU3gzdmE1WDBoelE2bXRH?=
- =?utf-8?B?YVJaMi9UL2JFRzJZbEhIcFBLZEtpNUNWOTJnbVVremsrc1BzOTVaYlhsRmtk?=
- =?utf-8?B?ZEpBbHMzYWR0Q2xrYnp0SzEwOFNpUDdQdldFbFpPelo0L3MzN2IzR2ptdHRC?=
- =?utf-8?B?U1RPdndZV28ycEU2aW1CMHJia0ZBTXBmUHBldVFIR29YNm95Ty81elEvUEQr?=
- =?utf-8?B?MURLUDIzYjNXUll6Rk0rRXBKQ3RlUFR4UkVOQ2dreVdYaTlENW1wR3BiTko0?=
- =?utf-8?B?QjgzdG1IcVZoOTNqQ2l2Ykdub0xkN1laZnAvQlVsMHovUjJDQnF3UjllbUNj?=
- =?utf-8?B?UzRXcmFHLzQ1ZXZaLzRJL3RidFE0VTdUZU5pTTRRY3psMzZCVW5rZ0Y3ek9I?=
- =?utf-8?B?QUtHdWRxY3NHZEpZVlhIZThlZFBlMmdoYWxHOFIxMFR4QjV0YkdzU3BJSVNW?=
- =?utf-8?B?QmRpMUlEK1ZBb3ptcGV0QUdKazNCT3E1dmVUeHQvUFFsNEtwTDczN0xxZTNo?=
- =?utf-8?B?bVFqNVJnOG1STTdCU2NpN3dJQVlkUFppS3lrYUp4TWlCcVEzWm0vTGNmbzBW?=
- =?utf-8?B?cWt3K0pzUFV6bXdEVUIyclhRQUlCYm5zRFhGOEd0M0tSR1hRMnhJbEZiRFVB?=
- =?utf-8?B?NGxlc1hpU21UVHo5R05IUmliZU1IRTFKczRBT1lJbGJldVNOU1V0azdEOTZi?=
- =?utf-8?B?dlpMdkVTdXNiR2EyckptNkNvblpvS1FNL01hVGc1VHBSM0s2aVlrSllTemx1?=
- =?utf-8?B?T2JGTkp1MG9UQmxjRkthV0toZ2VZeCtvWThTcTMxa0plTDA5ODBjN243ek5Y?=
- =?utf-8?B?ZEcwM0RhYjN1V0RzYWxuRlRYekJKSUhMRnZ3QXZrUDA0SzRhZmhEN0VDcVJz?=
- =?utf-8?B?Y1RFZHZZYVhvNndPYS9veXp1TlpmajUzMW9RTnpucVdUZWo5eVdHTDg4elRB?=
- =?utf-8?B?dUd2NWVWVWxKc283MmFJeW83bUdtRHFhQndmSE1odWNGRjZaN0ltK2xTQ0Js?=
- =?utf-8?B?Skw4WFFTR0hLN0ZSQUphdHAyVTBMeDBpd3lYalhLWTNFNmRCS096Wk0vNEh2?=
- =?utf-8?B?VFoyejVvaHIvcDZzMjJaWFNSeGdQbjVpZ0ZPRFNuTDFheXZhRnhhdjZsU2E1?=
- =?utf-8?B?a1kvNmNmUjJZTkU1L1RBZG05SFRoNmxyWUN4K0xMSS8yc0lUaDA4V080Tmc0?=
- =?utf-8?B?V0tLalBYL0JWSUM3Vk1jRW0zYWtLTVhYaTltb1l1K1IrWEpTN08vRHQva012?=
- =?utf-8?B?ZFlPMDBsTTB2cFBYK2l6T0czT1dtRm9EKzk4ZkQ0cWEvZFFoOUo4ak1WNk5l?=
- =?utf-8?B?dldNSE45UkkrVmc0M0tHRDFZVFh3dGhHeFh4aTRIVVUwSjNYbkNOZnpVblc5?=
- =?utf-8?B?SFNBTGlNdnhJbngzbWNNRmMwRzhBVjRQbVVwZ1dCS3U3Q3NlQU9yOC9YU3lo?=
- =?utf-8?B?bTd5aGFzcFRRNlZUSWdmRkZUN1c0alh0dUlEK3J2a0RxTW8ybTFaL0UyakUv?=
- =?utf-8?B?WmxhQWVzVmtTZGFZdXc5WVRyMkhTclErWUtyWTVtS1cvQnlWWU1lclY5N2h3?=
- =?utf-8?B?cVVDSTBYYlgxY2JSdnNnejVPcm4rU0h3Sy9acnFHaXZaWGFNMzV6OTZBQUtl?=
- =?utf-8?B?Y3pCQmdINW1vOVdVOEJ1VDdGeDZNMWlOMlZJOTExenFaTU12OXFBeEZBSXRZ?=
- =?utf-8?B?SlVycVJqclFqRUJNOXc4MGo2OFJSRE1lUXFJMjg3clRsc2MrRW5pdjJhdnNM?=
- =?utf-8?B?MEFYdm1QbEFGd2s4bDZjWFZrNHlKbDVoR0hGOEZXcFRSTkRKdEdGUkF4ZTU4?=
- =?utf-8?B?SHZ5Smx6cmNwaE1kanJkSXpiMWdld2N2eXVORUR3Yzd4elJJbVZRK3FPRloy?=
- =?utf-8?B?ckRSVW8zQVFiTlBRNFh1V3AyYU8yUm8vampnQ0tlRUtGSjl6SGppTXpRaXJn?=
- =?utf-8?B?M01sNmF0a1FCRmMwdFhlcnV1SE1oUllwNCtVd3BGcEZ3M25acVNLM1o5N2Fu?=
- =?utf-8?Q?/bTTReq6pgcYEP7GT2W9HR5mI?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7527dd77-77f2-4b15-8240-08de3ea0b8c3
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Dec 2025 01:48:35.1851
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yIEvganNLZFqSlEyTbPtwqLlDOrmpowQl4b8/NC5sOujB++jyJlkZqVr67oiBNo//C45pWB7B240vhZeBP7CNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7189
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowACHGAyFtURp2kMjAQ--.22672S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr4UXr17CrWxtr4xuryrCrg_yoW5JF1rpF
+	4DCw47uF4UJFWUuF47G3W5uFy3Wa9Fk34qy3yYgwnrZr13CrWDCF10qFnakF4FvFW8Jr18
+	Ar1xt3Wruw47CFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCREAA2lEGBxvagABs2
 
+In xilinx_pcie_init_irq_domain(), if xilinx_allocate_msi_domains()
+fails after pcie->leg_domain has been successfully created via
+irq_domain_create_linear(), the function returns directly without
+cleaning up the allocated IRQ domain, resulting in a resource leak.
+In xilinx_free_msi_domains(), pcie->leg_domain is also neglected.
 
+Add irq_domain_remove() call in the error path to properly release the
+IRQ domain before returning the error. Rename xilinx_free_msi_domains()
+to xilinx_free_irq_domains() and add the release of pcie->leg_domain
+in the function.
 
-On 12/18/2025 8:46 PM, Joel Fernandes wrote:
-> 
-> 
-> On 12/18/2025 6:34 PM, Timur Tabi wrote:
->> On Thu, 2025-12-18 at 22:44 +0000, Joel Fernandes wrote:
->>>> Isn't the real problem that we are polling for a specific message, when all message should be
->>>> handled asynchronously as events, like Nouveau does?
->>>>
->>>>           Err(ERANGE) => continue,
->>>>
->>>> This effectively throws out all other messages, including errors and anything else important.
->>>>
->>>
->>> Indeed, for that we need Interrupts. For the rest of the patterns where we need the message
->>> synchronously, we should bound this. Hanging in the driver is unacceptable.
->>
->> It's going to be difficulty to have a running asynchronous message handler in the background *and*
->> poll synchronously for a specific message on occasional.  I would say that even in this case, we
->> should handle the message asynchronously.  So instead of polling on the message queue, we just wait
->> on a semaphore, with a timeout.
-> 
-> I think we don't strictly need a semaphore for synchronous polling - the wait is
-> expected to be short AFAIK and if not we should just error out. What we need is
-> a registration mechanism that registers different event types and their
-> handlers, and if the message received is not an expected one, we simply call the
-> event handler registered while continuing to poll for the message we are
-> expecting until it is received: See how Nouveau does it in r535_gsp_msg_recv().
-> Anyway, the wait should be expected to be short and if not, we'd break out of
-> the loop { }.
-> 
-> Interestingly, Nouveau inserts 2 micro second sleeps while polling AFAICS. Where
-> as OpenRM simply spins without sleeps. I would even say that sleeping in the
-> loop is risky due to the dependency on atomic context, so we'd have to be
-> careful there (I am guessing all our usecases for these loops are non-atomic
-> context?).
-> 
-> We still need the interrupt handling for cases where we don't need synchronous
-> polling. During then, we will directly call the event handlers from
-> IRQ->workqueue path. The event handler registration/calling code in both cases
-> should be the same.
-> 
-> So in the loop { }, nova needs something like this:
-> 
->   Err(ERANGE) => {
->       // Dispatch to notification
->       dispatch_async_message(msg); // Same ones called by Async handling.
->       continue;
->   }
-Btw, I can work on this tomorrow and send out some patches.
+Fixes: 313b64c3ae52 ("PCI: xilinx: Convert to MSI domains")
+Suggested-by: Manivannan Sadhasivam <mani@kernel.org>
+Signed-off-by: Haotian Zhang <vulab@iscas.ac.cn>
+---
+Changes in v3:
+  - Rename xilinx_free_msi_domains() to xilinx_free_irq_domains()
+    and add the release of pcie->leg_domain in the function as
+    suggested by Manivannan Sadhasivam.
+---
+Changes in v2:
+  - Correct the Fixes tag to point to the commit that introduced the
+    legacy IRQ domain leak on MSI allocation failure.
+---
+ drivers/pci/controller/pcie-xilinx.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
+index 937ea6ae1ac4..4aa139abac16 100644
+--- a/drivers/pci/controller/pcie-xilinx.c
++++ b/drivers/pci/controller/pcie-xilinx.c
+@@ -302,9 +302,10 @@ static int xilinx_allocate_msi_domains(struct xilinx_pcie *pcie)
+ 	return 0;
+ }
+ 
+-static void xilinx_free_msi_domains(struct xilinx_pcie *pcie)
++static void xilinx_free_irq_domains(struct xilinx_pcie *pcie)
+ {
+ 	irq_domain_remove(pcie->msi_domain);
++	irq_domain_remove(pcie->leg_domain);
+ }
+ 
+ /* INTx Functions */
+@@ -480,8 +481,10 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie *pcie)
+ 		phys_addr_t pa = ALIGN_DOWN(virt_to_phys(pcie), SZ_4K);
+ 
+ 		ret = xilinx_allocate_msi_domains(pcie);
+-		if (ret)
++		if (ret) {
++			irq_domain_remove(pcie->leg_domain);
+ 			return ret;
++		}
+ 
+ 		pcie_write(pcie, upper_32_bits(pa), XILINX_PCIE_REG_MSIBASE1);
+ 		pcie_write(pcie, lower_32_bits(pa), XILINX_PCIE_REG_MSIBASE2);
+@@ -600,7 +603,7 @@ static int xilinx_pcie_probe(struct platform_device *pdev)
+ 
+ 	err = pci_host_probe(bridge);
+ 	if (err)
+-		xilinx_free_msi_domains(pcie);
++		xilinx_free_irq_domains(pcie);
+ 
+ 	return err;
+ }
+-- 
+2.50.1.windows.1
 
 
