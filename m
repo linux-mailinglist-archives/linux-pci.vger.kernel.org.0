@@ -1,236 +1,173 @@
-Return-Path: <linux-pci+bounces-43346-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43347-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C62CCCE60B
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 04:39:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A19EBCCE802
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 06:15:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3F60C3013953
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 03:39:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 67844302ABAA
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 05:15:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 704B61F17E8;
-	Fri, 19 Dec 2025 03:39:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 910B22222C4;
+	Fri, 19 Dec 2025 05:15:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Uc6t1Ywb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="miNJO5tr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011044.outbound.protection.outlook.com [52.101.62.44])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAFF71E8332;
-	Fri, 19 Dec 2025 03:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766115595; cv=fail; b=INCVb3FISxy5askn3QoMW67Nx/RTPbOMr9vM7LWntgZj3cbt1jbB3dzrqzPlhWz75P1RSoTtogURI14PHHfAU2+OcHoJViObn+Idgijp7NXoAOpDN1MVf0OspBG+oEPJNsWFnFcYczk6zU7PPGiMaRa1Fq7nzRw6k7YzbHnPb4w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766115595; c=relaxed/simple;
-	bh=cGXm/4t/QwBRzD2AUBQZynXOE1Va32Zrb67JJ/2Pkvg=;
-	h=Content-Type:Date:Message-Id:From:To:Cc:Subject:References:
-	 In-Reply-To:MIME-Version; b=YfS/kdnKswQdJcX/fabrA4k5i1KXBe5TvOSRZO/C+/eJDgnOPx2GG/5fAsvTQ52QB5IuWtsUsB2Of5evsZDJVUHU7ybEoa92uYeaTnBoEKJ5rwQeqp0naQ/8mbJA2AExKjI239Bn8beHGBmplc4qqUXzQApTY5eyMdYKHL5E1UY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Uc6t1Ywb; arc=fail smtp.client-ip=52.101.62.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bUT06OQJhnTFewojF8Bg6CIZ1zEvQVF31Ms1OMhgWwWBHsnqUJGY6yvh6wJ26utNumd52LfZvGZTZxM6f2bUOmEu4BhLvMeNlYDqivhEpJh1rO5u3tDgp6zQoNDWu/v+g/PJ4VtvmxQeNBw2n8qAe1jsA2Bzg4lVQy7uOtmPOADdr1k8ho2vBXWKU4r9+sD/TC4GJJkv47xopiAXstLoZgJdy10hmUW0YsHzOhxTWWFlPcfi69LDxzhgkZkExfwDQGLcs3jENPrrZ+aEkkbHdLZ1dcS4raB3A1mB+A+JBpjfe/2EDcIszM5SvX7n2NsJsUO4jBmNtxNJVOi8T2QWmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cGXm/4t/QwBRzD2AUBQZynXOE1Va32Zrb67JJ/2Pkvg=;
- b=S9iWdzgy+5OKbDEnHFkyWeh/Er7rE1f6j5Ea/VILAuAoJb7l7GpMy7GDAMYgFu26m0CKiW6DtC7mnle9wk/8bThTtII+3kG85gnBBXB9DEQtKi7rbFlsBlLBiKliebG39VV3Wvf8vlf/MuJ12hOYSRjes4lwwLY2346FOKiaaJtnumt0L7jL2GB4eJ/Z6QVI5otcXWnFJQ6VyhkWAjkF7rXXEE/KCxxPjzxRb0R1ag1uGTSrmoCc2+smTqnvUO2sSBinsa24lH9Tggsda5zNKtd/Lfcb6mLBLxdy4R7fekadC2uKiNp1OEYAK33yYxT+x5UTceU/pT2HqKDK3DEJgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cGXm/4t/QwBRzD2AUBQZynXOE1Va32Zrb67JJ/2Pkvg=;
- b=Uc6t1Ywb0QVThZ8fiwdulyUkzVhJITl9TbO7CtJR/Cnn6yHu1NzqF0ns/8Kb8VQRNE8zXHYwQxLRHifozX7WsQeoz4NBGRrS6Xpk1fKYMoq2Mp/TU59ppTeoKPZ9aPLn6g54pxMLTfZGqY98k6I5G6KnlZFAjjL1ozbbi359WNxPYKwWs9bq/p+qZl8vXkLTrCIZxQarjXzZW16Eql9FewdOhP5V+jq/V8SunL4IfS2HIMuM4hr5c30Cavh5NPBXsZiU+EJ8FjdYiU1Y6fQW00tNBDqH8fetTF1kUGgKLhCkv5k5pkNFPHjgMOXKCw+ZeTtVph4GQa8SfNoU9fq74A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by DM6PR12MB4466.namprd12.prod.outlook.com (2603:10b6:5:2ae::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.8; Fri, 19 Dec
- 2025 03:39:51 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::7de1:4fe5:8ead:5989]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::7de1:4fe5:8ead:5989%6]) with mapi id 15.20.9434.001; Fri, 19 Dec 2025
- 03:39:51 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 19 Dec 2025 12:39:47 +0900
-Message-Id: <DF1VQ45KF0JL.3E3GIL93DGBWL@nvidia.com>
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Timur Tabi" <ttabi@nvidia.com>, "Alexandre Courbot"
- <acourbot@nvidia.com>, "Joel Fernandes" <joelagnelf@nvidia.com>
-Cc: "dakr@kernel.org" <dakr@kernel.org>, "lossin@kernel.org"
- <lossin@kernel.org>, "a.hindborg@kernel.org" <a.hindborg@kernel.org>,
- "boqun.feng@gmail.com" <boqun.feng@gmail.com>, "ojeda@kernel.org"
- <ojeda@kernel.org>, "simona@ffwll.ch" <simona@ffwll.ch>,
- "tmgross@umich.edu" <tmgross@umich.edu>, "linux-pci@vger.kernel.org"
- <linux-pci@vger.kernel.org>, "nouveau@lists.freedesktop.org"
- <nouveau@lists.freedesktop.org>, "dri-devel@lists.freedesktop.org"
- <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "rust-for-linux@vger.kernel.org"
- <rust-for-linux@vger.kernel.org>, "bjorn3_gh@protonmail.com"
- <bjorn3_gh@protonmail.com>, "Eliot Courtney" <ecourtney@nvidia.com>,
- "aliceryhl@google.com" <aliceryhl@google.com>, "kwilczynski@kernel.org"
- <kwilczynski@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
- "gary@garyguo.net" <gary@garyguo.net>, "Alistair Popple"
- <apopple@nvidia.com>
-Subject: Re: [PATCH 6/7] gpu: nova-core: send UNLOADING_GUEST_DRIVER GSP
- command GSP upon unloading
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20251216-nova-unload-v1-0-6a5d823be19d@nvidia.com>
- <20251216-nova-unload-v1-6-6a5d823be19d@nvidia.com>
- <C890CCBB-76C0-4E70-A7B8-846E34DABECE@nvidia.com>
- <DF1DLWE9OOR6.2P43ATQYNAU3A@nvidia.com>
- <1369611d0014a4e5b630462d66790939b0f564c0.camel@nvidia.com>
-In-Reply-To: <1369611d0014a4e5b630462d66790939b0f564c0.camel@nvidia.com>
-X-ClientProxiedBy: TYCP286CA0026.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:263::17) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E862022D793
+	for <linux-pci@vger.kernel.org>; Fri, 19 Dec 2025 05:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766121356; cv=none; b=HM55QSLzxkLACU/OU0bj0xJci5UyfiFS1Y6EZxJj3qjnQNUg/AdOFHIOFWc44D4ckANkP/zWtwPB79+nqBicZnY2VreL5dzNZeP5lerdNG5+IAlGU+l++BBFPICN1EeKjV24mC2jj+BwyvJxx1O13MuI8V08bnuDBgriHBI93AE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766121356; c=relaxed/simple;
+	bh=cFqyeFbB1zVEz+ivYITj2OeUc7Hd+oEnsWJEaRGYWjg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=OsXQPAo2eWzFZlSPH755D2Pt8TTRAGJhTD+jK8CFIHNuHJxqNfTH0F7BRdIt25za40Ag5SVsMvuMvTyPzu2y73iB1htHYamBSBqXXtvaYMOpvNIre/VWiwIPE8z7SFYpwpExQCmwDGr+hf1a2db/DXBGrsL/gZbaRqakuRHN9zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=miNJO5tr; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1766121355; x=1797657355;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=cFqyeFbB1zVEz+ivYITj2OeUc7Hd+oEnsWJEaRGYWjg=;
+  b=miNJO5trWwxvXk6DrQh4auVbZNSR/YJnXbha7oZtzpeZmnuZw3wz+rOI
+   vauljEHxynLPr1twGGyQ7zPh/CkmZAMFuY6sPdGk54/Wygy25Sd4kQh3v
+   /TFN5aFrYIzZiZm6CXPmhLcktOq0gAM8dfbPQHhFLFGQZm8kWCbVohpDK
+   +595hyHCmqnjCz7ATDQ8XHMzUP1v/lGWxOGi/O+9t01crpr6cqmK6IcM/
+   0ShEg2shWsMlG5DRla7tj2CbwfurS7xDcjc6l8+E8CoP+jAFV3vTkxJEZ
+   ZiBMpgcSdkE0GMt4YlEZPkzoMD7ZvoQPlR0fIq85FexEk8Ph6P/2sWCVZ
+   A==;
+X-CSE-ConnectionGUID: TNHp1w9pQJyeyyp80spMEw==
+X-CSE-MsgGUID: Zx62NsgbTXGBeG7Txkv3zA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11646"; a="93556432"
+X-IronPort-AV: E=Sophos;i="6.21,159,1763452800"; 
+   d="scan'208";a="93556432"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2025 21:15:54 -0800
+X-CSE-ConnectionGUID: +zQry788TjetSQu2CUO0Hw==
+X-CSE-MsgGUID: Y6uVMh4hQQOk0iJkU/K5eg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,159,1763452800"; 
+   d="scan'208";a="198372333"
+Received: from lkp-server01.sh.intel.com (HELO 0d09efa1b85f) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 18 Dec 2025 21:15:52 -0800
+Received: from kbuild by 0d09efa1b85f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vWSqE-0000000033Y-2cSe;
+	Fri, 19 Dec 2025 05:15:50 +0000
+Date: Fri, 19 Dec 2025 13:15:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-pci@vger.kernel.org, Frank Li <Frank.Li@nxp.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [pci:controller/dwc 8/8]
+ drivers/pci/controller/dwc/pcie-designware-host.c:1175:6: warning: variable
+ 'ret' is used uninitialized whenever 'if' condition is true
+Message-ID: <202512191339.583iyg1a-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|DM6PR12MB4466:EE_
-X-MS-Office365-Filtering-Correlation-Id: fb98356f-903f-4f12-c41f-08de3eb043e1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|10070799003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bDFxSjlGZ3NsalcrYXZ0a29iaDlmUUNlNE0waHBGclducHN2ajhpRjV6YkJt?=
- =?utf-8?B?QXJxRmJacW5QRGpaU2ZKUmpoSnVBc0k4RWowemVmYStRa0d4NFhnVzk4aU9m?=
- =?utf-8?B?SGFodmExZXVpb2h0dmZQaUh1NTlKVnh5cFZNc3gwZmM4R2RYOWdYWVV5Rkhn?=
- =?utf-8?B?MndDYVBINUNqbjFWM1pGcmFiWGFOcTJLSzNWWkF1OXFHNGJkbytvOU1KZlM1?=
- =?utf-8?B?UURBLzM0STNMMGExZW1nZHR2aGptaGJMV2FJTWpYL2xiR3lqc0ZIVzcrZWdD?=
- =?utf-8?B?SjJQb1hZUHp6eHdoeFNIcHpSWVpTckZycTJZeFhGU2tVbnlLMEFBWk1xMERu?=
- =?utf-8?B?STlHOHZGTDB0Q0E4U2dkaXZsbko3bHk5OWgwS1pZTWdidTFYbmZPMVI1cG1H?=
- =?utf-8?B?ZmNKOXpPd1NPZFlkZ2o4VUExanM2dDZxR3cwU05VekdDVjEyV3FpUDBXYzRY?=
- =?utf-8?B?NFdwM3FNYnFGeEhmK3hIejNQTHhhMlpTVGxyVlNOWStwUGtIY2puT2J6SGxp?=
- =?utf-8?B?MGtYaWM1S1h1TmRnNUF1MWhMZmdkeEhlc09oMEhtU2I1dktHOFhvSDlNU2JW?=
- =?utf-8?B?b2kwd1JHdVpySlQ0RHUzREtlbjE2VjM1S3RoSmVieVNmNE1NRm9BWWdUYWtj?=
- =?utf-8?B?eUpXSWNhL0lBQVNOWFI3dS9GV2lqVzVTSDFZWXZiU0djK0JYTnVPZ0t0YWhC?=
- =?utf-8?B?bmpXVlhYSmJOMk0yTW1pazNUNmVjRlRSMlpDdkxHQkVTNzhVb3VTbUZJbW5m?=
- =?utf-8?B?WUlZbXQ5cnNkRyt4Z1pRTnh5R3JVOFdHT25KaFI0bTRCV0xRcjNkTGMvS1oy?=
- =?utf-8?B?c3VRWlR0YkRhNVlmTG5MeHhtZEpVcG1xNW4yazBjK1pIS1VSa01EZmZ5YnhV?=
- =?utf-8?B?ZmJycUdLRUFMOGFFYkJYemVkTFUwMEhwMHJGdkhTeXJFRUVYRlRmYnpKQU1W?=
- =?utf-8?B?WFlEamt4Ukpwb01GcGRsYlg4ZjRmcTBsUk5RK0NjanV5TFJlMEhkODFudUJE?=
- =?utf-8?B?ejJOYTlNZ0x5NDZ2ZUtCY3RIREllWTFyd2ZMaXFGaDBHeUFYYXRWbXNQcGJw?=
- =?utf-8?B?dTNzYUFzQUZEc0RsRXB0MFpabWdUVmhiVjVkOWhxeVpyTVMxZy81YlVmVWpG?=
- =?utf-8?B?b2ZSaWR3dUhVZjBRa3NXZFdjcHRBL3ZsKzAzOWZ5OHBzZGdkajRQQUUxQXV1?=
- =?utf-8?B?QWMvV24rTUJ1L1c4SVBITW1BZ1A0Wk45YVErdzEreHVKQWREQmdFVTF6YUt0?=
- =?utf-8?B?enRGVXllTkhGSis1QlVQclhZY0REWW9Fdi9VRld4MkRxMk1PeEFIRkN5SDhr?=
- =?utf-8?B?NW85bitmTmhsTzVaeWRWTnZZTHkvcmhHTWw2bnp0STlSTnkxTkQvYW55dU1v?=
- =?utf-8?B?N1JNN3FqK0tjN29DQmNIb0JiUGY3eTlyRERBMEJMeVA2THRvd2Y0SC9idC9J?=
- =?utf-8?B?azQwbWNKWlprcnFFSmVmV041blVGUVJtay9FRWZwRm1FWmFZWmtTL1gxYkd1?=
- =?utf-8?B?aWE1Q3NUZnYwRFBBd2hWWk5BTmNPVk5MR3hDQzl0N2hkTHBwaFZDOHVjV2ZT?=
- =?utf-8?B?NGptSCtjM3pCbVY2WnROL2VRWnJCZ1J5c0NZbDBVclZkU2lGVU10Z0pnK1hy?=
- =?utf-8?B?VTkzRXEwRlVmeER0bGNqOGhkT1JIUk45VzVoTWtFakRtSEEzQjA5WWVWWnFO?=
- =?utf-8?B?YkxicWlrS0Ruc2c4eFBLWERycGdDSjhCRnphWm1mM3U4d1R4Yi9EVGxmMktt?=
- =?utf-8?B?aWJvdkxHZEttK2xlMDhuTGVYWGo3TmlpdE1UUUtuZHZ0L0VPNXJlRXc5bGRW?=
- =?utf-8?B?T294MjVGVHFDenIvMEZGK1pZcWlwVzlyKzd0SytFWkhteXUyWWV5d000ekdy?=
- =?utf-8?B?NjJLbzRwTVFSUDBJZWUydHo5WUtkYkhoMmkzN2hIaFpKYzNPelNGMUNNTU1i?=
- =?utf-8?Q?e3dYb77K2ydmCdBFa8OVlsY3tsuZ3EkS?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(10070799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MFpqMjhkaGwrVFNIU0JYdTltWU45Nm1DK0ZPcmhKenhPMGV4QjFyUmVpcCtt?=
- =?utf-8?B?Y1BBYjJRSTNya0srMmE4K1VDQ05uNmdGRzUzSWtyL3dVNHh1OGtKTlJSL3dq?=
- =?utf-8?B?aGx6MjU0SkF5OFFrZUJkb2RxVk1KRnFTTlByb2pLNWhYRTFqSHg1VzdILzBv?=
- =?utf-8?B?Mm9YcUZ2SFRLMHZyUFZPbGVPTzVKWU9jeHhsQXZCek11QVo1ajVXd2MxMTU5?=
- =?utf-8?B?ZTBNS2pVWWJpZXhFOFI5QjR1YkJqc1l0Y1RtakhaMUkxMmhMTFArZ0pQdUlw?=
- =?utf-8?B?RnA2Q1Bwc3hZTk1hakNlNE8rWmU2UnNDakJSUEIxZnZyU0VsVmpVZ2FZbU1G?=
- =?utf-8?B?VXU5Skdva0tMUTR2SXVCNkRDSDFsUWF0SlhyNDRJajZpak1lM3NsRytCeWlp?=
- =?utf-8?B?M1lrczBqY3p5M3BwRlBzV0dPQUVYMHduenJpSVc1RGN5YmpZVGEzVXJIbzR0?=
- =?utf-8?B?ZVQrL0hPZmR5SkhxWTc3akhEMWdyVlFpLzNwT1NWbjZYeE93aDY0VWNFSXZ3?=
- =?utf-8?B?RDZYVDFKNjZoUkVnQkFpckNsakl3TjBnT0RmQjZndVJZbzE3OFhSbkhTaVVP?=
- =?utf-8?B?Tjd0Tk1DK3prWlE1YmI4RXZJSHJaVEM4eEJYUGVlMDd3cm5SWGFJaFQ3cCtl?=
- =?utf-8?B?b25yakVObnUxdGxNbnUyK2RBK2dSczdnbHI5Tno1SW5qY2tYaGRQQ3NRd0pB?=
- =?utf-8?B?VGorbjVUZ3FPVExvdzh2TVJ4T0Z5cjJzUVovRmcvQThYdnRCR2pMVnJnbGtR?=
- =?utf-8?B?ZlFVU3dUY0gvWjRkUVJNcFg5UVlQQVNENk9ta2ZQSzQ3by84TGJlY0F3QU91?=
- =?utf-8?B?NDVmU1VFeGtPRTdZMGlpQjZyYXBpK0g5RFlRRzBoWWZmOENGVk85MUxzTy9T?=
- =?utf-8?B?NEFFWHZRcGdFRDFhejVGNmxUWS94WmZkdXV0bFh2dmlXL1FIdjhNMUNjSUFD?=
- =?utf-8?B?SE8rK3VuK0EvWXlSNzBpZnN3cGV5bXo0QnRzdnNQTm9hSThscTQ1TWthQ1Yr?=
- =?utf-8?B?Ty95cEtpalAvUlhRL3R0THJSaG9NbFY1Unp6UWx4ZXg2b3RGcVBmVFlJaU93?=
- =?utf-8?B?aWRUSC9FdXJiZlE5RHZQNVBUZ0t2YVVJZWNDVHJFYzFBVldRN0pWYXhqRGxa?=
- =?utf-8?B?UHVTZVJuYTlua3FaaDIvZDFHMVFlSk9sY3RBYmdQVkR1YmhQMVNXMStFMkxi?=
- =?utf-8?B?cklzSEI4RGdUNndXeWc0bngzbGUrU2RMQ2F6eE9xL3Jscm1pcmhwQ0VCL1ZR?=
- =?utf-8?B?UDhya0ZOVSt6b1FOVkp6cVo3b0NicGhScm5sWTdPTDdOQ0k2TnkyYS9zRzBu?=
- =?utf-8?B?N1BlZGhyOG9ON0tyVTVuWGlJYldOSWtEMkFya1dhOEp4NDhwUlp2MXE3T21h?=
- =?utf-8?B?WEV1ZlBhZEpoSkVQM29RZXBTRzZ1enpwZzZVdkduS29WcG9UeHlNL2RTcGp6?=
- =?utf-8?B?cnVNZzZDaTYwakpLZ2NvbERJWXF5UG96NXFyWlppb0ZJRThadlRlR2I0T3N3?=
- =?utf-8?B?dTl3cUd6Qkk0ZDhQZGphSis0em9ZZExFTjJzbzZvRHNjY2dDM0pIK0tiYTVz?=
- =?utf-8?B?cE93SW1oOHVlVC9nZ1JzaWFVTWxrNEJnODFKRC9oWFJDQ1F5bURQSXhBdWxG?=
- =?utf-8?B?b3FJQnVEYlR2eTNoTnFsQWMyY2tmVnljWk11LzQwRWVyR1kyMUxIZzV3dmN4?=
- =?utf-8?B?Mm5mN2xHZlNGR3Q0dUcyOTZTMGNKV3BHQThTY0VFL2JTVEpPQTFXTjNCVnhj?=
- =?utf-8?B?NFhHK1FYRXMvcWlLOWxoMjZsTGx2WXMzM3hJTUlCZGhCNnovY1grZ1pvYmdj?=
- =?utf-8?B?MmVHclR6UHArK3BZSGNvaEtXMlRIQnRteXJJL0pYSjA3eFRYTHQvNTAyNW53?=
- =?utf-8?B?WVRCZEhScFV4WFZPaEgwTXBlM2hVL1ZhL0ZVaGw2eXN4L1M2WVVJMzRMaG8y?=
- =?utf-8?B?dUttZDZEQ2JkVlR3VzhDbzU3UThCd1lGTFBqSkVCb2RYYUV4UTl4OXB0aUo1?=
- =?utf-8?B?aWFkZWJvalgwRFFYYTVVUm5peCtES1M3MGE0TzhsaEtRazJ4YjNDbHQ0K1du?=
- =?utf-8?B?YWI1QktSOEVQUzVjQzF5T21SOFdSc09rTHBJT2tUSXRnYWJUUmxESWREdTgr?=
- =?utf-8?B?bC9sUFRVRFppbDRyOGNEVG9rVlIxYmxqZ3owNFdiUEFjaTY1bzFZQmIzaHJn?=
- =?utf-8?Q?pBYo25JDkmAWcIbAZluOodFKZ/WqwClwm60l3xh7s7eJ?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb98356f-903f-4f12-c41f-08de3eb043e1
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Dec 2025 03:39:50.8787
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AAvE8SajZ1lJXeIKYUAkV3ohVRofJkJ737UskJ3PEo+4dOuzduBJWDU/D3ePEneBMR4En0r0wVZlYM0DGDGVgg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4466
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri Dec 19, 2025 at 7:33 AM JST, Timur Tabi wrote:
-> On Thu, 2025-12-18 at 22:27 +0900, Alexandre Courbot wrote:
->> > > +=C2=A0=C2=A0=C2=A0 loop {
->> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 match cmdq.receive_msg::=
-<UnloadingGuestDriverReply>(Delta::from_secs(5)) {
->> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-Ok(resp) =3D> return Ok(resp),
->> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-Err(ERANGE) =3D> continue,
->> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-Err(e) =3D> return Err(e),
->> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->> >=20
->> > This outer loop can go on infinitely, lets bound it?
->> >=20
->> > Either outer timeout or bounded number of tries. Bounded tries better =
-since it has inner
->> > timeout.
->>=20
->> Yes. And what we really want is a more generic way to do this, because
->> this pattern occurs with several commands so far (and more to come).
->
-> Isn't the real problem that we are polling for a specific message, when a=
-ll message should be
-> handled asynchronously as events, like Nouveau does?
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc
+head:   c4a86e6600fa082d6646044fcce2183ad5e52283
+commit: c4a86e6600fa082d6646044fcce2183ad5e52283 [8/8] PCI: dwc: Skip PME_Turn_Off broadcast and L2/L3 transition during suspend if link is not up
+config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20251219/202512191339.583iyg1a-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251219/202512191339.583iyg1a-lkp@intel.com/reproduce)
 
-Does Nouveau really handle all messages asynchronously? Just taking a
-look at `r535_gsp_rpc_send` I see:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202512191339.583iyg1a-lkp@intel.com/
 
-* A potential busy-loop with `r535_gsp_rpc_handle_reply`, An argument to
-* define whether we should wait for a reply (`policy`).
+All warnings (new ones prefixed by >>):
 
-So it seems like each GSP command expecting a reply is effectively
-looping until it arrives, with some messages (LIBOS_PRINT, SEQUENCER,
-etc.) being managed by a notifier registered with the command queue. But
-messages sent explicitly by the driver don't seem to make use of it and
-instead process messages until they find their reply.
+>> drivers/pci/controller/dwc/pcie-designware-host.c:1175:6: warning: variable 'ret' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+    1175 |         if (!dw_pcie_link_up(pci))
+         |             ^~~~~~~~~~~~~~~~~~~~~
+   drivers/pci/controller/dwc/pcie-designware-host.c:1218:9: note: uninitialized use occurs here
+    1218 |         return ret;
+         |                ^~~
+   drivers/pci/controller/dwc/pcie-designware-host.c:1175:2: note: remove the 'if' if its condition is always false
+    1175 |         if (!dw_pcie_link_up(pci))
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+    1176 |                 goto stop_link;
+         |                 ~~~~~~~~~~~~~~
+   drivers/pci/controller/dwc/pcie-designware-host.c:1173:9: note: initialize the variable 'ret' to silence this warning
+    1173 |         int ret;
+         |                ^
+         |                 = 0
+   1 warning generated.
 
-This seems to work because IIUC the GSP sends replies in the same order
-as it received the messages (so one caller cannot consume the reply
-intended to another) and GSP messages are a replacement for the CPU
-messing with the hardware itself anyway. So in that context that design
-is not particularly awful, but maybe we will want to switch to something
-interrupt-based in Nova long-term anyway.
+
+vim +1175 drivers/pci/controller/dwc/pcie-designware-host.c
+
+  1168	
+  1169	int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+  1170	{
+  1171		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+  1172		u32 val;
+  1173		int ret;
+  1174	
+> 1175		if (!dw_pcie_link_up(pci))
+  1176			goto stop_link;
+  1177	
+  1178		/*
+  1179		 * If L1SS is supported, then do not put the link into L2 as some
+  1180		 * devices such as NVMe expect low resume latency.
+  1181		 */
+  1182		if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
+  1183			return 0;
+  1184	
+  1185		if (pci->pp.ops->pme_turn_off) {
+  1186			pci->pp.ops->pme_turn_off(&pci->pp);
+  1187		} else {
+  1188			ret = dw_pcie_pme_turn_off(pci);
+  1189			if (ret)
+  1190				return ret;
+  1191		}
+  1192	
+  1193		ret = read_poll_timeout(dw_pcie_get_ltssm, val,
+  1194					val == DW_PCIE_LTSSM_L2_IDLE ||
+  1195					val <= DW_PCIE_LTSSM_DETECT_WAIT,
+  1196					PCIE_PME_TO_L2_TIMEOUT_US/10,
+  1197					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+  1198		if (ret) {
+  1199			/* Only log message when LTSSM isn't in DETECT or POLL */
+  1200			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
+  1201			return ret;
+  1202		}
+  1203	
+  1204		/*
+  1205		 * Per PCIe r6.0, sec 5.3.3.2.1, software should wait at least
+  1206		 * 100ns after L2/L3 Ready before turning off refclock and
+  1207		 * main power. This is harmless when no endpoint is connected.
+  1208		 */
+  1209		udelay(1);
+  1210	
+  1211	stop_link:
+  1212		dw_pcie_stop_link(pci);
+  1213		if (pci->pp.ops->deinit)
+  1214			pci->pp.ops->deinit(&pci->pp);
+  1215	
+  1216		pci->suspended = true;
+  1217	
+  1218		return ret;
+  1219	}
+  1220	EXPORT_SYMBOL_GPL(dw_pcie_suspend_noirq);
+  1221	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
