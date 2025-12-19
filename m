@@ -1,88 +1,93 @@
-Return-Path: <linux-pci+bounces-43344-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43345-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CF25CCE5A5
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 04:19:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A658BCCE5DB
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 04:26:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4C01E300F31B
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 03:19:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 21682300A340
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 03:26:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AEF41991CB;
-	Fri, 19 Dec 2025 03:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C40F286416;
+	Fri, 19 Dec 2025 03:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ReXX9Whf"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mkliJqlp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013060.outbound.protection.outlook.com [52.101.72.60])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011044.outbound.protection.outlook.com [52.101.62.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDECEEB3;
-	Fri, 19 Dec 2025 03:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8199C19539F;
+	Fri, 19 Dec 2025 03:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766114393; cv=fail; b=E27KuavM43gDKS5f2zMUmOvwmc17Q10GPe6Oxl4Ur4VqMDdl5EWc+dXEbBtKWnL4AAHIXE99bYGKJ5ADsJ1ChI5LEgOCU++mPBaAWj1zKfTRCmJXd5rNRmpReQOk1+D+QqfLwgBCDfnWYc/mmQe12EilTlyjXW/msXuP9ySfktk=
+	t=1766114793; cv=fail; b=T7fPWkxSL1yS+cqku3IweZdHqQVbcKAogTz7606oOOqcWEs46HGoEVnWSOWLbmv6xMuwMPtDCA2Ij4YSPpF3trfBmVtqjMBKJaJyZWwYFK9Wt/WVgX2G/Kqhx0DKXzLINIHOynu6wyjcb66ZDlMhWCASuZigfApJukGXT5Kt/oA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766114393; c=relaxed/simple;
-	bh=001wSt+YUM8GNV5/HMpyIWDI7HDV8VKNWHbrHcOzWf8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=SHMNORFbbanD29haeK0pJotMcOMN0cnwVsgD7a8JyKXb5O0rxFrA6MiwoHjdL/ZFL0ziClZLamZC10UeFTzj9xh4IfjC24fKtUY1+Mb5qJrcL4MsJD+Rnm+haHW20bpV6ufdL+V4JIsgvLOolbKbOGai9FdAKZBNaew/t472euE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ReXX9Whf; arc=fail smtp.client-ip=52.101.72.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1766114793; c=relaxed/simple;
+	bh=y9YZA8tEbqgY0p3JhVh2/lk1EODMAVYxvqWmXs8aUoc=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=X67rFg4mxS56NGoWygAgZZ/JEPc/lIQdGAI5ijzEqNpRXn7Uo2PQLFy81bvd/yCjk/2LrJKEzLrvRXIj+j+MBSQcgGa2gx9S1pJ8c1fYf3sEMKH75drQ8106ujblEnUi15h2fZWCvQ0TAPpmSbkjcNaSaf9A+xeXx5XWTkB7LmU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mkliJqlp; arc=fail smtp.client-ip=52.101.62.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ctzFgAkIHz2MON5RSOf+yGU+OPeo5iAzocwUzBC0W5cbzQ13XZr5JPFB6nHKFH0U/AybbaKCaX/tMn5F6HH6u12ObhoGLKv8z5ZVkiS9VSAaMN1oiwxQHlvxkpk0iSskisrmp2UrcrSRvTgBRn4RjFj/WHyzGb0k4l1KuK1iSaXtInSCvczjSZDqlcCmkzzEmCyu2K9f8OqhNZTqyXesjseAbHQrKqYLCv4d6ldxb6z42EfTgoohLCOiu4giM0BmbW8jyFLVG6uoXux+3ryoeq7iU9LJlARYjZZV4KRWCKQuruzCeTLlQb/UPdjR1LlcKzK1mQY0me4jixJe82Kz9w==
+ b=NQcN6JrdWX8qsNxmV4Uhq1onpLaMpuF/ZciDgEPeh9qAIYfNKwlduuNBesJtgcAWTRCAQrj/kmE1VcwJfnihBvz+9/Hd0FGHrDPNxyd24WGzli0ZUEIQXjU2kd6HSig6vk7mUmVonW+4aHNdzPJztLHvHoKofeVSD3ie0k2lRUdVB55bFcGRtE4SVYERIEh0dwDKBT3wEfsoqk15Zqc5fA7GIFwR1EYIeQEKaj7Ym7G0LbeS5Nad3+Ss9wwE/8yk0uAmR6L8v7GHLloKB3BBgH084XneWBUpnJIiWvobjda6E0RDhYq2EoQ4WVzROOsRBqe8uCBoYHquzkzZ3PNTBg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a1wXbGY7ZIJ26vXDxPleGJpm2LC2Ks+3IAe4Lo7zz1g=;
- b=l+CBSQSNmpkZ8tg1lj5/KL11cuC7NHOgg8gZ/BifiYMWbHB1Vu+SiYzoEHLoaBaCsOxHOPU7HprYF7LP/JKLu8PcvfijwADpsZLzZyWglYST+1cDD3zRFLVmskkMcFNCagQGvKP8SX29DeV1NB47K6zODkBvKHtwQpGfZ+Kty9+sa2Y9036eO+fHzlyXFMzAgsEJyhlpG2G9Y9g39xF3KaYL8lp5iVBUWRm2ioJY5zvgiRUGTxDBpGGuLU8QPER7NtM0KrSjytIYbQNxKGxU7oz3rgUlzk0GHkmgdvfE4eeVOAamSNBw37vcgmNXioU6I5CVMMK02f9agWWKy8sDRg==
+ bh=x32PQP1WQ1Q7VRtzlDF2TLJc+H1Fh4ZfCYc5+f+KhEg=;
+ b=ydwNmGdBRADAL3DYJqh1uI+IMbBPhMGfHZazvYjRkVIDxoGDUBuM4Do7tDQMzR1fVj1zvYERShREznf36biOwqL9v6vG74+/Zv1RJJA4PgQj0z8rZDqbVg+M1QadDQw8SeZ4X+tUo9PCAOzhabni3XeGqzCm9q1dQdTYRPA0mXDqLbLkbxnnDsgm+4IV9ITa4ovWWGm+oPxSoxBH2nPww7Gezwcyh3h8NU7Kln6QKrUqgh8fILt/WBP5GajBZGSskvRc0jDGrNOXUlQuRB7fnhFk6mqE++Lkz+ljimTh3YqYwN7v22Znwf1dAA1cGxSRymuQVrRL6fWT8lbHg7+ogg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a1wXbGY7ZIJ26vXDxPleGJpm2LC2Ks+3IAe4Lo7zz1g=;
- b=ReXX9WhfSanlszuI7iu6StoyDFKGrQ6Rtf7isYnGQ4kv/KGAc050t9jTeQnsVR0H062jjQdOehRSc1B9jBOdRaUcYEpks/Tx97hUxPtdSMQzmoeWIAbi1GOz9UM7BRoGT7+Ud6T9uTHzVyvUxJmW42rn2igaRJc6ZOcBqoC7ce4AyCFxJVP23jCH0jIpsegPgnqldlKX1NufrjSXMlm/O84wIUoyPKODTJvdupjHRcp5JbAAYQfvW2p6WJAixVnkHSbgSwMxn+PPlV9wyJ84Vr5syARA1xxsZ+i7Ja8iFQ2Nbj8B/hUQvfk8FATWfqqckM/93VmpDdRVT9eewcxzsA==
+ bh=x32PQP1WQ1Q7VRtzlDF2TLJc+H1Fh4ZfCYc5+f+KhEg=;
+ b=mkliJqlpSNPtgWoLs5zkOosylqQEpqIg2XASblM9RV6QykxIT4tXPqhKn34fJxPkxkbUdCl+1W+HdvWKCCGzvXnNLJ8ykzVL7+MhZxIjkKszL9oGU2GoX85o1RpQUEeW/kxpXJv+m3jk6LZs5207Xx7MzNU0Uitwe6/fqvxuBvKWAkVcJs7LOaERh4YCo6Ia773Uo6+C0GCVcbkdtfIMQz5etDpQJQtEeDmqJSFP43xNVmSlDAPwwaEMYa9OqGkRGpvYSs5oj3EgOvjunMug+3V1h/A0LXHTeRX6FkPH/uL6+5k1d3JeNkQpRvYolabz/e0P1bEmiMExwmhY6MhtJA==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22)
- by PAXPR04MB8490.eurprd04.prod.outlook.com (2603:10a6:102:1de::18) with
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by DM3PR12MB9326.namprd12.prod.outlook.com (2603:10b6:0:3d::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.9; Fri, 19 Dec
- 2025 03:19:47 +0000
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196]) by DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196%4]) with mapi id 15.20.9434.001; Fri, 19 Dec 2025
- 03:19:46 +0000
-Date: Thu, 18 Dec 2025 22:19:35 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Koichiro Den <den@valinux.co.jp>
-Cc: dave.jiang@intel.com, ntb@lists.linux.dev, linux-pci@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org,
-	bhelgaas@google.com, corbet@lwn.net, geert+renesas@glider.be,
-	magnus.damm@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, vkoul@kernel.org, joro@8bytes.org,
-	will@kernel.org, robin.murphy@arm.com, jdmason@kudzu.us,
-	allenbh@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
-	kurt.schwemmer@microsemi.com, logang@deltatee.com,
-	jingoohan1@gmail.com, lpieralisi@kernel.org, utkarsh02t@gmail.com,
-	jbrunet@baylibre.com, dlemoal@kernel.org, arnd@arndb.de,
-	elfring@users.sourceforge.net
-Subject: Re: [RFC PATCH v3 02/35] NTB: epf: Add mwN_offset support and config
- region versioning
-Message-ID: <aUTER+i1707eGdqN@lizhi-Precision-Tower-5810>
-References: <20251217151609.3162665-1-den@valinux.co.jp>
- <20251217151609.3162665-3-den@valinux.co.jp>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251217151609.3162665-3-den@valinux.co.jp>
-X-ClientProxiedBy: PH7P220CA0001.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:326::35) To DU2PR04MB8951.eurprd04.prod.outlook.com
- (2603:10a6:10:2e2::22)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.8; Fri, 19 Dec
+ 2025 03:26:28 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::7de1:4fe5:8ead:5989]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::7de1:4fe5:8ead:5989%6]) with mapi id 15.20.9434.001; Fri, 19 Dec 2025
+ 03:26:28 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 19 Dec 2025 12:26:24 +0900
+Message-Id: <DF1VFVC7OQJ8.1FOMG6C5M2I8V@nvidia.com>
+Cc: "Danilo Krummrich" <dakr@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Simona Vetter" <simona@ffwll.ch>, "Bjorn Helgaas"
+ <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Trevor
+ Gross" <tmgross@umich.edu>, "Alistair Popple" <apopple@nvidia.com>, "Eliot
+ Courtney" <ecourtney@nvidia.com>, "nouveau@lists.freedesktop.org"
+ <nouveau@lists.freedesktop.org>, "dri-devel@lists.freedesktop.org"
+ <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+ <linux-pci@vger.kernel.org>, "rust-for-linux@vger.kernel.org"
+ <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH 6/7] gpu: nova-core: send UNLOADING_GUEST_DRIVER GSP
+ command GSP upon unloading
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Joel Fernandes" <joelagnelf@nvidia.com>, "Alexandre Courbot"
+ <acourbot@nvidia.com>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20251216-nova-unload-v1-0-6a5d823be19d@nvidia.com>
+ <20251216-nova-unload-v1-6-6a5d823be19d@nvidia.com>
+ <C890CCBB-76C0-4E70-A7B8-846E34DABECE@nvidia.com>
+ <DF1DLWE9OOR6.2P43ATQYNAU3A@nvidia.com>
+ <47F9A9AB-42B5-4A5C-90CA-8A00DD253DA7@nvidia.com>
+In-Reply-To: <47F9A9AB-42B5-4A5C-90CA-8A00DD253DA7@nvidia.com>
+X-ClientProxiedBy: TYCP286CA0214.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c5::10) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,453 +95,179 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|PAXPR04MB8490:EE_
-X-MS-Office365-Filtering-Correlation-Id: 99302d18-5b6f-46f1-3867-08de3ead7647
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|DM3PR12MB9326:EE_
+X-MS-Office365-Filtering-Correlation-Id: 82c68511-9d38-495a-4b69-08de3eae653f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|52116014|7416014|19092799006|376014|366016|7053199007|38350700014;
+	BCL:0;ARA:13230040|1800799024|366016|10070799003|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?LTvtooI8D9Ldi7M8xE274tnZ8mlA7rC4+ILUIMF8ORJ9RxeRKePdIFu4J+Cw?=
- =?us-ascii?Q?+MQAK3FLHIrenBDLu0Uio2ubCCyYMbJZysyl3rm9JDN81zTYea5hqClTzS3t?=
- =?us-ascii?Q?zInjjlTDxDCK02I5hdiNv/uLwvjXESWKJl0ryeVTndP5DXviIxWd+3yz1fxW?=
- =?us-ascii?Q?fUG9IMXy9qa6kQAONjZazUd/S2c90SHp4pCxUB3lbREJbJzSzp0rpvbBoyyF?=
- =?us-ascii?Q?3pSFIQzoLTbyHWPfybyV1HGAd2SA+g0TPJoqev1AH5SjoNl1mzK8du048et8?=
- =?us-ascii?Q?fKNXKTg/5vh9v1jQKTh+Y2UtOvS50ljEH4hE6X75fVumhQE56MVMaWI567nG?=
- =?us-ascii?Q?O+idlJu8pQDqAeUZf10DStdwyXKuVC9e+2LaF/uTff4PakSKsNX0wpn12r7s?=
- =?us-ascii?Q?IQWCTAbMe611sN6sVGul1TB99H2H8a+WL/m94TORBHxwS+xUGsPLYLrjacuY?=
- =?us-ascii?Q?po++/IfW5kxFgXMp/j2iBnNEcN3ArDsZJ+H3qMdoi3BdjNRn018emkRIv+6b?=
- =?us-ascii?Q?75YA6NX4NbrI8qYYtI7rknsA5ekzSByve79QYyKFeUg44LWGfcHqkq2Ob34O?=
- =?us-ascii?Q?c1TyK4uzTD7rQiaMnR4jE7VMOEGb8Pbi1xAy32QcD9HYLgTaoy0ENewuc2qd?=
- =?us-ascii?Q?JMMOUFglmSs8NJszWcsWACAQkdYVL8htfWW8woTGawRCV8ZVD7gMVxWJakM5?=
- =?us-ascii?Q?Whd2wYsPUfCc/O4KSDuIHTTqR1Ev1Jiav1eeAzE05TQL3oNAEO5+dcMHUyiH?=
- =?us-ascii?Q?smbu1qieyhqeGos2tyXBGARtmzAPkYN+nJ2a7h2doYaGC0JYHp1hwjJTwucW?=
- =?us-ascii?Q?yqCyqODVLS9fsZH9QswiM/mdYKy0gMRO4vDRSXTtjBae2r9vDueSvKP0e8iV?=
- =?us-ascii?Q?zA9iC/odMpTyCBC0PSCeBCTwrushEViY8vOCNyY4ub8ArlfftbGVu9/LWghN?=
- =?us-ascii?Q?2yOjf0sSYpXGAFXCqrv2rOS6IrWLbl3s1kV/BynslqGCzWPdeU0pyZwwNf9w?=
- =?us-ascii?Q?Lj5SrOZl9ztziUSt/wSvycSuXQxwjfFi9iL7PMIh06usV6PEqq0rPeRpyAq/?=
- =?us-ascii?Q?B7prJ1gnWkGLltwO8KnddjDm6H3qYK9kCZowf9nz+qLSz5ZVnySlzRxeMkYN?=
- =?us-ascii?Q?yGu5vHzcVWZWbeVpQ4kfjOOwCsBf1lVJwUi+oVftJtLpC2os/rGgF3k0uG7g?=
- =?us-ascii?Q?/3CqXgFQDss+eLDdfWajkxkosbymOeq/G1hum4pGtndKGik/feu/rwr68U7R?=
- =?us-ascii?Q?wm7UduCn3udqNYdHqi7VUiwbx8EGV0gknoTCyRdKwvHj7ZF6HGDjxCPPk4es?=
- =?us-ascii?Q?9CKqrNi1cX8a34l8jnFgAtP7BztCp/0z3glEspUgkLnrBVA3uvM3OvGJgKNJ?=
- =?us-ascii?Q?2ZtXToRF55A01N04v1SJ3udJhxTIyHN7HgkMKEWCQaypYSaHiQAuLmU60him?=
- =?us-ascii?Q?Y2ikcPyBDUxy3ncuTp1vOexWDilgsLVU1HEhdcMb48Ut1uRr+RZI5BrwQu1R?=
- =?us-ascii?Q?AEeT1yTu1RtSEV/Ug3wQVPYntjsTL8/WPH01?=
+	=?utf-8?B?eWxEVGZ4eTNyTWN5VW9vR0VpT2x2UnNoZDd2TU1rczJ1VTlibFp1cTdiS2Ev?=
+ =?utf-8?B?dkZnWXhjeUNYcXQrVzh0Y3BtaitmQkhXY0NHT0RnNTdWYTN5Smt1U20ra2d4?=
+ =?utf-8?B?WUFrSDVzRnEvUFZsbk11RmRXeENvYVViZFpwS3FLeHRBOThZV1k3RzRSeTJo?=
+ =?utf-8?B?OW5ESkVsb3d5UzJiMjdRK2hXcC92TS9CK3BSTjVPOEN6MXpsYTNKRTBacXNK?=
+ =?utf-8?B?WlRFT3RyMnFDNGxuQk1MRDBtajMvT3NwL04vRGpmREgzeHhXdDBvLzBYWU84?=
+ =?utf-8?B?YWJUMGM0OFRBRkhPQy96bEtIVkpZMUVOMHF5S3RWM3RiWU9QbUR3WitNK3Ux?=
+ =?utf-8?B?NjlFRmt5UXkrcElnTEVPbFVlYUszWmZSM1lkT21SelVON21WRS9qUVZPUmtm?=
+ =?utf-8?B?UGZTRW1aUWhCWDNudW1PM1lGTE03cUVYcjh1aWpSOTFFOUlCMlBhMzdFYUtL?=
+ =?utf-8?B?S2tYVzgvc2F1RUZXZVJVQjQ2WFZYNHVlclFEQ3lDZ2dwTWlXVVFKdCt1TzFh?=
+ =?utf-8?B?N1Q1N0lERDRzWWFyUmRjNWlXcEozT1VWQ0lETmNmY1pTUHA4K2g4cjh6SVhq?=
+ =?utf-8?B?WXVydHNWdkRUamRHMWIyR0R0T1ovS0J3RmR0MkFYbC9LbWFSdjhOd1VVNW9C?=
+ =?utf-8?B?ZTRzMStTOEtidDJpVVVVVC9hRkVPaUo3cDlmcE84N0h2M3FobmQ1S3pZeFd4?=
+ =?utf-8?B?Y1ZDcUVQN3Y2alp2aTFpVEIvSU0rYlFEVWlKd01lU0xNbUg1d2czZVhHRk4r?=
+ =?utf-8?B?dDBPaFRqdTRTR1VDOVZYYmNiUTZmNjZHcC9wRGVpdGt5US9PSHVJR0lZVVh6?=
+ =?utf-8?B?Nk5COERPNDUvNW5mUXdjM1NTcTFBVG9LSjZYSnJzOFdQYzNuRjJjYzE0akJo?=
+ =?utf-8?B?TEQrU2t1ZVg3cUhQZGJUNzdya0swcEhiWEQzQUlsdHkrSjlRdHFFdWZpVllU?=
+ =?utf-8?B?VC8rbXFDaTV6NGxMWTdKOHE1d2tqMkxMZXNBYXRYUWlyaEk0R2ZYdklnQ0FZ?=
+ =?utf-8?B?MUQ2WlRMZjNkL3FUaU1ENXo0d3J5dkhldHYrdHZscFozanlsNFRmVnQ4YlVR?=
+ =?utf-8?B?aThabm03OWhGOXF1M013VSt4MmRoYU9MdFlsdHBQb2lFS0ZjNHpBYmZZeVd6?=
+ =?utf-8?B?RHVJeWdocUF4Wlp1SHlFRW03SWl6Q0NTeGdkV3dVVEJCVjQvWnpiYnFvNDMr?=
+ =?utf-8?B?QU5rQ3FjUzZ6bU53eENBZFJCQjBJNUxWU3JXMEN1Q3dia3ZSRm5JYnF6bEg0?=
+ =?utf-8?B?SXJpMzIxdXpEQjJma1BmRU9URXl5NkVSbUxQRzZrMGh5cThyREx2OG5lenhJ?=
+ =?utf-8?B?REI5cmR3UkxTSTRadUN2dEFXeDMyZy9OdFJxT1hzdFZkMEFmS2M0WWN6cVh0?=
+ =?utf-8?B?Z1JqSlZ4d2FGdGxSeVNIRmxUUmpzMWdKMWxjakpsbVB6bWdsemh3M2NMQWZG?=
+ =?utf-8?B?QWpXa3MzTndVMXVpaXdveG9sK1J4ZG1RK3o4bXVXNmlubjlCd09TY0RMeDkw?=
+ =?utf-8?B?aHJ0Syt3Y2EvQkpYaFpST3N4RkMwQTlQOVF6aVlVTmZhRktRalhwaXovcVRH?=
+ =?utf-8?B?RjFKb1h6SmU0WmpiZzB3dkNFRzE1b1dObVB2akVzRStjZGJVOEFZTWxHcG9B?=
+ =?utf-8?B?dWE1NEQxUjJzTkhrMGVONEc2Ym9GenNIR0t1amtNM2xyWmV3VkhhSFpjeTVw?=
+ =?utf-8?B?dnpsK0hhS3JCL3MzQlhWcGZJSHhER2JMTk9QWW5wN1R2SGp0RHNRL3dWVjlM?=
+ =?utf-8?B?bFhrdnFwRlhVQ3AwcTZFNUc1WWxrNVo1NDMzcWVhRWFuVGlDNUJlYXAzekVZ?=
+ =?utf-8?B?Um4vZ1AvcFE4aXk3TEVxcjZhSklueHh0c1F4Kzd6T3hnclJnMlpNRDVia1Fa?=
+ =?utf-8?B?NU12aEV1WU5KRUxTUmNURlZvYXpFWUhPWkxjaU04Si9RSHBBTUUzaWR6Qytm?=
+ =?utf-8?Q?Y1qB0AEkuFcyPI7PqR3hnJU/PlSigiHQ?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(7416014)(19092799006)(376014)(366016)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(7416014)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?xqZSwccPi95LSTrPCMwCYBkAwnwskmPPaZwgXdzLJ/hzhNTStyf+E/fkVIA8?=
- =?us-ascii?Q?CYtqVAFYwNhhpT7o+c5aJn7yC1vEBABSPK+ClybZmeKLAghx6O3RNiS71FgT?=
- =?us-ascii?Q?l+WsCpwly8NWOiQALX/fdhRYD5hfvxeZr66/QbyjZC4y6tZyWeK/xILBqPYF?=
- =?us-ascii?Q?d1Kfxan5PzhvWDoW3eNuKccw/S9JCX91rYeM7c+8fNM7vObJX7qL43rxR3nG?=
- =?us-ascii?Q?GFvf0PzS2tU5wUmBgM8GDgN255SQzptdY0MlLHg+g5iKx4CtMkPEaum22CY3?=
- =?us-ascii?Q?LVXP2Ku6T/qHVU81V2yvUABJI37kI3UUINTHzUgwz/0N5na3GV52Dj7dNquj?=
- =?us-ascii?Q?cS1deIq1yqfn8fE2UHI1uWZP7angNCKnnRy9ANrnDD6JnfSsMezp9WMNo355?=
- =?us-ascii?Q?pnTQL8hmQP49FEzpU7FS+3KA82R5N534uhxspk8yGZaVQeMwqj+v2YUfDviG?=
- =?us-ascii?Q?KeB7Ez+CzhSc0ERgSUw1O0nJypC0pmKmO+mKYXs/5RUZg4lYt6YOiVvs/luQ?=
- =?us-ascii?Q?e0mAACP64DI7lFCYTEQPW9rpKnrKwaiQ7X2wVfhzdIzenuIzCc7b6g085Qku?=
- =?us-ascii?Q?xocm6mQOxv8Y8l5JtD/2fs18IZDD+cnZXHILK0mMWGhYaDiM54c252jk54fu?=
- =?us-ascii?Q?GQDpP9cz/2lmwUfUt1EYyAitzx0o4NYYu3DO5K3GUxZ7rysbPRc/RQdH5zeV?=
- =?us-ascii?Q?NkA2NGZwZ2OskXHKOePVDHWd1G0FKoLfhS0uT0anfF3HcL6suy48tt3jbH+a?=
- =?us-ascii?Q?uKkDUVXNXoKH3Rcx2z/sGApqsECDW4sbF0W0b7MidwUenWWlBmjfpmqtj4Yy?=
- =?us-ascii?Q?trhivwkh3U+vV89e9lJ5hNoyntfnUHmX/coeVwwxtg5KjLemrGDnxF2jOGge?=
- =?us-ascii?Q?hv+kZjkz7xZIbAjw5Vx2sgVClIwcAwh0wpiqIH6q/vpJSg3xbQs6TQXUlyIQ?=
- =?us-ascii?Q?oiGtPJTATJUrqJfUmVsvUK0zFzkED+LmrMT44gGGAl8yy9WSd3s/t4QDeJbQ?=
- =?us-ascii?Q?BTFfQf6Ba7mcIEdN9KohihFz/r8nEgEfkFKnkLh1kpF5khPHVGds/mLlAFB/?=
- =?us-ascii?Q?oT2b1ajo9xuusVIFfSGdex44aEEzLABUMhINbA/39joGdnKGVP/mfpsihcaM?=
- =?us-ascii?Q?Y9XLTV3+Iti59klh/ThJiraUYdlEvjR5GgXtKs+YOnBXjDKd/aY1l7rf3Dh3?=
- =?us-ascii?Q?/oeNifcvNJpBtCo46zrZndGWD325SK0mjZB/5evlVPFkrj+C/J4wSJukZ+H9?=
- =?us-ascii?Q?zvkv4hUY5UcLxCht9XigOH3J2E1GpH/Wn4ojlZfZCta25iyD8wgpyuqsPph7?=
- =?us-ascii?Q?17Qg1MV59twNysLH52Vn2Nac4SXYLaazKSzzKW0kAMt6fFBO3TmzHVgLoPye?=
- =?us-ascii?Q?xX8pAkVvhlJVfox5FVsJ1n/JQyeNz8C+6KHt8FivGF/3/YNZXU5iBjSrQ2p3?=
- =?us-ascii?Q?I5ojBpNITQTs17BVJh+zfpEUTKz6C0R8IHMxGpDHkzZzfph3fL/VVyHhmPAZ?=
- =?us-ascii?Q?E1xzQ9Ew6XcVZRp7GBbZz+yb1USOnXkEbA1ixw581P8IyThyfj1mPCbBwrx8?=
- =?us-ascii?Q?qM8tYWUaotGbjnQgVnH2Vz0LeuvpIe2JUuN95vGB?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99302d18-5b6f-46f1-3867-08de3ead7647
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8951.eurprd04.prod.outlook.com
+	=?utf-8?B?YWd4NnhjRExMb3J1UmlCZmdwUzJKakwwWFY0RUsrdytnaHVRakY1V09Yai8z?=
+ =?utf-8?B?VndDRWl1WjIvdzNML1BEMGllRW96OFpIMXdiL0l0QU1UcVRVV2tsZ1VIVDNQ?=
+ =?utf-8?B?V3VkV20xamJxT003OTRKOERDSUgxS0FWVHFXZ3FtN0JubGpvcXFLZ0lKZ0dE?=
+ =?utf-8?B?aG1wRzZEb3I5QlFWc3BzQ2ZRMFZOVm8yeWxhR3hMTy9QWFk3bysvOWREbGlr?=
+ =?utf-8?B?TE5aOXJ4UkYrUFJ3WGFVVUZsU1JXNWdhVThRQ2VQQWNWdjFlejYvVWVPWkRL?=
+ =?utf-8?B?eDJ0eVdaSGJ5SWt6b01XYXdBaGRTdFIvV25hbThkWTQrdVVPQ210VkY1bFc0?=
+ =?utf-8?B?UzJ6VmtrODBDaUhoWlM4Sk5JdzhyZys5L1I2eTBSUEFLVHlkb1V2d0NyZ0or?=
+ =?utf-8?B?Rk91MEM2RVdYdW45QnFydDNxZVBlMlgrcXkxSDVMOU03bXZMekdwTE5RbE9X?=
+ =?utf-8?B?a3JwMTRReVRDb3A3dEJ5RjF6NFNsbHcraUc4eURtbGo5RGR3OU51QWRTczV5?=
+ =?utf-8?B?YmVDUXRPd3ozSFZpZlNvOFVPeENabk9Rd0ZSUGZPUDEydS9HRGdtSkZybm5v?=
+ =?utf-8?B?UzFISUZ0WkM2UlRaTXRsVTN6RW0xTVF1Z2VmOHVvV1lRTmo5RGxkZVRBYUI0?=
+ =?utf-8?B?ZXZBclVyYmZRMmRNQjhWVnl4WktDUmNUelBsbG14TGh5Zjgvb0FiK1diUndZ?=
+ =?utf-8?B?VkpaNkphaGcyMTd2OUQvYmowd0QvM3JJTXJCVHkwcHFnSHJ1NW9VZThXSmFy?=
+ =?utf-8?B?d2xEdzVmYTBWK1NpNWh2K1kvemMwcVhNb3pZVjBFaGUyNFl1RG5jWUtTMGpU?=
+ =?utf-8?B?M3ZhTStYa3lhVEJ2TG1WOGdJM0ZDZFVvSVVLWVl4cEpMN0lxOWZzTFVRTEYy?=
+ =?utf-8?B?SUdkL1dzak1YcGVUOXgvWHFiZnNkOWlIL1J5b3FlTmtyemg1WFhBc2ErUzhB?=
+ =?utf-8?B?ZDUvaXpwRVVLYW1WY2FJRmxQT1lBSDFYdkZjVEpYVk1VcC95dXgvNjc5M2RN?=
+ =?utf-8?B?aHAyQ3E3TSt1T3ZDWUx6cTVwOHBlUmFtN3BTclJKOWJ3SWxoODZmUVpiTXNL?=
+ =?utf-8?B?TGcwNHZ4anRJZXd5bmFBVzQwUktrelZnWGFWK1FpdFl4RWhoRE1vTWtnaVJ6?=
+ =?utf-8?B?Rnl2NFZVdE83MkpMZVB1WXFHUDliSUYycHJ5Snc0OTZGZ0xMbDhlb2dwcDF3?=
+ =?utf-8?B?S3pQZkswWE1mODd6NlR4aVVhTVRlNG95R3hxQUkwQ2ZnQVpCWmgwYXM3S3hs?=
+ =?utf-8?B?YmF2cEFmUnQzcGxlK05MYzd2c0JwVVpOUG8ycGlrd1VrdEVEd0c0N3VpTkhn?=
+ =?utf-8?B?a0VLOEtLdEtic1ZQMWFIOXN0OU4vc1cyMUR0UmVYTFAwVGx1YUNKSGNwTENm?=
+ =?utf-8?B?RVA0VEZuSG9kbzN4c3R0L1BLN25GZVV3OHBWOXNrMWtJbEt3MjdOdXVpSVVy?=
+ =?utf-8?B?R09PMzF0cWszbXI3NlBMYXR0NC9CcUZYNkhjR3pzRitIMVFESm8xUU9XaDNJ?=
+ =?utf-8?B?VzhzZmhOVlkzMzVTSW9PcGovRC9rbXZ2dTFocnIvOTZ4eXdLNExBMldqYTY2?=
+ =?utf-8?B?aFNhUGs5NEl1cWtiTDJhYldGM0NIRVAwYnRiS2dhUXFOeFVOWTBRN3lsRUw3?=
+ =?utf-8?B?cU5TR2hxS1c2Y240MDg0bk1qVG9zUTVrTHBJYlo2NkVIOFZvMnB5dFY4UlBG?=
+ =?utf-8?B?SEJiYkpUdy9rV3BrREpxRHFTYWJWZHFpNis4em5QaFVJNWtmUUpkZ1NWSk9z?=
+ =?utf-8?B?VmkrZnpmdm9QVU12d0x6V01NTnptdlI2b2YzbXU3bHJiYTIvTEJuSHdkNEln?=
+ =?utf-8?B?amZpakpvK1VvVmZyQjJOcDdiM1lGR09BQ2hJTXk5STRHOVFndnZ1WitxeVFw?=
+ =?utf-8?B?aG9WaFJ6VnFkUnpLRkhKWS82S056OFAwOWJGcWJsdmZSL1RZUTZnejJhZmFZ?=
+ =?utf-8?B?cVZwaTlyajZLUjN2UDl4U1cveHJQQWhSekZ3UDRCeVRDTkNjckxBSkZaWmNJ?=
+ =?utf-8?B?aEZneFJvRVM5bUFFTFZBbWIvR29ZMUFCc2Y4TitMSktubFFwWnZYWE1ZSjZU?=
+ =?utf-8?B?QmwxdnQ2NEF6OWJqeHNnd0ZDSWhhRUlyb2dtcDBORmh2b00yYUh6YUFITjlY?=
+ =?utf-8?B?ZnFFS2VLN0o5SlJxZnhEZ0c4TmVYVkdPY05PaitGeE1HbXNvRUdPR3hrRncy?=
+ =?utf-8?Q?05CvjareJJVW+FeZTUQRGSSdlCAe1SI8VT3euUB40wzl?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82c68511-9d38-495a-4b69-08de3eae653f
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Dec 2025 03:19:46.9178
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Dec 2025 03:26:27.9536
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZT4ANcx4zpTfzKPOgvNZGdlz4pojRZERlsfrIbEr0zbGKmSJqJE4DZrK8uqNIcNVnajBHZZfw4sTupfipa9Gtw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8490
+X-MS-Exchange-CrossTenant-UserPrincipalName: ybUJ0I2LQ//kMlfPTC6uA4FcJNqkNxh7XNEArBRPHcrReffuvZ/5fRXFV9n63PdsE/a4B1Atu/FiAt37YzMQDQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9326
 
-On Thu, Dec 18, 2025 at 12:15:36AM +0900, Koichiro Den wrote:
-> Introduce new mwN_offset configfs attributes to specify memory window
-> offsets. This enables mapping multiple windows into a single BAR at
-> arbitrary offsets, improving layout flexibility.
+On Fri Dec 19, 2025 at 5:52 AM JST, Joel Fernandes wrote:
+> Hi Alex,
 >
-> Extend the control register region and add a 32-bit config version
-> field. Reuse NTB_EPF_TOPOLOGY (0x0C), which is currently unused, as the
-> version register. The endpoint function driver writes 1
-> (NTB_EPF_CTRL_VERSION_V1), and ntb_hw_epf reads it at probe time and
-> refuses to bind to unknown versions.
+>>>> +    }
+>>>> +}
+>>>> diff --git a/drivers/gpu/nova-core/gsp/fw.rs b/drivers/gpu/nova-core/g=
+sp/fw.rs
+>>>> index 09549f7db52d..228464fd47a0 100644
+>>>> --- a/drivers/gpu/nova-core/gsp/fw.rs
+>>>> +++ b/drivers/gpu/nova-core/gsp/fw.rs
+>>>> @@ -209,6 +209,7 @@ pub(crate) enum MsgFunction {
+>>>>    GspInitPostObjGpu =3D bindings::NV_VGPU_MSG_FUNCTION_GSP_INIT_POST_=
+OBJGPU,
+>>>>    GspRmControl =3D bindings::NV_VGPU_MSG_FUNCTION_GSP_RM_CONTROL,
+>>>>    GetStaticInfo =3D bindings::NV_VGPU_MSG_FUNCTION_GET_STATIC_INFO,
+>>>> +    UnloadingGuestDriver =3D bindings::NV_VGPU_MSG_FUNCTION_UNLOADING=
+_GUEST_DRIVER,
+>>>>=20
+>>>>    // Event codes
+>>>>    GspInitDone =3D bindings::NV_VGPU_MSG_EVENT_GSP_INIT_DONE,
+>>>> @@ -249,6 +250,9 @@ fn try_from(value: u32) -> Result<MsgFunction> {
+>>>>            }
+>>>>            bindings::NV_VGPU_MSG_FUNCTION_GSP_RM_CONTROL =3D> Ok(MsgFu=
+nction::GspRmControl),
+>>>>            bindings::NV_VGPU_MSG_FUNCTION_GET_STATIC_INFO =3D> Ok(MsgF=
+unction::GetStaticInfo),
+>>>> +            bindings::NV_VGPU_MSG_FUNCTION_UNLOADING_GUEST_DRIVER =3D=
+> {
+>>>> +                Ok(MsgFunction::UnloadingGuestDriver)
+>>>> +            }
+>>>>            bindings::NV_VGPU_MSG_EVENT_GSP_INIT_DONE =3D> Ok(MsgFuncti=
+on::GspInitDone),
+>>>>            bindings::NV_VGPU_MSG_EVENT_GSP_RUN_CPU_SEQUENCER =3D> {
+>>>>                Ok(MsgFunction::GspRunCpuSequencer)
+>>>> diff --git a/drivers/gpu/nova-core/gsp/fw/commands.rs b/drivers/gpu/no=
+va-core/gsp/fw/commands.rs
+>>>> index 85465521de32..c7df4783ad21 100644
+>>>> --- a/drivers/gpu/nova-core/gsp/fw/commands.rs
+>>>> +++ b/drivers/gpu/nova-core/gsp/fw/commands.rs
+>>>> @@ -125,3 +125,30 @@ unsafe impl AsBytes for GspStaticConfigInfo {}
+>>>> // SAFETY: This struct only contains integer types for which all bit p=
+atterns
+>>>> // are valid.
+>>>> unsafe impl FromBytes for GspStaticConfigInfo {}
+>>>> +
+>>>> +/// Payload of the `UnloadingGuestDriver` command and message.
+>>>> +#[repr(transparent)]
+>>>> +#[derive(Clone, Copy, Debug, Zeroable)]
+>>>> +pub(crate) struct UnloadingGuestDriver {
+>>>> +    inner: bindings::rpc_unloading_guest_driver_v1F_07,
+>>>> +}
+>>>> +
+>>>> +impl UnloadingGuestDriver {
+>>>> +    pub(crate) fn new(suspend: bool) -> Self {
+>>>> +        Self {
+>>>> +            inner: bindings::rpc_unloading_guest_driver_v1F_07 {
+>>>=20
+>>> We should go through intermediate firmware representation than direct b=
+indings access?
+>>=20
+>> Only if the size of the bindings justifies it - here having an opaque
+>> wrapper just just well, and spares us some code down the line as we
+>> would have to initialize the bindings anyway.
 >
-> Endpoint running with an older kernel that do not program
+> I am not sure about that, it sounds like a layering violation. It would b=
+e good not to keep the rules fuzzy about this, because then we could do it =
+either way in all cases.
+>
+> Another reason is that we cannot anticipate in advance which specific hel=
+per functions we will need to add in the future. Down the line, we may need=
+ to add some helper functions to the struct as well.  Also having V1F07 in =
+the name sounds very magic number-ish. It would be good to abstract that ou=
+t with a better-named struct anyway.
 
-Is it zero if EP have not program it?
+The rules are not fuzzy. The only thing modules outside of `fw` are
+seeing is a struct named `UnloadingGuestDriver`, and the name with
+`V1F07` is not leaked.
 
-> NTB_EPF_CTRL_VERSION will be rejected early by host with newer kernel,
-> instead of misbehaving at runtime.
-
-If old one is 0, try best to compatible with old version.
-
-Frank
->
-> Signed-off-by: Koichiro Den <den@valinux.co.jp>
-> ---
->  drivers/ntb/hw/epf/ntb_hw_epf.c               |  44 +++++-
->  drivers/pci/endpoint/functions/pci-epf-vntb.c | 136 ++++++++++++++++--
->  2 files changed, 160 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/ntb/hw/epf/ntb_hw_epf.c b/drivers/ntb/hw/epf/ntb_hw_epf.c
-> index d3ecf25a5162..126ba38e32ea 100644
-> --- a/drivers/ntb/hw/epf/ntb_hw_epf.c
-> +++ b/drivers/ntb/hw/epf/ntb_hw_epf.c
-> @@ -30,18 +30,22 @@
->  #define NTB_EPF_LINK_STATUS	0x0A
->  #define LINK_STATUS_UP		BIT(0)
->
-> -#define NTB_EPF_TOPOLOGY	0x0C
-> +/* 0x24 (32bit) is unused */
-> +#define NTB_EPF_CTRL_VERSION	0x0C
->  #define NTB_EPF_LOWER_ADDR	0x10
->  #define NTB_EPF_UPPER_ADDR	0x14
->  #define NTB_EPF_LOWER_SIZE	0x18
->  #define NTB_EPF_UPPER_SIZE	0x1C
->  #define NTB_EPF_MW_COUNT	0x20
-> -#define NTB_EPF_MW1_OFFSET	0x24
->  #define NTB_EPF_SPAD_OFFSET	0x28
->  #define NTB_EPF_SPAD_COUNT	0x2C
->  #define NTB_EPF_DB_ENTRY_SIZE	0x30
->  #define NTB_EPF_DB_DATA(n)	(0x34 + (n) * 4)
->  #define NTB_EPF_DB_OFFSET(n)	(0xB4 + (n) * 4)
-> +#define NTB_EPF_MW_OFFSET(n)	(0x134 + (n) * 4)
-> +#define NTB_EPF_MW_SIZE(n)	(0x144 + (n) * 4)
-> +
-> +#define NTB_EPF_CTRL_VERSION_V1	1
->
->  #define NTB_EPF_MIN_DB_COUNT	3
->  #define NTB_EPF_MAX_DB_COUNT	31
-> @@ -451,11 +455,12 @@ static int ntb_epf_peer_mw_get_addr(struct ntb_dev *ntb, int idx,
->  				    phys_addr_t *base, resource_size_t *size)
->  {
->  	struct ntb_epf_dev *ndev = ntb_ndev(ntb);
-> -	u32 offset = 0;
-> +	resource_size_t bar_sz;
-> +	u32 offset, sz;
->  	int bar;
->
-> -	if (idx == 0)
-> -		offset = readl(ndev->ctrl_reg + NTB_EPF_MW1_OFFSET);
-> +	offset = readl(ndev->ctrl_reg + NTB_EPF_MW_OFFSET(idx));
-> +	sz = readl(ndev->ctrl_reg + NTB_EPF_MW_SIZE(idx));
->
->  	bar = ntb_epf_mw_to_bar(ndev, idx);
->  	if (bar < 0)
-> @@ -464,8 +469,11 @@ static int ntb_epf_peer_mw_get_addr(struct ntb_dev *ntb, int idx,
->  	if (base)
->  		*base = pci_resource_start(ndev->ntb.pdev, bar) + offset;
->
-> -	if (size)
-> -		*size = pci_resource_len(ndev->ntb.pdev, bar) - offset;
-> +	if (size) {
-> +		bar_sz = pci_resource_len(ndev->ntb.pdev, bar);
-> +		*size = sz ? min_t(resource_size_t, sz, bar_sz - offset)
-> +			   : (bar_sz > offset ? bar_sz - offset : 0);
-> +	}
->
->  	return 0;
->  }
-> @@ -547,6 +555,24 @@ static inline void ntb_epf_init_struct(struct ntb_epf_dev *ndev,
->  	ndev->ntb.ops = &ntb_epf_ops;
->  }
->
-> +static int ntb_epf_check_version(struct ntb_epf_dev *ndev)
-> +{
-> +	struct device *dev = ndev->dev;
-> +	u32 ver;
-> +
-> +	ver = readl(ndev->ctrl_reg + NTB_EPF_CTRL_VERSION);
-> +
-> +	switch (ver) {
-> +	case NTB_EPF_CTRL_VERSION_V1:
-> +		break;
-> +	default:
-> +		dev_err(dev, "Unsupported NTB EPF version %u\n", ver);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int ntb_epf_init_dev(struct ntb_epf_dev *ndev)
->  {
->  	struct device *dev = ndev->dev;
-> @@ -695,6 +721,10 @@ static int ntb_epf_pci_probe(struct pci_dev *pdev,
->  		return ret;
->  	}
->
-> +	ret = ntb_epf_check_version(ndev);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = ntb_epf_init_dev(ndev);
->  	if (ret) {
->  		dev_err(dev, "Failed to init device\n");
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> index 56aab5d354d6..4dfb3e40dffa 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> @@ -39,6 +39,7 @@
->  #include <linux/atomic.h>
->  #include <linux/delay.h>
->  #include <linux/io.h>
-> +#include <linux/log2.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
->
-> @@ -61,6 +62,7 @@ static struct workqueue_struct *kpcintb_workqueue;
->
->  #define LINK_STATUS_UP			BIT(0)
->
-> +#define CTRL_VERSION			1
->  #define SPAD_COUNT			64
->  #define DB_COUNT			4
->  #define NTB_MW_OFFSET			2
-> @@ -107,7 +109,7 @@ struct epf_ntb_ctrl {
->  	u32 argument;
->  	u16 command_status;
->  	u16 link_status;
-> -	u32 topology;
-> +	u32 version;
->  	u64 addr;
->  	u64 size;
->  	u32 num_mws;
-> @@ -117,6 +119,8 @@ struct epf_ntb_ctrl {
->  	u32 db_entry_size;
->  	u32 db_data[MAX_DB_COUNT];
->  	u32 db_offset[MAX_DB_COUNT];
-> +	u32 mw_offset[MAX_MW];
-> +	u32 mw_size[MAX_MW];
->  } __packed;
->
->  struct epf_ntb {
-> @@ -128,6 +132,7 @@ struct epf_ntb {
->  	u32 db_count;
->  	u32 spad_count;
->  	u64 mws_size[MAX_MW];
-> +	u64 mws_offset[MAX_MW];
->  	atomic64_t db;
->  	u32 vbus_number;
->  	u16 vntb_pid;
-> @@ -454,10 +459,13 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
->  	ntb->reg = base;
->
->  	ctrl = ntb->reg;
-> +	ctrl->version = CTRL_VERSION;
->  	ctrl->spad_offset = ctrl_size;
->
->  	ctrl->spad_count = spad_count;
->  	ctrl->num_mws = ntb->num_mws;
-> +	memset(ctrl->mw_offset, 0, sizeof(ctrl->mw_offset));
-> +	memset(ctrl->mw_size, 0, sizeof(ctrl->mw_size));
->  	ntb->spad_size = spad_size;
->
->  	ctrl->db_entry_size = sizeof(u32);
-> @@ -689,15 +697,31 @@ static void epf_ntb_db_bar_clear(struct epf_ntb *ntb)
->   */
->  static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
->  {
-> +	struct device *dev = &ntb->epf->dev;
-> +	u64 bar_ends[BAR_5 + 1] = { 0 };
-> +	unsigned long bars_used = 0;
-> +	enum pci_barno barno;
-> +	u64 off, size, end;
->  	int ret = 0;
->  	int i;
-> -	u64 size;
-> -	enum pci_barno barno;
-> -	struct device *dev = &ntb->epf->dev;
->
->  	for (i = 0; i < ntb->num_mws; i++) {
-> -		size = ntb->mws_size[i];
->  		barno = ntb->epf_ntb_bar[BAR_MW1 + i];
-> +		off = ntb->mws_offset[i];
-> +		size = ntb->mws_size[i];
-> +		end = off + size;
-> +		if (end > bar_ends[barno])
-> +			bar_ends[barno] = end;
-> +		bars_used |= BIT(barno);
-> +	}
-> +
-> +	for (barno = BAR_0; barno <= BAR_5; barno++) {
-> +		if (!(bars_used & BIT(barno)))
-> +			continue;
-> +		if (bar_ends[barno] < SZ_4K)
-> +			size = SZ_4K;
-> +		else
-> +			size = roundup_pow_of_two(bar_ends[barno]);
->
->  		ntb->epf->bar[barno].barno = barno;
->  		ntb->epf->bar[barno].size = size;
-> @@ -713,8 +737,12 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
->  				      &ntb->epf->bar[barno]);
->  		if (ret) {
->  			dev_err(dev, "MW set failed\n");
-> -			goto err_alloc_mem;
-> +			goto err_set_bar;
->  		}
-> +	}
-> +
-> +	for (i = 0; i < ntb->num_mws; i++) {
-> +		size = ntb->mws_size[i];
->
->  		/* Allocate EPC outbound memory windows to vpci vntb device */
->  		ntb->vpci_mw_addr[i] = pci_epc_mem_alloc_addr(ntb->epf->epc,
-> @@ -723,19 +751,31 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
->  		if (!ntb->vpci_mw_addr[i]) {
->  			ret = -ENOMEM;
->  			dev_err(dev, "Failed to allocate source address\n");
-> -			goto err_set_bar;
-> +			goto err_alloc_mem;
->  		}
->  	}
->
-> +	for (i = 0; i < ntb->num_mws; i++) {
-> +		ntb->reg->mw_offset[i] = (u32)ntb->mws_offset[i];
-> +		ntb->reg->mw_size[i] = (u32)ntb->mws_size[i];
-> +	}
-> +
->  	return ret;
->
-> -err_set_bar:
-> -	pci_epc_clear_bar(ntb->epf->epc,
-> -			  ntb->epf->func_no,
-> -			  ntb->epf->vfunc_no,
-> -			  &ntb->epf->bar[barno]);
->  err_alloc_mem:
-> -	epf_ntb_mw_bar_clear(ntb, i);
-> +	while (--i >= 0)
-> +		pci_epc_mem_free_addr(ntb->epf->epc,
-> +				      ntb->vpci_mw_phy[i],
-> +				      ntb->vpci_mw_addr[i],
-> +				      ntb->mws_size[i]);
-> +err_set_bar:
-> +	while (--barno >= BAR_0)
-> +		if (bars_used & BIT(barno))
-> +			pci_epc_clear_bar(ntb->epf->epc,
-> +					  ntb->epf->func_no,
-> +					  ntb->epf->vfunc_no,
-> +					  &ntb->epf->bar[barno]);
-> +
->  	return ret;
->  }
->
-> @@ -1040,6 +1080,60 @@ static ssize_t epf_ntb_##_name##_store(struct config_item *item,	\
->  	return len;							\
->  }
->
-> +#define EPF_NTB_MW_OFF_R(_name)						\
-> +static ssize_t epf_ntb_##_name##_show(struct config_item *item,		\
-> +				      char *page)			\
-> +{									\
-> +	struct config_group *group = to_config_group(item);		\
-> +	struct epf_ntb *ntb = to_epf_ntb(group);			\
-> +	struct device *dev = &ntb->epf->dev;				\
-> +	int win_no, idx;						\
-> +									\
-> +	if (sscanf(#_name, "mw%d_offset", &win_no) != 1)		\
-> +		return -EINVAL;						\
-> +									\
-> +	idx = win_no - 1;						\
-> +	if (idx < 0 || idx >= ntb->num_mws) {				\
-> +		dev_err(dev, "MW%d out of range (num_mws=%d)\n",	\
-> +			win_no, ntb->num_mws);				\
-> +		return -EINVAL;						\
-> +	}								\
-> +									\
-> +	idx = array_index_nospec(idx, ntb->num_mws);			\
-> +	return sprintf(page, "%llu\n", ntb->mws_offset[idx]);		\
-> +}
-> +
-> +#define EPF_NTB_MW_OFF_W(_name)						\
-> +static ssize_t epf_ntb_##_name##_store(struct config_item *item,	\
-> +				       const char *page, size_t len)	\
-> +{									\
-> +	struct config_group *group = to_config_group(item);		\
-> +	struct epf_ntb *ntb = to_epf_ntb(group);			\
-> +	struct device *dev = &ntb->epf->dev;				\
-> +	int win_no, idx;						\
-> +	u64 val;							\
-> +	int ret;							\
-> +									\
-> +	ret = kstrtou64(page, 0, &val);					\
-> +	if (ret)							\
-> +		return ret;						\
-> +									\
-> +	if (sscanf(#_name, "mw%d_offset", &win_no) != 1)		\
-> +		return -EINVAL;						\
-> +									\
-> +	idx = win_no - 1;						\
-> +	if (idx < 0 || idx >= ntb->num_mws) {				\
-> +		dev_err(dev, "MW%d out of range (num_mws=%d)\n",	\
-> +			win_no, ntb->num_mws);				\
-> +		return -EINVAL;						\
-> +	}								\
-> +									\
-> +	idx = array_index_nospec(idx, ntb->num_mws);			\
-> +	ntb->mws_offset[idx] = val;					\
-> +									\
-> +	return len;							\
-> +}
-> +
->  #define EPF_NTB_BAR_R(_name, _id)					\
->  	static ssize_t epf_ntb_##_name##_show(struct config_item *item,	\
->  					      char *page)		\
-> @@ -1110,6 +1204,14 @@ EPF_NTB_MW_R(mw3)
->  EPF_NTB_MW_W(mw3)
->  EPF_NTB_MW_R(mw4)
->  EPF_NTB_MW_W(mw4)
-> +EPF_NTB_MW_OFF_R(mw1_offset)
-> +EPF_NTB_MW_OFF_W(mw1_offset)
-> +EPF_NTB_MW_OFF_R(mw2_offset)
-> +EPF_NTB_MW_OFF_W(mw2_offset)
-> +EPF_NTB_MW_OFF_R(mw3_offset)
-> +EPF_NTB_MW_OFF_W(mw3_offset)
-> +EPF_NTB_MW_OFF_R(mw4_offset)
-> +EPF_NTB_MW_OFF_W(mw4_offset)
->  EPF_NTB_BAR_R(ctrl_bar, BAR_CONFIG)
->  EPF_NTB_BAR_W(ctrl_bar, BAR_CONFIG)
->  EPF_NTB_BAR_R(db_bar, BAR_DB)
-> @@ -1130,6 +1232,10 @@ CONFIGFS_ATTR(epf_ntb_, mw1);
->  CONFIGFS_ATTR(epf_ntb_, mw2);
->  CONFIGFS_ATTR(epf_ntb_, mw3);
->  CONFIGFS_ATTR(epf_ntb_, mw4);
-> +CONFIGFS_ATTR(epf_ntb_, mw1_offset);
-> +CONFIGFS_ATTR(epf_ntb_, mw2_offset);
-> +CONFIGFS_ATTR(epf_ntb_, mw3_offset);
-> +CONFIGFS_ATTR(epf_ntb_, mw4_offset);
->  CONFIGFS_ATTR(epf_ntb_, vbus_number);
->  CONFIGFS_ATTR(epf_ntb_, vntb_pid);
->  CONFIGFS_ATTR(epf_ntb_, vntb_vid);
-> @@ -1148,6 +1254,10 @@ static struct configfs_attribute *epf_ntb_attrs[] = {
->  	&epf_ntb_attr_mw2,
->  	&epf_ntb_attr_mw3,
->  	&epf_ntb_attr_mw4,
-> +	&epf_ntb_attr_mw1_offset,
-> +	&epf_ntb_attr_mw2_offset,
-> +	&epf_ntb_attr_mw3_offset,
-> +	&epf_ntb_attr_mw4_offset,
->  	&epf_ntb_attr_vbus_number,
->  	&epf_ntb_attr_vntb_pid,
->  	&epf_ntb_attr_vntb_vid,
-> --
-> 2.51.0
->
+Even if we had a different structure, we would still need to write the
+rpc_unloading_guest_driver_v1F_07 at some point, so we would need to
+refer to it in `fw` anyway. The current design is not any more lax than
+that, it just removes one step.
 
