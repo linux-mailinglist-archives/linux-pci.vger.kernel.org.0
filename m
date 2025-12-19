@@ -1,173 +1,135 @@
-Return-Path: <linux-pci+bounces-43347-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43348-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A19EBCCE802
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 06:15:58 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0377DCCEA3E
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 07:24:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 67844302ABAA
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 05:15:57 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 92228301E21C
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 06:24:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 910B22222C4;
-	Fri, 19 Dec 2025 05:15:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E83F295DBD;
+	Fri, 19 Dec 2025 06:24:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="miNJO5tr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebrCZXsA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E862022D793
-	for <linux-pci@vger.kernel.org>; Fri, 19 Dec 2025 05:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE55221FCF
+	for <linux-pci@vger.kernel.org>; Fri, 19 Dec 2025 06:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766121356; cv=none; b=HM55QSLzxkLACU/OU0bj0xJci5UyfiFS1Y6EZxJj3qjnQNUg/AdOFHIOFWc44D4ckANkP/zWtwPB79+nqBicZnY2VreL5dzNZeP5lerdNG5+IAlGU+l++BBFPICN1EeKjV24mC2jj+BwyvJxx1O13MuI8V08bnuDBgriHBI93AE=
+	t=1766125453; cv=none; b=RKoEQlcmuiBA8eAloLLjow3znmNCVJRZwHFettflcfmHIOncdNoRQYv2RCcQEQOT4Fwh+lfrHPAquIvysq3x5X60u+3EA6L5/J05BFesV966p2Wq3/n5Aen5MlEbCyWjKKG36uKrLHXCT8iJlbX3Ec+D/x2D/jUSICrvbs5+MOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766121356; c=relaxed/simple;
-	bh=cFqyeFbB1zVEz+ivYITj2OeUc7Hd+oEnsWJEaRGYWjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=OsXQPAo2eWzFZlSPH755D2Pt8TTRAGJhTD+jK8CFIHNuHJxqNfTH0F7BRdIt25za40Ag5SVsMvuMvTyPzu2y73iB1htHYamBSBqXXtvaYMOpvNIre/VWiwIPE8z7SFYpwpExQCmwDGr+hf1a2db/DXBGrsL/gZbaRqakuRHN9zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=miNJO5tr; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766121355; x=1797657355;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=cFqyeFbB1zVEz+ivYITj2OeUc7Hd+oEnsWJEaRGYWjg=;
-  b=miNJO5trWwxvXk6DrQh4auVbZNSR/YJnXbha7oZtzpeZmnuZw3wz+rOI
-   vauljEHxynLPr1twGGyQ7zPh/CkmZAMFuY6sPdGk54/Wygy25Sd4kQh3v
-   /TFN5aFrYIzZiZm6CXPmhLcktOq0gAM8dfbPQHhFLFGQZm8kWCbVohpDK
-   +595hyHCmqnjCz7ATDQ8XHMzUP1v/lGWxOGi/O+9t01crpr6cqmK6IcM/
-   0ShEg2shWsMlG5DRla7tj2CbwfurS7xDcjc6l8+E8CoP+jAFV3vTkxJEZ
-   ZiBMpgcSdkE0GMt4YlEZPkzoMD7ZvoQPlR0fIq85FexEk8Ph6P/2sWCVZ
-   A==;
-X-CSE-ConnectionGUID: TNHp1w9pQJyeyyp80spMEw==
-X-CSE-MsgGUID: Zx62NsgbTXGBeG7Txkv3zA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11646"; a="93556432"
-X-IronPort-AV: E=Sophos;i="6.21,159,1763452800"; 
-   d="scan'208";a="93556432"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2025 21:15:54 -0800
-X-CSE-ConnectionGUID: +zQry788TjetSQu2CUO0Hw==
-X-CSE-MsgGUID: Y6uVMh4hQQOk0iJkU/K5eg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,159,1763452800"; 
-   d="scan'208";a="198372333"
-Received: from lkp-server01.sh.intel.com (HELO 0d09efa1b85f) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 18 Dec 2025 21:15:52 -0800
-Received: from kbuild by 0d09efa1b85f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vWSqE-0000000033Y-2cSe;
-	Fri, 19 Dec 2025 05:15:50 +0000
-Date: Fri, 19 Dec 2025 13:15:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org, Frank Li <Frank.Li@nxp.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [pci:controller/dwc 8/8]
- drivers/pci/controller/dwc/pcie-designware-host.c:1175:6: warning: variable
- 'ret' is used uninitialized whenever 'if' condition is true
-Message-ID: <202512191339.583iyg1a-lkp@intel.com>
+	s=arc-20240116; t=1766125453; c=relaxed/simple;
+	bh=XAWQOPHI+WBur9sUSKJakJodjiC8otpU2/f3VX456fU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NR07syudI4TF8yRb8ONHqfaflIX/lFTF5oKM7PsiETToS3nTEBSddDzEjBvKw2VOhf+Hcc82GZCM61yLjn6syH5RImimcqjSPqAwXkwFYnX9vT46zIYYkb4mGbbOCnaL6/304DNZqkxxA2iQoOw8P40SAulp5gNSqtivbYptabY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ebrCZXsA; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-595819064cdso2223551e87.0
+        for <linux-pci@vger.kernel.org>; Thu, 18 Dec 2025 22:24:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766125450; x=1766730250; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XAWQOPHI+WBur9sUSKJakJodjiC8otpU2/f3VX456fU=;
+        b=ebrCZXsAqErQbbyfQR4lGBO2pjF8ckfxvS3SP3deY/sgu/TcIAn3uOZvsqJFI001og
+         JIyIgCEM0T7nIccBUbAbRfPs6GBmucn0WXyJg4N4Wx66c0TgjnvM/06SV7He4jlxL2lu
+         xJ7OWWu0WIAYcTzrrqsZZnDYM5UiTosmRzGkzFD3w5aVHFRJC4KZnS7M3NMbXrbx4P9p
+         KrjQkKwKT1kB4/S423C3G112enVfik/6E4kl85jjHedMiEtkWp5Ay3qEJDO4vwjHYuv6
+         dfc+3Z9dpEpnsPEDd3w72C5Gqh5hItLTsCDBLZdVdNTUb9MVBBf1cGVWOZEhNDLpQbIA
+         Tm4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766125450; x=1766730250;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XAWQOPHI+WBur9sUSKJakJodjiC8otpU2/f3VX456fU=;
+        b=oCADlfmAH1kN41M+nbQ+9hgMAomR5J0pqyJsX6DqJn7X5Jj5dDbtxKb6yL/Q4arn6Q
+         XUEETqYmOmW0cjaA2wzSilxgW4tPRi6WFaIZ2zU+L2Ah6fwPsjpsH0NfonzviVlxlGbP
+         4IlaUylb95sa7dv4riRHhzbp8Chq0QrrgLYg1PVoRqwkXDFnQQ6FHeA2m7rbaLHLndfl
+         G26ZS2lMo6zwE9Yhd2Pz1k4pncU1SGHWMNAchrJWCgOY2LHVfIgnNWt7YxkBGfldzHH7
+         ay28n+xj7WbvcLnATSIkwJNvSIG5SeTihGQnFCUnk2TRbTV8kELSaBdOm01GQMetMViu
+         +2pA==
+X-Forwarded-Encrypted: i=1; AJvYcCW64ac4WYns/xc3x7j+4kfiJ0jtx5GqMNi8IKHCr1xlJ5+lKiMvBXI6zwHTWFiBpSWDokJ3cnLPzIg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+ahPDoCWqQZNPAwuHaNZm6kRYnFACmZQPx53Ky6ZAeZvoZckz
+	dZ4E7AeF58L1ae78QiuJ6RZgl47JFouwwBDZpXJ8oRku5Yw1oFrtUsXGXxgXznzY+0KLl1ZjmN7
+	KKvDpKWQ5WcvOfZnD5TEo0PADL2EtODcRhg==
+X-Gm-Gg: AY/fxX7S9XARo7YSjFJE+aZQ1XDrlAhJgo2Cu6XBZEQScSUEDo9v/lQfKChmPaJN+nW
+	7rGu3RlO1uvT01MN9JKRYE7YxSce7EEyF85HZGUaDLmhnmSWDOqkGwEX4jqA5ni5d8UMnhpJfKR
+	JJ8myzDGOMn/8tGnmGCnmZGrpwePpIIitUttpQBbW8t4f9PuRLHtByKgre6mh4NRUMug6pItqG8
+	SqFiCu8wMwa6nkW43SZAexpVCKFXHQwE0drWsPWYMVBdIErgapM/y2+Z+QU6UokByapq0CJxg==
+X-Google-Smtp-Source: AGHT+IG39OQjwLBbQlGXdvI2kB58X2CZX464R4UmGvJTXolSZNqYm3iCf7S8/7Js0XD64zjpGJhfemP/i60fFr7ibO4=
+X-Received: by 2002:a05:6512:2256:b0:598:e2a1:acda with SMTP id
+ 2adb3069b0e04-59a124ebdf6mr1891409e87.10.1766125449509; Thu, 18 Dec 2025
+ 22:24:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CAHP4M8Uy7HLiKjnMCdNG+QG+0cizN82c_G87AuzDL6qDCBG5vg@mail.gmail.com>
+ <20251215045203.13d96d09.alex@shazbot.org> <CAHP4M8WeHz-3VbzKb_54C5UuWW-jtqvE=X37CSssUa5gti41GQ@mail.gmail.com>
+In-Reply-To: <CAHP4M8WeHz-3VbzKb_54C5UuWW-jtqvE=X37CSssUa5gti41GQ@mail.gmail.com>
+From: Ajay Garg <ajaygargnsit@gmail.com>
+Date: Fri, 19 Dec 2025 11:53:56 +0530
+X-Gm-Features: AQt7F2q1nf4Dstbm1IzyittrsqPG3RefuBbQcL9mL7jcHlLZu1idSosVvvP5p2s
+Message-ID: <CAHP4M8X=e+dP-T_if5eA=gccdbxkkObYvcrwA3qUBONKWW3W_w@mail.gmail.com>
+Subject: Re: A lingering doubt on PCI-MMIO region of PCI-passthrough-device
+To: Alex Williamson <alex@shazbot.org>, QEMU Developers <qemu-devel@nongnu.org>
+Cc: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc
-head:   c4a86e6600fa082d6646044fcce2183ad5e52283
-commit: c4a86e6600fa082d6646044fcce2183ad5e52283 [8/8] PCI: dwc: Skip PME_Turn_Off broadcast and L2/L3 transition during suspend if link is not up
-config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20251219/202512191339.583iyg1a-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251219/202512191339.583iyg1a-lkp@intel.com/reproduce)
+Hi Alex.
+Kindly help if the steps listed in the previous email are correct.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512191339.583iyg1a-lkp@intel.com/
+(Have added qemu mailing-list too, as it might be a qemu thing too as
+virtual-pci is in picture).
 
-All warnings (new ones prefixed by >>):
-
->> drivers/pci/controller/dwc/pcie-designware-host.c:1175:6: warning: variable 'ret' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
-    1175 |         if (!dw_pcie_link_up(pci))
-         |             ^~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/controller/dwc/pcie-designware-host.c:1218:9: note: uninitialized use occurs here
-    1218 |         return ret;
-         |                ^~~
-   drivers/pci/controller/dwc/pcie-designware-host.c:1175:2: note: remove the 'if' if its condition is always false
-    1175 |         if (!dw_pcie_link_up(pci))
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-    1176 |                 goto stop_link;
-         |                 ~~~~~~~~~~~~~~
-   drivers/pci/controller/dwc/pcie-designware-host.c:1173:9: note: initialize the variable 'ret' to silence this warning
-    1173 |         int ret;
-         |                ^
-         |                 = 0
-   1 warning generated.
-
-
-vim +1175 drivers/pci/controller/dwc/pcie-designware-host.c
-
-  1168	
-  1169	int dw_pcie_suspend_noirq(struct dw_pcie *pci)
-  1170	{
-  1171		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-  1172		u32 val;
-  1173		int ret;
-  1174	
-> 1175		if (!dw_pcie_link_up(pci))
-  1176			goto stop_link;
-  1177	
-  1178		/*
-  1179		 * If L1SS is supported, then do not put the link into L2 as some
-  1180		 * devices such as NVMe expect low resume latency.
-  1181		 */
-  1182		if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
-  1183			return 0;
-  1184	
-  1185		if (pci->pp.ops->pme_turn_off) {
-  1186			pci->pp.ops->pme_turn_off(&pci->pp);
-  1187		} else {
-  1188			ret = dw_pcie_pme_turn_off(pci);
-  1189			if (ret)
-  1190				return ret;
-  1191		}
-  1192	
-  1193		ret = read_poll_timeout(dw_pcie_get_ltssm, val,
-  1194					val == DW_PCIE_LTSSM_L2_IDLE ||
-  1195					val <= DW_PCIE_LTSSM_DETECT_WAIT,
-  1196					PCIE_PME_TO_L2_TIMEOUT_US/10,
-  1197					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
-  1198		if (ret) {
-  1199			/* Only log message when LTSSM isn't in DETECT or POLL */
-  1200			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
-  1201			return ret;
-  1202		}
-  1203	
-  1204		/*
-  1205		 * Per PCIe r6.0, sec 5.3.3.2.1, software should wait at least
-  1206		 * 100ns after L2/L3 Ready before turning off refclock and
-  1207		 * main power. This is harmless when no endpoint is connected.
-  1208		 */
-  1209		udelay(1);
-  1210	
-  1211	stop_link:
-  1212		dw_pcie_stop_link(pci);
-  1213		if (pci->pp.ops->deinit)
-  1214			pci->pp.ops->deinit(&pci->pp);
-  1215	
-  1216		pci->suspended = true;
-  1217	
-  1218		return ret;
-  1219	}
-  1220	EXPORT_SYMBOL_GPL(dw_pcie_suspend_noirq);
-  1221	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On Mon, Dec 15, 2025 at 9:20=E2=80=AFAM Ajay Garg <ajaygargnsit@gmail.com> =
+wrote:
+>
+> Thanks Alex.
+>
+> So does something like the following happen :
+>
+> i)
+> During bootup, guest starts pci-enumeration as usual.
+>
+> ii)
+> Upon discovering the "passthrough-device", guest carves the physical
+> MMIO regions (as usual) in the guest's physical-address-space, and
+> starts-to/attempts to program the BARs with the
+> guest-physical-base-addresses carved out.
+>
+> iii)
+> These attempts to program the BARs (lying in the
+> "passthrough-device"'s config-space), are intercepted by the
+> hypervisor instead (causing a VM-exit in the interim).
+>
+> iv)
+> The hypervisor uses the above info to update the EPT, to ensure GPA =3D>
+> HPA conversions go fine when the guest tries to access the PCI-MMIO
+> regions later (once gurst is fully booted up). Also, the hypervisor
+> marks the operation as success (without "really" re-programming the
+> BARs).
+>
+> v)
+> The VM-entry is called, and the guest resumes with the "impression"
+> that the BARs have been "programmed by guest".
+>
+> Is the above sequencing correct at a bird's view level?
+>
+>
+> Once again, many thanks for the help !
+>
+> Thanks and Regards,
+> Ajay
 
