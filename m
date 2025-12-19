@@ -1,154 +1,95 @@
-Return-Path: <linux-pci+bounces-43363-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43364-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3838CCF73E
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 11:48:08 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14849CCF8D2
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 12:18:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B21E530E928B
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 10:43:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9637D301F241
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 11:18:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCF5F2FE057;
-	Fri, 19 Dec 2025 10:43:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IoSCk23s"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC63130DEBD;
+	Fri, 19 Dec 2025 11:18:39 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854782376FD;
-	Fri, 19 Dec 2025 10:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9812FF161;
+	Fri, 19 Dec 2025 11:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766140983; cv=none; b=GAJxY/SLTRBY55SJYQCM00S9p4zUDp5MFn7cVRpwMsek1H+x10yPUdodcbJe1H9VzPeypexoga/Gll1zb2Rl/+d2eJtfQL6KoCUYwMJqXmXi2ThUaGjjArUoIgQvK4hX0P7GwD7APze+8DV+DPFb4fzTYP4QcQu/hDuyrpu60vM=
+	t=1766143119; cv=none; b=WGl23CN3ZX810LisSfZIZ8lfkjMmKGRyS1Wc8Q9N2C8PqT0pUfr1lFGJdhoW3fEvC7afeVyhLKJyV7+ug8nBlXcDt/j/0tWjz64jO5AI40hsMLeulWB5m+vuYv/iVqTfaEjOVRCWCgA9kdsltdwWp8Z0Dc/nDmoK41P9TJFoStw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766140983; c=relaxed/simple;
-	bh=xkz5LUlBElFB9CvO+KaW9xJq6o3zkwL/JUJof/pyJKA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=duZNV3qQdGCYfd5z6Oj72GMxTB9ZKoUFQsLH73hhV6vhcCD5NVQjf5pDGfUYJqK3T9srdXHdCUA5/uyvJkptI4+NLouOK7O6QdKddL8lbWdRYfhcBy6n4staKKUQE3g2ukU+yXFDFs4M700A4VTMDsoklK9q1tINDt28ves/cKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IoSCk23s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA22C116B1;
-	Fri, 19 Dec 2025 10:42:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766140982;
-	bh=xkz5LUlBElFB9CvO+KaW9xJq6o3zkwL/JUJof/pyJKA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IoSCk23sz5zIAMhhpVSs+yWPq39dQ9XP469p2h5DRvRKuQSWJCW2G3aAoGFxmnsjR
-	 Y32S/nKLSMqJ8XvXJKKPt1Pzpofi4UzTmoFWnZQTyGWFQz4ePg61LHGxoS+EcGC+NQ
-	 rfPbh8jYbxXKaB/AGYclGcYhStpeiAoJ/12kcGwbssjeStmDEloHn/SePTEosz4mwy
-	 G+vuPh2d0k95qzFbVEsc/KQWud+YIsUIaPB8UK+YQUGKiFYja2/8mIkLB/xrgH7i4X
-	 V+i7y2DKw0yuhlxec2sGVW+fAC912w7KlOivIwf7iRrBCC+ahIV3bcQIFwCrmc/BQQ
-	 Lj3bhY4plfj4w==
-Message-ID: <0fa95ea2-4539-472b-adae-300e46a78f20@kernel.org>
-Date: Fri, 19 Dec 2025 19:42:57 +0900
+	s=arc-20240116; t=1766143119; c=relaxed/simple;
+	bh=NHolfz4XzXR6zIHhuwax5OUL7/pF4kuUuASqumpMD1M=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S4xtKa13XqJGNdsDofmFQqaoIAhVD+9snfj6X7Tajpku6rsl+1cVym6J8Ez52nSmFCYz4krxp17//Qy0AIh8OEt6ZZvOIR8wyfbXT9ceKILq0uvGnkalrM47F9znQw/qLTjpKhGYHgc0zIuZrxRrtNikB3PKhayX0EfX5oX0lk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dXlQ235hZzJ46DS;
+	Fri, 19 Dec 2025 19:18:02 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id E9D1640569;
+	Fri, 19 Dec 2025 19:18:34 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Fri, 19 Dec
+ 2025 11:18:34 +0000
+Date: Fri, 19 Dec 2025 11:18:32 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Xu Yilun <yilun.xu@linux.intel.com>
+CC: <linux-coco@lists.linux.dev>, <linux-pci@vger.kernel.org>,
+	<chao.gao@intel.com>, <dave.jiang@intel.com>, <baolu.lu@linux.intel.com>,
+	<yilun.xu@intel.com>, <zhenzhong.duan@intel.com>, <kvm@vger.kernel.org>,
+	<rick.p.edgecombe@intel.com>, <dave.hansen@linux.intel.com>,
+	<dan.j.williams@intel.com>, <kas@kernel.org>, <x86@kernel.org>
+Subject: Re: [PATCH v1 03/26] coco/tdx-host: Support Link TSM for TDX host
+Message-ID: <20251219111832.00004a6b@huawei.com>
+In-Reply-To: <20251117022311.2443900-4-yilun.xu@linux.intel.com>
+References: <20251117022311.2443900-1-yilun.xu@linux.intel.com>
+	<20251117022311.2443900-4-yilun.xu@linux.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/8] nvmet: pci-epf: Use
- dmaengine_prep_config_single_safe() API
-To: Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, Koichiro Den <den@valinux.co.jp>,
- Niklas Cassel <cassel@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
- mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- imx@lists.linux.dev
-References: <20251218-dma_prep_config-v2-0-c07079836128@nxp.com>
- <20251218-dma_prep_config-v2-6-c07079836128@nxp.com>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20251218-dma_prep_config-v2-6-c07079836128@nxp.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-On 12/19/25 00:56, Frank Li wrote:
-> Use the new dmaengine_prep_config_single_safe() API to combine the
-> configuration and descriptor preparation into a single call.
+On Mon, 17 Nov 2025 10:22:47 +0800
+Xu Yilun <yilun.xu@linux.intel.com> wrote:
+
+> Register a Link TSM instance to support host side TSM operations for
+> TDISP, when the TDX Connect support bit is set by TDX Module in
+> tdx_feature0.
 > 
-> Since dmaengine_prep_config_single_safe() performs the configuration and
-> preparation atomically and dw edma driver implement prep_config_sg() call
-> back, so dmaengine_prep_config_single() is reentriable, the mutex can be
-> removed.
-
-What about for platforms other than DesignWare EDMA ?
-This is a generic endpoint driver that can work on any platform that is endpoint
-capable and that has a DMA channel for the PCI endpoint.
-
-The dmaengine_prep_config_single_safe() API should be handling everything
-transparently for any platform, regardless of the DMA channel driver
-implementing or not the prep_config_sg() callback.
-
-For platforms that do not implement it, I suspect that the mutex will still be
-needed here. So how to we resolve this ? Ideally, all of that should be hidden
-by the DMA API. The endpoint driver should not need to deal with these differences.
-
+> This is the main purpose of an independent tdx-host module out of TDX
+> core. Recall that a TEE Security Manager (TSM) is a platform agent that
+> speaks the TEE Device Interface Security Protocol (TDISP) to PCIe
+> devices and manages private memory resources for the platform. An
+> independent tdx-host module allows for device-security enumeration and
+> initialization flows to be deferred from other TDX Module initialization
+> requirements. Crucially, when / if TDX Module init moves earlier in x86
+> initialization flow this driver is still guaranteed to run after IOMMU
+> and PCI init (i.e. subsys_initcall() vs device_initcall()).
 > 
-> Tested-by: Niklas Cassel <cassel@kernel.org>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/nvme/target/pci-epf.c | 18 ++++--------------
->  1 file changed, 4 insertions(+), 14 deletions(-)
+> The ability to unload the module, or unbind the driver is also useful
+> for debug and coarse grained transitioning between PCI TSM operation and
+> PCI CMA operation (native kernel PCI device authentication).
 > 
-> diff --git a/drivers/nvme/target/pci-epf.c b/drivers/nvme/target/pci-epf.c
-> index 56b1c6a7706a9e2dd9d8aaf17b440129b948486c..8b5ea5d4c79dfd461b767cfd4033a9e4604c94b1 100644
-> --- a/drivers/nvme/target/pci-epf.c
-> +++ b/drivers/nvme/target/pci-epf.c
-> @@ -388,22 +388,15 @@ static int nvmet_pci_epf_dma_transfer(struct nvmet_pci_epf *nvme_epf,
->  		return -EINVAL;
->  	}
->  
-> -	mutex_lock(lock);
-> -
->  	dma_dev = dmaengine_get_dma_device(chan);
->  	dma_addr = dma_map_single(dma_dev, seg->buf, seg->length, dir);
->  	ret = dma_mapping_error(dma_dev, dma_addr);
->  	if (ret)
-> -		goto unlock;
-> -
-> -	ret = dmaengine_slave_config(chan, &sconf);
-> -	if (ret) {
-> -		dev_err(dev, "Failed to configure DMA channel\n");
-> -		goto unmap;
-> -	}
-> +		return ret;
->  
-> -	desc = dmaengine_prep_slave_single(chan, dma_addr, seg->length,
-> -					   sconf.direction, DMA_CTRL_ACK);
-> +	desc = dmaengine_prep_config_single_safe(chan, dma_addr, seg->length,
-> +						 sconf.direction,
-> +						 DMA_CTRL_ACK, &sconf);
->  	if (!desc) {
->  		dev_err(dev, "Failed to prepare DMA\n");
->  		ret = -EIO;
-> @@ -426,9 +419,6 @@ static int nvmet_pci_epf_dma_transfer(struct nvmet_pci_epf *nvme_epf,
->  unmap:
->  	dma_unmap_single(dma_dev, dma_addr, seg->length, dir);
->  
-> -unlock:
-> -	mutex_unlock(lock);
-> -
->  	return ret;
->  }
->  
+> For now this is the basic boilerplate with operation flows to be added
+> later.
 > 
+> Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+All very standard looking which is just what we want to see!
 
-
--- 
-Damien Le Moal
-Western Digital Research
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
