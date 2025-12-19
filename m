@@ -1,220 +1,144 @@
-Return-Path: <linux-pci+bounces-43391-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43392-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9FD3CCFDF5
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 13:46:54 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3ACEFCCFDEF
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 13:46:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 450653105CFE
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 12:41:28 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 87E173033582
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Dec 2025 12:45:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51F60326931;
-	Fri, 19 Dec 2025 12:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i2UGar3y"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89C15329C78;
+	Fri, 19 Dec 2025 12:44:18 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC4232ABC1;
-	Fri, 19 Dec 2025 12:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8858328B64;
+	Fri, 19 Dec 2025 12:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766148085; cv=none; b=ZP1qTn53J/vIPD42ZVs51shPKmTUPQrsIQ4rfQ/CDSaSmgVwhdLc3IzEb7TCZ6LIYf82LkTO8cXpqG1mY5GPk6K8Uhuh2dzDMzk1ujQn1xOCWLdTJd4rgIhiHlZ08ZQV7c/qvo0UIOSWBRP/rlh5hzjjGGpRBAjraqUKJn1Umqs=
+	t=1766148258; cv=none; b=Y29o5UKShAmVgET2RfMihwnGkaF84wWVVp6ZzmiUI8nUZGBzK0Gb9EsDc2mKOYB0VTF7vPx8ACZHGxll8fXRt3KjY5rX3Y8Q2zBjwRlPE+hN+2AeFDrr1cSjZMRU66fKD30nj48fa7pjgBip99pKe27kye2DBAMCg4fQfZadzmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766148085; c=relaxed/simple;
-	bh=YiVlGQCr+FTIJ4B2/AoJNeziKA/MhUEzfyR0foaLu2g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=husHebaQxETbJKsZhwV+hYjnOHPdjzCzeu05QvunEn4S2PGtlaKzk6jn6S3tUH2xY3YvqPnr0SlXEnL0z19O2/cpWS0pNmp7kXE44ttGi7C6ow3nkIJ/odkFJlfXMA5cMcnD05sLYRqvr88J/Hx8FNVfJ8VQXkrUXbyatAItV2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i2UGar3y; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766148083; x=1797684083;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YiVlGQCr+FTIJ4B2/AoJNeziKA/MhUEzfyR0foaLu2g=;
-  b=i2UGar3yXwWQbaAHjyKf6qzFrUqkP1yEVIG//RjHIWT1TySNftplhsXI
-   xXj8jwgRu96qpsjPIMtp2QqQDIwH4p4fbCloSQn01xdGkgWLel0hKoPu7
-   pzXxcTctHzDUzObhkVXIm27jLj4fQcgV0N18JLjQBIPbhKokpmX3JKonS
-   +hcTClf63fjFS0780PDgiyBh1Z1j7BUuKjq+bO+mXirltCF3GwJ0b2Ijh
-   s+sbQJJjghgdNJwW0umAR9nzk0cR4Bk/5oWrKGsqIfuoSZsgd1OLb7GIW
-   iTM3OEV/XXHa0pvEhWHJl3dtxezjSuuixcTF2aoHhuRHvio7QdO2Eg+RJ
-   Q==;
-X-CSE-ConnectionGUID: COthT8mgRHqM5Y+8B14zpA==
-X-CSE-MsgGUID: zqK5nn2SSTOz7XLAmUdKww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11646"; a="78742760"
-X-IronPort-AV: E=Sophos;i="6.21,161,1763452800"; 
-   d="scan'208";a="78742760"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2025 04:41:23 -0800
-X-CSE-ConnectionGUID: /mUh9VRuT1iN9qqHBweqWg==
-X-CSE-MsgGUID: dTwCf6M5QyixEW97DiZ4Pw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,161,1763452800"; 
-   d="scan'208";a="198444435"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.52])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2025 04:41:17 -0800
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: Rafael J Wysocki <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: [PATCH 5/5 v8] ACPI: extlog: Trace CPER CXL Protocol Error Section
-Date: Fri, 19 Dec 2025 13:39:44 +0100
-Message-ID: <20251219124042.3759749-6-fabio.m.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251219124042.3759749-1-fabio.m.de.francesco@linux.intel.com>
-References: <20251219124042.3759749-1-fabio.m.de.francesco@linux.intel.com>
+	s=arc-20240116; t=1766148258; c=relaxed/simple;
+	bh=iKzE5RauLDZe0i/Y6euP5eyddQjGmkaX1s8zq51NfAA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ru6//MhQ9GI75ObsRMmDsEt/zKYBVGrzut4ynNMVan4TTsN27Yiksk07341fgdKljHBz9ZSNbR1fL3HfnMmNonZ3STTGOg2JFs+g8oW3BrRyCtD+zGyF0S03+KiNfu4dqiRb/fJeH/a6CclncGOgtM76gR6RUUF0p5rfXsLcI/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.150])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dXnJq2qplzJ468V;
+	Fri, 19 Dec 2025 20:43:39 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 04D5140565;
+	Fri, 19 Dec 2025 20:44:12 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Fri, 19 Dec
+ 2025 12:44:11 +0000
+Date: Fri, 19 Dec 2025 12:44:09 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: Linux ACPI <linux-acpi@vger.kernel.org>, LKML
+	<linux-kernel@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, Bjorn
+ Helgaas <helgaas@kernel.org>, Srinivas Pandruvada
+	<srinivas.pandruvada@linux.intel.com>, Hans de Goede <hansg@kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v1 3/8] ACPI: bus: Split _OSC evaluation out of
+ acpi_run_osc()
+Message-ID: <20251219124409.00002f4e@huawei.com>
+In-Reply-To: <3407425.44csPzL39Z@rafael.j.wysocki>
+References: <5049211.GXAFRqVoOG@rafael.j.wysocki>
+	<3407425.44csPzL39Z@rafael.j.wysocki>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-When Firmware First is enabled, BIOS handles errors first and then it
-makes them available to the kernel via the Common Platform Error Record
-(CPER) sections (UEFI 2.11 Appendix N.2.13). Linux parses the CPER
-sections via one of two similar paths, either ELOG or GHES. The errors
-managed by ELOG are signaled to the BIOS by the I/O Machine Check
-Architecture (I/O MCA).
+On Thu, 18 Dec 2025 21:36:08 +0100
+"Rafael J. Wysocki" <rafael@kernel.org> wrote:
 
-Currently, ELOG and GHES show some inconsistencies in how they report to
-userspace via trace events.
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Split a function for evaluating _OSL called acpi_eval_osc() out of
 
-Therefore, make the two mentioned paths act similarly by tracing the CPER
-CXL Protocol Error Section.
+_OSC
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
----
- drivers/acpi/Kconfig       |  2 ++
- drivers/acpi/acpi_extlog.c | 24 ++++++++++++++++++++++++
- drivers/cxl/core/ras.c     |  3 ++-
- include/cxl/event.h        |  2 ++
- 4 files changed, 30 insertions(+), 1 deletion(-)
+> acpi_run_osc() to facilitate subsequent changes and add some more
+> parameters sanity checks to the latter.
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-index ca00a5dbcf750..df0ff0764d0d5 100644
---- a/drivers/acpi/Kconfig
-+++ b/drivers/acpi/Kconfig
-@@ -494,6 +494,8 @@ config ACPI_EXTLOG
- 	tristate "Extended Error Log support"
- 	depends on X86_MCE && X86_LOCAL_APIC && EDAC
- 	select UEFI_CPER
-+	select ACPI_APEI
-+	select ACPI_APEI_GHES
- 	help
- 	  Certain usages such as Predictive Failure Analysis (PFA) require
- 	  more information about the error than what can be described in
-diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-index 88a2237772c26..7ad3b36013cc6 100644
---- a/drivers/acpi/acpi_extlog.c
-+++ b/drivers/acpi/acpi_extlog.c
-@@ -12,6 +12,7 @@
- #include <linux/ratelimit.h>
- #include <linux/edac.h>
- #include <linux/ras.h>
-+#include <cxl/event.h>
- #include <acpi/ghes.h>
- #include <asm/cpu.h>
- #include <asm/mce.h>
-@@ -162,6 +163,23 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
- #endif
- }
- 
-+static void
-+extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-+				int severity)
-+{
-+#ifdef ACPI_APEI_PCIEAER
-+	struct cxl_cper_prot_err_work_data wd;
-+
-+	if (cxl_cper_sec_prot_err_valid(prot_err))
-+		return;
-+
-+	if (cxl_cper_setup_prot_err_work_data(&wd, prot_err, severity))
-+		return;
-+
-+	cxl_cper_handle_prot_err(&wd);
-+#endif
-+}
-+
- static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			void *data)
- {
-@@ -213,6 +231,12 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			if (gdata->error_data_length >= sizeof(*mem))
- 				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
- 						       (u8)gdata->error_severity);
-+		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
-+			struct cxl_cper_sec_prot_err *prot_err =
-+				acpi_hest_get_payload(gdata);
-+
-+			extlog_cxl_cper_handle_prot_err(prot_err,
-+							gdata->error_severity);
- 		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
- 			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
- 
-diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-index 2731ba3a07993..a90480d07c878 100644
---- a/drivers/cxl/core/ras.c
-+++ b/drivers/cxl/core/ras.c
-@@ -63,7 +63,7 @@ static int match_memdev_by_parent(struct device *dev, const void *uport)
- 	return 0;
- }
- 
--static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
-+void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
- {
- 	unsigned int devfn = PCI_DEVFN(data->prot_err.agent_addr.device,
- 				       data->prot_err.agent_addr.function);
-@@ -104,6 +104,7 @@ static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
- 	else
- 		cxl_cper_trace_uncorr_prot_err(cxlmd, data->ras_cap);
- }
-+EXPORT_SYMBOL_GPL(cxl_cper_handle_prot_err);
- 
- static void cxl_cper_prot_err_work_fn(struct work_struct *work)
- {
-diff --git a/include/cxl/event.h b/include/cxl/event.h
-index 94081aec597ae..ff97fea718d2c 100644
---- a/include/cxl/event.h
-+++ b/include/cxl/event.h
-@@ -340,4 +340,6 @@ cxl_cper_setup_prot_err_work_data(struct cxl_cper_prot_err_work_data *wd,
- }
- #endif
- 
-+void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *wd);
-+
- #endif /* _LINUX_CXL_EVENT_H */
--- 
-2.52.0
+One comment on the fun static keyword usage.  Next time I have
+to ask/answer some silly C questions in an interview that one is definitely going
+in :)
+> ---
+>  drivers/acpi/bus.c |   89 ++++++++++++++++++++++++++++++-----------------------
+>  1 file changed, 52 insertions(+), 37 deletions(-)
+> 
+> --- a/drivers/acpi/bus.c
+> +++ b/drivers/acpi/bus.c
+> @@ -195,52 +195,67 @@ static void acpi_dump_osc_data(acpi_hand
+>  			 OSC_INVALID_REVISION_ERROR | \
+>  			 OSC_CAPABILITIES_MASK_ERROR)
+>  
+> -acpi_status acpi_run_osc(acpi_handle handle, struct acpi_osc_context *context)
+> +static int acpi_eval_osc(acpi_handle handle, guid_t *guid, int rev,
+> +			 struct acpi_buffer *cap,
+> +			 union acpi_object in_params[static 4],
+
+This static usage has such non intuitive behavior maybe use
+the new at_least marking in compiler_types.h to indicate
+what protection against wrong sizes it can offer.
+
+> +			 struct acpi_buffer *output)
+>  {
+> -	acpi_status status;
+>  	struct acpi_object_list input;
+> -	union acpi_object in_params[4];
+>  	union acpi_object *out_obj;
+> +	acpi_status status;
+> +
+> +	in_params[0].type = ACPI_TYPE_BUFFER;
+> +	in_params[0].buffer.length = sizeof(*guid);
+> +	in_params[0].buffer.pointer = (u8 *)guid;
+> +	in_params[1].type = ACPI_TYPE_INTEGER;
+> +	in_params[1].integer.value = rev;
+> +	in_params[2].type = ACPI_TYPE_INTEGER;
+> +	in_params[2].integer.value = cap->length / sizeof(u32);
+> +	in_params[3].type = ACPI_TYPE_BUFFER;
+> +	in_params[3].buffer.length = cap->length;
+> +	in_params[3].buffer.pointer = cap->pointer;
+> +	input.pointer = in_params;
+> +	input.count = 4;
+> +
+> +	output->length = ACPI_ALLOCATE_BUFFER;
+> +	output->pointer = NULL;
+> +
+> +	status = acpi_evaluate_object(handle, "_OSC", &input, output);
+> +	if (ACPI_FAILURE(status) || !output->length)
+> +		return -ENODATA;
+> +
+> +	out_obj = output->pointer;
+> +	if (out_obj->type != ACPI_TYPE_BUFFER ||
+> +	    out_obj->buffer.length != cap->length) {
+> +		acpi_handle_debug(handle, "Invalid _OSC return buffer\n");
+> +		acpi_dump_osc_data(handle, guid, rev, cap);
+> +		ACPI_FREE(out_obj);
+> +		return -ENODATA;
+> +	}
+> +
+> +	return 0;
+> +}
 
 
