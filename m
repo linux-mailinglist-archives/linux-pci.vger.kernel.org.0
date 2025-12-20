@@ -1,40 +1,40 @@
-Return-Path: <linux-pci+bounces-43456-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43458-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BBA5CD26F6
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Dec 2025 05:16:44 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3516CD2723
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Dec 2025 05:20:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 58FF730249BB
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Dec 2025 04:16:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0EADA3010ABA
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Dec 2025 04:16:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1F742F1FCF;
-	Sat, 20 Dec 2025 04:16:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B4712F7AD8;
+	Sat, 20 Dec 2025 04:16:21 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EB827EFE3;
-	Sat, 20 Dec 2025 04:16:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E88D2F5A09;
+	Sat, 20 Dec 2025 04:16:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766204177; cv=none; b=pjTUlQp4YeUYKe+w7WUJdylk2QIvSToAa/OLDejg/CnVGd5iI0Lipji0bnAZY7je7hveHbUh7NaRLdaxFD5LN1ytH/Qv1DL9V5f6J84XGCwYpSXDMNZC1NYiWWGkCOo88LkZ+BNVxc9ZiATweIMSfN8+YFubSEBH4PwbnSlNtoc=
+	t=1766204181; cv=none; b=VYpcOLT137Bf5jKVqcGgYcCxYCd63ipwDw0n3JKm4IZcl7SpVavG/QwREP0AxvDKgpV4K5Y6P+YvqgELMUonSVT+QZl1q4gdv8xQp0HlY25kZ50T/GjSE0kPGrkBo4ZPhW3KIH5YT3ajkfefdM/7Shd2ErEo6dHq6XY/+8Pp9Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766204177; c=relaxed/simple;
-	bh=sWxn4m0VtswJJMDsL52vwPsZZi6e7XbRViKbtvda+po=;
+	s=arc-20240116; t=1766204181; c=relaxed/simple;
+	bh=vpg4Y2CuK0BF6n9ne9C/TlupCZKIO9PBgYQ/GswlUyM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O5i/Mc4fROlD0xzG8EEs/7k/svmMHajURC7j/2CH+4P1WsTwpbo4G6PgH2bwgjngtFmixjyV0GgK9XZutjx88d1RMFjWWn6pHg1L8xxz+oarScq2/pzqzEuMNYLv8QV6E/MdL2f6W1w63g++//ImboAInXGgvpBqhrefbqsptDM=
+	 MIME-Version; b=buBGnhsHm4Fnjhoivw3eCdEXO0MQQrGvA/tDBUYua2TSCjC5BUQynXVSwjySkMR37FW1gwrKJI0Ai1IDcS4rklWe+68bK2/xmyAf5FSefUABed0FNCf+HkutdWXTGcMG+3In+e6O5l9vx4KROm2I9CHfJ1FZPJf4fvuOKZ8mN/M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dYB0817ZkzYQtfq;
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dYB081cnVzYQtj5;
 	Sat, 20 Dec 2025 12:15:36 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 7DF374058F;
+	by mail.maildlp.com (Postfix) with ESMTP id 8ED824056D;
 	Sat, 20 Dec 2025 12:16:07 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP4 (Coremail) with SMTP id gCh0CgD3WPn5IkZpFwpFAw--.56015S12;
+	by APP4 (Coremail) with SMTP id gCh0CgD3WPn5IkZpFwpFAw--.56015S13;
 	Sat, 20 Dec 2025 12:16:07 +0800 (CST)
 From: Hou Tao <houtao@huaweicloud.com>
 To: linux-kernel@vger.kernel.org
@@ -57,9 +57,9 @@ Cc: linux-pci@vger.kernel.org,
 	Christoph Hellwig <hch@lst.de>,
 	Sagi Grimberg <sagi@grimberg.me>,
 	houtao1@huawei.com
-Subject: [PATCH 08/13] mm/huge_memory: add helpers to insert huge page during mmap
-Date: Sat, 20 Dec 2025 12:04:41 +0800
-Message-Id: <20251220040446.274991-9-houtao@huaweicloud.com>
+Subject: [PATCH 09/13] PCI/P2PDMA: support get_unmapped_area to return aligned vaddr
+Date: Sat, 20 Dec 2025 12:04:42 +0800
+Message-Id: <20251220040446.274991-10-houtao@huaweicloud.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20251220040446.274991-1-houtao@huaweicloud.com>
 References: <20251220040446.274991-1-houtao@huaweicloud.com>
@@ -70,10 +70,10 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3WPn5IkZpFwpFAw--.56015S12
-X-Coremail-Antispam: 1UD129KBjvJXoWxZryfJFyfCF45JrW8WF47twb_yoW5uF17pF
-	97GFn8ZrWIqrnrurnxWFs8Ary3X3yxWayUKFW7WF1ava17t34F9a1kJw15tF15JryUCFs3
-	Xa17GFy5uFyUWa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgD3WPn5IkZpFwpFAw--.56015S13
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw1UWFW5JF1UAF15GF15urg_yoW8Kr18pF
+	WrtF98JrW8twsrKFWaya1DZry3Wwn5KryjkrWxK34a93W3GFnxWay5Aa4YqF13J34kW3W7
+	tanIkr47urWDJ3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUPlb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -92,116 +92,74 @@ X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
 
 From: Hou Tao <houtao1@huawei.com>
 
-vmf_insert_folio_{pmd,pud}() can be used to insert huge page during page
-fault. However, for simplicity, the mapping of p2pdma memory inserts all
-necessary pages during mmap. Therefore, add vm_insert_folio_{pmd|pud}
-helpers to support inserting pmd-sized and pud-sized page during mmap.
+P2PDMA memory already supports compound page. When mmapping the P2PDMA
+memory in the userspace, the mmap procedure needs to use an aligned
+virtual address to match the alignment of P2PDMA memory. Therefore,
+implement get_unmapped_area for p2pdma memory to return an aligned
+virtual address.
 
 Signed-off-by: Hou Tao <houtao1@huawei.com>
 ---
- include/linux/huge_mm.h |  4 +++
- mm/huge_memory.c        | 66 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 70 insertions(+)
+ drivers/pci/p2pdma.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index a4d9f964dfde..8cf8bb85be79 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -45,6 +45,10 @@ vm_fault_t vmf_insert_folio_pmd(struct vm_fault *vmf, struct folio *folio,
- 				bool write);
- vm_fault_t vmf_insert_folio_pud(struct vm_fault *vmf, struct folio *folio,
- 				bool write);
-+int vm_insert_folio_pmd(struct vm_area_struct *vma, unsigned long addr,
-+			struct folio *folio);
-+int vm_insert_folio_pud(struct vm_area_struct *vma, unsigned long addr,
-+			struct folio *folio);
- 
- enum transparent_hugepage_flag {
- 	TRANSPARENT_HUGEPAGE_UNSUPPORTED,
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 40cf59301c21..11d19f8986da 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1644,6 +1644,41 @@ vm_fault_t vmf_insert_folio_pmd(struct vm_fault *vmf, struct folio *folio,
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 7180dea4855c..e97f5da73458 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -90,6 +90,44 @@ static ssize_t published_show(struct device *dev, struct device_attribute *attr,
  }
- EXPORT_SYMBOL_GPL(vmf_insert_folio_pmd);
+ static DEVICE_ATTR_RO(published);
  
-+int vm_insert_folio_pmd(struct vm_area_struct *vma, unsigned long addr,
-+			struct folio *folio)
++static unsigned long p2pmem_get_unmapped_area(struct file *filp, struct kobject *kobj,
++					      const struct bin_attribute *attr,
++					      unsigned long uaddr, unsigned long len,
++					      unsigned long pgoff, unsigned long flags)
 +{
-+	struct mm_struct *mm = vma->vm_mm;
-+	struct folio_or_pfn fop = {
-+		.folio = folio,
-+		.is_folio = true,
-+	};
-+	pgd_t *pgd;
-+	p4d_t *p4d;
-+	pud_t *pud;
-+	pmd_t *pmd;
-+	vm_fault_t fault_err;
++	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
++	struct pci_p2pdma *p2pdma;
++	unsigned long aligned_len;
++	unsigned long addr;
++	unsigned long align;
 +
-+	mmap_assert_write_locked(mm);
-+
-+	pgd = pgd_offset(mm, addr);
-+	p4d = p4d_alloc(mm, pgd, addr);
-+	if (!p4d)
-+		return -ENOMEM;
-+	pud = pud_alloc(mm, p4d, addr);
-+	if (!pud)
-+		return -ENOMEM;
-+	pmd = pmd_alloc(mm, pud, addr);
-+	if (!pmd)
-+		return -ENOMEM;
-+
-+	fault_err = insert_pmd(vma, addr, pmd, fop, vma->vm_page_prot,
-+			       vma->vm_flags & VM_WRITE);
-+	if (fault_err != VM_FAULT_NOPAGE)
++	if (pgoff)
 +		return -EINVAL;
 +
-+	return 0;
++	rcu_read_lock();
++	p2pdma = rcu_dereference(pdev->p2pdma);
++	if (!p2pdma) {
++		rcu_read_unlock();
++		return -ENODEV;
++	}
++	align = p2pdma->align;
++	rcu_read_unlock();
++
++	/* Fixed address */
++	if (uaddr)
++		goto out;
++
++	aligned_len = len + align;
++	if (aligned_len < len)
++		goto out;
++
++	addr = mm_get_unmapped_area(filp, uaddr, aligned_len, pgoff, flags);
++	if (!IS_ERR_VALUE(addr))
++		return round_up(addr, align);
++out:
++	return mm_get_unmapped_area(filp, uaddr, len, pgoff, flags);
 +}
 +
- #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
- static pud_t maybe_pud_mkwrite(pud_t pud, struct vm_area_struct *vma)
+ static int p2pmem_alloc_mmap(struct file *filp, struct kobject *kobj,
+ 		const struct bin_attribute *attr, struct vm_area_struct *vma)
  {
-@@ -1759,6 +1794,37 @@ vm_fault_t vmf_insert_folio_pud(struct vm_fault *vmf, struct folio *folio,
- 	return insert_pud(vma, addr, vmf->pud, fop, vma->vm_page_prot, write);
- }
- EXPORT_SYMBOL_GPL(vmf_insert_folio_pud);
-+
-+int vm_insert_folio_pud(struct vm_area_struct *vma, unsigned long addr,
-+			struct folio *folio)
-+{
-+	struct mm_struct *mm = vma->vm_mm;
-+	struct folio_or_pfn fop = {
-+		.folio = folio,
-+		.is_folio = true,
-+	};
-+	pgd_t *pgd;
-+	p4d_t *p4d;
-+	pud_t *pud;
-+	vm_fault_t fault_err;
-+
-+	mmap_assert_write_locked(mm);
-+
-+	pgd = pgd_offset(mm, addr);
-+	p4d = p4d_alloc(mm, pgd, addr);
-+	if (!p4d)
-+		return -ENOMEM;
-+	pud = pud_alloc(mm, p4d, addr);
-+	if (!pud)
-+		return -ENOMEM;
-+
-+	fault_err = insert_pud(vma, addr, pud, fop, vma->vm_page_prot,
-+			       vma->vm_flags & VM_WRITE);
-+	if (fault_err != VM_FAULT_NOPAGE)
-+		return -EINVAL;
-+
-+	return 0;
-+}
- #endif /* CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD */
- 
- /**
+@@ -175,6 +213,7 @@ static int p2pmem_alloc_mmap(struct file *filp, struct kobject *kobj,
+ static const struct bin_attribute p2pmem_alloc_attr = {
+ 	.attr = { .name = "allocate", .mode = 0660 },
+ 	.mmap = p2pmem_alloc_mmap,
++	.get_unmapped_area = p2pmem_get_unmapped_area,
+ 	/*
+ 	 * Some places where we want to call mmap (ie. python) will check
+ 	 * that the file size is greater than the mmap size before allowing
 -- 
 2.29.2
 
