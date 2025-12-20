@@ -1,40 +1,40 @@
-Return-Path: <linux-pci+bounces-43459-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43461-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D683FCD2714
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Dec 2025 05:18:15 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B8C4CD272C
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Dec 2025 05:21:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 400ED3022D18
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Dec 2025 04:16:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1D0A53073A03
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Dec 2025 04:16:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141132F999A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6B722FBE1F;
 	Sat, 20 Dec 2025 04:16:22 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824412F6173;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8265C2F6179;
 	Sat, 20 Dec 2025 04:16:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766204181; cv=none; b=TX6J56JnIGAk9yD4zhFUImudM1921rLP+71Mbdql0D1a2swBM2M6Et+N9SV+IVq4Kqs0NBC38oRBNmF/LD7LwTqw2lI2ghqKXC5qvOMpVOPIjLDAUh3r1tc/+TK2dIeBVzIJLgbumlvnncvu7Kc7tSQLDTq2g8ndXbZCEydjCS8=
+	t=1766204182; cv=none; b=usYoqDOk/ihQ0IC6c7n7INZ6IFPNAu+gXTKUbt4MT8x4dJd3qfjCBRpEISoGAlT4sRWIEpZWRd0JzqCucCat9gBg6PuTmWBFVfHbn3LL27krT4EJKaXyiU75yHTPm8or3KRJ9j8U2D1WmPxY98AYwx7kfC40KvZgkzSnRS8J79E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766204181; c=relaxed/simple;
-	bh=UfTzxFmeBxMi2StwimfIMpRVlZpdNpNwvrM7o3WjFLA=;
+	s=arc-20240116; t=1766204182; c=relaxed/simple;
+	bh=hqrA2BuPhIDII7vCGnfPJOimI5mCMKKMhO1z38FPsSg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jkcjmxnRZFRZoYDO3oKJgD4WzQTrpuMsBBz5C2vfo+laVM7KMjN+M6H5sPDMF2tstVGfg+HVzy7Z/k6t89OBPnbKetnxv991U5xi03y61aETG0yJQDEsz25EQCRWkXk2Y+WQEQ388Cz9c8pV3OhHpEOfmRqa5SWKRBG38p3ILFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=hD6hMORoFVi11tVkWtMPy2y13TaVeFHz98JSHywBUmpR81tihA1DIVqi3xCvTCi3V3P5qdY91Y3NWR/FKwgqVZDnZOCLgD+mQXO+KGS4zqSOfv7mZLzGWDSv0tnySH27bx2juuR23lmkJL+ZEVzgpnqFYw8L3mAZlUNtQSkMLa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dYB082vZWzYQtjX;
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dYB083ZvgzYQtfS;
 	Sat, 20 Dec 2025 12:15:36 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id B52A740573;
+	by mail.maildlp.com (Postfix) with ESMTP id D046E4056B;
 	Sat, 20 Dec 2025 12:16:07 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP4 (Coremail) with SMTP id gCh0CgD3WPn5IkZpFwpFAw--.56015S15;
+	by APP4 (Coremail) with SMTP id gCh0CgD3WPn5IkZpFwpFAw--.56015S16;
 	Sat, 20 Dec 2025 12:16:07 +0800 (CST)
 From: Hou Tao <houtao@huaweicloud.com>
 To: linux-kernel@vger.kernel.org
@@ -57,9 +57,9 @@ Cc: linux-pci@vger.kernel.org,
 	Christoph Hellwig <hch@lst.de>,
 	Sagi Grimberg <sagi@grimberg.me>,
 	houtao1@huawei.com
-Subject: [PATCH 11/13] PCI/P2PDMA: add helper pci_p2pdma_max_pagemap_align()
-Date: Sat, 20 Dec 2025 12:04:44 +0800
-Message-Id: <20251220040446.274991-12-houtao@huaweicloud.com>
+Subject: [PATCH 12/13] nvme-pci: introduce cmb_devmap_align module parameter
+Date: Sat, 20 Dec 2025 12:04:45 +0800
+Message-Id: <20251220040446.274991-13-houtao@huaweicloud.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20251220040446.274991-1-houtao@huaweicloud.com>
 References: <20251220040446.274991-1-houtao@huaweicloud.com>
@@ -70,10 +70,10 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3WPn5IkZpFwpFAw--.56015S15
-X-Coremail-Antispam: 1UD129KBjvJXoWxJF15Gw1rWr1fKr48Xr48Crg_yoW8Ww43pF
-	1kAFZ5Xr18KF47Ar9xA3Z0k3ZYvrs3Ca42krW3Kan7ZFy7Jws5Kr4UGF1Ygr1rWrWvkrWf
-	JrsayF4Fk3sxt3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgD3WPn5IkZpFwpFAw--.56015S16
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFykWw48tw1xKr1xWF43trb_yoW8try3pa
+	4DZFn8XFWakF1ay3yaywsrZas8Zw4v93yUAFW3Gw17u347tFZayFyUGa4YgFy5WrWDuF13
+	AF42kryxWay7AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUPlb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -92,53 +92,58 @@ X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
 
 From: Hou Tao <houtao1@huawei.com>
 
-Add helper pci_p2pdma_max_pagemap_align() to find the max possible
-alignment for p2p dma memory mapping in both userspace and kernel space.
+P2PDMA memory has supported compound page. It is best to enable compound
+page for p2pdma memory automatically accordingly to the address, the
+size and the offset of the CMB, however, for nvme device, the p2pdma
+memory may be used in the kernel space (e.g., for SQ entries) and it
+will incur a lot of waste when a PUD or PMD-sized page is enabled for
+nvme device.
 
-When huge transparent page is supported, and the physical address, the
-size of the BAR and the offset is {PUD|PMM}_SIZE aligned, it returns
-{PUD|PMD_SIZE} accordingly. Otherwise, it returns PAGE_SIZE.
+Therefore, introduce a module parameter cmb_devmap_align to control the
+alignment of p2pdma memory mapping. Its default value is PAGE_SIZE. When
+its value is zero, it will use pci_p2pdma_max_pagemap_align() to find
+the maximal possible mapping alignment.
 
 Signed-off-by: Hou Tao <houtao1@huawei.com>
 ---
- include/linux/pci-p2pdma.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/nvme/host/pci.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/pci-p2pdma.h b/include/linux/pci-p2pdma.h
-index 2fa671274c45..5d940b9e5338 100644
---- a/include/linux/pci-p2pdma.h
-+++ b/include/linux/pci-p2pdma.h
-@@ -210,4 +210,30 @@ pci_p2pdma_bus_addr_map(struct p2pdma_provider *provider, phys_addr_t paddr)
- 	return paddr + provider->bus_offset;
- }
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index b070095bae5e..ca0126e36834 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -79,6 +79,10 @@ static bool use_cmb_sqes = true;
+ module_param(use_cmb_sqes, bool, 0444);
+ MODULE_PARM_DESC(use_cmb_sqes, "use controller's memory buffer for I/O SQes");
  
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+static inline size_t pci_p2pdma_max_pagemap_align(struct pci_dev *pdev, int bar,
-+						  u64 size, u64 offset)
-+{
-+	resource_size_t start = pci_resource_start(pdev, bar);
++static unsigned long cmb_devmap_align = PAGE_SIZE;
++module_param(cmb_devmap_align, ulong, 0444);
++MODULE_PARM_DESC(cmb_devmap_align, "the mapping alignment of CMB");
 +
-+	if (has_transparent_pud_hugepage() &&
-+	    IS_ALIGNED(start, PUD_SIZE) && IS_ALIGNED(size, PUD_SIZE) &&
-+	    IS_ALIGNED(offset, PUD_SIZE))
-+		return PUD_SIZE;
-+
-+	if (has_transparent_hugepage() &&
-+	    IS_ALIGNED(start, PMD_SIZE) && IS_ALIGNED(size, PMD_SIZE) &&
-+	    IS_ALIGNED(offset, PMD_SIZE))
-+		return PMD_SIZE;
-+
-+	return PAGE_SIZE;
-+}
-+#else
-+static inline size_t pci_p2pdma_max_pagemap_align(resource_size_t start,
-+						  u64 size, u64 offset)
-+{
-+	return PAGE_SIZE;
-+}
-+#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-+
- #endif /* _LINUX_PCI_P2P_H */
+ static unsigned int max_host_mem_size_mb = 128;
+ module_param(max_host_mem_size_mb, uint, 0444);
+ MODULE_PARM_DESC(max_host_mem_size_mb,
+@@ -2266,6 +2270,7 @@ static void nvme_map_cmb(struct nvme_dev *dev)
+ 	u64 size, offset;
+ 	resource_size_t bar_size;
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
++	size_t align;
+ 	int bar;
+ 
+ 	if (dev->cmb_size)
+@@ -2309,7 +2314,10 @@ static void nvme_map_cmb(struct nvme_dev *dev)
+ 			     dev->bar + NVME_REG_CMBMSC);
+ 	}
+ 
+-	if (pci_p2pdma_add_resource(pdev, bar, size, PAGE_SIZE, offset)) {
++	align = cmb_devmap_align;
++	if (!align)
++		align = pci_p2pdma_max_pagemap_align(pdev, bar, size, offset);
++	if (pci_p2pdma_add_resource(pdev, bar, size, align, offset)) {
+ 		dev_warn(dev->ctrl.device,
+ 			 "failed to register the CMB\n");
+ 		hi_lo_writeq(0, dev->bar + NVME_REG_CMBMSC);
 -- 
 2.29.2
 
