@@ -1,40 +1,40 @@
-Return-Path: <linux-pci+bounces-43460-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43459-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAA45CD26FB
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Dec 2025 05:16:46 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D683FCD2714
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Dec 2025 05:18:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id E3FD63002FC1
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Dec 2025 04:16:41 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 400ED3022D18
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Dec 2025 04:16:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17A4C2F99AE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141132F999A;
 	Sat, 20 Dec 2025 04:16:22 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D4C2F5A2D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824412F6173;
 	Sat, 20 Dec 2025 04:16:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766204181; cv=none; b=thmAgigzAF49NChsNSniL4xIJJ75DyQeNFG+qi7Gni0hTZy26p9KxPS2Am7p0sdDRZlYA7wN4Jflv+FEpa34OqECJl4CyG6Wr6epwd+tA9zDCz/SMcJETaizvcNsUz2XprCk97dDONS2xVdXW1O+ZIlLkKmKflDunF2m0jJ9K1k=
+	t=1766204181; cv=none; b=TX6J56JnIGAk9yD4zhFUImudM1921rLP+71Mbdql0D1a2swBM2M6Et+N9SV+IVq4Kqs0NBC38oRBNmF/LD7LwTqw2lI2ghqKXC5qvOMpVOPIjLDAUh3r1tc/+TK2dIeBVzIJLgbumlvnncvu7Kc7tSQLDTq2g8ndXbZCEydjCS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1766204181; c=relaxed/simple;
-	bh=QfEBpFqUgZYOMMZuAt2vGEic4dWJdxswcnkCytVkgYk=;
+	bh=UfTzxFmeBxMi2StwimfIMpRVlZpdNpNwvrM7o3WjFLA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Y0KD11mRLqvXNI/KXfO2Ml6JM5Zo+gV3eKLarFoXecjb7t1MGxdWCIyFSlP4gVkinmQZp5QTOuRCOd96Cyr5oy4vicpUGNwtrOmiQqoqdxNQtV4WD4CO3cZLqGpUJswi0sl8w4v7uSi1p2V3m2WXL/m/SPxwMAfnIVgJZCFy9kc=
+	 MIME-Version; b=jkcjmxnRZFRZoYDO3oKJgD4WzQTrpuMsBBz5C2vfo+laVM7KMjN+M6H5sPDMF2tstVGfg+HVzy7Z/k6t89OBPnbKetnxv991U5xi03y61aETG0yJQDEsz25EQCRWkXk2Y+WQEQ388Cz9c8pV3OhHpEOfmRqa5SWKRBG38p3ILFE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dYB082HJRzYQtjR;
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dYB082vZWzYQtjX;
 	Sat, 20 Dec 2025 12:15:36 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id A3DD140574;
+	by mail.maildlp.com (Postfix) with ESMTP id B52A740573;
 	Sat, 20 Dec 2025 12:16:07 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.50.87.129])
-	by APP4 (Coremail) with SMTP id gCh0CgD3WPn5IkZpFwpFAw--.56015S14;
+	by APP4 (Coremail) with SMTP id gCh0CgD3WPn5IkZpFwpFAw--.56015S15;
 	Sat, 20 Dec 2025 12:16:07 +0800 (CST)
 From: Hou Tao <houtao@huaweicloud.com>
 To: linux-kernel@vger.kernel.org
@@ -57,9 +57,9 @@ Cc: linux-pci@vger.kernel.org,
 	Christoph Hellwig <hch@lst.de>,
 	Sagi Grimberg <sagi@grimberg.me>,
 	houtao1@huawei.com
-Subject: [PATCH 10/13] PCI/P2PDMA: support compound page in p2pmem_alloc_mmap()
-Date: Sat, 20 Dec 2025 12:04:43 +0800
-Message-Id: <20251220040446.274991-11-houtao@huaweicloud.com>
+Subject: [PATCH 11/13] PCI/P2PDMA: add helper pci_p2pdma_max_pagemap_align()
+Date: Sat, 20 Dec 2025 12:04:44 +0800
+Message-Id: <20251220040446.274991-12-houtao@huaweicloud.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20251220040446.274991-1-houtao@huaweicloud.com>
 References: <20251220040446.274991-1-houtao@huaweicloud.com>
@@ -70,10 +70,10 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3WPn5IkZpFwpFAw--.56015S14
-X-Coremail-Antispam: 1UD129KBjvJXoWxurykGr1DCF13Gw1UJF4xJFb_yoWrWr4rpF
-	WrK3WqqayrGw42gw13Aa1DuFyavw1vg3yUta4xK34I9F1aqFWY9F18JFyYqF4YkrykWr1S
-	qF4Dtr1UuFs0k3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgD3WPn5IkZpFwpFAw--.56015S15
+X-Coremail-Antispam: 1UD129KBjvJXoWxJF15Gw1rWr1fKr48Xr48Crg_yoW8Ww43pF
+	1kAFZ5Xr18KF47Ar9xA3Z0k3ZYvrs3Ca42krW3Kan7ZFy7Jws5Kr4UGF1Ygr1rWrWvkrWf
+	JrsayF4Fk3sxt3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUPlb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -92,122 +92,53 @@ X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
 
 From: Hou Tao <houtao1@huawei.com>
 
-P2PDMA memory has already supported compound page and the helpers which
-support inserting compound page into vma is also ready, therefore, add
-support for compound page in p2pmem_alloc_mmap() as well. It will reduce
-the overhead of mmap() and get_user_pages() a lot when compound page is
-enabled for p2pdma memory.
+Add helper pci_p2pdma_max_pagemap_align() to find the max possible
+alignment for p2p dma memory mapping in both userspace and kernel space.
 
-The use of vm_private_data to save the alignment of p2pdma memory needs
-explanation. The normal way to get the alignment is through pci_dev. It
-can be achieved by either invoking kernfs_of() and sysfs_file_kobj() or
-defining a new struct kernfs_vm_ops to pass the kobject to the
-may_split() and ->pagesize() callbacks. The former approach depends too
-much on kernfs implementation details, and the latter would lead to
-excessive churn. Therefore, choose the simpler way of saving alignment
-in vm_private_data instead.
+When huge transparent page is supported, and the physical address, the
+size of the BAR and the offset is {PUD|PMM}_SIZE aligned, it returns
+{PUD|PMD_SIZE} accordingly. Otherwise, it returns PAGE_SIZE.
 
 Signed-off-by: Hou Tao <houtao1@huawei.com>
 ---
- drivers/pci/p2pdma.c | 48 ++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 44 insertions(+), 4 deletions(-)
+ include/linux/pci-p2pdma.h | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index e97f5da73458..4a133219ac43 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -128,6 +128,25 @@ static unsigned long p2pmem_get_unmapped_area(struct file *filp, struct kobject
- 	return mm_get_unmapped_area(filp, uaddr, len, pgoff, flags);
+diff --git a/include/linux/pci-p2pdma.h b/include/linux/pci-p2pdma.h
+index 2fa671274c45..5d940b9e5338 100644
+--- a/include/linux/pci-p2pdma.h
++++ b/include/linux/pci-p2pdma.h
+@@ -210,4 +210,30 @@ pci_p2pdma_bus_addr_map(struct p2pdma_provider *provider, phys_addr_t paddr)
+ 	return paddr + provider->bus_offset;
  }
  
-+static int p2pmem_may_split(struct vm_area_struct *vma, unsigned long addr)
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++static inline size_t pci_p2pdma_max_pagemap_align(struct pci_dev *pdev, int bar,
++						  u64 size, u64 offset)
 +{
-+	size_t align = (uintptr_t)vma->vm_private_data;
++	resource_size_t start = pci_resource_start(pdev, bar);
 +
-+	if (!IS_ALIGNED(addr, align))
-+		return -EINVAL;
-+	return 0;
++	if (has_transparent_pud_hugepage() &&
++	    IS_ALIGNED(start, PUD_SIZE) && IS_ALIGNED(size, PUD_SIZE) &&
++	    IS_ALIGNED(offset, PUD_SIZE))
++		return PUD_SIZE;
++
++	if (has_transparent_hugepage() &&
++	    IS_ALIGNED(start, PMD_SIZE) && IS_ALIGNED(size, PMD_SIZE) &&
++	    IS_ALIGNED(offset, PMD_SIZE))
++		return PMD_SIZE;
++
++	return PAGE_SIZE;
 +}
-+
-+static unsigned long p2pmem_pagesize(struct vm_area_struct *vma)
++#else
++static inline size_t pci_p2pdma_max_pagemap_align(resource_size_t start,
++						  u64 size, u64 offset)
 +{
-+	return (uintptr_t)vma->vm_private_data;
++	return PAGE_SIZE;
 +}
++#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
 +
-+static const struct vm_operations_struct p2pmem_vm_ops = {
-+	.may_split = p2pmem_may_split,
-+	.pagesize = p2pmem_pagesize,
-+};
-+
- static int p2pmem_alloc_mmap(struct file *filp, struct kobject *kobj,
- 		const struct bin_attribute *attr, struct vm_area_struct *vma)
- {
-@@ -136,6 +155,7 @@ static int p2pmem_alloc_mmap(struct file *filp, struct kobject *kobj,
- 	struct pci_p2pdma *p2pdma;
- 	struct percpu_ref *ref;
- 	unsigned long vaddr;
-+	size_t align;
- 	void *kaddr;
- 	int ret;
- 
-@@ -161,6 +181,16 @@ static int p2pmem_alloc_mmap(struct file *filp, struct kobject *kobj,
- 		goto out;
- 	}
- 
-+	align = p2pdma->align;
-+	if (vma->vm_start & (align - 1) || vma->vm_end & (align - 1)) {
-+		pci_info_ratelimited(pdev,
-+				     "%s: unaligned vma (%#lx~%#lx, %#lx)\n",
-+				     current->comm, vma->vm_start, vma->vm_end,
-+				     align);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
- 	kaddr = (void *)gen_pool_alloc_owner(p2pdma->pool, len, (void **)&ref);
- 	if (!kaddr) {
- 		ret = -ENOMEM;
-@@ -178,7 +208,7 @@ static int p2pmem_alloc_mmap(struct file *filp, struct kobject *kobj,
- 	}
- 	rcu_read_unlock();
- 
--	for (vaddr = vma->vm_start; vaddr < vma->vm_end; vaddr += PAGE_SIZE) {
-+	for (vaddr = vma->vm_start; vaddr < vma->vm_end; vaddr += align) {
- 		struct page *page = virt_to_page(kaddr);
- 
- 		/*
-@@ -188,7 +218,12 @@ static int p2pmem_alloc_mmap(struct file *filp, struct kobject *kobj,
- 		 */
- 		VM_WARN_ON_ONCE_PAGE(page_ref_count(page), page);
- 		set_page_count(page, 1);
--		ret = vm_insert_page(vma, vaddr, page);
-+		if (align == PUD_SIZE)
-+			ret = vm_insert_folio_pud(vma, vaddr, page_folio(page));
-+		else if (align == PMD_SIZE)
-+			ret = vm_insert_folio_pmd(vma, vaddr, page_folio(page));
-+		else
-+			ret = vm_insert_page(vma, vaddr, page);
- 		if (ret) {
- 			gen_pool_free(p2pdma->pool, (uintptr_t)kaddr, len);
- 			percpu_ref_put(ref);
-@@ -196,10 +231,15 @@ static int p2pmem_alloc_mmap(struct file *filp, struct kobject *kobj,
- 		}
- 		percpu_ref_get(ref);
- 		put_page(page);
--		kaddr += PAGE_SIZE;
--		len -= PAGE_SIZE;
-+		kaddr += align;
-+		len -= align;
- 	}
- 
-+	/* Disable unaligned splitting due to vma merge */
-+	vm_flags_set(vma, VM_DONTEXPAND);
-+	vma->vm_ops = &p2pmem_vm_ops;
-+	vma->vm_private_data = (void *)(uintptr_t)align;
-+
- 	percpu_ref_put(ref);
- 
- 	return 0;
+ #endif /* _LINUX_PCI_P2P_H */
 -- 
 2.29.2
 
