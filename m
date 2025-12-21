@@ -1,146 +1,408 @@
-Return-Path: <linux-pci+bounces-43485-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43486-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFC01CD3FF3
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Dec 2025 13:19:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 99E3ECD42D7
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Dec 2025 17:18:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 7DF8F3000B7D
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Dec 2025 12:19:22 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 626BC3000939
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Dec 2025 16:18:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD57C1F95C;
-	Sun, 21 Dec 2025 12:19:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07D46288C2F;
+	Sun, 21 Dec 2025 16:18:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XkR4deFJ"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mCnt4Y8g";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+fysO4lT";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SK/TpTNu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JK9Vnvs5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A66125D0;
-	Sun, 21 Dec 2025 12:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F44B3A1E67
+	for <linux-pci@vger.kernel.org>; Sun, 21 Dec 2025 16:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766319560; cv=none; b=lb1KUopxhxkwVt8CKLFFnnHXr71PL0y+12BdYEyqW0QSwdD4rJ0FVF0ZXixDlpK/mKzhzMnYwuXNX6rM2urHJlYJM1nLvkEgdcEPDbOmPwv64H2fu5H+3sWrYTHa1LFXDgQw+wSuub9pvNn2PZYU5gnwR133tUtI/JgV32pDREs=
+	t=1766333917; cv=none; b=cyP73cNjnLAlFtLs7OIK1x3ZmhRS7qV7aapQKShmWXbb0Qb318ywaM8ivufCER8CEBMQ6a84ZqPE8ESFxSEt0E1HTM3EXCXS2iWiQ7sfUK4WeaOjBR2RkQBtPN/9FAPiv4nlLz8QQT0m/UMzB9tQZeq8CdozqiDJn4F9odGmJ4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766319560; c=relaxed/simple;
-	bh=ZeOPwShHRhwYUB1pry9WKHZ3vg3L8IaUwEYKG8XWhQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lc7yPEvbW4C5X52GZPPCdHo70300u/Ghi8etjFmGzHWlg6pAdtirDpTq7efHWopEj8WeCaKLi2cxnRR/C4vhNmhLXrPuw2OUYx/2UTmvHucqjax4q7ktFoRJDfxNB6z78UEawWTwA0ckNYk63Ypx+Cl1E0l+HcRKuFv2E1ASVrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XkR4deFJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6261BC4CEFB;
-	Sun, 21 Dec 2025 12:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766319560;
-	bh=ZeOPwShHRhwYUB1pry9WKHZ3vg3L8IaUwEYKG8XWhQo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XkR4deFJRzYHolHakfbtdIDJtIK9Yk8DEnj/EqcYYdZgFW2I1C4gWIMRhYEV5SKlb
-	 zNNLh8pdxlqTYU8eLvtzQuykfloKYp1KfpB9SWgR6ATsaOlCXkSzolIV4RqxuYbkNu
-	 Qezx9UnTHfcahw/4ucIhdrMlFMdPbBrRUTgqw4qP7l6X2MRvlprvOu6D1F35hO3i7I
-	 gvWhoZ0/htR6bJx7t+Iwr4AoPRZlXmIRhv7uSUibBOmkzDZB8FmpHXChxqlNfMx3DS
-	 8SoqCN11kEmL2lhLaJZPKGoubgNsGbJu+CBNrzIOwiRaqNY0G3olfpPtH8xPiYE17/
-	 SD8VhXCcxIn8Q==
-Date: Sun, 21 Dec 2025 14:19:15 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Hou Tao <houtao@huaweicloud.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-mm@kvack.org, linux-nvme@lists.infradead.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Tejun Heo <tj@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	houtao1@huawei.com
-Subject: Re: [PATCH 00/13] Enable compound page for p2pdma memory
-Message-ID: <20251221121915.GJ13030@unreal>
-References: <20251220040446.274991-1-houtao@huaweicloud.com>
+	s=arc-20240116; t=1766333917; c=relaxed/simple;
+	bh=b6N6Jj7QBC5KdMoc+yYcrtzg/8owWwq3DmZcwg0Z8v8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IbEu7PC5dC4O0W818qFieAJ1+oCLrB5WlehiKsXz/5x/hQ33h1MxLQzhpQsLe2d1yCVE4RZna845XfGMXT36/XSiPn+7s5rEN/ljvGcI9wOXrQ0+wM2azJ2qZsOsjs3IGbqGGgJW9Nd+5yHizY+raB0ZR2sUmyyDohtdUT51JXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mCnt4Y8g; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+fysO4lT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SK/TpTNu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JK9Vnvs5; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 653C35BCC2;
+	Sun, 21 Dec 2025 16:18:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1766333910; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3Yj5PCkcX3NpOx0MVubHGjm/vyE75Or7OKm5HcbRRAM=;
+	b=mCnt4Y8g9wsGeC8a71YqMV35vOzr1m0HM69UW17UulhUuwVG0ydF3uuvzeXLa4GIvslZ7S
+	QYQc3/3AA/mLmpp+EtuVSWHSFyj2qHFq13+nY3F0Sz2QLUSg458KpQloTphi22MZ5Meq/4
+	GIRIQkIUdIRy7RQxjyXcgjxIfnpljRA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1766333910;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3Yj5PCkcX3NpOx0MVubHGjm/vyE75Or7OKm5HcbRRAM=;
+	b=+fysO4lT9QRvCJD4KFhF25SM1m1m/VNA80U1DScLwbWpQQYgUEyHmTeDGtG7rBrqQV+M1F
+	6h3OrRzIQ6Ob+kBA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="SK/TpTNu";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=JK9Vnvs5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1766333909; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3Yj5PCkcX3NpOx0MVubHGjm/vyE75Or7OKm5HcbRRAM=;
+	b=SK/TpTNuD9iwQ9XXcNlTwGcmiWFxH31bYOz2qi35e3x4fDRgAsvNA+ZhUzRPxq2nzxPFHF
+	RvhyFdO8JkbXaUmVNgZ58vW8x0HCHKwcOGRGsaidcJfg1bVOfg3aVOEyZwSXTlFJXdYsPb
+	LNIrSYQRjUUWwcmwLqIn/6OIXHPU5xM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1766333909;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3Yj5PCkcX3NpOx0MVubHGjm/vyE75Or7OKm5HcbRRAM=;
+	b=JK9Vnvs5Ps/AD+vFcl47c3Ac/ds9F0AXi/mGl57Rxm+IAa4aNyMKLohCuHyatBPjX+BmXa
+	jJVUd9ZB1w6TZPCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E8B7513A54;
+	Sun, 21 Dec 2025 16:18:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id oHBlN9QdSGnANgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Sun, 21 Dec 2025 16:18:28 +0000
+Message-ID: <0204b4f2-98b3-4463-9ae7-fc3657ce2fc1@suse.de>
+Date: Sun, 21 Dec 2025 17:18:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 9/9] efi: libstub: Simplify interfaces for
+ primary_display
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: javierm@redhat.com, arnd@arndb.de, richard.lyu@suse.com,
+ helgaas@kernel.org, x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
+References: <20251126160854.553077-1-tzimmermann@suse.de>
+ <20251126160854.553077-10-tzimmermann@suse.de>
+ <CAMj1kXFeBS7O5A-CPds3UfFnjegGTpVsuF7VznBc-zZ+gjygtw@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <CAMj1kXFeBS7O5A-CPds3UfFnjegGTpVsuF7VznBc-zZ+gjygtw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251220040446.274991-1-houtao@huaweicloud.com>
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
+X-Rspamd-Queue-Id: 653C35BCC2
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:dkim,suse.de:email];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Level: 
 
-On Sat, Dec 20, 2025 at 12:04:33PM +0800, Hou Tao wrote:
-> From: Hou Tao <houtao1@huawei.com>
-> 
-> Hi,
-> 
-> device-dax has already supported compound page. It not only reduces the
-> cost of struct page significantly, it also improve the performance of
-> get_user_pages when 2MB or 1GB page size is used. We are experimenting
-> to use p2p dma to directly transfer the content of NVMe SSD into NPU.
+Hi
 
-I’ll admit my understanding here is limited, and lately everything tends  
-to look like a DMABUF problem to me. Could you explain why DMABUF support 
-is not being used for this use case?
+Am 16.12.25 um 14:23 schrieb Ard Biesheuvel:
+> Hi Thomas
+>
+> On Wed, 26 Nov 2025 at 17:09, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>> Rename alloc_primary_display() and __alloc_primary_display(), clarify
+>> free semantics to make interfaces easier to understand.
+>>
+>> Rename alloc_primary_display() to lookup_primary_display() as it
+>> does not necessarily allocate. Then rename __alloc_primary_display()
+>> to the new alloc_primary_display(). The helper belongs to
+>> free_primary_display), so it should be named without underscores.
+>>
+>> The lookup helper does not necessarily allocate, so the output
+>> parameter needs_free to indicate when free should be called.
+> I don't understand why we need this. Whether or not the helper
+> allocates is a compile time decision, and in builds where it doesn't,
+> the free helper doesn't do anything.
+>
+> I'm all for making things simpler, but I don't think this patch
+> achieves that tbh.
+>
+> I've queued up this series now up until this patch - once we converge
+> on the simplification, I'm happy to apply it on top.
 
-Thanks
+If you don't want this patch, just leave it out then. Coming from 
+another subsystem, I found the current logic and naming confusing THB.
 
-> The size of NPU HBM is 32GB or larger and there are at most 8 NPUs in
-> the host. When using the base page, the memory overhead is about 4GB for
-> 128GB HBM, and the mapping of 32GB HBM into userspace takes about 0.8
-> second. Considering ZONE_DEVICE memory type has already supported the
-> compound page, enabling the compound page support for p2pdma memory as
-> well. After applying the patch set, when using the 1GB page, the memory
-> overhead is about 2MB and the mmap costs about 0.04 ms.
-> 
-> The main difference between the compound page support of device-dax and
-> p2pdma is that p2pdma inserts the page into user vma during mmap instead
-> of page fault. The main reason is simplicity. The patch set is
-> structured as shown below:
-> 
-> Patch #1~#2: tiny bug fixes for p2pdma
-> Patch #3~#5: add callbacks support in kernfs and sysfs, include
-> pagesize, may_split and get_unmapped_area. These callbacks are necessary
-> for the support of compound page when mmaping sysfs binary file.
-> Patch #6~#7: create compound page for p2pdma memory in the kernel. 
-> Patch #8~#10: support the mapping of compound page in userspace. 
-> Patch #11~#12: support the compound page for NVMe CMB.
-> Patch #13: enable the support for compound page for p2pdma memory.
-> 
-> Please see individual patches for more details. Comments and
-> suggestions are always welcome.
-> 
-> Hou Tao (13):
->   PCI/P2PDMA: Release the per-cpu ref of pgmap when vm_insert_page()
->     fails
->   PCI/P2PDMA: Fix the warning condition in p2pmem_alloc_mmap()
->   kernfs: add support for get_unmapped_area callback
->   kernfs: add support for may_split and pagesize callbacks
->   sysfs: support get_unmapped_area callback for binary file
->   PCI/P2PDMA: add align parameter for pci_p2pdma_add_resource()
->   PCI/P2PDMA: create compound page for aligned p2pdma memory
->   mm/huge_memory: add helpers to insert huge page during mmap
->   PCI/P2PDMA: support get_unmapped_area to return aligned vaddr
->   PCI/P2PDMA: support compound page in p2pmem_alloc_mmap()
->   PCI/P2PDMA: add helper pci_p2pdma_max_pagemap_align()
->   nvme-pci: introduce cmb_devmap_align module parameter
->   PCI/P2PDMA: enable compound page support for p2pdma memory
-> 
->  drivers/accel/habanalabs/common/hldio.c |   3 +-
->  drivers/nvme/host/pci.c                 |  10 +-
->  drivers/pci/p2pdma.c                    | 140 ++++++++++++++++++++++--
->  fs/kernfs/file.c                        |  79 +++++++++++++
->  fs/sysfs/file.c                         |  15 +++
->  include/linux/huge_mm.h                 |   4 +
->  include/linux/kernfs.h                  |   3 +
->  include/linux/pci-p2pdma.h              |  30 ++++-
->  include/linux/sysfs.h                   |   4 +
->  mm/huge_memory.c                        |  66 +++++++++++
->  10 files changed, 339 insertions(+), 15 deletions(-)
-> 
-> -- 
-> 2.29.2
-> 
-> 
+Best regards
+Thomas
+
+
+>
+> Thanks,
+>
+>
+>
+>> Pass
+>> an argument through the calls to track this state. Put the free
+>> handling into release_primary_display() for simplificy.
+>>
+>> Also move the comment fro primary_display.c to efi-stub-entry.c,
+>> where it now describes lookup_primary_display().
+>>
+>> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+>> ---
+>>   drivers/firmware/efi/libstub/efi-stub-entry.c | 23 +++++++++++++++++--
+>>   drivers/firmware/efi/libstub/efi-stub.c       | 22 ++++++++++++------
+>>   drivers/firmware/efi/libstub/efistub.h        |  2 +-
+>>   .../firmware/efi/libstub/primary_display.c    | 17 +-------------
+>>   drivers/firmware/efi/libstub/zboot.c          |  6 +++--
+>>   5 files changed, 42 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
+>> index aa85e910fe59..3077b51fe0b2 100644
+>> --- a/drivers/firmware/efi/libstub/efi-stub-entry.c
+>> +++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
+>> @@ -14,10 +14,29 @@ static void *kernel_image_addr(void *addr)
+>>          return addr + kernel_image_offset;
+>>   }
+>>
+>> -struct sysfb_display_info *alloc_primary_display(void)
+>> +/*
+>> + * There are two ways of populating the core kernel's sysfb_primary_display
+>> + * via the stub:
+>> + *
+>> + *   - using a configuration table, which relies on the EFI init code to
+>> + *     locate the table and copy the contents; or
+>> + *
+>> + *   - by linking directly to the core kernel's copy of the global symbol.
+>> + *
+>> + * The latter is preferred because it makes the EFIFB earlycon available very
+>> + * early, but it only works if the EFI stub is part of the core kernel image
+>> + * itself. The zboot decompressor can only use the configuration table
+>> + * approach.
+>> + */
+>> +
+>> +struct sysfb_display_info *lookup_primary_display(bool *needs_free)
+>>   {
+>> +       *needs_free = true;
+>> +
+>>          if (IS_ENABLED(CONFIG_ARM))
+>> -               return __alloc_primary_display();
+>> +               return alloc_primary_display();
+>> +
+>> +       *needs_free = false;
+>>
+>>          if (IS_ENABLED(CONFIG_X86) ||
+>>              IS_ENABLED(CONFIG_EFI_EARLYCON) ||
+>> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+>> index 42d6073bcd06..dc545f62c62b 100644
+>> --- a/drivers/firmware/efi/libstub/efi-stub.c
+>> +++ b/drivers/firmware/efi/libstub/efi-stub.c
+>> @@ -51,14 +51,14 @@ static bool flat_va_mapping = (EFI_RT_VIRTUAL_OFFSET != 0);
+>>   void __weak free_primary_display(struct sysfb_display_info *dpy)
+>>   { }
+>>
+>> -static struct sysfb_display_info *setup_primary_display(void)
+>> +static struct sysfb_display_info *setup_primary_display(bool *dpy_needs_free)
+>>   {
+>>          struct sysfb_display_info *dpy;
+>>          struct screen_info *screen = NULL;
+>>          struct edid_info *edid = NULL;
+>>          efi_status_t status;
+>>
+>> -       dpy = alloc_primary_display();
+>> +       dpy = lookup_primary_display(dpy_needs_free);
+>>          if (!dpy)
+>>                  return NULL;
+>>          screen = &dpy->screen;
+>> @@ -68,15 +68,22 @@ static struct sysfb_display_info *setup_primary_display(void)
+>>
+>>          status = efi_setup_graphics(screen, edid);
+>>          if (status != EFI_SUCCESS)
+>> -               goto err_free_primary_display;
+>> +               goto err___free_primary_display;
+>>
+>>          return dpy;
+>>
+>> -err_free_primary_display:
+>> -       free_primary_display(dpy);
+>> +err___free_primary_display:
+>> +       if (*dpy_needs_free)
+>> +               free_primary_display(dpy);
+>>          return NULL;
+>>   }
+>>
+>> +static void release_primary_display(struct sysfb_display_info *dpy, bool dpy_needs_free)
+>> +{
+>> +       if (dpy && dpy_needs_free)
+>> +               free_primary_display(dpy);
+>> +}
+>> +
+>>   static void install_memreserve_table(void)
+>>   {
+>>          struct linux_efi_memreserve *rsv;
+>> @@ -156,13 +163,14 @@ efi_status_t efi_stub_common(efi_handle_t handle,
+>>                               char *cmdline_ptr)
+>>   {
+>>          struct sysfb_display_info *dpy;
+>> +       bool dpy_needs_free;
+>>          efi_status_t status;
+>>
+>>          status = check_platform_features();
+>>          if (status != EFI_SUCCESS)
+>>                  return status;
+>>
+>> -       dpy = setup_primary_display();
+>> +       dpy = setup_primary_display(&dpy_needs_free);
+>>
+>>          efi_retrieve_eventlog();
+>>
+>> @@ -182,7 +190,7 @@ efi_status_t efi_stub_common(efi_handle_t handle,
+>>
+>>          status = efi_boot_kernel(handle, image, image_addr, cmdline_ptr);
+>>
+>> -       free_primary_display(dpy);
+>> +       release_primary_display(dpy, dpy_needs_free);
+>>
+>>          return status;
+>>   }
+>> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+>> index 979a21818cc1..1503ffb82903 100644
+>> --- a/drivers/firmware/efi/libstub/efistub.h
+>> +++ b/drivers/firmware/efi/libstub/efistub.h
+>> @@ -1176,8 +1176,8 @@ efi_enable_reset_attack_mitigation(void) { }
+>>
+>>   void efi_retrieve_eventlog(void);
+>>
+>> +struct sysfb_display_info *lookup_primary_display(bool *needs_free);
+>>   struct sysfb_display_info *alloc_primary_display(void);
+>> -struct sysfb_display_info *__alloc_primary_display(void);
+>>   void free_primary_display(struct sysfb_display_info *dpy);
+>>
+>>   void efi_cache_sync_image(unsigned long image_base,
+>> diff --git a/drivers/firmware/efi/libstub/primary_display.c b/drivers/firmware/efi/libstub/primary_display.c
+>> index cdaebab26514..34c54ac1e02a 100644
+>> --- a/drivers/firmware/efi/libstub/primary_display.c
+>> +++ b/drivers/firmware/efi/libstub/primary_display.c
+>> @@ -7,24 +7,9 @@
+>>
+>>   #include "efistub.h"
+>>
+>> -/*
+>> - * There are two ways of populating the core kernel's sysfb_primary_display
+>> - * via the stub:
+>> - *
+>> - *   - using a configuration table, which relies on the EFI init code to
+>> - *     locate the table and copy the contents; or
+>> - *
+>> - *   - by linking directly to the core kernel's copy of the global symbol.
+>> - *
+>> - * The latter is preferred because it makes the EFIFB earlycon available very
+>> - * early, but it only works if the EFI stub is part of the core kernel image
+>> - * itself. The zboot decompressor can only use the configuration table
+>> - * approach.
+>> - */
+>> -
+>>   static efi_guid_t primary_display_guid = LINUX_EFI_PRIMARY_DISPLAY_TABLE_GUID;
+>>
+>> -struct sysfb_display_info *__alloc_primary_display(void)
+>> +struct sysfb_display_info *alloc_primary_display(void)
+>>   {
+>>          struct sysfb_display_info *dpy;
+>>          efi_status_t status;
+>> diff --git a/drivers/firmware/efi/libstub/zboot.c b/drivers/firmware/efi/libstub/zboot.c
+>> index 4b76f74c56da..c1fd1fdbcb08 100644
+>> --- a/drivers/firmware/efi/libstub/zboot.c
+>> +++ b/drivers/firmware/efi/libstub/zboot.c
+>> @@ -26,9 +26,11 @@ void __weak efi_cache_sync_image(unsigned long image_base,
+>>          // executable code loaded into memory to be safe for execution.
+>>   }
+>>
+>> -struct sysfb_display_info *alloc_primary_display(void)
+>> +struct sysfb_display_info *lookup_primary_display(bool *needs_free)
+>>   {
+>> -       return __alloc_primary_display();
+>> +       *needs_free = true;
+>> +
+>> +       return alloc_primary_display();
+>>   }
+>>
+>>   asmlinkage efi_status_t __efiapi
+>> --
+>> 2.51.1
+>>
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
+
+
 
