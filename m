@@ -1,44 +1,44 @@
-Return-Path: <linux-pci+bounces-43546-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43545-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D6B6CD6F4A
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 20:27:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E6562CD6F44
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 20:27:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 86351301C884
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 19:27:17 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3DFAA301AE06
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 19:27:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB1F733B6E5;
-	Mon, 22 Dec 2025 19:27:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82665A937;
+	Mon, 22 Dec 2025 19:27:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PzpIWSKT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uyVQsAPo"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDBC2C1595;
-	Mon, 22 Dec 2025 19:27:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562C6238D52;
+	Mon, 22 Dec 2025 19:27:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766431635; cv=none; b=jov2ALx5syFUSJarflV/jCaqAxq0AqxmR5QR2sXPuC1w+oT61dmjARKlgNyqbg8ABlVYpygrYWFgVJxDNXbLcVdjESIIonjRBv+a1ZS8/f7jg+YMrpluHu6N+PfEZLUCbr0FtupUAYziiyMc1sEfUSWQOCuOJbNKhLn7Xx1U4I8=
+	t=1766431632; cv=none; b=Lg+W9/LFmxYrc//7/rYfD6OYNEBpuMY1bHLzHh0BscJ5j/seNlkULgiLYk3BDuUAIOgBm52qJMmHt04CWIB3/KtN7Sv3R9Z+R4S62ne0OsVih1vPPZlA/MfNDEbGBmUnWpVj6pTEh5+9HomrsnsRYWCBuCJ1am0TKOnRHxdHN3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766431635; c=relaxed/simple;
-	bh=iM4tplBMR+F8pcoBdC5WU9tHrrFnmr1mMXayfLhEHN8=;
+	s=arc-20240116; t=1766431632; c=relaxed/simple;
+	bh=IZ9qwJewa9Smq0paPPZv9Dt6MLxAeBrNwsYAyDWmC24=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tnhcOVXLGVyQ1SRzWXSdywIeKaCMiit7pScRNjyvQr75rMCoczpDh6kFQclCm5gxmw5gJGkCoQrJzZGstbU9f0ZFNknmWIU6bTi5UoEoTp6kz3alKSSLIusLJ1/9Gj3vLEUXzvvDo06JCdgwC+aOjlVGRZBdEhW+xdS2vRmFUcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PzpIWSKT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B189BC16AAE;
-	Mon, 22 Dec 2025 19:27:13 +0000 (UTC)
+	 MIME-Version:Content-Type; b=GiNvlo4F46fe7hkDSyHXAWkyCLVu9LScCbLDJscPcHWEkAEEXJ3HswXtjbTk17S1Xz/I58PGebSAE1xfivx5DFQb5dbHzMhovsVcRL41QCaSMpV3c5XfutJyjnJLGZ8yAdRh6oA+mbNWx9Az1WhYwqDPXNm+peKeSZtpmg0Dbec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uyVQsAPo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BC63C116D0;
+	Mon, 22 Dec 2025 19:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766431635;
-	bh=iM4tplBMR+F8pcoBdC5WU9tHrrFnmr1mMXayfLhEHN8=;
+	s=k20201202; t=1766431631;
+	bh=IZ9qwJewa9Smq0paPPZv9Dt6MLxAeBrNwsYAyDWmC24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PzpIWSKTPWQEtWtR2SSgQYcZOyykjLCiEJL0Re27nKHpnc/80B0hmkrdVTOhcfVQ3
-	 JeRFBhlQGv880mz1zdKH4LMkW8EP2L7L7vjiyZE8JmWSUjU16yQwru2BvQUcaSx+BT
-	 m2VYf7BrAgiQHNtlf71+f01tIOvHHPrmWGgv0pA8ur9wjEwFl0ysp2ysw1SMrMOFMQ
-	 Nagdx0k0FDxphcrHLS9mQph/9+ThvreCkF93kATYMLTEgN5ebhdtflp5QbPrr+atjj
-	 kiY+Xlet2tRblXvNAoaI2LwE+NI5vmUHKPkMK8ePxPYUZ9q58+2unWkZhqANHHLISo
-	 xJl13ZxVTCQkg==
+	b=uyVQsAPom/gu0vEbTj7CTxnAW2q8sHW9SCeJ9WwJjuv/rXwUMRdYatn3UBv+XzUPG
+	 d19Zhhxs1+FgQUJWrpkyjsChNAZEr+BND56hDRum+z6rzQu54+yCavb0qovcm9rpaF
+	 H7Djfuof730cy7nvTtEpHkPDMMjKqH2n8ztO//Bqpr7mUb7dng2JQ4Pnj6HPxRuoYs
+	 wCVFX/TZVvL6BmTrp0re9ehp0M0AiW1djq0GQ/R0iONEJj3zLWf8f03PIWjxDd7bvi
+	 bdmQDcQa4OGCeegpCvHlaZ/tIyyaXDMvmT6wFybgIipB9yuJOklhbL3rwu2w2WGxsT
+	 dwP69I0WVoC2g==
 From: "Rafael J. Wysocki" <rafael@kernel.org>
 To: Linux ACPI <linux-acpi@vger.kernel.org>,
  Jonathan Cameron <jonathan.cameron@huawei.com>
@@ -48,9 +48,9 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
  Hans de Goede <hansg@kernel.org>,
  Mario Limonciello <mario.limonciello@amd.com>
 Subject:
- [PATCH v2.1 1/8] ACPI: bus: Fix handling of _OSC errors in acpi_run_osc()
-Date: Mon, 22 Dec 2025 20:05:44 +0100
-Message-ID: <3042649.e9J7NaK4W3@rafael.j.wysocki>
+ [PATCH v2.1 2/8] ACPI: bus: Rework printing debug messages on _OSC errors
+Date: Mon, 22 Dec 2025 20:11:08 +0100
+Message-ID: <10794028.nUPlyArG6x@rafael.j.wysocki>
 Organization: Linux Kernel Development
 In-Reply-To: <2413407.ElGaqSPkdT@rafael.j.wysocki>
 References: <2413407.ElGaqSPkdT@rafael.j.wysocki>
@@ -65,156 +65,129 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-The handling of _OSC errors in acpi_run_osc() is inconsistent and
-arguably not compliant with the _OSC definition (cf. Section 6.2.12 of
-ACPI 6.6 [1]).
+Instead of using one function, acpi_print_osc_error(), for printing a
+debug message and dumping the _OSC request data in one go, use
+acpi_handle_debug() directly for printing messages and a separate
+function called acpi_dump_osc_data() for dumping the _OSC request data
+before printing one or more of them.
 
-Namely, if OSC_QUERY_ENABLE is not set in the capabilities buffer and
-any of the error bits are set in the _OSC return buffer, acpi_run_osc()
-returns an error code and the _OSC return buffer is discarded.  However,
-in that case, depending on what error bits are set, the return buffer
-may contain acknowledged bits for features that need to be controlled by
-the kernel going forward.
+This avoids
+ * dumping _OSC request data multiple times when there are
+   multiple error bits set in the return buffer,
+ * wrapping message lines on terminals with 80 character line width,
+ * mixing up unrelated messages by printing full lines only,
+and generally helps to make the messages easier to parse.
 
-If the OSC_INVALID_UUID_ERROR bit is set, the request could not be
-processed at all and so in that particular case discarding the _OSC
-return buffer and returning an error is the right thing to do regardless
-of whether or not OSC_QUERY_ENABLE is set in the capabilities buffer.
+Also, use %pUL for UUID printing instead of printing UUIDs as strings
+and include the revision number into the dumped _OSC request data.
 
-If OSC_QUERY_ENABLE is set in the capabilities buffer and the
-OSC_REQUEST_ERROR or OSC_INVALID_REVISION_ERROR bits are set in the
-return buffer, acpi_run_osc() may return an error and discard the _OSC
-return buffer because in that case the platform configuration does not
-change.  However, if any of them is set in the return buffer when
-OSC_QUERY_ENABLE is not set in the capabilities buffer, the feature
-mask in the _OSC return buffer still representes a set of acknowleded
-features as per the _OSC definition:
+This is how the debug printout looks like when the
+OSC_REQUEST_ERROR and OSC_INVALID_REVISION_ERROR bits
+are set in the return buffer before the change:
 
- The platform acknowledges the Capabilities Buffer by returning a
- buffer of DWORDs of the same length. Set bits indicate acknowledgment
- that OSPM may take control of the capability and cleared bits indicate
- that the platform either does not support the capability or that OSPM
- may not assume control.
+ ACPI: \_SB_: ACPI: (0811B06E-4A27-44F9-8D60-3CBBC22E7B48): _OSC request failed
+ ACPI: _OSC request data:
+ ACPI:  1
+ ACPI:  2e7eff
+ ACPI: 
+ ACPI: \_SB_: ACPI: (0811B06E-4A27-44F9-8D60-3CBBC22E7B48): _OSC invalid revision
+ ACPI: _OSC request data:
+ ACPI:  1
+ ACPI:  2e7eff
+ ACPI:
 
-which is not conditional on the error bits being clear, so in that case,
-discarding the _OSC return buffer is questionable.  There is also no
-reason to return an error and discard the _OSC return buffer if the
-OSC_CAPABILITIES_MASK_ERROR bit is set in it, but printing diagnostic
-messages is appropriate when that happens with OSC_QUERY_ENABLE clear
-in the capabilities buffer.
+and this is how it is going to look like afterward:
 
-Adress this issue by making acpi_run_osc() follow the rules outlined
-above.
+ ACPI: \_SB_: ACPI: _OSC: UUID: 0811B06E-4A27-44F9-8D60-3CBBC22E7B48, rev: 1
+ ACPI: \_SB_: ACPI: _OSC: capabilities DWORD 0: [00000001]
+ ACPI: \_SB_: ACPI: _OSC: capabilities DWORD 1: [002e7eff]
+ ACPI: \_SB_: ACPI: _OSC: request failed
+ ACPI: \_SB_: ACPI: _OSC: invalid revision
 
-Moreover, make acpi_run_osc() only take the defined _OSC error bits into
-account when checking _OSC errors.
-
-Link: https://uefi.org/specs/ACPI/6.6/06_Device_Configuration.html#osc-operating-system-capabilities [1]
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
 
-v2 -> v2.1:
-   * Print diagnostic messages for all error bits set in the _OSC return buffer
-     when OSC_INVALID_UUID_ERROR is set.
-   * Strengthen the changelog language related to printing diagnostic messages
-     when OSC_CAPABILITIES_MASK_ERROR is set in the _OSC return buffer (Jonathan).
-
-v1 -> v2:
-   * In addition to making the behavior consistent, also make the code
-     follow the specification more closely in the cases when the "query
-     enable" bit is not set in _OSC the capabilities buffer an error bits
-     are set in the _OSC return buffer.
-   * Update the changelog accordingly.
+v1 -> v2.1:
+   * Dump _OSC request data before printing diagnostic messages.
+   * Add example "before" and "after" debug output to the changelog (Jonathan).
+   * Reformat messages to avoid crossing the 80 characters boundary.
+   * Update the changelog.
 
 ---
- drivers/acpi/bus.c |   52 ++++++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 38 insertions(+), 14 deletions(-)
+ drivers/acpi/bus.c |   35 ++++++++++++++++-------------------
+ 1 file changed, 16 insertions(+), 19 deletions(-)
 
 --- a/drivers/acpi/bus.c
 +++ b/drivers/acpi/bus.c
-@@ -194,14 +194,18 @@ static void acpi_print_osc_error(acpi_ha
- 	pr_debug("\n");
+@@ -180,18 +180,16 @@ void acpi_bus_detach_private_data(acpi_h
+ }
+ EXPORT_SYMBOL_GPL(acpi_bus_detach_private_data);
+ 
+-static void acpi_print_osc_error(acpi_handle handle,
+-				 struct acpi_osc_context *context, char *error)
++static void acpi_dump_osc_data(acpi_handle handle, const guid_t *guid, int rev,
++			       struct acpi_buffer *cap)
+ {
++	u32 *capbuf = cap->pointer;
+ 	int i;
+ 
+-	acpi_handle_debug(handle, "(%s): %s\n", context->uuid_str, error);
+-
+-	pr_debug("_OSC request data:");
+-	for (i = 0; i < context->cap.length; i += sizeof(u32))
+-		pr_debug(" %x", *((u32 *)(context->cap.pointer + i)));
+-
+-	pr_debug("\n");
++	acpi_handle_debug(handle, "_OSC: UUID: %pUL, rev: %d\n", guid, rev);
++	for (i = 0; i < cap->length / sizeof(u32); i++)
++		acpi_handle_debug(handle, "_OSC: capabilities DWORD %i: [%08x]\n",
++				  i, capbuf[i]);
  }
  
-+#define OSC_ERROR_MASK 	(OSC_REQUEST_ERROR | OSC_INVALID_UUID_ERROR | \
-+			 OSC_INVALID_REVISION_ERROR | \
-+			 OSC_CAPABILITIES_MASK_ERROR)
-+
- acpi_status acpi_run_osc(acpi_handle handle, struct acpi_osc_context *context)
- {
-+	u32 errors, *capbuf = context->cap.pointer;
- 	acpi_status status;
- 	struct acpi_object_list input;
- 	union acpi_object in_params[4];
- 	union acpi_object *out_obj;
- 	guid_t guid;
--	u32 errors;
- 	struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
- 
- 	if (!context)
-@@ -240,29 +244,49 @@ acpi_status acpi_run_osc(acpi_handle han
+ #define OSC_ERROR_MASK 	(OSC_REQUEST_ERROR | OSC_INVALID_UUID_ERROR | \
+@@ -239,8 +237,8 @@ acpi_status acpi_run_osc(acpi_handle han
+ 	out_obj = output.pointer;
+ 	if (out_obj->type != ACPI_TYPE_BUFFER
+ 		|| out_obj->buffer.length != context->cap.length) {
+-		acpi_print_osc_error(handle, context,
+-			"_OSC evaluation returned wrong type");
++		acpi_dump_osc_data(handle, &guid, context->rev, &context->cap);
++		acpi_handle_debug(handle, "_OSC: evaluation returned wrong type");
  		status = AE_TYPE;
  		goto out_kfree;
  	}
--	/* Need to ignore the bit0 in result code */
--	errors = *((u32 *)out_obj->buffer.pointer) & ~(1 << 0);
-+	/* Only take defined error bits into account. */
-+	errors = *((u32 *)out_obj->buffer.pointer) & OSC_ERROR_MASK;
-+	/*
-+	 * If OSC_QUERY_ENABLE is set, ignore the "capabilities masked"
-+	 * bit because it merely means that some features have not been
-+	 * acknowledged which is not unexpected.
-+	 */
-+	if (capbuf[OSC_QUERY_DWORD] & OSC_QUERY_ENABLE)
-+		errors &= ~OSC_CAPABILITIES_MASK_ERROR;
-+
- 	if (errors) {
-+		/*
-+		 * As a rule, fail only if OSC_QUERY_ENABLE is set because
-+		 * otherwise the acknowledged features need to be controlled.
-+		 */
-+		bool fail = !!(capbuf[OSC_QUERY_DWORD] & OSC_QUERY_ENABLE);
-+
-+		if (errors & OSC_INVALID_UUID_ERROR) {
-+			acpi_print_osc_error(handle, context,
-+				"_OSC invalid UUID");
-+			/*
-+			 * Always fail if this bit is set because it means that
-+			 * the request could not be processed.
-+			 */
-+			fail = true;
-+			goto out_kfree;
-+		}
- 		if (errors & OSC_REQUEST_ERROR)
- 			acpi_print_osc_error(handle, context,
- 				"_OSC request failed");
--		if (errors & OSC_INVALID_UUID_ERROR)
+@@ -261,9 +259,9 @@ acpi_status acpi_run_osc(acpi_handle han
+ 		 */
+ 		bool fail = !!(capbuf[OSC_QUERY_DWORD] & OSC_QUERY_ENABLE);
+ 
++		acpi_dump_osc_data(handle, &guid, context->rev, &context->cap);
+ 		if (errors & OSC_INVALID_UUID_ERROR) {
 -			acpi_print_osc_error(handle, context,
 -				"_OSC invalid UUID");
- 		if (errors & OSC_INVALID_REVISION_ERROR)
- 			acpi_print_osc_error(handle, context,
- 				"_OSC invalid revision");
--		if (errors & OSC_CAPABILITIES_MASK_ERROR) {
--			if (((u32 *)context->cap.pointer)[OSC_QUERY_DWORD]
--			    & OSC_QUERY_ENABLE)
--				goto out_success;
--			status = AE_SUPPORT;
-+		if (errors & OSC_CAPABILITIES_MASK_ERROR)
-+			acpi_print_osc_error(handle, context,
-+				"_OSC capability bits masked");
-+
-+		if (fail) {
-+			status = AE_ERROR;
++			acpi_handle_debug(handle, "_OSC: invalid UUID");
+ 			/*
+ 			 * Always fail if this bit is set because it means that
+ 			 * the request could not be processed.
+@@ -272,14 +270,13 @@ acpi_status acpi_run_osc(acpi_handle han
  			goto out_kfree;
  		}
--		status = AE_ERROR;
--		goto out_kfree;
- 	}
--out_success:
+ 		if (errors & OSC_REQUEST_ERROR)
+-			acpi_print_osc_error(handle, context,
+-				"_OSC request failed");
++			acpi_handle_debug(handle, "_OSC: request failed");
 +
- 	context->ret.length = out_obj->buffer.length;
- 	context->ret.pointer = kmemdup(out_obj->buffer.pointer,
- 				       context->ret.length, GFP_KERNEL);
+ 		if (errors & OSC_INVALID_REVISION_ERROR)
+-			acpi_print_osc_error(handle, context,
+-				"_OSC invalid revision");
++			acpi_handle_debug(handle, "_OSC: invalid revision");
++
+ 		if (errors & OSC_CAPABILITIES_MASK_ERROR)
+-			acpi_print_osc_error(handle, context,
+-				"_OSC capability bits masked");
++			acpi_handle_debug(handle, "_OSC: capability bits masked");
+ 
+ 		if (fail) {
+ 			status = AE_ERROR;
 
 
 
