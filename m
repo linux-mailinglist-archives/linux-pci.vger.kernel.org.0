@@ -1,133 +1,149 @@
-Return-Path: <linux-pci+bounces-43549-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43550-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAE36CD708C
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 21:04:28 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D8B5CD775B
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 00:37:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0F9A93018959
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 20:04:23 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7C815301AE12
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 23:37:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC8F733BBBD;
-	Mon, 22 Dec 2025 20:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F6633176EB;
+	Mon, 22 Dec 2025 23:37:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ks4sEbD4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Swuj+OYA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC941DEFF5;
-	Mon, 22 Dec 2025 20:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CCB30BF5C
+	for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 23:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766433861; cv=none; b=VlBhSziaKRTLWj6xSAO8+kqiMSrpD8oS4cyrFOpuqserMwj6fgnyl+2L5e3KacdnSxacNV1hD3wXW6+z8NLoSUjylptAFHV/3SABiuRTTLpNqhL6Pnpw6vhENiv/PnoMUXstSCiD0cDK+zyBtVE9J+z+fqs6Zyk/IE6+OVi9jQc=
+	t=1766446667; cv=none; b=EUmHVmBSNJO7k1feri29Y03snQ6K+9BWp+s3mjOoyHUSweLVAPyw0MlZdt2OzsTyFuCUYbjlmdpszlF42EPVHoidmp2+rNYwpzQ7vfxzg4FJbG0MNxWJ6MVResSiBFHSd+g4DVDRg03dQpy2jCLeqYr7IfDa7Oi3mccshEJ/EM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766433861; c=relaxed/simple;
-	bh=zwpPZI3aCzU701r+bt49CUPkrH2uvexax+yCoGFo4dk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=a1SDRZJsVLetj3lRd+Z3FcidGLtkZh/rWrbU1Km3ExQX0ooL96QrIqksEkD2l1L4k3TP0bydRq7mk+gaUDILcd0i4LW73HRolFdS4foqhtvURH7GFoS6oLaZ3eCQzji7O3/xREPkIuu/XIcL6ZcTh/l0hFm6qyRrgvRPdAtVggE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ks4sEbD4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FB36C4CEF1;
-	Mon, 22 Dec 2025 20:04:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766433861;
-	bh=zwpPZI3aCzU701r+bt49CUPkrH2uvexax+yCoGFo4dk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Ks4sEbD4BmEIL+iZbfylQlhQIi6pN3LrZ83VQb9hSJU3r7XUizrxcsW6e/FeWfUvd
-	 gUHvKlGB9e7kpSWLMwSsxLIajsEJesvz+egvwY9KfQKhXq5lWNSDo7ad5p76ERuwYn
-	 nx733ghtCo2Vv0USO877gmZtEIAvFFkMMf4O5yXdUVX8g1KzsKgmEYf13snZfFswn2
-	 UzB43OXM0N2SIksoQEeMUYVUD9pc+B9Qd24TzWGVxk7U11h1w87whOpqfCRkCfjgCG
-	 trJawH2puCyAErsYIAFuNf7WoKp1zQJIft2VjIy4xRgaq9BOtNkaBPi2FfphiVKZ71
-	 5RKGWht8ECTkQ==
-From: Mark Brown <broonie@kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- FUJITA Tomonori <fujita.tomonori@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Breno Leitao <leitao@debian.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
- Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
- Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Arnd Bergmann <arnd@arndb.de>, Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Jens Axboe <axboe@kernel.dk>, 
- Alexandre Courbot <acourbot@nvidia.com>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Liam Girdwood <lgirdwood@gmail.com>, Rae Moar <raemoar63@gmail.com>, 
- Tamir Duberstein <tamird@gmail.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
- dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
- linux-clk@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
- linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-In-Reply-To: <20250925-core-cstr-cstrings-v2-0-78e0aaace1cd@gmail.com>
-References: <20250925-core-cstr-cstrings-v2-0-78e0aaace1cd@gmail.com>
-Subject: Re: (subset) [PATCH v2 00/19] rust: replace `kernel::c_str!` with
- C-Strings
-Message-Id: <176643385114.959021.16173066477128119135.b4-ty@kernel.org>
-Date: Mon, 22 Dec 2025 20:04:11 +0000
+	s=arc-20240116; t=1766446667; c=relaxed/simple;
+	bh=nY66VQOhbvqdzZgeGL+/FZXbOwO7nvJBigVU8eFU+VU=;
+	h=From:Content-Type:Mime-Version:Subject:Date:References:Cc:To:
+	 Message-Id; b=XOlxU8RPqEBiOuBolGXpMGpHA7Cw4EWvkR+WwlikLJxWjofrJlFDFQlNEuAYi0X5LggbDlf2ZpOkdIe68ld+/ZYY37QltHu++2y5mYjvT0ZhruBCEzooHwqMtM4G8JE1xh5XfEX3KjG8/G+xWrd5dI5FtzPD5DPOaX9YFCOGAj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Swuj+OYA; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4eda77e2358so36126581cf.1
+        for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 15:37:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766446664; x=1767051464; darn=vger.kernel.org;
+        h=message-id:to:cc:references:date:subject:mime-version
+         :content-transfer-encoding:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FJvGwq+7Pamxnffgvl/Xh+Dw+LtLBntFoSfEkNe0+74=;
+        b=Swuj+OYAPk+niqiClQn7cXdOSe0RYifqTLp+49YcHpXFJ3F+z/+lKk+J7PqHN62TK7
+         awYbXttrcjGQbiY83e9ngG2ZVc/eGpJ0jthG3RBiJKUxdCV/PGQoJGQOPFXr+a/Y+qhj
+         aH5bSu/WOLyXSw+TJpiV+jQ1StOJUT3ccC9q+AUS0sQ+TE/rXK6GD35+vTcIslLfh4jH
+         AJ/XO9jezw9gTciHuz+4LNpyfmwRsTM3gomXPBAwMKOowdO3nQjpsltbAuPuzkFB7lov
+         9a+M/cEXeeZH+WG85yuADxvI4jeOEwKuAMzcZYrQxO5NnJn7o6cPI2qW7qTdHmKO39Fp
+         7iIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766446664; x=1767051464;
+        h=message-id:to:cc:references:date:subject:mime-version
+         :content-transfer-encoding:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=FJvGwq+7Pamxnffgvl/Xh+Dw+LtLBntFoSfEkNe0+74=;
+        b=XgKKPwSzzl41C8Y2O08QKbN4pUT36v/0aa33URIDsaRygi9ew7zBC/li3dm/0b+yZv
+         qK7LMe3mft6FJ10H/OPIVj7NakLd6/Tuf9D3VkfglvJq7jN0uxkSGjfdDvD42zrlOcxt
+         9MvRJYGYKXYcCedx6CZQm4x6/g7KxvH2kUbUOl7+xTxqjDa7mTPPGYR9jlXna5lt6m+9
+         l2ht2u+fDURw7/SamE3HBZ70afPyLuh8NH356YWJzL7Ekqqi7ZL3v+8qmVZAXj8jZthe
+         nrrV+fyr/CsJuZAOldqfdaWFGSJ79XOCJVOCIhbSN+tbnHKV0To3ttsnSI+I5Fl1vix3
+         I16g==
+X-Gm-Message-State: AOJu0YyDPqEp9ZNlj8tD7c66zCSN/RlUAWt7+2WlXm/196dV/XDGqWx+
+	RGwQOPsvbir7gJDO6ZQH4u4kdQJ3dFzXLzlNiLyDeXZ7fCX82oHIsOV2pK02nw==
+X-Gm-Gg: AY/fxX4yQwLTm756lcufD4gP7d2lD9z1nQJfp7/PI1nwpxxU15gY1egVboD6k3q8xcb
+	xmDkG9eNBzg4Fz15VIgROd81Yo/qXyj3eXcYYc1UI1D/GT297q127e33hA8owQav+pCvWHS8A3f
+	0H6O8T39RfYAjm2fIjikxtU594sS7U3fXsnxUVOXMJrZvuaZlm81h8jGJoqJDKQu5zw3p6tKxC+
+	x1Agm1yTnujiLUx0AnWHv71Rv9gc+8LGf+h9kBaNQK5m31COYzR1LGfI04+OPu8v1T3Pv8ECYCz
+	26ZQ4XQ3v3iFMhU1yC4Nd+1p6EIMBKsaw6/L2qSf6iSGpElTdIUoRXJbdtfgQLH2CM1l/lytupE
+	VJlOj9JCf+FfHEI57FdkWGazm+wkOeENaVoyRk4TfYa0Xzqi7q/vZgM4s2BhnEVSRbWV/9iO7G8
+	lupwKeon2YE3ZeSBrs238NX3Pr68ZMoIun4dmqbCLyk1X8HFij
+X-Google-Smtp-Source: AGHT+IH04yosElyDXNujxX0PrNcUfcACTFFNNR9hYLNll/S61gWZPfwdzqxkwHHQqV8TVPhTPC/bVQ==
+X-Received: by 2002:a05:622a:4d08:b0:4ee:1879:e473 with SMTP id d75a77b69052e-4f4abcf3b54mr205212151cf.32.1766446663663;
+        Mon, 22 Dec 2025 15:37:43 -0800 (PST)
+Received: from smtpclient.apple ([2600:4041:45af:2c00:59d7:91be:c779:cc7e])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4f4ac62fa56sm93666341cf.17.2025.12.22.15.37.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Dec 2025 15:37:43 -0800 (PST)
+From: Patrick Bianchi <patrick.w.bianchi@gmail.com>
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-47773
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81.1.3\))
+Subject: Fwd: PCI Quirk - UGreen DXP8800 Plus
+Date: Mon, 22 Dec 2025 18:37:32 -0500
+References: <A005FF97-BB8D-49F6-994F-36C4A373FA59@gmail.com>
+Cc: alex@shazbot.org,
+ kvm@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>
+To: linux-pci@vger.kernel.org
+Message-Id: <26F3F2EE-37D4-4F73-9A51-EDD662EBEFF2@gmail.com>
+X-Mailer: Apple Mail (2.3826.700.81.1.3)
 
-On Thu, 25 Sep 2025 09:53:48 -0400, Tamir Duberstein wrote:
-> This series depends on step 3[0].
-> 
-> Subsystem maintainers: I would appreciate your `Acked-by`s so that this
-> can be taken through Miguel's tree (where the previous series must go).
-> 
-> Link: https://lore.kernel.org/all/20250925-cstr-core-v16-0-5cdcb3470ec2@gmail.com/ [0]
-> 
-> [...]
+Hello everyone.  At the advice of Bjorn Helgaas, I=E2=80=99m forwarding =
+this message to all of you.  Hope it=E2=80=99s helpful for future kernel =
+revisions!
 
-Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-Thanks!
+Begin forwarded message:
 
-[19/19] rust: regulator: replace `kernel::c_str!` with C-Strings
-        commit: b0655377aa5a410df02d89170c20141a1a5bbc28
+From: Patrick Bianchi <patrick.w.bianchi@gmail.com>
+Subject: PCI Quirk - UGreen DXP8800 Plus
+Date: December 20, 2025 at 9:56:10=E2=80=AFPM EST
+To: bhelgaas@google.com
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Hello!
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Let me start this off by saying that I=E2=80=99ve never submitted =
+anything like this before and I am not 100% sure I=E2=80=99m even in the =
+right place.  I was advised by a member on the Proxmox community forums =
+to submit my findings/request to the PCI subsystem maintainer and they =
+gave me a link to this e-mail.  If I=E2=80=99m in the wrong place, =
+please feel free to redirect me.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+I stumbled upon this thread =
+(https://forum.proxmox.com/threads/problems-with-pcie-passthrough-with-two=
+-identical-devices.149003/) when looking for solutions to passing =
+through the SATA controllers in my UGreen DXP8800 Plus NAS to a Proxmox =
+VM.  In post #12 by user =E2=80=9Ccelemine1gig=E2=80=9D they explain =
+that adding a PCI quirk and building a test kernel, which I did - over =
+the course of three days and with a lot of help from Google Gemini!  =
+I=E2=80=99m not very fluent in Linux or this type of thing at all, but =
+I=E2=80=99m also not afraid to try by following some directions.  =
+Thankfully, the proposed solution did work and now both of the NAS=E2=80=99=
+s SATA controllers stay awake and are passed through to the VM.  I=E2=80=99=
+ve pasted the quirk below.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+I guess the end goal would be to have this added to future kernels so =
+that people with this particular hardware combination don=E2=80=99t run =
+into PCI reset problems and don=E2=80=99t have to build their own =
+kernels at ever update.  Or at least that=E2=80=99s how I understand it =
+from reading through that thread a few times.
 
-Thanks,
-Mark
+I hope this was the right procedure for making this request.  Please let =
+me know if there=E2=80=99s anything else you need from me.  Thank you!
+
+-Patrick Bianchi
+
+
+
+C:
+/*
+* Test patch for Asmedia SATA controller issues with PCI-pass-through
+* Some Asmedia ASM1164 controllers do not seem to successfully
+* complete a bus reset.
+*/
 
 
