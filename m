@@ -1,100 +1,100 @@
-Return-Path: <linux-pci+bounces-43506-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43507-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82F47CD4F0B
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 09:14:19 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90C48CD51C2
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 09:41:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0D13F300818D
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 08:14:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A00BE302BA9E
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 08:38:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50EC030BF62;
-	Mon, 22 Dec 2025 08:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C7BA313285;
+	Mon, 22 Dec 2025 08:19:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gLS+j2GK";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="XAwzH/CS"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EGDfIdvj";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="MkXbBWx6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC04130BB98
-	for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 08:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD83F28690
+	for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 08:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766391256; cv=none; b=m/b++P+5AvmMYWQvgWCEB9Rft59mCc2hj8wByWOzcA+uY59sFC6wnSghT2bQGFfVMJtpRJhdiJHPa7ddNPTgQo2dLE1XSco6WOuY9ng+eF0EF4Oh+43JsgwuLj8+Du+ydHpaXsxSsCD0bs9EQHddzJ/LqO0dERaPGNjzMkPLFPk=
+	t=1766391569; cv=none; b=O/qP7FB0/Zw94G1asnnhlcIE02JL9dTfyMVomcqumb86tJnaSGcerfqSJ5Ps5dY7koEn26fZ2F1DQ96dPtxinU7x7Fx40o2U8WK9jp8n2oN2pp5JsgYu9bxshvjJumeFJ02PrYKc5JYqFUzhCrtZ9t6e+SrAkOfjE5JMq7HeLFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766391256; c=relaxed/simple;
-	bh=ug4yylwNcO90NJvpE3SC7VOMbFwgEshDUXvRfWQd9TY=;
+	s=arc-20240116; t=1766391569; c=relaxed/simple;
+	bh=nA8y2bEM4Yx1Oq5BRChFqdoB8+NVx6rAe6y8oTeQGFQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MB2KZ20B6/yzCKVexYzeMY0dAPpZTtFgCAYvykwBxmfEZLHuik5aKEDfiJQpKdMfaheAF4OntOIxvkNlkwSMkbebTgjbuQfb9yqHXKwQXS+upk5QnVZKiLEOQQZc7cwPDT3F7bqLE4DDDn4gcm9ZvfG7LHRtLsXp1dTwtk09qgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gLS+j2GK; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=XAwzH/CS; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:Content-Type; b=TaBkvHM1OpnqQSyVOBk0JSiLU9nR9h4n4pZ4/kd+gHgze0XbC3s0yoKoUdM658pWqpEmVR96wPdThE+Tuek1ayMEQScJq+P0eM2OoRg9NSRJHqUpEJmlS9GaGEIj5k1F8GWj21PjjjfwN0CjzVl3FaD06ynhKJbllcsaouHxNK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EGDfIdvj; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=MkXbBWx6; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BM0Aerl388275
-	for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 08:14:13 GMT
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BM824Hi3586371
+	for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 08:19:27 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	cbxoIvggTHwJGPAyfPp+mE9GnjxpExWzAQ+NnFf0Hcc=; b=gLS+j2GKE+o26XxJ
-	09rshfZSMea52CyGG6s8CXRBs45zFtBLYGt1nTkJS/UukmbwGBe1rbkueX5WQWKh
-	XINKSK5P6lmg1kvpW7ip+Sp0Y6JdPZK0VD0nG+7Gel9VQ7rhGHYOKfDgzm7CQw2u
-	o5DtXyFS+XmYg3dba8o9BnTQ4AiYBjLKZ7Pf3qLqeOFMMggmpt0UcOfxIlgXKXhx
-	KCpWN3BZcNomRwybcxiOJAM1z1q1YVH8LGixmpCnBo95tKys/ed6BiLmKR2Vbjm3
-	eYpdOFaOLlnj9tYkLc4h3cpYKEkz6nAKk4UA9F61HJvMbvSdCEgQ2qUmWjSrpTK/
-	3zvKiA==
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b5mubm7au-1
+	2Y3yLJRT2ENhfqeGTgY5YZoHEsYe5JwKTqP5zOTwVno=; b=EGDfIdvjM8scpHFU
+	JC2/lb64uYp5swg0jniRs63ZZ7Gln5jXcnqy3xTcbRbarIufaEiIQ7hhK0g56q0Z
+	kNJ7j/8Mh4Vmx3Y8M4ZeaUMczaVW6/mK7t6VrEjdDJZGHPvKauM19XZ2loClnaCZ
+	+ULoO0tSjBeu28s/wjn/ac98yfcRDqJiyv9lDxAyI6odOCmLy54TSyCTvvYFg7ZO
+	04H6GWpzwKZLOpHqVABerG9p7q8JsRFawvpGCUefpozb45GxzvrgfAThA1a39zC9
+	pvtsFs5v9KABqfVQ3ECfJSKxS7plj80LrKLDtZYcewYO7kI6ZS4AlK5sT7h+3B4H
+	yugNcw==
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b69ahjhnj-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 08:14:13 +0000 (GMT)
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-34eb6589ed2so1397340a91.2
-        for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 00:14:13 -0800 (PST)
+	for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 08:19:26 +0000 (GMT)
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-7b90740249dso6456793b3a.0
+        for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 00:19:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1766391252; x=1766996052; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1766391566; x=1766996366; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=cbxoIvggTHwJGPAyfPp+mE9GnjxpExWzAQ+NnFf0Hcc=;
-        b=XAwzH/CSpJXg9AvP/SNFpd9RXjQ4mnIUxP05PGKfePsUHXIk0fGu1hW2MP37H7EyHb
-         aWpGMGHHz+t0CoK+FqRFKUmiDo1NopchfnhjKMKokT3HuPEkw9+DXRBwZ2XlV+3ns8SA
-         NzfmLnjCaD0tIXe6NSyn5jBjcbSORQ6R6w8ztOiq2FtmiQp72ywyKciVUHkImjjd95YI
-         UAB1dZh3MNiA2ino4vnkwNg8pRG3ibOOXjA5j1VVmHcU04QCAxpvNK/6jSne1R52aKkd
-         7JZj6c9bmyHa1l9ctQqJ4mYiVqD4p3TFpUZf/HGlmNPPMLnwUcPJWpR3vkS7Wf8DZd1R
-         bzkg==
+        bh=2Y3yLJRT2ENhfqeGTgY5YZoHEsYe5JwKTqP5zOTwVno=;
+        b=MkXbBWx6olMvrEET71VqChJF2IH7rZjIOIEmP3gyLLNd3skaUQijtQ1MmgC4AcxAIK
+         WYh2Zqxx9msdhpDHXWVVSWb4Wt4ipVw2j2GXcc25gHp1drrNuwkgXbEvz3JPdHRVWZcY
+         tZFfNvxuZ1k15xjf2OZMkqgvN2ulHn5PZi6imd2/uKXrWIs392H9HlWht5NinOVM+7o0
+         oYfFV3DS/qvjfaJ6/gsLjni4zHdgSQUh5k5uEnZKkSrefJQHq+MCZ6Ua5XISpUE1m7DJ
+         /ICWQafZ3BMYP7wmZmvSS7OwU0ClOO8nN1OKtlM0fsqfOU2sdmo7kYMQg4tzPNwo2jT/
+         YJfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766391252; x=1766996052;
+        d=1e100.net; s=20230601; t=1766391566; x=1766996366;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=cbxoIvggTHwJGPAyfPp+mE9GnjxpExWzAQ+NnFf0Hcc=;
-        b=uqhlaKjXPGNAVTtn+4CrBP99bEkGitIwDOBj8dZM1ne1niMviCyXdIlzNuO+8z5T21
-         +hJoLIlOWlI6smi1NEryaa7gkoL24WHS1OAnqcwvGc7CSxtt/p/Su4wKDKCUZRJuTopx
-         VmG1q3+qaAPrtV1EIU5vOo6WebPgiBlJSYzYzReTY9Y50jkRpBaFApDkAjz+wICRx78d
-         b98W4OtmyBeTfP3vRkTshBd/C3coqkZnLkKvdfCD+J/BN+WGGGARxYFAjsyleVUivNfh
-         29tPNTERfACaNDXqrN9sjQ3+jNtwGPCM4Q3eGr3zpUAlns4XaztOYcdmovaVb/FPV4XT
-         buug==
-X-Forwarded-Encrypted: i=1; AJvYcCW+dKL/pZ9llqI+tQEJRfMsaaSKtgjVHw7gKYujArQ6B20XVU8TflTH4VOQhLLDl3F8AlOgWZb+iac=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydVejRTBcmzge9YF65EdVTYulIMa8jN+a/trbwBsO0fLJJASln
-	0vPdN/aen/Z/lWPMm+bKT+Q8I1Os3lmO6CcAz0z43JX1Lv2hRLzpS2THhnd3BvQ7zi/Tvi7mpCX
-	BDjXYyCfrD8Dy/jMu0E3ZWqv+9gmk21VmcVZc5U4rV4eDwwOuM1/pqRuzJjzZXVs=
-X-Gm-Gg: AY/fxX7OKKdCbua8ONbjG9C46bW2OQXpiaOhWbI0z7fc0ETY/B9LFZGxMSxY+QkBxW0
-	cusW9915Wlt4u8dpA0ZHciOmLi79EAi+P9EPDAZfhqL1w+vH8OXQnpvWnRVGFG/ooAC8sTMJvt4
-	t5nJmCmkQ2y0jpOdQpjCti+jKQIol99mz0Xug7jTU+y3/pPNyrPwxOxu6UVMHAWZ0cwEhYwjVL5
-	7cjP2U7JtQF+HMQh02c6FAxRxtzWHdMxLXV5NngH2xIT+TlaSnBiurYURlG/EfQWzT0fqHCzY0h
-	uP9VcRgqdYURcWmt/FKr34seDkLTmQUuu1dqxq5lPZ06RZnh3aQZc7c64HC33wQC/XljBdm1hij
-	ZBAy0U3LU2pRmCkmiVqANXWjEp2wF1/IG++yQQa3eJg==
-X-Received: by 2002:a17:90b:1d83:b0:32a:34d8:33d3 with SMTP id 98e67ed59e1d1-34e91f749d8mr8077442a91.0.1766391252391;
-        Mon, 22 Dec 2025 00:14:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG1Go09mxe6FptC6uL4OomBUKer2vZ4FaNIffkFWpnND+g9IVqxiqRcg2zZV/2/WJ8KZ0XTqQ==
-X-Received: by 2002:a17:90b:1d83:b0:32a:34d8:33d3 with SMTP id 98e67ed59e1d1-34e91f749d8mr8077421a91.0.1766391251826;
-        Mon, 22 Dec 2025 00:14:11 -0800 (PST)
+        bh=2Y3yLJRT2ENhfqeGTgY5YZoHEsYe5JwKTqP5zOTwVno=;
+        b=RXVX3j8THFqDi7x+K0zcHrgQhbEiHe8JxvcVvIdFP4HPVW93mSB53sTZjpOA9ZA3/D
+         +du/bY6zm/PM1ISwo7kaZTdQ7bPLt/okw41BPnqTb7PJOlugK4azyL5WQrgkx9pRl0w4
+         7ITJE9SKgh1XMw8+xxEQMAh7KakwB510dpq0vjhs2yOsfhuvFVtn0+DZzFj4HEZELhdw
+         19b1Oa0uUh+lIF55Jax9LSi13Iy1VEki8IAlbe+lEEx1wGiVh4dqfiLRANliizkr8P6L
+         X19REwAAwntXaCOMrzEYw1CqrQ51ETaReU2/8dehXI/4gJClOGlJzVkc01dRLrnUsw/N
+         374g==
+X-Forwarded-Encrypted: i=1; AJvYcCWzeKgZTNVeuAzWokjfjSIfK6hCG7RKUa824v83HGG9XUZAEhVs4tm1J8dOrxYEOiKKzS8CfvBa5/M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO1HCV2mNWFX/wgKfuvNwV62Cu4Nv0ku/3cCThmAQt6JJWhLHk
+	ysnE9csGQ+zyPqG9bqw7a56vXPQ1F+9eEFCGKCo23qMd3VcuP7Mc9iIkFbn5PUAtUZ9OtpE1BYH
+	BNd0h0liDqZxspmOGs8F0Lqm2djlma/74DmUdMqCEFwAKsoOm5xzT2SblPuG7uss=
+X-Gm-Gg: AY/fxX4XXuZH696OaH1b+/YjYhNJfT6u5JQHCqP0wnc/+kJpQ3/hXQQWJNXNYiz9B14
+	cQ6zdDIbjyFGh6y8W0+rILg2mvMQG1rpbQnFJBC5vkQ8EovC2OCFCeGPDr/BR1qrg0cHs9m+flE
+	g+MjWIerAvgLldzif13Mee58CTDD3j3gBpKolCEz5S2w1r5j3UNOPkQnFB7A4RK1PvUYXQZ8Kfg
+	O3nfQVFGwTXVFK4j+KAJnSAYZTpwrnvnmcWJPj/OpSrgcf8H0nXNby42Wft1emOrQzOeFMuSqau
+	q8BtinW5cs7+MwQWHhM+26mEexic07KjmQ8R5Zp5zbshu9p3dyUQnKB+Y/6GT+ICT+HvHPoW0lw
+	Z+stze0jWMX2IEswjWrYUCE1Mqufx47RAweEB//Qdeg==
+X-Received: by 2002:a05:6a00:1d15:b0:7ac:d1fe:5c1c with SMTP id d2e1a72fcca58-7ff648ed92dmr7873389b3a.18.1766391566126;
+        Mon, 22 Dec 2025 00:19:26 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGck4J5jvLctnijHRv9r5uef899dc2vnTKCfD1ohkAB1TPymZGpX+qghP9G1pceHXjBo7EfSQ==
+X-Received: by 2002:a05:6a00:1d15:b0:7ac:d1fe:5c1c with SMTP id d2e1a72fcca58-7ff648ed92dmr7873372b3a.18.1766391565581;
+        Mon, 22 Dec 2025 00:19:25 -0800 (PST)
 Received: from [10.218.35.45] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34e70dbd618sm12166827a91.12.2025.12.22.00.14.04
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7ff7b4234e2sm9557121b3a.27.2025.12.22.00.19.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Dec 2025 00:14:11 -0800 (PST)
-Message-ID: <a7b94f8f-8773-43b0-b481-29828aba9abd@oss.qualcomm.com>
-Date: Mon, 22 Dec 2025 13:44:02 +0530
+        Mon, 22 Dec 2025 00:19:25 -0800 (PST)
+Message-ID: <8e00bd1c-29ae-43fd-90e8-ea0943cb02b6@oss.qualcomm.com>
+Date: Mon, 22 Dec 2025 13:49:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -102,143 +102,258 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 19/27] PCI: dwc: ep: Cache MSI outbound iATU
- mapping
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Koichiro Den <den@valinux.co.jp>, ntb@lists.linux.dev,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Frank.Li@nxp.com, mani@kernel.org,
-        kwilczynski@kernel.org, kishon@kernel.org, bhelgaas@google.com,
-        corbet@lwn.net, vkoul@kernel.org, jdmason@kudzu.us,
-        dave.jiang@intel.com, allenbh@gmail.com, Basavaraj.Natikar@amd.com,
-        Shyam-sundar.S-k@amd.com, kurt.schwemmer@microsemi.com,
-        logang@deltatee.com, jingoohan1@gmail.com, lpieralisi@kernel.org,
-        robh@kernel.org, jbrunet@baylibre.com, fancer.lancer@gmail.com,
-        arnd@arndb.de, pstanner@redhat.com, elfring@users.sourceforge.net
-References: <20251129160405.2568284-1-den@valinux.co.jp>
- <20251129160405.2568284-20-den@valinux.co.jp> <aTaE3yB7tQ-Homju@ryzen>
- <4909f70a-2f65-4cac-96ac-5cd4371bc867@oss.qualcomm.com>
- <aUj4M3z87MwFSUFW@ryzen>
+Subject: Re: [PATCH] PCI: dwc: ep: Cache MSI outbound iATU mapping
+To: Niklas Cassel <cassel@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Frank Li <Frank.Li@nxp.com>, Damien Le Moal <dlemoal@kernel.org>,
+        Koichiro Den <den@valinux.co.jp>, linux-pci@vger.kernel.org
+References: <20251210071358.2267494-2-cassel@kernel.org>
 Content-Language: en-US
 From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <aUj4M3z87MwFSUFW@ryzen>
+In-Reply-To: <20251210071358.2267494-2-cassel@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjIyMDA3MyBTYWx0ZWRfX8teQ1qh7q+v/
- esTXQynMrQl9H1u35uqWBCKMotuPdgWgbm3YGUzeYnUGIFlbij8z5KPn6yrYdTL1vpkaGcoDJnA
- AwqMIqbz2fGiJ2oTyLrIqrb7Y6Ja0IBujQqk+F5X0/OB7CWljwtCQ5weJAnWSihdYXU1LACxGYn
- EwUiI79i+g01Nj0HLog0nLVgY5V0OkuYr5Lyu2Tf/TvF5QzvNfkKOA6Ay3E7v5PIefwdRtN/tlT
- XBdl//GEySTOgiio/peM2lXp0nJtUS6RzB8Z02W6Lub39xJ1ZeGMfat0bIJRFFpjkJuIDRYqZIi
- iFE+Do3o3/TYJTbC7aRrRvBcUs2EXJTfcicPbDRs2W6eBSF19jxk4+DE5uDZ0mp1iGHq8GiMrqC
- 7wvAbbwNYXPV58QU4xMvTOnzoOd8FvQshR14A+G4O8pR7kLXwCI7OrS/lMDUY17qrZvVJqOd97m
- hSHuQo+ar0Jva/n1Gvg==
-X-Proofpoint-GUID: xIATz2WwsEfOueRX22kheTeKeJVUM-1b
-X-Proofpoint-ORIG-GUID: xIATz2WwsEfOueRX22kheTeKeJVUM-1b
-X-Authority-Analysis: v=2.4 cv=KYbfcAYD c=1 sm=1 tr=0 ts=6948fdd5 cx=c_pps
- a=0uOsjrqzRL749jD1oC5vDA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=JuH8bc4C c=1 sm=1 tr=0 ts=6948ff0e cx=c_pps
+ a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
  a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=9AdMxfjQAAAA:20 a=VwQbUJbxAAAA:8 a=P-IC7800AAAA:8
- a=XlojDObrNaimPXCU0dcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=mQ_c8vxmzFEMiUWkPHU9:22 a=d3PnA9EDa4IxuAV0gXij:22 a=bA3UWDv6hWIuX7UZL3qL:22
+ a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=Op2LraesObuKZ0PTTu4A:9
+ a=QEXdDO2ut3YA:10 a=IoOABgeZipijB_acs4fv:22
+X-Proofpoint-ORIG-GUID: 3BSnLQrcqNcVVpsHaP-7wryhszf93ZOa
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjIyMDA3NCBTYWx0ZWRfX1TtdJLoz1OWm
+ 8VIQ5uUyFLfoAO03yP2DG/vYbXwpkyxKEAOm1lYFx9JzTD+iklkxq++ybJXp6HLfwo5zyPLHwOG
+ UKkCx1SCOnNs+D4ck7H7h21TpVmFoy1dORJOADDaPct3hgavu2xeu4rZWc1MpufestTod5Gh541
+ hnDppPQ52kbnMd5YrxA+61bWg9ZEGE6iDBYOaqIylgSke8ov0ljYu5hmEPPJeIpPcrByOiKu2Ir
+ xmbVF0tjHdOWDwYEud8C8Uw4V6syGa5VNdGbHw18B28463g2R/m6VSLgFB2I++M4dTRDvN51bZ6
+ smw+Rru4cG7jePY6khbH2EklNkDAjpqHlE0lDeG9VNQVAs7OGUM2tOT8BHipDWYKPSr70mo3G0+
+ /oIH6+2DfW2g6pXC5n54/k0WdPw2ez+48KTXIsrjeQ7xu9xWzfsnQPQWeMvwrsoKMrCJjmZ3oHH
+ Nme4zI4VFBEc4IniXVw==
+X-Proofpoint-GUID: 3BSnLQrcqNcVVpsHaP-7wryhszf93ZOa
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-12-21_05,2025-12-19_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 clxscore=1015 bulkscore=0 lowpriorityscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
- definitions=main-2512220073
+ malwarescore=0 priorityscore=1501 adultscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 impostorscore=0 suspectscore=0 spamscore=0
+ bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
+ definitions=main-2512220074
 
 
 
-On 12/22/2025 1:20 PM, Niklas Cassel wrote:
-> On Mon, Dec 22, 2025 at 10:40:12AM +0530, Krishna Chaitanya Chundru wrote:
->> On 12/8/2025 1:27 PM, Niklas Cassel wrote:
->>> On Sun, Nov 30, 2025 at 01:03:57AM +0900, Koichiro Den wrote:
->>>
->>> I guess the problem is that some EPF drivers, even if only
->>> one capability can be enabled (MSI/MSI-X), call both
->>> pci_epc_set_msi() and pci_epc_set_msix(), e.g.:
->>> https://github.com/torvalds/linux/blob/v6.18/drivers/pci/endpoint/functions/pci-epf-test.c#L969-L987
->>>
->>> To fill in the number of MSI/MSI-X irqs.
->>>
->>> While other EPF drivers only call either pci_epc_set_msi() or
->>> pci_epc_set_msix(), depending on the IRQ type that will actually
->>> be used:
->>> https://github.com/torvalds/linux/blob/v6.18/drivers/nvme/target/pci-epf.c#L2247-L2262
->>>
->>> I think both versions is okay, just because the number of IRQs
->>> is filled in for both MSI/MSI-X, AFAICT, only one of them will
->>> get enabled.
->>>
->>>
->>> I guess it might be hard for an EPC driver to know which capability
->>> that is currently enabled, as to enable a capability is only a config
->>> space write by the host side.
->> As the host is the one which enables MSI/MSIX, it should be better the
->> controller
->> driver takes this decision and the EPF driver just sends only raise_irq.
->> Because technically, host can disable MSI and enable MSIX at runtime also.
->>
->> In the controller driver,  it can check which is enabled and chose b/w
->> MSIX/MSI/Legacy.
-> I'm not sure if I'm following, but if by "the controller driver", you
-> mean the EPC driver, and not the host side driver, how can the EPC
-> driver know how many interrupts a specific EPF driver wants to use?
-I meant the dwc drivers here.
-Set msi & set msix still need to called from the EPF driver only to tell 
-how many
-interrupts they want to configure etc.
+On 12/10/2025 12:43 PM, Niklas Cassel wrote:
+> From: Koichiro Den <den@valinux.co.jp>
 >
->  From the kdoc to pci_epc_set_msi(), the nr_irqs parameter is defined as:
-> @nr_irqs: number of MSI interrupts required by the EPF
-> https://github.com/torvalds/linux/blob/v6.19-rc2/drivers/pci/endpoint/pci-epc-core.c#L305
+> dw_pcie_ep_raise_msi_irq() currently programs an outbound iATU window
+> for the MSI target address on every interrupt and tears it down again
+> via dw_pcie_ep_unmap_addr().
 >
+> On systems that heavily use the AXI bridge interface (for example when
+> the integrated eDMA engine is active), this means the outbound iATU
+> registers are updated while traffic is in flight. The DesignWare
+> endpoint databook 5.40a - "3.10.6.1 iATU Outbound Programming Overview"
+> warns that updating iATU registers in this situation is not supported,
+> and the behavior is undefined.
 >
-> Anyway, I posted Koichiro's patch here:
-> https://lore.kernel.org/linux-pci/20251210071358.2267494-2-cassel@kernel.org/
-I will comment on that patch.
+> Under high MSI and eDMA load this pattern results in occasional bogus
+> outbound transactions and IOMMU faults, on the RC side, such as:
 >
-> See my comment:
->    pci-epf-test does change between MSI and MSI-X without calling
->    dw_pcie_ep_stop(), however, the msg_addr address written by the host
->    will be the same address, at least when using a Linux host using a DWC
->    based controller. If another host ends up using different msg_addr for
->    MSI and MSI-X, then I think that we will need to modify pci-epf-test to
->    call a function when changing IRQ type, such that pcie-designware-ep.c
->    can tear down the MSI/MSI-X mapping.
-Maybe for arm based systems we are getting same address but for x86 
-based systems
-it is not guarantee that you will get same address.
-> So if we want to improve things, I think we need to modify the EPF drivers
-> to call a function when changing the IRQ type. The EPF driver should know
-> which IRQ type that is currently in use (see e.g. nvme_epf->irq_type in
-> drivers/nvme/target/pci-epf.c).
-My suggestion is let EPF driver call raise_irq with the vector number 
-then the dwc driver
-can raise IRQ based on which IRQ host enables it.
-> Additionally, I don't think that the host side should be allowed to change
-> the IRQ type (using e.g. setpci) when the EPF driver is in a "running state".
-In the host driver itelf they can choose to change it by using 
-pci_alloc_irq_vectors 
-<https://elixir.bootlin.com/linux/v6.18.2/C/ident/pci_alloc_irq_vectors>, 
-Currently it is not present but in future someone can change it, as spec 
-didn't say you
-can't update it.
-> I think things will break badly if you e.g. try to do this on an PCIe
-> connected network card while the network card is in use.
-I agree on this.
+>    ipmmu-vmsa eed40000.iommu: Unhandled fault: status 0x00001502 iova 0xfe000000
+>
+> followed by the system becoming unresponsive. This is the actual output
+> observed on Renesas R-Car S4, with its ipmmu_hc used with PCIe ch0.
+>
+> There is no need to reprogram the iATU region used for MSI on every
+> interrupt. The host-provided MSI address is stable while MSI is enabled,
+> and the endpoint driver already dedicates a scratch buffer for MSI
+> generation.
+>
+> Cache the aligned MSI address and map size, program the outbound iATU
+> once, and keep the window enabled. Subsequent interrupts only perform a
+> write to the MSI scratch buffer, avoiding dynamic iATU reprogramming in
+> the hot path and fixing the lockups seen under load.
+>
+> Signed-off-by: Koichiro Den <den@valinux.co.jp>
+> [cassel: do same change for dw_pcie_ep_raise_msix_irq()]
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> ---
+> Notes: Without this patch, I also see IOMMU errors on the host side,
+> when running drivers/nvme/target/pci-epf.c with a large queue depth.
+>
+> pci_epc_raise_irq() does take a mutex, so the calls to these functions
+> are serialized, so it really appears that the DWC controller does not
+> handle iATU reprogramming while there are outstanding transactions.
+>
+> Just like Koichiro describes here:
+> https://lore.kernel.org/linux-pci/ddriorsgyjs6klcb6d7pi2u3ah3wxlzku7v2dpyjlo6tmalvfw@yj5dczlkggt6/
+>
+> I also see the iova faulting on the RC side to be the start of "addr_space"
+> on the EP, so it appears that a transaction has gone through untranslated.
+> (Most likely because the DWC controller does handle the iATU table being
+> modified while there are outstanding transactions.)
+>
+> This patch has been tested using pci-epf-test and nvmet-pci-epf on rock5b.
+>
+> pci-epf-test does change between MSI and MSI-X without calling
+> dw_pcie_ep_stop(), however, the msg_addr address written by the host
+> will be the same address, at least when using a Linux host using a DWC
+> based controller. If another host ends up using different msg_addr for
+> MSI and MSI-X, then I think that we will need to modify pci-epf-test to
+> call a function when changing IRQ type, such that pcie-designware-ep.c
+> can tear down the MSI/MSI-X mapping.
+>
+>   .../pci/controller/dwc/pcie-designware-ep.c   | 82 ++++++++++++++++---
+>   drivers/pci/controller/dwc/pcie-designware.h  |  5 ++
+>   2 files changed, 75 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 7f2112c2fb21..2bbeddaa73d4 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -601,6 +601,16 @@ static void dw_pcie_ep_stop(struct pci_epc *epc)
+>   	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>   	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>   
+> +	/*
+> +	 * Tear down the dedicated outbound window used for MSI
+> +	 * generation. This avoids leaking an iATU window across
+> +	 * endpoint stop/start cycles.
+> +	 */
+> +	if (ep->msi_iatu_mapped) {
+> +		dw_pcie_ep_unmap_addr(epc, 0, 0, ep->msi_mem_phys);
+> +		ep->msi_iatu_mapped = false;
+> +	}
+> +
+>   	dw_pcie_stop_link(pci);
+>   }
+>   
+> @@ -702,14 +712,37 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>   	msg_addr = ((u64)msg_addr_upper) << 32 | msg_addr_lower;
+>   
+>   	msg_addr = dw_pcie_ep_align_addr(epc, msg_addr, &map_size, &offset);
+> -	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+> -				  map_size);
+> -	if (ret)
+> -		return ret;
+>   
+> -	writel(msg_data | (interrupt_num - 1), ep->msi_mem + offset);
+> +	/*
+> +	 * Program the outbound iATU once and keep it enabled.
+> +	 *
+> +	 * The spec warns that updating iATU registers while there are
+> +	 * operations in flight on the AXI bridge interface is not
+> +	 * supported, so we avoid reprogramming the region on every MSI,
+> +	 * specifically unmapping immediately after writel().
+> +	 */
+> +	if (!ep->msi_iatu_mapped) {
+> +		ret = dw_pcie_ep_map_addr(epc, func_no, 0,
+> +					  ep->msi_mem_phys, msg_addr,
+> +					  map_size);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ep->msi_iatu_mapped = true;
+> +		ep->msi_msg_addr = msg_addr;
+> +		ep->msi_map_size = map_size;
+> +	} else if (WARN_ON_ONCE(ep->msi_msg_addr != msg_addr ||
+> +				ep->msi_map_size != map_size)) {
+> +		/*
+> +		 * The host changed the MSI target address or the required
+> +		 * mapping size changed. Reprogramming the iATU at runtime is
+> +		 * unsafe on this controller, so bail out instead of trying to
+> +		 * update the existing region.
+> +		 */
+> +		return -EINVAL;
+> +	}
+>   
+> -	dw_pcie_ep_unmap_addr(epc, func_no, 0, ep->msi_mem_phys);
+> +	writel(msg_data | (interrupt_num - 1), ep->msi_mem + offset);
+>   
+>   	return 0;
+>   }
+> @@ -786,14 +819,36 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>   	}
+>   
+>   	msg_addr = dw_pcie_ep_align_addr(epc, msg_addr, &map_size, &offset);
+> -	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+> -				  map_size);
+> -	if (ret)
+> -		return ret;
+>   
+> -	writel(msg_data, ep->msi_mem + offset);
+> +	/*
+> +	 * Program the outbound iATU once and keep it enabled.
+> +	 *
+> +	 * The spec warns that updating iATU registers while there are
+> +	 * operations in flight on the AXI bridge interface is not
+> +	 * supported, so we avoid reprogramming the region on every MSI-X,
+> +	 * specifically unmapping immediately after writel().
+> +	 */
+> +	if (!ep->msi_iatu_mapped) {
+This is wrong, in MSIX each vector can give you different address, you 
+can't expect same address for
+all the vectors in MSIX table. In ARM based system you might see only 
+single address for X86 this will
+change.
 
-I just want to highlight there is possibility of this in future, if 
-someone comes up with a
-clean logic.
+And also we see in MSIX the address are getting updated at runtime with 
+x86 windows host machines.
+
+Use the MSIX doorbell method which will not use iATU at all, 
+dw_pcie_ep_raise_msix_irq_doorbell().
 
 - Krishna Chaitanya.
->
->
-> Kind regards,
-> Niklas
+> +		ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+> +					  map_size);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ep->msi_iatu_mapped = true;
+> +		ep->msi_msg_addr = msg_addr;
+> +		ep->msi_map_size = map_size;
+> +	} else if (WARN_ON_ONCE(ep->msi_msg_addr != msg_addr ||
+> +				ep->msi_map_size != map_size)) {
+> +		/*
+> +		 * The host changed the MSI-X target address or the required
+> +		 * mapping size changed. Reprogramming the iATU at runtime is
+> +		 * unsafe on this controller, so bail out instead of trying to
+> +		 * update the existing region.
+> +		 */
+> +		return -EINVAL;
+> +	}
+>   
+> -	dw_pcie_ep_unmap_addr(epc, func_no, 0, ep->msi_mem_phys);
+> +	writel(msg_data, ep->msi_mem + offset);
+>   
+>   	return 0;
+>   }
+> @@ -1086,6 +1141,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>   	struct device *dev = pci->dev;
+>   
+>   	INIT_LIST_HEAD(&ep->func_list);
+> +	ep->msi_iatu_mapped = false;
+> +	ep->msi_msg_addr = 0;
+> +	ep->msi_map_size = 0;
+>   
+>   	epc = devm_pci_epc_create(dev, &epc_ops);
+>   	if (IS_ERR(epc)) {
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index a31bd93490dc..1093c622826d 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -472,6 +472,11 @@ struct dw_pcie_ep {
+>   	void __iomem		*msi_mem;
+>   	phys_addr_t		msi_mem_phys;
+>   	struct pci_epf_bar	*epf_bar[PCI_STD_NUM_BARS];
+> +
+> +	/* MSI outbound iATU state */
+> +	bool			msi_iatu_mapped;
+> +	u64			msi_msg_addr;
+> +	size_t			msi_map_size;
+>   };
+>   
+>   struct dw_pcie_ops {
 
 
