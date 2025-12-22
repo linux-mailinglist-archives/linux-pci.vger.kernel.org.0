@@ -1,100 +1,113 @@
-Return-Path: <linux-pci+bounces-43511-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43512-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51332CD52A6
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 09:49:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 571A6CD5493
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 10:18:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 8A71830022D3
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 08:49:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1819E301A1C5
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 09:17:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 768493090CC;
-	Mon, 22 Dec 2025 08:49:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14D0A30FF2F;
+	Mon, 22 Dec 2025 09:17:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OlaqKPzv"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ct5e2TCT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B642405ED
-	for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 08:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7D8310627;
+	Mon, 22 Dec 2025 09:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766393362; cv=none; b=iDPxYA8v4RjjVbarYjgsRiVOk5bVqkbGrMx1njb72tGf1LErUp4/exd9Ph1jXxzqRUEQHqnyj8ILBL1889W4R3wEDbOzhlg2G44XFnCU1kptkLoDFxgdMQnXJuAhngCdojqHomkeiik7JE/kQ8xHpikmqgj3p4AZXtgREQm2mTw=
+	t=1766395039; cv=none; b=NkrBxLEqTtBqGCei3aav6EpU00D3WAJLQ50EHqusQzj0TtzpPjeootiQ93iSHYpyxHlMxYHNjXt/l++8u/S3ejX4uNwyVrF8SBvuKLa0/8IGG+j35olW41YooiaJMcNqPaGRO/8xt1mM0MI/qua24JZq9dPL3woo/h57KIeLNDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766393362; c=relaxed/simple;
-	bh=lGYe4SrAQ5Z8Ufdx+swBTt8GT+eQWM3pprHLNUV2L/Q=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=TCBDIzHk9c5k8WLnnUOUkTDcfb5ULwzelbv5EY/5ftsm1/0tuZ3gpCKZXdmOoRXhkEHWIdnR+fFtDXIreYEUQsA6mP4aCNZVPsE/TZCdyi+GePLZ3Ox1tbzoY9ob2G66qSH5EZi4gWAkAutpq1srYG/WPdqfpioGw05Q84vfttw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OlaqKPzv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45D52C4CEF1;
-	Mon, 22 Dec 2025 08:49:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766393361;
-	bh=lGYe4SrAQ5Z8Ufdx+swBTt8GT+eQWM3pprHLNUV2L/Q=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=OlaqKPzvixpFd7kDcohzwTGk8qpczpdyA32gxkUkzI1De0tvRKxSCVrkz5afWH747
-	 SHuHyridHxjSYUnvEZvttvn91cCYfA/lep4JbjHxgiRzjuylHeeQMR7gG8jf4ZHd9B
-	 fnSZjIUrYd4yBTUdA81bD2Rym9B6rmWd0SYeajSsao6g/MUUQpdHX17YVBPNqlib3H
-	 grFVOSpbmQKYMK1kX+hZxhy5e0xSJNGfA8k9CsWObmug8bSBbNuP/yDGRcOC5K+E15
-	 QN+MotGgEg7m/ZWkmxbMrUbcUMbbRqVnld+/ZwLpJ2yuYFZXeMyyTillTbMdTyTpCn
-	 VamLdZO8eDTNw==
-Date: Mon, 22 Dec 2025 09:49:20 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-CC: Jingoo Han <jingoohan1@gmail.com>, Manivannan Sadhasivam <mani@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Frank Li <Frank.Li@nxp.com>, Damien Le Moal <dlemoal@kernel.org>,
- Koichiro Den <den@valinux.co.jp>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: dwc: ep: Cache MSI outbound iATU mapping
-User-Agent: Thunderbird for Android
-In-Reply-To: <712064a7-abb4-4cad-b6a6-b5c3a8faadea@oss.qualcomm.com>
-References: <20251210071358.2267494-2-cassel@kernel.org> <8e00bd1c-29ae-43fd-90e8-ea0943cb02b6@oss.qualcomm.com> <aUkC-_pko_cItpKP@ryzen> <712064a7-abb4-4cad-b6a6-b5c3a8faadea@oss.qualcomm.com>
-Message-ID: <5254D564-D848-4112-8C91-A0621353CE0A@kernel.org>
+	s=arc-20240116; t=1766395039; c=relaxed/simple;
+	bh=haGYfWEE4ITTLcKZrPLgnQG4wcaylMYFMQEgW1F4h1I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FoSNr82Mg738xvHVY9gkuV4jitG5lY7ym8DocJESfDgxWUCrTdbrdpGCrC+m6AYspPcjJa71NwbOcv3vH9z8otWjHtDUxT/sUluh1A8IaSUsHOCsLFOfCeNOO9GjB2BGkRDkkhN4kLgjwqwEp0B5BDQW8YBPRTOiGZaBeu/E/aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ct5e2TCT; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Bb
+	DoEgPvTgvABo0pi1IsnoAMMPYLIP6q8/LQxErVjn4=; b=ct5e2TCTcqV3O20tRv
+	77IsAnx1GzJtaVpI5DLC13TYYmaKc9fV47RG+7TG1hXURIz8ZUCj5GHpetlzPKYV
+	2xDRypiCEqVVihfht7MH4Bhzuyqj2h7RUxhPvGdYtw9bZgZY7MFD+Lwsj5snWAfr
+	V9w2JtdpDyygYt/YUoLMeQqHU=
+Received: from hello.company.local (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgA3JqBFDElpDqiJJQ--.24692S2;
+	Mon, 22 Dec 2025 17:15:50 +0800 (CST)
+From: Liang Jie <buaajxlj@163.com>
+To: dirk.behme@gmail.com
+Cc: a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	bhelgaas@google.com,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	buaajxlj@163.com,
+	dakr@kernel.org,
+	gary@garyguo.net,
+	joelagnelf@nvidia.com,
+	justinstitt@google.com,
+	liangjie@lixiang.com,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lkp@intel.com,
+	llvm@lists.linux.dev,
+	lossin@kernel.org,
+	morbo@google.com,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	ojeda@kernel.org,
+	rust-for-linux@vger.kernel.org,
+	tmgross@umich.edu
+Subject: Re: [PATCH] pci: provide pci_free_irq_vectors() stub when CONFIG_PCI is disabled
+Date: Mon, 22 Dec 2025 17:15:49 +0800
+Message-Id: <20251222091549.2333017-1-buaajxlj@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <5521e98b-e12d-4af1-adcd-2dc56863f90b@gmail.com>
+References: <5521e98b-e12d-4af1-adcd-2dc56863f90b@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PSgvCgA3JqBFDElpDqiJJQ--.24692S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrJw4DAw43Gw4UZw1DWFWruFg_yoWxXrbEkr
+	sFkr4kWw1DXr1UGa1DtF9Ivrs0qFyDCF4F934jqF13G3W3Jw1fGan3Wr9xWw1aq3yxtrW2
+	ka15A39xXF4IgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7VUUubyPUUUUU==
+X-CM-SenderInfo: pexdtyx0omqiywtou0bp/xtbC5AfA4GlJDEebSQAA36
 
-On 22 December 2025 09:42:50 CET, Krishna Chaitanya Chundru <krishna=2Echun=
-dru@oss=2Equalcomm=2Ecom> wrote:
->> I guess we will need to come up with something else for the MSI-X case=
-=2E
->>=20
->>=20
->>> Use the MSIX doorbell method which will not use iATU at all,
->>> dw_pcie_ep_raise_msix_irq_doorbell()=2E
->> AFAICT, right now, the only driver ever calling this function is:
->> drivers/pci/controller/dwc/pci-layerscape-ep=2Ec
->>=20
->> Are you suggesting that we somehow change all the other DWC based EPC
->> drivers' =2Eraise_irq() callback to call dw_pcie_ep_raise_msix_irq_door=
-bell()
->> instead of dw_pcie_ep_raise_msix_irq() for case PCI_IRQ_MSIX ?
->Yes=2E
->> That sounds like a big change that would need to be tested and verified
->> for each DWC based EPC driver=2E
->I agree, but this will be clean solution to avoid iATU for MSIX=2E
+On 22 Dec 2025 08:02:44 +0100, Dirk Behme wrote:
+> On 22.12.25 04:44, Liang Jie wrote:
+> > From: Liang Jie <liangjie@lixiang.com>
+> > 
+> > When building with CONFIG_PCI=n, clang reports:
+> > 
+> >          ....
+> >
+> >  /* Include architecture-dependent settings and functions */
+> 
+> We have this from Boqun already
+> 
+> https://lore.kernel.org/rust-for-linux/20251215025444.65544-1-boqun.feng@gmail.com/
+> 
+> ?
+> 
+> Dirk
 
-I agree that this sounds like a nice solution for those platforms that can=
- use it=2E
+Hi Dirk,
 
-But, for platforms that might not be able to use this method (not sure if =
-this is possible with all versions of the DWC core),
-we probably still need to come up with some other solution to this problem=
-=2E
+Sorry, I missed Boqun's earlier patch:
+https://lore.kernel.org/rust-for-linux/20251215025444.65544-1-boqun.feng@gmail.com/
 
-It would also be nice with some solution that can be used until all driver=
-s have been converted=2E
+It addresses the same issue. Please ignore my patch.
 
+Thanks,
+Liang
 
-Kind regards,
-Niklas
 
