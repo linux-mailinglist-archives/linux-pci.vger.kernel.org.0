@@ -1,126 +1,133 @@
-Return-Path: <linux-pci+bounces-43548-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43549-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DB5ECD6FDA
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 20:36:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EAE36CD708C
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 21:04:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B3604300A1E0
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 19:36:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0F9A93018959
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 20:04:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9593B1EFFB4;
-	Mon, 22 Dec 2025 19:36:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC8F733BBBD;
+	Mon, 22 Dec 2025 20:04:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l7GdwVco"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ks4sEbD4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC48933065E;
-	Mon, 22 Dec 2025 19:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC941DEFF5;
+	Mon, 22 Dec 2025 20:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766432189; cv=none; b=CQf0Hhp0+uId8gjaBn/p9VjNpusJkMNkxmxbTdYeA/kVjB0AI+c6PocI4/VIrsIVQR9mMjpX4mSFWi+bJxSbuHioPTlIJli1l2nJAjUh+YockXnspdIE8LUhHaKwlLcvZhZby68MFMvkUZy0COaG90BgztrrSJUQO6dC7Fj+blg=
+	t=1766433861; cv=none; b=VlBhSziaKRTLWj6xSAO8+kqiMSrpD8oS4cyrFOpuqserMwj6fgnyl+2L5e3KacdnSxacNV1hD3wXW6+z8NLoSUjylptAFHV/3SABiuRTTLpNqhL6Pnpw6vhENiv/PnoMUXstSCiD0cDK+zyBtVE9J+z+fqs6Zyk/IE6+OVi9jQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766432189; c=relaxed/simple;
-	bh=WouLnG/EDgvG12FRfKj7rC3BNHDgqCalZ+ubaC/6qOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WWbGFwOLiyjQ8dIYn/rHXBA0KD46s7QrGwOrcHW39LPTmplxcJiVb5FJ6T9EkP23bGS00YE2EgruQ1QTlTe++kTYRx2/f6O2mPyt8ZYAjrmEzpihfiGYD/RTYohLDs6RK7fgTbrPkGtJiD/akuNCdFQn4l4voLAuhlmTZPjFI2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l7GdwVco; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766432188; x=1797968188;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WouLnG/EDgvG12FRfKj7rC3BNHDgqCalZ+ubaC/6qOI=;
-  b=l7GdwVcopJ2IB8VorkteCWYibY9VA1/cDtsSRfA/0hyKJIo9UzxJ7vd6
-   wZh/uCwZSdhRyeeB6ym0K9DED2OdLU7tH+j/paJk8YFBnnhtfLbZ/DvjE
-   Pa2t63x/klnOUMDUmIXz167VbzxyOO8lzEfi4Fh8V3nRNQ4apybcORf2Y
-   W/6/pq9Ibu6WDCYHi8vJJEZJr8H1ox8XoG7BrKP7cj8ocOaITXhTSFR9V
-   2oTE9FKyyrfGfKZQzAhy4LhezBQv8/0Af2uTMji17xc9EElW+f+0h7FRw
-   rXOHOHQUfL+W8shhpBqT9/fQDmi3ekX1oklcYk4UjjOnV48+sDsaxYx2t
-   Q==;
-X-CSE-ConnectionGUID: FGZKmtjSSu+bi/h1ruiDXg==
-X-CSE-MsgGUID: tZx9WNCiR8K1nfxOC9QqEQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11650"; a="90950052"
-X-IronPort-AV: E=Sophos;i="6.21,169,1763452800"; 
-   d="scan'208";a="90950052"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 11:36:27 -0800
-X-CSE-ConnectionGUID: HKnqYG8eRmmu3a5YwP8JxA==
-X-CSE-MsgGUID: SQK+jjjFQ8yMZr3kx2WaCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,169,1763452800"; 
-   d="scan'208";a="200091893"
-Received: from igk-lkp-server01.igk.intel.com (HELO 8a0c053bdd2a) ([10.211.93.152])
-  by fmviesa009.fm.intel.com with ESMTP; 22 Dec 2025 11:36:24 -0800
-Received: from kbuild by 8a0c053bdd2a with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vXlhe-000000005bA-0L86;
-	Mon, 22 Dec 2025 19:36:22 +0000
-Date: Mon, 22 Dec 2025 20:35:48 +0100
-From: kernel test robot <lkp@intel.com>
-To: Anand Moon <linux.amoon@gmail.com>, Bjorn Helgaas <helgaas@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Anand Moon <linux.amoon@gmail.com>,
-	Mikko Perttunen <mperttunen@nvidia.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: PCI: Convert nvidia,tegra-pcie to DT
- schema
-Message-ID: <202512222054.5XFbv0HE-lkp@intel.com>
-References: <20251215141603.6749-2-linux.amoon@gmail.com>
+	s=arc-20240116; t=1766433861; c=relaxed/simple;
+	bh=zwpPZI3aCzU701r+bt49CUPkrH2uvexax+yCoGFo4dk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=a1SDRZJsVLetj3lRd+Z3FcidGLtkZh/rWrbU1Km3ExQX0ooL96QrIqksEkD2l1L4k3TP0bydRq7mk+gaUDILcd0i4LW73HRolFdS4foqhtvURH7GFoS6oLaZ3eCQzji7O3/xREPkIuu/XIcL6ZcTh/l0hFm6qyRrgvRPdAtVggE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ks4sEbD4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FB36C4CEF1;
+	Mon, 22 Dec 2025 20:04:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766433861;
+	bh=zwpPZI3aCzU701r+bt49CUPkrH2uvexax+yCoGFo4dk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Ks4sEbD4BmEIL+iZbfylQlhQIi6pN3LrZ83VQb9hSJU3r7XUizrxcsW6e/FeWfUvd
+	 gUHvKlGB9e7kpSWLMwSsxLIajsEJesvz+egvwY9KfQKhXq5lWNSDo7ad5p76ERuwYn
+	 nx733ghtCo2Vv0USO877gmZtEIAvFFkMMf4O5yXdUVX8g1KzsKgmEYf13snZfFswn2
+	 UzB43OXM0N2SIksoQEeMUYVUD9pc+B9Qd24TzWGVxk7U11h1w87whOpqfCRkCfjgCG
+	 trJawH2puCyAErsYIAFuNf7WoKp1zQJIft2VjIy4xRgaq9BOtNkaBPi2FfphiVKZ71
+	 5RKGWht8ECTkQ==
+From: Mark Brown <broonie@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+ Danilo Krummrich <dakr@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ FUJITA Tomonori <fujita.tomonori@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Breno Leitao <leitao@debian.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+ Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Arnd Bergmann <arnd@arndb.de>, Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Jens Axboe <axboe@kernel.dk>, 
+ Alexandre Courbot <acourbot@nvidia.com>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Rae Moar <raemoar63@gmail.com>, 
+ Tamir Duberstein <tamird@gmail.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
+ dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+ linux-clk@vger.kernel.org, linux-pci@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+In-Reply-To: <20250925-core-cstr-cstrings-v2-0-78e0aaace1cd@gmail.com>
+References: <20250925-core-cstr-cstrings-v2-0-78e0aaace1cd@gmail.com>
+Subject: Re: (subset) [PATCH v2 00/19] rust: replace `kernel::c_str!` with
+ C-Strings
+Message-Id: <176643385114.959021.16173066477128119135.b4-ty@kernel.org>
+Date: Mon, 22 Dec 2025 20:04:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251215141603.6749-2-linux.amoon@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-47773
 
-Hi Anand,
+On Thu, 25 Sep 2025 09:53:48 -0400, Tamir Duberstein wrote:
+> This series depends on step 3[0].
+> 
+> Subsystem maintainers: I would appreciate your `Acked-by`s so that this
+> can be taken through Miguel's tree (where the previous series must go).
+> 
+> Link: https://lore.kernel.org/all/20250925-cstr-core-v16-0-5cdcb3470ec2@gmail.com/ [0]
+> 
+> [...]
 
-kernel test robot noticed the following build warnings:
+Applied to
 
-[auto build test WARNING on 8f0b4cce4481fb22653697cced8d0d04027cb1e8]
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Anand-Moon/dt-bindings-PCI-Convert-nvidia-tegra-pcie-to-DT-schema/20251215-231359
-base:   8f0b4cce4481fb22653697cced8d0d04027cb1e8
-patch link:    https://lore.kernel.org/r/20251215141603.6749-2-linux.amoon%40gmail.com
-patch subject: [PATCH v2 1/4] dt-bindings: PCI: Convert nvidia,tegra-pcie to DT schema
-reproduce: (https://download.01.org/0day-ci/archive/20251222/202512222054.5XFbv0HE-lkp@intel.com/reproduce)
+Thanks!
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512222054.5XFbv0HE-lkp@intel.com/
+[19/19] rust: regulator: replace `kernel::c_str!` with C-Strings
+        commit: b0655377aa5a410df02d89170c20141a1a5bbc28
 
-All warnings (new ones prefixed by >>):
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-   Warning: Documentation/translations/zh_CN/scsi/scsi_mid_low_api.rst references a file that doesn't exist: Documentation/Configure.help
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/ABI/testing/sysfs-platform-ayaneo
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/input/touchscreen/himax,hx83112b.yaml
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/media/mediatek-mdp.txt
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/display/bridge/megachips-stdpxxxx-ge-b850v3-fw.txt
->> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-   Warning: arch/powerpc/sysdev/mpic.c references a file that doesn't exist: Documentation/devicetree/bindings/powerpc/fsl/mpic.txt
-   Warning: arch/riscv/kernel/kexec_image.c references a file that doesn't exist: Documentation/riscv/boot-image-header.rst
-   Warning: drivers/clocksource/timer-armada-370-xp.c references a file that doesn't exist: Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
-   Warning: include/rv/da_monitor.h references a file that doesn't exist: Documentation/trace/rv/da_monitor_synthesis.rst
-   Warning: rust/kernel/sync/atomic/ordering.rs references a file that doesn't exist: srctree/tools/memory-model/Documentation/explanation.txt
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
 
