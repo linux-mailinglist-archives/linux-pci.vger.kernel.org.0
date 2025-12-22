@@ -1,44 +1,44 @@
-Return-Path: <linux-pci+bounces-43545-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43544-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6562CD6F44
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 20:27:31 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id E506DCD6F3E
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 20:27:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3DFAA301AE06
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 19:27:13 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E87DA30088CC
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 19:27:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82665A937;
-	Mon, 22 Dec 2025 19:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 801CD238D52;
+	Mon, 22 Dec 2025 19:27:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uyVQsAPo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p5ahgI4V"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562C6238D52;
-	Mon, 22 Dec 2025 19:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7752C1595;
+	Mon, 22 Dec 2025 19:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766431632; cv=none; b=Lg+W9/LFmxYrc//7/rYfD6OYNEBpuMY1bHLzHh0BscJ5j/seNlkULgiLYk3BDuUAIOgBm52qJMmHt04CWIB3/KtN7Sv3R9Z+R4S62ne0OsVih1vPPZlA/MfNDEbGBmUnWpVj6pTEh5+9HomrsnsRYWCBuCJ1am0TKOnRHxdHN3E=
+	t=1766431629; cv=none; b=Q5YgLTHrEKn6bOYi6QBEV94LNoxo+bCtMSOOxKwbBGaREcRKZBjHiAEKWp+cxU2Z1M3731011lSmacNWigleit+pEpDg3UIunEKzKPrMUiwp7sdsXMRf1Sp5RJSxahTTj+4A236GbiNAiOXlRZpNbl1JSHIX3KR2KJ4b5vhZY9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766431632; c=relaxed/simple;
-	bh=IZ9qwJewa9Smq0paPPZv9Dt6MLxAeBrNwsYAyDWmC24=;
+	s=arc-20240116; t=1766431629; c=relaxed/simple;
+	bh=pGsKDf8YDescZXuwmZggn0FtRk3WWnzONYgjmGlS42E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GiNvlo4F46fe7hkDSyHXAWkyCLVu9LScCbLDJscPcHWEkAEEXJ3HswXtjbTk17S1Xz/I58PGebSAE1xfivx5DFQb5dbHzMhovsVcRL41QCaSMpV3c5XfutJyjnJLGZ8yAdRh6oA+mbNWx9Az1WhYwqDPXNm+peKeSZtpmg0Dbec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uyVQsAPo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BC63C116D0;
-	Mon, 22 Dec 2025 19:27:10 +0000 (UTC)
+	 MIME-Version:Content-Type; b=kB1HPDb7qyG3B2ncII9zDgEPvEpDjWmaXzF8VyUZX7jx2W2RmbWUfURImQ3ZDktS8HbY5tVnqq3C4WsQMRE+58/mafuiSWzTSmHd122LbhT9cwZaFGMVS9HGoegcDzUgp3Zc2RH/Gn24zefiz0OodBj9QwGVvEmJ0CVQZtM7UTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p5ahgI4V; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A86EC4CEF1;
+	Mon, 22 Dec 2025 19:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766431631;
-	bh=IZ9qwJewa9Smq0paPPZv9Dt6MLxAeBrNwsYAyDWmC24=;
+	s=k20201202; t=1766431628;
+	bh=pGsKDf8YDescZXuwmZggn0FtRk3WWnzONYgjmGlS42E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uyVQsAPom/gu0vEbTj7CTxnAW2q8sHW9SCeJ9WwJjuv/rXwUMRdYatn3UBv+XzUPG
-	 d19Zhhxs1+FgQUJWrpkyjsChNAZEr+BND56hDRum+z6rzQu54+yCavb0qovcm9rpaF
-	 H7Djfuof730cy7nvTtEpHkPDMMjKqH2n8ztO//Bqpr7mUb7dng2JQ4Pnj6HPxRuoYs
-	 wCVFX/TZVvL6BmTrp0re9ehp0M0AiW1djq0GQ/R0iONEJj3zLWf8f03PIWjxDd7bvi
-	 bdmQDcQa4OGCeegpCvHlaZ/tIyyaXDMvmT6wFybgIipB9yuJOklhbL3rwu2w2WGxsT
-	 dwP69I0WVoC2g==
+	b=p5ahgI4VwXU+nKiqqg2NAVJBhr7tk0PhJ+JOoCZIZcmxe/1lBmHX9sZ8rC+zy8Ug5
+	 omVdad6HyjkXxh+i0aR60qpGZYzNxAo/7n3IJIoDowuJ3qKcSJOMh9WzSw5ATFJD93
+	 bXwnS6LR7qDF4AAjk8+490Ml7EEpTzrz8zPnwrrH7od3hdnKo4jLTDvN/r1VSNjsSI
+	 ZYab1hVz1w2K6kSsm0C7/tAKKTBz3Yv7G1aSzmd1Cggv5EYSUh9RHhmGyuAyWwYoFV
+	 e/Ov+4iirjH8FzEycrARHedAUMMxbrndzkDqUUmKReUFo94/+shnLeYZux4zIjhlLu
+	 P+6fHDkHQ6QLQ==
 From: "Rafael J. Wysocki" <rafael@kernel.org>
 To: Linux ACPI <linux-acpi@vger.kernel.org>,
  Jonathan Cameron <jonathan.cameron@huawei.com>
@@ -48,9 +48,9 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
  Hans de Goede <hansg@kernel.org>,
  Mario Limonciello <mario.limonciello@amd.com>
 Subject:
- [PATCH v2.1 2/8] ACPI: bus: Rework printing debug messages on _OSC errors
-Date: Mon, 22 Dec 2025 20:11:08 +0100
-Message-ID: <10794028.nUPlyArG6x@rafael.j.wysocki>
+ [PATCH v2.1 3/8] ACPI: bus: Split _OSC evaluation out of acpi_run_osc()
+Date: Mon, 22 Dec 2025 20:14:16 +0100
+Message-ID: <22963770.EfDdHjke4D@rafael.j.wysocki>
 Organization: Linux Kernel Development
 In-Reply-To: <2413407.ElGaqSPkdT@rafael.j.wysocki>
 References: <2413407.ElGaqSPkdT@rafael.j.wysocki>
@@ -65,129 +65,132 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Instead of using one function, acpi_print_osc_error(), for printing a
-debug message and dumping the _OSC request data in one go, use
-acpi_handle_debug() directly for printing messages and a separate
-function called acpi_dump_osc_data() for dumping the _OSC request data
-before printing one or more of them.
+Split a function for evaluating _OSC called acpi_eval_osc() out of
+acpi_run_osc() to facilitate subsequent changes and add some more
+parameters sanity checks to the latter.
 
-This avoids
- * dumping _OSC request data multiple times when there are
-   multiple error bits set in the return buffer,
- * wrapping message lines on terminals with 80 character line width,
- * mixing up unrelated messages by printing full lines only,
-and generally helps to make the messages easier to parse.
-
-Also, use %pUL for UUID printing instead of printing UUIDs as strings
-and include the revision number into the dumped _OSC request data.
-
-This is how the debug printout looks like when the
-OSC_REQUEST_ERROR and OSC_INVALID_REVISION_ERROR bits
-are set in the return buffer before the change:
-
- ACPI: \_SB_: ACPI: (0811B06E-4A27-44F9-8D60-3CBBC22E7B48): _OSC request failed
- ACPI: _OSC request data:
- ACPI:  1
- ACPI:  2e7eff
- ACPI: 
- ACPI: \_SB_: ACPI: (0811B06E-4A27-44F9-8D60-3CBBC22E7B48): _OSC invalid revision
- ACPI: _OSC request data:
- ACPI:  1
- ACPI:  2e7eff
- ACPI:
-
-and this is how it is going to look like afterward:
-
- ACPI: \_SB_: ACPI: _OSC: UUID: 0811B06E-4A27-44F9-8D60-3CBBC22E7B48, rev: 1
- ACPI: \_SB_: ACPI: _OSC: capabilities DWORD 0: [00000001]
- ACPI: \_SB_: ACPI: _OSC: capabilities DWORD 1: [002e7eff]
- ACPI: \_SB_: ACPI: _OSC: request failed
- ACPI: \_SB_: ACPI: _OSC: invalid revision
+No intentional functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
 
 v1 -> v2.1:
-   * Dump _OSC request data before printing diagnostic messages.
-   * Add example "before" and "after" debug output to the changelog (Jonathan).
-   * Reformat messages to avoid crossing the 80 characters boundary.
-   * Update the changelog.
+   * Fix typo in the changelog (Jonathan).
+   * Use at_least to enforce compiler checking of in_params[] size instead of
+     using "static" directly (Jonathan).
 
 ---
- drivers/acpi/bus.c |   35 ++++++++++++++++-------------------
- 1 file changed, 16 insertions(+), 19 deletions(-)
+ drivers/acpi/bus.c |   91 ++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 53 insertions(+), 38 deletions(-)
 
 --- a/drivers/acpi/bus.c
 +++ b/drivers/acpi/bus.c
-@@ -180,18 +180,16 @@ void acpi_bus_detach_private_data(acpi_h
- }
- EXPORT_SYMBOL_GPL(acpi_bus_detach_private_data);
+@@ -196,52 +196,67 @@ static void acpi_dump_osc_data(acpi_hand
+ 			 OSC_INVALID_REVISION_ERROR | \
+ 			 OSC_CAPABILITIES_MASK_ERROR)
  
--static void acpi_print_osc_error(acpi_handle handle,
--				 struct acpi_osc_context *context, char *error)
-+static void acpi_dump_osc_data(acpi_handle handle, const guid_t *guid, int rev,
-+			       struct acpi_buffer *cap)
+-acpi_status acpi_run_osc(acpi_handle handle, struct acpi_osc_context *context)
++static int acpi_eval_osc(acpi_handle handle, guid_t *guid, int rev,
++			 struct acpi_buffer *cap,
++			 union acpi_object in_params[at_least 4],
++			 struct acpi_buffer *output)
  {
-+	u32 *capbuf = cap->pointer;
- 	int i;
- 
--	acpi_handle_debug(handle, "(%s): %s\n", context->uuid_str, error);
+-	u32 errors, *capbuf = context->cap.pointer;
+-	acpi_status status;
+ 	struct acpi_object_list input;
+-	union acpi_object in_params[4];
+ 	union acpi_object *out_obj;
+-	guid_t guid;
+-	struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
 -
--	pr_debug("_OSC request data:");
--	for (i = 0; i < context->cap.length; i += sizeof(u32))
--		pr_debug(" %x", *((u32 *)(context->cap.pointer + i)));
--
--	pr_debug("\n");
-+	acpi_handle_debug(handle, "_OSC: UUID: %pUL, rev: %d\n", guid, rev);
-+	for (i = 0; i < cap->length / sizeof(u32); i++)
-+		acpi_handle_debug(handle, "_OSC: capabilities DWORD %i: [%08x]\n",
-+				  i, capbuf[i]);
- }
+-	if (!context)
+-		return AE_ERROR;
+-	if (guid_parse(context->uuid_str, &guid))
+-		return AE_ERROR;
+-	context->ret.length = ACPI_ALLOCATE_BUFFER;
+-	context->ret.pointer = NULL;
++	acpi_status status;
  
- #define OSC_ERROR_MASK 	(OSC_REQUEST_ERROR | OSC_INVALID_UUID_ERROR | \
-@@ -239,8 +237,8 @@ acpi_status acpi_run_osc(acpi_handle han
- 	out_obj = output.pointer;
- 	if (out_obj->type != ACPI_TYPE_BUFFER
- 		|| out_obj->buffer.length != context->cap.length) {
--		acpi_print_osc_error(handle, context,
--			"_OSC evaluation returned wrong type");
-+		acpi_dump_osc_data(handle, &guid, context->rev, &context->cap);
-+		acpi_handle_debug(handle, "_OSC: evaluation returned wrong type");
- 		status = AE_TYPE;
- 		goto out_kfree;
+-	/* Setting up input parameters */
+-	input.count = 4;
++	in_params[0].type = ACPI_TYPE_BUFFER;
++	in_params[0].buffer.length = sizeof(*guid);
++	in_params[0].buffer.pointer = (u8 *)guid;
++	in_params[1].type = ACPI_TYPE_INTEGER;
++	in_params[1].integer.value = rev;
++	in_params[2].type = ACPI_TYPE_INTEGER;
++	in_params[2].integer.value = cap->length / sizeof(u32);
++	in_params[3].type = ACPI_TYPE_BUFFER;
++	in_params[3].buffer.length = cap->length;
++	in_params[3].buffer.pointer = cap->pointer;
+ 	input.pointer = in_params;
+-	in_params[0].type 		= ACPI_TYPE_BUFFER;
+-	in_params[0].buffer.length 	= 16;
+-	in_params[0].buffer.pointer	= (u8 *)&guid;
+-	in_params[1].type 		= ACPI_TYPE_INTEGER;
+-	in_params[1].integer.value 	= context->rev;
+-	in_params[2].type 		= ACPI_TYPE_INTEGER;
+-	in_params[2].integer.value	= context->cap.length/sizeof(u32);
+-	in_params[3].type		= ACPI_TYPE_BUFFER;
+-	in_params[3].buffer.length 	= context->cap.length;
+-	in_params[3].buffer.pointer 	= context->cap.pointer;
+-
+-	status = acpi_evaluate_object(handle, "_OSC", &input, &output);
+-	if (ACPI_FAILURE(status))
+-		return status;
++	input.count = 4;
+ 
+-	if (!output.length)
+-		return AE_NULL_OBJECT;
++	output->length = ACPI_ALLOCATE_BUFFER;
++	output->pointer = NULL;
+ 
+-	out_obj = output.pointer;
+-	if (out_obj->type != ACPI_TYPE_BUFFER
+-		|| out_obj->buffer.length != context->cap.length) {
+-		acpi_dump_osc_data(handle, &guid, context->rev, &context->cap);
+-		acpi_handle_debug(handle, "_OSC: evaluation returned wrong type");
+-		status = AE_TYPE;
+-		goto out_kfree;
++	status = acpi_evaluate_object(handle, "_OSC", &input, output);
++	if (ACPI_FAILURE(status) || !output->length)
++		return -ENODATA;
++
++	out_obj = output->pointer;
++	if (out_obj->type != ACPI_TYPE_BUFFER ||
++	    out_obj->buffer.length != cap->length) {
++		acpi_handle_debug(handle, "Invalid _OSC return buffer\n");
++		acpi_dump_osc_data(handle, guid, rev, cap);
++		ACPI_FREE(out_obj);
++		return -ENODATA;
  	}
-@@ -261,9 +259,9 @@ acpi_status acpi_run_osc(acpi_handle han
- 		 */
- 		bool fail = !!(capbuf[OSC_QUERY_DWORD] & OSC_QUERY_ENABLE);
- 
-+		acpi_dump_osc_data(handle, &guid, context->rev, &context->cap);
- 		if (errors & OSC_INVALID_UUID_ERROR) {
--			acpi_print_osc_error(handle, context,
--				"_OSC invalid UUID");
-+			acpi_handle_debug(handle, "_OSC: invalid UUID");
- 			/*
- 			 * Always fail if this bit is set because it means that
- 			 * the request could not be processed.
-@@ -272,14 +270,13 @@ acpi_status acpi_run_osc(acpi_handle han
- 			goto out_kfree;
- 		}
- 		if (errors & OSC_REQUEST_ERROR)
--			acpi_print_osc_error(handle, context,
--				"_OSC request failed");
-+			acpi_handle_debug(handle, "_OSC: request failed");
 +
- 		if (errors & OSC_INVALID_REVISION_ERROR)
--			acpi_print_osc_error(handle, context,
--				"_OSC invalid revision");
-+			acpi_handle_debug(handle, "_OSC: invalid revision");
++	return 0;
++}
 +
- 		if (errors & OSC_CAPABILITIES_MASK_ERROR)
--			acpi_print_osc_error(handle, context,
--				"_OSC capability bits masked");
-+			acpi_handle_debug(handle, "_OSC: capability bits masked");
- 
- 		if (fail) {
- 			status = AE_ERROR;
++acpi_status acpi_run_osc(acpi_handle handle, struct acpi_osc_context *context)
++{
++	u32 errors, *capbuf = context->cap.pointer;
++	union acpi_object in_params[4], *out_obj;
++	struct acpi_buffer output;
++	acpi_status status = AE_OK;
++	guid_t guid;
++	int ret;
++
++	if (!context || !context->cap.pointer ||
++	    context->cap.length < 2 * sizeof(32) ||
++	    guid_parse(context->uuid_str, &guid))
++		return AE_BAD_PARAMETER;
++
++	ret = acpi_eval_osc(handle, &guid, context->rev, &context->cap,
++			    in_params, &output);
++	if (ret)
++		return AE_ERROR;
++
++	out_obj = output.pointer;
+ 	/* Only take defined error bits into account. */
+ 	errors = *((u32 *)out_obj->buffer.pointer) & OSC_ERROR_MASK;
+ 	/*
 
 
 
