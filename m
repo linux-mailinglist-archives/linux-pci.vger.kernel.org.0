@@ -1,44 +1,44 @@
-Return-Path: <linux-pci+bounces-43541-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43540-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C940BCD6F4E
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 20:27:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C775CD6F3B
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 20:27:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AB2B73018F6C
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 19:27:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A7002302CF66
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 19:26:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95B43327C0B;
-	Mon, 22 Dec 2025 19:26:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10F323277AF;
+	Mon, 22 Dec 2025 19:26:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BbanWyCb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3zeipN/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D18E307AD6;
-	Mon, 22 Dec 2025 19:26:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35852FBE1F;
+	Mon, 22 Dec 2025 19:26:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766431619; cv=none; b=KtHX8ukvOwP4+IvGbeVzfchurwuklDuJdBV1C4oyX51xIfiGYcnE9E4fz7v7KHlts6CSYTfBwGTGP5eIHJMxv7LoSs26D9xsRd0RvFXoN/DWInazJecEi+18YVRltBuY06lMDajDHd2YFTKhIVJ1vJnp4XoNVlE8kgPAm1TrSf4=
+	t=1766431615; cv=none; b=A1MGTNL6iBjQmHuen0qUOprUPzFppI2wdUDlJSFQYgcX2UyXJcRMUXj8J9nocqMN+1UYKWgkydPD9T8Cfs+MbYS7A2cFziWRZopYBv+GRzyzyFXKV8EOvP7HsJtCAVZ0bRsLl+LdUgwAYWHKFThvLAQ2H0eUUhhOPPhMqdfsKgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766431619; c=relaxed/simple;
-	bh=OLCadIv+zN48COV6/4DpvIa30w9QH3dUgKsSm6B8O2w=;
+	s=arc-20240116; t=1766431615; c=relaxed/simple;
+	bh=QwRvs2EXjXIW2IeCwjt9LwlDeiFLiRdbD4+I4Up857U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MYvtEHaOhoZPv3uHEA9Ylits3NzvlNXMlGKSQ6Z0j9+c3hkYvsf1STjcrerBV2pVPEHsyzYDNEWMzrWI+5/6eeCRJsauiWpl7mzFxslHi3a52YA63AyFLLB36yW3K+UBRChv+u9708fZK1biD1Ja5ztkRW2FDyeTaPPvZeq8lYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BbanWyCb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 523F4C4CEF1;
-	Mon, 22 Dec 2025 19:26:57 +0000 (UTC)
+	 MIME-Version:Content-Type; b=GrzxgVdsG5/paEScJO4viWYtLI/JJlEtuYW7J/Pq8iyj90fCvvfLYprntHfYoPctpZIWgJ4kLaEPT8/5WJ3OdRIFiYvIjI1DHGzlswb3PraZA8m0XJpC//qIpsyjQaY/7Jsp+VUKDLBKqwdL3oCyZDSAA/6y+Jt63VcUCr2ccqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3zeipN/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 049E1C4CEF1;
+	Mon, 22 Dec 2025 19:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766431618;
-	bh=OLCadIv+zN48COV6/4DpvIa30w9QH3dUgKsSm6B8O2w=;
+	s=k20201202; t=1766431615;
+	bh=QwRvs2EXjXIW2IeCwjt9LwlDeiFLiRdbD4+I4Up857U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BbanWyCb1XWcm9eZirW+Ae0A+zOAiImdESFESzZDeA9uD1fyVHIUsd7FJx+07O2wO
-	 DR+PYiobzMOSdnrJChnKRdqNIY2VovSj9LRNTWBPG+HCC88K8zoNLpJuIeMSpHqLfl
-	 ZprvXrVZcSzsxtVXr3fIvexmR2VuFS7iPiHOCGRjwVEU0oPbDrrxsnrdmIFpRKGW1I
-	 CrSwF+iQ0jiWewuzhgqztjrl9pgBRn1iDq6zf9jCdEyMW+Mz7a9fDj2u30fhCH3Exd
-	 CX5VqIt7DQ8wwCq8YXyNETEhjE0ie5b93hPNcxEUEilzMJHm5wDI17yhz3zOctbJz5
-	 cB2MDBsQwlDHQ==
+	b=c3zeipN/JeHMhH9nT7lNG6/o53br0XCtxyVOKUG5EpMHjU4c8eFrSLODvs05gSvFs
+	 uRJGaiiQeC4D6UHgy3FFAR6uqmhMgj7RhV5xn5OelLtABrQyVDSBXWLSFybxW7gFzA
+	 VdEa/enVU8nOCYz8pBG/agEzt/R/7PmrZ2vwPVbAxldzr4c1zZFQJsU9xdii3Dk1BO
+	 Z3Fh9rGnx6XtrHdMpVI7rptv0EDW29eBFAT7dr4phz+pJhOletiS5LuCF/sv9UQe5s
+	 Ejt0ixPiZ/nQSmoUOc6tI7SUuDo31zfXWeo6NpQqrDAmQ0i/5elGUr4ihD0SL80M7p
+	 q2Gsrfgg0YvZA==
 From: "Rafael J. Wysocki" <rafael@kernel.org>
 To: Linux ACPI <linux-acpi@vger.kernel.org>,
  Jonathan Cameron <jonathan.cameron@huawei.com>
@@ -48,10 +48,9 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
  Hans de Goede <hansg@kernel.org>,
  Mario Limonciello <mario.limonciello@amd.com>
 Subject:
- [PATCH v2.1 6/8] ACPI: bus: Rework the handling of \_SB._OSC platform
- features
-Date: Mon, 22 Dec 2025 20:21:19 +0100
-Message-ID: <1966378.CQOukoFCf9@rafael.j.wysocki>
+ [PATCH v2.1 7/8] ACPI: bus: Adjust feature mask creation for \_SB._OSC
+Date: Mon, 22 Dec 2025 20:23:29 +0100
+Message-ID: <4495088.ejJDZkT8p0@rafael.j.wysocki>
 Organization: Linux Kernel Development
 In-Reply-To: <2413407.ElGaqSPkdT@rafael.j.wysocki>
 References: <2413407.ElGaqSPkdT@rafael.j.wysocki>
@@ -66,201 +65,140 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Both acpi_bus_osc_negotiate_platform_control() and
-acpi_bus_osc_negotiate_usb_control() first call acpi_run_osc() to
-evaluate _OSC in "query mode", with OSC_QUERY_ENABLE set in the
-capabilities buffer, and then use the resultant feature mask as
-the input buffer for requesting control of those features by
-calling acpi_run_osc() to evaluate _OSC with OSC_QUERY_ENABLE clear.
+The feature mask creation for \_SB._OSC is messy and hard to follow,
+so clean it up and make all of the CPPC-related features depend on
+CONFIG_ACPI_CPPC_LIB as they will not work if it is not set anyway.
 
-This involves some code duplication and unnecessary memory
-allocations, so introduce a new helper function carrying out an
-_OSC handshake along the lines of the above description in a simpler
-way and update acpi_bus_osc_negotiate_platform_control() to use it.
+Also make acpi_bus_osc_negotiate_platform_control() print a message
+including a bit mask representig the features for which control has
+been granted.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 ---
 
 v1 -> v2.1:
-   * Add printing error messages regarding unexpected _OSC errors when
-     processing a feature mask acknowledged previously (Jonathan).
-   * Update the changelog after moving the essential change to patch [1/8].
+   * Print one more message including the initial feature mask before processing.
+   * Add R-by from Jonathan (assuming it still applies).
 
 ---
- drivers/acpi/bus.c |  141 +++++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 101 insertions(+), 40 deletions(-)
+ drivers/acpi/bus.c |   85 +++++++++++++++++++++++++----------------------------
+ 1 file changed, 41 insertions(+), 44 deletions(-)
 
 --- a/drivers/acpi/bus.c
 +++ b/drivers/acpi/bus.c
-@@ -325,6 +325,92 @@ out:
- }
- EXPORT_SYMBOL(acpi_run_osc);
- 
-+static int acpi_osc_handshake(acpi_handle handle, const char *uuid_str,
-+			      int rev, struct acpi_buffer *cap)
-+{
-+	union acpi_object in_params[4], *out_obj;
-+	size_t bufsize = cap->length / sizeof(u32);
-+	struct acpi_object_list input;
-+	struct acpi_buffer output;
-+	u32 *capbuf, *retbuf, test;
-+	guid_t guid;
-+	int ret, i;
-+
-+	if (!cap || cap->length < 2 * sizeof(32) || guid_parse(uuid_str, &guid))
-+		return -EINVAL;
-+
-+	/* First evaluate _OSC with OSC_QUERY_ENABLE set. */
-+	capbuf = cap->pointer;
-+	capbuf[OSC_QUERY_DWORD] = OSC_QUERY_ENABLE;
-+
-+	ret = acpi_eval_osc(handle, &guid, rev, cap, in_params, &output);
-+	if (ret)
-+		return ret;
-+
-+	out_obj = output.pointer;
-+	retbuf = (u32 *)out_obj->buffer.pointer;
-+
-+	if (acpi_osc_error_check(handle, &guid, rev, cap, retbuf)) {
-+		ret = -ENODATA;
-+		goto out;
-+	}
-+
-+	/*
-+	 * Clear the feature bits in the capabilities buffer that have not been
-+	 * acknowledged and clear the return buffer.
-+	 */
-+	for (i = OSC_QUERY_DWORD + 1, test = 0; i < bufsize; i++) {
-+		capbuf[i] &= retbuf[i];
-+		test |= capbuf[i];
-+		retbuf[i] = 0;
-+	}
-+	/*
-+	 * If none of the feature bits have been acknowledged, there's nothing
-+	 * more to do.  capbuf[] contains a feature mask of all zeros.
-+	 */
-+	if (!test)
-+		goto out;
-+
-+	retbuf[OSC_QUERY_DWORD] = 0;
-+	/*
-+	 * Now evaluate _OSC again (directly) with OSC_QUERY_ENABLE clear and
-+	 * the updated input and output buffers used before.  Since the feature
-+	 * bits that were clear in the return buffer from the previous _OSC
-+	 * evaluation are also clear in the capabilities buffer now, this _OSC
-+	 * evaluation is not expected to fail.
-+	 */
-+	capbuf[OSC_QUERY_DWORD] = 0;
-+	/* Reuse in_params[] populated by acpi_eval_osc(). */
-+	input.pointer = in_params;
-+	input.count = 4;
-+
-+	if (ACPI_FAILURE(acpi_evaluate_object(handle, "_OSC", &input, &output))) {
-+		ret = -ENODATA;
-+		goto out;
-+	}
-+
-+	/*
-+	 * Clear the feature bits in capbuf[] that have not been acknowledged.
-+	 * After that, capbuf[] contains the resultant feature mask.
-+	 */
-+	for (i = OSC_QUERY_DWORD + 1; i < bufsize; i++)
-+		capbuf[i] &= retbuf[i];
-+
-+	if (retbuf[OSC_QUERY_DWORD] & OSC_ERROR_MASK) {
-+		/*
-+		 * Complain about the unexpected errors and print diagnostic
-+		 * information related to them.
-+		 */
-+		acpi_handle_err(handle, "_OSC: errors while processing control request\n");
-+		acpi_handle_err(handle, "_OSC: some features may be missing\n");
-+		acpi_osc_error_check(handle, &guid, rev, cap, retbuf);
-+	}
-+
-+out:
-+	ACPI_FREE(out_obj);
-+	return ret;
-+}
-+
- bool osc_sb_apei_support_acked;
- 
- /*
-@@ -356,19 +442,16 @@ EXPORT_SYMBOL_GPL(osc_sb_native_usb4_sup
- 
- bool osc_sb_cppc2_support_acked;
- 
--static u8 sb_uuid_str[] = "0811B06E-4A27-44F9-8D60-3CBBC22E7B48";
+@@ -445,73 +445,70 @@ bool osc_sb_cppc2_support_acked;
  static void acpi_bus_osc_negotiate_platform_control(void)
  {
--	u32 capbuf[2], *capbuf_ret;
--	struct acpi_osc_context context = {
--		.uuid_str = sb_uuid_str,
--		.rev = 1,
--		.cap.length = 8,
--		.cap.pointer = capbuf,
-+	static const u8 sb_uuid_str[] = "0811B06E-4A27-44F9-8D60-3CBBC22E7B48";
-+	u32 capbuf[2];
-+	struct acpi_buffer cap = {
-+		.pointer = capbuf,
-+		.length = sizeof(capbuf),
+ 	static const u8 sb_uuid_str[] = "0811B06E-4A27-44F9-8D60-3CBBC22E7B48";
+-	u32 capbuf[2];
++	u32 capbuf[2], feature_mask;
+ 	struct acpi_buffer cap = {
+ 		.pointer = capbuf,
+ 		.length = sizeof(capbuf),
  	};
  	acpi_handle handle;
  
--	capbuf[OSC_QUERY_DWORD] = OSC_QUERY_ENABLE;
- 	capbuf[OSC_SUPPORT_DWORD] = OSC_SB_PR3_SUPPORT; /* _PR3 is in use */
+-	capbuf[OSC_SUPPORT_DWORD] = OSC_SB_PR3_SUPPORT; /* _PR3 is in use */
++	feature_mask = OSC_SB_PR3_SUPPORT | OSC_SB_HOTPLUG_OST_SUPPORT |
++			OSC_SB_PCLPI_SUPPORT | OSC_SB_OVER_16_PSTATES_SUPPORT |
++			OSC_SB_GED_SUPPORT | OSC_SB_IRQ_RESOURCE_SOURCE_SUPPORT;
++
++	if (IS_ENABLED(CONFIG_ARM64) || IS_ENABLED(CONFIG_X86))
++		feature_mask |= OSC_SB_GENERIC_INITIATOR_SUPPORT;
++
++	if (IS_ENABLED(CONFIG_ACPI_CPPC_LIB)) {
++		feature_mask |= OSC_SB_CPC_SUPPORT | OSC_SB_CPCV2_SUPPORT |
++				OSC_SB_CPC_FLEXIBLE_ADR_SPACE;
++		if (IS_ENABLED(CONFIG_SCHED_MC_PRIO))
++			feature_mask |= OSC_SB_CPC_DIVERSE_HIGH_SUPPORT;
++	}
++
  	if (IS_ENABLED(CONFIG_ACPI_PROCESSOR_AGGREGATOR))
- 		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_PAD_SUPPORT;
-@@ -414,43 +497,21 @@ static void acpi_bus_osc_negotiate_platf
+-		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_PAD_SUPPORT;
++		feature_mask |= OSC_SB_PAD_SUPPORT;
++
+ 	if (IS_ENABLED(CONFIG_ACPI_PROCESSOR))
+-		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_PPC_OST_SUPPORT;
++		feature_mask |= OSC_SB_PPC_OST_SUPPORT;
++
+ 	if (IS_ENABLED(CONFIG_ACPI_THERMAL))
+-		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_FAST_THERMAL_SAMPLING_SUPPORT;
++		feature_mask |= OSC_SB_FAST_THERMAL_SAMPLING_SUPPORT;
++
+ 	if (IS_ENABLED(CONFIG_ACPI_BATTERY))
+-		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_BATTERY_CHARGE_LIMITING_SUPPORT;
++		feature_mask |= OSC_SB_BATTERY_CHARGE_LIMITING_SUPPORT;
+ 
+-	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_HOTPLUG_OST_SUPPORT;
+-	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_PCLPI_SUPPORT;
+-	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_OVER_16_PSTATES_SUPPORT;
+-	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_GED_SUPPORT;
+-	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_IRQ_RESOURCE_SOURCE_SUPPORT;
+ 	if (IS_ENABLED(CONFIG_ACPI_PRMT))
+-		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_PRM_SUPPORT;
+-	if (IS_ENABLED(CONFIG_ACPI_FFH))
+-		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_FFH_OPR_SUPPORT;
+-
+-#ifdef CONFIG_ARM64
+-	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_GENERIC_INITIATOR_SUPPORT;
+-#endif
+-#ifdef CONFIG_X86
+-	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_GENERIC_INITIATOR_SUPPORT;
+-#endif
+-
+-#ifdef CONFIG_ACPI_CPPC_LIB
+-	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_CPC_SUPPORT;
+-	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_CPCV2_SUPPORT;
+-#endif
+-
+-	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_CPC_FLEXIBLE_ADR_SPACE;
++		feature_mask |= OSC_SB_PRM_SUPPORT;
+ 
+-	if (IS_ENABLED(CONFIG_SCHED_MC_PRIO))
+-		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_CPC_DIVERSE_HIGH_SUPPORT;
++	if (IS_ENABLED(CONFIG_ACPI_FFH))
++		feature_mask |= OSC_SB_FFH_OPR_SUPPORT;
+ 
+ 	if (IS_ENABLED(CONFIG_USB4))
+-		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_NATIVE_USB4_SUPPORT;
++		feature_mask |= OSC_SB_NATIVE_USB4_SUPPORT;
+ 
+ 	if (!ghes_disable)
+-		capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_APEI_SUPPORT;
++		feature_mask |= OSC_SB_APEI_SUPPORT;
++
  	if (ACPI_FAILURE(acpi_get_handle(NULL, "\\_SB", &handle)))
  		return;
  
--	if (ACPI_FAILURE(acpi_run_osc(handle, &context)))
--		return;
--
--	capbuf_ret = context.ret.pointer;
--	if (context.ret.length <= OSC_SUPPORT_DWORD) {
--		kfree(context.ret.pointer);
-+	if (acpi_osc_handshake(handle, sb_uuid_str, 1, &cap))
++	capbuf[OSC_SUPPORT_DWORD] = feature_mask;
++
++	acpi_handle_info(handle, "platform _OSC: OS support mask [%08x]\n", feature_mask);
++
+ 	if (acpi_osc_handshake(handle, sb_uuid_str, 1, &cap))
  		return;
--	}
--
--	/*
--	 * Now run _OSC again with query flag clear and with the caps
--	 * supported by both the OS and the platform.
--	 */
--	capbuf[OSC_QUERY_DWORD] = 0;
--	capbuf[OSC_SUPPORT_DWORD] = capbuf_ret[OSC_SUPPORT_DWORD];
--	kfree(context.ret.pointer);
  
--	if (ACPI_FAILURE(acpi_run_osc(handle, &context)))
--		return;
+-#ifdef CONFIG_ACPI_CPPC_LIB
+-	osc_sb_cppc2_support_acked = capbuf[OSC_SUPPORT_DWORD] & OSC_SB_CPCV2_SUPPORT;
+-#endif
 -
--	capbuf_ret = context.ret.pointer;
--	if (context.ret.length > OSC_SUPPORT_DWORD) {
- #ifdef CONFIG_ACPI_CPPC_LIB
--		osc_sb_cppc2_support_acked = capbuf_ret[OSC_SUPPORT_DWORD] & OSC_SB_CPCV2_SUPPORT;
-+	osc_sb_cppc2_support_acked = capbuf[OSC_SUPPORT_DWORD] & OSC_SB_CPCV2_SUPPORT;
- #endif
- 
--		osc_sb_apei_support_acked =
--			capbuf_ret[OSC_SUPPORT_DWORD] & OSC_SB_APEI_SUPPORT;
--		osc_pc_lpi_support_confirmed =
--			capbuf_ret[OSC_SUPPORT_DWORD] & OSC_SB_PCLPI_SUPPORT;
--		osc_sb_native_usb4_support_confirmed =
--			capbuf_ret[OSC_SUPPORT_DWORD] & OSC_SB_NATIVE_USB4_SUPPORT;
--		osc_cpc_flexible_adr_space_confirmed =
--			capbuf_ret[OSC_SUPPORT_DWORD] & OSC_SB_CPC_FLEXIBLE_ADR_SPACE;
--	}
--
--	kfree(context.ret.pointer);
-+	osc_sb_apei_support_acked =
-+			capbuf[OSC_SUPPORT_DWORD] & OSC_SB_APEI_SUPPORT;
-+	osc_pc_lpi_support_confirmed =
-+			capbuf[OSC_SUPPORT_DWORD] & OSC_SB_PCLPI_SUPPORT;
-+	osc_sb_native_usb4_support_confirmed =
-+			capbuf[OSC_SUPPORT_DWORD] & OSC_SB_NATIVE_USB4_SUPPORT;
-+	osc_cpc_flexible_adr_space_confirmed =
-+			capbuf[OSC_SUPPORT_DWORD] & OSC_SB_CPC_FLEXIBLE_ADR_SPACE;
+-	osc_sb_apei_support_acked =
+-			capbuf[OSC_SUPPORT_DWORD] & OSC_SB_APEI_SUPPORT;
+-	osc_pc_lpi_support_confirmed =
+-			capbuf[OSC_SUPPORT_DWORD] & OSC_SB_PCLPI_SUPPORT;
+-	osc_sb_native_usb4_support_confirmed =
+-			capbuf[OSC_SUPPORT_DWORD] & OSC_SB_NATIVE_USB4_SUPPORT;
+-	osc_cpc_flexible_adr_space_confirmed =
+-			capbuf[OSC_SUPPORT_DWORD] & OSC_SB_CPC_FLEXIBLE_ADR_SPACE;
++	feature_mask = capbuf[OSC_SUPPORT_DWORD];
++
++	acpi_handle_info(handle, "platform _OSC: OS control mask [%08x]\n", feature_mask);
++
++	osc_sb_cppc2_support_acked = feature_mask & OSC_SB_CPCV2_SUPPORT;
++	osc_sb_apei_support_acked = feature_mask & OSC_SB_APEI_SUPPORT;
++	osc_pc_lpi_support_confirmed = feature_mask & OSC_SB_PCLPI_SUPPORT;
++	osc_sb_native_usb4_support_confirmed = feature_mask & OSC_SB_NATIVE_USB4_SUPPORT;
++	osc_cpc_flexible_adr_space_confirmed = feature_mask & OSC_SB_CPC_FLEXIBLE_ADR_SPACE;
  }
  
  /*
