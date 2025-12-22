@@ -1,142 +1,244 @@
-Return-Path: <linux-pci+bounces-43505-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43506-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6C12CD4E71
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 08:50:25 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82F47CD4F0B
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 09:14:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0B0C030050A1
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 07:50:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0D13F300818D
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Dec 2025 08:14:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D40D730B505;
-	Mon, 22 Dec 2025 07:50:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50EC030BF62;
+	Mon, 22 Dec 2025 08:14:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQ+D1kaO"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gLS+j2GK";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="XAwzH/CS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2885309EEA;
-	Mon, 22 Dec 2025 07:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC04130BB98
+	for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 08:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766389819; cv=none; b=iD77P0Z9z4lS92abVBFD/XXyHqvGNt7cHH1ci72ZKBT1viHOsKJWWeOXLKttc1X+6KGCqRb1Udx83e2caPM/GrIXGfN30ViYYrn+is93I9EwlySigi+Ti8Bg31Pr3MR3eXilNSjuKCGjsWu9wj9b4jIp3ERiQjUvRaSXYKMwU80=
+	t=1766391256; cv=none; b=m/b++P+5AvmMYWQvgWCEB9Rft59mCc2hj8wByWOzcA+uY59sFC6wnSghT2bQGFfVMJtpRJhdiJHPa7ddNPTgQo2dLE1XSco6WOuY9ng+eF0EF4Oh+43JsgwuLj8+Du+ydHpaXsxSsCD0bs9EQHddzJ/LqO0dERaPGNjzMkPLFPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766389819; c=relaxed/simple;
-	bh=s8bMs2HaT7/SB/KIp2XWCFSkV6a48wWHJGengMvwL6A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TkEpdWKUy6oOWcQ491xA7tdv0YSvDMFsv2FEjUGXyVDGqFJsITvC9O6/YkCWwZpSQMDwLl0RSZtET/IfVEmIRTh6Yp226opd10RZ7KIH16McjKBQUcM+/5Xte+6PgVXUUIh93xJn7Oevi9Hy+c9xU9/s3kLMr9fXt2vMGSPzrCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQ+D1kaO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0728C4CEF1;
-	Mon, 22 Dec 2025 07:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766389819;
-	bh=s8bMs2HaT7/SB/KIp2XWCFSkV6a48wWHJGengMvwL6A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IQ+D1kaOkl3G+6BuPi8hfjZ6MoqupndbarVjXtyJ7qP0ux5eqAO/BfOY3ZM11790v
-	 3EVTGBH/PAMN47YkaR8VHyNn5QR5OD8xTNW+kYfYRYWvCpdYFP1uFHKHymKzaEZreo
-	 Sb8b3A42av+D0O6x9BEnPgpkxEyRLCHPNzIZ6lD2a1NlOPkmuUOgm6EAGnHzLzzvFw
-	 t6Lt0CcB50/t0Ex9Apcz2uT72+RCpFzSTpafH5qpKDuYqQRyNGcvmg7mmaBk6eg1tP
-	 dP9ojQZpgnFNbC6UzmSMaiobdFoLePsMrE+XeWDAk3SQbN763LwRS+n41wBlG+wL04
-	 GM/cwHEmrJcxQ==
-Date: Mon, 22 Dec 2025 08:50:11 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Koichiro Den <den@valinux.co.jp>, ntb@lists.linux.dev,
-	linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Frank.Li@nxp.com, mani@kernel.org,
-	kwilczynski@kernel.org, kishon@kernel.org, bhelgaas@google.com,
-	corbet@lwn.net, vkoul@kernel.org, jdmason@kudzu.us,
-	dave.jiang@intel.com, allenbh@gmail.com, Basavaraj.Natikar@amd.com,
-	Shyam-sundar.S-k@amd.com, kurt.schwemmer@microsemi.com,
-	logang@deltatee.com, jingoohan1@gmail.com, lpieralisi@kernel.org,
-	robh@kernel.org, jbrunet@baylibre.com, fancer.lancer@gmail.com,
-	arnd@arndb.de, pstanner@redhat.com, elfring@users.sourceforge.net
-Subject: Re: [RFC PATCH v2 19/27] PCI: dwc: ep: Cache MSI outbound iATU
- mapping
-Message-ID: <aUj4M3z87MwFSUFW@ryzen>
-References: <20251129160405.2568284-1-den@valinux.co.jp>
- <20251129160405.2568284-20-den@valinux.co.jp>
- <aTaE3yB7tQ-Homju@ryzen>
- <4909f70a-2f65-4cac-96ac-5cd4371bc867@oss.qualcomm.com>
+	s=arc-20240116; t=1766391256; c=relaxed/simple;
+	bh=ug4yylwNcO90NJvpE3SC7VOMbFwgEshDUXvRfWQd9TY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MB2KZ20B6/yzCKVexYzeMY0dAPpZTtFgCAYvykwBxmfEZLHuik5aKEDfiJQpKdMfaheAF4OntOIxvkNlkwSMkbebTgjbuQfb9yqHXKwQXS+upk5QnVZKiLEOQQZc7cwPDT3F7bqLE4DDDn4gcm9ZvfG7LHRtLsXp1dTwtk09qgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gLS+j2GK; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=XAwzH/CS; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BM0Aerl388275
+	for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 08:14:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	cbxoIvggTHwJGPAyfPp+mE9GnjxpExWzAQ+NnFf0Hcc=; b=gLS+j2GKE+o26XxJ
+	09rshfZSMea52CyGG6s8CXRBs45zFtBLYGt1nTkJS/UukmbwGBe1rbkueX5WQWKh
+	XINKSK5P6lmg1kvpW7ip+Sp0Y6JdPZK0VD0nG+7Gel9VQ7rhGHYOKfDgzm7CQw2u
+	o5DtXyFS+XmYg3dba8o9BnTQ4AiYBjLKZ7Pf3qLqeOFMMggmpt0UcOfxIlgXKXhx
+	KCpWN3BZcNomRwybcxiOJAM1z1q1YVH8LGixmpCnBo95tKys/ed6BiLmKR2Vbjm3
+	eYpdOFaOLlnj9tYkLc4h3cpYKEkz6nAKk4UA9F61HJvMbvSdCEgQ2qUmWjSrpTK/
+	3zvKiA==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b5mubm7au-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 08:14:13 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-34eb6589ed2so1397340a91.2
+        for <linux-pci@vger.kernel.org>; Mon, 22 Dec 2025 00:14:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1766391252; x=1766996052; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cbxoIvggTHwJGPAyfPp+mE9GnjxpExWzAQ+NnFf0Hcc=;
+        b=XAwzH/CSpJXg9AvP/SNFpd9RXjQ4mnIUxP05PGKfePsUHXIk0fGu1hW2MP37H7EyHb
+         aWpGMGHHz+t0CoK+FqRFKUmiDo1NopchfnhjKMKokT3HuPEkw9+DXRBwZ2XlV+3ns8SA
+         NzfmLnjCaD0tIXe6NSyn5jBjcbSORQ6R6w8ztOiq2FtmiQp72ywyKciVUHkImjjd95YI
+         UAB1dZh3MNiA2ino4vnkwNg8pRG3ibOOXjA5j1VVmHcU04QCAxpvNK/6jSne1R52aKkd
+         7JZj6c9bmyHa1l9ctQqJ4mYiVqD4p3TFpUZf/HGlmNPPMLnwUcPJWpR3vkS7Wf8DZd1R
+         bzkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766391252; x=1766996052;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cbxoIvggTHwJGPAyfPp+mE9GnjxpExWzAQ+NnFf0Hcc=;
+        b=uqhlaKjXPGNAVTtn+4CrBP99bEkGitIwDOBj8dZM1ne1niMviCyXdIlzNuO+8z5T21
+         +hJoLIlOWlI6smi1NEryaa7gkoL24WHS1OAnqcwvGc7CSxtt/p/Su4wKDKCUZRJuTopx
+         VmG1q3+qaAPrtV1EIU5vOo6WebPgiBlJSYzYzReTY9Y50jkRpBaFApDkAjz+wICRx78d
+         b98W4OtmyBeTfP3vRkTshBd/C3coqkZnLkKvdfCD+J/BN+WGGGARxYFAjsyleVUivNfh
+         29tPNTERfACaNDXqrN9sjQ3+jNtwGPCM4Q3eGr3zpUAlns4XaztOYcdmovaVb/FPV4XT
+         buug==
+X-Forwarded-Encrypted: i=1; AJvYcCW+dKL/pZ9llqI+tQEJRfMsaaSKtgjVHw7gKYujArQ6B20XVU8TflTH4VOQhLLDl3F8AlOgWZb+iac=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydVejRTBcmzge9YF65EdVTYulIMa8jN+a/trbwBsO0fLJJASln
+	0vPdN/aen/Z/lWPMm+bKT+Q8I1Os3lmO6CcAz0z43JX1Lv2hRLzpS2THhnd3BvQ7zi/Tvi7mpCX
+	BDjXYyCfrD8Dy/jMu0E3ZWqv+9gmk21VmcVZc5U4rV4eDwwOuM1/pqRuzJjzZXVs=
+X-Gm-Gg: AY/fxX7OKKdCbua8ONbjG9C46bW2OQXpiaOhWbI0z7fc0ETY/B9LFZGxMSxY+QkBxW0
+	cusW9915Wlt4u8dpA0ZHciOmLi79EAi+P9EPDAZfhqL1w+vH8OXQnpvWnRVGFG/ooAC8sTMJvt4
+	t5nJmCmkQ2y0jpOdQpjCti+jKQIol99mz0Xug7jTU+y3/pPNyrPwxOxu6UVMHAWZ0cwEhYwjVL5
+	7cjP2U7JtQF+HMQh02c6FAxRxtzWHdMxLXV5NngH2xIT+TlaSnBiurYURlG/EfQWzT0fqHCzY0h
+	uP9VcRgqdYURcWmt/FKr34seDkLTmQUuu1dqxq5lPZ06RZnh3aQZc7c64HC33wQC/XljBdm1hij
+	ZBAy0U3LU2pRmCkmiVqANXWjEp2wF1/IG++yQQa3eJg==
+X-Received: by 2002:a17:90b:1d83:b0:32a:34d8:33d3 with SMTP id 98e67ed59e1d1-34e91f749d8mr8077442a91.0.1766391252391;
+        Mon, 22 Dec 2025 00:14:12 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG1Go09mxe6FptC6uL4OomBUKer2vZ4FaNIffkFWpnND+g9IVqxiqRcg2zZV/2/WJ8KZ0XTqQ==
+X-Received: by 2002:a17:90b:1d83:b0:32a:34d8:33d3 with SMTP id 98e67ed59e1d1-34e91f749d8mr8077421a91.0.1766391251826;
+        Mon, 22 Dec 2025 00:14:11 -0800 (PST)
+Received: from [10.218.35.45] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34e70dbd618sm12166827a91.12.2025.12.22.00.14.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Dec 2025 00:14:11 -0800 (PST)
+Message-ID: <a7b94f8f-8773-43b0-b481-29828aba9abd@oss.qualcomm.com>
+Date: Mon, 22 Dec 2025 13:44:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 19/27] PCI: dwc: ep: Cache MSI outbound iATU
+ mapping
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Koichiro Den <den@valinux.co.jp>, ntb@lists.linux.dev,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Frank.Li@nxp.com, mani@kernel.org,
+        kwilczynski@kernel.org, kishon@kernel.org, bhelgaas@google.com,
+        corbet@lwn.net, vkoul@kernel.org, jdmason@kudzu.us,
+        dave.jiang@intel.com, allenbh@gmail.com, Basavaraj.Natikar@amd.com,
+        Shyam-sundar.S-k@amd.com, kurt.schwemmer@microsemi.com,
+        logang@deltatee.com, jingoohan1@gmail.com, lpieralisi@kernel.org,
+        robh@kernel.org, jbrunet@baylibre.com, fancer.lancer@gmail.com,
+        arnd@arndb.de, pstanner@redhat.com, elfring@users.sourceforge.net
+References: <20251129160405.2568284-1-den@valinux.co.jp>
+ <20251129160405.2568284-20-den@valinux.co.jp> <aTaE3yB7tQ-Homju@ryzen>
+ <4909f70a-2f65-4cac-96ac-5cd4371bc867@oss.qualcomm.com>
+ <aUj4M3z87MwFSUFW@ryzen>
+Content-Language: en-US
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <aUj4M3z87MwFSUFW@ryzen>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4909f70a-2f65-4cac-96ac-5cd4371bc867@oss.qualcomm.com>
-
-On Mon, Dec 22, 2025 at 10:40:12AM +0530, Krishna Chaitanya Chundru wrote:
-> On 12/8/2025 1:27 PM, Niklas Cassel wrote:
-> > On Sun, Nov 30, 2025 at 01:03:57AM +0900, Koichiro Den wrote:
-> > 
-> > I guess the problem is that some EPF drivers, even if only
-> > one capability can be enabled (MSI/MSI-X), call both
-> > pci_epc_set_msi() and pci_epc_set_msix(), e.g.:
-> > https://github.com/torvalds/linux/blob/v6.18/drivers/pci/endpoint/functions/pci-epf-test.c#L969-L987
-> > 
-> > To fill in the number of MSI/MSI-X irqs.
-> > 
-> > While other EPF drivers only call either pci_epc_set_msi() or
-> > pci_epc_set_msix(), depending on the IRQ type that will actually
-> > be used:
-> > https://github.com/torvalds/linux/blob/v6.18/drivers/nvme/target/pci-epf.c#L2247-L2262
-> > 
-> > I think both versions is okay, just because the number of IRQs
-> > is filled in for both MSI/MSI-X, AFAICT, only one of them will
-> > get enabled.
-> > 
-> > 
-> > I guess it might be hard for an EPC driver to know which capability
-> > that is currently enabled, as to enable a capability is only a config
-> > space write by the host side.
-> As the host is the one which enables MSI/MSIX, it should be better the
-> controller
-> driver takes this decision and the EPF driver just sends only raise_irq.
-> Because technically, host can disable MSI and enable MSIX at runtime also.
-> 
-> In the controller driver,  it can check which is enabled and chose b/w
-> MSIX/MSI/Legacy.
-
-I'm not sure if I'm following, but if by "the controller driver", you
-mean the EPC driver, and not the host side driver, how can the EPC
-driver know how many interrupts a specific EPF driver wants to use?
-
-From the kdoc to pci_epc_set_msi(), the nr_irqs parameter is defined as:
-@nr_irqs: number of MSI interrupts required by the EPF
-https://github.com/torvalds/linux/blob/v6.19-rc2/drivers/pci/endpoint/pci-epc-core.c#L305
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjIyMDA3MyBTYWx0ZWRfX8teQ1qh7q+v/
+ esTXQynMrQl9H1u35uqWBCKMotuPdgWgbm3YGUzeYnUGIFlbij8z5KPn6yrYdTL1vpkaGcoDJnA
+ AwqMIqbz2fGiJ2oTyLrIqrb7Y6Ja0IBujQqk+F5X0/OB7CWljwtCQ5weJAnWSihdYXU1LACxGYn
+ EwUiI79i+g01Nj0HLog0nLVgY5V0OkuYr5Lyu2Tf/TvF5QzvNfkKOA6Ay3E7v5PIefwdRtN/tlT
+ XBdl//GEySTOgiio/peM2lXp0nJtUS6RzB8Z02W6Lub39xJ1ZeGMfat0bIJRFFpjkJuIDRYqZIi
+ iFE+Do3o3/TYJTbC7aRrRvBcUs2EXJTfcicPbDRs2W6eBSF19jxk4+DE5uDZ0mp1iGHq8GiMrqC
+ 7wvAbbwNYXPV58QU4xMvTOnzoOd8FvQshR14A+G4O8pR7kLXwCI7OrS/lMDUY17qrZvVJqOd97m
+ hSHuQo+ar0Jva/n1Gvg==
+X-Proofpoint-GUID: xIATz2WwsEfOueRX22kheTeKeJVUM-1b
+X-Proofpoint-ORIG-GUID: xIATz2WwsEfOueRX22kheTeKeJVUM-1b
+X-Authority-Analysis: v=2.4 cv=KYbfcAYD c=1 sm=1 tr=0 ts=6948fdd5 cx=c_pps
+ a=0uOsjrqzRL749jD1oC5vDA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=9AdMxfjQAAAA:20 a=VwQbUJbxAAAA:8 a=P-IC7800AAAA:8
+ a=XlojDObrNaimPXCU0dcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=mQ_c8vxmzFEMiUWkPHU9:22 a=d3PnA9EDa4IxuAV0gXij:22 a=bA3UWDv6hWIuX7UZL3qL:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-21_05,2025-12-19_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
+ definitions=main-2512220073
 
 
-Anyway, I posted Koichiro's patch here:
-https://lore.kernel.org/linux-pci/20251210071358.2267494-2-cassel@kernel.org/
 
-See my comment:
-  pci-epf-test does change between MSI and MSI-X without calling
-  dw_pcie_ep_stop(), however, the msg_addr address written by the host
-  will be the same address, at least when using a Linux host using a DWC
-  based controller. If another host ends up using different msg_addr for
-  MSI and MSI-X, then I think that we will need to modify pci-epf-test to
-  call a function when changing IRQ type, such that pcie-designware-ep.c
-  can tear down the MSI/MSI-X mapping.
+On 12/22/2025 1:20 PM, Niklas Cassel wrote:
+> On Mon, Dec 22, 2025 at 10:40:12AM +0530, Krishna Chaitanya Chundru wrote:
+>> On 12/8/2025 1:27 PM, Niklas Cassel wrote:
+>>> On Sun, Nov 30, 2025 at 01:03:57AM +0900, Koichiro Den wrote:
+>>>
+>>> I guess the problem is that some EPF drivers, even if only
+>>> one capability can be enabled (MSI/MSI-X), call both
+>>> pci_epc_set_msi() and pci_epc_set_msix(), e.g.:
+>>> https://github.com/torvalds/linux/blob/v6.18/drivers/pci/endpoint/functions/pci-epf-test.c#L969-L987
+>>>
+>>> To fill in the number of MSI/MSI-X irqs.
+>>>
+>>> While other EPF drivers only call either pci_epc_set_msi() or
+>>> pci_epc_set_msix(), depending on the IRQ type that will actually
+>>> be used:
+>>> https://github.com/torvalds/linux/blob/v6.18/drivers/nvme/target/pci-epf.c#L2247-L2262
+>>>
+>>> I think both versions is okay, just because the number of IRQs
+>>> is filled in for both MSI/MSI-X, AFAICT, only one of them will
+>>> get enabled.
+>>>
+>>>
+>>> I guess it might be hard for an EPC driver to know which capability
+>>> that is currently enabled, as to enable a capability is only a config
+>>> space write by the host side.
+>> As the host is the one which enables MSI/MSIX, it should be better the
+>> controller
+>> driver takes this decision and the EPF driver just sends only raise_irq.
+>> Because technically, host can disable MSI and enable MSIX at runtime also.
+>>
+>> In the controller driver,  it can check which is enabled and chose b/w
+>> MSIX/MSI/Legacy.
+> I'm not sure if I'm following, but if by "the controller driver", you
+> mean the EPC driver, and not the host side driver, how can the EPC
+> driver know how many interrupts a specific EPF driver wants to use?
+I meant the dwc drivers here.
+Set msi & set msix still need to called from the EPF driver only to tell 
+how many
+interrupts they want to configure etc.
+>
+>  From the kdoc to pci_epc_set_msi(), the nr_irqs parameter is defined as:
+> @nr_irqs: number of MSI interrupts required by the EPF
+> https://github.com/torvalds/linux/blob/v6.19-rc2/drivers/pci/endpoint/pci-epc-core.c#L305
+>
+>
+> Anyway, I posted Koichiro's patch here:
+> https://lore.kernel.org/linux-pci/20251210071358.2267494-2-cassel@kernel.org/
+I will comment on that patch.
+>
+> See my comment:
+>    pci-epf-test does change between MSI and MSI-X without calling
+>    dw_pcie_ep_stop(), however, the msg_addr address written by the host
+>    will be the same address, at least when using a Linux host using a DWC
+>    based controller. If another host ends up using different msg_addr for
+>    MSI and MSI-X, then I think that we will need to modify pci-epf-test to
+>    call a function when changing IRQ type, such that pcie-designware-ep.c
+>    can tear down the MSI/MSI-X mapping.
+Maybe for arm based systems we are getting same address but for x86 
+based systems
+it is not guarantee that you will get same address.
+> So if we want to improve things, I think we need to modify the EPF drivers
+> to call a function when changing the IRQ type. The EPF driver should know
+> which IRQ type that is currently in use (see e.g. nvme_epf->irq_type in
+> drivers/nvme/target/pci-epf.c).
+My suggestion is let EPF driver call raise_irq with the vector number 
+then the dwc driver
+can raise IRQ based on which IRQ host enables it.
+> Additionally, I don't think that the host side should be allowed to change
+> the IRQ type (using e.g. setpci) when the EPF driver is in a "running state".
+In the host driver itelf they can choose to change it by using 
+pci_alloc_irq_vectors 
+<https://elixir.bootlin.com/linux/v6.18.2/C/ident/pci_alloc_irq_vectors>, 
+Currently it is not present but in future someone can change it, as spec 
+didn't say you
+can't update it.
+> I think things will break badly if you e.g. try to do this on an PCIe
+> connected network card while the network card is in use.
+I agree on this.
 
+I just want to highlight there is possibility of this in future, if 
+someone comes up with a
+clean logic.
 
-So if we want to improve things, I think we need to modify the EPF drivers
-to call a function when changing the IRQ type. The EPF driver should know
-which IRQ type that is currently in use (see e.g. nvme_epf->irq_type in
-drivers/nvme/target/pci-epf.c).
+- Krishna Chaitanya.
+>
+>
+> Kind regards,
+> Niklas
 
-
-Additionally, I don't think that the host side should be allowed to change
-the IRQ type (using e.g. setpci) when the EPF driver is in a "running state".
-
-I think things will break badly if you e.g. try to do this on an PCIe
-connected network card while the network card is in use.
-
-
-Kind regards,
-Niklas
 
