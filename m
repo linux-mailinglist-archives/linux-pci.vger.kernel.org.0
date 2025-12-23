@@ -1,179 +1,108 @@
-Return-Path: <linux-pci+bounces-43557-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43558-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AFA8CD84AD
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 07:48:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F12BCD85CD
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 08:12:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E10BE3010AA8
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 06:48:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2DF2F3010A84
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 07:12:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AE2E2F1FEA;
-	Tue, 23 Dec 2025 06:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89B162E03F1;
+	Tue, 23 Dec 2025 07:12:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rPVULLXg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aNh/3vSg"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3212D1F69;
-	Tue, 23 Dec 2025 06:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653F12DECBF
+	for <linux-pci@vger.kernel.org>; Tue, 23 Dec 2025 07:12:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766472528; cv=none; b=X7Df78g716mw5iCNmha3hDSErHf0xXQa08naIbbgh6D3MOGeQIxtGHJ09IPSZvUS2KZfAwbSFqNJmp73bGXdoBKDtB00MdEiQf0KugfWzTT2HDTDTc7yd/5tePBvPl4SNSpIaMkaTMRJwxWQQgk5KY5OWv1ayCwOq3/S9hJWCM4=
+	t=1766473935; cv=none; b=bNJUfgQKcQ8FfbLT1qXmYcagjgQ0Pw/CQmjboPeDyh7ImbGQVZiubHs7CiB7ZM/Wn/pbPzUn8D16J763DMD9ztHi8WfS5X2bCQlS3UacRKkWpG85P66vJ51HnwMRoUMdUD6N9nCqFSi2gfX+faD1r9sfmhj0XL7mb4ie89oSxq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766472528; c=relaxed/simple;
-	bh=1nvB1sWFtMXqleN7CoaA6md3o+PvQ6PHZiSWVmS8yiA=;
+	s=arc-20240116; t=1766473935; c=relaxed/simple;
+	bh=uAeBySv1vdL9FAJYV/sDbV1GgOxW9u8yyePOrf0vwXE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H0X3wJLDPAOqyWASYUSLCimZXVLos2jGRTx7F+7/Ag6gJr4hfc9Rvn1B2WwbtOSqDBThAighwmSVLTlgUi+bAzVQRAeckmeo2gVajR8/Xo5K71Xb//4qNxUsEtGijVmAP5j7VFbfgT18WAMVRp/Gyz7ZThEn2KvYDzANNWcdH8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rPVULLXg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF87DC113D0;
-	Tue, 23 Dec 2025 06:48:40 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=cwXKxsh+HPQFdBNzUGt7bPx89TmCyc7G76Sb0fz8HgMQAlfSpm8qiEJ4eoGjpuj3bYWJoXUvkU3gQCdpqlAjm+GdQFUvRJc02q2akp63IE1uJb06uga92g/r9juptpkCHRMS4zoTQ4BV/kQQVBv8uZeMGTwM/KX4znvOa6h3gHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aNh/3vSg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A16DC113D0;
+	Tue, 23 Dec 2025 07:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766472528;
-	bh=1nvB1sWFtMXqleN7CoaA6md3o+PvQ6PHZiSWVmS8yiA=;
+	s=k20201202; t=1766473934;
+	bh=uAeBySv1vdL9FAJYV/sDbV1GgOxW9u8yyePOrf0vwXE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rPVULLXgLMB8NxrCOvC6UmgdSpG6i87TkIReasmD96QtTlsosCAP+PvXj61QWlv2z
-	 p/uWqLwjUcBr6Izyw6bEa1DWumyGxPOF6kmzJQtnQ6aHn77DYKXVf7RZvEnWJyQGp3
-	 Zk9FB1+5hypY2Lhmh9FH844X59nF84kXh7Xhrm+FnZ5vj1hRkxCiGu5A7Oyr0sU82j
-	 yeZqVDBgO2wofrEOUMuSvJEboIh8LL6J+XDIbMcIQs5Ce8cTsNCP+gXgKpAd4gbB5h
-	 /8UoBaHBrIGEDfCCtFonmcXViGKgFijx/zimtE+J+4X7+venqq0AVWQFk1lUNSLR7P
-	 2HBMnkwg0OrnQ==
-Date: Tue, 23 Dec 2025 12:18:34 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>, vkoul@kernel.org
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, bhelgaas@google.com, johan+linaro@kernel.org, kishon@kernel.org, 
-	neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com, 
-	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com, 
-	Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Subject: Re: [PATCH v15 0/6] pci: qcom: Add QCS8300 PCIe support
-Message-ID: <5nlyry3yqloruyblcrjufalsu7yccgq5cq2el3lbfpjekepcha@b5zjen3u2xmf>
-References: <20251128104928.4070050-1-ziyue.zhang@oss.qualcomm.com>
+	b=aNh/3vSg2cPez2YrORpdSgR1iQevb5Oqc3xJtyFr5GhRhF8xBjG0fxV4TOuFkZtP6
+	 9jn3PBP4zz49m0BaCkYD8rALyQAwgITYSHGrdlOtGfPPsBwIhDIoRqap+f4rE0b2tX
+	 Abjvtc1b1T9rdUAteIhTyZveqmrSRUfKH7f905brHc8+oH95ada3w7Nr/PjBWfJ2g8
+	 FatEZiglS54/ADOw99hXtZQGESdm7/1mFY6dk19bihzhvrYFNNyjJ06PkEW1+s+fJo
+	 T1SOoXwFoI7o7uOHC3fv+6iAvQmBATKIXAQZi4UvWHRi9nLWVB8N2O8d7KBo0RlCL6
+	 zVsn1uLnXUcTw==
+Date: Tue, 23 Dec 2025 08:12:09 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Frank Li <Frank.Li@nxp.com>, Damien Le Moal <dlemoal@kernel.org>,
+	Koichiro Den <den@valinux.co.jp>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: ep: Cache MSI outbound iATU mapping
+Message-ID: <aUpAyag1bJLpOruG@ryzen>
+References: <20251210071358.2267494-2-cassel@kernel.org>
+ <8e00bd1c-29ae-43fd-90e8-ea0943cb02b6@oss.qualcomm.com>
+ <s5mbvhnummcegksauc7kyb2442ao27dwc63gyryetuvxojnxfj@a67nopel52tx>
+ <aUknSzSpNxLeEN5o@ryzen>
+ <3b34aa66-a418-4f6b-930a-0728d87d79b6@oss.qualcomm.com>
+ <aUlA7y95SUC-QA4T@ryzen>
+ <a24a5d8b-5818-4e11-bc09-47090de164c7@rock-chips.com>
+ <63321b7d-74a7-448f-ab20-08cc771beb5d@oss.qualcomm.com>
+ <424133b7-bd6b-4602-96ea-4413ce4f985d@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251128104928.4070050-1-ziyue.zhang@oss.qualcomm.com>
+In-Reply-To: <424133b7-bd6b-4602-96ea-4413ce4f985d@rock-chips.com>
 
-On Fri, Nov 28, 2025 at 06:49:22PM +0800, Ziyue Zhang wrote:
-> This series adds document, phy, configs support for PCIe in QCS8300.
-> It also adds 'link_down' reset for sa8775p.
+On Tue, Dec 23, 2025 at 02:23:39PM +0800, Shawn Lin wrote:
+> > On 12/23/2025 6:42 AM, Shawn Lin wrote:
+> > > I checked the IP configurtion parameters for RK3588 DM controller for
+> > > sure, it sets MSIX_TABLE_EN=1.
+> > > 
+> > > Looking into dw_pcie_ep_raise_msix_irq_doorbell(), it doesn't seem to
+> > > match the dwc databook. No matter for non-AXI mode or AXI access mode,
+> > > shouldn't we need to generate a MSI-X table RAM with data/address/
+> > > vector/TC in advanced? Am I missing anything because I didn't look
+> > The MSI-X table will updated automatically when host updates the MSI-X
+> > table, when MSI-X is enabled
+> > by host.
 > 
-> Have follwing changes:
-> 	- Add dedicated schema for the PCIe controllers found on QCS8300.
-> 	- Add compatible for qcs8300 platform.
-> 	- Add configurations in devicetree for PCIe0, including registers, clocks, interrupts and phy setting sequence.
-> 	- Add configurations in devicetree for PCIe1, including registers, clocks, interrupts and phy setting sequence.
-> 
+> Thanks for these details.
+> I re-read the databook, especially "Figure 3-49 iMSIX-TX: MSIX
+> Transmit ". Yes, it's updated automatically when host write access
+> it, which either comes from RX or local DBI(for debug purpose).
 
-Vinod, ping on the bindings patch!
+Shawn,
 
-- Mani
+if you have time to help figure out why we cannot simply
+replace dw_pcie_ep_raise_msix_irq() with dw_pcie_ep_raise_msix_irq_doorbell()
+in rockchip_pcie_raise_irq(), that would be appreciated.
 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-> ---
-> Changes in v15:
-> - rebase patches
-> - fix incorrect indentation (Dmitry)
-> - Add patches for monaco-evk enablement
-> - Link to v14: https://lore.kernel.org/all/20251024095609.48096-1-ziyue.zhang@oss.qualcomm.com/
-> 
-> Changes in v14:
-> - rebase patches
-> - Link to v13: https://lore.kernel.org/all/20250908073848.3045957-1-ziyue.zhang@oss.qualcomm.com/
-> 
-> Changes in v13:
-> - Fix dtb error
-> - Link to v12: https://lore.kernel.org/all/20250905071448.2034594-1-ziyue.zhang@oss.qualcomm.com/
-> 
-> Changes in v12:
-> - rebased pcie phy bindings
-> - Link to v11: https://lore.kernel.org/all/20250826091205.3625138-1-ziyue.zhang@oss.qualcomm.com/
-> 
-> Changes in v11:
-> - move phy/perst/wake to pcie bridge node (Mani)
-> - Link to v10: https://lore.kernel.org/all/20250811071131.982983-1-ziyue.zhang@oss.qualcomm.com/
-> 
-> Changes in v10:
-> - Update PHY max_items (Johan)
-> - Link to v9: https://lore.kernel.org/all/20250725104037.4054070-1-ziyue.zhang@oss.qualcomm.com/
-> 
-> Changes in v9:
-> - Fix DTB error (Vinod)
-> - Link to v8: https://lore.kernel.org/all/20250714081529.3847385-1-ziyue.zhang@oss.qualcomm.com/
-> 
-> Changes in v8:
-> - rebase sc8280xp-qmp-pcie-phy change to solve conflicts.
-> - Add Fixes tag to phy change (Johan)
-> - Link to v7: https://lore.kernel.org/all/20250625092539.762075-1-quic_ziyuzhan@quicinc.com/
-> 
-> Changes in v7:
-> - rebase qcs8300-ride.dtsi change to solve conflicts.
-> - Link to v6: https://lore.kernel.org/all/20250529035635.4162149-1-quic_ziyuzhan@quicinc.com/
-> 
-> Changes in v6:
-> - move the qcs8300 and sa8775p phy compatibility entry into the list of PHYs that require six clocks
-> - Update QCS8300 and sa8775p phy dt, remove aux clock.
-> - Fixed compile error found by kernel test robot
-> - Link to v5: https://lore.kernel.org/all/20250507031019.4080541-1-quic_ziyuzhan@quicinc.com/
-> 
-> Changes in v5:
-> - Add QCOM PCIe controller version in commit msg (Mani)
-> - Modify platform dts change subject (Dmitry)
-> - Fixed compile error found by kernel test robot
-> - Link to v4: https://lore.kernel.org/linux-phy/20241220055239.2744024-1-quic_ziyuzhan@quicinc.com/
-> 
-> Changes in v4:
-> - Add received tag
-> - Fixed compile error found by kernel test robot
-> - Link to v3: https://lore.kernel.org/lkml/202412211301.bQO6vXpo-lkp@intel.com/T/#mdd63e5be39acbf879218aef91c87b12d4540e0f7
-> 
-> Changes in v3:
-> - Add received tag(Rob & Dmitry)
-> - Update pcie_phy in gcc node to soc dtsi(Dmitry & Konrad)
-> - remove pcieprot0 node(Konrad & Mani)
-> - Fix format comments(Konrad)
-> - Update base-commit to tag: next-20241213(Bjorn)
-> - Corrected of_device_id.data from 1.9.0 to 1.34.0.
-> - Link to v2: https://lore.kernel.org/all/20241128081056.1361739-1-quic_ziyuzhan@quicinc.com/
-> 
-> Changes in v2:
-> - Fix some format comments and match the style in x1e80100(Konrad)
-> - Add global interrupt for PCIe0 and PCIe1(Konrad)
-> - split the soc dtsi and the platform dts into two changes(Konrad)
-> - Link to v1: https://lore.kernel.org/all/20241114095409.2682558-1-quic_ziyuzhan@quicinc.com/
-> 
-> Sushrut Shree Trivedi (1):
->   arm64: dts: qcom: monaco-evk: Enable PCIe0 and PCIe1.
-> 
-> Ziyue Zhang (5):
->   dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
->     for qcs8300
->   arm64: dts: qcom: qcs8300: enable pcie0
->   arm64: dts: qcom: qcs8300-ride: enable pcie0 interface
->   arm64: dts: qcom: qcs8300: enable pcie1
->   arm64: dts: qcom: qcs8300-ride: enable pcie1 interface
-> 
->  .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |  17 +-
->  arch/arm64/boot/dts/qcom/monaco-evk.dts       |  85 ++++
->  arch/arm64/boot/dts/qcom/monaco.dtsi          | 374 +++++++++++++++++-
->  arch/arm64/boot/dts/qcom/qcs8300-ride.dts     |  84 ++++
->  4 files changed, 543 insertions(+), 17 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+As you can see, we get IOMMU errors on the host side if we
+reprogram the outbound iATU while outgoing transactions are in flight.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Mani, perhaps we should even add a WARN_ON() in dw_pcie_ep_raise_msix_irq()
+that warns users that this function is broken and will lead to transactions
+to random writes on the host side memory, which is quite bad...
+
+
+Kind regards,
+Niklas
 
