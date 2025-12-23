@@ -1,147 +1,113 @@
-Return-Path: <linux-pci+bounces-43603-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43604-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2E86CD9ED4
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 17:23:07 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7254CCD9F40
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 17:27:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C9CFD303BBD2
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 16:22:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 69A853014138
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 16:27:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC50832827D;
-	Tue, 23 Dec 2025 16:22:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ECF1293B75;
+	Tue, 23 Dec 2025 16:27:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f40u1nK2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oPCWgb5W"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78D43148B3;
-	Tue, 23 Dec 2025 16:22:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3C32773C3;
+	Tue, 23 Dec 2025 16:27:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766506944; cv=none; b=UOYu2gbwyYiGxW177LzPBJvyGUa3k3qRVQIH2EZelho4FvtX6ODLTpK+bPagd5u2DTjzKGlutDEdFUHO5JlbAYLMbLiHongUPKCFRbVNLOBMZemGaH+zW58I3K4n9iNDfZEAyeRfezeX4n929MFPHNRvd4hPWoO01EgQ6ogR9No=
+	t=1766507243; cv=none; b=SJZ1ikMUCBUcqORyfgBUruTCZn7GOPvqLuflEGI2DJz1IBQ2T2M/b7w/6/gibooaNiPsbJsb9IbyEr92PtBC6EiynLF8C4gnkpfF8Hd4bSkusyuRV20NR/02vGynFiTwaiZR2Yg69k5RFtD7DG866IHaj0Ha1W3qbzBjwvt4M7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766506944; c=relaxed/simple;
-	bh=ghdK3k8HC0d+pZ7Vp2Q/ozvdOE31c9CqJV1yRUZ01TE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=KdLq3n+waetznZ0nlJ6cMuJ9jLbpVNRZOH9xrEgVO+TIyh9WEUUegQlwhCtPKpRt6Mqddhfxdl67PM2iqzcgxD2RQaEgCIxnCpRA4MxA1v2fn/MZsSMW564wR7w4sVb9QIw6zvh8ZrMl/E3ItNUrEDW1edqfxy49MWXaQ6tqB2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f40u1nK2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B1ABC113D0;
-	Tue, 23 Dec 2025 16:22:23 +0000 (UTC)
+	s=arc-20240116; t=1766507243; c=relaxed/simple;
+	bh=+rAjVS/FZUEAz55yzrpVpFDFVO48Hb8odyG8xVSIiK0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pe4RekCv5je7SGjcwGBdfyZKFcoDgTGNT+qQC6dzn/8Ly/Xn1NjV00yhjcH0m5QsSHaou/ocZMxAL2ekLKEQbcWOzHe26Z7oFFyRJYon3LFp9z5s22FQudKbEKpcTWjUJ+V3yjfc+SKNCLfz4fAaoeWhzuE2P4VhPDARmHYxX4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oPCWgb5W; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 769E2C113D0;
+	Tue, 23 Dec 2025 16:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766506944;
-	bh=ghdK3k8HC0d+pZ7Vp2Q/ozvdOE31c9CqJV1yRUZ01TE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=f40u1nK24Yb8eMbhaW5pQ/D7i1Rw4HmkYlX5TaH9mwqokQnCnADyqo7MXggoa8IPb
-	 RNpISUHd3HLL3lvksMwbUeDM3yGyQviT/ITGnHNdDsqSLHKrefHSYxmwiwTrIH09eD
-	 C7u4tgGSVl7n1ud7V0nVWOxmBKhZ81FPpfNE2hprIuQY/hnOWCQ9qAonAKje90QLGv
-	 U90tPYJeovuWK16/IjTk3s/cEp3jf08zA3udDBfwuXlQZWW5HuG9NrynnyBuBu/gDR
-	 wXEyLNgYsymJ2dZn1GF9P/kvdm2HOt4MHWFlQFDB2tOdRG8uNIr+/F4Es28Dv2m1ta
-	 V00mrI86umqgA==
-Date: Tue, 23 Dec 2025 10:22:22 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] scsi: target: Constify struct configfs_item_operations
- and configfs_group_operations
-Message-ID: <20251223162222.GA4022020@bhelgaas>
+	s=k20201202; t=1766507241;
+	bh=+rAjVS/FZUEAz55yzrpVpFDFVO48Hb8odyG8xVSIiK0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oPCWgb5Wkq8OztthytEeJjBkP5PnhGzGNtNrDzCvr4x9tSZ/lMNZunmEBl76G5uwg
+	 K2aocaBvOLzNawAFrr4IIAgxFDmCQWZ7v0bGpPPHFK9R+cate62VB6+sTyMMqEwrqJ
+	 HXfapzUEpPwiQkZZwGmyaMy7nCwf3tjZckZYZqPuPj2HkY02cpZ3bHVCbmcGA+jK4h
+	 1MJvYZ58/+PXsTTciZpasbGidNTJqXD5jmYOMXOiiTpkcZhqHyRDCJAqdgJyTDtfO6
+	 WbajMxgiNf8wleMHUG4+Nnmhj3XTCNOutlvaz/oynLnpdFdsDudBEAijJd8sOwoK2o
+	 PvZueinScPtbw==
+Date: Tue, 23 Dec 2025 21:57:15 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Siddharth Vadapalli <s-vadapalli@ti.com>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Hans Zhang <18255117159@163.com>, 
+	Chen Wang <unicorn_wang@outlook.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] PCI: Cadence: Avoid possible signed 64-bit truncation
+Message-ID: <racdnvit3j2plo4v3c3liz55ocbr7irofl2cgglvfltanxa54m@bebkiecxrrlj>
+References: <20251209223756.2321578-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f1f05f6c1bc0c6f37cd680f012fe08c525364968.1765705512.git.christophe.jaillet@wanadoo.fr>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251209223756.2321578-1-irogers@google.com>
 
-On Sun, Dec 14, 2025 at 10:45:29AM +0100, Christophe JAILLET wrote:
-> 'struct configfs_item_operations' and 'configfs_group_operations' are not
-> modified in this driver.
+On Tue, Dec 09, 2025 at 02:37:56PM -0800, Ian Rogers wrote:
+> 64-bit truncation to 32-bit can result in the sign of the truncated
+> value changing. The cdns_pcie_host_dma_ranges_cmp is used in list_sort
+> and so the truncation could result in an invalid sort order. This
+> would only happen were the resource_size values large.
 > 
-> Constifying these structures moves some data to a read-only section, so
-> increases overall security, especially when the structure holds some
-> function pointers.
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Sounds plausible, except that there's no apparent connection with scsi
-(as suggested by the subject).  Will wait for a revision that matches
-history of this file.
+Applied to pci/controller/cadence!
 
-> On a x86_64, with allmodconfig:
-> Before:
-> ======
->    text	   data	    bss	    dec	    hex	filename
->   27503	  12184	    256	  39943	   9c07	drivers/pci/endpoint/pci-ep-cfs.o
-> 
-> After:
-> =====
->    text	   data	    bss	    dec	    hex	filename
->   27855	  11832	    256	  39943	   9c07	drivers/pci/endpoint/pci-ep-cfs.o
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+- Mani
+
 > ---
-> Compile tested only.
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
 > 
-> This change is possible since commits f2f36500a63b and f7f78098690d.
-> ---
->  drivers/pci/endpoint/pci-ep-cfs.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
-> index ef50c82e647f..034a31c341c9 100644
-> --- a/drivers/pci/endpoint/pci-ep-cfs.c
-> +++ b/drivers/pci/endpoint/pci-ep-cfs.c
-> @@ -85,7 +85,7 @@ static void pci_secondary_epc_epf_unlink(struct config_item *epc_item,
->  	pci_epc_remove_epf(epc, epf, SECONDARY_INTERFACE);
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index fffd63d6665e..e5fd02305ab6 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -414,11 +414,19 @@ static int cdns_pcie_host_dma_ranges_cmp(void *priv, const struct list_head *a,
+>  					 const struct list_head *b)
+>  {
+>  	struct resource_entry *entry1, *entry2;
+> +	u64 size1, size2;
+>  
+> -        entry1 = container_of(a, struct resource_entry, node);
+> -        entry2 = container_of(b, struct resource_entry, node);
+> +	entry1 = container_of(a, struct resource_entry, node);
+> +	entry2 = container_of(b, struct resource_entry, node);
+>  
+> -        return resource_size(entry2->res) - resource_size(entry1->res);
+> +	size1 = resource_size(entry1->res);
+> +	size2 = resource_size(entry2->res);
+> +
+> +	if (size1 > size2)
+> +		return -1;
+> +	if (size1 < size2)
+> +		return 1;
+> +	return 0;
 >  }
 >  
-> -static struct configfs_item_operations pci_secondary_epc_item_ops = {
-> +static const struct configfs_item_operations pci_secondary_epc_item_ops = {
->  	.allow_link	= pci_secondary_epc_epf_link,
->  	.drop_link	= pci_secondary_epc_epf_unlink,
->  };
-> @@ -149,7 +149,7 @@ static void pci_primary_epc_epf_unlink(struct config_item *epc_item,
->  	pci_epc_remove_epf(epc, epf, PRIMARY_INTERFACE);
->  }
->  
-> -static struct configfs_item_operations pci_primary_epc_item_ops = {
-> +static const struct configfs_item_operations pci_primary_epc_item_ops = {
->  	.allow_link	= pci_primary_epc_epf_link,
->  	.drop_link	= pci_primary_epc_epf_unlink,
->  };
-> @@ -257,7 +257,7 @@ static void pci_epc_epf_unlink(struct config_item *epc_item,
->  	pci_epc_remove_epf(epc, epf, PRIMARY_INTERFACE);
->  }
->  
-> -static struct configfs_item_operations pci_epc_item_ops = {
-> +static const struct configfs_item_operations pci_epc_item_ops = {
->  	.allow_link	= pci_epc_epf_link,
->  	.drop_link	= pci_epc_epf_unlink,
->  };
-> @@ -508,7 +508,7 @@ static void pci_epf_release(struct config_item *item)
->  	kfree(epf_group);
->  }
->  
-> -static struct configfs_item_operations pci_epf_ops = {
-> +static const struct configfs_item_operations pci_epf_ops = {
->  	.allow_link		= pci_epf_vepf_link,
->  	.drop_link		= pci_epf_vepf_unlink,
->  	.release		= pci_epf_release,
-> @@ -662,7 +662,7 @@ static void pci_epf_drop(struct config_group *group, struct config_item *item)
->  	config_item_put(item);
->  }
->  
-> -static struct configfs_group_operations pci_epf_group_ops = {
-> +static const struct configfs_group_operations pci_epf_group_ops = {
->  	.make_group     = &pci_epf_make,
->  	.drop_item      = &pci_epf_drop,
->  };
+>  static void cdns_pcie_host_unmap_dma_ranges(struct cdns_pcie_rc *rc)
 > -- 
-> 2.52.0
+> 2.52.0.223.gf5cc29aaa4-goog
 > 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
