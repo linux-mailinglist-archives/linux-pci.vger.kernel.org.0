@@ -1,251 +1,184 @@
-Return-Path: <linux-pci+bounces-43599-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43600-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B900CD9D33
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 16:44:18 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11691CD9E0C
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 16:58:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 70C833018917
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 15:44:15 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B4799301FA76
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 15:58:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CC7129DB65;
-	Tue, 23 Dec 2025 15:44:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA557289367;
+	Tue, 23 Dec 2025 15:58:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vBFIjRks"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dY21izoQ";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="YO7N+BLQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0572329B8D9
-	for <linux-pci@vger.kernel.org>; Tue, 23 Dec 2025 15:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34820275B06
+	for <linux-pci@vger.kernel.org>; Tue, 23 Dec 2025 15:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766504654; cv=none; b=nMvePjX2Sx0zvtW+cjUn6eeNP3ZWs3cA4vDAnmeLn2otLgJXaSJQ7TQLija4TZN/AschidlvOlbYjV7q+owRUI53VtLxiAt2OD1beaiopA0aZLaZ6tz/FDZpiVuP7WAJLUYsnkIcws5DYbW6BucEFi+Wh+WpsPXK+33GzynVpz0=
+	t=1766505517; cv=none; b=s6HU5qH5MhSlCLM4NglX5P/XkzD6WRGReOkHEFYeqKh/qXhOUs3SxfZKYjjxGdVVePIfRmNDNKDB0F5bKmpxG1GwJakgh69o8ntfr3oJpv8Z3GDs34NxIwaxOkbeL0zfC3fJ3k5Wks95PBm+4f0wqN7KFhf+Uh9175JMfd2KjGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766504654; c=relaxed/simple;
-	bh=OsrpBcv4VF9p/kxszbtrHsang6ct6Zw+8JCKWbvk6Jg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a2dxHCfCZqs4WRzHsk+bqFt3p0v/hn9fitNYwRsHfMvI/3VLPyQfvZ7CMV1kTT4+XRAvB6ObuKPDRyCfXgS91qH8B9cEI3fct44BGbZJVy68ba6AS91A/TJ2Rg5zAc6XzmoQtDeTwwPXG+MELP+nNOEnPbhfTLaxq/tQjOBU+WM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vBFIjRks; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5ADAC113D0;
-	Tue, 23 Dec 2025 15:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766504653;
-	bh=OsrpBcv4VF9p/kxszbtrHsang6ct6Zw+8JCKWbvk6Jg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vBFIjRks97fLlkRDLYgI5RQ6OJUIaGChTlR5MiW1N9g3pGp3jzRVfzPP0+U4up9bD
-	 sqkALFmGoJ+lam0vAkXrRpNtQ4UwEY+Mseav4lc4wSLD040AZidhpb9M2FgpF73GhQ
-	 zwMaBElS1/Kvulqg/0kLew1wL3GOmDIDFj+GaQokB0vNJD7CtDVh/ZPaEHFwY/QSXR
-	 tHx92jst9+EVsgNREFcPv2qTxRgW1u268rf4VN1V+xBnfwR35uxOVHSSvBOqmCCuqe
-	 /Hz4oEx1R/+IDLAHUrtP5/kpjDkkIZzjz/nAb7rrGqFx6k1vxtCWDknRLFGqDg4b9z
-	 6vPl6zsqFnfDw==
-Date: Tue, 23 Dec 2025 21:14:08 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	linux-pci@vger.kernel.org, Ajay Agarwal <ajayagarwal@google.com>, 
-	Will McVicker <willmcvicker@google.com>
-Subject: Re: [PATCH] PCI: dwc: Use cfg0_base as iMSI-RX target address to
- support 32-bit MSI devices
-Message-ID: <t5brjzmsl6bzo2ku7ojjgm72syls2dgbll3wdkla5jzveqj75o@o5l6wg4g7cqg>
-References: <1764727630-129853-1-git-send-email-shawn.lin@rock-chips.com>
- <wc5s43s2aprtrxfyvjk7ebcutqse54kj4w452hqitqq3as5bj3@bg3ohzcbljy4>
- <7eb9773d-1d94-4443-a3eb-80ef3ccc60f9@rock-chips.com>
- <vdxwg6x6lx5oumjvxwwejxwwrsttx5uopy6q7lk6pjnplfx6a6@2w4jilfrrpkl>
- <3666010f-334e-412a-8d96-d5c40b40a88c@rock-chips.com>
+	s=arc-20240116; t=1766505517; c=relaxed/simple;
+	bh=Mtxd/iv3yMWlETS0+3baJ1bxVujZ3ZziEvgBz2Az3SI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=J6Ad+NtTD6Z+9FhBmu0+pbooSNE98EyTAbCyz44S2FP8E0wewTi93CIJHxEfuwSmdV2nlfHd03YG3x2f2p7smQcrLCpO/pdaIoe30AEYbOAuitl8XhOGkQdL857T+yp1xJc3GnQWHwAR8v4M26yePzHV+iZUS2/E0Wqm1fT8XWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dY21izoQ; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=YO7N+BLQ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BNEsBDt462214
+	for <linux-pci@vger.kernel.org>; Tue, 23 Dec 2025 15:58:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	jiVMsPmbQP7FZ38DNLit/HG1+5z9nnDnXvMaFIBjNjQ=; b=dY21izoQwZl3PUWu
+	Mb6XE3I9EdcKQO8QjSqkx5MLvjiEwvp7/oOdtyn2XSuWlTf3zVnBSDfvpxeh+aLG
+	uQViOdMN53cJFkPMxDxc7Tz0MrWKgjfFGwWea8YMW8CmOrD3Q9+uVH0+5tnsI3Ed
+	vxfom/ISfZ5X0F9jEgVbRIeCNtAtVoQ28hzi3zolpSY+3CY1+Dtd3NVZJYHXipJu
+	fTZdrdKIAAJ/Pd8qfzGX1MKPf2bTnUOKAR/WlTEpR4vdpBVwdecu0c2rn7UvVrN/
+	YmCQbg4NE2gSVOFz90F80BXLJDXxr/mJHWJxz2cna19+/98SeU6WkHbCYNzBY/kS
+	QCAYsA==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b7w8fr62n-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Tue, 23 Dec 2025 15:58:35 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2a09845b7faso75166865ad.3
+        for <linux-pci@vger.kernel.org>; Tue, 23 Dec 2025 07:58:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1766505514; x=1767110314; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jiVMsPmbQP7FZ38DNLit/HG1+5z9nnDnXvMaFIBjNjQ=;
+        b=YO7N+BLQWnvWUmSdOmGUman1RzVjMDvi84p2xGPICkncZjMFCHnhJPukQ4GDwIWLQ/
+         edbVicG+CRLeD4lccSS97d81ATOEBspudAMr9K7X5KcajhRqq9GOcNQr06pD8Nvj2dPf
+         O+6HhEpJJZQH4zi58N1DWYckUKBWLNwvyVSixRZF0H+Y5RqHmkOVwUdNvXXKanHLE8by
+         En8Z5WjW4T7ER2rWxQ3+rpaRYxwg51AR70iDSiWNCGvN7yoagXGfmcbSxUY0XDJoR2N+
+         qvYzAZztsbVjEmomtDJui+r5pxSZvk/cs3nG5W8FZhXsWMMOfhvvT7KTFdyvJ16HLDgL
+         fFhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766505514; x=1767110314;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=jiVMsPmbQP7FZ38DNLit/HG1+5z9nnDnXvMaFIBjNjQ=;
+        b=cCtW87j3N1omCc7YCD689yR72F9QUR4R8pVoCI+L4t2KZhBe8VwQUbC09z0gCmOLn9
+         axlbCcUJA9VuIuSDUo7CdAwM/pyn0pQMCFJaqcDDvuaxw6/QN2Tbs1l1I4WMzQFUEzuA
+         PTYxSeaUD4B9gjptFhJWHe1wRxM86wIy52L+l/rDY2favxq5X0EuTT/URl82gXV8kYK4
+         rRSu4o4o8iPm1LZmknlJZUvvEGrqCnlPvOCKnALWQLNdsxeW9QMKDBS9qzvmkU3oME3b
+         x8dguTpoPYLpZ9mjpQ63PuS77i8QcMIW8YowKiP9IaBgs8aum8XGE2zEipMml++RjiiN
+         BeFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlcjwnoGoayW3ZmiMAEKOEXyfL6zolFWnIXeoOTcGF80Bn4tuyTRbJ6bqlttBTws0Ya7350397RbA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzp4MXOU8SaG8GnWl+EkHt/1Gqf8MlVOEpE7CPu8FvnZXTdWIp9
+	8lCKb5GnM9Vmt/qAvgDirOFX2b4HMTOT77X67Oi5Shih4b+6pc18wbAJTMSCnE7g2jzx0nBEDZ6
+	T7O5ttF772NdMNe7EosIJEB428Gx6WlG+gfFYRyC36QAOBRSCDn+IYonF+tLNhwnVJ2t5amQ=
+X-Gm-Gg: AY/fxX6P0OMM/f0hfVL7b7RPVk65J9/9ZfrtE7l31W/meDsCuvZibvGVhEhCHgwuY+8
+	fF3g4qoK3Ah20ZMcE6xo4XXTcFA1UmpgqAm/0eQ1Ytm/recH/ATLKfibkG05MKwtsznupQw82HL
+	g+UIHQqzAd3zCGT/Xliv7qRft5SIkPp+b4pY9WbrTM40pgE3QFAixevtRSvVowh17aDUvQa+uuB
+	R3eNIe6v39RN2PjlKMxastCpXzAn3s8n8vtFt/fkpicCPI0RRts8nIyf2g7/WBXMA1ANrakulp4
+	ZdXminpNIKA/y8RUr1pzmHKxUwMoByMPpolWFNZgReUQtGYzHMkLe6IbLeikENhmSBV+PTKULP0
+	71liyO//wLQ==
+X-Received: by 2002:a17:902:d584:b0:29e:9c82:a91e with SMTP id d9443c01a7336-2a2f21fc506mr163295515ad.7.1766505514309;
+        Tue, 23 Dec 2025 07:58:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFhayM1D+7Y1gHqun6N5dRaivrEs0mEAHPs1q25xLW/IAzFnLc7m+vKUO2bdvStmAZD+ZHRIQ==
+X-Received: by 2002:a17:902:d584:b0:29e:9c82:a91e with SMTP id d9443c01a7336-2a2f21fc506mr163295255ad.7.1766505513842;
+        Tue, 23 Dec 2025 07:58:33 -0800 (PST)
+Received: from [192.168.1.102] ([120.56.200.112])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2f3d7754asm131271795ad.100.2025.12.23.07.58.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Dec 2025 07:58:33 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+X-Google-Original-From: Manivannan Sadhasivam <mani@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@codeconstruct.com.au>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org
+In-Reply-To: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
+References: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
+Subject: Re: (subset) [PATCH v7 0/7] Add ASPEED PCIe Root Complex support
+Message-Id: <176650550798.2188958.10356654881464455126.b4-ty@kernel.org>
+Date: Tue, 23 Dec 2025 21:28:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3666010f-334e-412a-8d96-d5c40b40a88c@rock-chips.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
+X-Proofpoint-GUID: xf7v0jU5sqFdXkQeksP-acX_oQXQtf7S
+X-Proofpoint-ORIG-GUID: xf7v0jU5sqFdXkQeksP-acX_oQXQtf7S
+X-Authority-Analysis: v=2.4 cv=QutTHFyd c=1 sm=1 tr=0 ts=694abc2b cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=31AEnvkI3DvSdtIumApubw==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=oUgZFhhkZxxgqap4hUAA:9
+ a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjIzMDEzMiBTYWx0ZWRfX85LypFEZalMG
+ f0qIDJ950Bh5OtPODS0MOgNrXGI7EL2D2+0E5FTWd3938oLgGsJbmqQw8FgIZrcRqI5XBOaffio
+ L/y0UfK2oPpHjdq1ODuPakSQ7QoVHYXb6G5coaDDILmC6LAlSxLplyq5GXMySzEJeqo4d7MEQSi
+ i4mgJLEjDLDRuDAGviBroZPL4m40W//bShCCYk7sw2YJj53dalSIR3GgGCsgkgTybQwkR1clLZI
+ ubSOYtN2sd6spnq+Tdlr3U6TLWb15um9vfCFzjIMbUoSRtEiwjpAOaQT1eB+nmVImscKuA1l5nO
+ 9czesPg7+ST3LLIZUmj9K4qRKttF/yGRXZZf58hCZFGQpT3jI4ee3vLTY0LyqY3jo0rnMDqypVk
+ XmOgMz9ezOkpaBL4J1I0p3x8m7kKtN/4MAY6ReIC6A6A+HFVP1+X/6VncvYqYKj3zchOIZEIH1g
+ EcsBp9YciFLCtjirS7Q==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-23_03,2025-12-22_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 bulkscore=0 impostorscore=0 spamscore=0
+ malwarescore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
+ definitions=main-2512230132
 
-On Tue, Dec 23, 2025 at 10:20:17PM +0800, Shawn Lin wrote:
-> 在 2025/12/23 星期二 21:47, Manivannan Sadhasivam 写道:
-> > On Tue, Dec 23, 2025 at 09:16:45PM +0800, Shawn Lin wrote:
-> > > 在 2025/12/23 星期二 20:22, Manivannan Sadhasivam 写道:
-> > > > On Wed, Dec 03, 2025 at 10:07:10AM +0800, Shawn Lin wrote:
-> > > > > commit f3a296405b6e ("PCI: dwc: Strengthen the MSI address allocation logic")
-> > > > > strengthened the iMSI-RX target address allocation logic to handle 64-bit
-> > > > > addresses for platforms without 32-bit DMA addresses. However, it still left
-> > > > > 32-bit MSI capable endpoints (EPs) non-functional on such platforms.
-> > > > > 
-> > > > > Since iMSI-RX is a pure virtual address that doesn't require actual system
-> > > > > memory mapping, we can assign any 32-bit address that won't conflict with
-> > > > > system memory allocations. This patch uses cfg0_base as the iMSI-RX target
-> > > > > address, which satisfies this requirement.
-> > > > 
-> > > > Excellent finding! For reference, DWC databook r6.21a, sec 3.10.2.3 clarifies
-> > > > this behavior by stating that the incoming MWr TLP targeting the MSI_CTRL_ADDR
-> > > > is terminated by the iMSI-RX and never appears on the AXI bus. TBH this is how
-> > > > every other MSI controller behave I suppose.
-> > > > 
-> > > > > 
-> > > > > [benefit]:
-> > > > > 
-> > > > > Three scenarios are considered:
-> > > > > 1. cfg0_base is 32-bit: 32-bit MSI capable EPs now work correctly (main improvement)
-> > > > > 2. cfg0_base is 64-bit: Behavior remains identical to the previous approach
-> > > > > 3. Device requires 32-bit DMA addresses for uDMA transfer on platform without
-> > > > >      32-bit addresses: Still incompatible (unchanged behavior)
-> > > > > 
-> > > > > The primary improvement is for case 1, where 32-bit MSI devices can now function
-> > > > > properly.
-> > > > > 
-> > > > > [Test]:
-> > > > > 
-> > > > > Tested on a Rockchip platform lacking 32-bit DMA addresses with an ASM1062 SATA
-> > > > > controller that only supports 32-bit MSI. The device functions correctly using
-> > > > > 43-bit DMA addressing via the board_ahci_43bit_dma flag in ahci_configure_dma_masks().
-> > > > > 
-> > > > > The log looks like below:
-> > > > > 
-> > > > > rockchip-dw-pcie 22400000.pcie: host bridge /soc/pcie@22400000 ranges:
-> > > > > rockchip-dw-pcie 22400000.pcie:       IO 0x0021100000..0x00211fffff -> 0x0021100000
-> > > > > rockchip-dw-pcie 22400000.pcie:      MEM 0x0021200000..0x0021ffffff -> 0x0021200000
-> > > > > rockchip-dw-pcie 22400000.pcie:      MEM 0x0980000000..0x09ffffffff -> 0x0980000000
-> > > > > rockchip-dw-pcie 22400000.pcie: Use cfg0_base 0x21000000 as iMSI-RX target address
-> > > > > rockchip-dw-pcie 22400000.pcie: iATU: unroll T, 8 ob, 8 ib, align 64K, limit 8G
-> > > > > 
-> > > > > root@linaro-alip:/# lspci -vvv
-> > > > > 03:00.0 SATA controller: ASMedia Technology Inc. ASM1062 Serial ATA Controller (rev 01) (prog-if 01 [AHCI 1.0])
-> > > > > 	Subsystem: ASMedia Technology Inc. ASM1061/ASM1062 Serial ATA Controller
-> > > > > 	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-> > > > > 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> > > > > 	Latency: 0
-> > > > > 	Interrupt: pin A routed to IRQ 121
-> > > > > 	Region 0: I/O ports at 1020 [size=8]
-> > > > > 	Region 1: I/O ports at 1030 [size=4]
-> > > > > 	Region 2: I/O ports at 1028 [size=8]
-> > > > > 	Region 3: I/O ports at 1034 [size=4]
-> > > > > 	Region 4: I/O ports at 1000 [size=32]
-> > > > > 	Region 5: Memory at 21210000 (32-bit, non-prefetchable) [size=512]
-> > > > > 	Expansion ROM at 20200000 [virtual] [disabled] [size=64K]
-> > > > > 	Capabilities: [50] MSI: Enable+ Count=1/1 Maskable- 64bit-
-> > > > > 		Address: 0x21000000  Data: 0003
-> > > > > 
-> > > > > root@linaro-alip:/# cat /proc/interrupts | grep PCI-MSI
-> > > > > 117:    0      0     0     0      0     0    0     0   PCI-MSI       0 Edge      PCIe PME
-> > > > > 121:    90     0     0     0      0     0    0     0   PCI-MSI 1572864 Edge      ahci[0000:03:00.0]
-> > > > > 
-> > > > > root@linaro-alip:/# dd if=/dev/sda1 of=/dev/null bs=1M count=10
-> > > > > 10+0 records in
-> > > > > 10+0 records out
-> > > > > 10485760 bytes (10 MB, 10 MiB) copied, 0.0227659 s, 461 MB/s
-> > > > > 
-> > > > > root@linaro-alip:/# cat /proc/interrupts | grep PCI-MSI
-> > > > > 117:    0      0     0     0      0     0    0     0   PCI-MSI       0 Edge      PCIe PME
-> > > > > 121:   101     0     0     0      0     0    0     0   PCI-MSI 1572864 Edge      ahci[0000:03:00.0]
-> > > > > 
-> > > > > MSI interrupt counts increase during I/O operations, confirming proper SATA controller
-> > > > > functionality.
-> > > > > 
-> > > > > cc: Ajay Agarwal <ajayagarwal@google.com>
-> > > > > cc: Will McVicker <willmcvicker@google.com>
-> > > > > Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> > > > > ---
-> > > > > 
-> > > > >    drivers/pci/controller/dwc/pcie-designware-host.c | 22 ++++++++++------------
-> > > > >    1 file changed, 10 insertions(+), 12 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > index 372207c..faa9681 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > @@ -367,9 +367,13 @@ int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-> > > > >    	 * order not to miss MSI TLPs from those devices the MSI target
-> > > > >    	 * address has to be within the lowest 4GB.
-> > > > >    	 *
-> > > > > -	 * Note until there is a better alternative found the reservation is
-> > > > > -	 * done by allocating from the artificially limited DMA-coherent
-> > > > > -	 * memory.
-> > > > > +	 * Since iMSI-RX monitors a virtual address space that doesn't require
-> > > > > +	 * physical memory mapping, we simplify the implementation by reusing
-> > > > > +	 * cfg0_base as the target address. This approach guarantees the address
-> > > > > +	 * won't be allocated to endpoint drivers for normal memory operations.
-> > > > > +	 *
-> > > > > +	 * Limitation: 32-bit MSI endpoints cannot be supported when cfg0_base
-> > > > > +	 * is a 64-bit address.
-> > > > >    	 */
-> > > > >    	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
-> > > > >    	if (!ret)
-> > > > > @@ -377,15 +381,9 @@ int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-> > > > >    						GFP_KERNEL);
-> > > > >    	if (!msi_vaddr) {
-> > > > > -		dev_warn(dev, "Failed to allocate 32-bit MSI address\n");
-> > > > > -		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-> > > > > -		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> > > > > -						GFP_KERNEL);
-> > > > > -		if (!msi_vaddr) {
-> > > > > -			dev_err(dev, "Failed to allocate MSI address\n");
-> > > > > -			dw_pcie_free_msi(pp);
-> > > > > -			return -ENOMEM;
-> > > > > -		}
-> > > > > +		pp->msi_data = pp->cfg0_base;
-> > > > > +		dev_info(dev, "Use cfg0_base 0x%llx as iMSI-RX target address\n", pp->cfg0_base);
-> > > > 
-> > > > This just assumes that 'config' space is always a 32bit address, but in
-> > > > practice, it is possible for the DWC glue implementation to have 64bit config
-> > > > address as well.
-> > > > 
-> > > 
-> > > I explained it in the commit message:
-> > > 
-> > > 1. cfg0_base is 32-bit: 32-bit MSI capable EPs now work correctly (main
-> > > improvement)
-> > > 2. cfg0_base is 64-bit: Behavior remains identical to the previous approach
-> > > 
-> > > I think what you suggest is the 2nd case which I wrote. Using 64-bit
-> > > cfg0_base makes no differences with allocating 64-bit dma address.
-> > > 
-> > 
-> > How can you make sure that the cfg0_base is always 32bit or 64bit and not
-> > something else? There is no guarantee that the platform will always allocate
-> > 'config' region in either 32bit or 64bit, it can very well allocate something
-> > like 36bit, 40bit etc...
-> 
-> Sure, it could be 36bit for example. I should rephase it like:
-> if cfg0_base is more than 32bit, behaviour remains identical to the
-> previous approach.
-> 
-> The fact for 32-bit MSI capable EP is that it cannot provide a Message
-> Address[63:32] for RC to set the high MSI target address. This doesn't
-> matter if it's 64-bit, 40-bit or 36-bit, etc, because the high address is
-> always lost in these cases.
-> 
-> 
-> > 
-> > Also, you do not set the coherent mask and just retain 32bit mask, which itself
-> > is wrong.
-> 
-> This is indeed a flaw I overlooked. For the RC drivers, it's useless
-> because it's only used for allocating MSI target address once here. The
-> only pontential problem is EP function driver attached inherits the DMA
-> mask to allocate DMA address for DMA transfer. But EP function driver
-> should set dma mask for themselves, becuase no RC drivers guarantee to
-> set correct DMA mask for them. For example, EP can only perform 34-bit
-> DMA, but it inherits 64-bit DMA mask from RC's dev->dma_mask, it can't
-> work at all.
-> 
 
-True. Mask needs to be set only by the entity that performs the DMA operation,
-so that's the EP client driver. But my concern was that the patch sets 32bit
-mask and never changes that later even if the 64bit MSI address is used. It is
-currently not serving any purpose, but I don't want to have this corner case for
-correctness.
+On Tue, 16 Dec 2025 09:49:59 +0800, Jacky Chou wrote:
+> This patch series adds support for the ASPEED PCIe Root Complex,
+> including device tree bindings, pinctrl support, and the PCIe host controller
+> driver. The patches introduce the necessary device tree nodes, pinmux groups,
+> and driver implementation to enable PCIe functionality on ASPEED platforms.
+> Currently, the ASPEED PCIe Root Complex only supports a single port.
+> 
+> Summary of changes:
+> - Add device tree binding documents for ASPEED PCIe PHY and PCIe RC
+> - Update MAINTAINERS for new bindings and driver
+> - Implement ASPEED PCIe PHY driver
+> - Implement ASPEED PCIe Root Complex host controller driver
+> 
+> [...]
 
-But I think we could flip the assignment. Check if the 'config' space is 32bit
-and set 'msi_data' if it is true, otherwise fallback to the coherent DMA
-allocation. Most of the platforms provide 32bit 'config' space address, so it
-makes sense to use it as the first option. For the rare ones (like some Qcom
-SoCs), fallback to allocation logic.
+Applied, thanks!
 
-- Mani
+[2/7] dt-bindings: PCI: Add ASPEED PCIe RC support
+      commit: a20df1a7683d6c1416c0f56fb737554b9abe9959
+[5/7] PCI: Add FMT, TYPE and CPL status definition for TLP header
+      commit: 73ce5ba701a53ad89c623a641401288844f526ac
+[6/7] PCI: aspeed: Add ASPEED PCIe RC driver
+      commit: 9aa0cb68fcc16280c8c8bdd22dc770af8dd7349f
+[7/7] MAINTAINERS: Add ASPEED PCIe RC driver
+      commit: e5c2061442dda716fb08cc4eff485220c94e6475
 
+Best regards,
 -- 
-மணிவண்ணன் சதாசிவம்
+Manivannan Sadhasivam <mani@kernel.org>
+
 
