@@ -1,57 +1,112 @@
-Return-Path: <linux-pci+bounces-43585-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43589-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 154A4CD94FE
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 13:39:42 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1179BCD95B2
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 13:49:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 11A98301A2C4
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 12:38:47 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2139A301FA68
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Dec 2025 12:48:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BAF4342520;
-	Tue, 23 Dec 2025 12:38:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3816BA34;
+	Tue, 23 Dec 2025 12:48:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="b04rYBRR"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IjOkuFb6";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="DrzaGE8Q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA91F340263;
-	Tue, 23 Dec 2025 12:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB0832860B
+	for <linux-pci@vger.kernel.org>; Tue, 23 Dec 2025 12:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766493495; cv=none; b=q65PDBeVzziS6tCfEGvJYaXRsnmcS6MVjEwcLjDRRrTgGWVIJyaj2ob3fRy6lDBNjdqzWc4nT3XXPqKZ4xxDjWLm7+VWVloNexxuri/+YRtJuRvN0dZ63xfazNX+aCJhj/gyU4vDilw7rVK+aQeLvVTv35cBn3ckoN++eoqWGHc=
+	t=1766494129; cv=none; b=ixZfECrTLWKIU8Ajy4bfAYIs7BFteDwakIH8lviAhdSfGRoGKU2Hrnc2GU4tGW24yrVOPecn45yBkgIOxK6HvemA2cGt0PyzGcfc8nG2DH4fJm9oYr+GGWWBuJfFMvNIPOTw8qydRguJ5AePd80fRYRSexjbsqUtLjw4oOVwv8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766493495; c=relaxed/simple;
-	bh=rdeG2VG+rMbzb7B0nEMR2+rl+ce7ZHv2oNQL6t2d04U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cYAog9LCg/IIZvNekNzcJ65YwCVflbe7jb8jPZRT+ANjlUuycrdEE7DIV7xNlRtttej9eoDw4FW/VA/TCZWDPV1fXVLJLfOgLD4er3Z/7LANEBtLzY3CB5+vUxXYeGCOzTaTyTpVeZBfF/6a4JvMYK67b9cRruD3PF7PpiolhiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=b04rYBRR; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1766493489;
-	bh=rdeG2VG+rMbzb7B0nEMR2+rl+ce7ZHv2oNQL6t2d04U=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=b04rYBRR/4mO98Sme0o6098TUsrxs4tB4X82WU/Mz/E7tCqE63CPYE8aoxvcUTXE0
-	 qqGmM88oz0yF6eP6Pn4tTaAH2RnUCO6hJMbDH3zSz1+/6SapLAVDS6wgVMhlWsL+lE
-	 shxNylYvlrQ6m2ly9PqWj6DK2/kU8ZRvrc5zUQ0AABOaewZInr0AkhBfba75FWpZoT
-	 t3uc0URa7pUSZmd/ohSkrpJnsyaX9S9pHweaVeMFq/EZd28T0MjhXen65wLXkbkq5u
-	 10jIoGM76QjsBlHeVPnrX1tvDsmPnp9E2tsRI7sYCwHvxvkhEWpBy+kOdGSAXeggSu
-	 JsU0plhxjtoBg==
-Received: from beast.luon.net (simons.connected.by.freedominter.net [45.83.240.172])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: sjoerd)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3245517E1513;
-	Tue, 23 Dec 2025 13:38:09 +0100 (CET)
-Received: by beast.luon.net (Postfix, from userid 1000)
-	id 69AC1117A067D; Tue, 23 Dec 2025 13:38:08 +0100 (CET)
-From: Sjoerd Simons <sjoerd@collabora.com>
-Date: Tue, 23 Dec 2025 13:37:58 +0100
-Subject: [PATCH v5 8/8] arm64: dts: mediatek: mt7981b-openwrt-one: Enable
- wifi
+	s=arc-20240116; t=1766494129; c=relaxed/simple;
+	bh=i59QBVjcipThG8DPnC9H8UaFM7mf6swYhObM6DGBW4Q=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=i/DI4/LUc3OdfhLXDHL9kHfNLJnS2YrsGAJCSZr3Z/3A6ykqHi6YlubaHK21Jp1hcjMqStzMPxhpfUAEWNzmNeQwXO8wbF5Dj4lXy2IOrSgGvVQ8MoMHVMetxIyg5IEioOiCeiujNl8+6K6UB5IC5kJ0NO456zkE5GQXSY318OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IjOkuFb6; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=DrzaGE8Q; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BN9uY7N1530068
+	for <linux-pci@vger.kernel.org>; Tue, 23 Dec 2025 12:48:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	VpdOzjVXXo3ABXz2GAYCU15x+ZuTtI8ZVsD3AfJvyfo=; b=IjOkuFb6Hd9Bm2lF
+	Tx/CjUBLnLjHnlr1iSdnrGWhbjFmroGVoRtje0NDq6O7O3VzB6z1HppO6kmHP4LJ
+	bVt594axA0kQ9SvzXyizUby2zwKZa3nTfd0OyproWavPFn0+KgRtewYske2dYYYa
+	kihm5XTTi+iQ6nFXy/bav3JAB3M9W6TBdX7tY9VILo/pBAH2pZbTcEoEtWiAhJMp
+	AKQLb3/b9NUysOcg0mx3EMjXuy2r+XefoZpEyUH7zK23SFGX0bsyOrnWRQKtcScP
+	8buJIYz/YNo5b1OZLMe+C9JbR37zY5s5X1phCpbOYxEsmQNDWFeVPQvHltJjgsLV
+	BFUmBQ==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b758y3xqy-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Tue, 23 Dec 2025 12:48:45 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-29f1f69eec6so61807905ad.1
+        for <linux-pci@vger.kernel.org>; Tue, 23 Dec 2025 04:48:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1766494125; x=1767098925; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VpdOzjVXXo3ABXz2GAYCU15x+ZuTtI8ZVsD3AfJvyfo=;
+        b=DrzaGE8QWg/0Gh5/I1ng1cb0YAMEnvM9eTA8BmULTh0zU5nTJ1G0GkE6r7jwdVg8qq
+         /+MpiY7YsYXDH/Q+GX2BlI6hKHohJsI67dRSyCvXBirwLxl1m/iyX5HbKGr7V7q2cmmT
+         flmhjV82h+z79l4ERc29ONPxtPfqiBHuX33LieZe+5nFnutmr/oYyFzpmNSTmpYRsxF4
+         woIFzHs3JMGpOEshrhQ5CqpCgUXpPnjMHOsJJjm1u/ol9W/e/qy7m2G9DEXdeyLDeoOA
+         Hk0IMcOqxNCo9BtKAI6UsTiVQiEEt3nOtPt5GnWxCOpIPoGX/Adw43qAUHdumwudHdUs
+         gPLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766494125; x=1767098925;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VpdOzjVXXo3ABXz2GAYCU15x+ZuTtI8ZVsD3AfJvyfo=;
+        b=YxPoyApTeYpV3zMLORvH3oHVRF7liwyZOWRQepssyB+UajR9D7sjubKjlO7v+4cj+E
+         FrZa5O4bRmyO+JChNyZobqfWMI/p9ujfH+yDjdf8eJYCcp1q30G7yZ61zoyihKagOFhQ
+         14ThwoGpepU0x9HApqVXJ8xOI/RqKgqPFKjulLfTtpZjlsI3LNvJ9kYQz5lYa4cczA6v
+         lSqK0VpQgJVgFnIdcX/pIb28dIqB4nqGse4grvCKTjspcyXoeuc6xrt2AtqzInUBmpei
+         e+rCiGQrkXVUERV0JJXjeE4NLn2w9zTJSj6TfqPI70Z05I948e8M5i3AjARM0QPW/trr
+         yniA==
+X-Gm-Message-State: AOJu0YxktReWgS2jAdpQsH/s2u/bJtOi9FNAh6324zxLldBhPAI5VFe5
+	mlYXbHPvIQX+qYEkIxt2SXJlDDVrXMKrqiGxDBeObVaZwNQsW9VfMBQywRES/tzndL5w1g6dH9v
+	7HyuqQy8fV0s5UHv7NVHsVhq8VRj7K/td2Zh/GN1QM7S6z627eyXmq/GEzvCF0AE=
+X-Gm-Gg: AY/fxX67BGnWXD57b/Xm+FXy1jW/WyMG8cQMB82pqVWJlA3TO7mZTZsJEEbxl7EDDxo
+	TxfqafUgvcXM+EChQXHxqD/hBa/B+KJrlrNrE+Kchhyio1g671ywP0wEv84jizjSPfsfBaa2j5v
+	CZ8rBMXnO4AqYesovEJvKHq5y86SxjJVOmR1gq73fehaQeCjD06zC+uGcFMMOVgBtCC7DUPKCnE
+	6AyE3LosuQhaBVehRMr/oPC3ikW3pAqyRGvPm04iImMK4MFk1Qo9bL5DrxMU4RU/18S5Qv3FkAJ
+	XsXcLzte/1Qpp5JqT8gs8kYiOkapW9l5fFTMcb091CjHVJuWIhQxRgXGI7v5LixNNWl8NCJOJlb
+	Bg70u+PKQ
+X-Received: by 2002:a17:903:b8b:b0:2a1:243:94a8 with SMTP id d9443c01a7336-2a2f2a4f102mr148061965ad.49.1766494124673;
+        Tue, 23 Dec 2025 04:48:44 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH8YWs/Lrk8D8Qax6Yg5cm74s9TOxV44XYaEydl2Aosk2GGRg9fclJgfKsjM+Tlt+pRR6geZw==
+X-Received: by 2002:a17:903:b8b:b0:2a1:243:94a8 with SMTP id d9443c01a7336-2a2f2a4f102mr148061735ad.49.1766494124140;
+        Tue, 23 Dec 2025 04:48:44 -0800 (PST)
+Received: from [192.168.1.102] ([120.60.139.28])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a322d76a19sm80283965ad.101.2025.12.23.04.48.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Dec 2025 04:48:43 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+X-Google-Original-From: Manivannan Sadhasivam <mani@kernel.org>
+To: Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, macro@orcam.me.uk,
+        stable@vger.kernel.org
+In-Reply-To: <20251203-ecam_io_fix-v1-0-5cc3d3769c18@oss.qualcomm.com>
+References: <20251203-ecam_io_fix-v1-0-5cc3d3769c18@oss.qualcomm.com>
+Subject: Re: [PATCH 0/2] PCI: dwc: Fix missing iATU setup when ECAM is
+ enabled
+Message-Id: <176649412094.525930.11885393958582645087.b4-ty@kernel.org>
+Date: Tue, 23 Dec 2025 18:18:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,101 +115,51 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251223-openwrt-one-network-v5-8-7d1864ea3ad5@collabora.com>
-References: <20251223-openwrt-one-network-v5-0-7d1864ea3ad5@collabora.com>
-In-Reply-To: <20251223-openwrt-one-network-v5-0-7d1864ea3ad5@collabora.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Ryder Lee <ryder.lee@mediatek.com>, 
- Jianjun Wang <jianjun.wang@mediatek.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>
-Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, 
- linux-phy@lists.infradead.org, netdev@vger.kernel.org, 
- Daniel Golle <daniel@makrotopia.org>, Bryan Hinton <bryan@bryanhinton.com>, 
- Sjoerd Simons <sjoerd@collabora.com>
 X-Mailer: b4 0.14.3
+X-Authority-Analysis: v=2.4 cv=TOdIilla c=1 sm=1 tr=0 ts=694a8fad cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=wbxd9xFQoh2bOL7BUxlcyw==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=dOtSmj_QbqaLots3hlYA:9
+ a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10 a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-ORIG-GUID: 57C2zwVEoXo_dbfI7r8xp7jZ9ALMizmR
+X-Proofpoint-GUID: 57C2zwVEoXo_dbfI7r8xp7jZ9ALMizmR
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjIzMDEwNCBTYWx0ZWRfX4EJ42eaeCkpl
+ tNbzQDw09l416s/qiJacT+UUwAK2xvy7iSlQyxpeOt5WKYoA4QJtTfaOerQDQ8ZEPoCJPXN2IQZ
+ h06qHWl+PYe9y/8/crMKdXSq0vTanwSMceaDsIX14P7pLprWBsR1XH8UfqPAuKL8uGdB5dUaZ/9
+ KWDa1kKKCUeGiIUV8ZBalqQIToitqx0me5efMSfnEa0nRqwnf2uC4y4SBebbvwjypG8DJxy9cig
+ 4V31Fo7bbJxr2K9KkKe8Ps1iO2QQ/HC7kYGMczEXkp35rDI0Rx4z74sbvgoj4Yjb/mRxmisHHns
+ gTJJYuNG99ykS/6BxJUQ4sdFCMzwPcATR1BiIJOEHnJ41BfMaWG/1xzUq6K48Kb4bdyiWFaLkW/
+ NGHqoiUq2ql04AnVUmpGwqlsdOEbxb9xg1uUtiPsREYmc1BQ+0Fi0sHkTOpudpUuyoyrydXwmZl
+ DJuLhvecGMSRxZm0/2w==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-23_03,2025-12-22_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 adultscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
+ clxscore=1015 impostorscore=0 bulkscore=0 suspectscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2512230104
 
-Enable Dual-band WiFI 6 functionality on the Openwrt One
 
-Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
----
-V2 -> V3: replace MTK_DRIVE_4mA with direct value
-V1 -> V2: Update eeprom node label
----
- .../boot/dts/mediatek/mt7981b-openwrt-one.dts      | 24 ++++++++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7981b.dtsi          |  2 +-
- 2 files changed, 25 insertions(+), 1 deletion(-)
+On Wed, 03 Dec 2025 11:50:13 +0530, Krishna Chaitanya Chundru wrote:
+> When ECAM is enabled, the driver skipped calling dw_pcie_iatu_setup()
+> before configuring ECAM iATU entries. This left IO and MEM outbound
+> windows unprogrammed, resulting in broken IO transactions. Additionally,
+> dw_pcie_config_ecam_iatu() was only called during host initialization,
+> so ECAM-related iATU entries were not restored after suspend/resume,
+> leading to failures in configuration space access.
+> 
+> [...]
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
-index 2aea89900645..3de368c73bc8 100644
---- a/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7981b-openwrt-one.dts
-@@ -180,6 +180,22 @@ conf-pd {
- 			pins = "SPI2_CLK", "SPI2_MOSI", "SPI2_MISO";
- 		};
- 	};
-+
-+	wifi_dbdc_pins: wifi-dbdc-pins {
-+		mux {
-+			function = "eth";
-+			groups = "wf0_mode1";
-+		};
-+
-+		conf {
-+			pins = "WF_HB1", "WF_HB2", "WF_HB3", "WF_HB4",
-+			       "WF_HB0", "WF_HB0_B", "WF_HB5", "WF_HB6",
-+			       "WF_HB7", "WF_HB8", "WF_HB9", "WF_HB10",
-+			       "WF_TOP_CLK", "WF_TOP_DATA", "WF_XO_REQ",
-+			       "WF_CBA_RESETB", "WF_DIG_RESETB";
-+			drive-strength = <4>;
-+		};
-+	};
- };
- 
- &pwm {
-@@ -257,6 +273,14 @@ &usb_phy {
- 	status = "okay";
- };
- 
-+&wifi {
-+	nvmem-cells = <&wifi_factory_calibration>;
-+	nvmem-cell-names = "eeprom";
-+	pinctrl-names = "dbdc";
-+	pinctrl-0 = <&wifi_dbdc_pins>;
-+	status = "okay";
-+};
-+
- &xhci {
- 	phys = <&u2port0 PHY_TYPE_USB2>;
- 	vusb33-supply = <&reg_3p3v>;
-diff --git a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-index a7be3670e005..66d89495bac5 100644
---- a/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7981b.dtsi
-@@ -490,7 +490,7 @@ wo_ccif0: syscon@151a5000 {
- 			interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
--		wifi@18000000 {
-+		wifi: wifi@18000000 {
- 			compatible = "mediatek,mt7981-wmac";
- 			reg = <0 0x18000000 0 0x1000000>,
- 			      <0 0x10003000 0 0x1000>,
+Applied, thanks!
 
+[1/2] PCI: dwc: Correct iATU index increment for MSG TLP region
+      commit: 3c364c9b96f1a0629a29363cdc6239c1ad2f68ad
+[2/2] PCI: dwc: Fix missing iATU setup when ECAM is enabled
+      commit: 37781eb814e16c75abb78dec2f9412d2e4d88298
+
+Best regards,
 -- 
-2.51.0
+Manivannan Sadhasivam <mani@kernel.org>
 
 
