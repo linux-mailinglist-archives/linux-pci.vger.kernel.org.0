@@ -1,180 +1,167 @@
-Return-Path: <linux-pci+bounces-43623-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43624-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A96DBCDB152
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 02:38:21 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DEDCCDB15B
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 02:39:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5CD1C30198E8
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 01:38:20 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 875EA3005259
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 01:39:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9807F20010A;
-	Wed, 24 Dec 2025 01:38:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 172AB26E175;
+	Wed, 24 Dec 2025 01:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="aNUga5Ta"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mail-m49204.qiye.163.com (mail-m49204.qiye.163.com [45.254.49.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E4042A96;
-	Wed, 24 Dec 2025 01:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65ED2231A30
+	for <linux-pci@vger.kernel.org>; Wed, 24 Dec 2025 01:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766540299; cv=none; b=kzhaEhQYWR4JfkTilejIecZCl7gJL/KCpQCAiXkEw3XK7uIwjt77NGEoRN9RZgEf780vkpeRMUmudwR5FupaOpeVnj3SAm+FipM5NfbJRRHHtEG3nNFt5m4PRJlTswbJqrh6T5IcxtA71bqpKlGY3+xpC0FAM6dRaXcyDbWdEcA=
+	t=1766540360; cv=none; b=AnEI9IMCKbAIDChl6NjKaHIS4q/if6wJu10UYj/Wnd1lje8BjR8+06YDu8Gac6ANnERHe1FfUqPqUDenwnGdzCjuxCPmA8oAYHC9xr3+5HcldM/scYAxIIYEyZaw76UE8yeYB5XwRod1LRf41GUauaeerHerDbF7eRCLtToVKlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766540299; c=relaxed/simple;
-	bh=Mk+uDUOmpLQgG+tbYNfv9H+9CAy9QA+i0uij0fh7Bmk=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=P4oRl8cjUmZshH9yBevCYEfEOLHEqXPn+VrN65SNojK2gvvM0q3brNZBKqxNucX6ekWh16grvrz8zUp5jjgCJf1bhuavAaVi86VxbS0ibGRpBpUAtU3EnpPA00+xhcFy4H9Ym0M1AZnTjLgAyoGF9BIPgtx54QS8fuYElVZMvDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dbZJD5T3DzKHMHx;
-	Wed, 24 Dec 2025 09:37:48 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id D4E934057A;
-	Wed, 24 Dec 2025 09:38:07 +0800 (CST)
-Received: from [10.174.179.156] (unknown [10.174.179.156])
-	by APP4 (Coremail) with SMTP id gCh0CgA3l_fjQ0tpM74RBQ--.51212S2;
-	Wed, 24 Dec 2025 09:38:03 +0800 (CST)
-Subject: Re: [PATCH 00/13] Enable compound page for p2pdma memory
-To: Leon Romanovsky <leon@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-mm@kvack.org, linux-nvme@lists.infradead.org,
- Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
- Alistair Popple <apopple@nvidia.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich
- <dakr@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Keith Busch
- <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
- houtao1@huawei.com
-References: <20251220040446.274991-1-houtao@huaweicloud.com>
- <20251221121915.GJ13030@unreal>
- <416b2575-f5e7-7faf-9e7c-6e9df170bf1a@huaweicloud.com>
-From: Hou Tao <houtao@huaweicloud.com>
-Message-ID: <996c64ca-8e97-2143-9227-ce65b89ae35e@huaweicloud.com>
-Date: Wed, 24 Dec 2025 09:37:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	s=arc-20240116; t=1766540360; c=relaxed/simple;
+	bh=3tqt+uH7mcJzeKVPIdhYWofwx4EpQjr6jbkyY5adOZ0=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=EYgS6H0Cyz9Aft/bBqq9+op39tyMaCmpFxHFT6Y6sxn/nzG7XGy24S0LmfygRp9kU+OeaJIZTno5gtE1Ia3rRrtOPInBJ/w++2CiHtHrR3eauDi8O9w32yGRduvhf+VOzRT6in5Orf/h5FV+YZ7XLt+KJ960srGQ0xmd22NpdbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=aNUga5Ta; arc=none smtp.client-ip=45.254.49.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2e580fb76;
+	Wed, 24 Dec 2025 09:39:05 +0800 (GMT+08:00)
+From: Shawn Lin <shawn.lin@rock-chips.com>
+To: Manivannan Sadhasivam <mani@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Ajay Agarwal <ajayagarwal@google.com>,
+	Will McVicker <willmcvicker@google.com>
+Subject: [PATCH v2] PCI: dwc: Use cfg0_base as iMSI-RX target address to support 32-bit MSI devices
+Date: Wed, 24 Dec 2025 09:38:52 +0800
+Message-Id: <1766540332-24235-1-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
+X-HM-Tid: 0a9b4e02811e09cckunm43bb1379375c93
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQk8eTlZISUxDSBhIGEwZH0xWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=aNUga5TaZyccPkBMxDpHuTNf+d+6Rxry4dJ1LqtMKB8rBHdtxrD/deJv90AAzyopaSMW+nvQlH8r1AETS3CwHoF5+EqOd3pSn2IXd33zbbZgbNVepQBHBAGf8RT0xBXexErb7Eg6LNbFBMcvsbahCr3yDOmTp8bweOsOKfjA0NI=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=kD0778QOdl00l7E/fs3sQg53czUMAH3dgmf7U4Ww8ZU=;
+	h=date:mime-version:subject:message-id:from;
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <416b2575-f5e7-7faf-9e7c-6e9df170bf1a@huaweicloud.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:gCh0CgA3l_fjQ0tpM74RBQ--.51212S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXFWUWw15XF15Zr4xZw4fKrg_yoWrAr4kpF
-	Z5KF1rJryDG342y3sIv3WDCF1avwn5KFWjqryxKry3AwnxtFn2vw4jyF15u34UXr47G3Wr
-	KF47ZFy3uwn5XaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4I
-	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-	WwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
-	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
-	IYCTnIWIevJa73UjIFyTuYvjxUIa0PDUUUU
-X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
 
+commit f3a296405b6e ("PCI: dwc: Strengthen the MSI address allocation logic")
+strengthened the iMSI-RX target address allocation logic to handle 64-bit
+addresses for platforms without 32-bit DMA addresses. However, it still left
+32-bit MSI capable endpoints (EPs) non-functional on such platforms.
 
+Per DWC databook r5.10a, section 3.8.2.2, it states:
+"The iMSI-RX is programmed with an address (MSI_CTRL_ADDR_OFF and
+MSI_CTRL_UPPER_ADDR_OFF) that is used as the system MSI address. When an
+inbound MWr request is passed to the AXI bridge and matches this address
+as well as the conditions specified for an MSI memory write request, an
+MSI interrupt is detected. When this MWr is about to be driven onto the
+AXI bridge master interface1, it is dropped and never appears on the AXI
+bus."
 
-On 12/24/2025 9:18 AM, Hou Tao wrote:
-> Hi,
->
-> On 12/21/2025 8:19 PM, Leon Romanovsky wrote:
->> On Sat, Dec 20, 2025 at 12:04:33PM +0800, Hou Tao wrote:
->>> From: Hou Tao <houtao1@huawei.com>
->>>
->>> Hi,
->>>
->>> device-dax has already supported compound page. It not only reduces the
->>> cost of struct page significantly, it also improve the performance of
->>> get_user_pages when 2MB or 1GB page size is used. We are experimenting
->>> to use p2p dma to directly transfer the content of NVMe SSD into NPU.
->> I’ll admit my understanding here is limited, and lately everything tends  
->> to look like a DMABUF problem to me. Could you explain why DMABUF support 
->> is not being used for this use case?
-> I have limited knowledge of dma-buf, so correct me if I am wrong. It
-> seems that as for now there is no available way to use the dma-buf to
-> read/write files. For the userspace vaddr backended by  the dma-buf, it
-> is a PFN mapping, get_user_pages() will reject such address.
+It's also confirmed by DWC databook r6.21a, section 3.10.2.3. So this
+behaviour should be the same for all DWC based iMSI-RX block. Since iMSI-RX
+is a pure virtual address that doesn't require actual system memory mapping,
+we can assign any 32-bit address that won't conflict with system memory
+allocations. Assign cfg0_base to the iMSI-RX target address as the first
+option if it's a 32-bit address, which satisfies this requirement. Otherwise,
+we still fallback to the original approach.
 
-Hit the send button too soon :) So In my understanding, the advantage of
-dma-buf is that it doesn't need struct page, and it also means that it
-needs special handling to support IO from/to dma-buf (e.g.,  [RFC v2
-00/11] Add dmabuf read/write via io_uring [1])
+Tested on a Rockchip platform lacking 32-bit DMA addresses with an ASM1062 SATA
+controller that only supports 32-bit MSI. The device functions correctly using
+43-bit DMA addressing via the board_ahci_43bit_dma flag in ahci_configure_dma_masks().
+The config space address for this host controller is located on 0x21000000, which
+is assigned to EP's MSI target address comfirmed by lspci output.
 
-[1]
-https://lore.kernel.org/io-uring/cover.1763725387.git.asml.silence@gmail.com/
->> Thanks
->>
->>> The size of NPU HBM is 32GB or larger and there are at most 8 NPUs in
->>> the host. When using the base page, the memory overhead is about 4GB for
->>> 128GB HBM, and the mapping of 32GB HBM into userspace takes about 0.8
->>> second. Considering ZONE_DEVICE memory type has already supported the
->>> compound page, enabling the compound page support for p2pdma memory as
->>> well. After applying the patch set, when using the 1GB page, the memory
->>> overhead is about 2MB and the mmap costs about 0.04 ms.
->>>
->>> The main difference between the compound page support of device-dax and
->>> p2pdma is that p2pdma inserts the page into user vma during mmap instead
->>> of page fault. The main reason is simplicity. The patch set is
->>> structured as shown below:
->>>
->>> Patch #1~#2: tiny bug fixes for p2pdma
->>> Patch #3~#5: add callbacks support in kernfs and sysfs, include
->>> pagesize, may_split and get_unmapped_area. These callbacks are necessary
->>> for the support of compound page when mmaping sysfs binary file.
->>> Patch #6~#7: create compound page for p2pdma memory in the kernel. 
->>> Patch #8~#10: support the mapping of compound page in userspace. 
->>> Patch #11~#12: support the compound page for NVMe CMB.
->>> Patch #13: enable the support for compound page for p2pdma memory.
->>>
->>> Please see individual patches for more details. Comments and
->>> suggestions are always welcome.
->>>
->>> Hou Tao (13):
->>>   PCI/P2PDMA: Release the per-cpu ref of pgmap when vm_insert_page()
->>>     fails
->>>   PCI/P2PDMA: Fix the warning condition in p2pmem_alloc_mmap()
->>>   kernfs: add support for get_unmapped_area callback
->>>   kernfs: add support for may_split and pagesize callbacks
->>>   sysfs: support get_unmapped_area callback for binary file
->>>   PCI/P2PDMA: add align parameter for pci_p2pdma_add_resource()
->>>   PCI/P2PDMA: create compound page for aligned p2pdma memory
->>>   mm/huge_memory: add helpers to insert huge page during mmap
->>>   PCI/P2PDMA: support get_unmapped_area to return aligned vaddr
->>>   PCI/P2PDMA: support compound page in p2pmem_alloc_mmap()
->>>   PCI/P2PDMA: add helper pci_p2pdma_max_pagemap_align()
->>>   nvme-pci: introduce cmb_devmap_align module parameter
->>>   PCI/P2PDMA: enable compound page support for p2pdma memory
->>>
->>>  drivers/accel/habanalabs/common/hldio.c |   3 +-
->>>  drivers/nvme/host/pci.c                 |  10 +-
->>>  drivers/pci/p2pdma.c                    | 140 ++++++++++++++++++++++--
->>>  fs/kernfs/file.c                        |  79 +++++++++++++
->>>  fs/sysfs/file.c                         |  15 +++
->>>  include/linux/huge_mm.h                 |   4 +
->>>  include/linux/kernfs.h                  |   3 +
->>>  include/linux/pci-p2pdma.h              |  30 ++++-
->>>  include/linux/sysfs.h                   |   4 +
->>>  mm/huge_memory.c                        |  66 +++++++++++
->>>  10 files changed, 339 insertions(+), 15 deletions(-)
->>>
->>> -- 
->>> 2.29.2
->>>
->>>
+  root@linaro-alip:/# lspci -vvv
+  03:00.0 SATA controller: ASMedia Technology Inc. ASM1062 Serial ATA Controller (rev 01) (prog-if 01 [AHCI 1.0])
+	  Subsystem: ASMedia Technology Inc. ASM1061/ASM1062 Serial ATA Controller
+  	  Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+	  Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	  Latency: 0
+	  Interrupt: pin A routed to IRQ 121
+	  Region 0: I/O ports at 1020 [size=8]
+	  Region 1: I/O ports at 1030 [size=4]
+	  Region 2: I/O ports at 1028 [size=8]
+	  Region 3: I/O ports at 1034 [size=4]
+	  Region 4: I/O ports at 1000 [size=32]
+	  Region 5: Memory at 21210000 (32-bit, non-prefetchable) [size=512]
+	  Expansion ROM at 21200000 [virtual] [disabled] [size=64K]
+	  Capabilities: [50] MSI: Enable+ Count=1/1 Maskable- 64bit-
+			Address: 0x21000000  Data: 0003
+
+MSI interrupt counts increase during I/O operations, confirming proper SATA controller
+functionality.
+
+  root@linaro-alip:/# cat /proc/interrupts | grep PCI-MSI
+  117:    0      0     0     0      0     0    0     0   PCI-MSI       0 Edge      PCIe PME
+  121:    90     0     0     0      0     0    0     0   PCI-MSI 1572864 Edge      ahci[0000:03:00.0]
+
+  root@linaro-alip:/# dd if=/dev/sda1 of=/dev/null bs=1M count=10
+  10+0 records in
+  10+0 records out
+  10485760 bytes (10 MB, 10 MiB) copied, 0.0227659 s, 461 MB/s
+
+  root@linaro-alip:/# cat /proc/interrupts | grep PCI-MSI
+  117:    0      0     0     0      0     0    0     0   PCI-MSI       0 Edge      PCIe PME
+  121:   101     0     0     0      0     0    0     0   PCI-MSI 1572864 Edge      ahci[0000:03:00.0]
+
+cc: Ajay Agarwal <ajayagarwal@google.com>
+cc: Will McVicker <willmcvicker@google.com>
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+---
+
+Changes in v2:
+- use cfg0_base as first option if it's a 32-bit address(Mani)
+- Add reference from databook and rework the code comment and
+  commit message
+
+ drivers/pci/controller/dwc/pcie-designware-host.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index f116591..c88db99 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -356,10 +356,20 @@ int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+ 	 * order not to miss MSI TLPs from those devices the MSI target
+ 	 * address has to be within the lowest 4GB.
+ 	 *
+-	 * Note until there is a better alternative found the reservation is
+-	 * done by allocating from the artificially limited DMA-coherent
+-	 * memory.
++	 * Per DWC databook r6.21a, section 3.10.2.3, the incoming MWr TLP
++	 * targeting the MSI_CTRL_ADDR is terminated by the iMSI-RX and
++	 * never appears on the AXI bus. Since iMSI-RX monitors a virtual
++	 * address space that doesn't require physical memory mapping, and
++	 * most of the platforms provide 32-bit config space address, we
++	 * use cfg0_base as the first option for the MSI target address if
++	 * it's a 32-bit address. Otherwise, try 32-bit and 64-bit coherent
++	 * memory allocation one by one.
+ 	 */
++	if (!(pp->cfg0_base & GENMASK_ULL(63, 32))) {
++		pp->msi_data = pp->cfg0_base;
++		return 0;
++	}
++
+ 	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+ 	if (!ret)
+ 		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+-- 
+2.7.4
 
 
