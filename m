@@ -1,257 +1,153 @@
-Return-Path: <linux-pci+bounces-43637-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43638-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F264CDB5B0
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 05:53:34 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70D8CCDB60F
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 06:18:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0F8413026B13
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 04:53:12 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4A4673016DCC
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 05:18:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAD7B2F0C78;
-	Wed, 24 Dec 2025 04:53:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 703DB2D63F8;
+	Wed, 24 Dec 2025 05:18:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jdMXGBS4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mzFuzYHw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5A12F90DB
-	for <linux-pci@vger.kernel.org>; Wed, 24 Dec 2025 04:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1992BD01B
+	for <linux-pci@vger.kernel.org>; Wed, 24 Dec 2025 05:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766551989; cv=none; b=PrUk1tKiG6BZol9lEut7uF1Vkf//FH71eXQHZX5L1jQrW+iuIkShEqRSzo2+OrsxU6XdGSAFQVjgmy13sDNzvv/NWV84xFN91XBhRc9Omsmi5IjdYlSj0ojFXLWOTrChjMbTZFyaxGbcifRqO7f9m/F7RkPFolPCm2MiLjOekcA=
+	t=1766553521; cv=none; b=n2Vy2Bo5EAV5qpOVzlc+Rg/YM+9zi2vZLqOK6M5CvONMxhDkRBMPROeY6RMB/OOWxuhleLNr6ht1wX8EemVefgZG8CcRG8u31pWVuiNkQpd96BBll6RGz+Ayn54HYcpLJ89OBpuIRijNKyG5zmBuhABhnIUGJxRAZFbczCmmDGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766551989; c=relaxed/simple;
-	bh=XOQ0/2P6rBYp7+I4tW4BT8RA11hj8AApLVIAfDOVaeA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=FtgVyRVBKXEOoPC9HVvqArh9iQEN/CT2XacoDeWkLMHREgVP8m6Uo1l978BpSpv2i/GlcST/1IeK/76OGso63cALcDpLubbxx91txrXkG6vBhG6w6dqfu37sL0UzjiGx7/Qnfz6tHRRtKg4/ElAvDxviKFj8BDTvownVm7KOvWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jdMXGBS4; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766551983; x=1798087983;
-  h=date:from:to:cc:subject:message-id;
-  bh=XOQ0/2P6rBYp7+I4tW4BT8RA11hj8AApLVIAfDOVaeA=;
-  b=jdMXGBS4TZ1DegGTPSaDVow9PotE2HY6Nk//s1mgCbBBJMJckAhNSTni
-   WGrxZzhMIQ68LbvoWNJePkaUievJ4fJ8cgStltUqAyKQhLYPKJjPSh/7i
-   gAbpcOPOu5PgBeVvtnkw4mBX63wcsIvRQkRKNyMhDdczr76JIva8y7SPH
-   lQ56ZKoIv3dAlmGEwvZMNKoVak8fRvaDGMw/gfuEki0NhNlf7h5EqLFq8
-   VPDRwH+Wj89bSDhQV11upTBITQY4IHH1+8a8Si4r943lGXuxK6nfyaFZT
-   eTxoGUYe8k3JM9N+qhbBwRmp1Atq6P6DFjadWaLpIe2GDkUBTVuDk/O4s
-   A==;
-X-CSE-ConnectionGUID: IJYcuL7NQfyrO28Ifro0Zw==
-X-CSE-MsgGUID: WAvurl/MQ2WiIfZxKacNKg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11651"; a="93868121"
-X-IronPort-AV: E=Sophos;i="6.21,172,1763452800"; 
-   d="scan'208";a="93868121"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2025 20:52:57 -0800
-X-CSE-ConnectionGUID: 0KYVOvjYT4G74cHYbW1wuA==
-X-CSE-MsgGUID: Vo9UOFZqTbyEMXFg9ybFgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,172,1763452800"; 
-   d="scan'208";a="200435931"
-Received: from lkp-server02.sh.intel.com (HELO dd3453e2b682) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 23 Dec 2025 20:52:56 -0800
-Received: from kbuild by dd3453e2b682 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vYGrl-000000002gn-2Tkl;
-	Wed, 24 Dec 2025 04:52:53 +0000
-Date: Wed, 24 Dec 2025 12:52:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/dwc-qcom] BUILD SUCCESS
- 91f2fb5fe4735c6c99c000857f2e0bd7ebbddb95
-Message-ID: <202512241206.zt36FD8W-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1766553521; c=relaxed/simple;
+	bh=WlMzKhHNURjonYFkyLxZRPQ9wOYejuTDM97ssfOBVV0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QGLz1hYVZFs1npXfnD16s3wp90472ZvAZRYFjIxmidS87Nkkg0HO31J95KTHOpHRJdi9JpW4L4kw7vGH/OGru17DAYtDB2A1p7PqYGuD3BzDszVni43+HST2VBAFoUSvBI6lrF/YUlhtwo3myjqm81jdqhFyQzoTncvZfof8v80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mzFuzYHw; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-64951939e1eso8493755a12.1
+        for <linux-pci@vger.kernel.org>; Tue, 23 Dec 2025 21:18:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766553518; x=1767158318; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=u6LC33FrBHnFwijckLFQe8PlcMlhWZbaNpDq7Z3k5U4=;
+        b=mzFuzYHwhgbk09IBp4BlJpB3AWOXHtgMHmpboFJ6vYXUdnvzgUQdNhT3ToNqoXb4/O
+         bgGgH1XnZtUy2zyE4K4XwaToLYHjtnscf89RHXLM2OaYQPy023us35ZBjsiWcZEXAjTK
+         8Go+dy7TR1MSo1nuLCluELuMreTYO2Q2lKZpN+m/nAonPvyBpFI2MwpCbc9K8rV7xeC8
+         tzD6CgYoLjfwXPbDySWeiqRyyi11BKRlcVcDll6qpOPzYFbFkIUA1PDdxD52Iic6SVme
+         V9Kij6J4lwkseK09SMaZHOhF6Q85VtLVfe1KbaDdEt5eNySsztm3A7nde+aB899vQNuH
+         ocUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766553518; x=1767158318;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u6LC33FrBHnFwijckLFQe8PlcMlhWZbaNpDq7Z3k5U4=;
+        b=CeAv3VVUG9N2hw5ZaWvpGESHQDqu112qhT2CC0hGKVvffJwy/j3LljTQhbfp7VDLKW
+         IaKCLj02GkoheQxEbCmBiPqS9ykltCIj+kFlf+J9lwxoqzdexs3NsItBZxbOLThEaWXM
+         NzzUBv0w+k5/fYH7NCodGNg83Wkh64ap/35yfy8ZBjTUfssc2zkAAUHdytEMmXEVubdb
+         GsZZgL40OEcwC3I1rvB/fSALapEs//ou8tL5vOPrk/y+0TnNcs/9bE0KEgLCqpODoKqf
+         f987CmrE+gA/NDi/jWReEMaZbjSsMECfktHOgVSbMV1UemHEmr+Y2fpjKkIw08ocDDd5
+         x4UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWzAtlctmdg050xy1HETXjbH/C02Re27IaKlrzBy1wTGRLQPy+s+0MAsMsiYcLiXZ4ldzyGmfLqAWs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwicmFgOTO5SA9CbWs2nUGHkAEmI0kspnH+H00ZoCzRlhWdMW7u
+	vaLPZhivB1SafMwMX6TCLTFf07/f4DwUcnCv2ALwzQJeka/fnjc1rrtw7HPLha2mAqMerSqxO1X
+	0qR6BAPIpkfBUF6EfDlszGLUh7yVWbUQ=
+X-Gm-Gg: AY/fxX7zstEgeZf+vM3hWrW3HTSrs3dE5TORIxdaCLyfCGdM8EgJkbetfYd5R+tBkRO
+	R4ZHyoXvNJy1z7AJEwpsTyOOoTIyI/Odi9sb50LFa9Ez1MhdK9BOIIhNmNQB2g4kYxrPn2yz9aW
+	eHevu872yMkNfxPiDiPK45Wgsm0BP6KxpGNKu2c1X8XkmCBovtT95vgLlk0rEGkBveVeCKiZ97o
+	b5LBwaTEGeGL4gOjD48+wkVv3bWuHFnLw33SsCO+2tffDhpzWAZRMAXGztmup4xF64=
+X-Google-Smtp-Source: AGHT+IE5dtPIKyU8ptUI2hkdMI7fwbMdU7esjAJmTvjiO17a7ITetL6IcJCGHQwxARRvQd0qeb1vLtgPofOSuLa2c5M=
+X-Received: by 2002:a05:6402:5188:b0:64b:572e:6ba5 with SMTP id
+ 4fb4d7f45d1cf-64b8e93c0dbmr15294044a12.4.1766553517792; Tue, 23 Dec 2025
+ 21:18:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <cover.1763415705.git.geraldogabriel@gmail.com> <eaa9c75ca02a53f8bcc293b8bc73d013e26ec253.1763415706.git.geraldogabriel@gmail.com>
+In-Reply-To: <eaa9c75ca02a53f8bcc293b8bc73d013e26ec253.1763415706.git.geraldogabriel@gmail.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Wed, 24 Dec 2025 10:48:20 +0530
+X-Gm-Features: AQt7F2pedp4R-xyN_-ijj3Fu8brq9lijlFOC48RK9mmQXfW6wy7VvzSVIN4mKhs
+Message-ID: <CANAwSgQ726J_vnDKEKd94Kq62kx8ToZzUGysz4r3tNAXvfAbGA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] PCI: rockchip: limit RK3399 to 2.5 GT/s to prevent damage
+To: Geraldo Nascimento <geraldogabriel@gmail.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Johan Jonker <jbx6244@gmail.com>, Dragan Simic <dsimic@manjaro.org>, 
+	linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc-qcom
-branch HEAD: 91f2fb5fe4735c6c99c000857f2e0bd7ebbddb95  PCI: qcom: Clear ASPM L0s CAP for MSM8996 SoC
+Hi Geraldo,
 
-elapsed time: 1319m
+On Tue, 18 Nov 2025 at 03:17, Geraldo Nascimento
+<geraldogabriel@gmail.com> wrote:
+>
+> Shawn Lin from Rockchip has reiterated that there may be danger in using
+> their PCIe with 5.0 GT/s speeds. Warn the user if they make a DT change
+> from the default and drive at 2.5 GT/s only, even if the DT
+> max-link-speed property is invalid or inexistent.
+>
+> This change is corroborated by RK3399 official datasheet [1], which
+> says maximum link speed for this platform is 2.5 GT/s.
+>
+> [1] https://opensource.rock-chips.com/images/d/d7/Rockchip_RK3399_Datasheet_V2.1-20200323.pdf
+>
+To accurately determine the operating speed, we can leverage the
+PCIE_CLIENT_BASIC_STATUS0/1 fields.
+This provides a dynamic mechanism to resolve the issue.
 
-configs tested: 166
-configs skipped: 4
+[1] https://github.com/torvalds/linux/blob/master/drivers/pci/controller/pcie-rockchip-ep.c#L533-L595
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks
+-Anand
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                 nsimosci_hs_smp_defconfig    gcc-15.1.0
-arc                   randconfig-001-20251223    gcc-8.5.0
-arc                   randconfig-002-20251223    gcc-8.5.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-22
-arm                   randconfig-001-20251223    clang-22
-arm                   randconfig-002-20251223    gcc-10.5.0
-arm                   randconfig-003-20251223    clang-20
-arm                   randconfig-004-20251223    gcc-8.5.0
-arm                             rpc_defconfig    clang-18
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20251223    clang-17
-arm64                 randconfig-002-20251223    clang-22
-arm64                 randconfig-003-20251223    clang-18
-arm64                 randconfig-004-20251223    gcc-9.5.0
-csky                             allmodconfig    gcc-15.1.0
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20251223    gcc-11.5.0
-csky                  randconfig-002-20251223    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                             defconfig    clang-22
-hexagon               randconfig-001-20251223    clang-22
-hexagon               randconfig-002-20251223    clang-22
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20251224    clang-20
-i386        buildonly-randconfig-002-20251224    gcc-14
-i386        buildonly-randconfig-003-20251224    clang-20
-i386        buildonly-randconfig-004-20251224    gcc-12
-i386        buildonly-randconfig-005-20251224    gcc-14
-i386        buildonly-randconfig-006-20251224    clang-20
-i386                                defconfig    clang-20
-i386                  randconfig-001-20251224    gcc-14
-i386                  randconfig-002-20251224    gcc-14
-i386                  randconfig-003-20251224    gcc-14
-i386                  randconfig-004-20251224    gcc-12
-i386                  randconfig-005-20251224    clang-20
-i386                  randconfig-006-20251224    clang-20
-i386                  randconfig-007-20251224    gcc-14
-i386                  randconfig-011-20251223    gcc-12
-i386                  randconfig-012-20251223    gcc-14
-i386                  randconfig-013-20251223    gcc-12
-i386                  randconfig-014-20251223    gcc-14
-i386                  randconfig-015-20251223    gcc-14
-i386                  randconfig-016-20251223    gcc-14
-i386                  randconfig-017-20251223    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251223    gcc-15.1.0
-loongarch             randconfig-002-20251223    clang-22
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                             allmodconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                             allyesconfig    gcc-15.1.0
-nios2                            allmodconfig    gcc-11.5.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251223    gcc-11.5.0
-nios2                 randconfig-002-20251223    gcc-11.5.0
-openrisc                         allmodconfig    gcc-15.1.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-openrisc                    or1ksim_defconfig    gcc-15.1.0
-openrisc                 simple_smp_defconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20251223    gcc-8.5.0
-parisc                randconfig-002-20251223    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc               randconfig-001-20251223    clang-22
-powerpc               randconfig-002-20251223    clang-22
-powerpc64             randconfig-001-20251223    clang-17
-powerpc64             randconfig-002-20251223    clang-22
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20251223    gcc-8.5.0
-riscv                 randconfig-002-20251223    clang-22
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20251223    gcc-14.3.0
-s390                  randconfig-002-20251223    gcc-14.3.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                         apsh4a3a_defconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                            hp6xx_defconfig    gcc-15.1.0
-sh                    randconfig-001-20251223    gcc-10.5.0
-sh                    randconfig-002-20251223    gcc-15.1.0
-sh                          rsk7264_defconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251223    gcc-15.1.0
-sparc                 randconfig-002-20251223    gcc-12.5.0
-sparc64                          allmodconfig    clang-22
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20251223    gcc-8.5.0
-sparc64               randconfig-002-20251223    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251223    clang-22
-um                    randconfig-002-20251223    gcc-14
-um                           x86_64_defconfig    clang-22
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251223    clang-20
-x86_64      buildonly-randconfig-002-20251223    clang-20
-x86_64      buildonly-randconfig-003-20251223    gcc-14
-x86_64      buildonly-randconfig-004-20251223    gcc-14
-x86_64      buildonly-randconfig-005-20251223    clang-20
-x86_64      buildonly-randconfig-006-20251223    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20251223    gcc-14
-x86_64                randconfig-002-20251223    clang-20
-x86_64                randconfig-003-20251223    gcc-14
-x86_64                randconfig-004-20251223    clang-20
-x86_64                randconfig-005-20251223    gcc-14
-x86_64                randconfig-006-20251223    clang-20
-x86_64                randconfig-011-20251223    gcc-14
-x86_64                randconfig-012-20251223    clang-20
-x86_64                randconfig-013-20251223    clang-20
-x86_64                randconfig-014-20251223    clang-20
-x86_64                randconfig-015-20251223    gcc-14
-x86_64                randconfig-016-20251223    gcc-14
-x86_64                randconfig-071-20251223    gcc-14
-x86_64                randconfig-072-20251223    clang-20
-x86_64                randconfig-073-20251223    clang-20
-x86_64                randconfig-074-20251223    gcc-14
-x86_64                randconfig-075-20251223    gcc-14
-x86_64                randconfig-076-20251223    clang-20
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20251223    gcc-8.5.0
-xtensa                randconfig-002-20251223    gcc-15.1.0
-xtensa                    xip_kc705_defconfig    gcc-15.1.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Fixes: 956cd99b35a8 ("PCI: rockchip: Separate common code from RC driver")
+> Link: https://lore.kernel.org/all/ffd05070-9879-4468-94e3-b88968b4c21b@rock-chips.com/
+> Cc: stable@vger.kernel.org
+> Reported-by: Dragan Simic <dsimic@manjaro.org>
+> Reported-by: Shawn Lin <shawn.lin@rock-chips.com>
+> Reviewed-by: Dragan Simic <dsimic@manjaro.org>
+> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
+> ---
+>  drivers/pci/controller/pcie-rockchip.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+> index 0f88da378805..992ccf4b139e 100644
+> --- a/drivers/pci/controller/pcie-rockchip.c
+> +++ b/drivers/pci/controller/pcie-rockchip.c
+> @@ -66,8 +66,14 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+>         }
+>
+>         rockchip->link_gen = of_pci_get_max_link_speed(node);
+> -       if (rockchip->link_gen < 0 || rockchip->link_gen > 2)
+> -               rockchip->link_gen = 2;
+> +       if (rockchip->link_gen < 0 || rockchip->link_gen > 2) {
+> +               rockchip->link_gen = 1;
+> +               dev_warn(dev, "invalid max-link-speed, set to 2.5 GT/s\n");
+> +       }
+> +       else if (rockchip->link_gen == 2) {
+> +               rockchip->link_gen = 1;
+> +               dev_warn(dev, "5.0 GT/s is dangerous, set to 2.5 GT/s\n");
+> +       }
+>
+>         for (i = 0; i < ROCKCHIP_NUM_PM_RSTS; i++)
+>                 rockchip->pm_rsts[i].id = rockchip_pci_pm_rsts[i];
+> --
+> 2.49.0
+>
+>
 
