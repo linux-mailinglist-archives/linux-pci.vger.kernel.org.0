@@ -1,260 +1,202 @@
-Return-Path: <linux-pci+bounces-43620-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43621-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A06A3CDAFDF
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 01:53:23 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 761E8CDB109
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 02:16:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4F9EE304E17B
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 00:51:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7DE21300986F
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 01:16:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D00930DEB0;
-	Wed, 24 Dec 2025 00:45:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F3AA261393;
+	Wed, 24 Dec 2025 01:16:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="csldCoTV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dMqe4mI/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m1973179.qiye.163.com (mail-m1973179.qiye.163.com [220.197.31.79])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3E41DF97F
-	for <linux-pci@vger.kernel.org>; Wed, 24 Dec 2025 00:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298891A2C0B;
+	Wed, 24 Dec 2025 01:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766537125; cv=none; b=kyjQZzoW6fHHSjQREBpZEPh0uIO27eqSs1ccjcoUAXHlk5dfuI9x/KqGSfnLtvIj2G5XF0ufrMM/hfREGwFkXN9YyWdhVBMArcCdTFjBW7JdvuVRyJ7bKv1fb0BochteqTKc2E2QPlJ/ywcdr8DvZqwtv8rVSLLACdBiH+sBznI=
+	t=1766538999; cv=none; b=SOCHPDK1CgLzabiSflVONis634uTOUXDSFr9Lf4RWUWekFL4gcrBxv7Ii/VXH3siudLfHZFifJVWPYeYvkZYGM96Z2xBHpe5xGFt/Ljol2rG8ei/WuSpkOhudhFSpxJEIbtYexgGGv8ptO0+QRjK/LzIGTSVI8h91mRP/NqYod8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766537125; c=relaxed/simple;
-	bh=P0TSxPINe3NiiS/Izan+AlFC+/XGacQbyRrCpW9PXjA=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=U/tkHcr4wfoHkDsfUlxjjD4eMUpi3orHDYcO9iLoVCP5JJqU7DPeThH1LXJ09X2NsC7h++k1k42DK9Qq00sjY/oODS6SVhVhEU5JNXEhvGcMyvujGdc6CnnGp83v0EEnwBbtUfcopSYnfxc6GvdoLrnNjgGKqNZa4eEkmtqmqy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=csldCoTV; arc=none smtp.client-ip=220.197.31.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.14] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 2e54e7134;
-	Wed, 24 Dec 2025 08:29:55 +0800 (GMT+08:00)
-Message-ID: <5f23a88b-1679-4413-a475-ee92f29abe59@rock-chips.com>
-Date: Wed, 24 Dec 2025 08:29:52 +0800
+	s=arc-20240116; t=1766538999; c=relaxed/simple;
+	bh=YrVzfIAQJXK7JVD1UChEaUkj/f7EBFUWs/8zVxrjE8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bqJVgcBdTEhr69qn/YSuRFnOP9uIn7gKhQEC/w5Y9jUUy6s7Ghs6pqjiGtj6ARi0fZVST5npVf63bw1eJkF3+gibhXIwvSiZKX4dvApT9SzbPMhX9iFYyA5quiIYVlSuEgtoqsPxTCmwsvTVc7kHeN54TbfKd/sNnBuLKo3Bj6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dMqe4mI/; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1766538998; x=1798074998;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YrVzfIAQJXK7JVD1UChEaUkj/f7EBFUWs/8zVxrjE8I=;
+  b=dMqe4mI/1Y64+/TN6Gi8h3379yRuU4zQbYBH0esKmaSt8K4eHf/UQhlb
+   qzz/pKCpCNx0DXAHVKRKg7M1fkAJYrnrNPe0pKjoTN/X9U50ApGwo2Ukv
+   6ODMl/gkYkFeHfNmpJ+MJFCtgUBzbAmDbkDCKxvhBx+RBwNVG4h0gTlAN
+   fOyonhVUuxgSzXFqt023VJUvJ1r2lO/bTBvyFHfl0T8xdTB3JWvMY0C+C
+   EUfSIEgElBxJJiDpkxL8iTXHurZmTm5ckdHSQbdVah1/VabQpUnVwjqt2
+   mwvdizYFGTmw0jYZw5+sVHbPtN2XURL8OoJcZ3fe6ka8bQ8k5OD4j+LND
+   Q==;
+X-CSE-ConnectionGUID: DST/knylRwyr44MbHRe9iw==
+X-CSE-MsgGUID: tmambNbyQTGzBvq+otRnIw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11651"; a="79106877"
+X-IronPort-AV: E=Sophos;i="6.21,172,1763452800"; 
+   d="scan'208";a="79106877"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2025 17:16:37 -0800
+X-CSE-ConnectionGUID: LIDZ/DQaRfS0Q7tAhXcR2A==
+X-CSE-MsgGUID: I+si5+QxSBCaxd62vmIuKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,172,1763452800"; 
+   d="scan'208";a="199046901"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa006.jf.intel.com with ESMTP; 23 Dec 2025 17:16:35 -0800
+Date: Wed, 24 Dec 2025 09:00:06 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-coco@lists.linux.dev, linux-pci@vger.kernel.org,
+	dan.j.williams@intel.com, yilun.xu@intel.com,
+	baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	linux-kernel@vger.kernel.org, yi1.lai@intel.com
+Subject: Re: [PATCH] PCI/IDE: Fix duplicate stream symlink names for TSM
+ class devices
+Message-ID: <aUs7FgdSQVUB1eux@yilunxu-OptiPlex-7050>
+References: <20251223085601.2607455-1-yilun.xu@linux.intel.com>
+ <20251223173157.GA4025076@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, Jingoo Han <jingoohan1@gmail.com>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- Ajay Agarwal <ajayagarwal@google.com>,
- Will McVicker <willmcvicker@google.com>
-Subject: Re: [PATCH] PCI: dwc: Use cfg0_base as iMSI-RX target address to
- support 32-bit MSI devices
-To: Manivannan Sadhasivam <mani@kernel.org>
-References: <1764727630-129853-1-git-send-email-shawn.lin@rock-chips.com>
- <wc5s43s2aprtrxfyvjk7ebcutqse54kj4w452hqitqq3as5bj3@bg3ohzcbljy4>
- <7eb9773d-1d94-4443-a3eb-80ef3ccc60f9@rock-chips.com>
- <vdxwg6x6lx5oumjvxwwejxwwrsttx5uopy6q7lk6pjnplfx6a6@2w4jilfrrpkl>
- <3666010f-334e-412a-8d96-d5c40b40a88c@rock-chips.com>
- <t5brjzmsl6bzo2ku7ojjgm72syls2dgbll3wdkla5jzveqj75o@o5l6wg4g7cqg>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <t5brjzmsl6bzo2ku7ojjgm72syls2dgbll3wdkla5jzveqj75o@o5l6wg4g7cqg>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9b4dc32d8709cckunm1d96c84a369449
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGR0YGlZPQx4aTRpMTBgfSB1WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUJCSU5LVU
-	pLS1VKQktCWQY+
-DKIM-Signature: a=rsa-sha256;
-	b=csldCoTVoRyfmrhkO2XKOXskbKjXkoeBzfeZ/YTztpzgXJ70O1mm1RUTyybGnD1AWnd/8X9vNkcUI6mcCg6GOnriApxHUXRPJN9xAOzBMJyQkvgIQDcjCpf8eNRhA4dAwJbidYVBiocTxmi2hpcqSFgiOsOvfergF7WYq+WEHZA=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=HTBLzmVVAWzuJ36b6Jrb7xM1H38NEABGWcgObQdlDk0=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251223173157.GA4025076@bhelgaas>
 
-
-在 2025/12/23 星期二 23:44, Manivannan Sadhasivam 写道:
-> On Tue, Dec 23, 2025 at 10:20:17PM +0800, Shawn Lin wrote:
->> 在 2025/12/23 星期二 21:47, Manivannan Sadhasivam 写道:
->>> On Tue, Dec 23, 2025 at 09:16:45PM +0800, Shawn Lin wrote:
->>>> 在 2025/12/23 星期二 20:22, Manivannan Sadhasivam 写道:
->>>>> On Wed, Dec 03, 2025 at 10:07:10AM +0800, Shawn Lin wrote:
->>>>>> commit f3a296405b6e ("PCI: dwc: Strengthen the MSI address allocation logic")
->>>>>> strengthened the iMSI-RX target address allocation logic to handle 64-bit
->>>>>> addresses for platforms without 32-bit DMA addresses. However, it still left
->>>>>> 32-bit MSI capable endpoints (EPs) non-functional on such platforms.
->>>>>>
->>>>>> Since iMSI-RX is a pure virtual address that doesn't require actual system
->>>>>> memory mapping, we can assign any 32-bit address that won't conflict with
->>>>>> system memory allocations. This patch uses cfg0_base as the iMSI-RX target
->>>>>> address, which satisfies this requirement.
->>>>>
->>>>> Excellent finding! For reference, DWC databook r6.21a, sec 3.10.2.3 clarifies
->>>>> this behavior by stating that the incoming MWr TLP targeting the MSI_CTRL_ADDR
->>>>> is terminated by the iMSI-RX and never appears on the AXI bus. TBH this is how
->>>>> every other MSI controller behave I suppose.
->>>>>
->>>>>>
->>>>>> [benefit]:
->>>>>>
->>>>>> Three scenarios are considered:
->>>>>> 1. cfg0_base is 32-bit: 32-bit MSI capable EPs now work correctly (main improvement)
->>>>>> 2. cfg0_base is 64-bit: Behavior remains identical to the previous approach
->>>>>> 3. Device requires 32-bit DMA addresses for uDMA transfer on platform without
->>>>>>       32-bit addresses: Still incompatible (unchanged behavior)
->>>>>>
->>>>>> The primary improvement is for case 1, where 32-bit MSI devices can now function
->>>>>> properly.
->>>>>>
->>>>>> [Test]:
->>>>>>
->>>>>> Tested on a Rockchip platform lacking 32-bit DMA addresses with an ASM1062 SATA
->>>>>> controller that only supports 32-bit MSI. The device functions correctly using
->>>>>> 43-bit DMA addressing via the board_ahci_43bit_dma flag in ahci_configure_dma_masks().
->>>>>>
->>>>>> The log looks like below:
->>>>>>
->>>>>> rockchip-dw-pcie 22400000.pcie: host bridge /soc/pcie@22400000 ranges:
->>>>>> rockchip-dw-pcie 22400000.pcie:       IO 0x0021100000..0x00211fffff -> 0x0021100000
->>>>>> rockchip-dw-pcie 22400000.pcie:      MEM 0x0021200000..0x0021ffffff -> 0x0021200000
->>>>>> rockchip-dw-pcie 22400000.pcie:      MEM 0x0980000000..0x09ffffffff -> 0x0980000000
->>>>>> rockchip-dw-pcie 22400000.pcie: Use cfg0_base 0x21000000 as iMSI-RX target address
->>>>>> rockchip-dw-pcie 22400000.pcie: iATU: unroll T, 8 ob, 8 ib, align 64K, limit 8G
->>>>>>
->>>>>> root@linaro-alip:/# lspci -vvv
->>>>>> 03:00.0 SATA controller: ASMedia Technology Inc. ASM1062 Serial ATA Controller (rev 01) (prog-if 01 [AHCI 1.0])
->>>>>> 	Subsystem: ASMedia Technology Inc. ASM1061/ASM1062 Serial ATA Controller
->>>>>> 	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
->>>>>> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
->>>>>> 	Latency: 0
->>>>>> 	Interrupt: pin A routed to IRQ 121
->>>>>> 	Region 0: I/O ports at 1020 [size=8]
->>>>>> 	Region 1: I/O ports at 1030 [size=4]
->>>>>> 	Region 2: I/O ports at 1028 [size=8]
->>>>>> 	Region 3: I/O ports at 1034 [size=4]
->>>>>> 	Region 4: I/O ports at 1000 [size=32]
->>>>>> 	Region 5: Memory at 21210000 (32-bit, non-prefetchable) [size=512]
->>>>>> 	Expansion ROM at 20200000 [virtual] [disabled] [size=64K]
->>>>>> 	Capabilities: [50] MSI: Enable+ Count=1/1 Maskable- 64bit-
->>>>>> 		Address: 0x21000000  Data: 0003
->>>>>>
->>>>>> root@linaro-alip:/# cat /proc/interrupts | grep PCI-MSI
->>>>>> 117:    0      0     0     0      0     0    0     0   PCI-MSI       0 Edge      PCIe PME
->>>>>> 121:    90     0     0     0      0     0    0     0   PCI-MSI 1572864 Edge      ahci[0000:03:00.0]
->>>>>>
->>>>>> root@linaro-alip:/# dd if=/dev/sda1 of=/dev/null bs=1M count=10
->>>>>> 10+0 records in
->>>>>> 10+0 records out
->>>>>> 10485760 bytes (10 MB, 10 MiB) copied, 0.0227659 s, 461 MB/s
->>>>>>
->>>>>> root@linaro-alip:/# cat /proc/interrupts | grep PCI-MSI
->>>>>> 117:    0      0     0     0      0     0    0     0   PCI-MSI       0 Edge      PCIe PME
->>>>>> 121:   101     0     0     0      0     0    0     0   PCI-MSI 1572864 Edge      ahci[0000:03:00.0]
->>>>>>
->>>>>> MSI interrupt counts increase during I/O operations, confirming proper SATA controller
->>>>>> functionality.
->>>>>>
->>>>>> cc: Ajay Agarwal <ajayagarwal@google.com>
->>>>>> cc: Will McVicker <willmcvicker@google.com>
->>>>>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->>>>>> ---
->>>>>>
->>>>>>     drivers/pci/controller/dwc/pcie-designware-host.c | 22 ++++++++++------------
->>>>>>     1 file changed, 10 insertions(+), 12 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>> index 372207c..faa9681 100644
->>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>> @@ -367,9 +367,13 @@ int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
->>>>>>     	 * order not to miss MSI TLPs from those devices the MSI target
->>>>>>     	 * address has to be within the lowest 4GB.
->>>>>>     	 *
->>>>>> -	 * Note until there is a better alternative found the reservation is
->>>>>> -	 * done by allocating from the artificially limited DMA-coherent
->>>>>> -	 * memory.
->>>>>> +	 * Since iMSI-RX monitors a virtual address space that doesn't require
->>>>>> +	 * physical memory mapping, we simplify the implementation by reusing
->>>>>> +	 * cfg0_base as the target address. This approach guarantees the address
->>>>>> +	 * won't be allocated to endpoint drivers for normal memory operations.
->>>>>> +	 *
->>>>>> +	 * Limitation: 32-bit MSI endpoints cannot be supported when cfg0_base
->>>>>> +	 * is a 64-bit address.
->>>>>>     	 */
->>>>>>     	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
->>>>>>     	if (!ret)
->>>>>> @@ -377,15 +381,9 @@ int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
->>>>>>     						GFP_KERNEL);
->>>>>>     	if (!msi_vaddr) {
->>>>>> -		dev_warn(dev, "Failed to allocate 32-bit MSI address\n");
->>>>>> -		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
->>>>>> -		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
->>>>>> -						GFP_KERNEL);
->>>>>> -		if (!msi_vaddr) {
->>>>>> -			dev_err(dev, "Failed to allocate MSI address\n");
->>>>>> -			dw_pcie_free_msi(pp);
->>>>>> -			return -ENOMEM;
->>>>>> -		}
->>>>>> +		pp->msi_data = pp->cfg0_base;
->>>>>> +		dev_info(dev, "Use cfg0_base 0x%llx as iMSI-RX target address\n", pp->cfg0_base);
->>>>>
->>>>> This just assumes that 'config' space is always a 32bit address, but in
->>>>> practice, it is possible for the DWC glue implementation to have 64bit config
->>>>> address as well.
->>>>>
->>>>
->>>> I explained it in the commit message:
->>>>
->>>> 1. cfg0_base is 32-bit: 32-bit MSI capable EPs now work correctly (main
->>>> improvement)
->>>> 2. cfg0_base is 64-bit: Behavior remains identical to the previous approach
->>>>
->>>> I think what you suggest is the 2nd case which I wrote. Using 64-bit
->>>> cfg0_base makes no differences with allocating 64-bit dma address.
->>>>
->>>
->>> How can you make sure that the cfg0_base is always 32bit or 64bit and not
->>> something else? There is no guarantee that the platform will always allocate
->>> 'config' region in either 32bit or 64bit, it can very well allocate something
->>> like 36bit, 40bit etc...
->>
->> Sure, it could be 36bit for example. I should rephase it like:
->> if cfg0_base is more than 32bit, behaviour remains identical to the
->> previous approach.
->>
->> The fact for 32-bit MSI capable EP is that it cannot provide a Message
->> Address[63:32] for RC to set the high MSI target address. This doesn't
->> matter if it's 64-bit, 40-bit or 36-bit, etc, because the high address is
->> always lost in these cases.
->>
->>
->>>
->>> Also, you do not set the coherent mask and just retain 32bit mask, which itself
->>> is wrong.
->>
->> This is indeed a flaw I overlooked. For the RC drivers, it's useless
->> because it's only used for allocating MSI target address once here. The
->> only pontential problem is EP function driver attached inherits the DMA
->> mask to allocate DMA address for DMA transfer. But EP function driver
->> should set dma mask for themselves, becuase no RC drivers guarantee to
->> set correct DMA mask for them. For example, EP can only perform 34-bit
->> DMA, but it inherits 64-bit DMA mask from RC's dev->dma_mask, it can't
->> work at all.
->>
+On Tue, Dec 23, 2025 at 11:31:57AM -0600, Bjorn Helgaas wrote:
+> On Tue, Dec 23, 2025 at 04:56:01PM +0800, Xu Yilun wrote:
+> > The symlink name streamH.R.E is unique within a specific host bridge but
+> > not across the system. Error occurs e.g. when creating the first stream
+> > on a second host bridge:
+> > 
+> > [ 1244.034755] sysfs: cannot create duplicate filename '/devices/faux/tdx_host/tsm/tsm0/stream0.0.0'
 > 
-> True. Mask needs to be set only by the entity that performs the DMA operation,
-> so that's the EP client driver. But my concern was that the patch sets 32bit
-> mask and never changes that later even if the 64bit MSI address is used. It is
-> currently not serving any purpose, but I don't want to have this corner case for
-> correctness.
-> 
-> But I think we could flip the assignment. Check if the 'config' space is 32bit
-> and set 'msi_data' if it is true, otherwise fallback to the coherent DMA
-> allocation. Most of the platforms provide 32bit 'config' space address, so it
-> makes sense to use it as the first option. For the rare ones (like some Qcom
-> SoCs), fallback to allocation logic.
+> Drop timestamp because it's no relevant.  Indent quoted material two
+> spaces.
 
-This makes sense. I'll proceed with this implementation.
+Yes.
 
 > 
-> - Mani
+> > Fix this by adding host bridge name into symlink name for TSM class
+> > devices. It should be OK to change the uAPI to
+> > /sys/class/tsm/tsmN/pciDDDD:BB:streamH.R.E since it's new and has few
+> > users.
 > 
+> Looks like this adds "pciDDDD:BB:" to one name, which is described
+> here and in the Documentation/ABI change.
+> 
+> > Internally in the IDE library, store the full name in struct pci_ide
+> > so TSM symlinks can use it directly, while PCI host bridge symlinks
+> > can skip the host bridge name to keep concise.
+> 
+> And shortens this name, but no example or doc update?  Or maybe the
+> shortening just strips the "pciDDDD:BB" to preserve the existing names
+> somewhere else?
 
+The later. The shortening is the internal code change, aims to preserve
+the existing name /sys/devices/pciDDDD:BB/streamH.R.E, which is
+described in:
+
+  Documentation/ABI/testing/sysfs-devices-pci-host-bridge
+
+  What:		pciDDDD:BB/streamH.R.E
+
+I don't want repeat the host bridge name in host bridge context.
+
+> 
+> I'm just confused about which symlinks are changing (adding
+> "pciDDDD:BB") and which are being kept concise (either by staying the
+> same or being shortened).
+
+I should have clearly listed the changed & preserved symlinks. Will
+improve in v2.
+
+Thanks,
+Yilun
+
+> 
+> > Fixes: a4438f06b1db ("PCI/TSM: Report active IDE streams")
+> > Reported-by: Yi Lai <yi1.lai@intel.com>
+> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-class-tsm |  2 +-
+> >  drivers/pci/ide.c                         | 12 +++++++++---
+> >  2 files changed, 10 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-class-tsm b/Documentation/ABI/testing/sysfs-class-tsm
+> > index 6fc1a5ac6da1..eff71e42c60e 100644
+> > --- a/Documentation/ABI/testing/sysfs-class-tsm
+> > +++ b/Documentation/ABI/testing/sysfs-class-tsm
+> > @@ -8,7 +8,7 @@ Description:
+> >  		link encryption and other device-security features coordinated
+> >  		through a platform tsm.
+> >  
+> > -What:		/sys/class/tsm/tsmN/streamH.R.E
+> > +What:		/sys/class/tsm/tsmN/pciDDDD:BB:streamH.R.E
+> >  Contact:	linux-pci@vger.kernel.org
+> >  Description:
+> >  		(RO) When a host bridge has established a secure connection via
+> > diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
+> > index f0ef474e1a0d..db1c7423bf39 100644
+> > --- a/drivers/pci/ide.c
+> > +++ b/drivers/pci/ide.c
+> > @@ -425,6 +425,7 @@ int pci_ide_stream_register(struct pci_ide *ide)
+> >  	struct pci_host_bridge *hb = pci_find_host_bridge(pdev->bus);
+> >  	struct pci_ide_stream_id __sid;
+> >  	u8 ep_stream, rp_stream;
+> > +	const char *short_name;
+> >  	int rc;
+> >  
+> >  	if (ide->stream_id < 0 || ide->stream_id > U8_MAX) {
+> > @@ -441,13 +442,16 @@ int pci_ide_stream_register(struct pci_ide *ide)
+> >  
+> >  	ep_stream = ide->partner[PCI_IDE_EP].stream_index;
+> >  	rp_stream = ide->partner[PCI_IDE_RP].stream_index;
+> > -	const char *name __free(kfree) = kasprintf(GFP_KERNEL, "stream%d.%d.%d",
+> > +	const char *name __free(kfree) = kasprintf(GFP_KERNEL, "%s:stream%d.%d.%d",
+> > +						   dev_name(&hb->dev),
+> >  						   ide->host_bridge_stream,
+> >  						   rp_stream, ep_stream);
+> >  	if (!name)
+> >  		return -ENOMEM;
+> >  
+> > -	rc = sysfs_create_link(&hb->dev.kobj, &pdev->dev.kobj, name);
+> > +	/* Skip host bridge name in the host bridge context */
+> > +	short_name = name + strlen(dev_name(&hb->dev)) + 1;
+> > +	rc = sysfs_create_link(&hb->dev.kobj, &pdev->dev.kobj, short_name);
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > @@ -471,8 +475,10 @@ void pci_ide_stream_unregister(struct pci_ide *ide)
+> >  {
+> >  	struct pci_dev *pdev = ide->pdev;
+> >  	struct pci_host_bridge *hb = pci_find_host_bridge(pdev->bus);
+> > +	const char *short_name;
+> >  
+> > -	sysfs_remove_link(&hb->dev.kobj, ide->name);
+> > +	short_name = ide->name + strlen(dev_name(&hb->dev)) + 1;
+> > +	sysfs_remove_link(&hb->dev.kobj, short_name);
+> >  	kfree(ide->name);
+> >  	ida_free(&hb->ide_stream_ids_ida, ide->stream_id);
+> >  	ide->name = NULL;
+> > 
+> > base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+> > -- 
+> > 2.25.1
+> > 
 
