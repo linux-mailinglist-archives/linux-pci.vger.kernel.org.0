@@ -1,36 +1,36 @@
-Return-Path: <linux-pci+bounces-43643-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43646-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 689D4CDB924
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 08:15:59 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8429FCDB940
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 08:26:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 532E53007DB9
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 07:15:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D0A743019BBB
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 07:26:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3830D288522;
-	Wed, 24 Dec 2025 07:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2231332D0D7;
+	Wed, 24 Dec 2025 07:26:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="gh5/+vL0"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="fXN+rH/S"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m15597.qiye.163.com (mail-m15597.qiye.163.com [101.71.155.97])
+Received: from mail-m3289.qiye.163.com (mail-m3289.qiye.163.com [220.197.32.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E06283FE2
-	for <linux-pci@vger.kernel.org>; Wed, 24 Dec 2025 07:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6ABB13AF2
+	for <linux-pci@vger.kernel.org>; Wed, 24 Dec 2025 07:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766560557; cv=none; b=emXuBrK6YiwhnMeCKAy0QJWBRU9NR4tydCbmvTqquoFuLzmOIMkho9F9ef4Haap+v3wIyd1zQHgy3NTv6aHlVdQ6K362JR9GqwdGWsclW1fF8TVaxYQZhcDbO9R9e6mBLC1oNblFMTmlCk0a8v8lg1h3FjkyB3spO5bXM2gPZCQ=
+	t=1766561178; cv=none; b=lB6uKp+C/XCv/tdcE+HLY54fpf64+Vzkr35LEVRFH9Aw6JLCi9pg/o5abZopaTMvRH+Nw1KaG+a/NDyjNW3nwP2iN7nw7YuQ3OzIEJBcx/4h8K5bDHZ2rTJ5vzRrEjXmkbQodnf80CcyPI1FoSWjEZ5CnUYFbgaSfyUMnquyhjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766560557; c=relaxed/simple;
-	bh=1Oj7VerpPDFpeCkHc2JYUV+IBPSrZImoEVTPIWjDZD8=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=d0tkBfOWE6FM20GYMZscp6CGQPMsqDygbbrN3ahyTlnZ1w3+oBVAS7UCisazhqALZbUrxSmfR66Imb0fg1uGVRuuN0iaBA5wMiej31HOaoz2wrCAv2UfYUEfeUzqOEex72PGTT+G5cKsi+TtoQQ4WFR2ncr6G8WCr5rQfBMBiPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=gh5/+vL0; arc=none smtp.client-ip=101.71.155.97
+	s=arc-20240116; t=1766561178; c=relaxed/simple;
+	bh=0S5zZNdv9XmmF7RpM1QcN+qhBTJfuOL76Q11ILOMlRE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=U0cnP+sWOmWG69Id4ZHWNCTfh2WHNg09jSPHzoXqH7HGfqDVD99c5iE2HivmC9YLhr5Y9JxagUa3XttVKWf4cyLK/R/PMHGgMOXSjERTGRgUjXyY/SK4g9yVV+E/xa3snBZCp1rEjC1y5kj4nk7IPJnbnEYsKh1TBAHRSM1Jmrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=fXN+rH/S; arc=none smtp.client-ip=220.197.32.89
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 2e63ea73d;
-	Wed, 24 Dec 2025 15:10:33 +0800 (GMT+08:00)
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2e63ea78c;
+	Wed, 24 Dec 2025 15:10:48 +0800 (GMT+08:00)
 From: Shawn Lin <shawn.lin@rock-chips.com>
 To: Manivannan Sadhasivam <mani@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -42,19 +42,21 @@ Cc: linux-pci@vger.kernel.org,
 	Neil Armstrong <neil.armstrong@linaro.org>,
 	Sebastian Reichel <sebastian.reichel@collabora.com>,
 	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 0/5] Add calibration for Synopsys PCIe PHY and Controller
-Date: Wed, 24 Dec 2025 15:10:05 +0800
-Message-Id: <1766560210-100883-1-git-send-email-shawn.lin@rock-chips.com>
+Subject: [PATCH 1/5] PCI: dw-rockchip: Add phy_calibrate() to check PHY lock status
+Date: Wed, 24 Dec 2025 15:10:06 +0800
+Message-Id: <1766560210-100883-2-git-send-email-shawn.lin@rock-chips.com>
 X-Mailer: git-send-email 2.7.4
-X-HM-Tid: 0a9b4f31f8b109cckunm34e2a83f3c29b2
+In-Reply-To: <1766560210-100883-1-git-send-email-shawn.lin@rock-chips.com>
+References: <1766560210-100883-1-git-send-email-shawn.lin@rock-chips.com>
+X-HM-Tid: 0a9b4f32340d09cckunm34e2a83f3c2a70
 X-HM-MType: 1
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUJCTlYaHk8dGkkfGENOSUtWFRQJFh
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGhoZQlZOSU4dSE8YGkxKH0JWFRQJFh
 	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
 	hVSktLVUpCS0tZBg++
 DKIM-Signature: a=rsa-sha256;
-	b=gh5/+vL0A5QZWNvpxrXt6g0tTM1y0jo5WlymP6ICW55+k3ArpRsLM/B+hts7Ac5bMMaVC4/fmDxwoWIsASG7NH0tfsQTkUNg2yu/6Wf1ZZoBYCyNEMo+GbZ+XgRWmgf8oan41gK77RSep4OsoV6sXnV5hgYBbsYvvBlVusNrcV8=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=yBptviF9T5YX5SPBqB7UXmBB5g56SIiXZoIROiFrrzw=;
+	b=fXN+rH/SRZfYnwscvqoSqYTEjcehEY+7m0VATktGPyBc5q+Sr8vHX9/FFAUmWt3xIx71RB0HFKIkId26Gc1UrAPnMycD7vMOP6yiv/+4tmSZkGkCnF0QX6r+rXFWCGk/X1gBl2yTev/3jACQHcx9peNbiPQovAZGA56jr9zSsHE=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=nmApjKhdRDMPDmEy+/sym/t5MR+4fczg/gJfQLzXJfs=;
 	h=date:mime-version:subject:message-id:from;
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -62,35 +64,46 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
+Current we keep controller in reset state when initializing PHY which
+is the right thing to do. But this case, the PHY is also reset because
+it refers to a signal from controller. Now we check PHY lock status
+inside .phy_init() callback which may be bogus for certain type of PHY,
+because of the fact above. Add phy_calibrate() to better check PHY lock
+status if provided.
 
-Currently, when pcie-dw-rockchip uses the Synopsys PHY, it relies on
-the phy_init() callback of the phy-rockchip-snps-pcie3 driver to
-perform calibration. This is incorrect because the controller is
-still held in reset at that time, preventing the PHY from accurately
-reflecting the actual PLL lock and calibration status.
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+---
 
-To fix this, this series:
-1. Calls phy_calibrate() in the pcie-dw-rockchip driver (if supported)
-   after the controller is out of reset, ensuring the PHY can
-   properly synchronize with the controller state.
-2. Adds the necessary calibration support in the Synopsys PHY driver
-   to implement this callback.
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Please review and test.
-
-
-
-Shawn Lin (5):
-  PCI: dw-rockchip: Add phy_calibrate() to check PHY lock status
-  phy: rockchip-snps-pcie3: Add phy_calibrate() support
-  phy: rockchip-snps-pcie3: Increase sram init timeout
-  phy: rockchip-snps-pcie3: Check more sram init status for RK3588
-  phy: rockchip-snps-pcie3: Only check PHY1 status when using it
-
- drivers/pci/controller/dwc/pcie-dw-rockchip.c  |  9 +++-
- drivers/phy/rockchip/phy-rockchip-snps-pcie3.c | 61 +++++++++++++++++++++-----
- 2 files changed, 57 insertions(+), 13 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+index f8605fe..75d6306 100644
+--- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
++++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+@@ -705,6 +705,12 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto deinit_phy;
+ 
++	ret = phy_calibrate(rockchip->phy);
++	if (ret) {
++		dev_err(dev, "phy lock failed\n");
++		goto assert_controller;
++	}
++
+ 	ret = rockchip_pcie_clk_init(rockchip);
+ 	if (ret)
+ 		goto deinit_phy;
+@@ -727,7 +733,8 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	return 0;
+-
++assert_controller:
++	reset_control_assert(rockchip->rst);
+ deinit_clk:
+ 	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
+ deinit_phy:
 -- 
 2.7.4
 
