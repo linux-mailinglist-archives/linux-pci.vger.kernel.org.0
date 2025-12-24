@@ -1,110 +1,152 @@
-Return-Path: <linux-pci+bounces-43645-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43648-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B547CDB934
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 08:17:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 980AECDBA2B
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 09:04:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D7EB73008EBF
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 07:17:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 200DE3010FCD
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 08:04:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4640213AF2;
-	Wed, 24 Dec 2025 07:17:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BEF52D3221;
+	Wed, 24 Dec 2025 08:04:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="TmLgWE9U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHdvNRe9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m3273.qiye.163.com (mail-m3273.qiye.163.com [220.197.32.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188DB2701CF
-	for <linux-pci@vger.kernel.org>; Wed, 24 Dec 2025 07:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CAC26158B
+	for <linux-pci@vger.kernel.org>; Wed, 24 Dec 2025 08:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766560631; cv=none; b=csNOaWZ5K58EYZ/FwDzoHBMcYX1DpewEe4JRm3wo2uO0nBo7WQsjYdMiv8X1XuF3SGfTrq3UPhHOUau+1C9l4uJUetl3M2BV4VKQ463zXxJY+i6QB24FHQWWTvYRQbp3RWKzCVeYAkHq0dIF21dWZ5pXasnH9R9+aSB1PoTZoxk=
+	t=1766563484; cv=none; b=rE5t2g4OWwwICThXLw+TE1dOJmbLN+w7K0iqmEKGsagNVkPmy7FcEm4S7rAd9Q+PRslgEPSO+9TsbfrSQVzI4xb7zlTiObY0wLmE+vwuthXiR2MZ8k0PpvssvyOlS3QnVpancZxfnp3hyfn0Nlmxh2G8dyRnblrMBxIrBhl0Vj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766560631; c=relaxed/simple;
-	bh=KFn0Jd/TnwN6RtZNHl/yQzK4e8KbiBSVkPiEzMwVhLY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=dI2fiVNkW3dMePl5bInM/rj7+VVmH/Lap2qn7MId7P7Itwk9gP8oSvgMDgOPMNB3eW6ZGdlu6bLVOfQ+rDxxJJb8wvyBZxlXEBMisfOmZFg9UrcHC3dP6fj9RP8nWiktniw1tDiPbr8mz4si9J7A/v9fJnygnZ3GV3nBcOxWInQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=TmLgWE9U; arc=none smtp.client-ip=220.197.32.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 2e63ea8ca;
-	Wed, 24 Dec 2025 15:11:50 +0800 (GMT+08:00)
-From: Shawn Lin <shawn.lin@rock-chips.com>
-To: Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-phy@lists.infradead.org,
-	Heiko Stuebner <heiko@sntech.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 5/5] phy: rockchip-snps-pcie3: Only check PHY1 status when using it
-Date: Wed, 24 Dec 2025 15:10:10 +0800
-Message-Id: <1766560210-100883-6-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1766560210-100883-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1766560210-100883-1-git-send-email-shawn.lin@rock-chips.com>
-X-HM-Tid: 0a9b4f3325d609cckunm34e2a83f3c2d9f
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkIeHlYaHUhJSkJPQx4dSh1WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=TmLgWE9U7J1vkop2lo1vEeOw97p0kk+Be/2U3TnE2Eek1d/kfquCEwnGLLvkp3zlUQmwNK7tTiEHQoh+mbs3GOUGNgpqfdb147CRvHji6dySuTGBQZgeQVYqR7EiwsK+KqGZWGKuxnFfbUdIgpArqyTP5gLb6AVyczeyc3Exk5k=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=HVTGJgDhwCKjeXI1BckdM02NnUQgr1hJwOomGYZB9m8=;
-	h=date:mime-version:subject:message-id:from;
+	s=arc-20240116; t=1766563484; c=relaxed/simple;
+	bh=+TfuYlLvMaLWTZmZDZsnA49hO+ryorTTCnTkX2pKAFY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lSv+74M7sgbvTTF/EZMucscKdcmmEsGZiIqopKNvHQhk2OOID7yoL2x2CBt9GW+8kba+SDhB7IUa4uYHtTxTfqWKJj01E4naejQeXdRLtNa00+ob+iHcOveh42NRE9SsiaRqYMiksB8JxyEmVdkYfN/tmLog6pjBEa8AtLg3c/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eHdvNRe9; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-64951939e1eso8645192a12.1
+        for <linux-pci@vger.kernel.org>; Wed, 24 Dec 2025 00:04:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766563481; x=1767168281; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+TfuYlLvMaLWTZmZDZsnA49hO+ryorTTCnTkX2pKAFY=;
+        b=eHdvNRe9hkZqROWeFuDWFlc5wcSJy9zW490I34GWsdhhSgtxAcFToSHsGJwgFg2raq
+         AnwMicqHza3dD0uHLZDzYR1Ynjvk9FO5bpodkKYRMSWaffXnRwLnsGesRV9Iufl/Gm6W
+         0iCJD8fXjchWI9LyVnjjC9LoXNrJFkiTaNu00Ejb63kqZjpiMAiM0doIk9ti9XlQKb9z
+         5HEK0fNHFPD+PSYcYR4PccovDC7H22IZcQ4hsJjJVhG7MaH7tMc2cV5OoqT430ms53tZ
+         46eClMPO6msk1+4d2SDonlXKPegBIl/OHaZMdWXTWjAPmHHaAONMLd6M7pw8OOa5HmKq
+         Q2Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766563481; x=1767168281;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+TfuYlLvMaLWTZmZDZsnA49hO+ryorTTCnTkX2pKAFY=;
+        b=VdDzQ8Qv4E+usaZpJe8GEW+kHXN+G+YcUYOqUHGqaNQOKX5vGPsGDnP/WLAi7bvy6U
+         LoN8xPWbg8H5qLmeaNwJ+Rio2j+jMbiX2S6X5PIIZ8k8fX6X1qyv9ro6a7GL06ID9GaX
+         y5E/knQOLO74ttRtjjgeQhRCqGdaptqYi4aeLTLp1BNHGkEy1yWzKWO1af2OfzJAGVcC
+         D2TmXsbOrZZRRMmkXxTvwzwmtRgR7LfimGuzuhA4XzXXVZxm2oabYBlq3hpKyVijJ9yv
+         5R6vX+wqi0KkA8m5mW8191ji1ZNQhEpO3QgB6J/OEyMZkshlCljmwNESSePD/z2xoCam
+         7kPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUH+rvJLhr2Ca05jbbKPUkXQi9BGCwswc1HAAQRXXqFcAuIfUHEq1sxXlIBEZzdj8fX7IeNRSWo74k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySKiKgrJTp1iHUdMJlBQG3bI55+XjonAcBiswYQqXW1dJlPxh7
+	/d6ypwEk7+ov99RJM1kNQ6RuXlgybWZhH9Chlmk/hrqYotZiK6kBPTlOMA167BNWol8IIg91rl9
+	5uQp08m2oRIH4Fm/hbDttgAl8N/qNDSs=
+X-Gm-Gg: AY/fxX7rcmv9zIwHryNQM8WtJVhHeC/RIRTrRr6UUMPnwGyyyEK/OCr73X/mMtpra+J
+	kwbot5CfrI3jNVOX+cYB+4M2Xo05Scp/d0KOP2Wq042bQFtAmkdzVkM8DwNzxHsbh5QnpMCiVC4
+	/1j3qUpFdQ9fjEehTpgq2kv3GWVUUH+OB4WIpnJqIasxFcMCBOAUCxq+dPtuP3J+1hPqeyKgMj3
+	/4lJavIzxk+Be2xnkfhtgvecBvFTspZdMnjJ2mrAFkFF7tyR8vjJSkU2bAKpOfZ3VM=
+X-Google-Smtp-Source: AGHT+IFNXz2QU01SE+DL2c1ZCqqAJiAT079DS2+XmSlL7nM5RGPoflTCsCJq7MHCePPbrmgdDllZFgH4/zk85C3yl5w=
+X-Received: by 2002:a05:6402:50cc:b0:64d:4a01:fc23 with SMTP id
+ 4fb4d7f45d1cf-64d4a020dfamr9289029a12.10.1766563480975; Wed, 24 Dec 2025
+ 00:04:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <cover.1763415705.git.geraldogabriel@gmail.com>
+ <eaa9c75ca02a53f8bcc293b8bc73d013e26ec253.1763415706.git.geraldogabriel@gmail.com>
+ <CANAwSgQ726J_vnDKEKd94Kq62kx8ToZzUGysz4r3tNAXvfAbGA@mail.gmail.com> <CAEsQvctSY7-RQEQF2TmJU2qKPZOe9TC5g-7Jat0LQKRHYz_6dQ@mail.gmail.com>
+In-Reply-To: <CAEsQvctSY7-RQEQF2TmJU2qKPZOe9TC5g-7Jat0LQKRHYz_6dQ@mail.gmail.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Wed, 24 Dec 2025 13:34:23 +0530
+X-Gm-Features: AQt7F2qzfCdogAfkIVvQ40sYz72XmKQPz1kBLtv40YPxaEuaYu_edJzXc4ZwP9s
+Message-ID: <CANAwSgQPQUBi6VVb+hZNraMt71vnRpki+YK_at=Luo4aPVtOPg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] PCI: rockchip: limit RK3399 to 2.5 GT/s to prevent damage
+To: Geraldo Nascimento <geraldogabriel@gmail.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Johan Jonker <jbx6244@gmail.com>, Dragan Simic <dsimic@manjaro.org>, 
+	linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-RK3588_LANE_AGGREGATION and RK3588_BIFURCATION_LANE_2_3 should be
-used to check if it need to check PHY1 status. Because in other
-cases, only PHY0 could show locked status.
+Hi Geraldo,
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
----
+On Wed, 24 Dec 2025 at 11:08, Geraldo Nascimento
+<geraldogabriel@gmail.com> wrote:
+>
+> On Wed, Dec 24, 2025 at 2:18=E2=80=AFAM Anand Moon <linux.amoon@gmail.com=
+> wrote:
+> >
+> > Hi Geraldo,
+> >
+> > On Tue, 18 Nov 2025 at 03:17, Geraldo Nascimento
+> > <geraldogabriel@gmail.com> wrote:
+> > >
+> > > Shawn Lin from Rockchip has reiterated that there may be danger in us=
+ing
+> > > their PCIe with 5.0 GT/s speeds. Warn the user if they make a DT chan=
+ge
+> > > from the default and drive at 2.5 GT/s only, even if the DT
+> > > max-link-speed property is invalid or inexistent.
+> > >
+> > > This change is corroborated by RK3399 official datasheet [1], which
+> > > says maximum link speed for this platform is 2.5 GT/s.
+> > >
+> > > [1] https://opensource.rock-chips.com/images/d/d7/Rockchip_RK3399_Dat=
+asheet_V2.1-20200323.pdf
+> > >
+> > To accurately determine the operating speed, we can leverage the
+> > PCIE_CLIENT_BASIC_STATUS0/1 fields.
+> > This provides a dynamic mechanism to resolve the issue.
+> >
+> > [1] https://github.com/torvalds/linux/blob/master/drivers/pci/controlle=
+r/pcie-rockchip-ep.c#L533-L595
+> >
+> > Thanks
+> > -Anand
+>
+> Hi Anand,
+>
+> not to put you down but I think your approach adds unnecessary complexity=
+.
+>
+> All I care really is that the Kernel Project isn't blamed in the
+> future if someone happens to lose their data.
+>
+Allow the hardware to negotiate the link speed based on the available
+number of lanes.
+I don=E2=80=99t anticipate any data loss, since PCIe will automatically
+configure the device speed
+with link training..
 
- drivers/phy/rockchip/phy-rockchip-snps-pcie3.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+> Thanks,
+> Geraldo Nascimento
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c b/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
-index 6cc38e3..36b2142 100644
---- a/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
-+++ b/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
-@@ -183,6 +183,7 @@ static int rockchip_p3phy_rk3588_init(struct rockchip_p3phy_priv *priv)
- 	}
- 
- 	reg = mode;
-+	priv->pcie30_phymode = mode;
- 	regmap_write(priv->phy_grf, RK3588_PCIE3PHY_GRF_CMN_CON0,
- 		     RK3588_PCIE30_PHY_MODE_EN | reg);
- 
-@@ -208,10 +209,13 @@ static int rockchip_p3phy_rk3588_calibrate(struct rockchip_p3phy_priv *priv)
- 				       RK3588_PCIE3PHY_GRF_PHY0_STATUS1,
- 				       reg, RK3588_SRAM_INIT_DONE(reg),
- 				       0, RK_SRAM_INIT_TIMEOUT_US);
--	ret |= regmap_read_poll_timeout(priv->phy_grf,
--					RK3588_PCIE3PHY_GRF_PHY1_STATUS1,
--					reg, RK3588_SRAM_INIT_DONE(reg),
--					0, RK_SRAM_INIT_TIMEOUT_US);
-+	if (priv->pcie30_phymode & (RK3588_LANE_AGGREGATION | RK3588_BIFURCATION_LANE_2_3)) {
-+		ret |= regmap_read_poll_timeout(priv->phy_grf,
-+						RK3588_PCIE3PHY_GRF_PHY1_STATUS1,
-+						reg, RK3588_SRAM_INIT_DONE(reg),
-+						0, RK_SRAM_INIT_TIMEOUT_US);
-+	}
-+
- 	if (ret)
- 		dev_err(&priv->phy->dev, "lock failed 0x%x, check input refclk and power supply\n",
- 			reg);
--- 
-2.7.4
-
+Thanks
+-Anand
 
