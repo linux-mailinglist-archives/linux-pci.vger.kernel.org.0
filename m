@@ -1,471 +1,316 @@
-Return-Path: <linux-pci+bounces-43658-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43659-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 155E0CDC3F3
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 13:44:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CAA5CDC477
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 13:51:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 008C1305F305
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 12:41:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 82C2D3102E1A
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Dec 2025 12:45:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CADFC3191AC;
-	Wed, 24 Dec 2025 12:41:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0679B2459C5;
+	Wed, 24 Dec 2025 12:45:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N3UkfxXB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CiFZxX6f"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD052F3614
-	for <linux-pci@vger.kernel.org>; Wed, 24 Dec 2025 12:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034F618AFD
+	for <linux-pci@vger.kernel.org>; Wed, 24 Dec 2025 12:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766580091; cv=none; b=nKdlWJU7PxohfPSGT/+r2E4DvlAX3kNbEZCGMlwbC7Jlnc7h5jQfEBhHTHxHQb7P5kxezoox3QXTl2dLNjyh6ij1Bf/0nOT3yjDbLG7AUi5idoC3TS1dlwzLr/dU6rVObcbQ7p8q5rlAWf59jgNj8FO3iQOGzAOJRnE5yNCMK8A=
+	t=1766580317; cv=none; b=T1Y5q/BTb76dv3cdkkPzVTvyjGSn4gT5qQhUZvAaRkTjvrtnKsPcxBasVSin8tVTH1EtYD89xFxzYHnnnlsZWJgDDHpN5tBP2g6WJ090m53rU37FL5zl5SR3BKcrEg51zBsx6QMMhexUEVLECNHzUp27jPdAGRzR1WnyicPFo7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766580091; c=relaxed/simple;
-	bh=zp9SNrsiDP2rnwAtZED37zEHUggE4bbgtXo1JQ91UDc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nrV/RZ9SQKsRoLWFsfVO1KbAoZ/Gvbk9ZKqagN+R3Sn1zzMQG9Wg+hEF6qk6SDckox+COUJh9ANFh2fZC0k/TqmvzomJsfq45EueCld56j0ScoJoL2hIVHxX3YhlwUEiw/g6KJQJVXT9Cne2cHUW9IS6SzNrnxDjfmFbHInmzBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N3UkfxXB; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-64b92abe63aso8711162a12.0
-        for <linux-pci@vger.kernel.org>; Wed, 24 Dec 2025 04:41:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766580087; x=1767184887; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=h57EtuIujQLC/3TT8y/U1ZZGUxIm0DnoUqvIlTL5TPQ=;
-        b=N3UkfxXBl/DdrdADJiZprq9n0Ga5w9BiywqSvdR2HAIFJsYF2ntjgKI0uCtrDqOmOO
-         wkt4Dafy7cpcvrzBMmzBkO1ahLjKqVtLvY3TA8w1TDnytmSNqIgk5UzSTyxc4iAPu+pY
-         le9/WnwR+54CBqGvhe3lrvaXxpvrtgwCC0f6nzX1twQZo93Au8oUYLsVztGcGdQ8X5/w
-         zo+jOHS4gNVsNn+Q01Y7AoLNEXKhs0qt/db4Y6HIdZlS8LtMJ/huVlW2cEwat8LZdbUe
-         yfSCEkWC5GLKmdKo1dVbsaa15FL19m+MXGBP8GvgPsYNqv5lguHIRyytcbxa3hHsE/vb
-         e4OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766580087; x=1767184887;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h57EtuIujQLC/3TT8y/U1ZZGUxIm0DnoUqvIlTL5TPQ=;
-        b=sh11yeoTvw441tSgJVJRrX6RdQopiKxQiacxITJTgkIg8xx7/BJb36JoahbCDYFrDs
-         nhzwFoCl494fbRWU2qTag+Fj0vxVEthTl5bMdveuYr8d1coZd6nGsjiQ29+ryZJSCIKo
-         REKsdX0JLOvWCW8m+ojKffgQHzwb/VAZIQMUR17aIGBxwJw+R2CF8qnzcetalVW/rPKF
-         MoLnkZFgVvvZJNrWzYyPbYr3TQyG6GuuAWCTxOjx/W2aLxuFHkdVhRJjAS7jDcMLmsI5
-         +DnPv1KFoP6N9ujNZfILvwb8g5EhuqvkAf5lFZtXxYF5Ld5WXplzL9vqb1GgLNf26JKe
-         q0Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCXBJ6rzUNwSCi+hcQaURliVOvepZRUcqT0mQ0q++A+lwCvI2IIBmk4NhFeVscHUNTMrL0Sjuh7cNfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTK3p4d3hadZgfcaaM6dO6zEZfQ654kisR3WelpYAteg9XX4L/
-	V46lscvloqj2d0mHRuiy9UiVoot+z1ynuyzzqNo1oeegFbE5xmq5TL1n+Wc4ado5vBiMMSRPTLY
-	gBUQV0J9WjcLOGAoJcY8UuIFFz+sYqUE=
-X-Gm-Gg: AY/fxX50upp+sS4ZJfsD/WU3tBMY8jlMnbhJUql4I45uiFk/8RDT52bBLtD1C8gVDfb
-	GPGdwXc4lx3/tn/+zWEBdhjJeoWNl5RhlBb8zZJAUeGSDMO8VGvQ32US5eU1U+GWH1UTHlywoTO
-	NOsug+x3+q8G87zhm0tXaUrztdA0bNNbB8WjlhTHpOKmkwrr/Bzo7jnJBCO+04GgixItYq20Z3d
-	kydvDygPEG/PEm0AneLqpxHldODCjW5xTb7LMjP72UgX5+YZpBziSf7vBRLeqaXumk=
-X-Google-Smtp-Source: AGHT+IGx/yn+/T8zHK48RzMg6PbmkWkp9LVZgl1ZiDszFLj3UTka2lUfIBhT+pc6jA9HDZNTesdwpa66VP5inrXbWLE=
-X-Received: by 2002:a05:6402:13d6:b0:64d:521e:15f8 with SMTP id
- 4fb4d7f45d1cf-64d521e19c7mr9754216a12.10.1766580086910; Wed, 24 Dec 2025
- 04:41:26 -0800 (PST)
+	s=arc-20240116; t=1766580317; c=relaxed/simple;
+	bh=jdh4Jmb1CsnEqGNfFuu66ROnoZ/CbE6r9CPjnyDUXnI=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=AgHDGpTMrwTpzdLEZz+L1jD+MzfI18Peetz0PtlZz+1+STt5vjraUYDvyWdr0lYN6cYqMgvv7zKBUV+D+Ax7hHy51vY+BAQ/+dX4pmEmeh+j5N7TY5PlkFd4bg5dx8I8WR/qR4EjsSBkcPZ9T0a+iNiZNNLTu0Tvt0wegL0JY8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CiFZxX6f; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1766580315; x=1798116315;
+  h=date:from:to:cc:subject:message-id;
+  bh=jdh4Jmb1CsnEqGNfFuu66ROnoZ/CbE6r9CPjnyDUXnI=;
+  b=CiFZxX6fhnmjyTcsOyHS3TylKrCGmYkLK7dyTth7IaMi5Hj7fkUOPLot
+   rXPDVkEMtxQ2b7TJ8uL6PnvwsonTQ0SUETmmUEQy2QBnkWomwG/nh5C07
+   NpBZfBHZY0nUY3rvh2j4DXKXC/8Gm06pReX+M9I7rkqufLKsKa8WDeyFd
+   rDW4PpDO76hq5H1F+HTDbeDburCP4mPow50G4i81DTYrMyyVVsdDz3AgK
+   II2bvYiATYc1v+Us8370hdKNV5/0F0OGQs78q9CZ3NwJ3OA6LWmd+zDcU
+   ew6v42GNnX2+ektee/B47aPxb6Z3EUMM5nmGcYPnhioYmvH7hdUvdPleH
+   w==;
+X-CSE-ConnectionGUID: kxOxPhyVTQKv9ESJEoYlkA==
+X-CSE-MsgGUID: Sr+FLIzsQjScVHYM7PzqgQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11651"; a="67612877"
+X-IronPort-AV: E=Sophos;i="6.21,173,1763452800"; 
+   d="scan'208";a="67612877"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2025 04:45:14 -0800
+X-CSE-ConnectionGUID: HekFfEpUSEGBAIxfajtk2w==
+X-CSE-MsgGUID: 5G2HW8RGQcyCQmvHHdocLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,173,1763452800"; 
+   d="scan'208";a="204931584"
+Received: from lkp-server02.sh.intel.com (HELO dd3453e2b682) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 24 Dec 2025 04:45:13 -0800
+Received: from kbuild by dd3453e2b682 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vYOEZ-0000000034t-1z4S;
+	Wed, 24 Dec 2025 12:44:56 +0000
+Date: Wed, 24 Dec 2025 20:43:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/xilinx] BUILD SUCCESS
+ f42b3c053b1554d66af6fe45bb1ef357464c0456
+Message-ID: <202512242042.CVAAB55W-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20251215141603.6749-1-linux.amoon@gmail.com> <20251215141603.6749-2-linux.amoon@gmail.com>
- <3cd7943c-4d35-4ec9-8826-c20a5d213626@kernel.org>
-In-Reply-To: <3cd7943c-4d35-4ec9-8826-c20a5d213626@kernel.org>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Wed, 24 Dec 2025 18:11:09 +0530
-X-Gm-Features: AQt7F2qtWybS3yYTJt8QcmL8qChahBGSrigzuYqno2Xmv1WHecx6hqkXOG93U84
-Message-ID: <CANAwSgR7UPrPSHB9RL5newKgWksyn4MoP03ykRQcP2eRSK2SXg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: PCI: Convert nvidia,tegra-pcie to DT schema
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
-	"open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
 
-Hi Krzysztof,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/xilinx
+branch HEAD: f42b3c053b1554d66af6fe45bb1ef357464c0456  PCI: xilinx: Fix INTx IRQ domain leak in error paths
 
-Thanks for your review comments.
-On Tue, 16 Dec 2025 at 11:08, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On 15/12/2025 15:15, Anand Moon wrote:
-> > Convert the existing text-based DT bindings documentation for the
-> > NVIDIA Tegra PCIe host controller to a DT schema format.
->
-> You dropped several properties from the original schema without
-> explanation. That's a no-go. I don't see any reason of doing that, but
-> if you find such reason you must clearly document any change done to the
-> binding with reasoning.
->
-Well, I have tried to address the review comments from Rob
-[1] https://lkml.org/lkml/2025/9/26/704
+elapsed time: 1448m
 
-Actually  /schemas/pci/pci-pci-bridge.yaml# covers most of the PCIe binding
-So I had not included them, as it would duplicate
-If I remove this file, I am getting the following warning
+configs tested: 225
+configs skipped: 4
 
-alarm@rockpi-5b:/media/nvme0/mainline/linux-tegra-6.y-devel$ make
-dt_binding_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.yaml
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.json
-  CHKDT   ./Documentation/devicetree/bindings
-  LINT    ./Documentation/devicetree/bindings
-  DTEX    Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.example.dts
-  DTC [C] Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.example.dtb
-/media/nvme0/mainline/linux-tegra-6.y-devel/Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.example.dtb:
-pcie@80003000 (nvidia,tegra20-pcie): Unevaluated properties are not
-allowed ('#address-cells', '#interrupt-cells', '#size-cells',
-'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask',
-'ranges' were unexpected)
-        from schema $id:
-http://devicetree.org/schemas/pci/nvidia,tegra-pcie.yaml
-/media/nvme0/mainline/linux-tegra-6.y-devel/Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.example.dtb:
-pcie@1003000 (nvidia,tegra210-pcie): Unevaluated properties are not
-allowed ('#address-cells', '#interrupt-cells', '#size-cells',
-'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask',
-'ranges' were unexpected)
-        from schema $id:
-http://devicetree.org/schemas/pci/nvidia,tegra-pcie.yaml
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> I won't be doing extensive review of your code, because you are known of
-> wasting my time, thus only few nits further.
->
-I will wait for any further comments on the patches
-Then try to submit the next version.
-> >
-> > Cc: Jon Hunter <jonathanh@nvidia.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> > v2: Tried to address the isssue Rob pointed
-> > [1] https://lkml.org/lkml/2025/9/26/704
-> > improve the $suject and commit message
-> > drop few examples only nvidia,tegra20-pcie and nvidia,tegra210-pcie
-> >
-> > $ make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.yaml
-> > ---
-> >  .../bindings/pci/nvidia,tegra-pcie.yaml       | 380 ++++++++++
-> >  .../bindings/pci/nvidia,tegra20-pcie.txt      | 670 ------------------
-> >  2 files changed, 380 insertions(+), 670 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.yaml b/Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.yaml
-> > new file mode 100644
-> > index 000000000000..e542adfe37b4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.yaml
-> > @@ -0,0 +1,380 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pci/nvidia,tegra-pcie.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: NVIDIA Tegra PCIe Controller
-> > +
-> > +maintainers:
-> > +  - Jon Hunter <jonathanh@nvidia.com>
-> > +  - Thierry Reding <treding@nvidia.com>
-> > +
-> > +description:
-> > +  PCIe controller found on NVIDIA Tegra SoCs which supports multiple
-> > +  root ports and platform-specific clock, reset, and power supply
-> > +  configurations.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - nvidia,tegra20-pcie
-> > +      - nvidia,tegra30-pcie
-> > +      - nvidia,tegra124-pcie
-> > +      - nvidia,tegra210-pcie
-> > +      - nvidia,tegra186-pcie
-> > +
-> > +  reg:
-> > +    items:
-> > +      - description: PADS registers
-> > +      - description: AFI registers
-> > +      - description: Configuration space region
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: pads
-> > +      - const: afi
-> > +      - const: cs
-> > +
-> > +  interrupts:
-> > +    items:
-> > +      - description: Controller interrupt
-> > +      - description: MSI interrupt
-> > +
-> > +  interrupt-names:
-> > +    items:
-> > +      - const: intr
-> > +      - const: msi
-> > +
-> > +  clocks:
-> > +    minItems: 3
-> > +    items:
-> > +      - description: PCIe clock
-> > +      - description: AFI clock
-> > +      - description: PLL_E clock
-> > +      - description: Optional CML clock
-> > +
-> > +  clock-names:
-> > +    description: Names of clocks used by the PCIe controller
-> > +    minItems: 3
-> > +    items:
-> > +      - const: pex
-> > +      - const: afi
-> > +      - const: pll_e
-> > +      - const: cml
-> > +
-> > +  resets:
-> > +    items:
-> > +      - description: PCIe reset
-> > +      - description: AFI reset
-> > +      - description: PCIe-X reset
-> > +
-> > +  reset-names:
-> > +    items:
-> > +      - const: pex
-> > +      - const: afi
-> > +      - const: pcie_x
-> > +
-> > +  power-domains:
-> > +    maxItems: 1
-> > +
-> > +  interconnects:
-> > +    minItems: 1
-> > +    maxItems: 2
->
-> This does not match the interconnect-names.
-Ok, will drop minItems
->
-> > +
-> > +  interconnect-names:
-> > +    items:
-> > +      - const: dma-mem
-> > +      - const: write
-> > +
-> > +  pinctrl-names:
-> > +    items:
-> > +      - const: default
-> > +      - const: idle
-> > +
-> > +  pinctrl-0: true
-> > +  pinctrl-1: true
-> > +
-> > +  operating-points-v2:
-> > +    description:
-> > +      Should contain freqs and voltages and opp-supported-hw property, which
-> > +      is a bitfield indicating SoC speedo ID mask.
->
-> Look at other bindings how this field is described.
-I have taken this example from nvidia binding.
- operating-points-v2:
-  description:
-    Defines operating points with required frequency and voltage values,
-    and the opp-supported-hw property.
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    clang-16
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    clang-22
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                     nsimosci_hs_defconfig    gcc-15.1.0
+arc                   randconfig-001-20251224    gcc-10.5.0
+arc                   randconfig-002-20251224    gcc-10.5.0
+arm                              alldefconfig    clang-22
+arm                               allnoconfig    clang-22
+arm                               allnoconfig    gcc-15.1.0
+arm                              allyesconfig    clang-16
+arm                              allyesconfig    gcc-15.1.0
+arm                                 defconfig    gcc-15.1.0
+arm                          moxart_defconfig    gcc-15.1.0
+arm                           omap1_defconfig    clang-22
+arm                   randconfig-001-20251224    gcc-10.5.0
+arm                   randconfig-002-20251224    gcc-10.5.0
+arm                   randconfig-003-20251224    gcc-10.5.0
+arm                   randconfig-004-20251224    gcc-10.5.0
+arm                           sama5_defconfig    clang-22
+arm64                            allmodconfig    clang-19
+arm64                            allmodconfig    clang-22
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20251224    gcc-15.1.0
+arm64                 randconfig-001-20251224    gcc-8.5.0
+arm64                 randconfig-002-20251224    gcc-14.3.0
+arm64                 randconfig-002-20251224    gcc-15.1.0
+arm64                 randconfig-003-20251224    clang-17
+arm64                 randconfig-003-20251224    gcc-15.1.0
+arm64                 randconfig-004-20251224    gcc-10.5.0
+arm64                 randconfig-004-20251224    gcc-15.1.0
+csky                             allmodconfig    gcc-15.1.0
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20251224    gcc-15.1.0
+csky                  randconfig-002-20251224    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allmodconfig    gcc-15.1.0
+hexagon                           allnoconfig    clang-22
+hexagon                           allnoconfig    gcc-15.1.0
+hexagon                             defconfig    gcc-15.1.0
+hexagon               randconfig-001-20251224    gcc-15.1.0
+hexagon               randconfig-002-20251224    gcc-15.1.0
+i386                             allmodconfig    clang-20
+i386                             allmodconfig    gcc-14
+i386                              allnoconfig    gcc-14
+i386                              allnoconfig    gcc-15.1.0
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-14
+i386        buildonly-randconfig-001-20251224    gcc-14
+i386        buildonly-randconfig-002-20251224    gcc-14
+i386        buildonly-randconfig-003-20251224    gcc-14
+i386        buildonly-randconfig-004-20251224    gcc-14
+i386        buildonly-randconfig-005-20251224    gcc-14
+i386        buildonly-randconfig-006-20251224    gcc-14
+i386                                defconfig    gcc-15.1.0
+i386                  randconfig-001-20251224    clang-20
+i386                  randconfig-002-20251224    clang-20
+i386                  randconfig-003-20251224    clang-20
+i386                  randconfig-004-20251224    clang-20
+i386                  randconfig-005-20251224    clang-20
+i386                  randconfig-006-20251224    clang-20
+i386                  randconfig-007-20251224    clang-20
+i386                  randconfig-011-20251224    clang-20
+i386                  randconfig-012-20251224    clang-20
+i386                  randconfig-013-20251224    clang-20
+i386                  randconfig-014-20251224    clang-20
+i386                  randconfig-015-20251224    clang-20
+i386                  randconfig-016-20251224    clang-20
+i386                  randconfig-017-20251224    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                        allmodconfig    clang-22
+loongarch                         allnoconfig    clang-22
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20251224    gcc-15.1.0
+loongarch             randconfig-002-20251224    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    clang-16
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    clang-19
+m68k                          hp300_defconfig    gcc-15.1.0
+m68k                       m5275evb_defconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    clang-19
+mips                             allmodconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                             allyesconfig    gcc-15.1.0
+nios2                         3c120_defconfig    gcc-15.1.0
+nios2                            allmodconfig    clang-22
+nios2                            allmodconfig    gcc-11.5.0
+nios2                             allnoconfig    clang-22
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    clang-19
+nios2                 randconfig-001-20251224    gcc-15.1.0
+nios2                 randconfig-002-20251224    gcc-15.1.0
+openrisc                         allmodconfig    clang-22
+openrisc                         allmodconfig    gcc-15.1.0
+openrisc                          allnoconfig    clang-22
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    clang-22
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    clang-19
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20251224    clang-22
+parisc                randconfig-001-20251224    gcc-8.5.0
+parisc                randconfig-002-20251224    clang-22
+parisc                randconfig-002-20251224    gcc-9.5.0
+parisc64                            defconfig    clang-19
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    clang-22
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc               randconfig-001-20251224    clang-22
+powerpc               randconfig-002-20251224    clang-22
+powerpc                     skiroot_defconfig    clang-22
+powerpc                     tqm8541_defconfig    gcc-15.1.0
+powerpc                     tqm8548_defconfig    clang-22
+powerpc64             randconfig-001-20251224    clang-22
+powerpc64             randconfig-001-20251224    gcc-8.5.0
+powerpc64             randconfig-002-20251224    clang-22
+powerpc64             randconfig-002-20251224    gcc-13.4.0
+riscv                            allmodconfig    clang-22
+riscv                             allnoconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    gcc-15.1.0
+riscv                 randconfig-001-20251224    gcc-15.1.0
+riscv                 randconfig-001-20251224    gcc-8.5.0
+riscv                 randconfig-002-20251224    clang-22
+riscv                 randconfig-002-20251224    gcc-15.1.0
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                          debug_defconfig    clang-22
+s390                                defconfig    gcc-15.1.0
+s390                  randconfig-001-20251224    gcc-10.5.0
+s390                  randconfig-001-20251224    gcc-15.1.0
+s390                  randconfig-002-20251224    gcc-15.1.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    clang-22
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    clang-19
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-14
+sh                        edosk7760_defconfig    clang-22
+sh                    randconfig-001-20251224    gcc-14.3.0
+sh                    randconfig-001-20251224    gcc-15.1.0
+sh                    randconfig-002-20251224    gcc-10.5.0
+sh                    randconfig-002-20251224    gcc-15.1.0
+sparc                             allnoconfig    clang-22
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20251224    gcc-14
+sparc                 randconfig-002-20251224    gcc-14
+sparc64                          allmodconfig    clang-22
+sparc64                             defconfig    gcc-14
+sparc64               randconfig-001-20251224    gcc-14
+sparc64               randconfig-002-20251224    gcc-14
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-14
+um                               allyesconfig    gcc-15.1.0
+um                                  defconfig    gcc-14
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20251224    gcc-14
+um                    randconfig-002-20251224    gcc-14
+um                           x86_64_defconfig    gcc-14
+x86_64                           allmodconfig    clang-20
+x86_64                            allnoconfig    clang-20
+x86_64                            allnoconfig    clang-22
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20251224    clang-20
+x86_64      buildonly-randconfig-001-20251224    gcc-14
+x86_64      buildonly-randconfig-002-20251224    gcc-14
+x86_64      buildonly-randconfig-003-20251224    gcc-14
+x86_64      buildonly-randconfig-004-20251224    clang-20
+x86_64      buildonly-randconfig-004-20251224    gcc-14
+x86_64      buildonly-randconfig-005-20251224    gcc-14
+x86_64      buildonly-randconfig-006-20251224    clang-20
+x86_64      buildonly-randconfig-006-20251224    gcc-14
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20251224    gcc-14
+x86_64                randconfig-002-20251224    gcc-14
+x86_64                randconfig-003-20251224    gcc-14
+x86_64                randconfig-004-20251224    gcc-14
+x86_64                randconfig-005-20251224    gcc-14
+x86_64                randconfig-006-20251224    gcc-14
+x86_64                randconfig-011-20251224    gcc-14
+x86_64                randconfig-012-20251224    gcc-14
+x86_64                randconfig-013-20251224    gcc-14
+x86_64                randconfig-014-20251224    gcc-14
+x86_64                randconfig-015-20251224    gcc-14
+x86_64                randconfig-016-20251224    gcc-14
+x86_64                randconfig-071-20251224    clang-20
+x86_64                randconfig-072-20251224    clang-20
+x86_64                randconfig-073-20251224    clang-20
+x86_64                randconfig-074-20251224    clang-20
+x86_64                randconfig-075-20251224    clang-20
+x86_64                randconfig-076-20251224    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-14
+x86_64                          rhel-9.4-func    clang-20
+x86_64                    rhel-9.4-kselftests    clang-20
+x86_64                         rhel-9.4-kunit    gcc-14
+x86_64                           rhel-9.4-ltp    gcc-14
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    clang-22
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                           allyesconfig    clang-22
+xtensa                           allyesconfig    gcc-15.1.0
+xtensa                randconfig-001-20251224    gcc-14
+xtensa                randconfig-002-20251224    gcc-14
 
-Is this Ok?
->
-> > +
-> > +patternProperties:
-> > +  "^pci@[0-9a-f]+(,[0-9a-f]+)?$":
-> > +    type: object
-> > +    allOf:
-> > +      - $ref: /schemas/pci/pci-pci-bridge.yaml#
-> > +
-> > +    properties:
-> > +      reg:
-> > +        maxItems: 1
-> > +
-> > +      nvidia,num-lanes:
-> > +        description: Number of lanes used by this PCIe port
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        enum:
-> > +          - 1
-> > +          - 2
-> > +          - 4
-> > +
-> > +    required:
-> > +      - nvidia,num-lanes
-> > +
-> > +    unevaluatedProperties: false
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/pci/pci-host-bridge.yaml#
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - nvidia,tegra20-pcie
-> > +              - nvidia,tegra186-pcie
-> > +    then:
-> > +      properties:
-> > +        clocks:
-> > +          maxItems: 3
-> > +        clock-names:
-> > +          items:
-> > +            - const: pex
-> > +            - const: afi
-> > +            - const: pll_e
-> > +        resets:
-> > +          maxItems: 3
-> > +        reset-names:
-> > +          items:
-> > +            - const: pex
-> > +            - const: afi
-> > +            - const: pcie_x
->
-> Blank line
-Ok
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - nvidia,tegra30-pcie
-> > +              - nvidia,tegra124-pcie
-> > +              - nvidia,tegra210-pcie
-> > +    then:
-> > +      properties:
-> > +        clocks:
-> > +          maxItems: 4
-> > +        clock-names:
-> > +          items:
-> > +            - const: pex
-> > +            - const: afi
-> > +            - const: pll_e
-> > +            - const: cml
-> > +        resets:
-> > +          maxItems: 3
-> > +        reset-names:
-> > +          items:
-> > +            - const: pex
-> > +            - const: afi
-> > +            - const: pcie_x
-> > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - nvidia,tegra20-pcie
-> > +              - nvidia,tegra30-pcie
-> > +    then:
-> > +      required:
-> > +        - power-domains
-> > +        - operating-points-v2
-> > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - nvidia,tegra186-pcie
-> > +    then:
-> > +      required:
-> > +        - interconnects
-> > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - nvidia,tegra210-pcie
-> > +    then:
-> > +      required:
-> > +        - pinctrl-names
-> > +        - pinctrl-0
-> > +        - pinctrl-1
-> > +
-> > +unevaluatedProperties: false
->
-> This goes after required.
->
-Ok
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - reg-names
-> > +  - clocks
-> > +  - clock-names
-> > +  - resets
-> > +  - reset-names
-> > +  - interrupts
-> > +  - interrupt-map
-> > +  - interrupt-map-mask
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    bus {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <1>;
-> > +
-> > +        pcie@80003000 {
-> > +            compatible = "nvidia,tegra20-pcie";
-> > +            device_type = "pci";
-> > +            reg = <0x80003000 0x00000800>,
-> > +                  <0x80003800 0x00000200>,
-> > +                  <0x90000000 0x10000000>;
-> > +            reg-names = "pads", "afi", "cs";
-> > +            interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-> > +                         <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
-> > +            interrupt-names = "intr", "msi";
-> > +            interrupt-parent = <&intc>;
-> > +
-> > +            #interrupt-cells = <1>;
-> > +            interrupt-map-mask = <0 0 0 0>;
-> > +            interrupt-map = <0 0 0 0 &intc GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-> > +
-> > +            bus-range = <0x00 0xff>;
-> > +            #address-cells = <3>;
-> > +            #size-cells = <2>;
-> > +
-> > +            ranges = <0x02000000 0 0x80000000 0x80000000 0 0x00001000>,
-> > +                     <0x02000000 0 0x80001000 0x80001000 0 0x00001000>,
-> > +                     <0x01000000 0 0          0x82000000 0 0x00010000>,
-> > +                     <0x02000000 0 0xa0000000 0xa0000000 0 0x08000000>,
-> > +                     <0x42000000 0 0xa8000000 0xa8000000 0 0x18000000>;
-> > +
-> > +            clocks = <&tegra_car 70>,
-> > +                     <&tegra_car 72>,
-> > +                     <&tegra_car 118>;
-> > +            clock-names = "pex", "afi", "pll_e";
-> > +            resets = <&tegra_car 70>,
-> > +                     <&tegra_car 72>,
-> > +                     <&tegra_car 74>;
-> > +            reset-names = "pex", "afi", "pcie_x";
-> > +            power-domains = <&pd_core>;
-> > +            operating-points-v2 = <&pcie_dvfs_opp_table>;
-> > +
-> > +            status = "okay";
->
-> No statuses in the example. Please look at other files to see how this
-> should be written.
->
-The "status" property is by default "okay", thus it can be omitted.
-Do you want me to remove the status field from the example?
->
-> Best regards,
-> Krzysztof
-
-Thanks
--Anand
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
