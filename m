@@ -1,100 +1,100 @@
-Return-Path: <linux-pci+bounces-43716-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43717-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC1C1CDE21E
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 23:28:51 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D472CDE227
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 23:31:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BEF7C3008E88
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 22:28:13 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A2B0F3000EB2
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 22:31:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32FB613D891;
-	Thu, 25 Dec 2025 22:28:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7916D2BE644;
+	Thu, 25 Dec 2025 22:31:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IjneIoF7";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="q7aHiHAh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E3SB6ibX";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="HBq+4AV6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4CC29C326
-	for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 22:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6B623315A
+	for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 22:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766701693; cv=none; b=ohZScOgJIeEm/Q1CwZJU2PURuFBPTcdST/v7uTwSwa7JwaYkJOcG3cGJz+E+w9+5GUC+SmSVJcHXlswJLweZ79ZAWbMYMux0Fw9V6hBgx4Cuvsy4fdGwsNRKBxmed11O3AFjRtBnchIPrGnueAwFppcUC0I9+j2DE1Wrs1SrlLY=
+	t=1766701873; cv=none; b=i9aZ0bI5nymNxMFEKi7/5JcDF9Q962t2khtUjZfzspCCU1/1OkcEDp1gFGDoOVCYPwUvhXdf6rqczzEPpRBINP/NUakkDUvhmPkdHChe+Ou1u58XH70j3RJzHvPCaIQ1lEdtR1c8IQYgTDfuA8Yt3BAqcCJKnh8ME36OydIgiNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766701693; c=relaxed/simple;
-	bh=ly8xlAcwEq5AylEYJRI18D+dCgZKx0t1PbpMqP7W2Io=;
+	s=arc-20240116; t=1766701873; c=relaxed/simple;
+	bh=pWxufWESdVpjSVMoJonasFKWulN2V2omt68lqo3uzG8=;
 	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=kc8k9EsGj94TWn14skQGnoq8K3LQMR+djN6eHtNj7Qkw0VASGreIW8PoPpRqG64mVvEpcocfkVComEkMkqO6zBmDJAoOWfN37L5aZM0NHe9cIw/1SgQg83ASAIw6fnfk2wRIjRx8PQwTTU1uTKUzqj2Ej77tKR6BiTPplFWGgxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IjneIoF7; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=q7aHiHAh; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=nlHbV6l5rl8aR72BTjYktFQsWdfDTKBHHDRRYfCHHH2qSNYftAOb+HzdE265i5PCMUSe9BtmBuDRqQnES0UVYgdC7kpft/dLGWfDNZALGiWZJPzyt9UEr2s8/UWnPI3WRkN/KZOCa6hmWFv9TOyJQPyU91IGDfRjW6tmy/8pTo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E3SB6ibX; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=HBq+4AV6; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1766701689;
+	s=mimecast20190719; t=1766701869;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PeNHvsN1ZBvb8Hdsv//kNjFTWoycJwfijVViJF41qv8=;
-	b=IjneIoF7fXqKFukcTsSrBKhm2n1FMnyAkcwwagOMdup07ESAof89M7UfNbZPJto7RERYqd
-	P0EUF3NtkAVQ98NnfnSYIDP7Dp7mOXJWberpsem3zNRd6zoUMRg4C20y6RnH4HoD/V6+sf
-	SaZLQ7Wke3jp1IJEN7VVB8fWByIH6sc=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=ab+MnheIVRKoBcmzrgSbvk3S4ufWNXWYr9CVeGGgh3o=;
+	b=E3SB6ibXHefP/sYpOnOQ9NEEhL5aHbkO7ZEMJ4ULCi3lIHoMbCtHetgy8I1CwFsaWQXWbs
+	Hs69ZWOLNGPY2/gIcOT6be3bm1qxCNiJQm7uarCrp1rtIVOJB+ENElLrF5+5q8LqkgYKMI
+	A9HAM5G7ZR/rVQe/9+c0uMTQT3pkGE4=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-482-ahRkV7FYMFy3Db1i8kaH9A-1; Thu, 25 Dec 2025 17:28:02 -0500
-X-MC-Unique: ahRkV7FYMFy3Db1i8kaH9A-1
-X-Mimecast-MFC-AGG-ID: ahRkV7FYMFy3Db1i8kaH9A_1766701680
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8b22ab98226so2376230585a.2
-        for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 14:28:02 -0800 (PST)
+ us-mta-287-g-X25UZQNAmS2MzhdQbXbA-1; Thu, 25 Dec 2025 17:31:08 -0500
+X-MC-Unique: g-X25UZQNAmS2MzhdQbXbA-1
+X-Mimecast-MFC-AGG-ID: g-X25UZQNAmS2MzhdQbXbA_1766701868
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-88a344b86f7so247904746d6.0
+        for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 14:31:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1766701680; x=1767306480; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1766701868; x=1767306668; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:content-language:references
          :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=PeNHvsN1ZBvb8Hdsv//kNjFTWoycJwfijVViJF41qv8=;
-        b=q7aHiHAhKiDFctYhmJS8WvOtJaLGJJEUm41lj1/1YVBLxmzbbIDbpp1MWcUFgJGuEw
-         2/EMTXdVNHQYo0PqfBqjIPv9eBwmHTUegV+Y98OtcB8cdlCbGOSQzFdIQ3HZ2/aCWKGB
-         iCTtxpM2oQThBS5VplpTT0UkLMGVYf0pSZpZkPkCVHg9CEcEUjt+AZ01K8hMCwY09ZIY
-         bhe3xukhHvsQ/06yaEwMhpILaP4JSKuwPo5iu7iRW+kUzuUQxkJlwVo0cfQT/loVNRe9
-         IcbgVKJN9brswEY9XFv4jEV95MdxoPFneV5GYiiRKRPDJioBQCBE++lCpNVRhQGmXz3X
-         RAKA==
+        bh=ab+MnheIVRKoBcmzrgSbvk3S4ufWNXWYr9CVeGGgh3o=;
+        b=HBq+4AV66DNfZOvb0tfvWKOYgl0rajg9KIchs5xk+rSIeXZvzmx0sBkqkIN8dgqRP0
+         nOj8o6GMap/8h7EEYWrvRp9vzn0a6EoNrpL9BV/rmsDhrVpVlRo9ZNRCdz2m5d4lobfM
+         3Zv0XAzfJae01+2Y5jEpoSC+4IMsiBdmIFMzxnMiMjJQmahrj4H1Mq+yFvCl893bLvcW
+         V3WWdMVzaHhRfhPSGns0krIJweh/wd/+RaXc3tTe580D5PiIa30hzWEdHtzTDqrsBKnx
+         F2wk97RQWTCzaiQ2QGrCH+unYL3S7ngkgL00XgL8oK781OyI2JLcI7/J7KmYTsNFf1+Q
+         izyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766701680; x=1767306480;
+        d=1e100.net; s=20230601; t=1766701868; x=1767306668;
         h=content-transfer-encoding:in-reply-to:content-language:references
          :cc:to:subject:user-agent:mime-version:date:message-id:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PeNHvsN1ZBvb8Hdsv//kNjFTWoycJwfijVViJF41qv8=;
-        b=dFyuInPxoiZ6kBFpPMRUj7VUQ515V335WcKk1AAXm0mB3hvKUHSVAuSkawtZfRMAZk
-         7J+QMC+TS4msYqF9I8D4v4EgULg4CU7SCRM1stdFVaJCP/eHgS0asnIsaBjx46vCyN2D
-         NBjbT4E7+YmzUbGMV6PjkK2CXm8p9PlKvFhSmMK78mPKVi/BQCZgi5wZHjneJUt4ylYR
-         H7DsWX5IucTk4SXK8JMjDknlFGRkh2Nf2dpFqycnmbXd/jXzaDtJltjgwtXb6fv5+7St
-         ZKwywxwmLSjfOA8/QGlTbd6uOJO5Xkge262l496UNM9gEZi8DhKZjCnAqe1YdxkIpbrL
-         vt1A==
-X-Forwarded-Encrypted: i=1; AJvYcCX7+bMQlWaHA5ydOI0BovmQG4g0ShWScaKXpex+/XEa8FiNrOHSqpwjGD1t/eFwsfxRRsm7DLgdnyo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIqfQ67Q7x+8ILsXGwSmyTur4wZvWRbDR7zSaK+ujSr6iWCOYO
-	fBsmzA3m3y3UUz7/tO56Uou8VW4bz68OPcMCX0yuqFhB2eDtu5w67JOXfzWArCG/jKcYnmXLzle
-	3ePbuV9B15Dd9RtdR4Aflq1Z2PZQAvxnXamDm1Pg7nYi/Bq63RhwCSeeTHj+apw==
-X-Gm-Gg: AY/fxX5alVAe2orCll1FDPJ+UckWXmC69cNyMzIW215NT3x0pfsZdUNEnQOxqYWhvqq
-	Mv4kWKqxnj8ix8NCBYrpIBbGdJWuJt1KAMAaNfkam1jxan4arTiPTpiaJG2i+xc0qdFCvClGTyq
-	GWdjeBiEOm90BsppS7XeeXmPJCCejzkEOctCmPaO1fVaLYCLt3kULRvagHh8v90rj7F8l0hSd1v
-	er2+6JxzvNQ+fPmWXdw8ZPAT159oL2zyIMRfwkLNeiyZapZ+uE/QCWgYZE1uwSN3xhduXciBs91
-	9YWpP76iUxnH164PiUDE9xzbRAE1x7lmv+EVIFg6GS7ZlpslEmB7cZNq4zK98b6y0S7LQ0P4wT8
-	etqe7GktqGE02w3jvqC+Qq/mP0Q3Cu4rCoJhIWCL7OSdFbjrnipP8NkRK
-X-Received: by 2002:a05:620a:414c:b0:8bb:26db:e22f with SMTP id af79cd13be357-8c08fbb5432mr3197587185a.30.1766701679935;
-        Thu, 25 Dec 2025 14:27:59 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEkk34PfoZDZVXHOsdvaSoOtEJlSomrI6NhnO1ciZ/uaqISBnHAQBKZ+i37TxyEDRNXrTUZhA==
-X-Received: by 2002:a05:620a:414c:b0:8bb:26db:e22f with SMTP id af79cd13be357-8c08fbb5432mr3197585085a.30.1766701679541;
-        Thu, 25 Dec 2025 14:27:59 -0800 (PST)
+        bh=ab+MnheIVRKoBcmzrgSbvk3S4ufWNXWYr9CVeGGgh3o=;
+        b=pp00seJCACeDGLDm4gJ/NAp+zOv4jtZZF6Fg8Og89Asm74kiQY0eXYN3ZZwJitf5fB
+         CIzol3v4T/OQHHI/SucxTzF3fc9QIgcORbNUb6CX0R2NSutGbtDXv2biJevGWTrowHXT
+         tdWnhopOJH7JjSlMnXfOZLLZr/9qphJ742giY6rKY4qZGzlYUN2W+4rj+ars8pZQ6fnG
+         8mQnAy7QRc/+sYaF7zDNDzDFiRimvGNJ3NWKojPL+Tq2jlGYytsOT7/zFNmAPScv6Ejb
+         S2WrdEiILkW76o4TwZm1fKhhLROs4A5tjXP2OSPSaDqE/lkxTpprehYq5T7jJh5/bp82
+         VG/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVOcPUG8/w8KUhtbqe/6nAfq99jn44IjUrgZPZFQZMaFkdyCWZfmc0XoWjpuS9ZJHPsO0v16oA010U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLte7XW0YexQCahJsrDFDsklBr6Ht8N/E5DTDpe6YTo17CjPQm
+	P/Oe5gF/rWz5MHjUs1zyu5saTCjjPfo/VyDwZw9PIitNNXbHutfWUes7I8vldaZgXToYEG2qe4K
+	+LdOy+lNVtkHPxECscgFJGYQDLewAsSVYLQUeF9f9Tufll5TDmuir6wKYmlkeuQ==
+X-Gm-Gg: AY/fxX5RxB/nwOS1XJ2/fAvuG4AFikODdvV32GFuXA7ZKLuZrzIgwRXKvfA/KbXvCAW
+	pH9SrpipKXBBf1++OqLb6quoqrPYwTYsMg8MnJOePYVlruvOxHznCtvbGXCfUueAsBb6BN2qheM
+	WX5ACXFvGJxB1umAULB5tfxeuraIWNeWffP2qKdB/23LoKKDhPtQAXjHEn67DndHVQHhbGAXU5Q
+	6U9eOpYsAeR1aO6Lr01qqg5ntkvXdR8jRXRgWbVuyJ+JX5HMGmct+zPVifYffia5wJLUio5KENX
+	eNtc/CmijkdmOPyaz2Bg9QmHmzqzOaNumLlYo9GSOjdfiZManCUVMG5OMnGvUfRs5hZNnI2hx2q
+	qA9UAG1e5R3I5T8uNFMf7mLgMkZQIT8L6ZcDBlgzoawW4xx2By852vngH
+X-Received: by 2002:a05:622a:341:b0:4ee:24fc:be81 with SMTP id d75a77b69052e-4f4abd400d4mr330935941cf.36.1766701867897;
+        Thu, 25 Dec 2025 14:31:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHthnytoNkit4+7wP+txqxK1npOqoQN/ulutuPL/gqwE7YXGTzVApXUK7yM3kp5hfoASbcRLg==
+X-Received: by 2002:a05:622a:341:b0:4ee:24fc:be81 with SMTP id d75a77b69052e-4f4abd400d4mr330935421cf.36.1766701867385;
+        Thu, 25 Dec 2025 14:31:07 -0800 (PST)
 Received: from ?IPV6:2601:600:947f:f020:85dc:d2b2:c5ee:e3c4? ([2601:600:947f:f020:85dc:d2b2:c5ee:e3c4])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c0970f5fdasm1605628285a.35.2025.12.25.14.27.54
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4f4ac65344bsm146923311cf.28.2025.12.25.14.31.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Dec 2025 14:27:58 -0800 (PST)
+        Thu, 25 Dec 2025 14:31:06 -0800 (PST)
 From: Waiman Long <llong@redhat.com>
 X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <04708b57-7ffe-4a97-925f-926d577061a6@redhat.com>
-Date: Thu, 25 Dec 2025 17:27:54 -0500
+Message-ID: <006b00ab-c8b4-4a2d-aa38-94a41eadd238@redhat.com>
+Date: Thu, 25 Dec 2025 17:31:02 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -102,7 +102,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/33] sched/isolation: Save boot defined domain flags
+Subject: Re: [PATCH 06/33] cpuset: Convert boot_hk_cpus to use
+ HK_TYPE_DOMAIN_BOOT
 To: Frederic Weisbecker <frederic@kernel.org>,
  LKML <linux-kernel@vger.kernel.org>
 Cc: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
@@ -128,52 +129,76 @@ Cc: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
  linux-block@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org,
  netdev@vger.kernel.org
 References: <20251224134520.33231-1-frederic@kernel.org>
- <20251224134520.33231-6-frederic@kernel.org>
+ <20251224134520.33231-7-frederic@kernel.org>
 Content-Language: en-US
-In-Reply-To: <20251224134520.33231-6-frederic@kernel.org>
+In-Reply-To: <20251224134520.33231-7-frederic@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 12/24/25 8:44 AM, Frederic Weisbecker wrote:
-> HK_TYPE_DOMAIN will soon integrate not only boot defined isolcpus= CPUs
-> but also cpuset isolated partitions.
->
-> Housekeeping still needs a way to record what was initially passed
-> to isolcpus= in order to keep these CPUs isolated after a cpuset
-> isolated partition is modified or destroyed while containing some of
-> them.
->
-> Create a new HK_TYPE_DOMAIN_BOOT to keep track of those.
+> boot_hk_cpus is an ad-hoc copy of HK_TYPE_DOMAIN_BOOT. Remove it and use
+> the official version.
 >
 > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 > Reviewed-by: Phil Auld <pauld@redhat.com>
+> Reviewed-by: Chen Ridong <chenridong@huawei.com>
 > ---
->   include/linux/sched/isolation.h | 4 ++++
->   kernel/sched/isolation.c        | 5 +++--
->   2 files changed, 7 insertions(+), 2 deletions(-)
+>   kernel/cgroup/cpuset.c | 22 +++++++---------------
+>   1 file changed, 7 insertions(+), 15 deletions(-)
 >
-> diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
-> index d8501f4709b5..109a2149e21a 100644
-> --- a/include/linux/sched/isolation.h
-> +++ b/include/linux/sched/isolation.h
-> @@ -7,8 +7,12 @@
->   #include <linux/tick.h>
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index 6e6eb09b8db6..3afa72f8d579 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -88,12 +88,6 @@ static cpumask_var_t	isolated_cpus;
+>    */
+>   static bool isolated_cpus_updating;
 >   
->   enum hk_type {
-> +	/* Revert of boot-time isolcpus= argument */
-> +	HK_TYPE_DOMAIN_BOOT,
->   	HK_TYPE_DOMAIN,
-> +	/* Revert of boot-time isolcpus=managed_irq argument */
->   	HK_TYPE_MANAGED_IRQ,
-> +	/* Revert of boot-time nohz_full= or isolcpus=nohz arguments */
->   	HK_TYPE_KERNEL_NOISE,
->   	HK_TYPE_MAX,
+> -/*
+> - * Housekeeping (HK_TYPE_DOMAIN) CPUs at boot
+> - */
+> -static cpumask_var_t	boot_hk_cpus;
+> -static bool		have_boot_isolcpus;
+> -
+>   /*
+>    * A flag to force sched domain rebuild at the end of an operation.
+>    * It can be set in
+> @@ -1453,15 +1447,16 @@ static bool isolated_cpus_can_update(struct cpumask *add_cpus,
+>    * @new_cpus: cpu mask
+>    * Return: true if there is conflict, false otherwise
+>    *
+> - * CPUs outside of boot_hk_cpus, if defined, can only be used in an
+> + * CPUs outside of HK_TYPE_DOMAIN_BOOT, if defined, can only be used in an
+>    * isolated partition.
+>    */
+>   static bool prstate_housekeeping_conflict(int prstate, struct cpumask *new_cpus)
+>   {
+> -	if (!have_boot_isolcpus)
+> +	if (!housekeeping_enabled(HK_TYPE_DOMAIN_BOOT))
+>   		return false;
 >   
-
-"Revert" is a verb. The term "Revert of" sound strange to me. I think 
-using "Inverse of" will sound better.
-
-Cheers,
-Longman
+> -	if ((prstate != PRS_ISOLATED) && !cpumask_subset(new_cpus, boot_hk_cpus))
+> +	if ((prstate != PRS_ISOLATED) &&
+> +	    !cpumask_subset(new_cpus, housekeeping_cpumask(HK_TYPE_DOMAIN_BOOT)))
+>   		return true;
+>   
+>   	return false;
+> @@ -3892,12 +3887,9 @@ int __init cpuset_init(void)
+>   
+>   	BUG_ON(!alloc_cpumask_var(&cpus_attach, GFP_KERNEL));
+>   
+> -	have_boot_isolcpus = housekeeping_enabled(HK_TYPE_DOMAIN);
+> -	if (have_boot_isolcpus) {
+> -		BUG_ON(!alloc_cpumask_var(&boot_hk_cpus, GFP_KERNEL));
+> -		cpumask_copy(boot_hk_cpus, housekeeping_cpumask(HK_TYPE_DOMAIN));
+> -		cpumask_andnot(isolated_cpus, cpu_possible_mask, boot_hk_cpus);
+> -	}
+> +	if (housekeeping_enabled(HK_TYPE_DOMAIN_BOOT))
+> +		cpumask_andnot(isolated_cpus, cpu_possible_mask,
+> +			       housekeeping_cpumask(HK_TYPE_DOMAIN_BOOT));
+>   
+>   	return 0;
+>   }
+Reviewed-by: Waiman Long <longman@redhat.com>
 
 
