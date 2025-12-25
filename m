@@ -1,175 +1,175 @@
-Return-Path: <linux-pci+bounces-43710-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43711-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86AD3CDD9AF
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 10:40:36 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E90CACDDA12
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 10:57:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4612A3086CBB
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 09:37:20 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 641A2301F4F3
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 09:57:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB526319606;
-	Thu, 25 Dec 2025 09:37:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C439238C3B;
+	Thu, 25 Dec 2025 09:57:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bYB4Kp3d"
+	dkim=pass (2048-bit key) header.d=vortan.dev header.i=@vortan.dev header.b="hJBYY57H";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tPqNC3QY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7452F616E
-	for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 09:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD741E572F
+	for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 09:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766655438; cv=none; b=TsC04n8+D4nCUQdxFtmzMp2JSbcSKk4HGyLO6zQBR48grcZBw/lX6Q0UaOe11k4yVWxc2MgQMApl0p2FgcN8E1yhFMk3Pl5HOl82F1A6M4ASCz6T69du0BmSloaO1/N3CQSGvFDlWfziPoDOFgT6KfMrJv4d/FHs1c+nmUTrrgk=
+	t=1766656653; cv=none; b=l32KnNdY2WQiHj++Hq+HTJkZqVOw2uOgU4KWDEtZqjzLhnb5B/8Cy330nE9sQiu3WvoeSPc8VHYVxmBgb3b7pJTScGFqwOHfS8/4LtUvmwboDUg+l9hqeuFBFL9G+l/7wliHEgCXn/yEO7KdtqYYrDWE++f4x1usy136ojKma/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766655438; c=relaxed/simple;
-	bh=VxBqnPDdnIHjfcuIiI4D7oNyQ73l/jfjo2YNl08bqJE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MYBN2SGwNXSbXRY6e6gjd0FJ0IzmQyfRzux6kojKNEpcoDmjGCw57wHY1W1aiFrywWF6YaUDL0rfaxjR3e0IXuFYAD3DGoy4o0GCmSFfbQ912dzOCeU9k8B7uTV1JFeGGnN7TG7TZqcaQZdxXKllSsEotv39Sjgk8A9NWL9VE2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bYB4Kp3d; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-8ba4197fbd4so689670485a.2
-        for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 01:37:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766655435; x=1767260235; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=nVJof1x/tXOVIVA84B6vueb8075E7eaQsUaC6CPaNX4=;
-        b=bYB4Kp3dOCIKNZUpZacJP3WH3RWh6xfO55jGEMS21uqATakjZbASrCK4Dkil01nui1
-         w+Hvviky4beOmYefTkqi2qQb9qaGV4+VOU46bybMMdiZ6iq1/T9+jU4f9cXBS+15qEmT
-         EsFu6gNn++hM83JqlLhZI8qYNOmxzYoMZmx8brw7i3A+bmSbn1lJLbGhs/59CI8rjDM4
-         IvljAzzuFGW9PkWfZZlMAzqmn4zz1CewJFFBFQiu32iAZHbFtYtH8QwwrIZsFVM3Kt35
-         BjdtlH3EgTH8Ay9vhIS8muTxxRapDQi3dnj2dnXQtt1j7KZtYr2ebGu7j4x/hi+9w0Tq
-         rt0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766655435; x=1767260235;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nVJof1x/tXOVIVA84B6vueb8075E7eaQsUaC6CPaNX4=;
-        b=V7nu6LoMyBCRKsrAzKx3yzWwRh0BHWlmy68NjElGFjWRPhSQ0+Fjova+0xGJBcCvez
-         mil7RWySfJaqKZ0ZdZQJX/BkJ7LPegVSLSIFtCLHQkdsQsXpFXAn2k9TuGb27knsgoap
-         wqB6tRH3s8GSwfFc3XDDMH66vrVKJUgbxQ/KrtO8MDSlX61buZIu4g4VxGLOTX0GRjtR
-         ZKS496t16KNeCr/26NV2D4I5yIRMv9YAjwdqKo+mE/jH53CSv4HMdv33lBmaalYxBw27
-         qUX0DmeH3DiqBO8qCSWPbo/yZW19bB+m9a5bKh3SzhhD6OrjuZkvef71zRnBFxL0FZ42
-         5WMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWfaijwZBF8Jc2mFtLAFKbK081wqjzFXDqHGwHti6g++is+OjY7EaqiwDFT/wTxu8ILMiRB96AalrY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZLZc/QkR/ElsAPQ+MJtgiy6tIsymZHa2tENYp2XLGbwoOiCfO
-	y84wx/+nw096/RKEEtOhdxZLvX2n4C7P9dR6eHAa+41IQKFR7gVATANk
-X-Gm-Gg: AY/fxX4L41TH3ee4ZWOTIA0gTcELc1OTiFFtehYbnhcdBIceXPTEopJP81h+xau6tk+
-	w7n6/nREHVhaUdpWcKo7stvWRTepuaooowHhYtbDUJ5kld3n2xZ/TR3kmuLjlEAb700hyVrpTsa
-	MqJvM0H1Cj8tI7YeoXv30eaYyShfeQbeoxzPkkdXHfV80yKia+RpGXICttcJHzuJDnm7vqiX8fh
-	GRZiLTyG2npioEQ4Cp4HVtaSkBz/cdnyfty+xYsJ2ceVVGW6xvoCKHZdlltxRVrxxgoZI+8NWY+
-	d6mnS41WwMHxTA99L2TWabpKGaFSNwX212haXSCgk7EsuRfap8nQoeZeWdqKFe3F98zfewLc5UZ
-	YYZvJWKFIQbHzaXjRiHgCbchkNx5znqesZb+Wtzzeb9Oxt7awbBwjO8m6DJy4CW265XJ02KUMS9
-	AxxUXg/mlcfRIaoiukKOGGJdep1jTfhzK8cPtHq4yW3LuEJ7gODymKVpMSoP6pn2YvCeMEV4Tde
-	hbj0R0iKz70Mp8=
-X-Google-Smtp-Source: AGHT+IEbRRGZzGujWcSUy0xGCmvJO9s2DIM/tr5qJ7KrDMoaQ6oVqoSAy936oz6+khGEi3m+dJtBJg==
-X-Received: by 2002:a05:620a:31a8:b0:8b1:adfd:f850 with SMTP id af79cd13be357-8c08f657bddmr3283688685a.18.1766655434938;
-        Thu, 25 Dec 2025 01:37:14 -0800 (PST)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c096783922sm1491700085a.7.2025.12.25.01.37.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Dec 2025 01:37:14 -0800 (PST)
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 081C8F40068;
-	Thu, 25 Dec 2025 04:37:14 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Thu, 25 Dec 2025 04:37:14 -0500
-X-ME-Sender: <xms:yQVNaa9gqC8xP3THqdxzxmukKh3HUKGi8emT874iWgZpND_VACX0VQ>
-    <xme:yQVNaWjsM4lK2eGHNg2XLD5mpvPSh7pdaWPRkf4t_jvoV5a3fp3W2ZqEd4FPTzEp_
-    uG7qhSYukof2Sy9Xl2K_UiUoSGLajvIegcTYOQoOyHUv14dGnPN0w>
-X-ME-Received: <xmr:yQVNaVhW5xAU0gXRIiniTb3fKy2XwvhESYmWhbcG6v4-zEe0L_lNFgXi>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeihedvgecutefuodetggdotefrod
+	s=arc-20240116; t=1766656653; c=relaxed/simple;
+	bh=GgNc3Zo28GTYkoEZos5akQl9BwxBFlx97GgFTfHB10s=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=ivuH5XC9DuJhsg1Sh6f/+BdDVaw8s0ZpBPzoaZZfa/iuqMR/XMTl/ri3AUJ+0g1TOGEb2ENms4310Qt2n4qmA45ELxZRrhF6h1q79Vivg+iMEEuMcB4RD5Ie2lUp8ncOkjoU/D1cKEF/L9ALE3uODN78t6EYqZY/4Vhq3VrmAJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=vortan.dev; spf=pass smtp.mailfrom=vortan.dev; dkim=pass (2048-bit key) header.d=vortan.dev header.i=@vortan.dev header.b=hJBYY57H; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tPqNC3QY; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=vortan.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vortan.dev
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 9030614000BD
+	for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 04:57:29 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Thu, 25 Dec 2025 04:57:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vortan.dev; h=cc
+	:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to; s=fm2; t=1766656649; x=1766743049; bh=x0CxR6nsS8
+	uYNVMmgflei2AYL7ZQvEXRYjzJJ4NEmng=; b=hJBYY57HfXZMlDNEtnBXz/USXc
+	bK2cjc5pwMMaahcY4Lwea4LIcQKj2FKVt6s8BKAwjEHPDlfnjQICzwu/HuxP/6cA
+	AbLjjN0bbkhoy2DsXODjeStyLngyOnGclIXvKqUpqaXscSbWIoWPMyvtyCVEPkWN
+	bNFWqIzOkO0CPuPxt5db+9I4FIydX8JVbQTW+AOvoT1jPOZeT4AEcIJqFefjgrn9
+	xS11577DYK8T5hgbZp5TV9vXH13w4Bjn3Q1E5uuWkwOeR8MUhwiJHBcQKsIYj3pA
+	jjoR62oJubzINNyh10OYxjV1JSURbublaM8QnroWYWYYJOu8y0htxjV6OQFw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-transfer-encoding:content-type
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1766656649; x=1766743049; bh=x0CxR6nsS8uYNVMmgflei2AYL7ZQvEXRYjz
+	JJ4NEmng=; b=tPqNC3QYsrqoaPPGoGT4FakiVgghQPFR21oxuaC0O6hSC/an4fU
+	BWp4pMItnUAoHft71irYEPVEsv64+fWgZ3/rTWboXratJCj7y9cZWoDWX/KsqUuT
+	vZ4bz8IHp8uApkqZDfXY6RRHfvYDJnA8FPPIcSJFaF7fmSpfiLVylF6tzxgriWvH
+	7qevABTBdzk4u44jX8aocStJjQT6/prs1LQ26YiQwPtA6fdGvr6JQIWW15NRPpNv
+	xqbmiFaeEKW9NX/JudIixTqvQ0U1cy3EHLdchbkL6pBwTB44vpRVnM7DHr73dLKi
+	F6j/aWRO/cIXfKphgb6mHS1LesQGqgLdSWw==
+X-ME-Sender: <xms:iQpNaYS4PWJNtBJru3yv_Stl4lac0jxdgn1nE3qDL2BvYY0QLT4lGg>
+    <xme:iQpNacs8XoDYRalGj9SqpeplvLmziPuKhdyY53h3ysC5tL-9bBTfn7muUb3-yIZ38
+    lqdZpDOMswE0tAvArFpHioXsH9vBJblfg0ktJEV0XkOcjlYqladBME>
+X-ME-Received: <xmr:iQpNabevBORsh42VQmOGwUqE5jeywdwv6ySJJEiGnow-6i3OChzv953OGJFQP6l13DQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeihedvkecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
-    gvrhhnpeejhfeikeekffejgeegueevffdtgeefudetleegjeelvdffteeihfelfeehvdeg
-    keenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
-    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
-    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthho
-    peduiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhhighhuvghlrdhojhgvug
-    grrdhsrghnughonhhishesghhmrghilhdrtghomhdprhgtphhtthhopehfuhhjihhtrgdr
-    thhomhhonhhorhhisehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrkhhrsehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhr
-    tghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgrrhihse
-    hgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhn
-    mhgrihhlrdgtohhmpdhrtghpthhtoheplhhoshhsihhnsehkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:yQVNaU7vLmlvz_TmzcKK8_GzqdrLXemwappQh8-qIqvrOgvxqbAxIQ>
-    <xmx:yQVNafRDSgXhWrIjhsyh9Pp9n7AKTBJNjr6RAnvc-4qgnv0QQP4NRA>
-    <xmx:yQVNab9kmwaFvijLW-Wef3zNk7ScOIt4bUHFqW-lXEvbLT50IfbPMw>
-    <xmx:yQVNaYr9-SoXJgDtCavVte9R-z2AUlbCpZo1Gv7JzqP8QmEJcM1OuA>
-    <xmx:ygVNaZX1HyyMaSe9_UxDPloPJKxV-eCNV6w9Smr60iJ45shfJfqdHfmq>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 25 Dec 2025 04:37:13 -0500 (EST)
-Date: Thu, 25 Dec 2025 17:37:11 +0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Joel Fernandes <joelagnelf@nvidia.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] PCI: Provide pci_free_irq_vectors() for CONFIG_PCI=n
-Message-ID: <aU0Fx_w6ZSi-I7UQ@tardis-2.local>
-References: <20251215025444.65544-1-boqun.feng@gmail.com>
- <CANiq72n1SX4OGFR4wNzurNX2RQki_ZmD13bBfywxxOEmw6cGZg@mail.gmail.com>
+    ihhlohhuthemuceftddtnecunecujfgurhepkfffgggfvffhufgtgfesthekredttddvje
+    enucfhrhhomhepffgrvhhiugcutfhusghinhcuoegurghvihgusehvohhrthgrnhdruggv
+    vheqnecuggftrfgrthhtvghrnhepgeeljeffgfdtudeuheduueeljeejleeileffhedvve
+    egiefgleehudekveegvdfhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomhepuggrvhhiugesvhhorhhtrghnrdguvghvpdhnsggprhgtphhtthhope
+    dupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqdhptghisehvghgv
+    rhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:iQpNaRK8BmNPG8B_uzqpnb9C7dnGSeuTFT_yZUCqmAANFrs2Famf0g>
+    <xmx:iQpNaRY1k9Rg6KYTxk0ysKZp5yzrQTKEAjLp9CtGh87glUHuutR0uQ>
+    <xmx:iQpNaUtLUoqY4iFAH8khnVMweZNzm-S1X4N1CAgnS_G_bOXCf5K47Q>
+    <xmx:iQpNaWt60lZkVIuqCRZV2cKYUxVUlMpCui9w6AwGsia-3VhItNmHbw>
+    <xmx:iQpNaQQ0SoyBi-TKaj0CQI969WDGq01eKecn5ADO6kcTNYW-vWzBZBsZ>
+Feedback-ID: i64c648fd:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA for
+ <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 04:57:28 -0500 (EST)
+Message-ID: <dd24b51d-9add-4ea1-b8db-05d856222f7f@vortan.dev>
+Date: Thu, 25 Dec 2025 01:57:28 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: linux-pci@vger.kernel.org
+From: David Rubin <david@vortan.dev>
+Subject: Question about ARI + SR-VIO
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72n1SX4OGFR4wNzurNX2RQki_ZmD13bBfywxxOEmw6cGZg@mail.gmail.com>
 
-On Thu, Dec 25, 2025 at 10:10:04AM +0100, Miguel Ojeda wrote:
-> On Mon, Dec 15, 2025 at 3:54 AM Boqun Feng <boqun.feng@gmail.com> wrote:
-> >
-> > Commit 473b9f331718 ("rust: pci: fix build failure when CONFIG_PCI_MSI
-> > is disabled") fixed a build error by providing rust helpers when
-> > CONFIG_PCI_MSI=n. However the rust helpers rely on the
-> > pci_alloc_irq_vectors() function is defined, which is not true when
-> > CONFIG_PCI=n. There are multiple ways to fix this, e.g. a possible fix
-> > could be just remove the calling of pci_alloc_irq_vectors() since it's
-> > empty when CONFIG_PCI_MSI=n anyway. However, since PCI irq APIs, such as
-> > pci_alloc_irq_vectors(), are already defined even when CONFIG_PCI=n, the
-> > more reasonable fix is to define pci_alloc_irq_vectors() when
-> > CONFIG_PCI=n and this aligns with the situations of other primitives as
-> > well.
-> >
-> > Fixes: 473b9f331718 ("rust: pci: fix build failure when CONFIG_PCI_MSI is disabled")
-> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> 
-> Related: https://lore.kernel.org/rust-for-linux/20251209014312.575940-1-fujita.tomonori@gmail.com/
-> 
+Hello,
 
-Thanks! I was missing that, and I should have replied Tomo's patch.
+I had a question about ARI and SR-VIO interactions, and I hope this is the
+right place to ask.
 
-> I guess it counts as a report, so we may want a Reported-by (Cc'ing Tomo).
-> 
+As I understand it, when ARI is disabled it is impossible to address a 
+function
+number larger than 7 (since the function takes up 3 bits in the ID).
 
-Tomo, how do you feel about two fix approaches? I think providing dummy
-pci_free_irq_vectors() is better because it's easier and aligned with
-other pci_*() APIs.
+Currently, when creating VF through SR-VIO and sysfs in an environment
+where the first VFis placed at function number 8+ (such as when we have
+a vf offset of 8, and a stride of 1), there is no check in place for 
+ensuring
+that ARI is enabled.
 
-Regards,
-Boqun
+The kernel will go and ask the device to create this VF, and I believe the
+devfn will just be garbage (although I haven't checked this). The device
+comes back to the kernel with an "OK, everything is good", however when the
+kernel then asks for the config on that VF, it gets complete garbage
+and fails after trying to interpret the header type. Doing the
+`early_dump_pci_device` just shows all 0xFF.
 
-> Cheers,
-> Miguel
+Example:
+[   45.017386] ice 0000:01:00.0: Enabling 1 VFs
+[   45.121403] pci 0000:01:01.0: config space:
+[   45.121499] 00000000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+[   45.121501] 00000010: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+... (cut for brevity)
+    45.121508] 000000e0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+[   45.121509] 000000f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+[   45.122040] pci 0000:01:01.0: [8086:1889] type 7f class 0xffffff 
+conventional PCI
+[   45.122049] pci 0000:01:01.0: unknown header type 7f, ignoring device
+[   46.169410] ice 0000:01:00.0: Failed to enable SR-IOV: -5
+
+I had a rough time debugging this issue, since I am not very familiar 
+with how
+PCI works in general, although I've been learning a lot recently. I finally
+did figure out that enabling ARI solves it!
+
+I would like to propose we add a check in `pci_enable_sriov`, that if the
+"effective" vf function is larger than or equal to 8, we produce an "early"
+error and a more helpful pci error message to dmesg. This may be a naive 
+idea,
+and I'd like to hear some feedback on it.
+
+I would also love to understand the process of submitting patches to the
+Linux kernel better and if possible write this patch myself.
+
+Below is an explanatory patch on what I'm trying to propose. Please 
+understand
+that it is merely trying to demonstrate my idea; we would come up with 
+better
+wording and fix issues that I likely don't see.
+
+Thank you and happy holidays,
+David Rubin
+
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 77dee43b7..e9ff5e892 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -672,6 +672,13 @@ static int sriov_enable(struct pci_dev *dev, int 
+nr_virtfn)
+             (!(iov->cap & PCI_SRIOV_CAP_VFM) && (nr_virtfn > initial)))
+                 return -EINVAL;
+
++       int effective_virtfn = dev->devfn + dev->sriov->offset +
++                                       dev->sriov->stride * (nr_virtfn 
+- 1);
++       if (effective_virtfn >= 8 && !pci_ari_enabled(dev->bus)) {
++               pci_err(dev, "cannot enable %d VF without ARI enabled", 
+nr_virtfn);
++               return -EINVAL;
++       }
++
+         nres = 0;
+         for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
+                 int idx = pci_resource_num_from_vf_bar(i);
 
