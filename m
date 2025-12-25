@@ -1,74 +1,76 @@
-Return-Path: <linux-pci+bounces-43712-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43713-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 136E4CDDA24
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 11:06:57 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7928ACDDA30
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 11:08:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 15AF8301510A
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 10:06:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 78757303AE9A
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 10:06:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A888F2F3612;
-	Thu, 25 Dec 2025 10:06:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 010A93164AD;
+	Thu, 25 Dec 2025 10:06:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JfvahGCa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eIts07Al"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CE43016F7
-	for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 10:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488262E8B71
+	for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 10:06:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766657214; cv=none; b=t4Ziwxf7tdIPy9AybtXagfjmBjABQeFRveD6A0kPdBoycFOEWV6mxVVicHztIvAX3HHe57iSim2L/aYimq9KBK4BjTGJAQcqsJIb6rMvX5ZOKC8g25rZZgMD5BtcuiKd8VxtMN/QHB1b3VxEzq/bzfE1UBd1Er88iuIUkEkLSOk=
+	t=1766657215; cv=none; b=hZqvUeP8Jh4DqRA+sg3Sdkk0NpGqXK7H8tAwuWtoO+kXD+YlpGkjOYRPaBzccy7BXPTEiUi9LtLqly2VvoozjYiCKLePCjqMuLk4RNyl2rTJ8fNDrGKIKZrJHngZM4VH1bFuAWCq+xrxR+LWvIR0SjXsd3YdWgSHgEl+vx29dck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766657214; c=relaxed/simple;
-	bh=F5gFdjqBDJfxc1khYe9bw6O9PWkpea7DfEZG1oezFXA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dsxLwrSd/S1jbLFDBhmTYeg0UhtUQhK2agJqEzkZ1zv8MzUAiFLgpq13uptDjvGmA1cIkU2TwIawDUR+KTeffWEzclsWgk9L7Ul1UNY2AhlgcVE7HzynbTOA5h9PbBNEeOBmjW+oklrwiKxRcyDCNY7ba8oghy/lNc4mbAWcMyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JfvahGCa; arc=none smtp.client-ip=74.125.82.48
+	s=arc-20240116; t=1766657215; c=relaxed/simple;
+	bh=ZzOdUNMhuT8F0aRUiUAWGdfQcxqFelYu4TJpHAJtjjc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eVUqtWYqTS2zMW2Z2y9K0+eGQi0FYC5AL2S9N0HUCpcTlbDjTULhCmXOQbmp9w383pO7TrtUpLqUumQX/afELfyeVRFzQsMwR5LnbbvdBpnmJBxrsK3LpZ5JzwwQSYwsf41HuuiEKOTc8sDjOCNEWh3I3Wvy2dQb+Vqs9/IpQJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eIts07Al; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-11beb0a7bd6so10305339c88.1
-        for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 02:06:51 -0800 (PST)
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-bc09b3d3afeso3677371a12.0
+        for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 02:06:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766657210; x=1767262010; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EoWlifoRrGIbrYwrkHpjiDlU/FrNuM+x7k7ugYZXtEw=;
-        b=JfvahGCan2dX+gJvnLSRAQ5qo84UK4mNqISSJM0Ho+2yO8gYLhQ1QBN2Lpbcd5Unvs
-         A5ka0I5qkx2xxXF0/sW5lOD01mpIDbeMP6cA6l7DtnLal5WVhg9qUs3DNTEi+wZvMOy1
-         NDNnMy8gIz4KLsJ+YFdTu6Kbk4YQVwZwfi45mFBfYHFeuikABxpThqgWU6xunnNchrcT
-         1+L3UllouRS0MNOUlOJXSYbgsszhwvzCRXqbLF1Kg0E/x705TEALXLHeC1FVDEc1UH63
-         fsRdyQuDWXXTqmTjZTI9uphZ1uMDIW70Kbgf7cRJ7Mq49r6MVcnmB3FuyLeqvBLX1MrQ
-         c07A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766657210; x=1767262010;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1766657213; x=1767262013; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EoWlifoRrGIbrYwrkHpjiDlU/FrNuM+x7k7ugYZXtEw=;
-        b=rUICOvvuRR8mmp86FQoQNryBwa3GGV3wjZYKJ0WKSQsBQFy6XBQFGYc7kfW9hJrXI/
-         87rbCHkn8QONk3gx42Pd/i4u07GJs+gHaVt+SmyPePAK1kiVAEW7jzocgJW+V30yJqGy
-         WXbztXMs2TJzOl0/gafviLb/4QT312uk9/EvhYo/tGYjBFUj1dhi3G7nGXvNyZQ0udyY
-         hfdzd1ytQWAliED2nKTp6PnislTUQmGH0Xv+SuDfO/uC2BNh6lveKpbRvn2CntywXvvN
-         i46xDdNfDq7wgfBoyZvQU8G1uVmPVmZLIyloX86Fesg4cyXK/tZyDX7ibhdLs86hLpiO
-         V/TQ==
-X-Gm-Message-State: AOJu0YzuxYfhnBY5HacboH+0N5rtUI3K1aXAhYaRbgeR5xTsB7TDxZGv
-	LMwmdn55olFPDOwmQ9jUrOnX9aJItynmB1Y8IbIIdWCqzXHkvVmwI1Zd
-X-Gm-Gg: AY/fxX4oLoV4qz/ExRPOA8jsekvO98nKHOImt5E/+kFCxRX7qU2nYE8n98VqbHSSiTi
-	U7McQVVVJI53bbFDJixtr7aF78Xgicn29dT+jK/G2EaviSzZ5MqmFsscerPAU9N3/7FdPOFK8S6
-	5FekP2ohSmR0h6MXBhsXo0N3WbxWb+AE/okC3wvw3RmpJUB6/+rPBAiiUL8o54kjxQ3HaoLvHc3
-	QgYkC63+frT+KiabZkLD0ahgTHyLLh3x2CntY59q55am+smbweKoiYv16k2s5TG1OxL5YnQ1YGD
-	5kFL3zClgeoU1m/ZD0vbzBTDaXcEOfvKycbnkKQ34Kn2ldTCK54Zy0pObmlvvbjpyC6H18Ui34C
-	yKgodvocBFRElj0/ngHCFXYisxiuVd/2xSY1ktHCLsTieAAuT0U4/AKshlVZ9p108xRloFMmhmR
-	D+TfyPbCyEWw==
-X-Google-Smtp-Source: AGHT+IFbsnhzrU2HWPMRmMa4EdnUFdxSrSsBDm9mIfEbSkhwERlZyQXQcunmeehaesCNYJS3yHd1mw==
-X-Received: by 2002:a05:7022:b90:b0:11b:3eb7:f9d7 with SMTP id a92af1059eb24-12061975750mr21668587c88.14.1766657209946;
-        Thu, 25 Dec 2025 02:06:49 -0800 (PST)
+        bh=jKv9AmSkB7bwFTo+4QrtWfuiVpsMTBZ+yI4lWsjh46o=;
+        b=eIts07AlEfZNu8+3fl4kP+MKZp1nLI8JoSCID1tYpTlIv20kmPGCmelM5CvXrAABe3
+         smnLFtaITPoKxuzRpSuURFPl91Zsrh/nOcqFujSXRJQj8DfnP+K0uLoYOW4G4MM8KaFj
+         KF5kFTVVK3V5oGOXnDLE437jw7O9VG7gmJRM8IRYoN7+/SMiwwSQH5Y/zqUakVEp23ed
+         G4Xy9DweuqYu4F0PQGGiEbcZpF7azQXINpnqdDx84dPBYz/XfFf/4n6oFeMMK2C9/F0b
+         RCfC1kW1ueByrCaCktKdUNXiwwfFK1FPVhkWvemXm5O8qoNU0Plu5m8hHCHXoO1r8l42
+         tm9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766657213; x=1767262013;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=jKv9AmSkB7bwFTo+4QrtWfuiVpsMTBZ+yI4lWsjh46o=;
+        b=aFpx93+g8rdFvaNvNiGlOlUYZxxFw1+816LePxAMU9E/Acp/vCLMpV5GKoV+jhLL6G
+         GaVNT97h84LHeiJd2OsOM9HT457VUHRhkGPa6uYTA+4cZmUQDcZKQpsTAW3Skd8S2ojA
+         UOR09tjIEZdF65+apd8uv/nOKadYO92uNNr2Mf8y4q+f9id31i3dVXRPgkiyVE2lhG2f
+         qKifSX+txNJo2LIBPhA14vy8uwCijuxHT/mX3MoOXa+479LVV5k90iVb9gqwygjkRcKC
+         aw4LjJvvm9hyvKz39OO51EpUuYa5qtMvX1/c6SaZ0KfEf4Eys3fvfKCAwi+JuKXSaWsf
+         HXHA==
+X-Gm-Message-State: AOJu0Yz42RQXeD8tXkyWeGdwbWorMeR7gJ02hGQwRNF8beupcGzwabik
+	ZFURLOdwDaFirojBiWkV1KcjbbcFXpaLQ02tVI69RvP/WCwkDpTs5DVi
+X-Gm-Gg: AY/fxX6MqgczDJBd9rJidoOW9rjFRmUfNxhz1dT5Xk40w6gX9bmxU9ogmmgjBx03FS5
+	8/8oP8EifvODULyhGudlm5rnkz06NC6GK2hHDdg9y3MEve2AyNRWCJXkuDB8P738H3RkQi1l40i
+	HPG0cydYZ6DtkWxBtpHsucnhnGxkswtL0fH453JvomySvwpcrUJh2/fqDa6SHPwwvGkZD1O1B7Q
+	dvKFe5mKk83PpeUIIWZVKt1QUB0KPo8FpJZeLSJYl+GA+g0ao6Ib022nD+q3Nl1NGTd+AgcmXKF
+	gSVw1AbtwLao1bA0ZdELbMeuYwoKmrFGlFS98c2Qrv/MsH+NZpmoPpT/HqtoE8Llj2GSaueTO4T
+	TdKamQORUI6fBDxZMV2hMmTvZYieg2mH01atk33IH7mJvZxIfzyytgRJNlg2J0oAthnDKFOyegu
+	N0BQKDx+4cRg==
+X-Google-Smtp-Source: AGHT+IEBv+zByQkOPrhwHx24FbblKRdt9e59rEckClTuU4HVXYmpU4e2ytFHg/K5FaWxv0cei7TfGw==
+X-Received: by 2002:a05:7022:989:b0:11b:9386:825a with SMTP id a92af1059eb24-1217230390fmr21043695c88.47.1766657213391;
+        Thu, 25 Dec 2025 02:06:53 -0800 (PST)
 Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b05fe99410sm55195962eec.2.2025.12.25.02.06.49
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-121724ddc30sm77810208c88.6.2025.12.25.02.06.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Dec 2025 02:06:49 -0800 (PST)
+        Thu, 25 Dec 2025 02:06:53 -0800 (PST)
 From: Inochi Amaoto <inochiama@gmail.com>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	Chen Wang <unicorn_wang@outlook.com>,
@@ -78,11 +80,14 @@ To: Bjorn Helgaas <bhelgaas@google.com>,
 Cc: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH 0/2] PCI/ASPM: Avoid L0s and L1 on Sophgo 2042/2044 PCIe Root Ports
-Date: Thu, 25 Dec 2025 18:05:27 +0800
-Message-ID: <20251225100530.1301625-1-inochiama@gmail.com>
+	Longbin Li <looong.bin@gmail.com>,
+	Han Gao <gaohan@iscas.ac.cn>
+Subject: [PATCH 1/2] PCI/ASPM: Avoid L0s and L1 on Sophgo 2042 PCIe [1f1c:2042] Root Ports
+Date: Thu, 25 Dec 2025 18:05:28 +0800
+Message-ID: <20251225100530.1301625-2-inochiama@gmail.com>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20251225100530.1301625-1-inochiama@gmail.com>
+References: <20251225100530.1301625-1-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -93,21 +98,46 @@ Content-Transfer-Encoding: 8bit
 
 Since commit f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM
 states for devicetree platforms") force enable ASPM on all device tree
-platform, the SG2042/SG2044 PCIe Root Ports breaks as it advertises L0s
-and L1 capabilities without supporting it.
+platform, the SG2042 root port breaks as it advertises L0s and L1
+capabilities without supporting it.
 
 Override the L0s and L1 Support advertised in Link Capabilities by the
-SG2042/SG2044 Root Ports so we don't try to enable those states.
+SG2042 Root Ports ([1f1c:2042]), so we don't try to enable those states.
 
-Inochi Amaoto (2):
-  PCI/ASPM: Avoid L0s and L1 on Sophgo 2042 PCIe [1f1c:2042] Root Ports
-  PCI/ASPM: Avoid L0s and L1 on Sophgo 2044 PCIe [1f1c:2044] Root Ports
-
- drivers/pci/quirks.c    | 2 ++
+Fixes: 4e27aca4881a ("riscv: sophgo: dts: add PCIe controllers for SG2042")
+Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+Tested-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/pci/quirks.c    | 1 +
  include/linux/pci_ids.h | 2 ++
- 2 files changed, 4 insertions(+)
+ 2 files changed, 3 insertions(+)
 
---
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index b9c252aa6fe0..d775ff567d1b 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2526,6 +2526,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_FREESCALE, 0x0451, quirk_disable_aspm_l0s_l1);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PASEMI, 0xa002, quirk_disable_aspm_l0s_l1);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0x1105, quirk_disable_aspm_l0s_l1);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SOPHGO, 0x2042, quirk_disable_aspm_l0s_l1);
+ 
+ /*
+  * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index a9a089566b7c..78638cbf2780 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2631,6 +2631,8 @@
+ 
+ #define PCI_VENDOR_ID_CXL		0x1e98
+ 
++#define PCI_VENDOR_ID_SOPHGO		0x1f1c
++
+ #define PCI_VENDOR_ID_TEHUTI		0x1fc9
+ #define PCI_DEVICE_ID_TEHUTI_3009	0x3009
+ #define PCI_DEVICE_ID_TEHUTI_3010	0x3010
+-- 
 2.52.0
 
 
