@@ -1,97 +1,124 @@
-Return-Path: <linux-pci+bounces-43707-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43708-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8485ECDD2CC
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 02:29:02 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04CDCCDD918
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 10:10:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 905413014DA1
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 01:29:00 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3C064301D649
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 09:10:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BAC621C16E;
-	Thu, 25 Dec 2025 01:28:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01D44314D1D;
+	Thu, 25 Dec 2025 09:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+i5DDdb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413554C98;
-	Thu, 25 Dec 2025 01:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855082F1FDD
+	for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 09:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766626139; cv=none; b=Onpr+HBNxB1yYz46zRJ28bXdIeYnJZy+kmyg0yrivS8D7ehdnbwaSJ95gr9jrgcguQ/nlvu90LCO0jQG1ojp1Jw4Bn60dwWo/oFadwUBf/eA3joQSC4vPSs88Ob2RCI7DcCHej5QbqUk8FGwh8QK3BY0asrQGOHDbR38tO97LRc=
+	t=1766653818; cv=none; b=k//ha76uuwAw9t6hWfnga4TOLwdCk6Wz9Bwg7WixJnvPl5lM8gWCZH5Bg37vr3dx73lS9V+jm8KHezN+CN8XXqUoBETVUyeE+hTWJqvr7w3a1wZwyK22FkNaAE8/wdf301hkSoQQSo+5cuUdSZOv0iO4psVBPOfASiElWTKtQcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766626139; c=relaxed/simple;
-	bh=h32bf6KjHQTp5SK1HXI68lXo33LUmPJTzH2E2SeTrNg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g2aj+YhAFXN57vlhrRvfQuHUn2EGIOhfvMKLPjxnhOxxW48hEoKpwds2uSLNzAqMbTxHZrVpz0PxPflwGsE4TpYNNzkykAN/Zg+tfG2OtiDZhdmXJVizf9O35pKC/qRInm0808HX6SbE5VJPnj2GCUBrlp2t9gVGU2qq7S7KOuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn; spf=pass smtp.mailfrom=isrc.iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isrc.iscas.ac.cn
-Received: from localhost.localdomain (unknown [36.112.3.223])
-	by APP-03 (Coremail) with SMTP id rQCowADn_tU3k0xpZm7nAQ--.9817S2;
-	Thu, 25 Dec 2025 09:28:24 +0800 (CST)
-From: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
-To: bhelgaas@google.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
-Subject: [PATCH] x86/PCI: add a check for alloc_pci_root_info()
-Date: Thu, 25 Dec 2025 09:28:21 +0800
-Message-Id: <20251225012821.1610670-1-lihaoxiang@isrc.iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1766653818; c=relaxed/simple;
+	bh=fidimhvskzenC8vv31RTcoVsNcs3n7YKe+cqigb2wvM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VmA1axSupax5xqFol5I8jBdSRkM5R1a59ynncuyD5uYQNoOBQSRHL0gzmTK3mH5/HxYIT9yeFjGGp+TlphgHJjtHTImOKqdOimP49C3IyKQ7iZbKzJNghQHPP8+AjxqaT96L/Y6gjdwpdcTGwfHnzWuvalJJUnSoX333OL+Da9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O+i5DDdb; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-34ab4ac9a34so1035867a91.0
+        for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 01:10:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766653817; x=1767258617; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fidimhvskzenC8vv31RTcoVsNcs3n7YKe+cqigb2wvM=;
+        b=O+i5DDdbAJJj21ZaDgaIHWMxgo7WgQrHK/VDvdHPlwrVYEXYmheYkIdx6Wqf9quEbT
+         0cNfhZNnXQshmzjnmynSD6F6mdxSxt3jT3wg+FzRcnOmnOsQTk5k10t4RX55csB463ya
+         a7PkZCqtUpgmLGEgV+tVX3+CF7N8d+9ZX3osT5X9mShw6Ho4a51gjYSrpBszaqiozH3y
+         9ExPKtcLVYVmXStqBncpE4Fp5wgNSWwRw/KoTkqXZYqQxVq9RQNyjwNt3gzV9Fo9prjN
+         L8kHpyYkG12Kj/Q1uGmBVfhBSG7plnviKoiOgnpInqabVxiEdtQjc+c6ZZQSurV4tyrF
+         r5lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766653817; x=1767258617;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=fidimhvskzenC8vv31RTcoVsNcs3n7YKe+cqigb2wvM=;
+        b=BpQG+fy4XAQwgeQygzsS+MAFCa8zchhu/E9hj1hpFPC3U5lqGCR0syJiirw9QjpLVZ
+         HAda8SS6/0x4IJEMbeXHBPDRJPrRDmCuvC0Gv+H3PtERXcY/zsCSX+MkQrv55Pbzbm9E
+         QSaLWdH7/XXMbm2Y5N/8MnWrpYengS0M+45bBoGIXOlROoOGUwzpMcsOS4Ef7cwWvNjR
+         FOu+hZjU4dGlG9bJDn9GDkqq1VQzbFNY66qHtPIIh4FaIZr0YDylr26tqIFZduWw6APN
+         6zA8Vc8g+IEWU+Qx+QmS+b1nDiI4W7QP2qRYk0h3YkCXRS0A496HUYhE+C+wJ5+OlGrb
+         bZTw==
+X-Forwarded-Encrypted: i=1; AJvYcCW7lrTLuL0QJS66zp8DYkUiJqhyON3N0HWvQVCrKFRkNnxqKdv+ixn476Gsz1fNRMSUnXzelBhTCfA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM8iWT5p0MGtX9/jp+OOpgirUgnPhJ8zQBpDhK7rwWKDEXlxHU
+	KSLcmfbpoP7W1g+/uzlBRwuru0nrOuLP4dn/XD/HrgvefFUiPrM4Bjz9WoYXftFiauDiBjNBRH6
+	2CBiab8XOMgb0ymdvIqsAWIJQ4KbsG/g=
+X-Gm-Gg: AY/fxX6v0woWV/Lsn+5Jg0Dc5fgP9B5Moq2BUIygVH8LGZMhpEOHWYPnRNxqFJ0L2v9
+	HkhvmzqYHVNZ/0enp3kbDF06ImzgNhnX4tUpJOa8mQnaFrZHXIUFdlbfQ72LRzLspd4Y75bP1b/
+	oZ4bX3w+EROyGw6Cc6j4gwWdbN01KeKjnMnxoLTYiBnV8yI7SAppW3xFgYAhV1a/TyCqXUCi+cE
+	dvgsp2Vq/NIWILo0WFf/1fUcy/hKSrr34PDkfaAykEHcCqR01BIoe4uOJPp4Ma4VATkaYH8IS06
+	fWQL7wGWSKlzeKafw9XS9yJYv2kbxLnnp7ZhdOj03ecLnZndxi2QvCWPcXi1ULh75IapPrTNOF+
+	RilPhmcRu0cuw
+X-Google-Smtp-Source: AGHT+IFcX1yBOStOKm5HdMQUD4DJ1B1ik5oviZQe1zo9UG/MP8cNODSPMd1h6tL4mWPgoT4qrIX/TF6a+BH8rDBCMsE=
+X-Received: by 2002:a05:7301:4090:b0:2ab:ca55:89cb with SMTP id
+ 5a478bee46e88-2b05ec45daemr11153031eec.6.1766653816672; Thu, 25 Dec 2025
+ 01:10:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowADn_tU3k0xpZm7nAQ--.9817S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Wr1xAw18CF13WF4kXF45Awb_yoW3XrcE9a
-	4a9wsrJrZ5t3s293yUAF4fGw13Aw1xKr4rWF1fAr13tFy3KF15Z397tFn8tr40g3yDAry5
-	JasxJr1UAF18CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbVAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_
-	Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Jr0_Gr
-	1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
-	cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
-	ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-	AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
-	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxh
-	VjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: 5olkt0x0ld0ww6lv2u4olvutnvoduhdfq/1tbiCREHE2lMko4BwwAAs3
+References: <20251215025444.65544-1-boqun.feng@gmail.com>
+In-Reply-To: <20251215025444.65544-1-boqun.feng@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 25 Dec 2025 10:10:04 +0100
+X-Gm-Features: AQt7F2o6kyHN8cKX_uujVj8hNOuUsXA5ClwSn19v52Gv06vvnfMS7OSidQW-HuY
+Message-ID: <CANiq72n1SX4OGFR4wNzurNX2RQki_ZmD13bBfywxxOEmw6cGZg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Provide pci_free_irq_vectors() for CONFIG_PCI=n
+To: Boqun Feng <boqun.feng@gmail.com>, FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Joel Fernandes <joelagnelf@nvidia.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a return value check for alloc_pci_root_info() to
-prevent null pointer dereference in update_res().
+On Mon, Dec 15, 2025 at 3:54=E2=80=AFAM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> Commit 473b9f331718 ("rust: pci: fix build failure when CONFIG_PCI_MSI
+> is disabled") fixed a build error by providing rust helpers when
+> CONFIG_PCI_MSI=3Dn. However the rust helpers rely on the
+> pci_alloc_irq_vectors() function is defined, which is not true when
+> CONFIG_PCI=3Dn. There are multiple ways to fix this, e.g. a possible fix
+> could be just remove the calling of pci_alloc_irq_vectors() since it's
+> empty when CONFIG_PCI_MSI=3Dn anyway. However, since PCI irq APIs, such a=
+s
+> pci_alloc_irq_vectors(), are already defined even when CONFIG_PCI=3Dn, th=
+e
+> more reasonable fix is to define pci_alloc_irq_vectors() when
+> CONFIG_PCI=3Dn and this aligns with the situations of other primitives as
+> well.
+>
+> Fixes: 473b9f331718 ("rust: pci: fix build failure when CONFIG_PCI_MSI is=
+ disabled")
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 
-Signed-off-by: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
----
- arch/x86/pci/broadcom_bus.c | 2 ++
- 1 file changed, 2 insertions(+)
+Related: https://lore.kernel.org/rust-for-linux/20251209014312.575940-1-fuj=
+ita.tomonori@gmail.com/
 
-diff --git a/arch/x86/pci/broadcom_bus.c b/arch/x86/pci/broadcom_bus.c
-index 2db73613cada..d0cf7d2acc65 100644
---- a/arch/x86/pci/broadcom_bus.c
-+++ b/arch/x86/pci/broadcom_bus.c
-@@ -27,6 +27,8 @@ static void __init cnb20le_res(u8 bus, u8 slot, u8 func)
- 	fbus = read_pci_config_byte(bus, slot, func, 0x44);
- 	lbus = read_pci_config_byte(bus, slot, func, 0x45);
- 	info = alloc_pci_root_info(fbus, lbus, 0, 0);
-+	if (!info)
-+		return;
- 
- 	/*
- 	 * Add the legacy IDE ports on bus 0
--- 
-2.25.1
+I guess it counts as a report, so we may want a Reported-by (Cc'ing Tomo).
 
+Cheers,
+Miguel
 
