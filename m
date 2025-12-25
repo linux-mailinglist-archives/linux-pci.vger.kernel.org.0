@@ -1,129 +1,177 @@
-Return-Path: <linux-pci+bounces-43714-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43715-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59A36CDDA36
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 11:08:38 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89FDBCDDA58
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 11:19:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 993B3304B20E
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 10:07:00 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4500A300768C
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Dec 2025 10:19:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48CB2318140;
-	Thu, 25 Dec 2025 10:06:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75F1330E822;
+	Thu, 25 Dec 2025 10:19:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PJvTB0Nw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2257oxH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D1B3093D3
-	for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 10:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B182DA755
+	for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 10:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766657219; cv=none; b=JV9Du1v9ju+eJyb0EfL3DIVAChvGAWN0zNsCg5HmwAqAn9hyYgWAdY7oNKsejwX2q3t6kByiyHNTJWWXQjQq2td7rFD31CFXvYM3bj/+9sM1TIumaRqqnVXJcdxwMGwW3tEPFDjzre/nX1cg2BBnXGGQGxMPlZaD79jetwEa0MM=
+	t=1766657955; cv=none; b=jmK4hFymEPVdsRIqgbUESVRoseAiitn+Fd4KAa+ZkistyZQkYvQqkey6syZG2io9oDiTD7Je8artMrLvLL7Ys9NbRVRaOY7cJPq8mZO8Q+wmPUPDHbd3MBdADyiLimRmIrV8kIEb1clSjFrqO5HPUYE7xF69XnEUzPdXjXJ0+6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766657219; c=relaxed/simple;
-	bh=RUbXW9vxhpq3S+asWdyZH1trJX5AyYZUr98nW0A94X8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tTaIuCUOE27E/L3KbyIpFNUo+QdaqgXOPtAaD2RDnQu6gp7ORAU1WvezlyapntBs/zkxqDQoALy72uQlVTdu3kHMjgnumM2TMwNAlq1LotaLfojp0q+4ORh2/Os4JSXibp0yQjDzn0/fX2L9RWw/0QYH7hK5Mo1HUzKU94HiJsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PJvTB0Nw; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1766657955; c=relaxed/simple;
+	bh=kUhEEcyeX+pQXDOvMfwKXPAjHAuScIlJSVDFA+dcEAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ui2ABeEM3fH9q7QnS7wMLVj6IuoQrnvlv133xvTVERe4JRqJvdrvPfalgCWGdtV7QEjNAd6O+kJm1EXJ1nVreydQFKxFjVq5s8EKt8623ie69THKOyQW0XeKzLiEA/6ZLVaY86e+ksdvwnj+g4qTVq95PMereKLvR3vhJ2OF5p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W2257oxH; arc=none smtp.client-ip=209.85.222.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-29efd139227so87418825ad.1
-        for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 02:06:57 -0800 (PST)
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-8b602811a01so726056285a.2
+        for <linux-pci@vger.kernel.org>; Thu, 25 Dec 2025 02:19:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766657217; x=1767262017; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MCxzUaHmQMEgNdIPADAEGtBFeTbBCSEQEw5xyBBxWtM=;
-        b=PJvTB0NwgESgYzElD4RBEC2z9NW49yf6Lcmt7p+Ddqu4f3Qw09p2gVSkDng/VnGuTK
-         sOi9nz0A4/MGvwxqfU3YLvrLMO39lhr3PUf1PrHwr+ZM1i4P4ZYSY0fRwYEtgXyf/PF7
-         hr4rtY4+M8CX2cONjD9ds7RA2Hhne6O1lrcqlukruYnkjzfAbiuzsLA298bK/gDs7XGg
-         vTQxcExNTbxt3OOYOaWPCfG4th6evxqHxHls+2vERHJFQkPJUDqtpp1zYXzFoy3KxCjZ
-         3z4Mo4GP032BvpqDgFn0Gk26sHP4wlgQLdGKBNTVj+pjeOU+e9Czm+TgUnc7XY6tXRO6
-         KYfA==
+        d=gmail.com; s=20230601; t=1766657953; x=1767262753; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=miZGUQ6K1J5NwF92QvnAvuWWv/LljifSu/1l61TDgUY=;
+        b=W2257oxHdD85K+qc2aC52c7kAbA8akLhnNnreroMR5CnejimyePbx8vVF0je7x214F
+         RRvdB6yhqMATULvq9uSm6t83yF8Ias6lml4R1fU+WZCqyfG3iaHE6UG1ud7q3WIoG3Yo
+         ivhjQBpzjkFPSa/f7pCME98TGRK3JqOGYZpYPzA8DgOfTNdt3SgySsN6tlUDFMp/Ht3i
+         wmhMVAFw9HXRilF82EUp3DoOJBgNAHK3EqP18ksUeDgVQK8PzxQmJuJOgQqpMXwFstTb
+         iFMv/+DFNg9rO2Cca9flMWbJAQFppr3w4ijvNT4AuNwKWgI0NjVpES3s0I9lT4oEEN8d
+         wqpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766657217; x=1767262017;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=MCxzUaHmQMEgNdIPADAEGtBFeTbBCSEQEw5xyBBxWtM=;
-        b=qibKgpvLyvMRbV+G2/Jkmo6KedrhE1rd8p/Xn875LHATZ3d+8hA+CokvOgaIJ8PdTg
-         RGp18YH7eeQ7Oqe811o8kkqMTsJxr4emUH63x6fLvaPicIqmViLVlBJjTIPpKNEe0QYC
-         P+TukgUrie9rwhkAYv3J07K22cF41aKWWOaE79IbxH526eo2JxM94hn+4SAbaT3hg4Tg
-         0PegI2fJO3iCwJ+vaf4U71RimS/OHRKG8Ic9aqeDd8MzdQTnj4wldx9WsFiq3Y//+9Yg
-         vyBZW0/p292iqAFLNoiB/G9TrnfUM1yVB62+zZ8PJV16o9hWHr7OSoIk+polZLoiuhRD
-         es/g==
-X-Gm-Message-State: AOJu0YwFHQuOcYOsjiYphXaOujrSMr5qKiPv75KPbipmv9SBBo140jlx
-	giRzO8I5MgQ7CKdtrV47LRbBDZRvyBRKO4M7KaVpYuspNgybSeiAXE8V
-X-Gm-Gg: AY/fxX6rRWlEyvxodJGSTrW7mHMu/g7bHiGBdfOO4p+IGbRJtcnhV/r+f8B/bPJdpLG
-	xbL27CfoJktxG+1soJYzNXg0NnKvVCXtTMQjvpSqxl24wwJRIq8LQ3LyvQ/HiaFp77bPUw1S+pI
-	4jbcKa9S9qGuuaN4SSdmgi+3unerySMU8yQlSeP/E9Xpi//d3alAXp4+lqgYDGAQsOFe3DnX8Y3
-	vGDvE5JrJ0Ibyq8wqDvzY+SbxDwpenitzlvj24ZDFNbGCYLpOWXDZiMqBgw6Xnqo8zWu/MZ4p2N
-	aZxtvfvNDl1z7zJZSYQMKVK2yFKnXqiv+BQryDj4yYOJoAkQX2DPY7y9cgQsVlGqasIyTCrE5o2
-	E4reHMW43v3eWCw6WGOEGL3nI4M1Csuy97HTK3udUerh/VjTbpjj27kPgYITfEOrx/Q/Jec1wBt
-	MOBY3lqBj5XQ==
-X-Google-Smtp-Source: AGHT+IHxULa3Kgo/D1IPJDm0Fh1aND7FwuD3MXVKqvYlgcgpDQHDIdGBa2yeukfLEwbJNSRSUARBjA==
-X-Received: by 2002:a05:7022:b903:b0:119:e569:f268 with SMTP id a92af1059eb24-121722ac40fmr15690018c88.17.1766657216512;
-        Thu, 25 Dec 2025 02:06:56 -0800 (PST)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-121724cfc0esm76131090c88.2.2025.12.25.02.06.55
+        d=1e100.net; s=20230601; t=1766657953; x=1767262753;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=miZGUQ6K1J5NwF92QvnAvuWWv/LljifSu/1l61TDgUY=;
+        b=l8n3KTku/i2eEntwPibLx/RYdZQMDQnAT3NZZCSeyfqHNT0PYhb99QsO3YO+vwe0AT
+         WwPPd+YrljqZlnj4oxygK0vDpJ0/xypn9j5rU8iE9BnulS5FHvKr43KXmER3Fr7Led3x
+         dBmQmqVNWqkvxeGJsr4+qKpZAPzitzasn08KXFqB3ma8Z7JRnZKjujEV0kj6N2/exD1M
+         txeXWn4PmQx1//6zRCphnJ9wtS2Y86CylAxPPTQVTdeQ2G6bkr/FBEf93ks+aaQe7wdo
+         W3BKoBBt0gOX3e6XZNAtlxDXM4M3iZhfu3ovQ0sIkVSqy1nxJ4q2wPr/TCr6T6Q6xmAp
+         Hzww==
+X-Forwarded-Encrypted: i=1; AJvYcCXWsS7cadFfXkpt83D2KJW4ooC9BcDDVmlTXDvyzjvUl4ZlU3/hWxpbpMWU79AgKsSdmKqWgjQN6bw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHJbbYg7q4SgED62X9ibfBsIuiRG7nvfzU831MPuD2/XB5sbTO
+	Dp7u9KN2+rJtozWhSuUYAJqXpXrK9+YQNz0a2dh2oQPb20lwHSvsQ1BN
+X-Gm-Gg: AY/fxX5Fd9z2cy4voBGPdZdatgnEHcZDXy1pbgEE6lrvQ2J1LCUAO39fxJW5TymNRlx
+	o2xq2MQ9o3B2B2m1ODR0Aye/ftoDDIJJowK40wgP9EOvQcbzSaU/Q2o1ckbO9GIzBfYyG8A7Kwt
+	1G9n7TlBrPupl3y89FaILELeoscfSTd9jrGcTsRvo/dx04wmXv/GSsoYL2fg/1F5e9XwG41N0Ag
+	49KIHpGABu0TpByFNzAvRIYnAzFhusBhwwjYYQaHlu3X3otcufgbuFyJvezkxCm5Dca1d03pZya
+	7ZVouQ0PA5uvEmvO4mldOu/EniLCou/YhXsbINVSCyK1xB4cdwlkXjONsGAg9cuWIB3dvllJEMF
+	T53i0yJYiokOxO/phSqNpmtiYASMktiAJ39gnJca/F9O3aT9WSzqlVTbWQZm/UrRXcQ1c1XUCbE
+	KJP6xQ6WmHTTalODOxP3erKCF1vqk+pqtpLMKowlo/mQSDRkKt9p/j40q2+OMf8w2Zl2R1iYk5G
+	WLfcGBKIGW1gKZgG+uL5CHkOQ==
+X-Google-Smtp-Source: AGHT+IELRx4EtlvFzotPmT4j3ykDSAHpxE8LMB6n3jz+WJQmz7KUPu0AQGuczmt78vVQelUhFbXvrA==
+X-Received: by 2002:a05:620a:4556:b0:863:42ea:d687 with SMTP id af79cd13be357-8c08fbb8308mr3496223485a.78.1766657952699;
+        Thu, 25 Dec 2025 02:19:12 -0800 (PST)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c0970f5fcdsm1461045685a.29.2025.12.25.02.19.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Dec 2025 02:06:56 -0800 (PST)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Han Gao <rabenda.cn@gmail.com>,
-	Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>,
-	Han Gao <gaohan@iscas.ac.cn>
-Subject: [PATCH 2/2] PCI/ASPM: Avoid L0s and L1 on Sophgo 2044 PCIe [1f1c:2044] Root Ports
-Date: Thu, 25 Dec 2025 18:05:29 +0800
-Message-ID: <20251225100530.1301625-3-inochiama@gmail.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251225100530.1301625-1-inochiama@gmail.com>
-References: <20251225100530.1301625-1-inochiama@gmail.com>
+        Thu, 25 Dec 2025 02:19:12 -0800 (PST)
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id BB627F40068;
+	Thu, 25 Dec 2025 05:19:11 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Thu, 25 Dec 2025 05:19:11 -0500
+X-ME-Sender: <xms:nw9NaSLI8rBUYl3awLA0Ikr0EzR-nflKjXU5GXsYUEEr2TBVQDWJUg>
+    <xme:nw9NabFAvq5EfgsjW7C7VSSL7B9RGkoMpSdh9LvqdRlC1YesG__kofhNibg5hNSMP
+    ofZoW52Z7a-BWqxlByoESkr8x6oiYziBHgsSHnm-_icAQ-qD7on>
+X-ME-Received: <xmr:nw9NaTCX-VTFYYSrbvZA1yttz-TwzNYlq6rbc8Con-TztfVRnoawVY5e>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeiheefvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
+    gvrhhnpeejhfeikeekffejgeegueevffdtgeefudetleegjeelvdffteeihfelfeehvdeg
+    keenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
+    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
+    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthho
+    pedujedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepfhhujhhithgrrdhtohhmoh
+    hnohhrihesghhmrghilhdrtghomhdprhgtphhtthhopehmihhguhgvlhdrohhjvggurgdr
+    shgrnhguohhnihhssehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrkhhrsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhr
+    tghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgrrhihse
+    hgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhn
+    mhgrihhlrdgtohhmpdhrtghpthhtoheplhhoshhsihhnsehkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:nw9NaV1J3Bk0NAezLUsr0x34VUOdDfCkFHv84Pd9Cpa80h9aqUKmZw>
+    <xmx:nw9NaQNtZu6iGHkDwtd6cDsWVBzuoBPz9fJsdPa5ZRRtY4sw7bx7vw>
+    <xmx:nw9NaS7blenS2HGYVdB3j_djThInoaK-aAkg0sS4l3yNXzQ3GO9HaA>
+    <xmx:nw9NadZCA809QIuB1YJDYXLN72eFAfwjcyhOuhWjZEbXj3he8QuZ5w>
+    <xmx:nw9NafGRXYyU_jSRIlX7j6KEKxzY4YYq5-jRG7OsE3boB7EC_VveHP6v>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 25 Dec 2025 05:19:11 -0500 (EST)
+Date: Thu, 25 Dec 2025 18:19:08 +0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: miguel.ojeda.sandonis@gmail.com, dakr@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, joelagnelf@nvidia.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Liang Jie <buaajxlj@163.com>
+Subject: Re: [PATCH] PCI: Provide pci_free_irq_vectors() for CONFIG_PCI=n
+Message-ID: <aU0PnCV69l7lV2aS@tardis-2.local>
+References: <20251215025444.65544-1-boqun.feng@gmail.com>
+ <CANiq72n1SX4OGFR4wNzurNX2RQki_ZmD13bBfywxxOEmw6cGZg@mail.gmail.com>
+ <20251225.183631.866118259815088053.fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251225.183631.866118259815088053.fujita.tomonori@gmail.com>
 
-Since commit f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM
-states for devicetree platforms") force enable ASPM on all device tree
-platform, the SG2044 root port breaks as it advertises L0s and L1
-capabilities without supporting it.
+On Thu, Dec 25, 2025 at 06:36:31PM +0900, FUJITA Tomonori wrote:
+> On Thu, 25 Dec 2025 10:10:04 +0100
+> Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
+> 
+> > On Mon, Dec 15, 2025 at 3:54 AM Boqun Feng <boqun.feng@gmail.com> wrote:
+> >>
+> >> Commit 473b9f331718 ("rust: pci: fix build failure when CONFIG_PCI_MSI
+> >> is disabled") fixed a build error by providing rust helpers when
+> >> CONFIG_PCI_MSI=n. However the rust helpers rely on the
+> >> pci_alloc_irq_vectors() function is defined, which is not true when
+> >> CONFIG_PCI=n. There are multiple ways to fix this, e.g. a possible fix
+> >> could be just remove the calling of pci_alloc_irq_vectors() since it's
+> >> empty when CONFIG_PCI_MSI=n anyway. However, since PCI irq APIs, such as
+> >> pci_alloc_irq_vectors(), are already defined even when CONFIG_PCI=n, the
+> >> more reasonable fix is to define pci_alloc_irq_vectors() when
+> >> CONFIG_PCI=n and this aligns with the situations of other primitives as
+> >> well.
+> >>
+> >> Fixes: 473b9f331718 ("rust: pci: fix build failure when CONFIG_PCI_MSI is disabled")
+> >> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > 
+> > Related: https://lore.kernel.org/rust-for-linux/20251209014312.575940-1-fujita.tomonori@gmail.com/
+> > 
+> > I guess it counts as a report, so we may want a Reported-by (Cc'ing Tomo).
+> 
+> Since pci.rs is only compiled when CONFIG_PCI is enabled. So it seems
+> consistent to treat the PCI helpers the same way. That said, this
+> approach is also fine by me: it's already inconsistent that
+> pci_alloc_irq_vectors() has a stuf definition, while
+> pci_free_irq_vectors does not.
 
-Override the L0s and L1 Support advertised in Link Capabilities by the
-SG2044 Root Ports ([1f1c:2044]), so we don't try to enable those states.
+Yes, I think providing a stub pci_free_irq_vectors() is the way to go.
+If you are OK with it, I could send a v2 with your and Liang Jie's
+Reported-by. Alternatively, since you're the first one sending the fix,
+and I would have replied that with the suggestion if I didn't miss that,
+feel free to send a v2 (providing the stub pci_free_irq_vectors()) from
+you ;-)
 
-Fixes: 3309df45e6b5 ("riscv: dts: sophgo: sg2044: add PCIe device support for SG2044")
-Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-Tested-by: Han Gao <gaohan@iscas.ac.cn>
----
- drivers/pci/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index d775ff567d1b..855e74203ca9 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2527,6 +2527,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_FREESCALE, 0x0451, quirk_disable_aspm_l0s
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PASEMI, 0xa002, quirk_disable_aspm_l0s_l1);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0x1105, quirk_disable_aspm_l0s_l1);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SOPHGO, 0x2042, quirk_disable_aspm_l0s_l1);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SOPHGO, 0x2044, quirk_disable_aspm_l0s_l1);
- 
- /*
-  * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
--- 
-2.52.0
-
+Regards,
+Boqun
 
