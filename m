@@ -1,184 +1,91 @@
-Return-Path: <linux-pci+bounces-43727-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43728-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7930BCDEBEE
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Dec 2025 14:48:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 76CF2CDED1B
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Dec 2025 17:30:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6967230084D6
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Dec 2025 13:48:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 611083005FC7
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Dec 2025 16:30:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 867D628D83E;
-	Fri, 26 Dec 2025 13:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7047B1EB9E1;
+	Fri, 26 Dec 2025 16:30:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k27WT8NC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aI7CnZ5Y"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591577081A;
-	Fri, 26 Dec 2025 13:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472B31419A9;
+	Fri, 26 Dec 2025 16:30:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766756930; cv=none; b=RVGb1CsbeRicGN9x40F87JVcjbdLVbR8ldr10rOx3m9ME03ycO/EG6/KKxyFOCI0NZoXoEWnKQgtDQcC2w5fDVZOupkU5aZeM78wZSQgMGgNsZlxLR1vCGrcoFzL19r9kavwJbrLbCAp+2ULA0Ofq5i38cXDBY/afkal7GVrEZE=
+	t=1766766633; cv=none; b=BSHWTVZ9DyPaQ9EEK3ExJejhY1AFtADxvazlCGVFXBlH5FACxNENIJz1eC0g1EKTlreL+ChBBmEHNANfbapgjY1AFaRbg5BlDjA1vt4aN/ov7OXja3R0t6wNsscnXAXschVtUOcmAyCsurrgM/RjzKySmU8aljR3mJLs4seSLDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766756930; c=relaxed/simple;
-	bh=8zJCHvhYtm9SFFBd33jKfljlQCKJ2vh9TxB+oxR4ZU8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I0BQ1QzKhk/JxtzCBdMraFIV4xc1Y9vegjU6JmhC9pqbhlaJhSrK/AcDqWCUwcu1HQlOku487JZFNmHbvClGvKuLjQ5SnP/x/A+lHWSdxjqKYt8u78RSIq2jdUoE0RIrClLNZ7AE69/dhkl5kDDFLeaxu0VXUB81ddCsQjAAAs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k27WT8NC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41A69C4CEF7;
-	Fri, 26 Dec 2025 13:48:47 +0000 (UTC)
+	s=arc-20240116; t=1766766633; c=relaxed/simple;
+	bh=uvsx8WxLRZ3PtN1KZABwOvkS92CrI/Tm2GTJsLeWG00=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=fMaI+kNN6/4GsPMx3blPIxzjs9SWbspxZ58aD1SstUXF71tg2gwMZRjx/HGDklYA0eUfXxcCJTixZdsSyym2h5J1hCjEzD2WZem1mh67sE9Q1dNy3ki8CBHcYMxaqVUK3kSTrZdZ7HKTkgotWws59yobL//AWKaY7E8NxeicKAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aI7CnZ5Y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2098C4CEF7;
+	Fri, 26 Dec 2025 16:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766756929;
-	bh=8zJCHvhYtm9SFFBd33jKfljlQCKJ2vh9TxB+oxR4ZU8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=k27WT8NCVYj8NcLmJMbp0ij1jGyZY52t4Z5KKAC6ERfKMwmDO5F/kJIseAoXXIlBn
-	 aBmrQL9nJabg6KKhc2cgkXYGQPycxHwIQJUaSYtLkZGzsrgUCpoQHhtY2dL21xwL6o
-	 PWu6Dd09iqB/omSjYY0/cjN5+XEaRiyI5ZMBDgHcUl/+6As8c5l+vR06J45eCBBHZE
-	 VBwB5NOJkugMTfunPo91EOSeT5Vsh71hWYH/7IP0McF/+VSENSA+h414VXIBQHujgA
-	 1SU6Fle1rUsYic1yB6CR2ln75xL1fsKNupHWC9oYQ/lBkV8GgplxB+hdU3mG3eTru8
-	 Z7IgboaTXvXnw==
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Linux ACPI <linux-acpi@vger.kernel.org>,
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
- LKML <linux-kernel@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
- Bjorn Helgaas <helgaas@kernel.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v1] ACPI: bus: Adjust acpi_osc_handshake() parameter list
-Date: Fri, 26 Dec 2025 14:48:45 +0100
-Message-ID: <12833187.O9o76ZdvQC@rafael.j.wysocki>
-Organization: Linux Kernel Development
+	s=k20201202; t=1766766632;
+	bh=uvsx8WxLRZ3PtN1KZABwOvkS92CrI/Tm2GTJsLeWG00=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=aI7CnZ5YCc8+hQKM5/GzyJyXdDwd8UxwqnEyn+0b2+wHXBJeCVSY77PNQIenZRzqG
+	 oFZo6Z1OWcnPnANpvUWbGG2NvyZK+f7R018SiQtaYUlYiFHnadXvRbUHiLAncTcbv/
+	 KWytvq4h5Zp+MdODG7JvneIW8CBJV/R/6Oc7Of0EsZVQU6j5h0KxDR18wACrNTL/hj
+	 KDbxIGjvePzrFp5iy27jSLzJbteUBJQkubYOcOxcvaC4xrUa1PXMbRepLRpHpm5KvP
+	 1CXNlX5SkiqXHQRbcA9mwk/fSvsvPb51cPsrAh+kPtnn0Wvxww3Fpw04WgKImN5SEI
+	 B3ucN4wet+0hA==
+Date: Fri, 26 Dec 2025 10:30:31 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Han Gao <rabenda.cn@gmail.com>,
+	Manivannan Sadhasivam <mani@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 0/2] PCI/ASPM: Avoid L0s and L1 on Sophgo 2042/2044 PCIe
+ Root Ports
+Message-ID: <20251226163031.GA4128882@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251225100530.1301625-1-inochiama@gmail.com>
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu, Dec 25, 2025 at 06:05:27PM +0800, Inochi Amaoto wrote:
+> Since commit f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM
+> states for devicetree platforms") force enable ASPM on all device tree
+> platform, the SG2042/SG2044 PCIe Root Ports breaks as it advertises L0s
+> and L1 capabilities without supporting it.
+> 
+> Override the L0s and L1 Support advertised in Link Capabilities by the
+> SG2042/SG2044 Root Ports so we don't try to enable those states.
+> 
+> Inochi Amaoto (2):
+>   PCI/ASPM: Avoid L0s and L1 on Sophgo 2042 PCIe [1f1c:2042] Root Ports
+>   PCI/ASPM: Avoid L0s and L1 on Sophgo 2044 PCIe [1f1c:2044] Root Ports
+> 
+>  drivers/pci/quirks.c    | 2 ++
+>  include/linux/pci_ids.h | 2 ++
+>  2 files changed, 4 insertions(+)
 
-For the sake of interface cleanliness, it is better to avoid using
-ACPICA data types in the parameter lists of helper functions that
-don't belong to ACPICA, so adjust the parameter list of recently
-introduced acpi_osc_handshake() to take a capabilities buffer pointer
-and the size of the buffer (in u32 size units) as parameters directly
-instead of a struct acpi_buffer pointer.
+1) Can somebody at Sophgo confirm that this is a hardware erratum?  I
+just want to make rule out some kind of OS bug in configuring L0s/L1.
 
-This is also somewhat more straightforward on the caller side because
-they won't need to create struct acpi_buffer objects themselves to pass
-them to the helper function and it guarantees that the size of the
-buffer in bytes will always be a multiple of 4 (the size of u32).
+2) Why don't we have a MAINTAINERS entry for this driver?  I failed to
+notice that the series we applied
+(https://lore.kernel.org/all/cover.1757643388.git.unicorn_wang@outlook.com/)
+does not include a maintainer.  Chen, since you posted that series,
+are you willing to sign up to maintain it?
 
-Moreover, it addresses a premature cap pointer dereference and
-eliminates a sizeof(32) that should have been sizeof(u32) [1].
-
-Fixes: e5322888e6bf ("ACPI: bus: Rework the handling of \_SB._OSC platform features")
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/linux-acpi/202512242052.W4GhDauV-lkp@intel.com/
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/bus.c |   30 ++++++++++++------------------
- 1 file changed, 12 insertions(+), 18 deletions(-)
-
---- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -326,31 +326,33 @@ out:
- EXPORT_SYMBOL(acpi_run_osc);
- 
- static int acpi_osc_handshake(acpi_handle handle, const char *uuid_str,
--			      int rev, struct acpi_buffer *cap)
-+			      int rev, u32 *capbuf, size_t bufsize)
- {
- 	union acpi_object in_params[4], *out_obj;
--	size_t bufsize = cap->length / sizeof(u32);
- 	struct acpi_object_list input;
-+	struct acpi_buffer cap = {
-+		.pointer = capbuf,
-+		.length = bufsize * sizeof(32),
-+	};
- 	struct acpi_buffer output;
--	u32 *capbuf, *retbuf, test;
-+	u32 *retbuf, test;
- 	guid_t guid;
- 	int ret, i;
- 
--	if (!cap || cap->length < 2 * sizeof(32) || guid_parse(uuid_str, &guid))
-+	if (!capbuf || bufsize < 2 || guid_parse(uuid_str, &guid))
- 		return -EINVAL;
- 
- 	/* First evaluate _OSC with OSC_QUERY_ENABLE set. */
--	capbuf = cap->pointer;
- 	capbuf[OSC_QUERY_DWORD] = OSC_QUERY_ENABLE;
- 
--	ret = acpi_eval_osc(handle, &guid, rev, cap, in_params, &output);
-+	ret = acpi_eval_osc(handle, &guid, rev, &cap, in_params, &output);
- 	if (ret)
- 		return ret;
- 
- 	out_obj = output.pointer;
- 	retbuf = (u32 *)out_obj->buffer.pointer;
- 
--	if (acpi_osc_error_check(handle, &guid, rev, cap, retbuf)) {
-+	if (acpi_osc_error_check(handle, &guid, rev, &cap, retbuf)) {
- 		ret = -ENODATA;
- 		goto out;
- 	}
-@@ -403,7 +405,7 @@ static int acpi_osc_handshake(acpi_handl
- 		 */
- 		acpi_handle_err(handle, "_OSC: errors while processing control request\n");
- 		acpi_handle_err(handle, "_OSC: some features may be missing\n");
--		acpi_osc_error_check(handle, &guid, rev, cap, retbuf);
-+		acpi_osc_error_check(handle, &guid, rev, &cap, retbuf);
- 	}
- 
- out:
-@@ -446,10 +448,6 @@ static void acpi_bus_osc_negotiate_platf
- {
- 	static const u8 sb_uuid_str[] = "0811B06E-4A27-44F9-8D60-3CBBC22E7B48";
- 	u32 capbuf[2], feature_mask;
--	struct acpi_buffer cap = {
--		.pointer = capbuf,
--		.length = sizeof(capbuf),
--	};
- 	acpi_handle handle;
- 
- 	feature_mask = OSC_SB_PR3_SUPPORT | OSC_SB_HOTPLUG_OST_SUPPORT |
-@@ -497,7 +495,7 @@ static void acpi_bus_osc_negotiate_platf
- 
- 	acpi_handle_info(handle, "platform _OSC: OS support mask [%08x]\n", feature_mask);
- 
--	if (acpi_osc_handshake(handle, sb_uuid_str, 1, &cap))
-+	if (acpi_osc_handshake(handle, sb_uuid_str, 1, capbuf, 2))
- 		return;
- 
- 	feature_mask = capbuf[OSC_SUPPORT_DWORD];
-@@ -532,10 +530,6 @@ static void acpi_bus_osc_negotiate_usb_c
- {
- 	static const u8 sb_usb_uuid_str[] = "23A0D13A-26AB-486C-9C5F-0FFA525A575A";
- 	u32 capbuf[3], control;
--	struct acpi_buffer cap = {
--		.pointer = capbuf,
--		.length = sizeof(capbuf),
--	};
- 	acpi_handle handle;
- 
- 	if (!osc_sb_native_usb4_support_confirmed)
-@@ -550,7 +544,7 @@ static void acpi_bus_osc_negotiate_usb_c
- 	capbuf[OSC_SUPPORT_DWORD] = 0;
- 	capbuf[OSC_CONTROL_DWORD] = control;
- 
--	if (acpi_osc_handshake(handle, sb_usb_uuid_str, 1, &cap))
-+	if (acpi_osc_handshake(handle, sb_usb_uuid_str, 1, capbuf, 3))
- 		return;
- 
- 	osc_sb_native_usb4_control = capbuf[OSC_CONTROL_DWORD];
-
-
-
+Bjorn
 
