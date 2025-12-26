@@ -1,61 +1,80 @@
-Return-Path: <linux-pci+bounces-43748-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43749-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FC5FCDF1FE
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Dec 2025 00:46:58 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4605CCDF23A
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Dec 2025 00:56:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 629643000B63
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Dec 2025 23:46:55 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0980B3004D2F
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Dec 2025 23:56:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE13621FF5B;
-	Fri, 26 Dec 2025 23:46:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18C2928467C;
+	Fri, 26 Dec 2025 23:56:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DIBvyqte"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ESTPbVJJ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB552B2DA;
-	Fri, 26 Dec 2025 23:46:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36D922D9F7;
+	Fri, 26 Dec 2025 23:56:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766792813; cv=none; b=iYD/gMwYjvjyHrh5AxoRhTCfZThhCC1H3jqebR9Wn8ifiTTh++/JSPciuYarOqKcWQ/lDR3gMBY5zmFY4x0mkSrFulCWM2xvU1dryvQZ6nR7mooPoEbobpupfit61efeaECTCSa5eo016ux6900/C6i482zf0GToMffuCnDo7RY=
+	t=1766793412; cv=none; b=WzU8teJVqQ+HA2vcUXostqaOTW6SgL6OvQg4nFG1Ci4XylZYt8rDC2+CL9MhiG60FhQRdA2KMVbBMfEcD/3eaz0k3Eqmn6Q+4n2i62SOdKmfQZ+p2mczUszw4mbuD1J+TRDdyskLRjGpUzbMh8ngCxa6boAE2IBm2qVo4R7jFnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766792813; c=relaxed/simple;
-	bh=mNwbS3FHpwKCBARgVxIQ6GeM8kLKlZvOA+pbE6NdXDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=mmqIVC0HP8tL6lNS00kdt7qr6Yihu/LM/yh2BbbeCXn9CX4r9J8daZVdshrbGyMd12N/XURK8t/SP8t9acLiIA8Dq9VOeXItxPJExtxFgQljXLdYQ6b5mE1K2CpAIkGXzGWNDBOnSA+U9MAagPVhIu03TYRMPw/2skEOPFLkvts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DIBvyqte; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF764C4CEF7;
-	Fri, 26 Dec 2025 23:46:52 +0000 (UTC)
+	s=arc-20240116; t=1766793412; c=relaxed/simple;
+	bh=TmkQ20OZkTQkt5CoWiGqlvcZyzl19wgFNsEBjFcJyxc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qLSQoC2cksB2wBcjEa10eSMn4m2Obl+xndIyRRkF4xr7ZkYgkV2llg7lO5VwCzJVC9O2EOZ/Wz6TinpD4nokIrZPrTSDlnhrAxX12b7knKxo/x15/selJMAQNgzWeOzXm8BoGfxhGjV2dPXeSaQaOy0G0acBhMQB3v9X9UizkqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ESTPbVJJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 053BEC4CEF7;
+	Fri, 26 Dec 2025 23:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766792813;
-	bh=mNwbS3FHpwKCBARgVxIQ6GeM8kLKlZvOA+pbE6NdXDE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=DIBvyqtesOH1on+kWKFitpmCpw/8xWzrnv7rSzSGryD0GOIUb+sKtUrpI6+CDoRNg
-	 zGWmE25HQHVAqO5tJIvzr80CbDxNA461ZRdVpEtJi6Ko8seHti6uMPavxHxYWdmgGm
-	 q2oW4/5lPMyE3DpoadKBUp4ES3mgFHusPRSSvbheeC5DcBmR5s7ZFbaO7DxigGCwGg
-	 Q0p/lmlei0OvDHTZrhzyC0Wyhr1udB+4bsqHn2iAxPz2UPATX42YQF3DXPcP9JVxFE
-	 r3qXkatr5isuw3GZkZC9+9P5DL95FB21CLac4Xe993XTuDt/Fp/aU6qqOOyMa7Lrj0
-	 RnLnTX+brEQXA==
-Date: Fri, 26 Dec 2025 17:46:51 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>, Kees Cook <kees@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2] PCI: rcar-host: Add OF Kconfig dependency to avoid
- objtool no-cfi warning
-Message-ID: <20251226234651.GA4148926@bhelgaas>
+	s=k20201202; t=1766793411;
+	bh=TmkQ20OZkTQkt5CoWiGqlvcZyzl19wgFNsEBjFcJyxc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ESTPbVJJEMD9u9uHankO1Rd8hjsHnae8LYU/sqHgEPolKKBWTxvNiLpqtXw/Afw7I
+	 kRI+cWQthmnS7MU0oGsE0IHLNMkKsI/EoJ1Ln4bL0WmRvXJQAjMpS6Hm+aFs0XWtNk
+	 kouoAQmT585nRVEqyOuSzCqiEASOJPYciCVqlpyTUVW0BZuTZw7B66wIPPcN83E2QN
+	 9+5R/Nfv7VVEeSGyicAkaNhQXEc07s2XAd0ApwBhwayDKn7ZvxLcpUabe/caIjhlFz
+	 L8GjFTl8a8wrHjo5nhcXTSIWvhmVGzMxb70RcdWJGqcetaCEi73LRF9AFuGejws8Zf
+	 flFJuqv38l56g==
+Date: Fri, 26 Dec 2025 13:56:50 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Chen Ridong <chenridong@huawei.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Simon Horman <horms@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>, Waiman Long <longman@redhat.com>,
+	Will Deacon <will@kernel.org>, cgroups@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH 03/33] memcg: Prepare to protect against concurrent
+ isolated cpuset change
+Message-ID: <aU8gwjlVmRkMtPZT@slm.duckdns.org>
+References: <20251224134520.33231-1-frederic@kernel.org>
+ <20251224134520.33231-4-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,37 +83,21 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <176603538085.6580.3625113457403612097.b4-ty@kernel.org>
+In-Reply-To: <20251224134520.33231-4-frederic@kernel.org>
 
-On Thu, Dec 18, 2025 at 10:53:00AM +0530, Manivannan Sadhasivam wrote:
-> On Tue, 14 Oct 2025 11:20:27 -0700, Nathan Chancellor wrote:
-> > After commit 894af4a1cde6 ("objtool: Validate kCFI calls"), compile
-> > testing pcie-rcar-host.c with CONFIG_FINEIBT=y and CONFIG_OF=n results
-> > in a no-cfi objtool warning in rcar_pcie_probe():
-> > 
-> >   $ cat allno.config
-> >   CONFIG_CFI=y
-> >   CONFIG_COMPILE_TEST=y
-> >   CONFIG_CPU_MITIGATIONS=y
-> >   CONFIG_GENERIC_PHY=y
-> >   CONFIG_MITIGATION_RETPOLINE=y
-> >   CONFIG_MODULES=y
-> >   CONFIG_PCI=y
-> >   CONFIG_PCI_MSI=y
-> >   CONFIG_PCIE_RCAR_HOST=y
-> >   CONFIG_X86_KERNEL_IBT=y
-> > 
-> > [...]
-> 
-> Applied, thanks!
-> 
-> [1/1] PCI: rcar-host: Add OF Kconfig dependency to avoid objtool no-cfi warning
->       commit: 57833f84f6f5967134c9c1119289f7acdd1c93e9
+On Wed, Dec 24, 2025 at 02:44:50PM +0100, Frederic Weisbecker wrote:
+> +static void schedule_drain_work(int cpu, struct work_struct *work)
+> +{
+> +	guard(rcu)();
+> +	if (!cpu_is_isolated(cpu))
+> +		schedule_work_on(cpu, work);
+> +}
 
-Is this v6.19 material?  The patch is old, 894af4a1cde6 appeared in
-v6.18, and it's not really a regression, but it only affects
-PCIE_RCAR_HOST and it looks like it papers over a headache for static
-analysis.
+As the sync rules aren't trivial, it'd be nice to have some comment
+explaining what's going on.
 
-Bjorn
+Thanks.
+
+-- 
+tejun
 
