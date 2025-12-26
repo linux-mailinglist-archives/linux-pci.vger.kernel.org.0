@@ -1,223 +1,134 @@
-Return-Path: <linux-pci+bounces-43724-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43725-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBFB6CDE837
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Dec 2025 09:48:22 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF5E6CDEA11
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Dec 2025 12:12:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3E922300CB88
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Dec 2025 08:48:20 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id F40E5300647F
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Dec 2025 11:12:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1970E126BF1;
-	Fri, 26 Dec 2025 08:48:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8538831A05E;
+	Fri, 26 Dec 2025 11:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bKXBVGXb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798F6A945;
-	Fri, 26 Dec 2025 08:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FE431960F
+	for <linux-pci@vger.kernel.org>; Fri, 26 Dec 2025 11:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766738899; cv=none; b=MGmSbaXy9v3SMVuTqhhJnfLHigKV7KXGGAuXUtJjE8rGdrvZnBVoJEMWkdgIcbJN1/kzMHZ9Iw4bbba489wKGkzgaM2hTTtsxuBUYLvLgrFCCdpndUCKn74TFkVf5R+LZixD8pciLdzGAye+DzNu2qiV+CjDC79x3yK+snFkNPk=
+	t=1766747521; cv=none; b=afVwUGs28ccw/1Fl2XuWPDesl6BPP/KvNA1Sx4J975N46ipVj3YrY2LMkRj9w/zrWvk3xyjSfCyhgtXGWUIFoYHpu92uEEW4zhscSffmbQNClIauJmctE8uW0NZaI/vkYkYXL6ycqVcal2T2X3HK/YYZNKsgOvbTLLGBKCZf/zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766738899; c=relaxed/simple;
-	bh=Qe1ViFaURpXZO7boMFNR0+RIbaHQHv+MQXT0F1X1lvE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BMbEOkD71IG7u16yKdvY7a+gDdWvdZM/RLRSTRbtYToNg0DioyapHpFzDgOwewAXbNqdqNR2KyXZkqpGS+KOKcu6+kmmj1F8/hzMAnh8IdM5Rmc3To+ekRdGAPw9xQDgCPxDKzQmzt76N4v2Np4Y3olN4xpkodgJ6GHT4HxFE7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dczlT5D1fzKHMNb;
-	Fri, 26 Dec 2025 16:47:49 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 571224057D;
-	Fri, 26 Dec 2025 16:48:12 +0800 (CST)
-Received: from [10.67.111.176] (unknown [10.67.111.176])
-	by APP4 (Coremail) with SMTP id gCh0CgC3F_jKS05pTcYjBg--.59999S2;
-	Fri, 26 Dec 2025 16:48:11 +0800 (CST)
-Message-ID: <c724aac7-5647-4253-bf7b-4ea92ea5d167@huaweicloud.com>
-Date: Fri, 26 Dec 2025 16:48:10 +0800
+	s=arc-20240116; t=1766747521; c=relaxed/simple;
+	bh=GrEryL+CS0vvELyT36eR2JXYpd/5DcbikdcG9E3uqtc=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=dLUGpxSEK1OwRfJJh2746xn4g1zK844339MZG+HiOV09JKHbSb7jW5obLUAKE9KRGOHdBHO9JsLkUe8X+QfuT+xd2tYQLI67XvxqpsJ4JcXRFNm3Mizq/rd4B4J0Rj18rjf2NrQzZbZQ1uePmdj1EDUx5PLyo/+4rYIWMrGqEfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bKXBVGXb; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2a09757004cso92051495ad.3
+        for <linux-pci@vger.kernel.org>; Fri, 26 Dec 2025 03:11:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766747519; x=1767352319; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GrEryL+CS0vvELyT36eR2JXYpd/5DcbikdcG9E3uqtc=;
+        b=bKXBVGXb0+jFhCCWBtJoK06x0dX52wc7iXcgg2QaOuJtNNSdY7TWc9oR9ZIYy8LX9X
+         jfAvuVFpd563SG/mlGFuOCj1TwcBSyZ8D0NAz2vkQQXSBb40PuK507PWvGXvboIC5K1n
+         8du7an+mnYiIjP/XhGWxeiqCNXfSGxY0WAt/77MQwkm8dATzSW1lBFvBIeudjPzoCBlo
+         ps3PYX4EujG24kWDIY0CCa68Stw05k0bdvQAoix4f3oNe+t8YhjTlt8+GnkYIJRQh0y8
+         jpsIAGLIrLV+W2p8VVjfQwKumDKQ781OI4Zc/DcNG1bWegPSjPikleTyMB4lzGHwB6Mu
+         1dNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766747519; x=1767352319;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GrEryL+CS0vvELyT36eR2JXYpd/5DcbikdcG9E3uqtc=;
+        b=YEaUVSdDfdSFQEOMjPGLh+IzFYDc5+0Wgno2sFlDQ6v04JhyZI5gAVD5h+S7utEdxc
+         GVOgJ0ppqkcBe8sTq+8T80FDDlyYhKw3NpckS1iek98qpJIHlFBPy8W3mBMJrKrEdT0C
+         ByjNyECNVRqWRPp9Bdzw6UTGF6P2g8BtlomQhVrFVM+FqlKGJEiSFB8Yp673t4JVEcM5
+         9UEX84/ngbIUiWJSiJ5QsnoGjSu1gZQWOYwRBFu6d0dMFNIJa9rUBag0hZpuNfbBPyTC
+         LG0PDmladKbNTd78mW6Q7GAnLGhTIaqW0QTLjrVNCXeI+56G9jQCIFE0VIcBiM/GHnBs
+         Encw==
+X-Forwarded-Encrypted: i=1; AJvYcCXEe//Mkp7wOa2LqoI6M7mIWbBRosL6F3T6unq4pZpNj4lePbtqbVfX1jCfE6U4UtFo2Bl7o2ZpKA4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcFJ3+OG+Nyfy1JY8PvG20PaVzhogavTti/8Rspveb777nfhg8
+	m8069OSaAG62ZWCFQ/0DHxpUa//cmMmj/CflgOEzEAHxvJMXP+pW81As
+X-Gm-Gg: AY/fxX4zJAFT1jaFTXRFBf9LnwDyx6NJSIyGEK7dRvLKhgIbLPXCqtj74MO4KidwF/K
+	fiVbpAC17doPdGWKzYrmeQh9yUfO7EAXPINbOnw1H5SIpQ4xdBPnFVVUgySbxlQHPX+octYQu67
+	jcyIHNhP5QuCwLi3nUtXTnnVkJBFb6BEJd5dgo9i+4U0RcQGjKP9WQkup/1vSrBoiwD7glV2tfB
+	LcArD73sqqevWimuIZ5pcZouTcEPW5a4EMV+YOUiJT6UgU+dPhngjfHnnkQyJn5QKGSHGSv2a5L
+	mp1W8P4ZB65AV7Brg0skmGd0u2NKgUlUq9mQRx1aCfCLMYfXNrPKKjpnfmUZLO5Z1UFl1mEpskS
+	B4f9Q2OlCNICYInBK9cxqkXUXSjTWws4iGfwZMc2ccj/dHeeptA8RoYgg64LIvrIsXiXL00tfqC
+	Od+21K4SmPCPt6VOOjsADkhkstYoly2WncEpE+daKiueeeMttJRe3VqvqqvPQXq8AzSiw=
+X-Google-Smtp-Source: AGHT+IGGipCbhgaQOoY2a9zGN67p1m3gUlBc7Gwg4kuol771fhfZChu6DYeHJHsL/FtWYs3YsAKz1Q==
+X-Received: by 2002:a17:903:190d:b0:2a0:a09b:7b0 with SMTP id d9443c01a7336-2a2f2c5f2d3mr236489945ad.61.1766747519188;
+        Fri, 26 Dec 2025 03:11:59 -0800 (PST)
+Received: from localhost (p5342157-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.39.242.157])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2f3c6661esm199723195ad.2.2025.12.26.03.11.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Dec 2025 03:11:57 -0800 (PST)
+Date: Fri, 26 Dec 2025 20:11:42 +0900 (JST)
+Message-Id: <20251226.201142.1049434388098064267.fujita.tomonori@gmail.com>
+To: boqun.feng@gmail.com
+Cc: fujita.tomonori@gmail.com, miguel.ojeda.sandonis@gmail.com,
+ dakr@kernel.org, bhelgaas@google.com, ojeda@kernel.org, gary@garyguo.net,
+ bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
+ aliceryhl@google.com, tmgross@umich.edu, joelagnelf@nvidia.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, buaajxlj@163.com
+Subject: Re: [PATCH] PCI: Provide pci_free_irq_vectors() for CONFIG_PCI=n
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <aU0PnCV69l7lV2aS@tardis-2.local>
+References: <CANiq72n1SX4OGFR4wNzurNX2RQki_ZmD13bBfywxxOEmw6cGZg@mail.gmail.com>
+	<20251225.183631.866118259815088053.fujita.tomonori@gmail.com>
+	<aU0PnCV69l7lV2aS@tardis-2.local>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 17/33] PCI: Flush PCI probe workqueue on cpuset isolated
- partition change
-To: Frederic Weisbecker <frederic@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-Cc: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Chen Ridong <chenridong@huawei.com>, Danilo Krummrich <dakr@kernel.org>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Gabriele Monaco <gmonaco@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
- Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
- Lai Jiangshan <jiangshanlai@gmail.com>,
- Marco Crivellari <marco.crivellari@suse.com>, Michal Hocko
- <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
- Paolo Abeni <pabeni@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Phil Auld <pauld@redhat.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Simon Horman <horms@kernel.org>,
- Tejun Heo <tj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Vlastimil Babka <vbabka@suse.cz>, Waiman Long <longman@redhat.com>,
- Will Deacon <will@kernel.org>, cgroups@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
- linux-mm@kvack.org, linux-pci@vger.kernel.org, netdev@vger.kernel.org
-References: <20251224134520.33231-1-frederic@kernel.org>
- <20251224134520.33231-18-frederic@kernel.org>
-Content-Language: en-US
-From: Chen Ridong <chenridong@huaweicloud.com>
-In-Reply-To: <20251224134520.33231-18-frederic@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgC3F_jKS05pTcYjBg--.59999S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCr4kAF45AF1rAr47XryDAwb_yoWrAF4fpF
-	Z8AFW5tr48tFWUW3s0vF17Ar1S9wn2va4Ikr47Gw1Fvry2ya4vqasavry8tryfWrWDuF12
-	yFW5KrZxuayjyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8
-	Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v2
-	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj
-	xUVZ2-UUUUU
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: base64
 
-
-
-On 2025/12/24 21:45, Frederic Weisbecker wrote:
-> The HK_TYPE_DOMAIN housekeeping cpumask is now modifiable at runtime. In
-> order to synchronize against PCI probe works and make sure that no
-> asynchronous probing is still pending or executing on a newly isolated
-> CPU, the housekeeping subsystem must flush the PCI probe works.
-> 
-> However the PCI probe works can't be flushed easily since they are
-> queued to the main per-CPU workqueue pool.
-> 
-> Solve this with creating a PCI probe-specific pool and provide and use
-> the appropriate flushing API.
-> 
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> ---
->  drivers/pci/pci-driver.c | 17 ++++++++++++++++-
->  include/linux/pci.h      |  3 +++
->  kernel/sched/isolation.c |  2 ++
->  3 files changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 786d6ce40999..d87f781e5ce9 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -337,6 +337,8 @@ static int local_pci_probe(struct drv_dev_and_id *ddi)
->  	return 0;
->  }
->  
-> +static struct workqueue_struct *pci_probe_wq;
-> +
->  struct pci_probe_arg {
->  	struct drv_dev_and_id *ddi;
->  	struct work_struct work;
-> @@ -407,7 +409,11 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
->  		cpu = cpumask_any_and(cpumask_of_node(node),
->  				      wq_domain_mask);
->  		if (cpu < nr_cpu_ids) {
-> -			schedule_work_on(cpu, &arg.work);
-> +			struct workqueue_struct *wq = pci_probe_wq;
-> +
-> +			if (WARN_ON_ONCE(!wq))
-> +				wq = system_percpu_wq;
-> +			queue_work_on(cpu, wq, &arg.work);
->  			rcu_read_unlock();
->  			flush_work(&arg.work);
->  			error = arg.ret;
-> @@ -425,6 +431,11 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
->  	return error;
->  }
->  
-> +void pci_probe_flush_workqueue(void)
-> +{
-> +	flush_workqueue(pci_probe_wq);
-> +}
-> +
->  /**
->   * __pci_device_probe - check if a driver wants to claim a specific PCI device
->   * @drv: driver to call to check if it wants the PCI device
-> @@ -1762,6 +1773,10 @@ static int __init pci_driver_init(void)
->  {
->  	int ret;
->  
-> +	pci_probe_wq = alloc_workqueue("sync_wq", WQ_PERCPU, 0);
-> +	if (!pci_probe_wq)
-> +		return -ENOMEM;
-> +
->  	ret = bus_register(&pci_bus_type);
->  	if (ret)
->  		return ret;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 864775651c6f..f14f467e50de 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1206,6 +1206,7 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->  				    struct pci_ops *ops, void *sysdata,
->  				    struct list_head *resources);
->  int pci_host_probe(struct pci_host_bridge *bridge);
-> +void pci_probe_flush_workqueue(void);
->  int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int busmax);
->  int pci_bus_update_busn_res_end(struct pci_bus *b, int busmax);
->  void pci_bus_release_busn_res(struct pci_bus *b);
-> @@ -2079,6 +2080,8 @@ static inline int pci_has_flag(int flag) { return 0; }
->  _PCI_NOP_ALL(read, *)
->  _PCI_NOP_ALL(write,)
->  
-> +static inline void pci_probe_flush_workqueue(void) { }
-> +
->  static inline struct pci_dev *pci_get_device(unsigned int vendor,
->  					     unsigned int device,
->  					     struct pci_dev *from)
-> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-> index 8aac3c9f7c7f..7dbe037ea8df 100644
-> --- a/kernel/sched/isolation.c
-> +++ b/kernel/sched/isolation.c
-> @@ -8,6 +8,7 @@
->   *
->   */
->  #include <linux/sched/isolation.h>
-> +#include <linux/pci.h>
->  #include "sched.h"
->  
->  enum hk_flags {
-> @@ -145,6 +146,7 @@ int housekeeping_update(struct cpumask *isol_mask, enum hk_type type)
->  
->  	synchronize_rcu();
->  
-> +	pci_probe_flush_workqueue();
->  	mem_cgroup_flush_workqueue();
->  	vmstat_flush_workqueue();
->  
-
-I am concerned that this flush work may slow down writes to the cpuset interface. I am not sure how
-significant the impact will be.
-
-I'm concerned about potential deadlock risks. While preliminary investigation hasn't uncovered any
-issues, we must ensure that the cpu write lock is not held during the work(writing cpuset interface
-needs cpu read lock).
-
--- 
-Best regards,
-Ridong
-
+T24gVGh1LCAyNSBEZWMgMjAyNSAxODoxOTowOCArMDgwMA0KQm9xdW4gRmVuZyA8Ym9xdW4uZmVu
+Z0BnbWFpbC5jb20+IHdyb3RlOg0KDQo+IE9uIFRodSwgRGVjIDI1LCAyMDI1IGF0IDA2OjM2OjMx
+UE0gKzA5MDAsIEZVSklUQSBUb21vbm9yaSB3cm90ZToNCj4+IE9uIFRodSwgMjUgRGVjIDIwMjUg
+MTA6MTA6MDQgKzAxMDANCj4+IE1pZ3VlbCBPamVkYSA8bWlndWVsLm9qZWRhLnNhbmRvbmlzQGdt
+YWlsLmNvbT4gd3JvdGU6DQo+PiANCj4+ID4gT24gTW9uLCBEZWMgMTUsIDIwMjUgYXQgMzo1NOKA
+r0FNIEJvcXVuIEZlbmcgPGJvcXVuLmZlbmdAZ21haWwuY29tPiB3cm90ZToNCj4+ID4+DQo+PiA+
+PiBDb21taXQgNDczYjlmMzMxNzE4ICgicnVzdDogcGNpOiBmaXggYnVpbGQgZmFpbHVyZSB3aGVu
+IENPTkZJR19QQ0lfTVNJDQo+PiA+PiBpcyBkaXNhYmxlZCIpIGZpeGVkIGEgYnVpbGQgZXJyb3Ig
+YnkgcHJvdmlkaW5nIHJ1c3QgaGVscGVycyB3aGVuDQo+PiA+PiBDT05GSUdfUENJX01TST1uLiBI
+b3dldmVyIHRoZSBydXN0IGhlbHBlcnMgcmVseSBvbiB0aGUNCj4+ID4+IHBjaV9hbGxvY19pcnFf
+dmVjdG9ycygpIGZ1bmN0aW9uIGlzIGRlZmluZWQsIHdoaWNoIGlzIG5vdCB0cnVlIHdoZW4NCj4+
+ID4+IENPTkZJR19QQ0k9bi4gVGhlcmUgYXJlIG11bHRpcGxlIHdheXMgdG8gZml4IHRoaXMsIGUu
+Zy4gYSBwb3NzaWJsZSBmaXgNCj4+ID4+IGNvdWxkIGJlIGp1c3QgcmVtb3ZlIHRoZSBjYWxsaW5n
+IG9mIHBjaV9hbGxvY19pcnFfdmVjdG9ycygpIHNpbmNlIGl0J3MNCj4+ID4+IGVtcHR5IHdoZW4g
+Q09ORklHX1BDSV9NU0k9biBhbnl3YXkuIEhvd2V2ZXIsIHNpbmNlIFBDSSBpcnEgQVBJcywgc3Vj
+aCBhcw0KPj4gPj4gcGNpX2FsbG9jX2lycV92ZWN0b3JzKCksIGFyZSBhbHJlYWR5IGRlZmluZWQg
+ZXZlbiB3aGVuIENPTkZJR19QQ0k9biwgdGhlDQo+PiA+PiBtb3JlIHJlYXNvbmFibGUgZml4IGlz
+IHRvIGRlZmluZSBwY2lfYWxsb2NfaXJxX3ZlY3RvcnMoKSB3aGVuDQo+PiA+PiBDT05GSUdfUENJ
+PW4gYW5kIHRoaXMgYWxpZ25zIHdpdGggdGhlIHNpdHVhdGlvbnMgb2Ygb3RoZXIgcHJpbWl0aXZl
+cyBhcw0KPj4gPj4gd2VsbC4NCj4+ID4+DQo+PiA+PiBGaXhlczogNDczYjlmMzMxNzE4ICgicnVz
+dDogcGNpOiBmaXggYnVpbGQgZmFpbHVyZSB3aGVuIENPTkZJR19QQ0lfTVNJIGlzIGRpc2FibGVk
+IikNCj4+ID4+IFNpZ25lZC1vZmYtYnk6IEJvcXVuIEZlbmcgPGJvcXVuLmZlbmdAZ21haWwuY29t
+Pg0KPj4gPiANCj4+ID4gUmVsYXRlZDogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcnVzdC1mb3It
+bGludXgvMjAyNTEyMDkwMTQzMTIuNTc1OTQwLTEtZnVqaXRhLnRvbW9ub3JpQGdtYWlsLmNvbS8N
+Cj4+ID4gDQo+PiA+IEkgZ3Vlc3MgaXQgY291bnRzIGFzIGEgcmVwb3J0LCBzbyB3ZSBtYXkgd2Fu
+dCBhIFJlcG9ydGVkLWJ5IChDYydpbmcgVG9tbykuDQo+PiANCj4+IFNpbmNlIHBjaS5ycyBpcyBv
+bmx5IGNvbXBpbGVkIHdoZW4gQ09ORklHX1BDSSBpcyBlbmFibGVkLiBTbyBpdCBzZWVtcw0KPj4g
+Y29uc2lzdGVudCB0byB0cmVhdCB0aGUgUENJIGhlbHBlcnMgdGhlIHNhbWUgd2F5LiBUaGF0IHNh
+aWQsIHRoaXMNCj4+IGFwcHJvYWNoIGlzIGFsc28gZmluZSBieSBtZTogaXQncyBhbHJlYWR5IGlu
+Y29uc2lzdGVudCB0aGF0DQo+PiBwY2lfYWxsb2NfaXJxX3ZlY3RvcnMoKSBoYXMgYSBzdHVmIGRl
+ZmluaXRpb24sIHdoaWxlDQo+PiBwY2lfZnJlZV9pcnFfdmVjdG9ycyBkb2VzIG5vdC4NCj4gDQo+
+IFllcywgSSB0aGluayBwcm92aWRpbmcgYSBzdHViIHBjaV9mcmVlX2lycV92ZWN0b3JzKCkgaXMg
+dGhlIHdheSB0byBnby4NCj4gSWYgeW91IGFyZSBPSyB3aXRoIGl0LCBJIGNvdWxkIHNlbmQgYSB2
+MiB3aXRoIHlvdXIgYW5kIExpYW5nIEppZSdzDQo+IFJlcG9ydGVkLWJ5Lg0KDQpJdCB3b3JrcyBm
+b3IgbWUuIFBsZWFzZSBnbyBhaGVhZC4NCg0K
 
