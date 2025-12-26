@@ -1,200 +1,184 @@
-Return-Path: <linux-pci+bounces-43726-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43727-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D9B5CDEA88
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Dec 2025 12:39:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7930BCDEBEE
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Dec 2025 14:48:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2DE05300797D
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Dec 2025 11:39:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6967230084D6
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Dec 2025 13:48:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5FA1298CAF;
-	Fri, 26 Dec 2025 11:39:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 867D628D83E;
+	Fri, 26 Dec 2025 13:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICeUjw+w"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k27WT8NC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F551F3BAC
-	for <linux-pci@vger.kernel.org>; Fri, 26 Dec 2025 11:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591577081A;
+	Fri, 26 Dec 2025 13:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766749186; cv=none; b=n07/+Db8bS+uF6IOjgN1j5Xn0zfh+2b8elrOpbk24lUD1CVys2GQoQE/fIlIjjdqdavCfD/Vsol757RZIGA5BUwoY2T8qCYsJr07I/3apkBGhnuRFs0LbRPuYEmTAVuMaZg7hSy3TIOkBfaKdhpn32ZnqzrR3QSk2KXb7D1im4Y=
+	t=1766756930; cv=none; b=RVGb1CsbeRicGN9x40F87JVcjbdLVbR8ldr10rOx3m9ME03ycO/EG6/KKxyFOCI0NZoXoEWnKQgtDQcC2w5fDVZOupkU5aZeM78wZSQgMGgNsZlxLR1vCGrcoFzL19r9kavwJbrLbCAp+2ULA0Ofq5i38cXDBY/afkal7GVrEZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766749186; c=relaxed/simple;
-	bh=ejONzTVU0FdmdyDekUr8YEFyQevob5Y9vbn53RBZ8Eo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GdteknZsDlqK4IP7SKsot82zDcITfZHpF56vG7fOv+kIkooeNi/n4tI8TAUfwod+culdCaRBgK6Hqv7Ny/CIKf1B5fx67GgOuy8ZNXoua1fiTvL1XKqICQDSOVl4KSngoNXVVlscKU3voZxZtqeU6uiOQzuAQm7QcJRZ0/IZkNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ICeUjw+w; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-8888a444300so78319536d6.1
-        for <linux-pci@vger.kernel.org>; Fri, 26 Dec 2025 03:39:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766749184; x=1767353984; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=tmKT01VlgiVDtYWOF8z6L//YBXMRlOGnlMxAj6FU8N0=;
-        b=ICeUjw+w5OHQskyKx9agrJ3n5nKEj0nAFhrkZVXcZWgyL48hqGQcm4pcvtWjlJThmq
-         8zuT/rHWdvHzuWoWIU8aCFLuXDk8uWvBFwNLxGQH65VcT3dqlYJjhJVFmzTA0GwetecK
-         lgWhjTlP1sU4nP7EFIuQ/OxkxBufyOyiwDe27F+nL9Oz7Zq7nyz2CaxdxQIw8MstYiDm
-         euw1kx6Rl1lQc3oy9Be0mmJ3WcvSdY5ZpRDGdlelsRzRInQAV3XN3z4q3lYVw5qs1ftE
-         mZTW3AwglQ1VP3UBVzffCde64Q6GdiGX9qTbeSJJKsUUVfneSfZvaUhHCHRAiISaVDFk
-         aIIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766749184; x=1767353984;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:feedback-id:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tmKT01VlgiVDtYWOF8z6L//YBXMRlOGnlMxAj6FU8N0=;
-        b=CHxyM44g4o95Jri46i4vzz2RASZRUnxxOziRKaK/N8PXHSzk4OaWAEBS2Y1QQ/G6KB
-         v2F0cUm6Mg/dZsR3+NC3stf+pVIAkc6nX0tA28F6alYYxKXE8rl3OMlsNMH4hvtlq0Lt
-         xoFarh8XHLWhVuopDrfIEw4p2gvX29N3THGU5EOI30ItcCvTrM5dcda6JdbZyZqMjz8U
-         9gQCiXVO82EdsxuhgGYCQz58YGQw+SggHQPi9E040/F/6AgpMBoPoiBH+Ty2m/ZXGnZh
-         JBJsH/GZrvZkI8qqp66Cq7iOLeRxG88CwoF1dyFOKYCz0YrTlZ/Di2bzdKsIO3TYPZ+j
-         jyRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWDsHWhaPhiYB6FyXB9lYE+926nurIHOidrWfqcW+ueM5dTp1XnDp60hP1A5QGTXIYmDPEbVdajptQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzU7cmB18n9eT8PqY5oaOxm4Jo3sy3pU0WgLKrBOf0BcSg5/2b6
-	EtxKB4GyXJu9IGEWiAhVAB1yXDOVCzQuFKYek0fHAsh7bvVrX/xKlupk
-X-Gm-Gg: AY/fxX7jFsJQ+cq9Pb8ce6PLa9u0Ac/fDsvOqTCPJYTZaBK4tCBSVdZMqtVj3EqBbC5
-	gEwIDllYr664GJR52G3/HpYXQbb6AyDcDlJc4UZJxfbEaVdQqDAkJwLlVH1xNf3PxDKG8Xpt/qk
-	MOdEIGx4fkY/JMcA5qX+tGc+/rozLytzV4q/mzq2fnW3U8Tu77XdIYaFIQbkIFXTlztBJoD+Rn6
-	hB2je/Q+e16X7W+L7vSwvJLUJKLG8vsXOPEuVMUybOw6wI6UKxnFoFXTRD1qY1tSH9nRtaafby7
-	+LM1LRcMjda11QZ8LZEq94bhp+YoZqE1dA/XT1/k8bpmGWoWK0dtJdSuyiYDTIngy3bE/bvKypB
-	eftW/hVh0tdl42hxXmP5nZMAEKeWEM1DtXNRZtbb142NYL3yGK//nqdqds9BaDNNTlgtZro3gIY
-	8E+2YvW5CZHF2oQrW/fDt3u9MtOCsyqwo/1FrI6HFF+D2Ntcd3vzUVd4aZXgivc0MBURpcka2U2
-	wMtistBNdjpjhw=
-X-Google-Smtp-Source: AGHT+IGV8BHHtX/GVo7I0/97UaUQUtAkvaXwseFZpyG4xX7ayE5yjIfCJ/90vxAgzY9uXJbR9su+2A==
-X-Received: by 2002:a05:6214:248b:b0:70f:a4b0:1eb8 with SMTP id 6a1803df08f44-88d8203f029mr371419736d6.13.1766749184014;
-        Fri, 26 Dec 2025 03:39:44 -0800 (PST)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-88d96bec1d3sm165930696d6.17.2025.12.26.03.39.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Dec 2025 03:39:43 -0800 (PST)
-Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
-	by mailfauth.phl.internal (Postfix) with ESMTP id DB8BDF40068;
-	Fri, 26 Dec 2025 06:39:42 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Fri, 26 Dec 2025 06:39:42 -0500
-X-ME-Sender: <xms:_nNOaZz7d5PDPwIEHoTgeLWMoK0trC6INblxeKYyn0mb84Dhg8q4IA>
-    <xme:_nNOaeIgxk7dv9vjr8-6y4IEoF1dMRTkkWrTvz2H4jJrrLyWp7KZ0DXoCbQ0GsLNp
-    HxxSFWjV0q1FTBTttD9YJeKienGATafTF04wtjr2aZrGUihJhbWcA>
-X-ME-Received: <xmr:_nNOab5UiwuM6njQyvoJmfrMZ6X3P47J4zHQX1EYHlCsu5nbGZwzsyjQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeikeefjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhnucfhvghn
-    ghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvghrnh
-    epgeegueekgefhvedukedtveejhefhkeffveeufeduiedvleetledtkeehjefgieevnecu
-    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshho
-    nhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngh
-    eppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepvddt
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthho
-    pehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsohhquhhnrdhfvghngh
-    esghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdp
-    rhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtph
-    htthhopehlohhsshhinheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprgdrhhhinhgu
-    sghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhhitggvrhihhhhlsehgoh
-    hoghhlvgdrtghomh
-X-ME-Proxy: <xmx:_nNOacwXode_EDdi-iJ4R4d3HemtSSIBt3_7C4tiZqfE2_Vzc5sFIg>
-    <xmx:_nNOad9QHGw-4GCVx7menAHWVyWa_upulO2RWYd9m7AWDl4L3fH8Ww>
-    <xmx:_nNOaQGzvbsYU46FMowqg0-rE1kbngIdm52hyUtT5heCLhVXj4yYVA>
-    <xmx:_nNOaXDW77woyuMzmWjbQOb2dwGkexT6SqPF0SY2ZaYkTqWujGMYLA>
-    <xmx:_nNOaUmEYnwCrT1xfj2QtgmcPSQ1CWghtvtvWxbyVCsULNFOUf1-a9PU>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 26 Dec 2025 06:39:42 -0500 (EST)
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Dirk Behme <dirk.behme@gmail.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	kernel test robot <lkp@intel.com>,
-	Liang Jie <liangjie@lixiang.com>,
-	Drew Fustini <fustini@kernel.org>,
-	David Gow <davidgow@google.com>
-Subject: [PATCH v2] PCI: Provide pci_free_irq_vectors() for CONFIG_PCI=n
-Date: Fri, 26 Dec 2025 19:39:38 +0800
-Message-ID: <20251226113938.52145-1-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1766756930; c=relaxed/simple;
+	bh=8zJCHvhYtm9SFFBd33jKfljlQCKJ2vh9TxB+oxR4ZU8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I0BQ1QzKhk/JxtzCBdMraFIV4xc1Y9vegjU6JmhC9pqbhlaJhSrK/AcDqWCUwcu1HQlOku487JZFNmHbvClGvKuLjQ5SnP/x/A+lHWSdxjqKYt8u78RSIq2jdUoE0RIrClLNZ7AE69/dhkl5kDDFLeaxu0VXUB81ddCsQjAAAs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k27WT8NC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41A69C4CEF7;
+	Fri, 26 Dec 2025 13:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766756929;
+	bh=8zJCHvhYtm9SFFBd33jKfljlQCKJ2vh9TxB+oxR4ZU8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=k27WT8NCVYj8NcLmJMbp0ij1jGyZY52t4Z5KKAC6ERfKMwmDO5F/kJIseAoXXIlBn
+	 aBmrQL9nJabg6KKhc2cgkXYGQPycxHwIQJUaSYtLkZGzsrgUCpoQHhtY2dL21xwL6o
+	 PWu6Dd09iqB/omSjYY0/cjN5+XEaRiyI5ZMBDgHcUl/+6As8c5l+vR06J45eCBBHZE
+	 VBwB5NOJkugMTfunPo91EOSeT5Vsh71hWYH/7IP0McF/+VSENSA+h414VXIBQHujgA
+	 1SU6Fle1rUsYic1yB6CR2ln75xL1fsKNupHWC9oYQ/lBkV8GgplxB+hdU3mG3eTru8
+	 Z7IgboaTXvXnw==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Linux ACPI <linux-acpi@vger.kernel.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
+ LKML <linux-kernel@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
+ Bjorn Helgaas <helgaas@kernel.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v1] ACPI: bus: Adjust acpi_osc_handshake() parameter list
+Date: Fri, 26 Dec 2025 14:48:45 +0100
+Message-ID: <12833187.O9o76ZdvQC@rafael.j.wysocki>
+Organization: Linux Kernel Development
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 
-Commit 473b9f331718 ("rust: pci: fix build failure when CONFIG_PCI_MSI
-is disabled") fixed a build error by providing rust helpers when
-CONFIG_PCI_MSI=n. However the rust helpers rely on the
-pci_alloc_irq_vectors() function is defined, which is not true when
-CONFIG_PCI=n. There are multiple ways to fix this, e.g. a possible fix
-could be just remove the calling of pci_alloc_irq_vectors() since it's
-empty when CONFIG_PCI_MSI=n anyway. However, since PCI irq APIs, such as
-pci_alloc_irq_vectors(), are already defined even when CONFIG_PCI=n, the
-more reasonable fix is to define pci_alloc_irq_vectors() when
-CONFIG_PCI=n and this aligns with the situations of other primitives as
-well.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Reported-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Closes: https://lore.kernel.org/rust-for-linux/20251209014312.575940-1-fujita.tomonori@gmail.com/
+For the sake of interface cleanliness, it is better to avoid using
+ACPICA data types in the parameter lists of helper functions that
+don't belong to ACPICA, so adjust the parameter list of recently
+introduced acpi_osc_handshake() to take a capabilities buffer pointer
+and the size of the buffer (in u32 size units) as parameters directly
+instead of a struct acpi_buffer pointer.
+
+This is also somewhat more straightforward on the caller side because
+they won't need to create struct acpi_buffer objects themselves to pass
+them to the helper function and it guarantees that the size of the
+buffer in bytes will always be a multiple of 4 (the size of u32).
+
+Moreover, it addresses a premature cap pointer dereference and
+eliminates a sizeof(32) that should have been sizeof(u32) [1].
+
+Fixes: e5322888e6bf ("ACPI: bus: Rework the handling of \_SB._OSC platform features")
 Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202512220740.4Kexm4dW-lkp@intel.com/
-Reported-by: Liang Jie <liangjie@lixiang.com>
-Closes: https://lore.kernel.org/rust-for-linux/20251222034415.1384223-1-buaajxlj@163.com/
-Fixes: 473b9f331718 ("rust: pci: fix build failure when CONFIG_PCI_MSI is disabled")
-Reviewed-by: Drew Fustini <fustini@kernel.org>
-Reviewed-by: David Gow <davidgow@google.com>
-Reviewed-by: Joel Fernandes <joelagnelf@nvidia.com>
-Reviewed-by: Danilo Krummrich <dakr@kernel.org>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/linux-acpi/202512242052.W4GhDauV-lkp@intel.com/
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
-v1 --> v2:
+ drivers/acpi/bus.c |   30 ++++++++++++------------------
+ 1 file changed, 12 insertions(+), 18 deletions(-)
 
-* Add Reported-by from FUJITA Tomonori, kernel test robot and Liang Jie.
-* Add Reviewed-by tags.
-
-Thanks!
-
-Liang Jie, I added you as Reported-by because of [1], if you prefer not
-to have that tag, feel free to let me know, thanks!
-
-[1]: https://lore.kernel.org/rust-for-linux/20251222034415.1384223-1-buaajxlj@163.com/
-
- include/linux/pci.h | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 864775651c6f..b5cc0c2b9906 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2210,6 +2210,10 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
- {
- 	return -ENOSPC;
- }
-+
-+static inline void pci_free_irq_vectors(struct pci_dev *dev)
-+{
-+}
- #endif /* CONFIG_PCI */
+--- a/drivers/acpi/bus.c
++++ b/drivers/acpi/bus.c
+@@ -326,31 +326,33 @@ out:
+ EXPORT_SYMBOL(acpi_run_osc);
  
- /* Include architecture-dependent settings and functions */
--- 
-2.51.0
+ static int acpi_osc_handshake(acpi_handle handle, const char *uuid_str,
+-			      int rev, struct acpi_buffer *cap)
++			      int rev, u32 *capbuf, size_t bufsize)
+ {
+ 	union acpi_object in_params[4], *out_obj;
+-	size_t bufsize = cap->length / sizeof(u32);
+ 	struct acpi_object_list input;
++	struct acpi_buffer cap = {
++		.pointer = capbuf,
++		.length = bufsize * sizeof(32),
++	};
+ 	struct acpi_buffer output;
+-	u32 *capbuf, *retbuf, test;
++	u32 *retbuf, test;
+ 	guid_t guid;
+ 	int ret, i;
+ 
+-	if (!cap || cap->length < 2 * sizeof(32) || guid_parse(uuid_str, &guid))
++	if (!capbuf || bufsize < 2 || guid_parse(uuid_str, &guid))
+ 		return -EINVAL;
+ 
+ 	/* First evaluate _OSC with OSC_QUERY_ENABLE set. */
+-	capbuf = cap->pointer;
+ 	capbuf[OSC_QUERY_DWORD] = OSC_QUERY_ENABLE;
+ 
+-	ret = acpi_eval_osc(handle, &guid, rev, cap, in_params, &output);
++	ret = acpi_eval_osc(handle, &guid, rev, &cap, in_params, &output);
+ 	if (ret)
+ 		return ret;
+ 
+ 	out_obj = output.pointer;
+ 	retbuf = (u32 *)out_obj->buffer.pointer;
+ 
+-	if (acpi_osc_error_check(handle, &guid, rev, cap, retbuf)) {
++	if (acpi_osc_error_check(handle, &guid, rev, &cap, retbuf)) {
+ 		ret = -ENODATA;
+ 		goto out;
+ 	}
+@@ -403,7 +405,7 @@ static int acpi_osc_handshake(acpi_handl
+ 		 */
+ 		acpi_handle_err(handle, "_OSC: errors while processing control request\n");
+ 		acpi_handle_err(handle, "_OSC: some features may be missing\n");
+-		acpi_osc_error_check(handle, &guid, rev, cap, retbuf);
++		acpi_osc_error_check(handle, &guid, rev, &cap, retbuf);
+ 	}
+ 
+ out:
+@@ -446,10 +448,6 @@ static void acpi_bus_osc_negotiate_platf
+ {
+ 	static const u8 sb_uuid_str[] = "0811B06E-4A27-44F9-8D60-3CBBC22E7B48";
+ 	u32 capbuf[2], feature_mask;
+-	struct acpi_buffer cap = {
+-		.pointer = capbuf,
+-		.length = sizeof(capbuf),
+-	};
+ 	acpi_handle handle;
+ 
+ 	feature_mask = OSC_SB_PR3_SUPPORT | OSC_SB_HOTPLUG_OST_SUPPORT |
+@@ -497,7 +495,7 @@ static void acpi_bus_osc_negotiate_platf
+ 
+ 	acpi_handle_info(handle, "platform _OSC: OS support mask [%08x]\n", feature_mask);
+ 
+-	if (acpi_osc_handshake(handle, sb_uuid_str, 1, &cap))
++	if (acpi_osc_handshake(handle, sb_uuid_str, 1, capbuf, 2))
+ 		return;
+ 
+ 	feature_mask = capbuf[OSC_SUPPORT_DWORD];
+@@ -532,10 +530,6 @@ static void acpi_bus_osc_negotiate_usb_c
+ {
+ 	static const u8 sb_usb_uuid_str[] = "23A0D13A-26AB-486C-9C5F-0FFA525A575A";
+ 	u32 capbuf[3], control;
+-	struct acpi_buffer cap = {
+-		.pointer = capbuf,
+-		.length = sizeof(capbuf),
+-	};
+ 	acpi_handle handle;
+ 
+ 	if (!osc_sb_native_usb4_support_confirmed)
+@@ -550,7 +544,7 @@ static void acpi_bus_osc_negotiate_usb_c
+ 	capbuf[OSC_SUPPORT_DWORD] = 0;
+ 	capbuf[OSC_CONTROL_DWORD] = control;
+ 
+-	if (acpi_osc_handshake(handle, sb_usb_uuid_str, 1, &cap))
++	if (acpi_osc_handshake(handle, sb_usb_uuid_str, 1, capbuf, 3))
+ 		return;
+ 
+ 	osc_sb_native_usb4_control = capbuf[OSC_CONTROL_DWORD];
+
+
 
 
