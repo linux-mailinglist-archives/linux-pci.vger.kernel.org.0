@@ -1,55 +1,59 @@
-Return-Path: <linux-pci+bounces-43753-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43754-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D16C9CDF431
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Dec 2025 05:28:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A0D7CDF445
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Dec 2025 05:42:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8D1FD3007957
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Dec 2025 04:28:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C15DD3008185
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Dec 2025 04:42:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81218135A53;
-	Sat, 27 Dec 2025 04:28:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0CDF1DF27D;
+	Sat, 27 Dec 2025 04:42:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oa1qEHg+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IdIeTGCD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E47288AD;
-	Sat, 27 Dec 2025 04:28:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C79F45C0B;
+	Sat, 27 Dec 2025 04:42:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766809716; cv=none; b=gzDFYIqu9HQf0V9Enyad84hAzyzfvmFkb4hXKwPHAc/1Wf9GZ6Bz5i+Oqy1yyePfEqheeUP98IJ25rh6V5T3Xyu/SFHjNmunjK0fGUFwlJ5LaYMVD9Xlm/OaIKeZNhg7QxBGzUZQLsd8lwf5a0zQ07nEuNSRV/nqHQFYY15/uVw=
+	t=1766810559; cv=none; b=e08q4P3EKKVJpXgNmzZMdaMDn5LIe0+X2yR4+QoHxFjQszUzle/68TatfSQTkvLWl6/RT2ti8b0UQMQlCjH0ENDg6r88QdSsv0tPgcA5z2OqNpKFTVVr4CRzh9Ed/34GrIzgaF7Yktak/tBTexOfDR/9zCIyvzuGn4xPWZuQ33Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766809716; c=relaxed/simple;
-	bh=LiAa30J2lKwiSWZfO8YyRXn4CjBMM3IKHPINE8Ajomc=;
+	s=arc-20240116; t=1766810559; c=relaxed/simple;
+	bh=HJ1Mg1aNTedk02BBtbXHOBjt3oUYpxf+I9kTL+6Z0Kg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dJOKK+zhmrKejNBPZ7HYkii1602UAzuh+uPls4fO6Ib8NXV/E3jHzs2RHHzjFYOyV8LbglnCqYoRpYWofUQivms7f5evLqG/+XcKQeljo3q8HDGjlk4icGG/FeQMa89dPBAbXJHs9QaW6jL/e/v74zCOi1LXB7aNkH958y8LQjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oa1qEHg+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57165C4CEF1;
-	Sat, 27 Dec 2025 04:28:32 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=l4XDRvK7u0+ug2NYQxvSZooZ2hliQhObsgQOSrj3LxxDPL5c9+A/34jQHNF5KNwsG+0J2PTJggeo8eJpJdvVjZC77zGkp6EX68rQRQKki3GzEuG1vTNnJndSAaQVvh60f/dHP6+mUc7wLwLFsI1lFYixkLc9ZVTW2yj0Vp+Je7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IdIeTGCD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3806C4CEF1;
+	Sat, 27 Dec 2025 04:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766809715;
-	bh=LiAa30J2lKwiSWZfO8YyRXn4CjBMM3IKHPINE8Ajomc=;
+	s=k20201202; t=1766810559;
+	bh=HJ1Mg1aNTedk02BBtbXHOBjt3oUYpxf+I9kTL+6Z0Kg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Oa1qEHg+yPIMIeeWxDKazlDn1CVwp+kD10XuABQMNZgD9+xhREX4tVojna/NdnNPH
-	 BC2XgGUg/DwR1uZ1lu0x9pr5YwTLymu6wHHQr1nghwPkg9N2lIOS3/f2vwv8cNwXwk
-	 97GvopqAe0r8Dbf4Igh246YH7CO0ZvsN/mjYvtgDpHXHmRAATC2paB7zV+JirJvyVI
-	 UXxuOA0nPsdPsqiFnxLcS9VuuFTWk8Q2PbYC8Q9CIZ2DEbq1O1z84pfymO+VcNTZv0
-	 zlj8LRB+eWUa6h1jte5JMUl6w9bahbXW0jcrAf3RVqfJjZaFCyuCbX11JvKJycFJpY
-	 kIkUXmBGqbzJQ==
-Date: Sat, 27 Dec 2025 09:58:28 +0530
+	b=IdIeTGCDVUlRuCGNUR/4Qhlvmw1dFDnlUowK7FsrAp7Jn0c0FeVoltFCJDFoFHmyN
+	 UvunmVuR1yyoNWUx7hq701mBwqIVWp9h1OI3JkVVcuVgKckMldJD2H/3oYe4fhISNK
+	 WTdQtEXy6/6ddC3pL1ZJRIBQEZ76/ig768h7K0aLFXom73fBV2ZJrMgOIVThzeHG/t
+	 v87omKmr2s6B9DxnNijhR5cgq9928vaSD8zmn0mp0dtV+obCXBVc1qmDRugNndM1Mz
+	 J1UtOeTaKI31ggdqqNbdUP4k2Lh2Lb+LbYQGKBJWjMu1etgySHYwYLd+sz70uSFOSu
+	 nMTYnL9F9QqOg==
+Date: Sat, 27 Dec 2025 10:12:29 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com, robh@kernel.org, 
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Val Packett <val@packett.cool>
-Subject: Re: [PATCH] PCI: qcom: Clear ASPM L0s CAP for MSM8996 SoC
-Message-ID: <scgyvnbmovko24h3sesnmt3mlnujvxohgpeusadusn3fkhsqv3@4hsnd7oacepy>
-References: <20251126081718.8239-1-mani@kernel.org>
- <20251226233955.GA4148273@bhelgaas>
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Bartosz Golaszewski <brgl@kernel.org>, linux-pci@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@kernel.org>, 
+	Brian Norris <briannorris@chromium.org>, Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Niklas Cassel <cassel@kernel.org>, Alex Elder <elder@riscstar.com>, 
+	Chen-Yu Tsai <wenst@chromium.org>
+Subject: Re: [PATCH v2 1/5] PCI: qcom: Parse PERST# from all PCIe bridge nodes
+Message-ID: <ibvk4it7th4bi6djoxshjqjh7zusbulzpndac5jtqkqovvgcei@5sycben7pqkk>
+References: <20251216-pci-pwrctrl-rework-v2-1-745a563b9be6@oss.qualcomm.com>
+ <20251226232458.GA4146464@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,80 +63,131 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251226233955.GA4148273@bhelgaas>
+In-Reply-To: <20251226232458.GA4146464@bhelgaas>
 
-On Fri, Dec 26, 2025 at 05:39:55PM -0600, Bjorn Helgaas wrote:
-> [+cc Val]
-> 
-> On Wed, Nov 26, 2025 at 01:47:18PM +0530, Manivannan Sadhasivam wrote:
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+On Fri, Dec 26, 2025 at 05:24:58PM -0600, Bjorn Helgaas wrote:
+> On Tue, Dec 16, 2025 at 06:21:43PM +0530, Manivannan Sadhasivam wrote:
+> > Devicetree schema allows the PERST# GPIO to be present in all PCIe bridge
+> > nodes, not just in Root Port node. But the current logic parses PERST# only
+> > from the Root Port nodes. Though it is not causing any issue on the current
+> > platforms, the upcoming platforms will have PERST# in PCIe switch
+> > downstream ports also. So this requires parsing all the PCIe bridge nodes
+> > for the PERST# GPIO.
 > > 
-> > Though I couldn't confirm the ASPM L0s support with the Qcom hardware team,
-> > bug report from Dmitry suggests that L0s is broken on this legacy SoC.
-> > Hence, clear the L0s CAP for the Root Ports in this SoC.
+> > Hence, rework the parsing logic to extend to all PCIe bridge nodes starting
+> > from the Root Port node. If the 'reset-gpios' property is found for a PCI
+> > bridge node, the GPIO descriptor will be stored in qcom_pcie_perst::desc
+> > and added to the qcom_pcie_port::perst list.
 > 
-> I'm squinting a little bit about a Qcom engineer not being able to
-> confirm whether L0s is known to work on a Qcom part :)
-> 
-
-Unfortunately, all the folks who worked on this part no longer work at Qcom. And
-there is no credible documentation that affirms me that L0s is supported on this
-SoC.
-
-> This looks like possible v6.19 material since it's a regression and
-> Dmitry reported random resets that are impossible to debug?
-> 
-
-Yes. I was about to ping you offline the list of v6.19 materials once you got
-back from vacation.
-
-- Mani
-
-> For now I moved this to the beginning of pci/controller/dwc-qcom since
-> it sounds like the PERST# series will be updated.
-> 
-> > Since qcom_pcie_clear_aspm_l0s() is now used by more than one SoC config,
-> > call it from qcom_pcie_host_init() instead.
-> > 
-> > Reported-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> > Closes: https://lore.kernel.org/linux-pci/4cp5pzmlkkht2ni7us6p3edidnk25l45xrp6w3fxguqcvhq2id@wjqqrdpkypkf
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 805edbbfe7eb..25399d47fc40 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -1088,7 +1088,6 @@ static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
-> >  		writel(WR_NO_SNOOP_OVERRIDE_EN | RD_NO_SNOOP_OVERRIDE_EN,
-> >  				pcie->parf + PARF_NO_SNOOP_OVERRIDE);
+> >  static void qcom_perst_assert(struct qcom_pcie *pcie, bool assert)
+> >  {
+> > +	struct qcom_pcie_perst *perst;
+> >  	struct qcom_pcie_port *port;
+> >  	int val = assert ? 1 : 0;
 > >  
-> > -	qcom_pcie_clear_aspm_l0s(pcie->pci);
-> >  	qcom_pcie_clear_hpc(pcie->pci);
+> > -	list_for_each_entry(port, &pcie->ports, list)
+> > -		gpiod_set_value_cansleep(port->reset, val);
+> > +	list_for_each_entry(port, &pcie->ports, list) {
+> > +		list_for_each_entry(perst, &port->perst, list)
+> > +			gpiod_set_value_cansleep(perst->desc, val);
+> > +	}
 > >  
-> >  	return 0;
-> > @@ -1350,6 +1349,8 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
-> >  			goto err_disable_phy;
+> >  	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
+> >  }
+> > @@ -1702,18 +1710,58 @@ static const struct pci_ecam_ops pci_qcom_ecam_ops = {
 > >  	}
-> >  
-> > +	qcom_pcie_clear_aspm_l0s(pcie->pci);
-> > +
-> >  	qcom_ep_reset_deassert(pcie);
-> >  
-> >  	if (pcie->cfg->ops->config_sid) {
-> > @@ -1486,6 +1487,7 @@ static const struct qcom_pcie_cfg cfg_2_1_0 = {
-> >  
-> >  static const struct qcom_pcie_cfg cfg_2_3_2 = {
-> >  	.ops = &ops_2_3_2,
-> > +	.no_l0s = true,
 > >  };
 > >  
-> >  static const struct qcom_pcie_cfg cfg_2_3_3 = {
-> > -- 
-> > 2.48.1
-> > 
+> > -static int qcom_pcie_parse_port(struct qcom_pcie *pcie, struct device_node *node)
+> > +/* Parse PERST# from all nodes in depth first manner starting from @np */
+> > +static int qcom_pcie_parse_perst(struct qcom_pcie *pcie,
+> > +				 struct qcom_pcie_port *port,
+> > +				 struct device_node *np)
+> >  {
+> >  	struct device *dev = pcie->pci->dev;
+> > -	struct qcom_pcie_port *port;
+> > +	struct qcom_pcie_perst *perst;
+> >  	struct gpio_desc *reset;
+> > -	struct phy *phy;
+> >  	int ret;
+> >  
+> > -	reset = devm_fwnode_gpiod_get(dev, of_fwnode_handle(node),
+> > -				      "reset", GPIOD_OUT_HIGH, "PERST#");
+> > -	if (IS_ERR(reset))
+> > +	if (!of_find_property(np, "reset-gpios", NULL))
+> > +		goto parse_child_node;
+> > +
+> > +	reset = devm_fwnode_gpiod_get(dev, of_fwnode_handle(np), "reset",
+> > +				      GPIOD_OUT_HIGH, "PERST#");
+> > +	if (IS_ERR(reset)) {
+> > +		/*
+> > +		 * FIXME: GPIOLIB currently supports exclusive GPIO access only.
+> > +		 * Non exclusive access is broken. But shared PERST# requires
+> > +		 * non-exclusive access. So once GPIOLIB properly supports it,
+> > +		 * implement it here.
+> > +		 */
+> > +		if (PTR_ERR(reset) == -EBUSY)
+> > +			dev_err(dev, "Shared PERST# is not supported\n");
+> > +
+> >  		return PTR_ERR(reset);
+> > +	}
+> > +
+> > +	perst = devm_kzalloc(dev, sizeof(*perst), GFP_KERNEL);
+> > +	if (!perst)
+> > +		return -ENOMEM;
+> > +
+> > +	INIT_LIST_HEAD(&perst->list);
+> > +	perst->desc = reset;
+> > +	list_add_tail(&perst->list, &port->perst);
+> > +
+> > +parse_child_node:
+> > +	for_each_available_child_of_node_scoped(np, child) {
+> > +		ret = qcom_pcie_parse_perst(pcie, port, child);
+> 
+> It looks like the perst->list will be ordered by distance from the
+> root, i.e., a Root Port first, followed by downstream devices?
+> 
+
+Yes.
+
+> And qcom_perst_assert() will assert/deassert PERST# in that same
+> order?  Intuitively I would have expected that if there are multiple
+> PERST# signals, we would assert them bottom-up, and deassert them
+> top-down.  Does the order matter?
+> 
+
+I did't give much importance to the PERST# ordering since it doesn't matter,
+atleast per base/electromechanical specs.
+
+> I suppose maybe you plan to enhance pwrctrl so it can assert/deassert
+> individual PERST# in the hierarchy?
+> 
+
+No, that plan has been dropped for good. For now, PERST# will be handled
+entirely by the controller drivers. Sharing the PERST# handling with pwrctrl
+proved to be a pain and it looks more clean (after the API introduction) to
+handle PERST# in controller drivers.
+
+> I'm confused about qcom_perst_assert() because it's only called from
+> qcom_ep_reset_assert() and qcom_ep_reset_deassert(), which are only
+> called from qcom_pcie_assert_perst().  Seems like a mix of host and
+> endpoint situation.  I assumed pwrctrl would be used on the host.
+> Maybe the "_ep_" names are not quite right?  Or more likely I'm just
+> misunderstanding the plan.
+> 
+
+Yeah, it is a bit confusing now due to the introduction of the
+'dw_pcie_ops::assert_perst' callback. But it will go away at the end of the
+pwrctrl rework series and I'll fix those names by then.
+
+> I notice you'd only applied this patch (1/5) so far on
+> pci/controller/dwc-qcom.  Is this patch useful by itself?
+> 
+
+Yes, ofc. This patch allows the controller driver to parse and assert/deassert
+PERST# from all PCI nodes, not just from the Root Port node.
+
+- Mani
 
 -- 
 மணிவண்ணன் சதாசிவம்
