@@ -1,57 +1,57 @@
-Return-Path: <linux-pci+bounces-43757-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43758-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E19DDCDF47C
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Dec 2025 06:10:24 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07BF9CDF486
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Dec 2025 06:21:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 87E863008188
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Dec 2025 05:10:22 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D7ADA3003530
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Dec 2025 05:21:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3470719C566;
-	Sat, 27 Dec 2025 05:10:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 839361CAA4;
+	Sat, 27 Dec 2025 05:21:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyN/v6To"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pov4KUFf"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0269142A9D;
-	Sat, 27 Dec 2025 05:10:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE333A1E66;
+	Sat, 27 Dec 2025 05:21:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766812220; cv=none; b=mLoadpX3FUzioyQRv7YsjnINDyBehb/TAUiq1lkIVS154YZYwXZgRuJw6Re/vXgUhKSLec58YprJRxDWG+dUCWi8C0xE7ja4o8s7JtPbNAjq3+ItuOWdQWMK4HrWF9WudSnHkTpPkxvcNqhv0pTnnJ3zqJfXjphrnwAuuH2O1YE=
+	t=1766812898; cv=none; b=KvvZIzfgYInDymdOb8hccWfVI6X/DdpqPkl7LX+eQbnCPAMhUjA29h3HLtAtM+SVxrSuiEkcyEaA+nx9ADd8AAIbGQTMxK/T6Gbkz7gs85onBq8btesQFI3StYK4qpHsFQWi6lOV8XTJ00VfY2gzIS6iYK+XRT9XfH2kK1ZBMDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766812220; c=relaxed/simple;
-	bh=Sbs7K7LSHhglyl8Edtv95fOY3s0v6ZYXYgPbT8PpirE=;
+	s=arc-20240116; t=1766812898; c=relaxed/simple;
+	bh=AE78E7zKume6JJaGn/DJw4dCIzOuy5MCLvGnQwQbRTk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZByRjAi7FKha/tWk5G2k+XgvgTvZmWhlRljq+fqSQ+usgEjx37FL755XX5vagSXKyCYQ1yQV/Vr4geJK84uzEyQ/jpV8M/j5irpUHAE0+R8hEdVl9OwlQefGfQrHSZ/pQ/GhOiv+n/zFv7dR7UfTPbWOlaRJRhlZPFi+IRVJy48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyN/v6To; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 538ADC4CEF1;
-	Sat, 27 Dec 2025 05:10:16 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=YNXFPulPF82+oGO4Q7EP3WQQeNttz3uiD+UwToirr8aEMGED+yOH2D3wnN8bK9KNSNQWtrC0/tsicoqPj0V/XM3bQU9sDH7AGuVpPbUfZj6h8SsG0XgcWHCuRyOZdeNROwGMGSVMKfFcgabAHGhM/6vGYi656P9xccJqEiu07tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pov4KUFf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF550C4CEF1;
+	Sat, 27 Dec 2025 05:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766812219;
-	bh=Sbs7K7LSHhglyl8Edtv95fOY3s0v6ZYXYgPbT8PpirE=;
+	s=k20201202; t=1766812897;
+	bh=AE78E7zKume6JJaGn/DJw4dCIzOuy5MCLvGnQwQbRTk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZyN/v6ToUAd2CBgiPB4xgq7SP4MPnRRhOhmRl1gV0qBPBw9FC1e5e4bJqfSWnKeM5
-	 iyshVNIL1TfXqH+110cwb+5kBE1FPQFzVjGp408Y8Tzo3NR8ghfc38gD0nmgwOobdk
-	 IXAuunyVg6zCu6N2bQ+eNedWdBvbH8dSZMAvuUoqAg+nRnwELQ1dLwz4l/DCe1bl8X
-	 0PI3JtzFwZCSLg2eFR2VK5fmgZQRlMe5u4XoiVLzpZkw/qSSxinpB4kL02S52mydH/
-	 atJO4O2vIeva1CZYCh2QAtuLq5aQYAXtDbL2+pRvXt0rhib7+je/S2gatSS2P5XTfZ
-	 XrvQNnNW+V6IA==
-Date: Sat, 27 Dec 2025 10:40:12 +0530
+	b=pov4KUFfQNCLRHbK396jHZciCctOeg3fwIel9g29ziaAYFE1K0wBr7Fy5jdTkdXwf
+	 qo2zFX70XgDN7xeE6hm+qPnrd5U0I8bL2tNvTSky7XB0IvojXznHYvIt415CWDv7CP
+	 yOr3SpzJkhLS2r3zNABHN49JSyn+zzhL3dclL1heonouQjzRvn3M2EjKbx+nDayWwk
+	 ZDkJtzXDL4oJlDbR07WNW0GdGxW8ijWfHTzhB+KzdBBOpUK51TNs1gWg7ZS2W4vTBM
+	 +nThLDhPrk25SeLJIhzfNSZkWilkSvknANsKBNU7Oso9EoI8HMahQr4sHHPWAVXB2h
+	 gU3eL3RVQHVog==
+Date: Sat, 27 Dec 2025 10:51:26 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: Qiang Yu <qiang.yu@oss.qualcomm.com>, 
 	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
 	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, Wenbin Yao <wenbin.yao@oss.qualcomm.com>
-Subject: Re: [PATCH 2/5] PCI: dwc: Add new APIs to remove standard and
- extended Capability
-Message-ID: <466mx6loranawy6cwg2zi6fgtvnb3ij6llfamjtz5x6iz4xpaa@6p3egbit5zcy>
-References: <20251109-remove_cap-v1-2-2208f46f4dc2@oss.qualcomm.com>
- <20251226210741.GA4141010@bhelgaas>
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 3/5] PCI: dwc: Remove MSI/MSIX capability if iMSI-RX is
+ used as MSI controller
+Message-ID: <dua64cg42sduzzjp623o4c72etyqtei6txk57kwbqerpa5ketz@x4cs5fjlervu>
+References: <20251109-remove_cap-v1-3-2208f46f4dc2@oss.qualcomm.com>
+ <20251226213123.GA4141314@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,134 +61,95 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251226210741.GA4141010@bhelgaas>
+In-Reply-To: <20251226213123.GA4141314@bhelgaas>
 
-On Fri, Dec 26, 2025 at 03:07:41PM -0600, Bjorn Helgaas wrote:
-> On Sun, Nov 09, 2025 at 10:59:41PM -0800, Qiang Yu wrote:
-> > On some platforms, certain PCIe Capabilities may be present in hardware
-> > but are not fully implemented as defined in PCIe spec. These incomplete
-> > capabilities should be hidden from the PCI framework to prevent unexpected
-> > behavior.
+On Fri, Dec 26, 2025 at 03:31:23PM -0600, Bjorn Helgaas wrote:
+> In subject, s/MSIX/MSI-X/ to match spec and other usage.
+> 
+> On Sun, Nov 09, 2025 at 10:59:42PM -0800, Qiang Yu wrote:
+> > Some platforms may not support ITS (Interrupt Translation Service) and
+> > MBI (Message Based Interrupt), or there are not enough available empty SPI
+> > lines for MBI, in which case the msi-map and msi-parent property will not
+> > be provided in device tree node. For those cases, the DWC PCIe driver
+> > defaults to using the iMSI-RX module as MSI controller. However, due to
+> > DWC IP design, iMSI-RX cannot generate MSI interrupts for Root Ports even
+> > when MSI is properly configured and supported as iMSI-RX will only monitor
+> > and intercept incoming MSI TLPs from PCIe link, but the memory write
+> > generated by Root Port are internal system bus transactions instead of
+> > PCIe TLPs, so they are ignored.
 > > 
-> > Introduce two APIs to remove a specific PCIe Capability and Extended
-> > Capability by updating the previous capability's next offset field to skip
-> > over the unwanted capability. These APIs allow RC drivers to easily hide
-> > unsupported or partially implemented capabilities from software.
+> > This leads to interrupts such as PME, AER from the Root Port not received
+> > on the host and the users have to resort to workarounds such as passing
+> > "pcie_pme=nomsi" cmdline parameter.
 > 
-> It's super annoying to have to do this, but I suppose from the
-> hardware point of view these things *could* work depending on the
-> design of the platform outside the device.  So the designers probably
-> assume platform firmware knows those details and hides things that
-> aren't supported.  But in the DT case, there likely *is* no platform
-> firmware, so the native RC driver has to do it instead.
+> This will be great, thanks a lot for working on this.  This has been a
+> long-standing irritation with this DWC IP.
 > 
-
-This is actually a synopsis IP bug, so I'm not sure what the expectations are
-from vendor implementations pov. We do have platform firmware like UEFI, but
-it doesn't remove the capabilities.
-
-- Mani
-
-> > Co-developed-by: Wenbin Yao <wenbin.yao@oss.qualcomm.com>
-> > Signed-off-by: Wenbin Yao <wenbin.yao@oss.qualcomm.com>
+> > To ensure reliable interrupt handling, remove MSI and MSI-X capabilities
+> > from Root Ports when using iMSI-RX as MSI controller, which is indicated
+> > by has_msi_ctrl == true. This forces a fallback to INTx interrupts,
+> > eliminating the need for manual kernel command line workarounds.
+> > 
+> > With this behavior:
+> > - Platforms with ITS/MBI support use ITS/MBI MSI for interrupts from all
+> >   components.
+> > - Platforms without ITS/MBI support fall back to INTx for Root Ports and
+> >   use iMSI-RX for other PCI devices.
+> > 
 > > Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
 > > ---
-> >  drivers/pci/controller/dwc/pcie-designware.c | 53 ++++++++++++++++++++++++++++
-> >  drivers/pci/controller/dwc/pcie-designware.h |  2 ++
-> >  2 files changed, 55 insertions(+)
+> >  drivers/pci/controller/dwc/pcie-designware-host.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
 > > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > index 5585d3ed74316bd218572484f6320019db8d6a10..24f8e9959cb81ca41e91d27057cc115d32e8d523 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > @@ -234,6 +234,59 @@ u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > index 20c9333bcb1c4812e2fd96047a49944574df1e6f..3724aa7f9b356bfba33a6515e2c62a3170aef1e9 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > @@ -1083,6 +1083,16 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
 > >  
-> > +void dw_pcie_remove_capability(struct dw_pcie *pci, u8 cap)
-> > +{
-> > +	u8 cap_pos, pre_pos, next_pos;
-> > +	u16 reg;
-> > +
-> > +	cap_pos = PCI_FIND_NEXT_CAP(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
-> > +				 &pre_pos, pci);
-> > +	if (!cap_pos)
-> > +		return;
-> > +
-> > +	reg = dw_pcie_readw_dbi(pci, cap_pos);
-> > +	next_pos = (reg & 0xff00) >> 8;
-> > +
-> > +	dw_pcie_dbi_ro_wr_en(pci);
-> > +	if (pre_pos == PCI_CAPABILITY_LIST)
-> > +		dw_pcie_writeb_dbi(pci, PCI_CAPABILITY_LIST, next_pos);
-> > +	else
-> > +		dw_pcie_writeb_dbi(pci, pre_pos + 1, next_pos);
-> > +	dw_pcie_dbi_ro_wr_dis(pci);
-> > +}
-> > +EXPORT_SYMBOL_GPL(dw_pcie_remove_capability);
-> > +
-> > +void dw_pcie_remove_ext_capability(struct dw_pcie *pci, u8 cap)
-> > +{
-> > +	int cap_pos, next_pos, pre_pos;
-> > +	u32 pre_header, header;
-> > +
-> > +	cap_pos = PCI_FIND_NEXT_EXT_CAP(dw_pcie_read_cfg, 0, cap, &pre_pos, pci);
-> > +	if (!cap_pos)
-> > +		return;
-> > +
-> > +	header = dw_pcie_readl_dbi(pci, cap_pos);
-> 
-> Blank line here to match style of other comments.
-> 
+> >  	dw_pcie_dbi_ro_wr_dis(pci);
+> >  
 > > +	/*
-> > +	 * If the first cap at offset PCI_CFG_SPACE_SIZE is removed,
-> > +	 * only set it's capid to zero as it cannot be skipped.
-> 
-> If setting the capid to zero works here, why won't it work for all
-> capabilities?  If setting capid to zero is enough, we wouldn't need to
-> mess with keeping track of the previous capability, and we could drop
-> the first patch.
-> 
-> s/it's/its/
-> 
+> > +	 * If iMSI-RX module is used as the MSI controller, remove MSI and
+> > +	 * MSI-X capabilities from PCIe Root Ports to ensure fallback to INTx
+> > +	 * interrupt handling.
 > > +	 */
-> > +	if (cap_pos == PCI_CFG_SPACE_SIZE) {
-> > +		dw_pcie_dbi_ro_wr_en(pci);
-> > +		dw_pcie_writel_dbi(pci, cap_pos, header & 0xffff0000);
-> > +		dw_pcie_dbi_ro_wr_dis(pci);
-> > +		return;
+> > +	if (pp->has_msi_ctrl) {
+> > +		dw_pcie_remove_capability(pci, PCI_CAP_ID_MSI);
+> > +		dw_pcie_remove_capability(pci, PCI_CAP_ID_MSIX);
 > > +	}
-> > +
-> > +	pre_header = dw_pcie_readl_dbi(pci, pre_pos);
-> > +	next_pos = PCI_EXT_CAP_NEXT(header);
-> > +
-> > +	dw_pcie_dbi_ro_wr_en(pci);
-> > +	dw_pcie_writel_dbi(pci, pre_pos,
-> > +			  (pre_header & 0xfffff) | (next_pos << 20));
-> > +	dw_pcie_dbi_ro_wr_dis(pci);
-> > +}
-> > +EXPORT_SYMBOL_GPL(dw_pcie_remove_ext_capability);
-> > +
-> >  static u16 __dw_pcie_find_vsec_capability(struct dw_pcie *pci, u16 vendor_id,
-> >  					  u16 vsec_id)
-> >  {
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > index e995f692a1ecd10130d3be3358827f801811387f..b68dbc528001b63448db8b1a93bf56a5e53bd33e 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > @@ -552,6 +552,8 @@ void dw_pcie_version_detect(struct dw_pcie *pci);
-> >  
-> >  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
-> >  u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
-> > +void dw_pcie_remove_capability(struct dw_pcie *pci, u8 cap);
-> > +void dw_pcie_remove_ext_capability(struct dw_pcie *pci, u8 cap);
-> >  u16 dw_pcie_find_rasdes_capability(struct dw_pcie *pci);
-> >  u16 dw_pcie_find_ptm_capability(struct dw_pcie *pci);
-> >  
-> > 
-> > -- 
-> > 2.34.1
-> > 
+> 
+> "has_msi_ctrl" doesn't seem like a good name here because there's no
+> documentation about what it means, and "has_msi_ctrl" is completely
+> generic while "iMSI-RX" is very specific.
+> 
+
+This predates my involvement with DWC drivers, but I guess it expands to 'has
+internal MSI controller' and 'internal' probably means iMSI-RX. But I agree that
+the naming could be improved to something like 'imsi_rx_available' or
+'has_imsi_rx'. I'll take a stab at it in a separate patch.
+
+> And apparently platforms with ITS/MBI *can* generate MSIs from Root
+> Ports, but "has_msi_ctrl" would be false for them?  This is really
+> hard to read.
+> 
+
+Yes.
+
+> pp->has_msi_ctrl is set by qcom_pcie_ecam_host_init() and IIUC, for
+> any platform that lacks .msi_init() and the "msi-parent" and "msi-map"
+> properties.
+> 
+> The qcom_pcie_ecam_host_init() case is weird because it looks like it
+> abuses the pci_ecam_ops.init() callback to initialize MSI stuff, not
+> ECAM stuff.  Maybe that MSI init could be done in qcom_pcie_probe()
+> right after it calls pci_host_common_ecam_create()?
+> 
+
+I think it should be possible to initialize MSI after
+pci_host_common_ecam_create(). Let me fix *this* and above in a separate series.
+
+- Mani
 
 -- 
 மணிவண்ணன் சதாசிவம்
