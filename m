@@ -1,115 +1,88 @@
-Return-Path: <linux-pci+bounces-43781-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43782-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7147CE5638
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Dec 2025 20:14:19 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBE89CE573B
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Dec 2025 21:40:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B9F543018944
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Dec 2025 19:14:11 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 945F93002A70
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Dec 2025 20:40:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F29C32571A0;
-	Sun, 28 Dec 2025 19:14:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CB9216EB42;
+	Sun, 28 Dec 2025 20:40:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K8OFqJqq"
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="J12dmoJE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2FB2475CE;
-	Sun, 28 Dec 2025 19:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D67824BD
+	for <linux-pci@vger.kernel.org>; Sun, 28 Dec 2025 20:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766949249; cv=none; b=f53hTLu90sBAF5/EuCR+9yCyGlR20ao0if7LJJUWtKMTbY0YzQ0r433Z6yDHzhA5XMEOnp+xZlo3t8UgeUxTjbNn0+gO+ZLP1JIEmru+BILZdG8oDuOeTyU5g98f3i8f9+aWVEqMP/ipfGIuTGnyKBmz5WPix8zkuAKjS8ivxuA=
+	t=1766954420; cv=none; b=XL/eGib5iKlX1dAn8oa3gc3o7tDloqhlhPkBq6Fu4nIr6jMxZE7EtbW7gRyrcZW6K++KimStPWZR9yo1t9MJJ5BiXvFVY9ZK5d/kg7jRMQngUwDx/iZPWU+y7QtgtbyGn1hLtIafC324VVc54XLQiQQOaHg4iaelnBmaBxT7WLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766949249; c=relaxed/simple;
-	bh=HzMwpb56qSvnqkpHGC/UD2h1wKNMQR/JCeNGnS6Irg8=;
+	s=arc-20240116; t=1766954420; c=relaxed/simple;
+	bh=NMCG/MYXfT/f1h/TWq7xauyVOpHxqgI6pgWJTStzw5s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GOQUKaaMV89XjOzgmUqPFIlW5+GSnVVS34ERh3VGFL/C/qb1fTAQI7SMfQGPRCJg51/Q1l+/cMJ1lzoBWracyg6+cLSfhPlXILw9ALPnxcBF1WjeAugwiyfbR7o0qvWsjBoRKG6Jq+BPhKwqo0U/G3RaAyGMu6fmKIpgAA6a6V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K8OFqJqq; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766949248; x=1798485248;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HzMwpb56qSvnqkpHGC/UD2h1wKNMQR/JCeNGnS6Irg8=;
-  b=K8OFqJqquvwJw+e+vJmhpe80hA/U3DtheOaYRB64xou9gaXWXo/0R79/
-   DTh3FFNEQkJAKPfFKJjExCRM6kQXZXw7wbXoARpZh0I3JGgA76039ZHT1
-   DprLutwMag3Mm4W2BC+lATM7Zil1Tab0/c5aE5cLgA2+2kifz0RK2sFME
-   6l805cXMXRCoxU4F7PYYwBEGEQEbpsVfFOtkzlrK8222QFoLk6XslO2H9
-   i+ztnVJKVmlBRR1iMBih4/T5z4yLwR9YnMeuEsqG2YM8AaI5LgEATSebk
-   fzzfani3CuSSYytuuhoP8mjuVmtriI0ctrdWqtaJL2cQes5o4jzE7j9WI
-   w==;
-X-CSE-ConnectionGUID: qTzGsfdkTxyvphqEeipMJQ==
-X-CSE-MsgGUID: HXhH1T4iSkCIPOLjckOzaQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11655"; a="67786826"
-X-IronPort-AV: E=Sophos;i="6.21,184,1763452800"; 
-   d="scan'208";a="67786826"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2025 11:14:05 -0800
-X-CSE-ConnectionGUID: d7g1EE3DRKyOZ7YDJoRttQ==
-X-CSE-MsgGUID: trLKylj4QlybDA7F+8oCdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,184,1763452800"; 
-   d="scan'208";a="201226452"
-Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.236])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2025 11:14:03 -0800
-Date: Sun, 28 Dec 2025 21:14:00 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linux PCI <linux-pci@vger.kernel.org>,
-	Alex Hung <alexhung@gmail.com>, Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	AceLan Kao <acelan.kao@canonical.com>
-Subject: Re: [PATCH v1 3/4] platform/x86/intel/vbtn: Stop creating a platform
- device
-Message-ID: <aVGBeBT3TKxgn_lu@smile.fi.intel.com>
-References: <7888874.EvYhyI6sBW@rafael.j.wysocki>
- <8661724.NyiUUSuA9g@rafael.j.wysocki>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fJ1vR5bDC8jsu/Io5xm9NXDoqifgCHGyPt4bFwekW2SSgRYLAkTpTc1Rdu3mCkeIDnnBuRTLXcNUV2e1vLj6pRlAqG6lQ6tA3Uu5wkkw8KnGTUMYtqXpwiDXG/HIRE4beGExwPXnx7NBwgREXOp37u5sKXdszD7cp5Qe6TUlS2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=J12dmoJE; arc=none smtp.client-ip=195.113.20.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+Received: by nikam.ms.mff.cuni.cz (Postfix, from userid 2587)
+	id BF43A280189; Sun, 28 Dec 2025 21:34:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1766954043;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IG8v5SZ0c82OXh9D/ldmyLpfzls8KbJ7OgfpiuXV+dY=;
+	b=J12dmoJEDsGi5LmyrgGjonSzPF1y3R4uLUSyUnhyJk1Tgt5EXvTk4MwMK2BMt0f7I6Qb+z
+	mQQ69xVQIHXB8i4QHszBGi8eqA8XUSg+9jksB7335bXMPDLifHfs94YrfV7WSGq8hhioOA
+	ucf7nNOPs6+AMV44GbLRCZR3v/JdAsQ=
+Date: Sun, 28 Dec 2025 21:34:03 +0100
+From: Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
+To: Brian Norris <briannorris@chromium.org>
+Cc: linux-pci@vger.kernel.org, Brian Norris <briannorris@google.com>
+Subject: Re: [PATCH pciutils] dump: Support `lspci -F -` for stdin
+Message-ID: <mj+md-20251228.203122.39222.nikam@ucw.cz>
+References: <20251202222315.2548516-1-briannorris@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <8661724.NyiUUSuA9g@rafael.j.wysocki>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251202222315.2548516-1-briannorris@chromium.org>
 
-On Mon, Dec 15, 2025 at 02:35:44PM +0100, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi!
+
+> From: Brian Norris <briannorris@google.com>
 > 
-> Now that "system" devices are represented as platform devices, they
-> are not claimed by the PNP ACPI scan handler any more and the Intel
-> virtual button array platform devices should be created by the ACPI
-> core, so the driver does not need to attempt to create a platform
-> device by itself.
+> It can be useful to pipe raw config registers (lspci -x) from one system
+> to another, so the latter system can do the parsing (lspci -vv -F ...).
+> For example, one might do this if the former has a more limited / older
+> version of lspci. Today, one has to write the contents to a file.
 > 
-> Accordingly, make it stop doing so.
+> Support stdin via "-", so it's easier to run it through a pipeline, such
+> as:
 > 
-> No intentional functional impact.
+>   ssh ${remote_host} old_lspci -xxx | new_lspci -vv -F -
+> 
+> A dash (-) is a common convention used by many other tools. If one
+> really expected to access a file named "-", one can use "./-" or similar
+> to disambiguate.
 
-...
+I like the idea, but please avoid closing stdin.
 
->  	.remove = intel_vbtn_remove,
->  };
->  
+You probably want to refactor the parsing itself to a separate function.
 
-Same comment about this blank line.
-
+				Have a nice fortnight
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Martin `MJ' Mareš                        <mj@ucw.cz>   http://mj.ucw.cz/
+United Computer Wizards, Prague, Czech Republic, Europe, Earth, Universe
 
