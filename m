@@ -1,231 +1,202 @@
-Return-Path: <linux-pci+bounces-43765-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43766-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3119CE0159
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Dec 2025 20:23:28 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69C2ACE4926
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Dec 2025 05:04:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 520B33009750
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Dec 2025 19:23:27 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A6A3A30049E2
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Dec 2025 04:04:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91D3A22D9ED;
-	Sat, 27 Dec 2025 19:23:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B1D822F77B;
+	Sun, 28 Dec 2025 04:04:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="VgQKTfng"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="b32o8bxz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CA818E1F
-	for <linux-pci@vger.kernel.org>; Sat, 27 Dec 2025 19:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B14A22FE11
+	for <linux-pci@vger.kernel.org>; Sun, 28 Dec 2025 04:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766863405; cv=none; b=UOt5Gj3DOFwFUD8syHpn61IZEqcbTcgfoM4Y1rAkB/1WFdLb2t6S0md0iu0jwrVaHK4K9KSXgm789ZBcw6bIZdKVUZktt+dEAmz1QU03PHOeHoO0CzZrml1wn/oSR89O/8AnJdQDp/JDDtiXninuGEAhxq+l9VBn8KQjI9sv8HU=
+	t=1766894682; cv=none; b=SXsJKnVF7kbvl+FfW91jo5XJnyDIOBpHSnEL6CabjwrhK0ACt9y6ULWrmWYtlC2LYUs2sFKgTSaha0BA0HiBXqyR6nY7+exQzOuFlswFoA3nTcvU+7K/GB39yGmKpqTHD+yFC6DKqxE4XO6vm2zUjlGH+G69ulRuEziEwn1NX9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766863405; c=relaxed/simple;
-	bh=CIUTJPnEIzdHePK9nwXrWk8cZBaui4jZl8U3BBKZ3mo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nnWFPFf9vwl9K6PUE3VEvfyz+acWIdq+0IjYQVaHOU9OL5cLpYH6AmDHKeOQ+z8COeBuJZKVyQ1E+kdlFSoyzGOSvySO7bd0anlHJ6HCbPJJ5yagk75mvCVkuFMhXAvC0gDWpC3ZCJoy+0GRZKmZfNN9VDmmwEyJVCcFn/BadWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=VgQKTfng; arc=none smtp.client-ip=67.231.153.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BRIEgvx3046471
-	for <linux-pci@vger.kernel.org>; Sat, 27 Dec 2025 11:23:22 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
-	 bh=/9FmIM1H1ArdH+87Bbu2+pLJOGM2QnqhXssbZ8e99+A=; b=VgQKTfng2L9R
-	rhYXyMQRWv8VsHX7/CT8xv9kTh1HVUggRC9V+2MQE3qxxBAlhB5Whhf33c6xfmjt
-	t4AK6t+Ljt4S9A8kDvrCo5KRq/JGwnLAc4FITWcnsIcSEHupKq6IK8dqfp+ZYtXE
-	A7YyewKvy4DiK4dXA61Qx/Bmq0NdKM6HKfkMYIGeYKb0Pqk4EbUfZEq4rrkOBj5E
-	5Q1Jpy+NdKx7+bHeOrz2V0YvU63MeZPUAoYTL1mqeDENXVfdJvcAjQozzfD8JwaG
-	ObxnI691JbQRRrjx6wum3rQG6JimJTqPgdfZzFbgEhswuv765pOZAJ8PPkoGLPxp
-	78dJRDJIvQ==
-Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4badudhgdq-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Sat, 27 Dec 2025 11:23:22 -0800 (PST)
-Received: from twshared41309.15.frc2.facebook.com (2620:10d:c0a8:1c::1b) by
- mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.29; Sat, 27 Dec 2025 19:23:21 +0000
-Received: by devbig259.ftw1.facebook.com (Postfix, from userid 664516)
-	id BB69FE0509CC; Sat, 27 Dec 2025 11:23:03 -0800 (PST)
-From: Zhiping Zhang <zhipingz@meta.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-CC: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-rdma@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <netdev@vger.kernel.org>, Keith Busch <kbusch@kernel.org>,
-        Yochai Cohen
-	<yochai@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
-        Zhiping Zhang
-	<zhipingz@meta.com>
-Subject: Re: [RFC 2/2] Set steering-tag directly for PCIe P2P memory access
-Date: Sat, 27 Dec 2025 11:22:54 -0800
-Message-ID: <20251227192303.3866551-1-zhipingz@meta.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251204081117.1987227-1-zhipingz@meta.com>
-References: <20251204081117.1987227-1-zhipingz@meta.com>
+	s=arc-20240116; t=1766894682; c=relaxed/simple;
+	bh=rwso1IvqVHcmC0OFBZ+qtFY1RlZNlcFe2TJYNy85Vu0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QApEQtbsLOCsCwFFCUzvhlwl1rby4VCytHND3GqzdhtI/ucWqiul8a10D+51oCBHPgOAFFG+i7wsEwFlzSdmt5Getpd1O+VLKeJ11SJDP7f0UIs4Raev4dxwI/w1CIJ3hrT81O4xRPnJUZL5wg7XyHIMP3T4KRhjEfZsUOrFMrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=b32o8bxz; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <f0439348-dca7-4f1b-9d96-b5a596c9407d@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1766894668;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=R92CBy0/1nAfk4g7pT7vyN8U+OvLxgWMegNQkEwQja0=;
+	b=b32o8bxzsyw4dCZSx+bpqNAJk7/PyR2MGYbTDMgtJY2V/pQjv+E38m1RzAfzoUM1Re4Wkf
+	Z+jePIFQK/tqmJseD59D3NVigjbFNUHxiwqMb316IIyKeXtCQP2nPzZH7nTDmOYAhIjzp3
+	TzIB8uV16gjSj0XMpIIlMnkJxUNWmjc=
+Date: Sat, 27 Dec 2025 20:03:44 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-X-Proofpoint-ORIG-GUID: kwBs_UMn4tVdqgxr489lziAKTxOPmM94
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjI3MDE4NSBTYWx0ZWRfX2/iV04XCiXWf
- l/Z9Bdt2lM0Zbns8uTm9XPORQ2Q/g34fIE5XIm1oyXo8wD0N9KrFIH+x0bXlbNvcdrdCY7atobX
- /Fow/JkZ/zD6x0tGIWxceKLeaSZsO/IahvD6BsHwh8AX4CfdkjjQYXxn/qItNR64Zla2FguRJgq
- 70Ga9luPNEHis/hjoUL4BdqeazUEmW259NbBihmc0S0KHvivinNe2lFTxJ5QltdasBOFWMGnQUd
- JvKeEeCNaSLj03lFe/KPNZaHMVYCX2Km9Bj7UCF95gzd1lKvTiDpOJ9+MziLzEzAsL1zKH1AfrH
- JHAXHDdrrpI94QpyrDEGl8kf2LzNLh6FQVC82FdujeOjdIYTwFlqLG9rVxm7+CEhxUCAc4MMYtu
- hTVElhz1Zi4pXgw8bSYvvvcPL6G1wu6DGCV5Tn6nM4XJ2zPJEnq11Mbo0LR0WvwFaSJHuRHlFTa
- MHrjMR0v2q/2EJqx+TQ==
-X-Authority-Analysis: v=2.4 cv=LryfC3dc c=1 sm=1 tr=0 ts=6950322a cx=c_pps
- a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=Ikd4Dj_1AAAA:8 a=VabnemYjAAAA:8 a=vaBoqUaa7kBdn5e81RoA:9
- a=QEXdDO2ut3YA:10 a=gKebqoRLp9LExxC7YDUY:22
-X-Proofpoint-GUID: kwBs_UMn4tVdqgxr489lziAKTxOPmM94
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-27_05,2025-12-26_01,2025-10-01_01
+Subject: Re: [PATCH 19/21] vfio: selftests: Expose low-level helper routines
+ for setting up struct vfio_pci_device
+To: David Matlack <dmatlack@google.com>, Alex Williamson <alex@shazbot.org>
+Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
+ Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+ David Rientjes <rientjes@google.com>,
+ Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Josh Hilke <jrhilke@google.com>,
+ Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org,
+ Leon Romanovsky <leonro@nvidia.com>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org,
+ Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>,
+ Parav Pandit <parav@nvidia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Philipp Stanner <pstanner@redhat.com>, Pratyush Yadav <pratyush@kernel.org>,
+ Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>,
+ Shuah Khan <shuah@kernel.org>, Tomita Moeko <tomitamoeko@gmail.com>,
+ Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+ Yi Liu <yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>
+References: <20251126193608.2678510-1-dmatlack@google.com>
+ <20251126193608.2678510-20-dmatlack@google.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20251126193608.2678510-20-dmatlack@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thur 2025-12-04  8:10 UTC Zhiping Zhang wrote:
 
-> On Monday 2025-11-20 13:11 UTC, Jason Gunthorpe wrote:
-> >
-> > Re: [RFC 2/2] Set steering-tag directly for PCIe P2P memory access
-> >
-> > On Wed, Nov 19, 2025 at 11:24:40PM -0800, Zhiping Zhang wrote:
-> > > On Monday, November 17, 2025 at 8:00=E2=80=AFAM, Jason Gunthorpe wr=
-ote:
-> > > > Re: [RFC 2/2] Set steering-tag directly for PCIe P2P memory acces=
-s
-> > > >
-> > > > On Thu, Nov 13, 2025 at 01:37:12PM -0800, Zhiping Zhang wrote:
-> > > > > RDMA: Set steering-tag value directly in DMAH struct for DMABUF=
- MR
-> > > > >
-> > > > > This patch enables construction of a dma handler (DMAH) with th=
-e P2P memory type
-> > > > > and a direct steering-tag value. It can be used to register a R=
-DMA memory
-> > > > > region with DMABUF for the RDMA NIC to access the other device'=
-s memory via P2P.
-> > > > >
-> > > > > Signed-off-by: Zhiping Zhang <zhipingz@meta.com>
-> > > > > ---
-> > > > > .../infiniband/core/uverbs_std_types_dmah.c   | 28 ++++++++++++=
-+++++++
-> > > > > drivers/infiniband/core/uverbs_std_types_mr.c |  3 ++
-> > > > > drivers/infiniband/hw/mlx5/dmah.c             |  5 ++--
-> > > > > .../net/ethernet/mellanox/mlx5/core/lib/st.c  | 12 +++++---
-> > > > > include/linux/mlx5/driver.h                   |  4 +--
-> > > > > include/rdma/ib_verbs.h                       |  2 ++
-> > > > > include/uapi/rdma/ib_user_ioctl_cmds.h        |  1 +
-> > > > > 7 files changed, 46 insertions(+), 9 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/infiniband/core/uverbs_std_types_dmah.c b/=
-drivers/infiniband/core/uverbs_std_types_dmah.c
-> > > > > index 453ce656c6f2..1ef400f96965 100644
-> > > > > --- a/drivers/infiniband/core/uverbs_std_types_dmah.c
-> > > > > +++ b/drivers/infiniband/core/uverbs_std_types_dmah.c
-> > > > > @@ -61,6 +61,27 @@ static int UVERBS_HANDLER(UVERBS_METHOD_DMAH=
-_ALLOC)(
-> > > > >              dmah->valid_fields |=3D BIT(IB_DMAH_MEM_TYPE_EXIST=
-S);
-> > > > >      }
-> > > > >
-> > > > > +     if (uverbs_attr_is_valid(attrs, UVERBS_ATTR_ALLOC_DMAH_DI=
-RECT_ST_VAL)) {
-> > > > > +             ret =3D uverbs_copy_from(&dmah->direct_st_val, at=
-trs,
-> > > > > +                                    UVERBS_ATTR_ALLOC_DMAH_DIR=
-ECT_ST_VAL);
-> > > > > +             if (ret)
-> > > > > +                     goto err;
-> > > >
-> > > > This should not come from userspace, the dmabuf exporter should
-> > > > provide any TPH hints as part of the attachment process.
-> > > >
-> > > > We are trying not to allow userspace raw access to the TPH values=
-, so
-> > > > this is not a desirable UAPI here.
-> > > >
-> > > > Thanks for your feedback!
-> > >
-> > > I understand the concern about not exposing raw TPH values to
-> > > userspace.  To clarify, would it be acceptable to use an index-base=
-d
-> > > mapping table, where userspace provides an index and the kernel
-> > > translates it to the appropriate TPH value? Given that the PCIe spe=
-c
-> > > allows up to 16-bit TPH values, this could require a mapping table
-> > > of up to 128KB. Do you see this as a reasonable approach, or is
-> > > there a preferred alternative?
-> >
-> > ?
-> >
-> > The issue here is to secure the TPH. The kernel driver that owns the
-> > exporting device should control what TPH values an importing driver
-> > will use.
-> >
-> > I don't see how an indirection table helps anything, you need to add
-> > an API to DMABUF to retrieve the tph.
-
-> I see, thanks for the clarification. Yes we can add and use another new
-> API(s) for this purpose.
-
-> Sorry for the delay: I was waiting for the final version of Leon's
-> vfio-dmabuf patch series and plan to follow that for implementing the n=
-ew
-> API(s) needed.
-> (https://lore.kernel.org/all/20251120-dmabuf-vfio-v9-6-d7f71607f371@nvi=
-dia.com/).
+在 2025/11/26 11:36, David Matlack 写道:
+> Expose a few low-level helper routings for setting up vfio_pci_device
+> structs. These routines will be used in a subsequent commit to assert
+> that VFIO_GROUP_GET_DEVICE_FD fails under certain conditions.
 >
-> >
-> > > Additionally, in cases where the dmabuf exporter device can handle =
-all possible 16-bit
-> > > TPH values  (i.e., it has its own internal mapping logic or table),=
- should this still be
-> > > entirely abstracted away from userspace?
-> >
-> > I imagine the exporting device provides the raw on the wire TPH value
-> > it wants the importing device to use and the importing device is
-> > responsible to program it using whatever scheme it has.
-> >
-> > Jason
+> Signed-off-by: David Matlack <dmatlack@google.com>
+> ---
+>   .../lib/include/libvfio/vfio_pci_device.h     |  5 +++
+>   .../selftests/vfio/lib/vfio_pci_device.c      | 33 +++++++++++++------
+>   2 files changed, 28 insertions(+), 10 deletions(-)
 >
-> Can you suggest or elaborate a bit on the schmes you see feasible?
->
-> When the exporting device supports all or multiple TPH values, it is
-> desirable to have userspace processes select which TPH values to use
-> for the dmabuf at runtime. Actually that is the main use case of this
-> patch: the user can select the TPH values to associate desired P2P
-> operations on the dmabuf. The difficulty is how we can provide this
-> flexibility while still aligning with kernel and security best
-> practices.
->
-> Zhiping
+> diff --git a/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_device.h b/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_device.h
+> index 896dfde88118..2389c7698335 100644
+> --- a/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_device.h
+> +++ b/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_device.h
+> @@ -125,4 +125,9 @@ static inline bool vfio_pci_device_match(struct vfio_pci_device *device,
+>   
+>   const char *vfio_pci_get_cdev_path(const char *bdf);
+>   
+> +/* Low-level routines for setting up a struct vfio_pci_device */
+> +struct vfio_pci_device *vfio_pci_device_alloc(const char *bdf, struct iommu *iommu);
+> +void vfio_pci_group_setup(struct vfio_pci_device *device);
+> +void vfio_pci_iommu_setup(struct vfio_pci_device *device);
+> +
+>   #endif /* SELFTESTS_VFIO_LIB_INCLUDE_LIBVFIO_VFIO_PCI_DEVICE_H */
+> diff --git a/tools/testing/selftests/vfio/lib/vfio_pci_device.c b/tools/testing/selftests/vfio/lib/vfio_pci_device.c
+> index e9423dc3864a..c1a3886dee30 100644
+> --- a/tools/testing/selftests/vfio/lib/vfio_pci_device.c
+> +++ b/tools/testing/selftests/vfio/lib/vfio_pci_device.c
+> @@ -199,7 +199,7 @@ static unsigned int vfio_pci_get_group_from_dev(const char *bdf)
+>   	return group;
+>   }
+>   
+> -static void vfio_pci_group_setup(struct vfio_pci_device *device, const char *bdf)
+> +void vfio_pci_group_setup(struct vfio_pci_device *device)
+>   {
+>   	struct vfio_group_status group_status = {
+>   		.argsz = sizeof(group_status),
+> @@ -207,7 +207,7 @@ static void vfio_pci_group_setup(struct vfio_pci_device *device, const char *bdf
+>   	char group_path[32];
+>   	int group;
+>   
+> -	group = vfio_pci_get_group_from_dev(bdf);
+> +	group = vfio_pci_get_group_from_dev(device->bdf);
+>   	snprintf(group_path, sizeof(group_path), "/dev/vfio/%d", group);
+>   
+>   	device->group_fd = open(group_path, O_RDWR);
+> @@ -219,14 +219,12 @@ static void vfio_pci_group_setup(struct vfio_pci_device *device, const char *bdf
+>   	ioctl_assert(device->group_fd, VFIO_GROUP_SET_CONTAINER, &device->iommu->container_fd);
+>   }
+>   
+> -static void vfio_pci_container_setup(struct vfio_pci_device *device, const char *bdf)
+> +void vfio_pci_iommu_setup(struct vfio_pci_device *device)
+>   {
+>   	struct iommu *iommu = device->iommu;
+>   	unsigned long iommu_type = iommu->mode->iommu_type;
+>   	int ret;
+>   
+> -	vfio_pci_group_setup(device, bdf);
+> -
+>   	ret = ioctl(iommu->container_fd, VFIO_CHECK_EXTENSION, iommu_type);
+>   	VFIO_ASSERT_GT(ret, 0, "VFIO IOMMU type %lu not supported\n", iommu_type);
+>   
+> @@ -236,8 +234,14 @@ static void vfio_pci_container_setup(struct vfio_pci_device *device, const char
+>   	 * because the IOMMU type is already set.
+>   	 */
+>   	(void)ioctl(iommu->container_fd, VFIO_SET_IOMMU, (void *)iommu_type);
+> +}
+>   
+> -	device->fd = ioctl(device->group_fd, VFIO_GROUP_GET_DEVICE_FD, bdf);
+> +static void vfio_pci_container_setup(struct vfio_pci_device *device)
+> +{
+> +	vfio_pci_group_setup(device);
+> +	vfio_pci_iommu_setup(device);
+> +
+> +	device->fd = ioctl(device->group_fd, VFIO_GROUP_GET_DEVICE_FD, device->bdf);
+>   	VFIO_ASSERT_GE(device->fd, 0);
+>   }
+>   
+> @@ -337,9 +341,7 @@ static void vfio_pci_iommufd_setup(struct vfio_pci_device *device,
+>   	vfio_device_attach_iommufd_pt(device->fd, device->iommu->ioas_id);
+>   }
+>   
+> -struct vfio_pci_device *__vfio_pci_device_init(const char *bdf,
+> -					       struct iommu *iommu,
+> -					       int device_fd)
+> +struct vfio_pci_device *vfio_pci_device_alloc(const char *bdf, struct iommu *iommu)
+>   {
+>   	struct vfio_pci_device *device;
+>   
+> @@ -349,9 +351,20 @@ struct vfio_pci_device *__vfio_pci_device_init(const char *bdf,
+>   	device->bdf = bdf;
+>   	device->iommu = iommu;
+>   
+> +	return device;
+> +}
+> +
 
-Happy holidays! I went through the vfio-dmabuf patch series and Jason's
-comments once more. I think I have a proposal that addresses the concerns=
-.
+In the latest kernel, this part changes too much.
 
-For p2p or dmabuf use cases, we pass in an ID or fd similar to CPU_ID whe=
-n
-allocating a dmah, and make a callback to the dmabuf exporter to get the
-TPH value associated with the fd. That involves adding a new dmabuf opera=
-tion
-for the callback to get the TPH/tag value associated.
+Yanjun.Zhu
 
-I can start with vfio-dmabuf and add the new dmabuf op/ABI there based on
-Leon's patch. Pls let me know if you have any concerns or suggestions.
+> +struct vfio_pci_device *__vfio_pci_device_init(const char *bdf,
+> +					       struct iommu *iommu,
+> +					       int device_fd)
+> +{
+> +	struct vfio_pci_device *device;
+> +
+> +	device = vfio_pci_device_alloc(bdf, iommu);
+> +
+>   	if (device->iommu->mode->container_path) {
+>   		VFIO_ASSERT_EQ(device_fd, -1);
+> -		vfio_pci_container_setup(device, bdf);
+> +		vfio_pci_container_setup(device);
+>   	} else {
+>   		vfio_pci_iommufd_setup(device, bdf, device_fd);
+>   	}
 
-Zhiping
+-- 
+Best Regards,
+Yanjun.Zhu
+
 
