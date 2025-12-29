@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-43819-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43820-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D84DCCE7C17
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Dec 2025 18:31:12 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59FA6CE7CBE
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Dec 2025 19:07:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E18EC300462E
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Dec 2025 17:31:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 86DC83015866
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Dec 2025 18:07:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CCC318A6A8;
-	Mon, 29 Dec 2025 17:31:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E8132D63FC;
+	Mon, 29 Dec 2025 18:07:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r+0m2qhG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WLnnfPpU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EDD2110;
-	Mon, 29 Dec 2025 17:31:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765AE1AE877;
+	Mon, 29 Dec 2025 18:07:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767029468; cv=none; b=oXkoGj6WDMvz3snWDxZ1tWePA8M6kyNEWCIRbK/9/4xCKzx0/TraBDxYTFAAycJPh+jlb5biZt1sqZ/Uxwa1uZh6QyRB8UwFe+COZNFF4K5MuqIeB1nMS8Bjw5zN0JxbzfAxfLglmlLzb8nBNAsYunKJWUqiG0+4QMDB40i39B8=
+	t=1767031664; cv=none; b=a0V3ZRCCjQAge8CN1WD/jptlfE7zG3o7mhKQzOlUP2g7zWAVdcSQCfRpld5LLicthBPS3iSlGaRcd6RYfTJBiWFgExdwCkfnDRs0tdqt44jTgotfytKDfnDPgXOloxaEiTolmguyqJzbCsYy9X/M9UL4wOPk0PUb+uzit+RK33o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767029468; c=relaxed/simple;
-	bh=wTyW+CJrvSvt1v8k+Jj5oo3naPQS7wVINsI91G+SwRk=;
+	s=arc-20240116; t=1767031664; c=relaxed/simple;
+	bh=QZ6esHtHl5YiUbsmvl1SS/cjY+N3/aUL9YOuLzxEyok=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tuVOwfvCv6twNVhct0c54s6lt1133eqbGtlS8oe3m5KEwLPbm+F+Z3U+fUsCWFAMbE1PdeyPztHXqOLduaUji2zk0mm2lBt3SgsTIwu4up4ePAJwvMhCtIt6zYCBmB+KF/8pCOdb6mjSmt4JiNmk3Fp+aA9WHQJeAhxWOi33gOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r+0m2qhG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78A66C4CEF7;
-	Mon, 29 Dec 2025 17:31:07 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Eu2LU/xVxL8Ktiqb0eu5dlMhKDYgsKUDfOaN+9iQAsl2wJkISIMmzggElYyYx8QzjE77k3WSnXlZNSRlUW2OlcRTdkTHLcILsvXwgT6cGSMwLpUiuoSTkbxYXgVGIiQIowaKIFlU5/od6awXbgAgz3TUfN8o1zRiAxEW532R4GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WLnnfPpU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED844C4CEF7;
+	Mon, 29 Dec 2025 18:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767029467;
-	bh=wTyW+CJrvSvt1v8k+Jj5oo3naPQS7wVINsI91G+SwRk=;
+	s=k20201202; t=1767031664;
+	bh=QZ6esHtHl5YiUbsmvl1SS/cjY+N3/aUL9YOuLzxEyok=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=r+0m2qhGmYN0C7dfHmaMViA4KfgBXc6uOXLp4o11OBwlnuJOeXK+IRkKnUmvrqZNU
-	 GSM3IbNBuHSQ0q+nYLnqTVEWP9861Xr7dIJVNi3L2fVoe/E1EV0YztI4+CameeLSkv
-	 o9ZRTSqmhoLFuuLkGZZ6OZ0yY10CJVZzo7rJrTiRv8CSxlvoJoWNMdpA9Mt5ysB9x7
-	 RPYOYpiJHHSPU9QeShP+axkgbOaqPSbVM5BVIM/NuP0mvu/ndM+6TUsJS+YSK0A34w
-	 RyAeuS5RmX9ohSja3Ls+7LUsBHqhEYKvMpJtn3ufz6DMjJT57mrEvm97x1fSTeCv6z
-	 dxtLORnkhGCHg==
-Date: Mon, 29 Dec 2025 11:31:06 -0600
+	b=WLnnfPpU6kxL5ZGFmVhybaYk4IjUWxjEPo4fEXyoGwO1Uq4RW2C4C8loe7V1ew4sm
+	 pD36VqCk+ibcfkNajjtNVuybohfW0BGwgm3ywjUCsCsQQ0B3LfVLmJ8uWqnEJEfLMd
+	 oeZCAOn7IDJTVazUNRyjZD1ZTEhdXyNo9qXlWozEwl4zhLkTsKTQ2G6uJgET6dkoR7
+	 gC4KQN08WYFZhn/CijiFLrSqQuEp6KKvOaZIWR6mAKQyOYO+InBFd/AnfMCleC/YJ9
+	 RgB9j1+45PrdW6OcTjIxbMxsajLApkMAfz+8tXPkAI+yMxJMnXUd33rOV4++W0qoEN
+	 4EL4de5PF5IYg==
+Date: Mon, 29 Dec 2025 12:07:42 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Ziming Du <duziming2@huawei.com>
 Cc: bhelgaas@google.com, jbarnes@virtuousgeek.org, chrisw@redhat.com,
 	alex.williamson@redhat.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, liuyongqiang13@huawei.com
-Subject: Re: [PATCH v2 1/3] PCI/sysfs: Fix null pointer dereference during
- hotplug
-Message-ID: <20251229173106.GA69373@bhelgaas>
+	linux-kernel@vger.kernel.org, liuyongqiang13@huawei.com,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH v2 2/3] PCI: Prevent overflow in proc_bus_pci_write()
+Message-ID: <20251229180742.GA69587@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,23 +56,80 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251224092721.2034529-2-duziming2@huawei.com>
+In-Reply-To: <20251224092721.2034529-3-duziming2@huawei.com>
 
-On Wed, Dec 24, 2025 at 05:27:17PM +0800, Ziming Du wrote:
-> During the concurrent process of creating and rescanning in VF, the
-> resource files for the same pci_dev may be created twice. The second
-> creation attempt fails, resulting the res_attr in pci_dev to kfree(),
-> but the pointer is not set to NULL. This will subsequently lead to
-> dereferencing a null pointer when removing the device.
+[+cc Krzysztof; I thought we looked at this long ago?]
+
+On Wed, Dec 24, 2025 at 05:27:18PM +0800, Ziming Du wrote:
+> From: Yongqiang Liu <liuyongqiang13@huawei.com>
 > 
-> When we perform the following operation:
->   echo $vfcount > /sys/class/net/"$pfname"/device/sriov_numvfs &
+> When the value of ppos over the INT_MAX, the pos is over set to a negtive
+> value which will be passed to get_user() or pci_user_write_config_dword().
+> Unexpected behavior such as a softlock will happen as follows:
 
-Is the value of $vfcount relevant here?  Can you use the actual values
-here instead of the variables so this is more useful to others?
+s/negtive/negative/
+s/softlock/soft lockup/ to match message below
 
->   sleep 0.5
->   echo 1 > /sys/bus/pci/rescan
->   pci_remove "$pfname"
-> system will crash as follows:
+s/ppos/pos/ (or fix this to refer to "*ppos", which I think is what
+you're referring to)
+
+I guess the point is that proc_bus_pci_write() takes a "loff_t *ppos",
+loff_t is a signed type, and negative read/write offsets are invalid.
+
+If this is easily reproducible with "dd" or similar, could maybe
+include a sample command line?
+
+>  watchdog: BUG: soft lockup - CPU#0 stuck for 130s! [syz.3.109:3444]
+>  RIP: 0010:_raw_spin_unlock_irq+0x17/0x30
+>  Call Trace:
+>   <TASK>
+>   pci_user_write_config_dword+0x126/0x1f0
+>   proc_bus_pci_write+0x273/0x470
+>   proc_reg_write+0x1b6/0x280
+>   do_iter_write+0x48e/0x790
+>   vfs_writev+0x125/0x4a0
+>   __x64_sys_pwritev+0x1e2/0x2a0
+>   do_syscall_64+0x59/0x110
+>   entry_SYSCALL_64_after_hwframe+0x78/0xe2
+> 
+> Fix this by add check for the pos.
+> 
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
+> Signed-off-by: Ziming Du <duziming2@huawei.com>
+> ---
+>  drivers/pci/proc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
+> index 9348a0fb8084..200d42feafd8 100644
+> --- a/drivers/pci/proc.c
+> +++ b/drivers/pci/proc.c
+> @@ -121,7 +121,7 @@ static ssize_t proc_bus_pci_write(struct file *file, const char __user *buf,
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (pos >= size)
+> +	if (pos >= size || pos < 0)
+>  		return 0;
+
+I see a few similar cases that look like this; maybe we should do the
+same?
+
+  if (pos < 0)
+    return -EINVAL;
+
+Looks like proc_bus_pci_read() has the same issue?
+
+What about pci_read_config(), pci_write_config(),
+pci_llseek_resource(), pci_read_legacy_io(), pci_write_legacy_io(),
+pci_read_resource_io(), pci_write_resource_io(), pci_read_rom()?
+These are all sysfs things; does the sysfs infrastructure take care of
+negative offsets before we get to these?
+
+>  	if (nbytes >= size)
+>  		nbytes = size;
+> -- 
+> 2.43.0
+> 
 
