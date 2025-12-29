@@ -1,195 +1,149 @@
-Return-Path: <linux-pci+bounces-43796-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43797-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26E1FCE6AF9
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Dec 2025 13:30:28 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D34CCE6D2D
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Dec 2025 14:07:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C60203000DD1
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Dec 2025 12:30:24 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 92ABC30056D0
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Dec 2025 13:07:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1152630FC0F;
-	Mon, 29 Dec 2025 12:30:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00D93308F23;
+	Mon, 29 Dec 2025 13:07:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="EEAyNpqP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9QZFSCS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-25.smtpout.orange.fr [80.12.242.25])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11361946C8;
-	Mon, 29 Dec 2025 12:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8C63112DC
+	for <linux-pci@vger.kernel.org>; Mon, 29 Dec 2025 13:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767011423; cv=none; b=ZAVxC5jdOyMP7//jNpkYoVOu8shVnk96AFXmo/vdfuHweEVxUQRbpygC8pFV4sau7Rem8Lb0AMPea5T8a6La7+6FKdZeuK1ctFjkR5ZLLD2ZfNWb0mKt6jwtotjcprxSg+dPTUXfBWzu/Vr1WVM9/jac8hKqVYTrLAH7QTolrEM=
+	t=1767013656; cv=none; b=iYwLB3J4GWq8B3vjWpM+ksF/sVmwPrANSaJeAbWBvjqFmDHHqEqu11jaZSy9prRrTc2mqgGncX4mLoL/Z2tjBbMOmUrSAb21vGI6y4J9YO/dJ5ESIjak/RBrUDE2uwCzuFxx/0m5tx+/AgxoKoS+amJVXmRIl6PkL2oLvnqLAgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767011423; c=relaxed/simple;
-	bh=8SqAamIhKPcweeDRupgsAJpevZj1OrLnixFWIuYKX4Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pWnM0zx59galVMvPbZn43qVwcT0FiNMZUhH/efM8BqQa4sRSGS6nktHXzRp05Gt87f0avu4MT2rvvHCixXnNf83rERD5JICjbQvjHvPMmJ1DQ3JkSS3Ak8+AND9eqg74U7eYlCeh5nQ0h1lLsop5ILzn9FUwD5vhr2LOuac4PWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=EEAyNpqP; arc=none smtp.client-ip=80.12.242.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id aCMvvMVMYjSZXaCMvvsf9B; Mon, 29 Dec 2025 13:29:05 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1767011346;
-	bh=fSTbBzZnMi5ZmX6dfCrTLQPupOlRFVbrKDWxqD9sUZk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=EEAyNpqPCs8gLEK/CoU8lCVTUnmZne/tUclR1S++jDjlJQTL6L6Qe/gPlfDt/vJA6
-	 F7fel6HYCEFjXD1cU/Pm0sARlzAwaCTBgp0l5u1X9ORvNNac/zjgNSr80nDUG95Lk4
-	 u3dxHVWWIuubiwYW7GVmeYKYA3BEfDD5ODeSEwfpYmPL0WDNVydwSUf50ZEuIJmffi
-	 +lcWbn1vITXNu/oYwRHiT9XzPlkWFXtyfzer2Uj3mZAW8kevgb+yRJsxcGdyO+nwHy
-	 hR8X1vQvM3LNAcI5QH8U+MvDA5AnZJDbF5i7ueBeNE8BObUseu8IO0wP9/kmCue0yH
-	 hM1It1jzYKiwQ==
-X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 29 Dec 2025 13:29:06 +0100
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-Message-ID: <37ef98c2-b13f-4292-8db7-df90237c7ce1@wanadoo.fr>
-Date: Mon, 29 Dec 2025 13:28:59 +0100
+	s=arc-20240116; t=1767013656; c=relaxed/simple;
+	bh=AMUQSRG1b3Bfy03EvZuA2MH+vEg2DbG2lHxiayfH+QM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GHWs3kzD9odIoznM8R0V5yb3Wq0WcHBP3rUfqnKdisydYnb4U52aRZ1NlZ6DuJ9lLfuHee4pNtdnXohEDN6U0ZJTilD4fPoK4TgpKsX9IaoMSvCQ54FbDivwNPKKee8ri8aXeQQcMTy+uGfyCU5OqfMigaAk8uODmz51fGuIVh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9QZFSCS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 938E0C2BC87
+	for <linux-pci@vger.kernel.org>; Mon, 29 Dec 2025 13:07:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767013656;
+	bh=AMUQSRG1b3Bfy03EvZuA2MH+vEg2DbG2lHxiayfH+QM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=A9QZFSCS3xPAwWqtCvPqrrX/p48huao8sdF4q7VJrNiDsDYyoTmKF02kun7BWCwv2
+	 LlsSgFHY15pRVXlu9EATZrgsqDgunJb6wRhpRqUZyRJInOYJkjuiI8VHip1Wz6xOVU
+	 2yQJ5yFOiuT2II442/1AqTt0rVIfoMRw68VLyP3xWQAWWxG14vYQv/u0d8TXQbpiT3
+	 2fTIV9seyM9cn6Qy1zvrY3KNmHr5+yn5s5+hYtmiwc0eKIW4K6xX3N3o1IdiG5oPCS
+	 8R/UYrqS5k4jhFz6XYIcBpiLgC/cF08TioNkA9W8Dtd0WdvxVJ2A2IV6JskQ0Wb7H9
+	 Djp6vlpQmH0tQ==
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7c6cc44ff62so6789658a34.3
+        for <linux-pci@vger.kernel.org>; Mon, 29 Dec 2025 05:07:36 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWl5vjBPfpMKtw66gFhtEbuQlOpXmorpiKzL/+Um5/UBghQLwsXvjT+Af9uoz9cYaQs6TZQ4Y0VnsI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzbRH2FyU16y3JOwfBqFUPS4nuEsuXsx+IqGKHzznP0ZJ5BQjJ
+	nN1B35er811S5kmXqmb8thXR7vjGgxSDkvrZKMk/SG/1Q2kIz9RrCPLshMoDqlH9ak8vRWaCoNJ
+	3sC8OajW9qVAGdUg3HfMmPUEehRdcH0Q=
+X-Google-Smtp-Source: AGHT+IF44OvAT8xzPCw6GemK5RnjOaPJgRioAtH7qU3YkYnFcixJdFY9nD1Exc2RVpUjYDwkKnc/hWyfHiMYWmbrDgs=
+X-Received: by 2002:a05:6830:f94:b0:7c7:68d6:5925 with SMTP id
+ 46e09a7af769-7cc66a46941mr12797514a34.27.1767013655638; Mon, 29 Dec 2025
+ 05:07:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 2/2] PCI: eic7700: Add Eswin PCIe host controller
- driver
-To: zhangsenchuan@eswincomputing.com, bhelgaas@google.com, mani@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, lpieralisi@kernel.org,
- kwilczynski@kernel.org, robh@kernel.org, p.zabel@pengutronix.de,
- jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, christian.bruel@foss.st.com,
- mayank.rana@oss.qualcomm.com, shradha.t@samsung.com,
- krishna.chundru@oss.qualcomm.com, thippeswamy.havalige@amd.com,
- inochiama@gmail.com, Frank.li@nxp.com
-Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
- pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com
-References: <20251229113021.1859-1-zhangsenchuan@eswincomputing.com>
- <20251229113208.1893-1-zhangsenchuan@eswincomputing.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20251229113208.1893-1-zhangsenchuan@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <7888874.EvYhyI6sBW@rafael.j.wysocki> <6115868.MhkbZ0Pkbq@rafael.j.wysocki>
+ <aVGBW4UcRAaxtbCX@smile.fi.intel.com>
+In-Reply-To: <aVGBW4UcRAaxtbCX@smile.fi.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 29 Dec 2025 14:07:23 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0gyhVFA65YCqrz7WiY=4H+dhKb6FYMo06sU-hF=4fLS4Q@mail.gmail.com>
+X-Gm-Features: AQt7F2qdw28JM-u46gZ2DuXmSUxLEhjvbWB_OEQLQYM-tkIUpJW9B6giu1Jrkj0
+Message-ID: <CAJZ5v0gyhVFA65YCqrz7WiY=4H+dhKb6FYMo06sU-hF=4fLS4Q@mail.gmail.com>
+Subject: Re: [PATCH v1 2/4] platform/x86/intel/hid: Stop creating a platform device
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Chen Yu <yu.c.chen@intel.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Linux PCI <linux-pci@vger.kernel.org>, 
+	Alex Hung <alexhung@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	platform-driver-x86@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Le 29/12/2025 à 12:32, zhangsenchuan@eswincomputing.com a écrit :
-> From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
-> 
-> Add driver for the Eswin EIC7700 PCIe host controller, which is based on
-> the DesignWare PCIe core, IP revision 5.96a. The PCIe Gen.3 controller
-> supports a data rate of 8 GT/s and 4 channels, support INTx and MSI
-> interrupts.
-> 
-> Signed-off-by: Yu Ning <ningyu@eswincomputing.com>
-> Signed-off-by: Yanghui Ou <ouyanghui@eswincomputing.com>
-> Signed-off-by: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
-> ---
+On Sun, Dec 28, 2025 at 8:13=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Dec 15, 2025 at 02:35:05PM +0100, Rafael J. Wysocki wrote:
+> >
+> > Now that "system" devices are represented as platform devices, they
+> > are not claimed by the PNP ACPI scan handler any more and the Intel
+> > HID platform devices should be created by the ACPI core, so the
+> > driver does not need to attempt to create a platform device by
+> > itself.
+> >
+> > Accordingly, make it stop doing so.
+> >
+> > No intentional functional impact.
+>
+> ...
+>
+> >       .remove =3D intel_hid_remove,
+> >  };
+>
+> >
+>
+> This blank line now can also be removed as the module_platform_driver() c=
+oupled
+> with the above structure initialiser.
+>
+> > -/*
+> > - * Unfortunately, some laptops provide a _HID=3D"INT33D5" device with
+> > - * _CID=3D"PNP0C02".  This causes the pnpacpi scan driver to claim the
+> > - * ACPI node, so no platform device will be created.  The pnpacpi
+> > - * driver rejects this device in subsequent processing, so no physical
+> > - * node is created at all.
+> > - *
+> > - * As a workaround until the ACPI core figures out how to handle
+> > - * this corner case, manually ask the ACPI platform device code to
+> > - * claim the ACPI node.
+> > - */
+> > -static acpi_status __init
+> > -check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
+> > -{
+> > -     const struct acpi_device_id *ids =3D context;
+> > -     struct acpi_device *dev =3D acpi_fetch_acpi_dev(handle);
+> > -
+> > -     if (dev && acpi_match_device_ids(dev, ids) =3D=3D 0)
+> > -             if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL=
+)))
+> > -                     dev_info(&dev->dev,
+> > -                              "intel-hid: created platform device\n");
+> > -
+> > -     return AE_OK;
+> > -}
+> > -
+> > -static int __init intel_hid_init(void)
+> > -{
+> > -     acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
+> > -                         ACPI_UINT32_MAX, check_acpi_dev, NULL,
+> > -                         (void *)intel_hid_ids, NULL);
+> > -
+> > -     return platform_driver_register(&intel_hid_pl_driver);
+> > -}
+> > -module_init(intel_hid_init);
+> > -
+> > -static void __exit intel_hid_exit(void)
+> > -{
+> > -     platform_driver_unregister(&intel_hid_pl_driver);
+> > -}
+> > -module_exit(intel_hid_exit);
+> > +module_platform_driver(intel_hid_pl_driver);
 
-Hi,
-
-> +static int eic7700_pcie_host_init(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct eic7700_pcie *pcie = to_eic7700_pcie(pci);
-> +	struct eic7700_pcie_port *port;
-> +	u32 val;
-> +	int ret;
-> +
-> +	pcie->num_clks = devm_clk_bulk_get_all_enabled(pci->dev, &pcie->clks);
-
-Is this the correct place to call this function?
-
-eic7700_pcie_host_init() is called from eic7700_pcie_resume_noirq() and 
-calling a devm function from a resume function is really unusual and is 
-likely to leak memory.
-
-> +	if (pcie->num_clks < 0)
-> +		return dev_err_probe(pci->dev, pcie->num_clks,
-> +				     "Failed to get pcie clocks\n");
-> +
-> +	/*
-> +	 * The PWR and DBI reset signals are respectively used to reset the
-> +	 * PCIe controller and the DBI register.
-> +	 *
-> +	 * The PERST# signal is a reset signal that simultaneously controls the
-> +	 * PCIe controller, PHY, and Endpoint. Before configuring the PHY, the
-> +	 * PERST# signal must first be deasserted.
-> +	 *
-> +	 * The external reference clock is supplied simultaneously to the PHY
-> +	 * and EP. When the PHY is configurable, the entire chip already has
-> +	 * stable power and reference clock. The PHY will be ready within 20ms
-> +	 * after writing app_hold_phy_rst register bit of ELBI register space.
-> +	 */
-> +	ret = reset_control_bulk_deassert(EIC7700_NUM_RSTS, pcie->resets);
-> +	if (ret) {
-> +		dev_err(pcie->pci.dev, "Failed to deassert resets\n");
-> +		return ret;
-> +	}
-> +
-> +	/* Configure Root Port type */
-> +	val = readl_relaxed(pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
-> +	val &= ~PCIEELBI_CTRL0_DEV_TYPE;
-> +	val |= FIELD_PREP(PCIEELBI_CTRL0_DEV_TYPE, PCI_EXP_TYPE_ROOT_PORT);
-> +	writel_relaxed(val, pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
-> +
-> +	list_for_each_entry(port, &pcie->ports, list) {
-> +		ret = eic7700_pcie_perst_reset(port, pcie);
-> +		if (ret)
-> +			goto err_perst;
-> +	}
-> +
-> +	/* Configure app_hold_phy_rst */
-> +	val = readl_relaxed(pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
-> +	val &= ~PCIEELBI_APP_HOLD_PHY_RST;
-> +	writel_relaxed(val, pci->elbi_base + PCIEELBI_CTRL0_OFFSET);
-> +
-> +	/* The maximum waiting time for the clock switch lock is 20ms */
-> +	ret = readl_poll_timeout(pci->elbi_base + PCIEELBI_STATUS0_OFFSET, val,
-> +				 !(val & PCIEELBI_PM_SEL_AUX_CLK), 1000,
-> +				 20000);
-> +	if (ret) {
-> +		dev_err(pci->dev, "Timeout waiting for PM_SEL_AUX_CLK ready\n");
-> +		goto err_phy_init;
-> +	}
-> +
-> +	/*
-> +	 * Configure ESWIN VID:DID for Root Port as the default values are
-> +	 * invalid.
-> +	 */
-> +	dw_pcie_dbi_ro_wr_en(pci);
-> +	dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, PCI_VENDOR_ID_ESWIN);
-> +	dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, PCI_DEVICE_ID_ESWIN);
-> +	dw_pcie_dbi_ro_wr_dis(pci);
-> +
-> +	return 0;
-> +
-> +err_phy_init:
-> +	list_for_each_entry(port, &pcie->ports, list)
-> +		reset_control_assert(port->perst);
-> +err_perst:
-> +	reset_control_bulk_assert(EIC7700_NUM_RSTS, pcie->resets);
-> +
-> +	return ret;
-> +}
-
-...
-
-> +DEFINE_NOIRQ_DEV_PM_OPS(eic7700_pcie_pm, eic7700_pcie_suspend_noirq,
-> +			eic7700_pcie_resume_noirq);
-> +
-> +static const struct of_device_id eic7700_pcie_of_match[] = {
-> +	{ .compatible = "eswin,eic7700-pcie" },
-> +	{},
-
-Nitpick: No need for trailing comma after a terminator.
-
-> +};
-
-CJ
-
+Feel free to send a patch to remove it then, perhaps along with the
+one in the other driver.
 
