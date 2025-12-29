@@ -1,116 +1,110 @@
-Return-Path: <linux-pci+bounces-43805-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43806-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2245CE6FCD
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Dec 2025 15:16:27 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28DC4CE72CB
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Dec 2025 16:11:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AAE95300F31D
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Dec 2025 14:16:22 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 27FB8300A9D0
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Dec 2025 15:11:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 260551F874C;
-	Mon, 29 Dec 2025 14:16:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8B8E30FF36;
+	Mon, 29 Dec 2025 15:11:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b="Nw5xg1z3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MwETxTuy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-op-o10.zoho.com (sender4-op-o10.zoho.com [136.143.188.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3575C8BEC;
-	Mon, 29 Dec 2025 14:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767017781; cv=pass; b=m9wjC2Km/FgsBn9QX21A8pJyjDAdW2mUHabZB3k252fvajV6ABI/qwsJQzKt/3SNMjZ4sPfHPyPDfuCfAG0bK8iUBcgKMj3whuFcwGRFFFTh5uSjFylybncYi0b30DvG+eDc+skPb8kQJ8Pf+m1tHjMvXCSJOS2gDmeq23MT0oM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767017781; c=relaxed/simple;
-	bh=gcGoEnrtXDIB7GOHQw70PHm1fFbRAHrLIr2ZLda2Sbo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uwhH5G7K8yCk9XplTSRnajPfA3E5xkNOsmrDKCYOcvvN66JYfhFSpK4YS+IwxWuuW82sVdDmyXsRpv3f0FgoZtzN547CaQeRa9YRVZOw8gh24cJS3xqzbCUFrfttdPNA3VI0w+5gCiY6K2N9nl2SLNZGvHbhQiAlGqzFxc/hniA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b=Nw5xg1z3; arc=pass smtp.client-ip=136.143.188.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1767017706; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=c132D8Q3MEQnj5rQMTMNFyDLvy0qPgMPOnZFF6uXrKqrOFvOuLUxaxJrTk8oZVx+zbWusYPdz1g5cXYskX82leIo4qnkaCZi8gWWtNCaZ7KrBeCrEj8J+X8ku2vddzZznHZkon/31rhzfOG0xfqvJjKDLj7wgZa3o5rWZXZAHYo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1767017706; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=gcGoEnrtXDIB7GOHQw70PHm1fFbRAHrLIr2ZLda2Sbo=; 
-	b=JhuqOJfKnmx3A9WVjIxKVMMWNjnDyjI01DYzYK0gQkWvTka0Qr9UB45AC3+R4hJNAl20YAPM0tmLkABCS1jh+ehrxmcsaH4ljpo9K73B5rqEpmeFl5Nr6/0yDa3LmT3SGJyJeNHtUN7ISAC3wO4GJoxA63UxQWQrKD3cmETF5kM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nfraprado@collabora.com;
-	dmarc=pass header.from=<nfraprado@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1767017706;
-	s=zohomail; d=collabora.com; i=nfraprado@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=gcGoEnrtXDIB7GOHQw70PHm1fFbRAHrLIr2ZLda2Sbo=;
-	b=Nw5xg1z3cLP9VkYemFCEQnqUxQv87FIyfwExUfFBbW16Efglq8oL6Ap19gxrpL6K
-	xKRbcDf0GPyPD/FM63TQJaq/1vZSOXRL+p+gIpSwEHmNUF79r4ko21rz8ymMR5GB8Rr
-	CH6VE0CvnupjDedRSQa/XHi30VA2XJuY9SAC9fNo=
-Received: by mx.zohomail.com with SMTPS id 1767017705278437.0577963304597;
-	Mon, 29 Dec 2025 06:15:05 -0800 (PST)
-Message-ID: <8caf35529d2825ba98a8f7ea63ce03d23007292a.camel@collabora.com>
-Subject: Re: [PATCH v4 1/3] kselftest: Add test to verify probe of devices
- from discoverable buses
-From: =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado" <nfraprado@collabora.com>
-To: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Shuah Khan <shuah@kernel.org>, Greg Kroah-Hartman	
- <gregkh@linuxfoundation.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	kernelci@lists.linux.dev, kernel@collabora.com, Tim Bird
- <Tim.Bird@sony.com>, 	linux-pci@vger.kernel.org, David Gow
- <davidgow@google.com>, 	linux-kselftest@vger.kernel.org, Rob Herring
- <robh+dt@kernel.org>, Doug Anderson	 <dianders@chromium.org>,
- linux-usb@vger.kernel.org, Saravana Kannan	 <saravanak@google.com>, Dan
- Carpenter <dan.carpenter@linaro.org>, Guenter Roeck	 <groeck@chromium.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 29 Dec 2025 11:14:59 -0300
-In-Reply-To: <20251229145542-059157e7-1864-4407-8734-0a32589f9b0b@linutronix.de>
-References: 
-	<20240122-discoverable-devs-ksft-v4-0-d602e1df4aa2@collabora.com>
-	 <20240122-discoverable-devs-ksft-v4-1-d602e1df4aa2@collabora.com>
-	 <20251229145542-059157e7-1864-4407-8734-0a32589f9b0b@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-7 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D681E8826;
+	Mon, 29 Dec 2025 15:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767021114; cv=none; b=eHV0uY/xwjlQ92ZFsomNe0FdXxM+Z0llSGiPIu2+PLvVmOCfdLAkRIzQKAtjPPGMBL+nd6GVsr0Ixb8AXXMIrnKxNVmBbAbEU/cTrHFzYo1Ctuvd6VDUJYR4POrjRAqY4atL+WJsQVld9+vev41KZNCyWY8KksLrR+C96UV5fSc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767021114; c=relaxed/simple;
+	bh=U3RerkmBMhFujmcWE0DQfbj1pFbuSaRAlrOlKqHv8VI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Tgjt7PKrbcu1+m2tuELM0tweciGkS4sSWl7gosehMeld4ySqk+Wuc5gNnxdjApTACALDmwRB1IwycHTFEbwBOgIHH5JDq1PA2b2XYutds+bUcDmM70xQfN0VQc8BdXclOMb8oJnegD8NVp4UUD7RXOwhBog7Ub74WjSFqE/G/kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MwETxTuy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0E0AC4CEF7;
+	Mon, 29 Dec 2025 15:11:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767021114;
+	bh=U3RerkmBMhFujmcWE0DQfbj1pFbuSaRAlrOlKqHv8VI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=MwETxTuypcfy5ogpON6HHzYKwBPYNReAh64fmRplQdRqq64JX1gIkB5ViwJKqR7xP
+	 OPElE0Ep629Axs03eiPiPeyFxBqCMkZPmcV0EZv7oyBRlF1mgStUcxZiOb+KkFGv3H
+	 hCRHn2bmqZt+h8TItazyAkNezun3yF0sa+W2m8hSVUuIHnKztAJUOIkIyfXZrDzayF
+	 NXVwrKKt+ZBarvbYOm5mSEXuHj2In551PX7TkuR8bSgY0d30TEOrBs6dlR0s2GgjqE
+	 AeQog2UhNOCOv9KQxb0H6liIVTJiB1hGa+DqOddlrCkRp4K5MLKioZjDtiwAAi1Hwu
+	 7Oh+6nV28LmnQ==
+Date: Mon, 29 Dec 2025 09:11:52 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Chen Wang <unicorn_wang@outlook.com>
+Cc: Inochi Amaoto <inochiama@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Han Gao <rabenda.cn@gmail.com>,
+	Manivannan Sadhasivam <mani@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 0/2] PCI/ASPM: Avoid L0s and L1 on Sophgo 2042/2044 PCIe
+ Root Ports
+Message-ID: <20251229151152.GA57954@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <MA5PR01MB1250074A97978ACB5C88D1363FEBFA@MA5PR01MB12500.INDPRD01.PROD.OUTLOOK.COM>
 
-On Mon, 2025-12-29 at 14:57 +0100, Thomas Wei=C3=9Fschuh wrote:
-> On Mon, Jan 22, 2024 at 03:53:21PM -0300, N=C3=ADcolas F. R. A. Prado
-> wrote:
-> > Add a new test to verify that a list of expected devices from
-> > discoverable buses (ie USB, PCI) have been successfully
-> > instantiated and
-> > probed by a driver.
-> >=20
-> > The per-platform list of expected devices is selected from the ones
-> > under the boards/ directory based on the DT compatible or the DMI
-> > IDs.
-> >=20
-> > Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
-> > ---
-> > =C2=A0tools/testing/selftests/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- |=C2=A0=C2=A0 1 +
-> > =C2=A0tools/testing/selftests/devices/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 4 +
->=20
-> > =C2=A0tools/testing/selftests/devices/ksft.py=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 90 ++++++
->=20
-> This seems to be a copy of tools/testing/selftests/kselftest/ksft.py.
-> Instead of copying the file, try to use it from the standard
-> location.
+On Mon, Dec 29, 2025 at 08:17:40AM +0800, Chen Wang wrote:
+> On 12/27/2025 12:30 AM, Bjorn Helgaas wrote:
+> > On Thu, Dec 25, 2025 at 06:05:27PM +0800, Inochi Amaoto wrote:
+> > > Since commit f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM
+> > > states for devicetree platforms") force enable ASPM on all device tree
+> > > platform, the SG2042/SG2044 PCIe Root Ports breaks as it advertises L0s
+> > > and L1 capabilities without supporting it.
+> > > 
+> > > Override the L0s and L1 Support advertised in Link Capabilities by the
+> > > SG2042/SG2044 Root Ports so we don't try to enable those states.
+> > > 
+> > > Inochi Amaoto (2):
+> > >    PCI/ASPM: Avoid L0s and L1 on Sophgo 2042 PCIe [1f1c:2042] Root Ports
+> > >    PCI/ASPM: Avoid L0s and L1 on Sophgo 2044 PCIe [1f1c:2044] Root Ports
+> > > 
+> > >   drivers/pci/quirks.c    | 2 ++
+> > >   include/linux/pci_ids.h | 2 ++
+> > >   2 files changed, 4 insertions(+)
+> ...
 
-This series is almost 1 year old and has long ago been merged :)
+> > 2) Why don't we have a MAINTAINERS entry for this driver?  I failed to
+> > notice that the series we applied
+> > (https://lore.kernel.org/all/cover.1757643388.git.unicorn_wang@outlook.com/)
+> > does not include a maintainer.  Chen, since you posted that series,
+> > are you willing to sign up to maintain it?
+>
+> Sorry, I didn't realize I needed to submit maintainer information
+> separately for each driver when I submitted the PCIe driver code.
+> 
+> Yes, I will be maintaining the SG2042 PCIe driver. Do I need to add
+> an entry to the MAINTAINERS file?
 
---=20
-Thanks,
+Yes, please.
 
-N=C3=ADcolas
+  $ ./scripts/get_maintainer.pl drivers/pci/controller/cadence/pcie-sg2042.c
+  Lorenzo Pieralisi <lpieralisi@kernel.org> (maintainer:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS)
+  "Krzysztof Wilczyński" <kwilczynski@kernel.org> (maintainer:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS)
+  Manivannan Sadhasivam <mani@kernel.org> (maintainer:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS,commit_signer:2/2=100%)
+  ...
+  Chen Wang <unicorn_wang@outlook.com> (commit_signer:2/2=100%,authored:1/2=50%,added_lines:134/134=100%)
+
+This does list you, but only as a commit signer.  It should list you
+as a maintainer of the driver so people know to send patches to you
+(and cc linux-pci, of course).
+
+Bjorn
 
