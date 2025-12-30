@@ -1,159 +1,143 @@
-Return-Path: <linux-pci+bounces-43842-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43843-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6726ECE98CF
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 12:37:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99EE5CE994C
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 12:54:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 692EC3016907
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 11:37:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 03B18301C951
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 11:54:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 628A82E22AA;
-	Tue, 30 Dec 2025 11:37:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E628A2D839F;
+	Tue, 30 Dec 2025 11:54:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ase3+yPC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kvD6ECWI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDBF2D94AB
-	for <linux-pci@vger.kernel.org>; Tue, 30 Dec 2025 11:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01E22264C0;
+	Tue, 30 Dec 2025 11:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767094624; cv=none; b=fnVjjLs22POe9aORq+QZBG+dMH+CPUPFvNvUOriborsfCx12pw+z/pvu4hObgZCr9ydYLhpzOMTSZcOxdk6g4gUGaiXhd1fymVrM7k6uHOBmPEnenYYt3IFgdEgSwAQkdPqtXSJpt9mWrn58m1QUPM+bOnFrI6xiVwzhIdys/ck=
+	t=1767095648; cv=none; b=RjGUhbPqWSF/zqUwJbsomk+oqCCvp7dsF81XOXMPCbhPFDn8PO2GZUTF4llJX0aKCgHEY2Qb6Y0qX2kp7Lom7aBk7CJFhZKFhXh9+fhvoSMBT6sG+5TlC6sx1CkZeyAIf1PCnKF/IfFXsKpD0YYHDoUrAJHRakk/OJY1a4YUNs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767094624; c=relaxed/simple;
-	bh=8n8WP6t0YcDAYZ7kg3FzA+7B5fDmDzd8BrdVQJVpcRs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kZ04g0wut2oNGJPNCGGi+9C8VlOMtytkjofHLLjr9Grw0YbEER35lSUZCJMTcTu4GDtbKcdK3lObTC6WFNvD0mh8sghRyyd2ZvdK3uiXslEyQtFnAbvzJ4QyQxRgRxQddD+kjKuPXXK2o3Me8/2GmazjhYNuEIgqbFSVRC4x2Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ase3+yPC; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-38105ad3720so81924341fa.0
-        for <linux-pci@vger.kernel.org>; Tue, 30 Dec 2025 03:37:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767094621; x=1767699421; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4CmAFwrYbDuyMoa/BPWjtX3r2mUHX5vgd3DvqkBcFzk=;
-        b=Ase3+yPCgI2K/7zwY6HeHLVpt0MTzbeVu+fQe7YltTVnJsipj/+VnLDpzD9gUutvUE
-         If0ARIlIQGQPtaxrMb5538uWv0vFWABUlrI/mtJLxGZy4DvW8RWGyi7onFwFQr+cpvGX
-         5NQDZscrk7FIL3gtbRloK+ymD9Xiqdt//Of/zWl2Si6mcZmb+PTaEeXsdJOVlRzAHcCr
-         bIsjN8Q/NPw6xueIx78sUHN516LUBT5PqD1MJYcFCpBI5pWJHsdffSO64jdjQ36dEQ8/
-         DQ8am0zxmUmpmW2MztQ3a4z8f/wd84yf6AG53B3pXgQG65hnO6W0ih3eFgeIk31sSLE0
-         AH4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767094621; x=1767699421;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4CmAFwrYbDuyMoa/BPWjtX3r2mUHX5vgd3DvqkBcFzk=;
-        b=kWX7Y+omJsKX1hOOWZKoBJ/b5aU+u/K5OGwe34lC3SwbCxELlzzDOVO8Mg0OFObD3H
-         GoxbCqoZtltONdaN0tWWad6pgpznK1gdkPcK8Kag1PLTAWHpIAqZIR3qERRKARr8yXBi
-         klVj7yoIMLa3A9uIVXbioK/9h+5v0BwqWAbuqdnUyRfkfdGelSa+BG4CjRQW3EhXwl75
-         fHRgtsTmiKziTZJenxl7zcWsjt2+DuHdbJ2WvxUQp2Rh4EnAyABi/AXpopWuk6Ajxsr4
-         CrGE8h0taZNi2CRWNUNsR7nViLf8MwDYV+aUSFSNU6uvcRjXsLxFr3qAmE6L7ybJ9FFN
-         evJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVaZuCrvLcRO9qicjZrTbHCFxCQJhtM652DyevdSbF58T9vowhVBKbltu7SWMhI3IU5zdK6l+mEGKk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoJdJtBNReT8zvaJDrlMQsr51e9rC6JkRrLXK4N8/cdyGR+HHO
-	Qd99FDIlJn8skr0f8UlTvx5UIvOqOZLZ5sGoTOiruRw18nCgtYPOLEtB
-X-Gm-Gg: AY/fxX65hA21wHhKvzvMdY1e/hr83EBFjMRTqp8YUWjH9LtP2zFi5VtMQns9GAQFOqu
-	8H06fuX3UrMYHoqwBCFodXI9pcWfhYrC3V9VLCDj9bNz/rBcgbfligEeNoBVb3/6vORAVbl3nBe
-	tFtYuJ8qf3N9ap44u1QIW9ne3Pnv/cyxl8oT4Z5KFbVuqVxbcBz9CvhVs2YVJPdMq7K2UIvh3ie
-	Dg/aolAfbfhQ+hMSvlnvxWaD5FAo3bK6Lp9ayOlyPNGnSot0UI0yPxuPAd72XGTIdjiUFXlXR48
-	6X18qL5rx+GQQ4OZUyhs7VrX6QnQ8WKjzj1urwCNGiHqCToWQ3NkrdeMNGTbA7cb6B+bhHZbUG5
-	2LyTl48W0tkhWLlGr+xk2QQumBrK2c+BCKIm2K5zb4SeLnuMISen76bdJUgUTzIhz9GQ3T37/BW
-	AJwbcIwfDo
-X-Google-Smtp-Source: AGHT+IGF3gFGUozf4G9zt9Om+vstcNbw0h6yAp0aZ++ChCDii30yTV/4I9FiaTW4YuEjPjrGwT/sFw==
-X-Received: by 2002:a05:651c:f02:b0:37f:8bb4:88 with SMTP id 38308e7fff4ca-381216bd8cfmr102647771fa.41.1767094620457;
-        Tue, 30 Dec 2025 03:37:00 -0800 (PST)
-Received: from localhost ([194.190.17.114])
-        by smtp.gmail.com with UTF8SMTPSA id 38308e7fff4ca-381224de728sm89285781fa.5.2025.12.30.03.36.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Dec 2025 03:37:00 -0800 (PST)
-From: Askar Safin <safinaskar@gmail.com>
-To: nfraprado@collabora.com
-Cc: Tim.Bird@sony.com,
-	bhelgaas@google.com,
-	dan.carpenter@linaro.org,
-	davidgow@google.com,
-	devicetree@vger.kernel.org,
-	dianders@chromium.org,
-	gregkh@linuxfoundation.org,
-	groeck@chromium.org,
-	kernel@collabora.com,
-	kernelci@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	robh+dt@kernel.org,
-	saravanak@google.com,
-	shuah@kernel.org
-Subject: Re: [PATCH v4 3/3] kselftest: devices: Add sample board file for XPS 13 9300
-Date: Tue, 30 Dec 2025 14:36:16 +0300
-Message-ID: <20251230113655.1817727-1-safinaskar@gmail.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <78b4f1f60563fc854f5f4a54b42e0bac60715070.camel@collabora.com>
-References: <78b4f1f60563fc854f5f4a54b42e0bac60715070.camel@collabora.com>
+	s=arc-20240116; t=1767095648; c=relaxed/simple;
+	bh=spPr8TBiHbVgQkzYTHJ55ZXoc4bw8ADD5ffVTH2O2wg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=lqCajx0QF+xOD+odEFOZrLIAS4EaqTGOqd4b7zHC685Uk0gR5obzIUoyWY8YXcfW00p3qkR6W9K7dARkRdJ0LeyQV8nehVRJ1tB0vazkcdl1wlG6MSWyBYnInrsS/jbV810SVrpsHuNTBTxJnbv5Vp5rdH9x79Lv9d+hTbQCcm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kvD6ECWI; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767095647; x=1798631647;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=spPr8TBiHbVgQkzYTHJ55ZXoc4bw8ADD5ffVTH2O2wg=;
+  b=kvD6ECWIFT0vzwaIuEp5RusnxymBxJOKl6E+A9LIdot+vkC0ncc9w4Qi
+   6H97eUWTxUEeOalip8z1qMCvz2uVFHFJC6JhNRvRbNrISJzeC2H4t0R2Q
+   QUE//kO3VTeW2j0eY74t6k5Q5WXqPCZTSJMM/8IKqvh2sS6rxkCZoDl2j
+   hIKDOYhLVmseSe7N/4K+S+IVtfO7XKIvswSvqdyklbOtsmVh5PNSJsJ1a
+   BobsyaLkwJEvdxPbBxsflLOTkmVi7qZESYc3GI/gztCb5pmJfyiml9G/i
+   dq1ihffPdAPc1rtJYwx8fnUWRNRWkb+27e9H7Ea1sx1SCGE0PczdNAHkt
+   w==;
+X-CSE-ConnectionGUID: tNJuxyPwSZ6E1AyAfnKJVw==
+X-CSE-MsgGUID: x24pF/jpTiq57zRJsZP1GA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="80135671"
+X-IronPort-AV: E=Sophos;i="6.21,188,1763452800"; 
+   d="scan'208";a="80135671"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2025 03:54:06 -0800
+X-CSE-ConnectionGUID: FMJIFOZzTRGmupU6isp6WA==
+X-CSE-MsgGUID: vWIk7zn3QT67vm8gW7fs3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,188,1763452800"; 
+   d="scan'208";a="206260072"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.114])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2025 03:54:01 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 30 Dec 2025 13:53:58 +0200 (EET)
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+cc: Linux ACPI <linux-acpi@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, 
+    Zhang Rui <rui.zhang@intel.com>, Chen Yu <yu.c.chen@intel.com>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    Linux PCI <linux-pci@vger.kernel.org>, Alex Hung <alexhung@gmail.com>, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    AceLan Kao <acelan.kao@canonical.com>
+Subject: Re: [PATCH v1] ACPI: scan: Use resource_type() for resource type
+ checking
+In-Reply-To: <12814730.O9o76ZdvQC@rafael.j.wysocki>
+Message-ID: <e555049f-1170-9e7e-7564-1fe541c33dd8@linux.intel.com>
+References: <12814730.O9o76ZdvQC@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-565337332-1767095638=:985"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-565337332-1767095638=:985
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-"Nícolas F. R. A. Prado" <nfraprado@collabora.com>:
-> While I understand it might be inconvenient that this is the only file
+On Tue, 30 Dec 2025, Rafael J. Wysocki wrote:
 
-As well as I understand, it is intended that more files will be added
-to tools/testing/selftests/devices/boards with various vendor names and
-product names.
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>=20
+> To follow a well-established existing pattern, use resource_type() for
+> resource type checking in acpi_scan_claim_resources().
+>=20
+> No intentional functional impact.
+>=20
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>=20
+> This is a follow-up to
+>=20
+> https://lore.kernel.org/linux-acpi/7888874.EvYhyI6sBW@rafael.j.wysocki/
+>=20
+> which is present in linux-next.
+>=20
+> ---
+>  drivers/acpi/scan.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -2624,7 +2624,7 @@ static void acpi_scan_claim_resources(st
+>  =09=09if ((res->flags & IORESOURCE_DISABLED) || res->end < res->start)
+>  =09=09=09continue;
+> =20
+> -=09=09if (res->flags & IORESOURCE_IO) {
+> +=09=09if (resource_type(res) =3D=3D IORESOURCE_IO) {
+>  =09=09=09/*
+>  =09=09=09 * Follow the PNP system driver and on x86 skip I/O
+>  =09=09=09 * resources that start below 0x100 (the "standard PC
+> @@ -2635,7 +2635,7 @@ static void acpi_scan_claim_resources(st
+>  =09=09=09=09continue;
+>  =09=09=09}
+>  =09=09=09r =3D request_region(res->start, resource_size(res), regionid);
+> -=09=09} else if (res->flags & IORESOURCE_MEM) {
+> +=09=09} else if (resource_type(res) =3D=3D IORESOURCE_MEM) {
+>  =09=09=09r =3D request_mem_region(res->start, resource_size(res), region=
+id);
+>  =09=09} else {
+>  =09=09=09continue;
+>=20
+>=20
+>=20
 
-So I did some further research. I grepped Linux source and found some
-vendor names and product names with undesirable chars.
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
-Let's go.
+--=20
+ i.
 
-/rbt/linux/arch/x86/kernel/apm_32.c:2097:                       DMI_MATCH(DMI_PRODUCT_NAME, "PC-PJ/AX"),
-/rbt/linux/arch/x86/kernel/reboot.c:396:                        DMI_MATCH(DMI_PRODUCT_NAME, "PowerEdge 300/"),
-/rbt/linux/drivers/platform/x86/samsung-laptop.c:1633:          DMI_MATCH(DMI_PRODUCT_NAME, "R40/R41"),
-
-Here we see / chars, which are simply forbidden in Linux filesystems.
-
-I also found a lot of others undesirable chars, such as "(" ")" "'" "&" "#" "*",
-which surely will break a lot of tools. In particular, "'" is used in bash
-to quote something verbatim.
-
-Here is extended result of my research:
-https://zerobin.net/?d1f2655a979acd3f#oBhwIedQvBL/iB9Src65aRYuyjaye2GQBNL3+6yfvGg=
-
-Unfortunately, I'm not sure which of these names refer to whole "board",
-and which of them refer to merely some particular device, such as USB device.
-
-BUT for 3 instances of / chars given in the top of this email I'm totally
-sure that they refer to whole "boards", so we have at least 3 totally
-legitime cases, where we have / in product name, which simply cannot appear
-in UNIX filesystem at all.
-
-So, conclusion: if it is indeed intended that further examples of boards
-will be added to tools/testing/selftests/devices/boards, then they
-will contain all sorts of undesirable chars and notably "/", which cannot
-appear in filename at all.
-
-For all these reasons I ask you to change name convention for this directory.
-For example, use some kind of sanitized vendor/product names.
-
-> there are
-> tons of dt-binding filenames containing commas in the tree.
-
-Okay, I agree with this point. There already are a lot of files with commas.
-But I still don't like spaces and all sorts of characters, which are present
-in DMI vendor names and product names ( "(" ")" "'" "&" "#" "*" "/" ).
-
--- 
-Askar Safin
+--8323328-565337332-1767095638=:985--
 
