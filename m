@@ -1,97 +1,107 @@
-Return-Path: <linux-pci+bounces-43833-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43834-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 808F9CE9478
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 10:59:47 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE8CDCE94D2
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 11:07:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2C2F03012BF5
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 09:59:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E983B300419B
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 10:06:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 905E62FD7BC;
-	Tue, 30 Dec 2025 09:59:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78B4E2D7DD7;
+	Tue, 30 Dec 2025 10:06:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqwrhjIp"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ltv95GZN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8A12FD1B5;
-	Tue, 30 Dec 2025 09:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09612D837C
+	for <linux-pci@vger.kernel.org>; Tue, 30 Dec 2025 10:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767088781; cv=none; b=Sp2Y9k3LDPl+4ylzo/aMnyP/rCgx3EjjdKj+7sbWHNAFmt2EOaT4ZemfRwHn8cQXYa7yyatWtvt7eL968WiWOM6m49JZqvonc3vpyW7C3poacVmWhsCSuNOT2BMCN7hYCnLEWKL4BZi4chPOh3lJu84+sHdq6rquHupOaYiIDH0=
+	t=1767089212; cv=none; b=UWmHc/U6y8eV+cBoNDxsehTVlijNv2Y81lBuqebJ5Mb0kjgTJOu/9xdnYVEniJypNEq7Jir2SRnbZa5S2DLJ98AHVtXz6FCmOMpgqzTjMXEpymyyE7c/sSqCkZZRvgoEgvnmHcfcPdH3A5C087xZBtjn5eF6gjlC0P1Rrzclb20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767088781; c=relaxed/simple;
-	bh=WQMM7B12M9tIAmaZVZs3gPdILEXJR91D0xsOKWnW8Xk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uOBIoTI4VU4yi8Xbd1nVlYnaY7y/LFOo6yh0y2lWP3DqeHLKYbPYfJGDQAIThxjz81WR1jSJ9MeMQKPO1xo8B18PNnIayxn/HEJHwhYJln9B/QsLP7T5heGnkQ3gtEBIupSJfPEDBC9C8fcWdi3dt/1HlblTkCATAvP1W1LLJTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqwrhjIp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 805D4C4CEFB;
-	Tue, 30 Dec 2025 09:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767088780;
-	bh=WQMM7B12M9tIAmaZVZs3gPdILEXJR91D0xsOKWnW8Xk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oqwrhjIpRrmUHbOHO5zyLEza02aPUJI3mccQhmKPtxIZJ9a/63KUmdx1YAbxcCL7u
-	 KTnKKlvrtH6j5FiVziTV3W29DE5n+FhJXL9b08FKGcm2M2LaBVIE1sp1k543D6KE09
-	 m3ys6JQk//QzYdKUsn2kDO9mgP2ubbHdsrROvC8IHIik/q0SRFbCwm3aNm1PHCrMqV
-	 b++Jl1KwixUXFPjevpwrPqzaAO5G+fMBMQNemV31K9hVERlEbGKfrF6rIT+bSDxns3
-	 qaPreNpkBNr+8agQGhRF8nS4SZWwIfG0sqJRaYlrNUyo5td/4cVhzzYGfPOL7HbLHC
-	 g+0h79GzwpqoA==
-Date: Tue, 30 Dec 2025 15:29:32 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Damien Le Moal <dlemoal@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-	linux-pm@vger.kernel.org, linux-ide@vger.kernel.org, Frank Li <Frank.Li@nxp.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v4 0/5] PCI: Add initial support for handling PCIe M.2
- connectors in devicetree
-Message-ID: <jhykqitumvq6jr63euamjdli4zntxbxasepx3g5nn4m45fu4ou@m2v44lk7lbby>
-References: <20251228-pci-m2-v4-0-5684868b0d5f@oss.qualcomm.com>
- <aVOcgDeOejO9m1zE@ryzen>
+	s=arc-20240116; t=1767089212; c=relaxed/simple;
+	bh=o+QAyah/e9NJS11NX3XpsKORay4rz45Nrje/xC1EopM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WGOlTQqwcxHfKQrdIG6crVzLiBiTU94s5ss/Bn81VrcjBCe1+m7PvBXYGYwr9iA1nBEeJYJGwr1QX3DqOVJpuXTNCVuz8PB9q8V7g63hSPDywRfxV793s07LRTXaisNkiih5DuE3pM+Ag+MfiwQxPGAmWS3h2dKldg6o0jCBX3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ltv95GZN; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5942b58ac81so8057594e87.2
+        for <linux-pci@vger.kernel.org>; Tue, 30 Dec 2025 02:06:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1767089206; x=1767694006; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o+QAyah/e9NJS11NX3XpsKORay4rz45Nrje/xC1EopM=;
+        b=Ltv95GZNWAEx0oXOQTeLtPV46YRu/oJJ/l+UEVNWfT/PQvD++X64mQfXJLpHPe9ZpB
+         2n3RbKvQ5ZkAYFOsWQztym05Vipr0l5K5Yx54kRQoQ5p7AQHga3TSzDZMonsCcUln6N6
+         ZMzYppOtl4F4lpLXPDLtqvyNCFylD7HEAhcOfBXD/D+BOJXtFj7VmHxY01yJCT02nrEE
+         9/v/dUE0D8fDiFVMHxsjds9eWuxZWTwJMlIfy3AYymzHsdtvuAvXblAZfpvb3hkKIkEY
+         dZ99r4s7HuVypAwgzPfsEuiAcu6woy9WeB3Q6hzjotjE99Z0jApj5Hti162BevmJ8GYW
+         Pz+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767089206; x=1767694006;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=o+QAyah/e9NJS11NX3XpsKORay4rz45Nrje/xC1EopM=;
+        b=N6/jmW7/9+VipP01lezSCQj9eODj7K0XBPTBA4KLSiqCNlI52jLmTjiJqRPHzrTQmg
+         5/AnK/KwazSmPpLI0vAwBMY16q9fwhsWzNVfv05oJaZ6PFpcZ0NjaGE9B0JrE8J7U6rX
+         3v+7kFBKEjIkQ7w367rt8M+i44Qn5MxqIjN4H7a3m21sWeR7RLinE1A8rY5P+85kh7ms
+         tUwlehUtsG6/SxjJtIIOtFX3SVIWAiraYxoIWVkAcNftSH5EdKmZ+OnJlALgtfbL39H9
+         1sQCRDf7RX2TpbnozD/NlU6ZbnDy3/TMSlhsPhlB1X5o2BODgvuiAxmHcC/OaBpJBTHD
+         gaag==
+X-Forwarded-Encrypted: i=1; AJvYcCWQzs76ol8pIeWntyiRsQfCJTtHthqHJj5/nt7mhy5XVG8hHWZjanofsnnkbzKO2BV4p/Z+K7DS+o4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGCdD78/jK+p2KraGjINY8AkQHJMn8IrhU4vOUWWkfJvB0WITc
+	WRkBCyIWdiRXASGs+6RSKfUbkZ/F7DwkyM0LK7RPZf6rH2Tm5RPISwnIp5Sk9GUcpaCVgof2NvL
+	L8WnMbQO26T3FqJtbD8ciW6Gh+aRfdZA2v6F+Jypy4Q==
+X-Gm-Gg: AY/fxX4u4AKHHCgD/J7X302ZVZeUCYhmZgce7SHCbH66LhZHhaZu3O+UQ1j9FzTC58y
+	rIpfZ+iaOelyMfV3skcpwn5cBWnIFlDk15Idd2g7Vypgp5m9ULgUxaLBnoOeDMfUZ1FGVs/IjZm
+	ufxZHQIL94VpgB0f3POkZC1SDLlt/aKZPmVFvjC7picgTN0DBETyax2g+oQsHJK7uMcu6Jd/jo3
+	heIkh75CSAITvCqaPjvwlYcVQSCZz1kj7Hxxmi5v0nmF8+YGsfmv0+r7CTe7aCehU7p+tEhMPEF
+	XG5bgTuaLRYFtSjFOISmo6bj5/ya
+X-Google-Smtp-Source: AGHT+IEptJ9N0DNz+gItThuXT73C4+wuZb1+z9PtD7OBSI40hjPfReT36csaJ6oHgrtPI6VbFz+xkGhO3xEP4JLU36I=
+X-Received: by 2002:a05:6512:3b9c:b0:594:34ae:1446 with SMTP id
+ 2adb3069b0e04-59a17deb93amr10965575e87.41.1767089206425; Tue, 30 Dec 2025
+ 02:06:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aVOcgDeOejO9m1zE@ryzen>
+References: <20251107143624.244978-1-marco.crivellari@suse.com> <20251229164059.GA65997@bhelgaas>
+In-Reply-To: <20251229164059.GA65997@bhelgaas>
+From: Marco Crivellari <marco.crivellari@suse.com>
+Date: Tue, 30 Dec 2025 11:06:35 +0100
+X-Gm-Features: AQt7F2rczV24JRCfL1l9zvRnghblqczv_JCUgmsJPUM-oL-RIqtUJrQqHU5a3u0
+Message-ID: <CAAofZF45jsHo2G77MEMV4VES3HFnLQ5agH6MFGe9-yi-Me5K_A@mail.gmail.com>
+Subject: Re: [PATCH] PCI: shpchp: add WQ_PERCPU to alloc_workqueue users
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Michal Hocko <mhocko@suse.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Manivannan Sadhasivam <mani@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 30, 2025 at 10:33:52AM +0100, Niklas Cassel wrote:
-> Hello Mani,
-> 
-> On Sun, Dec 28, 2025 at 10:31:00PM +0530, Manivannan Sadhasivam wrote:
-> > The Mechanical Key M connector is used to connect SSDs to the host machine over
-> > PCIe/SATA interfaces. Due to the hardware constraints, this series only adds
-> > support for driving the PCIe interface of the connector in the kernel.
-> 
-> Since this series does not add any support for SATA, do we really want to
-> modify the SATA device tree binding?
-> 
-> I know that device tree describes the hardware, but if there is no software
-> that makes use of this, the SATA DT binding change feels a bit unnecessary.
-> 
-> Do we perhaps want to defer modifying the SATA DT binding change until the
-> corresponding change in software is added?
-> 
+On Mon, Dec 29, 2025 at 5:41=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+> Squashed with similar patches [1] and applied on pci/workqueue for
+> v6.20, thanks!
+>
+> See https://lore.kernel.org/r/20251229163858.GA63361@bhelgaas
 
-I'll defer the question to Rob since he was the one who asked for the SATA
-binding change:
+Many thanks!
 
-https://lore.kernel.org/all/20251208191110.GA2473021-robh@kernel.org
+--=20
 
-- Mani
+Marco Crivellari
 
--- 
-மணிவண்ணன் சதாசிவம்
+L3 Support Engineer
 
