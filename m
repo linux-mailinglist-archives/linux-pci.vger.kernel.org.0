@@ -1,88 +1,159 @@
-Return-Path: <linux-pci+bounces-43841-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43842-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95D18CE9896
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 12:31:21 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6726ECE98CF
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 12:37:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 556A9301B806
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 11:31:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 692EC3016907
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 11:37:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F32E1C862E;
-	Tue, 30 Dec 2025 11:31:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 628A82E22AA;
+	Tue, 30 Dec 2025 11:37:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tzz78W1l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ase3+yPC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70313322A;
-	Tue, 30 Dec 2025 11:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDBF2D94AB
+	for <linux-pci@vger.kernel.org>; Tue, 30 Dec 2025 11:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767094278; cv=none; b=QL3d9NEc9zoGAQsJPA/evQZUxL/dKaI+2Bj6HRsl4Ekz7DLjslJU/WcAJW/ivdU5uvU3mo6znjbA3TpAtxv8Ofq9fzDuzdnELkJ+oGis1yLHgSWqeEX0bKcEU0856iQgT5C73kLCfJx3j+PYOghc84k7qjjcFjat0cl3aLZLLG8=
+	t=1767094624; cv=none; b=fnVjjLs22POe9aORq+QZBG+dMH+CPUPFvNvUOriborsfCx12pw+z/pvu4hObgZCr9ydYLhpzOMTSZcOxdk6g4gUGaiXhd1fymVrM7k6uHOBmPEnenYYt3IFgdEgSwAQkdPqtXSJpt9mWrn58m1QUPM+bOnFrI6xiVwzhIdys/ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767094278; c=relaxed/simple;
-	bh=ejkC56H2S5iESuymhtWNBvnu+CGEka22f7apesNmaVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PBJRGk1UoBSLxz0bCkKfD+Jc/hz5qWO7yMBlPlDJjLVt2Ela9t5rCpGiFw8B+8lMLDMnhviQsxFqx6N2iZs179AJz5rCcXhIo1mK/odlXZ/kWjtCo2RfFGojXEv2pDZ7IkIIpCYqoisDOx0QsWZEu3268OqN8n3IRk/nDqV7T6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tzz78W1l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B199DC4CEFB;
-	Tue, 30 Dec 2025 11:31:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767094277;
-	bh=ejkC56H2S5iESuymhtWNBvnu+CGEka22f7apesNmaVE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Tzz78W1luFSUbJSDiWh50xF9CIlvg8VrZBcaum2mChvCxPSM1enj0dfiGbIyCdUjY
-	 rWG2V0z5JAFbp55J4fUNyOlI5jb7r7Dze442ey3wYQXoQaEFFdDq8KMPe89efSyRYa
-	 9iZc2bk5w9z/IEWTEp3o5esaXIFbb4I4K7cMEm+Ku4mboxxEu2Fnqjs65KdQ/72EwY
-	 iLKH9CVIHtHvX3oLeO0sjtdhZGMNuXTxBj99vfassC6zig88kCwvP2R0cZsWEILerh
-	 MpNkoofZTYff72pTGiLVjhzkDh9K76tPZyj/FMHXHjJCy9Vn5pALNzorBY20DPoux3
-	 Umqc3ncNyY1xA==
-Date: Tue, 30 Dec 2025 12:31:11 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: manivannan.sadhasivam@oss.qualcomm.com
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Chen-Yu Tsai <wens@kernel.org>,
-	Brian Norris <briannorris@chromium.org>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	Alex Elder <elder@riscstar.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Chen-Yu Tsai <wenst@chromium.org>
-Subject: Re: [PATCH v3 0/7] PCI/pwrctrl: Major rework to integrate pwrctrl
- devices with controller drivers
-Message-ID: <aVO3_32KT6HfOUAZ@ryzen>
-References: <20251229-pci-pwrctrl-rework-v3-0-c7d5918cd0db@oss.qualcomm.com>
+	s=arc-20240116; t=1767094624; c=relaxed/simple;
+	bh=8n8WP6t0YcDAYZ7kg3FzA+7B5fDmDzd8BrdVQJVpcRs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kZ04g0wut2oNGJPNCGGi+9C8VlOMtytkjofHLLjr9Grw0YbEER35lSUZCJMTcTu4GDtbKcdK3lObTC6WFNvD0mh8sghRyyd2ZvdK3uiXslEyQtFnAbvzJ4QyQxRgRxQddD+kjKuPXXK2o3Me8/2GmazjhYNuEIgqbFSVRC4x2Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ase3+yPC; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-38105ad3720so81924341fa.0
+        for <linux-pci@vger.kernel.org>; Tue, 30 Dec 2025 03:37:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767094621; x=1767699421; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4CmAFwrYbDuyMoa/BPWjtX3r2mUHX5vgd3DvqkBcFzk=;
+        b=Ase3+yPCgI2K/7zwY6HeHLVpt0MTzbeVu+fQe7YltTVnJsipj/+VnLDpzD9gUutvUE
+         If0ARIlIQGQPtaxrMb5538uWv0vFWABUlrI/mtJLxGZy4DvW8RWGyi7onFwFQr+cpvGX
+         5NQDZscrk7FIL3gtbRloK+ymD9Xiqdt//Of/zWl2Si6mcZmb+PTaEeXsdJOVlRzAHcCr
+         bIsjN8Q/NPw6xueIx78sUHN516LUBT5PqD1MJYcFCpBI5pWJHsdffSO64jdjQ36dEQ8/
+         DQ8am0zxmUmpmW2MztQ3a4z8f/wd84yf6AG53B3pXgQG65hnO6W0ih3eFgeIk31sSLE0
+         AH4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767094621; x=1767699421;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4CmAFwrYbDuyMoa/BPWjtX3r2mUHX5vgd3DvqkBcFzk=;
+        b=kWX7Y+omJsKX1hOOWZKoBJ/b5aU+u/K5OGwe34lC3SwbCxELlzzDOVO8Mg0OFObD3H
+         GoxbCqoZtltONdaN0tWWad6pgpznK1gdkPcK8Kag1PLTAWHpIAqZIR3qERRKARr8yXBi
+         klVj7yoIMLa3A9uIVXbioK/9h+5v0BwqWAbuqdnUyRfkfdGelSa+BG4CjRQW3EhXwl75
+         fHRgtsTmiKziTZJenxl7zcWsjt2+DuHdbJ2WvxUQp2Rh4EnAyABi/AXpopWuk6Ajxsr4
+         CrGE8h0taZNi2CRWNUNsR7nViLf8MwDYV+aUSFSNU6uvcRjXsLxFr3qAmE6L7ybJ9FFN
+         evJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVaZuCrvLcRO9qicjZrTbHCFxCQJhtM652DyevdSbF58T9vowhVBKbltu7SWMhI3IU5zdK6l+mEGKk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoJdJtBNReT8zvaJDrlMQsr51e9rC6JkRrLXK4N8/cdyGR+HHO
+	Qd99FDIlJn8skr0f8UlTvx5UIvOqOZLZ5sGoTOiruRw18nCgtYPOLEtB
+X-Gm-Gg: AY/fxX65hA21wHhKvzvMdY1e/hr83EBFjMRTqp8YUWjH9LtP2zFi5VtMQns9GAQFOqu
+	8H06fuX3UrMYHoqwBCFodXI9pcWfhYrC3V9VLCDj9bNz/rBcgbfligEeNoBVb3/6vORAVbl3nBe
+	tFtYuJ8qf3N9ap44u1QIW9ne3Pnv/cyxl8oT4Z5KFbVuqVxbcBz9CvhVs2YVJPdMq7K2UIvh3ie
+	Dg/aolAfbfhQ+hMSvlnvxWaD5FAo3bK6Lp9ayOlyPNGnSot0UI0yPxuPAd72XGTIdjiUFXlXR48
+	6X18qL5rx+GQQ4OZUyhs7VrX6QnQ8WKjzj1urwCNGiHqCToWQ3NkrdeMNGTbA7cb6B+bhHZbUG5
+	2LyTl48W0tkhWLlGr+xk2QQumBrK2c+BCKIm2K5zb4SeLnuMISen76bdJUgUTzIhz9GQ3T37/BW
+	AJwbcIwfDo
+X-Google-Smtp-Source: AGHT+IGF3gFGUozf4G9zt9Om+vstcNbw0h6yAp0aZ++ChCDii30yTV/4I9FiaTW4YuEjPjrGwT/sFw==
+X-Received: by 2002:a05:651c:f02:b0:37f:8bb4:88 with SMTP id 38308e7fff4ca-381216bd8cfmr102647771fa.41.1767094620457;
+        Tue, 30 Dec 2025 03:37:00 -0800 (PST)
+Received: from localhost ([194.190.17.114])
+        by smtp.gmail.com with UTF8SMTPSA id 38308e7fff4ca-381224de728sm89285781fa.5.2025.12.30.03.36.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Dec 2025 03:37:00 -0800 (PST)
+From: Askar Safin <safinaskar@gmail.com>
+To: nfraprado@collabora.com
+Cc: Tim.Bird@sony.com,
+	bhelgaas@google.com,
+	dan.carpenter@linaro.org,
+	davidgow@google.com,
+	devicetree@vger.kernel.org,
+	dianders@chromium.org,
+	gregkh@linuxfoundation.org,
+	groeck@chromium.org,
+	kernel@collabora.com,
+	kernelci@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	robh+dt@kernel.org,
+	saravanak@google.com,
+	shuah@kernel.org
+Subject: Re: [PATCH v4 3/3] kselftest: devices: Add sample board file for XPS 13 9300
+Date: Tue, 30 Dec 2025 14:36:16 +0300
+Message-ID: <20251230113655.1817727-1-safinaskar@gmail.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <78b4f1f60563fc854f5f4a54b42e0bac60715070.camel@collabora.com>
+References: <78b4f1f60563fc854f5f4a54b42e0bac60715070.camel@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251229-pci-pwrctrl-rework-v3-0-c7d5918cd0db@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello Mani,
+"Nícolas F. R. A. Prado" <nfraprado@collabora.com>:
+> While I understand it might be inconvenient that this is the only file
 
-On Mon, Dec 29, 2025 at 10:56:51PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> **NOTE**: With this series, the controller driver may undergo multiple probe
-> deferral if the pwrctrl driver was not available during the controller driver
-> probe. This is pretty much required to avoid the resource allocation issue. I
-> plan to replace probe deferral with blocking wait in the coming days.
+As well as I understand, it is intended that more files will be added
+to tools/testing/selftests/devices/boards with various vendor names and
+product names.
 
-It sounds like you want to base that upcoming series on top of this series.
+So I did some further research. I grepped Linux source and found some
+vendor names and product names with undesirable chars.
 
-Considering that we are only at -rc3, would it perhaps be a good idea to
-wait for you to implement the blocking wait, so that it can be part of
-this series, to avoid the additional code churn?
+Let's go.
 
+/rbt/linux/arch/x86/kernel/apm_32.c:2097:                       DMI_MATCH(DMI_PRODUCT_NAME, "PC-PJ/AX"),
+/rbt/linux/arch/x86/kernel/reboot.c:396:                        DMI_MATCH(DMI_PRODUCT_NAME, "PowerEdge 300/"),
+/rbt/linux/drivers/platform/x86/samsung-laptop.c:1633:          DMI_MATCH(DMI_PRODUCT_NAME, "R40/R41"),
 
-Kind regards,
-Niklas
+Here we see / chars, which are simply forbidden in Linux filesystems.
+
+I also found a lot of others undesirable chars, such as "(" ")" "'" "&" "#" "*",
+which surely will break a lot of tools. In particular, "'" is used in bash
+to quote something verbatim.
+
+Here is extended result of my research:
+https://zerobin.net/?d1f2655a979acd3f#oBhwIedQvBL/iB9Src65aRYuyjaye2GQBNL3+6yfvGg=
+
+Unfortunately, I'm not sure which of these names refer to whole "board",
+and which of them refer to merely some particular device, such as USB device.
+
+BUT for 3 instances of / chars given in the top of this email I'm totally
+sure that they refer to whole "boards", so we have at least 3 totally
+legitime cases, where we have / in product name, which simply cannot appear
+in UNIX filesystem at all.
+
+So, conclusion: if it is indeed intended that further examples of boards
+will be added to tools/testing/selftests/devices/boards, then they
+will contain all sorts of undesirable chars and notably "/", which cannot
+appear in filename at all.
+
+For all these reasons I ask you to change name convention for this directory.
+For example, use some kind of sanitized vendor/product names.
+
+> there are
+> tons of dt-binding filenames containing commas in the tree.
+
+Okay, I agree with this point. There already are a lot of files with commas.
+But I still don't like spaces and all sorts of characters, which are present
+in DMI vendor names and product names ( "(" ")" "'" "&" "#" "*" "/" ).
+
+-- 
+Askar Safin
 
