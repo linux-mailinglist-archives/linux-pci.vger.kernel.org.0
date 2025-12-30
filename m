@@ -1,256 +1,312 @@
-Return-Path: <linux-pci+bounces-43861-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43862-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B51BCEA348
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 17:43:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 53AA0CEA3B7
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 17:54:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AF33630380D1
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 16:41:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 712373014D97
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 16:54:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34CDB21D3CD;
-	Tue, 30 Dec 2025 16:41:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01B06324B24;
+	Tue, 30 Dec 2025 16:54:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QLcNoPF2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C81TwN0I"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C198137923
-	for <linux-pci@vger.kernel.org>; Tue, 30 Dec 2025 16:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B9D326950;
+	Tue, 30 Dec 2025 16:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767112903; cv=none; b=mPklb7CC/FVPw8gcrSj8qxmpQo28Uem0PA7fU/zVwFHgK8TiM9mezHSB3oG/g09Lwc7xixadWYJcu7y4lwKlSbGKQJ4nT1SX6hPWWhjWYgs7kQusX9+CJwkBOyi+paePBSq0aqBMmqIsMNuwFXEfwe5znuJ+o3RSuCgAS/qhTQM=
+	t=1767113669; cv=none; b=o+TmnvM+3VLGDaI4CdDvL3nUDQTkNUSweC1D0UsMA/8vH6s6OIaN2XJd0Vr1PntSq99UcUsKgzQgNSXa3MBc9rNoktmNCoGFC+NJf1J2ViG9OMON4PnrXO2LcVlVqiFqq/9c/dXWX2/hitEwx5HIlekKErckN/y891sg/WyeP50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767112903; c=relaxed/simple;
-	bh=yq84QaksitgbvmNnwXcBx9M4+wXJJX04FVEh4iuW/kM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=MWEuIHTygx/bg1/021rUWHC2vs2/syX8Xq9K41imsKIP/2tHc7aKZgTYePeOhk3YSNxSZElZ1QG4NHNKAPjFL2k8A3HiNkT2BChPf15dtvevkcL0z95207yZiRbsYaXaPUEgCqCtrpUepkSndZIZw0x350vSu3gv3Dzh6K67Big=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QLcNoPF2; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767112901; x=1798648901;
-  h=date:from:to:cc:subject:message-id;
-  bh=yq84QaksitgbvmNnwXcBx9M4+wXJJX04FVEh4iuW/kM=;
-  b=QLcNoPF2WmKJrGCVxJCpHRlyBHcJQVUDmBUrBPeA006BN3eiEhZI+0rP
-   V9v+rPFrdW6rEceIRJRFl8l5KFIj2Pyw0P3UbXzh2zAMr55YdIOcYT1cr
-   SN9ms2UcUkV6gH1gAQaBktR0f8jq5JPwsiK7RzPnGEQmJQ78Qbcqwa/M6
-   ZbFiNOD+uFfodHXGT08OJWnpYMnKvsPKXwLM3UUP577wv4LulB/LmQaOd
-   g4YFBs3vuoIMyfG4cXe5JdKqVuKH48dL1lCV5sTlNpmx62pitJDTbhNOo
-   wEKsmP+Ad3e2KjnWFSpS+IBJ4XrRTU2kn6RpsQiwK9RMUDawwHZqNC8TU
-   w==;
-X-CSE-ConnectionGUID: zRKrcRFnQJ2CYbGnjiZiqg==
-X-CSE-MsgGUID: HbAEiZbcRteN90o7RYGxcw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11657"; a="56274107"
-X-IronPort-AV: E=Sophos;i="6.21,189,1763452800"; 
-   d="scan'208";a="56274107"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2025 08:41:40 -0800
-X-CSE-ConnectionGUID: DEam4SUNTaGG7VDIHL4y0g==
-X-CSE-MsgGUID: 18z0chigQbyqkkjWeRPUTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,189,1763452800"; 
-   d="scan'208";a="238686026"
-Received: from lkp-server01.sh.intel.com (HELO c9aa31daaa89) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 30 Dec 2025 08:41:39 -0800
-Received: from kbuild by c9aa31daaa89 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vacmu-000000000Xo-3PlF;
-	Tue, 30 Dec 2025 16:41:36 +0000
-Date: Wed, 31 Dec 2025 00:41:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:endpoint] BUILD SUCCESS
- 7c5c7d06bd1f86d2c3ebe62be903a4ba42db4d2c
-Message-ID: <202512310026.I2vNboel-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1767113669; c=relaxed/simple;
+	bh=vnL8kfRl+GH4yPapjEPyZLI8PJpzYRw1llbZVWshViE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WZW0uq6ow0UiPaVuCPyHfDIrzCv9ruZvXXLABAZfoGFq68rQXoSt1dpSWjX9ZamSmjMYCl19GnYFZ6lorfxcAEbQfTsH5DCadslPotRQwKqiumAZNm16aPU+XKLqMw1LPlopL0zNw6HuYKAigJQ5uZydfUy890+uYV0AO/7rZLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C81TwN0I; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57A7BC4CEFB;
+	Tue, 30 Dec 2025 16:54:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767113669;
+	bh=vnL8kfRl+GH4yPapjEPyZLI8PJpzYRw1llbZVWshViE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C81TwN0IFwymVNw7dw2eIX7t1fWSG3OEXuxt8QZRG5G2oTxxMHWsecfZ9g+FE2+gT
+	 QWd5BbZn8y2PwcOqGIC3ZGeva7gJT0OPvaSdRZSog5hRGHmXxlOLnRVKW5XC8ywJAT
+	 GXhfjoX4ICCpgYkogt0z66rzHtrBiPX5lajo9NwTsXBmkAcck84y4peDmkbRYFkCwT
+	 UKqj6F1NLXSknBcRhChwCg5IvYj32ZekyJF3j2eUsRfYZroLS/oFQT64vDNNSdPEWF
+	 sNNsHByfHNiggLn6PhIROKTVt0qC8AsMLxuM1MyZLXvNioR1QYN9wFIZHCywEJEPL4
+	 Vrh5RyFSJBLlQ==
+Date: Tue, 30 Dec 2025 22:24:20 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+	Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Christoph Hellwig <hch@lst.de>, Niklas Cassel <cassel@kernel.org>, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-nvme@lists.infradead.org, imx@lists.linux.dev
+Subject: Re: [PATCH 09/11] dmaengine: dw-edma: Use common
+ dw_edma_core_start() for both edma and hdmi
+Message-ID: <lo5yj5eaqny4m5m4dxic4i2hnftnlgs32loed7x7wlwxpl72lj@bccj3ayuuyf5>
+References: <20251212-edma_ll-v1-0-fc863d9f5ca3@nxp.com>
+ <20251212-edma_ll-v1-9-fc863d9f5ca3@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251212-edma_ll-v1-9-fc863d9f5ca3@nxp.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git endpoint
-branch HEAD: 7c5c7d06bd1f86d2c3ebe62be903a4ba42db4d2c  PCI: endpoint: Avoid creating sub-groups asynchronously
+On Fri, Dec 12, 2025 at 05:24:48PM -0500, Frank Li wrote:
+> Use common dw_edma_core_start() for both edma and hdmi. Remove .start()
 
-elapsed time: 1428m
+s/edma/eDMA
+s/hdmi/HDMA
 
-configs tested: 165
-configs skipped: 4
+Here and below.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> callback functions at edma and hdmi.
+> 
+> HDMI set CYCLE_BIT for each chunk. Now only set it when first is true. The
+> logic is the same because previous ll_max is -1, so first is always true.
+> 
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20251230    gcc-12.5.0
-arc                   randconfig-002-20251230    gcc-9.5.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-22
-arm                   randconfig-001-20251230    gcc-8.5.0
-arm                   randconfig-002-20251230    gcc-8.5.0
-arm                   randconfig-003-20251230    gcc-10.5.0
-arm                   randconfig-004-20251230    gcc-8.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20251230    gcc-15.1.0
-arm64                 randconfig-002-20251230    gcc-14.3.0
-arm64                 randconfig-003-20251230    clang-22
-arm64                 randconfig-004-20251230    clang-20
-csky                             allmodconfig    gcc-15.1.0
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20251230    gcc-15.1.0
-csky                  randconfig-002-20251230    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                             defconfig    clang-22
-hexagon               randconfig-001-20251230    clang-22
-hexagon               randconfig-002-20251230    clang-18
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20251230    gcc-14
-i386        buildonly-randconfig-002-20251230    clang-20
-i386        buildonly-randconfig-003-20251230    clang-20
-i386        buildonly-randconfig-004-20251230    clang-20
-i386        buildonly-randconfig-005-20251230    clang-20
-i386        buildonly-randconfig-006-20251230    clang-20
-i386                                defconfig    clang-20
-i386                  randconfig-001-20251230    gcc-14
-i386                  randconfig-002-20251230    clang-20
-i386                  randconfig-003-20251230    clang-20
-i386                  randconfig-004-20251230    clang-20
-i386                  randconfig-005-20251230    clang-20
-i386                  randconfig-006-20251230    clang-20
-i386                  randconfig-007-20251230    clang-20
-i386                  randconfig-011-20251230    gcc-14
-i386                  randconfig-012-20251230    gcc-14
-i386                  randconfig-013-20251230    clang-20
-i386                  randconfig-014-20251230    gcc-12
-i386                  randconfig-015-20251230    gcc-14
-i386                  randconfig-016-20251230    gcc-14
-i386                  randconfig-017-20251230    gcc-12
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251230    gcc-15.1.0
-loongarch             randconfig-002-20251230    clang-22
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                             allmodconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                             allyesconfig    gcc-15.1.0
-nios2                         10m50_defconfig    gcc-11.5.0
-nios2                            allmodconfig    gcc-11.5.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251230    gcc-8.5.0
-nios2                 randconfig-002-20251230    gcc-9.5.0
-openrisc                         allmodconfig    gcc-15.1.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                generic-64bit_defconfig    gcc-15.1.0
-parisc                randconfig-001-20251230    gcc-15.1.0
-parisc                randconfig-002-20251230    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                     asp8347_defconfig    clang-22
-powerpc                 mpc8315_rdb_defconfig    clang-22
-powerpc               randconfig-001-20251230    gcc-10.5.0
-powerpc               randconfig-002-20251230    gcc-12.5.0
-powerpc64             randconfig-001-20251230    gcc-14.3.0
-powerpc64             randconfig-002-20251230    clang-22
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20251230    gcc-15.1.0
-riscv                 randconfig-002-20251230    gcc-15.1.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20251230    gcc-14.3.0
-s390                  randconfig-002-20251230    clang-22
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                         apsh4a3a_defconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                          polaris_defconfig    gcc-15.1.0
-sh                    randconfig-001-20251230    gcc-13.4.0
-sh                    randconfig-002-20251230    gcc-12.5.0
-sh                          rsk7269_defconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251230    gcc-8.5.0
-sparc                 randconfig-002-20251230    gcc-11.5.0
-sparc64                          allmodconfig    clang-22
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20251230    clang-22
-sparc64               randconfig-002-20251230    clang-20
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251230    gcc-13
-um                    randconfig-002-20251230    clang-18
-um                           x86_64_defconfig    clang-22
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251230    gcc-14
-x86_64      buildonly-randconfig-002-20251230    gcc-14
-x86_64      buildonly-randconfig-003-20251230    clang-20
-x86_64      buildonly-randconfig-004-20251230    clang-20
-x86_64      buildonly-randconfig-005-20251230    clang-20
-x86_64      buildonly-randconfig-006-20251230    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20251230    gcc-14
-x86_64                randconfig-002-20251230    clang-20
-x86_64                randconfig-003-20251230    clang-20
-x86_64                randconfig-004-20251230    clang-20
-x86_64                randconfig-005-20251230    clang-20
-x86_64                randconfig-006-20251230    gcc-14
-x86_64                randconfig-011-20251230    gcc-14
-x86_64                randconfig-012-20251230    gcc-14
-x86_64                randconfig-013-20251230    gcc-14
-x86_64                randconfig-014-20251230    clang-20
-x86_64                randconfig-015-20251230    clang-20
-x86_64                randconfig-016-20251230    clang-20
-x86_64                randconfig-071-20251230    clang-20
-x86_64                randconfig-072-20251230    clang-20
-x86_64                randconfig-073-20251230    gcc-14
-x86_64                randconfig-074-20251230    clang-20
-x86_64                randconfig-075-20251230    clang-20
-x86_64                randconfig-076-20251230    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20251230    gcc-8.5.0
-xtensa                randconfig-002-20251230    gcc-8.5.0
+How ll_max is related to 'desc->xfer_sz'?
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- Mani
+
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/dma/dw-edma/dw-edma-core.c    | 24 ++++++++++++++++--
+>  drivers/dma/dw-edma/dw-edma-core.h    |  7 -----
+>  drivers/dma/dw-edma/dw-edma-v0-core.c | 48 -----------------------------------
+>  drivers/dma/dw-edma/dw-hdma-v0-core.c | 43 +++----------------------------
+>  4 files changed, 25 insertions(+), 97 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index 5b12af20cb37156a8dec440401d956652b890d53..37918f733eb4d36c7ced6418b85a885affadc8f7 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -163,9 +163,29 @@ static void vchan_free_desc(struct virt_dma_desc *vdesc)
+>  	dw_edma_free_desc(vd2dw_edma_desc(vdesc));
+>  }
+>  
+> +static void dw_edma_core_start(struct dw_edma_chunk *chunk, bool first)
+> +{
+> +	struct dw_edma_chan *chan = chunk->chan;
+> +	struct dw_edma_burst *child;
+> +	u32 i = 0;
+> +	int j;
+> +
+> +	j = chunk->bursts_alloc;
+> +	list_for_each_entry(child, &chunk->burst->list, list) {
+> +		j--;
+> +		dw_edma_core_ll_data(chan, child, i++, chunk->cb, !j);
+> +	}
+> +
+> +	dw_edma_core_ll_link(chan, i, chunk->cb, chan->ll_region.paddr);
+> +
+> +	if (first)
+> +		dw_edma_core_ch_enable(chan);
+> +
+> +	dw_edma_core_ch_doorbell(chan);
+> +}
+> +
+>  static int dw_edma_start_transfer(struct dw_edma_chan *chan)
+>  {
+> -	struct dw_edma *dw = chan->dw;
+>  	struct dw_edma_chunk *child;
+>  	struct dw_edma_desc *desc;
+>  	struct virt_dma_desc *vd;
+> @@ -183,7 +203,7 @@ static int dw_edma_start_transfer(struct dw_edma_chan *chan)
+>  	if (!child)
+>  		return 0;
+>  
+> -	dw_edma_core_start(dw, child, !desc->xfer_sz);
+> +	dw_edma_core_start(child, !desc->xfer_sz);
+>  	desc->xfer_sz += child->xfer_sz;
+>  	dw_edma_free_burst(child);
+>  	list_del(&child->list);
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+> index 2b5defae133c360f142394f9fab35c4748a893da..7a0d8405eb7feaedf4b19fd83bbeb5d24781bb7b 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.h
+> +++ b/drivers/dma/dw-edma/dw-edma-core.h
+> @@ -124,7 +124,6 @@ struct dw_edma_core_ops {
+>  	enum dma_status (*ch_status)(struct dw_edma_chan *chan);
+>  	irqreturn_t (*handle_int)(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
+>  				  dw_edma_handler_t done, dw_edma_handler_t abort);
+> -	void (*start)(struct dw_edma_chunk *chunk, bool first);
+>  	void (*ll_data)(struct dw_edma_chan *chan, struct dw_edma_burst *burst,
+>  			u32 idx, bool cb, bool irq);
+>  	void (*ll_link)(struct dw_edma_chan *chan, u32 idx, bool cb, u64 addr);
+> @@ -195,12 +194,6 @@ dw_edma_core_handle_int(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
+>  	return dw_irq->dw->core->handle_int(dw_irq, dir, done, abort);
+>  }
+>  
+> -static inline
+> -void dw_edma_core_start(struct dw_edma *dw, struct dw_edma_chunk *chunk, bool first)
+> -{
+> -	dw->core->start(chunk, first);
+> -}
+> -
+>  static inline
+>  void dw_edma_core_ch_config(struct dw_edma_chan *chan)
+>  {
+> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> index 59ee219f1abddd48806dec953ce96afdc87ffdab..c5f381d00b9773e52c1134cfea3ac3a04c7bef52 100644
+> --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> @@ -379,36 +379,6 @@ static void dw_edma_v0_core_ch_enable(struct dw_edma_chan *chan)
+>  		  upper_32_bits(chan->ll_region.paddr));
+>  }
+>  
+> -static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
+> -{
+> -	struct dw_edma_burst *child;
+> -	struct dw_edma_chan *chan = chunk->chan;
+> -	u32 control = 0, i = 0;
+> -	int j;
+> -
+> -	if (chunk->cb)
+> -		control = DW_EDMA_V0_CB;
+> -
+> -	j = chunk->bursts_alloc;
+> -	list_for_each_entry(child, &chunk->burst->list, list) {
+> -		j--;
+> -		if (!j) {
+> -			control |= DW_EDMA_V0_LIE;
+> -			if (!(chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
+> -				control |= DW_EDMA_V0_RIE;
+> -		}
+> -
+> -		dw_edma_v0_write_ll_data(chan, i++, control, child->sz,
+> -					 child->sar, child->dar);
+> -	}
+> -
+> -	control = DW_EDMA_V0_LLP | DW_EDMA_V0_TCB;
+> -	if (!chunk->cb)
+> -		control |= DW_EDMA_V0_CB;
+> -
+> -	dw_edma_v0_write_ll_link(chan, i, control, chan->ll_region.paddr);
+> -}
+> -
+>  static void dw_edma_v0_sync_ll_data(struct dw_edma_chan *chan)
+>  {
+>  	/*
+> @@ -423,23 +393,6 @@ static void dw_edma_v0_sync_ll_data(struct dw_edma_chan *chan)
+>  		readl(chan->ll_region.vaddr.io);
+>  }
+>  
+> -static void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> -{
+> -	struct dw_edma_chan *chan = chunk->chan;
+> -	struct dw_edma *dw = chan->dw;
+> -
+> -	dw_edma_v0_core_write_chunk(chunk);
+> -
+> -	if (first)
+> -		dw_edma_v0_core_ch_enable(chan);
+> -
+> -	dw_edma_v0_sync_ll_data(chan);
+> -
+> -	/* Doorbell */
+> -	SET_RW_32(dw, chan->dir, doorbell,
+> -		  FIELD_PREP(EDMA_V0_DOORBELL_CH_MASK, chan->id));
+> -}
+> -
+>  static void dw_edma_v0_core_ch_config(struct dw_edma_chan *chan)
+>  {
+>  	struct dw_edma *dw = chan->dw;
+> @@ -562,7 +515,6 @@ static const struct dw_edma_core_ops dw_edma_v0_core = {
+>  	.ch_count = dw_edma_v0_core_ch_count,
+>  	.ch_status = dw_edma_v0_core_ch_status,
+>  	.handle_int = dw_edma_v0_core_handle_int,
+> -	.start = dw_edma_v0_core_start,
+>  	.ll_data = dw_edma_v0_core_ll_data,
+>  	.ll_link = dw_edma_v0_core_ll_link,
+>  	.ch_doorbell = dw_edma_v0_core_ch_doorbell,
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> index 94350bb2bdcd6e29d8a42380160a5bd77caf4680..7f9fe3a6edd94583fd09c80a8d79527ed6383a8c 100644
+> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> @@ -217,26 +217,10 @@ static void dw_hdma_v0_core_ch_enable(struct dw_edma_chan *chan)
+>  		  lower_32_bits(chan->ll_region.paddr));
+>  	SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+>  		  upper_32_bits(chan->ll_region.paddr));
+> -}
+> -
+> -static void dw_hdma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
+> -{
+> -	struct dw_edma_chan *chan = chunk->chan;
+> -	struct dw_edma_burst *child;
+> -	u32 control = 0, i = 0;
+> -
+> -	if (chunk->cb)
+> -		control = DW_HDMA_V0_CB;
+> -
+> -	list_for_each_entry(child, &chunk->burst->list, list)
+> -		dw_hdma_v0_write_ll_data(chan, i++, control, child->sz,
+> -					 child->sar, child->dar);
+> -
+> -	control = DW_HDMA_V0_LLP | DW_HDMA_V0_TCB;
+> -	if (!chunk->cb)
+> -		control |= DW_HDMA_V0_CB;
+>  
+> -	dw_hdma_v0_write_ll_link(chan, i, control, chunk->chan->ll_region.paddr);
+> +	/* Set consumer cycle */
+> +	SET_CH_32(dw, chan->dir, chan->id, cycle_sync,
+> +		  HDMA_V0_CONSUMER_CYCLE_STAT | HDMA_V0_CONSUMER_CYCLE_BIT);
+>  }
+>  
+>  static void dw_hdma_v0_sync_ll_data(struct dw_edma_chan *chan)
+> @@ -253,26 +237,6 @@ static void dw_hdma_v0_sync_ll_data(struct dw_edma_chan *chan)
+>  		readl(chan->ll_region.vaddr.io);
+>  }
+>  
+> -static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> -{
+> -	struct dw_edma_chan *chan = chunk->chan;
+> -	struct dw_edma *dw = chan->dw;
+> -
+> -	dw_hdma_v0_core_write_chunk(chunk);
+> -
+> -	if (first)
+> -		dw_hdma_v0_core_ch_enable(chan);
+> -
+> -	/* Set consumer cycle */
+> -	SET_CH_32(dw, chan->dir, chan->id, cycle_sync,
+> -		  HDMA_V0_CONSUMER_CYCLE_STAT | HDMA_V0_CONSUMER_CYCLE_BIT);
+> -
+> -	dw_hdma_v0_sync_ll_data(chan);
+> -
+> -	/* Doorbell */
+> -	SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
+> -}
+> -
+>  static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
+>  {
+>  	struct dw_edma *dw = chan->dw;
+> @@ -332,7 +296,6 @@ static const struct dw_edma_core_ops dw_hdma_v0_core = {
+>  	.ch_count = dw_hdma_v0_core_ch_count,
+>  	.ch_status = dw_hdma_v0_core_ch_status,
+>  	.handle_int = dw_hdma_v0_core_handle_int,
+> -	.start = dw_hdma_v0_core_start,
+>  	.ll_data = dw_hdma_v0_core_ll_data,
+>  	.ll_link = dw_hdma_v0_core_ll_link,
+>  	.ch_doorbell = dw_hdma_v0_core_ch_doorbell,
+> 
+> -- 
+> 2.34.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
