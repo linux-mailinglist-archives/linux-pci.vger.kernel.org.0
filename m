@@ -1,107 +1,97 @@
-Return-Path: <linux-pci+bounces-43832-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43833-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3920ACE94C9
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 11:06:41 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 808F9CE9478
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 10:59:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EBAE73018967
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 10:06:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2C2F03012BF5
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Dec 2025 09:59:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5DB12E7BD6;
-	Tue, 30 Dec 2025 09:57:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 905E62FD7BC;
+	Tue, 30 Dec 2025 09:59:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aFvy0ze8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqwrhjIp"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB562E764D;
-	Tue, 30 Dec 2025 09:57:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8A12FD1B5;
+	Tue, 30 Dec 2025 09:59:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767088658; cv=none; b=TIDKwXAhcGPQ49kGFTW1DOudXgZq2F6vonny1TGA7oOjhh7TNx5oDW9fkzNrD/xmEpXvfSlcHG463OBSdQqqJGIwR4M7ed9YI6DgqXUPSoebAvP03Arbyw1v8trTAvTAhEg0nzhc6HQPsCEdNhR9nOlR5fdCwEwS77mZczKz9c4=
+	t=1767088781; cv=none; b=Sp2Y9k3LDPl+4ylzo/aMnyP/rCgx3EjjdKj+7sbWHNAFmt2EOaT4ZemfRwHn8cQXYa7yyatWtvt7eL968WiWOM6m49JZqvonc3vpyW7C3poacVmWhsCSuNOT2BMCN7hYCnLEWKL4BZi4chPOh3lJu84+sHdq6rquHupOaYiIDH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767088658; c=relaxed/simple;
-	bh=HGx1ic1t7aTiIFW+Y1/81F3eQnEoNSTUIq+92dzQeiM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Pb/ULNwlAc/lUqIXsPKvSpOlTNn5jTPR9z2Ok+ZYxVTW2xqWXhKjRxOF7dj7h18CBpl54+TKpiyCvBlAcxy9/u5su/RprKb9u+P/qjRsrvCVgmgEPBpxyM1tdpWtONlbc02M01kLjKRtTOYnASmDB37KePJQn9nGyWBnYVenoUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aFvy0ze8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02537C4CEFB;
-	Tue, 30 Dec 2025 09:57:35 +0000 (UTC)
+	s=arc-20240116; t=1767088781; c=relaxed/simple;
+	bh=WQMM7B12M9tIAmaZVZs3gPdILEXJR91D0xsOKWnW8Xk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uOBIoTI4VU4yi8Xbd1nVlYnaY7y/LFOo6yh0y2lWP3DqeHLKYbPYfJGDQAIThxjz81WR1jSJ9MeMQKPO1xo8B18PNnIayxn/HEJHwhYJln9B/QsLP7T5heGnkQ3gtEBIupSJfPEDBC9C8fcWdi3dt/1HlblTkCATAvP1W1LLJTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqwrhjIp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 805D4C4CEFB;
+	Tue, 30 Dec 2025 09:59:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767088658;
-	bh=HGx1ic1t7aTiIFW+Y1/81F3eQnEoNSTUIq+92dzQeiM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aFvy0ze8OCx9tudNxMpTaspzCWyiPazxYFu+Ba+mxVUL+I+5KUENDvs1w4geMal5s
-	 EVKhWor08kfcHi5XLU8SMWEJO2O671fGANBt23jHdW0a+9Lqb46zFn8xSawAyomknD
-	 myS3tf+bqT2JGtOaeHTDb6+BVi2oewOary6Ln4OzCDgknYC1TQW2g16L8eS5VvYUC8
-	 nty/nFOcWDAZOKoitVyi3OPOIxICLAbpeTL4OPoZC+SGst+rNgwoB3j1f3ruCTc3bP
-	 YJ+uNNCi0ZXT7SvB63hY0ns+6t2j/pwYps01KzyJWnSBcLr+ViMCBqcmEZWka0pROi
-	 /A0TIXNcxD43g==
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Linux ACPI <linux-acpi@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
- Zhang Rui <rui.zhang@intel.com>, Chen Yu <yu.c.chen@intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Linux PCI <linux-pci@vger.kernel.org>, Alex Hung <alexhung@gmail.com>,
- Hans de Goede <hansg@kernel.org>,
- Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>
-Subject: [PATCH v1] ACPI: scan: Use resource_type() for resource type checking
-Date: Tue, 30 Dec 2025 10:57:34 +0100
-Message-ID: <12814730.O9o76ZdvQC@rafael.j.wysocki>
-Organization: Linux Kernel Development
+	s=k20201202; t=1767088780;
+	bh=WQMM7B12M9tIAmaZVZs3gPdILEXJR91D0xsOKWnW8Xk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oqwrhjIpRrmUHbOHO5zyLEza02aPUJI3mccQhmKPtxIZJ9a/63KUmdx1YAbxcCL7u
+	 KTnKKlvrtH6j5FiVziTV3W29DE5n+FhJXL9b08FKGcm2M2LaBVIE1sp1k543D6KE09
+	 m3ys6JQk//QzYdKUsn2kDO9mgP2ubbHdsrROvC8IHIik/q0SRFbCwm3aNm1PHCrMqV
+	 b++Jl1KwixUXFPjevpwrPqzaAO5G+fMBMQNemV31K9hVERlEbGKfrF6rIT+bSDxns3
+	 qaPreNpkBNr+8agQGhRF8nS4SZWwIfG0sqJRaYlrNUyo5td/4cVhzzYGfPOL7HbLHC
+	 g+0h79GzwpqoA==
+Date: Tue, 30 Dec 2025 15:29:32 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Damien Le Moal <dlemoal@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	linux-pm@vger.kernel.org, linux-ide@vger.kernel.org, Frank Li <Frank.Li@nxp.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v4 0/5] PCI: Add initial support for handling PCIe M.2
+ connectors in devicetree
+Message-ID: <jhykqitumvq6jr63euamjdli4zntxbxasepx3g5nn4m45fu4ou@m2v44lk7lbby>
+References: <20251228-pci-m2-v4-0-5684868b0d5f@oss.qualcomm.com>
+ <aVOcgDeOejO9m1zE@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aVOcgDeOejO9m1zE@ryzen>
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Tue, Dec 30, 2025 at 10:33:52AM +0100, Niklas Cassel wrote:
+> Hello Mani,
+> 
+> On Sun, Dec 28, 2025 at 10:31:00PM +0530, Manivannan Sadhasivam wrote:
+> > The Mechanical Key M connector is used to connect SSDs to the host machine over
+> > PCIe/SATA interfaces. Due to the hardware constraints, this series only adds
+> > support for driving the PCIe interface of the connector in the kernel.
+> 
+> Since this series does not add any support for SATA, do we really want to
+> modify the SATA device tree binding?
+> 
+> I know that device tree describes the hardware, but if there is no software
+> that makes use of this, the SATA DT binding change feels a bit unnecessary.
+> 
+> Do we perhaps want to defer modifying the SATA DT binding change until the
+> corresponding change in software is added?
+> 
 
-To follow a well-established existing pattern, use resource_type() for
-resource type checking in acpi_scan_claim_resources().
+I'll defer the question to Rob since he was the one who asked for the SATA
+binding change:
 
-No intentional functional impact.
+https://lore.kernel.org/all/20251208191110.GA2473021-robh@kernel.org
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
+- Mani
 
-This is a follow-up to
-
-https://lore.kernel.org/linux-acpi/7888874.EvYhyI6sBW@rafael.j.wysocki/
-
-which is present in linux-next.
-
----
- drivers/acpi/scan.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -2624,7 +2624,7 @@ static void acpi_scan_claim_resources(st
- 		if ((res->flags & IORESOURCE_DISABLED) || res->end < res->start)
- 			continue;
- 
--		if (res->flags & IORESOURCE_IO) {
-+		if (resource_type(res) == IORESOURCE_IO) {
- 			/*
- 			 * Follow the PNP system driver and on x86 skip I/O
- 			 * resources that start below 0x100 (the "standard PC
-@@ -2635,7 +2635,7 @@ static void acpi_scan_claim_resources(st
- 				continue;
- 			}
- 			r = request_region(res->start, resource_size(res), regionid);
--		} else if (res->flags & IORESOURCE_MEM) {
-+		} else if (resource_type(res) == IORESOURCE_MEM) {
- 			r = request_mem_region(res->start, resource_size(res), regionid);
- 		} else {
- 			continue;
-
-
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
