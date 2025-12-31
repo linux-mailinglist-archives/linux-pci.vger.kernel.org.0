@@ -1,160 +1,184 @@
-Return-Path: <linux-pci+bounces-43869-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43870-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66349CEB25D
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 04:01:26 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39190CEB79A
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 08:51:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A106830245C9
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 02:58:40 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id EA15A3009107
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 07:51:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DA4D2E2DDD;
-	Wed, 31 Dec 2025 02:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ABBB30F94E;
+	Wed, 31 Dec 2025 07:51:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pardini.net header.i=@pardini.net header.b="hbBB9+OO"
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="i0cDoN0J"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from sg-1-104.ptr.blmpb.com (sg-1-104.ptr.blmpb.com [118.26.132.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E9223ED75
-	for <linux-pci@vger.kernel.org>; Wed, 31 Dec 2025 02:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD17259C80
+	for <linux-pci@vger.kernel.org>; Wed, 31 Dec 2025 07:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767149918; cv=none; b=jeTIXg8+u9l9ffLbQ8Pd0p0LWYj1OApyJylwkKOFcMyZeocgyQssXG5HwkKxBFsy3iaa1FxK8hsodBNLKhRjztkQUv6yeMXHm18M4TdEZXuSYH8ggHZsiwji3YsKcMLUaGbIu5MfYpuVOwDmOoPOK3x9LQK9oPW5kkzbldjKJA4=
+	t=1767167497; cv=none; b=fqxhysR3cHuaF5KuHfbjTS1R8TqRDJrVHLGtOX6CvPOhBZMCjl0mH/HT7a+oAboojR4vx68qXPmwtW+86jZ4O6kCKSMMHBsaqbFcuzMyKft95lx6k+U3vfndReI5O09uYbFWrZzgz0/aVa5Ck9zskJ1JSYxrfAlvoqOfU55rry4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767149918; c=relaxed/simple;
-	bh=WVD+7f2N4tCkZK3m/mQgLQPTE38EnHO55pxEujuiFc4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JbYA+8UZrwE1BScIkXlVYvbhD1I5C+rfzNTvshhJFRwLECOeNNNGRJ0RV1Wkm6Fnm7xjrLWejmy7IeZKI9kzdhUf1fS+hMaC66eWWmQWZYcAnpKanpPDriDjfYmhBm0lSJZETNLt3/YAU5ACthtt6PG1O+AHcKEamicqoFIGPm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pardini.net; spf=pass smtp.mailfrom=pardini.net; dkim=pass (2048-bit key) header.d=pardini.net header.i=@pardini.net header.b=hbBB9+OO; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pardini.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pardini.net
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b832c65124cso634124266b.0
-        for <linux-pci@vger.kernel.org>; Tue, 30 Dec 2025 18:58:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pardini.net; s=google; t=1767149915; x=1767754715; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zUfeQsuPis8+vWGa7ve6iy4exkmxdmo6Yqgm4mr4Xz0=;
-        b=hbBB9+OOicofPrsFnV2AIsUqkkWQVE/OZm/Uv/4OU1gIf2c1312I0UV8wEKWPkx70d
-         aZoexnezJAsG9o11NoPAkIEb4lO5rcHrOAo6eFeI1FDIp+SCPSL0QRfmwAi3geQe/Hop
-         pUDki2dTmPovg+LOHp4mm+86F3EOMkXGY7a50FB55lp1in6XJot021NDZf7l9+hYeZoL
-         jNjK0BNbmAfQ4ojrl8JHhVXYI/F1f5fD6DLXLOfadseUMVUaIHd7/faq2crNtPqlorw0
-         PFsyei1DJl8iuwkbTSuKs6wQmE0iLSzmBvpJ9xQso+MN560EGkYnadna9Wt9AhvIEXde
-         3xPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767149915; x=1767754715;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zUfeQsuPis8+vWGa7ve6iy4exkmxdmo6Yqgm4mr4Xz0=;
-        b=W/NI9I5beqBh1LqsRtP9hzdx+A0aVH3yWUTcPJ2B138EC0GE7v+2bmM0gw6648p+Ob
-         1zkkuVNWEfebucVnVBC7SE2LI2/XQtJ4PeQFOxDDEg+ZmHeSfSmi+DC5cxPDZ7CEgfHu
-         ZZrqTY4Fz1Geasc+Azih2ZZ0oJQbfsiEvsfNZ1jplX5sAVV1UklANsLh0n1Q4Fb6zm4n
-         +A80Kegh70lJPzZjELhzCpdLykD0OA1o8ZMNL/ugzccJMsmwnQ3OHVYz+U38WrNn6qp8
-         5XjSk3GVATOCH+M4Qn3vDq+TQc4M8n1CsLzcvy+YYGkRfYfN9UCbr+Z5p685yc3pPy3U
-         qTXg==
-X-Forwarded-Encrypted: i=1; AJvYcCVklUocAX9F9m9mEOtKLH3p/Mu6f/u6yxNmdUeTUTtQPomgzeRSHX3pYKcwAt9P3DygRFFFjsfvYyk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNlu/o5UHFQ1wOUmHxlrlfbeYN9z3mSUfArUfhH2t35dStZkaA
-	7+FQCgNYr5k2ad99/eNZCBb4Sz8U5EHnHQ7Uhspdu4AJX0Hq/YO2gmczk2njCOnsdg==
-X-Gm-Gg: AY/fxX7IR8Q6crHfVf+mw3xX3Iaf2rEbUFPdjGik7KOESSYmbXPp/rXQjbmt0CNIATN
-	98G88soyAjlkFar2aurKf+0Map7dluyJ6JstQUgCCPiXAcXWTNBTbPWEhd2eD3eQN8Emuu223Gz
-	UBhRDwdVktmhekGY/f1hVzaS/IeDsBek1aYfM/dlfarq01Cykn4MSZYFroaH07xE5ySxLggHSv+
-	nkv3M9tdcGUcgzjc+6C9T7sloZjyrTWvqwZVJe/X1NVFulfVBSc9zhq0e6Egz8RMUtjNL/AJz9t
-	mR48bXU9kBIVms4FIqQcLx5xLSp1xPZQ4JedOqqZ2kam5G0aFTohNPAa6Jj6OfmE3wKpCFhmyJE
-	gkxyrgG3cxsFvJI6sVHIWsxJtO2yqPyprYWw2iB2EiB/wzliM2M5JoS3qKvJP5SZmEDpQ0Bnjmr
-	ZCNXN2O6QfbzEb8Ls+CgVhpX2bVlQTe8o0UShNZ4btuJxSpIcGQYZdWe/oM5elHQ43dkW1+MNIu
-	iZ0wIowq/bi+Y2VZ9LLp/31tqf/tE+/rEnEVmpLgRvkOAfrvsln6K1ynA==
-X-Google-Smtp-Source: AGHT+IGGCF0sHMt1+YYCpeAxQN9Ovdj+s2AiArjZinsNakQ8z+N2JPpr7xnF8T/yZnTmh07agmcy1w==
-X-Received: by 2002:a17:907:1b15:b0:b73:9792:918b with SMTP id a640c23a62f3a-b8036f5fcf3mr4070078066b.27.1767149915064;
-        Tue, 30 Dec 2025 18:58:35 -0800 (PST)
-Received: from ?IPV6:2a02:a466:4d7a:0:49c0:3675:3f69:8ee2? (2a02-a466-4d7a-0-49c0-3675-3f69-8ee2.fixed6.kpn.net. [2a02:a466:4d7a:0:49c0:3675:3f69:8ee2])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b83926533b7sm450609966b.20.2025.12.30.18.58.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Dec 2025 18:58:34 -0800 (PST)
-Message-ID: <f5322597-c6dd-494a-863b-2caf24363f2d@pardini.net>
-Date: Wed, 31 Dec 2025 03:58:33 +0100
+	s=arc-20240116; t=1767167497; c=relaxed/simple;
+	bh=5OhfQh94QrWrHPOEwimZhgVrzHBQO14VZlluCJQpk+4=;
+	h=From:Date:Message-Id:In-Reply-To:Mime-Version:Content-Type:
+	 References:To:Cc:Subject; b=oNnn0TElANAdtw4rs80EKwsd3jhr8zPu1qZVEV9dxj7mKc1qFaQkmYcB6H2/hyWvrzMPqL0HyVT4R8vXmSVGtHz+SXxGe/i8Qh2FE2S2i3sPJQ5ySxJrbUDmGpM5VqVoU0k39myv1rGaTsdLOirOeM+TOen/7o/Otrkq85tU4n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=i0cDoN0J; arc=none smtp.client-ip=118.26.132.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1767167487; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=XcspS1IKS8vFQcHe5Ltr51i0quFjOWyZrLSyAxS3hJs=;
+ b=i0cDoN0JL1Il/Q6XcMWZJ/1iUhsiErysdUDkBYRBmsfimjNPu9lGK4+lxtdsagloG7Ajj2
+ jcLhLDxEjiaHbc69zCissWCZ6OZRRfjV1VENQsI2XYQcGw7rYJrMwXkVebNBmSc6NY9KJy
+ 9ggvuTXneTCt1rOOMcjXITnV1fwZS1JedbvLW45qtRNao14M+NMxaHZqgaAUi1N4rRCA6o
+ baU/Lh2WYzRYc9Q0tQdB2jWtm+e3Oo4s1EYqKTI8cyDEknQNNMggI2nmtBb09z9vJ9ro7T
+ 0okEXhPD5z0ta6+40W0qUFFBVl36p0rGvMW8syO3eLJTerj6k9a9CLvC1Kigow==
+From: "Jinhui Guo" <guojinhui.liam@bytedance.com>
+Date: Wed, 31 Dec 2025 15:51:05 +0800
+Message-Id: <20251231075105.1368-1-guojinhui.liam@bytedance.com>
+In-Reply-To: <20251230215241.GA130710@bhelgaas>
+X-Lms-Return-Path: <lba+26954d5fd+fdc0ff+vger.kernel.org+guojinhui.liam@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/2] PCI: Configure Root Port MPS during host probing
-To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
- kwilczynski@kernel.org, bhelgaas@google.com, helgaas@kernel.org,
- heiko@sntech.de, mani@kernel.org, yue.wang@Amlogic.com
-Cc: pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org,
- jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
- martin.blumenstingl@googlemail.com, cassel@kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20251127170908.14850-1-18255117159@163.com>
-Content-Language: en-US
-From: Ricardo Pardini <ricardo@pardini.net>
-In-Reply-To: <20251127170908.14850-1-18255117159@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-Mailer: git-send-email 2.17.1
+X-Original-From: Jinhui Guo <guojinhui.liam@bytedance.com>
+References: <20251230215241.GA130710@bhelgaas>
+To: <helgaas@kernel.org>
+Cc: <alexander.h.duyck@linux.intel.com>, <bhelgaas@google.com>, 
+	<bvanassche@acm.org>, <dan.j.williams@intel.com>, 
+	<gregkh@linuxfoundation.org>, <guojinhui.liam@bytedance.com>, 
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>, 
+	<stable@vger.kernel.org>, <tj@kernel.org>
+Subject: Re: [PATCH] PCI: Avoid work_on_cpu() in async probe workers
 
-On 27/11/2025 18:09, Hans Zhang wrote:
-> Current PCIe initialization exhibits a key optimization gap: Root Ports
-> may operate with non-optimal Maximum Payload Size (MPS) settings. While
-> downstream device configuration is handled during bus enumeration, Root
-> Port MPS values inherited from firmware or hardware defaults often fail
-> to utilize the full capabilities supported by controller hardware. This
-> results in suboptimal data transfer efficiency throughout the PCIe
-> hierarchy.
-> 
-> This patch series addresses this by:
-> 
-> 1. Core PCI enhancement (Patch 1):
-> - Proactively configures Root Port MPS during host controller probing
-> - Sets initial MPS to hardware maximum (128 << dev->pcie_mpss)
-> - Conditional on PCIe bus tuning being enabled (PCIE_BUS_TUNE_OFF unset)
->    and not in PCIE_BUS_PEER2PEER mode (which requires default 128 bytes)
-> - Maintains backward compatibility via PCIE_BUS_TUNE_OFF check
-> - Preserves standard MPS negotiation during downstream enumeration
-> 
-> 2. Driver cleanup (Patch 2):
-> - Removes redundant MPS configuration from Meson PCIe controller driver
-> - Functionality is now centralized in PCI core
-> - Simplifies driver maintenance long-term
-> 
-> ---
-> Changes in v7:
-> - Exclude PCIE_BUS_PEER2PEER mode from Root Port MPS configuration
-> - Remove redundant check for upstream bridge (Root Ports don't have one)
-> - Improve commit message and code comments as per Bjorn.
-Hi Hans,
+On Tue, Dec 30, 2025 at 03:52:41PM -0600, Bjorn Helgaas wrote:
+> On Tue, Dec 30, 2025 at 10:27:36PM +0800, Jinhui Guo wrote:
+> > On Mon, Dec 29, 2025 at 08:08:57AM -1000, Tejun Heo wrote:
+> > > On Sat, Dec 27, 2025 at 07:33:26PM +0800, Jinhui Guo wrote:
+> > > > To fix the issue, pci_call_probe() must not call work_on_cpu() when=
+ it is
+> > > > already running inside an unbounded asynchronous worker. Because a =
+driver
+> > > > can be probed asynchronously either by probe_type or by the kernel =
+command
+> > > > line, we cannot rely on PROBE_PREFER_ASYNCHRONOUS alone. Instead, w=
+e test
+> > > > the PF_WQ_WORKER flag in current->flags; if it is set, pci_call_pro=
+be() is
+> > > > executing within an unbounded workqueue worker and should skip the =
+extra
+> > > > work_on_cpu() call.
+> > >=20
+> > > Why not just use queue_work_on() on system_dfl_wq (or any other unbou=
+nd
+> > > workqueue)? Those are soft-affine to cache domain but can overflow to=
+ other
+> > > CPUs?
+> >=20
+> > Hi, tejun,
+> >=20
+> > Thank you for your time and helpful suggestions.
+> > I had considered replacing work_on_cpu() with queue_work_on(system_dfl_=
+wq) +
+> > flush_work(), but that would be a refactor rather than a fix for the sp=
+ecific
+> > problem we hit.
+> >=20
+> > Let me restate the issue:
+> >=20
+> > 1. With PROBE_PREFER_ASYNCHRONOUS enabled, the driver core queues work =
+on
+> >    async_wq to speed up driver probe.
+> > 2. The PCI core then calls work_on_cpu() to tie the probe thread to the=
+ PCI
+> >    device=E2=80=99s NUMA node, but it always picks the same CPU for eve=
+ry device on
+> >    that node, forcing the PCI probes to run serially.
+> >=20
+> > Therefore I test current->flags & PF_WQ_WORKER to detect that we are al=
+ready
+> > inside an async_wq worker and skip the extra nested work queue.
+> >=20
+> > I agree with your point=E2=80=94using queue_work_on(system_dfl_wq) + fl=
+ush_work()
+> > would be cleaner and would let different vendors=E2=80=99 drivers probe=
+ in parallel
+> > instead of fighting over the same CPU. I=E2=80=99ve prepared and tested=
+ another patch,
+> > but I=E2=80=99m still unsure it=E2=80=99s the better approach; any furt=
+her suggestions would
+> > be greatly appreciated.
+> >=20
+> > Test results for that patch:
+> >   nvme 0000:01:00.0: CPU: 2, COMM: kworker/u1025:3, probe cost: 3490495=
+5 ns
+> >   nvme 0000:02:00.0: CPU: 134, COMM: kworker/u1025:1, probe cost: 34774=
+235 ns
+> >   nvme 0000:03:00.0: CPU: 1, COMM: kworker/u1025:4, probe cost: 3457305=
+4 ns
+> >=20
+> > Key changes in the patch:
+> >=20
+> > 1. Keep the current->flags & PF_WQ_WORKER test to avoid nested workers.
+> > 2. Replace work_on_cpu() with queue_work_node(system_dfl_wq) + flush_wo=
+rk()
+> >    to enable parallel probing when PROBE_PREFER_ASYNCHRONOUS is disable=
+d.
+> > 3. Remove all cpumask operations.
+> > 4. Drop cpu_hotplug_disable() since both cpumask manipulation and work_=
+on_cpu()
+> >    are gone.
+> >=20
+> > The patch is shown below.
+>=20
+> I love this patch because it makes pci_call_probe() so much simpler.
+>=20
+> I *would* like a short higher-level description of the issue that
+> doesn't assume so much workqueue background.
+>=20
+> I'm not an expert, but IIUC __driver_attach() schedules async workers
+> so driver probes can run in parallel, but the problem is that the
+> workers for devices on node X are currently serialized because they
+> all bind to the same CPU on that node.
+>=20
+> Naive questions: It looks like async_schedule_dev() already schedules
+> an async worker on the device node, so why does pci_call_probe() need
+> to use queue_work_node() again?
+>=20
+> pci_call_probe() dates to 2005 (d42c69972b85 ("[PATCH] PCI: Run PCI
+> driver initialization on local node")), but the async_schedule_dev()
+> looks like it was only added in 2019 (c37e20eaf4b2 ("driver core:
+> Attach devices on CPU local to device node")).  Maybe the
+> pci_call_probe() node awareness is no longer necessary?
 
-I've tested on an Odroid-HC4 with a SATA SSD (via an ASM1061) by 
-applying your v7 on v6.19-rc3 + Bjorn's 
-20251103221930.1831376-1-helgaas@kernel.org ("PCI: meson: Remove 
-meson_pcie_link_up() timeout, message, speed check" which is required to 
-get the meson PCIe to work at all since 6.18). With that setup I get:
+Hi, Bjorn
 
-# hdparm --direct -t /dev/sda
-  Timing O_DIRECT disk reads: 832 MB in  3.00 seconds = 277.33 MB/sec
+Thank you for your time and kind reply.
 
-I've an identical machine, with a similar disk (even slightly faster, on 
-paper), running plain 6.12.y and there I get:
+As I see it, two scenarios should be borne in mind:
 
-# hdparm --direct -t /dev/sda
-  Timing O_DIRECT disk reads: 764 MB in  3.00 seconds = 254.26 MB/sec
+1. Driver allowed to probe asynchronously
+   The driver core schedules async workers via async_schedule_dev(),
+   so pci_call_probe() needs no extra queue_work_node().
 
-I repeated those a few times, not very scientific, I know; but anyway:
+2. Driver not allowed to probe asynchronously
+   The driver core (__driver_attach() or __device_attach()) calls
+   pci_call_probe() directly, without any async worker from
+   async_schedule_dev(). NUMA-node awareness in pci_call_probe()
+   is therefore still required.
 
-Tested-by: Ricardo Pardini <ricardo@pardini.net> # on Odroid-HC4
-
-I've also feedback from another user running with this series with 
-success on a different meson PCIe machine, will ask them to TB as well; 
-they had reported a significant drop in performance since v6.18 without 
-this.
-
-Thanks,
-Ricardo
+Best Regards,
+Jinhui
 
