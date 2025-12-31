@@ -1,304 +1,181 @@
-Return-Path: <linux-pci+bounces-43886-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43887-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C4DDCEC4D9
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 18:01:54 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3323BCEC4FD
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 18:04:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5E29E3005AA1
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 17:01:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8355D3007FE5
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 17:04:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61D0029A9C3;
-	Wed, 31 Dec 2025 17:01:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B43028134F;
+	Wed, 31 Dec 2025 17:04:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fU7ZJeWb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rGOAxQOu"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD3D284674;
-	Wed, 31 Dec 2025 17:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E084C97;
+	Wed, 31 Dec 2025 17:04:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767200512; cv=none; b=LwwNEScdusVE2VsQYuUVqJMcN0lJZelHXN7Y4WzpkAzG92E6Q4zbzhsNpFghHx/lTH1fHLuFVSQatjGJ7f9HUXod+alaVpJjxMC5tpfAYmXF0c764QdptRtNWCxT5Iwpxr0u3YTIhbwgP6BsDHLN7wJzrrk3afqIezQyPgiNMtA=
+	t=1767200676; cv=none; b=e0UXtoPotoEQaayCQJR3JeEjJn2I6GFd5+R1zGiztC6P1tAHKgHxYak6df5BXMHpAb9LXjdUXNTFm4JUUB/Hj4hCBJLqGlSwIJpCC97IJYc1VWVo5mZ2dxGL4KuChhdToKctDBckAX0Du+PhuN68hFqnDo6s6UbxfVtJaqaAFus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767200512; c=relaxed/simple;
-	bh=N72JkyT+rZD9OdtAJl7cpuORygxpXKbwdLS5ZFP27ho=;
+	s=arc-20240116; t=1767200676; c=relaxed/simple;
+	bh=UdD2WETjBAVFKgUJSLY9cX/ev7Q8Wxs4tu/21OACLE8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=PlZDmdh5O721hySRvT69xaMYmoVY9TkRJv1O5uqOOG3xR81BpGzuhqgn9wXXrqvyBTnwMF61Y4SkbGNGt7guR6xFpPyoMTLku6WgsY+c2Nl8lNUkdXCCn7A3UucnwlnbL4nDLBXjC7k41Krmtk1gxb9vfJaUPd+ULHnp6M3Qag0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fU7ZJeWb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F645C113D0;
-	Wed, 31 Dec 2025 17:01:51 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=rs7QvNUKf5w2bqOnhLDVnxiu+1iu/Rbd5H52Ll6LdbK7BlltY7TbPaOarNK6QQdDzakFlcEogdBNUWIH0n+aIBe2z48yDwVHmjiszcvMaiNRjcyM9+VVWw8YHKv0iYdoUHsOcDHgN4uuTguQSl0fMN+9gLJd8h+j8J3abz1h7ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rGOAxQOu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1189C113D0;
+	Wed, 31 Dec 2025 17:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767200511;
-	bh=N72JkyT+rZD9OdtAJl7cpuORygxpXKbwdLS5ZFP27ho=;
+	s=k20201202; t=1767200675;
+	bh=UdD2WETjBAVFKgUJSLY9cX/ev7Q8Wxs4tu/21OACLE8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=fU7ZJeWbC8t6neVjMX6DyP4JatoNd51EEAKbvpktdOf00vGrk+AsWav3Z1XRIb0n3
-	 htqkQhcPmklDPjhpwlWIHkqOaVuSvqlcjey3NFwa0DTkNpX8Wm3/rq2EVKuU554niV
-	 qsmbc6iBlAZM5OgWmWs6MsHoSJuFFswiSCB6a4+hNCQJ4ZTBlAZx2NiIJ95c446CeG
-	 UBILGmy1ixWd5o6Q9Lb5eV+OoudBnWWB/1CohZiWulygtlR9xd5sNN+Btp5Wzx/b1l
-	 s/KNv5phEM735Or8EOgjjyYFG6uBhOVivYbEHV2vULZ9wwHly8YwR82/DgYPglz7VN
-	 DA36fHr15YHBQ==
-Date: Wed, 31 Dec 2025 11:01:50 -0600
+	b=rGOAxQOuS8AoUrUjBqJ8bo21g3vTs1pusLMspCYb2vh07jBqeC/vf+ig5czYQ8kYN
+	 mp2hY6bh4YurSi40oV5jiYUTTN10mEQI7mfBsZRxuF1JjXzEPlgJN2VDDs7SUqfZls
+	 bp/upJ+LHUFAsw1VTxzH0P4OTJ4QHKwhMjaJ62wO2N/rrqf4COXGVwgqjLi1e3fiC7
+	 01iQtFmangkk2rCijfh+uht3wlmTfvmfjytuQctONdhbO6ZdmU3NvjHSa30NMe72R0
+	 d4M8b56wySZc6y6c84Xl4WGY+C1w3z+16bpUwEL103xwU/tQ6APZWmtnhCDhgm5u/e
+	 AfAmeB/vVI88A==
+Date: Wed, 31 Dec 2025 11:04:34 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, Len Brown <lenb@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] ACPI: PCI: IRQ: Handle INTx GSIs as u32 values not int
-Message-ID: <20251231170150.GA160311@bhelgaas>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: duziming <duziming2@huawei.com>, bhelgaas@google.com,
+	jbarnes@virtuousgeek.org, chrisw@redhat.com,
+	alex.williamson@redhat.com, linux-pci@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, liuyongqiang13@huawei.com,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH v2 2/3] PCI: Prevent overflow in proc_bus_pci_write()
+Message-ID: <20251231170434.GA160560@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251231092615.3014761-1-lpieralisi@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b5cc94da-23e7-0185-0b5a-b35125234af4@linux.intel.com>
 
-On Wed, Dec 31, 2025 at 10:26:15AM +0100, Lorenzo Pieralisi wrote:
-> In ACPI Global System Interrupts (GSIs) are described using a 32-bit
-> value.
+On Wed, Dec 31, 2025 at 11:31:47AM +0200, Ilpo Järvinen wrote:
+> On Tue, 30 Dec 2025, duziming wrote:
+> > 在 2025/12/30 2:07, Bjorn Helgaas 写道:
+> > > [+cc Krzysztof; I thought we looked at this long ago?]
+> > > 
+> > > On Wed, Dec 24, 2025 at 05:27:18PM +0800, Ziming Du wrote:
+> > > > From: Yongqiang Liu <liuyongqiang13@huawei.com>
+> > > > 
+> > > > When the value of ppos over the INT_MAX, the pos is over set to a negtive
+> > > > value which will be passed to get_user() or pci_user_write_config_dword().
+> > > > Unexpected behavior such as a softlock will happen as follows:
+> > > s/negtive/negative/
+> > > s/softlock/soft lockup/ to match message below
+> > Thanks for pointing out the ambiguous parts.
+> > > s/ppos/pos/ (or fix this to refer to "*ppos", which I think is what
+> > > you're referring to)
+> > > 
+> > > I guess the point is that proc_bus_pci_write() takes a "loff_t *ppos",
+> > > loff_t is a signed type, and negative read/write offsets are invalid.
+> > 
+> > Actually, the *loff_t *ppos *passed in is not a negative value. The root cause
+> > of the issue
+> > 
+> > lies in the cast *int* *pos = *ppos*. When the value of **ppos* over the
+> > INT_MAX, the pos is over set
+> > 
+> > to a negative value. This negative *pos* then propagates through subsequent
+> > logic, leading to the observed errors.
+> > 
+> > > If this is easily reproducible with "dd" or similar, could maybe
+> > > include a sample command line?
+> > 
+> > We reproduced the issue using the following POC:
+> > 
+> >     #include <stdio.h>
+> > 
+> >     #include <string.h>
+> >     #include <unistd.h>
+> >     #include <fcntl.h>
+> >     #include <sys/uio.h>
+> > 
+> >     int main() {
+> >     int fd = open("/proc/bus/pci/00/02.0", O_RDWR);
+> >     if (fd < 0) {
+> >         perror("open failed");
+> >         return 1;
+> >     }
+> >     char data[] = "926b7719201054f37a1d9d391e862c";
+> >     off_t offset = 0x80800001;
+> >     struct iovec iov = {
+> >         .iov_base = data,
+> >         .iov_len = 0xf
+> >     };
+> >     pwritev(fd, &iov, 1, offset);
+> >     return 0;
+> > }
+> > 
+> > > >   watchdog: BUG: soft lockup - CPU#0 stuck for 130s! [syz.3.109:3444]
+> > > >   RIP: 0010:_raw_spin_unlock_irq+0x17/0x30
+> > > >   Call Trace:
+> > > >    <TASK>
+> > > >    pci_user_write_config_dword+0x126/0x1f0
+> > > >    proc_bus_pci_write+0x273/0x470
+> > > >    proc_reg_write+0x1b6/0x280
+> > > >    do_iter_write+0x48e/0x790
+> > > >    vfs_writev+0x125/0x4a0
+> > > >    __x64_sys_pwritev+0x1e2/0x2a0
+> > > >    do_syscall_64+0x59/0x110
+> > > >    entry_SYSCALL_64_after_hwframe+0x78/0xe2
+> > > > 
+> > > > Fix this by add check for the pos.
+> > > > 
+> > > > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> > > > Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
+> > > > Signed-off-by: Ziming Du <duziming2@huawei.com>
+> > > > ---
+> > > >   drivers/pci/proc.c | 2 +-
+> > > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
+> > > > index 9348a0fb8084..200d42feafd8 100644
+> > > > --- a/drivers/pci/proc.c
+> > > > +++ b/drivers/pci/proc.c
+> > > > @@ -121,7 +121,7 @@ static ssize_t proc_bus_pci_write(struct file *file,
+> > > > const char __user *buf,
+> > > >   	if (ret)
+> > > >   		return ret;
+> > > >   -	if (pos >= size)
+> > > > +	if (pos >= size || pos < 0)
+> > > >   		return 0;
+> > > I see a few similar cases that look like this; maybe we should do the
+> > > same?
+> > > 
+> > >    if (pos < 0)
+> > >      return -EINVAL;
+> > > 
+> > > Looks like proc_bus_pci_read() has the same issue?
+> > 
+> > proc_bus_pci_read() may also trigger similar issue as mentioned by Ilpo
+> > Järvinen in
+> > 
+> > https://lore.kernel.org/linux-pci/e5a91378-4a41-32fb-00c6-2810084581bd@linux.intel.com/
+> > 
+> > However, it does not result in an overflow to a negative number.
 > 
-> ACPI/PCI legacy interrupts (INTx) parsing code treats GSIs as 'int', which
-> poses issues if the GSI interrupt value is a 32-bit value with the MSB set
-> (as required in some interrupt configurations - eg ARM64 GICv5 systems).
+> Why does the cast has to happen first here?
 > 
-> Fix ACPI/PCI legacy INTx parsing by converting variables representing
-> GSIs from 'int' to 'u32' bringing the code in line with the ACPI
-> specification.
+> This would ensure _correctness_ without any false alignment issues for 
+> large numbers:
+> 
+> 	int pos;
+> 	int size = dev->cfg_size;
+> 
+> 	...
+> 	if (*ppos > INT_MAX)
 
-Looks good to me.  Is there any symptom of what the issue looks like
-that could be mentioned here?  Might also be useful in the subject,
-which currently describes the C code without really saying why we want
-to do this.
-
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> ---
->  drivers/acpi/pci_irq.c      | 19 ++++++++++--------
->  drivers/acpi/pci_link.c     | 39 ++++++++++++++++++++++++-------------
->  drivers/xen/acpi.c          | 13 +++++++------
->  include/acpi/acpi_drivers.h |  2 +-
->  4 files changed, 44 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-> index ad81aa03fe2f..c416942ff3e2 100644
-> --- a/drivers/acpi/pci_irq.c
-> +++ b/drivers/acpi/pci_irq.c
-> @@ -188,7 +188,7 @@ static int acpi_pci_irq_check_entry(acpi_handle handle, struct pci_dev *dev,
->  	 * the IRQ value, which is hardwired to specific interrupt inputs on
->  	 * the interrupt controller.
->  	 */
-> -	pr_debug("%04x:%02x:%02x[%c] -> %s[%d]\n",
-> +	pr_debug("%04x:%02x:%02x[%c] -> %s[%u]\n",
->  		 entry->id.segment, entry->id.bus, entry->id.device,
->  		 pin_name(entry->pin), prt->source, entry->index);
->  
-> @@ -384,7 +384,7 @@ static inline bool acpi_pci_irq_valid(struct pci_dev *dev, u8 pin)
->  int acpi_pci_irq_enable(struct pci_dev *dev)
->  {
->  	struct acpi_prt_entry *entry;
-> -	int gsi;
-> +	u32 gsi;
->  	u8 pin;
->  	int triggering = ACPI_LEVEL_SENSITIVE;
->  	/*
-> @@ -422,18 +422,21 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
->  			return 0;
->  	}
->  
-> +	rc = -ENODEV;
-> +
->  	if (entry) {
->  		if (entry->link)
-> -			gsi = acpi_pci_link_allocate_irq(entry->link,
-> +			rc = acpi_pci_link_allocate_irq(entry->link,
->  							 entry->index,
->  							 &triggering, &polarity,
-> -							 &link);
-> -		else
-> +							 &link, &gsi);
-> +		else {
->  			gsi = entry->index;
-> -	} else
-> -		gsi = -1;
-> +			rc = 0;
-> +		}
-> +	}
->  
-> -	if (gsi < 0) {
-> +	if (rc < 0) {
->  		/*
->  		 * No IRQ known to the ACPI subsystem - maybe the BIOS /
->  		 * driver reported one, then use it. Exit in any case.
-> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-> index bed7dc85612e..b91b039a3d20 100644
-> --- a/drivers/acpi/pci_link.c
-> +++ b/drivers/acpi/pci_link.c
-> @@ -448,7 +448,7 @@ static int acpi_isa_irq_penalty[ACPI_MAX_ISA_IRQS] = {
->  	/* >IRQ15 */
->  };
->  
-> -static int acpi_irq_pci_sharing_penalty(int irq)
-> +static int acpi_irq_pci_sharing_penalty(u32 irq)
->  {
->  	struct acpi_pci_link *link;
->  	int penalty = 0;
-> @@ -474,7 +474,7 @@ static int acpi_irq_pci_sharing_penalty(int irq)
->  	return penalty;
->  }
->  
-> -static int acpi_irq_get_penalty(int irq)
-> +static int acpi_irq_get_penalty(u32 irq)
->  {
->  	int penalty = 0;
->  
-> @@ -528,7 +528,7 @@ static int acpi_irq_balance = -1;	/* 0: static, 1: balance */
->  static int acpi_pci_link_allocate(struct acpi_pci_link *link)
->  {
->  	acpi_handle handle = link->device->handle;
-> -	int irq;
-> +	u32 irq;
->  	int i;
->  
->  	if (link->irq.initialized) {
-> @@ -598,44 +598,53 @@ static int acpi_pci_link_allocate(struct acpi_pci_link *link)
->  	return 0;
->  }
->  
-> -/*
-> - * acpi_pci_link_allocate_irq
-> - * success: return IRQ >= 0
-> - * failure: return -1
-> +/**
-> + * acpi_pci_link_allocate_irq(): Retrieve a link device GSI
-> + *
-> + * @handle: Handle for the link device
-> + * @index: GSI index
-> + * @triggering: pointer to store the GSI trigger
-> + * @polarity: pointer to store GSI polarity
-> + * @name: pointer to store link device name
-> + * @gsi: pointer to store GSI number
-> + *
-> + * Returns:
-> + *	0 on success with @triggering, @polarity, @name, @gsi initialized.
-> + *	-ENODEV on failure
->   */
->  int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
-> -			       int *polarity, char **name)
-> +			       int *polarity, char **name, u32 *gsi)
->  {
->  	struct acpi_device *device = acpi_fetch_acpi_dev(handle);
->  	struct acpi_pci_link *link;
->  
->  	if (!device) {
->  		acpi_handle_err(handle, "Invalid link device\n");
-> -		return -1;
-> +		return -ENODEV;
->  	}
->  
->  	link = acpi_driver_data(device);
->  	if (!link) {
->  		acpi_handle_err(handle, "Invalid link context\n");
-> -		return -1;
-> +		return -ENODEV;
->  	}
->  
->  	/* TBD: Support multiple index (IRQ) entries per Link Device */
->  	if (index) {
->  		acpi_handle_err(handle, "Invalid index %d\n", index);
-> -		return -1;
-> +		return -ENODEV;
->  	}
->  
->  	mutex_lock(&acpi_link_lock);
->  	if (acpi_pci_link_allocate(link)) {
->  		mutex_unlock(&acpi_link_lock);
-> -		return -1;
-> +		return -ENODEV;
->  	}
->  
->  	if (!link->irq.active) {
->  		mutex_unlock(&acpi_link_lock);
->  		acpi_handle_err(handle, "Link active IRQ is 0!\n");
-> -		return -1;
-> +		return -ENODEV;
->  	}
->  	link->refcnt++;
->  	mutex_unlock(&acpi_link_lock);
-> @@ -647,7 +656,9 @@ int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
->  	if (name)
->  		*name = acpi_device_bid(link->device);
->  	acpi_handle_debug(handle, "Link is referenced\n");
-> -	return link->irq.active;
-> +	*gsi = link->irq.active;
-> +
-> +	return 0;
->  }
->  
->  /*
-> diff --git a/drivers/xen/acpi.c b/drivers/xen/acpi.c
-> index d2ee605c5ca1..eab28cfe9939 100644
-> --- a/drivers/xen/acpi.c
-> +++ b/drivers/xen/acpi.c
-> @@ -89,11 +89,11 @@ int xen_acpi_get_gsi_info(struct pci_dev *dev,
->  						  int *trigger_out,
->  						  int *polarity_out)
->  {
-> -	int gsi;
-> +	u32 gsi;
->  	u8 pin;
->  	struct acpi_prt_entry *entry;
->  	int trigger = ACPI_LEVEL_SENSITIVE;
-> -	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
-> +	int ret, polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
->  				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
->  
->  	if (!dev || !gsi_out || !trigger_out || !polarity_out)
-> @@ -105,17 +105,18 @@ int xen_acpi_get_gsi_info(struct pci_dev *dev,
->  
->  	entry = acpi_pci_irq_lookup(dev, pin);
->  	if (entry) {
-> +		ret = 0;
->  		if (entry->link)
-> -			gsi = acpi_pci_link_allocate_irq(entry->link,
-> +			ret = acpi_pci_link_allocate_irq(entry->link,
->  							 entry->index,
->  							 &trigger, &polarity,
-> -							 NULL);
-> +							 NULL, &gsi);
->  		else
->  			gsi = entry->index;
->  	} else
-> -		gsi = -1;
-> +		ret = -ENODEV;
->  
-> -	if (gsi < 0)
-> +	if (ret < 0)
->  		return -EINVAL;
->  
->  	*gsi_out = gsi;
-> diff --git a/include/acpi/acpi_drivers.h b/include/acpi/acpi_drivers.h
-> index b14d165632e7..402b97d12138 100644
-> --- a/include/acpi/acpi_drivers.h
-> +++ b/include/acpi/acpi_drivers.h
-> @@ -51,7 +51,7 @@
->  
->  int acpi_irq_penalty_init(void);
->  int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
-> -			       int *polarity, char **name);
-> +			       int *polarity, char **name, u32 *gsi);
->  int acpi_pci_link_free_irq(acpi_handle handle);
->  
->  /* ACPI PCI Device Binding */
-> -- 
-> 2.50.1
-> 
+Isn't *ppos a signed quantity?  If so, wouldn't we want to check for
+"*ppos < 0"?
 
