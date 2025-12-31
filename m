@@ -1,144 +1,145 @@
-Return-Path: <linux-pci+bounces-43876-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43877-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 084D9CEC0AC
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 14:49:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 84B67CEC0EE
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 15:04:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B75DE300D178
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 13:49:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3E82F302685D
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 14:02:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 033C5263F5E;
-	Wed, 31 Dec 2025 13:49:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2853821B9C1;
+	Wed, 31 Dec 2025 14:02:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E3U3wb1k"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V/KYCPL7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9EF1C84D0
-	for <linux-pci@vger.kernel.org>; Wed, 31 Dec 2025 13:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0501217F53;
+	Wed, 31 Dec 2025 14:02:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767188985; cv=none; b=IVDZ8J14EJejMIxSRyiOk3SYR1VP9xub2YIJ1IC3UR4+QHhZ7keNtde9TMCcu0oxH0Te3RtmYOftXfuxsUxcNpyQypp0Cmuqzu3A0Ys42+ciSgn4RWszTf8ztS4FlT+l+MdW5f5BK0eD73uk9+8rBEVvzOevJIqOV0yHdOU0DUg=
+	t=1767189758; cv=none; b=ZEiGfeuF/HOCT+JVYNeMJbFvN70P3/Q5eHOImgqng5qr1MWmUDkcDsBP0f6i4z0t4bldvJym1V7xeD9TDdi+DQKUtfWJ5BKbuIF8Xmc7hBzl7crFvDznID0sd9yxRfci82J6NxMjuveyL14O/S4K3blbYJu/MWYjfnEfPbugveU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767188985; c=relaxed/simple;
-	bh=jd02B+CKbNlsnRR1QiaxO5/cIaVzND9HxDs7LXQol8k=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=PIxWS0bdr+mrDDYJl6ZQ5EAPNzXpEB5XlgWw63ee1mDT3EjH6qT1QXyGFMeFwuWmlQ6uEjkWCdLRudjg8jSqyoZFn0FgWYoNo++IDWhpyn35wJ5qHkYw/wlAnhGCXjFT2nKwsJE9ZjX1N6A/1NI1eY87C35L900k39D6eN7NKn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E3U3wb1k; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767188984; x=1798724984;
-  h=date:from:to:cc:subject:message-id;
-  bh=jd02B+CKbNlsnRR1QiaxO5/cIaVzND9HxDs7LXQol8k=;
-  b=E3U3wb1kvM2Popl+bBrSQnGuRx581xCeaZ06Y4P3p65eWluBQzd3dcrG
-   XMx9NstWabAJlARzPNxQpadfqx4SqF9kEAT4jWu/2I7kUBclbdqdJ4wQ5
-   ES/b6c2L8g4KmPdyP2+vrxD1ILlLrDp7n8dUtnr/fT7rH3MAYhaC7Nc/Y
-   ftl5YS4+KGscH0vYOm0i4g9V2DJXLIJ/SljKdulGCGk+jB0GXSuQXD5qs
-   3uyt3yS56go3HwlG6kE90LTEuqSPFBjq6QS4LFlmdVGGhtRSwaWlJX5xD
-   pb/fFsWIOuAiA1A102fza+dgaPhBYVqI3cDsTqhKAQofALJKbcUwvZxIY
-   A==;
-X-CSE-ConnectionGUID: pfuKvl+pTru7JoXQH+dmzA==
-X-CSE-MsgGUID: EoMvezCWT/m/n4r5U3ck8A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11658"; a="86333317"
-X-IronPort-AV: E=Sophos;i="6.21,191,1763452800"; 
-   d="scan'208";a="86333317"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Dec 2025 05:49:43 -0800
-X-CSE-ConnectionGUID: KYfZPYzCRQaj+02tWp0DxQ==
-X-CSE-MsgGUID: DPMQMFooTri8ZFRGQBbC1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,191,1763452800"; 
-   d="scan'208";a="206495975"
-Received: from lkp-server01.sh.intel.com (HELO c9aa31daaa89) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 31 Dec 2025 05:49:42 -0800
-Received: from kbuild by c9aa31daaa89 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vawa3-000000001Ez-1hMb;
-	Wed, 31 Dec 2025 13:49:39 +0000
-Date: Wed, 31 Dec 2025 21:49:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:dt-bindings] BUILD SUCCESS
- 2cca8d79709e1debd27da5dcae2abc859f41db70
-Message-ID: <202512312126.6gfGTnGO-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1767189758; c=relaxed/simple;
+	bh=CBFfLku7dIdIU6H6oIpUvPWYyR6ucYYMUyo6GlFZdAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B9OyGoe2LJ+Ze3m/J6cf+4H3/QKBQ+FlbIYRrc0fLjX2TqYmJMFLdcCtcID9tPwibNx4oMXurVE02zFArN0xZh3crzWEd/y2lKR0luZaj17sXb0+ku+W+20v1MAdKnq543jUXAwcwa7/8UccNYO2V2utcYNBY3WGUOF6b5YNPDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V/KYCPL7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAA17C113D0;
+	Wed, 31 Dec 2025 14:02:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767189757;
+	bh=CBFfLku7dIdIU6H6oIpUvPWYyR6ucYYMUyo6GlFZdAE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V/KYCPL7ZtkMijc6GCGy07DqTpJm2bcO1Hyk7oeLdmLDr4cryXHiAbYSa0rdHoTmz
+	 xO1R86BMlXOvB7Bi6HCf0I6MrrXlvW4Tifmo/YaGV1r6/hXHdzochqy+Rx9CDugnW8
+	 KL0pY73twndKcZdjNDfVh7l6tZDUjQW4VDWv/nAL9ad6qz6ZAUtNrHXDCfP2Cywtm6
+	 ugYPs4h+jagAwy6hsofbysUt3OS9gH+6R84kJxL4x3DsSiKIXbQvIHr3qZRG6sMKpf
+	 M6jkkbfhDqzpVpnYKxH0r6jDyw29DBX9RAwbViO1Y+CIGYDKBMqcVEFznqc1PXd0Hw
+	 Qai/24OW/4z9w==
+Date: Wed, 31 Dec 2025 15:02:34 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Chen Ridong <chenridong@huawei.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Simon Horman <horms@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>, Waiman Long <longman@redhat.com>,
+	Will Deacon <will@kernel.org>, cgroups@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH 09/33] block: Protect against concurrent isolated cpuset
+ change
+Message-ID: <aVUs-mFYCO2qGmqT@localhost.localdomain>
+References: <20251224134520.33231-1-frederic@kernel.org>
+ <20251224134520.33231-10-frederic@kernel.org>
+ <0f65c4fe-8b10-403d-b5b6-ed33fc4eb69c@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0f65c4fe-8b10-403d-b5b6-ed33fc4eb69c@kernel.dk>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git dt-bindings
-branch HEAD: 2cca8d79709e1debd27da5dcae2abc859f41db70  dt-bindings: PCI: socionext,uniphier-pcie: Fix interrupt controller node name
+Le Mon, Dec 29, 2025 at 05:37:29PM -0700, Jens Axboe a écrit :
+> On 12/24/25 6:44 AM, Frederic Weisbecker wrote:
+> > The block subsystem prevents running the workqueue to isolated CPUs,
+> > including those defined by cpuset isolated partitions. Since
+> > HK_TYPE_DOMAIN will soon contain both and be subject to runtime
+> > modifications, synchronize against housekeeping using the relevant lock.
+> > 
+> > For full support of cpuset changes, the block subsystem may need to
+> > propagate changes to isolated cpumask through the workqueue in the
+> > future.
+> > 
+> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> > ---
+> >  block/blk-mq.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/block/blk-mq.c b/block/blk-mq.c
+> > index 1978eef95dca..0037af1216f3 100644
+> > --- a/block/blk-mq.c
+> > +++ b/block/blk-mq.c
+> > @@ -4257,12 +4257,16 @@ static void blk_mq_map_swqueue(struct request_queue *q)
+> >  
+> >  		/*
+> >  		 * Rule out isolated CPUs from hctx->cpumask to avoid
+> > -		 * running block kworker on isolated CPUs
+> > +		 * running block kworker on isolated CPUs.
+> > +		 * FIXME: cpuset should propagate further changes to isolated CPUs
+> > +		 * here.
+> >  		 */
+> > +		rcu_read_lock();
+> >  		for_each_cpu(cpu, hctx->cpumask) {
+> >  			if (cpu_is_isolated(cpu))
+> >  				cpumask_clear_cpu(cpu, hctx->cpumask);
+> >  		}
+> > +		rcu_read_unlock();
+> 
+> Want me to just take this one separately and get it out of your hair?
+> Doesn't seem to have any dependencies.
 
-elapsed time: 1242m
+The patch could be applied alone but the rest of the patchset needs it,
+otherwise it may dereference freed memory. So I fear it needs to stay
+within the lot.
 
-configs tested: 53
-configs skipped: 2
+I appreciate the offer though. But an ack would help, even if I must admit
+this single patch (which doesn't change current behaviour) leaves a
+bitter taste because complete handling of cpuset isolated partition change
+will require more work.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Speaking of, is there a way that I missed to define/overwrite the above
+hctx->cpumask on runtime?
 
-tested configs:
-alpha         allnoconfig    gcc-15.1.0
-alpha        allyesconfig    gcc-15.1.0
-arc          allmodconfig    gcc-15.1.0
-arc           allnoconfig    gcc-15.1.0
-arc          allyesconfig    gcc-15.1.0
-arm           allnoconfig    clang-22
-arm          allyesconfig    gcc-15.1.0
-arm64        allmodconfig    clang-19
-arm64         allnoconfig    gcc-15.1.0
-csky         allmodconfig    gcc-15.1.0
-csky          allnoconfig    gcc-15.1.0
-hexagon      allmodconfig    clang-17
-hexagon       allnoconfig    clang-22
-i386         allmodconfig    gcc-14
-i386          allnoconfig    gcc-14
-i386         allyesconfig    gcc-14
-loongarch     allnoconfig    clang-22
-m68k         allmodconfig    gcc-15.1.0
-m68k          allnoconfig    gcc-15.1.0
-m68k         allyesconfig    gcc-15.1.0
-microblaze    allnoconfig    gcc-15.1.0
-microblaze   allyesconfig    gcc-15.1.0
-mips         allmodconfig    gcc-15.1.0
-mips          allnoconfig    gcc-15.1.0
-mips         allyesconfig    gcc-15.1.0
-nios2        allmodconfig    gcc-11.5.0
-nios2         allnoconfig    gcc-11.5.0
-openrisc     allmodconfig    gcc-15.1.0
-openrisc      allnoconfig    gcc-15.1.0
-parisc       allmodconfig    gcc-15.1.0
-parisc        allnoconfig    gcc-15.1.0
-parisc       allyesconfig    gcc-15.1.0
-powerpc      allmodconfig    gcc-15.1.0
-powerpc       allnoconfig    gcc-15.1.0
-riscv        allmodconfig    clang-22
-riscv         allnoconfig    gcc-15.1.0
-riscv        allyesconfig    clang-16
-s390         allmodconfig    clang-18
-s390          allnoconfig    clang-22
-s390         allyesconfig    gcc-15.1.0
-sh           allmodconfig    gcc-15.1.0
-sh            allnoconfig    gcc-15.1.0
-sh           allyesconfig    gcc-15.1.0
-sparc         allnoconfig    gcc-15.1.0
-sparc64      allmodconfig    clang-22
-um           allmodconfig    clang-19
-um            allnoconfig    clang-22
-um           allyesconfig    gcc-14
-x86_64       allmodconfig    clang-20
-x86_64        allnoconfig    clang-20
-x86_64       allyesconfig    clang-20
-x86_64      rhel-9.4-rust    clang-20
-xtensa        allnoconfig    gcc-15.1.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks.
+-- 
+Frederic Weisbecker
+SUSE Labs
 
