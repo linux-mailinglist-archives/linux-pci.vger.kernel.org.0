@@ -1,173 +1,304 @@
-Return-Path: <linux-pci+bounces-43885-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43886-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16356CEC4C3
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 17:55:16 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C4DDCEC4D9
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 18:01:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B6731300647E
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 16:55:14 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5E29E3005AA1
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 17:01:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78C77288505;
-	Wed, 31 Dec 2025 16:55:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61D0029A9C3;
+	Wed, 31 Dec 2025 17:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oagiJKLh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fU7ZJeWb"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDBB28DB56;
-	Wed, 31 Dec 2025 16:55:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD3D284674;
+	Wed, 31 Dec 2025 17:01:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767200105; cv=none; b=RH7x66rsrlmpX3tSEih/08cJz5asplSQ2p2yQYCF/r2Ow23mZe3xBz8S3y1emxm68HrO4ONzgnPfmo2rNT6t/Fd8vSIhsw1JNG6qmQWoUlVBZdq/oDL57SmBwvNttzOUtnBGupMPqd/zBNS8mc5DgkRiek9tTlb/nwzxUunIfSg=
+	t=1767200512; cv=none; b=LwwNEScdusVE2VsQYuUVqJMcN0lJZelHXN7Y4WzpkAzG92E6Q4zbzhsNpFghHx/lTH1fHLuFVSQatjGJ7f9HUXod+alaVpJjxMC5tpfAYmXF0c764QdptRtNWCxT5Iwpxr0u3YTIhbwgP6BsDHLN7wJzrrk3afqIezQyPgiNMtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767200105; c=relaxed/simple;
-	bh=Y/5bf9h/NUrC5vUtyqz8GPzz/c0/aicl4xD+7PciqPc=;
+	s=arc-20240116; t=1767200512; c=relaxed/simple;
+	bh=N72JkyT+rZD9OdtAJl7cpuORygxpXKbwdLS5ZFP27ho=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ElcrwmIO1/ai/b52P9CTHw8spr/A4x/4Ir53GVgPnr0Ef6ejzTJe8oC9jo7L6OPJjTNM8aJ+DNBBMhnQJj4qdu4EDCIgo86OwApRASUHQomAYJqcz4d7GXueRVuPB9SsVvAFhaSHxvQIPC2R/zEnKIbtuXe7xpupT8tTXdCyOg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oagiJKLh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E3D0C113D0;
-	Wed, 31 Dec 2025 16:55:04 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=PlZDmdh5O721hySRvT69xaMYmoVY9TkRJv1O5uqOOG3xR81BpGzuhqgn9wXXrqvyBTnwMF61Y4SkbGNGt7guR6xFpPyoMTLku6WgsY+c2Nl8lNUkdXCCn7A3UucnwlnbL4nDLBXjC7k41Krmtk1gxb9vfJaUPd+ULHnp6M3Qag0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fU7ZJeWb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F645C113D0;
+	Wed, 31 Dec 2025 17:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767200104;
-	bh=Y/5bf9h/NUrC5vUtyqz8GPzz/c0/aicl4xD+7PciqPc=;
+	s=k20201202; t=1767200511;
+	bh=N72JkyT+rZD9OdtAJl7cpuORygxpXKbwdLS5ZFP27ho=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=oagiJKLhkxpnlRIWxJcrRtAo95NONHHB9nfMbLclU0sMm8g0eKfTjCvM8oYD6/J1T
-	 UmLQDM0EvUDieGgI3S4q5f4KfLWkMI8pPUMins/Zy8tiW/D27m5XWk5S8ssmMahfVA
-	 rTDdzfyMRZ72tNxlKbebnbRPW9x7R0Tp5agDjMLt5TywuhWrJbCznWdWeeSf6IHEOk
-	 aKB+WGKI1IM0ktTXUfuNMhfPQwVValcVrLUGDAD/RtcX0lVjagoqo2gqHTZxq2Crn+
-	 BfTdRAG1zIoIPNV5lnmCsdB/FnXjrKAToIqOS7vVj9dU8uV3yR+SIAAMoXlFPqi3nw
-	 ufbmYZgk1qtsg==
-Date: Wed, 31 Dec 2025 10:55:03 -0600
+	b=fU7ZJeWbC8t6neVjMX6DyP4JatoNd51EEAKbvpktdOf00vGrk+AsWav3Z1XRIb0n3
+	 htqkQhcPmklDPjhpwlWIHkqOaVuSvqlcjey3NFwa0DTkNpX8Wm3/rq2EVKuU554niV
+	 qsmbc6iBlAZM5OgWmWs6MsHoSJuFFswiSCB6a4+hNCQJ4ZTBlAZx2NiIJ95c446CeG
+	 UBILGmy1ixWd5o6Q9Lb5eV+OoudBnWWB/1CohZiWulygtlR9xd5sNN+Btp5Wzx/b1l
+	 s/KNv5phEM735Or8EOgjjyYFG6uBhOVivYbEHV2vULZ9wwHly8YwR82/DgYPglz7VN
+	 DA36fHr15YHBQ==
+Date: Wed, 31 Dec 2025 11:01:50 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jinhui Guo <guojinhui.liam@bytedance.com>
-Cc: alexander.h.duyck@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alexander Duyck <alexanderduyck@fb.com>,
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, Len Brown <lenb@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] PCI: Avoid work_on_cpu() in async probe workers
-Message-ID: <20251231165503.GA159243@bhelgaas>
+Subject: Re: [PATCH] ACPI: PCI: IRQ: Handle INTx GSIs as u32 values not int
+Message-ID: <20251231170150.GA160311@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251231075105.1368-1-guojinhui.liam@bytedance.com>
+In-Reply-To: <20251231092615.3014761-1-lpieralisi@kernel.org>
 
-[+cc Rafael, Danilo (driver core question), update Alexander's email]
-
-On Wed, Dec 31, 2025 at 03:51:05PM +0800, Jinhui Guo wrote:
-> On Tue, Dec 30, 2025 at 03:52:41PM -0600, Bjorn Helgaas wrote:
-> > On Tue, Dec 30, 2025 at 10:27:36PM +0800, Jinhui Guo wrote:
-> > > On Mon, Dec 29, 2025 at 08:08:57AM -1000, Tejun Heo wrote:
-> > > > On Sat, Dec 27, 2025 at 07:33:26PM +0800, Jinhui Guo wrote:
-> > > > > To fix the issue, pci_call_probe() must not call work_on_cpu() when it is
-> > > > > already running inside an unbounded asynchronous worker. Because a driver
-> > > > > can be probed asynchronously either by probe_type or by the kernel command
-> > > > > line, we cannot rely on PROBE_PREFER_ASYNCHRONOUS alone. Instead, we test
-> > > > > the PF_WQ_WORKER flag in current->flags; if it is set, pci_call_probe() is
-> > > > > executing within an unbounded workqueue worker and should skip the extra
-> > > > > work_on_cpu() call.
-> > > > 
-> > > > Why not just use queue_work_on() on system_dfl_wq (or any other unbound
-> > > > workqueue)? Those are soft-affine to cache domain but can overflow to other
-> > > > CPUs?
-> > > 
-> > > Hi, tejun,
-> > > 
-> > > Thank you for your time and helpful suggestions.
-> > > I had considered replacing work_on_cpu() with queue_work_on(system_dfl_wq) +
-> > > flush_work(), but that would be a refactor rather than a fix for the specific
-> > > problem we hit.
-> > > 
-> > > Let me restate the issue:
-> > > 
-> > > 1. With PROBE_PREFER_ASYNCHRONOUS enabled, the driver core queues work on
-> > >    async_wq to speed up driver probe.
-> > > 2. The PCI core then calls work_on_cpu() to tie the probe thread to the PCI
-> > >    device’s NUMA node, but it always picks the same CPU for every device on
-> > >    that node, forcing the PCI probes to run serially.
-> > > 
-> > > Therefore I test current->flags & PF_WQ_WORKER to detect that we are already
-> > > inside an async_wq worker and skip the extra nested work queue.
-> > > 
-> > > I agree with your point—using queue_work_on(system_dfl_wq) + flush_work()
-> > > would be cleaner and would let different vendors’ drivers probe in parallel
-> > > instead of fighting over the same CPU. I’ve prepared and tested another patch,
-> > > but I’m still unsure it’s the better approach; any further suggestions would
-> > > be greatly appreciated.
-> > > 
-> > > Test results for that patch:
-> > >   nvme 0000:01:00.0: CPU: 2, COMM: kworker/u1025:3, probe cost: 34904955 ns
-> > >   nvme 0000:02:00.0: CPU: 134, COMM: kworker/u1025:1, probe cost: 34774235 ns
-> > >   nvme 0000:03:00.0: CPU: 1, COMM: kworker/u1025:4, probe cost: 34573054 ns
-> > > 
-> > > Key changes in the patch:
-> > > 
-> > > 1. Keep the current->flags & PF_WQ_WORKER test to avoid nested workers.
-> > > 2. Replace work_on_cpu() with queue_work_node(system_dfl_wq) + flush_work()
-> > >    to enable parallel probing when PROBE_PREFER_ASYNCHRONOUS is disabled.
-> > > 3. Remove all cpumask operations.
-> > > 4. Drop cpu_hotplug_disable() since both cpumask manipulation and work_on_cpu()
-> > >    are gone.
-> > > 
-> > > The patch is shown below.
-> > 
-> > I love this patch because it makes pci_call_probe() so much simpler.
-> > 
-> > I *would* like a short higher-level description of the issue that
-> > doesn't assume so much workqueue background.
-> > 
-> > I'm not an expert, but IIUC __driver_attach() schedules async workers
-> > so driver probes can run in parallel, but the problem is that the
-> > workers for devices on node X are currently serialized because they
-> > all bind to the same CPU on that node.
-> > 
-> > Naive questions: It looks like async_schedule_dev() already schedules
-> > an async worker on the device node, so why does pci_call_probe() need
-> > to use queue_work_node() again?
-> > 
-> > pci_call_probe() dates to 2005 (d42c69972b85 ("[PATCH] PCI: Run PCI
-> > driver initialization on local node")), but the async_schedule_dev()
-> > looks like it was only added in 2019 (c37e20eaf4b2 ("driver core:
-> > Attach devices on CPU local to device node")).  Maybe the
-> > pci_call_probe() node awareness is no longer necessary?
+On Wed, Dec 31, 2025 at 10:26:15AM +0100, Lorenzo Pieralisi wrote:
+> In ACPI Global System Interrupts (GSIs) are described using a 32-bit
+> value.
 > 
-> Hi, Bjorn
+> ACPI/PCI legacy interrupts (INTx) parsing code treats GSIs as 'int', which
+> poses issues if the GSI interrupt value is a 32-bit value with the MSB set
+> (as required in some interrupt configurations - eg ARM64 GICv5 systems).
 > 
-> Thank you for your time and kind reply.
+> Fix ACPI/PCI legacy INTx parsing by converting variables representing
+> GSIs from 'int' to 'u32' bringing the code in line with the ACPI
+> specification.
+
+Looks good to me.  Is there any symptom of what the issue looks like
+that could be mentioned here?  Might also be useful in the subject,
+which currently describes the C code without really saying why we want
+to do this.
+
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> ---
+>  drivers/acpi/pci_irq.c      | 19 ++++++++++--------
+>  drivers/acpi/pci_link.c     | 39 ++++++++++++++++++++++++-------------
+>  drivers/xen/acpi.c          | 13 +++++++------
+>  include/acpi/acpi_drivers.h |  2 +-
+>  4 files changed, 44 insertions(+), 29 deletions(-)
 > 
-> As I see it, two scenarios should be borne in mind:
+> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+> index ad81aa03fe2f..c416942ff3e2 100644
+> --- a/drivers/acpi/pci_irq.c
+> +++ b/drivers/acpi/pci_irq.c
+> @@ -188,7 +188,7 @@ static int acpi_pci_irq_check_entry(acpi_handle handle, struct pci_dev *dev,
+>  	 * the IRQ value, which is hardwired to specific interrupt inputs on
+>  	 * the interrupt controller.
+>  	 */
+> -	pr_debug("%04x:%02x:%02x[%c] -> %s[%d]\n",
+> +	pr_debug("%04x:%02x:%02x[%c] -> %s[%u]\n",
+>  		 entry->id.segment, entry->id.bus, entry->id.device,
+>  		 pin_name(entry->pin), prt->source, entry->index);
+>  
+> @@ -384,7 +384,7 @@ static inline bool acpi_pci_irq_valid(struct pci_dev *dev, u8 pin)
+>  int acpi_pci_irq_enable(struct pci_dev *dev)
+>  {
+>  	struct acpi_prt_entry *entry;
+> -	int gsi;
+> +	u32 gsi;
+>  	u8 pin;
+>  	int triggering = ACPI_LEVEL_SENSITIVE;
+>  	/*
+> @@ -422,18 +422,21 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+>  			return 0;
+>  	}
+>  
+> +	rc = -ENODEV;
+> +
+>  	if (entry) {
+>  		if (entry->link)
+> -			gsi = acpi_pci_link_allocate_irq(entry->link,
+> +			rc = acpi_pci_link_allocate_irq(entry->link,
+>  							 entry->index,
+>  							 &triggering, &polarity,
+> -							 &link);
+> -		else
+> +							 &link, &gsi);
+> +		else {
+>  			gsi = entry->index;
+> -	} else
+> -		gsi = -1;
+> +			rc = 0;
+> +		}
+> +	}
+>  
+> -	if (gsi < 0) {
+> +	if (rc < 0) {
+>  		/*
+>  		 * No IRQ known to the ACPI subsystem - maybe the BIOS /
+>  		 * driver reported one, then use it. Exit in any case.
+> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
+> index bed7dc85612e..b91b039a3d20 100644
+> --- a/drivers/acpi/pci_link.c
+> +++ b/drivers/acpi/pci_link.c
+> @@ -448,7 +448,7 @@ static int acpi_isa_irq_penalty[ACPI_MAX_ISA_IRQS] = {
+>  	/* >IRQ15 */
+>  };
+>  
+> -static int acpi_irq_pci_sharing_penalty(int irq)
+> +static int acpi_irq_pci_sharing_penalty(u32 irq)
+>  {
+>  	struct acpi_pci_link *link;
+>  	int penalty = 0;
+> @@ -474,7 +474,7 @@ static int acpi_irq_pci_sharing_penalty(int irq)
+>  	return penalty;
+>  }
+>  
+> -static int acpi_irq_get_penalty(int irq)
+> +static int acpi_irq_get_penalty(u32 irq)
+>  {
+>  	int penalty = 0;
+>  
+> @@ -528,7 +528,7 @@ static int acpi_irq_balance = -1;	/* 0: static, 1: balance */
+>  static int acpi_pci_link_allocate(struct acpi_pci_link *link)
+>  {
+>  	acpi_handle handle = link->device->handle;
+> -	int irq;
+> +	u32 irq;
+>  	int i;
+>  
+>  	if (link->irq.initialized) {
+> @@ -598,44 +598,53 @@ static int acpi_pci_link_allocate(struct acpi_pci_link *link)
+>  	return 0;
+>  }
+>  
+> -/*
+> - * acpi_pci_link_allocate_irq
+> - * success: return IRQ >= 0
+> - * failure: return -1
+> +/**
+> + * acpi_pci_link_allocate_irq(): Retrieve a link device GSI
+> + *
+> + * @handle: Handle for the link device
+> + * @index: GSI index
+> + * @triggering: pointer to store the GSI trigger
+> + * @polarity: pointer to store GSI polarity
+> + * @name: pointer to store link device name
+> + * @gsi: pointer to store GSI number
+> + *
+> + * Returns:
+> + *	0 on success with @triggering, @polarity, @name, @gsi initialized.
+> + *	-ENODEV on failure
+>   */
+>  int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
+> -			       int *polarity, char **name)
+> +			       int *polarity, char **name, u32 *gsi)
+>  {
+>  	struct acpi_device *device = acpi_fetch_acpi_dev(handle);
+>  	struct acpi_pci_link *link;
+>  
+>  	if (!device) {
+>  		acpi_handle_err(handle, "Invalid link device\n");
+> -		return -1;
+> +		return -ENODEV;
+>  	}
+>  
+>  	link = acpi_driver_data(device);
+>  	if (!link) {
+>  		acpi_handle_err(handle, "Invalid link context\n");
+> -		return -1;
+> +		return -ENODEV;
+>  	}
+>  
+>  	/* TBD: Support multiple index (IRQ) entries per Link Device */
+>  	if (index) {
+>  		acpi_handle_err(handle, "Invalid index %d\n", index);
+> -		return -1;
+> +		return -ENODEV;
+>  	}
+>  
+>  	mutex_lock(&acpi_link_lock);
+>  	if (acpi_pci_link_allocate(link)) {
+>  		mutex_unlock(&acpi_link_lock);
+> -		return -1;
+> +		return -ENODEV;
+>  	}
+>  
+>  	if (!link->irq.active) {
+>  		mutex_unlock(&acpi_link_lock);
+>  		acpi_handle_err(handle, "Link active IRQ is 0!\n");
+> -		return -1;
+> +		return -ENODEV;
+>  	}
+>  	link->refcnt++;
+>  	mutex_unlock(&acpi_link_lock);
+> @@ -647,7 +656,9 @@ int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
+>  	if (name)
+>  		*name = acpi_device_bid(link->device);
+>  	acpi_handle_debug(handle, "Link is referenced\n");
+> -	return link->irq.active;
+> +	*gsi = link->irq.active;
+> +
+> +	return 0;
+>  }
+>  
+>  /*
+> diff --git a/drivers/xen/acpi.c b/drivers/xen/acpi.c
+> index d2ee605c5ca1..eab28cfe9939 100644
+> --- a/drivers/xen/acpi.c
+> +++ b/drivers/xen/acpi.c
+> @@ -89,11 +89,11 @@ int xen_acpi_get_gsi_info(struct pci_dev *dev,
+>  						  int *trigger_out,
+>  						  int *polarity_out)
+>  {
+> -	int gsi;
+> +	u32 gsi;
+>  	u8 pin;
+>  	struct acpi_prt_entry *entry;
+>  	int trigger = ACPI_LEVEL_SENSITIVE;
+> -	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
+> +	int ret, polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
+>  				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
+>  
+>  	if (!dev || !gsi_out || !trigger_out || !polarity_out)
+> @@ -105,17 +105,18 @@ int xen_acpi_get_gsi_info(struct pci_dev *dev,
+>  
+>  	entry = acpi_pci_irq_lookup(dev, pin);
+>  	if (entry) {
+> +		ret = 0;
+>  		if (entry->link)
+> -			gsi = acpi_pci_link_allocate_irq(entry->link,
+> +			ret = acpi_pci_link_allocate_irq(entry->link,
+>  							 entry->index,
+>  							 &trigger, &polarity,
+> -							 NULL);
+> +							 NULL, &gsi);
+>  		else
+>  			gsi = entry->index;
+>  	} else
+> -		gsi = -1;
+> +		ret = -ENODEV;
+>  
+> -	if (gsi < 0)
+> +	if (ret < 0)
+>  		return -EINVAL;
+>  
+>  	*gsi_out = gsi;
+> diff --git a/include/acpi/acpi_drivers.h b/include/acpi/acpi_drivers.h
+> index b14d165632e7..402b97d12138 100644
+> --- a/include/acpi/acpi_drivers.h
+> +++ b/include/acpi/acpi_drivers.h
+> @@ -51,7 +51,7 @@
+>  
+>  int acpi_irq_penalty_init(void);
+>  int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
+> -			       int *polarity, char **name);
+> +			       int *polarity, char **name, u32 *gsi);
+>  int acpi_pci_link_free_irq(acpi_handle handle);
+>  
+>  /* ACPI PCI Device Binding */
+> -- 
+> 2.50.1
 > 
-> 1. Driver allowed to probe asynchronously
->    The driver core schedules async workers via async_schedule_dev(),
->    so pci_call_probe() needs no extra queue_work_node().
-> 
-> 2. Driver not allowed to probe asynchronously
->    The driver core (__driver_attach() or __device_attach()) calls
->    pci_call_probe() directly, without any async worker from
->    async_schedule_dev(). NUMA-node awareness in pci_call_probe()
->    is therefore still required.
-
-Good point, we need the NUMA awareness in both sync and async probe
-paths.
-
-But node affinity is orthogonal to the sync/async question, so it
-seems weird to deal with affinity in two separate places.  It also
-seems sub-optimal to have node affinity in the driver core async path
-but not the synchronous probe path.
-
-Maybe driver_probe_device() should do something about NUMA affinity?
-
-Bjorn
 
