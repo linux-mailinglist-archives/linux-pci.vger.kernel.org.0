@@ -1,184 +1,259 @@
-Return-Path: <linux-pci+bounces-43870-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43871-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39190CEB79A
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 08:51:40 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DE4ACEB9F8
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 10:04:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id EA15A3009107
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 07:51:38 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7A120300A3E2
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Dec 2025 09:04:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ABBB30F94E;
-	Wed, 31 Dec 2025 07:51:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E55526D4CA;
+	Wed, 31 Dec 2025 09:04:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="i0cDoN0J"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z0V/lB1n"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sg-1-104.ptr.blmpb.com (sg-1-104.ptr.blmpb.com [118.26.132.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD17259C80
-	for <linux-pci@vger.kernel.org>; Wed, 31 Dec 2025 07:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874AA31577B
+	for <linux-pci@vger.kernel.org>; Wed, 31 Dec 2025 09:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767167497; cv=none; b=fqxhysR3cHuaF5KuHfbjTS1R8TqRDJrVHLGtOX6CvPOhBZMCjl0mH/HT7a+oAboojR4vx68qXPmwtW+86jZ4O6kCKSMMHBsaqbFcuzMyKft95lx6k+U3vfndReI5O09uYbFWrZzgz0/aVa5Ck9zskJ1JSYxrfAlvoqOfU55rry4=
+	t=1767171875; cv=none; b=QdU7DkybTOBUXeFN1d6ChpgD3Qn9WcR3lNgXM5NSJ4/cUo6s/BvtqH7H8EK35hRRZa36m9P1Vb7tPc9pVuGUTCM0WVYZ+2a9llNcz2zq9/jBsuMPf/yrnuJeZeUwmkesXTSCU1vNezbwGXy5/GDMhuLG7/HZlEZeGJ5VGPTdVDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767167497; c=relaxed/simple;
-	bh=5OhfQh94QrWrHPOEwimZhgVrzHBQO14VZlluCJQpk+4=;
-	h=From:Date:Message-Id:In-Reply-To:Mime-Version:Content-Type:
-	 References:To:Cc:Subject; b=oNnn0TElANAdtw4rs80EKwsd3jhr8zPu1qZVEV9dxj7mKc1qFaQkmYcB6H2/hyWvrzMPqL0HyVT4R8vXmSVGtHz+SXxGe/i8Qh2FE2S2i3sPJQ5ySxJrbUDmGpM5VqVoU0k39myv1rGaTsdLOirOeM+TOen/7o/Otrkq85tU4n8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=i0cDoN0J; arc=none smtp.client-ip=118.26.132.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1767167487; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=XcspS1IKS8vFQcHe5Ltr51i0quFjOWyZrLSyAxS3hJs=;
- b=i0cDoN0JL1Il/Q6XcMWZJ/1iUhsiErysdUDkBYRBmsfimjNPu9lGK4+lxtdsagloG7Ajj2
- jcLhLDxEjiaHbc69zCissWCZ6OZRRfjV1VENQsI2XYQcGw7rYJrMwXkVebNBmSc6NY9KJy
- 9ggvuTXneTCt1rOOMcjXITnV1fwZS1JedbvLW45qtRNao14M+NMxaHZqgaAUi1N4rRCA6o
- baU/Lh2WYzRYc9Q0tQdB2jWtm+e3Oo4s1EYqKTI8cyDEknQNNMggI2nmtBb09z9vJ9ro7T
- 0okEXhPD5z0ta6+40W0qUFFBVl36p0rGvMW8syO3eLJTerj6k9a9CLvC1Kigow==
-From: "Jinhui Guo" <guojinhui.liam@bytedance.com>
-Date: Wed, 31 Dec 2025 15:51:05 +0800
-Message-Id: <20251231075105.1368-1-guojinhui.liam@bytedance.com>
-In-Reply-To: <20251230215241.GA130710@bhelgaas>
-X-Lms-Return-Path: <lba+26954d5fd+fdc0ff+vger.kernel.org+guojinhui.liam@bytedance.com>
+	s=arc-20240116; t=1767171875; c=relaxed/simple;
+	bh=MSi+JwwDiXZCRFklqNC2bU/4XMZUKH82XEiKggFLKFM=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=IGjHOgeSQ5NPSAmao6dDFnXDTsXmQXTZC7qJ6fp1iGSu5YpBB8m1VnWjeVocQbLcO/P/w35c+1sff2UfajU35xT4yDJ5XATlRn4GgJWIpOpMN4855vxIZzrhuNbnryOoZdimZB86MWQrtLo5rvn5OZjBa6Mb7P+47Wj0V47R7KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z0V/lB1n; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767171873; x=1798707873;
+  h=date:from:to:cc:subject:message-id;
+  bh=MSi+JwwDiXZCRFklqNC2bU/4XMZUKH82XEiKggFLKFM=;
+  b=Z0V/lB1nLRCrk5gldSbvFA+tJWFi/hOqZy7Zgv313f9u5CMHxtQS5eEo
+   eJ0RiABZ7Dj4dNt5X+wX+V35Ph2b7WHVavp83Jdbtzjk7VLpT06UK50X8
+   +RYNkF3OW2BfzLPh4HvgOHyEPqqGCnn0Ra7/HiK+cSdhreVvacRJzImP0
+   han+SO0BMA9ZvS191Jft2YKp4Q196VL6N7VP5CWMao86aZJsWVblTBxro
+   NMdrSW1JmkJKfW2nToLlLNlbjv9y58PbzFj2ji6Q9vJe7m6+Dc06PDbJa
+   QBj8+u2FvGK8KEzj2Wk2OsMzLEgFJv47adbCqA7u8dy8lzNuccIaPNOfE
+   w==;
+X-CSE-ConnectionGUID: ONMRigmYQfWu+l6CHD0fUA==
+X-CSE-MsgGUID: 9d0VsYIkQBSJ+VBhD5v81A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11657"; a="79051375"
+X-IronPort-AV: E=Sophos;i="6.21,191,1763452800"; 
+   d="scan'208";a="79051375"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Dec 2025 01:04:33 -0800
+X-CSE-ConnectionGUID: b5ufNmg8RmmrrkGCb4dGQw==
+X-CSE-MsgGUID: pHeRavfxRl2pJiCNcahUmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,191,1763452800"; 
+   d="scan'208";a="201406908"
+Received: from lkp-server01.sh.intel.com (HELO c9aa31daaa89) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 31 Dec 2025 01:04:31 -0800
+Received: from kbuild by c9aa31daaa89 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vas82-0000000014V-1xFC;
+	Wed, 31 Dec 2025 09:04:26 +0000
+Date: Wed, 31 Dec 2025 17:03:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ 4d1d1216640953e1129838b0801f87c07bc056b1
+Message-ID: <202512311730.3vieOTaz-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-X-Mailer: git-send-email 2.17.1
-X-Original-From: Jinhui Guo <guojinhui.liam@bytedance.com>
-References: <20251230215241.GA130710@bhelgaas>
-To: <helgaas@kernel.org>
-Cc: <alexander.h.duyck@linux.intel.com>, <bhelgaas@google.com>, 
-	<bvanassche@acm.org>, <dan.j.williams@intel.com>, 
-	<gregkh@linuxfoundation.org>, <guojinhui.liam@bytedance.com>, 
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>, 
-	<stable@vger.kernel.org>, <tj@kernel.org>
-Subject: Re: [PATCH] PCI: Avoid work_on_cpu() in async probe workers
 
-On Tue, Dec 30, 2025 at 03:52:41PM -0600, Bjorn Helgaas wrote:
-> On Tue, Dec 30, 2025 at 10:27:36PM +0800, Jinhui Guo wrote:
-> > On Mon, Dec 29, 2025 at 08:08:57AM -1000, Tejun Heo wrote:
-> > > On Sat, Dec 27, 2025 at 07:33:26PM +0800, Jinhui Guo wrote:
-> > > > To fix the issue, pci_call_probe() must not call work_on_cpu() when=
- it is
-> > > > already running inside an unbounded asynchronous worker. Because a =
-driver
-> > > > can be probed asynchronously either by probe_type or by the kernel =
-command
-> > > > line, we cannot rely on PROBE_PREFER_ASYNCHRONOUS alone. Instead, w=
-e test
-> > > > the PF_WQ_WORKER flag in current->flags; if it is set, pci_call_pro=
-be() is
-> > > > executing within an unbounded workqueue worker and should skip the =
-extra
-> > > > work_on_cpu() call.
-> > >=20
-> > > Why not just use queue_work_on() on system_dfl_wq (or any other unbou=
-nd
-> > > workqueue)? Those are soft-affine to cache domain but can overflow to=
- other
-> > > CPUs?
-> >=20
-> > Hi, tejun,
-> >=20
-> > Thank you for your time and helpful suggestions.
-> > I had considered replacing work_on_cpu() with queue_work_on(system_dfl_=
-wq) +
-> > flush_work(), but that would be a refactor rather than a fix for the sp=
-ecific
-> > problem we hit.
-> >=20
-> > Let me restate the issue:
-> >=20
-> > 1. With PROBE_PREFER_ASYNCHRONOUS enabled, the driver core queues work =
-on
-> >    async_wq to speed up driver probe.
-> > 2. The PCI core then calls work_on_cpu() to tie the probe thread to the=
- PCI
-> >    device=E2=80=99s NUMA node, but it always picks the same CPU for eve=
-ry device on
-> >    that node, forcing the PCI probes to run serially.
-> >=20
-> > Therefore I test current->flags & PF_WQ_WORKER to detect that we are al=
-ready
-> > inside an async_wq worker and skip the extra nested work queue.
-> >=20
-> > I agree with your point=E2=80=94using queue_work_on(system_dfl_wq) + fl=
-ush_work()
-> > would be cleaner and would let different vendors=E2=80=99 drivers probe=
- in parallel
-> > instead of fighting over the same CPU. I=E2=80=99ve prepared and tested=
- another patch,
-> > but I=E2=80=99m still unsure it=E2=80=99s the better approach; any furt=
-her suggestions would
-> > be greatly appreciated.
-> >=20
-> > Test results for that patch:
-> >   nvme 0000:01:00.0: CPU: 2, COMM: kworker/u1025:3, probe cost: 3490495=
-5 ns
-> >   nvme 0000:02:00.0: CPU: 134, COMM: kworker/u1025:1, probe cost: 34774=
-235 ns
-> >   nvme 0000:03:00.0: CPU: 1, COMM: kworker/u1025:4, probe cost: 3457305=
-4 ns
-> >=20
-> > Key changes in the patch:
-> >=20
-> > 1. Keep the current->flags & PF_WQ_WORKER test to avoid nested workers.
-> > 2. Replace work_on_cpu() with queue_work_node(system_dfl_wq) + flush_wo=
-rk()
-> >    to enable parallel probing when PROBE_PREFER_ASYNCHRONOUS is disable=
-d.
-> > 3. Remove all cpumask operations.
-> > 4. Drop cpu_hotplug_disable() since both cpumask manipulation and work_=
-on_cpu()
-> >    are gone.
-> >=20
-> > The patch is shown below.
->=20
-> I love this patch because it makes pci_call_probe() so much simpler.
->=20
-> I *would* like a short higher-level description of the issue that
-> doesn't assume so much workqueue background.
->=20
-> I'm not an expert, but IIUC __driver_attach() schedules async workers
-> so driver probes can run in parallel, but the problem is that the
-> workers for devices on node X are currently serialized because they
-> all bind to the same CPU on that node.
->=20
-> Naive questions: It looks like async_schedule_dev() already schedules
-> an async worker on the device node, so why does pci_call_probe() need
-> to use queue_work_node() again?
->=20
-> pci_call_probe() dates to 2005 (d42c69972b85 ("[PATCH] PCI: Run PCI
-> driver initialization on local node")), but the async_schedule_dev()
-> looks like it was only added in 2019 (c37e20eaf4b2 ("driver core:
-> Attach devices on CPU local to device node")).  Maybe the
-> pci_call_probe() node awareness is no longer necessary?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: 4d1d1216640953e1129838b0801f87c07bc056b1  Merge branch 'pci/misc'
 
-Hi, Bjorn
+elapsed time: 904m
 
-Thank you for your time and kind reply.
+configs tested: 168
+configs skipped: 3
 
-As I see it, two scenarios should be borne in mind:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-1. Driver allowed to probe asynchronously
-   The driver core schedules async workers via async_schedule_dev(),
-   so pci_call_probe() needs no extra queue_work_node().
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                        nsimosci_defconfig    gcc-15.1.0
+arc                   randconfig-001-20251231    gcc-11.5.0
+arc                   randconfig-002-20251231    gcc-8.5.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    gcc-15.1.0
+arm                                 defconfig    clang-22
+arm                           h3600_defconfig    gcc-15.1.0
+arm                   randconfig-001-20251231    gcc-12.5.0
+arm                   randconfig-002-20251231    clang-22
+arm                   randconfig-003-20251231    gcc-8.5.0
+arm                   randconfig-004-20251231    clang-19
+arm                         s3c6400_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20251231    clang-22
+arm64                 randconfig-002-20251231    clang-19
+arm64                 randconfig-003-20251231    gcc-8.5.0
+arm64                 randconfig-004-20251231    gcc-13.4.0
+csky                             allmodconfig    gcc-15.1.0
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20251231    gcc-14.3.0
+csky                  randconfig-002-20251231    gcc-10.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-22
+hexagon                             defconfig    clang-22
+hexagon               randconfig-001-20251231    clang-22
+hexagon               randconfig-002-20251231    clang-22
+i386                             allmodconfig    gcc-14
+i386                              allnoconfig    gcc-14
+i386                             allyesconfig    gcc-14
+i386        buildonly-randconfig-001-20251231    clang-20
+i386        buildonly-randconfig-002-20251231    gcc-14
+i386        buildonly-randconfig-003-20251231    gcc-14
+i386        buildonly-randconfig-004-20251231    gcc-14
+i386        buildonly-randconfig-005-20251231    gcc-14
+i386        buildonly-randconfig-006-20251231    gcc-14
+i386                                defconfig    clang-20
+i386                  randconfig-001-20251231    gcc-14
+i386                  randconfig-002-20251231    gcc-12
+i386                  randconfig-003-20251231    gcc-14
+i386                  randconfig-004-20251231    clang-20
+i386                  randconfig-005-20251231    gcc-14
+i386                  randconfig-006-20251231    gcc-14
+i386                  randconfig-007-20251231    gcc-14
+i386                  randconfig-011-20251231    gcc-14
+i386                  randconfig-012-20251231    clang-20
+i386                  randconfig-013-20251231    gcc-13
+i386                  randconfig-014-20251231    gcc-14
+i386                  randconfig-015-20251231    gcc-13
+i386                  randconfig-016-20251231    clang-20
+i386                  randconfig-017-20251231    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20251231    gcc-12.5.0
+loongarch             randconfig-002-20251231    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                             allmodconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                             allyesconfig    gcc-15.1.0
+mips                        bcm63xx_defconfig    clang-22
+mips                      malta_kvm_defconfig    gcc-15.1.0
+nios2                            allmodconfig    gcc-11.5.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20251231    gcc-8.5.0
+nios2                 randconfig-002-20251231    gcc-10.5.0
+openrisc                         allmodconfig    gcc-15.1.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20251231    gcc-8.5.0
+parisc                randconfig-002-20251231    gcc-11.5.0
+parisc64                         alldefconfig    gcc-15.1.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                       holly_defconfig    clang-22
+powerpc                       ppc64_defconfig    clang-22
+powerpc               randconfig-001-20251231    gcc-8.5.0
+powerpc               randconfig-002-20251231    clang-22
+powerpc64             randconfig-001-20251231    clang-16
+powerpc64             randconfig-002-20251231    gcc-14.3.0
+riscv                            allmodconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-22
+riscv                 randconfig-001-20251231    gcc-14.3.0
+riscv                 randconfig-002-20251231    gcc-13.4.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-22
+s390                  randconfig-001-20251231    gcc-8.5.0
+s390                  randconfig-002-20251231    gcc-10.5.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                    randconfig-001-20251231    gcc-15.1.0
+sh                    randconfig-002-20251231    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20251231    gcc-11.5.0
+sparc                 randconfig-002-20251231    gcc-13.4.0
+sparc64                          allmodconfig    clang-22
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20251231    clang-22
+sparc64               randconfig-002-20251231    clang-20
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-14
+um                                  defconfig    clang-22
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20251231    clang-22
+um                    randconfig-002-20251231    gcc-12
+um                           x86_64_defconfig    clang-22
+x86_64                           allmodconfig    clang-20
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20251231    gcc-14
+x86_64      buildonly-randconfig-002-20251231    gcc-14
+x86_64      buildonly-randconfig-003-20251231    gcc-14
+x86_64      buildonly-randconfig-004-20251231    clang-20
+x86_64      buildonly-randconfig-005-20251231    gcc-14
+x86_64      buildonly-randconfig-006-20251231    clang-20
+x86_64                              defconfig    gcc-14
+x86_64                randconfig-001-20251231    gcc-13
+x86_64                randconfig-002-20251231    clang-20
+x86_64                randconfig-003-20251231    clang-20
+x86_64                randconfig-004-20251231    clang-20
+x86_64                randconfig-005-20251231    clang-20
+x86_64                randconfig-006-20251231    clang-20
+x86_64                randconfig-011-20251231    clang-20
+x86_64                randconfig-012-20251231    gcc-14
+x86_64                randconfig-013-20251231    gcc-14
+x86_64                randconfig-014-20251231    gcc-12
+x86_64                randconfig-015-20251231    gcc-14
+x86_64                randconfig-016-20251231    gcc-14
+x86_64                randconfig-071-20251231    clang-20
+x86_64                randconfig-072-20251231    clang-20
+x86_64                randconfig-073-20251231    gcc-12
+x86_64                randconfig-074-20251231    gcc-14
+x86_64                randconfig-075-20251231    clang-20
+x86_64                randconfig-076-20251231    gcc-14
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20251231    gcc-8.5.0
+xtensa                randconfig-002-20251231    gcc-8.5.0
+xtensa                         virt_defconfig    gcc-15.1.0
 
-2. Driver not allowed to probe asynchronously
-   The driver core (__driver_attach() or __device_attach()) calls
-   pci_call_probe() directly, without any async worker from
-   async_schedule_dev(). NUMA-node awareness in pci_call_probe()
-   is therefore still required.
-
-Best Regards,
-Jinhui
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
