@@ -1,363 +1,211 @@
-Return-Path: <linux-pci+bounces-43929-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43930-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BA45CEE57B
-	for <lists+linux-pci@lfdr.de>; Fri, 02 Jan 2026 12:27:23 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AF64CEE6D8
+	for <lists+linux-pci@lfdr.de>; Fri, 02 Jan 2026 12:53:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EE8423024E71
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jan 2026 11:26:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DADB53018199
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Jan 2026 11:53:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C14B2F12BF;
-	Fri,  2 Jan 2026 11:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="quyGjldQ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1136130E822;
+	Fri,  2 Jan 2026 11:53:00 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8024B2F12C3
-	for <linux-pci@vger.kernel.org>; Fri,  2 Jan 2026 11:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D41D2B9B9;
+	Fri,  2 Jan 2026 11:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767353199; cv=none; b=X8bpRjpRxdc162qudng2PlGUey0stF5eEJJhFXJ9+uhobzcSp8KhVX6ZCjs/5jQ17WqSJmEk++K/Bo23oTW+nmt7b9BYs8qp3GuRozMdU0Hpj/J9arXXPEP39TIHs8UNtiL7BKscLZpVgR3gdswMh0AH46eU0VPxE5x7YkREDvs=
+	t=1767354780; cv=none; b=mdRYWp2YhLJVJGqP92697hD6+5+Ic4awBcZDbJGZBTdZaWqpyJN+Iwmyk73WiNw8zR215sRFKAt7fWQLDD9Kn+xHHldj6frJvbonHBKzegkwUdbS3XPOWAXD8vsIf+RH5hjaI3beAWrztCp/V6YJTHtTP6wiVe5Efuc0PhQQMRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767353199; c=relaxed/simple;
-	bh=6gt0lCtYfDrnE8WlSXS1Mph8bJZZDD2O6n9Kjt2/TTw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bfdpdmKiktwsMvt59Tac94DD3sWoXUGEJe4QIrAncqbQY8c8k7zbgg4z7jgcS1abqKsNQsm8YAgoDR/XoiH7eBifbkywyTDdpWkcLnVQzjWdDUbP1d2FcZzNpNYrbey2MyH+Kz6ynB8Oc20t3r9CuymDMd0kU3X3MxuECXkO/G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=quyGjldQ; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-37a2dced861so122702041fa.1
-        for <linux-pci@vger.kernel.org>; Fri, 02 Jan 2026 03:26:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1767353194; x=1767957994; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=poHpaeklp4IY+w+Q9FeQOfXydnUU88YIobaVeAHqVDs=;
-        b=quyGjldQ6mQNV2/GSU5cxzFEjOuItZMKwLU6C0YWUTCYXOyrEcY60/DD9xWdjbwr15
-         Vj3SdSZzXPO7p1oSNBcg/AXw7y07Qq3o+4BtANAERNfccjlEcvrMydAKnLorin+XN1gS
-         W2C/C9B4ETKNuBsOWXjMpIoEQ0e3epwe0J5TvadAVrXf9uBjEnL5vc7+QNwl0vtDs/HP
-         hEkZv5v49mndDJAbXDL+CDQKeTOK+vvh7ZebNO8PAYW0jZ1vseboPouKv3lnhyXTCkoI
-         sVmxOALAGrpbojMXZ0SKX4qr621xowTMHR4hSvGgjtL3YpiebWvdLxtZ+UJIIDTc+V5S
-         w3ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767353194; x=1767957994;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=poHpaeklp4IY+w+Q9FeQOfXydnUU88YIobaVeAHqVDs=;
-        b=q94a02HbD6iQBiQIBod5PpebufqerRJIW+cfFVDzWQO/OJERYgSiAyI8S1aPR6AcyO
-         oY+yFOJWLS6x2m0Ch/u+xzeuj/tM1daX/ub+tf3fHTeefgy71+PViB2KrAGsGjTx+tpY
-         3XYFH4ajYPlhhCfyzZ4uV5Skz29oeXEPZwD3aL1eGgiaHWPLGB3kmRW3OEF2GYEec/sb
-         Qjzjod8XAEslz8fmeyVMAYWeCWqIWUPFi45MEwq6V0xx80lMKnvW02nny3VmG1DzAm5f
-         nmLyxp/iLpCoO6Pgz1YjwDOI+hFzvp1pugoFdmXSHqrb3xTXkbc9jl+lod5r0t7b/04F
-         oUPg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9T7EmhW7sFXWC04N+YNt5crUi4x0+hnlwGIi/td7nxqpXw6Q/nNpBh7tBCoA3xzNxG4OtZ8urvgs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsiWsk42u6ru8AChm6zUIx47j+44uPOj7zwfQpVn2kffteo9nx
-	K+TJwXvYHsuyuUABmwRnC2fdoPsOVazP0W212Lhoif+B6966VZnEs1IJ8pVhXaSDJi3eUXlzjMO
-	rNJPNb62//ntOXBYBwD0O2Gf+ZAz/BFIDpFjoYmOx6w==
-X-Gm-Gg: AY/fxX4VOyeLFBEX5TtYdagZLkQPCGiC3+l+/Ydyna4uD3K8cj2QmQ0O4cEVYhYXN/6
-	ytoolAnsFE/c1KGN4+A6TxRCmgwVcQ4B0HQwub9ZvmydhGp/l8isyFFavthlVNkXMx/RGK9CE++
-	JJH7SOaTKA2Z9Q31azAzU5HIMmFYvK44ekG4HoIVtYIg5dpBlVb21fB1Lpu50AEM3iyZeu3Wm+J
-	CdusK4fm5wJXfMobMRuMMUfojCwa5jzpxRYtHgy8pI3EDmzoA3HRTDCbtOb1fKq1b7HfLdWt8M+
-	4dBpe86FD7XOt+K1s5HeiXuch3w=
-X-Google-Smtp-Source: AGHT+IGRZrM9abbdnTN/4+pj5RYHmuLdG4GQWkBYStRVXjpCtIkw40x89qPYTM6dH8OtGtRyYRBI+978SCrSoXEmcA4=
-X-Received: by 2002:a05:651c:199e:b0:380:af0:d07 with SMTP id
- 38308e7fff4ca-3812025c99fmr122614661fa.0.1767353193614; Fri, 02 Jan 2026
- 03:26:33 -0800 (PST)
+	s=arc-20240116; t=1767354780; c=relaxed/simple;
+	bh=sspdCbED63g83BojotuKWdg2+B/XPystf+q7O6UjsVM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ObtEPmMjmTXc5gshOoWUVkjUCKZgBsd3awsWH4eD/At8B8K/wMvhjIu4StlJ1dvlrualMnaGDhAnAWgu06UFrscv+JMlt79Vv5p+Oz0e5fHREgqQfCLaHdlgBoNgrjZoOpg3zU5dbx8T/di6PlOJGvpxIlZ4SAPuQ2jgvPvXOdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.150])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4djMVh5sNxzHnGgk;
+	Fri,  2 Jan 2026 19:51:56 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6743340539;
+	Fri,  2 Jan 2026 19:52:53 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Fri, 2 Jan
+ 2026 11:52:52 +0000
+Date: Fri, 2 Jan 2026 11:52:50 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: Linux ACPI <linux-acpi@vger.kernel.org>, Dan Carpenter
+	<dan.carpenter@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Linux PCI
+	<linux-pci@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, "Srinivas
+ Pandruvada" <srinivas.pandruvada@linux.intel.com>, Hans de Goede
+	<hansg@kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v1] ACPI: bus: Adjust acpi_osc_handshake() parameter
+ list
+Message-ID: <20260102115250.0000045c@huawei.com>
+In-Reply-To: <12833187.O9o76ZdvQC@rafael.j.wysocki>
+References: <12833187.O9o76ZdvQC@rafael.j.wysocki>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251228-pci-m2-v4-0-5684868b0d5f@oss.qualcomm.com> <20251228-pci-m2-v4-5-5684868b0d5f@oss.qualcomm.com>
-In-Reply-To: <20251228-pci-m2-v4-5-5684868b0d5f@oss.qualcomm.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 2 Jan 2026 12:26:21 +0100
-X-Gm-Features: AQt7F2ohvXnGZHdBsT_8cVPDY34uYT-aFVnGJfL69K1cxd16weXDo9rcPY7qXnE
-Message-ID: <CAMRc=MfPq7+ZbWTp7+H388hqHoX27qbbHsLHO+xeLaceTwZLVA@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] power: sequencing: Add the Power Sequencing driver
- for the PCIe M.2 connectors
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-pm@vger.kernel.org, 
-	linux-ide@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Sun, Dec 28, 2025 at 6:01=E2=80=AFPM Manivannan Sadhasivam
-<manivannan.sadhasivam@oss.qualcomm.com> wrote:
->
-> This driver is used to control the PCIe M.2 connectors of different
-> Mechanical Keys attached to the host machines and supporting different
-> interfaces like PCIe/SATA, USB/UART etc...
->
-> Currently, this driver supports only the Mechanical Key M connectors with
-> PCIe interface. The driver also only supports driving the mandatory 3.3v
-> and optional 1.8v power supplies. The optional signals of the Key M
-> connectors are not currently supported.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.=
-com>
+On Fri, 26 Dec 2025 14:48:45 +0100
+"Rafael J. Wysocki" <rafael@kernel.org> wrote:
+
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> For the sake of interface cleanliness, it is better to avoid using
+> ACPICA data types in the parameter lists of helper functions that
+> don't belong to ACPICA, so adjust the parameter list of recently
+> introduced acpi_osc_handshake() to take a capabilities buffer pointer
+> and the size of the buffer (in u32 size units) as parameters directly
+> instead of a struct acpi_buffer pointer.
+> 
+> This is also somewhat more straightforward on the caller side because
+> they won't need to create struct acpi_buffer objects themselves to pass
+> them to the helper function and it guarantees that the size of the
+> buffer in bytes will always be a multiple of 4 (the size of u32).
+> 
+> Moreover, it addresses a premature cap pointer dereference and
+> eliminates a sizeof(32) that should have been sizeof(u32) [1].
+> 
+> Fixes: e5322888e6bf ("ACPI: bus: Rework the handling of \_SB._OSC platform features")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/linux-acpi/202512242052.W4GhDauV-lkp@intel.com/
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+A couple of minor comments inline.  I see you have it queued up already, but
+FWIW nothing here major enough to warrant reverting that.
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+
 > ---
->  MAINTAINERS                               |   7 ++
->  drivers/power/sequencing/Kconfig          |   8 ++
->  drivers/power/sequencing/Makefile         |   1 +
->  drivers/power/sequencing/pwrseq-pcie-m2.c | 160 ++++++++++++++++++++++++=
-++++++
->  4 files changed, 176 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5b11839cba9d..2eb7b6d26573 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20791,6 +20791,13 @@ F:     Documentation/driver-api/pwrseq.rst
->  F:     drivers/power/sequencing/
->  F:     include/linux/pwrseq/
->
-> +PCIE M.2 POWER SEQUENCING
-> +M:     Manivannan Sadhasivam <mani@kernel.org>
-> +L:     linux-pci@vger.kernel.org
-> +S:     Maintained
-> +F:     Documentation/devicetree/bindings/connector/pcie-m2-m-connector.y=
-aml
-> +F:     drivers/power/sequencing/pwrseq-pcie-m2.c
-> +
->  POWER STATE COORDINATION INTERFACE (PSCI)
->  M:     Mark Rutland <mark.rutland@arm.com>
->  M:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-> diff --git a/drivers/power/sequencing/Kconfig b/drivers/power/sequencing/=
-Kconfig
-> index 280f92beb5d0..f5fff84566ba 100644
-> --- a/drivers/power/sequencing/Kconfig
-> +++ b/drivers/power/sequencing/Kconfig
-> @@ -35,4 +35,12 @@ config POWER_SEQUENCING_TH1520_GPU
->           GPU. This driver handles the complex clock and reset sequence
->           required to power on the Imagination BXM GPU on this platform.
->
-> +config POWER_SEQUENCING_PCIE_M2
-> +       tristate "PCIe M.2 connector power sequencing driver"
-> +       depends on OF || COMPILE_TEST
-> +       help
-> +         Say Y here to enable the power sequencing driver for PCIe M.2
-> +         connectors. This driver handles the power sequencing for the M.=
-2
-> +         connectors exposing multiple interfaces like PCIe, SATA, UART, =
-etc...
-> +
->  endif
-> diff --git a/drivers/power/sequencing/Makefile b/drivers/power/sequencing=
-/Makefile
-> index 96c1cf0a98ac..0911d4618298 100644
-> --- a/drivers/power/sequencing/Makefile
-> +++ b/drivers/power/sequencing/Makefile
-> @@ -5,3 +5,4 @@ pwrseq-core-y                           :=3D core.o
->
->  obj-$(CONFIG_POWER_SEQUENCING_QCOM_WCN)        +=3D pwrseq-qcom-wcn.o
->  obj-$(CONFIG_POWER_SEQUENCING_TH1520_GPU) +=3D pwrseq-thead-gpu.o
-> +obj-$(CONFIG_POWER_SEQUENCING_PCIE_M2) +=3D pwrseq-pcie-m2.o
-> diff --git a/drivers/power/sequencing/pwrseq-pcie-m2.c b/drivers/power/se=
-quencing/pwrseq-pcie-m2.c
-> new file mode 100644
-> index 000000000000..4835d099d967
-> --- /dev/null
-> +++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> @@ -0,0 +1,160 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com=
->
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwrseq/provider.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/slab.h>
-> +
-> +struct pwrseq_pcie_m2_pdata {
-> +       const struct pwrseq_target_data **targets;
-> +};
-> +
-> +struct pwrseq_pcie_m2_ctx {
-> +       struct pwrseq_device *pwrseq;
-> +       struct device_node *of_node;
-> +       const struct pwrseq_pcie_m2_pdata *pdata;
-> +       struct regulator_bulk_data *regs;
-> +       size_t num_vregs;
-> +       struct notifier_block nb;
-> +};
-> +
-> +static int pwrseq_pcie_m2_m_vregs_enable(struct pwrseq_device *pwrseq)
-> +{
-> +       struct pwrseq_pcie_m2_ctx *ctx =3D pwrseq_device_get_drvdata(pwrs=
-eq);
-> +
-> +       return regulator_bulk_enable(ctx->num_vregs, ctx->regs);
-> +}
-> +
-> +static int pwrseq_pcie_m2_m_vregs_disable(struct pwrseq_device *pwrseq)
-> +{
-> +       struct pwrseq_pcie_m2_ctx *ctx =3D pwrseq_device_get_drvdata(pwrs=
-eq);
-> +
-> +       return regulator_bulk_disable(ctx->num_vregs, ctx->regs);
-> +}
-> +
-> +static const struct pwrseq_unit_data pwrseq_pcie_m2_vregs_unit_data =3D =
-{
-> +       .name =3D "regulators-enable",
-> +       .enable =3D pwrseq_pcie_m2_m_vregs_enable,
-> +       .disable =3D pwrseq_pcie_m2_m_vregs_disable,
-> +};
-> +
-> +static const struct pwrseq_unit_data *pwrseq_pcie_m2_m_unit_deps[] =3D {
-> +       &pwrseq_pcie_m2_vregs_unit_data,
-> +       NULL
-> +};
-> +
-> +static const struct pwrseq_unit_data pwrseq_pcie_m2_m_pcie_unit_data =3D=
- {
-> +       .name =3D "pcie-enable",
-> +       .deps =3D pwrseq_pcie_m2_m_unit_deps,
-> +};
-> +
-> +static const struct pwrseq_target_data pwrseq_pcie_m2_m_pcie_target_data=
- =3D {
-> +       .name =3D "pcie",
-> +       .unit =3D &pwrseq_pcie_m2_m_pcie_unit_data,
-> +};
-> +
-> +static const struct pwrseq_target_data *pwrseq_pcie_m2_m_targets[] =3D {
-> +       &pwrseq_pcie_m2_m_pcie_target_data,
-> +       NULL
-> +};
-> +
-> +static const struct pwrseq_pcie_m2_pdata pwrseq_pcie_m2_m_of_data =3D {
-> +       .targets =3D pwrseq_pcie_m2_m_targets,
-> +};
-> +
-> +static int pwrseq_pcie_m2_match(struct pwrseq_device *pwrseq,
-> +                                struct device *dev)
-> +{
-> +       struct pwrseq_pcie_m2_ctx *ctx =3D pwrseq_device_get_drvdata(pwrs=
-eq);
-> +       struct device_node *endpoint __free(device_node) =3D NULL;
-> +
-> +       /*
-> +        * Traverse the 'remote-endpoint' nodes and check if the remote n=
-ode's
-> +        * parent matches the OF node of 'dev'.
-> +        */
-> +       for_each_endpoint_of_node(ctx->of_node, endpoint) {
-> +               struct device_node *remote __free(device_node) =3D
-> +                               of_graph_get_remote_port_parent(endpoint)=
-;
-> +               if (remote && (remote =3D=3D dev_of_node(dev)))
-> +                       return PWRSEQ_MATCH_OK;
-> +       }
-> +
-> +       return PWRSEQ_NO_MATCH;
-> +}
-> +
-> +static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev =3D &pdev->dev;
-> +       struct pwrseq_pcie_m2_ctx *ctx;
-> +       struct pwrseq_config config =3D {};
-> +       int ret;
-> +
-> +       ctx =3D devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> +       if (!ctx)
-> +               return -ENOMEM;
-> +
-> +       ctx->of_node =3D dev_of_node(dev);
+>  drivers/acpi/bus.c |   30 ++++++++++++------------------
+>  1 file changed, 12 insertions(+), 18 deletions(-)
+> 
+> --- a/drivers/acpi/bus.c
+> +++ b/drivers/acpi/bus.c
+> @@ -326,31 +326,33 @@ out:
+>  EXPORT_SYMBOL(acpi_run_osc);
+>  
+>  static int acpi_osc_handshake(acpi_handle handle, const char *uuid_str,
+> -			      int rev, struct acpi_buffer *cap)
+> +			      int rev, u32 *capbuf, size_t bufsize)
 
-Since you're storing the node address for later, I'd suggest using
-of_node_get() to get a real reference.
+Size parameters in number of u32s is to me a little confusing but
+I guess this is only used locally so that's probably fine.
+I'd have been tempted to call it dwords or something like that.
 
-> +       ctx->pdata =3D device_get_match_data(dev);
-> +       if (!ctx->pdata)
-> +               return dev_err_probe(dev, -ENODEV,
-> +                                    "Failed to obtain platform data\n");
-> +
-> +       /*
-> +        * Currently, of_regulator_bulk_get_all() is the only regulator A=
-PI that
-> +        * allows to get all supplies in the devicetree node without manu=
-ally
-> +        * specifying them.
-> +        */
-> +       ret =3D of_regulator_bulk_get_all(dev, dev_of_node(dev), &ctx->re=
-gs);
-> +       if (ret < 0)
-> +               return dev_err_probe(dev, ret,
-> +                                    "Failed to get all regulators\n");
-> +
-> +       ctx->num_vregs =3D ret;
-> +
-> +       config.parent =3D dev;
-> +       config.owner =3D THIS_MODULE;
-> +       config.drvdata =3D ctx;
-> +       config.match =3D pwrseq_pcie_m2_match;
-> +       config.targets =3D ctx->pdata->targets;
-> +
-> +       ctx->pwrseq =3D devm_pwrseq_device_register(dev, &config);
-> +       if (IS_ERR(ctx->pwrseq)) {
-> +               regulator_bulk_free(ctx->num_vregs, ctx->regs);
 
-You're freeing it on error but not on driver detach? Maybe schedule a
-devm action if there's no devres variant?
+>  {
+>  	union acpi_object in_params[4], *out_obj;
+> -	size_t bufsize = cap->length / sizeof(u32);
+>  	struct acpi_object_list input;
+> +	struct acpi_buffer cap = {
+> +		.pointer = capbuf,
+> +		.length = bufsize * sizeof(32),
 
-> +               return dev_err_probe(dev, PTR_ERR(ctx->pwrseq),
-> +                                    "Failed to register the power sequen=
-cer\n");
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id pwrseq_pcie_m2_of_match[] =3D {
-> +       {
-> +               .compatible =3D "pcie-m2-m-connector",
-> +               .data =3D &pwrseq_pcie_m2_m_of_data,
-> +       },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, pwrseq_pcie_m2_of_match);
-> +
-> +static struct platform_driver pwrseq_pcie_m2_driver =3D {
-> +       .driver =3D {
-> +               .name =3D "pwrseq-pcie-m2",
-> +               .of_match_table =3D pwrseq_pcie_m2_of_match,
-> +       },
-> +       .probe =3D pwrseq_pcie_m2_probe,
-> +};
-> +module_platform_driver(pwrseq_pcie_m2_driver);
-> +
-> +MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm=
-.com>");
-> +MODULE_DESCRIPTION("Power Sequencing driver for PCIe M.2 connector");
-> +MODULE_LICENSE("GPL");
->
-> --
-> 2.48.1
->
+You fixed this up already but just for completeness.
+sizeof(u32)
 
-Bart
+> +	};
+>  	struct acpi_buffer output;
+> -	u32 *capbuf, *retbuf, test;
+> +	u32 *retbuf, test;
+>  	guid_t guid;
+>  	int ret, i;
+>  
+> -	if (!cap || cap->length < 2 * sizeof(32) || guid_parse(uuid_str, &guid))
+> +	if (!capbuf || bufsize < 2 || guid_parse(uuid_str, &guid))
+>  		return -EINVAL;
+>  
+>  	/* First evaluate _OSC with OSC_QUERY_ENABLE set. */
+> -	capbuf = cap->pointer;
+>  	capbuf[OSC_QUERY_DWORD] = OSC_QUERY_ENABLE;
+>  
+> -	ret = acpi_eval_osc(handle, &guid, rev, cap, in_params, &output);
+> +	ret = acpi_eval_osc(handle, &guid, rev, &cap, in_params, &output);
+>  	if (ret)
+>  		return ret;
+>  
+>  	out_obj = output.pointer;
+>  	retbuf = (u32 *)out_obj->buffer.pointer;
+>  
+> -	if (acpi_osc_error_check(handle, &guid, rev, cap, retbuf)) {
+> +	if (acpi_osc_error_check(handle, &guid, rev, &cap, retbuf)) {
+>  		ret = -ENODATA;
+>  		goto out;
+>  	}
+> @@ -403,7 +405,7 @@ static int acpi_osc_handshake(acpi_handl
+>  		 */
+>  		acpi_handle_err(handle, "_OSC: errors while processing control request\n");
+>  		acpi_handle_err(handle, "_OSC: some features may be missing\n");
+> -		acpi_osc_error_check(handle, &guid, rev, cap, retbuf);
+> +		acpi_osc_error_check(handle, &guid, rev, &cap, retbuf);
+>  	}
+>  
+>  out:
+> @@ -446,10 +448,6 @@ static void acpi_bus_osc_negotiate_platf
+>  {
+>  	static const u8 sb_uuid_str[] = "0811B06E-4A27-44F9-8D60-3CBBC22E7B48";
+>  	u32 capbuf[2], feature_mask;
+> -	struct acpi_buffer cap = {
+> -		.pointer = capbuf,
+> -		.length = sizeof(capbuf),
+> -	};
+>  	acpi_handle handle;
+>  
+>  	feature_mask = OSC_SB_PR3_SUPPORT | OSC_SB_HOTPLUG_OST_SUPPORT |
+> @@ -497,7 +495,7 @@ static void acpi_bus_osc_negotiate_platf
+>  
+>  	acpi_handle_info(handle, "platform _OSC: OS support mask [%08x]\n", feature_mask);
+>  
+> -	if (acpi_osc_handshake(handle, sb_uuid_str, 1, &cap))
+> +	if (acpi_osc_handshake(handle, sb_uuid_str, 1, capbuf, 2))
+
+As below. Maybe ARRAY_SIZE(capbuf) instead of that 2.
+
+>  		return;
+>  
+>  	feature_mask = capbuf[OSC_SUPPORT_DWORD];
+> @@ -532,10 +530,6 @@ static void acpi_bus_osc_negotiate_usb_c
+>  {
+>  	static const u8 sb_usb_uuid_str[] = "23A0D13A-26AB-486C-9C5F-0FFA525A575A";
+>  	u32 capbuf[3], control;
+> -	struct acpi_buffer cap = {
+> -		.pointer = capbuf,
+> -		.length = sizeof(capbuf),
+> -	};
+>  	acpi_handle handle;
+>  
+>  	if (!osc_sb_native_usb4_support_confirmed)
+> @@ -550,7 +544,7 @@ static void acpi_bus_osc_negotiate_usb_c
+>  	capbuf[OSC_SUPPORT_DWORD] = 0;
+>  	capbuf[OSC_CONTROL_DWORD] = control;
+>  
+> -	if (acpi_osc_handshake(handle, sb_usb_uuid_str, 1, &cap))
+> +	if (acpi_osc_handshake(handle, sb_usb_uuid_str, 1, capbuf, 3))
+
+Maybe ARRAY_SIZE(capbuf) just to avoid any chance they get out of sync?
+
+>  		return;
+>  
+>  	osc_sb_native_usb4_control = capbuf[OSC_CONTROL_DWORD];
+> 
+> 
+> 
+> 
+
 
