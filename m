@@ -1,71 +1,72 @@
-Return-Path: <linux-pci+bounces-43954-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43955-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4020CCF0123
-	for <lists+linux-pci@lfdr.de>; Sat, 03 Jan 2026 15:31:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 799F6CF0129
+	for <lists+linux-pci@lfdr.de>; Sat, 03 Jan 2026 15:32:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F17C830249C1
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Jan 2026 14:31:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 40B7930046EC
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Jan 2026 14:31:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 646DC1DF74F;
-	Sat,  3 Jan 2026 14:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75A9127A465;
+	Sat,  3 Jan 2026 14:31:44 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2AB35975
-	for <linux-pci@vger.kernel.org>; Sat,  3 Jan 2026 14:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16EA35975
+	for <linux-pci@vger.kernel.org>; Sat,  3 Jan 2026 14:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767450696; cv=none; b=Au8yO/oETazYZ2TkZnEvGRMMuZlsOVSfZNSmVLA5sZzhG5DKMsUayZg/Q/sLEI4pUTnIpx+ba63t20CawiaRW+5JtfbLydzH7ZfbqryiFbi7fIJF64qXRxx/397R5s+nwgxawnE4VXHlhduRLZl5VjTMl3U7hrLXVtC7KZ5tyko=
+	t=1767450704; cv=none; b=KnMjx/qfUYie0zA7N4U76sNt9fYLNUsbMEFMDqDq0I2OavjGx0OXbKFP4RIuIFa1N6attuc/mC+T09qzua3P5o0H9UA2v6qunL3w7Z83IIBAO5iGzbZtu9BPCTP3C0dF0+wyvIH+8uJlvkw8++DOV9JG/eR5vpa2ERaYdsHcLgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767450696; c=relaxed/simple;
-	bh=OjJEHZbX9DUZYNV7p8GKg1sdBCh5/HJWJkWeJDu+dDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=tyWQRTaIwvpGc98k2nYjqwg5swUCRjgbEK4rRKbIi82rlRTAB/VHcaf9nHQtJMSzY0Jm1sgodl1hjmrAxI4pkbw0+vEXAGjEv7ytdhT1+FT4Py2WU7irhM66feBpbMOP3sgiWJYTmk80X3NYY38kP9XaWQ9cQcWuFketQSzJeSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=markoturk.info; spf=pass smtp.mailfrom=markoturk.info; arc=none smtp.client-ip=209.85.208.52
+	s=arc-20240116; t=1767450704; c=relaxed/simple;
+	bh=Yo9NiJnTxJkwwB8eCcyZ5gF6vklgPfAHnzpS9T2+4BI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BG6O6diSuRpHUnY1KjTE9Y4ealwATxJdoX86SHNERzrceYqm/xLyZHlkmDxc6q90RYQhze5d3QwI/kzd6NlV8KBcbQ5gjlx9q6jC6d5Ntwc2hmDtIHo5cEdxfSKUtFlulJBfPDT60wz47yVW71Y/sGN2jsrO4wyXbQ4qBCBHCoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=markoturk.info; spf=pass smtp.mailfrom=markoturk.info; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=markoturk.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=markoturk.info
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-64ba9a00b5aso15089440a12.2
-        for <linux-pci@vger.kernel.org>; Sat, 03 Jan 2026 06:31:34 -0800 (PST)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b725ead5800so1811056566b.1
+        for <linux-pci@vger.kernel.org>; Sat, 03 Jan 2026 06:31:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767450693; x=1768055493;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+AYUNRl9rbLXc2HwT5sVlUQnauM+p95hRATJcoDG+eg=;
-        b=RTdwyFxvB+0/ugOnPDVqRbF0WSKPbycolXP7598vOc9IrViBROJyLAwITQmQK58R2Q
-         eHEr+9NPDT1u8YlYrWow4fYGEPaNvGgvg9xFvcAgALemZWOqy07f/44DJJf/XU5i/PJv
-         uConuJq0dhXQHNO5aeXfHNsapMWLeSluksrffwgc+9f/AwQukw6s6Q8mnSTFNSmMrdsb
-         RmJyPjkc3VS54IPEYzzhqAiwUveIa4gol8hPrgmBSZfLJkfmLPEhznee71qLwpei/0+d
-         gx3oJERrNlhkFxs7lHoZLi100TeQouOCYBp5NTQqx/b/0fgtl2gfch396xbSq7BS47dq
-         5zrQ==
-X-Gm-Message-State: AOJu0Yxp2CT4KvXownMqZj42xRyzgkSLWxfVU7whByAG2mT7L3Ct+RQG
-	BTeQXoEKC8h0SW+Q/vcvoJZt73Ja3iYSpRanjHWSrAFVUaDhX2A2HP3t3MT/PpGDH/M=
-X-Gm-Gg: AY/fxX43wL5QzhhIdg6UUE+rLQwD14mniIUikFAv+Tvaf/f2caY/KdKLqbMkQ27kHFB
-	+c+tujF0zg7UNl7kBjyy8W8YnPON2SMEKA9kjABXL4fn7mtEhYPpARZCWC2ckvnshnrOMSCCW7i
-	PP3Kcxt7udMOUZGjIUlFCptaC+boTjbq4XazjEBevjO6Z9EcZg2sT5iUwlZ5cBjT3RhGT4Y4ZjU
-	4niX6Ow4dZX12ZTu6Izq4WC4ETKUmv/SqHIjBnXRQkmbGafvdOyF7ukHkQNGMLzvBcVj5UAUnP5
-	0+azKgYFhbl/G7O6iR5I72NUXy+GC5/PiAv5JY5bp9y6M1NYqw7IowxpH0xoZ5b88HZKvJTn9a4
-	iQNWBex5TaZ6mgLfnNdpS8W9C3SaGTZaTCYWhWSf6AOUOTqrtcxSsB1p68muYLHQixKgTaiu8/m
-	GWJG+SouuMyxYXSxFOZ7EnsA==
-X-Google-Smtp-Source: AGHT+IEZpVXonSoNsNw9e1t4FvmQEeUM7GlEnGV5J/HtRKd9w8z0N4bgG9lfpaveMKQWaK8M1hT5WA==
-X-Received: by 2002:a17:907:6094:b0:b73:9368:ad5e with SMTP id a640c23a62f3a-b8037051288mr4580991066b.34.1767450692708;
-        Sat, 03 Jan 2026 06:31:32 -0800 (PST)
+        d=1e100.net; s=20230601; t=1767450701; x=1768055501;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TeXK/uLet5xBMYnQch/F6aurpQjuvhTk9qorMiPAHMo=;
+        b=P1yhqt1Fzld7mZ12P7faOjAP8qPBOS3D09nXRPnv54jdnkkFxfEyfbRi62zSch4h/0
+         zmFbQDG6n1+SKevpi2/0vr4FrUBL7MBlvgM5MDyrHnUg4LnJ/ijAqhRdXMoD8kib72pr
+         sesexMhl/7bEYw2CVlqPPRkw63hftCgF2iabf4wWwALWIlQfklCov61uDmuu7mBiA+12
+         jEMt6iAURn9xNTAecnLkThMi8a5h/a8CBhtr3ewgWxRog1d5We6LkzEA8FFifYGNXLEL
+         jSTnx1XcA4RxzJLZBXip8DWTSQQjyvKSk96JL0WVIzLth3gIteiSW9/dz6ALok3DIEBS
+         Gb6g==
+X-Gm-Message-State: AOJu0YwwZ7PHi3pgCojYqV5dJQ1LrMcHHfcfyXZKvri1JuEvziZVjABu
+	P/Jg/BRWPOeHN4AM7yEOfCiMcCFtLxH84rsRlqTybK+H33aau/z2XVTLrDCyCIGE3kQ=
+X-Gm-Gg: AY/fxX7/GHj+DqcsMO/ERC+AbcIyjYfFSOS07N1oOq4/XZvVd8BCZEQGQWVHVPQ7n7b
+	2k+h8PQSyQ+tdUtM7+AB6uXeui1lXi+IveDP89R0oGSg7mjeh2mUz3u/a6fAXj0qSpYUUPgHO3+
+	9VX2k1xruF7+YlSlkmszYHHHmtCkv4AKKjSWZNHkbdfZap78/KwnC5JyIEnGDMm6MPfTqCWdeI5
+	5+WPfYII1MPWeTT/7TLijoc8pgaZqVhZ1vbeoIuOfo+s/KganKpifvPo/MPtkVd7L9CkYBaLGDH
+	ScQPHxiYAr3G3/SOw9rRY3oWE4srJS2KTi6emVFTD+NAEB8HImyCoZVX1CX7eDmiXMPfGNoLpgM
+	yXkcJff79lCtb1jR82KWklrxcAGGGU9ijQvWbfQvnWx5bwiCZS8cyQLTLBm/voGkfu5w0mVEkTW
+	1DRZkNC43t/Ds=
+X-Google-Smtp-Source: AGHT+IENJSduuZRD1nBhGtGEJjleRZsqM+PDOV1UaW/DiyfEC1lIDZ+R5/jusjphWj25iRZFPeThfw==
+X-Received: by 2002:a17:906:6a21:b0:b76:3399:457b with SMTP id a640c23a62f3a-b80371d8c90mr4327536266b.37.1767450700331;
+        Sat, 03 Jan 2026 06:31:40 -0800 (PST)
 Received: from vps.markoturk.info ([109.60.4.132])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8037ad83dasm5130254766b.25.2026.01.03.06.31.31
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8037f13847sm4772012366b.57.2026.01.03.06.31.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Jan 2026 06:31:32 -0800 (PST)
-Date: Sat, 3 Jan 2026 15:31:30 +0100
+        Sat, 03 Jan 2026 06:31:39 -0800 (PST)
+Date: Sat, 3 Jan 2026 15:31:38 +0100
 From: Marko Turk <mt@markoturk.info>
 To: dakr@kernel.org, dirk.behme@de.bosch.com, linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
 	mt@markoturk.info
 Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
 	rust-for-linux@vger.kernel.org, Marko Turk <mt@markoturk.info>
-Subject: [PATCH 1/2] rust: io: fix Bar reference in Io struct's comment
-Message-ID: <20260103143119.96095-1-mt@markoturk.info>
+Subject: [PATCH 2/2] rust: pci: fix typo in Bar struct's comment
+Message-ID: <20260103143119.96095-2-mt@markoturk.info>
+References: <20260103143119.96095-1-mt@markoturk.info>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,28 +75,29 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20260103143119.96095-1-mt@markoturk.info>
 X-Mailer: git-send-email 2.51.0
 
-Bar was moved to a separate pci::io module, update the reference to it.
+inststance -> instance
 
 Signed-off-by: Marko Turk <mt@markoturk.info>
 ---
- rust/kernel/io.rs | 2 +-
+ rust/kernel/pci/io.rs | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-index 98e8b84e68d1..08853f32dae6 100644
---- a/rust/kernel/io.rs
-+++ b/rust/kernel/io.rs
-@@ -87,7 +87,7 @@ pub fn maxsize(&self) -> usize {
- /// };
- /// use core::ops::Deref;
+diff --git a/rust/kernel/pci/io.rs b/rust/kernel/pci/io.rs
+index 0d55c3139b6f..fba746c4dc5d 100644
+--- a/rust/kernel/pci/io.rs
++++ b/rust/kernel/pci/io.rs
+@@ -20,7 +20,7 @@
  ///
--/// // See also [`pci::Bar`] for a real example.
-+/// // See also [`pci::io::Bar`] for a real example.
- /// struct IoMem<const SIZE: usize>(IoRaw<SIZE>);
+ /// # Invariants
  ///
- /// impl<const SIZE: usize> IoMem<SIZE> {
+-/// `Bar` always holds an `IoRaw` inststance that holds a valid pointer to the start of the I/O
++/// `Bar` always holds an `IoRaw` instance that holds a valid pointer to the start of the I/O
+ /// memory mapped PCI BAR and its size.
+ pub struct Bar<const SIZE: usize = 0> {
+     pdev: ARef<Device>,
 -- 
 2.51.0
 
