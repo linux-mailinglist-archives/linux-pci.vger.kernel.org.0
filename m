@@ -1,152 +1,123 @@
-Return-Path: <linux-pci+bounces-43960-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43961-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CDD7CF0224
-	for <lists+linux-pci@lfdr.de>; Sat, 03 Jan 2026 16:38:43 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75428CF022A
+	for <lists+linux-pci@lfdr.de>; Sat, 03 Jan 2026 16:39:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0F6C330037B1
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Jan 2026 15:38:42 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E0193300101D
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Jan 2026 15:39:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5362E276051;
-	Sat,  3 Jan 2026 15:38:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ED5D276051;
+	Sat,  3 Jan 2026 15:39:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="me7GF99J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cGCBNALO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F4A1E832A
-	for <linux-pci@vger.kernel.org>; Sat,  3 Jan 2026 15:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08A01E832A
+	for <linux-pci@vger.kernel.org>; Sat,  3 Jan 2026 15:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767454721; cv=none; b=FkXdy4+mhz1Xm7kNzLfSsxTKB2kL4uSHAdAgeMH5WBPU+LhDfySQxMI6d+bgz7tF4Nz3I+X8BEZoDR4zw6PvncyUOGdgaKXyiqkDFmE87D4aPJAIqG9I4ma6IaXUCDg0TaZBiDWBYdd9R6FoxiPqvjR+2BCg19cMSIzkTXDIgBA=
+	t=1767454778; cv=none; b=GW7s3gMkp5an0ovOAhuDJCMqIGVRNU9NGoyk1ktdXpnhNL+sYupZaFcN2WBsQwbFocMqZ8IsRapnJ+K6DDoAes5Pmo5lcgXUXOEI9Bpg06N+kCFURFzaL168XQEMfCqYu3upjKGGY/gU6RdmtAGjJ9s5eYZ7Yokdcp3emxNSVq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767454721; c=relaxed/simple;
-	bh=Cq3k1/fXBP/fel0pjPIO4KMDsjM8pwucAIhaVZQ4XBg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I/NjT5dPKel50HwpT+bzLH8iAx+dak3wX1ihcmlYN2KeMECcMCIaTaS5ikWOcW0U+amQOT2jjjxaVTGJ1XV6k24pdwzV7J/Ng29KVgJboPNmvYxXrlNj9ruDiopqzPZGfPbudkzY3NAFbxuCdD9jq5QGHXfKrlCfH6e6WUgqv+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=me7GF99J; arc=none smtp.client-ip=209.85.218.44
+	s=arc-20240116; t=1767454778; c=relaxed/simple;
+	bh=5DTP51OoE964av4TXHzuXB0250ODYdK6kR4s7+AnK5U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VOBEckm7x95LMghYT4fxg+LoVv1h7xKmLt8bVjNz205JBVNOfVcr5hNxBH+OB3YrywiXI781PHJQamA6rWzpvZBdNhY3hMV0ky0yeOjiuY09+pj72rXdAGUd7dNnNKmviBtH3atSyY+M0KdkmaDI7EwBGa/bHIllVxokGWEbxBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cGCBNALO; arc=none smtp.client-ip=209.85.161.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b725ead5800so1814878566b.1
-        for <linux-pci@vger.kernel.org>; Sat, 03 Jan 2026 07:38:39 -0800 (PST)
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-65d1a094185so4493401eaf.1
+        for <linux-pci@vger.kernel.org>; Sat, 03 Jan 2026 07:39:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767454718; x=1768059518; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4hs0EhRoobDLxoEH08l0zC5fr9dWFdN5yFIFiuBMlNQ=;
-        b=me7GF99JAULmF/6ay0IJjFgsGXTTukgbeEgebbP8q/Z4bsdZ4vL3NvJsWK/PCrrn0t
-         TLw6gDPXD6DidR8zBY8BLlNs4IwmmYAdXHNdn9ETipEo9Zs2GPneXyINpnhyovBMsRGh
-         09qOy8YCggXhCMfKoLG9NV+EIvET66VXDeh91/0iufIhlqQO6luxHzdfsgXQAq+Dw5ey
-         QFF+vSU8P/4sw8zI3XdcLImEXTzZOW569LgcX0VXHJ9DHiNoWAPcl1+N+Mc9SFHnrDWT
-         CUa+rXF/pg+uaSjLO8MxwlZh5BBqpfXHf/Q96drNdzNI6KqVbj0NVEyqmw92luN6tGqD
-         6m2w==
+        d=gmail.com; s=20230601; t=1767454775; x=1768059575; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5DTP51OoE964av4TXHzuXB0250ODYdK6kR4s7+AnK5U=;
+        b=cGCBNALOKWzIQ4FWOTbDdymwsb83BD2IDCsGDeJBTm7RaKoXSYpwWR5J9fRA1QKpGe
+         +ZDMwxCwcV7X4OjwrxeVysj5VSvszi0AWFd82ekt+5cC6IfPueLptsswksh1ph3HEr+h
+         5AX0HuwV9OcAMSXdsasv3kH2aXLkKlN4PjdQ3PTeSE8etDaTlHBdH9fICswIPW24QR1o
+         7tbS2KEs7A+RFrSfGcJ4oaXOt7f8eXJYfVS75ygEKHvwHwnEI3HnlkHrsQ0kChAocajN
+         OkWwXS5NI5YFCU40ow9K2OCl1/yHH5xyemMcl0S52FXTqfmzbgMPBnmYwmNCiaeeVOWr
+         /Mdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767454718; x=1768059518;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4hs0EhRoobDLxoEH08l0zC5fr9dWFdN5yFIFiuBMlNQ=;
-        b=xM6xYWULITaO5EcfYG3fNmuiZ6ApwuNrAsAUZ4l8fk0fGMwFpFLZ/WKd4PeNL1VpEG
-         qYRDqXLf2TEuovvdGpdASHHSnoUW31eAzkuR+cAkv/8D3ySRkIZU4VosspeW48wrF/Bc
-         irjQbuUHrLNuQUdqlpntgEHlKZfrELlT5+snMJOJza12N1b+yWXac+SrcLxuz4vSszXz
-         4UksmH6LFN9zWtxiMWrcpMs3JWOn/u6TOQxA8tC41qjurB5/wOG+WQmEF9QDdeoom4lW
-         QkYB6AFNfpO5OSL/n/96EkohUBqhdieSrxKWhfatRQfAM3gtcA8LYoKoM5FekR/+Cge5
-         7rpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUhLFUFWTDeyGnZntvtcO+bElOhwHIzxGe/VyYZHWqGYd0iQ+DDmIF0jiyT+fFe694nz8v6d9gDrc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmS2ic9ZJqw+y8TfaQjItyAWaUPhJLBpvTs+64PpTw6m1Lgx3u
-	1YwN/IuYL0qVDib/pLYNUP78Aaybd1M21IAdyR0q7J2hRQzR5LaCmkmF
-X-Gm-Gg: AY/fxX4U7rYaUDCbpz/iT7cbQQOyd/jchgJfQ7pSFTWqYGUy8A3rkTAlosDlHKj1nUr
-	sfhqWEFr0prxBS3Xi2eXhPqHplAmoicqDo+lHSarCAyq+DgrVdt3tPSGGLAA34rwsv8XOYKPVjp
-	HwDto/DeE3icFTnH+pcxoFOeQkqUFd39Z6fsrXL+wfu9XRprz+gCvjanI1pa+gDFPWjDG2EA/6W
-	MOHwZoNqF9fYquK9CoojYSMAvwDXbS2g0otS2lzE6KyNpGHHV26W150NruT/0emt9/1JFexTWMx
-	1AIkfAGfX4HMGXmADbI6rdE5ZhugObnMnWSZUDpOa2BaPoCHFc7yMOhqYSBdopTiyTL9cL7vsZH
-	4V6L90pchYYkg54+JaSvTkn9tN0gGANeCZ7RUcBrAM6OZshvtwhZ78pnrkAsJmex1TTAEowlrsA
-	JhO0Vy8hlbI/jdDS/QJDGaWVBvOoUVgOqPwOfzzn0xr2erufxClCGtjV5pRzpW4g6OIz9DMhoYz
-	WOh+wfwXsyeYNdW1alHjFNFyRtT5AoeYnzAnyu/0nvSBA==
-X-Google-Smtp-Source: AGHT+IHX3y0FmDy1TKEc3tmnS+B1SrOgQ3j6ATmu3whCYNr8VYjGOlmbeI9SRs33adJYXlB3knoEvw==
-X-Received: by 2002:a17:907:7638:b0:b80:6ddc:7dcd with SMTP id a640c23a62f3a-b806ddc842amr3076213466b.31.1767454717880;
-        Sat, 03 Jan 2026 07:38:37 -0800 (PST)
-Received: from ?IPV6:2003:df:bf2d:e300:a75f:8613:8605:1c8b? (p200300dfbf2de300a75f861386051c8b.dip0.t-ipconnect.de. [2003:df:bf2d:e300:a75f:8613:8605:1c8b])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8037ad83dasm5150694466b.25.2026.01.03.07.38.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 03 Jan 2026 07:38:37 -0800 (PST)
-Message-ID: <84cc5699-f9ab-42b3-a1ea-15bf9bd80d19@gmail.com>
-Date: Sat, 3 Jan 2026 16:38:36 +0100
+        d=1e100.net; s=20230601; t=1767454775; x=1768059575;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5DTP51OoE964av4TXHzuXB0250ODYdK6kR4s7+AnK5U=;
+        b=LBy23WLLjKn5NHh9Ijw0vBQdgkLGek9hR1/fvsCnZiOOc5Yfs0OGhQ0Nng9ymzLv6G
+         cchAAyQ8MwEcnhc3ulntMASaOI+97hhuhSdNY+bKwvgtiowMseaaojgbcDwKePf2sXol
+         t15oD4yBaJ1Ha0qCGJXA/xlopzGM7XbqwW/y0PwHyETlfhRWadbBbegH/Lovvbhuq7dg
+         4MQL0+0lywDOUu03kRYrNG7gubMA5Mh27ESmYz8cjIL3UVFyEaUUsgHRrGLujejB3lTk
+         Z0xWsfUWtypfHfKblkgWWYJJLYuPpRVpoTDsbtLyccC+YMh/oFt3luDTKAkVD5T7QKGU
+         ewIg==
+X-Forwarded-Encrypted: i=1; AJvYcCWOkOVZdn+kekawncci5j/sLaSbQQVIhd6CXcTBEQQYLDh74iDzHL7VghGhfBBtF9YAXBctylxXufo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDA213c467EUiNsjLB2aMWTfQcrYIwd+q6hw+VCs9AQEykMZWN
+	GerRgqFMYLQ25oDtbzXyDONF8KHbi+BicLhT9CSBxtVaUZ3/YaK045VOE3pm/OyTfrcCAEdTccr
+	JWCJRFWKFCX/zDjciA4Oqmi5ZxA/hGEQ=
+X-Gm-Gg: AY/fxX6fIZ+xJtcRM3ZBzogMkWDUiDhgZg5V24t8iBdRN8TW8cZDmcrBA1NL6hCCvvu
+	+ML8jHgNgtj9Tytswoio+SDq3Hffn2GY0pCExyRbZX0XT+hnEK72nUnRfhZ52QJPxM2OKvXT/KJ
+	HBEmBeXWrxF9BtVaFb83s97SC3qmenJ2ZPSGT5x0ICVBrFBmNaKRblAtMq4pVnHM60usNsBwDtq
+	ggzK3UVR2KON1Qa4uZTBNDvSSg0wDV0St4+eCbH9UVAor+fZM2uIAN/HFStDF6+JXSxRDC4PS4b
+	lvTljqJx
+X-Google-Smtp-Source: AGHT+IFiF5bRlSstcAz55OLiRxMKY7gsIuUB9aJwmCNZSi8KHW8f/P2TP0ncCzwcFhgy2k62TT524m4brRRYvWIBsvs=
+X-Received: by 2002:a05:6820:7804:b0:659:9a49:8f64 with SMTP id
+ 006d021491bc7-65d0ea9a762mr12009833eaf.41.1767454775431; Sat, 03 Jan 2026
+ 07:39:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] rust: pci: fix typo in Bar struct's comment
-To: Danilo Krummrich <dakr@kernel.org>, Marko Turk <mt@markoturk.info>
-Cc: dirk.behme@de.bosch.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-References: <20260103143119.96095-1-mt@markoturk.info>
- <20260103143119.96095-2-mt@markoturk.info>
- <DFF23OTZRIDS.2PZIV7D8AHWFA@kernel.org>
-Content-Language: en-US
-From: Dirk Behme <dirk.behme@gmail.com>
-In-Reply-To: <DFF23OTZRIDS.2PZIV7D8AHWFA@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260103-add-rust-pci-header-type-v1-1-879b4d74b227@gmail.com> <DFF1Y5LEQ85Q.V2AC0R1EFXNZ@kernel.org>
+In-Reply-To: <DFF1Y5LEQ85Q.V2AC0R1EFXNZ@kernel.org>
+From: =?UTF-8?B?7ZWY7Iq57KKF?= <engineer.jjhama@gmail.com>
+Date: Sun, 4 Jan 2026 00:39:24 +0900
+X-Gm-Features: AQt7F2r1h7I5GZG9Kc2q99Qlcmhl5gMhMKine4GGBX6EsdRmhyvaaLHFp0MwWGo
+Message-ID: <CAGAB6648kOCF4GZV=wKUxEptzW_91BySPMqFSjE+L-TA3ufH-g@mail.gmail.com>
+Subject: Re: [PATCH] rust: pci: add HeaderType enum and header_type() helper
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: SeungJong Ha via B4 Relay <devnull+engineer.jjhama.gmail.com@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 03.01.26 16:24, Danilo Krummrich wrote:
-> On Sat Jan 3, 2026 at 3:31 PM CET, Marko Turk wrote:
->> inststance -> instance
-> 
-> It's trivial in this case, but we usually write at least something along the
-> lines of "Fix a typo in the doc-comment of the Bar structure: 'inststance ->
-> instance'."
-> 
-> Please also add a corresponding Fixes: tag.
+2026=EB=85=84 1=EC=9B=94 4=EC=9D=BC (=EC=9D=BC) AM 12:17, Danilo Krummrich =
+<dakr@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On Sat Jan 3, 2026 at 3:38 PM CET, SeungJong Ha via B4 Relay wrote:
+> > This is my first patch to the Linux kernel, specifically targeting the
+> > Rust PCI subsystem.
+>
+> Thanks for your contribution!
+>
+> > This patch introduces the HeaderType enum to represent PCI configuratio=
+n
+> > space header types (Normal and Bridge) and implements the header_type()
+> > method in the Device struct.
+>
+> We usually do not add dead code in the kernel. Do you work on a user for =
+this
+> API?
 
-While looking at this some days ago as well I came up with
+Hi Danilo, Thanks for your feedback.
 
-Fixes: 3c2e31d717ac ("rust: pci: move I/O infrastructure to separate
-file")
+Yes, I am currently developing a Rust-based driver for nvme and ixgbe devic=
+es,
+which requires identifying the header type to check compatibility on
+initialization.
+I sent this patch first as it provides a foundational API for the PCI
+abstraction.
 
-But that just moves the pre-existing typo from rust/kernel/pci.rs to
-rust/kernel/pci/io.rs. So I'm unsure if that move-only commit should
-be mentioned in Fixes:? Or if we should go back more to search for the
-commit introducing this typo?
-
-Best regards
-
-Dirk
-
-Btw: While we are at this file, do we want to add an 'is' in line 57
-as well?
-
-// `pdev` valid by the invariants of `Device`. => ... is valid ...
-
-
->> Signed-off-by: Marko Turk <mt@markoturk.info>
->> ---
->>  rust/kernel/pci/io.rs | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/rust/kernel/pci/io.rs b/rust/kernel/pci/io.rs
->> index 0d55c3139b6f..fba746c4dc5d 100644
->> --- a/rust/kernel/pci/io.rs
->> +++ b/rust/kernel/pci/io.rs
->> @@ -20,7 +20,7 @@
->>  ///
->>  /// # Invariants
->>  ///
->> -/// `Bar` always holds an `IoRaw` inststance that holds a valid pointer to the start of the I/O
->> +/// `Bar` always holds an `IoRaw` instance that holds a valid pointer to the start of the I/O
->>  /// memory mapped PCI BAR and its size.
->>  pub struct Bar<const SIZE: usize = 0> {
->>      pdev: ARef<Device>,
->> -- 
->> 2.51.0
-> 
-> 
-
+Best regards, SeungJong Ha
 
