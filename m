@@ -1,111 +1,175 @@
-Return-Path: <linux-pci+bounces-43952-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43953-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F23C2CEFA88
-	for <lists+linux-pci@lfdr.de>; Sat, 03 Jan 2026 05:01:11 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9F2ACEFB54
+	for <lists+linux-pci@lfdr.de>; Sat, 03 Jan 2026 06:39:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CD8BA3013EB7
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Jan 2026 04:01:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7C76F300C6EF
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Jan 2026 05:39:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CA5F1B81A1;
-	Sat,  3 Jan 2026 04:01:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A16223702;
+	Sat,  3 Jan 2026 05:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TRPX5eDW"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="KspRgSll"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9693D2744F
-	for <linux-pci@vger.kernel.org>; Sat,  3 Jan 2026 04:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F62119258E
+	for <linux-pci@vger.kernel.org>; Sat,  3 Jan 2026 05:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767412865; cv=none; b=hcBrZNp1skBf2QkRyj/2Mre9crNzw/iVeLPM6dxfV6XdGc+tKhPgsArp26KFaBNOveQ0whkIsi0gTnRJa6QpduAOFVka54Ir1GHkgvpdhOCcMAdDOdjbROhU9J6tqxQjTXIkDOMmVIVWvuRI2X4Emy7N/ZyrR+2keEaiRJApPJI=
+	t=1767418743; cv=none; b=Am8KIjNqtKFvSv6iY5qOeE/m+fXQXtz/v9uxxec2ZT7XNpiPLtKEitTyPbO0c05DRa6rh8hmNFfukPpNFaHHUzJrV4njJCfiPXoK/5P/8r+9UnNrFO5N6xMiaBtzCIJsw0NKvmazZyw11eMnCg6Zmu2K9Yv3k7ZzC37En+BeVIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767412865; c=relaxed/simple;
-	bh=O5TyLxDxTl+f2mZ1axYzsQh2njdkr6wcLvTK/Jvsf3M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=RkjYAvvkT1/7iEF0yUsnVMr+F3Nc+c4wlxY8EbORpe0Z2JuRrKXxmAxACKyXq2o+91TvySGelMbxGuTTq7n2W/pR/nFaMsOcHazHBGUdFROhS9aLhfQv05QMbqmzKWuMaGw4WdSpF24tLJny83wSGF6paYKfiAEe8G1X6J5pczI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TRPX5eDW; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b7277324054so2050659766b.0
-        for <linux-pci@vger.kernel.org>; Fri, 02 Jan 2026 20:01:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767412861; x=1768017661; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O5TyLxDxTl+f2mZ1axYzsQh2njdkr6wcLvTK/Jvsf3M=;
-        b=TRPX5eDWmed9dEbBDAByhjEEmAP9tHMCv3z25+KNIx3kjqWKgOg4YQsxI0ZXk/un6y
-         yhZ22kSCjIz3Dfs+lHY7QXD8aJEQlTKLMVJK2jnQSWVFV2LKAQTqa5R0j6tSaZdPVBxi
-         HsKTBqzIDOGEikqSrNWOTSFgrd/gAmdTxJe/zgEUsMvmF3T0Z9+SHJpFRNy2h7+TEsH9
-         WZYH1xreDHat5RBnTdzB1yb7450GQ/rYdhaymRfp1DSA7qQzxTNoNx1XzuHmfIUMnVLg
-         UjvoZncQDTS+PrSrE7PLIRN8eNg+sGzzaMa060F6jhXjz2+d7Z6Dz5i5NugG4qdr0U9n
-         fxQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767412861; x=1768017661;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O5TyLxDxTl+f2mZ1axYzsQh2njdkr6wcLvTK/Jvsf3M=;
-        b=HRDxpVqfXSFhI5X1B9HQF3m+2JKqfM9DD//JATQyEYPeMcBPE+gSywUgKrxQWOawcL
-         0pYYngVQ5iaxpeT7lIhV1BgSg/292Fy439RzeoWmggWGFDUwhxIDs750Cg7xJAYWy+jd
-         9pUINk/BsOdBuwpMZNGwGQuHk20p6IgQyJTAQolPpo/DOJInrBhEI6xlnjTEMOCd9QJ5
-         v+zBHeTBL8s8pO3NCBpfZp32DxlmaPJnQbx+cZz2hwWzqired0ve0CiFBANy72SV/ho9
-         p7o7WuL9LSpwVeUkgNnhcDVKoATQpjEA1zv+02quLrk1q5H8c8FYeNBG7Qv4xD2fn8dO
-         799Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUpvc4OngN1IRYrgvt7JQpRuYvETrgl+u9ZJqiF+gWcWSErhM0EWUDcPgDsaVKc1JchS/E6pILOzSc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1pTC8VCy2+edaTLQ65QXyN9Ou6QjoZCjB6jRFWyKTye5ll0sC
-	lQEgp9crcIp/EpjrglmmhrkKR+asqPmwVp/aBBn94zzc8juOEv43FHg7ylbnhnDaeIylm5cwWU0
-	e2o+pvyZnjF54EFoscm9kE0qfR8yN3sg=
-X-Gm-Gg: AY/fxX5Fyt9YX2V2ftdCmZPbYv5kUvZtbTeIzprHfU7DFeQpjtYxR7mnooSs5dgoGsW
-	9DIKmiKxNqSmxrU6DdywTCvNRobQsAVm5BDBfPU78XEjOSAMVu4jOcXQqHpWQspnBhNJDrJjeDu
-	l9lBQj68auM9QvgbMtjoKYbKA0GNxql1V466JvMP2bX2Fz/KrQUANRAZTvwaTlM14ixUg3gr8uu
-	orKVwxPDRE9kvbdYgeOcx+pfEHXfUMzBgSMc78kjGfsp1hsH1dFBbSUTLD2UOQqSBGq9nPBWd38
-	Uw==
-X-Google-Smtp-Source: AGHT+IFbqOg1v7R6x4ZKSLsBtcF4IavFaKTZJD22J8rhS7PY+gLCvqJNHPA4Xulg1zgPgOEwgSlZWRiPLIIb2GrK8bY=
-X-Received: by 2002:a17:907:d8c:b0:b72:6143:60c2 with SMTP id
- a640c23a62f3a-b803722fd2dmr4546055166b.51.1767412861124; Fri, 02 Jan 2026
- 20:01:01 -0800 (PST)
+	s=arc-20240116; t=1767418743; c=relaxed/simple;
+	bh=zB7InRxdhbUfArUeoDkJEcjsUSyvb8a9oqQTv82r8uQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GjOZtlSBYHY3Dl0Z6tqzGVYvNS4P3eQifqgUhubUAb2RTcDxzjSCcMn2yeSxEd/dT8oderpQYiESwTfnmut8eXkwp5WAxV6+GKsByXMQzzqPI20H1uqzUxdGVtnCmJ44G2R0+vZZo2a6z3xgAoiUjirDSm4X/YcwaAbFK5lRs6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=KspRgSll; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6034Ub3V2564355
+	for <linux-pci@vger.kernel.org>; Fri, 2 Jan 2026 21:39:01 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=s2048-2025-q2;
+	 bh=dPZistrW42shSqONuISjFKYdIKC68QTLEs9Rb5vD9I0=; b=KspRgSllwdkK
+	IhK21B6zhGAXdO7wsOGYpQj8wt8XNy+zWmzAN7bK0C3sI1Pww8ZCwJ+gaD29pxr5
+	AD8eiVPiFpazgLPcOEtDiPB7ZFI0lz6BikvHbKmJ5RQQG8QN7CRqubXNHyiA1mIe
+	lTLMw08nqKtZXBWvG8Uqjf12Ok2agLCuJlJ8a1dDGPFCUGfcoiuwt/nCDI5v8xah
+	zDAv9U03P8VaId/DLVyeDBTh1MWKx4ze/yaUhG3BIfawrkxSgA3bbbOT5z3CR9P/
+	hL6GLE9E8HAtIxm8BhX0e0lPlhBASyD7sOqgucXKcfTDiYusjyLtH9K2yoaPIicx
+	eHLUZ0UNEA==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4bev40r599-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 02 Jan 2026 21:39:01 -0800 (PST)
+Received: from twshared17475.04.snb3.facebook.com (2620:10d:c0a8:1b::2d) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.29; Sat, 3 Jan 2026 05:38:59 +0000
+Received: by devbig259.ftw1.facebook.com (Postfix, from userid 664516)
+	id C9E25E3FFCE1; Fri,  2 Jan 2026 21:38:45 -0800 (PST)
+From: Zhiping Zhang <zhipingz@meta.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+CC: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-rdma@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <netdev@vger.kernel.org>, Keith Busch <kbusch@kernel.org>,
+        Yochai Cohen
+	<yochai@nvidia.com>, Yishai Hadas <yishaih@nvidia.com>,
+        Zhiping Zhang
+	<zhipingz@meta.com>
+Subject: [RFC 2/2] [fix] mlx5: modifications for use cases other than CPU
+Date: Fri, 2 Jan 2026 21:38:35 -0800
+Message-ID: <20260103053842.984489-1-zhipingz@meta.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20251113213712.776234-1-zhipingz@meta.com>
+References: <20251113213712.776234-1-zhipingz@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260102131819.123745-1-linux.amoon@gmail.com>
-In-Reply-To: <20260102131819.123745-1-linux.amoon@gmail.com>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Sat, 3 Jan 2026 09:30:44 +0530
-X-Gm-Features: AQt7F2quBQViuflKz_7WiGupGUP2_HLsYQ3tNIlxCVaZuJpRuYGaxaR_J_lrz5U
-Message-ID: <CANAwSgQ2TBnGAwaykRFDCphAZOk6gY1yVYOroUDYnRwP1kZACg@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: dw-rockchip: Add runtime PM support to Rockchip PCIe
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Niklas Cassel <cassel@kernel.org>, 
-	Shawn Lin <shawn.lin@rock-chips.com>, Hans Zhang <18255117159@163.com>, 
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
-	"moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>, 
-	"open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: bRe82AdYlCX5xCUMY5jjrCyhPbeAY9ic
+X-Proofpoint-ORIG-GUID: bRe82AdYlCX5xCUMY5jjrCyhPbeAY9ic
+X-Authority-Analysis: v=2.4 cv=MpBfKmae c=1 sm=1 tr=0 ts=6958ab75 cx=c_pps
+ a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
+ a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VabnemYjAAAA:8
+ a=dY4F4hLoAaLEDHvlMMEA:9 a=gKebqoRLp9LExxC7YDUY:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTAzMDA0OSBTYWx0ZWRfXzzkwswKmlSAv
+ l3if3bwnPSrvtxNgKpkYGyA8nT+uAZ+5OXczpIA9bRITGkfM5rPKK8PhouaOIgF2jfYaAuHy5DU
+ GSJyEqz8ZC6+hX+EBJ01jseGjYFsJpPWcG33rY5NCy6ArD0yxsCYkkzU4CWXqcZwiuA6rOG4xse
+ Kj+xszACtbu9T1ilQM4lii8cPd8hxncDEvkKkNNulM1KxP0pncT5XvbAUMTsOVq2qB8syGFFb5+
+ VwzTGBq4R8325E0Uyy80iYTegEwMCERjzqnNKbH+7QkzYCdQvvyt3jaUemxm+5/Bq0cfU9ktwG0
+ PungCtmd9GouyPdn0zjN5+oM/7226sYCH6RLrJXAmcNv2crcxLxLcFFJDO2Ctklbn5TtnRqSD/w
+ crTZrj1i7HGmr0Ok9/NSiOB9wU8W2zTnPi83XW9iPqRsA02x1Fn2B2Z0fOt1euh1qbVzBTHJCnS
+ oL8Sgac1QS76/q62SzQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-02_04,2025-12-31_01,2025-10-01_01
 
-Hi All
+In order to set the tag value properly besides the CPU use case, we need
+to also fix and modify the few checks on CPU_ID in mlx5 RDMA code.
 
-On Fri, 2 Jan 2026 at 18:48, Anand Moon <linux.amoon@gmail.com> wrote:
+Signed-off-by: Zhiping Zhang <zhipingz@meta.com>
+
+> [RFC 2/2] RDMA: Set steering-tag value directly for P2P memory access
 >
-> Add runtime powwe manageement functionality into the Rockchip DesignWare
-There is a small typo over here,
- s/runtime powwe manageement/runtime power management/
-If you need it, I will send an updated version.
-> PCIe controller driver. Calling devm_pm_runtime_enable() during device
-> probing allows the controller to report its runtime PM status, enabling
-> power management controls to be applied consistently across the entire
-> connected PCIe hierarchy.
+> Currently, the steering tag can be used for a CPU on the motherboard; t=
+he
+> ACPI check is in place to query and obtain the supported steering tag. =
+This
+> same check is not possible for the accelerator devices because they are
+> designed to be plug-and-play to and ownership can not be always confirm=
+ed.
 >
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> We intend to use the steering tag to improve RDMA NIC memory access on =
+a GPU
+> or accelerator device via PCIe peer-to-peer. An application can constru=
+ct a
+> dma handler (DMAH) with the device memory type and a direct steering-ta=
+g
+> value, and this DMAH can be used to register a RDMA memory region with =
+DMABUF
+> for the RDMA NIC to access the device memory. The steering tag contains
+> additional instructions or hints to the GPU or accelerator device for
+> advanced memory operations, such as, read cache selection.
+>
+> Signed-off-by: Zhiping Zhang <zhipingz@meta.com>
+---
+ drivers/infiniband/hw/mlx5/dmah.c | 3 ++-
+ drivers/infiniband/hw/mlx5/mr.c   | 6 ++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-Thanks
--Anand
+diff --git a/drivers/infiniband/hw/mlx5/dmah.c b/drivers/infiniband/hw/ml=
+x5/dmah.c
+index 98c8d3313653..c0d8532f94ac 100644
+--- a/drivers/infiniband/hw/mlx5/dmah.c
++++ b/drivers/infiniband/hw/mlx5/dmah.c
+@@ -41,7 +41,8 @@ static int mlx5_ib_dealloc_dmah(struct ib_dmah *ibdmah,
+ 	struct mlx5_ib_dmah *dmah =3D to_mdmah(ibdmah);
+ 	struct mlx5_core_dev *mdev =3D to_mdev(ibdmah->device)->mdev;
+=20
+-	if (ibdmah->valid_fields & BIT(IB_DMAH_CPU_ID_EXISTS))
++	if (ibdmah->valid_fields & BIT(IB_DMAH_CPU_ID_EXISTS) ||
++	    ibdmah->valid_fields & BIT(IB_DMAH_DIRECT_ST_VAL_EXISTS))
+ 		return mlx5_st_dealloc_index(mdev, dmah->st_index);
+=20
+ 	return 0;
+diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5=
+/mr.c
+index d4917d5c2efa..fb0e0c5826c2 100644
+--- a/drivers/infiniband/hw/mlx5/mr.c
++++ b/drivers/infiniband/hw/mlx5/mr.c
+@@ -1470,7 +1470,8 @@ static struct ib_mr *create_real_mr(struct ib_pd *p=
+d, struct ib_umem *umem,
+ 		struct mlx5_ib_dmah *mdmah =3D to_mdmah(dmah);
+=20
+ 		ph =3D dmah->ph;
+-		if (dmah->valid_fields & BIT(IB_DMAH_CPU_ID_EXISTS))
++		if (dmah->valid_fields & BIT(IB_DMAH_CPU_ID_EXISTS) ||
++			dmah->valid_fields & BIT(IB_DMAH_DIRECT_ST_VAL_EXISTS))
+ 			st_index =3D mdmah->st_index;
+ 	}
+=20
+@@ -1660,7 +1661,8 @@ reg_user_mr_dmabuf(struct ib_pd *pd, struct device =
+*dma_device,
+ 		struct mlx5_ib_dmah *mdmah =3D to_mdmah(dmah);
+=20
+ 		ph =3D dmah->ph;
+-		if (dmah->valid_fields & BIT(IB_DMAH_CPU_ID_EXISTS))
++		if (dmah->valid_fields & BIT(IB_DMAH_CPU_ID_EXISTS) ||
++			dmah->valid_fields & BIT(IB_DMAH_DIRECT_ST_VAL_EXISTS))
+ 			st_index =3D mdmah->st_index;
+ 	}
+=20
+--=20
+2.47.3
+
 
