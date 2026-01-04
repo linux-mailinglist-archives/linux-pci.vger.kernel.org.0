@@ -1,106 +1,156 @@
-Return-Path: <linux-pci+bounces-43973-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43974-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6C5CCF10F3
-	for <lists+linux-pci@lfdr.de>; Sun, 04 Jan 2026 15:08:25 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2219CCF1103
+	for <lists+linux-pci@lfdr.de>; Sun, 04 Jan 2026 15:24:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BEDC73001966
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Jan 2026 14:08:24 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BB45B3004F05
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Jan 2026 14:24:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 998F72066F7;
-	Sun,  4 Jan 2026 14:08:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF24C219A8A;
+	Sun,  4 Jan 2026 14:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4HMWNRM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WyTCZa0g"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658AE14A4CC;
-	Sun,  4 Jan 2026 14:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284E6225413
+	for <linux-pci@vger.kernel.org>; Sun,  4 Jan 2026 14:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767535702; cv=none; b=oWuKJFesKf7VKFMdlHkp2GuvUJJHgYRgeYYN7B1vV3B80ycgENes0ZF/fb/kxZ3YqsyT/BRh07OUQC46DR/bPHw+QMEwvsYh1pVxKHq+lgE28k+BGczRK8+TM9hgg0t7x/VqWkNvxbZipWthQxcBYBGNCZpBsvNECq9G9werkvc=
+	t=1767536642; cv=none; b=RPCPgLLR00Hp2/TA7rpTlRAhfeVMy0bZMMG789qOvHfy49DhMsUnbvTtLVZ4xGUsHDVwTYza+pvPbsEUFCSrw/Bg6x7mSkrqqr5fVQFevhsJC/4ptm4xqQaarffC3HEJ30WCkIXTVlc2FYf2CyLHk5ooj6hw7uqV8YxxZ18CLUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767535702; c=relaxed/simple;
-	bh=7M/pNScVgxaw18c6W7QeMkytNy3thIlhQApd5pkeZnY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=jifw0xTQVLYOHGN92ZuK5Msizflh2TMnLy6TmkvnZiLWuso0I6LQS3NQNOZmVo/jh1llgj5E1tyvfah+6pvepsWvM5UWX540KOeUYmmrul5oFYzHs+2c4UXGN1alBxKu1nhhyniMHA8C2w7Hf9vKEW4BE9Yvh8udTMs5gJsAick=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V4HMWNRM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFF06C4CEF7;
-	Sun,  4 Jan 2026 14:08:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767535701;
-	bh=7M/pNScVgxaw18c6W7QeMkytNy3thIlhQApd5pkeZnY=;
-	h=Date:From:Subject:Cc:To:References:In-Reply-To:From;
-	b=V4HMWNRMHV1V4yd9NEAUY9e7RKTQrRyr+12YFdbD2HbwkGckjiwGOSbmUWV10cHBQ
-	 f1eYzSH2qyyfPwl1dI9eubiWOoc8KV5yj1YbW9JbCDxKnr3rBsHZQGZCUu4PFh21hN
-	 bZp0ezOTPNoU2IsPV4TJllqr7gG98PKN0R4He2X4TocSEsIvoAz8foeA90CLKON4hg
-	 wRZrkwaWc2+FnkrcPzQSKTAtK9DAncdT40dsNOM6tFvZGIZEi5KHaS+OeyH4I16rXP
-	 CPlyzwt1nmD9gp/5s7X6EBHUE2NmalNUuLcDm/tjwHhaWtzqNiOtz+9GGPOfiD3r2s
-	 0otnCz2aebUGw==
+	s=arc-20240116; t=1767536642; c=relaxed/simple;
+	bh=SHcPaN26m7tnkGXNQr+MqluXAtXVdm6nBqdxWF9tneM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oyn5aBOnBNKGdBx0grpTdqakdMg94dI8TDKDM1JUNsnUMfYK+yUyUoJs6rCAzPQDOqUOUk4SPoAusvP+Yrt3T1jSCfTBwXV5CiValdb7tfjwTxw5tkny6BcMKBrZVVo//gnJ5Pd0wsIR4fhW1sF5MtWSNuLsUpEYD+Fa3RKdGM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WyTCZa0g; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-459a516592eso4563222b6e.1
+        for <linux-pci@vger.kernel.org>; Sun, 04 Jan 2026 06:24:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767536640; x=1768141440; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SHcPaN26m7tnkGXNQr+MqluXAtXVdm6nBqdxWF9tneM=;
+        b=WyTCZa0gr2GVpQpBtaTcsCKMQvjh5oXONXqnJZQKawm5PjQlHF8721jkBY1u0MYUJz
+         qgfy9E3wJzRTP2uL3PpXhdYht6YXGFBRDk1JoYLCbRgfS0B77LS4khm9wyN17l4jcCuD
+         MoShlv1TfVcuVWlYBPfwFbiGObsP54HvBvy+qcpxbRn3IWFvT+xCo6LfD7roKZYTbT95
+         p1foDogH0m0HvvhIC2deV61obxy0kL6ClgQdb5kKYQnXW066KWu+Cnyg01H2Nyn7XHjt
+         2yL2LrAzJO1thVMk0q94GGoSHVBJgV+w2GZVwqbuZlr5SgkLFVWyClkq90dTyPR8+9v4
+         qeog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767536640; x=1768141440;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=SHcPaN26m7tnkGXNQr+MqluXAtXVdm6nBqdxWF9tneM=;
+        b=sGQIIAxLUkeivKO44PYboCCFZekNPeCdDIGEZIdE0G7ytwS6n58ghBr1peylPRgb7x
+         hAOUEAiyuajAZaOzi1GgBtq+xuy3AfHEjH9+C7akJ+rBg1apM1CvjJf4FvyHxkEpGeik
+         68A3Zf+kQ3GqHcHXhL7Nh28D/veBB0w6Yg0iX8lSeFW+7guW5xxyLE+GGeFRFkF+jzp1
+         XpbS6FyA35YoCDAhz+/M2ocLf1whVvNvcvBjkBFLTV7AotnMaqFHu7BIntIyktk3uI/k
+         g5w6Jsi+4EsYFDiXHxQmGbqKxDH09n/7Tbi3rx0GjHxKJRZ7+cxhc1jtXa4ufWiFbwtG
+         H85Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVftfN7gIDKMpCYzFiKKO5AyOlWD3PXvT4pdh+hr5ZY9lvjQg2+NQLlP0Cq/R6CEWXmgWbrFVXnIrw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+h0LyoKiY+7SZv/mQnaTI+OidItrAQmaQUobAaXn7sp58OjCN
+	HXeo9Vqgbb4o99cwjPu5dTsO1ve3P6FNCCqRENhbYfIxtvVkDX1+7EAEI7GYgIvkTP92Cvrvk0b
+	6GEeF4dw0ktQodPkYhtcI/HjElVuXnMA=
+X-Gm-Gg: AY/fxX4eEVqiehebLy/7gMgagu+ogXZEWHQgyn6v52VTZ1OlGOs5imaNaszS3cin56u
+	fKALe1+qKlNcBbXDyKYIzQjVfzRDNqr092P995UMvOpw+0ZSlm/IxUF2RXfSkmNL/brPF8u4zN1
+	m0JxIKxo3muoWFig4hM+/LgarkEcLutVF1hVGlqH9afaFa+3DoOAMbMXqAttMzSH8SFtycHMLrz
+	1QfYySnjblvWN4eqoTdaBn4CCDQHYkP+LNntrDilgLLRG+dSKHu64YrkJYtQH7Hl+t5tI2lQg==
+X-Google-Smtp-Source: AGHT+IE80sPzkJouvn6pDvfJR1AYQedhLGjsMIAuzkpaS9EhhohGgzBj072ItCnm5C5B9f/Wvz7i7LuiYuIc1etQi7M=
+X-Received: by 2002:a05:6808:218c:b0:44f:dec0:b995 with SMTP id
+ 5614622812f47-457b229e1b5mr19780191b6e.61.1767536639936; Sun, 04 Jan 2026
+ 06:23:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20260103-add-rust-pci-header-type-v1-1-879b4d74b227@gmail.com>
+ <DFF1Y5LEQ85Q.V2AC0R1EFXNZ@kernel.org> <CAGAB6648kOCF4GZV=wKUxEptzW_91BySPMqFSjE+L-TA3ufH-g@mail.gmail.com>
+ <DFFUIKLNVQB6.3UDMOX8TB5XDQ@kernel.org>
+In-Reply-To: <DFFUIKLNVQB6.3UDMOX8TB5XDQ@kernel.org>
+From: =?UTF-8?B?7ZWY7Iq57KKF?= <engineer.jjhama@gmail.com>
+Date: Sun, 4 Jan 2026 23:23:48 +0900
+X-Gm-Features: AQt7F2q4YN8HutDp9ScdcBA4s-TV0BfqRWNqODHBg_fsVA3Q02F0TpJxOs6iK5s
+Message-ID: <CAGAB666VQ764O-d0WoeOpu7uO+y+VV0TMisSfZ0n-7ENjO0BUQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: pci: add HeaderType enum and header_type() helper
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: SeungJong Ha via B4 Relay <devnull+engineer.jjhama.gmail.com@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 04 Jan 2026 15:08:17 +0100
-Message-Id: <DFFV41VPS2MU.3LHXU4UKITD0U@kernel.org>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH 2/2] rust: pci: fix typo in Bar struct's comment
-Cc: "Marko Turk" <mt@markoturk.info>, "Dirk Behme" <dirk.behme@gmail.com>,
- <dirk.behme@de.bosch.com>, <linux-pci@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- <stable@vger.kernel.org>
-To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>,
- <gregkh@linuxfoundation.org>, <sashal@kernel.org>
-References: <20260103143119.96095-1-mt@markoturk.info>
- <20260103143119.96095-2-mt@markoturk.info>
- <DFF23OTZRIDS.2PZIV7D8AHWFA@kernel.org>
- <84cc5699-f9ab-42b3-a1ea-15bf9bd80d19@gmail.com>
- <aVmHGBop5OPlVVBa@vps.markoturk.info>
- <CANiq72=t-U8JTH2JZxkQaW7sbYXjWLpkYkuMd_CuzLoJLbEvgQ@mail.gmail.com>
-In-Reply-To: <CANiq72=t-U8JTH2JZxkQaW7sbYXjWLpkYkuMd_CuzLoJLbEvgQ@mail.gmail.com>
 
-(Cc: Greg, Sasha)
-
-On Sun Jan 4, 2026 at 1:45 PM CET, Miguel Ojeda wrote:
-> On Sat, Jan 3, 2026 at 10:16=E2=80=AFPM Marko Turk <mt@markoturk.info> wr=
-ote:
->>
->> The typo was introduced in the original commit where pci::Bar was added:
->> Fixes: bf9651f84b4e ("rust: pci: implement I/O mappable `pci::Bar`")
->>
->> Should I use that for the Fixes: tag?
+2026=EB=85=84 1=EC=9B=94 4=EC=9D=BC (=EC=9D=BC) PM 10:40, Danilo Krummrich =
+<dakr@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
 >
-> I would add both, since it was added in both and thus different set of
-> stable releases may need to fix it differently (i.e. before and after
-> the move).
+> On Sat Jan 3, 2026 at 4:39 PM CET, =ED=95=98=EC=8A=B9=EC=A2=85 wrote:
+> > 2026=EB=85=84 1=EC=9B=94 4=EC=9D=BC (=EC=9D=BC) AM 12:17, Danilo Krummr=
+ich <dakr@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+> >>
+> >> On Sat Jan 3, 2026 at 3:38 PM CET, SeungJong Ha via B4 Relay wrote:
+> >> > This is my first patch to the Linux kernel, specifically targeting t=
+he
+> >> > Rust PCI subsystem.
+> >>
+> >> Thanks for your contribution!
+> >>
+> >> > This patch introduces the HeaderType enum to represent PCI configura=
+tion
+> >> > space header types (Normal and Bridge) and implements the header_typ=
+e()
+> >> > method in the Device struct.
+> >>
+> >> We usually do not add dead code in the kernel. Do you work on a user f=
+or this
+> >> API?
+> >
+> > Hi Danilo, Thanks for your feedback.
+> >
+> > Yes, I am currently developing a Rust-based driver for nvme and ixgbe d=
+evices,
+> > which requires identifying the header type to check compatibility on
+> > initialization.
+> > I sent this patch first as it provides a foundational API for the PCI
+> > abstraction.
+>
+> As Miguel also pointed out in his reply, I'd like to see a patch series w=
+ith the
+> driver as an RFC patch.
+>
+> If it is working, not too far from an "upstreamable" state and the subsys=
+tem
+> maintainers of the driver's target subsystem are indicating willingness t=
+o
+> eventually take the driver, I'm happy to go ahead and merge any dependenc=
+ies.
+>
+> - Danilo
 
-In general I prefer to only add a Fixes: tag for the commit that introduced=
- the
-issue.
+Hi Danilo, Muguel!
 
-> In this case, from a quick look, one is for the current release, so it
-> doesn't need backport, and the other would need a custom one (since
-> this commit wouldn't apply) if someone wants to do Option 3.
+Thank you for the encouragement and the clear guidance.
+Since my current driver implementation is still in a very early stage
+and not yet
+ready for public review, I will focus on maturing the codebase first.
+I will come back with an RFC patch series that includes both the PCI
+abstractions
+and the driver once it reaches a more stable state.
+Thank you again for your kind feedback and for guiding me through my first =
+patch
+submission.
 
-I could be wrong, but I think in trivial cases (such as code moves) the sta=
-ble
-team does derive custom commits themselves.
-
-@Greg, Sasha: Is this something you prefer to do or is it something you jus=
-t do
-because it's easier / quicker than to get back and ask for a custom commit?
-
-Again, I could also remember this wrongly, but I think I just recently revi=
-ewed
-such a commit from Sasha. :)
-
->> Should I do that in the same commit?
-
-That seems reasonable in this case, please do so.
+- SeungJong Ha
 
