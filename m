@@ -1,148 +1,198 @@
-Return-Path: <linux-pci+bounces-43962-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43963-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F32A4CF062E
-	for <lists+linux-pci@lfdr.de>; Sat, 03 Jan 2026 22:16:18 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC7F1CF0757
+	for <lists+linux-pci@lfdr.de>; Sun, 04 Jan 2026 01:48:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 592B83015E36
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Jan 2026 21:16:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B0772300888F
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Jan 2026 00:47:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E19B129AB1D;
-	Sat,  3 Jan 2026 21:16:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26F936FBF;
+	Sun,  4 Jan 2026 00:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dB7N4XeY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0514D18C933
-	for <linux-pci@vger.kernel.org>; Sat,  3 Jan 2026 21:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AE03A1E9D
+	for <linux-pci@vger.kernel.org>; Sun,  4 Jan 2026 00:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767474975; cv=none; b=XgFaNO2PIrICzXyqCzKeWQ+m1XWW9LmKOLITrOVZZo7ih2wAYObQcJvH5EGVAxsx7LXwePs8zM66KlinE11bKrJlXMbzk3h3PkJkEKrwA6kfUxCqLCXelBKFjCmKhKW0f6W//Waed/z/l161lpivwp5zzCU2wsnq3qzfwDqh79Y=
+	t=1767487679; cv=none; b=eiz1A1OgpwWCU06VsolxcNcVUSYqDIEIC015/4sFAgwPQ5SpkQz96gk7BfbM6T6oKgn4OUmpAg4lBZPLyPy3F/9zWP7Bs98frtPpjZVNGotx23wEF8WFREH1y/WinMFbnG9WSwx8TQhNWuPgBMmMLxR6pYEpiKPeCbHeXKPkGVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767474975; c=relaxed/simple;
-	bh=uiOLYSm61ERq2gPGbffcOs1yp9L6ssLDhSpjJurNdxU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=osWRO+EnWcUYsHbfug0L7T5g4fEpYZSBgR0G+zOEq3gglipYQFSoGBHdiRHY8Z9rG7nJNrwtJsQpl6fvZEZ+ssuGazijg+FSZs2GIapjuChJUw7/i7CQ0v6VUmWVgj2gq7tWmNWCdxT4n0WqiBN6v8KldZ5TRxKs8jpLQD2pVRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=markoturk.info; spf=pass smtp.mailfrom=markoturk.info; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=markoturk.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=markoturk.info
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b725ead5800so1834164966b.1
-        for <linux-pci@vger.kernel.org>; Sat, 03 Jan 2026 13:16:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767474971; x=1768079771;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d7unVhQC3T8DNmPkvBEAcaa6tSYQmAuHw+iiC51rCJE=;
-        b=jo82ObW7ZwLGdD7h5Me8X/OkNoGYs1rtF+AKodJQOckYxaNjGTZB2fIm94CRTKuC0/
-         CAAh/W0xbTZS0Xe6WQHAjhV1F7ch9yokELpB7+Kp1N04zUbVrDDzbcX0zFIKZ6tJNx4h
-         iw+yqoiTQB16jCUHogYSnQqfl0xDDxWPiCbVLH6OA/c+/lEMIyumsRdC1gl1FPiuQjrf
-         iddujLnVc0u/FM0QamFj76++BxcQ2Y1RBCRQ7NoQs1iPA2umKMBDfPbm+Sb3Tf4Xlesf
-         85VhOvSSUlp/GR4SkoUxAOIwVs+9oHnOYQatW4bwsOZtgkVblUxQbli6aoHUgj3RhG66
-         qqQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUU8SZrcForTVO8+KWkHENfG4H9O8T3wA89Ptp27xLVnRfgidlba0OAJR7FKNcneytllTpUDYcVfFo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzErXvmSXPQNDenadk7LJcM9FeE5DSK5tt+8gXUJJxIZWG+rMAN
-	Inyo4XWtF1dI8TGBHYIlhLItEZ43n4KV34QA3yFEElsoohEFqrFQhega9/s1e8XPPAE=
-X-Gm-Gg: AY/fxX7q+7OQfff5iEZ6K4fuiZ9NiOevqck8eCWv2eg4uKkjCiaXh2r0oFy+hYfxKpn
-	ixHCfGQrI2B5wZujMewwIRR78R0afQDpPnYdF0oRW+7mo3WTTWOKj3XoosxuwQbKbbKhu4Quunk
-	Aufs3GbuOTl1nco0XtxILIyCqFb/A72EEiY6/U0Zb8xbjMSVc2dGKbz4Mf5G2+co0Tp7I+XgTiy
-	COQnANLDkzXqMtqFUH59O3mrl9nWes0pZTqjj/gr95lrdZs8K+h9qjX8i4JDZrHj4DoqM/0nemF
-	RsQMdhdQuYipive98GgLuymmUn/Pk7Ld8iF77dAdr69BSE4Lz9yh38kZN3VF5AY3lE0DNOOndHy
-	aIhkkw2s1ReCx2PzDjtAx7/2rSIK0H09iUQND7ZTowO4lUNYTLLezQ0jkaSNznhWmbTWgXrNAzy
-	fyGxlJG1d214o=
-X-Google-Smtp-Source: AGHT+IFuGObiLaYcEpCLsdnPWy/fW1azgSOUQs/3/+r6mlDFstD9ErqMY1MnRi+0ZMkkAUAoABOzjg==
-X-Received: by 2002:a17:906:f598:b0:b79:cf10:a17c with SMTP id a640c23a62f3a-b8036f2d2e9mr4343539166b.10.1767474970707;
-        Sat, 03 Jan 2026 13:16:10 -0800 (PST)
-Received: from vps.markoturk.info ([109.60.4.132])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8037a60569sm5170024166b.4.2026.01.03.13.16.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Jan 2026 13:16:10 -0800 (PST)
-Date: Sat, 3 Jan 2026 22:16:08 +0100
-From: Marko Turk <mt@markoturk.info>
-To: Dirk Behme <dirk.behme@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, dirk.behme@de.bosch.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 2/2] rust: pci: fix typo in Bar struct's comment
-Message-ID: <aVmHGBop5OPlVVBa@vps.markoturk.info>
-References: <20260103143119.96095-1-mt@markoturk.info>
- <20260103143119.96095-2-mt@markoturk.info>
- <DFF23OTZRIDS.2PZIV7D8AHWFA@kernel.org>
- <84cc5699-f9ab-42b3-a1ea-15bf9bd80d19@gmail.com>
+	s=arc-20240116; t=1767487679; c=relaxed/simple;
+	bh=bzhmIUEEJBJNtNgxF0kOLfyql4yi+7BSr7SUv4NLsYY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=hUpaorZk3nA/L4QWvEjBX6rfZmXBEqQpOKSQURhyyhgax1YjvSAQ6pn9g1yspbdlwt6FJisqyoHObsK9u1OWiRJoyNDPhhsgGd1xMNrXNXs4fwKnjSzXOODkuxUkyw5IW2QDPYd/7C+oWCaHtn6KYWscJG+y9LNMdpP2FFIhu/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dB7N4XeY; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767487677; x=1799023677;
+  h=date:from:to:cc:subject:message-id;
+  bh=bzhmIUEEJBJNtNgxF0kOLfyql4yi+7BSr7SUv4NLsYY=;
+  b=dB7N4XeYHAex1NqVbp6j+gFHmNCx/1UOALfiewSymGQWRIpau/OcYuJ8
+   uPoL41JsjWw74pJAcdn4d6eTfjPqgmSJTHOdh5kO/xjtq+lukgmoZUwJY
+   ueWObjpmj4Q/Gz947cfGg6Gmfn7nAm779kQng+XfJAinv9kV1kJXPmB78
+   5rE8PEwWWtVfMF3x02UgDyyeomdVnQ1J0kJJVh4mUd+/a+7rIOu+CO43e
+   AtInpz4P6Vb5n3tpbIpgdKN27iDwW0ByodO99m+Fh+LGR2P34p3/jz0zJ
+   9ETvTETWG388SdA2/RiRMmh/vA0p1uqqxRdm2C6nk4nagAs85qTzTxWq9
+   Q==;
+X-CSE-ConnectionGUID: RKCrWg4ESJmUxz5ZAX8jpg==
+X-CSE-MsgGUID: kbvYXT6aRyyallham4e6mg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11659"; a="56473410"
+X-IronPort-AV: E=Sophos;i="6.21,200,1763452800"; 
+   d="scan'208";a="56473410"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 16:47:56 -0800
+X-CSE-ConnectionGUID: Cadj8yYHR+CtF8yUY5PWDw==
+X-CSE-MsgGUID: 8LRbPkvUQK2TzOxtFeoP1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,200,1763452800"; 
+   d="scan'208";a="202548651"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 03 Jan 2026 16:47:56 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vcCHh-000000000JB-25AZ;
+	Sun, 04 Jan 2026 00:47:53 +0000
+Date: Sun, 04 Jan 2026 08:47:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ 29a77b4897f1a0f40209bee929129d4c3f9c7a4b
+Message-ID: <202601040855.uKNeqrcX-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84cc5699-f9ab-42b3-a1ea-15bf9bd80d19@gmail.com>
 
-On Sat, Jan 03, 2026 at 04:38:36PM +0100, Dirk Behme wrote:
-> On 03.01.26 16:24, Danilo Krummrich wrote:
-> > On Sat Jan 3, 2026 at 3:31 PM CET, Marko Turk wrote:
-> >> inststance -> instance
-> > 
-> > It's trivial in this case, but we usually write at least something along the
-> > lines of "Fix a typo in the doc-comment of the Bar structure: 'inststance ->
-> > instance'."
-> > 
-> > Please also add a corresponding Fixes: tag.
-> 
-> While looking at this some days ago as well I came up with
-> 
-> Fixes: 3c2e31d717ac ("rust: pci: move I/O infrastructure to separate
-> file")
-> 
-> But that just moves the pre-existing typo from rust/kernel/pci.rs to
-> rust/kernel/pci/io.rs. So I'm unsure if that move-only commit should
-> be mentioned in Fixes:? Or if we should go back more to search for the
-> commit introducing this typo?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: 29a77b4897f1a0f40209bee929129d4c3f9c7a4b  Merge branch 'pci/misc'
 
-The typo was introduced in the original commit where pci::Bar was added:
-Fixes: bf9651f84b4e ("rust: pci: implement I/O mappable `pci::Bar`")
+elapsed time: 1491m
 
-Should I use that for the Fixes: tag?
+configs tested: 107
+configs skipped: 2
 
-> 
-> Best regards
-> 
-> Dirk
-> 
-> Btw: While we are at this file, do we want to add an 'is' in line 57
-> as well?
-> 
-> // `pdev` valid by the invariants of `Device`. => ... is valid ...
-> 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Should I do that in the same commit?
+tested configs:
+alpha                               defconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20260104    gcc-14.3.0
+arc                   randconfig-002-20260104    gcc-15.1.0
+arm                                 defconfig    clang-22
+arm                          exynos_defconfig    clang-22
+arm                       imx_v6_v7_defconfig    clang-16
+arm                   randconfig-001-20260104    gcc-13.4.0
+arm                   randconfig-002-20260104    clang-22
+arm                   randconfig-003-20260104    clang-22
+arm                   randconfig-004-20260104    gcc-15.1.0
+arm                           tegra_defconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20260104    gcc-11.5.0
+arm64                 randconfig-002-20260104    clang-22
+arm64                 randconfig-003-20260104    clang-22
+arm64                 randconfig-004-20260104    clang-22
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20260104    gcc-11.5.0
+csky                  randconfig-002-20260104    gcc-10.5.0
+hexagon                             defconfig    clang-22
+hexagon               randconfig-001-20260103    clang-22
+hexagon               randconfig-002-20260103    clang-22
+i386        buildonly-randconfig-001-20260104    clang-20
+i386        buildonly-randconfig-002-20260104    gcc-14
+i386        buildonly-randconfig-003-20260104    gcc-14
+i386        buildonly-randconfig-004-20260104    clang-20
+i386        buildonly-randconfig-005-20260104    clang-20
+i386        buildonly-randconfig-006-20260104    clang-20
+i386                                defconfig    clang-20
+i386                  randconfig-001-20260104    clang-20
+i386                  randconfig-002-20260104    clang-20
+i386                  randconfig-003-20260104    clang-20
+i386                  randconfig-004-20260104    clang-20
+i386                  randconfig-005-20260104    gcc-14
+i386                  randconfig-006-20260104    clang-20
+i386                  randconfig-007-20260104    gcc-14
+i386                  randconfig-012-20260104    clang-20
+i386                  randconfig-013-20260104    gcc-14
+i386                  randconfig-014-20260104    gcc-14
+i386                  randconfig-015-20260104    gcc-14
+i386                  randconfig-016-20260104    clang-20
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20260103    gcc-15.1.0
+loongarch             randconfig-002-20260103    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+m68k                           virt_defconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                           mtx1_defconfig    clang-22
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20260103    gcc-8.5.0
+nios2                 randconfig-002-20260103    gcc-10.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20260104    gcc-13.4.0
+parisc                randconfig-002-20260104    gcc-9.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc               randconfig-002-20260104    gcc-10.5.0
+powerpc                     tqm8540_defconfig    gcc-15.1.0
+powerpc64                        alldefconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                               defconfig    clang-22
+riscv                 randconfig-001-20260104    gcc-8.5.0
+riscv                 randconfig-002-20260104    clang-22
+s390                              allnoconfig    clang-22
+s390                                defconfig    clang-22
+s390                  randconfig-001-20260104    gcc-9.5.0
+s390                  randconfig-002-20260104    gcc-12.5.0
+sh                                allnoconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                        edosk7760_defconfig    gcc-15.1.0
+sh                    randconfig-001-20260104    gcc-10.5.0
+sh                    randconfig-002-20260104    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20260104    gcc-8.5.0
+sparc                 randconfig-002-20260104    gcc-12.5.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20260104    clang-22
+sparc64               randconfig-002-20260104    gcc-12.5.0
+um                                allnoconfig    clang-22
+um                                  defconfig    clang-22
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20260104    clang-22
+um                    randconfig-002-20260104    clang-16
+um                           x86_64_defconfig    clang-22
+x86_64                            allnoconfig    clang-20
+x86_64      buildonly-randconfig-001-20260104    clang-20
+x86_64      buildonly-randconfig-002-20260104    clang-20
+x86_64      buildonly-randconfig-003-20260104    clang-20
+x86_64      buildonly-randconfig-004-20260104    gcc-13
+x86_64      buildonly-randconfig-005-20260104    gcc-14
+x86_64      buildonly-randconfig-006-20260104    clang-20
+x86_64                              defconfig    gcc-14
+x86_64                randconfig-001-20260104    gcc-14
+x86_64                randconfig-002-20260104    clang-20
+x86_64                randconfig-003-20260104    clang-20
+x86_64                randconfig-004-20260104    clang-20
+x86_64                randconfig-005-20260104    gcc-14
+x86_64                randconfig-006-20260104    gcc-14
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20260104    gcc-15.1.0
+xtensa                randconfig-002-20260104    gcc-15.1.0
 
-Marko
-
-> 
-> >> Signed-off-by: Marko Turk <mt@markoturk.info>
-> >> ---
-> >>  rust/kernel/pci/io.rs | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/rust/kernel/pci/io.rs b/rust/kernel/pci/io.rs
-> >> index 0d55c3139b6f..fba746c4dc5d 100644
-> >> --- a/rust/kernel/pci/io.rs
-> >> +++ b/rust/kernel/pci/io.rs
-> >> @@ -20,7 +20,7 @@
-> >>  ///
-> >>  /// # Invariants
-> >>  ///
-> >> -/// `Bar` always holds an `IoRaw` inststance that holds a valid pointer to the start of the I/O
-> >> +/// `Bar` always holds an `IoRaw` instance that holds a valid pointer to the start of the I/O
-> >>  /// memory mapped PCI BAR and its size.
-> >>  pub struct Bar<const SIZE: usize = 0> {
-> >>      pdev: ARef<Device>,
-> >> -- 
-> >> 2.51.0
-> > 
-> > 
-> 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
