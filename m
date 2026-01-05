@@ -1,136 +1,142 @@
-Return-Path: <linux-pci+bounces-44006-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44007-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7B95CF36AF
-	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 13:07:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EDEACF3709
+	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 13:12:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2FDC730CCD01
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 12:01:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7210A306BF08
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 12:08:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB4CE33438F;
-	Mon,  5 Jan 2026 12:01:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E3A2338F40;
+	Mon,  5 Jan 2026 12:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YM+UX06r"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FEE330B36;
-	Mon,  5 Jan 2026 12:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A6F338F36;
+	Mon,  5 Jan 2026 12:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767614478; cv=none; b=o/sROj4P/5grmQTjFze9f8h6b5chzAjIOBqU1969+Z/steqRsekwiaZqMnfVUmSItT0X5uGtKNs81Vozh8CQOKkJNTzZHGwFDSUT3Li3DQfAL4vxu2sQ+M9dbPj2waZFGdddrGSGnS01QRq3YFRljdcz0hZt+FSgX1tNbFvyR94=
+	t=1767614925; cv=none; b=uFgpgcvv9CgCZ2CpgC3Vlvx6Dd39g2QyGkUJVjEnt6mhy6767yTSkc8X11G7BaSbfN5mGWGKbjlg9Gf2oZiThafY+eiiKspkpdT6OYYj1oMLo5zoH3hX8KDj1ZErFlyh2/GfVmHfCGCcgF0Gixj3yrjT8bzbvRnmt/ZrSvy3z1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767614478; c=relaxed/simple;
-	bh=4ynjMxk0roEk3a96iXXrcKZGWIGR6B/H8t/ixLIN/Bc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MdqIV7EvwarQD9Rhzuvcq1EG/M/i8YDN8ZWyhJwDSvVLOrGfCd3s1LPTw+kAtx/Nq63UGa7x+ZxDVASvqoQtj3b3egBnViJGUzJLiLzwBVZcBexPf7RBH9tsccJV2oIruCIwS9VihIQynleWGnJprUSLqHzxUBvEuxQ76vt97VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dlCYw6g49zHnH7t;
-	Mon,  5 Jan 2026 20:01:08 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 17D0240565;
-	Mon,  5 Jan 2026 20:01:11 +0800 (CST)
-Received: from localhost (10.48.157.23) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Mon, 5 Jan
- 2026 12:01:09 +0000
-Date: Mon, 5 Jan 2026 12:01:08 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
-	Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Marc
- Zyngier <maz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	<linux-acpi@vger.kernel.org>, <acpica-devel@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 3/7] irqdomain: Add parent field to struct
- irqchip_fwid
-Message-ID: <20260105120108.00002016@huawei.com>
-In-Reply-To: <20251218-gicv5-host-acpi-v2-3-eec76cd1d40b@kernel.org>
-References: <20251218-gicv5-host-acpi-v2-0-eec76cd1d40b@kernel.org>
-	<20251218-gicv5-host-acpi-v2-3-eec76cd1d40b@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1767614925; c=relaxed/simple;
+	bh=00kNw09cpGx3XSRebeZFtdozVzpNlMCjZvpZG0apwOs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pj9+QhlV+hi6zGx9SLYt6i5b8SnQ+NYCwyFyC4pDXz5OTWlU9NlS3GRnJdDhgsPyE4vAdjgvzyCYp0iuHz3DUzYaI3PMNPt8C1NlL6LT57Jf2g2hb5JVTbLU4m+x6UkAG2MCPTtFWkE5X4gZEjhLfNTIC8NSnaNrKX5kEmxg+vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YM+UX06r; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E122EC19421;
+	Mon,  5 Jan 2026 12:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767614924;
+	bh=00kNw09cpGx3XSRebeZFtdozVzpNlMCjZvpZG0apwOs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YM+UX06rpRa0qS5CA6m98qgbAjaSo/moh17uaW0oaJzKHRsjBsQ5J/C+bYGmaRLjS
+	 8VqKoPJOBuz2bTpaGdYefcnhhnvqLKaQrJqErTOHrmA+ijXxz3hnPVNhliGNW5oOYt
+	 wTqBnt3wkfuW3PW7KQr4Qv+lCLKqMV2DrbRJZDdBwDEcORmetqgfFjAMlRCvEOt7Er
+	 WyFSkDS0GQQP74cKNTcg4HWJRClOeFJ2URriiiA9HUFVy6sW4tlR3vq6Jzc0NlhP0U
+	 re0ps/oBhdGthxCUo3QojCsF4EO3F/GArqDD0dVeUKHvZGZ29n6j8xrrRglY89uyHO
+	 GW0zqBV1nb8EA==
+Date: Mon, 5 Jan 2026 17:38:34 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Niklas Cassel <cassel@kernel.org>, 
+	Francesco Lavra <flavra@baylibre.com>, thierry.reding@gmail.com, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Mayank Rana <mayank.rana@oss.qualcomm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Shradha Todi <shradha.t@samsung.com>, Thippeswamy Havalige <thippeswamy.havalige@amd.com>, 
+	Inochi Amaoto <inochiama@gmail.com>, Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH] pci: controller: tegra194: remove dependency on Tegra194
+ SoC
+Message-ID: <q2iezy4uydlvwgo6m6yv2nlucafyvxgonm2o5q3g32p73vemwb@x33rmfffnwlu>
+References: <20251126102530.4110067-1-flavra@baylibre.com>
+ <xh2att7wpqowricyifxmoaijbhtrtoht25pomu4voosfctf36e@4p27y7rezz22>
+ <e900f082-fb3e-45c6-a94b-935132190249@nvidia.com>
+ <5cwg6tg2y2q4mkns5zblenvhhovnz52dp5bo4uyghs4yledh3v@7apj6wwy3kjf>
+ <aVt_t3kxtT99wbwi@ryzen>
+ <7bfb3ebc-2e8b-4fcc-8d13-a6f3e0b7141e@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7bfb3ebc-2e8b-4fcc-8d13-a6f3e0b7141e@nvidia.com>
 
-On Thu, 18 Dec 2025 11:14:29 +0100
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-
-> The GICv5 driver IRQ domain hierarchy requires adding a parent field to
-> struct irqchip_fwid so that core code can reference a fwnode_handle parent
-> for a given fwnode.
+On Mon, Jan 05, 2026 at 11:56:37AM +0000, Jon Hunter wrote:
 > 
-> Add a parent field to struct irqchip_fwid and update the related kernel API
-> functions to initialize and handle it.
 > 
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Marc Zyngier <maz@kernel.org>
-Hi Lorenzo,
-
-Happy new year.
-
-> ---
->  include/linux/irqdomain.h | 30 ++++++++++++++++++++++++++----
->  kernel/irq/irqdomain.c    | 14 +++++++++++++-
->  2 files changed, 39 insertions(+), 5 deletions(-)
+> On 05/01/2026 09:09, Niklas Cassel wrote:
+> > On Mon, Jan 05, 2026 at 02:09:34PM +0530, Manivannan Sadhasivam wrote:
+> > > On Fri, Jan 02, 2026 at 10:58:15AM +0000, Jon Hunter wrote:
+> > > > 
+> > > > On 23/12/2025 06:45, Manivannan Sadhasivam wrote:
+> > > > > On Wed, Nov 26, 2025 at 11:25:30AM +0100, Francesco Lavra wrote:
+> > > > > 
+> > > > > + Tegra maintainers
+> > > > > 
+> > > > > > This driver runs (for both host and endpoint operation) also on other Tegra
+> > > > > > SoCs (e.g. Tegra234).
+> > > > > > Replace the Kconfig dependency on ARCH_TEGRA_194_SOC with a more generic
+> > > > > > dependency on ARCH_TEGRA; in addition, amend the Kconfig help text to
+> > > > > > reflect the fact that this driver is no longer exclusive to Tegra194.
+> > > > > > 
+> > > > > 
+> > > > > I vaguely remember asking about this a while back during some other patch review
+> > > > > and I don't remember what we concluded.
+> > > > > > Thierry, Jon, thoughts?
+> > > > 
+> > > > So ARCH_TEGRA means that this can be enabled for the legacy 32-bit Tegra
+> > > > devices as well as the current 64-bit Tegra devices (such as Tegra194).
+> > > > Given that this driver is only used for Tegra194 and Tegra234, it seems it
+> > > > would be better to only enable this for Tegra194 and Tegra234 instead of any
+> > > > Tegra.
+> > > > 
+> > > 
+> > > The dependency means, whenever someone tries to enable PCIE_TEGRA194_HOST,
+> > > ARCH_TEGRA should be enabled. So as long as someone not trying to enable
+> > > PCIE_TEGRA194_HOST for 32bit Tegra systems, ARCH_TEGRA should work fine and
+> > > PCIE_TEGRA194_HOST is not selected by arch/arm/configs/tegra_defconfig. So I
+> > > don't see any blocker with this patch. In fact, many other archs do the same.
+> > > 
+> > > But I don't like extending the Kconfig with per SoC dependency as it won't
+> > > scale.
+> > 
+> > We already have a patch from Vidya:
+> > [PATCH V4] PCI: dwc: tegra194: Broaden architecture dependency
+> > that was sent 2025-05-08
+> > 
+> > Back then, the reason why it wasn't merged was because it required a
+> > similar change to the PHY driver to go in first:
+> > https://lore.kernel.org/linux-pci/174722268141.85510.14696275121588719556.b4-ty@kernel.org/
+> > 
+> > The PHY driver change was merged in v6.16:
+> > 0c2228731974 ("phy: tegra: p2u: Broaden architecture dependency")
+> > 
+> > So, I think we could just merge:
+> > https://lore.kernel.org/linux-pci/20250508051922.4134041-1-vidyas@nvidia.com/
+> > 
+> > (Assuming it still applies.)
 > 
-> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-> index 62f81bbeb490..b9df84b447a1 100644
-> --- a/include/linux/irqdomain.h
-> +++ b/include/linux/irqdomain.h
-> @@ -257,7 +257,8 @@ static inline void irq_domain_set_pm_device(struct irq_domain *d, struct device
->  
->  #ifdef CONFIG_IRQ_DOMAIN
->  struct fwnode_handle *__irq_domain_alloc_fwnode(unsigned int type, int id,
-> -						const char *name, phys_addr_t *pa);
-> +						const char *name, phys_addr_t *pa,
-> +						struct fwnode_handle *parent);
->  
->  enum {
->  	IRQCHIP_FWNODE_REAL,
-> @@ -267,18 +268,39 @@ enum {
->  
->  static inline struct fwnode_handle *irq_domain_alloc_named_fwnode(const char *name)
->  {
-> -	return __irq_domain_alloc_fwnode(IRQCHIP_FWNODE_NAMED, 0, name, NULL);
-> +	return __irq_domain_alloc_fwnode(IRQCHIP_FWNODE_NAMED, 0, name, NULL, NULL);
-> +}
-> +
-> +static inline
-> +struct fwnode_handle *irq_domain_alloc_named_fwnode_parent(const char *name,
-> +							   struct fwnode_handle *parent)
+> Yes it does and applying Sagar's patch is fine with me. So it you want to
+> apply Sagar's patch please add my ...
+> 
 
-The name of this makes me think it's allocating the named fwnode parent, rather that
-the named fwnode + setting it's parent.
+Don't we need:
 
-There aren't all that many calls to irq_domain_named_fwnode(), maybe to avoid challenge
-of a new name, just add the parameter to all of them? (25ish)  Mind you the current
-pattern for similar cases is a helper, so maybe not.
+	depends on (ARCH_TEGRA && ARM64) || COMPILE_TEST
 
-Or go with something similar to named and have
+in the above patch?
 
-irq_domain_alloc_named_parented_fwnode()?
+- Mani
 
-I'm not that bothered though if you think the current naming is the best we can do.
-
-Jonathan
-
-> +{
-> +	return __irq_domain_alloc_fwnode(IRQCHIP_FWNODE_NAMED, 0, name, NULL, parent);
->  }
-
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
