@@ -1,107 +1,192 @@
-Return-Path: <linux-pci+bounces-43987-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43988-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B0BBCF27F2
-	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 09:43:31 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D549CF2828
+	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 09:47:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 736F43053BC2
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 08:39:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7E1A43041573
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 08:45:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA6FA313E39;
-	Mon,  5 Jan 2026 08:39:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77520320CBB;
+	Mon,  5 Jan 2026 08:45:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="huNGUoAI"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fO9vOUle";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="XfQ4Jj0/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E646254B18;
-	Mon,  5 Jan 2026 08:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF07313E07
+	for <linux-pci@vger.kernel.org>; Mon,  5 Jan 2026 08:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767602383; cv=none; b=ilKH2VpdJIlWxlW4W+FR7Y6m0Khmi9lZCpRzl7YV+cNA9z92WJ9V/PLS16Hfq088NlOCrkEg9k5j2p/RyR6dSLJzqnuKuxvM6sy77dqlM0ZDKMyXIcve42irCzCT73zJMPJo5WALNrDVEsTManAk9wvcuQ7bnigzIhVUnqwYfss=
+	t=1767602745; cv=none; b=UrwYM5gzY6/eI1bkDduCYgAMvyMuuNCE6v70h2r2Qlk9nOJwKAvb5z6duD+ArAhJO9VEcU67hYHVq1TutOZWMQ3ybMstLAd8GKJgbN7YsrOTAhMSrdvQLGIxgVxjtiWGApBDzea4r0YAdXAk8FD0WoKjBfMckCynJJv97XzWzpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767602383; c=relaxed/simple;
-	bh=EpLu6yh77VS0IgkoZnbaTo04x8UBy2Ue0cAFWXUo//4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oU9LK0CIMG96nmdxj0ZcQH196Y+Jg1PXrU9FkzyP1fY/HxNTZa+asPjg0+K8KtjSG1M1huWmHeXyk24AOIOgnb6mGrmIwdt1XULoaPrmpsXQvhETX7h8859gUKSjbkp7JGZIeS5VP4EoockhGRV4C5XoJlFMyMbv9PGgNM6X26s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=huNGUoAI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ACADC116D0;
-	Mon,  5 Jan 2026 08:39:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767602383;
-	bh=EpLu6yh77VS0IgkoZnbaTo04x8UBy2Ue0cAFWXUo//4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=huNGUoAIy6rvXnRpwTVu78tsktqThUzG3AXNJLhEseVTJUViWEohZAa8L9gnwwHaG
-	 5a6xcnNMQivYFpqbSgpW3XCGLg/3hRPCIIQGY+rHBrc5/+OSAqukv5Yp8p5D3eWHg9
-	 yh/263ibMBCW26Vw/XE7AZrRStEhfHG93ppTNPUvZGGEviw9MPx7p/MNZgjI7eJkHf
-	 0XjKHRyvceQR7QgF5omGOga4oHw4+EwSK6g3bY1V8gJXgjriFFU3Tb5uKWOZG1qUHg
-	 U98nfNzfg1zXILA/shSsfY9wFBO/TVv6jm9i4F3Y2W7L8K/1oCNhhvve6wz2b5ReWs
-	 pL00aX9cNGvsw==
-Date: Mon, 5 Jan 2026 14:09:34 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Francesco Lavra <flavra@baylibre.com>, thierry.reding@gmail.com, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Mayank Rana <mayank.rana@oss.qualcomm.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Shradha Todi <shradha.t@samsung.com>, Thippeswamy Havalige <thippeswamy.havalige@amd.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH] pci: controller: tegra194: remove dependency on Tegra194
- SoC
-Message-ID: <5cwg6tg2y2q4mkns5zblenvhhovnz52dp5bo4uyghs4yledh3v@7apj6wwy3kjf>
-References: <20251126102530.4110067-1-flavra@baylibre.com>
- <xh2att7wpqowricyifxmoaijbhtrtoht25pomu4voosfctf36e@4p27y7rezz22>
- <e900f082-fb3e-45c6-a94b-935132190249@nvidia.com>
+	s=arc-20240116; t=1767602745; c=relaxed/simple;
+	bh=SMIJvydny/1uz4YEBDY/8s1j8oA5CTec59Q/8FlToeU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=KA4WYqHnxPvPsxyboCoITQdc9ildaavvmTKCj2otH1ArB3XFmSMhwj5+UJgW4cEONcohna4T/xw1DvgQJS14UBuY1/E88CX0YuBvolzz0KR29DJZR7jkIPHs4x4JaZ0bsNykNVX5HqVZVEAGTcw15Oi65VLdFDkMOQupA2ezSJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fO9vOUle; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=XfQ4Jj0/; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6058ZqXU1208136
+	for <linux-pci@vger.kernel.org>; Mon, 5 Jan 2026 08:45:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	owo2knkEHrTGLCudWA55pB2/WZkWvc3MvCzY7Jo38es=; b=fO9vOUledbCU0wOF
+	5dLBkiaDrxyuEldtpSh1ch2RzLPu6PfjreRe7ysq84vYmVa5I9mvoHLTZFnrBLVi
+	p3gl8Lu7ZE31yGF9KbYX42KPZmei8q+HBSRBc+0ZlNQo9L5JjNbSISYxTA0Gx5MB
+	7pezjOoLCz0mL+m1ihr1B1ujbsHsk9r9tI/J0O5sHe1ez/chC3Nt78Li1zWsfZON
+	dnOnWlh9UAMaw0/qHqgaoKtmUUF7hjXrgPCPgOOUXUd94O6RuQ9ZzmhTILlJ39QE
+	Gb2gKzZKMggoSzvTdbGTg8+R5jEEZTYabl7F0DMbYvLndpFly1wbHwY8ie1iZCUV
+	DKR9+g==
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bev9hbt4e-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 05 Jan 2026 08:45:43 +0000 (GMT)
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-7d481452732so26108221b3a.1
+        for <linux-pci@vger.kernel.org>; Mon, 05 Jan 2026 00:45:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1767602742; x=1768207542; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=owo2knkEHrTGLCudWA55pB2/WZkWvc3MvCzY7Jo38es=;
+        b=XfQ4Jj0/gDFoXN0Rc8M16mth7cXxb7vCtZdWkpa38qgWoG2Id8raRXI02gpHbl1oDi
+         DUs/oOnpZt/oC8oACAPVDsovetahwwHM+NLagGnNiZ7KTeuzUhXXLtgcLAw9u6yWRtlP
+         F6yRxo+xbldSCR32xfoGQKHqOHfRNqrh29xp6hxMSonHdgPQU5dZQepRuogiVYEXziW1
+         qvDCxzWajmyDd3bebuZ1zw+sdCNLpV/to1k9o21JumDD5bZ+PVkiwWPeCUZuOSpwp567
+         4poTtPAaxNFr/69+MWflOPMHWG/lhOovltVDhGU9D02Tx9HAeHnxOss3cLcfcDfLa6HE
+         isXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767602742; x=1768207542;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=owo2knkEHrTGLCudWA55pB2/WZkWvc3MvCzY7Jo38es=;
+        b=j82R6G9IvoHyehzu9QosB/MUeGHpuG7oIXrPcOi+jR5Bh4xeWut5+XU9ZBv/sNnRAI
+         hBahDpORQNU+Y9DDFqGpP0nm8Fe/QZxE0yraHkxukeQCiMfhNCoePOum6XuFckkiiOeN
+         2sZjli+KEJhDW6kLyzARFOu/U4MQqL3wyiu5JJ5Ns4W8aOlXtt0lzyoH7ByvwmEDlewc
+         iRJWAvOEpkX3fSSloY8GRvknxCHguDbSyI6XK2dsHSpNwSQxtXyHPUn65Duf9ZjYEoWL
+         v9YuYY5E8OTclRln/bepUA3QjF2e3se4JP6TX/5aF8O9kGb+siBxIab5KaUv0XHOv/y5
+         KshQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWvOzIp85ZDoevB5Mfefbr30vujb8fbfWxRxUpLgE/6RYczOyZBK2NsWlIROj26dd8bxL1gdhN4AZ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxnj01hcpCO+vSNxSzVrmFDNdo11VsTaJIeSzzWk9Z1K7WbeWiv
+	u0mYpDuM1eqVSjR+EJO2CUZpXqQhHNHJw7LnlycZcaHKCXmkghfQXRQBAwJhZVlGwMR5dhQx9VG
+	zyQOufn11sFwk5Sfi/4vTBTU98xp1nNtZT36AapfnuEkcSDA0x+MpAas3GhyBxRpIh2I1f4Y=
+X-Gm-Gg: AY/fxX7GuuSQWeqNLCpn9AUKxla8lhobAQA32M04Xl1+k2pl1Fn/HCT4yOtoqlyEMfa
+	d26qsqRpSEzbgSnxCKYcUlU7jwuQ9YmOzCDUlVazUt/GFCS48w4i3wVJRDmKwyAlzTZnrUJCuk2
+	mmqrRinsERuziUYWee/cdEeze1jJrWkaNc+wcyfHo1mgR9LV/KaBLh7ri6O2s86v0ZTZE9XCZH/
+	fO3KQlzwYW+JXqu1I2tzmLf1tKPsRkFTf6GKjrCUmXqsLDKOZW1X3aoPJkBtmWooZNMGBNRnEYk
+	swEJdlIT6vurmXrIJRoUjbfT9foo/WfP2jQC5C2VQ2k9vV82565SfLI1EWV0o0Rs1dWmftqWiWY
+	jbaMP2SBZSA==
+X-Received: by 2002:a05:6a20:3d05:b0:35e:3cac:858c with SMTP id adf61e73a8af0-376a8ac34f9mr46386483637.33.1767602741963;
+        Mon, 05 Jan 2026 00:45:41 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEMvBhc0ZbR6k0FaY78RVr2rQjEFNd2W/FOAOP1PoRx5xHv1FpN6/pgW2Pttoo0pZc29JnwuQ==
+X-Received: by 2002:a05:6a20:3d05:b0:35e:3cac:858c with SMTP id adf61e73a8af0-376a8ac34f9mr46386462637.33.1767602741374;
+        Mon, 05 Jan 2026 00:45:41 -0800 (PST)
+Received: from [192.168.1.102] ([120.56.194.222])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c1e7ca0b587sm41399110a12.33.2026.01.05.00.45.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Jan 2026 00:45:40 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+X-Google-Original-From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20251217-dt-bindings-pci-qcom-v2-0-873721599754@oss.qualcomm.com>
+References: <20251217-dt-bindings-pci-qcom-v2-0-873721599754@oss.qualcomm.com>
+Subject: Re: [PATCH v2 00/12] dt-bindings: PCI: qcom: Move remaining
+ devices to dedicated schema
+Message-Id: <176760273771.8418.10713849546494908131.b4-ty@kernel.org>
+Date: Mon, 05 Jan 2026 14:15:37 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e900f082-fb3e-45c6-a94b-935132190249@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA1MDA3NyBTYWx0ZWRfX9Snrn9cGHY+x
+ WgPTnOBQk+xbnqrmZpdTbmec73BZWzSdMn98h5LGo6+U9/0UdTg4hLml9vTojlRhYEcE7ZP0uwv
+ PuE5Z1+zgSWeqLCnDlXsSQrBiQxwRXhfxOIPVKYgt4zQeP7a4E4VgdM06XvGhhBTtjVS9ygB9m/
+ GIbPHleImOb+OOq/+wzqRDarpj9A7CoEZg2MuVOEK9lUXnooI+TTibaYApdjZomuvZsbkJkgv15
+ MEP3vWXxMzVTVU+P1x1d6ZEAdJA8tiLKa+MtLCwmFRUi24yBI9n3HvT4JRrQWGu7orUp9P9ILtX
+ BTWX9YIMMG5+Pv0t+zQ5QSUhJ3x5WH9zCPXSjPEX679KcCjC/YrOYduSL68gTHmsIPWQrm/Rjmq
+ 15RtXfYm32FqN/lb1vKH6hVas+scRN6AtVr4M7giSLRwHf229mnC3pV+JmzR7MU8grvgFJyqduX
+ z8XLaXN7PCh6csgwqBw==
+X-Proofpoint-GUID: gkb7AWHpKb802smTlcAXffypv9tRLTlD
+X-Authority-Analysis: v=2.4 cv=RrbI7SmK c=1 sm=1 tr=0 ts=695b7a37 cx=c_pps
+ a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=3dEILRYKsVIWdVk4w2Qziw==:17
+ a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=bC-a23v3AAAA:8 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8
+ a=6q_225CX-kZnqSqlAqYA:9 a=QEXdDO2ut3YA:10 a=OpyuDcXvxspvyRM73sMx:22
+ a=FO4_E8m0qiDe52t0p3_H:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: gkb7AWHpKb802smTlcAXffypv9tRLTlD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-05_01,2025-12-31_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 clxscore=1015 spamscore=0 impostorscore=0 malwarescore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2601050077
 
-On Fri, Jan 02, 2026 at 10:58:15AM +0000, Jon Hunter wrote:
+
+On Wed, 17 Dec 2025 17:19:06 +0100, Krzysztof Kozlowski wrote:
+> Changes in v2:
+> - Rebase - Mani's email address changed, but I think I used the proper
+>   @kernel.org one.
+> - Add Rb tags
+> - Link to v1: https://patch.msgid.link/20251103-dt-bindings-pci-qcom-v1-0-c0f6041abf9b@linaro.org
 > 
-> On 23/12/2025 06:45, Manivannan Sadhasivam wrote:
-> > On Wed, Nov 26, 2025 at 11:25:30AM +0100, Francesco Lavra wrote:
-> > 
-> > + Tegra maintainers
-> > 
-> > > This driver runs (for both host and endpoint operation) also on other Tegra
-> > > SoCs (e.g. Tegra234).
-> > > Replace the Kconfig dependency on ARCH_TEGRA_194_SOC with a more generic
-> > > dependency on ARCH_TEGRA; in addition, amend the Kconfig help text to
-> > > reflect the fact that this driver is no longer exclusive to Tegra194.
-> > > 
-> > 
-> > I vaguely remember asking about this a while back during some other patch review
-> > and I don't remember what we concluded.
-> > > Thierry, Jon, thoughts?
+> Some time ago I already moved several devices from qcom,pcie.yaml
+> binding to a dedicated binding files for easier reviewing and
+> maintenance.
 > 
-> So ARCH_TEGRA means that this can be enabled for the legacy 32-bit Tegra
-> devices as well as the current 64-bit Tegra devices (such as Tegra194).
-> Given that this driver is only used for Tegra194 and Tegra234, it seems it
-> would be better to only enable this for Tegra194 and Tegra234 instead of any
-> Tegra.
-> 
+> [...]
 
-The dependency means, whenever someone tries to enable PCIE_TEGRA194_HOST,
-ARCH_TEGRA should be enabled. So as long as someone not trying to enable
-PCIE_TEGRA194_HOST for 32bit Tegra systems, ARCH_TEGRA should work fine and
-PCIE_TEGRA194_HOST is not selected by arch/arm/configs/tegra_defconfig. So I
-don't see any blocker with this patch. In fact, many other archs do the same.
+Applied, thanks!
 
-But I don't like extending the Kconfig with per SoC dependency as it won't
-scale.
+[01/12] dt-bindings: PCI: qcom,pcie-sm8150: Merge SC8180x into SM8150
+        commit: b73d6672ebc1e3a52b67585f28daca0d2f5bb4f2
+[02/12] dt-bindings: PCI: qcom,pcie-sdx55: Move SDX55 to dedicated schema
+        commit: c86e1f39f6e4c8425c5b55f276615ae16b5ac57f
+[03/12] dt-bindings: PCI: qcom,pcie-sdm845: Move SDM845 to dedicated schema
+        commit: c80dc8121d3af8f33413bb0f9ed9e81e2c576e1a
+[04/12] dt-bindings: PCI: qcom,pcie-qcs404: Move QCS404 to dedicated schema
+        commit: 78aa7d0d9be697409207309013051d080c243421
+[05/12] dt-bindings: PCI: qcom,pcie-ipq5018: Move IPQ5018 to dedicated schema
+        commit: 7366e19379c75add8ac407439bf9ee8473cab7b5
+[06/12] dt-bindings: PCI: qcom,pcie-ipq6018: Move IPQ6018 and IPQ8074 Gen3 to dedicated schema
+        commit: 06f4ac1f7673632eaba82d04e578ebb9b783e96b
+[07/12] dt-bindings: PCI: qcom,pcie-ipq8074: Move IPQ8074 to dedicated schema
+        commit: edf1701c86c91175c0b978d50cfda418516d8d43
+[08/12] dt-bindings: PCI: qcom,pcie-ipq4019: Move IPQ4019 to dedicated schema
+        commit: 769f6826d5ad8baef1238b10cc97a7b0f678ba43
+[09/12] dt-bindings: PCI: qcom,pcie-ipq9574: Move IPQ9574 to dedicated schema
+        commit: 5e8bf1c1d5b7f1129148d537afc8feb9c9f883a1
+[10/12] dt-bindings: PCI: qcom,pcie-apq8064: Move APQ8064 to dedicated schema
+        commit: b673d06ea8449db084cabfee2844f17b6f98f22c
+[11/12] dt-bindings: PCI: qcom,pcie-msm8996: Move MSM8996 to dedicated schema
+        commit: 0eaa8d1c36f032d6023af96cd84e8b2ece0d6922
+[12/12] dt-bindings: PCI: qcom,pcie-apq8084: Move APQ8084 to dedicated schema
+        commit: 72b39430284fc4a7a960133b70137c24fed63b74
 
-- Mani
-
+Best regards,
 -- 
-மணிவண்ணன் சதாசிவம்
+Manivannan Sadhasivam <mani@kernel.org>
+
 
