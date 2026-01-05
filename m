@@ -1,137 +1,182 @@
-Return-Path: <linux-pci+bounces-44000-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44001-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D6ABCF344E
-	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 12:32:30 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 595D0CF351A
+	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 12:43:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id A66AE3009221
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 11:32:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 41B2D3003076
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 11:41:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3801A33858E;
-	Mon,  5 Jan 2026 11:06:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 473F83195EF;
+	Mon,  5 Jan 2026 11:41:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nAYck1k2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GVmSS2dV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FA0338581
-	for <linux-pci@vger.kernel.org>; Mon,  5 Jan 2026 11:06:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2009A3191C6;
+	Mon,  5 Jan 2026 11:41:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767611202; cv=none; b=nAmyCQQMxQXdslmUYMBCzzxa5mlqtAoReAI/W6jK2y1PWCFfWAiVA3Tt65ER2myuD5xvr3xl8DMZV7a3MuvG+W7t7MwVWX11p7+6b4d3KELPqnEu+E89fuNCiWELdOKlSIjRWLd4/TSSUMXRNdwsB98BmYNoYQbDMeZCNMvUv8g=
+	t=1767613311; cv=none; b=OJy/KP+OfCUGzgsk0uvonme9zwG/eg71GQOz8fm85nNEPgX95o2Xg5meWBbwoEYTe0zNZhZP8Wt4W7fTI/GC75tx4hIqn1kpXY04bZy+YFHK1Z8fpkT2H+mNZk1YxZm0n/JU/thtNddLqJEvYNbnwcAoZKoXCagaHGw8gqMxaVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767611202; c=relaxed/simple;
-	bh=57FWld+XwI+aYRqi/11GRuJ3H7SFEpiahq4Vv+hSAis=;
+	s=arc-20240116; t=1767613311; c=relaxed/simple;
+	bh=ZnWJRu5bMZyuao8+myPfH6g27n1qqOts89M3KQ+T/hU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=odKdC5KjX4s0+9CTTxX+VD+t/L/y+3QqArCp/MQYy1yIFnoFFY9MEvnuiJrIp8F2AeiSG/WQtI1eIwjeingNC/O02sXmKij88Egbrqvin3zkg+XZJnIqgjxQoL/gpHKAduV8kvyLpakJNdjQwU/DH2+598l+LYUYfkVHTsEYtck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nAYck1k2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34029C116D0;
-	Mon,  5 Jan 2026 11:06:39 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=CSj54qOhOv1turP+FSbr0XB1iS3WAwy1CbRlZvSQUV297e3/5GZWDC2Ucy8PJyiKtUIywheFt2R8J6NvjzUceuzjXaVI9XGs6hETZwI+umoPzNi3g00wyXJljP2FnMpee9g/d6baMg6rSUiw2GMehPGLvtCTs4pzY0qZvCGTAHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GVmSS2dV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58510C19423;
+	Mon,  5 Jan 2026 11:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767611201;
-	bh=57FWld+XwI+aYRqi/11GRuJ3H7SFEpiahq4Vv+hSAis=;
+	s=k20201202; t=1767613310;
+	bh=ZnWJRu5bMZyuao8+myPfH6g27n1qqOts89M3KQ+T/hU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nAYck1k2vKcDTAqP+069tcejmUNnbPtiCb9QbrOGHi9M4yAf9tQGSI7m4nC4evcMQ
-	 1uTyHTshrpX9Pz9gz2JNEpdnmpbniH6s5795zH0tLIeYcx0Xho1gc1ieHGJSf7YHdi
-	 HtDu9d8MSbHyJlUSPnMXKtTbwy8nyxrqCVBufkcwuvW7I1JjWTmjmvpZN2hqxmr8QQ
-	 Alv/hi0Lwo0DvntHiCpubi7nwMbnD8tsquv9/iEZFM8AmqZqpifdzXX+sv8YOONyCc
-	 PJMK87bopQ0aHstWLOAkxoOVRGuxx7nV4XdPoYQG0tMGD2vY1d+hu9QPEf/Lv6tpkb
-	 c3qQLXNeB4QPw==
-Date: Mon, 5 Jan 2026 12:06:37 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>,
-	Manivannan Sadhasivam <mani@kernel.org>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Frank Li <Frank.Li@nxp.com>, Damien Le Moal <dlemoal@kernel.org>,
-	Koichiro Den <den@valinux.co.jp>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: dwc: ep: Cache MSI outbound iATU mapping
-Message-ID: <aVubPUphGP59bH09@ryzen>
-References: <20251210071358.2267494-2-cassel@kernel.org>
- <8e00bd1c-29ae-43fd-90e8-ea0943cb02b6@oss.qualcomm.com>
- <s5mbvhnummcegksauc7kyb2442ao27dwc63gyryetuvxojnxfj@a67nopel52tx>
- <aUknSzSpNxLeEN5o@ryzen>
- <3b34aa66-a418-4f6b-930a-0728d87d79b6@oss.qualcomm.com>
- <aUlA7y95SUC-QA4T@ryzen>
- <a24a5d8b-5818-4e11-bc09-47090de164c7@rock-chips.com>
- <63321b7d-74a7-448f-ab20-08cc771beb5d@oss.qualcomm.com>
- <424133b7-bd6b-4602-96ea-4413ce4f985d@rock-chips.com>
+	b=GVmSS2dVEg4cHs0xzG2/iPZLPapp4xEE+da64O22p4c3lrXPoleulbcSQAt4mJ1Sv
+	 K/7JtgwurlPOTUuE9rxAaMYkxXjXmY+/zxEmh6hNvziMLpDVC8mf2RVnSVxzeqNHli
+	 GVSpTXpp+QPlhpTrZ1mW5BHqm+0A1DlsGH+0xMvWu9JT+J6cm7qYFUDIuG84cTc6tO
+	 e0GZQbdYVdLnwPDUH8TL2z/sJ8aHEWO8BOv9XFJ8s8eOYxgUF1xLUN+hDSoDb3AvD3
+	 PV9yC7kXLVhnXvdKBfnoSkNh9+LQAIdhCU9LNguWUdBKh0CpBQ/vA93xt8UvmUOmsP
+	 TBRukzGHXuEWA==
+Date: Mon, 5 Jan 2026 17:11:42 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com, 
+	Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	vincent.guittot@linaro.org, zhangsenchuan@eswincomputing.com, 
+	Shawn Lin <shawn.lin@rock-chips.com>, dlemoal@kernel.org
+Subject: Re: [PATCH v3 0/4] PCI: dwc: Rework the error handling of
+ dw_pcie_wait_for_link() API
+Message-ID: <mrm7yif2tg7trvsof3jiqbevfldkf7ckkfswtabrnkc4dlgmae@qyp4s23utlid>
+References: <20251230-pci-dwc-suspend-rework-v3-0-40cd485714f5@oss.qualcomm.com>
+ <aVezfq-8bTKczYkp@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <424133b7-bd6b-4602-96ea-4413ce4f985d@rock-chips.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aVezfq-8bTKczYkp@ryzen>
 
-Hello all,
-
-On Tue, Dec 23, 2025 at 02:23:39PM +0800, Shawn Lin wrote:
-> > > I checked the IP configurtion parameters for RK3588 DM controller for
-> > > sure, it sets MSIX_TABLE_EN=1.
-> > > 
-> > > Looking into dw_pcie_ep_raise_msix_irq_doorbell(), it doesn't seem to
-> > > match the dwc databook. No matter for non-AXI mode or AXI access mode,
-> > > shouldn't we need to generate a MSI-X table RAM with data/address/
-> > > vector/TC in advanced? Am I missing anything because I didn't look
-> > The MSI-X table will updated automatically when host updates the MSI-X
-> > table, when MSI-X is enabled
-> > by host.
+On Fri, Jan 02, 2026 at 01:01:02PM +0100, Niklas Cassel wrote:
+> On Tue, Dec 30, 2025 at 08:37:31PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > Hi,
+> >
+> > This series reworks the dw_pcie_wait_for_link() API to allow the callers to
+> > detect the absence of the device on the bus and skip the failure.
+> >
+> > Compared to v2, I've reworked the patch 2 to improve the API further and
+> > dropped the patch 1 that got applied (hence changed the subject). I've also
+> > modified the error code based on the feedback in v2 to return -ENODEV if device
+> > is not detected on the bus and -ETIMEDOUT otherwise. This allows the callers to
+> > skip the failure if device is not detected and handle error for other failure.
+> >
+> > Testing
+> > =======
+> >
+> > Tested this series on Rb3Gen2 board without powering on the PCIe switch. Now the
+> > dw_pcie_wait_for_link() API prints:
+> >
+> >	qcom-pcie 1c08000.pcie: Device not found
+> >
+> > Instead of the previous log:
+> >
+> >	qcom-pcie 1c08000.pcie: Phy link never came up
 > 
-> Thanks for these details.
-> I re-read the databook, especially "Figure 3-49 iMSIX-TX: MSIX
-> Transmit ". Yes, it's updated automatically when host write access
-> it, which either comes from RX or local DBI(for debug purpose).
+> Hello Mani,
+> 
+> I really like this series.
+> 
+> However when testing my usual setup with 2 Rock 5B:s, one in EP mode, one
+> in RC mode, where I usually power on both boards at the same time, but only
+> after both boards are booted, do I do the configfs write to enable the link
+> training on EP, and then do a rescan on the RC.
+> 
+> Even with this series, this workflow still works in 8 out of 10 boots.
+> 
+> 
+> However, in 2 out of 10 boots I instead got:
+> [    2.285827] rockchip-dw-pcie a40000000.pcie: Link failed to come up. LTSSM: POLL_COMPLIANCE
+> [    2.286584] rockchip-dw-pcie a40000000.pcie: probe with driver rockchip-dw-pcie failed with error -110
+> 
+> In both cases LTSSM was in POLL_COMPLIANCE.
+> 
+> 
+> Considering that things work in 8 out of 10 boots, means that the LTSSM state
+> was in Detect.Quiet or Detect.Active.
+> 
+> I did comment out goto err_stop_link if dw_pcie_wait_for_link(), so I can dump
+> LTSSM afterwards, when this happens.
+> 
+> [    2.293785] rockchip-dw-pcie a40000000.pcie: Link failed to come up. LTSSM: POLL_COMPLIANCE
+> 
+> Then I do:
+> 
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status 
+> POLL_COMPLIANCE (0x03)
+> 
+> So LTSSM is still in Poll.Compliance.
+> 
+> However, as soon as I do the configfs writes on the EP board:
+> 
+> 
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status 
+> L0 (0x11)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status 
+> L0 (0x11)
+> 
+> LTSSM transitions out of compliance, and rescan will find my device:
+> 
+> # echo 1 > /sys/bus/pci/devices/0000:00:00.0/rescan 
+> [  246.777867] pci 0000:01:00.0: [1d87:3588] type 00 class 0xff0000 PCIe Endpoint
+> [  246.778627] pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x000fffff]
+> [  246.779151] pci 0000:01:00.0: BAR 1 [mem 0x00000000-0x000fffff]
+> [  246.779672] pci 0000:01:00.0: BAR 2 [mem 0x00000000-0x000fffff]
+> [  246.780192] pci 0000:01:00.0: BAR 3 [mem 0x00000000-0x000fffff]
+> [  246.780716] pci 0000:01:00.0: BAR 5 [mem 0x00000000-0x000fffff]
+> [  246.781236] pci 0000:01:00.0: ROM [mem 0x00000000-0x0000ffff pref]
+> 
+> 
+> 
+> I understand that in most normal situations, the endpoint is powered on
+> before powering on the host side (or there is no EP connected at all).
+> But somehow, for us PCIe endpoint developers, it would be nice if we
+> could keep the behavior of being able to rescan the bus, even when the EP
+> is not powered on before the host side.
+> 
 
-With the help of Shawn, I managed to get dw_pcie_ep_raise_msix_irq_doorbell()
-to work on RK3588.
+What could be happening here is that since the endpoint is physically connected
+to the bus, the receiver gets detected during Detect.Active state and LTSSM
+enters the Polling state. I think the reason why it ended up staying in
+Poll.Compliance could be due to (as per the spec):
 
-By default, on RK3588, the MSI-X table is stored in BAR4 at offset 0x4000.
+a. Not all Lanes from the predetermined set of Lanes from above have
+detected an exit from Electrical Idle since entering Polling.Active.
 
-There seems to be a limitation that the iMSIX-TX doorbell feature only
-works when the MSI-X table is stored in this default location.
+b. Any Lane that detected a Receiver during Detect received eight consecutive
+TS1 Ordered Sets (or their complement) with the Lane and Link numbers set to
+PAD, the Compliance Receive bit (bit 4 of Symbol 5) is 1b, and the Loopback bit
+(bit 2 of Symbol 5) is 0b that the Compliance Receive bit (bit 4 of Symbol 5) is
+set.
 
+So this is perfectly legal from endpoint perspective.
 
-As you know, by default, pci-epf-test stores the MSI-X table in BAR0,
-after the registers defined by pci-epf-test itself.
-This works fine when triggering a MSI-X using dw_pcie_ep_raise_msix_irq(),
-but does not work when using dw_pcie_ep_raise_msix_irq_doorbell() (at least
-not or RK3588).
+> Perhaps a Kconfig or module param? Suggestions?
+> 
 
-Additionally, on RK3588, at offset 0x0 in BAR4, the eDMA registers are
-mapped, so we cannot simply use BAR4 as test_reg_bar, as that would conflict
-with the registers defined by pci-epf-test-itself.
+There is a DIRECT_POLCOMP_TO_DETECT bit (bit 9) in DBI SD_CONTROL2 register.
+This bit will ensure that the LTSSM will not stuck in Poll.Compliance and will
+return back to Detect state. Could you set it on the EP before starting LTSSM
+and see if it helps?
 
+- Mani
 
-The solution here is most likely to let EPC drivers define a
-"HW limitation" of the MSI-X table (BAR number and offset), and create a new
-API in the PCI endpoint framework that exposes this, and modify all EPF
-drivers to use this API before calling pci_epc_set_msix().
-
-
-Personally, I'm too busy to work on this right now.
-For our use case with the NVMe PCI EPF, we can simply force it to only
-use MSI (instead of MSI-X).
-
-But... I could submit a WARN() in dw_pcie_ep_raise_msix_irq() that explains
-that this function is broken, and that dw_pcie_ep_raise_msix_irq_doorbell()
-should be used instead, on platforms that support it.
-
-Or, if it is preferred, we could simply modify all DWC based drivers that is
-not using dw_pcie_ep_raise_msix_irq_doorbell() (i.e. all except layerspace)
-to simply not set "msix_capable = true" in epc_features, as we know that all
-drivers that are using dw_pcie_ep_raise_msix_irq() are broken.
-
-Thoughts?
-
-
-Kind regards,
-Niklas
+-- 
+மணிவண்ணன் சதாசிவம்
 
