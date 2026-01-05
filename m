@@ -1,396 +1,336 @@
-Return-Path: <linux-pci+bounces-44051-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44052-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0204ECF52D1
-	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 19:10:34 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2C1FCF52FB
+	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 19:13:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 84D8830621FE
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 18:05:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1D13A3002FF3
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 18:08:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0CE43242A4;
-	Mon,  5 Jan 2026 18:05:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 522C033A9CC;
+	Mon,  5 Jan 2026 18:08:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hpItik2+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ebI+ijbd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011049.outbound.protection.outlook.com [52.101.52.49])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20761D7E42;
-	Mon,  5 Jan 2026 18:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767636342; cv=fail; b=VHU0cD0HbkS/u+VJSs8nUEaoA6J1gwxABv4BELjbtP0qPGwfcqe4H7GjDgRliVPNBA+2WQJZRlcWksaY7pu/RTQYB2K9B7IsiN7FjFgpt8el3BeRg3aRf/dujsovVgSdQoYl6Zj5uFU/HB/NRGMYniVDk0CmltG9PZz1OTe4uKk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767636342; c=relaxed/simple;
-	bh=qmIzOlglX8t7QPD6PkfzH7vJUTkmD0y31JV8qmOH/YY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=maQL54Ju2LVsQAi967Ksjh/BJa8mk9zQ9+m8hVq7RNstzL89HK6yR/i+4wgchlxZgM+Nap3aQzwORZ3kR9IyqkFmBJIDyhv7xKcI+fpR1Vp3dyjWfeqlmjL/yKR5TFjxtjpQNPF+SBWrr9FvkJooZOA3mDY4pNnDLtYO1AoJNF8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hpItik2+; arc=fail smtp.client-ip=52.101.52.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QKhDmFicQMQlSDbONnlH8tNkdB9H00tbEkmtIEehCl9uJArgfLPmxHFF9gbhRGOFwDT71qs8OtadR8ENvYbsEMRhVgv9d8v7jVczcfZRlEZkcQlf/BAcIPug+MPnYLqhBVT1klUAlNB33ZcTziATopQhksM1CNk8Gq1BgnrFwqClmfBriBXpyx93UmuRysDElIXwDMIe+LP6YXMR6vRQNvXMnWrE7W4Ykq3Gl5Js5oCInAbqoR8mkOMY3DVS+e2KhFzaIkXhUmOCGwUhZRT1xIkA/VG/c5WJJP21eLBJiAPpVF0qEWczQ51GrPvpLZz8alyWBavNXgvLYAZIyY1Tog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=casvrRVRa5faP4zei2U5QAjHPT9Ud4opIZxE6zezSuk=;
- b=RaNjcg3Mx6KsXzMADdiYFFlPyDogDik3Y1vuKcY1JNBPs4074e3DN/sePNC3ZHw6wNpKn4Qwv92lSOtEALxhQppRioNBdByQGyODOHCm+nc+7VLaHF1VYPUTh2PrGZ05pPsEz2WKBalYQLQBdIqEVZO941G/H4z3Qj02oeyItD82dnrep8W6aweMyac71rmHK9kaurVYq9CVGXyb1Lpk/+zLkVAp1Z7FrJ+d11G9OmBxmE6MM6gX/8kAnF+Ko7ZlfkLiFEPU/FxL5p5LYy1+gq0HPcZOW2a3qMaLr8BWo34vpmiX9YjnRKiAUa3Z6JTuexvERlUPcUDc8iH98U0Uag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=casvrRVRa5faP4zei2U5QAjHPT9Ud4opIZxE6zezSuk=;
- b=hpItik2+AxVNLt76WqKPDrtOTqeFWvBCfJQXOSAXgKTh8OXiqEsrDD2fdQLm3lXyHTNjQdMm4BMoquJGk/XYDLuHf1ULxrseOEzAl8pN0LIXSMiKMOTZ7JHa4EpNimXtNlSJb3NURtB5H/klTYf4sv1zuhj9voyL/GTw8K3+otk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH0PR12MB7982.namprd12.prod.outlook.com (2603:10b6:510:28d::5)
- by IA1PR12MB6210.namprd12.prod.outlook.com (2603:10b6:208:3e6::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Mon, 5 Jan
- 2026 18:05:33 +0000
-Received: from PH0PR12MB7982.namprd12.prod.outlook.com
- ([fe80::bfd5:ffcf:f153:636a]) by PH0PR12MB7982.namprd12.prod.outlook.com
- ([fe80::bfd5:ffcf:f153:636a%5]) with mapi id 15.20.9478.004; Mon, 5 Jan 2026
- 18:05:33 +0000
-Message-ID: <641c55d4-5c18-4b81-be04-404e6bb3fbb1@amd.com>
-Date: Mon, 5 Jan 2026 10:05:43 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] PCI/MSI: Conservatively generalize no_64bit_msi into
- msi_addr_mask
-To: Vivian Wang <wangruikang@iscas.ac.cn>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Brett Creeley <brett.creeley@amd.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>
-Cc: Han Gao <gaohan@iscas.ac.cn>, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, netdev@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org
-References: <20251224-pci-msi-addr-mask-v1-0-05a6fcb4b4c0@iscas.ac.cn>
- <20251224-pci-msi-addr-mask-v1-1-05a6fcb4b4c0@iscas.ac.cn>
-Content-Language: en-US
-From: "Creeley, Brett" <bcreeley@amd.com>
-In-Reply-To: <20251224-pci-msi-addr-mask-v1-1-05a6fcb4b4c0@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY3PR05CA0042.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::17) To PH0PR12MB7982.namprd12.prod.outlook.com
- (2603:10b6:510:28d::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCAB335572
+	for <linux-pci@vger.kernel.org>; Mon,  5 Jan 2026 18:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767636536; cv=none; b=oFwYdYb9zYEkL6F4JZJdCyNOGRsSmc99oR4P+Z4/iP1aob2LSCWV9g1lx6CrtoPQRawcoftuY3oCsg+qIw7HQ1ZWa98bOlzpjLd+eUDbXkpW/wVZ7zv14kAK1i9QIYUQkPZe9qEB+6F3RWSB0PyqRks63v1XVH4n7c8h+KX2AHM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767636536; c=relaxed/simple;
+	bh=lkPrL+pR093lymW39hhIyYAn2c3AnvDhe7DdkRle8jo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kttPxHHiTALSF0n6jV+ILbndjdC06L+C1j7fIrMTHsxhxH6bvzV2QcZW07Oj1OG9O4cOI5JlaPBCa1B3hU5v3x8aMi5ievHgK4Gy5T756FMQHDjmgAuDVuQ1BQfVeN7YbROJ8hZ3XShKnbgVGjq6bitm22L4/3IU7BusP3ciOuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ebI+ijbd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D66E2C4AF0B
+	for <linux-pci@vger.kernel.org>; Mon,  5 Jan 2026 18:08:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767636535;
+	bh=lkPrL+pR093lymW39hhIyYAn2c3AnvDhe7DdkRle8jo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ebI+ijbdrmCaYe+5hA+4Sb6qtBEToT/Jngwm1ylXfLzuT+B0xBmBLaEfATppGGerQ
+	 oHihjEmQyCDAF6l+5m7HgfNfRXiA8aMSRROX13UMiyPIV+1C0/6DON+rkmExyFrkyL
+	 Nb+sKNLrRYy0a9cfWlV70CbJSIoKN9evhwi0O06Ix7DZsHMCfTlDCYu63yEzvcAOuE
+	 t/GrEooUiK6mmLJWtfgul2utjz83RyVTznMDwUpvhq9EvkViNRYWSypQpBTevycP88
+	 h5k68HVsfBT/lR/8HKIb/hafu8zAx294v//ovH+vGLf/Io5mz/4R/2kL5hc+sbZVfP
+	 6uZxC24rXp8IA==
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-3e0f19a38d0so151379fac.0
+        for <linux-pci@vger.kernel.org>; Mon, 05 Jan 2026 10:08:55 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWcf3UQBbAKvpuBG+zXHj2th7wwhWTyUQBrdkdAJP5E44E3G1xifcYMryz/L1Dzw3ZBIS6AnSdybPg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQ4fi59HXakUNPMpjGpWoYSdLFtvnXhUdAjO7bSpXHTuMtZsty
+	/UFMheN9wR+WMDzB8or7TNTn18ZvEAQ/EMsIS3uXiL1Nr6UkFGiGaD2LeS3CIijCnOa7BCeWGmv
+	2StecU25X1t+XEMbgrUW9gBnHEfpuA1Y=
+X-Google-Smtp-Source: AGHT+IE72e8H9jfTf8cEfj+JLx+mwDAFCjkAW4MuVapdljSZE/hSN+HQC2lNI8AsEJCzfIXJiFdBimbTL2R7qCpw2P0=
+X-Received: by 2002:a05:6820:6582:b0:657:5629:2cef with SMTP id
+ 006d021491bc7-65f479d9510mr133819eaf.4.1767636534934; Mon, 05 Jan 2026
+ 10:08:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR12MB7982:EE_|IA1PR12MB6210:EE_
-X-MS-Office365-Filtering-Correlation-Id: 840fb2c8-782b-461a-aeb3-08de4c85051f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|921020|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TEd6SDYxWDZmeWRUM251Q3hMYzdwQitYU3dYZG1XL2N0b05IRnBoWHhKdmh4?=
- =?utf-8?B?ejJmUDl5WDI1bjgxMzk3cWVYRm1DUS9LQWQrcDh0dUNacmtpclMrUW9YNjgy?=
- =?utf-8?B?MWtGczRqQ2t3V3NoeHJJNjA4MzYrc01VQ1NkMDVpL05NS2VzR1NBMG43dkI0?=
- =?utf-8?B?L3FQK1RZQUtsVmFHajVXdUtCSWtjMVRKY3krd29QSVZwQlh3clFqbTErcFNl?=
- =?utf-8?B?aEhKUnArK2QyZGplQVRJZmVYc1pCYnRhMUxPaTQ3UXJZY1dyZG5QNFdqYTdI?=
- =?utf-8?B?UjY0TlN1OENCdGtHMXdCTHN2cWxORUlDNlBkWGw2Nkh5OVJFaUQ2bGNNekhW?=
- =?utf-8?B?TkVkcUVHcEJuTzRMRHZnWUNBcFFlSmVHWmtZVm5sVkpmUi9NMExGdzVrMnBo?=
- =?utf-8?B?aWxCZ3FnL0dqMTdydTJ6L3NBb0xVLzBwWFNUNHJ1WXRaQ1RXZElsV3FXVm53?=
- =?utf-8?B?MW9EY3dkR1JKT010TEQ3ek5wN0lWbW0rVWJ6MUJJeHBxT2dNUy96bWNGTExh?=
- =?utf-8?B?M1pMK0V6ZDBpUS9jc3dvRGM2ejRmbXBZTGlBZDhKWGlncC9BTHYrK3lRR24z?=
- =?utf-8?B?YVFQb3RTVHZHelhOclVyTUhDQWRMOTd1L1lSM2FtM1huRzlYaXhNdCtuT2Mx?=
- =?utf-8?B?a2tITkhjMXZSR0JYQVJUU1FtM1pYZFljc21UNUgyVXpGVzhDdnQ0SWFxRnVR?=
- =?utf-8?B?Q29PU25Yc3UwRlFqckhkM3BMQjRRbDg0Zm9qU1ZJNVpWNm03VFlicm16UWw4?=
- =?utf-8?B?bEJtaHBKTXBpY2pPd2VvMno1OTFSTjIwY0JGTkQzUXVYRyttRnpWemNodFdy?=
- =?utf-8?B?UzQrMzl1L3pJekZYUklzQVhxbHQ0UTh4clExbnZyZWc4a2xncVpiT3AyYzVT?=
- =?utf-8?B?OExxVGVPZzZJQnhRdFB1Rm5zWURNK3BVcnk4cDVqNU94dE90Kzhic1FQbGZD?=
- =?utf-8?B?Z2htU2NGQllGWS9DbXB5ekVJYkl0UnQyc0dMcXRobjRRUmVjTDVpamFRWU9L?=
- =?utf-8?B?QkU5MC85RUJXNy9HNzNKR2MxanVyb0kxeVE3bFhyaThvSGlZNEpaVkduQ1Y0?=
- =?utf-8?B?cG5aOWJoNDFsTmc5NWs3NndmYmlpVktHVmZ2VUZqOG00R2U1ZWJWZEdQUURS?=
- =?utf-8?B?bmkrM0dsR09GZzlaeXNsSjVLUXU3VW5ob3RGN2Mya1dqUzhqdmZGeUFOV1NI?=
- =?utf-8?B?KzRXbXlYeURjYkJlSnd2ZEI2Z0MrODRaQXdhUzhHMXNwZkRSaGU0S0VqSnQ3?=
- =?utf-8?B?YkQxK3hlbmcwckd3Yk9tNXk1Y0ZPQ1JmUDk2S01jVUlVQkVsaTVmM3Fud1py?=
- =?utf-8?B?YlFHNkFmcEN6TVcyZ0ZSMkYzTzcxS3E5THYzbWhTY0h5cUtUbXZycDVvazZj?=
- =?utf-8?B?R1BmVm40THRmaG11Zmp4REZEc0t5YVU5RUtkWTBhdU96YmVHYzdrMVR6dFFv?=
- =?utf-8?B?OFloZ045MjlHTHYrdkVVZ0krV1dkTU9KcG9kc1VvTkRuUzJpcm81R0ZneTFl?=
- =?utf-8?B?Q2V3bWdpUDNSSUl4LzI0Qi9Kd2VQeCtUZU9iMnZaTmRBZnVHT05qRTBIRzVp?=
- =?utf-8?B?R3IyWldpSkdrbUNjYi90a2lIN0lSN0JyUFVxb0J4YWZMclBOYjFENHJ3eC9q?=
- =?utf-8?B?cnVsbTY5QzY3R0Q4WlAvUFovVElJRUZnY2w2MHhldEpkWHV4ekJWMDNUZTBI?=
- =?utf-8?B?VEtZSHUwcldCQ3RCMFlzTzBTbGx5L1pMdnIyaDJPbVZ2RHR5NGwySEp0TURv?=
- =?utf-8?B?V2pMUGRIbmlROXQzRmdoUEtVdE1tc2VxMGc1TThBdFUwV2lDa1g2NHBnL0Z5?=
- =?utf-8?B?eXBNZWx3ZTdWS3Nqb0F6T3dDYXI2MllXQmdNY3FnalNIQzFXNGdhN1ZiOGxT?=
- =?utf-8?B?OUF5VEVSZHF5a3JTdXo2NHVlWmJ6ZXQyYmlPV2ViRVlrbWQxTk11VmYwOWpv?=
- =?utf-8?B?Q0lZalYzeEVRRUo5TjNUdmg1VnFkMnpNRXdQb2xVRmlsNmROc3dmaUIvM0ZM?=
- =?utf-8?Q?SD6RzicCOfWWWQHq3ntlpKZj+nJJco=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB7982.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(921020)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?U0cvYU9oMEhBd0FsZlY3M3dSUDZWT3J0R0ZwV21xUWt6OWRhY3lpOVdRNDFL?=
- =?utf-8?B?WURneFp2YWlrMElYQW1IbVFjZ0xFMURrelpGcVVSVy9vVWdkZUtpc2tlazJB?=
- =?utf-8?B?T2hzVDkyQldCK0ZVSkNSSkpmdC9ieGQ2b1UrYmVONmNmUFFaM1ZGck5hcHlS?=
- =?utf-8?B?M1VhOFhrVHlIMFVySnZKUGtodGJjdHpaQUs1MkNKZDFhVjNlR1QxRUpUMzBM?=
- =?utf-8?B?UmRCaHp4UU0vWlBqa3JKa1g5c08rcHdMOWYvdEtsd2IwOVVnaUh5VG1NV2JZ?=
- =?utf-8?B?enIxUFM5NjVoeVlvajdkL3JtVy90TmRiM0tIaDNGa0ZXOGhsTHNMdWdUZy8x?=
- =?utf-8?B?R25hanpGQ3J0VGNTcDRmWlczY0M2YjlpT25INUJQUWMwUmdlVDBMYzZHK0Jo?=
- =?utf-8?B?V0V0eG9sZzNqVjUySEZhL0JYNWVMOUpycEU0dmtrMmRnbmxQTHN4QzhIM296?=
- =?utf-8?B?MkFnN1Z0OHFXdXA5anZtaWJRM3ZTcUg1UzQzU3Znb29tanp5RUFNandteW9I?=
- =?utf-8?B?d0hXc3o3NGJrOGIxc045YW91YVNOcDdXeU9OSkxBQ2lYYkZycHJpZmZNb3Jv?=
- =?utf-8?B?T3ExOWJnUkUyUU5LbmVRNGVJdUxsbk85MUE3c2xZVVpYVzlEQmxnbC9VUFNV?=
- =?utf-8?B?U1FoYUtBZERWWDZsd09qMWI4SEtzOHdtYXd5WDF1K0YxV1VEOWtabkUxcENm?=
- =?utf-8?B?S01yQ2htelh4aGlEcldKOUhNc0RzYUJHVTVHTkpPTkE3YzhCN0tSOElOd2Jv?=
- =?utf-8?B?RC9BSk5CSzJrbmNIMVVmTEdIRWxhQThZeG5lZWwyZzh4MVNnbVAraGQ2YS82?=
- =?utf-8?B?WWVPbzZCY0t2OGIranhIYnY1OGhZc2xWczByNjRVNHhLKytPZ0x3WXJ6WGEv?=
- =?utf-8?B?bkp4Sm9sb3g5RnVFVHUwNWJWYzNzQXJQakNCU081ZE9OMnhYb1h3cU1tWVdk?=
- =?utf-8?B?dk9ialFWaWVLQTJJZmJkYnBRVnowS203YXB4OHprSlFKZCtjL0FXNjhPSC9D?=
- =?utf-8?B?bWJlaU9Rd2NTRlE0RjZCK2dCTTdxVEM2ZGxnSjlDM1h3cHZtWWlzbjd2WjY5?=
- =?utf-8?B?UktCMTZ1RVBTQ1RvVlQvTS94Qmp4T2M4a25wVlhWQ2dZdkN2NEFNSFdDcTBr?=
- =?utf-8?B?K2w1a2lZWUdDejNkWXdFU3YzczZlTm1hZ1hVaFRRY3F1UUxRQ2g2OWRPYU92?=
- =?utf-8?B?MFZoM05Vb3U1SEFneGFvc1ltTzVtMlNYVGJxTTU5MlpJeHU2OEFVQTNHVUtq?=
- =?utf-8?B?REZaZ0Zyd2d2VU1JaHZQekFHOFJjSDI3a1hBVFkvOXlRV045MDZZUUk1Q0No?=
- =?utf-8?B?d1JHVStSeVdPWE9ybTBCTmxjQnM1MmpqUVdIczI1OVFnUjE4bUszUlNBdlAy?=
- =?utf-8?B?cGs2amNWSndhZGNNUk45UVQ2Vkd3bjRuY1M0VmlnUFdTTWgwN095UUdWUlZN?=
- =?utf-8?B?RFJaV2dGbERwL21vajVhS2hIUldidWdIcDRpMUpoZGF6aXJhUnlpUXV1UnVm?=
- =?utf-8?B?aTMxV1E2bm1qZy9RS2lpb3MyZjVFUTRMbFZ3S2I3L2NPb0ZBdjVkWERaTFA1?=
- =?utf-8?B?QkRoM3VxOUI3VFMveExHTDB6U2tDRUljb0l5TW5XWC9DNVlDYjloWGpmVk5K?=
- =?utf-8?B?cVdFaFVLYXBSVEFRQ21ZUDU4UjJBMTZsWFRkTUY1Q21qNWJGT1ZCcTZVMnJF?=
- =?utf-8?B?N1lLQUsrNGRJUERJMXA2WTFSMUx1U3hocVhuZG5oMnZBVE5xSUR0WGVjVENU?=
- =?utf-8?B?N3UwWG9tN0tYRXpqQWd6cVVjdlFxMnVuKzZlQVZDMVJCTlcxdlBXOFQ0VU5J?=
- =?utf-8?B?V1BQMTN3eVkvak41MlU2R0ZWbVVDbmFQeFRKenZvSnNFNnFMdlVESllNUmli?=
- =?utf-8?B?SmhOL3VsM3k0WjliQmxXUEQrQnk1TWRsd1VkWWdEMGgzOElOakdOUmJyRHJi?=
- =?utf-8?B?R3BCd0FPY3BJWXVJRlh6KzJmdS9KOTk2bWZ2SGJOMnZOWkxrbkZTeHNRNEpM?=
- =?utf-8?B?ejQvSFRtQkQzV3hxUjFlR0dYeXpjVDBPL3dYZlZLOWp5S0lTbWNNRUZqR24x?=
- =?utf-8?B?eGJnOVhLU3BWU0t3Slo3bGZ1TGhCcVdXWkRtcllzU0FwNWdTUFlTOGs4VEtx?=
- =?utf-8?B?N2Y0NlE5V0VEYmxpMStUS0N4UDZHanZHcUtVVXFpaytSVy9McnlFdFhrUzlK?=
- =?utf-8?B?MExpTjEvOVJuMTc1ZkRjSUVBdm9LVkJSTlpVcHd3S0NkelRTYzZIVmJ3MzRs?=
- =?utf-8?B?NGdqenFqdndRUFloM0xTamgxUDU1WTVlU2l3UFFaR21UYlB2RHV0d21GNmVR?=
- =?utf-8?B?UllhRGNTd0dEaVN0UDhpdnQ0WDBJMFVtamZxNjBUZ0ZRUmFvQkp0Zz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 840fb2c8-782b-461a-aeb3-08de4c85051f
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB7982.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2026 18:05:33.5120
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FEEs1226PqPjW2706R99A6qdoLLIYIz8F9Kz/PauoreFAiQX/nHWGZpE7M0QZTY61h1TmxSsvNVqS4ntJ3bChg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6210
+References: <20260105101705.36703-1-lpieralisi@kernel.org>
+In-Reply-To: <20260105101705.36703-1-lpieralisi@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 5 Jan 2026 19:08:44 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0jLftD-A4HDfTvo0xBenBuxg-jRS-abAB7LKYtTWXpbng@mail.gmail.com>
+X-Gm-Features: AQt7F2okhhoNq9IAs0n85ibXEhGypJaFqS2BdPp4J5GQ6Fqs1vJt6s73RV0JHLI
+Message-ID: <CAJZ5v0jLftD-A4HDfTvo0xBenBuxg-jRS-abAB7LKYtTWXpbng@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI: PCI: IRQ: Fix INTx GSIs signedness
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 12/23/2025 7:10 PM, Vivian Wang wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+On Mon, Jan 5, 2026 at 11:17=E2=80=AFAM Lorenzo Pieralisi <lpieralisi@kerne=
+l.org> wrote:
 >
+> In ACPI Global System Interrupts (GSIs) are described using a 32-bit
+> value.
 >
-> Some PCI devices have PCI_MSI_FLAGS_64BIT in the MSI capability, but
-> implement less than 64 address bits. This breaks on platforms where such
-> a device is assigned an MSI address higher than what's reachable.
+> ACPI/PCI legacy interrupts (INTx) parsing code treats GSIs as 'int', whic=
+h
+> poses issues if the GSI interrupt value is a 32-bit value with the MSB se=
+t
+> (as required in some interrupt configurations - eg ARM64 GICv5 systems)
+> because acpi_pci_link_allocate_irq() treats a negative gsi return value
+> as a failed GSI allocation (and acpi_irq_get_penalty() would trigger
+> an out-of-bounds array dereference if the 'irq' param is a negative
+> value).
 >
-> Currently, we deal with this with a single no_64bit_msi flag, and
-> (notably on powerpc) use 32-bit MSI address for these devices. However,
-> on some platforms the MSI doorbell address is above 32-bit but within
-> device ability.
+> Fix ACPI/PCI legacy INTx parsing by converting variables representing
+> GSIs from 'int' to 'u32' bringing the code in line with the ACPI
+> specification and fixing the current parsing issue.
 >
-> As a first step, conservatively generalize the single-bit flag
-> no_64bit_msi into msi_addr_mask. (The name msi_addr_mask is chosen to
-> avoid confusion with msi_mask.)
->
-> The translation is essentially:
->
-> - no_64bit_msi = 1    ->    msi_addr_mask = DMA_BIT_MASK(32)
-> - no_64bit_msi = 0    ->    msi_addr_mask = DMA_BIT_MASK(64)
-> - if (no_64bit_msi)   ->    if (msi_addr_mask < DMA_BIT_MASK(64))
->
-> Since no values other than DMA_BIT_MASK(32) and DMA_BIT_MASK(64) is
-> used, no functional change is intended. Future patches that make use of
-> intermediate values of msi_addr_mask will follow, allowing devices that
-> cannot use full 64-bit addresses for MSI to work on platforms with MSI
-> doorbell above 32-bit address space.
->
-> Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
->
+> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
 > ---
+> v1 -> v2:
+>         - Reworded commit log
+>         - Added Bjorn's review tag
+> v1: https://lore.kernel.org/lkml/20251231092615.3014761-1-lpieralisi@kern=
+el.org
 >
-> checkpatch complains about the comment include/linux/pci.h, which I have
-> formatted similarly with other comments in the vicinity.
-> ---
->   arch/powerpc/platforms/powernv/pci-ioda.c           | 2 +-
->   arch/powerpc/platforms/pseries/msi.c                | 4 ++--
->   drivers/gpu/drm/radeon/radeon_irq_kms.c             | 2 +-
->   drivers/net/ethernet/pensando/ionic/ionic_bus_pci.c | 2 +-
->   drivers/pci/msi/msi.c                               | 2 +-
->   drivers/pci/msi/pcidev_msi.c                        | 2 +-
->   drivers/pci/probe.c                                 | 7 +++++++
->   include/linux/pci.h                                 | 8 +++++++-
->   sound/hda/controllers/intel.c                       | 2 +-
->   9 files changed, 22 insertions(+), 9 deletions(-)
+>  drivers/acpi/pci_irq.c      | 19 ++++++++++--------
+>  drivers/acpi/pci_link.c     | 39 ++++++++++++++++++++++++-------------
+>  drivers/xen/acpi.c          | 13 +++++++------
+>  include/acpi/acpi_drivers.h |  2 +-
+>  4 files changed, 44 insertions(+), 29 deletions(-)
 >
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index b0c1d9d16fb5..1c78fdfb7b03 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -1666,7 +1666,7 @@ static int __pnv_pci_ioda_msi_setup(struct pnv_phb *phb, struct pci_dev *dev,
->                  return -ENXIO;
+> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+> index ad81aa03fe2f..c416942ff3e2 100644
+> --- a/drivers/acpi/pci_irq.c
+> +++ b/drivers/acpi/pci_irq.c
+> @@ -188,7 +188,7 @@ static int acpi_pci_irq_check_entry(acpi_handle handl=
+e, struct pci_dev *dev,
+>          * the IRQ value, which is hardwired to specific interrupt inputs=
+ on
+>          * the interrupt controller.
+>          */
+> -       pr_debug("%04x:%02x:%02x[%c] -> %s[%d]\n",
+> +       pr_debug("%04x:%02x:%02x[%c] -> %s[%u]\n",
+>                  entry->id.segment, entry->id.bus, entry->id.device,
+>                  pin_name(entry->pin), prt->source, entry->index);
 >
->          /* Force 32-bit MSI on some broken devices */
-> -       if (dev->no_64bit_msi)
-> +       if (dev->msi_addr_mask < DMA_BIT_MASK(64))
->                  is_64 = 0;
+> @@ -384,7 +384,7 @@ static inline bool acpi_pci_irq_valid(struct pci_dev =
+*dev, u8 pin)
+>  int acpi_pci_irq_enable(struct pci_dev *dev)
+>  {
+>         struct acpi_prt_entry *entry;
+> -       int gsi;
+> +       u32 gsi;
+>         u8 pin;
+>         int triggering =3D ACPI_LEVEL_SENSITIVE;
+>         /*
+> @@ -422,18 +422,21 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+>                         return 0;
+>         }
 >
->          /* Assign XIVE to PE */
-> diff --git a/arch/powerpc/platforms/pseries/msi.c b/arch/powerpc/platforms/pseries/msi.c
-> index a82aaa786e9e..7473c7ca1db0 100644
-> --- a/arch/powerpc/platforms/pseries/msi.c
-> +++ b/arch/powerpc/platforms/pseries/msi.c
-> @@ -383,7 +383,7 @@ static int rtas_prepare_msi_irqs(struct pci_dev *pdev, int nvec_in, int type,
->           */
->   again:
->          if (type == PCI_CAP_ID_MSI) {
-> -               if (pdev->no_64bit_msi) {
-> +               if (pdev->msi_addr_mask < DMA_BIT_MASK(64)) {
->                          rc = rtas_change_msi(pdn, RTAS_CHANGE_32MSI_FN, nvec);
->                          if (rc < 0) {
->                                  /*
-> @@ -409,7 +409,7 @@ static int rtas_prepare_msi_irqs(struct pci_dev *pdev, int nvec_in, int type,
->                  if (use_32bit_msi_hack && rc > 0)
->                          rtas_hack_32bit_msi_gen2(pdev);
->          } else {
-> -               if (pdev->no_64bit_msi)
-> +               if (pdev->msi_addr_mask < DMA_BIT_MASK(64))
->                          rc = rtas_change_msi(pdn, RTAS_CHANGE_32MSIX_FN, nvec);
->                  else
->                          rc = rtas_change_msi(pdn, RTAS_CHANGE_MSIX_FN, nvec);
-> diff --git a/drivers/gpu/drm/radeon/radeon_irq_kms.c b/drivers/gpu/drm/radeon/radeon_irq_kms.c
-> index 9961251b44ba..d550554a6f3f 100644
-> --- a/drivers/gpu/drm/radeon/radeon_irq_kms.c
-> +++ b/drivers/gpu/drm/radeon/radeon_irq_kms.c
-> @@ -252,7 +252,7 @@ static bool radeon_msi_ok(struct radeon_device *rdev)
->           */
->          if (rdev->family < CHIP_BONAIRE) {
->                  dev_info(rdev->dev, "radeon: MSI limited to 32-bit\n");
-> -               rdev->pdev->no_64bit_msi = 1;
-> +               rdev->pdev->msi_addr_mask = DMA_BIT_MASK(32);
->          }
->
->          /* force MSI on */
-> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_bus_pci.c b/drivers/net/ethernet/pensando/ionic/ionic_bus_pci.c
-> index 70d86c5f52fb..0671deae9a28 100644
-> --- a/drivers/net/ethernet/pensando/ionic/ionic_bus_pci.c
-> +++ b/drivers/net/ethernet/pensando/ionic/ionic_bus_pci.c
-> @@ -331,7 +331,7 @@ static int ionic_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->
->   #ifdef CONFIG_PPC64
->          /* Ensure MSI/MSI-X interrupts lie within addressable physical memory */
-> -       pdev->no_64bit_msi = 1;
-> +       pdev->msi_addr_mask = DMA_BIT_MASK(32);
-
-I know this is just an intermediate commit in the series, but does this 
-retain the original intent?
-
-Thanks,
-
-Brett
->   #endif
->
->          err = ionic_setup_one(ionic);
-> diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-> index 34d664139f48..48f5f03d1479 100644
-> --- a/drivers/pci/msi/msi.c
-> +++ b/drivers/pci/msi/msi.c
-> @@ -322,7 +322,7 @@ static int msi_verify_entries(struct pci_dev *dev)
->   {
->          struct msi_desc *entry;
->
-> -       if (!dev->no_64bit_msi)
-> +       if (dev->msi_addr_mask == DMA_BIT_MASK(64))
->                  return 0;
->
->          msi_for_each_desc(entry, &dev->dev, MSI_DESC_ALL) {
-> diff --git a/drivers/pci/msi/pcidev_msi.c b/drivers/pci/msi/pcidev_msi.c
-> index 5520aff53b56..0b0346813092 100644
-> --- a/drivers/pci/msi/pcidev_msi.c
-> +++ b/drivers/pci/msi/pcidev_msi.c
-> @@ -24,7 +24,7 @@ void pci_msi_init(struct pci_dev *dev)
->          }
->
->          if (!(ctrl & PCI_MSI_FLAGS_64BIT))
-> -               dev->no_64bit_msi = 1;
-> +               dev->msi_addr_mask = DMA_BIT_MASK(32);
->   }
->
->   void pci_msix_init(struct pci_dev *dev)
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 41183aed8f5d..a2bff57176a3 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2047,6 +2047,13 @@ int pci_setup_device(struct pci_dev *dev)
->           */
->          dev->dma_mask = 0xffffffff;
->
-> +       /*
-> +        * Assume 64-bit addresses for MSI initially. Will be changed to 32-bit
-> +        * if MSI (rather than MSI-X) capability does not have
-> +        * PCI_MSI_FLAGS_64BIT. Can also be overridden by driver.
-> +        */
-> +       dev->msi_addr_mask = DMA_BIT_MASK(64);
+> +       rc =3D -ENODEV;
 > +
->          dev_set_name(&dev->dev, "%04x:%02x:%02x.%d", pci_domain_nr(dev->bus),
->                       dev->bus->number, PCI_SLOT(dev->devfn),
->                       PCI_FUNC(dev->devfn));
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 864775651c6f..0fe32fef0331 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -377,6 +377,13 @@ struct pci_dev {
->                                             0xffffffff.  You only need to change
->                                             this if your device has broken DMA
->                                             or supports 64-bit transfers.  */
-> +       u64             msi_addr_mask;  /* Mask of the bits of bus address for
-> +                                          MSI that this device implements.
-> +                                          Normally set based on device
-> +                                          capabilities. You only need to
-> +                                          change this if your device claims
-> +                                          to support 64-bit MSI but implements
-> +                                          fewer than 64 address bits. */
+>         if (entry) {
+>                 if (entry->link)
+> -                       gsi =3D acpi_pci_link_allocate_irq(entry->link,
+> +                       rc =3D acpi_pci_link_allocate_irq(entry->link,
+>                                                          entry->index,
+>                                                          &triggering, &po=
+larity,
+> -                                                        &link);
+> -               else
+> +                                                        &link, &gsi);
+> +               else {
+>                         gsi =3D entry->index;
+> -       } else
+> -               gsi =3D -1;
+> +                       rc =3D 0;
+> +               }
+> +       }
 >
->          struct device_dma_parameters dma_parms;
+> -       if (gsi < 0) {
+> +       if (rc < 0) {
+>                 /*
+>                  * No IRQ known to the ACPI subsystem - maybe the BIOS /
+>                  * driver reported one, then use it. Exit in any case.
+> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
+> index bed7dc85612e..b91b039a3d20 100644
+> --- a/drivers/acpi/pci_link.c
+> +++ b/drivers/acpi/pci_link.c
+> @@ -448,7 +448,7 @@ static int acpi_isa_irq_penalty[ACPI_MAX_ISA_IRQS] =
+=3D {
+>         /* >IRQ15 */
+>  };
 >
-> @@ -441,7 +448,6 @@ struct pci_dev {
+> -static int acpi_irq_pci_sharing_penalty(int irq)
+> +static int acpi_irq_pci_sharing_penalty(u32 irq)
+>  {
+>         struct acpi_pci_link *link;
+>         int penalty =3D 0;
+> @@ -474,7 +474,7 @@ static int acpi_irq_pci_sharing_penalty(int irq)
+>         return penalty;
+>  }
 >
->          unsigned int    is_busmaster:1;         /* Is busmaster */
->          unsigned int    no_msi:1;               /* May not use MSI */
-> -       unsigned int    no_64bit_msi:1;         /* May only use 32-bit MSIs */
->          unsigned int    block_cfg_access:1;     /* Config space access blocked */
->          unsigned int    broken_parity_status:1; /* Generates false positive parity */
->          unsigned int    irq_reroute_variant:2;  /* Needs IRQ rerouting variant */
-> diff --git a/sound/hda/controllers/intel.c b/sound/hda/controllers/intel.c
-> index 1e8e3d61291a..c9542ebdf7e2 100644
-> --- a/sound/hda/controllers/intel.c
-> +++ b/sound/hda/controllers/intel.c
-> @@ -1905,7 +1905,7 @@ static int azx_first_init(struct azx *chip)
+> -static int acpi_irq_get_penalty(int irq)
+> +static int acpi_irq_get_penalty(u32 irq)
+>  {
+>         int penalty =3D 0;
 >
->          if (chip->msi && chip->driver_caps & AZX_DCAPS_NO_MSI64) {
->                  dev_dbg(card->dev, "Disabling 64bit MSI\n");
-> -               pci->no_64bit_msi = true;
-> +               pci->msi_addr_mask = DMA_BIT_MASK(32);
->          }
+> @@ -528,7 +528,7 @@ static int acpi_irq_balance =3D -1;   /* 0: static, 1=
+: balance */
+>  static int acpi_pci_link_allocate(struct acpi_pci_link *link)
+>  {
+>         acpi_handle handle =3D link->device->handle;
+> -       int irq;
+> +       u32 irq;
+>         int i;
 >
->          pci_set_master(pci);
+>         if (link->irq.initialized) {
+> @@ -598,44 +598,53 @@ static int acpi_pci_link_allocate(struct acpi_pci_l=
+ink *link)
+>         return 0;
+>  }
 >
+> -/*
+> - * acpi_pci_link_allocate_irq
+> - * success: return IRQ >=3D 0
+> - * failure: return -1
+> +/**
+> + * acpi_pci_link_allocate_irq(): Retrieve a link device GSI
+> + *
+> + * @handle: Handle for the link device
+> + * @index: GSI index
+> + * @triggering: pointer to store the GSI trigger
+> + * @polarity: pointer to store GSI polarity
+> + * @name: pointer to store link device name
+> + * @gsi: pointer to store GSI number
+> + *
+> + * Returns:
+> + *     0 on success with @triggering, @polarity, @name, @gsi initialized=
+.
+> + *     -ENODEV on failure
+>   */
+>  int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *trigg=
+ering,
+> -                              int *polarity, char **name)
+> +                              int *polarity, char **name, u32 *gsi)
+>  {
+>         struct acpi_device *device =3D acpi_fetch_acpi_dev(handle);
+>         struct acpi_pci_link *link;
+>
+>         if (!device) {
+>                 acpi_handle_err(handle, "Invalid link device\n");
+> -               return -1;
+> +               return -ENODEV;
+>         }
+>
+>         link =3D acpi_driver_data(device);
+>         if (!link) {
+>                 acpi_handle_err(handle, "Invalid link context\n");
+> -               return -1;
+> +               return -ENODEV;
+>         }
+>
+>         /* TBD: Support multiple index (IRQ) entries per Link Device */
+>         if (index) {
+>                 acpi_handle_err(handle, "Invalid index %d\n", index);
+> -               return -1;
+> +               return -ENODEV;
+>         }
+>
+>         mutex_lock(&acpi_link_lock);
+>         if (acpi_pci_link_allocate(link)) {
+>                 mutex_unlock(&acpi_link_lock);
+> -               return -1;
+> +               return -ENODEV;
+>         }
+>
+>         if (!link->irq.active) {
+>                 mutex_unlock(&acpi_link_lock);
+>                 acpi_handle_err(handle, "Link active IRQ is 0!\n");
+> -               return -1;
+> +               return -ENODEV;
+>         }
+>         link->refcnt++;
+>         mutex_unlock(&acpi_link_lock);
+> @@ -647,7 +656,9 @@ int acpi_pci_link_allocate_irq(acpi_handle handle, in=
+t index, int *triggering,
+>         if (name)
+>                 *name =3D acpi_device_bid(link->device);
+>         acpi_handle_debug(handle, "Link is referenced\n");
+> -       return link->irq.active;
+> +       *gsi =3D link->irq.active;
+> +
+> +       return 0;
+>  }
+>
+>  /*
+> diff --git a/drivers/xen/acpi.c b/drivers/xen/acpi.c
+> index d2ee605c5ca1..eab28cfe9939 100644
+> --- a/drivers/xen/acpi.c
+> +++ b/drivers/xen/acpi.c
+> @@ -89,11 +89,11 @@ int xen_acpi_get_gsi_info(struct pci_dev *dev,
+>                                                   int *trigger_out,
+>                                                   int *polarity_out)
+>  {
+> -       int gsi;
+> +       u32 gsi;
+>         u8 pin;
+>         struct acpi_prt_entry *entry;
+>         int trigger =3D ACPI_LEVEL_SENSITIVE;
+> -       int polarity =3D acpi_irq_model =3D=3D ACPI_IRQ_MODEL_GIC ?
+> +       int ret, polarity =3D acpi_irq_model =3D=3D ACPI_IRQ_MODEL_GIC ?
+>                                       ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
+>
+>         if (!dev || !gsi_out || !trigger_out || !polarity_out)
+> @@ -105,17 +105,18 @@ int xen_acpi_get_gsi_info(struct pci_dev *dev,
+>
+>         entry =3D acpi_pci_irq_lookup(dev, pin);
+>         if (entry) {
+> +               ret =3D 0;
+>                 if (entry->link)
+> -                       gsi =3D acpi_pci_link_allocate_irq(entry->link,
+> +                       ret =3D acpi_pci_link_allocate_irq(entry->link,
+>                                                          entry->index,
+>                                                          &trigger, &polar=
+ity,
+> -                                                        NULL);
+> +                                                        NULL, &gsi);
+>                 else
+>                         gsi =3D entry->index;
+>         } else
+> -               gsi =3D -1;
+> +               ret =3D -ENODEV;
+>
+> -       if (gsi < 0)
+> +       if (ret < 0)
+>                 return -EINVAL;
+>
+>         *gsi_out =3D gsi;
+> diff --git a/include/acpi/acpi_drivers.h b/include/acpi/acpi_drivers.h
+> index b14d165632e7..402b97d12138 100644
+> --- a/include/acpi/acpi_drivers.h
+> +++ b/include/acpi/acpi_drivers.h
+> @@ -51,7 +51,7 @@
+>
+>  int acpi_irq_penalty_init(void);
+>  int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *trigg=
+ering,
+> -                              int *polarity, char **name);
+> +                              int *polarity, char **name, u32 *gsi);
+>  int acpi_pci_link_free_irq(acpi_handle handle);
+>
+>  /* ACPI PCI Device Binding */
 > --
-> 2.51.2
->
 
+Applied as 6.19-rc material, thanks!
 
