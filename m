@@ -1,196 +1,236 @@
-Return-Path: <linux-pci+bounces-44035-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44036-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E970CF419A
-	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 15:26:53 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A950CF44F6
+	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 16:08:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id BC9D83004626
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 14:26:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 50EAE30B7374
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 15:02:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BBF4242D95;
-	Mon,  5 Jan 2026 14:17:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1E7B7E110;
+	Mon,  5 Jan 2026 15:01:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gSdfxUhl"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="W2kEYN4L"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9920919DF4D;
-	Mon,  5 Jan 2026 14:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3CC3A1E96;
+	Mon,  5 Jan 2026 15:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767622639; cv=none; b=Y7w8Ev7kA5ZagtjXOz7NKnZlW6XYCqSHYd1pqpF7q3qm5VXH3SvHT8R1SxBcez6vZM8ExEHd6OLxQzaO0hCrBfLLmVv9Ys7A5BIz+FLfPFQzYBY07OgD8a8vFaslEirQp1fwUEhPX+VUoqPhr+NXxgzpuYnkal+ORKffioVgIOw=
+	t=1767625300; cv=none; b=LwJZJ9aGuU0FrlYRQppiAEiYzUKX2UcZmxakfqI41zJF3FBwo/QtP9xHNFtzSo4xI1KPsqn8Q2g5Z3xDkPDBUYNEi4kCen2sVQgUN1ddOFpv5BPZXEDJ8LnnID1Wy8cdSDialUMruEiZsQBlIiTsjpvOZUklYE06nBPV3YkbszI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767622639; c=relaxed/simple;
-	bh=swfbx1sxZFbl2gBzvMcXE5KVCqJ9EAtLmDJTmDGg4U0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=C0iWTncThgqsGBqGZ5bZ8Xk7yMkMUm4aXBCBHhUjH5m3NZULJU774DUpWhXaFMpYSGXQlB4hiVbxuGcl0qN4kigykAScONwsCr8aHq5Wi8lj98b8exJSIzYdytGYBwDZzA/ZTSX5OrmQoDdkfOVjSqJk6o4facIBgiZ6WOQDVdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gSdfxUhl; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767622636; x=1799158636;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=swfbx1sxZFbl2gBzvMcXE5KVCqJ9EAtLmDJTmDGg4U0=;
-  b=gSdfxUhlYygxrLk7F43qHcb+/RDI1BPODTeabQj13kSx9AreGRK9lSy3
-   Cgfz+YZ+5PPGlxDj2xOASxC/QgK9u8MdzNG4bkoxS4ZtwVUWiXtQASt0L
-   hxbrhkiMttiZTCJMypDGHZslBYJTYtby1hbTugIfurLlWws6qX3OC8wkn
-   HILWWdIUnzk+X1DqJGj/+DWS51EWBCMiM81Y0BL7I7LRDr0QYuKBvipG7
-   JItNe8nkaSm9qceTxXIqgLKo4YL4VeQ2ZKrimiEFFzlZ7ZGvKIhvdGpzt
-   xdnbGAKCIp88h20YEFe+nMApj79Fh2NqzhdJ7N3GVlb76aAfu2lrCwXCw
-   Q==;
-X-CSE-ConnectionGUID: WSQK5bXNRyaEEzp9Amxybg==
-X-CSE-MsgGUID: vF9pLyi+ReODsyG+Nb1hdA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11662"; a="79621206"
-X-IronPort-AV: E=Sophos;i="6.21,203,1763452800"; 
-   d="scan'208";a="79621206"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2026 06:17:11 -0800
-X-CSE-ConnectionGUID: swAqwZH9TR2l6es3u20rGw==
-X-CSE-MsgGUID: KXT20lA7Q667Y9q59Rds3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,203,1763452800"; 
-   d="scan'208";a="203365148"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.202])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2026 06:17:06 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 5 Jan 2026 16:17:03 +0200 (EET)
-To: Ziyao Li <liziyao@uniontech.com>
-cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, 
-    Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, niecheng1@uniontech.com, 
-    zhanjun@uniontech.com, guanwentao@uniontech.com, 
-    Kexy Biscuit <kexybiscuit@aosc.io>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Lain Fearyncess Yang <fsf@live.com>, 
-    Ayden Meng <aydenmeng@yeah.net>, Mingcong Bai <jeffbai@aosc.io>, 
-    Xi Ruoyao <xry111@xry111.site>
-Subject: Re: [PATCH v2] PCI: loongson: Override PCIe bridge supported speeds
- for older Loongson 3C6000 series steppings
-In-Reply-To: <20260104-loongson-pci1-v2-1-d151e57b6ef8@uniontech.com>
-Message-ID: <2d36653c-0f5d-21d4-b974-112ccb599d68@linux.intel.com>
-References: <20260104-loongson-pci1-v2-1-d151e57b6ef8@uniontech.com>
+	s=arc-20240116; t=1767625300; c=relaxed/simple;
+	bh=ahAgD0Fs7SzussxHCSmv8Dl6KtgI+0MaddlvsYlBKR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tUCg9nCzw+8v3qiVR/wyeafcdSNrfQS1Vc3RLHGuc6Tfmgb9wfsgPnWkeDbYrMqF7waGBcgoKEIMEdw48hJLFiSGYp3HPzgzMMyewqGSKTo23ea5SSsGVkP04dXrvdyD7wzhPuiusVyYnVpbPKGRPuZp2F51TvQJy2iQAhw4NHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=W2kEYN4L; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <8269249f-48a9-4136-a326-23f5076be487@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1767625286;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fOxQLFGEW0RANVkVfAKLLDgXb3+7inse/Fs/vs8oviw=;
+	b=W2kEYN4LQUJDBeZ+ZAdPcAe/LDR9TS8MijYUcz83M03A4wybZiEd9P3eDX64FZ5lkLiJiO
+	rtiKXW4fp59dcKjLS7kdQ4zqrsPZwvKv9vprNY8ytZO/r//2q/LW71RJcLEnKnkuUkqJ93
+	0lUn3aVzgScqCY7OlRrvfRYWmsr0ic4=
+Date: Mon, 5 Jan 2026 10:01:22 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH v2 0/5] PCI/pwrctrl: Major rework to integrate pwrctrl
+ devices with controller drivers
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Bartosz Golaszewski <brgl@kernel.org>,
+ linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@kernel.org>,
+ Brian Norris <briannorris@chromium.org>,
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+ Niklas Cassel <cassel@kernel.org>, Alex Elder <elder@riscstar.com>,
+ Chen-Yu Tsai <wenst@chromium.org>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20251216-pci-pwrctrl-rework-v2-0-745a563b9be6@oss.qualcomm.com>
+ <39e025bd-50f4-407d-8fd4-e254dbed46b2@linux.dev>
+ <n2vboqjh45bwhs3czpey3alxwi7msohir7m3lk45mecouddwew@byi2emazszqq>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <n2vboqjh45bwhs3czpey3alxwi7msohir7m3lk45mecouddwew@byi2emazszqq>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, 4 Jan 2026, Ziyao Li via B4 Relay wrote:
-
-> From: Ziyao Li <liziyao@uniontech.com>
+On 12/23/25 09:05, Manivannan Sadhasivam wrote:
+> On Fri, Dec 19, 2025 at 12:19:36PM -0500, Sean Anderson wrote:
+>> Hi,
+>> 
+>> I have a few comments on the overall architecture. I did some work to
+>> add PERST as well (sent as replies to this message).
+>> 
+>> On 12/16/25 07:51, Manivannan Sadhasivam wrote:
+>> > Hi,
+>> > 
+>> > This series provides a major rework for the PCI power control (pwrctrl)
+>> > framework to enable the pwrctrl devices to be controlled by the PCI controller
+>> > drivers.
+>> > 
+>> > Problem Statement
+>> > =================
+>> > 
+>> > Currently, the pwrctrl framework faces two major issues:
+>> > 
+>> > 1. Missing PERST# integration
+>> > 2. Inability to properly handle bus extenders such as PCIe switch devices
+>> > 
+>> > First issue arises from the disconnect between the PCI controller drivers and
+>> > pwrctrl framework. At present, the pwrctrl framework just operates on its own
+>> > with the help of the PCI core. The pwrctrl devices are created by the PCI core
+>> > during initial bus scan and the pwrctrl drivers once bind, just power on the
+>> > PCI devices during their probe(). This design conflicts with the PCI Express
+>> > Card Electromechanical Specification requirements for PERST# timing. The reason
+>> > is, PERST# signals are mostly handled by the controller drivers and often
+>> > deasserted even before the pwrctrl drivers probe. According to the spec, PERST#
+>> > should be deasserted only after power and reference clock to the device are
+>> > stable, within predefined timing parameters.
+>> > 
+>> > The second issue stems from the PCI bus scan completing before pwrctrl drivers
+>> > probe. This poses a significant problem for PCI bus extenders like switches
+>> > because the PCI core allocates upstream bridge resources during the initial
+>> > scan. If the upstream bridge is not hotplug capable, resources are allocated
+>> > only for the number of downstream buses detected at scan time, which might be
+>> > just one if the switch was not powered and enumerated at that time. Later, when
+>> > the pwrctrl driver powers on and enumerates the switch, enumeration fails due to
+>> > insufficient upstream bridge resources.
+>> >
+>> >
+>> > Proposal
+>> > ========
+>> > 
+>> > This series addresses both issues by introducing new individual APIs for pwrctrl
+>> > device creation, destruction, power on, and power off operations.
+>> 
+>> I wrote my own PCI power sequencing subsystem last year but didn't get
+>> around to upstreaming it before the current subsystem was merged. This
+>> approach (individual APIs for each power sequence) was how I did it. But
+>> I think the approach to do everything in probe is rather elegant, since
+>> it integrates with the existing device model and we don't need to modify
+>> existing drivers.
+>> 
+>> To contrast, in U-Boot the second issue doesn't apply because driver
+>> probing happens synchronously and config space accesses are done after
+>> devices get probed. So you have something like
+>> 
+>> host bridge probe()
+>> pci_scan_child_bus()
+>>    discover root port
+>>    root port probe()
+>>       initialize slot resources (power supplies, clocks, etc.)
+>>    allocate root port BARs
+>>    discover root port children
+>> 
+>> I guess your approach is the only way to do it in Linux given the
+>> asynchronous nature of driver binding. What is the overhead for hotplug
+>> switches like? Maybe it makes sense to just treat all switches as
+>> hotplug capable when PCI power sequencing is enabled?
+>> 
 > 
-> Older steppings of the Loongson 3C6000 series incorrectly report the
-> supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
-> only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
-> up to 16 GT/s.
+> Pwrctrl doesn't care if the underlying bridge is hotplug capable or not. It just
+> handles the power control for the device if it happens to have resource
+> dependency in DT. For example, if the PCIe switch requires pwrctrl and the
+> corresponding DT node has the resources described, pwrctrl framework will just
+> turn ON the switch. Then during PCI bus scan, PCI core will enumerate the switch
+> and check whether the downstream ports are hotplug capable or not and handles
+> the bus resource accordingly.
 > 
-> As a result, certain PCIe devices would be incorrectly probed as a Gen1-
-> only, even if higher link speeds are supported, harming performance and
-> prevents dynamic link speed functionality from being enabled in drivers
-> such as amdgpu.
 
-What do you mean here? Does "dynamic link speed functionality" refer to 
-bwctrl? (If that's the case, can you write it out explicitly as the 
-connection is not obvious and I've heard the AMD GPUs do manage link 
-speed autonomously too so you might be referring to that too.)
+I'm saying that we allocate enough address space for each bridge as if
+it was hotplug capable, to ensure we don't run out of space later on.
 
-I don't see amdgpu using supported_speeds for anything, I guess the 
-connection comes through pcie_get_speed_cap() which is seemingly used by 
-amdgpu code (if that's the case, please include that into the 
-explanation)?
- 
-> Manually override the `supported_speeds` field for affected PCIe bridges
-> with those found on the upstream bus to correctly reflect the supported
-> link speeds.
-
-It's nice to see this field becoming useful for this kind of cases too, I 
-kind of foresaw it happening one day when I added it. :-)
-
-> This patch was originally found from AOSC OS[1].
+>> > Controller
+>> > drivers are expected to invoke these APIs during their probe(), remove(),
+>> > suspend(), and resume() operations. This integration allows better coordination
+>> > between controller drivers and the pwrctrl framework, enabling enhanced features
+>> > such as D3Cold support.
+>> 
+>> How does PERST work? The only reference I can find to GPIOs in this
+>> series is in the first patch. Is every driver supposed to add support
+>> for PERST and then call these new functions?
 > 
-> Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
-> Tested-by: Lain Fearyncess Yang <fsf@live.com>
-> Tested-by: Ayden Meng <aydenmeng@yeah.net>
-> Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
-> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
-> [Xi Ruoyao: Fix falling through logic and add kernel log output.]
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> Link: https://github.com/AOSC-Tracking/linux/commit/4392f441363abdf6fa0a0433d73175a17f493454
-> [Ziyao Li: move from drivers/pci/quirks.c to drivers/pci/controller/pci-loongson.c]
-> Signed-off-by: Ziyao Li <liziyao@uniontech.com>
-> Tested-by: Mingcong Bai <jeffbai@aosc.io>
-> ---
-> Changes in v2:
-> - Link to v1: https://lore.kernel.org/r/20250822-loongson-pci1-v1-1-39aabbd11fbd@uniontech.com
-> - Move from arch/loongarch/pci/pci.c to drivers/pci/controller/pci-loongson.c
-> - Fix falling through logic and add kernel log output by Xi Ruoyao
-> ---
->  drivers/pci/controller/pci-loongson.c | 39 +++++++++++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
+> Yes. We can come up with some generic controller specific APIs later to reduce
+> duplication, especially if GPIO is used for PERST#. But that's currently not in
+> scope for this series.
 > 
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> index bc630ab8a283..75a1b494b527 100644
-> --- a/drivers/pci/controller/pci-loongson.c
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -176,6 +176,45 @@ static void loongson_pci_msi_quirk(struct pci_dev *dev)
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loongson_pci_msi_quirk);
->  
-> +/*
-> + * Older steppings of the Loongson 3C6000 series incorrectly report the
-> + * supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
-> + * only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
-> + * up to 16 GT/s.
-> + */
-> +static void quirk_loongson_pci_bridge_supported_speeds(struct pci_dev *pdev)
-> +{
-> +	u8 supported_speeds = pdev->supported_speeds;
-> +
-> +	switch (pdev->bus->max_bus_speed) {
-> +	case PCIE_SPEED_16_0GT:
-> +		supported_speeds |= PCI_EXP_LNKCAP2_SLS_16_0GB;
+>> Shouldn't this be handled
+>> by the power sequencing driver, especially as there are timing
+>> requirements for the other resources referenced to PERST? IMO if we are
+>> going to touch each driver, it would be much better to consolidate
+>> things by removing the ad-hoc PERST support.
+>> 
+> 
+> It is not that straightforward. Initially, my goal was to abstract pwrctrl away
+> from controller drivers, but then that didn't scale. Because, each controller
+> drivers have different requirement, some may use GPIO for PERST# and some use
+> MMIO.
 
-I'd have named the variable old_supported_speeds and adjusted 
-pdev->supported_speeds here directly (I actually assumed it is what 
-you're doing here and it took a while for me to even notice you only write 
-the changes back later, I had to remove a few incorrect review comments 
-written on basis of that wrong assumption :-)).
+Can't you resolve that by exposing a GPIO controller for the signal?
 
-> +		fallthrough;
-> +	case PCIE_SPEED_8_0GT:
-> +		supported_speeds |= PCI_EXP_LNKCAP2_SLS_8_0GB;
-> +		fallthrough;
-> +	case PCIE_SPEED_5_0GT:
-> +		supported_speeds |= PCI_EXP_LNKCAP2_SLS_5_0GB;
-> +		fallthrough;
-> +	case PCIE_SPEED_2_5GT:
-> +		supported_speeds |= PCI_EXP_LNKCAP2_SLS_2_5GB;
-> +		break;
-> +	default:
-> +		pci_warn(pdev, "unexpected max bus speed");
+Of course for compatibility we will want to support old devicetrees, so
+maybe we should just add a method on the host bridge to control PERST.
+And then pwrctrl could try to use it as a fallback.
 
-Missing \n
+> Also, some drivers do more work during the PERST# deassert, like checking
+> for Link up as in drivers/pci/controller/pci-tegra.c.
 
-> +		return;
-> +	}
-> +
-> +	if (supported_speeds != pdev->supported_speeds) {
-> +		pci_info(pdev, "fixing up supported link speeds: 0x%x => 0x%x",
+Yeah, but is this actually necessary? We should just be able to toggle
+the reset and then try to read a config register after 100 ms. If the
+link is up the access will succeed. If it's down at that point then the
+device doesn't follow the PCIe spec and we can't really be sure the link
+will ever come up. The relevant code even has a comment
 
-Missing \n
+ * FIXME: If there are no PCIe cards attached, then calling this function
+ * can result in the increase of the bootup time as there are big timeout
+ * loops.
 
-> +			 pdev->supported_speeds, supported_speeds);
-> +		pdev->supported_speeds = supported_speeds;
-> +	}
-> +}
+Which would be avoided by delaying asynchronously in the pwrseq driver.
 
--- 
- i.
+> For sure, it would be doable to rework those drivers for pwrctrl, but that is
+> not practically possible and requires platform maintainer support. So to make
+> the pwrctrl adoption easier, I went with the explicit APIs that the drivers can
+> call from relevant places.
+> 
+>> > The original design aimed to avoid modifying controller drivers for pwrctrl
+>> > integration. However, this approach lacked scalability because different
+>> > controllers have varying requirements for when devices should be powered on. For
+>> > example, controller drivers require devices to be powered on early for
+>> > successful PHY initialization.
+>> 
+>> Is this the case for qcom? The device I tested (nwl) was perfectly
+>> happy to have the PCI device show up some time after the host bridge
+>> got probed.
+>> 
+> 
+> Not for Qcom, but some platforms do LTSSM during phy_init(), so they will fail
+> if the device is not powered ON at that time.
 
+Do you have a specific driver in mind?
+
+> The challenge with the pwrctrl framework is that, it has to work across all
+> platforms and with the existing drivers without major rework. The initial design
+> worked for Qcom (somewhat), but I couldn't get it to scale across other
+> platforms.
+
+--Sean
 
