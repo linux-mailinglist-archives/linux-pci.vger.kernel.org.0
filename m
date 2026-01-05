@@ -1,84 +1,54 @@
-Return-Path: <linux-pci+bounces-44038-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44040-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF696CF4A1B
-	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 17:19:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 479EECF4D5A
+	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 17:55:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 6978B300A90D
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 16:19:52 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B34BD300A51D
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 16:55:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D998E348894;
-	Mon,  5 Jan 2026 16:19:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 988C93358D1;
+	Mon,  5 Jan 2026 16:55:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KhHlARlN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlwskDj9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6C433D6E7;
-	Mon,  5 Jan 2026 16:19:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4095A306D36;
+	Mon,  5 Jan 2026 16:55:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767629990; cv=none; b=Ipv4jDqgwdkDw9hVMj1DHVJupncBnuTMKHViuODOrro7MgvdPFT7fLfH/MNSaX+kXnj+ybAuqcehMgoUWgRws4yUakW4tYkHKWNIBK7vumI3NZoiMpzRJWYthAaZ81EToYbFMnqxM/rC1gM8qZ0TkiTo766XdPZMQVE2aZoOv4k=
+	t=1767632135; cv=none; b=goSoCUlyMN3PvC1ZmF2fWJkjtjV/oXAR28NBbU/sOdPZVfi41sWsdU/A0fl0DJlix5fecJsz3JDI7gEIPNdOJCj4Tn8tUY7OzWpO1NrN/7vH2wD4xogs18FPphsInAnOfLA/K+LpdGiapqV/Z6wg/68Uhc11u3RaA4DIXXGRo+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767629990; c=relaxed/simple;
-	bh=AtN7od0JeLsN9YbMUfbbQk/4L1P9KKm0XcoR8cmj7CA=;
+	s=arc-20240116; t=1767632135; c=relaxed/simple;
+	bh=19T6fxz6mE75PtXY5IdipsLtMHkkhxHva4HG1axddtk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YKPLrjf/ItY5RMRjrzzH/6sollMb93DI9JiG8kx4fNJYhu8KbHjDe/drx0zYANSddQYo48jV7rSuEXuzJ0nqkBUR66iCWhgCGNje5PcOTEl9dLu9JwsTuYQ5PY5sRlJa9JqYV7Ti4srftLzRPobAbhSg8FZZGRDITk4FjFhenT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KhHlARlN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE25AC116D0;
-	Mon,  5 Jan 2026 16:19:41 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=LIk7QfVRvhD+ozOMnpfI+9PEyCJwE0qHxuOxDSmMiwI3OxTeF/K1eQEPS6r9FEISSP0yN3ZCLSKWZx1HvbPNytAjoZlmVP97uEtmxgLuQRobri4IElMfhHQZbDaiilEO7XV5lWBfyKLUsRipLCkSgCSlMqSW7rIt/4u2oJoJqJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlwskDj9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3689C116D0;
+	Mon,  5 Jan 2026 16:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767629990;
-	bh=AtN7od0JeLsN9YbMUfbbQk/4L1P9KKm0XcoR8cmj7CA=;
+	s=k20201202; t=1767632134;
+	bh=19T6fxz6mE75PtXY5IdipsLtMHkkhxHva4HG1axddtk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KhHlARlNAGXphZOOMOLPXXdYboH6rQGoEW00D0fi7fuAHJOXGzeRgKYG5X1gpaPFj
-	 uzXh4SM8KE4Na2K2V9fmxDxkWzBKNxqKopKgrNor3jKn7aZ4gRQLdsF3X5+jLkxh4U
-	 0SjmlPwW3RkL7OZV9qDHm54Wi5IR/Al4nYVxEV392JoniVlmeAEahNMfp1JOK7ns/o
-	 liXgqtNjg/fiLGTcysf30O4NzJSIrFMFIdeHpIqm/F1jF8Uc7Kjsgi/Ihe8FPPnrY3
-	 DDJqu93pjX4IWDHcObkDD4CagtAouZaUKOTXJ3tft846K9m7kLSRbZtQZs8CYaPD91
-	 0Xn6ZM8O1egOQ==
-Date: Mon, 5 Jan 2026 17:19:38 +0100
+	b=NlwskDj9hjzIsuHafM9aq1WzmLN4kjMvT4VRb+Z/k6kcXwM1oBambCnxof7ARAuYE
+	 QPKvLezDovqQFzfVKZXuwODIEEaoErqH5lUJVcG6T0SupYfpwLAfnDnoxLtyQHwC6h
+	 3FDjFC1Qv62r7zS3ZcUTpGsI6r3E2t2Fu5W5I6H+vy7xslXDatT2vZnXngt219Cazt
+	 SJVy0qw1IzyhLOhgU+QMbYVjV7Ko4AHNEmweHkZk2v5pPDVXolm3GwZveS3O8RpN7K
+	 +cvuHreQckYqqPygRrAWARDfYrwRqlF1otRtbSBI3xGJYhqi4DwbH7igYyeYdJEczk
+	 kfeQ0hZmED2Ww==
+Date: Mon, 5 Jan 2026 17:55:30 +0100
 From: Niklas Cassel <cassel@kernel.org>
-To: Sumit Kumar <sumit.kumar@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Yue Wang <yue.wang@amlogic.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Greentime Hu <greentime.hu@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Chuanhua Lei <lchuanhua@maxlinear.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Pratyush Anand <pratyush.anand@gmail.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, imx@lists.linux.dev,
-	linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 2/2] PCI: dwc: Add multi-port controller support
-Message-ID: <aVvkmkd5mWPmxeiS@ryzen>
-References: <20260105-dt-parser-v1-0-b11c63cb5e2c@oss.qualcomm.com>
- <20260105-dt-parser-v1-2-b11c63cb5e2c@oss.qualcomm.com>
+To: Koichiro Den <den@valinux.co.jp>
+Cc: jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com,
+	Frank.Li@nxp.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] PCI: endpoint: BAR subrange mapping support
+Message-ID: <aVvtAkEcg6Qg7K3C@ryzen>
+References: <20260105080214.1254325-1-den@valinux.co.jp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,45 +57,66 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260105-dt-parser-v1-2-b11c63cb5e2c@oss.qualcomm.com>
+In-Reply-To: <20260105080214.1254325-1-den@valinux.co.jp>
 
-On Mon, Jan 05, 2026 at 05:57:55PM +0530, Sumit Kumar wrote:
-> The current DesignWare PCIe RC implementation supports only the controller
-> (Host Bridge) node for specifying the Root Port properties in an assumption
-> that the underlying platform only supports a single root Port per
-> controller instance. This limits support for multi-port controllers where
-> different ports may have different lane configurations and speed limits.
+Hello Koichiro,
+
+On Mon, Jan 05, 2026 at 05:02:12PM +0900, Koichiro Den wrote:
+> This series proposes support for mapping subranges within a PCIe endpoint
+> BAR and enables controllers to program inbound address translation for
+> those subranges.
 > 
-> Introduce a separate dw_pcie_port structure to enable multi-port support.
-> Each Root Port can have independent lane count, speed limit through pcie@N
-> child nodes in device tree. Add dw_pcie_parse_root_ports()
-> API to parse these child nodes.
+> The first patch introduces generic BAR subrange mapping support in the
+> PCI endpoint core. The second patch adds an implementation for the
+> DesignWare PCIe endpoint controller using Address Match Mode IB iATU.
 > 
-> Equalization presets and link width detection currently use common DBI
-> space for all the root ports. Per-port DBI space assignment for these
-> features will be added in future.
+> This series is a spin-off from a larger RFC series posted earlier:
+> https://lore.kernel.org/all/20251217151609.3162665-4-den@valinux.co.jp/
 > 
-> Signed-off-by: Sumit Kumar <sumit.kumar@oss.qualcomm.com>
+> Base:
+>   git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
+>   branch: controller/dwc
+>   commit: 68ac85fb42cf ("PCI: dwc: Use cfg0_base as iMSI-RX target address
+>                          to support 32-bit MSI devices")
+> 
+> Thank you for reviewing,
+> 
+> Koichiro Den (2):
+>   PCI: endpoint: Add BAR subrange mapping support
+>   PCI: dwc: ep: Support BAR subrange inbound mapping via address-match
+>     iATU
 
-Hello Sumit,
+I have nothing against this feature, but the big question here is:
+where is the user?
 
-Is there a reason why you represent this as a list of ports rather than a
-simple array?
+Usually, we don't add a new feature without having a single user of said
+feature.
 
-The number of ports is known by parsing the device tree, so it should be
-static, no?
 
-At least to me, this seem similar to e.g. how a gpio_device has multiple
-gpio_descriptors "struct gpio_desc *descs":
-https://github.com/torvalds/linux/blob/master/drivers/gpio/gpiolib.h#L68C1-L68C26
+One thing that I would like to see though:
+stricter verification of the pci_epf_bar_submap array.
 
-A list is usually used for something that is dynamic.
-I don't think that the number of ports to a PCIe controller will be dynamic.
+For DWC, we know that the minimum size that an iATU can map is stored in:
+(struct dw_pcie *pci) pci->region_align.
 
-I can see that struct qcom_pcie in pcie-qcom.c has struct list_head ports,
-but that does not necessarily mean that we need to have a list of ports in
-pcie-designware-host.c. (pcie-qcom could also be modified to have an array
-of ports if there is a desire for similar design pattern.)
+Thus, each element in the pci_epf_bar_submap array has to have a size that
+is a multiple of pci->region_align.
+
+I don't see that you ever verify this anywhere.
+
+You should also verify that the sum of all the sizes in the pci_epf_bar_submap
+array adds up to exactly pci_epf_bar->size.
+
+
+Also, we currently have code in dw_pcie_prog_inbound_atu() that verifies
+that the physical memory address is aligned to the size of the BAR, as that
+is a requirement in BAR match mode, see:
+129f6af747b2 ("PCI: dwc: ep: Add 'address' alignment to 'size' check in dw_pcie_prog_ep_inbound_atu()")
+
+This is not a requirement in address match mode, so you probably don't
+want to do that check in address match mode.
+(You will want to keep the check that the physical memory address is
+aligned to pci->region_align though.)
 
 
 Kind regards,
