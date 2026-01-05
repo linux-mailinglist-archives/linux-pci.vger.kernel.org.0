@@ -1,124 +1,137 @@
-Return-Path: <linux-pci+bounces-43999-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44000-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1844BCF3056
-	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 11:40:12 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D6ABCF344E
+	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 12:32:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 15ACC300C347
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 10:40:11 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A66AE3009221
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 11:32:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25EA63161A4;
-	Mon,  5 Jan 2026 10:40:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3801A33858E;
+	Mon,  5 Jan 2026 11:06:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPBahxkD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nAYck1k2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6D821348
-	for <linux-pci@vger.kernel.org>; Mon,  5 Jan 2026 10:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FA0338581
+	for <linux-pci@vger.kernel.org>; Mon,  5 Jan 2026 11:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767609605; cv=none; b=IF0CLoXiohLScPT8/YadpzZLEu7DMfR0jJpGM47l+EwvPR90lLFu9rGyojuLK0YYRedA7zNQYbwwlhHyB6GaFoyJjzkrmIuK+NhgyJYo99jQm0lp+rPsIxKbSxy1v5k/wVtzst/Pim9Mu3uOo9EzXqI93Ais243cLvN24j9eu/0=
+	t=1767611202; cv=none; b=nAmyCQQMxQXdslmUYMBCzzxa5mlqtAoReAI/W6jK2y1PWCFfWAiVA3Tt65ER2myuD5xvr3xl8DMZV7a3MuvG+W7t7MwVWX11p7+6b4d3KELPqnEu+E89fuNCiWELdOKlSIjRWLd4/TSSUMXRNdwsB98BmYNoYQbDMeZCNMvUv8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767609605; c=relaxed/simple;
-	bh=ilQVyanHgKsLWkZPGkjqH6wvmpNb1DelmMugaEdB5jM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iPOPfccDctvIybNlM1nO0XCQZfcwh1uKBVHn5YIwvTe0OhznYJ7bj9/UHJ9vz2n4qaP6wX/kc6KLAvSYysWuxlLpy48lO3ZwLOEDrcXbYeTqT1s4UzFpNW4kY9/C73ObPTnhXGRJ+l3PgG0zAl5oeC6SXVG8w0J3EsRw3A84ekI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TPBahxkD; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-bc144564e07so395834a12.3
-        for <linux-pci@vger.kernel.org>; Mon, 05 Jan 2026 02:40:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767609602; x=1768214402; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ilQVyanHgKsLWkZPGkjqH6wvmpNb1DelmMugaEdB5jM=;
-        b=TPBahxkDEzxpIldCY4B48Wn0U0NjzwIRbzpxV8VdgtEolAf7SDrhIa1TmNAYW6ytEL
-         MdFu0LTgkLyGgbi9UQIBVVUlnV/QfSD3GICWA6Hkpa8AjmWhr71O2TwGAQv2eDhDebYd
-         p4iITY36D8esuBSU02dRVLHpvlWikGcDejkfpANOUxejXnfB/V2oDJfYG2gUOP28/0ZU
-         9YhmIRHHsi0oW64Q958RraaJxBx8v1ufnPCHwaMWExcDEnZ+6KDCNggCFzma5s4abq5y
-         2+mRBT1JLftMEa6C/V1oLDRgIwMOVNlIh+2J7DcMKlW7AdJbnC5KghBWwo6fBJ4a9mkh
-         a+7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767609602; x=1768214402;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ilQVyanHgKsLWkZPGkjqH6wvmpNb1DelmMugaEdB5jM=;
-        b=dtIrrEGLi35C0QdkW5Jakcbpot6W/23nwqicAdeNU846w4VJzgHqNENUtcA5LmTQMh
-         l6vm32Zj8/kDVdvK/pbKXkoz3x3rZwkwgCbgBwTIc39he0XQ1kXNZ6km1eNIALuUSkc2
-         uxaUcF4n49+QTVIqmSqyd99VAYFZG3iSJDjOkd4Yzu3qxxGPqfCJIkOUZgYM/bUfE61D
-         urKzkQhWYX1XDWD8r/3I6duIkqessxhB8+biNlCngjpQpT2DbwUJ4wtaWyk7UqA4m8mr
-         QdX8/4KFg6p0BPZrshiIP+TMfIz/DUj97yZ0hwfzzbHRa4/xoj0nAroYn+0Ml/k3gA/z
-         X1Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCUaC0u8G0OrNKCwF9xBFWKcuE6JJYbRrFjpPY5Swp90JkcZwb3eRwACW1kpzLcJfE4OuG1Lod3EB0E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH1yVRS/+V5X6vEfkKZlUf+PM6mod3IqPQtLqFEi1GRpjlbw5r
-	yBcXy7QY75rkv/syQpzBbt823CJaBWKGQC0GQHtnYUVLxJ/14z7acu4P2jrRrXJMUUtANDPIjXX
-	IObEWvYoQmmbSjBsKVSqk31tGYJpT+pA=
-X-Gm-Gg: AY/fxX7805NMF+kzvQj+IEHAoi4Le0eLto5E6BAns7bagfoqNkvOzCFlDDOEWXrPP3k
-	xSuQP2V/6ZrBZxrdLCXoMngpo542sKpYmtkPRnJHr01VTLYys0EbYQwga2RlujoJI1jVTUg3dYe
-	4ndt5MbiElImxq2Vl1umaF4NXCAWCh/Lz4+M5rAhWeBUJzgMYr7Fycp6nDzYHQJUNHTPTsK1Ykx
-	hchEe3idwNlJJobXHOnBNDIktYIlyyDBLGqtZHXkN2Sk8pcWAJj5gzDlXNKXxPAr9GvqCIh6ROR
-	E9kR/+x6dwJ9reL5S5uptOGlfyDaP/NwhApLA+oU6cuK8tTwIBWbt8BQjtv/qa95Cd84u7+9EYO
-	o7Rpt5QTEsGs4
-X-Google-Smtp-Source: AGHT+IFW2rQaG24jjJapMA2YCS5ndIcCTUrcLoVwM07bEOEYf1H++r47YjXTIrY1jYLwOX3qoKgMykSxPiszDmOKty4=
-X-Received: by 2002:a05:7300:80cc:b0:2ae:5dd5:c178 with SMTP id
- 5a478bee46e88-2b05eb787b8mr24225253eec.2.1767609602464; Mon, 05 Jan 2026
- 02:40:02 -0800 (PST)
+	s=arc-20240116; t=1767611202; c=relaxed/simple;
+	bh=57FWld+XwI+aYRqi/11GRuJ3H7SFEpiahq4Vv+hSAis=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=odKdC5KjX4s0+9CTTxX+VD+t/L/y+3QqArCp/MQYy1yIFnoFFY9MEvnuiJrIp8F2AeiSG/WQtI1eIwjeingNC/O02sXmKij88Egbrqvin3zkg+XZJnIqgjxQoL/gpHKAduV8kvyLpakJNdjQwU/DH2+598l+LYUYfkVHTsEYtck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nAYck1k2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34029C116D0;
+	Mon,  5 Jan 2026 11:06:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767611201;
+	bh=57FWld+XwI+aYRqi/11GRuJ3H7SFEpiahq4Vv+hSAis=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nAYck1k2vKcDTAqP+069tcejmUNnbPtiCb9QbrOGHi9M4yAf9tQGSI7m4nC4evcMQ
+	 1uTyHTshrpX9Pz9gz2JNEpdnmpbniH6s5795zH0tLIeYcx0Xho1gc1ieHGJSf7YHdi
+	 HtDu9d8MSbHyJlUSPnMXKtTbwy8nyxrqCVBufkcwuvW7I1JjWTmjmvpZN2hqxmr8QQ
+	 Alv/hi0Lwo0DvntHiCpubi7nwMbnD8tsquv9/iEZFM8AmqZqpifdzXX+sv8YOONyCc
+	 PJMK87bopQ0aHstWLOAkxoOVRGuxx7nV4XdPoYQG0tMGD2vY1d+hu9QPEf/Lv6tpkb
+	 c3qQLXNeB4QPw==
+Date: Mon, 5 Jan 2026 12:06:37 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Shawn Lin <shawn.lin@rock-chips.com>,
+	Manivannan Sadhasivam <mani@kernel.org>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Frank Li <Frank.Li@nxp.com>, Damien Le Moal <dlemoal@kernel.org>,
+	Koichiro Den <den@valinux.co.jp>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: ep: Cache MSI outbound iATU mapping
+Message-ID: <aVubPUphGP59bH09@ryzen>
+References: <20251210071358.2267494-2-cassel@kernel.org>
+ <8e00bd1c-29ae-43fd-90e8-ea0943cb02b6@oss.qualcomm.com>
+ <s5mbvhnummcegksauc7kyb2442ao27dwc63gyryetuvxojnxfj@a67nopel52tx>
+ <aUknSzSpNxLeEN5o@ryzen>
+ <3b34aa66-a418-4f6b-930a-0728d87d79b6@oss.qualcomm.com>
+ <aUlA7y95SUC-QA4T@ryzen>
+ <a24a5d8b-5818-4e11-bc09-47090de164c7@rock-chips.com>
+ <63321b7d-74a7-448f-ab20-08cc771beb5d@oss.qualcomm.com>
+ <424133b7-bd6b-4602-96ea-4413ce4f985d@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260103143119.96095-1-mt@markoturk.info> <20260103143119.96095-2-mt@markoturk.info>
- <DFF23OTZRIDS.2PZIV7D8AHWFA@kernel.org> <84cc5699-f9ab-42b3-a1ea-15bf9bd80d19@gmail.com>
- <aVmHGBop5OPlVVBa@vps.markoturk.info> <CANiq72=t-U8JTH2JZxkQaW7sbYXjWLpkYkuMd_CuzLoJLbEvgQ@mail.gmail.com>
- <DFFV41VPS2MU.3LHXU4UKITD0U@kernel.org> <CANiq72=fFZpWJ9BvHEBqi4chZO3rFo8+-F9=myW1f_JzJ0PNrg@mail.gmail.com>
- <2026010520-quickness-humble-70db@gregkh>
-In-Reply-To: <2026010520-quickness-humble-70db@gregkh>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 5 Jan 2026 11:39:50 +0100
-X-Gm-Features: AQt7F2oJSnCa_SxWh-jZOT4jqarKH-djdmAAEP18_oI9iQTalSPqljHbD4ecNRg
-Message-ID: <CANiq72nrPiTmuFStm5fmOZZM8e_4TGHFyC_77+cSqPp8yC8nUQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] rust: pci: fix typo in Bar struct's comment
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, sashal@kernel.org, Marko Turk <mt@markoturk.info>, 
-	Dirk Behme <dirk.behme@gmail.com>, dirk.behme@de.bosch.com, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <424133b7-bd6b-4602-96ea-4413ce4f985d@rock-chips.com>
 
-On Mon, Jan 5, 2026 at 7:25=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
->
-> It all depends, sometimes we can handle file moves easily, sometimes we
-> can not.
->
-> But really, why is a comment typo being needed in stable kernels?
+Hello all,
 
-It isn't (well, it is not just a comment since it does end up in the
-rendered docs, so it is a bit more "visible" than in a comment, and I
-imagine some projects reasonably treat them as a fix, but still, it is
-just a typo).
+On Tue, Dec 23, 2025 at 02:23:39PM +0800, Shawn Lin wrote:
+> > > I checked the IP configurtion parameters for RK3588 DM controller for
+> > > sure, it sets MSIX_TABLE_EN=1.
+> > > 
+> > > Looking into dw_pcie_ep_raise_msix_irq_doorbell(), it doesn't seem to
+> > > match the dwc databook. No matter for non-AXI mode or AXI access mode,
+> > > shouldn't we need to generate a MSI-X table RAM with data/address/
+> > > vector/TC in advanced? Am I missing anything because I didn't look
+> > The MSI-X table will updated automatically when host updates the MSI-X
+> > table, when MSI-X is enabled
+> > by host.
+> 
+> Thanks for these details.
+> I re-read the databook, especially "Figure 3-49 iMSIX-TX: MSIX
+> Transmit ". Yes, it's updated automatically when host write access
+> it, which either comes from RX or local DBI(for debug purpose).
 
-We discussed this years ago when I noticed a typo being picked up by
-stable since I wondered why. On my side, I am happy either way -- what
-I currently do is explicitly tag the ones that appear in docs. That
-way you can decide on your side.
+With the help of Shawn, I managed to get dw_pcie_ep_raise_msix_irq_doorbell()
+to work on RK3588.
 
-For the others (the ones in comments), I think it is not really worth
-it to even figure out a Fixes: tag etc.
+By default, on RK3588, the MSI-X table is stored in BAR4 at offset 0x4000.
 
-Of course, this is for trivial typos -- for something that e.g.
-completely changes the requirements of a `# Safety` precondition the
-story is different.
+There seems to be a limitation that the iMSIX-TX doorbell feature only
+works when the MSI-X table is stored in this default location.
 
-Cheers,
-Miguel
+
+As you know, by default, pci-epf-test stores the MSI-X table in BAR0,
+after the registers defined by pci-epf-test itself.
+This works fine when triggering a MSI-X using dw_pcie_ep_raise_msix_irq(),
+but does not work when using dw_pcie_ep_raise_msix_irq_doorbell() (at least
+not or RK3588).
+
+Additionally, on RK3588, at offset 0x0 in BAR4, the eDMA registers are
+mapped, so we cannot simply use BAR4 as test_reg_bar, as that would conflict
+with the registers defined by pci-epf-test-itself.
+
+
+The solution here is most likely to let EPC drivers define a
+"HW limitation" of the MSI-X table (BAR number and offset), and create a new
+API in the PCI endpoint framework that exposes this, and modify all EPF
+drivers to use this API before calling pci_epc_set_msix().
+
+
+Personally, I'm too busy to work on this right now.
+For our use case with the NVMe PCI EPF, we can simply force it to only
+use MSI (instead of MSI-X).
+
+But... I could submit a WARN() in dw_pcie_ep_raise_msix_irq() that explains
+that this function is broken, and that dw_pcie_ep_raise_msix_irq_doorbell()
+should be used instead, on platforms that support it.
+
+Or, if it is preferred, we could simply modify all DWC based drivers that is
+not using dw_pcie_ep_raise_msix_irq_doorbell() (i.e. all except layerspace)
+to simply not set "msix_capable = true" in epc_features, as we know that all
+drivers that are using dw_pcie_ep_raise_msix_irq() are broken.
+
+Thoughts?
+
+
+Kind regards,
+Niklas
 
