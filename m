@@ -1,179 +1,169 @@
-Return-Path: <linux-pci+bounces-43990-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-43991-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFA5FCF2E0C
-	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 10:58:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3002DCF2E7B
+	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 11:07:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 44097311270E
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 09:52:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 890773004B84
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 10:04:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F2DA2D73A3;
-	Mon,  5 Jan 2026 09:52:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF5762DAFBB;
+	Mon,  5 Jan 2026 10:04:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bQ9J3SU7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c6rlWbkT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1AD14F9D6;
-	Mon,  5 Jan 2026 09:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F082777F9
+	for <linux-pci@vger.kernel.org>; Mon,  5 Jan 2026 10:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767606744; cv=none; b=tWbK6CAic+TLLDcc0pvezTOHzbmfX3B2G/ZEXBUAK437UC8ktm/UbMWXN9DgcvCtgZaaV8jDGeKGx/yXVvxn/W1kOr3lBYYzHDj2lftGF/kMVf665K4aEuE4MpbHRkuzi9TWQno63+Fp0BGiHCOIodgFTIOPmFuZCTwn45zCyj8=
+	t=1767607476; cv=none; b=L3vJuo0TW/oAAfv6QBvBMyo7DX3ZOfd3C+hgnjQSIcHU1prLhw9uYh4hRZejuzoIG50ojx8WfANoCl7T/7GbOTlkgRGne3ftTvGCUHET/oaKBnRNxDPHkdwA1+/SxqR9s+LeJgADJ35aq8Y9Kc29F1i8MRrkxT/dMOYMRGTHy5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767606744; c=relaxed/simple;
-	bh=rIdwh3i8iJzdkK7g3RzApCbHBIt0WZef3WETv/UpmYY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sk3O8arlloU9panf/kQ1yr/hHrdjJbDzj3yvIcTmPy9v/2y7zzF2LAtLCNi9P0jZ5oMZQvJInt64iNW9K9hU7My2T+ZiHDiFJsHm1BMG7KW3LUDdnVoDtGhX/Ucx05canO4Vk3J3Kd0YJ3clqDzchO5F9EwPjc0wdsCRF2BabwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bQ9J3SU7; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767606743; x=1799142743;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=rIdwh3i8iJzdkK7g3RzApCbHBIt0WZef3WETv/UpmYY=;
-  b=bQ9J3SU7AadVfjBAH80Gm9ST/WtEoL8VfHW9VmIrl34iECid4ZtqlAOe
-   yz4QpakQSaUGgPg1oV5PX3rLOmb0flPc1a32R5tuBOu5DlduZwpnLDNbV
-   JU1HOPhYlkHjhzyNJxw3n6AsVDkFa9dsYTQDsM8E5nTlxl34isB/JYjvt
-   7g/0u1RSKtYe7EIa2wbFcwMlPwVlYkI2tach4OY8lPyxrr6cqsMzc9JcP
-   f3/zX+VtR3PVNeD/f1di73lgO1/xeu364A+meocbLqozUGI0ZG7AYh8Qa
-   01EegrJz87anl6jRYakWH3cTOQk30g5ADElnDN1Gbvw4i2n7WZ4ILZgli
-   g==;
-X-CSE-ConnectionGUID: O3rVif6iRSe0vq3urZUsuQ==
-X-CSE-MsgGUID: kZy50KleRl+QUaUi1T/kqA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11661"; a="69012922"
-X-IronPort-AV: E=Sophos;i="6.21,203,1763452800"; 
-   d="scan'208";a="69012922"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2026 01:52:22 -0800
-X-CSE-ConnectionGUID: 3IIatdb6RBGuWQcc4GpoaA==
-X-CSE-MsgGUID: bihwDKAuQMSN6Qcw5wRkVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,203,1763452800"; 
-   d="scan'208";a="203326473"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.165])
-  by fmviesa010.fm.intel.com with ESMTP; 05 Jan 2026 01:52:20 -0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: linux-coco@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	dan.j.williams@intel.com
-Cc: yilun.xu@intel.com,
-	yilun.xu@linux.intel.com,
-	baolu.lu@linux.intel.com,
-	zhenzhong.duan@intel.com,
-	linux-kernel@vger.kernel.org,
-	yi1.lai@intel.com,
-	helgaas@kernel.org
-Subject: [PATCH v2] PCI/IDE: Fix duplicate stream symlink names for TSM class devices
-Date: Mon,  5 Jan 2026 17:35:16 +0800
-Message-Id: <20260105093516.2645397-1-yilun.xu@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1767607476; c=relaxed/simple;
+	bh=JkcfIl8BKcEojFGjIazk4MDWVe9rANBCsbOBtRi+yn8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WHWhBzT/RZbU3qz6iItWOKBMC06lWwaBPKkY4uTWdUmPBf/JVK4uSth3pzdAoEDodrx/yLFc2QMjntAMgGt49GS6ihrj3TV3z6yhL3nyEwXrCxWedofLqad/ZetlXR5Q4znvfw5Pv46I9myg2DwJB2b1QsgKx6mPHM4M/ppESM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c6rlWbkT; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-64b7318f1b0so16533944a12.2
+        for <linux-pci@vger.kernel.org>; Mon, 05 Jan 2026 02:04:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1767607473; x=1768212273; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wcJVs11fw74WQ0Su67r8AFuKhGPgqhPXzmgguyrAPQM=;
+        b=c6rlWbkTSakQeBUOj46LTKavFgnPX+u+Q/uSiPUVtJh5TbduOiMFALdZDU59jv/2FL
+         nmoClixdrHbbI5yUYcn122psJ3fw1fc2V2MfU7VK741b7SSBQl3sCwKn3mPSbQsLMqi/
+         elPyddW7nsDdPB3IZOWJJa400JnGZkGxHbbcMDeCNbXh6kImxyuo4SwRbAfWDNY2cRH0
+         xYJttz0V+c3jnuey0evaxhAfPKSmZ5j3YlY5OxW+Q0JxgPuTJr13pBc2bB9vefugFV8d
+         idFpor86HfdNQIGmoWGZVDMyv219epff4uSQKDgTD2Ww39ep6xHjJh2nNZ6WS+ZfNaL0
+         tD6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767607473; x=1768212273;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wcJVs11fw74WQ0Su67r8AFuKhGPgqhPXzmgguyrAPQM=;
+        b=UDJQGe3PUUJ8O4Hx8gFg0Gf5KiQmdqqzwxiki0dNPycGDoxZvF0WYuKe4D/WWjnPkI
+         E2IlUtv60/cacTSPMxz7u6opfBeu0E4n0FRdU+DkOLONDwFZGssQTUoYcbOGeAqJiPfg
+         E82vyKC9fUV7SXdats3UzSv+SsdWVnyp0eZBSlGqbLK5k4T7SySzOv0y3xXnCn2CSE8Q
+         I8HbrolnvNgqP0d8+gK2IqREk6+ie752zyfNbJzLtWGlyVjGUfKZJ6+k1f37s4zdcm2S
+         Vxxv/vfDbe4oABHYV6l3hdrUCU96QSX2USM0qC/XNj6c66Lnv+Nvs2U8WbsYFSZp5FNA
+         +ADw==
+X-Forwarded-Encrypted: i=1; AJvYcCUC9dh7lMGJPSOGJZHg2O5lezW7eGR23f7742MWQiKNjpBrt/8+ncZBPXqPB+18mZKeTMZTKz0e9UU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwB5IEhqak7i5WxnfWi4POLtFJ2Gy8JBcbCQZnmhKqJosbrwrpf
+	DLrFJu6EVx9nlqD4f6bjUHaZL/vL9UKGxVNxiCLrJ3UE5rBAL2GKsLM38UJlFXtSDxY4qQzfHKg
+	ksOVIvzmEZb5zhdz2gG4HC2PKwyoe5qblCp+Qq6dWZw==
+X-Gm-Gg: AY/fxX75/D3s4Sq8wTrNAOyGVVhdRPMhDP4exF3pZewuDEAtnJzt5hhpOdqa9Vs9KPI
+	fFY/Kt1v1+CHjmckC2k0//6uBuKjsrg0204oGpt7DD5rqxJYS/5WxxQ31gfJKxYF2qQZPf4Xkql
+	MhkV3yEKy75dxXy6TTa+oCQbFFav0U0EopWRm3SQs9AwdQjLZBOMLgg7zn9hbqYqHDhasXmcSAY
+	Bfhkz17GI+NMITgNiL9+cq3OF3vOihHkcYYfGW4Ms4mWGKLV7pd3UQauYXXwcE48CsfaZNNM2pX
+	9EG3E+z3ZsAJ90thAS2gmqjn
+X-Google-Smtp-Source: AGHT+IEOkRWiaWbHsFNA0Xh1nF6WPLLBGqs3wNb+5iB674m6pjhEObn2ANSg0gr5GKFEms9hOIW3Npus/kadl5Ov+pc=
+X-Received: by 2002:a05:6402:1474:b0:64b:588b:4375 with SMTP id
+ 4fb4d7f45d1cf-64b8eb62574mr45764212a12.2.1767607473153; Mon, 05 Jan 2026
+ 02:04:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251230-pci-dwc-suspend-rework-v3-0-40cd485714f5@oss.qualcomm.com>
+In-Reply-To: <20251230-pci-dwc-suspend-rework-v3-0-40cd485714f5@oss.qualcomm.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Mon, 5 Jan 2026 11:04:21 +0100
+X-Gm-Features: AQt7F2pI2rEFQniRu0nts8RkQpZQp4VTDXifbPjh7okMKWhQhyYthJoQyv7luHY
+Message-ID: <CAKfTPtDgbkH57bahUAee8_N3QYWNuu6-jZFrJH1GW32aMiZ+og@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] PCI: dwc: Rework the error handling of
+ dw_pcie_wait_for_link() API
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Jingoo Han <jingoohan1@gmail.com>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, zhangsenchuan@eswincomputing.com, 
+	Shawn Lin <shawn.lin@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The name streamH.R.E is used for 2 symlinks:
+On Tue, 30 Dec 2025 at 16:07, Manivannan Sadhasivam via B4 Relay
+<devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
+>
+> Hi,
+>
+> This series reworks the dw_pcie_wait_for_link() API to allow the callers to
+> detect the absence of the device on the bus and skip the failure.
+>
+> Compared to v2, I've reworked the patch 2 to improve the API further and
+> dropped the patch 1 that got applied (hence changed the subject). I've also
+> modified the error code based on the feedback in v2 to return -ENODEV if device
+> is not detected on the bus and -ETIMEDOUT otherwise. This allows the callers to
+> skip the failure if device is not detected and handle error for other failure.
+>
+> Testing
+> =======
+>
+> Tested this series on Rb3Gen2 board without powering on the PCIe switch. Now the
+> dw_pcie_wait_for_link() API prints:
+>
+>         qcom-pcie 1c08000.pcie: Device not found
+>
+> Instead of the previous log:
+>
+>         qcom-pcie 1c08000.pcie: Phy link never came up
 
-  1. TSM class devices: /sys/class/tsm/tsmN/streamH.R.E
-  2. host bridge devices: /sys/devices/pciDDDD:BB/streamH.R.E
+I tested the patchset with s32g399a-rdb3 and during the resume, I have:
 
-The first usage is broken cause streamH.R.E is only unique within a
-specific host bridge but not across the system. Error occurs e.g. when
-creating the first stream on a second host bridge:
+[  460.255927] s32g-pcie 44100000.pcie: Device not found
+[  460.256021] s32g-pcie 44100000.pcie: PM: dpm_run_callback():
+s32g_pcie_resume_noirq returns -19
+[  460.256278] s32g-pcie 44100000.pcie: PM: failed to resume noirq: error -19
 
-  sysfs: cannot create duplicate filename '/devices/faux/tdx_host/tsm/tsm0/stream0.0.0'
+I was not expecting more lines than the 1st line: Device not found,
+like the init
 
-Fix this by adding host bridge name into symlink name for TSM class
-devices so they show up as:
+[    2.668921] s32g-pcie 44100000.pcie: Device not found
+[    2.675342] s32g-pcie 44100000.pcie: PCI host bridge to bus 0001:00
 
-  /sys/class/tsm/tsmN/pciDDDD:BB:streamH.R.E
+where with skip the -ENODEV case if dw_pcie_wait_for_link() fails
 
-It should be OK to change the uAPI since it's new and has few users.
+Should we skip the -ENODEV case in dw_pcie_resume_noirq() too ?
 
-The symlink name for host bridge devices keeps unchanged. Keep concise
-as it is already in host bridge context.
-
-Internally in the IDE library, store the full name in struct pci_ide
-so TSM symlinks can use it directly as before, while host bridge
-symlinks use only the streamH.R.E portion to preserve the existing name.
-
-Fixes: a4438f06b1db ("PCI/TSM: Report active IDE streams")
-Reported-by: Yi Lai <yi1.lai@intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
----
-v2: Changelog improvements
-
-v1: https://lore.kernel.org/linux-coco/20251223085601.2607455-1-yilun.xu@linux.intel.com/
----
- Documentation/ABI/testing/sysfs-class-tsm |  2 +-
- drivers/pci/ide.c                         | 12 +++++++++---
- 2 files changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-class-tsm b/Documentation/ABI/testing/sysfs-class-tsm
-index 6fc1a5ac6da1..eff71e42c60e 100644
---- a/Documentation/ABI/testing/sysfs-class-tsm
-+++ b/Documentation/ABI/testing/sysfs-class-tsm
-@@ -8,7 +8,7 @@ Description:
- 		link encryption and other device-security features coordinated
- 		through a platform tsm.
- 
--What:		/sys/class/tsm/tsmN/streamH.R.E
-+What:		/sys/class/tsm/tsmN/pciDDDD:BB:streamH.R.E
- Contact:	linux-pci@vger.kernel.org
- Description:
- 		(RO) When a host bridge has established a secure connection via
-diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
-index f0ef474e1a0d..58fbe9cfd68c 100644
---- a/drivers/pci/ide.c
-+++ b/drivers/pci/ide.c
-@@ -425,6 +425,7 @@ int pci_ide_stream_register(struct pci_ide *ide)
- 	struct pci_host_bridge *hb = pci_find_host_bridge(pdev->bus);
- 	struct pci_ide_stream_id __sid;
- 	u8 ep_stream, rp_stream;
-+	const char *short_name;
- 	int rc;
- 
- 	if (ide->stream_id < 0 || ide->stream_id > U8_MAX) {
-@@ -441,13 +442,16 @@ int pci_ide_stream_register(struct pci_ide *ide)
- 
- 	ep_stream = ide->partner[PCI_IDE_EP].stream_index;
- 	rp_stream = ide->partner[PCI_IDE_RP].stream_index;
--	const char *name __free(kfree) = kasprintf(GFP_KERNEL, "stream%d.%d.%d",
-+	const char *name __free(kfree) = kasprintf(GFP_KERNEL, "%s:stream%d.%d.%d",
-+						   dev_name(&hb->dev),
- 						   ide->host_bridge_stream,
- 						   rp_stream, ep_stream);
- 	if (!name)
- 		return -ENOMEM;
- 
--	rc = sysfs_create_link(&hb->dev.kobj, &pdev->dev.kobj, name);
-+	/* Strip host bridge name in the host bridge context */
-+	short_name = name + strlen(dev_name(&hb->dev)) + 1;
-+	rc = sysfs_create_link(&hb->dev.kobj, &pdev->dev.kobj, short_name);
- 	if (rc)
- 		return rc;
- 
-@@ -471,8 +475,10 @@ void pci_ide_stream_unregister(struct pci_ide *ide)
- {
- 	struct pci_dev *pdev = ide->pdev;
- 	struct pci_host_bridge *hb = pci_find_host_bridge(pdev->bus);
-+	const char *short_name;
- 
--	sysfs_remove_link(&hb->dev.kobj, ide->name);
-+	short_name = ide->name + strlen(dev_name(&hb->dev)) + 1;
-+	sysfs_remove_link(&hb->dev.kobj, short_name);
- 	kfree(ide->name);
- 	ida_free(&hb->ide_stream_ids_ida, ide->stream_id);
- 	ide->name = NULL;
-
-base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
--- 
-2.25.1
-
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+> Changes in v3:
+> - Dropped patch 1 that got appplied
+> - Reworked the error handling of dw_pcie_wait_for_link() API further
+> - Link to v2: https://lore.kernel.org/r/20251218-pci-dwc-suspend-rework-v2-0-5a7778c6094a@oss.qualcomm.com
+>
+> Changes in v2:
+> - Changed the logic to check for Detect.Quiet/Active states
+> - Collected tags and rebased on top of v6.19-rc1
+> - Link to v1: https://lore.kernel.org/r/20251119-pci-dwc-suspend-rework-v1-0-aad104828562@oss.qualcomm.com
+>
+> ---
+> Manivannan Sadhasivam (4):
+>       PCI: dwc: Return -ENODEV from dw_pcie_wait_for_link() if device is not found
+>       PCI: dwc: Rename and move ltssm_status_string() to pcie-designware.c
+>       PCI: dwc: Rework the error print of dw_pcie_wait_for_link()
+>       PCI: dwc: Only skip the dw_pcie_wait_for_link() failure if it returns -ENODEV
+>
+>  .../pci/controller/dwc/pcie-designware-debugfs.c   | 54 +---------------
+>  drivers/pci/controller/dwc/pcie-designware-host.c  |  6 +-
+>  drivers/pci/controller/dwc/pcie-designware.c       | 75 +++++++++++++++++++++-
+>  drivers/pci/controller/dwc/pcie-designware.h       |  2 +
+>  4 files changed, 80 insertions(+), 57 deletions(-)
+> ---
+> base-commit: 68ac85fb42cfeb081cf029acdd8aace55ed375a2
+> change-id: 20251119-pci-dwc-suspend-rework-8b0515a38679
+>
+> Best regards,
+> --
+> Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+>
+>
 
