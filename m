@@ -1,124 +1,184 @@
-Return-Path: <linux-pci+bounces-44022-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44013-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4C0ACF3A96
-	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 14:00:04 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B80ECF3BDE
+	for <lists+linux-pci@lfdr.de>; Mon, 05 Jan 2026 14:18:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A33D230123C6
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 12:58:48 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 057EB3005311
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 13:18:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB7C933E36D;
-	Mon,  5 Jan 2026 12:56:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99170335082;
+	Mon,  5 Jan 2026 12:21:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bKlS6fJH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PUQRt5o6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C939D2D97BF
-	for <linux-pci@vger.kernel.org>; Mon,  5 Jan 2026 12:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5539218C933;
+	Mon,  5 Jan 2026 12:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767617806; cv=none; b=BBhO6+heALywOeduc57t8YDgsk19ntE9s+4VODBdO9c7FVe9U13gLN1sm8wDISfNaVueheoZQuyzerrjbFYvszBiYj6V/Jj8BCOox6NnhCwuIG8SID2h4hArG5sFh1bNmFge551k31rzrWgmjRr++hO2wfD5jJQTgI1hdXa5R9E=
+	t=1767615697; cv=none; b=SRzI49bia7b1+3sO36PBKvjJF3gEUECjuP198qEQcbaPX8qqNfWhAPRr2x6iY+9/8HCFCgdYaYV3aBkzn1XuKNjJBfYar636KWWcZGoTAzkS9m2v8fd53jF0IHI94FOL0eJpIF0dypDU6aLEI19zoy4GnGS3oNjE185PnDheCis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767617806; c=relaxed/simple;
-	bh=V0eV9L9ITo8NgV25mFW1sr+g+mEaBKtqXjQS+8LF7A0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qjGbM/W3M+kYUA/2euIgyVBUJdLFiTVVs/Ssqc2XE55V+q0ejmGVxXb6+NGNoxDKhqMIxPl9zxBPFvKNah08BgqdSFoTXsBt9tRaVyArFA1elUABjaQAMGtg7v4rKa2/hZmjSKxZKLG10E+Aolk0shxUDWTBIDNsnZjzyEW2/54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=bKlS6fJH; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-64b9d01e473so20443719a12.2
-        for <linux-pci@vger.kernel.org>; Mon, 05 Jan 2026 04:56:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1767617802; x=1768222602; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=en2pW9puE35IFTbs++BWoNNKvbkB1aM3UnUzh6oqOZ4=;
-        b=bKlS6fJHGox/wmOBaGKjuthWLPO4UDbieHYifcKbPxJQXv4eNdWOQRY7rg6BmTT09I
-         8Ey6ZJvlvJoVDXEQZo9vS9b04qKssr7w1Kd3EbLD6SBQ/SjMka8AV8ng2AiX8ediL3N+
-         5A+V0yQXthazKUYEoRABskHG7p3KmAfBVRzeEl/1BbA/MCox+yxqPG6embaAe6j0x5JU
-         jclCttOJLuPvFjkehpGTefZwU4Lr29ZYoT8/tkpys0Si2+aglbmJXxLC22YKcugFF1cP
-         9IoMFvB7PbgFXwznzb5tt5vh6y3O0FWyWN8fP0zi8uoNv4i+RiXGydKFYE/owe4pKdOk
-         WSCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767617802; x=1768222602;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=en2pW9puE35IFTbs++BWoNNKvbkB1aM3UnUzh6oqOZ4=;
-        b=QaI7JolzOuHUkcEoINCC5E6M7CNvfYW7QtZdHXdz6AnmzCFsfNVN2lt0c7VLp6fu0F
-         K6a25Yhwu1v3wBao+2SOExuSXxEpkdSHS4bGmNePSxo8tishSaF0qh4otE/xPvRZZtw5
-         cTvyXIB9mDlHk/tKYw0RfDSZbTZtHHAaRmM1315BQCfS/nYjtei38evp20uLbfF1jGXh
-         CP5v2K0lA9kFzwZvEkb7dte9/5uar4bS1WHg56KFaiYCSEFkK6eTmNn4DRXgM9RDe5a/
-         5lg514GSGisP+5bYowSdZ/mjau9OvJUlhgAcx8S/2N2GnwrnXhiDWAEG/h71kbOvPR+q
-         Gr9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV122yt7VPdmmbyK7IHVxTn2bwOXU8aZA374spDYXB+MA59WyIL2IPRgl/QzcV7N/tbU4Sj15hKkx0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5M4Zdh+VLbCefAmv5xFWJy1Q6aqMhQTdKocwOcVEOozeBJMET
-	gXPaCH4aSpF0hmulPPPkO+Wlri0/TYz2RoSbESyg9SiLa6lOutsNE0Gq
-X-Gm-Gg: AY/fxX73ABHZn0EXBgiGW2mqBxGKE8ehNNwAJ7woJ8n5jnKTMB6ATWzpl8e7EWSAwb5
-	ufCP2XzOW0KxsAJMrJ4eyTW9r/ER60D1e4sjfGb4m32oLv2vZurr06BCDWvGrsN0xQmaxPVM93P
-	0/u8PbOv48WGDDKBH2nIKpfSWOTznlOClqQXxVY6s5f++zK5FZkaZMfit3B46qYea08obvA6QoP
-	rq1D0aGwWXKQIMKZJSk8wKO/ybiCLc4CtcTQq1buRtOuhuX24+pahjGhFf67i6pZ/UjjEf+6bHL
-	x6KgNy71WNVFZL0cMvFTzoHPXHww+7U7ASwwXZmJHKkgZR7/F3/PU6mNfHxwzJx2P3QPhWZ/WiW
-	LXo6nHWzELrvXHZnWt9Kl11D1NIELIQPHKCi639GZ1nY2/9WbcPRhrWFnD2dUMP6SapcOdwcIb1
-	hhlhCu2NaYJSaZdk8jdn9PCSfm+L6bjKLk0TPIwZgA7cor9fAm/NQ2B7gyM7duG9/mdu7sprhzs
-	pAwG61/BXVXHe0sc6oHduGNFU9boRsPX648lRHPEOrEKvXGb6aF
-X-Google-Smtp-Source: AGHT+IGkQHUVn4G1LTfeKcgEt+M7w3okEoSSOC40iYpGOWHCsX59BOszv9hkdCiQgf3kosmWwCeYyQ==
-X-Received: by 2002:a05:6402:3587:b0:64d:3b22:a5b9 with SMTP id 4fb4d7f45d1cf-64d3b22a88fmr37161484a12.9.1767617801949;
-        Mon, 05 Jan 2026 04:56:41 -0800 (PST)
-Received: from blackbox (dynamic-2a02-3100-a8ad-5500-1e86-0bff-fe2f-57b7.310.pool.telefonica.de. [2a02:3100:a8ad:5500:1e86:bff:fe2f:57b7])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-64b90f53b21sm53582712a12.5.2026.01.05.04.56.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jan 2026 04:56:41 -0800 (PST)
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To: linux-amlogic@lists.infradead.org,
-	linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	bhelgaas@google.com,
-	robh@kernel.org,
-	mani@kernel.org,
-	kwilczynski@kernel.org,
-	lpieralisi@kernel.org,
-	yue.wang@Amlogic.com,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH] PCI: meson: Drop unused WAIT_LINKUP_TIMEOUT macro
-Date: Mon,  5 Jan 2026 13:56:25 +0100
-Message-ID: <20260105125625.239497-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1767615697; c=relaxed/simple;
+	bh=hJOhi5Vbf202RHsg63yMNniOhNEzOOriE/DJRW383i0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SQkeXexhOkR2I/DfkpFvsQvPb0hpMArQpEAOFdNxlO7p91oSVTMoMxs0nEOQttTfDcBxbB2awZJsyCcctF38J7pI836ywHggEXHjQVhDYy1getlGntbrXUFd8kc9dmP2L4b9hGuHzM7YpExE/HXQyUL6qtMYzIdIR0Oj8Uli3rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PUQRt5o6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CEA4C19423;
+	Mon,  5 Jan 2026 12:21:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767615696;
+	bh=hJOhi5Vbf202RHsg63yMNniOhNEzOOriE/DJRW383i0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PUQRt5o6LfL5amKf1MOG4X34V5fdgpgGuCrS8rCo6aTrJ9SFl1cvj1++ndz6LB+ni
+	 3cS8MaIAn6E0UgjOZYeUo8+3S2FyS5l73MGPpLEa6PqKY0vRIloEclXmEPuRCHh/AF
+	 b9ck1cUvmLxGvICuON04zeR0P759Hn58XmWDwtDbBBFQXvQA6l7XT+6hUV1QOXDOLD
+	 ue3EybsGH9kRd+yNuPA505cgTQ52QEvAxDNqFtFRpZTKXdgh5BUMBq17RqtVWhzRvk
+	 S9T77XXdm8A699eQduQv7jzYf9XjIL0bPqbBkBnnbp9OBSeCrGyobGMfvNcfhbnV+C
+	 ZcMxm2RanEqSA==
+Date: Mon, 5 Jan 2026 17:51:26 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Niklas Cassel <cassel@kernel.org>, 
+	Francesco Lavra <flavra@baylibre.com>, thierry.reding@gmail.com, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Mayank Rana <mayank.rana@oss.qualcomm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Shradha Todi <shradha.t@samsung.com>, Thippeswamy Havalige <thippeswamy.havalige@amd.com>, 
+	Inochi Amaoto <inochiama@gmail.com>, Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH] pci: controller: tegra194: remove dependency on Tegra194
+ SoC
+Message-ID: <hbhvydcqr7lcpvijw5vu57biqato2znjf4txshfepc7zszsptk@6ft3jujbyvtd>
+References: <20251126102530.4110067-1-flavra@baylibre.com>
+ <xh2att7wpqowricyifxmoaijbhtrtoht25pomu4voosfctf36e@4p27y7rezz22>
+ <e900f082-fb3e-45c6-a94b-935132190249@nvidia.com>
+ <5cwg6tg2y2q4mkns5zblenvhhovnz52dp5bo4uyghs4yledh3v@7apj6wwy3kjf>
+ <aVt_t3kxtT99wbwi@ryzen>
+ <7bfb3ebc-2e8b-4fcc-8d13-a6f3e0b7141e@nvidia.com>
+ <q2iezy4uydlvwgo6m6yv2nlucafyvxgonm2o5q3g32p73vemwb@x33rmfffnwlu>
+ <aVurA-MUECufgTw0@ryzen>
+ <8b5dc374-77e0-4957-8ecc-6c646aff36a1@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <8b5dc374-77e0-4957-8ecc-6c646aff36a1@nvidia.com>
 
-Commit 113d9712f63b ("PCI: meson: Report that link is up while in ASPM
-L0s and L1 states") removed the waiting loop in meson_pcie_link_up()
-making #define WAIT_LINKUP_TIMEOUT now unused.
+On Mon, Jan 05, 2026 at 12:18:35PM +0000, Jon Hunter wrote:
+> 
+> On 05/01/2026 12:13, Niklas Cassel wrote:
+> > On Mon, Jan 05, 2026 at 05:38:34PM +0530, Manivannan Sadhasivam wrote:
+> > > On Mon, Jan 05, 2026 at 11:56:37AM +0000, Jon Hunter wrote:
+> > > > 
+> > > > 
+> > > > On 05/01/2026 09:09, Niklas Cassel wrote:
+> > > > > On Mon, Jan 05, 2026 at 02:09:34PM +0530, Manivannan Sadhasivam wrote:
+> > > > > > On Fri, Jan 02, 2026 at 10:58:15AM +0000, Jon Hunter wrote:
+> > > > > > > 
+> > > > > > > On 23/12/2025 06:45, Manivannan Sadhasivam wrote:
+> > > > > > > > On Wed, Nov 26, 2025 at 11:25:30AM +0100, Francesco Lavra wrote:
+> > > > > > > > 
+> > > > > > > > + Tegra maintainers
+> > > > > > > > 
+> > > > > > > > > This driver runs (for both host and endpoint operation) also on other Tegra
+> > > > > > > > > SoCs (e.g. Tegra234).
+> > > > > > > > > Replace the Kconfig dependency on ARCH_TEGRA_194_SOC with a more generic
+> > > > > > > > > dependency on ARCH_TEGRA; in addition, amend the Kconfig help text to
+> > > > > > > > > reflect the fact that this driver is no longer exclusive to Tegra194.
+> > > > > > > > > 
+> > > > > > > > 
+> > > > > > > > I vaguely remember asking about this a while back during some other patch review
+> > > > > > > > and I don't remember what we concluded.
+> > > > > > > > > Thierry, Jon, thoughts?
+> > > > > > > 
+> > > > > > > So ARCH_TEGRA means that this can be enabled for the legacy 32-bit Tegra
+> > > > > > > devices as well as the current 64-bit Tegra devices (such as Tegra194).
+> > > > > > > Given that this driver is only used for Tegra194 and Tegra234, it seems it
+> > > > > > > would be better to only enable this for Tegra194 and Tegra234 instead of any
+> > > > > > > Tegra.
+> > > > > > > 
+> > > > > > 
+> > > > > > The dependency means, whenever someone tries to enable PCIE_TEGRA194_HOST,
+> > > > > > ARCH_TEGRA should be enabled. So as long as someone not trying to enable
+> > > > > > PCIE_TEGRA194_HOST for 32bit Tegra systems, ARCH_TEGRA should work fine and
+> > > > > > PCIE_TEGRA194_HOST is not selected by arch/arm/configs/tegra_defconfig. So I
+> > > > > > don't see any blocker with this patch. In fact, many other archs do the same.
+> > > > > > 
+> > > > > > But I don't like extending the Kconfig with per SoC dependency as it won't
+> > > > > > scale.
+> > > > > 
+> > > > > We already have a patch from Vidya:
+> > > > > [PATCH V4] PCI: dwc: tegra194: Broaden architecture dependency
+> > > > > that was sent 2025-05-08
+> > > > > 
+> > > > > Back then, the reason why it wasn't merged was because it required a
+> > > > > similar change to the PHY driver to go in first:
+> > > > > https://lore.kernel.org/linux-pci/174722268141.85510.14696275121588719556.b4-ty@kernel.org/
+> > > > > 
+> > > > > The PHY driver change was merged in v6.16:
+> > > > > 0c2228731974 ("phy: tegra: p2u: Broaden architecture dependency")
+> > > > > 
+> > > > > So, I think we could just merge:
+> > > > > https://lore.kernel.org/linux-pci/20250508051922.4134041-1-vidyas@nvidia.com/
+> > > > > 
+> > > > > (Assuming it still applies.)
+> > > > 
+> > > > Yes it does and applying Sagar's patch is fine with me. So it you want to
+> > > > apply Sagar's patch please add my ...
+> > > > 
+> > > 
+> > > Don't we need:
+> > > 
+> > > 	depends on (ARCH_TEGRA && ARM64) || COMPILE_TEST
+> > 
+> > This is exactly what I originally suggested to Vidya:
+> > https://lore.kernel.org/linux-pci/Z6XjWJd9jm0HHNXW@ryzen/
+> > 
+> > 
+> > > 
+> > > in the above patch?
+> > 
+> > The above patch instead has:
+> > 
+> > depends on ARCH_TEGRA && (ARM64 || COMPILE_TEST)
+> > 
+> > I don't know why Vidya did not use my suggestion exactly, but I guess I
+> > assumed that he had a reason not to use my suggestion exactly.
+> 
+> Looking 0c2228731974 ("phy: tegra: p2u: Broaden architecture
+> dependency") we ended up just merging ...
+> 
+> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+> index f30cfb42b210..342fb736da4b 100644
+> --- a/drivers/phy/tegra/Kconfig
+> +++ b/drivers/phy/tegra/Kconfig
+> @@ -13,7 +13,7 @@ config PHY_TEGRA_XUSB
+>  config PHY_TEGRA194_P2U
+>         tristate "NVIDIA Tegra194 PIPE2UPHY PHY driver"
+> -       depends on ARCH_TEGRA_194_SOC || ARCH_TEGRA_234_SOC || COMPILE_TEST
+> +       depends on ARCH_TEGRA || COMPILE_TEST
+>         select GENERIC_PHY
+>         help
+> 
+> So I guess we could just merge Francesco's original suggestion for
+> consistency. Otherwise I would be happy with ...
+> 
+>  depends on (ARCH_TEGRA && ARM64) || COMPILE_TEST
+> 
 
-Drop the now unused variable to keep the driver code clean.
+I made the above change applied Vidya's patch. Thanks Jon and Niklas!
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/pci/controller/dwc/pci-meson.c | 1 -
- 1 file changed, 1 deletion(-)
+- Mani
 
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index a1c389216362..0694084f612b 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -37,7 +37,6 @@
- #define PCIE_CFG_STATUS17		0x44
- #define PM_CURRENT_STATE(x)		(((x) >> 7) & 0x1)
- 
--#define WAIT_LINKUP_TIMEOUT		4000
- #define PORT_CLK_RATE			100000000UL
- #define MAX_PAYLOAD_SIZE		256
- #define MAX_READ_REQ_SIZE		256
 -- 
-2.52.0
-
+மணிவண்ணன் சதாசிவம்
 
