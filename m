@@ -1,151 +1,135 @@
-Return-Path: <linux-pci+bounces-44102-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44103-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53F08CF85D2
-	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 13:44:00 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CE24CF86B1
+	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 14:08:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9F1AA3007503
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 12:43:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6021930A6E86
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 12:54:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9A0F329C5D;
-	Tue,  6 Jan 2026 12:43:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 647EA32B9A8;
+	Tue,  6 Jan 2026 12:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KN4oqz61"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.168.213])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DF71236A8B;
-	Tue,  6 Jan 2026 12:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.229.168.213
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A8E219A8E;
+	Tue,  6 Jan 2026 12:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767703437; cv=none; b=YW92l+UmGPpMokn75IugzudrcC3g8pwbBWnOr1EcQkdSYKJjLqig/oPFDeZWw0dCnoxU4FzcP0p620Z8T+tkw3PPCseNtImiKjAZl2RyLLnuPRLW5QITBzMTGGdKGIA9L7qxJMB0XwLPs8zOXavJvayTiyXjCkLE12TN6aKNocw=
+	t=1767704070; cv=none; b=Gkf6k4hVsD7X+PgwrQHMS4AEJcm09B2kBq1+bY6jUeSIqKWrDHl/6gku4Qq6RV1m6B7VYLs2/2laqC30nMvhRbBUTkmxTeKAOrtYe2Yp+ZngFu4JIU1vWTr45r1yZV0ECanOBZ1bfzJsFEWwvbGEXEdKa5w7ogSVqToBAKDCIIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767703437; c=relaxed/simple;
-	bh=TMdZ5Mmr32jio4USdC4cUOR4V8rZ27kbMSvb+F4bHRg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=WIykkoy+p0g97EywJ9tBB38K1dNgtIN0THIAwW15uMGB9Zo2LIknltfyy1zU4+WnAo57bdiFCS1NjkbEdFfktl4HgsZXlWLagfr00wa9J2gUsYoxwgcFnB88nu6zppUefiMg1bFzNDcarbeEsZpq+JF2hBKOLdAyBiqCiNd0+/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.229.168.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
- ajax-webmail-app2 (Coremail) ; Tue, 6 Jan 2026 20:43:11 +0800 (GMT+08:00)
-Date: Tue, 6 Jan 2026 20:43:11 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-To: "Bjorn Helgaas" <helgaas@kernel.org>
-Cc: bhelgaas@google.com, mani@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	robh@kernel.org, p.zabel@pengutronix.de, jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	christian.bruel@foss.st.com, mayank.rana@oss.qualcomm.com,
-	shradha.t@samsung.com, krishna.chundru@oss.qualcomm.com,
-	thippeswamy.havalige@amd.com, inochiama@gmail.com, Frank.li@nxp.com,
-	ningyu@eswincomputing.com, linmin@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com, ouyanghui@eswincomputing.com,
-	"Niklas Cassel" <cassel@kernel.org>
-Subject: Re: Re: [PATCH v9 2/2] PCI: eic7700: Add Eswin PCIe host controller
- driver
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2026 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <20260105223037.GA332950@bhelgaas>
-References: <20260105223037.GA332950@bhelgaas>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1767704070; c=relaxed/simple;
+	bh=Oe82Dko28Elj2iz2dw44a9YNxq8NU/2D2uNU8P53OZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jyr3GKABrh0EpaOq0weZevxg73Tz/cEqGZj/ATI3EfFX8FDP/fujOCP4N5fRqbmFn3jK11cv98qQX5zU2CybPhsBYVh7sHgf6KbAwfH0baOeTMtMLEGjPHgzCjlqipCE7eNePpX+Zz1xWJZrpcdqXBUaZae/ij/D9jwXk5FyZoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KN4oqz61; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43702C116C6;
+	Tue,  6 Jan 2026 12:54:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767704069;
+	bh=Oe82Dko28Elj2iz2dw44a9YNxq8NU/2D2uNU8P53OZE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KN4oqz610r/u6hH1tOaCgWtj2JyIk3YpqEs6IVXdlw5ZZserrRV2qnOUJAjhDeMN8
+	 EA1973sY8RCkfakuEgJhX0g5rBystiIKEJkue0fUT59yOgCUnaKf/I+tvs24+F8Itg
+	 xerfB9qu2s4y0MhlPlIXMd3IdIVq/t4UYxcNDF5sfbpVwloD+66FZvPR5jLkYnIJZC
+	 V2KUnxAvW8q2fxiYkva91OfDw0TFX1xSN8TokROXvJCZlGUhhXv6IFgQ7mUeXWIFdw
+	 LXks9wMYH/rc1LcnwIQEMD3+d8IH9kuvkIECy0I70YCL6uILhhIZsZOwJeehUCbslL
+	 9PCvDC9tlkB6A==
+Date: Tue, 6 Jan 2026 18:24:19 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de, 
+	kernel@pengutronix.de, festevam@gmail.com, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/11] PCI: imx6: Add a method to handle CLKREQ#
+ override
+Message-ID: <inzg46tc2fwsajxq4vzdyuiq7krzy6xtcg2mjaieninz7zsmgm@mtdjr4tuegpq>
+References: <20251015030428.2980427-1-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <3c8d6749.1f49.19b93552d97.Coremail.zhangsenchuan@eswincomputing.com>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:TQJkCgDnK69fA11psMOQAA--.6166W
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAgETBmlb5
-	-4lYAABs5
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW3Jw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251015030428.2980427-1-hongxing.zhu@nxp.com>
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHY5IDIvMl0gUENJOiBlaWM3NzAwOiBBZGQgRXN3aW4gUENJ
-ZSBob3N0IGNvbnRyb2xsZXIgZHJpdmVyCj4gCj4gWytjYyBOaWtsYXMsIGxpc3QgdnMgYXJyYXkg
-b2YgcG9ydHNdCj4gCj4gT24gTW9uLCBEZWMgMjksIDIwMjUgYXQgMDc6MzI6MDdQTSArMDgwMCwg
-emhhbmdzZW5jaHVhbkBlc3dpbmNvbXB1dGluZy5jb20gd3JvdGU6Cj4gPiBGcm9tOiBTZW5jaHVh
-biBaaGFuZyA8emhhbmdzZW5jaHVhbkBlc3dpbmNvbXB1dGluZy5jb20+Cj4gPiAKPiA+IEFkZCBk
-cml2ZXIgZm9yIHRoZSBFc3dpbiBFSUM3NzAwIFBDSWUgaG9zdCBjb250cm9sbGVyLCB3aGljaCBp
-cyBiYXNlZCBvbgo+ID4gdGhlIERlc2lnbldhcmUgUENJZSBjb3JlLCBJUCByZXZpc2lvbiA1Ljk2
-YS4gVGhlIFBDSWUgR2VuLjMgY29udHJvbGxlcgo+ID4gc3VwcG9ydHMgYSBkYXRhIHJhdGUgb2Yg
-OCBHVC9zIGFuZCA0IGNoYW5uZWxzLCBzdXBwb3J0IElOVHggYW5kIE1TSQo+ID4gaW50ZXJydXB0
-cy4KPiAKPiA+ICtjb25maWcgUENJRV9FSUM3NzAwCj4gPiArCXRyaXN0YXRlICJFc3dpbiBFSUM3
-NzAwIFBDSWUgY29udHJvbGxlciIKPiAKPiA+ICsvKiBWZW5kb3IgYW5kIGRldmljZSBJRCB2YWx1
-ZSAqLwo+ID4gKyNkZWZpbmUgUENJX1ZFTkRPUl9JRF9FU1dJTgkJMHgxZmUxCj4gPiArI2RlZmlu
-ZSBQQ0lfREVWSUNFX0lEX0VTV0lOCQkweDIwMzAKPiAKPiBVc3VhbGx5IHRoZSBkZXZpY2UgbmFt
-ZSBpcyBhIGxpdHRsZSBtb3JlIHRoYW4ganVzdCB0aGUgdmVuZG9yLiAgV2hhdAo+IGlmIEVzd2lu
-IGV2ZXIgbWFrZXMgYSBzZWNvbmQgZGV2aWNlPwoKT2tleSwgdGhhbmtzLgpQZXJoYXBzIGl0J3Mg
-YSBwcm9ibGVtLiBNYXliZSBQQ0lfREVWSUNFX0lEX0VJQzc3MDAgaXMgYmV0dGVyPwoKPiAKPiA+
-ICtzdGF0aWMgaW50IGVpYzc3MDBfcGNpZV9wYXJzZV9wb3J0KHN0cnVjdCBlaWM3NzAwX3BjaWUg
-KnBjaWUsCj4gPiArCQkJCSAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSkKPiA+ICt7Cj4gPiAr
-CXN0cnVjdCBkZXZpY2UgKmRldiA9IHBjaWUtPnBjaS5kZXY7Cj4gPiArCXN0cnVjdCBlaWM3NzAw
-X3BjaWVfcG9ydCAqcG9ydDsKPiA+ICsKPiA+ICsJcG9ydCA9IGRldm1fa3phbGxvYyhkZXYsIHNp
-emVvZigqcG9ydCksIEdGUF9LRVJORUwpOwo+ID4gKwlpZiAoIXBvcnQpCj4gPiArCQlyZXR1cm4g
-LUVOT01FTTsKPiA+ICsKPiA+ICsJcG9ydC0+cGVyc3QgPSBvZl9yZXNldF9jb250cm9sX2dldF9l
-eGNsdXNpdmUobm9kZSwgInBlcnN0Iik7Cj4gPiArCWlmIChJU19FUlIocG9ydC0+cGVyc3QpKSB7
-Cj4gPiArCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBnZXQgUEVSU1QjIHJlc2V0XG4iKTsKPiA+
-ICsJCXJldHVybiBQVFJfRVJSKHBvcnQtPnBlcnN0KTsKPiA+ICsJfQo+ID4gKwo+ID4gKwkvKgo+
-ID4gKwkgKiBUT0RPOiBTaW5jZSB0aGUgUm9vdCBQb3J0IG5vZGUgaXMgc2VwYXJhdGVkIG91dCBi
-eSBwY2llIGRldmljZXRyZWUsCj4gPiArCSAqIHRoZSBEV0MgY29yZSBpbml0aWFsaXphdGlvbiBj
-b2RlIGNhbid0IHBhcnNlIHRoZSBudW0tbGFuZXMgYXR0cmlidXRlCj4gPiArCSAqIGluIHRoZSBS
-b290IFBvcnQuIEJlZm9yZSBlbnRlcmluZyB0aGUgRFdDIGNvcmUgaW5pdGlhbGl6YXRpb24gY29k
-ZSwKPiA+ICsJICogdGhlIHBsYXRmb3JtIGRyaXZlciBjb2RlIHBhcnNlcyB0aGUgUm9vdCBQb3J0
-IG5vZGUuIFRoZSBFSUM3NzAwIG9ubHkKPiA+ICsJICogc3VwcG9ydHMgb25lIFJvb3QgUG9ydCBu
-b2RlLCBhbmQgdGhlIG51bS1sYW5lcyBhdHRyaWJ1dGUgaXMgc3VpdGFibGUKPiA+ICsJICogZm9y
-IHRoZSBjYXNlIG9mIG9uZSBSb290IFBvcnQuCj4gPiArCSAqLwo+ID4gKwlpZiAoIW9mX3Byb3Bl
-cnR5X3JlYWRfdTMyKG5vZGUsICJudW0tbGFuZXMiLCAmcG9ydC0+bnVtX2xhbmVzKSkKPiA+ICsJ
-CXBjaWUtPnBjaS5udW1fbGFuZXMgPSBwb3J0LT5udW1fbGFuZXM7Cj4gPiArCj4gPiArCUlOSVRf
-TElTVF9IRUFEKCZwb3J0LT5saXN0KTsKPiA+ICsJbGlzdF9hZGRfdGFpbCgmcG9ydC0+bGlzdCwg
-JnBjaWUtPnBvcnRzKTsKPiAKPiBOaWtsYXMgcmFpc2VkIGFuIGludGVyZXN0aW5nIHF1ZXN0aW9u
-IGFib3V0IHdoZXRoZXIgYSBsaXN0IG9yIGFuIGFycmF5Cj4gaXMgdGhlIGJlc3QgZGF0YSBzdHJ1
-Y3R1cmUgZm9yIHRoZSBzZXQgb2YgUm9vdCBQb3J0czoKPiAKPiAgIGh0dHBzOi8vbG9yZS5rZXJu
-ZWwub3JnL3IvYVZ2a21rZDVtV1BteGVpU0ByeXplbgo+IAo+IE1pZ2h0IGhhdmUgdG8gaXRlcmF0
-ZSBvdmVyIHRoZSBjaGlsZCBub2RlcyB0d2ljZSAob25jZSB0byBjb3VudCwgYWdhaW4KPiBmb3Ig
-ZWljNzcwMF9wY2llX3BhcnNlX3BvcnQoKSksIGJ1dCBvdGhlcndpc2UgdGhlIGFycmF5IGlzIHBy
-b2JhYmx5Cj4gc2ltcGxlciBjb2RlLgoKQWZ0ZXIgcmVhZGluZyBwYXRjaCdzIGNvbW1lbnRzLCBs
-aXN0cyBhbmQgYXJyYXlzIHNlZW0gdG8gYmUgZ29vZCBjaG9pY2VzLApJIGRvbid0IGhhdmUgYW55
-IHBhcnRpY3VsYXJseSBnb29kIGlkZWFzIGZvciB0aGUgdGltZSBiZWluZy4gQW55d2F5LCB0aGlz
-CmlzIGEgdmVyeSBnb29kIHBhdGNoIHRoYXQgc3VwcG9ydHMgbXVsdGlwbGUgUm9vdCBQb3J0cyBy
-ZXNvbHV0aW9ucy4KCj4gCj4gPiArCXJldHVybiAwOwo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMg
-aW50IGVpYzc3MDBfcGNpZV9wYXJzZV9wb3J0cyhzdHJ1Y3QgZWljNzcwMF9wY2llICpwY2llKQo+
-ID4gK3sKPiA+ICsJc3RydWN0IGVpYzc3MDBfcGNpZV9wb3J0ICpwb3J0LCAqdG1wOwo+ID4gKwlz
-dHJ1Y3QgZGV2aWNlICpkZXYgPSBwY2llLT5wY2kuZGV2Owo+ID4gKwlpbnQgcmV0Owo+ID4gKwo+
-ID4gKwlmb3JfZWFjaF9hdmFpbGFibGVfY2hpbGRfb2Zfbm9kZV9zY29wZWQoZGV2LT5vZl9ub2Rl
-LCBvZl9wb3J0KSB7Cj4gPiArCQlyZXQgPSBlaWM3NzAwX3BjaWVfcGFyc2VfcG9ydChwY2llLCBv
-Zl9wb3J0KTsKPiA+ICsJCWlmIChyZXQpCj4gPiArCQkJZ290byBlcnJfcG9ydDsKPiA+ICsJfQo+
-ID4gKwo+ID4gKwlyZXR1cm4gMDsKPiA+ICsKPiA+ICtlcnJfcG9ydDoKPiA+ICsJbGlzdF9mb3Jf
-ZWFjaF9lbnRyeV9zYWZlKHBvcnQsIHRtcCwgJnBjaWUtPnBvcnRzLCBsaXN0KQo+ID4gKwkJbGlz
-dF9kZWwoJnBvcnQtPmxpc3QpOwo+IAo+IElzIHNvbWUga2luZCBvZiByZXNldF9jb250cm9sX3B1
-dCgpIG5lZWRlZCB0byBtYXRjaCB0aGUKPiBvZl9yZXNldF9jb250cm9sX2dldF9leGNsdXNpdmUo
-KSBhYm92ZT8KCkkgb25seSBjb25zaWRlcmVkIHRoYXQgdGhlcmUgaXMgY3VycmVudGx5IG9ubHkg
-b25lIFJvb3QgUG9ydC4gTWF5YmUgCnRoZXJlIHdpbGwgYmUgbXVsdGlwbGUgUm9vdCBQb3J0cyBp
-biB0aGUgZnV0dXJlLgoKUGVyaGFwcyB0aGlzIGlzIHRoZSBiZXN0OgpsaXN0X2Zvcl9lYWNoX2Vu
-dHJ5X3NhZmUocG9ydCwgdG1wLCAmcGNpZS0+cG9ydHMsIGxpc3QpewogICAgICAgIGlmICghSVNf
-RVJSX09SX05VTEwocG9ydC0+cGVyc3QpKQogICAgICAgICAgICByZXNldF9jb250cm9sX3B1dChw
-b3J0LT5wZXJzdCk7CiAgICAgICAgbGlzdF9kZWwoJnBvcnQtPmxpc3QpOwp9Cgo+IAo+ID4gK3N0
-YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGVpYzc3MDBfcGNpZV9kcml2ZXIgPSB7Cj4gPiAr
-CS5wcm9iZSA9IGVpYzc3MDBfcGNpZV9wcm9iZSwKPiAKPiBUaGlzIGRyaXZlciBpcyB0cmlzdGF0
-ZSBidXQgaGFzIG5vIC5yZW1vdmUoKSBjYWxsYmFjay4gIFNlZW1zIGxpa2UgaXQKPiBzaG91bGQg
-aGF2ZSBvbmU/CgpJbiB2MiBwYXRjaCwgSSByZWZlcnJlZCB0byBNYW5pJ3MgY29tbWVudHMgYW5k
-IHJlbW92ZWQgdGhlIC5yZW1vdmUoKQpjYWxsYmFjaywgYXMgZm9sbG93czoKIlNpbmNlIHRoaXMg
-Y29udHJvbGxlciBpbXBsZW1lbnRzIGlycWNoaXAgdXNpbmcgdGhlIERXQyBjb3JlIGRyaXZlciwK
-aXQgaXMgbm90IHNhZmUgdG8gcmVtb3ZlIGl0IGR1cmluZyBydW50aW1lLiIKaHR0cHM6Ly9sb3Jl
-Lmtlcm5lbC5vcmcvbGludXgtcGNpL2pnaG96dXJqcXlobXR1bml2b3RpdGdzNjdoNnhvNHNiNDZx
-Y3ljbmJid3l2amNtNGVrQHZncTc1b2xhem1vaS8KCkluIGFkZGl0aW9uLCByZW1vdmUgLnJlbW92
-ZSgpIGNhbGxiYWNrLCBiZWNhdXNlIHRoaXMgZHJpdmVyIGhhcyBiZWVuIAptb2RpZmllZCB0byBi
-dWlsdGluX3BsYXRmb3JtX2RyaXZlciBhbmQgZG9lcyBub3Qgc3VwcG9ydCBIb3RQbHVnLCAKdGhl
-cmVmb3JlLCB0aGUgLnJlbW92ZSgpIGNhbGxiYWNrIGlzIG5vdCBuZWVkZWQuIERvIHlvdSBoYXZl
-IGFueQpiZXR0ZXIgc3VnZ2VzdGlvbnM/CgpLaW5kIHJlZ2FyZHMsClNlbmNodWFuIFpoYW5nCgo+
-IAo+ID4gKwkuZHJpdmVyID0gewo+ID4gKwkJLm5hbWUgPSAiZWljNzcwMC1wY2llIiwKPiA+ICsJ
-CS5vZl9tYXRjaF90YWJsZSA9IGVpYzc3MDBfcGNpZV9vZl9tYXRjaCwKPiA+ICsJCS5zdXBwcmVz
-c19iaW5kX2F0dHJzID0gdHJ1ZSwKPiA+ICsJCS5wbSA9ICZlaWM3NzAwX3BjaWVfcG0sCj4gPiAr
-CQkucHJvYmVfdHlwZSA9IFBST0JFX1BSRUZFUl9BU1lOQ0hST05PVVMsCj4gPiArCX0sCj4gPiAr
-fTsKPiA+ICtidWlsdGluX3BsYXRmb3JtX2RyaXZlcihlaWM3NzAwX3BjaWVfZHJpdmVyKTsK
+On Wed, Oct 15, 2025 at 11:04:17AM +0800, Richard Zhu wrote:
+> Clock Request is a reference clock request signal as defined by the PCIe
+> Mini CEM and M.2 specification; Also used by L1 PM Substates. But it's
+> an optional signal added in PCIe CEM r4.0, sec 2. The CLKREQ# support is
+> relied on the exact hardware board and device designs.
+> 
+> Add supports-clkreq property to i.MX PCIe M.2 port since the CLKREQ#
+> signal would be driven active low on this M.2 connector by the add-in
+> card to requtest reference clock. And, the host bridge driver can enable
+> the ASPM L1 PM Substates support if this property present.
+> 
+> To support L1 PM Substates, add a callback to clear CLKREQ# override on
+> the boards that support CLKREQ# in the hardware designs.
+> 
+> Main changes in v6:
+> - Rebase to v6.18-rc1.
+> - Add the dts changes into the v6 version patch-set.
+> - Fix the i.MX95 refclk enable that was missed in the v5 series.
+> - Make i.MX95 refclk enable parallel to the others.
+> - Describe the potential CLKREQ# problem on i.MX95 19x19 EVK second
+>   slot in the commit, and emphasis the CLKREQ# issue is caused by the
+>   board and device hardware designs.
+> 
+> Main changes in v5:
+> - New create imx8mm_pcie_clkreq_override() and keep the original
+>   enable_ref_clk callback function.
+> 
+> Main changes in v4:
+> - To align the function name when add the CLKREQ# override clear, rename
+> imx8mm_pcie_enable_ref_clk(), clean up codes refer to Mani' suggestions.
+> 
+> Main changes in v3:
+> - Rebase to v6.17-rc1.
+> - Update the commit message refer to Bjorn's suggestions.
+> 
+> Main changes in v2:
+> - Update the commit message, and collect the reviewed-by tag.
+> 
+> [PATCH v6 01/11] arm64: dts: imx95-15x15-evk: Add supports-clkreq
+> [PATCH v6 02/11] arm64: dts: imx95-19x19-evk: Add supports-clkreq
+> [PATCH v6 03/11] arm64: dts: imx8mm-evk: Add supports-clkreq property
+> [PATCH v6 04/11] arm64: dts: imx8mp-evk: Add supports-clkreq property
+> [PATCH v6 05/11] arm64: dts: imx8mq-evk: Add supports-clkreq property
+> [PATCH v6 06/11] arm64: dts: imx8qm-mek: Add supports-clkreq property
+> [PATCH v6 07/11] arm64: dts: imx8qxp-mek: Add supports-clkreq
+> [PATCH v6 08/11] PCI: dwc: Invoke post_init in dw_pcie_resume_noirq()
+> [PATCH v6 09/11] PCI: imx6: Add a new imx8mm_pcie_clkreq_override()
+> [PATCH v6 10/11] PCI: imx6: Add CLKREQ# override to enable REFCLK for
+> [PATCH v6 11/11] PCI: imx6: Add a callback to clear CLKREQ# override
+
+Squashed patch 9 with 11 and applied to controller/dwc-imx6, thanks!
+
+- Mani
+
+> 
+> arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi     |  1 +
+> arch/arm64/boot/dts/freescale/imx8mp-evk.dts      |  1 +
+> arch/arm64/boot/dts/freescale/imx8mq-evk.dts      |  2 ++
+> arch/arm64/boot/dts/freescale/imx8qm-mek.dts      |  1 +
+> arch/arm64/boot/dts/freescale/imx8qxp-mek.dts     |  1 +
+> arch/arm64/boot/dts/freescale/imx95-15x15-evk.dts |  1 +
+> arch/arm64/boot/dts/freescale/imx95-19x19-evk.dts |  1 +
+> drivers/pci/controller/dwc/pci-imx6.c             | 50 +++++++++++++++++++++++++++++++++++++++++++++++++-
+> drivers/pci/controller/dwc/pcie-designware-host.c |  3 +++
+> 9 files changed, 60 insertions(+), 1 deletion(-)
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
