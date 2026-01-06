@@ -1,315 +1,247 @@
-Return-Path: <linux-pci+bounces-44100-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44101-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD42FCF8560
-	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 13:36:08 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1AA2CF8623
+	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 13:48:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 8468530499F3
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 12:35:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D622D306F247
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 12:39:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBBA632D0E9;
-	Tue,  6 Jan 2026 12:35:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E0413FCC;
+	Tue,  6 Jan 2026 12:39:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nEMHp2w/";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="f8j/8iDy"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="o5fnHJ+e"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11021128.outbound.protection.outlook.com [40.107.74.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3712832E14F
-	for <linux-pci@vger.kernel.org>; Tue,  6 Jan 2026 12:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767702920; cv=none; b=nnx53HySn4R4Fj0mHNRzbuI4xmU2HQW9rFXWK7GZWKKWmF3ClwRblhYdO9BwhDNXipcttjeZgO6gJUhuRgild3S2A6xcwbi4GfvKs/kg7yCCAuz2yPAnYmGGGS4CWHf0fn4g/SGTamkSxG9rTYHvAolSbwP7XYjRI/OW88gjdyk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767702920; c=relaxed/simple;
-	bh=lpREkdKrYB0i9xOdYVwf95ZKijvVrCKLc5MhFmp5Mds=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qGy3kJYQTycV13BT23SVE2JQiHIwf2HRgfl5+yibkQTz/7gi8s08go9oD5634rlOiQF90WrESkK409AuWWXDsAq9viXYv4lBZNVUTul6TpUE0EWVm/VVG4a40Jir3n7Yt/LWHKIcjcRSVX1ANFqrvpbSmUNdEZPPz73t1ckvVHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nEMHp2w/; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=f8j/8iDy; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 606AdEjZ3214062
-	for <linux-pci@vger.kernel.org>; Tue, 6 Jan 2026 12:35:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	eXweGIGQP+389eatYl/A0e37pEINDI7V0gdpqnXDHQE=; b=nEMHp2w/W++28fiy
-	jAg5IGg4HtnzAmqyQIvnIo5ghdnxF68byLUXy6xhgX5lw6wtNoHTMWbqW0QCfoAw
-	5jXvWXCTZjlfU+a3UHu9Stu8YCVAWbtaEq2kutC85Qj5nQezANKkjiOt8V/ruOS5
-	4M8aGl5l7//V27tSOsi/4xv63nL5rWyIrPHLZ1X6YhamtAksgVq984crmmPfmIjP
-	SOPZ9+WXmvtSclf29R8vKeGfMgqu8IhcUQJSrmyNMlu45pWohuDjDkgQkR7x3BNa
-	4ABgPKUROh+0tIqTJ0gcvlNug7kRvSQSsldiBErcnaXf7YMms13AUel0aytzHSOb
-	hrcPfA==
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bgpnda1qy-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Tue, 06 Jan 2026 12:35:18 +0000 (GMT)
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-7f21951c317so834659b3a.2
-        for <linux-pci@vger.kernel.org>; Tue, 06 Jan 2026 04:35:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1767702917; x=1768307717; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eXweGIGQP+389eatYl/A0e37pEINDI7V0gdpqnXDHQE=;
-        b=f8j/8iDy3UvbT8kv6CydL8kctZ3aCkoyhnIcvXlGPqfMIzW7rUbP8s8prYvxPe+uN2
-         Jb+Smh9lKwjEwVCOsROS0GG77bvOp3foWbH1FG6Ty9XcyBBSTk1heltJS/yHWTXW5hNp
-         tF3iYh+pb7hVkDWFkk/3H3qO7uKBFnxckZxq5YYUa8UMx/nMinwBUEAOQZ6NcRA4stT5
-         iBXT0ox720nqV/C/sv9yK+KZV1L3XQvS3GDhE5QTirz+Oa8xYWyhB5TrClK9O0lpSS0I
-         pj8y0k1Itc7O1oXs6zu5INzlvVMigGkm3OCLXLRw1l4UotQjG7x2HTdM8M8G02JxUMZP
-         KyHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767702917; x=1768307717;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eXweGIGQP+389eatYl/A0e37pEINDI7V0gdpqnXDHQE=;
-        b=mU2NjAoahVMfmfJ+wBlr5BJi8zhyf3WeCMi/nzEgoR9aVfrKBCPgatpi8qJa4Gio2D
-         Xju8yL6xaxroGYT10A7lQmI9UvWppoS20OnJdRhub98nSik1Gty2LlReVMcgG3ZU394+
-         M7NBvaj98n7FcBXEfI4fB31JgRSanBWJfB06yi9Ivqk/NRAPVdIa4y/Lr849p4Q5J9bi
-         wwKBkSpZwR+oa+h5xNyL34nnPAdvz1kVemXNDiSWOeiO07Cdm3z36vn/kx59MSNZ21Np
-         3ICJ+/mc1X+FBg7H/P1T/UbSEkHxRCk7bb6iOba1X7E8b7kp5cc3QCigcTnkTDMcj9t/
-         Leeg==
-X-Forwarded-Encrypted: i=1; AJvYcCXTEPUQAytHf3pQQ9lp4Vi/axaUUizwAyNizqQEIpgVnqkufkcBTjLa3t0B8MX66tCYtDGKrUhzR0U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylwW/FR24CUDb1e9XbMnQFl5w3ogc0syDxVbgIMClCkr6f1bfB
-	zH8veJ7lw7cks4PKAJLC+aEe5MiNfwhCYgUEaOar/2vHy/P2NjacvM1f3HBg7vCyq53Z73JNSms
-	9wiHtR7IVPIoIzjGurFMS+9mXBGj0nIDp8s5D67PTdcFod69pPHR39mFpbPXRplU=
-X-Gm-Gg: AY/fxX7tJE1dS9FC3YNtSfUqRQdKvjN6laytk7J+4FTyyQW44EAwBDggY1ZrxX23sKY
-	j8WpNfxprIoMuTdQGxfCKaN9NKFnhuoFIVBN0lFBTlPwQdhlBMJAWOELHJYAuqvADQ88/Jr33g2
-	q3GjKe/EGe+iajnKg6wOlZ7EjBexhWvxiuxp3V9b5fPmn84tgrFPV4YyHAOf2Vz4gOAdcYvzcL8
-	zhqFrfAlePKDtnfCPN4wTybSykiBD9hCyM2a14c966jqYHlbgHhYMWrHo831FMXIgmcr6qV1SLD
-	8B8bzSTt+PRbxiaDbcLmwsB90aIcWMFFmj9cUplBWzAwTgDQqV52r2AnJfd1480vU31a2epkBcI
-	LA/mInOVhH/qXvcnmX4UCL/4SxxxMEb2BKkxRlwiLKqQ=
-X-Received: by 2002:a05:6a00:4295:b0:781:1f28:eadd with SMTP id d2e1a72fcca58-81880b6c513mr2696962b3a.20.1767702915952;
-        Tue, 06 Jan 2026 04:35:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHge5WmZqCBf8j+3Ngw9xkT9W1WtOx50n7DYYhwZyH4ZZwl7y63KFgminhgHunMQGCuKBeUeg==
-X-Received: by 2002:a05:6a00:4295:b0:781:1f28:eadd with SMTP id d2e1a72fcca58-81880b6c513mr2696923b3a.20.1767702915396;
-        Tue, 06 Jan 2026 04:35:15 -0800 (PST)
-Received: from hu-msarkar-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-819c59e83bcsm2161583b3a.56.2026.01.06.04.35.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 04:35:15 -0800 (PST)
-From: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
-Date: Tue, 06 Jan 2026 18:04:46 +0530
-Subject: [PATCH v5 2/2] PCI: qcom-ep: Add support for firmware-managed PCIe
- Endpoint
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72277256D;
+	Tue,  6 Jan 2026 12:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.128
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767703159; cv=fail; b=BMW3wkyWPxe+VGGS8HIZ0KbFUcHUGs85zJuq25nsgbqclSfc4otW84/WEuLdTNYOb20yHumHBbq83lf9INY54rwU1lyOuGZrdPUghnyze78uYvs0HLQQszL+liXMhu7/uoFvhFt92eBW4Mnzch/BcsVLPb1kX2EJvzltPjFqkHs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767703159; c=relaxed/simple;
+	bh=ou/fuZhYlfKnbCsvDz0drY+pcOkT4bn7HoMsots20SQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=tUNeXX+uUurf/4P6INqf+pDbII3daIH6Zd8mctlsBo/mZYFEbUepMbll9gBtT2leATWG1sRQtZTKZnpOlrSAOa2KoLGRD4sT5AarL8bjIcYp/59bmCtqEZ3RbAcOqHBiFMHGB3eeZwDpDrBy4QlpeMrI5ztHxjSkGh8npbZ9D6E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=o5fnHJ+e; arc=fail smtp.client-ip=40.107.74.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HJjrMd3/QgCNUvrFgPU8XZ8xbNeWYUZwxPgJ9C9T7wn427JobaW7v8z/UzQbQe/tcFvCQJm4WToslkIapmqULnfr2mSS3Cjy1iDbB7qkmqlPd2pmpR2OiNPy0Tla5cvBFhfPMx1dmbWVoxB77LVdwdLDciL3ReIX3RDdZlA+SQGtW5dOdBz9WioE4h3P8OPjnvwleIJxqSjem1dbvdFrYND3rvM0R/PpKvVd49acHJyA/l6XDCp4umALNiABt5Ixjsc/nrcjIfCatu8XuHT/WS69zqPYRMKTMUnGRW3JCclG0+tAiTPbCqdIhZfhxjRLGBKdFV0csZrpvk1Uhl63dQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UZRoH6oRumoDVEDp3C0cA0am28Km5cqvUZZv4RHb8XE=;
+ b=B5lWtNrd0k+5YX6TWAqbRq7wYgBVkxk/J1glB6niV7V0rOQ5ni5oerTbWje7wXxSXzWcj7hG82dh/AjasTM/QUa0qBywXvBiwA5oJ7r3b0veuCZIPO6mH6K1VLrjludCcHESU06qYZRNKkBFa+8010XNwH7sDsGddj3/5IAuoZ1k5YLfhqf6bXzV8c76vYRgOacH7R4IGriaraOfOCFoRgWI1oeeSLwi/AzvHCjz6y2lQ2RfYf6zfJKId28HyejaPUHij/OhXBLvNW+cSIKIhQDtbtx8r1tM993hkr+x44j/w4DpyUrW4bjrMKA7Db89WO+dPJCuG8JdDYE70jw5kQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
+ header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UZRoH6oRumoDVEDp3C0cA0am28Km5cqvUZZv4RHb8XE=;
+ b=o5fnHJ+exoyN4ClHHdm5wl7iIOVuOd+q6vv041VAfOHAUwqp8Vr5LyZkYxw9T5bRwtKAh95ZFcA/p2W4KhMmPNORdf/N4q2CiaPdRxZChytgMD0HKf7cjSdlifca34ndHRAb8oKLdQofe15Dg9kBG4TXDjosAdiiT5ZRmWmGxYE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=valinux.co.jp;
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
+ by OS3P286MB1831.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:171::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.2; Tue, 6 Jan
+ 2026 12:39:15 +0000
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.20.9478.005; Tue, 6 Jan 2026
+ 12:39:15 +0000
+Date: Tue, 6 Jan 2026 21:39:14 +0900
+From: Koichiro Den <den@valinux.co.jp>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, Frank.Li@nxp.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] PCI: endpoint: BAR subrange mapping support
+Message-ID: <6dbjjx3q543e3nllxhl66aczujifikf6g2hp4kjjg6ojoz4r47@z5uvbjqlrxnb>
+References: <20260105080214.1254325-1-den@valinux.co.jp>
+ <aVvtAkEcg6Qg7K3C@ryzen>
+ <gb3mr7onokhufasxaeoxiqft22incwxxlf43m6jcrhrem3477j@63oi3ztvbqku>
+ <o6swnuf4aplcyd5jpgbyhslxcxuhzt4j6a4oq773eujva6ynqj@wmkorp4mavul>
+ <aVzS3_Vx8hXZte1Z@fedora>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aVzS3_Vx8hXZte1Z@fedora>
+X-ClientProxiedBy: TY4P301CA0086.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:405:37a::7) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260106-firmware_managed_ep-v5-2-1933432127ec@oss.qualcomm.com>
-References: <20260106-firmware_managed_ep-v5-0-1933432127ec@oss.qualcomm.com>
-In-Reply-To: <20260106-firmware_managed_ep-v5-0-1933432127ec@oss.qualcomm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Bjorn Andersson <andersson@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        quic_vbadigan@quicinc.com, quic_shazhuss@quicinc.com,
-        konrad.dybcio@oss.qualcomm.com,
-        Mrinmay sarkar <mrinmay.sarkar@oss.qualcomm.com>,
-        Rama Krishna <quic_ramkri@quicinc.com>,
-        Ayiluri Naga Rashmi <quic_nayiluri@quicinc.com>,
-        Nitesh Gupta <quic_nitegupt@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1767702896; l=5344;
- i=mrinmay.sarkar@oss.qualcomm.com; s=20250423; h=from:subject:message-id;
- bh=lpREkdKrYB0i9xOdYVwf95ZKijvVrCKLc5MhFmp5Mds=;
- b=/huxLK/6VSsK0Qf6AxudDDmeD+PNnbOej5xqjM/S4amSM+KIbtPLCg8h1kfDJutFmYO4VJAvv
- TnhVRiNI4l6DLI8A2ZIwZuAhx7PZ9q2e5z57FVhjR0URlbxZVUbk5Wr
-X-Developer-Key: i=mrinmay.sarkar@oss.qualcomm.com; a=ed25519;
- pk=5D8s0BEkJAotPyAnJ6/qmJBFhCjti/zUi2OMYoferv4=
-X-Proofpoint-ORIG-GUID: rVcoqBZ-SNcXEeYqqaj5b7p2oIG7dLte
-X-Proofpoint-GUID: rVcoqBZ-SNcXEeYqqaj5b7p2oIG7dLte
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA2MDEwOCBTYWx0ZWRfX72uoslvXq8rz
- wItdKYkRgf3WZ+zuiYxNe0+x7vEwT0+vo771hUTIvgWYF5HHRSJrlJPkATNn6Zd4JuKt9/IUejD
- 0KLZSJ2C6EJ7oVJPM68OSJeW2Sp/sKG87Nt8g5P6oF0oIhSU5mTDSWTxuG4mf2wbipm4dwl/1Xg
- f8xuTVNKoWELT2WjddSZKSqE5n4mvrK66nI9NyhrL6kXrxW7/iAlfYl3CeehtYU0s6jTe8Z+kbD
- 4nNfIl6MLSDUO2WdZBGJF9trtgFjLT9ICpE1l2E+V78w3lW52m97uO3twTR7VssgMimn/DFGHuX
- zhSSvrEOPkhZ7J8GVecSgTYtu/dXcdNxD9v2uT3ylC5q1tjaxCZ4F1vxtr5J2FwrbyI7MUVwpzw
- MWDs2iv53fp6yyxxgqWeU8veymDAQpq7DZ4nIbHXIFmLAfHhGHi1sIodxMvoWNnlHu8aD4cemOW
- MZktgKdnGcvCUbxqyRA==
-X-Authority-Analysis: v=2.4 cv=Jpz8bc4C c=1 sm=1 tr=0 ts=695d0186 cx=c_pps
- a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
- a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=2tdM-IJ1x2Ue4swjlzoA:9
- a=QEXdDO2ut3YA:10 a=OpyuDcXvxspvyRM73sMx:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-06_01,2026-01-06_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 malwarescore=0 bulkscore=0 clxscore=1015 adultscore=0
- phishscore=0 suspectscore=0 impostorscore=0 spamscore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2601060108
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|OS3P286MB1831:EE_
+X-MS-Office365-Filtering-Correlation-Id: 11f5eb14-9476-4cea-6908-08de4d209a1e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|10070799003|7416014|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/5JxJ+oRZvAvy+0JxRzlFST28GDjInhR5Ru9op//BIE3ZEt8z8YwaQm40YUb?=
+ =?us-ascii?Q?ka5TxF3KwP9zFWfMIgBDqMYSmJQIqO4YZ3D95/SBFDanRp6lKpj3z+L27SXy?=
+ =?us-ascii?Q?Z7q1Jlrpan4Cs55rA9Cow5HrkzruoFWltxHGBAPLorcBFJyKw4g9F42V6VZH?=
+ =?us-ascii?Q?Cd61edULvia5EjcOgDEEpD89MYTn84x6pwiz8HN5EK15rYibw13janp/9oWa?=
+ =?us-ascii?Q?tOLeeF7/dQt7Q5exrnw54xzKHhDXhl69EVqBud4osyyBzWzg1onZmH6b57Dz?=
+ =?us-ascii?Q?pQPP6VIWbD+BGcyGteEX+E3WyjqRJ4JMcd2XB/E2lJNIBbPpJTjAN9purGQf?=
+ =?us-ascii?Q?3HXwhUzc44qvwn0wZPT18JqQqlv/pfC2eNd/vg5acPaa+mbXNlw9HWHkIu+a?=
+ =?us-ascii?Q?MduArSyRD8rOo9HQ4YOqUNvWXNsqewQB6XZ7BelsMzUJ6TyfTpw9ikrgTcql?=
+ =?us-ascii?Q?KrtAp3of5e/MgAb1UmSF27aHp7ZzRdw+EpXNROjNAf0i4bWmUL8lEkTa6D7+?=
+ =?us-ascii?Q?ojsuj/CSK1d+DQKo4WeiWe+xb8oMNn4vNqOKJXcF0U22OB3eG+IP/rAftPp2?=
+ =?us-ascii?Q?2H/GolG+uSC+j8KS9stQ5Cc8JcVgwrAXZGsBZrx6ug9SvNz9GkcBhvN+fUCj?=
+ =?us-ascii?Q?2s/7pgDRSYcXJ75YfWCMeWncnCJgzNyIGJaF0t2qqgPYHrIi7h/1abIJ0RoJ?=
+ =?us-ascii?Q?DsNPdks6Ze95S0TPTlxnpblhQ02LZCXmCIkQzwHh1nbowsNbSpEd2W0snzkV?=
+ =?us-ascii?Q?+gkxIFqRQLj04zdRBX8i7nlDWM5exETmomYk2zyKvZX8ulvq/G7UNWiVmT5O?=
+ =?us-ascii?Q?cs8k5yWKEsNZWZt26aoriKjLtUE9wIGhRiPhKiXqYJiSyM7R6GUV4sDGyEJI?=
+ =?us-ascii?Q?w28lhS7nh/L6MDYCVWNi9KMUtJU9YrKZYbCIew79J+M2GRdGustwdiMn0mSF?=
+ =?us-ascii?Q?4XGA7sZ7ynGdzhIoA+cnrY8y7lgbbi+f5VrbhaPuSNbHPxYF44hWvcJK9coX?=
+ =?us-ascii?Q?IVfR6OUwWGwwZHwJ1/6fUCuFtmTWWR25bHh1aBXQWWYd6u2ul7av4BbFEDWU?=
+ =?us-ascii?Q?keVcvhvbjd1yddP3gtdVIVQu/i6fMSafLj81rRZ/yxNnBLSbltBWXBH4ZClS?=
+ =?us-ascii?Q?hf1mYwQw/CSP5ZHcQPclYO+eREEDo/t/u9xY5hG7mA7I//hxaYf/fIYpqqLA?=
+ =?us-ascii?Q?3RnmXm5sk74XFHGxvMt2Fzet+RysF1VOtEIZatpo3IRmEWl4Fk1xabAi0ZtL?=
+ =?us-ascii?Q?90Tkpx+oBDOaZol9HvoshITJSqGkGpKikDNP5sUpZKHVkEyHh1IFYNo1t6EF?=
+ =?us-ascii?Q?Uea4BioF8JkvV5pq9/+IzMzI0qjyoHRX2slAMoizaBvIBJx9S8dUCTCIg7O8?=
+ =?us-ascii?Q?PypedGteP+zoq5xfzbCCqc3jv5Z1mbAKRSqfAFMh4WyqKmRnOKPjGdpTCxy6?=
+ =?us-ascii?Q?zPMo+rVgZtYtpREQyoT183k8hB+Q1kh5pPH78vCjUUWMexfe1tgu7w=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(10070799003)(7416014)(13003099007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?LRnXSCofhwboRJvgFxqJAPH6D2aVwCIl1q5M5UR7EF/kiPvdpQU9bqmxwHG1?=
+ =?us-ascii?Q?k91svbePQluACPH0512hdWNtpyFv1m04p9S1FQKXJGgJ31Jamd4mWcib2hhb?=
+ =?us-ascii?Q?e7DzDOhD3q9S8SYVf1+WWHD8Du4yIVMaBunIO0jQg7kx/PW1fAY6xV++0DMo?=
+ =?us-ascii?Q?CVnaL6TQVS4G16TiH11txVWU+n2/yfl7e5Mqvhdmrrh6Oc6eDk66wVoTFnmt?=
+ =?us-ascii?Q?KXK/wRio8WEqeQSdNZVs9YB9k914srWrslu6qnAvtQUCm+MaRgXeCwDNIs0l?=
+ =?us-ascii?Q?qRfTjLggfkP2puqc3op8bXHrBWpEIIHPgeHwlQ+zcmFwjJET8PfQvrLBRDrs?=
+ =?us-ascii?Q?1IbkHkbA2ZkLjoBSVx9ptyrbpAguI9FX9GokHULtxPteuB4271UMENNRqhcO?=
+ =?us-ascii?Q?NXyBu4RPZL3b8klmyX9/2pwM3tAaZe1e4JVdsHUBBy0HBHQhiTNto1Xc7/rO?=
+ =?us-ascii?Q?A2aQHhdCxFV9WVgEVEQJkjZF3zlid8gk0mQnsOtcxJMWZHxRcOtwf/C2qrmV?=
+ =?us-ascii?Q?y0CBXON3ZLzt6Xf35S2smds8YJl5BiWjYZ7wnp9t3U5F1ewm395g+NdhRaGi?=
+ =?us-ascii?Q?ObfxYVOcC8XV/VJnWXkZGAe8wbHp40mtfhpf+hGnGbDtqBE9NpTjG+BkTYrK?=
+ =?us-ascii?Q?weNk1mZLuP+Vhg9BosnzLnpkDh0RNes63O7xD8ZxfrmItblEjsf64ChoY+rd?=
+ =?us-ascii?Q?rYzz/dOX0bQJ3iHHne8ENp7kf9A9w4ApTCC+CWgbBVcXxYr5euHairPSsBPn?=
+ =?us-ascii?Q?mId2Kiu/HjwSRS2C3pkyOM1a2CRCsxqmlUxK+/OIImY/VaWDlP4JPf4PWz0o?=
+ =?us-ascii?Q?O7LZXN8dySeaZxKaO38qqKqimHDemHEndWxreQMsutvuMeKqrFVgpUdN45M5?=
+ =?us-ascii?Q?UGd5wmxkAOO2YqD9YysBOTv59WDDQLZbFyMuiLMwwnb/Ow34NiDtH5NyYU6Z?=
+ =?us-ascii?Q?bYTJliD8Hyiv9KidaA+0KR7zYPQTIrvR7us84dSYtuPDa7ZKrchghIiPrz7r?=
+ =?us-ascii?Q?Xt+PBS9k6S7OXgqggvVbgsv3jSFMYi8piDh9BtlLKXc6YXONBBJqk7kgSY+r?=
+ =?us-ascii?Q?y0mHblct8PyxLlHAduX5c8I10Ld1BM4PztCzhBbwmL2RqIYbfAlDVr4XZTEr?=
+ =?us-ascii?Q?dAl96HM9IqzYIc/ki5mNE04Zvy/s1/LDCB2L4KLJgopeKGhEhZW8fLqzVOjk?=
+ =?us-ascii?Q?D8RuzjTGVlSkbQZ7D02mkzpyFegwij5G9Z4hwA88Z5clngdYtfALg1z+L5za?=
+ =?us-ascii?Q?oE7Y4CD3dtWhoIoNQguQNmmIsw/57u9khtYGsKrebx/0BMlPl5qzbsBBzbSs?=
+ =?us-ascii?Q?EikmSplqHSx4PTq0j5nXsFFWfaDSDbkh2hHdlja6k9RGB1oynZWPzSjvv3Yj?=
+ =?us-ascii?Q?HAlJZ9joP2yHNWqgnur9Enc52wz7qXpBe7N7wnawjAdF9knuWvGX2R50anIi?=
+ =?us-ascii?Q?2Fr4bKGgP8g2W0IHuhMlL+Y+JWSqhpfnffVtm1oU2ubRHy1WbOBbFjSimh0/?=
+ =?us-ascii?Q?eoPVK+gm6Cqh+R1ZieeqP/xIKOoJ59xGKvBpgxrKvKlTeUNa4nnlAZzFhJXC?=
+ =?us-ascii?Q?5H9JjLZ/hJmlx+4T3+sfHhGOZ6iO/PsiySRduYRhnKoM547+7YU1eexJ9JVt?=
+ =?us-ascii?Q?w7Uc9e+sPbQK+yFMMrwBWGAD+02FTsRc7EcCFgzWQo1d6u3N4GfQECYwthZd?=
+ =?us-ascii?Q?ve94H/tAKAHIdukK055fZ0qD/8FnXQEq39FpCW3Uf1uZCxIxfOxrjCfIepgZ?=
+ =?us-ascii?Q?H/rsk3wZh6XYsFhWRjhP+H29moUX8k3WxmkvbEaMr5fxIYhPrvxr?=
+X-OriginatorOrg: valinux.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11f5eb14-9476-4cea-6908-08de4d209a1e
+X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2026 12:39:15.3603
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hNG/I75udqSmjSQDQh3zOxUmqtWuySxTcqKv5upKunPAekh/ylGc+JYouiJ0ZbbE2vnUp+vaqCSMyNQAzprlZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3P286MB1831
 
-Some Qualcomm platforms use firmware to manage PCIe resources such as
-clocks, resets, and PHY through the SCMI interface. In these cases,
-the Linux driver should not perform resource enable or disable
-operations directly. Additionally, runtime PM support has been enabled
-to ensure proper power state transitions.
+On Tue, Jan 06, 2026 at 10:16:15AM +0100, Niklas Cassel wrote:
+> On Tue, Jan 06, 2026 at 12:09:24PM +0900, Koichiro Den wrote:
+> > On Tue, Jan 06, 2026 at 10:52:54AM +0900, Koichiro Den wrote:
+> > > On Mon, Jan 05, 2026 at 05:55:30PM +0100, Niklas Cassel wrote:
+> > > > Hello Koichiro,
+> > > > 
+> > > > On Mon, Jan 05, 2026 at 05:02:12PM +0900, Koichiro Den wrote:
+> > > > > This series proposes support for mapping subranges within a PCIe endpoint
+> > > > > BAR and enables controllers to program inbound address translation for
+> > > > > those subranges.
+> > > > > 
+> > > > > The first patch introduces generic BAR subrange mapping support in the
+> > > > > PCI endpoint core. The second patch adds an implementation for the
+> > > > > DesignWare PCIe endpoint controller using Address Match Mode IB iATU.
+> > > > > 
+> > > > > This series is a spin-off from a larger RFC series posted earlier:
+> > > > > https://lore.kernel.org/all/20251217151609.3162665-4-den@valinux.co.jp/
+> > > > > 
+> > > > > Base:
+> > > > >   git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
+> > > > >   branch: controller/dwc
+> > > > >   commit: 68ac85fb42cf ("PCI: dwc: Use cfg0_base as iMSI-RX target address
+> > > > >                          to support 32-bit MSI devices")
+> > > > > 
+> > > > > Thank you for reviewing,
+> > > > > 
+> > > > > Koichiro Den (2):
+> > > > >   PCI: endpoint: Add BAR subrange mapping support
+> > > > >   PCI: dwc: ep: Support BAR subrange inbound mapping via address-match
+> > > > >     iATU
+> > > > 
+> > > > I have nothing against this feature, but the big question here is:
+> > > > where is the user?
+> > > > 
+> > > > Usually, we don't add a new feature without having a single user of said
+> > > > feature.
+> > > > 
+> > > 
+> > > The first user will likely be Remote eDMA-backed NTB transport. An RFC
+> > > series,
+> > > https://lore.kernel.org/all/20251217151609.3162665-4-den@valinux.co.jp/
+> > > referenced in the cover letter relies on Address Match Mode support.
+> > > In that sense, this split series is prerequisite work, and if this gets
+> > > acked, I will post another patch series that utilizes this in the NTB code.
+> > > 
+> > > At least for Renesas R-Car S4, where 64-bit BAR0/BAR2 and 32-bit BAR4 are
+> > > available, exposing the eDMA regsister and LL regions to the host requires
+> > > at least two mappings (one for register and another for a contiguous LL
+> > > memory). Address Match Mode allows a flexible and extensible layout for the
+> > > required regions.
+> > > 
+> > > > 
+> > > > One thing that I would like to see though:
+> > > > stricter verification of the pci_epf_bar_submap array.
+> > > > 
+> > > > For DWC, we know that the minimum size that an iATU can map is stored in:
+> > > > (struct dw_pcie *pci) pci->region_align.
+> > > > 
+> > > > Thus, each element in the pci_epf_bar_submap array has to have a size that
+> > > > is a multiple of pci->region_align.
+> > > > 
+> > > > I don't see that you ever verify this anywhere.
+> > > 
+> > > I missed it, will add the check.
+> > 
+> > My reply above was wrong, the region_align-related validation is already
+> > handled in dw_pcie_prog_inbound_atu(). I don't think we need to duplicate
+> > the same check at (A) (see below) in dw_pcie_ep_ib_atu_addr(), and would
+> > prefer to keep the code simple as possible since this is not a fast path.
+> 
+> The region align check in dw_pcie_prog_inbound_atu() validates that the
+> addresses (pci_addr and parent_bus_addr) are aligned to region_align
+> (min iATU size).
+> 
+> You also need to check that the size of the region mapped is aligned to
+> region_align (min iATU size).
 
-This commit introduces a `firmware_managed` flag in the Endpoint
-configuration structure. When set, the driver skips resource handling
-and uses generic runtime PM calls to let firmware do resource management.
+You're right, thanks for pointing that out.
 
-A new compatible string is added for SA8255P platforms where firmware
-manages resources.
+Koichiro
 
-Signed-off-by: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
----
- drivers/pci/controller/dwc/pcie-qcom-ep.c | 61 +++++++++++++++++++++++++++----
- 1 file changed, 53 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index f1bc0ac81a928b928ab3f8cc7bf82558fc430474..38fcc241032b60e4c93574e4d759596ddf268efa 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -168,11 +168,13 @@ enum qcom_pcie_ep_link_status {
-  * @hdma_support: HDMA support on this SoC
-  * @override_no_snoop: Override NO_SNOOP attribute in TLP to enable cache snooping
-  * @disable_mhi_ram_parity_check: Disable MHI RAM data parity error check
-+ * @firmware_managed: Set if the Endpoint controller is firmware managed
-  */
- struct qcom_pcie_ep_cfg {
- 	bool hdma_support;
- 	bool override_no_snoop;
- 	bool disable_mhi_ram_parity_check;
-+	bool firmware_managed;
- };
- 
- /**
-@@ -377,6 +379,14 @@ static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
- 
- static void qcom_pcie_disable_resources(struct qcom_pcie_ep *pcie_ep)
- {
-+	struct device *dev = pcie_ep->pci.dev;
-+
-+	pm_runtime_put(dev);
-+
-+	/* Skip resource disablement if Endpoint controller is firmware-managed */
-+	if (pcie_ep->cfg && pcie_ep->cfg->firmware_managed)
-+		return;
-+
- 	icc_set_bw(pcie_ep->icc_mem, 0, 0);
- 	phy_power_off(pcie_ep->phy);
- 	phy_exit(pcie_ep->phy);
-@@ -390,12 +400,24 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
- 	u32 val, offset;
- 	int ret;
- 
-+	ret = pm_runtime_resume_and_get(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to enable endpoint device: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Skip resource enablement if Endpoint controller is firmware-managed */
-+	if (pcie_ep->cfg && pcie_ep->cfg->firmware_managed)
-+		goto skip_resources_enable;
-+
- 	ret = qcom_pcie_enable_resources(pcie_ep);
- 	if (ret) {
- 		dev_err(dev, "Failed to enable resources: %d\n", ret);
-+		pm_runtime_put(dev);
- 		return ret;
- 	}
- 
-+skip_resources_enable:
- 	/* Perform cleanup that requires refclk */
- 	pci_epc_deinit_notify(pci->ep.epc);
- 	dw_pcie_ep_cleanup(&pci->ep);
-@@ -630,6 +652,17 @@ static int qcom_pcie_ep_get_resources(struct platform_device *pdev,
- 		return ret;
- 	}
- 
-+	pcie_ep->reset = devm_gpiod_get(dev, "reset", GPIOD_IN);
-+	if (IS_ERR(pcie_ep->reset))
-+		return PTR_ERR(pcie_ep->reset);
-+
-+	pcie_ep->wake = devm_gpiod_get_optional(dev, "wake", GPIOD_OUT_LOW);
-+	if (IS_ERR(pcie_ep->wake))
-+		return PTR_ERR(pcie_ep->wake);
-+
-+	if (pcie_ep->cfg && pcie_ep->cfg->firmware_managed)
-+		return 0;
-+
- 	pcie_ep->num_clks = devm_clk_bulk_get_all(dev, &pcie_ep->clks);
- 	if (pcie_ep->num_clks < 0) {
- 		dev_err(dev, "Failed to get clocks\n");
-@@ -640,14 +673,6 @@ static int qcom_pcie_ep_get_resources(struct platform_device *pdev,
- 	if (IS_ERR(pcie_ep->core_reset))
- 		return PTR_ERR(pcie_ep->core_reset);
- 
--	pcie_ep->reset = devm_gpiod_get(dev, "reset", GPIOD_IN);
--	if (IS_ERR(pcie_ep->reset))
--		return PTR_ERR(pcie_ep->reset);
--
--	pcie_ep->wake = devm_gpiod_get_optional(dev, "wake", GPIOD_OUT_LOW);
--	if (IS_ERR(pcie_ep->wake))
--		return PTR_ERR(pcie_ep->wake);
--
- 	pcie_ep->phy = devm_phy_optional_get(dev, "pciephy");
- 	if (IS_ERR(pcie_ep->phy))
- 		ret = PTR_ERR(pcie_ep->phy);
-@@ -874,6 +899,12 @@ static int qcom_pcie_ep_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, pcie_ep);
- 
-+	pm_runtime_get_noresume(dev);
-+	pm_runtime_set_active(dev);
-+	ret = devm_pm_runtime_enable(dev);
-+	if (ret)
-+		return ret;
-+
- 	ret = qcom_pcie_ep_get_resources(pdev, pcie_ep);
- 	if (ret)
- 		return ret;
-@@ -894,6 +925,12 @@ static int qcom_pcie_ep_probe(struct platform_device *pdev)
- 		goto err_disable_irqs;
- 	}
- 
-+	ret = pm_runtime_put_sync(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to disable endpoint device: %d\n", ret);
-+		goto err_disable_irqs;
-+	}
-+
- 	pcie_ep->debugfs = debugfs_create_dir(name, NULL);
- 	qcom_pcie_ep_init_debugfs(pcie_ep);
- 
-@@ -930,7 +967,15 @@ static const struct qcom_pcie_ep_cfg cfg_1_34_0 = {
- 	.disable_mhi_ram_parity_check = true,
- };
- 
-+static const struct qcom_pcie_ep_cfg cfg_1_34_0_fw_managed = {
-+	.hdma_support = true,
-+	.override_no_snoop = true,
-+	.disable_mhi_ram_parity_check = true,
-+	.firmware_managed = true,
-+};
-+
- static const struct of_device_id qcom_pcie_ep_match[] = {
-+	{ .compatible = "qcom,sa8255p-pcie-ep", .data = &cfg_1_34_0_fw_managed},
- 	{ .compatible = "qcom,sa8775p-pcie-ep", .data = &cfg_1_34_0},
- 	{ .compatible = "qcom,sdx55-pcie-ep", },
- 	{ .compatible = "qcom,sm8450-pcie-ep", },
-
--- 
-2.25.1
-
+> 
+> 
+> Kind regards,
+> Niklas
 
