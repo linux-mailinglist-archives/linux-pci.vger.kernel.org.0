@@ -1,152 +1,180 @@
-Return-Path: <linux-pci+bounces-44092-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44093-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1FEACF7D24
-	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 11:37:54 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A9CACF7F16
+	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 12:02:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7D72D305A44C
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 10:36:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7AA463155E67
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 10:56:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E945A342518;
-	Tue,  6 Jan 2026 10:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 436043376B0;
+	Tue,  6 Jan 2026 10:56:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cbiYxwmb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XcDKNXev"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B05342505
-	for <linux-pci@vger.kernel.org>; Tue,  6 Jan 2026 10:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072B03314B9;
+	Tue,  6 Jan 2026 10:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767695436; cv=none; b=pYt7OpjHpkGsIQPBrFOWadELgDF7M/MJjkPCwKhfbiMwSsABfwd+iUlcSl2iHKSxrjSRRI0yCig33F+cD3LhXnuFyqjpKNMSRAvW5IJbI7ECcWmWZ0Ry2a+W7iV4gZdVI5npxxP41S87qYjch1tO3qXEMC+wJx8b7DlAn8KyONU=
+	t=1767696960; cv=none; b=rWOzDO+LfDShtHodE9Q27GZqcTs+zpjfkgzRFaHuJ8JIXqFuyXdw1MCYC5DrkzzTX5zP+AQt4q+ytcyyxjlk3SqLKOumx4X/QkN+c8FrZ5MaxGhhVUDGwVv7qTewVc2Q4/AzM0oww/FM+GpRygFAkXl62s2gAnyvtSTc/KOQuYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767695436; c=relaxed/simple;
-	bh=c6JfQkHcrJOT7jlRutHXYm4l0no8Tfkw+iaOPkSh0q8=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=NMeWBOd8JujsjkwCRx9q1ZUUt0fmza3N6e9RmWeXxvq0BeD+fyHCGyZ80s3bHjzi73hsEDqyyZtIztXsqDYxbKcMWOANcBqETiDBy7vFbY4aoMH8xYdu25ymo+ikirIMcdjkJatITmbIkFhBbduBmAeZZTi0iBlbRNjRolj4ssA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cbiYxwmb; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-37bbb36c990so27013721fa.0
-        for <linux-pci@vger.kernel.org>; Tue, 06 Jan 2026 02:30:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767695433; x=1768300233; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=NsJJOzya3cvYihpIwq796R0nHpBIF37n18oyXT0fuvE=;
-        b=cbiYxwmbry3kbDR8UzW0E2MnqrPl5XBsx66NP1XyjPRtX1WHd/bwoDeH9Uik3ok+iZ
-         M35ONFj1wjea+EkkrHAkKofUJBFkEmIi7auSRIvQPnr033Xz7LJryz0n4bL2FxhvObq+
-         w675e7TfpeFwjlDuZAnJMjfXILN3ZPNYwMFsZq1mujB6ncGofcZJkHFK29lhDaccH66N
-         gB/gcSkjt5Q+4cP4hoobrqD8B+UvbQwzdcgwPtfBWFYbq1BIuA11gldjYJRuGZzxSnKP
-         aCXEi8YXFGb9JGLsMbzOeFQlIsR8OlpjMinvhX0ssdh+N24LEgwQbVy1uzPxEfut3Cty
-         Ipmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767695433; x=1768300233;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NsJJOzya3cvYihpIwq796R0nHpBIF37n18oyXT0fuvE=;
-        b=QnirwSw1YqfNEmCP/Ve1GTxvrn+BcvWmpB0A8qnRsy0LrefEcQekO6G4lRqkCLeVBU
-         Ft/SffB6g63jtdHgnFoO5Wt9Sq7J3a/lEb/RjN/ehwF7Yv/pSM9mLbeXrsw9tiNx6mUO
-         +Uw/YsHsfpcB+dDCIZ3H5aX0di0b7m2TehrplViu8QwVSctZ4LqeecsY9E2ZENqcadeL
-         alKWeEcU1Z2B+xv3BANcWcheXAWo9bOydZICC31cjCDq0TPrQh6OfO/ekOQOibprjR9I
-         3B7oP27C/wOLe8z/WAPhRxNeydS+W37KBpgAGs2aC6sYc946XJgvAdf0iaUlWz/pTTSj
-         1k4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUo62RWOHE9EYZYAGQOndSgPRWziKVXK0lE10dt3Q7goVp1tHNhW9GJnMqFL3O6QRuml7zX1fQuQYk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEdSE1apLeei3sCEfMKA6RiduW60OiIH1qqDAc1UfzIXju2XC+
-	t18tPztqxKFxX/gobBjecRIGwBZEGQ60yLeTpsEdbu3/3hB79U+jZp+K
-X-Gm-Gg: AY/fxX4W8Ln+sBVrtMI50pF7XsoS8jltPtmuxxzJDYR/npMvnAhwGMxj10NwxHSUWU4
-	lxqRMtDyWFwjcSbbQBGZbVNpPX1JhpQvngh4fyXn+KyNDSgdJy4lFpwtFHBz4bkY7gOKjQlsSmB
-	Qe+UmQNr+feog2kGgypQoNaB66nqsHe6qjS8kN1d9OLO0nSi/u+2g6nENcX7D9hu12Pu8TvDcGx
-	MTprgVMKGdYeeA+ZgJn9m2KUEjN6AUrnrXnKPqmnKGhwqANlTg7DO8CbR9w/+/UoG3dRomSZJYA
-	nu3TU/3KLn9bRn/7TromNAUXoEqv3tuorNgdTsXnspE/ki7nrXMG8DqidNlPW0b8e8O5xIFjxFD
-	QKubRgbtiP5wJF8SFOQYInqcB2lCXLi0dqWhLKoIKjGRM+Q/ovgVenDCknBtEl5k4jua7vJDQ
-X-Google-Smtp-Source: AGHT+IFmb+80wkKZdKxRHpidfReqxOHlUmLsipFT1rzzTuNx9rKmNHYR/9f9tfCpJuYk6MXE4I4WOw==
-X-Received: by 2002:a05:651c:1148:b0:37b:9361:711d with SMTP id 38308e7fff4ca-382eae68ac5mr6985121fa.8.1767695432846;
-        Tue, 06 Jan 2026 02:30:32 -0800 (PST)
-Received: from razdolb ([77.220.204.220])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-382eb8dadc0sm4315921fa.33.2026.01.06.02.30.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 02:30:32 -0800 (PST)
-References: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
-User-agent: mu4e 1.10.9; emacs 30.2
-From: Mikhail Rudenko <mike.rudenko@gmail.com>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Joel Stanley
- <joel@jms.id.au>, Andrew  Jeffery <andrew@codeconstruct.com.au>, Bjorn
- Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan
-  Sadhasivam
- <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, Neil Armstrong <neil.armstrong@linaro.org>,
- linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew
- Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org,
- linux-gpio@vger.kernel.org, Mikhail Rudenko <mike.rudenko@gmail.com>
-Subject: Re: [PATCH v7 0/7] Add ASPEED PCIe Root Complex support
-Date: Tue, 06 Jan 2026 12:58:40 +0300
-In-reply-to: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
-Message-ID: <875x9fuj7i.fsf@gmail.com>
+	s=arc-20240116; t=1767696960; c=relaxed/simple;
+	bh=ifuhjD9dVO9aJ7A0tSpgghkHXwetyJmijfctFIgwaSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TCEC2Od4Txgj7NXacMZrMLcUXftsJPpJ8GH3CzKb9+6iMGv9KPvr67kzsZ4amIYWT+cLzYp8NjSh10ltbtxvckxV31yET0esdTrwSZrzQUvtOtLQywR3m9voTtroEGblcxWRFS1regda+eVhOEKD+x/hqMlQJsarrbVaZO5wpNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XcDKNXev; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98CD3C116C6;
+	Tue,  6 Jan 2026 10:55:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767696959;
+	bh=ifuhjD9dVO9aJ7A0tSpgghkHXwetyJmijfctFIgwaSQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XcDKNXevXkZg8xqIKBNqcWVx14ybsmAEKhzw4HEBwmq1U1GERhcd9QTkvp0unu5XI
+	 4OtXMxpN3HDf2tPDnnCKq2y497yTXDIj9nwFNlSyK8XyAvBjNdCzBdhXb3UBfaJLYy
+	 bIxZvujpYBeIfSlkKvuvJ0h1jhRL7zX7mfeW2X1kp1T0EdPR4my3C0+VCKtM6gporu
+	 lCxKwiDrmNkz+dxHxkM3gRyY2kx49QXeLHIy/rjFwAN42buU38WLxvWwE2kP3GxLYG
+	 ORkDLiVIxrPfNjLrOHjr2dyBvLgqACPGBYm7yqDNsN2yVOJS+A/6eR7ejJBG6Ztgl+
+	 xoq8axTMuSkUA==
+Date: Tue, 6 Jan 2026 11:55:46 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Sumit Kumar <sumit.kumar@oss.qualcomm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Yue Wang <yue.wang@amlogic.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Greentime Hu <greentime.hu@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Chuanhua Lei <lchuanhua@maxlinear.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Pratyush Anand <pratyush.anand@gmail.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, imx@lists.linux.dev,
+	linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 2/2] PCI: dwc: Add multi-port controller support
+Message-ID: <aVzqMqTUWIuKhgmC@fedora>
+References: <20260105-dt-parser-v1-0-b11c63cb5e2c@oss.qualcomm.com>
+ <20260105-dt-parser-v1-2-b11c63cb5e2c@oss.qualcomm.com>
+ <aVvkmkd5mWPmxeiS@ryzen>
+ <m5ukeugo2lazipljqpubyvm7j3xk2j5o7i2xgdbkkhii57xmyk@lh32qdzjhe4n>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <m5ukeugo2lazipljqpubyvm7j3xk2j5o7i2xgdbkkhii57xmyk@lh32qdzjhe4n>
 
-Hi Jacky,
+On Tue, Jan 06, 2026 at 10:49:19AM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Jan 05, 2026 at 05:19:38PM +0100, Niklas Cassel wrote:
+> > On Mon, Jan 05, 2026 at 05:57:55PM +0530, Sumit Kumar wrote:
+> > > The current DesignWare PCIe RC implementation supports only the controller
+> > > (Host Bridge) node for specifying the Root Port properties in an assumption
+> > > that the underlying platform only supports a single root Port per
+> > > controller instance. This limits support for multi-port controllers where
+> > > different ports may have different lane configurations and speed limits.
+> > > 
+> > > Introduce a separate dw_pcie_port structure to enable multi-port support.
+> > > Each Root Port can have independent lane count, speed limit through pcie@N
+> > > child nodes in device tree. Add dw_pcie_parse_root_ports()
+> > > API to parse these child nodes.
+> > > 
+> > > Equalization presets and link width detection currently use common DBI
+> > > space for all the root ports. Per-port DBI space assignment for these
+> > > features will be added in future.
+> > > 
+> > > Signed-off-by: Sumit Kumar <sumit.kumar@oss.qualcomm.com>
+> > 
+> > Hello Sumit,
+> > 
+> > Is there a reason why you represent this as a list of ports rather than a
+> > simple array?
+> > 
+> > The number of ports is known by parsing the device tree, so it should be
+> > static, no?
+> > 
+> > At least to me, this seem similar to e.g. how a gpio_device has multiple
+> > gpio_descriptors "struct gpio_desc *descs":
+> > https://github.com/torvalds/linux/blob/master/drivers/gpio/gpiolib.h#L68C1-L68C26
+> > 
+> > A list is usually used for something that is dynamic.
+> > I don't think that the number of ports to a PCIe controller will be dynamic.
+> > 
+> > I can see that struct qcom_pcie in pcie-qcom.c has struct list_head ports,
+> > but that does not necessarily mean that we need to have a list of ports in
+> > pcie-designware-host.c. (pcie-qcom could also be modified to have an array
+> > of ports if there is a desire for similar design pattern.)
+> > 
+> 
+> Only reason why I went with lists in pcie-qcom is flexibility. There are useful
+> helpers available for traversing the lists and they seem much more elegant to
+> use rather than manually traversing the array in C.
+> 
+> But to be frank, I don't really care which one is used as there is going to be
+> only a handful of ports at max anyway and there is not much overhead.
 
-On 2025-12-16 at 09:49 +08, Jacky Chou <jacky_chou@aspeedtech.com> wrote:
+Personally, when I see lists, I automatically think of something that is
+dynamic, so using lists for something static just looks a little bit out of
+place IMHO.
 
-> This patch series adds support for the ASPEED PCIe Root Complex,
-> including device tree bindings, pinctrl support, and the PCIe host controller
-> driver. The patches introduce the necessary device tree nodes, pinmux groups,
-> and driver implementation to enable PCIe functionality on ASPEED platforms.
-> Currently, the ASPEED PCIe Root Complex only supports a single port.
->
-> Summary of changes:
-> - Add device tree binding documents for ASPEED PCIe PHY and PCIe RC
-> - Update MAINTAINERS for new bindings and driver
-> - Implement ASPEED PCIe PHY driver
-> - Implement ASPEED PCIe Root Complex host controller driver
->
-> This series has been tested on AST2600/AST2700 platforms and enables PCIe device
-> enumeration and operation.
+Technically, the difference is speed. If we want a specific element, we
+will need to traverse the list. With an array, we can access the element
+directly. However, looking at the current patch, it seems like it never
+looks for a specific port, it always does an operation for all ports.
+So from a speed perspective, it doesn't matter, at least not for now.
 
-First of all, thank you for your efforts in getting this driver
-upstreamed! I am trying to understand whether this driver supports
-PCIe devices that have an I/O port BAR, where CPU access to I/O ports
-is required for proper device operation.
 
-If I understand correctly, this line in the Aspeed 2600 dtsi file
-declares the I/O port range:
+One advantage I can see, instead of doing:
 
-    ranges = <0x01000000 0x0 0x00018000 0x00018000 0x0 0x00008000
++	struct dw_pcie_port *port = list_first_entry(&pci->pp.ports,
++						struct dw_pcie_port, list);
++	return dw_pcie_wait_for_link(pci, port);
 
-During system initialization, the pci_remap_iospace() function in
-arch/arm/mm/ioremap.c maps the physical address range
-0x00018000-0x00020000 to the virtual address PCI_IO_VIRT_BASE
-(0xfee00000). After this mapping, inb() and outb() calls work by
-converting I/O port addresses to virtual addresses starting at
-PCI_IO_VIRT_BASE, then performing reads and writes to those virtual
-addresses.
+for drivers with only one port (most drivers), we could just instead do:
 
-What I don't understand is this: according to the Aspeed 2600
-datasheet, the address range 0x00000000-0x0fffffff (which contains
-0x00018000-0x00020000) is mapped to Firmware SPI Memory. This would
-mean that outb() operations get routed to memory-mapped SPI flash
-instead of PCIe.
++	return dw_pcie_wait_for_link(pci, pci->pp.port);
 
-It seems like there's a missing piece to this puzzle. Could you help
-clarify how this is supposed to work?
+To simply get the first element in the array. No need to sprinkle
+list_first_entry() everywhere in all the drivers if they just have one port.
 
---
+
+For iterating, to avoid manually traversing the array, we could do like
+libata and create a simple macro, e.g. ata_qc_for_each():
+https://github.com/torvalds/linux/blob/v6.19-rc4/drivers/ata/libata-eh.c#L851-L854
+https://github.com/torvalds/linux/blob/v6.19-rc4/include/linux/libata.h#L1657-L1659
+
+And at least personally, I think my brain will parse dw_pcie_port_for_each() { }
+faster than it parses list_for_each_entry(port, &pcie->ports, list) { },
+since it is more unique, but perhaps I am the weird one here :)
+
+
 Kind regards,
-Mikhail Rudenko
+Niklas
 
