@@ -1,116 +1,196 @@
-Return-Path: <linux-pci+bounces-44110-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44111-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA810CF8923
-	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 14:46:31 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 572F9CF9B15
+	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 18:30:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 0E4CA301A1F4
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 13:46:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E10093038F44
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 17:24:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3754C25DB0D;
-	Tue,  6 Jan 2026 13:46:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57706355024;
+	Tue,  6 Jan 2026 17:24:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOWCPHNt"
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="VL4qu+nP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XjH4X3k5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0702B21CC51
-	for <linux-pci@vger.kernel.org>; Tue,  6 Jan 2026 13:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F14D352F8F;
+	Tue,  6 Jan 2026 17:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767707187; cv=none; b=qlSlWSzdsJz7YGHLWlpjCmow7OhXCs9ub1DuRCXdzHJu2n/s2gOKH/RoKdX0BEVEIJcyIcRMmn4hmgomgG3POIqQzJhZn9mfmUMQuPafAZQmVAXYqpZSLIUUxVZv6e4M4xYHs1g5967cYF4NQxnpihqyGEGdU2cELZHXV0hkyRs=
+	t=1767720240; cv=none; b=AaE6tXBaDZgdpdWrgIH5vxtY5Cy7oBBsN3QBE5m8cKtXQoZpTOV+kE8NiYOy2Bd04MTaDfA4gt6aYwrOb9r5Z/shbFlII3Sf04975HkuSdue9/D18fXN/DfS/2vV10J1yNtQ6jpyc3LSb8Ub6M6b7PjxpkTJ5mlNlYOrLyImNsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767707187; c=relaxed/simple;
-	bh=4ejxZJiYyg2u5WcO+ScWWe+JhgLNy6gIpqZLxLyreRs=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WM56Qn4Jek7Zhop2BDnKsJOxapmW8jzAU9IUd1/1nSzo/JSo1ciKtteF7CTgvQOQlreHNT7v+3ljo/6pZ9QpLFd+eYAExIswN+tJ67SZ3KZ9Ehl0fhcTE3mmKpin8FqMO50L9dO/r3XwCISIvnn2IU6zVqFX01baJPkMM1I9k0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOWCPHNt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91D5FC2BC86
-	for <linux-pci@vger.kernel.org>; Tue,  6 Jan 2026 13:46:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767707186;
-	bh=4ejxZJiYyg2u5WcO+ScWWe+JhgLNy6gIpqZLxLyreRs=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=VOWCPHNt563Jx2u2fHCi/b5iM700H2SyDJYdy7T2PGFwLGyV0W/LgDCYcoeLCYooB
-	 Nad66MorxmwLBcgHK7pjpVjNgUPS7zNS0b1fdHV9DZzNJBM93H/cnQvXFzgpIhNCpa
-	 bvAs5+QlKefO8T+FoxmmvfkQUfrCZoz3UhyG2UZsj3ILJAMLGC8I17nkAf5xWqio81
-	 LrclUJZu2jGkWZZz2bEQ2Xxe5pEvTj0b1faEzsIrjIwEHxI4pdnOt3UZzKO3z3/Ivq
-	 59akQTRUPHTlQGo++BydJqB4zLqTwj1dzebgvZdQEastXR9xgOz0W10xbwLXoCADng
-	 U+PxdtFvGtULw==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-37b95f87d4eso9026101fa.1
-        for <linux-pci@vger.kernel.org>; Tue, 06 Jan 2026 05:46:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVMVN8EjwKUF9+Ql1uBwKESx1UcCh1W2aBYsOih3M1Wno5nPUrdcCqC9W9dMwNhl1e6QM5j9kx/oB8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy48DKok6TSwMtdAccPIgnsXLOqYJ2vzFwDhf8XxYjawktFfQz6
-	kB4lr/qIN6W0VnWSRHn/wezEEq7zBW7M1AXajIscaMcbJ1eXHBIwv60Gcyu5w/zHEljv0Fo6GXM
-	hBBdKkwPOI2eIcxahuF7HbiUQhraiVXjWbSF3bwLAfw==
-X-Google-Smtp-Source: AGHT+IGTg7Zmtb3DV06X53avcKWYzhBfEMBVWhmF13m8wxvPkNUtSzr45+bO3/dQ4qEjcnSwabFJlvu5oNqO3I+dhuk=
-X-Received: by 2002:a05:651c:1501:b0:37b:9a39:b885 with SMTP id
- 38308e7fff4ca-382ea9f2e1emr8182411fa.8.1767707185189; Tue, 06 Jan 2026
- 05:46:25 -0800 (PST)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 6 Jan 2026 07:46:23 -0600
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 6 Jan 2026 07:46:23 -0600
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260105-pci-pwrctrl-rework-v4-7-6d41a7a49789@oss.qualcomm.com>
+	s=arc-20240116; t=1767720240; c=relaxed/simple;
+	bh=sjYVjLIpU88N0FNxAeSDQCndO50FyT2WQHOAUo3znrc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K9V40BWTgjdlCknkkZTtCMpyS2bnX6dalHWu6rLdvLPtagkZH8qgS+jba/gFNf0LLAGXFBzTcjf13KEfAIiUpII7Kj3rOM3hVrk9RgFvJLqEOLesmyN7mHOocRWlhLmvdn8SJg9ZE/WToKTPyPtU7iPMwPfYdmG+g6lZlSBB2OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=VL4qu+nP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XjH4X3k5; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
+	by mailfout.stl.internal (Postfix) with ESMTP id 5F54B1D00116;
+	Tue,  6 Jan 2026 12:23:56 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Tue, 06 Jan 2026 12:23:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1767720236;
+	 x=1767806636; bh=TrczBjp9CgnuX9dZjVpLH4g9fi4Rskt0vtReSN19ZN0=; b=
+	VL4qu+nPxoM85+rjJAo2NX0KADvl0y9u+jbRY+ONMiihUShuUBFgpRPqd8Ae+0rc
+	ytcJbOo01z+Dp+q2XNNBGWffEIEbfcVa+nsn6OJWqwo59+sHa63QcP6qV7qx1FSu
+	eaLI0DC9CLyksCITD6K2opUMDxZcrv5RWU+5epyKUiRlezX3ZNxTZe1KwheK4fPY
+	d+plAuRl4q4FYqYk38czra4e3RCuMQj+qWrxu7kzO5y3sT8aAnL7hzWu9b6su6ci
+	DPpkFg6iYGwIrrn/4kXT9zivTkWLPbfdPbbgdDTENxQ+1vjwZptK9rynJbTU/Md8
+	beiZV2KZd61HqIO6rVoPcA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1767720236; x=
+	1767806636; bh=TrczBjp9CgnuX9dZjVpLH4g9fi4Rskt0vtReSN19ZN0=; b=X
+	jH4X3k5+zIE8UxbHHbmBXHSDeJm9wNQM7G2PCzApycjSI9D13M/07wK+96lnE7kn
+	dDvBmEa3ymlbIx3JfRANEZLnJ0xsWlVFvhbVS+R2dwxzvJsY3F70tqm1Tk7jPBpk
+	1vu2x+L3phWlX4P5CB4thJTWteM4Fp+0YKiiDXxPMk2I68W++TWliWq7GN8Vj7kT
+	Rx1qsjNGUgQTW8jhW5mYvne4mew3OL8q7JRlwO6iOuLycus0OrznLdrXmTz6IJOF
+	iqSrpTdbGXWcjp/eG0BVCfMkwt7v0TE7VSKHPxDiCr2Qe3GTd8MDB+S6X9wkRd4d
+	UBuZioNAsOxyrv5XxDPeg==
+X-ME-Sender: <xms:LEVdaTv_EX7YJYF9h1Yu20noOron-xxzrZi5xuQ38bCJYpK4aJpzVQ>
+    <xme:LEVdaSS8fCYjJiwsWZf_8YCrQVv4XLM5XnOkO6BYEpAWtV-Cc4v7nHosDJ7oQ46Eo
+    EXd1rFAnRXxxCCQORkC-M9NaYo_Iw7oPs5AGq19B1frnr97UEk>
+X-ME-Received: <xmr:LEVdaROplcooSQX6yma18_kLRiBg111T4v8Dbiacw7HOX_6S49P52eF1z7E>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddutddtjeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkjghfgggtgfesthhqredttddtjeenucfhrhhomheptehlvgigucgh
+    ihhllhhirghmshhonhcuoegrlhgvgiesshhhrgiisghothdrohhrgheqnecuggftrfgrth
+    htvghrnhepfeehudevjefhgeeileeijefgtddugeetleevvefhvdegueegieevkeekheeg
+    tdeknecuffhomhgrihhnpehprhhogihmohigrdgtohhmnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghlvgigsehshhgriigsohhtrdhorhhg
+    pdhnsggprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehprg
+    htrhhitghkrdifrdgsihgrnhgthhhisehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhi
+    nhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvhhmse
+    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghhvghlghgrrghssehgohho
+    ghhlvgdrtghomh
+X-ME-Proxy: <xmx:LEVdafZcul1rXVUb4WHSoSHxJZ0WfrejLkqnhK41BMT06_EjeicH8Q>
+    <xmx:LEVdaTyskeZ0mbAkQJ9RNwh_FLG3BuiP1DiKso7dKEBJEiCm42gDpg>
+    <xmx:LEVdaSIkQfeus1i1AmGiO8GxsPltEwnMBBaFq3btO7ZdpzbLaZ2R2w>
+    <xmx:LEVdaVqBnTsEiFIK85-zu9AVedSwvuKtO7FyN20yCmI0ZL5CIZ-6QA>
+    <xmx:LEVdaXzJqq6WvOECNNWbWgjRlN7me4zRQGvlOBHpGWpZTbCHLg5jf6st>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 6 Jan 2026 12:23:55 -0500 (EST)
+Date: Tue, 6 Jan 2026 10:23:54 -0700
+From: Alex Williamson <alex@shazbot.org>
+To: Patrick Bianchi <patrick.w.bianchi@gmail.com>
+Cc: linux-pci@vger.kernel.org, kvm@vger.kernel.org, Bjorn Helgaas
+ <bhelgaas@google.com>
+Subject: Re: PCI Quirk - UGreen DXP8800 Plus
+Message-ID: <20260106102354.4b84b4a7.alex@shazbot.org>
+In-Reply-To: <26F3F2EE-37D4-4F73-9A51-EDD662EBEFF2@gmail.com>
+References: <A005FF97-BB8D-49F6-994F-36C4A373FA59@gmail.com>
+	<26F3F2EE-37D4-4F73-9A51-EDD662EBEFF2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260105-pci-pwrctrl-rework-v4-0-6d41a7a49789@oss.qualcomm.com> <20260105-pci-pwrctrl-rework-v4-7-6d41a7a49789@oss.qualcomm.com>
-Date: Tue, 6 Jan 2026 07:46:23 -0600
-X-Gmail-Original-Message-ID: <CAMRc=MfhKfQ2b3Me_CaP0Jgj3+7fOZt9Zz4bqWiC-OvAOfd5gQ@mail.gmail.com>
-X-Gm-Features: AQt7F2rKqujt7guT--eWZOjkmi0PWCmduen5pdhfU1mAygZLU62-LPQAQUAQcto
-Message-ID: <CAMRc=MfhKfQ2b3Me_CaP0Jgj3+7fOZt9Zz4bqWiC-OvAOfd5gQ@mail.gmail.com>
-Subject: Re: [PATCH v4 7/8] PCI: Drop the assert_perst() callback
-To: manivannan.sadhasivam@oss.qualcomm.com
-Cc: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>, 
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@kernel.org>, 
-	Brian Norris <briannorris@chromium.org>, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, Niklas Cassel <cassel@kernel.org>, 
-	Alex Elder <elder@riscstar.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 5 Jan 2026 14:55:47 +0100, Manivannan Sadhasivam via B4 Relay
-<devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> said:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
->
-> Now since all .assert_callback() implementations have been removed from the
-> controller drivers, drop the .assert_callback callback from pci.h.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> ---
->  include/linux/pci.h | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 864775651c6f..3eb8fd975ad9 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -854,7 +854,6 @@ struct pci_ops {
->  	void __iomem *(*map_bus)(struct pci_bus *bus, unsigned int devfn, int where);
->  	int (*read)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val);
->  	int (*write)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val);
-> -	int (*assert_perst)(struct pci_bus *bus, bool assert);
->  };
->
->  /*
->
-> --
-> 2.48.1
->
->
->
+On Mon, 22 Dec 2025 18:37:32 -0500
+Patrick Bianchi <patrick.w.bianchi@gmail.com> wrote:
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> Hello everyone.  At the advice of Bjorn Helgaas, I=E2=80=99m forwarding t=
+his
+> message to all of you.  Hope it=E2=80=99s helpful for future kernel revis=
+ions!
+
+I'm not sure what the proposed change is, but the comment at the end of
+the previous message seems to be leading to the quirk_no_bus_reset
+patch proposed here:
+
+https://forum.proxmox.com/threads/problems-with-pcie-passthrough-with-two-i=
+dentical-devices.149003/#post-803149
+
+IIRC QEMU will favor the bus reset if the device otherwise only
+supports PM reset and interfaces like reset_method only influence the
+reset-function path rather than the bus/slot reset interface available
+through the vfio-pci hot reset ioctl.
+
+Disabling bus reset appears reasonable given the corroboration in the
+thread and the fact that the device still seems to support PM reset.
+
+Do you confirm the quirk you were testing is:
+
+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ASMEDIA, 0x1164, quirk_no_bus_reset);
+
+ie. vendor:device ID 1b21:1164?
+
+Thanks,
+Alex
+
+> Begin forwarded message:
+>=20
+> From: Patrick Bianchi <patrick.w.bianchi@gmail.com>
+> Subject: PCI Quirk - UGreen DXP8800 Plus
+> Date: December 20, 2025 at 9:56:10=E2=80=AFPM EST
+> To: bhelgaas@google.com
+>=20
+> Hello!
+>=20
+> Let me start this off by saying that I=E2=80=99ve never submitted anything
+> like this before and I am not 100% sure I=E2=80=99m even in the right pla=
+ce.
+> I was advised by a member on the Proxmox community forums to submit
+> my findings/request to the PCI subsystem maintainer and they gave me
+> a link to this e-mail.  If I=E2=80=99m in the wrong place, please feel fr=
+ee
+> to redirect me.
+>=20
+> I stumbled upon this thread
+> (https://forum.proxmox.com/threads/problems-with-pcie-passthrough-with-tw=
+o-identical-devices.149003/)
+> when looking for solutions to passing through the SATA controllers in
+> my UGreen DXP8800 Plus NAS to a Proxmox VM.  In post #12 by user
+> =E2=80=9Ccelemine1gig=E2=80=9D they explain that adding a PCI quirk and b=
+uilding a
+> test kernel, which I did - over the course of three days and with a
+> lot of help from Google Gemini!  I=E2=80=99m not very fluent in Linux or =
+this
+> type of thing at all, but I=E2=80=99m also not afraid to try by following
+> some directions.  Thankfully, the proposed solution did work and now
+> both of the NAS=E2=80=99s SATA controllers stay awake and are passed thro=
+ugh
+> to the VM.  I=E2=80=99ve pasted the quirk below.
+>=20
+> I guess the end goal would be to have this added to future kernels so
+> that people with this particular hardware combination don=E2=80=99t run i=
+nto
+> PCI reset problems and don=E2=80=99t have to build their own kernels at e=
+ver
+> update.  Or at least that=E2=80=99s how I understand it from reading thro=
+ugh
+> that thread a few times.
+>=20
+> I hope this was the right procedure for making this request.  Please
+> let me know if there=E2=80=99s anything else you need from me.  Thank you!
+>=20
+> -Patrick Bianchi
+>=20
+>=20
+>=20
+> C:
+> /*
+> * Test patch for Asmedia SATA controller issues with PCI-pass-through
+> * Some Asmedia ASM1164 controllers do not seem to successfully
+> * complete a bus reset.
+> */
+>=20
+
 
