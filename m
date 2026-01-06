@@ -1,127 +1,114 @@
-Return-Path: <linux-pci+bounces-44067-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44068-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 094ECCF6085
-	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 00:51:23 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8A1ECF60ED
+	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 01:08:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0738C3062B37
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jan 2026 23:51:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C426B302D385
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 00:08:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C887B277007;
-	Mon,  5 Jan 2026 23:51:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E67593A1E6D;
+	Tue,  6 Jan 2026 00:08:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e7RX2XPm"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mRZZiiHw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96303221F39;
-	Mon,  5 Jan 2026 23:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC73712B94
+	for <linux-pci@vger.kernel.org>; Tue,  6 Jan 2026 00:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767657079; cv=none; b=B8JsteOu6JYAefULJ7XUP9AiV/gA1PA6kkeDyhHXIFrsQ+7ngYJ1ME3BPTl9birL98TnWQW2YAgS5oO3tJPBDuQ8aVW3Is0Axfny4KvuYT4g1zpwFh0JexiDRNS7OxAoa7Pft5LY0sbIyZAe008gN4Cxms3iLnW1jz0iy/GY0Z8=
+	t=1767658132; cv=none; b=hc4X8lc4k4lNE9lRfTbrb8wROBJOl0WuNw2Dto+wZZlIeo0Iuw84QionP5efLQs3oplMDtG8FzZsRBqgnB2y8bJzzdm72A8TNmUGo3yNWjaotHzl/65m/k0/crMu+2HUr7gvXwxaiWk5hU8l1fnJukn5l5QDRc+MeO6IfWh4GNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767657079; c=relaxed/simple;
-	bh=XJ9eT8cqm1GHWwEU2heyZiCGj7Z4P2U8GtuPK/Nfre8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Goyaat7npe3WuH0d0+udFMQUstcF0uiavthC2IheSIWwVdT9/LOgFsb8F/XbcxS3A8kIdFVQn4sBJ8kvFPRrm26XAOwg6aYFGd9ZMK6/Y3fOlvaq7AZztB2o0A5b1jdwyWcDG7dfWTwumSObk95w0Uai98eK3phKStxvBPEoQpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e7RX2XPm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44F11C116D0;
-	Mon,  5 Jan 2026 23:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767657079;
-	bh=XJ9eT8cqm1GHWwEU2heyZiCGj7Z4P2U8GtuPK/Nfre8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=e7RX2XPmxqj4f6CbWY9AVg6rRnvsskKfFhb5TFLQGzbKfnCPORmxNF5EMQDlV74nF
-	 LPKJzDwWzCHrPhqSflFNsl5R8dfK1JbcHzqhp6sxrDw9FtKRdSgcyt9xW3Kmug0+yx
-	 yu8u3mWSDjkiJapdMyzGc/Ym2wCBYFk9sGZSd80MpeFRGOBYXm8ZsqdwBk5c3kVDmh
-	 8z7cq/Sot4SsQn8Y7RZCymPFgYkYs/bDNWXMgz0PSzcRK3dVS8HvZ8aMaJRR18OCrj
-	 xTMHghvdX94v/geEMdPBPE8ddudD6TdwuCxzEc89LsYjjfHr3fGk6sbUmCHVk6iXbM
-	 kgdmfxZr9A40w==
-Date: Mon, 5 Jan 2026 17:51:17 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	Brian Norris <briannorris@google.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] PCI/PM: Avoid redundant delays on D3hot->D3cold
-Message-ID: <20260105235117.GA336996@bhelgaas>
+	s=arc-20240116; t=1767658132; c=relaxed/simple;
+	bh=a82xTthIcNehQpZ6rOGsATibYTCrmxAP5sovfwtE100=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MAd0c4YNvF6XumnBIVY/A9V/hR5CiCcSc6cIehmQlHIBtk7ZN6UoxUbgq/IYMxab19/jLj2QCtK4fNnewbfm7qI7Z9rtnOioOjrTQS1hq/hUHbQ+ryJx2qY6KgXixXcb1xJRl7pTi4/rO22a3QTNE3dcMRoVsPhtntpbjMb4y6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mRZZiiHw; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <2779d6a2-d734-4334-befc-99f958e1d1ef@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1767658127;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CKXdtHAZxkL4dbdBsFp4H2lxuKZOEn/tbI1ZRL1PIoQ=;
+	b=mRZZiiHwbDumZLLsIkopVpbarNOTKTnJPB8xLZGcwE7Ybhzd8Yt/TGxbLlTz4CDYMyNZz6
+	UqVXDzVNpv53OnCuWigg/lV8KL8ARRDFapjmyvwOOg1VWAINwHs51v1lF4ky9AB4jo1fwD
+	WbLWxgufYJ+Bx7GXloJw8TB8In11NWg=
+Date: Mon, 5 Jan 2026 16:07:55 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251003154008.1.I7a21c240b30062c66471329567a96dceb6274358@changeid>
+Subject: Re: [PATCH 19/21] vfio: selftests: Expose low-level helper routines
+ for setting up struct vfio_pci_device
+To: David Matlack <dmatlack@google.com>
+Cc: Alex Williamson <alex@shazbot.org>,
+ Adithya Jayachandran <ajayachandra@nvidia.com>, Alex Mastro
+ <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+ David Rientjes <rientjes@google.com>,
+ Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Josh Hilke <jrhilke@google.com>,
+ Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org,
+ Leon Romanovsky <leonro@nvidia.com>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org,
+ Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>,
+ Parav Pandit <parav@nvidia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Philipp Stanner <pstanner@redhat.com>, Pratyush Yadav <pratyush@kernel.org>,
+ Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>,
+ Shuah Khan <shuah@kernel.org>, Tomita Moeko <tomitamoeko@gmail.com>,
+ Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+ Yi Liu <yi.l.liu@intel.com>, Yunxiang Li <Yunxiang.Li@amd.com>
+References: <20251126193608.2678510-1-dmatlack@google.com>
+ <20251126193608.2678510-20-dmatlack@google.com>
+ <f0439348-dca7-4f1b-9d96-b5a596c9407d@linux.dev>
+ <CALzav=duUuUaFLmTnRR41ZiWZKxbRAcb9LGvA5S8g2b5_Liv4g@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Yanjun.Zhu" <yanjun.zhu@linux.dev>
+In-Reply-To: <CALzav=duUuUaFLmTnRR41ZiWZKxbRAcb9LGvA5S8g2b5_Liv4g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Oct 03, 2025 at 03:40:09PM -0700, Brian Norris wrote:
-> From: Brian Norris <briannorris@google.com>
-> 
-> When transitioning to D3cold, __pci_set_power_state() will first
-> transition a device to D3hot. If the device was already in D3hot, this
-> will add excess work:
-> (a) read/modify/write PMCSR; and
-> (b) excess delay (pci_dev_d3_sleep()).
-> 
-> For (b), we already performed the necessary delay on the previous D3hot
-> entry; this was extra noticeable when evaluating runtime PM transition
-> latency.
-> 
-> Check whether we're already in the target state before continuing.
-> 
-> Note that __pci_set_power_state() already does this same check for other
-> state transitions, but D3cold is special because __pci_set_power_state()
-> converts it to D3hot for the purposes of PMCSR.
-> 
-> This seems to be an oversight in commit 0aacdc957401 ("PCI/PM: Clean up
-> pci_set_low_power_state()").
-> 
-> Fixes: 0aacdc957401 ("PCI/PM: Clean up pci_set_low_power_state()")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Brian Norris <briannorris@google.com>
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
 
-Applied to pci/pm for v6.20, thanks!
+On 1/5/26 9:54 AM, David Matlack wrote:
+> On Sat, Dec 27, 2025 at 8:04 PM Zhu Yanjun <yanjun.zhu@linux.dev> wrote:
+>> 在 2025/11/26 11:36, David Matlack 写道:
+>>> @@ -349,9 +351,20 @@ struct vfio_pci_device *__vfio_pci_device_init(const char *bdf,
+>>>        device->bdf = bdf;
+>>>        device->iommu = iommu;
+>>>
+>>> +     return device;
+>>> +}
+>>> +
+>> In the latest kernel, this part changes too much.
+> Can you clarify what you mean by "changes too much"? What is the issue?
 
-I reversed the test to match similar tests in
-pci_set_low_power_state(), __pci_set_power_state(), etc.
+I tried to apply this commit to the linux and linux-next repositories 
+and run tests.
 
-I dropped the stable tag because this is a performance improvement
-that I can't quantify and doesn't seem to fit in the categories here:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/stable-kernel-rules.rst?id=v6.18#n15
+However, I’m unable to apply [PATCH 19/21] vfio: selftests: Expose 
+low-level helper routines for setting up struct vfio_pci_device, because 
+the related source code has changed significantly in both linux and 
+linux-next.
 
-I'm not sure anybody pays attention to that list; lots of things I
-don't expect get backported, so likely this will get backported as
-well.  But as long as we have the documented list, I try to follow it.
+If you plan to resend this patch series based on the latest linux or 
+linux-next, please feel free to ignore this comment.
 
-Would be good to have Rafael's ack, but I don't think we need to wait
-for it.
+I look forward to testing the updated patch series once it is available.
 
-> ---
-> 
->  drivers/pci/pci.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b0f4d98036cd..7517f1380201 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1539,6 +1539,9 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
->  	   || (state == PCI_D2 && !dev->d2_support))
->  		return -EIO;
->  
-> +	if (state == dev->current_state)
-> +		return 0;
-> +
->  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->  	if (PCI_POSSIBLE_ERROR(pmcsr)) {
->  		pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
-> -- 
-> 2.51.0.618.g983fd99d29-goog
-> 
+Best Regards,
+
+Yanjun.Zhu
+
 
