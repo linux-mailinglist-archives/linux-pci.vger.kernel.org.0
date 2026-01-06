@@ -1,202 +1,152 @@
-Return-Path: <linux-pci+bounces-44091-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44092-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91475CF79EF
-	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 10:52:02 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1FEACF7D24
+	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 11:37:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 36ED8300FA27
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 09:51:59 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7D72D305A44C
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 10:36:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25D152DCF7B;
-	Tue,  6 Jan 2026 09:51:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E945A342518;
+	Tue,  6 Jan 2026 10:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EPLrFaZD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cbiYxwmb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F092386250
-	for <linux-pci@vger.kernel.org>; Tue,  6 Jan 2026 09:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B05342505
+	for <linux-pci@vger.kernel.org>; Tue,  6 Jan 2026 10:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767693118; cv=none; b=GSX2KJwzM+XS9j/RuGERYh59L7BVPNaqQvsCHpqNYfGEOwJjiJ1F3ZRUaWtqtjy9cjll59zpmAIKWsUsWoh0GiEMhC7daW93j32dhiHeWWV/QtyPyyOvaNBJaIsXZ6a10bgJsViB01dHx2bwNkfkGUTcFIhycew2+1VfrLp0vmw=
+	t=1767695436; cv=none; b=pYt7OpjHpkGsIQPBrFOWadELgDF7M/MJjkPCwKhfbiMwSsABfwd+iUlcSl2iHKSxrjSRRI0yCig33F+cD3LhXnuFyqjpKNMSRAvW5IJbI7ECcWmWZ0Ry2a+W7iV4gZdVI5npxxP41S87qYjch1tO3qXEMC+wJx8b7DlAn8KyONU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767693118; c=relaxed/simple;
-	bh=2kMQnftrmetouetOr5c28QNnvj5za26g9mc1cOJPxp8=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=gxc7eil7KGiyN7KWjXSBs2Oqk+nag8OPeD9Xjy5UR1SnqwOWCrgVNxpEIcidU1Uh/EnbkoqSMcZe8Rtcuff3gh2XQDzt6Y/vO4xlyzpdYJGu+kT5BgKC4QTdYW1S78OHfvwHCYjTAKNV84/y2aqdorzgBGse5uChViwSD1IAn4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EPLrFaZD; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767693116; x=1799229116;
-  h=date:from:to:cc:subject:message-id;
-  bh=2kMQnftrmetouetOr5c28QNnvj5za26g9mc1cOJPxp8=;
-  b=EPLrFaZDCLH7Bfpf/DKhxMT7F2frpBhXyXEYyPzOUuFxN4iHnMXJSmLb
-   Tf/PNJDkKZaXercsRBKv1d1rp5N7jlIYmcWUSyFZPatSBGoYxRuvqRJkn
-   M6edvxunz9/u2Bfd6XVc3UnMwDvalZCbDrqxsLrblrcAk2GO7OJGJ7b72
-   ZGN2ut5cQvHLlqAhQ9TuCX4FDz0kFSAf7RejI9cTRZ6rdBuI01S03zazl
-   dWSEzuKYZCcBsa0bM7KnRfobL2axoPPZbTxg0QPEokaDnIbFkDcxhGxky
-   b3p0/e7COCET4iXXkWA+X+rX9WxrUQiIEs24sCKgnf5FAbCGFTOlz14Jx
-   A==;
-X-CSE-ConnectionGUID: LxE6N3BZSbyA6XeDbC+tqg==
-X-CSE-MsgGUID: APfAYMAOQ4KUdwiu6xn7oA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11662"; a="69131077"
-X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
-   d="scan'208";a="69131077"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 01:51:55 -0800
-X-CSE-ConnectionGUID: gZ0xwpDbQYiqRFCNnneJkQ==
-X-CSE-MsgGUID: BaZPdEjCSJq7hEQ/3JWkZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
-   d="scan'208";a="201843041"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 06 Jan 2026 01:51:54 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vd3jD-000000001p1-2zUd;
-	Tue, 06 Jan 2026 09:51:51 +0000
-Date: Tue, 06 Jan 2026 17:51:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:dt-bindings] BUILD SUCCESS
- 72b39430284fc4a7a960133b70137c24fed63b74
-Message-ID: <202601061707.KWFUu4I2-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1767695436; c=relaxed/simple;
+	bh=c6JfQkHcrJOT7jlRutHXYm4l0no8Tfkw+iaOPkSh0q8=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=NMeWBOd8JujsjkwCRx9q1ZUUt0fmza3N6e9RmWeXxvq0BeD+fyHCGyZ80s3bHjzi73hsEDqyyZtIztXsqDYxbKcMWOANcBqETiDBy7vFbY4aoMH8xYdu25ymo+ikirIMcdjkJatITmbIkFhBbduBmAeZZTi0iBlbRNjRolj4ssA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cbiYxwmb; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-37bbb36c990so27013721fa.0
+        for <linux-pci@vger.kernel.org>; Tue, 06 Jan 2026 02:30:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767695433; x=1768300233; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=NsJJOzya3cvYihpIwq796R0nHpBIF37n18oyXT0fuvE=;
+        b=cbiYxwmbry3kbDR8UzW0E2MnqrPl5XBsx66NP1XyjPRtX1WHd/bwoDeH9Uik3ok+iZ
+         M35ONFj1wjea+EkkrHAkKofUJBFkEmIi7auSRIvQPnr033Xz7LJryz0n4bL2FxhvObq+
+         w675e7TfpeFwjlDuZAnJMjfXILN3ZPNYwMFsZq1mujB6ncGofcZJkHFK29lhDaccH66N
+         gB/gcSkjt5Q+4cP4hoobrqD8B+UvbQwzdcgwPtfBWFYbq1BIuA11gldjYJRuGZzxSnKP
+         aCXEi8YXFGb9JGLsMbzOeFQlIsR8OlpjMinvhX0ssdh+N24LEgwQbVy1uzPxEfut3Cty
+         Ipmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767695433; x=1768300233;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NsJJOzya3cvYihpIwq796R0nHpBIF37n18oyXT0fuvE=;
+        b=QnirwSw1YqfNEmCP/Ve1GTxvrn+BcvWmpB0A8qnRsy0LrefEcQekO6G4lRqkCLeVBU
+         Ft/SffB6g63jtdHgnFoO5Wt9Sq7J3a/lEb/RjN/ehwF7Yv/pSM9mLbeXrsw9tiNx6mUO
+         +Uw/YsHsfpcB+dDCIZ3H5aX0di0b7m2TehrplViu8QwVSctZ4LqeecsY9E2ZENqcadeL
+         alKWeEcU1Z2B+xv3BANcWcheXAWo9bOydZICC31cjCDq0TPrQh6OfO/ekOQOibprjR9I
+         3B7oP27C/wOLe8z/WAPhRxNeydS+W37KBpgAGs2aC6sYc946XJgvAdf0iaUlWz/pTTSj
+         1k4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUo62RWOHE9EYZYAGQOndSgPRWziKVXK0lE10dt3Q7goVp1tHNhW9GJnMqFL3O6QRuml7zX1fQuQYk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEdSE1apLeei3sCEfMKA6RiduW60OiIH1qqDAc1UfzIXju2XC+
+	t18tPztqxKFxX/gobBjecRIGwBZEGQ60yLeTpsEdbu3/3hB79U+jZp+K
+X-Gm-Gg: AY/fxX4W8Ln+sBVrtMI50pF7XsoS8jltPtmuxxzJDYR/npMvnAhwGMxj10NwxHSUWU4
+	lxqRMtDyWFwjcSbbQBGZbVNpPX1JhpQvngh4fyXn+KyNDSgdJy4lFpwtFHBz4bkY7gOKjQlsSmB
+	Qe+UmQNr+feog2kGgypQoNaB66nqsHe6qjS8kN1d9OLO0nSi/u+2g6nENcX7D9hu12Pu8TvDcGx
+	MTprgVMKGdYeeA+ZgJn9m2KUEjN6AUrnrXnKPqmnKGhwqANlTg7DO8CbR9w/+/UoG3dRomSZJYA
+	nu3TU/3KLn9bRn/7TromNAUXoEqv3tuorNgdTsXnspE/ki7nrXMG8DqidNlPW0b8e8O5xIFjxFD
+	QKubRgbtiP5wJF8SFOQYInqcB2lCXLi0dqWhLKoIKjGRM+Q/ovgVenDCknBtEl5k4jua7vJDQ
+X-Google-Smtp-Source: AGHT+IFmb+80wkKZdKxRHpidfReqxOHlUmLsipFT1rzzTuNx9rKmNHYR/9f9tfCpJuYk6MXE4I4WOw==
+X-Received: by 2002:a05:651c:1148:b0:37b:9361:711d with SMTP id 38308e7fff4ca-382eae68ac5mr6985121fa.8.1767695432846;
+        Tue, 06 Jan 2026 02:30:32 -0800 (PST)
+Received: from razdolb ([77.220.204.220])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-382eb8dadc0sm4315921fa.33.2026.01.06.02.30.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jan 2026 02:30:32 -0800 (PST)
+References: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
+User-agent: mu4e 1.10.9; emacs 30.2
+From: Mikhail Rudenko <mike.rudenko@gmail.com>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Joel Stanley
+ <joel@jms.id.au>, Andrew  Jeffery <andrew@codeconstruct.com.au>, Bjorn
+ Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan
+  Sadhasivam
+ <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Philipp Zabel
+ <p.zabel@pengutronix.de>, Neil Armstrong <neil.armstrong@linaro.org>,
+ linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org,
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew
+ Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org,
+ linux-gpio@vger.kernel.org, Mikhail Rudenko <mike.rudenko@gmail.com>
+Subject: Re: [PATCH v7 0/7] Add ASPEED PCIe Root Complex support
+Date: Tue, 06 Jan 2026 12:58:40 +0300
+In-reply-to: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
+Message-ID: <875x9fuj7i.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git dt-bindings
-branch HEAD: 72b39430284fc4a7a960133b70137c24fed63b74  dt-bindings: PCI: qcom,pcie-apq8084: Move APQ8084 to dedicated schema
+Hi Jacky,
 
-elapsed time: 1505m
+On 2025-12-16 at 09:49 +08, Jacky Chou <jacky_chou@aspeedtech.com> wrote:
 
-configs tested: 111
-configs skipped: 4
+> This patch series adds support for the ASPEED PCIe Root Complex,
+> including device tree bindings, pinctrl support, and the PCIe host controller
+> driver. The patches introduce the necessary device tree nodes, pinmux groups,
+> and driver implementation to enable PCIe functionality on ASPEED platforms.
+> Currently, the ASPEED PCIe Root Complex only supports a single port.
+>
+> Summary of changes:
+> - Add device tree binding documents for ASPEED PCIe PHY and PCIe RC
+> - Update MAINTAINERS for new bindings and driver
+> - Implement ASPEED PCIe PHY driver
+> - Implement ASPEED PCIe Root Complex host controller driver
+>
+> This series has been tested on AST2600/AST2700 platforms and enables PCIe device
+> enumeration and operation.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+First of all, thank you for your efforts in getting this driver
+upstreamed! I am trying to understand whether this driver supports
+PCIe devices that have an I/O port BAR, where CPU access to I/O ports
+is required for proper device operation.
 
-tested configs:
-alpha                               defconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20260106    gcc-13.4.0
-arc                   randconfig-002-20260106    gcc-8.5.0
-arm                                 defconfig    clang-22
-arm                   milbeaut_m10v_defconfig    clang-19
-arm                   randconfig-001-20260106    gcc-11.5.0
-arm                   randconfig-002-20260106    clang-22
-arm                   randconfig-003-20260106    gcc-10.5.0
-arm                   randconfig-004-20260106    gcc-8.5.0
-arm                        shmobile_defconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20260106    clang-22
-arm64                 randconfig-002-20260106    gcc-8.5.0
-arm64                 randconfig-003-20260106    gcc-9.5.0
-arm64                 randconfig-004-20260106    gcc-10.5.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20260106    gcc-10.5.0
-csky                  randconfig-002-20260106    gcc-11.5.0
-hexagon                             defconfig    clang-22
-hexagon               randconfig-001-20260106    clang-22
-hexagon               randconfig-002-20260106    clang-17
-i386        buildonly-randconfig-001-20260106    clang-20
-i386        buildonly-randconfig-002-20260106    clang-20
-i386        buildonly-randconfig-003-20260106    gcc-14
-i386        buildonly-randconfig-004-20260106    clang-20
-i386        buildonly-randconfig-005-20260106    gcc-14
-i386        buildonly-randconfig-006-20260106    clang-20
-i386                                defconfig    clang-20
-i386                  randconfig-001-20260106    clang-20
-i386                  randconfig-002-20260106    gcc-14
-i386                  randconfig-003-20260106    clang-20
-i386                  randconfig-004-20260106    clang-20
-i386                  randconfig-005-20260106    clang-20
-i386                  randconfig-006-20260106    clang-20
-i386                  randconfig-007-20260106    clang-20
-i386                  randconfig-011-20260106    clang-20
-i386                  randconfig-012-20260106    gcc-14
-i386                  randconfig-013-20260106    gcc-14
-i386                  randconfig-014-20260106    clang-20
-i386                  randconfig-015-20260106    gcc-14
-i386                  randconfig-016-20260106    clang-20
-i386                  randconfig-017-20260106    gcc-14
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20260106    gcc-15.1.0
-loongarch             randconfig-002-20260106    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                  maltasmvp_eva_defconfig    gcc-15.1.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20260106    gcc-8.5.0
-nios2                 randconfig-002-20260106    gcc-11.5.0
-openrisc                            defconfig    gcc-15.1.0
-openrisc                       virt_defconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20260106    gcc-8.5.0
-parisc                randconfig-002-20260106    gcc-11.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc               randconfig-001-20260106    clang-22
-powerpc               randconfig-002-20260106    gcc-8.5.0
-powerpc                     tqm8540_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20260106    gcc-8.5.0
-powerpc64             randconfig-002-20260106    gcc-8.5.0
-riscv                            alldefconfig    gcc-15.1.0
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20260106    gcc-8.5.0
-riscv                 randconfig-002-20260106    clang-22
-s390                                defconfig    clang-22
-s390                  randconfig-001-20260106    gcc-8.5.0
-s390                  randconfig-002-20260106    gcc-14.3.0
-sh                                  defconfig    gcc-15.1.0
-sh                          r7785rp_defconfig    gcc-15.1.0
-sh                    randconfig-001-20260106    gcc-15.1.0
-sh                    randconfig-002-20260106    gcc-10.5.0
-sh                             sh03_defconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20260106    gcc-11.5.0
-sparc                 randconfig-002-20260106    gcc-15.1.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20260106    clang-22
-sparc64               randconfig-002-20260106    gcc-15.1.0
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260106    clang-22
-um                    randconfig-002-20260106    clang-22
-um                           x86_64_defconfig    clang-22
-x86_64      buildonly-randconfig-001-20260106    clang-20
-x86_64      buildonly-randconfig-002-20260106    gcc-14
-x86_64      buildonly-randconfig-003-20260106    clang-20
-x86_64      buildonly-randconfig-004-20260106    gcc-14
-x86_64      buildonly-randconfig-005-20260106    clang-20
-x86_64      buildonly-randconfig-006-20260106    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20260106    gcc-14
-x86_64                randconfig-002-20260106    gcc-14
-x86_64                randconfig-005-20260106    gcc-14
-x86_64                randconfig-006-20260106    gcc-14
-x86_64                randconfig-011-20260106    gcc-14
-x86_64                randconfig-012-20260106    gcc-13
-x86_64                randconfig-013-20260106    gcc-14
-x86_64                randconfig-014-20260106    gcc-14
-x86_64                randconfig-015-20260106    clang-20
-x86_64                randconfig-016-20260106    clang-20
-x86_64                randconfig-071-20260106    gcc-14
-x86_64                randconfig-072-20260106    clang-20
-x86_64                randconfig-073-20260106    clang-20
-x86_64                randconfig-074-20260106    clang-20
-x86_64                randconfig-075-20260106    gcc-14
-x86_64                randconfig-076-20260106    clang-20
-xtensa                randconfig-001-20260106    gcc-8.5.0
-xtensa                randconfig-002-20260106    gcc-8.5.0
+If I understand correctly, this line in the Aspeed 2600 dtsi file
+declares the I/O port range:
+
+    ranges = <0x01000000 0x0 0x00018000 0x00018000 0x0 0x00008000
+
+During system initialization, the pci_remap_iospace() function in
+arch/arm/mm/ioremap.c maps the physical address range
+0x00018000-0x00020000 to the virtual address PCI_IO_VIRT_BASE
+(0xfee00000). After this mapping, inb() and outb() calls work by
+converting I/O port addresses to virtual addresses starting at
+PCI_IO_VIRT_BASE, then performing reads and writes to those virtual
+addresses.
+
+What I don't understand is this: according to the Aspeed 2600
+datasheet, the address range 0x00000000-0x0fffffff (which contains
+0x00018000-0x00020000) is mapped to Firmware SPI Memory. This would
+mean that outb() operations get routed to memory-mapped SPI flash
+instead of PCIe.
+
+It seems like there's a missing piece to this puzzle. Could you help
+clarify how this is supposed to work?
 
 --
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Kind regards,
+Mikhail Rudenko
 
