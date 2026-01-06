@@ -1,247 +1,169 @@
-Return-Path: <linux-pci+bounces-44129-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44130-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABB43CFB42E
-	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 23:29:29 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A594ECFB4D6
+	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 23:57:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0F90F30141CD
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 22:27:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 64CC93012DD2
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 22:57:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C3092DFA32;
-	Tue,  6 Jan 2026 22:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98F4E2E718F;
+	Tue,  6 Jan 2026 22:57:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KOQcflmS"
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="d7uKE5Od";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="e/PV7krE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2317E0FF;
-	Tue,  6 Jan 2026 22:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D7341C63;
+	Tue,  6 Jan 2026 22:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767738437; cv=none; b=rKhNqEWSucYEdUfkW4vfdpPgO7H+wAznV/rhzKQL+ZJEC/HD2BkywXFToTQXzpxyTqcDwmwA6E8eYGmBYHdg3JI8/wS91od2p1gDZqraEeY/e/NovIvZJWA0b0rU7GQJIZVdv8ZZ/PW9tQKGyQ2Q5oMHWIdtMDjA0u9Sbq/Dz1M=
+	t=1767740234; cv=none; b=Z7Y5rgP3736nwvLLI31rwww95ihWNlHP666K+f524MN4mpE++O1j/HObBHURq6+szsFGbe1q/kxeFjFp9+57cyT41Wed6tLkz7yFVRHKB6CU4F0Ejn4/Hrx+vMXHebC1PkzFnY26Mvm0LxIj2onHZrxdqsQQQB01wLNhfI9rcAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767738437; c=relaxed/simple;
-	bh=ZKxAHb4+0dtEx92XBAjCVGn08+JIdbzoRMV9WYZxKVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=HrGyPIdWEwKlmbur2JZxLfxhQQ6NGd6APY7dY3J4R0vFFyehpK3ktYl8BIDve69lTeL/uNR9oNJ/uQYV26woC8Z4hocw0EWHuLoQgSRE+x1cQwRCSvBnc44zEXqXNgvpNyWGrOGbymT2IsSMVkpiuB3wNKa+xdLx9zpkhTTFEjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KOQcflmS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDCE4C116C6;
-	Tue,  6 Jan 2026 22:27:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767738437;
-	bh=ZKxAHb4+0dtEx92XBAjCVGn08+JIdbzoRMV9WYZxKVk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=KOQcflmSJnJ0ucCaS2W1LWSa2vEkGj+Q6d1TIUl6uwi9Hq2ZxuiOjmO2mZdxwcyD9
-	 6JkDZlTmPprXkVyb+zmb9GajYU9Xq9V+GnuK5p9WQCwWf0PesuIL4tkKw0JzjFZZZ2
-	 KEyqfVSEH+umUfqipQrpJNUdUxQXsnjBv3K+nw4wOaV7Z4Udyc+oIq3N7o3BMhJ91F
-	 BZu1G34YJlgxo/udbsmfa4WelmNJLsPKLHWLK1aXD76dt2I/qXbcxDmzvma8dxnMK2
-	 b33Oa/JDgewyz3oPmIhXFn/qPWgbEna7Eg0wh3KKKyCWIiRpnRm8opNQjpsbullGQ3
-	 8cP+BuvMdXuMw==
-Date: Tue, 6 Jan 2026 16:27:15 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH v4] PCI/PM: Prevent runtime suspend before devices are
- fully initialized
-Message-ID: <20260106222715.GA381397@bhelgaas>
+	s=arc-20240116; t=1767740234; c=relaxed/simple;
+	bh=IZ5oFAXeLmg2fJkkun1bfPICW7AWCqURB9x0jY/b1W4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pUfFeT/NYqHJ8XTi+lUiyKBrfChAy7XANZFC9lSU5W3CY0zAro/c3mZ/gZ3Q0Bo7IJcYLtoF5X9KYLuxn8tbsQ9KzmapMzq3kVaO7Ckj5GeWsagPYU9Dv5ntlkcdW63DkGuUdVYEsEDoeDQ8WHIvg975bI9R9dRa1dDPcqKphOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=d7uKE5Od; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=e/PV7krE; arc=none smtp.client-ip=202.12.124.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfout.stl.internal (Postfix) with ESMTP id F0C101D00127;
+	Tue,  6 Jan 2026 17:57:10 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Tue, 06 Jan 2026 17:57:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1767740230;
+	 x=1767826630; bh=A2oM0i/RZZFjG1HFXcuUq5dzkmISfukUY5yQMo3PfzM=; b=
+	d7uKE5OdWNX0QholdywdcUNa68Tse3WfpoEU19J0ui1jmLvAzTK8TIzBZLVMm6iz
+	rEYxUDTwq9Ghh496BD/0cbN8fZBQGy0TRJTzPsG1j/V5Bo0KUVMz17X08iXQXGgy
+	n+nnDlrOdaUS0hbne0FqkK8IjUOwzHwXTOv8usMBojH2hnjYhbnWj5PfUpT9GLj/
+	Q4az5SezMxMWJRB1OYx4mWcnEQC3bes1TpJshLLfE1YUlPQ/NErE7f/qJW3YUApi
+	OTnVK+ua++qYQkc6Wmpf069E3Lyxloxaqh0UVXKCamCuqFdqcP8qrq4OoXt3iSR0
+	/0uOvxmEEfHKU6W0ruFVIg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1767740230; x=
+	1767826630; bh=A2oM0i/RZZFjG1HFXcuUq5dzkmISfukUY5yQMo3PfzM=; b=e
+	/PV7krEkYWkPDWYF/PE0AJHWwYkilZWlio4NJKUYRtJWpqRiBrGYaumDBq7ZzIAB
+	uMvriC5h7HdAKMNIPn2SECi6T9artBoUlQ990T/MtjXewYt1YshlMDWHB/dOThKn
+	TA/aE/Op6fWNw/HU3ZpgqMMmnWLE44BHdfbuwbSTRJSuo+JHAopTpuDPZCHL/sC7
+	IyooL7eYG0sJx+MxNS8Oq9rJIpcykFRUnezuNykguGMrUeyAS+zQc+jFFZFWYmMO
+	X//ynRcpkPFVC2G2lyHj5+vxEtiTh1RHXzTu77bacjj+ZcPz+0oAr0P0gHvUA77k
+	+pYI2jHSjramDMG42Zbng==
+X-ME-Sender: <xms:RpNdabOh3kYHzFnXtmP2na9XkkdlDVwCS4Cqx__idkFlnAWnNYxifA>
+    <xme:RpNdaf_I_vECxk7M4rEB69oAQgZBMVQ48Pl58mxkWKBBu2tb_n_rJHGBmW49jegoB
+    _iX2m81Yjb8eIF00PmXHI8gNLyG_GI9YltPWMdcq8-0LX2n3Ocffw>
+X-ME-Received: <xmr:RpNdaQ49Y4evrb_9P8z7p8Z3qHhFWtIh9EV3CjJ2l-k-3LiZnKWcWiVcUo8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddutddugeehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkjghfgggtgfesthejredttddtvdenucfhrhhomheptehlvgigucgh
+    ihhllhhirghmshhonhcuoegrlhgvgiesshhhrgiisghothdrohhrgheqnecuggftrfgrth
+    htvghrnhephedvtdeuveejudffjeefudfhueefjedvtefgffdtieeiudfhjeejhffhfeeu
+    vedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrlhgvgiesshhhrgiisghothdrohhrghdp
+    nhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohephhgvlh
+    hgrggrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvohhnsehkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpth
+    htoheplhhoghgrnhhgseguvghlthgrthgvvgdrtghomhdprhgtphhtthhopehjghhgseii
+    ihgvphgvrdgtrgdprhgtphhtthhopegrnhhkihhtrgesnhhvihguihgrrdgtohhmpdhrtg
+    hpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:RpNdad6QuxtQOxGpsF7-EcbdnayWM7drdn1hf-aVRffr9zeuCSYvww>
+    <xmx:RpNdaRpzb-Z1Xyia6EKujHSNaqPWM70rHN6u-UFuMQ8abZtcBb0d6g>
+    <xmx:RpNdaWM-iRl9MGrp4tmG6UlJ8LiA2HXv_t_ok4K3CZfIPcRjKjKCYA>
+    <xmx:RpNdaR1X3hGOWxwTwHQYf9_I0j1cHk-u4fnxwaHxPhan_UdOKOtbfg>
+    <xmx:RpNdabPCozEeyeAKcmc2zKB0eFiszi9Hfmr6jgR1yMPo_sQKsTLGkxDH>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 6 Jan 2026 17:57:09 -0500 (EST)
+Date: Tue, 6 Jan 2026 15:57:08 -0700
+From: Alex Williamson <alex@shazbot.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Leon Romanovsky <leon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Logan Gunthorpe <logang@deltatee.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Ankit Agrawal <ankita@nvidia.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/P2PDMA: Add missing struct p2pdma_provider
+ documentation
+Message-ID: <20260106155708.47915065.alex@shazbot.org>
+In-Reply-To: <20260106221852.GA381083@bhelgaas>
+References: <20260104-fix-p2p-kdoc-v1-1-6d181233f8bc@nvidia.com>
+	<20260106221852.GA381083@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251023140901.v4.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 23, 2025 at 02:09:01PM -0700, Brian Norris wrote:
-> Today, it's possible for a PCI device to be created and
-> runtime-suspended before it is fully initialized. When that happens, the
-> device will remain in D0, but the suspend process may save an
-> intermediate version of that device's state -- for example, without
-> appropriate BAR configuration. When the device later resumes, we'll
-> restore invalid PCI state and the device may not function.
-> 
-> Prevent runtime suspend for PCI devices by deferring pm_runtime_enable()
-> until we've fully initialized the device.
-> 
-> More details on how exactly this may occur:
-> 
-> 1. PCI device is created by pci_scan_slot() or similar
-> 2. As part of pci_scan_slot(), pci_pm_init() enables runtime PM; the
->    device starts "active" and we initially prevent (pm_runtime_forbid())
->    suspend -- but see [*] footnote
-> 3. Underlying 'struct device' is added to the system (device_add());
->    runtime PM can now be configured by user space
-> 4. PCI device receives BAR configuration
->    (pci_assign_unassigned_bus_resources(), etc.)
-> 5. PCI device is added to the system in pci_bus_add_device()
-> 
-> The device may potentially suspend between #3 and #4.
-> 
-> [*] By default, pm_runtime_forbid() prevents suspending a device; but by
-> design [**], this can be overridden by user space policy via
-> 
->   echo auto > /sys/bus/pci/devices/.../power/control
-> 
-> Thus, the above #3/#4 sequence is racy with user space (udev or
-> similar).
-> 
-> Notably, many PCI devices are enumerated at subsys_initcall time and so
-> will not race with user space. However, there are several scenarios
-> where PCI devices are created later on, such as with hotplug or when
-> drivers (pwrctrl or controller drivers) are built as modules.
-> 
->   ---
-> 
-> [**] The relationship between pm_runtime_forbid(), pm_runtime_allow(),
-> /sys/.../power/control, and the runtime PM usage counter can be subtle.
-> It appears that the intention of pm_runtime_forbid() /
-> pm_runtime_allow() is twofold:
-> 
-> 1. Allow the user to disable runtime_pm (force device to always be
->    powered on) through sysfs.
-> 2. Allow the driver to start with runtime_pm disabled (device forced
->    on) and user space could later enable runtime_pm.
-> 
-> This conclusion comes from reading `Documentation/power/runtime_pm.rst`,
-> specifically the section starting "The user space can effectively
-> disallow".
-> 
-> This means that while pm_runtime_forbid() does technically increase the
-> runtime PM usage counter, this usage counter is not a guarantee of
-> functional correctness, because sysfs can decrease that count again.
-> 
->   ---
-> 
-> Note that we also move pm_runtime_set_active(), but leave
-> pm_runtime_forbid() in place earlier in the initialization sequence, to
-> avoid confusing user space. From Documentation/power/runtime_pm.rst:
-> 
->   "It should be noted, however, that if the user space has already
->   intentionally changed the value of /sys/devices/.../power/control to
->   "auto" to allow the driver to power manage the device at run time, the
->   driver may confuse it by using pm_runtime_forbid() this way."
-> 
-> Thus, we should ensure pm_runtime_forbid() is called before the device
-> is available to user space.
-> 
-> Link: https://lore.kernel.org/all/20251016155335.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid/
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> Cc: <stable@vger.kernel.org>
-> Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+On Tue, 6 Jan 2026 16:18:52 -0600
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Applied to pci/pm for v6.20, thanks!  I tried to simplify the commit
-log so the issue isn't hidden by details.  Happy to restore things if
-I trimmed too much:
-
-    PCI/PM: Prevent runtime suspend until devices are fully initialized
-
-    Previously, it was possible for a PCI device to be runtime-suspended before
-    it was fully initialized. When that happened, the suspend process could
-    save invalid device state, for example, before BAR assignment. Restoring
-    the invalid state during resume may leave the device non-functional.
-
-    Prevent runtime suspend for PCI devices until they are fully initialized by
-    deferring pm_runtime_enable().
-
-    More details on how exactly this may occur:
-
-      1. PCI device is created by pci_scan_slot() or similar
-
-      2. As part of pci_scan_slot(), pci_pm_init() puts the device in D0 and
-         prevents runtime suspend prevented via pm_runtime_forbid()
-
-      3. pci_device_add() adds the underlying 'struct device' via device_add(),
-         which means user space can allow runtime suspend, e.g.,
-
-           echo auto > /sys/bus/pci/devices/.../power/control
-
-      4. PCI device receives BAR configuration
-         (pci_assign_unassigned_bus_resources(), etc.)
-
-      5. pci_bus_add_device() applies final fixups, saves device state, and
-         tries to attach a driver
-
-    The device may potentially be suspended between #3 and #5, so this is racy
-    with user space (udev or similar).
-
-    Many PCI devices are enumerated at subsys_initcall time and so will not
-    race with user space, but devices created later by hotplug or modular
-    pwrctrl or host controller drivers are susceptible to this race.
-
-    More runtime PM details at the first Link: below.
-
-    Signed-off-by: Brian Norris <briannorris@chromium.org>
-    [bhelgaas: simplify commit log]
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
-    Cc: stable@vger.kernel.org
-    Link: https://lore.kernel.org/all/20251016155335.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid/
-    Link: https://patch.msgid.link/20251023140901.v4.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid
-
-
-> ---
+> On Sun, Jan 04, 2026 at 02:51:28PM +0200, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@nvidia.com>
+> > 
+> > Two fields in struct p2pdma_provider were not documented, which resulted
+> > in the following kernel-doc warning:
+> > 
+> >   Warning: include/linux/pci-p2pdma.h:26 struct member 'owner' not described in 'p2pdma_provider'
+> >   Warning: include/linux/pci-p2pdma.h:26 struct member 'bus_offset' not described in 'p2pdma_provider'
+> > 
+> > Repro:
+> > 
+> >   $ scripts/kernel-doc -none include/linux/pci-p2pdma.h
+> > 
+> > Fixes: f58ef9d1d135 ("PCI/P2PDMA: Separate the mmap() support from the core logic")
+> > Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+> > Closes: https://lore.kernel.org/all/20260102234033.GA246107@bhelgaas
+> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>  
 > 
-> Changes in v4:
->  * Move pm_runtime_set_active() too
+> Applied to pci/misc for v6.20, thanks!
 > 
-> Changes in v3:
->  * Add Link to initial discussion
->  * Add Rafael's Reviewed-by
->  * Add lengthier footnotes about forbid vs allow vs sysfs
+> Alex, let me know if you'd rather take this (you merged f58ef9d1d135).
+
+Nope, makes sense to follow get_maintainer.pl for the standalone
+follow-ups.  Sorry we didn't spot it on the way in.  Thanks,
+
+Alex
+
 > 
-> Changes in v2:
->  * Update CC list
->  * Rework problem description
->  * Update solution: defer pm_runtime_enable(), instead of trying to
->    get()/put()
-> 
->  drivers/pci/bus.c | 4 ++++
->  drivers/pci/pci.c | 2 --
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index f26aec6ff588..40ff954f416f 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -14,6 +14,7 @@
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/proc_fs.h>
->  #include <linux/slab.h>
->  
-> @@ -375,6 +376,9 @@ void pci_bus_add_device(struct pci_dev *dev)
->  		put_device(&pdev->dev);
->  	}
->  
-> +	pm_runtime_set_active(&dev->dev);
-> +	pm_runtime_enable(&dev->dev);
-> +
->  	if (!dn || of_device_is_available(dn))
->  		pci_dev_allow_binding(dev);
->  
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b14dd064006c..234bf3608569 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3225,8 +3225,6 @@ void pci_pm_init(struct pci_dev *dev)
->  poweron:
->  	pci_pm_power_up_and_verify_state(dev);
->  	pm_runtime_forbid(&dev->dev);
-> -	pm_runtime_set_active(&dev->dev);
-> -	pm_runtime_enable(&dev->dev);
->  }
->  
->  static unsigned long pci_ea_flags(struct pci_dev *dev, u8 prop)
-> -- 
-> 2.51.1.821.gb6fe4d2222-goog
-> 
+> > ---
+> >  include/linux/pci-p2pdma.h | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/include/linux/pci-p2pdma.h b/include/linux/pci-p2pdma.h
+> > index 517e121d2598..873de20a2247 100644
+> > --- a/include/linux/pci-p2pdma.h
+> > +++ b/include/linux/pci-p2pdma.h
+> > @@ -20,6 +20,8 @@ struct scatterlist;
+> >   * struct p2pdma_provider
+> >   *
+> >   * A p2pdma provider is a range of MMIO address space available to the CPU.
+> > + * @owner: Device to which this provider belongs.
+> > + * @bus_offset: Bus offset for p2p communication.
+> >   */
+> >  struct p2pdma_provider {
+> >  	struct device *owner;
+> > 
+> > ---
+> > base-commit: f8f9c1f4d0c7a64600e2ca312dec824a0bc2f1da
+> > change-id: 20260104-fix-p2p-kdoc-3f503e6d6a55
+> > 
+> > Best regards,
+> > --  
+> > Leon Romanovsky <leonro@nvidia.com>
+> >   
+
 
