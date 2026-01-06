@@ -1,144 +1,177 @@
-Return-Path: <linux-pci+bounces-44086-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44087-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5254DCF7862
-	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 10:27:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 98D05CF7856
+	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 10:27:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 525E030DFBD0
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 09:18:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9BB203121BE0
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 09:19:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB7A030FC00;
-	Tue,  6 Jan 2026 09:16:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCBAF1519AC;
+	Tue,  6 Jan 2026 09:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TnrEQDQt"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="QB0TQuWz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m3275.qiye.163.com (mail-m3275.qiye.163.com [220.197.32.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1392857C1;
-	Tue,  6 Jan 2026 09:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3912F6925
+	for <linux-pci@vger.kernel.org>; Tue,  6 Jan 2026 09:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767690981; cv=none; b=EokvZeVQx4xXoDKMT5kcRXN9waV4R8J2ouNsUXGQOVnPrX/XTE5srjmdDeR/WFm/DbgLi9U1sgIO5l6C35THHT/ToNt+VgJIJsDe/dq+7c72Rebpu7zcmhoOwpeaBGT1kScq+fN2MBmSJfonTBPhMlzqZzgGJQfZ40crv/jSbVw=
+	t=1767691138; cv=none; b=Qj0pvMXOzflWSRx+X46MrCrHM72Nahbk2UPnZun7aDgKne5B9Ednk3x2+7bxedf6kWC7PZ5zedgfmz8FT6slGmq0tBEaJw0S4JDYZtDWZ25ysakwKC3DU0HykzczMEtZJM/khILb3Tg/xwNi4+PLhxD64Dg+HnyT23vMqpfczH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767690981; c=relaxed/simple;
-	bh=cynLGl5RlxS7Xu40g+HTevna25fZXxq+QHg/HSuAPM4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yl3ubDRSEQrE/BRqK5ijSu+fZ0DFi+764rznIeWJW0BSgFmnHU3kACUdhD/Pl39dYkmOM7BJ6BSAShBK2rGeGgG2CN0L9YvHHCV3hKrhDAwnGwpLUp8IiAWW6qt7JGYaBvYrszZvOfxm4kTERRa9HneqO01M094xh13j1OeliJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TnrEQDQt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7588C19424;
-	Tue,  6 Jan 2026 09:16:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767690981;
-	bh=cynLGl5RlxS7Xu40g+HTevna25fZXxq+QHg/HSuAPM4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TnrEQDQt4e1hvZugzUohnrjFUNExJ5FxrqUffTKdvbV/TG45H99PW7NA7+kDqsvVQ
-	 zeQCeq/4AE/kXXyHEMCJ0jGiCZTfbRUM4kAIIn3sL7s6DMaE2Pzen0Q6zep6SzVDHN
-	 R8G2f49yuhqS9qEYLaZMQd/QPfndKnn5IK1zBj9rMMZYqSpNcrvXppE7F42kl75YwX
-	 DY+F2yPMsGD1KqMNvTiwFTcVeuuxyKyp2xEDe24IFYbNmCwLM1muIhuRWSVGx64108
-	 aIF98IPgDYX8Jt3GdA5mi1HBFcG+U4CKDxux86xew3Kv/YqDPTRUeJw1xZMmkOmH/C
-	 e8lErTlz5zcwA==
-Date: Tue, 6 Jan 2026 10:16:15 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Koichiro Den <den@valinux.co.jp>
-Cc: jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	Frank.Li@nxp.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] PCI: endpoint: BAR subrange mapping support
-Message-ID: <aVzS3_Vx8hXZte1Z@fedora>
-References: <20260105080214.1254325-1-den@valinux.co.jp>
- <aVvtAkEcg6Qg7K3C@ryzen>
- <gb3mr7onokhufasxaeoxiqft22incwxxlf43m6jcrhrem3477j@63oi3ztvbqku>
- <o6swnuf4aplcyd5jpgbyhslxcxuhzt4j6a4oq773eujva6ynqj@wmkorp4mavul>
+	s=arc-20240116; t=1767691138; c=relaxed/simple;
+	bh=qeBtlAl8F1tuaPcxAYATOwylg2Vy+T1vpHc4a4/GCn0=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=jq9zjqaKlxmLx7iDzscRWppXRkKeJSaMoV0wOC1WFzCncgc8qfr8CJF79nrXYf/jBuawFNZ9OPcUziQ53hQExuxOA5ojIt7r0X/honR+i6sTbhmbIrhLKWMkychY8wH6ysuAFjn5PmRBCRB4dD7oroYIuZxpq6xoIishUWxY3T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=QB0TQuWz; arc=none smtp.client-ip=220.197.32.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2faab4829;
+	Tue, 6 Jan 2026 17:18:50 +0800 (GMT+08:00)
+From: Shawn Lin <shawn.lin@rock-chips.com>
+To: Manivannan Sadhasivam <mani@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-rockchip@lists.infradead.org,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH 1/2] PCI: dwc: Add LTSSM tracing support to debugfs
+Date: Tue,  6 Jan 2026 17:18:38 +0800
+Message-Id: <1767691119-28287-1-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
+X-HM-Tid: 0a9b929a145509cekunm960b3024166f93e
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUtLTlYaS00dQkweGRpOS0tWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=QB0TQuWzncQcG7xaEDg/Mb/C7uRhXYieZQu0yfl1/pX5mMuqy9Nqg6maBHSOianagwlmjG+4BY3+huoctXWmGjbkPJVg8v7paL62B54/5wx6GIdvDxNBWH/LPc9MgYBGgaAgDiqUuKllkVNDj3rHbhe2Z5SaUBvR/WfQlhOSwBQ=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=aBj8Utrniq8SlTD9HEuIz3zb59ewyLcmf8DwOngwudI=;
+	h=date:mime-version:subject:message-id:from;
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <o6swnuf4aplcyd5jpgbyhslxcxuhzt4j6a4oq773eujva6ynqj@wmkorp4mavul>
 
-On Tue, Jan 06, 2026 at 12:09:24PM +0900, Koichiro Den wrote:
-> On Tue, Jan 06, 2026 at 10:52:54AM +0900, Koichiro Den wrote:
-> > On Mon, Jan 05, 2026 at 05:55:30PM +0100, Niklas Cassel wrote:
-> > > Hello Koichiro,
-> > > 
-> > > On Mon, Jan 05, 2026 at 05:02:12PM +0900, Koichiro Den wrote:
-> > > > This series proposes support for mapping subranges within a PCIe endpoint
-> > > > BAR and enables controllers to program inbound address translation for
-> > > > those subranges.
-> > > > 
-> > > > The first patch introduces generic BAR subrange mapping support in the
-> > > > PCI endpoint core. The second patch adds an implementation for the
-> > > > DesignWare PCIe endpoint controller using Address Match Mode IB iATU.
-> > > > 
-> > > > This series is a spin-off from a larger RFC series posted earlier:
-> > > > https://lore.kernel.org/all/20251217151609.3162665-4-den@valinux.co.jp/
-> > > > 
-> > > > Base:
-> > > >   git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
-> > > >   branch: controller/dwc
-> > > >   commit: 68ac85fb42cf ("PCI: dwc: Use cfg0_base as iMSI-RX target address
-> > > >                          to support 32-bit MSI devices")
-> > > > 
-> > > > Thank you for reviewing,
-> > > > 
-> > > > Koichiro Den (2):
-> > > >   PCI: endpoint: Add BAR subrange mapping support
-> > > >   PCI: dwc: ep: Support BAR subrange inbound mapping via address-match
-> > > >     iATU
-> > > 
-> > > I have nothing against this feature, but the big question here is:
-> > > where is the user?
-> > > 
-> > > Usually, we don't add a new feature without having a single user of said
-> > > feature.
-> > > 
-> > 
-> > The first user will likely be Remote eDMA-backed NTB transport. An RFC
-> > series,
-> > https://lore.kernel.org/all/20251217151609.3162665-4-den@valinux.co.jp/
-> > referenced in the cover letter relies on Address Match Mode support.
-> > In that sense, this split series is prerequisite work, and if this gets
-> > acked, I will post another patch series that utilizes this in the NTB code.
-> > 
-> > At least for Renesas R-Car S4, where 64-bit BAR0/BAR2 and 32-bit BAR4 are
-> > available, exposing the eDMA regsister and LL regions to the host requires
-> > at least two mappings (one for register and another for a contiguous LL
-> > memory). Address Match Mode allows a flexible and extensible layout for the
-> > required regions.
-> > 
-> > > 
-> > > One thing that I would like to see though:
-> > > stricter verification of the pci_epf_bar_submap array.
-> > > 
-> > > For DWC, we know that the minimum size that an iATU can map is stored in:
-> > > (struct dw_pcie *pci) pci->region_align.
-> > > 
-> > > Thus, each element in the pci_epf_bar_submap array has to have a size that
-> > > is a multiple of pci->region_align.
-> > > 
-> > > I don't see that you ever verify this anywhere.
-> > 
-> > I missed it, will add the check.
-> 
-> My reply above was wrong, the region_align-related validation is already
-> handled in dw_pcie_prog_inbound_atu(). I don't think we need to duplicate
-> the same check at (A) (see below) in dw_pcie_ep_ib_atu_addr(), and would
-> prefer to keep the code simple as possible since this is not a fast path.
+Some platforms may provide LTSSM trace functionality, recording historical
+LTSSM state transition information. This is very useful for debugging, such
+as when certain devices cannot be recognized. Add an ltssm_trace operation
+node in debugfs for platform which could provide these information to show
+the LTSSM history.
 
-The region align check in dw_pcie_prog_inbound_atu() validates that the
-addresses (pci_addr and parent_bus_addr) are aligned to region_align
-(min iATU size).
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+---
+ .../controller/dwc/pcie-designware-debugfs.c  | 44 +++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h  |  6 +++
+ 2 files changed, 50 insertions(+)
 
-You also need to check that the size of the region mapped is aligned to
-region_align (min iATU size).
+diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+index df98fee69892..569e8e078ef2 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
++++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+@@ -511,6 +511,38 @@ static int ltssm_status_open(struct inode *inode, struct file *file)
+ 	return single_open(file, ltssm_status_show, inode->i_private);
+ }
+ 
++static struct dw_pcie_ltssm_history *dw_pcie_ltssm_trace(struct dw_pcie *pci)
++{
++	if (pci->ops && pci->ops->ltssm_trace)
++		return pci->ops->ltssm_trace(pci);
++
++	return NULL;
++}
++
++static int ltssm_trace_show(struct seq_file *s, void *v)
++{
++	struct dw_pcie *pci = s->private;
++	struct dw_pcie_ltssm_history *history;
++	enum dw_pcie_ltssm val;
++	u32 loop;
++
++	history = dw_pcie_ltssm_trace(pci);
++	if (!history)
++		return 0;
++
++	for (loop = 0; loop < history->count; loop++) {
++		val = history->states[loop];
++		seq_printf(s, "%s (0x%02x)\n", ltssm_status_string(val), val);
++	}
++
++	return 0;
++}
++
++static int ltssm_trace_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, ltssm_trace_show, inode->i_private);
++}
++
+ #define dwc_debugfs_create(name)			\
+ debugfs_create_file(#name, 0644, rasdes_debug, pci,	\
+ 			&dbg_ ## name ## _fops)
+@@ -552,6 +584,11 @@ static const struct file_operations dwc_pcie_ltssm_status_ops = {
+ 	.read = seq_read,
+ };
+ 
++static const struct file_operations dwc_pcie_ltssm_trace_ops = {
++	.open = ltssm_trace_open,
++	.read = seq_read,
++};
++
+ static void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
+ {
+ 	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
+@@ -644,6 +681,12 @@ static void dwc_pcie_ltssm_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
+ 			    &dwc_pcie_ltssm_status_ops);
+ }
+ 
++static void dwc_pcie_ltssm_trace_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
++{
++	debugfs_create_file("ltssm_trace", 0444, dir, pci,
++			    &dwc_pcie_ltssm_trace_ops);
++}
++
+ static int dw_pcie_ptm_check_capability(void *drvdata)
+ {
+ 	struct dw_pcie *pci = drvdata;
+@@ -922,6 +965,7 @@ void dwc_pcie_debugfs_init(struct dw_pcie *pci, enum dw_pcie_device_mode mode)
+ 			err);
+ 
+ 	dwc_pcie_ltssm_debugfs_init(pci, dir);
++	dwc_pcie_ltssm_trace_debugfs_init(pci, dir);
+ 
+ 	pci->mode = mode;
+ 	pci->ptm_debugfs = pcie_ptm_create_debugfs(pci->dev, pci,
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 5cd27f5739f1..0df18995b7fe 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -395,6 +395,11 @@ enum dw_pcie_ltssm {
+ 	DW_PCIE_LTSSM_UNKNOWN = 0xFFFFFFFF,
+ };
+ 
++struct dw_pcie_ltssm_history {
++    enum dw_pcie_ltssm *states;
++    u32 count;
++};
++
+ struct dw_pcie_ob_atu_cfg {
+ 	int index;
+ 	int type;
+@@ -499,6 +504,7 @@ struct dw_pcie_ops {
+ 			      size_t size, u32 val);
+ 	bool	(*link_up)(struct dw_pcie *pcie);
+ 	enum dw_pcie_ltssm (*get_ltssm)(struct dw_pcie *pcie);
++	struct dw_pcie_ltssm_history * (*ltssm_trace)(struct dw_pcie *pcie);
+ 	int	(*start_link)(struct dw_pcie *pcie);
+ 	void	(*stop_link)(struct dw_pcie *pcie);
+ 	int	(*assert_perst)(struct dw_pcie *pcie, bool assert);
+-- 
+2.43.0
 
-
-Kind regards,
-Niklas
 
