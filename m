@@ -1,180 +1,232 @@
-Return-Path: <linux-pci+bounces-44104-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44105-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2722ECF87A7
-	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 14:23:51 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A3CBCF8746
+	for <lists+linux-pci@lfdr.de>; Tue, 06 Jan 2026 14:19:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F00D030EE8BA
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 13:11:25 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3E7D63054C13
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jan 2026 13:16:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CDF232E732;
-	Tue,  6 Jan 2026 13:11:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6455324B1E;
+	Tue,  6 Jan 2026 13:16:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9VSxyA6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ePep8Pxs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FD830C60D;
-	Tue,  6 Jan 2026 13:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C735F30B53D;
+	Tue,  6 Jan 2026 13:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767705085; cv=none; b=LubNjq0+T1lWN66DbymIkecvzhvQ6fmyzEZocwQQVZwHh+W5yAtXhmzpsZxyVAFLTE/jORt9+OUeUmJoevTZevi3oyJux/gR2MDEUEBbfQFvA+EnRntnaQgOG/Jtvkcgdg6CtPFT6y/qTOEQf4EKovZJBstcGfY8Hq4rckQ4FTU=
+	t=1767705387; cv=none; b=NM7JNYcsHLhU3dhus0u6li1wt14bKZfpI+78TQvFnnEFC14ouS+ztmUODUg8v1/giVvhCbf8k39FdVWGPmttRzaLdqAeVyan9cx7t96bOG+7/9eVe5X5rzQNh+s2CQPDF1H8Txg7brIa8r3hJqNo0aPfh7DztJL9viCAlpz0Pus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767705085; c=relaxed/simple;
-	bh=up2iff1BZxa94kRdGC8JpHKlWbcnvKvXoZYjbXT7JJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GqhGKYaUpTxXn5YIZiLPjyQtVH6B3x2js4LXmJv/Qgk588aE2WeTFuiua2gPbMTREjGZAmkgKaZ3o0q9KEj1pBqLCEhYCof9b2m0QCOgzzugnFwOMtkPAsgKXByAetUF6UzwjQQBfvz+dEzsQUgFe3yM7F4TzODxdDWuWrCssb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9VSxyA6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B83DC116C6;
-	Tue,  6 Jan 2026 13:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767705084;
-	bh=up2iff1BZxa94kRdGC8JpHKlWbcnvKvXoZYjbXT7JJI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n9VSxyA6dLZYidFmR3YKrnuiZmFCzcB/BXSKq32qKyENyNq4aYaGeJAl6It6ZWDae
-	 fNHETbHe0yBHeHjen+HujqOr71J0UL8kKlDhPZPwBXLp5KOJzvtamRwgbC1dTWtzoU
-	 dU8zDzs8a3uCTCqPdqAaHawnWUWhg0/LDiK9aM5Vnv5eyd/YlNschdxUR68oCwFSuq
-	 lsb+Yem3dGUbajGYyEcIG1jGg3tb4MFgBauIq1kXi/bjkYNnEjRcZYahTuLaT6sg8S
-	 43n3wc587dSole11rjV87w4Lq2gF90tg+wVYlie+AZg/u/3/SL0a3CFyoH3K0toWyp
-	 KnseknnkVQXOg==
-Date: Tue, 6 Jan 2026 18:41:09 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Sumit Kumar <sumit.kumar@oss.qualcomm.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Richard Zhu <hongxing.zhu@nxp.com>, 
-	Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Yue Wang <yue.wang@amlogic.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Greentime Hu <greentime.hu@sifive.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Chuanhua Lei <lchuanhua@maxlinear.com>, 
-	Marek Vasut <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Pratyush Anand <pratyush.anand@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, imx@lists.linux.dev, 
-	linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 2/2] PCI: dwc: Add multi-port controller support
-Message-ID: <5gne3bureusi45sy4zqr2zrfvt4ba4uxgnsfdnjeh2eno5zspe@ldvhq2nilsan>
-References: <20260105-dt-parser-v1-0-b11c63cb5e2c@oss.qualcomm.com>
- <20260105-dt-parser-v1-2-b11c63cb5e2c@oss.qualcomm.com>
- <aVvkmkd5mWPmxeiS@ryzen>
- <m5ukeugo2lazipljqpubyvm7j3xk2j5o7i2xgdbkkhii57xmyk@lh32qdzjhe4n>
- <aVzqMqTUWIuKhgmC@fedora>
+	s=arc-20240116; t=1767705387; c=relaxed/simple;
+	bh=9MxuVCcj7YLjBQwvIW48dSzL8CNL+DLkDjYTYETRCQk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=kHMI3eKA3Db2a+A023S5KYaR9Ud3i8rCYzfP7DU65ZKHEaMCLofdAnVAj5+nGhuE915EWKeG9FkaxVgqUnjAlkR2kHD0W/AxvaHFl2Op6Ybqo5U6Fi6IS5PONO+UgM8hNTZx45w+y7sWBT44pQfxq2LCxH1zEeP3lKJbeV2Oa50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ePep8Pxs; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767705383; x=1799241383;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=9MxuVCcj7YLjBQwvIW48dSzL8CNL+DLkDjYTYETRCQk=;
+  b=ePep8PxsZUS4KcjUDyXZEmMjB7RjtLd+4ipYlxUEbsxPQqSTXRSvy9Tq
+   ACGQqFgJG9R0CPW6sVwLe9sYAZbavv26Y35QZm8jea98LTXuh7k7TIse2
+   jMFiPHCbPhsiK8iN0TTe+v1S2Bppc/ugEZLuQmGXmgMeL4I1h08OlMJRg
+   YZABmQF39bUsSzY5dZpr6VWwb9LGvVivPgK9bV8g77JEz/0RBnug/Q37r
+   LB6sWEMK8aQvmpSZNOkMNbhviKVOGTfxqCsCErYvPtfxD6MpDmZUO5O0J
+   YAktB4bQCHoxJmyAQSlD8ylZ0wcKIs5zIv48JzRDr/8o9Y/lUUfU0Lus8
+   Q==;
+X-CSE-ConnectionGUID: zWB0l/YRQ9eZcUgZbSRE1g==
+X-CSE-MsgGUID: fj1Pw0HJS22zhRbiY3C0Ow==
+X-IronPort-AV: E=McAfee;i="6800,10657,11663"; a="69142268"
+X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
+   d="scan'208";a="69142268"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 05:16:22 -0800
+X-CSE-ConnectionGUID: 21qYsJG7TOiPuaEzvFRk0A==
+X-CSE-MsgGUID: dPudM4RlQXirZE88u7g92g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
+   d="scan'208";a="207207097"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.6])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 05:16:19 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 6 Jan 2026 15:16:15 +0200 (EET)
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+cc: Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, 
+    "David S. Miller" <davem@davemloft.net>, 
+    Andreas Larsson <andreas@gaisler.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+    sparclinux@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Nathaniel Roach <nroach44@gmail.com>
+Subject: Re: [PATCH RESEND 1/1] SPARC/PCI: Correct 64-bit non-pref -> pref
+ BAR resources
+In-Reply-To: <6d788abe-3176-426a-a640-e30c03d25972@leemhuis.info>
+Message-ID: <7d1d0133-da17-9ba6-e34f-f09b85393e92@linux.intel.com>
+References: <20251124170411.3709-1-ilpo.jarvinen@linux.intel.com> <6d788abe-3176-426a-a640-e30c03d25972@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aVzqMqTUWIuKhgmC@fedora>
+Content-Type: multipart/mixed; BOUNDARY="8323328-395248168-1767705304=:1051"
+Content-ID: <e46bda39-d881-0955-9f0a-887921232004@linux.intel.com>
 
-On Tue, Jan 06, 2026 at 11:55:46AM +0100, Niklas Cassel wrote:
-> On Tue, Jan 06, 2026 at 10:49:19AM +0530, Manivannan Sadhasivam wrote:
-> > On Mon, Jan 05, 2026 at 05:19:38PM +0100, Niklas Cassel wrote:
-> > > On Mon, Jan 05, 2026 at 05:57:55PM +0530, Sumit Kumar wrote:
-> > > > The current DesignWare PCIe RC implementation supports only the controller
-> > > > (Host Bridge) node for specifying the Root Port properties in an assumption
-> > > > that the underlying platform only supports a single root Port per
-> > > > controller instance. This limits support for multi-port controllers where
-> > > > different ports may have different lane configurations and speed limits.
-> > > > 
-> > > > Introduce a separate dw_pcie_port structure to enable multi-port support.
-> > > > Each Root Port can have independent lane count, speed limit through pcie@N
-> > > > child nodes in device tree. Add dw_pcie_parse_root_ports()
-> > > > API to parse these child nodes.
-> > > > 
-> > > > Equalization presets and link width detection currently use common DBI
-> > > > space for all the root ports. Per-port DBI space assignment for these
-> > > > features will be added in future.
-> > > > 
-> > > > Signed-off-by: Sumit Kumar <sumit.kumar@oss.qualcomm.com>
-> > > 
-> > > Hello Sumit,
-> > > 
-> > > Is there a reason why you represent this as a list of ports rather than a
-> > > simple array?
-> > > 
-> > > The number of ports is known by parsing the device tree, so it should be
-> > > static, no?
-> > > 
-> > > At least to me, this seem similar to e.g. how a gpio_device has multiple
-> > > gpio_descriptors "struct gpio_desc *descs":
-> > > https://github.com/torvalds/linux/blob/master/drivers/gpio/gpiolib.h#L68C1-L68C26
-> > > 
-> > > A list is usually used for something that is dynamic.
-> > > I don't think that the number of ports to a PCIe controller will be dynamic.
-> > > 
-> > > I can see that struct qcom_pcie in pcie-qcom.c has struct list_head ports,
-> > > but that does not necessarily mean that we need to have a list of ports in
-> > > pcie-designware-host.c. (pcie-qcom could also be modified to have an array
-> > > of ports if there is a desire for similar design pattern.)
-> > > 
-> > 
-> > Only reason why I went with lists in pcie-qcom is flexibility. There are useful
-> > helpers available for traversing the lists and they seem much more elegant to
-> > use rather than manually traversing the array in C.
-> > 
-> > But to be frank, I don't really care which one is used as there is going to be
-> > only a handful of ports at max anyway and there is not much overhead.
-> 
-> Personally, when I see lists, I automatically think of something that is
-> dynamic, so using lists for something static just looks a little bit out of
-> place IMHO.
-> 
-> Technically, the difference is speed. If we want a specific element, we
-> will need to traverse the list. With an array, we can access the element
-> directly. However, looking at the current patch, it seems like it never
-> looks for a specific port, it always does an operation for all ports.
-> So from a speed perspective, it doesn't matter, at least not for now.
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Yes. I don't envision the driver doing element based lookup even in the future.
+--8323328-395248168-1767705304=:1051
+Content-Type: text/plain; CHARSET=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <72109ff8-49de-8a0a-26b2-2d97b798f59b@linux.intel.com>
 
-> 
-> One advantage I can see, instead of doing:
-> 
-> +	struct dw_pcie_port *port = list_first_entry(&pci->pp.ports,
-> +						struct dw_pcie_port, list);
-> +	return dw_pcie_wait_for_link(pci, port);
-> 
-> for drivers with only one port (most drivers), we could just instead do:
-> 
-> +	return dw_pcie_wait_for_link(pci, pci->pp.port);
-> 
-> To simply get the first element in the array. No need to sprinkle
-> list_first_entry() everywhere in all the drivers if they just have one port.
-> 
-> 
-> For iterating, to avoid manually traversing the array, we could do like
-> libata and create a simple macro, e.g. ata_qc_for_each():
-> https://github.com/torvalds/linux/blob/v6.19-rc4/drivers/ata/libata-eh.c#L851-L854
-> https://github.com/torvalds/linux/blob/v6.19-rc4/include/linux/libata.h#L1657-L1659
-> 
+On Tue, 6 Jan 2026, Linux regression tracking (Thorsten Leemhuis) wrote:
 
-I specifically do not want to introduce custom helpers. That's one of my primary
-motivation for using lists :)
+> [top-posting to facilitate processing]
+>=20
+> The issue fixed by below patch is still on my list of tracked
+> regression, which got me wondering what's up here. Did it fall through
+> the cracks? Is there some good reason why this approach was dropped? Or
+> Was the regression maybe fixed already and I just missed it?
 
-> And at least personally, I think my brain will parse dw_pcie_port_for_each() { }
-> faster than it parses list_for_each_entry(port, &pcie->ports, list) { },
-> since it is more unique, but perhaps I am the weird one here :)
-> 
+Hi Thorsten,
 
-Arrays for sure will allow us to do O(1) lookups, but considering that we will
-only be traversing the ports from the start, I still prefer using lists.
+There isn't other solution to this AFAIK so you've not missed anything.
 
-- Mani
+I'm used to PCI related changes often taking long time to handle so I'm=20
+just patiently waiting. :-)
 
--- 
-மணிவண்ணன் சதாசிவம்
+--
+ i.
+
+> Ciao, Thorsten
+>=20
+> On 11/24/25 18:04, Ilpo J=C3=A4rvinen wrote:
+> > SPARC T5-2 dts describes some PCI BARs as 64-bit resources without
+> > pref(etchable) bit (0x83... vs 0xc3... in assigned-addresses) for
+> > address ranges above the 4G threshold. Such resources cannot be placed
+> > into a non-prefetchable PCI bridge window that is capable only to
+> > 32-bit addressing. As such, it looks the platform is improperly
+> > describe by dts.
+> >=20
+> > Kernel detect this problem (see the IORESOURCE_PREFETCH check in
+> > pci_find_parent_resource()) and fails to assign these BAR resources to
+> > the resource tree due to lack of a compatible bridge window.
+> >=20
+> > Prior to the commit 754babaaf333 ("sparc/PCI: Remove
+> > pcibios_enable_device() as they do nothing extra") SPARC arch code did
+> > not test whether device resources were successfully in the resource
+> > tree when enabling a device, effectively hiding the problem. After
+> > removing the arch specific enable code, PCI core's
+> > pci_enable_resources() refuses to enable the device when it finds not
+> > all mem resources are assigned, and therefore mpt3sas can't be enabled:
+> >=20
+> > pci 0001:04:00.0: reg 0x14: [mem 0x801110000000-0x80111000ffff 64bit]
+> > pci 0001:04:00.0: reg 0x1c: [mem 0x801110040000-0x80111007ffff 64bit]
+> > pci 0001:04:00.0: BAR 1 [mem 0x801110000000-0x80111000ffff 64bit]: can'=
+t claim; no compatible bridge window
+> > pci 0001:04:00.0: BAR 3 [mem 0x801110040000-0x80111007ffff 64bit]: can'=
+t claim; no compatible bridge window
+> > mpt3sas 0001:04:00.0: BAR 1 [mem size 0x00010000 64bit]: not assigned; =
+can't enable device
+> >=20
+> > For clarity, this filtered log only shows failures for one mpt3sas
+> > device but other devices fail similarly. In the reported case, the end
+> > result with all the failures is an unbootable system.
+> >=20
+> > Things appeared to "work" before the commit 754babaaf333 ("sparc/PCI:
+> > Remove pcibios_enable_device() as they do nothing extra") because the
+> > resource tree is agnostic to whether PCI BAR resources are properly in
+> > the tree or not. So as long as there was a parent resource (e.g. a root
+> > bus resource) that contains the address range, the resource tree code
+> > just places resource request underneath it without any consideration to
+> > the intermediate BAR resource. While it worked, it's incorrect setup
+> > still.
+> >=20
+> > Add of fixup to set IORESOURCE_PREFETCH flag for a 64-bit PCI resource
+> > that has the end address above 4G requiring placement into the
+> > prefetchable window. Also log the issue.
+> >=20
+> > Fixes: 754babaaf333 ("sparc/PCI: Remove pcibios_enable_device() as they=
+ do nothing extra")
+> > Reported-by: Nathaniel Roach <nroach44@gmail.com>
+> > Tested-by: Nathaniel Roach <nroach44@gmail.com>
+> > Closes: https://github.com/sparclinux/issues/issues/22
+> > Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> > ---
+> >=20
+> > Resending with linux-pci@ ML.
+> >=20
+> > Any comments on the approach are welcome. E.g., is the fixup done at a
+> > correct level? Should it be targeted specifically to the known failures
+> > (how?) to avoid hiding more platform description problems?
+> >=20
+> > It seems VF BARs still have 64-bit non-pref despite this change, AFAICT=
+,
+> > those are read directly from the device's config space so would require
+> > ordinary quirks. None of them result in device enable failing though so=
+ the
+> > issue is orthogonal to the one being fixed here.
+> >=20
+> > If suggesting a different approach, please do realize my knowledge
+> > about OF code is generally very limited (and I'm not sure how directly
+> > the fixup code in other archs, mainly ppc, can be used as an example
+> > how to do fixups with sparc).
+> > ---
+> >  arch/sparc/kernel/pci.c | 23 +++++++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> >=20
+> > diff --git a/arch/sparc/kernel/pci.c b/arch/sparc/kernel/pci.c
+> > index a9448088e762..b290107170e9 100644
+> > --- a/arch/sparc/kernel/pci.c
+> > +++ b/arch/sparc/kernel/pci.c
+> > @@ -181,6 +181,28 @@ static int __init ofpci_debug(char *str)
+> > =20
+> >  __setup("ofpci_debug=3D", ofpci_debug);
+> > =20
+> > +static void of_fixup_pci_pref(struct pci_dev *dev, int index,
+> > +=09=09=09      struct resource *res)
+> > +{
+> > +=09struct pci_bus_region region;
+> > +
+> > +=09if (!(res->flags & IORESOURCE_MEM_64))
+> > +=09=09return;
+> > +
+> > +=09if (!resource_size(res))
+> > +=09=09return;
+> > +
+> > +=09pcibios_resource_to_bus(dev->bus, &region, res);
+> > +=09if (region.end <=3D ~((u32)0))
+> > +=09=09return;
+> > +
+> > +=09if (!(res->flags & IORESOURCE_PREFETCH)) {
+> > +=09=09res->flags |=3D IORESOURCE_PREFETCH;
+> > +=09=09pci_info(dev, "reg 0x%x: fixup: pref added to 64-bit resource\n"=
+,
+> > +=09=09=09 index);
+> > +=09}
+> > +}
+> > +
+> >  static unsigned long pci_parse_of_flags(u32 addr0)
+> >  {
+> >  =09unsigned long flags =3D 0;
+> > @@ -244,6 +266,7 @@ static void pci_parse_of_addrs(struct platform_devi=
+ce *op,
+> >  =09=09res->end =3D op_res->end;
+> >  =09=09res->flags =3D flags;
+> >  =09=09res->name =3D pci_name(dev);
+> > +=09=09of_fixup_pci_pref(dev, i, res);
+> > =20
+> >  =09=09pci_info(dev, "reg 0x%x: %pR\n", i, res);
+> >  =09}
+> >=20
+> > base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+>=20
+--8323328-395248168-1767705304=:1051--
 
