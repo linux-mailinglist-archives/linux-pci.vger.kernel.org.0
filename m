@@ -1,133 +1,120 @@
-Return-Path: <linux-pci+bounces-44180-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44181-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5481DCFDB0F
-	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 13:34:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 20BD0CFDB39
+	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 13:37:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CD51330C59D9
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 12:30:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AED83311C00C
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 12:32:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B9FD31A7F8;
-	Wed,  7 Jan 2026 12:22:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEAD431353C;
+	Wed,  7 Jan 2026 12:32:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="m/eEQEIk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GkGk6XqK"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121AF31A56C;
-	Wed,  7 Jan 2026 12:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41058F49;
+	Wed,  7 Jan 2026 12:32:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767788568; cv=none; b=DnW2PwONgROR4X7uvuScJvmp8CMXUv1tdaB/3UTGclQlfjn0awJUtX/g+sAqONayrs7dWLvKql2ICCdD9Hh6OReW4Di7IxyhBXiThOp868IkM8lT/g4uOkaTwBJVLyAlx/hXnNcbA8Cx1eDFCNn9skDJBqv0UZ+UgIhTQRkjknU=
+	t=1767789125; cv=none; b=J0b2PjCfjJopP9osph3ACd89XGjhmB+DWvaUCbS3UcEg1QVuYek8gvuhcwhwXzY46d9z5mBgM1fxMT588FGB5E+rifXwRm5pm4AwCqwdb+/iBgUhVYP+uyCAz2pPSdr48STISOerGpCrvaDqoqMdRBlj3u3Rot+qDuSvHtzBC08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767788568; c=relaxed/simple;
-	bh=2wz8cf8crD1UXOpgkNkds4yjzWyJDvxV9FNfHAZ7L/I=;
+	s=arc-20240116; t=1767789125; c=relaxed/simple;
+	bh=sfYlyiZoeUZcVn7NwfS5gMgyWT0pMwsrWiexLPWG+Lo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TSVoQpXDNc4R17e/yCD0Q59/xz+Qh3YSvir1qk2D8MZZiTAjCu4Le7AeHYMcQgWwfCtaz9dNnDd45fa7ZW8D/JgRjoPAjVX+ZrEI6Q1StTv0f9eZH++7ashph+70geQo3ZW5W7MvAteWAXyFJmZjmWuIsxrifBh9IvwCredd6NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=m/eEQEIk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A0F8C4CEF7;
-	Wed,  7 Jan 2026 12:22:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1767788567;
-	bh=2wz8cf8crD1UXOpgkNkds4yjzWyJDvxV9FNfHAZ7L/I=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=uG7zBLOL8Sa38Kd9Lw5AXBHKt8+6deQ8Gh9OAyDuagPMdPV4bjGCW9u/qtV0XDtXI/Qg6yJkbtcVZsCqnU74BqxPAvtq8V2d7OJ9jollj3jiNltsMcERz29Ki72gEtkcrnNLCtzZgWR3Jyg7Y5cue+pW/6BJH/7hn0q2hiJBuEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GkGk6XqK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A34EC4CEF7;
+	Wed,  7 Jan 2026 12:31:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767789125;
+	bh=sfYlyiZoeUZcVn7NwfS5gMgyWT0pMwsrWiexLPWG+Lo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m/eEQEIkgULSHDPhdH3kgjBcjWc3w1ilYx/3tnhazTYE9GO+ICCseTorTbXgE9/o7
-	 EE6TKPEe57iUWaPqb5sZfQV/v5Fr6sMuAC0wn6cobdNm2RWJprWOQN1WGVXZAGmUZ6
-	 jOT6A6qj/I0rsJFqqeKIih+hfj+SI736FM5AfISI=
-Date: Wed, 7 Jan 2026 13:22:44 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: rafael@kernel.org, igor.korotin.linux@gmail.com, ojeda@kernel.org,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
-	leon@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org,
-	wsa+renesas@sang-engineering.com, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH 6/6] rust: driver: drop device private data post unbind
-Message-ID: <2026010741-wiry-trophy-46ec@gregkh>
-References: <20260107103511.570525-1-dakr@kernel.org>
- <20260107103511.570525-7-dakr@kernel.org>
+	b=GkGk6XqKLaGl/8j/tUCkvHRUPu5FGXepJy0ojmFTNwzNgDtZLbY42vyoyRm8ZEM4B
+	 91dywEkuqYf+i7YOFLywI8jwoJeO0ARjqIOZQ/R8OcBK1EY0JcXRGUMp7KelNJQTdx
+	 BepyMOchxH7/DqNmQGJiphOUtpskRIjSh7wjC/YphZ11lVghKdhVVdrFPPq5npC2qP
+	 bTXpfYMTuEcWvSW409C5JF1kRiFXeNuCFp+GMefGV8i2fkI6GtxbgKruLxJ/1NOtGJ
+	 cHOqiYvJa26ydKn34QsC8rh0WpC0Y+cg+fwTROdmKdLrNCjuLKa8FvuhD9d4hBr7gw
+	 7Wsqff3rWNJCQ==
+Date: Wed, 7 Jan 2026 18:01:56 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	linux-pm@vger.kernel.org, linux-ide@vger.kernel.org
+Subject: Re: [PATCH v4 5/5] power: sequencing: Add the Power Sequencing
+ driver for the PCIe M.2 connectors
+Message-ID: <pqix44ld4icxhmvaranezas7j77wcrmkfpj4xyxgxir3tmfwx7@fswnr25k2f43>
+References: <20251228-pci-m2-v4-0-5684868b0d5f@oss.qualcomm.com>
+ <20251228-pci-m2-v4-5-5684868b0d5f@oss.qualcomm.com>
+ <CAMRc=MfPq7+ZbWTp7+H388hqHoX27qbbHsLHO+xeLaceTwZLVA@mail.gmail.com>
+ <z33axfsiox73f2lklhiaulekjnqxnqtkycfylybwqnqxtx2fck@3qtas4u6mfnz>
+ <CAMRc=McS8a-1cH_y+kpze=zj2-PksHDO3SE=p3XnbEueUQt9xA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260107103511.570525-7-dakr@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McS8a-1cH_y+kpze=zj2-PksHDO3SE=p3XnbEueUQt9xA@mail.gmail.com>
 
-On Wed, Jan 07, 2026 at 11:35:05AM +0100, Danilo Krummrich wrote:
-> @@ -548,6 +548,10 @@ static DEVICE_ATTR_RW(state_synced);
->  static void device_unbind_cleanup(struct device *dev)
->  {
->  	devres_release_all(dev);
-> +#ifdef CONFIG_RUST
+On Wed, Jan 07, 2026 at 10:51:11AM +0100, Bartosz Golaszewski wrote:
+> On Wed, Jan 7, 2026 at 10:39 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
+> >
+> > > > +
+> > > > +static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
+> > > > +{
+> > > > +       struct device *dev = &pdev->dev;
+> > > > +       struct pwrseq_pcie_m2_ctx *ctx;
+> > > > +       struct pwrseq_config config = {};
+> > > > +       int ret;
+> > > > +
+> > > > +       ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> > > > +       if (!ctx)
+> > > > +               return -ENOMEM;
+> > > > +
+> > > > +       ctx->of_node = dev_of_node(dev);
+> > >
+> > > Since you're storing the node address for later, I'd suggest using
+> > > of_node_get() to get a real reference.
+> > >
+> >
+> > If CONFIG_OF_DYNAMIC is not enabled, then of_node_get() will just return the
+> > passed pointer. I always prefer using dev_of_node() since it has the CONFIG_OF
+> > and NULL check. Though, the checks won't apply here, I used it for consistency.
+> >
+> 
+> I think it's just more of a good practice to take a reference to any
+> resource whenever you store keep it for longer than the duration of
+> the function even if the actual reference counting is disabled in some
+> instances.
 
-Nit, let's not put #ifdef in .c files, the overhead of an empty pointer
-for all drivers is not a big deal.
+Good practice you inherited from writing Rust code :)
 
-> +	if (dev->driver->p_cb.post_unbind)
-> +		dev->driver->p_cb.post_unbind(dev);
-> +#endif
->  	arch_teardown_dma_ops(dev);
->  	kfree(dev->dma_range_map);
->  	dev->dma_range_map = NULL;
-> diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
-> index cd8e0f0a634b..51a9ebdd8a2d 100644
-> --- a/include/linux/device/driver.h
-> +++ b/include/linux/device/driver.h
-> @@ -85,6 +85,8 @@ enum probe_type {
->   *		uevent.
->   * @p:		Driver core's private data, no one other than the driver
->   *		core can touch this.
-> + * @p_cb:	Callbacks private to the driver core; no one other than the
-> + *		driver core is allowed to touch this.
->   *
->   * The device driver-model tracks all of the drivers known to the system.
->   * The main reason for this tracking is to enable the driver core to match
-> @@ -119,6 +121,15 @@ struct device_driver {
->  	void (*coredump) (struct device *dev);
->  
->  	struct driver_private *p;
-> +#ifdef CONFIG_RUST
+> If ever we switch to fwnodes, the circumstances may be
+> different than static devicetree.
+> 
+> You can also do "ctx->of_node = of_node_get(dev_of_node(dev));", all
+> the NULL-checks are there.
+> 
 
-Again, no #ifdef.
+This may not be needed. I can use of_node_get() here, but the APIs are just
+fragile such that neither dev_of_node() nor of_node_get() increments the
+refcount always.
 
-> +	struct {
-> +		/*
-> +		 * Called after remove() and after all devres entries have been
-> +		 * processed.
-> +		 */
-> +		void (*post_unbind)(struct device *dev);
+- Mani
 
-post_unbind_rust_only()?
-
-> -impl<T: RegistrationOps> Registration<T> {
-> +impl<T: RegistrationOps + 'static> Registration<T> {
-> +    extern "C" fn post_unbind_callback(dev: *mut bindings::device) {
-> +        // SAFETY: The driver core only ever calls the post unbind callback with a valid pointer to
-> +        // a `struct device`.
-> +        //
-> +        // INVARIANT: `dev` is valid for the duration of the `post_unbind_callback()`.
-> +        let dev = unsafe { &*dev.cast::<device::Device<device::CoreInternal>>() };
-> +
-> +        // `remove()` and all devres callbacks have been completed at this point, hence drop the
-> +        // driver's device private data.
-> +        //
-> +        // SAFETY: By the safety requirements of the `Driver` trait, `T::DriverData` is the
-> +        // driver's device private data.
-> +        drop(unsafe { dev.drvdata_obtain::<T::DriverData>() });
-
-I don't mind this, but why don't we also do this for all C drivers?
-Just null out the pointer at this point in time so that no one can touch
-it, just like you are doing here (in a way.)
-
-thanks,
-
-greg k-h
+-- 
+மணிவண்ணன் சதாசிவம்
 
