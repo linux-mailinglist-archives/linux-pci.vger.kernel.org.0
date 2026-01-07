@@ -1,150 +1,151 @@
-Return-Path: <linux-pci+bounces-44151-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44152-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3149CFCAA5
-	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 09:47:00 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCFB8CFCB29
+	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 09:58:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 9C87D3002D27
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 08:46:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D178230248B6
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 08:58:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A23702DE6FC;
-	Wed,  7 Jan 2026 08:46:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 041BB2E8B94;
+	Wed,  7 Jan 2026 08:58:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="A1ZIetzC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e3KV4wp9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m49211.qiye.163.com (mail-m49211.qiye.163.com [45.254.49.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359D17083C;
-	Wed,  7 Jan 2026 08:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B392E6CD2;
+	Wed,  7 Jan 2026 08:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767775615; cv=none; b=VwlBcvB0kIxF1Q17RE0yU+0zTecxrBa8g7BgR0Qc1VAJSo+9i2IEvrwEcYcqzczc9E23a31gv/UWlbgNSIiZeC04aZpTLL2rXDRoeDZpdUWS+weKI9IuVzF9e2Cylq5hijHdpARETu2FV0NXKUVpGyb2jxPzLL3ld+ne9CBUwXI=
+	t=1767776293; cv=none; b=klGdC5VUcwV7BGbMEEh4G4+nft+hOIOyiSEzUOGtVokvTtwe9CmARMZUpVSLCgRNKjBkvsoKgDsMHPROBXhPSdbCxvsOkOyaZHMEUl1E+kS3i7FtdWJJWBsbCCVpNnb5scnPuOxvUwc9XEilGnaPpsPHRjFCT/vHecpN1/lk+jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767775615; c=relaxed/simple;
-	bh=SwhJvgMMuzvHajFL3jZrmdI7aOyPsCKmq3fRKgjq3j4=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KN00M1oXd30EBFqI13FBuVZ0/JcSKWYU7yBRCa0uhRFk3ZM82x935baHWIOjcTRksDnDSRk/2ZmDB4W58xSxvG1nMcdmI3QDwe/r4s96LC/OJfizd1kLpoMMYguuvsC8soRhTqwgAtgVL5XNawbKW1pAFCJBMiVx0AfdAOECOX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=A1ZIetzC; arc=none smtp.client-ip=45.254.49.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.14] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 2fcc8741a;
-	Wed, 7 Jan 2026 16:41:34 +0800 (GMT+08:00)
-Message-ID: <3bae58cb-cf60-487b-a056-0c0d7a85d05c@rock-chips.com>
-Date: Wed, 7 Jan 2026 16:41:33 +0800
+	s=arc-20240116; t=1767776293; c=relaxed/simple;
+	bh=YfscGlzjoPdKa2cHm3kbuvdCSUSLTviahPedm8Ok0YU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A7cqTVx1DDdl/YB+HdOttVdH4t2RmxuXvsadg1ARBAw6U+zYo5+zzv5Dnn67OSVVT/yw4pA6bSIQg2rD29BM+lmr2XeG3j7f0kgRnI3kRpxI7J9854x6oa9HRdo9/McOl/6Hd2S6+4iS6zKCjR2inSnscfABG5lXj+wFxyRiM+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e3KV4wp9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DCA3C16AAE;
+	Wed,  7 Jan 2026 08:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767776293;
+	bh=YfscGlzjoPdKa2cHm3kbuvdCSUSLTviahPedm8Ok0YU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e3KV4wp9dk91PRYB7pSFMEbNdL+dcrw9T9h0nU6RHPagQoOpSwUQaA6XkF70RKuTc
+	 xtM+n1DqXdbGgVpHLeptVTFwu72Nkld3CNTXiX/Gl/SY+9PZdCNwjudheqAIuSX8gQ
+	 rDsEai9kpQPI/dQGZFy+mfY7cwZFOIBH7BsKpQAgi9SCqUqibD7/mr0ux9qWUL5IIf
+	 CiquSLDMBiYqU0NDSwQVpQ/PndVbOsLhBcaIbCeQgv57QIR+/aevsY6w44Qfvh5xb2
+	 l73d9ClDxHXKajAgoxdtaZm+L396NIIZjfxPXxUw5oBcdXAD2iHN6VAx5VcXtjbbkz
+	 Qe3rWcWrHegjw==
+Date: Wed, 7 Jan 2026 09:58:07 +0100
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, Marc Zyngier <maz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] irqdomain: Add parent field to struct irqchip_fwid
+Message-ID: <aV4gH/yHaOmOtK0J@lpieralisi>
+References: <20251218-gicv5-host-acpi-v2-0-eec76cd1d40b@kernel.org>
+ <20251218-gicv5-host-acpi-v2-3-eec76cd1d40b@kernel.org>
+ <20260105120108.00002016@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, vincent.guittot@linaro.org,
- zhangsenchuan@eswincomputing.com, Richard Zhu <hongxing.zhu@nxp.com>
-Subject: Re: [PATCH v4 6/6] PCI: dwc: Skip failure during
- dw_pcie_resume_noirq() if no device is available
-To: manivannan.sadhasivam@oss.qualcomm.com, Jingoo Han
- <jingoohan1@gmail.com>, Manivannan Sadhasivam <mani@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-References: <20260107-pci-dwc-suspend-rework-v4-0-9b5f3c72df0a@oss.qualcomm.com>
- <20260107-pci-dwc-suspend-rework-v4-6-9b5f3c72df0a@oss.qualcomm.com>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <20260107-pci-dwc-suspend-rework-v4-6-9b5f3c72df0a@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9b979e534009cckunm86cf5ae48db346
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGRoeT1ZDT0NMHkJJSE1KHk5WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=A1ZIetzCuP2UCHY3Apt0yrCTiVom/95kH3NNJcuNy79dpULt4mmNgbqJcv3GUovKx0jatwi2aeYP7//iFHueMyUI9MRnCLJXh7VLko2zdfapIe1P7p5xAOT6XwMshOrIOFbniRNHUEhgWO8K27lG72M4TMwiZ0ZuHGS5Kzjkpb8=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=hPBAP0siFyQfFygqTu4pRiTMv/W6paLyxD9KvAqRJT8=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260105120108.00002016@huawei.com>
 
+On Mon, Jan 05, 2026 at 12:01:08PM +0000, Jonathan Cameron wrote:
+> On Thu, 18 Dec 2025 11:14:29 +0100
+> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> 
+> > The GICv5 driver IRQ domain hierarchy requires adding a parent field to
+> > struct irqchip_fwid so that core code can reference a fwnode_handle parent
+> > for a given fwnode.
+> > 
+> > Add a parent field to struct irqchip_fwid and update the related kernel API
+> > functions to initialize and handle it.
+> > 
+> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Marc Zyngier <maz@kernel.org>
+> Hi Lorenzo,
+> 
+> Happy new year.
 
-在 2026/01/07 星期三 16:11, Manivannan Sadhasivam via B4 Relay 写道:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> 
-> If there is no device attached to any of the Root Ports available under the
-> Root bus before suspend and during resume, then there is no point in
-> returning failure.
-> 
-> So skip returning failure so that the resume succeeds and allow the device
-> to get attached later.
-> 
-> If there was a device before suspend and not available during resume, then
-> propagate the error to indicate that the device got removed during suspend.
-> 
+Happy New Year !
 
-Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
-
-
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> ---
->   drivers/pci/controller/dwc/pcie-designware-host.c | 17 ++++++++++++-----
->   1 file changed, 12 insertions(+), 5 deletions(-)
+> > ---
+> >  include/linux/irqdomain.h | 30 ++++++++++++++++++++++++++----
+> >  kernel/irq/irqdomain.c    | 14 +++++++++++++-
+> >  2 files changed, 39 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+> > index 62f81bbeb490..b9df84b447a1 100644
+> > --- a/include/linux/irqdomain.h
+> > +++ b/include/linux/irqdomain.h
+> > @@ -257,7 +257,8 @@ static inline void irq_domain_set_pm_device(struct irq_domain *d, struct device
+> >  
+> >  #ifdef CONFIG_IRQ_DOMAIN
+> >  struct fwnode_handle *__irq_domain_alloc_fwnode(unsigned int type, int id,
+> > -						const char *name, phys_addr_t *pa);
+> > +						const char *name, phys_addr_t *pa,
+> > +						struct fwnode_handle *parent);
+> >  
+> >  enum {
+> >  	IRQCHIP_FWNODE_REAL,
+> > @@ -267,18 +268,39 @@ enum {
+> >  
+> >  static inline struct fwnode_handle *irq_domain_alloc_named_fwnode(const char *name)
+> >  {
+> > -	return __irq_domain_alloc_fwnode(IRQCHIP_FWNODE_NAMED, 0, name, NULL);
+> > +	return __irq_domain_alloc_fwnode(IRQCHIP_FWNODE_NAMED, 0, name, NULL, NULL);
+> > +}
+> > +
+> > +static inline
+> > +struct fwnode_handle *irq_domain_alloc_named_fwnode_parent(const char *name,
+> > +							   struct fwnode_handle *parent)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index ccde12b85463..c30a2ed324cd 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -20,6 +20,7 @@
->   #include <linux/platform_device.h>
->   
->   #include "../../pci.h"
-> +#include "../pci-host-common.h"
->   #include "pcie-designware.h"
->   
->   static struct pci_ops dw_pcie_ops;
-> @@ -1227,6 +1228,7 @@ EXPORT_SYMBOL_GPL(dw_pcie_suspend_noirq);
->   
->   int dw_pcie_resume_noirq(struct dw_pcie *pci)
->   {
-> +	struct dw_pcie_rp *pp = &pci->pp;
->   	int ret;
->   
->   	if (!pci->suspended)
-> @@ -1234,23 +1236,28 @@ int dw_pcie_resume_noirq(struct dw_pcie *pci)
->   
->   	pci->suspended = false;
->   
-> -	if (pci->pp.ops->init) {
-> -		ret = pci->pp.ops->init(&pci->pp);
-> +	if (pp->ops->init) {
-> +		ret = pp->ops->init(pp);
->   		if (ret) {
->   			dev_err(pci->dev, "Host init failed: %d\n", ret);
->   			return ret;
->   		}
->   	}
->   
-> -	dw_pcie_setup_rc(&pci->pp);
-> +	dw_pcie_setup_rc(pp);
->   
->   	ret = dw_pcie_start_link(pci);
->   	if (ret)
->   		return ret;
->   
->   	ret = dw_pcie_wait_for_link(pci);
-> -	if (ret)
-> -		return ret;
-> +	/*
-> +	 * Skip failure if there is no device attached to the bus now and before
-> +	 * suspend. But the error should be returned if a device was attached
-> +	 * before suspend and not available now.
-> +	 */
-> +	if (ret == -ENODEV && !pci_root_ports_have_device(pp->bridge->bus))
-> +		return 0;
->   
->   	return ret;
->   }
+> The name of this makes me think it's allocating the named fwnode parent, rather that
+> the named fwnode + setting it's parent.
 > 
+> There aren't all that many calls to irq_domain_named_fwnode(), maybe to avoid challenge
+> of a new name, just add the parameter to all of them? (25ish)  Mind you the current
+> pattern for similar cases is a helper, so maybe not.
 
+Similar cases ? Have you got anything specific I can look into ?
+
+> Or go with something similar to named and have
+> 
+> irq_domain_alloc_named_parented_fwnode()?
+
+Or I can add a set_parent() helper (though that's a bit of churn IMO) ?
+
+If Thomas has a preference I will follow that, all of the above is doable
+for me.
+
+> I'm not that bothered though if you think the current naming is the best we can do.
+
+I think you have a point - as per my comment above.
+
+Thanks,
+Lorenzo
+
+> Jonathan
+> 
+> > +{
+> > +	return __irq_domain_alloc_fwnode(IRQCHIP_FWNODE_NAMED, 0, name, NULL, parent);
+> >  }
+> 
+> 
 
