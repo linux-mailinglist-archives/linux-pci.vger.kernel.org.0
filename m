@@ -1,163 +1,182 @@
-Return-Path: <linux-pci+bounces-44156-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44157-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5269CCFCD9F
-	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 10:27:22 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D56ACFCDBF
+	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 10:29:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BA77530C80E7
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 09:21:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 892F230062E0
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 09:23:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A94812FD7BE;
-	Wed,  7 Jan 2026 09:21:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 851FF2FE58F;
+	Wed,  7 Jan 2026 09:23:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6i7g2fH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o/MtHX9x"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802F82FBDF2;
-	Wed,  7 Jan 2026 09:21:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53EFA2356A4;
+	Wed,  7 Jan 2026 09:23:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767777713; cv=none; b=R+gj1nyfuFh4x3yAnggQJmaAp6QI6G2XAso7KZ93a8iKop2I0/IhCp3Awipn1f4H5Ua1iWhz852WB4hcnjegiJnrHmBl3LFht+26lLOkRNKxbfMR9MAPzpcHwQliXtNSgye8z0GmJeFcU4f9wvlVPIr9U2Ah90/8Vx5y8+zzy0c=
+	t=1767777838; cv=none; b=ClnmyVfrwBMHYwLljhFQREWLUlwMGqA0F9xbiB7zfVKiTig6dytF0paTIcIeXbYkxRoKzRJ+CFvS5pv+Pw5DIA8oJ+daekSitonplaQH4OC2azN0AZUhyI6hV7J2m9pFQ99KUV9Hiy5+GlcXz3ivAmx0DczgNxsCnfr5/2oDlY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767777713; c=relaxed/simple;
-	bh=8DINCbuJQD5wwJWcbQ2qfTOQo9DyNZ/cR+d1iKICHx0=;
+	s=arc-20240116; t=1767777838; c=relaxed/simple;
+	bh=+6pwW5uwAPs1Ujhdl8iggTkeR5DIz6CdXvrHytl9AcI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oRSGoT4fZY1qPLxPeO8L2OyRk+hSH6MOVDo6+j2GfCsTi7M2NZVXcx2CFFM/FHz9SgLGs/BRvEWn1RvGmYhiEg4VWNjjUaDbwvcyUaZAr9cTYfvMQl4eyy22aX4HZroYdMRWUCzouTEl2UN8XHyu+ATaM8aDYg5WaGwfRiFB1Mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6i7g2fH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B99C4CEF7;
-	Wed,  7 Jan 2026 09:21:48 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z2b0kJ85MUPs1kT8YcX/izHqZKM0Nzb1/aCGFhYnwnQSX7yGdGZxkMFOfDaS8xjYAb1Sd9vYwojhoCfVzuzdxfCqExXrEZVWxdodxiJQUWWWXR8pB5mQU6dyJR3LEu6jqEHc+9a9bc3QjkjLUYqPZIak1kLJtjDgh4/f97Ldiis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o/MtHX9x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6B21C4CEF7;
+	Wed,  7 Jan 2026 09:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767777713;
-	bh=8DINCbuJQD5wwJWcbQ2qfTOQo9DyNZ/cR+d1iKICHx0=;
+	s=k20201202; t=1767777837;
+	bh=+6pwW5uwAPs1Ujhdl8iggTkeR5DIz6CdXvrHytl9AcI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B6i7g2fHcAv2ATBTCSv0FqR2vlQ505Lrja7YsyJy3Uog16uBI9cthAmju+OuOCB0b
-	 8cCziRMahyuh9dHODb37OVBmEKOJSevUWrbP1+SvOz/kT/xZ/YOeBQ7CDrT2j4Lo9a
-	 tqLWrUl7ejmvLweAqkIp/NbxrlLGw/WbWy2mG+sFTFYkPaQumBC98H21+6acbKwYGK
-	 e3Sa8YQzzjaBFYMDZM/OiVFB58DbmnjsBsMHuekNiYh2VEwTg909mVyvt0BIwDu9tQ
-	 2v9AV4p7GFWQKxsQOqJBu/EIDFX+gluLrHM7nXW6nj0FlzsDXNfAqw3Di08OHyVrVi
-	 4dLreSbP3bK8w==
-Date: Wed, 7 Jan 2026 14:51:45 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lukas Wunner <lukas@wunner.de>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Giovanni Cabiddu <giovanni.cabiddu@intel.com>, 
-	Feng Tang <feng.tang@linux.alibaba.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI/portdev: Disable AER for Titan Ridge 4C 2018
-Message-ID: <65j2ah57lotdhzocczw4jq5zsc2w37aj6wskv6zfptpsi6kpmk@qz7oiiovzjgb>
-References: <20260107081445.1100-1-atharvatiwarilinuxdev@gmail.com>
+	b=o/MtHX9xtq+8mIeuQ2a+CEV/EtEvcjehkZNy0F+6BDhCO2qi5rHoyAGTnniOgESHE
+	 IilnvhlTtAzQVB2y8T3ZBijAcuBqaJB2AwJjtk5/DWot25uwJ+9YcnT4QuZEGzzOSe
+	 py+97jd19AM7or0s1Rx0yj9R92DDWFXOXPdyEB0cPuVaow2Rsug9g+6fvxvHuF0gwG
+	 ZGiuOYLbq9oQVOT2/PPR+A1x3zHTUvpqmHPE9nvlbzSIxCf0vh0IqhioksNFRRjOZ2
+	 ElCudii24ZjPfc75AGA5lW+xLQjYfq2Zt6HG87JzpC123whWvhKq6aoHdC24ZXlkwv
+	 nNmiJHzkFSybw==
+Date: Wed, 7 Jan 2026 10:23:52 +0100
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, Marc Zyngier <maz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] PCI/MSI: Make the pci_msi_map_rid_ctlr_node()
+ interface firmware agnostic
+Message-ID: <aV4mKBRjeyp9eWVy@lpieralisi>
+References: <20251218-gicv5-host-acpi-v2-0-eec76cd1d40b@kernel.org>
+ <20251218-gicv5-host-acpi-v2-4-eec76cd1d40b@kernel.org>
+ <20260105122114.000035e8@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260107081445.1100-1-atharvatiwarilinuxdev@gmail.com>
+In-Reply-To: <20260105122114.000035e8@huawei.com>
 
-On Wed, Jan 07, 2026 at 08:14:35AM +0000, Atharva Tiwari wrote:
-> Changes since v1:
-> 	Transferred logic to drivers/pci/quicks.c
+On Mon, Jan 05, 2026 at 12:21:14PM +0000, Jonathan Cameron wrote:
+> On Thu, 18 Dec 2025 11:14:30 +0100
+> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 > 
-> Disable AER for Intel Titan Ridge 4C 2018
-> (used in T2 iMacs, where the warnings appear)
-> that generate continuous pcieport warnings. such as:
+> > To support booting with OF and ACPI seamlessly, GIC ITS parent code
+> > requires the PCI/MSI irqdomain layer to implement a function to retrieve
+> > an MSI controller fwnode and map an RID in a firmware agnostic way
+> > (ie pci_msi_map_rid_ctlr_node()).
+> > 
+> > Convert pci_msi_map_rid_ctlr_node() to an OF agnostic interface
+> > (fwnode_handle based) and update the GIC ITS MSI parent code to reflect
+> > the pci_msi_map_rid_ctlr_node() change.
+> > 
+> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Marc Zyngier <maz@kernel.org>
+> Hi Lorenzo,
 > 
-> pcieport 0000:00:1c.4: AER: Correctable error message received from 0000:07:00.0
-> pcieport 0000:07:00.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
-> pcieport 0000:07:00.0:   device [8086:15ea] error status/mask=00000080/00002000
-> pcieport 0000:07:00.0:    [ 7] BadDLLP
+> A few minor comments inline.  All in the 'up to you' category.
 > 
-> (see: https://bugzilla.kernel.org/show_bug.cgi?id=220651)
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 > 
-> macOS also disables AER for Thunderbolt devices and controllers in their drivers.
+> > ---
 > 
-> Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+> > diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+> > index a329060287b5..3136341e802c 100644
+> > --- a/drivers/pci/msi/irqdomain.c
+> > +++ b/drivers/pci/msi/irqdomain.c
+> > @@ -376,23 +376,35 @@ u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev)
+> >  }
+> >  
+> >  /**
+> > - * pci_msi_map_rid_ctlr_node - Get the MSI controller node and MSI requester id (RID)
+> > + * pci_msi_map_rid_ctlr_node - Get the MSI controller fwnode_handle and MSI requester id (RID)
+> > + * @domain:	The interrupt domain
+> >   * @pdev:	The PCI device
+> > - * @node:	Pointer to store the MSI controller device node
+> > + * @node:	Pointer to store the MSI controller fwnode_handle
+> >   *
+> > - * Use the firmware data to find the MSI controller node for @pdev.
+> > + * Use the firmware data to find the MSI controller fwnode_handle for @pdev.
+> >   * If found map the RID and initialize @node with it. @node value must
+> >   * be set to NULL on entry.
+> >   *
+> >   * Returns: The RID.
+> >   */
+> > -u32 pci_msi_map_rid_ctlr_node(struct pci_dev *pdev, struct device_node **node)
+> > +u32 pci_msi_map_rid_ctlr_node(struct irq_domain *domain, struct pci_dev *pdev,
+> > +			      struct fwnode_handle **node)
+> >  {
+> > +	struct device_node *of_node;
+> >  	u32 rid = pci_dev_id(pdev);
+> >  
+> >  	pci_for_each_dma_alias(pdev, get_msi_id_cb, &rid);
+> >  
+> > -	return of_msi_xlate(&pdev->dev, node, rid);
+> > +	of_node = irq_domain_get_of_node(domain);
+> > +	if (of_node) {
+> 
+> I haven't read on but my assumption is of_node is never used for anything else.
+> I'd make that explicit by not having the local variable.
+> 	if (irq_domain_get_of_node(domain))
+> 
+> Might even be worth a comment to say this is just checking of is in use for the
+> domain in general?
 
-Discussion in v1 of this patch is not yet concluded and you have sent v2. This
-is not going to help merge this patch.
+Yes, I thought an explicit variable would make it clearer, don't know,
+not a big deal either way I believe.
 
-Since you don't know why AER is happening, you should wait for a response from
-the Intel/Thunderbolt folks who know more about the hardware.
-
-- Mani
-
-> ---
->  drivers/pci/pcie/aer.c     | 3 +++
->  drivers/pci/pcie/portdrv.c | 2 +-
->  drivers/pci/quirks.c       | 9 +++++++++
->  include/linux/pci.h        | 1 +
->  4 files changed, 14 insertions(+), 1 deletion(-)
+> > +		struct device_node *msi_ctlr_node = NULL;
+> > +
+> > +		rid = of_msi_xlate(&pdev->dev, &msi_ctlr_node, rid);
+> > +		if (msi_ctlr_node)
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index e0bcaa896803..45604564ce6f 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -389,6 +389,9 @@ void pci_aer_init(struct pci_dev *dev)
->  {
->  	int n;
->  
-> +	if (dev->no_aer)
-> +		return;
-> +
->  	dev->aer_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
->  	if (!dev->aer_cap)
->  		return;
-> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> index 38a41ccf79b9..ab904a224296 100644
-> --- a/drivers/pci/pcie/portdrv.c
-> +++ b/drivers/pci/pcie/portdrv.c
-> @@ -240,7 +240,7 @@ static int get_port_device_capability(struct pci_dev *dev)
->  	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
->               pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
->  	    dev->aer_cap && pci_aer_available() &&
-> -	    (pcie_ports_native || host->native_aer))
-> +	    (pcie_ports_native || host->native_aer) && !dev->no_aer)
->  		services |= PCIE_PORT_SERVICE_AER;
->  #endif
->  
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index b9c252aa6fe0..d36dd3f8bbf6 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -6340,4 +6340,13 @@ static void pci_mask_replay_timer_timeout(struct pci_dev *pdev)
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_timer_timeout);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_timer_timeout);
-> +
-> +static void pci_disable_aer(struct pci_dev *pdev)
-> +{
-> +	pdev->no_aer = 1;
-> +}
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15EA, pci_disable_aer);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15EB, pci_disable_aer);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15EC, pci_disable_aer);
-> +
->  #endif
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 864775651c6f..f447f86c6bdf 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -440,6 +440,7 @@ struct pci_dev {
->  	unsigned int	multifunction:1;	/* Multi-function device */
->  
->  	unsigned int	is_busmaster:1;		/* Is busmaster */
-> +	unsigned int	no_aer:1;		/* May not use AER */
->  	unsigned int	no_msi:1;		/* May not use MSI */
->  	unsigned int	no_64bit_msi:1;		/* May only use 32-bit MSIs */
->  	unsigned int	block_cfg_access:1;	/* Config space access blocked */
-> -- 
-> 2.43.0
+> Do you need the protection? Ultimately that depends on whether
+> setting *node = NULL on failure to match is a problem.
+> It's a bit subtle, but if your new code matches behavior of old code
+> then *node was always NULL at entry to this function so setting it
+> to NULL again (which is what happens if ms_ctrl_node == NULL) should
+> be fine.
 > 
-> 
+> Maybe it's all a bit subtle though so perhaps the check is worth having.
 
--- 
-மணிவண்ணன் சதாசிவம்
+As above, I thought that to help understand what the function does
+assigning only if !NULL would help, you are right though.
+
+Thanks,
+Lorenzo
+
+> > +			*node = of_fwnode_handle(msi_ctlr_node);
+> > +	}
+> > +
+> > +	return rid;
+> >  }
+> >  
+> >  /**
+> > diff --git a/include/linux/msi.h b/include/linux/msi.h
+> > index 8003e3218c46..8ddb05d5c96a 100644
+> > --- a/include/linux/msi.h
+> > +++ b/include/linux/msi.h
+> > @@ -702,7 +702,8 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg);
+> >  void pci_msi_mask_irq(struct irq_data *data);
+> >  void pci_msi_unmask_irq(struct irq_data *data);
+> >  u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
+> > -u32 pci_msi_map_rid_ctlr_node(struct pci_dev *pdev, struct device_node **node);
+> > +u32 pci_msi_map_rid_ctlr_node(struct irq_domain *domain, struct pci_dev *pdev,
+> > +			      struct fwnode_handle **node);
+> >  struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
+> >  void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
+> >  			   struct msi_desc *desc);
+> > 
+> 
 
