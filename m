@@ -1,151 +1,108 @@
-Return-Path: <linux-pci+bounces-44152-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44155-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCFB8CFCB29
-	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 09:58:53 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D680CFCC4C
+	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 10:14:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D178230248B6
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 08:58:14 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 955DD3000DED
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 09:13:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 041BB2E8B94;
-	Wed,  7 Jan 2026 08:58:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F38A22E7165;
+	Wed,  7 Jan 2026 09:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e3KV4wp9"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="S25RtDC1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m49246.qiye.163.com (mail-m49246.qiye.163.com [45.254.49.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B392E6CD2;
-	Wed,  7 Jan 2026 08:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E3A221FBD;
+	Wed,  7 Jan 2026 09:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767776293; cv=none; b=klGdC5VUcwV7BGbMEEh4G4+nft+hOIOyiSEzUOGtVokvTtwe9CmARMZUpVSLCgRNKjBkvsoKgDsMHPROBXhPSdbCxvsOkOyaZHMEUl1E+kS3i7FtdWJJWBsbCCVpNnb5scnPuOxvUwc9XEilGnaPpsPHRjFCT/vHecpN1/lk+jI=
+	t=1767777235; cv=none; b=WvQgCeZIliU3Xao1SdgYlwW0eahrtAfVuD3KZCqCtzdLFIsKEjBcU308Wc6XFa5u6ULC+NJQsts2ydg/fEcFGIJzHzVbaVHaeLjdnw14HSC5CGPTPE4jLjHblkNGdzFfJn5NeuKpdA3msQLAQiFSY8/W9eFUIIdoleCEFvGQz8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767776293; c=relaxed/simple;
-	bh=YfscGlzjoPdKa2cHm3kbuvdCSUSLTviahPedm8Ok0YU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A7cqTVx1DDdl/YB+HdOttVdH4t2RmxuXvsadg1ARBAw6U+zYo5+zzv5Dnn67OSVVT/yw4pA6bSIQg2rD29BM+lmr2XeG3j7f0kgRnI3kRpxI7J9854x6oa9HRdo9/McOl/6Hd2S6+4iS6zKCjR2inSnscfABG5lXj+wFxyRiM+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e3KV4wp9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DCA3C16AAE;
-	Wed,  7 Jan 2026 08:58:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767776293;
-	bh=YfscGlzjoPdKa2cHm3kbuvdCSUSLTviahPedm8Ok0YU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e3KV4wp9dk91PRYB7pSFMEbNdL+dcrw9T9h0nU6RHPagQoOpSwUQaA6XkF70RKuTc
-	 xtM+n1DqXdbGgVpHLeptVTFwu72Nkld3CNTXiX/Gl/SY+9PZdCNwjudheqAIuSX8gQ
-	 rDsEai9kpQPI/dQGZFy+mfY7cwZFOIBH7BsKpQAgi9SCqUqibD7/mr0ux9qWUL5IIf
-	 CiquSLDMBiYqU0NDSwQVpQ/PndVbOsLhBcaIbCeQgv57QIR+/aevsY6w44Qfvh5xb2
-	 l73d9ClDxHXKajAgoxdtaZm+L396NIIZjfxPXxUw5oBcdXAD2iHN6VAx5VcXtjbbkz
-	 Qe3rWcWrHegjw==
-Date: Wed, 7 Jan 2026 09:58:07 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@arm.com>, Marc Zyngier <maz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 3/7] irqdomain: Add parent field to struct irqchip_fwid
-Message-ID: <aV4gH/yHaOmOtK0J@lpieralisi>
-References: <20251218-gicv5-host-acpi-v2-0-eec76cd1d40b@kernel.org>
- <20251218-gicv5-host-acpi-v2-3-eec76cd1d40b@kernel.org>
- <20260105120108.00002016@huawei.com>
+	s=arc-20240116; t=1767777235; c=relaxed/simple;
+	bh=9+sabqTAKXVR8KuD20UJ7DsKZ16mPbrKjHmf1lZrq8k=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=msWHtKtG+TC0EYBNySZKNM0kRTeAW1CK4AOvvPk3C+o9FhqH+E68J3Otxs7059GWPQwi4yxuzAYWD9mFSKXJK++jH/BnTRsY0Y5PhI26AHHJIF5YOwkpTdN5o49jJdR63xB/XJdeGZWKk9FStY5BNzx5jgn4vxyLcEh3C83FswY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=S25RtDC1; arc=none smtp.client-ip=45.254.49.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.14] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2fcc712cd;
+	Wed, 7 Jan 2026 16:38:15 +0800 (GMT+08:00)
+Message-ID: <af7be4b3-93a0-4fb0-aa36-cf62d13c0579@rock-chips.com>
+Date: Wed, 7 Jan 2026 16:38:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260105120108.00002016@huawei.com>
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, vincent.guittot@linaro.org,
+ zhangsenchuan@eswincomputing.com, Richard Zhu <hongxing.zhu@nxp.com>
+Subject: Re: [PATCH v4 3/6] PCI: dwc: Rework the error print of
+ dw_pcie_wait_for_link()
+To: manivannan.sadhasivam@oss.qualcomm.com, Jingoo Han
+ <jingoohan1@gmail.com>, Manivannan Sadhasivam <mani@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+References: <20260107-pci-dwc-suspend-rework-v4-0-9b5f3c72df0a@oss.qualcomm.com>
+ <20260107-pci-dwc-suspend-rework-v4-3-9b5f3c72df0a@oss.qualcomm.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <20260107-pci-dwc-suspend-rework-v4-3-9b5f3c72df0a@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9b979b4abe09cckunm9d739e2a8da29e
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkpJH1ZPGR1DQktNHUhNS0tWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=S25RtDC1T5vJVt0cKdxYZWFw8a6VRMKjMFdwabYQ87Ghxsq7mDgIhvubTQzZ5/lGhlsP9ab1mm+aYxKKmr7/HSzA1Ul2X7yLJvf1jLQ+S4C2SMq8KUAhUvYYX3BTbjh8ySoVh7znwoSd6MhIBftK1LaziyzTr/Yno25U7aa397E=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=e/6Z10cVcegjp3tE+yfoBahMZjBikogOt93G++cVhkA=;
+	h=date:mime-version:subject:message-id:from;
 
-On Mon, Jan 05, 2026 at 12:01:08PM +0000, Jonathan Cameron wrote:
-> On Thu, 18 Dec 2025 11:14:29 +0100
-> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+在 2026/01/07 星期三 16:11, Manivannan Sadhasivam via B4 Relay 写道:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 > 
-> > The GICv5 driver IRQ domain hierarchy requires adding a parent field to
-> > struct irqchip_fwid so that core code can reference a fwnode_handle parent
-> > for a given fwnode.
-> > 
-> > Add a parent field to struct irqchip_fwid and update the related kernel API
-> > functions to initialize and handle it.
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Marc Zyngier <maz@kernel.org>
-> Hi Lorenzo,
+> If the link fails to come up even after detecting the device on the bus
+> i.e., if the LTSSM is not in Detect.Quiet and Detect.Active states, then
+> dw_pcie_wait_for_link() should log it as an error.
 > 
-> Happy new year.
+> So promote dev_info() to dev_err(), reword the error log to make it clear
+> and also print the LTSSM state to aid debugging.
 
-Happy New Year !
+LTSSM might still be changing, so not sure how much value it would be
+to print it at a singal moment, but anyway
 
-> > ---
-> >  include/linux/irqdomain.h | 30 ++++++++++++++++++++++++++----
-> >  kernel/irq/irqdomain.c    | 14 +++++++++++++-
-> >  2 files changed, 39 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-> > index 62f81bbeb490..b9df84b447a1 100644
-> > --- a/include/linux/irqdomain.h
-> > +++ b/include/linux/irqdomain.h
-> > @@ -257,7 +257,8 @@ static inline void irq_domain_set_pm_device(struct irq_domain *d, struct device
-> >  
-> >  #ifdef CONFIG_IRQ_DOMAIN
-> >  struct fwnode_handle *__irq_domain_alloc_fwnode(unsigned int type, int id,
-> > -						const char *name, phys_addr_t *pa);
-> > +						const char *name, phys_addr_t *pa,
-> > +						struct fwnode_handle *parent);
-> >  
-> >  enum {
-> >  	IRQCHIP_FWNODE_REAL,
-> > @@ -267,18 +268,39 @@ enum {
-> >  
-> >  static inline struct fwnode_handle *irq_domain_alloc_named_fwnode(const char *name)
-> >  {
-> > -	return __irq_domain_alloc_fwnode(IRQCHIP_FWNODE_NAMED, 0, name, NULL);
-> > +	return __irq_domain_alloc_fwnode(IRQCHIP_FWNODE_NAMED, 0, name, NULL, NULL);
-> > +}
-> > +
-> > +static inline
-> > +struct fwnode_handle *irq_domain_alloc_named_fwnode_parent(const char *name,
-> > +							   struct fwnode_handle *parent)
+Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
+
 > 
-> The name of this makes me think it's allocating the named fwnode parent, rather that
-> the named fwnode + setting it's parent.
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+>   drivers/pci/controller/dwc/pcie-designware.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> There aren't all that many calls to irq_domain_named_fwnode(), maybe to avoid challenge
-> of a new name, just add the parameter to all of them? (25ish)  Mind you the current
-> pattern for similar cases is a helper, so maybe not.
-
-Similar cases ? Have you got anything specific I can look into ?
-
-> Or go with something similar to named and have
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 87f2ebc134d6..c2dfadc53d04 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -776,7 +776,8 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+>   			return -ENODEV;
+>   		}
+>   
+> -		dev_info(pci->dev, "Phy link never came up\n");
+> +		dev_err(pci->dev, "Link failed to come up. LTSSM: %s\n",
+> +			dw_pcie_ltssm_status_string(ltssm));
+>   		return -ETIMEDOUT;
+>   	}
+>   
 > 
-> irq_domain_alloc_named_parented_fwnode()?
 
-Or I can add a set_parent() helper (though that's a bit of churn IMO) ?
-
-If Thomas has a preference I will follow that, all of the above is doable
-for me.
-
-> I'm not that bothered though if you think the current naming is the best we can do.
-
-I think you have a point - as per my comment above.
-
-Thanks,
-Lorenzo
-
-> Jonathan
-> 
-> > +{
-> > +	return __irq_domain_alloc_fwnode(IRQCHIP_FWNODE_NAMED, 0, name, NULL, parent);
-> >  }
-> 
-> 
 
