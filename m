@@ -1,113 +1,206 @@
-Return-Path: <linux-pci+bounces-44228-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44229-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9FA9CFFD2D
-	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 20:46:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DD8E1D00047
+	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 21:34:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B20363309A4E
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 19:06:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4B4F23011EE7
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 20:24:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D47A3016F5;
-	Wed,  7 Jan 2026 19:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6625337BA2;
+	Wed,  7 Jan 2026 20:24:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A4RHJTdV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ByWrru9N"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FCF1EB9E1;
-	Wed,  7 Jan 2026 19:05:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5DF3242B3;
+	Wed,  7 Jan 2026 20:24:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767812736; cv=none; b=oRKZozxZSSjwdTs+XF5CkwfYYHV0+IJmC5Yr9FleceiiYhmjFOnlWyJt1A6+9rGPhtpodPcTKZIK8MtsWCzBqqA1CnCDJ9zTOPVVFMm2zH2I+BfD5eGrkUb021Ywr57A4/xuiDhO163hZwgnEknaWLZ7ieTKiFJtl3Tp6CcrJds=
+	t=1767817463; cv=none; b=NDOtBLOApUpWGkEfo/YC3DhP1WxuLYBt7SNXMXTPxy64POwvCCAk/Oemb57VmdALVMReE1oWUNTDkxPeX7TQh1+L7QVuAUK3nHZteXFgGYigojab6jZEmwXbNyDSbia0DdPQq1hrPxnvULaqHSt1FXt2nNvAbPUKKAoAufvBD+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767812736; c=relaxed/simple;
-	bh=cXrxAzv98+rTuAo6AZR2IpL01l/GgbnBK6hzUkgo918=;
+	s=arc-20240116; t=1767817463; c=relaxed/simple;
+	bh=giCjZFFGJTBcP6I5Iecb0sZXSsOvzIa+ijNZAsYdFnA=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JgW3CwVayZkeEv8ASfTK2hgrZg9l9Ds+Vy1KmLG2IHtz2ENkZi7Na8ie8hFo8KwC0Kng3X7ijrci6B6lOfPlXSi/54Bbiap9dxphnsAok6SYZ+YcP39BtNQBwuJPOI69yaOFewP/u9UyqEX7R5fBszfNvOyARhrGQ0HgAZvnWaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A4RHJTdV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F10CC4CEF1;
-	Wed,  7 Jan 2026 19:05:35 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=aMK+LUc7NgoZMwUXVs0Zm82MH91LI+ad5NQ6GC+r2K672U9AKPg2o/3Wh8AgxPFokbOC24Hl0Z7yoE2eYNfqT/dTaZrShD9yvGh9UDn0atEjDRWUviyRLG+4En8QMSnmWD4w62jOwsbUxBPwwHr/XwWMEQ3H/QqSlPlFfF2HI14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ByWrru9N; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC5CFC4CEF1;
+	Wed,  7 Jan 2026 20:24:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767812735;
-	bh=cXrxAzv98+rTuAo6AZR2IpL01l/GgbnBK6hzUkgo918=;
+	s=k20201202; t=1767817463;
+	bh=giCjZFFGJTBcP6I5Iecb0sZXSsOvzIa+ijNZAsYdFnA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=A4RHJTdVg2eo8w4IuucYp7SsRoCH3YT//hVw93Zkkrf5yuY7VdVHzXn5p17rzjL12
-	 qFhnYO1sBxAF8pzvUHMpneAhxajxGMSSn/P5eWKV8DgEr+V8cC0I0it/mxBoIwnpzA
-	 ZTG5e65Y87dMZvAKJQ5K5dt9Ppt1bkZCnEZg46y9U/FleUdZZwCi/IwOgRoSRZueGl
-	 wWU3xb2cH5R7JKWBRu+isqhIrXzOJQiW5H8Z0OLzuYO0YHMw3moiytq6UZetkvnrs/
-	 q+BCtxWtQqAd1Xg6v3hFI08liH2/hzx+9bPTHbu7bb9UT4hw/68aVlXtLjWeg5+mZk
-	 TljZ3k+3lL8bg==
-Date: Wed, 7 Jan 2026 13:05:34 -0600
+	b=ByWrru9N9qCY/ovADdp6p6gdFwQCH3ACI3UXI1Iy+DQryQv+zfmc2fPTyP/mNaond
+	 dl1J8ar+Z6Jjdwd7Um6KMP8RNds/5IS2Aie3KaziGpjqAt3q4xD4HqV3mhdH17rCCQ
+	 eWbWGgWm4MGbQpkEVwxK9rLHYXcz4R2aniOcX+POYwIniD6ACrPnjo8WmHPe7ttpZJ
+	 06fWwiJUQQhA7MOwu4d7Icm7D7FGtF+QFh2bOtl4AXa596sYXJ3ur4tmmpgwBQC1p9
+	 3ojOXqpAmc2j5+Q+yLKpAySX9ZEVr+Yu46JP898eIGml6Fpti9GhSiJfhwBqiessah
+	 iMtsZ324ewj7A==
+Date: Wed, 7 Jan 2026 14:24:21 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Chen Ridong <chenridong@huawei.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Simon Horman <horms@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>, Waiman Long <longman@redhat.com>,
-	Will Deacon <will@kernel.org>, cgroups@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
-	netdev@vger.kernel.org, Jinhui Guo <guojinhui.liam@bytedance.com>
-Subject: Re: [PATCH 01/33] PCI: Prepare to protect against concurrent
- isolated cpuset change
-Message-ID: <20260107190534.GA441483@bhelgaas>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, sparclinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Nathaniel Roach <nroach44@gmail.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Subject: Re: [PATCH RESEND 1/1] SPARC/PCI: Correct 64-bit non-pref -> pref
+ BAR resources
+Message-ID: <20260107202421.GA442125@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260101221359.22298-2-frederic@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251124170411.3709-1-ilpo.jarvinen@linux.intel.com>
 
-[+cc Jinhui]
+[+cc Adrian]
 
-On Thu, Jan 01, 2026 at 11:13:26PM +0100, Frederic Weisbecker wrote:
-> HK_TYPE_DOMAIN will soon integrate cpuset isolated partitions and
-> therefore be made modifiable at runtime. Synchronize against the cpumask
-> update using RCU.
+On Mon, Nov 24, 2025 at 07:04:11PM +0200, Ilpo Järvinen wrote:
+> SPARC T5-2 dts describes some PCI BARs as 64-bit resources without
+> pref(etchable) bit (0x83... vs 0xc3... in assigned-addresses) for
+> address ranges above the 4G threshold. Such resources cannot be placed
+> into a non-prefetchable PCI bridge window that is capable only to
+> 32-bit addressing. As such, it looks the platform is improperly
+> describe by dts.
 > 
-> The RCU locked section includes both the housekeeping CPU target
-> election for the PCI probe work and the work enqueue.
+> Kernel detect this problem (see the IORESOURCE_PREFETCH check in
+> pci_find_parent_resource()) and fails to assign these BAR resources to
+> the resource tree due to lack of a compatible bridge window.
 > 
-> This way the housekeeping update side will simply need to flush the
-> pending related works after updating the housekeeping mask in order to
-> make sure that no PCI work ever executes on an isolated CPU. This part
-> will be handled in a subsequent patch.
+> Prior to the commit 754babaaf333 ("sparc/PCI: Remove
+> pcibios_enable_device() as they do nothing extra") SPARC arch code did
+> not test whether device resources were successfully in the resource
+> tree when enabling a device, effectively hiding the problem. After
+> removing the arch specific enable code, PCI core's
+> pci_enable_resources() refuses to enable the device when it finds not
+> all mem resources are assigned, and therefore mpt3sas can't be enabled:
 > 
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> pci 0001:04:00.0: reg 0x14: [mem 0x801110000000-0x80111000ffff 64bit]
+> pci 0001:04:00.0: reg 0x1c: [mem 0x801110040000-0x80111007ffff 64bit]
+> pci 0001:04:00.0: BAR 1 [mem 0x801110000000-0x80111000ffff 64bit]: can't claim; no compatible bridge window
+> pci 0001:04:00.0: BAR 3 [mem 0x801110040000-0x80111007ffff 64bit]: can't claim; no compatible bridge window
+> mpt3sas 0001:04:00.0: BAR 1 [mem size 0x00010000 64bit]: not assigned; can't enable device
+> 
+> For clarity, this filtered log only shows failures for one mpt3sas
+> device but other devices fail similarly. In the reported case, the end
+> result with all the failures is an unbootable system.
+> 
+> Things appeared to "work" before the commit 754babaaf333 ("sparc/PCI:
+> Remove pcibios_enable_device() as they do nothing extra") because the
+> resource tree is agnostic to whether PCI BAR resources are properly in
+> the tree or not. So as long as there was a parent resource (e.g. a root
+> bus resource) that contains the address range, the resource tree code
+> just places resource request underneath it without any consideration to
+> the intermediate BAR resource. While it worked, it's incorrect setup
+> still.
+> 
+> Add of fixup to set IORESOURCE_PREFETCH flag for a 64-bit PCI resource
+> that has the end address above 4G requiring placement into the
+> prefetchable window. Also log the issue.
+> 
+> Fixes: 754babaaf333 ("sparc/PCI: Remove pcibios_enable_device() as they do nothing extra")
+> Reported-by: Nathaniel Roach <nroach44@gmail.com>
+> Tested-by: Nathaniel Roach <nroach44@gmail.com>
+> Closes: https://github.com/sparclinux/issues/issues/22
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Just FYI, Jinhui posted a series that touches this same code and might
-need some coordination:
+Originally posted as attachment in response to Adrian's pointer to
+Nathaniel's regression report:
 
-  https://lore.kernel.org/r/20260107175548.1792-1-guojinhui.liam@bytedance.com
+  https://lore.kernel.org/r/d221be13-f652-cc75-90d1-92cf38e0110e@linux.intel.com
 
-IIUC, Jinhui's series adds some more NUMA smarts in the driver core
-sync probing path and removes corresponding NUMA code from the PCI
-core probe path.
+This seems reasonable to me and addresses a v6.18 regression, so I put
+this on pci/for-linus for v6.19.
 
-Bjorn
+> ---
+> 
+> Resending with linux-pci@ ML.
+> 
+> Any comments on the approach are welcome. E.g., is the fixup done at a
+> correct level? Should it be targeted specifically to the known failures
+> (how?) to avoid hiding more platform description problems?
+> 
+> It seems VF BARs still have 64-bit non-pref despite this change, AFAICT,
+> those are read directly from the device's config space so would require
+> ordinary quirks. None of them result in device enable failing though so the
+> issue is orthogonal to the one being fixed here.
+
+The VF BARs that don't have PCI_BASE_ADDRESS_MEM_PREFETCH set is a
+generic question, not anything sparc-specific, right?
+
+As of the "Removing Prefetchable Terminology" ECN
+(https://members.pcisig.com/wg/PCI-SIG/document/20839) that was
+incorporated in PCIe r6.3, PCI_BASE_ADDRESS_MEM_PREFETCH (bit 3) is
+deprecated.  There's a recommendation that it be set for 64-bit BARs
+and cleared for 32-bit BARs, but I suppose we'll see 64-bit VF BARs
+with it cleared as in this case.
+
+We might need to rework the PCI_BASE_ADDRESS_MEM_PREFETCH handling to
+accommodate this.  I suspect we'll still need to pay attention to it
+at least for conventional PCI, but there might be some wiggle room for
+PCIe.
+
+> If suggesting a different approach, please do realize my knowledge
+> about OF code is generally very limited (and I'm not sure how directly
+> the fixup code in other archs, mainly ppc, can be used as an example
+> how to do fixups with sparc).
+> ---
+>  arch/sparc/kernel/pci.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/arch/sparc/kernel/pci.c b/arch/sparc/kernel/pci.c
+> index a9448088e762..b290107170e9 100644
+> --- a/arch/sparc/kernel/pci.c
+> +++ b/arch/sparc/kernel/pci.c
+> @@ -181,6 +181,28 @@ static int __init ofpci_debug(char *str)
+>  
+>  __setup("ofpci_debug=", ofpci_debug);
+>  
+> +static void of_fixup_pci_pref(struct pci_dev *dev, int index,
+> +			      struct resource *res)
+> +{
+> +	struct pci_bus_region region;
+> +
+> +	if (!(res->flags & IORESOURCE_MEM_64))
+> +		return;
+> +
+> +	if (!resource_size(res))
+> +		return;
+> +
+> +	pcibios_resource_to_bus(dev->bus, &region, res);
+> +	if (region.end <= ~((u32)0))
+> +		return;
+> +
+> +	if (!(res->flags & IORESOURCE_PREFETCH)) {
+> +		res->flags |= IORESOURCE_PREFETCH;
+> +		pci_info(dev, "reg 0x%x: fixup: pref added to 64-bit resource\n",
+> +			 index);
+> +	}
+> +}
+> +
+>  static unsigned long pci_parse_of_flags(u32 addr0)
+>  {
+>  	unsigned long flags = 0;
+> @@ -244,6 +266,7 @@ static void pci_parse_of_addrs(struct platform_device *op,
+>  		res->end = op_res->end;
+>  		res->flags = flags;
+>  		res->name = pci_name(dev);
+> +		of_fixup_pci_pref(dev, i, res);
+>  
+>  		pci_info(dev, "reg 0x%x: %pR\n", i, res);
+>  	}
+> 
+> base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+> -- 
+> 2.39.5
+> 
 
