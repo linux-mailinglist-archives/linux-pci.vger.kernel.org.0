@@ -1,83 +1,177 @@
-Return-Path: <linux-pci+bounces-44233-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44234-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0D74D00391
-	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 22:48:28 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5B3DD00626
+	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 00:22:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9403630216B4
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 21:48:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 806AA30245F2
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 23:22:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EB21318ED7;
-	Wed,  7 Jan 2026 21:47:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C65712EDD76;
+	Wed,  7 Jan 2026 23:22:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ncaiadvN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cswAK8FL"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F23318BBD;
-	Wed,  7 Jan 2026 21:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4F22F6935;
+	Wed,  7 Jan 2026 23:22:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767822433; cv=none; b=nt1crVQ5Gw8WyNx7vziRnWl9K17d5GG9Q5MZmGKZdp79V1Y6Fen1IABq8m5WXugw87EaVFEY18zXLlvLMbr54aZI10giajDQI6J8Wh3vA359XqIAQ0H8zoQNmWK1ZC0qRda5KLWZLXqLun35Aj+Vw6Bo+WwoRf7mRbvS/TIkUPY=
+	t=1767828127; cv=none; b=X7RZLJHmkb/4rMUufJyfqPUPvPOWnkHbcoL/IsuBWBv3idAWcKCHNeo5roeRFi+2qOFccLziyiB/1ZrW1vt3GIgPscARhEyneksBMq6goR9TZRKz8jJ+uMj300Y3IYmEJNE5bnPZUk0PI5q5PXt9NM36vRDyRAV2wndnvzJO7QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767822433; c=relaxed/simple;
-	bh=SAlipT1fP7kIO0IvVZ5VIq5XK5ijLK54y/2EHpkDTik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WI4GPmjgJnBjQeholVf6zylpuZlIGuejblZpQK/plPuzdCrMX4uAbH2iZVa0dkv2H/j6qMmKYbS0b2mPmsl3+9MsDhH949mOj+JURqgblfXeISehCUTvKUdZW+T8d9sXBuBzHrzltcNUTcLMeyV5Tm8F0WhSRHAF+uZFtPCX/Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ncaiadvN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32DB5C4CEF1;
-	Wed,  7 Jan 2026 21:47:12 +0000 (UTC)
+	s=arc-20240116; t=1767828127; c=relaxed/simple;
+	bh=cN9S9O/4HJG7EzHzKhFL7xloKBhasEs+8qTLxStgemc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Qxpfvo59lyMt9WG4iKk3y69WpI+0CiyMfB40sIacI21mhUkLnXqWQSDReEM3iRX3ULxEmBw1HBtc74bJnuweXkKFjR8mC6LBd7bEaNdX8m9nxE1KQNzyd9yuGLp36vSRZT1J0BQTAHlALQMG+RsibzyHlz4Q+3Z1spGkoPs7B68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cswAK8FL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDF17C19423;
+	Wed,  7 Jan 2026 23:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767822432;
-	bh=SAlipT1fP7kIO0IvVZ5VIq5XK5ijLK54y/2EHpkDTik=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ncaiadvNMNgwCq2etZbPL7Yh/XkEH1LVA3IP5mGMwq3AYIYMqRkQ2VAnmo+a9NggV
-	 ZQuugN1q6RcIXxfiq854uVFj54uovBoQwkShaQQrkdFWiBA+r9D7MSUIZ7dkexUVdz
-	 lHi/I9c7voYq8KMMlp5fwyCcJ6EXsQA+S2CMF72DRfELZf86LyfvYdJjTVm0ASwd6Z
-	 uy5DWOjSI0bbIyMvC/u/Ct+oantqBvX719NcjUZST+RvFhf8KwwIaW218jwv7+rclk
-	 jk0MtBTLcKA6Jnmlj/TT5VEA8DHDD6KHU9COpEQJiY40AbAtNlB6Ogh37c3WkEchr4
-	 EGnSTSxBB9qxA==
-Message-ID: <fb7bdfeb-46a8-444a-b556-77266da3ff3c@kernel.org>
-Date: Wed, 7 Jan 2026 15:47:11 -0600
+	s=k20201202; t=1767828127;
+	bh=cN9S9O/4HJG7EzHzKhFL7xloKBhasEs+8qTLxStgemc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=cswAK8FLdhEhtQ1S2SA7nzogITFrn/PKhEvuplYvXsRVxe65WuJywwUJ8gfx+Ks+S
+	 s4kAX8dSrS7ZmxfHFLEcHav5cGj3JLVc+G2qF39nC1HjRK94XP7v2yeWrRFS5hcEjl
+	 az3Nm12Q83XAo7c2OqdZA4YkedKeyY5j7IDc8PhxdtYBpDS4q5pGxM1BbqWrA4eIDY
+	 pCVuRBOHzO3M8HYCxM306DZBXJD1X2GYQDfe6XuAFwlUFiuwx0kkGoG9lCmkczBZ/6
+	 K32ESvoMcaAvjislIZvFcyfivF+zUDuaDCNrcS5SD74BGxYGNB/uJa5m1IFuSy8nK9
+	 PuGypki5OccfA==
+Date: Wed, 7 Jan 2026 17:22:05 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: =?utf-8?B?SMOla29u?= Bugge <haakon.bugge@oracle.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Sinan Kaya <okaya@codeaurora.org>,
+	Casey Leedom <leedom@chelsio.com>, Ashok Raj <ashok.raj@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	dingtianhong <dingtianhong@huawei.com>,
+	Alexander Duyck <alexander.h.duyck@intel.com>,
+	Alexander Duyck <alexanderduyck@fb.com>, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/ACPI: Do not fiddle with ExtTag and RO in
+ program_hpx_type2
+Message-ID: <20260107232205.GA447140@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/2] Revise some PCI _DSM method implement
-To: Zhou Shengqing <zhoushengqing@ttyinfo.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250605065814.41298-1-zhoushengqing@ttyinfo.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250605065814.41298-1-zhoushengqing@ttyinfo.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251205142831.4063891-1-haakon.bugge@oracle.com>
 
-On 6/5/25 1:58 AM, Zhou Shengqing wrote:
-> [1/2]PCI/ACPI: Add rev 2 check for PRESERVE_BOOT_CONFIG function
-> [2/2]PCI/ACPI: Add acpi_check_dsm() for PCI _DSM definitions
+[+cc Alexander's @fb.com address]
+
+On Fri, Dec 05, 2025 at 03:28:29PM +0100, Håkon Bugge wrote:
+> After commit 60db3a4d8cc9 ("PCI: Enable PCIe Extended Tags if
+> supported"), the kernel controls enablement of extended tags
+> (ExtTag). Similar, after commit a99b646afa8a ("PCI: Disable PCIe
+> Relaxed Ordering if unsupported"), the kernel controls the relaxed
+> ordering bit (RO), in the sense that the kernel keeps the bit set (if
+> already set) unless the RC does not support it.
 > 
->   drivers/pci/pci-acpi.c | 58 ++++++++++++++++++++++++++++++++----------
->   1 file changed, 44 insertions(+), 14 deletions(-)
+> On some platforms, when program_hpx_type2() is called and the _HPX
+> object's Type2 records are, let's say, dubious, we may end up
+> resetting ExtTag and RO, although they were explicit set or kept set
+> by the OSPM [1].
 
-Did this series get overlooked?  I was talking to someone about this 
-_DSM and noticed it on lore.  It looks reasonable to me.
+This text about Type 2 records in ACPI r6.6, sec 6.2.10.3, seems a
+little ambiguous to me:
 
-The only thing that jumped out to me that I would say is that the tag
+  A PCI Express-aware OS that has assumed ownership of native hot plug
+  (via _OSC) but does not support or does not have ownership of the
+  AER register set must use the data values returned by the _HPX
+  object’s Type 2 record to program the AER registers of a hot-added
+  PCI Express device. However, since the Type 2 record also includes
+  register bits that have functions other than AER, OSPM must ignore
+  values contained within this setting record that are not applicable.
 
-Fixes: 9d7d5db8e78e ("PCI: Move PRESERVE_BOOT_CONFIG _DSM evaluation to 
-pci_re")
+If I squint, I can read that as meaning that Type 2 is really there
+just for AER, and the OS:
 
-Shouldn't be below the cutlist, it should be above it.  If there are no 
-other concerns maybe Bjorn can just fix that while committing though.
+  - should only use a Type 2 record when it owns PCIe native hotplug
+    (native_pcie_hotplug) but does not own AER (!native_aer),
 
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+  - should only program AER registers, and
 
+  - should *ignore* bits unrelated to AER.
+
+Most of the registers in Type 2 are in the AER Capability.  Device
+Control is in the PCIe Capability, but if _OSC has granted AER
+ownership to the OS, that includes the Error Reporting Enable bits in
+Device Control (there's a PCI Firmware spec ECN to this effect:
+https://members.pcisig.com/wg/Firmware/document/20514).
+
+Type 2 does include Link Control, which is in the PCIe Capability and
+doesn't seem related to AER, so maybe I'm on the wrong track.  But if
+Type 2 was intended to handle things *other* than AER, I would think
+the PCIe Capability Slot Control and Root Control would have been
+included.
+
+So *maybe* program_hpx_type2() should mask out everything from
+pci_exp_devctl_or except PCI_EXP_DEVCTL_CERE, PCI_EXP_DEVCTL_NFERE,
+PCI_EXP_DEVCTL_FERE, and PCI_EXP_DEVCTL_URRE?  I have no idea what we
+would do with Link Control though.
+
+I wish I knew the history of this, but I don't.
+
+> The Advanced Configuration and Power Interface (ACPI) Specification
+> version 6.6 has a provision that gives the OSPM the ability to
+> control these bits any way. In a note in section 6.2.9, it is stated:
+> 
+> "OSPM may override the settings provided by the _HPX object's Type2
+> record (PCI Express Settings) or Type3 record (PCI Express Descriptor
+> Settings) when OSPM has assumed native control of the corresponding
+> feature."
+> 
+> So, in order to preserve the increased performance of ExtTag and RO on
+> platforms that support any of these, we make sure program_hpx_type2()
+> doesn't reset them.
+> 
+> [1] Operating System-directed configuration and Power Management
+> 
+> Fixes: 60db3a4d8cc9 ("PCI: Enable PCIe Extended Tags if supported")
+> Fixes: a99b646afa8a ("PCI: Disable PCIe Relaxed Ordering if unsupported")
+> Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+> ---
+>  drivers/pci/pci-acpi.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 9369377725fa0..6a2ae1b821732 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -324,15 +324,18 @@ static void program_hpx_type2(struct pci_dev *dev, struct hpx_type2 *hpx)
+>  		return;
+>  	}
+>  
+> -	/*
+> -	 * Don't allow _HPX to change MPS or MRRS settings.  We manage
+> -	 * those to make sure they're consistent with the rest of the
+> -	 * platform.
+> +	/* Don't allow _HPX to change MPS, MRRS, ExtTag, or RO
+> +	 * settings.  We manage those to make sure they're consistent
+> +	 * with the rest of the platform.
+>  	 */
+>  	hpx->pci_exp_devctl_and |= PCI_EXP_DEVCTL_PAYLOAD |
+> -				    PCI_EXP_DEVCTL_READRQ;
+> +				   PCI_EXP_DEVCTL_READRQ  |
+> +				   PCI_EXP_DEVCTL_EXT_TAG |
+> +				   PCI_EXP_DEVCTL_RELAX_EN;
+>  	hpx->pci_exp_devctl_or &= ~(PCI_EXP_DEVCTL_PAYLOAD |
+> -				    PCI_EXP_DEVCTL_READRQ);
+> +				    PCI_EXP_DEVCTL_READRQ  |
+> +				    PCI_EXP_DEVCTL_EXT_TAG |
+> +				    PCI_EXP_DEVCTL_RELAX_EN);
+>  
+>  	/* Initialize Device Control Register */
+>  	pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
+> -- 
+> 2.43.5
+> 
 
