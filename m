@@ -1,79 +1,56 @@
-Return-Path: <linux-pci+bounces-44179-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44180-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 506D7CFD828
-	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 12:57:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5481DCFDB0F
+	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 13:34:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0C2203007C9A
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 11:57:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CD51330C59D9
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 12:30:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B49563093C4;
-	Wed,  7 Jan 2026 11:57:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B9FD31A7F8;
+	Wed,  7 Jan 2026 12:22:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LeOVqk9+"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="m/eEQEIk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2C7238166;
-	Wed,  7 Jan 2026 11:57:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121AF31A56C;
+	Wed,  7 Jan 2026 12:22:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767787023; cv=none; b=eImndedoxtpdBeEKAbFojQdvPfOo1JJr0qWpY2Ulp4xJOJovB6gnSSJZIeDa45deCIxmtQQLyOFMdScfuCCxsAj6xVSv32bhhU4cIXlqw8Jnbv0cGDglmWrNw+5wvIGeafJEMX1FOQrtpuz6pMR7oyKWh+Ajk9rznKCnXgOv21s=
+	t=1767788568; cv=none; b=DnW2PwONgROR4X7uvuScJvmp8CMXUv1tdaB/3UTGclQlfjn0awJUtX/g+sAqONayrs7dWLvKql2ICCdD9Hh6OReW4Di7IxyhBXiThOp868IkM8lT/g4uOkaTwBJVLyAlx/hXnNcbA8Cx1eDFCNn9skDJBqv0UZ+UgIhTQRkjknU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767787023; c=relaxed/simple;
-	bh=mNpHcF+MwpeYkX9EkT3dgyo2t+tch8FndQ1ofJbAPRQ=;
+	s=arc-20240116; t=1767788568; c=relaxed/simple;
+	bh=2wz8cf8crD1UXOpgkNkds4yjzWyJDvxV9FNfHAZ7L/I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lib/rEo2TrXGAw+PwoEEnmtV50OFHN2E6F4GrqAT+AFvXbCPDYi94svYY6vv8LQbQ5WLrW2OlLuKOsxW1JsMBKQSDjELNCqMO2KZ2DW1fn/romiRl0LMmSmjxI0RMQtPMDLdLxwMzcboqKBzUsdnDvAxuvRSx7hgpxBlLAoFMGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LeOVqk9+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7530C2BC86;
-	Wed,  7 Jan 2026 11:56:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767787023;
-	bh=mNpHcF+MwpeYkX9EkT3dgyo2t+tch8FndQ1ofJbAPRQ=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=TSVoQpXDNc4R17e/yCD0Q59/xz+Qh3YSvir1qk2D8MZZiTAjCu4Le7AeHYMcQgWwfCtaz9dNnDd45fa7ZW8D/JgRjoPAjVX+ZrEI6Q1StTv0f9eZH++7ashph+70geQo3ZW5W7MvAteWAXyFJmZjmWuIsxrifBh9IvwCredd6NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=m/eEQEIk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A0F8C4CEF7;
+	Wed,  7 Jan 2026 12:22:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1767788567;
+	bh=2wz8cf8crD1UXOpgkNkds4yjzWyJDvxV9FNfHAZ7L/I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LeOVqk9+TU5kCP+FDRa6whXFCQVaVEbDllyqM6h//SAX5uiVAXQ8VG7Am0rvJsC1H
-	 GqoHmEPSiac74Rt53FFrHdVYKM4/rFVqh30AdgVeV6vLWbAjvELEI1HTUOnJqZhRcl
-	 WUKTPSBfeNtl/h9hRKM1nu0OKjKz29OOH9dTct1GoghBZrfukj/3dyGolifM9h+2bh
-	 wbVLW2c8CGbXntqacDOCLSp8UU61M7HCX59PbmrBJjXYcCtF5Cx56s4+CUuypQTiMs
-	 aUdEwgtI6C7dlhy4lPby3E841CBfyCwkeyWL2UmPv7fe8h0pBCK+OfBWitaUqoPHxs
-	 uX/nyikfJSLNw==
-Date: Wed, 7 Jan 2026 11:56:53 +0000
-From: Simon Horman <horms@kernel.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Chen Ridong <chenridong@huawei.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>, Tejun Heo <tj@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>, Waiman Long <longman@redhat.com>,
-	Will Deacon <will@kernel.org>, cgroups@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH 13/33] sched/isolation: Convert housekeeping cpumasks to
- rcu pointers
-Message-ID: <20260107115653.GA196631@kernel.org>
-References: <20260101221359.22298-1-frederic@kernel.org>
- <20260101221359.22298-14-frederic@kernel.org>
+	b=m/eEQEIkgULSHDPhdH3kgjBcjWc3w1ilYx/3tnhazTYE9GO+ICCseTorTbXgE9/o7
+	 EE6TKPEe57iUWaPqb5sZfQV/v5Fr6sMuAC0wn6cobdNm2RWJprWOQN1WGVXZAGmUZ6
+	 jOT6A6qj/I0rsJFqqeKIih+hfj+SI736FM5AfISI=
+Date: Wed, 7 Jan 2026 13:22:44 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: rafael@kernel.org, igor.korotin.linux@gmail.com, ojeda@kernel.org,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
+	leon@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org,
+	wsa+renesas@sang-engineering.com, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH 6/6] rust: driver: drop device private data post unbind
+Message-ID: <2026010741-wiry-trophy-46ec@gregkh>
+References: <20260107103511.570525-1-dakr@kernel.org>
+ <20260107103511.570525-7-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -82,63 +59,75 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260101221359.22298-14-frederic@kernel.org>
+In-Reply-To: <20260107103511.570525-7-dakr@kernel.org>
 
-On Thu, Jan 01, 2026 at 11:13:38PM +0100, Frederic Weisbecker wrote:
-> HK_TYPE_DOMAIN's cpumask will soon be made modifiable by cpuset.
-> A synchronization mechanism is then needed to synchronize the updates
-> with the housekeeping cpumask readers.
-> 
-> Turn the housekeeping cpumasks into RCU pointers. Once a housekeeping
-> cpumask will be modified, the update side will wait for an RCU grace
-> period and propagate the change to interested subsystem when deemed
-> necessary.
-> 
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> ---
->  kernel/sched/isolation.c | 58 +++++++++++++++++++++++++---------------
->  kernel/sched/sched.h     |  1 +
->  2 files changed, 37 insertions(+), 22 deletions(-)
-> 
-> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-> index 11a623fa6320..83be49ec2b06 100644
-> --- a/kernel/sched/isolation.c
-> +++ b/kernel/sched/isolation.c
-> @@ -21,7 +21,7 @@ DEFINE_STATIC_KEY_FALSE(housekeeping_overridden);
->  EXPORT_SYMBOL_GPL(housekeeping_overridden);
+On Wed, Jan 07, 2026 at 11:35:05AM +0100, Danilo Krummrich wrote:
+> @@ -548,6 +548,10 @@ static DEVICE_ATTR_RW(state_synced);
+>  static void device_unbind_cleanup(struct device *dev)
+>  {
+>  	devres_release_all(dev);
+> +#ifdef CONFIG_RUST
+
+Nit, let's not put #ifdef in .c files, the overhead of an empty pointer
+for all drivers is not a big deal.
+
+> +	if (dev->driver->p_cb.post_unbind)
+> +		dev->driver->p_cb.post_unbind(dev);
+> +#endif
+>  	arch_teardown_dma_ops(dev);
+>  	kfree(dev->dma_range_map);
+>  	dev->dma_range_map = NULL;
+> diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
+> index cd8e0f0a634b..51a9ebdd8a2d 100644
+> --- a/include/linux/device/driver.h
+> +++ b/include/linux/device/driver.h
+> @@ -85,6 +85,8 @@ enum probe_type {
+>   *		uevent.
+>   * @p:		Driver core's private data, no one other than the driver
+>   *		core can touch this.
+> + * @p_cb:	Callbacks private to the driver core; no one other than the
+> + *		driver core is allowed to touch this.
+>   *
+>   * The device driver-model tracks all of the drivers known to the system.
+>   * The main reason for this tracking is to enable the driver core to match
+> @@ -119,6 +121,15 @@ struct device_driver {
+>  	void (*coredump) (struct device *dev);
 >  
->  struct housekeeping {
-> -	cpumask_var_t cpumasks[HK_TYPE_MAX];
-> +	struct cpumask __rcu *cpumasks[HK_TYPE_MAX];
->  	unsigned long flags;
->  };
->  
-> @@ -33,17 +33,28 @@ bool housekeeping_enabled(enum hk_type type)
->  }
->  EXPORT_SYMBOL_GPL(housekeeping_enabled);
->  
-> +const struct cpumask *housekeeping_cpumask(enum hk_type type)
-> +{
-> +	if (static_branch_unlikely(&housekeeping_overridden)) {
-> +		if (housekeeping.flags & BIT(type)) {
-> +			return rcu_dereference_check(housekeeping.cpumasks[type], 1);
-> +		}
-> +	}
-> +	return cpu_possible_mask;
-> +}
-> +EXPORT_SYMBOL_GPL(housekeeping_cpumask);
+>  	struct driver_private *p;
+> +#ifdef CONFIG_RUST
+
+Again, no #ifdef.
+
+> +	struct {
+> +		/*
+> +		 * Called after remove() and after all devres entries have been
+> +		 * processed.
+> +		 */
+> +		void (*post_unbind)(struct device *dev);
+
+post_unbind_rust_only()?
+
+> -impl<T: RegistrationOps> Registration<T> {
+> +impl<T: RegistrationOps + 'static> Registration<T> {
+> +    extern "C" fn post_unbind_callback(dev: *mut bindings::device) {
+> +        // SAFETY: The driver core only ever calls the post unbind callback with a valid pointer to
+> +        // a `struct device`.
+> +        //
+> +        // INVARIANT: `dev` is valid for the duration of the `post_unbind_callback()`.
+> +        let dev = unsafe { &*dev.cast::<device::Device<device::CoreInternal>>() };
 > +
+> +        // `remove()` and all devres callbacks have been completed at this point, hence drop the
+> +        // driver's device private data.
+> +        //
+> +        // SAFETY: By the safety requirements of the `Driver` trait, `T::DriverData` is the
+> +        // driver's device private data.
+> +        drop(unsafe { dev.drvdata_obtain::<T::DriverData>() });
 
-Hi Frederic,
+I don't mind this, but why don't we also do this for all C drivers?
+Just null out the pointer at this point in time so that no one can touch
+it, just like you are doing here (in a way.)
 
-I think this patch should also update the access to housekeeping.cpumasks
-in housekeeping_setup(), on line 200, to use housekeeping_cpumask().
+thanks,
 
-As is, sparse flags __rcu a annotation miss match there.
-
-  kernel/sched/isolation.c:200:80: warning: incorrect type in argument 3 (different address spaces)
-  kernel/sched/isolation.c:200:80:    expected struct cpumask const *srcp3
-  kernel/sched/isolation.c:200:80:    got struct cpumask [noderef] __rcu *
-
-...
+greg k-h
 
