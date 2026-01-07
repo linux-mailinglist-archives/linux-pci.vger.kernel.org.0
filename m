@@ -1,182 +1,127 @@
-Return-Path: <linux-pci+bounces-44157-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44160-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D56ACFCDBF
-	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 10:29:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E6FE7CFD023
+	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 10:54:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 892F230062E0
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 09:23:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 90BDE3124302
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 09:44:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 851FF2FE58F;
-	Wed,  7 Jan 2026 09:23:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF51D322B9F;
+	Wed,  7 Jan 2026 09:43:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o/MtHX9x"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Ehust4Hh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m15573.qiye.163.com (mail-m15573.qiye.163.com [101.71.155.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53EFA2356A4;
-	Wed,  7 Jan 2026 09:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F993218B3;
+	Wed,  7 Jan 2026 09:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767777838; cv=none; b=ClnmyVfrwBMHYwLljhFQREWLUlwMGqA0F9xbiB7zfVKiTig6dytF0paTIcIeXbYkxRoKzRJ+CFvS5pv+Pw5DIA8oJ+daekSitonplaQH4OC2azN0AZUhyI6hV7J2m9pFQ99KUV9Hiy5+GlcXz3ivAmx0DczgNxsCnfr5/2oDlY8=
+	t=1767779017; cv=none; b=OFWIdvrw4ql9e/KLjxLHC5DH+UODey4g4zRbcIAPfGivBUpmV+Z7mKChSnCU8Zpsqd09w7z3mA/BwdQagSh/Fn/cLhIiQKhqqRnNTFN3ruhIUQtXamjp+J76t/dkiNRzL/uzaFwP/bQ2SO81S43e8Jb5n4OpSdekSulM5f82tt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767777838; c=relaxed/simple;
-	bh=+6pwW5uwAPs1Ujhdl8iggTkeR5DIz6CdXvrHytl9AcI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z2b0kJ85MUPs1kT8YcX/izHqZKM0Nzb1/aCGFhYnwnQSX7yGdGZxkMFOfDaS8xjYAb1Sd9vYwojhoCfVzuzdxfCqExXrEZVWxdodxiJQUWWWXR8pB5mQU6dyJR3LEu6jqEHc+9a9bc3QjkjLUYqPZIak1kLJtjDgh4/f97Ldiis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o/MtHX9x; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6B21C4CEF7;
-	Wed,  7 Jan 2026 09:23:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767777837;
-	bh=+6pwW5uwAPs1Ujhdl8iggTkeR5DIz6CdXvrHytl9AcI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o/MtHX9xtq+8mIeuQ2a+CEV/EtEvcjehkZNy0F+6BDhCO2qi5rHoyAGTnniOgESHE
-	 IilnvhlTtAzQVB2y8T3ZBijAcuBqaJB2AwJjtk5/DWot25uwJ+9YcnT4QuZEGzzOSe
-	 py+97jd19AM7or0s1Rx0yj9R92DDWFXOXPdyEB0cPuVaow2Rsug9g+6fvxvHuF0gwG
-	 ZGiuOYLbq9oQVOT2/PPR+A1x3zHTUvpqmHPE9nvlbzSIxCf0vh0IqhioksNFRRjOZ2
-	 ElCudii24ZjPfc75AGA5lW+xLQjYfq2Zt6HG87JzpC123whWvhKq6aoHdC24ZXlkwv
-	 nNmiJHzkFSybw==
-Date: Wed, 7 Jan 2026 10:23:52 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@arm.com>, Marc Zyngier <maz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 4/7] PCI/MSI: Make the pci_msi_map_rid_ctlr_node()
- interface firmware agnostic
-Message-ID: <aV4mKBRjeyp9eWVy@lpieralisi>
-References: <20251218-gicv5-host-acpi-v2-0-eec76cd1d40b@kernel.org>
- <20251218-gicv5-host-acpi-v2-4-eec76cd1d40b@kernel.org>
- <20260105122114.000035e8@huawei.com>
+	s=arc-20240116; t=1767779017; c=relaxed/simple;
+	bh=v6H8Q+5HtRkfi3hLhA2BhgTp5Lo+cHV7DGN0At2ttvQ=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=SafDOtOOsbAyjt4m/yxdSoLvXOwXV1HyxbMhJsehREAbw11muBjM2+3tcleU0lvyYLJJLzNXMnj9Pbv2/MF8dNkQSbhXsFVIkdjJa08qWbZjvLk52/Fg6OxjxhVzpF1okeS8WCC2nfNrgLdFSj38+fdrjhIrt1R2NohsVZUtuP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Ehust4Hh; arc=none smtp.client-ip=101.71.155.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.14] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2fce93f02;
+	Wed, 7 Jan 2026 17:28:08 +0800 (GMT+08:00)
+Message-ID: <6662785c-7912-4e58-a5b2-613ddac419c0@rock-chips.com>
+Date: Wed, 7 Jan 2026 17:28:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260105122114.000035e8@huawei.com>
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, manivannan.sadhasivam@oss.qualcomm.com,
+ Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, vincent.guittot@linaro.org,
+ zhangsenchuan@eswincomputing.com, Richard Zhu <hongxing.zhu@nxp.com>
+Subject: Re: [PATCH v4 3/6] PCI: dwc: Rework the error print of
+ dw_pcie_wait_for_link()
+To: Manivannan Sadhasivam <mani@kernel.org>
+References: <20260107-pci-dwc-suspend-rework-v4-0-9b5f3c72df0a@oss.qualcomm.com>
+ <20260107-pci-dwc-suspend-rework-v4-3-9b5f3c72df0a@oss.qualcomm.com>
+ <af7be4b3-93a0-4fb0-aa36-cf62d13c0579@rock-chips.com>
+ <gtgvh7bxfsm7xoigg7tiqs7n42gnfbxsa4aqxtupqnr6ihxswn@gk7dcw2zbh7x>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <gtgvh7bxfsm7xoigg7tiqs7n42gnfbxsa4aqxtupqnr6ihxswn@gk7dcw2zbh7x>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9b97c8f75409cckunm330a1c758e8aac
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkgaHlZKGhhMT09IGR5NHk9WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=Ehust4HhZ8llb3eboDU8IIqDSzji5gyIlzeR7tIMboQwqjO2egvmvB4f7XuPSW+EPDHa5wfHpT/5CEoycg7yGjytlXPyDdhIAaNWUq4YvUFJBiFumGDprtYTnYyZE1tZBMN2hNI4hEa024Z1Zx5Z93NYOuNy+RkZoLBKkcOTORc=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=VIvMs1i/cn5NY2UPQsH2LMVuLFVSxHC/a7b87moHzDg=;
+	h=date:mime-version:subject:message-id:from;
 
-On Mon, Jan 05, 2026 at 12:21:14PM +0000, Jonathan Cameron wrote:
-> On Thu, 18 Dec 2025 11:14:30 +0100
-> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+在 2026/01/07 星期三 17:09, Manivannan Sadhasivam 写道:
+> On Wed, Jan 07, 2026 at 04:38:14PM +0800, Shawn Lin wrote:
+>> 在 2026/01/07 星期三 16:11, Manivannan Sadhasivam via B4 Relay 写道:
+>>> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+>>>
+>>> If the link fails to come up even after detecting the device on the bus
+>>> i.e., if the LTSSM is not in Detect.Quiet and Detect.Active states, then
+>>> dw_pcie_wait_for_link() should log it as an error.
+>>>
+>>> So promote dev_info() to dev_err(), reword the error log to make it clear
+>>> and also print the LTSSM state to aid debugging.
+>>
+>> LTSSM might still be changing, so not sure how much value it would be
+>> to print it at a singal moment, but anyway
+>>
 > 
-> > To support booting with OF and ACPI seamlessly, GIC ITS parent code
-> > requires the PCI/MSI irqdomain layer to implement a function to retrieve
-> > an MSI controller fwnode and map an RID in a firmware agnostic way
-> > (ie pci_msi_map_rid_ctlr_node()).
-> > 
-> > Convert pci_msi_map_rid_ctlr_node() to an OF agnostic interface
-> > (fwnode_handle based) and update the GIC ITS MSI parent code to reflect
-> > the pci_msi_map_rid_ctlr_node() change.
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Marc Zyngier <maz@kernel.org>
-> Hi Lorenzo,
+> It is very unlikely that the LTSSM would be changing after the 1s timeout.
+> Printing the state will allow debugging the link up failure.
 > 
-> A few minor comments inline.  All in the 'up to you' category.
-> 
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> 
-> > ---
-> 
-> > diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
-> > index a329060287b5..3136341e802c 100644
-> > --- a/drivers/pci/msi/irqdomain.c
-> > +++ b/drivers/pci/msi/irqdomain.c
-> > @@ -376,23 +376,35 @@ u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev)
-> >  }
-> >  
-> >  /**
-> > - * pci_msi_map_rid_ctlr_node - Get the MSI controller node and MSI requester id (RID)
-> > + * pci_msi_map_rid_ctlr_node - Get the MSI controller fwnode_handle and MSI requester id (RID)
-> > + * @domain:	The interrupt domain
-> >   * @pdev:	The PCI device
-> > - * @node:	Pointer to store the MSI controller device node
-> > + * @node:	Pointer to store the MSI controller fwnode_handle
-> >   *
-> > - * Use the firmware data to find the MSI controller node for @pdev.
-> > + * Use the firmware data to find the MSI controller fwnode_handle for @pdev.
-> >   * If found map the RID and initialize @node with it. @node value must
-> >   * be set to NULL on entry.
-> >   *
-> >   * Returns: The RID.
-> >   */
-> > -u32 pci_msi_map_rid_ctlr_node(struct pci_dev *pdev, struct device_node **node)
-> > +u32 pci_msi_map_rid_ctlr_node(struct irq_domain *domain, struct pci_dev *pdev,
-> > +			      struct fwnode_handle **node)
-> >  {
-> > +	struct device_node *of_node;
-> >  	u32 rid = pci_dev_id(pdev);
-> >  
-> >  	pci_for_each_dma_alias(pdev, get_msi_id_cb, &rid);
-> >  
-> > -	return of_msi_xlate(&pdev->dev, node, rid);
-> > +	of_node = irq_domain_get_of_node(domain);
-> > +	if (of_node) {
-> 
-> I haven't read on but my assumption is of_node is never used for anything else.
-> I'd make that explicit by not having the local variable.
-> 	if (irq_domain_get_of_node(domain))
-> 
-> Might even be worth a comment to say this is just checking of is in use for the
-> domain in general?
 
-Yes, I thought an explicit variable would make it clearer, don't know,
-not a big deal either way I believe.
+Most cases, yes. But I saw some reports that the LTSSM is stiling
+changing between RCVRY_* and CFG_* when supporting customers. Especially
+a buggy card I remembered, which sends some hot reset immediately after
+link comes up. If it misses the first 1s wait for link check, then we
+could see ltssm changing here. But better than nothing, keeps a log here
+isn't a big deal I think. :)
 
-> > +		struct device_node *msi_ctlr_node = NULL;
-> > +
-> > +		rid = of_msi_xlate(&pdev->dev, &msi_ctlr_node, rid);
-> > +		if (msi_ctlr_node)
+
+> - Mani
 > 
-> Do you need the protection? Ultimately that depends on whether
-> setting *node = NULL on failure to match is a problem.
-> It's a bit subtle, but if your new code matches behavior of old code
-> then *node was always NULL at entry to this function so setting it
-> to NULL again (which is what happens if ms_ctrl_node == NULL) should
-> be fine.
+>> Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
+>>
+>>>
+>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+>>> ---
+>>>    drivers/pci/controller/dwc/pcie-designware.c | 3 ++-
+>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>>> index 87f2ebc134d6..c2dfadc53d04 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>>> @@ -776,7 +776,8 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+>>>    			return -ENODEV;
+>>>    		}
+>>> -		dev_info(pci->dev, "Phy link never came up\n");
+>>> +		dev_err(pci->dev, "Link failed to come up. LTSSM: %s\n",
+>>> +			dw_pcie_ltssm_status_string(ltssm));
+>>>    		return -ETIMEDOUT;
+>>>    	}
+>>>
+>>
 > 
-> Maybe it's all a bit subtle though so perhaps the check is worth having.
 
-As above, I thought that to help understand what the function does
-assigning only if !NULL would help, you are right though.
-
-Thanks,
-Lorenzo
-
-> > +			*node = of_fwnode_handle(msi_ctlr_node);
-> > +	}
-> > +
-> > +	return rid;
-> >  }
-> >  
-> >  /**
-> > diff --git a/include/linux/msi.h b/include/linux/msi.h
-> > index 8003e3218c46..8ddb05d5c96a 100644
-> > --- a/include/linux/msi.h
-> > +++ b/include/linux/msi.h
-> > @@ -702,7 +702,8 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg);
-> >  void pci_msi_mask_irq(struct irq_data *data);
-> >  void pci_msi_unmask_irq(struct irq_data *data);
-> >  u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
-> > -u32 pci_msi_map_rid_ctlr_node(struct pci_dev *pdev, struct device_node **node);
-> > +u32 pci_msi_map_rid_ctlr_node(struct irq_domain *domain, struct pci_dev *pdev,
-> > +			      struct fwnode_handle **node);
-> >  struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
-> >  void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
-> >  			   struct msi_desc *desc);
-> > 
-> 
 
