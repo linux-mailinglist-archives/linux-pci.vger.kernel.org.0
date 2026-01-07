@@ -1,127 +1,107 @@
-Return-Path: <linux-pci+bounces-44177-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44178-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F6AFCFD5BC
-	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 12:16:47 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDA33CFD729
+	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 12:43:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F281130B0F79
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 11:13:06 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D47BB300E459
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 11:43:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E04A130C61B;
-	Wed,  7 Jan 2026 11:12:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8E4A309F08;
+	Wed,  7 Jan 2026 11:43:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="GRFfT5q7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7DcinwH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43AB2FC876;
-	Wed,  7 Jan 2026 11:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BA12FD69E
+	for <linux-pci@vger.kernel.org>; Wed,  7 Jan 2026 11:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767784379; cv=none; b=TfN0h4OqoaPq+HkCsGdHr+pCWLoFNvYtqeScEEvBY8ylTO+kZvseFkHiXZA/nRniDyyPl5GmV2xmRmry8sipc7qLj/SMog9SdhwxYM9zYv+Be8BjmMJeCm7zEb6efaTLYcNLUlWdy8wMOCCriRHekVw5qJOpZQRqh35FEgMY+a4=
+	t=1767786222; cv=none; b=OVsM5ykkP5qoXtFvkXdjGT59NBaEO1ofeabnawt7w5E6MKkCLfDBOQpVz9FM1QkQR/lgzJTD3vefeywJ/VSLUHUrpGRKuFf2J4y2zgf3rGPSmcK3t8064v9YK9d2ofR6gWHkDmHC+eXPPsIkBNGznx3PteG5XTqHav0LYe68rJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767784379; c=relaxed/simple;
-	bh=8FREetWQYfqgzhDiO9WBTIlqJFhiC73BzMP7I3w1vQc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bMkjWqFNmj7X41QjLidLCk/9JTdYWmS6WqS2oNwerSutAI9bwCmcYvShHdGtP2OMyn095R8A1culxQ0EQw4bJEOTHWmNRxiCj7IboWfz6PrPIra9mkoeWmwpSUt/hQ6XJDuB81YnZiRPSzw0K7OboMRcjWxLnRqXMh0gzgApAaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=GRFfT5q7; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1767784376;
-	bh=8FREetWQYfqgzhDiO9WBTIlqJFhiC73BzMP7I3w1vQc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GRFfT5q7chGTiJfUlB0pDh1C0QfcIXq0VIpGD486V4WCNjYPtUCBK2n4z8cK/+gJg
-	 AXu+aPT0e1AI8x39N3DehXiiPKzEBTHGe8vF+QYTuWmi/eMgxLTijgE4Ij1SV61oXJ
-	 JQILbpQWZSmIevaa7U71+9xVJzb9AtYMaqdbH5oPE0pI9E4pOyRVYyD5JQhpYU6T5T
-	 7CIXHUXlqmBwQZU1FleXw/R/QABRaWCo1gArUqm8NUaGYKOcuLHuZ8UmfdAOLA4/dR
-	 jLX6m91ad4A6+MChEJXsrg5CrFM5wi3qyoqO6xOpg/GCeZJT1eAsBi5jKj6qCzd1+0
-	 O0N3TRJDRYhZw==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3E06217E152C;
-	Wed,  7 Jan 2026 12:12:55 +0100 (CET)
-Message-ID: <98320300-04dc-4575-9e8b-22b85374b663@collabora.com>
-Date: Wed, 7 Jan 2026 12:12:54 +0100
+	s=arc-20240116; t=1767786222; c=relaxed/simple;
+	bh=hQY7gqRUD0m7DCREiZCNdJ7Q8sM0i3MxeoJ9KLvZ9Fc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DGzSb65NLxipkiw7dhyCgeFarKephlNdM057XtrlpBJs0bCBlK3StDPzWKzMs8sudh8kg1h9xyBU55dzeIAM5R+7vOU0dVlPToiqwvMFVymEFu6Ex/yu0nsAU9aCxaev++bmS3mfyyBwCwfIpb7lTNck6PK0nkY30AxnterXFOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K7DcinwH; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7b852bb31d9so1888330b3a.0
+        for <linux-pci@vger.kernel.org>; Wed, 07 Jan 2026 03:43:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767786221; x=1768391021; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hQY7gqRUD0m7DCREiZCNdJ7Q8sM0i3MxeoJ9KLvZ9Fc=;
+        b=K7DcinwHNyMc+1Tu4DZmhPGCpl91CFlWUxOolAdeZvELIkAqRGeS9W3ZHN0CbOSVfE
+         V0VT2qvCzz13Brat6duT40+cRTK43yZtw8NOVmpOapECOkMR6Fwt22LbzH19mbSp37Ax
+         KRxWiviXRgv7fNh8mj2450amP5qP+z+zgSpI84KADd1UqzmTdfi0ulDdjVcNUfB+xDam
+         RkM3WMJz3MErWTksQL+Ry9/ZmosK25fchtpl9QneUo67jUHsTrwSXZEw4XcxuwwBU03g
+         HuDuXFsJ6avA6htcNoBVYm0cr2lte+cX46HtZVA22vZEEZo3JkcXJe6EElsL0PVjYboB
+         Nc6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767786221; x=1768391021;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=hQY7gqRUD0m7DCREiZCNdJ7Q8sM0i3MxeoJ9KLvZ9Fc=;
+        b=vth6LZuP+D77KQePWcuGQEuTK1zZX7lGtY1KeBeW6utcXZigOkGx6ll0HXPHQgLNxm
+         83LC/ehhKJc2oMpezcnhsEyi7CbfsYTjqOxlN3oc76W6a/AoF5bkw2KxRh1VNbBr5PsO
+         xlKxuwy2LEAxUEs3C//pkN5blC39oqOZEv6inPsp8nz/CZAyNMWKVY4YUqYZwNrVqoVt
+         2uWUs5uYMGz4vz8yDZJDKBc4e/4MHAOAIne/UZjZUDrkYnThAoo32V0GWZxgy9HUndgI
+         H4kMU8W24omtyO4ivraepYhd5IdQnr3Z00kzvcjnTByQzyRv2aoFVF8OPE/dbPWBOLu/
+         Ey2g==
+X-Forwarded-Encrypted: i=1; AJvYcCW+E+TKx49PsX/94pngaLuLcUmtIwT8QbCGErv8v3oGcvK/u9epm3AfNrtDPz+ZvfQiRMsroEz8Eyw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8AV81agZb+x9W2uShxMGVwopKNRvZBG2xzydskO0wzAfHyehl
+	Eq1GQoAF5dDPVQFyxCIWFB4hmuVVmj3jcYh9qRAVHt1T7Dh64h8yWPQ=
+X-Gm-Gg: AY/fxX5EQo1AJd3GHmRpPYCd0aMvRTc+X7H+kgIP+xB/7Lbj07MboBMmADDuEMv+sQ7
+	53yRJo8BAypZjxpJ1DTKcXRFGt5NHErV7YQhHgPNpB0ZM8GdGnszpIkq1DDBr1Tw4n5tcGWx4bx
+	Rbeo+ChAXotrqyrL0SJn5SR5W9LKcpb1oLY6VkFkS7m1AePQGpMhMWV3MP7Gh6Voz/cR4Ayqwtc
+	IKifVTJHfOZjQvxd4RotlKuCPxBAj4XVzUUP96ppqnmk+JxQjxsuWHkqig5ynljhC48pik8jDy7
+	wSclVlKJVm/M5OMU041NDiHYcUmCYi+CRPydwZ+eQOOQh182jy3ij5reqfp+s+rTAQw0AUMFe6u
+	jfl6mw1QQrqgSYAjBIiqgLQ3kMLtvV6uEYNZIV0cPUHmIB59VoSDmnK6yZop0WIi2T4KlaOJqdL
+	zc45nGTw/1+NcsXZU=
+X-Google-Smtp-Source: AGHT+IEL/irKUmHduAIb+7IQsrOJGizixcnab96aJqSCF1h8BB26P/sAiJWfDmIGBjPcpWtmLyIhZw==
+X-Received: by 2002:a05:6a00:801b:b0:7f7:3225:e2da with SMTP id d2e1a72fcca58-81b7d853038mr2000426b3a.18.1767786220582;
+        Wed, 07 Jan 2026 03:43:40 -0800 (PST)
+Received: from at.. ([171.61.166.195])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-81c4905ca83sm335530b3a.38.2026.01.07.03.43.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jan 2026 03:43:40 -0800 (PST)
+From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+To: lukas@wunner.de
+Cc: atharvatiwarilinuxdev@gmail.com,
+	bhelgaas@google.com,
+	feng.tang@linux.alibaba.com,
+	giovanni.cabiddu@intel.com,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	mahesh@linux.ibm.com,
+	oohall@gmail.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v2] PCI/portdev: Disable AER for Titan Ridge 4C 2018
+Date: Wed,  7 Jan 2026 11:43:33 +0000
+Message-ID: <20260107114333.1536-1-atharvatiwarilinuxdev@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <aV4tyKPGioCqXTRr@wunner.de>
+References: <aV4tyKPGioCqXTRr@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/8] dt-bindings: PCI: mediatek-gen3: Add MT7981 PCIe
- compatible
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>,
- Jianjun Wang <jianjun.wang@mediatek.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>,
- Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Lee Jones <lee@kernel.org>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
- linux-pci@vger.kernel.org
-Cc: kernel@collabora.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
- netdev@vger.kernel.org, Daniel Golle <daniel@makrotopia.org>,
- Bryan Hinton <bryan@bryanhinton.com>,
- Conor Dooley <conor.dooley@microchip.com>,
- Sjoerd Simons <sjoerd@collabora.com>
-References: <20251223-openwrt-one-network-v5-0-7d1864ea3ad5@collabora.com>
- <20251223-openwrt-one-network-v5-1-7d1864ea3ad5@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20251223-openwrt-one-network-v5-1-7d1864ea3ad5@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Il 23/12/25 13:37, Sjoerd Simons ha scritto:
-> Add compatible string for MediaTek MT7981 PCIe Gen3 controller.
-> The MT7981 PCIe controller is compatible with the MT8192 PCIe
-> controller.
-> 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
+> Could you provide a link to the xnu source code
+> so that we can double-check what they're doing and why?
 
-I picked all of the DTS patches in this series, because this is ready to merge.
-
-PCI maintainers, please, can you pick this one?
-
-Thanks,
-Angelo
-
-> ---
-> V1 -> V2: Improve commit subject
-> ---
->   Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> index 0278845701ce..4db700fc36ba 100644
-> --- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> @@ -48,6 +48,7 @@ properties:
->       oneOf:
->         - items:
->             - enum:
-> +              - mediatek,mt7981-pcie
->                 - mediatek,mt7986-pcie
->                 - mediatek,mt8188-pcie
->                 - mediatek,mt8195-pcie
-> 
-
-
-
+The XNU is open-source but its drivers are closed source
+(which includes the thunderbolt drivers), so unfourtunatly
+i cant provide the source code of the thunderbolt drivers in macOS.
 
