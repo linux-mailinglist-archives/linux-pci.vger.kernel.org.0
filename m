@@ -1,166 +1,185 @@
-Return-Path: <linux-pci+bounces-44187-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44188-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD9F6CFE18B
-	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 14:55:11 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 756A0CFE30F
+	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 15:11:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5833C3063254
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 13:49:18 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E14DD300160B
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 14:11:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A58A23EAAF;
-	Wed,  7 Jan 2026 13:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 870B932FA30;
+	Wed,  7 Jan 2026 14:11:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQTCSVDg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s3lucvlo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6345322C67
-	for <linux-pci@vger.kernel.org>; Wed,  7 Jan 2026 13:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F12332AAC4;
+	Wed,  7 Jan 2026 14:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767793556; cv=none; b=ZwFpGkLbpU73JLq+6ap/joUyKdJBvHCrpEydJwlCwheYoOnoVI0opJpKglPhhB3GcjEBgGp6HENybgvEAPmNu96uWHrM0JJd1UEXYPUjXBoHKIOEdimK3lOFgVGiqSdUoIyns5NgUIx0EtwZmK2Ftzw3S5aY2kLRLdNrkJ/h9ow=
+	t=1767795086; cv=none; b=V6V4b9D7eiBo2wQRJAnW2INiwiKGgbXar2cSa8DuXgfAAVCjRRleJZk3sUJid4nQ4S1UeZbcfXCw1k7O4uchuu08scGEBd2r2Gb7hu3X/EoxjcABFzJBs3D273isjIfOnEithi+z+dG7S3T/lYXx5cVo06m9XQW+1ByCtwc7Emw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767793556; c=relaxed/simple;
-	bh=Mo5zQFUvZgfbiFA5jz8xgr54ypO2nOCMgs6MX83smjw=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=WZWuR2MlmulAmAm/9QH1Q5MsL9WBDeD+r8GdLMTFVGQMv3zv9t1AvobAJSn5ttyPyNmdUxZX3S9evhB1pwXXfCbk2WtQaI3frebxuvKI8+wN/AsJM8xNFqBXdaCkLTKQS0Fts6e6hgJqaRjQXx6xJWohzdwLRRfOKBeqQ+V4bQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JQTCSVDg; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-59b30275e69so1821667e87.1
-        for <linux-pci@vger.kernel.org>; Wed, 07 Jan 2026 05:45:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767793546; x=1768398346; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=zbg60yhotFqS4lYQ4SPbRRNfljX1PZuvfnI5dpwkZJ8=;
-        b=JQTCSVDgtatkBFRNvr4BBUEVN/fPmYFca9a7gH1f4cdl98ymQ/RvuUbbXlIFbGpKvO
-         qed+KYFdgPvLtqSevr61usZx4cUgrlZLbQQEw6dSkQznr1oJZW6yyY/9swM4ukDNbRI/
-         x7VrNAWqwUqGgqWZcxbDm6LrmJlgMyH+3Mi8I4PasJKfDbp0a+cA3L4ltS/q/6bBq44l
-         ha+od8yY814+GO3yyZd+MoIzApfeSZS9ktHX5F+q1rRRGD/Bx7+gJyhGn4cakrlj1UlQ
-         ZkEzZaDTadm68WfK6wOOIJ7rgYX6PZgDVPKvL8UsEC2srAXjXW89lKlBHQg2xVNPKF4E
-         AZNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767793546; x=1768398346;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zbg60yhotFqS4lYQ4SPbRRNfljX1PZuvfnI5dpwkZJ8=;
-        b=k/ewE30X6L9HRaGKu37lTLZi8Q/xG7Q821lqCQBU9nh8UEG+f+jwcHbY6lZLkQvcDm
-         yNGVBbQB0a2NdEqQIz1H7Uw/AVfa+zjuxLaoBlIoymuuEP0fI3jN7ArGYVG9wlzNwPq5
-         uSNB/bllAaYZ6HKBRad5aU0h5LHeA3874MOBHBv7vQsy3lno3SfYOjl21kG6Rqx/bcoN
-         zDnb3uUs2TnMsy/T4Ia0QwhPnxx9nDoK8UHcYc/LlJcUpcCK2vgDXXC7Tt5KRpgMJAkW
-         5icHZ6cCrU8MWTog3tuU5RSJPokRtCLwWBLNS5pdRkCG5B64EpJXxs75NQJArCU65z85
-         mtsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVWWeTyX+ZPPoFoM+Tpy7zWHiPKdlVK/G/ptJs6MJSc9ZwuhLp5xquu4xXGnLv2hYTmj0jQolTTzIo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjnnT7AAbYP+RQe3+jqCbTXFa8/WEtNU/EgTczJ90uCo+QovBL
-	4oJ1WJUfhUBo1/l2hYQ2Yzmo3w8SpCbr3mDp4CeRtbwoLuGQ59/6CaXj
-X-Gm-Gg: AY/fxX63C7y3FcY0Ilw0pyeTBMrHLZlO1Cj5mhZKjaE1BYa9IuxrwBErK3bDsfcxR7Q
-	UGHVcXJIpgg4ZZ+3Y8F6r30Oao6qfEVNof7jVA2pKyvs7NwATlCHeaTbl3XwvBYJ6AMUn44DHfK
-	IZ7spqjNLWHCnk5CSIWfB7txAgG/q5u7cAMnu8JJ7zG1CZD/DUHk+OBbtxdawAPa7WAxglPa8SP
-	wHDZ9JabpLrQam7QYueOl4TljnmmpLq1iqz68SoA5HPdDRPUAK1yMGXS+JeUYRa47CwTySdcdMP
-	Nz/dkDlDhgv4nrOnh2MiNYiEH0RvLo3QJBiWMEMXj+Wdwz6eCIfSxKDf2x6Vpd3+lYlfA3bwgoI
-	/c7pehTnPS5jukkZNPxTTDsA+ZRaWhvcCwSkSrFqrZeflEmNg/KnOzOQXO6bwJcFY3qOFJsRI
-X-Google-Smtp-Source: AGHT+IFBvFdbxlKvEOgpHQQ8YktwaenfQmmG9RkrtS+47ehkEyiqafqKukfyFwzDbyon83pp4CA81A==
-X-Received: by 2002:a05:6512:2399:b0:59b:730d:4a57 with SMTP id 2adb3069b0e04-59b730d4b44mr510415e87.39.1767793545398;
-        Wed, 07 Jan 2026 05:45:45 -0800 (PST)
-Received: from razdolb ([77.220.204.220])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59b669418b6sm1224545e87.20.2026.01.07.05.45.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jan 2026 05:45:45 -0800 (PST)
-References: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
- <875x9fuj7i.fsf@gmail.com>
- <SEYPR06MB513404EB419B7850159F3CC29D84A@SEYPR06MB5134.apcprd06.prod.outlook.com>
-User-agent: mu4e 1.10.9; emacs 30.2
-From: Mikhail Rudenko <mike.rudenko@gmail.com>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Joel Stanley
- <joel@jms.id.au>, Andrew  Jeffery <andrew@codeconstruct.com.au>, Bjorn
- Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan
-  Sadhasivam
- <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, Neil Armstrong <neil.armstrong@linaro.org>,
- "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
- "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v7 0/7] Add ASPEED PCIe Root Complex support
-Date: Wed, 07 Jan 2026 16:40:09 +0300
-In-reply-to: <SEYPR06MB513404EB419B7850159F3CC29D84A@SEYPR06MB5134.apcprd06.prod.outlook.com>
-Message-ID: <875x9dcz9c.fsf@gmail.com>
+	s=arc-20240116; t=1767795086; c=relaxed/simple;
+	bh=69kWmgb5kyt3827slfE0BXPQKtSt8cYB1ahtlFiFOGA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pVXy6H0rZ9y4Q+DAh6dJQ00woaXaX0ZKzD9NR5W+5oQJii8dvqEDfLeu/XVSMsUTFAyRcJsBS5icDYtQG4mRXckrRJZJ8/RUub/2SePR7pI5oeQ7MtBIE0nUSnq2SeUoKIBgnHqCRBQWwl1XwkzUEG58TTIV75BqR58rOGJUllk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s3lucvlo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CE31FC4CEF1;
+	Wed,  7 Jan 2026 14:11:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767795085;
+	bh=69kWmgb5kyt3827slfE0BXPQKtSt8cYB1ahtlFiFOGA=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=s3lucvloK8RErUSRJhgi/LQuE/cmAbC1ZacJUcjeIcVc6AKVMtqVsL6bk1VxzRsIG
+	 wxGrwNktqStx5s4x5B2YtsuFeJ1/5BugrF3UcAx/oL/YvDbuwr+dSD+vYHuGofTJxy
+	 ZmGUXtscYcsBBwDpmgshNhx2RMWtqkHbkytwZWxCdzN2NDJDOFOzyc3Co75V+wLngx
+	 +HIkCanqC1pNrA4tFnzG6verexyAOBC8IHTg1s3xT3TU2yg0QIVBQxeU37CZ6lZdUI
+	 z/uUUsKEqe36RY7wcu6zDG0cCugxH56oZ2MQXYQurj8vy4ZfQeunR+2xwF7o+u4iCz
+	 v5JHSYMECZ2/w==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE88CFD642;
+	Wed,  7 Jan 2026 14:11:25 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
+Subject: [PATCH v5 0/5] PCI: Add initial support for handling PCIe M.2
+ connectors in devicetree
+Date: Wed, 07 Jan 2026 19:41:22 +0530
+Message-Id: <20260107-pci-m2-v5-0-8173d8a72641@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIppXmkC/3XNTQ6CMBAF4KuYri1ppz80rryHcdGWqTYRUapEY
+ 7i7hQRhIZtJ3mS+Nx+SsI2YyG7zIS12McXmmoPabog/2+sJaaxyJsBAcc4EvflIa6ClFkIL7nS
+ wluTjW4shvsaiwzHnc0yPpn2PvR0ftlOFmio6Thk10qnAA0eFZt+kVNyf9uKbui7yIENTB0ttf
+ hqyRuO8rEoXJFQrWiw0zL9F1l6BYRIsWlmuaDlrgPm3zFppI402jlUq/NF9338BCnfp7V0BAAA
+ =
+X-Change-ID: 20251103-pci-m2-7633631b6faa
+To: Bjorn Helgaas <bhelgaas@google.com>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Stephan Gerhold <stephan.gerhold@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ linux-pm@vger.kernel.org, linux-ide@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+ Frank Li <Frank.Li@nxp.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4312;
+ i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
+ bh=69kWmgb5kyt3827slfE0BXPQKtSt8cYB1ahtlFiFOGA=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpXmmL70dXctGXdSVrhDngLGraiqgTiIH+5K7Nk
+ HosqhOtKTWJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaV5piwAKCRBVnxHm/pHO
+ 9dAbB/4xBAwExMOzXRuRO7kkN1KIOU2V3du5JeI6lr8ThQF6kB0kDWOKFhqCzIet+echU4TE32N
+ SPVLslEsbr0lcM1evYc8oXwIl7pFhMP1gly8ynfyv/4jVu2HOirEUMJTW4z2FTaOBvGsP1UgPWO
+ 1/AxfCJKgddDv2BX9v0UOGTEUb+TGUZMNbF1+C4xt9gmnjzTm7m45kwGlHDx4iHsdVJRh0THP3W
+ 4mjdwzdDPPf6cAIo+Ks/e47ttqil2dEqcy1sUclf8CuWz/msjJuQDbkxAHHJAD5uBofqNoGhTEi
+ C2UJa2vITI5mE7p8YXP+TyISiDKHy9YISzr2SDthUJPufdz5
+X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@oss.qualcomm.com/default with auth_id=461
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Reply-To: manivannan.sadhasivam@oss.qualcomm.com
+
+Hi,
+
+This series is an initial attempt to support the PCIe M.2 connectors in the
+kernel and devicetree binding. The PCIe M.2 connectors as defined in the PCI
+Express M.2 Specification are widely used in Notebooks/Tablet form factors (even
+in PCs). On the ACPI platforms, power to these connectors are mostly handled by
+the firmware/BIOS and the kernel never bothered to directly power manage them as
+like other PCIe connectors. But on the devicetree platforms, the kernel needs to
+power manage these connectors with the help of the devicetree description. But
+so far, there is no proper representation of the M.2 connectors in devicetree
+binding. This forced the developers to fake the M.2 connectors as PMU nodes [1]
+and fixed regulators in devicetree.
+
+So to properly support the M.2 connectors in devicetree platforms, this series
+introduces the devicetree binding for Mechanical Key M connector as an example
+and also the corresponding pwrseq driver and PCI changes in kernel to driver the
+connector.
+
+The Mechanical Key M connector is used to connect SSDs to the host machine over
+PCIe/SATA interfaces. Due to the hardware constraints, this series only adds
+support for driving the PCIe interface of the connector in the kernel.
+
+Also, the optional interfaces supported by the Key M connectors are not
+supported in the driver and left for the future enhancements.
+
+Testing
+=======
+
+This series, together with the devicetree changes [2] [3] were tested on the
+Qualcomm X1e based Lenovo Thinkpad T14s Laptop which has the NVMe SSD connected
+over PCIe.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts?h=v6.18-rc4&id=d09ab685a8f51ba412d37305ea62628a01cbea57
+[2] https://github.com/Mani-Sadhasivam/linux/commit/40120d02219f34d2040ffa6328f0d406b1e4c04d
+[3] https://github.com/Mani-Sadhasivam/linux/commit/ff6c3075836cc794a3700b0ec6a4a9eb21d14c6f
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+---
+Changes in v5:
+- used of_node_get() and devm_action to free regulators
+- Link to v4: https://lore.kernel.org/r/20251228-pci-m2-v4-0-5684868b0d5f@oss.qualcomm.com
+
+Changes in v4:
+- Added graph property to SATA in this series and PCI to dtschema:
+  https://github.com/devicetree-org/dt-schema/pull/180
+- Used 'i2c-parent' instead of SMBus port
+- Reworded the -gpios property description
+- Rebased on top of v6.19-rc1
+- Link to v3: https://lore.kernel.org/r/20251125-pci-m2-v3-0-c528042aea47@oss.qualcomm.com
+
+Changes in v3:
+- Changed the VIO supply name as per dtschema
+- Added explicit endpoint properties to port 0 node for host I/F
+- Used scope based cleanup for OF node in pwrseq driver
+- Collected review tags
+- Link to v2: https://lore.kernel.org/r/20251108-pci-m2-v2-0-e8bc4d7bf42d@oss.qualcomm.com
+
+Changes in v2:
+- Incorporated comments from Bartosz and Frank for pwrseq and dt-binding
+  patches, especially adding the pwrseq match() code.
+- Link to v1: https://lore.kernel.org/r/20251105-pci-m2-v1-0-84b5f1f1e5e8@oss.qualcomm.com
+
+---
+Manivannan Sadhasivam (5):
+      dt-bindings: ata: sata: Document the graph port
+      dt-bindings: connector: Add PCIe M.2 Mechanical Key M connector
+      PCI/pwrctrl: Add support for handling PCIe M.2 connectors
+      PCI/pwrctrl: Create pwrctrl device if the graph port is found
+      power: sequencing: Add the Power Sequencing driver for the PCIe M.2 connectors
+
+ .../devicetree/bindings/ata/sata-common.yaml       |   3 +
+ .../bindings/connector/pcie-m2-m-connector.yaml    | 133 ++++++++++++++++
+ MAINTAINERS                                        |   7 +
+ drivers/pci/probe.c                                |   3 +-
+ drivers/pci/pwrctrl/Kconfig                        |   1 +
+ drivers/pci/pwrctrl/slot.c                         |  35 ++++-
+ drivers/power/sequencing/Kconfig                   |   8 +
+ drivers/power/sequencing/Makefile                  |   1 +
+ drivers/power/sequencing/pwrseq-pcie-m2.c          | 169 +++++++++++++++++++++
+ 9 files changed, 354 insertions(+), 6 deletions(-)
+---
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+change-id: 20251103-pci-m2-7633631b6faa
+
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
 
-Hi Jacky,
-
-On 2026-01-07 at 02:28 GMT, Jacky Chou <jacky_chou@aspeedtech.com> wrote:
-
-> Hi Mikhail Rudenko,
->
->> First of all, thank you for your efforts in getting this driver upstreamed! I am
->> trying to understand whether this driver supports PCIe devices that have an I/O
->> port BAR, where CPU access to I/O ports is required for proper device
->> operation.
->>
->> If I understand correctly, this line in the Aspeed 2600 dtsi file declares the I/O
->> port range:
->>
->>     ranges = <0x01000000 0x0 0x00018000 0x00018000 0x0 0x00008000
->>
->> During system initialization, the pci_remap_iospace() function in
->> arch/arm/mm/ioremap.c maps the physical address range
->> 0x00018000-0x00020000 to the virtual address PCI_IO_VIRT_BASE
->> (0xfee00000). After this mapping, inb() and outb() calls work by converting I/O
->> port addresses to virtual addresses starting at PCI_IO_VIRT_BASE, then
->> performing reads and writes to those virtual addresses.
->>
->> What I don't understand is this: according to the Aspeed 2600 datasheet, the
->> address range 0x00000000-0x0fffffff (which contains
->> 0x00018000-0x00020000) is mapped to Firmware SPI Memory. This would
->> mean that outb() operations get routed to memory-mapped SPI flash instead of
->> PCIe.
->>
->> It seems like there's a missing piece to this puzzle. Could you help clarify how
->> this is supposed to work?
->>
->
-> Thank you for pointing this out, and sorry for the confusion.
->
-> You are correct that, as things stand, this does not make sense from a real hardware perspective.
->
-> In fact, the I/O addressing support you noticed was something we experimented with internally
-> only. There is no actual hardware design on AST2600 that supports PCIe I/O port addressing in
-> this way. To enable those experiments, we modified our internal kernel accordingly, but this was
-> never intended to represent real, supported hardware behavior.
->
-> This is our mistake for leaving this description in the DTS, as it can indeed be misleading. We
-> will remove this part to avoid further confusion.
->
-> Thank you again for your careful review and for bringing this to our attention.
-
-Thank you for prompt reply and for getting this clarified!
-
-> Thanks,
-> Jacky
-
-
---
-Kind regards,
-Mikhail
 
