@@ -1,121 +1,109 @@
-Return-Path: <linux-pci+bounces-44162-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44163-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65361CFCFDF
-	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 10:52:03 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94B53CFD13D
+	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 11:03:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DFF21305FF81
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 09:51:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DDC27304ED80
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 09:54:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8100A3128CE;
-	Wed,  7 Jan 2026 09:51:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7714A33032C;
+	Wed,  7 Jan 2026 09:54:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGeLT8rz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gzYtDwS2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5BC30F540
-	for <linux-pci@vger.kernel.org>; Wed,  7 Jan 2026 09:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BF132FA2E
+	for <linux-pci@vger.kernel.org>; Wed,  7 Jan 2026 09:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767779486; cv=none; b=P9bZtEabk56Oyn9dH/eHwDk4nDCVkiWYO1rL4FPSs6cFlHPXzHCVe3g6Ef32iKT2mgmBA0nIhjfzzMMdFsbRBl2DvcaTD5rYzESLnPAom7x7Sm1trOsPwDmA5x2S+7Dbtq4Lkfi45QeLe/Y/UfL+aQdWbUC2k0ODDNsM8y88BJ4=
+	t=1767779684; cv=none; b=RngarsRRog1jqbtgAR5gbMZkkjJ46vMi8/YReUigibTzEYVpK638p2h0G9Ws7o4D/yfliLLheI4MdcvwVBA3/Xdu5jL7pTkIpsTV4jYP0l4r6ahoAUK/XMIz7EgEsMQq3JTuyDfRgtnkJYno43R2SBl+IuHwp4XNlHkaK9Yuztw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767779486; c=relaxed/simple;
-	bh=NmLMzAzCpWZoeHjWGioABuXSbYuv+EuUrRg7mmBjYnY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J0TFq/MDcq0hBmNtRHt60jCY9XzaXIct8eGupTUFcsHa9iXZKNuQrmMP2tIjnFd8C2XmhFFJzHqOBn+a3qCKTXGiQVdEaUrFbuUUh09OsGhTNxX6AvbSBs4oRJfjrcN/9/0k0VQU1e9FETpyHtEvcYL7R1+VGt+c5Nq9xMy5EOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGeLT8rz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09653C19425
-	for <linux-pci@vger.kernel.org>; Wed,  7 Jan 2026 09:51:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767779486;
-	bh=NmLMzAzCpWZoeHjWGioABuXSbYuv+EuUrRg7mmBjYnY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qGeLT8rzryOa37z3RZZFI/qYuvMtWJyefGcugLj9TMGUVRzof6EdRfa0kYu3Q+LVQ
-	 2DKdzzsKPhlK0agbYQI59g31Ywvyz/CILBKHWs1xgYPfEgfUHq29yZvakPAQ2a0JLm
-	 vpPLDSnP0Yh66Bu78VKWqK57ZY4aDEbGYhfschOn1YzJDhdwO0qq+1KCDSTkAU0U70
-	 kzE9ItwNOHYKvydB2NV7bXx9s2kmWvw/+ekHyCbwbRzdfrOeLqlI5e2hL0A4G/R7km
-	 fqZ/zQhhQnJSIzIciUk9+XGYjWdXhaRE9j8eRYSwqc/KdKEquCeMXXAKzTB4TdR1mi
-	 aALpbhGjMcxUw==
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-382fe06aa94so6308041fa.0
-        for <linux-pci@vger.kernel.org>; Wed, 07 Jan 2026 01:51:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXh6ynRbUSIw1e3F8/+2UUBH9V7UtEcphE9FXdV6PCyTrDf4/yHOPM/wGTE5ydN0tddlcbjs6bb4u8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ83WfzTqIDfASb8OrLOMDOW/5AjeGxNPZIXX6nU6zg175oytp
-	2hSI2LvFwYyHyigO2HtYZU0GgmyYRovya34LJox0kqTGhWVu9DlJWES4isvfQT6GG8Hl8hpPKCw
-	lRNc4Po1KTHDt/0UDkX7hsopoxrF8uKAqpnaCR4HVVA==
-X-Google-Smtp-Source: AGHT+IGsOoksfiYs3d/2Uvo17brphOFA2kNch8Yl6j6+wfFkNrmovd56yuzo/tpGa0rkoqkNNyxiklr2IQiXyV/Owns=
-X-Received: by 2002:a05:651c:2227:b0:372:8d61:c26f with SMTP id
- 38308e7fff4ca-382ff68f13amr6143751fa.11.1767779484574; Wed, 07 Jan 2026
- 01:51:24 -0800 (PST)
+	s=arc-20240116; t=1767779684; c=relaxed/simple;
+	bh=ANYs6i6trLGcerht4yR1tZmU8onsevcVhIQsE+VbHQM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aK4wajbWg95PrZCCzF5o/t1AJMWq7hrWgv925/DpsVY4AY95XHQwU1YiWFFC+6/kGo1Qv5kgTwTAMK04lC4vft0NMB1fJhgIXx8hEDSSlYn8a+V+kg9RtLVC2OFq8IspnwGe2JM6NQkU+bO2RtgfUNIx5uTtDg/jdw/2OOYexPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gzYtDwS2; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7b8e49d8b35so1944153b3a.3
+        for <linux-pci@vger.kernel.org>; Wed, 07 Jan 2026 01:54:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767779682; x=1768384482; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ANYs6i6trLGcerht4yR1tZmU8onsevcVhIQsE+VbHQM=;
+        b=gzYtDwS2mYC9RovpNcHgNQebi7B/n13yvzxBb01+nbvR0O9Ekau1MxVTry8SSYYc76
+         5lK4MiydPKdpaHgyd5m+SJPNHl+RsdFVG+R+semjb3nR3GWatXikB0uoVDhydLJLeeV5
+         i/nQ0ETtHM6nzFOontNVJMS4npVCgJfUAknms5BzqneulLzQ8YC1WaDdk1sryfVdN8Ni
+         gRIgyPmYEHrnftIgcP3Jh20WEqArGezvvD3K5FHfeCon8OC/178dAqtI0Lg6V9T47lQD
+         BXDeCvk1Gel8slQdqBGdY5ioxff8BsUcwvJBoI21LUBgAMvyuZ5P7EzHFCWW+ATvBrt0
+         JK1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767779682; x=1768384482;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ANYs6i6trLGcerht4yR1tZmU8onsevcVhIQsE+VbHQM=;
+        b=qC0lM6/s5S+Z0DTfOQL+leco0z7HM2sYR+7+wJNN3AadF+0AHs/FOb8CIEVhQkHT4a
+         25go9a/RF5TALcW1Y31aLQJO/v4+qH3LxCEC6OpJSp3/Km8h8DyMgSMSRdKTNbNwWajZ
+         MeF5X8TQo9atLFA0aY73uTVRjg5WLH/KkplsK0HNdxDJ1mxiF38YbHgD5jo5NqVh6ZAn
+         HCxrhKEM+Bp+OHyaNyIXWK+eHIjqGsZJdzTCLaq+pds2ecm+lSWptNCcvV7ctDYv7Lzv
+         +BbP/ekD9zD+aNFfQvPH2y6e/mU4HRxLkOxOjyXVAQGEJ3G6xwzzsICfqr7EmublvVp8
+         H8Fg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSX1tJw9OHeIZpX+gdRfaT2Wv++4J8NV2eEvs6fBNFjQKCc1fU9nKchI7pqhKA8EcDdtmKqsRzhok=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTaVdhBc8iwTlHZjFG93a9Szh5TgBkUn+uGDFvaiUtLi04B7oU
+	O+HbvNTK08uRCU1wR89+sGraj4DivcinzK3dTa1X4lXA/fvubiLOffU=
+X-Gm-Gg: AY/fxX51JvDBkMUx5lv4iRbmvMri4Tf4oN/UtACywDkNkS+8dlXTcC02iArl5wJRR94
+	KKghXsrm0J6g0RfUnY+mzu559vDAojGuZM/qdkzeTD2wXW/vJd/6v+SC2SZS+igcoivv9N0Ng7b
+	lI1UvzF2WDy/r7Mp85SNs+uZ7Vi7wSiN/HEavCTzXWbKKOoq5vluzwK+789pKxtqXvdGdtNe2SU
+	aqB3gzL/L5XX11Lue/zysMpeM7gCU6P1jL7Tc6Oc2VUnFRzmvBe80/X4ICAWUUsM8f1qfJgVL8y
+	7VL7/NmLE2f8j5BJvWgA3QHzYN4gQP5uc77snpGGak2qI3HzSwTnzYv8J6/KK+1ckBavOrctZSY
+	/DY528p0K+jSrXtzZ8690XTO5b1EDYK8vbO//kF0umBriB1eSEOxItuZtHk7kJOsSNFwJ5J6Wr/
+	IqWOLd3dmItU/rd+8=
+X-Google-Smtp-Source: AGHT+IGAXBAfvt9+HKGFTfnKpIlZhyLpeWAQmEI7acjOkyIBy2z200DLidZSG3Vic7Jdxr5MpccL5w==
+X-Received: by 2002:a05:6a20:7287:b0:35d:d477:a7f1 with SMTP id adf61e73a8af0-3898f99146bmr1696314637.43.1767779682366;
+        Wed, 07 Jan 2026 01:54:42 -0800 (PST)
+Received: from at.. ([171.61.166.195])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34f5f7c2666sm4557245a91.5.2026.01.07.01.54.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jan 2026 01:54:42 -0800 (PST)
+From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+To: mika.westerberg@linux.intel.com
+Cc: YehezkelShB@gmail.com,
+	andreas.noever@gmail.com,
+	atharvatiwarilinuxdev@gmail.com,
+	bhelgaas@google.com,
+	dave.jiang@intel.com,
+	feng.tang@linux.alibaba.com,
+	helgaas@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	lukas@wunner.de,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	westeri@kernel.org
+Subject: Re: [PATCH] PCI/portdev: Disable AER for Titan Ridge 4C 2018
+Date: Wed,  7 Jan 2026 09:54:33 +0000
+Message-ID: <20260107095435.1390-1-atharvatiwarilinuxdev@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260107093021.GN2275908@black.igk.intel.com>
+References: <20260107093021.GN2275908@black.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251228-pci-m2-v4-0-5684868b0d5f@oss.qualcomm.com>
- <20251228-pci-m2-v4-5-5684868b0d5f@oss.qualcomm.com> <CAMRc=MfPq7+ZbWTp7+H388hqHoX27qbbHsLHO+xeLaceTwZLVA@mail.gmail.com>
- <z33axfsiox73f2lklhiaulekjnqxnqtkycfylybwqnqxtx2fck@3qtas4u6mfnz>
-In-Reply-To: <z33axfsiox73f2lklhiaulekjnqxnqtkycfylybwqnqxtx2fck@3qtas4u6mfnz>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Wed, 7 Jan 2026 10:51:11 +0100
-X-Gmail-Original-Message-ID: <CAMRc=McS8a-1cH_y+kpze=zj2-PksHDO3SE=p3XnbEueUQt9xA@mail.gmail.com>
-X-Gm-Features: AQt7F2pY9Ypb4lLMQKTc1ZxHjn85KZ9DgQjKFvp34cr91yK650oitQF5-K0QY8Q
-Message-ID: <CAMRc=McS8a-1cH_y+kpze=zj2-PksHDO3SE=p3XnbEueUQt9xA@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] power: sequencing: Add the Power Sequencing driver
- for the PCIe M.2 connectors
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-pm@vger.kernel.org, 
-	linux-ide@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 7, 2026 at 10:39=E2=80=AFAM Manivannan Sadhasivam <mani@kernel.=
-org> wrote:
->
-> > > +
-> > > +static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
-> > > +{
-> > > +       struct device *dev =3D &pdev->dev;
-> > > +       struct pwrseq_pcie_m2_ctx *ctx;
-> > > +       struct pwrseq_config config =3D {};
-> > > +       int ret;
-> > > +
-> > > +       ctx =3D devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> > > +       if (!ctx)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       ctx->of_node =3D dev_of_node(dev);
-> >
-> > Since you're storing the node address for later, I'd suggest using
-> > of_node_get() to get a real reference.
-> >
->
-> If CONFIG_OF_DYNAMIC is not enabled, then of_node_get() will just return =
-the
-> passed pointer. I always prefer using dev_of_node() since it has the CONF=
-IG_OF
-> and NULL check. Though, the checks won't apply here, I used it for consis=
-tency.
->
-
-I think it's just more of a good practice to take a reference to any
-resource whenever you store keep it for longer than the duration of
-the function even if the actual reference counting is disabled in some
-instances. If ever we switch to fwnodes, the circumstances may be
-different than static devicetree.
-
-You can also do "ctx->of_node =3D of_node_get(dev_of_node(dev));", all
-the NULL-checks are there.
-
-Bart
+I’ve been using the mainline kernel
+(which I compiled about two weeks ago),
+and the problem still isn’t fixed,
+so PTM is most likely not the root cause.
 
