@@ -1,293 +1,206 @@
-Return-Path: <linux-pci+bounces-44159-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44161-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C862FCFD1A6
-	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 11:06:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 28B5ECFD191
+	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 11:05:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 415D530B2398
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 10:00:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ACE8F30E469B
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 09:57:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEF7128B4FE;
-	Wed,  7 Jan 2026 09:39:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F21B212542;
+	Wed,  7 Jan 2026 09:46:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YOu4RDFH"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="UKq1DGST"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m19731112.qiye.163.com (mail-m19731112.qiye.163.com [220.197.31.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9513C2139C9;
-	Wed,  7 Jan 2026 09:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABA8217F24
+	for <linux-pci@vger.kernel.org>; Wed,  7 Jan 2026 09:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767778744; cv=none; b=JrxG3X1j/FZvYLQ4UTMi5pA3T6demUX8MFgL3h8I8+sTGeKUgyvRag0dmY4iQ7RMYf6wxGFwEI6/NmTEBaMHpPTqE+A8z9yfztK+KoerifZAGojHtNMV/UpyTBLh/TWNgjj/YWtLvXMHHSrBhmYuOG/ey/YdC10Axc3xz06498Q=
+	t=1767779194; cv=none; b=mtIu8mI1wHNiij9SqhlPMBvB8daOuYyGMpEzODNSRkp3Oc9+xop332UvxmShRXgW9dq//lFJONdzkzSG7fzra+edEx6M9gE/+8CRhihiSf0cXytY1lur5UZlRjXQYBlZb92KapFWBc7X0qCnaolb/hyznUNtZu+mZlZWLIRXL5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767778744; c=relaxed/simple;
-	bh=PsRf4pbDc1e82R0yxHCIvKZeRq20Nnsceo97LxRmP58=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q0KE4/6QGL4vQ5UUWzX6EdR4kWd/eZUgZdOcRrrSb3G8UJAWnYV25U8u4JNfvbDvMKSnpLfkAmMuEM70T4oaO5OmxCGj2uFrTJeXHagx7rzY6RTwP1PtolEEWK7hmyOUIZXpl4Z66H6HOsdylANg4t//glmj7xDhhDmn9Bh20I0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YOu4RDFH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FC1AC16AAE;
-	Wed,  7 Jan 2026 09:38:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767778744;
-	bh=PsRf4pbDc1e82R0yxHCIvKZeRq20Nnsceo97LxRmP58=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YOu4RDFHf4wy5wSuEt+UhwBF5CwWPIHrRgshqFqBIKGVzkEMooQ1yg1R+tMajri1V
-	 j1J5Lhlkv1u5qEl/0qQ06I228mrRrKIKvnlLuDOLwg/+uY/9d3cqKdEWWkemNUG1pG
-	 X/SVbM/M+CGZQzoiW4vjqf+5yqwFBXZj29+L3tL6Ct222wvVVi9H+GBPL062XkDtr+
-	 lz+l6laIzipwYJGdL5X6ytgLWNiLRERvLfA+EwnrSS/ScTqr42/CCaij6fIjjKMD1P
-	 4B6GuTMTyVxEzKfGPfEyv8HYLeay6PPH63K/U3Q9lWoVN7oncd8eUioN7oRM2uIwcg
-	 pdEpqXaPj0izA==
-Date: Wed, 7 Jan 2026 15:08:55 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-	linux-pm@vger.kernel.org, linux-ide@vger.kernel.org
-Subject: Re: [PATCH v4 5/5] power: sequencing: Add the Power Sequencing
- driver for the PCIe M.2 connectors
-Message-ID: <z33axfsiox73f2lklhiaulekjnqxnqtkycfylybwqnqxtx2fck@3qtas4u6mfnz>
-References: <20251228-pci-m2-v4-0-5684868b0d5f@oss.qualcomm.com>
- <20251228-pci-m2-v4-5-5684868b0d5f@oss.qualcomm.com>
- <CAMRc=MfPq7+ZbWTp7+H388hqHoX27qbbHsLHO+xeLaceTwZLVA@mail.gmail.com>
+	s=arc-20240116; t=1767779194; c=relaxed/simple;
+	bh=//9ADedbLyfcUw1duZOdbEAkFUsZwJwkxjwXrCKI2XU=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=muaSDnBmKVLxWb9aZDuhL42zQiUJYBSm61PT1PoUr9kY6dExhauT2WpT4HVYHqpHXJbqwz/NJBrmr00P2BANGPZoixzmzk+j5RcehnginAMqdRYNBErNZCf9IYWGSIo3BmWs3rvDskjMg23ZmO+loFG+YD2dYvsg7aFJuBTwiX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=UKq1DGST; arc=none smtp.client-ip=220.197.31.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.14] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2fcf0e560;
+	Wed, 7 Jan 2026 17:41:14 +0800 (GMT+08:00)
+Message-ID: <014d034f-998d-466c-9c73-181297de83ba@rock-chips.com>
+Date: Wed, 7 Jan 2026 17:41:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, linux-rockchip@lists.infradead.org,
+ Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI: dwc: Add LTSSM tracing support to debugfs
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+ Manivannan Sadhasivam <mani@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+References: <1767691119-28287-1-git-send-email-shawn.lin@rock-chips.com>
+ <8d4e73f5-b4da-4aca-a2b2-b607be8c245a@oss.qualcomm.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <8d4e73f5-b4da-4aca-a2b2-b607be8c245a@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfPq7+ZbWTp7+H388hqHoX27qbbHsLHO+xeLaceTwZLVA@mail.gmail.com>
+X-HM-Tid: 0a9b97d4f39b09cckunm99824e1a8eb6a8
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQk0dTFZKGB9NSktPHkseHU5WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=UKq1DGSTutbU6hXV6fSMiAZs2lGy14VI5OiPeb0/nltUsCXOiUIeL/eKeEqtDSm8hovSMUG4wgFBx9pbyGb0mGkfQfw90XPswnXY4zNbHGMXAkxM9BFt70HAZWkF8j5ze4v9CyBhSnDFW/ESQowyRboBgGXA3JREsCntKt8pOHg=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=Tn+b1s6Nv5FIXs5nHNOp+r/XH3TXSbuK50ANRcqCEDQ=;
+	h=date:mime-version:subject:message-id:from;
 
-On Fri, Jan 02, 2026 at 12:26:21PM +0100, Bartosz Golaszewski wrote:
-> On Sun, Dec 28, 2025 at 6:01 PM Manivannan Sadhasivam
-> <manivannan.sadhasivam@oss.qualcomm.com> wrote:
-> >
-> > This driver is used to control the PCIe M.2 connectors of different
-> > Mechanical Keys attached to the host machines and supporting different
-> > interfaces like PCIe/SATA, USB/UART etc...
-> >
-> > Currently, this driver supports only the Mechanical Key M connectors with
-> > PCIe interface. The driver also only supports driving the mandatory 3.3v
-> > and optional 1.8v power supplies. The optional signals of the Key M
-> > connectors are not currently supported.
-> >
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > ---
-> >  MAINTAINERS                               |   7 ++
-> >  drivers/power/sequencing/Kconfig          |   8 ++
-> >  drivers/power/sequencing/Makefile         |   1 +
-> >  drivers/power/sequencing/pwrseq-pcie-m2.c | 160 ++++++++++++++++++++++++++++++
-> >  4 files changed, 176 insertions(+)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 5b11839cba9d..2eb7b6d26573 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -20791,6 +20791,13 @@ F:     Documentation/driver-api/pwrseq.rst
-> >  F:     drivers/power/sequencing/
-> >  F:     include/linux/pwrseq/
-> >
-> > +PCIE M.2 POWER SEQUENCING
-> > +M:     Manivannan Sadhasivam <mani@kernel.org>
-> > +L:     linux-pci@vger.kernel.org
-> > +S:     Maintained
-> > +F:     Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
-> > +F:     drivers/power/sequencing/pwrseq-pcie-m2.c
-> > +
-> >  POWER STATE COORDINATION INTERFACE (PSCI)
-> >  M:     Mark Rutland <mark.rutland@arm.com>
-> >  M:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > diff --git a/drivers/power/sequencing/Kconfig b/drivers/power/sequencing/Kconfig
-> > index 280f92beb5d0..f5fff84566ba 100644
-> > --- a/drivers/power/sequencing/Kconfig
-> > +++ b/drivers/power/sequencing/Kconfig
-> > @@ -35,4 +35,12 @@ config POWER_SEQUENCING_TH1520_GPU
-> >           GPU. This driver handles the complex clock and reset sequence
-> >           required to power on the Imagination BXM GPU on this platform.
-> >
-> > +config POWER_SEQUENCING_PCIE_M2
-> > +       tristate "PCIe M.2 connector power sequencing driver"
-> > +       depends on OF || COMPILE_TEST
-> > +       help
-> > +         Say Y here to enable the power sequencing driver for PCIe M.2
-> > +         connectors. This driver handles the power sequencing for the M.2
-> > +         connectors exposing multiple interfaces like PCIe, SATA, UART, etc...
-> > +
-> >  endif
-> > diff --git a/drivers/power/sequencing/Makefile b/drivers/power/sequencing/Makefile
-> > index 96c1cf0a98ac..0911d4618298 100644
-> > --- a/drivers/power/sequencing/Makefile
-> > +++ b/drivers/power/sequencing/Makefile
-> > @@ -5,3 +5,4 @@ pwrseq-core-y                           := core.o
-> >
-> >  obj-$(CONFIG_POWER_SEQUENCING_QCOM_WCN)        += pwrseq-qcom-wcn.o
-> >  obj-$(CONFIG_POWER_SEQUENCING_TH1520_GPU) += pwrseq-thead-gpu.o
-> > +obj-$(CONFIG_POWER_SEQUENCING_PCIE_M2) += pwrseq-pcie-m2.o
-> > diff --git a/drivers/power/sequencing/pwrseq-pcie-m2.c b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> > new file mode 100644
-> > index 000000000000..4835d099d967
-> > --- /dev/null
-> > +++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> > @@ -0,0 +1,160 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-> > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > + */
-> > +
-> > +#include <linux/device.h>
-> > +#include <linux/mod_devicetable.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_graph.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pwrseq/provider.h>
-> > +#include <linux/regulator/consumer.h>
-> > +#include <linux/slab.h>
-> > +
-> > +struct pwrseq_pcie_m2_pdata {
-> > +       const struct pwrseq_target_data **targets;
-> > +};
-> > +
-> > +struct pwrseq_pcie_m2_ctx {
-> > +       struct pwrseq_device *pwrseq;
-> > +       struct device_node *of_node;
-> > +       const struct pwrseq_pcie_m2_pdata *pdata;
-> > +       struct regulator_bulk_data *regs;
-> > +       size_t num_vregs;
-> > +       struct notifier_block nb;
-> > +};
-> > +
-> > +static int pwrseq_pcie_m2_m_vregs_enable(struct pwrseq_device *pwrseq)
-> > +{
-> > +       struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
-> > +
-> > +       return regulator_bulk_enable(ctx->num_vregs, ctx->regs);
-> > +}
-> > +
-> > +static int pwrseq_pcie_m2_m_vregs_disable(struct pwrseq_device *pwrseq)
-> > +{
-> > +       struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
-> > +
-> > +       return regulator_bulk_disable(ctx->num_vregs, ctx->regs);
-> > +}
-> > +
-> > +static const struct pwrseq_unit_data pwrseq_pcie_m2_vregs_unit_data = {
-> > +       .name = "regulators-enable",
-> > +       .enable = pwrseq_pcie_m2_m_vregs_enable,
-> > +       .disable = pwrseq_pcie_m2_m_vregs_disable,
-> > +};
-> > +
-> > +static const struct pwrseq_unit_data *pwrseq_pcie_m2_m_unit_deps[] = {
-> > +       &pwrseq_pcie_m2_vregs_unit_data,
-> > +       NULL
-> > +};
-> > +
-> > +static const struct pwrseq_unit_data pwrseq_pcie_m2_m_pcie_unit_data = {
-> > +       .name = "pcie-enable",
-> > +       .deps = pwrseq_pcie_m2_m_unit_deps,
-> > +};
-> > +
-> > +static const struct pwrseq_target_data pwrseq_pcie_m2_m_pcie_target_data = {
-> > +       .name = "pcie",
-> > +       .unit = &pwrseq_pcie_m2_m_pcie_unit_data,
-> > +};
-> > +
-> > +static const struct pwrseq_target_data *pwrseq_pcie_m2_m_targets[] = {
-> > +       &pwrseq_pcie_m2_m_pcie_target_data,
-> > +       NULL
-> > +};
-> > +
-> > +static const struct pwrseq_pcie_m2_pdata pwrseq_pcie_m2_m_of_data = {
-> > +       .targets = pwrseq_pcie_m2_m_targets,
-> > +};
-> > +
-> > +static int pwrseq_pcie_m2_match(struct pwrseq_device *pwrseq,
-> > +                                struct device *dev)
-> > +{
-> > +       struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
-> > +       struct device_node *endpoint __free(device_node) = NULL;
-> > +
-> > +       /*
-> > +        * Traverse the 'remote-endpoint' nodes and check if the remote node's
-> > +        * parent matches the OF node of 'dev'.
-> > +        */
-> > +       for_each_endpoint_of_node(ctx->of_node, endpoint) {
-> > +               struct device_node *remote __free(device_node) =
-> > +                               of_graph_get_remote_port_parent(endpoint);
-> > +               if (remote && (remote == dev_of_node(dev)))
-> > +                       return PWRSEQ_MATCH_OK;
-> > +       }
-> > +
-> > +       return PWRSEQ_NO_MATCH;
-> > +}
-> > +
-> > +static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
-> > +{
-> > +       struct device *dev = &pdev->dev;
-> > +       struct pwrseq_pcie_m2_ctx *ctx;
-> > +       struct pwrseq_config config = {};
-> > +       int ret;
-> > +
-> > +       ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> > +       if (!ctx)
-> > +               return -ENOMEM;
-> > +
-> > +       ctx->of_node = dev_of_node(dev);
+在 2026/01/07 星期三 17:12, Krishna Chaitanya Chundru 写道:
 > 
-> Since you're storing the node address for later, I'd suggest using
-> of_node_get() to get a real reference.
+> 
+> On 1/6/2026 2:48 PM, Shawn Lin wrote:
+>> Some platforms may provide LTSSM trace functionality, recording 
+>> historical
+>> LTSSM state transition information. This is very useful for debugging, 
+>> such
+>> as when certain devices cannot be recognized. Add an ltssm_trace 
+>> operation
+>> node in debugfs for platform which could provide these information to 
+>> show
+>> the LTSSM history.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>> ---
+>>   .../controller/dwc/pcie-designware-debugfs.c  | 44 +++++++++++++++++++
+>>   drivers/pci/controller/dwc/pcie-designware.h  |  6 +++
+>>   2 files changed, 50 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/ 
+>> drivers/pci/controller/dwc/pcie-designware-debugfs.c
+>> index df98fee69892..569e8e078ef2 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+>> @@ -511,6 +511,38 @@ static int ltssm_status_open(struct inode *inode, 
+>> struct file *file)
+>>       return single_open(file, ltssm_status_show, inode->i_private);
+>>   }
+>> +static struct dw_pcie_ltssm_history *dw_pcie_ltssm_trace(struct 
+>> dw_pcie *pci)
+>> +{
+>> +    if (pci->ops && pci->ops->ltssm_trace)
+>> +        return pci->ops->ltssm_trace(pci);
+>> +
+>> +    return NULL;
+>> +}
+>> +
+>> +static int ltssm_trace_show(struct seq_file *s, void *v)
+>> +{
+>> +    struct dw_pcie *pci = s->private;
+>> +    struct dw_pcie_ltssm_history *history;
+>> +    enum dw_pcie_ltssm val;
+>> +    u32 loop;
+>> +
+>> +    history = dw_pcie_ltssm_trace(pci);
+>> +    if (!history)
+>> +        return 0;
+>> +
+>> +    for (loop = 0; loop < history->count; loop++) {
+>> +        val = history->states[loop];
+>> +        seq_printf(s, "%s (0x%02x)\n", ltssm_status_string(val), val);
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int ltssm_trace_open(struct inode *inode, struct file *file)
+>> +{
+>> +    return single_open(file, ltssm_trace_show, inode->i_private);
+>> +}
+>> +
+>>   #define dwc_debugfs_create(name)            \
+>>   debugfs_create_file(#name, 0644, rasdes_debug, pci,    \
+>>               &dbg_ ## name ## _fops)
+>> @@ -552,6 +584,11 @@ static const struct file_operations 
+>> dwc_pcie_ltssm_status_ops = {
+>>       .read = seq_read,
+>>   };
+>> +static const struct file_operations dwc_pcie_ltssm_trace_ops = {
+>> +    .open = ltssm_trace_open,
+>> +    .read = seq_read,
+>> +};
+>> +
+>>   static void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
+>>   {
+>>       struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
+>> @@ -644,6 +681,12 @@ static void dwc_pcie_ltssm_debugfs_init(struct 
+>> dw_pcie *pci, struct dentry *dir)
+>>                   &dwc_pcie_ltssm_status_ops);
+>>   }
+>> +static void dwc_pcie_ltssm_trace_debugfs_init(struct dw_pcie *pci, 
+>> struct dentry *dir)
+>> +{
+>> +    debugfs_create_file("ltssm_trace", 0444, dir, pci,
+>> +                &dwc_pcie_ltssm_trace_ops);
+> Can we have this as the sysfs, so that if there is some issue in 
+> production devices where debugfs is not available,
+> we can use this to see LTSSM state figure out the issue.
 > 
 
-If CONFIG_OF_DYNAMIC is not enabled, then of_node_get() will just return the
-passed pointer. I always prefer using dev_of_node() since it has the CONFIG_OF
-and NULL check. Though, the checks won't apply here, I used it for consistency.
+Thanks for the input. I think the ltssm_trace is debug in nature, just 
+like the existing ltssm and rasdes_debug nodes, so it probably fits 
+better under debugfs for consistency. Moreover, given most time we
+combine rasdes_debug and ltssmm history to debug issues, if we split it
+out, we’d end up with two separate debugging areas, which feels a bit
+fragmented and less clear.
 
-> > +       ctx->pdata = device_get_match_data(dev);
-> > +       if (!ctx->pdata)
-> > +               return dev_err_probe(dev, -ENODEV,
-> > +                                    "Failed to obtain platform data\n");
-> > +
-> > +       /*
-> > +        * Currently, of_regulator_bulk_get_all() is the only regulator API that
-> > +        * allows to get all supplies in the devicetree node without manually
-> > +        * specifying them.
-> > +        */
-> > +       ret = of_regulator_bulk_get_all(dev, dev_of_node(dev), &ctx->regs);
-> > +       if (ret < 0)
-> > +               return dev_err_probe(dev, ret,
-> > +                                    "Failed to get all regulators\n");
-> > +
-> > +       ctx->num_vregs = ret;
-> > +
-> > +       config.parent = dev;
-> > +       config.owner = THIS_MODULE;
-> > +       config.drvdata = ctx;
-> > +       config.match = pwrseq_pcie_m2_match;
-> > +       config.targets = ctx->pdata->targets;
-> > +
-> > +       ctx->pwrseq = devm_pwrseq_device_register(dev, &config);
-> > +       if (IS_ERR(ctx->pwrseq)) {
-> > +               regulator_bulk_free(ctx->num_vregs, ctx->regs);
+
+> - Krishna Chaitanya.
+>> +}
+>> +
+>>   static int dw_pcie_ptm_check_capability(void *drvdata)
+>>   {
+>>       struct dw_pcie *pci = drvdata;
+>> @@ -922,6 +965,7 @@ void dwc_pcie_debugfs_init(struct dw_pcie *pci, 
+>> enum dw_pcie_device_mode mode)
+>>               err);
+>>       dwc_pcie_ltssm_debugfs_init(pci, dir);
+>> +    dwc_pcie_ltssm_trace_debugfs_init(pci, dir);
+>>       pci->mode = mode;
+>>       pci->ptm_debugfs = pcie_ptm_create_debugfs(pci->dev, pci,
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/ 
+>> pci/controller/dwc/pcie-designware.h
+>> index 5cd27f5739f1..0df18995b7fe 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -395,6 +395,11 @@ enum dw_pcie_ltssm {
+>>       DW_PCIE_LTSSM_UNKNOWN = 0xFFFFFFFF,
+>>   };
+>> +struct dw_pcie_ltssm_history {
+>> +    enum dw_pcie_ltssm *states;
+>> +    u32 count;
+>> +};
+>> +
+>>   struct dw_pcie_ob_atu_cfg {
+>>       int index;
+>>       int type;
+>> @@ -499,6 +504,7 @@ struct dw_pcie_ops {
+>>                     size_t size, u32 val);
+>>       bool    (*link_up)(struct dw_pcie *pcie);
+>>       enum dw_pcie_ltssm (*get_ltssm)(struct dw_pcie *pcie);
+>> +    struct dw_pcie_ltssm_history * (*ltssm_trace)(struct dw_pcie *pcie);
+>>       int    (*start_link)(struct dw_pcie *pcie);
+>>       void    (*stop_link)(struct dw_pcie *pcie);
+>>       int    (*assert_perst)(struct dw_pcie *pcie, bool assert);
 > 
-> You're freeing it on error but not on driver detach? Maybe schedule a
-> devm action if there's no devres variant?
 > 
 
-Ok!
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
 
