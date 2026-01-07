@@ -1,163 +1,182 @@
-Return-Path: <linux-pci+bounces-44144-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44146-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61E45CFC910
-	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 09:18:46 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4ADACFC8B5
+	for <lists+linux-pci@lfdr.de>; Wed, 07 Jan 2026 09:14:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 197FF30B9B93
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 08:12:05 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 5302430011BD
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jan 2026 08:14:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95F73292B44;
-	Wed,  7 Jan 2026 08:12:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E41942701DC;
+	Wed,  7 Jan 2026 08:14:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DdUKYL+F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1LICu/u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FEC02868B2;
-	Wed,  7 Jan 2026 08:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C2127FB26
+	for <linux-pci@vger.kernel.org>; Wed,  7 Jan 2026 08:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767773521; cv=none; b=TSrdldCosBKhWa/xjBvc/6pBiLvQ7R+oTgc9THxvB7CLJlfzBukMAnl+Svio6/kkcO1GFRa80mIGHpNQAw7bH1jZnpdsYgMY2hb54VRbDCreE7QgebCOEj91rsl4RcoDXg6jOxu29tswfrYomwZqrtiSNfWnjxipjJQ3BbUKyDo=
+	t=1767773695; cv=none; b=LWDIYjdmvrsX5BT4FnS8ahqi0QKgk4TUa6yovBR7d6vTB/0MC2Egot/yqYkaGpPMwYoEbrsMAUWYF/r7JlaeGI2kDuIeSR3UF/tI5CFmAXFxfM2ZfY6MpCjDWhJ80yF9xlImO3s99jEnwzBv3FbIiL6WMk/hD7Tgtc7j/njM8J0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767773521; c=relaxed/simple;
-	bh=NXcrBc6SPdJUDN1PP5t6mB2NTOJ+7GwZ9k2MbvSSQH0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rJazFTK4DR5x5/rYq7+L6ltZY9gPm6unximEcfKHt/nxH0gfRwNG0lxlfNnDC5ZxAlu9QK+6VDmmDhNVoQlRt9jiXcYXxXYAe6YDoWiElRFUJ847r6XvP+gnWzGsmZ1CDUpSUGyj5+HJr8i7/0rle54YkeMfwi+b7k9txuDLDSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DdUKYL+F; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D12F5C2BCB8;
-	Wed,  7 Jan 2026 08:12:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767773520;
-	bh=NXcrBc6SPdJUDN1PP5t6mB2NTOJ+7GwZ9k2MbvSSQH0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=DdUKYL+FWUByWwEyOibeYFiCVgWXuNFy4iSn38RUjXHap0uVBYuydTeksJTHXVY2z
-	 DnW/GrMHJtYUBYOlIPBjEg0D4xmUtZAJ9YzMA2QfaNuMKvkBotsvbXvlD2QakI6ZNB
-	 IczBX7mCWoubt7ia+VFB0sF8r2Sy1wGhwKlgumVHcwo85qlUulXrhA4Q2/xpsogNOO
-	 1PvUbTX4yxrtuPe8A/SffYhSuuHoU3Aostf1moWD1gsWZmfJOfTGXGFTLd9EO/Qikg
-	 pPmybPaF/3Sljp2uNPCmmLlLiNjrHJOeLsx19GDn3qgGnRT5fuSzGZUw2a9QOC9JNb
-	 ht87IkITXZKrA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5648CF6BF4;
-	Wed,  7 Jan 2026 08:12:00 +0000 (UTC)
-From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Wed, 07 Jan 2026 13:41:59 +0530
-Subject: [PATCH v4 6/6] PCI: dwc: Skip failure during
- dw_pcie_resume_noirq() if no device is available
+	s=arc-20240116; t=1767773695; c=relaxed/simple;
+	bh=KDj106qciwLowDj4mUAUGHujSOR3nPmg0elS/LP/TXM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D60yuc5cZb0ceRFE5Whv/MuPcXw9RYy5AWj/66FuZPH7M8GC8bRgEwzmM7pdn6nFNx+qS0HeuZjT/as7KWcR6JUXYrQAtcLRrMnHfC7W6tUyKLtDEca/1vHzrokR7gs3SUCnaVgmMY/32r7XTcxHDXWmw/nH0cQHRsmXkGIaUTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a1LICu/u; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2a0f3f74587so18157605ad.2
+        for <linux-pci@vger.kernel.org>; Wed, 07 Jan 2026 00:14:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767773694; x=1768378494; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bskqrEZI3mWJPk0/2+jknOdH1/nKT2h7hO8FoQ5vtvY=;
+        b=a1LICu/uO2HEBQBb5x4V20Ikhimw3F500m7QXtF88BVPf47sKg63t2QWOjQSlNmS29
+         JSUxxGbjdqibAesMH9MYqcJP9asFX54mOVhBdqUowlDAnncZz6VEkYzYJCknA/4Og8GZ
+         N4B/zx0xZGFxfURIdYpvZHZWCm5T+CLCIW62XnWZ+KchBF2CmA7f3eEiPwH5dBcCvOSq
+         CHVjA73QlWj234U5OCOwBuzLPr9YGRsfTyuW0ShaRST+JDFBlTzVDywcpreoq1eZTteU
+         VOEvReMDB1LuTtbeb5Kx9hw9yOttF9Noc4h8pXt+uiy1KXqabAHt4OCtdcW7dNitM7mS
+         BYag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767773694; x=1768378494;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bskqrEZI3mWJPk0/2+jknOdH1/nKT2h7hO8FoQ5vtvY=;
+        b=J2fNzafpbXG/W043POgOBmbLQaXQm5gZn+lUHIhm0sTbhPnt4R8cqYLKWVdTK/TCaU
+         SQzqKJzcp/A8S1DSlGhr0+5/whZ0qeuLQbQnsXndDTKj3pK0K4Q700ANfoFYZFvLEOPk
+         XMvkzIQZUtDcoS0gx/BlxNLmiM1hOBjPdxaRdhSQlxBWlGogHVgYerLZTlqHL3inznKm
+         cdnEQV44iQo6V/tzYJLrXqhmDVOxJkhWC3/BdhOvhDnAS2La7mxCWxhNwUF58/eGckHf
+         8z7GK1Rfx4dugqXvLc1ma6buJSLdT8FGUDYSVoQ3c5Aq0z0wAj/Bi3lVMAER5st4IXqf
+         kEcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtCtJzPxnw77yT9udpe1QVQ+pVVFVlDQnVp1HHukPyw8Y+Xh522S77X98ZsyiY5XaebLUGCtDiU6E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzV3sHO15RqN6Uv9MA/Nwhq8STqBRuWyzo5PJd4N+nojuYOulqj
+	ORfOCYVBcN1Q0jniNE9MmFMuN3NgUS+ECw4iDK1wY1xMKfUYUOUrbCo=
+X-Gm-Gg: AY/fxX5o05ggRZHyfTQuTaO+crd/prHbbnqNZn3rdj3r2VAitKI4xR6KES3KfxOXSTL
+	lN5ZO7rvXFPJ+lzFvIit7kVLwUKwkDxBHWCPTZiQ8stwMudmss3MdFoByynJGRpq1wbz8pdaJiw
+	jPVHwn6pLSwFMA7ObjGgOi5k4gpkdVWjCESBAZed4AQje8Tiek6d7pJQAXbuqnuXr2n83PQv9fj
+	Xsj+0ou444Ua06+sKz0gKFzDDrOb9uCDAldLqEW6aXe43lgk201d6cHpO/6WuhnfW+55dkbQJ6w
+	D8X/UgKVcWJmASNHnrf/Y3i8ky7qqGIS4WLtu7BRBTh6e270zZqLofWvi1mIMZ/p5FlsPCHx4zk
+	luFhbz/adSUTeEW64We5fJ23skepiQRLe6M1fNbIuoSizoLyjaUSv3fBH0JN0qh7O7h1xecZ/Ti
+	53+W6chYhgqp8ACuM=
+X-Google-Smtp-Source: AGHT+IEVoP6pHkawjtR7Y9FSmOyxuGs7jEFf4OAW54GqLy+VY1n5OQILdfH/RXZEFEu7/SXDZastkQ==
+X-Received: by 2002:a17:902:e806:b0:2a0:ba6d:d0ff with SMTP id d9443c01a7336-2a3ee452490mr16514365ad.16.1767773693586;
+        Wed, 07 Jan 2026 00:14:53 -0800 (PST)
+Received: from at.. ([171.61.166.195])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3cd2acdsm42335445ad.89.2026.01.07.00.14.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jan 2026 00:14:53 -0800 (PST)
+From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+To: 
+Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	"Oliver O'Halloran" <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Feng Tang <feng.tang@linux.alibaba.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] PCI/portdev: Disable AER for Titan Ridge 4C 2018
+Date: Wed,  7 Jan 2026 08:14:35 +0000
+Message-ID: <20260107081445.1100-1-atharvatiwarilinuxdev@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260107-pci-dwc-suspend-rework-v4-6-9b5f3c72df0a@oss.qualcomm.com>
-References: <20260107-pci-dwc-suspend-rework-v4-0-9b5f3c72df0a@oss.qualcomm.com>
-In-Reply-To: <20260107-pci-dwc-suspend-rework-v4-0-9b5f3c72df0a@oss.qualcomm.com>
-To: Jingoo Han <jingoohan1@gmail.com>, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- vincent.guittot@linaro.org, zhangsenchuan@eswincomputing.com, 
- Shawn Lin <shawn.lin@rock-chips.com>, Richard Zhu <hongxing.zhu@nxp.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2136;
- i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=A+dYXc5n837LUvYZ/2oH3XrvOeQd2MIwA/IwRECz2uo=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpXhVOUjSqOMt6oipJjhHgmBL0+vEUiOzLr77dK
- o/yZ0+6BlCJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaV4VTgAKCRBVnxHm/pHO
- 9SdDB/sGCaPHvWbzjXbEQqHunIZGnTeF+jfGN8X1HvypQRxSWaoCrN9PnHi7fF7M+jLrmu4Vqei
- m0LaOVq3Giiu0o6UW2kqQWcYlNjZRQXvKH9VkTX+fAgE+guRIXtiKQXmfcuyhxggZtgvJSyVP7t
- B3AsEKuKKTzyCCEGQrX/uIEgpVs56RfU5u4tSFJKbdiqchedKmuz7DDghmf7/VIJcBFQLQW1Xwq
- PPPDUx30SHfrnCzcrbGNSS7ECaJxbjE9cGPE9D9eS06eeQznMAhBdi/v1ivyAPWRbx4qQrOQG/1
- 54RUjRClQzvsILf5oV6wviHq4rb2mi7WLJiYEuEKedS4t79I
-X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
-X-Endpoint-Received: by B4 Relay for
- manivannan.sadhasivam@oss.qualcomm.com/default with auth_id=461
-X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Reply-To: manivannan.sadhasivam@oss.qualcomm.com
+Content-Transfer-Encoding: 8bit
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Changes since v1:
+	Transferred logic to drivers/pci/quicks.c
 
-If there is no device attached to any of the Root Ports available under the
-Root bus before suspend and during resume, then there is no point in
-returning failure.
+Disable AER for Intel Titan Ridge 4C 2018
+(used in T2 iMacs, where the warnings appear)
+that generate continuous pcieport warnings. such as:
 
-So skip returning failure so that the resume succeeds and allow the device
-to get attached later.
+pcieport 0000:00:1c.4: AER: Correctable error message received from 0000:07:00.0
+pcieport 0000:07:00.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
+pcieport 0000:07:00.0:   device [8086:15ea] error status/mask=00000080/00002000
+pcieport 0000:07:00.0:    [ 7] BadDLLP
 
-If there was a device before suspend and not available during resume, then
-propagate the error to indicate that the device got removed during suspend.
+(see: https://bugzilla.kernel.org/show_bug.cgi?id=220651)
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+macOS also disables AER for Thunderbolt devices and controllers in their drivers.
+
+Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/pci/pcie/aer.c     | 3 +++
+ drivers/pci/pcie/portdrv.c | 2 +-
+ drivers/pci/quirks.c       | 9 +++++++++
+ include/linux/pci.h        | 1 +
+ 4 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index ccde12b85463..c30a2ed324cd 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -20,6 +20,7 @@
- #include <linux/platform_device.h>
- 
- #include "../../pci.h"
-+#include "../pci-host-common.h"
- #include "pcie-designware.h"
- 
- static struct pci_ops dw_pcie_ops;
-@@ -1227,6 +1228,7 @@ EXPORT_SYMBOL_GPL(dw_pcie_suspend_noirq);
- 
- int dw_pcie_resume_noirq(struct dw_pcie *pci)
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index e0bcaa896803..45604564ce6f 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -389,6 +389,9 @@ void pci_aer_init(struct pci_dev *dev)
  {
-+	struct dw_pcie_rp *pp = &pci->pp;
- 	int ret;
+ 	int n;
  
- 	if (!pci->suspended)
-@@ -1234,23 +1236,28 @@ int dw_pcie_resume_noirq(struct dw_pcie *pci)
++	if (dev->no_aer)
++		return;
++
+ 	dev->aer_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
+ 	if (!dev->aer_cap)
+ 		return;
+diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+index 38a41ccf79b9..ab904a224296 100644
+--- a/drivers/pci/pcie/portdrv.c
++++ b/drivers/pci/pcie/portdrv.c
+@@ -240,7 +240,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+ 	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+              pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
+ 	    dev->aer_cap && pci_aer_available() &&
+-	    (pcie_ports_native || host->native_aer))
++	    (pcie_ports_native || host->native_aer) && !dev->no_aer)
+ 		services |= PCIE_PORT_SERVICE_AER;
+ #endif
  
- 	pci->suspended = false;
- 
--	if (pci->pp.ops->init) {
--		ret = pci->pp.ops->init(&pci->pp);
-+	if (pp->ops->init) {
-+		ret = pp->ops->init(pp);
- 		if (ret) {
- 			dev_err(pci->dev, "Host init failed: %d\n", ret);
- 			return ret;
- 		}
- 	}
- 
--	dw_pcie_setup_rc(&pci->pp);
-+	dw_pcie_setup_rc(pp);
- 
- 	ret = dw_pcie_start_link(pci);
- 	if (ret)
- 		return ret;
- 
- 	ret = dw_pcie_wait_for_link(pci);
--	if (ret)
--		return ret;
-+	/*
-+	 * Skip failure if there is no device attached to the bus now and before
-+	 * suspend. But the error should be returned if a device was attached
-+	 * before suspend and not available now.
-+	 */
-+	if (ret == -ENODEV && !pci_root_ports_have_device(pp->bridge->bus))
-+		return 0;
- 
- 	return ret;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index b9c252aa6fe0..d36dd3f8bbf6 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -6340,4 +6340,13 @@ static void pci_mask_replay_timer_timeout(struct pci_dev *pdev)
  }
-
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_timer_timeout);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_timer_timeout);
++
++static void pci_disable_aer(struct pci_dev *pdev)
++{
++	pdev->no_aer = 1;
++}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15EA, pci_disable_aer);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15EB, pci_disable_aer);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15EC, pci_disable_aer);
++
+ #endif
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 864775651c6f..f447f86c6bdf 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -440,6 +440,7 @@ struct pci_dev {
+ 	unsigned int	multifunction:1;	/* Multi-function device */
+ 
+ 	unsigned int	is_busmaster:1;		/* Is busmaster */
++	unsigned int	no_aer:1;		/* May not use AER */
+ 	unsigned int	no_msi:1;		/* May not use MSI */
+ 	unsigned int	no_64bit_msi:1;		/* May only use 32-bit MSIs */
+ 	unsigned int	block_cfg_access:1;	/* Config space access blocked */
 -- 
-2.48.1
-
+2.43.0
 
 
