@@ -1,200 +1,200 @@
-Return-Path: <linux-pci+bounces-44264-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44262-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABBA4D01AD4
-	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 09:56:26 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3E04D01C9A
+	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 10:18:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E93823021773
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Jan 2026 08:56:24 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C4FE532DD3BC
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Jan 2026 08:13:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFCE535CB84;
-	Thu,  8 Jan 2026 08:25:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6DD83563ED;
+	Thu,  8 Jan 2026 07:58:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="COHAo9Fa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwKUjO6f"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C621B3ACEEC
-	for <linux-pci@vger.kernel.org>; Thu,  8 Jan 2026 08:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6E4350D51;
+	Thu,  8 Jan 2026 07:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767860740; cv=none; b=tyAtubIW24Zc6NbQYcv2fRLV14v0x64VcX7SOkvmbNKEng2zKyJwIs2lnuS/biND0ymL/+rNJ07NMwzmkcOHpI/FE5ua+r3p2dUhmQFIT242OcTcv8Su049BPPeKxs9ferimQ7xrfd+/llCFqMs9scQW5BchkKK2riefHPHx+OY=
+	t=1767859116; cv=none; b=l/2Oz8743qlz4ckrZBTGiIVBiR40pax7Lvbcb7LNQ3Bpo1rblWS9gvi9NT6dxE++1jcFyDuuZKWsbKsFR44wCY++l6im8FxlMUDg7Dgkc+m+n6tE5/w8U5Tlxw3EQNb6HviqYVUgvgsRFyDpSvsay31i7fMTY5Wzx3UaeO5lX8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767860740; c=relaxed/simple;
-	bh=KziMa7QNGUm/4xZVgFBikODfU6bmya2+U35lZ61t6IU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EAEUpQyD1Gv+TGoEuSW+JSXtObIjX9HLeWA0FuAQgjnwHMPfXGk7QdkP/U8guN7hgR+7j0o19bnKuMrK1/p5+Z3bNDjt7/ElTxTNwqCI5+RpnQmfe3JluAcGkisGC+GkttrTQxwURBgNLjrHq/uOc7MScOUO2V/WN8Xms3TZ01g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=COHAo9Fa; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2a0ac29fca1so22960765ad.2
-        for <linux-pci@vger.kernel.org>; Thu, 08 Jan 2026 00:25:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767860724; x=1768465524; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=x8t1+RviBZBkQiz1+F0jLoZoAGkcEhuc2rfeggUJxJA=;
-        b=COHAo9Fadf1BUBEBbBuBuRFX794Igrky/O6OKgvi+ot2aYw8LXRpuPbABRts3k0y3W
-         fTi5ZfvtOsYZHAl1MgA3+wht4f95hpELRmMeu/vpjP5YYngbGvnSbnE9lNd9+xJ5TtQ+
-         2MqgfQ3/YMpHC1csfF9HBF53/D2XpRMONjtBB3wF9SE5/efNfI26+ZahAr35OeFZls3u
-         SrlYcHe3sC6HB8a7ndUahZ5QNWQvxr6IdMo2zF+ACpV/KwNOpb7+P63VZaQ4frVjCpxH
-         6hEej5AgqDi0RDbh2UutrunlgJ958WDyLdzl9gEgC6ZdBicsxc6HSNLEpxYiufpzdZgQ
-         BiOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767860724; x=1768465524;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x8t1+RviBZBkQiz1+F0jLoZoAGkcEhuc2rfeggUJxJA=;
-        b=WOtVsUQL0rIqRNPrkK8josN8NLmjyUUb+AgIFPbpzfWLOF6Pps4ZjVLLKBFv2A5Otz
-         662ZHxlNibtHjqc6TTjJOLWJ5zAmPmHvSJxVjbc6xy9LFtRYKAaIOdCdMJViN9B1hSf0
-         0qchcA9H2ejVziS0YKxWEteTQpc7zDUsKu+yEBepxNGv1GN9+KGNQxyyEJZzVIH18wpk
-         6weCxu0OpiqpIXf+he0um17LTPAfsoQRIYSeVR2hjE8IrAvr1Sac8RiSy3H/ZMUV0bcN
-         rCm5yHrvty/r7p0FS1aVVR0EWdAZFiuDFYWHlQXhn8/FHOP9hpIMq/7MokwQbWI7sQlN
-         gGwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXbxl0Jq+cEgplCnsrV9bYoyETFTz9wr5vLM7vJk/NqGYL/qwPG8jNb/m2X5UPCnCYe1Ep/LucXf1M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywae3RWSR4Ak8EPm7NWZmMqig8bWZnwJW8UfAeiFwlKC0TKZX88
-	pL6gKdz3bysIzHMJG5LUGIhKM23RL7Tm1ObjGpe+jBs0Ti+DxeVqGJI=
-X-Gm-Gg: AY/fxX45WgNhFZgqDHVELlZsvW6CSM7isWw5Mzu7kl6aQJ+mQUpewz/Glw9VARFRzoo
-	0Nev/jF3snhl5B48TYQTohtHiX6Ys0wcQ5BedMKJNAjnSaU8WgWqLDH6ydDAFGdZdYKrlpCwGQG
-	GvS7o4/Up/LLIA4W14gsBuaenpRdbSZN13Bg8ZxnvlMPMixGjvs/MOQxQL+knOT3c7rtpoYwz0z
-	f8PglwAzInbVsQ6WldAUeGARuzrqvs4IFepNRgGzFgl9B82Dl4/K8SS9qLK2snyGNZXnmMjInHD
-	qj3/H1voyGkzaTx8qG2AFJNd4BPe3WAn5yCYdJ0hHrv05NBM7h8nEt139CRre26r5f8an1wk1vk
-	s15PBIo20ZELfvZP4gJef2rmVgRaIu7WGBd80ttn80JqWehGm5CYgZurHhoFOGEeCVhRo4EASo2
-	NsIMG9CNiE8khj4b8=
-X-Google-Smtp-Source: AGHT+IFlqu/P/5sh9z5DWE3DsjYa1JH40CTlBeUg8uyttdF4r71Kg5WERp3YCavi1Kt+WDXEmDPaOw==
-X-Received: by 2002:a17:903:3c30:b0:2a0:fe4a:d67c with SMTP id d9443c01a7336-2a3ee437a5dmr49953365ad.10.1767860724001;
-        Thu, 08 Jan 2026 00:25:24 -0800 (PST)
-Received: from at.. ([171.61.166.195])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3c47303sm70625825ad.24.2026.01.08.00.25.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jan 2026 00:25:23 -0800 (PST)
-From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-To: 
-Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	"Oliver O'Halloran" <oohall@gmail.com>,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Mika Westerberg <westeri@kernel.org>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Feng Tang <feng.tang@linux.alibaba.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-usb@vger.kernel.org
-Subject: [PATCH v4] PCI/portdev: Disable AER for Titan Ridge 4C 2018
-Date: Thu,  8 Jan 2026 08:25:03 +0000
-Message-ID: <20260108082509.3028-1-atharvatiwarilinuxdev@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1767859116; c=relaxed/simple;
+	bh=BHWjH60r0N8ZBDVV0Is9BFHZ05CWiNlrCK64NpYA3js=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NvJ5ji1EFnQDVhk/KE6tn8YWUxURFSTL3xKyXLKD68Jtmw0e7hPPd3hRD3+TnNTX7MwI146Eq90aKOFrkxNdP6yBtoQNTvE29PK42jSVLAo1d1Aq0lvdWidP3JBhV0C15BVUUH9JdEY3MzPa/1GmcXZFXEF6i6uFp68srp17Bv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwKUjO6f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C332BC16AAE;
+	Thu,  8 Jan 2026 07:58:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767859112;
+	bh=BHWjH60r0N8ZBDVV0Is9BFHZ05CWiNlrCK64NpYA3js=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GwKUjO6fNvi0qeVn1AsJxoFsJh600X+LDFxJRjriXP3F5XZSl/qYcsu02FrKPhfMS
+	 J4gU/skb25xhTD+scfP/bB+BVIUzEEzXbd54GExTiE2EypsbF2IlN87H/vYaW0zThp
+	 WfZstZ4dbYt3LoSgGftRhTYg5cAhEuZbAveFtIyKvOeoYBeOMRAWMNvFz5bDfDxmal
+	 iB0Dpq1ai20nwJr/PAZbjGICz5liX8VzBoXVCuJ/J0LgTw2xZFMdn+hN6PUYt4DDkj
+	 SVCiT9O5T6ly1e5FEgpOIIAZTc2VI7L0sb4qUDxH5Z+1svZed8XYjy2g5P30eY01qN
+	 jzXD+Y+xavYVw==
+Date: Thu, 8 Jan 2026 08:58:26 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org,
+	bhelgaas@google.com, lpieralisi@kernel.org, vidyas@nvidia.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Koichiro Den <den@valinux.co.jp>
+Subject: Re: [PATCH 1/1] PCI: endpoint: Fix swapped parameters in
+ primary/secondary unlink callbacks
+Message-ID: <aV9joi3jF1R6ca02@ryzen>
+References: <20260108062747.1870669-1-mmaddireddy@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260108062747.1870669-1-mmaddireddy@nvidia.com>
 
-Disable AER for Intel Titan Ridge 4C 2018
-(used in T2 iMacs, where the warnings appear)
-that generate continuous pcieport warnings. such as:
+On Thu, Jan 08, 2026 at 11:57:47AM +0530, Manikanta Maddireddy wrote:
+> When using the primary/secondary EPC linking method via configfs, unlinking
+> the symlink causes a kernel crash with NULL pointer dereference. The crash
+> occurs in pci_epf_unbind() with a corrupted pointer (e.g., 0x0000000300000857),
+> and WARN_ON_ONCE(epc_group->start) triggers even when the EPC was properly
+> stopped before unlinking.
+>
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 1774 at drivers/pci/endpoint/pci-ep-cfs.c:143 pci_primary_epc_epf_unlink+0x6c/0x74
+> CPU: 1 PID: 1774 Comm: unlink Tainted:
+> Hardware name: NVIDIA Jetson
+> pstate: 23400009 (nzCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+> pc : pci_primary_epc_epf_unlink+0x6c/0x74
+> lr : configfs_unlink+0xe0/0x208
+> sp : ffff8000854fbcc0
+> x29: ffff8000854fbcc0 x28: ffff00008fd0ddc0 x27: 0000000000000000
+> x26: 0000000000000000 x25: ffff00008b756220 x24: ffffc46154d53248
+> x23: ffff000095368088 x22: ffffc461568bdd18 x21: ffff00008afb3f00
+> x20: ffff00008068ec00 x19: ffff000095368088 x18: 0000000000000000
+> x17: 0000000000000000 x16: ffffc46153e6f32c x15: 0000000000000000
+> x14: 0000000000000000 x13: ffff00008eec2043 x12: ffff8000854fbc64
+> x11: 00000007ec988e71 x10: 0000000000000002 x9 : 0000000000000007
+> x8 : ffff0000824c3540 x7 : e0fee0d0d0d0a0b5 x6 : 0000000000000002
+> x5 : 0000000000000064 x4 : 0000000200000000 x3 : 0000000200000000
+> x2 : ffffc46153e6f32c x1 : ffff000088009c00 x0 : 0000000000000073
+> Call trace:
+>  pci_primary_epc_epf_unlink+0x6c/0x74
+>  configfs_unlink+0xe0/0x208
+>  vfs_unlink+0x120/0x29c
+>  do_unlinkat+0x25c/0x2c4
+>  __arm64_sys_unlinkat+0x3c/0x90
+>  invoke_syscall+0x48/0x134
+>  el0_svc_common.constprop.0+0xd0/0xf0
+>  do_el0_svc+0x1c/0x30
+>  el0t_64_sync_handler+0x130/0x13c
+>  el0t_64_sync+0x194/0x198
+>
+> ------------[ cut here ]------------
+> Unable to handle kernel paging request at virtual address 0000000300000857
+> Mem abort info:
+>   SET = 0, FnV = 0(current EL), IL = 32 bits
+>   EA = 0, S1PTW = 0
+>   FSC = 0x04: level 0 translation fault
+> Data abort info:
+>   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+> user pgtable: 4k pages, 48-bit VAs, pgdp=000000010ed28000
+> [0000000300000857] pgd=0000000000000000, p4d=0000000000000000
+> Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+> pstate: 034000c9 (nzcv daIF +PAN -UAO +TCO +DIT -SSBS BTYPE=--)n
+> pc : string+0x54/0x14c
+> lr : vsnprintf+0x280/0x6e8
+> sp : ffff8000854fb940
+> x29: ffff8000854fb940 x28: ffffc461555540fd x27: 00000000ffffffd8
+> x26: ffff8000854fbc90 x25: 0000000000000008 x24: ffff8000854fba70
+> x23: ffff8000854fbc90 x22: ffff8000854fba78 x21: 0000000000000002
+> x20: ffff8000854fba75 x19: ffffc461555540fd x18: 0000000000000006
+> x17: 0000000000000000 x16: ffffc46154a438a0 x15: ffff8000854fb5e0
+> x14: 0000000000000000 x13: 00000000ffffffea x12: ffffc46156333e80
+> x11: 0000000000000001 x10: 0000000000000020 x9 : ffff8000854fbc90
+> x8 : 0000000000000020 x7 : 00000000ffffffff x6 : ffff8000854fba78
+> x5 : 0000000000000000 x4 : ffffffffffffffff x3 : ffff0a00ffffff04
+> x2 : 0000000300000857 x1 : 0000000000000000 x0 : ffff8000854fba75
+> Call trace:
+>  string+0x54/0x14c
+>  vsnprintf+0x280/0x6e8
+>  vprintk_default+0x38/0x4c
+>  vprintk+0xc4/0xe0
+>  pci_epf_unbind+0xdc/0x108
+>  configfs_unlink+0xe0/0x208+0x44/0x74
+>  vfs_unlink+0x120/0x29c
+>  __arm64_sys_unlinkat+0x3c/0x90
+>  invoke_syscall+0x48/0x134
+>  do_el0_svc+0x1c/0x30prop.0+0xd0/0xf0
+>
+> The pci_primary_epc_epf_unlink() and pci_secondary_epc_epf_unlink() functions
+> have their parameter names swapped compared to the corresponding _link()
+> functions, but the function body was not updated to match.
+>
+> ConfigFS drop_link callback receives parameters as (src_item, target_item):
+> - src_item: the config_item of the directory containing the symlink (primary/ group)
+> - target_item: the config_item that the symlink points to (EPC controller)
+>
+> The _link() functions correctly use:
+>   pci_primary_epc_epf_link(struct config_item *epf_item, struct config_item *epc_item)
+>   - epf_item (1st param) = primary/ group -> epf_item->ci_parent = EPF group
+>   - epc_item (2nd param) = EPC controller
+>
+> But the _unlink() functions had parameters swapped:
+>   pci_primary_epc_epf_unlink(struct config_item *epc_item, struct config_item *epf_item)
+>   - epc_item (1st param) = actually primary/ group (misnamed!)
+>   - epf_item (2nd param) = actually EPC controller (misnamed!)
+>
+> The body then incorrectly uses:
+>   to_pci_epf_group(epf_item->ci_parent) -> EPC's parent = controllers/ group (WRONG!)
+>   to_pci_epc_group(epc_item) -> primary/ group cast as EPC group (WRONG!)
+>
+> This causes garbage pointer dereferences leading to the crash.
+>
+> Swap the parameter names in both unlink functions to match the link functions,
+> so the body logic correctly interprets the parameters.
+>
+> Verification steps:
+> 1. cd /sys/kernel/config/pci_ep/
+> 2. Create EPF function: mkdir functions/<driver>/func1
+> 3. Link via primary: ln -s controllers/<epc> functions/<driver>/func1/primary/
+> 4. Start EPC: echo 1 > controllers/<epc>/start
+> 5. Stop EPC: echo 0 > controllers/<epc>/start
+> 6. Unlink: unlink functions/<driver>/func1/primary/<epc>
+> 7. Cleanup: rmdir functions/<driver>/func1
+> 8. Verify no crash occurs during unlink
+>
+> Fixes: e85a2d783762 ("PCI: endpoint: Add support in configfs to associate two EPCs with EPF")
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> ---
 
-pcieport 0000:00:1c.4: AER: Correctable error message received from 0000:07:00.0
-pcieport 0000:07:00.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
-pcieport 0000:07:00.0:   device [8086:15ea] error status/mask=00000080/00002000
-pcieport 0000:07:00.0:    [ 7] BadDLLP
+I think the commit message is a bit too verbose.
+Something like the following would suffice:
 
-macOS also disables AER for Thunderbolt devices and controllers in their drivers.
+struct configfs_item_operations callbacks are defined like the following:
+int (*allow_link)(struct config_item *src, struct config_item *target);
+void (*drop_link)(struct config_item *src, struct config_item *target);
 
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220651
-Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+While pci_primary_epc_epf_link() and pci_secondary_epc_epf_link() specifies
+the parameters in the correct order, pci_primary_epc_epf_unlink() and
+pci_secondary_epc_epf_unlink() specifies the parameters in the wrong order,
+leading to a kernel crash when using the unlink command in configfs.
 
----
-Chnages since v3:
-- Fixed Grammer mistakes
-Changes since v2:
-- Transferred logic to arch/x86/pci/fixup.c to only target x86
-- Added DMI quirk to only target Apple Systems
-Changes since v1:
-- Transferred logic to drivers/pci/quicks.c
----
----
- arch/x86/pci/fixup.c       | 12 ++++++++++++
- drivers/pci/pcie/aer.c     |  3 +++
- drivers/pci/pcie/portdrv.c |  2 +-
- include/linux/pci.h        |  1 +
- 4 files changed, 17 insertions(+), 1 deletion(-)
+With that:
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
 
-diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-index 25076a5acd96..bd72f7cf5db9 100644
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -1081,3 +1081,15 @@ static void quirk_tuxeo_rp_d3(struct pci_dev *pdev)
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1502, quirk_tuxeo_rp_d3);
- #endif /* CONFIG_SUSPEND */
-+
-+#ifdef CONFIG_PCIEAER
-+
-+static void quirk_disable_aer(struct pci_dev *pdev)
-+{
-+	if (dmi_match(DMI_SYS_VENDOR, "Apple"))
-+		pdev->no_aer = 1;
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x15EA, quirk_disable_aer);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x15EB, quirk_disable_aer);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x15EC, quirk_disable_aer);
-+#endif /* CONFIG_PCIEAER */
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index e0bcaa896803..45604564ce6f 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -389,6 +389,9 @@ void pci_aer_init(struct pci_dev *dev)
- {
- 	int n;
- 
-+	if (dev->no_aer)
-+		return;
-+
- 	dev->aer_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
- 	if (!dev->aer_cap)
- 		return;
-diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-index 38a41ccf79b9..ab904a224296 100644
---- a/drivers/pci/pcie/portdrv.c
-+++ b/drivers/pci/pcie/portdrv.c
-@@ -240,7 +240,7 @@ static int get_port_device_capability(struct pci_dev *dev)
- 	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-              pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
- 	    dev->aer_cap && pci_aer_available() &&
--	    (pcie_ports_native || host->native_aer))
-+	    (pcie_ports_native || host->native_aer) && !dev->no_aer)
- 		services |= PCIE_PORT_SERVICE_AER;
- #endif
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 864775651c6f..f447f86c6bdf 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -440,6 +440,7 @@ struct pci_dev {
- 	unsigned int	multifunction:1;	/* Multi-function device */
- 
- 	unsigned int	is_busmaster:1;		/* Is busmaster */
-+	unsigned int	no_aer:1;		/* May not use AER */
- 	unsigned int	no_msi:1;		/* May not use MSI */
- 	unsigned int	no_64bit_msi:1;		/* May only use 32-bit MSIs */
- 	unsigned int	block_cfg_access:1;	/* Config space access blocked */
--- 
-2.43.0
 
+Note that a fix for this is also is part of Koichiro series:
+https://lore.kernel.org/linux-pci/20251202072348.2752371-3-den@valinux.co.jp/
+
+
+Kind regards,
+Niklas
 
