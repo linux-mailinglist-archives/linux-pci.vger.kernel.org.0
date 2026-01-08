@@ -1,74 +1,130 @@
-Return-Path: <linux-pci+bounces-44273-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44279-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A720DD04545
-	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 17:24:54 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2018CD03C9D
+	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 16:23:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BF0D831B5E36
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Jan 2026 15:14:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EF6C431C6362
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Jan 2026 14:54:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F309A3A89BA;
-	Thu,  8 Jan 2026 10:17:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0C994BDEB2;
+	Thu,  8 Jan 2026 12:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iy5+++A8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CC13A63EC;
-	Thu,  8 Jan 2026 10:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E814A5B1B
+	for <linux-pci@vger.kernel.org>; Thu,  8 Jan 2026 12:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767867472; cv=none; b=oU8+OY54bwJO+GtB1ensaOeD1yXueDX2ewRbLXUb/God/W3uM8bG/4TYxuG6qIcg1fRkKTlOaDS6dymL4ovbQYxExZ9RT9kDmJWY3U43QZMtC+LPGfIVMwPD8wEe57ATQU8oLBUg8Z4Q1/b/+b9aYyHCdcIeFrwBS3OqApeb00A=
+	t=1767874527; cv=none; b=txACAzLFKtNA+4uyqQL931ew9EgQle9FQ1PhrMaegrWEIU4SUrxwaWmlWKuCeW6ShdIYgOzf2seWwTMPZqy/j4KihJ0zttQUTcs+EkPXMf3NZ2fqTFOLyMlhJz1poNlqfPVhTkkZw87nW+1fcgVkIg06fupdTSosKZufP3nSByg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767867472; c=relaxed/simple;
-	bh=7y4MAUAOlFLvy6xkX8Vql9Spu9LRIDXbDcmnMGNgqZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R2jrZyad0GEnDnZi2pBUb2etkIo9+L/GZS0uZaQ14S5TQ4Mbt4GfRWx2xUvMHY+DLjvRYDLaxgls5P6Pdaedp+GIVcv7uWRm0RLyoltKFsS7eotxbIiOdZXT8uhGxU8MonrJn/TXTmQhqu7WtYCB+j1nqNbx4486yA3U9zzsinM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id D7E68227AAA; Thu,  8 Jan 2026 11:17:42 +0100 (CET)
-Date: Thu, 8 Jan 2026 11:17:42 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Logan Gunthorpe <logang@deltatee.com>,
-	Hou Tao <houtao@huaweicloud.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-mm@kvack.org,
-	linux-nvme@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Tejun Heo <tj@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Sagi Grimberg <sagi@grimberg.me>, houtao1@huawei.com
-Subject: Re: [PATCH 02/13] PCI/P2PDMA: Fix the warning condition in
- p2pmem_alloc_mmap()
-Message-ID: <20260108101742.GB24709@lst.de>
-References: <20260107171724.GA432074@bhelgaas> <20260107203439.GA446340@bhelgaas>
+	s=arc-20240116; t=1767874527; c=relaxed/simple;
+	bh=oN3VJ81TR92t72IorUOGx+yYKZ6zgxZk9xFRV4q/Jvs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rPD8L17Ccf7qUycGM9mIQv8krT5wY+E4008AExuwIQKWUzhsXm7xT3APxpcZdnFeXwHCAwBwHcyGzCUKWH0SIijRuiBlJhbouIiRTNqHbYI40vQrA2fcac+OXCHSqYID/Ul5w/H/qsnBU+5mmXfDh9PXPCABqvJOV6kuGTyuvAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iy5+++A8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B2DFC2BCAF
+	for <linux-pci@vger.kernel.org>; Thu,  8 Jan 2026 12:15:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767874527;
+	bh=oN3VJ81TR92t72IorUOGx+yYKZ6zgxZk9xFRV4q/Jvs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=iy5+++A86Sd4Opbng5Cpq18bXVkT5o3GMVfzsGGk+tSkDWzJntj1FB6j6rsTmvDV7
+	 htk5tpeZs7QIUTy1l81V0iwHwd+ld3bzRnlSLulPMLJgS5+BHEXo2cQsyv09Gs87c1
+	 6U6WuD9E4fHh9FTyCDiwOvTsfJCfMABaKvIEh/hxlznf66fal6a5ELJKAz+QYDHowm
+	 RSYmfVWwSOTYlMrwmhNGfnhOg87uRQ2rCIdg4Z746axEcP2smmEWDVmqa/Kjm2JKzd
+	 cTRPrW2m084iD5VJcJnB63d5nGR5SkqGE+jzjgNUCjYJgR3S/74C1Exn+71ksFN4o/
+	 YNS2z15g0sydA==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-59b6d5bd575so2287337e87.1
+        for <linux-pci@vger.kernel.org>; Thu, 08 Jan 2026 04:15:27 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVyFp/C2v1Pg4hKhMiS+c9takbvzAMnMUSeRcG+v9wD5FW/Xceidyq+FoZasVqgHABEZG2fZ0LPs0w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOnfW8QR8qHFwQxEEPhu0g8UBeS7zcqcmICLofQyufPsv8TzCI
+	gAUY23qCcGKlALB9PRHE4mY0Ar+TdHQ03HuSX6LlHbnDXl34vSln23dlgVGQRmrnfpsG1v3xONV
+	tinwHp/9e1AIzt/ui87uKMOQbr1YTlQfQmEJlhdpIWQ==
+X-Google-Smtp-Source: AGHT+IF/4koG/MN6sfNsURUrtRSXZrXyRHd0bqi6p5mzExxZBo2GY4yvcJpb3YE7lL2MK6UqIWbaGQBDGlnCB4B6bas=
+X-Received: by 2002:a05:6512:68f:b0:594:35c4:fed1 with SMTP id
+ 2adb3069b0e04-59b6ef03a2dmr1813240e87.13.1767874525775; Thu, 08 Jan 2026
+ 04:15:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260107203439.GA446340@bhelgaas>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20260107-pci-m2-v5-0-8173d8a72641@oss.qualcomm.com> <20260107-pci-m2-v5-5-8173d8a72641@oss.qualcomm.com>
+In-Reply-To: <20260107-pci-m2-v5-5-8173d8a72641@oss.qualcomm.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Thu, 8 Jan 2026 13:15:12 +0100
+X-Gmail-Original-Message-ID: <CAMRc=Md9TQiSX-gFa5q--JgaGyQ2ky4mOwjSpdxHhvHAj-X5Qw@mail.gmail.com>
+X-Gm-Features: AQt7F2puNlVWjbhiRoX8QQnOlbAAs4UdjLNY6ZTbm-vEXEFSeur6kT9w8kO5QSk
+Message-ID: <CAMRc=Md9TQiSX-gFa5q--JgaGyQ2ky4mOwjSpdxHhvHAj-X5Qw@mail.gmail.com>
+Subject: Re: [PATCH v5 5/5] power: sequencing: Add the Power Sequencing driver
+ for the PCIe M.2 connectors
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-pm@vger.kernel.org, 
+	linux-ide@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 07, 2026 at 02:34:39PM -0600, Bjorn Helgaas wrote:
-> > 
-> > Given that, I would ordinarily target the v6.20 merge window, but the
-> > "ASAP" suggests more urgency.  Do you want one or both for v6.19?
-> 
-> I put the patches above on pci/p2pdma for v6.20 until I hear
-> otherwise.
+On Wed, Jan 7, 2026 at 3:11=E2=80=AFPM Manivannan Sadhasivam via B4 Relay
+<devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
+>
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+>
+> This driver is used to control the PCIe M.2 connectors of different
+> Mechanical Keys attached to the host machines and supporting different
+> interfaces like PCIe/SATA, USB/UART etc...
+>
+> Currently, this driver supports only the Mechanical Key M connectors with
+> PCIe interface. The driver also only supports driving the mandatory 3.3v
+> and optional 1.8v power supplies. The optional signals of the Key M
+> connectors are not currently supported.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.=
+com>
 
-Sounds good, thanks!
+This looks good to me, though there are some nits I may fix when applying.
 
+I'll pick it up for v7.0 once the bindings are reviewed.
+
+> +++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
+> @@ -0,0 +1,169 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com=
+>
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/of_platform.h>
+
+It looks like this is a leftover from previous versions and you no
+longer need it?
+
+> +
+> +static void pwrseq_pcie_free_resources(void *data)
+> +{
+> +       struct pwrseq_pcie_m2_ctx *ctx =3D data;
+> +
+> +       regulator_bulk_free(ctx->num_vregs, ctx->regs);
+> +}
+
+I would call it pwrseq_pcie_m2_free_regulators() if you don't mind.
+
+Bart
 
