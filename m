@@ -1,56 +1,55 @@
-Return-Path: <linux-pci+bounces-44270-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44273-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4603AD03C79
-	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 16:22:55 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A720DD04545
+	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 17:24:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id ECBCC306B7A4
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Jan 2026 15:15:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BF0D831B5E36
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Jan 2026 15:14:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5A833C1FE9;
-	Thu,  8 Jan 2026 09:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EwGl/lQh"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F309A3A89BA;
+	Thu,  8 Jan 2026 10:17:52 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDB53C26DD;
-	Thu,  8 Jan 2026 09:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CC13A63EC;
+	Thu,  8 Jan 2026 10:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767865275; cv=none; b=GuYZ9GdtnDPbrR63bUJztYcZwXR+q3LHsgtVQLv+BMaKdwSLmsOKVBO8B/PmiJzBYX1OjbxTF4qgV1BizDFHtvELQw4BuA5AMVii/crDiyMbXpEJq27w3ZI74n0o6m8kK2iBeJzFImBh67tfb+XtV7E/mPQJAIxJ9+Z8zauMZ4Q=
+	t=1767867472; cv=none; b=oU8+OY54bwJO+GtB1ensaOeD1yXueDX2ewRbLXUb/God/W3uM8bG/4TYxuG6qIcg1fRkKTlOaDS6dymL4ovbQYxExZ9RT9kDmJWY3U43QZMtC+LPGfIVMwPD8wEe57ATQU8oLBUg8Z4Q1/b/+b9aYyHCdcIeFrwBS3OqApeb00A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767865275; c=relaxed/simple;
-	bh=UEaIQfRq82d68MoxCK3eZ2F/3OU0Q+vcRrHpzPPA6VU=;
+	s=arc-20240116; t=1767867472; c=relaxed/simple;
+	bh=7y4MAUAOlFLvy6xkX8Vql9Spu9LRIDXbDcmnMGNgqZQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AOrrnRcXH60f9D/CU9+DovLYvjxmlX+YgWuwS02EmFC9qCWSHfaYA58FeVBOddFBbJkfVr3HtRu4kVRHbmbRxvtBmk+mwpwuo4sT5GxNCXtVR4OBHsOvviEl90n5DHmXKfZucPRZnB+ZELRg0xhmSs0Iw/m3aYvvBpzMRdBs2s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EwGl/lQh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8E8BC116C6;
-	Thu,  8 Jan 2026 09:41:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767865274;
-	bh=UEaIQfRq82d68MoxCK3eZ2F/3OU0Q+vcRrHpzPPA6VU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EwGl/lQhKitXy13aE9fSGLrPxFVJfyltMqldZArq6sNltJFhpZXO2prlgdap+1umG
-	 cYs13LmbEDwx1KVmOLe5kuSnAIZS/Vzg/WMwQh2qofg8DWUXJcoR4obG6c64ftbkrG
-	 +wHqUCABzC4jluOiArHl4pL2luB5vKCmJiGXTdhp9FnOeN4Q1gWmxbXYJoZRQnJIM8
-	 /WJ0fNXs7GSfGimETwgDoz97Ke4tOzCKMdkZv8nSvo9w4VmgxGMlHS14yFR1p5tmCM
-	 RbgCrj3aYJ8HWPmnQGUsjiT+qY0VXrSHytaElV4409IiI3mACaYhdM+jvF9z4xtWsO
-	 X6UTxLs4lPofg==
-Date: Thu, 8 Jan 2026 10:41:09 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Koichiro Den <den@valinux.co.jp>
-Cc: jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	Frank.Li@nxp.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] PCI: endpoint: Add BAR subrange mapping support
-Message-ID: <aV97tR3AKxBVCBHr@ryzen>
-References: <20260108044148.2352800-1-den@valinux.co.jp>
- <20260108044148.2352800-2-den@valinux.co.jp>
- <aV9638ebwqc4bsbd@ryzen>
+	 Content-Type:Content-Disposition:In-Reply-To; b=R2jrZyad0GEnDnZi2pBUb2etkIo9+L/GZS0uZaQ14S5TQ4Mbt4GfRWx2xUvMHY+DLjvRYDLaxgls5P6Pdaedp+GIVcv7uWRm0RLyoltKFsS7eotxbIiOdZXT8uhGxU8MonrJn/TXTmQhqu7WtYCB+j1nqNbx4486yA3U9zzsinM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id D7E68227AAA; Thu,  8 Jan 2026 11:17:42 +0100 (CET)
+Date: Thu, 8 Jan 2026 11:17:42 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Logan Gunthorpe <logang@deltatee.com>,
+	Hou Tao <houtao@huaweicloud.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-mm@kvack.org,
+	linux-nvme@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Tejun Heo <tj@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Sagi Grimberg <sagi@grimberg.me>, houtao1@huawei.com
+Subject: Re: [PATCH 02/13] PCI/P2PDMA: Fix the warning condition in
+ p2pmem_alloc_mmap()
+Message-ID: <20260108101742.GB24709@lst.de>
+References: <20260107171724.GA432074@bhelgaas> <20260107203439.GA446340@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,25 +58,17 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aV9638ebwqc4bsbd@ryzen>
+In-Reply-To: <20260107203439.GA446340@bhelgaas>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, Jan 08, 2026 at 10:37:35AM +0100, Niklas Cassel wrote:
-> @@ -596,6 +596,9 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  	if (!epc_features)
->  		return -EINVAL;
->  
-> +	if (epf_bar->flags && !epc_features->subrange_mapping)
-> +		return -EINVAL;
+On Wed, Jan 07, 2026 at 02:34:39PM -0600, Bjorn Helgaas wrote:
+> > 
+> > Given that, I would ordinarily target the v6.20 merge window, but the
+> > "ASAP" suggests more urgency.  Do you want one or both for v6.19?
+> 
+> I put the patches above on pci/p2pdma for v6.20 until I hear
+> otherwise.
 
-This should of course have been:
+Sounds good, thanks!
 
-	if (epf_bar->use_submap && !epc_features->subrange_mapping)
-		return -EINVAL;
-
-
-(I simply used flags in order to compile test without applying your series.)
-
-
-Kind regards,
-Niklas
 
