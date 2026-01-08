@@ -1,204 +1,129 @@
-Return-Path: <linux-pci+bounces-44284-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44285-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F535D04042
-	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 16:48:42 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49506D04297
+	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 17:07:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 3904F301CA15
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Jan 2026 15:46:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1CFEF32F7663
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Jan 2026 15:59:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 687AE25F797;
-	Thu,  8 Jan 2026 15:40:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 433EC26C39E;
+	Thu,  8 Jan 2026 15:56:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cBEU8FHo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="smTz0YN5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC00C50096B
-	for <linux-pci@vger.kernel.org>; Thu,  8 Jan 2026 15:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017D725392A;
+	Thu,  8 Jan 2026 15:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767886857; cv=none; b=G+8Nf6mPMyU1W5+clNnnzkkx2Ejm5QJZNVOSCYzWtrOfEhIxF/z5WWpoqKXrcmHvqFRMb3P6Obnhlxp/VmiLIzoU7nQgiTNNHWS6VhETvmJB7ZJqXAxk6m2IKEVkaNncBnDN5/sS7/+HBlHNK5aiOhprlNVS1FtQx7udTeNb4hc=
+	t=1767887761; cv=none; b=tmNUqrFklyVUljeYvXsZaXrRljk91VTD/eTM0sgwR/TRlXgDNvdtL/09FOGjvwUMKlnZZqURyhGqnzynZBJY4D4NiO4FDVGTf68DWHLDQF7jvF7vSR+6Clc7G76JxGwkeSdjb0FQ3oEMMHBW56MdTk8YNz3wQM7k+Nub+NrLfck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767886857; c=relaxed/simple;
-	bh=9Fi24xt7VJ7oslwng0uLAc5uAII/9UxE1v41ql9ffew=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=jbnA4IWTy4EzJ8zdRfCi3dKqllUvKaV7vrq0Tt4Q6Nrua2a7mmKTKcaNUqMNj9+M4NexrRsjFgaEqjAyHNk93e1TS4qiMFW2ZrrMH3MemJZJpkyCAEB5cHk0/ekcCheuLy68nHYUs4P/Q454QlfWP3EOmNQ8g8BhKqIfNW5S8SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cBEU8FHo; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767886855; x=1799422855;
-  h=date:from:to:cc:subject:message-id;
-  bh=9Fi24xt7VJ7oslwng0uLAc5uAII/9UxE1v41ql9ffew=;
-  b=cBEU8FHocY/usPFmkMgRn59GIBxbr32Ee1YX9CUGpXCMuP+iGc2CPaLA
-   0sWpucVHl5n3Asvzr+xTUDY7y7TO2WUJRt74Z7QBw554lbxwRJXfSuN0e
-   87N6CFUPfatMZxy26TbWGBAnP/sC1oGDQcoq7fPZd9f8XgEhmca6Zn+H8
-   EJue45m++0Bo6KyrIOgGns5msxGKfGS0Ft5FydP9gTDzIs9CP/PQipVX1
-   pSGrK++/r2RaA6HyEOQFsBFCieTTofeBErpOsrKppVR7Jj71KgbAtHBJ0
-   rLTrqX515LKnsvJK9jUFutzrX8XybHqEYdkYlM9SZHFKt5OPrt1h+AFHX
-   A==;
-X-CSE-ConnectionGUID: gxlxpKPtRy6djQw8qJIZ+g==
-X-CSE-MsgGUID: I08LiCU5QqGPNWjF2GSAvA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11665"; a="80631056"
-X-IronPort-AV: E=Sophos;i="6.21,211,1763452800"; 
-   d="scan'208";a="80631056"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 07:40:55 -0800
-X-CSE-ConnectionGUID: JeyG2kDUQYGXrJVUeAVzlw==
-X-CSE-MsgGUID: 93e5Gio/Q7KJg6dNmuVwgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,211,1763452800"; 
-   d="scan'208";a="208297196"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 08 Jan 2026 07:40:54 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vds83-000000004u4-2WiQ;
-	Thu, 08 Jan 2026 15:40:51 +0000
-Date: Thu, 08 Jan 2026 23:40:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:dt-bindings] BUILD SUCCESS
- 407cc7ff3e99f6bca9b4ca2561d3f9e7192652fe
-Message-ID: <202601082332.9oF5hr1F-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1767887761; c=relaxed/simple;
+	bh=GfulWa/ARu4Yr8rPC67SODwYIn35P8iw0erhJXUkXcY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=TuGAEhc6PWxYJMtDB3r+kUBvNRzvoMA5BQ4QHdGm9Oy/Vu4QW9BsUDfe2tRVoxvP9eOohnSvvZj3uEWnOirpjBjQPMZ+FS3V+qsPp700kBwp+6uj9IE4kh0UiMfite71jA/YKmo/2469i7lC0BAnfyKWVmL5XHCM+pTfK+DzGDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=smTz0YN5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DFD6C116C6;
+	Thu,  8 Jan 2026 15:56:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767887760;
+	bh=GfulWa/ARu4Yr8rPC67SODwYIn35P8iw0erhJXUkXcY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=smTz0YN5YLFmAlOwB/XE8lSG6WmMP9wwqSDofdB02oq65EsOYfnBlUklxTr+EgvDK
+	 D8lBV6Neawx+hCoXcQ6EgI+F4Vv4Zrwc9mjuyRoN2D9iz15mp/8X/xXkIDpluV8Z1+
+	 2w9Aq1d0cFAIHm7EvNx2GH1ulX6+5eXLtIUGYofhwcoOT947MRxroquuxMdN+9IewD
+	 W929EV3dvo4vDZAvAU27sNCWOs2xaEra2+bel24JzUK8CDMgc77ZvAVp3//FojQ+v7
+	 kOs71Vya+liqOAZf8HJg6nkTyKyr+a/U1QkBeLh3lRWlYEt1McXz1ecpnZeMxewfMx
+	 W9fCRcqMSwgog==
+Date: Thu, 8 Jan 2026 09:55:58 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alistair Popple <apopple@nvidia.com>
+Cc: Hou Tao <houtao@huaweicloud.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-mm@kvack.org,
+	linux-nvme@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Tejun Heo <tj@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	houtao1@huawei.com
+Subject: Re: [PATCH 01/13] PCI/P2PDMA: Release the per-cpu ref of pgmap when
+ vm_insert_page() fails
+Message-ID: <20260108155558.GA482755@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <46lz5szq44vz3chzj6unh2sff4cfnpyvih7zty6fcnitzyrulu@6a2xdopoafxt>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git dt-bindings
-branch HEAD: 407cc7ff3e99f6bca9b4ca2561d3f9e7192652fe  dt-bindings: PCI: mediatek-gen3: Add MT7981 PCIe compatible
+On Thu, Jan 08, 2026 at 02:23:16PM +1100, Alistair Popple wrote:
+> On 2025-12-20 at 15:04 +1100, Hou Tao <houtao@huaweicloud.com> wrote...
+> > From: Hou Tao <houtao1@huawei.com>
+> > 
+> > When vm_insert_page() fails in p2pmem_alloc_mmap(), p2pmem_alloc_mmap()
+> > doesn't invoke percpu_ref_put() to free the per-cpu ref of pgmap
+> > acquired after gen_pool_alloc_owner(), and memunmap_pages() will hang
+> > forever when trying to remove the PCIe device.
+> > 
+> > Fix it by adding the missed percpu_ref_put().
+> 
+> This pairs with the percpu_ref_tryget_live_rcu() above right? Might
+> be worth mentioning that as a comment, but overall looks good to me
+> so feel free to add:
+> 
+> Reviewed-by: Alistair Popple <apopple@nvidia.com>
 
-elapsed time: 1603m
+Added your Reviewed-by, thanks!
 
-configs tested: 113
-configs skipped: 2
+Would the following commit log address your suggestion?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+  When the vm_insert_page() in p2pmem_alloc_mmap() failed, we did not
+  invoke percpu_ref_put() to free the per-CPU pgmap ref acquired by
+  percpu_ref_tryget_live_rcu(), which meant that PCI device removal would
+  hang forever in memunmap_pages().
 
-tested configs:
-alpha                               defconfig    gcc-15.1.0
-arc                      axs103_smp_defconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20260107    gcc-14.3.0
-arc                   randconfig-002-20260107    gcc-8.5.0
-arm                       aspeed_g4_defconfig    clang-22
-arm                                 defconfig    clang-22
-arm                   randconfig-001-20260107    gcc-10.5.0
-arm                   randconfig-002-20260107    clang-22
-arm                   randconfig-003-20260107    clang-22
-arm                   randconfig-004-20260107    gcc-10.5.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20260107    clang-22
-arm64                 randconfig-002-20260107    clang-22
-arm64                 randconfig-003-20260107    gcc-8.5.0
-arm64                 randconfig-004-20260107    clang-22
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20260107    gcc-15.1.0
-csky                  randconfig-002-20260107    gcc-9.5.0
-hexagon                             defconfig    clang-22
-hexagon               randconfig-001-20260107    clang-22
-hexagon               randconfig-002-20260107    clang-22
-i386        buildonly-randconfig-001-20260107    gcc-14
-i386        buildonly-randconfig-002-20260107    gcc-14
-i386        buildonly-randconfig-003-20260107    clang-20
-i386        buildonly-randconfig-004-20260107    gcc-14
-i386        buildonly-randconfig-005-20260107    clang-20
-i386        buildonly-randconfig-006-20260107    clang-20
-i386                                defconfig    clang-20
-i386                  randconfig-001-20260107    gcc-14
-i386                  randconfig-002-20260107    gcc-14
-i386                  randconfig-003-20260107    gcc-14
-i386                  randconfig-004-20260107    gcc-14
-i386                  randconfig-005-20260107    gcc-14
-i386                  randconfig-006-20260107    gcc-14
-i386                  randconfig-007-20260107    clang-20
-i386                  randconfig-011-20260107    gcc-13
-i386                  randconfig-012-20260107    gcc-14
-i386                  randconfig-013-20260107    clang-20
-i386                  randconfig-014-20260107    gcc-14
-i386                  randconfig-015-20260107    clang-20
-i386                  randconfig-016-20260107    clang-20
-i386                  randconfig-017-20260107    clang-20
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20260107    gcc-15.1.0
-loongarch             randconfig-002-20260107    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-m68k                        m5272c3_defconfig    gcc-15.1.0
-m68k                           sun3_defconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                     loongson2k_defconfig    gcc-15.1.0
-mips                        omega2p_defconfig    clang-22
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20260107    gcc-8.5.0
-nios2                 randconfig-002-20260107    gcc-8.5.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20260107    gcc-8.5.0
-parisc                randconfig-002-20260107    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                        fsp2_defconfig    gcc-15.1.0
-powerpc                   lite5200b_defconfig    clang-22
-powerpc               randconfig-001-20260107    clang-22
-powerpc               randconfig-002-20260107    gcc-8.5.0
-powerpc64             randconfig-001-20260107    gcc-14.3.0
-powerpc64             randconfig-002-20260107    clang-22
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20260107    clang-22
-riscv                 randconfig-002-20260107    gcc-9.5.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20260107    clang-22
-s390                  randconfig-002-20260107    clang-22
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20260107    gcc-12.5.0
-sh                    randconfig-002-20260107    gcc-12.5.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20260107    gcc-8.5.0
-sparc                 randconfig-002-20260107    gcc-11.5.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20260107    clang-22
-sparc64               randconfig-002-20260107    gcc-10.5.0
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260107    clang-16
-um                    randconfig-002-20260107    clang-22
-um                           x86_64_defconfig    clang-22
-x86_64      buildonly-randconfig-001-20260107    gcc-14
-x86_64      buildonly-randconfig-002-20260107    gcc-14
-x86_64      buildonly-randconfig-003-20260107    gcc-14
-x86_64      buildonly-randconfig-004-20260107    clang-20
-x86_64      buildonly-randconfig-005-20260107    gcc-14
-x86_64      buildonly-randconfig-006-20260107    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20260107    clang-20
-x86_64                randconfig-002-20260107    clang-20
-x86_64                randconfig-003-20260107    clang-20
-x86_64                randconfig-004-20260107    gcc-13
-x86_64                randconfig-005-20260107    clang-20
-x86_64                randconfig-006-20260107    clang-20
-x86_64                randconfig-011-20260107    gcc-12
-x86_64                randconfig-012-20260107    gcc-14
-x86_64                randconfig-013-20260107    clang-20
-x86_64                randconfig-014-20260107    clang-20
-x86_64                randconfig-015-20260107    clang-20
-x86_64                randconfig-016-20260107    clang-20
-x86_64                randconfig-071-20260107    gcc-14
-x86_64                randconfig-072-20260107    clang-20
-x86_64                randconfig-073-20260107    gcc-14
-x86_64                randconfig-074-20260107    gcc-14
-x86_64                randconfig-075-20260107    clang-20
-x86_64                randconfig-076-20260107    gcc-14
-xtensa                randconfig-001-20260107    gcc-8.5.0
-xtensa                randconfig-002-20260107    gcc-15.1.0
+  Fix it by adding the missed percpu_ref_put().
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Looking at this again, I'm confused about why in the normal, non-error
+case, we do the percpu_ref_tryget_live_rcu(ref), followed by another
+percpu_ref_get(ref) for each page, followed by just a single
+percpu_ref_put() at the exit.
+
+So we do ref_get() "1 + number of pages" times but we only do a single
+ref_put().  Is there a loop of ref_put() for each page elsewhere?
+
+> > Fixes: 7e9c7ef83d78 ("PCI/P2PDMA: Allow userspace VMA allocations through sysfs")
+> > Signed-off-by: Hou Tao <houtao1@huawei.com>
+> > ---
+> >  drivers/pci/p2pdma.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> > index 4a2fc7ab42c3..218c1f5252b6 100644
+> > --- a/drivers/pci/p2pdma.c
+> > +++ b/drivers/pci/p2pdma.c
+> > @@ -152,6 +152,7 @@ static int p2pmem_alloc_mmap(struct file *filp, struct kobject *kobj,
+> >  		ret = vm_insert_page(vma, vaddr, page);
+> >  		if (ret) {
+> >  			gen_pool_free(p2pdma->pool, (uintptr_t)kaddr, len);
+> > +			percpu_ref_put(ref);
+> >  			return ret;
+> >  		}
+> >  		percpu_ref_get(ref);
+> > -- 
+> > 2.29.2
+> > 
 
