@@ -1,429 +1,215 @@
-Return-Path: <linux-pci+bounces-44288-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44289-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37EBDD045AF
-	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 17:27:41 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1558DD049D4
+	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 17:59:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 46E6A30124DD
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Jan 2026 16:22:36 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id C84BD3016A83
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Jan 2026 16:39:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A90E26E70E;
-	Thu,  8 Jan 2026 16:22:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CCE02D97BD;
+	Thu,  8 Jan 2026 16:39:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skB9EGoB"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="DX2JlgHs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11021127.outbound.protection.outlook.com [40.107.74.127])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050282F85B;
-	Thu,  8 Jan 2026 16:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767889355; cv=none; b=YGnfPSc8CxwJtO3xZ7rfW/cTptFO1ImQUTIMNHORyA+vld2bd/AkDfDoTxnyuSt1M8Bs5ohRZx5PZkLDEJ1usR6TLY8qg6J4dfNeZKFTtYUYUqnvhHjVyxa9u80lOR0alzz8ymQGSCSP3TlL+/BcR/wK8IrGioj/ywpYfh+eZbA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767889355; c=relaxed/simple;
-	bh=iOoqb1X4B3ENACSvtfeWkGsmtKi0caTFIo0G6PjDKmo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t6OfACItR5LhoK2K0q1z1LB9pG5hewZCGXXFCpJcRD229HS0qJvW8A2QTLax0WwfNtek5YU14PoumhKz/duYhu7xhcLTUYY1iky1UlfNn2N7ZRqWr6LPGDDhkgdJM+kedzWRxEtCB53MZJmn5l1p53hnEnxUQ8jB9q6VlXOibS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skB9EGoB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 837F8C16AAE;
-	Thu,  8 Jan 2026 16:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767889354;
-	bh=iOoqb1X4B3ENACSvtfeWkGsmtKi0caTFIo0G6PjDKmo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=skB9EGoBJFX3QNSzUUfmWs600x//F5f+J9LsufiBe6Cg+At91NVFpblJefG7K/JIU
-	 K7Ho4qAhhD70f69ro+fW7QV6SSmM7bbA/37zXzVQPlsGz8uSRPgUmQkoEhmE0fLN1H
-	 F4yx3Ve7UdWKjh9Rp+xBYJQODaCLy4YnCP+S0W5/W1pc7y2TTpifpT9kcflxLXehHq
-	 87nT/tJrIrCCvfgGnUgLsSnNJ90MTMNSQ7yTcF3uXRMBY5k+iQHv4f8Bt5/EHXtOOQ
-	 RZVKZGgClOVTe43s1oKFVWuRjd9TB072kGt25CVUuWk3CUXp2lR76xgbewuZsxZogP
-	 ZcH5eAbi13DAA==
-Date: Thu, 8 Jan 2026 17:22:29 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@arm.com>, Marc Zyngier <maz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 5/7] irqchip/gic-v5: Add ACPI IRS probing
-Message-ID: <aV/Zxc3T8hANyBvg@lpieralisi>
-References: <20251218-gicv5-host-acpi-v2-0-eec76cd1d40b@kernel.org>
- <20251218-gicv5-host-acpi-v2-5-eec76cd1d40b@kernel.org>
- <20260105132421.00000213@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A802D7DDF;
+	Thu,  8 Jan 2026 16:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.127
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767890363; cv=fail; b=uBNytf1GoZDJO6HfQrgbg/d9MHC5BAQdiivvQJyKPLgEZW21aj9si+rb9bysFQW2pnomW6IEurHDgKfSJpZpDS12K9z9I3btQU9R9sTolFdY99AQnWQ0CwFpCKDHCY7cYBy9VtbOmT4JXj7XxjLJZXfmNoSE1w2a3KRHwbmIWsA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767890363; c=relaxed/simple;
+	bh=gLotboruaomsahM/DU6azM0tq8ZF9+s32OH0AVROvEc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Ex9me91WkkpyaUFnZVwerT+jxV/8IBnbuywZoB33Mn0U7nVA4A3WGTV04g98EQoKR2vMoTs76NRIZDC93NlrayB2GZA+Cv0RK51MdB09Mt6AKbdJ/gtmsa3C2QP0mXz5oq/aIzsOXr/goph48z3MzYT0LPxJHFGOC+ccct5qTnc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=DX2JlgHs; arc=fail smtp.client-ip=40.107.74.127
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=m6CR5JOmdqypCgkoW5OFe3Oec42OiFV0A1lIDIiZDQzfM+X/ZDheO/04mT/G3X/7xyXf27I3tfrAUdjYrMrOYoEQ+PLxDwzCX6CWxqW09IbZHGnM2LyixyDlkfSZJ2evu2D/tfYEC7oPaYNc2TPQyQkWDB/cR1E6gN5YfE3cas5JlnbZhraMs5koOxKp/1wBux2o3SVdH0vH/gHNHhYJAc1F8LDExUHPP8M/4J0GznQ7UGlTqzfAKUljuF2zM55358nXvIA9fptHveKbjn3z51IVZdxB9ZbXkmNrFqdtDRIdE6Xu5vBhqhKfj5V5S0oc6yVbnjFIw6Grssi/5pDbGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FPLsrllk9/h9cg87opNAZO7BUvv/WDOPdKR0cTFb3h0=;
+ b=WCeoHRFjqVmFqvmegQSX24afj2MGG3yU97PvrLH5skqKRO1NyjxWuB8ZehUnhto/MUrBuVPXZXmnSRvEHqQyapTVEvO0ywhpGvMfy0sZ4JMwIfJrb3m7QqxxUIZTonLqjwbXMrQOolM/CaZ8g7q7oviSCZZyL+SH3kkQARhesyIxVFtll1HzRNrQIaRGa6yWFNj4QzL0ijzZF1bBPAhKeKyQlrTq0B4eRVopQyYj8RgnLe8ooo1wJWL612MF9emUMEksQxpQmWwbFFf33pIG4a8K/kTwybbDKrhKGtB44LaXy0aSi6/2y6EQK25WZJzuYO10Io99HN7H6rLPEyglkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
+ header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FPLsrllk9/h9cg87opNAZO7BUvv/WDOPdKR0cTFb3h0=;
+ b=DX2JlgHs8gFZ4FGvLxmRCIomYq8ERUAC4HnzyGS//KcrcRSbyKaaVEUcIkFHWIQIVNRFnRLW5viCAQIjWgYh030+PF43oXyr+RSiBSLnq3anlQNEsiuaTJAg58arq0ZJiL1olxIegRAdWdXqP2WdC9U6gFl8B6l4psLWKGwvmMk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=valinux.co.jp;
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
+ by TYRP286MB4994.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:13a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.4; Thu, 8 Jan
+ 2026 16:39:18 +0000
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.20.9499.002; Thu, 8 Jan 2026
+ 16:39:17 +0000
+Date: Fri, 9 Jan 2026 01:39:15 +0900
+From: Koichiro Den <den@valinux.co.jp>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, Frank.Li@nxp.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] PCI: endpoint: Add BAR subrange mapping support
+Message-ID: <3zbztusceiv2imwfj4t3xxju4ht2s2xlkxjv3ncrjmfkl5g6z2@ulqbr6aspryn>
+References: <20260108044148.2352800-1-den@valinux.co.jp>
+ <20260108044148.2352800-2-den@valinux.co.jp>
+ <aV9638ebwqc4bsbd@ryzen>
+ <aV-AApRHXLOTEwm3@ryzen>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aV-AApRHXLOTEwm3@ryzen>
+X-ClientProxiedBy: TYCP301CA0057.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:400:384::8) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260105132421.00000213@huawei.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|TYRP286MB4994:EE_
+X-MS-Office365-Filtering-Correlation-Id: ac61bc16-b08d-4116-a630-08de4ed4773b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|10070799003|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Hw5sp+aioYy396f7/1/JG7cw425VdzE4AmHusG9Gq+8VpmUzeVjcN55o3fve?=
+ =?us-ascii?Q?a8ub/d6kMIjkxBvyvgdSrdSeZp38xV6Osb9LOBLLFdoK5Mx3G8e68BtaqYkg?=
+ =?us-ascii?Q?Gr1BxVA08c7Ou7o+FXrglxPzjs4xtixb3wgled8nG+WdRFQtRMmJpJpfFYEq?=
+ =?us-ascii?Q?vZ0XkWnEzPyda5SKExoumsIjL20+WPfMsipqWvgWDi5S+Le8ZnINi+dKW5Xn?=
+ =?us-ascii?Q?cv6gwlqX8akqXN+QEyki9y7kfKQsK0f/HupAIISlo1mGyuC4IeJM4j2zUoVO?=
+ =?us-ascii?Q?vGoMOjTHAiLJBcT7qXRptu9NiYG7ocCU3Eqhkxzoj8AUUvxTRd/CUEEBxks9?=
+ =?us-ascii?Q?JKlTNr5u27Y557f+JZsHGWOmj7HfXR0zAjJlTU5ic5tecJojrazLtPTDBnKE?=
+ =?us-ascii?Q?9qSYLjY5xU+RA50XMgPM/PPME3doj5aGsKt01ndWwTKOnaRugn4M+OdjgOLW?=
+ =?us-ascii?Q?0Ekdkh77JBHhV+eu8uY3T2OoT7WQBszmRKdw1tx51bXE2EYMwu+0GnsFgeYa?=
+ =?us-ascii?Q?/yFdjSrdYxlHUTvqKr2gaUmYR0J8AgX5WxwQSdVB07OOP7M7Acw+uAn6Brb4?=
+ =?us-ascii?Q?dz6topQ3a97NVjng+gdgJO5tV389SrNetiNzRVLajKdShbuJQV1q9qI47iks?=
+ =?us-ascii?Q?FsykUveEvq/cMrt/trn5zhI5joAC6oSAjmFJ3BClupUgzoDAfQTKyTobEaWG?=
+ =?us-ascii?Q?XyfE/p60BH2q891sfvo+32udp/Vb9V26hi9Fp9psMx7QDMISTotBze0HfPf7?=
+ =?us-ascii?Q?/Xz6iqabAQCRaympVX80HDtceayNoh0oSCCDqy5uI86HBFMG1ew5SUN5kFlk?=
+ =?us-ascii?Q?v3X1NHURk9g0OE6E6wjBpruJ2Foeg2QeWJDNseU/pT7dccpEJBKjRcD2o3Un?=
+ =?us-ascii?Q?aTy/Djtwi8yUwBKQkmNA7FnlEwtp0UWuRiR3xo51WOgB9PDPuEkTHUjLS9T3?=
+ =?us-ascii?Q?5tuV7XQObsg5y9uS/esZjsapuub8yUyqTcBQocDxtIPjidYM6NO2YvSRzJdd?=
+ =?us-ascii?Q?dTy5sBfQ1V80ih0wGobdyyRoQZwBGszVRui6AK2lNnYTLFUBHbOaKIzmCFa6?=
+ =?us-ascii?Q?V6R09vMehQLjZBIPMcJsqw8M/TAQBkLFAxze3MbQe/RA1pOvfMLb8al+Nsxx?=
+ =?us-ascii?Q?RUvs4MGxB9/CxHNGYND464vYi7PdUwNwDrELL2bK8VTDEiZN5JCGCqMOUA6m?=
+ =?us-ascii?Q?QJMN7wIQNnpL6QUWt5daP8IRiG2EB/jHxQTCYxVwGQ6lQDiVKUMfy9nRZUq0?=
+ =?us-ascii?Q?m4kdGoZfICfQz0DxO9vawifxFdQNnojVt9xoTeYS+4dK6KXOIyMEITfTmGDr?=
+ =?us-ascii?Q?g1NaQH14EejktA44DH8SxdBI4Xk2GxbXIjYhMbYCjjBNyrI6rgZHNMzhCVTa?=
+ =?us-ascii?Q?E2lDs6Bs4WkmCCw2q1TD1fXHJcKRNp9lV5tfERJYmWtWKB4VIF6piW3AENdg?=
+ =?us-ascii?Q?4vF4B8Kvc+I+ubVGwW1j7bZRvjRDyhBfVpIVFeNK9JDH8E2KcCQ7QA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(366016)(7416014)(376014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?XDZrFRaHN3KCvehsoiJRtv2Opg1T8evvn568PG/t67KVaGQKluZsN5eUSaFd?=
+ =?us-ascii?Q?txHfLgla1jna4qOKK8HrOmv560pu6wdRmjXB1xn0Ykj9u32cRVZfiBnowVlN?=
+ =?us-ascii?Q?NKtD9k1t826OM0TSkMozB5hTuFJFqFDkQAUk/g7SlmaaMp/45xeOOfO8Oxgt?=
+ =?us-ascii?Q?5/uq86e1E6HsPkH3oeBhGwjAjv/3jZTHjpcjuWMOURsa85Z9SlSk0vJtXSUB?=
+ =?us-ascii?Q?0jHvB/iuSfxiryVqvTplLdw+EOD99rPVGHHI9Jfz7Wh0wYhrx0AdDEubZkaR?=
+ =?us-ascii?Q?DPqYtmlYPIUtU77KqBhUQ9QsMn7LtsqeiPo+9tUfElF0NLhApPV+LF5v6NIo?=
+ =?us-ascii?Q?SKNJ9w1OPgnSatU350T2P4TTQQeH9ZG5dqIFHyMp8iRJLUbCqso+yVqCUUqQ?=
+ =?us-ascii?Q?MKxul267NQAfRxl9dIBYDn6q9Q5OQezzN5E77bdb94RhZRTpgEqNPvX8P/vc?=
+ =?us-ascii?Q?1yAzYZcVTp7GFmRf1EYYfPT9gYrt2acD28WKRsqdC4/QFD8zQbkoI9Ohqa+Z?=
+ =?us-ascii?Q?btczEFGAr3fECGDj5JV9OxpGsGRWkO5JO9pai52LQf/yd0FbNSacyC2UHKDr?=
+ =?us-ascii?Q?pql+u62RSslom9AKKq86UbuHpJnS23h9GJSuPfz/VQyDhYB1sCpUzDAwFQ9t?=
+ =?us-ascii?Q?K6FFZExsiwB9wRa+F8ScIkzvgdFk+8EwYmrZTZI5U07cizaXz9bbShIZu/BY?=
+ =?us-ascii?Q?g7nGiyPTmRXAyRmyMW4xCoPfPLVI4s2IoqxSDNV2lCQdO/KV3UVhZwsaRDP3?=
+ =?us-ascii?Q?IrzrGNhUAIT6S4dlfoqUzKcWtlIzo544xG45Jw947R2YAaGXb9ZkJ/eWre0M?=
+ =?us-ascii?Q?mTCk5rED5e6jpfo7DC0p/o+ApmTBhSWsEkkCI6QEJjxmf6i8hAjgsTaqT7mj?=
+ =?us-ascii?Q?tgYv4yqpybHX0nLRp0arMApPHxiHyjc6yqaA8c6NwfosMu40WOXnGnDmLMTc?=
+ =?us-ascii?Q?Co9I949CEqhBqY0OzlfTdXSHOTCFeeHt8ivMkDY+yUJ77Uuk16Sb7EXUkH+t?=
+ =?us-ascii?Q?BU0vixQFfDpPBN84AxgHjVnKJO6L5pZ1k0SXl/5EXNP6bRY22p8s/dT5sHBP?=
+ =?us-ascii?Q?5QHGm9n/rPv+ypHaA1CbTWa0MRRqPAxRVBdzYI+PqP9CkK+na33uKMb+z1Hq?=
+ =?us-ascii?Q?C+yCXecTtDo0Uc/UKvQJDUvgvIAZhPN19Yi8zG1oPOLKgqzOU7C4jTm9Hx5T?=
+ =?us-ascii?Q?sF983ScQecCutpkmXP65DtTlBGV6tY34kOveLvhahPBjbGaTXaPur7Yd/mzw?=
+ =?us-ascii?Q?iyElkcbz5EA0oJPjMTJebfSmHAtUTpkwyajYpKOl0jG7D6JnXINCHc+YZN81?=
+ =?us-ascii?Q?hTrMq/YOxghzGzocy99O7Fub3JE7/3LwZNgPVIKIHF9AaR+Gq4iXL/1nAabH?=
+ =?us-ascii?Q?1gUggf+HTc04Ankgi1DL0+5ZRpuEp1TBJK1iQSh0AZTLlmIEdn1vCc0efm31?=
+ =?us-ascii?Q?VPEuFeEVb0byMPeaB5QavD4ESEqNb/mvSESkc9pTVD4uadmqY8MNj+4tjwfq?=
+ =?us-ascii?Q?dcMLuWIUEmN9GrpsniTIR/PioA+wu45vyntCBmErmcZ+140gv+hR9qycMBbp?=
+ =?us-ascii?Q?K/c/NQrmCeERVXXzE+PijN4ZYR3WdiWCbw9+yNWDgcy8wIr+ux6VjQM0+5Ha?=
+ =?us-ascii?Q?Bws1Gh5X0rnT03YnlBPwvIhLOeXdxeSY8T4nBHv7adbUObTPtH2UL655TM1q?=
+ =?us-ascii?Q?sXoa1VlQ1rj0eqKaEBRfyJeyUFoF5rIn53l3GLYaEhki6YnpGM2Pdb/uN5T7?=
+ =?us-ascii?Q?1+OD3JXHg/4sWAnjZnnstVRCyG8/73+M+8E9utuE/0as4HFq5IT2?=
+X-OriginatorOrg: valinux.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac61bc16-b08d-4116-a630-08de4ed4773b
+X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2026 16:39:17.4370
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eDZzt0A5vOLdu3i3XWg4P2Nbkmmrx2/LufJMPRuzblYlWM+mJq2+OmpoGEWvcF88jHrlAYbraL27/8JG13mYXg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYRP286MB4994
 
-On Mon, Jan 05, 2026 at 01:24:21PM +0000, Jonathan Cameron wrote:
-> On Thu, 18 Dec 2025 11:14:31 +0100
-> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On Thu, Jan 08, 2026 at 10:59:30AM +0100, Niklas Cassel wrote:
+> On Thu, Jan 08, 2026 at 10:37:35AM +0100, Niklas Cassel wrote:
+> > The memcpy in dw_pcie_ep_get_features() is a bit ugly.
+> > I guess the alternative is to change all the DWC based glue drivers
+> > to return a "struct pci_epc_features*" instead of a "const struct pci_epc_features*"
+> > such that dw_pcie_ep_get_features() can simply set subrange_mapping = true in the
+> > struct pci_epc_features returned by the glue driver.
 > 
-> > On ARM64 ACPI systems GICv5 IRSes are described in MADT sub-entries.
-> > 
-> > Add the required plumbing to parse MADT IRS firmware table entries and
-> > probe the IRS components in ACPI.
-> > 
-> > Refactor the OF based probe so that common code paths can be reused for
-> > ACPI as well in the process.
-> > 
-> > Augment the irqdomain_ops.translate() for PPI and SPI IRQs in order to
-> > provide support for their ACPI based firmware translation.
-> > 
-> > Implement an irqchip ACPI based callback to initialize the global GSI
-> > domain upon an MADT IRS detection.
-> > 
-> > The IRQCHIP_ACPI_DECLARE() entry in the top level GICv5 driver is only used
-> > to trigger the IRS probing (ie the global GSI domain is initialized once on
-> > the first call on multi-IRS systems); IRS probing takes place by calling
-> > acpi_table_parse_madt() in the IRS sub-driver, that probes all IRSes
-> > in sequence.
-> > 
-> > Add a new ACPI interrupt model so that it can be detected at runtime and
-> > distinguished from previous GIC architecture models.
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > Cc: Marc Zyngier <maz@kernel.org>
-> Just a few minor comments inline.
+> I think the best way it probably to create another patch,
+> that will be patch 2 out of 3 in the series, which changes:
+> https://github.com/torvalds/linux/blob/v6.19-rc4/drivers/pci/controller/dwc/pcie-designware.h#L449
 > 
-> > diff --git a/drivers/irqchip/irq-gic-v5-irs.c b/drivers/irqchip/irq-gic-v5-irs.c
-> > index ce2732d649a3..07c3df5692af 100644
-> > --- a/drivers/irqchip/irq-gic-v5-irs.c
-> > +++ b/drivers/irqchip/irq-gic-v5-irs.c
-> > @@ -5,6 +5,7 @@
-> >  
-> >  #define pr_fmt(fmt)	"GICv5 IRS: " fmt
-> >  
-> > +#include <linux/acpi.h>
-> >  #include <linux/kmemleak.h>
-> >  #include <linux/log2.h>
-> >  #include <linux/of.h>
-> > @@ -545,15 +546,15 @@ int gicv5_irs_register_cpu(int cpuid)
-> >  
-> >  static void __init gicv5_irs_init_bases(struct gicv5_irs_chip_data *irs_data,
-> >  					void __iomem *irs_base,
-> > -					struct fwnode_handle *handle)
-> > +					struct fwnode_handle *handle,
-> > +					bool noncoherent)
-> >  {
-> > -	struct device_node *np = to_of_node(handle);
-> >  	u32 cr0, cr1;
-> >  
-> >  	irs_data->fwnode = handle;
+> from:
+> const struct pci_epc_features* (*get_features)(struct dw_pcie_ep *ep);
 > 
-> Looking this again as you are touching it.
+> to:
+> struct pci_epc_features* (*get_features)(struct dw_pcie_ep *ep);
 > 
-> This feels a tiny bit out of place, as not obvious to me why the fwnode being
-> set is related to initializing bases.  Perhaps that belongs at the caller?
+> and which does the equivalent change in all the DWC based glue drivers.
+> 
+> That way, dw_pcie_ep_get_features() can simply set subrange_mapping = true
+> in the struct pci_epc_features returned by the glue driver.
+> 
+> 
+> 
+> Note that the function dw_pcie_ep_get_features() itself should still return:
+> "static const struct pci_epc_features*"
+> 
+> (Since this represents the DWC midlayer driver level.)
+> 
+> It is only the DWC based glue drivers (lower level drivers) that should drop
+> the const.
 
-Done.
+Hi Niklas,
 
-> >  	irs_data->irs_base = irs_base;
-> >  
-> > -	if (of_property_read_bool(np, "dma-noncoherent")) {
-> > +	if (noncoherent) {
-> >  		/*
-> >  		 * A non-coherent IRS implies that some cache levels cannot be
-> >  		 * used coherently by the cores and GIC. Our only option is to mark
-> > @@ -678,49 +679,13 @@ static void irs_setup_pri_bits(u32 idr1)
-> >  	}
-> >  }
-> >  
-> 
-> ...
-> 
-> > +static int __init gicv5_irs_of_init(struct device_node *node)
-> > +{
-> 
-> Not sure whether it would be worth it by inclination would have been
-> a noop refactor patch, then the ACPI support. I'd have found it a little
-> bit easier to review.
+Thanks again for the detailed feedback. I agree we should not let
+controllers that do not support subrange mapping silently ignore
+epf_bar->use_submap, as that could potentially lead to an unexpected and
+hard-to-debug state without returning an error.
 
-Split it into two patches.
+Adding a subrange_mapping bit to struct pci_epc_features makes sense.
+I also considered setting .subrange_mapping = 1 in every DWC-based glue
+driver and keeping the const qualifiers, but that would duplicate the
+same information across drivers and add unnecessary maintenance burden.
+So I'll follow your suggestion and drop const only at the glue-driver
+level. I'll send v5 shortly.
 
-> > +	struct gicv5_irs_chip_data *irs_data;
-> > +	void __iomem *irs_base;
-> > +	u8 iaffid_bits;
-> > +	u32 idr;
-> > +	int ret;
-> > +
-> > +	irs_data = kzalloc(sizeof(*irs_data), GFP_KERNEL);
-> > +	if (!irs_data)
-> > +		return -ENOMEM;
-> > +
-> > +	raw_spin_lock_init(&irs_data->spi_config_lock);
-> > +
-> > +	ret = of_property_match_string(node, "reg-names", "ns-config");
-> > +	if (ret < 0) {
-> > +		pr_err("%pOF: ns-config reg-name not present\n", node);
-> > +		goto out_err;
-> 
-> Obviously comes form original code, but this label could give some indication
-> of where we are going and why. out_free_data maybe?
+Thanks,
+Koichiro
 
-I could probably change it (or better sneak it in) in this set, though
-as you said it could well be a standalone change.
-
-> Perhaps I'm just being fussy as I had to open the code up to check given
-> it didn't end up in the context.
 > 
-> > +	}
-> > +
-> ...
 > 
-> > +static int __init gic_acpi_parse_iaffid(union acpi_subtable_headers *header,
-> > +					const unsigned long end)
-> > +{
-> > +	struct acpi_madt_generic_interrupt *gicc = (struct acpi_madt_generic_interrupt *)header;
-> > +	int cpu;
-> > +
-> > +	if (!(gicc->flags & (ACPI_MADT_ENABLED | ACPI_MADT_GICC_ONLINE_CAPABLE)))
-> > +		return 0;
-> > +
-> > +	if (gicc->irs_id == current_irsid) {
-> Unless this is going to get more complex I'd flip the log for an early return on
-> 'not this one'
-> 	if (gicc->irs_id != current_irsid)
-> 		return 0;
-> 
-> mostly to save on long lines where they aren't needed.
-
-Done.
-
-> > +		cpu = get_logical_index(gicc->arm_mpidr);
-> > +
-> > +		if (gicc->iaffid & ~GENMASK(current_iaffid_bits - 1, 0)) {
-> > +			pr_warn("CPU %d iaffid 0x%x exceeds IRS iaffid bits\n", cpu, gicc->iaffid);
-> > +			return 0;
-> > +		}
-> > +
-> > +		// Bind the IAFFID and the CPU
-> > +		per_cpu(cpu_iaffid, cpu).iaffid = gicc->iaffid;
-> > +		per_cpu(cpu_iaffid, cpu).valid = true;
-> > +		pr_debug("Processed IAFFID %u for CPU%d", per_cpu(cpu_iaffid, cpu).iaffid, cpu);
-> > +
-> > +		// We also know that the CPU is connected to this IRS
-> > +		per_cpu(per_cpu_irs_data, cpu) = current_irs_data;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int __init gicv5_irs_acpi_init_affinity(u32 irsid, struct gicv5_irs_chip_data *irs_data)
-> > +{
-> > +	u32 idr;
-> > +
-> > +	current_irsid = irsid;
-> > +	current_irs_data = irs_data;
-> > +
-> > +	idr = irs_readl_relaxed(irs_data, GICV5_IRS_IDR1);
-> > +	current_iaffid_bits = FIELD_GET(GICV5_IRS_IDR1_IAFFID_BITS, idr) + 1;
-> > +
-> > +	acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT, gic_acpi_parse_iaffid, 0);
-> > +
-> > +	return 0;
-> > +}
-> 
-> > +
-> > +static int __init gic_acpi_parse_madt_irs(union acpi_subtable_headers *header,
-> > +					  const unsigned long end)
-> > +{
-> > +	struct acpi_madt_gicv5_irs *irs = (struct acpi_madt_gicv5_irs *)header;
-> > +	struct gicv5_irs_chip_data *irs_data;
-> > +	void __iomem *irs_base;
-> > +	struct resource *r;
-> > +	int ret;
-> > +
-> > +	// Per-IRS data structure
-> 
-> It's your code to look after, so I don't care that strongly but this does
-> seem to be inconsistent wrt to local style and use of C style
-> single line comments.  I'd stick to /* */ throughout.
-
-+1
-
-> > +	irs_data = kzalloc(sizeof(*irs_data), GFP_KERNEL);
-> > +	if (!irs_data)
-> > +		return -ENOMEM;
-> > +
-> > +	// This spinlock is used for SPI config changes
-> > +	raw_spin_lock_init(&irs_data->spi_config_lock);
-> > +
-> > +	irs_base = ioremap(irs->config_base_address, ACPI_GICV5_IRS_MEM_SIZE);
-> > +	if (!irs_base) {
-> > +		pr_err("Unable to map GIC IRS registers\n");
-> > +		ret = -ENOMEM;
-> > +		goto out_free;
-> > +	}
-> > +
-> > +	r = gic_request_region(irs->config_base_address, ACPI_GICV5_IRS_MEM_SIZE, "GICv5 IRS");
-> 
-> Really minor but I wonder if this should follow the same ordering as
-> of_io_request_and_map() which does the request_mem_region() before
-> trying to ioremap()?
-
-That would make sense, yes.
-
-> Nice to have the same ordering though that would then put you at odds iwth the
-> gicv3 redist code that does it in this order.  Guess can't win them all and
-> an ephemeral mapping that is then torn down on error of the second call
-> doesn't really matter.  
-> 
-> > +	if (!r) {
-> > +		ret = -EBUSY;
-> > +		goto out_map;
-> > +	}
-> > +
-> > +	gicv5_irs_init_bases(irs_data, irs_base, NULL, irs->flags & ACPI_MADT_IRS_NON_COHERENT);
-> > +
-> > +	gicv5_irs_acpi_init_affinity(irs->irs_id, irs_data);
-> > +
-> > +	ret = gicv5_irs_init(irs_data);
-> > +	if (ret)
-> > +		goto out_release;
-> > +
-> > +	if (irs_data->spi_range) {
-> > +		pr_info("%s @%llx detected SPI range [%u-%u]\n", "IRS", irs->config_base_address,
-> > +									irs_data->spi_min,
-> > +									irs_data->spi_min +
-> > +									irs_data->spi_range - 1);
-> > +	}
-> > +
-> > +	return 0;
-> > +
-> > +out_release:
-> > +	release_mem_region(r->start, resource_size(r));
-> > +out_map:
-> > +	iounmap(irs_base);
-> > +out_free:
-> > +	kfree(irs_data);
-> > +	return ret;
-> > +}
-> 
-> > diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-> > index 41ef286c4d78..23fd551c4347 100644
-> > --- a/drivers/irqchip/irq-gic-v5.c
-> > +++ b/drivers/irqchip/irq-gic-v5.c
-> > @@ -579,16 +579,36 @@ static __always_inline int gicv5_irq_domain_translate(struct irq_domain *d,
-> >  						      unsigned int *type,
-> >  						      const u8 hwirq_type)
-> >  {
-> > -	if (!is_of_node(fwspec->fwnode))
-> > -		return -EINVAL;
-> > +	unsigned int hwirq_trigger;
-> > +	u8 fwspec_irq_type;
-> >  
-> > -	if (fwspec->param_count < 3)
-> > -		return -EINVAL;
-> > +	if (is_of_node(fwspec->fwnode)) {
-> >  
-> > -	if (fwspec->param[0] != hwirq_type)
-> > -		return -EINVAL;
-> > +		if (fwspec->param_count < 3)
-> > +			return -EINVAL;
-> >  
-> > -	*hwirq = fwspec->param[1];
-> > +		fwspec_irq_type = fwspec->param[0];
-> > +
-> > +		if (fwspec->param[0] != hwirq_type)
-> > +			return -EINVAL;
-> > +
-> > +		*hwirq = fwspec->param[1];
-> > +		hwirq_trigger = fwspec->param[2];
-> > +	}
-> > +
-> > +	if (is_fwnode_irqchip(fwspec->fwnode)) {
-> > +
-> > +		if (fwspec->param_count != 2)
-> > +			return -EINVAL;
-> > +
-> > +		fwspec_irq_type = FIELD_GET(GICV5_HWIRQ_TYPE, fwspec->param[0]);
-> > +
-> > +		if (fwspec_irq_type != hwirq_type)
-> > +			return -EINVAL;
-> > +
-> > +		*hwirq = FIELD_GET(GICV5_HWIRQ_ID, fwspec->param[0]);
-> > +		hwirq_trigger = fwspec->param[1];
-> > +	}
-> >  
-> >  	switch (hwirq_type) {
-> >  	case GICV5_HWIRQ_TYPE_PPI:
-> > @@ -600,7 +620,7 @@ static __always_inline int gicv5_irq_domain_translate(struct irq_domain *d,
-> >  							 IRQ_TYPE_EDGE_RISING;
-> >  		break;
-> >  	case GICV5_HWIRQ_TYPE_SPI:
-> > -		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
-> > +		*type = hwirq_trigger & IRQ_TYPE_SENSE_MASK;
-> >  		break;
-> >  	default:
-> >  		BUILD_BUG_ON(1);
-> > @@ -660,10 +680,18 @@ static void gicv5_irq_domain_free(struct irq_domain *domain, unsigned int virq,
-> >  static int gicv5_irq_ppi_domain_select(struct irq_domain *d, struct irq_fwspec *fwspec,
-> >  				       enum irq_domain_bus_token bus_token)
-> >  {
-> > +	u32 hwirq_type;
-> > +
-> >  	if (fwspec->fwnode != d->fwnode)
-> >  		return 0;
-> >  
-> > -	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
-> > +	if (is_of_node(fwspec->fwnode))
-> > +		hwirq_type = fwspec->param[0];
-> > +
-> > +	if (is_fwnode_irqchip(fwspec->fwnode))
-> > +		hwirq_type = FIELD_GET(GICV5_HWIRQ_TYPE, fwspec->param[0]);
-> 
-> Bit borderline but maybe worth a helper for getting the irq type from
-> the fwspec? Or a more generic helper that optionally gets that and the other
-> stuff you need in gicv5_irq_domain_translate()
-
-I will think about this one, first let's make sure the series is ready.
-
-Lorenzo
-
-> > +
-> > +	if (hwirq_type != GICV5_HWIRQ_TYPE_PPI)
-> >  		return 0;
-> >  
-> >  	return (d == gicv5_global_data.ppi_domain);
-> > @@ -718,10 +746,18 @@ static int gicv5_irq_spi_domain_alloc(struct irq_domain *domain, unsigned int vi
-> >  static int gicv5_irq_spi_domain_select(struct irq_domain *d, struct irq_fwspec *fwspec,
-> >  				       enum irq_domain_bus_token bus_token)
-> >  {
-> > +	u32 hwirq_type;
-> > +
-> >  	if (fwspec->fwnode != d->fwnode)
-> >  		return 0;
-> >  
-> > -	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_SPI)
-> > +	if (is_of_node(fwspec->fwnode))
-> > +		hwirq_type = fwspec->param[0];
-> > +
-> > +	if (is_fwnode_irqchip(fwspec->fwnode))
-> > +		hwirq_type = FIELD_GET(GICV5_HWIRQ_TYPE, fwspec->param[0]);
-> > +
-> > +	if (hwirq_type != GICV5_HWIRQ_TYPE_SPI)
-> >  		return 0;
-> >  
-> >  	return (d == gicv5_global_data.spi_domain);
-> > @@ -1082,16 +1118,12 @@ static inline void __init gic_of_setup_kvm_info(struct device_node *node)
-> >  }
-> >  #endif // CONFIG_KVM
-> 
-> Thanks,
-> 
-> Jonathan
-> 
+> Kind regards,
+> Niklas
 
