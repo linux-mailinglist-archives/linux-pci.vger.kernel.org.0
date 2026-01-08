@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-44286-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44287-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 704E3D046B7
-	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 17:34:29 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D30F6D047F9
+	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 17:44:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 193B4310566F
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Jan 2026 16:12:40 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3FFCA30D5FBA
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Jan 2026 16:13:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05BFB2BB1D;
-	Thu,  8 Jan 2026 16:12:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4AEE26C39E;
+	Thu,  8 Jan 2026 16:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B9LRzVav"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTiQ4gyk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F09226D1E;
-	Thu,  8 Jan 2026 16:12:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8A67DA66;
+	Thu,  8 Jan 2026 16:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767888756; cv=none; b=BpKgYg9TG6yLNNq4rHxLG/k3iYMTKutwy6N5QXmb0bhvaWDrV+FQXeMVCz8NhO4f/aJcviLZ+hAtjEWiTM6DdtWi2wW2JKPV66O3qsynqpIrxYzeJ9NE6l2nD03ZMPJ2HgTrKUMzy9BirsR/ryd6ftRYSQO0Jh9HAtsXFoc0hg4=
+	t=1767888802; cv=none; b=uft25So7/FRtefa9nbYZfJcegH64+M5FwT9xOUr+JXT+Z2KPtgLnniAmJWMQ4IALdhV/mwhAWu4nXNQjJ1A6nwSePMuN/ajS+up+xYYCugmCtu59F/IPC2GEuh8WH2dmbDr4XplFQcItQAWLs1lSWn7NDVqh/TdlY1ehrx2qHTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767888756; c=relaxed/simple;
-	bh=V8O17syXNsMLoXA54yd13fKCVCjHzEoJ999ub7lM/Pg=;
+	s=arc-20240116; t=1767888802; c=relaxed/simple;
+	bh=S72kyJ6OhWOaTjMtM11JCMPxODXaSQCVVNaJHWk9JJA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CTmEcZLPgDbZJAMzo1Od+5hsg/jzqr9IiSDo4kEUKcxnk8P1YqKQUm8orW9vXjmrRsBBb48xZHthE/JAV5NZigGS1WzQ+k5rgfm/MmEjkdpa13laPcnnApBE43lmg0xa383DePzq8zcD/uTG9AA8ffhyhStNiUHgYUYnX/5ge9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B9LRzVav; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5884EC116C6;
-	Thu,  8 Jan 2026 16:12:33 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=BdakTYtcT2bT+I28t3G6f041YgHhlLvZR5WDesiXhni3tFFLkPm1h+xtudEQMuo6NbE+HT4Hs1Qy8p5w8iJMguGsRI/JUMXJ3C1SfDHc31KyO0Qhe77IvrJsGwDNML6l/X3BZ5+VydvpN2KwU1WO0RdS7/2SjwPr/FPwJK7fSDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KTiQ4gyk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0682C19422;
+	Thu,  8 Jan 2026 16:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767888756;
-	bh=V8O17syXNsMLoXA54yd13fKCVCjHzEoJ999ub7lM/Pg=;
+	s=k20201202; t=1767888801;
+	bh=S72kyJ6OhWOaTjMtM11JCMPxODXaSQCVVNaJHWk9JJA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B9LRzVav2GO4CMduUYKdZsdpdXOgcXSJqjTduv7EcQ1UIyAY8wCV0GBdpAy3q3C+P
-	 bhKc240hjb3u/t7nVUzARqu1oiuDzY5mK/m0x8s86Ag1QG2X4pM1xA0KJezfVtr73f
-	 Grb+0t0Zt6S9FwjVht7Z2EiSK+voxc2nzI301ool3EByVIB6bTL2YCaQPOvGT8idp8
-	 1zECHh0pS3E0KhVJW1MNZVB0so5vnVZIAyCQeXNMTWwdZhcvhM5lfIKp4tr23d+kBQ
-	 EGlmUBW3BiRN+vXsxuV5Q0NFJsWF/08l7R/VYrUy7avgTn7snbgG5O5tOVBmE2y7W4
-	 oUA9wpdkLg60g==
-Date: Thu, 8 Jan 2026 17:12:30 +0100
+	b=KTiQ4gykw+qZEp0IC5oOch0G+UQQMj+WxxSfjOYba3ju/faZXuP+5CggeYNv+KaTE
+	 9kgDZOuFCQ1kQgU7hi08Rux3iXqUReWgB3AZyePUL5UNRWqNMHOR5JqNObSPKZhNIj
+	 a5YQv1RJ6fa2j758A2Gx5QtX1rEbDvFCUQUy6nv6YR3U0oCM6dWLDYQEh1jB+5tIvQ
+	 lpXU0aUUZWQWJjod/zZVFMdaRhd2J8lHMlPLj/RUV2KAhEKzof9wuogHiEdAR0DqM7
+	 sClSS6fFSj9qqVOnyFws3SmfXHckf1trDEg44R5IZUl+hEGoJmxQChVzeqfBuODltL
+	 Zq7IPPWskPVsw==
+Date: Thu, 8 Jan 2026 17:13:16 +0100
 From: Lorenzo Pieralisi <lpieralisi@kernel.org>
 To: Jonathan Cameron <jonathan.cameron@huawei.com>
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
@@ -50,11 +50,11 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
 	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] irqchip/gic-v5: Add ACPI IWB probing
-Message-ID: <aV/XbgUrjLVGM40O@lpieralisi>
+Subject: Re: [PATCH v2 6/7] irqchip/gic-v5: Add ACPI ITS probing
+Message-ID: <aV/XnJg7CPBpbXnR@lpieralisi>
 References: <20251218-gicv5-host-acpi-v2-0-eec76cd1d40b@kernel.org>
- <20251218-gicv5-host-acpi-v2-7-eec76cd1d40b@kernel.org>
- <20260105153521.00007e46@huawei.com>
+ <20251218-gicv5-host-acpi-v2-6-eec76cd1d40b@kernel.org>
+ <20260105135545.00003a59@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,151 +63,118 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260105153521.00007e46@huawei.com>
+In-Reply-To: <20260105135545.00003a59@huawei.com>
 
-On Mon, Jan 05, 2026 at 03:35:21PM +0000, Jonathan Cameron wrote:
-> On Thu, 18 Dec 2025 11:14:33 +0100
+On Mon, Jan 05, 2026 at 01:55:45PM +0000, Jonathan Cameron wrote:
+> On Thu, 18 Dec 2025 11:14:32 +0100
 > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 > 
-> > To probe an IWB in an ACPI based system it is required:
+> > On ACPI ARM64 systems the GICv5 ITS configuration and translate frames
+> > are described in the MADT table.
 > > 
-> > - to implement the IORT functions handling the IWB IORT node and create
-> >   functions to retrieve IWB firmware information
-> > - to augment the driver to match the DSDT ACPI "ARMH0003" device and
-> >   retrieve the IWB wire and trigger mask from the GSI interrupt descriptor
-> >   in the IWB msi_domain_ops.msi_translate() function
+> > Refactor the current GICv5 ITS driver code to share common functions
+> > between ACPI and OF and implement ACPI probing in the GICv5 ITS driver.
 > > 
-> > Make the required driver changes to enable IWB probing in ACPI systems.
+> > Add iort_msi_xlate() to map a device ID and retrieve an MSI controller
+> > fwnode node for ACPI systems and update pci_msi_map_rid_ctlr_node() to
+> > use it in its ACPI code path.
 > > 
-> > The GICv5 GSI format requires special handling for IWB routed IRQs.
-> > 
-> > Add IWB GSI detection to the top level driver gic_v5_get_gsi_domain_id()
-> > function so that the correct IRQ domain for a GSI can be detected by
-> > parsing the GSI and check whether it is an IWB-backed IRQ or not.
+> > Add the required functions to IORT code for deviceID retrieval and IRQ
+> > domain registration and look-up so that the GICv5 ITS driver in an
+> > ACPI based system can be successfully probed.
 > > 
 > > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 > > Cc: Thomas Gleixner <tglx@linutronix.de>
 > > Cc: Hanjun Guo <guohanjun@huawei.com>
 > > Cc: Sudeep Holla <sudeep.holla@arm.com>
 > > Cc: Marc Zyngier <maz@kernel.org>
-> A couple of trivial comments inline. Overall this series looks in a good
-> state to me.
+> Hi Lorenzo,
+> 
+> Diff was in a rather unfriendly mood on this one and smashing the xlate
+> on top of the wrong function (wrt to what was being replaced).
+> 
+> Ah well. Only one minor comment inline.  Not really my area of expertise
+> beyond wanting this to move forwards quickly but none the less,
+> 
 > Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 > 
 > > ---
-> >  drivers/acpi/arm64/iort.c          | 95 ++++++++++++++++++++++++++++++++------
-> >  drivers/irqchip/irq-gic-v5-iwb.c   | 42 +++++++++++++----
-> >  drivers/irqchip/irq-gic-v5.c       |  4 ++
-> >  include/linux/acpi_iort.h          |  1 +
-> >  include/linux/irqchip/arm-gic-v5.h |  6 +++
-> >  5 files changed, 123 insertions(+), 25 deletions(-)
+> >  drivers/acpi/arm64/iort.c                |  95 +++++++++++++++++-----
+> >  drivers/irqchip/irq-gic-its-msi-parent.c |  39 ++++-----
+> >  drivers/irqchip/irq-gic-v5-irs.c         |   7 +-
+> >  drivers/irqchip/irq-gic-v5-its.c         | 132 ++++++++++++++++++++++++++++++-
+> >  drivers/pci/msi/irqdomain.c              |   2 +
+> >  include/linux/acpi_iort.h                |  10 ++-
+> >  include/linux/irqchip/arm-gic-v5.h       |   1 +
+> >  7 files changed, 241 insertions(+), 45 deletions(-)
 > > 
 > > diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> > index 17dbe66da804..4b0b753db738 100644
+> > index 65f0f56ad753..17dbe66da804 100644
 > > --- a/drivers/acpi/arm64/iort.c
 > > +++ b/drivers/acpi/arm64/iort.c
-> 
-> > @@ -317,12 +325,28 @@ static acpi_status iort_match_node_callback(struct acpi_iort_node *node,
-> >  	return status;
+> > @@ -595,45 +595,45 @@ u32 iort_msi_map_id(struct device *dev, u32 input_id)
 > >  }
-> >  
-> > +static acpi_status iort_match_iwb_callback(struct acpi_iort_node *node, void *context)
+> >
+> > +/**
+> > + * iort_pmsi_get_msi_info() - Get the device id and translate frame PA for a device
+> > + * @dev: The device for which the mapping is to be done.
+> > + * @dev_id: The device ID found.
+> > + * @pa: optional pointer to store translate frame address.
+> > + *
+> > + * Returns: 0 for successful devid and pa retrieval, -ENODEV on error
+> > + */
+> > +int iort_pmsi_get_msi_info(struct device *dev, u32 *dev_id, phys_addr_t *pa)
 > > +{
-> > +	acpi_status status = AE_NOT_FOUND;
-> > +	u32 *id = context;
+> > +	struct acpi_iort_node *node, *parent = NULL;
+> > +	struct acpi_iort_its_group *its;
+> > +	int i, index;
 > > +
-> > +	if (node->type == ACPI_IORT_NODE_IWB) {
-> > +		struct acpi_iort_iwb *iwb;
+> > +	node = iort_find_dev_node(dev);
+> > +	if (!node)
+> > +		return -ENODEV;
 > > +
-> > +		iwb = (struct acpi_iort_iwb *)node->node_data;
-> > +		status = iwb->iwb_index == *id ? AE_OK : AE_NOT_FOUND;
+> > +	index = iort_get_id_mapping_index(node);
+> > +	/* if there is a valid index, go get the dev_id directly */
+> > +	if (index >= 0) {
+> > +		parent = iort_node_get_id(node, dev_id, index);
+> > +	} else {
+> > +		for (i = 0; i < node->mapping_count; i++) {
+> > +			parent = iort_node_map_platform_id(node, dev_id,
+> > +						      IORT_MSI_TYPE, i);
+> > +			if (parent)
+> > +				break;
+> > +		}
 > > +	}
 > > +
-> > +	return status;
-> Simpler flow with a quick exclusion of wrong nodes.
-> 	if (node->type != ACPI_IORT_NODE_IWB)
-> 		return AE_NOT_FOUND;
-> 	....
-> 	iwb = ...
-> 	
-> Also not sure I'd use a ternary here given it's only slightly more code
-> as more readable.
-> 	if (iwb->iwb_index != *id)
-> 		return AE_NOT_FOUND;
+> Another borderline comment on what I think is a small readabilty
+> improvement.
 > 
-> 	return AE_OK;
+> I'd handle the only error case that would otherwise use the ternary below
+> here
+> 	if (!parent)
+> 		return -ENODEV;
+> 
+> 	if (pa) {
+> 		...
+> 	}
+> 	return 0;
 
 Updated.
-
-> > +}
-> 
-> 
-> > diff --git a/drivers/irqchip/irq-gic-v5-iwb.c b/drivers/irqchip/irq-gic-v5-iwb.c
-> > index ad9fdc14d1c6..c7d5fd34d053 100644
-> > --- a/drivers/irqchip/irq-gic-v5-iwb.c
-> > +++ b/drivers/irqchip/irq-gic-v5-iwb.c
-> > @@ -4,6 +4,7 @@
-> >   */
-> >  #define pr_fmt(fmt)	"GICv5 IWB: " fmt
-> >  
-> > +#include <linux/acpi.h>
-> >  #include <linux/init.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/msi.h>
-> > @@ -136,18 +137,31 @@ static int gicv5_iwb_irq_domain_translate(struct irq_domain *d, struct irq_fwspe
-> >  					  irq_hw_number_t *hwirq,
-> >  					  unsigned int *type)
-> >  {
-> > -	if (!is_of_node(fwspec->fwnode))
-> > -		return -EINVAL;
-> > +	if (is_of_node(fwspec->fwnode)) {
-> >  
-> > -	if (fwspec->param_count < 2)
-> > -		return -EINVAL;
-> > +		if (fwspec->param_count < 2)
-> > +			return -EINVAL;
-> >  
-> > -	/*
-> > -	 * param[0] is be the wire
-> > -	 * param[1] is the interrupt type
-> > -	 */
-> > -	*hwirq = fwspec->param[0];
-> > -	*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-> > +		/*
-> > +		 * param[0] is be the wire
-> > +		 * param[1] is the interrupt type
-> > +		 */
-> > +		*hwirq = fwspec->param[0];
-> > +		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-> 
-> As below, FIELD_GET() would improve reviewability a little.
-> 
-> 
-> > +	}
-> > +
-> > +	if (is_acpi_device_node(fwspec->fwnode)) {
-> > +
-> > +		if (fwspec->param_count < 2)
-> > +			return -EINVAL;
-> > +
-> > +		/*
-> > +		 * Extract the wire from param[0]
-> > +		 * param[1] is the interrupt type
-> > +		 */
-> > +		*hwirq = FIELD_GET(GICV5_GSI_IWB_WIRE, fwspec->param[0]);
-> > +		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-> 
-> I'd prefer this FIELD_GET() for this as well so there is no need to
-> go sanity check that it is the lowest bits.
-
-It is a common pattern in the kernel, that's why I am not convinced that
-changing just this instance would improve much.
 
 Thanks,
 Lorenzo
 
-> 
+> > +	if (parent && pa) {
+> > +		int ret;
+> > +
+> > +		its = (struct acpi_iort_its_group *)node->node_data;
+> > +		ret = iort_find_its_base(its->identifiers[0], pa);
+> > +		if (ret)
+> > +			return ret;
 > > +	}
-> >  
-> >  	return 0;
+> > +
+> > +	return parent ? 0 : -ENODEV;
+> > +}
+> 
+> 
 
