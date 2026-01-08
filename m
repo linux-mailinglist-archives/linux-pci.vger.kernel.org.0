@@ -1,279 +1,206 @@
-Return-Path: <linux-pci+bounces-44254-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44255-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86252D01069
-	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 05:59:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E4A8BD010B5
+	for <lists+linux-pci@lfdr.de>; Thu, 08 Jan 2026 06:14:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3ABE1303E439
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Jan 2026 04:58:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 314213009F9E
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Jan 2026 05:14:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A4FA2C21FE;
-	Thu,  8 Jan 2026 04:58:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D24C2D249A;
+	Thu,  8 Jan 2026 05:14:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="jfslcXFa"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hG7mNeNz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m49238.qiye.163.com (mail-m49238.qiye.163.com [45.254.49.238])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013012.outbound.protection.outlook.com [40.93.196.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7EF2D0C7A
-	for <linux-pci@vger.kernel.org>; Thu,  8 Jan 2026 04:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.238
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767848321; cv=none; b=FB+gqMBTkPZN2cqGobBFQZk55Qr2C1qyMRQL1EPvs96/gHDjBJViWG4+jhW9sxsmcX8uGOMiLL3D43HrHlzsYSNfFh2hTb2t86tn4mVELt/i8L0BB/F5SiZ927J1uC+AxWMOGoBwoMqpWEV3R8yHvkHCD3laLu/NJl64Kw2zBqM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767848321; c=relaxed/simple;
-	bh=lXn0pTppSBegGElu6a+FmHnxiShi5VsDZUM/h08hknI=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=g7wp/9/3TbPSLrsXKPFNWMkmV3+LKzPvyE8yyQ8TmzyGxDU39GJypd4bcjW7ZeP6y6m0QpH2QPpKvdc3LM2+BYhMFw1B+If+GbYSG1Vs/5v07+H+5axvbaMVXVkQ4YoayFCp+PZBSv32VDtwYxu+mrHiJ+MKfCOovDWMfvd49Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=jfslcXFa; arc=none smtp.client-ip=45.254.49.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.14] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 2fe7522f0;
-	Thu, 8 Jan 2026 12:58:29 +0800 (GMT+08:00)
-Message-ID: <70b6e8c9-8dbe-484a-b8a8-aeb7380b6ca2@rock-chips.com>
-Date: Thu, 8 Jan 2026 12:58:28 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049F12D063E;
+	Thu,  8 Jan 2026 05:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767849256; cv=fail; b=iObFDyd7I3RgY58Gm21yK/dZYjo0V6Sxz0RIRzYtBhpfwDDcvWllMdYNs90zJaL0iwz3r3qeF1N15aWYi5yYwvTM7T+xtxBkedORYqNGgMspWsJ5J7korBG+r3lV3N8jFQx9lBkchL8vWmBX4ywLGU/4sNmtMG6lPwy7TmJjbyo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767849256; c=relaxed/simple;
+	bh=DbDgOa6OM0w6xpC8Pa8kErwcFFNouur65LsSr7INeAI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=PAYbUO8EyjM1dLVAGuxj914R+d5LiOV6g3fQSpeEsD+9C9V214RcGuErPpJOrzMMJQA4DgNUQ9nvhZYPRGD031HWkcEKPkGWPj2nroLKfcREsPDzOk1D+QyzZ+W6QjP+koKlXAoUcWdHS/gtl5TVsqZb3xTPA59Qa10HVuM6SpE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hG7mNeNz; arc=fail smtp.client-ip=40.93.196.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nYusBwzvpoHLBTWwF/wziP/gUUV81qKQE/dGqdWfGBtpnhmimeqVf7mQAZX2MjSJ+S5WzhtIHGadaeiRvMIX8pSwxgDqQ6V7hoDEnyguQAjU7VKHRMf/7jo49btwAvLwTQL0C6Pm+DiEmT9HLYu+HYpAwo9fbNSLUziAuFtcZOP+1ZI+fXN0iyqMBY+bO15Fx7vNJuSRIHd5CK6MveVpfJhTfm3fdsARSTz7cn+z7+Qh1jB42TxwS0aUwlzmWybHstB8qYPB2ViPDNyLWG7ZTfcOGa0O5TGeXxgs3Mrssw+Ao0RwXaMO3uPE67Cb2VsjC4b+NeZQcH8rRdMjXpAhBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RSF9vzmnmNwBOYoOQZEJO5/l7w6JZ3zE4YTmjXWjRaY=;
+ b=Wri9zsW3OLvXVN7ERoeBHDnMIM7ZNyy22pIW1NEImtQHhwU/dKkHvoaf/e/KMdd0hWVX/uywwsAvidQxHbI2+awUlR9fh9K90quiyldcD8yJzpONu5vul4dEu900YgCR4uaifxgsqqfeMBhY0mG8RNE+Hm8mzjWlNeZQv46kq85fwzebOBNyNXx1Iz9anvDoby4/5HfeqLxXIe/pYIqvhTc8XsLthDc1wkXS1F+hY1cPrvFQEdU0ip6Kc4LEcqjrmxTpl7LGckTzquFT7oj5/qXDco7+pfKRgxyGJ6FiCplxNXVJ9FYphK5S0wKtE5H8HIsV2yx5vMK24CDbsovqUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RSF9vzmnmNwBOYoOQZEJO5/l7w6JZ3zE4YTmjXWjRaY=;
+ b=hG7mNeNzIZ4Ue52PsUemO14ZOGvVLcDJt4kFihmLe9xd2lTPklFnI/rIdxHSuRbDJ9U/zYn7Y0iDHzn/VXacN8m440P1WCRJe2Nn2RvwhGon/xF81ohX4tWVpWOxjDwDFv8qDo1O1SxwnTcFclIE6PUlSZNbOl1s2Tae0B5KE4NxDRwb82VAIcu8PFLO2xbn1tzPY1U+U43fmWw3XTVT88jFWumtnNmlNppf5Xr1vhixpvmmdUGRVqJbuiTmnH3CyFyxfHjuzWXXxSLH0PpqXdTmn5lsuDJ87LJ0ykUryOVt7utGNXaYk8yvObd7gM66X78Hd/WZuTfKLkyCf3BZTw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ LV2PR12MB5992.namprd12.prod.outlook.com (2603:10b6:408:14e::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.2; Thu, 8 Jan
+ 2026 05:14:12 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%4]) with mapi id 15.20.9499.001; Thu, 8 Jan 2026
+ 05:14:12 +0000
+Date: Thu, 8 Jan 2026 16:14:07 +1100
+From: Alistair Popple <apopple@nvidia.com>
+To: Hou Tao <houtao@huaweicloud.com>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-mm@kvack.org, linux-nvme@lists.infradead.org, 
+	Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>, 
+	Leon Romanovsky <leonro@nvidia.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Tejun Heo <tj@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
+	Sagi Grimberg <sagi@grimberg.me>, houtao1@huawei.com
+Subject: Re: [PATCH 07/13] PCI/P2PDMA: create compound page for aligned
+ p2pdma memory
+Message-ID: <krs6qfjs2rle2ufoqdk65slnjkq55nbn23reptoij3je4gnb4d@pcbiqtz35hbh>
+References: <20251220040446.274991-1-houtao@huaweicloud.com>
+ <20251220040446.274991-8-houtao@huaweicloud.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251220040446.274991-8-houtao@huaweicloud.com>
+X-ClientProxiedBy: SY5P282CA0132.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:209::13) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, Jingoo Han <jingoohan1@gmail.com>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-rockchip@lists.infradead.org,
- Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: dwc: Add LTSSM tracing support to debugfs
-To: Manivannan Sadhasivam <mani@kernel.org>
-References: <1767691119-28287-1-git-send-email-shawn.lin@rock-chips.com>
- <cudy2lfd7q7tujfivampgciziuho7izkpvmabj3qa2udvzkvfh@lw5vasqcrs6c>
- <2e1a3eff-5d4d-4e3a-a076-ef8a76e08d4c@rock-chips.com>
- <lhshuxj4aztwbernypwgaxkdtxzonzydzipu63mspbqfygyrvy@nggpj7vwsw7n>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <lhshuxj4aztwbernypwgaxkdtxzonzydzipu63mspbqfygyrvy@nggpj7vwsw7n>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9b9bf8722709cckunme78d4b0088855
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQh9DTlZLGhpNGU5CSktNHUNWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=jfslcXFa6jn5pFaMTluTyVBwtOti+6+OvcCPz40HECjzDAsdldDI83+NcqjC1SjW+nmB33m9lRMRA2ge/4opej29prXy2MgHsm1qatm7mfsHkLt1v5NDhsRoSkORt2fuKHJklfaargznMpleF5MQQUNu6/2BqsUmAswjR1eQeU4=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=wTPuu3xgyg0xoYlHD4kMcHX7pKbo2jNhwxG5uBDypg8=;
-	h=date:mime-version:subject:message-id:from;
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|LV2PR12MB5992:EE_
+X-MS-Office365-Filtering-Correlation-Id: fa1950aa-7d90-47e2-5ea9-08de4e74c250
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/0AmEL7XX2IIXD5+x4nBm8tn/M+W4FZ8be4zWbLSUrsNeJ0GyyeqtklL9H9r?=
+ =?us-ascii?Q?cTOcOhsthN2ZuNAnJ7p/GTSa/z74zgTu5PGKkOAm9dCDLH4mxOSq6lYV8FTm?=
+ =?us-ascii?Q?uj9Ps2SHHsfN34icGR70NACenBSxZcnSMwFcY446Er7w58HQuNUEpZMwosdp?=
+ =?us-ascii?Q?L3tyY65n9mWfyapPbdu3YnjdgOkUPGJDe1CiIOniSaYlM9DivhBYg6glCGqj?=
+ =?us-ascii?Q?MF3onwwjZfavEmvNu7I3IEZBG4n8xV1WkRI0X7zk6yK9hV0Hwys1h5B6v0Fe?=
+ =?us-ascii?Q?pbkcCMfgxadSJAovmfvhnxUqhx4gl6CU7GkQZs5PqOv7+buyKLJlycgSVD2D?=
+ =?us-ascii?Q?X+RywJh1ztlxIZnUgm++5cCK2wJ/Lbk5ZUSvxAQkgq13JAi0r72juEmhfl0W?=
+ =?us-ascii?Q?j4gBlndCKqh3Nd8qUAyDVIjXe7Rn4/hOYTyvkY4OWDx3+jzDpBjgcZMKzEyw?=
+ =?us-ascii?Q?QdNGyXiJ11hdqlnHvZf2o2zc88rR112qqJYdS7PiVeBabe7mOZSt/YdHelzS?=
+ =?us-ascii?Q?j25vQRZe24vzqebctso5HOiEJZ+t4wmMxn1aFmHgV/f0j3s33tdMC/GUCDaz?=
+ =?us-ascii?Q?7xWqdDHTXpcoFoKEDEP2E0CqLbhJsbdHM7J1yI8/9wDiMuHfy4cf8uO0Y4cY?=
+ =?us-ascii?Q?92qDVn2tIfok342M+RU8rF4RY1N20oUR+E25KUDgMswMKAS2ldUNzs5FE6Bt?=
+ =?us-ascii?Q?ZqJrRd+m3edb1d9hrDB1V7B7GLllhGTw3EVgkysIx06EuK9fZkHmGZzuFc7c?=
+ =?us-ascii?Q?X37WdqopHPMHjIZMZVlieY7EF70QN7Q/Dfu5Bdjkx8A1lH9vRLGk0ZIsQjv7?=
+ =?us-ascii?Q?5PAvbXJuwKcqxiEOPngniMxTfim6pSgzw+szfN7h1wS9bcnjgF4kBTS5uY5l?=
+ =?us-ascii?Q?nBivMbpTQfINvOduKvUKucbXAr8NnnQzvWPKW82dti6erCXrCfMb30Fz7571?=
+ =?us-ascii?Q?WaDIdK65MGN0qNyK0lfUFL59ZrPzrSoOExt3zfIGfjisXAMhRyFo4W5KRx5r?=
+ =?us-ascii?Q?SBeYRdL/vwkK9w/hhmeTNcO+vXVZShasY8ZKHRxCyyd1xCzIJeghFVchfCgH?=
+ =?us-ascii?Q?TwBC8wBne2lapg+/orqEP7YgfBletHNrpUJQ0ugMm0XCNNBiwGXdtDQ5ulAw?=
+ =?us-ascii?Q?luK7hTzVQ1fqOwvXDduZRALsPKlzCuzBGQa+I6zVSpzOXmgbSdtvr+gRBX5n?=
+ =?us-ascii?Q?A+LMBEQa5Nd0IJqxiJOo7187twBqPzpBn4BAtNh/6p0c4FenTAVpA3o+vvMj?=
+ =?us-ascii?Q?j/Td3gzv0xL9q44A4C/c1BRqTM3xKh7zQHH62rT3R7bfXkKDFOkfbXa0Q6oD?=
+ =?us-ascii?Q?ZQLW0ty+b+Md/LrRmkfKK5Y8KW2/veOfY4Y3MeZX6SLabgEpxfuwlj2nN4mS?=
+ =?us-ascii?Q?+08JTrRVq9N/Jmje+jKdoSikR9vu0s5SnbY36tgNVLvNcZ122fjl2ilhnSaM?=
+ =?us-ascii?Q?qa67Gwf7hPmbLX8JVtOcA/iAqcXYLPUW?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?K2zULAYxpaLOfts9s4+dR6pH++eR4Sy1LOFW4t3tvmcKKHtjzukqZwaRy9no?=
+ =?us-ascii?Q?u/gulSoGe4917selRic6cdNEoFEu8qRwb0Szd3hU0r2LFOPKyZpuYCiYeCcu?=
+ =?us-ascii?Q?rP7OGkMLzQHErvw53QObt8kvBh7VMm+LGwOrVd6RbB16IGhI7VYlUbov54dV?=
+ =?us-ascii?Q?0uOf51Bs6iOSlyYyJA54ZySTp4dI6wkgOqXr+UJuP6i3qS0wRLFdjsDIBQcz?=
+ =?us-ascii?Q?fuvqnDngInsc1fX9Eb2EiDvVvTEYUk3CdxdYOGaNZGJVQbzYrZHpARGBeYAz?=
+ =?us-ascii?Q?rRhidPHbqp1FwahpqYDh3Chkqj2h2ngjuViz6NN3RXaKXqApIZhD7cJpQSLN?=
+ =?us-ascii?Q?H3nRTAAwKijqpIQcy7Z5/a6Vku+9UlRSnh46clChhIE4oUJs3EYJJAAreoVF?=
+ =?us-ascii?Q?z+Qe09nviBo3uMnJ4/OLdQeqxfWc9r3xcz0hhYDV+gUbbMCjoxTDu6BlbeYE?=
+ =?us-ascii?Q?Pw6pOFXb4yCmsFQZLzqOxojcRgAJfX/pxzMvzdFNCB+4pwWrUm/GTPfz4qFr?=
+ =?us-ascii?Q?8lqMXlkHv0MQl6K/KuOLyTwAW9VEQ3x6/dVpItibW+lT057fd2XiuYFPBEDT?=
+ =?us-ascii?Q?kHep9C8uVDCG7jhaUwuO2/E2rwP/Mb5tql2uCepzw+s2+rsxKFBoJEFwoTWk?=
+ =?us-ascii?Q?DIlUbsmvLThnVE4AY/651sbBgNW6devWEoHp1+cRcfkyKCPAMjJ9QYIaDcGc?=
+ =?us-ascii?Q?rq1dfArrLqplFrsOEuq31LHy7Q7rB9dzhE3bH38ospITxlEXqTQ2iA30Biwd?=
+ =?us-ascii?Q?DZO4nxL9tRYO1r/2uqsCQ04X8ntBPR2NltJjdIxI+Maf+6lbzP5Kt18FAIMC?=
+ =?us-ascii?Q?YPpXulgVvqUOzEb3bdtzfjY9FIdut3Ma2sRovII5Aq7jl+St9m+lL53QG5th?=
+ =?us-ascii?Q?j3ExeCmrElg5uRhms6sJDgRmato32FDHSECdPphNE1W6aRiv1pWS4CX3eHx6?=
+ =?us-ascii?Q?PHwyL2abysySfL/BFWt0ccR5EhtU2V24Hc/4JRxTUv20CPuHa0cEEZiSN4+v?=
+ =?us-ascii?Q?R8PH1yKaGSDyfedTNHlyOaUQvHxyPbR2l94Uw1KxdoQQuCSyoh2tvFS2+IUy?=
+ =?us-ascii?Q?l5FlheTFPnrEvno7VR3NaZSFioUar87j5e1q0xxSNu60/A6XLtFNVeETwzb8?=
+ =?us-ascii?Q?kcbAFC4g5H/xQWlLGjGsXfiMbQZiDC0hcXJjumS+QhLZLIABwUlkfCaByZhF?=
+ =?us-ascii?Q?sZQDd8XJEgIRiJlLT1dgHu0NkDRC/UqdmN3X7BBA4gx1gsmUqHiOdw/cfWaw?=
+ =?us-ascii?Q?CmEmXHW36xRDpJgh1fM0AFOcSaqde/y5MgV4X22Exbl+rT5qgcHq9YkTk/h+?=
+ =?us-ascii?Q?zQaDfs1n+1ZYMeDB19FBZPZSrooeVMB/zWEgRzAB9ewJV0MuPIOESH+GRC6L?=
+ =?us-ascii?Q?F4ByXYVPPPLfKqe25NRhBnFnAfOPw6pQ3OC5GRhS4bOmkPf182PaerYYLqpd?=
+ =?us-ascii?Q?7gSnHM0Hw2n0w8lZrKzcDCKM87Lw2uqnTTZmPV0u74ecj1sig6xOB6x0evAt?=
+ =?us-ascii?Q?ySrTwEHjze5U8ZMzzhsBHMTXn6k1HVQ+/B/QhkexGWtqemjNM9fW/54mfYGw?=
+ =?us-ascii?Q?JocnBGSutPag/+1sRcYtYpZdabCxzoL0CPDYMNNMUlVhV8SrJrsHb3iWpeL4?=
+ =?us-ascii?Q?4igwV6kqY8h8i9Alpwqt3ZVGopfQy42K1XoXJAIfhOhcvfCNK4UV8JQdhyrF?=
+ =?us-ascii?Q?KpINtv/nuj4OdnhzM59KWD3/9p5ANGWE1p5ajknSA5kTQT1rojgZWS3CFefF?=
+ =?us-ascii?Q?kHo7k2ShXQ=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa1950aa-7d90-47e2-5ea9-08de4e74c250
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2026 05:14:11.8528
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aQZw/d+sW/6+dbRZ+HpNWsSN8byAZudw+MP6PXfVY1smH6qqZkw17y/0vn/TueYMwWUlVBrmhDnS2Z3jR6RrEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5992
 
-在 2026/01/08 星期四 12:49, Manivannan Sadhasivam 写道:
-> On Thu, Jan 08, 2026 at 09:01:43AM +0800, Shawn Lin wrote:
->> 在 2026/01/07 星期三 20:41, Manivannan Sadhasivam 写道:
->>> On Tue, Jan 06, 2026 at 05:18:38PM +0800, Shawn Lin wrote:
->>>> Some platforms may provide LTSSM trace functionality, recording historical
->>>> LTSSM state transition information. This is very useful for debugging, such
->>>> as when certain devices cannot be recognized. Add an ltssm_trace operation
->>>> node in debugfs for platform which could provide these information to show
->>>> the LTSSM history.
->>>>
->>>
->>> Why don't you implement it as a tracepoint since you want to expose traces?
->>>
->>
->> I evaluated this option but didn't choose to do it just as I didn't
->> want to select CONFIG_TRACING_SUPPORT for dwc driver because of this
->> cheap function. But I'm fine to implement it as a tracepoint. Just to
->> make it clear, if a tracepoint is preferred, should I need to create a new
->> file like pcie-designware-trace?
->>
+On 2025-12-20 at 15:04 +1100, Hou Tao <houtao@huaweicloud.com> wrote...
+> From: Hou Tao <houtao1@huawei.com>
 > 
-> I would prefer that, because that will allow us to add more tracepoints in the
-> future and not muddle pcie-designware.h. General convention is to define
-> trace events in a separate header.
+> Commit c4386bd8ee3a ("mm/memremap: add ZONE_DEVICE support for compound
+> pages") has already supported compound page for ZONE_DEVICE memory. It
+> not only decreases the memory overhead of ZONE_DEVICE memory through
+> the deduplication of vmemmap pages
+
+Is this true? I wouldn't expect supporting P2PDMA compound pages would change
+the vmemmap overhead - I think we'd still need a struct page in the vmemmap
+for each 4K of memory unless you were going to prevent anything smaller than a
+PMD/PUD sized BAR region from getting mapped.
+
+> , it also optimize the performance of
+> get_user_pages when the memory is used for IO.
 > 
-
-I did a quick convention by adding it to the existing 
-include/trace/events/pci.h
-
-The TRACE_EVENT is called pcie_ltssm_state_change, making it not just
-for dwc-based but for all possible coming host drivers and the output
-looks like below. Is that the way you expected?
-
-root@debian:/#echo 1 > 
-/sys/kernel/debug/tracing/events/pci/pcie_ltssm_state_change/enable
-root@debian:/# cat /sys/kernel/debug/tracing/trace
-# tracer: nop
-#
-# entries-in-buffer/entries-written: 572/572   #P:8
-#
-#                                _-----=> irqs-off/BH-disabled
-#                               / _----=> need-resched
-#                              | / _---=> hardirq/softirq
-#                              || / _--=> preempt-depth
-#                              ||| / _-=> migrate-disable
-#                              |||| /     delay
-#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-#              | |         |   |||||     |         |
-
-...
-      kworker/1:1-109     [001] .....     4.719968: ltssm_state_change: 
-dev: a40000000.pcie state: 0x0d rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719969: ltssm_state_change: 
-dev: a40000000.pcie state: 0x0f rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719970: ltssm_state_change: 
-dev: a40000000.pcie state: 0x10 rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719970: ltssm_state_change: 
-dev: a40000000.pcie state: 0x11 rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719971: ltssm_state_change: 
-dev: a40000000.pcie state: 0x13 rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719972: ltssm_state_change: 
-dev: a40000000.pcie state: 0x14 rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719973: ltssm_state_change: 
-dev: a40000000.pcie state: 0x0d rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719973: ltssm_state_change: 
-dev: a40000000.pcie state: 0x0f rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719974: ltssm_state_change: 
-dev: a40000000.pcie state: 0x10 rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719975: ltssm_state_change: 
-dev: a40000000.pcie state: 0x11 rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719975: ltssm_state_change: 
-dev: a40000000.pcie state: 0x13 rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719976: ltssm_state_change: 
-dev: a40000000.pcie state: 0x14 rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719977: ltssm_state_change: 
-dev: a40000000.pcie state: 0x0d rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719977: ltssm_state_change: 
-dev: a40000000.pcie state: 0x0f rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719978: ltssm_state_change: 
-dev: a40000000.pcie state: 0x10 rate: 8.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719979: ltssm_state_change: 
-dev: a40000000.pcie state: 0x11 rate: 5.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719980: ltssm_state_change: 
-dev: a40000000.pcie state: 0x13 rate: 5.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719980: ltssm_state_change: 
-dev: a40000000.pcie state: 0x14 rate: 5.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719981: ltssm_state_change: 
-dev: a40000000.pcie state: 0x0d rate: 5.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719982: ltssm_state_change: 
-dev: a40000000.pcie state: 0x0f rate: 5.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719982: ltssm_state_change: 
-dev: a40000000.pcie state: 0x10 rate: 5.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719983: ltssm_state_change: 
-dev: a40000000.pcie state: 0x11 rate: 5.0 GT/s PCIe
-      kworker/1:1-109     [001] .....     4.719984: ltssm_state_change: 
-dev: a40000000.pcie state: 0x13 rate: 5.0 GT/s PCIe
-
-
-> - Mani
+> As for now, the alignment of p2p dma memory is already known, setting
+> vmemmap_shift accordingly to create compound page for p2pdma memory.
 > 
->>> - Mani
->>>
->>>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->>>> ---
->>>>    .../controller/dwc/pcie-designware-debugfs.c  | 44 +++++++++++++++++++
->>>>    drivers/pci/controller/dwc/pcie-designware.h  |  6 +++
->>>>    2 files changed, 50 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
->>>> index df98fee69892..569e8e078ef2 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
->>>> +++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
->>>> @@ -511,6 +511,38 @@ static int ltssm_status_open(struct inode *inode, struct file *file)
->>>>    	return single_open(file, ltssm_status_show, inode->i_private);
->>>>    }
->>>> +static struct dw_pcie_ltssm_history *dw_pcie_ltssm_trace(struct dw_pcie *pci)
->>>> +{
->>>> +	if (pci->ops && pci->ops->ltssm_trace)
->>>> +		return pci->ops->ltssm_trace(pci);
->>>> +
->>>> +	return NULL;
->>>> +}
->>>> +
->>>> +static int ltssm_trace_show(struct seq_file *s, void *v)
->>>> +{
->>>> +	struct dw_pcie *pci = s->private;
->>>> +	struct dw_pcie_ltssm_history *history;
->>>> +	enum dw_pcie_ltssm val;
->>>> +	u32 loop;
->>>> +
->>>> +	history = dw_pcie_ltssm_trace(pci);
->>>> +	if (!history)
->>>> +		return 0;
->>>> +
->>>> +	for (loop = 0; loop < history->count; loop++) {
->>>> +		val = history->states[loop];
->>>> +		seq_printf(s, "%s (0x%02x)\n", ltssm_status_string(val), val);
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static int ltssm_trace_open(struct inode *inode, struct file *file)
->>>> +{
->>>> +	return single_open(file, ltssm_trace_show, inode->i_private);
->>>> +}
->>>> +
->>>>    #define dwc_debugfs_create(name)			\
->>>>    debugfs_create_file(#name, 0644, rasdes_debug, pci,	\
->>>>    			&dbg_ ## name ## _fops)
->>>> @@ -552,6 +584,11 @@ static const struct file_operations dwc_pcie_ltssm_status_ops = {
->>>>    	.read = seq_read,
->>>>    };
->>>> +static const struct file_operations dwc_pcie_ltssm_trace_ops = {
->>>> +	.open = ltssm_trace_open,
->>>> +	.read = seq_read,
->>>> +};
->>>> +
->>>>    static void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
->>>>    {
->>>>    	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
->>>> @@ -644,6 +681,12 @@ static void dwc_pcie_ltssm_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
->>>>    			    &dwc_pcie_ltssm_status_ops);
->>>>    }
->>>> +static void dwc_pcie_ltssm_trace_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
->>>> +{
->>>> +	debugfs_create_file("ltssm_trace", 0444, dir, pci,
->>>> +			    &dwc_pcie_ltssm_trace_ops);
->>>> +}
->>>> +
->>>>    static int dw_pcie_ptm_check_capability(void *drvdata)
->>>>    {
->>>>    	struct dw_pcie *pci = drvdata;
->>>> @@ -922,6 +965,7 @@ void dwc_pcie_debugfs_init(struct dw_pcie *pci, enum dw_pcie_device_mode mode)
->>>>    			err);
->>>>    	dwc_pcie_ltssm_debugfs_init(pci, dir);
->>>> +	dwc_pcie_ltssm_trace_debugfs_init(pci, dir);
->>>>    	pci->mode = mode;
->>>>    	pci->ptm_debugfs = pcie_ptm_create_debugfs(pci->dev, pci,
->>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->>>> index 5cd27f5739f1..0df18995b7fe 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
->>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->>>> @@ -395,6 +395,11 @@ enum dw_pcie_ltssm {
->>>>    	DW_PCIE_LTSSM_UNKNOWN = 0xFFFFFFFF,
->>>>    };
->>>> +struct dw_pcie_ltssm_history {
->>>> +    enum dw_pcie_ltssm *states;
->>>> +    u32 count;
->>>> +};
->>>> +
->>>>    struct dw_pcie_ob_atu_cfg {
->>>>    	int index;
->>>>    	int type;
->>>> @@ -499,6 +504,7 @@ struct dw_pcie_ops {
->>>>    			      size_t size, u32 val);
->>>>    	bool	(*link_up)(struct dw_pcie *pcie);
->>>>    	enum dw_pcie_ltssm (*get_ltssm)(struct dw_pcie *pcie);
->>>> +	struct dw_pcie_ltssm_history * (*ltssm_trace)(struct dw_pcie *pcie);
->>>>    	int	(*start_link)(struct dw_pcie *pcie);
->>>>    	void	(*stop_link)(struct dw_pcie *pcie);
->>>>    	int	(*assert_perst)(struct dw_pcie *pcie, bool assert);
->>>> -- 
->>>> 2.43.0
->>>>
->>>>
->>>
->>
->>
+> Signed-off-by: Hou Tao <houtao1@huawei.com>
+> ---
+>  drivers/pci/p2pdma.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index 70482e240304..7180dea4855c 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -447,6 +447,8 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+>  	pgmap->nr_range = 1;
+>  	pgmap->type = MEMORY_DEVICE_PCI_P2PDMA;
+>  	pgmap->ops = &p2pdma_pgmap_ops;
+> +	if (align > PAGE_SIZE)
+> +		pgmap->vmemmap_shift = ilog2(align) - PAGE_SHIFT;
+>  	p2p_pgmap->mem = mem;
+>  
+>  	addr = devm_memremap_pages(&pdev->dev, pgmap);
+> -- 
+> 2.29.2
+> 
 
