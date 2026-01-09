@@ -1,204 +1,200 @@
-Return-Path: <linux-pci+bounces-44325-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44326-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 181A5D07606
-	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 07:19:51 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DEBCD07622
+	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 07:22:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C3909302FA27
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 06:19:13 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 21862303837C
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 06:22:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E026255F2C;
-	Fri,  9 Jan 2026 06:19:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FEC5296BBF;
+	Fri,  9 Jan 2026 06:22:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMbwam1g"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="BGLzTK6Q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m21469.qiye.163.com (mail-m21469.qiye.163.com [117.135.214.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A27264609
-	for <linux-pci@vger.kernel.org>; Fri,  9 Jan 2026 06:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1129A28506B;
+	Fri,  9 Jan 2026 06:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.214.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767939553; cv=none; b=oDcGwvR3Tf4LThHcnwKZZPJxAVFZf5VHPXAjD54jsbWPQVxuDSDhkh5BLO3oYDu9gvDQQjmYUE2ao48Uego3jJcnLc0U6VjIl96Lo4ymZTwwgS+fnRykLuxAPLAdsAkcPYrUTGANzWPQ0H5TXoD+VV6KcBGh8C9nuTINBr+/+Bc=
+	t=1767939746; cv=none; b=RWnf2OJ7C1xojhgsUvBTyX7Hhn+qB9O9ywBiABMWAdA/BPF1002Ifvfn7qgkTts51LFxJ5q9VNEe/s5GEAdQm9SCNkaBuMIWCKEwBVOtevBvLR8ij89YyOaGY9oWOMk36iiNPF73a9wHvgGtezleTYfF2izpbXbwjR4oebcL6mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767939553; c=relaxed/simple;
-	bh=b/3huWzi5fH5yfmWBVLBG0clk1xwuF28Qcz+cqEDEds=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j+5nUvKN/dQ8NxOQBiguZdeVgrrGT6oK57gHVT4wHUsx57DdXonS63GEEeReirPOV2IuJOucwFiE5oHT391vSkh2JeiaGoLe4FFieH8wzolZ3jUa5yDxUMnhoIMwTVqF3wDzrNAv0Xo4YJSQ6E489VSBSgtUX1l9EpnkWc9/Dsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dMbwam1g; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2a0d6f647e2so41809355ad.1
-        for <linux-pci@vger.kernel.org>; Thu, 08 Jan 2026 22:19:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767939551; x=1768544351; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mxcIAZdi8DSHabnzsxkENQYm/KIvgyHbwki+UOtqU4s=;
-        b=dMbwam1g4FQd4hPWaAvnKL4WMv3mgao0NHJzDuaHYZgIJqavPeEAD8rMLSFKm3kOBP
-         n2czKPQ/A/LpjomLuH6BsnDxcqgFUY9Y8z3EPBhEVmAKoBegZjfjnmH/f416jmewhJ/E
-         gUwQFFOGnFgyB9rCWKX6BlYGC+VjtoAqmXGN1IvoTj5/X1nfB+H3erOYJb3lWmbclsNR
-         9nhd6jniR+jcPWo+rfe4TqPWAp5W0TDsUvaiIDlucgz5eUaWGqESsjD5cPlc8un8C2IQ
-         +SETE5fBuxn5SzuCRh1hJ3r1E6K2G3PA2deM62AiFp9pUNWmWiRnvy5caK7sJSLddyqO
-         F60w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767939551; x=1768544351;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mxcIAZdi8DSHabnzsxkENQYm/KIvgyHbwki+UOtqU4s=;
-        b=be41FaMxQfwpX3tb6Z4XyknzRDJybIdmRiJG0oAR1pD3ZxjzQw8zMi9l+uGpfwEB86
-         vRTmK5Xtp25hu15nPzhLpTHyl26cOPejDTCLjx/YGWcgRWmY59nBncbD/8lca5VvS3wW
-         oNhC8TZe+03UjRS+8sGahw0hStzXyL2N1zxbBLDUX0SVuw6hy59Cs4lrnE4y3v6Gh8uv
-         jIsmrc8hWJu0VgpbMPcxcpWjGsevj1kMyFmsVEMMseJwVCPxseqqMGnOakLAgCHoygrh
-         XTWWqLShRr2qt563up+CxYQr7d0MjThZv6vtUv3GW84tzK5A2+fZOp3rylnx6QwhREIM
-         GXFg==
-X-Forwarded-Encrypted: i=1; AJvYcCVSzyfuQpT3k7KG9VumsrfpQxjGgcjCRPfCU8C42lYNFQb0TVQgAmiSk+3SOIIYq3z9McsqIowkwf8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtsHiI646G5G+AFkSLlM2Y6Bg0eKwNdI4WWrjD3h9Q3+VTLw1C
-	QeCyF/wgc5OX/6tcffrchNVkYOMdUEhdfAPTldciTxLYQ+9FaTDALKM7allespY=
-X-Gm-Gg: AY/fxX4W3B/TfD5+LWZFAui+SHAbj7603UMpV+/25n0CxDrVCJ/ifAz89RnNbRKhfip
-	eI/+NMtkxXO3oEyMXEuAxRNFnuRrOLP/ECGkNDfcV/JdKm5kwDDJimqmbOhNl2bxI+OOse4MspF
-	4rwtEw8C0LS95txaSNmZfyRcgKcLEdt6lmvUnNouqeZBCijKMOSaPVA5NHExv5I/T/d7by8KFFh
-	p3kU6H3ssqofU1AGASx0UVpUiyy7a8uPvSE9jqFvRT0voqjo9AmDq946VfjrmXAVYlIzZdRFUnP
-	yQZRmR5MZhr/RpcsftcmHS9W/IQe9qwu6TNpMObliLaZbDuFOTpGuHjh7p5gcAhqOSLdZfVB00g
-	Kd5ssuVV0hrXSrRfgAHFt/wfXMSlil+rqHyWpAXPuPPk4v9rZfkcQq3mpi2Gn3TWsIWamBlU/2N
-	8QtHQgQJ6ChwENxAQ=
-X-Google-Smtp-Source: AGHT+IGN1WYQT2EKc4h3GaCwKE2jZCARir0K7jCaV93K9/r5xtWTUECgPBy7LokTrS9Cz97x/QdO2A==
-X-Received: by 2002:a17:902:ccd0:b0:298:2cdf:56c8 with SMTP id d9443c01a7336-2a3ee4c46d4mr71063545ad.60.1767939551278;
-        Thu, 08 Jan 2026 22:19:11 -0800 (PST)
-Received: from at.. ([171.61.163.202])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-819c530133csm9272546b3a.31.2026.01.08.22.19.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jan 2026 22:19:10 -0800 (PST)
-From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-To: 
-Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	"Oliver O'Halloran" <oohall@gmail.com>,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Mika Westerberg <westeri@kernel.org>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Feng Tang <feng.tang@linux.alibaba.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-usb@vger.kernel.org
-Subject: [PATCH v5] PCI/portdev: Disable AER for Titan Ridge 4C 2018
-Date: Fri,  9 Jan 2026 06:18:53 +0000
-Message-ID: <20260109061901.3127-1-atharvatiwarilinuxdev@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1767939746; c=relaxed/simple;
+	bh=Wty9H0UnmPdr2z7gdWU7XScrqhg5D9w7XjlVUCC9NjE=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Zzqfu0TellcI0ht54ks+XxSRatR0eFu9QbTSQ+dB8ux85Hi1KZ92J0VtSDzJiTDiRyMCapS6YBkIY1rhc36T00LLKvY/+zGNb6ZMicZXs76EkASB7tpMEJ+S3bM1qiTadHhZuhn4l7h1E0GhDXqIafrE2hwtS3WUXa08PG9AhJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=BGLzTK6Q; arc=none smtp.client-ip=117.135.214.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.14] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 300cbf6a5;
+	Fri, 9 Jan 2026 14:22:11 +0800 (GMT+08:00)
+Message-ID: <dddbcb37-68d4-4ccb-9897-b1e5a4b41be7@rock-chips.com>
+Date: Fri, 9 Jan 2026 14:22:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v2 3/3] PCI: dw-rockchip: Add pcie_ltssm_state_transition
+ trace support
+To: Manivannan Sadhasivam <mani@kernel.org>
+References: <1767929389-143957-1-git-send-email-shawn.lin@rock-chips.com>
+ <1767929389-143957-4-git-send-email-shawn.lin@rock-chips.com>
+ <uev63wla4msmmhww4j3t2jim7lhvxjikvujwpxiblg5mz7jwwa@2jucxkbtcsfm>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <uev63wla4msmmhww4j3t2jim7lhvxjikvujwpxiblg5mz7jwwa@2jucxkbtcsfm>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9ba16b709409cckunm3a5211faa0570
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUtKH1YfT0lCGBgaTkJOSENWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=BGLzTK6QoCvwxHdMC1RRW6dwY43TnaJqrY/cL2NiL+N3UDZiUZZkpLfB+wOFJguwyghTMd6I5LxWg42RWci9IFmQFRt5CCAJHpQSnz22gpW4kDyi1azGmcmanaOE9q+rqMuOxYscUi4mnMgr+b74zNtgv/6GksxboCnE8uIF9N4=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=fusigJkE09jP1amE7Q6yCbc178kexJW7rrHRQizLPt8=;
+	h=date:mime-version:subject:message-id:from;
 
-Disable AER for Intel Titan Ridge 4C 2018
-(used in T2 iMacs, where the warnings appear)
-that generate continuous pcieport warnings. such as:
+在 2026/01/09 星期五 13:55, Manivannan Sadhasivam 写道:
+> On Fri, Jan 09, 2026 at 11:29:49AM +0800, Shawn Lin wrote:
+>> Rockchip platforms provide a 64x4 bytes debug FIFO to trace the
+>> LTSSM history. Any LTSSM change will be recorded. It's userful
+>> for debug purpose, for example link failure, etc.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>> ---
+>>
+>> Changes in v2:
+>> - use tracepoint
+>>
+>>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 92 +++++++++++++++++++++++++++
+>>   1 file changed, 92 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> index 352f513..be9639aa 100644
+>> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> @@ -22,6 +22,8 @@
+>>   #include <linux/platform_device.h>
+>>   #include <linux/regmap.h>
+>>   #include <linux/reset.h>
+>> +#include <linux/workqueue.h>
+>> +#include <trace/events/pci_controller.h>
+>>   
+>>   #include "../../pci.h"
+>>   #include "pcie-designware.h"
+>> @@ -73,6 +75,18 @@
+>>   #define  PCIE_CLIENT_CDM_RASDES_TBA_L1_1	BIT(4)
+>>   #define  PCIE_CLIENT_CDM_RASDES_TBA_L1_2	BIT(5)
+>>   
+>> +/* Debug FIFO information */
+>> +#define PCIE_CLIENT_DBG_FIFO_MODE_CON	0x310
+>> +#define  PCIE_CLIENT_DBG_EN		0xffff0007
+>> +#define  PCIE_CLIENT_DBG_DIS		0xffff0000
+>> +#define PCIE_CLIENT_DBG_FIFO_PTN_HIT_D0	0x320
+>> +#define PCIE_CLIENT_DBG_FIFO_PTN_HIT_D1	0x324
+>> +#define PCIE_CLIENT_DBG_FIFO_TRN_HIT_D0	0x328
+>> +#define PCIE_CLIENT_DBG_FIFO_TRN_HIT_D1	0x32c
+>> +#define  PCIE_CLIENT_DBG_TRANSITION_DATA 0xffff0000
+>> +#define PCIE_CLIENT_DBG_FIFO_STATUS	0x350
+>> +#define PCIE_DBG_LTSSM_HISTORY_CNT	64
+>> +
+>>   /* Hot Reset Control Register */
+>>   #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
+>>   #define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
+>> @@ -96,6 +110,7 @@ struct rockchip_pcie {
+>>   	struct irq_domain *irq_domain;
+>>   	const struct rockchip_pcie_of_data *data;
+>>   	bool supports_clkreq;
+>> +	struct delayed_work trace_work;
+>>   };
+>>   
+>>   struct rockchip_pcie_of_data {
+>> @@ -206,6 +221,79 @@ static enum dw_pcie_ltssm rockchip_pcie_get_ltssm(struct dw_pcie *pci)
+>>   	return rockchip_pcie_get_ltssm_reg(rockchip) & PCIE_LTSSM_STATUS_MASK;
+>>   }
+>>   
+>> +#ifdef CONFIG_TRACING
+>> +static void rockchip_pcie_ltssm_trace_work(struct work_struct *work)
+>> +{
+>> +	struct rockchip_pcie *rockchip = container_of(work, struct rockchip_pcie,
+>> +						trace_work.work);
+>> +	struct dw_pcie *pci = &rockchip->pci;
+>> +	enum dw_pcie_ltssm state;
+>> +	u32 val, rate, l1ss, loop, prev_val = DW_PCIE_LTSSM_UNKNOWN;
+> 
+> Reverse Xmas order please.
+> 
+>> +
+>> +	for (loop = 0; loop < PCIE_DBG_LTSSM_HISTORY_CNT; loop++) {
+> 
+> s/loop/i?
+> 
+>> +		val = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_DBG_FIFO_STATUS);
+>> +		rate = (val & GENMASK(22, 20)) >> 20;
+>> +		l1ss = (val & GENMASK(10, 8)) >> 8;
+>> +		val &= PCIE_LTSSM_STATUS_MASK;
+> 
+> Can you use FIELD_ macros here?
+> 
+>> +
+>> +		/* Two consecutive identical LTSSM means invalid subsequent data */
+> 
+> Interesting. Does the hardware maintain a counter to track the reads? So once
+> you break out of the loop and read it after 5s, you'll start from where you left
+> i.e., the duplicate entry or from the start of the counter again?
+> 
 
-pcieport 0000:00:1c.4: AER: Correctable error message received from 0000:07:00.0
-pcieport 0000:07:00.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
-pcieport 0000:07:00.0:   device [8086:15ea] error status/mask=00000080/00002000
-pcieport 0000:07:00.0:    [ 7] BadDLLP
+Yes, the ring FIFO maintains counters for recording both of 
+last-read-point for user to continue to read, and last-valid-point for 
+HW to
+continue to update transition state. So we could start from where we
+left.
 
-macOS also disables AER for Thunderbolt devices and controllers in their drivers.
+>> +		if ((loop > 0 && val == prev_val) || val > DW_PCIE_LTSSM_RCVRY_EQ3)
+>> +			break;
+>> +
+>> +		state = prev_val = val;
+>> +		if (val == DW_PCIE_LTSSM_L1_IDLE) {
+>> +			if (l1ss == 2)
+>> +				state = DW_PCIE_LTSSM_L1_2;
+>> +			else if (l1ss == 1)
+>> +				state = DW_PCIE_LTSSM_L1_1;
+> 
+> I believe L1.0 is not supported.
+> 
 
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220651
-Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+I'm not sure I follow this comment. state is DW_PCIE_LTSSM_L1_IDLE
+（L1.0） if l1ss is neither 1 nor 2.
 
----
-Changes since v4:
-- Used lowercase hex letters
-- Used DMI_BOARD_VENDOR instead of DMI_SYS_VENDOR
-Chnages since v3:
-- Fixed Grammer mistakes
-Changes since v2:
-- Transferred logic to arch/x86/pci/fixup.c to only target x86
-- Added DMI quirk to only target Apple Systems
-Changes since v1:
-- Transferred logic to drivers/pci/quicks.c
----
----
- arch/x86/pci/fixup.c       | 12 ++++++++++++
- drivers/pci/pcie/aer.c     |  3 +++
- drivers/pci/pcie/portdrv.c |  2 +-
- include/linux/pci.h        |  1 +
- 4 files changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-index 25076a5acd96..850bfe03a685 100644
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -1081,3 +1081,15 @@ static void quirk_tuxeo_rp_d3(struct pci_dev *pdev)
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1502, quirk_tuxeo_rp_d3);
- #endif /* CONFIG_SUSPEND */
-+
-+#ifdef CONFIG_PCIEAER
-+
-+static void quirk_disable_aer(struct pci_dev *pdev)
-+{
-+	if (dmi_match(DMI_BOARD_VENDOR, "Apple"))
-+		pdev->no_aer = 1;
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x15ea, quirk_disable_aer);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x15eb, quirk_disable_aer);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x15ec, quirk_disable_aer);
-+#endif /* CONFIG_PCIEAER */
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index e0bcaa896803..45604564ce6f 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -389,6 +389,9 @@ void pci_aer_init(struct pci_dev *dev)
- {
- 	int n;
- 
-+	if (dev->no_aer)
-+		return;
-+
- 	dev->aer_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
- 	if (!dev->aer_cap)
- 		return;
-diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-index 38a41ccf79b9..ab904a224296 100644
---- a/drivers/pci/pcie/portdrv.c
-+++ b/drivers/pci/pcie/portdrv.c
-@@ -240,7 +240,7 @@ static int get_port_device_capability(struct pci_dev *dev)
- 	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-              pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
- 	    dev->aer_cap && pci_aer_available() &&
--	    (pcie_ports_native || host->native_aer))
-+	    (pcie_ports_native || host->native_aer) && !dev->no_aer)
- 		services |= PCIE_PORT_SERVICE_AER;
- #endif
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 864775651c6f..f447f86c6bdf 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -440,6 +440,7 @@ struct pci_dev {
- 	unsigned int	multifunction:1;	/* Multi-function device */
- 
- 	unsigned int	is_busmaster:1;		/* Is busmaster */
-+	unsigned int	no_aer:1;		/* May not use AER */
- 	unsigned int	no_msi:1;		/* May not use MSI */
- 	unsigned int	no_64bit_msi:1;		/* May only use 32-bit MSIs */
- 	unsigned int	block_cfg_access:1;	/* Config space access blocked */
--- 
-2.43.0
+>> +		}
+>> +
+>> +		trace_pcie_ltssm_state_transition(dev_name(pci->dev),
+>> +					dw_pcie_ltssm_status_string(state),
+>> +					((rate + 1) > pci->max_link_speed) ?
+>> +					PCI_SPEED_UNKNOWN : PCIE_SPEED_2_5GT + rate);
+>> +	}
+>> +
+>> +	schedule_delayed_work(&rockchip->trace_work, msecs_to_jiffies(5000));
+>> +}
+>> +
+>> +static void rockchip_pcie_ltssm_trace(struct rockchip_pcie *rockchip,
+>> +				      bool en)
+> 
+> s/en/enable
+> 
+> - Mani
+> 
 
 
