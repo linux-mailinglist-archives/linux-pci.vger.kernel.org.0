@@ -1,128 +1,198 @@
-Return-Path: <linux-pci+bounces-44357-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44358-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8D6CD08DE9
-	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 12:23:38 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C36BAD08F5A
+	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 12:41:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 833B6301BE92
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 11:23:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 15ECE3011185
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 11:36:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16E3B350D68;
-	Fri,  9 Jan 2026 11:23:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A62C01946C8;
+	Fri,  9 Jan 2026 11:36:16 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.76.78.106])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DACAD2FD69F;
-	Fri,  9 Jan 2026 11:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.76.78.106
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2502550097C
+	for <linux-pci@vger.kernel.org>; Fri,  9 Jan 2026 11:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767957816; cv=none; b=JN6lqc6bkDrSxFC5P4h8zCP1sLKxhkUTg+1zUcMLZn+pgbmTac0FeAfragL0QIjfpyI0QV7vK97hzpdqxoV+9EB4B7JzBE3W2VH2/7YwllFI9k2C2BO2Z/84l+n9EkFOMfCslg8FOVD5DrdC/RTwTK1smp7X5lMjGnEDy3WMBuM=
+	t=1767958576; cv=none; b=ezHuexEWUbLQOxkgB1BItGpHSh+iYexj5UFDJbtN5Vwi5yVB+qE9NeQDx8sbZ2b4AwQnU+XUUcno8UpxaJ6KHnG+jmFwynXXOd28SlJk7khmrNAdH0r1pVS4Ma6DH2NeZubexbY8pbjOCFNql43B4m/GCX+C+5k6CQUp92n7Fo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767957816; c=relaxed/simple;
-	bh=0stQzMsZmDNiH6Qln6FwiN3pW8ecpJNWONBqh7RF9Lo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=cJbLWN5MK5dkmBNy53Ih1ySAmTBM6+KSgzmRxfkSXg+b4NL7k6+jqNUykAi+0OYTAGYKkmv8w0GnfBy88PhsHKGdQS6i0Usv+eOGeb4rbfBm+A5sTuYxNmLeu09beeHeRjSLuv0P4TJNGCo2vo3tGxys4Ymh69F3F2BNkO2WFI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=13.76.78.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
- ajax-webmail-app2 (Coremail) ; Fri, 9 Jan 2026 19:23:07 +0800 (GMT+08:00)
-Date: Fri, 9 Jan 2026 19:23:07 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
-To: "Manivannan Sadhasivam" <mani@kernel.org>
-Cc: "Bjorn Helgaas" <helgaas@kernel.org>, bhelgaas@google.com,
-	krzk+dt@kernel.org, conor+dt@kernel.org, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, robh@kernel.org, p.zabel@pengutronix.de,
-	jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, christian.bruel@foss.st.com,
-	mayank.rana@oss.qualcomm.com, shradha.t@samsung.com,
-	krishna.chundru@oss.qualcomm.com, thippeswamy.havalige@amd.com,
-	inochiama@gmail.com, Frank.li@nxp.com, ningyu@eswincomputing.com,
-	linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com,
-	ouyanghui@eswincomputing.com, "Niklas Cassel" <cassel@kernel.org>,
-	sumit.kumar@oss.qualcomm.com
-Subject: Re: Re: [PATCH v9 2/2] PCI: eic7700: Add Eswin PCIe host controller
- driver
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2026 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <4f3rhkrlp3jypajh77rohqgpoujivpxq6g3o6vrt6u7u5j2atd@gd5o3vtlhapp>
-References: <20260105223037.GA332950@bhelgaas>
- <3c8d6749.1f49.19b93552d97.Coremail.zhangsenchuan@eswincomputing.com>
- <4f3rhkrlp3jypajh77rohqgpoujivpxq6g3o6vrt6u7u5j2atd@gd5o3vtlhapp>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1767958576; c=relaxed/simple;
+	bh=Uhlkk3LVxRsNvWI7huS9pzK+/qSKKm9V9GgFmplCnCA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QHuqvk7F+uUXaDVpWprJfFu5ynSaXcTzpOXjgYaGsg6ImPyHiChyMv6LITiTdziKwMydFrSITYYXB4fO2HUD+FbVr++E6QxWoZBowtP75mhvgGeebA+oODBFrhmMM79dZPF3erXnKi2O1WUcrR8co3AUJfvlU6+hch/eQZPlAnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from mail.andestech.com (ATCPCS34.andestech.com [10.0.1.134])
+	by Atcsqr.andestech.com with ESMTPS id 609BYdaA080471
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
+	Fri, 9 Jan 2026 19:34:39 +0800 (+08)
+	(envelope-from randolph@andestech.com)
+Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS34.andestech.com
+ (10.0.1.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 9 Jan
+ 2026 19:34:39 +0800
+From: Randolph <randolph@andestech.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>, <robh@kernel.org>,
+        <kwilczynski@kernel.org>, <lpieralisi@kernel.org>, <mani@kernel.org>,
+        <jingoohan1@gmail.com>, <samuel.holland@sifive.com>,
+        <Frank.Li@nxp.com>, <cmirabil@redhat.com>, <randolph.sklin@gmail.com>,
+        <tim609@andestech.com>, Randolph Lin <randolph@andestech.com>
+Subject: [PATCH v2] PCI: dwc: Use multiple ATU regions for large bridge windows
+Date: Fri, 9 Jan 2026 19:34:30 +0800
+Message-ID: <20260109113430.2767264-1-randolph@andestech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <6757aa97.21d8.19ba27ef220.Coremail.zhangsenchuan@eswincomputing.com>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:TQJkCgDnK68b5WBpVoKSAA--.6507W
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAQECBmlf3
-	AofuAADsA
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ATCPCS33.andestech.com (10.0.1.100) To
+ ATCPCS34.andestech.com (10.0.1.134)
+X-DKIM-Results: atcpcs34.andestech.com; dkim=none;
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 609BYdaA080471
 
-K2NjIFN1bWl0Cgo+IE9uIFR1ZSwgSmFuIDA2LCAyMDI2IGF0IDA4OjQzOjExUE0gKzA4MDAsIHpo
-YW5nc2VuY2h1YW4gd3JvdGU6Cj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjkgMi8yXSBQQ0k6
-IGVpYzc3MDA6IEFkZCBFc3dpbiBQQ0llIGhvc3QgY29udHJvbGxlciBkcml2ZXIKPiA+ID4gCj4g
-PiA+IFsrY2MgTmlrbGFzLCBsaXN0IHZzIGFycmF5IG9mIHBvcnRzXQo+ID4gPiAKPiA+ID4gT24g
-TW9uLCBEZWMgMjksIDIwMjUgYXQgMDc6MzI6MDdQTSArMDgwMCwgemhhbmdzZW5jaHVhbkBlc3dp
-bmNvbXB1dGluZy5jb20gd3JvdGU6Cj4gPiA+ID4gRnJvbTogU2VuY2h1YW4gWmhhbmcgPHpoYW5n
-c2VuY2h1YW5AZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gPiA+IAo+ID4gPiA+IEFkZCBkcml2ZXIg
-Zm9yIHRoZSBFc3dpbiBFSUM3NzAwIFBDSWUgaG9zdCBjb250cm9sbGVyLCB3aGljaCBpcyBiYXNl
-ZCBvbgo+ID4gPiA+IHRoZSBEZXNpZ25XYXJlIFBDSWUgY29yZSwgSVAgcmV2aXNpb24gNS45NmEu
-IFRoZSBQQ0llIEdlbi4zIGNvbnRyb2xsZXIKPiA+ID4gPiBzdXBwb3J0cyBhIGRhdGEgcmF0ZSBv
-ZiA4IEdUL3MgYW5kIDQgY2hhbm5lbHMsIHN1cHBvcnQgSU5UeCBhbmQgTVNJCj4gPiA+ID4gaW50
-ZXJydXB0cy4KPiA+ID4gCj4gPiA+ID4gK3N0YXRpYyBpbnQgZWljNzcwMF9wY2llX3BhcnNlX3Bv
-cnQoc3RydWN0IGVpYzc3MDBfcGNpZSAqcGNpZSwKPiA+ID4gPiArCQkJCSAgIHN0cnVjdCBkZXZp
-Y2Vfbm9kZSAqbm9kZSkKPiA+ID4gPiArewo+ID4gPiA+ICsJc3RydWN0IGRldmljZSAqZGV2ID0g
-cGNpZS0+cGNpLmRldjsKPiA+ID4gPiArCXN0cnVjdCBlaWM3NzAwX3BjaWVfcG9ydCAqcG9ydDsK
-PiA+ID4gPiArCj4gPiA+ID4gKwlwb3J0ID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpwb3J0
-KSwgR0ZQX0tFUk5FTCk7Cj4gPiA+ID4gKwlpZiAoIXBvcnQpCj4gPiA+ID4gKwkJcmV0dXJuIC1F
-Tk9NRU07Cj4gPiA+ID4gKwo+ID4gPiA+ICsJcG9ydC0+cGVyc3QgPSBvZl9yZXNldF9jb250cm9s
-X2dldF9leGNsdXNpdmUobm9kZSwgInBlcnN0Iik7Cj4gPiA+ID4gKwlpZiAoSVNfRVJSKHBvcnQt
-PnBlcnN0KSkgewo+ID4gPiA+ICsJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdldCBQRVJTVCMg
-cmVzZXRcbiIpOwo+ID4gPiA+ICsJCXJldHVybiBQVFJfRVJSKHBvcnQtPnBlcnN0KTsKPiA+ID4g
-PiArCX0KPiA+ID4gPiArCj4gPiA+ID4gKwkvKgo+ID4gPiA+ICsJICogVE9ETzogU2luY2UgdGhl
-IFJvb3QgUG9ydCBub2RlIGlzIHNlcGFyYXRlZCBvdXQgYnkgcGNpZSBkZXZpY2V0cmVlLAo+ID4g
-PiA+ICsJICogdGhlIERXQyBjb3JlIGluaXRpYWxpemF0aW9uIGNvZGUgY2FuJ3QgcGFyc2UgdGhl
-IG51bS1sYW5lcyBhdHRyaWJ1dGUKPiA+ID4gPiArCSAqIGluIHRoZSBSb290IFBvcnQuIEJlZm9y
-ZSBlbnRlcmluZyB0aGUgRFdDIGNvcmUgaW5pdGlhbGl6YXRpb24gY29kZSwKPiA+ID4gPiArCSAq
-IHRoZSBwbGF0Zm9ybSBkcml2ZXIgY29kZSBwYXJzZXMgdGhlIFJvb3QgUG9ydCBub2RlLiBUaGUg
-RUlDNzcwMCBvbmx5Cj4gPiA+ID4gKwkgKiBzdXBwb3J0cyBvbmUgUm9vdCBQb3J0IG5vZGUsIGFu
-ZCB0aGUgbnVtLWxhbmVzIGF0dHJpYnV0ZSBpcyBzdWl0YWJsZQo+ID4gPiA+ICsJICogZm9yIHRo
-ZSBjYXNlIG9mIG9uZSBSb290IFBvcnQuCj4gPiA+ID4gKwkgKi8KPiA+ID4gPiArCWlmICghb2Zf
-cHJvcGVydHlfcmVhZF91MzIobm9kZSwgIm51bS1sYW5lcyIsICZwb3J0LT5udW1fbGFuZXMpKQo+
-ID4gPiA+ICsJCXBjaWUtPnBjaS5udW1fbGFuZXMgPSBwb3J0LT5udW1fbGFuZXM7Cj4gPiA+ID4g
-Kwo+ID4gPiA+ICsJSU5JVF9MSVNUX0hFQUQoJnBvcnQtPmxpc3QpOwo+ID4gPiA+ICsJbGlzdF9h
-ZGRfdGFpbCgmcG9ydC0+bGlzdCwgJnBjaWUtPnBvcnRzKTsKPiA+ID4gCj4gPiA+IE5pa2xhcyBy
-YWlzZWQgYW4gaW50ZXJlc3RpbmcgcXVlc3Rpb24gYWJvdXQgd2hldGhlciBhIGxpc3Qgb3IgYW4g
-YXJyYXkKPiA+ID4gaXMgdGhlIGJlc3QgZGF0YSBzdHJ1Y3R1cmUgZm9yIHRoZSBzZXQgb2YgUm9v
-dCBQb3J0czoKPiA+ID4gCj4gPiA+ICAgaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvci9hVnZrbWtk
-NW1XUG14ZWlTQHJ5emVuCj4gPiA+IAo+ID4gPiBNaWdodCBoYXZlIHRvIGl0ZXJhdGUgb3ZlciB0
-aGUgY2hpbGQgbm9kZXMgdHdpY2UgKG9uY2UgdG8gY291bnQsIGFnYWluCj4gPiA+IGZvciBlaWM3
-NzAwX3BjaWVfcGFyc2VfcG9ydCgpKSwgYnV0IG90aGVyd2lzZSB0aGUgYXJyYXkgaXMgcHJvYmFi
-bHkKPiA+ID4gc2ltcGxlciBjb2RlLgo+ID4gCj4gPiBBZnRlciByZWFkaW5nIHBhdGNoJ3MgY29t
-bWVudHMsIGxpc3RzIGFuZCBhcnJheXMgc2VlbSB0byBiZSBnb29kIGNob2ljZXMsCj4gPiBJIGRv
-bid0IGhhdmUgYW55IHBhcnRpY3VsYXJseSBnb29kIGlkZWFzIGZvciB0aGUgdGltZSBiZWluZy4g
-QW55d2F5LCB0aGlzCj4gPiBpcyBhIHZlcnkgZ29vZCBwYXRjaCB0aGF0IHN1cHBvcnRzIG11bHRp
-cGxlIFJvb3QgUG9ydHMgcmVzb2x1dGlvbnMuCj4gPiAKPiAKPiBJIHN0aWxsIHByZWZlciB1c2lu
-ZyBsaXN0cyBmb3IgdGhlIHJlYXNvbnMgbWVudGlvbmVkIGluIHRoYXQgdGhyZWFkLgoKTGlzdHMg
-YW5kIGFycmF5cyBkbyBub3QgaGF2ZSB0b28gb2J2aW91cyBkaXNhZHZhbnRhZ2VzLiBGb3IgbWUs
-IGkgcHJlZmVyCnRvIHVzZSBsaXN0LiBXZSBjYW4gdXNlIHRoZSBzdGFuZGFyZCBrZXJuZWwgbGlu
-a2VkIGxpc3QgQVBJLCB3aGljaCBoYXMgYSAKcmljaCBzZXQgb2YgaGVscGVyIGZ1bmN0aW9ucy4g
-SXQgaXMgZGV2ZWxvcGVyLWZyaWVuZGx5IGFuZCBkb2VzIG5vdCByZXF1aXJlIApmYW1pbGlhcml0
-eSB3aXRoIG90aGVyIEFQSS4KCkluIGFkZGl0aW9uLCBJIHNhdyB0aGF0IHRoZSBkZXZpY2Ugbm9k
-ZXMgImFtZCx2ZXJzYWwyLW1kYi1ob3N0LnlhbWwiIGFuZCAKInNvcGhnbyxzZzIwNDQtcGNpZS55
-YW1sIiBoYXZlIG5vZGVzIHRoYXQgYXJlIG5vdCBQb3J0LiBXaWxsIHRoaXMgYWZmZWN0IAp0aGUg
-bm9kZSB0cmF2ZXJzYWw/CgpLaW5kIHJlZ2FyZHMsClNlbmNodWFuCgo+IAo+ID4gPiAKPiA+ID4g
-PiArCXJldHVybiAwOwo+ID4gPiA+ICt9Cgo=
+From: Samuel Holland <samuel.holland@sifive.com>
+
+Some SoCs may allocate more address space for a bridge window than can
+be covered by a single ATU region. Allow using a larger bridge window
+by allocating multiple adjacent ATU regions.
+
+Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Acked-by: Charles Mirabile <cmirabil@redhat.com>
+Signed-off-by: Charles Mirabile <cmirabil@redhat.com>
+Co-developed-by: Randolph Lin <randolph@andestech.com>
+Signed-off-by: Randolph Lin <randolph@andestech.com>
+---
+Since our changes depend on the original patch and no updated revision
+has been posted by the original author, we reached out to Samuel Holland
+directly and received his approval.I have consolidated the required
+changes and am resending them as v2.
+---
+ .../pci/controller/dwc/pcie-designware-host.c | 72 ++++++++++++++-----
+ 1 file changed, 55 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 372207c33a85..771e71b40f76 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -903,29 +903,49 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+ 
+ 	i = 0;
+ 	resource_list_for_each_entry(entry, &pp->bridge->windows) {
++		resource_size_t res_size;
++
+ 		if (resource_type(entry->res) != IORESOURCE_MEM)
+ 			continue;
+ 
+-		if (pci->num_ob_windows <= ++i)
++		if (pci->num_ob_windows <= i + 1)
+ 			break;
+ 
+-		atu.index = i;
+ 		atu.type = PCIE_ATU_TYPE_MEM;
+ 		atu.parent_bus_addr = entry->res->start - pci->parent_bus_offset;
+ 		atu.pci_addr = entry->res->start - entry->offset;
+ 
+ 		/* Adjust iATU size if MSG TLP region was allocated before */
+ 		if (pp->msg_res && pp->msg_res->parent == entry->res)
+-			atu.size = resource_size(entry->res) -
++			res_size = resource_size(entry->res) -
+ 					resource_size(pp->msg_res);
+ 		else
+-			atu.size = resource_size(entry->res);
++			res_size = resource_size(entry->res);
++
++		while (res_size > 0) {
++			/*
++			 * Make sure to fail probe if we run out of windows
++			 * in the middle and we would end up only partially
++			 * mapping a single resource
++			 */
++			if (pci->num_ob_windows <= ++i) {
++				dev_err(pci->dev, "Exhausted outbound windows mapping %pr\n",
++					entry->res);
++				return -ENOMEM;
++			}
++			atu.index = i;
++			atu.size = MIN(pci->region_limit + 1, res_size);
+ 
+-		ret = dw_pcie_prog_outbound_atu(pci, &atu);
+-		if (ret) {
+-			dev_err(pci->dev, "Failed to set MEM range %pr\n",
+-				entry->res);
+-			return ret;
++			ret = dw_pcie_prog_outbound_atu(pci, &atu);
++			if (ret) {
++				dev_err(pci->dev, "Failed to set MEM range %pr\n",
++					entry->res);
++				return ret;
++			}
++
++			atu.parent_bus_addr += atu.size;
++			atu.pci_addr += atu.size;
++			res_size -= atu.size;
+ 		}
+ 	}
+ 
+@@ -956,20 +976,38 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+ 
+ 	i = 0;
+ 	resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
++		resource_size_t res_start, res_size, window_size;
++
+ 		if (resource_type(entry->res) != IORESOURCE_MEM)
+ 			continue;
+ 
+ 		if (pci->num_ib_windows <= i)
+ 			break;
+ 
+-		ret = dw_pcie_prog_inbound_atu(pci, i++, PCIE_ATU_TYPE_MEM,
+-					       entry->res->start,
+-					       entry->res->start - entry->offset,
+-					       resource_size(entry->res));
+-		if (ret) {
+-			dev_err(pci->dev, "Failed to set DMA range %pr\n",
+-				entry->res);
+-			return ret;
++		res_size = resource_size(entry->res);
++		res_start = entry->res->start;
++		while (res_size >= 0) {
++			/*
++			 * Make sure to fail probe if we run out of windows
++			 * in the middle and we would end up only partially
++			 * mapping a single resource
++			 */
++			if (pci->num_ib_windows <= i) {
++				dev_err(pci->dev, "Exhausted inbound windows mapping %pr\n",
++					entry->res);
++				return -ENOMEM;
++			}
++			window_size = MIN(pci->region_limit + 1, res_size);
++			ret = dw_pcie_prog_inbound_atu(pci, i++, PCIE_ATU_TYPE_MEM, res_start,
++						       res_start - entry->offset, window_size);
++			if (ret) {
++				dev_err(pci->dev, "Failed to set DMA range %pr\n",
++					entry->res);
++				return ret;
++			}
++
++			res_start += window_size;
++			res_size -= window_size;
+ 		}
+ 	}
+ 
+-- 
+2.34.1
+
 
