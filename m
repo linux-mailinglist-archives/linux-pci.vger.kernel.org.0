@@ -1,184 +1,202 @@
-Return-Path: <linux-pci+bounces-44327-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44328-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id B19E3D07787
-	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 07:57:57 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D9E4D0788B
+	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 08:21:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 23CB7300A900
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 06:57:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9157D3047192
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 07:21:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAF0F2E7BDC;
-	Fri,  9 Jan 2026 06:57:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38C4A2EBBB3;
+	Fri,  9 Jan 2026 07:21:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VClQ3CQf"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BoEBzhfi";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="MsvDWh1i"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B00223322;
-	Fri,  9 Jan 2026 06:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCC429B8E0
+	for <linux-pci@vger.kernel.org>; Fri,  9 Jan 2026 07:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767941873; cv=none; b=kPNS1VwcSkU4wvhjTbDc77trjnq3QJkh+MmWbn9Ef3/07c7k/F78XkNn1MCuxBxi2WvX5zJqbf3rKxCMunNce/hhHWxsWPdtU2jIyzmNBGGB+hgWdr0Xgw/Gk3kGHadm603OFC31caL8xE58aV0zUzDsJsRBlSbf5IzhPRMe4+g=
+	t=1767943279; cv=none; b=tpTVHVUeOzA7SJoyBT+S7TM4GyfNr0ulb+aAQReNmXYWW4jqbxRCjZlDXqHIR/isRBWpz2JpKZZaafif9mzYE3bzb/afiUgs9AexTl4JZWecQ24Y1VSgORy8mG5qX4TD5Eo2XXblS4ric/e6hD8oyRG5Y7unMHuTBT1B463KdQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767941873; c=relaxed/simple;
-	bh=FlO0xEN6Jh0wwWYqypG+Z0Vs7hkbD+IyuhpO4YrXzCQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PDqP0ELyoNnpBIn+x4E3341IzJdaNA2BfrKpUpCuTk6qpua6t4zIs1KPKCpQD3u4Afbtg2ephJUY6Q+2xh0FqmNNutuWZYvWywCSeePJPflvYZgM3aXbErxt4JRR821izSAtXh1G9lMS2vYQoksEA11RFlKezbQRSoaVDV7xeuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VClQ3CQf; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767941872; x=1799477872;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FlO0xEN6Jh0wwWYqypG+Z0Vs7hkbD+IyuhpO4YrXzCQ=;
-  b=VClQ3CQfGkYz2cUAQYhtLhOaC10jD10pgCDdqgMwNLC1XE4/G7IN/Tu4
-   G6ABIDkbTvuLGGhjJdPxQeqO4rBgsynvi+p6uqy9zAKGC8+5lkFK7pjS2
-   N9OJPyEiG8gNTJe3vQ+594dhHAKnSR45v0C2yvZCzitu0J/r5QS8dfjSv
-   g5LXKXn2uOdlvXz5FpH4PiF5TOKxUQd/RTlfc3U6KLKRMuLOeTvoBr92S
-   pItLry33fv/DbbV/fBEhY48UFaa7EB50GUH5+sTgRd6jvvTU6ri+Ru8NX
-   viP8hbhSPWvnzy13cWwJRmVP/iO+mpOe3eFG/i39bzb9fYUing8U/sM/t
-   Q==;
-X-CSE-ConnectionGUID: mEJdaGIVSQGhiN8Dogk0dg==
-X-CSE-MsgGUID: JwCCQsntTFyQ4oWKiiAvOg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11665"; a="79619253"
-X-IronPort-AV: E=Sophos;i="6.21,212,1763452800"; 
-   d="scan'208";a="79619253"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 22:57:51 -0800
-X-CSE-ConnectionGUID: YDNB1ScjQaiMHEmYsfgGfg==
-X-CSE-MsgGUID: wqzbjOnoS9+MoeRdKTcM8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,212,1763452800"; 
-   d="scan'208";a="208236178"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa004.fm.intel.com with ESMTP; 08 Jan 2026 22:57:47 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 3E18994; Fri, 09 Jan 2026 07:57:46 +0100 (CET)
-Date: Fri, 9 Jan 2026 07:57:46 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Cc: YehezkelShB@gmail.com, andreas.noever@gmail.com, bhelgaas@google.com,
-	bp@alien8.de, dave.hansen@linux.intel.com,
-	feng.tang@linux.alibaba.com, hpa@zytor.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	lukas@wunner.de, mahesh@linux.ibm.com, mingo@redhat.com,
-	oohall@gmail.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-	tglx@linutronix.de, westeri@kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4] PCI/portdev: Disable AER for Titan Ridge 4C 2018
-Message-ID: <20260109065746.GT2275908@black.igk.intel.com>
-References: <20260108113701.GR2275908@black.igk.intel.com>
- <20260108141804.1086-1-atharvatiwarilinuxdev@gmail.com>
+	s=arc-20240116; t=1767943279; c=relaxed/simple;
+	bh=2iLTHGWWp4AzJ7oli8atcmBSsHfhHA2O0yBWHWcnRNs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=i3XW2QyAvVollnFi7PK7F2Hus3MdUh4zD8rayaC4/U+5thmOj0l+njHg1780xxU0YKEUXgcQWeLOU7NH9K8ip0J1qH9qCQz1DuCySfnEURh+cwojI5mcl1qXlaD+2c5pEPVD+HZWHa2RPv50hyt5ZfNiNh6U42Y/VEIm0PRCJsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BoEBzhfi; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=MsvDWh1i; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6096ETRY3019530
+	for <linux-pci@vger.kernel.org>; Fri, 9 Jan 2026 07:21:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=w8/JF4/tv+7RolLNf/bATg
+	nZLPU/tYClxfiouVTfnE8=; b=BoEBzhfiEu9C8OxNDpUZR1L+WlHQxrirT5yAj9
+	cWij1FcNbWSZPZu2AFk72pzlUpAmaRgyQOUaqzTlDtswEGmPB4aQ61hH49+L1rq9
+	DCwJyqz+ssfW8Ywi39mERZd0atmz9n6qLbioJwZVyEUAP0NQJhgNF/OiTeO1/lwP
+	0Zuxs1/6wsFsQbH8HigyMVdqndX/YiqWBrBW6R2NnUA3NZM/l0LEFOEZAgxXoL5e
+	LqwLU13M2WdLeOj2A6oiLta8HjFmAgjzzekVXZSmSQ+XOPmKwIKbMXzuDFb4tJSb
+	caGpJRlIOzYDBnV6f57LR/wGOzolr2AcxYtloEbC7+lKg3CQ==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bjjk3hqn8-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 09 Jan 2026 07:21:15 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-29f8e6a5de4so43838625ad.2
+        for <linux-pci@vger.kernel.org>; Thu, 08 Jan 2026 23:21:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1767943275; x=1768548075; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w8/JF4/tv+7RolLNf/bATgnZLPU/tYClxfiouVTfnE8=;
+        b=MsvDWh1iwBcZJYg8oQPk73CpBuH+D1yHfgTxGfDWXjmLoqP+GjEjzUqo5K0cCGc746
+         s4LbuYSQdAoqCjZeBwfXxm1C4xLVSl9w2ceOairHNVEBWRJlSXQ2lvT+w2GU1Fund7Nl
+         q2/9pGV1QZw1mkLfdcaovRvZND7JMhOe2HR4h6q/OKl+84SFI7w0LLQjC98jhJzwhcAw
+         pWJSmMNddclC9JNR4DyCNLSm1Aa1owmFnRY/+BztGpQiFPdVg2+jhGzBX6YzEdy7sj1b
+         47g6S3rRFGHbfLBBZcyu7Jd4Nx0KT3KdkEMi7gaQ0xmVjZ3YTbm+Ije2QUG0a5eX0ag9
+         dm0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767943275; x=1768548075;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w8/JF4/tv+7RolLNf/bATgnZLPU/tYClxfiouVTfnE8=;
+        b=fT6ItdTRyhJoRY1SM7O76v+InSW3lc7yHV8jhnNgLTS3z0Ixl8U7c2JID+ZfahcQM9
+         RPOjzDH6pr7SG2gI4OPl83hQFL6md1qoN55BB50bpmXWxLQaFDssUJqWzkcWNwT2OvxT
+         i6oF/JPRpjpDTwueCid5q1vJcM7QEoh84qh2dT9vevlwG3o+Uxs2VcJYHC820Mn4YbLi
+         Bhd1C5joAOGV7YwDSWp9DfMZswsJUZFJgNyQfuzgrCjuZwF5FRW98ujpyw9oPRekWt8G
+         Yqi69l3TDDuJjHhXmxWaJKnDtmxMzm5mQUj7gT4B19mDr96Vv+wjcq1RonMENlpScKjc
+         gxOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVl2XIrLvghiu55GeBYTGqaE8mJzAQlux/3TASypY9LW36QGRAycOuMMIAKbDyUmQ238exRB4ykuVQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy545j+CfzUQdmVT3P2agma/GNsj5JGemzNVixDvoQk9F2mSyQz
+	tqio2PzLa/P1ObMh1P2QSxqYmDn0mkQ/7Tv8tziFSzEZi7oMDkHVmvbFxJ9Ir9H5BN/nbiH2409
+	ZS+b1x/5KdW5Yzi07kk7ejJ9AR7uy06OYGU8m23D8gAG+JvrWds/ydw12cQlNsVjthbZW5gE=
+X-Gm-Gg: AY/fxX4/RO06Fl127vtiEi80GM7spjS4U3V04CtikaLvqvYEqBcNZGqAjh+j6pYk7rx
+	cWVthHrYpJWZ5fGy+ABdzHnq7o6PG6qIIy+5KZxwoVTkpio9klzIG6YBzp1kIeAy11d0sgnps9B
+	DMj+UqPHuNwrsOYGennm74mwtc2dl16ZuXt4xjolSSRvCeAUTHw8PtdgL/34ZVk9eytTHnuhnk6
+	hQeE+2f6P89j8gmTZ41QN6Dw6exMLDRDuIoAfBYuztOSs8Pnu3sSU2wo5tPvOce+4GkqJ2Bh4Mq
+	uT6HeEU1o5ARSqX2B07jCHNiB4tXzE3f5EZzFRE5I1fmfQcUm683DnDI65AN6veOJc81CQHLUri
+	W5I3eXHXMukQIE22BbuwpFCoVQhxtp4KJz9OLsCXftuHQ
+X-Received: by 2002:a17:903:19c8:b0:2a3:1b33:ae30 with SMTP id d9443c01a7336-2a3ee4a653cmr68655995ad.51.1767943275033;
+        Thu, 08 Jan 2026 23:21:15 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFmX85K7l00KBW1kA6f3TQ3NMAR6fIywTS9QpDPhMAiF3kY9dOi0NzcCSQ3m6cZ6XwkDmcefw==
+X-Received: by 2002:a17:903:19c8:b0:2a3:1b33:ae30 with SMTP id d9443c01a7336-2a3ee4a653cmr68655745ad.51.1767943274505;
+        Thu, 08 Jan 2026 23:21:14 -0800 (PST)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-819bb4c85bfsm9510369b3a.30.2026.01.08.23.21.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jan 2026 23:21:14 -0800 (PST)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: [PATCH 0/5] PCI: qcom: Add link retention support
+Date: Fri, 09 Jan 2026 12:51:05 +0530
+Message-Id: <20260109-link_retain-v1-0-7e6782230f4b@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260108141804.1086-1-atharvatiwarilinuxdev@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGGsYGkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1NDAwND3ZzMvOz4otSSxMw83TRDC0NjA3NLE/NUEyWgjoKi1LTMCrBp0bG
+ 1tQDBpc5xXQAAAA==
+X-Change-ID: 20251001-link_retain-f181307947e4
+To: Vinod Koul <vkoul@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1767943270; l=2484;
+ i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=2iLTHGWWp4AzJ7oli8atcmBSsHfhHA2O0yBWHWcnRNs=;
+ b=ieJv0ul7NIphohRIMQNN6yUm+5gKS7whPVUUZtuXY2TeKz3puKJwi0QVvzHH5JsVCQwJ30t9W
+ nWs5yjR+ZeRBqwJ15FQLxGnQ+FCMeD5fWD3NrNzUS04gRCgUgnsQ7eN
+X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Proofpoint-ORIG-GUID: hLnlnu22c93QGDRVjoSv0-6VKKsvvcx6
+X-Authority-Analysis: v=2.4 cv=EazFgfmC c=1 sm=1 tr=0 ts=6960ac6c cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=gKsALX6-UOwXnLYYSJMA:9
+ a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22
+X-Proofpoint-GUID: hLnlnu22c93QGDRVjoSv0-6VKKsvvcx6
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA5MDA1MCBTYWx0ZWRfX8SItShMHaUSD
+ r9BawZaK184eqbmnDP57NVA/yX9a9Zi7W+a0LsaxptKiiKVTRma5I5BKFuZx3ArJLKfnoa6rgzj
+ kSqNCc2S3bRA12A7YIRhEBhFw7oqaTUxI/1vJX6qQqzbppdu6vrm7d08k/YFSUl6DFkh8YBKfCx
+ atDsfJ6B7Rasd8x5GMazsLRAA3e4fwzuosPg7YWZolbwtzd/SByRCzHbeWbZLtel18sPwKtMNkC
+ cZNHll4EMOOyOWl+849bTSho168zMuhO6KLEO3K9F3h/W4Gp+zISYP3SIFk7TG8GM7s+F9E1kA4
+ Eqhi62369lvVGrj7WnnlMEyVo8skVqBgOlpQjMzdzxt39V+3MFcAhyeZcbK4kDLM5xcrqlunw9s
+ vsOrR7YXqmsB/6HDziIemfX7ZkMKKXnxAoy4cMG5DI5E52l9euuOCCOl/VFGfMWNeSxPAmmNHaP
+ Lhk+Bl0Opsd4Q7fUm4A==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-09_02,2026-01-08_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 spamscore=0 adultscore=0 impostorscore=0 priorityscore=1501
+ malwarescore=0 bulkscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2601090050
 
-On Thu, Jan 08, 2026 at 02:18:04PM +0000, Atharva Tiwari wrote:
-> linux mint wouldnt install, because it gives a GRUB error.
-> so i cant compile the kernel, so the lspci is from 6.12:
+This patch series introduces support for retaining the PCIe link across
+bootloader and kernel handoff on Qualcomm platforms, specifically
+X1E80100. The goal is to reduce boot time and avoid unnecessary link
+reinitialization  when the link is already up.
 
-That's fine, thanks!
+We are not enabling link retantion support for all the targets, as there
+is no guarantee that the bootloader on all targets has initialized the
+PCIe link in max supported speed. So we are enabling for hamoa & glymur
+target only for now based on the config flag.
 
-> 00:1c.4/07:00.0 PCI bridge [0604]: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 4C 2018] [8086:15ea] (rev 06) (prog-if 00 [Normal decode])
-> 	Subsystem: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 4C 2018] [8086:0000]
-> 	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> 	Latency: 0
-> 	Interrupt: pin A routed to IRQ 10
-> 	IOMMU group: 14
-> 	Bus: primary=07, secondary=08, subordinate=7c, sec-latency=0
-> 	I/O behind bridge: 5000-8fff [size=16K] [16-bit]
-> 	Memory behind bridge: 81900000-8fafffff [size=226M] [32-bit]
-> 	Prefetchable memory behind bridge: b1800000-bf7fffff [size=224M] [32-bit]
-> 	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
-> 	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
-> 		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-> 	Capabilities: [80] Power Management version 3
-> 		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
-> 		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-> 	Capabilities: [88] MSI: Enable- Count=1/1 Maskable- 64bit+
-> 		Address: 0000000000000000  Data: 0000
-> 	Capabilities: [ac] Subsystem: Intel Corporation JHL7540 Thunderbolt 3 Bridge [Titan Ridge 4C 2018] [8086:0000]
-> 	Capabilities: [c0] Express (v2) Upstream Port, MSI 00
-> 		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-> 			ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ SlotPowerLimit 25W
-> 		DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-> 			RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
-> 			MaxPayload 128 bytes, MaxReadReq 512 bytes
-> 		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-> 		LnkCap:	Port #0, Speed 8GT/s, Width x4, ASPM L1, Exit Latency L1 <2us
-> 			ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
-> 		LnkCtl:	ASPM Disabled; Disabled- CommClk+
-> 			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-> 		LnkSta:	Speed 8GT/s, Width x4
-> 			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
-> 		DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR+
-> 			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-> 			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-> 			 FRS-
-> 			 AtomicOpsCap: Routing-
-> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR+ 10BitTagReq- OBFF Disabled,
-> 			 AtomicOpsCtl: EgressBlck-
-> 		LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer- 2Retimers- DRS-
-> 		LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
-> 			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-> 			 Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
-> 		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete+ EqualizationPhase1+
-> 			 EqualizationPhase2+ EqualizationPhase3+ LinkEqualizationRequest-
-> 			 Retimer- 2Retimers- CrosslinkRes: unsupported
-> 	Capabilities: [50] Capability ID 0x15 [0000]
-> 	Capabilities: [100 v1] Device Serial Number ee-ad-a4-f1-8e-b3-02-00
-> 	Capabilities: [200 v1] Advanced Error Reporting
-> 		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-> 		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-> 		UESvrt:	DLP+ SDES- TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-> 		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-> 		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
-> 		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-> 			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-> 		HeaderLog: 00000000 00000000 00000000 00000000
-> 	Capabilities: [300 v1] Virtual Channel
-> 		Caps:	LPEVC=0 RefClk=100ns PATEntryBits=1
-> 		Arb:	Fixed- WRR32- WRR64- WRR128-
-> 		Ctrl:	ArbSelect=Fixed
-> 		Status:	InProgress-
-> 		VC0:	Caps:	PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
-> 			Arb:	Fixed+ WRR32- WRR64- WRR128- TWRR128- WRR256-
-> 			Ctrl:	Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
-> 			Status:	NegoPending- InProgress-
-> 	Capabilities: [400 v1] Power Budgeting <?>
-> 	Capabilities: [500 v1] Vendor Specific Information: ID=1234 Rev=1 Len=100 <?>
-> 	Capabilities: [600 v1] Vendor Specific Information: ID=8086 Rev=2 Len=04c <?>
-> 	Capabilities: [700 v1] Secondary PCI Express
-> 		LnkCtl3: LnkEquIntrruptEn- PerformEqu-
-> 		LaneErrStat: 0
-> 	Capabilities: [800 v1] Latency Tolerance Reporting
-> 		Max snoop latency: 0ns
-> 		Max no snoop latency: 0ns
-> 	Capabilities: [a00 v1] L1 PM Substates
-> 		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-> 			  PortCommonModeRestoreTime=0us PortTPowerOnTime=10us
-> 		L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
-> 			   T_CommonMode=0us LTR1.2_Threshold=0ns
-> 		L1SubCtl2: T_PwrOn=10us
-> 	Capabilities: [b00 v1] Precision Time Measurement
-> 		PTMCap: Requester:- Responder:- Root:-
-> 		PTMClockGranularity: Unimplemented
-> 		PTMControl: Enabled:+ RootSelected:-
+If the link is up and has link_retain is set to true in the
+ithe driver config data then enable retain logic in the controller.
 
-At least this shows a similar issue we fixed for Barlow Ridge.
+In phy as we already have skip init logic, the phy patch uses same
+assumption that if there is phy no csr and bootloader has done the init
+then driver can skip resetting the phy when phy status indicates it is
+up.
 
-I don't have Titan Ridge host here so cannot try to repro but I wonder if
-you could still try with CONFIG_PCIE_PTM=n and see if that changes
-anything? Of course assuming you get the Linux installation working again.
+Problem:-
+1) As part of late init calls of clock & GENPD(for power domains) the
+framework is disabling all the unvoted resources by that time and also
+there is no sync state to keep them enabled till the probe is completed.
+Due to dependencies with regulators and phy, qcom pcie probe is happening
+after late init which is causing the resources(clocks & power domains) to
+be off which causes the link to go down. To avoid this we need to use these
+two kernel command line arguments (clk_ignore_unused & pd_ignore_unused)
+to skip disabling clocks and gendp power domains as part of late init
+for initial version. Once it is resolved we can avoid those kernel command
+line arguments.
+
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+---
+Krishna Chaitanya Chundru (5):
+      phy: qcom: qmp-pcie: Skip PHY reset if already up
+      PCI: dwc: Add support for retaining link during host init
+      PCI: qcom: Keep PERST# GPIO state as-is during probe
+      PCI: qcom: Add link retention support
+      PCI: qcom: enable Link retain logic for Hamoa
+
+ drivers/pci/controller/dwc/pcie-designware-host.c | 11 ++--
+ drivers/pci/controller/dwc/pcie-designware.h      |  1 +
+ drivers/pci/controller/dwc/pcie-qcom.c            | 62 ++++++++++++++++++++---
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c          | 28 ++++++----
+ 4 files changed, 83 insertions(+), 19 deletions(-)
+---
+base-commit: fc065cadc7ed048bedbb23cb6b7c4475198f431c
+change-id: 20251001-link_retain-f181307947e4
+
+Best regards,
+-- 
+Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+
 
