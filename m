@@ -1,114 +1,114 @@
-Return-Path: <linux-pci+bounces-44366-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44367-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A47FFD0A675
-	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 14:26:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D9360D0A8A2
+	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 15:04:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id EDB9E30C49CE
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 13:13:11 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 805D13015128
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 14:03:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CECC735BDDA;
-	Fri,  9 Jan 2026 13:13:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C814B338F45;
+	Fri,  9 Jan 2026 14:03:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pvZqVfkS";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="GRgZO6pr"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OP7K5wzY";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="DxoGpER6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2B835B159
-	for <linux-pci@vger.kernel.org>; Fri,  9 Jan 2026 13:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74378306486
+	for <linux-pci@vger.kernel.org>; Fri,  9 Jan 2026 14:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767964388; cv=none; b=Ga433HaGUpNVVc9ufOMIiD1EYWrUB1yV3yAmAbctI8HYpXqw3ulpGeGlIW2oDdOJIK9Kbb7zm2RavL5e93qzs4m5D2auBnlJlKj9AdlsKwn/Nf7hyu8Taw6CsLFm2ZW3+I54hsO6a00PGoL11nGGYorhcHaKgtYB2ap3l8SUczc=
+	t=1767967424; cv=none; b=fU6hpXc21GCsxBSLK8W9Suw6TjeLm3eV+vX4Q56meSsv/gCMxhbMrQ/kks00TKTokQ5WK93Yym9ZIEdu1lS2CZDsSDEr/vaGrDQUClxcn/WitqlT5iTczQkajHIs5xDSLjMfsNiIIrSp6BTGVvh+I+v+Yvc4eW/nmYRiB2AuBlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767964388; c=relaxed/simple;
-	bh=n9p+o+jjlXVzSPYGgZ3/XXWIFJwb0MeEoAQo+gx9h4c=;
+	s=arc-20240116; t=1767967424; c=relaxed/simple;
+	bh=RdtMykOjmEtDG9g2kE/0xnXGya/GK8cV0nOc7GKalLg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FQ3kgsXvxKUlzyJjaM9/BrOPJtM+xElNaajKdm038SxEg3/uAxLHzSTYYz6wOLgP72VnDs4y3Bs5/6mAxChulPlP/AKp3gNKrV3drpxJ1WBHWkOQhjIq0/UYb1qXF+NOTYNEHM0MLxSaBP4Zvp2Wyn5Gno7v+zU4XWDuDrtlVdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pvZqVfkS; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=GRgZO6pr; arc=none smtp.client-ip=205.220.180.131
+	 Content-Type:Content-Disposition:In-Reply-To; b=HM+zS82GiwmeflmholU/lBRyy1s4r4vmUyGOq7YWOfJpfaBgu+XrgWVHbV32n9X2nYCGy7b3NqZ9BUwVvFqx9LftqnGZibEzLWZH8ij7z6x3riDCdpwqSqHTKSzKb0iBC5mYGKrvSW/05eIpjQsLHQ0Zcj2cpnSFDUVwqjQJFMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OP7K5wzY; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=DxoGpER6; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60975nwp1953455
-	for <linux-pci@vger.kernel.org>; Fri, 9 Jan 2026 13:13:05 GMT
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6099LYD53324821
+	for <linux-pci@vger.kernel.org>; Fri, 9 Jan 2026 14:03:43 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=HAQ2jETUJIKRwTk2kBD82NUb
-	fvuyEHAaaeAEsNEprpw=; b=pvZqVfkStM/zVnvtVZTSGYW8Lp4Z2Czo4LTEsu1j
-	HYbNDoy+fnjhpkbcprnglJXzh05dZnBYuvkpAiR5bm4dL0XlqcAY9sWRW+a5hnwW
-	hQ01WWV/hY9rSoTI7//f30+OO+REgit4T0O/Rr2mKnfYnCUzVqp8F5adtiDgCsXZ
-	Q/1bIhoZ+kzu2KUUX6VARWhCP23+VUSSv8EDOUo8Nab0BkkA4iXf0IaTSloarI+8
-	+M4MmutgVJlctIbPmzX/+MXmWud0c4ch+8i46YniXUKR5uaRz1M7U5wkfq850dhk
-	RkpMYtuy6Frh0Uv38H7mRhGnr//jr1W4W3ZN9QQ+itXLNg==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bjfdabd9p-1
+	:references:subject:to; s=qcppdkim1; bh=GQs+SI3tCjQDH71MvlNczL4V
+	y/mRHLL8bORmki3/saY=; b=OP7K5wzYi6pRQjj/xiJ6j0JPK4OapKnfj/H+miEd
+	RgoNbXsUBJsDoIvX4uPBSrl7lU4l7rsnDQa/jYwWlY5LAUbe9yNn/x/lcucOPc4T
+	CYWZJo0sVX8FDQ2lessV3P9uUoZjkuphYkZimk2zPO5Wt1F+1KZ68KMsTzU9SO3k
+	Y5UJXL86UQIj571/qQ72weDV9LDBQqFwFONwPSJCebUwGw7/onuw9AXKYqsx0alN
+	p257LKp64ycY2BFwIXg5i1m4AhIcmYw7kqjvaOGjC/PeYSD4+Fw67AGCzmCMteTZ
+	v91N2XRnc+vEj8Qkfx/f1FxDEpl2egWmZUj11WFfeEr+xg==
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com [209.85.167.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bjrd6j15s-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 09 Jan 2026 13:13:05 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8b2217a9c60so952059885a.3
-        for <linux-pci@vger.kernel.org>; Fri, 09 Jan 2026 05:13:05 -0800 (PST)
+	for <linux-pci@vger.kernel.org>; Fri, 09 Jan 2026 14:03:42 +0000 (GMT)
+Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-45074787a6dso7949067b6e.0
+        for <linux-pci@vger.kernel.org>; Fri, 09 Jan 2026 06:03:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1767964385; x=1768569185; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1767967422; x=1768572222; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HAQ2jETUJIKRwTk2kBD82NUbfvuyEHAaaeAEsNEprpw=;
-        b=GRgZO6pr+SqIh3XWREcVDHHT9YlbDVO88VwYw78sCo5XprIB413vE+9xOAxmP04QPk
-         puRwlsT+1lp/58LnJB8mXpZ7Cd3frjCTE38CZXpD/jbe8kwxyzPsFl3mi7qwrahiU9BG
-         Dbh7eN1f4FUB5UMBCX8SBc7mceKfMGmyZNsKw9jUjerrYnN5BiuzKGFueSoaVfOGqsfC
-         EblLjcPpXYqFIynTOaX8VEHxDUtaKX/i0X0M41WTN8aaEd/PRUPw38HFnVvs5cV408NI
-         APjOs6tbfNx07IVeq168uY8fanSBUruw5c4LLAmDdgvb0ZvoMm9FFZ8VJOz5/st98q2B
-         K8qw==
+        bh=GQs+SI3tCjQDH71MvlNczL4Vy/mRHLL8bORmki3/saY=;
+        b=DxoGpER6lHD82/3h9eR50Jmspi7zsgRzzBIzHcDlhlPRlCFkIluzQSOs9CvjukcZpT
+         TvXXjHAz09HnUtOjjbMQNINE50/OFu/4rAdCCaMdTHKrUYLzySb3vgh1TflGf9fwGlDN
+         rJYuyXbCvS41WhXL1vxiOSvve484XjaYKd4c1gTzw1NApDHC5Fo0tdjahA/km7DRimho
+         2sdJxJD1ib12D7NNbAEQpeaJ8f0eYL2Z5cJSAQUa9sPF1gT97VXWwz10OIkWs3Fs2lWB
+         LoSEoEgNEtE8ICOIgCHAtAP5sJqJZS3Z4Sf8d2K18PsXPKOdBjmHt68B9xY7YLaIFTPZ
+         f4Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767964385; x=1768569185;
+        d=1e100.net; s=20230601; t=1767967422; x=1768572222;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HAQ2jETUJIKRwTk2kBD82NUbfvuyEHAaaeAEsNEprpw=;
-        b=qDvNivRiCZkEBvzF5Phpn8Wo9Kr/aRG5JbRSoSGB3kmOq2WNFWrjr66GmTLdQpGLGu
-         OYAzLf+uyQLtlVQrEYQO7mDT8gdUI/+qBoX1ybJh6VtWaTxkeQo1tbMElMNdZ2J1uilc
-         5cfv3+i9al5k28RniDHi6IPK5eGRO5EmVi2k8Wwb402UrUxUbXugIMKWuArDcFDrBFpf
-         3efHtPYmlBFYb/c8MlzvQd+wAB0SZkSW10bmHEhFeWwuJXIjgIkw++crL8XnE2rz93Bf
-         FV44DdlO7D01H0OStXb7PvoMLs8+ZEk5uKY1OTFIReKHgNvQFUmIWNN0IypjfK+RqOG/
-         J37A==
-X-Forwarded-Encrypted: i=1; AJvYcCUpfHos9HASE/sopfyrYbHv32dvF5wptyHMjmVvwCUCfb8x0SagspWsywM61JxhL9WMH01AgAUCbzU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOxDTeVPCp5TRsxKgbduYsFws6cTpnTeEezUqASHhG44KcqDBv
-	msQaoezsdePvUO8Wj1HI9hqbjyCNaPSUjAp/pbgPLkjMCvRH05stp+5fW6fRZcGEh5JtUby4wcy
-	Y1qEy37zH0xd7Zmz/wEuVjlalZgo7jywBDGuZxndm2lKeAozObnacdrPMRIjRG/k=
-X-Gm-Gg: AY/fxX4BsJ4YOSUDylq75jMVtrGJo2DsOnRTjMXOWDD+sd0sQIeX5NcUclMLOA6OQxN
-	09lX1FSZgiwD7pgb8iputPv8x4jKhuhCK59Ywimt7i+oAF+DJs0S3wPBBc8BVYkiDWkfCNVE9I3
-	60waGaVXVucqkU0u+NVuUARWSYJJF4D/syHXmcF2R8ZfsdfZUtgT746EEKT1AGrpW5hSZD3q+4h
-	N2nn6e5vT+RbEPpQFh+iI8RmZ9DLwj1eyah/L3cYXUmkWNiuRzhy8tFU2QrmX+G+Je5hfIgayO+
-	jmZYwvSG9Vz+71jj9CGXSqhMtFlb4t6zQC05bZG7wBCdYBKptBjDxYWSdtTn7dGIzJOYekYipGd
-	eY2Lcr1xlVqodAGqXHRMgVoBErVmt/abmrUqJFSSut4GreDzH+aeNfJaoyGfwnHLEN1H3faqwww
-	+UFesUVzK4uO3YWhYJS6E6bho=
-X-Received: by 2002:a05:620a:4089:b0:8b2:e15c:be60 with SMTP id af79cd13be357-8c389429edfmr1392059385a.88.1767964384758;
-        Fri, 09 Jan 2026 05:13:04 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGwjJitLy9yE1EF3Cff9LL6AgsYBdvt5wBqevXDELT0x/mrye2ZYfBbYvnaBJsQ/NCBbtfEeg==
-X-Received: by 2002:a05:620a:4089:b0:8b2:e15c:be60 with SMTP id af79cd13be357-8c389429edfmr1392051785a.88.1767964384189;
-        Fri, 09 Jan 2026 05:13:04 -0800 (PST)
+        bh=GQs+SI3tCjQDH71MvlNczL4Vy/mRHLL8bORmki3/saY=;
+        b=qhML2CDiMGzozcUKa4p6Eu7UjdTG5bPNGzcCbshpSFrD3/6aQbCaS8JJ/+LB6WGILy
+         cXhrFYshUh0WVB+vvZ7KMYjbF4jwiskqHZytnM7nNhiUW+cf14wo29i7+EKyJu6WMJwj
+         zQkUinSLVZxEB357Gjw1w/o0U5Uw8M2PQ+cSM8P6JL0NPfoF366jh4/u4NHy8NnGBz2P
+         44jBZRgFzU2XlywjsZAFJnslaWMJl1CBDlyhgSKUuPaJf0qphyNZ8j4XGB3aJbYVyXTT
+         HsRMk2heKPXzZU5rfB6BABf2eExmbg04t9wwpD4j6SqBQFkUScdd4oxyAWQaJly/ZnwU
+         JoaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWqbHMN1MyPmbDCJKgfd81a1txemImlshYXd2QP9cgp52LHddJvlXdCRj1iCtIwiD+zP5/6Swl56zY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+EgyKPDvr8wrqjXijukBfarS0ZXduwtUaIRi/nazKrLyTBjAd
+	JiFPp7t64L1f/icUUkCTAWy/CLv1EKQaixOXAFdlacRqIhxqtNVCXTh5jtPxA6uh4cg2gBXFOoQ
+	uU0qHfKo8p7r3m6+Kpn36KOpQZ/Rx6KVuJntpDz90JulI4Uw8O+b1SxSTL27FuWg=
+X-Gm-Gg: AY/fxX6xOudCcCyGiHDF3w37gJlj7Msf412LtOoWPsmeiDU8EK08fiAlShpLlivdlsI
+	v1avlVy7S/SHWr2akAKhDFsQA6Y+wBYPw4KVPrH7cvyvqNYds0A1YLP/jXMcQ2/n06NXjNv00I+
+	gcIQ8FlBfWf4L/7losmeripZrqgTHU0uHlH15w8I7G2QAw23SJs3jZTDaY7EbFk30BxQPQLR363
+	irnxiIl3s916nKXwwLCTEu6uJlyDmJvj8gEWoJEKWoA9IRAa/QaMpkgCdXfVjdnU24gNFM1+jiO
+	GXcrLU64J0ty7F/Z6tHorxH+NG248Dl0StTi3R9VllfwBKndBBG/TjqjoUPF/UiYSJemLr0F5T5
+	MHNL8u6qmoK7BnYbJ9MhDxN8eso+59JsGZ0PZs0Fk2230vXe3T4KUMkPgbmQ0kWntfRWUPtvpji
+	IE2lzShy0XHW20k/A1SOlLx64=
+X-Received: by 2002:a05:6808:528e:b0:450:a9d0:b790 with SMTP id 5614622812f47-45a6beb59efmr5451145b6e.46.1767967421604;
+        Fri, 09 Jan 2026 06:03:41 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFhed6/gC1XQdYPnbtJvfwFpetbHTMNUPdnIOYHCqjQqJOeAFrw62c6frHz86sCY1b039DemA==
+X-Received: by 2002:a05:6808:528e:b0:450:a9d0:b790 with SMTP id 5614622812f47-45a6beb59efmr5451093b6e.46.1767967420959;
+        Fri, 09 Jan 2026 06:03:40 -0800 (PST)
 Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59b65cea522sm2781417e87.3.2026.01.09.05.13.01
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-38302bd92fbsm14199561fa.3.2026.01.09.06.03.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jan 2026 05:13:03 -0800 (PST)
-Date: Fri, 9 Jan 2026 15:13:00 +0200
+        Fri, 09 Jan 2026 06:03:39 -0800 (PST)
+Date: Fri, 9 Jan 2026 16:03:37 +0200
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
-        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-        bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
-        kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
-        kw@linux.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-        qiang.yu@oss.qualcomm.com, quic_krichai@quicinc.com,
-        quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v4 1/3] arm64: dts: qcom: hamoa: Move PHY, PERST, and
- Wake GPIOs to PCIe port nodes and add port Nodes for all PCIe ports
-Message-ID: <xk2har5jvunwc5lhue5j7nunrcnecnljwxz2l7cnxu4sdeyixe@bcflvpgmugyi>
-References: <20260109104504.3147745-1-ziyue.zhang@oss.qualcomm.com>
- <20260109104504.3147745-2-ziyue.zhang@oss.qualcomm.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Vinod Koul <vkoul@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/5] phy: qcom: qmp-pcie: Skip PHY reset if already up
+Message-ID: <cvxvq7f2ku6aq5gbbqav42ckqk2raesbxq2bx46mxvapcza5v4@5zuyjdtn5us2>
+References: <20260109-link_retain-v1-0-7e6782230f4b@oss.qualcomm.com>
+ <20260109-link_retain-v1-1-7e6782230f4b@oss.qualcomm.com>
+ <nmle3y6nb4kjcwstzqxkqzaokeyjoegg6lxtmji57kxwh5snxa@p76v6dr7rgsg>
+ <53f0c45f-7f5c-4abd-af84-cbb82d509872@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -117,66 +117,128 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260109104504.3147745-2-ziyue.zhang@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=Ue1ciaSN c=1 sm=1 tr=0 ts=6960fee1 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+In-Reply-To: <53f0c45f-7f5c-4abd-af84-cbb82d509872@linaro.org>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA5MDEwNCBTYWx0ZWRfX7bhEPowGaf0Y
+ 1jT4BzlQVXP1KTPaKHyU++iin1/hOoOVnYGR3grNl1RqUD0+r+XlEYRiQXmIyeZTMwwNQV1lyxL
+ h6PKU0UpSsmHjXCu5Q4gmzHkkBJ9cCSCoJp7dwVplEs0If5JUpb7e1edosuGhBznUbRtG57Q8gF
+ Vnp0+jsTTp0AzFerN3j0amsEJq2to9KxuykvxJCC43aC8iG+2bsn1mYwTpzS8cruWk/LjPJRBQr
+ RcYzu4iacTB74IVmo1OMkENqOWxjghoVAQ3XIEUqvc5ACJcP1XrnU7cgdf0g5FJbgAYF+I0XlS2
+ 9Mse9G5hWDGX+QChk3KtTpWaSvOF//5UZNSFcJdRjOsXTOP0uOabAg2t8UWFI3vRjYxvH0MuLMf
+ g1uKfxWHWymTS8fvREvvFgPP62lmco65BYX2TfWxEYECyanoN9HKcZDSZ3Jbkpj6LWHVb+s/vCb
+ NAhTMUP8Ae/x779oR+g==
+X-Proofpoint-GUID: HEkR4ZVClNMXRBU7tDhBMUdQBV0TnIOR
+X-Proofpoint-ORIG-GUID: HEkR4ZVClNMXRBU7tDhBMUdQBV0TnIOR
+X-Authority-Analysis: v=2.4 cv=Xtf3+FF9 c=1 sm=1 tr=0 ts=69610abe cx=c_pps
+ a=yymyAM/LQ7lj/HqAiIiKTw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
  a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=EUspDBNiAAAA:8 a=hO0vvW4Z7aDYz2clpJ4A:9 a=CjuIK1q_8ugA:10
- a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-ORIG-GUID: KNbKKdeH75wm5wNUXv9R8qJyYoZkDMlI
-X-Proofpoint-GUID: KNbKKdeH75wm5wNUXv9R8qJyYoZkDMlI
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA5MDA5OCBTYWx0ZWRfXx0rgVC3xzVie
- kDyo8qdmvhpUUSJbM5jYzRRBJrtfWLwH9pFE2FTuoTnJmIoJTE2RGjJAL7gPWYDh6bRsSxPcf+4
- yF13ZbJ+k4ncsJh6kCMgl5RwZXK/PFqIL+b85Crq8MRlunhu24MXxE2tSJ0XFG/t3CvNQWCLaRe
- 1Ce+HHzffe0lBhTNWVGaHiOyU2vZQl4Uz+H/lrg+HfdjKAmnrgLHkR+d7/Gs9ef213ybWAt4YtD
- xa/TUmJwLwXfESjhpuFPA0l7Q/0C3H02aRRpJhbod2+kKjlfO+t2gstPhmu8NUuO5Rxz3l146ig
- Ej5Js5rTdbBoylBatbjxy0Q48PK32+h9eE1NkabUPDMkGGSQV0UpVPpqu/b9gF3w2WZlgPLX/XF
- Xb4QKPqP1oA10X7Plw4TjTnD3L3rZ2AU5eLKUvPB8VK8p6v9K7UUsEmpFqWaiVATfmXoLo2hNlY
- sYaTr1A+6YShIHeJOlQ==
+ a=EUspDBNiAAAA:8 a=lHV2lZlUvwFcl_mAknkA:9 a=CjuIK1q_8ugA:10
+ a=efpaJB4zofY2dbm2aIRb:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2026-01-09_04,2026-01-08_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
- bulkscore=0 suspectscore=0 phishscore=0 spamscore=0 malwarescore=0
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
+ malwarescore=0 adultscore=0 clxscore=1011 suspectscore=0 spamscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
- definitions=main-2601090098
+ definitions=main-2601090104
 
-On Fri, Jan 09, 2026 at 06:45:02PM +0800, Ziyue Zhang wrote:
-> Since describing the PCIe PHY directly under the RC node is now
-> deprecated, move the references to the respective PCIe port nodes,
-> creating them where necessary.Also add port nodes for PCIe5 and PCIe6a
-> with proper PHY references.
+On Fri, Jan 09, 2026 at 02:10:49PM +0100, Neil Armstrong wrote:
+> On 1/9/26 14:08, Dmitry Baryshkov wrote:
+> > On Fri, Jan 09, 2026 at 12:51:06PM +0530, Krishna Chaitanya Chundru wrote:
+> > > If the bootloader has already powered up the PCIe PHY, doing a full
+> > > reset and waiting for it to come up again slows down boot time.
+> > 
+> > How big is the delay caused by it?
+> > 
+> > > 
+> > > Add a check for PHY status and skip the reset steps when the PHY is
+> > > already active. In this case, only enable the required resources during
+> > > power-on. This works alongside the existing logic that skips the init
+> > > sequence.
+> > 
+> > Can we end up in a state where the bootloader has mis-setup the link? Or
+> > the link going bad because of any glitch during the bootup?
 > 
-> And also move the PCIe PERST and wake GPIOs from the controller nodes to
-> the corresponding PCIe port nodes on Hamoa-based platforms:
-> 
->  - x1e001de-devkit
->  - x1e78100-lenovo-thinkpad-t14s
->  - x1e80100-asus-vivobook-s15
->  - x1e80100-asus-zenbook-a14
->  - x1e80100-dell-xps13-9345
->  - x1e80100-lenovo-yoga-slim7x
->  - x1e80100-microsoft-romulus
->  - x1e80100-qcp
-> 
-> Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-> ---
->  arch/arm64/boot/dts/qcom/hamoa.dtsi           | 42 +++++++++++++------
->  arch/arm64/boot/dts/qcom/x1e001de-devkit.dts  | 24 +++++++----
->  .../qcom/x1e78100-lenovo-thinkpad-t14s.dtsi   | 24 +++++++----
->  .../dts/qcom/x1e80100-asus-vivobook-s15.dts   | 14 ++++---
->  .../dts/qcom/x1e80100-asus-zenbook-a14.dts    |  3 ++
->  .../dts/qcom/x1e80100-dell-xps13-9345.dts     | 14 ++++---
->  .../dts/qcom/x1e80100-lenovo-yoga-slim7x.dts  |  8 ++--
->  .../dts/qcom/x1e80100-microsoft-romulus.dtsi  | 19 ++++++---
->  arch/arm64/boot/dts/qcom/x1e80100-qcp.dts     | 21 ++++++----
->  9 files changed, 108 insertions(+), 61 deletions(-)
-> 
+> Good question, can we add a module parameter to force a full reset of the PHY in case
+> the bootloader is buggy ?
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+I'd suggest a simpler thing: if the reset was skipped, reset the PHY in
+case of an error and retry. That's also one of the reasons why I asked
+for skip_reset not to be the persistent value.
 
+> 
+> > 
+> > > 
+> > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > > ---
+> > >   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 28 ++++++++++++++++++----------
+> > >   1 file changed, 18 insertions(+), 10 deletions(-)
+> > > 
+> > > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> > > index 86b1b7e2da86a8675e3e48e90b782afb21cafd77..c93e613cf80b2612f0f225fa2125f78dbec1a33f 100644
+> > > --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> > > +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> > > @@ -3153,6 +3153,7 @@ struct qmp_pcie {
+> > >   	const struct qmp_phy_cfg *cfg;
+> > >   	bool tcsr_4ln_config;
+> > >   	bool skip_init;
+> > > +	bool skip_reset;
+> > >   	void __iomem *serdes;
+> > >   	void __iomem *pcs;
+> > > @@ -4537,6 +4538,9 @@ static int qmp_pcie_init(struct phy *phy)
+> > >   		qphy_checkbits(pcs, cfg->regs[QPHY_START_CTRL], SERDES_START | PCS_START) &&
+> > >   		qphy_checkbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL], cfg->pwrdn_ctrl);
+> > > +	qmp->skip_reset = qmp->skip_init && !qphy_checkbits(pcs, cfg->regs[QPHY_PCS_STATUS],
+> > 
+> > It is definitely not a long-term state, there is no need to store it in
+> > qmp_pcie struct.
+> > 
+> > > +							    cfg->phy_status);
+> > > +
+> > >   	if (!qmp->skip_init && !cfg->tbls.serdes_num) {
+> > >   		dev_err(qmp->dev, "Init sequence not available\n");
+> > >   		return -ENODATA;
+> > > @@ -4560,13 +4564,15 @@ static int qmp_pcie_init(struct phy *phy)
+> > >   		}
+> > >   	}
+> > > -	ret = reset_control_assert(qmp->nocsr_reset);
+> > > -	if (ret) {
+> > > -		dev_err(qmp->dev, "no-csr reset assert failed\n");
+> > > -		goto err_assert_reset;
+> > > -	}
+> > > +	if (!qmp->skip_reset) {
+> > > +		ret = reset_control_assert(qmp->nocsr_reset);
+> > > +		if (ret) {
+> > > +			dev_err(qmp->dev, "no-csr reset assert failed\n");
+> > > +			goto err_assert_reset;
+> > > +		}
+> > > -	usleep_range(200, 300);
+> > > +		usleep_range(200, 300);
+> > > +	}
+> > >   	if (!qmp->skip_init) {
+> > >   		ret = reset_control_bulk_deassert(cfg->num_resets, qmp->resets);
+> > > @@ -4641,10 +4647,12 @@ static int qmp_pcie_power_on(struct phy *phy)
+> > >   	if (ret)
+> > >   		return ret;
+> > > -	ret = reset_control_deassert(qmp->nocsr_reset);
+> > > -	if (ret) {
+> > > -		dev_err(qmp->dev, "no-csr reset deassert failed\n");
+> > > -		goto err_disable_pipe_clk;
+> > > +	if (!qmp->skip_reset) {
+> > > +		ret = reset_control_deassert(qmp->nocsr_reset);
+> > > +		if (ret) {
+> > > +			dev_err(qmp->dev, "no-csr reset deassert failed\n");
+> > > +			goto err_disable_pipe_clk;
+> > > +		}
+> > >   	}
+> > >   	if (qmp->skip_init)
+> > > 
+> > > -- 
+> > > 2.34.1
+> > > 
+> > 
+> 
 
 -- 
 With best wishes
