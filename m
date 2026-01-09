@@ -1,134 +1,123 @@
-Return-Path: <linux-pci+bounces-44321-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44322-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1A7CD072FA
-	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 06:19:11 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A151D0733D
+	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 06:29:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9BD8E3015ED2
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 05:19:10 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id EAF42300C9B5
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 05:29:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE72E42050;
-	Fri,  9 Jan 2026 05:19:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 201CD1F1534;
+	Fri,  9 Jan 2026 05:29:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNkXnJud"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nS+CAAEx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82CF8F48;
-	Fri,  9 Jan 2026 05:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E041D88D7;
+	Fri,  9 Jan 2026 05:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767935949; cv=none; b=qeotQx91jIGa48ZG5B0vsnPfb3KL9vPdxLg9T9q17pcxlBQFme4oGnF1Y3PowcRdTk5goWoNxGcS4NFjkpC97tOT6bjY3BwaIQsxdLdiwebanLbgrDoC8ASZo3n64FkKohe/754QdVroLwG7AcmgkPsXg9D+gaMXC3HKuaNpXqI=
+	t=1767936583; cv=none; b=HCQGmXg6nzwjSmKEl47Hj4P3T5uU8r16E8tihMM+Eq0CRl7QRwH+ad2vS8ZiMA6bftNF/o1wPefYc+C/g4X2Z+No2jX2LY4tN9ExlFJNsZmLygRI/UTNeM6bAaJRkWuxB63paZAY3+HELHUwmFo2sgsWkZueUmGWneoup0XU2s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767935949; c=relaxed/simple;
-	bh=QE+eW1lioXX0IuCt+nHwpU4h82uHQnaRvfgJbPKkX7o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ROMcKV8Xwr3gywicIwXYHNoYz0Cfqa9II+7WUV2AENs4pV3Cz1HG9/Y0zoUS4OPd5j8PIUsDl9KJ8xOJ5onSrdjFZJLrkNmcm5b4yz+yRVIEnyA/8AkSxcU5h26a/7gh208t0zoEkxksHDLYFkYJWbt/9y5Ywsiyr656k1jv3X0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNkXnJud; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE84EC4CEF1;
-	Fri,  9 Jan 2026 05:19:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767935949;
-	bh=QE+eW1lioXX0IuCt+nHwpU4h82uHQnaRvfgJbPKkX7o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JNkXnJudUJDV1z6JVqc2S9K5UxaVQiSyLAnFc6UtdaOqRwrQyTDSXwe8V3ar24iJz
-	 9iw+ZJjGg0GsJRw1VBi8ROBj5xoOpOyFFJJyOTUqp8devgICXE4hcqkMoyENRPAeDC
-	 NzUw3v5Fo7PQkc1KduHq0v9osYQzQsSAkv5GnsbCtJnJCaILCrPnURPxe4OC22cNil
-	 yYgsLgiPblXX2oCBLnj9j3LESKIipeKxaG7H780aZriXuOztQKb8FwDxJZTo0vtHgP
-	 sgP72yv9429H/c10Fcfo3vgfCZa7WopgZEw6qvq+QdZ7gjlpSN/3hSNXQ1S69lxg4p
-	 Yyv+Tme96j8Yg==
-Date: Fri, 9 Jan 2026 10:49:02 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, 
-	linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v2 2/3] Documentation: tracing: Add PCI controller event
- documentation
-Message-ID: <kvdwnbtbk6vac6mt6delxgyowp2g74cmb24kgmn5lqpmrbx66x@vscy2lbgmzj3>
-References: <1767929389-143957-1-git-send-email-shawn.lin@rock-chips.com>
- <1767929389-143957-3-git-send-email-shawn.lin@rock-chips.com>
+	s=arc-20240116; t=1767936583; c=relaxed/simple;
+	bh=+0w56qn2Ot2YzxrPBPeB7CCk+RvW3j6N2Smby0YTKdw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Mtu7SU9BhAIxfmCi2SvaFUhwLcbnv59T8XA6sv1xodRa37fngEOY/UGBswME7+kP9NlIvJENtqKOjY+wvmoJVf+3tBgUFa8RzB+opI8CukyxVlFo2M/QSDys+7A9EmOi9wqIveFdXcDs6Rj6mHEbS7+Cn8JRy3sZ6ip4mDBDsWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nS+CAAEx; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767936582; x=1799472582;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+0w56qn2Ot2YzxrPBPeB7CCk+RvW3j6N2Smby0YTKdw=;
+  b=nS+CAAEx5v6jr1YSg3xTvNcNVmJVE9EZNB0zYu3MGILDe59iSgI4OeCw
+   yHVYNzamEH/m7fIwLBFt64pS0e0XKeH5i5AUg9AbpwVz1EAhNj2upKTEK
+   IuklxRYjxKjy43HFXDE9ylFmL0UKGIZEevnXRkmQreh96bIKYtlwDTTf0
+   PI/jdkaVBSFmgjF8JKS+vSRKiKkN0xtJP/Y7gAw5257eauYVoIFzSFybQ
+   VNkR4WgvuopbZm0w/2/p2neM/yyb6vfZfy5KWcNy43YQNXz4om1xBdDx+
+   G+FUnGwflHMaHyHtKyVGOFSYc2F7TG03coZcx5H92QQGNneDLzMJXYjFk
+   w==;
+X-CSE-ConnectionGUID: iAlYuNv7SiWLlEdwUd8Ytg==
+X-CSE-MsgGUID: Tx7dybmzRsCO4pisD+nZxg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11665"; a="86735674"
+X-IronPort-AV: E=Sophos;i="6.21,211,1763452800"; 
+   d="scan'208";a="86735674"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 21:29:42 -0800
+X-CSE-ConnectionGUID: NEF8T6CpR7q9aW5dvxCVTA==
+X-CSE-MsgGUID: euHBE5q/TUqvH3HA2wDyUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,211,1763452800"; 
+   d="scan'208";a="207918893"
+Received: from indlpbc065983.iind.intel.com ([10.49.120.87])
+  by orviesa004.jf.intel.com with ESMTP; 08 Jan 2026 21:29:39 -0800
+From: George Abraham P <george.abraham.p@intel.com>
+To: bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	giovanni.cabiddu@intel.com,
+	George Abraham P <george.abraham.p@intel.com>
+Subject: [PATCH V2 RESEND] PCI/TPH: Skip Root Port completer check for RC_END devices
+Date: Fri,  9 Jan 2026 10:59:23 +0530
+Message-Id: <20260109052923.1170070-1-george.abraham.p@intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1767929389-143957-3-git-send-email-shawn.lin@rock-chips.com>
 
-On Fri, Jan 09, 2026 at 11:29:48AM +0800, Shawn Lin wrote:
-> The available tracepoint, pcie_ltssm_state_transition, monitors the LTSSM state
-> transistion for debugging purpose. Add description about it.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> ---
-> 
-> Changes in v2: None
-> 
->  Documentation/trace/events-pci-conotroller.rst | 41 ++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/trace/events-pci-conotroller.rst
-> 
-> diff --git a/Documentation/trace/events-pci-conotroller.rst b/Documentation/trace/events-pci-conotroller.rst
-> new file mode 100644
-> index 0000000..8253d00
-> --- /dev/null
-> +++ b/Documentation/trace/events-pci-conotroller.rst
-> @@ -0,0 +1,41 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +======================================
-> +Subsystem Trace Points: PCI Controller
-> +======================================
-> +
-> +Overview
-> +========
-> +The PCI controller tracing system provides tracepoints to monitor controller level
-> +information for debugging purpose. The events normally show up here:
-> +up here:
-> +
-> +	/sys/kernel/tracing/events/pci_controller
-> +
-> +Cf. include/trace/events/pci_controller.h for the events definitions.
-> +
-> +Available Tracepoints
-> +=====================
-> +
-> +pcie_ltssm_state_transition
-> +-----------------------
-> +
-> +Monitors PCIe LTSSM state transition including state and rate information
-> +::
-> +
-> +    pcie_ltssm_state_transition  "dev: %s state: %s rate: %s\n"
-> +
-> +**Parameters**:
-> +
-> +* ``dev`` - PCIe root port name
+Root Complex Integrated Endpoint devices (PCI_EXP_TYPE_RC_END) are
+directly integrated into the root complex and do not have an
+associated Root Port in the traditional PCIe hierarchy. The current
+TPH implementation incorrectly attempts to find and check a Root Port's
+TPH completer capability for these devices.
 
-'PCIe controller instance'
+Add a check to skip Root Port completer type verification for RC_END
+devices, allowing them to use their full TPH requester capability
+without being limited by a non-existent Root Port's completer support.
 
-> +* ``state`` - PCIe LTSSM state
-> +* ``rate`` - PCIe bus speed
+For RC_END devices, the root complex itself acts as the TPH completer,
+and this relationship is handled differently than the standard
+endpoint-to-Root-Port model.
 
-'PCIe data rate'
+Fixes: f69767a1ada3 ("PCI: Add TLP Processing Hints (TPH) support")
+Signed-off-by: George Abraham P <george.abraham.p@intel.com>
+---
+v1->v2:
+  - Added "Fixes:" tag to link the commit hash that introduced the code
+---
+ drivers/pci/tph.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-> +
-> +**Example Usage**:
-> +
-> +    # Enable the tracepoint
-> +    echo 1 > /sys/kernel/debug/tracing/events/pci/pcie_ltssm_state_transition/enable
-
-/sys/kernel/debug/tracing/events/pci_controller/pcie_ltssm_state_transition/enable
-
-- Mani
-
+diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
+index ca4f97be7538..e896b3958281 100644
+--- a/drivers/pci/tph.c
++++ b/drivers/pci/tph.c
+@@ -407,10 +407,13 @@ int pcie_enable_tph(struct pci_dev *pdev, int mode)
+ 	else
+ 		pdev->tph_req_type = PCI_TPH_REQ_TPH_ONLY;
+ 
+-	rp_req_type = get_rp_completer_type(pdev);
++	/* Check if the device is behind a Root Port */
++	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END) {
++		rp_req_type = get_rp_completer_type(pdev);
+ 
+-	/* Final req_type is the smallest value of two */
+-	pdev->tph_req_type = min(pdev->tph_req_type, rp_req_type);
++		/* Final req_type is the smallest value of two */
++		pdev->tph_req_type = min(pdev->tph_req_type, rp_req_type);
++	}
+ 
+ 	if (pdev->tph_req_type == PCI_TPH_REQ_DISABLE)
+ 		return -EINVAL;
 -- 
-மணிவண்ணன் சதாசிவம்
+2.40.1
+
 
