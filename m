@@ -1,317 +1,177 @@
-Return-Path: <linux-pci+bounces-44395-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44396-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B993D0BC9F
-	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 19:05:40 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC943D0BE53
+	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 19:42:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A2C1730146FD
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 18:05:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C9D23306CDB4
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 18:41:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42C635B139;
-	Fri,  9 Jan 2026 18:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81C492D322F;
+	Fri,  9 Jan 2026 18:41:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f3hin1A4"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XoCTjqjf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE61366567
-	for <linux-pci@vger.kernel.org>; Fri,  9 Jan 2026 18:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8989529AB11;
+	Fri,  9 Jan 2026 18:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767981936; cv=none; b=BAAzZiNZ4WOIKsJKRWPI7UVH/EF7A23T4l31xDOozo9ohhFpIHc/lZSTLlWuoByxLwLkEhKXdldNuPlAW3zzZy7nYurDfiK0+VGwmx0IVspWyKHe4vlu95YTrJfD5ttjG9JiDSS2F7rIEHw73SBVaB/fG2qXPVsAbi58TaYyWbw=
+	t=1767984059; cv=none; b=ZwLB0n4XbRVTiYTfFwQJl4RLooi477fkQP0KUW1Qg56RwXZeOBQy/nsQ4sWbhnblra2DB9CgMkhSaCs2x9Aqr2V0WbnHN8FqIGpDa3S9zh4sg6paxd1n9cnF6ll9YLyX3oPnFQiV+4RgMBH0lGfw1Xj6L6HC+0IfWZmRyx4g7Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767981936; c=relaxed/simple;
-	bh=YH8CD7UEKflElLgCCrn2tacds5WGEsZU9+ZREW2NblY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=teqVwfwrWX0jSgHgdmPsA7+XWpgN1k0evNNaO6YTyq2kbaRnL6FD6quIpejexum53Cx1ujkVJ+0GyLEAzkwsSo3eN1K4vlGFj+APBeHW8/l0CMEwByBfqxg6NSA39mDoND1QsRnkk3AzSOJeT45Z4846XcrdvH/YJxazxlo8+6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f3hin1A4; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767981935; x=1799517935;
-  h=date:from:to:cc:subject:message-id;
-  bh=YH8CD7UEKflElLgCCrn2tacds5WGEsZU9+ZREW2NblY=;
-  b=f3hin1A4Hp14BTsXBtJ5V/Np1d41kxCQdlCj2FFLFSrAC/q4SJgr1eFM
-   lDYJPuIyw6agFShNodCTzVxb8tSp2MnKaKYnsQmR6/v/xcWY2oV0DXLRu
-   1q5G2WMWPp5jhJXmAoMriX8tNat0Vh1BdQMj0EoPdegjxfNVlUeZKAmfO
-   35VJk1nMv3o9HXnXSCagV1eh+tLdO20V30zich8W1d38qjUhkRwKxTEtl
-   mkYm1383QN/6JpPI6/s5Z2AeDgcX/Xskld5STRWuBFb7qc60+cxgF1Ppk
-   nn+NJw+TcklRI4kPC2mYAew+ozEnwHTYJZPjv+ihVNNY6SmUsmXv6zd0y
-   w==;
-X-CSE-ConnectionGUID: /eV9pYj3QAOVCMD4yfnTfA==
-X-CSE-MsgGUID: Om4JwVDOT/K21CmQPtxOeg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11666"; a="80085280"
-X-IronPort-AV: E=Sophos;i="6.21,214,1763452800"; 
-   d="scan'208";a="80085280"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 10:05:35 -0800
-X-CSE-ConnectionGUID: OnYCnhgHSLKEfsyCn1Srxg==
-X-CSE-MsgGUID: z8zpUgUcT0i6TAJTkoMUlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,214,1763452800"; 
-   d="scan'208";a="202736567"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 09 Jan 2026 10:05:33 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1veGrb-000000007b2-00EF;
-	Fri, 09 Jan 2026 18:05:31 +0000
-Date: Sat, 10 Jan 2026 02:04:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:p2pdma] BUILD SUCCESS
- cb500023a75246f60b79af9f7321d6e75330c5b5
-Message-ID: <202601100228.EJOn7t6Q-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1767984059; c=relaxed/simple;
+	bh=DVq+iGiTpsM0PMC6tUEaMCxyeanmPJ7pPH4Fuz4eSW4=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=NvMmgqPR338CuBFVqGkTkTHeL583/u68jWoPr7jk+/5LQfYeHVjhewFMbgvEGp6qFhrWaa+gi1NLS33bqNjcyk0exKvbYDuUTFoDqOW0f9HaFsYPFOMfjaKumk/0GEHWpP7DAdfuO653/eO2ZcHKs7O4wp4OCEv530QE+m7aMTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XoCTjqjf; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [192.168.201.246] (unknown [4.194.122.144])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 33C37201AC63;
+	Fri,  9 Jan 2026 10:40:37 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 33C37201AC63
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1767984048;
+	bh=kAjbPy112sQr9pnjoL+tUHNQcw11KZSGpWO64sBkgeE=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=XoCTjqjf+0cTQ6+NtsMwPbX50/W1KMFtwywbDEjthV4ZPrQ3/CmR7oiAwy21nY7rJ
+	 Y2odzPK/fEx7S4+CSSS5DZS4wC4zfamvChcOdOiGiDhUTiF/DzCeaYKBZqseFb96HY
+	 s0nYe32guvtm4GRcc3F0wToZT7BPJK4ayFHtHr/w=
+Message-ID: <162c901f-69a7-420a-9148-a469d5a8ca4f@linux.microsoft.com>
+Date: Fri, 9 Jan 2026 10:40:38 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: Yu Zhang <zhangyu1@linux.microsoft.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ easwar.hariharan@linux.microsoft.com, "kys@microsoft.com"
+ <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+ "mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de"
+ <arnd@arndb.de>, "joro@8bytes.org" <joro@8bytes.org>,
+ "will@kernel.org" <will@kernel.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>,
+ "jacob.pan@linux.microsoft.com" <jacob.pan@linux.microsoft.com>,
+ "nunodasneves@linux.microsoft.com" <nunodasneves@linux.microsoft.com>,
+ "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [RFC v1 1/5] PCI: hv: Create and export hv_build_logical_dev_id()
+To: Michael Kelley <mhklinux@outlook.com>
+References: <20251209051128.76913-1-zhangyu1@linux.microsoft.com>
+ <20251209051128.76913-2-zhangyu1@linux.microsoft.com>
+ <SN6PR02MB41570FC0D7EA1364FB48CD1ED485A@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <SN6PR02MB41570FC0D7EA1364FB48CD1ED485A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git p2pdma
-branch HEAD: cb500023a75246f60b79af9f7321d6e75330c5b5  PCI/P2PDMA: Fix p2pmem_alloc_mmap() warning condition
+On 1/8/2026 10:46 AM, Michael Kelley wrote:
+> From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Monday, December 8, 2025 9:11 PM
+>>
+>> From: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+>>
+>> Hyper-V uses a logical device ID to identify a PCI endpoint device for
+>> child partitions. This ID will also be required for future hypercalls
+>> used by the Hyper-V IOMMU driver.
+>>
+>> Refactor the logic for building this logical device ID into a standalone
+>> helper function and export the interface for wider use.
+>>
+>> Signed-off-by: Easwar Hariharan <easwar.hariharan@linux.microsoft.com>
+>> Signed-off-by: Yu Zhang <zhangyu1@linux.microsoft.com>
+>> ---
+>>  drivers/pci/controller/pci-hyperv.c | 28 ++++++++++++++++++++--------
+>>  include/asm-generic/mshyperv.h      |  2 ++
+>>  2 files changed, 22 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+>> index 146b43981b27..4b82e06b5d93 100644
+>> --- a/drivers/pci/controller/pci-hyperv.c
+>> +++ b/drivers/pci/controller/pci-hyperv.c
+>> @@ -598,15 +598,31 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
+>>
+>>  #define hv_msi_prepare		pci_msi_prepare
+>>
+>> +/**
+>> + * Build a "Device Logical ID" out of this PCI bus's instance GUID and the
+>> + * function number of the device.
+>> + */
+>> +u64 hv_build_logical_dev_id(struct pci_dev *pdev)
+>> +{
+>> +	struct pci_bus *pbus = pdev->bus;
+>> +	struct hv_pcibus_device *hbus = container_of(pbus->sysdata,
+>> +						struct hv_pcibus_device, sysdata);
+>> +
+>> +	return (u64)((hbus->hdev->dev_instance.b[5] << 24) |
+>> +		     (hbus->hdev->dev_instance.b[4] << 16) |
+>> +		     (hbus->hdev->dev_instance.b[7] << 8)  |
+>> +		     (hbus->hdev->dev_instance.b[6] & 0xf8) |
+>> +		     PCI_FUNC(pdev->devfn));
+>> +}
+>> +EXPORT_SYMBOL_GPL(hv_build_logical_dev_id);
+> 
+> This change is fine for hv_irq_retarget_interrupt(), it doesn't help for the
+> new IOMMU driver because pci-hyperv.c can (and often is) built as a module.
+> The new Hyper-V IOMMU driver in this patch series is built-in, and so it can't
+> use this symbol in that case -- you'll get a link error on vmlinux when building
+> the kernel. Requiring pci-hyperv.c to *not* be built as a module would also
+> require that the VMBus driver not be built as a module, so I don't think that's
+> the right solution.
+> 
+> This is a messy problem. The new IOMMU driver needs to start with a generic
+> "struct device" for the PCI device, and somehow find the corresponding VMBus
+> PCI pass-thru device from which it can get the VMBus instance ID. I'm thinking
+> about ways to do this that don't depend on code and data structures that are
+> private to the pci-hyperv.c driver, and will follow-up if I have a good suggestion.
 
-elapsed time: 1562m
+Thank you, Michael. FWIW, I did try to pull out the device ID components out of 
+pci-hyperv into include/linux/hyperv.h and/or a new include/linux/pci-hyperv.h
+but it was just too messy as you say.
 
-configs tested: 226
-configs skipped: 5
+> I was wondering if this "logical device id" is actually parsed by the hypervisor,
+> or whether it is just a unique ID that is opaque to the hypervisor. From the
+> usage in the hypercalls in pci-hyperv.c and this new IOMMU driver, it appears
+> to be the former. Evidently the hypervisor is taking this logical device ID and
+> and matching against bytes 4 thru 7 of the instance GUIDs of PCI pass-thru
+> devices offered to the guest, so as to identify a particular PCI pass-thru device.
+> If that's the case, then Linux doesn't have the option of choosing some other
+> unique ID that is easier to generate and access. 
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Yes, the device ID is actually used by the hypervisor to find the corresponding PCI
+pass-thru device and the physical IOMMUs the device is behind and execute the
+requested operation for those IOMMUs.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.2.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    clang-16
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    clang-22
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20260109    gcc-13.4.0
-arc                   randconfig-002-20260109    gcc-13.4.0
-arc                   randconfig-002-20260109    gcc-9.5.0
-arm                               allnoconfig    gcc-15.1.0
-arm                              allyesconfig    clang-16
-arm                                 defconfig    clang-22
-arm                      footbridge_defconfig    clang-17
-arm                   randconfig-001-20260109    gcc-10.5.0
-arm                   randconfig-001-20260109    gcc-13.4.0
-arm                   randconfig-002-20260109    gcc-13.4.0
-arm                   randconfig-002-20260109    gcc-15.1.0
-arm                   randconfig-003-20260109    gcc-13.4.0
-arm                   randconfig-003-20260109    gcc-8.5.0
-arm                   randconfig-004-20260109    gcc-11.5.0
-arm                   randconfig-004-20260109    gcc-13.4.0
-arm                        shmobile_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-22
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20260109    clang-22
-arm64                 randconfig-001-20260109    gcc-8.5.0
-arm64                 randconfig-002-20260109    clang-22
-arm64                 randconfig-002-20260109    gcc-8.5.0
-arm64                 randconfig-003-20260109    gcc-11.5.0
-arm64                 randconfig-003-20260109    gcc-8.5.0
-arm64                 randconfig-004-20260109    gcc-8.5.0
-csky                             allmodconfig    gcc-15.2.0
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20260109    gcc-8.5.0
-csky                  randconfig-001-20260109    gcc-9.5.0
-csky                  randconfig-002-20260109    gcc-15.1.0
-csky                  randconfig-002-20260109    gcc-8.5.0
-hexagon                          allmodconfig    gcc-15.2.0
-hexagon                           allnoconfig    gcc-15.1.0
-hexagon                             defconfig    clang-22
-hexagon               randconfig-001-20260109    clang-22
-hexagon               randconfig-001-20260109    gcc-8.5.0
-hexagon               randconfig-002-20260109    clang-17
-hexagon               randconfig-002-20260109    gcc-8.5.0
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    gcc-15.1.0
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20260109    clang-20
-i386        buildonly-randconfig-002-20260109    clang-20
-i386        buildonly-randconfig-002-20260109    gcc-14
-i386        buildonly-randconfig-003-20260109    clang-20
-i386        buildonly-randconfig-003-20260109    gcc-14
-i386        buildonly-randconfig-004-20260109    clang-20
-i386        buildonly-randconfig-005-20260109    clang-20
-i386        buildonly-randconfig-005-20260109    gcc-12
-i386        buildonly-randconfig-006-20260109    clang-20
-i386                                defconfig    clang-20
-i386                  randconfig-001-20260109    gcc-14
-i386                  randconfig-002-20260109    gcc-14
-i386                  randconfig-003-20260109    gcc-12
-i386                  randconfig-003-20260109    gcc-14
-i386                  randconfig-004-20260109    gcc-14
-i386                  randconfig-005-20260109    gcc-14
-i386                  randconfig-006-20260109    clang-20
-i386                  randconfig-006-20260109    gcc-14
-i386                  randconfig-007-20260109    gcc-14
-i386                  randconfig-011-20260109    clang-20
-i386                  randconfig-012-20260109    gcc-14
-i386                  randconfig-013-20260109    clang-20
-i386                  randconfig-014-20260109    gcc-14
-i386                  randconfig-015-20260109    clang-20
-i386                  randconfig-016-20260109    clang-20
-i386                  randconfig-017-20260109    clang-20
-loongarch                        allmodconfig    clang-22
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20260109    clang-22
-loongarch             randconfig-001-20260109    gcc-8.5.0
-loongarch             randconfig-002-20260109    gcc-15.1.0
-loongarch             randconfig-002-20260109    gcc-8.5.0
-m68k                             allmodconfig    gcc-15.2.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    clang-16
-m68k                                defconfig    clang-19
-m68k                                defconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.2.0
-microblaze                          defconfig    clang-19
-microblaze                          defconfig    gcc-15.1.0
-mips                             allmodconfig    gcc-15.2.0
-mips                              allnoconfig    gcc-15.1.0
-mips                             allyesconfig    gcc-15.2.0
-mips                           jazz_defconfig    clang-17
-mips                          rm200_defconfig    gcc-15.1.0
-nios2                            alldefconfig    gcc-11.5.0
-nios2                            allmodconfig    clang-22
-nios2                             allnoconfig    clang-22
-nios2                               defconfig    clang-19
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20260109    gcc-8.5.0
-nios2                 randconfig-002-20260109    gcc-8.5.0
-openrisc                         allmodconfig    clang-22
-openrisc                          allnoconfig    clang-22
-openrisc                            defconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.2.0
-parisc                           allmodconfig    gcc-15.2.0
-parisc                            allnoconfig    clang-22
-parisc                           allyesconfig    clang-19
-parisc                              defconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.2.0
-parisc                randconfig-001-20260109    gcc-12.5.0
-parisc                randconfig-002-20260109    gcc-15.1.0
-parisc64                            defconfig    clang-19
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.2.0
-powerpc                           allnoconfig    clang-22
-powerpc                     rainier_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20260109    clang-22
-powerpc               randconfig-002-20260109    clang-22
-powerpc64             randconfig-001-20260109    gcc-15.1.0
-powerpc64             randconfig-002-20260109    gcc-8.5.0
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    clang-22
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                               defconfig    gcc-15.2.0
-riscv                 randconfig-001-20260109    clang-22
-riscv                 randconfig-001-20260109    gcc-14.3.0
-riscv                 randconfig-002-20260109    clang-22
-riscv                 randconfig-002-20260109    gcc-8.5.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.2.0
-s390                                defconfig    clang-22
-s390                                defconfig    gcc-15.2.0
-s390                  randconfig-001-20260109    clang-22
-s390                  randconfig-002-20260109    clang-22
-sh                               allmodconfig    gcc-15.2.0
-sh                                allnoconfig    clang-22
-sh                               allyesconfig    clang-19
-sh                                  defconfig    gcc-15.1.0
-sh                          lboxre2_defconfig    gcc-15.1.0
-sh                          r7780mp_defconfig    gcc-15.1.0
-sh                    randconfig-001-20260109    clang-22
-sh                    randconfig-001-20260109    gcc-14.3.0
-sh                    randconfig-002-20260109    clang-22
-sh                    randconfig-002-20260109    gcc-13.4.0
-sparc                             allnoconfig    clang-22
-sparc                               defconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.2.0
-sparc                 randconfig-001-20260109    gcc-14.3.0
-sparc                 randconfig-001-20260109    gcc-8.5.0
-sparc                 randconfig-002-20260109    gcc-13.4.0
-sparc                 randconfig-002-20260109    gcc-14.3.0
-sparc64                          allmodconfig    clang-22
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20260109    gcc-14.3.0
-sparc64               randconfig-001-20260109    gcc-8.5.0
-sparc64               randconfig-002-20260109    clang-20
-sparc64               randconfig-002-20260109    gcc-14.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-15.2.0
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260109    gcc-14
-um                    randconfig-001-20260109    gcc-14.3.0
-um                    randconfig-002-20260109    gcc-14
-um                    randconfig-002-20260109    gcc-14.3.0
-um                           x86_64_defconfig    clang-22
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-22
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20260109    clang-20
-x86_64      buildonly-randconfig-001-20260109    gcc-14
-x86_64      buildonly-randconfig-002-20260109    gcc-14
-x86_64      buildonly-randconfig-003-20260109    gcc-14
-x86_64      buildonly-randconfig-004-20260109    gcc-14
-x86_64      buildonly-randconfig-005-20260109    gcc-14
-x86_64      buildonly-randconfig-006-20260109    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20260109    clang-20
-x86_64                randconfig-001-20260109    gcc-14
-x86_64                randconfig-002-20260109    clang-20
-x86_64                randconfig-002-20260109    gcc-14
-x86_64                randconfig-003-20260109    gcc-14
-x86_64                randconfig-004-20260109    clang-20
-x86_64                randconfig-004-20260109    gcc-14
-x86_64                randconfig-005-20260109    clang-20
-x86_64                randconfig-005-20260109    gcc-14
-x86_64                randconfig-006-20260109    gcc-14
-x86_64                randconfig-011-20260109    gcc-12
-x86_64                randconfig-011-20260109    gcc-14
-x86_64                randconfig-012-20260109    clang-20
-x86_64                randconfig-012-20260109    gcc-14
-x86_64                randconfig-013-20260109    gcc-14
-x86_64                randconfig-014-20260109    gcc-14
-x86_64                randconfig-015-20260109    gcc-12
-x86_64                randconfig-015-20260109    gcc-14
-x86_64                randconfig-016-20260109    gcc-14
-x86_64                randconfig-071-20260109    clang-20
-x86_64                randconfig-071-20260109    gcc-14
-x86_64                randconfig-072-20260109    clang-20
-x86_64                randconfig-073-20260109    clang-20
-x86_64                randconfig-073-20260109    gcc-14
-x86_64                randconfig-074-20260109    clang-20
-x86_64                randconfig-074-20260109    gcc-14
-x86_64                randconfig-075-20260109    clang-20
-x86_64                randconfig-075-20260109    gcc-14
-x86_64                randconfig-076-20260109    clang-20
-x86_64                randconfig-076-20260109    gcc-12
-x86_64                               rhel-9.4    gcc-14
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    gcc-14
-x86_64                    rhel-9.4-kselftests    gcc-14
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    clang-22
-xtensa                           allyesconfig    clang-22
-xtensa                randconfig-001-20260109    gcc-12.5.0
-xtensa                randconfig-001-20260109    gcc-14.3.0
-xtensa                randconfig-002-20260109    gcc-14.3.0
+> There's a uniqueness issue with this kind of logical device ID that has been
+> around for years, but I had never thought about before. In hv_pci_probe()
+> instance GUID bytes 4 and 5 are used to generate the PCI domain number for
+> the "fake" PCI bus that the PCI pass-thru device resides on. The issue is the
+> lack of guaranteed uniqueness of bytes 4 and 5, so there's code to deal with
+> a collision. (The full GUID is unique, but not necessarily some subset of the
+> GUID.) It seems like the same kind of uniqueness issue could occur here. Does
+> the Hyper-V host provide any guarantees about the uniqueness of bytes 4 thru
+> 7 as a unit, and if not, what happens if there is a collision? Again, this
+> uniqueness issue has existed for years, so it's not new to this patch set, but
+> with new uses of the logical device ID, it seems relevant to consider.
+ 
+Thank you for bringing that up, I was aware of the uniqueness workaround but, like you,
+I had not considered that the workaround could prevent matching the device ID with the
+record the hypervisor has of the PCI pass-thru device assigned to us. I will work with
+the hypervisor folks to resolve this before this patch series is posted for merge.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Easwar (he/him)
 
