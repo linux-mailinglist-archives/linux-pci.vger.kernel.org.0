@@ -1,155 +1,125 @@
-Return-Path: <linux-pci+bounces-44346-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44348-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43BEFD082AB
-	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 10:24:08 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20B98D0844A
+	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 10:40:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 98C17300644A
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 09:23:29 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 07F053008C9D
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 09:40:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B29D132FA3D;
-	Fri,  9 Jan 2026 09:23:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14E2731AF3D;
+	Fri,  9 Jan 2026 09:40:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IkZmnFp0";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="aACiz/7c"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="ck4Vcf/w"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8713590B5
-	for <linux-pci@vger.kernel.org>; Fri,  9 Jan 2026 09:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9709D2ED15F;
+	Fri,  9 Jan 2026 09:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.224
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767950608; cv=none; b=aRxL/Y2K4vvJJk4yho7MLiceBOPAFR2rrn+Qcgsfxtl/fN8Ov/vpjCHCoztpcxSy57TPGi3MvmPE62HgKU501cSTweqTunoadvkF3inf67cDizVeAhb5vhB9VuWx0coFS2IsfOoWUVMttjq17M1LZhEadH/5d/PEJjjj2nahnLo=
+	t=1767951613; cv=none; b=o/REVyoLD6E8qW7S4eygQ1OJDGlMYhixsaRGErlNfWnrioA7aMxrhJ1aONM6rt/YwXbrFWY/dOCqBPiAbgGGae4VfppdudY/YSYbB9XbjNgGPx7ePK5obnlbMcToPnKPKmBdPKEy4+HF3w/3GQVvyM83xluZH9LNdMg+IZvk8YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767950608; c=relaxed/simple;
-	bh=quyxddBCJbdfnj8ezjVDIXfGNJkfQjaJBRecYk19f+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rQ1FZrlhz8G3DuCNR+Kv1iAxYXJoCx4+D20uUt4J115/b4ox8eRP4l3BZp68flXAcAPoexnyRZ+CWFwe1IO0v6IMau51rP0H4Hen0Zyy1Lq2ZpAoQHiDqjUPbQmJInp9G0qSCWRAWr0PonRZrybZNFDjBU1qLIfsd/4esRJGPKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IkZmnFp0; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=aACiz/7c; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6091qTIp3324889
-	for <linux-pci@vger.kernel.org>; Fri, 9 Jan 2026 09:23:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=gbUKEx6h2/06Jgs052NbO21m
-	OGxgS4o/wlcmmWs0HKU=; b=IkZmnFp0ssSEw2M68/WhsH1X67QSMzV/C5LhtGce
-	qKCNDI65tk0PMOFBkqxJWqBWqgfEBi2RQWbc4paLZz+fV3alGtMUM0PJcMOJUu9w
-	q1Q/z0wmdH45Wyw5A2eVXDTkUaj3neguS08kB2okCa0jn9cYqC7g62A9XsiyIpr8
-	pTH9eYnf0AVV3/nWDrGpb94Aqe2Dbf3mNpFvNdNIui5eJtRGtOZ5+Wcw7uFi+FsE
-	eoDYqNCIgmSnjOt+SRW34+KslU7aIOuCNEILlNBk7sk9/uGivfRsa/YysrDni87a
-	DfHdhmnRQOKq9/MIa4ExaCIaFjR0zGRkMB4So9NfuuEAoQ==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bjrd6h7gd-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 09 Jan 2026 09:23:07 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8b19a112b75so983580685a.1
-        for <linux-pci@vger.kernel.org>; Fri, 09 Jan 2026 01:23:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1767950586; x=1768555386; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gbUKEx6h2/06Jgs052NbO21mOGxgS4o/wlcmmWs0HKU=;
-        b=aACiz/7cnFp+MDLFFX4jFooYyEvVK+apFyKE72gOK1dIt/0ozDIFrT8+KpqrEcYQ7n
-         GpyopJQaCSs93c+KQsD7xFjW7X6vC3JwchOPSUbS4iqpUURwW2fqNv3X6kp+S7EncFCU
-         0PFAJsdwURM6NANhoTeNu6DrrWWQbD9Ylm8aKTFTPFsLa9b8fruoJby86soiFtHM5jZy
-         18C93q/M+S27FFAEF1YDwpytGjCAzqKEN+5XYZXfZQvarPjf/aMWJ4ZkOYjucIGiskMj
-         qJmdryU1S5S6MVwDMgBG5vCSk0qWmeCws+EINA7FxmjWuKLidsfn8ZioNAW2f7bfYUmT
-         lyTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767950586; x=1768555386;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gbUKEx6h2/06Jgs052NbO21mOGxgS4o/wlcmmWs0HKU=;
-        b=JpPhK5V3obAjQetfmO8V5N1haNsZ+Yao9P+/XoqJnKS9wavGnhjiKffBBPVBA0P1xq
-         IU6TTZooflvFcU0Si+MRSpYfF814ckdmP08o4/dg95pj1AYmz2XaIePPfPsw1dPF98Zq
-         J06fDlkrJXdp4v7vAqXoRcJR9NtcnXQmdFxhzQSKOImH7IGXGGHaydyYRPQg6nZZXXDu
-         KZPkFoa6I/YSYNN0c7dn/jJN3bqtK3iaGn8bWdoiJ2Wxfqw/DpCbyDBdoTdDrAn+/0CQ
-         znA79bUwY+B7Y3vKNsd1gUS86okXv+9YL607y5s/IKLJwRMzmSpe9LaCpnCkD8J0rVYc
-         bWXw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4X2U3R3JzB4lymQawLOc5YTktnl3jG7t948ngKOKc/weAKihuflN5yIgKIaVlEhyYWyCtmKzYoB4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXsW9SK7kJD8Js45CHrXjCUXTQ2ArvFtK3Yr3A5Jb6qTrAyGXL
-	TLpTiEXZpfnm0Y4QNKQQpxUZs3ijvqgbeZ2EGMNBBVA8sh8bKBEHXDSy9JJ+D6nr7xhvqspBG1Q
-	smsVsdIy4izqH+fVCiqO/CnsJtdIFsXg2ksAwF4jMDV8lUl1UFOeJqoZ0WEHVZXY=
-X-Gm-Gg: AY/fxX6pnm6KjTaXoT7oS3SEKAQwV3Omsc6G3t1gVNoDsUm+MMJpCDsuuwUME9c9H9I
-	k62TjIZWzEvorjEQTNdvZkHFme3DNKIwv74OSDdPvsCAhLwAToGJJTg2YSTloAtqVmjzqexyxi+
-	I/wR3ZRJtSlX8hZv6ljkVCvAKXt6o9BErJgNDmcaey+aepyJVeFe0pqzxH+XLt/kjkm5QQhQ/U4
-	FRJoWd1G7XLSAlokSc0MBh5ttc5wN5GEhP3yc6zVPYdYzRHlnoifXEoMVJUPZfsoFnAgcPyKhzN
-	SByjntkxhJQU+mgFY2pLDrLKbIlVSHumY6DoRqJA0gZgrMcZIt80yU1zRQ8quFL+3Frvaxs98FE
-	reZ704bppS9bqDlPtAdLw
-X-Received: by 2002:a05:620a:410e:b0:8c0:d16b:b0a7 with SMTP id af79cd13be357-8c38938dc0amr1108936885a.2.1767950586024;
-        Fri, 09 Jan 2026 01:23:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHDhJ4s/J+LZvq5xGGHQag3lnHCUa0+1Z4v9U1tVSQgONvR2YU99W2TOhbQzi8LO6OYwTHnkw==
-X-Received: by 2002:a05:620a:410e:b0:8c0:d16b:b0a7 with SMTP id af79cd13be357-8c38938dc0amr1108934785a.2.1767950585336;
-        Fri, 09 Jan 2026 01:23:05 -0800 (PST)
-Received: from oss.qualcomm.com ([86.121.7.10])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b842a2340a2sm1072317666b.5.2026.01.09.01.23.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jan 2026 01:23:04 -0800 (PST)
-Date: Fri, 9 Jan 2026 11:23:03 +0200
-From: Abel Vesa <abel.vesa@oss.qualcomm.com>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/5] phy: qcom: qmp-pcie: Skip PHY reset if already up
-Message-ID: <3h7xe2k7iis4mmowvcq5mghneyyk64epcs2hg7fjrpowl6omfu@ltf6vi6mtx36>
-References: <20260109-link_retain-v1-0-7e6782230f4b@oss.qualcomm.com>
- <20260109-link_retain-v1-1-7e6782230f4b@oss.qualcomm.com>
+	s=arc-20240116; t=1767951613; c=relaxed/simple;
+	bh=T2zOYN70bbCbQXXbh/evuuNBHsFRh5jSZVQh4gWJWkE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JwYMhtVcvHjSawSA6w5GI/31yF7mbho7zWMO2BEsXnWOvyz3pQcySSxsspajhjV2xY+y+UW90dkicSM2BCQb2CdcMhS9CmgSPW3d3xREyV8j+mI3xFr2YrKXKJFuNBWanzlbwpecQzfZCJgU8BjMPLBkalWr5xfOPn9UR4+CT08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=ck4Vcf/w; arc=none smtp.client-ip=113.46.200.224
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=8JsXyhMNbwnp+YKrNedE1boMnhXYzusZORR+vsFIB+s=;
+	b=ck4Vcf/wBGjodRgEDMjv2eTZbM4M+czB/KI30+lZcOl+JgyUgVv7ySutKavAf8d/viirJeX1M
+	w8BMcV2QUXL6Z30OPXTwKDB9brewyT+tRtPz9pUmcXDVF1yZmnzHMO7fwhXK57RZWIZHQPOAtsG
+	2BQki4zw8ShNmo4C0MFM3CM=
+Received: from mail.maildlp.com (unknown [172.19.163.127])
+	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4dnc9b6L6mz1cyQq;
+	Fri,  9 Jan 2026 17:36:51 +0800 (CST)
+Received: from kwepemr500012.china.huawei.com (unknown [7.202.195.23])
+	by mail.maildlp.com (Postfix) with ESMTPS id F2BB7402AB;
+	Fri,  9 Jan 2026 17:40:07 +0800 (CST)
+Received: from [100.103.109.72] (100.103.109.72) by
+ kwepemr500012.china.huawei.com (7.202.195.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 9 Jan 2026 17:40:07 +0800
+Message-ID: <422df374-2afd-48c0-be73-834ce95fb55c@huawei.com>
+Date: Fri, 9 Jan 2026 17:40:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260109-link_retain-v1-1-7e6782230f4b@oss.qualcomm.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA5MDA2NSBTYWx0ZWRfX3QTrL14CHiE0
- 8VkULxxUJXCM/Fs2EzXIKqkFs4waf9uzA/yInlZCFQcueWoMICg+NZKYeN8Jm0Z8ddFlhGy3eKy
- nY9vLXdlFC3+N64YCX8bPcnCS5KI1ph+Y0nNcsZblbOLTX1qawk14ezH4QmIzi6hXnbNrIlE/aF
- doZ/DVFH6KiFpQ9etNPh+k5hWBlglhcZaRxXz8PVOz82Pk9kE0cTw2/d97yXgn6lilNDYYLxiyb
- gesd2WdPRWY+oc6GuPLfwpvdgs4WrbVXd2lWmu9sPCyWRELZrCASANmz3ibtFoii9MJ5a+WStqG
- 03NGPvnWD7SjIHTvolWMaLM7Jr9wAjsAOZsDZY2aRRlPf2RfI3xYELumCdYbpR3l7fVuKZkvB1P
- d1TBDfc6S+zzsVef6TFVIPtAAnrGTnG0oXjP4mPaIz0PTAFUiUvwNiPfp38DzAO0IS3WNvBWW6e
- HGwBK3wW4P4CTLYY9KQ==
-X-Proofpoint-GUID: lcspUuYfjewydZ8-vieEqvMBu-s9l2YO
-X-Proofpoint-ORIG-GUID: lcspUuYfjewydZ8-vieEqvMBu-s9l2YO
-X-Authority-Analysis: v=2.4 cv=Xtf3+FF9 c=1 sm=1 tr=0 ts=6960c8fb cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=hZ5Vz02otkLiOpJ15TJmsQ==:17
- a=kj9zAlcOel0A:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=Q_-NVal78LaQRGvTYVYA:9
- a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-09_02,2026-01-08_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- malwarescore=0 adultscore=0 clxscore=1011 suspectscore=0 spamscore=0
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
- definitions=main-2601090065
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] PCI/sysfs: Prohibit unaligned access to I/O port
+ on non-x86
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: David Laight <david.laight.linux@gmail.com>, <bhelgaas@google.com>,
+	<linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	<liuyongqiang13@huawei.com>
+References: <20260108015944.3520719-1-duziming2@huawei.com>
+ <20260108015944.3520719-4-duziming2@huawei.com>
+ <20260108085611.0f07816d@pumpkin>
+ <98ecea9b-ca2f-4ef7-9f1a-848faa9c92a3@huawei.com>
+ <0d57b385-410f-3296-ca8b-8b1370a886b1@linux.intel.com>
+From: duziming <duziming2@huawei.com>
+In-Reply-To: <0d57b385-410f-3296-ca8b-8b1370a886b1@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemr500012.china.huawei.com (7.202.195.23)
 
-On 26-01-09 12:51:06, Krishna Chaitanya Chundru wrote:
-> If the bootloader has already powered up the PCIe PHY, doing a full
-> reset and waiting for it to come up again slows down boot time.
-> 
-> Add a check for PHY status and skip the reset steps when the PHY is
-> already active. In this case, only enable the required resources during
-> power-on. This works alongside the existing logic that skips the init
-> sequence.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 
-Reviewed-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
+在 2026/1/9 15:21, Ilpo Järvinen 写道:
+> On Thu, 8 Jan 2026, duziming wrote:
+>
+>> 在 2026/1/8 16:56, David Laight 写道:
+>>> On Thu, 8 Jan 2026 09:59:44 +0800
+>>> Ziming Du <duziming2@huawei.com> wrote:
+>>>
+>>>> From: Yongqiang Liu <liuyongqiang13@huawei.com>
+>>>>
+>>>> Unaligned access is harmful for non-x86 archs such as arm64. When we
+>>>> use pwrite or pread to access the I/O port resources with unaligned
+>>>> offset, system will crash as follows:
+>>>>
+>>>> Unable to handle kernel paging request at virtual address fffffbfffe8010c1
+>>>> Internal error: Oops: 0000000096000061 [#1] SMP
+>>>> Call trace:
+>>>>    _outw include/asm-generic/io.h:594 [inline]
+>>>>    logic_outw+0x54/0x218 lib/logic_pio.c:305
+>>>>    pci_resource_io drivers/pci/pci-sysfs.c:1157 [inline]
+>>>>    pci_write_resource_io drivers/pci/pci-sysfs.c:1191 [inline]
+>>>>    pci_write_resource_io+0x208/0x260 drivers/pci/pci-sysfs.c:1181
+>>>>    sysfs_kf_bin_write+0x188/0x210 fs/sysfs/file.c:158
+>>>>    kernfs_fop_write_iter+0x2e8/0x4b0 fs/kernfs/file.c:338
+>>>>    vfs_write+0x7bc/0xac8 fs/read_write.c:586
+>>>>    ksys_write+0x12c/0x270 fs/read_write.c:639
+>>>>    __arm64_sys_write+0x78/0xb8 fs/read_write.c:648
+>>>>
+>>>> Powerpc seems affected as well, so prohibit the unaligned access
+>>>> on non-x86 archs.
+>>> I'm not sure it makes any real sense for x86 either.
+>>> IIRC io space is just like memory space, so a 16bit io access looks the
+>>> same as two 8bit accesses to an 8bit device (some put the 'data fifo' on
+>>> addresses 0 and 1 so the code could use 16bit io accesses to speed things
+>>> up).
+>>> The same will have applied to misaligned accesses.
+>>> But, in reality, all device registers are aligned.
+>>>
+>>> I'm not sure EFAULT is the best error code though, EINVAL might be better.
+>>> (EINVAL is returned for other address/size errors.)
+>>> EFAULT is usually returned for errors accessing the user buffer, a least
+>>> one unix system raises SIGSEGV whenever EFAULT is returned.
+>>>
+>> Just to confirm: should all architectures prohibit unaligned access to device
+>> registers?
+> In my opinion, yes, also x86 should prohibit it (like I already
+> expressed but you ignored that comment until now).
+Oops,  I didn’t quite understand your opinion earlier :(
+>
 
