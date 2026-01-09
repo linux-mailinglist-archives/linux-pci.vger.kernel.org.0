@@ -1,192 +1,142 @@
-Return-Path: <linux-pci+bounces-44355-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44356-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F3C2D08D88
-	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 12:15:37 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C01ED08DD7
+	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 12:22:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 30EE03012DE1
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 11:14:13 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id EC95D301B30B
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 11:22:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EE0D33C188;
-	Fri,  9 Jan 2026 11:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ARHEqsJB";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="PI0UByHo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6A8E33CE91;
+	Fri,  9 Jan 2026 11:22:26 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2118333AD92
-	for <linux-pci@vger.kernel.org>; Fri,  9 Jan 2026 11:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [207.46.229.174])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0A7433C53A;
+	Fri,  9 Jan 2026 11:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.46.229.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767957252; cv=none; b=UkaLi2XUBod9obc2kpDOhYrlUyYpibTqlZBD06Tw+Bins33K/gJfmLl1v8jGlYCF6n6ufjjxc5vXoavtJ/PEPh+rA6MqWE4hNFxLbRC3mTB09Bn7jjEsuM1fA1V+566oX4GLdmzot4yqk1Kj2nCOxeDHcC11vsWya5qznoAiCD0=
+	t=1767957746; cv=none; b=l5+kh/zxu2bvFrfGpZ2a+iCPZYnRT9RXgx6ddmrIGldBJwRqaT6W31ZqcmOXpYLJpajPVBnPOaaqENx6D747/WEqSuZy/DhamP9pXTagKAq8TF4TVNMY43/FmOpjULpp07lPMJeyHw7JWwE1+5yRgYlV+sBGQi3SRpNB1QtVsPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767957252; c=relaxed/simple;
-	bh=hVtNJAfAuRuf73LQMtg59ts4s2e//TKY93Vcy8rZE+s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NCRBaTdbyBQqumjEqS9nOiTCg4QhHdhV4J4gaT8p1EizyILnsEro3tzwfB1NhWWtUQBTa9TOERf+iDn79HTtMDsh2+T5/fbaD7d0fqZnIfu31FAXmtB/xxIyQKRYT2S1Rlb+BVuNUQpdkpEMTG9bIc5z9dbJXavRqe4q3usu5+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ARHEqsJB; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=PI0UByHo; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6098VF3j3728380
-	for <linux-pci@vger.kernel.org>; Fri, 9 Jan 2026 11:14:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	pbGsyEjb9GLUxR/KE7Zt2yh4eaMOiAA5kJ01ApCC77w=; b=ARHEqsJBnJaq2osq
-	Z87MjGzAlY18jovCmDfmtA3z3cSuu0Fr70TN1CKh6m9jWM9CFxn7mw4SDL9Hlg0a
-	l3EvtqvtYViUB3lbOl/u6ZuLoSWg36RUH64qc2CB+HF31wGLPXZSFvluq/9g4Ggm
-	ZSqcFrGopLuge3wVPZuRpDnjytjfv5sTUGyL41Y87noMqVEg0PKxcHvGcIUosZ3/
-	6ypZRzdYCxV6kFo9BAHZUmsjo0Ad1O3nhNVnUgYjgW/UmdkOrkDA1CnkOClUREG2
-	8TJtnDPLGXUrs1g2aKe7gdAKbJxlFh9HAxA3sS27pdu7x0KlZdyTYTmi3IMP/VRr
-	xSW5Rg==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bjpmkhsxk-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 09 Jan 2026 11:14:10 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4ee409f1880so9855321cf.1
-        for <linux-pci@vger.kernel.org>; Fri, 09 Jan 2026 03:14:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1767957249; x=1768562049; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pbGsyEjb9GLUxR/KE7Zt2yh4eaMOiAA5kJ01ApCC77w=;
-        b=PI0UByHo6Nocb032JL8/w0cPhZ3M06cMrc8lFRAMdElQQ6SJYGREUNg4arRipJWqis
-         YiisqVI2N5ziA6ooXscRZlXS2N/5mTWHFkFUgYe96b7ahwNKfJORgrBzMWOdvTQG+Z2v
-         M7G8jCfaQeMgZaRdaaBqh8qd4PzPCSykp/gsETuGzeENzuI9VIKilMMnTIft9zIHXuGJ
-         4K83Eyxr/zsR/vXascN5zp4gibVOVNOampY7akoDu2fav4iUSLI+MXZufO+aztt6P+ry
-         8EZJi9g510T2LhkDe7lmvBk8MNsVX6SPBX2Cpd1WTFJjNW1pN0g+/13LNtEeZ61EdhLW
-         T3vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767957249; x=1768562049;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pbGsyEjb9GLUxR/KE7Zt2yh4eaMOiAA5kJ01ApCC77w=;
-        b=n/xqAjACT+xB84YXiZfANEe7Lt4wWfRrcGwbWPq2vsKJjCxxUbW7Ew5xfSqn4TDAeM
-         bzZWs0/h6HqHxo/KnhKkNAY/ReeMN1Ss/5F4HhkDxjvkdQjq9qFUeww8WoQT1kd4Q3v6
-         MmycAo+15VgeoMp5aojSQT8Am5fzQPXvs+0tG1xgrhzVeSnfkWnKwtpLYmzkaOENeh/o
-         wyRurmt1Ww/1ziNNd+hxxHr+l3crWFLxGcrMAYePdA9p7byyZjNbXphM2OcSo6Re7t7H
-         wQApjHzkSvvkbcETy8yneYMPNcRlIxJyVCtNAzAIHquKrL/BytzIQTdW0dEmifu2Ap/J
-         vkOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpKQ75/LbAbQn7sa7cH/tWxjYgd6xabv2L0F1GpVEL9JDhmsUa80glH/txzXLH36W+s86pu7g5Dr8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzrsTI/RImNUgn2dJ5+bg+fzaHkYp2IILEPD9LjlfXJM09RkFK
-	Ewb94YvZwm3D63H5FWHnvR57LqPV5um2GUcgtDXjtuXQ2XzrgQV4MD5/VWk+DAKT1fKp9D74BEG
-	FKyBrxyjXxCn3erltkbff1oq1s5uZ9vrPEKsuUVW7g5lIYtjAoTGQtvwVOgXl6wo=
-X-Gm-Gg: AY/fxX5gAhF8YHBzrb6cyoTt9/WNtUmvDFSI7t+tTFUmLYRB/XVN1TwUPNC9gkvP39q
-	6RDYUKsNtjCKcRXzOINbhf3XRKo3jxgr9ViZpOrg6pop8AKjvhrKigF0GbE/boLG8oEW+T0XuJm
-	XVveYjcmLs/iF9PTXssj/sFukOYd2uXSbRMqmgpc/hThUjOq5zhRYjK6RjHmx75p0iEzZN8DjN6
-	gxj3rPahyEPhfUaLHszReqDcyxi1cAh7mD0oZCu1VuZvDVfZuz5cZb1WldCAEat8pfhv3ZoaDfG
-	fWlEsC+mbvC5T1T6Jw5VH+MNS2bhyuV/jsgWpOfcnMdsDTL1yVM7c6qsl/ggPCt3LQXjLZb124l
-	C/LzfdjPnFvnYEb34K/jO4woUiQ4zD8CiBwltDwoA6jDPtzGAVSVJ1MMXUu1UtujCXCs=
-X-Received: by 2002:a05:622a:51:b0:4ee:2339:a056 with SMTP id d75a77b69052e-4ffb487fcb1mr106443541cf.2.1767957249094;
-        Fri, 09 Jan 2026 03:14:09 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGdvN0j1mfTjJ9QiVsMbOTGrNWeD/W2yvwWHCpWlcYUo0gPkpqG1W9F+oG5sS4PJEpVUDXSWw==
-X-Received: by 2002:a05:622a:51:b0:4ee:2339:a056 with SMTP id d75a77b69052e-4ffb487fcb1mr106443331cf.2.1767957248609;
-        Fri, 09 Jan 2026 03:14:08 -0800 (PST)
-Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b842a4cfd97sm1044008866b.36.2026.01.09.03.14.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Jan 2026 03:14:07 -0800 (PST)
-Message-ID: <be6aecbc-3ea4-4282-b777-0dc8ae1b8c26@oss.qualcomm.com>
-Date: Fri, 9 Jan 2026 12:14:05 +0100
+	s=arc-20240116; t=1767957746; c=relaxed/simple;
+	bh=jIs/n+q2hzat89JPtfaBAB/r9j8g4oYU5XEHdUUpqDA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=YqXW19oXzh0eP1WOYmLjHc6YQAss8M0ZbOc//+rRxF1Y4Sz+sV/dl5olQP7zkA/9urpHqWetsMNvc4J1AVVESt0N5pbRVCjIAmD7kaA4M2XG04d4MCyLUzT8lcbAeOZN1mCH6zLn8tXXY2JEegwsfLhnlAgzt7CZ6vVDkXzZTwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=207.46.229.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from zhangsenchuan$eswincomputing.com ( [10.12.96.83] ) by
+ ajax-webmail-app2 (Coremail) ; Fri, 9 Jan 2026 19:22:02 +0800 (GMT+08:00)
+Date: Fri, 9 Jan 2026 19:22:02 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: zhangsenchuan <zhangsenchuan@eswincomputing.com>
+To: "Bjorn Helgaas" <helgaas@kernel.org>
+Cc: "Manivannan Sadhasivam" <mani@kernel.org>, bhelgaas@google.com,
+	krzk+dt@kernel.org, conor+dt@kernel.org, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, robh@kernel.org, p.zabel@pengutronix.de,
+	jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, christian.bruel@foss.st.com,
+	mayank.rana@oss.qualcomm.com, shradha.t@samsung.com,
+	krishna.chundru@oss.qualcomm.com, thippeswamy.havalige@amd.com,
+	inochiama@gmail.com, Frank.li@nxp.com, ningyu@eswincomputing.com,
+	linmin@eswincomputing.com, pinkesh.vaghela@einfochips.com,
+	ouyanghui@eswincomputing.com, "Niklas Cassel" <cassel@kernel.org>
+Subject: Re: Re: [PATCH v9 2/2] PCI: eic7700: Add Eswin PCIe host controller
+ driver
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
+ 20241203(6b039d88) Copyright (c) 2002-2026 www.mailtech.cn
+ mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
+In-Reply-To: <20260106174348.GA365798@bhelgaas>
+References: <20260106174348.GA365798@bhelgaas>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] PCI: qcom: Keep PERST# GPIO state as-is during probe
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20260109-link_retain-v1-0-7e6782230f4b@oss.qualcomm.com>
- <20260109-link_retain-v1-3-7e6782230f4b@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20260109-link_retain-v1-3-7e6782230f4b@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=YNiSCBGx c=1 sm=1 tr=0 ts=6960e302 cx=c_pps
- a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=M-jGJTmE-ygQmRKCDXMA:9
- a=QEXdDO2ut3YA:10 a=a_PwQJl-kcHnX1M80qC6:22
-X-Proofpoint-GUID: VYUuvE-NbNJ3x7PQUcb9dm1-rVNVkSYF
-X-Proofpoint-ORIG-GUID: VYUuvE-NbNJ3x7PQUcb9dm1-rVNVkSYF
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA5MDA4MSBTYWx0ZWRfX9b7e0BUhDtpi
- k6qiGiodos+jg2Bl6dv3QRoN4a6dpkDT/DNVLESq5cbMvxNYgZe0AQTUkcbB3QuqCqmSoq/wZtW
- bmJzNGaTMaVGqT5ss77JfPPH6UUPDvFp+CXsQ0tr8gcqa5mn1VGSxCK68hni1CFhT5eg7olYp6b
- qldpkFD+39YWmEVWSN5vTrn9jlp3xUB5ttPxqeE1HZZOHAMz+aCn3wirb8RjT6nrOfWZILrSGZe
- mrELJxPLV9tYH73dyylqZUDAW99k++LKkAf9Y/LcNsU0NoihPal30C8h+JiaL1qnvG1i/LyhHF+
- XehkB2fm4wvuob9nqipbdDU9QSYKeQjLyYuLS43Ls3U1opySqnP9Cgshp7LfpriJvIQv0+N7CNq
- 71+uvoDgL5fXUvzIvD01CXpbp/bgaRgmnLNNYagOMUW2eeht64gXcVduzngHyTWC+jk2jyPg9Et
- sLPr+8KJjDogoaVkY0g==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-09_03,2026-01-08_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 phishscore=0 suspectscore=0 impostorscore=0 adultscore=0
- spamscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2601090081
+Message-ID: <6607c5b8.21d6.19ba27df74f.Coremail.zhangsenchuan@eswincomputing.com>
+X-Coremail-Locale: en_US
+X-CM-TRANSID:TQJkCgDnK6_a5GBpM4KSAA--.6506W
+X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/1tbiAQECBmlf3
+	AofuAAAsD
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW3Jw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-On 1/9/26 8:21 AM, Krishna Chaitanya Chundru wrote:
-> The PERST# signal is used to reset PCIe devices. Currently, the driver
-> requests the GPIO with GPIOD_OUT_HIGH, which forces the line high
-> during probe. This can unintentionally assert reset early, breaking
-
-                                         ^ de-assert, probably?
-
-Konrad
-
-> link retention or causing unexpected device behavior.
-> 
-> Change the request to use GPIOD_ASIS so the driver preserves the
-> existing state configured by the bootloader or firmware. This allows
-> platforms that manage PERST# externally to maintain proper reset
-> sequencing.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 7b92e7a1c0d9364a9cefe1450818f9cbfc7fd3ac..9342f9c75f1c3017b55614069a7aa821a6fb8da7 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1711,7 +1711,7 @@ static int qcom_pcie_parse_port(struct qcom_pcie *pcie, struct device_node *node
->  	int ret;
->  
->  	reset = devm_fwnode_gpiod_get(dev, of_fwnode_handle(node),
-> -				      "reset", GPIOD_OUT_HIGH, "PERST#");
-> +				      "reset", GPIOD_ASIS, "PERST#");
->  	if (IS_ERR(reset))
->  		return PTR_ERR(reset);
->  
-> @@ -1772,7 +1772,7 @@ static int qcom_pcie_parse_legacy_binding(struct qcom_pcie *pcie)
->  	if (IS_ERR(phy))
->  		return PTR_ERR(phy);
->  
-> -	reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_HIGH);
-> +	reset = devm_gpiod_get_optional(dev, "perst", GPIOD_ASIS);
->  	if (IS_ERR(reset))
->  		return PTR_ERR(reset);
->  
-> 
+PiA+IE9uIFR1ZSwgSmFuIDA2LCAyMDI2IGF0IDA4OjQzOjExUE0gKzA4MDAsIHpoYW5nc2VuY2h1
+YW4gd3JvdGU6Cj4gPiA+ID4gT24gTW9uLCBEZWMgMjksIDIwMjUgYXQgMDc6MzI6MDdQTSArMDgw
+MCwgemhhbmdzZW5jaHVhbkBlc3dpbmNvbXB1dGluZy5jb20gd3JvdGU6Cj4gPiA+ID4gPiBGcm9t
+OiBTZW5jaHVhbiBaaGFuZyA8emhhbmdzZW5jaHVhbkBlc3dpbmNvbXB1dGluZy5jb20+Cj4gPiA+
+ID4gPiAKPiA+ID4gPiA+IEFkZCBkcml2ZXIgZm9yIHRoZSBFc3dpbiBFSUM3NzAwIFBDSWUgaG9z
+dCBjb250cm9sbGVyLCB3aGljaCBpcyBiYXNlZCBvbgo+ID4gPiA+ID4gdGhlIERlc2lnbldhcmUg
+UENJZSBjb3JlLCBJUCByZXZpc2lvbiA1Ljk2YS4gVGhlIFBDSWUgR2VuLjMgY29udHJvbGxlcgo+
+ID4gPiA+ID4gc3VwcG9ydHMgYSBkYXRhIHJhdGUgb2YgOCBHVC9zIGFuZCA0IGNoYW5uZWxzLCBz
+dXBwb3J0IElOVHggYW5kIE1TSQo+ID4gPiA+ID4gaW50ZXJydXB0cy4KPiA+ID4gPiAKPiA+ID4g
+PiA+ICtjb25maWcgUENJRV9FSUM3NzAwCj4gPiA+ID4gPiArCXRyaXN0YXRlICJFc3dpbiBFSUM3
+NzAwIFBDSWUgY29udHJvbGxlciIKPiA+ID4gPiAKPiA+ID4gPiA+ICsvKiBWZW5kb3IgYW5kIGRl
+dmljZSBJRCB2YWx1ZSAqLwo+ID4gPiA+ID4gKyNkZWZpbmUgUENJX1ZFTkRPUl9JRF9FU1dJTgkJ
+MHgxZmUxCj4gPiA+ID4gPiArI2RlZmluZSBQQ0lfREVWSUNFX0lEX0VTV0lOCQkweDIwMzAKPiA+
+ID4gPiAKPiA+ID4gPiBVc3VhbGx5IHRoZSBkZXZpY2UgbmFtZSBpcyBhIGxpdHRsZSBtb3JlIHRo
+YW4ganVzdCB0aGUgdmVuZG9yLiAgV2hhdAo+ID4gPiA+IGlmIEVzd2luIGV2ZXIgbWFrZXMgYSBz
+ZWNvbmQgZGV2aWNlPwo+ID4gPiAKPiA+ID4gT2tleSwgdGhhbmtzLgo+ID4gPiBQZXJoYXBzIGl0
+J3MgYSBwcm9ibGVtLiBNYXliZSBQQ0lfREVWSUNFX0lEX0VJQzc3MDAgaXMgYmV0dGVyPwo+IAo+
+IENoZWNrIHBjaV9pZHMuaCBhbmQgZm9sbG93IHRoZSBzdHlsZSB1c2VkIHRoZXJlLiAgRGV2aWNl
+IElEIG1hY3Jvcwo+IHR5cGljYWxseSBpbmNsdWRlIGJvdGggdGhlIHZlbmRvciBhbmQgdGhlIGRl
+dmljZS4KCk9rZXksIHRoYW5rcy4KCj4gCj4gPiA+ID4gPiArc3RhdGljIHN0cnVjdCBwbGF0Zm9y
+bV9kcml2ZXIgZWljNzcwMF9wY2llX2RyaXZlciA9IHsKPiA+ID4gPiA+ICsJLnByb2JlID0gZWlj
+NzcwMF9wY2llX3Byb2JlLAo+ID4gPiA+IAo+ID4gPiA+IFRoaXMgZHJpdmVyIGlzIHRyaXN0YXRl
+IGJ1dCBoYXMgbm8gLnJlbW92ZSgpIGNhbGxiYWNrLiAgU2VlbXMgbGlrZSBpdAo+ID4gPiA+IHNo
+b3VsZCBoYXZlIG9uZT8KPiA+ID4gCj4gPiA+IEluIHYyIHBhdGNoLCBJIHJlZmVycmVkIHRvIE1h
+bmkncyBjb21tZW50cyBhbmQgcmVtb3ZlZCB0aGUgLnJlbW92ZSgpCj4gPiA+IGNhbGxiYWNrLCBh
+cyBmb2xsb3dzOgo+ID4gPiAiU2luY2UgdGhpcyBjb250cm9sbGVyIGltcGxlbWVudHMgaXJxY2hp
+cCB1c2luZyB0aGUgRFdDIGNvcmUgZHJpdmVyLAo+ID4gPiBpdCBpcyBub3Qgc2FmZSB0byByZW1v
+dmUgaXQgZHVyaW5nIHJ1bnRpbWUuIgo+ID4gPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51
+eC1wY2kvamdob3p1cmpxeWhtdHVuaXZvdGl0Z3M2N2g2eG80c2I0NnFjeWNuYmJ3eXZqY200ZWtA
+dmdxNzVvbGF6bW9pLwo+ID4gPiAKPiA+ID4gSW4gYWRkaXRpb24sIHJlbW92ZSAucmVtb3ZlKCkg
+Y2FsbGJhY2ssIGJlY2F1c2UgdGhpcyBkcml2ZXIgaGFzIGJlZW4gCj4gPiA+IG1vZGlmaWVkIHRv
+IGJ1aWx0aW5fcGxhdGZvcm1fZHJpdmVyIGFuZCBkb2VzIG5vdCBzdXBwb3J0IEhvdFBsdWcsIAo+
+ID4gPiB0aGVyZWZvcmUsIHRoZSAucmVtb3ZlKCkgY2FsbGJhY2sgaXMgbm90IG5lZWRlZC4gRG8g
+eW91IGhhdmUgYW55Cj4gPiA+IGJldHRlciBzdWdnZXN0aW9ucz8KPiA+IAo+ID4gWWVzLCBidWls
+dGluX3BsYXRmb3JtX2RyaXZlcigpIHdvdWxkbid0IGFsbG93IHRoZSB1c2VycyB0byByZW1vdmUK
+PiA+IHRoZSBtb2R1bGUuIFNvIHJlbW92ZSgpIGNhbGxiYWNrIHdpbGwgYmVjb21lIHVzZWxlc3Mu
+IFRoZSByZWFzb24gd2h5Cj4gPiB0aGlzIGRyaXZlciBpcyB0cmlzdGF0ZSBpcyB0aGF0IGl0IGNv
+dWxkIGJlIGxvYWRlZCBmcm9tIHJvb3RmcyBhbmQKPiA+IG5vdCBhbHdheXMgc3RhdGljYWxseSBi
+dWlsdCB0byB0aGUga2VybmVsIGltYWdlLgo+IAo+IFRoaXMgLnJlbW92ZSgpIHZzIElSUSB0aGlu
+ZyBpcyBhIHBlcmVubmlhbCBpc3N1ZSBhbmQgaXQncyBoYXJkIHRvIGtub3cKPiB3aGF0IHN0eWxl
+IG5ldyBkcml2ZXJzIHNob3VsZCBjb3B5Lgo+IAo+IFRoZXJlIGFyZSBsb3RzIG9mIERXQy1iYXNl
+ZCBkcml2ZXJzIHRoYXQgYXJlIHRyaXN0YXRlLCBpbXBsZW1lbnQKPiAucmVtb3ZlKCksIGFuZCB1
+c2UgbW9kdWxlX3BsYXRmb3JtX2RyaXZlcigpIChlLmcuLCBidDEsIGtpcmluLAo+IHRlZ3JhMTk0
+LCByY2FyLWdlbjQsIGV4eW5vcywgazEsIHN0bTMyKS4gIElzIHRoZXJlIHNvbWV0aGluZyBkaWZm
+ZXJlbnQKPiBhYm91dCB0aGUgd2F5IHRoZXkgaW1wbGVtZW50IGlycWNoaXAgdGhhdCBtYWtlcyAu
+cmVtb3ZlKCkgc2FmZT8KCkhpIEJqb3JuLCBNYW5pLAoKVGhlIGNvbW1lbnRzIGFyZSBhcyBmb2xs
+b3dzOgoiWW91IGNhbiBtYWtlIGl0IHRyaXN0YXRlIGFzIHlvdSd2ZSB1c2VkIGJ1aWx0aW5fcGxh
+dGZvcm1fZHJpdmVyKCkgd2hpY2gKZ3VhcmFudGVlcyB0aGF0IHRoaXMgZHJpdmVyIHdvbid0IGJl
+IHJlbW92ZWQgb25jZSBsb2FkZWQuIgpodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1wY2kv
+dWlqZzQ3c3V2bHV2YW1mdHl4d2M2NWtsMzRlbzJldTJhZjJvNWFpYTRudTQ1aGFucWNAZ3JjcjJi
+amdwaDJpLwoKRG8gbm90IGFkZCB0aGUgcmVtb3ZlIGNhbGxiYWNrLiBJdCBuZWVkcyB0byBiZSBz
+ZXQgdG8gYSBib29s77yaCkluIHY2IHBhdGNoLCBpdCB3YXMgbWVudGlvbmVkIHRvIHNldCB0cmlz
+dGF0ZS4gTm93LCBhZnRlciBjYXJlZnVsIApjb25zaWRlcmF0aW9uLCBzZXR0aW5nIHRyaXN0YXRl
+IGNhbiBhbGxvdyBsb2FkaW5nIGFzIGEgbW9kdWxlLCBidXQgdGhlIApkcml2ZXIgaW1wbGVtZW50
+YXRpb24gZG9lcyBub3QgaGF2ZSBhIHJlbW92ZSBmdW5jdGlvbi4gSWYgaXQgZXhpc3RzIGluIAp0
+aGUgZm9ybSBvZiBhIG1vZHVsZSwgYWZ0ZXIgdGVzdGluZywgV2hlbiBpbnNtb2QgZHJpdmVyIGlz
+IGZvbGxvd2VkIGJ5IApybW1vZCBkcml2ZXIsIHRoZSByZXNvdXJjZXMgY2Fubm90IGJlIHJlbGVh
+c2VkLCBhbmQgcHJvYmxlbXMgd2lsbCBvY2N1cgp3aGVuIGluc21vZCBkcml2ZXIgaXMgdXNlZCBh
+Z2Fpbi4gU28gSSB0aGluayB0aGF0IGlmIHRoZSByZW1vdmUgY2FsbGJhY2sKZnVuY3Rpb24gaXMg
+bm90IHByb3ZpZGVkIGluIHRoZSBmb3JtIG9mIGJ1aWx0aW4sIGl0IGNhbiBvbmx5IGJlIHNldCB0
+byAKYm9vbC4KCkFkZCB0aGUgcmVtb3ZlIGNhbGxiYWNrLiBJdCBjYW4gbWFrZSBpdCB0cmlzdGF0
+ZToKUXVlc3Rpb25zIGFib3V0IHJlbW92aW5nIGl0IGR1cmluZyBydW50aW1lLiBJIGRvbid0IGhh
+dmUgYSB2ZXJ5IGdvb2QgaWRlYS4KSSBzdGlsbCBkb24ndCBxdWl0ZSB1bmRlcnN0YW5kIHdoeSBp
+dCdzIG5vdCBzYWZlLiBDb3VsZCB5b3UgZXhwbGFpbiBpdCB0byAKbWU/CgpBdCBwcmVzZW50LCBy
+ZWZlciB0byBvdGhlciBtYW51ZmFjdHVyZXJzLCBpIHRoaW5rIHRoZXJlIGFyZSB0d28gd2F5cyB0
+byAKYWNoaWV2ZSBpdC4KMS5TZXQgYSBib29sLiBEbyBub3QgYWRkIHRoZSByZW1vdmUgZnVuY3Rp
+b24sIG1vZHVsZSBsb2FkaW5nIGlzIG5vdCAKYWxsb3dlZCwgYW5kIHRoZSBkcml2ZXIgY3VycmVu
+dGx5IGRvZXMgbm90IHN1cHBvcnQgSG90UGx1Zy4KMi5TZXQgYSB0cmlzdGF0ZSwgYWRkIC5yZW1v
+dmUgY2FsbGJhY2suCgpJIHRoaW5rIHRoZSBmaXJzdCBvbmUgbWlnaHQgYmUgYmV0dGVyIGZvciBt
+ZSwgYmVjYXVzZSB0aGVyZSBpcyBubyBuZWVkIAp0byBhZGQgdGhlIHJlbW92ZSBmdW5jdGlvbiwg
+bXkgdW5kZXJzdGFuZGluZyBtaWdodCBhbHNvIGJlIGluY29ycmVjdC4gClBsZWFzZSByZXZpZXcg
+aXQgZm9yIG1lLiBUaGFua3PvvIEKCktpbmQgcmVnYXJkcywKU2VuY2h1YW4KCgo=
 
