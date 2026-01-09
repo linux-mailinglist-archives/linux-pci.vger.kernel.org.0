@@ -1,133 +1,204 @@
-Return-Path: <linux-pci+bounces-44324-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44325-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A75F0D074CA
-	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 07:02:34 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 181A5D07606
+	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 07:19:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B23133017124
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 06:02:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C3909302FA27
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 06:19:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 980FA27281D;
-	Fri,  9 Jan 2026 06:02:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E026255F2C;
+	Fri,  9 Jan 2026 06:19:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BHHBBaP0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMbwam1g"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F19519309C;
-	Fri,  9 Jan 2026 06:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A27264609
+	for <linux-pci@vger.kernel.org>; Fri,  9 Jan 2026 06:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767938542; cv=none; b=AC2lQPzKIWPRxvEQtY35drc9I+UhCHQTkhJpItUOu5H5znF6sB97f8orH2DghLqyXckNw+JPBD66ysLabdECsSm01wdDjEH+Ut3yxQOn45kL9g8Dv6L8CQ31Bo6G14aDfqza4AMxWL6D/Ul/mUtYWLbjRn49qmPKZxJ+Fsn1+7g=
+	t=1767939553; cv=none; b=oDcGwvR3Tf4LThHcnwKZZPJxAVFZf5VHPXAjD54jsbWPQVxuDSDhkh5BLO3oYDu9gvDQQjmYUE2ao48Uego3jJcnLc0U6VjIl96Lo4ymZTwwgS+fnRykLuxAPLAdsAkcPYrUTGANzWPQ0H5TXoD+VV6KcBGh8C9nuTINBr+/+Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767938542; c=relaxed/simple;
-	bh=2ZwanXb3K+wdRbDyhjpQDRTpzVByn8xFIpP+xmyQH/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m2jJpBjIuQJ88YS5LZzrjuTaRG0u0AYKYC2CcFdo37TCld/dqDEfYlTmxFQlHTL37YgO+yL3/dya3lPqHn4egcDMIYH7CM2l0HVkWZf5MGapoVQKy1733QR1GgSE5ikclvIx1xEvXxMlzsvjerwfPORVj4huoXPYv5udt6iitUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BHHBBaP0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 308DFC4CEF1;
-	Fri,  9 Jan 2026 06:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767938542;
-	bh=2ZwanXb3K+wdRbDyhjpQDRTpzVByn8xFIpP+xmyQH/0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BHHBBaP0kYweSLXa2JXymudu2N5nQC3K5M6mXHNXKBn9jwMvH/rEQZpI23pKI7TqZ
-	 F6nfATSP3l9vB5yYH3FarXk/C/s15MeuSoBxA+bFq06c29BcHIUHxUcJQjSjaVP+hl
-	 YD5UJVmkmV/k4V6OUsqtKv9DXIRpWhAQ2VV2q7iz1nM7MDvqFZnEqAMRuKYKhTiyug
-	 yc1xhsKG12JC0W2nInZHMd+FgcxTxbKQWT7IXI15AtNcysla4hcJ1QV59JYaHGJZeZ
-	 u2x0HVwb2vBWcH1o8PnsiXcP8GvZVdvEWCxTw7Jntu2upnUNFqGGO6pnolwIu4UAjf
-	 MjosRLVcWhtvg==
-Date: Fri, 9 Jan 2026 11:32:12 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: manivannan.sadhasivam@oss.qualcomm.com, 
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-	linux-pm@vger.kernel.org, linux-ide@vger.kernel.org
-Subject: Re: [PATCH v5 5/5] power: sequencing: Add the Power Sequencing
- driver for the PCIe M.2 connectors
-Message-ID: <xd5uvfqcx3vcbcqerji556ejstmgvtci4chfzxclkzhizqmqxa@xusf2skt6xhh>
-References: <20260107-pci-m2-v5-0-8173d8a72641@oss.qualcomm.com>
- <20260107-pci-m2-v5-5-8173d8a72641@oss.qualcomm.com>
- <CAMRc=Md9TQiSX-gFa5q--JgaGyQ2ky4mOwjSpdxHhvHAj-X5Qw@mail.gmail.com>
+	s=arc-20240116; t=1767939553; c=relaxed/simple;
+	bh=b/3huWzi5fH5yfmWBVLBG0clk1xwuF28Qcz+cqEDEds=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j+5nUvKN/dQ8NxOQBiguZdeVgrrGT6oK57gHVT4wHUsx57DdXonS63GEEeReirPOV2IuJOucwFiE5oHT391vSkh2JeiaGoLe4FFieH8wzolZ3jUa5yDxUMnhoIMwTVqF3wDzrNAv0Xo4YJSQ6E489VSBSgtUX1l9EpnkWc9/Dsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dMbwam1g; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2a0d6f647e2so41809355ad.1
+        for <linux-pci@vger.kernel.org>; Thu, 08 Jan 2026 22:19:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767939551; x=1768544351; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mxcIAZdi8DSHabnzsxkENQYm/KIvgyHbwki+UOtqU4s=;
+        b=dMbwam1g4FQd4hPWaAvnKL4WMv3mgao0NHJzDuaHYZgIJqavPeEAD8rMLSFKm3kOBP
+         n2czKPQ/A/LpjomLuH6BsnDxcqgFUY9Y8z3EPBhEVmAKoBegZjfjnmH/f416jmewhJ/E
+         gUwQFFOGnFgyB9rCWKX6BlYGC+VjtoAqmXGN1IvoTj5/X1nfB+H3erOYJb3lWmbclsNR
+         9nhd6jniR+jcPWo+rfe4TqPWAp5W0TDsUvaiIDlucgz5eUaWGqESsjD5cPlc8un8C2IQ
+         +SETE5fBuxn5SzuCRh1hJ3r1E6K2G3PA2deM62AiFp9pUNWmWiRnvy5caK7sJSLddyqO
+         F60w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767939551; x=1768544351;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mxcIAZdi8DSHabnzsxkENQYm/KIvgyHbwki+UOtqU4s=;
+        b=be41FaMxQfwpX3tb6Z4XyknzRDJybIdmRiJG0oAR1pD3ZxjzQw8zMi9l+uGpfwEB86
+         vRTmK5Xtp25hu15nPzhLpTHyl26cOPejDTCLjx/YGWcgRWmY59nBncbD/8lca5VvS3wW
+         oNhC8TZe+03UjRS+8sGahw0hStzXyL2N1zxbBLDUX0SVuw6hy59Cs4lrnE4y3v6Gh8uv
+         jIsmrc8hWJu0VgpbMPcxcpWjGsevj1kMyFmsVEMMseJwVCPxseqqMGnOakLAgCHoygrh
+         XTWWqLShRr2qt563up+CxYQr7d0MjThZv6vtUv3GW84tzK5A2+fZOp3rylnx6QwhREIM
+         GXFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVSzyfuQpT3k7KG9VumsrfpQxjGgcjCRPfCU8C42lYNFQb0TVQgAmiSk+3SOIIYq3z9McsqIowkwf8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtsHiI646G5G+AFkSLlM2Y6Bg0eKwNdI4WWrjD3h9Q3+VTLw1C
+	QeCyF/wgc5OX/6tcffrchNVkYOMdUEhdfAPTldciTxLYQ+9FaTDALKM7allespY=
+X-Gm-Gg: AY/fxX4W3B/TfD5+LWZFAui+SHAbj7603UMpV+/25n0CxDrVCJ/ifAz89RnNbRKhfip
+	eI/+NMtkxXO3oEyMXEuAxRNFnuRrOLP/ECGkNDfcV/JdKm5kwDDJimqmbOhNl2bxI+OOse4MspF
+	4rwtEw8C0LS95txaSNmZfyRcgKcLEdt6lmvUnNouqeZBCijKMOSaPVA5NHExv5I/T/d7by8KFFh
+	p3kU6H3ssqofU1AGASx0UVpUiyy7a8uPvSE9jqFvRT0voqjo9AmDq946VfjrmXAVYlIzZdRFUnP
+	yQZRmR5MZhr/RpcsftcmHS9W/IQe9qwu6TNpMObliLaZbDuFOTpGuHjh7p5gcAhqOSLdZfVB00g
+	Kd5ssuVV0hrXSrRfgAHFt/wfXMSlil+rqHyWpAXPuPPk4v9rZfkcQq3mpi2Gn3TWsIWamBlU/2N
+	8QtHQgQJ6ChwENxAQ=
+X-Google-Smtp-Source: AGHT+IGN1WYQT2EKc4h3GaCwKE2jZCARir0K7jCaV93K9/r5xtWTUECgPBy7LokTrS9Cz97x/QdO2A==
+X-Received: by 2002:a17:902:ccd0:b0:298:2cdf:56c8 with SMTP id d9443c01a7336-2a3ee4c46d4mr71063545ad.60.1767939551278;
+        Thu, 08 Jan 2026 22:19:11 -0800 (PST)
+Received: from at.. ([171.61.163.202])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-819c530133csm9272546b3a.31.2026.01.08.22.19.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jan 2026 22:19:10 -0800 (PST)
+From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+To: 
+Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	"Oliver O'Halloran" <oohall@gmail.com>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Mika Westerberg <westeri@kernel.org>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Feng Tang <feng.tang@linux.alibaba.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-usb@vger.kernel.org
+Subject: [PATCH v5] PCI/portdev: Disable AER for Titan Ridge 4C 2018
+Date: Fri,  9 Jan 2026 06:18:53 +0000
+Message-ID: <20260109061901.3127-1-atharvatiwarilinuxdev@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Md9TQiSX-gFa5q--JgaGyQ2ky4mOwjSpdxHhvHAj-X5Qw@mail.gmail.com>
 
-On Thu, Jan 08, 2026 at 01:15:12PM +0100, Bartosz Golaszewski wrote:
-> On Wed, Jan 7, 2026 at 3:11 PM Manivannan Sadhasivam via B4 Relay
-> <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
-> >
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> >
-> > This driver is used to control the PCIe M.2 connectors of different
-> > Mechanical Keys attached to the host machines and supporting different
-> > interfaces like PCIe/SATA, USB/UART etc...
-> >
-> > Currently, this driver supports only the Mechanical Key M connectors with
-> > PCIe interface. The driver also only supports driving the mandatory 3.3v
-> > and optional 1.8v power supplies. The optional signals of the Key M
-> > connectors are not currently supported.
-> >
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> 
-> This looks good to me, though there are some nits I may fix when applying.
-> 
-> I'll pick it up for v7.0 once the bindings are reviewed.
-> 
+Disable AER for Intel Titan Ridge 4C 2018
+(used in T2 iMacs, where the warnings appear)
+that generate continuous pcieport warnings. such as:
 
-Ok. I'm expecting patch 1 to go through ATA tree, patch 2 through DT, and
-patches 3,4 through PCI tree.
+pcieport 0000:00:1c.4: AER: Correctable error message received from 0000:07:00.0
+pcieport 0000:07:00.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
+pcieport 0000:07:00.0:   device [8086:15ea] error status/mask=00000080/00002000
+pcieport 0000:07:00.0:    [ 7] BadDLLP
 
-> > +++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> > @@ -0,0 +1,169 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-> > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > + */
-> > +
-> > +#include <linux/device.h>
-> > +#include <linux/mod_devicetable.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_graph.h>
-> > +#include <linux/of_platform.h>
-> 
-> It looks like this is a leftover from previous versions and you no
-> longer need it?
-> 
+macOS also disables AER for Thunderbolt devices and controllers in their drivers.
 
-Yeah.
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220651
+Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
 
-> > +
-> > +static void pwrseq_pcie_free_resources(void *data)
-> > +{
-> > +       struct pwrseq_pcie_m2_ctx *ctx = data;
-> > +
-> > +       regulator_bulk_free(ctx->num_vregs, ctx->regs);
-> > +}
-> 
-> I would call it pwrseq_pcie_m2_free_regulators() if you don't mind.
-> 
+---
+Changes since v4:
+- Used lowercase hex letters
+- Used DMI_BOARD_VENDOR instead of DMI_SYS_VENDOR
+Chnages since v3:
+- Fixed Grammer mistakes
+Changes since v2:
+- Transferred logic to arch/x86/pci/fixup.c to only target x86
+- Added DMI quirk to only target Apple Systems
+Changes since v1:
+- Transferred logic to drivers/pci/quicks.c
+---
+---
+ arch/x86/pci/fixup.c       | 12 ++++++++++++
+ drivers/pci/pcie/aer.c     |  3 +++
+ drivers/pci/pcie/portdrv.c |  2 +-
+ include/linux/pci.h        |  1 +
+ 4 files changed, 17 insertions(+), 1 deletion(-)
 
-Sure. I indeed missed '_m2'.
-
-- Mani
-
+diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+index 25076a5acd96..850bfe03a685 100644
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -1081,3 +1081,15 @@ static void quirk_tuxeo_rp_d3(struct pci_dev *pdev)
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1502, quirk_tuxeo_rp_d3);
+ #endif /* CONFIG_SUSPEND */
++
++#ifdef CONFIG_PCIEAER
++
++static void quirk_disable_aer(struct pci_dev *pdev)
++{
++	if (dmi_match(DMI_BOARD_VENDOR, "Apple"))
++		pdev->no_aer = 1;
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x15ea, quirk_disable_aer);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x15eb, quirk_disable_aer);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x15ec, quirk_disable_aer);
++#endif /* CONFIG_PCIEAER */
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index e0bcaa896803..45604564ce6f 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -389,6 +389,9 @@ void pci_aer_init(struct pci_dev *dev)
+ {
+ 	int n;
+ 
++	if (dev->no_aer)
++		return;
++
+ 	dev->aer_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
+ 	if (!dev->aer_cap)
+ 		return;
+diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+index 38a41ccf79b9..ab904a224296 100644
+--- a/drivers/pci/pcie/portdrv.c
++++ b/drivers/pci/pcie/portdrv.c
+@@ -240,7 +240,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+ 	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+              pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
+ 	    dev->aer_cap && pci_aer_available() &&
+-	    (pcie_ports_native || host->native_aer))
++	    (pcie_ports_native || host->native_aer) && !dev->no_aer)
+ 		services |= PCIE_PORT_SERVICE_AER;
+ #endif
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 864775651c6f..f447f86c6bdf 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -440,6 +440,7 @@ struct pci_dev {
+ 	unsigned int	multifunction:1;	/* Multi-function device */
+ 
+ 	unsigned int	is_busmaster:1;		/* Is busmaster */
++	unsigned int	no_aer:1;		/* May not use AER */
+ 	unsigned int	no_msi:1;		/* May not use MSI */
+ 	unsigned int	no_64bit_msi:1;		/* May only use 32-bit MSIs */
+ 	unsigned int	block_cfg_access:1;	/* Config space access blocked */
 -- 
-மணிவண்ணன் சதாசிவம்
+2.43.0
+
 
