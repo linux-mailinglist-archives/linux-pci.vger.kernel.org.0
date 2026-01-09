@@ -1,66 +1,66 @@
-Return-Path: <linux-pci+bounces-44353-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44350-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0944AD08B29
-	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 11:49:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6BA6D08AFE
+	for <lists+linux-pci@lfdr.de>; Fri, 09 Jan 2026 11:48:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3B03A30B50E3
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 10:45:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 414003098462
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jan 2026 10:45:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC49633A9CB;
-	Fri,  9 Jan 2026 10:45:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0FBD330B00;
+	Fri,  9 Jan 2026 10:45:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YdaC+KZX"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LlNtgtB1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE8A3382D4;
-	Fri,  9 Jan 2026 10:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3090E2D8792;
+	Fri,  9 Jan 2026 10:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767955535; cv=none; b=pZ4Zl/zd3Nm3uEkqDohZqKzt4uQhLiWDZdQGvxDx6I7sRWNWkD7iDLoaN1v0YwGhY3dPvq5gd9jjq9vOO+NhofrTVtLyF9x/LXMIKGuEKJvQiKrFwK68JfyfypmwpV7gCbsEq23JexZ3LevzbvR8XhRb/tvXSlhLopXkPDK5J3I=
+	t=1767955531; cv=none; b=ogyngzOOv724T33lAVmvv/KlYlpgIsR2wONSqhavmCutnrUarwthFK94UES12dRzRu4e/rs63xhltBkjcjbNCVkFj+HglrKwoNIvDXf+qLAhepCrIYskZG7RS5CwjENS9lo5iZFe/YpvV/V5X5SyMNhz8ZIyUYp1GcirmIoHo38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767955535; c=relaxed/simple;
-	bh=9PFo81dzNXmJnq2Y+YmD7k+VFOW2LuKu7KqFq7DN9WA=;
+	s=arc-20240116; t=1767955531; c=relaxed/simple;
+	bh=sXnGe4UbsOUus9OpoLgxgrCbT1h9nQnxB74kqWfgGXA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IVGBLa9Qz6fxmSPOe38NHhw7r94087ttvLfxJ7LibA56MBOqDE/hSylbN7CQPPuuuDk27rBCQeoND2ivEvpj7b9rVCZZ2zaGeCrKpnmHsl+Wfp3H77zcpqWKTUmcS797ZNttq/t/zunqCGJ1G648zqteuvKFbdg0agG1h+P8lCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YdaC+KZX; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version; b=p0ZeJTGGm1aP4wvqOJXWoxQJFRg8DEmpjNRIYcq2fiSZOeuLf0fFQrrznAP9Jj1cuYVghKNp+pvkvFg0y2wH5LLgtbtksgQ8Ib2iah8ezyoVr79tZpFtJAtiN9Im8J5W/QjdArq05RlljEvcazh554AEBduQBxNqItBY5twWHGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LlNtgtB1; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6098JUIT3219827;
-	Fri, 9 Jan 2026 10:45:20 GMT
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6099SdDG3324801;
+	Fri, 9 Jan 2026 10:45:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=hgzvY5/ak9H
-	0SsOfm+TlCiiwuICAtq/YrINziKYr6wM=; b=YdaC+KZXDdki3R/qly9Bh8Y+163
-	UYRVeGfTqyX4OdtqQLncxvjCpG2+2f4ixoyAP6/qXPSOnbq08pg2a+J4in5BlTYC
-	Emnu9zPtYLBKxIiioQrYrAG5sq4GY0zFpDBvTb/S5RZMzdb9P4mF6CcTdsUWsU1F
-	LLeBGxgJy/qxsjdiLwjmcgYf7TSLgYu9aY2WLlU4nVgYK7UGv6D+YpkWDXUhrKew
-	+J+OV3bivanKOG+t5gF5Mw7ZAdfKjtJE4l3FET+7viRN0r7LGqaOMUf09wVFRmA/
-	8KaeukdyRGZo+J8kma3zKRpP37ICRwnqeKicXaCd48wjInyrArlgUhYkFLA==
-Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bjjt0j6x7-1
+	:mime-version:references:subject:to; s=qcppdkim1; bh=tfM5QaUiVRD
+	nu3SIVKAGSl4h0t2vJaAWSi4gaC55Vz0=; b=LlNtgtB1SlSD6Vd2jgqbZul+TbF
+	yTTsztB3CIIsfQU2aF4UYmMgrtxvf4EiGkjoPAW7lDLHRjq3EKMPORfWL2oX4IIz
+	ixYvXUtcI4FJNbEovwbN6fpIzB3GcD/9Cf03HnCz3QMYq7Muu3/4CEUFeIzBzVa4
+	q1wlkoIA4UNYY/ge8tlzkCGQkN2LOOP1oKUIaptNKrgkTN9vouxMg2KUIwN9ZHZi
+	VyB1AxVdYDI3QsfxCqkxCb5GOc7W69ye+AxGGxIAov3Olb9SpZjQnP3ysHSI19w0
+	kQW9AnwPc+74+Or2fYOqbbdSFA+Mvo4gbMK8Mr0rqu4wD/5Ey1rVjeFRmRw==
+Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bjrd6hfn5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 09 Jan 2026 10:45:19 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 609AjHeC007216;
+Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 609AjHuw004105;
 	Fri, 9 Jan 2026 10:45:17 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 4bev6mpxxu-1
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 4bev6mpxx2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 09 Jan 2026 10:45:17 +0000
-Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 609AjGLd007201;
+Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 609AjGS8004090;
 	Fri, 9 Jan 2026 10:45:16 GMT
 Received: from cse-cd02-lnx.ap.qualcomm.com (smtphost-taiwan.qualcomm.com [10.249.136.33])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 609AjGCL007196
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 609AjGje004087
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 09 Jan 2026 10:45:16 +0000
 Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
-	id 096B67AA; Fri,  9 Jan 2026 18:45:15 +0800 (CST)
+	id 0F1B57AE; Fri,  9 Jan 2026 18:45:15 +0800 (CST)
 From: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
 To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
         krzk+dt@kernel.org, conor+dt@kernel.org, ziyue.zhang@oss.qualcomm.com,
@@ -74,9 +74,9 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
         Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
         Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: [PATCH v4 2/3] arm64: dts: qcom: Add PCIe3 and PCIe5 support for HAMOA-IOT-SOM platform
-Date: Fri,  9 Jan 2026 18:45:03 +0800
-Message-Id: <20260109104504.3147745-3-ziyue.zhang@oss.qualcomm.com>
+Subject: [PATCH v4 3/3] arm64: dts: qcom: Add PCIe3 and PCIe5 regulators for HAMAO-IOT-EVK board
+Date: Fri,  9 Jan 2026 18:45:04 +0800
+Message-Id: <20260109104504.3147745-4-ziyue.zhang@oss.qualcomm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260109104504.3147745-1-ziyue.zhang@oss.qualcomm.com>
 References: <20260109104504.3147745-1-ziyue.zhang@oss.qualcomm.com>
@@ -91,150 +91,214 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: PMmYzIKmeY9hDt3afjYeaQmFqYZH2eoR
-X-Authority-Analysis: v=2.4 cv=VJzQXtPX c=1 sm=1 tr=0 ts=6960dc40 cx=c_pps
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA5MDA3OCBTYWx0ZWRfX7rPtfloe7U+d
+ E+VAwjdpnhYU5xMn51N2FQSfeWrt8YrXX+tboeNTYpZREE8U4nPTrLZ0F12pk/D8kykBXIpwFY+
+ cTZKfK2zNVI17x5Si2sAjWozrduAT4YtMC6gYhs7gogfrqxh+aR0shLsgKZaed8HBrL+LBU6cPY
+ Tv2HiqbDrj8sPyfmIFDo5ZeaqAQC0JXDnR4ZSXUiAc/0sOXDYwP3KrvFDYq1zuDn2Mtz8+SBpUQ
+ Skgb8WuQAFkvwDAQdIPonmIgQJorMEPgHjttJlkxsjnN01vGX1nRp39N9LBrTBr8er427uHmGFO
+ D4xCz7G2E9DIuwSPEzNXpBC6e10kKs570P0uEWfBxFpNhuVNl8Iy9DIEWOTpybT4fG9Ufcnf7RD
+ afIrxqjXMuc8RE1iNZErwFAq8r2kKDJbuy8PgLW6ygnttdKfOoNggfbNpxFTyxiSCEPfrYPytdC
+ MSaicrRizVgAyXgY1eQ==
+X-Proofpoint-GUID: OgLcficy-mxos3_6pDI9WWsBHQE9a4a1
+X-Proofpoint-ORIG-GUID: OgLcficy-mxos3_6pDI9WWsBHQE9a4a1
+X-Authority-Analysis: v=2.4 cv=Xtf3+FF9 c=1 sm=1 tr=0 ts=6960dc3f cx=c_pps
  a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
  a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8
- a=fLguakaJfclCSsbpy6UA:9
-X-Proofpoint-ORIG-GUID: PMmYzIKmeY9hDt3afjYeaQmFqYZH2eoR
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA5MDA3OCBTYWx0ZWRfXzu83W84ber4Q
- oH0cmNptffaDWXj337svqhlgHJgmaKuD8le7KL2tULvsvJme1EBeId/pVCRCGakPp5slS7yCAWF
- Qxiwyr8St9Ikv+Au6bEItWMH+iBHBJw8WQc4Kbesu3uQlYZeXGaRlGZufvE+B2KiYZ5PIJF7VzG
- sVLGfogr5VQGHokfqvJnqvKj4Fd7Jf5i7lfaAsf/GowtDu1duJXPyTDV4ymShEIeuZua7FvTS35
- GrzTVB5qFKWbeoaTbD/Whe/iGSjgi1n+K4cfONJ8Z/KbbnbA7yi3UP3WyrB+VU5kjyqapeqnJdP
- PaK2D6NnxoVU1Bp+a7bHW8Yi1Gn0JSKWBIaaBlpP9LL5p5JrAZ95Tz6OfEZ8jHXSfL38vlgVnXL
- fpPreSyqnvWLtpKZaPOKWrP8w2Le8HhYvfi24gd5XW/7sbw32qLHX0l+I68HanxHJT9Ry6H/c7P
- whU7ePGpwO1UEri8Aqg==
+ a=F64zyhlCJvNoaSjIp8kA:9
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2026-01-09_03,2026-01-08_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 spamscore=0 phishscore=0 clxscore=1015
- priorityscore=1501 adultscore=0 bulkscore=0 lowpriorityscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
+ malwarescore=0 adultscore=0 clxscore=1011 suspectscore=0 spamscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
  definitions=main-2601090078
 
-HAMOA IoT SOM requires PCIe3 and PCIe5 connectivity for SATA controller
-and SDX65.
+HAMAO IoT EVK uses PCIe5 to connect an SDX65 module for WWAN functionality
+and PCIe3 to connect a SATA controller. These interfaces require multiple
+voltage rails: PCIe5 needs 3.3V supplied by vreg_wwan, while PCIe3 requires
+12V, 3.3V, and 3.3V AUX rails, controlled via PMIC GPIOs.
 
-Add the required sideband signals (PERST#, WAKE#, CLKREQ#), pinctrl states
-and power supply properties in the device tree, which PCIe3 and PCIe5
-require.
+Add the required fixed regulators with related pin configuration, and
+connect them to the PCIe3 and PCIe5 ports to ensure proper power for the
+SDX65 module and SATA controller.
+
+Move reset and wake GPIO properties from RC nodes to port nodes.
 
 Signed-off-by: Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
 Reviewed-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 ---
- arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi | 74 +++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+ arch/arm64/boot/dts/qcom/hamoa-iot-evk.dts  | 97 +++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi |  6 --
+ 2 files changed, 97 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi b/arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi
-index 4a69852e9176..81866f94fe01 100644
---- a/arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi
-+++ b/arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi
-@@ -390,6 +390,20 @@ &gpu_zap_shader {
- 	firmware-name = "qcom/x1e80100/gen70500_zap.mbn";
- };
+diff --git a/arch/arm64/boot/dts/qcom/hamoa-iot-evk.dts b/arch/arm64/boot/dts/qcom/hamoa-iot-evk.dts
+index 898b92627f84..07378ee183f9 100644
+--- a/arch/arm64/boot/dts/qcom/hamoa-iot-evk.dts
++++ b/arch/arm64/boot/dts/qcom/hamoa-iot-evk.dts
+@@ -253,6 +253,48 @@ vreg_nvme: regulator-nvme {
+ 		regulator-boot-on;
+ 	};
  
-+&pcie3 {
-+	pinctrl-0 = <&pcie3_default>;
-+	pinctrl-names = "default";
++	vreg_pcie_12v: regulator-pcie-12v {
++		compatible = "regulator-fixed";
 +
-+	status = "okay";
-+};
++		regulator-name = "VREG_PCIE_12V";
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
 +
-+&pcie3_phy {
-+	vdda-phy-supply = <&vreg_l3c_0p8>;
-+	vdda-pll-supply = <&vreg_l3e_1p2>;
++		gpio = <&pm8550ve_8_gpios 8 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
 +
-+	status = "okay";
-+};
++		pinctrl-0 = <&pcie_x8_12v>;
++		pinctrl-names = "default";
++	};
 +
- &pcie4 {
- 	perst-gpios = <&tlmm 146 GPIO_ACTIVE_LOW>;
- 	wake-gpios = <&tlmm 148 GPIO_ACTIVE_LOW>;
-@@ -407,6 +421,20 @@ &pcie4_phy {
++	vreg_pcie_3v3: regulator-pcie-3v3 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VREG_PCIE_3P3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&pmc8380_3_gpios 6 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-0 = <&pm_sde7_main_3p3_en>;
++		pinctrl-names = "default";
++	};
++
++	vreg_pcie_3v3_aux: regulator-pcie-3v3-aux {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VREG_PCIE_3P3_AUX";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&pmc8380_3_gpios 8 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-0 = <&pm_sde7_aux_3p3_en>;
++		pinctrl-names = "default";
++	};
++
+ 	/* Left unused as the retimer is not used on this board. */
+ 	vreg_rtmr0_1p15: regulator-rtmr0-1p15 {
+ 		compatible = "regulator-fixed";
+@@ -920,7 +962,19 @@ &mdss_dp3_phy {
  	status = "okay";
  };
  
-+&pcie5 {
-+	pinctrl-0 = <&pcie5_default>;
-+	pinctrl-names = "default";
++&pcie3_port0 {
++	vpcie12v-supply = <&vreg_pcie_12v>;
++	vpcie3v3-supply = <&vreg_pcie_3v3>;
++	vpcie3v3aux-supply = <&vreg_pcie_3v3_aux>;
 +
-+	status = "okay";
++	reset-gpios = <&tlmm 143 GPIO_ACTIVE_LOW>;
++	wake-gpios = <&tlmm 145 GPIO_ACTIVE_LOW>;
 +};
 +
-+&pcie5_phy {
-+	vdda-phy-supply = <&vreg_l3i_0p8>;
-+	vdda-pll-supply = <&vreg_l3e_1p2>;
+ &pcie4_port0 {
++	reset-gpios = <&tlmm 146 GPIO_ACTIVE_LOW>;
++	wake-gpios = <&tlmm 148 GPIO_ACTIVE_LOW>;
 +
-+	status = "okay";
+ 	wifi@0 {
+ 		compatible = "pci17cb,1107";
+ 		reg = <0x10000 0x0 0x0 0x0 0x0>;
+@@ -937,10 +991,24 @@ wifi@0 {
+ 	};
+ };
+ 
++&pcie5 {
++	vddpe-3v3-supply = <&vreg_wwan>;
++};
++
++&pcie5_port0 {
++	reset-gpios = <&tlmm 149 GPIO_ACTIVE_LOW>;
++	wake-gpios = <&tlmm 151 GPIO_ACTIVE_LOW>;
 +};
 +
  &pcie6a {
- 	perst-gpios = <&tlmm 152 GPIO_ACTIVE_LOW>;
- 	wake-gpios = <&tlmm 154 GPIO_ACTIVE_LOW>;
-@@ -453,6 +481,29 @@ &remoteproc_cdsp {
- &tlmm {
- 	gpio-reserved-ranges = <34 2>; /* TPM LP & INT */
+ 	vddpe-3v3-supply = <&vreg_nvme>;
+ };
  
-+	pcie3_default: pcie3-default-state {
-+		clkreq-n-pins {
-+			pins = "gpio144";
-+			function = "pcie3_clk";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
++&pcie6a_port0 {
++	reset-gpios = <&tlmm 152 GPIO_ACTIVE_LOW>;
++	wake-gpios = <&tlmm 154 GPIO_ACTIVE_LOW>;
++};
 +
-+		perst-n-pins {
-+			pins = "gpio143";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+
-+		wake-n-pins {
-+			pins = "gpio145";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+	};
-+
- 	pcie4_default: pcie4-default-state {
- 		clkreq-n-pins {
- 			pins = "gpio147";
-@@ -476,6 +527,29 @@ wake-n-pins {
- 		};
+ &pm8550_gpios {
+ 	rtmr0_default: rtmr0-reset-n-active-state {
+ 		pins = "gpio10";
+@@ -961,6 +1029,17 @@ usb0_3p3_reg_en: usb0-3p3-reg-en-state {
  	};
+ };
  
-+	pcie5_default: pcie5-default-state {
-+		clkreq-n-pins {
-+			pins = "gpio150";
-+			function = "pcie5_clk";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
++&pm8550ve_8_gpios {
++	pcie_x8_12v: pcie-12v-default-state {
++		pins = "gpio8";
++		function = "normal";
++		output-enable;
++		output-high;
++		bias-pull-down;
++		power-source = <0>;
++	};
++};
 +
-+		perst-n-pins {
-+			pins = "gpio149";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+
-+		wake-n-pins {
-+			pins = "gpio151";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
+ &pm8550ve_9_gpios {
+ 	usb0_1p8_reg_en: usb0-1p8-reg-en-state {
+ 		pins = "gpio8";
+@@ -1025,6 +1104,24 @@ edp_bl_reg_en: edp-bl-reg-en-state {
+ 	};
+ };
+ 
++&pmc8380_3_gpios {
++	pm_sde7_aux_3p3_en: pcie-aux-3p3-default-state {
++		pins = "gpio8";
++		function = "normal";
++		output-enable;
++		bias-pull-down;
++		power-source = <0>;
 +	};
 +
- 	pcie6a_default: pcie6a-default-state {
- 		clkreq-n-pins {
- 			pins = "gpio153";
++	pm_sde7_main_3p3_en: pcie-main-3p3-default-state {
++		pins = "gpio6";
++		function = "normal";
++		output-enable;
++		bias-pull-down;
++		power-source = <0>;
++	};
++};
++
+ &pmc8380_5_gpios {
+ 	usb0_pwr_1p15_reg_en: usb0-pwr-1p15-reg-en-state {
+ 		pins = "gpio8";
+diff --git a/arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi b/arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi
+index 81866f94fe01..b8e3e04a6fbd 100644
+--- a/arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi
++++ b/arch/arm64/boot/dts/qcom/hamoa-iot-som.dtsi
+@@ -405,9 +405,6 @@ &pcie3_phy {
+ };
+ 
+ &pcie4 {
+-	perst-gpios = <&tlmm 146 GPIO_ACTIVE_LOW>;
+-	wake-gpios = <&tlmm 148 GPIO_ACTIVE_LOW>;
+-
+ 	pinctrl-0 = <&pcie4_default>;
+ 	pinctrl-names = "default";
+ 
+@@ -436,9 +433,6 @@ &pcie5_phy {
+ };
+ 
+ &pcie6a {
+-	perst-gpios = <&tlmm 152 GPIO_ACTIVE_LOW>;
+-	wake-gpios = <&tlmm 154 GPIO_ACTIVE_LOW>;
+-
+ 	pinctrl-0 = <&pcie6a_default>;
+ 	pinctrl-names = "default";
+ 
 -- 
 2.34.1
 
