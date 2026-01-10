@@ -1,217 +1,126 @@
-Return-Path: <linux-pci+bounces-44412-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44413-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F1EBD0CE32
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Jan 2026 04:56:50 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF1A6D0CF5B
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Jan 2026 06:07:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id ED42A300AFD7
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Jan 2026 03:56:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 542173031CE8
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Jan 2026 05:07:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BA06242D91;
-	Sat, 10 Jan 2026 03:56:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0530C24DD09;
+	Sat, 10 Jan 2026 05:07:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="af3ZDpHd"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="C74SC47v"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36AF0223336
-	for <linux-pci@vger.kernel.org>; Sat, 10 Jan 2026 03:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3B832AEE1;
+	Sat, 10 Jan 2026 05:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768017398; cv=none; b=qVIlXV3lHpjTdtHC7tnfUjkWzXVwJCKooxplc7ibqxyEFRZc96oVOOWQebN9WcKNPCxziZ5d5QHqUYZavtLGQbS5pKY2UlUPhL8Tm/AjgE9CAot7Jf4/scYYR05svlQ6OJCETeZBl9GN8ObKUEa6Q3YWZ/oGDzohJ5RSvr2t09Q=
+	t=1768021624; cv=none; b=Nqrayuw0so6BiVY3L50/tUaaEeAQdXW+8Ic6PEoc8wAtN6y+EjaUERetZorxmA0oDycCojl4muLfroCF/z4tVDv4hK2CsDoP+n6aD7Ron87jfrdHYIey0EH6h7GJr6oFct3hGmJ54TAzgvUrClQZC0gTiXn3ks/EM7ExUMxtY4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768017398; c=relaxed/simple;
-	bh=9p6RmnkmPmxThjE5ZGGGJIzSUtMFQpEhF2G8Sb52rhs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Idld6Hml2nquGCf719Du6PXZzsm7IOUExKz0p+z4i9m3MnL51i4Me5S5tlgB+cSo34no0qPppIkpqJM9wM1WzSmCerm+p1suodcjyYgxRxIO/wNBSO2Z0zsigT0dHS3PMki37bOTXUqKk7Iw9k9xwij44gWKa5G/cmo3C8p9yTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=af3ZDpHd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFA88C2BC86
-	for <linux-pci@vger.kernel.org>; Sat, 10 Jan 2026 03:56:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768017397;
-	bh=9p6RmnkmPmxThjE5ZGGGJIzSUtMFQpEhF2G8Sb52rhs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=af3ZDpHdr+HWZdgRUe6clJHlkf/xzatlfW54wz4EyKY04zpdmluKYp5eVUg1hUU4h
-	 qXRO8zX+m2LBS+pQS9LMj5Tyib80x05HqkaU1vI3693b7ma3C42W0K8AEcdcub53JA
-	 W5Pt+KcGfeUio076DPkTofjbumgQA4MwE5oLSxywUtDdgCpnBotZHC8BnrTn57+H78
-	 MdoTUIdML7RGG0gap22RFI+tTu8Yqc8s6eFkHqN/SK7z2AlFA7vQnoZB6iKcFMTZG1
-	 W7JbnZGCE+7GaneqigTpFOCoIEeh1WfU80Jfp6+pAYkClMx/eynfK6FtrH3Iy7LJOt
-	 QYCEIgeClKyJg==
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b7a72874af1so882137266b.3
-        for <linux-pci@vger.kernel.org>; Fri, 09 Jan 2026 19:56:37 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWCvxhIk/YJjKhD85FigJNPB4qwPiWARCNWCTiJv4dPmDJNrovxlRIfx24SShkfQZawnwGmVT/qMkU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBXZO5DyG17qsJDfMnCqmvAAim/wlTvq4UMEy72JxUqVF4RDxE
-	2Ftas4l+BJ82Sdn7TC8V6CcAd94jABdY6GknJHFr6dhYGogN4AOkLDnNbu2dAPaVuuSpjKK+vh0
-	V8WTqDKv4XeyGcorXshzCw+3gD294ux4=
-X-Google-Smtp-Source: AGHT+IGqSgt2l+c/zfH3fsWOnD3TfFlFCMg+cRoIShka34bkE6l10kWQY4tFn/1hTTr39NYqrOQOiXRTW0avh0YyVP4=
-X-Received: by 2002:a17:907:7392:b0:b79:cec4:f1ad with SMTP id
- a640c23a62f3a-b8444f6f7cfmr856490366b.40.1768017396363; Fri, 09 Jan 2026
- 19:56:36 -0800 (PST)
+	s=arc-20240116; t=1768021624; c=relaxed/simple;
+	bh=H9sP3OuduopwwfkgZnqCplKd7Uw7oudWDC+SRAthous=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DAjyArsK5QfnRDkPyIRKnihwZQxfqcylBbXpUGH6dSdwhfwQEHdHZ6+jbcG+MVnc1DHOQaJmm0jSNSaUA2DQq/61ccDFU2e5CDMSRcOw+FlZY9qezXiHCLslNzJkee1o8lNNLK8yjEWcyrhioM/YbC9Lk0Giy3R08A3yS/aQ9JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=C74SC47v; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from localhost (unknown [167.220.232.230])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 44F97201AC7E;
+	Fri,  9 Jan 2026 21:07:02 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 44F97201AC7E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1768021622;
+	bh=8LDRrRcWPAQ/JM0ulR7Cmo3AX3HSBKt9ssdkQit4fZ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C74SC47v/fG9cBx+G9rSDmaT3PUXefUfqblHqSXIXFtD91RKQH1jXzFHRw2eXLqCO
+	 RE/wVcJv2dYVCEU3g6AmDBpSveCVqhg4/9YIBhgC1ZFpp8sRFci2fpKU1IKBi48X7c
+	 wBUKrY4EigDJ5oH/ycm2aJzLVAMzRiwsxTHQPi3k=
+Date: Sat, 10 Jan 2026 13:07:00 +0800
+From: Yu Zhang <zhangyu1@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kys@microsoft.com" <kys@microsoft.com>, 
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, 
+	"decui@microsoft.com" <decui@microsoft.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>, "mani@kernel.org" <mani@kernel.org>, 
+	"robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, 
+	"arnd@arndb.de" <arnd@arndb.de>, "joro@8bytes.org" <joro@8bytes.org>, 
+	"will@kernel.org" <will@kernel.org>, "robin.murphy@arm.com" <robin.murphy@arm.com>, 
+	"easwar.hariharan@linux.microsoft.com" <easwar.hariharan@linux.microsoft.com>, "jacob.pan@linux.microsoft.com" <jacob.pan@linux.microsoft.com>, 
+	"nunodasneves@linux.microsoft.com" <nunodasneves@linux.microsoft.com>, "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [RFC v1 4/5] hyperv: allow hypercall output pages to be
+ allocated for child partitions
+Message-ID: <4xjdq3js7w4qxcev727ujedpcujvzgrhf4xsfn3plfrn7fskxu@2qwxljanz3i6>
+References: <20251209051128.76913-1-zhangyu1@linux.microsoft.com>
+ <20251209051128.76913-5-zhangyu1@linux.microsoft.com>
+ <SN6PR02MB4157C3EF6617A7BA4CA9E432D485A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260109-loongson-pci1-v3-1-5ddc5ae3ba93@uniontech.com>
-In-Reply-To: <20260109-loongson-pci1-v3-1-5ddc5ae3ba93@uniontech.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 10 Jan 2026 11:56:28 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6=Q33SXNDGbWVMAQjBeH-26qj0d-E-pKZhgpS5DWu75g@mail.gmail.com>
-X-Gm-Features: AZwV_QgOlk07fbUywRCQBgNGLsxr3cV_EL4PXROhykeNBUQhA6qdSLHN3Oj7wSc
-Message-ID: <CAAhV-H6=Q33SXNDGbWVMAQjBeH-26qj0d-E-pKZhgpS5DWu75g@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI: loongson: Override PCIe bridge supported speeds
- for older Loongson 3C6000 series steppings
-To: liziyao@uniontech.com
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	niecheng1@uniontech.com, zhanjun@uniontech.com, guanwentao@uniontech.com, 
-	Kexy Biscuit <kexybiscuit@aosc.io>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Lain Fearyncess Yang <fsf@live.com>, Ayden Meng <aydenmeng@yeah.net>, Mingcong Bai <jeffbai@aosc.io>, 
-	Xi Ruoyao <xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB4157C3EF6617A7BA4CA9E432D485A@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-Hi, Ziyao,
+On Thu, Jan 08, 2026 at 06:47:44PM +0000, Michael Kelley wrote:
+> From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Monday, December 8, 2025 9:11 PM
+> > 
+> 
+> The "Subject:" line prefix for this patch should probably be "Drivers: hv:"
+> to be consistent with most other changes to this source code file.
+> 
+> > Previously, the allocation of per-CPU output argument pages was restricted
+> > to root partitions or those operating in VTL mode.
+> > 
+> > Remove this restriction to support guest IOMMU related hypercalls, which
+> > require valid output pages to function correctly.
+> 
+> The thinking here isn't quite correct. Just because a hypercall produces output
+> doesn't mean that Linux needs to allocate a page for the output that is separate
+> from the input. It's perfectly OK to use the same page for both input and output,
+> as long as the two areas don't overlap. Yes, the page is called
+> "hyperv_pcpu_input_arg", but that's a historical artifact from before the time
+> it was realized that the same page can be used for both input and output.
+> 
+> Of course, if there's ever a hypercall that needs lots of input and lots of output
+> such that the combined size doesn't fit in a single page, then separate input
+> and output pages will be needed. But I'm skeptical that will ever happen. Rep
+> hypercalls could have large amounts of input and/or output, but I'd venture
+> that the rep count can always be managed so everything fits in a single page.
+> 
 
-As far as I know, new chips may still use the same PCI ID, and even if
-new chips fix this problem in hardware, this patch seems harmless. So
-I suggest the subject to be:
+Thanks, Michael.
 
-PCI: loongson: Override PCIe bridge supported speeds for Loongson-3C6000 se=
-ries.
+Is there an existing hypercall precedent that reuses the input page for output?
+I believe reusing the input page should be acceptable, at least for pvIOMMU's
+hypercalls, but I will confirm these interfaces with the Hyper-V team.
 
+> > 
+> > While unconditionally allocating per-CPU output pages scales with the number
+> > of vCPUs, and potentially adding overhead for guests that may not utilize the
+> > IOMMU, this change anticipates that future hypercalls from child partitions
+> > may also require these output pages.
+> 
+> I've heard the argument that the amount of overhead is modest relative to the
+> overall amount of memory that is typically in a VM, particularly VMs with high
+> vCPU counts. And I don't disagree. But on the flip side, why tie up memory when
+> there's no need to do so? I'd argue for dropping this patch, and changing the
+> two hypercall call sites in Patch 5 to just use part of the so-called hypercall input
+> page for the output as well. It's only a one-line change in each hypercall call site.
+> 
 
-On Fri, Jan 9, 2026 at 11:37=E2=80=AFAM Ziyao Li via B4 Relay
-<devnull+liziyao.uniontech.com@kernel.org> wrote:
->
-> From: Ziyao Li <liziyao@uniontech.com>
->
-> Older steppings of the Loongson 3C6000 series incorrectly report the
-> supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
-> only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
-> up to 16 GT/s.
-Please use Loongson-3C6000 instead of Loongson 3C6000, and use
-0x3c19/0x3c29 instead of 3c19/3c29, thanks.
+I share your concern about unconditionally allocating a separate output page
+for each vCPU. And if reusing the input page isn't accepted by the Hyper-V team,
+perhaps we could gate the allocation by checking IS_ENABLED(CONFIG_HYPERV_PVIOMMU)
+in hv_output_page_exist()?
 
-Huacai
-
->
-> As a result, since commit 774c71c52aa4 ("PCI/bwctrl: Enable only if more
-> than one speed is supported"), bwctrl will be disabled if there's only
-> one 2.5 GT/s value in vector `supported_speeds`.
->
-> Also, amdgpu reads the value by pcie_get_speed_cap() in amdgpu_device_
-> partner_bandwidth(), for its dynamic adjustment of PCIe clocks and
-> lanes in power management. We hope this can prevent similar problems
-> in future driver changes (similar checks may be implemented in other
-> GPU, storage controller, NIC, etc. drivers).
->
-> Manually override the `supported_speeds` field for affected PCIe bridges
-> with those found on the upstream bus to correctly reflect the supported
-> link speeds.
->
-> This patch was originally found from AOSC OS[1].
->
-> Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
-> Tested-by: Lain Fearyncess Yang <fsf@live.com>
-> Tested-by: Ayden Meng <aydenmeng@yeah.net>
-> Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
-> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
-> [Xi Ruoyao: Fix falling through logic and add kernel log output.]
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> Link: https://github.com/AOSC-Tracking/linux/commit/4392f441363abdf6fa0a0=
-433d73175a17f493454
-> [Ziyao Li: move from drivers/pci/quirks.c to drivers/pci/controller/pci-l=
-oongson.c]
-> Signed-off-by: Ziyao Li <liziyao@uniontech.com>
-> Tested-by: Mingcong Bai <jeffbai@aosc.io>
-> ---
-> Changes in v3:
-> - Adjust commit message
-> - Make the program flow more intuitive
-> - Link to v2: https://lore.kernel.org/r/20260104-loongson-pci1-v2-1-d151e=
-57b6ef8@uniontech.com
->
-> Changes in v2:
-> - Link to v1: https://lore.kernel.org/r/20250822-loongson-pci1-v1-1-39aab=
-bd11fbd@uniontech.com
-> - Move from arch/loongarch/pci/pci.c to drivers/pci/controller/pci-loongs=
-on.c
-> - Fix falling through logic and add kernel log output by Xi Ruoyao
-> ---
->  drivers/pci/controller/pci-loongson.c | 38 +++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 38 insertions(+)
->
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controll=
-er/pci-loongson.c
-> index bc630ab8a283..67a6d99b9e82 100644
-> --- a/drivers/pci/controller/pci-loongson.c
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -176,6 +176,44 @@ static void loongson_pci_msi_quirk(struct pci_dev *d=
-ev)
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loo=
-ngson_pci_msi_quirk);
->
-> +/*
-> + * Older steppings of the Loongson 3C6000 series incorrectly report the
-> + * supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) a=
-s
-> + * only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT=
-/s
-> + * up to 16 GT/s.
-> + */
-> +static void loongson_pci_bridge_speed_quirk(struct pci_dev *pdev)
-> +{
-> +       u8 old_supported_speeds =3D pdev->supported_speeds;
-> +
-> +       switch (pdev->bus->max_bus_speed) {
-> +       case PCIE_SPEED_16_0GT:
-> +               pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_16_0GB;
-> +               fallthrough;
-> +       case PCIE_SPEED_8_0GT:
-> +               pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_8_0GB;
-> +               fallthrough;
-> +       case PCIE_SPEED_5_0GT:
-> +               pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_5_0GB;
-> +               fallthrough;
-> +       case PCIE_SPEED_2_5GT:
-> +               pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_2_5GB;
-> +               break;
-> +       default:
-> +               pci_warn(pdev, "unexpected max bus speed");
-> +
-> +               return;
-> +       }
-> +
-> +       if (pdev->supported_speeds !=3D old_supported_speeds)
-> +               pci_info(pdev, "fixing up supported link speeds: 0x%x =3D=
-> 0x%x",
-> +                        old_supported_speeds, pdev->supported_speeds);
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19,
-> +                        loongson_pci_bridge_speed_quirk);
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29,
-> +                        loongson_pci_bridge_speed_quirk);
-> +
->  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
->  {
->         struct pci_config_window *cfg;
->
-> ---
-> base-commit: ea1013c1539270e372fc99854bc6e4d94eaeff66
-> change-id: 20250822-loongson-pci1-4ded0d78f1bb
->
-> Best regards,
-> --
-> Ziyao Li <liziyao@uniontech.com>
->
->
->
+B.R.
+Yu
 
