@@ -1,230 +1,217 @@
-Return-Path: <linux-pci+bounces-44411-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44412-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61856D0CAD0
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Jan 2026 02:04:07 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F1EBD0CE32
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Jan 2026 04:56:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3B86330053C2
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Jan 2026 01:04:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id ED42A300AFD7
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Jan 2026 03:56:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A04CC2066DE;
-	Sat, 10 Jan 2026 01:04:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BA06242D91;
+	Sat, 10 Jan 2026 03:56:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k9Gxp1kf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="af3ZDpHd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421D817B50F
-	for <linux-pci@vger.kernel.org>; Sat, 10 Jan 2026 01:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36AF0223336
+	for <linux-pci@vger.kernel.org>; Sat, 10 Jan 2026 03:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768007044; cv=none; b=tjplNCFzKVe3WgsDC53SuABR81a25w08lQRWfxX9/O5+KLLLNU4DtF9MXfW4ZrS2Gn0eBd+poAyxM263JUcYy0K9uLwZbdWypLbVx2R16ma9++h0Ppy/gMxKNODFIJ41XleGbp56RDxrgCR5SJ15Ri+vdmKnhJI58CcroaaTlbk=
+	t=1768017398; cv=none; b=qVIlXV3lHpjTdtHC7tnfUjkWzXVwJCKooxplc7ibqxyEFRZc96oVOOWQebN9WcKNPCxziZ5d5QHqUYZavtLGQbS5pKY2UlUPhL8Tm/AjgE9CAot7Jf4/scYYR05svlQ6OJCETeZBl9GN8ObKUEa6Q3YWZ/oGDzohJ5RSvr2t09Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768007044; c=relaxed/simple;
-	bh=dn3aG37VNuW1K4N1Ogdk4S6zJlWuGbT3QTthIZAQLVw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ShQ+5OIkHwI3GmwltZGTu5DGBTNrQTINx7bDxaTrlgKaOZvU8N8xbOIJkDwMl8vbKi62Qlmrm1elogd/Gzwse8m7G+47CBpMBVi0F/kGDXqIOneBDPQX17RMWZ6ZyrOYDOXpxA3o2q3c9PpCPGSM1uIrNHg4whvhliLHP/jQV/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k9Gxp1kf; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768007043; x=1799543043;
-  h=date:from:to:cc:subject:message-id;
-  bh=dn3aG37VNuW1K4N1Ogdk4S6zJlWuGbT3QTthIZAQLVw=;
-  b=k9Gxp1kfgRyUyaPUEUoguwVvpJjfTw3nY+BZQ5yJLyO3vfHZZmWcXGmG
-   BaSebdWfL+4qrVuK4MBsUpWjdUjuamDFEKfWLH40eMYKgm4ux9QKh+eiN
-   Nq3bSCVIwdIRK+E5/vylfGYcKlzazrcaLvx4gjoYTiR0K/bLQQO5xPdvO
-   Y4rEQ15HTEuVEXBtxq3VdSw4/b8kYMGXOsjUXb3puojB3BC1HRAtHijJG
-   FG7uTeq0pZGosO7EboCzZ0KgjAuil6olCxOCrQq5XsfgpgxYWe92BTtmt
-   69AG+3+oLN72eiW4Kw5A5P3JsafmFt716lucMF9ElywG76WCbe5QU5JcP
-   Q==;
-X-CSE-ConnectionGUID: +/SO3Z3cSCKVZ60F1f9oZQ==
-X-CSE-MsgGUID: epSjsAXmSgebBcXxflHIQw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11666"; a="73244100"
-X-IronPort-AV: E=Sophos;i="6.21,215,1763452800"; 
-   d="scan'208";a="73244100"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 17:04:02 -0800
-X-CSE-ConnectionGUID: 0DXgkI+hQg6DeP6Hq+BhQg==
-X-CSE-MsgGUID: hPT4xxe4SAGDN7XNYtgDHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,215,1763452800"; 
-   d="scan'208";a="203391749"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 09 Jan 2026 17:04:02 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1veNOZ-000000007uJ-0MQ9;
-	Sat, 10 Jan 2026 01:03:59 +0000
-Date: Sat, 10 Jan 2026 09:03:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- 15a80caa4399d92b4c3ad6582b4c37aa312dc5de
-Message-ID: <202601100944.PIGNUmKf-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1768017398; c=relaxed/simple;
+	bh=9p6RmnkmPmxThjE5ZGGGJIzSUtMFQpEhF2G8Sb52rhs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Idld6Hml2nquGCf719Du6PXZzsm7IOUExKz0p+z4i9m3MnL51i4Me5S5tlgB+cSo34no0qPppIkpqJM9wM1WzSmCerm+p1suodcjyYgxRxIO/wNBSO2Z0zsigT0dHS3PMki37bOTXUqKk7Iw9k9xwij44gWKa5G/cmo3C8p9yTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=af3ZDpHd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFA88C2BC86
+	for <linux-pci@vger.kernel.org>; Sat, 10 Jan 2026 03:56:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768017397;
+	bh=9p6RmnkmPmxThjE5ZGGGJIzSUtMFQpEhF2G8Sb52rhs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=af3ZDpHdr+HWZdgRUe6clJHlkf/xzatlfW54wz4EyKY04zpdmluKYp5eVUg1hUU4h
+	 qXRO8zX+m2LBS+pQS9LMj5Tyib80x05HqkaU1vI3693b7ma3C42W0K8AEcdcub53JA
+	 W5Pt+KcGfeUio076DPkTofjbumgQA4MwE5oLSxywUtDdgCpnBotZHC8BnrTn57+H78
+	 MdoTUIdML7RGG0gap22RFI+tTu8Yqc8s6eFkHqN/SK7z2AlFA7vQnoZB6iKcFMTZG1
+	 W7JbnZGCE+7GaneqigTpFOCoIEeh1WfU80Jfp6+pAYkClMx/eynfK6FtrH3Iy7LJOt
+	 QYCEIgeClKyJg==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b7a72874af1so882137266b.3
+        for <linux-pci@vger.kernel.org>; Fri, 09 Jan 2026 19:56:37 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWCvxhIk/YJjKhD85FigJNPB4qwPiWARCNWCTiJv4dPmDJNrovxlRIfx24SShkfQZawnwGmVT/qMkU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBXZO5DyG17qsJDfMnCqmvAAim/wlTvq4UMEy72JxUqVF4RDxE
+	2Ftas4l+BJ82Sdn7TC8V6CcAd94jABdY6GknJHFr6dhYGogN4AOkLDnNbu2dAPaVuuSpjKK+vh0
+	V8WTqDKv4XeyGcorXshzCw+3gD294ux4=
+X-Google-Smtp-Source: AGHT+IGqSgt2l+c/zfH3fsWOnD3TfFlFCMg+cRoIShka34bkE6l10kWQY4tFn/1hTTr39NYqrOQOiXRTW0avh0YyVP4=
+X-Received: by 2002:a17:907:7392:b0:b79:cec4:f1ad with SMTP id
+ a640c23a62f3a-b8444f6f7cfmr856490366b.40.1768017396363; Fri, 09 Jan 2026
+ 19:56:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260109-loongson-pci1-v3-1-5ddc5ae3ba93@uniontech.com>
+In-Reply-To: <20260109-loongson-pci1-v3-1-5ddc5ae3ba93@uniontech.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 10 Jan 2026 11:56:28 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6=Q33SXNDGbWVMAQjBeH-26qj0d-E-pKZhgpS5DWu75g@mail.gmail.com>
+X-Gm-Features: AZwV_QgOlk07fbUywRCQBgNGLsxr3cV_EL4PXROhykeNBUQhA6qdSLHN3Oj7wSc
+Message-ID: <CAAhV-H6=Q33SXNDGbWVMAQjBeH-26qj0d-E-pKZhgpS5DWu75g@mail.gmail.com>
+Subject: Re: [PATCH v3] PCI: loongson: Override PCIe bridge supported speeds
+ for older Loongson 3C6000 series steppings
+To: liziyao@uniontech.com
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	niecheng1@uniontech.com, zhanjun@uniontech.com, guanwentao@uniontech.com, 
+	Kexy Biscuit <kexybiscuit@aosc.io>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Lain Fearyncess Yang <fsf@live.com>, Ayden Meng <aydenmeng@yeah.net>, Mingcong Bai <jeffbai@aosc.io>, 
+	Xi Ruoyao <xry111@xry111.site>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: 15a80caa4399d92b4c3ad6582b4c37aa312dc5de  Merge branch 'pci/misc'
+Hi, Ziyao,
 
-elapsed time: 1589m
+As far as I know, new chips may still use the same PCI ID, and even if
+new chips fix this problem in hardware, this patch seems harmless. So
+I suggest the subject to be:
 
-configs tested: 139
-configs skipped: 2
+PCI: loongson: Override PCIe bridge supported speeds for Loongson-3C6000 se=
+ries.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.2.0
-alpha                               defconfig    gcc-15.2.0
-arc                               allnoconfig    gcc-15.2.0
-arc                                 defconfig    gcc-15.2.0
-arc                   randconfig-001-20260109    gcc-13.4.0
-arc                   randconfig-002-20260109    gcc-13.4.0
-arm                               allnoconfig    gcc-15.2.0
-arm                       aspeed_g4_defconfig    clang-22
-arm                                 defconfig    gcc-15.2.0
-arm                   randconfig-001-20260109    gcc-13.4.0
-arm                   randconfig-002-20260109    gcc-13.4.0
-arm                   randconfig-003-20260109    gcc-13.4.0
-arm                   randconfig-004-20260109    gcc-13.4.0
-arm                           spitz_defconfig    clang-22
-arm64                             allnoconfig    gcc-15.2.0
-arm64                               defconfig    gcc-15.2.0
-arm64                 randconfig-001-20260109    gcc-8.5.0
-arm64                 randconfig-002-20260109    gcc-8.5.0
-arm64                 randconfig-003-20260109    gcc-8.5.0
-arm64                 randconfig-004-20260109    gcc-8.5.0
-csky                              allnoconfig    gcc-15.2.0
-csky                                defconfig    gcc-15.2.0
-csky                  randconfig-001-20260109    gcc-8.5.0
-csky                  randconfig-002-20260109    gcc-8.5.0
-hexagon                           allnoconfig    gcc-15.2.0
-hexagon                             defconfig    gcc-15.2.0
-hexagon               randconfig-001-20260109    gcc-8.5.0
-hexagon               randconfig-002-20260109    gcc-8.5.0
-i386                              allnoconfig    gcc-15.2.0
-i386        buildonly-randconfig-001-20260109    clang-20
-i386        buildonly-randconfig-002-20260109    clang-20
-i386        buildonly-randconfig-003-20260109    clang-20
-i386        buildonly-randconfig-004-20260109    clang-20
-i386        buildonly-randconfig-005-20260109    clang-20
-i386        buildonly-randconfig-006-20260109    clang-20
-i386                                defconfig    gcc-15.2.0
-i386                  randconfig-001-20260109    gcc-14
-i386                  randconfig-002-20260109    gcc-14
-i386                  randconfig-003-20260109    gcc-14
-i386                  randconfig-004-20260109    gcc-14
-i386                  randconfig-005-20260109    gcc-14
-i386                  randconfig-006-20260109    gcc-14
-i386                  randconfig-007-20260109    gcc-14
-i386                  randconfig-011-20260109    clang-20
-i386                  randconfig-012-20260109    clang-20
-i386                  randconfig-013-20260109    clang-20
-i386                  randconfig-014-20260109    clang-20
-i386                  randconfig-015-20260109    clang-20
-i386                  randconfig-016-20260109    clang-20
-i386                  randconfig-017-20260109    clang-20
-loongarch                         allnoconfig    gcc-15.2.0
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20260109    gcc-8.5.0
-loongarch             randconfig-002-20260109    gcc-8.5.0
-m68k                              allnoconfig    gcc-15.2.0
-m68k                                defconfig    clang-19
-m68k                           sun3_defconfig    clang-22
-microblaze                        allnoconfig    gcc-15.2.0
-microblaze                          defconfig    clang-19
-mips                              allnoconfig    gcc-15.2.0
-mips                     decstation_defconfig    clang-22
-mips                        vocore2_defconfig    clang-22
-nios2                             allnoconfig    clang-22
-nios2                               defconfig    clang-19
-nios2                 randconfig-001-20260109    gcc-8.5.0
-nios2                 randconfig-002-20260109    gcc-8.5.0
-openrisc                          allnoconfig    clang-22
-openrisc                            defconfig    gcc-15.2.0
-parisc                            allnoconfig    clang-22
-parisc                              defconfig    gcc-15.2.0
-parisc                randconfig-001-20260109    gcc-8.5.0
-parisc                randconfig-002-20260109    gcc-8.5.0
-parisc64                            defconfig    clang-19
-powerpc                           allnoconfig    clang-22
-powerpc               randconfig-001-20260109    gcc-8.5.0
-powerpc               randconfig-002-20260109    gcc-8.5.0
-powerpc                      tqm8xx_defconfig    clang-22
-powerpc64             randconfig-001-20260109    gcc-8.5.0
-powerpc64             randconfig-002-20260109    gcc-8.5.0
-riscv                             allnoconfig    clang-22
-riscv                               defconfig    gcc-15.2.0
-riscv                 randconfig-001-20260109    clang-22
-riscv                 randconfig-002-20260109    clang-22
-s390                              allnoconfig    clang-22
-s390                                defconfig    gcc-15.2.0
-s390                  randconfig-001-20260109    clang-22
-s390                  randconfig-002-20260109    clang-22
-s390                       zfcpdump_defconfig    clang-22
-sh                                allnoconfig    clang-22
-sh                                  defconfig    gcc-14
-sh                        dreamcast_defconfig    clang-22
-sh                    randconfig-001-20260109    clang-22
-sh                    randconfig-002-20260109    clang-22
-sparc                             allnoconfig    clang-22
-sparc                               defconfig    gcc-15.2.0
-sparc                 randconfig-001-20260109    gcc-14.3.0
-sparc                 randconfig-002-20260109    gcc-14.3.0
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20260109    gcc-14.3.0
-sparc64               randconfig-002-20260109    gcc-14.3.0
-um                                allnoconfig    clang-22
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260109    gcc-14.3.0
-um                    randconfig-002-20260109    gcc-14.3.0
-um                           x86_64_defconfig    gcc-14
-x86_64                            allnoconfig    clang-22
-x86_64      buildonly-randconfig-001-20260109    gcc-14
-x86_64      buildonly-randconfig-002-20260109    gcc-14
-x86_64      buildonly-randconfig-003-20260109    gcc-14
-x86_64      buildonly-randconfig-004-20260109    gcc-14
-x86_64      buildonly-randconfig-005-20260109    gcc-14
-x86_64      buildonly-randconfig-006-20260109    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20260109    gcc-14
-x86_64                randconfig-002-20260109    gcc-14
-x86_64                randconfig-003-20260109    gcc-14
-x86_64                randconfig-004-20260109    gcc-14
-x86_64                randconfig-005-20260109    gcc-14
-x86_64                randconfig-006-20260109    gcc-14
-x86_64                randconfig-011-20260109    gcc-14
-x86_64                randconfig-012-20260109    gcc-14
-x86_64                randconfig-013-20260109    gcc-14
-x86_64                randconfig-014-20260109    gcc-14
-x86_64                randconfig-015-20260109    gcc-14
-x86_64                randconfig-016-20260109    gcc-14
-x86_64                randconfig-071-20260109    clang-20
-x86_64                randconfig-072-20260109    clang-20
-x86_64                randconfig-073-20260109    clang-20
-x86_64                randconfig-074-20260109    clang-20
-x86_64                randconfig-075-20260109    clang-20
-x86_64                randconfig-076-20260109    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-xtensa                            allnoconfig    clang-22
-xtensa                randconfig-001-20260109    gcc-14.3.0
-xtensa                randconfig-002-20260109    gcc-14.3.0
+On Fri, Jan 9, 2026 at 11:37=E2=80=AFAM Ziyao Li via B4 Relay
+<devnull+liziyao.uniontech.com@kernel.org> wrote:
+>
+> From: Ziyao Li <liziyao@uniontech.com>
+>
+> Older steppings of the Loongson 3C6000 series incorrectly report the
+> supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
+> only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
+> up to 16 GT/s.
+Please use Loongson-3C6000 instead of Loongson 3C6000, and use
+0x3c19/0x3c29 instead of 3c19/3c29, thanks.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Huacai
+
+>
+> As a result, since commit 774c71c52aa4 ("PCI/bwctrl: Enable only if more
+> than one speed is supported"), bwctrl will be disabled if there's only
+> one 2.5 GT/s value in vector `supported_speeds`.
+>
+> Also, amdgpu reads the value by pcie_get_speed_cap() in amdgpu_device_
+> partner_bandwidth(), for its dynamic adjustment of PCIe clocks and
+> lanes in power management. We hope this can prevent similar problems
+> in future driver changes (similar checks may be implemented in other
+> GPU, storage controller, NIC, etc. drivers).
+>
+> Manually override the `supported_speeds` field for affected PCIe bridges
+> with those found on the upstream bus to correctly reflect the supported
+> link speeds.
+>
+> This patch was originally found from AOSC OS[1].
+>
+> Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
+> Tested-by: Lain Fearyncess Yang <fsf@live.com>
+> Tested-by: Ayden Meng <aydenmeng@yeah.net>
+> Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
+> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+> [Xi Ruoyao: Fix falling through logic and add kernel log output.]
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> Link: https://github.com/AOSC-Tracking/linux/commit/4392f441363abdf6fa0a0=
+433d73175a17f493454
+> [Ziyao Li: move from drivers/pci/quirks.c to drivers/pci/controller/pci-l=
+oongson.c]
+> Signed-off-by: Ziyao Li <liziyao@uniontech.com>
+> Tested-by: Mingcong Bai <jeffbai@aosc.io>
+> ---
+> Changes in v3:
+> - Adjust commit message
+> - Make the program flow more intuitive
+> - Link to v2: https://lore.kernel.org/r/20260104-loongson-pci1-v2-1-d151e=
+57b6ef8@uniontech.com
+>
+> Changes in v2:
+> - Link to v1: https://lore.kernel.org/r/20250822-loongson-pci1-v1-1-39aab=
+bd11fbd@uniontech.com
+> - Move from arch/loongarch/pci/pci.c to drivers/pci/controller/pci-loongs=
+on.c
+> - Fix falling through logic and add kernel log output by Xi Ruoyao
+> ---
+>  drivers/pci/controller/pci-loongson.c | 38 +++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 38 insertions(+)
+>
+> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controll=
+er/pci-loongson.c
+> index bc630ab8a283..67a6d99b9e82 100644
+> --- a/drivers/pci/controller/pci-loongson.c
+> +++ b/drivers/pci/controller/pci-loongson.c
+> @@ -176,6 +176,44 @@ static void loongson_pci_msi_quirk(struct pci_dev *d=
+ev)
+>  }
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loo=
+ngson_pci_msi_quirk);
+>
+> +/*
+> + * Older steppings of the Loongson 3C6000 series incorrectly report the
+> + * supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) a=
+s
+> + * only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT=
+/s
+> + * up to 16 GT/s.
+> + */
+> +static void loongson_pci_bridge_speed_quirk(struct pci_dev *pdev)
+> +{
+> +       u8 old_supported_speeds =3D pdev->supported_speeds;
+> +
+> +       switch (pdev->bus->max_bus_speed) {
+> +       case PCIE_SPEED_16_0GT:
+> +               pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_16_0GB;
+> +               fallthrough;
+> +       case PCIE_SPEED_8_0GT:
+> +               pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_8_0GB;
+> +               fallthrough;
+> +       case PCIE_SPEED_5_0GT:
+> +               pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_5_0GB;
+> +               fallthrough;
+> +       case PCIE_SPEED_2_5GT:
+> +               pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_2_5GB;
+> +               break;
+> +       default:
+> +               pci_warn(pdev, "unexpected max bus speed");
+> +
+> +               return;
+> +       }
+> +
+> +       if (pdev->supported_speeds !=3D old_supported_speeds)
+> +               pci_info(pdev, "fixing up supported link speeds: 0x%x =3D=
+> 0x%x",
+> +                        old_supported_speeds, pdev->supported_speeds);
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19,
+> +                        loongson_pci_bridge_speed_quirk);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29,
+> +                        loongson_pci_bridge_speed_quirk);
+> +
+>  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
+>  {
+>         struct pci_config_window *cfg;
+>
+> ---
+> base-commit: ea1013c1539270e372fc99854bc6e4d94eaeff66
+> change-id: 20250822-loongson-pci1-4ded0d78f1bb
+>
+> Best regards,
+> --
+> Ziyao Li <liziyao@uniontech.com>
+>
+>
+>
 
