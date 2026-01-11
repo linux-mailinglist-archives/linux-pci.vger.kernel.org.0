@@ -1,327 +1,135 @@
-Return-Path: <linux-pci+bounces-44442-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44443-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAE35D0FDD4
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Jan 2026 21:59:47 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF257D0FFEB
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Jan 2026 22:52:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E5B2B3048639
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Jan 2026 20:59:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9081F304F174
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Jan 2026 21:52:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01B9E259C80;
-	Sun, 11 Jan 2026 20:59:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C88BA1D63D1;
+	Sun, 11 Jan 2026 21:52:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JtG3kzGY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jELmB6At"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3547624DD1F;
-	Sun, 11 Jan 2026 20:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5270347DD;
+	Sun, 11 Jan 2026 21:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768165154; cv=none; b=C0FTmOR/WircpzJuyDHQemUnAze07rlRInu/eESp9He+aGC1x5eo764Jag7gwH0mcHKKqHYWDVmV71DAdJbXuf/mPnVlA6q38n47rgPlclsOb9WKdRl9fCZtypMM72nv6FLfGSv0OVgbjt0DAf0iX46maON1i05YrV9+mPIcqi0=
+	t=1768168336; cv=none; b=mlUHK8huKF4gWdSnem18M0CiRN59CWN4fQDdOlgFJumLktRlu70ZUKlI52cLqlrvFKo4aRJe+woPe7RsiButdPyTVSaFbBsbIg2Cg52kRrewoQwoOCnFLSxqiLrTcdWSOYe1x1m9hMWzCvXrpma9DNsiiG/0JQGV6eS6XHzXw5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768165154; c=relaxed/simple;
-	bh=s1T9vuao+kXccuTcOMDTHHq+bj2twItjHB4YXvJcFdM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ula7+9ZRv+a0BH6DGtCPWHQQKRe4KmYNDBkhO7yoagu6VZPh12lMG+fhOfdBlb+Ycg6oF3N/jeFgozKIx5R2s19gIcMVtRrwv1/1muALpWDFsbVz1VGIV/PVoX3x5jDQRlD97fFkKeaxTve30jqrEIsY+J36MPeAABTfia9N2I8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JtG3kzGY; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768165154; x=1799701154;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=s1T9vuao+kXccuTcOMDTHHq+bj2twItjHB4YXvJcFdM=;
-  b=JtG3kzGYXmq0jFZA5nRp6BiA0lll/Fbo53OMPwvEoQQGZ4aG9u3h7jx6
-   aljVpAMa1G3hgbk7yim4g8dX7XJ6na7qvn8d4RWQi9SzVbvU0tcWLYDmf
-   eNN7pEd1z6995kPBryjBHNXgdey0HhpyK4JnOehyaSATq/NY+SWxfupJm
-   SZaEdJtte3pOKudD7VVWVBmBCjTbAgR1ucmwVev92cYaRDjHrfHwIA9Zd
-   lyktn8vbVNSI0UgiH/UWk1KNRNmAijESaKOW7vCvQq/TMiX3v/mIu46Qg
-   d+kYm1TFxp7yj3kJ/V5jwSVDUK584B+hl2UC9ZO/BmEo2aNUvGAuxbo/w
-   Q==;
-X-CSE-ConnectionGUID: s0vkVV1OTrOJ61LxYWUNsA==
-X-CSE-MsgGUID: 2GUEF3oeQnifolr9NeQ+Uw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11668"; a="80904678"
-X-IronPort-AV: E=Sophos;i="6.21,219,1763452800"; 
-   d="scan'208";a="80904678"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2026 12:59:12 -0800
-X-CSE-ConnectionGUID: x5hfc93rT7yYrL+IWOJYbg==
-X-CSE-MsgGUID: YcOO9Gc2RRmD+fYdz8alfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,219,1763452800"; 
-   d="scan'208";a="208419956"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO fdugast-desk.home) ([10.245.245.11])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2026 12:59:04 -0800
-From: Francois Dugast <francois.dugast@intel.com>
-To: intel-xe@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org,
-	Matthew Brost <matthew.brost@intel.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Felix Kuehling <Felix.Kuehling@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	David Hildenbrand <david@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Balbir Singh <balbirs@nvidia.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	linuxppc-dev@lists.ozlabs.org,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	linux-pci@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org,
-	Francois Dugast <francois.dugast@intel.com>
-Subject: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free callback
-Date: Sun, 11 Jan 2026 21:55:40 +0100
-Message-ID: <20260111205820.830410-2-francois.dugast@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260111205820.830410-1-francois.dugast@intel.com>
-References: <20260111205820.830410-1-francois.dugast@intel.com>
+	s=arc-20240116; t=1768168336; c=relaxed/simple;
+	bh=gBJl0jhJQTOjs2kWtiwlGj2NK+MzVVpaCnR9lzcialw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=j4gjU3x096kkKHtyUilnuos4gv+Yv2nYfDS0YTUW4Qwjo2e60Q90feUoS7cEGd+MCKSIp8grwtBLIJ+CvukKCOiHc5T1hbQx7hvKyY08Oml9QJHu8Xv2J9dvux/X60rgtbZuIC2/U+ceFlvjpJHRuRiSR6cUDaOLHvvc8kg8tMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jELmB6At; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A408C4CEF7;
+	Sun, 11 Jan 2026 21:52:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768168336;
+	bh=gBJl0jhJQTOjs2kWtiwlGj2NK+MzVVpaCnR9lzcialw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=jELmB6AtfPWLe4I0Wri47bMLigG2GC2kGVH3KZiAYvDhcWRHtHDGQHZDQmODLPrjP
+	 p4ckNBuwPvjEX5CcJ6C0EI9yAsnpCOyDvYXPoJcxMhjEbLsiN1A8CFp2HxNMz6zGja
+	 nyCs82ftoyoS/jPY8LoLkXMgn6hnNwxQQ4wbvcVkjWnqKQrTiOmnpT0X0PTeNHkZXC
+	 0UDivXDgw9UspxY+wyMmDz6NfdDNyzwncNoJ/1KqpEQ8wd4xFb/YSl1WNIr8VNKnqn
+	 TjIt5oXh0yPVhqGBHrVcLZljwPE42LMq8qQSvGYotOpfeGdQ1nQIdhUdfkykPQ2aEG
+	 FP1dsnueeDEkQ==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Radu Rendec <rrendec@redhat.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Daniel Tsai
+ <danielsftsai@google.com>, Marek =?utf-8?Q?Beh=C3=BAn?= <kabel@kernel.org>,
+ Krishna
+ Chaitanya Chundru <quic_krichai@quicinc.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ =?utf-8?Q?Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Jingoo Han <jingoohan1@gmail.com>, Brian Masney <bmasney@redhat.com>, Eric
+ Chanudet <echanude@redhat.com>, Alessandro Carminati
+ <acarmina@redhat.com>, Jared Kangas <jkangas@redhat.com>, Jon Hunter
+ <jonathanh@nvidia.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, x86@kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] fixup! genirq: Add interrupt redirection infrastructure
+In-Reply-To: <20260109175227.1136782-1-rrendec@redhat.com>
+References: <20260109175227.1136782-1-rrendec@redhat.com>
+Date: Sun, 11 Jan 2026 22:52:12 +0100
+Message-ID: <87fr8bg6lv.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Matthew Brost <matthew.brost@intel.com>
+Radu!
 
-The core MM splits the folio before calling folio_free, restoring the
-zone pages associated with the folio to an initialized state (e.g.,
-non-compound, pgmap valid, etc...). The order argument represents the
-folio’s order prior to the split which can be used driver side to know
-how many pages are being freed.
+Thanks for taking care of this, but this is not really the way how it
+works.
 
-Fixes: 3a5a06554566 ("mm/zone_device: rename page_free callback to folio_free")
-Cc: Zi Yan <ziy@nvidia.com>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-Cc: Felix Kuehling <Felix.Kuehling@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Simona Vetter <simona@ffwll.ch>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Danilo Krummrich <dakr@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: David Hildenbrand <david@kernel.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Leon Romanovsky <leon@kernel.org>
-Cc: Balbir Singh <balbirs@nvidia.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Alistair Popple <apopple@nvidia.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: amd-gfx@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
-Cc: linux-pci@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-cxl@vger.kernel.org
-Signed-off-by: Matthew Brost <matthew.brost@intel.com>
-Signed-off-by: Francois Dugast <francois.dugast@intel.com>
----
- arch/powerpc/kvm/book3s_hv_uvmem.c       | 2 +-
- drivers/gpu/drm/amd/amdkfd/kfd_migrate.c | 2 +-
- drivers/gpu/drm/drm_pagemap.c            | 3 ++-
- drivers/gpu/drm/nouveau/nouveau_dmem.c   | 4 ++--
- drivers/pci/p2pdma.c                     | 2 +-
- include/linux/memremap.h                 | 7 ++++++-
- lib/test_hmm.c                           | 4 +---
- mm/memremap.c                            | 5 +++--
- 8 files changed, 17 insertions(+), 12 deletions(-)
+$subject: fixup!.... is neither a valid nor a useful subject line.
 
-diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
-index e5000bef90f2..b58f34eec6e5 100644
---- a/arch/powerpc/kvm/book3s_hv_uvmem.c
-+++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
-@@ -1014,7 +1014,7 @@ static vm_fault_t kvmppc_uvmem_migrate_to_ram(struct vm_fault *vmf)
-  * to a normal PFN during H_SVM_PAGE_OUT.
-  * Gets called with kvm->arch.uvmem_lock held.
-  */
--static void kvmppc_uvmem_folio_free(struct folio *folio)
-+static void kvmppc_uvmem_folio_free(struct folio *folio, unsigned int order)
- {
- 	struct page *page = &folio->page;
- 	unsigned long pfn = page_to_pfn(page) -
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c b/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-index af53e796ea1b..a26e3c448e47 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-@@ -567,7 +567,7 @@ svm_migrate_ram_to_vram(struct svm_range *prange, uint32_t best_loc,
- 	return r < 0 ? r : 0;
- }
- 
--static void svm_migrate_folio_free(struct folio *folio)
-+static void svm_migrate_folio_free(struct folio *folio, unsigned int order)
- {
- 	struct page *page = &folio->page;
- 	struct svm_range_bo *svm_bo = page->zone_device_data;
-diff --git a/drivers/gpu/drm/drm_pagemap.c b/drivers/gpu/drm/drm_pagemap.c
-index 03ee39a761a4..df253b13cf85 100644
---- a/drivers/gpu/drm/drm_pagemap.c
-+++ b/drivers/gpu/drm/drm_pagemap.c
-@@ -1144,11 +1144,12 @@ static int __drm_pagemap_migrate_to_ram(struct vm_area_struct *vas,
- /**
-  * drm_pagemap_folio_free() - Put GPU SVM zone device data associated with a folio
-  * @folio: Pointer to the folio
-+ * @order: Order of the folio prior to being split by core MM
-  *
-  * This function is a callback used to put the GPU SVM zone device data
-  * associated with a page when it is being released.
-  */
--static void drm_pagemap_folio_free(struct folio *folio)
-+static void drm_pagemap_folio_free(struct folio *folio, unsigned int order)
- {
- 	drm_pagemap_zdd_put(folio->page.zone_device_data);
- }
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-index 58071652679d..545f316fca14 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-@@ -115,14 +115,14 @@ unsigned long nouveau_dmem_page_addr(struct page *page)
- 	return chunk->bo->offset + off;
- }
- 
--static void nouveau_dmem_folio_free(struct folio *folio)
-+static void nouveau_dmem_folio_free(struct folio *folio, unsigned int order)
- {
- 	struct page *page = &folio->page;
- 	struct nouveau_dmem_chunk *chunk = nouveau_page_to_chunk(page);
- 	struct nouveau_dmem *dmem = chunk->drm->dmem;
- 
- 	spin_lock(&dmem->lock);
--	if (folio_order(folio)) {
-+	if (order) {
- 		page->zone_device_data = dmem->free_folios;
- 		dmem->free_folios = folio;
- 	} else {
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 4a2fc7ab42c3..a6fa7610f8a8 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -200,7 +200,7 @@ static const struct attribute_group p2pmem_group = {
- 	.name = "p2pmem",
- };
- 
--static void p2pdma_folio_free(struct folio *folio)
-+static void p2pdma_folio_free(struct folio *folio, unsigned int order)
- {
- 	struct page *page = &folio->page;
- 	struct pci_p2pdma_pagemap *pgmap = to_p2p_pgmap(page_pgmap(page));
-diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-index 713ec0435b48..97fcffeb1c1e 100644
---- a/include/linux/memremap.h
-+++ b/include/linux/memremap.h
-@@ -79,8 +79,13 @@ struct dev_pagemap_ops {
- 	 * Called once the folio refcount reaches 0.  The reference count will be
- 	 * reset to one by the core code after the method is called to prepare
- 	 * for handing out the folio again.
-+	 *
-+	 * The core MM splits the folio before calling folio_free, restoring the
-+	 * zone pages associated with the folio to an initialized state (e.g.,
-+	 * non-compound, pgmap valid, etc...). The order argument represents the
-+	 * folio’s order prior to the split.
- 	 */
--	void (*folio_free)(struct folio *folio);
-+	void (*folio_free)(struct folio *folio, unsigned int order);
- 
- 	/*
- 	 * Used for private (un-addressable) device memory only.  Must migrate
-diff --git a/lib/test_hmm.c b/lib/test_hmm.c
-index 8af169d3873a..e17c71d02a3a 100644
---- a/lib/test_hmm.c
-+++ b/lib/test_hmm.c
-@@ -1580,13 +1580,11 @@ static const struct file_operations dmirror_fops = {
- 	.owner		= THIS_MODULE,
- };
- 
--static void dmirror_devmem_free(struct folio *folio)
-+static void dmirror_devmem_free(struct folio *folio, unsigned int order)
- {
- 	struct page *page = &folio->page;
- 	struct page *rpage = BACKING_PAGE(page);
- 	struct dmirror_device *mdevice;
--	struct folio *rfolio = page_folio(rpage);
--	unsigned int order = folio_order(rfolio);
- 
- 	if (rpage != page) {
- 		if (order)
-diff --git a/mm/memremap.c b/mm/memremap.c
-index 63c6ab4fdf08..39dc4bd190d0 100644
---- a/mm/memremap.c
-+++ b/mm/memremap.c
-@@ -417,6 +417,7 @@ void free_zone_device_folio(struct folio *folio)
- {
- 	struct dev_pagemap *pgmap = folio->pgmap;
- 	unsigned long nr = folio_nr_pages(folio);
-+	unsigned int order = folio_order(folio);
- 	int i;
- 
- 	if (WARN_ON_ONCE(!pgmap))
-@@ -453,7 +454,7 @@ void free_zone_device_folio(struct folio *folio)
- 	case MEMORY_DEVICE_COHERENT:
- 		if (WARN_ON_ONCE(!pgmap->ops || !pgmap->ops->folio_free))
- 			break;
--		pgmap->ops->folio_free(folio);
-+		pgmap->ops->folio_free(folio, order);
- 		percpu_ref_put_many(&folio->pgmap->ref, nr);
- 		break;
- 
-@@ -472,7 +473,7 @@ void free_zone_device_folio(struct folio *folio)
- 	case MEMORY_DEVICE_PCI_P2PDMA:
- 		if (WARN_ON_ONCE(!pgmap->ops || !pgmap->ops->folio_free))
- 			break;
--		pgmap->ops->folio_free(folio);
-+		pgmap->ops->folio_free(folio, order);
- 		break;
- 	}
- }
--- 
-2.43.0
+$subject is documented to be a concise summary of the change at hand, so
+in this case this should be something like:
 
+   [PATCH] genirq: Update effective affinity for redirected interrupts
+
+See?
+
+On Fri, Jan 09 2026 at 12:52, Radu Rendec wrote:
+> The previous version of this patch has two related bugs:
+
+The previous version of which patch? The patch at hand does not have a
+previous version, right?
+
+> - irq_chip_redirect_set_affinity() doesn't update the effective affinity
+>   mask, which triggers the warning in irq_validate_effective_affinity().
+>   This bug was reported at [1].
+> - As a result, the cpumask_test_cpu(smp_processor_id(), m) condition in
+>   demux_redirect_remote() is always false, and the interrupt is always
+>   redirected, even if it's already running on the target CPU.
+
+How are those two bugs? It's only one because the missing update causes
+the malfunction in demux_redirect_remote(), no?
+
+> The solution is not ideal because it may lie about the effective
+
+Which solution? Care to read this change log again and figure out what
+"the solution" means? You fail to describe the solution before you
+describe it being non ideal...
+
+> affinity of the demultiplexed ("child") interrupt. If the requested
+> affinity mask includes multiple CPUs, the effective affinity, in
+> reality, is the intersection between the requested mask and the
+> demultiplexing ("parent") interrupt's effective affinity mask, plus
+> the first CPU in the requested mask.
+>
+> Accurately describing the effective affinity of the demultiplexed
+> interrupt is not trivial because it requires keeping track of the
+> demultiplexing interrupt's effective affinity. That is tricky in the
+> context of CPU hot(un)plugging, where interrupt migration ordering is
+> not guaranteed. The solution in the original version of the patch,
+> which stored the first CPU of the demultiplexing interrupt's effective
+> affinity in the `target_cpu` field, has its own drawbacks and
+> limitations.
+>
+> [1] https://lore.kernel.org/all/44509520-f29b-4b8a-8986-5eae3e022eb7@nvidia.com/
+
+This wants to be a Closes: https://... tag which makes that [1]
+reference superflouous when you describe the problem coherently.
+
+It also lacks a 'Fixes:' tag as the code is already merged, no?
+
+> Signed-off-by: Radu Rendec <rrendec@redhat.com>
+
+Read 'git log kernel/irq/' output and search for 'Closes:' tags in the
+commit messages and you get the idea.
+
+Thanks,
+
+        tglx
 
