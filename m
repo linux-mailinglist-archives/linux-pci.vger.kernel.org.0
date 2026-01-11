@@ -1,106 +1,98 @@
-Return-Path: <linux-pci+bounces-44434-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44435-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED747D0DB31
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Jan 2026 20:14:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C3ECD0E1F7
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Jan 2026 08:38:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E56F63079EED
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Jan 2026 19:11:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 36144300660A
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Jan 2026 07:38:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1EC62DCF43;
-	Sat, 10 Jan 2026 19:11:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CBA7257423;
+	Sun, 11 Jan 2026 07:38:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1yv9Q0c"
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="bdhzIPZQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-o95.zoho.com (sender4-pp-o95.zoho.com [136.143.188.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B757A2C21F7;
-	Sat, 10 Jan 2026 19:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768072306; cv=none; b=FH0j3/FivURbPznEt1dxo/68qqEjLXEauw0+3slVhfAr5FnKP10mtmLa3zqVO9r24mY8mESnnrsx/RBtKsHYAyDYDzjaoxlH6dgKj3nX57jflyaHyrKc1oz4Kx4TDaIZz6zP/CMkDMiEems2kYBDNO00+qtaHdKp4gvIZXQayE4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768072306; c=relaxed/simple;
-	bh=ORk9zLyAqSVC4BjhBEwJU6A588Pq49HoT3tn4kCPsqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FHQ/QP+pNRy18exhTEpO5OZ4GwuffcMaD98TYF036kSwfQj10FBQhMZQZrjJiKnJhp3DMEcLpT7OA8gGHlYkf0TJErWRygSHozzuJKSpCMMnvrvaHx7MHwMea5o1veaEIt+Dsf+8D2/NdxKaSeqij2tvRb0KeBsYdHtfs+BxQvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I1yv9Q0c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFCA2C16AAE;
-	Sat, 10 Jan 2026 19:11:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768072304;
-	bh=ORk9zLyAqSVC4BjhBEwJU6A588Pq49HoT3tn4kCPsqM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I1yv9Q0carRpGXDNN3gPGL/6wihqvcW/sidEG5pRQs+jlCNEUCOuPzP2vgKorGJz4
-	 d9Fc0p5AGNOMIlD7YUmJVUI41zZ1o851XH4EeLuWu26VLB3ymmMCta/JvouLRSw8Ch
-	 y3D54RMdtuOxrT/9r1CZfeQqCf1PsRy2HrfSaqb9nBAhRk2rcpD1x9Tnzf2QK7KSUK
-	 FcgpNxwmMCKtNGQ5UcsbwPvi+Lj/oXR+VPyX322kBo43h9o/+D0mQIO1YLooTbe9V9
-	 IiVrmKyeQmRN5aIuuGmH+nJPSii4TYweja+Fg1uDJyfPwnBc859maMxp1TiuHU8Nr5
-	 0B1yUCS8X3/og==
-From: Bjorn Andersson <andersson@kernel.org>
-To: konradybcio@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	jingoohan1@gmail.com,
-	mani@kernel.org,
-	lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	bhelgaas@google.com,
-	johan+linaro@kernel.org,
-	vkoul@kernel.org,
-	kishon@kernel.org,
-	neil.armstrong@linaro.org,
-	Abel Vesa <abelvesa@kernel.org>,
-	Ziyue Zhang <ziyue.zhang@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A7C250C06;
+	Sun, 11 Jan 2026 07:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.95
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768117135; cv=pass; b=Rkm8/kAXXoSs5zV8Whawl19DiLa3tnpuuamJFFX4gDqZR+qIAWWnbgTJ8thlFaN9rRuK+fmi2N4dn848NzuQPH8rn64jTMFSLAjN05SmdbT6NDwYS7ZrSw0BGg44KLbCAgvPfKD+k2LaWESbNex6Gmmc4iwgL83tJuknolTpzDw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768117135; c=relaxed/simple;
+	bh=qFP3QIZpz2GVO6OFem1qWqhJ9hdu4IrMCPU9teOB+5A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nv8OD2GnGGwKGxWaw2SzUPPTUqqZXbgIIhO8A6INeI6tCEeFFDk/iHDxYYcj4SiUd90/gSG7bSLkg74dW2V4gXJQBnNOuvZWnYENawU4z3o7IyEMNV6Q7xOUUYLp3cMUbKbT/MMNKF0spMuYuM0hpx0UEvh8oBvXBVZlswnNyvA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=bdhzIPZQ; arc=pass smtp.client-ip=136.143.188.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+ARC-Seal: i=1; a=rsa-sha256; t=1768117129; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=QUGnjDtFoMN3u2jE10dBs6j1EYidAdwcalVUiklqtiK+A/Q+NdFubao8ljN9OcuAQsZ/S1egvayU9M6jcKHqbpg+KRaBIX2wSOepxQa0UvCMrSXKjGIaaNAVkhaMA2AbNqQ0+80Kx7JAmqQ9JOO5iA/nwWkQdA4Ywb25Mcegx6E=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1768117129; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=QDrIhAeKJui/DEXRJtly1VvU3Jb9pvZaZDDR4BNVDrQ=; 
+	b=gN5hPgkj7mcnFNel4vkTZHjWGcoKAa00RBAAkF7yrC+4phpRZGvxXRI4MbWCMflOtfejVMq+WVEQ5+hezKLXHyHSWOho8ows37ox4V+SdEL2PXScu3xU3UsFFv/OBjNkcWXk7S2dzXZ+7+pMRIw/mXZfi/PNE1/o0Mfh8ruVwbQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1768117129;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=QDrIhAeKJui/DEXRJtly1VvU3Jb9pvZaZDDR4BNVDrQ=;
+	b=bdhzIPZQTxOzov7ccyj8f6m8s7Zq5UJf05Qgv9MyDY7r/b/8CTgLIVBdxaEs4N2Q
+	hfd4SVW40v7YH7EUUlkeJIMBLNeJaZtXspzsuSkkcjSS7UCsrXs9p9HtR4ED0jJ8Xpy
+	Kyuf85qfCz6RFLVQWjvo3462+L2PONaZj2IhUijA=
+Received: by mx.zohomail.com with SMTPS id 1768117125456560.8214843784988;
+	Sat, 10 Jan 2026 23:38:45 -0800 (PST)
+From: Li Ming <ming.li@zohomail.com>
+To: dan.j.williams@intel.com
+Cc: linux-pci@vger.kernel.org,
+	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-phy@lists.infradead.org,
-	qiang.yu@oss.qualcomm.com,
-	quic_krichai@quicinc.com,
-	quic_vbadigan@quicinc.com,
-	Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Subject: Re: [PATCH v4 0/3] Add PCIe3 and PCIe5 support for HAMOA-IOT-EVK board
-Date: Sat, 10 Jan 2026 13:11:27 -0600
-Message-ID: <176807228439.3708332.9264264204240911796.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260109104504.3147745-1-ziyue.zhang@oss.qualcomm.com>
-References: <20260109104504.3147745-1-ziyue.zhang@oss.qualcomm.com>
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH 1/1] PCI/IDE: Fix reading a wrong reg for unused sel stream initialization
+Date: Sun, 11 Jan 2026 15:38:23 +0800
+Message-Id: <20260111073823.486665-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Feedback-ID: rr08011227efd45e7aa253df03a5321344000030c5b9857f10fff8da6b3a82c1944ef512470b5dea8b8c3a87:zu08011227aa66b4faafa3813863fd1e6d00008aaf58facbae80da1243eedbae44fda1786bb5bb851dd1b074:rf0801122b3271035a8c9170a1fe0bd4e7000005b158552355fabc6f4d1c2847e229cb387b276593d9b881d806f5d2ab:ZohoMail
+X-ZohoMailClient: External
 
+During pci_ide_init(), it will write PCI_ID_RESERVED_STREAM_ID into all
+unused selective IDE stream blocks. In a selective IDE stream block, IDE
+stream ID field is in selective IDE stream control register instead of
+selective IDE stream capability register.
 
-On Fri, 09 Jan 2026 18:45:01 +0800, Ziyue Zhang wrote:
-> From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-> 
-> This patch series adds support for PCIe3 and PCIe5 on the HAMOA-IOT-EVK
-> board.
-> 
-> PCIe3 is a Gen4 x8 slot intended for sata controller.
-> PCIe5 is a Gen3 x2 slot designed for external modem connectivity.
-> 
-> [...]
+Fixes: 079115370d00 ("PCI/IDE: Initialize an ID for all IDE streams")
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+ drivers/pci/ide.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied, thanks!
-
-[1/3] arm64: dts: qcom: hamoa: Move PHY, PERST, and Wake GPIOs to PCIe port nodes and add port Nodes for all PCIe ports
-      commit: 960609b22be58baa16823103894de3c6858e6cf4
-[2/3] arm64: dts: qcom: Add PCIe3 and PCIe5 support for HAMOA-IOT-SOM platform
-      commit: a395b859ecacedc6ff28e6b62e43a7cd1abc34ee
-[3/3] arm64: dts: qcom: Add PCIe3 and PCIe5 regulators for HAMAO-IOT-EVK board
-      commit: ac62730dbc71e4e2320b368e86e0c6ea3e41f1f5
-
-Best regards,
+diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
+index f0ef474e1a0d..26f7cc94ec31 100644
+--- a/drivers/pci/ide.c
++++ b/drivers/pci/ide.c
+@@ -168,7 +168,7 @@ void pci_ide_init(struct pci_dev *pdev)
+ 	for (u16 i = 0; i < nr_streams; i++) {
+ 		int pos = __sel_ide_offset(ide_cap, nr_link_ide, i, nr_ide_mem);
+ 
+-		pci_read_config_dword(pdev, pos + PCI_IDE_SEL_CAP, &val);
++		pci_read_config_dword(pdev, pos + PCI_IDE_SEL_CTL, &val);
+ 		if (val & PCI_IDE_SEL_CTL_EN)
+ 			continue;
+ 		val &= ~PCI_IDE_SEL_CTL_ID;
 -- 
-Bjorn Andersson <andersson@kernel.org>
+2.34.1
+
 
