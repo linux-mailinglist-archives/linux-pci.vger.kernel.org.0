@@ -1,106 +1,80 @@
-Return-Path: <linux-pci+bounces-44487-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44488-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0FF4D11C05
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 11:14:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 28A0ED11CA2
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 11:18:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3FB2A301A71B
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 10:10:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9F6EA3007263
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 10:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C676228DB76;
-	Mon, 12 Jan 2026 10:10:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4C93274B37;
+	Mon, 12 Jan 2026 10:16:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZRanc8tu";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="DVO+Uwz3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FYyWpeZR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB0C28CF77
-	for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 10:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEE12C0260;
+	Mon, 12 Jan 2026 10:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768212608; cv=none; b=YsY1AHs2j12enDjQNkHRpNtG0VXZO/z/Hv48A6jqxPVn1BdWTrTrh+4/BKgCoSzeuuEiFbh6Bybqely77YIlOG0cSC5DuamnWPnyaglFLMmgTZ83xX108yjgs3ysr6EtqcplRI0DRoLW5nlcr1PUIbUuvtQ+dNOprAiy7sMDR5A=
+	t=1768212978; cv=none; b=FHSLqkjxj4rLYzncHLScPtxU2GLDLJFIorhp8r+JuPU0kN83QmnhPf/BQm8b9kzg/9cFzPgKOZgoOlEgPrxBwzlxh3TNQ1muvKd0VenlL3S+aXQmk4hBOT2cwycG1swxoo3iQZ1xr+iLHvdCZsAItHkQDqBCOyQy4l3rKXfhbBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768212608; c=relaxed/simple;
-	bh=iDFXfwWSoRhROG/Vq0Ji69eB6IojPN4EMOINzPWp4nE=;
+	s=arc-20240116; t=1768212978; c=relaxed/simple;
+	bh=H8gp41/PvMnd7tQ04BGrl2ztpsHRk7DIXiv5/QpR4qY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IzYe6aMa6orQoZ6TNLpQmHG9Zoaf1u+A4wp7X2BLhbygUm/UjUgEV+S1gqm8AiqvOqO7uQwOHCuSldgQS5z8YjIRH93Cb5odvaYHvmwwLvQcp7l03utLQ2eB5yTAVVbxQ73vNCOO8I3ijGcXXzi8kZesMgVYk6nfcFXQj8fWbcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZRanc8tu; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=DVO+Uwz3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768212606;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nT/4BhiqLs8P+whMDHfwq+DdiboEiYpjxDoAfVQFdkw=;
-	b=ZRanc8tuDBUSAZkvZjkf8D9ZvqxL3jJLQhtfzULfDVhn7GUUR4Lo2VdVWK+aYD59Lg+aMb
-	arsphN80FsJldLDsZ6WpStUfPh9pumxZfGkW/7R83riVAU2vGz7OSYN9SXNBWIsSeA5DqE
-	jU8tP/QyWguos9dm+vQ2KycCbUTgcH4=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-691-rawJ2G16PGyNRdLGGIh99g-1; Mon, 12 Jan 2026 05:10:04 -0500
-X-MC-Unique: rawJ2G16PGyNRdLGGIh99g-1
-X-Mimecast-MFC-AGG-ID: rawJ2G16PGyNRdLGGIh99g_1768212603
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-477cf2230c8so58314525e9.0
-        for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 02:10:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1768212603; x=1768817403; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nT/4BhiqLs8P+whMDHfwq+DdiboEiYpjxDoAfVQFdkw=;
-        b=DVO+Uwz3KQoGJMRrvhMReupkOeciWpQhBLtfQSbbK7anl1+oZMq2g7J6emo/51H1X9
-         9DeI9eNjGYUC/3GpIPup7MKzKwq1mgmKkBmgfEdyG0ei2f2ZtQXq+oOfxQtN70Eu4NQv
-         MCkwBTe4iPWV/BMt7yguYZU7oAuxYCy0seQ6oQwqMG/80vhqtmIuch/xpDPDKRmbWYzr
-         CEQgk3pEh+6fNAfMutG5EOQm3UUvNk4W1DGlr7Tgy1eRvUcjMqwU/W6Vo3CMjRcY8A3I
-         8bptRGqubjZQFN+uDFnRPaa0tMyQJ2D6rAaZqZLM0J2CdUJqbVQrVKvKmeUdLxYNw+N6
-         I5fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768212603; x=1768817403;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nT/4BhiqLs8P+whMDHfwq+DdiboEiYpjxDoAfVQFdkw=;
-        b=YK9dtiuLMzgyt3A2BohKcYYcA+UmVyuIBkJ0yPr/ih0H83QItflGJo1N8Smeg78BDz
-         uTkbinZX24TfpoQ6R0MncECm1BaLm2j/Ur1mDIn2r2DC8ZYx27R0Wng43qJkROEIalMk
-         prev9sMpfY879u8aLGosjf/GZ6OrPC8UCTtC3SOO2ZEZ2NnfHvn56Z72nE5O6vTSmfQW
-         XFNNm9Ch1UyZhvo8W66oA9/qqBGY+DtvW/zWVn9yj7fsJa6QyFgGlX9Mnm36WW9ekelq
-         Rruhx7Thk0U0b1+S7b3SClQilj1Av6BWU27qWh+fdBg9q2l4o2WYREG4h6hEhBGs32ZR
-         A0AA==
-X-Forwarded-Encrypted: i=1; AJvYcCVS4BtWvzy1aIDeKn3btCkUGTBArcPO7dAPmA2B+6/DxidfoH1cIcTnnNzm3oHFIAyJVVrc9JeSnzs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOiFMbZ/pfCzzhaKhO9HDghvB+Xi62H7tQgHD3HIUmzgTVgwBH
-	AkHC7AgpO9vecLi/NhZIR6PB4pz78kIMUKjLLzHLsC6HLu2gmDsYvH6b+IKmOc8aKXnGO4rNemk
-	zx8wgSU+VqoMOqvbHvBHRnrC47XptE+Kdhtv+JzDDY+1ftIt34W1L088Et6rGVQ==
-X-Gm-Gg: AY/fxX6JU8pVePgDjESW+7q+718alcx5fALYui8edJWncnO9kCeBxKZAD/nP7YtITff
-	QWD6i8xpNWb64STYDnVlX1UuuF3foJnWWq57UDlj7FmCKmBR6JSPmTalWkR5YD350AgTJDAcDso
-	jqtHm8l7n2pL4gLpJH2tG8KsbxCsWRwOAUV9VFF4m06NAd/9X0Wm0JwIDzj2wfmDzKvDlMJX6x9
-	5TG6qGUm0YAGA3TKEITtug+YYt7WsG7vyuNQFarvJGcCZ3zngBfl9dbkxjYM6xXhL+K5Fu/YFh0
-	Op5/Zimys5vUmQLjZ1kWF3qMmu3eq0fP4g5vDNNW4+EstnPAuprP9L/5fuh0AMaw22mbk6IW3n5
-	dP4dqtewRQzKZmWYc+JVYN6G5KYSyUXpcRUCeBP01
-X-Received: by 2002:a05:600c:c4a8:b0:477:54cd:2030 with SMTP id 5b1f17b1804b1-47d84b32788mr193390585e9.21.1768212603459;
-        Mon, 12 Jan 2026 02:10:03 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHHxXn/UA4trykZ5T+SQc9F6yA7v1dNyRS4eMXq4oY/fXdGhX4AlgW2jGMNsGOSw5qPOxfWew==
-X-Received: by 2002:a05:600c:c4a8:b0:477:54cd:2030 with SMTP id 5b1f17b1804b1-47d84b32788mr193390185e9.21.1768212603022;
-        Mon, 12 Jan 2026 02:10:03 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.129.40])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432dd78f5a8sm17906870f8f.27.2026.01.12.02.10.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 02:10:02 -0800 (PST)
-Date: Mon, 12 Jan 2026 11:10:00 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@linaro.org>
-Subject: Re: [ANNOUNCE][CFP] Power Management and Scheduling in the Linux
- Kernel VIII edition (OSPM-summit 2026)
-Message-ID: <aWTIeLbQXalZtOGc@jlelli-thinkpadt14gen4.remote.csb>
-References: <aULDwbALUj0V7cVk@jlelli-thinkpadt14gen4.remote.csb>
+	 Content-Type:Content-Disposition:In-Reply-To; b=CcYIyFPz4tJGpY2Wp9jaUFOhkSzTcLHNTY4K6cu4N4F/J4/SC/cSRRX1w7/UilMzst9sZQzILsSNpSrvmGvuXUR8QB+lsP7+a9YgXSUkcGh4+965eyMS2CuvunLNK4AHK9EqabLkxIK27xAjR31uro4czEZH0mogP+hz6p+unQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FYyWpeZR; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768212977; x=1799748977;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=H8gp41/PvMnd7tQ04BGrl2ztpsHRk7DIXiv5/QpR4qY=;
+  b=FYyWpeZR5divjtCr/eUbljTV4kHRXG9q/HmSS3YebjF2aKQ5np9ddMRs
+   3ztZe1DFny65DOzZNsJtTN8h/jxkj3PRS6WPHY2rd55E482xVz5zSZPWV
+   MEt1a7OpFSxFUVFZ/x+3ZhFuTuQb5k5tRfkmwofybuWp3+PdAcWQ9WjOG
+   IEKpMtxTExV/k3K3h6NJwRMtC3DyV3aRDZiIT/BkOb4IyElUKeVpve3V1
+   goFkM+3akTtHtr7WfJ/ZEFq3LITm2op3gyDBCkFRCTei1mmrwiwDDvpLJ
+   +HK9X3yJ5EnDDCaosOF6BPgJAgKh/sPCbEXWbSJ3mSVEtLueeDl1fu9Bb
+   A==;
+X-CSE-ConnectionGUID: Eivch2DxTX6ObUWTkOPEoQ==
+X-CSE-MsgGUID: MFoBeiDnRsWtM9rF9HDWnA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11668"; a="92151273"
+X-IronPort-AV: E=Sophos;i="6.21,219,1763452800"; 
+   d="scan'208";a="92151273"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 02:16:16 -0800
+X-CSE-ConnectionGUID: kio9i+jfSvSXaI/JTm4KcQ==
+X-CSE-MsgGUID: lWCYiL/hQqyBbhD2t3nNQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,219,1763452800"; 
+   d="scan'208";a="204337417"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 12 Jan 2026 02:16:12 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vfEy2-00000000DFc-1HOY;
+	Mon, 12 Jan 2026 10:16:10 +0000
+Date: Mon, 12 Jan 2026 18:15:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Shawn Lin <shawn.lin@rock-chips.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v3 3/3] PCI: dw-rockchip: Add pcie_ltssm_state_transition
+ trace support
+Message-ID: <202601121712.JbsMAjDZ-lkp@intel.com>
+References: <1768180800-63364-4-git-send-email-shawn.lin@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -109,65 +83,97 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aULDwbALUj0V7cVk@jlelli-thinkpadt14gen4.remote.csb>
+In-Reply-To: <1768180800-63364-4-git-send-email-shawn.lin@rock-chips.com>
 
-Hi All!
+Hi Shawn,
 
-Happy new year. :-)
+kernel test robot noticed the following build errors:
 
-On 17/12/25 15:52, Juri Lelli wrote:
-> Power Management and Scheduling in the Linux Kernel (OSPM-summit) VIII
-> edition
-> 
-> April 14-16, 2026 - Arm, Cambridge (UK)
-> 
-> .:: FOCUS
-> 
-> The VIII edition of the Power Management and Scheduling in the Linux
-> Kernel (OSPM) summit aims at fostering discussions on power management
-> and (real-time) scheduling techniques. The summit will be held at Arm in
-> Cambridge (UK) on April 14-16, 2026.
-> 
-> We welcome anybody interested in having discussions on the broad scope
-> of scheduler techniques for reducing energy consumption while meeting
-> performance and latency requirements, real-time systems, real-time and
-> non-real-time scheduling, tooling, debugging and tracing.
-> 
+[auto build test ERROR on pci/next]
+[also build test ERROR on next-20260109]
+[cannot apply to pci/for-linus trace/for-next mani-mhi/mhi-next linus/master v6.19-rc5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-...
+url:    https://github.com/intel-lab-lkp/linux/commits/Shawn-Lin/PCI-trace-Add-PCI-controller-LTSSM-transition-tracepoint/20260112-100141
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/1768180800-63364-4-git-send-email-shawn.lin%40rock-chips.com
+patch subject: [PATCH v3 3/3] PCI: dw-rockchip: Add pcie_ltssm_state_transition trace support
+config: arm64-randconfig-004-20260112 (https://download.01.org/0day-ci/archive/20260112/202601121712.JbsMAjDZ-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260112/202601121712.JbsMAjDZ-lkp@intel.com/reproduce)
 
-> Presentations (50 min) can cover recently developed technologies,
-> ongoing work and new ideas. Please understand that this workshop is not
-> intended for presenting sales and marketing pitches.
-> 
-> .:: SUBMIT A TOPIC/PRESENTATION
-> 
-> To submit a topic/presentation use the form available at
-> https://forms.gle/dR5FuzQRFNXZEQBb8.
-> 
-> Or, if you prefer, simply reply (only to me, please :) to this email
-> specifying:
-> 
-> - name/surname
-> - affiliation
-> - short bio
-> - email address
-> - title
-> - abstract
-> 
-> The deadline for submitting topics/presentations is January 30, 2026.
-> Notifications for accepted topics/presentations will be sent out
-> February 6, 2026.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601121712.JbsMAjDZ-lkp@intel.com/
 
-Quick reminder that the deadline for submitting topics is approaching!
+All errors (new ones prefixed by >>):
 
-Also, I'd like to mention that the proper event website address is
+>> drivers/pci/controller/dwc/pcie-dw-rockchip.c:264:6: error: call to undeclared function 'dw_pcie_ltssm_status_string'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     264 |                                         dw_pcie_ltssm_status_string(state),
+         |                                         ^
+>> drivers/pci/controller/dwc/pcie-dw-rockchip.c:264:6: error: incompatible integer to pointer conversion passing 'int' to parameter of type 'const char *' [-Wint-conversion]
+     264 |                                         dw_pcie_ltssm_status_string(state),
+         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/trace/events/pci_controller.h:20:45: note: passing argument to parameter 'state' here
+      20 |         TP_PROTO(const char *dev_name, const char *state, u32 rate),
+         |                                                    ^
+   2 errors generated.
 
-https://retis.santannapisa.it/ospm-summit/
 
-Don't hesitate to reach out if you need any help.
+vim +/dw_pcie_ltssm_status_string +264 drivers/pci/controller/dwc/pcie-dw-rockchip.c
 
-Best,
-Juri
+   225	
+   226	#ifdef CONFIG_TRACING
+   227	static void rockchip_pcie_ltssm_trace_work(struct work_struct *work)
+   228	{
+   229		struct rockchip_pcie *rockchip = container_of(work, struct rockchip_pcie,
+   230							trace_work.work);
+   231		struct dw_pcie *pci = &rockchip->pci;
+   232		enum dw_pcie_ltssm state;
+   233		u32 i, l1ss, prev_val = DW_PCIE_LTSSM_UNKNOWN, rate, val;
+   234	
+   235		for (i = 0; i < PCIE_DBG_LTSSM_HISTORY_CNT; i++) {
+   236			val = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_DBG_FIFO_STATUS);
+   237			rate = FIELD_GET(PCIE_DBG_FIFO_RATE_MASK, val);
+   238			l1ss = FIELD_GET(PCIE_DBG_FIFO_L1SUB_MASK, val);
+   239			val = FIELD_GET(PCIE_LTSSM_STATUS_MASK, val);
+   240	
+   241			/*
+   242			 * Hardware Mechanism: The ring FIFO employs two tracking counters:
+   243			 * - 'last-read-point': maintains the user's last read position
+   244			 * - 'last-valid-point': tracks the hardware's last state update
+   245			 *
+   246			 * Software Handling: When two consecutive LTSSM states are identical,
+   247			 * it indicates invalid subsequent data in the FIFO. In this case, we
+   248			 * skip the remaining entries. The dual-counter design ensures that on
+   249			 * the next state transition, reading can resume from the last user
+   250			 * position.
+   251			 */
+   252			if ((i > 0 && val == prev_val) || val > DW_PCIE_LTSSM_RCVRY_EQ3)
+   253				break;
+   254	
+   255			state = prev_val = val;
+   256			if (val == DW_PCIE_LTSSM_L1_IDLE) {
+   257				if (l1ss == 2)
+   258					state = DW_PCIE_LTSSM_L1_2;
+   259				else if (l1ss == 1)
+   260					state = DW_PCIE_LTSSM_L1_1;
+   261			}
+   262	
+   263			trace_pcie_ltssm_state_transition(dev_name(pci->dev),
+ > 264						dw_pcie_ltssm_status_string(state),
+   265						((rate + 1) > pci->max_link_speed) ?
+   266						PCI_SPEED_UNKNOWN : PCIE_SPEED_2_5GT + rate);
+   267		}
+   268	
+   269		schedule_delayed_work(&rockchip->trace_work, msecs_to_jiffies(5000));
+   270	}
+   271	
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
