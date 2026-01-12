@@ -1,266 +1,467 @@
-Return-Path: <linux-pci+bounces-44540-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44541-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D94B2D1499B
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 18:56:14 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 364BED148D8
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 18:53:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 86780315ECC6
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 17:49:32 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id BF3AD3043692
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 17:50:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5236387347;
-	Mon, 12 Jan 2026 17:47:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74D1D37F0ED;
+	Mon, 12 Jan 2026 17:48:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="pxBqF0Pl"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="k+vnLIU+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010036.outbound.protection.outlook.com [52.101.61.36])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazolkn19010016.outbound.protection.outlook.com [52.103.20.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3218D37F8A5;
-	Mon, 12 Jan 2026 17:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BF237F0E2;
+	Mon, 12 Jan 2026 17:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.16
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768240031; cv=fail; b=mHAmQfwBfGZczaX3/DSM0hC3bpdxAMjgQ2/KuZam4Vc27o+GEHRZipfuri5g2jq3dxCvFIOiTKLGoQcq0C/lz2/u5wWvZqA0OgjsuPXsYqeFcG5IoLmoG40s8hLX1DYevtV15mwz2fnQNuuZP5lYZgUprn5IuPYmhgdTDC4hmhI=
+	t=1768240116; cv=fail; b=C8Vh4rSdNp7N3qo28LUZRbT+qy2tnDMPedFtekTbveNTsDUZGYxC3yQ98xgttr9B41WGw4K31DpvCSgLfMEMIK5WWcCPf/qfPfwsnAuPwoM5rBlvTRccodSwQ0fBfIWa7dwVPdDGixMBNXS2psPZANCmOuww84w+a8u2mwy/pRc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768240031; c=relaxed/simple;
-	bh=tWoQ58cvR5Qn2vkX+5K/GBYs5d1pdioM1XVSyKZupQ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kbTE4PfP7C6w4wmisBAgCh3k7jNAKhTcM0kYuJZaQaEsnVSqpURNMvKhhvn+BFP7T2u02//XbdaTITmSSj1YkA2HSq99XqEMvrHET/vyiQcN7mLRGIhQv3G1KEcCKkzlV8D1Ehnf7u52sE/Y+IsMXUy8ZaIhKXfEQQud5+IEm2I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=pxBqF0Pl; arc=fail smtp.client-ip=52.101.61.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1768240116; c=relaxed/simple;
+	bh=0bAKGtYLKkhu7mzhcR5gfSQXEPFDlLZVn65p4AvO20I=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=aCMYUkbhrxyiF1ysplwBvPz8jCn2C09ZvlhOT6LlJC/nywkoIj8Fxe5hD7mh9XxTGEugnTLM5k1ehNUgBsRQ+9Nv8R+mRc6t5PFanPnnSwn4G+FXViBapUI7b/NxrDvFG1fA6qrc7pfDQAAaB2tiDJAh4w1+sI2+2hXhfQxbCKk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=k+vnLIU+; arc=fail smtp.client-ip=52.103.20.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YILb9ezFyb3MG9kKGXbgAts5PVvg2ko3eHKPYcBRr6ug7KJjT92f9RHlQF3sG143HdTHOsUVVxYrxyieR7Pg7WlJR/G06k7nD9dWF5UD00hVjBBRUq2lbncGGkWA62BXTXLgnUcfV0RYNAVFz1HXRj4VMBswPkT5HaL8zQstZEQqEhU3BpV57BbVCJD/HUP43HhNuaCj1QnvGIQpiUTTCs0ngUu4tn8bNfbLC8nFvnEkM6jBQHIM2fDL60h6C7zmXRM4CWNwzOGDjp7CGVGBOjs4O9S6yVDJsF3jRiSSoIowoaZgiq4Ux8rIyTBzTnOJbd/TRyx20xxLeILMfW46Xw==
+ b=T/MZbNf01cvVqhuJu2tW8QIhI8iH/p0VH5gmF/wCWSBAfYUqmNPs5e6ZAL7ej9fjB5NL327QLUiiG6D/CT+3KmnkhcVfhl3eTt5UnOUyogyRbtzBbRiyNpYz+tjKdpzu7ak1fqzPciwRM87oHgYWUhQOiWIQ1gf9YywHzirOp5ulQ2VwLw85m+/8Z8oqrUgcdQihYiuMdg4yM1TM/DJhe8VzA7/QjYJjM3UcYrhABJBvINcSsXHgJdravf4OVpm2H1LL0cUm9+ae5nSaI5/jFpU+r7MAMCgqsIQ6uOsGcmCspWrhSg4fxydxCsyQD6pEws+vOMYmbbF5q11Zcm1Y0Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N1J+BdCt6tiyG5IlAf9740izsatqm4Ntj+zK5oiEn5g=;
- b=qyvA6xHOoul1NBtABxTwOUecPxqUDUeWVzjEqzYZvXvB+74L5O/XMgc6d5qwaWoQU85hBdpnmb8p/+7tBi+oMzUN5aJFiMa/JnXHsZGjxZ+d7l7F0NhphYYFasyA2OTuVHpZCYmAq3FKfp76BJi2M1B16TaI0offEa7NAMy5UCoCVyO05wvghrZxpvcYwavZp5b4v/QOaLMRhxrLj34OX+kcs3HIX4FTJURCX9Q3xziFuL0Y3OqZlR/yuIcL5KMMNwEfy6OZe3VZ58tryfmFQ82xM4W/efRYi5OoVNhn2kHFs7h8wu6cE1zU4RgppgRGAK2+w4TyvIQLb4LeH+xsrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=Prm0CkZjm6AvivR1lCW3tMDY0nezPby9oFrIoiApnzU=;
+ b=mzrQHweQ1kNcCjhdqyYrJHGD3NKKLB1DafSg8BC97eXiWuUuDt3a39yZECqUSUS4BIxyfalcYPWKdsOb+qh3wA7f6cVhnsoRamv363t+LdA6T9wSjYpwKKLS4Un9tN8ePX/GIGz41eTq5RAiQFVJnLD4zGuEe2WoS3MdC03bK/TPEr7v2xtWk/gZbq+QQzm+qF1jP3KhW2t/A2ijY9LZKfYbK5ABDzqE+/uDm7koBPYDF5dPdWrNg3bN5iOPRmnOsUId2O7s1n7YRXa8LkWYDa+k4dzqjbzytizsLr3lgNXLhMy0k5A/pCu6cmwQWJx874xvNok5UT+3CKNYwIX+8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N1J+BdCt6tiyG5IlAf9740izsatqm4Ntj+zK5oiEn5g=;
- b=pxBqF0PlH3aKPOw1Lws0EBbewATSYCKIGXibh0/NWJo2Swe83FpBekNjpw3gy+3xX58+VynNoC+mNopbqz2C6iG60dROhUuR9NMs6pQRGP+558XsVYtBhmiMj6HyYFbUB2dkqTVnUf5lOG5t93mSE6nCMZ+NIKp8yNq7dfM+BgSthOeiJmC2n28ttJadOxDWmvLLBFpQRqoyw3qoAwsewVV1dGY6tK44KR/W219p3W2ltoGnwKH1AvValA2/UK3Qoe9EHOwVKo6vIKYVmIsrBVkrkDM7q+VTdjcZA0xW8GhUdmRiibOwTzvHQudXGKFTGaMqlyrLv5P1/Jjndra/2g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- DM4PR12MB6012.namprd12.prod.outlook.com (2603:10b6:8:6c::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9499.7; Mon, 12 Jan 2026 17:47:07 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.9499.005; Mon, 12 Jan 2026
- 17:47:07 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
- Francois Dugast <francois.dugast@intel.com>, intel-xe@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Matthew Brost <matthew.brost@intel.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Felix Kuehling <Felix.Kuehling@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
- David Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>, Leon Romanovsky <leon@kernel.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Alistair Popple <apopple@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-pci@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
- callback
-Date: Mon, 12 Jan 2026 12:46:57 -0500
-X-Mailer: MailMate (2.0r6290)
-Message-ID: <86D91C8B-C3EA-4836-8DC2-829499477618@nvidia.com>
-In-Reply-To: <20260112165001.GG745888@ziepe.ca>
-References: <20260111205820.830410-1-francois.dugast@intel.com>
- <20260111205820.830410-2-francois.dugast@intel.com>
- <aWQlsyIVVGpCvB3y@casper.infradead.org>
- <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
- <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
- <20260112134510.GC745888@ziepe.ca>
- <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
- <20260112165001.GG745888@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR03CA0195.namprd03.prod.outlook.com
- (2603:10b6:a03:2ef::20) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+ bh=Prm0CkZjm6AvivR1lCW3tMDY0nezPby9oFrIoiApnzU=;
+ b=k+vnLIU+lttgRLbJb3wEHme/MjCmz2RFupSrErrl2OSDSV7B0m70vdBrNZ7Frbyg1oZoRngN99L+fJewxTI9c7kYPXeS+GCzq+HDqES+SlA7poYQO3Ybi5/Oca1+QCBIZECBJx799grxdSdixEoq0K/0Pp1VUK+PfkJGfm5vzC4nhOXY4R3U1pKLJxMTZM55Ei3w6Pt+8u1YYLPguaw+sXyT5OIvsI+31CXytMI3VtnCeDsZ2DbncqX5azEbe7kI+S/iQbl3yR2UiSevpZpU18aPGsw8gg3uVi8WNRt87MthjhmBrWK4g9dqvCUnzLURhC4NLIqAhVKRiSXpo5QraQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by CO1PR02MB8425.namprd02.prod.outlook.com (2603:10b6:303:154::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.2; Mon, 12 Jan
+ 2026 17:48:31 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9499.005; Mon, 12 Jan 2026
+ 17:48:31 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Yu Zhang <zhangyu1@linux.microsoft.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
+	<wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kwilczynski@kernel.org"
+	<kwilczynski@kernel.org>, "mani@kernel.org" <mani@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "joro@8bytes.org"
+	<joro@8bytes.org>, "will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"easwar.hariharan@linux.microsoft.com"
+	<easwar.hariharan@linux.microsoft.com>, "jacob.pan@linux.microsoft.com"
+	<jacob.pan@linux.microsoft.com>, "nunodasneves@linux.microsoft.com"
+	<nunodasneves@linux.microsoft.com>, "mrathor@linux.microsoft.com"
+	<mrathor@linux.microsoft.com>, "peterz@infradead.org" <peterz@infradead.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: [RFC v1 5/5] iommu/hyperv: Add para-virtualized IOMMU support for
+ Hyper-V guest
+Thread-Topic: [RFC v1 5/5] iommu/hyperv: Add para-virtualized IOMMU support
+ for Hyper-V guest
+Thread-Index: AQHcaMpb286bdBhc60y7Ts6ZOD3veLVIruwggAZIL4CAAAL1EA==
+Date: Mon, 12 Jan 2026 17:48:30 +0000
+Message-ID:
+ <SN6PR02MB41571D67D866538138D06585D481A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20251209051128.76913-1-zhangyu1@linux.microsoft.com>
+ <20251209051128.76913-6-zhangyu1@linux.microsoft.com>
+ <SN6PR02MB41572D46CF6C1DE68974EAA1D485A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <dws34g6znmam7eabwetg722b4wgf2wxufcqxqphhbqlryx23mb@we5utwanawe2>
+In-Reply-To: <dws34g6znmam7eabwetg722b4wgf2wxufcqxqphhbqlryx23mb@we5utwanawe2>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CO1PR02MB8425:EE_
+x-ms-office365-filtering-correlation-id: f035fb3e-d81a-4250-d14a-08de5202cc4a
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8062599012|51005399006|19110799012|8060799015|15080799012|41001999006|461199028|13091999003|31061999003|56899033|440099028|3412199025|40105399003|102099032|12091999003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?uiVbgy+oHE9k4h8zRKRO/w2N264bE84KNsxvurbDo4QlStmMCxfzKreMaQJ2?=
+ =?us-ascii?Q?jml8gCmo7Rnt8xhUokmmrh0AMMWpP1PXhTJezlnwCNAaZaFuMXk5h1QHaAoY?=
+ =?us-ascii?Q?M+DQ/aSJCaWVXCQ5JKvWGhzjlCx0blsDRoI83xMV0IZCIkGwnnogQABtapZB?=
+ =?us-ascii?Q?T5osj3Ed/o/gLO6mjWKznqcu2cGAS88paSgooLdkJJAhUx6S7kUMu7Wrym3s?=
+ =?us-ascii?Q?89Xo3Al0Oj3CrR93EZ/4lD5GLTNypbDe+aQS1NaIpjOJstLzmQ21dznmYq0i?=
+ =?us-ascii?Q?b2ClShkCDzO0yFwAi2/mYMEMFTwPwA+LGAyKtTEMRv5RuyBgy+RLOrgqxmPI?=
+ =?us-ascii?Q?LssPLCJiNkEsSbt9qOuB7Bq7Bbd6Z6iNXdi80MB0xk2dtRAUdfGbvR8bQ6If?=
+ =?us-ascii?Q?YsBILH2JsRT0uO4ArGYfGJFofFK5oNl8kvof9HWTkgR4Y/aVLTxIl6lmoFeX?=
+ =?us-ascii?Q?X0o+u7p2rrnxjoIGr2XXp4JF64W5l4kaIVbh49/902vj023XtCkH6HzonLma?=
+ =?us-ascii?Q?zH9zuNZkivOqhOltRj/blnS+Wr0MpQkzFUmOWta9sJVK3xIZwfwVDW3HMHft?=
+ =?us-ascii?Q?JjZYPO9PIoiD3OkBxAdm5BpZX4l2mQ1FVgQwjLHO/O6rGjK3v7sxsB7d2Mit?=
+ =?us-ascii?Q?adMXj0WT7ZtU9rh7vJ76dJuT0biJ9UrQ0mfjhz3NzXOylyLWKScIuVjzET+j?=
+ =?us-ascii?Q?yMEfifXgsSdYwIfZKC+ZqgVj/DVnrnLOz2mPn0rZDObHk5lTmqhS3CdFMvrW?=
+ =?us-ascii?Q?wAmYHxLFQgya2i6k4LSPBN4lOQhFZJ/W8+PgYnMx8oIl6c9sfgxDbM2UCVA3?=
+ =?us-ascii?Q?tcviJ5UgCySy8fuOaUxmm4ybFabW0gl7yFkIkPjS+x+vo5fEh/7DUWLBd+n8?=
+ =?us-ascii?Q?2zjzmbDoqSJidYd3cfKFlUe+GmOggErFC1HII1Wwa2yaeiB8Myst7Wi6lZ+u?=
+ =?us-ascii?Q?99pfN9KeUmfdkMBByOKITME4t/a07w70V0TDgS//EVxMqPVA+rETYtzwFddx?=
+ =?us-ascii?Q?wbKl9zH1ddUAcisNUpJmR38c9/9pDHP3gM2urLEtobZZ45JOi/WHYsgbh1wF?=
+ =?us-ascii?Q?fTPs/1vyFcr5QRwZaNV677EQUK07iUVOIgb2djnJjlYI2qu5uQqGcnIBSeVi?=
+ =?us-ascii?Q?VncxkJAqAmMMzsFqFnPDOX9Lgp3bLc0/RX4NfVDDVNSSdgNw0Y+v3nbdPUqr?=
+ =?us-ascii?Q?sKmSV0HIS/PBOMmdutBh/YJoqq2BYGKpatDK4j6+LGvRaVrfZAhQub4b5oms?=
+ =?us-ascii?Q?UkanyOpeIDpGzga7spJgHTrz3/C1WOPncF+t2ltcaw=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?N40aPPaRahhlTNiVwXcLJqgHceWv8msOxbI+EKBpcBc88NMBWlinwqOT/3A/?=
+ =?us-ascii?Q?LXxb6woFD0LL3yHGrB5dhklsdrsMfLxClN44h16yii7p7l0lzp+0R7aVCxD7?=
+ =?us-ascii?Q?e9T4YNzlntDJHHVkDCfclrA0xPZzyl4bZ9U9xHPKyc2EVV2iLVwmo5ArOhjW?=
+ =?us-ascii?Q?OFRPKC0i9oq83BEcx4cmPImN9cymJqFKrr5FlY2uN+XZdnJofdrMvjVkn8ua?=
+ =?us-ascii?Q?drGti3i7yEMuXVJjkm2XjfAe+bICvUKKsX1Xbtpi4xELpP8bB8Sxk0/W0fuo?=
+ =?us-ascii?Q?/iCwQZ7mWW/SNtDIPvS0DgI8LRqVi8VZ8Jnq58BCt790UzYR/U5S1jEbxwe0?=
+ =?us-ascii?Q?nSp0i7Z3/oyaWhyOlWUux6q7sBOSLvgJmpO6kH6iXRQVNiBwHbnFBsyUa+AR?=
+ =?us-ascii?Q?9NiGMNPQajpz58R5icGDidPY79QxV281OgZdzfsnXZ56vHIGbYyk1CN6ZQtT?=
+ =?us-ascii?Q?QEtAHkgcDr4j0LfLJBRPNnS5vJWXp065QPkrNohwQy1jSg9+YGX8WMhKN/i2?=
+ =?us-ascii?Q?fmYpT7dogaA7Wta1UJnf4djCaREH6h6nqXrztJb3t+BTRVzqHym5MD73pe+t?=
+ =?us-ascii?Q?78wc0JZow/h90WZcBVX9FIssNKtdtE9wB3t8KhGZpJaY8nIh2tYxDZfjDTTb?=
+ =?us-ascii?Q?GCyXXloxKo/50DBYp00JUuAfzgwR038p2VaZMxnBmt0VS+FOBwpRbnc2hlb3?=
+ =?us-ascii?Q?ScZjPUthab27DZEwstoW+Gi4XGUCzUWFFpdyIrPJmDZpd2yDyj9mo7QHHOiy?=
+ =?us-ascii?Q?db0eNWXgedSClt+Frvj+X94eFgAj9YDlpc0fNaz8lh5YRygzxxYsCQ1cjIhj?=
+ =?us-ascii?Q?VFqtI2j76sHkxXkuxFz4TaRX50XX27sju9fGv6+3ke5dfd6bxz2oJLGGFHcU?=
+ =?us-ascii?Q?3O6kbBqIUJDhcMnbn9kJf5ektcCgrQJcjcDF7pOaLGuNLog6q+lZhvTSQrD5?=
+ =?us-ascii?Q?vmWDOgShdcxIv5tuXhS5Ngc5aZJ26B8sjt1n1cBBUl6T06SafKl/oz5mMYvi?=
+ =?us-ascii?Q?/TOPutcHmW3Y3zJ2NWy8swnjNenZJqNATNQ419wa+RBrVncpCGsdGeQmpPyG?=
+ =?us-ascii?Q?Xc5J0IPB9NY5szEb3uPe9XZgsgMDHGGUZhvJvx6LQ2om+CysAiyUmhK+f+VP?=
+ =?us-ascii?Q?/NqigXx45r9aIk6nFkxkrroBgow8gco5tctw9Zy2Yl5zE4yHaTOmGVqghzJA?=
+ =?us-ascii?Q?wQqpJYWoZzUjD6UvtWknh/9Lxi9n5Xj/56IHx5moqY2JUmWuux1eYxT3U2fb?=
+ =?us-ascii?Q?ilj8gsscCsLC7X9xdEwyFRJeZO7pAEf1zbiEh4zfEdOuTEjH+2aCVsFritMn?=
+ =?us-ascii?Q?+Gg3a6duRV4+2MdgvpmU+/AB03Nj9Hq5j/G+27pmi806LlTF4ANCGUZAGunj?=
+ =?us-ascii?Q?6OnOxiw=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DM4PR12MB6012:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0ed69ae2-ee15-4670-2fff-08de52029ac4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dytEcXlBTlZtRDNiMFMrbnloVEVaVGdqa2puM1FJeEY2VnJOWDFtL1F0TGtl?=
- =?utf-8?B?SWZENVdMdU1ZbzFhSU0zb2ZRSjVqcXRVQmFDZW81NjU0UytYdGZBYjZsNENv?=
- =?utf-8?B?eWNIUkJFYUV1cmd2ZmtEYnZWSjJWRHZpUTZyUEsyS0JIZE1Hbk9JNGRvK0Z5?=
- =?utf-8?B?Y09mTTlPNThNS1BGa1VvOFFMdGYrVjIvZFVNNWpoWTkyRGhRT2cyRHhuMVpG?=
- =?utf-8?B?aWdpTlZOTkYydVlmMDlrdnZuZXhmRk5FTERBTzZkUitlUHdyTzZGZ25ab205?=
- =?utf-8?B?YjBIL1BBRGNyazBLYTVlSEZPM0JiR3lnSS9GWVRheC94OWFrc1I0SmwzQ0M3?=
- =?utf-8?B?WDE4WmJLMkQ1bjcxY09hSTVmUXlUcVZ1UFgvNXJSaXk0MVBCSWRJdllDWnBH?=
- =?utf-8?B?N0MyTzV2TDE3T0NrZFRhOWtGUlJRR21HNFZGOHlTVWRlNk1hQ3JodlF3RUNk?=
- =?utf-8?B?dzh6WllVdTRyOEE3ZTZ6RUk3TG00Q3JtT2llUjlSTm5ibzRlL0VEcnptZFJY?=
- =?utf-8?B?L2NNb3p3YWVBT0JYeWxIeVd0VzdwTU51bFp6c2k3MXcwbjRldHY3SFZMU1dp?=
- =?utf-8?B?alp3K0YyNGVSenZ6WWVVRVQ5WXd1bFBrQ3JqNnVUb0srNzdrK1VPTDVVUVBD?=
- =?utf-8?B?UytMa3d1dFNvd2d5Rkw0WExzNndkbmVKa245d0lhK053YWpvL1FRYXZDTWo0?=
- =?utf-8?B?UHpQQkFIZlpwRnE0cTlsUHA2VzRwQnkrVFVmVytHNHcwYTVZQndvQlRhdjVZ?=
- =?utf-8?B?MVdPNUJrd3ZNRlNRaE41VUI5cXZCb2JPenRKZXEzdEU2aWF6Q3VGcHpwRVI2?=
- =?utf-8?B?dlJLZWxzQXNNQmJlQ05MemV2ZUM0bDJBZEhMc0pwZFQrM1hITmVnYmlyTVcx?=
- =?utf-8?B?ZmFJbEJaL2dNZEduU284MU1Pa0JobmpVWXRtQzJ5d0kvVVJrVmxBTjhNK3Vq?=
- =?utf-8?B?TWR4dEpjZ0lDRC9iaE9QSndITlc2QUhwV3V5YmVta0RiVzJVY1FycTFnTDF2?=
- =?utf-8?B?UG9RWTJmUjdJMHlRbVFCRm4zMXdOV3lWOGZQTVRjU1ZpS0dvVGt0K043QnZ6?=
- =?utf-8?B?Tk5NY1Q1ZmRkOWNYMXZvMVFWVVFQUGxaQ29sM0JMM0lFeHlmUjhIMWlCNndM?=
- =?utf-8?B?Zmd3clI0dndnak5LTnk0cEY1SEgvWHVXbWhhMHkzY0NEc1p2YU1vcGdMNllR?=
- =?utf-8?B?TmUxOFBOSGhFVE5XdU5QRVdSdEFSWTlzcHRJdGZkM1hOdWNYbnBhc2oraUtq?=
- =?utf-8?B?MmJYL3NoZVZJeVBpVUVNUXN0d0s1cDZlc2hsVnhrYmdCMW1tTkFwS3d3dlN2?=
- =?utf-8?B?YmladmhiUndaaDM1NHBmQUlsYi95enBHa2FPUWNoU1JQdlJla09icHBZK3RU?=
- =?utf-8?B?bUtLMUw1ZTIyRWFVZUZJYkk1Y0FqOWw0bm9FZSt2dnFUWmNUbXlacG5iV0cv?=
- =?utf-8?B?RVlZSld6RWxZMldoOWlSdlYyZklPRjZtZTBxODJYVlJXaHRhU3BrbFdHS0dT?=
- =?utf-8?B?ZXJyMkhNMzFBci90dmJ6Unc2Y29HNXM3Q0p6NnFnd1dXS2VDRm1UMkF2RVhJ?=
- =?utf-8?B?VXFHSGRMdlc2ZGVxaGtjNXZIWWRCRk1SWWV0VWpuMy9pbGNVcnRzbENtSmlw?=
- =?utf-8?B?ZUxWbk1vRkN4a0wyeHByWnNjYjhzckVCc3pWdWhUME1DWUl5OUpwbnlmWUto?=
- =?utf-8?B?OVVJZzhSZnJVdzJkUmVKek5PM1pzTGs3ZXdVUUk4V2pDeWtKeEFtaEFKWlVL?=
- =?utf-8?B?Vk14ZE8vckdkOUJhS2s4a1BGY1RBYVFxc1IzVDQvWlVmVVh1VVMyQ09BNGlY?=
- =?utf-8?B?UmttQkNycHVZd3R3VExOT3RmTDFPZWtUSVZuT1Y0dnVqZ0xxREw4OFRsWWFt?=
- =?utf-8?B?ZHZ2VUt4ckZOd3pGT2poOFlaVlZoY3oyMjJQTnl2ZXV2Y25pcTJCZnZsQ2lX?=
- =?utf-8?Q?nWRc6PnT2UOD0jXlRWGp035ZvNOS9Aq4?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UEdDZXE3Qi9QUjFJYjB2M2x2VytPc2xPTVd1TE14OUhzMElRdENqVTJKYTRS?=
- =?utf-8?B?ZU14RGxaSG9uU3dxd0M4Rm1PVXlmaXVrcWN5RTA3YmFxRHprOWx1T2EzVmpa?=
- =?utf-8?B?NTdmWWY1UWF3MTdRcFduYjJOd0ozQTYySlhjRXp2Y2xtbC9NWkV3TmQvN2lv?=
- =?utf-8?B?OStkZjZQNm5oMXprWGpRekFzamxIUUtlM3BMdHk4MnpMZ2NKbDZiWlJvNnZ6?=
- =?utf-8?B?ejZYZ3BUV1dESmxSQTRtd2xBNGtDYUNHYS9WS2hhelRzVzNlVEpTYmNHdy9O?=
- =?utf-8?B?OWdRVFNBUkVzNlBlMUdVVVhaT251SXp4V2w1cmtHbmxKRExBcEdtOFpoSWlZ?=
- =?utf-8?B?UVdxbURRbG1ZK3J2QUNvUys5cHdaK0QwSjBWa21XdFZvUzdqNStSeU91U1U2?=
- =?utf-8?B?RFBTY3htNjdSZlEvRjI2QUlPTWs5T1B0RGVhUlgySDVNRFVDNzVqMFpCTHFv?=
- =?utf-8?B?YW94N0hiczNTOFFhK2R5bmR0RFFBUHNvMXIyd1FzS3ZVWCtndWg4citJUnhK?=
- =?utf-8?B?a1FXUGJHbCtYK3ExbjRIczFhM2JPakxSY1lsam80ejhVUThFTGZPRG90amFB?=
- =?utf-8?B?VGlRTWtNVXhMejIxK2VvcFpZd0s2aml4cy9Gb2lUYWR5NXU4MHlNMzZ1NitG?=
- =?utf-8?B?My9XVmZBYWNuaGlJcG5ONUJYMUVWK0VKcGwzWU5XUFIyY3pJdTJ6SGVEQjdl?=
- =?utf-8?B?eFpsWFpJbGNheWt2S1orejhrVUk3emc4MVhOT1FkUzdYZVdaRWlkMGRtVE92?=
- =?utf-8?B?ZnVRNmErN0RDY2tGV0Z5OW5FZjNLWG13Wk5QbW5vcUppUy9UN2tURitPc1Js?=
- =?utf-8?B?SGlobm83YldoU1I4b1o1ekRJbVdvSk1rTkt0N0xnZC9WV3o2dmJBZkwwclRD?=
- =?utf-8?B?Z3NidnUzSm5EM3k3SWt1bGN6TmtTdGwyOVlsYWlCM0VjV0tjc251eGVRRGth?=
- =?utf-8?B?RGwrYnQxeU0rN1djNVpjcFBKVlduV3VqdG9wVTZWNVl0T0J5OFVTcSt3N2F4?=
- =?utf-8?B?TUJIRG9CU0xhMUNKVFRxeXpOMmVzSHBqNjhDV2dOY0h3aThtMU1HbUxnc1c1?=
- =?utf-8?B?bU9qUDZza201K2VwQ0FSZ0t6ajVkZWRsYUQ3VUZwTEhWbmZJSHNzTTVLL05p?=
- =?utf-8?B?NTdmNWFWRDE3UG9XUGFkZEY3c29KVHFXalhCRktSTkUzWCthOE5ySkd6V0ZZ?=
- =?utf-8?B?eXQ1bnB2eEhDN2JNOG1XNGtTLzBhUlE5VkgvUmpYcVFCd21NTmZKODc4ejFM?=
- =?utf-8?B?SUdEZkdzd00wQTdvTHBxdTVGbWRjaDhjNHBGRXVzdlM0R3U5Z0txcWFsYW5v?=
- =?utf-8?B?TU5uT0RKcERUZ2ppbTIrMHh1S3hPYy81TEZLQm40Ym1CWnZYelpkWWtWWFBI?=
- =?utf-8?B?V1Q2RVA5RjJKTXc1WC9rSUYwTjBCRUd1a0lhV1VDdC93Z28yNm81V3J6TUxy?=
- =?utf-8?B?c1F6V3BBdHFQNllmdkNmZE9SMTNjV2tuOEZBZjQ2T08wWS8xVUY1M09UQ3ZL?=
- =?utf-8?B?VkJOME1RMHdQL1BXZ2xhUHNNY2x0Nm1TUHk0YzdMek9RQ0w5aStLV1RURGtC?=
- =?utf-8?B?QVlrVDgvRzBNUU1HTStVbENXNHg0bENPKzdwVlNSNTlGTDRJb1Z3dTJYYS9E?=
- =?utf-8?B?Q09MZlFTU3Mvc1dtK05LdzJpbXlCQmNWajNVYnN1U2dOS0t4dTR1RXJQaGxM?=
- =?utf-8?B?UURuV3RkWVBBS09SNkhZTGVhMnNFVE1nODloenJWWmh5dmpWb29XdHRRVzNF?=
- =?utf-8?B?UVlMU21yU3BadEpOTHhOeVpPODMzcHRLcC8vejFzMithckpuZ1FGc0tDZ3NZ?=
- =?utf-8?B?Y1U0OFRVKzg0VHVxV25aUXoybkhNVXJwanVzN0N5ejQreW4wcFpFVE5XMkdQ?=
- =?utf-8?B?VXhVdGloTDJzNnBpVmtodGluNW5SaktmemdNOG5FVVRmYUltek54bFBHT3Vn?=
- =?utf-8?B?OEM5d2NOTzlET3M5STRNS3Y1OEhjMnJtNXlQaHMwdVErMjlWZVRvZ1RNT3FV?=
- =?utf-8?B?ZXVZNnBpU0FvNnFtVUtScHM1aXA4RUxqV3pBdHBXUEltRkpwZ1A1L3Y1dVpB?=
- =?utf-8?B?anNKcjZ2K1pCN1U4QngrZnl6UlUvZDJGMWVYZVZ1ZnRCTlBObDdmTTRYblJ4?=
- =?utf-8?B?aERZaE14Nlc4eGtMUlFuOUF1QXllUlk2TW9aK3RmMDdIQ2hablFTcWdZZHZy?=
- =?utf-8?B?Sy9hamMzMTBYamJzbGhoNUF6MnFoVGVjMHlJcUk5OEg5OTJWa3Q4ajYrZWtY?=
- =?utf-8?B?ZklraDhDeWtzanV2UFdadW9hSUZadWdOV2RuaVNaMmdEUUJQd1ZJdU1EaU9L?=
- =?utf-8?Q?0qRRHi2DIoGdMi79k9?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ed69ae2-ee15-4670-2fff-08de52029ac4
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2026 17:47:07.4247
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f035fb3e-d81a-4250-d14a-08de5202cc4a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jan 2026 17:48:30.3894
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7z6sPf+8v8slvfmOJEmaD3i4bGffy247ah29D6PaqtxxpDfobutQ0aiRiYvbdrMA
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6012
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR02MB8425
 
-On 12 Jan 2026, at 11:50, Jason Gunthorpe wrote:
+From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Monday, January 12, 202=
+6 8:56 AM
+>=20
+> On Thu, Jan 08, 2026 at 06:48:59PM +0000, Michael Kelley wrote:
+> > From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Monday, December 8,=
+ 2025 9:11 PM
+>=20
+> <snip>
+> Thank you so much, Michael, for the thorough review!
+>=20
+> I've snipped some comments I fully agree with and will address in
+> next version. Actually, I have to admit I agree with your remaining
+> comments below as well. :)
+>=20
+> > > +struct hv_iommu_dev *hv_iommu_device;
+> > > +static struct hv_iommu_domain hv_identity_domain;
+> > > +static struct hv_iommu_domain hv_blocking_domain;
+> >
+> > Why is hv_iommu_device allocated dynamically while the two
+> > domains are allocated statically? Seems like the approach could
+> > be consistent, though maybe there's some reason I'm missing.
+> >
+>=20
+> On second thought, `hv_identity_domain` and `hv_blocking_domain` should
+> likely be allocated dynamically as well, consistent with `hv_iommu_device=
+`.
 
-> On Mon, Jan 12, 2026 at 11:31:04AM -0500, Zi Yan wrote:
->>> folio_free()
->>>
->>> 1) Allocator finds free memory
->>> 2) zone_device_page_init() allocates the memory and makes refcount=1
->>> 3) __folio_put() knows the recount 0.
->>> 4) free_zone_device_folio() calls folio_free(), but it doesn't
->>>    actually need to undo prep_compound_page() because *NOTHING* can
->>>    use the page pointer at this point.
->>> 5) Driver puts the memory back into the allocator and now #1 can
->>>    happen. It knows how much memory to put back because folio->order
->>>    is valid from #2
->>> 6) #1 happens again, then #2 happens again and the folio is in the
->>>    right state for use. The successor #2 fully undoes the work of the
->>>    predecessor #2.
->>
->> But how can a successor #2 undo the work if the second #1 only allocates
->> half of the original folio? For example, an order-9 at PFN 0 is
->> allocated and freed, then an order-8 at PFN 0 is allocated and another
->> order-8 at PFN 256 is allocated. How can two #2s undo the same order-9
->> without corrupting each other’s data?
->
-> What do you mean? The fundamental rule is you can't read the folio or
-> the order outside folio_free once it's refcount reaches 0.
+I don't know if there's a strong rationale either way (static allocation vs=
+.
+dynamic). If the long-term expectation is that there is never more than one
+PV IOMMU in a guest, then static would be OK. If future direction allows th=
+at
+there could be multiple PV IOMMUs in a guest, then doing dynamic from
+the start is justifiable (though the current PV IOMMU hypercalls seem to
+assume only one PV IOMMU). But either way, being consistent is desirable.
 
-There is no such a rule. In core MM, folio_split(), which splits a high
-order folio to low order ones, freezes the folio (turning refcount to 0)
-and manipulates the folio order and all tail pages compound_head to
-restructure the folio. Your fundamental rule breaks this.
-Allowing compound information to stay after a folio is freed means
-you cannot tell whether a folio is under split or freed.
+>=20
+> <snip>
+> > > +static int hv_iommu_get_logical_device_property(struct device *dev,
+> > > +					enum hv_logical_device_property_code code,
+> > > +					struct hv_output_get_logical_device_property *property)
+> > > +{
+> > > +	u64 status;
+> > > +	unsigned long flags;
+> > > +	struct hv_input_get_logical_device_property *input;
+> > > +	struct hv_output_get_logical_device_property *output;
+> > > +
+> > > +	local_irq_save(flags);
+> > > +
+> > > +	input =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
+> > > +	output =3D *this_cpu_ptr(hyperv_pcpu_output_arg);
+> > > +	memset(input, 0, sizeof(*input));
+> > > +	memset(output, 0, sizeof(*output));
+> >
+> > General practice is to *not* zero the output area prior to a hypercall.=
+ The hypervisor
+> > should be correctly setting all the output bits. There are a couple of =
+cases in the new
+> > MSHV code where the output is zero'ed, but I'm planning to submit a pat=
+ch to
+> > remove those so that hypercall call sites that have output are consiste=
+nt across the
+> > code base. Of course, it's possible to have a Hyper-V bug where it does=
+n't do the
+> > right thing, and zero'ing the output could be done as a workaround. But=
+ such cases
+> > should be explicitly known with code comments indicating the reason for=
+ the
+> > zero'ing.
+> >
+> > Same applies in hv_iommu_detect().
+> >
+>=20
+> Thanks for the information! Just to clarify: this is only because Hyper-V=
+ is
+> supposed to zero the output page, and for input page, memset is still nee=
+ded.
+> Am I correct?
 
->
-> So the successor #2 will write updated heads and order to the order 8
-> pages at PFN 0 and the ones starting at PFN 256 will remain with
-> garbage.
->
-> This is OK because nothing is allowed to read them as their refcount
-> is 0.
->
-> If later PFN256 is allocated then it will get updated head and order
-> at the same time it's refcount becomes 1.
->
-> There is corruption and they don't corrupt each other's data.
->
->>> If the allocator is using the struct page memory then step #5 should
->>> also clean up the struct page with the allocator data before returning
->>> it to the allocator.
->>
->> Do you mean ->folio_free() callback should undo prep_compound_page()
->> instead?
->
-> I wouldn't say undo, I was very careful to say it needs to get the
-> struct page memory into a state that the allocator algorithm expects,
-> whatever that means.
->
-> Jason
+Yes, you are correct.
 
+The general TLFS requirement for hypercall input is that unused fields and =
+bits
+are set to zero. This requirement ensures forward compatibility if a later =
+version of
+the hypervisor assigns some meaning to previously unused fields/bits. So be=
+st practice
+for hypercall call sites is to use memset() to zero the entire input area, =
+and then specific
+field values are set on top of that. Any fields/bits that aren't explicitly=
+ set then meet
+the TLFS requirement.
 
-Best Regards,
-Yan, Zi
+It would be OK if a hypercall call site explicitly set every field/bit inst=
+ead of using
+memset(), but it's easy to unintentionally miss a field/bit and create a fo=
+rward
+compatibility problem. However, when the hypercall input contains a large a=
+rray,
+the code usually does *not* do memset() on the large array because of the p=
+erf
+impact, but instead the code populating the large array must be careful to =
+not leave
+any bits uninitialized.
+
+For hypercall output, the hypervisor essentially has the same requirement. =
+It should
+make sure that any unused fields/bits in the output area are zero, so that =
+the Linux
+guest can properly deal with a future hypervisor version that assigns meani=
+ng to
+previously unused fields/bits.
+
+>=20
+> <snip>
+>=20
+> > > +static void hv_iommu_shutdown(void)
+> > > +{
+> > > +	iommu_device_sysfs_remove(&hv_iommu_device->iommu);
+> > > +
+> > > +	kfree(hv_iommu_device);
+> > > +}
+> > > +
+> > > +static struct syscore_ops hv_iommu_syscore_ops =3D {
+> > > +	.shutdown =3D hv_iommu_shutdown,
+> > > +};
+> >
+> > Why is a shutdown needed at all?  hv_iommu_shutdown() doesn't do anythi=
+ng
+> > that really needed, since sysfs entries are transient, and freeing memo=
+ry isn't
+> > relevant for a shutdown.
+> >
+>=20
+> For iommu_device_sysfs_remove(), I guess they are not necessary, and
+> I will need to do some homework to better understand the sysfs. :)
+> Originally, we wanted a shutdown routine to trigger some hypercall,
+> so that Hyper-V will disable the DMA translation, e.g., during the VM
+> reboot process.
+
+I would presume that if Hyper-V reboots the VM, Hyper-V automatically
+resets the PV IOMMU and prevents any further DMA operations. But
+consider kexec(), where a new kernel gets loaded without going through
+the hypervisor "reboot-this-VM" path. There have been problems in the
+past with kexec() where parts of Hyper-V state for the guest didn't get
+reset, and the PV IOMMU is likely something in that category. So there
+may indeed be a need to tell the hypervisor to reset everything related
+to the PV IOMMU. There are already functions to do Hyper-V cleanup: see
+vmbus_initiate_unload() and hyperv_cleanup(). These existing functions
+may be a better place to do PV IOMMU cleanup/reset if needed.
+
+>=20
+> <snip>
+>=20
+> > > +device_initcall(hv_iommu_init);
+> >
+> > I'm concerned about the timing of this initialization. VMBus is initial=
+ized with
+> > subsys_initcall(), which is initcall level 4 while device_initcall() is=
+ initcall level 6.
+> > So VMBus initialization happens quite a bit earlier, and the hypervisor=
+ starts
+> > offering devices to the guest, including PCI pass-thru devices, before =
+the
+> > IOMMU initialization starts. I cobbled together a way to make this IOMM=
+U code
+> > run in an Azure VM using the identity domain. The VM has an NVMe OS dis=
+k,
+> > two NVMe data disks, and a MANA NIC. The NVMe devices were offered, and
+> > completed hv_pci_probe() before this IOMMU initialization was started. =
+When
+> > IOMMU initialization did run, it went back and found the NVMe devices. =
+But
+> > I'm unsure if that's OK because my hacked together environment obviousl=
+y
+> > couldn't do real IOMMU mapping. It appears that the NVMe device driver
+> > didn't start its initialization until after the IOMMU driver was setup,=
+ which
+> > would probably make everything OK. But that might be just timing luck, =
+or
+> > maybe there's something that affirmatively prevents the native PCI driv=
+er
+> > (like NVMe) from getting started until after all the initcalls have fin=
+ished.
+> >
+>=20
+> This is yet another immature attempt by me to do the hv_iommu_init() in
+> an arch-independent path. And I do not think using device_initcall() is
+> harmless. This patch set was tested using an assigned Intel DSA device,
+> and the DMA tests succeeded w/o any error. But that is not enough to
+> justify using device_initcall(): I reset the idxd driver as kernel
+> builtin and realized, just like you said, both hv_pci_probe() and
+> idxd_pci_probe() were triggered before hv_iommu_init(), and when pvIOMMU
+> tries to probe the endpoint device, a warning is printed:
+>=20
+> [    3.609697] idxd 13d7:00:00.0: late IOMMU probe at driver bind, someth=
+ing fishy here!
+>=20
+
+You succeeded in doing what I was going to try! I won't spend time on it no=
+w.
+
+> > I'm planning to look at this further to see if there's a way for a PCI =
+driver
+> > to try initializing a pass-thru device *before* this IOMMU driver has i=
+nitialized.
+> > If so, a different way to do the IOMMU initialization will be needed th=
+at is
+> > linked to VMBus initialization so things can't happen out-of-order. Est=
+ablishing
+> > such a linkage is probably a good idea regardless.
+> >
+> > FWIW, the Azure VM with the 3 NVMe devices and MANA, and operating with
+> > the identity IOMMU domain, all seemed to work fine! Got 4 IOMMU groups,
+> > and devices coming and going dynamically all worked correctly. When a d=
+evice
+> > was removed, it was moved to the blocking domain, and then flushed befo=
+re
+> > being finally removed. All good! I wish I had a way to test with an IOM=
+MU
+> > paging domain that was doing real translation.
+> >
+>=20
+> Thank you, Michael! I really appreciate you running these extra experimen=
+ts!
+>=20
+> My tests on this DSA device passed (using paging domain) too, with no DMA
+> errors observed (regardless its driver is builtin or as a kernel module).
+> But that doesn't make me confident about using `device_initcall`. I belie=
+ve
+> your concern is valid. E.g., an endpoint device might allocate a DMA addr=
+ess(
+> using a raw GPA, instead of gIOVA) before pvIOMMU is initialized, and the=
+n
+> use that address for DMA later, after a paging domain is attached?
+
+Yes, that's exactly my concern.
+
+>=20
+> > > diff --git a/drivers/iommu/hyperv/iommu.h b/drivers/iommu/hyperv/iomm=
+u.h
+> > > new file mode 100644
+> > > index 000000000000..c8657e791a6e
+> > > --- /dev/null
+> > > +++ b/drivers/iommu/hyperv/iommu.h
+> > > @@ -0,0 +1,53 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +
+> > > +/*
+> > > + * Hyper-V IOMMU driver.
+> > > + *
+> > > + * Copyright (C) 2024-2025, Microsoft, Inc.
+> > > + *
+> > > + */
+> > > +
+> > > +#ifndef _HYPERV_IOMMU_H
+> > > +#define _HYPERV_IOMMU_H
+> > > +
+> > > +struct hv_iommu_dev {
+> > > +	struct iommu_device iommu;
+> > > +	struct ida domain_ids;
+> > > +
+> > > +	/* Device configuration */
+> > > +	u8  max_iova_width;
+> > > +	u8  max_pasid_width;
+> > > +	u64 cap;
+> > > +	u64 pgsize_bitmap;
+> > > +
+> > > +	struct iommu_domain_geometry geometry;
+> > > +	u64 first_domain;
+> > > +	u64 last_domain;
+> > > +};
+> > > +
+> > > +struct hv_iommu_domain {
+> > > +	union {
+> > > +		struct iommu_domain    domain;
+> > > +		struct pt_iommu        pt_iommu;
+> > > +		struct pt_iommu_x86_64 pt_iommu_x86_64;
+> > > +	};
+> > > +	struct hv_iommu_dev *hv_iommu;
+> > > +	struct hv_input_device_domain device_domain;
+> > > +	u64		pgsize_bitmap;
+> > > +
+> > > +	spinlock_t lock; /* protects dev_list and TLB flushes */
+> > > +	/* List of devices in this DMA domain */
+> >
+> > It appears that this list is really a list of endpoints (i.e., struct
+> > hv_iommu_endpoint), not devices (which I read to be struct
+> > hv_iommu_dev).
+> >
+> > But that said, what is the list used for?  I see code to add
+> > endpoints to the list, and to remove then, but the list is never
+> > walked by any code in this patch set. If there is an anticipated
+> > future use, it would be better to add the list as part of the code
+> > for that future use.
+> >
+>=20
+> Yes, we do not really need this list for this patch set. Thanks!
+>=20
+> B.R.
+> Yu
 
