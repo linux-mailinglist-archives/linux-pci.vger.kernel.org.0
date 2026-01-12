@@ -1,303 +1,266 @@
-Return-Path: <linux-pci+bounces-44539-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44540-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05515D14806
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 18:48:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D94B2D1499B
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 18:56:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 8EA7E304754A
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 17:41:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 86780315ECC6
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 17:49:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 745D937F0EE;
-	Mon, 12 Jan 2026 17:41:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5236387347;
+	Mon, 12 Jan 2026 17:47:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="lrtLPXs+"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="pxBqF0Pl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010036.outbound.protection.outlook.com [52.101.61.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B93374176;
-	Mon, 12 Jan 2026 17:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768239712; cv=none; b=H/v/XtxOLtd+uW5q84YEoz5CEBCqod8rnh0G0/wBcfqWAeMabxmm5NVLhQavCfLBMqfXJhGl3xUr4TkDOvonoiqsJwp6Hgw1LW71M5q7bXoQ3JhL72gJCxH9R0jqOTggxnJY4e2hQ3CEy9A0MgBKykTfqMOw6oR/CRn50D0E5lw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768239712; c=relaxed/simple;
-	bh=YXfG3cpftaBPyugNxucbUe1bRZTTS4lWl/EUAsvkqSo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KUa6JuS7igrzbNFSXuOjGJO4FRFd95L1CMrb3DXpeV36flZwUA+/573kiyaoLQdCphOE87OXl3HZP0iooRa2tT1VyGahQBjUPJV2DfWU77Mhj+id1jBWJejogiYXepHjEH7kryE0X5TfS9zdtuKTM9/JUcWd20QzjUkxT+M40T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=lrtLPXs+; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1768239708; x=1768844508; i=w_armin@gmx.de;
-	bh=5sNI0U4unbPia8BfWHfZSsP1d6huK3jxDWUqeEUG1M4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=lrtLPXs+yhBhXsUzZThPYiyt4rTyAroZv8SIqvC843ZQTOZ+37VLpJ0WrNPraFjL
-	 bpsafAVh5h0+Q6Ow6CrGNv5dOdwH1qE0uAuPZIDzK64xDYrELKJ+v0L24NgAj5wbq
-	 GcXLOauqP6kUeiVyvK7Z9uegD15dX17A7Z0gnwS64TW/YpvQ0P/zwB7PeEgea9zcU
-	 xp9KvoF6B51PQQPBoTS7E8AfSbgXcpGft6IbSZMKRwXjSl/Nh1RqXLYxI/7OfsCfv
-	 10LZf7SHtlurtldT69trQTv+a560SOg6lHorjAd9q60hfycMtuef17tmAWuTx9621
-	 Fw3XZcF/YX6oX8emrA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.24] ([93.202.247.91]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MatVb-1wHAe02fGN-00amdC; Mon, 12
- Jan 2026 18:41:47 +0100
-Message-ID: <1a107aaf-c1c1-46af-98a8-03eae1bb9db2@gmx.de>
-Date: Mon, 12 Jan 2026 18:41:45 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3218D37F8A5;
+	Mon, 12 Jan 2026 17:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.36
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768240031; cv=fail; b=mHAmQfwBfGZczaX3/DSM0hC3bpdxAMjgQ2/KuZam4Vc27o+GEHRZipfuri5g2jq3dxCvFIOiTKLGoQcq0C/lz2/u5wWvZqA0OgjsuPXsYqeFcG5IoLmoG40s8hLX1DYevtV15mwz2fnQNuuZP5lYZgUprn5IuPYmhgdTDC4hmhI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768240031; c=relaxed/simple;
+	bh=tWoQ58cvR5Qn2vkX+5K/GBYs5d1pdioM1XVSyKZupQ8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kbTE4PfP7C6w4wmisBAgCh3k7jNAKhTcM0kYuJZaQaEsnVSqpURNMvKhhvn+BFP7T2u02//XbdaTITmSSj1YkA2HSq99XqEMvrHET/vyiQcN7mLRGIhQv3G1KEcCKkzlV8D1Ehnf7u52sE/Y+IsMXUy8ZaIhKXfEQQud5+IEm2I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=pxBqF0Pl; arc=fail smtp.client-ip=52.101.61.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YILb9ezFyb3MG9kKGXbgAts5PVvg2ko3eHKPYcBRr6ug7KJjT92f9RHlQF3sG143HdTHOsUVVxYrxyieR7Pg7WlJR/G06k7nD9dWF5UD00hVjBBRUq2lbncGGkWA62BXTXLgnUcfV0RYNAVFz1HXRj4VMBswPkT5HaL8zQstZEQqEhU3BpV57BbVCJD/HUP43HhNuaCj1QnvGIQpiUTTCs0ngUu4tn8bNfbLC8nFvnEkM6jBQHIM2fDL60h6C7zmXRM4CWNwzOGDjp7CGVGBOjs4O9S6yVDJsF3jRiSSoIowoaZgiq4Ux8rIyTBzTnOJbd/TRyx20xxLeILMfW46Xw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N1J+BdCt6tiyG5IlAf9740izsatqm4Ntj+zK5oiEn5g=;
+ b=qyvA6xHOoul1NBtABxTwOUecPxqUDUeWVzjEqzYZvXvB+74L5O/XMgc6d5qwaWoQU85hBdpnmb8p/+7tBi+oMzUN5aJFiMa/JnXHsZGjxZ+d7l7F0NhphYYFasyA2OTuVHpZCYmAq3FKfp76BJi2M1B16TaI0offEa7NAMy5UCoCVyO05wvghrZxpvcYwavZp5b4v/QOaLMRhxrLj34OX+kcs3HIX4FTJURCX9Q3xziFuL0Y3OqZlR/yuIcL5KMMNwEfy6OZe3VZ58tryfmFQ82xM4W/efRYi5OoVNhn2kHFs7h8wu6cE1zU4RgppgRGAK2+w4TyvIQLb4LeH+xsrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N1J+BdCt6tiyG5IlAf9740izsatqm4Ntj+zK5oiEn5g=;
+ b=pxBqF0PlH3aKPOw1Lws0EBbewATSYCKIGXibh0/NWJo2Swe83FpBekNjpw3gy+3xX58+VynNoC+mNopbqz2C6iG60dROhUuR9NMs6pQRGP+558XsVYtBhmiMj6HyYFbUB2dkqTVnUf5lOG5t93mSE6nCMZ+NIKp8yNq7dfM+BgSthOeiJmC2n28ttJadOxDWmvLLBFpQRqoyw3qoAwsewVV1dGY6tK44KR/W219p3W2ltoGnwKH1AvValA2/UK3Qoe9EHOwVKo6vIKYVmIsrBVkrkDM7q+VTdjcZA0xW8GhUdmRiibOwTzvHQudXGKFTGaMqlyrLv5P1/Jjndra/2g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ DM4PR12MB6012.namprd12.prod.outlook.com (2603:10b6:8:6c::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9499.7; Mon, 12 Jan 2026 17:47:07 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.9499.005; Mon, 12 Jan 2026
+ 17:47:07 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
+ Francois Dugast <francois.dugast@intel.com>, intel-xe@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, Matthew Brost <matthew.brost@intel.com>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ Felix Kuehling <Felix.Kuehling@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
+ David Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>, Leon Romanovsky <leon@kernel.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Alistair Popple <apopple@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-pci@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
+ callback
+Date: Mon, 12 Jan 2026 12:46:57 -0500
+X-Mailer: MailMate (2.0r6290)
+Message-ID: <86D91C8B-C3EA-4836-8DC2-829499477618@nvidia.com>
+In-Reply-To: <20260112165001.GG745888@ziepe.ca>
+References: <20260111205820.830410-1-francois.dugast@intel.com>
+ <20260111205820.830410-2-francois.dugast@intel.com>
+ <aWQlsyIVVGpCvB3y@casper.infradead.org>
+ <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
+ <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
+ <20260112134510.GC745888@ziepe.ca>
+ <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
+ <20260112165001.GG745888@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SJ0PR03CA0195.namprd03.prod.outlook.com
+ (2603:10b6:a03:2ef::20) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] hwmon: spd5118: Do not fail resume on temporary I2C
- errors
-To: TINSAE TADESSE <tinsaetadesse2015@gmail.com>
-Cc: linux@roeck-us.net, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org
-References: <20260110172003.13969-1-tinsaetadesse2015@gmail.com>
- <d08f3edd-f5bd-4e6b-b174-e768d42df281@gmx.de>
- <CAJ12PfOP_ddk=nqaSDrravpgOYK3eTND24MaXo9RyzdN7cXLfA@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAJ12PfOP_ddk=nqaSDrravpgOYK3eTND24MaXo9RyzdN7cXLfA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:agqE3oTcENWS+X/7hVjyaGn6rBdBIc+MN6MZOM/qUONvWjAhQgo
- sFNmuPnqgH86fB9YPP8FoUi/zqJly0ArIVq9sxpbVXCWzvOijZgv6KpJUDrQOC0FM6/NwT5
- pkXk+h9Z+ZFDolVL7nFxWXCfE3T5AMVTINbYPri+k5ustMSaTmhiA1aw0VNLiUpXT1ALqtG
- pU1ZAZzKlhA1TZoWGyHTQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:6KhcLHkO3Mw=;hnJ7kLpzsrM6IxxoffMuL77y72p
- 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
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DM4PR12MB6012:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0ed69ae2-ee15-4670-2fff-08de52029ac4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dytEcXlBTlZtRDNiMFMrbnloVEVaVGdqa2puM1FJeEY2VnJOWDFtL1F0TGtl?=
+ =?utf-8?B?SWZENVdMdU1ZbzFhSU0zb2ZRSjVqcXRVQmFDZW81NjU0UytYdGZBYjZsNENv?=
+ =?utf-8?B?eWNIUkJFYUV1cmd2ZmtEYnZWSjJWRHZpUTZyUEsyS0JIZE1Hbk9JNGRvK0Z5?=
+ =?utf-8?B?Y09mTTlPNThNS1BGa1VvOFFMdGYrVjIvZFVNNWpoWTkyRGhRT2cyRHhuMVpG?=
+ =?utf-8?B?aWdpTlZOTkYydVlmMDlrdnZuZXhmRk5FTERBTzZkUitlUHdyTzZGZ25ab205?=
+ =?utf-8?B?YjBIL1BBRGNyazBLYTVlSEZPM0JiR3lnSS9GWVRheC94OWFrc1I0SmwzQ0M3?=
+ =?utf-8?B?WDE4WmJLMkQ1bjcxY09hSTVmUXlUcVZ1UFgvNXJSaXk0MVBCSWRJdllDWnBH?=
+ =?utf-8?B?N0MyTzV2TDE3T0NrZFRhOWtGUlJRR21HNFZGOHlTVWRlNk1hQ3JodlF3RUNk?=
+ =?utf-8?B?dzh6WllVdTRyOEE3ZTZ6RUk3TG00Q3JtT2llUjlSTm5ibzRlL0VEcnptZFJY?=
+ =?utf-8?B?L2NNb3p3YWVBT0JYeWxIeVd0VzdwTU51bFp6c2k3MXcwbjRldHY3SFZMU1dp?=
+ =?utf-8?B?alp3K0YyNGVSenZ6WWVVRVQ5WXd1bFBrQ3JqNnVUb0srNzdrK1VPTDVVUVBD?=
+ =?utf-8?B?UytMa3d1dFNvd2d5Rkw0WExzNndkbmVKa245d0lhK053YWpvL1FRYXZDTWo0?=
+ =?utf-8?B?UHpQQkFIZlpwRnE0cTlsUHA2VzRwQnkrVFVmVytHNHcwYTVZQndvQlRhdjVZ?=
+ =?utf-8?B?MVdPNUJrd3ZNRlNRaE41VUI5cXZCb2JPenRKZXEzdEU2aWF6Q3VGcHpwRVI2?=
+ =?utf-8?B?dlJLZWxzQXNNQmJlQ05MemV2ZUM0bDJBZEhMc0pwZFQrM1hITmVnYmlyTVcx?=
+ =?utf-8?B?ZmFJbEJaL2dNZEduU284MU1Pa0JobmpVWXRtQzJ5d0kvVVJrVmxBTjhNK3Vq?=
+ =?utf-8?B?TWR4dEpjZ0lDRC9iaE9QSndITlc2QUhwV3V5YmVta0RiVzJVY1FycTFnTDF2?=
+ =?utf-8?B?UG9RWTJmUjdJMHlRbVFCRm4zMXdOV3lWOGZQTVRjU1ZpS0dvVGt0K043QnZ6?=
+ =?utf-8?B?Tk5NY1Q1ZmRkOWNYMXZvMVFWVVFQUGxaQ29sM0JMM0lFeHlmUjhIMWlCNndM?=
+ =?utf-8?B?Zmd3clI0dndnak5LTnk0cEY1SEgvWHVXbWhhMHkzY0NEc1p2YU1vcGdMNllR?=
+ =?utf-8?B?TmUxOFBOSGhFVE5XdU5QRVdSdEFSWTlzcHRJdGZkM1hOdWNYbnBhc2oraUtq?=
+ =?utf-8?B?MmJYL3NoZVZJeVBpVUVNUXN0d0s1cDZlc2hsVnhrYmdCMW1tTkFwS3d3dlN2?=
+ =?utf-8?B?YmladmhiUndaaDM1NHBmQUlsYi95enBHa2FPUWNoU1JQdlJla09icHBZK3RU?=
+ =?utf-8?B?bUtLMUw1ZTIyRWFVZUZJYkk1Y0FqOWw0bm9FZSt2dnFUWmNUbXlacG5iV0cv?=
+ =?utf-8?B?RVlZSld6RWxZMldoOWlSdlYyZklPRjZtZTBxODJYVlJXaHRhU3BrbFdHS0dT?=
+ =?utf-8?B?ZXJyMkhNMzFBci90dmJ6Unc2Y29HNXM3Q0p6NnFnd1dXS2VDRm1UMkF2RVhJ?=
+ =?utf-8?B?VXFHSGRMdlc2ZGVxaGtjNXZIWWRCRk1SWWV0VWpuMy9pbGNVcnRzbENtSmlw?=
+ =?utf-8?B?ZUxWbk1vRkN4a0wyeHByWnNjYjhzckVCc3pWdWhUME1DWUl5OUpwbnlmWUto?=
+ =?utf-8?B?OVVJZzhSZnJVdzJkUmVKek5PM1pzTGs3ZXdVUUk4V2pDeWtKeEFtaEFKWlVL?=
+ =?utf-8?B?Vk14ZE8vckdkOUJhS2s4a1BGY1RBYVFxc1IzVDQvWlVmVVh1VVMyQ09BNGlY?=
+ =?utf-8?B?UmttQkNycHVZd3R3VExOT3RmTDFPZWtUSVZuT1Y0dnVqZ0xxREw4OFRsWWFt?=
+ =?utf-8?B?ZHZ2VUt4ckZOd3pGT2poOFlaVlZoY3oyMjJQTnl2ZXV2Y25pcTJCZnZsQ2lX?=
+ =?utf-8?Q?nWRc6PnT2UOD0jXlRWGp035ZvNOS9Aq4?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UEdDZXE3Qi9QUjFJYjB2M2x2VytPc2xPTVd1TE14OUhzMElRdENqVTJKYTRS?=
+ =?utf-8?B?ZU14RGxaSG9uU3dxd0M4Rm1PVXlmaXVrcWN5RTA3YmFxRHprOWx1T2EzVmpa?=
+ =?utf-8?B?NTdmWWY1UWF3MTdRcFduYjJOd0ozQTYySlhjRXp2Y2xtbC9NWkV3TmQvN2lv?=
+ =?utf-8?B?OStkZjZQNm5oMXprWGpRekFzamxIUUtlM3BMdHk4MnpMZ2NKbDZiWlJvNnZ6?=
+ =?utf-8?B?ejZYZ3BUV1dESmxSQTRtd2xBNGtDYUNHYS9WS2hhelRzVzNlVEpTYmNHdy9O?=
+ =?utf-8?B?OWdRVFNBUkVzNlBlMUdVVVhaT251SXp4V2w1cmtHbmxKRExBcEdtOFpoSWlZ?=
+ =?utf-8?B?UVdxbURRbG1ZK3J2QUNvUys5cHdaK0QwSjBWa21XdFZvUzdqNStSeU91U1U2?=
+ =?utf-8?B?RFBTY3htNjdSZlEvRjI2QUlPTWs5T1B0RGVhUlgySDVNRFVDNzVqMFpCTHFv?=
+ =?utf-8?B?YW94N0hiczNTOFFhK2R5bmR0RFFBUHNvMXIyd1FzS3ZVWCtndWg4citJUnhK?=
+ =?utf-8?B?a1FXUGJHbCtYK3ExbjRIczFhM2JPakxSY1lsam80ejhVUThFTGZPRG90amFB?=
+ =?utf-8?B?VGlRTWtNVXhMejIxK2VvcFpZd0s2aml4cy9Gb2lUYWR5NXU4MHlNMzZ1NitG?=
+ =?utf-8?B?My9XVmZBYWNuaGlJcG5ONUJYMUVWK0VKcGwzWU5XUFIyY3pJdTJ6SGVEQjdl?=
+ =?utf-8?B?eFpsWFpJbGNheWt2S1orejhrVUk3emc4MVhOT1FkUzdYZVdaRWlkMGRtVE92?=
+ =?utf-8?B?ZnVRNmErN0RDY2tGV0Z5OW5FZjNLWG13Wk5QbW5vcUppUy9UN2tURitPc1Js?=
+ =?utf-8?B?SGlobm83YldoU1I4b1o1ekRJbVdvSk1rTkt0N0xnZC9WV3o2dmJBZkwwclRD?=
+ =?utf-8?B?Z3NidnUzSm5EM3k3SWt1bGN6TmtTdGwyOVlsYWlCM0VjV0tjc251eGVRRGth?=
+ =?utf-8?B?RGwrYnQxeU0rN1djNVpjcFBKVlduV3VqdG9wVTZWNVl0T0J5OFVTcSt3N2F4?=
+ =?utf-8?B?TUJIRG9CU0xhMUNKVFRxeXpOMmVzSHBqNjhDV2dOY0h3aThtMU1HbUxnc1c1?=
+ =?utf-8?B?bU9qUDZza201K2VwQ0FSZ0t6ajVkZWRsYUQ3VUZwTEhWbmZJSHNzTTVLL05p?=
+ =?utf-8?B?NTdmNWFWRDE3UG9XUGFkZEY3c29KVHFXalhCRktSTkUzWCthOE5ySkd6V0ZZ?=
+ =?utf-8?B?eXQ1bnB2eEhDN2JNOG1XNGtTLzBhUlE5VkgvUmpYcVFCd21NTmZKODc4ejFM?=
+ =?utf-8?B?SUdEZkdzd00wQTdvTHBxdTVGbWRjaDhjNHBGRXVzdlM0R3U5Z0txcWFsYW5v?=
+ =?utf-8?B?TU5uT0RKcERUZ2ppbTIrMHh1S3hPYy81TEZLQm40Ym1CWnZYelpkWWtWWFBI?=
+ =?utf-8?B?V1Q2RVA5RjJKTXc1WC9rSUYwTjBCRUd1a0lhV1VDdC93Z28yNm81V3J6TUxy?=
+ =?utf-8?B?c1F6V3BBdHFQNllmdkNmZE9SMTNjV2tuOEZBZjQ2T08wWS8xVUY1M09UQ3ZL?=
+ =?utf-8?B?VkJOME1RMHdQL1BXZ2xhUHNNY2x0Nm1TUHk0YzdMek9RQ0w5aStLV1RURGtC?=
+ =?utf-8?B?QVlrVDgvRzBNUU1HTStVbENXNHg0bENPKzdwVlNSNTlGTDRJb1Z3dTJYYS9E?=
+ =?utf-8?B?Q09MZlFTU3Mvc1dtK05LdzJpbXlCQmNWajNVYnN1U2dOS0t4dTR1RXJQaGxM?=
+ =?utf-8?B?UURuV3RkWVBBS09SNkhZTGVhMnNFVE1nODloenJWWmh5dmpWb29XdHRRVzNF?=
+ =?utf-8?B?UVlMU21yU3BadEpOTHhOeVpPODMzcHRLcC8vejFzMithckpuZ1FGc0tDZ3NZ?=
+ =?utf-8?B?Y1U0OFRVKzg0VHVxV25aUXoybkhNVXJwanVzN0N5ejQreW4wcFpFVE5XMkdQ?=
+ =?utf-8?B?VXhVdGloTDJzNnBpVmtodGluNW5SaktmemdNOG5FVVRmYUltek54bFBHT3Vn?=
+ =?utf-8?B?OEM5d2NOTzlET3M5STRNS3Y1OEhjMnJtNXlQaHMwdVErMjlWZVRvZ1RNT3FV?=
+ =?utf-8?B?ZXVZNnBpU0FvNnFtVUtScHM1aXA4RUxqV3pBdHBXUEltRkpwZ1A1L3Y1dVpB?=
+ =?utf-8?B?anNKcjZ2K1pCN1U4QngrZnl6UlUvZDJGMWVYZVZ1ZnRCTlBObDdmTTRYblJ4?=
+ =?utf-8?B?aERZaE14Nlc4eGtMUlFuOUF1QXllUlk2TW9aK3RmMDdIQ2hablFTcWdZZHZy?=
+ =?utf-8?B?Sy9hamMzMTBYamJzbGhoNUF6MnFoVGVjMHlJcUk5OEg5OTJWa3Q4ajYrZWtY?=
+ =?utf-8?B?ZklraDhDeWtzanV2UFdadW9hSUZadWdOV2RuaVNaMmdEUUJQd1ZJdU1EaU9L?=
+ =?utf-8?Q?0qRRHi2DIoGdMi79k9?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ed69ae2-ee15-4670-2fff-08de52029ac4
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2026 17:47:07.4247
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7z6sPf+8v8slvfmOJEmaD3i4bGffy247ah29D6PaqtxxpDfobutQ0aiRiYvbdrMA
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6012
 
-Am 12.01.26 um 12:48 schrieb TINSAE TADESSE:
+On 12 Jan 2026, at 11:50, Jason Gunthorpe wrote:
 
-> On Sun, Jan 11, 2026 at 1:27=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrot=
-e:
->> Am 10.01.26 um 18:19 schrieb Tinsae Tadesse:
->>
->>> SPD5118 DDR5 temperature sensors may be temporarily unavailable
->>> during s2idle resume. Ignore temporary -ENXIO and -EIO errors during r=
-esume and allow
->>> register synchronization to be retried later.
->> Hi,
->>
->> do you know if the error is caused by the SPD5118 device itself or by t=
-he underlying
->> i2c controller? Please also share the output of "acpidump" and the name=
- of the i2c
->> controller used to communicate with the SPD5118.
->>
->>> Signed-off-by: Tinsae Tadesse <tinsaetadesse2015@gmail.com>
->>> ---
->>>    drivers/hwmon/spd5118.c | 8 +++++++-
->>>    1 file changed, 7 insertions(+), 1 deletion(-)
+> On Mon, Jan 12, 2026 at 11:31:04AM -0500, Zi Yan wrote:
+>>> folio_free()
 >>>
->>> diff --git a/drivers/hwmon/spd5118.c b/drivers/hwmon/spd5118.c
->>> index 5da44571b6a0..ec9f14f6e0df 100644
->>> --- a/drivers/hwmon/spd5118.c
->>> +++ b/drivers/hwmon/spd5118.c
->>> @@ -512,9 +512,15 @@ static int spd5118_resume(struct device *dev)
->>>    {
->>>        struct spd5118_data *data =3D dev_get_drvdata(dev);
->>>        struct regmap *regmap =3D data->regmap;
->>> +     int ret;
->>>
->>>        regcache_cache_only(regmap, false);
->>> -     return regcache_sync(regmap);
->>> +     ret =3D regcache_sync(regmap);
->>> +     if(ret =3D=3D -ENXIO || ret =3D=3D -EIO) {
->>> +             dev_warn(dev, "SPD hub not responding on resume (%d), de=
-ferring init\n", ret);
->>> +             return 0;
->>> +     }
->> The specification says that the SPD5118 might take up to 10ms to initia=
-lize its i2c interface
->> after power on. Can you test if simply waiting for 10ms before syncing =
-the regcache solves this
->> issue?
+>>> 1) Allocator finds free memory
+>>> 2) zone_device_page_init() allocates the memory and makes refcount=1
+>>> 3) __folio_put() knows the recount 0.
+>>> 4) free_zone_device_folio() calls folio_free(), but it doesn't
+>>>    actually need to undo prep_compound_page() because *NOTHING* can
+>>>    use the page pointer at this point.
+>>> 5) Driver puts the memory back into the allocator and now #1 can
+>>>    happen. It knows how much memory to put back because folio->order
+>>>    is valid from #2
+>>> 6) #1 happens again, then #2 happens again and the folio is in the
+>>>    right state for use. The successor #2 fully undoes the work of the
+>>>    predecessor #2.
 >>
->> Thanks,
->> Armin Wolf
+>> But how can a successor #2 undo the work if the second #1 only allocates
+>> half of the original folio? For example, an order-9 at PFN 0 is
+>> allocated and freed, then an order-8 at PFN 0 is allocated and another
+>> order-8 at PFN 256 is allocated. How can two #2s undo the same order-9
+>> without corrupting each other’s data?
+>
+> What do you mean? The fundamental rule is you can't read the folio or
+> the order outside folio_free once it's refcount reaches 0.
+
+There is no such a rule. In core MM, folio_split(), which splits a high
+order folio to low order ones, freezes the folio (turning refcount to 0)
+and manipulates the folio order and all tail pages compound_head to
+restructure the folio. Your fundamental rule breaks this.
+Allowing compound information to stay after a folio is freed means
+you cannot tell whether a folio is under split or freed.
+
+>
+> So the successor #2 will write updated heads and order to the order 8
+> pages at PFN 0 and the ones starting at PFN 256 will remain with
+> garbage.
+>
+> This is OK because nothing is allowed to read them as their refcount
+> is 0.
+>
+> If later PFN256 is allocated then it will get updated head and order
+> at the same time it's refcount becomes 1.
+>
+> There is corruption and they don't corrupt each other's data.
+>
+>>> If the allocator is using the struct page memory then step #5 should
+>>> also clean up the struct page with the allocator data before returning
+>>> it to the allocator.
 >>
->>> +     return ret;
->>>    }
->>>
->>>    static DEFINE_SIMPLE_DEV_PM_OPS(spd5118_pm_ops, spd5118_suspend, sp=
-d5118_resume);
-> Hi Armin,
+>> Do you mean ->folio_free() callback should undo prep_compound_page()
+>> instead?
 >
->> Do you know if the error is caused by the SPD5118 device itself or by t=
-he underlying i2c controller?
-> The error appears to be caused by the underlying I2C controller and plat=
-form
-> power sequencing rather than by the SPD5118 device itself.
+> I wouldn't say undo, I was very careful to say it needs to get the
+> struct page memory into a state that the allocator algorithm expects,
+> whatever that means.
 >
-> The failure manifests as a temporary -ENXIO occurring only during s2idle
-> resume. The SPD5118 temperature sensor works correctly before suspend an=
-d
-> after resume once the bus becomes available again. This indicates that t=
-he
-> driver=E2=80=99s resume callback may be invoked before the I2C controlle=
-r or firmware
-> has fully re-enabled access to the SPD hub.
->
->> Please also share the output of "acpidump" and the name of the i2c
-> controller used to communicate with the SPD5118.
->
-> I have attached the output of acpidump as requested.
-> The SPD5118 is connected via I2C bus 14 and accessed through the Intel
-> I801 SMBus controller (0000:00:1f.4), which is ACPI-managed.
+> Jason
 
-Interesting, the ACPI code seems to do two things when the i2c controller =
-suspends (aka is put into D3):
 
-1. A unknown register 0x84 ("PMEC") is modified
-2. The PCI BAR of the i2c controller is disabled
-
-Since the PCI bar is not re-enabled during resume, i suspect that either t=
-he firmware
-is buggy or that the firmware relies on the operating system to restore an=
-y BAR settings
-when resuming.
-
-I do not know how the PCI core handles suspend, so i CCed the associated m=
-aintainers.
-
->> Can you test if simply waiting for 10ms before syncing the regcache sol=
-ves this
-> issue?
->
-> I tested adding an explicit msleep(10) in spd5118_resume() before callin=
-g
-> regcache_sync(), for the I2C interface to become ready after power-on.
-> With this delay in place, the resume failures (-ENXIO during regcache sy=
-nc)
-> no longer occur, and repeated suspend/resume cycles are completed succes=
-sfully.
->
-> However, relying on a fixed delay in the resume path is not robust and w=
-ould
-> not be suitable across platforms with different firmware and power seque=
-ncing.
-> It also still performs hardware I/O during PM resume.
-
-In this case the 10 ms delay is OK since the specification of the SPD5118 =
-device explicitly
-states that the device needs those 10ms to become operational after loosin=
-g power.
-
-> Additional evidence comes from running sensors, where all the temperatur=
-e
-> limit and alarm attributes fail with =E2=80=9CCan=E2=80=99t read=E2=80=
-=9D and temp1 reports N/A,
-> after adding msleep(10). All hwmon attributes (temperature input,
-> limits, and alarms) fail uniformly, which points to a bus-level access
-> failure rather than an issue with specific SPD5118 registers.
-
-Strange, what kind of error is reported then accessing those sysfs attribu=
-tes? Can you still
-access the nvmem part of the SPD5118 device?
-
-Can you also check if accessing tempX_enable works? If yes then please try=
- to set this
-attribute to "1" if it is still set to "0".
-
-Additionally, please use "i2cdump" or "i2cdetect" to check if other i2c de=
-vices on the same
-bus are also affected by this.
-
-> This supports deferring regcache synchronization and avoiding I2C transa=
-ctions
-> in the resume callback, since userspace may attempt to access hwmon
-> attributes before the
-> bus or device is ready.
-
-As already stated by Guenter, the root cause might be the i2c controller i=
-tself. Having
-this deferred regcache sync only acts as a workaround, but we strongly pre=
-fer having a
-real solution.
-
-Thanks,
-Armin Wolf
-
+Best Regards,
+Yan, Zi
 
