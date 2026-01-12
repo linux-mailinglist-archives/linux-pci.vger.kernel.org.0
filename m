@@ -1,209 +1,162 @@
-Return-Path: <linux-pci+bounces-44510-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44511-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5AF9D13B05
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 16:33:13 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C955D13B5A
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 16:35:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DE65230F479E
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 15:16:48 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id AB9703015464
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 15:34:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77D162E7186;
-	Mon, 12 Jan 2026 15:16:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D65F635FF40;
+	Mon, 12 Jan 2026 15:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XKIOSV2t"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09842BD5BB;
-	Mon, 12 Jan 2026 15:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0155C35FF7B
+	for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 15:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768231007; cv=none; b=jdbEJlqP99xOmwg+rNbe0aKOTkW7v3FbFDrpTkjSNyhQwWXjhnJEzcsV1eWsQrFMKXz7fpQ4Wv0Di3uy8ExiXsZXNENgIHjXO3A5EFNWEz1P2vgvMTG/AdAl8mN422ATWaQaGOf7TPclsN+gfAAZb7Pb0+gDPRc5fe/DTD6xyno=
+	t=1768232086; cv=none; b=jN72bhnga54BpJSvmN5P2RGVdHmdhb1aKE3JhSizPGo029hgUpxNb3hOIFSSdnn5rUAiu1c9Go83Qe/0II9lKc6cQbFLdlIZNl69hfBB0kGALSzEUP/Dq5mjvZwrfboCgicXyjIrZ6uKtdGqCbKZ1VipOhvyHQ7QcuVTwFPzquk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768231007; c=relaxed/simple;
-	bh=wPgiadCiymx4SgYtzEsDOyDQF6+5TWtuEQapElgaS7E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CmqROHSJiov6wjuiw9BuhtUayWMCPV/Y4PIO7nxSKIqpu2pKgqH1nNUXpn9rCfRDMJUiRBfZ1ApZMkt3sFks36X6YrglZOp0GEjI3qsjdVtqSrBw7SosH77vQ0Q91/A2lkv/Jirvwk5xHlA6I1l3ebYQeerUJGYFWkV5+deZjL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id F167F59162;
-	Mon, 12 Jan 2026 15:16:43 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id EF4E42002B;
-	Mon, 12 Jan 2026 15:16:41 +0000 (UTC)
-Date: Mon, 12 Jan 2026 10:16:44 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, linux-rockchip@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v3 3/3] PCI: dw-rockchip: Add
- pcie_ltssm_state_transition trace support
-Message-ID: <20260112101644.5c1b772a@gandalf.local.home>
-In-Reply-To: <1768180800-63364-4-git-send-email-shawn.lin@rock-chips.com>
-References: <1768180800-63364-1-git-send-email-shawn.lin@rock-chips.com>
-	<1768180800-63364-4-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1768232086; c=relaxed/simple;
+	bh=s6EznykqrP/F+nG9EBSEEX5NUjzWXxqBqj7KLutlW/4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Bi6+oIPoqU3O8DsLywo7BNbNBwun2/tPt14clke57fFp2RTQ20q413yEPi7kwegoGWv6FHfp4f2gA3hTISJmlM0bXx5ivIOZJh27a8ircR5t1MBmD+l2WU8f7dJVC82JhnQy074B8k/eryo+rfKQ0RpttRZNG4liSp7MPorgL74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XKIOSV2t; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-47d4029340aso67344895e9.3
+        for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 07:34:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1768232083; x=1768836883; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KEwDDJTfrVrFOxZl4FAKmDVtMP/Lxo1p2Wt2dLR6YMI=;
+        b=XKIOSV2tKPecBYD5a7DwPkTDOgIR3CIz1Vf9j90JmUrV9bwYwhhNWN+Y0uIva/ucCi
+         o9CA4HxtWozUG0qGobGKmBkd6ngvBgC3RvTImtWLe0MszerF1byOY4kv9Avy4I8iqHoV
+         lRQfNqRscDQ7FojnjA54KBv0iZ/tmC0k+fZhvcYzrHgEf8X8Em5O3urhQf7SfB4Mqmq8
+         NMbj4X1Xm8M1WEg7cVBOGA8lFWbwbTUTzOBpJgZKAOwvKArnZQAnXgMeaPbBydSrBe/i
+         HFn4O4ifePRptaBZ9OujOkOMPHI0vLQAZQhBg9HV2p2eP21JBAAM0Ow6aJWjL4jnECoX
+         E34Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768232083; x=1768836883;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KEwDDJTfrVrFOxZl4FAKmDVtMP/Lxo1p2Wt2dLR6YMI=;
+        b=WJXhb/ElsTUklzYITXDwnXGwSO9PHbio3qc+dIV9i6M3KbDrDu3M6yMmW9E8zRFfGh
+         u/UFUVnOkAtTwCE7daLrJoJ3FhtEfVUCq4FLW4eU9j42n/8jwUn96IWjpaTmt9/feuxn
+         tndM/K0pbIDTbY1sgBCDTumbxN8nti0fHN3LeOlaiuiShZyyxmwuH2Lg6Ol5oj99nzjw
+         Oc2lsJ1u8n0xHGOhjUlsgba1pDtlxOZ2pr8Yb4SfBt64DkbtUZOXpkW8tMNUkZH/amPK
+         3gEVBct+uxl9TYpgDiJ2kllnL7bsQB1zXWkjrd2scXmpSnOthHv3/qAS5PBZC/bSjOIe
+         oTVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWd7LZaW48EkCXt6CTp+752Vr36N3TZpr0oMwFPeQBuC/be3vOCu3nfaX6lsdR7ZYer4oKEwl65wAY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgeTCo6NptNXOfa6b4iIienYlzFIRiuu6vmtTP4aSxRxY3Gtz0
+	+DwL4TI4CFkCTmo9Q1gp1qJo4/OppdtRYSIQM2TTWJSCcwsDWWeJhoPrVtowrbG1iS780/KBjOk
+	G9s3ZB3izbLf+aLQxNg==
+X-Google-Smtp-Source: AGHT+IF2pkR80bdpFTRy3maBMZNDzCR8VeScBbIruZWtCzdu+/XDr5Lim5Am3othwewKWoKXkQzlZG5TEHYl8kE=
+X-Received: from wmbjp9.prod.google.com ([2002:a05:600c:5589:b0:477:9bcb:dd8b])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3143:b0:47d:4fbe:e6cc with SMTP id 5b1f17b1804b1-47d84b179f7mr226113455e9.13.1768232083524;
+ Mon, 12 Jan 2026 07:34:43 -0800 (PST)
+Date: Mon, 12 Jan 2026 15:34:42 +0000
+In-Reply-To: <DFII83QY76O0.2PKZ73WCTVGPR@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: EF4E42002B
-X-Stat-Signature: pkqtmyjz99xk34i7gczso7nyxz4r8ksh
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18oHLU8bzt/wclyIb/7L7zxrvbI6h4Fzu4=
-X-HE-Tag: 1768231001-775116
-X-HE-Meta: U2FsdGVkX1+0ozTFidj5QYjHCytY6PnsZObGBoyUvQcbsME2aCgsV8Bqd+z+IQn22TVG6Z9v8kx5BcmsxhLQ03JfJ31/nTKUJdXObmPF2Px22LW4PizSVFOX2/RuPs+msd4DYCf0nlSKYNELv2zSL09/SIKtkfsV8dsMOq1e0qNaGjg/Mpdw2MX8D7eV0mI0nbxycs4HQgBOtWCpt02W9D/1M24aOTFqQT5cxO/zJnqgRfltvPmQ7qaXxU5BFuQZM2jLNV4ct33BvnmecUYgDZt6f+s9JMFu5bF/Bz7WT0mVxRdn8j622pKY1JKQPmYRwYI++4n3gkCiPcmgm/m+Nu07fmtKft/NgqqxYlC4Yp9ysE5mvNSK5Bvamus1PKygTFIILVUMsta+5MJvHzx2aWRwwYMiEd2F
+Mime-Version: 1.0
+References: <20260107103511.570525-1-dakr@kernel.org> <aV6BHw-Liv0SVAwO@google.com>
+ <DFII83QY76O0.2PKZ73WCTVGPR@kernel.org>
+Message-ID: <aWUUkvdKsRVJqfE2@google.com>
+Subject: Re: [PATCH 0/6] Address race condition with Device::drvdata()
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, 
+	igor.korotin.linux@gmail.com, ojeda@kernel.org, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org, 
+	a.hindborg@kernel.org, tmgross@umich.edu, david.m.ertman@intel.com, 
+	ira.weiny@intel.com, leon@kernel.org, bhelgaas@google.com, 
+	kwilczynski@kernel.org, wsa+renesas@sang-engineering.com, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, 12 Jan 2026 09:20:00 +0800
-Shawn Lin <shawn.lin@rock-chips.com> wrote:
-
-> Rockchip platforms provide a 64x4 bytes debug FIFO to trace the
-> LTSSM history. Any LTSSM change will be recorded. It's userful
-> for debug purpose, for example link failure, etc.
+On Wed, Jan 07, 2026 at 05:40:20PM +0100, Danilo Krummrich wrote:
+> On Wed Jan 7, 2026 at 4:51 PM CET, Alice Ryhl wrote:
+> > If a &Device<Bound> lets you access a given value, then we must not
+> > destroy that value until after the last &Device<Bound> has expired.
+> >
+> > A &Device<Bound> lets you access the driver private data. And a
+> > &Device<Bound> lets you access the contents of a Devres<T>.
+> >
+> > Thus, the last &Device<Bound> must expire before we destroy driver
+> > private data or values inside of Devres<T>. Etc.
 > 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> ---
+> Yes, the last &Device<Bound> must expire before we destroy the device private
+> data. This is exactly what is achieved by this patch. The device private data is
+> destroyed after all devres callbacks have been processed, which guarantees that
+> there can't be any contexts left that provide a &Device<Bound>.
 > 
-> Changes in v3:
-> - reorder variables(Mani)
-> - rename loop to i; rename en to enable(Mani)
-> - use FIELD_GET(Mani)
-> - add comment about how the FIFO works(Mani)
+> As for the values inside of a Devres<T>, this is exactly what I refer to in my
+> paragraph above talking about the unsoundness of the devres cleanup ordering in
+> Rust.
 > 
-> Changes in v2:
-> - use tracepoint
+> I also mention that I'm already working on a solution and it is in fact pretty
+> close to the solution you propose below, i.e. a generic mechanism to support
+> multiple devres domains (which I also see advantages for in C code).
 > 
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 104 ++++++++++++++++++++++++++
->  1 file changed, 104 insertions(+)
+> As mentioned, this will also help with getting the required synchronize_rcu()
+> calls down to exactly one per device unbind.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index 352f513..344e0b9 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -22,6 +22,8 @@
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/reset.h>
-> +#include <linux/workqueue.h>
-> +#include <trace/events/pci_controller.h>
->  
->  #include "../../pci.h"
->  #include "pcie-designware.h"
-> @@ -73,6 +75,20 @@
->  #define  PCIE_CLIENT_CDM_RASDES_TBA_L1_1	BIT(4)
->  #define  PCIE_CLIENT_CDM_RASDES_TBA_L1_2	BIT(5)
->  
-> +/* Debug FIFO information */
-> +#define PCIE_CLIENT_DBG_FIFO_MODE_CON	0x310
-> +#define  PCIE_CLIENT_DBG_EN		0xffff0007
-> +#define  PCIE_CLIENT_DBG_DIS		0xffff0000
-> +#define PCIE_CLIENT_DBG_FIFO_PTN_HIT_D0	0x320
-> +#define PCIE_CLIENT_DBG_FIFO_PTN_HIT_D1	0x324
-> +#define PCIE_CLIENT_DBG_FIFO_TRN_HIT_D0	0x328
-> +#define PCIE_CLIENT_DBG_FIFO_TRN_HIT_D1	0x32c
-> +#define  PCIE_CLIENT_DBG_TRANSITION_DATA 0xffff0000
-> +#define PCIE_CLIENT_DBG_FIFO_STATUS	0x350
-> +#define  PCIE_DBG_FIFO_RATE_MASK	GENMASK(22, 20)
-> +#define  PCIE_DBG_FIFO_L1SUB_MASK	GENMASK(10, 8)
-> +#define PCIE_DBG_LTSSM_HISTORY_CNT	64
-> +
->  /* Hot Reset Control Register */
->  #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
->  #define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
-> @@ -96,6 +112,7 @@ struct rockchip_pcie {
->  	struct irq_domain *irq_domain;
->  	const struct rockchip_pcie_of_data *data;
->  	bool supports_clkreq;
-> +	struct delayed_work trace_work;
->  };
->  
->  struct rockchip_pcie_of_data {
-> @@ -206,6 +223,89 @@ static enum dw_pcie_ltssm rockchip_pcie_get_ltssm(struct dw_pcie *pci)
->  	return rockchip_pcie_get_ltssm_reg(rockchip) & PCIE_LTSSM_STATUS_MASK;
->  }
->  
-> +#ifdef CONFIG_TRACING
-> +static void rockchip_pcie_ltssm_trace_work(struct work_struct *work)
-> +{
-> +	struct rockchip_pcie *rockchip = container_of(work, struct rockchip_pcie,
-> +						trace_work.work);
-> +	struct dw_pcie *pci = &rockchip->pci;
-> +	enum dw_pcie_ltssm state;
-> +	u32 i, l1ss, prev_val = DW_PCIE_LTSSM_UNKNOWN, rate, val;
-> +
-> +	for (i = 0; i < PCIE_DBG_LTSSM_HISTORY_CNT; i++) {
-> +		val = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_DBG_FIFO_STATUS);
-> +		rate = FIELD_GET(PCIE_DBG_FIFO_RATE_MASK, val);
-> +		l1ss = FIELD_GET(PCIE_DBG_FIFO_L1SUB_MASK, val);
-> +		val = FIELD_GET(PCIE_LTSSM_STATUS_MASK, val);
-> +
-> +		/*
-> +		 * Hardware Mechanism: The ring FIFO employs two tracking counters:
-> +		 * - 'last-read-point': maintains the user's last read position
-> +		 * - 'last-valid-point': tracks the hardware's last state update
-> +		 *
-> +		 * Software Handling: When two consecutive LTSSM states are identical,
-> +		 * it indicates invalid subsequent data in the FIFO. In this case, we
-> +		 * skip the remaining entries. The dual-counter design ensures that on
-> +		 * the next state transition, reading can resume from the last user
-> +		 * position.
-> +		 */
-> +		if ((i > 0 && val == prev_val) || val > DW_PCIE_LTSSM_RCVRY_EQ3)
-> +			break;
-> +
-> +		state = prev_val = val;
-> +		if (val == DW_PCIE_LTSSM_L1_IDLE) {
-> +			if (l1ss == 2)
-> +				state = DW_PCIE_LTSSM_L1_2;
-> +			else if (l1ss == 1)
-> +				state = DW_PCIE_LTSSM_L1_1;
-> +		}
-> +
-> +		trace_pcie_ltssm_state_transition(dev_name(pci->dev),
-> +					dw_pcie_ltssm_status_string(state),
-> +					((rate + 1) > pci->max_link_speed) ?
-> +					PCI_SPEED_UNKNOWN : PCIE_SPEED_2_5GT + rate);
-> +	}
+> Technically, we could utilize such a devres domain for dropping the device
+> private data, but there is no need to have a separate domain just for this, we
+> already have a distinct place for dropping and freeing the device private data
+> after the device has been fully unbound, which is much simpler than a separate
+> devres domain.
+> 
+> Now, you may argue we don't need a separate devres domain, and that we could use
+> the non-early devres domain. However, this would have the following implication:
+> 
+> In the destructor of the device private data, drivers could still try to use
+> device resources stored in the device private data through try_access(), which
+> may or may not succeed depending on whether the corresponding Devres<T>
+> containers are part of the device private data initializer or whether they have
+> been allocated separately.
+> 
+> Or in other words it would leave room for drivers to abuse this behavior.
+> 
+> Therefore, the desired order is:
+> 
+>   1. Driver::unbind() (A place for drivers to tear down the device;
+>      registrations are up - unless explicitly revoked by the driver (this is a
+>      semantic choice) - and device resources are accessible.)
+> 
+>   2. devm_early_* (Drop all devres guarded registrations.)
+> 
+>   3. No more &Device<Bound> left.
+> 
+>   4. devm_* (Drop all device resources.)
+> 
+>   5. No more device resources left.
+> 
+>   6. Drop and free device private data. (try_access() will never succeed in the
+>      destructor of the device private data.
 
-Does it make sense to call this work function every 5 seconds when the
-tracepoint isn't enabled?
+so your private data is just the first devres resource ;)
 
-You can add a function callback to when the tracepoint is enabled by defining:
+Ok. I'm worried that when you fix Devres, you have to undo changes you
+made here. But I guess that's not the end of the world (and maybe you
+don't have to).
 
-TRACE_EVENT_FN(<name>
- TP_PROTO(..)
- TP_ARGS(..)
- TP_STRUCT__entry(..)
- TP_fast_assign(..)
- TP_printk(..)
+Concept SGTM. I have not yet reviewed patches in details, but
 
- reg,
- unreg)
+Acked-by: Alice Ryhl <aliceryhl@google.com>
 
-reg() gets called when the tracepoint is first enabled. This could be where
-you can start the work function. And unreg() would stop it.
-
-You would likely need to also include state variables as I guess you don't
-want to start it if the link is down. Also, if the tracepoint is enabled
-when the link goes up you want to start the work queue.
-
-I would recommend this so that you don't call this work function when it's
-not doing anything useful.
-
--- Steve
-
- 
-
-> +
-> +	schedule_delayed_work(&rockchip->trace_work, msecs_to_jiffies(5000));
-> +}
-> +
+Alice
 
