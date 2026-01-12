@@ -1,88 +1,88 @@
-Return-Path: <linux-pci+bounces-44568-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44569-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0E3FD15E1E
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 00:53:14 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BF86D15E41
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 00:54:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 910923016ED8
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 23:53:13 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B4FA330060CD
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 23:54:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EA692D2397;
-	Mon, 12 Jan 2026 23:53:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EA62285CA9;
+	Mon, 12 Jan 2026 23:54:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Jg/9iBa/"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="HAWkep//"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61D32BD5AD
-	for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 23:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C942D238A
+	for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 23:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768261990; cv=none; b=ucY8yaLOXiW/2qvS1TTrXaKroKYKkSLSkqZm4mAbsXQCgPTvHSAYwuguo0JXnjNeuqH+yZoq316GUoJaj8IYuEhmN1CRky44LN9Y5QR6M/la+sNxH6fnvSFT9JNkQf8xd71Q/yWLhgdSavm8zWxQM1amotu9l2w/IkSn31yRk+w=
+	t=1768262058; cv=none; b=efzmZFf+MAeG52U/uEq+CG+HP+pVCl2WJ7HCZGADvidbbP8mq6VwD5JtYchjjTARD5kRVNtXMFu71+N4+C2EkbWdrKDklSO2QJYOquHRpzbNzhlNXgMhxaWevLu2YmR85zPUweVMu9rUDF9jZxkgHJQefyu2XkC4YAgohONciuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768261990; c=relaxed/simple;
-	bh=OsumxHHod6cIwX4b7rdpDcd79fga9ieWIlr7hu71obk=;
+	s=arc-20240116; t=1768262058; c=relaxed/simple;
+	bh=vbQpTPqvkNza84fX2uyalXQvb9OzER6/e1aJC0fiWDY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VNYhIzvJcmpgCd0cvGn0+NglWHoj1olovMDSHADkIDDAh7JWX0377Enege1prq7MAiaMgMeP1RHbdPjYeIXn0vIwcrk0K7JM4cs4g9mSsshdOy+eZy2+LyY0euxWFp4yHcUO08EjDygA2K9buxo1xcCoWRCOESKY98ZLXIO2XgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Jg/9iBa/; arc=none smtp.client-ip=209.85.222.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=JqbGLVugJbKqORILpa7G3pVbWtRTetBGx6gndnnPwPim2Vywkp7hB4YVHPc2NTsTedHDhyaLYPHo1Sas1udJYkHD9akSzWX02MEM+pmSUTtYEKBhajuRRK9fU0D6g+1j4xwQ2qvJtCGi1jfTJ0y2/fBCRMX+eA8qGCqToyKWb7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=HAWkep//; arc=none smtp.client-ip=209.85.160.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-8b23b6d9f11so748504985a.3
-        for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 15:53:08 -0800 (PST)
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-5013d163e2fso401611cf.0
+        for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 15:54:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1768261988; x=1768866788; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1768262056; x=1768866856; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MFAPVPPrTQcXGzmX4uMQny5ONRwVZsvoYJMZG32QBJM=;
-        b=Jg/9iBa/FaqzZNIe0tXBwAIEk6mV8adU7a0Sr276NkTnVEOdm/5rCGuq7FsWF+FA0d
-         Q9J4zzEmw555iFZ3q9O1cG8LgHnJgS+00Rq4pum2YJfYTw68mf03f44mrTRFIDYG2CI7
-         86IazSc5frMobT5lMtuCnSYtwBqEQKaCnrH0wfkftQDAItzE3r4u/o8xxKmT3pV7+BC+
-         xYULpTvrv2IAqRMWFF/ME7JsgbEfYLJBUsoddr2HWZO+HcXhYu6wygW8nf0lItb2G4eU
-         olfnP8lZPmMOROH0uixhcMJKlheMNtx0oas2ekwTggbtOZNYxfIvkrZHhcnlABXByfbF
-         c1/g==
+        bh=vbQpTPqvkNza84fX2uyalXQvb9OzER6/e1aJC0fiWDY=;
+        b=HAWkep//EFhJW9wywQFy2dMaCD6x0rWanih6xdYl+a8hTir2qjOknoBiE1lYRxRgVM
+         /whsUs9cl+Ycb2AwF8z46BlbbZhWzq2Pmk/lSOqE5IkoroReJFVjrZ+U+1szEvSK6pmk
+         QuYiSTtT7Z/pq6rwN+f6YxFrG2KQnyFXY5sMHbedmi3Q642Ov5MBM/fOix+b27wozxUV
+         VDzacX25oMKjSSCEjRbKUnkEQ0yhlLisnQCaTAysRvJTC6r6HiOKf1jTMCBX8OsO+m5/
+         RvXYkVstXSGVKRf9ehh9ysEdilZPK5RHl2PY19gQMPVMg125ANzOIdNrBAYetGIAzsNU
+         sMpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768261988; x=1768866788;
+        d=1e100.net; s=20230601; t=1768262056; x=1768866856;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MFAPVPPrTQcXGzmX4uMQny5ONRwVZsvoYJMZG32QBJM=;
-        b=NWLiDGnukQnRhEBQKcw1dd4jeyjyRnTZeDGlqbO1GR1bx/r4hqa2hd4QNVu1QGwq7m
-         KBxLr5pOUPuy873NeF6kgaaaVSGlADd5ViuKh5xue65rtJJO4T0+Z8DmRn9SfpaZj5Vl
-         eybyvs3/6ls+V3SO7vY/sm1pUV1WTil42OPAYDcjr9F36k8iRFSFkrD6T0d8LBpG0Cym
-         HrrMFjVol2cZqafKF/If7hfm9/iAr2uN4n/s740FN1JiKaGxwY2hTvZsxo+p6APX5jth
-         Dgnnv9vu6P80KfemmAvsSsGzW6+xcdevarnyRUAz3M2S2QMKhOpn5+IoMAlkmSA/jRWr
-         x1KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWEpdKqaUQw7lU/7U4YlfJb8qto65fq7ExCU+mgkUKIwx5VTtSVl9KBd1mQU3vw+0cuP7UEzBDuz+s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2sf7Ha0ZWYwigUAcqUD71MXGQVDUvr8izhl3QlJ6CUnJWqSqs
-	oZfsjly4b6EQJIJlXhPDBptJjMfq7NF4kQbjo1ZmA4lfL7j0gbRllB+JbZd7VF466jo=
-X-Gm-Gg: AY/fxX4JXeqkk+olvIo6sZEgI/tRJaPetYIFM7sBZ3ZKUL1baGEDP8pjqUPu1fkgVTD
-	X/b9Bcm0AkgoPOVD9dBu2qs45jdDoZuCyXayEdDVFCAMYV1MVAVuz4brG0+MNTz1isMW3ugQuOp
-	wv4ZqXCGRzyF4qEXE8NpptrM4TGeYn9HzbzTugtIqwG9yNRy31BdGZKNscKYbfjA29JP86NPN0S
-	Pb2I6GPHepoYpemXT+uR5QAAXFr4u1nsawdY46Q61E2PhP+Y6FVkGjbI6iMvrr0a4OoyBo7qzgW
-	8U6ojVcuubJcX9eamlsuVSvoOO/SlC9SDRZObj/iTiyIy9q4qhvNOM0/XqYTxrwUs/6CqsS5kAI
-	7e7asfBeJ2GrLtwaIzU71s6ATzKhPeN7caex4LhwHlCL9l5d8QiFUJ4Df7JMrZH+ImKc4dnKOzm
-	P6Y5R7SRc8zhsqulIkz71+VBGXJawxNOGrlHub3uDT4mFamSpCsGJpMVAKvftw30eLn9iGM4f4x
-	nZH2Q==
-X-Google-Smtp-Source: AGHT+IECCLtz04Q1g6y58MlK+cu2G+IQ+shlJTLlvJFkV+wtTDGmcQVfka7R8tosUNuc3dGp+UEbDg==
-X-Received: by 2002:a05:620a:4804:b0:8b2:7536:bd2c with SMTP id af79cd13be357-8c3894188a8mr2759937485a.78.1768261987580;
-        Mon, 12 Jan 2026 15:53:07 -0800 (PST)
+        bh=vbQpTPqvkNza84fX2uyalXQvb9OzER6/e1aJC0fiWDY=;
+        b=gpVWnpIT3U7/eau2MHrupx7WmVxzf39KWNdfi0ZIjSyeT99Po4PkugFDaEjzV11Wez
+         TH8/EjnDjqeY5ril408IQTZjyUSrWGrfGPH4DLKLm4sCReF+lDSxTlLh6hhoOURl609f
+         7TWR4DY0FLonQ7jNcF76ysmV86CJ6HJ+a1fvjc8bvyJ7N/3WY938Dl+sFFkM7CgASIV9
+         aRbIqlU+dWqkpDyOvzQqp/jHPwC4lAW/YNHg69+B6CxwufTYCXptP+ydauhTIKSOqafG
+         stw7pcuqoMpdODNe165n+pGxX32JCDPDLZycJp/ommrjRLaMXQipQ8zBf6QulPD8xj9m
+         J8Gg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8iGqUjRY8UK6ogC4R9DoZNCo5s4BKfYxXtzfG3PWgp6LGLqqbGhPCUykza2SDUePLwuyRzG01y40=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfGQIOKBx+OT9dcBP8ZOpBeyPqfVdZNu4K0MXWVMeJ/0u6/xnX
+	HA9V88F9uZA/c+AOYGsLbQx4zccLDt8/yb5pDu8/kj9ge2yYCwIl4mF7KisxeIFFKC8=
+X-Gm-Gg: AY/fxX6JEwi7L0qFD/oVBG2swRVsa3PfJhmcHYfRY6ZLoo1OFYn9aKil0gb+GBBhilw
+	kyuFjucgjimb7kHwVGf8XvZaNQz0FvUP7igz9dKatlGQ03T2LRp0eBJinugHKyoQwVYeNBHWUeC
+	0KYUJenp07kyb+Q+Lq9vmcOhVj1YvfiiqZ3UBNVy/mi5mvJyT3ZjQwkLwNaXoqk220XPlf2XIjL
+	jiaROJwFqmAWxfuXWtygNtFhbCCgV0jOKPxnXzhXl2nW+RZMSljLzh1kVY1prHPG7UMWsbPoVRl
+	Ea5dwBr/EIXU0yZ6Mhu1R8/U+pjMpAocncZwsPqXC3soc/C1hXlJ7kgZSo1ERu1jjQW9lneF+s1
+	ewPhPcQxKvCvcT/qN6RO8aYqyKcvZBT8O8AISDMghpwECUSunpSG0fyuWCZqA8cL41x/nP3C+oK
+	tQlt0DPSnlyJVw+IxCiX9TZge6cBUFNebLjWdrMSTozAOPTtv+txH0lqWSstHOL1KJUc8=
+X-Google-Smtp-Source: AGHT+IFqShnh4nFq4FI+txOqV94h9FNeJmPa4/JUWRJXzRBu2Yp6JXhvTMJ52+U7dVhw4CMApET5TA==
+X-Received: by 2002:a05:622a:8d1b:b0:501:3b8c:7d63 with SMTP id d75a77b69052e-5013b8c8686mr4698571cf.26.1768262055766;
+        Mon, 12 Jan 2026 15:54:15 -0800 (PST)
 Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c37f530907sm1597443885a.39.2026.01.12.15.53.06
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4ffa8e35dbfsm129011631cf.19.2026.01.12.15.54.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 15:53:07 -0800 (PST)
+        Mon, 12 Jan 2026 15:54:15 -0800 (PST)
 Received: from jgg by wakko with local (Exim 4.97)
 	(envelope-from <jgg@ziepe.ca>)
-	id 1vfRic-00000003fUQ-2VnR;
-	Mon, 12 Jan 2026 19:53:06 -0400
-Date: Mon, 12 Jan 2026 19:53:06 -0400
+	id 1vfRji-00000003fUm-0uFg;
+	Mon, 12 Jan 2026 19:54:14 -0400
+Date: Mon, 12 Jan 2026 19:54:14 -0400
 From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Zi Yan <ziy@nvidia.com>
-Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
+To: Alistair Popple <apopple@nvidia.com>
+Cc: Matthew Brost <matthew.brost@intel.com>, Zi Yan <ziy@nvidia.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Balbir Singh <balbirs@nvidia.com>,
 	Francois Dugast <francois.dugast@intel.com>,
 	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	Matthew Brost <matthew.brost@intel.com>,
 	Madhavan Srinivasan <maddy@linux.ibm.com>,
 	Nicholas Piggin <npiggin@gmail.com>,
 	Michael Ellerman <mpe@ellerman.id.au>,
@@ -105,25 +105,24 @@ Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
 	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
 	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
 	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Alistair Popple <apopple@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+	Michal Hocko <mhocko@suse.com>, linuxppc-dev@lists.ozlabs.org,
 	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
 	linux-pci@vger.kernel.org, linux-mm@kvack.org,
 	linux-cxl@vger.kernel.org
 Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
  callback
-Message-ID: <20260112235306.GN745888@ziepe.ca>
-References: <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
+Message-ID: <20260112235414.GO745888@ziepe.ca>
+References: <20260111205820.830410-1-francois.dugast@intel.com>
+ <20260111205820.830410-2-francois.dugast@intel.com>
+ <aWQlsyIVVGpCvB3y@casper.infradead.org>
+ <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
  <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
  <20260112134510.GC745888@ziepe.ca>
- <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
- <20260112165001.GG745888@ziepe.ca>
- <86D91C8B-C3EA-4836-8DC2-829499477618@nvidia.com>
- <20260112182500.GI745888@ziepe.ca>
- <6AFCEB51-8EE1-4AC9-8F39-FCA561BE8CB5@nvidia.com>
- <20260112192816.GL745888@ziepe.ca>
- <8DB7DC41-FDBD-4739-AABC-D363A1572ADD@nvidia.com>
+ <aWVsUu1RBKgn0VFH@lstrano-desk.jf.intel.com>
+ <45A4E73B-F6C2-44B7-8C81-13E24ED12127@nvidia.com>
+ <aWWCK0C23CUl9zEq@lstrano-desk.jf.intel.com>
+ <fzpd6caij2l73jkdvvmlk4jxlrdbt5ozu4yladpsbdc4c4jvag@d72h42nfolgh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -132,56 +131,15 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8DB7DC41-FDBD-4739-AABC-D363A1572ADD@nvidia.com>
+In-Reply-To: <fzpd6caij2l73jkdvvmlk4jxlrdbt5ozu4yladpsbdc4c4jvag@d72h42nfolgh>
 
-On Mon, Jan 12, 2026 at 06:34:06PM -0500, Zi Yan wrote:
-> page[1].flags.f &= ~PAGE_FLAGS_SECOND. It clears folio->order.
-> 
-> free_tail_page_prepare() clears ->mapping, which is TAIL_MAPPING, and
-> compound_head at the end.
-> 
-> page->flags.f &= ~PAGE_FLAGS_CHECK_AT_PREP. It clears PG_head for compound
-> pages.
-> 
-> These three parts undo prep_compound_page().
+On Tue, Jan 13, 2026 at 10:44:27AM +1100, Alistair Popple wrote:
 
-Well, mm doesn't clear all things on alloc..
+> Also drivers may have different strategies than just resetting everything back
+> to small pages. For example the may choose to only ever allocate large folios
+> making the whole clearing/resetting of folio fields superfluous.
 
-> In current nouveau code, ->free_folios is used holding the freed folio.
-> In nouveau_dmem_page_alloc_locked(), the freed folio is passed to
-> zone_device_folio_init(). If the allocated folio order is different
-> from the freed folio order, I do not know how you are going to keep
-> track of the rest of the freed folio. Of course you can implement a
-> buddy allocator there.
-
-nouveau doesn't support high order folios.
-
-A simple linked list is not really a suitable data structure to ever
-support high order folios with.. If it were to use such a thing, and
-did want to take a high order folio off the list, and reduce its
-order, then it would have to put the remainder back on the list with a
-revised order value. That's all, nothing hard.
-
-Again if the driver needs to store information in the struct page to
-manage its free list mechanism (ie linked pointers, order, whatever)
-then it should be doing that directly.
-
-When it takes the memory range off the free list it should call
-zone_device_page_init() to make it ready to be used again. I think it
-is a poor argument to say that zone_device_page_init() should rely on
-values already in the struct page to work properly :\
-
-The usable space within the struct page, and what values must be fixed
-for correct system function, should exactly mirror what frozen pages
-require. After free it is effectively now a frozen page owned by the
-device driver.
-
-I haven't seen any documentation on that, but I suspect Matthew and
-David have some ideas..
-
-If there is a reason for order, flags and mapping to be something
-particular then it should flow from the definition of frozen pages,
-and be documented, IMHO.
++1
 
 Jason
 
