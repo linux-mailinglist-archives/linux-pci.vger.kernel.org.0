@@ -1,210 +1,123 @@
-Return-Path: <linux-pci+bounces-44489-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44490-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9713D11FAB
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 11:44:10 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2864D12104
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 11:54:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E04C1300D561
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 10:44:07 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 11811301D6BD
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 10:54:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB78526056E;
-	Mon, 12 Jan 2026 10:44:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DDDC34F257;
+	Mon, 12 Jan 2026 10:54:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="v6HMB/RN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ER9uDpKU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30367320A33
-	for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 10:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBE534FF47
+	for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 10:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768214645; cv=none; b=iPRVO6wTCfmnu9QdXp2TqyOjn1Ede76l1lAqR6twByKIv7kjlmjdUEImUVguM/I28UG025mlKeeCYxbLdezqqPXUT4mfKDnFuP36ExkBI3PDbhnzs/9mvls9kKl+eR1Q17O7kqNWSjX3BWRVNd7AlOnaa6SU0LoaRY5XIb3PDXg=
+	t=1768215260; cv=none; b=BajYWFebMQ3ylA9pOY+1p00nhliYyPaFETZDUe2wYcyMbDFC4h5gaUw1k4R0FV7mr1Bo1p5AKE5eR+MFy138J+3pcts3Sy3On1CfD47GzE5O0zLNV0HV/IRb6NvLfK/tFGVAU1NgqN7XxpE4PWPf3bVjitABVZIzfwJ3s7Zcfpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768214645; c=relaxed/simple;
-	bh=pMUNyAs7tZrKAtJ4QzgUA9ASB+rC7z9YJhFyA5un8Xw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aKdMQd6gWRuk1Ij7BBS0/P+9/Q+xasxeSfmTbwiQGsczOCqzWKSwH8QC3cPJ3GqXgFc1UIytJ6DN2aXLmEZolxzMI3Do78QX4ZI4tYbQLPyVV5W7z8sbDZ370+Vh6erGowrTYoVDLT45DPgS5j8hQnNRF0Gbp+vloNKhutHF/G8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=v6HMB/RN; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-47774d3536dso43837025e9.0
-        for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 02:44:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1768214641; x=1768819441; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WMrDt4Q4wL0V7piIVYei7vk5FOHcXlVo0bsU8ISZ+M0=;
-        b=v6HMB/RNYGTpCDolLfYMVrpKc5hCqHbH+pZ4aWtxPR4zODS0tm/hcOe0c+3ykItWOe
-         MpsigYQaPIKr4lynP+z1eblMgu/qXkh2OSYhZTWq0iGxc3X4HwnJXuIFI91ju+833dPR
-         S3PXkRVq2i2b9fQR5wZpNAarc49Hk2T9wYAkROmAcr5AxUQ4GeTSe3KxRh5dZR8qbuPQ
-         JOJrzP/t8K1HxEoTRSqEXbbbvKrrF0fRwT5+kOBeUPokf06RcLVCusGIAHi/ByYqSG0x
-         QXKj2IztlW7HzPmyT00YmcLQObTQEtv3seIUPA4teuJEb+QhgMQvqENRIMwUAVZ0cXsS
-         sWzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768214641; x=1768819441;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WMrDt4Q4wL0V7piIVYei7vk5FOHcXlVo0bsU8ISZ+M0=;
-        b=DTEz046orhnX5cXGkSVmFSMutZT2zJBJnTjyDid9lLJHGmrTsdrDCdKLQYxl072H4h
-         8P6rHvXBnTuhyvk8+dCQbdSBWF5f82Qir2paZYJl1+8ldUcvnai0hzgRTFQUgOaoq3HY
-         BzW5ct99CmV53/cer7KiAqBnnOPu9bSFQNqEmrO8bhvr7aSSVnaD+wVAiDKcV3H9JJek
-         /i377FRhEicJ4sk2lv3akMEZlaI/aHlEoMbvuwIVwo4MdoRAy8idSE3wQUWvWU3wLnKj
-         spsXGnvkBd8MdsXo5sZiPOblfJXVfuK35icsQxnawOEdgtV3njLpwZY0fKXOxsL/poqV
-         WdlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXQbTkeG8MA+OwbIF+k/Np9IxIH6xbXT+c6rT8Mwu/iakroh8zcarY9CDjPF5Rg/TjIUTPE2ycvbZQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+peckdltc1vd7J2YvNyXj6fLnZPQaW6sv88eVO0vz4JQRo0Y6
-	VrOb79k7xG3Ps46SQIDV7wsbd5VMgTmoIQEAWhWi2nxKGlhKPyp+wd67lm2a6yQKdB85DYUs5v2
-	hwJI6
-X-Gm-Gg: AY/fxX69c3xsj1UNAz9NY7zsx4bckJLlYkzzrIbeviylp8LMQ/JwA1EdyYTxaZRKqU/
-	FDL1T4nJ/cILY/DN2DpzRCg8nFpzWTn//Lmm/jyP50gg9JOAz5/46jWC3eVLIRS+8xE/LoOOTJP
-	GGyiy7hRFo2oEkUowvHM6+p8teqwRsIW+FF84aZQLjYNwxhtH3hT60Md0sbOPbIAdLvh1oJsBs/
-	sZALyCnaroea+qv3REUiZR1u49OqXF5tq/iCd/xAAud4hPQ2Ucyaiz4wC3wBtTW9ma5vk7RrTAS
-	U472nfoVsNdHBedDWepnB99d14nitcHw2xw3USX9ZwuSMgd7Ov9HhYd3Oogm/BiC6uPXG8MhoLZ
-	d5R6bED4wpGuZ1W1YuEX3KV5dDXqPUPohHTefRa8yG4NFf70Z+94bicaOnsMn3Lr2kfPMCogTOo
-	dbz6hcaTI0Fr3oD1R8mn5gwzdU1xWdCM8JOvWwlx0T0I8qRAXUYFU3XL8Xf3Yy7DHJICDb6dVdG
-	A2FBwi0BVP9
-X-Google-Smtp-Source: AGHT+IHhhDX1svaSTURQuNz/hlSlDEcbpqJnlm/jbbU9BrgUUIm/I6vxYYgCdCFRIp9etNOMRf/78g==
-X-Received: by 2002:a05:600c:a30c:b0:479:13e9:3d64 with SMTP id 5b1f17b1804b1-47d848787eemr145811145e9.15.1768214641505;
-        Mon, 12 Jan 2026 02:44:01 -0800 (PST)
-Received: from localhost (p200300f65f20eb045084e32706235b2b.dip0.t-ipconnect.de. [2003:f6:5f20:eb04:5084:e327:623:5b2b])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-47d8661caffsm126396445e9.5.2026.01.12.02.44.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 02:44:00 -0800 (PST)
-Date: Mon, 12 Jan 2026 11:43:59 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Feng Tang <feng.tang@linux.alibaba.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 4/6] PCI/portdrv: Move pcie_port_bus_type to pcie source
- file
-Message-ID: <bzezw7ocr65qe33l2jpdhrybckjq7eu65edakxcqdeqjl5ozo4@ipljx5zlol3u>
-References: <cover.1764688034.git.u.kleine-koenig@baylibre.com>
- <420d771f0091dea7cf18f445b94301576dcee4c8.1764688034.git.u.kleine-koenig@baylibre.com>
- <df1810e3-6c16-0534-9042-f04dbf123e33@linux.intel.com>
- <iiowlowpgwezv7gffkijkicana64mdgv4vq2mxwztjztqbivgi@w7snrgu5qg3d>
+	s=arc-20240116; t=1768215260; c=relaxed/simple;
+	bh=JN8Tx9lcEFa1feWSSo2+DawtEa+D5nz6pKkmTYdd80o=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cfQ2OZv+ONmBoPgSbJG4oJXsMUg1lbs3YUb7GephxfvlxBnn9rfLvrpHSwpkR/R1M/n2b10TIROvWZYcANHEaqQM5TeI5XdUIQa9oqzQ0Is87z/SLWxDPUGlQPyTKmKxeahes+r79FDBgpWyY0oB4g2iOxN7lQiOFaoEnTLPhIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ER9uDpKU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C1B8C2BCAF
+	for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 10:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768215259;
+	bh=JN8Tx9lcEFa1feWSSo2+DawtEa+D5nz6pKkmTYdd80o=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=ER9uDpKU0gKhm7Mmd4Cxsn7MpqOQ7vgt/ZcySJ+A9bsTzXxToNbycaa4e7QBta8wD
+	 T8NSpwycbQYwIUTgh19uyJzFyLVV6QQKvVGN6qt0KMPkIdc7nYA5/U/QaOUJfI/kHy
+	 4Sd8Rvl0QCaU2Atg20NBcAm9QKTOwrxoxTsSOFizYh1bMtgu6MnsGhGFxsls0+Oizc
+	 Xfu6WwhJvA9CBk8mYony8E2iuqdfKr+rPvb+ZNEc0SiWYI7T1hZhsiyqoKBkOzwwuA
+	 E1rPydvvuBL8GGQHD+ufLKpzTd1tbTNHHZ6tGNWh5Zxq05oWl3ZtIWyApP4xskyR6/
+	 fc8kgRKSlTMpg==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-59b7be7496dso4464259e87.0
+        for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 02:54:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU/YP83iwJKeGzKwK9k7n/bWnRstzF6sN726dH9KUSOKb4CVqxwNQdK/NjoWTkpgvHD27bqVnlxCDo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqTs5kqQBfAAZSbEolFMCsFT5ChFR4Cx+BoT9tpb+JPvUHrNlC
+	95u+RDQ4TPjUWS9HOqroHIHUV+rtURoB3X2GyfAR6qRM6/+XGMRdaO0bkfEf+7b+JdbLFkkU21J
+	qx6CAyYWj7fWQDCFXEHiBEXHBnRn3v4Y51/cwEUDAww==
+X-Google-Smtp-Source: AGHT+IFOFA8kXD2/ntFFnMuqlDdI+7/+mE0Jg2kNrYOPk8LLfb+NDy962k4fw01JMa4nCZndlay6ttujw6BSDeEvZxc=
+X-Received: by 2002:a05:651c:210d:b0:383:4b8:435c with SMTP id
+ 38308e7fff4ca-38304b844c3mr52338991fa.9.1768215257586; Mon, 12 Jan 2026
+ 02:54:17 -0800 (PST)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 12 Jan 2026 02:54:16 -0800
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 12 Jan 2026 02:54:16 -0800
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <aWSq_7_5kkQIv9Hc@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4jlshotm5dxcz2zd"
-Content-Disposition: inline
-In-Reply-To: <iiowlowpgwezv7gffkijkicana64mdgv4vq2mxwztjztqbivgi@w7snrgu5qg3d>
+References: <20260110-pci-m2-e-v3-0-4faee7d0d5ae@oss.qualcomm.com> <aWSq_7_5kkQIv9Hc@smile.fi.intel.com>
+Date: Mon, 12 Jan 2026 02:54:16 -0800
+X-Gmail-Original-Message-ID: <CAMRc=MfoUi-qvZnOcM5pgvmVhPMEK+gvs5m2APrqLXc2J7x1AQ@mail.gmail.com>
+X-Gm-Features: AZwV_Qgkgd0gbVuBhbU6fLauSpqstnPMp3OpP37gMnJcwjV2eQkZ3qyjBa1-dnE
+Message-ID: <CAMRc=MfoUi-qvZnOcM5pgvmVhPMEK+gvs5m2APrqLXc2J7x1AQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/14] Add support for handling PCIe M.2 Key E
+ connectors in devicetree
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Sui Jingfeng <sui.jingfeng@linux.dev>, 
+	manivannan.sadhasivam@oss.qualcomm.com
+Content-Type: text/plain; charset="UTF-8"
 
+On Mon, 12 Jan 2026 09:04:15 +0100, Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> said:
+> On Sat, Jan 10, 2026 at 12:26:18PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+>>
 
---4jlshotm5dxcz2zd
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 4/6] PCI/portdrv: Move pcie_port_bus_type to pcie source
- file
-MIME-Version: 1.0
+[snip]
 
-On Fri, Dec 12, 2025 at 11:35:40PM +0100, Uwe Kleine-K=F6nig wrote:
-> Hello Ilpo,
->=20
-> On Thu, Dec 11, 2025 at 07:28:45PM +0200, Ilpo J=E4rvinen wrote:
-> > On Tue, 2 Dec 2025, Uwe Kleine-K=F6nig wrote:
-> > > @@ -564,6 +579,11 @@ static int pcie_port_remove_service(struct devic=
-e *dev)
-> > >  	return 0;
-> > >  }
-> > > =20
-> > > +const struct bus_type pcie_port_bus_type =3D {
-> > > +	.name =3D "pci_express",
-> > > +	.match =3D pcie_port_bus_match,
-> > > +};
-> > > +
-> > >  /**
-> > >   * pcie_port_service_register - register PCI Express port service dr=
-iver
-> > >   * @new: PCI Express port service driver to register
-> >=20
-> > I wonder if you should also relocate that #ifdef region=20
-> > bus_register(&pcie_port_bus_type); is in and make pcie_port_bus_type=20
-> > static? As is, this move feels somewhat incomplete.
->=20
-> Yeah, I agree, I had the same feeling. I decided against that because
-> I'd need a new function that just calls bus_register and that has to be
-> called from pci_driver_init(). I thought this to be hardly better than
-> the status quo. Looking again pcieportdrv.o is a separate module that
-> doesn't have an initcall, so this could be done in there. Will have a
-> look early next week.
+>> Though this series adds the relevant functionality for handling the M.2 Key M
+>> connectors, there are still a few open questions exists on the design.
+>>
+>> 1. I've used the DT compatible for the serdev swnode to match the existing OF
+>> device_id of the bluetooth driver. This avoids implementing custom serdev id
+>> matching as implemented till v2.
+>
+> Yeah, swnodes are not designed to replace the real DT or other firmware
+> interface. The idea of swnodes is to have them providing quirks if needed (i.e.
+> fixing up the broken or missed FW device properties). This should not have been
+> done this way. Please, consider another approach, e.g. DT-overlay.
+>
 
-This is wrong for two reasons. a) there is an initcall in
-drivers/pci/pcie/portdrv.c, and b) it took me longer than "next week".
+This may have been true historically but software nodes were introduced before
+the auxiliary bus. With platform devices, the question has a clear response:
+DT or ACPI first, then possibly additional software node. But with auxiliary
+devices, where does the entirety of device properties come from if we - for
+whatever reason - don't want to propagate any "real" firmware node?
 
-So the move could be completed by:
+This is not even about this particular series, rather it's a wider architecture
+question.
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 2cc4e9e6f5ef..23316b5f1491 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -1709,11 +1709,6 @@ static int __init pci_driver_init(void)
- 	if (ret)
- 		return ret;
-=20
--#ifdef CONFIG_PCIEPORTBUS
--	ret =3D bus_register(&pcie_port_bus_type);
--	if (ret)
--		return ret;
--#endif
- 	dma_debug_add_bus(&pci_bus_type);
- 	return 0;
- }
-diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-index 88af0dacf351..3382d50ecb3e 100644
---- a/drivers/pci/pcie/portdrv.c
-+++ b/drivers/pci/pcie/portdrv.c
-@@ -838,9 +838,15 @@ static void __init pcie_init_services(void)
-=20
- static int __init pcie_portdrv_init(void)
- {
-+	int ret;
-+
- 	if (pcie_ports_disabled)
- 		return -EACCES;
-=20
-+	ret =3D bus_register(&pcie_port_bus_type);
-+	if (ret)
-+		return ret;
-+
- 	pcie_init_services();
- 	dmi_check_system(pcie_portdrv_dmi_table);
-=20
-But I'd like to have this postponed and in a separate patch because
-pci_driver_init() is a postcore_initcall and pcie_portdrv_init is only a
-normal device_initcall(). So it definitively changes ordering and I'd
-fear regressions. It would be sad if patches #5 and #6 would need to be
-reverted to fix a regression in this area.
-
-So given this is the only open issue in this series I'm aware of, can we
-please get this in? Then I'll send a patch for the above change during
-the next development cycle.
-
-Best regards
-Uwe
-
---4jlshotm5dxcz2zd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlk0GMACgkQj4D7WH0S
-/k69NAf9H7g2LcgmdrVpdBBzmZ6H0mKlnj9nNzs5M8a2drvin7vuP/y0+wYjpRLv
-lWHyZ5qIYkqi9wUU0CnEKHYR7u3e4up0dkfPTdWZ4npozl85f36zIeucvraQ5T0T
-LGR/q/An2FGkawN1Bqhq11uqBoQpdwqkYlMcDI/WPRluX/wtQ6eeuNUKaDj/aQJz
-s41J9ZJJfoeMcSXfckyo58GDglQ8c8Vn2D6y5Dd7GfwOXVTW1V7dqD1/USW0c/Lr
-ZLGAAAimG6u0MX8AlxUe4W0Xe5iO5mZPvuIJi/zwtwcP93KH2e6WYJeN0XNRphck
-F4Zdgd0L1cZ0MXDVpkxCxIUQ3LVNBg==
-=xKCL
------END PGP SIGNATURE-----
-
---4jlshotm5dxcz2zd--
+Bartosz
 
