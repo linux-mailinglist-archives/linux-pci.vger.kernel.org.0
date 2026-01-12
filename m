@@ -1,184 +1,142 @@
-Return-Path: <linux-pci+bounces-44530-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44531-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34EBBD142A9
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 17:50:09 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BB48D1431E
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 17:56:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id A7BDF3002163
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 16:50:08 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6941030047BF
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 16:56:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FD87352C29;
-	Mon, 12 Jan 2026 16:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99C412FA0DD;
+	Mon, 12 Jan 2026 16:55:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Xh28jBuC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.b="gRO5Jvl7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing2021.csail.mit.edu (outgoing2021.csail.mit.edu [128.30.2.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88C536CDEE
-	for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 16:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931E436E46D;
+	Mon, 12 Jan 2026 16:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.30.2.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768236607; cv=none; b=SpvpCDSQ+vFxf9Gd/tqdF4Du1bIRJWPzdaheHSOH2VzWYldN/rTnCGxdPNM/9zQuNGWUZmXa0QwvW/xJmsIcWIHF9JEJyBx0/mgWZPDZaNBxObxSBNco9h3ZhgSum1pOuciWAD3yAKrGoxKAbMU5onYHJy347kV/1+I38fCi2Ow=
+	t=1768236957; cv=none; b=CMb1YP9LWGUoNYOB8zyEGVfnEEqpppczMj6F0UIxnkt+TFUzdcxTM9rP5IMc1B94Haummu1t3NrT/BZsVP48hXmsA4GuHgcP4PQ3Fws5Mz/iYh0vPze9K807MFHAwiMhFLLJdteZXlwxISr7x+2MqiZYjB78vyrE61qEO9rGgXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768236607; c=relaxed/simple;
-	bh=tqjQya8iav+U2F1Y8sTA4RoO8FG8N5ZbxkqeKQhKHMk=;
+	s=arc-20240116; t=1768236957; c=relaxed/simple;
+	bh=KVX5MxmSTaO9QC6XAGHbbVFh9hxe355q3X3nJViMtbQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QBJFbynbuJQMPrs+c8qxiv8jax59ftOHfhiDwhwpb9WZsCRMh/+tvufQVtUadq/nqBP4ChAJ7wvmeWJGZ+bx8+Hv13vxOg5nlfE32WgNluM2sodzRu2/U29mFlySh4eC13r+xge016RSZFtcdPezJtifYZlV+TieLFFNZD/biLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Xh28jBuC; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4ffbea7fdf1so33029301cf.1
-        for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 08:50:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1768236603; x=1768841403; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eAxh70JY3ShLNfnDxBWsRZWpalCHcaRfsM5YzKZ+W9w=;
-        b=Xh28jBuCzSmjNImJHPipMhJ0Ay7bk672VmA9OuRlRS5xHW5yOjBQoqGrHp/AwF81rB
-         U4wbU+uoNLx2hWjU7U4zq3tWfLHjExnBD0S2eQKaomwC1k6Re30nBI8pSTT4ZUFwDXtw
-         NB+3sqspu7NHXnhnH1vGI97i4pjAI57Tck8NM8TbREST9HEQAuFfCqITWgCnp0IvR9fK
-         +ZdAosDXqrYrMVZd4ILWmB9i07jlSbP6DyIB9yxkaOjGqB4aGN22b/QWCSygCzJpyPQe
-         W6fEtrLRoKz3QtzuKuqh5mJBRVgPzcZzMRv1SZTKdpfxUsRxAxwrExm1lW+TsFUPDzah
-         L4DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768236603; x=1768841403;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eAxh70JY3ShLNfnDxBWsRZWpalCHcaRfsM5YzKZ+W9w=;
-        b=tV7xsdIpKGNn0/m51mR3WcN2JkHPseV3hSPj5r0YGkU/pX6yMMXwAhFPFP6+QYvn6o
-         8f0ua7TqkI8drZdUlhMepEED2m4R89sXwUyfWZjmB5m+JvvUWs4/h5mk1E3nXamllOFX
-         uEXCp/Va/OGvmbDQOY56jU29qhxD/5l461QBvJY2CIKEX9F9WT0MCfBriNpuApeV37Es
-         GQFrp8YGRU6JZBj9SIK+qwpp94qxjkts6ZXMlkVUk/1g4duOmqsqQYQClZW1GnzBVYXk
-         myhEUZ1LcbBEsiuEIE3NA3Jcf5s5JJmZYT+zqL1o4+vQ7Z2eVArw/SjRAPPzEnRxbfPR
-         MEeA==
-X-Forwarded-Encrypted: i=1; AJvYcCXorvjX85ZQsmv3hR5veiLImGwzFkdAga9uYdiK3jc5xZ7L20BKODFwaoh8T1zDkS2bWC+Wprx/mt0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztwF96LPfZBLRKLxF9ENoYLVobmP2vxb/E/VJaepPKz3PeOnK7
-	u9bimWAOT8d8EY/TYOQVlyMo28aPCc8JaZP0mSN8u+gFjY1poamPDRuxk2XRozbjT6I=
-X-Gm-Gg: AY/fxX7J/RYOSormDzwRd/EpIL/gyS1VMyFCn7ffhsW9WnraXc7Gzn71Tz1rORPs4Lg
-	JeALSgJFpbHn5j3LuRm1EnaMNDSJV4ucrT4PITGA1PNw4uSjd3vzsSysW50MKdIIGficV7R0MJW
-	w9MLlodoB6pcobP6Hpdm6k8/7d3CQ9kkbTOvYB8RGb+yiyGGnJnGOwjZchs6BdwK7QFVqpbKICR
-	ZLlYbQowBpkcZH8hVli7H8ZpvaAVi2nO2eWxZ3AaIBqYF3H3VnH9V6MTq+KaunIHzyZLbsNUYP1
-	Rj7XYgPVj0oHePkVhainNtIuGHN1LCtBlvBfBWtxAa5u+MQE8Weca0V7+eAVUkfaicFuCM2XZQ/
-	nSuJKHQNdDRJYfu7BolqRX9nhUFHzLEyxAD7+xoIkLuOW/9E0pmIffDTcaaud0j0XOUCOaOmqut
-	qPmVulL7GhwUAG661yQG0RDVoFFv8OI7LpYf2NQYEpT25wjwbTQ1+i93yHIte63MeW5JE=
-X-Google-Smtp-Source: AGHT+IE/A98Uf8f6ySXPvh9xamBlLANpUoYS4iXttzp8YDJn905I/7mcjcPxPkNVMXbRPnmf8UaJPg==
-X-Received: by 2002:ac8:6f1a:0:b0:4ee:208a:fbec with SMTP id d75a77b69052e-4ffb4a1ed32mr255276771cf.66.1768236602551;
-        Mon, 12 Jan 2026 08:50:02 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89077253218sm139285396d6.43.2026.01.12.08.50.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 08:50:02 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1vfL7B-00000003RcK-2R9k;
-	Mon, 12 Jan 2026 12:50:01 -0400
-Date: Mon, 12 Jan 2026 12:50:01 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Zi Yan <ziy@nvidia.com>
-Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
-	Francois Dugast <francois.dugast@intel.com>,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	Matthew Brost <matthew.brost@intel.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Felix Kuehling <Felix.Kuehling@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	David Hildenbrand <david@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Alistair Popple <apopple@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-pci@vger.kernel.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
- callback
-Message-ID: <20260112165001.GG745888@ziepe.ca>
-References: <20260111205820.830410-1-francois.dugast@intel.com>
- <20260111205820.830410-2-francois.dugast@intel.com>
- <aWQlsyIVVGpCvB3y@casper.infradead.org>
- <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
- <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
- <20260112134510.GC745888@ziepe.ca>
- <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yw61uyTRh3+sOfPH4eguQdnswwgZF9ax1xaABRZ7VR1CMxL0mmZYH6mH8E0aixxY2Z1t0oVmkP+hQ5IE72C73+0leXBs/R+sTcccZseQXMciThMSptElqSPa8FWb0a0toQCtIMFQKjahlzlzdHXZaLFbBzIfpIrRAh+QhXjlSfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csail.mit.edu; spf=pass smtp.mailfrom=csail.mit.edu; dkim=pass (2048-bit key) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.b=gRO5Jvl7; arc=none smtp.client-ip=128.30.2.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csail.mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csail.mit.edu
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=outgoing.csail.mit.edu; s=test20231205; h=In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=XVqfR8Xq2h2BVs0MCgdAImBeBi3MhN9EdFXYum4ZEd0=; t=1768236955; x=1769100955; 
+	b=gRO5Jvl7yImqb6qDJcGVIBS/yUlZ2pbuGuxfSqGt/T0wj9/4KQuZzNl+BIQVHp9SoZgdoduwX+x
+	w9GGbeRyhBcko0lC3hiwxWRaJ2kD6Op22QR/bi2HxQmeEBtsHh1rkyqZsSeib50Qye95YzXRboDn4
+	B41+Sfl04GO9hMQ0fqjWP+DKO9L4UrF4YO9ENpRfSxAVW67IV427gkeHYAy5E1dBPK86HqhV+4oG9
+	mH6z6oSuapKJEEjz/zumOTGQ0WRpbWg2G7liwBBka6aehC1rZlBUnJED5B2tdAgRtc9/LtOXhMsye
+	nnlmhbwzBErCgtAknK0v0wF1XpNGjAlW0ofw==;
+Received: from [49.207.196.83] (helo=csail.mit.edu)
+	by outgoing2021.csail.mit.edu with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <srivatsa@csail.mit.edu>)
+	id 1vfLCn-006dCy-S5;
+	Mon, 12 Jan 2026 11:55:50 -0500
+Date: Mon, 12 Jan 2026 22:25:41 +0530
+From: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"longli@microsoft.com" <longli@microsoft.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: [PATCH 1/1] PCI: hv: Remove unused field pci_bus in struct
+ hv_pcibus_device
+Message-ID: <aWUnjXIMgE--hCgg@csail.mit.edu>
+References: <20260111170034.67558-1-mhklinux@outlook.com>
+ <aWUFPUxrMkM32zDD@csail.mit.edu>
+ <SN6PR02MB4157BFB422607900AC1EBD82D481A@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
+In-Reply-To: <SN6PR02MB4157BFB422607900AC1EBD82D481A@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Mon, Jan 12, 2026 at 11:31:04AM -0500, Zi Yan wrote:
-> > folio_free()
-> >
-> > 1) Allocator finds free memory
-> > 2) zone_device_page_init() allocates the memory and makes refcount=1
-> > 3) __folio_put() knows the recount 0.
-> > 4) free_zone_device_folio() calls folio_free(), but it doesn't
-> >    actually need to undo prep_compound_page() because *NOTHING* can
-> >    use the page pointer at this point.
-> > 5) Driver puts the memory back into the allocator and now #1 can
-> >    happen. It knows how much memory to put back because folio->order
-> >    is valid from #2
-> > 6) #1 happens again, then #2 happens again and the folio is in the
-> >    right state for use. The successor #2 fully undoes the work of the
-> >    predecessor #2.
+On Mon, Jan 12, 2026 at 03:54:51PM +0000, Michael Kelley wrote:
+> From: Srivatsa S. Bhat <srivatsa@csail.mit.edu> Sent: Monday, January 12, 2026 6:29 AM
+> > Hi Michael,
+> > 
+> > On Sun, Jan 11, 2026 at 09:00:34AM -0800, mhkelley58@gmail.com wrote:
+> > > From: Michael Kelley <mhklinux@outlook.com>
+> > >
+> > > Field pci_bus in struct hv_pcibus_device is unused since
+> > > commit 418cb6c8e051 ("PCI: hv: Generify PCI probing"). Remove it.
+> > >
+> > 
+> > Since that commit is several years old (2021), I was curious if this was found by
+> > manual inspection or if the compiler was able to flag the unused
+> > variable as well.
 > 
-> But how can a successor #2 undo the work if the second #1 only allocates
-> half of the original folio? For example, an order-9 at PFN 0 is
-> allocated and freed, then an order-8 at PFN 0 is allocated and another
-> order-8 at PFN 256 is allocated. How can two #2s undo the same order-9
-> without corrupting each other’s data?
-
-What do you mean? The fundamental rule is you can't read the folio or
-the order outside folio_free once it's refcount reaches 0.
-
-So the successor #2 will write updated heads and order to the order 8
-pages at PFN 0 and the ones starting at PFN 256 will remain with
-garbage.
-
-This is OK because nothing is allowed to read them as their refcount
-is 0.
-
-If later PFN256 is allocated then it will get updated head and order
-at the same time it's refcount becomes 1.
-
-There is corruption and they don't corrupt each other's data.
-
-> > If the allocator is using the struct page memory then step #5 should
-> > also clean up the struct page with the allocator data before returning
-> > it to the allocator.
+> Code inspection. I was brushing up on how the structs defined
+> in pci-hyperv.c relate to the standard Linux PCI struct pci_bus and
+> struct pci_dev. Having a pointer to struct pci_bus in struct
+> hv_pcibus_device makes sense, and I was a bit surprised to find
+> it's not set or used. Instead, the PCI bus is always found through
+> the PCI bridge.
 > 
-> Do you mean ->folio_free() callback should undo prep_compound_page()
-> instead?
 
-I wouldn't say undo, I was very careful to say it needs to get the
-struct page memory into a state that the allocator algorithm expects,
-whatever that means.
+Ah, I see, thank you for the background!
 
-Jason
+Regards,
+Srivatsa
+
+> 
+> > 
+> > > No functional change.
+> > >
+> > > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> > 
+> > Reviewed-by: Srivatsa S. Bhat (Microsoft) <srivatsa@csail.mit.edu>
+> > 
+> > Regards,
+> > Srivatsa
+> > Microsoft Linux Systems Group
+> > 
+> > > ---
+> > >  drivers/pci/controller/pci-hyperv.c | 1 -
+> > >  1 file changed, 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> > > index 1e237d3538f9..7fcba05cec30 100644
+> > > --- a/drivers/pci/controller/pci-hyperv.c
+> > > +++ b/drivers/pci/controller/pci-hyperv.c
+> > > @@ -501,7 +501,6 @@ struct hv_pcibus_device {
+> > >  	struct resource *low_mmio_res;
+> > >  	struct resource *high_mmio_res;
+> > >  	struct completion *survey_event;
+> > > -	struct pci_bus *pci_bus;
+> > >  	spinlock_t config_lock;	/* Avoid two threads writing index page */
+> > >  	spinlock_t device_list_lock;	/* Protect lists below */
+> > >  	void __iomem *cfg_addr;
+> > > --
+> > > 2.25.1
+> > >
+> > >
 
