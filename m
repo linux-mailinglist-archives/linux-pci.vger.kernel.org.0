@@ -1,183 +1,210 @@
-Return-Path: <linux-pci+bounces-44551-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44552-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70E4FD15105
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 20:35:17 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E03ED1515D
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 20:37:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B35F2307C9F2
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 19:28:28 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C78AD304890F
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 19:30:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9B3E30F931;
-	Mon, 12 Jan 2026 19:28:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8EB3322B94;
+	Mon, 12 Jan 2026 19:29:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="pMnuPJ9A"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a3gndHcM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051EB31B803
-	for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 19:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C0F320CD5;
+	Mon, 12 Jan 2026 19:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768246100; cv=none; b=eI9OMg4SmHpUvDTD/fbbMm8bZsf5wcJMoKYzXuVjJd/ww903cwTMjoILNzn5ChTYAua9I2L7Q8yqBuldu2ut3PFF6LZz7KlLPz7SgdqH4Yf26dO6sNmD+X6vOa5PIDnO0XZu8f13UYvO3KfkkGLD34hwErlDXp3V19jktJXagJo=
+	t=1768246194; cv=none; b=CyDtNkP0SKwnanIrFm+OIAeVzguLg3tVYy5GMCMBHnN4NCm6Sl8Pc+PEeKfFYILG3RUmbp3wOmdVVNbdL17PQsUd4BiPPE/vlmhjOWn0ZojIxqZNBOfGBBfvbTzTKWfBUFQgF70Xh7Gm1JFAgX5hScwz1NlxF2frfEkd37dOBZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768246100; c=relaxed/simple;
-	bh=shxmX2+HmXmALgYV4I/T+QoVuAHA2Vhig6RTaEDJOds=;
+	s=arc-20240116; t=1768246194; c=relaxed/simple;
+	bh=/FNl+yM0hGl4sB95N++ILsrhRRKe3muJ5CSF6Ts1Pxg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dzVu2+UgsfXUzLd9dPtN/znyGGscYZKxmm6Hkqv5C0A4r5AbGMb0M6ZfSYv86rbf7PmSJ+iryAVVMUgu/BJLT/EfQlzDsZ8pfwK5toN5WgBGNKNzHCtSe4+RX3DjsOZ+3rYfx8W+MEWko0/5gj3T5kQ2VRbQtWx+BomvBbiDxlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=pMnuPJ9A; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-8be92e393f8so608774585a.1
-        for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 11:28:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1768246098; x=1768850898; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=a9AdLI7uJUYtOYd89GixDifcE7N5970uW2swaB6ncSw=;
-        b=pMnuPJ9A29sI3cWXfL3AcdhcYCbp5QX64v+VQQdObhNgHqPse++jj/lwWWU4Ot/o0L
-         ptMMa5o08J8HeJp0iuLYJu4C+et1bBsiHqAqFIvCnT2jJ4ZG9Z4HFAZolq40731tJgYR
-         GIJiYA09Jj8QTQMUlYp4dBqT3UbEnz1VhJE/IW8MoT9ueNAASvDJmCKaX408UqP9afJv
-         P0EIWDjjT3k7iv+UTZO9m6KL7XquMEtRxKW/ntn/MMdJXSqV2RdUAWGbi+YrvVYqC2qd
-         kZjwAZMSfUaAUrYobELCqUhcNbVnLfioXz93dU43Wtw28vnTyYawjN7aGDGNPkKi+HZ2
-         c/bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768246098; x=1768850898;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a9AdLI7uJUYtOYd89GixDifcE7N5970uW2swaB6ncSw=;
-        b=p2sQCeQwIMbgZwd+t6H8TAdM+zN7xtsTGkGDw/9apjSqocWW8l89iT16vWhSLVnas2
-         Gbe4a/Z69g7hoJO4eIuMQFvrpxGkNVZjkysr7zQYuttVTf0LFnBdAvVdwyWR08j3X35x
-         6cUtBEFe+G/pb4uLLVLyFcLL1IDMy41LoXgiqvAKLcaTulXbu2cRwCwDflZpOAP6DJmJ
-         6yR8X9/bdCqO7UmrOa8649ylmlV7DDBnNGB4E/atMFL4VJtzr9EVGMmCGdYQ6Pg0yppi
-         XNcJb5cSrdKcfs5OPDD8Z46ukCzrvQVdM+MBl1YSsdWV/w6MY2FJlDI+EHA7KRy1J6nm
-         ePLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXs19qrJH1Pq99njIzBMkbg3o3c9nQAYZWoTxhpQjAybIK+dVggtTfX6fs6v4BuA6sEPCbFuJSF29Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcBrOWdsLpqjp9qDoM8xPTOwGI6R+PZtg3Y1aMrZtn/vxEw3t7
-	LlQ9AbjPCYoMjMYBxwIPqU5qVHSyJuLFVkVV1HEcDm6TG2dAZ8KfUytdbQnydGitRGQ=
-X-Gm-Gg: AY/fxX4xdgY4rrMv/QBkUzXvo9Aqhgr4HH3KK8YjATI+syDZE3iIkqSbp1Zzewbf3FA
-	Ucee/CKCGQaaTgONN8OKIrZhQxRREDpiaDKDLvJThww82cBGx+OjKSrEByaCj52MCj4TleMel2/
-	dhJfF09tT7vTbNWQh3VoQmJKT25vqaXha7rvNHNNbSJWHtlPqpNiV+7O67o8EymEbvBH9X97IjE
-	F5CXJUOTHkRPtGCc49eCjj156cUF1hyENPFLRAytbxWQiQzRQhBsvrspZbcgqbDS0rg7dJRGqS5
-	PCu+lAykY0eHWATGJUT0PeWbAtMazv+KIuihsDK+D5dm0pWud6gDKxhHdSC0YA+gAikBO+IOv4K
-	ODC5+hoTycKfYUaI0Np5k9J/OfcEcENea3gJon/I5+43T3p8BV/kzhDQc1Z80Mwuix3ibx+phSH
-	90nVUwEogw55f7FZgcJjm1kACgwjJbNTsd8oHPxwyx2+G0FrYh0eLX0FLIXqKY4IX3cEI=
-X-Received: by 2002:a05:620a:1726:b0:8b8:7f8d:c33b with SMTP id af79cd13be357-8c5208f18e3mr71372585a.43.1768246097807;
-        Mon, 12 Jan 2026 11:28:17 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c37f4cd7a3sm1609425185a.24.2026.01.12.11.28.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 11:28:16 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1vfNaK-00000003cxB-192v;
-	Mon, 12 Jan 2026 15:28:16 -0400
-Date: Mon, 12 Jan 2026 15:28:16 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Zi Yan <ziy@nvidia.com>
-Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
-	Francois Dugast <francois.dugast@intel.com>,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	Matthew Brost <matthew.brost@intel.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Felix Kuehling <Felix.Kuehling@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	David Hildenbrand <david@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Alistair Popple <apopple@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-pci@vger.kernel.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
- callback
-Message-ID: <20260112192816.GL745888@ziepe.ca>
-References: <20260111205820.830410-2-francois.dugast@intel.com>
- <aWQlsyIVVGpCvB3y@casper.infradead.org>
- <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
- <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
- <20260112134510.GC745888@ziepe.ca>
- <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
- <20260112165001.GG745888@ziepe.ca>
- <86D91C8B-C3EA-4836-8DC2-829499477618@nvidia.com>
- <20260112182500.GI745888@ziepe.ca>
- <6AFCEB51-8EE1-4AC9-8F39-FCA561BE8CB5@nvidia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bvcdvy4EY84TCctN8KQmQJB7NHqQbPQN/uusZXNigckaABwXazjSc+/2sz85faC0pkGrexZvkJmGyeD7VBOjd+08O1bgrYB3S5vbyKCCuOEDu17U5cVrorcKF3BbYkjOtk74ic/zcq1dSrxfDWpm90/PMYUriYJvvSk0/YIHHwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a3gndHcM; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768246193; x=1799782193;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/FNl+yM0hGl4sB95N++ILsrhRRKe3muJ5CSF6Ts1Pxg=;
+  b=a3gndHcMrUEeiZ7O7PW5KERg9+HO9xUyrDv6zXdJa+KWbkIfcUsmbp3f
+   qVhd2bAx3LPMJ0R5fM6QE8UqCDIrPFneGN8W7/XyzyjGhar59cv2Iu6AX
+   E6B11ykn9h2hASa/bAStYCOro1+ueOCPFA/gu7rjk7ahER/yzM3wq+MtO
+   Fy/hcHKJi4QotePt3bEHnLVobaJFS8+2cX5Wh61MMwaoEL0LM1fw2fQWr
+   +9KvtUNIPalFzxlWqLX4dvGycumU5ZiHzGdp+YCllD1ABxF3GMq/BeoV8
+   Aqz2nULxqXRS5Md/TG/KPI5v3MAbezDjD5QFOAHj055/u65I7Ky1Co1eO
+   g==;
+X-CSE-ConnectionGUID: KImT7tFCTBGTgmRB3HqYFg==
+X-CSE-MsgGUID: GZfGabTmRcK2CXO4z9IfQw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="73370489"
+X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
+   d="scan'208";a="73370489"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 11:29:53 -0800
+X-CSE-ConnectionGUID: DtpOCRNwS4WSwE7pSA5Krw==
+X-CSE-MsgGUID: nPyjcCCJQMqWwjQygcO+BA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
+   d="scan'208";a="208646824"
+Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.37])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 11:29:46 -0800
+Date: Mon, 12 Jan 2026 21:29:44 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Rob Herring <robh@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	linux-acpi@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v4 0/9] Add support for handling PCIe M.2 Key E
+ connectors in devicetree
+Message-ID: <aWVLqEV4hTzlRYLu@smile.fi.intel.com>
+References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6AFCEB51-8EE1-4AC9-8F39-FCA561BE8CB5@nvidia.com>
+In-Reply-To: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Jan 12, 2026 at 01:55:18PM -0500, Zi Yan wrote:
-> > That's different, I am talking about reaching 0 because it has been
-> > freed, meaning there are no external pointers to it.
-> >
-> > Further, when a page is frozen page_ref_freeze() takes in the number
-> > of references the caller has ownership over and it doesn't succeed if
-> > there are stray references elsewhere.
-> >
-> > This is very important because the entire operating model of split
-> > only works if it has exclusive locks over all the valid pointers into
-> > that page.
-> >
-> > Spurious refcount failures concurrent with split cannot be allowed.
-> >
-> > I don't see how pointing at __folio_freeze_and_split_unmapped() can
-> > justify this series.
-> >
+On Mon, Jan 12, 2026 at 09:55:59PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+
+> This series is the continuation of the series [1] that added the initial support
+> for the PCIe M.2 connectors. This series extends it by adding support for Key E
+> connectors. These connectors are used to connect the Wireless Connectivity
+> devices such as WiFi, BT, NFC and GNSS devices to the host machine over
+> interfaces such as PCIe/SDIO, USB/UART and NFC. This series adds support for
+> connectors that expose PCIe interface for WiFi and UART interface for BT. Other
+> interfaces are left for future improvements.
 > 
-> But from anyone looking at the folio state, refcount == 0, compound_head
-> is set, they cannot tell the difference.
-
-This isn't reliable, nothing correct can be doing it :\
-
-> If what you said is true, why is free_pages_prepare() needed? No one
-> should touch these free pages. Why bother resetting these states.
-
-? that function does alot of stuff, thinks like uncharging the cgroup
-should obviously happen at free time.
-
-What part of it are you looking at?
-
-> > You can't refcount a folio out of nothing. It has to come from a
-> > memory location that already is holding a refcount, and then you can
-> > incr it.
+> Serdev device support for BT
+> ============================
 > 
-> Right. There is also no guarantee that all code is correct and follows
-> this.
+> Adding support for the PCIe interface was mostly straightforward and a lot
+> similar to the previous Key M connector. But adding UART interface has proved to
+> be tricky. This is mostly because of the fact UART is a non-discoverable bus,
+> unlike PCIe which is discoverable. So this series relied on the PCI notifier to
+> create the serdev device for UART/BT. This means the PCIe interface will be
+> brought up first and after the PCIe device enumeration, the serdev device will
+> be created by the pwrseq driver. This logic is necessary since the connector
+> driver and DT node don't describe the device, but just the connector. So to make
+> the connector interface Plug and Play, the connector driver uses the PCIe device
+> ID to identify the card and creates the serdev device. This logic could be
+> extended in the future to support more M.2 cards. Even if the M.2 card uses SDIO
+> interface for connecting WLAN, a SDIO notifier could be added to create the
+> serdev device.
+> 
+> Open questions
+> ==============
+> 
+> Though this series adds the relevant functionality for handling the M.2 Key M
+> connectors, there are still a few open questions exists on the design. 
+> 
+> 1. Created a dynamic 'bluetooth' node with the compatible property matching the
+> WCN7850 device and attached it to the serdev device. This allowed reusing the
+> existing OF based BT driver without much modifications.
 
-Let's concretely point at things that have a problem please.
+And now I like the solution, thanks!
 
-> My point here is that calling prep_compound_page() on a compound page
-> does not follow core MM’s conventions.
+> 2. PCIe client drivers of some M.2 WLAN cards like the Qcom QCA6390, rely on
+> the PCIe device DT node to extract properties such as
+> 'qcom,calibration-variant', 'firmware-name', etc... For those drivers, should we
+> add the PCIe DT node in the Root Port in conjunction with the Port node as
+> below?
+> 
+> pcie@0 {
+> 	wifi@0 {
+> 		compatible = "pci17cb,1103";
+> 		...
+> 		qcom,calibration-variant = "LE_X13S";
+> 	};
+> 
+> 	port {
+> 		pcie4_port0_ep: endpoint {
+> 			remote-endpoint = <&m2_e_pcie_ep>;
+> 		};
+> 	};
+> };
+> 
+> This will also require marking the PMU supplies optional in the relevant ath
+> bindings for M.2 cards.
+> 
+> 3. Some M.2 cards require specific power up sequence like delays between
+> regulator/GPIO and such. For instance, the WCN7850 card supported in this series
+> requires 50ms delay between powering up an interface and driving it. I've just
+> hardcoded the delay in the driver, but it is a pure hack. Since the pwrseq
+> driver doesn't know anything about the device it is dealing with before powering
+> it ON, how should it handle the device specific power requirements? Should we
+> hardcode the device specific property in the connector node? But then, it will
+> no longer become a generic M.2 connector and sort of defeats the purpose of the
+> connector binding.
+> 
+> I hope to address these questions with the help of the relevant subsystem
+> maintainers and the community. 
+> 
+> Testing
+> =======
+> 
+> This series, together with the devicetree changes [2] was tested on the
+> Qualcomm X1e based Lenovo Thinkpad T14s Laptop which has the WCN7850 WLAN/BT
+> 1620 LGA card connected over PCIe and UART.
+> 
+> Dependency
+> ==========
+> 
+> This series is dependent on the M.2 Key M series [1] on top of v6.19-rc1.
+> 
+> [1] https://lore.kernel.org/linux-pci/20260107-pci-m2-v5-0-8173d8a72641@oss.qualcomm.com
+> [2] https://github.com/Mani-Sadhasivam/linux/commit/753033861360171f2af1fdd56e8985ff916e1ac2
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+> Changes in v4:
+> - Switched to dynamic OF node for serdev instead of swnode and dropped all
+>   swnode related patches
 
-Maybe, but that doesn't mean it isn't the right solution..
+Yep, and I even won't insist on fwnode API in serdev as now OF one makes more
+sense. OTOH, most of the handling on pwrseq and serdev can be rewritten using
+fwnode in principle.
 
-Jason
+> - Link to v3: https://lore.kernel.org/r/20260110-pci-m2-e-v3-0-4faee7d0d5ae@oss.qualcomm.com
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
