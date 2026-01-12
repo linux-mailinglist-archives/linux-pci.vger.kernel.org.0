@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-44523-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44524-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CF59D13FF7
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 17:29:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 89316D14018
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 17:29:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 36CEF3016AE7
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 16:28:53 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 32FE2301AE16
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 16:28:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06B1B36AB6D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 167B836655A;
 	Mon, 12 Jan 2026 16:28:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gj/dus4E"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0iD7YdF"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5599368284;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E3536829E;
 	Mon, 12 Jan 2026 16:28:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768235314; cv=none; b=s0H90Sk7MJNkux6ez38adERmO8djIzStzGp70DL+zF4iYT4dg2RviawJWHjU2/XaMWlG9MPqT1YIg80SAQMrJixVq6t0LHOhp1w1gNkgyxlD40bMe4FvW1NbLp5foe78VM1ueQkPRw/n5Kut9F8Dxr43joJOq1rEyqiFR/RdqFs=
+	t=1768235314; cv=none; b=nh2HQ4uLWMY6H7PMn6WR/f7g67sKTZC6VtCIAff04GzQTM88mHZwj/eD/RXkANXQJy2K4xq2pYdT/WebHj4T7bT8xU5qQjPEG1QjgLkfr+U36BukGQysxOilS23fv/03k1ZE3yPksdWDbLaPrOqIZI0hJ3xcHNugemCCnvi0GsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1768235314; c=relaxed/simple;
-	bh=uwW8257EhmouZpvkVKGgdUbE780fBLOlGG44AztWPJU=;
+	bh=grrBzUog12+WE5FP8RC1t7J6n4Xk4iWQti4S7q8UyIM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iX96DTWNERE9/S3eZ0lTaLr7v3d2erQ1PxbbwPJSWH4TIF0w5HiMvepSpwFQnZijTP3Qtj8DeucSLBANaLPKN7+5FrF029eIJTLpHiR9uFzrCuPZklS5GZldFcRLEzhOWcer5JF9yM3twY8AzHELmK5wKDXVNsejIZq3nJJfDqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gj/dus4E; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B54D3C19425;
+	 In-Reply-To:To:Cc; b=Da932bBoNQgqaYa5F6/9RIot34cHYz26rLIkzYgSOBQ12fMiXK70fRT/T5p7wyORfDvcWEfDGixqdhgUWKkg/KYp0e6+MTaXSKwl45v9cGmTK5QhHVIHQmXm16XJbmtfVO2U5zVTNA9LA74p5oypcek4/txkEGwFLcJBuDfhroU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0iD7YdF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C86F4C19422;
 	Mon, 12 Jan 2026 16:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1768235313;
-	bh=uwW8257EhmouZpvkVKGgdUbE780fBLOlGG44AztWPJU=;
+	bh=grrBzUog12+WE5FP8RC1t7J6n4Xk4iWQti4S7q8UyIM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=gj/dus4Ebu3+bJ8B8ksFvNd7Pq4ujI6e5xavjiVu7Luwteu1x04s8vU1JYGNPBppD
-	 PleO1Esntak//tuz8tQ8itvcXUh080oK0/Y5NK5DHW6olM355DfDe+C9X789vD81Rc
-	 o9fP5p9ItCGQNpwFT5gjHIiOBYDP+pumGQIn2tXhL6gxluqMv7fwozFAm9teQCvZSD
-	 rb06Zk8dslHm8WVxk1L5AqtZPnd6pjf0ZuOH7mGrnxpj3UPna3CzF0cRsK9walxAmL
-	 T+YYWoF9aMXEDLDoO0rYm0eUGODjoI+G6Zu2XHFPvOf/PynTuWD3fzB1ajiY0/a1fo
-	 qk94m28y7Ms4Q==
+	b=o0iD7YdFw8q6ThQ29JHAro4ZvVy2rVBNTTRMICyoAKU4mV/CkxFRp4PcViVdcZF0g
+	 f+uKrxgMnTH9Ds0npL8+70FXhqh+9hbTPaa+u8Srz+GthSbN8F+rwvprC6yh5hOlVV
+	 YKp/5/ibeefHpW7rsFHDND6TTzOrLJak1XZzL8SvlAH7Xu62pRpZAaX32Ooge3g1al
+	 uVCeEGlc0FytsxRz7As5+dUUmkvb8E7mvNmC2rT62J+VczvtaP/ZUYKmL/llcSQlFQ
+	 OcVdTvuXTIS2+iEgZg1yK35dvZXbdjHfct1t/a9mloLTW1ynSqnXQTGv3jpg61Rpgc
+	 0G+lZzezNWVJA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F5AC9EC9D;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB78D25041;
 	Mon, 12 Jan 2026 16:28:33 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Mon, 12 Jan 2026 21:56:05 +0530
-Subject: [PATCH v4 6/9] dt-bindings: connector: m2: Add M.2 1620 LGA
- soldered down connector
+Date: Mon, 12 Jan 2026 21:56:06 +0530
+Subject: [PATCH v4 7/9] Bluetooth: hci_qca: Add M.2 Bluetooth device
+ support using pwrseq
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260112-pci-m2-e-v4-6-eff84d2c6d26@oss.qualcomm.com>
+Message-Id: <20260112-pci-m2-e-v4-7-eff84d2c6d26@oss.qualcomm.com>
 References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
 In-Reply-To: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
 To: Rob Herring <robh@kernel.org>, 
@@ -80,16 +80,16 @@ Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-acpi@vger.kernel.org, 
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1302;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1456;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=RWekJdEKdic9EZu4rQGv0fBKORumjbEDCuN8SBTLMc4=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpZSEu9lkU8zXSarTBauv+J55+9dDXCd86TV95R
- Hg4HFzhvpuJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaWUhLgAKCRBVnxHm/pHO
- 9en8B/9QtFwvoPLK8ytd54e3XPvecnAHB4Saxp+aBXFoEq0MQ+d102DNUVZifS3N24eYRSDdC41
- TPbnS0A0513Snh4EoY48GHNfeZPGv+hEXoK15gVK/ZNI5nK9O/MvRwKmj8r5zLxkrQ20RnV4hAn
- SoZbqUwgIVFYomtyQg9XoFNBvu0CK83/dyK9vANbA6eDaS/7rCf5TE3x4v4Brox9U+vj2WKRZ2P
- LudJmT+kr2Ut2Mg2sfdZHDz8lAUHyNcqPVCf7PPAn0U/9834LuvC1pA9TtQpYj+xDRPF1oLuiDV
- En/W/ccMkGvtcQTnTSuLjChp9+eiw3xds8HO+nU/Vt6vLFXt
+ bh=0KqheeXO4Oi8QyG11TDbNEO023eYG3+bTSLkuoPEKb8=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpZSEuKYIUhamgQf6AalMOWO7Rfl2Il8MaGaoj+
+ gm0X0978nWJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaWUhLgAKCRBVnxHm/pHO
+ 9YI/B/4so8DL0igNTt5laHHShN9QY9BShj9qsVmgCmZZizALVLOpQtpgvprKHQpF3hI4Xt6L2FJ
+ FJbZryxF13pMx3goH+YdgkzPmFyfUAjqbXyhaeaii/ouFz9bey7NQL7oV1PjGrJRNBIqH7iwQ+C
+ wQc69799eXgaoRJvvfu2Gg/zX2Y/JrmVlEdxdDT1Tk0LBE9jUw5+OClD/6jj24ovQFQSUcCiN2A
+ 5WojYECWh4+gWPWcuH3TfnCwn4IYD432qmpihCDTqXkaNjit1v5i4rp9+6DxeWD8ZCGNBcnL8uy
+ +Zz3zxBGrAWSjRVDzEzuK1UjzbqdV1v5hBVrQmHs/YhRJWCg
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -99,37 +99,44 @@ Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-Lenovo Thinkpad T14s is found to have a soldered down version of M.2 1620
-LGA connector. Though, there is no 1620 LGA form factor defined in the M.2
-spec, it looks very similar to the M.2 Key M connector. So add the
-"pcie-m2-1620-lga-connector" compatible with "pcie-m2-e-connector" fallback
-to reuse the Key M binding.
+Power supply to the M.2 Bluetooth device attached to the host using M.2
+connector is controlled using the 'uart' pwrseq device. So add support for
+getting the pwrseq device if the OF graph link is present. Once obtained,
+the existing pwrseq APIs can be used to control the power supplies of the
+M.2 card.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
- .../devicetree/bindings/connector/pcie-m2-e-connector.yaml       | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/bluetooth/hci_qca.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
-index b65b39ddfd19..9757fe92907b 100644
---- a/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
-+++ b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
-@@ -17,7 +17,14 @@ description:
- 
- properties:
-   compatible:
--    const: pcie-m2-e-connector
-+    oneOf:
-+      - items:
-+          - enum:
-+              - pcie-m2-1620-lga-connector
-+          - const: pcie-m2-e-connector
-+      - items:
-+          - enum:
-+              - pcie-m2-e-connector
- 
-   vpcie3v3-supply:
-     description: A phandle to the regulator for 3.3v supply.
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 888176b0faa9..4d562596ebf9 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -26,6 +26,7 @@
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_graph.h>
+ #include <linux/acpi.h>
+ #include <linux/platform_device.h>
+ #include <linux/pwrseq/consumer.h>
+@@ -2384,6 +2385,14 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 	case QCA_WCN6855:
+ 	case QCA_WCN7850:
+ 	case QCA_WCN6750:
++		if (of_graph_is_present(dev_of_node(&serdev->ctrl->dev))) {
++			qcadev->bt_power->pwrseq = devm_pwrseq_get(&serdev->ctrl->dev,
++								   "uart");
++			if (IS_ERR(qcadev->bt_power->pwrseq))
++				return PTR_ERR(qcadev->bt_power->pwrseq);
++			break;
++		}
++
+ 		if (!device_property_present(&serdev->dev, "enable-gpios")) {
+ 			/*
+ 			 * Backward compatibility with old DT sources. If the
 
 -- 
 2.48.1
