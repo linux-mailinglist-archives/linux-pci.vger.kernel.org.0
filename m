@@ -1,212 +1,255 @@
-Return-Path: <linux-pci+bounces-44514-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44517-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B11FED13D52
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 16:56:09 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D260D13FB8
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 17:28:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 597ED3008193
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 15:54:55 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 092A4300CAD3
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 16:28:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4C84362129;
-	Mon, 12 Jan 2026 15:54:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF875366DC3;
+	Mon, 12 Jan 2026 16:28:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Ro2wa3Hu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cQufjzlZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazolkn19012051.outbound.protection.outlook.com [52.103.2.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BCB36165F;
-	Mon, 12 Jan 2026 15:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768233294; cv=fail; b=ly13nT5+YkhjjEaPO6WLWxLNNCEtfIdfaukAzWBML4u8Yj3CzukeR+z3H9YFzi4SUCmQaAIi0nxVAS82cXyP1dHQa4hYWYaWCziDlmmDhm2iKURpCrZ75KyAEB5d16IDNdNnioza5IuiPcWXfXSgGX0U61g/c7i9/NWkpD2Jvrs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768233294; c=relaxed/simple;
-	bh=6hQ5e0L/60ZWa6472CDMQBnzvi/gGJoXsBHIKRkWrKs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GqHoyI+He5IsRv+ifWakYUE1HYtKKQek0qMpSQBKlbMoQhO4DKiS/9LBsZuPKmfLu810lIHZEMxuuZ9DkaTDFKBoxbZI28zO/1TnDttvEgDT5iIasZDFLTOQoGd4LmIcYHGZgR6irwSIKVogmB6F0ScJ51OE7smp+TM1Sp/mos8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Ro2wa3Hu; arc=fail smtp.client-ip=52.103.2.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NdZjdDn45PqlSPzeUkvNoGHrYAWPMyzs9ToTGb3PZPqGsZDDgfojJ3eYlJVliNyni/REzlUgFI1rDvtHpnCC69cCS6KniNukwFijcF+vh0oB5vT0oPrmyDt/cvUMQ/2vcx5W7fVdR88+YRP3FxgtAs1n+Am4iJURb2zqqKEPoY8DQLpdKmhuvPADBSKPwDoZguQvNqPSKMzzBdYm2JbAzKfYA9MsevOb2c+L+HubMJgLCiSITOF+EfKNjJ5J+UX3BTuRLLF6/WehWknVUbaFKUUcjGVKlg6yefTzrBD/gr5e792fEnnb7o/GXTuvtiyU+xH6SW6EVJFGAmW1HCmsPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=F1S7HXyrnnBDfLnxyhm4/ID9LNtEdNNWZkn08qiD9RI=;
- b=Q/VzDd11noaCK/Uwjho8jafNeULKPxSpCASpQlB4gEe5TAWabnDckEs/TYWbEgIxwY2okbkhUkuRopnbvs1u65REvKkR+PBV1jbUtghMxHQ+5gU116miVd2JzYfOB8hBm+YFC2MAVRPTbmVn6PMLUCwA8b/QerFbxR5HU8NxmxbRSwyx5IqvRUaEIdQA9q1mgYHjBaua8f0Lts1jSxWxUv1R7LKgAxOQrIdIGXR2M7rbncbJLj0pNh/fsOTxpFvsIyitwujFauJ+pBip/0T9J2PYepI/RFEo0Ron2FriGOV1x1llI3PUVhsIRiL8pN21UT8+ffB2UdGxgI3Zj/L2ew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F1S7HXyrnnBDfLnxyhm4/ID9LNtEdNNWZkn08qiD9RI=;
- b=Ro2wa3HuoM2uVQdjxEwQ7hJdiXs6sjkenHZVEHY3HXmHFdHge9fDGrCSiafPUaiQgT4bX5VektfefSocCDhUyCvXRrOlZOY44gibHUdc0PfDIjvI2MvtL+qM9rHMpfzaRrkg5KDo2JEKrLqKY6ffG+w3YUAtFr8e2XitvhgPE6nKYqyWMVMlhd7EXmZxkVysGodIQK4nm7X0Fz9yqK1ZFlfcMtGpO9IGF5vrh6GFDC1UrX6Dbay/iOgBANxov46W2lpR5Jd3X2sMAyd8BKgNXkl9hZFe7rfl86upd2i3H7TEkyjxmEL+l5N7w74jqLE1H2d7aJaDhzlMVf/UqnJwzg==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SJ0PR02MB7165.namprd02.prod.outlook.com (2603:10b6:a03:298::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Mon, 12 Jan
- 2026 15:54:51 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%6]) with mapi id 15.20.9499.005; Mon, 12 Jan 2026
- 15:54:51 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>, "longli@microsoft.com"
-	<longli@microsoft.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>, "mani@kernel.org"
-	<mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH 1/1] PCI: hv: Remove unused field pci_bus in struct
- hv_pcibus_device
-Thread-Topic: [PATCH 1/1] PCI: hv: Remove unused field pci_bus in struct
- hv_pcibus_device
-Thread-Index: AQHcgxvbxTpq11Tjn06iuwMa8TiYF7VOmXKAgAAWCHA=
-Date: Mon, 12 Jan 2026 15:54:51 +0000
-Message-ID:
- <SN6PR02MB4157BFB422607900AC1EBD82D481A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20260111170034.67558-1-mhklinux@outlook.com>
- <aWUFPUxrMkM32zDD@csail.mit.edu>
-In-Reply-To: <aWUFPUxrMkM32zDD@csail.mit.edu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB7165:EE_
-x-ms-office365-filtering-correlation-id: 3c584ee9-5ba2-4b4e-7b4b-08de51f2ebbf
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|15080799012|31061999003|51005399006|13091999003|19110799012|8062599012|8060799015|3412199025|440099028|40105399003|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?CXGzVGzZTXCql2JiVYiGzdIb23fhf/GN/GwoXm/HOifWK5rpXmBOYwMc1FjH?=
- =?us-ascii?Q?ruhAjsa7Qf7MPaAQwBqfu8yvQma3NA4kTLlU90jg7tVTbVr4oC2qs6P6ou8R?=
- =?us-ascii?Q?/LUchrphCnY/7kQ7YtmqnOx84GrgpOgySFQhUTvoA2QNL5jv+H0RYylV6G+R?=
- =?us-ascii?Q?hauicNngXxx018XjgCYYQFwkjLdzjFb/vNV7MP0p3EZSuDVj4JCKlYbF3EyA?=
- =?us-ascii?Q?Qm/oS0tEAdk4MjQkFri/ERH8NuG39OqyX0Bpl/pnpzvpg+Y8ggGkaud9KvGS?=
- =?us-ascii?Q?Wd9XsC5bNkqnduhg98Z1H1CF4t2iCbaarrvy8pLVP9VHVyDjB3sF7c5w1GKJ?=
- =?us-ascii?Q?l9jThVw7STrYjHpLvytLiNCevJ6cOWI1NzHnwu97LmIdXr/dpaXZyLQqF3Nx?=
- =?us-ascii?Q?WPMkTE2jgEPwnKARtRQ5UjU4g9AXq1ugX9pXeTY0HEMtEw4c6faOLf+07SFR?=
- =?us-ascii?Q?VXdIxBnrGRmrk+4Tl4ZxW2EjJYnd5jjl3zpVzU4OrYCVQnECx3CKkent2yGf?=
- =?us-ascii?Q?9bGNVi4AK9YY/mSr9CR6kRKmLXz/kZVLE8XdrP1TZTkO2LCtMcwtPLoEs9dW?=
- =?us-ascii?Q?ASq8OqB3KETnU1dhLPRb2KTXwWiVEKMi74fU9yRhSEOpXAaeUPMIFYfg7uFn?=
- =?us-ascii?Q?y8YFvGFRlKgbSXKskPTOMDRkEhpeTRBPm7ecZosvakW5sUwbifaFMXrlPzHG?=
- =?us-ascii?Q?OqKHuKA4NKFktVdpipnOkNFskc81Dqt0a1sPCn8NxksVfyCChrN/bLNXx1qF?=
- =?us-ascii?Q?fCg7YDPmM8r49D4V0HNVzN3wAiomZCBDx2hjXq5Qp45z1WaMHccIz35JGVZb?=
- =?us-ascii?Q?q6KDOy+jqBcwjg/9ZMO+NKcCjv0MN74Pm2fpU/QAVqC9UbGl2X6ZO/CYrnIA?=
- =?us-ascii?Q?y7zD7mYWPrKxcNjsQBilKVDaNcICz72+gHExMFT8oyGPqJAlSMfmZbKoL6F4?=
- =?us-ascii?Q?8+EW6WSGYmoDIH7Avpb3CgLBDsa/9P2sfqCvYIqN0eygVZSpFL5t6uMSVcaU?=
- =?us-ascii?Q?ZhdgjwYvDKNkMr2AgnVHylfAAHWC1Lja1fM81+MbTXLSZVqA48chqXc3sCCJ?=
- =?us-ascii?Q?Mvf4errut7++Kz+Uu5xUT7ElRZmi9reKYjhYXszUaJQGFV/g7eQO5c9AXudI?=
- =?us-ascii?Q?+YtgtFUWxIKwwJDdvarJBYqqLFDpVAHJyqWR1gv8gUdiXHrM2Z52eEfNvS5H?=
- =?us-ascii?Q?GzZ/ghRbctX7lIuIXRFXmOTRFgMllxfZypd7oA=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?wkIb0belKodLyRdXI9pCn+cTnWueiYKn6EgdsPV1Bo9iXzdWoZEgYjABFtxf?=
- =?us-ascii?Q?YDkNEi8+Pc6s3spCZzyK1hLtfzYhyMqGXpbUi90/9sk1VMXLWOwPHZrkLqOs?=
- =?us-ascii?Q?aRUVFlWmRgL3R5XLbHIGO/Hs0G+FFih+j2ex7qC75TRMpRoaq9qwwD64Iu3E?=
- =?us-ascii?Q?DWtlGe+oFcGyKlNEtW4TaeIIF724FfeO5EQUPhv5xKh1DqjoRWGQYx4Ofqw1?=
- =?us-ascii?Q?ssS1InKAGiztuNbCCnyTe/fLETGpD+97pWFrOg17o96dku45IAg9PtF391St?=
- =?us-ascii?Q?6oa/NZpYV14xo60jS9n7Uvrwff1NNbn9DJ5nypaz5Ht0UEZzBqonQt515MLo?=
- =?us-ascii?Q?+adw53tUVVnepmJdpwts2qBbgJJ9fXLhLw/YTilwlk6URXEHo0BozUiH9CM5?=
- =?us-ascii?Q?iTuDGdb+F0bB9liF3vlL4V3hfFQBShFioAnmk7+u3nwI9z6IvS7AwWMLaccb?=
- =?us-ascii?Q?xFpJquiUtW1FF/Xa2skcdDR72peGNrIlQlQWmiMp5jIwDaoKNnMpmRu7gQzO?=
- =?us-ascii?Q?pI1k4hrtD4QeywnCu1gEB4/4vh626DgsTKdM8nhiHu5PB2D+X/MtSI86fWQK?=
- =?us-ascii?Q?RczlI/AeNyfV6L6POEJ+DCEo3/jCjQ2XWwLmPJr+vvpKELV8rL6wibG39Rou?=
- =?us-ascii?Q?JmF2mldTToRL30UswB1tT5MuAAchTiD440kMsj7+pP4CL94yVX/5HT6zWAwZ?=
- =?us-ascii?Q?tEWUcJz7qixlkVvgCQkC8BwnLPlSac5hzBqcCY1CZ9PfAJwho3XH0qeakmUM?=
- =?us-ascii?Q?uu+kIxzIUo1w0kH0kAl5VjhfCYExtMz57DRWIleZsMMcWMRWAaWAfFbptzaH?=
- =?us-ascii?Q?2MHkHRQ/oSJ1sC6Mvqr076UjQ93IHLMvijDuHjJMuqH6dZCrUi9JJKOrXOjJ?=
- =?us-ascii?Q?5LLZ/2hHxm56mKqqsrqNTna/wbMYQcFgiGR8u3tHQI7bv0W8YR7fS/5Ufkww?=
- =?us-ascii?Q?LHrhVzY2dUvz8Kw0ELb+WAGCx0AXiBTedkEbnjgwtRamvn1Sgsqx7wjvHL/a?=
- =?us-ascii?Q?OC+1CwxAHP4ZQiajTAfmMd+ofHMxKM4L+GHQkDSfKFn+A20PuNdQKBUJIflE?=
- =?us-ascii?Q?tY/K5VQRKSCNVtPjEhUIUEQlYPD6LUra62LrYmAcfBT9gTfWLTKuM22QuCPj?=
- =?us-ascii?Q?epUC7Uw6hTCv0HDsenuP9kC34Y+fHRAtewea5PB8lmfIcauLb22wWDlRetUT?=
- =?us-ascii?Q?YbxRTwUnHY8i6Boj+lAaTZcE+ejEyMUCfwuTLXDlhb0eWIzR8GgNbT7VAKo0?=
- =?us-ascii?Q?wdYCWezHtvT0uQHCi519mALaQRnAMzDbUZsH9u4xMyugZNlEua4fWFJT0T2z?=
- =?us-ascii?Q?JF20j7OxxX7zAW525c19idk3kM6TGU0tfGuvl6r2PkD3vack7scFc2s+PTjN?=
- =?us-ascii?Q?QYM30mQ=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D25365A09;
+	Mon, 12 Jan 2026 16:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768235313; cv=none; b=sOfW6MpPJgjzD766lBjmWZGfyTDXy3KoIOqaQaCRfJd0gRK1tpCqBl3TKwWW6GwLWR0Xko4BE6EX2gwJx8lPFIO693ghpuByjdTUKNgkAO+fqeewkCmulbCxx/p/qsxntSFk82d8IGJTzQJ/gRH0eoneDYySCmTtG/vFfh6F/OY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768235313; c=relaxed/simple;
+	bh=9S9KztO8/ZYkPDYvEOYZP3UT7oEj1fzgnUHdhGGOUPY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PKvviIxhvV1LKMth2aYpAn6kasMxz9OqhwjMOHrrNk7it+8Qi1YCz4lZ4gUxWoPxzlvv5ynyoSeXU309ACluBA1LNlbR4KA/7oS5CMFSauHczP3cZWzH2Vu+thAq0naaeJjDI+fkkz5JB17EdrdNp3xasn2gwD/8aEZKp1mDFkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cQufjzlZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DFBCBC116D0;
+	Mon, 12 Jan 2026 16:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768235313;
+	bh=9S9KztO8/ZYkPDYvEOYZP3UT7oEj1fzgnUHdhGGOUPY=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=cQufjzlZ2QA792AyEfJV6UOyuuAG93SMg3NeKSMHWjtWf2QwDp33o7XHbSjfsC0cH
+	 RBRZ4mvvd7KdCRg6lQIlIX/gskUjlbfX+jtVWu8yOE2p8Mi24pKRZrtBkjNq5M+BBv
+	 Nwjilu5z9QnRgHQ2NphMFy+JDouQ7xerqzmkWbkjLC0Y6lPAGxgWVIKPO9FcR4cYe9
+	 g0Fy97SdQSxGon0gr7tqlr5XiivnEXHrSw7KeuoGM5I4Tc/rIWardPEt9axmp3vUpr
+	 5QjYjT7SISj73wTym5M25hv2bcABQ7q4CF2dRYMzohY0OF0HqrYFNrVPrEEG3iWIf8
+	 SZFNQbdja0PEA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A1CC9EC7A;
+	Mon, 12 Jan 2026 16:28:32 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
+Subject: [PATCH v4 0/9] Add support for handling PCIe M.2 Key E connectors
+ in devicetree
+Date: Mon, 12 Jan 2026 21:55:59 +0530
+Message-Id: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c584ee9-5ba2-4b4e-7b4b-08de51f2ebbf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jan 2026 15:54:51.1994
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB7165
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJcgZWkC/3WQ3WrDMAxGXyX4eg624p8kV32PsQvXVlbD0rR2a
+ lpK331KyiBs3Y3gEz5Hlu4sY4qYWV/dWcISc5yOFNRbxfzBHT+Rx0CZgQAtpQR+8pGPwJF3ynT
+ a+S4YbRk9PyUc4nVVvX9QPsQ8T+m2motcui8kRXLBO6tkE8x+aEHtppzr88V9+WkcaypscRXY8
+ KA3PBDfQAsmoLDe63/45oc3Qkqx4Rvi1eAQbRBBO3zBP57LJTxf6Dzzc0M2Ys5uPU9f/f7XavU
+ aWqHAoVP2r5Wce5eRL40491UxtWx58pLmPb4BaKXlIpYBAAA=
+X-Change-ID: 20251112-pci-m2-e-94695ac9d657
+To: Rob Herring <robh@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+ Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Manivannan Sadhasivam <mani@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+ linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ linux-acpi@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7020;
+ i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
+ bh=9S9KztO8/ZYkPDYvEOYZP3UT7oEj1fzgnUHdhGGOUPY=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpZSEtGGfSh/B1nXp79dZ8tN42YNlOmlhU2XEVl
+ IfM9hdzOWaJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaWUhLQAKCRBVnxHm/pHO
+ 9eATB/9I4PeXTjoeXCEcZ8gzOFHC+k+q1MX2Q0KbtUm5/UeLw3/wtmHj8kFe+mC3UfGbn6hud5V
+ Ehx1diBiHlWBykDmTFJQTEkFhMdu/1Xq1h7j1osWieFndkoob+y4ThvytUW1Q1ua5awlGWooixA
+ 0yIABdgB/RikR5nLcyUZqUOvD9SuGQRn7Cihks4FXyC32sTULnvNoOvBhhMLLMwTN6ab7YWxe8u
+ k9Rzjl533ObbpeGrV14Hlvdv9d+uONSWQDHHeIVrMpMwtDVseM+fCxGwxSyP8NRsp9GvbSDF6Gq
+ dHFOzGmcl0AOu8aOTi43GLennHP5oa4w2XPj+dl6A2Pwvd2u
+X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@oss.qualcomm.com/default with auth_id=461
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
-From: Srivatsa S. Bhat <srivatsa@csail.mit.edu> Sent: Monday, January 12, 2=
-026 6:29 AM
-> Hi Michael,
->=20
-> On Sun, Jan 11, 2026 at 09:00:34AM -0800, mhkelley58@gmail.com wrote:
-> > From: Michael Kelley <mhklinux@outlook.com>
-> >
-> > Field pci_bus in struct hv_pcibus_device is unused since
-> > commit 418cb6c8e051 ("PCI: hv: Generify PCI probing"). Remove it.
-> >
->=20
-> Since that commit is several years old (2021), I was curious if this was =
-found by
-> manual inspection or if the compiler was able to flag the unused
-> variable as well.
+Hi,
 
-Code inspection. I was brushing up on how the structs defined
-in pci-hyperv.c relate to the standard Linux PCI struct pci_bus and
-struct pci_dev. Having a pointer to struct pci_bus in struct
-hv_pcibus_device makes sense, and I was a bit surprised to find
-it's not set or used. Instead, the PCI bus is always found through
-the PCI bridge.
+This series is the continuation of the series [1] that added the initial support
+for the PCIe M.2 connectors. This series extends it by adding support for Key E
+connectors. These connectors are used to connect the Wireless Connectivity
+devices such as WiFi, BT, NFC and GNSS devices to the host machine over
+interfaces such as PCIe/SDIO, USB/UART and NFC. This series adds support for
+connectors that expose PCIe interface for WiFi and UART interface for BT. Other
+interfaces are left for future improvements.
 
-Michael
+Serdev device support for BT
+============================
 
->=20
-> > No functional change.
-> >
-> > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
->=20
-> Reviewed-by: Srivatsa S. Bhat (Microsoft) <srivatsa@csail.mit.edu>
->=20
-> Regards,
-> Srivatsa
-> Microsoft Linux Systems Group
->=20
-> > ---
-> >  drivers/pci/controller/pci-hyperv.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controll=
-er/pci-hyperv.c
-> > index 1e237d3538f9..7fcba05cec30 100644
-> > --- a/drivers/pci/controller/pci-hyperv.c
-> > +++ b/drivers/pci/controller/pci-hyperv.c
-> > @@ -501,7 +501,6 @@ struct hv_pcibus_device {
-> >  	struct resource *low_mmio_res;
-> >  	struct resource *high_mmio_res;
-> >  	struct completion *survey_event;
-> > -	struct pci_bus *pci_bus;
-> >  	spinlock_t config_lock;	/* Avoid two threads writing index page */
-> >  	spinlock_t device_list_lock;	/* Protect lists below */
-> >  	void __iomem *cfg_addr;
-> > --
-> > 2.25.1
-> >
-> >
+Adding support for the PCIe interface was mostly straightforward and a lot
+similar to the previous Key M connector. But adding UART interface has proved to
+be tricky. This is mostly because of the fact UART is a non-discoverable bus,
+unlike PCIe which is discoverable. So this series relied on the PCI notifier to
+create the serdev device for UART/BT. This means the PCIe interface will be
+brought up first and after the PCIe device enumeration, the serdev device will
+be created by the pwrseq driver. This logic is necessary since the connector
+driver and DT node don't describe the device, but just the connector. So to make
+the connector interface Plug and Play, the connector driver uses the PCIe device
+ID to identify the card and creates the serdev device. This logic could be
+extended in the future to support more M.2 cards. Even if the M.2 card uses SDIO
+interface for connecting WLAN, a SDIO notifier could be added to create the
+serdev device.
+
+Open questions
+==============
+
+Though this series adds the relevant functionality for handling the M.2 Key M
+connectors, there are still a few open questions exists on the design. 
+
+1. Created a dynamic 'bluetooth' node with the compatible property matching the
+WCN7850 device and attached it to the serdev device. This allowed reusing the
+existing OF based BT driver without much modifications.
+
+2. PCIe client drivers of some M.2 WLAN cards like the Qcom QCA6390, rely on
+the PCIe device DT node to extract properties such as
+'qcom,calibration-variant', 'firmware-name', etc... For those drivers, should we
+add the PCIe DT node in the Root Port in conjunction with the Port node as
+below?
+
+pcie@0 {
+	wifi@0 {
+		compatible = "pci17cb,1103";
+		...
+		qcom,calibration-variant = "LE_X13S";
+	};
+
+	port {
+		pcie4_port0_ep: endpoint {
+			remote-endpoint = <&m2_e_pcie_ep>;
+		};
+	};
+};
+
+This will also require marking the PMU supplies optional in the relevant ath
+bindings for M.2 cards.
+
+3. Some M.2 cards require specific power up sequence like delays between
+regulator/GPIO and such. For instance, the WCN7850 card supported in this series
+requires 50ms delay between powering up an interface and driving it. I've just
+hardcoded the delay in the driver, but it is a pure hack. Since the pwrseq
+driver doesn't know anything about the device it is dealing with before powering
+it ON, how should it handle the device specific power requirements? Should we
+hardcode the device specific property in the connector node? But then, it will
+no longer become a generic M.2 connector and sort of defeats the purpose of the
+connector binding.
+
+I hope to address these questions with the help of the relevant subsystem
+maintainers and the community. 
+
+Testing
+=======
+
+This series, together with the devicetree changes [2] was tested on the
+Qualcomm X1e based Lenovo Thinkpad T14s Laptop which has the WCN7850 WLAN/BT
+1620 LGA card connected over PCIe and UART.
+
+Dependency
+==========
+
+This series is dependent on the M.2 Key M series [1] on top of v6.19-rc1.
+
+[1] https://lore.kernel.org/linux-pci/20260107-pci-m2-v5-0-8173d8a72641@oss.qualcomm.com
+[2] https://github.com/Mani-Sadhasivam/linux/commit/753033861360171f2af1fdd56e8985ff916e1ac2
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+---
+Changes in v4:
+- Switched to dynamic OF node for serdev instead of swnode and dropped all
+  swnode related patches
+- Link to v3: https://lore.kernel.org/r/20260110-pci-m2-e-v3-0-4faee7d0d5ae@oss.qualcomm.com
+
+Changes in v3:
+- Switched to swnode for the serdev device and dropped the custom
+  serdev_device_id related patches
+- Added new swnode APIs to match the swnode with existing of_device_id
+- Incorporated comments in the bindings patch
+- Dropped the UIM interface from binding since it is not clear how it should get
+  wired
+- Incorporated comments in the pwrseq driver patch
+- Splitted the pwrseq patch into two
+- Added the 1620 LGA compatible with Key E fallback based on Stephan's finding
+- Link to v2: https://lore.kernel.org/r/20251125-pci-m2-e-v2-0-32826de07cc5@oss.qualcomm.com
+
+Changes in v2:
+- Used '-' for GPIO names in the binding and removed led*-gpios properties
+- Described the endpoint nodes for port@0 and port@1 nodes
+- Added the OF graph port to the serial binding
+- Fixed the hci_qca driver to return err if devm_pwrseq_get() fails
+- Incorporated various review comments in pwrseq driver
+- Collected Ack
+- Link to v1: https://lore.kernel.org/r/20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com
+
+---
+Manivannan Sadhasivam (9):
+      serdev: Convert to_serdev_*() helpers to macros and use container_of_const()
+      serdev: Add an API to find the serdev controller associated with the devicetree node
+      serdev: Do not return -ENODEV from of_serdev_register_devices() if external connector is used
+      dt-bindings: serial: Document the graph port
+      dt-bindings: connector: Add PCIe M.2 Mechanical Key E connector
+      dt-bindings: connector: m2: Add M.2 1620 LGA soldered down connector
+      Bluetooth: hci_qca: Add M.2 Bluetooth device support using pwrseq
+      power: sequencing: pcie-m2: Add support for PCIe M.2 Key E connectors
+      power: sequencing: pcie-m2: Create serdev device for WCN7850 bluetooth
+
+ .../bindings/connector/pcie-m2-e-connector.yaml    | 161 ++++++++++++
+ .../devicetree/bindings/serial/serial.yaml         |   3 +
+ MAINTAINERS                                        |   1 +
+ drivers/bluetooth/hci_qca.c                        |   9 +
+ drivers/power/sequencing/Kconfig                   |   1 +
+ drivers/power/sequencing/pwrseq-pcie-m2.c          | 278 ++++++++++++++++++++-
+ drivers/tty/serdev/core.c                          |  25 +-
+ include/linux/serdev.h                             |  24 +-
+ 8 files changed, 482 insertions(+), 20 deletions(-)
+---
+base-commit: cb6649f6217c0331b885cf787f1d175963e2a1d2
+change-id: 20251112-pci-m2-e-94695ac9d657
+prerequisite-message-id: 20251125-pci-m2-v3-0-c528042aea47@oss.qualcomm.com
+prerequisite-patch-id: 58778d8eb97ab86008cd48fb5d28ed6cc0bbbc1b
+prerequisite-patch-id: 2dd7d793a67f59ef6e6b5137e69436896198b965
+prerequisite-patch-id: 8ccaa5fdd95e64e69cd942f93c26e89b827d0453
+prerequisite-patch-id: 3d3e1bb7959ab1e140c5024acdd8655e7a7e99ef
+
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+
+
 
