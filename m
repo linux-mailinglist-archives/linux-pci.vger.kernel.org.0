@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-44516-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44518-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5738ED13FAC
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 17:28:44 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CC88D140A8
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 17:32:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4536C30123F6
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 16:28:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9D5BA30B960E
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 16:28:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 986B7366559;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA7C9368271;
 	Mon, 12 Jan 2026 16:28:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l1jlFzrW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4nQZ1S7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C6C365A08;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75492365A0C;
 	Mon, 12 Jan 2026 16:28:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768235313; cv=none; b=CS5Q9rnh5j+23ReRfGY2DQ3p32KdNwgJoygxW7in2xckCL6pqpJRZ1Qq22jwV8lslo0o2kfHzjTOwCHVL0oqrRmPpVBdkAxxpKwuui1j98Vbx+FdXDEtXRTR22oajjKkBHUUJBwwQUqf9LiSftX0v54m6wDDdPfbDV2xp9z8HKs=
+	t=1768235313; cv=none; b=JWcSMDpuaM8AaFa233P7up1Ov1dUkkdNB0RHmMHVE96QXQwakeTHp0OdgFx1cwEdmECsLUp/Ecde5rTmi4KYA/Qk7zw6T9dRw0DmnoMLvGmeYm6wxoj1frJX9oYIh7Zuu8LIJu7WNL9NEdkCNb0jPjuszsA7O/pj7yZNNQf0t7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1768235313; c=relaxed/simple;
-	bh=VwpIUgJ7TQ6NyHLOeJDcf/38Dl2NWNEcsZHgAexS5KQ=;
+	bh=phbllhBeNk7oBieBbdMZ19g98Tr+ZxNyuZaevxor5S0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rszeTCG8rNTUTv3k74TFsOZKEv9jqQtfG/Gr4KTN18wrn47w4mlCaIymcMk9N11EykfkjebGAj6lUE6IMBlcyQYj3mPjSVCR0J2C0GfZbq8QOQSFMjlJDkdncWaBiOFQaFKc6M9k1RMNHhWAlDgWG4+X5wsyOXnelYTUqao+dUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l1jlFzrW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1ED2DC2BC86;
+	 In-Reply-To:To:Cc; b=q5PHELz/CYG+KFhiBzxNjyNtMIlfvWst3ovq6CpSuwu6AhO05/99YN5WKhbl0hC4WmNIfphc421ZrTZJsowfs0mcmYLBFjIET2YenetvojVgswwY4vupWsV36Sv3ZqfGoic9+9FRUhlQ82QeugTwxcUvrFY8Np0v/v/vTN//aas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4nQZ1S7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3B553C2BCB2;
 	Mon, 12 Jan 2026 16:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1768235313;
-	bh=VwpIUgJ7TQ6NyHLOeJDcf/38Dl2NWNEcsZHgAexS5KQ=;
+	bh=phbllhBeNk7oBieBbdMZ19g98Tr+ZxNyuZaevxor5S0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=l1jlFzrWXiR+bPz/tAoas97NLT3Sb/mzv/cNexBpkyN935yKgZXrwyX5hcKRvRWjW
-	 /7jdusQk9J3KQGxEtdTLD5ZSske7arq9+Iu5Ch8DZj9lY8up+xxNq1rIUNlri/FgCn
-	 3vOXtBLeIfa3f4t8wxrsioZZcaZekECdmbd9t5rJ1/20S/t7yEmc1wtG3xnPqgLKor
-	 4y57st7Z9mpvOpEGeY57j6kcJpyP2SRV5sPfInfvcbU/XQPCatGtwMUBAwXKGa7kPm
-	 AOSZzGf0ziGPBDfNzg9l346zshWCwOqdx4ULtHAja92RflyzlMgfhNeu7gcUjVvC48
-	 OZouoGi8Vld1A==
+	b=F4nQZ1S78CcMZWdW1XgLQGl1teVUKpAnABs9/uUWl8FS/su+2V/Un2fforQvWfTmp
+	 YIjDhF79H+ThwzIu4IzuDcLu+9eLlKM76n4HYP5Uh6LCwawyfVFfIPbBrgDuOJMQds
+	 fbPBdlytTcyrOWBfesgw2LBrxa+qQoWQbmYqBf2S1mAzxmB3Rd9+le6ITiyXHE+N8V
+	 9tb7YVVp5LrUSobxjIi/vDulZAQtTSOOi/XumU/eHmdt2kWd++646HMidlojuF0C4q
+	 lf/dALibwLNezGpjo5Cl9gORvSb0zEWUBHOu/xC/3LHIkfFYoOEfWao7mFMxs5hhOL
+	 0PNDYYB3IN7Vg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11230C9EC9D;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B88D26D97;
 	Mon, 12 Jan 2026 16:28:33 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Mon, 12 Jan 2026 21:56:01 +0530
-Subject: [PATCH v4 2/9] serdev: Add an API to find the serdev controller
- associated with the devicetree node
+Date: Mon, 12 Jan 2026 21:56:02 +0530
+Subject: [PATCH v4 3/9] serdev: Do not return -ENODEV from
+ of_serdev_register_devices() if external connector is used
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260112-pci-m2-e-v4-2-eff84d2c6d26@oss.qualcomm.com>
+Message-Id: <20260112-pci-m2-e-v4-3-eff84d2c6d26@oss.qualcomm.com>
 References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
 In-Reply-To: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
 To: Rob Herring <robh@kernel.org>, 
@@ -78,18 +78,19 @@ Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
  Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
  linux-acpi@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1955;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1366;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=J1VmrZOJOQw4R6fDrVVe/0GgAe/UzN5xgoimqww9n5Q=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpZSEtqgiwm1mkQDaD/Wb8/ZXVgx6a+CPfmCw+6
- HFABhElf66JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaWUhLQAKCRBVnxHm/pHO
- 9eMPCACobFxxteG5pdzS0luxGgzCXNtDCi5oiEXMX32Vb8bWtrZ6t6eXEP/LLe4esV0w1AiTKKk
- 6s5b9O2HMWDmQgjJOMSQl1ee7bmPg9QkbGIJnbs4Bhz+jCEGUAt4x3aNRE2Oi9CGeN37cG4HsB8
- UK+Wd4Y2JHpUYg/Pyt85++38RT6kG0/RTLg0apGiKZf0jCGUbAu9+1aw2yReUTLJ5H1HKNYjxHI
- HPuc55LD9SuUMtuAbvxzkxj9XNeO+KgY5yLfxprgHSmvlGkNxbTWmxOPCZ4hMQ9sipJvTCu5yWd
- 04yiZzfEKcRICb2XsaVVDdU/yohakOQ8Bjl6pY2KGzqw6lxD
+ bh=70A6WG9+LyiVcQGDZXLPxALHM/UGaFUvvsHfTehdZzg=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpZSEtRw78QNqqJdo870z1l/BYbYj/u0Xo8r9YZ
+ n37jmcGrM+JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaWUhLQAKCRBVnxHm/pHO
+ 9XR+B/0VHC0628+hDHpd19trCYGlXPgy6Z8cGBNjn01kj0yUXk6jb/+LeCFJ2G9lQb/kax+79eM
+ AXWKVqINoOT5dQbYrlX+VTPS9X6V6SDDJ8txyXwch2RDN01oFF9zNYRj2XFiweXK4TLvcTeEBoj
+ lvvN0KMMMNvn2na1hauUv9k6EJhLjvY0R8OMW5h1fElKq7CbQkWWYppz6RjOV+PCcEI0dk/Bf/q
+ JY0Gyn0ro6S7fq+GL39z27cRhl7DlIjVZBLMlj76Fdue8Apoh7ZUpZd0gU6rqRJNDrNcrm1izz6
+ MrZl4F4astYmm88mZceGrs9P9ar2MV8krQPH3LbL7pvBZLCp
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -99,60 +100,44 @@ Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-Add of_find_serdev_controller_by_node() API to find the serdev controller
-device associated with the devicetree node.
+If an external connector like M.2 is connected to the serdev controller
+in DT, then the serdev devices may be created dynamically by the connector
+driver. So do not return -ENODEV from of_serdev_register_devices() if the
+static nodes are not found and the graph node is used.
 
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
- drivers/tty/serdev/core.c | 16 ++++++++++++++++
- include/linux/serdev.h    |  9 +++++++++
- 2 files changed, 25 insertions(+)
+ drivers/tty/serdev/core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-index b33e708cb245..25382c2d63e6 100644
+index 25382c2d63e6..f8093b606dda 100644
 --- a/drivers/tty/serdev/core.c
 +++ b/drivers/tty/serdev/core.c
-@@ -504,6 +504,22 @@ struct serdev_controller *serdev_controller_alloc(struct device *host,
- }
- EXPORT_SYMBOL_GPL(serdev_controller_alloc);
+@@ -12,6 +12,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_graph.h>
+ #include <linux/of_device.h>
+ #include <linux/pm_domain.h>
+ #include <linux/pm_runtime.h>
+@@ -548,7 +549,13 @@ static int of_serdev_register_devices(struct serdev_controller *ctrl)
+ 		} else
+ 			found = true;
+ 	}
+-	if (!found)
++
++	/*
++	 * When the serdev controller is connected to an external connector like
++	 * M.2 in DT, then the serdev devices may be created dynamically by the
++	 * connector driver.
++	 */
++	if (!found && !of_graph_is_present(ctrl->dev.of_node))
+ 		return -ENODEV;
  
-+/**
-+ * of_find_serdev_controller_by_node() - Find the serdev controller associated
-+ *					 with the devicetree node
-+ * @node:	Devicetree node
-+ *
-+ * Return: Pointer to the serdev controller associated with the node. NULL if
-+ * the controller is not found.
-+ */
-+struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
-+{
-+	struct device *dev = bus_find_device_by_of_node(&serdev_bus_type, node);
-+
-+	return (dev && dev->type == &serdev_ctrl_type) ? to_serdev_controller(dev) : NULL;
-+}
-+EXPORT_SYMBOL_GPL(of_find_serdev_controller_by_node);
-+
- static int of_serdev_register_devices(struct serdev_controller *ctrl)
- {
- 	struct device_node *node;
-diff --git a/include/linux/serdev.h b/include/linux/serdev.h
-index ecde0ad3e248..db9bfaba0662 100644
---- a/include/linux/serdev.h
-+++ b/include/linux/serdev.h
-@@ -333,4 +333,13 @@ static inline bool serdev_acpi_get_uart_resource(struct acpi_resource *ares,
- }
- #endif /* CONFIG_ACPI */
- 
-+#ifdef CONFIG_OF
-+struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node);
-+#else
-+struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
-+{
-+	return NULL;
-+}
-+#endif /* CONFIG_OF */
-+
- #endif /*_LINUX_SERDEV_H */
+ 	return 0;
 
 -- 
 2.48.1
