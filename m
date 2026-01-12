@@ -1,137 +1,115 @@
-Return-Path: <linux-pci+bounces-44474-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44475-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF6D5D10FF7
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 08:56:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 32176D11066
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 09:01:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CEB0D3032112
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 07:56:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8171730E56B0
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 07:58:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C761339B30;
-	Mon, 12 Jan 2026 07:56:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 731F033AD8D;
+	Mon, 12 Jan 2026 07:58:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DChkeAXD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KKFOd+CI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB1D339878;
-	Mon, 12 Jan 2026 07:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE8A338586;
+	Mon, 12 Jan 2026 07:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768204577; cv=none; b=HXpOYpTgmD2VPJqcKcDIJEizLd4px8x51/xfOJI80LoQkmfDFGHEWRICjxqhQhMYoNh6dACKCOj7uw24QsLXtY2mvOWD7Pr/rBPalE8aUxe721hYc/2V89ROVmKF/szEeIDOllswsYKMP0RrBGhYiyIYWpefXA68t2oKZTmdyaQ=
+	t=1768204728; cv=none; b=W2Z0rYAuxT6q198eJh9QhbKM5W60BMlz5rNUEFOSfUMAvvg5mUM/ND8JZIH6zC0PRWPLmC7v5njI2j4z6xqyigQBnfEftIleWaJCK6HeZtl4mr3stwiLTR7fbR+o2uePoe11ZoW9/oB2m7uVGSSVsKyXN/YqymYGB4i2/xYLpDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768204577; c=relaxed/simple;
-	bh=aucdtIlfUEGPYC2FoDFyRT9nZudmUN6PptQvFCOe7/s=;
+	s=arc-20240116; t=1768204728; c=relaxed/simple;
+	bh=0LZKsjkXfHySOPGTc0+a4TfkOx3ctR7uJHuXAFkeim4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EVgQK+wIPVn+bdH+GUC/VzXTd6M1dFF0XlxX0i12ITD7SEkcF+lSF38TiVrsTlxunY7Me/jkiwhEevXoEgPnChCVz91ppD4G3u/9wd2JOkMj/df26P8GkTaa41Q4NmxuoUPf9XUeob2LwfXJh+qVMnxMw0R2if0v6GCFUwafgM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DChkeAXD; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768204577; x=1799740577;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aucdtIlfUEGPYC2FoDFyRT9nZudmUN6PptQvFCOe7/s=;
-  b=DChkeAXDI4gwl9IF5eCIlmS+ksbPXSnZmW5NttFGUqiyhCIdH5Te/iiI
-   t3GR5ttMEfKuvxnHws+mfw8oDr/WdAPk7JqQyj8VmfSMI2fN254FkdfR4
-   2G7gVa2eazj7Q45IjwzSmcrrF9b4L5LbiROg5vYjufORW/3jjqy5zMzpY
-   87ZemzfcVp8LphiB9XOyLWvk9uTldzFsEtb8wXfS/Zl+39OEgf+1H2djX
-   IraY572x5EaVminMefPx8PLo5TECCpdc0hC7q0gA2NxQ4kJ0hjKSepyGP
-   F2/hkj5O9u5c1fP9RXI7TVvxGQcc4IrCwJpn2L08bXpBpt2QuviOCPDz2
-   w==;
-X-CSE-ConnectionGUID: eb8KIlGyTC24tKfJsiYZdA==
-X-CSE-MsgGUID: +W32EXieQmGxa/ypDYpe3g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11668"; a="80195917"
-X-IronPort-AV: E=Sophos;i="6.21,219,1763452800"; 
-   d="scan'208";a="80195917"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2026 23:56:16 -0800
-X-CSE-ConnectionGUID: 3Y+NqyHcSW2DmuxXKsVr3w==
-X-CSE-MsgGUID: vYYtp5HLTaGm6EZYZ0y/JA==
-X-ExtLoop1: 1
-Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.37])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2026 23:56:09 -0800
-Date: Mon, 12 Jan 2026 09:56:06 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: manivannan.sadhasivam@oss.qualcomm.com
-Cc: Rob Herring <robh@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	linux-acpi@vger.kernel.org, Sui Jingfeng <sui.jingfeng@linux.dev>
-Subject: Re: [PATCH v3 03/14] software node: Implement device_get_match_data
- fwnode callback
-Message-ID: <aWSpFk9z0zpyKjr6@smile.fi.intel.com>
-References: <20260110-pci-m2-e-v3-0-4faee7d0d5ae@oss.qualcomm.com>
- <20260110-pci-m2-e-v3-3-4faee7d0d5ae@oss.qualcomm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=IhGwyFIXa89kfoWntZS9U+PgAwHjOn9ug7waCxYDI8j6ysRZOmFjmyQ1t3k6WfCC4nvl/u4aaU37MA8b+3x8slLIyjdjM58A63wSDdCj8Ud86+rLg2dU8dI/D1UOz7fY9qbBFzBruhS2+vgg7i2wRKWd2y1b6ks2UYt3gYl/EPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KKFOd+CI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51FE9C116D0;
+	Mon, 12 Jan 2026 07:58:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768204728;
+	bh=0LZKsjkXfHySOPGTc0+a4TfkOx3ctR7uJHuXAFkeim4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KKFOd+CIasEo8xokhexO3iZF3L802utZN2eUuCQr4Jffj+DnW3PyHPo+R5iCKV8AM
+	 XtuPtsWfiz0ler9bUvFzbAquPGAXQ9dDeFoShatXvJ5x9/gQKgmyPRDimQ6CMbUurG
+	 bAmtibAqXswRG0EMfJZZ9damkJ0zhrCTUESMKeneUHLh79lNAwLPFCK8jaGXubbEOo
+	 ObdygZg6/N52gViFE6cZVu/xFg5uC4gGA5wtFhpoYMekcG3sknaflxjr7Gf9AqxlIC
+	 CoNp2UFwH02CujLFS68m+CXlXBNvVG7/5+yuXAP7iw5JnxYFLgJfxSsh1+y9Pa5YOX
+	 IHk35sz6krzyA==
+Date: Mon, 12 Jan 2026 13:28:38 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, 
+	manivannan.sadhasivam@oss.qualcomm.com, Bjorn Helgaas <bhelgaas@google.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	linux-pm@vger.kernel.org, linux-ide@vger.kernel.org
+Subject: Re: [PATCH v5 5/5] power: sequencing: Add the Power Sequencing
+ driver for the PCIe M.2 connectors
+Message-ID: <ix7mu6twdd35clxyglgcwilwn3o3u5jvkmf6wwyz7zwgsscbc5@awwwnouy4pyh>
+References: <20260107-pci-m2-v5-0-8173d8a72641@oss.qualcomm.com>
+ <20260107-pci-m2-v5-5-8173d8a72641@oss.qualcomm.com>
+ <CAMRc=Md9TQiSX-gFa5q--JgaGyQ2ky4mOwjSpdxHhvHAj-X5Qw@mail.gmail.com>
+ <xd5uvfqcx3vcbcqerji556ejstmgvtci4chfzxclkzhizqmqxa@xusf2skt6xhh>
+ <375ea14c-b089-4ae4-9827-5c19139f69c4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260110-pci-m2-e-v3-3-4faee7d0d5ae@oss.qualcomm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <375ea14c-b089-4ae4-9827-5c19139f69c4@kernel.org>
 
-On Sat, Jan 10, 2026 at 12:26:21PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-
-> Because the software node backend of the fwnode API framework lacks an
-> implementation for the .device_get_match_data function callback.
-
-Maybe this is done on purpose. Have you thought about this aspect?
-
-> This makes it difficult to use(and/or test) a few drivers that originates
-> from DT world on the non-DT platform.
-
-How difficult? DSA implementation went to the way of taking DT overlay
-approach. Why that one can't be applied here?
-
-> Implement the .device_get_match_data fwnode callback, which helps to keep
-> the three backends of the fwnode API aligned as much as possible. This is
-> also a fundamental step to make a few drivers OF-independent truely
-> possible.
+On Fri, Jan 09, 2026 at 10:02:10AM +0100, Damien Le Moal wrote:
+> On 1/9/26 07:02, Manivannan Sadhasivam wrote:
+> > On Thu, Jan 08, 2026 at 01:15:12PM +0100, Bartosz Golaszewski wrote:
+> >> On Wed, Jan 7, 2026 at 3:11 PM Manivannan Sadhasivam via B4 Relay
+> >> <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> wrote:
+> >>>
+> >>> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> >>>
+> >>> This driver is used to control the PCIe M.2 connectors of different
+> >>> Mechanical Keys attached to the host machines and supporting different
+> >>> interfaces like PCIe/SATA, USB/UART etc...
+> >>>
+> >>> Currently, this driver supports only the Mechanical Key M connectors with
+> >>> PCIe interface. The driver also only supports driving the mandatory 3.3v
+> >>> and optional 1.8v power supplies. The optional signals of the Key M
+> >>> connectors are not currently supported.
+> >>>
+> >>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> >>
+> >> This looks good to me, though there are some nits I may fix when applying.
+> >>
+> >> I'll pick it up for v7.0 once the bindings are reviewed.
+> >>
+> > 
+> > Ok. I'm expecting patch 1 to go through ATA tree, patch 2 through DT, and
+> > patches 3,4 through PCI tree.
 > 
-> Device drivers or platform setup codes are expected to provide a software
-> node string property, named as "compatible". At this moment, the value of
-> this string property is being used to match against the compatible entries
-> in the of_device_id table. It can be extended in the future though.
+> Patch 1 seems to be completely unrelated to the power changes, so please send it
+> to the ata list separately. It is otherwise very complicated and confusing for
+> everyone to have patches from one series being applied through multiple trees.
+> 
 
-I really do not want to see this patch without very good justification
-(note, there were at least two attempts in the past to add this stuff
- and no-one was merged, have you studied those cases?).
+Many maintainers often prefer patches in a single series for the complete
+picture. That's why I clubbed all of them in a single series. But I can send the
+ATA binding separately also (once it got reviewed by Rob).
+
+Btw, with b4, it is no longer a hassle to apply individual patches from a single
+series.
+
+- Mani
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+மணிவண்ணன் சதாசிவம்
 
