@@ -1,65 +1,126 @@
-Return-Path: <linux-pci+bounces-44529-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44530-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AA7FD1425E
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 17:47:20 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34EBBD142A9
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 17:50:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8C909307C716
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 16:43:32 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A7BDF3002163
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 16:50:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE9E536998E;
-	Mon, 12 Jan 2026 16:43:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FD87352C29;
+	Mon, 12 Jan 2026 16:50:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQemu9lb"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Xh28jBuC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F082EA15C;
-	Mon, 12 Jan 2026 16:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88C536CDEE
+	for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 16:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768236210; cv=none; b=piWqC5+AOJhTv8vXoTAjOr6ckxT81mInOjrHG6GM3yIK7TaxY1XlutfR4ecW5JFf1DVbK7beu9UaoX3WYxm/p4DNUv5T/kVdOBPKSss+9PDA5UtYwK58OeDTGH4RMNjXzYzJjUCmb1qJxrFE+cCS4Inf97AT1RqL1IziIwISSes=
+	t=1768236607; cv=none; b=SpvpCDSQ+vFxf9Gd/tqdF4Du1bIRJWPzdaheHSOH2VzWYldN/rTnCGxdPNM/9zQuNGWUZmXa0QwvW/xJmsIcWIHF9JEJyBx0/mgWZPDZaNBxObxSBNco9h3ZhgSum1pOuciWAD3yAKrGoxKAbMU5onYHJy347kV/1+I38fCi2Ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768236210; c=relaxed/simple;
-	bh=lFgctjtutGQXOiqTT6uzDo7xxjSfF86bzNybiJFqlFs=;
+	s=arc-20240116; t=1768236607; c=relaxed/simple;
+	bh=tqjQya8iav+U2F1Y8sTA4RoO8FG8N5ZbxkqeKQhKHMk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TqERfB7Ihs2lPnYlrc843qZm2YPpErJJBQDKzd9t9rYn1GO+pS/js2W61G8oDdRLYGXZOS/5RtkaihupD40Y/6CmrGjA9b5Q3SzT0z1GKrEyNYTNpz0gN27DNVgNqFTZEi8LB9VRktjxNJvL9jC/06NPjsA/z7MxD9Br2pyGycM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQemu9lb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE18C116D0;
-	Mon, 12 Jan 2026 16:43:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768236209;
-	bh=lFgctjtutGQXOiqTT6uzDo7xxjSfF86bzNybiJFqlFs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KQemu9lbPmlYlUdtCfab0b3qxZiqjkrWH1seRGrIAxCggA9PopzCct9Mh4DzyzYTx
-	 OepzY7Vybccjz7N141sngTsDVA35C3gqQ5wObndsc7Qskcw0zYDbxoezbrEfodA86z
-	 jmDo/5g3u7XxNhxgeh9FZ7x+GthsibsbLsw+CLJ+bJIN9izFhGzwfQpcywuu++wsnF
-	 i6Elmuk5du1aosfR0RdykwcjBsKiUaG+lQQMhDQYmwfAmqVxHWfKnvhW4k41V18qQ3
-	 u6qtf+z+VLd1ebCDg1TuxOBbYHIRDvgs47m8AEqbDwo/QU0KxGJDga6uPBbSWRhSyA
-	 h2zFd7sNTP96w==
-Date: Mon, 12 Jan 2026 22:13:16 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: manivannan.sadhasivam@oss.qualcomm.com
-Cc: Rob Herring <robh@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v3 03/14] software node: Implement device_get_match_data
- fwnode callback
-Message-ID: <jo4flkszwuy6bxmjn55jtprtj567adlisaqfqgrqwbigfmvd4e@zp3kllj2y4fh>
-References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
- <20260112-pci-m2-e-v4-9-eff84d2c6d26@oss.qualcomm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=QBJFbynbuJQMPrs+c8qxiv8jax59ftOHfhiDwhwpb9WZsCRMh/+tvufQVtUadq/nqBP4ChAJ7wvmeWJGZ+bx8+Hv13vxOg5nlfE32WgNluM2sodzRu2/U29mFlySh4eC13r+xge016RSZFtcdPezJtifYZlV+TieLFFNZD/biLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Xh28jBuC; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4ffbea7fdf1so33029301cf.1
+        for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 08:50:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1768236603; x=1768841403; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=eAxh70JY3ShLNfnDxBWsRZWpalCHcaRfsM5YzKZ+W9w=;
+        b=Xh28jBuCzSmjNImJHPipMhJ0Ay7bk672VmA9OuRlRS5xHW5yOjBQoqGrHp/AwF81rB
+         U4wbU+uoNLx2hWjU7U4zq3tWfLHjExnBD0S2eQKaomwC1k6Re30nBI8pSTT4ZUFwDXtw
+         NB+3sqspu7NHXnhnH1vGI97i4pjAI57Tck8NM8TbREST9HEQAuFfCqITWgCnp0IvR9fK
+         +ZdAosDXqrYrMVZd4ILWmB9i07jlSbP6DyIB9yxkaOjGqB4aGN22b/QWCSygCzJpyPQe
+         W6fEtrLRoKz3QtzuKuqh5mJBRVgPzcZzMRv1SZTKdpfxUsRxAxwrExm1lW+TsFUPDzah
+         L4DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768236603; x=1768841403;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eAxh70JY3ShLNfnDxBWsRZWpalCHcaRfsM5YzKZ+W9w=;
+        b=tV7xsdIpKGNn0/m51mR3WcN2JkHPseV3hSPj5r0YGkU/pX6yMMXwAhFPFP6+QYvn6o
+         8f0ua7TqkI8drZdUlhMepEED2m4R89sXwUyfWZjmB5m+JvvUWs4/h5mk1E3nXamllOFX
+         uEXCp/Va/OGvmbDQOY56jU29qhxD/5l461QBvJY2CIKEX9F9WT0MCfBriNpuApeV37Es
+         GQFrp8YGRU6JZBj9SIK+qwpp94qxjkts6ZXMlkVUk/1g4duOmqsqQYQClZW1GnzBVYXk
+         myhEUZ1LcbBEsiuEIE3NA3Jcf5s5JJmZYT+zqL1o4+vQ7Z2eVArw/SjRAPPzEnRxbfPR
+         MEeA==
+X-Forwarded-Encrypted: i=1; AJvYcCXorvjX85ZQsmv3hR5veiLImGwzFkdAga9uYdiK3jc5xZ7L20BKODFwaoh8T1zDkS2bWC+Wprx/mt0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztwF96LPfZBLRKLxF9ENoYLVobmP2vxb/E/VJaepPKz3PeOnK7
+	u9bimWAOT8d8EY/TYOQVlyMo28aPCc8JaZP0mSN8u+gFjY1poamPDRuxk2XRozbjT6I=
+X-Gm-Gg: AY/fxX7J/RYOSormDzwRd/EpIL/gyS1VMyFCn7ffhsW9WnraXc7Gzn71Tz1rORPs4Lg
+	JeALSgJFpbHn5j3LuRm1EnaMNDSJV4ucrT4PITGA1PNw4uSjd3vzsSysW50MKdIIGficV7R0MJW
+	w9MLlodoB6pcobP6Hpdm6k8/7d3CQ9kkbTOvYB8RGb+yiyGGnJnGOwjZchs6BdwK7QFVqpbKICR
+	ZLlYbQowBpkcZH8hVli7H8ZpvaAVi2nO2eWxZ3AaIBqYF3H3VnH9V6MTq+KaunIHzyZLbsNUYP1
+	Rj7XYgPVj0oHePkVhainNtIuGHN1LCtBlvBfBWtxAa5u+MQE8Weca0V7+eAVUkfaicFuCM2XZQ/
+	nSuJKHQNdDRJYfu7BolqRX9nhUFHzLEyxAD7+xoIkLuOW/9E0pmIffDTcaaud0j0XOUCOaOmqut
+	qPmVulL7GhwUAG661yQG0RDVoFFv8OI7LpYf2NQYEpT25wjwbTQ1+i93yHIte63MeW5JE=
+X-Google-Smtp-Source: AGHT+IE/A98Uf8f6ySXPvh9xamBlLANpUoYS4iXttzp8YDJn905I/7mcjcPxPkNVMXbRPnmf8UaJPg==
+X-Received: by 2002:ac8:6f1a:0:b0:4ee:208a:fbec with SMTP id d75a77b69052e-4ffb4a1ed32mr255276771cf.66.1768236602551;
+        Mon, 12 Jan 2026 08:50:02 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89077253218sm139285396d6.43.2026.01.12.08.50.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jan 2026 08:50:02 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1vfL7B-00000003RcK-2R9k;
+	Mon, 12 Jan 2026 12:50:01 -0400
+Date: Mon, 12 Jan 2026 12:50:01 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Zi Yan <ziy@nvidia.com>
+Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
+	Francois Dugast <francois.dugast@intel.com>,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	Matthew Brost <matthew.brost@intel.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Felix Kuehling <Felix.Kuehling@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	David Hildenbrand <david@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Alistair Popple <apopple@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-pci@vger.kernel.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
+ callback
+Message-ID: <20260112165001.GG745888@ziepe.ca>
+References: <20260111205820.830410-1-francois.dugast@intel.com>
+ <20260111205820.830410-2-francois.dugast@intel.com>
+ <aWQlsyIVVGpCvB3y@casper.infradead.org>
+ <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
+ <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
+ <20260112134510.GC745888@ziepe.ca>
+ <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,242 +130,55 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260112-pci-m2-e-v4-9-eff84d2c6d26@oss.qualcomm.com>
+In-Reply-To: <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
 
-On Mon, Jan 12, 2026 at 09:56:08PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+On Mon, Jan 12, 2026 at 11:31:04AM -0500, Zi Yan wrote:
+> > folio_free()
+> >
+> > 1) Allocator finds free memory
+> > 2) zone_device_page_init() allocates the memory and makes refcount=1
+> > 3) __folio_put() knows the recount 0.
+> > 4) free_zone_device_folio() calls folio_free(), but it doesn't
+> >    actually need to undo prep_compound_page() because *NOTHING* can
+> >    use the page pointer at this point.
+> > 5) Driver puts the memory back into the allocator and now #1 can
+> >    happen. It knows how much memory to put back because folio->order
+> >    is valid from #2
+> > 6) #1 happens again, then #2 happens again and the folio is in the
+> >    right state for use. The successor #2 fully undoes the work of the
+> >    predecessor #2.
 > 
-> For supporting bluetooth over the non-discoverable UART interface of
-> WCN7850, create the serdev device after enumerating the PCIe interface.
-> This is mandatory since the device ID is only known after the PCIe
-> enumeration and the ID is used for creating the serdev device.
-> 
-> Since by default there is no OF or ACPI node for the created serdev,
-> create a dynamic OF 'bluetooth' node with the 'compatible' property and
-> attach it to the serdev device. This will allow the serdev device to bind
-> to the existing bluetooth driver.
-> 
+> But how can a successor #2 undo the work if the second #1 only allocates
+> half of the original folio? For example, an order-9 at PFN 0 is
+> allocated and freed, then an order-8 at PFN 0 is allocated and another
+> order-8 at PFN 256 is allocated. How can two #2s undo the same order-9
+> without corrupting each other’s data?
 
-Missed "select OF_DYNAMIC" in Kconfig...
+What do you mean? The fundamental rule is you can't read the folio or
+the order outside folio_free once it's refcount reaches 0.
 
-- Mani
+So the successor #2 will write updated heads and order to the order 8
+pages at PFN 0 and the ones starting at PFN 256 will remain with
+garbage.
 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> ---
->  drivers/power/sequencing/pwrseq-pcie-m2.c | 170 +++++++++++++++++++++++++++++-
->  1 file changed, 169 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/power/sequencing/pwrseq-pcie-m2.c b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> index 4b85a40d7692..5f9232e6c700 100644
-> --- a/drivers/power/sequencing/pwrseq-pcie-m2.c
-> +++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> @@ -17,6 +17,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pwrseq/provider.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/serdev.h>
->  #include <linux/slab.h>
->  
->  struct pwrseq_pcie_m2_pdata {
-> @@ -32,6 +33,9 @@ struct pwrseq_pcie_m2_ctx {
->  	struct gpio_desc *w_disable1_gpio;
->  	struct gpio_desc *w_disable2_gpio;
->  	struct device *dev;
-> +	struct serdev_device *serdev;
-> +	struct notifier_block nb;
-> +	struct of_changeset *ocs;
->  };
->  
->  static int pwrseq_pcie_m2_vregs_enable(struct pwrseq_device *pwrseq)
-> @@ -178,9 +182,169 @@ static void pwrseq_pcie_free_resources(void *data)
->  {
->  	struct pwrseq_pcie_m2_ctx *ctx = data;
->  
-> +	serdev_device_remove(ctx->serdev);
-> +	of_changeset_revert(ctx->ocs);
-> +	of_changeset_destroy(ctx->ocs);
-> +	bus_unregister_notifier(&pci_bus_type, &ctx->nb);
->  	regulator_bulk_free(ctx->num_vregs, ctx->regs);
->  }
->  
-> +static int pwrseq_m2_pcie_create_bt_node(struct pwrseq_pcie_m2_ctx *ctx,
-> +					struct device_node *parent)
-> +{
-> +	struct device *dev = ctx->dev;
-> +	struct device_node *np;
-> +	int ret;
-> +
-> +	ctx->ocs = devm_kzalloc(dev, sizeof(*ctx->ocs), GFP_KERNEL);
-> +	if (!ctx->ocs)
-> +		return -ENOMEM;
-> +
-> +	of_changeset_init(ctx->ocs);
-> +
-> +	np = of_changeset_create_node(ctx->ocs, parent, "bluetooth");
-> +	if (!np) {
-> +		dev_err(dev, "Failed to create bluetooth node\n");
-> +		ret = -ENODEV;
-> +		goto err_destroy_changeset;
-> +	}
-> +
-> +	ret = of_changeset_add_prop_string(ctx->ocs, np, "compatible", "qcom,wcn7850-bt");
-> +	if (ret) {
-> +		dev_err(dev, "Failed to add bluetooth compatible: %d\n", ret);
-> +		goto err_destroy_changeset;
-> +	}
-> +
-> +	ret = of_changeset_apply(ctx->ocs);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to apply changeset: %d\n", ret);
-> +		goto err_destroy_changeset;
-> +	}
-> +
-> +	ret = device_add_of_node(&ctx->serdev->dev, np);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to add OF node: %d\n", ret);
-> +		goto err_revert_changeset;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_revert_changeset:
-> +	of_changeset_revert(ctx->ocs);
-> +err_destroy_changeset:
-> +	of_changeset_destroy(ctx->ocs);
-> +
-> +	return ret;
-> +}
-> +
-> +static int pwrseq_m2_pcie_notify(struct notifier_block *nb, unsigned long action,
-> +			      void *data)
-> +{
-> +	struct pwrseq_pcie_m2_ctx *ctx = container_of(nb, struct pwrseq_pcie_m2_ctx, nb);
-> +	struct pci_dev *pdev = to_pci_dev(data);
-> +	struct serdev_controller *serdev_ctrl;
-> +	struct device *dev = ctx->dev;
-> +	struct device_node *pci_parent;
-> +	int ret;
-> +
-> +	/*
-> +	 * Check whether the PCI device is associated with this M.2 connector or
-> +	 * not, by comparing the OF node of the PCI device parent and the Port 0
-> +	 * (PCIe) remote node parent OF node.
-> +	 */
-> +	pci_parent = of_graph_get_remote_node(dev_of_node(ctx->dev), 0, 0);
-> +	if (!pci_parent || (pci_parent != pdev->dev.parent->of_node)) {
-> +		of_node_put(pci_parent);
-> +		return NOTIFY_DONE;
-> +	}
-> +	of_node_put(pci_parent);
-> +
-> +	switch (action) {
-> +	case BUS_NOTIFY_ADD_DEVICE:
-> +		/* Create serdev device for WCN7850 */
-> +		if (pdev->vendor == PCI_VENDOR_ID_QCOM && pdev->device == 0x1107) {
-> +			struct device_node *serdev_parent __free(device_node) =
-> +				of_graph_get_remote_node(dev_of_node(ctx->dev), 1, 1);
-> +			if (!serdev_parent)
-> +				return NOTIFY_DONE;
-> +
-> +			serdev_ctrl = of_find_serdev_controller_by_node(serdev_parent);
-> +			if (!serdev_ctrl)
-> +				return NOTIFY_DONE;
-> +
-> +			ctx->serdev = serdev_device_alloc(serdev_ctrl);
-> +			if (!ctx->serdev)
-> +				return NOTIFY_BAD;
-> +
-> +			ret = pwrseq_m2_pcie_create_bt_node(ctx, serdev_parent);
-> +			if (ret) {
-> +				serdev_device_put(ctx->serdev);
-> +				return notifier_from_errno(ret);
-> +			}
-> +
-> +			ret = serdev_device_add(ctx->serdev);
-> +			if (ret) {
-> +				dev_err(dev, "Failed to add serdev for WCN7850: %d\n", ret);
-> +				of_changeset_revert(ctx->ocs);
-> +				of_changeset_destroy(ctx->ocs);
-> +				serdev_device_put(ctx->serdev);
-> +				return notifier_from_errno(ret);
-> +			}
-> +		}
-> +		break;
-> +	case BUS_NOTIFY_REMOVED_DEVICE:
-> +		/* Destroy serdev device for WCN7850 */
-> +		if (pdev->vendor == PCI_VENDOR_ID_QCOM && pdev->device == 0x1107) {
-> +			serdev_device_remove(ctx->serdev);
-> +			of_changeset_revert(ctx->ocs);
-> +			of_changeset_destroy(ctx->ocs);
-> +		}
-> +		break;
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static bool pwrseq_pcie_m2_check_remote_node(struct device *dev, u8 port, u8 endpoint,
-> +					     const char *node)
-> +{
-> +	struct device_node *remote __free(device_node) =
-> +			of_graph_get_remote_node(dev_of_node(dev), port, endpoint);
-> +
-> +	if (remote && of_node_name_eq(remote, node))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +/*
-> + * If the connector exposes a non-discoverable bus like UART, the respective
-> + * protocol device needs to be created manually with the help of the notifier
-> + * of the discoverable bus like PCIe.
-> + */
-> +static int pwrseq_pcie_m2_register_notifier(struct pwrseq_pcie_m2_ctx *ctx, struct device *dev)
-> +{
-> +	int ret;
-> +
-> +	/*
-> +	 * Register a PCI notifier for Key E connector that has PCIe as Port
-> +	 * 0/Endpoint 0 interface and Serial as Port 1/Endpoint 1 interface.
-> +	 */
-> +	if (pwrseq_pcie_m2_check_remote_node(dev, 1, 1, "serial")) {
-> +		if (pwrseq_pcie_m2_check_remote_node(dev, 0, 0, "pcie")) {
-> +			ctx->dev = dev;
-> +			ctx->nb.notifier_call = pwrseq_m2_pcie_notify;
-> +			ret = bus_register_notifier(&pci_bus_type, &ctx->nb);
-> +			if (ret) {
-> +				dev_err_probe(dev, ret, "Failed to register notifier for serdev\n");
-> +				return ret;
-> +			}
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -235,7 +399,11 @@ static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
->  		return dev_err_probe(dev, PTR_ERR(ctx->pwrseq),
->  				     "Failed to register the power sequencer\n");
->  
-> -	return 0;
-> +	/*
-> +	 * Register a notifier for creating protocol devices for
-> +	 * non-discoverable busses like UART.
-> +	 */
-> +	return pwrseq_pcie_m2_register_notifier(ctx, dev);
->  }
->  
->  static const struct of_device_id pwrseq_pcie_m2_of_match[] = {
-> 
-> -- 
-> 2.48.1
-> 
-> 
+This is OK because nothing is allowed to read them as their refcount
+is 0.
 
--- 
-மணிவண்ணன் சதாசிவம்
+If later PFN256 is allocated then it will get updated head and order
+at the same time it's refcount becomes 1.
+
+There is corruption and they don't corrupt each other's data.
+
+> > If the allocator is using the struct page memory then step #5 should
+> > also clean up the struct page with the allocator data before returning
+> > it to the allocator.
+> 
+> Do you mean ->folio_free() callback should undo prep_compound_page()
+> instead?
+
+I wouldn't say undo, I was very careful to say it needs to get the
+struct page memory into a state that the allocator algorithm expects,
+whatever that means.
+
+Jason
 
