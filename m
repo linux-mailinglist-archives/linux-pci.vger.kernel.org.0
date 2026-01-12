@@ -1,119 +1,160 @@
-Return-Path: <linux-pci+bounces-44483-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44484-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D42B8D113F5
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 09:33:26 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3E01D11630
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 10:03:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 143AC30388A5
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 08:32:35 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 92082304577D
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 09:02:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBBBC33E369;
-	Mon, 12 Jan 2026 08:32:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D5B5346AF2;
+	Mon, 12 Jan 2026 09:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ress5Qyu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8cHfpOX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6871D32E6A3;
-	Mon, 12 Jan 2026 08:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F288A30FC1D;
+	Mon, 12 Jan 2026 09:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768206753; cv=none; b=Rz2WBvC8Jt0K4mTL7gj05ci6XOIkvvvyw5mY92YSJJ3CvmuZP+WOJFfNFJTVqfph2btKKe3kKVXUwXVn9z4dOJMEjCTx6r55odu0gBqcNTe7Eopb/NtDfQUdXywVyUxvQ1lVZgXAJ4bTaUL3Hwz7uPyrNuWkqoQG8hBR16Uc57c=
+	t=1768208542; cv=none; b=KAKKeIjeUb24ZIyE0T33P6KR8C356XThswaPOwwi1x6xLpw1uEfTKXVhVjWEjEjLtfbC4VOT2LUmJzfWJMXAbYKPWMjnXxU5zxQ7DO7fwdhCZwzwzXYC0YoNrbiVwYZSybrbIb0Z9IEaZw24810bfRz7jWa4zhE+4Rnp0ENtVHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768206753; c=relaxed/simple;
-	bh=vZmtTFdf1WfS3J+DgdEQOXV4WlPnID5PJxe1R+uRVU4=;
+	s=arc-20240116; t=1768208542; c=relaxed/simple;
+	bh=qj7f8OVKymqpaGteRJaSiKYCtCRP7TJCNDokvj7EXck=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MoGTkejwpvudA5cX/JGCKV0LF8xDg7VYhXhD0PssqMqHT54rN5Ika5zgHw5qiBGxlwHOQxbH+q6BVt+BF6iMKBxvhsMb8hcM0xqhvL8xNs5ZczAI297zPQ+/Zv+kp+NdK33gvd+BL5M1xQf+e5QZB5HSCdfbp7jXwBjkHAGHXzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ress5Qyu; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768206752; x=1799742752;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vZmtTFdf1WfS3J+DgdEQOXV4WlPnID5PJxe1R+uRVU4=;
-  b=Ress5QyuTyIHUUCLXTdpgdnsT+1MvEaIgnbxESdLtkn0J+e/Z9abiLFK
-   IzF6JUK/tKHSfHydnmPeep+iGp/NpCX0npQwADJhjgGDPJWNkHTYxGwNv
-   VMCh2EcNM3ucca5CsrclQJjDyhSJsML2wZA++fn0aSIxi+spG49HVl7bL
-   ebdLW/bwKO3/a3CgKGH/QphfLbxMP8VN/a6hCvfkiN4kSJpWynM2YcN56
-   fyEJfnHO4P77in4qsO6bQJXDHmMdvRYB1WAQzQbao1BRtjtKRfsytf6yG
-   vkxlNnp3rgg5I9cVMVra2Uw4aT/dPPTCFuHYX3NCe9P5oXjz6MHWSKx+8
-   w==;
-X-CSE-ConnectionGUID: 14xqpxwvTbGBgK/lQRPHww==
-X-CSE-MsgGUID: PB5Yoqu3Reqj4ABTJtX0rQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11668"; a="57027492"
-X-IronPort-AV: E=Sophos;i="6.21,219,1763452800"; 
-   d="scan'208";a="57027492"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 00:32:31 -0800
-X-CSE-ConnectionGUID: sNlCI97QSyiEy94S2oMxsg==
-X-CSE-MsgGUID: uKHr7F8GSfCtIr3y8QPFCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,219,1763452800"; 
-   d="scan'208";a="204108597"
-Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.37])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 00:32:24 -0800
-Date: Mon, 12 Jan 2026 10:32:22 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: manivannan.sadhasivam@oss.qualcomm.com
-Cc: Rob Herring <robh@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v3 06/14] software node: Add
- software_node_device_modalias() API
-Message-ID: <aWSxlilPbsLVgn10@smile.fi.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uk/mnp15k438goDtCgKskbr+iIpGD83Hk21wld6twmzgzvfNC4oNpQLfX88I/xLBpCUHkqQiEXtF8S0gvMe8UhWJnxgHZXbz5Q8Tg977fpzmDLnjnGzSUnzm/qONhXUp1eCC97KG2Vkf8QoiUimo2OYAywk8OJZKICRusclF/2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a8cHfpOX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BD38C116D0;
+	Mon, 12 Jan 2026 09:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768208541;
+	bh=qj7f8OVKymqpaGteRJaSiKYCtCRP7TJCNDokvj7EXck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a8cHfpOXYmjDpTJf0FP9hfGwW608GKXGMUaKLc4npoU5hNjgSuhe0YHISlZspwBPs
+	 apiAizX4PipAxtigEkm9mt+lq7HwnJTSlZAX6vxTS3bCjXA1iqf/FWPzRxyzJD1nIh
+	 lL+M+8Je+EJR9SLQjburw2C10PmrohWL7p/P1VPZJY5mbDUc6+sOeiiRmiV/Ya2ZSj
+	 c4zHxaOlQAeyi4eKS85vOTXZGFf/Ma/CO24IoDLSb0cHkIGdcz+mgsbPSTPpiL1V+I
+	 v6C17+HdnDkpgMwQhViQtYkW1VgGpzhkLFiKacPrJ0AhcIk1GxbQcPcJr5Tk/tflei
+	 OnAmF//T6Cafg==
+Date: Mon, 12 Jan 2026 14:32:04 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	manivannan.sadhasivam@oss.qualcomm.com, Rob Herring <robh@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org, 
+	Sui Jingfeng <sui.jingfeng@linux.dev>
+Subject: Re: [PATCH v3 03/14] software node: Implement device_get_match_data
+ fwnode callback
+Message-ID: <6peb6afhpm4l7opxbdt3b5sx32longevwds5c3dlqji2hr5dlh@kxuvj55jkqgi>
 References: <20260110-pci-m2-e-v3-0-4faee7d0d5ae@oss.qualcomm.com>
- <20260110-pci-m2-e-v3-6-4faee7d0d5ae@oss.qualcomm.com>
+ <20260110-pci-m2-e-v3-3-4faee7d0d5ae@oss.qualcomm.com>
+ <aWSpFk9z0zpyKjr6@smile.fi.intel.com>
+ <6l3rs5pv6xnrbygpvqrdxqoqtybjyefsltk5bl4336q56rfoza@ejo3sxuufghe>
+ <aWSwgRiEkT9unYw9@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260110-pci-m2-e-v3-6-4faee7d0d5ae@oss.qualcomm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aWSwgRiEkT9unYw9@smile.fi.intel.com>
 
-On Sat, Jan 10, 2026 at 12:26:24PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+On Mon, Jan 12, 2026 at 10:27:45AM +0200, Andy Shevchenko wrote:
+> On Mon, Jan 12, 2026 at 01:49:54PM +0530, Manivannan Sadhasivam wrote:
+> > + Dmitry Torokhov (who was against this patch previously)
+> > 
+> > On Mon, Jan 12, 2026 at 09:56:06AM +0200, Andy Shevchenko wrote:
+> > > On Sat, Jan 10, 2026 at 12:26:21PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > > 
+> > > > Because the software node backend of the fwnode API framework lacks an
+> > > > implementation for the .device_get_match_data function callback.
+> > > 
+> > > Maybe this is done on purpose. Have you thought about this aspect?
+> > 
+> > IMO, software nodes were introduced to add sub-properties to the existing
+> > firmware nodes, but it has usecase/potential to go beyond that. More below.
+> 
+> Potential doesn't mean the necessity.
+> 
+> > > > This makes it difficult to use(and/or test) a few drivers that originates
+> > > > from DT world on the non-DT platform.
+> > > 
+> > > How difficult? DSA implementation went to the way of taking DT overlay
+> > > approach. Why that one can't be applied here?
+> > 
+> > Sometimes you do not have any DT node at all.
+> 
+> Yes, that is exactly the case I have referred to. The PCI core (in Linux)
+> is able to create DT subtree on non-OF based platforms.
+> 
 
-> Add software_node_device_modalias() API to return the MODALIAS string for
-> swnode based on the swnode's compatible property.
+Maybe I should look into creating dynamic DT node for the device and insert it
+to the uart node. Theoretically it should work.
 
-NAK. swnodes != real firmware nodes.
+> > For example, in this series, the
+> > M.2 pwrseq driver creates the serdev software device for the M.2 BT card to
+> > match it with the existing OF based BT driver (for non-M2 device). From the
+> > driver's point of view, a BT device attached to the M.2 slot and over custom
+> > connectors are both the same. Only difference is that, in the case of custom
+> > connectors, the bluetooth DT node will have the BT device described and in the
+> > case of M.2, the device won't get described, but just the connector [1].
+> 
+> So, what's the problem to add such a description? (Assuming you want a customisation
+> it can be done at run-time, correct?)
+> 
+> > But for the driver to identify the device (since it cannot enumerate it),
+> > either it has to rely on DT/ACPI or some other means.
+> 
+> Yes.
+> 
+> > In the previous version of this series [2], I used the serdev ID based on the
+> > product name for creating the serdev device and added a new id_table for serdev
+> > driver to match with the device [3]. This almost duplicated the existing OF
+> > match logic.
+> 
+> That's how we do when we want to add a board file, but thing is that we do not
+> want board files (only in the cases when other ways are impossible or make less
+> sense).
+> 
+> > Then Bartosz suggested to use swnode approach [4], to get rid of
+> > the custom serdev ID based matching. When I prototyped, it mostly worked well,
+> 
+> I know that Bart is fan of swnodes, but it should not be used as a silver
+> bullet, really.
+> 
+> > except that swnode needed to have its own .device_get_match_data(), match() and
+> > uevent/modalias functions. And if the swnode reused the existing DT compatible
+> > string, it can work with the existing BT driver without modifications. And this
+> > approach can also be extended to devices instantiated from the board specific
+> > drivers.
+> 
+> DT overlay should work without even modifications done to swnode code, right?
+> 
+
+Not from the overlay binaries (.dtbo), but adding dynamic BT node for the device
+based on the enumerated PCI device should work.
+
+- Mani
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+மணிவண்ணன் சதாசிவம்
 
