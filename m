@@ -1,192 +1,206 @@
-Return-Path: <linux-pci+bounces-44545-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44546-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4AB7D14BED
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 19:24:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8448CD14C44
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 19:28:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C5842301C5C6
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 18:24:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 74DDA306A0EC
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 18:25:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFA7C38759D;
-	Mon, 12 Jan 2026 18:24:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 119533803ED;
+	Mon, 12 Jan 2026 18:25:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FWpZ9Lrv";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="guWZ/pOZ"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="X5yKzpec"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F45D387370
-	for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 18:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CEB8356A08
+	for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 18:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768242241; cv=none; b=L8qLk6I2B6YTHBA5dwfBUZtceRSYdJ6MKOCwwPIPlQJPRTWZ3kD5zFmJNp5UjIseLHlhzZ4+KJg1JhCazskBVc90tTAbZ+aUdJPm9g9DmpFB7gtjRwB2y5umO2RYWHrRbDzLBnxh/syoQ//ITNBZsSANNd0LNHkEFqs2ulfFjTc=
+	t=1768242304; cv=none; b=YRwCRyNx5bIx5GkoBYqdOcYBMQW8bJxTT7BwTHwIHyCL+dRQtpwn2X5eINxYOyhM3P9IspbaKmScdigL+L0f2LpEbATPvjLKa5GlH8JHERuwpK1DrAhRAA0ory8NDZxKL8sGD/fJeWT70jfxdeBUFMg8kttpbjPGVWQvzxCRBr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768242241; c=relaxed/simple;
-	bh=zpoNdTeaB4i3QK4pd6pXO1rrYW3DhRqSBMGvDT0il6g=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Q6gye1TkwkSF/CDOqAFVC8OBWvNVlGRviHFvBwn90kHSCf7/o/EdNtJlZYu2pjxrHgwWuPSw5SwybSQ2j/uPw+bYrmiUmYHGK0xTRvGx5wzxwYuFYC7wJv8T+FmhubYiCaRa9bBU5KWrrtjQexueC8HA7Q3K6B3v4nZ10h5cC4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FWpZ9Lrv; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=guWZ/pOZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768242239;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2gLOxIDyxhTvVzJuSwvSFZ4MlqhsCFk9OHFtuRb1ESk=;
-	b=FWpZ9LrvYHiS7aGdljd+Igfcct2cokATR6+D5ebFep8iti98uX0GqcrakCmUdIlJh8z3o/
-	eHRLERNxEe9QPsW2VDqS2q5yvNLWuPgqzxtjJAewEQbRjK+OuvXSF2ATwYstzR/B+Kwmmw
-	aHufBShApfcsR1sjFnEi4/uVfHYjqis=
-Received: from mail-vs1-f70.google.com (mail-vs1-f70.google.com
- [209.85.217.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-653-zduTDDIlPECw1AdB89KI9A-1; Mon, 12 Jan 2026 13:23:57 -0500
-X-MC-Unique: zduTDDIlPECw1AdB89KI9A-1
-X-Mimecast-MFC-AGG-ID: zduTDDIlPECw1AdB89KI9A_1768242237
-Received: by mail-vs1-f70.google.com with SMTP id ada2fe7eead31-5ec9a4e6cb0so5988223137.0
-        for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 10:23:57 -0800 (PST)
+	s=arc-20240116; t=1768242304; c=relaxed/simple;
+	bh=zGOveUJBSydj6+f1Ng48sG1u8gGyaZbL+TtCvCFhQyM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mnG932qo68+ENBVgoEUppxL91tGkP029jI+lGrjL8amFpZNBv3tNp3iiJNPPIHEiY+tXBV3wYq2/VALYbK9lL/BBK9SamjW4VNtP5LeGzzZymZvz0QnrCbgRf2DcmT4V7+xKNA34Q8KBIShIrEJD3YS09B6ZE9b8BHVIt8OthOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=X5yKzpec; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-88a2ad13c24so64722586d6.1
+        for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 10:25:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1768242237; x=1768847037; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
+        d=ziepe.ca; s=google; t=1768242301; x=1768847101; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=2gLOxIDyxhTvVzJuSwvSFZ4MlqhsCFk9OHFtuRb1ESk=;
-        b=guWZ/pOZLgLBpVMG05eI3nl8fDNrxtbg2JeJCnJpCJrPxAsxB0oM8wX1VZpMXoNChX
-         pxVtL3oEQmmej+J7Eoz8v2sBGDeskbAevIn9NmTy3ojM3gvsNXW2FCX7PLS/gSwFs9Rg
-         22898MVltwFNGxKeyaMy5jSocMHB7lcT1a6L12IkSe0hAwRkjhrPwbyiDdX6Q6ipjmqT
-         ACAnBfRKxgkyS7q8cV5a2zWbQWX23rvz/z6tCe1AjFaUArNLOnZJ3Ouwlsk2WJK/lbk9
-         hYiI6TnNwFUjKyE28XmfU3yhWW02R0ju/S/QE4BQz+4ubhR5V1itNdkLypLRsXsJi1Eg
-         EMlw==
+        bh=jdD8MqriJAO2uyiGLSo7KkiIHx3VWLqLd6aNoF+yCm8=;
+        b=X5yKzpec7drmkLwczvotHIEs/RFApJJlDqIJrFABBm597UK3AtaxvQmn7L2a0gqWKc
+         I/NFZxdnyIaTbC1Vnp/3JAbp5EmAJ7M8n7mARHPlcAzRHyAVAOy0yiNrY8gYYVasf9Tj
+         PlJTnC56YVduwV5Lp8XP+YXgJc0YwfBy7HiTFEK/9Tvdgckp/FVA/6LMe38MGRGVB5UR
+         TGatHKQS0Uv303CYzW8psHNHBHcp6W5jklx+95Bxkjz0SIbj/9B1G9xvzGWSez2Vn69u
+         KtqwdsV7eEcss5kCDA4kzPztcm4yrV3fCxxALKK7lXuPZJX3/dzMJhNYYhirMp19EJj4
+         rMkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768242237; x=1768847037;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:x-gm-gg
+        d=1e100.net; s=20230601; t=1768242301; x=1768847101;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2gLOxIDyxhTvVzJuSwvSFZ4MlqhsCFk9OHFtuRb1ESk=;
-        b=S8NRdVhy7OX5SMBZAWJ30j3YHE05McpAHS9wY+Rpy69AEMdpZ7dAwY7CC/ByWSDqjR
-         wq+eMbfUVQYq3oOThDloqZYRKeBP5EgpIzM3beaX5X/ZMDhn/h/T5EIGaOab8u+PywpA
-         F3Q3c1JUVIdYpqiFWxTSosyE/mkf1kPiAPK+MOdQ/O6+bMF9cx0UUMsvdopwjM4Lpuzc
-         M/fNBAIAA7NBZhclDK+64Hiz39p44VOoJ8puSNx7vZA571mdvbGCISabXiRxxzVr3K0S
-         pxahxcP/aaaTg6jZQaiv57YS7/ShVgdoUlRm4FLCW7f2yb/bSqwC8S9dPCXbzLiSqgln
-         XQEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwLPlloWjLfFXIaSQ5hwXEXSGdDkigBQZO0WbENSB1qKNrqbxQqTcA3hJY5W68Q6LYoaKgqEyLm8Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDvhhNgKD0BKVehZt5Es5YHmyQ/n25IdEvDAv2JIl2PrAEA3HJ
-	Y9jiM7lAItNM6feYpOneHczu6S88NFE1COjBhuylMvkAw95Zh+VWp0Aysc1Z9Jp2a5qtRpEI9/B
-	xE3v0+xHPoVJbF3ZaIN7Aa5Fb7m/4f2bgCgb+Pd4z1nFTihC+U4FPZvPNJyFpqA==
-X-Gm-Gg: AY/fxX6bekVM6R3KJv9nDKVFamk8m3JY9g8ny74stzzv+ctIMKLHYU+hlI0CqjTwvUw
-	5L+fKU+k7T0ybgHbl/AryL9zWiwf1GGX+WjjzyUlNqZF/M1jaD2n/IuhUtXRCFxDgyGlvj49O1/
-	UqEt4J0vTulj/UijOihft0zfqRR5ICzqZgG1qpfsz0t5wYgiAkvVyI2mNT3Fls3zVpvFaXBEcys
-	3dmn2pTDIPwslZEL9Ks22IVKSVuGEiWejb5zpeeOWfIDSg8HJ8S+La3e4QY7Tprr38WaibW+zwI
-	tHnoK0PkMhCBlSu1EuliaYkjWaV19Fd2XQfuHCUfN/bMLxlBxYGhf3QPOiCRyv2lLxkpK1gVdel
-	6RvaXMhQNjBamU5VHeN2e8GEQBzK8NKS+Azsjm0c7U7oIUPbI0fWm1dr+
-X-Received: by 2002:a05:6102:ccd:b0:5ef:b5fc:dd4c with SMTP id ada2fe7eead31-5efb5fceabcmr2465126137.7.1768242237176;
-        Mon, 12 Jan 2026 10:23:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFwmHNbjOkRHiOzASiFvy8qH079mvHRUgTgzybGWlZGH94huRhJ7zei/lWRFsGQLOin7Q4KDw==
-X-Received: by 2002:a05:6102:ccd:b0:5ef:b5fc:dd4c with SMTP id ada2fe7eead31-5efb5fceabcmr2465086137.7.1768242235294;
-        Mon, 12 Jan 2026 10:23:55 -0800 (PST)
-Received: from ?IPV6:2601:188:c102:b180:1f8b:71d0:77b1:1f6e? ([2601:188:c102:b180:1f8b:71d0:77b1:1f6e])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5ef15be79c6sm10965711137.12.2026.01.12.10.23.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Jan 2026 10:23:54 -0800 (PST)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <437ccd7a-e839-4b40-840c-7c40d22f8166@redhat.com>
-Date: Mon, 12 Jan 2026 13:23:40 -0500
+        bh=jdD8MqriJAO2uyiGLSo7KkiIHx3VWLqLd6aNoF+yCm8=;
+        b=KezT6EuQ08SDuj3/YGT3Fex1cMQgI6ZsjTRaeJHSmzhstZLCulyp5ycKahpvdeZjqL
+         UAR7VkqDHTRutHsJO4xAqsyp8XitwAkHrDqyJUIiLOy8wGDHRtAzGsqf2F7EVWbFyN0P
+         QF447zuPuI73A9t6tW8Yd/LfEyvJ+kSFp2XdvQhj+U1nYHNv0aoPCbNlZ8fN31nh273d
+         4tkgw2cyOhX0yx28/gEBZzBFq4SIkEQbhwkL6SK5gVykpv+fgkRQ/wpLEVlKqu3g3qix
+         HiRy0kmfd0Li8eIwuI/KrMjihTroOA2H8ksEFinOrSlCxzpOY9x27JW6RdWQcxCnyMKd
+         BeYg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3yjh5653xYoYj/zJIK0nN0V5A7PVrp5yQB7dYFoyEy+A+R/gi0+ZPJQYqbEOTFZ/EfVZEXwAjI0I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4SlCAXobXR2vUHUcVBNQLD/DzBhXQLD6xAgN2PptPPSShGAV3
+	8s21vQy5gx6R8D+qHqzT9Hno+bLtsjCLuZFdY1EGJLBZ5WwNu4qk872sgkKze/N0/hg=
+X-Gm-Gg: AY/fxX6ulDkv5rxgQZ5LjgDATY83RNSba0wHkYzy6SPOb/pNW7pzQUzT6dffuEPq1sp
+	ECZeD8hRtcsQMOLhJylchdlh8RVWusrTXxvCD6mMCc8Yydjv5XVswmgxOivowjU3vVdN+iqn2v0
+	kVE3JUIKtFJlIK7dBYwByn6UuOhLkSPIIxErEhz4rtZeLDai0n+QA/zd48f47M0E4F7ROtwhif3
+	Wem7N8fLlsdfiAFtJRcTvhhB8JwobvK8uONADNpsnw5ROQQAKJytnSzBxOuTCq3EdVAULEXe+Ug
+	uZtsJMbiWZeugmxouo545PIv7vIdj80Rq1Ay+qXq/HGhYroiavutfetnyC2fJV5PTFYH4stOzWA
+	YaWU1Mc3mZ2UbuhfQJEwYf9Oh+iiyINQM5bLtLwbYWvmycSilx1JttmRGBkRMoOdrOxrEFU/Ofj
+	vRJTq0kdipROd1sB3PSn+5gfnCsed4QYtZsQ9dbhDt1UzWyFNvcu31N/5YzBNj9OZgWEA=
+X-Google-Smtp-Source: AGHT+IGn2SBiEVfPnYP4nrga1XlmOOc9x/h3J7lqU+usVoOUoaNofJJs2v26tTONjDwmwZ1AsmIeFg==
+X-Received: by 2002:a05:6214:428e:b0:88e:9f73:2c08 with SMTP id 6a1803df08f44-89084179da3mr258471116d6.5.1768242300986;
+        Mon, 12 Jan 2026 10:25:00 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-890770ce985sm138366276d6.11.2026.01.12.10.25.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jan 2026 10:25:00 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1vfMb6-00000003SfZ-05E0;
+	Mon, 12 Jan 2026 14:25:00 -0400
+Date: Mon, 12 Jan 2026 14:25:00 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Zi Yan <ziy@nvidia.com>
+Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
+	Francois Dugast <francois.dugast@intel.com>,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	Matthew Brost <matthew.brost@intel.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Felix Kuehling <Felix.Kuehling@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	David Hildenbrand <david@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Alistair Popple <apopple@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-pci@vger.kernel.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
+ callback
+Message-ID: <20260112182500.GI745888@ziepe.ca>
+References: <20260111205820.830410-1-francois.dugast@intel.com>
+ <20260111205820.830410-2-francois.dugast@intel.com>
+ <aWQlsyIVVGpCvB3y@casper.infradead.org>
+ <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
+ <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
+ <20260112134510.GC745888@ziepe.ca>
+ <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
+ <20260112165001.GG745888@ziepe.ca>
+ <86D91C8B-C3EA-4836-8DC2-829499477618@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/33 v6] cpuset/isolation: Honour kthreads preferred
- affinity
-To: Frederic Weisbecker <frederic@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-Cc: Tejun Heo <tj@kernel.org>, Phil Auld <pauld@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Lai Jiangshan
- <jiangshanlai@gmail.com>, Danilo Krummrich <dakr@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Michal Koutny <mkoutny@suse.com>,
- netdev@vger.kernel.org, Roman Gushchin <roman.gushchin@linux.dev>,
- linux-block@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Eric Dumazet <edumazet@google.com>, Michal Hocko <mhocko@suse.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>,
- Chen Ridong <chenridong@huawei.com>, cgroups@vger.kernel.org,
- linux-pci@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "David S . Miller" <davem@davemloft.net>, Vlastimil Babka <vbabka@suse.cz>,
- Marco Crivellari <marco.crivellari@suse.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Simon Horman <horms@kernel.org>,
- Shakeel Butt <shakeel.butt@linux.dev>, linux-mm@kvack.org,
- Jakub Kicinski <kuba@kernel.org>, linux-arm-kernel@lists.infradead.org,
- Gabriele Monaco <gmonaco@redhat.com>, Muchun Song <muchun.song@linux.dev>,
- Will Deacon <will@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Chen Ridong <chenridong@huaweicloud.com>
-References: <20260101221359.22298-1-frederic@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20260101221359.22298-1-frederic@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <86D91C8B-C3EA-4836-8DC2-829499477618@nvidia.com>
 
-On 1/1/26 5:13 PM, Frederic Weisbecker wrote:
-> Hi,
->
-> The kthread code was enhanced lately to provide an infrastructure which
-> manages the preferred affinity of unbound kthreads (node or custom
-> cpumask) against housekeeping constraints and CPU hotplug events.
->
-> One crucial missing piece is cpuset: when an isolated partition is
-> created, deleted, or its CPUs updated, all the unbound kthreads in the
-> top cpuset are affine to _all_ the non-isolated CPUs, possibly breaking
-> their preferred affinity along the way
->
-> Solve this with performing the kthreads affinity update from cpuset to
-> the kthreads consolidated relevant code instead so that preferred
-> affinities are honoured.
->
-> The dispatch of the new cpumasks to workqueues and kthreads is performed
-> by housekeeping, as per the nice Tejun's suggestion.
->
-> As a welcome side effect, HK_TYPE_DOMAIN then integrates both the set
-> from isolcpus= and cpuset isolated partitions. Housekeeping cpumasks are
-> now modifyable with specific synchronization. A big step toward making
-> nohz_full= also mutable through cpuset in the future.
->
-> Changes since v5:
->
-> * Add more tags
->
-> * Fix leaked destroy_work_on_stack() (Zhang Qiao, Waiman Long)
->
-> * Comment schedule_drain_work() synchronization requirement (Tejun)
->
-> * s/Revert of/Inverse of (Waiman Long)
->
-> * Remove housekeeping_update() needless (for now) parameter (Chen Ridong)
->
-> * Don't propagate housekeeping_update() failures beyond allocations (Waiman Long)
->
-> * Whitespace cleanup (Waiman Long)
->
->
-> git://git.kernel.org/pub/scm/linux/kernel/git/frederic/linux-dynticks.git
-> 	kthread/core-v6
->
-> HEAD: 811e87ca8a0a1e54eb5f23e71896cb97436cccdc
->
-> Happy new year,
-> 	Frederic
+On Mon, Jan 12, 2026 at 12:46:57PM -0500, Zi Yan wrote:
+> On 12 Jan 2026, at 11:50, Jason Gunthorpe wrote:
+> 
+> > On Mon, Jan 12, 2026 at 11:31:04AM -0500, Zi Yan wrote:
+> >>> folio_free()
+> >>>
+> >>> 1) Allocator finds free memory
+> >>> 2) zone_device_page_init() allocates the memory and makes refcount=1
+> >>> 3) __folio_put() knows the recount 0.
+> >>> 4) free_zone_device_folio() calls folio_free(), but it doesn't
+> >>>    actually need to undo prep_compound_page() because *NOTHING* can
+> >>>    use the page pointer at this point.
+> >>> 5) Driver puts the memory back into the allocator and now #1 can
+> >>>    happen. It knows how much memory to put back because folio->order
+> >>>    is valid from #2
+> >>> 6) #1 happens again, then #2 happens again and the folio is in the
+> >>>    right state for use. The successor #2 fully undoes the work of the
+> >>>    predecessor #2.
+> >>
+> >> But how can a successor #2 undo the work if the second #1 only allocates
+> >> half of the original folio? For example, an order-9 at PFN 0 is
+> >> allocated and freed, then an order-8 at PFN 0 is allocated and another
+> >> order-8 at PFN 256 is allocated. How can two #2s undo the same order-9
+> >> without corrupting each other’s data?
+> >
+> > What do you mean? The fundamental rule is you can't read the folio or
+> > the order outside folio_free once it's refcount reaches 0.
+> 
+> There is no such a rule. In core MM, folio_split(), which splits a high
+> order folio to low order ones, freezes the folio (turning refcount to 0)
+> and manipulates the folio order and all tail pages compound_head to
+> restructure the folio.
 
-I don't see any major issue with this v6 version. There may be some 
-minor issues that can be cleaned up later. Now the issue is which tree 
-should this series go to as it touches a number of different subsystems 
-with different maintainers.
+That's different, I am talking about reaching 0 because it has been
+freed, meaning there are no external pointers to it.
 
-Cheers,
-Longman
+Further, when a page is frozen page_ref_freeze() takes in the number
+of references the caller has ownership over and it doesn't succeed if
+there are stray references elsewhere.
 
+This is very important because the entire operating model of split
+only works if it has exclusive locks over all the valid pointers into
+that page.
+
+Spurious refcount failures concurrent with split cannot be allowed.
+
+I don't see how pointing at __folio_freeze_and_split_unmapped() can
+justify this series.
+
+> Your fundamental rule breaks this.  Allowing compound information
+> to stay after a folio is freed means you cannot tell whether a folio
+> is under split or freed.
+
+You can't refcount a folio out of nothing. It has to come from a
+memory location that already is holding a refcount, and then you can
+incr it.
+
+For example lockless GUP fast will read the PTE, adjust to the head
+page, attempt to incr it, then recheck the PTE.
+
+If there are races then sure maybe the PTE will point to a stray tail
+page that refers to an already allocated head page, but the re-check
+of the PTE wille exclude this. The refcount system already has to
+tolerate spurious refcount incrs because of GUP fast.
+
+Nothing should be looking at order and refcount to try to guess if
+concurrent split is happening!!
+
+Jason
 
