@@ -1,63 +1,68 @@
-Return-Path: <linux-pci+bounces-44497-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44498-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2BDCD127C0
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 13:13:40 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D62DBD12ABC
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 14:03:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DEAA23040D3A
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 12:13:39 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E91D2305A45C
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 13:01:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D35303570AE;
-	Mon, 12 Jan 2026 12:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DA0E357A2D;
+	Mon, 12 Jan 2026 13:01:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tihHO1Gn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rXpL3ocf"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD7715665C;
-	Mon, 12 Jan 2026 12:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7F435770E;
+	Mon, 12 Jan 2026 13:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768220017; cv=none; b=cThccUWRBhG2mmqMwxYx+bndhRMxhiqVeBlwSV4XYDpssu5z2hMj6S7cEFQz9bG8VAdXIxV3HTb/+E0kPNHN5l1YKBrp9uLpiCuW8X8PzRsyaN+Qv6AzByhadXLLa0B/MeLBRWKYeFd05SQ/ayUzMB51vDizuVQLs5lGZOYSAic=
+	t=1768222899; cv=none; b=XjMf3zzwUAoaEq8JhDDQ0alMmbjxwcyl4LInXYi5/OBScnvGIKx/OIGRMvWn3e4cduHd0jtsljq+TCbW/CQAaIsBEpmfQDBYf8LHuStz2HYb3px49Uwz81E5kDyFN8HRcrKIXKoyv6yWsTSMwE07qTo5ME9VTVe8vuyhrRvLM8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768220017; c=relaxed/simple;
-	bh=RuHDtGL00SnpZqV0qXNelW6J171aN3M0JIvYYprsUe4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=LonIgpT+Nz9t63rqtdpylQhCasqpJV23u/WobVBspf0pqbIe9IEfPG67t4h+D1ZfNZZTc7x8C8WLBzoImSX4LTWvo1ES6I+RvOqazW509hG2ixB0p1+OjOqYkguk2BZPYHz9pEvLIYrPgQImaA5NMZImL5NnLECfZPWZbKrcKk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tihHO1Gn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CAF7C16AAE;
-	Mon, 12 Jan 2026 12:13:37 +0000 (UTC)
+	s=arc-20240116; t=1768222899; c=relaxed/simple;
+	bh=WLtpL3iiLHc+bo5wxz2Ay2u3w3qNsN2rTz0oFg1Enb0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UhC1x4UgYV5IkyeuWv4P19mf6jWl5aqr3qfDF9dqqBsmwr6XB/AHth30A4t+Q0i54u6mnbJDuGiPQa4yezjsWT4cODAS+2mRuyL0ObktO75fZZEA4YF97NHuCirMNY4n+5jhSgRN8LD3GI1fEX6zxE8z0Mrc44UIQLA5reAdZ6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rXpL3ocf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2987C19422;
+	Mon, 12 Jan 2026 13:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768220017;
-	bh=RuHDtGL00SnpZqV0qXNelW6J171aN3M0JIvYYprsUe4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=tihHO1GnLWfY9wTo0UJsTeEZG5Im8Hy7bZW9ZSc1XOA+8ypp8wVtpSWnjwewMpslK
-	 tzDnQAFBnNSvNtEYN4SXoWEUPhsI/gQmZVTlodE1heW8SU5Y0Z6VdBo3Kj9TMAFC8R
-	 hk0mU9eJwRijZcYP5/jk1SphGXW8LEIykh/3uF9bFhv52VkeBCn+HRQYRYqoXFpnin
-	 a7KNXq23lNjbKjAJ0ZNbrWKh6lKk/iqOBGysDnDZKrNy9RWv5aOnBEgIFDAo38zfAv
-	 Rxe06/PPcx9WXvt0fWG7TKk7u8kO905YNM9xpft30CxeFAC1g4jRbxxQ/l3ph6mTGC
-	 xUQJHWg7xQ9uQ==
-Date: Mon, 12 Jan 2026 06:13:35 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: manivannan.sadhasivam@oss.qualcomm.com,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	s=k20201202; t=1768222899;
+	bh=WLtpL3iiLHc+bo5wxz2Ay2u3w3qNsN2rTz0oFg1Enb0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rXpL3ocfh373K5bNXWgVfNocnwtPg11QneBpqIT66SgmmZ/6+awvuRRAs6hTWn3Iq
+	 bcl9sVDzTDUlH58n7OTWA7Ow5zH/zTAidmSunr1zSCV7wYLQ6IuEpHb1q50qGePdf/
+	 PAhA4LZm8r4xFIuS2KE+Ngg9rjsPTcO2qGiQXm+GwTe17ykNXaZGF5UZzQJLYgf+xD
+	 BPDMm+HMpYRLY0M9QmCK6sJM+ACJnMQ0KQyXmq2N5t91Gcbl0TWXezGTixppahR1vh
+	 vJ5SiF+P4EuQP4AruPe8Gy2Byg9B6EUPJJ2EtOAoKb4j4WrHjKfzutdV+iRJD1El6U
+	 X3sv697FjFtzg==
+Date: Mon, 12 Jan 2026 14:01:32 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Chen-Yu Tsai <wens@kernel.org>,
-	Brian Norris <briannorris@chromium.org>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	Niklas Cassel <cassel@kernel.org>, Alex Elder <elder@riscstar.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Chen-Yu Tsai <wenst@chromium.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v4 0/8] PCI/pwrctrl: Major rework to integrate pwrctrl
- devices with controller drivers
-Message-ID: <20260112121335.GA707347@bhelgaas>
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Koichiro Den <den@valinux.co.jp>, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-nvme@lists.infradead.org, mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	Damien Le Moal <dlemoal@kernel.org>
+Subject: Re: [PATCH v3 0/9] dmaengine: Add new API to combine configuration
+ and descriptor preparation
+Message-ID: <aWTwrOOXX3AR8Ght@ryzen>
+References: <20260105-dma_prep_config-v3-0-a8480362fd42@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,29 +71,32 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <smxp3g5pveepvub3j2p7kvftnaza5ptuehmlvanhdamt46ugrb@hszfopsdzkgz>
+In-Reply-To: <20260105-dma_prep_config-v3-0-a8480362fd42@nxp.com>
 
-On Mon, Jan 12, 2026 at 01:23:02PM +0530, Manivannan Sadhasivam wrote:
-> On Sun, Jan 11, 2026 at 09:31:32PM -0600, Bjorn Helgaas wrote:
-> > On Mon, Jan 05, 2026 at 07:25:40PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > > Hi,
-> > > 
-> > > This series provides a major rework for the PCI power control (pwrctrl)
-> > > framework to enable the pwrctrl devices to be controlled by the PCI controller
-> > > drivers.
-> > 
-> > I pushed a pci/pwrctrl-v5 that incorporates some of the comments I
-> > sent.  If it's useful, you can use it as a basis for a v6; if not,
-> > no worries.
-> > 
-> 
-> Thanks for making the changes, they look good to me. Do you expect
-> me to send v6 or you intend to merge this pwrctrl-v5 branch to
-> pci/next?
+Frank,
 
-I'm not planning to merge pwrctrl-v5 yet.
+Thanks a lot for your work on this series!
 
-Still hoping pci_pwrctrl_slot_power_on() could be factored out earlier
-to simplify "PCI/pwrctrl: Add 'struct pci_pwrctrl::power_{on/off}'
-callbacks".  It wasn't quite obvious to me how to do that.
+On Mon, Jan 05, 2026 at 05:46:50PM -0500, Frank Li wrote:
+>  Documentation/driver-api/dmaengine/client.rst |   9 ++
+>  drivers/crypto/atmel-aes.c                    |  10 +--
+>  drivers/dma/dmaengine.c                       |   3 +
+>  drivers/dma/dw-edma/dw-edma-core.c            |  41 ++++++---
+>  drivers/nvme/target/pci-epf.c                 |  21 ++---
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c  |  52 ++++--------
+>  drivers/pci/endpoint/functions/pci-epf-test.c |   8 +-
+>  include/linux/dmaengine.h                     | 117 ++++++++++++++++++++++++--
+>  8 files changed, 177 insertions(+), 84 deletions(-)
+
+Is the plan to merge this series via the dmaengine tree?
+
+If so, we might need an Ack from Mani on the pci-epf-mhi.c and
+pci-epf-test.c patch.
+
+Likewise we might need an Ack from Keith/Christoph on the
+drivers/nvme/target/pci-epf.c patches.
+
+
+Kind regards,
+Niklas
 
