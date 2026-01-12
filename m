@@ -1,129 +1,115 @@
-Return-Path: <linux-pci+bounces-44504-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44505-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6798D134B5
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 15:50:33 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C8B0D13449
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 15:46:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 327B63075C2B
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 14:33:12 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D094B3039E2C
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 14:40:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57FAA2E6CD0;
-	Mon, 12 Jan 2026 14:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29B552609CC;
+	Mon, 12 Jan 2026 14:40:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I8d/wXMz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.b="kgH9Gpiu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outgoing2021.csail.mit.edu (outgoing2021.csail.mit.edu [128.30.2.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338C52E2DF2;
-	Mon, 12 Jan 2026 14:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2683225B1D2;
+	Mon, 12 Jan 2026 14:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.30.2.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768228034; cv=none; b=d1wN5WaNe6zPYyA6gRCmCAx/y/ul0eLMv+p3Vcy504gE/kfEyxyl3GNHe4Qdm/Z+RY3x6ccpOrNG8nEaIlfRQIdDw/x+v3Rr034XFd7tyRJkKqjqnkKOcdlJrAUW0EzJmu7cV2VbQ+ROmzbJRyurZot0sXWhPqrrxI7JGaKpgcs=
+	t=1768228806; cv=none; b=cwURC0cVWoGT/ruY2pYp9W6oU71RQcANeLoSiMw0ws5bKpbk7QmParebX1awnUIMjawRoLN0ZWmfduiLBJM3W+loFNJFzkmxbZPRfOuH72dPirnelo4wncGLGJt+QK06oY9K7CQRxBaVnaaKdQfvs09DIDGW6ZJBYFLa+vtl/ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768228034; c=relaxed/simple;
-	bh=ZGnxsgK/5Z1p93I0FWNkfWilUaIajuvcnQz79Vyaozk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
-	 References:In-Reply-To; b=OrR7F7gibO57QVbxRMXgmQXv1yzdVQPJkXj5T9C2CCtZgiVpwN5qsQIDxMZ1hAey9hVPn98njksQs8tIT1OWk4cErBvTSDidxp34tFn8dRbbIdDCehURRUs8UrNJIoyTIAbV3HtCMC9MxfdmMtmizGnqg1kTOjsVCn1muB7hllY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I8d/wXMz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06B80C16AAE;
-	Mon, 12 Jan 2026 14:27:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768228034;
-	bh=ZGnxsgK/5Z1p93I0FWNkfWilUaIajuvcnQz79Vyaozk=;
-	h=Date:To:From:Subject:Cc:References:In-Reply-To:From;
-	b=I8d/wXMz6YIIxsvkh75J33zs9/A2zJU+9qS3WnskjVYZEQ9Oo+4iIXUgwyzB7usNE
-	 sESlh8fPLukij1AER+4U/zVnjKcdv3D/gMpOUBKtvjpG5xMqQ2Ekx3L+waCocpYBMe
-	 WNPC4uSU3DUdAaAJMhHJqvdnxAnLFybkpOPMpwcsIVrkWNpCyaGuhRX5Xke5k8fkxv
-	 /brdcSMV7AVVP9t18c+SwEUkjS5X8mMNvNiKww8CB9HjG6TXqdaFPc7ruWgAvu6993
-	 xvh/uMx4KRc/vRVdyFWFejQTRz7LyJ+yEq/uTlawVchsfNlGHvBOg2MMp8Iy2C9AQ2
-	 W8wKJQC8GJbyA==
+	s=arc-20240116; t=1768228806; c=relaxed/simple;
+	bh=o1iNiArgHH8WtIVlO9KKHPRIhCKW0gyuEJqSdpVC20U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VmFq9SzeUSt5FQCJ/mqo2G+KKOBcHif50p7OGOAiEUoWF54T+xfITeBaamQ8C3d+WLHeSswQH72euNFuB+JI+KzMH+Iw8z9JLzDQKNJJZk4k5JfaRu4veF/1xKJNXRTZbQPzkpef2QHl07pamJNQ6MzrL/+ZgX6JFouhLw76a3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csail.mit.edu; spf=pass smtp.mailfrom=csail.mit.edu; dkim=pass (2048-bit key) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.b=kgH9Gpiu; arc=none smtp.client-ip=128.30.2.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csail.mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csail.mit.edu
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=outgoing.csail.mit.edu; s=test20231205; h=In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ydrZoxkV6O7ZRauys1QMgFWqtUFjFYz2TetCiceIH5A=; t=1768228804; x=1769092804; 
+	b=kgH9GpiuIrusaqPYpDpqRH68LCPsIHcKL01BYaXPXteS0ZbVRqY5ewlzxgt532vqRP6qy3ZL+VD
+	t/oEN4deillAVg1goTktr1ezjcFsmRPUaTX5MkYobmyV4hy3hZX2tg64agZbZWCbeV9e7/Br/00An
+	mWjOfjxBPMI3il73g2neMerqCJ/WUAZsKUuNSa47KqMyif3PxA0UjL6aHk4KkMyT1m+B7VVt0lOiX
+	87FnVfb95TtYA8g4D7nlBTjednFfN3QyOXjn7CJEL1n6+5mKSGj+u1BovxwmupvbrUZpb4+l9hFw0
+	nGOVILaf+Ng+oAubCaWMLsGdnXZPnkViP+Pw==;
+Received: from [49.207.196.83] (helo=csail.mit.edu)
+	by outgoing2021.csail.mit.edu with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <srivatsa@csail.mit.edu>)
+	id 1vfIvD-006Jsn-62;
+	Mon, 12 Jan 2026 09:29:31 -0500
+Date: Mon, 12 Jan 2026 19:59:17 +0530
+From: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+To: mhklinux@outlook.com
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, longli@microsoft.com, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI: hv: Remove unused field pci_bus in struct
+ hv_pcibus_device
+Message-ID: <aWUFPUxrMkM32zDD@csail.mit.edu>
+References: <20260111170034.67558-1-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 12 Jan 2026 15:27:08 +0100
-Message-Id: <DFMOIU3FC48L.17P3TCF92CEZZ@kernel.org>
-To: "Greg KH" <gregkh@linuxfoundation.org>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH 6/6] rust: driver: drop device private data post unbind
-Cc: <rafael@kernel.org>, <igor.korotin.linux@gmail.com>, <ojeda@kernel.org>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <lossin@kernel.org>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
- <tmgross@umich.edu>, <david.m.ertman@intel.com>, <ira.weiny@intel.com>,
- <leon@kernel.org>, <bhelgaas@google.com>, <kwilczynski@kernel.org>,
- <wsa+renesas@sang-engineering.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <linux-usb@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-References: <20260107103511.570525-1-dakr@kernel.org>
- <20260107103511.570525-7-dakr@kernel.org>
- <2026010741-wiry-trophy-46ec@gregkh> <DFIDCAL68R7N.8SYKSAF0JO4C@kernel.org>
- <2026010701-rearview-retriever-3268@gregkh>
-In-Reply-To: <2026010701-rearview-retriever-3268@gregkh>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260111170034.67558-1-mhklinux@outlook.com>
 
-On Wed Jan 7, 2026 at 3:54 PM CET, Greg KH wrote:
-> I say name it with "rust_" and take out the #ifdef, that makes it
-> simpler/easier to understand.
+Hi Michael,
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 2d9871503614..bea8da5f8a3a 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -548,10 +548,8 @@ static DEVICE_ATTR_RW(state_synced);
- static void device_unbind_cleanup(struct device *dev)
- {
-        devres_release_all(dev);
--#ifdef CONFIG_RUST
--       if (dev->driver->p_cb.post_unbind)
--               dev->driver->p_cb.post_unbind(dev);
--#endif
-+       if (dev->driver->p_cb.post_unbind_rust)
-+               dev->driver->p_cb.post_unbind_rust(dev);
-        arch_teardown_dma_ops(dev);
-        kfree(dev->dma_range_map);
-        dev->dma_range_map =3D NULL;
-diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
-index 51a9ebdd8a2d..bbc67ec513ed 100644
---- a/include/linux/device/driver.h
-+++ b/include/linux/device/driver.h
-@@ -121,15 +121,13 @@ struct device_driver {
-        void (*coredump) (struct device *dev);
+On Sun, Jan 11, 2026 at 09:00:34AM -0800, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> Field pci_bus in struct hv_pcibus_device is unused since
+> commit 418cb6c8e051 ("PCI: hv: Generify PCI probing"). Remove it.
+> 
 
-        struct driver_private *p;
--#ifdef CONFIG_RUST
-        struct {
-                /*
-                 * Called after remove() and after all devres entries have =
-been
--                * processed.
-+                * processed. This is a Rust only callback.
-                 */
--               void (*post_unbind)(struct device *dev);
-+               void (*post_unbind_rust)(struct device *dev);
-        } p_cb;
--#endif
- };
+Since that commit is several years old (2021), I was curious if this was found by
+manual inspection or if the compiler was able to flag the unused
+variable as well.
 
+> No functional change.
+> 
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 
-diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-index 6e32376d4c7c..26095d7bd0d9 100644
---- a/rust/kernel/driver.rs
-+++ b/rust/kernel/driver.rs
-@@ -207,7 +207,7 @@ fn callbacks_attach(drv: &Opaque<T::DriverType>) {
-         let base =3D base.cast::<bindings::device_driver>();
+Reviewed-by: Srivatsa S. Bhat (Microsoft) <srivatsa@csail.mit.edu>
 
-         // SAFETY: It is safe to set the fields of `struct device_driver` =
-on initialization.
--        unsafe { (*base).p_cb.post_unbind =3D Some(Self::post_unbind_callb=
-ack) };
-+        unsafe { (*base).p_cb.post_unbind_rust =3D Some(Self::post_unbind_=
-callback) };
-     }
+Regards,
+Srivatsa
+Microsoft Linux Systems Group
 
-     /// Creates a new instance of the registration object.
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 1e237d3538f9..7fcba05cec30 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -501,7 +501,6 @@ struct hv_pcibus_device {
+>  	struct resource *low_mmio_res;
+>  	struct resource *high_mmio_res;
+>  	struct completion *survey_event;
+> -	struct pci_bus *pci_bus;
+>  	spinlock_t config_lock;	/* Avoid two threads writing index page */
+>  	spinlock_t device_list_lock;	/* Protect lists below */
+>  	void __iomem *cfg_addr;
+> -- 
+> 2.25.1
+> 
+> 
 
