@@ -1,178 +1,296 @@
-Return-Path: <linux-pci+bounces-44561-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44562-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 641D8D1595A
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 23:32:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 51034D15BB1
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 00:07:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 598E43026BEE
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 22:32:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4C3A130369BC
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 23:07:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 219B82853F7;
-	Mon, 12 Jan 2026 22:32:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E9C027FB34;
+	Mon, 12 Jan 2026 23:07:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="kO9UeeRE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gS88dUTJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V2SYjN5/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76CAE269D18;
-	Mon, 12 Jan 2026 22:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768257171; cv=none; b=FvXDDjRoAcSmVVIIoZjMFYZ7wXNXPJxC1pI87x4BFuKmWoElprqrA8nJlUZVHOCBWVAJWGZJGPALrREppixCbWzujA8h0Kghad8nmWYmY6rkasNtG+7gYUpEEbjF+6op3mIugglVdKeF8zMPzK354koO32JjtSCXpSLKtXywSKM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768257171; c=relaxed/simple;
-	bh=x0Y8+T56vpt2wLjy2y5lsv//P1lFieQsVosgTMl1AP4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iHlbMOoBnQ+lM9MkQwTW7u+Sxo43m0iRp3Jf/EgmEmJCbnu6rB43E4aHD3boKPHwhEIxW+Vz0gkJd5griF2IE8uoEWSvGDBWAaiFhEJyxzW+XCR1nOeGxWqH8bmOX+Jw9QKutgLQeIXuv9AxrPssD6LYAVbj3CRaw1wfvNFl4bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=kO9UeeRE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gS88dUTJ; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfout.stl.internal (Postfix) with ESMTP id 9A4141D000F9;
-	Mon, 12 Jan 2026 17:32:47 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Mon, 12 Jan 2026 17:32:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1768257167;
-	 x=1768343567; bh=ZgBrEuDhy3L+HbqTfkoSAu7E5PgSbf+QDr5oTUW4q6g=; b=
-	kO9UeeRESmSyeFfvKzuni6bdq/B57jmfZ+XMzpNBjbBLnuhILeVjysXZw6YiHdID
-	pwNKsxWcm8OtfmO0NfKzUILiCwDhJveoLuR7RtYa68Veug0wrY5KfxNV1/VVaMn0
-	EfZZXNQocIUZzq0jjnGgDVPD/gBeXH4yVepRwf+oihfuElmTDhjRRPx80Agvw0hv
-	bAfFJ0YrufW0L+t+JG33WyN2wxqwbH92vi1j2TUP3jT+eKjNIKSlpvPSQNvLq9tx
-	ZuFafmv9CLIuUNs2mDgnHT0KxrMkGUWnxIPUivL2H+bnnt0UoCrGjacHUVtYWxNb
-	3UrKhXrbozmPiitxLCHRwg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1768257167; x=
-	1768343567; bh=ZgBrEuDhy3L+HbqTfkoSAu7E5PgSbf+QDr5oTUW4q6g=; b=g
-	S88dUTJTt9dZ11ZgvPrc2fdP6jQe80jawk07i+DrmIrqvfq8sdAsc1BtxPLDa9lV
-	r8p9glV1Ufjjnkpv6nbl2KKZCo4vTyb5JENMnsrHcc2HVsNgmV4kXltCsQQqmB4O
-	v11dmMVgm85ntCW32kGKBmeTSipVREOl8SOr9+UeNun+16JUjOeGgmCMzEMCr9wE
-	xtrdOCDQSWXETVcV1Of3Xb4MaKeETI2aCGEH6orwpiOcPE2iIr2qBYfil2OqIZtO
-	JLjdPZRkxOr/M8gVV/sbpsXUTjG2Hi92tvmE6w/d4PhVBH+l3zxI/Du8UEUppM6Z
-	keaBulTPxWwpfJgquUV4w==
-X-ME-Sender: <xms:j3ZlaRPDIvQsySsInlKfp--eaV2REk9mXoBVGDngdZE75r1q7GazEw>
-    <xme:j3ZlaVdLNQNw4f5b311Dh4w7r46ErpOjhTiV1N2Amxy-3Cx3kDjFHhCEvfj1thQT7
-    P99V4AV91p1QgY1-DxjKOBPP3CjiEhpstm5smV9lU8OeQAoA-04>
-X-ME-Received: <xmr:j3ZlaQX7qlrvkpg9s8rlh9g8kdSFzJT9bgJYjVNJuEEVcC5D2JztqVYrESE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduudekieeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkjghfofggtgfgsehtjeertdertddvnecuhfhrohhmpeetlhgvgicu
-    hghilhhlihgrmhhsohhnuceorghlvgigsehshhgriigsohhtrdhorhhgqeenucggtffrrg
-    htthgvrhhnpedvkeefjeekvdduhfduhfetkedugfduieettedvueekvdehtedvkefgudeg
-    veeuueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grlhgvgiesshhhrgiisghothdrohhrghdpnhgspghrtghpthhtohephedpmhhouggvpehs
-    mhhtphhouhhtpdhrtghpthhtoheprghnthhhohhnhidrphhighhhihhnsehnohhkihgrrd
-    gtohhmpdhrtghpthhtohepkhhvmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    epnhgrthhhrghntgesnhhvihguihgrrdgtohhmpdhrtghpthhtohepjhhgghesnhhvihgu
-    ihgrrdgtohhm
-X-ME-Proxy: <xmx:j3Zladi46_pdzDGRWzislpA68taKdQ_gU6FgJqUEiZKsbqN5qF5fyg>
-    <xmx:j3Zlaf8LyatFQTSxxpT4KJsRnaKAIWijYJWpbjWa5OifbXl7812fOg>
-    <xmx:j3ZlafZ25u3X90XJSsYO-BGjAXf6A152QoHl-lfrvOnXVCHb-dGTAQ>
-    <xmx:j3ZlaW0FjaEt9COe-ZHcFiO3GtB38SbpFKkOAji8RUUr1OBQfxqDjQ>
-    <xmx:j3ZlaQAIk-_d9AoQJuPR94BrQx7dAIebKLB6xZC37-qEhC53QM8Iabgt>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 12 Jan 2026 17:32:46 -0500 (EST)
-Date: Mon, 12 Jan 2026 15:32:45 -0700
-From: Alex Williamson <alex@shazbot.org>
-To: "Anthony Pighin (Nokia)" <anthony.pighin@nokia.com>
-Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-pci@vger.kernel.org"
- <linux-pci@vger.kernel.org>, Nathan Chen <nathanc@nvidia.com>, Jason
- Gunthorpe <jgg@nvidia.com>
-Subject: Re: VFIO_GROUP_GET_DEVICE_FD triggering an "unlocked secondary bus
- reset" warning
-Message-ID: <20260112153245.1e64dca9@shazbot.org>
-In-Reply-To: <BN0PR08MB6951416BAFA500FC9902DAA68381A@BN0PR08MB6951.namprd08.prod.outlook.com>
-References: <BN0PR08MB6951416BAFA500FC9902DAA68381A@BN0PR08MB6951.namprd08.prod.outlook.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA32223336;
+	Mon, 12 Jan 2026 23:07:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768259253; cv=fail; b=Yl7NTwU1NX+91zMmuTsJFDF8C145mO9Df9JVHF8l0mZ8VU0SKYsmfUjjBjzaa8U+XIWf1bYqmRf6NW1KdhdFKYZ9kHQxVUogn7j3ikCLhOxmdyjSuYNcnwn72wP4xSCgPp5id14CQqvJGlig1R9YVIkEvfeI67WD9YjOC2cQ0jU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768259253; c=relaxed/simple;
+	bh=TY9PdHZd1pZv1622LgGxftKNJ53j+MSo1XXf/SCzxHo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ZkD9YRKo/X0Q4q7tHQxiKZJg1KU3q9k+s5mMribtUotAC4tcVI5JMviOm6AP2+oETr6Jp8wTwooMXnbtBs+6sIzopnM5BmWTINmjerKJqJ68/GdUABTfDbgk3w4myBpg4/0wDY1U1Z3q/wFR4ie4M04Dm0w1cT8gVAavoYE1HAw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V2SYjN5/; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768259250; x=1799795250;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=TY9PdHZd1pZv1622LgGxftKNJ53j+MSo1XXf/SCzxHo=;
+  b=V2SYjN5/yov0rb51jg2rLf6q6vFRvLOKiYt5+x1N7KZZD4fKCqOBA+aA
+   QWmdrgoKjI74S4Km+shwPiOpECZKDpoujsmY9quXALN3GJA7WwAhS6JWW
+   qYwAC4S+ipWM9zKlmfPlj/Xf/pXMmBDAVsCcIWMc/FrT7KwTf7KVW3XIa
+   YisfSdof1Cp9LXRgqjnmzIMWBJ2qLxYv3pVsFQLrA6+6Rue9kc5lS6JKg
+   rAFw1eMG/HThCnUXaRiER8mr6pDAI4DvbsJVTfmOa7Pka2vr0WQP4Llzl
+   /CdHLyUYsq4TYF4eUx7gLnSCYTIXs0yzoT83z8f6gXojSt14tqlpQEEYy
+   Q==;
+X-CSE-ConnectionGUID: q7pr/NpbQtqUGSYBnnUvhw==
+X-CSE-MsgGUID: D45AJhbpSkyuIBvjnZzLIQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="69593384"
+X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
+   d="scan'208";a="69593384"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 15:07:23 -0800
+X-CSE-ConnectionGUID: 3bDnGGmCSWCWmdEgDFFz0A==
+X-CSE-MsgGUID: ge7jWs1HRO2LWwnmuyN5Tg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
+   d="scan'208";a="208734757"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 15:07:24 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Mon, 12 Jan 2026 15:07:22 -0800
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29 via Frontend Transport; Mon, 12 Jan 2026 15:07:22 -0800
+Received: from CH4PR04CU002.outbound.protection.outlook.com (40.107.201.36) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Mon, 12 Jan 2026 15:07:22 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=t1jvUOqs8B0bWQNMgITQRga/rUSbNwn0qbrFtylM3/OHmfqZ5xdK92peUo5h2X18c7HbZtufcMPoCQj36Yc85ABFC9uJKF6G0u7XM4rVFdTBY+7RIHUuBEqin9EY4y08sCyPTdqdaNbHjbtV1MPhLpfWqV2WyutNUBe2HdTvxmyqoz9b6nkryha8aztRt21ku8/R9Hbim3jp1Vk2C0A4eEzRrO2HWN6J8zSbxykrndZbRuS2L+xx3COUs5iKUokzSliPCTFGu+UT3g8fm/mCKiT1Kcl7TBg+hTJslud+AlKQts3ooGB6cZaFulylbAQzyQ1AH0uBI916CDBHmDxt0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OsCEeHzixQq/jJGKBfSuALnMO45i9828Rit/pT28dck=;
+ b=tm/2NgiNVbCowBs8LMxhiOIg1b+0rtkoyrvE30mnTOj7s9TmJctdoEOlM0CYyU0VQ5M1VceZVf4xdTV6n3sZQO/Np6JauEiRZ8qgMQC90sLSZqyDtMjQH25kTsOLq/QwjJzt0KwEE5/xUMjNdepLJIYow5WVJlKftdu8d2qF/BT3S/A9XJSjsjTJWa2MJB7i7DD4wyBcG/bLvM9rENjirk/LN8AWxDuaCrihQ8/XL575OANcKGhs6H3UVJuRonPooH3gmXjPWCUhgr24UygHEnlHRsYoa+YG5PtG+a5pZCoS4gGDJJQvvJK2pZFfFx8+MzDNMG5T3Or0VkcBx5Kq0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
+ by MN0PR11MB6254.namprd11.prod.outlook.com (2603:10b6:208:3c5::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Mon, 12 Jan
+ 2026 23:07:20 +0000
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332]) by PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332%7]) with mapi id 15.20.9456.015; Mon, 12 Jan 2026
+ 23:07:20 +0000
+Date: Mon, 12 Jan 2026 15:07:16 -0800
+From: Matthew Brost <matthew.brost@intel.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+CC: Zi Yan <ziy@nvidia.com>, Matthew Wilcox <willy@infradead.org>, "Balbir
+ Singh" <balbirs@nvidia.com>, Francois Dugast <francois.dugast@intel.com>,
+	<intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+	"Madhavan Srinivasan" <maddy@linux.ibm.com>, Nicholas Piggin
+	<npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, "Christophe Leroy
+ (CS GROUP)" <chleroy@kernel.org>, Felix Kuehling <Felix.Kuehling@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>, Christian =?iso-8859-1?Q?K=F6nig?=
+	<christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter
+	<simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>, "David
+ Hildenbrand" <david@kernel.org>, Oscar Salvador <osalvador@suse.de>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Leon Romanovsky <leon@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R . Howlett"
+	<Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
+	<rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+	<mhocko@suse.com>, Alistair Popple <apopple@nvidia.com>,
+	<linuxppc-dev@lists.ozlabs.org>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
+	<nouveau@lists.freedesktop.org>, <linux-pci@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
+ callback
+Message-ID: <aWV+pIBkDlgvnPrr@lstrano-desk.jf.intel.com>
+References: <20260111205820.830410-1-francois.dugast@intel.com>
+ <20260111205820.830410-2-francois.dugast@intel.com>
+ <aWQlsyIVVGpCvB3y@casper.infradead.org>
+ <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
+ <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
+ <20260112134510.GC745888@ziepe.ca>
+ <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
+ <20260112165001.GG745888@ziepe.ca>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260112165001.GG745888@ziepe.ca>
+X-ClientProxiedBy: SJ0PR03CA0142.namprd03.prod.outlook.com
+ (2603:10b6:a03:33c::27) To PH7PR11MB6522.namprd11.prod.outlook.com
+ (2603:10b6:510:212::12)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|MN0PR11MB6254:EE_
+X-MS-Office365-Filtering-Correlation-Id: 400f3175-9aeb-4a22-36a1-08de522f567f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?S1dCNzUyZSs4ZTZtay9UVmlTNEdvbytSbS9zeTJ2cDhDWHJnd2ZBSGx2bWl3?=
+ =?utf-8?B?NkVFanZJZFdEcGxEMDJ5TjJwdnlHRm9iYnhMV0JERUlqNXJDSW95TnFRK296?=
+ =?utf-8?B?dlZwL1Y3ZGZNeE5PNUVJM0MwcmdHLzhPckdvRjZXZ2VuQTNlU3lrRjFUWVJy?=
+ =?utf-8?B?MFUrcTBwTXAwN3VXemR5L0pUaEhZMzVMcitQUGt3TURodzU4SldCWmZWRXRJ?=
+ =?utf-8?B?OGVWVFRFcW0zMFJuS3hCRTlSQVkxRytrQTJXTVFtRk9ZUmxuODY4QWZQcHRZ?=
+ =?utf-8?B?eTB0eVhuY2RDUGZEaExZekZuMStjM01lRnJTSnlkV3QwTnlRZmhCOWtQNFFH?=
+ =?utf-8?B?NXhaT3pXSHpaV2lFUWhFNXp4WjBHSlBiTW8wbnJURVpISWVoaGIwbUpHWWVH?=
+ =?utf-8?B?dTRIam1EZnJhMTdHbnJHOE9KZ0tvOVZSQ1gwMis2eWdSRFY3T2d4RVdMRTRP?=
+ =?utf-8?B?TFpKa0hLVGlqeS8wVk0vR2xuSk1tbVkyMi9GRTlMd1ZGbk1KSisvWVUvWGZP?=
+ =?utf-8?B?Tlp0ZW1jeWhuNUtROFExZ0pSWE1DRmtBQnFUcm5BZ1VDUzM5RDFFcXpsZ2Ft?=
+ =?utf-8?B?Smt1NjgydEdUcU9Pbkh5bmszRDJJQXZBQ0N5RnRrdEwrVFFuaUhGMTNjNG5y?=
+ =?utf-8?B?eWJzcC8zUzNqY3lhSVpLbCt5ZVJnMHpZTUlUWkhHMGFwSlVMamFnY01RbjNG?=
+ =?utf-8?B?bzFHNU12LytJVDl0M1ZxN1BBRXB3aXk3T0UxODhHNmtnNDlSbVUveHE2RHNy?=
+ =?utf-8?B?U2JYNXMrZ0xCdUNQOTZNUVlyaU9kcFJ6NTJGam5QUGtPOWhTZVh5dUJFOC9N?=
+ =?utf-8?B?OVRsRUM1ak1JUEZUTlBOdVBHY2tnYUJ0Nmc3RjU4eEkxTnAwSkVsN1ZFOUd0?=
+ =?utf-8?B?KzJPaThNNmRLK3R5YUJZMi9OakpHYXV3SS9qanhYd0RtMksySjhzL202RkRw?=
+ =?utf-8?B?b3kzV1lRMlhyWDhXbFNsb2xmT1g1a3YxNU9zUDYwWU9waUtaZ0MvRDZUUmJN?=
+ =?utf-8?B?aWFBQ3RXdVYrZGlBSnk5bXcrK1VMT1JqYmFFS0diUG5xb05NQWlHZmZkSGIr?=
+ =?utf-8?B?K1R4SlJ6OW80UlFsY3k2TlN6VTd5NVhjQ2hYeE9zaXlSVllIMGdqV3l6RlFj?=
+ =?utf-8?B?V3d1cXpWdVdpKzRKMGgvVFBXQkxzclpPZ0pnWi9XcXRaWHVBeEhLM0dHWkw2?=
+ =?utf-8?B?R0JPaUZPekdJS21kRmg4bTI4eU9SeEVhT3JPb1FwZjUxL0lQa2hLZks5NVdC?=
+ =?utf-8?B?M1k2MjRCOGkwRUtVcDdJdWN2YTNxWXYyMmxDNHpYQ1RPUzRJMnhvQWZKeWZm?=
+ =?utf-8?B?VUMyWS81aFRrT1pEMlVMNEdBL3VDUmM5S0tVclhMU0dKLzk1Uk9jSWsyOGxn?=
+ =?utf-8?B?d3MzeUZjSEFxemh5RERRTWtIMUNzSitEQ3pubTVneVFTVnZLbk9JZmw1VlRU?=
+ =?utf-8?B?S0RxdFlVSW1BS1JQSTFyYUY5anNFMmhia3g4eE1UaUxHMWpDMzVpWC9YQkox?=
+ =?utf-8?B?SzMreVQ0UUM1VU45OHNwOXcrNHl1ZTJMclhqZThmcU0rSEZab1hkeU9JWjZn?=
+ =?utf-8?B?UFM4YUVEeWJ2UUczczhNbnVhMkphMjFNdUtjeUkwaUNOSGtaWTE0S29EK0s5?=
+ =?utf-8?B?SlF3S2JCUG1pK0Zsb0lVR0FRZWFjSU9DR09TcXdNL0REZitFUzJOeWJPaWdJ?=
+ =?utf-8?B?dEJpeFdKMnYwVDMzQ3E3SUxqa3FKRjFVb01RM0J0VW1sQU5XVThKK1M3aGJM?=
+ =?utf-8?B?N0hVclEySDk4SUwra1ErcjJTRXNBWnB0dEgzMEVFWkRVN0t2ZC8zRmhwbVgy?=
+ =?utf-8?B?QVVIK0crYnB3NFg3VG5nOTNzWmx2bFIzSUZ3c3BrVGtNeVg1bW9VZ09LSU9P?=
+ =?utf-8?B?cW1sSEtJZm9UUFZiK2ZYdkZ4djEzSUtzWm4vZkljc0hlYVE9PQ==?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NlczMTdTR082dTVkSDBsNTNEc2hEK0RCVFo0eDN6MTFyTU1mNWlFcFppczBV?=
+ =?utf-8?B?YjhPYnZ3cG44b2ZEK3JDbmxEeHJGWUxVUUduVjczc3c1VzdrYzVXVVhVcVhx?=
+ =?utf-8?B?eFZZcW9kWkRxZ2g5bHJNMUhtMWdrazY2NW1VSEdZSkFvQ25sVWROU2JTaUs4?=
+ =?utf-8?B?TzdpclVpU0kyMkY0WVhZNG50MXd0cjhKZ1BleldoTy8yV2ZJdU9lb1Bkd3N4?=
+ =?utf-8?B?WmphWHdkaGdxckYydnpUdDljUnFvL2hSaUdldG5LMm9xNG85NVN3d2R3WENX?=
+ =?utf-8?B?eWFiS3RmdGNSNkRsV0cwZjBsNkVKQ3BKWEJtcDJEdktqNkpyMG9BRms5ai9w?=
+ =?utf-8?B?YW14bkFac1hCaWtkdHhPRWFzZ09jU0taTkdGK3BJcGpSZmU4MUpVNTF2ZjhM?=
+ =?utf-8?B?Y05UdXR0cjRKSlRjcmhBZXVqSWtGdWtkbnU0RHFOdHExSm0zNHR2d2hoTnZT?=
+ =?utf-8?B?U3FWVS8xdmt1STNhVXMwemxRTzRKb1ZvV0JSMUMyNmlrbFVxVTMzQlJSZ3Va?=
+ =?utf-8?B?alZmTFk2UmdnWFFqa0xCN1c3N3MrWlhPZlpvMDc1bXcybEh2TUFUaTc1K0Ji?=
+ =?utf-8?B?aWszQmpCbTF5bjNJYkl2OWNCaWlGYjB0aGQ4Vm1DRFVvTWI3UWdyaUFoNk5L?=
+ =?utf-8?B?OXFUWUREbTg2TWhqSng2Zm1PMmVLbzRzRlQyaVdSa21rT3NFZ3Brak1FN2h6?=
+ =?utf-8?B?d0ZGeHY0K20rN3NXd25oTVRKUHVzZ3huY01VVDRVaHNEa0hRSkhDZnRYZmY3?=
+ =?utf-8?B?QzFrTTBjbm5tclhBN3FoY1k2VHR4Z2p0Q2IxeExaNUhzVGdoZlVkTkx1c0Vl?=
+ =?utf-8?B?QjVacTF0akJZYm4wWW5yQ3ZBZlkrMmpxU0V6UHpObGtzNS8xNEVlK2tMZ3I1?=
+ =?utf-8?B?b0R4dlVkdlVYYmxETDhtckJsK3NGc0ZZejR0Yk1KSjFGc3NTOGcrWklGWVVP?=
+ =?utf-8?B?bHduWm94RFZMei9WbnhDdUFUb0ZjeFNSSVJUbGdlOFU0RjVEM1FwdTlSbHRO?=
+ =?utf-8?B?alZZMWd3QzFJdUlXdzM1dnRzcEZEYm4rWXFKc0ZjcGtmTjNpUGJzRGJ3a2Yv?=
+ =?utf-8?B?QzRhZ1FvK2U1WkxsZUt2Rzg2VFpRSVpzaVZSWmNNK0p4WTBUZXJqWTQ3WERx?=
+ =?utf-8?B?bFNuNE1kcmpGRUZsWmZ3b2JtcUNSWFREaHRvMWRzTmw3N3ppekttUzQ1bjFV?=
+ =?utf-8?B?bVI5WlpRNUU5ZFpCUU9KRjNuTkVEQmZNSnhDNFkySEU3d2xQVmphWWhQTXEw?=
+ =?utf-8?B?RmtUUnhDUTJvRTE5US9XTk5zb3lSdDhmZkFna0Ywd1RYZndLK2JUSWp3RWZL?=
+ =?utf-8?B?TENhN0FPM21TSkxvVjZmMHVyQVVtdXR6SHZrczc5VnYrZGI3UGNTZ082YWVz?=
+ =?utf-8?B?RDhUNW1LNTQ2eVBTWWpXeGc2TWNSQVI0RGYrN3dlR01YM1Qrb1pMNHg5UFRL?=
+ =?utf-8?B?TFZ5MVQ3SUo5cXlPakRyNG1zZHcrc053czRxUzBSbTA4ZHU0ejRuUFBwbmJp?=
+ =?utf-8?B?eW1DcFVUOUVhKzBORUZaYjZUMm9RcC9JYlF1NjJRV2w2bGdNN1h2NlNCajlZ?=
+ =?utf-8?B?WGMzSnNNRUVsSGJCYUtCTFBwN1FaRGZjdE9ab3hzYTJjUjI2NWdybVBQTzNO?=
+ =?utf-8?B?L3JOSmZnTnhZRmppWmpCSWE4d3lmSXFPbzFYMk9ncFFOVE9EanVlMGV6cXdq?=
+ =?utf-8?B?LzZEcTNSVmptUWpObHpsUWZ4RTZhRXZrSEpiNkw3NDNqRnVXVEdmeE8zeXRk?=
+ =?utf-8?B?NWlBWVczRVBBa1NQdnE1M3dlaHNVZGo0TUUyczc1VmhnY2pEaEYzeDVjMDAw?=
+ =?utf-8?B?emhlN1laTWZXRFNOOXJOd1IwekQreXBLelVnSzl2ZnNDcmZ1YVhTQXluYUwy?=
+ =?utf-8?B?aUQ4QXZ6azY1UFZ3UGhnYk95Y25tL0ZpbWY0cFQrYml6enNnUG9pdGt6UXZt?=
+ =?utf-8?B?dUpQdnpLanZhL3UyUVpDRGh1ZnBZbUpqbW82TjFzcnFpaUNlYWxGQ2xJSkZi?=
+ =?utf-8?B?R0dSSXVqdjN1Z20zYjl5c0NKY21ldjdoSDdBb3E4WXQ0UVZEdlllbmp2RDZ6?=
+ =?utf-8?B?NlJiSGFqb3M3RnVuZDk4Y2pYNmczTVVlOHpjeWlZQ2c5Yndrb3NwczdtYVlG?=
+ =?utf-8?B?c2VMUk9pTms2b0xXM25vVkxZWHFLc2Y5S0ZmV1FrUmo2NTI0NzBLV1NCdW53?=
+ =?utf-8?B?bGU0a2NtdlhnNEs1OVFvQ0NDY09xODFzNGZtZFBpQW5XYVdSTktTYk9RaWlm?=
+ =?utf-8?B?OENTTytZcVRoRHpDOWdXSVpYc0gxbU4zN1J4QVRCTnlkK3U4aFA5RmdFTG5s?=
+ =?utf-8?B?U1VWRGxqUHBZT0Yyc1IwSWY1Z0pVVk5Ddm54cFk5U25ZUlBkQUJnWHFJclJv?=
+ =?utf-8?Q?qu8W5bYnhq73JDHQ=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 400f3175-9aeb-4a22-36a1-08de522f567f
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2026 23:07:20.3074
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8rOsCvGWBmuq+axcLVOa8aAWLUomYaurPjdnpq6Cx6/X0DpQKYx+hpNcFjjGkHmFSs65XvFqsu4Q7qqSamsijg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6254
+X-OriginatorOrg: intel.com
 
-On Mon, 12 Jan 2026 21:58:44 +0000
-"Anthony Pighin (Nokia)" <anthony.pighin@nokia.com> wrote:
+On Mon, Jan 12, 2026 at 12:50:01PM -0400, Jason Gunthorpe wrote:
+> On Mon, Jan 12, 2026 at 11:31:04AM -0500, Zi Yan wrote:
+> > > folio_free()
+> > >
+> > > 1) Allocator finds free memory
+> > > 2) zone_device_page_init() allocates the memory and makes refcount=1
+> > > 3) __folio_put() knows the recount 0.
+> > > 4) free_zone_device_folio() calls folio_free(), but it doesn't
+> > >    actually need to undo prep_compound_page() because *NOTHING* can
+> > >    use the page pointer at this point.
+> > > 5) Driver puts the memory back into the allocator and now #1 can
+> > >    happen. It knows how much memory to put back because folio->order
+> > >    is valid from #2
+> > > 6) #1 happens again, then #2 happens again and the folio is in the
+> > >    right state for use. The successor #2 fully undoes the work of the
+> > >    predecessor #2.
+> > 
+> > But how can a successor #2 undo the work if the second #1 only allocates
+> > half of the original folio? For example, an order-9 at PFN 0 is
+> > allocated and freed, then an order-8 at PFN 0 is allocated and another
+> > order-8 at PFN 256 is allocated. How can two #2s undo the same order-9
+> > without corrupting each other’s data?
+> 
+> What do you mean? The fundamental rule is you can't read the folio or
+> the order outside folio_free once it's refcount reaches 0.
+> 
+> So the successor #2 will write updated heads and order to the order 8
+> pages at PFN 0 and the ones starting at PFN 256 will remain with
+> garbage.
+> 
+> This is OK because nothing is allowed to read them as their refcount
+> is 0.
+> 
+> If later PFN256 is allocated then it will get updated head and order
+> at the same time it's refcount becomes 1.
+> 
+> There is corruption and they don't corrupt each other's data.
+> 
+> > > If the allocator is using the struct page memory then step #5 should
+> > > also clean up the struct page with the allocator data before returning
+> > > it to the allocator.
+> > 
+> > Do you mean ->folio_free() callback should undo prep_compound_page()
+> > instead?
+> 
+> I wouldn't say undo, I was very careful to say it needs to get the
+> struct page memory into a state that the allocator algorithm expects,
+> whatever that means.
+> 
 
-> When adding a PCI device to a VFIO group, the following is triggered:
-> pcieport 0000:00:00.0: unlocked secondary bus reset via: pci_reset_bus_function+0x188/0x1b8 
-> 
-> As a result of:
-> 920f6468924f ("PCI: Warn on missing cfg_access_lock during secondary bus reset")
-> 
-> PCI topology is very simple:
-> # lspci -vvvtn
-> -[0000:00]---00.0-[01-ff]----00.0  10ee:7011
-> 
-> Full backtrace is as follows:
-> [  125.942637] Hardware name: Freescale ARMv8 based Layerscape SoC family
-> [  125.942642] Call trace:
-> [  125.942648]  dump_backtrace from show_stack+0x20/0x24
-> [  125.942669]  r7:600f0013 r6:600f0013 r5:c11bd5e8 r4:00000000
-> [  125.942672]  show_stack from dump_stack_lvl+0x58/0x6c
-> [  125.942688]  dump_stack_lvl from dump_stack+0x18/0x1c
-> [  125.942706]  r7:c3663483 r6:c1c2e000 r5:00000000 r4:c1c2e000
-> [  125.942709]  dump_stack from pci_bridge_secondary_bus_reset+0x74/0x78
-> [  125.942724]  pci_bridge_secondary_bus_reset from pci_reset_bus_function+0x188/0x1b8
-> [  125.942740]  r5:00000000 r4:c3663000
-> [  125.942742]  pci_reset_bus_function from __pci_reset_function_locked+0x4c/0x6c
-> [  125.942761]  r6:c104aa58 r5:c3663000 r4:c366347c
-> [  125.942764]  __pci_reset_function_locked from pci_try_reset_function+0x64/0xd4
-> [  125.942782]  r7:c24b3700 r6:c36630cc r5:c3648400 r4:c3663000
-> [  125.942784]  pci_try_reset_function from vfio_pci_core_enable+0x74/0x29c
-> [  125.942802]  r7:c24b3700 r6:c3663000 r5:c3648400 r4:00000000
-> [  125.942805]  vfio_pci_core_enable from vfio_pci_open_device+0x1c/0x34
-> [  125.942825]  r7:c24b3700 r6:c3648400 r5:c3648400 r4:c3648400
-> [  125.942828]  vfio_pci_open_device from vfio_df_open+0xc8/0xe4
-> [  125.942844]  r5:00000000 r4:c3648400
-> [  125.942847]  vfio_df_open from vfio_group_fops_unl_ioctl+0x3dc/0x704
-> [  125.942861]  r7:c24b3700 r6:00000013 r5:c3179cc0 r4:c3648400
-> [  125.942863]  vfio_group_fops_unl_ioctl from sys_ioctl+0x2d4/0xc80
-> [  125.942879]  r10:c24b3700 r9:00000012 r8:c3757300 r7:beb3c8e8 r6:00003b6a r5:c3757301
-> [  125.942883]  r4:00003b6a
-> [  125.942886]  sys_ioctl from ret_fast_syscall+0x0/0x5c
-> 
-> Some added debug shows that the trylock is successful for the device being attached. However,
-> the parent (controller) is not locked, leading to the warning.
-> 
-> [  126.254846] pci_cfg_access_trylock: locked for 0000:01:00.0
-> [  126.255081] pci_parent_bus_reset called for dev 0000:01:00.0
-> [  126.255086] pci_parent_bus_reset: checking conditions for dev 0000:01:00.0
-> [  126.255091]   pci_is_root_bus: 0
-> [  126.255096]   subordinate: 00000000
-> [  126.255102]   bus->self: e8833d2c
-> [  126.255108]   PCI_DEV_FLAGS_NO_BUS_RESET: 0
-> [  126.255112] pci_parent_bus_reset: resetting bus for dev 0000:00:00.0
-> [  126.255120] pcieport 0000:00:00.0: unlocked secondary bus reset via: pci_reset_bus_function+0x21c/0x220
-> 
-> The reset methods are as follows:
-> # cat /sys/devices/platform/soc/3500000.pcie/pci0000:00/0000:00:00.0/reset_method
-> pm
-> # cat /sys/devices/platform/soc/3500000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/reset_method
-> bus
+Hi Jason,
 
+A lot of back and forth with Zi — if I’m understanding correctly, your
+suggestion is to just call free_zone_device_folio_prepare() [1] in
+->folio_free() if required by the driver. This is the function that puts
+struct page into a state my allocator expects. That works just fine for
+me.
 
-Thanks for the report, I'm surprised we haven't seen more of this.
-The warning was added in 7e89efc6e9e4 ("PCI: Lock upstream bridge for
-pci_reset_function()"), where locking of the parent bridge was added
-for pci_reset_function() but not for pci_try_reset_function().  There's
-another case too where vfio_pci_core_disable() makes use of
-__pci_reset_function_locked() and was also not updated to match the
-requirement enforced by 7e89efc6e9e4  Thanks,
+Matt
 
-Alex
+[1] https://patchwork.freedesktop.org/patch/697877/?series=159120&rev=4
+
+> Jason
 
