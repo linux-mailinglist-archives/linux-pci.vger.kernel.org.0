@@ -1,140 +1,193 @@
-Return-Path: <linux-pci+bounces-44548-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44549-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40AF7D14E28
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 20:17:23 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE2ABD14E9E
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 20:23:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 5C3A030082E8
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 19:17:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 235293031CF1
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jan 2026 19:23:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37577182D2;
-	Mon, 12 Jan 2026 19:17:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3710D31B833;
+	Mon, 12 Jan 2026 19:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LZEyCo93"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275DBBA3F
-	for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 19:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359DB31ED80;
+	Mon, 12 Jan 2026 19:22:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768245439; cv=none; b=JJc/Km8nhmdBAZpJXRaiCadvOg/87FWZ4gdm1Ib8iGPjwPgYkRXDsIR/9W3pLA9Dc6kPhlZHWwEiONV52hlKfB1zmkAuGwDrDL0hafOwR2vspIXqmsJSzUqL/ghiw9rY1yggzaA1Jxagos0uPYAQ1qoCBOTrZpAh6yZt9p0SxH8=
+	t=1768245779; cv=none; b=oVQh5XhschZXCo4kyU+4D3nl1v6Q+m5u9IgMh/wLECYcBeyNp5/2GOfsKQEYW+F+/1Vr021akap5PmvwJXo/DXwbYs0wXtQ+BDjYioJvI7AQDalA8WzKsqJuulMsvJWwJ/Wfm2So+7d/KDkU+c6lJb2egN1SGX5hw1HK/JvN/BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768245439; c=relaxed/simple;
-	bh=1Pxj4oCluiKLepBu8sfazi6rV6kMCAcMHnjVLHROAlM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mwxsLVSzcr/SrsolttU95eZaXa0ZaDi0JAJZg1cnouisqY/6AX4dcWgUM3ndxtR8wGNkAfraJnad4iuWkhuHo6YNvRApjo7yxFz53qKhbaLFgUwvH6sm0kqpiLFSBWjskKxgfefMEX0PLCCiPq+udJSV247RMmgIwK4qOC69lIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=ratatoskr.trumtrar.info)
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <s.trumtrar@pengutronix.de>)
-	id 1vfNPd-0003nP-0Y; Mon, 12 Jan 2026 20:17:13 +0100
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Date: Mon, 12 Jan 2026 20:17:11 +0100
-Subject: [PATCH] PCI: layerscape: Allow to compile as module
+	s=arc-20240116; t=1768245779; c=relaxed/simple;
+	bh=ZhRs7xnPZSV6XzTqCAD9BCDygo93shWOqBF0P1AaaRE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FzOFyZHnRzDFLzhHMao+5LGyKiTVJKN8/hKH217f4bkEZrHyjxEXXtjegcwzPrje9efqBca8DsG/ia/cQukeT7yvBagdE14eEgrF6ZWEWCC/ZJB+vYLv/+BN9bl57B7++/f86AexhMQ85R4RCh3Iflpq1BO+Qr0BfSaqtoXCpyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LZEyCo93; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768245768; x=1799781768;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZhRs7xnPZSV6XzTqCAD9BCDygo93shWOqBF0P1AaaRE=;
+  b=LZEyCo93wnXyTfQbLqFQg0VpXsXl8PqF7X2A6MLtmiKMTbw2BO8U+MSt
+   dRXBqLL3n+4ZsfsVnv1QbOo/sk+abxPg9r89OI2gWeho20fSIICb+8Oa5
+   a2pJ3MA2CqyYw5j4y6CjDEszz8t+Y4a8Bxp1iZW2V3dG5Wp/aPsRwdffC
+   lhunireMdavEvJ+suCtRKmeVgA0HrTVteOA80aBDbj0eUrdo29RN6J/od
+   pOi/nyE679ci6KhBOrvruykiDBJMHdh+RMcOeunnU1nxK9ZYebMEC1mBq
+   otT6lyAgjYEWJDDXP2a+8/R8Npq6Gfv8pQEDuL2FwK/We+c17Fd5vzRWh
+   g==;
+X-CSE-ConnectionGUID: M1qEcAmqSamuh7M1v4oe2g==
+X-CSE-MsgGUID: 9l0OgbWyQUO7Mk6WGs7k4A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="95004014"
+X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
+   d="scan'208";a="95004014"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 11:22:47 -0800
+X-CSE-ConnectionGUID: /POQ5LCQRMmFK2RRBMq4iA==
+X-CSE-MsgGUID: sRBvAVgdRVW3CVbcLKyFvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
+   d="scan'208";a="208690532"
+Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.37])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 11:22:40 -0800
+Date: Mon, 12 Jan 2026 21:22:38 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Rob Herring <robh@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v4 9/9] power: sequencing: pcie-m2: Create serdev device
+ for WCN7850 bluetooth
+Message-ID: <aWVJ_ncUkAYswE3W@smile.fi.intel.com>
+References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
+ <20260112-pci-m2-e-v4-9-eff84d2c6d26@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260112-v6-19-topic-layerscape-pcie-v1-1-1cd863fce50e@pengutronix.de>
-X-B4-Tracking: v=1; b=H4sIALZIZWkC/x3MQQqAIBAAwK/EnltwrQT7SnQw22ohSjSiiP6ed
- JzLPJA4Cidoiwcin5Jk3zKoLMAvbpsZZcwGrbRRRBpPg2Tx2IN4XN3NMXkXGIMXRjuSGkxTa6o
- s5CFEnuT6965/3w/uII1AbQAAAA==
-X-Change-ID: 20260112-v6-19-topic-layerscape-pcie-9d10b6542139
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Minghuan Lian <minghuan.Lian@nxp.com>, 
- Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, 
- Jingoo Han <jingoohan1@gmail.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
- imx@lists.linux.dev, Sascha Hauer <s.hauer@pengutronix.de>, 
- Steffen Trumtrar <s.trumtrar@pengutronix.de>
-X-Mailer: b4 0.14.3
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: s.trumtrar@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260112-pci-m2-e-v4-9-eff84d2c6d26@oss.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+On Mon, Jan 12, 2026 at 09:56:08PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
 
-The layerscape pcie host controller could also be compiled as module.
-Add the necessary infrastructure to allow building as module instead of
-only as builtin driver.
+> For supporting bluetooth over the non-discoverable UART interface of
+> WCN7850, create the serdev device after enumerating the PCIe interface.
+> This is mandatory since the device ID is only known after the PCIe
+> enumeration and the ID is used for creating the serdev device.
+> 
+> Since by default there is no OF or ACPI node for the created serdev,
+> create a dynamic OF 'bluetooth' node with the 'compatible' property and
+> attach it to the serdev device. This will allow the serdev device to bind
+> to the existing bluetooth driver.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
----
- drivers/pci/controller/dwc/Kconfig          |  2 +-
- drivers/pci/controller/dwc/pci-layerscape.c | 16 +++++++++++++++-
- 2 files changed, 16 insertions(+), 2 deletions(-)
+...
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 519b59422b479..abfa4a6e62c25 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -121,7 +121,7 @@ config PCI_IMX6_EP
- 	  DesignWare core functions to implement the driver.
- 
- config PCI_LAYERSCAPE
--	bool "Freescale Layerscape PCIe controller (host mode)"
-+	tristate "Freescale Layerscape PCIe controller (host mode)"
- 	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
- 	depends on PCI_MSI
- 	select PCIE_DW_HOST
-diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-index a44b5c256d6e2..14d6ac4fc53fd 100644
---- a/drivers/pci/controller/dwc/pci-layerscape.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape.c
-@@ -13,6 +13,7 @@
- #include <linux/interrupt.h>
- #include <linux/init.h>
- #include <linux/iopoll.h>
-+#include <linux/module.h>
- #include <linux/of_pci.h>
- #include <linux/of_platform.h>
- #include <linux/of_address.h>
-@@ -403,8 +404,16 @@ static const struct dev_pm_ops ls_pcie_pm_ops = {
- 	NOIRQ_SYSTEM_SLEEP_PM_OPS(ls_pcie_suspend_noirq, ls_pcie_resume_noirq)
- };
- 
-+static void ls_pcie_remove(struct platform_device *pdev)
-+{
-+	struct ls_pcie *pcie = platform_get_drvdata(pdev);
-+
-+	dw_pcie_host_deinit(&pcie->pci->pp);
-+}
-+
- static struct platform_driver ls_pcie_driver = {
- 	.probe = ls_pcie_probe,
-+	.remove = ls_pcie_remove,
- 	.driver = {
- 		.name = "layerscape-pcie",
- 		.of_match_table = ls_pcie_of_match,
-@@ -412,4 +421,9 @@ static struct platform_driver ls_pcie_driver = {
- 		.pm = &ls_pcie_pm_ops,
- 	},
- };
--builtin_platform_driver(ls_pcie_driver);
-+module_platform_driver(ls_pcie_driver);
-+
-+MODULE_AUTHOR("Minghuan Lian <Minghuan.Lian@freescale.com>");
-+MODULE_DESCRIPTION("Layerscape PCIe host controller driver");
-+MODULE_LICENSE("GPL");
-+MODULE_DEVICE_TABLE(of, ls_pcie_of_match);
+> +static int pwrseq_m2_pcie_notify(struct notifier_block *nb, unsigned long action,
+> +			      void *data)
+> +{
+> +	struct pwrseq_pcie_m2_ctx *ctx = container_of(nb, struct pwrseq_pcie_m2_ctx, nb);
+> +	struct pci_dev *pdev = to_pci_dev(data);
+> +	struct serdev_controller *serdev_ctrl;
+> +	struct device *dev = ctx->dev;
+> +	struct device_node *pci_parent;
+> +	int ret;
+> +
+> +	/*
+> +	 * Check whether the PCI device is associated with this M.2 connector or
+> +	 * not, by comparing the OF node of the PCI device parent and the Port 0
+> +	 * (PCIe) remote node parent OF node.
+> +	 */
+> +	pci_parent = of_graph_get_remote_node(dev_of_node(ctx->dev), 0, 0);
 
----
-base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
-change-id: 20260112-v6-19-topic-layerscape-pcie-9d10b6542139
+> +	if (!pci_parent || (pci_parent != pdev->dev.parent->of_node)) {
 
-Best regards,
+!device_match_of_node()
+
+> +		of_node_put(pci_parent);
+> +		return NOTIFY_DONE;
+> +	}
+> +	of_node_put(pci_parent);
+> +
+> +	switch (action) {
+> +	case BUS_NOTIFY_ADD_DEVICE:
+> +		/* Create serdev device for WCN7850 */
+> +		if (pdev->vendor == PCI_VENDOR_ID_QCOM && pdev->device == 0x1107) {
+> +			struct device_node *serdev_parent __free(device_node) =
+> +				of_graph_get_remote_node(dev_of_node(ctx->dev), 1, 1);
+> +			if (!serdev_parent)
+> +				return NOTIFY_DONE;
+> +
+> +			serdev_ctrl = of_find_serdev_controller_by_node(serdev_parent);
+> +			if (!serdev_ctrl)
+> +				return NOTIFY_DONE;
+> +
+> +			ctx->serdev = serdev_device_alloc(serdev_ctrl);
+> +			if (!ctx->serdev)
+> +				return NOTIFY_BAD;
+> +
+> +			ret = pwrseq_m2_pcie_create_bt_node(ctx, serdev_parent);
+> +			if (ret) {
+> +				serdev_device_put(ctx->serdev);
+> +				return notifier_from_errno(ret);
+> +			}
+> +
+> +			ret = serdev_device_add(ctx->serdev);
+> +			if (ret) {
+> +				dev_err(dev, "Failed to add serdev for WCN7850: %d\n", ret);
+> +				of_changeset_revert(ctx->ocs);
+> +				of_changeset_destroy(ctx->ocs);
+> +				serdev_device_put(ctx->serdev);
+> +				return notifier_from_errno(ret);
+> +			}
+> +		}
+> +		break;
+> +	case BUS_NOTIFY_REMOVED_DEVICE:
+> +		/* Destroy serdev device for WCN7850 */
+> +		if (pdev->vendor == PCI_VENDOR_ID_QCOM && pdev->device == 0x1107) {
+> +			serdev_device_remove(ctx->serdev);
+> +			of_changeset_revert(ctx->ocs);
+> +			of_changeset_destroy(ctx->ocs);
+> +		}
+> +		break;
+> +	}
+> +
+> +	return NOTIFY_OK;
+> +}
+
 -- 
-Steffen Trumtrar <s.trumtrar@pengutronix.de>
+With Best Regards,
+Andy Shevchenko
+
 
 
