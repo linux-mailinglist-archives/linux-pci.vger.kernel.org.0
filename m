@@ -1,95 +1,95 @@
-Return-Path: <linux-pci+bounces-44678-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44679-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5641CD1B776
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 22:46:34 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7500D1B7A0
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 22:50:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EB86C302106B
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 21:46:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A15973031CC4
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 21:50:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9587318EFF;
-	Tue, 13 Jan 2026 21:46:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C4EC322753;
+	Tue, 13 Jan 2026 21:50:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9I2bAwv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6L4PimT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8441830F922;
-	Tue, 13 Jan 2026 21:46:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196681B3925
+	for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 21:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768340791; cv=none; b=edyWj8DqbjxVl5bfnP+e9gsVx4/GyxC2e5R+wYkRAp06ETFtUL51jsFbfKwhDziAaG5AeBSxKIw0dswp4J+50cANi7lA00T2wgQiG7LVBO2U1IBcbeL+sosHJgIO+8EDbuKHFiKQm/QPz5m9HWvsjfucnrDT/LViv+vED8ik954=
+	t=1768341017; cv=none; b=YC8/1A3LSIV+er6+xdgDZK6TM7STmus2DGB67Ut46iP5C7B8Jw6C8QX28eCvuA62N51MAWEv0q68XKY8B+oPdWeYEWg+tV0/BW8aYspCW2G59VoAXhjr23dJbBiEMDZL7H8/gaLaYDLPYx61tZVno+N956RfgGQ26zg4nUA8Jt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768340791; c=relaxed/simple;
-	bh=50OooZQr+axK/WY8rkv+dFFrWBuwx26gvpQRFT62CXg=;
+	s=arc-20240116; t=1768341017; c=relaxed/simple;
+	bh=mHj/NEGaKckkGqOd3Bd4ppZNGpNvkNokTu/s5NsgQPE=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=TelMGjVTXK7mKoiooCwVekAyit/z10krRzj/CcuBpDbv3CdXvspwvWGsJ/4TUkev3FvnGLscFf76XHwQquBHruhOgjBqxX0jugXTGMASy1P3HFlCCGuDCroIeu8Wgx37uAYGIg+eM4vSenQWQLEV45Gr4cfE0G7zGHBUnqYJtIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9I2bAwv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0305CC116C6;
-	Tue, 13 Jan 2026 21:46:30 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=LuWQLvU5ivQf/NMhozBmpra0KELD6twbCkdRT8GtMWygpMybVWanjFvuHl/d40eDxIb66HsslzmRkxEpW9WgGzNB/vpQeniqo4Ao6zVunZyc4LnffgDmTPvf/NswLXc1MetEADvVhTFzqBEEUvpM7LcZq770xVqcu52cOgS3pl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6L4PimT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C458C116C6;
+	Tue, 13 Jan 2026 21:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768340791;
-	bh=50OooZQr+axK/WY8rkv+dFFrWBuwx26gvpQRFT62CXg=;
+	s=k20201202; t=1768341016;
+	bh=mHj/NEGaKckkGqOd3Bd4ppZNGpNvkNokTu/s5NsgQPE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=a9I2bAwvocF4kW1suM7+toDFKNO+c5bLSwY/VrywOnC3HVhTJw/HjDugF7YZHPVbI
-	 BOW+3SWJ5MZ2keYKRWkVoRXunkur6PLBu3BBW+TBRGIUT2Vn/+fMadiawWt6WFZd0h
-	 4JDeVAe3Msbkd5eB/iiet4Ae+zQpFr29BOMpKgKaK7Kp4a3WfJ0RrCY3FJB4wsE2MH
-	 eNCSJ4EPCkT9lq9lGFRt+awIXpGcw9p4hEh1+R+DkXNEkMJx0LF7Ro50NGdsXA/AtS
-	 E7+YNDzbW0C0wG1aVW3tceHDko8LooEtAIuQE5tTatEVc1Jsb/iFRXjZZt9r6xUI62
-	 DInk8wxkk5Tug==
-Date: Tue, 13 Jan 2026 15:46:29 -0600
+	b=W6L4PimTVf4gw2uiXO9cB2pnDKoTzZYjVJwXJEPnr7JbkqEIZm+c0V4bRGEbHaafW
+	 KdyZ3FDEAWpbLh4iNCLsKzn9PHP6xINn4FS/wR9Mn4y8rqdiLFKiNh6i4FC7DxGJkp
+	 pKM2a62w71xhBETb2G8K7r8ictp4+b05EgbWXZPew3Jka+BGSTzSZPc4E5dMTVlsyh
+	 oem7Ar+lRq4ACt+z9Qw/gVnfvvYKUqDSRjpx8iogEMgcMOA8G+M8bS8DKy2XV1Xnq7
+	 5cI4tjp9awswyNKzH+YGH0UXgSHq3Gxa23CReO+N+ajvTSEmSwqIPsR8vdiPwk1Rda
+	 DQvW/GX5Ge7yw==
+Date: Tue, 13 Jan 2026 15:50:15 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Li Ming <ming.li@zohomail.com>
-Cc: dan.j.williams@intel.com, linux-pci@vger.kernel.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI/IDE: Fix using wrong VF ID for RID range
- calculation
-Message-ID: <20260113214629.GA781429@bhelgaas>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Feng Tang <feng.tang@linux.alibaba.com>,
+	Jonathan Cameron <Jonthan.Cameron@huawei.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/6] PCI/portdrv: Use bus-type functions
+Message-ID: <20260113215015.GA781767@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260111080631.506487-1-ming.li@zohomail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1764688034.git.u.kleine-koenig@baylibre.com>
 
-On Sun, Jan 11, 2026 at 04:06:31PM +0800, Li Ming wrote:
-> When allocate a new IDE stream for a pci device in SR-IOV case, the RID
-> range of the new IDE stream should cover all VFs of the device. VF id
-> range of a pci device is [0 - (num_VFs - 1)], so should use (num_VFs - )
-> as the last VF's ID.
-
-s/(num_VFs - )/(num_VFs - 1)/  (I think?)
-
-s/pci/PCI/  (or could just omit, it's obvious these are PCI devices)
-s/id/ID/
-
-> Fixes: 1e4d2ff3ae45 ("PCI/IDE: Add IDE establishment helpers")
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-> ---
->  drivers/pci/ide.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue, Dec 02, 2025 at 04:13:48PM +0100, Uwe Kleine-König wrote:
+> Hello,
 > 
-> diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
-> index 26f7cc94ec31..9629f3ceb213 100644
-> --- a/drivers/pci/ide.c
-> +++ b/drivers/pci/ide.c
-> @@ -283,8 +283,8 @@ struct pci_ide *pci_ide_stream_alloc(struct pci_dev *pdev)
->  	/* for SR-IOV case, cover all VFs */
->  	num_vf = pci_num_vf(pdev);
->  	if (num_vf)
-> -		rid_end = PCI_DEVID(pci_iov_virtfn_bus(pdev, num_vf),
-> -				    pci_iov_virtfn_devfn(pdev, num_vf));
-> +		rid_end = PCI_DEVID(pci_iov_virtfn_bus(pdev, num_vf - 1),
-> +				    pci_iov_virtfn_devfn(pdev, num_vf - 1));
->  	else
->  		rid_end = pci_dev_id(pdev);
->  
-> -- 
-> 2.34.1
+> with the eventual goal to remore .probe(), .remove() and .shutdown()
+> from struct device_driver convert pcie portdrv to use bus-type
+> callbacks.
 > 
+> The first patch is a fix, but I think it's not relevant as I didn't find
+> a pcie driver without a remove callback. Feel free to drop the Fixes
+> line if you think it's not justified and decide yourself if you want it
+> backported to stable. I have no strong opinion here.
+> 
+> For the complete series there is no intended change in behaviour (apart
+> from the fix in the first patch :-).
+> 
+> Best regards
+> Uwe
+> 
+> Uwe Kleine-König (6):
+>   PCI/portdrv: Fix potential resource leak
+>   PCI/portdrv: Drop empty shutdown callback
+>   PCI/portdrv: Don't check for the driver's and device's bus
+>   PCI/portdrv: Move pcie_port_bus_type to pcie source file
+>   PCI/portdrv: Don't check for valid device and driver in bus callbacks
+>   PCI/portdrv: Use bus-type functions
+> 
+>  drivers/pci/pci-driver.c   | 28 -------------------
+>  drivers/pci/pcie/portdrv.c | 55 +++++++++++++++++++-------------------
+>  2 files changed, 28 insertions(+), 55 deletions(-)
+
+Applied to pci/portdrv for v6.20, thanks for doing this!
 
