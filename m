@@ -1,44 +1,44 @@
-Return-Path: <linux-pci+bounces-44666-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44667-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41BEFD1B1A9
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 20:48:38 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EBDBD1B1C0
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 20:50:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id AE7873002D2C
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 19:48:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E6C0230206AA
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 19:49:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 677CA314B60;
-	Tue, 13 Jan 2026 19:48:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24CF135E527;
+	Tue, 13 Jan 2026 19:49:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0lvGy8H"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eypCiSOr"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DF730DEDD;
-	Tue, 13 Jan 2026 19:48:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009982FD689;
+	Tue, 13 Jan 2026 19:49:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768333713; cv=none; b=FTOG7wbvctQ0YPYQxLgnC+gDmbDvQcF4Hi2YFOP3btvHhWy9Vtl03uwpcIhBm7dHWQNVgT2nFW41fWhOEXONX5UZppmpW7Ixf+pT5eQPTMonrrRQnkNO3fz3ogI68knH4/NvC09920wbnBppkA4RugRjqVn2SidfrQDcMB/heEk=
+	t=1768333761; cv=none; b=vGoXZ+MlLMRE94nx/OnOVc8oNV0+VqRnGPy0TKSaNdTX6qRXa7WXVXMKAEWdsO5mR4s9IPISsQ5DC7yzZvWHGZpCoGUKMIfoswrnPy3c+joWHn+GvMvQwVG827SGRfd9QEnn57NibK5Z0oZ/LUV8/MfAYpl8lgZ9aR2l+iwOgkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768333713; c=relaxed/simple;
-	bh=52j9AsPVJF8C276omodYbCAaqg1Kyg4VVTwaQWADMIw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=p0oYolAH6KBfPVpbFe7hbi5hlvQx0aUdNaTcbylAnblryg3Ctw1WG/Qz/9PJivDK/zJ7bf8hHgaUa80vjmmQs+D1gvshl6YMLUj8HIBeR6yTB1n6fIEYi8DQRO0pzuo8cPCOZYpzv72wgST5H9HPKF3XIWfBQVq61jTT00ovK5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0lvGy8H; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFD97C19423;
-	Tue, 13 Jan 2026 19:48:27 +0000 (UTC)
+	s=arc-20240116; t=1768333761; c=relaxed/simple;
+	bh=yfPgGkpwuD2KjtAw9IVkFuilfVOJvHYpHRSDUjmENzk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=ZwgRr+GpgR0e0VhM4Q/Z1mkQHkl19FUMLbf94QIbNgEwV9aBQq1vrKUzNS7iUDJv1qHCA/m9h4ykWzdv2EZJvux+HCtxZuIAbK0fo9Mw/55zviL+0Wof72lkDoeaDs1pGnmyJu9XZ26PYztMXeWPmyGOwiS9ZGV/YMmEZoVZ+Vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eypCiSOr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AA21C116C6;
+	Tue, 13 Jan 2026 19:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768333712;
-	bh=52j9AsPVJF8C276omodYbCAaqg1Kyg4VVTwaQWADMIw=;
-	h=Date:Cc:To:From:Subject:References:In-Reply-To:From;
-	b=Y0lvGy8H2GQMqic9A1WC1fuM2kDlSUcx0RgOj4SRFfe41ie9mDfaeXTqyL4PYpe8y
-	 CUF5UH4yFs0aHEEZFcSo79HNA85uM+AwwZjvrb1t53cJhepEfIWtNSnwZQbLl0Ujid
-	 LASmi/WvPZNK/lEmw+N1fDOWI/Gw8G+Kyj8UviNqwi32yG0p4QjEv60Urd6s77LRY9
-	 qJ+sKRkKncWDiD7VR7e2akw8Kux4zKF1NcdqueTuAYJQuMfwMLOK3uOAaJRAbKzBBl
-	 0ttURQ30pI8II1bEwtMHEaipYy/J3+lK0FF/1q15P/9+08nIQ96l5sbkdhpU3StAaK
-	 3BhTz7X1KNpMQ==
+	s=k20201202; t=1768333760;
+	bh=yfPgGkpwuD2KjtAw9IVkFuilfVOJvHYpHRSDUjmENzk=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=eypCiSOrTkSbVRDuGZ9rrmN2+G2w9lURskL8n/xlsvZ0JspYdVm5FwZPV0aSLDoJ4
+	 IrYQP3KQkc8o3Jrdy4Yu1YBV8OrIGyJd2W+jTwrRgRfd5eC/Af5LU+rC3oyZsuvEse
+	 Iyph07OHC0hanpHKPNMlzIYHDHSoURT9t+BMiYNTaI8GfTXo+30s180mFj1KY3cxpM
+	 MBZGSvTc9pMtxea6ai4GmIzin5f2ssDXH3KRhgB+W60U/BoI7sZdwZWbszPvmDClt8
+	 YWzswcWnd5hrFNp6kGN5EtnEyyTn8+jFA2dN83QIjmDexup0yAAe58uqx9sLIIXvqo
+	 qJJpEQZwK/I/w==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -47,8 +47,10 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 13 Jan 2026 20:48:25 +0100
-Message-Id: <DFNPZDQW3FX5.4UI5M96GZUT6@kernel.org>
+Date: Tue, 13 Jan 2026 20:49:13 +0100
+Message-Id: <DFNPZZNAZRG6.30Q62W48XV008@kernel.org>
+Subject: Re: [PATCH v8 5/5] sample: rust: pci: add tests for config space
+ routines
 Cc: <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
  <linux-kernel@vger.kernel.org>, <aliceryhl@google.com>,
  <bhelgaas@google.com>, <kwilczynski@kernel.org>, <ojeda@kernel.org>,
@@ -61,134 +63,23 @@ Cc: <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
  <zhiwang@kernel.org>
 To: "Zhi Wang" <zhiw@nvidia.com>
 From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH v8 4/5] rust: pci: add config space read/write support
 References: <20260113092253.220346-1-zhiw@nvidia.com>
- <20260113092253.220346-5-zhiw@nvidia.com>
-In-Reply-To: <20260113092253.220346-5-zhiw@nvidia.com>
+ <20260113092253.220346-6-zhiw@nvidia.com>
+In-Reply-To: <20260113092253.220346-6-zhiw@nvidia.com>
 
 On Tue Jan 13, 2026 at 10:22 AM CET, Zhi Wang wrote:
-> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> index 82e128431f08..f373413e8a84 100644
-> --- a/rust/kernel/pci.rs
-> +++ b/rust/kernel/pci.rs
-> @@ -40,7 +40,10 @@
->      ClassMask,
->      Vendor, //
->  };
-> -pub use self::io::Bar;
-> +pub use self::io::{
-> +    Bar,
-> +    ConfigSpace, //
-> +};
->  pub use self::irq::{
->      IrqType,
->      IrqTypes,
-> @@ -331,6 +334,30 @@ fn as_raw(&self) -> *mut bindings::pci_dev {
->      }
->  }
+> diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_p=
+ci.rs
+> index f7130a359768..1b28a2a7d07d 100644
+> --- a/samples/rust/rust_driver_pci.rs
+> +++ b/samples/rust/rust_driver_pci.rs
+> @@ -66,6 +66,32 @@ fn testdev(index: &TestIndex, bar: &Bar0) -> Result<u3=
+2> {
 > =20
-> +/// Represents the size of a PCI configuration space.
-> +///
-> +/// PCI devices can have either a *normal* (legacy) configuration space =
-of 256 bytes,
-> +/// or an *extended* configuration space of 4096 bytes as defined in the=
- PCI Express
-> +/// specification.
-> +#[repr(usize)]
-> +pub enum ConfigSpaceSize {
-> +    /// 256-byte legacy PCI configuration space.
-> +    Normal =3D 256,
-> +
-> +    /// 4096-byte PCIe extended configuration space.
-> +    Extended =3D 4096,
-> +}
-> +
-> +impl ConfigSpaceSize {
-> +    /// Get the raw value of this enum.
-> +    #[inline(always)]
-> +    pub const fn as_raw(self) -> usize {
-> +        // CAST: PCI configuration space size is at most 4096 bytes, so =
-the value always fits
-> +        // within `usize` without truncation or sign change.
-> +        self as usize
-> +    }
-> +}
-
-Please move this to rust/kernel/pci/io.rs as well.
-
-> +
->  impl Device {
->      /// Returns the PCI vendor ID as [`Vendor`].
->      ///
-> @@ -427,6 +454,20 @@ pub fn pci_class(&self) -> Class {
->          // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_dev=
-`.
->          Class::from_raw(unsafe { (*self.as_raw()).class })
+>          Ok(bar.read32(Regs::COUNT))
 >      }
 > +
-> +    /// Returns the size of configuration space.
-> +    fn cfg_size(&self) -> Result<ConfigSpaceSize> {
-> +        // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_dev=
-`.
-> +        let size =3D unsafe { (*self.as_raw()).cfg_size };
-> +        match size {
-> +            256 =3D> Ok(ConfigSpaceSize::Normal),
-> +            4096 =3D> Ok(ConfigSpaceSize::Extended),
-> +            _ =3D> {
-> +                debug_assert!(false);
-> +                Err(EINVAL)
-> +            }
-> +        }
-> +    }
+> +    fn config_space(pdev: &pci::Device<Core>) -> Result {
 
-Same here.
-
->  }
-> =20
->  impl Device<device::Core> {
-> diff --git a/rust/kernel/pci/io.rs b/rust/kernel/pci/io.rs
-> index e3377397666e..c8741f0080ec 100644
-> --- a/rust/kernel/pci/io.rs
-> +++ b/rust/kernel/pci/io.rs
-> @@ -2,12 +2,19 @@
-> =20
->  //! PCI memory-mapped I/O infrastructure.
-> =20
-> -use super::Device;
-> +use super::{
-> +    ConfigSpaceSize,
-> +    Device, //
-> +};
->  use crate::{
->      bindings,
->      device,
->      devres::Devres,
->      io::{
-> +        define_read,
-> +        define_write,
-> +        IoBase,
-> +        IoKnownSize,
->          Mmio,
->          MmioRaw, //
->      },
-> @@ -16,6 +23,101 @@
->  };
->  use core::ops::Deref;
-> =20
-> +/// The PCI configuration space of a device.
-> +///
-> +/// Provides typed read and write accessors for configuration registers
-> +/// using the standard `pci_read_config_*` and `pci_write_config_*` help=
-ers.
-> +///
-> +/// The generic const parameter `SIZE` can be used to indicate the
-> +/// maximum size of the configuration space (e.g. 256 bytes for legacy,
-> +/// 4096 bytes for extended config space).
-
-Let's refer to ConfigSpaceSize instead.
-
-> +pub struct ConfigSpace<'a, const SIZE: usize =3D { ConfigSpaceSize::Exte=
-nded as usize }> {
-> +    pub(crate) pdev: &'a Device<device::Bound>,
-> +}
+&pci::Device<Bound>
 
