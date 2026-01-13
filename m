@@ -1,116 +1,95 @@
-Return-Path: <linux-pci+bounces-44642-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44646-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC92AD1A526
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 17:37:41 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12973D1A628
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 17:48:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 79FF63097C06
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 16:32:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C955430DA3A4
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 16:43:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0872B30AAD8;
-	Tue, 13 Jan 2026 16:32:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 865C4328B43;
+	Tue, 13 Jan 2026 16:43:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hTVJCXIq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BC1H/3Pt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B833130ACF6;
-	Tue, 13 Jan 2026 16:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0853246EE;
+	Tue, 13 Jan 2026 16:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768321971; cv=none; b=tz7g9PM61yQYtO3cckCgpTO8ocvH10o9EScCkvhtaPCuYHGMeJ8n+2gxU/PAfqh68rRQZ080HaQDSZWcLF5n9VTtYj0YVxtUdBG7F9zCPwzb19UI3VpAYyn5mM8jfaVkLywU8TEB28T0zAb4zHPovU/CYAf0bAISev46MndoHQk=
+	t=1768322599; cv=none; b=KIYHNc5LtC5T4dOCFZVr0tCMCSVmkh/TR+NI24QjuJzCqmJu2OielHbzoJ6+PmsRlC5Qa7Qwaq1W2v45p43j6brA3NCGR/s8cGt1pz8sQFcJy80d9mtL60+QuOX4efRiixqVv/Pb9Mf1HWoxo7QsCDeDzLaqLcyiIrG8p//96pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768321971; c=relaxed/simple;
-	bh=tdyFxb8ShtT8cW27+J4Wc2g1kLnSW6VDCnFWjBdsxlw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iSHNSZmyyH0yhyiGimkfLSe1tpVjBpezpVFbGy52CjLTdP25NeKp3vHv4f76zEAUGDlxc4wbI/Ii6TuhAHAX8TlV9uwfGlAkPTyA2WZEb1JFjLOiGQCpTaVo6jPuYVmuM2EiAIE003PEc6pAaYZ8Ojuz98oLH4IAQF/8LiagfuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hTVJCXIq; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768321970; x=1799857970;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=tdyFxb8ShtT8cW27+J4Wc2g1kLnSW6VDCnFWjBdsxlw=;
-  b=hTVJCXIqg3Jq77s5416tfXUC46bwQi3RtoHRn5CkqsYYk9sOqP9ACr98
-   tvfAdTI0clnayu3QvMrwrKiuAZVa7X9nNKznRg4eLKqHp7shW9pyyb2Nk
-   cieUZR4npdb7TktptE/jt9LkLX9c/Rs/Npn+HqvVWsAuOkwifOtvZ7zVk
-   mcFHQK/vvMNLNvzcBadlX1wIAsSst1QB4x4i0WAL0ufgWjPfpjPEjbYli
-   r/oSJEdNz+Vv3qctj4NuLLjkHg6d23w4Ffi32XfeGkZ+kPTKqQwlS+vZe
-   eKXDPvPum9hAIeTh9szKQ5+1tMCZZHFpgj0bE8kJQ3YXIU3CIKvg5CXnj
-   Q==;
-X-CSE-ConnectionGUID: oFBz6AGcRFGuMc+csBMIoA==
-X-CSE-MsgGUID: lWVhYuioRX+7yHirOVVLGw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="69521101"
-X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
-   d="scan'208";a="69521101"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 08:32:50 -0800
-X-CSE-ConnectionGUID: +HigFG2vRNS2Y02pQyDCaA==
-X-CSE-MsgGUID: yigGqjmvSB+uDEiv6q2DDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
-   d="scan'208";a="204060372"
-Received: from bnilawar-desk2.iind.intel.com ([10.190.239.41])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 08:32:46 -0800
-From: Badal Nilawar <badal.nilawar@intel.com>
-To: intel-xe@lists.freedesktop.org,
-	linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Cc: anshuman.gupta@intel.com,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	bhelgaas@google.com,
-	ilpo.jarvinen@linux.intel.com,
-	rodrigo.vivi@intel.com,
-	varun.gupta@intel.com,
-	ville.syrjala@linux.intel.com,
-	uma.shankar@intel.com,
-	karthik.poosa@intel.com,
-	matthew.auld@intel.com,
-	sk.anirban@intel.com,
-	raag.jadav@intel.com
-Subject: [PATCH v6 12/12] drm/xe/vrsr: Introduce a debugfs node named vrsr_capable
-Date: Tue, 13 Jan 2026 22:12:13 +0530
-Message-ID: <20260113164200.1151788-26-badal.nilawar@intel.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260113164200.1151788-14-badal.nilawar@intel.com>
-References: <20260113164200.1151788-14-badal.nilawar@intel.com>
+	s=arc-20240116; t=1768322599; c=relaxed/simple;
+	bh=Y1mpJt9qvaLbi5B87D95AFRcMvuKwM1TnjtpoOuRPW0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c/ERvep0N09FeHkDw/aZpyHmRdlUWtQT+p1qIbKtRWf0Dl5LcqydijAubCBE4a1rM8A0sj1SCCvVBSofU6EsGoA8Nc3XhWgTZlnF68P2AI+P5DDKloL+4sFHTcjpIbpi3SkgEWDu791IJQlgVpF18q8SovVr/uEdv4GuoFxn+lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BC1H/3Pt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CC7BC116C6;
+	Tue, 13 Jan 2026 16:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768322599;
+	bh=Y1mpJt9qvaLbi5B87D95AFRcMvuKwM1TnjtpoOuRPW0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BC1H/3PtnQxiwTF+fIhCNsvJQyJzxoWjpExwOngg4Yaej9GrR/wR0ss/zmwamVgd5
+	 A8QNLIWDdTrhey//z7t3KxMDrXZmznwyHEi8i+csWFgDAPih1RkdCNXUWDM/szBmdu
+	 9R+cnTMgb2JUF+SkTL/CAtFsMAI3tBIcx0AHiOC6srYsdwhkPuqi4zIibEXJSbtEbN
+	 zUwYg9kr1rofpVVmXN2lFG7l7TWgPWAzkveJVfQP+y5whbz4gDTmhrx+oO7JD53fx0
+	 lKXxEMaUZg8jM3iutSWAiXu2bXuDPOCoyO6m+hAYr/SMWgJ3hWt+YxyjhLO0VKRCOX
+	 46PT6rBAHi7Ww==
+Date: Tue, 13 Jan 2026 10:43:18 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, devicetree@vger.kernel.org,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-pm@vger.kernel.org,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>, linux-kbuild@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-bluetooth@vger.kernel.org,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v4 4/9] dt-bindings: serial: Document the graph port
+Message-ID: <176832259781.3925075.6465150730329929595.robh@kernel.org>
+References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
+ <20260112-pci-m2-e-v4-4-eff84d2c6d26@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260112-pci-m2-e-v4-4-eff84d2c6d26@oss.qualcomm.com>
 
-Add a debugfs node named vrsr_capable to check if the device
-supports VRSR.
 
-V2: Use debugfs_create_bool for vrsr_capable node (Karthik)
+On Mon, 12 Jan 2026 21:56:03 +0530, Manivannan Sadhasivam wrote:
+> A serial controller could be connected to an external connector like PCIe
+> M.2 for controlling the serial interface of the card. Hence, document the
+> OF graph port.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+>  Documentation/devicetree/bindings/serial/serial.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
-Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
----
- drivers/gpu/drm/xe/xe_debugfs.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/gpu/drm/xe/xe_debugfs.c b/drivers/gpu/drm/xe/xe_debugfs.c
-index 844cfafe1ec7..60b78d3f91da 100644
---- a/drivers/gpu/drm/xe/xe_debugfs.c
-+++ b/drivers/gpu/drm/xe/xe_debugfs.c
-@@ -550,6 +550,8 @@ void xe_debugfs_register(struct xe_device *xe)
- 	debugfs_create_file("disable_late_binding", 0600, root, xe,
- 			    &disable_late_binding_fops);
- 
-+	debugfs_create_bool("vrsr_capable", 0400, root,
-+			    &xe->d3cold.vrsr_capable);
- 	/*
- 	 * Don't expose page reclaim configuration file if not supported by the
- 	 * hardware initially.
--- 
-2.52.0
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
 
