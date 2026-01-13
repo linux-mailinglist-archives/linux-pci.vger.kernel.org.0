@@ -1,136 +1,160 @@
-Return-Path: <linux-pci+bounces-44605-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44606-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF282D1925C
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 14:47:55 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F6DFD19311
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 14:55:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ADD3B3062167
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 13:44:55 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3DDD0302CDCC
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 13:55:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F4014310777;
-	Tue, 13 Jan 2026 13:44:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C3863921F5;
+	Tue, 13 Jan 2026 13:54:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="XVeS78f+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LwcX08r7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-pp-o90.zoho.com (sender4-pp-o90.zoho.com [136.143.188.90])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A548838BF87;
-	Tue, 13 Jan 2026 13:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.90
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768311893; cv=pass; b=UQ+VtQL843MdQ9E2EM/lzOr3IKRp58Z9nmfMGq3N9A+iGTWeHfjISj7W6P9CH4GmnwUNNr+sRID4Tf4uixmCZkB+HwS+x1N0C5kdyUVrK1V0vV8+hnCRTyGJKmz7wYgk0zegQJ1N724cZ/ZCxS2LqTQDJWYZa1ATQ8QsE28AUR8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768311893; c=relaxed/simple;
-	bh=4Gt/84Q+V5euNC7bgqpKx6HdoPNXpstkSBpwu9PaaZQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pMSY6lLVyM2NX1nfmLMeozBe/rF/5mRxEvMy2DHHuY3nEUIX8jsqMQRrlEorxfWtQANsbiGFwJwPlIlcPZlLBsjpYbm6w0JyljpIyyeZ7sbY8khfEkOEbYv3KCvDcNxvG18JbU5JKQMoLGwk3HnpAq6FFUSUHOU+RN6m7cfhV34=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=XVeS78f+; arc=pass smtp.client-ip=136.143.188.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-ARC-Seal: i=1; a=rsa-sha256; t=1768311883; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=i1WLLgWF506AlbMBXiCAv/2t9VEffnz1Hz2110h0ISMTbdS3KluoTs0eahQoL2mBFiNHVDoOY0IJEf/VNq3vV9k6QKGqEq5OVE/HjO+5ax0RIyqfIYRtqyqROAeScu6OMvexcU8hWmakTJByzoX1MwpMp0cHmhCds0/4ZU+VZik=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1768311883; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=IOYFfwbNhRu26SipoEbEjskn3DVZyhOKMh76jzWEV2A=; 
-	b=Dx5JnK3rRM0WbfmxmnJlzqiyGHcDb8NER0tRMPpzsYXvPBB0LKk7gJ7Yd5p4SZE/Cr5ZNRJHqsUQKZ3oYqyl8se3dTBkgQZ9O/tHcZrZzVc7Anyjzy7hRZAJZrB28PBA2dgrEcCojuPsEVSdJ+Cr3W1EBu6VFjwGOITUha7hfh0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1768311883;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=IOYFfwbNhRu26SipoEbEjskn3DVZyhOKMh76jzWEV2A=;
-	b=XVeS78f+o8y1Ka26k8E2/iB4slfQsjc60BJP+pS0ZIgmeh87ezXCT66r9Wfrxmba
-	/NSFDQEsKvnaL58Zy2i0tTaGemOsiB0dpnySgiu64ARWYpfF1VBgOLlzDdeLamumt+M
-	Nh1uPrR4eyHWrABEJ4xzJvaZyOR2Wb4JVf561pHs=
-Received: by mx.zohomail.com with SMTPS id 1768311882285304.78439700796616;
-	Tue, 13 Jan 2026 05:44:42 -0800 (PST)
-Message-ID: <b5a2d815-7389-4bf1-9750-a2243cc1ffd2@zohomail.com>
-Date: Tue, 13 Jan 2026 21:44:38 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3790F3921D6
+	for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 13:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768312498; cv=none; b=bINDV0lQa0MylqeYYe4/HWdqMC6LgPOdhseCFSC86uMO/GgteIJ0Jo9XHVC9Vrs4j/KpkVXeJXaDSbdbB4y7M9d31lQVtxyykjUqhvS8gSMjp1NJvKfOyS3FczldPXJj7a7SqyHxaUILGU65TvbxbIqHPVFMzMUi9YyrycUHqBw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768312498; c=relaxed/simple;
+	bh=qoD2yGygqaoN/33J25h6tmmzMz3XXXhCzzZUa7glhR0=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lu2V6Qfn4s8KvlQmTvfu3QNSY/1cHYUYNarX3HwioicrPKHobczCCTPKOUR+2LiPy0wvnhlN0H/PzhTEfVD9cYCZwRkMQ8D+Z7J2T/lYFhS4jSwwmy+AyETrquE2Pjw+Z851lywbfMy6BZdGXa7wsHeSHA5rcScAkFmNEYEpemc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LwcX08r7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C229C2BCB7
+	for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 13:54:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768312498;
+	bh=qoD2yGygqaoN/33J25h6tmmzMz3XXXhCzzZUa7glhR0=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=LwcX08r7EsQDhJCbjPOzCDQ8L/NJdp+Yvx5t+jbK2RONDVNJfRDUxJFYirLqfL4sF
+	 emf/K5rGhWKjJY0Cp/kFBkd2OilME1JHhepYAOW6CY8x9Kw/pIXuSvv3hC6j+EsK8/
+	 0a+05/4KgEUVUYNEmL+wyQB/T823za1JSHgdHxa6U4Q0w2PeTNShckZR3ydeMV1uey
+	 4Ha3BJJNScCIVUmwVvgxd20QmZwNpJqq/5fIOnuYD+8vamKE6oLKoANxUyAbFwPrvR
+	 qD6qC+pSUwRXhxUfLJ0QdpT9Ij8EfviBbSxu2t97P58E+9mfVv58fGQ+VjsH4zA42u
+	 +MBLUBaxcl10w==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-59b672f8e40so8536856e87.2
+        for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 05:54:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW+1iYBDmON3/Fbu9bF3hmIYyxe7PTlUXjhdbBBxQJG/F2W/4jfK3eiob7k3ekvlRwFlfg/SSb5BuM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzi3T39LkSutH0Hp3Y2rN377/ajsCQQZBMsQa6G9aDjEVh8Hwro
+	PLLB0zAhEyvnwn7kEqleGHoxJqrZhgnkHfyJij0VgNYgVUPTZONYiwsa1VMOPdkAGpLT7otGvcu
+	WD2voc+YrElGXjLd6m7ufR54QJeqG6nHSUzBLKhB51g==
+X-Google-Smtp-Source: AGHT+IHtxkUGwU9KE66IHi1cBKvrXikFiqjf5FnMhLoUqzd0zbPBghAy/6jPyeE4fjWfRvr/ZtuwVmPnk4eOTeZtRkw=
+X-Received: by 2002:a2e:be13:0:b0:37f:a216:e455 with SMTP id
+ 38308e7fff4ca-382ff6a998emr60740471fa.18.1768312496407; Tue, 13 Jan 2026
+ 05:54:56 -0800 (PST)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 13 Jan 2026 08:54:55 -0500
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 13 Jan 2026 08:54:55 -0500
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260112-pci-m2-e-v4-2-eff84d2c6d26@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] PCI/IDE: Fix using wrong VF ID for RID range
- calculation
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: dan.j.williams@intel.com, linux-pci@vger.kernel.org,
- linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20260111080631.506487-1-ming.li@zohomail.com>
- <aWRctnwjEXvUyayb@yilunxu-OptiPlex-7050>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <aWRctnwjEXvUyayb@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr080112270578d1b8937d401e7e418a1f0000f11a1ad9d7fbd0ecdb4ef5799db54b0609d60c9a21441c95cf:zu08011227ae3811fbab9d3b660a75aa5a000071c90fc83e6eb4bd1589b5450004d2b0c66f0b549d75ef3727:rf080112326d311bc55c967f7ebcf7e82c000009d3c1dc8d59f3b4651200410d89272560c088c21c2ae178bed880c29303cc17de607440:ZohoMail
-X-ZohoMailClient: External
+References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com> <20260112-pci-m2-e-v4-2-eff84d2c6d26@oss.qualcomm.com>
+Date: Tue, 13 Jan 2026 08:54:55 -0500
+X-Gmail-Original-Message-ID: <CAMRc=McDvQoqfH0Gy-wzbcEGvNCZACSACCcviwpCc4YNSpKYrw@mail.gmail.com>
+X-Gm-Features: AZwV_QiNfMpaasLV4YYAdk4pjC7egojRYHOX7MP76SYTH8HXlXx4MiSntJqB_WU
+Message-ID: <CAMRc=McDvQoqfH0Gy-wzbcEGvNCZACSACCcviwpCc4YNSpKYrw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/9] serdev: Add an API to find the serdev controller
+ associated with the devicetree node
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Bartosz Golaszewski <brgl@kernel.org>, 
+	Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>, 
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-
-在 2026/1/12 10:30, Xu Yilun 写道:
-> On Sun, Jan 11, 2026 at 04:06:31PM +0800, Li Ming wrote:
->> When allocate a new IDE stream for a pci device in SR-IOV case, the RID
->> range of the new IDE stream should cover all VFs of the device. VF id
->> range of a pci device is [0 - (num_VFs - 1)], so should use (num_VFs - )
->> as the last VF's ID.
->>
->> Fixes: 1e4d2ff3ae45 ("PCI/IDE: Add IDE establishment helpers")
->> Signed-off-by: Li Ming <ming.li@zohomail.com>
->> ---
->>   drivers/pci/ide.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
->> index 26f7cc94ec31..9629f3ceb213 100644
->> --- a/drivers/pci/ide.c
->> +++ b/drivers/pci/ide.c
->> @@ -283,8 +283,8 @@ struct pci_ide *pci_ide_stream_alloc(struct pci_dev *pdev)
->>   	/* for SR-IOV case, cover all VFs */
->>   	num_vf = pci_num_vf(pdev);
->>   	if (num_vf)
->> -		rid_end = PCI_DEVID(pci_iov_virtfn_bus(pdev, num_vf),
->> -				    pci_iov_virtfn_devfn(pdev, num_vf));
->> +		rid_end = PCI_DEVID(pci_iov_virtfn_bus(pdev, num_vf - 1),
->> +				    pci_iov_virtfn_devfn(pdev, num_vf - 1));
-> I don't have VF for test but I believe the change is correct.
+On Mon, 12 Jan 2026 17:26:01 +0100, Manivannan Sadhasivam via B4 Relay
+<devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> said:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 >
-> The calculated rid_end will be passed to IDE RID association register values,
-> which is inclusive according to IDE SPEC.
+> Add of_find_serdev_controller_by_node() API to find the serdev controller
+> device associated with the devicetree node.
 >
->    void pci_ide_stream_to_regs(...)
->    {
-> 	...
-> 	regs->rid1 = FIELD_PREP(PCI_IDE_SEL_RID_1_LIMIT, settings->rid_end);
-> 	...
->    }
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+>  drivers/tty/serdev/core.c | 16 ++++++++++++++++
+>  include/linux/serdev.h    |  9 +++++++++
+>  2 files changed, 25 insertions(+)
 >
-> Is it better we clarify the kernel-doc a little bit:
+> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> index b33e708cb245..25382c2d63e6 100644
+> --- a/drivers/tty/serdev/core.c
+> +++ b/drivers/tty/serdev/core.c
+> @@ -504,6 +504,22 @@ struct serdev_controller *serdev_controller_alloc(struct device *host,
+>  }
+>  EXPORT_SYMBOL_GPL(serdev_controller_alloc);
 >
-> --------8<--------
+> +/**
+> + * of_find_serdev_controller_by_node() - Find the serdev controller associated
+> + *					 with the devicetree node
+> + * @node:	Devicetree node
+> + *
+> + * Return: Pointer to the serdev controller associated with the node. NULL if
+> + * the controller is not found.
+> + */
+
+Please also say that the caller is responsible for calling
+serdev_controller_put() on the returned object.
+
+Bart
+
+> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
+> +{
+> +	struct device *dev = bus_find_device_by_of_node(&serdev_bus_type, node);
+> +
+> +	return (dev && dev->type == &serdev_ctrl_type) ? to_serdev_controller(dev) : NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(of_find_serdev_controller_by_node);
+> +
+>  static int of_serdev_register_devices(struct serdev_controller *ctrl)
+>  {
+>  	struct device_node *node;
+> diff --git a/include/linux/serdev.h b/include/linux/serdev.h
+> index ecde0ad3e248..db9bfaba0662 100644
+> --- a/include/linux/serdev.h
+> +++ b/include/linux/serdev.h
+> @@ -333,4 +333,13 @@ static inline bool serdev_acpi_get_uart_resource(struct acpi_resource *ares,
+>  }
+>  #endif /* CONFIG_ACPI */
 >
-> diff --git a/include/linux/pci-ide.h b/include/linux/pci-ide.h
-> index 2521a2914294..f0c6975fd429 100644
-> --- a/include/linux/pci-ide.h
-> +++ b/include/linux/pci-ide.h
-> @@ -26,7 +26,7 @@ enum pci_ide_partner_select {
->   /**
->    * struct pci_ide_partner - Per port pair Selective IDE Stream settings
->    * @rid_start: Partner Port Requester ID range start
-> - * @rid_end: Partner Port Requester ID range end
-> + * @rid_end: Partner Port Requester ID range end (inclusive)
->    * @stream_index: Selective IDE Stream Register Block selection
->    * @mem_assoc: PCI bus memory address association for targeting peer partner
->    * @pref_assoc: PCI bus prefetchable memory address association for
-
-Sure, will do that in V2, thanks for review.
-
-
-Ming
-
+> +#ifdef CONFIG_OF
+> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node);
+> +#else
+> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
+> +{
+> +	return NULL;
+> +}
+> +#endif /* CONFIG_OF */
+> +
+>  #endif /*_LINUX_SERDEV_H */
+>
+> --
+> 2.48.1
+>
+>
+>
 
