@@ -1,44 +1,44 @@
-Return-Path: <linux-pci+bounces-44665-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44666-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A9CAD1B17B
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 20:45:11 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41BEFD1B1A9
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 20:48:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 70835303ACF6
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 19:44:45 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id AE7873002D2C
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 19:48:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D70536C595;
-	Tue, 13 Jan 2026 19:44:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 677CA314B60;
+	Tue, 13 Jan 2026 19:48:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dYDqMc0p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0lvGy8H"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E329335E527;
-	Tue, 13 Jan 2026 19:44:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DF730DEDD;
+	Tue, 13 Jan 2026 19:48:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768333485; cv=none; b=IjN9PI42UjnDZE8VV17rpAreAWWL8w7GGTUt9e80mOMCOUXKBYoSHFcwk6jD8EgyFLOVSbqqpeku7eEpkdsxGHoXN1rfDVOjJWv7bRhfeL9bojK05KgOMxNjNlV+Um9renxpxAdlNqeEVwA3dN8cfw0BvAhnoIokRuqbNFBnMrI=
+	t=1768333713; cv=none; b=FTOG7wbvctQ0YPYQxLgnC+gDmbDvQcF4Hi2YFOP3btvHhWy9Vtl03uwpcIhBm7dHWQNVgT2nFW41fWhOEXONX5UZppmpW7Ixf+pT5eQPTMonrrRQnkNO3fz3ogI68knH4/NvC09920wbnBppkA4RugRjqVn2SidfrQDcMB/heEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768333485; c=relaxed/simple;
-	bh=xcSIwmUhq35k9I8BYW8bVgi9M0uhdkya0n/w4q+aQ+Q=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=DcqVHcHmuVrm6yICsnV0goOY6pPEs3tUhNAor2d+T6yPF237FQKseZbRJ8yssKwGb5keo6JI96r7vHH7Gpd4dXgA7v0W2vkQLkcN2UI+gp3GxbA2XzLiKkAYYHFzKzVNO89MY+G3UPuUhnQ4MZCCn2COdnhp9I0ad1tOgY6ROqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dYDqMc0p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84534C116C6;
-	Tue, 13 Jan 2026 19:44:39 +0000 (UTC)
+	s=arc-20240116; t=1768333713; c=relaxed/simple;
+	bh=52j9AsPVJF8C276omodYbCAaqg1Kyg4VVTwaQWADMIw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=p0oYolAH6KBfPVpbFe7hbi5hlvQx0aUdNaTcbylAnblryg3Ctw1WG/Qz/9PJivDK/zJ7bf8hHgaUa80vjmmQs+D1gvshl6YMLUj8HIBeR6yTB1n6fIEYi8DQRO0pzuo8cPCOZYpzv72wgST5H9HPKF3XIWfBQVq61jTT00ovK5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0lvGy8H; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFD97C19423;
+	Tue, 13 Jan 2026 19:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768333484;
-	bh=xcSIwmUhq35k9I8BYW8bVgi9M0uhdkya0n/w4q+aQ+Q=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=dYDqMc0p9gZLVQpLWafkmXeJ8n6uauLWhZIt+DQmvg3Kfsx0Kb3SLo28GIcbjnLno
-	 P8YjKB/XLQFNOu5O+s15VMXcX3azlGmLgUYhwxPM9+51w7JMnVXZbyAucmEOcA9/6o
-	 d/hwhnXbWc6LK36ooL9upMASdsMjqzIo3ULLKhwS6byW8BiEFMJQzqCOiEdhDgqHcT
-	 hv2HYJFIN9XgSyFg0tgQd8xqf6l/3WS1+XKBq7Bnma23SV1dxNaadBr/fRdj1tGzmg
-	 qYMJ20k8+JwgkitVcGbGw3v354WgWRY4dIsLqGRuZr6wyHfcBHGrRbXisWPnSnYBJU
-	 kA/im5TvpE/QQ==
+	s=k20201202; t=1768333712;
+	bh=52j9AsPVJF8C276omodYbCAaqg1Kyg4VVTwaQWADMIw=;
+	h=Date:Cc:To:From:Subject:References:In-Reply-To:From;
+	b=Y0lvGy8H2GQMqic9A1WC1fuM2kDlSUcx0RgOj4SRFfe41ie9mDfaeXTqyL4PYpe8y
+	 CUF5UH4yFs0aHEEZFcSo79HNA85uM+AwwZjvrb1t53cJhepEfIWtNSnwZQbLl0Ujid
+	 LASmi/WvPZNK/lEmw+N1fDOWI/Gw8G+Kyj8UviNqwi32yG0p4QjEv60Urd6s77LRY9
+	 qJ+sKRkKncWDiD7VR7e2akw8Kux4zKF1NcdqueTuAYJQuMfwMLOK3uOAaJRAbKzBBl
+	 0ttURQ30pI8II1bEwtMHEaipYy/J3+lK0FF/1q15P/9+08nIQ96l5sbkdhpU3StAaK
+	 3BhTz7X1KNpMQ==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -47,10 +47,8 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 13 Jan 2026 20:44:37 +0100
-Message-Id: <DFNPWGYVIY66.1HD14G875G8L0@kernel.org>
-Subject: Re: [PATCH v8 2/5] rust: io: factor common I/O helpers into Io
- trait
+Date: Tue, 13 Jan 2026 20:48:25 +0100
+Message-Id: <DFNPZDQW3FX5.4UI5M96GZUT6@kernel.org>
 Cc: <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
  <linux-kernel@vger.kernel.org>, <aliceryhl@google.com>,
  <bhelgaas@google.com>, <kwilczynski@kernel.org>, <ojeda@kernel.org>,
@@ -63,162 +61,134 @@ Cc: <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
  <zhiwang@kernel.org>
 To: "Zhi Wang" <zhiw@nvidia.com>
 From: "Danilo Krummrich" <dakr@kernel.org>
+Subject: Re: [PATCH v8 4/5] rust: pci: add config space read/write support
 References: <20260113092253.220346-1-zhiw@nvidia.com>
- <20260113092253.220346-3-zhiw@nvidia.com>
-In-Reply-To: <20260113092253.220346-3-zhiw@nvidia.com>
+ <20260113092253.220346-5-zhiw@nvidia.com>
+In-Reply-To: <20260113092253.220346-5-zhiw@nvidia.com>
 
 On Tue Jan 13, 2026 at 10:22 AM CET, Zhi Wang wrote:
->  drivers/gpu/nova-core/gsp/sequencer.rs |   5 +-
->  drivers/gpu/nova-core/regs/macros.rs   |  90 ++++----
->  drivers/gpu/nova-core/vbios.rs         |   1 +
->  rust/kernel/devres.rs                  |  14 +-
->  rust/kernel/io.rs                      | 271 ++++++++++++++++++-------
->  rust/kernel/io/mem.rs                  |  16 +-
->  rust/kernel/io/poll.rs                 |   8 +-
->  rust/kernel/pci/io.rs                  |  12 +-
->  samples/rust/rust_driver_pci.rs        |   2 +
->  9 files changed, 288 insertions(+), 131 deletions(-)
-
-I think you did forget to update the Tyr driver.
-
-> +/// Represents a region of I/O space of a fixed size.
-> +///
-> +/// Provides common helpers for offset validation and address
-> +/// calculation on top of a base address and maximum size.
-
-Maybe you can expand this a bit, i.e. explaining that this is a abstract
-representation to be implemented by arbitrary I/O backends pointing out som=
-e
-examples, such as MMIO, I2C, etc.
-
-> +///
-
-Spurious newline.
-
-> +pub trait IoBase {
-
-<snip>
-
-> +/// Types implementing this trait (e.g. MMIO BARs or PCI config
-> +/// regions) can share the same KnownSize accessors.
-
-Please expand this a bit and add some more detailed explanation what "known
-size" means in this context, i.e. it is the minimum size requested from the=
- I/O
-backend, hence we know that we are safe within this boundary.
-
-However, the size of the requested I/O region might still be larger than th=
-e
-"known size".
-
-> +pub trait IoKnownSize: IoBase {
-> +    /// Infallible 8-bit read with compile-time bounds check.
-> +    fn read8(&self, offset: usize) -> u8;
-> +
-> +    /// Infallible 16-bit read with compile-time bounds check.
-> +    fn read16(&self, offset: usize) -> u16;
-> +
-> +    /// Infallible 32-bit read with compile-time bounds check.
-> +    fn read32(&self, offset: usize) -> u32;
-> +
-> +    /// Infallible 8-bit write with compile-time bounds check.
-> +    fn write8(&self, value: u8, offset: usize);
-> +
-> +    /// Infallible 16-bit write with compile-time bounds check.
-> +    fn write16(&self, value: u16, offset: usize);
-> +
-> +    /// Infallible 32-bit write with compile-time bounds check.
-> +    fn write32(&self, value: u32, offset: usize);
-> +}
-> +
-> +/// Types implementing this trait (e.g. MMIO BARs or PCI config
-> +/// regions) can share the same Io accessors.
-
-Same here, please add some more detail, e.g. how does it differ from
-IoKnownSize, in which cases should it be used, etc.
-
-> +pub trait Io: IoBase {
-> +    /// Fallible 8-bit read with runtime bounds check.
-> +    fn try_read8(&self, offset: usize) -> Result<u8>;
-> +
-> +    /// Fallible 16-bit read with runtime bounds check.
-> +    fn try_read16(&self, offset: usize) -> Result<u16>;
-> +
-> +    /// Fallible 32-bit read with runtime bounds check.
-> +    fn try_read32(&self, offset: usize) -> Result<u32>;
-> +
-> +    /// Fallible 8-bit write with runtime bounds check.
-> +    fn try_write8(&self, value: u8, offset: usize) -> Result;
-> +
-> +    /// Fallible 16-bit write with runtime bounds check.
-> +    fn try_write16(&self, value: u16, offset: usize) -> Result;
-> +
-> +    /// Fallible 32-bit write with runtime bounds check.
-> +    fn try_write32(&self, value: u32, offset: usize) -> Result;
-> +}
-> +
-> +/// Represents a region of I/O space of a fixed size with 64-bit accesso=
-rs.
-> +/// Types implementing this trait can share the same Infallible accessor=
-s.
-
-Please refer to IoKnownSize for details.
-
-> +#[cfg(CONFIG_64BIT)]
-> +pub trait IoKnownSize64: IoKnownSize {
-> +    /// Infallible 64-bit read with compile-time bounds check.
-> +    fn read64(&self, offset: usize) -> u64;
+> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+> index 82e128431f08..f373413e8a84 100644
+> --- a/rust/kernel/pci.rs
+> +++ b/rust/kernel/pci.rs
+> @@ -40,7 +40,10 @@
+>      ClassMask,
+>      Vendor, //
+>  };
+> -pub use self::io::Bar;
+> +pub use self::io::{
+> +    Bar,
+> +    ConfigSpace, //
+> +};
+>  pub use self::irq::{
+>      IrqType,
+>      IrqTypes,
+> @@ -331,6 +334,30 @@ fn as_raw(&self) -> *mut bindings::pci_dev {
+>      }
+>  }
 > =20
-> -    define_read!(read8, try_read8, readb -> u8);
-> -    define_read!(read16, try_read16, readw -> u16);
-> -    define_read!(read32, try_read32, readl -> u32);
-> +    /// Infallible 64-bit write with compile-time bounds check.
-> +    fn write64(&self, value: u64, offset: usize);
+> +/// Represents the size of a PCI configuration space.
+> +///
+> +/// PCI devices can have either a *normal* (legacy) configuration space =
+of 256 bytes,
+> +/// or an *extended* configuration space of 4096 bytes as defined in the=
+ PCI Express
+> +/// specification.
+> +#[repr(usize)]
+> +pub enum ConfigSpaceSize {
+> +    /// 256-byte legacy PCI configuration space.
+> +    Normal =3D 256,
+> +
+> +    /// 4096-byte PCIe extended configuration space.
+> +    Extended =3D 4096,
 > +}
 > +
-> +/// Types implementing this trait can share the same Fallible accessors.
-> +#[cfg(CONFIG_64BIT)]
-> +pub trait Io64: Io {
+> +impl ConfigSpaceSize {
+> +    /// Get the raw value of this enum.
+> +    #[inline(always)]
+> +    pub const fn as_raw(self) -> usize {
+> +        // CAST: PCI configuration space size is at most 4096 bytes, so =
+the value always fits
+> +        // within `usize` without truncation or sign change.
+> +        self as usize
+> +    }
+> +}
 
-Please refer to Io for details.
+Please move this to rust/kernel/pci/io.rs as well.
 
-> diff --git a/rust/kernel/io/poll.rs b/rust/kernel/io/poll.rs
-> index b1a2570364f4..65d5a370ed14 100644
-> --- a/rust/kernel/io/poll.rs
-> +++ b/rust/kernel/io/poll.rs
-> @@ -45,12 +45,12 @@
->  /// # Examples
->  ///
->  /// ```no_run
-> -/// use kernel::io::{Io, poll::read_poll_timeout};
-> +/// use kernel::io::{Io, Mmio, poll::read_poll_timeout};
+> +
+>  impl Device {
+>      /// Returns the PCI vendor ID as [`Vendor`].
+>      ///
+> @@ -427,6 +454,20 @@ pub fn pci_class(&self) -> Class {
+>          // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_dev=
+`.
+>          Class::from_raw(unsafe { (*self.as_raw()).class })
+>      }
+> +
+> +    /// Returns the size of configuration space.
+> +    fn cfg_size(&self) -> Result<ConfigSpaceSize> {
+> +        // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_dev=
+`.
+> +        let size =3D unsafe { (*self.as_raw()).cfg_size };
+> +        match size {
+> +            256 =3D> Ok(ConfigSpaceSize::Normal),
+> +            4096 =3D> Ok(ConfigSpaceSize::Extended),
+> +            _ =3D> {
+> +                debug_assert!(false);
+> +                Err(EINVAL)
+> +            }
+> +        }
+> +    }
 
-Please switch to vertical style while at it, here and below.
+Same here.
 
->  /// use kernel::time::Delta;
->  ///
->  /// const HW_READY: u16 =3D 0x01;
->  ///
-> -/// fn wait_for_hardware<const SIZE: usize>(io: &Io<SIZE>) -> Result {
-> +/// fn wait_for_hardware<const SIZE: usize>(io: &Mmio<SIZE>) -> Result {
->  ///     read_poll_timeout(
->  ///         // The `op` closure reads the value of a specific status reg=
-ister.
->  ///         || io.try_read16(0x1000),
-> @@ -128,12 +128,12 @@ pub fn read_poll_timeout<Op, Cond, T>(
->  /// # Examples
->  ///
->  /// ```no_run
-> -/// use kernel::io::{poll::read_poll_timeout_atomic, Io};
-> +/// use kernel::io::{poll::read_poll_timeout_atomic, Io, Mmio};
->  /// use kernel::time::Delta;
->  ///
->  /// const HW_READY: u16 =3D 0x01;
->  ///
-> -/// fn wait_for_hardware<const SIZE: usize>(io: &Io<SIZE>) -> Result {
-> +/// fn wait_for_hardware<const SIZE: usize>(io: &Mmio<SIZE>) -> Result {
->  ///     read_poll_timeout_atomic(
->  ///         // The `op` closure reads the value of a specific status reg=
-ister.
->  ///         || io.try_read16(0x1000),
+>  }
+> =20
+>  impl Device<device::Core> {
+> diff --git a/rust/kernel/pci/io.rs b/rust/kernel/pci/io.rs
+> index e3377397666e..c8741f0080ec 100644
+> --- a/rust/kernel/pci/io.rs
+> +++ b/rust/kernel/pci/io.rs
+> @@ -2,12 +2,19 @@
+> =20
+>  //! PCI memory-mapped I/O infrastructure.
+> =20
+> -use super::Device;
+> +use super::{
+> +    ConfigSpaceSize,
+> +    Device, //
+> +};
+>  use crate::{
+>      bindings,
+>      device,
+>      devres::Devres,
+>      io::{
+> +        define_read,
+> +        define_write,
+> +        IoBase,
+> +        IoKnownSize,
+>          Mmio,
+>          MmioRaw, //
+>      },
+> @@ -16,6 +23,101 @@
+>  };
+>  use core::ops::Deref;
+> =20
+> +/// The PCI configuration space of a device.
+> +///
+> +/// Provides typed read and write accessors for configuration registers
+> +/// using the standard `pci_read_config_*` and `pci_write_config_*` help=
+ers.
+> +///
+> +/// The generic const parameter `SIZE` can be used to indicate the
+> +/// maximum size of the configuration space (e.g. 256 bytes for legacy,
+> +/// 4096 bytes for extended config space).
+
+Let's refer to ConfigSpaceSize instead.
+
+> +pub struct ConfigSpace<'a, const SIZE: usize =3D { ConfigSpaceSize::Exte=
+nded as usize }> {
+> +    pub(crate) pdev: &'a Device<device::Bound>,
+> +}
 
