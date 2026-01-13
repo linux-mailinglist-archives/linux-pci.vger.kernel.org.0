@@ -1,81 +1,81 @@
-Return-Path: <linux-pci+bounces-44592-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44591-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB0B4D17B3D
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 10:39:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D6D7D17A51
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 10:33:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1D17830F031C
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 09:25:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4CCE730EDFEC
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 09:25:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03B5138B7B8;
-	Tue, 13 Jan 2026 09:24:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A0E738B997;
+	Tue, 13 Jan 2026 09:23:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZI3j9nxJ"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mIwkobO8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010027.outbound.protection.outlook.com [40.93.198.27])
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013032.outbound.protection.outlook.com [40.93.201.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B54632A3F1;
-	Tue, 13 Jan 2026 09:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A7638B7A9;
+	Tue, 13 Jan 2026 09:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768296239; cv=fail; b=DrO8H52hOhpcRnmqTjCZVDNZLnk1PCyTX+PQw8pebUga3a2iCkmrvAULwvHyeDZRrhd9vqsIOCXiF9UKuoHFBLjFrXtR8UCrF05l+XMFN0lwgxIhi2QCgfsHt5ecrBbr6LamHI78KuD3XZwBNhQdwUqQTPX9g8xiPS6O4SBck1U=
+	t=1768296237; cv=fail; b=YnYC3H7qOFppX0bJQPDJw4C0ojLCqF57fF3ohJyEcLbFPRO6r8iKD7aatmcDfLiQbJHTP89Ahvh1ldWXfPSi5Eymh6mYwgOZ5BSFIm6WosGL+jqEvMiA1T4sG7HuAy5GWjVxdx9pRU4XjTq/BV7wOBJMiWgj2YizrA2jreE2ekI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768296239; c=relaxed/simple;
-	bh=y+IA+Sz8RYjDyctuus4LwnQCql+X+V9nMaV04LeKz7o=;
+	s=arc-20240116; t=1768296237; c=relaxed/simple;
+	bh=kzYoeuokPunEtsTYzoA+hzASkC5c3bXNz5Bad/HFDeM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bddtg4ZrdB/BZ+ls6snIG+5hf3+/7kIYKROvLGpi4/Otwco9x/aL8hPehFQKq1MLM+6AvwqTWWEO+j/ozYm4xLV8tgl7los6xcnBnYzaflSZQz5ETeD7a9lAWG7K2DcJJF9J7J7953eb3QPlOVf5wPzxNKRCmwQE15b4zz/0rB0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZI3j9nxJ; arc=fail smtp.client-ip=40.93.198.27
+	 MIME-Version:Content-Type; b=f0tV3J1QrOeSfYHK0gh74vhM9yM1L/pXz/Sgj4olv6TOAGDANmsYwHQJnPd/gMr0TYjnSRfNlbvvRm7SgsKUxCWkjvUaV1KK2faNVQe/V6r9fCYjvUdnKnbXoo0GKghbcdbiOVaBqubuUXfE6LAnuH7cciOPKubaNZT1Gfw1LUs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mIwkobO8; arc=fail smtp.client-ip=40.93.201.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JibaL5ecCG8se46pnD+3U7zTUyA8Ks37SlYjU7FxpvK9vFWYHX/om4jKPhmYsI/OihOTxdHAkKWZyJoqRGrqO642RvWtovZedAoYi2EU1sKtg0zR7Vwd6p/VPT6kqjBnNDMgtDz6jyFXYMGNpT0sm/j8vsG1jSaLolHO8oQJNj811S6NrKtBlLKY+nkKVOXQudwTlXWIA46GB2wAAXcdMxZ0YLhzjsdHZ2CoRDvx5WZ6roVqh76JGjAmd2MHc9ecXaR1x6fNw/JBxQvzjEkyR3spNnFbqNTy7rLzG+j0mJ41HbfsNDDwmswE7vpy08gInrdSkHAFH+nbbDuDz8KrXQ==
+ b=dermEm6VLX+boeRPEFp5l6kZP89SrfL1RlurnBDFxzhkqZgjk3eOBxbN9iVm8a1vjmpHjV9AaMxeLR7JLHU1olVBktYSnx/67oXmsnAnERb9EeSBAAwNnjS7HsOkf1a8eP++9hL8sDuMVZ2d2dcuK36saAOtPTQjJ3fhFMYuQxBCTYhUncVsJ9lPDaOybU/7acq6+IV11tsXRrsc90EPIa6jESDEhr9wH0RZn+V9qL3OcAGT6WtjeD5uvK/G3AeHmUG74ZhDH7jlydTLUMZ5vlDifhFV6PlCU+VcbLpJrPsi30dI43oqyslgTV6dfxf+tgqjtcqMi5jP4/d9Y7RgTA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/mHRspm9EyprAyU+CMRRaAAt+uz8c/CtZHap7eE+aIo=;
- b=jFunTLv8mO9aqjExd0aJEMt+cY6xZzJAt8iCRun1vrflZyeqMnoYE8VFGExfmNV9dKRyEG+spP+Q12u262j07hscoT6jU0jTezJeFRSdLVErzq7Hm509f1Z8ZuNLp/I2ZRh/YWuXNt6c84cLfE9o7DjZMoVSjYFFMUiJYHSv9pHGbMutQToblGQ7WsZzU7DXL7Dz5SDv1qXDp5DccsfrnfGaJZXIcKhiKUJhs24BL0Sf8LyNY8dWdKV1S2ao7kvO3pPNVhf8wfbJP9eTXIzw7dj09UfiBlBl9xt+/qeAlZbqHVclUAPXh699yjsHckwYeRBcrof/shWTkPW+Lcq3qw==
+ bh=p8r1OKwuA6HKWItdGQHC5SNEQop1mrjWntr5zpDARcc=;
+ b=gnWK8yC9eZGctYhKbzwjr9zdUVsviBVua+p6WLz5N+/KMfP7W5ZgNANz1j220cE9I91g3mXKFuEpzK2SDjryquv7SYRfIBUt/+E9dTREHeNswCmmeiUjYQOJP7PAr8whrdyJQd7N7vG0hse98mHN30uEfHBqaDz6FspwyKwQr/v2Z/BY+pJEBNaokrxmT/gKKPmzDGLnbqORVJq9sXisfXjf9svgFTR0IH6tp+aanRcKBh3WUxbEcnOgL1p19WVjAaY8ciEvLackd6aF9qqbwQM3ZxPMLj7rUHVzEjV6DdttxDgIc/BSe42eHgPlGdV9JPfWo2WQJFtvwiT+QWGQ2g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ 216.228.117.161) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/mHRspm9EyprAyU+CMRRaAAt+uz8c/CtZHap7eE+aIo=;
- b=ZI3j9nxJysOfunW/RpjTaBVQHlljtPaX3RLWqwQFVOoSr2yBmRY1wRdd5NgKpux74QREqIkCKCpoEJbkqYboVBV7Zx8sneYQ+ukqgkUnN4yWyf/PRjWtGAtpMfE8yIov0met8CukZiK9DKO7LqahI0fEHvNB4WLvvXugFM2vhehd/2vxZxYQNgY7Vf0XxYShR3ZyxQsZvwTUqlULfmudnvpA6B1GI2kOXTLxeL0xUVUo/3usW+e2KP0bhS9hcmcrvxw7fN7u/GQwxZatrE2uGAhTQr3VTnfjnqazXrausOJVQRN+cteAizMzKSwWPSXWYPD+RDBQ/iBtrir7mVBAiQ==
-Received: from MW4PR04CA0280.namprd04.prod.outlook.com (2603:10b6:303:89::15)
- by MW4PR12MB6997.namprd12.prod.outlook.com (2603:10b6:303:20a::14) with
+ bh=p8r1OKwuA6HKWItdGQHC5SNEQop1mrjWntr5zpDARcc=;
+ b=mIwkobO8zYd0ABqOKASXqCp4Uwg6PADU/ZdJLLLdkK+VATl7t+wNZr9GTH+xh1jFULz2taEF+9nKbLdhFXedyig9sNiPH9p+5Q7Eq+uBeZt9TEOQFJ0e0H8RA46GmaRs7Bmu0EzUJXhWvk8C0hpuozjlOdeq2WM9u9N8fPgvH93wjGVYOcyy6Mg7oZWn8Aupv95gleHRYa2BmKSFhQE9hXjzVOFpQ7dHpSeNNDxZdFRjkMzfJZIafUacUC9w8aFBMyXdSe72HxMcY7na2coH4M4gQZXSRTp8lPHiDYHSrs2UZWgs1GEDxWXG7yW6lXC70wLx0NzR1ZHgYlb4cK73Hg==
+Received: from BYAPR11CA0078.namprd11.prod.outlook.com (2603:10b6:a03:f4::19)
+ by DS4PR12MB9562.namprd12.prod.outlook.com (2603:10b6:8:27e::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.4; Tue, 13 Jan
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Tue, 13 Jan
  2026 09:23:47 +0000
-Received: from CO1PEPF000044F0.namprd05.prod.outlook.com
- (2603:10b6:303:89:cafe::b6) by MW4PR04CA0280.outlook.office365.com
- (2603:10b6:303:89::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9499.8 via Frontend Transport; Tue,
- 13 Jan 2026 09:23:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+Received: from SJ5PEPF000001F4.namprd05.prod.outlook.com
+ (2603:10b6:a03:f4:cafe::a1) by BYAPR11CA0078.outlook.office365.com
+ (2603:10b6:a03:f4::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9499.7 via Frontend Transport; Tue,
+ 13 Jan 2026 09:23:46 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CO1PEPF000044F0.mail.protection.outlook.com (10.167.241.70) with Microsoft
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ SJ5PEPF000001F4.mail.protection.outlook.com (10.167.242.72) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.20.9520.1 via Frontend Transport; Tue, 13 Jan 2026 09:23:46 +0000
 Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 13 Jan
- 2026 01:23:23 -0800
+ 2026 01:23:30 -0800
 Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail202.nvidia.com
  (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 13 Jan
- 2026 01:23:23 -0800
+ 2026 01:23:29 -0800
 Received: from inno-vm-xubuntu (10.127.8.13) by mail.nvidia.com (10.129.68.7)
  with Microsoft SMTP Server id 15.2.2562.20 via Frontend Transport; Tue, 13
- Jan 2026 01:23:17 -0800
+ Jan 2026 01:23:23 -0800
 From: Zhi Wang <zhiw@nvidia.com>
 To: <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
@@ -88,9 +88,9 @@ CC: <dakr@kernel.org>, <aliceryhl@google.com>, <bhelgaas@google.com>,
 	<kwankhede@nvidia.com>, <targupta@nvidia.com>, <acourbot@nvidia.com>,
 	<joelagnelf@nvidia.com>, <jhubbard@nvidia.com>, <zhiwang@kernel.org>, "Zhi
  Wang" <zhiw@nvidia.com>
-Subject: [PATCH v8 3/5] rust: io: factor out MMIO read/write macros
-Date: Tue, 13 Jan 2026 11:22:50 +0200
-Message-ID: <20260113092253.220346-4-zhiw@nvidia.com>
+Subject: [PATCH v8 4/5] rust: pci: add config space read/write support
+Date: Tue, 13 Jan 2026 11:22:51 +0200
+Message-ID: <20260113092253.220346-5-zhiw@nvidia.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260113092253.220346-1-zhiw@nvidia.com>
 References: <20260113092253.220346-1-zhiw@nvidia.com>
@@ -105,331 +105,295 @@ Content-Transfer-Encoding: 8bit
 X-NV-OnPremToCloud: ExternallySecured
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F0:EE_|MW4PR12MB6997:EE_
-X-MS-Office365-Filtering-Correlation-Id: e28d5531-96b4-47f1-7894-08de52857464
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F4:EE_|DS4PR12MB9562:EE_
+X-MS-Office365-Filtering-Correlation-Id: 209f8fad-a206-4a06-4df3-08de52857447
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|36860700013|1800799024|82310400026;
+	BCL:0;ARA:13230040|36860700013|82310400026|7416014|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?U3pKeGwvN0NhdnpoTkFEaHdxVWV0eWlWcHNaOGtGUUw4NEYyK2s1UjYvVHJa?=
- =?utf-8?B?L29sUlg3czF0SmtGaEU0VjZCZVFrVU5SR25HWjNkY1dYVTdZaEdnQmFTTyta?=
- =?utf-8?B?YkRvYlJmc2Q4c1JGMUtLSEthcXgzT1FodnJGYmZ2SFZGN0Fhd1Z3a2N2OVdQ?=
- =?utf-8?B?V0JkUzRzNGlUTGFaWkxuTGxKa0xncGVkbXpSbEpDcEFVZktCdWJ3OXIrdzlk?=
- =?utf-8?B?Sm1FekpWZzNyZ2loYittZFh2TW5wUUtzY3lsVytreTU0US9FT2ZUYWRhVGpW?=
- =?utf-8?B?RmVGMml5KzB6VlFUemNLOHNSd2ZrTlVyR0tXcGVnZDFmRUQzeVJPb3VFMUVY?=
- =?utf-8?B?U3Bwc1NlVlprMEl5Yi9BZ1FTVE5nQzB2VWxHOXdvZ0tZeEV2TktYWW5DNnZj?=
- =?utf-8?B?NjQ0OW8vMlI2Um8yZ1FIWmFyRHlXQWJtNUpIWVBzMG1TZG9KdXg2MkJKcCs0?=
- =?utf-8?B?RlNweFVxSDFJUnRXdWJzR0tza2xuMGNDeCt1QStWOUtQVlFuKzg3QzRwc3N0?=
- =?utf-8?B?THlVc0w5UzZkWnVIdkliVHpDUGNtUjhPMjlhUE95NFFBTHowN1M1Q05ZVXY3?=
- =?utf-8?B?alB3RXNSVGNwYTliTFArS3ZQY0tTbTRvNGI0Y2NaaFNyU1dydHFJc0RUaDVC?=
- =?utf-8?B?a0ZBZHkyNEdrYnZ5cUhQVDUzOFRPOFhZM0Z2L1MrclQzTkNqM0dxQUpmVkkv?=
- =?utf-8?B?ak44RTl4QnlaK1VCOVlFUmV3N2JVWnhvWXdzMkVHeTVOUnA5SVBYWWdrZHV3?=
- =?utf-8?B?V0NsZzlmUVpTaGZvcEI2ZUNHaVVneVZuQ0lMUEF5TGpQQ2VSVFJLK25RRzBU?=
- =?utf-8?B?Tm5zOENjYzJLSE5LSmhMRXhTd2N1WXB5TjhJY2VTeXFYblpQWWY1Qy9KQzlC?=
- =?utf-8?B?NDlGejZzSkFHT0tLQy9xcGpYMlp3aDdMWlVPa2F3Nkp1anQwS0VEb1kxTmlH?=
- =?utf-8?B?NFVMSzNUb1hmRS83RXB3YmNRckkrSkw1U3FaQzRkZ2d3OFpCTzlXVUhLOGV4?=
- =?utf-8?B?dm1BenM3eElOemZ5ZnNnaE9tY2dnK092YmxqdGhPamRIYWh2OXB6V3VGMHZH?=
- =?utf-8?B?TVJiVmFCcGUxbk0zZTVkalZDakhBK2NhME9CbTBsOHpITXMxSCt6am1YSzYw?=
- =?utf-8?B?WGJKU2xBT0hkbHBOQTBQWEpNMzcvU21CREEvRmRVTXJIQnZnS2hPOHVhc0Mr?=
- =?utf-8?B?OCsvVTNETStqbGdudFA4L2kwOTNwZUJPVlQwVnBaMDJjQXVWZUxOZEtRTWwz?=
- =?utf-8?B?NzZQZjVRMzhPeFZnempXa3FLZy9xRUEzd3pZa0dCeE9ya01tOXRpWEpMVWdN?=
- =?utf-8?B?ZWF0V3lRQUdvLzBxTEhGS1lJbTEvbGRDbUF5eDBjVGFScU4wMFY2SnByd2Fa?=
- =?utf-8?B?UkwrSm1mWGRpTjNHM1ZvVnNFVS8vY2psSitFa3c1bEtYaW9VUDgyK1V5TkNS?=
- =?utf-8?B?SW9QOEZMcXk4NDd3ZmRXRTJQYmIvVDErWm9RZlVwa1ZvVnlZbEVscEE1NVFz?=
- =?utf-8?B?VXo0ejlqdTRBbUhROXhhRjVLdzRtcVp5SjlMS1N0ZExhSUtBckhnK1o0YnFW?=
- =?utf-8?B?TmY1VmY2emEyMFBhSUNTak5rN0gvV3U2M08vVlNMbFpocUZSQ1UrS2lWdVJN?=
- =?utf-8?B?b01WRU9ENzlSU3RTYTU0RmhFaGNGQ2w3b1g0TVZqT3dPWWtGUW9CeWZvVnFt?=
- =?utf-8?B?Qmg0eUYySUZhYUpRaE81NytKSXlYQlhYT0M3YWlaT2J4bDJJcms3UFNCSnd5?=
- =?utf-8?B?cEppaGI2am50M1JGdW5KU2ttYUYvWFduOUlZdG9rZ0llQmZxOUFIZkVSVEwr?=
- =?utf-8?B?Z3Z6enZGSnIwM2NZQ1Q4SmpQM2IxVWxyVm13WW1raFQwL3J5Z29CdS85ZUpZ?=
- =?utf-8?B?Y3RiUmt5Q3RqSW9GYmNGcjhGR3lDb0lVUFpNd3lqY25mMG0zNWs4YVF4QTNC?=
- =?utf-8?B?bC9pdWZhMVhyaGtrZXYwaEFOYUNYZ1BkWkFha3lya28rSHdWQkEwZEplekxh?=
- =?utf-8?B?NXlsZittQnROYXdvSzFZbUJERGxPSVFmWUpTbDVHbngwUEVBTFdDZzIyYmJS?=
- =?utf-8?B?MXJJWjlsL2Ruc00zT0ZKdTVpMzQ3czhSaFRjN0tXdnZQaTg1SE5VTWg0cE9x?=
- =?utf-8?Q?r7yA=3D?=
+	=?utf-8?B?b0cyVXhzSGdhTkloajEzNXBiczFUNnN5NlNTb0ZtZDNUK0VmTnQrM3IxbUlp?=
+ =?utf-8?B?TllXY3BOTE9od0UwTGlzaC9XSXFCallmTkNhaEViT1l6Vm8wNW5qRWtJSVdq?=
+ =?utf-8?B?Yjltd3ZYK29ua1daczF2VlJTQ0hNbEJBd2xJS0gxVERkQmhWRHFGdTQzUlNI?=
+ =?utf-8?B?a3A4WnprNTFwR0pZN1B2bTF3Mk5jNEVHOVpjd08xOHZnYXMxazlmaWJ5ZVJy?=
+ =?utf-8?B?T1ZHeFAzV3B2NCtFOEhRYnA1dENmRld6MGVCT0lWekVOTTU1MGE2NGJYWTlQ?=
+ =?utf-8?B?eVRPU0FDVStEelVGbFozZXRQcUptYUtWbzNsWU41eDBQeHN4djNRMWdlenlP?=
+ =?utf-8?B?NmdtejVDaHNaUXdFS3lXRnpWaHlrQUs4SlpacGp1cnpFS1F0cm43dXJaam5m?=
+ =?utf-8?B?ZDhLN1oxMjNpZGxUdGZYOWVVbHBaZ1E2WEQwbUJUVFM3NmcrSHYvNUJ5TWdM?=
+ =?utf-8?B?ckZvOWtydE1QL0JGbTNzOVNQTmgrcElEK1Jrd2ROUHZDRmZFclVZeGxOejZ3?=
+ =?utf-8?B?VFJ6ck1MZ0FWTXRidjVzbWlqdTgxQWVGZzJPWlBmOEc0YVkrT3pqRGg4YTh5?=
+ =?utf-8?B?VDByZ3Q5aGp0NnRMZHV0Qm1NcitBTVphWHF6aDZsV2JjSGk2SFI4Q25IU3VT?=
+ =?utf-8?B?S0Y4NXpZckIvU2t0c1ZMV0Q4Tkd6aFgxZHpmbERBbzMrRzN2bTdwVWxjS3ZG?=
+ =?utf-8?B?V0JoaEcvTTRaNmZzVWhEa0phV0oyRnYyaGhjemFpV0lSRkk4SjhPc1cvVjB4?=
+ =?utf-8?B?a0h4TWJxQThjbzN2ZTQ2UEpEeHB1R2h4UkpSbGJ5bW5rQmM3bVgwa2I0bnl0?=
+ =?utf-8?B?bHdKWHBOQXFnRWIxTmUrK21UOURLY3Irdk1QLy9wYmhPdTEzUTVsTXNMWENw?=
+ =?utf-8?B?OXR3UVp0c093djkwTWNRRlRHeGR1eGVlU3ROQVdJaGNrK24yWElMRDVsTVVX?=
+ =?utf-8?B?UEZ2dE45clJKWmRtOThjVnFjUkIwdXlQTGZFRkJ0VGkvTFNHdlpGOW9uT2VS?=
+ =?utf-8?B?aFNnQ1VyZFVpeFFWcmJBS2JBU0t2cW02dFFQa0M0Z0NkbU9Nc1R0bHNwMURD?=
+ =?utf-8?B?WVB2SnFQMTE4bzIxU0dGYzI4cGovTS9IcW1aeXhpNGxWVkwycHNxSmZpZ0Fq?=
+ =?utf-8?B?dHl3M21ocklrV3JoSG9zZ05aT25OTk5TWkdsNEZXNm5jOWtEd3ZkUFFpS3BL?=
+ =?utf-8?B?RkVFSzM2VloxcHM3WDV0eG9ObE4rUUZTUEIzNmVydm1IeTNzeVU4RGp1WWtL?=
+ =?utf-8?B?aTNka0t6cHd4dTAwYktlWEVVM3ZuY2FkTmpoMFJ3dFBuTHpFbmpIYjN6dzRq?=
+ =?utf-8?B?T1c4S1RQbEE1WDVodTYzQjFLRFg5VUlOdjdxaEZzTUVqcnZlUXFYV1hOTTUz?=
+ =?utf-8?B?TFlWZXN6WHFTNXd0ZUtlUU8rNzhpSjdEeDhUeHJCWk5nbk5kUk9Fbkd0d0k2?=
+ =?utf-8?B?RHZEbWFDOXJMUEpZR29hY0pQci9vQ1FJR0E3aGxwNmRjTWhlcSszdUVQVmRy?=
+ =?utf-8?B?K1F0TlZPVzlvWjMrdHJLd2FueE5lT29vZWtWb2ZvV05wb1ByUUREYm1ySVZj?=
+ =?utf-8?B?MTJMMjU5YWlMZm02VjYvSVdBUHdTK3JvVk9ub1RkTWthNG9wZE52YUEvZkp1?=
+ =?utf-8?B?dU9keWttYVpndmxwWVhUUzBURFJGK2JQRnA3WG5uZitybzJyaDNhUVowbjRE?=
+ =?utf-8?B?UCtNTFhldjIyUDI0ZjZybWp2UEwvYjRKaDNlcktQN2o5NWt1ZXp5T2xYZ3Av?=
+ =?utf-8?B?MDBoUnlON3FIYTVWS0JZSEhNcXdjMTVjRUx2WjRONU5INk1Nc0svU1FrOWRY?=
+ =?utf-8?B?QzY1SE52VXFpZ0NnQWFmVmsvSjc2dGh6YXV0RmFCYTNYSnRvalNkQ1NxUFMx?=
+ =?utf-8?B?eFc5UzNGdm5PZTBlTHJCT3ROTmtxVXlLS1lwM2hSVGZqZkRTZHN2ejMzbUtj?=
+ =?utf-8?B?UGFKU2trSU0yRHVKQW56RS9zZzlJbHVQSjFwVS9Dd2svMlk3b28rakVWNWxZ?=
+ =?utf-8?B?VHdnL014TE5JZW83WllSdUtWOEhOOTM2RDU1U05LbTlHMmlDRGw5OXhnQXh4?=
+ =?utf-8?B?M2hBcExzYkhFVnlrQlRYRE1HSEQ3WmlmS2N6R25BeXJuM1NpYjlHZE9WNTg1?=
+ =?utf-8?Q?rbbY=3D?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2026 09:23:46.8548
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2026 09:23:46.6900
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e28d5531-96b4-47f1-7894-08de52857464
+X-MS-Exchange-CrossTenant-Network-Message-Id: 209f8fad-a206-4a06-4df3-08de52857447
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F0.namprd05.prod.outlook.com
+	SJ5PEPF000001F4.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6997
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PR12MB9562
 
-Refactor the existing MMIO accessors to use common call macros
-instead of inlining the bindings calls in each `define_{read,write}!`
-expansion.
+Drivers might need to access PCI config space for querying capability
+structures and access the registers inside the structures.
 
-This factoring separates the common offset/bounds checks from the
-low-level call pattern, making it easier to add additional I/O accessor
-families.
+For Rust drivers need to access PCI config space, the Rust PCI abstraction
+needs to support it in a way that upholds Rust's safety principles.
 
-No functional change intended.
+Introduce a `ConfigSpace` wrapper in Rust PCI abstraction to provide safe
+accessors for PCI config space. The new type implements the `Io` trait to
+share offset validation and bound-checking logic with others.
 
 Cc: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Danilo Krummrich <dakr@kernel.org>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>
 Signed-off-by: Zhi Wang <zhiw@nvidia.com>
 ---
- rust/kernel/io.rs | 149 ++++++++++++++++++++++++++++++++--------------
- 1 file changed, 104 insertions(+), 45 deletions(-)
+ rust/kernel/pci.rs    |  43 ++++++++++++++-
+ rust/kernel/pci/io.rs | 118 +++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 159 insertions(+), 2 deletions(-)
 
-diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-index 6e7f0d48ba3e..65a68da168c0 100644
---- a/rust/kernel/io.rs
-+++ b/rust/kernel/io.rs
-@@ -137,8 +137,65 @@ pub fn maxsize(&self) -> usize {
- #[repr(transparent)]
- pub struct Mmio<const SIZE: usize = 0>(MmioRaw<SIZE>);
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index 82e128431f08..f373413e8a84 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -40,7 +40,10 @@
+     ClassMask,
+     Vendor, //
+ };
+-pub use self::io::Bar;
++pub use self::io::{
++    Bar,
++    ConfigSpace, //
++};
+ pub use self::irq::{
+     IrqType,
+     IrqTypes,
+@@ -331,6 +334,30 @@ fn as_raw(&self) -> *mut bindings::pci_dev {
+     }
+ }
  
-+/// Internal helper macros used to invoke C MMIO read functions.
++/// Represents the size of a PCI configuration space.
 +///
-+/// This macro is intended to be used by higher-level MMIO access macros (define_read) and provides
-+/// a unified expansion for infallible vs. fallible read semantics. It emits a direct call into the
-+/// corresponding C helper and performs the required cast to the Rust return type.
++/// PCI devices can have either a *normal* (legacy) configuration space of 256 bytes,
++/// or an *extended* configuration space of 4096 bytes as defined in the PCI Express
++/// specification.
++#[repr(usize)]
++pub enum ConfigSpaceSize {
++    /// 256-byte legacy PCI configuration space.
++    Normal = 256,
++
++    /// 4096-byte PCIe extended configuration space.
++    Extended = 4096,
++}
++
++impl ConfigSpaceSize {
++    /// Get the raw value of this enum.
++    #[inline(always)]
++    pub const fn as_raw(self) -> usize {
++        // CAST: PCI configuration space size is at most 4096 bytes, so the value always fits
++        // within `usize` without truncation or sign change.
++        self as usize
++    }
++}
++
+ impl Device {
+     /// Returns the PCI vendor ID as [`Vendor`].
+     ///
+@@ -427,6 +454,20 @@ pub fn pci_class(&self) -> Class {
+         // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_dev`.
+         Class::from_raw(unsafe { (*self.as_raw()).class })
+     }
++
++    /// Returns the size of configuration space.
++    fn cfg_size(&self) -> Result<ConfigSpaceSize> {
++        // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_dev`.
++        let size = unsafe { (*self.as_raw()).cfg_size };
++        match size {
++            256 => Ok(ConfigSpaceSize::Normal),
++            4096 => Ok(ConfigSpaceSize::Extended),
++            _ => {
++                debug_assert!(false);
++                Err(EINVAL)
++            }
++        }
++    }
+ }
+ 
+ impl Device<device::Core> {
+diff --git a/rust/kernel/pci/io.rs b/rust/kernel/pci/io.rs
+index e3377397666e..c8741f0080ec 100644
+--- a/rust/kernel/pci/io.rs
++++ b/rust/kernel/pci/io.rs
+@@ -2,12 +2,19 @@
+ 
+ //! PCI memory-mapped I/O infrastructure.
+ 
+-use super::Device;
++use super::{
++    ConfigSpaceSize,
++    Device, //
++};
+ use crate::{
+     bindings,
+     device,
+     devres::Devres,
+     io::{
++        define_read,
++        define_write,
++        IoBase,
++        IoKnownSize,
+         Mmio,
+         MmioRaw, //
+     },
+@@ -16,6 +23,101 @@
+ };
+ use core::ops::Deref;
+ 
++/// The PCI configuration space of a device.
++///
++/// Provides typed read and write accessors for configuration registers
++/// using the standard `pci_read_config_*` and `pci_write_config_*` helpers.
++///
++/// The generic const parameter `SIZE` can be used to indicate the
++/// maximum size of the configuration space (e.g. 256 bytes for legacy,
++/// 4096 bytes for extended config space).
++pub struct ConfigSpace<'a, const SIZE: usize = { ConfigSpaceSize::Extended as usize }> {
++    pub(crate) pdev: &'a Device<device::Bound>,
++}
++
++/// Internal helper macros used to invoke C PCI configuration space read functions.
++///
++/// This macro is intended to be used by higher-level PCI configuration space access macros
++/// (define_read) and provides a unified expansion for infallible vs. fallible read semantics. It
++/// emits a direct call into the corresponding C helper and performs the required cast to the Rust
++/// return type.
 +///
 +/// # Parameters
 +///
-+/// * `$c_fn` – The C function performing the MMIO write.
++/// * `$c_fn` – The C function performing the PCI configuration space write.
 +/// * `$self` – The I/O backend object.
-+/// * `$ty` – The type of the value to be read.
-+/// * `$addr` – The MMIO address to read.
++/// * `$ty` – The type of the value to read.
++/// * `$addr` – The PCI configuration space offset to read.
 +///
 +/// This macro does not perform any validation; all invariants must be upheld by the higher-level
 +/// abstraction invoking it.
-+macro_rules! call_mmio_read {
-+    (infallible, $c_fn:ident, $self:ident, $type:ty, $addr:expr) => {
-+        // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
-+        unsafe { bindings::$c_fn($addr as *const c_void) as $type }
-+    };
-+
-+    (fallible, $c_fn:ident, $self:ident, $type:ty, $addr:expr) => {{
-+        // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
-+        Ok(unsafe { bindings::$c_fn($addr as *const c_void) as $type })
++macro_rules! call_config_read {
++    (infallible, $c_fn:ident, $self:ident, $ty:ty, $addr:expr) => {{
++        let mut val: $ty = 0;
++        // SAFETY: By the type invariant `$self.pdev` is a valid address.
++        // CAST: The offset is cast to `i32` because the C functions expect a 32-bit signed offset
++        // parameter. PCI configuration space size is at most 4096 bytes, so the value always fits
++        // within `i32` without truncation or sign change.
++        // Return value from C function is ignored in infallible accessors.
++        let _ret = unsafe { bindings::$c_fn($self.pdev.as_raw(), $addr as i32, &mut val) };
++        val
 +    }};
 +}
 +
-+/// Internal helper macros used to invoke C MMIO write functions.
++/// Internal helper macros used to invoke C PCI configuration space write functions.
 +///
-+/// This macro is intended to be used by higher-level MMIO access macros (define_write) and provides
-+/// a unified expansion for infallible vs. fallible read semantics. It emits a direct call into the
-+/// corresponding C helper and performs the required cast to the Rust return type.
++/// This macro is intended to be used by higher-level PCI configuration space access macros
++/// (define_write) and provides a unified expansion for infallible vs. fallible read semantics. It
++/// emits a direct call into the corresponding C helper and performs the required cast to the Rust
++/// return type.
 +///
 +/// # Parameters
 +///
-+/// * `$c_fn` – The C function performing the MMIO write.
++/// * `$c_fn` – The C function performing the PCI configuration space write.
 +/// * `$self` – The I/O backend object.
 +/// * `$ty` – The type of the written value.
-+/// * `$addr` – The MMIO address to write.
++/// * `$addr` – The configuration space offset to write.
 +/// * `$value` – The value to write.
 +///
 +/// This macro does not perform any validation; all invariants must be upheld by the higher-level
 +/// abstraction invoking it.
-+macro_rules! call_mmio_write {
++macro_rules! call_config_write {
 +    (infallible, $c_fn:ident, $self:ident, $ty:ty, $addr:expr, $value:expr) => {
-+        // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
-+        unsafe { bindings::$c_fn($value, $addr as *mut c_void) }
++        // SAFETY: By the type invariant `$self.pdev` is a valid address.
++        // CAST: The offset is cast to `i32` because the C functions expect a 32-bit signed offset
++        // parameter. PCI configuration space size is at most 4096 bytes, so the value always fits
++        // within `i32` without truncation or sign change.
++        // Return value from C function is ignored in infallible accessors.
++        let _ret = unsafe { bindings::$c_fn($self.pdev.as_raw(), $addr as i32, $value) };
 +    };
-+
-+    (fallible, $c_fn:ident, $self:ident, $ty:ty, $addr:expr, $value:expr) => {{
-+        // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
-+        unsafe { bindings::$c_fn($value, $addr as *mut c_void) };
-+        Ok(())
-+    }};
 +}
 +
- macro_rules! define_read {
--    (infallible, $(#[$attr:meta])* $vis:vis $name:ident, $c_fn:ident -> $type_name:ty) => {
-+    (infallible, $(#[$attr:meta])* $vis:vis $name:ident, $call_macro:ident($c_fn:ident) ->
-+     $type_name:ty) => {
-         /// Read IO data from a given offset known at compile time.
-         ///
-         /// Bound checks are performed on compile time, hence if the offset is not known at compile
-@@ -148,12 +205,13 @@ macro_rules! define_read {
-         $vis fn $name(&self, offset: usize) -> $type_name {
-             let addr = self.io_addr_assert::<$type_name>(offset);
- 
--            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
--            unsafe { bindings::$c_fn(addr as *const c_void) }
-+            // SAFETY: By the type invariant `addr` is a valid address for IO operations.
-+            $call_macro!(infallible, $c_fn, self, $type_name, addr)
-         }
-     };
- 
--    (fallible, $(#[$attr:meta])* $vis:vis $try_name:ident, $c_fn:ident -> $type_name:ty) => {
-+    (fallible, $(#[$attr:meta])* $vis:vis $try_name:ident, $call_macro:ident($c_fn:ident) ->
-+     $type_name:ty) => {
-         /// Read IO data from a given offset.
-         ///
-         /// Bound checks are performed on runtime, it fails if the offset (plus the type size) is
-@@ -162,14 +220,16 @@ macro_rules! define_read {
-         $vis fn $try_name(&self, offset: usize) -> Result<$type_name> {
-             let addr = self.io_addr::<$type_name>(offset)?;
- 
--            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
--            Ok(unsafe { bindings::$c_fn(addr as *const c_void) })
-+            // SAFETY: By the type invariant `addr` is a valid address for IO operations.
-+            $call_macro!(fallible, $c_fn, self, $type_name, addr)
-         }
-     };
- }
-+pub(crate) use define_read;
- 
- macro_rules! define_write {
--    (infallible, $(#[$attr:meta])* $vis:vis $name:ident, $c_fn:ident <- $type_name:ty) => {
-+    (infallible, $(#[$attr:meta])* $vis:vis $name:ident, $call_macro:ident($c_fn:ident) <-
-+     $type_name:ty) => {
-         /// Write IO data from a given offset known at compile time.
-         ///
-         /// Bound checks are performed on compile time, hence if the offset is not known at compile
-@@ -179,12 +239,12 @@ macro_rules! define_write {
-         $vis fn $name(&self, value: $type_name, offset: usize) {
-             let addr = self.io_addr_assert::<$type_name>(offset);
- 
--            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
--            unsafe { bindings::$c_fn(value, addr as *mut c_void) }
-+            $call_macro!(infallible, $c_fn, self, $type_name, addr, value);
-         }
-     };
- 
--    (fallible, $(#[$attr:meta])* $vis:vis $try_name:ident, $c_fn:ident <- $type_name:ty) => {
-+    (fallible, $(#[$attr:meta])* $vis:vis $try_name:ident, $call_macro:ident($c_fn:ident) <-
-+     $type_name:ty) => {
-         /// Write IO data from a given offset.
-         ///
-         /// Bound checks are performed on runtime, it fails if the offset (plus the type size) is
-@@ -193,12 +253,11 @@ macro_rules! define_write {
-         $vis fn $try_name(&self, value: $type_name, offset: usize) -> Result {
-             let addr = self.io_addr::<$type_name>(offset)?;
- 
--            // SAFETY: By the type invariant `addr` is a valid address for MMIO operations.
--            unsafe { bindings::$c_fn(value, addr as *mut c_void) }
--            Ok(())
-+            $call_macro!(fallible, $c_fn, self, $type_name, addr, value)
-         }
-     };
- }
-+pub(crate) use define_write;
- 
- /// Checks whether an access of type `U` at the given `offset`
- /// is valid within this region.
-@@ -332,37 +391,37 @@ fn maxsize(&self) -> usize {
- }
- 
- impl<const SIZE: usize> IoKnownSize for Mmio<SIZE> {
--    define_read!(infallible, read8, readb -> u8);
--    define_read!(infallible, read16, readw -> u16);
--    define_read!(infallible, read32, readl -> u32);
-+    define_read!(infallible, read8, call_mmio_read(readb) -> u8);
-+    define_read!(infallible, read16, call_mmio_read(readw) -> u16);
-+    define_read!(infallible, read32, call_mmio_read(readl) -> u32);
- 
--    define_write!(infallible, write8, writeb <- u8);
--    define_write!(infallible, write16, writew <- u16);
--    define_write!(infallible, write32, writel <- u32);
-+    define_write!(infallible, write8, call_mmio_write(writeb) <- u8);
-+    define_write!(infallible, write16, call_mmio_write(writew) <- u16);
-+    define_write!(infallible, write32, call_mmio_write(writel) <- u32);
- }
- 
- impl<const SIZE: usize> Io for Mmio<SIZE> {
--    define_read!(fallible, try_read8, readb -> u8);
--    define_read!(fallible, try_read16, readw -> u16);
--    define_read!(fallible, try_read32, readl -> u32);
-+    define_read!(fallible, try_read8, call_mmio_read(readb) -> u8);
-+    define_read!(fallible, try_read16, call_mmio_read(readw) -> u16);
-+    define_read!(fallible, try_read32, call_mmio_read(readl) -> u32);
- 
--    define_write!(fallible, try_write8, writeb <- u8);
--    define_write!(fallible, try_write16, writew <- u16);
--    define_write!(fallible, try_write32, writel <- u32);
-+    define_write!(fallible, try_write8, call_mmio_write(writeb) <- u8);
-+    define_write!(fallible, try_write16, call_mmio_write(writew) <- u16);
-+    define_write!(fallible, try_write32, call_mmio_write(writel) <- u32);
- }
- 
- #[cfg(CONFIG_64BIT)]
- impl<const SIZE: usize> IoKnownSize64 for Mmio<SIZE> {
--    define_read!(infallible, read64, readq -> u64);
-+    define_read!(infallible, read64, call_mmio_read(readq) -> u64);
- 
--    define_write!(infallible, write64, writeq <- u64);
-+    define_write!(infallible, write64, call_mmio_write(writeq) <- u64);
- }
- 
- #[cfg(CONFIG_64BIT)]
- impl<const SIZE: usize> Io64 for Mmio<SIZE> {
--    define_read!(fallible, try_read64, readq -> u64);
-+    define_read!(fallible, try_read64, call_mmio_read(readq) -> u64);
- 
--    define_write!(fallible, try_write64, writeq <- u64);
-+    define_write!(fallible, try_write64, call_mmio_write(writeq) <- u64);
- }
- 
- impl<const SIZE: usize> Mmio<SIZE> {
-@@ -377,43 +436,43 @@ pub unsafe fn from_raw(raw: &MmioRaw<SIZE>) -> &Self {
-         unsafe { &*core::ptr::from_ref(raw).cast() }
++impl<'a, const SIZE: usize> IoBase for ConfigSpace<'a, SIZE> {
++    const MIN_SIZE: usize = SIZE;
++
++    /// Returns the base address of the I/O region. It is always 0 for configuration space.
++    #[inline]
++    fn addr(&self) -> usize {
++        0
++    }
++
++    /// Returns the maximum size of the configuration space.
++    #[inline]
++    fn maxsize(&self) -> usize {
++        self.pdev.cfg_size().map_or(0, |v| v as usize)
++    }
++}
++
++impl<'a, const SIZE: usize> IoKnownSize for ConfigSpace<'a, SIZE> {
++    define_read!(infallible, read8, call_config_read(pci_read_config_byte) -> u8);
++    define_read!(infallible, read16, call_config_read(pci_read_config_word) -> u16);
++    define_read!(infallible, read32, call_config_read(pci_read_config_dword) -> u32);
++
++    define_write!(infallible, write8, call_config_write(pci_write_config_byte) <- u8);
++    define_write!(infallible, write16, call_config_write(pci_write_config_word) <- u16);
++    define_write!(infallible, write32, call_config_write(pci_write_config_dword) <- u32);
++}
++
+ /// A PCI BAR to perform I/O-Operations on.
+ ///
+ /// I/O backend assumes that the device is little-endian and will automatically
+@@ -144,4 +246,18 @@ pub fn iomap_region<'a>(
+     ) -> impl PinInit<Devres<Bar>, Error> + 'a {
+         self.iomap_region_sized::<0>(bar, name)
      }
- 
--    define_read!(infallible, pub read8_relaxed, readb_relaxed -> u8);
--    define_read!(infallible, pub read16_relaxed, readw_relaxed -> u16);
--    define_read!(infallible, pub read32_relaxed, readl_relaxed -> u32);
-+    define_read!(infallible, pub read8_relaxed, call_mmio_read(readb_relaxed) -> u8);
-+    define_read!(infallible, pub read16_relaxed, call_mmio_read(readw_relaxed) -> u16);
-+    define_read!(infallible, pub read32_relaxed, call_mmio_read(readl_relaxed) -> u32);
-     define_read!(
-         infallible,
-         #[cfg(CONFIG_64BIT)]
-         pub read64_relaxed,
--        readq_relaxed -> u64
-+        call_mmio_read(readq_relaxed) -> u64
-     );
- 
--    define_read!(fallible, pub try_read8_relaxed, readb_relaxed -> u8);
--    define_read!(fallible, pub try_read16_relaxed, readw_relaxed -> u16);
--    define_read!(fallible, pub try_read32_relaxed, readl_relaxed -> u32);
-+    define_read!(fallible, pub try_read8_relaxed, call_mmio_read(readb_relaxed) -> u8);
-+    define_read!(fallible, pub try_read16_relaxed, call_mmio_read(readw_relaxed) -> u16);
-+    define_read!(fallible, pub try_read32_relaxed, call_mmio_read(readl_relaxed) -> u32);
-     define_read!(
-         fallible,
-         #[cfg(CONFIG_64BIT)]
-         pub try_read64_relaxed,
--        readq_relaxed -> u64
-+        call_mmio_read(readq_relaxed) -> u64
-     );
- 
--    define_write!(infallible, pub write8_relaxed, writeb_relaxed <- u8);
--    define_write!(infallible, pub write16_relaxed, writew_relaxed <- u16);
--    define_write!(infallible, pub write32_relaxed, writel_relaxed <- u32);
-+    define_write!(infallible, pub write8_relaxed, call_mmio_write(writeb_relaxed) <- u8);
-+    define_write!(infallible, pub write16_relaxed, call_mmio_write(writew_relaxed) <- u16);
-+    define_write!(infallible, pub write32_relaxed, call_mmio_write(writel_relaxed) <- u32);
-     define_write!(
-         infallible,
-         #[cfg(CONFIG_64BIT)]
-         pub write64_relaxed,
--        writeq_relaxed <- u64
-+        call_mmio_write(writeq_relaxed) <- u64
-     );
- 
--    define_write!(fallible, pub try_write8_relaxed, writeb_relaxed <- u8);
--    define_write!(fallible, pub try_write16_relaxed, writew_relaxed <- u16);
--    define_write!(fallible, pub try_write32_relaxed, writel_relaxed <- u32);
-+    define_write!(fallible, pub try_write8_relaxed, call_mmio_write(writeb_relaxed) <- u8);
-+    define_write!(fallible, pub try_write16_relaxed, call_mmio_write(writew_relaxed) <- u16);
-+    define_write!(fallible, pub try_write32_relaxed, call_mmio_write(writel_relaxed) <- u32);
-     define_write!(
-         fallible,
-         #[cfg(CONFIG_64BIT)]
-         pub try_write64_relaxed,
--        writeq_relaxed <- u64
-+        call_mmio_write(writeq_relaxed) <- u64
-     );
++
++    /// Return an initialized config space object.
++    pub fn config_space<'a>(
++        &'a self,
++    ) -> Result<ConfigSpace<'a, { ConfigSpaceSize::Normal.as_raw() }>> {
++        Ok(ConfigSpace { pdev: self })
++    }
++
++    /// Return an initialized config space object.
++    pub fn config_space_extended<'a>(
++        &'a self,
++    ) -> Result<ConfigSpace<'a, { ConfigSpaceSize::Extended.as_raw() }>> {
++        Ok(ConfigSpace { pdev: self })
++    }
  }
 -- 
 2.51.0
