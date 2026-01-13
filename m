@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-44641-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44642-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F865D1A51D
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 17:37:37 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC92AD1A526
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 17:37:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1319030B40D9
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 16:32:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 79FF63097C06
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 16:32:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A954930AAC9;
-	Tue, 13 Jan 2026 16:32:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0872B30AAD8;
+	Tue, 13 Jan 2026 16:32:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e3Y+Q8Ia"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hTVJCXIq"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9BA2DC763;
-	Tue, 13 Jan 2026 16:32:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B833130ACF6;
+	Tue, 13 Jan 2026 16:32:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768321967; cv=none; b=JT0cWbQbhcLu/RMd9pT0nhT1tEXMsyNu0rURPFUIrWGElbSwarxIVVNcSaPLqr84JY9lxw+7idWsNOvWc59alSFFMl7gyJDGe2x0mSXOyHSkPAvcqXQCQmEaUFO87z8DG4HvobHZnUzXorPeOSKmYiu5hgjQa2KT2j2CANRZRjs=
+	t=1768321971; cv=none; b=tz7g9PM61yQYtO3cckCgpTO8ocvH10o9EScCkvhtaPCuYHGMeJ8n+2gxU/PAfqh68rRQZ080HaQDSZWcLF5n9VTtYj0YVxtUdBG7F9zCPwzb19UI3VpAYyn5mM8jfaVkLywU8TEB28T0zAb4zHPovU/CYAf0bAISev46MndoHQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768321967; c=relaxed/simple;
-	bh=EhbOro/6pVIW02rKbQ479kU/sLmFKyjbCcftZJG0bsI=;
+	s=arc-20240116; t=1768321971; c=relaxed/simple;
+	bh=tdyFxb8ShtT8cW27+J4Wc2g1kLnSW6VDCnFWjBdsxlw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rqaIY2aydkCWp2MNjHuZRuSykwZ26k4tooyFUn3xpp7HqEfK0VwwvnveT50utzjcbI4l9T+ByDpgsbXJ4wEeBA+LP7RymSnJ8Q9qawU4QfDBIwNdhTxSn5FdwRbBsxJX7kl7D8y7oeC2gZKM8fWF2TUTus9vPCGEbWi/q53OFT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e3Y+Q8Ia; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=iSHNSZmyyH0yhyiGimkfLSe1tpVjBpezpVFbGy52CjLTdP25NeKp3vHv4f76zEAUGDlxc4wbI/Ii6TuhAHAX8TlV9uwfGlAkPTyA2WZEb1JFjLOiGQCpTaVo6jPuYVmuM2EiAIE003PEc6pAaYZ8Ojuz98oLH4IAQF/8LiagfuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hTVJCXIq; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768321966; x=1799857966;
+  t=1768321970; x=1799857970;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=EhbOro/6pVIW02rKbQ479kU/sLmFKyjbCcftZJG0bsI=;
-  b=e3Y+Q8IaglpsAlF/lyMfsDVDHSsqttFn7q4+JBiVXE2HqSTSyEDkxlCb
-   nrEFd9dOESlTiDjiN+swT98DHtyjbmtMvVpvsp5Q9Pd20YlDwIn98IIC1
-   nc8aGEWtFlHNGIM5M4NFyIrBL6YgoFu5WKk01ry2z9ZeBLAIfAVRy1ZaW
-   WI0ZwB8XG7kY9uYIMAbs+LXBnkosW/RMk17wt1napTudqA5YHr1jgQmHQ
-   dR0ZnPrzg8CnqsLW5W43m3CWYbI+Jk7pQKz3jfa4fZe7I0a9JS1CY0CIB
-   tsffYu0OXg750++3AZf6GaFMlSuCHe0X7+YcViieGCG+0TB1bSlHvh2y9
+  bh=tdyFxb8ShtT8cW27+J4Wc2g1kLnSW6VDCnFWjBdsxlw=;
+  b=hTVJCXIqg3Jq77s5416tfXUC46bwQi3RtoHRn5CkqsYYk9sOqP9ACr98
+   tvfAdTI0clnayu3QvMrwrKiuAZVa7X9nNKznRg4eLKqHp7shW9pyyb2Nk
+   cieUZR4npdb7TktptE/jt9LkLX9c/Rs/Npn+HqvVWsAuOkwifOtvZ7zVk
+   mcFHQK/vvMNLNvzcBadlX1wIAsSst1QB4x4i0WAL0ufgWjPfpjPEjbYli
+   r/oSJEdNz+Vv3qctj4NuLLjkHg6d23w4Ffi32XfeGkZ+kPTKqQwlS+vZe
+   eKXDPvPum9hAIeTh9szKQ5+1tMCZZHFpgj0bE8kJQ3YXIU3CIKvg5CXnj
    Q==;
-X-CSE-ConnectionGUID: 2btQoOGmRt+gA97KJkgtOA==
-X-CSE-MsgGUID: GP8KS/0BQx2BCp8sF3FpVA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="69521091"
+X-CSE-ConnectionGUID: oFBz6AGcRFGuMc+csBMIoA==
+X-CSE-MsgGUID: lWVhYuioRX+7yHirOVVLGw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="69521101"
 X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
-   d="scan'208";a="69521091"
+   d="scan'208";a="69521101"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 08:32:46 -0800
-X-CSE-ConnectionGUID: H1ToScFnTm+PLtXfZmyKaA==
-X-CSE-MsgGUID: ye6fDcmEQ/mu7D5yR290rw==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 08:32:50 -0800
+X-CSE-ConnectionGUID: +HigFG2vRNS2Y02pQyDCaA==
+X-CSE-MsgGUID: yigGqjmvSB+uDEiv6q2DDg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
-   d="scan'208";a="204060300"
+   d="scan'208";a="204060372"
 Received: from bnilawar-desk2.iind.intel.com ([10.190.239.41])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 08:32:42 -0800
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 08:32:46 -0800
 From: Badal Nilawar <badal.nilawar@intel.com>
 To: intel-xe@lists.freedesktop.org,
 	linux-acpi@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: anshuman.gupta@intel.com,
 	matthew.auld@intel.com,
 	sk.anirban@intel.com,
 	raag.jadav@intel.com
-Subject: [PATCH v6 11/12] drm/xe/pm/s2idle: Don't evict user BOs D3cold-VRSR state
-Date: Tue, 13 Jan 2026 22:12:12 +0530
-Message-ID: <20260113164200.1151788-25-badal.nilawar@intel.com>
+Subject: [PATCH v6 12/12] drm/xe/vrsr: Introduce a debugfs node named vrsr_capable
+Date: Tue, 13 Jan 2026 22:12:13 +0530
+Message-ID: <20260113164200.1151788-26-badal.nilawar@intel.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260113164200.1151788-14-badal.nilawar@intel.com>
 References: <20260113164200.1151788-14-badal.nilawar@intel.com>
@@ -87,68 +87,29 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since VRAM stays active in D3cold-VRSR, evicting user BOs is unnecessary.
+Add a debugfs node named vrsr_capable to check if the device
+supports VRSR.
 
-Cc: Matthew Auld <matthew.auld@intel.com>
-Co-developed-by: Sk Anirban <sk.anirban@intel.com>
-Signed-off-by: Sk Anirban <sk.anirban@intel.com>
+V2: Use debugfs_create_bool for vrsr_capable node (Karthik)
+
 Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
 ---
-V1: Removed D3hot handling since, on discrete cards, we do not block
-    D3cold during system suspend
----
- drivers/gpu/drm/xe/xe_pm.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/xe/xe_debugfs.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
-index 1dd8e2c0f51e..3c7983afca9c 100644
---- a/drivers/gpu/drm/xe/xe_pm.c
-+++ b/drivers/gpu/drm/xe/xe_pm.c
-@@ -169,7 +169,7 @@ static void xe_rpm_lockmap_release(const struct xe_device *xe)
+diff --git a/drivers/gpu/drm/xe/xe_debugfs.c b/drivers/gpu/drm/xe/xe_debugfs.c
+index 844cfafe1ec7..60b78d3f91da 100644
+--- a/drivers/gpu/drm/xe/xe_debugfs.c
++++ b/drivers/gpu/drm/xe/xe_debugfs.c
+@@ -550,6 +550,8 @@ void xe_debugfs_register(struct xe_device *xe)
+ 	debugfs_create_file("disable_late_binding", 0600, root, xe,
+ 			    &disable_late_binding_fops);
  
- static void xe_pm_suspend_prepare(struct xe_device *xe)
- {
--	if (pm_suspend_target_state == PM_SUSPEND_TO_IDLE)
-+	if (pm_suspend_default_s2idle())
- 		xe_pm_d3cold_target_state_toggle(xe);
- 	else
- 		xe->d3cold.target_state = XE_D3COLD_OFF;
-@@ -192,8 +192,6 @@ int xe_pm_suspend(struct xe_device *xe, bool hibernation)
- 	xe_pm_block_begin_signalling();
- 	trace_xe_pm_suspend(xe, __builtin_return_address(0));
- 
--	xe_pm_suspend_prepare(xe);
--
- 	err = xe_pxp_pm_suspend(xe->pxp);
- 	if (err)
- 		goto err;
-@@ -554,8 +552,12 @@ static int xe_pm_notifier_callback(struct notifier_block *nb,
- 	int err = 0;
- 
- 	switch (action) {
--	case PM_HIBERNATION_PREPARE:
- 	case PM_SUSPEND_PREPARE:
-+		xe_pm_suspend_prepare(xe);
-+		if (xe->d3cold.target_state == XE_D3COLD_VRSR)
-+			break;
-+		fallthrough;
-+	case PM_HIBERNATION_PREPARE:
- 	{
- 		struct xe_validation_ctx ctx;
- 
-@@ -580,8 +582,11 @@ static int xe_pm_notifier_callback(struct notifier_block *nb,
- 		xe_pm_block_end_signalling();
- 		break;
- 	}
--	case PM_POST_HIBERNATION:
- 	case PM_POST_SUSPEND:
-+		if (xe->d3cold.target_state == XE_D3COLD_VRSR)
-+			break;
-+		fallthrough;
-+	case PM_POST_HIBERNATION:
- 		complete_all(&xe->pm_block);
- 		xe_pm_wake_rebind_workers(xe);
- 		xe_bo_notifier_unprepare_all_pinned(xe);
++	debugfs_create_bool("vrsr_capable", 0400, root,
++			    &xe->d3cold.vrsr_capable);
+ 	/*
+ 	 * Don't expose page reclaim configuration file if not supported by the
+ 	 * hardware initially.
 -- 
 2.52.0
 
