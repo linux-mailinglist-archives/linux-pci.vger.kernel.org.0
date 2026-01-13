@@ -1,63 +1,56 @@
-Return-Path: <linux-pci+bounces-44680-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44681-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29BB1D1B7D9
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 22:56:10 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id D28E2D1B85A
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 23:03:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id F171130019D4
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 21:56:06 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0E46430131D4
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 22:03:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 682C2344055;
-	Tue, 13 Jan 2026 21:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73364318BAB;
+	Tue, 13 Jan 2026 22:03:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KVL0x7JG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gginygg8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4000F2DC34E;
-	Tue, 13 Jan 2026 21:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC8E2ED164;
+	Tue, 13 Jan 2026 22:03:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768341365; cv=none; b=TRSvVl6DSwvc6FT+IPPYT/qA1TTsij/SIc+ph2jOSRC/TrlViuMHZjI8nd+ftsCI+ugM8f6aYPtEVnJ+cxTQQs6/zNeG/GTpOO62m2nQaunE9TwnaqoU6RXDZSu8SbG4yw1tLeHNluKvlz+kKO1F2oNZz63O1Qn2wnvVSaHFEKU=
+	t=1768341793; cv=none; b=fhDOhLeErWDpS+cfL3ybN4CkgyOdNFtg0hmFme86blLcCfcVJL++dpz3VIGKjv4A6C0wk3sLtOFRa6a7MKOpaVOfDKivDvnX6butryrMpKt7Kj9/JF9a5KTkHnnvH6vc2iOs+GiXJdDES48QvnGN2hOIeggMJhekXD4nyv6srpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768341365; c=relaxed/simple;
-	bh=nTh7fFqg/LT3f9MdXlSs711AfVqGFXu1moivv8qFk5I=;
+	s=arc-20240116; t=1768341793; c=relaxed/simple;
+	bh=nief9n323/1os0uIPBw9I+JGlvYKhvBDE8nJXbETvfY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=PnsZR0+nEDcZ+hs+npbV5VaqsNgPsVAldS44U6xrirsg7r0fDJoi0Go5zXOsJSYrgu16+XTyFJfRTdpf0En/j1Wy9rejZnCBQ4ssdL4z8BVEjQ4blwtF72L3KwKPmgi5SZkQC70/lCtlI2Y2dhudlwAs9/G4nhIQTcYpP9zTFMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KVL0x7JG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECE4AC116C6;
-	Tue, 13 Jan 2026 21:56:04 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=pZnrj1n+rOZq7cx84t5mxCM4+D0qHbCMa8AUtSA1oRh/ZH4OzJgd2ZelrmpJQbxnkEZz5/puQ7C/I8Bg6eP+x40Tf/o5Jj9CbQrKhme1QXC0IkGXbK8rRn1IlVPXfEeU65jcScYmjj7x0tROrDLbWwwL87jsemZL0ZX2Dxn7FXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gginygg8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 137A7C116C6;
+	Tue, 13 Jan 2026 22:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768341365;
-	bh=nTh7fFqg/LT3f9MdXlSs711AfVqGFXu1moivv8qFk5I=;
+	s=k20201202; t=1768341793;
+	bh=nief9n323/1os0uIPBw9I+JGlvYKhvBDE8nJXbETvfY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=KVL0x7JGjD1UDylwCNvsq33YOeWSQBFTiC0+Ys1LNYVg3J074Acwc7UY/GnO/DNyq
-	 bJLC0dA+r3nyYWkHrnmVPpipU6qBFuHkj2OMXLTlhXXEzWkPR6A2q5u1TOqw1AFKVu
-	 8qyG6Y41DcW1nKub4hyAYH2bmHsXswKGrL7ifknyOCEXV9TXlmfQ4seB+DEuXruxFn
-	 YuroqYs2OUBOVmiy0BbTxnvQyW6Mq7lOVI8NcKftIPjl4yAPCvM0Ii9XYkM1p22XWQ
-	 zD47bg2Mj+wKYHbFE5Cor0+hKEq+Lm7VChI96RChOIkk4o0RtwZ6TccRsGnMDLKkbT
-	 rRiTy9Wd4sQ/A==
-Date: Tue, 13 Jan 2026 15:56:03 -0600
+	b=Gginygg81xftxlqNavUsJxeeos3OT3NbnOVpOnuLxuKuvZJMOznHUpxkL7sdWO/bX
+	 aT9lo8sZUGPsfUq+/972k7JA5UR983jmNeNOy3N85c0aXvJZTpEe9lP+lRZMKHn4Am
+	 vPWe2gEq6Y7sAH98WehqpgAeBdi8GRORFmwBP+pI6XB+hjO0sEZfLXUtTjiQSW8pCm
+	 kwGbqgdld2z1/lxzjHzV2t+1RS07CB3I099Aksa5/PPzi9CfIgHRcQl4kYwz1CVpAW
+	 kQvZ0KL20onU9joRfc9fvAv/sGpKzb1D852bRmPlWVORm5CXgnd6YGP9omesVv8mBm
+	 HsQjW1fzIkLIg==
+Date: Tue, 13 Jan 2026 16:03:11 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: huyuye <huyuye812@163.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Robert Moore <robert.moore@intel.com>, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-riscv@lists.infradead.org,
-	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
-	dai.hualiang@zte.com.cn, deng.weixian@zte.com.cn,
-	guo.chang2@zte.com.cn, liu.qingtao2@zte.com.cn,
-	wu.jiabao@zte.com.cn, lin.yongchun@zte.com.cn, hu.yuye@zte.com.cn,
-	zhang.longxiang@zte.com.cn, zuo.jiang@zte.com.cn,
-	li.kunpeng@zte.com.cn
-Subject: Re: [PATCH v2] ACPI: pci_root: Clear the acpi dependencies after PCI
- root bridge initialization on RISC-V
-Message-ID: <20260113215603.GA781891@bhelgaas>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v3 3/3] PCI: dw-rockchip: Add pcie_ltssm_state_transition
+ trace support
+Message-ID: <20260113220311.GA782180@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,31 +59,27 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260112141630.2869-1-huyuye812@163.com>
+In-Reply-To: <1768180800-63364-4-git-send-email-shawn.lin@rock-chips.com>
 
-On Mon, Jan 12, 2026 at 10:16:29PM +0800, huyuye wrote:
-> Hi Rafael,
-> Thank you for your thorough review and valuable comments on v1.
-> I've updated the patch as follows:
-> 1. Removed the redundant #ifdef CONFIG_ACPI and if (!acpi_disabled) 
-> guard as you pointed out. The entire code block indeed already depends
-> on CONFIG_ACPI at a higher level, making the inner guard unnecessary.
-> 2. Moved acpi_dev_clear_dependencies to RISC-V specific architecture 
-> code (driver/acpi/riscv/acpi_pci.c). This ensures that ACPI dependency
-> clearing is handled within the appropriate architectural context.
-> 
-> Best regards
+On Mon, Jan 12, 2026 at 09:20:00AM +0800, Shawn Lin wrote:
+> Rockchip platforms provide a 64x4 bytes debug FIFO to trace the
+> LTSSM history. Any LTSSM change will be recorded. It's userful
+> for debug purpose, for example link failure, etc.
 
-This really should have the commit log here, as it did in the original
-post [1].
+s/userful/useful/
 
-> Signed-off-by: huyuye <huyuye812@163.com> 
-> ---
+> +		 * Hardware Mechanism: The ring FIFO employs two tracking counters:
+> +		 * - 'last-read-point': maintains the user's last read position
+> +		 * - 'last-valid-point': tracks the hardware's last state update
+> +		 *
+> +		 * Software Handling: When two consecutive LTSSM states are identical,
+> +		 * it indicates invalid subsequent data in the FIFO. In this case, we
+> +		 * skip the remaining entries. The dual-counter design ensures that on
+> +		 * the next state transition, reading can resume from the last user
+> +		 * position.
 
-And the description of the changes from v1 to v2 can go here, after
-the "---" since it doesn't need to be part of the permanent git
-history; see [2].
-
-[1] https://lore.kernel.org/r/20251203140716.3065-1-huyuye812@163.com
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.18#n784
+Wrap this to fit in 80 columns like the rest of the file.  Occasional
+code lines that don't fit because of indentation or long meaningful
+names are tolerable, but reading plain English text that doesn't fit
+for no real reason is just annoying.
 
