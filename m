@@ -1,178 +1,223 @@
-Return-Path: <linux-pci+bounces-44617-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44618-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C49DBD19BF2
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 16:10:21 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61A79D19DC0
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 16:24:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4C90230151AF
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 15:08:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 564BF300E3C2
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 15:24:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19C192EA490;
-	Tue, 13 Jan 2026 15:07:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 708A5315D49;
+	Tue, 13 Jan 2026 15:24:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="E5qhynzc";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="XftoF3b2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AhP/y80K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7A62D9499
-	for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 15:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A00A70830;
+	Tue, 13 Jan 2026 15:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768316877; cv=none; b=m2AhPrhZ35URrTM0pdiEJuoCNZzvMJQhUKfEKSn0g/6sOESObSr8INIOK6n8+czR8/D6Ja6ryBfjp2ZXuCQBD4QebspZRHMT4N23liB5IzMjgSkVF35PAUha/2IMmIj99rgpaNVaBpDgm/ZtKfQ98HVl59RDhmxekGYdkyuk6bY=
+	t=1768317890; cv=none; b=XdegkTWPinoSs4zuGe3Wp8HwcJjHo6L4MZaD22vdtzqkw0YY8umok1101Z+xwxVBxQLp+Wzk9ygeaFtZT+0hXbrJWGyI570T2Nlu/6uBIV2WtW99kighKwH6ce0b4lTIIOaudjxw6dtQ3kvFcopwXwGILaf2NXwrWitYadXssuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768316877; c=relaxed/simple;
-	bh=VSGkbwv8HFbydgyRyX+OYPrBxwLBYxlOvsSfJGvFESs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QZBw2hMSYETZxot3335u/3rtjolYwG/tybWZ15Z7gqO+257lBBgIwMeUqUCgmjpHe9Hn5VT7eSp4KxtVl9bN8+AXWfwFeeo1IzCmOSroBB3MKPkiKzuVdtas9MQtrR17Lt/SNZtMXxZUVoitfQqOjZqKAJL8/RAuJeqApajgWWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=E5qhynzc; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=XftoF3b2; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60DCIfjD3817041
-	for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 15:07:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	5u8zZy+SMq1tuf6StAdBY31X0PCasfr3C7hRuW51Ttg=; b=E5qhynzcBI2GzoXL
-	b1/RtLPX+FRGsvl8F84iP8SSkejYgVC74GGemmD+7JS+baYecF+W8QXKUTOr23ST
-	wfge79nB9b8wnccBy5Pgah/Oro/zURlH2h0uI70QQWIVflyIzwxNa7WaWTId260T
-	qmdDebR9Ty1Oib02+4L9UXlEqCPfe7odWe2rXNvKv2DlJ1toLdFwHK781Up2oBRD
-	UyI9XUlj5I804dWIY8lSMKH+l29TJ7rKFLVcRwfN/PBH/rAD5SJ5R/YkwaILGNC4
-	/oIIgzRqYcmWPv+gl0qN1aTflPEBpPVt1L/552HkGCp0h27prtltS07h7SixgBXu
-	jXF7+g==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bng55ss01-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 15:07:55 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-34cc8bf226cso8574554a91.3
-        for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 07:07:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1768316874; x=1768921674; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5u8zZy+SMq1tuf6StAdBY31X0PCasfr3C7hRuW51Ttg=;
-        b=XftoF3b2YWAOtPEmUrHgCui2RGmpusmuXEH+AlzYgu9Rpa3ILnFGpvq3MDZ1dP46Lm
-         vP7F7vwaNW+zbpLkPmfxnae8KtjfZxiDaBRrqnbaSSjStDSbAz7D1L8SS9Yp0D1zzbCK
-         tPfmCoskRbA2Yo3oQ4eSsmdAzDLBKjyH0QbHrT7BxhHAbtO+QpRLyjP6thg3Rl9dsmFe
-         f5LZB/3q/g2KivvCo0B5ZauebrP/Gxx3qYQqP9pglf18IwK4DD+k69TAhZpnvdHRPS7O
-         e7VvzHj2J3upls+oEHtwGuY1BHI9TJVOC51ece0sugs5Z6MaJoUb3wwsKvPAKw+jbYRR
-         FAfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768316874; x=1768921674;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5u8zZy+SMq1tuf6StAdBY31X0PCasfr3C7hRuW51Ttg=;
-        b=onjLJrjva8jkAuk7wfuS8W8JRDoh/ytTiPjVtHqcJ8CSaH6PA46ATn0Z4qB3oWTsJT
-         eLTyngX0mRgAL+j5aytXbLywFSkzQsMXNygSz500Qee4zb0Xu4Ac2HkbiZqThffcJxLo
-         333/0QULCL3Hw0VfrXeNWn04HvbWH5h9Dw5NpQXfphw0SGbi+gHVzELaIriJFRnPVsdV
-         AUNiYIi/Kn2198dMUzmDmw7N/ffkcNqAhmmaOALH6B1E4WUfYTKb3bVDsMP24Zb2qtD2
-         TCEaCHl3SJCBIm1ojBARxG6jQc6swpf3+LoVPWwO/8Hsx1H/Eo4UL3QN0mtqRk4SWDqv
-         1NCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWEOvdDQwHDs3kEI/KMIXVxdvVx4oPrlyY58IX7WHK+hTeiCQDSzXgGKKfMl7yT0GUBayNQRJiWpNc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNzthV2P7/Bk5YJOHaKWDIJ97uDM1NeG1dGF/Zw4c9ArloKcYA
-	LG9wQd+ermz01mYzWMJjJnIHmNpxAOFxkFApkJ0sx/p1za8fo8VAoj1h3rOnZMiqe012YyWRH0k
-	zVylUcxtmjahHcmQnSS2EfkOYRKpi+7pKZpoMhJADCw3/lbhsdFA57hp8vv5Cwa8=
-X-Gm-Gg: AY/fxX7XEbV05195mMbM2KO6k8gNAUxOp/SDde7/MpD97c6dygdcvhrTS3ze5CMZ9oO
-	ToSu6f/MwusEB/X9/1j1EnIkutLryTmu345GfsRoNMnp3O2JCwE9/WAYOlKKB3nLifYGJDJatgY
-	uF4VGTxI8wODE1tn2YEFXbgdc+V39oqzOHehb+ZUTlNjCdZ4MetsQcc9G/Gp8xS1zn8PJGoHMeX
-	mmJ8TuRqtZJMmDOpFALEqVY0h1VTYuVgDXnatxaarrGTcJL8Uo9x20gtxU2UvyNIrU+sOqZZUuk
-	zmN48p9cTfu4vVTZwoJ5barmrVyslTlV6kfl0ZjqmocQ4UoYpftXTcfWgbwTJOJpA/ZmIu1Fce5
-	penlJYQLz
-X-Received: by 2002:a17:90b:5708:b0:341:8b2b:43c with SMTP id 98e67ed59e1d1-34f68ca4541mr20354404a91.18.1768316874341;
-        Tue, 13 Jan 2026 07:07:54 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFlt8ZgEvivm97+Rg+mnmfT7T2zykprrAJCxYtGFDtZ2bzCPakH5pqcMmlIJmmG2RqIRh42vQ==
-X-Received: by 2002:a17:90b:5708:b0:341:8b2b:43c with SMTP id 98e67ed59e1d1-34f68ca4541mr20354355a91.18.1768316873746;
-        Tue, 13 Jan 2026 07:07:53 -0800 (PST)
-Received: from [192.168.1.102] ([120.60.62.237])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34f5f7c4118sm20111482a91.7.2026.01.13.07.07.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 07:07:52 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-X-Google-Original-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        quic_vbadigan@quicinc.com, quic_shazhuss@quicinc.com,
-        konrad.dybcio@oss.qualcomm.com, Rama Krishna <quic_ramkri@quicinc.com>,
-        Ayiluri Naga Rashmi <quic_nayiluri@quicinc.com>,
-        Nitesh Gupta <quic_nitegupt@quicinc.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-In-Reply-To: <20260106-firmware_managed_ep-v5-0-1933432127ec@oss.qualcomm.com>
-References: <20260106-firmware_managed_ep-v5-0-1933432127ec@oss.qualcomm.com>
-Subject: Re: [PATCH v5 0/2] Add firmware-managed PCIe Endpoint support for
- SA8255P
-Message-Id: <176831686765.502522.2253728268158673109.b4-ty@kernel.org>
-Date: Tue, 13 Jan 2026 20:37:47 +0530
+	s=arc-20240116; t=1768317890; c=relaxed/simple;
+	bh=taak2UygMZbdacgSedIXzlFkiSjhrP80UZpBg3+A9T4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uKXTvmE5KTGkqPCVLoOGTPkma+MkZEPTRbdD2om7mf9QskYtaoc0d7f4ICyUmbcgMPwF4/nEgpSpUuR56u4sq8avld39mnCnmW0ZV3XKfB2A7R3m8D9YQh1fepebnWItR0z07A8mVoKv0476oS4Ipa0TETk11QbKO8rX/h4UuBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AhP/y80K; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22D46C116C6;
+	Tue, 13 Jan 2026 15:24:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768317889;
+	bh=taak2UygMZbdacgSedIXzlFkiSjhrP80UZpBg3+A9T4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=AhP/y80KVpZcmRV1+NMKLTI7A3S3B1azBgUpQ1DJUoaoH/TdnGwIdSpNdf4iOtRl5
+	 VMjPXhRqRohFjpEbWulvcJ9JjRwozK8fucaQwQiM8u0Gja1ik0Q3sTcW/6IIEq+3d5
+	 hHD4PWcpVpfgVDOn0SV7bboOAc09bk7OwyDufmZublxhYqPbm49WVLbdvElM/VF8he
+	 HvtLSZJ2jXKm2fI/o+QkcMPrelVltHLBYAFKn1iSoIrObiMteKseVxFxZCfeELV8Ah
+	 IWAlUHyqaY0szCLSQBji+FnqKNi/kZEfK8gaMPepsMkMAyl1jzdeApqJdvxGLgQf5K
+	 W731h5A9eUm3w==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Bert Karwatzki <spasswolf@web.de>, linux-kernel@vger.kernel.org
+Cc: Bert Karwatzki <spasswolf@web.de>, linux-next@vger.kernel.org, Mario
+ Limonciello <mario.limonciello@amd.com>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Christian =?utf-8?Q?K=C3=B6nig?=
+ <christian.koenig@amd.com>,
+ regressions@lists.linux.dev, linux-pci@vger.kernel.org,
+ linux-acpi@vger.kernel.org, "Rafael J . Wysocki"
+ <rafael.j.wysocki@intel.com>, acpica-devel@lists.linux.dev, Robert Moore
+ <robert.moore@intel.com>, Saket Dumbre <saket.dumbre@intel.com>, Bjorn
+ Helgaas <bhelgaas@google.com>, Clemens Ladisch <clemens@ladisch.de>,
+ Jinchao Wang <wangjinchao600@gmail.com>, Yury Norov
+ <yury.norov@gmail.com>, Anna Schumaker <anna.schumaker@oracle.com>,
+ Baoquan He <bhe@redhat.com>, "Darrick J. Wong" <djwong@kernel.org>, Dave
+ Young <dyoung@redhat.com>, Doug Anderson <dianders@chromium.org>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Helge Deller
+ <deller@gmx.de>, Ingo Molnar <mingo@kernel.org>, Jason Gunthorpe
+ <jgg@ziepe.ca>, Joanthan Cameron <Jonathan.Cameron@huawei.com>, Joel
+ Granados <joel.granados@kernel.org>, John Ogness
+ <john.ogness@linutronix.de>, Kees Cook <kees@kernel.org>, Li Huafei
+ <lihuafei1@huawei.com>, "Luck, Tony" <tony.luck@intel.com>, Luo Gengkun
+ <luogengkun@huaweicloud.com>, Max Kellermann <max.kellermann@ionos.com>,
+ Nam Cao <namcao@linutronix.de>, oushixiong <oushixiong@kylinos.cn>, Petr
+ Mladek <pmladek@suse.com>, Qianqiang Liu <qianqiang.liu@163.com>, Sergey
+ Senozhatsky <senozhatsky@chromium.org>, Sohil Mehta
+ <sohil.mehta@intel.com>, Tejun Heo <tj@kernel.org>, Thomas Zimemrmann
+ <tzimmermann@suse.de>, Thorsten Blum <thorsten.blum@linux.dev>, Ville
+ Syrjala <ville.syrjala@linux.intel.com>, Vivek Goyal <vgoyal@redhat.com>,
+ Yicong Yang <yangyicong@hisilicon.com>, Yunhui Cui
+ <cuiyunhui@bytedance.com>, Andrew Morton <akpm@linux-foundation.org>,
+ W_Armin@gmx.de
+Subject: Re: NMI stack overflow during resume of PCIe bridge with
+ CONFIG_HARDLOCKUP_DETECTOR=y
+In-Reply-To: <20260113094129.3357-1-spasswolf@web.de>
+References: <20260113094129.3357-1-spasswolf@web.de>
+Date: Tue, 13 Jan 2026 16:24:46 +0100
+Message-ID: <87h5spk01t.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
-X-Proofpoint-GUID: P04O0FBZwhNWIEnzGMrad6-xQBrBgz62
-X-Proofpoint-ORIG-GUID: P04O0FBZwhNWIEnzGMrad6-xQBrBgz62
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTEzMDEyNyBTYWx0ZWRfX28IGX2WOyaRr
- WSCz42RF1mhR5Sfl7pTAGpB/OhfsfBYR6NafqFL1UO9YMJI6uNBL0Wksf5gviC+4EWOMST2XAF0
- Jv/UXbDJM51srE4J0vWjrc2aYUtCJcIA3ih/npF7zFgUrgV4a52oDNKKqOkNIQ2nahdLVhb9dkf
- qjNvhi9KkvId5Jt3hULGVGrvrDev78tx1uUVf3BCBq/iqYcNup+jIMAMt95EKLbh7xdvx5iDKoH
- 7UTPsxzQsRkHgbbIbAuhq7fALPXr9EhUDRViK3biYGL7B+AiiefBxmTmQwGHJtDr6TFZyuovqWu
- /l0iBqKBrFvizdHfnIoCQ2BhBo/tGF55pd1FateTDAKXkHzlhXNGKQHXq6VRRCx9Q91csP1bFJ8
- i6/iYwA5pKOXElV3wik63CesFKH3kLjtSEEnGqMCCdEf4NYZvnC/LPpGGGEdauxCuiifwiyI+Nj
- 0PgRjQS6JMcfDA1GNig==
-X-Authority-Analysis: v=2.4 cv=IIsPywvG c=1 sm=1 tr=0 ts=69665fcb cx=c_pps
- a=vVfyC5vLCtgYJKYeQD43oA==:117 a=tlgrONNCw2HA119KiuRAjA==:17
- a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=90D3mx7Vd8eILxI8FvwA:9
- a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10 a=rl5im9kqc5Lf4LNbBjHf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-13_03,2026-01-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 malwarescore=0 adultscore=0 clxscore=1015 bulkscore=0
- phishscore=0 priorityscore=1501 suspectscore=0 spamscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2601130127
+Content-Type: text/plain
+
+On Tue, Jan 13 2026 at 10:41, Bert Karwatzki wrote:
+> Here's the result in case of the crash:
+> 2026-01-12T04:24:36.809904+01:00 T1510;acpi_ex_system_memory_space_handler 255: logical_addr_ptr = ffffc066977b3000
+> 2026-01-12T04:24:36.846170+01:00 C14;exc_nmi: 0
+
+Here the NMI triggers in non-task context on CPU14
+
+> 2026-01-12T04:24:36.960760+01:00 C14;exc_nmi: 10.3
+> 2026-01-12T04:24:36.960760+01:00 C14;default_do_nmi 
+> 2026-01-12T04:24:36.960760+01:00 C14;nmi_handle: type=0x0
+> 2026-01-12T04:24:36.960760+01:00 C14;nmi_handle: a=0xffffffffa1612de0
+> 2026-01-12T04:24:36.960760+01:00 C14;nmi_handle: a->handler=perf_event_nmi_handler+0x0/0xa6
+> 2026-01-12T04:24:36.960760+01:00 C14;perf_event_nmi_handler: 0
+> 2026-01-12T04:24:36.960760+01:00 C14;perf_event_nmi_handler: 1
+> 2026-01-12T04:24:36.960760+01:00 C14;perf_event_nmi_handler: 2
+> 2026-01-12T04:24:36.960760+01:00 C14;x86_pmu_handle_irq: 2
+> 2026-01-12T04:24:36.960760+01:00 C14;x86_pmu_handle_irq: 2.6
+> 2026-01-12T04:24:36.960760+01:00 C14;__perf_event_overflow: 0
+> 2026-01-12T04:24:36.960760+01:00 C14;__perf_event_overflow: 6.99: overflow_handler=watchdog_overflow_callback+0x0/0x10d
+> 2026-01-12T04:24:36.960760+01:00 C14;watchdog_overflow_callback: 0
+> 2026-01-12T04:24:36.960760+01:00 C14;__ktime_get_fast_ns_debug: 0.1
+> 2026-01-12T04:24:36.960760+01:00 C14;tk_clock_read_debug: read=read_hpet+0x0/0xf0
+> 2026-01-12T04:24:36.960760+01:00 C14;read_hpet: 0
+> 2026-01-12T04:24:36.960760+01:00 C14;read_hpet: 0.1
+
+> 2026-01-12T04:24:36.960760+01:00 T0;exc_nmi: 0
+
+This one triggers in task context of PID0, aka idle task, but it's not
+clear on which CPU that happens. It's probably CPU13 as that continues
+with the expected 10.3 output, but that's almost ~1.71 seconds later.
+
+> 2026-01-12T04:24:38.674625+01:00 C13;exc_nmi: 10.3
+> 2026-01-12T04:24:38.674625+01:00 C13;default_do_nmi 
+> 2026-01-12T04:24:38.674625+01:00 C13;nmi_handle: type=0x0
+> 2026-01-12T04:24:38.674625+01:00 C13;nmi_handle: a=0xffffffffa1612de0
+> 2026-01-12T04:24:38.674625+01:00 C13;nmi_handle: a->handler=perf_event_nmi_handler+0x0/0xa6
+> 2026-01-12T04:24:38.674625+01:00 C13;perf_event_nmi_handler: 0
+> 2026-01-12T04:24:38.674625+01:00 C13;perf_event_nmi_handler: 1
+> 2026-01-12T04:24:38.674625+01:00 C13;perf_event_nmi_handler: 2
+> 2026-01-12T04:24:38.674625+01:00 C13;x86_pmu_handle_irq: 2
+> 2026-01-12T04:24:38.674625+01:00 C13;x86_pmu_handle_irq: 2.6
+> 2026-01-12T04:24:38.674625+01:00 C13;__perf_event_overflow: 0
+> 2026-01-12T04:24:38.674625+01:00 C13;__perf_event_overflow: 6.99: overflow_handler=watchdog_overflow_callback+0x0/0x10d
+> 2026-01-12T04:24:38.674625+01:00 C13;watchdog_overflow_callback: 0
+> 2026-01-12T04:24:38.674625+01:00 C13;__ktime_get_fast_ns_debug: 0.1
+> 2026-01-12T04:24:38.674625+01:00 C13;tk_clock_read_debug: read=read_hpet+0x0/0xf0
+> 2026-01-12T04:24:38.674625+01:00 C13;read_hpet: 0
+> 2026-01-12T04:24:38.674625+01:00 C13;read_hpet: 0.1
+
+> 2026-01-12T04:24:38.674625+01:00 T0;exc_nmi: 0
+
+Same picture as above, but this time on CPU2 with a delay of 0.68
+seconds
+
+> 2026-01-12T04:24:39.355101+01:00 C2;exc_nmi: 10.3
+> 2026-01-12T04:24:39.355101+01:00 C2;default_do_nmi 
+> 2026-01-12T04:24:39.355101+01:00 C2;nmi_handle: type=0x0
+> 2026-01-12T04:24:39.355101+01:00 C2;nmi_handle: a=0xffffffffa1612de0
+> 2026-01-12T04:24:39.355101+01:00 C2;nmi_handle: a->handler=perf_event_nmi_handler+0x0/0xa6
+> 2026-01-12T04:24:39.355101+01:00 C2;perf_event_nmi_handler: 0
+> 2026-01-12T04:24:39.355101+01:00 C2;perf_event_nmi_handler: 1
+> 2026-01-12T04:24:39.355101+01:00 C2;perf_event_nmi_handler: 2
+> 2026-01-12T04:24:39.355101+01:00 C2;x86_pmu_handle_irq: 2
+> 2026-01-12T04:24:39.355101+01:00 C2;x86_pmu_handle_irq: 2.6
+> 2026-01-12T04:24:39.355101+01:00 C2;__perf_event_overflow: 0
+> 2026-01-12T04:24:39.355101+01:00 C2;__perf_event_overflow: 6.99: overflow_handler=watchdog_overflow_callback+0x0/0x10d
+> 2026-01-12T04:24:39.355101+01:00 C2;watchdog_overflow_callback: 0
+> 2026-01-12T04:24:39.355101+01:00 C2;__ktime_get_fast_ns_debug: 0.1
+> 2026-01-12T04:24:39.355101+01:00 C2;tk_clock_read_debug: read=read_hpet+0x0/0xf0
+> 2026-01-12T04:24:39.355101+01:00 C2;read_hpet: 0
+> 2026-01-12T04:24:39.355101+01:00 C2;read_hpet: 0.1
+
+> 2026-01-12T04:24:39.355101+01:00 T0;exc_nmi: 0
+
+Again on CPU0 with a delay of 0.06 seconds
+
+> 2026-01-12T04:24:39.410207+01:00 C0;exc_nmi: 10.3
+> 2026-01-12T04:24:39.410207+01:00 C0;default_do_nmi 
+> 2026-01-12T04:24:39.410207+01:00 C0;nmi_handle: type=0x0
+> 2026-01-12T04:24:39.410207+01:00 C0;nmi_handle: a=0xffffffffa1612de0
+> 2026-01-12T04:24:39.410207+01:00 C0;nmi_handle: a->handler=perf_event_nmi_handler+0x0/0xa6
+> 2026-01-12T04:24:39.410207+01:00 C0;perf_event_nmi_handler: 0
+> 2026-01-12T04:24:39.410207+01:00 C0;perf_event_nmi_handler: 1
+> 2026-01-12T04:24:39.410207+01:00 C0;perf_event_nmi_handler: 2
+> 2026-01-12T04:24:39.410207+01:00 C0;x86_pmu_handle_irq: 2
+> 2026-01-12T04:24:39.410207+01:00 C0;x86_pmu_handle_irq: 2.6
+> 2026-01-12T04:24:39.410207+01:00 C0;__perf_event_overflow: 0
+> 2026-01-12T04:24:39.410207+01:00 C0;__perf_event_overflow: 6.99: overflow_handler=watchdog_overflow_callback+0x0/0x10d
+> 2026-01-12T04:24:39.410207+01:00 C0;watchdog_overflow_callback: 0
+> 2026-01-12T04:24:39.410207+01:00 C0;__ktime_get_fast_ns_debug: 0.1
+> 2026-01-12T04:24:39.410207+01:00 C0;tk_clock_read_debug: read=read_hpet+0x0/0xf0
+> 2026-01-12T04:24:39.410207+01:00 C0;read_hpet: 0
+> 2026-01-12T04:24:39.410207+01:00 C0;read_hpet: 0.1
+
+> 2026-01-12T04:24:39.410207+01:00 T0;exc_nmi: 0
+
+....
+
+> In the case of the crash the interrupt handler never returns because when accessing
+> the HPET another NMI is triggered. This goes on until a crash happens, probably because
+> of stack overflow.
+
+No. NMI nesting is only one level deep and immediately returns:
+
+        if (this_cpu_read(nmi_state) != NMI_NOT_RUNNING) {
+		this_cpu_write(nmi_state, NMI_LATCHED);
+		return;
+	}
 
 
-On Tue, 06 Jan 2026 18:04:44 +0530, Mrinmay Sarkar wrote:
-> This patch series introduces support for Qualcomm SA8255P platform
-> where PCIe Endpoint resources are managed by firmware instead of
-> Linux driver. So the Linux driver should avoid redundant resource
-> management and relies on runtime PM calls to inform firmware for
-> resource management.
-> 
-> And document the new compatible string "qcom,sa8255p-pcie-ep" for
-> SA8255P platform in the device tree bindings.
-> 
-> [...]
+So it's not a stack overflow. What's more likely is that after a while
+_ALL_ CPUs are hung up in the NMI handler after they tripped over the
+HPET read.
 
-Applied, thanks!
+> The behaviour described here seems to be similar to the bug that commit
+> 3d5f4f15b778 ("watchdog: skip checks when panic is in progress") is fixing, but
+> this is actually a different bug as kernel 6.18 (which contains 3d5f4f15b778)
+> is also affected (I've conducted 5 tests with 6.18 so far and got 4 crashes (crashes occured
+> after (0.5h, 1h, 4.5h, 1.5h) of testing)). 
+> Nevertheless these look similar enough to CC the involved people.
 
-[1/2] dt-bindings: PCI: qcom,sa8255p-pcie-ep: Document firmware managed PCIe endpoint
-      commit: 20165a8ac68ff375e4955b3f9fda0404229131bd
-[2/2] PCI: qcom-ep: Add support for firmware-managed PCIe Endpoint
-      commit: 5b026a9e714d33bb61f6041b9e1bffa2dcc66ff6
+There is nothing similar.
 
-Best regards,
--- 
-Manivannan Sadhasivam <mani@kernel.org>
+Your problem originates from a screwed up hardware state which in turn
+causes the HPET to go haywire for unknown reasons.
 
+What is the physical address of this ACPI handler access:
+
+       logical_addr_ptr = ffffc066977b3000
+
+along with the full output of /proc/iomem
+
+Thanks,
+
+        tglx
 
