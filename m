@@ -1,247 +1,209 @@
-Return-Path: <linux-pci+bounces-44570-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44571-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F7DDD1611C
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 01:38:44 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 996E7D1635B
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 02:49:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B32E93031D70
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 00:35:20 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id C923130049FC
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 01:49:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB3E723535E;
-	Tue, 13 Jan 2026 00:35:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DA7726CE2C;
+	Tue, 13 Jan 2026 01:49:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CoYiFPdY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cq6nkmJp";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="cSzktrvA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012047.outbound.protection.outlook.com [40.107.209.47])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7E122B8CB;
-	Tue, 13 Jan 2026 00:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768264519; cv=fail; b=ND1GWTzNhxDjwmywswp4M9e+noqk+RHTaX+/gosCkn2ZJ/m6iJVrFgekL5RF7nTleYsiSjR/bwR9oas2PEqoqk2ZUze3JED/Spncb0NFd5ObFXyQYvGitUXttmTfAbGZ4kKgVZwqRxd2ev/VH2f59tv6PCeAwZ0G2ohqCr9qjSo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768264519; c=relaxed/simple;
-	bh=dKkzBvM356Vb7Drbe7hPtcCd4IqpPxo9tF5DBFgqcXI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BT7985ZE3+FetsBoNV+yUp1uOFdfBof4FRXsiW9rMF8R/n2HTFL9ijDqvaiL5wuyxpdk0n+FbmDooJu91PzivlZQQ8o6UkemwTz2wodFUfLYbsQ4nShTCardsQ0I7ntWQhlvVJkd2c0p00HTGiIHKlRNF57/c97oJ80eWUuiB2Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CoYiFPdY; arc=fail smtp.client-ip=40.107.209.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UIbXC6xcrZoNh5XPCR0XfFwWZeix+Qj6l3+m2jRssSjVWtVIASPA2ea5mrrWARIoAoutje2O+ni7OLJxora4ihRxVa3soLbw9ssTxPb0Qw1yvLhJuLNIOLS+NqKXz7vxJlX+HTKhvFLVkhIBl6ycj1XMqyOKbj9+4A1MpPZ8130QMSAeJsCGvZZ4HIdS9nB4OnlGTwh776feEn9A4WTCnKbyeSzUz+yYP3zXExD5WKI4CJ3HIzZpdyX5vZwnVOWU+pdy9XR6H45mZpxqUQKdj09RbgI6puL4btmzBuiM/wkxMeDaROgNsNyiff8jn0E0qtELrqwqMQDBDGtaHQVqtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dKkzBvM356Vb7Drbe7hPtcCd4IqpPxo9tF5DBFgqcXI=;
- b=tN4rWBMZHnqcqygTMOkqOMLbgDuk1eEo+uR0C3FNDRYwQoN4kPtIhH6wi6VygbSzEk8yv3zPru7dKAIdJjz9mmLpsep+yA8CDnaRpqFgjROIBNL5b2rft/P3hQfKsLaIBSaQmz5Uw1AYj7haOLKlr0/VBt1rVP+iu0EaH2Z+gBf1QMHSxnhTSuVOhk36JKZcszYByDSlbmX8LVB8Cz6A/VSzaTH46wvmEgnfjOtij7CNa2CH1R+SnflRTi7cvjCa7tTz8tibVU80aw7JpPQd2eZXQ+2DGheffkUkrHguevZwaBs5W1DJyJiLkGo6GqoBN4WEgYMA6MF0NDDt4ZPo4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dKkzBvM356Vb7Drbe7hPtcCd4IqpPxo9tF5DBFgqcXI=;
- b=CoYiFPdYmDteC8ZDILeaDduEa3JOClUK1b/vCEGwhHzq0OL6mZYU9lz5+pkItfUfu5el0NJFMho1+5GdYVy+4dhpqFSzxrsSF0ygCIivrS1ohOqv8RoQ3fpdExWtb6158TyMARyFgsDnoCcjcMnWo2mNaIkJuPuFPBbHe94EBJpYN77AnGliOl8XCQ1Jby1Y3uSyIvSIP8k2dEF6/yMg3/n+jdEzYq+AxCKLSnpfFDWvX8D75qtdPqIed3nq4JXDIFASdL3h+98chgQ3OOAIhvEAWG3d+41NV9RsvxOXRm8XuV7urSay8wi1fSDX5rioR0sZSrEKZwhIBAV1+nrF0A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- PH7PR12MB5999.namprd12.prod.outlook.com (2603:10b6:510:1db::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Tue, 13 Jan
- 2026 00:35:15 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.9499.005; Tue, 13 Jan 2026
- 00:35:15 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Matthew Wilcox <willy@infradead.org>, Balbir Singh <balbirs@nvidia.com>,
- Francois Dugast <francois.dugast@intel.com>, intel-xe@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Matthew Brost <matthew.brost@intel.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Felix Kuehling <Felix.Kuehling@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
- David Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>, Leon Romanovsky <leon@kernel.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Alistair Popple <apopple@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-pci@vger.kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v4 1/7] mm/zone_device: Add order argument to folio_free
- callback
-Date: Mon, 12 Jan 2026 19:35:05 -0500
-X-Mailer: MailMate (2.0r6290)
-Message-ID: <23B46B7B-66D5-4557-AF78-F82EAAA5A168@nvidia.com>
-In-Reply-To: <20260112235306.GN745888@ziepe.ca>
-References: <874d29da-2008-47e6-9c27-6c00abbf404a@nvidia.com>
- <0D532F80-6C4D-4800-9473-485B828B55EC@nvidia.com>
- <20260112134510.GC745888@ziepe.ca>
- <218D42B0-3E08-4ABC-9FB4-1203BB31E547@nvidia.com>
- <20260112165001.GG745888@ziepe.ca>
- <86D91C8B-C3EA-4836-8DC2-829499477618@nvidia.com>
- <20260112182500.GI745888@ziepe.ca>
- <6AFCEB51-8EE1-4AC9-8F39-FCA561BE8CB5@nvidia.com>
- <20260112192816.GL745888@ziepe.ca>
- <8DB7DC41-FDBD-4739-AABC-D363A1572ADD@nvidia.com>
- <20260112235306.GN745888@ziepe.ca>
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR05CA0031.namprd05.prod.outlook.com
- (2603:10b6:a03:33f::6) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EA523D7CD
+	for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 01:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768268971; cv=none; b=q1GUpHALUCghFwPOTtyQXwfZPTvVffnR1SjFYyBs7RlFBXOHEhxEw7CShQVywItXNOEsPy8ZiJE/Mv8DViaqf4tzQZZDZfK/iAy38QIArQHLYWz2U0EIrRYFbmqMYclvOD4C8muSzBlM+/emMxJSkwmW9Q2ag4W6sltou46sxqY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768268971; c=relaxed/simple;
+	bh=odrlExJfFzg0riamVUhcfYPGQohsWjwFOIvkcN9lcyU=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Go1irOfLe+6OUDD7Yb1ggPi1eTADRgn8BhNrm7YoqNRImEAk+rJ9WNeGnOUz3dR4JuglymUUkgnY1mE6HwwfIXnqi5ggy1ETxlEKHbEggr9y0vHsP4DrRZyMo2ZJzAz7Iyd7XnYGPldGlVc1Nn7TSXtHT7yGrc2rxvsBzD9GtLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cq6nkmJp; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=cSzktrvA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768268969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ipl04u3803c/IO8SDz5fqTBlvGqq/KbVl3bI4vEOEvs=;
+	b=cq6nkmJp7XLRu0u2mCD9I2beSGedYDfd9LPLQ9XCfMqI/PB7Rt9yH3Ij37aeKtX0rCD8UL
+	D2UIGBmfqyPr/Y9e2JwccJ89HvJa6KaVgb+pJgaXFCTW9kGWyxYxGHuszs/9TatQnxK5m/
+	4PyJU0YXmPaFYk77eIo2gUCuIWlAHG4=
+Received: from mail-vk1-f199.google.com (mail-vk1-f199.google.com
+ [209.85.221.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-137-ifOtyTm6OaKUEyanvipsnQ-1; Mon, 12 Jan 2026 20:49:28 -0500
+X-MC-Unique: ifOtyTm6OaKUEyanvipsnQ-1
+X-Mimecast-MFC-AGG-ID: ifOtyTm6OaKUEyanvipsnQ_1768268968
+Received: by mail-vk1-f199.google.com with SMTP id 71dfb90a1353d-56344627228so4387943e0c.2
+        for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 17:49:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1768268968; x=1768873768; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ipl04u3803c/IO8SDz5fqTBlvGqq/KbVl3bI4vEOEvs=;
+        b=cSzktrvAskyNt2YiCWAAZ+Hnb4NvI6UYDv1NZeWrlDK26yszp0Ko/N+P12ZXFQmhy5
+         cXO/i1ZWAR7NFH2//AALgxHkNUSx9MTYqq5rtukoAXAsz0cTFVWRq4fRaHXuRNGLI8Hd
+         BL8Eucp2S0ag4OwvLzSiz/ofZeMIQ9LXp98If6BRJxcpBprnn7y5w2KxgyQc57I/6IzO
+         hiXhYNmTGAdt4ZJsymbJ6szos+CCEiZ9sp2Hek0OJisMS54W4amG03PceKlMdF1W7Woc
+         89bFMnJwptnoRkBMTrHpfTU3z7zVu8S5C5Kq2w9tnYPOH0HouF2387/XiQ1zyyDB0oNU
+         o5NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768268968; x=1768873768;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ipl04u3803c/IO8SDz5fqTBlvGqq/KbVl3bI4vEOEvs=;
+        b=bEAnAGgEloDf/YXKOUJx5xMShSBLODF1JnshpydW6Uy3C32ETEZY/own420mbygBy9
+         f3q17ZSZ0Tmd+u/dicpFj4ynizsjglPVxEznwi35XymfdQAF6M8FP5TyBy2C6Ge26kFH
+         /k1VlwD3WszMJNfA0cim0IStn5lKrzZfCgMsJGO1omyhRVGzE3rvK8vbJ5Zjki9NwvdK
+         ARbKMCjR1lQ0JJEBaeF+5gE6MQ6Xan7Bjp8MoOi2QrKFo8BlUJlJsYyG62+QL9CQEK9o
+         RSzWtTMwZMBR1or2PPwIX+rpyZ8h9rbZuxXu89PixldgvcFLzfHR2VoE6yQHkQJF98CT
+         LGqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVSBd8H+hZVEc6OmwlIoVdHOeamx2cexLrlP1Xbw6Kd2KReMhrq3GNLA+zeVv1QET0kdkXvHfN8Cc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEbBmUllhtbX6D97srZ+sCmgIPzcLZ+yYBcAn8NBXfelO0odsR
+	1L0q6Vg9QUaJN/ikJNEmmBUDfwPKhfwKRIIeUHcpIdTnqnB3NCcBXu4QR7KR+18hJjgDrLSxWut
+	gZh+Js6Ia8Tpz7M+vj9aPigEp/QQ6mUKclW21HK5a/IYJiQFI4RFVh1729sNGmA==
+X-Gm-Gg: AY/fxX7+Jd1WKgW5WoeuX5+uhnt2q+xRF4m0OUoMaZm/7qfWEiDvNwlZcESaN/GgHLI
+	W7HIcKDpQo7ok5Gq+tGI7Hn/qT4NAXcQ2J89XfLpUH5MIFgPxRvxevDaaXY99j9NizoF7ZG1drr
+	piuMSCaQ5Y8ETLwVJ3lAcNt2tZTojJ2D3M79tjZdSTg8YjZXgYvRU4oCfI01g+K6t6gvN/uitfQ
+	q0xWkSo0FwYUIGAOaXg67NU4K6WrowUKBaIT64BuKcn8d46nl5cvLNK27DZkRATJcdIjqNOpS4C
+	xpUszYKoImdKZUCCswp2nX5DaOhVrY8oLa5z341VTFyStBSChWz7Wd4i5bCyl8gpoMMlzQyz3EA
+	M015+NQsYoQJOYDvXBC304SdOQhX2JEGsJ+JYqXdye/MXmt39fvh9p6rF
+X-Received: by 2002:a05:6122:4b89:b0:55b:305b:4e38 with SMTP id 71dfb90a1353d-5634800729cmr7402453e0c.19.1768268967534;
+        Mon, 12 Jan 2026 17:49:27 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFK3nQoFNSvzu3p3PMs7jwaVTVycoM8jcu4b27g95LRRVLuycfC94MCTb+8aGEaS+r94nXQbg==
+X-Received: by 2002:a05:6122:4b89:b0:55b:305b:4e38 with SMTP id 71dfb90a1353d-5634800729cmr7402411e0c.19.1768268967043;
+        Mon, 12 Jan 2026 17:49:27 -0800 (PST)
+Received: from ?IPV6:2601:188:c102:b180:1f8b:71d0:77b1:1f6e? ([2601:188:c102:b180:1f8b:71d0:77b1:1f6e])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5635bd72c7esm13437373e0c.12.2026.01.12.17.49.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Jan 2026 17:49:26 -0800 (PST)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <2857c203-96e5-4bf9-b19c-7a80b009cce2@redhat.com>
+Date: Mon, 12 Jan 2026 20:49:11 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|PH7PR12MB5999:EE_
-X-MS-Office365-Filtering-Correlation-Id: a76cce5f-cf71-4936-6de9-08de523b9e70
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?xTk5IFRFX/7flBE/ftBmVFBXYWBQh8GZiqMiSrAXpnBG/pfDeJ7aaRHt+cHZ?=
- =?us-ascii?Q?Xa/CsbPytB2EJl0G6T4ipcBWI3+/kz+/oxNOnj0uZxA4T43dWrRQngtmmmfT?=
- =?us-ascii?Q?BY0twrxkRupCTcBOc76gOpLCsokRZuJY3h4gHK63THcwhgqam7V/61eC0Tw+?=
- =?us-ascii?Q?IQ5IKvsWfmq7v//0o/bd7+/S/oxemtwUOyuLogE95QMl0mnHS92kS1zvVz9z?=
- =?us-ascii?Q?io3bsbrxU0Q6chhb05YrpK6O3SEnyJtMZEZ79quouIx5rE2M5oH1a4bZtZjj?=
- =?us-ascii?Q?bP7X7HEr2Z9rKcgycH4XV21aHaZli8nW07uuvBN2f5HcToaV5JOt+a/Q9K4q?=
- =?us-ascii?Q?WN8E6ursOhPB8VX3NPCQWP+i1sZZ2yAEFP4ebqfopErrlbJY0z4ogNk7WPjJ?=
- =?us-ascii?Q?ay7+cCbH5DXewb9rCEs91dNP4LPirli/Y3bYkmR60V99kdhQ0vcC4C7Gqxo3?=
- =?us-ascii?Q?CL1ZK62HRv/aRgkCv6GbogpIXsGi+ynVU50/86QqD8Pvtdt1mlY1N2gBvR5Q?=
- =?us-ascii?Q?aTWvT2AWSFSNsTmT72pVk53YNmJME7CUrsrXn7UOk/RuZTA2z2gCgfEDjxdy?=
- =?us-ascii?Q?lWYuncoYywIBwDDhPQJqAbvxLqmCzgMC+pWUb+OOgBIn4vaxTzftALejrmYv?=
- =?us-ascii?Q?WMGsqj9YbSiqqZM5ezi2/trimjjphJwAUTcxrFdD/HvUjkIbBRWAE4V6Mb7x?=
- =?us-ascii?Q?dZZCzy91da3BEwBM3260TXXw8X9fw/x5UGChnQ0Ptekioc3s5+0l2YelCMEV?=
- =?us-ascii?Q?XE9YQHi9QiXcdBRsaYJJsfsqPGYUE3ZNCnhzBFAUftMB/2Bbi0b4DQ+38+Kw?=
- =?us-ascii?Q?wYCzpm52kuzp2X5JdA2A6kMT90SInJg92/LkPPKeX3YMzV/DMApBes0CTssP?=
- =?us-ascii?Q?J1kxZz/KBGblvDPEfUA4RRodZnGm3c6JKJU4+25VNw8MsGdYMFdpnsyhehWK?=
- =?us-ascii?Q?Oz7nu9VvGv2bN+6WyQ94OunnqRRBK1v6Q3hUeT1TxF44nT+J3pkjfqPsi0HP?=
- =?us-ascii?Q?WRQWl+Xt1JGLYvq7nVms04y1CZQUVgVFtVSNOkMg90WyN0Zf2naxOqDoNc6M?=
- =?us-ascii?Q?grvLN3jQzplFH4k4WoQGIx8mMETJtM3n4h5DAhtJAKMP0isAqergiqpKJe4r?=
- =?us-ascii?Q?KQYk3r9WlkzOo8U7yZMYEriKXzgGi/CkiTh0zMPbo+WBbzESYxYdso7PL6xt?=
- =?us-ascii?Q?xeCg+M4vA48tcArV9gHyv0W8/Uz6gzjI9WpritDF+t0etwhiM8C4oIYg0bwr?=
- =?us-ascii?Q?Li7YqwakWw42SS5/UaKOcJ5bvOYB8b31fPGt9GnIoEFoDP8FVwWrTrPJIWxi?=
- =?us-ascii?Q?RFbSquSGxUKovQOOoppw5Mi2Ut2CwZX0xEBmAQoZfb3C+1pasrmdsrAQfNuh?=
- =?us-ascii?Q?DB6i9Jdl4dZXW73QGZeAZFIl45lR2nWzgZIWLhIkXH42FLnc7C8UjBkrl+Wb?=
- =?us-ascii?Q?Q4iKUulnGcBNMQG4yMeYsEdBXjbNV/4u?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?0xHcZAamwfuh9aNRGbqQHha6GtGKj9pU/9WHb6s8Qand1+tYwTX14cIJHt78?=
- =?us-ascii?Q?ABruIfKYalbLrBJ9Upk7AF5MTfCrOd/bNdxUn3VCtcCp/AcEf4XRXEwDlaT+?=
- =?us-ascii?Q?0PplstRnuGk/Dh5Ra4dgHOwu/1gJXqXNotxPD1r80Fi9ZNZye8kRYo/x7bDU?=
- =?us-ascii?Q?OJlBE1LokOJc0Rri6mRBl1vQX6WqLIx4+7IjS7ezGsSs/obPB8vpLdUKB3NE?=
- =?us-ascii?Q?TzHHriJm618OeYGfG6xg+MNJbtzmtU3DOX/Zr7e5Tgpz0kpQdyv5mJGpIaTV?=
- =?us-ascii?Q?yqUDe79sIN/o7WjXdPWy+0o+XcWi+gi47HaZdn31VooYpZDCiouaO7IdQUbc?=
- =?us-ascii?Q?kAR6psQFey63yrXS8LsaqE/yTx/PTcFi10fG++EJ6eXTWktvnFbrn+2C69zL?=
- =?us-ascii?Q?CuaCx8S+MCVeEycq2i51BP4/LFgKq/mZhPZXWhtoQoSJqqNK0LgoofqNmdtB?=
- =?us-ascii?Q?jkWmgKCfcTC6i6V6Fu/p6xI5G5Q3PI7tXdWCc0QQ25/dRjBQl42J3fuzVP8x?=
- =?us-ascii?Q?U543tnjmX9VIl4QJcdbNDjIWDJkOtbKKtKc+qPsNYzZ9UmGfNoyvFh9eyY59?=
- =?us-ascii?Q?wMhLT+rT5E+dsIIDfwNTMSgUDMMIeQP+ibJ0Q1yVnJzExn94slVQCU079dg9?=
- =?us-ascii?Q?IvU1qbwQEfbKNXoJ7+4p56q2MdqROyVFI5ZJ9grWNRE4ijqgd4dZ+kO8SaXX?=
- =?us-ascii?Q?vTGB6YJCsOTagubZ/Bcek5jQdeqWACQ+01YG+pkTQY/nBcSC1djaAbxQuyfr?=
- =?us-ascii?Q?fKRDgOJ8YpCI1EuRYDTgzVplKKZCxlxKDwssLphMM43RT9OlIYoaOT4JZ9PN?=
- =?us-ascii?Q?Lu7YYrE50JxFkXh039qUuq9QbODzf+GXf1lTmFVZ3HY9cOmaDIdRN6+Ok3/Q?=
- =?us-ascii?Q?GD2y6LbofeS0fvgJ4/zqvrIkgndbAMMPC4fWOvM15IB/cWZ9rLtOymqSD9Hi?=
- =?us-ascii?Q?JnC0kqLCElPyu58KXlVz8qm5qzHpMf4DWEhkd34TjwkEMAvRSli3okwPaIJ/?=
- =?us-ascii?Q?giCiMmYoXv8vnxrWCL6o5UyznvTBMF3ZaVdWirGyyeXXWR7FrskVC4A5HPAt?=
- =?us-ascii?Q?/XIEhUMcngSSLOaYsjOfYyijiqETwhYFZ6RtFj1EVVBEoLZqJJPV0O8GOAJB?=
- =?us-ascii?Q?mBu449U3kL848+2gx6IssBi/zK06ULs3wzUpQEIfz8oG50FUmr6N9kQ0AVv1?=
- =?us-ascii?Q?7q1WE86ZR8e2dBeoX8d0j/R7/LN2sAHxMdiu0Fxj3Xui/QAZlJhZ80yomYPI?=
- =?us-ascii?Q?NF2zxuZgJfKXhGCeKP6KJMCO5kndB43tS8eqBlVi709C5XcgWsgfXKeixSOx?=
- =?us-ascii?Q?yzWxMdqgc0x4NwLshF+8jsB1pOLuzFxqa2DmSRFuQPsS+jH7lSkHyTjjKPKI?=
- =?us-ascii?Q?hiXYAn/jjz05lNGhKV47tIc3/BYLCrRhoZdd152iG1p38KOFKUN1VZzf1ws/?=
- =?us-ascii?Q?Vfsnz0A4EJwnKQngrCBlEMdQQ+9rDO6wGOv77DLEsnfAN96r3GAuH4gLa51Y?=
- =?us-ascii?Q?+kJFxQfprdQYE3ErA2eHBIYjcenOFH3PNXhuq/OTthSf9/CCMx2ntE9e99FR?=
- =?us-ascii?Q?FfTPck14DQtPIyDmjtz0C/Mcj6BZUaQa39c5RjMSsW6c98L0Y4jDnHl24ZQL?=
- =?us-ascii?Q?abwGg1ApQ3rVCYGNFy6cHH56W0D5IaDdbsFwUEEyy7yEvDv9aUy5A7M9WbTI?=
- =?us-ascii?Q?IFACeW/PclHmv3aI0YJ9a4MtEDdHf+mhWqN+XgnCijgnZm3d7wPIMMxBYbEK?=
- =?us-ascii?Q?LktIgx94uw=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a76cce5f-cf71-4936-6de9-08de523b9e70
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2026 00:35:14.9351
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5ll8VV26aSRh5TgVs29YPjedve/ynX1sbFtG78i+QJFAIQg31CJTOPiao9lDV+nP
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5999
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/33 v6] cpuset/isolation: Honour kthreads preferred
+ affinity
+To: Frederic Weisbecker <frederic@kernel.org>, Waiman Long <llong@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
+ Phil Auld <pauld@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Danilo Krummrich <dakr@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Michal Koutny <mkoutny@suse.com>,
+ netdev@vger.kernel.org, Roman Gushchin <roman.gushchin@linux.dev>,
+ linux-block@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+ Eric Dumazet <edumazet@google.com>, Michal Hocko <mhocko@suse.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>,
+ Chen Ridong <chenridong@huawei.com>, cgroups@vger.kernel.org,
+ linux-pci@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "David S . Miller" <davem@davemloft.net>, Vlastimil Babka <vbabka@suse.cz>,
+ Marco Crivellari <marco.crivellari@suse.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Simon Horman <horms@kernel.org>,
+ Shakeel Butt <shakeel.butt@linux.dev>, linux-mm@kvack.org,
+ Jakub Kicinski <kuba@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ Gabriele Monaco <gmonaco@redhat.com>, Muchun Song <muchun.song@linux.dev>,
+ Will Deacon <will@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Chen Ridong <chenridong@huaweicloud.com>
+References: <20260101221359.22298-1-frederic@kernel.org>
+ <437ccd7a-e839-4b40-840c-7c40d22f8166@redhat.com>
+ <aWVxJVQYEWQiyO8Q@pavilion.home>
+Content-Language: en-US
+In-Reply-To: <aWVxJVQYEWQiyO8Q@pavilion.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 12 Jan 2026, at 18:53, Jason Gunthorpe wrote:
+On 1/12/26 5:09 PM, Frederic Weisbecker wrote:
+> Le Mon, Jan 12, 2026 at 01:23:40PM -0500, Waiman Long a écrit :
+>> On 1/1/26 5:13 PM, Frederic Weisbecker wrote:
+>>> Hi,
+>>>
+>>> The kthread code was enhanced lately to provide an infrastructure which
+>>> manages the preferred affinity of unbound kthreads (node or custom
+>>> cpumask) against housekeeping constraints and CPU hotplug events.
+>>>
+>>> One crucial missing piece is cpuset: when an isolated partition is
+>>> created, deleted, or its CPUs updated, all the unbound kthreads in the
+>>> top cpuset are affine to _all_ the non-isolated CPUs, possibly breaking
+>>> their preferred affinity along the way
+>>>
+>>> Solve this with performing the kthreads affinity update from cpuset to
+>>> the kthreads consolidated relevant code instead so that preferred
+>>> affinities are honoured.
+>>>
+>>> The dispatch of the new cpumasks to workqueues and kthreads is performed
+>>> by housekeeping, as per the nice Tejun's suggestion.
+>>>
+>>> As a welcome side effect, HK_TYPE_DOMAIN then integrates both the set
+>>> from isolcpus= and cpuset isolated partitions. Housekeeping cpumasks are
+>>> now modifyable with specific synchronization. A big step toward making
+>>> nohz_full= also mutable through cpuset in the future.
+>>>
+>>> Changes since v5:
+>>>
+>>> * Add more tags
+>>>
+>>> * Fix leaked destroy_work_on_stack() (Zhang Qiao, Waiman Long)
+>>>
+>>> * Comment schedule_drain_work() synchronization requirement (Tejun)
+>>>
+>>> * s/Revert of/Inverse of (Waiman Long)
+>>>
+>>> * Remove housekeeping_update() needless (for now) parameter (Chen Ridong)
+>>>
+>>> * Don't propagate housekeeping_update() failures beyond allocations (Waiman Long)
+>>>
+>>> * Whitespace cleanup (Waiman Long)
+>>>
+>>>
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/frederic/linux-dynticks.git
+>>> 	kthread/core-v6
+>>>
+>>> HEAD: 811e87ca8a0a1e54eb5f23e71896cb97436cccdc
+>>>
+>>> Happy new year,
+>>> 	Frederic
+>> I don't see any major issue with this v6 version. There may be some minor
+>> issues that can be cleaned up later. Now the issue is which tree should this
+>> series go to as it touches a number of different subsystems with different
+>> maintainers.
+> It indeed crosses many subsystems. I would be fine if anybody takes it but
+> nobody volunteered so far.
+>
+> The main purpose is to fix kthreads affinity (HK_TYPE_DOMAIN handling cpuset is
+> a bonus). And since I made the pull request myself to Linus when I introduced
+> kthreads managed affinity, I guess I could reiterate with this patchset. I
+> already pushed it to linux-next.
+>
+> But if anybody wants to pull that to another tree, that's fine, just tell me
+> so that we synchronize to avoid duplication on linux-next.
+>
+> Thanks.
 
-> On Mon, Jan 12, 2026 at 06:34:06PM -0500, Zi Yan wrote:
->> page[1].flags.f &= ~PAGE_FLAGS_SECOND. It clears folio->order.
->>
->> free_tail_page_prepare() clears ->mapping, which is TAIL_MAPPING, and
->> compound_head at the end.
->>
->> page->flags.f &= ~PAGE_FLAGS_CHECK_AT_PREP. It clears PG_head for compound
->> pages.
->>
->> These three parts undo prep_compound_page().
->
-> Well, mm doesn't clear all things on alloc..
->
->> In current nouveau code, ->free_folios is used holding the freed folio.
->> In nouveau_dmem_page_alloc_locked(), the freed folio is passed to
->> zone_device_folio_init(). If the allocated folio order is different
->> from the freed folio order, I do not know how you are going to keep
->> track of the rest of the freed folio. Of course you can implement a
->> buddy allocator there.
->
-> nouveau doesn't support high order folios.
->
-> A simple linked list is not really a suitable data structure to ever
-> support high order folios with.. If it were to use such a thing, and
-> did want to take a high order folio off the list, and reduce its
-> order, then it would have to put the remainder back on the list with a
-> revised order value. That's all, nothing hard.
->
-> Again if the driver needs to store information in the struct page to
-> manage its free list mechanism (ie linked pointers, order, whatever)
-> then it should be doing that directly.
->
-> When it takes the memory range off the free list it should call
-> zone_device_page_init() to make it ready to be used again. I think it
-> is a poor argument to say that zone_device_page_init() should rely on
-> values already in the struct page to work properly :\
->
-> The usable space within the struct page, and what values must be fixed
-> for correct system function, should exactly mirror what frozen pages
-> require. After free it is effectively now a frozen page owned by the
-> device driver.
->
-> I haven't seen any documentation on that, but I suspect Matthew and
-> David have some ideas..
->
-> If there is a reason for order, flags and mapping to be something
-> particular then it should flow from the definition of frozen pages,
-> and be documented, IMHO.
+Good to know as I am wondering where it will go. So you are going to 
+push that directly to Linus.
 
-Thank you for the explanation.
+Cheers,
+Longman
 
-It seems that I do not have enough knowledge to comment on device private
-pages. I will refrain myself from doing so from now on
-
-Best Regards,
-Yan, Zi
 
