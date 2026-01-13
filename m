@@ -1,95 +1,96 @@
-Return-Path: <linux-pci+bounces-44679-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44680-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7500D1B7A0
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 22:50:18 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29BB1D1B7D9
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 22:56:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A15973031CC4
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 21:50:17 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id F171130019D4
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 21:56:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C4EC322753;
-	Tue, 13 Jan 2026 21:50:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 682C2344055;
+	Tue, 13 Jan 2026 21:56:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6L4PimT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KVL0x7JG"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196681B3925
-	for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 21:50:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4000F2DC34E;
+	Tue, 13 Jan 2026 21:56:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768341017; cv=none; b=YC8/1A3LSIV+er6+xdgDZK6TM7STmus2DGB67Ut46iP5C7B8Jw6C8QX28eCvuA62N51MAWEv0q68XKY8B+oPdWeYEWg+tV0/BW8aYspCW2G59VoAXhjr23dJbBiEMDZL7H8/gaLaYDLPYx61tZVno+N956RfgGQ26zg4nUA8Jt8=
+	t=1768341365; cv=none; b=TRSvVl6DSwvc6FT+IPPYT/qA1TTsij/SIc+ph2jOSRC/TrlViuMHZjI8nd+ftsCI+ugM8f6aYPtEVnJ+cxTQQs6/zNeG/GTpOO62m2nQaunE9TwnaqoU6RXDZSu8SbG4yw1tLeHNluKvlz+kKO1F2oNZz63O1Qn2wnvVSaHFEKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768341017; c=relaxed/simple;
-	bh=mHj/NEGaKckkGqOd3Bd4ppZNGpNvkNokTu/s5NsgQPE=;
+	s=arc-20240116; t=1768341365; c=relaxed/simple;
+	bh=nTh7fFqg/LT3f9MdXlSs711AfVqGFXu1moivv8qFk5I=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=LuWQLvU5ivQf/NMhozBmpra0KELD6twbCkdRT8GtMWygpMybVWanjFvuHl/d40eDxIb66HsslzmRkxEpW9WgGzNB/vpQeniqo4Ao6zVunZyc4LnffgDmTPvf/NswLXc1MetEADvVhTFzqBEEUvpM7LcZq770xVqcu52cOgS3pl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6L4PimT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C458C116C6;
-	Tue, 13 Jan 2026 21:50:16 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=PnsZR0+nEDcZ+hs+npbV5VaqsNgPsVAldS44U6xrirsg7r0fDJoi0Go5zXOsJSYrgu16+XTyFJfRTdpf0En/j1Wy9rejZnCBQ4ssdL4z8BVEjQ4blwtF72L3KwKPmgi5SZkQC70/lCtlI2Y2dhudlwAs9/G4nhIQTcYpP9zTFMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KVL0x7JG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECE4AC116C6;
+	Tue, 13 Jan 2026 21:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768341016;
-	bh=mHj/NEGaKckkGqOd3Bd4ppZNGpNvkNokTu/s5NsgQPE=;
+	s=k20201202; t=1768341365;
+	bh=nTh7fFqg/LT3f9MdXlSs711AfVqGFXu1moivv8qFk5I=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=W6L4PimTVf4gw2uiXO9cB2pnDKoTzZYjVJwXJEPnr7JbkqEIZm+c0V4bRGEbHaafW
-	 KdyZ3FDEAWpbLh4iNCLsKzn9PHP6xINn4FS/wR9Mn4y8rqdiLFKiNh6i4FC7DxGJkp
-	 pKM2a62w71xhBETb2G8K7r8ictp4+b05EgbWXZPew3Jka+BGSTzSZPc4E5dMTVlsyh
-	 oem7Ar+lRq4ACt+z9Qw/gVnfvvYKUqDSRjpx8iogEMgcMOA8G+M8bS8DKy2XV1Xnq7
-	 5cI4tjp9awswyNKzH+YGH0UXgSHq3Gxa23CReO+N+ajvTSEmSwqIPsR8vdiPwk1Rda
-	 DQvW/GX5Ge7yw==
-Date: Tue, 13 Jan 2026 15:50:15 -0600
+	b=KVL0x7JGjD1UDylwCNvsq33YOeWSQBFTiC0+Ys1LNYVg3J074Acwc7UY/GnO/DNyq
+	 bJLC0dA+r3nyYWkHrnmVPpipU6qBFuHkj2OMXLTlhXXEzWkPR6A2q5u1TOqw1AFKVu
+	 8qyG6Y41DcW1nKub4hyAYH2bmHsXswKGrL7ifknyOCEXV9TXlmfQ4seB+DEuXruxFn
+	 YuroqYs2OUBOVmiy0BbTxnvQyW6Mq7lOVI8NcKftIPjl4yAPCvM0Ii9XYkM1p22XWQ
+	 zD47bg2Mj+wKYHbFE5Cor0+hKEq+Lm7VChI96RChOIkk4o0RtwZ6TccRsGnMDLKkbT
+	 rRiTy9Wd4sQ/A==
+Date: Tue, 13 Jan 2026 15:56:03 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Feng Tang <feng.tang@linux.alibaba.com>,
-	Jonathan Cameron <Jonthan.Cameron@huawei.com>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/6] PCI/portdrv: Use bus-type functions
-Message-ID: <20260113215015.GA781767@bhelgaas>
+To: huyuye <huyuye812@163.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Robert Moore <robert.moore@intel.com>, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-riscv@lists.infradead.org,
+	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+	dai.hualiang@zte.com.cn, deng.weixian@zte.com.cn,
+	guo.chang2@zte.com.cn, liu.qingtao2@zte.com.cn,
+	wu.jiabao@zte.com.cn, lin.yongchun@zte.com.cn, hu.yuye@zte.com.cn,
+	zhang.longxiang@zte.com.cn, zuo.jiang@zte.com.cn,
+	li.kunpeng@zte.com.cn
+Subject: Re: [PATCH v2] ACPI: pci_root: Clear the acpi dependencies after PCI
+ root bridge initialization on RISC-V
+Message-ID: <20260113215603.GA781891@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1764688034.git.u.kleine-koenig@baylibre.com>
+In-Reply-To: <20260112141630.2869-1-huyuye812@163.com>
 
-On Tue, Dec 02, 2025 at 04:13:48PM +0100, Uwe Kleine-König wrote:
-> Hello,
-> 
-> with the eventual goal to remore .probe(), .remove() and .shutdown()
-> from struct device_driver convert pcie portdrv to use bus-type
-> callbacks.
-> 
-> The first patch is a fix, but I think it's not relevant as I didn't find
-> a pcie driver without a remove callback. Feel free to drop the Fixes
-> line if you think it's not justified and decide yourself if you want it
-> backported to stable. I have no strong opinion here.
-> 
-> For the complete series there is no intended change in behaviour (apart
-> from the fix in the first patch :-).
+On Mon, Jan 12, 2026 at 10:16:29PM +0800, huyuye wrote:
+> Hi Rafael,
+> Thank you for your thorough review and valuable comments on v1.
+> I've updated the patch as follows:
+> 1. Removed the redundant #ifdef CONFIG_ACPI and if (!acpi_disabled) 
+> guard as you pointed out. The entire code block indeed already depends
+> on CONFIG_ACPI at a higher level, making the inner guard unnecessary.
+> 2. Moved acpi_dev_clear_dependencies to RISC-V specific architecture 
+> code (driver/acpi/riscv/acpi_pci.c). This ensures that ACPI dependency
+> clearing is handled within the appropriate architectural context.
 > 
 > Best regards
-> Uwe
-> 
-> Uwe Kleine-König (6):
->   PCI/portdrv: Fix potential resource leak
->   PCI/portdrv: Drop empty shutdown callback
->   PCI/portdrv: Don't check for the driver's and device's bus
->   PCI/portdrv: Move pcie_port_bus_type to pcie source file
->   PCI/portdrv: Don't check for valid device and driver in bus callbacks
->   PCI/portdrv: Use bus-type functions
-> 
->  drivers/pci/pci-driver.c   | 28 -------------------
->  drivers/pci/pcie/portdrv.c | 55 +++++++++++++++++++-------------------
->  2 files changed, 28 insertions(+), 55 deletions(-)
 
-Applied to pci/portdrv for v6.20, thanks for doing this!
+This really should have the commit log here, as it did in the original
+post [1].
+
+> Signed-off-by: huyuye <huyuye812@163.com> 
+> ---
+
+And the description of the changes from v1 to v2 can go here, after
+the "---" since it doesn't need to be part of the permanent git
+history; see [2].
+
+[1] https://lore.kernel.org/r/20251203140716.3065-1-huyuye812@163.com
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.18#n784
 
