@@ -1,239 +1,216 @@
-Return-Path: <linux-pci+bounces-44582-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44583-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA8DAD16920
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 04:55:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CBDFDD169D2
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 05:46:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EEFE93016CCB
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 03:55:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8B3823018F6F
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 04:46:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A9C93101C5;
-	Tue, 13 Jan 2026 03:55:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12861313532;
+	Tue, 13 Jan 2026 04:46:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="arlC/2hp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RXRa7dug"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m49238.qiye.163.com (mail-m49238.qiye.163.com [45.254.49.238])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8300F3126A5;
-	Tue, 13 Jan 2026 03:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F0025BEF8
+	for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 04:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768276528; cv=none; b=B78J90gxaYvUypwqf0vpphRefjEuvarcyCZ2jGs7QY6za0gatmUWbP03t8FXtMWMOXE+mFweLl75GNVS0I/GBdqRwHLukUV8kxyRcMFJlt/QPlsIGs5j+Cgy/h7yglCA7E4+6yb36k3UZr+bMiI0enRuRnJNUcGZ/IEXg/BqR0Y=
+	t=1768279614; cv=none; b=E2BXLINwD5F4NQnVD/qgUZsyZ+/PCcpnokLAb9WZgm1lXWM4+8XEKEQEmWnf1Ixax/GorsGMoBvhGEbhQIYTCWCevH4MQT9CAbXjWbdEh4swm9xhFLESGK6VdSKmWd4YMrz8HXfAvH4g0wMdh9zpwX9b6MbyXyWrZlJr+L1utNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768276528; c=relaxed/simple;
-	bh=EHNqyewQacUvW1Ibjpfbw+396u5i06O1R0vbwIlKdZo=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PNRIUckc5dlr7c37zCBltrbuCJMeKtOrH05cTsUrB9PTy5FEnwVicGft9hZ+cCDRlHkY6vMrkXAmLvTiYI6jIlkIOT00ktUgRwEKoH2flQhvLsf3eSac4cLPstGMcazIsF0fiUdD87VcA3T+mxjkvAe51JYIn3Wf584tWuZf4uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=arlC/2hp; arc=none smtp.client-ip=45.254.49.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.14] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 306b4e5b4;
-	Tue, 13 Jan 2026 11:55:14 +0800 (GMT+08:00)
-Message-ID: <02b530b1-93e2-4bd3-9d29-a009c24eb3e3@rock-chips.com>
-Date: Tue, 13 Jan 2026 11:55:14 +0800
+	s=arc-20240116; t=1768279614; c=relaxed/simple;
+	bh=aGBQ+yN8ubeLgAJtGA586Zb3Qf9KIiiRaq0ACQmKZng=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Pbm3OogIosadgW7mGnhDckxY9k2xGha5sQkW5y6mq6v3Ixaia56I8tNQKBGarNmmG5GGQlx1lbigmpdQmj812Fep7+TSfpgmCfZVPU6bNjFtzSmvOYdcxmOtrlRCUP4bHa4gJ4rME9RW0phtqXwuXcCb8GrJxqq0o/Hn/MOdx7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RXRa7dug; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5985C2BCB8
+	for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 04:46:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768279613;
+	bh=aGBQ+yN8ubeLgAJtGA586Zb3Qf9KIiiRaq0ACQmKZng=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RXRa7dugM6fdw2HEF/ybFcJPenOCEIh84sUeZTh3XmSqPxwZ/+8wWQrQ2zoW1B9UP
+	 Q804xoUsXlRp0emrsMEEopiDQaKf2c3JFIrarxU1dK8q8TkTPJ97Dc6ce6P7Ms1Qhi
+	 ose3G6QxaJrGUCPnOpxG5nyi1pJi9PfF95BJLQG+aTIJaa2YAPIGAWJtwa6ZwtTK1M
+	 4UfNRK9KYM+S20fQL8b3RMOsFrXKk+th7tEHUejKBopjX8BFZR+71eI1sc3wx1kNYY
+	 2sI/rbhxmIUuhQ1UegfCOuMzYq/o55JkwTinhSImFul7OmWsAEG/aLzMy+gR3p5Eki
+	 j5uMlvfslL4cA==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-64b9b0b4d5dso14974458a12.1
+        for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 20:46:53 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW3TLdCSVpmx5x89nfXHHCAYgcUFCPMBv9BevAjlfBmb0ZowHjatsxVbju12exuFL07NChMgn0/Lss=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyV4J7cNTV8r07PGBIaTROCxtdXbp0DxmGII1Vu66SzaGuAwAXg
+	+WOOavV2FYyhK2xIwr3PnIrGmHQa7MW3vSKur9BEpz3kNMkwN+EOEXDDf9FZhmPYxhZMSVefrV0
+	a8XLZVmP7j/CWtQGRUX4PPJX37psFAPY=
+X-Google-Smtp-Source: AGHT+IHxfmFJnwol2oFof4hU9TKfRglrHo14dFqXfwgac4v0J9+cVkh7Jag2ZA+XnbdjkcnYAZrqM3frQ6/yYLWwuH8=
+X-Received: by 2002:a17:907:7291:b0:b87:2f29:205f with SMTP id
+ a640c23a62f3a-b872f293a6amr266193966b.0.1768279611917; Mon, 12 Jan 2026
+ 20:46:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, Manivannan Sadhasivam <mani@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-rockchip@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v3 3/3] PCI: dw-rockchip: Add pcie_ltssm_state_transition
- trace support
-To: Steven Rostedt <rostedt@goodmis.org>
-References: <1768180800-63364-1-git-send-email-shawn.lin@rock-chips.com>
- <1768180800-63364-4-git-send-email-shawn.lin@rock-chips.com>
- <20260112101644.5c1b772a@gandalf.local.home>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <20260112101644.5c1b772a@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9bb57e572c09cckunm550ec7913638ae
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUlMGVZMSh1CSh1IThlDGE1WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=arlC/2hpapH734Cab1zvf2Yb8LMjgLHJIrMyDRwen7eggJ6RsaiEC9o213XgQ9SFECTFfN1sVLYvfcJ+imAsWTGCeOaE9mAk0+BJlVGrcjtjASneRg8gYUEBkTvEbCJxVSHjy/K7K5PF2xHD0UUk5J/y1tlZ6CSNqqlLVteGm6M=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=97V1F7S4KJ+9mZWTw8AYWTllOD9spM17YItPb7AVlu0=;
-	h=date:mime-version:subject:message-id:from;
+References: <20260113-loongson-pci1-v4-1-1921d6479fe4@uniontech.com>
+In-Reply-To: <20260113-loongson-pci1-v4-1-1921d6479fe4@uniontech.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 13 Jan 2026 12:46:42 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4o4ULmN1wc93tXfHghGUd2pJ-yK5u-P-OrZzHfbKs76A@mail.gmail.com>
+X-Gm-Features: AZwV_QhazdGa9hg0s3-mOXd-XVzsCSMYGXF2I3YfQAw54s8Rsn2hAsgPrJgAwng
+Message-ID: <CAAhV-H4o4ULmN1wc93tXfHghGUd2pJ-yK5u-P-OrZzHfbKs76A@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI: loongson: Override PCIe bridge supported speeds
+ for Loongson-3C6000 series
+To: liziyao@uniontech.com
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	niecheng1@uniontech.com, zhanjun@uniontech.com, guanwentao@uniontech.com, 
+	Kexy Biscuit <kexybiscuit@aosc.io>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Lain Fearyncess Yang <fsf@live.com>, Ayden Meng <aydenmeng@yeah.net>, Mingcong Bai <jeffbai@aosc.io>, 
+	Xi Ruoyao <xry111@xry111.site>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Steven,
+Hi, Ziyao,
 
-在 2026/01/12 星期一 23:16, Steven Rostedt 写道:
-> On Mon, 12 Jan 2026 09:20:00 +0800
-> Shawn Lin <shawn.lin@rock-chips.com> wrote:
-> 
->> Rockchip platforms provide a 64x4 bytes debug FIFO to trace the
->> LTSSM history. Any LTSSM change will be recorded. It's userful
->> for debug purpose, for example link failure, etc.
->>
->> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->> ---
->>
->> Changes in v3:
->> - reorder variables(Mani)
->> - rename loop to i; rename en to enable(Mani)
->> - use FIELD_GET(Mani)
->> - add comment about how the FIFO works(Mani)
->>
->> Changes in v2:
->> - use tracepoint
->>
->>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 104 ++++++++++++++++++++++++++
->>   1 file changed, 104 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> index 352f513..344e0b9 100644
->> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> @@ -22,6 +22,8 @@
->>   #include <linux/platform_device.h>
->>   #include <linux/regmap.h>
->>   #include <linux/reset.h>
->> +#include <linux/workqueue.h>
->> +#include <trace/events/pci_controller.h>
->>   
->>   #include "../../pci.h"
->>   #include "pcie-designware.h"
->> @@ -73,6 +75,20 @@
->>   #define  PCIE_CLIENT_CDM_RASDES_TBA_L1_1	BIT(4)
->>   #define  PCIE_CLIENT_CDM_RASDES_TBA_L1_2	BIT(5)
->>   
->> +/* Debug FIFO information */
->> +#define PCIE_CLIENT_DBG_FIFO_MODE_CON	0x310
->> +#define  PCIE_CLIENT_DBG_EN		0xffff0007
->> +#define  PCIE_CLIENT_DBG_DIS		0xffff0000
->> +#define PCIE_CLIENT_DBG_FIFO_PTN_HIT_D0	0x320
->> +#define PCIE_CLIENT_DBG_FIFO_PTN_HIT_D1	0x324
->> +#define PCIE_CLIENT_DBG_FIFO_TRN_HIT_D0	0x328
->> +#define PCIE_CLIENT_DBG_FIFO_TRN_HIT_D1	0x32c
->> +#define  PCIE_CLIENT_DBG_TRANSITION_DATA 0xffff0000
->> +#define PCIE_CLIENT_DBG_FIFO_STATUS	0x350
->> +#define  PCIE_DBG_FIFO_RATE_MASK	GENMASK(22, 20)
->> +#define  PCIE_DBG_FIFO_L1SUB_MASK	GENMASK(10, 8)
->> +#define PCIE_DBG_LTSSM_HISTORY_CNT	64
->> +
->>   /* Hot Reset Control Register */
->>   #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
->>   #define  PCIE_LTSSM_APP_DLY2_EN		BIT(1)
->> @@ -96,6 +112,7 @@ struct rockchip_pcie {
->>   	struct irq_domain *irq_domain;
->>   	const struct rockchip_pcie_of_data *data;
->>   	bool supports_clkreq;
->> +	struct delayed_work trace_work;
->>   };
->>   
->>   struct rockchip_pcie_of_data {
->> @@ -206,6 +223,89 @@ static enum dw_pcie_ltssm rockchip_pcie_get_ltssm(struct dw_pcie *pci)
->>   	return rockchip_pcie_get_ltssm_reg(rockchip) & PCIE_LTSSM_STATUS_MASK;
->>   }
->>   
->> +#ifdef CONFIG_TRACING
->> +static void rockchip_pcie_ltssm_trace_work(struct work_struct *work)
->> +{
->> +	struct rockchip_pcie *rockchip = container_of(work, struct rockchip_pcie,
->> +						trace_work.work);
->> +	struct dw_pcie *pci = &rockchip->pci;
->> +	enum dw_pcie_ltssm state;
->> +	u32 i, l1ss, prev_val = DW_PCIE_LTSSM_UNKNOWN, rate, val;
->> +
->> +	for (i = 0; i < PCIE_DBG_LTSSM_HISTORY_CNT; i++) {
->> +		val = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_DBG_FIFO_STATUS);
->> +		rate = FIELD_GET(PCIE_DBG_FIFO_RATE_MASK, val);
->> +		l1ss = FIELD_GET(PCIE_DBG_FIFO_L1SUB_MASK, val);
->> +		val = FIELD_GET(PCIE_LTSSM_STATUS_MASK, val);
->> +
->> +		/*
->> +		 * Hardware Mechanism: The ring FIFO employs two tracking counters:
->> +		 * - 'last-read-point': maintains the user's last read position
->> +		 * - 'last-valid-point': tracks the hardware's last state update
->> +		 *
->> +		 * Software Handling: When two consecutive LTSSM states are identical,
->> +		 * it indicates invalid subsequent data in the FIFO. In this case, we
->> +		 * skip the remaining entries. The dual-counter design ensures that on
->> +		 * the next state transition, reading can resume from the last user
->> +		 * position.
->> +		 */
->> +		if ((i > 0 && val == prev_val) || val > DW_PCIE_LTSSM_RCVRY_EQ3)
->> +			break;
->> +
->> +		state = prev_val = val;
->> +		if (val == DW_PCIE_LTSSM_L1_IDLE) {
->> +			if (l1ss == 2)
->> +				state = DW_PCIE_LTSSM_L1_2;
->> +			else if (l1ss == 1)
->> +				state = DW_PCIE_LTSSM_L1_1;
->> +		}
->> +
->> +		trace_pcie_ltssm_state_transition(dev_name(pci->dev),
->> +					dw_pcie_ltssm_status_string(state),
->> +					((rate + 1) > pci->max_link_speed) ?
->> +					PCI_SPEED_UNKNOWN : PCIE_SPEED_2_5GT + rate);
->> +	}
-> 
-> Does it make sense to call this work function every 5 seconds when the
-> tracepoint isn't enabled?
-> 
+On Tue, Jan 13, 2026 at 10:39=E2=80=AFAM Ziyao Li via B4 Relay
+<devnull+liziyao.uniontech.com@kernel.org> wrote:
+>
+> From: Ziyao Li <liziyao@uniontech.com>
+>
+> Older steppings of the Loongson-3C6000 series incorrectly report the
+> supported link speeds on their PCIe bridges (device IDs 0x3c19, 0x3c29)
+> as only 2.5 GT/s, despite the upstream bus supporting speeds from
+> 2.5 GT/s up to 16 GT/s.
+>
+> As a result, since commit 774c71c52aa4 ("PCI/bwctrl: Enable only if more
+> than one speed is supported"), bwctrl will be disabled if there's only
+> one 2.5 GT/s value in vector `supported_speeds`.
+>
+> Also, amdgpu reads the value by pcie_get_speed_cap() in amdgpu_device_
+> partner_bandwidth(), for its dynamic adjustment of PCIe clocks and
+> lanes in power management. We hope this can prevent similar problems
+> in future driver changes (similar checks may be implemented in other
+> GPU, storage controller, NIC, etc. drivers).
+>
+> Manually override the `supported_speeds` field for affected PCIe bridges
+> with those found on the upstream bus to correctly reflect the supported
+> link speeds.
+>
+> This patch was originally found from AOSC OS[1].
+>
+> Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
+> Tested-by: Lain Fearyncess Yang <fsf@live.com>
+> Tested-by: Ayden Meng <aydenmeng@yeah.net>
+> Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
+> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+> [Xi Ruoyao: Fix falling through logic and add kernel log output.]
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> Link: https://github.com/AOSC-Tracking/linux/commit/4392f441363abdf6fa0a0=
+433d73175a17f493454
+> [Ziyao Li: move from drivers/pci/quirks.c to drivers/pci/controller/pci-l=
+oongson.c]
+> Signed-off-by: Ziyao Li <liziyao@uniontech.com>
+> Tested-by: Mingcong Bai <jeffbai@aosc.io>
+> ---
+> Changes in v4:
+> - rename subject
+> - use 0x3c19/0x3c29 instead of 3c19/3c29
+> - Link to v3: https://lore.kernel.org/r/20260109-loongson-pci1-v3-1-5ddc5=
+ae3ba93@uniontech.com
+>
+> Changes in v3:
+> - Adjust commit message
+> - Make the program flow more intuitive
+> - Link to v2: https://lore.kernel.org/r/20260104-loongson-pci1-v2-1-d151e=
+57b6ef8@uniontech.com
+>
+> Changes in v2:
+> - Link to v1: https://lore.kernel.org/r/20250822-loongson-pci1-v1-1-39aab=
+bd11fbd@uniontech.com
+> - Move from arch/loongarch/pci/pci.c to drivers/pci/controller/pci-loongs=
+on.c
+> - Fix falling through logic and add kernel log output by Xi Ruoyao
+> ---
+>  drivers/pci/controller/pci-loongson.c | 38 +++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 38 insertions(+)
+>
+> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controll=
+er/pci-loongson.c
+> index bc630ab8a283..3d0873b63cd6 100644
+> --- a/drivers/pci/controller/pci-loongson.c
+> +++ b/drivers/pci/controller/pci-loongson.c
+> @@ -176,6 +176,44 @@ static void loongson_pci_msi_quirk(struct pci_dev *d=
+ev)
+>  }
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loo=
+ngson_pci_msi_quirk);
+>
+> +/*
+> + * Older steppings of the Loongson-3C6000 series incorrectly report the
+> + * supported link speeds on their PCIe bridges (device IDs 0x3c19,
+> + * 0x3c29) as only 2.5 GT/s, despite the upstream bus supporting speeds
+> + * from 2.5 GT/s up to 16 GT/s.
+> + */
+> +static void loongson_pci_bridge_speed_quirk(struct pci_dev *pdev)
+> +{
+> +       u8 old_supported_speeds =3D pdev->supported_speeds;
+> +
+> +       switch (pdev->bus->max_bus_speed) {
+> +       case PCIE_SPEED_16_0GT:
+> +               pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_16_0GB;
+> +               fallthrough;
+> +       case PCIE_SPEED_8_0GT:
+> +               pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_8_0GB;
+> +               fallthrough;
+> +       case PCIE_SPEED_5_0GT:
+> +               pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_5_0GB;
+> +               fallthrough;
+> +       case PCIE_SPEED_2_5GT:
+> +               pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_2_5GB;
+> +               break;
+> +       default:
+> +               pci_warn(pdev, "unexpected max bus speed");
+> +
+> +               return;
+> +       }
+> +
+> +       if (pdev->supported_speeds !=3D old_supported_speeds)
+> +               pci_info(pdev, "fixing up supported link speeds: 0x%x =3D=
+> 0x%x",
+> +                        old_supported_speeds, pdev->supported_speeds);
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19,
+> +                        loongson_pci_bridge_speed_quirk);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29,
+> +                        loongson_pci_bridge_speed_quirk);
+Sorry for my ignorance in the previous version, these can be put in a
+single line.
 
-That's a good question. We don't need to read fifo and call
-trace_pcie_ltssm_state_transition if tracepoint isn't enabled.
-Will improve in v4.
+With these changes, you can add:
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-> You can add a function callback to when the tracepoint is enabled by defining:
-> 
-> TRACE_EVENT_FN(<name>
->   TP_PROTO(..)
->   TP_ARGS(..)
->   TP_STRUCT__entry(..)
->   TP_fast_assign(..)
->   TP_printk(..)
-> 
->   reg,
->   unreg)
-> 
-> reg() gets called when the tracepoint is first enabled. This could be where
-> you can start the work function. And unreg() would stop it.
-> 
+Huacai
 
-As how to start/stop it may vary from host to host, so I think we could
-use reg()/unreg() to set a status to indicate whether this tracepoint is
-enabled. Then the host drivers could decide how to implement trace work
-based on it.
-
-> You would likely need to also include state variables as I guess you don't
-> want to start it if the link is down. Also, if the tracepoint is enabled
-> when the link goes up you want to start the work queue.
-
-
-Frankly, I do want to start it if the link is down as the link may come
-up later and that will make us able to dump the transition in time.
-
-> 
-> I would recommend this so that you don't call this work function when it's
-> not doing anything useful.
-
-Sure, very appreciate your suggestion.
-
-Thanks.
-
-> 
-> -- Steve
-> 
->   
-> 
->> +
->> +	schedule_delayed_work(&rockchip->trace_work, msecs_to_jiffies(5000));
->> +}
->> +
-> 
-
+> +
+>  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
+>  {
+>         struct pci_config_window *cfg;
+>
+> ---
+> base-commit: ea1013c1539270e372fc99854bc6e4d94eaeff66
+> change-id: 20250822-loongson-pci1-4ded0d78f1bb
+>
+> Best regards,
+> --
+> Ziyao Li <liziyao@uniontech.com>
+>
+>
+>
 
