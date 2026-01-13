@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-44598-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44599-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B31D3D17EC6
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 11:16:47 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 495A2D17F1E
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 11:18:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 80D6D301D504
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 10:14:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F1DEF3067DEF
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 10:14:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B90D38A297;
-	Tue, 13 Jan 2026 10:14:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8932238A289;
+	Tue, 13 Jan 2026 10:14:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4jHHzHO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DnCo48+i"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9027313550;
-	Tue, 13 Jan 2026 10:14:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BD9389DEE;
+	Tue, 13 Jan 2026 10:14:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768299253; cv=none; b=mqYu2PpUUIVyIsIbxbkXYzFRSunA3mjOXP/bciH4zhAouFVqadi+rTNnjq8WdFndds+OQ/4mr59svdG6dbUs9/4ehgfeWg1QhWkWmqPUkfPJx7Ku2qgkakC0FM+msJtvvTGDSDq4CT4gKuRLnHmDOnKijbsTz5i/m+ZCojoEgN0=
+	t=1768299276; cv=none; b=W7u4hgmLy/rKQHdrbyi5pWuJN/QN/K5NuUctrcgP6L2vqYMn3YKtfN7cMB5mZKKS09qRqWQrlo3qFbsod95Yp/5bAdW9ZWzS6mdZ8/zk/YnDfxnMcys3Hahs7vLpzr7n7yz0vTcAc7PnoMD8ZbDx7aLPgcmOFmin4NX9EPCcNz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768299253; c=relaxed/simple;
-	bh=TGUkh8Gval+loBUcY0wl9fpiuvXqEh3n7gDAud8tPZA=;
+	s=arc-20240116; t=1768299276; c=relaxed/simple;
+	bh=noH2csNYttkzJximg2DkOMRq7PSZu8QvD26YdxlPYIk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eAvpFnQkcZRxtUc+iOrtrP7Jy3NlnCC8stReJRLzPB2kPETOvAOiWD3uLCQxpXH07r6j96bBpngflwS3qBglC3brjAxfFt97HDd/4qJsHKHVJ4jj3dqgsBwL753kGSDx7dQgbjDuC3oXUl06RkscQFeBj0xgsXH1KogWHCvsvlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4jHHzHO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B8ABC116C6;
-	Tue, 13 Jan 2026 10:14:02 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=L1D+JWxwZyiCvBDW4E74S8lF4Pgb3HjEeW+EGe/2btE1AQNh3yxx8sAjhPrF76LNP/FJeL9HS6UCKwksenlKrlsYsh7M//7UL5evHdZqqA0Lg9W8XT2C67cRG4vF2IEc1yTQB55dHknpUUXPdgfpKuNtZuOaT0UEMWkrWNezGqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DnCo48+i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44057C116C6;
+	Tue, 13 Jan 2026 10:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768299252;
-	bh=TGUkh8Gval+loBUcY0wl9fpiuvXqEh3n7gDAud8tPZA=;
+	s=k20201202; t=1768299276;
+	bh=noH2csNYttkzJximg2DkOMRq7PSZu8QvD26YdxlPYIk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a4jHHzHOUVsgIY6iLEFwNqEhROfJX0HqEz2AgiMoJ905dpc27Ipl7uiQTzDuSkHGt
-	 a4zqFmQddcjjIpU2Hk3SV+UnBl1MicSbvTR3yWKw7wp+MVL+NWLjFwKsS7xUA/1Ccb
-	 kNVgZP8Lgvr//+yMpx/aw01IOJZlWqk/NM8uUKtlM5PbVbeOiN/MvtCR7FMhwZbUyT
-	 mj1PV/ATKjO2Tcxn2J9SnCGVkgOlTlA04Cx64oDamNIXkqBH9smtxiiJSdrPOXnc45
-	 8GojOC7O2PjYBb2RMI+Sa4E6tlzIl8RDdudZLPrZc8befQdJTEqeHc10imI5fCVeSk
-	 g4bwybfGogERQ==
-Date: Tue, 13 Jan 2026 11:13:59 +0100
+	b=DnCo48+itSv/Z28wMZQtVhh0fd455MaYSuLbQW6msp/bVpo2RGKM7v01FABDcC/+U
+	 6APVMBzTSQbuUc6AhL7BcTRAI4Ixf+UFQNB4/DHAQArlAsgjubbi6i5acb75Au4E4Z
+	 8MjbpNxoc3ojtcQwW/hR8ZT+dxKkJ/RRMJ9g2rkV08Nhf4bobolIcGJsMuW5IoG60K
+	 YqIaDSdymp+dxdHtZ30GCRkvvFqg2To2vhn47htFBg2/y6fikSE3Nm9wqjNn2PzWHB
+	 BK4d/7sUcf70yGB9PUsgJE4SbBD1cX2dV7Oe2O9HSgpZl83MYSX/dmIyJNVoc2FGPw
+	 PN58GnzLcopoA==
+Date: Tue, 13 Jan 2026 11:14:23 +0100
 From: Niklas Cassel <cassel@kernel.org>
 To: Koichiro Den <den@valinux.co.jp>
 Cc: jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org,
@@ -65,10 +65,11 @@ Cc: jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org,
 	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v6 1/5] PCI: endpoint: Add BAR subrange mapping support
-Message-ID: <aWYa59GgcB7jOfQq@ryzen>
+Subject: Re: [PATCH v6 2/5] PCI: dwc: Allow glue drivers to return mutable
+ EPC features
+Message-ID: <aWYa_9mlWu-A2uCN@ryzen>
 References: <20260113023715.3463724-1-den@valinux.co.jp>
- <20260113023715.3463724-2-den@valinux.co.jp>
+ <20260113023715.3463724-3-den@valinux.co.jp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -77,78 +78,24 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260113023715.3463724-2-den@valinux.co.jp>
+In-Reply-To: <20260113023715.3463724-3-den@valinux.co.jp>
 
-On Tue, Jan 13, 2026 at 11:37:11AM +0900, Koichiro Den wrote:
-> Extend the PCI endpoint core to support mapping subranges within a BAR.
-> Introduce a new 'submap' field and a 'use_submap' flag in struct
-> pci_epf_bar so an endpoint function driver can request inbound mappings
-> that fully cover the BAR.
+On Tue, Jan 13, 2026 at 11:37:12AM +0900, Koichiro Den wrote:
+> The DesignWare EP midlayer needs to advertise additional capabilities at
+> the DWC layer (e.g. subrange_mapping) without duplicating the same bit
+> in every DWC-based glue driver and without copying feature structures.
 > 
-> Add a subrange_mapping feature bit to struct pci_epc_features so EPC
-> drivers can explicitly advertise support. Make pci_epc_set_bar() reject
-> use_submap requests (-EINVAL) when the EPC does not advertise
-> subrange_mapping, to avoid silently accepting a configuration that the
-> controller cannot implement.
+> Change dw_pcie_ep_ops.get_features() to return a mutable
+> struct pci_epc_features * and update all DWC-based glue drivers
+> accordingly. The DWC midlayer can then adjust/augment the returned
+> features while still exposing a const struct pci_epc_features * to the
+> PCI EPC core.
 > 
-> The submap array describes the complete BAR layout (no overlaps and no
-> gaps are allowed to avoid exposing untranslated address ranges). This
-> provides the generic infrastructure needed to map multiple logical
-> regions into a single BAR at different offsets, without assuming a
-> controller-specific inbound address translation mechanism. Also, the
-> array must be sorted in ascending order by offset.
+> No functional change on its own.
 > 
+> Suggested-by: Niklas Cassel <cassel@kernel.org>
 > Signed-off-by: Koichiro Den <den@valinux.co.jp>
 > ---
 
-I think this patch should be after the:
-"PCI: endpoint: Add dynamic_inbound_mapping EPC feature"
-patch...
-
-
->  drivers/pci/endpoint/pci-epc-core.c |  3 +++
->  include/linux/pci-epc.h             |  3 +++
->  include/linux/pci-epf.h             | 31 +++++++++++++++++++++++++++++
->  3 files changed, 37 insertions(+)
-> 
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index ca7f19cc973a..8d809a2c3ce9 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -596,6 +596,9 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  	if (!epc_features)
->  		return -EINVAL;
->  
-> +	if (epf_bar->use_submap && !epc_features->subrange_mapping)
-> +		return -EINVAL;
-
-...then you can change this condition to:
-
-	if (epf_bar->use_submap &&
-	    !(epc_features->dynamic_inbound_mapping &&
-	      epc_features->subrange_mapping))
-		return -EINVAL;
-
-
-> +
->  	if (epc_features->bar[bar].type == BAR_RESIZABLE &&
->  	    (epf_bar->size < SZ_1M || (u64)epf_bar->size > (SZ_128G * 1024)))
->  		return -EINVAL;
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index 4286bfdbfdfa..898a29e7d6f7 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -223,6 +223,8 @@ struct pci_epc_bar_desc {
->  /**
->   * struct pci_epc_features - features supported by a EPC device per function
->   * @linkup_notifier: indicate if the EPC device can notify EPF driver on link up
-> + * @subrange_mapping: indicate if the EPC device can map inbound subranges for a
-> + *                    BAR
-
-This text should probably also mention that this feature depends on the
-dynamic_inbound_mapping feature.
-
-
-With those comments fixed, looks good to me:
 Reviewed-by: Niklas Cassel <cassel@kernel.org>
 
