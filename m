@@ -1,209 +1,523 @@
-Return-Path: <linux-pci+bounces-44571-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44572-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 996E7D1635B
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 02:49:37 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F313FD16444
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 03:19:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C923130049FC
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 01:49:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3AF2B301B2F9
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 02:18:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DA7726CE2C;
-	Tue, 13 Jan 2026 01:49:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E397257423;
+	Tue, 13 Jan 2026 02:18:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cq6nkmJp";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="cSzktrvA"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="qa9C2KXu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11021091.outbound.protection.outlook.com [52.101.125.91])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EA523D7CD
-	for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 01:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768268971; cv=none; b=q1GUpHALUCghFwPOTtyQXwfZPTvVffnR1SjFYyBs7RlFBXOHEhxEw7CShQVywItXNOEsPy8ZiJE/Mv8DViaqf4tzQZZDZfK/iAy38QIArQHLYWz2U0EIrRYFbmqMYclvOD4C8muSzBlM+/emMxJSkwmW9Q2ag4W6sltou46sxqY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768268971; c=relaxed/simple;
-	bh=odrlExJfFzg0riamVUhcfYPGQohsWjwFOIvkcN9lcyU=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Go1irOfLe+6OUDD7Yb1ggPi1eTADRgn8BhNrm7YoqNRImEAk+rJ9WNeGnOUz3dR4JuglymUUkgnY1mE6HwwfIXnqi5ggy1ETxlEKHbEggr9y0vHsP4DrRZyMo2ZJzAz7Iyd7XnYGPldGlVc1Nn7TSXtHT7yGrc2rxvsBzD9GtLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cq6nkmJp; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=cSzktrvA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768268969;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ipl04u3803c/IO8SDz5fqTBlvGqq/KbVl3bI4vEOEvs=;
-	b=cq6nkmJp7XLRu0u2mCD9I2beSGedYDfd9LPLQ9XCfMqI/PB7Rt9yH3Ij37aeKtX0rCD8UL
-	D2UIGBmfqyPr/Y9e2JwccJ89HvJa6KaVgb+pJgaXFCTW9kGWyxYxGHuszs/9TatQnxK5m/
-	4PyJU0YXmPaFYk77eIo2gUCuIWlAHG4=
-Received: from mail-vk1-f199.google.com (mail-vk1-f199.google.com
- [209.85.221.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-137-ifOtyTm6OaKUEyanvipsnQ-1; Mon, 12 Jan 2026 20:49:28 -0500
-X-MC-Unique: ifOtyTm6OaKUEyanvipsnQ-1
-X-Mimecast-MFC-AGG-ID: ifOtyTm6OaKUEyanvipsnQ_1768268968
-Received: by mail-vk1-f199.google.com with SMTP id 71dfb90a1353d-56344627228so4387943e0c.2
-        for <linux-pci@vger.kernel.org>; Mon, 12 Jan 2026 17:49:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1768268968; x=1768873768; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Ipl04u3803c/IO8SDz5fqTBlvGqq/KbVl3bI4vEOEvs=;
-        b=cSzktrvAskyNt2YiCWAAZ+Hnb4NvI6UYDv1NZeWrlDK26yszp0Ko/N+P12ZXFQmhy5
-         cXO/i1ZWAR7NFH2//AALgxHkNUSx9MTYqq5rtukoAXAsz0cTFVWRq4fRaHXuRNGLI8Hd
-         BL8Eucp2S0ag4OwvLzSiz/ofZeMIQ9LXp98If6BRJxcpBprnn7y5w2KxgyQc57I/6IzO
-         hiXhYNmTGAdt4ZJsymbJ6szos+CCEiZ9sp2Hek0OJisMS54W4amG03PceKlMdF1W7Woc
-         89bFMnJwptnoRkBMTrHpfTU3z7zVu8S5C5Kq2w9tnYPOH0HouF2387/XiQ1zyyDB0oNU
-         o5NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768268968; x=1768873768;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ipl04u3803c/IO8SDz5fqTBlvGqq/KbVl3bI4vEOEvs=;
-        b=bEAnAGgEloDf/YXKOUJx5xMShSBLODF1JnshpydW6Uy3C32ETEZY/own420mbygBy9
-         f3q17ZSZ0Tmd+u/dicpFj4ynizsjglPVxEznwi35XymfdQAF6M8FP5TyBy2C6Ge26kFH
-         /k1VlwD3WszMJNfA0cim0IStn5lKrzZfCgMsJGO1omyhRVGzE3rvK8vbJ5Zjki9NwvdK
-         ARbKMCjR1lQ0JJEBaeF+5gE6MQ6Xan7Bjp8MoOi2QrKFo8BlUJlJsYyG62+QL9CQEK9o
-         RSzWtTMwZMBR1or2PPwIX+rpyZ8h9rbZuxXu89PixldgvcFLzfHR2VoE6yQHkQJF98CT
-         LGqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSBd8H+hZVEc6OmwlIoVdHOeamx2cexLrlP1Xbw6Kd2KReMhrq3GNLA+zeVv1QET0kdkXvHfN8Cc8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEbBmUllhtbX6D97srZ+sCmgIPzcLZ+yYBcAn8NBXfelO0odsR
-	1L0q6Vg9QUaJN/ikJNEmmBUDfwPKhfwKRIIeUHcpIdTnqnB3NCcBXu4QR7KR+18hJjgDrLSxWut
-	gZh+Js6Ia8Tpz7M+vj9aPigEp/QQ6mUKclW21HK5a/IYJiQFI4RFVh1729sNGmA==
-X-Gm-Gg: AY/fxX7+Jd1WKgW5WoeuX5+uhnt2q+xRF4m0OUoMaZm/7qfWEiDvNwlZcESaN/GgHLI
-	W7HIcKDpQo7ok5Gq+tGI7Hn/qT4NAXcQ2J89XfLpUH5MIFgPxRvxevDaaXY99j9NizoF7ZG1drr
-	piuMSCaQ5Y8ETLwVJ3lAcNt2tZTojJ2D3M79tjZdSTg8YjZXgYvRU4oCfI01g+K6t6gvN/uitfQ
-	q0xWkSo0FwYUIGAOaXg67NU4K6WrowUKBaIT64BuKcn8d46nl5cvLNK27DZkRATJcdIjqNOpS4C
-	xpUszYKoImdKZUCCswp2nX5DaOhVrY8oLa5z341VTFyStBSChWz7Wd4i5bCyl8gpoMMlzQyz3EA
-	M015+NQsYoQJOYDvXBC304SdOQhX2JEGsJ+JYqXdye/MXmt39fvh9p6rF
-X-Received: by 2002:a05:6122:4b89:b0:55b:305b:4e38 with SMTP id 71dfb90a1353d-5634800729cmr7402453e0c.19.1768268967534;
-        Mon, 12 Jan 2026 17:49:27 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFK3nQoFNSvzu3p3PMs7jwaVTVycoM8jcu4b27g95LRRVLuycfC94MCTb+8aGEaS+r94nXQbg==
-X-Received: by 2002:a05:6122:4b89:b0:55b:305b:4e38 with SMTP id 71dfb90a1353d-5634800729cmr7402411e0c.19.1768268967043;
-        Mon, 12 Jan 2026 17:49:27 -0800 (PST)
-Received: from ?IPV6:2601:188:c102:b180:1f8b:71d0:77b1:1f6e? ([2601:188:c102:b180:1f8b:71d0:77b1:1f6e])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5635bd72c7esm13437373e0c.12.2026.01.12.17.49.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Jan 2026 17:49:26 -0800 (PST)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <2857c203-96e5-4bf9-b19c-7a80b009cce2@redhat.com>
-Date: Mon, 12 Jan 2026 20:49:11 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5152E543B;
+	Tue, 13 Jan 2026 02:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.91
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768270724; cv=fail; b=bqNPqbwiULS8YGFldrcrYeNJ/akEytHPl3QMz+nFLfbQ64PCO38o3FsGVUOeP7Y5bx48hsSLO0BQDCn/hJTJ00pNzaTJ1AuvxS6/cEY0xj/3calwGS4ZbL5RmB4qhGFKxXJQuXFG6vNzlASMGoni1pdgwMlzoJFkOTZPNfuLMXM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768270724; c=relaxed/simple;
+	bh=M1QsYAu7fN/XRlqOEryDAbxSB7ohsOoCPjJXGpCTEsc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=PNqITA+xIsVFluYDghdWSh8N59TmJrEieq7agwp8fHPPk9ghb6YbPcZum9aMDJVIQPvryzoVaAQcInivfDOKqmFGvQyZtjxmGjXm6NPDSMgqZknNx+fDieMb0tCJ2TbyBEHv7owMmVguaSbYTy3gJWLh6VxSQvzFe1BsiTbFe7Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=qa9C2KXu; arc=fail smtp.client-ip=52.101.125.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nQBWfcjexKJ8nmAy9pQGsNMZQsp6iu8HnVs4yTjJw6avo+flbQ6oKpJdgiRNi0ZI3k2xiHjREfodk9qepC+jq9tJaE65I+U48BAeTXCjegEjsSFqQtvLT3cjNKzQsyd0KJrWkNpe2R4fw67UTVyeQqRMsLQaVZrA8DobQnHpYOeRKpgruo8+4aKYt0zTPEz0IOUwR/nHOs+/Gdn6EakUyfC6brUudeWfg1HMIKD/McWbVaIeGDTA0iBsLlHglRjsdNkqKMDlCZNP+yp8cpnKJ2WEN3RWxzMVBxfNXqq6Lpbgcmf0K1VKkaponzQ0EoV37BhBBLKL6AtZuNwrEHsdNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uxde/HcnyG6Gaq3w/4Z3vefmrWbHn/QgN5zb/PVM3/8=;
+ b=aMxX9O7VLGeMtaKCJsdQYIuQhUUxdv0ZS2jBDOh4OjBsklERPPAaysb6nSEEMn6y4Uv+lSw8bEyPQXxAsnXQeJQjtrcuQdxvH98rZ+55dc9XH0/EZj8iMyqkoe35IFgi1tW+S0MzLdffL6lZfPBdKsOWCSz+gyCUwBp1JXTANlgARsUqX7t8IgVEnbEt+sUjfAvjA1zfP3+XpZRE4qYYJHjNPSxQvIvj9QEvclKT8xn/UEz6UdDsQa+5Zdc5gZtnQEZVgqPRBbKO0lwOVzxVGxeQoEZks9WixqNt3123lCZ+8T2fVz5SOeqAVtDdC17RXiiaSLbJMF1EtqWMWipccw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
+ header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uxde/HcnyG6Gaq3w/4Z3vefmrWbHn/QgN5zb/PVM3/8=;
+ b=qa9C2KXurHJvv7+onhpsb9gNyk3wq4MNX7BkzihZj7ug5VatkrE45pD9wd+2/hpumx3lcnI2ITD4FB9VlUkuChickCnBRx9glPwy3sZR3SmYQGRZXeReA4reoRhX61tdJCm5YVWQuph6Fp3xJPGnmwh9YOsL4bDPOtkQ761bwwM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=valinux.co.jp;
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
+ by TYCP286MB2193.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:156::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Tue, 13 Jan
+ 2026 02:18:38 +0000
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.20.9499.005; Tue, 13 Jan 2026
+ 02:18:38 +0000
+Date: Tue, 13 Jan 2026 11:18:36 +0900
+From: Koichiro Den <den@valinux.co.jp>
+To: jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, cassel@kernel.org
+Cc: vigneshr@ti.com, s-vadapalli@ti.com, hongxing.zhu@nxp.com, 
+	l.stach@pengutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de, 
+	kernel@pengutronix.de, festevam@gmail.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, 
+	roy.zang@nxp.com, jesper.nilsson@axis.com, heiko@sntech.de, 
+	srikanth.thokala@intel.com, marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com, 
+	geert+renesas@glider.be, magnus.damm@gmail.com, christian.bruel@foss.st.com, 
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, thierry.reding@gmail.com, 
+	jonathanh@nvidia.com, hayashi.kunihiko@socionext.com, mhiramat@kernel.org, 
+	kishon@kernel.org, jirislaby@kernel.org, rongqianfeng@vivo.com, 18255117159@163.com, 
+	shawn.lin@rock-chips.com, nicolas.frattaroli@collabora.com, linux.amoon@gmail.com, 
+	vidyas@nvidia.com, Frank.Li@nxp.com, linux-omap@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-arm-kernel@axis.com, linux-rockchip@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] PCI: dwc: ep: Support BAR subrange inbound
+ mapping via Address Match Mode iATU
+Message-ID: <773s32dqpeauari7yxmzqz4t6wlpbkazv74forku75sw62f6u3@b4lf5tojka7p>
+References: <20260108172403.2629671-1-den@valinux.co.jp>
+ <20260108172403.2629671-4-den@valinux.co.jp>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260108172403.2629671-4-den@valinux.co.jp>
+X-ClientProxiedBy: TYXPR01CA0052.jpnprd01.prod.outlook.com
+ (2603:1096:403:a::22) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/33 v6] cpuset/isolation: Honour kthreads preferred
- affinity
-To: Frederic Weisbecker <frederic@kernel.org>, Waiman Long <llong@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
- Phil Auld <pauld@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Danilo Krummrich <dakr@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Michal Koutny <mkoutny@suse.com>,
- netdev@vger.kernel.org, Roman Gushchin <roman.gushchin@linux.dev>,
- linux-block@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Eric Dumazet <edumazet@google.com>, Michal Hocko <mhocko@suse.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>,
- Chen Ridong <chenridong@huawei.com>, cgroups@vger.kernel.org,
- linux-pci@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "David S . Miller" <davem@davemloft.net>, Vlastimil Babka <vbabka@suse.cz>,
- Marco Crivellari <marco.crivellari@suse.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Simon Horman <horms@kernel.org>,
- Shakeel Butt <shakeel.butt@linux.dev>, linux-mm@kvack.org,
- Jakub Kicinski <kuba@kernel.org>, linux-arm-kernel@lists.infradead.org,
- Gabriele Monaco <gmonaco@redhat.com>, Muchun Song <muchun.song@linux.dev>,
- Will Deacon <will@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Chen Ridong <chenridong@huaweicloud.com>
-References: <20260101221359.22298-1-frederic@kernel.org>
- <437ccd7a-e839-4b40-840c-7c40d22f8166@redhat.com>
- <aWVxJVQYEWQiyO8Q@pavilion.home>
-Content-Language: en-US
-In-Reply-To: <aWVxJVQYEWQiyO8Q@pavilion.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|TYCP286MB2193:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9cca5227-1bc1-4e51-a150-08de524a0ff6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|10070799003|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?dBo+gBeNhqSPNTSpI06RtI0moacZQq9yIa0nzd1vw+Mc60Syi1+eT1/J6a2K?=
+ =?us-ascii?Q?FkYp/H/7xue6xw9cK92V5xEhKmYk7rOrxHRoIkCpV1Opwi9lNPrSQJERgYSn?=
+ =?us-ascii?Q?XLSoUPne4KH5x28govXjjg+3An+Zl9cB1Vi/8A6K5E9WREyNc6y0vyhTxAA4?=
+ =?us-ascii?Q?6P6RX70sziVqXSJTCzA6BULvsYka1KB7O0zMYG2XtmyIyOZBBReXhoReSnOM?=
+ =?us-ascii?Q?qEYX1D7v+EJnxsrRXLWExQubAdj2ZZBlP1055WjTmzd7EmB0r0aClvgALubJ?=
+ =?us-ascii?Q?22o0ypAH8ih8e3sSevQzCfg5N3nDaevlgW/CzDEEEi2TF9lt2R6MURRX7m50?=
+ =?us-ascii?Q?0+hLNi4B36InSTMjiXbriyKJnnAW/ww32Mu8dULINBTJEu/5vw5Qj13fk3J0?=
+ =?us-ascii?Q?wv4NR6hArZOhbPxwkzoOMn2ZR5rULHK+7IEGWwONB3Vs8pmJKSSL0Y5BIl8u?=
+ =?us-ascii?Q?g0WNQQAybAJkN9hEeo54E5VylUW1HlDrXYK/FKV+VP6CttmKQ+SL8no87Ipt?=
+ =?us-ascii?Q?hZSCNVqSJH05PNDu8eSDu9Cyhlo4LTBofYa06/34qAA/SasMN7hxMUrTfH/9?=
+ =?us-ascii?Q?L7eAxu6OKFGvp+PZIZJzPtSgj5xPpOGsnGEwXmISUBicG13cADrO0sxnV5Hl?=
+ =?us-ascii?Q?8yKK1TxIHpQ9hz/N6m3p7OVHS8GR4iFcY7bocJPdbUXkVQcq6Gicpnldtkbv?=
+ =?us-ascii?Q?7kbTlIoY4geTL6CWMzDxamf7CaF4u9D+lDgsGSnDRZDZfpQ58Uv9stnmfF7F?=
+ =?us-ascii?Q?xn2BIl4cS+F899hioSEax4q4skeVnKO1sME5nUjFnKWEZhi99H5N2lI2D7bt?=
+ =?us-ascii?Q?AVZZ+sYrzcnBo5iImSoVwv7ejjzNy7MNoTJN+JyKQ32Pukf1Uu3znulEp4eR?=
+ =?us-ascii?Q?6lOdXYmf9k6RJ+UWaY7RXtC/Vqs//yTud/ynRt43kmYGUIAkTmxFWnZx1p4J?=
+ =?us-ascii?Q?2ME7klOZLPrZVddZ5yAmwimeAocfjDOHyglykLekP5WNPbqX98YrJyMbIkjR?=
+ =?us-ascii?Q?XEomtty5ZdHvNEOeyRF5pQXCjfl3vea0eyW4iQz+sgTI02O0VbKI2/eN96rt?=
+ =?us-ascii?Q?8m1q+wcbgzicDHJji0p1irQOUritiijUTq+qjYoH1TdZ69VHtbX/oKiIqJgC?=
+ =?us-ascii?Q?Brxt2LmpDeMtQf3LQKNpH4PmHXD6PuJZPQi5H2teA3ULH6+JhWQHWwsvk2cm?=
+ =?us-ascii?Q?InUoBCG4e4KdWxC4lrWzV1ar5f1rulDZyUGFy7B5SxxtjXMuWitPiNXtoqop?=
+ =?us-ascii?Q?Som+lkr/0ud/H14YiZQ2vsLj6SF/cFcCvbUxb6ZdhM7XWU+dFdKwlFpQLpcS?=
+ =?us-ascii?Q?YmfkvbvrfNMdM2tjZdwz7o6FHeUiU1a5n25p2gsZW38I0aQAUXNtjeLnjBE8?=
+ =?us-ascii?Q?PEaIgE2pwDKLV3PeLqwvw5TeojDGhC+2HeD2fgk4lkbg5Jyouv9uYD0U4bVn?=
+ =?us-ascii?Q?sT740Ke9P8GRzCL0pVJifFvhfgy94Rb1?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(10070799003)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?givWq2OFYDF+xavCeyV+8yjr492iMVx8aEIvtFMVFT9l7Q6lM2rStJVV/D/A?=
+ =?us-ascii?Q?Z1KoBgmN+d8xsiTtI3ffZZqShoJd9nVlrBIYGcxcL+GAwaP0scTvZNM7Y1zj?=
+ =?us-ascii?Q?H9UEhz7qlIpSmfkCVO2XOT5ienGmBXG0PMFmWpy+/VO5c+OiTDBkSOE/5m+A?=
+ =?us-ascii?Q?MJxGsQrQq5WzkK7/lBkfZXYok9o/jf7NcZt8beODTX/A8lL9cgjLDvrTiPoT?=
+ =?us-ascii?Q?jaPk6GekXadiipACgOv+4VVcsEidAaq4H+vQwUZEs/j/F4QOD9em4gswVwO4?=
+ =?us-ascii?Q?3d1x20GNnLVuouq8syjsRoZNS2d1TwNIfdRUhc60h6hwHVp+dsqH9VScqzG0?=
+ =?us-ascii?Q?2CcqIiGhACRV/U+JbY+FJj3yfLiQiozfXiCH9jtqhIBProsCTeUPWZueygaT?=
+ =?us-ascii?Q?pf/UChi5xwDt6pOSEdfDa9thJc/y9yNS+FKRK+O6NN9Oc8EP7vr++scaGdAA?=
+ =?us-ascii?Q?Egvd5o7h2Thz4HHyBfXtWYIVw93+aZnUWWBYCcAd05SffRMQJsWWwLNWe65R?=
+ =?us-ascii?Q?B0/bCsmwOU+AKwaPf7zmAgKOMpZUjoLzGSRNM5Z4tirmpuOiW5/DY8zNxwJc?=
+ =?us-ascii?Q?axN36uNc+iMSOKBscAdHhjKFWW3H14Up96Etf4WJhUhDp3aH6THW8foZioY8?=
+ =?us-ascii?Q?WvR8lY0ynzRzSSCiu2xQdRSIQWhBoLpgFoiGcd16XOt9DQyfHnCZ8g499YNM?=
+ =?us-ascii?Q?VxeId5ew9+eQG6QOGzAslwEQ7YylblvlMubvm/aglE1w3uSofYqemikFdz19?=
+ =?us-ascii?Q?gW8Y3ghoRne3GlWIoitiqrr+quUnOpVzE/uaP/rFMp6u4lEnWZmwRgYYQpfj?=
+ =?us-ascii?Q?5xoV2/CJxR0x2NwheTrJwhDaJp3TISS65N1TkpAQEAp07tOs3FZxrc8mlkEj?=
+ =?us-ascii?Q?3Pl5wJ+DzPs0upVOGyHbZuYqstSVeDyPASzEw2wMPmKq0snGnzGDu9yrSlQW?=
+ =?us-ascii?Q?NR9fXsVUTlKEd9fcjWkv+tSFzHetXxUGMo5MCqG67YqOcJ0dIUYTrdqEVTZQ?=
+ =?us-ascii?Q?k0TbkP2K8wV2VJigx723kK5sq0QWJgTnjtk6WGtoaU+CVIL3k95EwOmbz17x?=
+ =?us-ascii?Q?JpC3LqW/TWeirzlUQdfwF7OZhtDTA5gGdKE8030J0NrkMqiWGIs2nj2jZF1x?=
+ =?us-ascii?Q?FJfWbvXxyNwjGjA/RKiUmwKtK8pDG69O9u4JLhzJEKlkYgBj5yqesDqvVoSd?=
+ =?us-ascii?Q?Ayp6cBQ2Qqq5ySe5oFZH0Wr3v31QEfw/5bdVBHm/xNjxiYpXXB8JMCmP4I2/?=
+ =?us-ascii?Q?SjOAKUAz4+FQcOf+CT1glIeY3k9SOpkQ5mhsfYGFenC3qShNVPsh5A4SUsHM?=
+ =?us-ascii?Q?PKu5/pl9sAjzPg6Lp23wU4w3Vp++7p6RbSM3E0hPW/IXAtFY3MmBebDZ13Nb?=
+ =?us-ascii?Q?AQL6XKc1Dp6mlO2TnebjbCksiNnIDGD8xhz0eQrr2G/4Lc5jUo6DG2E9sCxq?=
+ =?us-ascii?Q?XWT5GEqj9Gm9taOiw2CF4l8o0gBfGNn3ZnPo6nuo9i4X4weNiRtoOw081uMl?=
+ =?us-ascii?Q?Ld/odm7fYZ5fuBq7vHglPvnMqCIJhslp5pTf4P1cK0GkquM84rbvRZsm29zK?=
+ =?us-ascii?Q?A4Z6RAE6bL/H5CVNQ+uoUwvkT14sXP/YogqgXi6I1ZIbs+CTLu25eo2oGMYB?=
+ =?us-ascii?Q?8DCRrceKuedF4LiVgpTA5x7Buwu3JWALVzkWJc50ILEF4GcNH5JzZJK7+1dp?=
+ =?us-ascii?Q?U+xrj8tROTWw7//WDfBEMC39M01JnQXcz7VmrN8FTL7nD/Tucq9jPVi929l6?=
+ =?us-ascii?Q?AwiXTF8d8RArfRRtHchTNuOdIWRCCNybZm9WMsvLLUAblwYC0PvR?=
+X-OriginatorOrg: valinux.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9cca5227-1bc1-4e51-a150-08de524a0ff6
+X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2026 02:18:38.3312
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4u+FjSyq1CSTFP0tAVwO0KjF99HxuNSkA9IcWAyaN5xDXuh8CrpF9jw6E+gW2YML44a3Co29SUnW+v1JASzUYw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCP286MB2193
 
-On 1/12/26 5:09 PM, Frederic Weisbecker wrote:
-> Le Mon, Jan 12, 2026 at 01:23:40PM -0500, Waiman Long a écrit :
->> On 1/1/26 5:13 PM, Frederic Weisbecker wrote:
->>> Hi,
->>>
->>> The kthread code was enhanced lately to provide an infrastructure which
->>> manages the preferred affinity of unbound kthreads (node or custom
->>> cpumask) against housekeeping constraints and CPU hotplug events.
->>>
->>> One crucial missing piece is cpuset: when an isolated partition is
->>> created, deleted, or its CPUs updated, all the unbound kthreads in the
->>> top cpuset are affine to _all_ the non-isolated CPUs, possibly breaking
->>> their preferred affinity along the way
->>>
->>> Solve this with performing the kthreads affinity update from cpuset to
->>> the kthreads consolidated relevant code instead so that preferred
->>> affinities are honoured.
->>>
->>> The dispatch of the new cpumasks to workqueues and kthreads is performed
->>> by housekeeping, as per the nice Tejun's suggestion.
->>>
->>> As a welcome side effect, HK_TYPE_DOMAIN then integrates both the set
->>> from isolcpus= and cpuset isolated partitions. Housekeeping cpumasks are
->>> now modifyable with specific synchronization. A big step toward making
->>> nohz_full= also mutable through cpuset in the future.
->>>
->>> Changes since v5:
->>>
->>> * Add more tags
->>>
->>> * Fix leaked destroy_work_on_stack() (Zhang Qiao, Waiman Long)
->>>
->>> * Comment schedule_drain_work() synchronization requirement (Tejun)
->>>
->>> * s/Revert of/Inverse of (Waiman Long)
->>>
->>> * Remove housekeeping_update() needless (for now) parameter (Chen Ridong)
->>>
->>> * Don't propagate housekeeping_update() failures beyond allocations (Waiman Long)
->>>
->>> * Whitespace cleanup (Waiman Long)
->>>
->>>
->>> git://git.kernel.org/pub/scm/linux/kernel/git/frederic/linux-dynticks.git
->>> 	kthread/core-v6
->>>
->>> HEAD: 811e87ca8a0a1e54eb5f23e71896cb97436cccdc
->>>
->>> Happy new year,
->>> 	Frederic
->> I don't see any major issue with this v6 version. There may be some minor
->> issues that can be cleaned up later. Now the issue is which tree should this
->> series go to as it touches a number of different subsystems with different
->> maintainers.
-> It indeed crosses many subsystems. I would be fine if anybody takes it but
-> nobody volunteered so far.
->
-> The main purpose is to fix kthreads affinity (HK_TYPE_DOMAIN handling cpuset is
-> a bonus). And since I made the pull request myself to Linus when I introduced
-> kthreads managed affinity, I guess I could reiterate with this patchset. I
-> already pushed it to linux-next.
->
-> But if anybody wants to pull that to another tree, that's fine, just tell me
-> so that we synchronize to avoid duplication on linux-next.
->
-> Thanks.
+On Fri, Jan 09, 2026 at 02:24:03AM +0900, Koichiro Den wrote:
+> Extend dw_pcie_ep_set_bar() to support inbound mappings for BAR
+> subranges using Address Match Mode IB iATU.
+> 
+> Rename the existing BAR-match helper into dw_pcie_ep_ib_atu_bar() and
+> introduce dw_pcie_ep_ib_atu_addr() for Address Match Mode. When
+> use_submap is set, read the assigned BAR base address and program one
+> inbound iATU window per subrange. Validate the submap array before
+> programming:
+> - each subrange is aligned to pci->region_align
+> - subranges cover the whole BAR (no gaps and no overlaps)
+> - subranges are sorted in ascending order by offset
+> 
+> Track Address Match Mode mappings and tear them down on clear_bar() and
+> on set_bar() error paths to avoid leaving half-programmed state or
+> untranslated BAR holes.
+> 
+> Advertise this capability by setting subrange_mapping in the EPC
+> features returned from dw_pcie_ep_get_features().
+> 
+> Signed-off-by: Koichiro Den <den@valinux.co.jp>
+> ---
+>  .../pci/controller/dwc/pcie-designware-ep.c   | 242 +++++++++++++++++-
+>  drivers/pci/controller/dwc/pcie-designware.h  |   2 +
+>  2 files changed, 232 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 1195d401df19..406e9218e4ea 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -139,9 +139,10 @@ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  	return 0;
+>  }
+>  
+> -static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+> -				  dma_addr_t parent_bus_addr, enum pci_barno bar,
+> -				  size_t size)
+> +/* Bar Match Mode inbound iATU mapping */
+> +static int dw_pcie_ep_ib_atu_bar(struct dw_pcie_ep *ep, u8 func_no, int type,
+> +				 dma_addr_t parent_bus_addr, enum pci_barno bar,
+> +				 size_t size)
+>  {
+>  	int ret;
+>  	u32 free_win;
+> @@ -174,6 +175,208 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+>  	return 0;
+>  }
+>  
+> +/* Inbound mapping bookkeeping for Address Match Mode */
+> +struct dw_pcie_ib_map {
+> +	struct list_head	list;
+> +	enum pci_barno		bar;
+> +	u64			pci_addr;
+> +	u64			parent_bus_addr;
+> +	u64			size;
+> +	u32			index;
+> +};
+> +
+> +static void dw_pcie_ep_clear_ib_maps(struct dw_pcie_ep *ep, enum pci_barno bar)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct dw_pcie_ib_map *m, *tmp;
+> +	struct device *dev = pci->dev;
+> +	u32 atu_index;
+> +
+> +	/* Tear down the BAR Match Mode mapping, if any. */
+> +	if (ep->bar_to_atu[bar]) {
+> +		atu_index = ep->bar_to_atu[bar] - 1;
+> +		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, atu_index);
+> +		clear_bit(atu_index, ep->ib_window_map);
+> +		ep->bar_to_atu[bar] = 0;
+> +	}
+> +
+> +	/* Tear down all Address Match Mode mappings, if any. */
+> +	guard(spinlock_irqsave)(&ep->ib_map_lock);
+> +	list_for_each_entry_safe(m, tmp, &ep->ib_map_list, list) {
+> +		if (m->bar != bar)
+> +			continue;
+> +		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, m->index);
+> +		clear_bit(m->index, ep->ib_window_map);
+> +		list_del(&m->list);
+> +		devm_kfree(dev, m);
+> +	}
+> +}
+> +
+> +static u64 dw_pcie_ep_read_bar_assigned(struct dw_pcie_ep *ep, u8 func_no,
+> +					enum pci_barno bar, int flags)
+> +{
+> +	u32 reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+> +	u32 lo, hi;
+> +	u64 addr;
+> +
+> +	lo = dw_pcie_ep_readl_dbi(ep, func_no, reg);
+> +
+> +	if (flags & PCI_BASE_ADDRESS_SPACE)
+> +		return lo & PCI_BASE_ADDRESS_IO_MASK;
+> +
+> +	addr = lo & PCI_BASE_ADDRESS_MEM_MASK;
+> +	if (!(flags & PCI_BASE_ADDRESS_MEM_TYPE_64))
+> +		return addr;
+> +
+> +	hi = dw_pcie_ep_readl_dbi(ep, func_no, reg + 4);
+> +	return addr | ((u64)hi << 32);
+> +}
+> +
+> +static int dw_pcie_ep_validate_submap(struct dw_pcie_ep *ep,
+> +				      const struct pci_epf_bar_submap *submap,
+> +				      unsigned int num_submap, size_t bar_size)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	u32 align = pci->region_align;
+> +	size_t expected = 0;
+> +	size_t size, off;
+> +	unsigned int i;
+> +
+> +	if (!align || !IS_ALIGNED(bar_size, align))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * The array is expected to be sorted by offset before calling this
+> +	 * helper. With sorted entries, we can enforce a strict, gapless
+> +	 * decomposition of the BAR:
+> +	 *  - each entry has a non-zero size
+> +	 *  - offset/size/phys_addr are aligned to pci->region_align
+> +	 *  - each entry lies within the BAR range
+> +	 *  - entries are contiguous (no overlaps, no holes)
+> +	 *  - the entries exactly cover the whole BAR
+> +	 *
+> +	 * Note: dw_pcie_prog_inbound_atu() also checks alignment for
+> +	 * offset/phys_addr, but validating up-front avoids partially
+> +	 * programming iATU windows in vain.
+> +	 */
+> +	for (i = 0; i < num_submap; i++) {
+> +		off = submap[i].offset;
+> +		size = submap[i].size;
+> +
+> +		if (!size)
+> +			return -EINVAL;
+> +
+> +		if (!IS_ALIGNED(size, align) || !IS_ALIGNED(off, align))
+> +			return -EINVAL;
+> +
+> +		if (!IS_ALIGNED(submap[i].phys_addr, align))
+> +			return -EINVAL;
+> +
+> +		if (off > bar_size || size > bar_size - off)
+> +			return -EINVAL;
+> +
+> +		/* Enforce contiguity (no overlaps, no holes). */
+> +		if (off != expected)
+> +			return -EINVAL;
+> +
+> +		expected += size;
+> +	}
+> +	if (expected != bar_size)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +/* Address Match Mode inbound iATU mapping */
+> +static int dw_pcie_ep_ib_atu_addr(struct dw_pcie_ep *ep, u8 func_no, int type,
+> +				  const struct pci_epf_bar *epf_bar)
+> +{
+> +	const struct pci_epf_bar_submap *submap = epf_bar->submap;
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	enum pci_barno bar = epf_bar->barno;
+> +	struct device *dev = pci->dev;
+> +	u64 pci_addr, parent_bus_addr;
+> +	struct dw_pcie_ib_map *new;
+> +	u64 size, off, base;
+> +	unsigned long flags;
+> +	int free_win, ret;
+> +	unsigned int i;
+> +
+> +	if (!epf_bar->num_submap || !submap || !epf_bar->size)
+> +		return -EINVAL;
+> +
+> +	ret = dw_pcie_ep_validate_submap(ep, submap, epf_bar->num_submap,
+> +					 epf_bar->size);
+> +	if (ret)
+> +		return ret;
+> +
+> +	base = dw_pcie_ep_read_bar_assigned(ep, func_no, bar, epf_bar->flags);
+> +	if (!base) {
+> +		dev_err(dev,
+> +			"BAR%u not assigned, cannot set up sub-range mappings\n",
+> +			bar);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Tear down any existing mappings before (re)programming. */
+> +	dw_pcie_ep_clear_ib_maps(ep, bar);
+> +
+> +	for (i = 0; i < epf_bar->num_submap; i++) {
+> +		off = submap[i].offset;
+> +		size = submap[i].size;
+> +		parent_bus_addr = submap[i].phys_addr;
+> +
+> +		if (off > (~0ULL) - base) {
+> +			ret = -EINVAL;
+> +			goto err;
+> +		}
+> +
+> +		pci_addr = base + off;
+> +
+> +		new = devm_kzalloc(dev, sizeof(*new), GFP_KERNEL);
+> +		if (!new) {
+> +			ret = -ENOMEM;
+> +			goto err;
+> +		}
+> +
+> +		spin_lock_irqsave(&ep->ib_map_lock, flags);
+> +
+> +		free_win = find_first_zero_bit(ep->ib_window_map,
+> +					       pci->num_ib_windows);
+> +		if (free_win >= pci->num_ib_windows) {
+> +			spin_unlock_irqrestore(&ep->ib_map_lock, flags);
+> +			devm_kfree(dev, new);
+> +			ret = -ENOSPC;
+> +			goto err;
+> +		}
+> +		set_bit(free_win, ep->ib_window_map);
+> +
+> +		new->bar = bar;
+> +		new->index = free_win;
+> +		new->pci_addr = pci_addr;
+> +		new->parent_bus_addr = parent_bus_addr;
+> +		new->size = size;
+> +		list_add_tail(&new->list, &ep->ib_map_list);
+> +
+> +		spin_unlock_irqrestore(&ep->ib_map_lock, flags);
+> +
+> +		ret = dw_pcie_prog_inbound_atu(pci, free_win, type,
+> +					       parent_bus_addr, pci_addr, size);
+> +		if (ret) {
+> +			spin_lock_irqsave(&ep->ib_map_lock, flags);
+> +			list_del(&new->list);
+> +			clear_bit(free_win, ep->ib_window_map);
+> +			spin_unlock_irqrestore(&ep->ib_map_lock, flags);
+> +			devm_kfree(dev, new);
+> +			goto err;
+> +		}
+> +	}
+> +	return 0;
+> +err:
+> +	dw_pcie_ep_clear_ib_maps(ep, bar);
+> +	return ret;
+> +}
+> +
+>  static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep,
+>  				   struct dw_pcie_ob_atu_cfg *atu)
+>  {
+> @@ -204,17 +407,15 @@ static void dw_pcie_ep_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	enum pci_barno bar = epf_bar->barno;
+> -	u32 atu_index = ep->bar_to_atu[bar] - 1;
+>  
+> -	if (!ep->bar_to_atu[bar])
+> +	if (!ep->epf_bar[bar])
+>  		return;
+>  
+>  	__dw_pcie_ep_reset_bar(pci, func_no, bar, epf_bar->flags);
+>  
+> -	dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, atu_index);
+> -	clear_bit(atu_index, ep->ib_window_map);
+> +	dw_pcie_ep_clear_ib_maps(ep, bar);
+> +
+>  	ep->epf_bar[bar] = NULL;
+> -	ep->bar_to_atu[bar] = 0;
+>  }
+>  
+>  static unsigned int dw_pcie_ep_get_rebar_offset(struct dw_pcie *pci,
+> @@ -408,10 +609,17 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  	else
+>  		type = PCIE_ATU_TYPE_IO;
+>  
+> -	ret = dw_pcie_ep_inbound_atu(ep, func_no, type, epf_bar->phys_addr, bar,
+> -				     size);
+> -	if (ret)
+> +	if (epf_bar->use_submap)
+> +		ret = dw_pcie_ep_ib_atu_addr(ep, func_no, type, epf_bar);
+> +	else
+> +		ret = dw_pcie_ep_ib_atu_bar(ep, func_no, type,
+> +					    epf_bar->phys_addr, bar, size);
+> +
+> +	if (ret) {
+> +		if (epf_bar->use_submap)
+> +			dw_pcie_ep_clear_bar(epc, func_no, vfunc_no, epf_bar);
 
-Good to know as I am wondering where it will go. So you are going to 
-push that directly to Linus.
+I just noticed that this dw_pcie_ep_clear_bar() should be dropped, since it
+goes too far and resets the BAR. Also dw_pcie_ep_ib_atu_addr() already
+rolls back partially programmed inbound mappings on failure, so this extra
+clear_bar() is unnecessary. I'll drop this in v6.
 
-Cheers,
-Longman
+Koichiro
 
+>  		return ret;
+> +	}
+>  
+>  	ep->epf_bar[bar] = epf_bar;
+>  
+> @@ -626,11 +834,19 @@ static const struct pci_epc_features*
+>  dw_pcie_ep_get_features(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
+>  {
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+> +	struct pci_epc_features *features;
+>  
+>  	if (!ep->ops->get_features)
+>  		return NULL;
+>  
+> -	return ep->ops->get_features(ep);
+> +	features = ep->ops->get_features(ep);
+> +	if (!features)
+> +		return NULL;
+> +
+> +	/* All DWC-based glue drivers support inbound subrange mapping */
+> +	features->subrange_mapping = true;
+> +
+> +	return features;
+>  }
+>  
+>  static const struct pci_epc_ops epc_ops = {
+> @@ -1120,6 +1336,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	struct device *dev = pci->dev;
+>  
+>  	INIT_LIST_HEAD(&ep->func_list);
+> +	INIT_LIST_HEAD(&ep->ib_map_list);
+> +	spin_lock_init(&ep->ib_map_lock);
+>  	ep->msi_iatu_mapped = false;
+>  	ep->msi_msg_addr = 0;
+>  	ep->msi_map_size = 0;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 4dda9a38d46b..969b1f32dddf 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -479,6 +479,8 @@ struct dw_pcie_ep {
+>  	phys_addr_t		*outbound_addr;
+>  	unsigned long		*ib_window_map;
+>  	unsigned long		*ob_window_map;
+> +	struct list_head	ib_map_list;
+> +	spinlock_t		ib_map_lock;
+>  	void __iomem		*msi_mem;
+>  	phys_addr_t		msi_mem_phys;
+>  	struct pci_epf_bar	*epf_bar[PCI_STD_NUM_BARS];
+> -- 
+> 2.51.0
+> 
 
