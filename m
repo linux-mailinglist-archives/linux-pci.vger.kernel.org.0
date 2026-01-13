@@ -1,223 +1,312 @@
-Return-Path: <linux-pci+bounces-44618-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44619-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61A79D19DC0
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 16:24:53 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D50FBD19E2B
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 16:28:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 564BF300E3C2
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 15:24:51 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 327AA3015132
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 15:26:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 708A5315D49;
-	Tue, 13 Jan 2026 15:24:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B38E338FF19;
+	Tue, 13 Jan 2026 15:26:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AhP/y80K"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="db+k16Oo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A00A70830;
-	Tue, 13 Jan 2026 15:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A47363C64;
+	Tue, 13 Jan 2026 15:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768317890; cv=none; b=XdegkTWPinoSs4zuGe3Wp8HwcJjHo6L4MZaD22vdtzqkw0YY8umok1101Z+xwxVBxQLp+Wzk9ygeaFtZT+0hXbrJWGyI570T2Nlu/6uBIV2WtW99kighKwH6ce0b4lTIIOaudjxw6dtQ3kvFcopwXwGILaf2NXwrWitYadXssuw=
+	t=1768318003; cv=none; b=HzDEbY470njQ7kCdCvzMg+C08MXX+fajqBRa1krjeAeYzV5SDcDaxMFNR+KDO/oxcSCKn1pGp6WAM0uH4NPM0v2s1Y4nILwUgKJS9yWcTCvIhamh2oqu5eWDUOZyOssQ2nyzCBBevER1utTsQUQg0F0VZ4dYO07b23MkyUKOdII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768317890; c=relaxed/simple;
-	bh=taak2UygMZbdacgSedIXzlFkiSjhrP80UZpBg3+A9T4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=uKXTvmE5KTGkqPCVLoOGTPkma+MkZEPTRbdD2om7mf9QskYtaoc0d7f4ICyUmbcgMPwF4/nEgpSpUuR56u4sq8avld39mnCnmW0ZV3XKfB2A7R3m8D9YQh1fepebnWItR0z07A8mVoKv0476oS4Ipa0TETk11QbKO8rX/h4UuBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AhP/y80K; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22D46C116C6;
-	Tue, 13 Jan 2026 15:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768317889;
-	bh=taak2UygMZbdacgSedIXzlFkiSjhrP80UZpBg3+A9T4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=AhP/y80KVpZcmRV1+NMKLTI7A3S3B1azBgUpQ1DJUoaoH/TdnGwIdSpNdf4iOtRl5
-	 VMjPXhRqRohFjpEbWulvcJ9JjRwozK8fucaQwQiM8u0Gja1ik0Q3sTcW/6IIEq+3d5
-	 hHD4PWcpVpfgVDOn0SV7bboOAc09bk7OwyDufmZublxhYqPbm49WVLbdvElM/VF8he
-	 HvtLSZJ2jXKm2fI/o+QkcMPrelVltHLBYAFKn1iSoIrObiMteKseVxFxZCfeELV8Ah
-	 IWAlUHyqaY0szCLSQBji+FnqKNi/kZEfK8gaMPepsMkMAyl1jzdeApqJdvxGLgQf5K
-	 W731h5A9eUm3w==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Bert Karwatzki <spasswolf@web.de>, linux-kernel@vger.kernel.org
-Cc: Bert Karwatzki <spasswolf@web.de>, linux-next@vger.kernel.org, Mario
- Limonciello <mario.limonciello@amd.com>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, Steven
- Rostedt <rostedt@goodmis.org>, Christian =?utf-8?Q?K=C3=B6nig?=
- <christian.koenig@amd.com>,
- regressions@lists.linux.dev, linux-pci@vger.kernel.org,
- linux-acpi@vger.kernel.org, "Rafael J . Wysocki"
- <rafael.j.wysocki@intel.com>, acpica-devel@lists.linux.dev, Robert Moore
- <robert.moore@intel.com>, Saket Dumbre <saket.dumbre@intel.com>, Bjorn
- Helgaas <bhelgaas@google.com>, Clemens Ladisch <clemens@ladisch.de>,
- Jinchao Wang <wangjinchao600@gmail.com>, Yury Norov
- <yury.norov@gmail.com>, Anna Schumaker <anna.schumaker@oracle.com>,
- Baoquan He <bhe@redhat.com>, "Darrick J. Wong" <djwong@kernel.org>, Dave
- Young <dyoung@redhat.com>, Doug Anderson <dianders@chromium.org>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Helge Deller
- <deller@gmx.de>, Ingo Molnar <mingo@kernel.org>, Jason Gunthorpe
- <jgg@ziepe.ca>, Joanthan Cameron <Jonathan.Cameron@huawei.com>, Joel
- Granados <joel.granados@kernel.org>, John Ogness
- <john.ogness@linutronix.de>, Kees Cook <kees@kernel.org>, Li Huafei
- <lihuafei1@huawei.com>, "Luck, Tony" <tony.luck@intel.com>, Luo Gengkun
- <luogengkun@huaweicloud.com>, Max Kellermann <max.kellermann@ionos.com>,
- Nam Cao <namcao@linutronix.de>, oushixiong <oushixiong@kylinos.cn>, Petr
- Mladek <pmladek@suse.com>, Qianqiang Liu <qianqiang.liu@163.com>, Sergey
- Senozhatsky <senozhatsky@chromium.org>, Sohil Mehta
- <sohil.mehta@intel.com>, Tejun Heo <tj@kernel.org>, Thomas Zimemrmann
- <tzimmermann@suse.de>, Thorsten Blum <thorsten.blum@linux.dev>, Ville
- Syrjala <ville.syrjala@linux.intel.com>, Vivek Goyal <vgoyal@redhat.com>,
- Yicong Yang <yangyicong@hisilicon.com>, Yunhui Cui
- <cuiyunhui@bytedance.com>, Andrew Morton <akpm@linux-foundation.org>,
- W_Armin@gmx.de
-Subject: Re: NMI stack overflow during resume of PCIe bridge with
- CONFIG_HARDLOCKUP_DETECTOR=y
-In-Reply-To: <20260113094129.3357-1-spasswolf@web.de>
-References: <20260113094129.3357-1-spasswolf@web.de>
-Date: Tue, 13 Jan 2026 16:24:46 +0100
-Message-ID: <87h5spk01t.ffs@tglx>
+	s=arc-20240116; t=1768318003; c=relaxed/simple;
+	bh=DAFK6ts6h5oycafq6Gc/0yiCRES3UGi7RyPEY9i83m8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=He+C3dIVxlvP9xoy3vJQ0ebd/6Ln9fog7qgaYuiiNDFQCeJWdwVX1e7ZNoJEggxLea/VzLz3zWPLaJ2cB5sIXrisdFmUJmwzKBSWB4ShJHRVerPwYGQ47KKqRsVV0+0sIRpzRMGfurwZofM3GvR0ocuW7AB+LEewWtUFUTC61Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=db+k16Oo; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <2432dafc-4101-4b23-90b2-85ea5459435c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1768317998;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jG0Bu8LbTPoVOj6e4IGMmcUh/bkY4GBbkm/sd8XSO1E=;
+	b=db+k16OoHiSaywpFQWYsVmgGEuM+ade9mP+cAI3oNm49lUFhfW8ZAwQYAAdsHmNiUM4xX7
+	LAXOUmYB0Q1pqZoIFEa7rz8MdmEJirefRM6mdtDUamHSieJarY/koc8SzZm7hp/nmUla0i
+	ZKjpJui8Rd9xNxafuH+9252J3qgP5O8=
+Date: Tue, 13 Jan 2026 10:26:04 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Subject: Re: [PATCH v4 8/9] power: sequencing: pcie-m2: Add support for PCIe
+ M.2 Key E connectors
+To: manivannan.sadhasivam@oss.qualcomm.com, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Manivannan Sadhasivam <mani@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ linux-acpi@vger.kernel.org
+References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
+ <20260112-pci-m2-e-v4-8-eff84d2c6d26@oss.qualcomm.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20260112-pci-m2-e-v4-8-eff84d2c6d26@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jan 13 2026 at 10:41, Bert Karwatzki wrote:
-> Here's the result in case of the crash:
-> 2026-01-12T04:24:36.809904+01:00 T1510;acpi_ex_system_memory_space_handler 255: logical_addr_ptr = ffffc066977b3000
-> 2026-01-12T04:24:36.846170+01:00 C14;exc_nmi: 0
+On 1/12/26 11:26, Manivannan Sadhasivam via B4 Relay wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> 
+> Add support for handling the power sequence of the PCIe M.2 Key E
+> connectors. These connectors are used to attach the Wireless Connectivity
+> devices to the host machine including combinations of WiFi, BT, NFC using
+> interfaces such as PCIe/SDIO for WiFi, USB/UART for BT and I2C for NFC.
+> 
+> Currently, this driver supports only the PCIe interface for WiFi and UART
+> interface for BT. The driver also only supports driving the 3.3v/1.8v power
+> supplies and W_DISABLE{1/2}# GPIOs. The optional signals of the Key E
+> connectors are not currently supported.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+>  drivers/power/sequencing/Kconfig          |   1 +
+>  drivers/power/sequencing/pwrseq-pcie-m2.c | 110 ++++++++++++++++++++++++++++--
+>  2 files changed, 104 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/power/sequencing/Kconfig b/drivers/power/sequencing/Kconfig
+> index f5fff84566ba..29bd204319cc 100644
+> --- a/drivers/power/sequencing/Kconfig
+> +++ b/drivers/power/sequencing/Kconfig
+> @@ -38,6 +38,7 @@ config POWER_SEQUENCING_TH1520_GPU
+>  config POWER_SEQUENCING_PCIE_M2
+>  	tristate "PCIe M.2 connector power sequencing driver"
+>  	depends on OF || COMPILE_TEST
+> +	depends on PCI
+>  	help
+>  	  Say Y here to enable the power sequencing driver for PCIe M.2
+>  	  connectors. This driver handles the power sequencing for the M.2
+> diff --git a/drivers/power/sequencing/pwrseq-pcie-m2.c b/drivers/power/sequencing/pwrseq-pcie-m2.c
+> index e01e19123415..4b85a40d7692 100644
+> --- a/drivers/power/sequencing/pwrseq-pcie-m2.c
+> +++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
+> @@ -4,12 +4,16 @@
+>   * Author: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+>   */
+>  
+> +#include <linux/err.h>
+>  #include <linux/device.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_graph.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/pci.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwrseq/provider.h>
+>  #include <linux/regulator/consumer.h>
+> @@ -25,17 +29,19 @@ struct pwrseq_pcie_m2_ctx {
+>  	const struct pwrseq_pcie_m2_pdata *pdata;
+>  	struct regulator_bulk_data *regs;
+>  	size_t num_vregs;
+> -	struct notifier_block nb;
+> +	struct gpio_desc *w_disable1_gpio;
+> +	struct gpio_desc *w_disable2_gpio;
+> +	struct device *dev;
+>  };
+>  
+> -static int pwrseq_pcie_m2_m_vregs_enable(struct pwrseq_device *pwrseq)
+> +static int pwrseq_pcie_m2_vregs_enable(struct pwrseq_device *pwrseq)
+>  {
+>  	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+>  
+>  	return regulator_bulk_enable(ctx->num_vregs, ctx->regs);
+>  }
+>  
+> -static int pwrseq_pcie_m2_m_vregs_disable(struct pwrseq_device *pwrseq)
+> +static int pwrseq_pcie_m2_vregs_disable(struct pwrseq_device *pwrseq)
+>  {
+>  	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+>  
+> @@ -44,18 +50,84 @@ static int pwrseq_pcie_m2_m_vregs_disable(struct pwrseq_device *pwrseq)
+>  
+>  static const struct pwrseq_unit_data pwrseq_pcie_m2_vregs_unit_data = {
+>  	.name = "regulators-enable",
+> -	.enable = pwrseq_pcie_m2_m_vregs_enable,
+> -	.disable = pwrseq_pcie_m2_m_vregs_disable,
+> +	.enable = pwrseq_pcie_m2_vregs_enable,
+> +	.disable = pwrseq_pcie_m2_vregs_disable,
+>  };
+>  
+> -static const struct pwrseq_unit_data *pwrseq_pcie_m2_m_unit_deps[] = {
+> +static const struct pwrseq_unit_data *pwrseq_pcie_m2_unit_deps[] = {
+>  	&pwrseq_pcie_m2_vregs_unit_data,
+>  	NULL
+>  };
+>  
+> +static int pwrseq_pci_m2_e_uart_enable(struct pwrseq_device *pwrseq)
+> +{
+> +	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+> +
+> +	return gpiod_set_value_cansleep(ctx->w_disable2_gpio, 0);
+> +}
+> +
+> +static int pwrseq_pci_m2_e_uart_disable(struct pwrseq_device *pwrseq)
+> +{
+> +	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+> +
+> +	return gpiod_set_value_cansleep(ctx->w_disable2_gpio, 1);
+> +}
+> +
+> +static const struct pwrseq_unit_data pwrseq_pcie_m2_e_uart_unit_data = {
+> +	.name = "uart-enable",
+> +	.deps = pwrseq_pcie_m2_unit_deps,
+> +	.enable = pwrseq_pci_m2_e_uart_enable,
+> +	.disable = pwrseq_pci_m2_e_uart_disable,
+> +};
+> +
+> +static int pwrseq_pci_m2_e_pcie_enable(struct pwrseq_device *pwrseq)
+> +{
+> +	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+> +
+> +	return gpiod_set_value_cansleep(ctx->w_disable1_gpio, 0);
+> +}
+> +
+> +static int pwrseq_pci_m2_e_pcie_disable(struct pwrseq_device *pwrseq)
+> +{
+> +	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+> +
+> +	return gpiod_set_value_cansleep(ctx->w_disable1_gpio, 1);
+> +}
+> +
+> +static const struct pwrseq_unit_data pwrseq_pcie_m2_e_pcie_unit_data = {
+> +	.name = "pcie-enable",
+> +	.deps = pwrseq_pcie_m2_unit_deps,
+> +	.enable = pwrseq_pci_m2_e_pcie_enable,
+> +	.disable = pwrseq_pci_m2_e_pcie_disable,
+> +};
+> +
+>  static const struct pwrseq_unit_data pwrseq_pcie_m2_m_pcie_unit_data = {
+>  	.name = "pcie-enable",
+> -	.deps = pwrseq_pcie_m2_m_unit_deps,
+> +	.deps = pwrseq_pcie_m2_unit_deps,
+> +};
+> +
+> +static int pwrseq_pcie_m2_e_pwup_delay(struct pwrseq_device *pwrseq)
+> +{
+> +	/*
+> +	 * FIXME: This delay is only required for some Qcom WLAN/BT cards like
+> +	 * WCN7850 and not for all devices. But currently, there is no way to
+> +	 * identify the device model before enumeration.
+> +	 */
+> +	msleep(50);
 
-Here the NMI triggers in non-task context on CPU14
+Section 3.1.4 of the M.2 spec says that "Power Valid to PERST# input
+inactive" (T_PVPGL) is "Implementation specific recommended 50 ms." So I
+think we should delay for at least 50 ms for all M.2 cards.
+Additionally, the PCIe CEM specifies that "Power stable to PERST#
+inactive" (T_PVPERL) must be at least 100 ms. So I think we should just
+delay for 100 ms regardless of the slot, perhaps making this
+configurable in the devicetree if e.g. the system integrator knows the
+soldered-down M.2 requires less initialization time. This is exactly
+what I proposed in [1].
 
-> 2026-01-12T04:24:36.960760+01:00 C14;exc_nmi: 10.3
-> 2026-01-12T04:24:36.960760+01:00 C14;default_do_nmi 
-> 2026-01-12T04:24:36.960760+01:00 C14;nmi_handle: type=0x0
-> 2026-01-12T04:24:36.960760+01:00 C14;nmi_handle: a=0xffffffffa1612de0
-> 2026-01-12T04:24:36.960760+01:00 C14;nmi_handle: a->handler=perf_event_nmi_handler+0x0/0xa6
-> 2026-01-12T04:24:36.960760+01:00 C14;perf_event_nmi_handler: 0
-> 2026-01-12T04:24:36.960760+01:00 C14;perf_event_nmi_handler: 1
-> 2026-01-12T04:24:36.960760+01:00 C14;perf_event_nmi_handler: 2
-> 2026-01-12T04:24:36.960760+01:00 C14;x86_pmu_handle_irq: 2
-> 2026-01-12T04:24:36.960760+01:00 C14;x86_pmu_handle_irq: 2.6
-> 2026-01-12T04:24:36.960760+01:00 C14;__perf_event_overflow: 0
-> 2026-01-12T04:24:36.960760+01:00 C14;__perf_event_overflow: 6.99: overflow_handler=watchdog_overflow_callback+0x0/0x10d
-> 2026-01-12T04:24:36.960760+01:00 C14;watchdog_overflow_callback: 0
-> 2026-01-12T04:24:36.960760+01:00 C14;__ktime_get_fast_ns_debug: 0.1
-> 2026-01-12T04:24:36.960760+01:00 C14;tk_clock_read_debug: read=read_hpet+0x0/0xf0
-> 2026-01-12T04:24:36.960760+01:00 C14;read_hpet: 0
-> 2026-01-12T04:24:36.960760+01:00 C14;read_hpet: 0.1
+--Sean
 
-> 2026-01-12T04:24:36.960760+01:00 T0;exc_nmi: 0
+[1] https://lore.kernel.org/linux-pci/20251219172222.2808195-2-sean.anderson@linux.dev/
 
-This one triggers in task context of PID0, aka idle task, but it's not
-clear on which CPU that happens. It's probably CPU13 as that continues
-with the expected 10.3 output, but that's almost ~1.71 seconds later.
-
-> 2026-01-12T04:24:38.674625+01:00 C13;exc_nmi: 10.3
-> 2026-01-12T04:24:38.674625+01:00 C13;default_do_nmi 
-> 2026-01-12T04:24:38.674625+01:00 C13;nmi_handle: type=0x0
-> 2026-01-12T04:24:38.674625+01:00 C13;nmi_handle: a=0xffffffffa1612de0
-> 2026-01-12T04:24:38.674625+01:00 C13;nmi_handle: a->handler=perf_event_nmi_handler+0x0/0xa6
-> 2026-01-12T04:24:38.674625+01:00 C13;perf_event_nmi_handler: 0
-> 2026-01-12T04:24:38.674625+01:00 C13;perf_event_nmi_handler: 1
-> 2026-01-12T04:24:38.674625+01:00 C13;perf_event_nmi_handler: 2
-> 2026-01-12T04:24:38.674625+01:00 C13;x86_pmu_handle_irq: 2
-> 2026-01-12T04:24:38.674625+01:00 C13;x86_pmu_handle_irq: 2.6
-> 2026-01-12T04:24:38.674625+01:00 C13;__perf_event_overflow: 0
-> 2026-01-12T04:24:38.674625+01:00 C13;__perf_event_overflow: 6.99: overflow_handler=watchdog_overflow_callback+0x0/0x10d
-> 2026-01-12T04:24:38.674625+01:00 C13;watchdog_overflow_callback: 0
-> 2026-01-12T04:24:38.674625+01:00 C13;__ktime_get_fast_ns_debug: 0.1
-> 2026-01-12T04:24:38.674625+01:00 C13;tk_clock_read_debug: read=read_hpet+0x0/0xf0
-> 2026-01-12T04:24:38.674625+01:00 C13;read_hpet: 0
-> 2026-01-12T04:24:38.674625+01:00 C13;read_hpet: 0.1
-
-> 2026-01-12T04:24:38.674625+01:00 T0;exc_nmi: 0
-
-Same picture as above, but this time on CPU2 with a delay of 0.68
-seconds
-
-> 2026-01-12T04:24:39.355101+01:00 C2;exc_nmi: 10.3
-> 2026-01-12T04:24:39.355101+01:00 C2;default_do_nmi 
-> 2026-01-12T04:24:39.355101+01:00 C2;nmi_handle: type=0x0
-> 2026-01-12T04:24:39.355101+01:00 C2;nmi_handle: a=0xffffffffa1612de0
-> 2026-01-12T04:24:39.355101+01:00 C2;nmi_handle: a->handler=perf_event_nmi_handler+0x0/0xa6
-> 2026-01-12T04:24:39.355101+01:00 C2;perf_event_nmi_handler: 0
-> 2026-01-12T04:24:39.355101+01:00 C2;perf_event_nmi_handler: 1
-> 2026-01-12T04:24:39.355101+01:00 C2;perf_event_nmi_handler: 2
-> 2026-01-12T04:24:39.355101+01:00 C2;x86_pmu_handle_irq: 2
-> 2026-01-12T04:24:39.355101+01:00 C2;x86_pmu_handle_irq: 2.6
-> 2026-01-12T04:24:39.355101+01:00 C2;__perf_event_overflow: 0
-> 2026-01-12T04:24:39.355101+01:00 C2;__perf_event_overflow: 6.99: overflow_handler=watchdog_overflow_callback+0x0/0x10d
-> 2026-01-12T04:24:39.355101+01:00 C2;watchdog_overflow_callback: 0
-> 2026-01-12T04:24:39.355101+01:00 C2;__ktime_get_fast_ns_debug: 0.1
-> 2026-01-12T04:24:39.355101+01:00 C2;tk_clock_read_debug: read=read_hpet+0x0/0xf0
-> 2026-01-12T04:24:39.355101+01:00 C2;read_hpet: 0
-> 2026-01-12T04:24:39.355101+01:00 C2;read_hpet: 0.1
-
-> 2026-01-12T04:24:39.355101+01:00 T0;exc_nmi: 0
-
-Again on CPU0 with a delay of 0.06 seconds
-
-> 2026-01-12T04:24:39.410207+01:00 C0;exc_nmi: 10.3
-> 2026-01-12T04:24:39.410207+01:00 C0;default_do_nmi 
-> 2026-01-12T04:24:39.410207+01:00 C0;nmi_handle: type=0x0
-> 2026-01-12T04:24:39.410207+01:00 C0;nmi_handle: a=0xffffffffa1612de0
-> 2026-01-12T04:24:39.410207+01:00 C0;nmi_handle: a->handler=perf_event_nmi_handler+0x0/0xa6
-> 2026-01-12T04:24:39.410207+01:00 C0;perf_event_nmi_handler: 0
-> 2026-01-12T04:24:39.410207+01:00 C0;perf_event_nmi_handler: 1
-> 2026-01-12T04:24:39.410207+01:00 C0;perf_event_nmi_handler: 2
-> 2026-01-12T04:24:39.410207+01:00 C0;x86_pmu_handle_irq: 2
-> 2026-01-12T04:24:39.410207+01:00 C0;x86_pmu_handle_irq: 2.6
-> 2026-01-12T04:24:39.410207+01:00 C0;__perf_event_overflow: 0
-> 2026-01-12T04:24:39.410207+01:00 C0;__perf_event_overflow: 6.99: overflow_handler=watchdog_overflow_callback+0x0/0x10d
-> 2026-01-12T04:24:39.410207+01:00 C0;watchdog_overflow_callback: 0
-> 2026-01-12T04:24:39.410207+01:00 C0;__ktime_get_fast_ns_debug: 0.1
-> 2026-01-12T04:24:39.410207+01:00 C0;tk_clock_read_debug: read=read_hpet+0x0/0xf0
-> 2026-01-12T04:24:39.410207+01:00 C0;read_hpet: 0
-> 2026-01-12T04:24:39.410207+01:00 C0;read_hpet: 0.1
-
-> 2026-01-12T04:24:39.410207+01:00 T0;exc_nmi: 0
-
-....
-
-> In the case of the crash the interrupt handler never returns because when accessing
-> the HPET another NMI is triggered. This goes on until a crash happens, probably because
-> of stack overflow.
-
-No. NMI nesting is only one level deep and immediately returns:
-
-        if (this_cpu_read(nmi_state) != NMI_NOT_RUNNING) {
-		this_cpu_write(nmi_state, NMI_LATCHED);
-		return;
-	}
-
-
-So it's not a stack overflow. What's more likely is that after a while
-_ALL_ CPUs are hung up in the NMI handler after they tripped over the
-HPET read.
-
-> The behaviour described here seems to be similar to the bug that commit
-> 3d5f4f15b778 ("watchdog: skip checks when panic is in progress") is fixing, but
-> this is actually a different bug as kernel 6.18 (which contains 3d5f4f15b778)
-> is also affected (I've conducted 5 tests with 6.18 so far and got 4 crashes (crashes occured
-> after (0.5h, 1h, 4.5h, 1.5h) of testing)). 
-> Nevertheless these look similar enough to CC the involved people.
-
-There is nothing similar.
-
-Your problem originates from a screwed up hardware state which in turn
-causes the HPET to go haywire for unknown reasons.
-
-What is the physical address of this ACPI handler access:
-
-       logical_addr_ptr = ffffc066977b3000
-
-along with the full output of /proc/iomem
-
-Thanks,
-
-        tglx
+> +	return 0;
+> +}
+> +
+> +static const struct pwrseq_target_data pwrseq_pcie_m2_e_uart_target_data = {
+> +	.name = "uart",
+> +	.unit = &pwrseq_pcie_m2_e_uart_unit_data,
+> +	.post_enable = pwrseq_pcie_m2_e_pwup_delay,
+> +};
+> +
+> +static const struct pwrseq_target_data pwrseq_pcie_m2_e_pcie_target_data = {
+> +	.name = "pcie",
+> +	.unit = &pwrseq_pcie_m2_e_pcie_unit_data,
+> +	.post_enable = pwrseq_pcie_m2_e_pwup_delay,
+>  };
+>  
+>  static const struct pwrseq_target_data pwrseq_pcie_m2_m_pcie_target_data = {
+> @@ -63,11 +135,21 @@ static const struct pwrseq_target_data pwrseq_pcie_m2_m_pcie_target_data = {
+>  	.unit = &pwrseq_pcie_m2_m_pcie_unit_data,
+>  };
+>  
+> +static const struct pwrseq_target_data *pwrseq_pcie_m2_e_targets[] = {
+> +	&pwrseq_pcie_m2_e_pcie_target_data,
+> +	&pwrseq_pcie_m2_e_uart_target_data,
+> +	NULL
+> +};
+> +
+>  static const struct pwrseq_target_data *pwrseq_pcie_m2_m_targets[] = {
+>  	&pwrseq_pcie_m2_m_pcie_target_data,
+>  	NULL
+>  };
+>  
+> +static const struct pwrseq_pcie_m2_pdata pwrseq_pcie_m2_e_of_data = {
+> +	.targets = pwrseq_pcie_m2_e_targets,
+> +};
+> +
+>  static const struct pwrseq_pcie_m2_pdata pwrseq_pcie_m2_m_of_data = {
+>  	.targets = pwrseq_pcie_m2_m_targets,
+>  };
+> @@ -126,6 +208,16 @@ static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
+>  		return dev_err_probe(dev, ret,
+>  				     "Failed to get all regulators\n");
+>  
+> +	ctx->w_disable1_gpio = devm_gpiod_get_optional(dev, "w-disable1", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(ctx->w_disable1_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->w_disable1_gpio),
+> +				     "Failed to get the W_DISABLE_1# GPIO\n");
+> +
+> +	ctx->w_disable2_gpio = devm_gpiod_get_optional(dev, "w-disable2", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(ctx->w_disable2_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->w_disable2_gpio),
+> +				     "Failed to get the W_DISABLE_2# GPIO\n");
+> +
+>  	ctx->num_vregs = ret;
+>  
+>  	ret = devm_add_action_or_reset(dev, pwrseq_pcie_free_resources, ctx);
+> @@ -151,6 +243,10 @@ static const struct of_device_id pwrseq_pcie_m2_of_match[] = {
+>  		.compatible = "pcie-m2-m-connector",
+>  		.data = &pwrseq_pcie_m2_m_of_data,
+>  	},
+> +	{
+> +		.compatible = "pcie-m2-e-connector",
+> +		.data = &pwrseq_pcie_m2_e_of_data,
+> +	},
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, pwrseq_pcie_m2_of_match);
+> 
 
