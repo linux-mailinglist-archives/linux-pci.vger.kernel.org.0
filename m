@@ -1,76 +1,103 @@
-Return-Path: <linux-pci+bounces-44655-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44656-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D492D1AA30
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 18:31:10 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 200A8D1AA6C
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 18:34:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 20602301A31E
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 17:29:55 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7A9A03012CE3
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 17:34:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACD24365A1B;
-	Tue, 13 Jan 2026 17:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1832A334C1F;
+	Tue, 13 Jan 2026 17:34:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rEhrHDPf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6Z+xc5m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F4C7350A25;
-	Tue, 13 Jan 2026 17:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A13329C74
+	for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 17:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768325384; cv=none; b=eg4hHd/53nH9CC1m+gSs7GOZ0mEVq4bExqdMjH4wqD/9kXhollDhceShyUMqX4qTspmB2eWMcG1pmwWill3hzG5+shq80CcY1VdGqDgzVa/kC8SD08x+Da3qDZRhZdDtcnkqQtU2WUKClsgqX2Ok+pCkRWdc60oSqxBbWJ3MDPg=
+	t=1768325644; cv=none; b=jszIvrlxlu9eo6vCYJ3i4CX3AXBESNkLipcfkqyLpDt4/2jcHjTcAcZrSzkBrrbYcQttRYvo1kOjoL25rFUlwv2VOGjo+h39Ij8zw/rBLZbxDaL/nai4DNaxfcReg6qiT7GhExsYlEmB7aqHtOapNc+kgyCiIGGan13TWhyWvBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768325384; c=relaxed/simple;
-	bh=LhFzFpqZCkTlg+4EdN58/iujAtnb8yiY5L+KDY9IGBk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mtMHVspX3u/RzhpWfja1YUUj3tE9NQjf9NaIsYgXoz9EQC7zw2e/Dqd/jh8QNTOX5E0PhYenksmWr4E7wTkZT+AB5NoG8icO46rG8O/UFV9xJ8XpCAafzTU+iei3H+7KHpqr0RFUbt0LmhjB1i3TEhaZvfJwOBYobSJDHwQkG1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rEhrHDPf; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from localhost (unknown [20.236.11.42])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 62AE620B716E;
-	Tue, 13 Jan 2026 09:29:41 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 62AE620B716E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1768325382;
-	bh=C4y6lqCer5WCpiCbWDllL4m7vUvxhKlPrlTUCsJaCKY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rEhrHDPf0ohClKYxtcWftDMzjclcsu19XUgvYouGFQ0IUPkhtcPJYct2FErUegenL
-	 sG2a7uFooNbvJQuyVHs7iEL5saHdANhDSbqSj0Plu8dz6BeoM503I77um3Vn7p2WjD
-	 IRV4xWtqXce+W7WPRG5BM1+dzopxxeMxzSo0xO1A=
-Date: Tue, 13 Jan 2026 09:29:40 -0800
-From: Jacob Pan <jacob.pan@linux.microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Yu Zhang <zhangyu1@linux.microsoft.com>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
- <linux-hyperv@vger.kernel.org>, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>, "linux-pci@vger.kernel.org"
- <linux-pci@vger.kernel.org>, "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
- <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kwilczynski@kernel.org"
- <kwilczynski@kernel.org>, "mani@kernel.org" <mani@kernel.org>,
- "robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
- <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "joro@8bytes.org"
- <joro@8bytes.org>, "will@kernel.org" <will@kernel.org>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>,
- "easwar.hariharan@linux.microsoft.com"
- <easwar.hariharan@linux.microsoft.com>, "nunodasneves@linux.microsoft.com"
- <nunodasneves@linux.microsoft.com>, "mrathor@linux.microsoft.com"
- <mrathor@linux.microsoft.com>, "peterz@infradead.org"
- <peterz@infradead.org>, "linux-arch@vger.kernel.org"
- <linux-arch@vger.kernel.org>
-Subject: Re: [RFC v1 5/5] iommu/hyperv: Add para-virtualized IOMMU support
- for Hyper-V guest
-Message-ID: <20260113092940.000050b8@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB41571D67D866538138D06585D481A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20251209051128.76913-1-zhangyu1@linux.microsoft.com>
-	<20251209051128.76913-6-zhangyu1@linux.microsoft.com>
-	<SN6PR02MB41572D46CF6C1DE68974EAA1D485A@SN6PR02MB4157.namprd02.prod.outlook.com>
-	<dws34g6znmam7eabwetg722b4wgf2wxufcqxqphhbqlryx23mb@we5utwanawe2>
-	<SN6PR02MB41571D67D866538138D06585D481A@SN6PR02MB4157.namprd02.prod.outlook.com>
-Organization: LSG
-X-Mailer: Claws Mail 3.21.0 (GTK+ 2.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1768325644; c=relaxed/simple;
+	bh=eSn6OwD3SrFNXw5tP/h9H/Ii7V8Im22C2P69wloFwSM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jZfVR5C/o1iWctX3jlgr+b43x1FrpgF9xfzOtHFcEY4sQtfnwA6bPdEYpktmQyaqeWCLquKUzsoWgBbfQjd+LdtCj0uUXdqPJE1+h0yj1q8Mcqt5gp1qh5czbQHXMt1MWsw5prKpnhHAEezdYFykMU2acBocEMzcHrpk4/JCDbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X6Z+xc5m; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-81e98a1f55eso2083714b3a.3
+        for <linux-pci@vger.kernel.org>; Tue, 13 Jan 2026 09:34:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768325641; x=1768930441; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=o9AYRVJbls5kMz4af/phakvFWuIaNCCibN2SZ7D9nuU=;
+        b=X6Z+xc5mtXg0NqS0JuUbt1276ipKGNu0R4ckTAgVXUlKTUMiBwO5lSK2x1UTTsCLDD
+         /QIv8UUd46Dk4FI7bKy0ArpNtGt9/v4UYFj//SRFAZa7iJxZxYVXLIc1/GmFFbT3PNDK
+         Ph9N9Z6jzPIOymVNTKo7AkHkpKN4UWa739o1NArSz3RA+r4bkLo5tpwsw7xRxPgAYEYh
+         /AAj4H8ro7dYitL2oQJTKqd/16r6B25ymhHrrOs0hugGI7QVS0fl+qoytta50+WrkHjG
+         za/cEWO9sds43hlDIoCealBxoDEb+3L9q33ao+CfHkoMSEL005lg5FLzTQZGEubYJ6Fg
+         /hLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768325641; x=1768930441;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o9AYRVJbls5kMz4af/phakvFWuIaNCCibN2SZ7D9nuU=;
+        b=SNxm186iunL10+2WN7pqBOgxP7vOo7rtuRSUFjrMEYJxvoKBlZ8rAboy2mQ3AS5/8/
+         xDKuftxKNzIRKp268Xu7dmT4FiEc7zY8Gm5StfT1QwJX41/93gyvo6Pl7g5lTO3zYSTP
+         fRlbFhHYwQhyb2Pq55NMAmqWe1HieZTOr53Ns1jHX6WvpH/HQ3hOAZqaNJ3ftWuUEy1K
+         MCPMQw0618Ug6lsJ1HlMmsf66iPofY/adsbOhB9LHr4le/BjmSx+TRLEEE3J4ZNvGBrF
+         CXzYG2gBCQxMIOxPXRegqmyWa6zojxX3ROHlx37nPo2+O+5Cra7iJ7/YaFsgHb8LR5TY
+         DWPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPzY/6vrZupwp4EBIUcH5ZFSCRjdABkPp86ETaMDosWTt4VgaqzVaiJfJ+nvxbWcJAWUOY8Q9DZnI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIayyvZC0NKNhmIVVpEhM+JZyQElex/olMPOAlwqTyNQgthOxE
+	90Shk+R2Pc3hSApOlYy9RohZTrcqFz9r9cQXUcBvQ8Rby61xWPQsa08=
+X-Gm-Gg: AY/fxX7K1TNArWWBZuBmPFE0kfZxEPbee+UtXT5QFH+groCACPEK6VMONCLF1WZk27K
+	2rHn7a4beUyFHKD1AWL9y5etcWZ/G258Jj1NbDsCNYRbAkOsK4A/4VXVrvzxIumDShs/HG8/Dj9
+	4UyPwNKv//DNAFq5XbwhjCk1Ahn2xy2P9G/kCSMDhFETMzhg1bNy8N8eSfzJLtL23DN7JFhJE+z
+	2G67d2l1FLb8MBiwU7wDKSa8vUKoV4IoQ9z8QbJUh/SRN2E0ZN2I/uX8psP9PPS+QsOYTCRTKO0
+	y+ptW5VeM+31pdDFbGGsn4PBr9NrklzEhTS7aU4AAgKTFNSeFy/Io2HoXyfA3tqAMuK/7ZOpPnZ
+	5IzKJMqfcCV7lp1xfIWjMt1A3HCGH8NARPvER3BSEjew46hFC3viouiz9zL0V+Tcexjm/Phk6C7
+	i+fNuxSYVgtcOBvif2Kw==
+X-Google-Smtp-Source: AGHT+IFVIOA0i/RAZfOle5Rnk5OR3hAeebkOKtj4cj5B/mfjbUzBpEhX9pRkYTvlm8gfa3/cjIZpdw==
+X-Received: by 2002:a05:6a20:2450:b0:361:3bdb:26df with SMTP id adf61e73a8af0-3898f889453mr21192202637.5.1768325640779;
+        Tue, 13 Jan 2026 09:34:00 -0800 (PST)
+Received: from at.. ([171.61.166.29])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-81f66f9cf38sm4568854b3a.53.2026.01.13.09.33.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Jan 2026 09:34:00 -0800 (PST)
+From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+To: 
+Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	"Oliver O'Halloran" <oohall@gmail.com>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Mika Westerberg <westeri@kernel.org>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Feng Tang <feng.tang@linux.alibaba.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-usb@vger.kernel.org
+Subject: [PATCH RESEND v6] PCI/portdev: Disable AER for Titan Ridge 4C 2018
+Date: Tue, 13 Jan 2026 17:33:41 +0000
+Message-ID: <20260113173351.1417-1-atharvatiwarilinuxdev@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,119 +105,105 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Michael,
+Disable AER for Intel Titan Ridge 4C 2018
+(used in T2 iMacs, where the warnings appear)
+that generate continuous pcieport warnings. such as:
 
-On Mon, 12 Jan 2026 17:48:30 +0000
-Michael Kelley <mhklinux@outlook.com> wrote:
+pcieport 0000:00:1c.4: AER: Correctable error message received from 0000:07:00.0
+pcieport 0000:07:00.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
+pcieport 0000:07:00.0:   device [8086:15ea] error status/mask=00000080/00002000
+pcieport 0000:07:00.0:    [ 7] BadDLLP
 
-> From: Michael Kelley <mhklinux@outlook.com>
-> To: Yu Zhang <zhangyu1@linux.microsoft.com>
-> CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-> "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-> "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-> "linux-pci@vger.kernel.org"  <linux-pci@vger.kernel.org>,
-> "kys@microsoft.com" <kys@microsoft.com>,  "haiyangz@microsoft.com"
-> <haiyangz@microsoft.com>, "wei.liu@kernel.org"  <wei.liu@kernel.org>,
-> "decui@microsoft.com" <decui@microsoft.com>,  "lpieralisi@kernel.org"
-> <lpieralisi@kernel.org>, "kwilczynski@kernel.org"
-> <kwilczynski@kernel.org>, "mani@kernel.org" <mani@kernel.org>,
-> "robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
-> <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>,
-> "joro@8bytes.org"  <joro@8bytes.org>, "will@kernel.org"
-> <will@kernel.org>,  "robin.murphy@arm.com" <robin.murphy@arm.com>,
-> "easwar.hariharan@linux.microsoft.com"
-> <easwar.hariharan@linux.microsoft.com>,
-> "jacob.pan@linux.microsoft.com"  <jacob.pan@linux.microsoft.com>,
-> "nunodasneves@linux.microsoft.com"
-> <nunodasneves@linux.microsoft.com>, "mrathor@linux.microsoft.com"
-> <mrathor@linux.microsoft.com>, "peterz@infradead.org"
-> <peterz@infradead.org>,  "linux-arch@vger.kernel.org"
-> <linux-arch@vger.kernel.org> Subject: RE: [RFC v1 5/5] iommu/hyperv:
-> Add para-virtualized IOMMU support for  Hyper-V guest Date: Mon, 12
-> Jan 2026 17:48:30 +0000
->=20
-> From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Monday, January
-> 12, 2026 8:56 AM
-> >=20
-> > On Thu, Jan 08, 2026 at 06:48:59PM +0000, Michael Kelley wrote: =20
-> > > From: Yu Zhang <zhangyu1@linux.microsoft.com> Sent: Monday,
-> > > December 8, 2025 9:11 PM =20
-> >=20
-> > <snip>
-> > Thank you so much, Michael, for the thorough review!
-> >=20
-> > I've snipped some comments I fully agree with and will address in
-> > next version. Actually, I have to admit I agree with your remaining
-> > comments below as well. :)
-> >  =20
-> > > > +struct hv_iommu_dev *hv_iommu_device;
-> > > > +static struct hv_iommu_domain hv_identity_domain;
-> > > > +static struct hv_iommu_domain hv_blocking_domain; =20
-> > >
-> > > Why is hv_iommu_device allocated dynamically while the two
-> > > domains are allocated statically? Seems like the approach could
-> > > be consistent, though maybe there's some reason I'm missing.
-> > > =20
-> >=20
-> > On second thought, `hv_identity_domain` and `hv_blocking_domain`
-> > should likely be allocated dynamically as well, consistent with
-> > `hv_iommu_device`. =20
->=20
-> I don't know if there's a strong rationale either way (static
-> allocation vs. dynamic). If the long-term expectation is that there
-> is never more than one PV IOMMU in a guest, then static would be OK.
-> If future direction allows that there could be multiple PV IOMMUs in
-> a guest, then doing dynamic from the start is justifiable (though the
-> current PV IOMMU hypercalls seem to assume only one PV IOMMU). But
-> either way, being consistent is desirable.
->=20
-I believe we only need a single global static identity domain here
-regardless how many vIOMMUs there may be. From the guest=E2=80=99s perspect=
-ive,
-the hvIOMMU only supports hardware=E2=80=91passthrough identity domains, wh=
-ich
-do not maintain any per=E2=80=91IOMMU state, i.e., there is no S1 IO page t=
-able
-based identity domain.
+macOS also disables AER for Thunderbolt devices and controllers in their drivers.
 
-The expectation of physical IOMMU settings for guest identity
-domain should be as follows:
-- Intel vtd PASID entry PGTT =3D 010b (Second-stage Translation only)
-- AMD DTE TV=3D1; GV=3D0
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220651
+Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
 
-> >=20
-> > <snip>
-> >  =20
-> > > > +static void hv_iommu_shutdown(void)
-> > > > +{
-> > > > +	iommu_device_sysfs_remove(&hv_iommu_device->iommu);
-> > > > +
-> > > > +	kfree(hv_iommu_device);
-> > > > +}
-> > > > +
-> > > > +static struct syscore_ops hv_iommu_syscore_ops =3D {
-> > > > +	.shutdown =3D hv_iommu_shutdown,
-> > > > +}; =20
->  [...] =20
-> >=20
-> > For iommu_device_sysfs_remove(), I guess they are not necessary, and
-> > I will need to do some homework to better understand the sysfs. :)
-> > Originally, we wanted a shutdown routine to trigger some hypercall,
-> > so that Hyper-V will disable the DMA translation, e.g., during the
-> > VM reboot process. =20
->=20
-> I would presume that if Hyper-V reboots the VM, Hyper-V automatically
-> resets the PV IOMMU and prevents any further DMA operations. But
-> consider kexec(), where a new kernel gets loaded without going through
-> the hypervisor "reboot-this-VM" path. There have been problems in the
-> past with kexec() where parts of Hyper-V state for the guest didn't
-> get reset, and the PV IOMMU is likely something in that category. So
-> there may indeed be a need to tell the hypervisor to reset everything
-> related to the PV IOMMU. There are already functions to do Hyper-V
-> cleanup: see vmbus_initiate_unload() and hyperv_cleanup(). These
-> existing functions may be a better place to do PV IOMMU cleanup/reset
-> if needed.
-That would be my vote also.
+---
+Changes since v5:
+- Used the correct name for DMI check
+- Used DECLARE_PCI_FIXUP_EARLY instead of DECLARE_PCI_FIXUP_FINAL
+  to disable aer, before the aer init function
+Changes since v4:
+- Used lowercase hex letters
+- Used DMI_BOARD_VENDOR instead of DMI_SYS_VENDOR
+Chnages since v3:
+- Fixed Grammer mistakes
+Changes since v2:
+- Transferred logic to arch/x86/pci/fixup.c to only target x86
+- Added DMI quirk to only target Apple Systems
+Changes since v1:
+- Transferred logic to drivers/pci/quicks.c
+---
+---
+ arch/x86/pci/fixup.c       | 12 ++++++++++++
+ drivers/pci/pcie/aer.c     |  3 +++
+ drivers/pci/pcie/portdrv.c |  2 +-
+ include/linux/pci.h        |  1 +
+ 4 files changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+index 25076a5acd96..402387e41450 100644
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -1081,3 +1081,15 @@ static void quirk_tuxeo_rp_d3(struct pci_dev *pdev)
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x1502, quirk_tuxeo_rp_d3);
+ #endif /* CONFIG_SUSPEND */
++
++#ifdef CONFIG_PCIEAER
++
++static void quirk_disable_aer(struct pci_dev *pdev)
++{
++	if (dmi_match(DMI_BOARD_VENDOR, "Apple Inc."))
++		pdev->no_aer = 1;
++}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15ea, quirk_disable_aer);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15eb, quirk_disable_aer);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15ec, quirk_disable_aer);
++#endif /* CONFIG_PCIEAER */
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index e0bcaa896803..45604564ce6f 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -389,6 +389,9 @@ void pci_aer_init(struct pci_dev *dev)
+ {
+ 	int n;
+ 
++	if (dev->no_aer)
++		return;
++
+ 	dev->aer_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
+ 	if (!dev->aer_cap)
+ 		return;
+diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+index 38a41ccf79b9..ab904a224296 100644
+--- a/drivers/pci/pcie/portdrv.c
++++ b/drivers/pci/pcie/portdrv.c
+@@ -240,7 +240,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+ 	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+              pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
+ 	    dev->aer_cap && pci_aer_available() &&
+-	    (pcie_ports_native || host->native_aer))
++	    (pcie_ports_native || host->native_aer) && !dev->no_aer)
+ 		services |= PCIE_PORT_SERVICE_AER;
+ #endif
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 864775651c6f..f447f86c6bdf 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -440,6 +440,7 @@ struct pci_dev {
+ 	unsigned int	multifunction:1;	/* Multi-function device */
+ 
+ 	unsigned int	is_busmaster:1;		/* Is busmaster */
++	unsigned int	no_aer:1;		/* May not use AER */
+ 	unsigned int	no_msi:1;		/* May not use MSI */
+ 	unsigned int	no_64bit_msi:1;		/* May only use 32-bit MSIs */
+ 	unsigned int	block_cfg_access:1;	/* Config space access blocked */
+-- 
+2.43.0
+
 
