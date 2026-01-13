@@ -1,312 +1,212 @@
-Return-Path: <linux-pci+bounces-44619-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44620-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D50FBD19E2B
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 16:28:35 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32B9CD19EE2
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 16:34:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 327AA3015132
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 15:26:45 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id EF5B23038D19
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Jan 2026 15:28:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B38E338FF19;
-	Tue, 13 Jan 2026 15:26:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A7363933F9;
+	Tue, 13 Jan 2026 15:27:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="db+k16Oo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qUbW/ctG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A47363C64;
-	Tue, 13 Jan 2026 15:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE523933F4;
+	Tue, 13 Jan 2026 15:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768318003; cv=none; b=HzDEbY470njQ7kCdCvzMg+C08MXX+fajqBRa1krjeAeYzV5SDcDaxMFNR+KDO/oxcSCKn1pGp6WAM0uH4NPM0v2s1Y4nILwUgKJS9yWcTCvIhamh2oqu5eWDUOZyOssQ2nyzCBBevER1utTsQUQg0F0VZ4dYO07b23MkyUKOdII=
+	t=1768318064; cv=none; b=PqMNMHdlJc+vr0ShC1zx2+Bdt+lFQspqdBMm2Ol4MFb3FwUWYeacQe4TQO/W9KoWXeH48HS8Jli7tTQco/O0yowf5/ANYQf5sj9Xo5RZlKwK8kET6CKUjovu79cBHNQKKYEdhlzpNKFDHspntxe/JNmHJNlsOTvtZvJUhisrYo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768318003; c=relaxed/simple;
-	bh=DAFK6ts6h5oycafq6Gc/0yiCRES3UGi7RyPEY9i83m8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=He+C3dIVxlvP9xoy3vJQ0ebd/6Ln9fog7qgaYuiiNDFQCeJWdwVX1e7ZNoJEggxLea/VzLz3zWPLaJ2cB5sIXrisdFmUJmwzKBSWB4ShJHRVerPwYGQ47KKqRsVV0+0sIRpzRMGfurwZofM3GvR0ocuW7AB+LEewWtUFUTC61Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=db+k16Oo; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <2432dafc-4101-4b23-90b2-85ea5459435c@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768317998;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jG0Bu8LbTPoVOj6e4IGMmcUh/bkY4GBbkm/sd8XSO1E=;
-	b=db+k16OoHiSaywpFQWYsVmgGEuM+ade9mP+cAI3oNm49lUFhfW8ZAwQYAAdsHmNiUM4xX7
-	LAXOUmYB0Q1pqZoIFEa7rz8MdmEJirefRM6mdtDUamHSieJarY/koc8SzZm7hp/nmUla0i
-	ZKjpJui8Rd9xNxafuH+9252J3qgP5O8=
-Date: Tue, 13 Jan 2026 10:26:04 -0500
+	s=arc-20240116; t=1768318064; c=relaxed/simple;
+	bh=YnOpqEglNY3vQ34HlVAtTWoHG1niNCbvODOpEPP4Da0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cbSJjv/fpyDVv0G8hwxArzhfMjELiKMhKjHRbxTKhHlrXXiS0Imc3oYuekw1iqUJqQey9pxyOoosY+VgeS4KcErF5n9W94JSArWz7Xzzgqbt2/dyKfV7S2VcJ77GUfasskkXp+7VDoV7bACORZgNEHkQUiWR6vpesfhkc3L5Ors=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qUbW/ctG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E390BC19422;
+	Tue, 13 Jan 2026 15:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768318058;
+	bh=YnOpqEglNY3vQ34HlVAtTWoHG1niNCbvODOpEPP4Da0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qUbW/ctGDpVNHIWSDXuEs4Lg//dBztmnD1lFa1/DswaUBhGMQG8LcNuaWyVh8lSqa
+	 bdrX9NbeJiGGjUjpK2fl6RC36mlUcGahyYWHrkY1m2q1xMZ4gnnT6c2IbCC//qp6TV
+	 09uxecf2G5d7dFC76MYa7M5MHwou7AYuciyDmbFLuS1ebmNJWJUsDdm654jCu0m4Hh
+	 ohp2M0fVGDTiBGN2w+FM7hxCGErdkTrYPp7bsn33nEduJX3zTl9i9QWa3zouJsRUqL
+	 rQiinTcLS7VzUANttixMWtyzidyb93Jos0p179GjByaNs3drEjIfBA5lAQoX6nUTDu
+	 VHBFvTrD5RRbg==
+Date: Tue, 13 Jan 2026 20:57:28 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: frank.li@nxp.com, jingoohan1@gmail.com, l.stach@pengutronix.de, 
+	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, 
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
+	festevam@gmail.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v8 1/2] PCI: dwc: Don't poll L2 if QUIRK_NOL2POLL_IN_PM
+ is existing in suspend
+Message-ID: <g3yuqj2yyq236x7fzwdfl5s7onvuwd2ot7btadf3qs36vchleb@4kwfwpo4ni36>
+References: <20260107024553.3307205-1-hongxing.zhu@nxp.com>
+ <20260107024553.3307205-2-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 8/9] power: sequencing: pcie-m2: Add support for PCIe
- M.2 Key E connectors
-To: manivannan.sadhasivam@oss.qualcomm.com, Rob Herring <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Manivannan Sadhasivam <mani@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- linux-acpi@vger.kernel.org
-References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
- <20260112-pci-m2-e-v4-8-eff84d2c6d26@oss.qualcomm.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <20260112-pci-m2-e-v4-8-eff84d2c6d26@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260107024553.3307205-2-hongxing.zhu@nxp.com>
 
-On 1/12/26 11:26, Manivannan Sadhasivam via B4 Relay wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+On Wed, Jan 07, 2026 at 10:45:52AM +0800, Richard Zhu wrote:
+> Refer to PCIe r6.0, sec 5.2, fig 5-1 Link Power Management State Flow
+> Diagram. Both L0 and L2/L3 Ready can be transferred to LDn directly.
 > 
-> Add support for handling the power sequence of the PCIe M.2 Key E
-> connectors. These connectors are used to attach the Wireless Connectivity
-> devices to the host machine including combinations of WiFi, BT, NFC using
-> interfaces such as PCIe/SDIO for WiFi, USB/UART for BT and I2C for NFC.
+> It's harmless to let dw_pcie_suspend_noirq() proceed suspend after the
+> PME_Turn_Off is sent out, whatever the LTSSM state is in L2 or L3 after
+> a recommended 10ms max wait refer to PCIe r6.0, sec 5.3.3.2.1 PME
+> Synchronization.
 > 
-> Currently, this driver supports only the PCIe interface for WiFi and UART
-> interface for BT. The driver also only supports driving the 3.3v/1.8v power
-> supplies and W_DISABLE{1/2}# GPIOs. The optional signals of the Key E
-> connectors are not currently supported.
+> The LTSSM states are inaccessible on i.MX6QP and i.MX7D after the
+> PME_Turn_Off is sent out.
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> To support this case, don't poll L2 state and apply a simple delay of
+> PCIE_PME_TO_L2_TIMEOUT_US(10ms) if the QUIRK_NOL2POLL_IN_PM flag is set
+> in suspend.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 4774faf854f5 ("PCI: dwc: Implement generic suspend/resume functionality")
+> Fixes: a528d1a72597 ("PCI: imx6: Use DWC common suspend resume method")
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
 > ---
->  drivers/power/sequencing/Kconfig          |   1 +
->  drivers/power/sequencing/pwrseq-pcie-m2.c | 110 ++++++++++++++++++++++++++++--
->  2 files changed, 104 insertions(+), 7 deletions(-)
+>  drivers/pci/controller/dwc/pci-imx6.c         |  4 +++
+>  .../pci/controller/dwc/pcie-designware-host.c | 34 +++++++++++++------
+>  drivers/pci/controller/dwc/pcie-designware.h  |  4 +++
+>  3 files changed, 32 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/power/sequencing/Kconfig b/drivers/power/sequencing/Kconfig
-> index f5fff84566ba..29bd204319cc 100644
-> --- a/drivers/power/sequencing/Kconfig
-> +++ b/drivers/power/sequencing/Kconfig
-> @@ -38,6 +38,7 @@ config POWER_SEQUENCING_TH1520_GPU
->  config POWER_SEQUENCING_PCIE_M2
->  	tristate "PCIe M.2 connector power sequencing driver"
->  	depends on OF || COMPILE_TEST
-> +	depends on PCI
->  	help
->  	  Say Y here to enable the power sequencing driver for PCIe M.2
->  	  connectors. This driver handles the power sequencing for the M.2
-> diff --git a/drivers/power/sequencing/pwrseq-pcie-m2.c b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> index e01e19123415..4b85a40d7692 100644
-> --- a/drivers/power/sequencing/pwrseq-pcie-m2.c
-> +++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> @@ -4,12 +4,16 @@
->   * Author: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
->   */
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 4668fc9648bf..d84bfcd1079c 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -125,6 +125,7 @@ struct imx_pcie_drvdata {
+>  	enum imx_pcie_variants variant;
+>  	enum dw_pcie_device_mode mode;
+>  	u32 flags;
+> +	u32 quirk;
+>  	int dbi_length;
+>  	const char *gpr;
+>  	const u32 ltssm_off;
+> @@ -1765,6 +1766,7 @@ static int imx_pcie_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
 >  
-> +#include <linux/err.h>
->  #include <linux/device.h>
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/mod_devicetable.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_graph.h>
->  #include <linux/of_platform.h>
-> +#include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <linux/pwrseq/provider.h>
->  #include <linux/regulator/consumer.h>
-> @@ -25,17 +29,19 @@ struct pwrseq_pcie_m2_ctx {
->  	const struct pwrseq_pcie_m2_pdata *pdata;
->  	struct regulator_bulk_data *regs;
->  	size_t num_vregs;
-> -	struct notifier_block nb;
-> +	struct gpio_desc *w_disable1_gpio;
-> +	struct gpio_desc *w_disable2_gpio;
-> +	struct device *dev;
->  };
->  
-> -static int pwrseq_pcie_m2_m_vregs_enable(struct pwrseq_device *pwrseq)
-> +static int pwrseq_pcie_m2_vregs_enable(struct pwrseq_device *pwrseq)
->  {
->  	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
->  
->  	return regulator_bulk_enable(ctx->num_vregs, ctx->regs);
->  }
->  
-> -static int pwrseq_pcie_m2_m_vregs_disable(struct pwrseq_device *pwrseq)
-> +static int pwrseq_pcie_m2_vregs_disable(struct pwrseq_device *pwrseq)
->  {
->  	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
->  
-> @@ -44,18 +50,84 @@ static int pwrseq_pcie_m2_m_vregs_disable(struct pwrseq_device *pwrseq)
->  
->  static const struct pwrseq_unit_data pwrseq_pcie_m2_vregs_unit_data = {
->  	.name = "regulators-enable",
-> -	.enable = pwrseq_pcie_m2_m_vregs_enable,
-> -	.disable = pwrseq_pcie_m2_m_vregs_disable,
-> +	.enable = pwrseq_pcie_m2_vregs_enable,
-> +	.disable = pwrseq_pcie_m2_vregs_disable,
->  };
->  
-> -static const struct pwrseq_unit_data *pwrseq_pcie_m2_m_unit_deps[] = {
-> +static const struct pwrseq_unit_data *pwrseq_pcie_m2_unit_deps[] = {
->  	&pwrseq_pcie_m2_vregs_unit_data,
->  	NULL
->  };
->  
-> +static int pwrseq_pci_m2_e_uart_enable(struct pwrseq_device *pwrseq)
-> +{
-> +	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
-> +
-> +	return gpiod_set_value_cansleep(ctx->w_disable2_gpio, 0);
-> +}
-> +
-> +static int pwrseq_pci_m2_e_uart_disable(struct pwrseq_device *pwrseq)
-> +{
-> +	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
-> +
-> +	return gpiod_set_value_cansleep(ctx->w_disable2_gpio, 1);
-> +}
-> +
-> +static const struct pwrseq_unit_data pwrseq_pcie_m2_e_uart_unit_data = {
-> +	.name = "uart-enable",
-> +	.deps = pwrseq_pcie_m2_unit_deps,
-> +	.enable = pwrseq_pci_m2_e_uart_enable,
-> +	.disable = pwrseq_pci_m2_e_uart_disable,
-> +};
-> +
-> +static int pwrseq_pci_m2_e_pcie_enable(struct pwrseq_device *pwrseq)
-> +{
-> +	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
-> +
-> +	return gpiod_set_value_cansleep(ctx->w_disable1_gpio, 0);
-> +}
-> +
-> +static int pwrseq_pci_m2_e_pcie_disable(struct pwrseq_device *pwrseq)
-> +{
-> +	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
-> +
-> +	return gpiod_set_value_cansleep(ctx->w_disable1_gpio, 1);
-> +}
-> +
-> +static const struct pwrseq_unit_data pwrseq_pcie_m2_e_pcie_unit_data = {
-> +	.name = "pcie-enable",
-> +	.deps = pwrseq_pcie_m2_unit_deps,
-> +	.enable = pwrseq_pci_m2_e_pcie_enable,
-> +	.disable = pwrseq_pci_m2_e_pcie_disable,
-> +};
-> +
->  static const struct pwrseq_unit_data pwrseq_pcie_m2_m_pcie_unit_data = {
->  	.name = "pcie-enable",
-> -	.deps = pwrseq_pcie_m2_m_unit_deps,
-> +	.deps = pwrseq_pcie_m2_unit_deps,
-> +};
-> +
-> +static int pwrseq_pcie_m2_e_pwup_delay(struct pwrseq_device *pwrseq)
-> +{
-> +	/*
-> +	 * FIXME: This delay is only required for some Qcom WLAN/BT cards like
-> +	 * WCN7850 and not for all devices. But currently, there is no way to
-> +	 * identify the device model before enumeration.
-> +	 */
-> +	msleep(50);
-
-Section 3.1.4 of the M.2 spec says that "Power Valid to PERST# input
-inactive" (T_PVPGL) is "Implementation specific recommended 50 ms." So I
-think we should delay for at least 50 ms for all M.2 cards.
-Additionally, the PCIe CEM specifies that "Power stable to PERST#
-inactive" (T_PVPERL) must be at least 100 ms. So I think we should just
-delay for 100 ms regardless of the slot, perhaps making this
-configurable in the devicetree if e.g. the system integrator knows the
-soldered-down M.2 requires less initialization time. This is exactly
-what I proposed in [1].
-
---Sean
-
-[1] https://lore.kernel.org/linux-pci/20251219172222.2808195-2-sean.anderson@linux.dev/
-
-> +	return 0;
-> +}
-> +
-> +static const struct pwrseq_target_data pwrseq_pcie_m2_e_uart_target_data = {
-> +	.name = "uart",
-> +	.unit = &pwrseq_pcie_m2_e_uart_unit_data,
-> +	.post_enable = pwrseq_pcie_m2_e_pwup_delay,
-> +};
-> +
-> +static const struct pwrseq_target_data pwrseq_pcie_m2_e_pcie_target_data = {
-> +	.name = "pcie",
-> +	.unit = &pwrseq_pcie_m2_e_pcie_unit_data,
-> +	.post_enable = pwrseq_pcie_m2_e_pwup_delay,
->  };
->  
->  static const struct pwrseq_target_data pwrseq_pcie_m2_m_pcie_target_data = {
-> @@ -63,11 +135,21 @@ static const struct pwrseq_target_data pwrseq_pcie_m2_m_pcie_target_data = {
->  	.unit = &pwrseq_pcie_m2_m_pcie_unit_data,
->  };
->  
-> +static const struct pwrseq_target_data *pwrseq_pcie_m2_e_targets[] = {
-> +	&pwrseq_pcie_m2_e_pcie_target_data,
-> +	&pwrseq_pcie_m2_e_uart_target_data,
-> +	NULL
-> +};
-> +
->  static const struct pwrseq_target_data *pwrseq_pcie_m2_m_targets[] = {
->  	&pwrseq_pcie_m2_m_pcie_target_data,
->  	NULL
->  };
->  
-> +static const struct pwrseq_pcie_m2_pdata pwrseq_pcie_m2_e_of_data = {
-> +	.targets = pwrseq_pcie_m2_e_targets,
-> +};
-> +
->  static const struct pwrseq_pcie_m2_pdata pwrseq_pcie_m2_m_of_data = {
->  	.targets = pwrseq_pcie_m2_m_targets,
->  };
-> @@ -126,6 +208,16 @@ static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
->  		return dev_err_probe(dev, ret,
->  				     "Failed to get all regulators\n");
->  
-> +	ctx->w_disable1_gpio = devm_gpiod_get_optional(dev, "w-disable1", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(ctx->w_disable1_gpio))
-> +		return dev_err_probe(dev, PTR_ERR(ctx->w_disable1_gpio),
-> +				     "Failed to get the W_DISABLE_1# GPIO\n");
-> +
-> +	ctx->w_disable2_gpio = devm_gpiod_get_optional(dev, "w-disable2", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(ctx->w_disable2_gpio))
-> +		return dev_err_probe(dev, PTR_ERR(ctx->w_disable2_gpio),
-> +				     "Failed to get the W_DISABLE_2# GPIO\n");
-> +
->  	ctx->num_vregs = ret;
->  
->  	ret = devm_add_action_or_reset(dev, pwrseq_pcie_free_resources, ctx);
-> @@ -151,6 +243,10 @@ static const struct of_device_id pwrseq_pcie_m2_of_match[] = {
->  		.compatible = "pcie-m2-m-connector",
->  		.data = &pwrseq_pcie_m2_m_of_data,
+> +	pci->quirk_flag = imx_pcie->drvdata->quirk;
+>  	pci->use_parent_dt_ranges = true;
+>  	if (imx_pcie->drvdata->mode == DW_PCIE_EP_TYPE) {
+>  		ret = imx_add_pcie_ep(imx_pcie, pdev);
+> @@ -1849,6 +1851,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  		.enable_ref_clk = imx6q_pcie_enable_ref_clk,
+>  		.core_reset = imx6qp_pcie_core_reset,
+>  		.ops = &imx_pcie_host_ops,
+> +		.quirk = QUIRK_NOL2POLL_IN_PM,
 >  	},
-> +	{
-> +		.compatible = "pcie-m2-e-connector",
-> +		.data = &pwrseq_pcie_m2_e_of_data,
-> +	},
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, pwrseq_pcie_m2_of_match);
-> 
+>  	[IMX7D] = {
+>  		.variant = IMX7D,
+> @@ -1860,6 +1863,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  		.enable_ref_clk = imx7d_pcie_enable_ref_clk,
+>  		.core_reset = imx7d_pcie_core_reset,
+> +		.quirk = QUIRK_NOL2POLL_IN_PM,
+>  	},
+>  	[IMX8MQ] = {
+>  		.variant = IMX8MQ,
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 43d091128ef7..06cbfd9e1f1e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -1179,15 +1179,29 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>  			return ret;
+>  	}
+>  
+> -	ret = read_poll_timeout(dw_pcie_get_ltssm, val,
+> -				val == DW_PCIE_LTSSM_L2_IDLE ||
+> -				val <= DW_PCIE_LTSSM_DETECT_WAIT,
+> -				PCIE_PME_TO_L2_TIMEOUT_US/10,
+> -				PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+> -	if (ret) {
+> -		/* Only log message when LTSSM isn't in DETECT or POLL */
+> -		dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
+> -		return ret;
+> +	if (dwc_quirk(pci, QUIRK_NOL2POLL_IN_PM)) {
+> +		/*
+> +		 * Add the QUIRK_NOL2_POLL_IN_PM case to avoid the read hang,
+> +		 * when LTSSM is not powered in L2/L3/LDn properly.
+> +		 *
+> +		 * Refer to PCIe r6.0, sec 5.2, fig 5-1 Link Power Management
+> +		 * State Flow Diagram. Both L0 and L2/L3 Ready can be
+> +		 * transferred to LDn directly. On the LTSSM states poll broken
+> +		 * platforms, add a max 10ms delay refer to PCIe r6.0,
+> +		 * sec 5.3.3.2.1 PME Synchronization.
+> +		 */
+> +		mdelay(PCIE_PME_TO_L2_TIMEOUT_US/1000);
+> +	} else {
+> +		ret = read_poll_timeout(dw_pcie_get_ltssm, val,
+> +					val == DW_PCIE_LTSSM_L2_IDLE ||
+> +					val <= DW_PCIE_LTSSM_DETECT_WAIT,
+> +					PCIE_PME_TO_L2_TIMEOUT_US/10,
+> +					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+> +		if (ret) {
+> +			/* Only log message when LTSSM isn't in DETECT or POLL */
+> +			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
+> +			return ret;
+> +		}
+>  	}
+>  
+>  	/*
+> @@ -1204,7 +1218,7 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>  
+>  	pci->suspended = true;
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_suspend_noirq);
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 31685951a080..dd760c17bdcc 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -305,6 +305,9 @@
+>  /* Default eDMA LLP memory size */
+>  #define DMA_LLP_MEM_SIZE		PAGE_SIZE
+>  
+> +#define QUIRK_NOL2POLL_IN_PM		BIT(0)
+> +#define dwc_quirk(pci, val)		(pci->quirk_flag & val)
+> +
+
+Though I like this quirk idea, I think at this point a simple flag will do the
+job.
+
+>  struct dw_pcie;
+>  struct dw_pcie_rp;
+>  struct dw_pcie_ep;
+> @@ -520,6 +523,7 @@ struct dw_pcie {
+>  	const struct dw_pcie_ops *ops;
+>  	u32			version;
+>  	u32			type;
+> +	u32			quirk_flag;
+
+You can just add a flag "skip_l23_wait" in dw_pcie_rp as this is a Root Port
+behavior.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
