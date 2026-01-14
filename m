@@ -1,212 +1,253 @@
-Return-Path: <linux-pci+bounces-44770-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44771-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6EFAD2019F
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 17:12:00 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 128A8D20205
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 17:16:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 6628D300530F
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 16:12:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6994230621D5
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 16:14:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC1CC2DA75A;
-	Wed, 14 Jan 2026 16:11:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C3BE3A1E64;
+	Wed, 14 Jan 2026 16:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P/LskQK+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKQ511Jr"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53752EFD98
-	for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 16:11:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CE939E6DB;
+	Wed, 14 Jan 2026 16:14:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768407117; cv=none; b=PDqIg0EjeLUQfJCYvz/ms7c2yv9Wwbydz76Yjtv4TalNxvJ1iIFaNhHB3DiS8dli78Kk29fV0SKfPJNksOSpSvW8UIHPvdlHEwTuif/Hj+dU/uDkR37ETmzd/nd8JlFljA/BUFtwJ0Y+0p2YvWyJae+el7PkNm0J/nGuDzx0DQM=
+	t=1768407290; cv=none; b=VF4iR9EXqBs4+vGtWLkQp+ZdXmV61fKrbHQto4bM5NSC+KZzBwqLXm/mMT1O6Y/tOwJne4mbq+pS3R+Czse2JKHkTQSsZanx8iA5I0lXTIeNr6UPRrVL9rSYWqdtnaPXE8QK7r3KpztWmmV90ZGVz7I5czL4LrF82d0/O4FB0oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768407117; c=relaxed/simple;
-	bh=CjGcWeIbnw3YM0US5tjsJUz4YE5ESf3a+4znRW4sVZg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jz8SgayiHUKS9J0XtSkoCnXh1jStXVSyG5vCDlsaQwe0721QC4z1lKyjnyXa7lgDgJzXRGgxZi1Co68bml2K2FVky8vFYFx1gyp3Xjt1u+k3mgXB2Fi7J39P9VPREJN1WEIZNKbuF96l99e9wZpjadAmqED9ZnnaYpLZJw0Rtbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P/LskQK+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84B92C4AF09
-	for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 16:11:57 +0000 (UTC)
+	s=arc-20240116; t=1768407290; c=relaxed/simple;
+	bh=GhwmK4FZnhVlKOisYnJ/xfW9wiiV6ZkLJ6q2UyKhx9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AosAfNUy5JvNTXgs+z8F4vFxGLAR87+HJn9ZsE/1wrcMH3wlGv8eDeV/XeJZu+zw6uDv+YzVSVPatSVMSt6LV2GW4Slf2l/TnvTz8A/VllU7QjXAgBUWFNeGDymUS6qSRTPT64u0+gTQUpdrs/yozCXuRl3DVyW7J50DRyBH0QU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKQ511Jr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 838E6C16AAE;
+	Wed, 14 Jan 2026 16:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768407117;
-	bh=CjGcWeIbnw3YM0US5tjsJUz4YE5ESf3a+4znRW4sVZg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=P/LskQK+X/eiTfNzo6K6Dh3/j7095bmGljh+7hurouMk8iTdWkHHPf5z9Gnf7RQjl
-	 /48oxvCUnpEHezC7Mc5Bo+Sjr0dVUI56U+3kntIy4Rib62e20RFDlJTBfgVrjCRrYB
-	 YwjwfkoiEfrqSVsNBDNwPuRfz+bGDQ2o59sCyx2Gz05ikwOVhSAQ3/H4ldbNI52PgC
-	 WQz0N7idgLULimc7Ux936swpGSpwEyGkQK5QlFynKNmZ8l8X2uY/DXRLSLaMgKWBhh
-	 KEJbjy1ZlBmFMAvYZGzfe2vsU1k06WjC4ERZ4ujX8N7ajjDRKvinI2cIuVPDZJzoTC
-	 3itB94CuLQHYg==
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-656d9230cf2so4562514eaf.1
-        for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 08:11:57 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUuP6ULmfqmATxdiOetdJPAkGfv73+tfWmS9FdFf9EaA86tH2JUk6zjJbrkxjc+CAbfoX2zL/yL4AU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxH0crGgfHGsNUyqTYQa2pP+4KA6RswKIZhPoSM0Ogu52jvFfxm
-	Egq9brNAOcHk3m4LIkIcomvTec5esL+V3R++OnFn6QfSGqpqhebC55xEHtm2GiU/OvJIxjlhfVW
-	n3fEXNoh9b7IqXTIs3OdJoiQevagAXV0=
-X-Received: by 2002:a05:6820:1611:b0:65f:6c0f:fb25 with SMTP id
- 006d021491bc7-6610045c234mr2240815eaf.0.1768407116460; Wed, 14 Jan 2026
- 08:11:56 -0800 (PST)
+	s=k20201202; t=1768407289;
+	bh=GhwmK4FZnhVlKOisYnJ/xfW9wiiV6ZkLJ6q2UyKhx9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bKQ511Jr8hxW3LfytH59Yr+E9WefLkWV+CausWBDOm+LAo+t7tHRoHnvv4LJQATsb
+	 2T5ZlbgRQkIpS+ejYatUCVVwpZ6QumKRr5w2l58DRwsiyQkkYeGiiPjHH+QYt87SFQ
+	 ssxy6VxI1xrxQDFIPxtTDLrVp71ENOiY+Z2e1NhfhOstOVPH2sLvQlIZz9fg2VqmQQ
+	 LiIS8OxNJzYNab8i8slpo2vQz6KLhlnqCteaSz6+7xHDriSw0trxyxvY2esu8X1vTp
+	 v8IKkdFlsQbzXpWbe+VtYWBC/6VDjEzW25hRiIAZN2uzEA/HtQ3kHM/Ue9U4qJ3zLa
+	 uB3kQNRl7/iVQ==
+Date: Wed, 14 Jan 2026 21:44:32 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v4 5/9] dt-bindings: connector: Add PCIe M.2 Mechanical
+ Key E connector
+Message-ID: <xyttom64ht5hrrp5hecjqehnyfgsv4mfl2t36e2sveu44ccpjl@lkzquse2kqsx>
+References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
+ <20260112-pci-m2-e-v4-5-eff84d2c6d26@oss.qualcomm.com>
+ <20260113171424.GA3925312-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260114101543.85926-1-fabio.m.de.francesco@linux.intel.com>
-In-Reply-To: <20260114101543.85926-1-fabio.m.de.francesco@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 14 Jan 2026 17:11:45 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0g80j4iFMXYDKek8VBYsa0g35avvw+UK6RxutcmxSX+WA@mail.gmail.com>
-X-Gm-Features: AZwV_QhOS444bZTklJpN97U-FoqtsZx0kcscnMnkoO7PBldoBVm0mhtxLbbJV4Y
-Message-ID: <CAJZ5v0g80j4iFMXYDKek8VBYsa0g35avvw+UK6RxutcmxSX+WA@mail.gmail.com>
-Subject: Re: [PATCH 0/5 v9] Make ELOG and GHES log and trace consistently
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Cc: linux-cxl@vger.kernel.org, Rafael J Wysocki <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
-	Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Shuai Xue <xueshuai@linux.alibaba.com>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver O'Halloran" <oohall@gmail.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260113171424.GA3925312-robh@kernel.org>
 
-On Wed, Jan 14, 2026 at 11:15=E2=80=AFAM Fabio M. De Francesco
-<fabio.m.de.francesco@linux.intel.com> wrote:
->
-> When Firmware First is enabled, BIOS handles errors first and then it
-> makes them available to the kernel via the Common Platform Error Record
-> (CPER) sections (UEFI 2.10 Appendix N). Linux parses the CPER sections
-> via one of two similar paths, either ELOG or GHES.
->
-> Currently, ELOG and GHES show some inconsistencies in how they print to
-> the kernel log as well as in how they report to userspace via trace
-> events.
->
-> Make the two mentioned paths act similarly for what relates to logging
-> and tracing.
->
-> --- Changes for v9 ---
->
->         - #include linux/printk.h for pr_*_ratelimited() in ghes_helpers.=
-c
->           Reported-by: kernel test robot <lkp@intel.com>
->           Closes: https://lore.kernel.org/oe-kbuild-all/202512240711.Iv57=
-ik8I-lkp@intel.com/
->
-> --- Changes for v8 ---
->
->         - Don't make GHES dependend on PCI and drop patch 3/6 -
->           incidentally it works out the issues that the KTR found with v7
->           (Jonathan, Hanjun)
->         - Don't have EXTLOG dependend on CXL_BUS and move the new helpers
->           to a new file, then link it to ghes.c only if ACPI_APEI_PCIEAER=
- is
->           selected. Placing the new helpers to their own translation unit=
- seems
->           be a more flexible and safer solution than messing with Kconfig=
- or
->           with conditional compilation macros within ghes.c. PCI may not =
-be an
->           option in embedded platforms
->
-> --- Changes for v7 ---
->
->         - Reference UEFI v2.11 (Sathyanarayanan)
->         - Substitute !(A || B) with !(A && B) in an 'if' statement to
->           convey the intended logic (Jonathan)
->         - Make ACPI_APEI_GHES explicitly select PCIAER because the needed
->           ACPI_APEI_PCIEAER doesn't recursively select that prerequisite =
-(Jonathan)
->           Reported-by: kernel test robot <lkp@intel.com>
->           Closes: https://lore.kernel.org/oe-kbuild-all/202510232204.7aYB=
-pl7h-lkp@intel.com/
->           Closes: https://lore.kernel.org/oe-kbuild-all/202510232204.XIXg=
-PWD7-lkp@intel.com/
->         - Don't add the unnecessary cxl_cper_ras_handle_prot_err() wrappe=
-r
->           for cxl_cper_handle_prot_err() (Jonathan)
->         - Make ACPI_EXTLOG explicitly select PCIAER && ACPI_APEI because
->           the needed ACPI_APEI_PCIEAER doesn't recursively select the
->           prerequisites
->         - Make ACPI_EXTLOG select CXL_BUS
->
-> --- Changes for v6 ---
->
->         - Rename the helper that copies the CPER CXL protocol error
->           information to work struct (Dave)
->         - Return -EOPNOTSUPP (instead of -EINVAL) from the two helpers if
->           ACPI_APEI_PCIEAER is not defined (Dave)
->
-> --- Changes for v5 ---
->
->         - Add 3/6 to select ACPI_APEI_PCIEAER for GHES
->         - Add 4,5/6 to move common code between ELOG and GHES out to new
->           helpers use them in 6/6 (Jonathan).
->
-> --- Changes for v4 ---
->
->         - Re-base on top of recent changes of the AER error logging and
->           drop obsoleted 2/4 (Sathyanarayanan)
->         - Log with pr_warn_ratelimited() (Dave)
->         - Collect tags
-> --- Changes for v3 ---
->
->     1/4, 2/4:
->         - collect tags; no functional changes
->     3/4:
->         - Invert logic of checks (Yazen)
->         - Select CONFIG_ACPI_APEI_PCIEAER (Yazen)
->     4/4:
->         - Check serial number only for CXL devices (Yazen)
->         - Replace "invalid" with "unknown" in the output of a pr_err()
->           (Yazen)
->
-> --- Changes for v2 ---
->
->         - Add a patch to pass log levels to pci_print_aer() (Dan)
->         - Add a patch to trace CPER CXL Protocol Errors
->         - Rework commit messages (Dan)
->         - Use log_non_standard_event() (Bjorn)
->
-> --- Changes for v1 ---
->
->         - Drop the RFC prefix and restart from PATCH v1
->         - Drop patch 3/3 because a discussion on it has not yet been
->           settled
->         - Drop namespacing in export of pci_print_aer while() (Dan)
->         - Don't use '#ifdef' in *.c files (Dan)
->         - Drop a reference on pdev after operation is complete (Dan)
->         - Don't log an error message if pdev is NULL (Dan)
->
-> Fabio M. De Francesco (5):
->   ACPI: extlog: Trace CPER Non-standard Section Body
->   ACPI: extlog: Trace CPER PCI Express Error Section
->   acpi/ghes: Add helper for CPER CXL protocol errors checks
->   acpi/ghes: Add helper to copy CPER CXL protocol error info to work
->     struct
->   ACPI: extlog: Trace CPER CXL Protocol Error Section
->
->  drivers/acpi/Kconfig             |  2 +
->  drivers/acpi/acpi_extlog.c       | 64 +++++++++++++++++++++++++++++++
->  drivers/acpi/apei/Makefile       |  1 +
->  drivers/acpi/apei/ghes.c         | 40 +------------------
->  drivers/acpi/apei/ghes_helpers.c | 66 ++++++++++++++++++++++++++++++++
->  drivers/cxl/core/ras.c           |  3 +-
->  drivers/pci/pcie/aer.c           |  2 +-
->  include/cxl/event.h              | 22 +++++++++++
->  8 files changed, 160 insertions(+), 40 deletions(-)
->  create mode 100644 drivers/acpi/apei/ghes_helpers.c
->
->
-> base-commit: b71e635feefc8
-> --
+On Tue, Jan 13, 2026 at 11:14:24AM -0600, Rob Herring wrote:
+> On Mon, Jan 12, 2026 at 09:56:04PM +0530, Manivannan Sadhasivam wrote:
+> > Add the devicetree binding for PCIe M.2 Mechanical Key E connector defined
+> > in the PCI Express M.2 Specification, r4.0, sec 5.1.2. This connector
+> > provides interfaces like PCIe or SDIO to attach the WiFi devices to the
+> > host machine, USB or UART+PCM interfaces to attach the Bluetooth (BT)
+> > devices. Spec also provides an optional interface to connect the UIM card,
+> > but that is not covered in this binding.
+> > 
+> > The connector provides a primary power supply of 3.3v, along with an
+> > optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating at
+> > 1.8v sideband signaling.
+> > 
+> > The connector also supplies optional signals in the form of GPIOs for fine
+> > grained power management.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > ---
+> >  .../bindings/connector/pcie-m2-e-connector.yaml    | 154 +++++++++++++++++++++
+> >  MAINTAINERS                                        |   1 +
+> >  2 files changed, 155 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
+> > new file mode 100644
+> > index 000000000000..b65b39ddfd19
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
+> > @@ -0,0 +1,154 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/connector/pcie-m2-e-connector.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: PCIe M.2 Mechanical Key E Connector
+> > +
+> > +maintainers:
+> > +  - Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > +
+> > +description:
+> > +  A PCIe M.2 E connector node represents a physical PCIe M.2 Mechanical Key E
+> > +  connector. Mechanical Key E connectors are used to connect Wireless
+> > +  Connectivity devices including combinations of Wi-Fi, BT, NFC to the host
+> > +  machine over interfaces like PCIe/SDIO, USB/UART+PCM, and I2C.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: pcie-m2-e-connector
+> > +
+> > +  vpcie3v3-supply:
+> > +    description: A phandle to the regulator for 3.3v supply.
+> > +
+> > +  vpcie1v8-supply:
+> > +    description: A phandle to the regulator for VIO 1.8v supply.
+> 
+> I don't see any 1.8V supply on the connector. There are 1.8V IOs and you 
+> may need something in DT to ensure those are powered. However, there's 
+> no guarantee that it's a single supply.
+> 
 
-Applied as 6.20 material, thanks!
+1.8v VIO supply is an optional supply and is only required if the platform
+supports 1.8v for sideband signals such as PERST#, WAKE#... I can include it in
+the example for completeness.
+
+> > +
+> > +  ports:
+> > +    $ref: /schemas/graph.yaml#/properties/ports
+> > +    description: OF graph bindings modeling the interfaces exposed on the
+> > +      connector. Since a single connector can have multiple interfaces, every
+> > +      interface has an assigned OF graph port number as described below.
+> > +
+> > +    properties:
+> > +      port@0:
+> > +        $ref: /schemas/graph.yaml#/properties/port
+> > +        description: Connector interfaces for Wi-Fi
+> > +
+> > +        properties:
+> > +          endpoint@0:
+> > +            $ref: /schemas/graph.yaml#/properties/endpoint
+> > +            description: PCIe interface
+> > +
+> > +          endpoint@1:
+> > +            $ref: /schemas/graph.yaml#/properties/endpoint
+> > +            description: SDIO interface
+> 
+> I think I already said this, but multiple endpoints are generally for 
+> something that's muxed. Looking at the connector pinout, PCIe and SDIO 
+> are not muxed. So these 2 should be 2 port nodes.
+> 
+
+Sorry, I didn't know that you were asking for 2 port nodes. Will switch to it.
+
+> > +
+> > +        anyOf:
+> > +          - required:
+> > +              - endpoint@0
+> > +          - required:
+> > +              - endpoint@1
+> > +
+> > +      port@1:
+> > +        $ref: /schemas/graph.yaml#/properties/port
+> > +        description: Connector interfaces for BT
+> > +
+> > +        properties:
+> > +          endpoint@0:
+> > +            $ref: /schemas/graph.yaml#/properties/endpoint
+> > +            description: USB 2.0 interface
+> > +
+> > +          endpoint@1:
+> > +            $ref: /schemas/graph.yaml#/properties/endpoint
+> > +            description: UART interface
+> 
+> And UART and USB are not muxed either.
+> 
+
+Ack.
+
+> 
+> > +
+> > +        anyOf:
+> > +          - required:
+> > +              - endpoint@0
+> > +          - required:
+> > +              - endpoint@1
+> > +
+> > +      port@2:
+> > +        $ref: /schemas/graph.yaml#/properties/port
+> > +        description: PCM/I2S interface
+> > +
+> > +      i2c-parent:
+> > +        $ref: /schemas/types.yaml#/definitions/phandle
+> > +        description: I2C interface
+> 
+> Move out of 'ports'.
+> 
+
+Ack.
+
+> > +
+> > +    oneOf:
+> > +      - required:
+> > +          - port@0
+> > +
+> > +  clocks:
+> > +    description: 32.768 KHz Suspend Clock (SUSCLK) input from the host system to
+> > +      the M.2 card. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.1 for
+> > +      more details.
+> > +    maxItems: 1
+> > +
+> > +  w-disable1-gpios:
+> > +    description: GPIO input to W_DISABLE1# signal. This signal is used by the
+> > +      system to disable WiFi radio in the M.2 card. Refer, PCI Express M.2
+> > +      Specification r4.0, sec 3.1.12.3 for more details.
+> > +    maxItems: 1
+> > +
+> > +  w-disable2-gpios:
+> > +    description: GPIO input to W_DISABLE2# signal. This signal is used by the
+> > +      system to disable WiFi radio in the M.2 card. Refer, PCI Express M.2
+> > +      Specification r4.0, sec 3.1.12.3 for more details.
+> > +    maxItems: 1
+> > +
+> > +  viocfg-gpios:
+> > +    description: GPIO output to IO voltage configuration (VIO_CFG) signal. This
+> > +      signal is used by the M.2 card to indicate to the host system that the
+> > +      card supports an independent IO voltage domain for the sideband signals.
+> > +      Refer, PCI Express M.2 Specification r4.0, sec 3.1.15.1 for more details.
+> > +    maxItems: 1
+> 
+> What about SDIO and UART WAKE, SDIO RESET, and vendor defined signals?
+> 
+
+Not sure about vendor defined signals as they can be either GPIO or interface
+signals. How should them be defined?
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
