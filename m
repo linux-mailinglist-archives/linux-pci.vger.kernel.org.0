@@ -1,96 +1,101 @@
-Return-Path: <linux-pci+bounces-44763-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44765-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1B05D1FD3B
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 16:37:43 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82B62D1FEC1
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 16:48:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id F01203019664
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 15:37:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 65B15305845E
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 15:44:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E42B39E6D6;
-	Wed, 14 Jan 2026 15:37:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93F3C3A0B03;
+	Wed, 14 Jan 2026 15:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6H+7e2d"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9095D39E6DA;
-	Wed, 14 Jan 2026 15:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713DB39E6F9
+	for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 15:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768405039; cv=none; b=XB99rbHoMMSsXQUElpZ+4EBTBEJrkz2H6SVe6nG4U/O2hDdpFkS77jwrXUNk0wo9kSm5MOC7oR6eex8EyMpaIagidpjVSNkYmjIKwLxrul3np578hEAed+hMlKFXzWxKldqqAq3F5z28aRKTx27UWHhvuaJzBd1WGRoHrgzY7/s=
+	t=1768405440; cv=none; b=j+AxAzDNCQTXoD/AEnOk6xNdF9CfENSH+KHCdxm+6X+sx3/aCN34YitO70Wxp95xl6GX7cDGXe1qpbYrF2uQHH460MQYY6pwFUD6Wgw5ZPbFbjriUHwuREfj+yabjxDAgVdzxx7Vonu9pC/v2Fzzv0i1hHACtDZzx8jFoL1cTAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768405039; c=relaxed/simple;
-	bh=UGmVvuo+kXcrMhYIfPT8rt3547ejMtiRt7VvAB9MeT8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SAqQhes+vPu79uGhegM82PnQ3qOgOw8/XLnW7tvn7hArRvEd+oSyHwZnXXPesOfnVFW4t/3tXv5H72y2JCQYeNa41COBkzAKkJppxDWkglwdiQdznjE3gATak2dkzExxfUxsQO4dgbAF9ZYYqQ0PCNLvvzaUK2/K21Yd8DQ0okk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: WS458akEQxCyYbM0NaDL7Q==
-X-CSE-MsgGUID: QhJh8AW0QqykvlJKu/pnNA==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 15 Jan 2026 00:37:17 +0900
-Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.178])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id BDF5740078D6;
-	Thu, 15 Jan 2026 00:37:11 +0900 (JST)
-From: John Madieu <john.madieu.xa@bp.renesas.com>
-To: claudiu.beznea.uj@bp.renesas.com,
-	lpieralisi@kernel.org,
-	kwilczynski@kernel.org,
-	mani@kernel.org,
-	geert+renesas@glider.be,
-	krzk+dt@kernel.org
-Cc: robh@kernel.org,
-	bhelgaas@google.com,
-	conor+dt@kernel.org,
-	magnus.damm@gmail.com,
-	biju.das.jz@bp.renesas.com,
-	linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	john.madieu@gmail.com,
-	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH 16/16] arm64: dts: renesas: r9a09g047e57-smarc: Enable PCIe
-Date: Wed, 14 Jan 2026 16:33:37 +0100
-Message-ID: <20260114153337.46765-17-john.madieu.xa@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260114153337.46765-1-john.madieu.xa@bp.renesas.com>
-References: <20260114153337.46765-1-john.madieu.xa@bp.renesas.com>
+	s=arc-20240116; t=1768405440; c=relaxed/simple;
+	bh=ReVz6cPlRsm4lE4yj8qgNYX22f2C5+7rwEPvVzG9M+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XybR1Cwu7OwYvakc6jqqVFrEgQxNWG2EJpGsFKucMm9mdWHiNNAoyaq4Y5UDiV3Q1vg0XXQWxpxH3rsK21WApISRx2tWexzTKE7P9Q1cnLOM0UpwlS57klM70Y6fBa6SXsiHDrro+3fipAWMetUy8D953WO4SwFNG4+4Mkp2Re0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6H+7e2d; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3155BC16AAE;
+	Wed, 14 Jan 2026 15:43:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768405440;
+	bh=ReVz6cPlRsm4lE4yj8qgNYX22f2C5+7rwEPvVzG9M+Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t6H+7e2dbK9gQEvEZJKxd76IWSbrl5frhABmypwBkBSe9/hSV1JA+4/TRUsjzkl5w
+	 XQEZ1EISjXhn47N72nETB4OFNxb7Lsio8Sz0v77iL/NIBXmw4NRPzMMKcBkmee+gzp
+	 UuJZakX/7QiK0Jto7I52nmYYQUgT7XroBKqdcNCmSVRUM56w1rTDGIm3d9tNZ/wdan
+	 Ds5w84/WQgFGuxoEYkU0ORjWDlKOBID7SYhI6+PAvnT0xOG+wxCIOtA9r7h0AnNA8+
+	 PkMGMTv8WY0Tgb7nY7IsVGFeDpSht3jygHKnLmdBhkyM5alXbV4JdzK270X3LyXATw
+	 vM8Uz3eOiZcVA==
+Date: Wed, 14 Jan 2026 16:43:53 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Vinod Koul <vkoul@kernel.org>,
+	linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+	linux-phy@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [PATCH 0/5] Add calibration for Synopsys PCIe PHY and Controller
+Message-ID: <aWe5s5mqFt26lRGL@ryzen>
+References: <1766560210-100883-1-git-send-email-shawn.lin@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1766560210-100883-1-git-send-email-shawn.lin@rock-chips.com>
 
-The RZ Smarc Crarrier-II board has PCIe slots mounted on it.
-Enable PCIe support.
+On Wed, Dec 24, 2025 at 03:10:05PM +0800, Shawn Lin wrote:
+> 
+> Currently, when pcie-dw-rockchip uses the Synopsys PHY, it relies on
+> the phy_init() callback of the phy-rockchip-snps-pcie3 driver to
+> perform calibration. This is incorrect because the controller is
+> still held in reset at that time, preventing the PHY from accurately
+> reflecting the actual PLL lock and calibration status.
 
-Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/renesas-smarc2.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Hello Shawn,
 
-diff --git a/arch/arm64/boot/dts/renesas/renesas-smarc2.dtsi b/arch/arm64/boot/dts/renesas/renesas-smarc2.dtsi
-index b607b5d6c259..3db7d31be2b2 100644
---- a/arch/arm64/boot/dts/renesas/renesas-smarc2.dtsi
-+++ b/arch/arm64/boot/dts/renesas/renesas-smarc2.dtsi
-@@ -96,6 +96,13 @@ &i2c0 {
- 	clock-frequency = <400000>;
- };
- 
-+&pcie {
-+	dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 1 0x00000000>;
-+	pinctrl-0 = <&pcie_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
- &scif0 {
- 	status = "okay";
- };
--- 
-2.25.1
+I can see that you move the calibration code from .phy_init() to
+.phy_calibrate().
 
+And I understandthat the controller is still held in reset.
+
+I understand that the the PHY calibration is supposed to be done
+when the controller is not held in reset, and that alone is
+enough to warrant a fix.
+
+The Synopsys Gen3 PHY is used in e.g. Rock5b, and link training
+currently works fine with this PHY, so what is the actual
+implications of performing the PHY calibration when the controller
+is held in reset?
+
+Will it somehow it improve signal integrity?
+
+
+Kind regards,
+Niklas
+
+> 
+> To fix this, this series:
+> 1. Calls phy_calibrate() in the pcie-dw-rockchip driver (if supported)
+>    after the controller is out of reset, ensuring the PHY can
+>    properly synchronize with the controller state.
+> 2. Adds the necessary calibration support in the Synopsys PHY driver
+>    to implement this callback.
 
