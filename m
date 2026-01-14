@@ -1,160 +1,231 @@
-Return-Path: <linux-pci+bounces-44742-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44743-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4A2BD1F4F2
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 15:08:05 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14DB2D1F4F8
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 15:08:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1234830CDB79
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 14:02:30 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B6B63302F14E
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 14:03:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2725A2D9488;
-	Wed, 14 Jan 2026 14:01:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F80A2040B6;
+	Wed, 14 Jan 2026 14:03:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GamcmtOM"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="liCNZj4D"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011011.outbound.protection.outlook.com [52.101.52.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF49F2D8371;
-	Wed, 14 Jan 2026 14:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768399319; cv=none; b=XQiOvRnxHTqWGontaEdcXhPAfLJ/mnWZBkE6Yydz3EhmCDEOxV4VqudEDm4VMxUt1EG3QfQyUSm1gmivjb805041wQCV+/Xc7NVmU4ueyi8kFqD4Jl6JsPClIpyrhjXdXXMnGDyHFBAon/NHbSaQlKUso5hUmrFWzHlXRIHReXE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768399319; c=relaxed/simple;
-	bh=YThRr+SqFQrj1xWYbkZyAQfpTQhSxOJrEz7Vmu8eYO0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D9vQBa5OfCgazENkjB0mwTCmeN0N5uI2g4mu9qPFtlpNLEV6HFB75GGCyg/5BUd6MTRQ5LDeH9DJJ3Y6e3u1euYS/J+ItnsGT/UDxC8TUUInzeIA7jD5i8GjoE8c91cpVvlT0eEWvV9vB3tg5VQTFyqwg1y054cJ75T+RaoG//8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GamcmtOM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62176C19423;
-	Wed, 14 Jan 2026 14:01:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768399318;
-	bh=YThRr+SqFQrj1xWYbkZyAQfpTQhSxOJrEz7Vmu8eYO0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GamcmtOMZjUjnBtKP0uhc41XsMqZ5fSe9+uXZ30TVeZpZSpRIIMXLIZ6LSMmqmxZJ
-	 NMpWBOrVCw5ay9J9pII8Hg/QzzTF8slSB/w2unqe4TNoWuGWzngFiEoJoUAvAmqFB5
-	 Iwga7pBiI5Zhqw1J+tOTc30FaWvGC89yLrq+JlbFxL2kl2s3LxRjEpWvdFoSPyfKHh
-	 jTw7x+USzU8jCMBBzyudL54Ry+Ze3oj0BmfkDgneM6dbU0fXZXjVgZ4iNhOuJykciN
-	 khzGT4OdT3Wu+wQV1jAF14IH2be73WBLizVZPZCNbT/eImzvDLUXbcLvK5UdivHV/a
-	 mq/qzYKU6Fp5w==
-Message-ID: <2a44e967-ebae-4641-88d7-ccb4536ee3b7@kernel.org>
-Date: Wed, 14 Jan 2026 15:01:51 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42BA27A92D;
+	Wed, 14 Jan 2026 14:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768399380; cv=fail; b=ofutuReqsuwURuwgiUnSDb+uEW07aVYzzyLnrlGIf399tR8eyMeO938U8Ls39K2zTqou1h6HNiDTNNWterD5EQ0/d4VtjTMceT2STuMF5MH1MhHf0m56zbkTX8verLkp5K/ejU/6OOgjKU70FXxAjdmxYKfyv8bmjEBWCsLZ2Y0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768399380; c=relaxed/simple;
+	bh=s3+4ogXSHVXA3SEpRIAe9VTuUfkvN/ZFB8fyGLVfAXI=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=YlGP8VD1ngMiQiJKYjWqV/pmKmLEVULlsWgM6YdsqEGhDX1QGG804ukUrqn5vHAabmZ3i6eywYk+XxE8mOr/3cA7TPk+qfu15nnvBCJSj5/rHezqtHyCLIoUinkBOK0JPfEETuPtHZmIEWimISFlfkIburYNoNKPmjvhk57xLDI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=liCNZj4D; arc=fail smtp.client-ip=52.101.52.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZtEA72Z+AoYJSAoNihj9v525S6ycH96bNBcr6MP1eDZvguDNfXbKkeAghBU1FTz2CwfliV6kECdfhQR0uCK+XYg1qup8rfMiCpFPxaL67tNBct9u7MfTjAPSEE35SX+OS+Nx2UvLBr5oriboIaReGiBMSjOT6vhHGRVC0i5MIilcd10piRScP+6oMhAHde/N2wcT+l667yRROXkNBORIdoayRbykoovuqRZtoHpkRkEy0cWh1FscD489YJMEH4+VMQuOkwo2ae90/WJjLPApmwO8GpOhA+0+ZpyoysZjlswvDFnFa4esV4TczIVUrUN6uox1wzwpFm3kQ0/pIdmlpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sllNcyHE3CkcREgPlpwlzmfuS8pqNbb4Ik1Edmz59hs=;
+ b=hWGuA6x9eUS05KmzWBmE7FVK83WKVGA3jeFOFITIZW5hkCYw8u5XtpyNnryb9g294cdgwgBxemoRUxmj+6vOzSLRUmxKvV04uakHgA2B3WvgQqIRbiq0sJTfwiiQwz/Hk4K2rDeizCsTE6TDkH0A70PyY07qI1v98qpesER5oDNStPDofkAM/OXt1nV1FLF86pEMw6DgElXlpR3x2xXidQ0WlKMg0nusPa4XbnXApu7QfD0PjsPz3DF2B5pBE3yJX4oOeKCU0tdPU6Jwpw1z+KaelrsUiNs9Gq0ANc4jil9eWRadLpQ2ZvTWd2TUXlo5bw1U3lWGmePuLY+qVUya9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sllNcyHE3CkcREgPlpwlzmfuS8pqNbb4Ik1Edmz59hs=;
+ b=liCNZj4D4ibrt9ovHN2eKqZ0DpnOdVtakQJfPfJnUjyTustxI9u69Rnt95+5YUr6f3LZPiwgenALjW9naB4gJNSz5mk3vEsi+1a0OvwxK56ng8noZmdFfukFG0nw6pOrgFZsaDWlopm/y2asGWG2AlEKW3ZMgb9T4DhR27bAuTQXnRYU30CJdqSye8G8VX2ypj/nzfB5pTSBe1PMh9T3TBNXeT/iYU6LjfUKOuWR20xXDIJ9762mrv8GPriFeG9Qt/eoH+TM3RNZSzNAl/qovNlRl/k90T9Ja8hSGIMiRQRiBjB2HqY0HhAGpGJHuWuYNhJXL9xN/48BJtHDqECglA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by DM4PR12MB6229.namprd12.prod.outlook.com (2603:10b6:8:a8::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Wed, 14 Jan
+ 2026 14:02:53 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::7de1:4fe5:8ead:5989]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::7de1:4fe5:8ead:5989%6]) with mapi id 15.20.9520.005; Wed, 14 Jan 2026
+ 14:02:53 +0000
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 14 Jan 2026 23:02:51 +0900
+Message-Id: <DFOD9BX2FHP2.X5ST15IMUR1G@nvidia.com>
+Cc: "Joel Fernandes" <joelagnelf@nvidia.com>, "gary@garyguo.net"
+ <gary@garyguo.net>, "lossin@kernel.org" <lossin@kernel.org>,
+ "ojeda@kernel.org" <ojeda@kernel.org>, "boqun.feng@gmail.com"
+ <boqun.feng@gmail.com>, "a.hindborg@kernel.org" <a.hindborg@kernel.org>,
+ "simona@ffwll.ch" <simona@ffwll.ch>, "tmgross@umich.edu"
+ <tmgross@umich.edu>, "nouveau@lists.freedesktop.org"
+ <nouveau@lists.freedesktop.org>, "dri-devel@lists.freedesktop.org"
+ <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "rust-for-linux@vger.kernel.org"
+ <rust-for-linux@vger.kernel.org>, "bjorn3_gh@protonmail.com"
+ <bjorn3_gh@protonmail.com>, "Eliot Courtney" <ecourtney@nvidia.com>,
+ "aliceryhl@google.com" <aliceryhl@google.com>, "kwilczynski@kernel.org"
+ <kwilczynski@kernel.org>, "linux-pci@vger.kernel.org"
+ <linux-pci@vger.kernel.org>, "dakr@kernel.org" <dakr@kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, "Alistair Popple"
+ <apopple@nvidia.com>
+Subject: Re: [PATCH 6/7] gpu: nova-core: send UNLOADING_GUEST_DRIVER GSP
+ command GSP upon unloading
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Timur Tabi" <ttabi@nvidia.com>
+Content-Transfer-Encoding: quoted-printable
+References: <20251216-nova-unload-v1-0-6a5d823be19d@nvidia.com>
+ <20251216-nova-unload-v1-6-6a5d823be19d@nvidia.com>
+ <C890CCBB-76C0-4E70-A7B8-846E34DABECE@nvidia.com>
+ <DF1DLWE9OOR6.2P43ATQYNAU3A@nvidia.com>
+ <1369611d0014a4e5b630462d66790939b0f564c0.camel@nvidia.com>
+ <DF1VQ45KF0JL.3E3GIL93DGBWL@nvidia.com>
+ <64be6d1f5fd70c8f0e3988d4220212b9f3d1d418.camel@nvidia.com>
+In-Reply-To: <64be6d1f5fd70c8f0e3988d4220212b9f3d1d418.camel@nvidia.com>
+X-ClientProxiedBy: TYCP286CA0094.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:2b4::8) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/9] serdev: Add an API to find the serdev controller
- associated with the devicetree node
-To: manivannan.sadhasivam@oss.qualcomm.com, Rob Herring <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas.schier@linux.dev>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Manivannan Sadhasivam <mani@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- linux-acpi@vger.kernel.org
-References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
- <20260112-pci-m2-e-v4-2-eff84d2c6d26@oss.qualcomm.com>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <20260112-pci-m2-e-v4-2-eff84d2c6d26@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|DM4PR12MB6229:EE_
+X-MS-Office365-Filtering-Correlation-Id: 53fff3f8-95f3-4606-630f-08de53759c91
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|10070799003|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VkVleEk0L0JKY0FNQWRCc0tWQTV5ZUJ2UjBNY0lSbWlaUkQyM1JiNENWbFNG?=
+ =?utf-8?B?WjNqc2FQTm4vZWttUEYwQ3RhTHBFcGUxOE1zSFNSRy9pV3FpdHJJRWNlczVE?=
+ =?utf-8?B?WDNJUU1GdmNQaUZaVWJCNUora1JQcEc0UVpsdmljWlFwK2p5Sm5CY3lsdjMz?=
+ =?utf-8?B?emdqT0xHTnpGVk9lRVR1YUxJWERGT0krdE0rU0xKZVVmZG1NOHIwRUtCcGx3?=
+ =?utf-8?B?QWROZElWdDNDMGorZHZEekMxWnNlSEFnbmcraXN0YXJ3enJ5RnZRdkdIazhQ?=
+ =?utf-8?B?elcwditpN1VnaytuT1NZYjN3VnR1bS9nZXZmWkxSWkNuS2p5dE5iRjhleFhX?=
+ =?utf-8?B?NXlCNTVmb3pzY3NZQ1pJUHQ2VmtneGpjSkpCNlJaSldGSGgyRXErbE9XRmFm?=
+ =?utf-8?B?dzZrY3JSUjdseUlVcmVhQkdpRW9KbEswK3M4eEtKUjVYQlhuQU1PRWowMXVw?=
+ =?utf-8?B?aUZoK0Z1NW83ZDZlZVlvMkxQaG1MRGkvcGUwaDdmcE9zYmNtWTZoZFJUUVFP?=
+ =?utf-8?B?NTJTaThaVzV6ZVB1bU9qbDQ4eVFkNUc0eTB0NHkxdXhnaVpCQ1BzaG4xcmRK?=
+ =?utf-8?B?K1E0Z1hJcGVZY2k0aFI2MzQ4ZWpxVGpsQ0NkWDRLSDBENWZOZ2xXb0Q0M2lh?=
+ =?utf-8?B?TERac21mZVgydEdraUNXU3l5U04wd2JwaGh1UWY1bElMcnFyaDVwdlpTRFRr?=
+ =?utf-8?B?TWp6SUJSZHpBd1k5Q1U2M0FzbHdEV1dkSDRCV0xMRGs2UXoyaTBvYjJkSVhL?=
+ =?utf-8?B?bm1TSzdNS1VYLzNXcGlybm9xR3ArMHhJamFXMUJhVVB0ZS9wNXN4VE81cGVL?=
+ =?utf-8?B?c1FEUW5IZUtvQmdiaFV3bFhRK2t4bTFzUWh3RmRieFhKUHQ5ZkJjbmZhQ3Ja?=
+ =?utf-8?B?amFkblRrYk1qSlZjQjNnWHY2TjM0S2hIQldhYzRYRWFLMWtDVlNKaEl2UlVk?=
+ =?utf-8?B?M2FBenpUam5aZ2l5d0h2aEFqVzVTZ0hxYWNuQ0dIVVg0UmV3RU9OT2FPYnh5?=
+ =?utf-8?B?ZGVLR2NzQmFSeEM0VWdVN1M2UEZSdDRNeWVtcDhNa1FDR3F5a3IxeHIyL3N6?=
+ =?utf-8?B?M3pTaEJTSURsZTI0Z21tNWV2VUwzTHk2OEc1Z2NiTVFLQVNvU1BmbXFscnhX?=
+ =?utf-8?B?TXRMTjQzLzFLR3lxMDdndUNGWXRJbUUxUVR6NnJLa3pNam5kbmViZ2lNbytY?=
+ =?utf-8?B?dW53ZUJNUEJBNVBsTTJxcnpFWHFCSHMwVXpYSDV5ZkVaTy9SOGdyK01QQU5Z?=
+ =?utf-8?B?ZGZqWHljeVJNK1BnYWRxcmpKcDAyYjJ1dVk3OHZwVzhHR25FZHhWS3VTeisr?=
+ =?utf-8?B?czhPN2ZiZ0pZVnVpOEtXdytmcXlnVU9CUGFoVEpXWVR2UkIrMnFwZ1FGUnZI?=
+ =?utf-8?B?NjZsZGVuU1A1L1FkMW1CbHBmUmZkd2g4WjJDd0VLNkNzTXFRV3VQTnRjL2VL?=
+ =?utf-8?B?SFkvMGlxMUJjejgzdG83bmUrejBpN0l3Z04yYWRrWVZ2RStGbmQrRXA1RE5H?=
+ =?utf-8?B?enBFME92YnQxWmJKa2VQNHFETFN4bEthL05XaWFLQXdMTFRMT1RUbk96RnFX?=
+ =?utf-8?B?MHNmMDk5Ym95bG9RK3AyYk5xNFYvUGl1aXoydWp6V2ppRFdNZ05hMmIxN2R5?=
+ =?utf-8?B?OGdPcXlkZ3lCblJlUHM4Tm1oUUU2R0NDZFlnUE5PTmdTTE5nNnJzeDRiaWg5?=
+ =?utf-8?B?WFY0ay95cGVZY24wUUhBVVJucGo2SG1NemJlNXhIV010SGpQd2dpTjBvT1J2?=
+ =?utf-8?B?N2NXeGFkZzQvZFBoZ1dPdUFMcU9obUkyajJNZm5tSmM3MDdOWkU4czhVYkhZ?=
+ =?utf-8?B?WkdRV0c3MTU0bGdBdFFIcllEdGJ5bFAza1lDTVlGeDZGUWNMM2dnSDhoOHgv?=
+ =?utf-8?B?TDYwcVpEekQ0T2t1Y2RqeEhEYmlkUTVxNlRTNE15MUxVQVMwem11c3dZTjlX?=
+ =?utf-8?B?aldQS05BSUlPMzhaRWpjeWlyNE5DQU0ySEMxR1NBVEJUUWlINUNabExsMlZ0?=
+ =?utf-8?B?amYzMVBITUVYQ01rRWhWZHdnNUZoSWR5NExzVXBOWDg2K1RhRkRrZmN4LzZl?=
+ =?utf-8?B?MC9KQmNKWmNRaVU2NFU2b2xPby83bW1TWStVcFo4RnBpYXJId0VycG1kc0FJ?=
+ =?utf-8?Q?rOtg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(10070799003)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YlZLRm5PK0lzOE5ORjZkY2VoajJoRTViSWtQRmNjVVJhMmJxTlJlU2tmaUhp?=
+ =?utf-8?B?STFHek5HVmUrR0J4cXhiRSs3MDZSTWhUWnpzSzJjeVRNdi9MTnp1RDFKNjVt?=
+ =?utf-8?B?aXVPYTh4TVU2TjY2eUFBbm1uU1M5VWlTcUh1K1VKTUROSmJIRSt1akxUait2?=
+ =?utf-8?B?b1NRdmNLcUIzSDlnS1FBd2RDR0ZHTkJmdmJmbkhzaDE2ODNHcWx2NlhDR0Va?=
+ =?utf-8?B?UmRESTZPV1NaelFwQXJsUlNIaVVUMmVLRlFsTzVIYmV2MEduSDB2bDc3ZGV3?=
+ =?utf-8?B?ZTVjQ0FNUXJ2K1U2SEZFSHA3Y1hFandNL2FTbWdSaXNIOWtTL1BkNnhGaVdq?=
+ =?utf-8?B?SlZYT05ZU3V4QW03Wi9WbytpeGMyeFNka0d1RFVvMXh6RHVud1ZvMGRzSTlB?=
+ =?utf-8?B?SUkwdlNqdGFDd1hDT2sycEpQeEJtWC9ZUU5WVE51MHRtL0MyLytqS3duMkdQ?=
+ =?utf-8?B?TVRISzZOU1VyZm1tTzl1dW9UNW9DRW1ROUNVL3dJOEd1M2VycjdPZ1U5bjNo?=
+ =?utf-8?B?TkJCUGloVzlGRldMczJ5bXRvNWNqakhHMFMycHd1b2Z2QlJEZGs3dmV6aVZt?=
+ =?utf-8?B?c1phaHpnZ2RPUEdGbzk3ZVl1M09iL2l4cC9tcm1sRUdpbW5zYXh0NE9QZDh1?=
+ =?utf-8?B?NHJMNThNWmNKN1pKU0FUcksvTnRhZzF1MzdEOENmMHNOcjQ1YUFzaTRXVUs0?=
+ =?utf-8?B?dGpTWG5yRnJ6Ym9mNDdDbnZHYjBqNVVTdXNrc21kRHQyQWhuSzFuZURqSi9H?=
+ =?utf-8?B?QnZkcVZaVXVNcFQ4V29pcW5aRWptT1VKL3IzMTdMN2lXaGVDNzJtMDRHZ1V0?=
+ =?utf-8?B?YitwM3V5NzZzS1I3aVpYaDNVYy9NSWF1cGVSa3d0aTRqNFcrenduMDV0cUFV?=
+ =?utf-8?B?YlcyQTlnUFM3WkJhMEZ3NW0yR1U1aEx1Qm1oelZRNlh5Y3pUQTlVdFhQVGRw?=
+ =?utf-8?B?UVViVlEvT1hrTEhDNGxTSklUakZ3OFZWcitqZmo5YU96a0VXU0tPbWdQaWNn?=
+ =?utf-8?B?TGhhbkpzVFZ1TFZOeHFObkhCb0lXYjUwUVdKbUJZbVZWazNxR1lDUjJPdHNP?=
+ =?utf-8?B?S3R3cXZ1Tm0xQWw2aHFmM3BHVTNVRk91WDNBTTkxSk92R3Avd3FtMlE4dXpS?=
+ =?utf-8?B?ZFFkVHVseGQ0dENqT2psbndLYTVCelpkbEVrSlllb3d0Tmt6eVhJRTZOMnJT?=
+ =?utf-8?B?WUp3cU1ZeE42a0JSY3BqOUhlcUxNODR4cnFna2ROa3g5RHV6R2xsTEJDOUVk?=
+ =?utf-8?B?QXgwaTcxSkZtZGFrOVVLcHNYVEZHV3Fubkw0VGlpU1NNeU9PWlMyRy9xUFBY?=
+ =?utf-8?B?NUJnNFlnaHdQVGQ0aVFLZlg0YllrOGhORHM1ZmFyYUFNTDkzYU1UbmtRK2tD?=
+ =?utf-8?B?WnYvQzYzRXBKLzBNS3F3bEhBaG5QVmFPZENoOFJZelZiVjlQeG1OeVZ5Z2lV?=
+ =?utf-8?B?bXdZVHk0NmN3QUZvQTR0cm8yNGJzK1JUbmhKMFUyOXlzVmUvcjcyWDN3MzF4?=
+ =?utf-8?B?TDYyOTVUZ2IyNDFPelhmbnRnRlhQU2RkSDJQbzBkRWtXT0V2YlVDeXpvaW1H?=
+ =?utf-8?B?RXZscDRYdjhpcFJ3UUhCWWlmZWJQT3UzK3NUVE96SVNLYlByTVZsUjlrbUF1?=
+ =?utf-8?B?U1RBRkJzV1UwZWU5WWovcVB5MG9ycFhKY1BzWm5XMktvSDQ2MWlKYXBhZzRw?=
+ =?utf-8?B?bXBBQXpIcHZnQ3pIbjNXYjBvOVMyNHZZc1ZQRk1uN3NXVWl4QkkrbmFCV1hI?=
+ =?utf-8?B?c25kYVUxcWJDZnZLMm4wZHV4Y2RQK3lOYmhod2IyWnRDUS9NMXQ0TDA2WkNQ?=
+ =?utf-8?B?R2tPamtCNGRpS2RCa1lKYWlNTnlmeEdmSWU1cHVnTkpFbDJ3bDUzYk9LcUtT?=
+ =?utf-8?B?Si83enZ4WUhCVlY0WlV2WG1uRlM1TEs3a2o0cXB5RGoyMTdDSDJ4TUNPLzE4?=
+ =?utf-8?B?andVekp3OWR1dlBxMGd4NVlXMS95enZXMVdHTzFyNjJ0ZzVNdGZHOHlQUGtm?=
+ =?utf-8?B?dHJyVm9ySTVYS3QyZG9OLy9UQWtEZXdPcmtMWElnZ3J4Y0hmR0pwVzVObXdJ?=
+ =?utf-8?B?TWpoMjFQcGFabzJrb0JGNWxNOWtxeEVFMHh4QkxIbXFZTTg0MWVxNFc4ZFc2?=
+ =?utf-8?B?UkFyR1VkdlNEVy8xVWR1QU5yRGVmTnVaS0pwc0c3TU96TVd3N3doempyZk1u?=
+ =?utf-8?B?M3hyMTlpSW50TXhMVGpLV2ZlQTZMV3p2MjhGMkdWaDNwTWE1d1BhM21kYzJO?=
+ =?utf-8?B?U1VvcXZyZVkrUlIzZVRTckRiMkNNWHFNaFN2MjFjeFFtUFA1ZzY3bmZpT0Ri?=
+ =?utf-8?B?Y29Fc2RWeWIwT0RYdlBEeFJkNFNBbmtudGJWU0d2c3U0VGhhWHJoQi8zZStR?=
+ =?utf-8?Q?nDj+XK61eXZbcQLkaUX14t16K7TtZNqKxB3HcfgYuoR9F?=
+X-MS-Exchange-AntiSpam-MessageData-1: LVPF3Kvxd3rJhw==
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53fff3f8-95f3-4606-630f-08de53759c91
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 14:02:53.7790
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0X0fvBXH+Cn1Z4B15N8JYCevXSSU3vdk4nLdyMI17lzuZ+QB4BxLhqbQpp5tBBxua6GyvzPrWgq8+gZzSWyYiw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6229
 
-Hi Mani,
+On Sun Dec 21, 2025 at 6:30 AM JST, Timur Tabi wrote:
+> On Fri, 2025-12-19 at 12:39 +0900, Alexandre Courbot wrote:
+>
+>
+>
+>> Does Nouveau really handle all messages asynchronously? Just taking a
+>> look at `r535_gsp_rpc_send` I see:
+>>=20
+>> * A potential busy-loop with `r535_gsp_rpc_handle_reply`, An argument to
+>> * define whether we should wait for a reply (`policy`).
+>>=20
+>> So it seems like each GSP command expecting a reply is effectively
+>> looping until it arrives, with some messages (LIBOS_PRINT, SEQUENCER,
+>> etc.) being managed by a notifier registered with the command queue. But
+>> messages sent explicitly by the driver don't seem to make use of it and
+>> instead process messages until they find their reply.
+>
+> Yes, you're right.  But the difference is that in Nouveau, all message pr=
+ocessing is handled by
+> r535_gsp_msg_recv(), which always also handles all of the asynchronous "o=
+ther" messages.
+>
+> The above `loop` expression in Nova doesn't do that.  It's missing the as=
+ynchronous handler.=20
+> This is the crux of my concern.
 
-Thank you for your work in this.
-
-On 12-Jan-26 17:26, Manivannan Sadhasivam via B4 Relay wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> 
-> Add of_find_serdev_controller_by_node() API to find the serdev controller
-> device associated with the devicetree node.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> ---
->  drivers/tty/serdev/core.c | 16 ++++++++++++++++
->  include/linux/serdev.h    |  9 +++++++++
->  2 files changed, 25 insertions(+)
-> 
-> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-> index b33e708cb245..25382c2d63e6 100644
-> --- a/drivers/tty/serdev/core.c
-> +++ b/drivers/tty/serdev/core.c
-> @@ -504,6 +504,22 @@ struct serdev_controller *serdev_controller_alloc(struct device *host,
->  }
->  EXPORT_SYMBOL_GPL(serdev_controller_alloc);
->  
-> +/**
-> + * of_find_serdev_controller_by_node() - Find the serdev controller associated
-> + *					 with the devicetree node
-> + * @node:	Devicetree node
-> + *
-> + * Return: Pointer to the serdev controller associated with the node. NULL if
-> + * the controller is not found.
-> + */
-> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
-> +{
-> +	struct device *dev = bus_find_device_by_of_node(&serdev_bus_type, node);
-> +
-> +	return (dev && dev->type == &serdev_ctrl_type) ? to_serdev_controller(dev) : NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(of_find_serdev_controller_by_node);
-> +
-
-This new of_find_serdev_controller_by_node() function needs:
-
-#ifdef CONFIG_OF ... #endif
-
-around it, to match the stubbing you are doing in serdev.h
-
->  static int of_serdev_register_devices(struct serdev_controller *ctrl)
->  {
->  	struct device_node *node;
-> diff --git a/include/linux/serdev.h b/include/linux/serdev.h
-> index ecde0ad3e248..db9bfaba0662 100644
-> --- a/include/linux/serdev.h
-> +++ b/include/linux/serdev.h
-> @@ -333,4 +333,13 @@ static inline bool serdev_acpi_get_uart_resource(struct acpi_resource *ares,
->  }
->  #endif /* CONFIG_ACPI */
->  
-> +#ifdef CONFIG_OF
-> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node);
-> +#else
-> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
-> +{
-> +	return NULL;
-> +}
-
-stubs like this one should be static inline to avoid warnings like this one:
-
-In file included from drivers/tty/serdev/core.c:21:
-./include/linux/serdev.h:339:27: warning: no previous prototype for ‘of_find_serdev_controller_by_node’ [-Wmissing-prototypes]
-  339 | struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
-      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Regards,
-
-Hans
-
+I agree with you that this is something we want to improve (either by
+adding a handler to the loop, or some other way). It should be its own
+patch series once we have better visibility about how we want to handle
+message, as the current implementation is still very crude and ad-hoc.
 
 
