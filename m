@@ -1,37 +1,37 @@
-Return-Path: <linux-pci+bounces-44761-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44762-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EFA2D1FE55
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 16:44:42 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41FDCD1FD65
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 16:38:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BE74D3073007
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 15:37:08 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 666453044845
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 15:37:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 131E639E6CB;
-	Wed, 14 Jan 2026 15:37:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B9BE39E6DB;
+	Wed, 14 Jan 2026 15:37:13 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AAEC39E6CF;
-	Wed, 14 Jan 2026 15:37:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7447A3939C2;
+	Wed, 14 Jan 2026 15:37:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768405028; cv=none; b=qKWjyikQNvwSvvnyz1/wxfEqAz0QGmtKkbuijGYQGcMVt47GSNLnsxK27Hlcwq6w4v341dc9T2+5ZwsCGZhj6O0M/xu9VXzSPvirF8sCcR8oaxLm5GZPjc8X1JYW+/RFKbItGQCxcia2MDkjDm275c2mtghmqtSwjaVzf6EUHl4=
+	t=1768405033; cv=none; b=ZnO1MrUC6DyWVFyTt4Hmb51duMhyo9Yh9lm9e056a4gnKIgwpLmfveNvHyH8/CVj3UOj2vfVjdvv89igZJBcrh/+450CmUFZWW+MFcL4EVkl5HtKZ9miDq6R/Jpjs83lkCHFKE+DZGAkKLCpDq6rcIO/Ic/+1qlzuc+TqJ0mhm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768405028; c=relaxed/simple;
-	bh=UOCLfSIjERLUrdnLyrg4dWK/1me2ygs3RSWB0u5qX5U=;
+	s=arc-20240116; t=1768405033; c=relaxed/simple;
+	bh=W7mGjhVe2GWCXMoc3eUn7rKrCw+Zo/Pfa+mpDO8cqRI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h9VinONotq+aHpVOzhjZ6ehhKhGKjA2eKRlwgItjFmQzj+Fx8C6+C7Ut7j8QvxDSoaH0apjidRV8GOwFFuBGX4IYGUST3ByibMuIn3e6j1lBSSeUmw9SlLE3x2tQ2zEk1eqvDe/tvxRtXzC9XLyT7GnhrMAhB/MURAiB8rPLNXM=
+	 MIME-Version; b=WCSKAhgN18cWHZ2c4U5v42YySDu5q6EpCXmLUprCPHPT2bXOxAzR493n9hkRCXYCcUgyJ5k0D7guf3o+ywVvXdalPMeeyd7HNr64bXMZcw6LgLw45xlgaVYUqfNNAK0aR7wjh9cg1B/RZ6FSl27hNDtzyQ+imw/WpqHZjumZmL8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: HAJfLiRZRweMuO+OmQdCAg==
-X-CSE-MsgGUID: HfilMfSISWOIDZb6PUocJA==
+X-CSE-ConnectionGUID: QwdG+pJNRomX4tn70mE62g==
+X-CSE-MsgGUID: xyHWtZpeT3C80lBaflD6TQ==
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 15 Jan 2026 00:37:04 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 15 Jan 2026 00:37:11 +0900
 Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.178])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 593AA4022B3F;
-	Thu, 15 Jan 2026 00:36:59 +0900 (JST)
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 80EAE40078D6;
+	Thu, 15 Jan 2026 00:37:05 +0900 (JST)
 From: John Madieu <john.madieu.xa@bp.renesas.com>
 To: claudiu.beznea.uj@bp.renesas.com,
 	lpieralisi@kernel.org,
@@ -50,9 +50,9 @@ Cc: robh@kernel.org,
 	linux-clk@vger.kernel.org,
 	john.madieu@gmail.com,
 	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH 14/16] arm64: dts: renesas: r9a09g047e57-smarc-som: Add PCIe reference clock
-Date: Wed, 14 Jan 2026 16:33:35 +0100
-Message-ID: <20260114153337.46765-15-john.madieu.xa@bp.renesas.com>
+Subject: [PATCH 15/16] arm64: dts: renesas: r9a09g047e57-smarc: Add PCIe pincontrol
+Date: Wed, 14 Jan 2026 16:33:36 +0100
+Message-ID: <20260114153337.46765-16-john.madieu.xa@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260114153337.46765-1-john.madieu.xa@bp.renesas.com>
 References: <20260114153337.46765-1-john.madieu.xa@bp.renesas.com>
@@ -64,43 +64,35 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The RZ/G3E SMARC SoM has a fixed 100 MHz reference clock generator
-for PCIe. Model it as a fixed-clock and assign it to the PCIe port.
+Add pincontrol configuration for PCIe on the RZ/G3E SMARC platform.
 
 Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
 ---
- arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi | 11 +++++++++++
+ arch/arm64/boot/dts/renesas/r9a09g047e57-smarc.dts | 11 +++++++++++
  1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
-index eb0de21d6716..7e2345bb9918 100644
---- a/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
-@@ -43,6 +43,12 @@ memory@48000000 {
- 		reg = <0x0 0x48000000 0x0 0xf8000000>;
+diff --git a/arch/arm64/boot/dts/renesas/r9a09g047e57-smarc.dts b/arch/arm64/boot/dts/renesas/r9a09g047e57-smarc.dts
+index 696903dc7a63..a9e58103d496 100644
+--- a/arch/arm64/boot/dts/renesas/r9a09g047e57-smarc.dts
++++ b/arch/arm64/boot/dts/renesas/r9a09g047e57-smarc.dts
+@@ -167,6 +167,17 @@ rsci9_pins: rsci9 {
+ 		bias-pull-up;
  	};
  
-+	pcie_refclk: clock-pcie-ref {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <100000000>;
++	pcie-clkreq-n {
++		gpio-hog;
++		gpios = <RZG3E_GPIO(4, 5) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "pcie_clkreq_n";
 +	};
 +
- 	reg_1p8v: regulator-1p8v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "fixed-1.8V";
-@@ -168,6 +174,11 @@ phy1: ethernet-phy@7 {
- 	};
- };
- 
-+&pcie_port0 {
-+	clocks = <&pcie_refclk>;
-+	clock-names = "ref";
-+};
++	pcie_pins: pcie {
++		pinmux = <RZG3E_PORT_PINMUX(G, 7, 1)>; /* PCIE_RST_OUT# */
++	};
 +
- &pinctrl {
- 	eth0_pins: eth0 {
- 		clk {
+ 	scif_pins: scif {
+ 		pins = "SCIF_TXD", "SCIF_RXD";
+ 		renesas,output-impedance = <1>;
 -- 
 2.25.1
 
