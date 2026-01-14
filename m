@@ -1,432 +1,667 @@
-Return-Path: <linux-pci+bounces-44842-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44843-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F102AD2110F
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 20:41:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DE9FD21145
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 20:45:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0A4923076902
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 19:40:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2774C3026AA3
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 19:44:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D110A347FC0;
-	Wed, 14 Jan 2026 19:40:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F04C25F78F;
+	Wed, 14 Jan 2026 19:44:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZmBYlfI5"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="XZm8LVrF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013038.outbound.protection.outlook.com [40.107.159.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D46134D3AD
-	for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 19:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768419640; cv=none; b=kg5xHIjpiiAPeQ83TkJMVsDajn76Q7bbqVNnG7hTuBdyypwA1yB8jA9HPR6azge3MczmuCa/MKywEe9Q8qVdHbQDDdhdRlc8bah4Yb0xzZOlvGbvmAFxLKcNH+7nxfNUERcoO3zfFLgX0l1XANQk8kiG3yHg+L1mQuytHKwZXpc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768419640; c=relaxed/simple;
-	bh=ykLH2MgbCvBBlz1nfxnm2nxGWsprbZ68o9/wmnQtSQg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BzW4Ex8XGy9QwuN7nNiFj70GgdlFE2Gd6hKcSxa5UCTFTlldnEm6R/ATXZFNn7o+NLq/Sj8y8SD7Q9lYV9wQPyVrIi67z9hX96Wsw1bnZov2iHD05whuVitZlHZNYnZjV7c1wgMFlULz6WqAYYVT+0mm6o46eXyl98Yp2Hawtww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZmBYlfI5; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-4327555464cso101956f8f.1
-        for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 11:40:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768419636; x=1769024436; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Scpe9pFl2VETM92or+Eva19ojkvY4Xd+w6SP7ONyFrE=;
-        b=ZmBYlfI51rt514x4jVU2s6nzIWHbuR43vHtcq+biRQMlpYpBCloeOyyme5NmOATh7f
-         4eOGfT8J39lVkXBg5dmDCu5eWCwly3b3pGPU3h0xYnln/hUN5ApbGGKsymxNHETfuzP+
-         mWsRJgCiEtAvCcFwaHx0BjvbCjF92XQs2LYHMCai0ptmbxmzoDuXhx1C533s2ATg8cKp
-         HHJgx3U08ABQEUa8KM4N1CtFO1ZHbdqHE8lXKUc3pftbpmcuvhBs+Qke30KbCHjkDqxd
-         fea20GF4JC05brbPuLg46oIqIN2yN/H5sbgL7QXZ3Q5Ydu6HB8FHZv6Plh4cFUy/owJE
-         5LXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768419636; x=1769024436;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Scpe9pFl2VETM92or+Eva19ojkvY4Xd+w6SP7ONyFrE=;
-        b=E71T106Cajc3XuRSjw2Qt2bFd29i2BNeppYtPpdlYEYeWOaD6/SnohuR6S6ULosoW+
-         LoqWppK+lHQZd6ViRqEId/5HtCWviI70+vT+phAZDtFYD9NvCEv23JGtrLfdm/ZQO2SF
-         YUM31IBfuECRneetll41xJReqHj/Q2HDn5KmgJs47DxPWn8EYJMe5F4cCuQdSzMnRck0
-         OWwdku+72Z6WN4VsR5flrO/MXhq4mKkgfFcvwKst6sYIuIjsY7gsDuuwY7spKwITCiut
-         f+n/gfB5kX97/nykv3bX1wrCA2URdIlW6IVQ85ifm7rCu1wPMsMK5xGqFGZMrPPe1Ooa
-         +t/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVblJI7diHYyKXLgqrG2c0Z97DA6SJt61xDzj0N079p3WnMSs2DDeJMh2Dr5nrNE5IOZn6KPkN1cDk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD986kauENzVJs/7Oa8zxKwJOrZepsBRNt5ovEz4/15COJdMPr
-	5rlyQ4vIQOni7srZOk0hVWXfbZHi9/u3aNlergkgX/+DAoYN48M32kR8
-X-Gm-Gg: AY/fxX5U4dPbFKfvNtzf8btJv7SfxLYiYeSIFQr77EDKiIHglILxelQV+VcT+UABbIo
-	+E6DUARpG6Urdwt/jN8643e7GXOGLVVMo3oc8MwXG6AtJUgy+NUU0C0UEwI/2EA1grLcbcK3dPK
-	kxQNLAa6lM/K247kONxjs4ZnMyvngpeW/wVz5IRSPCCKfcaCrHD2SF6cJgwnWgq/eEOZE+aH9MP
-	YlMjkYmPyN8n0lajqRswucFz4o4PzjKJuXNnwUtxP2fLne0IUGOgfRWs5Se81ClxGJrwRI5862k
-	a7C3YYceuIshHSZJqHjrBjCHgbLpyaEq92z7h2asDPUY0SLJyqIPtVbjZ8s4gtoBZfcs2j4kIdB
-	rXW6SJITYFnWTemSoOOndSjjrT4COIhItd6/Qz99XMurkvOzGlBeZ82DInCV2BVkNDzfp2bJ6DD
-	JTUklgnR6qsmrVfpWNuLsoRJzF/XSRZfZEVMZQifnCXepOZbSyxxrNOW+hgBdPjGalMp0wUx1i2
-	mQucg==
-X-Received: by 2002:a5d:5d0a:0:b0:430:fd84:3175 with SMTP id ffacd0b85a97d-4342c535d4cmr5459711f8f.38.1768419635614;
-        Wed, 14 Jan 2026 11:40:35 -0800 (PST)
-Received: from ?IPV6:2a06:5906:2639:e200:7139:7167:2ab3:2206? ([2a06:5906:2639:e200:7139:7167:2ab3:2206])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-434af64a778sm1065645f8f.3.2026.01.14.11.40.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Jan 2026 11:40:35 -0800 (PST)
-Message-ID: <ee4a31e1-f375-4c9b-aa1a-b056f40e0d91@gmail.com>
-Date: Wed, 14 Jan 2026 19:40:34 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4C334D3AD;
+	Wed, 14 Jan 2026 19:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.38
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768419877; cv=fail; b=o1rUYCvQSA8TFKJwcdJcRC7jvbFwx8ziLgxn9CW1S6/8rSj4k6c8FjNtV2SNwImSOXOIH3c69sIj1KUBWzKxau0e9v9K9sFx1eUPqX/OB4U7NkD0df4Q7+7EwJvGJYzmMwJrS+VRgtghtjEQmSys+l0o4tNG0f87SPGys8Outk8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768419877; c=relaxed/simple;
+	bh=afM6b7oFn76lU2PgmI3vRBMmNLPSg2gBkHQsBpK5S3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=kJzGt4awDkDYoNQfwuU/RinG00j4CXTz99AwyhZcLUPvVlYAQ4jHUea/zbyAdXoa+zH45uwVVGnOcCwuVWLs7kUMyYmQCVHHFsIWKH4CcITWmyqYjJfZFdPt9HLPjB2AXmvi6DpQvNkQCmmjAYXJHKHYudYZ5JHZRZvFnhF3cJU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=XZm8LVrF; arc=fail smtp.client-ip=40.107.159.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=n3eTpvAUCZZxP1uKT8aUzMfy48zUN25teM2c5XK89n7qnc6xAoC/M8oVhcsLavfikWa0QPEcU+7TyWf8ZUZYcH4gRpGJvsIunwM7ueQu+Xz/HJ/ej8t62TiAjD9w99jqp+LyA6iH71kDxwAXt5gCx/yD1wVb0W1BhrWvEUot8ArHk3St2WVUz7sKOuw1eViFldV73EflSgEU2QzqzQjBqCCpXxS0OdRhTOSOS/S6VxqZHMV++HIbq1TdLe9sUbqvUdPYd8MuCrwXuiPlfut/U+X6dWVPrMDBXCeUwmKhn8kdN5smEZdo9u4nQqeQnxlrdgQU1MHSOhmDA6myB5Wt7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=E6H0C9rBH96ccfflCBwqR1X9JT4LF0rbIn+41cJYB0Q=;
+ b=Bvc08wn/CVMeJrcowaanMyVMaHnQ4jK23DBi6l4gu6jtRoLLE23oUMS0+/66R0ndYbSfCTRVhyCrgIVvqxZuA+RzdPhDEGM0Q4Ns4GpHcT1LRAHQwzxk+8EJD7ShTCB2pme9xryRe0/xvy8mOylsPwXQJbUO+a6Ar/xE3m4ddcMuIUdBrzk/OJtQWWS/ISwO/hKcYBq3DFGRJBS+IVCsl0cJ3MuG28ycm72cJeyjfCeKqoP1khrBkP4BiqFLkbURQ6DhFt/a5rcAyPFQINbYVh8CCb8z5Kit3ghVqDmEy6r0qABtxdt304M2e5I4JIc36fkzSDflxcSuGzW0aNcgyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E6H0C9rBH96ccfflCBwqR1X9JT4LF0rbIn+41cJYB0Q=;
+ b=XZm8LVrFM115ArU1ePuiYsgecqyL4LCwPWt+4WkSKseFXKwhCpACI/5pAHlz1L5vNTnajGo3g0WygbCHzzvgc57mbYBTblQxSj6u8I+2ejNGVrSu/c+BCRw7GamTiPc2AN9IOSmumFUyv+BvTMWYYVFub9HzkC+4C+PV8hBiYxIKeE41Gux4hTdtSzHdmbPeYYMIWt4fgAg2woZiQKpofEjHStQPTEItxG3uIEk+uAPqq1vD9yPzvJKvBq3kkn2NLEr14N4GcRYslif0l/hS42TKu1L2up7iTJVgVhSmDGkggnfE5T/tvDkWzcsktGp1eo96whbbebDMp6yCdQT7Hg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8948.eurprd04.prod.outlook.com (2603:10a6:20b:42f::17)
+ by AM9PR04MB7649.eurprd04.prod.outlook.com (2603:10a6:20b:2d8::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Wed, 14 Jan
+ 2026 19:44:28 +0000
+Received: from AS8PR04MB8948.eurprd04.prod.outlook.com
+ ([fe80::843f:752e:60d:3e5e]) by AS8PR04MB8948.eurprd04.prod.outlook.com
+ ([fe80::843f:752e:60d:3e5e%4]) with mapi id 15.20.9499.002; Wed, 14 Jan 2026
+ 19:44:28 +0000
+Date: Wed, 14 Jan 2026 14:44:12 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Koichiro Den <den@valinux.co.jp>
+Cc: jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com,
+	cassel@kernel.org, vigneshr@ti.com, s-vadapalli@ti.com,
+	hongxing.zhu@nxp.com, l.stach@pengutronix.de, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+	minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+	jesper.nilsson@axis.com, heiko@sntech.de,
+	srikanth.thokala@intel.com, marek.vasut+renesas@gmail.com,
+	yoshihiro.shimoda.uh@renesas.com, geert+renesas@glider.be,
+	magnus.damm@gmail.com, christian.bruel@foss.st.com,
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+	thierry.reding@gmail.com, jonathanh@nvidia.com,
+	hayashi.kunihiko@socionext.com, mhiramat@kernel.org,
+	kishon@kernel.org, jirislaby@kernel.org, rongqianfeng@vivo.com,
+	18255117159@163.com, shawn.lin@rock-chips.com,
+	nicolas.frattaroli@collabora.com, linux.amoon@gmail.com,
+	vidyas@nvidia.com, linux-omap@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@axis.com,
+	linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v7 3/6] PCI: dwc: Allow glue drivers to return mutable
+ EPC features
+Message-ID: <aWfyDHZCoh1t6/vP@lizhi-Precision-Tower-5810>
+References: <20260113162719.3710268-1-den@valinux.co.jp>
+ <20260113162719.3710268-4-den@valinux.co.jp>
+ <aWatVUFdyYz+JaMI@lizhi-Precision-Tower-5810>
+ <mz3ahnech7yn66hcv7hqllir6rz6qpjd6m2aj3feh2gqfsvpwk@oobwtkb6o2jx>
+ <aWe0KJnZNHqSUAKg@lizhi-Precision-Tower-5810>
+ <m47oybaq4u2noqqd77czzgwwnmmquhvarjnxgijlhb5neulznt@dts3icronu6u>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <m47oybaq4u2noqqd77czzgwwnmmquhvarjnxgijlhb5neulznt@dts3icronu6u>
+X-ClientProxiedBy: PH8P221CA0066.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:510:349::6) To AS8PR04MB8948.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42f::17)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/6] rust: driver: introduce a common Driver trait
-To: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org,
- rafael@kernel.org, ojeda@kernel.org, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
- aliceryhl@google.com, tmgross@umich.edu, david.m.ertman@intel.com,
- ira.weiny@intel.com, leon@kernel.org, bhelgaas@google.com,
- kwilczynski@kernel.org, wsa+renesas@sang-engineering.com
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-i2c@vger.kernel.org
-References: <20260107103511.570525-1-dakr@kernel.org>
- <20260107103511.570525-4-dakr@kernel.org>
-Content-Language: en-US
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-In-Reply-To: <20260107103511.570525-4-dakr@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8948:EE_|AM9PR04MB7649:EE_
+X-MS-Office365-Filtering-Correlation-Id: 36a3fcca-e443-4868-5f96-08de53a55448
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|52116014|7416014|376014|366016|19092799006|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?OUl0vs6YsqYs1ps50eSC1SKcgrFsbkoIvjeGSZ9+NPvo9KVBRnAkwwp7wRfh?=
+ =?us-ascii?Q?bXjGgI2pxbUVdEymqqUSM6JzvJxBPWDYz+iZDzFcS8dL44npIP6Is4ZJZb9u?=
+ =?us-ascii?Q?fwAXdcztEFp20qVDjWr35gIEowTzPmn0gEb4jyNRTxnmK3l8dRG/nunGg5cH?=
+ =?us-ascii?Q?JSiwcvrMs/de76stZ28XeD/AZ0GQa9G70IeljGWDOpOOouJsrG1Fda9G80HN?=
+ =?us-ascii?Q?pLox50CvcH5i91gQb2fQAlTWsrND6LPMt9Om67+FDqq64N0VnhQzqBGCzoRz?=
+ =?us-ascii?Q?n9C5FpFykvSdcle9/VYCRv218GmqPHDk1g868yq5DtO+kCHWi7nwGgRRFbVt?=
+ =?us-ascii?Q?aEAbNglzf8WbPGXMDiZwqte/BUJ4YHextguv+ElKDZ1FpwGcJflT3N/rXQ77?=
+ =?us-ascii?Q?mxLlIybtxZxa+HvKhHyKqQy7pZuNWthG2mV3dVivkCYp+o1OYUrbwkR1IVpY?=
+ =?us-ascii?Q?3QtqPIZ5sR7u5CM3eoSdMzHbDOpPVGY09nYhlVvtqNNAzDa5xrBtV8HHYiQh?=
+ =?us-ascii?Q?d55ZuMS0ucPaavPcDOQ08ykxD7902WbrNLyYtlpAECXO3dmjKVqLlGNS229V?=
+ =?us-ascii?Q?cvxMNYWepnjAjM83HSsN5SCxe8o9klbYMSdwg7ImoZuYzEPRIUoP0E038Fm1?=
+ =?us-ascii?Q?9J+doszYNN6c+pNfh2ekkhbUTPYRHw/enjuftOIOwW4RXlQCzu6ixqCPVIac?=
+ =?us-ascii?Q?/ndHlC1xRdticnvJeYRmzIkkAxypx/AmeIoLV27OWz1lQUePqqplhBksmpSr?=
+ =?us-ascii?Q?MWOFWCKln7SoQ6eGueET5YolgNbPy9PPkHbE2YTQwKK8GNSvt1ddbDoIJHjP?=
+ =?us-ascii?Q?lX+t/n8rPYR3ru53Qu+pQsZMIUkbSD1vnQg1vSuRa899uxlwwbR8GJw6O0Pq?=
+ =?us-ascii?Q?nrbyKVN0X8AbDXhoGU1itNv+RXe+14xSmv3ole0VSnGsXiAB87iLfBzwHdRh?=
+ =?us-ascii?Q?LDO8z4swg8RSr7YNQXsvj1GbvGkn+VPORFHMeqmYkrDPydpjGHOZrJma/I3d?=
+ =?us-ascii?Q?vuZna+qkfzb8Hc6e8bBMwjrs8NFFMKWvp8osx+A1w14chQmc40xPkUUKvF5O?=
+ =?us-ascii?Q?BPbU2adjmq9LqsX5qFcXXZS3PmJh152eCORdATNW6RafVGm4+IvPr/OnWFmA?=
+ =?us-ascii?Q?3JcgV7azWNVHCtPIeg8KoIKz3XOgofcP4bY8VxS3L68hcZVK5gREzpZkWy+6?=
+ =?us-ascii?Q?whCbh0vZRTPRoOM1RTsIiGSN+Xxb0gha3TT3Je3KObsR+HGIFITLY+rKWUzo?=
+ =?us-ascii?Q?rTfS/Z/V3BIblttJmnyJ/4ww8ZTGRZzsLQrnfjijpe81yeZpMbpkhsEpMzxI?=
+ =?us-ascii?Q?CBNSKW5kEYvAgiEvUJG+Lnl2c28jtVEBFlR2CpzIcLLFaE0fUrLkSKQkLG0k?=
+ =?us-ascii?Q?kxJW5t4udvOwwygVuHAUI5lslWVjpL6X+I+8QBBLA7xynmmz0aCohWSFUDh2?=
+ =?us-ascii?Q?/c1lubZ+kEUSMGrXp0igowvdSj1JgQzchT4aUWHjrUrSzL8vK5R5Z9TG6TAi?=
+ =?us-ascii?Q?l0kaOt8Hn0e8q7bF7snWLixnqk5aFTmg0eJo30wzF28DJAmVdsrZVQv/x/4K?=
+ =?us-ascii?Q?DDxXzQw014rNdGFT2RPlk2byduMN+un6s7WztCPAf5dDjQKmdNsmVLURYugK?=
+ =?us-ascii?Q?LhpTuaPpyF6mlQRoreMQjBA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8948.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(7416014)(376014)(366016)(19092799006)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?hW82qFlGyOnvfHZYJT7jW0zB0VYIXEmx/ALt/wzzcgdAkMHlTLyPR4lD/H/E?=
+ =?us-ascii?Q?uf6BPQ8ldPqBom/mRHGj4G7S5tYppjdCIYF3OhWIA75ix+afzmOcGUWGvhw8?=
+ =?us-ascii?Q?KOE+4iFrcgsuPMN6OwW1fdsTGK/Ke/Y4UEmZxCKI3eAohrtubhBksWdaWpns?=
+ =?us-ascii?Q?Nb5YaKBJMh/LvVTipEz3K9eisCa3urjG9dDuI5uzrw69ra0d/kFRN8FiLkgV?=
+ =?us-ascii?Q?IsPKFKn1qHLSu7lNU6VSzknp+hRFZWX8mSD454ub/iKca1AHB6dUpb5d1Sg4?=
+ =?us-ascii?Q?/UhxwJoTg5yPIJ1pWIlG+uNU6DJqjdzK5aEWhRSjRxaj3D1hzCdqFAl4uxFz?=
+ =?us-ascii?Q?gUvtAPdvunCXsgu/zuRtoPBB++Tnmv8fovr2XLeMHzyxHeDfC5rpv9QK69za?=
+ =?us-ascii?Q?koZljUop110bqxXzDnU1slQLDyxN7zi26BCr3z2Et0z/ZMwL4YhP2Zyib0bt?=
+ =?us-ascii?Q?7fHCDmjxPowIFH6D5DPRmFGgxVNj/tQ/X2FEk/DVpOVN+I4b8++rXWOOXpq5?=
+ =?us-ascii?Q?erpFn33RyEIgNOK00IOdeXkc9DiOpt+DkvArRsD57EqdEoKKlmRiVWWvmNUk?=
+ =?us-ascii?Q?D3u9RhLJHB+VtPIkNw3AycbpiPmIS2TH8qJIHGngPbx8dYSdQEYauQcAGQGE?=
+ =?us-ascii?Q?8VMpDYAJ6j5I0Ey9izJ3sitPkyQiniSeIBdhAhWwiHovg7QEvh9srAII5PhG?=
+ =?us-ascii?Q?cKBwJEYxfxacZqM7wgHzQe2Qk8czMCOrB/onQ/8lqi4clIsghm4p4dZ7lCbQ?=
+ =?us-ascii?Q?h2+ttov1JhDM+UleVlbGK4i53bkFGK1Xr4PocZ+XLk5IaLE0/JsBnzKnM1qu?=
+ =?us-ascii?Q?4Cp62+HTvoM3tej9CiM6527QgQjEP7yWE67UtjIVdYsH+8Xcul2JkRSv6cav?=
+ =?us-ascii?Q?75cYBTDLh3vmcImiBbz/uR9xgrLeJr19PXAUn4yayXMXayAFfCCkFplQevFF?=
+ =?us-ascii?Q?TyIAFM9RH90sC/tHcfGw6TRCo7ZoK2eQmbmzP+BDuAszwUXPMUeTrbd4GcQT?=
+ =?us-ascii?Q?uOKjLQNVmAEMCsEqBYp5+4HFfqEdA3+kJXY86zasF43hX7d64Eq16RQgI8YY?=
+ =?us-ascii?Q?hFokdQi0d4Z17SyhS52B2KCi7ZcdE1DqnzN0/ZacpCjRz6dlBmYS8IT6vbiv?=
+ =?us-ascii?Q?GgJ+sWTk6ScIAzsRXExokJv/XCMDXcv8ZX014n7EOcOuUULWy2YPTBT1IXfc?=
+ =?us-ascii?Q?x10sfCFPmu4R6rhp9dutTRVf4Uxgi/rcbi5eIsf6hIUiaEpW21vHZBqesu6k?=
+ =?us-ascii?Q?o6FwbmEi17S5H98CZL9u/SFforZdV595rUWs4U7pPJ73jiTlJzGhMTtFCCQa?=
+ =?us-ascii?Q?U0zrefiHYEuh1ljPg5CQEqmdVHO5fCOY9QZlCAx3K9a3mHo+W2gaJ/qzA4Lu?=
+ =?us-ascii?Q?1NG21t33bZtmwDXj160X+86QEl0ieMHrmwhCtQuaWZaYlSJM7VJliZUV07PO?=
+ =?us-ascii?Q?Kp9owz+zu4wpWtDjoBWMoqzrV2wjw+q6hUlduZpy5i4fgo/PDgtDQXE65tLt?=
+ =?us-ascii?Q?oE2ApfxN5uTryO8G07DHGwnEAOMTlhN6m/g+4CH6MQGXSy6I6Dy2+wz4hUPH?=
+ =?us-ascii?Q?U7FNulSheCDvTX8p8ivqTcO3vOIzNR9v+3lH8016wA4d5NiCDb7SJVXLUUG4?=
+ =?us-ascii?Q?C7GQ40mElWPAUhobzLU6vA1ELZojrpItTTMtMBWNh8FqJId6qvzE/1E00SRG?=
+ =?us-ascii?Q?nDTXVBTU5GNdAie6JOLTkroEQQ3X0D80+LfVV1zAuyAG+0Be?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36a3fcca-e443-4868-5f96-08de53a55448
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8948.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 19:44:28.6515
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5Q8/E8l+8/AjMje6mCZdYTd9xaTYez6J5COCNlTdoKuslBEWSEzXMa0UM5e7EtrXNhlUHQ70K2hvyexnsmWTOA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB7649
 
-On 1/7/2026 10:35 AM, Danilo Krummrich wrote:
-> The Driver trait describes the layout of a specific driver structure,
-> such as `struct pci_driver` or `struct platform_driver`.
-> 
-> In a first step, this replaces the associated type RegType of the
-> RegistrationOps with the Driver::DriverType associated type.
-> 
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->   rust/kernel/auxiliary.rs | 18 +++++++++++-------
->   rust/kernel/driver.rs    | 40 +++++++++++++++++++++++++---------------
->   rust/kernel/i2c.rs       | 18 +++++++++++-------
->   rust/kernel/pci.rs       | 18 +++++++++++-------
->   rust/kernel/platform.rs  | 18 +++++++++++-------
->   rust/kernel/usb.rs       | 18 +++++++++++-------
->   6 files changed, 80 insertions(+), 50 deletions(-)
-> 
-> diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
-> index 6931f8a4267f..4636b6f41195 100644
-> --- a/rust/kernel/auxiliary.rs
-> +++ b/rust/kernel/auxiliary.rs
-> @@ -23,13 +23,17 @@
->   /// An adapter for the registration of auxiliary drivers.
->   pub struct Adapter<T: Driver>(T);
->   
-> -// SAFETY: A call to `unregister` for a given instance of `RegType` is guaranteed to be valid if
-> +// SAFETY:
-> +// - `bindings::auxiliary_driver` is a C type declared as `repr(C)`.
-> +unsafe impl<T: Driver + 'static> driver::Driver for Adapter<T> {
-> +    type DriverType = bindings::auxiliary_driver;
-> +}
-> +
-> +// SAFETY: A call to `unregister` for a given instance of `DriverType` is guaranteed to be valid if
->   // a preceding call to `register` has been successful.
->   unsafe impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
-> -    type RegType = bindings::auxiliary_driver;
-> -
->       unsafe fn register(
-> -        adrv: &Opaque<Self::RegType>,
-> +        adrv: &Opaque<Self::DriverType>,
->           name: &'static CStr,
->           module: &'static ThisModule,
->       ) -> Result {
-> @@ -41,14 +45,14 @@ unsafe fn register(
->               (*adrv.get()).id_table = T::ID_TABLE.as_ptr();
->           }
->   
-> -        // SAFETY: `adrv` is guaranteed to be a valid `RegType`.
-> +        // SAFETY: `adrv` is guaranteed to be a valid `DriverType`.
->           to_result(unsafe {
->               bindings::__auxiliary_driver_register(adrv.get(), module.0, name.as_char_ptr())
->           })
->       }
->   
-> -    unsafe fn unregister(adrv: &Opaque<Self::RegType>) {
-> -        // SAFETY: `adrv` is guaranteed to be a valid `RegType`.
-> +    unsafe fn unregister(adrv: &Opaque<Self::DriverType>) {
-> +        // SAFETY: `adrv` is guaranteed to be a valid `DriverType`.
->           unsafe { bindings::auxiliary_driver_unregister(adrv.get()) }
->       }
->   }
-> diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-> index 649d06468f41..cd1d36c313e1 100644
-> --- a/rust/kernel/driver.rs
-> +++ b/rust/kernel/driver.rs
-> @@ -99,23 +99,33 @@
->   use core::pin::Pin;
->   use pin_init::{pin_data, pinned_drop, PinInit};
->   
-> +/// Trait describing the layout of a specific device driver.
-> +///
-> +/// This trait describes the layout of a specific driver structure, such as `struct pci_driver` or
-> +/// `struct platform_driver`.
-> +///
-> +/// # Safety
-> +///
-> +/// Implementors must guarantee that:
-> +/// - `DriverType` is `repr(C)`.
-> +pub unsafe trait Driver {
-> +    /// The specific driver type embedding a `struct device_driver`.
-> +    type DriverType: Default;
-> +}
-> +
->   /// The [`RegistrationOps`] trait serves as generic interface for subsystems (e.g., PCI, Platform,
->   /// Amba, etc.) to provide the corresponding subsystem specific implementation to register /
-> -/// unregister a driver of the particular type (`RegType`).
-> +/// unregister a driver of the particular type (`DriverType`).
->   ///
-> -/// For instance, the PCI subsystem would set `RegType` to `bindings::pci_driver` and call
-> +/// For instance, the PCI subsystem would set `DriverType` to `bindings::pci_driver` and call
->   /// `bindings::__pci_register_driver` from `RegistrationOps::register` and
->   /// `bindings::pci_unregister_driver` from `RegistrationOps::unregister`.
->   ///
->   /// # Safety
->   ///
-> -/// A call to [`RegistrationOps::unregister`] for a given instance of `RegType` is only valid if a
-> -/// preceding call to [`RegistrationOps::register`] has been successful.
-> -pub unsafe trait RegistrationOps {
-> -    /// The type that holds information about the registration. This is typically a struct defined
-> -    /// by the C portion of the kernel.
-> -    type RegType: Default;
-> -
-> +/// A call to [`RegistrationOps::unregister`] for a given instance of `DriverType` is only valid if
-> +/// a preceding call to [`RegistrationOps::register`] has been successful.
-> +pub unsafe trait RegistrationOps: Driver {
->       /// Registers a driver.
->       ///
->       /// # Safety
-> @@ -123,7 +133,7 @@ pub unsafe trait RegistrationOps {
->       /// On success, `reg` must remain pinned and valid until the matching call to
->       /// [`RegistrationOps::unregister`].
->       unsafe fn register(
-> -        reg: &Opaque<Self::RegType>,
-> +        reg: &Opaque<Self::DriverType>,
->           name: &'static CStr,
->           module: &'static ThisModule,
->       ) -> Result;
-> @@ -134,7 +144,7 @@ unsafe fn register(
->       ///
->       /// Must only be called after a preceding successful call to [`RegistrationOps::register`] for
->       /// the same `reg`.
-> -    unsafe fn unregister(reg: &Opaque<Self::RegType>);
-> +    unsafe fn unregister(reg: &Opaque<Self::DriverType>);
->   }
->   
->   /// A [`Registration`] is a generic type that represents the registration of some driver type (e.g.
-> @@ -146,7 +156,7 @@ unsafe fn register(
->   #[pin_data(PinnedDrop)]
->   pub struct Registration<T: RegistrationOps> {
->       #[pin]
-> -    reg: Opaque<T::RegType>,
-> +    reg: Opaque<T::DriverType>,
->   }
->   
->   // SAFETY: `Registration` has no fields or methods accessible via `&Registration`, so it is safe to
-> @@ -161,13 +171,13 @@ impl<T: RegistrationOps> Registration<T> {
->       /// Creates a new instance of the registration object.
->       pub fn new(name: &'static CStr, module: &'static ThisModule) -> impl PinInit<Self, Error> {
->           try_pin_init!(Self {
-> -            reg <- Opaque::try_ffi_init(|ptr: *mut T::RegType| {
-> +            reg <- Opaque::try_ffi_init(|ptr: *mut T::DriverType| {
->                   // SAFETY: `try_ffi_init` guarantees that `ptr` is valid for write.
-> -                unsafe { ptr.write(T::RegType::default()) };
-> +                unsafe { ptr.write(T::DriverType::default()) };
->   
->                   // SAFETY: `try_ffi_init` guarantees that `ptr` is valid for write, and it has
->                   // just been initialised above, so it's also valid for read.
-> -                let drv = unsafe { &*(ptr as *const Opaque<T::RegType>) };
-> +                let drv = unsafe { &*(ptr as *const Opaque<T::DriverType>) };
->   
->                   // SAFETY: `drv` is guaranteed to be pinned until `T::unregister`.
->                   unsafe { T::register(drv, name, module) }
-> diff --git a/rust/kernel/i2c.rs b/rust/kernel/i2c.rs
-> index 35b678b78d91..de35961c6903 100644
-> --- a/rust/kernel/i2c.rs
-> +++ b/rust/kernel/i2c.rs
-> @@ -92,13 +92,17 @@ macro_rules! i2c_device_table {
->   /// An adapter for the registration of I2C drivers.
->   pub struct Adapter<T: Driver>(T);
->   
-> -// SAFETY: A call to `unregister` for a given instance of `RegType` is guaranteed to be valid if
-> +// SAFETY:
-> +// - `bindings::i2c_driver` is a C type declared as `repr(C)`.
-> +unsafe impl<T: Driver + 'static> driver::Driver for Adapter<T> {
-> +    type DriverType = bindings::i2c_driver;
-> +}
-> +
-> +// SAFETY: A call to `unregister` for a given instance of `DriverType` is guaranteed to be valid if
->   // a preceding call to `register` has been successful.
->   unsafe impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
-> -    type RegType = bindings::i2c_driver;
-> -
->       unsafe fn register(
-> -        idrv: &Opaque<Self::RegType>,
-> +        idrv: &Opaque<Self::DriverType>,
->           name: &'static CStr,
->           module: &'static ThisModule,
->       ) -> Result {
-> @@ -133,12 +137,12 @@ unsafe fn register(
->               (*idrv.get()).driver.acpi_match_table = acpi_table;
->           }
->   
-> -        // SAFETY: `idrv` is guaranteed to be a valid `RegType`.
-> +        // SAFETY: `idrv` is guaranteed to be a valid `DriverType`.
->           to_result(unsafe { bindings::i2c_register_driver(module.0, idrv.get()) })
->       }
->   
-> -    unsafe fn unregister(idrv: &Opaque<Self::RegType>) {
-> -        // SAFETY: `idrv` is guaranteed to be a valid `RegType`.
-> +    unsafe fn unregister(idrv: &Opaque<Self::DriverType>) {
-> +        // SAFETY: `idrv` is guaranteed to be a valid `DriverType`.
->           unsafe { bindings::i2c_del_driver(idrv.get()) }
->       }
->   }
-> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> index 82e128431f08..f58ce35d9c60 100644
-> --- a/rust/kernel/pci.rs
-> +++ b/rust/kernel/pci.rs
-> @@ -50,13 +50,17 @@
->   /// An adapter for the registration of PCI drivers.
->   pub struct Adapter<T: Driver>(T);
->   
-> -// SAFETY: A call to `unregister` for a given instance of `RegType` is guaranteed to be valid if
-> +// SAFETY:
-> +// - `bindings::pci_driver` is a C type declared as `repr(C)`.
-> +unsafe impl<T: Driver + 'static> driver::Driver for Adapter<T> {
-> +    type DriverType = bindings::pci_driver;
-> +}
-> +
-> +// SAFETY: A call to `unregister` for a given instance of `DriverType` is guaranteed to be valid if
->   // a preceding call to `register` has been successful.
->   unsafe impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
-> -    type RegType = bindings::pci_driver;
-> -
->       unsafe fn register(
-> -        pdrv: &Opaque<Self::RegType>,
-> +        pdrv: &Opaque<Self::DriverType>,
->           name: &'static CStr,
->           module: &'static ThisModule,
->       ) -> Result {
-> @@ -68,14 +72,14 @@ unsafe fn register(
->               (*pdrv.get()).id_table = T::ID_TABLE.as_ptr();
->           }
->   
-> -        // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
-> +        // SAFETY: `pdrv` is guaranteed to be a valid `DriverType`.
->           to_result(unsafe {
->               bindings::__pci_register_driver(pdrv.get(), module.0, name.as_char_ptr())
->           })
->       }
->   
-> -    unsafe fn unregister(pdrv: &Opaque<Self::RegType>) {
-> -        // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
-> +    unsafe fn unregister(pdrv: &Opaque<Self::DriverType>) {
-> +        // SAFETY: `pdrv` is guaranteed to be a valid `DriverType`.
->           unsafe { bindings::pci_unregister_driver(pdrv.get()) }
->       }
->   }
-> diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-> index ed889f079cab..e48d055fdc8a 100644
-> --- a/rust/kernel/platform.rs
-> +++ b/rust/kernel/platform.rs
-> @@ -26,13 +26,17 @@
->   /// An adapter for the registration of platform drivers.
->   pub struct Adapter<T: Driver>(T);
->   
-> -// SAFETY: A call to `unregister` for a given instance of `RegType` is guaranteed to be valid if
-> +// SAFETY:
-> +// - `bindings::platform_driver` is a C type declared as `repr(C)`.
-> +unsafe impl<T: Driver + 'static> driver::Driver for Adapter<T> {
-> +    type DriverType = bindings::platform_driver;
-> +}
-> +
-> +// SAFETY: A call to `unregister` for a given instance of `DriverType` is guaranteed to be valid if
->   // a preceding call to `register` has been successful.
->   unsafe impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
-> -    type RegType = bindings::platform_driver;
-> -
->       unsafe fn register(
-> -        pdrv: &Opaque<Self::RegType>,
-> +        pdrv: &Opaque<Self::DriverType>,
->           name: &'static CStr,
->           module: &'static ThisModule,
->       ) -> Result {
-> @@ -55,12 +59,12 @@ unsafe fn register(
->               (*pdrv.get()).driver.acpi_match_table = acpi_table;
->           }
->   
-> -        // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
-> +        // SAFETY: `pdrv` is guaranteed to be a valid `DriverType`.
->           to_result(unsafe { bindings::__platform_driver_register(pdrv.get(), module.0) })
->       }
->   
-> -    unsafe fn unregister(pdrv: &Opaque<Self::RegType>) {
-> -        // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
-> +    unsafe fn unregister(pdrv: &Opaque<Self::DriverType>) {
-> +        // SAFETY: `pdrv` is guaranteed to be a valid `DriverType`.
->           unsafe { bindings::platform_driver_unregister(pdrv.get()) };
->       }
->   }
-> diff --git a/rust/kernel/usb.rs b/rust/kernel/usb.rs
-> index d10b65e9fb6a..32f4b2d55dfb 100644
-> --- a/rust/kernel/usb.rs
-> +++ b/rust/kernel/usb.rs
-> @@ -27,13 +27,17 @@
->   /// An adapter for the registration of USB drivers.
->   pub struct Adapter<T: Driver>(T);
->   
-> -// SAFETY: A call to `unregister` for a given instance of `RegType` is guaranteed to be valid if
-> +// SAFETY:
-> +// - `bindings::usb_driver` is a C type declared as `repr(C)`.
-> +unsafe impl<T: Driver + 'static> driver::Driver for Adapter<T> {
-> +    type DriverType = bindings::usb_driver;
-> +}
-> +
-> +// SAFETY: A call to `unregister` for a given instance of `DriverType` is guaranteed to be valid if
->   // a preceding call to `register` has been successful.
->   unsafe impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
-> -    type RegType = bindings::usb_driver;
-> -
->       unsafe fn register(
-> -        udrv: &Opaque<Self::RegType>,
-> +        udrv: &Opaque<Self::DriverType>,
->           name: &'static CStr,
->           module: &'static ThisModule,
->       ) -> Result {
-> @@ -45,14 +49,14 @@ unsafe fn register(
->               (*udrv.get()).id_table = T::ID_TABLE.as_ptr();
->           }
->   
-> -        // SAFETY: `udrv` is guaranteed to be a valid `RegType`.
-> +        // SAFETY: `udrv` is guaranteed to be a valid `DriverType`.
->           to_result(unsafe {
->               bindings::usb_register_driver(udrv.get(), module.0, name.as_char_ptr())
->           })
->       }
->   
-> -    unsafe fn unregister(udrv: &Opaque<Self::RegType>) {
-> -        // SAFETY: `udrv` is guaranteed to be a valid `RegType`.
-> +    unsafe fn unregister(udrv: &Opaque<Self::DriverType>) {
-> +        // SAFETY: `udrv` is guaranteed to be a valid `DriverType`.
->           unsafe { bindings::usb_deregister(udrv.get()) };
->       }
->   }
+On Thu, Jan 15, 2026 at 02:17:07AM +0900, Koichiro Den wrote:
+> On Wed, Jan 14, 2026 at 10:20:08AM -0500, Frank Li wrote:
+> > On Wed, Jan 14, 2026 at 12:29:00PM +0900, Koichiro Den wrote:
+> > > On Tue, Jan 13, 2026 at 03:38:45PM -0500, Frank Li wrote:
+> > > > On Wed, Jan 14, 2026 at 01:27:16AM +0900, Koichiro Den wrote:
+> > > > > The DesignWare EP midlayer needs to advertise additional capabilities at
+> > > > > the DWC layer (e.g. subrange_mapping) without duplicating the same bit
+> > > > > in every DWC-based glue driver and without copying feature structures.
+> > > > >
+> > > > > Change dw_pcie_ep_ops.get_features() to return a mutable
+> > > > > struct pci_epc_features * and update all DWC-based glue drivers
+> > > > > accordingly. The DWC midlayer can then adjust/augment the returned
+> > > > > features while still exposing a const struct pci_epc_features * to the
+> > > > > PCI EPC core.
+> > > > >
+> > > > > No functional change on its own.
+> > > > >
+> > > > > Suggested-by: Niklas Cassel <cassel@kernel.org>
+> > > > > Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> > > > > Signed-off-by: Koichiro Den <den@valinux.co.jp>
+> > > > > ---
+> > > > >  drivers/pci/controller/dwc/pci-dra7xx.c       |  4 +-
+> > > > >  drivers/pci/controller/dwc/pci-imx6.c         | 10 ++--
+> > > > >  drivers/pci/controller/dwc/pci-keystone.c     |  4 +-
+> > > > >  .../pci/controller/dwc/pci-layerscape-ep.c    |  2 +-
+> > > > >  drivers/pci/controller/dwc/pcie-artpec6.c     |  4 +-
+> > > > >  .../pci/controller/dwc/pcie-designware-plat.c |  4 +-
+> > > > >  drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
+> > > > >  drivers/pci/controller/dwc/pcie-dw-rockchip.c |  8 +--
+> > > > >  drivers/pci/controller/dwc/pcie-keembay.c     |  4 +-
+> > > > >  drivers/pci/controller/dwc/pcie-qcom-ep.c     |  4 +-
+> > > > >  drivers/pci/controller/dwc/pcie-rcar-gen4.c   |  4 +-
+> > > > >  drivers/pci/controller/dwc/pcie-stm32-ep.c    |  4 +-
+> > > > >  drivers/pci/controller/dwc/pcie-tegra194.c    |  4 +-
+> > > > >  drivers/pci/controller/dwc/pcie-uniphier-ep.c | 58 ++++++++++---------
+> > > > >  14 files changed, 60 insertions(+), 56 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> > > > > index 01cfd9aeb0b8..e67f8b7b56cb 100644
+> > > > > --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> > > > > +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> > > > > @@ -423,12 +423,12 @@ static int dra7xx_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  	return 0;
+> > > > >  }
+> > > > >
+> > > > > -static const struct pci_epc_features dra7xx_pcie_epc_features = {
+> > > > > +static struct pci_epc_features dra7xx_pcie_epc_features = {
+> > > > >  	.linkup_notifier = true,
+> > > > >  	.msi_capable = true,
+> > > > >  };
+> > > > >
+> > > > > -static const struct pci_epc_features*
+> > > > > +static struct pci_epc_features*
+> > > > >  dra7xx_pcie_get_features(struct dw_pcie_ep *ep)
+> > > > >  {
+> > > > >  	return &dra7xx_pcie_epc_features;
+> > > > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> > > > > index 4668fc9648bf..fe1de30b3df6 100644
+> > > > > --- a/drivers/pci/controller/dwc/pci-imx6.c
+> > > > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> > > > > @@ -131,7 +131,7 @@ struct imx_pcie_drvdata {
+> > > > >  	const u32 ltssm_mask;
+> > > > >  	const u32 mode_off[IMX_PCIE_MAX_INSTANCES];
+> > > > >  	const u32 mode_mask[IMX_PCIE_MAX_INSTANCES];
+> > > > > -	const struct pci_epc_features *epc_features;
+> > > > > +	struct pci_epc_features *epc_features;
+> > > > >  	int (*init_phy)(struct imx_pcie *pcie);
+> > > > >  	int (*enable_ref_clk)(struct imx_pcie *pcie, bool enable);
+> > > > >  	int (*core_reset)(struct imx_pcie *pcie, bool assert);
+> > > > > @@ -1386,7 +1386,7 @@ static int imx_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  	return 0;
+> > > > >  }
+> > > > >
+> > > > > -static const struct pci_epc_features imx8m_pcie_epc_features = {
+> > > > > +static struct pci_epc_features imx8m_pcie_epc_features = {
+> > > > >  	.msi_capable = true,
+> > > > >  	.bar[BAR_1] = { .type = BAR_RESERVED, },
+> > > > >  	.bar[BAR_3] = { .type = BAR_RESERVED, },
+> > > > > @@ -1395,7 +1395,7 @@ static const struct pci_epc_features imx8m_pcie_epc_features = {
+> > > > >  	.align = SZ_64K,
+> > > > >  };
+> > > > >
+> > > > > -static const struct pci_epc_features imx8q_pcie_epc_features = {
+> > > > > +static struct pci_epc_features imx8q_pcie_epc_features = {
+> > > >
+> > > > Is it more simple if
+> > > > #define DWC_EPC_DEFAULT	.dynamtic_map = true
+> > > >
+> > > > Add
+> > > > 	DWC_EPC_DEFAULT, into every epc_features.
+> > >
+> > > One corner case is that pci-layerscape-ep.c builds the pci_epc_features
+> >
+> > It is our old platform. I checked code, it should be wrong. features should
+> > report EPC hardware capibility.
+>
+> I'm not really sure whether commit cc255eb0bfbe ("PCI: layerscape: Modify
+> the way of getting capability with different PEX") was wrong.
+> Do you have a patch in mind?
 
-Acked-by: Igor Korotin <igor.korotin.linux@gmail.com>
+I think it's wrong. And it doesn't impact your patch. Just leave it as it.
+we can add submap support later if need.
 
-Cheers
-Igor
+Frank
+
+>
+> >
+> > > dynamically in ls_pcie_ep_init(), rather than providing a static definition
+> > > with an initializer. I think setting (ie. overriding) the bit centrally in
+> > > dw_pcie_ep_get_features() keeps things simpler.
+> >
+> > In case one of chip have bugs, which need remove .dynamtic_map.
+>
+> This is a good point.
+>
+> Thanks,
+> Koichiro
+>
+> > DWC_EPC_DEFAULT will be simple.
+> >
+> > Frank
+> > >
+> > > Thanks,
+> > > Koichiro
+> > >
+> > > >
+> > > >
+> > > > Frank
+> > > >
+> > > > >  	.msi_capable = true,
+> > > > >  	.bar[BAR_1] = { .type = BAR_RESERVED, },
+> > > > >  	.bar[BAR_3] = { .type = BAR_RESERVED, },
+> > > > > @@ -1415,13 +1415,13 @@ static const struct pci_epc_features imx8q_pcie_epc_features = {
+> > > > >   * BAR4	| Enable   | 32-bit  |  1 MB   | Programmable Size
+> > > > >   * BAR5	| Enable   | 32-bit  | 64 KB   | Programmable Size
+> > > > >   */
+> > > > > -static const struct pci_epc_features imx95_pcie_epc_features = {
+> > > > > +static struct pci_epc_features imx95_pcie_epc_features = {
+> > > > >  	.msi_capable = true,
+> > > > >  	.bar[BAR_1] = { .type = BAR_FIXED, .fixed_size = SZ_64K, },
+> > > > >  	.align = SZ_4K,
+> > > > >  };
+> > > > >
+> > > > > -static const struct pci_epc_features*
+> > > > > +static struct pci_epc_features*
+> > > > >  imx_pcie_ep_get_features(struct dw_pcie_ep *ep)
+> > > > >  {
+> > > > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > > > diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> > > > > index f86d9111f863..4292007a9b3a 100644
+> > > > > --- a/drivers/pci/controller/dwc/pci-keystone.c
+> > > > > +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> > > > > @@ -929,7 +929,7 @@ static int ks_pcie_am654_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  	return 0;
+> > > > >  }
+> > > > >
+> > > > > -static const struct pci_epc_features ks_pcie_am654_epc_features = {
+> > > > > +static struct pci_epc_features ks_pcie_am654_epc_features = {
+> > > > >  	.msi_capable = true,
+> > > > >  	.msix_capable = true,
+> > > > >  	.bar[BAR_0] = { .type = BAR_RESERVED, },
+> > > > > @@ -941,7 +941,7 @@ static const struct pci_epc_features ks_pcie_am654_epc_features = {
+> > > > >  	.align = SZ_64K,
+> > > > >  };
+> > > > >
+> > > > > -static const struct pci_epc_features*
+> > > > > +static struct pci_epc_features*
+> > > > >  ks_pcie_am654_get_features(struct dw_pcie_ep *ep)
+> > > > >  {
+> > > > >  	return &ks_pcie_am654_epc_features;
+> > > > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > index a4a800699f89..8d48413050ef 100644
+> > > > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > @@ -138,7 +138,7 @@ static int ls_pcie_ep_interrupt_init(struct ls_pcie_ep *pcie,
+> > > > >  	return 0;
+> > > > >  }
+> > > > >
+> > > > > -static const struct pci_epc_features*
+> > > > > +static struct pci_epc_features*
+> > > > >  ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
+> > > > >  {
+> > > > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
+> > > > > index f4a136ee2daf..84111d8257f2 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-artpec6.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-artpec6.c
+> > > > > @@ -369,11 +369,11 @@ static int artpec6_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  	return 0;
+> > > > >  }
+> > > > >
+> > > > > -static const struct pci_epc_features artpec6_pcie_epc_features = {
+> > > > > +static struct pci_epc_features artpec6_pcie_epc_features = {
+> > > > >  	.msi_capable = true,
+> > > > >  };
+> > > > >
+> > > > > -static const struct pci_epc_features *
+> > > > > +static struct pci_epc_features *
+> > > > >  artpec6_pcie_get_features(struct dw_pcie_ep *ep)
+> > > > >  {
+> > > > >  	return &artpec6_pcie_epc_features;
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/drivers/pci/controller/dwc/pcie-designware-plat.c
+> > > > > index 12f41886c65d..60ada0eb838e 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-designware-plat.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
+> > > > > @@ -60,12 +60,12 @@ static int dw_plat_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  	return 0;
+> > > > >  }
+> > > > >
+> > > > > -static const struct pci_epc_features dw_plat_pcie_epc_features = {
+> > > > > +static struct pci_epc_features dw_plat_pcie_epc_features = {
+> > > > >  	.msi_capable = true,
+> > > > >  	.msix_capable = true,
+> > > > >  };
+> > > > >
+> > > > > -static const struct pci_epc_features*
+> > > > > +static struct pci_epc_features*
+> > > > >  dw_plat_pcie_get_features(struct dw_pcie_ep *ep)
+> > > > >  {
+> > > > >  	return &dw_plat_pcie_epc_features;
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > index f87c67a7a482..4dda9a38d46b 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > @@ -449,7 +449,7 @@ struct dw_pcie_ep_ops {
+> > > > >  	void	(*init)(struct dw_pcie_ep *ep);
+> > > > >  	int	(*raise_irq)(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  			     unsigned int type, u16 interrupt_num);
+> > > > > -	const struct pci_epc_features* (*get_features)(struct dw_pcie_ep *ep);
+> > > > > +	struct pci_epc_features* (*get_features)(struct dw_pcie_ep *ep);
+> > > > >  	/*
+> > > > >  	 * Provide a method to implement the different func config space
+> > > > >  	 * access for different platform, if different func have different
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > > > index 352f513ebf03..1f3c91368dc3 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > > > @@ -100,7 +100,7 @@ struct rockchip_pcie {
+> > > > >
+> > > > >  struct rockchip_pcie_of_data {
+> > > > >  	enum dw_pcie_device_mode mode;
+> > > > > -	const struct pci_epc_features *epc_features;
+> > > > > +	struct pci_epc_features *epc_features;
+> > > > >  };
+> > > > >
+> > > > >  static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip, u32 reg)
+> > > > > @@ -383,7 +383,7 @@ static int rockchip_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  	return 0;
+> > > > >  }
+> > > > >
+> > > > > -static const struct pci_epc_features rockchip_pcie_epc_features_rk3568 = {
+> > > > > +static struct pci_epc_features rockchip_pcie_epc_features_rk3568 = {
+> > > > >  	.linkup_notifier = true,
+> > > > >  	.msi_capable = true,
+> > > > >  	.msix_capable = true,
+> > > > > @@ -403,7 +403,7 @@ static const struct pci_epc_features rockchip_pcie_epc_features_rk3568 = {
+> > > > >   * default.) If the host could write to BAR4, the iATU settings (for all other
+> > > > >   * BARs) would be overwritten, resulting in (all other BARs) no longer working.
+> > > > >   */
+> > > > > -static const struct pci_epc_features rockchip_pcie_epc_features_rk3588 = {
+> > > > > +static struct pci_epc_features rockchip_pcie_epc_features_rk3588 = {
+> > > > >  	.linkup_notifier = true,
+> > > > >  	.msi_capable = true,
+> > > > >  	.msix_capable = true,
+> > > > > @@ -416,7 +416,7 @@ static const struct pci_epc_features rockchip_pcie_epc_features_rk3588 = {
+> > > > >  	.bar[BAR_5] = { .type = BAR_RESIZABLE, },
+> > > > >  };
+> > > > >
+> > > > > -static const struct pci_epc_features *
+> > > > > +static struct pci_epc_features *
+> > > > >  rockchip_pcie_get_features(struct dw_pcie_ep *ep)
+> > > > >  {
+> > > > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-keembay.c b/drivers/pci/controller/dwc/pcie-keembay.c
+> > > > > index 60e74ac782af..e6de5289329f 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-keembay.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-keembay.c
+> > > > > @@ -308,7 +308,7 @@ static int keembay_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  	}
+> > > > >  }
+> > > > >
+> > > > > -static const struct pci_epc_features keembay_pcie_epc_features = {
+> > > > > +static struct pci_epc_features keembay_pcie_epc_features = {
+> > > > >  	.msi_capable		= true,
+> > > > >  	.msix_capable		= true,
+> > > > >  	.bar[BAR_0]		= { .only_64bit = true, },
+> > > > > @@ -320,7 +320,7 @@ static const struct pci_epc_features keembay_pcie_epc_features = {
+> > > > >  	.align			= SZ_16K,
+> > > > >  };
+> > > > >
+> > > > > -static const struct pci_epc_features *
+> > > > > +static struct pci_epc_features *
+> > > > >  keembay_pcie_get_features(struct dw_pcie_ep *ep)
+> > > > >  {
+> > > > >  	return &keembay_pcie_epc_features;
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> > > > > index f1bc0ac81a92..6ad033301909 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> > > > > @@ -819,7 +819,7 @@ static void qcom_pcie_ep_init_debugfs(struct qcom_pcie_ep *pcie_ep)
+> > > > >  				    qcom_pcie_ep_link_transition_count);
+> > > > >  }
+> > > > >
+> > > > > -static const struct pci_epc_features qcom_pcie_epc_features = {
+> > > > > +static struct pci_epc_features qcom_pcie_epc_features = {
+> > > > >  	.linkup_notifier = true,
+> > > > >  	.msi_capable = true,
+> > > > >  	.align = SZ_4K,
+> > > > > @@ -829,7 +829,7 @@ static const struct pci_epc_features qcom_pcie_epc_features = {
+> > > > >  	.bar[BAR_3] = { .type = BAR_RESERVED, },
+> > > > >  };
+> > > > >
+> > > > > -static const struct pci_epc_features *
+> > > > > +static struct pci_epc_features *
+> > > > >  qcom_pcie_epc_get_features(struct dw_pcie_ep *pci_ep)
+> > > > >  {
+> > > > >  	return &qcom_pcie_epc_features;
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> > > > > index 80778917d2dd..ff0c4af90eff 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> > > > > @@ -419,7 +419,7 @@ static int rcar_gen4_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  	return 0;
+> > > > >  }
+> > > > >
+> > > > > -static const struct pci_epc_features rcar_gen4_pcie_epc_features = {
+> > > > > +static struct pci_epc_features rcar_gen4_pcie_epc_features = {
+> > > > >  	.msi_capable = true,
+> > > > >  	.bar[BAR_1] = { .type = BAR_RESERVED, },
+> > > > >  	.bar[BAR_3] = { .type = BAR_RESERVED, },
+> > > > > @@ -428,7 +428,7 @@ static const struct pci_epc_features rcar_gen4_pcie_epc_features = {
+> > > > >  	.align = SZ_1M,
+> > > > >  };
+> > > > >
+> > > > > -static const struct pci_epc_features*
+> > > > > +static struct pci_epc_features*
+> > > > >  rcar_gen4_pcie_ep_get_features(struct dw_pcie_ep *ep)
+> > > > >  {
+> > > > >  	return &rcar_gen4_pcie_epc_features;
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-stm32-ep.c b/drivers/pci/controller/dwc/pcie-stm32-ep.c
+> > > > > index 2cecf32d2b0f..8a892def54f5 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-stm32-ep.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-stm32-ep.c
+> > > > > @@ -69,12 +69,12 @@ static int stm32_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  	}
+> > > > >  }
+> > > > >
+> > > > > -static const struct pci_epc_features stm32_pcie_epc_features = {
+> > > > > +static struct pci_epc_features stm32_pcie_epc_features = {
+> > > > >  	.msi_capable = true,
+> > > > >  	.align = SZ_64K,
+> > > > >  };
+> > > > >
+> > > > > -static const struct pci_epc_features*
+> > > > > +static struct pci_epc_features*
+> > > > >  stm32_pcie_get_features(struct dw_pcie_ep *ep)
+> > > > >  {
+> > > > >  	return &stm32_pcie_epc_features;
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > > > index 0ddeef70726d..06f45a17e52c 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > > > @@ -1987,7 +1987,7 @@ static int tegra_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  	return 0;
+> > > > >  }
+> > > > >
+> > > > > -static const struct pci_epc_features tegra_pcie_epc_features = {
+> > > > > +static struct pci_epc_features tegra_pcie_epc_features = {
+> > > > >  	.linkup_notifier = true,
+> > > > >  	.msi_capable = true,
+> > > > >  	.bar[BAR_0] = { .type = BAR_FIXED, .fixed_size = SZ_1M,
+> > > > > @@ -2000,7 +2000,7 @@ static const struct pci_epc_features tegra_pcie_epc_features = {
+> > > > >  	.align = SZ_64K,
+> > > > >  };
+> > > > >
+> > > > > -static const struct pci_epc_features*
+> > > > > +static struct pci_epc_features*
+> > > > >  tegra_pcie_ep_get_features(struct dw_pcie_ep *ep)
+> > > > >  {
+> > > > >  	return &tegra_pcie_epc_features;
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> > > > > index d6e73811216e..ddb5ff70340c 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> > > > > @@ -82,7 +82,7 @@ struct uniphier_pcie_ep_soc_data {
+> > > > >  	bool has_gio;
+> > > > >  	void (*init)(struct uniphier_pcie_ep_priv *priv);
+> > > > >  	int (*wait)(struct uniphier_pcie_ep_priv *priv);
+> > > > > -	const struct pci_epc_features features;
+> > > > > +	struct pci_epc_features *features;
+> > > > >  };
+> > > > >
+> > > > >  #define to_uniphier_pcie(x)	dev_get_drvdata((x)->dev)
+> > > > > @@ -273,13 +273,13 @@ static int uniphier_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  	return 0;
+> > > > >  }
+> > > > >
+> > > > > -static const struct pci_epc_features*
+> > > > > +static struct pci_epc_features*
+> > > > >  uniphier_pcie_get_features(struct dw_pcie_ep *ep)
+> > > > >  {
+> > > > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > > >  	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> > > > >
+> > > > > -	return &priv->data->features;
+> > > > > +	return priv->data->features;
+> > > > >  }
+> > > > >
+> > > > >  static const struct dw_pcie_ep_ops uniphier_pcie_ep_ops = {
+> > > > > @@ -415,40 +415,44 @@ static int uniphier_pcie_ep_probe(struct platform_device *pdev)
+> > > > >  	return 0;
+> > > > >  }
+> > > > >
+> > > > > +static struct pci_epc_features uniphier_pro5_features = {
+> > > > > +	.linkup_notifier = false,
+> > > > > +	.msi_capable = true,
+> > > > > +	.msix_capable = false,
+> > > > > +	.align = 1 << 16,
+> > > > > +	.bar[BAR_0] = { .only_64bit = true, },
+> > > > > +	.bar[BAR_1] = { .type = BAR_RESERVED, },
+> > > > > +	.bar[BAR_2] = { .only_64bit = true, },
+> > > > > +	.bar[BAR_3] = { .type = BAR_RESERVED, },
+> > > > > +	.bar[BAR_4] = { .type = BAR_RESERVED, },
+> > > > > +	.bar[BAR_5] = { .type = BAR_RESERVED, },
+> > > > > +};
+> > > > > +
+> > > > > +static struct pci_epc_features uniphier_nx1_features = {
+> > > > > +	.linkup_notifier = false,
+> > > > > +	.msi_capable = true,
+> > > > > +	.msix_capable = false,
+> > > > > +	.align = 1 << 12,
+> > > > > +	.bar[BAR_0] = { .only_64bit = true, },
+> > > > > +	.bar[BAR_1] = { .type = BAR_RESERVED, },
+> > > > > +	.bar[BAR_2] = { .only_64bit = true, },
+> > > > > +	.bar[BAR_3] = { .type = BAR_RESERVED, },
+> > > > > +	.bar[BAR_4] = { .only_64bit = true, },
+> > > > > +	.bar[BAR_5] = { .type = BAR_RESERVED, },
+> > > > > +};
+> > > > > +
+> > > > >  static const struct uniphier_pcie_ep_soc_data uniphier_pro5_data = {
+> > > > >  	.has_gio = true,
+> > > > >  	.init = uniphier_pcie_pro5_init_ep,
+> > > > >  	.wait = NULL,
+> > > > > -	.features = {
+> > > > > -		.linkup_notifier = false,
+> > > > > -		.msi_capable = true,
+> > > > > -		.msix_capable = false,
+> > > > > -		.align = 1 << 16,
+> > > > > -		.bar[BAR_0] = { .only_64bit = true, },
+> > > > > -		.bar[BAR_1] = { .type = BAR_RESERVED, },
+> > > > > -		.bar[BAR_2] = { .only_64bit = true, },
+> > > > > -		.bar[BAR_3] = { .type = BAR_RESERVED, },
+> > > > > -		.bar[BAR_4] = { .type = BAR_RESERVED, },
+> > > > > -		.bar[BAR_5] = { .type = BAR_RESERVED, },
+> > > > > -	},
+> > > > > +	.features = &uniphier_pro5_features,
+> > > > >  };
+> > > > >
+> > > > >  static const struct uniphier_pcie_ep_soc_data uniphier_nx1_data = {
+> > > > >  	.has_gio = false,
+> > > > >  	.init = uniphier_pcie_nx1_init_ep,
+> > > > >  	.wait = uniphier_pcie_nx1_wait_ep,
+> > > > > -	.features = {
+> > > > > -		.linkup_notifier = false,
+> > > > > -		.msi_capable = true,
+> > > > > -		.msix_capable = false,
+> > > > > -		.align = 1 << 12,
+> > > > > -		.bar[BAR_0] = { .only_64bit = true, },
+> > > > > -		.bar[BAR_1] = { .type = BAR_RESERVED, },
+> > > > > -		.bar[BAR_2] = { .only_64bit = true, },
+> > > > > -		.bar[BAR_3] = { .type = BAR_RESERVED, },
+> > > > > -		.bar[BAR_4] = { .only_64bit = true, },
+> > > > > -		.bar[BAR_5] = { .type = BAR_RESERVED, },
+> > > > > -	},
+> > > > > +	.features = &uniphier_nx1_features,
+> > > > >  };
+> > > > >
+> > > > >  static const struct of_device_id uniphier_pcie_ep_match[] = {
+> > > > > --
+> > > > > 2.51.0
+> > > > >
 
