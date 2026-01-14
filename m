@@ -1,171 +1,119 @@
-Return-Path: <linux-pci+bounces-44735-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44736-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72185D1E29C
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 11:43:31 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01A73D1E571
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 12:15:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C348D3075F36
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 10:39:18 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3D07C30049F9
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 11:15:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EC9D38A2BA;
-	Wed, 14 Jan 2026 10:39:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D02C394464;
+	Wed, 14 Jan 2026 11:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1cx4AN6"
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="bN5fGUsE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-o90.zoho.com (sender4-pp-o90.zoho.com [136.143.188.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC041E98E6;
-	Wed, 14 Jan 2026 10:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768387157; cv=none; b=ZfrAqyoTKAl4qMr2klRkiEvtX1g9Z9sHwu0/6O7mWrygM+CKLTYQGpl+x1aSEySEISD9/azt4tdxS9rLq0XUTKKLIB8iB7IuTKGtxTjMMxUUZmqe58rlbQFByJkYa2PvzXZi/YcsW9ZraY9Dqx1ZVvImxY7fAV62unCvB4x4gXY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768387157; c=relaxed/simple;
-	bh=GXOUS5IVA/W+B1bIiXQJ9wm/cqS9Cfmo4/ZzvR1iFTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QvSRYZNGFYqYGC2wZO/++RWfwJHURaJtApLjqiZ+3brltGZO9LhaqrHleAMnZaZ/jqYgh27ZNVMKPjvfJMY8nwPK2UzU3KCjtacymGytdPSO2eTnPu6vRXRjmfYHn8O1Zwx3dSx29zQ4pI4OW/gbyULNYq1Ctv0JkKC7TnRn1gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1cx4AN6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26CFAC4CEF7;
-	Wed, 14 Jan 2026 10:39:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768387157;
-	bh=GXOUS5IVA/W+B1bIiXQJ9wm/cqS9Cfmo4/ZzvR1iFTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c1cx4AN6qnW//qfPtg+YU+kBK0Fwi1qx7TD4KI7OcyvNk84LcaOGokwsZbcc85njb
-	 qNE/fDPQvFv/hrK3hmEx5+u9dS2ysExw/sZMu59+B6tkrQgcsiR0HoyBLL0SqDaJNl
-	 lZiiHfClvv5U5qlwltVlii620fXgPEmppvSDIBUFS8QaAvEzvcf7lbCi351zOc3W8f
-	 OSyJms1RzaBtduqCcc4R6U9FLBKh2qAsW/1bGu/5Vq+EF+x+/uK/2ZYuVFmug/pbtL
-	 IQE5Pt8WGKFCXfH5aCcnYzBH4PHJ3+KmYKvQ4C17LfDVYZ564TGrXzWP3iZN+7Q5zE
-	 l1TuhhZkNiuDQ==
-Date: Wed, 14 Jan 2026 11:39:03 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Koichiro Den <den@valinux.co.jp>
-Cc: jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	vigneshr@ti.com, s-vadapalli@ti.com, hongxing.zhu@nxp.com,
-	l.stach@pengutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com, minghuan.Lian@nxp.com,
-	mingkai.hu@nxp.com, roy.zang@nxp.com, jesper.nilsson@axis.com,
-	heiko@sntech.de, srikanth.thokala@intel.com,
-	marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com,
-	geert+renesas@glider.be, magnus.damm@gmail.com,
-	christian.bruel@foss.st.com, mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com, thierry.reding@gmail.com,
-	jonathanh@nvidia.com, hayashi.kunihiko@socionext.com,
-	mhiramat@kernel.org, kishon@kernel.org, jirislaby@kernel.org,
-	rongqianfeng@vivo.com, 18255117159@163.com,
-	shawn.lin@rock-chips.com, nicolas.frattaroli@collabora.com,
-	linux.amoon@gmail.com, vidyas@nvidia.com, Frank.Li@nxp.com,
-	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@axis.com, linux-rockchip@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v7 5/6] PCI: dwc: ep: Support BAR subrange inbound
- mapping via Address Match Mode iATU
-Message-ID: <aWdyR4Xkh2_ZgOf8@fedora>
-References: <20260113162719.3710268-1-den@valinux.co.jp>
- <20260113162719.3710268-6-den@valinux.co.jp>
- <5kexuvze2a4m6bd3yhv2cd7yrzo4r6ubbbouktdsurv7n22v7o@7s3pgf6ftgur>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C07393DF6;
+	Wed, 14 Jan 2026 11:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.90
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768389317; cv=pass; b=fs2A6bS8XQx01ms6lxXec4enjdjSmP+VQBQD45t3vzVQ+fCZ7YZUIN5STLS4JbyOF3aDduKr3HTRa5DhIUsdlnb5HOyYFzL9zqaVGf0umzAhFAVvoEnfDizVpzCXwJZAbEP5ZilS5FjAnPDfrNQyxUbFHl9wCihCdrVSkvJwWAU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768389317; c=relaxed/simple;
+	bh=LPPwlz73/+z1pYfVWh2PWZw0b4qUercK70vLtoi4SxI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=POEGP4HrUQSRDg/+ymKG2doDZq+4Sh+NUWTnqUsQTfNA2oUw6z59TdeDctscZhnB3qIzskRuRcHVDRUrO6OwXwTVjmvFQngHDsmtJI39+wThvzpt7H42tH1sPIRpJKsKTakp2ICm0uleajgz12XKg6QA+YQSBA10Gt9Za++9NP0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=bN5fGUsE; arc=pass smtp.client-ip=136.143.188.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+ARC-Seal: i=1; a=rsa-sha256; t=1768389306; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=idklMtmzgU37Dkyalbk5S5B1UIgaBY2ETvAC64g6exYiSrRvteqQq5ibdzrXuPRd7Ja+HJi/T5pqT4ATnP1gQ1HLm8DSLl0tyPFjlX2USVackjXEgBKqRZu4ctSN6D8E3qsLtKWGti8jBXhYWOMYO6Q6s7IKJFahzQuoxuCL9Vs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1768389306; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=WpqHerWN0fLAd3RNCX750NkC+k/KfFL2Rd0iq1NMVcU=; 
+	b=dvMTWFc67LBiSiqPnfsmUJ6UhYim/434KtJ7xeWSbupQjLU9kR0KQlPjL0BjF1TZrT+6dmySROWl7eshJhIKpbTYHVNldXoqNeITWgvMxSwAp7L8NWoWVIJ97cJddy216J+rsySsiAePWlUomVPqHEvrt4ki1/7vhL3yCyXuoHA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1768389305;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=WpqHerWN0fLAd3RNCX750NkC+k/KfFL2Rd0iq1NMVcU=;
+	b=bN5fGUsExfiFZnuYKtmmKCeS3XZxesPPCG3ufhHVWiepTWSZRW+IwwXlvimaQ246
+	ZgQAbPVL/orfKaD6+3e/23onnssdgTrfIWQWUhxKkwKgceMQG2S28Gqh+t9BDDHtGYk
+	MZjOoh4WDzklvNpN4vA/mHM6tiMMiaS8a4sBFeP0=
+Received: by mx.zohomail.com with SMTPS id 1768389304430316.02879079140484;
+	Wed, 14 Jan 2026 03:15:04 -0800 (PST)
+From: Li Ming <ming.li@zohomail.com>
+To: helgaas@kernel.org,
+	dan.j.williams@intel.com
+Cc: linux-pci@vger.kernel.org,
+	linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH v2 1/1] PCI/IDE: Fix using wrong VF ID for RID range calculation
+Date: Wed, 14 Jan 2026 19:14:55 +0800
+Message-Id: <20260114111455.550984-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5kexuvze2a4m6bd3yhv2cd7yrzo4r6ubbbouktdsurv7n22v7o@7s3pgf6ftgur>
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr08011227a92b0bd26dc0d18c2cb4ee6100009939737c2a05c73e881e4eabad6d678cf128bba41e5c5bbf36:zu080112276a528f98b94ac2614bc54b8900008630618b6d75801446ed451df3328650fef14921229bcdab82:rf0801123291d012e50f005ca760478e2c00003f1e1f360a860f994587022782d57be69d26cdf0145faabb8ceba99a0bd3f04a492bd35d:ZohoMail
+X-ZohoMailClient: External
 
-On Wed, Jan 14, 2026 at 12:54:37PM +0900, Koichiro Den wrote:
-> I realized that I missed one case in v7.
-> 
-> I think dw_pcie_ep_clear_ib_maps() should also be called from
-> dw_pcie_ep_ib_atu_bar() to tear down any existing inbound mappings for the
-> same BAR before re-programming it in BAR Match Mode.
-> 
-> This matters when updating inbound mappings for a BAR without resetting the
-> BAR in between. There are four possible transition patterns, and pattern #4
-> below was overlooked:
-> 
->   1. BAR Match Mode -> BAR Match Mode
->      As the current implementation does, the mapping is simply updated
->      (with the same atu index)
-> 
->   2. BAR Match Mode -> Address Match Mode
->      This patch series already ensures the old BAR Match mapping is
->      torn down before reprogramming.
-> 
->   3. Address Match Mode -> Address Match Mode
->      Likewise, existing Address Match mappings are cleared first.
-> 
->   4. Address Match Mode  -> BAR Match Mode
->      This case was not handled. The change below adds the missing
->      teardown so that stale Address Match mappings do not remain active.
-> 
->      --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
->      +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
->      @@ -148,9 +148,12 @@ static int dw_pcie_ep_ib_atu_bar(struct dw_pcie_ep *ep, u8 func_no, int type,
->              u32 free_win;
->              struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->      
->      -       if (!ep->bar_to_atu[bar])
->      +       if (!ep->bar_to_atu[bar]) {
->      +               /* Tear down existing mappings before (re)programming. */
->      +               dw_pcie_ep_clear_ib_maps(ep, bar);
->      +
->                      free_win = find_first_zero_bit(ep->ib_window_map,
->                                                    pci->num_ib_windows);
->      -       else
->      +       } else
->                      free_win = ep->bar_to_atu[bar] - 1;
+When allocate a new IDE stream for a PCI device in SR-IOV case, the RID
+range of the new IDE stream should cover all VFs of the device. VF ID
+range of a PCI device is [0, num_VFs - 1], so should use (num_VFs - 1)
+as the last VF's ID.
 
-If one of the branches has braces, both branches should have braces:
-https://www.kernel.org/doc/html/latest/process/coding-style.html#placing-braces-and-spaces
+Fixes: 1e4d2ff3ae45 ("PCI/IDE: Add IDE establishment helpers")
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+v2:
+ * Make kernel-doc more detailed. (Yilun)
+ * Fix typos in commit log. (Bjorn)
+---
+ drivers/pci/ide.c       | 4 ++--
+ include/linux/pci-ide.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-
-> 
-> Unless there are objections, I'll include this fix in v8.
-
-Isn't it easier/cleaner if we call dw_pcie_ep_clear_ib_maps() in
-dw_pcie_ep_set_bar(), rather than calling it in both dw_pcie_ep_ib_atu_addr()
-and dw_pcie_ep_ib_atu_bar() ?
-
-dw_pcie_ep_set_bar() knows the condition if we are dynamically reprogramming
-a BAR or not, and all the four cases are when dynamically reprogramming a BAR.
-
-I.e. instead of adding additional code to dw_pcie_ep_ib_atu_bar(), we do
-something like:
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index b2ea2c2c986f..63ae5471fe13 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -318,9 +318,6 @@ static int dw_pcie_ep_ib_atu_addr(struct dw_pcie_ep *ep, u8 func_no, int type,
-                return -EINVAL;
-        }
+diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
+index f0ef474e1a0d..799caa94ab94 100644
+--- a/drivers/pci/ide.c
++++ b/drivers/pci/ide.c
+@@ -283,8 +283,8 @@ struct pci_ide *pci_ide_stream_alloc(struct pci_dev *pdev)
+ 	/* for SR-IOV case, cover all VFs */
+ 	num_vf = pci_num_vf(pdev);
+ 	if (num_vf)
+-		rid_end = PCI_DEVID(pci_iov_virtfn_bus(pdev, num_vf),
+-				    pci_iov_virtfn_devfn(pdev, num_vf));
++		rid_end = PCI_DEVID(pci_iov_virtfn_bus(pdev, num_vf - 1),
++				    pci_iov_virtfn_devfn(pdev, num_vf - 1));
+ 	else
+ 		rid_end = pci_dev_id(pdev);
  
--       /* Tear down any existing mappings before (re)programming. */
--       dw_pcie_ep_clear_ib_maps(ep, bar);
--
-        for (i = 0; i < epf_bar->num_submap; i++) {
-                off = submap[i].offset;
-                size = submap[i].size;
-@@ -571,6 +568,9 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-                    ep->epf_bar[bar]->flags != flags)
-                        return -EINVAL;
- 
-+               if (ep->epf_bar[bar]->num_submap || epf_bar->num_submap)
-+                       dw_pcie_ep_clear_ib_maps(ep, bar);
-+
-                /*
-                 * When dynamically changing a BAR, skip writing the BAR reg, as
-                 * that would clear the BAR's PCI address assigned by the host.
-
-
+diff --git a/include/linux/pci-ide.h b/include/linux/pci-ide.h
+index 37a1ad9501b0..381a1bf22a95 100644
+--- a/include/linux/pci-ide.h
++++ b/include/linux/pci-ide.h
+@@ -26,7 +26,7 @@ enum pci_ide_partner_select {
+ /**
+  * struct pci_ide_partner - Per port pair Selective IDE Stream settings
+  * @rid_start: Partner Port Requester ID range start
+- * @rid_end: Partner Port Requester ID range end
++ * @rid_end: Partner Port Requester ID range end (inclusive)
+  * @stream_index: Selective IDE Stream Register Block selection
+  * @mem_assoc: PCI bus memory address association for targeting peer partner
+  * @pref_assoc: PCI bus prefetchable memory address association for
+-- 
+2.34.1
 
 
