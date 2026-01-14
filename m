@@ -1,116 +1,92 @@
-Return-Path: <linux-pci+bounces-44779-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44780-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3A11D2041A
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 17:41:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E14E0D2047D
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 17:45:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A9B243018192
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 16:39:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B94B630173AD
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 16:45:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 366F83A35D3;
-	Wed, 14 Jan 2026 16:39:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95B55394492;
+	Wed, 14 Jan 2026 16:45:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QNDY9xWw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azPrhNNp"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115A53A35B6;
-	Wed, 14 Jan 2026 16:39:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA2F3933FC;
+	Wed, 14 Jan 2026 16:45:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768408799; cv=none; b=p8818CZ5LrcH613RWR3e/uSb5DLTLqAdZtvdmIWUDSBGX0MBjUsR7MIw58GIg/UvNolKVxfSC7NhPNWBnMnP87Wx08z3AHW/nyT9JkcePHzLPP07YImZTUR9rkHCAGyM7NQ74Id8CNXQx4D3frmm1WYJmu4AirQLiWaa7IZXPXM=
+	t=1768409140; cv=none; b=f9WLbIS5/jMuQbOsvIHU88sObt8EzEUv0JMx5IBncgwpPR6UVnvecOzLbfVn2HmBzP5gt71NnPeltA2PpDBc3F3ZLNgfAlNl0MNjhFxyUuD5qB6Z4BxeQykoa2zaqKTuTxhWSkowsU7SCrumTGirtiDBUw0PzBOMv/QqYWeT+GQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768408799; c=relaxed/simple;
-	bh=npWBCjaGR/UM0D2e2/yFYMKRWKoBacRWm319Ji2nh24=;
+	s=arc-20240116; t=1768409140; c=relaxed/simple;
+	bh=ZtLzQt5YBwUg6DG6bIwSFawdoa7qArNKtK/7xD+zL0g=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=K8AOuF0PCQm34XCgEsw3V/VD0V7gmeJK3EYJQayuugTazvhZd31lIxOH31WSH48EyVvhVw0yKFX+wvnVtqQmuq8j+vCSuyH3WQWUVDXxIbuBPVd3u+t0w4xeJCc8KvGTuEUzrzV6LrooifEVeGuzzW0Pncvv4eWkUKjny1O1fxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QNDY9xWw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80F0DC4CEF7;
-	Wed, 14 Jan 2026 16:39:58 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=BSICV37OXpX/n9QyW9mhn9qkKzDYD0PAjj2Vb2v3nZ9sJs128KDks1DQtsHd5Tj+xzVEALwsEPrbFX2vSu+18+zv7rl/VRebt36uqfcShXnxpoopDvJzpFEHaByV8qgK+xe+u0rirkkX5EBBL3h+jJPR6v+8Gy8uoZ8ZJAqOckU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azPrhNNp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFBFAC4CEF7;
+	Wed, 14 Jan 2026 16:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768408798;
-	bh=npWBCjaGR/UM0D2e2/yFYMKRWKoBacRWm319Ji2nh24=;
+	s=k20201202; t=1768409140;
+	bh=ZtLzQt5YBwUg6DG6bIwSFawdoa7qArNKtK/7xD+zL0g=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=QNDY9xWwSZw2Rb3cNCQ/Nune8K8JfDfBqbOmjH6CG1oHAvjZj6XfZTv4IUcrBY9/K
-	 hd8ZK1lnSwiTPBgqHy3AWy3AJRvzzR51w/bcKk1DIUTRNg6bUQJ75T5+Qvlz1qAAym
-	 p56j12/UueuI+dgbYm1Nl9+ExTNwfukd/2yiFB4V3Uxr/tlpGpa67gabmm5Xcd7yru
-	 OWNygTWFEv4c7lhFhOBjsY7hKe6D1nDxO8dPligeYc9ExNSXCf/ZiAbyhu1vYKDSiO
-	 T4wVYVKLWlL1Z+SiT+eg85c3cDpoFVjIcfZXIRmJsSsJOXgD8mAAL2i0poSOwz5Ro3
-	 RTkiArZkniBVw==
-Date: Wed, 14 Jan 2026 10:39:57 -0600
+	b=azPrhNNptoYR+pu6N29kqKJMY+m5eXR0VNujXN6qW/T0q/xFfmXR78t8jnqqjY7pr
+	 yXHAR+rFu/uNe+IlGnXvMRxPOtzi6fZyMoPA6XNCOe8gFbrKc7AE/AUZ5B7BZbH0uH
+	 XxrJFeM4z7rfyUjQlUr1az/F3xbBEdOMmKyx/MOcwxi15ZPbntzTbCdhzgIYA8vx8Y
+	 D6IakQxZznXplW0YVQRDbrpE+iCJnaHtuk/kfzVLC7Td9mI82IE4BlJYMhOdBKKAUD
+	 ZstS3mzdcVfzSAaLSE+33dWv7774z70++C/3nHyxefXaSQP0jOf5AiaUaNiB1a413p
+	 Vc3Qs83/4/ZyQ==
+Date: Wed, 14 Jan 2026 10:45:38 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Aadityarangan Shridhar Iyengar <adiyenga@cisco.com>,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/PTM: Fix memory leak in pcie_ptm_create_debugfs()
- error path
-Message-ID: <20260114163957.GA815952@bhelgaas>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Brian Norris <briannorris@chromium.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH v4] PCI/PM: Prevent runtime suspend before devices are
+ fully initialized
+Message-ID: <20260114164538.GA816227@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <pdp4xc4d5ee3e547mmdro5riui3mclduqdl7j6iclfbozo2a4c@7m3qdm6yrhuv>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0e35a4e1-894a-47c1-9528-fc5ffbafd9e2@samsung.com>
 
-On Wed, Jan 14, 2026 at 12:58:56PM +0530, Manivannan Sadhasivam wrote:
-> On Sun, Jan 11, 2026 at 10:06:50PM +0530, Aadityarangan Shridhar Iyengar wrote:
-> > In pcie_ptm_create_debugfs(), if devm_kasprintf() fails after successfully
-> > allocating ptm_debugfs with kzalloc(), the function returns NULL without
-> > freeing the allocated memory, resulting in a memory leak.
-> > 
-> > Fix this by adding kfree(ptm_debugfs) before returning NULL in the
-> > devm_kasprintf() error path.
-> > 
-> > This leak is particularly problematic during memory pressure situations
-> > where devm_kasprintf() is more likely to fail, potentially compounding
-> > the memory exhaustion issue.
-> > 
-> > Fixes: 132833405e61 ("PCI: Add debugfs support for exposing PTM context")
-> > Signed-off-by: Aadityarangan Shridhar Iyengar <adiyenga@cisco.com>
-> > ---
-> >  drivers/pci/pcie/ptm.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-> > index ed0f9691e7d1..09c0167048a3 100644
-> > --- a/drivers/pci/pcie/ptm.c
-> > +++ b/drivers/pci/pcie/ptm.c
-> > @@ -542,8 +542,10 @@ struct pci_ptm_debugfs *pcie_ptm_create_debugfs(struct device *dev, void *pdata,
-> >  		return NULL;
-> >  
-> >  	dirname = devm_kasprintf(dev, GFP_KERNEL, "pcie_ptm_%s", dev_name(dev));
-> > -	if (!dirname)
-> > +	if (!dirname) {
-> > +		kfree(ptm_debugfs);
-> >  		return NULL;
-> > +	}
-> 
-> Thanks for spotting the leak. I also forgot to remove it in
-> pcie_ptm_destroy_debugfs(). Since this one got applied, Bjorn could you please
-> squash the below fix as well?
-> 
-> diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-> index ed0f9691e7d1..2c27bee0773d 100644
-> --- a/drivers/pci/pcie/ptm.c
-> +++ b/drivers/pci/pcie/ptm.c
-> @@ -574,6 +574,7 @@ void pcie_ptm_destroy_debugfs(struct pci_ptm_debugfs *ptm_debugfs)
->  
->         mutex_destroy(&ptm_debugfs->lock);
->         debugfs_remove_recursive(ptm_debugfs->debugfs);
-> +       kfree(ptm_debugfs);
->  }
->  EXPORT_SYMBOL_GPL(pcie_ptm_destroy_debugfs);
->  #endif
-> 
-> For this patch,
-> 
-> Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+On Wed, Jan 14, 2026 at 10:46:41AM +0100, Marek Szyprowski wrote:
+> On 06.01.2026 23:27, Bjorn Helgaas wrote:
+> > On Thu, Oct 23, 2025 at 02:09:01PM -0700, Brian Norris wrote:
+> >> Today, it's possible for a PCI device to be created and
+> >> runtime-suspended before it is fully initialized. When that happens, the
+> >> device will remain in D0, but the suspend process may save an
+> >> intermediate version of that device's state -- for example, without
+> >> appropriate BAR configuration. When the device later resumes, we'll
+> >> restore invalid PCI state and the device may not function.
+> ...
 
-Added the fix and your Reviewed-by, thanks!
+> >      Link: https://patch.msgid.link/20251023140901.v4.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid
+> 
+> This patch landed recently in linux-next as commit c796513dc54e 
+> ("PCI/PM: Prevent runtime suspend until devices are fully initialized"). 
+> In my tests I found that it sometimes causes the "pci 0000:01:00.0: 
+> runtime PM trying to activate child device 0000:01:00.0 but parent 
+> (0000:00:00.0) is not active" warning on Qualcomm Robotics RB5 board 
+> (arch/arm64/boot/dts/qcom/qrb5165-rb5.dts). This in turn causes a 
+> lockdep warning about console lock, but this is just a consequence of 
+> the runtime pm warning. Reverting $subject patch on top of current 
+> linux-next hides this warning.
+
+I moved this patch from pci/pm to pci/pend to remove it from
+linux-next while we figure this out.  Thanks for the report and
+debugging!
+
+Bjorn
 
