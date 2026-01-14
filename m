@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-44807-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44808-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5A3DD20C50
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 19:24:14 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10EC4D20D0D
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 19:29:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 331EB3007C22
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 18:24:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 403323062D61
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 18:24:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DD82335554;
-	Wed, 14 Jan 2026 18:24:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BD2A3358A0;
+	Wed, 14 Jan 2026 18:24:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qNMuZPqo"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YYnZb09/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010042.outbound.protection.outlook.com [52.101.193.42])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011030.outbound.protection.outlook.com [52.101.62.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53432FFF8F;
-	Wed, 14 Jan 2026 18:24:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83CA2FFF8F;
+	Wed, 14 Jan 2026 18:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.30
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768415053; cv=fail; b=EnbC5a3Jziv4py3kAg/2mNVuigzQDc78kbjazpAXnsM+7uYDxBLZCw2PvqB6pGatpn9fXxdGCzVTjpy+n7lIeT7yrOO4SG7YtZZTDn7qs0OIXGwxs+ZOkLQNwp5SLxXPbG+ydJKUltVwkwS9Oby7pTxzgbD+QSCuiWTz5mcosjo=
+	t=1768415066; cv=fail; b=IXaws2npWBqxMx+cEkin8g0UITBSkGDwG+Icby52cwlpARLn5/h689xuL292Dh79ZgBD7fPJWkGTkRJXnjLGmV3hBmTZjbShG+8DPLIzpUZD6t4HSLR36mOjuEQ7WFM/DyJ9lx0/2keV0Sj04Iz3OB8SAPzJhy7yo4sppFt6arA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768415053; c=relaxed/simple;
-	bh=4lOLDHKSO3n1AmFx0v5LCNYof28l9RI6aYhMFonxYhA=;
+	s=arc-20240116; t=1768415066; c=relaxed/simple;
+	bh=I2+os5LOLKG4FXaqJWQOap1TzNRcoFsrNHRTRGYd9Y8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TQg/0sIXlcOgKt/WpNeD1b9OZ5RTphMe8X5Pci3n93R67u5dJ+C3ysNpTLoeeZ225+cZ95uwRp96wQ191JdjmelY2Gs8Z4Q2swIoHz+XjBQrx6AeAQ4ieAqgtJWUa1ptnfDM1LeDbF3wdyVZ4VHUaOoXjQicS9+cEh9dH5bS+hM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qNMuZPqo; arc=fail smtp.client-ip=52.101.193.42
+	 MIME-Version:Content-Type; b=Y1/oXIn3QBJlbDIZNdt0ioqKUpmqWnIlgx4cVrGUQ7htgsnExTAAfbnhVEixbNsFVVw5weWLd0VW8PXlvpfqK5sg//HruQ4Vvb6jTzpFLjq5AgYAUNXuF+XTIILt6E3Qid+eHXcsKq4CA5yqKbo5SWXBqC0G1LBovXqYrH+4024=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YYnZb09/; arc=fail smtp.client-ip=52.101.62.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p/AkmGF4SVj2Crxux+kFf5t0satmJsHRlvrRcFJZHKHcuYAF5Its06gD6fND3sc5iFKQ/y55vRvaCYncmCBcfdjLfVu/LS9RezwvoD0zbjcMK2L9hKTJ5DibbxjJ6dESYXbmegxFb9RGfpE6hONTwxQEI85hfFu1DD6wY7QJd2pZUBRu5unttnXWaGyoyWvFGfuVA5/1Mg+CWCM+jwp7QhXqkF5BCRHk+fFd2pr3WKcFsl8cRbtCWF9INNMo4qPKroCQo8s82H5Y+16/0o/uhDRyJ9qAMDXKhEZtauz5q8DnApjZ+wDkrzq7wrjQbTuNKbtv8BBLHWfXm5joOgeU4g==
+ b=rl6yHqU2KrHVPgLLHaw2OVZpOAmh4z+MDHyOdt9oDr4kgMKfeM9qHcUIaBeCGXNaIPQBXJj5YSudCbiwLJwMQGlNp56Zkcc9AlLSXKV/Y6f4Strj42/1DjmFrtS3smoIzh4eAxbONprvm6xgySSfV7RjxKYZzSgFNj1rco7LeohZXC3ECz6moK6QMgyQsCbMHHRu67RUi48qHEOOuwF7HQIYj0K5ALG1FMc1XeKQn+HjA1d+lVCHZK9gu56/295okW2f7pN7tWflsXx892HbH7ikDSEtt6aLsJNl3ANCZFNFdDtKeYOThZ3DcqFm2Ncb4aARGrlH9vJiwLb957axGw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Bx4KNGb8N7kxgkSMsHRRFGkiA6Dn9/htDYvfc3BxdXw=;
- b=oyyXQQS3FjKHT3uuGQ2jSiPVHYHkw/MRF8eUS3zPQQR8yb7rwcIh774/5WFe6bnEpdd2gF4yDSiCJDa1qL07ReDqBDV7lcEp46yurLUfTVKSVkG3NuM+wP10s7An4pQfv0UP5CCtVHhVaBra/VuICEGD55JadHJh2cc+lU70LAnVyARyE28ApWUGEVyNfS8F55iNLlIAeYct0bURKzwcrAGekJD9vpJVntrcTvmFIH3Ge3rX0s9WqAlhNHNgANhYSeIKZ4Nl33Okl0TN7M53RDjRL320O2xuRhJQMNZfqf2A1hLjVn7Lu5VSRqN83BvQTzcZyoqgXmJ51j0y78hWdw==
+ bh=CTvagjfN0/nj097j8/D7x+AXctoiVCNLrNB9HLOkbV4=;
+ b=D/sZWJkOw8Wyrcrsn0NXc0YS+TL4APbn5qtBW38RKYcZthW71BLDX8XaqJTDsdoyL3b3UCqzDsmwOBZs/ug+aYXPuEBDnh+x6ZRDYcjGuEmYtFlhfQyK5eVs/bstBZnGA3PAkrHgiIyyXVUFFmAcl/Faz1TbiF4lEqZfFNwDtxLFePx9PExm/E7j/ow0HFYIEQvmw9bFtZgFda8gcD3Yu/q3HFFdm6SZyBCJ7CPzpAw7NmvEfsyrBAPYGcxlsOrYOa4iGbD+cRyChzGCXxAlHzN3SBYSfRrj/LIZcaoWI1wCuUTlGRJT7O2PXYamQy3c9y5fJBnm6GcTV0Gzs+Vuow==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bx4KNGb8N7kxgkSMsHRRFGkiA6Dn9/htDYvfc3BxdXw=;
- b=qNMuZPqo6rv0fXJc9Iyzgj+49++1cLbzL+ODKpaiKteEOQFItK82vN0YPyJ7fp41D6afgjKdb5H/9gwbowdS0ZDpFL4NWe9gvL1MRStc6+Xnl6Ce1sIpVT86P4Ebi0wza8+hJ/TbleEmKuGZwY4e4P+BRuAWR9HL0rCcUteTxfA=
-Received: from PH8P223CA0016.NAMP223.PROD.OUTLOOK.COM (2603:10b6:510:2db::35)
- by SJ2PR12MB9088.namprd12.prod.outlook.com (2603:10b6:a03:565::15) with
+ bh=CTvagjfN0/nj097j8/D7x+AXctoiVCNLrNB9HLOkbV4=;
+ b=YYnZb09/2zn983ifmJeLbajflcW6grwSjFdF+dCscIL1cv0yDhezCSRttlgDuDsgGL9w3eqAZThF/BaSiUViBaskDJG/25Fi69Y8roFw5coGcSGlLMND8bnUjvTYtu1HIXehHIfBp4/zj2HkS8kz+ppT116UjoTTOsgkiBQ9bcI=
+Received: from DM6PR08CA0014.namprd08.prod.outlook.com (2603:10b6:5:80::27) by
+ PH8PR12MB6987.namprd12.prod.outlook.com (2603:10b6:510:1be::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Wed, 14 Jan
- 2026 18:24:04 +0000
+ 2026 18:24:19 +0000
 Received: from CY4PEPF0000E9CE.namprd03.prod.outlook.com
- (2603:10b6:510:2db:cafe::79) by PH8P223CA0016.outlook.office365.com
- (2603:10b6:510:2db::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.5 via Frontend Transport; Wed,
- 14 Jan 2026 18:24:04 +0000
+ (2603:10b6:5:80:cafe::c1) by DM6PR08CA0014.outlook.office365.com
+ (2603:10b6:5:80::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.6 via Frontend Transport; Wed,
+ 14 Jan 2026 18:24:18 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -63,11 +63,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from satlexmb07.amd.com (165.204.84.17) by
  CY4PEPF0000E9CE.mail.protection.outlook.com (10.167.241.133) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9520.1 via Frontend Transport; Wed, 14 Jan 2026 18:24:04 +0000
+ 15.20.9520.1 via Frontend Transport; Wed, 14 Jan 2026 18:24:18 +0000
 Received: from ethanolx7ea3host.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 14 Jan
- 2026 12:24:01 -0600
+ 2026 12:24:17 -0600
 From: Terry Bowman <terry.bowman@amd.com>
 To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
 	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
@@ -80,9 +80,9 @@ To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
 	<ira.weiny@intel.com>
 CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
 	<terry.bowman@amd.com>
-Subject: [PATCH v14 14/34] PCI/AER: Report CXL or PCIe bus type in AER trace logging
-Date: Wed, 14 Jan 2026 12:20:35 -0600
-Message-ID: <20260114182055.46029-15-terry.bowman@amd.com>
+Subject: [PATCH v14 15/34] PCI/AER: Update struct aer_err_info with kernel-doc formatting
+Date: Wed, 14 Jan 2026 12:20:36 -0600
+Message-ID: <20260114182055.46029-16-terry.bowman@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260114182055.46029-1-terry.bowman@amd.com>
 References: <20260114182055.46029-1-terry.bowman@amd.com>
@@ -98,240 +98,125 @@ X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9CE:EE_|SJ2PR12MB9088:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac4b87a8-13b1-4113-ce23-08de539a18ea
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9CE:EE_|PH8PR12MB6987:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5efd0c5e-6211-4e48-7ca6-08de539a21be
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|36860700013|1800799024|82310400026|921020;
+	BCL:0;ARA:13230040|376014|7416014|82310400026|1800799024|36860700013|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?z51cwl4xaMOH4eq50ZP/kxzJTrVwLeQVi07/Gq1YRDPYcXXoCNN5gQf1j6xR?=
- =?us-ascii?Q?9SUf6FvloTiqvqxd+uw0Uqs6SWAFNI8kxhZcsrCqC/kG7Ez6CfT7K5mJwwT+?=
- =?us-ascii?Q?gVMqiXNtHSAUqJpSk0E6bDXfQIk+9Nm+q3mlha3ls2NL62d21TesdLvLQaB9?=
- =?us-ascii?Q?Zl6AM+MOJGJn1LTnKMj3z+9gZDaJQvk27anVkE/Z80xtHVR1c2wfEDelr8pQ?=
- =?us-ascii?Q?Ybk7vhGNgwGBiFWykRst8ps+BezTgDs7Dze15Jz5XUVVGzFzLIYTkV6bsd9d?=
- =?us-ascii?Q?l0fEuK7Du0rLdSsYzHyIjx92QiH8uhN3GtxC/MX0awUCyBKHQ7kBd0MzCunC?=
- =?us-ascii?Q?ESzCJ8YmYgt3YrFCL6Pw/3bebpFKdF84oodIzN+b6FTH8+v+6POCJMZFPHuH?=
- =?us-ascii?Q?7Nt4fLcwdEnjqxxGeC77Q6bF2RmfTx5Ffsze0s4uO248TrSKFFfISZO9mQdP?=
- =?us-ascii?Q?kuG3vzcdSkrHXYNuQKNOBbtAMSoNidkjB/bdTEx4seyLmh8Pil4i6vG6ryHD?=
- =?us-ascii?Q?x4zq0B9K96WyRfy9a27oDCIQ1QuDozK6yXfBZfsgnWAYKdxsCsWuaGujqhbS?=
- =?us-ascii?Q?ivHkZvyuInag29mXIVVqraB+VLqKbPQk5CWjngTwy6sUz+yu55eTDcClW0Ec?=
- =?us-ascii?Q?cJNkFpS1L78oVmQdrU6wG2SqAcSpQwR+nZprnUPbXlpucCefrjzRo6F4zkkO?=
- =?us-ascii?Q?Ma5GNvv/dmII84ONIpRc1eTK1bVAbl3nAz97lkYy22aEwDCpoNieMSJRtUKM?=
- =?us-ascii?Q?+SLRNGsXXvwqzIz9/vnXzqtLYHrXLzJTRBtw7QvScNeab4s65zY/wshM3zxA?=
- =?us-ascii?Q?tr493MHnCc7PO7maoL5udswyRl+EgCVtwYJftQIpU7G0tclju6pUTZokbo75?=
- =?us-ascii?Q?wOOh1Warmc5DeK6LADxaZpUGShbWsvkv5begQlEPp9evFFkYcUsZ3FN99On8?=
- =?us-ascii?Q?rd+lEGdynDfVqXAzTgUOYMSAXmnxoT9wx6qchW5zcAt66rtKsQWdntsgN0bP?=
- =?us-ascii?Q?x2P5yMkINgHJfrvTHqI2JAP3pkAmU2YxVeGn8Mf7j3HsMQ0QeteCaNtmUMf4?=
- =?us-ascii?Q?fHPiqSdXLQokZhGs1EBqew2Nw4L7xkGZIcyRx5Q071Y6K7CARBy+gG3s1wPH?=
- =?us-ascii?Q?5xyYrpGoF0PozcUEvVUkjMMl1tNPQNdraTG0qgRC8Wx8ZLCgyCO5cWBbZDW/?=
- =?us-ascii?Q?85L+EuO7TDEK9uf5TUeUWKDzmoxBc4g2dAOrTMa/gn8hbKdyzF1mL/9p2Unr?=
- =?us-ascii?Q?G8TzytZJI6xZyA7cExrpzWnqZZ+Yo+ZvI0CtdXZBRcvcMre9Tvk7imVQ2Bu6?=
- =?us-ascii?Q?cq7/xAr+sqFInyHlLZiif7VHQ55tWVZDdYqnSuZn+sdnEknMrol7jaF557wT?=
- =?us-ascii?Q?Txon002JC3Dy/Y5ysI/5Lhk0r9nKAplS/ji3ITj+cQcGgpHTxJMJPLh7dggQ?=
- =?us-ascii?Q?9/sHD31DKC8NZtjcUWckDjdQDOrG1kKx4XfSKYIdfk/G00UGOdQuTFH75pL7?=
- =?us-ascii?Q?vehLy32swTZvaE7UO/sICroHCV0eF5JTlOfr9BhJyO5cGAAvWVnpGZiZhAph?=
- =?us-ascii?Q?FskKlaXen1lIhswD6+EA69Pr6H5+ycPMoh/W900T5aSBohJr1z8azoCBdTKo?=
- =?us-ascii?Q?QMFCc46sa8tg+IKwQv6g4paJG2Wt9rZ2NcOMf/aETE+jY5jKS+29T7nm2kbh?=
- =?us-ascii?Q?D/gsR8xrZG4fajpsbciXaDHmzWk=3D?=
+	=?us-ascii?Q?KVkDVv9BJeCasAP/akqMF1kGS/gprM+EYN0Ht7PXBzlEY+270Arx1X13rJ3r?=
+ =?us-ascii?Q?mdC/9siuRsGSeVyta/Hi5QXNOpWlacWauALbV1zpn2oCOghl573DEXArqkkq?=
+ =?us-ascii?Q?cDAsqGtRxdcFP64cnAgR2qqoznRUPtcrd54rcMRDJbvGgG+Ff5YfmIM3Ezly?=
+ =?us-ascii?Q?upk3nXA2OorkWaI2OTLKk6vJYVdpoeembUD4U2kZEsjKtBS+LVKdt8kLhqKj?=
+ =?us-ascii?Q?kE7wetGcLwUueYBAUT63f1/cnY4v9KJZhYm+lHP/2YmguajUzPq9weK218FF?=
+ =?us-ascii?Q?/1VlPw/tO8Dsq7ZFSDcOfhRQDssvUFypDJX1pRwpV+xFUd37+U/kVJaogoz1?=
+ =?us-ascii?Q?2e8e0TMVYprCkR0wphhW4RyLabHIqTrCEIjRuA0QOnMDlU+25We2wFShtl9g?=
+ =?us-ascii?Q?itd+1vkcI+pE7A4l+otVNgWCmi1OGGEwcCnqW9ngyMlDxnHvhRF7x8h+3laV?=
+ =?us-ascii?Q?RTM+2swSO4CCANzaShTtAGda3rHLNoJCZ4ev0BX7kp/U2P4fvSUm9ICjXO3k?=
+ =?us-ascii?Q?2dAurtThin6mu/jQ3f94BZkTL8wmWRRTMI/TAM0tj8hDYZkyjcohoZcr37nh?=
+ =?us-ascii?Q?6csv96l8if4uOlvv3F3YJqPhXmzKSjEPSIxI5Ztn/aZn6eyUjJ8uMh4ZPq2F?=
+ =?us-ascii?Q?nLv+zC9yuHv9aBQGOD2ln9fcnNwT9hyopsO72Bypq0H8tX/9cuk5WQJ/N7Ko?=
+ =?us-ascii?Q?mWHg3F7r2fo9sj6YTp1fiUDoSrrL1nYSUcw1zmeMBLHkkoQ/sWDL2ktzmZ6S?=
+ =?us-ascii?Q?8crUnwDTSmWdXJz7Oqm/+ENWnOIdVBPjmeyFnSqk9MtxhkAhLcDPJHJepf/M?=
+ =?us-ascii?Q?cwjZkIHhwFHDijFnogzmG6tmtyKdKHW2EdZeLiRLFcWV8OvehK+DQjkQsQQc?=
+ =?us-ascii?Q?DH/DeDVuNwhmY2IVAiM46kXMq5TOhV3QnmcPR3kc6ER2u5+pBRkggxQZeGEX?=
+ =?us-ascii?Q?qeaEp1VbzlVT3vAVATgfu7n+5zo4zvZ5j8sJKOd/K4/7h4k2BnPnkNphgax6?=
+ =?us-ascii?Q?QrvkPD/dirYaC+XUROmwRN/sg4a7SFrso2aHQYyTJl3vDW3A3FbTBohJmagY?=
+ =?us-ascii?Q?xMkwm9CCaUSBH/5/WnXpVm7En7zEiWtwoDSWD838/+0/+aEQtq2Et/J1GOul?=
+ =?us-ascii?Q?ZGul+62aaHolaKCo0UDkVr/HVUiOEf3nVoAWBPDycZ4xcMngFCKs7HNMmiGY?=
+ =?us-ascii?Q?+I2PDHSpe+ZcSGkEWaLv8F4TAtlw+l/v8391axlF9sKNFgXZybIwDVu0uZ1t?=
+ =?us-ascii?Q?eXVEKo6N4GNA9xtIuPn5Y+gWUfXEGZt0b1rlmAHZieX/gJ2banPYZHuMZhzv?=
+ =?us-ascii?Q?QAaY7YJe7HmPNW9imp9BTnxapRnH1lLiHZO7ja1/9ku7vMiWzoyF/UkN+Czj?=
+ =?us-ascii?Q?4ZEMxIo4L8raVExyHWHRnXRoapBFgI4OY/OmAzGxvqS2ps8hTkUUm/AiaWzL?=
+ =?us-ascii?Q?EDFxC1+lbKyMvvqb3wuSbxB/a0PaeI5DIQwHxdarMSwcaoEr8bh7McYOL/3l?=
+ =?us-ascii?Q?tzThM8wzw+VRQfbZyIthYs2MAQTEf3Ve2XT7DzFlAicMZLQncntSisnejfpC?=
+ =?us-ascii?Q?BKPyWgonHFUJsk7ing9COb2jluov7CECLou4tGg2QOV7mtRGdI7O9NHhlZmc?=
+ =?us-ascii?Q?XQfcy/nwoMywd2rYkI6tJpyB4jJoE3LSwr7fKVUUGHKn8HVooFbp2G4e2Gn9?=
+ =?us-ascii?Q?zIHHUTVTNtorg7yTXFGIiR7Je40=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(1800799024)(82310400026)(921020);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(1800799024)(36860700013)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 18:24:04.0369
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 18:24:18.8525
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac4b87a8-13b1-4113-ce23-08de539a18ea
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5efd0c5e-6211-4e48-7ca6-08de539a21be
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	CY4PEPF0000E9CE.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9088
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6987
 
-The AER service driver and aer_event tracing currently log 'PCIe Bus Type'
-for all errors. Update the driver and aer_event tracing to log 'CXL Bus
-Type' for CXL device errors.
-
-This requires that AER can identify and distinguish between PCIe errors and
-CXL errors.
-
-Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
-aer_get_device_error_info() and pci_print_aer().
-
-Update the aer_event trace routine to accept a bus type string parameter.
+Update the existing 'struct aer_err_info' definition to use kernel-doc
+formatting. Remove the inline comments to reduce noise and do not introduce
+functional changes. This will improve readability and maintainability.
 
 Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
 ---
 
 Changes in v13->v14:
-- Merged with Dan's commit. Changes are moving bus_type the last
-  parameter in function calls (Dan)
-- Removed all DCOs because of changes (Terry)
-- Update commit message (Bjorn)
-- Add Bjorn's ack-by
-
-Changes in v12->v13:
-- Remove duplicated aer_err_info inline comments. Is already in the
-  kernel-doc header (Ben)
-
-Changes in v11->v12:
- - Change aer_err_info::is_cxl to be bool a bitfield. Update structure
- padding. (Lukas)
- - Add kernel-doc for 'struct aer_err_info' (Lukas)
-
-Changes in v10->v11:
- - Remove duplicate call to trace_aer_event() (Shiju)
- - Added Dan William's and Dave Jiang's reviewed-by
+- New commit
 ---
- drivers/pci/pci.h       |  8 +++++++-
- drivers/pci/pcie/aer.c  | 20 +++++++++++++-------
- include/ras/ras_event.h | 12 ++++++++----
- 3 files changed, 28 insertions(+), 12 deletions(-)
+ drivers/pci/pci.h | 29 +++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 0e67014aa001..41ec38e82c08 100644
+index 41ec38e82c08..dbc547db208a 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -738,7 +738,8 @@ struct aer_err_info {
+@@ -724,16 +724,33 @@ static inline bool pci_dev_binding_disallowed(struct pci_dev *dev)
+ 
+ #define AER_MAX_MULTI_ERR_DEVICES	5	/* Not likely to have more */
+ 
++/**
++ * struct aer_err_info - AER Error Information
++ * @dev: Devices reporting error
++ * @ratelimit_print: Flag to log or not log the devices' error. 0=NotLog/1=Log
++ * @error_dev_num: Number of devices reporting an error
++ * @level: printk level to use in logging
++ * @id: Value from register PCI_ERR_ROOT_ERR_SRC
++ * @severity: AER severity, 0-UNCOR Non-fatal, 1-UNCOR fatal, 2-COR
++ * @root_ratelimit_print: Flag to log or not log the root's error. 0=NotLog/1=Log
++ * @multi_error_valid: If multiple errors are reported
++ * @first_error: First reported error
++ * @is_cxl: Bus type error: 0-PCI Bus error, 1-CXL Bus error
++ * @tlp_header_valid: Indicates if TLP field contains error information
++ * @status: COR/UNCOR error status
++ * @mask: COR/UNCOR mask
++ * @tlp: Transaction packet information
++ */
+ struct aer_err_info {
+ 	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
+ 	int ratelimit_print[AER_MAX_MULTI_ERR_DEVICES];
+ 	int error_dev_num;
+-	const char *level;		/* printk level */
++	const char *level;
+ 
+ 	unsigned int id:16;
+ 
+-	unsigned int severity:2;	/* 0:NONFATAL | 1:FATAL | 2:COR */
+-	unsigned int root_ratelimit_print:1;	/* 0=skip, 1=print */
++	unsigned int severity:2;
++	unsigned int root_ratelimit_print:1;
+ 	unsigned int __pad1:4;
  	unsigned int multi_error_valid:1;
  
- 	unsigned int first_error:5;
--	unsigned int __pad2:2;
-+	unsigned int __pad2:1;
-+	unsigned int is_cxl:1;
+@@ -742,9 +759,9 @@ struct aer_err_info {
+ 	unsigned int is_cxl:1;
  	unsigned int tlp_header_valid:1;
  
- 	unsigned int status;		/* COR/UNCOR Error Status */
-@@ -749,6 +750,11 @@ struct aer_err_info {
+-	unsigned int status;		/* COR/UNCOR Error Status */
+-	unsigned int mask;		/* COR/UNCOR Error Mask */
+-	struct pcie_tlp_log tlp;	/* TLP Header */
++	unsigned int status;
++	unsigned int mask;
++	struct pcie_tlp_log tlp;
+ };
+ 
  int aer_get_device_error_info(struct aer_err_info *info, int i);
- void aer_print_error(struct aer_err_info *info, int i);
- 
-+static inline const char *aer_err_bus(struct aer_err_info *info)
-+{
-+	return info->is_cxl ? "CXL" : "PCIe";
-+}
-+
- int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
- 		      unsigned int tlp_len, bool flit,
- 		      struct pcie_tlp_log *log);
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index b1e6ee7468b9..d30a217fae46 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -870,6 +870,7 @@ void aer_print_error(struct aer_err_info *info, int i)
- 	struct pci_dev *dev;
- 	int layer, agent, id;
- 	const char *level = info->level;
-+	const char *bus_type = aer_err_bus(info);
- 
- 	if (WARN_ON_ONCE(i >= AER_MAX_MULTI_ERR_DEVICES))
- 		return;
-@@ -879,22 +880,22 @@ void aer_print_error(struct aer_err_info *info, int i)
- 
- 	pci_dev_aer_stats_incr(dev, info);
- 	trace_aer_event(pci_name(dev), (info->status & ~info->mask),
--			info->severity, info->tlp_header_valid, &info->tlp);
-+			info->severity, info->tlp_header_valid, &info->tlp, bus_type);
- 
- 	if (!info->ratelimit_print[i])
- 		return;
- 
- 	if (!info->status) {
--		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
--			aer_error_severity_string[info->severity]);
-+		pci_err(dev, "%s Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-+			bus_type, aer_error_severity_string[info->severity]);
- 		goto out;
- 	}
- 
- 	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
- 	agent = AER_GET_AGENT(info->severity, info->status);
- 
--	aer_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
--		   aer_error_severity_string[info->severity],
-+	aer_printk(level, dev, "%s Bus Error: severity=%s, type=%s, (%s)\n",
-+		   bus_type, aer_error_severity_string[info->severity],
- 		   aer_error_layer[layer], aer_agent_string[agent]);
- 
- 	aer_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-@@ -928,6 +929,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
- void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 		   struct aer_capability_regs *aer)
- {
-+	const char *bus_type;
- 	int layer, agent, tlp_header_valid = 0;
- 	u32 status, mask;
- 	struct aer_err_info info = {
-@@ -948,10 +950,13 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 
- 	info.status = status;
- 	info.mask = mask;
-+	info.is_cxl = pcie_is_cxl(dev);
-+
-+	bus_type = aer_err_bus(&info);
- 
- 	pci_dev_aer_stats_incr(dev, &info);
--	trace_aer_event(pci_name(dev), (status & ~mask),
--			aer_severity, tlp_header_valid, &aer->header_log);
-+	trace_aer_event(pci_name(dev), (status & ~mask), aer_severity,
-+			tlp_header_valid, &aer->header_log, bus_type);
- 
- 	if (!aer_ratelimit(dev, info.severity))
- 		return;
-@@ -1301,6 +1306,7 @@ int aer_get_device_error_info(struct aer_err_info *info, int i)
- 	/* Must reset in this function */
- 	info->status = 0;
- 	info->tlp_header_valid = 0;
-+	info->is_cxl = pcie_is_cxl(dev);
- 
- 	/* The device might not support AER */
- 	if (!aer)
-diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-index eaecc3c5f772..fdb785fa4613 100644
---- a/include/ras/ras_event.h
-+++ b/include/ras/ras_event.h
-@@ -339,9 +339,11 @@ TRACE_EVENT(aer_event,
- 		 const u32 status,
- 		 const u8 severity,
- 		 const u8 tlp_header_valid,
--		 struct pcie_tlp_log *tlp),
-+		 struct pcie_tlp_log *tlp,
-+		 const char *bus_type),
- 
--	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
-+
-+	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp, bus_type),
- 
- 	TP_STRUCT__entry(
- 		__string(	dev_name,	dev_name	)
-@@ -349,10 +351,12 @@ TRACE_EVENT(aer_event,
- 		__field(	u8,		severity	)
- 		__field(	u8, 		tlp_header_valid)
- 		__array(	u32, 		tlp_header, PCIE_STD_MAX_TLP_HEADERLOG)
-+		__string(	bus_type,	bus_type	)
- 	),
- 
- 	TP_fast_assign(
- 		__assign_str(dev_name);
-+		__assign_str(bus_type);
- 		__entry->status		= status;
- 		__entry->severity	= severity;
- 		__entry->tlp_header_valid = tlp_header_valid;
-@@ -364,8 +368,8 @@ TRACE_EVENT(aer_event,
- 		}
- 	),
- 
--	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
--		__get_str(dev_name),
-+	TP_printk("%s %s Bus Error: severity=%s, %s, TLP Header=%s\n",
-+		__get_str(dev_name), __get_str(bus_type),
- 		__entry->severity == AER_CORRECTABLE ? "Corrected" :
- 			__entry->severity == AER_FATAL ?
- 			"Fatal" : "Uncorrected, non-fatal",
 -- 
 2.34.1
 
