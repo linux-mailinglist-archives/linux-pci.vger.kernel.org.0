@@ -1,156 +1,209 @@
-Return-Path: <linux-pci+bounces-44689-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44690-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26AE3D1BFCA
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 02:48:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 934D3D1C13E
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 03:06:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 24C6F300C172
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 01:48:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CB326301E593
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 02:06:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AFA41DF25C;
-	Wed, 14 Jan 2026 01:48:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 393C82F28FF;
+	Wed, 14 Jan 2026 02:06:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="MTEX6kXV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPl4BP11"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m15590.qiye.163.com (mail-m15590.qiye.163.com [101.71.155.90])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5148914AD20
-	for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 01:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116492F25FB;
+	Wed, 14 Jan 2026 02:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768355304; cv=none; b=hoJsrbCQxZQ2UFIxXJ9vEobD0eCgZD1NqtEGHWJY77xR6uSi40MAqy4/kA8mNNJDCIAhcu7ThwTTRejzf6Lq4kdBFMpbzS5l/qY0MvyS288XpT01h+6EoAiF+dhDwODQFyfcLG3Kh9qbX/1aw2uhpB+s7BvK4U08bzFFSLWLc1Y=
+	t=1768356400; cv=none; b=ZpdEiLSgbdSxXuqPNDrqGzM/PDUU4B22uVqmj7oWbL2e/qnTsu78geQpZbsEjPyhURytS3g4tgwc1p3y54VbPQpbfYfwlVr37CupTNJnZYNtPblnj/8N7/1xvFTKNjAD0mlMRwq1Q0wjPfaN+nPZVTL1tZ9oKjiBpArgnWGvq48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768355304; c=relaxed/simple;
-	bh=aCNS0lS5c6fltu2MzNadI4I1ln44SEVfhwg3z0ql52M=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FBcIWSKal5nN6ccApht0DjWVflfksVngYfEx0yndyKzz453j4mneUoJu/Vi1zNjLjscGXm04bdU1nniuPoHIhQkXXfAppz5p0RyqmgOCRZfofmptZ0QxRS8vQqatG64aOd1obHdLgfslzErnAxG0JpCAoaxF0WYQmK/eixMhnR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=MTEX6kXV; arc=none smtp.client-ip=101.71.155.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.14] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 308ba3e68;
-	Wed, 14 Jan 2026 09:32:56 +0800 (GMT+08:00)
-Message-ID: <1814707c-1ab1-414e-8f84-fce748b6f165@rock-chips.com>
-Date: Wed, 14 Jan 2026 09:32:55 +0800
+	s=arc-20240116; t=1768356400; c=relaxed/simple;
+	bh=uuLr/j8r2wPQDPeI3/LDBsXy44v02x81XisruRF7Wo0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Q7jOtTetCu+2zJP884ZQCsHlWqNBTk22tH7zEGX5/FVMyB3VqHoa/c7W4MIjEefgPnkT8Or6oTF5vGao1WV30d2pzvsrWyAm1TCub2dTB6NyPelfAnQQYrYISV+appBhPdgrpc0XJMYBJwkijpPZomBDEPLN19dG+JiIFDu4HKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPl4BP11; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 85929C116C6;
+	Wed, 14 Jan 2026 02:06:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768356399;
+	bh=uuLr/j8r2wPQDPeI3/LDBsXy44v02x81XisruRF7Wo0=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=gPl4BP11xBYFA9FvQ2g9ZImlgtJh1zHXH632Dbe+7yTvDAacB/n7YZ1LXldxbJZFu
+	 20GofxINix8p8NWWoVJWi60ZxGoXZW5VfYVK/GH067uxgZtfbcGOhCIceSxtf0gGXD
+	 8qYXfPRTnWvCmu3E3pX6fOZ7fnFv/G/jGrzUuM1c3JWM9Gd5DJb5RkR11X43NYJXc0
+	 ZqlHU3RqXX/99Ws83MdiWBgx+8WBmXZYnr/OcdCGgEgs7RRdiSYif74IXZqCU672vH
+	 UnHK8YgOOLrgWIttRpt0maOWuijrmPQ87R0PbvxfRJJLvwFbveUSpNW71x5hpTlyUp
+	 Agg+SYwLVzV+g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F59D31A05;
+	Wed, 14 Jan 2026 02:06:39 +0000 (UTC)
+From: Ziyao Li via B4 Relay <devnull+liziyao.uniontech.com@kernel.org>
+Date: Wed, 14 Jan 2026 10:05:45 +0800
+Subject: [PATCH v6] PCI: loongson: Override PCIe bridge supported speeds
+ for Loongson-3C6000 series
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, Jingoo Han <jingoohan1@gmail.com>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-rockchip@lists.infradead.org,
- Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: dw-rockchip: Disable BAR 0 and BAR 1 for RC mode
-To: Manivannan Sadhasivam <mani@kernel.org>
-References: <1766570461-138256-1-git-send-email-shawn.lin@rock-chips.com>
- <jrah3krizuwyfwhmvq67wjsye2eeompjflpuo4dz2mgugi5txt@np6gknrtbkqo>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <jrah3krizuwyfwhmvq67wjsye2eeompjflpuo4dz2mgugi5txt@np6gknrtbkqo>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9bba2269fa09cckunmeed149924252e5
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkwZGFYeH00fH04fGE4ZH0tWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=MTEX6kXVb9GwYym+vUUGXj0LzWIjA8mOHM1ygjN5OJ3/8S2sIxAU8C+p+aN/L/ohDAaUbTQ1ln7ZH8GqZo4YykFTzgwW4u087OC0Hg4z4be+kO3yQ2RN6Ik+sblWGa4MQRCeTFqTQDqmLLzCWg87IMcIXWY6usY7NbtunGSsedw=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=RwuldkTHkRdgDbBtixJ83jhlVo/aPu3UyniC5of32nU=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260114-loongson-pci1-v6-1-ee8a18f5d242@uniontech.com>
+X-B4-Tracking: v=1; b=H4sIAPj5ZmkC/33OTWrDMBCG4asEraui0Z+trHqP0oWkGcWCVgpWa
+ lqC714lUAjG7fL9YB7myhrNmRo7Hq5spiW3XEsP+3RgcfLlRDxjbyaFNGKUkr/XWk6tFn6OGbh
+ GQoHDmCAE1m/OM6X8dfde33pPuV3q/H3nF7itf0kLcODKeR8CAqSAL5+l/3KhOD3H+sFu2iJ/B
+ StA6K0gu4BggMwQLKVxT1CPgtsKqgsGMRpPKnin9gT9IIDaCroL4CSg1YNLpPcE869guiCtji5
+ o74QPW2Fd1x+5ktCOtgEAAA==
+X-Change-ID: 20250822-loongson-pci1-4ded0d78f1bb
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: niecheng1@uniontech.com, zhanjun@uniontech.com, 
+ guanwentao@uniontech.com, Kexy Biscuit <kexybiscuit@aosc.io>, 
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ loongarch@lists.linux.dev, kernel@uniontech.com, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Lain Fearyncess Yang <fsf@live.com>, Ayden Meng <aydenmeng@yeah.net>, 
+ Mingcong Bai <jeffbai@aosc.io>, Xi Ruoyao <xry111@xry111.site>, 
+ Ziyao Li <liziyao@uniontech.com>, stable@vger.kernel.org, 
+ Huacai Chen <chenhuacai@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1768356398; l=4664;
+ i=liziyao@uniontech.com; s=20250730; h=from:subject:message-id;
+ bh=NQB5kuvj5NMBxTAmoWUFNc7QxvL1OvGSuDPC180t0ro=;
+ b=YZcYmCnnZHg6jd7Ql8ij+njUe18BYwIVeGyn9DE4bpxHuv4/xh5oiyda8MZAuIMcnYKnhrTx1
+ 69ZJtbc2VgFDLp4aXajeECo/gZQ+ADavZpaB3i+MEn0f8bSQD9XtVBS
+X-Developer-Key: i=liziyao@uniontech.com; a=ed25519;
+ pk=tZ+U+kQkT45GRGewbMSB4VPmvpD+KkHC/Wv3rMOn/PU=
+X-Endpoint-Received: by B4 Relay for liziyao@uniontech.com/20250730 with
+ auth_id=471
+X-Original-From: Ziyao Li <liziyao@uniontech.com>
+Reply-To: liziyao@uniontech.com
 
-Hi Mani
+From: Ziyao Li <liziyao@uniontech.com>
 
-在 2026/01/13 星期二 22:29, Manivannan Sadhasivam 写道:
-> On Wed, Dec 24, 2025 at 06:01:01PM +0800, Shawn Lin wrote:
->> To slitence the useless bar allocation error log of RC when
->> scanning bus, as RC doesn't need BARs at all.
-> 
-> It is not RC, but Root Port. It is OK to disable the Root Port BARs if they
-> don't serve any purpose, but I think the issue is that the BAR size is bogus.
-> Both BARs report 1GiB of size, which I don't think it makes sense for a Root
-> Port.
-> 
+Older steppings of the Loongson-3C6000 series incorrectly report the
+supported link speeds on their PCIe bridges (device IDs 0x3c19, 0x3c29)
+as only 2.5 GT/s, despite the upstream bus supporting speeds from
+2.5 GT/s up to 16 GT/s.
 
-Sure, it's the root port reports the bogus BARS size.
+As a result, since commit 774c71c52aa4 ("PCI/bwctrl: Enable only if more
+than one speed is supported"), bwctrl will be disabled if there's only
+one 2.5 GT/s value in vector `supported_speeds`.
 
-> Can I reword the commit message as:
-> 
-> Some Rockchip PCIe Root Port report bogus size of 1GiB for the BAR memories and
-> they cause below resource allocation issue during probe. Since there is no use
-> of the Root Port BAR memories, disable both of them.
-> 
+Also, the amdgpu driver reads the value by pcie_get_speed_cap() in
+amdgpu_device_partner_bandwidth(), for its dynamic adjustment of PCIe
+clocks and lanes in power management. We hope this can prevent similar
+problems in future driver changes (similar checks may be implemented
+in other GPU, storage controller, NIC, etc. drivers).
 
-Looks fine to me. Would you prefer a v2 or you could amend the commit
-msg while applying this patch?
+Manually override the `supported_speeds` field for affected PCIe bridges
+with those found on the upstream bus to correctly reflect the supported
+link speeds.
 
-Thanks.
+This patch was originally found from AOSC OS[1].
 
-> - Mani
-> 
->>
->>    pci 0000:00:00.0: [1d87:3588] type 01 class 0x060400 PCIe Root Port
->>    pci 0000:00:00.0: BAR 0 [mem 0x00000000-0x3fffffff]
->>    pci 0000:00:00.0: BAR 1 [mem 0x00000000-0x3fffffff]
->>    pci 0000:00:00.0: ROM [mem 0x00000000-0x0000ffff pref]
->> 	...
->>    pci 0000:00:00.0: BAR 0 [mem 0x900000000-0x93fffffff]: assigned
->>    pci 0000:00:00.0: BAR 1 [mem size 0x40000000]: can't assign; no space
->>    pci 0000:00:00.0: BAR 1 [mem size 0x40000000]: failed to assign
->>    pci 0000:00:00.0: ROM [mem 0xf0200000-0xf020ffff pref]: assigned
->>    pci 0000:00:00.0: BAR 0 [mem 0x900000000-0x93fffffff]: releasing
->>    pci 0000:00:00.0: ROM [mem 0xf0200000-0xf020ffff pref]: releasing
->>    pci 0000:00:00.0: BAR 0 [mem 0x900000000-0x93fffffff]: assigned
->>    pci 0000:00:00.0: BAR 1 [mem size 0x40000000]: can't assign; no space
->>    pci 0000:00:00.0: BAR 1 [mem size 0x40000000]: failed to assign
->>
->> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->> ---
->>
->>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> index f8605fe..e421fa0 100644
->> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> @@ -80,6 +80,8 @@
->>   #define  PCIE_LINKUP_MASK		GENMASK(17, 16)
->>   #define  PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
->>   
->> +#define PCIE_TYPE0_HDR_DBI2_OFFSET      0x100000
->> +
->>   struct rockchip_pcie {
->>   	struct dw_pcie pci;
->>   	void __iomem *apb_base;
->> @@ -292,6 +294,8 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
->>   	if (irq < 0)
->>   		return irq;
->>   
->> +	pci->dbi_base2 = pci->dbi_base + PCIE_TYPE0_HDR_DBI2_OFFSET;
->> +
->>   	ret = rockchip_pcie_init_irq_domain(rockchip);
->>   	if (ret < 0)
->>   		dev_err(dev, "failed to init irq domain\n");
->> @@ -302,6 +306,10 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
->>   	rockchip_pcie_configure_l1ss(pci);
->>   	rockchip_pcie_enable_l0s(pci);
->>   
->> +	/* Disable RC's BAR0 and BAR1 */
->> +	dw_pcie_writel_dbi2(pci, PCI_BASE_ADDRESS_0, 0x0);
->> +	dw_pcie_writel_dbi2(pci, PCI_BASE_ADDRESS_1, 0x0);
->> +
->>   	return 0;
->>   }
->>   
->> -- 
->> 2.7.4
->>
->>
-> 
+Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
+Tested-by: Lain Fearyncess Yang <fsf@live.com>
+Tested-by: Ayden Meng <aydenmeng@yeah.net>
+Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
+Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+[Xi Ruoyao: Fix falling through logic and add kernel log output.]
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+Link: https://github.com/AOSC-Tracking/linux/commit/4392f441363abdf6fa0a0433d73175a17f493454
+[Ziyao Li: move from drivers/pci/quirks.c to drivers/pci/controller/pci-loongson.c]
+Signed-off-by: Ziyao Li <liziyao@uniontech.com>
+Tested-by: Mingcong Bai <jeffbai@aosc.io>
+Cc: stable@vger.kernel.org
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+Changes in v6:
+- adjust commit message
+- Link to v5: https://lore.kernel.org/r/20260113-loongson-pci1-v5-1-264c9b4a90ab@uniontech.com
+
+Changes in v5:
+- style adjust
+- Link to v4: https://lore.kernel.org/r/20260113-loongson-pci1-v4-1-1921d6479fe4@uniontech.com
+
+Changes in v4:
+- rename subject
+- use 0x3c19/0x3c29 instead of 3c19/3c29
+- Link to v3: https://lore.kernel.org/r/20260109-loongson-pci1-v3-1-5ddc5ae3ba93@uniontech.com
+
+Changes in v3:
+- Adjust commit message
+- Make the program flow more intuitive
+- Link to v2: https://lore.kernel.org/r/20260104-loongson-pci1-v2-1-d151e57b6ef8@uniontech.com
+
+Changes in v2:
+- Link to v1: https://lore.kernel.org/r/20250822-loongson-pci1-v1-1-39aabbd11fbd@uniontech.com
+- Move from arch/loongarch/pci/pci.c to drivers/pci/controller/pci-loongson.c
+- Fix falling through logic and add kernel log output by Xi Ruoyao
+---
+ drivers/pci/controller/pci-loongson.c | 36 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+index bc630ab8a283..a4250d7af1bf 100644
+--- a/drivers/pci/controller/pci-loongson.c
++++ b/drivers/pci/controller/pci-loongson.c
+@@ -176,6 +176,42 @@ static void loongson_pci_msi_quirk(struct pci_dev *dev)
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loongson_pci_msi_quirk);
+ 
++/*
++ * Older steppings of the Loongson-3C6000 series incorrectly report the
++ * supported link speeds on their PCIe bridges (device IDs 0x3c19,
++ * 0x3c29) as only 2.5 GT/s, despite the upstream bus supporting speeds
++ * from 2.5 GT/s up to 16 GT/s.
++ */
++static void loongson_pci_bridge_speed_quirk(struct pci_dev *pdev)
++{
++	u8 old_supported_speeds = pdev->supported_speeds;
++
++	switch (pdev->bus->max_bus_speed) {
++	case PCIE_SPEED_16_0GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_16_0GB;
++		fallthrough;
++	case PCIE_SPEED_8_0GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_8_0GB;
++		fallthrough;
++	case PCIE_SPEED_5_0GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_5_0GB;
++		fallthrough;
++	case PCIE_SPEED_2_5GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_2_5GB;
++		break;
++	default:
++		pci_warn(pdev, "unexpected max bus speed");
++
++		return;
++	}
++
++	if (pdev->supported_speeds != old_supported_speeds)
++		pci_info(pdev, "fixing up supported link speeds: 0x%x => 0x%x",
++			 old_supported_speeds, pdev->supported_speeds);
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19, loongson_pci_bridge_speed_quirk);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29, loongson_pci_bridge_speed_quirk);
++
+ static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
+ {
+ 	struct pci_config_window *cfg;
+
+---
+base-commit: ea1013c1539270e372fc99854bc6e4d94eaeff66
+change-id: 20250822-loongson-pci1-4ded0d78f1bb
+
+Best regards,
+-- 
+Ziyao Li <liziyao@uniontech.com>
+
 
 
