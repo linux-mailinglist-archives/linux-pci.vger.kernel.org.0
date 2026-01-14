@@ -1,159 +1,220 @@
-Return-Path: <linux-pci+bounces-44837-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44839-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77944D20FE2
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 20:18:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2ED3AD21036
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 20:22:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D6032303371D
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 19:18:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E00933086246
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 19:21:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 614C932E15B;
-	Wed, 14 Jan 2026 19:18:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 619583469FF;
+	Wed, 14 Jan 2026 19:21:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9BumdeR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c5BfR4D6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF9A4502A
-	for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 19:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DFF346A1F;
+	Wed, 14 Jan 2026 19:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768418310; cv=none; b=jSa5MhJ79zwStB143C0jbyinnlQB3UuGRiSNuLQIr1bvcZlgjr6B8I/yoTdbzT/MF58izjFeGS8TRLRXaOIAjPLvCQfJHOlmOa3k1VSF8n09eL7E3FikQyqb9m8Pklw/Tdhg9LhmtoSgT9ijhRAlahyUGyDLvDyVaI5RvTbvTus=
+	t=1768418504; cv=none; b=omWtX5Frz3x53UR4Q1LUJcnlC7khD3NtuNyUOOHc2xRJZyjbYaJB/ANrrGIrV0IAIC4cahj08G7kfr7myPhKkcC7vrr9w5uFSW+Tc/68pPnnW9ZRaUaQJRPuA7lTwGYK2hR9jDYZBpSAM/0AyAhiYGDW6gh8gnmjjYiBSauGf/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768418310; c=relaxed/simple;
-	bh=77cHCs8stIX+7mteF3sBj2Pg0Eh0ATANF5xhZTXj3FY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ixRbfx+2+Lk0ET0YrmzmpXkP5zCFdEBwP0AU+LaLjxyZlzn/1koC45iHkMpWysLT5HVUkuX94v6rCgTLx6sGpEoRs7UpmzPv3LtSSS/HTWMFj2Z/SiRK7syK2xv6EcaNS1pMHsPC/qRhpa3Xtq39g7GpBJlXxiyTw/rZ/oR6x/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9BumdeR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4950C4CEF7;
-	Wed, 14 Jan 2026 19:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768418309;
-	bh=77cHCs8stIX+7mteF3sBj2Pg0Eh0ATANF5xhZTXj3FY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=V9BumdeRsR862jLq6GeMJBDDhU+ToaG1SjCeCu/rdomXQ/JsmhSUaBcH++SaUsOv1
-	 rmetFes9hAgrNSS2iCetGI7BhRJA0aj9TA2pBrNMiMZC/aO/6xXvscrNwZwuuN2ghT
-	 tkjdWdcnDvyQzdSpOxS0OTR8zHjpbnoXeEvhf61L8c4OKfagHFoiYNUtpVbGw5elbD
-	 BwSlKwZvyS5WvEHQ/CuIv2rWsieyYz9f73rJQA9Swdm9biTcoSFKK/AwbEc0lOVGkC
-	 VIcaFO1XhigWdkFC2djPPD2NCt+qyLt+4z4Qp6BU1DXoKYgLtT0NNlPfVHQwBSAnvb
-	 srSpV8uqUxVdA==
-Date: Wed, 14 Jan 2026 13:18:28 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Keith Busch <kbusch@meta.com>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
-	Keith Busch <kbusch@kernel.org>, Alex Williamson <alex@shazbot.org>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH] pci: make reset_subordinate hotplug safe
-Message-ID: <20260114191828.GA830415@bhelgaas>
+	s=arc-20240116; t=1768418504; c=relaxed/simple;
+	bh=0Xr44qIt4aDZeFOuXJUWqKFpNwHw/ty79qHlHFXr8ng=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I+xXo6nFqCFAnoaAM2XqUVW7e3b3LmJg2WkmVYNbmDQALDG0XH/twVDmbWg91Xoro6hSXvPPp9R+TZfs6D3C6kCie0fmcCdyfuZOYf4F7A18FWXr/ktSGueGstbF1ngWlOXl4rGPMPVh6EVisEsGpD+iI6B6NF/lCTGAQiinPMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c5BfR4D6; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768418502; x=1799954502;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0Xr44qIt4aDZeFOuXJUWqKFpNwHw/ty79qHlHFXr8ng=;
+  b=c5BfR4D6eHlFOp+wLlCQ/3b8mecEzY7wm+duto/Aeoug8l5SU6D0fTKp
+   eWJGEZT2ySN1UltpxjYuq26QzXK7wA1gzIr3jM5edagmJqfncLu6xH40D
+   IxKOv0JHg3DR7HSHLAKkFuowLgsN5RJVqySFXgu5+c6c0p0hohE7+Ah76
+   XXrSmhapXXVS5wMvlz5Xl/hx4rkw9BOGaYyUCLz0IZJSgwJ5tFdCc+WXs
+   vvGeMRexwjFpcL6g18sYXmqiw/Fxd8SPdPmBMqdI6ZNM+pIZZH63oGN51
+   3vAJ3eZj/YvVUubuxxypV87L1EZeqMmss52utftJe8iV3vyzhoc96oXal
+   w==;
+X-CSE-ConnectionGUID: IFVKRy3eTUebWgjSyWxH0g==
+X-CSE-MsgGUID: DDCm0kSnTjWPaulfCx5FMg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="87305647"
+X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
+   d="scan'208";a="87305647"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 11:21:41 -0800
+X-CSE-ConnectionGUID: 36cRy4BqT3ukGV7yMf/R4Q==
+X-CSE-MsgGUID: oSiZugMJQPWWWoPWHLMztA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
+   d="scan'208";a="236006778"
+Received: from smoticic-mobl1.ger.corp.intel.com (HELO fdugast-desk.intel.com) ([10.245.244.85])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 11:21:33 -0800
+From: Francois Dugast <francois.dugast@intel.com>
+To: intel-xe@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org,
+	Francois Dugast <francois.dugast@intel.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Felix Kuehling <Felix.Kuehling@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	David Hildenbrand <david@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Balbir Singh <balbirs@nvidia.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	linuxppc-dev@lists.ozlabs.org,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	linux-pci@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH v5 0/5] Enable THP support in drm_pagemap
+Date: Wed, 14 Jan 2026 20:19:51 +0100
+Message-ID: <20260114192111.1267147-1-francois.dugast@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260114185821.704089-1-kbusch@meta.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-[+cc Alex, Lukas]
+Use Balbir Singh's series for device-private THP support [1] and previous
+preparation work in drm_pagemap [2] to add 2MB/THP support in xe. This leads
+to significant performance improvements when using SVM with 2MB pages.
 
-On Wed, Jan 14, 2026 at 10:58:21AM -0800, Keith Busch wrote:
-> From: Keith Busch <kbusch@kernel.org>
-> 
-> Use the slot reset method when resetting the bridge if the bus contains
-> hotplug slots. This fixes spurious hotplug events the secondary bus
-> reset triggers by utilizing slot's specific reset callback that ignores
-> link events.
+[1] https://lore.kernel.org/linux-mm/20251001065707.920170-1-balbirs@nvidia.com/
+[2] https://patchwork.freedesktop.org/series/151754/
 
-What do these spurious events look like in dmesg?
+v2:
+- rebase on top of multi-device SVM
+- add drm_pagemap_cpages() with temporary patch
+- address other feedback from Matt Brost on v1
 
-> Signed-off-by: Keith Busch <kbusch@kernel.org>
-> ---
-> The new function introduced here is essentially the same as
-> pci_bus_error_reset, except it uses the reset functions that save and
-> restore the device. This is the same as before if not resetting a
-> hotplug slot.
-> 
->  drivers/pci/pci-sysfs.c |  3 +--
->  drivers/pci/pci.c       | 27 +++++++++++++++++++++++++++
->  drivers/pci/pci.h       |  2 +-
->  3 files changed, 29 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 3881359440b1a..5c7c6f0c435f3 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -553,7 +553,6 @@ static ssize_t reset_subordinate_store(struct device *dev,
->  				const char *buf, size_t count)
->  {
->  	struct pci_dev *pdev = to_pci_dev(dev);
-> -	struct pci_bus *bus = pdev->subordinate;
->  	unsigned long val;
->  
->  	if (!capable(CAP_SYS_ADMIN))
-> @@ -563,7 +562,7 @@ static ssize_t reset_subordinate_store(struct device *dev,
->  		return -EINVAL;
->  
->  	if (val) {
-> -		int ret = __pci_reset_bus(bus);
-> +		int ret = pci_reset_bridge(pdev);
->  
->  		if (ret)
->  			return ret;
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b14dd064006cc..ca426ff68c820 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5747,6 +5747,33 @@ int __pci_reset_bus(struct pci_bus *bus)
->  	return rc;
->  }
->  
-> +int pci_reset_bridge(struct pci_dev *bridge)
-> +{
-> +	struct pci_bus *bus = bridge->subordinate;
-> +	struct pci_slot *slot;
-> +
-> +	if (!bus)
-> +		return -ENOTTY;
-> +
-> +	mutex_lock(&pci_slot_mutex);
-> +	if (list_empty(&bus->slots))
-> +		goto bus_reset;
-> +
-> +	list_for_each_entry(slot, &bus->slots, list)
-> +		if (pci_probe_reset_slot(slot))
-> +			goto bus_reset;
-> +
-> +	list_for_each_entry(slot, &bus->slots, list)
-> +		if (__pci_reset_slot(slot))
-> +			goto bus_reset;
-> +
-> +	mutex_unlock(&pci_slot_mutex);
-> +	return 0;
-> +bus_reset:
-> +	mutex_unlock(&pci_slot_mutex);
-> +	return __pci_reset_bus(bus);
-> +}
-> +
->  /**
->   * pci_reset_bus - Try to reset a PCI bus
->   * @pdev: top level PCI device to reset via slot/bus
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 36f8c0985430a..f216e7a37d726 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -197,7 +197,7 @@ bool pci_reset_supported(struct pci_dev *dev);
->  void pci_init_reset_methods(struct pci_dev *dev);
->  int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
->  int pci_bus_error_reset(struct pci_dev *dev);
-> -int __pci_reset_bus(struct pci_bus *bus);
-> +int pci_reset_bridge(struct pci_dev *dev);
->  
->  struct pci_cap_saved_data {
->  	u16		cap_nr;
-> -- 
-> 2.47.3
-> 
+v3:
+The major change is to remove the dependency to the mm/huge_memory
+helper migrate_device_split_page() that was called explicitely when
+a 2M buddy allocation backed by a large folio would be later reused
+for a smaller allocation (4K or 64K). Instead, the first 3 patches
+provided by Matthew Brost ensure large folios are split at the time
+of freeing.
+
+v4:
+- add order argument to folio_free callback
+- send complete series to linux-mm and MM folks as requested (Zi Yan
+  and Andrew Morton) and cover letter to anyone receiving at least
+  one of the patches (Liam R. Howlett)
+
+v5:
+- update zone_device_page_init() in patch #1 to reinitialize large
+  zone device private folios
+
+Cc: Zi Yan <ziy@nvidia.com>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: Felix Kuehling <Felix.Kuehling@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Simona Vetter <simona@ffwll.ch>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Danilo Krummrich <dakr@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: David Hildenbrand <david@kernel.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: Balbir Singh <balbirs@nvidia.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: kvm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: amd-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-cxl@vger.kernel.org
+Cc: nvdimm@lists.linux.dev
+Cc: linux-fsdevel@vger.kernel.org
+
+Francois Dugast (3):
+  drm/pagemap: Unlock and put folios when possible
+  drm/pagemap: Add helper to access zone_device_data
+  drm/pagemap: Enable THP support for GPU memory migration
+
+Matthew Brost (2):
+  mm/zone_device: Reinitialize large zone device private folios
+  drm/pagemap: Correct cpages calculation for migrate_vma_setup
+
+ arch/powerpc/kvm/book3s_hv_uvmem.c       |   2 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_migrate.c |   2 +-
+ drivers/gpu/drm/drm_gpusvm.c             |   7 +-
+ drivers/gpu/drm/drm_pagemap.c            | 158 ++++++++++++++++++-----
+ drivers/gpu/drm/nouveau/nouveau_dmem.c   |   2 +-
+ include/drm/drm_pagemap.h                |  15 +++
+ include/linux/memremap.h                 |   9 +-
+ lib/test_hmm.c                           |   4 +-
+ mm/memremap.c                            |  20 ++-
+ 9 files changed, 180 insertions(+), 39 deletions(-)
+
+-- 
+2.43.0
+
 
