@@ -1,37 +1,37 @@
-Return-Path: <linux-pci+bounces-44758-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44759-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A81D7D1FDC2
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 16:42:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 37796D1FE43
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 16:44:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E9201309D0D1
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 15:36:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0AA453098445
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 15:36:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F86F39E6C1;
-	Wed, 14 Jan 2026 15:36:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1979139E6C2;
+	Wed, 14 Jan 2026 15:36:55 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8DDE39C659;
-	Wed, 14 Jan 2026 15:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC24F39E162;
+	Wed, 14 Jan 2026 15:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768405008; cv=none; b=iWhCUVs7XxX/RZuX6oPUsnZgiRNAJKwe17yVs2HO8FCVOrLX2F+/GT74V4Jgd7gloMTpsSq0s197QXW8PkjZGR8722h1zxN2bvJsss84cPGOHPMZJA27b3gljatjNUvdUmeMpBv58Hefadqjq+qL/HWAC6BelGAABXUFzBLOlW0=
+	t=1768405015; cv=none; b=UReiGI+KujBIxisva25xUhLel6/WEsvsqpvW4qyduNpIOfhFZ+1QZ4FWzWv8Eyq1mctM5u2LDr8XnVNuucnpqNqjX39PYAOU9Z1ibDiA2cbX+1efmtWWuNIGK7ASy8A341bVhBRgFIJhcEWBMDTzd4TSFnPxul+L9+eB0pGyNeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768405008; c=relaxed/simple;
-	bh=MZAmNmdNkHHTPKjxlr+GYi6n/cBXCC+ccrJERg4b3dM=;
+	s=arc-20240116; t=1768405015; c=relaxed/simple;
+	bh=8cQJJvnMXYVvy7aMxgApvCKGphaaKO/87ll7T2/12VI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bkAfQLF7YuAwXeY8zDBSqfLF0Y4ZxWfS9H/72GSRZeffEIuECP/rdu8BrW1X2Y87Js/pA3HikjwE4q8O8xL/r/7DLt+MDBa735GjhC9eBwnT5khiFpQMl0q9oCtQhnutUQcG1oq89LOhxxjUSX1x9RFP3LUN/KTShYwqFeTl5gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+	 MIME-Version; b=IEAVJT+/TndSGtgS2Epor4R9KbyaHPWDbR9ANUPF/JV/yRI748IAPPkkPSKlqvQEsl28XvT4oIeCPjiTT+oq/LbahP5TtRCQpCcWiXtL9sGDj4LHQJfDfDAwDy7sZQjXXsRmWQIx9KO2u2SXMm+b5hDbvprQfBm+p5L4EnmwDZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: KIs55CiGSy2Oep/9isQ6Ow==
-X-CSE-MsgGUID: OVENkJhyT4e1MyJ3nNPV5Q==
+X-CSE-ConnectionGUID: Xk+HL/2OTumuUfgOSJ+hcQ==
+X-CSE-MsgGUID: clDLddJlSayctEfHGu8sfw==
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 15 Jan 2026 00:36:46 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 15 Jan 2026 00:36:52 +0900
 Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.178])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9B87B4022B3F;
-	Thu, 15 Jan 2026 00:36:40 +0900 (JST)
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9B3B04022B3E;
+	Thu, 15 Jan 2026 00:36:46 +0900 (JST)
 From: John Madieu <john.madieu.xa@bp.renesas.com>
 To: claudiu.beznea.uj@bp.renesas.com,
 	lpieralisi@kernel.org,
@@ -50,9 +50,9 @@ Cc: robh@kernel.org,
 	linux-clk@vger.kernel.org,
 	john.madieu@gmail.com,
 	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH 11/16] PCI: rzg3s-host: Add PCIe Gen3 (8.0 GT/s) link speed support
-Date: Wed, 14 Jan 2026 16:33:32 +0100
-Message-ID: <20260114153337.46765-12-john.madieu.xa@bp.renesas.com>
+Subject: [PATCH 12/16] PCI: rzg3s-host: Add support for RZ/G3E PCIe controller
+Date: Wed, 14 Jan 2026 16:33:33 +0100
+Message-ID: <20260114153337.46765-13-john.madieu.xa@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260114153337.46765-1-john.madieu.xa@bp.renesas.com>
 References: <20260114153337.46765-1-john.madieu.xa@bp.renesas.com>
@@ -64,82 +64,339 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Extend the link speed configuration to support Gen3 (8.0 GT/s) in addition
-to Gen2 (5.0 GT/s). This is required for RZ/G3E PCIe host support, which is
-Gen3 capable.
+Add support for the PCIe controller found in RZ/G3E SoCs to the existing
+RZ/G3S PCIe host driver. The RZ/G3E PCIe controller is similar to the
+RZ/G3S's, with the following key differences:
 
-Instead of relying on DT max-link-speed for configuration, read the hardware
-capabilities from the PCI_EXP_LNKCAP register to determine the maximum
-supported speed. The DT max-link-speed property is now only used as an
-optional limit when explicitly specified, which aligns with PCIe subsystem
-expectations.
+ - Supports PCIe Gen3 (8.0 GT/s) link speeds alongside Gen2 (5.0 GT/s)
+ - Uses a different reset control mechanism via AXI registers instead
+   of the Linux reset framework
+ - Requires specific SYSC configuration for link state control and
+   Root Complex mode selection
 
 Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
 ---
- drivers/pci/controller/pcie-rzg3s-host.c | 26 ++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ drivers/pci/controller/pcie-rzg3s-host.c | 231 ++++++++++++++++++++---
+ 1 file changed, 209 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-rzg3s-host.c b/drivers/pci/controller/pcie-rzg3s-host.c
-index 18fccc687c6b..b0a5c08d2527 100644
+index b0a5c08d2527..b046360e92da 100644
 --- a/drivers/pci/controller/pcie-rzg3s-host.c
 +++ b/drivers/pci/controller/pcie-rzg3s-host.c
-@@ -981,8 +981,9 @@ static int rzg3s_pcie_set_max_link_speed(struct rzg3s_pcie_host *host)
+@@ -111,6 +111,16 @@
+ #define RZG3S_PCI_PERM_CFG_HWINIT_EN		BIT(2)
+ #define RZG3S_PCI_PERM_PIPE_PHY_REG_EN		BIT(1)
+ 
++/* RZ/G3E specific registers */
++#define RZG3E_PCI_RESET				0x310
++#define RZG3E_PCI_RESET_RST_OUT_B		BIT(6)
++#define RZG3E_PCI_RESET_RST_PS_B		BIT(5)
++#define RZG3E_PCI_RESET_RST_LOAD_B		BIT(4)
++#define RZG3E_PCI_RESET_RST_CFG_B		BIT(3)
++#define RZG3E_PCI_RESET_RST_RSM_B		BIT(2)
++#define RZG3E_PCI_RESET_RST_GP_B		BIT(1)
++#define RZG3E_PCI_RESET_RST_B			BIT(0)
++
+ #define RZG3S_PCI_MSIRE(id)			(0x600 + (id) * 0x10)
+ #define RZG3S_PCI_MSIRE_ENA			BIT(0)
+ 
+@@ -183,9 +193,13 @@ struct rzg3s_sysc_function {
+ /**
+  * struct rzg3s_sysc_info - RZ/G3S System Controller function info
+  * @rst_rsm_b: Reset RSM_B function descriptor
++ * @l1_allow: L1 power state management function descriptor
++ * @mode: Mode configuration function descriptor
+  */
+ struct rzg3s_sysc_info {
+ 	struct rzg3s_sysc_function rst_rsm_b;
++	struct rzg3s_sysc_function l1_allow;
++	struct rzg3s_sysc_function mode;
+ };
+ 
+ /**
+@@ -1201,6 +1215,10 @@ static int rzg3s_pcie_resets_prepare_and_get(struct rzg3s_pcie_host *host)
+ 	if (ret)
+ 		return ret;
+ 
++	/* Mandatory for RZ/G3E, harmless for RZ/G3S */
++	reset_control_bulk_assert(data->num_power_resets,
++				  host->power_resets);
++
+ 	return devm_reset_control_bulk_get_optional_exclusive(host->dev,
+ 							      data->num_cfg_resets,
+ 							      host->cfg_resets);
+@@ -1266,6 +1284,7 @@ static int rzg3s_pcie_host_init_port(struct rzg3s_pcie_host *host)
+ 
+ static int rzg3s_pcie_host_init(struct rzg3s_pcie_host *host)
  {
- 	u32 remote_supported_link_speeds, max_supported_link_speeds;
- 	u32 cs2, tmp, pcie_cap = RZG3S_PCI_CFG_PCIEC;
--	u32 cur_link_speed, link_speed;
-+	u32 cur_link_speed, link_speed, hw_max_speed;
- 	u8 ltssm_state_l0 = 0xc;
-+	u32 lnkcap;
++	const struct rzg3s_sysc_info *sysc_info = host->sysc->info;
+ 	u32 val;
  	int ret;
- 	u16 ls;
  
-@@ -1002,7 +1003,22 @@ static int rzg3s_pcie_set_max_link_speed(struct rzg3s_pcie_host *host)
- 	ls = readw_relaxed(host->pcie + pcie_cap + PCI_EXP_LNKSTA);
- 	cs2 = readl_relaxed(host->axi + RZG3S_PCI_PCSTAT2);
+@@ -1282,6 +1301,16 @@ static int rzg3s_pcie_host_init(struct rzg3s_pcie_host *host)
+ 	if (ret)
+ 		return ret;
  
--	switch (pcie_link_speed[host->max_link_speed]) {
-+	/* Read hardware supported link speed from Link Capabilities Register */
-+	lnkcap = readl_relaxed(host->pcie + pcie_cap + PCI_EXP_LNKCAP);
-+	hw_max_speed = FIELD_GET(PCI_EXP_LNKCAP_SLS, lnkcap);
++	/* Enable ASPM L1 transition for SoCs that use it */
++	if (sysc_info->l1_allow.mask) {
++		ret = regmap_update_bits(host->sysc->regmap,
++					 sysc_info->l1_allow.offset,
++					 sysc_info->l1_allow.mask,
++					 field_prep(sysc_info->l1_allow.mask, 1));
++		if (ret)
++			return ret;
++	}
++
+ 	/* Initialize the interrupts */
+ 	rzg3s_pcie_irq_init(host);
+ 
+@@ -1625,12 +1654,27 @@ static int rzg3s_pcie_probe(struct platform_device *pdev)
+ 		goto port_refclk_put;
+ 	}
+ 
+-	ret = regmap_update_bits(sysc->regmap,
+-				 sysc->info->rst_rsm_b.offset,
+-				 sysc->info->rst_rsm_b.mask,
+-				 field_prep(sysc->info->rst_rsm_b.mask, 1));
+-	if (ret)
+-		goto port_refclk_put;
++	/*
++	 * Put controller in RC (Root Complex) mode for SoCs that
++	 * support it. These can operate in either EP or RC mode.
++	 */
++	if (sysc->info->mode.mask) {
++		ret = regmap_write(sysc->regmap,
++				   sysc->info->mode.offset,
++				   sysc->info->mode.mask);
++		if (ret)
++			goto port_refclk_put;
++	}
++
++	/* De-assert SYSC RST_RSM_B only if used by the SoC */
++	if (sysc->info->rst_rsm_b.mask) {
++		ret = regmap_update_bits(sysc->regmap,
++					 sysc->info->rst_rsm_b.offset,
++					 sysc->info->rst_rsm_b.mask,
++					 field_prep(sysc->info->rst_rsm_b.mask, 1));
++		if (ret)
++			goto port_refclk_put;
++	}
+ 
+ 	ret = rzg3s_pcie_resets_prepare_and_get(host);
+ 	if (ret)
+@@ -1684,9 +1728,11 @@ static int rzg3s_pcie_probe(struct platform_device *pdev)
+ 	 * SYSC RST_RSM_B signal need to be asserted before turning off the
+ 	 * power to the PHY.
+ 	 */
+-	regmap_update_bits(sysc->regmap, sysc->info->rst_rsm_b.offset,
+-			   sysc->info->rst_rsm_b.mask,
+-			   field_prep(sysc->info->rst_rsm_b.mask, 0));
++	if (sysc->info->rst_rsm_b.mask)
++		regmap_update_bits(sysc->regmap,
++				   sysc->info->rst_rsm_b.offset,
++				   sysc->info->rst_rsm_b.mask,
++				   field_prep(sysc->info->rst_rsm_b.mask, 0));
+ port_refclk_put:
+ 	clk_put(host->port.refclk);
+ 
+@@ -1721,11 +1767,15 @@ static int rzg3s_pcie_suspend_noirq(struct device *dev)
+ 	if (ret)
+ 		goto cfg_reinit;
+ 
+-	ret = regmap_update_bits(sysc->regmap, sysc->info->rst_rsm_b.offset,
+-				 sysc->info->rst_rsm_b.mask,
+-				 field_prep(sysc->info->rst_rsm_b.mask, 0));
+-	if (ret)
+-		goto power_resets_restore;
++	/* Assert SYSC RST_RSM_B if supported */
++	if (sysc->info->rst_rsm_b.mask) {
++		ret = regmap_update_bits(sysc->regmap,
++					 sysc->info->rst_rsm_b.offset,
++					 sysc->info->rst_rsm_b.mask,
++					 field_prep(sysc->info->rst_rsm_b.mask, 0));
++		if (ret)
++			goto power_resets_restore;
++	}
+ 
+ 	return 0;
+ 
+@@ -1748,11 +1798,23 @@ static int rzg3s_pcie_resume_noirq(struct device *dev)
+ 	struct rzg3s_sysc *sysc = host->sysc;
+ 	int ret;
+ 
+-	ret = regmap_update_bits(sysc->regmap, sysc->info->rst_rsm_b.offset,
+-				 sysc->info->rst_rsm_b.mask,
+-				 field_prep(sysc->info->rst_rsm_b.mask, 1));
+-	if (ret)
+-		return ret;
++	/* De-assert SYSC RST_RSM_B if supported */
++	if (sysc->info->rst_rsm_b.mask) {
++		ret = regmap_update_bits(sysc->regmap,
++					 sysc->info->rst_rsm_b.offset,
++					 sysc->info->rst_rsm_b.mask,
++					 field_prep(sysc->info->rst_rsm_b.mask, 1));
++		if (ret)
++			return ret;
++	}
++
++	if (sysc->info->mode.mask) {
++		ret = regmap_write(sysc->regmap,
++				   sysc->info->mode.offset,
++				   sysc->info->mode.mask);
++		if (ret)
++			return ret;
++	}
+ 
+ 	ret = rzg3s_pcie_power_resets_deassert(host);
+ 	if (ret)
+@@ -1779,12 +1841,133 @@ static int rzg3s_pcie_resume_noirq(struct device *dev)
+ 	reset_control_bulk_assert(data->num_power_resets,
+ 				  host->power_resets);
+ assert_rst_rsm_b:
+-	regmap_update_bits(sysc->regmap, sysc->info->rst_rsm_b.offset,
+-			   sysc->info->rst_rsm_b.mask,
+-			   field_prep(sysc->info->rst_rsm_b.mask, 0));
++	if (sysc->info->rst_rsm_b.mask)
++		regmap_update_bits(sysc->regmap,
++				   sysc->info->rst_rsm_b.offset,
++				   sysc->info->rst_rsm_b.mask,
++				   field_prep(sysc->info->rst_rsm_b.mask, 0));
+ 	return ret;
+ }
+ 
++/* RZ/G3E SoC-specific implementations */
++static void rzg3e_pcie_config_pre_init(struct rzg3s_pcie_host *host)
++{
++	/*
++	 * De-assert LOAD_B and CFG_B during configuration phase.
++	 * These are part of the RZ/G3E reset register, not reset framework.
++	 * Other reset bits remain asserted until cfg_post_init.
++	 */
++	rzg3s_pcie_update_bits(host->axi, RZG3E_PCI_RESET,
++			       RZG3E_PCI_RESET_RST_LOAD_B | RZG3E_PCI_RESET_RST_CFG_B,
++			       RZG3E_PCI_RESET_RST_LOAD_B | RZG3E_PCI_RESET_RST_CFG_B);
++}
++
++static void rzg3e_cfg_deinit(struct rzg3s_pcie_host *host)
++{
++	writel_relaxed(0, host->axi + RZG3E_PCI_RESET);
++}
++
++static int rzg3e_cfg_post_init(struct rzg3s_pcie_host *host)
++{
++	/* De-assert PS_B, GP_B, RST_B */
++	rzg3s_pcie_update_bits(host->axi, RZG3E_PCI_RESET,
++			       RZG3E_PCI_RESET_RST_PS_B | RZG3E_PCI_RESET_RST_GP_B |
++			       RZG3E_PCI_RESET_RST_B,
++			       RZG3E_PCI_RESET_RST_PS_B | RZG3E_PCI_RESET_RST_GP_B |
++			       RZG3E_PCI_RESET_RST_B);
++
++	/* Hardware requires >= 500us delay before final reset deassert */
++	fsleep(500);
++
++	/* De-assert OUT_B and RSM_B to complete reset sequence */
++	rzg3s_pcie_update_bits(host->axi, RZG3E_PCI_RESET,
++			       RZG3E_PCI_RESET_RST_OUT_B | RZG3E_PCI_RESET_RST_RSM_B,
++			       RZG3E_PCI_RESET_RST_OUT_B | RZG3E_PCI_RESET_RST_RSM_B);
++
++	return 0;
++}
++
++static int rzg3e_pcie_set_inbound_windows(struct rzg3s_pcie_host *host,
++					  struct resource_entry *entry,
++					  int *index)
++{
++	u64 pci_addr = entry->res->start - entry->offset;
++	u64 cpu_addr = entry->res->start;
++	u64 cpu_end = entry->res->end;
++	int id = *index;
++	u64 size;
 +
 +	/*
-+	 * Use DT max-link-speed only as a limit. If specified and lower
-+	 * than hardware capability, cap to that value.
++	 * The RZ/G3E requires power-of-2 sizes (4K * 2^N) due to mask register
++	 * format. Split non-power-of-2 regions into multiple windows to avoid
++	 * over-mapping.
 +	 */
-+	if (host->max_link_speed > 0 && host->max_link_speed < hw_max_speed)
-+		hw_max_speed = host->max_link_speed;
++	while (cpu_addr <= cpu_end) {
++		u64 remaining_size = cpu_end - cpu_addr + 1;
++		u64 align_limit;
 +
-+	switch (pcie_link_speed[hw_max_speed]) {
-+	case PCIE_SPEED_8_0GT:
-+		max_supported_link_speeds = GENMASK(PCI_EXP_LNKSTA_CLS_8_0GB - 1, 0);
-+		link_speed = PCI_EXP_LNKCTL2_TLS_8_0GT;
-+		break;
- 	case PCIE_SPEED_5_0GT:
- 		max_supported_link_speeds = GENMASK(PCI_EXP_LNKSTA_CLS_5_0GB - 1, 0);
- 		link_speed = PCI_EXP_LNKCTL2_TLS_5_0GT;
-@@ -1018,10 +1034,10 @@ static int rzg3s_pcie_set_max_link_speed(struct rzg3s_pcie_host *host)
- 	remote_supported_link_speeds &= max_supported_link_speeds;
++		if (id >= RZG3S_MAX_WINDOWS)
++			return dev_err_probe(host->dev, -ENOSPC,
++					     "Failed to map inbound window for resource (%s)\n",
++					     entry->res->name);
++
++		/* Start with largest power-of-two that fits in remaining size */
++		size = 1ULL << __fls(remaining_size);
++
++		/*
++		 * Find alignment limit - the largest power-of-two that both
++		 * addresses are aligned to
++		 */
++		align_limit = min(cpu_addr ? (1ULL << __ffs(cpu_addr)) : ~0ULL,
++				  pci_addr ? (1ULL << __ffs(pci_addr)) : ~0ULL);
++
++		/* Window size cannot exceed alignment */
++		size = min(size, align_limit);
++
++		/*
++		 * According to the RZ/G3E HW manual Rev.1.15,
++		 * (Section 6.6.4.1.3.(74) AXI Window Mask (Lower) Register):
++		 * The area which can be set is 4K * 2^N bytes.
++		 */
++		size = max(size, SZ_4K);
++
++		/*
++		 * HW expects size - 1 for mask register.
++		 * For example: 4KB (0x1000) becomes mask 0xfff (12 bits set).
++		 */
++		rzg3s_pcie_set_inbound_window(host, cpu_addr, pci_addr,
++					      size - 1, id);
++
++		cpu_addr += size;
++		pci_addr += size;
++		id++;
++	}
++	*index = id;
++
++	return 0;
++}
++
++static const char * const rzg3e_soc_power_resets[] = { "aresetn" };
++
++static const struct rzg3s_pcie_soc_data rzg3e_soc_data = {
++	.power_resets = rzg3e_soc_power_resets,
++	.num_power_resets = ARRAY_SIZE(rzg3e_soc_power_resets),
++	.cfg_post_init = rzg3e_cfg_post_init,
++	.cfg_deinit = rzg3e_cfg_deinit,
++	.cfg_pre_init = rzg3e_pcie_config_pre_init,
++	.set_inbound_windows = rzg3e_pcie_set_inbound_windows,
++	.sysc_info = {
++		.l1_allow = {
++			.offset = 0x1020,
++			.mask = BIT(0),
++		},
++		.mode = {
++			.offset = 0x1024,
++			.mask = BIT(0),
++		},
++	},
++};
++
+ static const struct dev_pm_ops rzg3s_pcie_pm_ops = {
+ 	NOIRQ_SYSTEM_SLEEP_PM_OPS(rzg3s_pcie_suspend_noirq,
+ 				  rzg3s_pcie_resume_noirq)
+@@ -1819,6 +2002,10 @@ static const struct of_device_id rzg3s_pcie_of_match[] = {
+ 		.compatible = "renesas,r9a08g045-pcie",
+ 		.data = &rzg3s_soc_data,
+ 	},
++	{
++		.compatible = "renesas,r9a09g047-pcie",
++		.data = &rzg3e_soc_data,
++	},
+ 	{}
+ };
  
- 	/*
--	 * Return if max link speed is already set or the connected device
-+	 * Return if target link speed is already set or the connected device
- 	 * doesn't support it.
- 	 */
--	if (cur_link_speed == host->max_link_speed ||
-+	if (cur_link_speed == hw_max_speed ||
- 	    remote_supported_link_speeds != max_supported_link_speeds)
- 		return 0;
- 
-@@ -1598,8 +1614,6 @@ static int rzg3s_pcie_probe(struct platform_device *pdev)
- 	host->pcie = host->axi + RZG3S_PCI_CFG_BASE;
- 
- 	host->max_link_speed = of_pci_get_max_link_speed(np);
--	if (host->max_link_speed < 0)
--		host->max_link_speed = 2;
- 
- 	ret = rzg3s_pcie_host_parse_port(host);
- 	if (ret)
 -- 
 2.25.1
 
