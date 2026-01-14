@@ -1,83 +1,198 @@
-Return-Path: <linux-pci+bounces-44877-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44878-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 290F8D21A23
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 23:40:51 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2641D21A79
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 23:50:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C4BFD30060C1
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 22:40:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9CADE301339F
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 22:50:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D42C357A31;
-	Wed, 14 Jan 2026 22:40:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31E80357A5F;
+	Wed, 14 Jan 2026 22:50:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czDpH+3v"
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="CMNdH9Kf";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X1GJn2M7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DF53AEF51;
-	Wed, 14 Jan 2026 22:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F5B357717;
+	Wed, 14 Jan 2026 22:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768430443; cv=none; b=mwU3DD6hpHPWjJzqob3F/m9lBG5WzW3G6mg1DLmqMVP8dLTMJbrmEe/2FmrWTAQZFae4NRXT0T+5oeOirq+bv/BJYRljlHMApTANUyM6m/1rZh4yNOmcx8MaNR3iLHCTe3CT5n0S3Lu7/8PCS7onXFog2a6FM3j1UeDthOejGgk=
+	t=1768431050; cv=none; b=FpkpjGQ7cxixWYbXAX6IE9eBoDc9hyNUrBBAU1iSDNV/eXiQzB+WtRzfLlHP64zaaVwHlMVGowH8nDeuwxfJ+W12F4s+XHpvAhjHSVIOxB8ZScaPiUgxqaQYioJoljuG8DYelbxXDHf/jZ7PHbEDSTptQ4EsDVSYngBsaeXAuhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768430443; c=relaxed/simple;
-	bh=5ES8bEMKNj3Ib/nnpA6GUX5TcpIIhEFS6A05uogh01A=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Rdtw3GlcCAKytn6KfI463FwU9CqyOyxAYGOhNH8vGxi91Fi48E7oE9M9w0foSbhMW29RMMzlb5c0VigXnmq6oSAATnbxWriAbtRIcEogSkieBnPxhr3U/umw91u6/Wr/IIhLzQaPZ+jvesvJ2+taEzrPzB5ZjGqen6dc9jgpFOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czDpH+3v; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48C18C4CEF7;
-	Wed, 14 Jan 2026 22:40:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768430442;
-	bh=5ES8bEMKNj3Ib/nnpA6GUX5TcpIIhEFS6A05uogh01A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=czDpH+3verLeY51lPxTi7poZJvwjMZjysGesQxJu5aCMUT9QRTTq/9zuSnyfsE+we
-	 k4esnpXLgDbnfcYBw6hNZo12CBUE+vBreIpVhio9f8ES79GZPue+HWJRhgAD/+w1dB
-	 QfJZE2oKi7OfGfrTBVmSHcdAeX0kSe8iexef5mHdI34oNqCY3nHMIZoOaMy/c6Aw3m
-	 573usHQ7b+PXCQ/+D6QPFk4FXwLS26W1Hg+WEI8A8GxqmWpOlvKc+k5ZmjA4M1+hzc
-	 2cLz5nChLdj89EGJUQ6nAR+oRNHh9v+cGPw4YSlSnvFQTZOnccdsVu9jzPWr0B+ryI
-	 IovLKYk9dtWUg==
-Date: Wed, 14 Jan 2026 16:40:41 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: John Madieu <john.madieu.xa@bp.renesas.com>
-Cc: claudiu.beznea.uj@bp.renesas.com, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, mani@kernel.org, geert+renesas@glider.be,
-	krzk+dt@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	conor+dt@kernel.org, magnus.damm@gmail.com,
-	biju.das.jz@bp.renesas.com, linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org, john.madieu@gmail.com
-Subject: Re: [PATCH 09/16] PCI: rzg3s-host: Add SoC-specific configuration
- and initialization callbacks
-Message-ID: <20260114224041.GA838614@bhelgaas>
+	s=arc-20240116; t=1768431050; c=relaxed/simple;
+	bh=g//UZzu7MsgYucd6N3xPydbKHc3HPUhKc/0ChTjYf+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jtlExvZoGQ0JW0a5Uz4Is0k9kqdqRtGWFUAjuHwsu55Ce1Elsqs4cEZPgAa2xaLsFRk8ngu4dcpWMNPyaqyTSnH2dA7Ek1q1lAqvuH42l920tGyNOhWfbiy/IooXZWuboWhJPGWOhJPiNzPemqMzd0NcO7KQLsSGimBb26GlfO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=CMNdH9Kf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=X1GJn2M7; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id E9420EC0166;
+	Wed, 14 Jan 2026 17:50:43 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Wed, 14 Jan 2026 17:50:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1768431043;
+	 x=1768517443; bh=O3ziLGsY2aZqDAycUIMKi54XxQLNGeT4ykW3yhvseLE=; b=
+	CMNdH9Kft15bdPIpCCfxc5fDI/9DQAXp1MARAoRSDvvMbONbxiWQ+oofuLJSzV4h
+	o4HtTegiYlRMJcFFkeknozE2fZdx2Kfp0Vu51mRQzh7m9WU1ExE7qQaVizgkXfUy
+	A/SRKWAnpjyfL6RQwEvY1HNe5bXvaXmasCRwje5F/P895rGJeEHFaXq3G5swzYrD
+	cZXpAFwVV60LCCHMyzbwh2qJzbt3gYAXaAV4jZqIowFLx1YqT0my2c66n8RZPQS/
+	BFj55Ov2vBeUz9z228BR9r2LC6s0bNgDE9wa2xftm8viYwH0gVW8GCVJA+IoK8al
+	yDcR5mdr52fTFBUrldcAqQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1768431043; x=
+	1768517443; bh=O3ziLGsY2aZqDAycUIMKi54XxQLNGeT4ykW3yhvseLE=; b=X
+	1GJn2M7DiwqG9RZ/W8zuuk1yrp6dpSa5zQ0BXtM4bL2yfIkWakPzHH/IhR/ZHyTf
+	aMDuTR7ugr4xsXz6n3dCWv+H5nQAU+xuwfsblSo27ET+a/msWWGC0qSAVu+PBhTV
+	3y3iqqwblAoGATwQ1ohuexTrk7Zj9rlnY77uU9hD3TWMtHTN+iG8zn3KceeS3h/S
+	9ue4mI4AJLUS4u7VHm6pgSJQ4j2jUqhI0xiBAgRyqFWPvl+eWiQU1IigZ5yRHq6a
+	nGIqnzXeJY4uW1+YEzCPudyZU4dF9DWMX4DWkOkOAAkUVFo+cAaZfWJOe8FHWc15
+	7Vxsw2Go5kBYbyFD75ARw==
+X-ME-Sender: <xms:wx1oaZPL7t2ZSumB5rble6XDRhK7cJ_xdxv_vk_znWoNjbC6uT0h7w>
+    <xme:wx1oaW7eRr7noNP8Gn5QaMw5IaqI8rfCnzNJp6UMVON1wA98sMSVyCA_l7ZuaH8uE
+    GGeOxWsM4m816gYvCBAsc2afmH58a0TBOED4r082xy_a8FAljBntA>
+X-ME-Received: <xmr:wx1oaXT_cy9AYRNyajkNg_n-4_cjuusj5T6kGxCEIJdtZeYPO17wCqJtcFc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdeggedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkjghfofggtgfgsehtqhertdertdejnecuhfhrohhmpeetlhgvgicu
+    hghilhhlihgrmhhsohhnuceorghlvgigsehshhgriigsohhtrdhorhhgqeenucggtffrrg
+    htthgvrhhnpeegudevhfejueefveduieeuueeifeettdekveekhffgvdetfeelueehgfdt
+    heffhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grlhgvgiesshhhrgiisghothdrohhrghdpnhgspghrtghpthhtohepiedpmhhouggvpehs
+    mhhtphhouhhtpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrih
+    hnthgvlhdrtghomhdprhgtphhtthhopegrnhhthhhonhihrdhpihhghhhinhesnhhokhhi
+    rgdrtghomhdprhgtphhtthhopehkvhhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehnrghthhgrnhgtsehnvhhiughirgdrtghomhdprhgtphhtthhopehjghhgsehnvh
+    hiughirgdrtghomh
+X-ME-Proxy: <xmx:wx1oabAApIEmyBXxIanjnYvnA3nvuxCtQlU-m2UJjkwq7EDzka-scQ>
+    <xmx:wx1oafFG9rgrz5ASlSQ305aMH4Pehvx5TGwjbhsa8eFBaJzryD9LaA>
+    <xmx:wx1oadAodPe0gjOp8l4gKczVfjNSMtiWKz5b1S9_hfeHT3eQBLuKXw>
+    <xmx:wx1oafUUlQC5kEi1XRT7HUc8c9kzEBpc6Ww7F1urCYxbkeKGqKKf3g>
+    <xmx:wx1oadEGVqDAiCinkzFKiotV2qSKYvMC5PPLw-KqV9D-H_x8QuEDlr6W>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 14 Jan 2026 17:50:42 -0500 (EST)
+Date: Wed, 14 Jan 2026 15:50:41 -0700
+From: Alex Williamson <alex@shazbot.org>
+To: Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Anthony Pighin (Nokia)" <anthony.pighin@nokia.com>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-pci@vger.kernel.org"
+ <linux-pci@vger.kernel.org>, Nathan Chen <nathanc@nvidia.com>, Jason
+ Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH] vfio/pci: Lock upstream bridge for
+ vfio_pci_core_disable()
+Message-ID: <20260114155041.60f87930@shazbot.org>
+In-Reply-To: <1ccd984a-a852-2e98-12c5-3547581a3eb7@linux.intel.com>
+References: <BN0PR08MB695173DD697AB6E404803FEA838EA@BN0PR08MB6951.namprd08.prod.outlook.com>
+	<1ccd984a-a852-2e98-12c5-3547581a3eb7@linux.intel.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260114153337.46765-10-john.madieu.xa@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 14, 2026 at 04:33:30PM +0100, John Madieu wrote:
-> Add optional cfg_pre_init, cfg_post_init, and cfg_deinit callbacks
-> to handle SoC-specific configuration methods. While RZ/G3S uses the Linux
-> reset framework with dedicated reset lines, other SoC variants like RZ/G3E
-> control configuration resets through PCIe AXI registers.
-> 
-> As Linux reset bulk API gracefully handles optional NULL reset lines
-> (num_cfg_resets = 0 for RZ/G3E), the driver continues to use the standard
-> reset framework when reset lines are available, while custom callbacks
-> are only invoked when provided.
-> 
-> This provides a balanced pattern where:
-> - RZ/G3S: Uses reset framework only, no callbacks needed
-> - RZ/G3E: Sets num_cfg_resets=0, provides cfg_pre_init/cfg_post_init/cfg_deinit
-> - In addition to that, RZ/G3E requires explicit cfg reset and clok turned off
->   to put the PCIe IP in a known state.
+On Wed, 14 Jan 2026 10:36:08 +0200 (EET)
+Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
 
-s/clok/clock/
+> On Tue, 13 Jan 2026, Anthony Pighin (Nokia) wrote:
+>=20
+> > Fix the following on VFIO detach: =20
+>=20
+> Fix the following warning that occurs during VFIO detach:
+>=20
+> > [  242.271584] pcieport 0000:00:00.0: unlocked secondary bus reset via:
+> >                pci_reset_bus_function+0x188/0x1b8
+> >=20
+> > Commit 920f6468924f ("Warn on missing cfg_access_lock during secondary
+> > bus reset") added a warning if the PCI configuration space was not
+> > locked during a secondary bus reset request. That was in response to
+> > commit 7e89efc6e9e4 ("Lock upstream bridge for pci_reset_function()")
+> > such that remaining paths would be made more visible.
+> >=20
+> > Address the vfio_pci_core_disable() path. =20
+>=20
+> Similar comments as to the other patch.
+>=20
+> Why these are not submitted in a series (they seem to fix very similar=20
+> cases, just for different call chains)?
+
+They're related but independent fixes.  IMO it's easier for clear
+ownership between maintainers and avoiding unnecessary conflicts or
+shared branches to post them separately.
+
+Let's also add the Fixes: tag on this one since it needs a respin for
+the other comments.  Thanks,
+
+Alex
+
+>=20
+> > Signed-off-by: Anthony Pighin <anthony.pighin@nokia.com>
+> > ---
+> >  drivers/vfio/pci/vfio_pci_core.c | 17 +++++++++++++----
+> >  1 file changed, 13 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_p=
+ci_core.c
+> > index 3a11e6f450f7..aa2c21020ea8 100644
+> > --- a/drivers/vfio/pci/vfio_pci_core.c
+> > +++ b/drivers/vfio/pci/vfio_pci_core.c
+> > @@ -588,6 +588,7 @@ EXPORT_SYMBOL_GPL(vfio_pci_core_enable);
+> > =20
+> >  void vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
+> >  {
+> > +	struct pci_dev *bridge;
+> >  	struct pci_dev *pdev =3D vdev->pdev;
+> >  	struct vfio_pci_dummy_resource *dummy_res, *tmp;
+> >  	struct vfio_pci_ioeventfd *ioeventfd, *ioeventfd_tmp;
+> > @@ -694,12 +695,20 @@ void vfio_pci_core_disable(struct vfio_pci_core_d=
+evice *vdev)
+> >  	 * We can not use the "try" reset interface here, which will
+> >  	 * overwrite the previously restored configuration information.
+> >  	 */
+> > -	if (vdev->reset_works && pci_dev_trylock(pdev)) {
+> > -		if (!__pci_reset_function_locked(pdev))
+> > -			vdev->needs_reset =3D false;
+> > -		pci_dev_unlock(pdev);
+> > +	if (vdev->reset_works) {
+> > +		bridge =3D pci_upstream_bridge(pdev);
+> > +		if (bridge && !pci_dev_trylock(bridge))
+> > +				goto out_restore_state; =20
+>=20
+> Misaligned.
+>=20
+> > +		if (pci_dev_trylock(pdev)) {
+> > +			if (!__pci_reset_function_locked(pdev))
+> > +				vdev->needs_reset =3D false;
+> > +			pci_dev_unlock(pdev);
+> > +		}
+> > +		if (bridge)
+> > +			pci_dev_unlock(bridge);
+> >  	}
+> > =20
+> > +out_restore_state:
+> >  	pci_restore_state(pdev);
+> >  out:
+> >  	pci_disable_device(pdev);
+> > --=20
+> > 2.43.0
+> >  =20
+>=20
+
 
