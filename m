@@ -1,37 +1,37 @@
-Return-Path: <linux-pci+bounces-44752-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44753-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2256CD1FE00
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 16:43:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 105E7D1FDFD
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 16:43:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 00BBC30C6847
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 15:36:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 63D8330C6CA9
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 15:36:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A26E39E16C;
-	Wed, 14 Jan 2026 15:36:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 001D639E165;
+	Wed, 14 Jan 2026 15:36:17 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09A9030EF6F;
-	Wed, 14 Jan 2026 15:36:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADDAF39C653;
+	Wed, 14 Jan 2026 15:36:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768404972; cv=none; b=JrvBfuYtVfly5Avo+E3TgxGxfsZij9Rt8k3Otkh8wwibEe/VR8bW4UexIcvj84ak4jhgeWd6fnuXWdsWVsWKEgzcQKaBLmM7Q7CL65z1I+xL+xnA1e/BcLXA7EmBvrd9j5XxusYi4r+Foj/c8R99WnmxlPbokmr4GAoHZNCksOQ=
+	t=1768404977; cv=none; b=pNVBXjsQ8FPkv0HVLiTIBkYKZvQlZNuZR/FuFF2oOPYQnWFQgOtIKuHm/Aby2tOaIyZuq66rFBb0eh2LTJWVLXpByOLBkf5ogX84oLdkLz9J3aQKmq7UoM7Ykhi3O3DKguSuvSFSirvJJCRvCwvZuhwPIxcB0esOESakGG+nJtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768404972; c=relaxed/simple;
-	bh=vvui3AZFKc3NTruMpsk2C5aluN2CrRaZCRDjVkJfpjI=;
+	s=arc-20240116; t=1768404977; c=relaxed/simple;
+	bh=Kl01Sgg/pHuGUxL1EE8imyL+ivBm8QSGwEwWRSRcuvs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=osmly2fnq6lJaa0E5vQ9sfCbiCAzBXrMwIWva9BHYg2SnSXjlNBJklqHLdsprhjIHMU8y2Zw9CP4n7+roUiKFLMaAJ/T/mZ9c+CRYBPM7maMGcPtWB/4pcqedQDFCmWUczclZyAafaDbSEcY+rDorPOCNPDQOTlF7Xeg4rt49vI=
+	 MIME-Version; b=VwSgcGl5NwWThFlXvY4llT4Bitot0EubdTEkP6o+ygLkHr7wHWcBmJ3pLPFLlscTB9e0xUP/hZS92jOQjLQG8Xq32zlRYKG/6pN++fHPBO5uIDMquN68JRI2FtTwtaKVL08WvLgK4WjCVRFpX51VnyNo8bcMhgNOL7jXLG85PaA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: 5J2bL7qFS/+sBGryXnDSNw==
-X-CSE-MsgGUID: kXX2nxevRt+qM7zH5XFmuw==
+X-CSE-ConnectionGUID: eBdP1K+oTFCnkHL2ATk5GQ==
+X-CSE-MsgGUID: +Ie96CY+Q8KjTN/X88hwQw==
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 15 Jan 2026 00:36:09 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 15 Jan 2026 00:36:15 +0900
 Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.178])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 8C04B4022B3E;
-	Thu, 15 Jan 2026 00:36:03 +0900 (JST)
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id CD69C4022B3F;
+	Thu, 15 Jan 2026 00:36:09 +0900 (JST)
 From: John Madieu <john.madieu.xa@bp.renesas.com>
 To: claudiu.beznea.uj@bp.renesas.com,
 	lpieralisi@kernel.org,
@@ -50,9 +50,9 @@ Cc: robh@kernel.org,
 	linux-clk@vger.kernel.org,
 	john.madieu@gmail.com,
 	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH 05/16] dt-bindings: PCI: renesas,r9a08g045s33-pcie: Document RZ/G3E SoC
-Date: Wed, 14 Jan 2026 16:33:26 +0100
-Message-ID: <20260114153337.46765-6-john.madieu.xa@bp.renesas.com>
+Subject: [PATCH 06/16] PCI: rzg3s-host: Make SYSC register offsets SoC-specific
+Date: Wed, 14 Jan 2026 16:33:27 +0100
+Message-ID: <20260114153337.46765-7-john.madieu.xa@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260114153337.46765-1-john.madieu.xa@bp.renesas.com>
 References: <20260114153337.46765-1-john.madieu.xa@bp.renesas.com>
@@ -64,313 +64,226 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Extend the existing device tree bindings for Renesas RZ/G3S PCIe
-controller to include support for the RZ/G3E (renesas,r9a09g047e57-pcie) PCIe
-controller. The RZ/G3E PCIe controller is similar to RZ/G3S but has some key
-differences:
+In preparation for adding RZ/G3E support, move the RST_RSM_B register
+offset and mask into a SoC-specific data structure. Compared with RZ/G3S,
+the RZ/G3E SYSC controls different functionalities for the PCIe controller.
 
- - Uses a different device ID
- - Supports PCIe Gen3 (8.0 GT/s) link speeds
- - Uses a different clock naming (clkpmu vs clkl1pm)
- - Has a different set of interrupts, interrupt ordering, and reset signals
-
-Add device tree bindings for renesas,r9a09g047e57-pcie compatible IPs.
+Make SYSC operations conditional on the presence of register offset
+information, allowing the driver to handle SoCs that don't use the
+RST_RSM_B signal.
 
 Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
 ---
- .../bindings/pci/renesas,r9a08g045-pcie.yaml  | 243 +++++++++++++-----
- 1 file changed, 172 insertions(+), 71 deletions(-)
+ drivers/pci/controller/pcie-rzg3s-host.c | 93 +++++++++++++++++-------
+ 1 file changed, 67 insertions(+), 26 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/renesas,r9a08g045-pcie.yaml b/Documentation/devicetree/bindings/pci/renesas,r9a08g045-pcie.yaml
-index d668782546a2..c68bc76af35d 100644
---- a/Documentation/devicetree/bindings/pci/renesas,r9a08g045-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/renesas,r9a08g045-pcie.yaml
-@@ -10,85 +10,34 @@ maintainers:
-   - Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+diff --git a/drivers/pci/controller/pcie-rzg3s-host.c b/drivers/pci/controller/pcie-rzg3s-host.c
+index 205b60421be1..44728771afa3 100644
+--- a/drivers/pci/controller/pcie-rzg3s-host.c
++++ b/drivers/pci/controller/pcie-rzg3s-host.c
+@@ -159,10 +159,6 @@
  
- description:
--  Renesas RZ/G3S PCIe host controller complies with PCIe Base Specification
--  4.0 and supports up to 5 GT/s (Gen2).
-+  Renesas RZ/G3{E,S} PCIe host controllers comply with PCIe
-+  Base Specification 4.0 and support up to 5 GT/s (Gen2) for RZ/G3S and
-+  up to 8 GT/s (Gen3) for RZ/G3E.
+ #define RZG3S_PCI_CFG_PCIEC			0x60
  
- properties:
-   compatible:
--    const: renesas,r9a08g045-pcie # RZ/G3S
-+    enum:
-+      - renesas,r9a08g045-pcie # RZ/G3S
-+      - renesas,r9a09g047-pcie # RZ/G3E
- 
-   reg:
-     maxItems: 1
- 
--  interrupts:
--    items:
--      - description: System error interrupt
--      - description: System error on correctable error interrupt
--      - description: System error on non-fatal error interrupt
--      - description: System error on fatal error interrupt
--      - description: AXI error interrupt
--      - description: INTA interrupt
--      - description: INTB interrupt
--      - description: INTC interrupt
--      - description: INTD interrupt
--      - description: MSI interrupt
--      - description: Link bandwidth interrupt
--      - description: PME interrupt
--      - description: DMA interrupt
--      - description: PCIe event interrupt
--      - description: Message interrupt
--      - description: All interrupts
+-/* System controller registers */
+-#define RZG3S_SYS_PCIE_RST_RSM_B		0xd74
+-#define RZG3S_SYS_PCIE_RST_RSM_B_MASK		BIT(0)
 -
--  interrupt-names:
--    items:
--      - description: serr
--      - description: ser_cor
--      - description: serr_nonfatal
--      - description: serr_fatal
--      - description: axi_err
--      - description: inta
--      - description: intb
--      - description: intc
--      - description: intd
--      - description: msi
--      - description: link_bandwidth
--      - description: pm_pme
--      - description: dma
--      - description: pcie_evt
--      - description: msg
--      - description: all
-+  interrupts: true
+ /* Maximum number of windows */
+ #define RZG3S_MAX_WINDOWS			8
+ 
+@@ -174,6 +170,34 @@
+ /* Timeouts experimentally determined */
+ #define RZG3S_REQ_ISSUE_TIMEOUT_US		2500
+ 
++/**
++ * struct rzg3s_sysc_function - System Controller register function descriptor
++ * @offset: Register offset from the System Controller base address
++ * @mask: Bit mask for the function within the register
++ */
++struct rzg3s_sysc_function {
++	u32 offset;
++	u32 mask;
++};
 +
-+  interrupt-names: true
- 
-   interrupt-controller: true
- 
-   clocks:
--    items:
--      - description: System clock
--      - description: PM control clock
-+    maxItems: 2
- 
-   clock-names:
--    items:
--      - description: aclk
--      - description: pm
--
--  resets:
--    items:
--      - description: AXI2PCIe Bridge reset
--      - description: Data link layer/transaction layer reset
--      - description: Transaction layer (ACLK domain) reset
--      - description: Transaction layer (PCLK domain) reset
--      - description: Physical layer reset
--      - description: Configuration register reset
--      - description: Configuration register reset
--
--  reset-names:
--    items:
--      - description: aresetn
--      - description: rst_b
--      - description: rst_gp_b
--      - description: rst_ps_b
--      - description: rst_rsm_b
--      - description: rst_cfg_b
--      - description: rst_load_b
-+    maxItems: 2
++/**
++ * struct rzg3s_sysc_info - RZ/G3S System Controller function info
++ * @rst_rsm_b: Reset RSM_B function descriptor
++ */
++struct rzg3s_sysc_info {
++	struct rzg3s_sysc_function rst_rsm_b;
++};
 +
-+  resets: true
++/**
++ * struct rzg3s_sysc - RZ/G3S System Controller descriptor
++ * @regmap: System controller regmap
++ * @info: System controller info
++ */
++struct rzg3s_sysc {
++	struct regmap *regmap;
++	const struct rzg3s_sysc_info *info;
++};
 +
-+  reset-names: true
+ /**
+  * struct rzg3s_pcie_msi - RZ/G3S PCIe MSI data structure
+  * @domain: IRQ domain
+@@ -203,6 +227,7 @@ struct rzg3s_pcie_host;
+  *                power-on
+  * @cfg_resets: array with the resets that need to be de-asserted after
+  *              configuration
++ * @sysc_info: SYSC functionalities
+  * @num_power_resets: number of power resets
+  * @num_cfg_resets: number of configuration resets
+  */
+@@ -210,6 +235,7 @@ struct rzg3s_pcie_soc_data {
+ 	int (*init_phy)(struct rzg3s_pcie_host *host);
+ 	const char * const *power_resets;
+ 	const char * const *cfg_resets;
++	struct rzg3s_sysc_info sysc_info;
+ 	u8 num_power_resets;
+ 	u8 num_cfg_resets;
+ };
+@@ -233,7 +259,7 @@ struct rzg3s_pcie_port {
+  * @dev: struct device
+  * @power_resets: reset control signals that should be set after power up
+  * @cfg_resets: reset control signals that should be set after configuration
+- * @sysc: SYSC regmap
++ * @sysc: SYSC descriptor
+  * @intx_domain: INTx IRQ domain
+  * @data: SoC specific data
+  * @msi: MSI data structure
+@@ -248,7 +274,7 @@ struct rzg3s_pcie_host {
+ 	struct device *dev;
+ 	struct reset_control_bulk_data *power_resets;
+ 	struct reset_control_bulk_data *cfg_resets;
+-	struct regmap *sysc;
++	struct rzg3s_sysc *sysc;
+ 	struct irq_domain *intx_domain;
+ 	const struct rzg3s_pcie_soc_data *data;
+ 	struct rzg3s_pcie_msi msi;
+@@ -1516,6 +1542,7 @@ static int rzg3s_pcie_probe(struct platform_device *pdev)
+ 	struct device_node *sysc_np __free(device_node) =
+ 		of_parse_phandle(np, "renesas,sysc", 0);
+ 	struct rzg3s_pcie_host *host;
++	struct rzg3s_sysc *sysc;
+ 	int ret;
  
-   power-domains:
-     maxItems: 1
-@@ -128,11 +77,12 @@ patternProperties:
-         const: 0x1912
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*host));
+@@ -1527,6 +1554,13 @@ static int rzg3s_pcie_probe(struct platform_device *pdev)
+ 	host->data = device_get_match_data(dev);
+ 	platform_set_drvdata(pdev, host);
  
-       device-id:
--        const: 0x0033
-+        enum:
-+          - 0x0033
-+          - 0x0039
++	host->sysc = devm_kzalloc(dev, sizeof(*host->sysc), GFP_KERNEL);
++	if (!host->sysc)
++		return -ENOMEM;
++
++	sysc = host->sysc;
++	sysc->info = &host->data->sysc_info;
++
+ 	host->axi = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(host->axi))
+ 		return PTR_ERR(host->axi);
+@@ -1540,15 +1574,16 @@ static int rzg3s_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
  
-       clocks:
--        items:
--          - description: Reference clock
-+        maxItems: 1
+-	host->sysc = syscon_node_to_regmap(sysc_np);
+-	if (IS_ERR(host->sysc)) {
+-		ret = PTR_ERR(host->sysc);
++	sysc->regmap = syscon_node_to_regmap(sysc_np);
++	if (IS_ERR(sysc->regmap)) {
++		ret = PTR_ERR(sysc->regmap);
+ 		goto port_refclk_put;
+ 	}
  
-       clock-names:
-         items:
-@@ -142,8 +92,6 @@ patternProperties:
-       - device_type
-       - vendor-id
-       - device-id
--      - clocks
--      - clock-names
+-	ret = regmap_update_bits(host->sysc, RZG3S_SYS_PCIE_RST_RSM_B,
+-				 RZG3S_SYS_PCIE_RST_RSM_B_MASK,
+-				 FIELD_PREP(RZG3S_SYS_PCIE_RST_RSM_B_MASK, 1));
++	ret = regmap_update_bits(sysc->regmap,
++				 sysc->info->rst_rsm_b.offset,
++				 sysc->info->rst_rsm_b.mask,
++				 field_prep(sysc->info->rst_rsm_b.mask, 1));
+ 	if (ret)
+ 		goto port_refclk_put;
  
-     unevaluatedProperties: false
+@@ -1601,9 +1636,9 @@ static int rzg3s_pcie_probe(struct platform_device *pdev)
+ 	 * SYSC RST_RSM_B signal need to be asserted before turning off the
+ 	 * power to the PHY.
+ 	 */
+-	regmap_update_bits(host->sysc, RZG3S_SYS_PCIE_RST_RSM_B,
+-			   RZG3S_SYS_PCIE_RST_RSM_B_MASK,
+-			   FIELD_PREP(RZG3S_SYS_PCIE_RST_RSM_B_MASK, 0));
++	regmap_update_bits(sysc->regmap, sysc->info->rst_rsm_b.offset,
++			   sysc->info->rst_rsm_b.mask,
++			   field_prep(sysc->info->rst_rsm_b.mask, 0));
+ port_refclk_put:
+ 	clk_put(host->port.refclk);
  
-@@ -167,6 +115,159 @@ required:
+@@ -1615,7 +1650,7 @@ static int rzg3s_pcie_suspend_noirq(struct device *dev)
+ 	struct rzg3s_pcie_host *host = dev_get_drvdata(dev);
+ 	const struct rzg3s_pcie_soc_data *data = host->data;
+ 	struct rzg3s_pcie_port *port = &host->port;
+-	struct regmap *sysc = host->sysc;
++	struct rzg3s_sysc *sysc = host->sysc;
+ 	int ret;
  
- allOf:
-   - $ref: /schemas/pci/pci-host-bridge.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: renesas,r9a08g045-pcie
-+    then:
-+      properties:
-+        interrupts:
-+          items:
-+            - description: System error interrupt
-+            - description: System error on correctable error interrupt
-+            - description: System error on non-fatal error interrupt
-+            - description: System error on fatal error interrupt
-+            - description: AXI error interrupt
-+            - description: INTA interrupt
-+            - description: INTB interrupt
-+            - description: INTC interrupt
-+            - description: INTD interrupt
-+            - description: MSI interrupt
-+            - description: Link bandwidth interrupt
-+            - description: PME interrupt
-+            - description: DMA interrupt
-+            - description: PCIe event interrupt
-+            - description: Message interrupt
-+            - description: All interrupts
-+        interrupt-names:
-+          items:
-+            - const: serr
-+            - const: serr_cor
-+            - const: serr_nonfatal
-+            - const: serr_fatal
-+            - const: axi_err
-+            - const: inta
-+            - const: intb
-+            - const: intc
-+            - const: intd
-+            - const: msi
-+            - const: link_bandwidth
-+            - const: pm_pme
-+            - const: dma
-+            - const: pcie_evt
-+            - const: msg
-+            - const: all
-+        clocks:
-+          items:
-+            - description: System clock
-+            - description: PM control clock
-+        clock-names:
-+          items:
-+            - const: aclk
-+            - const: pm
-+        resets:
-+          items:
-+            - description: AXI2PCIe Bridge reset
-+            - description: Data link layer/transaction layer reset
-+            - description: Transaction layer (ACLK domain) reset
-+            - description: Transaction layer (PCLK domain) reset
-+            - description: Physical layer reset
-+            - description: Configuration register reset
-+            - description: Configuration register reset
-+        reset-names:
-+          items:
-+            - const: aresetn
-+            - const: rst_b
-+            - const: rst_gp_b
-+            - const: rst_ps_b
-+            - const: rst_rsm_b
-+            - const: rst_cfg_b
-+            - const: rst_load_b
-+      patternProperties:
-+        "^pcie@0,[0-0]$":
-+          properties:
-+            device-id:
-+              const: 0x0033
-+          required:
-+            - clocks
-+            - clock-names
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: renesas,r9a09g047-pcie
-+    then:
-+      properties:
-+        interrupts:
-+          items:
-+            - description: All interrupts
-+            - description: INTA interrupt
-+            - description: INTB interrupt
-+            - description: INTC interrupt
-+            - description: INTD interrupt
-+            - description: MSI interrupt
-+            - description: Link bandwidth interrupt
-+            - description: Link equalization request interrupt
-+            - description: PME interrupt
-+            - description: System error interrupt
-+            - description: System error on correctable error interrupt
-+            - description: System error on non-fatal error interrupt
-+            - description: System error on fatal error interrupt
-+            - description: DMA interrupt
-+            - description: PCIe event interrupt
-+            - description: AXI error interrupt
-+            - description: Message interrupt
-+            - description: Turn off event interrupt
-+            - description: PMU power off interrupt
-+            - description: D3 event function 0 interrupt
-+            - description: D3 event function 1 interrupt
-+            - description: Configuration PMCSR write clear function 0 interrupt
-+            - description: Configuration PMCSR write clear function 1 interrupt
-+        interrupt-names:
-+          items:
-+            - const: all
-+            - const: inta
-+            - const: intb
-+            - const: intc
-+            - const: intd
-+            - const: msi
-+            - const: link_bandwidth
-+            - const: link_equalization_request
-+            - const: pm_pme
-+            - const: serr
-+            - const: serr_cor
-+            - const: serr_nonfatal
-+            - const: serr_fatal
-+            - const: dma
-+            - const: pcie_evt
-+            - const: axi_err
-+            - const: msg
-+            - const: turn_off_event
-+            - const: pmu_poweroff
-+            - const: d3_event_f0
-+            - const: d3_event_f1
-+            - const: cfg_pmcsr_writeclear_f0
-+            - const: cfg_pmcsr_writeclear_f1
-+        clocks:
-+          items:
-+            - description: System clock
-+            - description: PMU clock
-+        clock-names:
-+          items:
-+            - const: aclk
-+            - const: pmu
-+        resets:
-+          items:
-+            - description: AXI2PCIe Bridge reset
-+        reset-names:
-+          items:
-+            - const: aresetn
-+      patternProperties:
-+        "^pcie@0,[0-0]$":
-+          properties:
-+            device-id:
-+              const: 0x0039
+ 	ret = pm_runtime_put_sync(dev);
+@@ -1634,9 +1669,9 @@ static int rzg3s_pcie_suspend_noirq(struct device *dev)
+ 	if (ret)
+ 		goto power_resets_restore;
  
- unevaluatedProperties: false
+-	ret = regmap_update_bits(sysc, RZG3S_SYS_PCIE_RST_RSM_B,
+-				 RZG3S_SYS_PCIE_RST_RSM_B_MASK,
+-				 FIELD_PREP(RZG3S_SYS_PCIE_RST_RSM_B_MASK, 0));
++	ret = regmap_update_bits(sysc->regmap, sysc->info->rst_rsm_b.offset,
++				 sysc->info->rst_rsm_b.mask,
++				 field_prep(sysc->info->rst_rsm_b.mask, 0));
+ 	if (ret)
+ 		goto cfg_resets_restore;
  
+@@ -1659,12 +1694,12 @@ static int rzg3s_pcie_resume_noirq(struct device *dev)
+ {
+ 	struct rzg3s_pcie_host *host = dev_get_drvdata(dev);
+ 	const struct rzg3s_pcie_soc_data *data = host->data;
+-	struct regmap *sysc = host->sysc;
++	struct rzg3s_sysc *sysc = host->sysc;
+ 	int ret;
+ 
+-	ret = regmap_update_bits(sysc, RZG3S_SYS_PCIE_RST_RSM_B,
+-				 RZG3S_SYS_PCIE_RST_RSM_B_MASK,
+-				 FIELD_PREP(RZG3S_SYS_PCIE_RST_RSM_B_MASK, 1));
++	ret = regmap_update_bits(sysc->regmap, sysc->info->rst_rsm_b.offset,
++				 sysc->info->rst_rsm_b.mask,
++				 field_prep(sysc->info->rst_rsm_b.mask, 1));
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1693,9 +1728,9 @@ static int rzg3s_pcie_resume_noirq(struct device *dev)
+ 	reset_control_bulk_assert(data->num_power_resets,
+ 				  host->power_resets);
+ assert_rst_rsm_b:
+-	regmap_update_bits(sysc, RZG3S_SYS_PCIE_RST_RSM_B,
+-			   RZG3S_SYS_PCIE_RST_RSM_B_MASK,
+-			   FIELD_PREP(RZG3S_SYS_PCIE_RST_RSM_B_MASK, 0));
++	regmap_update_bits(sysc->regmap, sysc->info->rst_rsm_b.offset,
++			   sysc->info->rst_rsm_b.mask,
++			   field_prep(sysc->info->rst_rsm_b.mask, 0));
+ 	return ret;
+ }
+ 
+@@ -1718,6 +1753,12 @@ static const struct rzg3s_pcie_soc_data rzg3s_soc_data = {
+ 	.cfg_resets = rzg3s_soc_cfg_resets,
+ 	.num_cfg_resets = ARRAY_SIZE(rzg3s_soc_cfg_resets),
+ 	.init_phy = rzg3s_soc_pcie_init_phy,
++	.sysc_info = {
++		.rst_rsm_b = {
++			.offset = 0xd74,
++			.mask = BIT(0),
++		},
++	},
+ };
+ 
+ static const struct of_device_id rzg3s_pcie_of_match[] = {
 -- 
 2.25.1
 
