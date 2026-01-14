@@ -1,302 +1,438 @@
-Return-Path: <linux-pci+bounces-44857-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44858-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3791D212AE
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 21:24:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AC517D21317
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 21:35:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CFEFA302C8F8
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 20:24:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 654E93027E17
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 20:35:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11BB5330D43;
-	Wed, 14 Jan 2026 20:24:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0D08352C53;
+	Wed, 14 Jan 2026 20:35:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OmTQOYP3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AY1nvTGh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EE232C924;
-	Wed, 14 Jan 2026 20:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6839B329E6A;
+	Wed, 14 Jan 2026 20:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768422261; cv=none; b=lVMF/Gx/tWPHpQ2S7DNNEOBXxMv5YB3f7Dnwikj7W465SfRn59djZSJlYHZCYFJ2hp0yUktV6ddPGdChpcifUTT5aM2LWwokMYsTjFzP8tGDYSJ+wzRKaJBrQSiUXSC2hbOfn4V6xljFeLgStLFgB9h3WDR3oj6pw1Ed1s9uA4Y=
+	t=1768422947; cv=none; b=gr+YvtlhvNT/xjsDaSCzZNQOEmUwoRrsO1C3ntcDnXFdmpvVVw+ih6kfuyQyDxyuvTPyp9FWe1+sb+XWttFsu1VHNftmuIh6L1wmjDX2z4Wt2dJs9qjD8sTLxwZGTkwByWWDCo7LJ7ErX1aQ9T3DmRv7H1EN/7PnQdbesgd9NYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768422261; c=relaxed/simple;
-	bh=2QdzLaUu11/vxbPCOmbk67hSo2EwQNx/2DHWgb15TpU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=B3fGkWNJVPvATJ0UusyL7P/4/EhfnqMLgAxb93sOpuq7gyz4r58VYiiEe4GxNfzAS/JMgDBgAxDFsInu6ENvggV+ogCgIEK6SMsKxhntouFPIc+BeDBcW0rDGBGu38d+wkRAc6V8iyzXmEbxDOCQXcP0/qFDR+CkzE8dw0WUazo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OmTQOYP3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62607C4CEF7;
-	Wed, 14 Jan 2026 20:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768422260;
-	bh=2QdzLaUu11/vxbPCOmbk67hSo2EwQNx/2DHWgb15TpU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=OmTQOYP3EX/M2oj/bD+vFJbeX6mnzLjYQLa2cIz3urjOTgTfhc/MPyYaZujrYByd2
-	 Hc4rK7TQmPew2HN0QoVmeOI/6izyuzlDrpRPaIqgG0N3/J4whZ7p28Y4ngSBVaOtKt
-	 5tONS8e8fcEjCDmr0FvLBjO0idvYsIG2m7Pc09k3/ZNlJQxBP3d+ZJFQc3bHJhrEhM
-	 T251PSw0oHYDrCaGLsqsUqHfDUrTy5+BZzy58WpALdjhUoolVdtKkT/n8mS6BpY4UZ
-	 41I5+Gh7qeBxQxeOIE2cVTgeRzohe2w4gQaQ4iJt5buorj7PxNyLvHYPPr7CTeH3lp
-	 IiR8ZsqO9iD5A==
-Date: Wed, 14 Jan 2026 14:24:19 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Badal Nilawar <badal.nilawar@intel.com>
-Cc: intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, anshuman.gupta@intel.com,
-	rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com,
-	ilpo.jarvinen@linux.intel.com, rodrigo.vivi@intel.com,
-	varun.gupta@intel.com, ville.syrjala@linux.intel.com,
-	uma.shankar@intel.com, karthik.poosa@intel.com,
-	matthew.auld@intel.com, sk.anirban@intel.com, raag.jadav@intel.com
-Subject: Re: [PATCH v6 01/12] PCI/ACPI: Add D3cold Aux Power Limit_DSM method
-Message-ID: <20260114202419.GA831656@bhelgaas>
+	s=arc-20240116; t=1768422947; c=relaxed/simple;
+	bh=pUJm3eQE4UOyrCb6z+nKug7ix67xd/dTrJ1NMO5jbHA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Oro72nEyaoeyG2ZufhjbDoNNAq8FGaMPUKmZ+J3pfKApdVWRTuLqfLNLCfWmBq2vkeO14jrwerWPQOE8eC13iUO9b+CqNu8+y+EkNTdDGk6o2meq50HWWPJRbs+5SsZ68OExs7N46L2+dQiBSly7BuH+wL6FVp6mKqUG21G2aZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AY1nvTGh; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768422945; x=1799958945;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=pUJm3eQE4UOyrCb6z+nKug7ix67xd/dTrJ1NMO5jbHA=;
+  b=AY1nvTGho5SsMwQjIOA/QnA7mj3PrGpGAfXxmHLFSfs98xHj6ZUY+N8S
+   oo9DcLkCBd9nVT5v8ao/guSGTD5sIii04pjYl9L5qBnoWTMOw+daCHUTS
+   UOrSwFBoy0Nr8Mi+wYMgec5UFgP5+aedy6cEUXu/2/TXmJjC3yrNj/xNE
+   LqifGLbvNhfvY+tFFn3pzdd3E5Fi0J+AS2DWo7YhNMcj1ah+8CMTXf5lv
+   QeLdH1QLq9sD48cYX0+Xmki90j/uVhKKuhdJev6cUAtEmcRVJTGRJCMgx
+   fgTM9q1QWRG8363EQweQYTCzouDhyjmi7Q1cAI72HZ6yex6pl59yoatB9
+   g==;
+X-CSE-ConnectionGUID: WLdy+GEoRhiJBIHOEvbkZw==
+X-CSE-MsgGUID: 0xpVzFNrTOKnZXNxTcGOog==
+X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="69630885"
+X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
+   d="scan'208";a="69630885"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 12:35:45 -0800
+X-CSE-ConnectionGUID: L2yWXfHTQ3WnUcR0DpHryg==
+X-CSE-MsgGUID: KmjokH+fRWCBp6FlKwrRog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
+   d="scan'208";a="235498616"
+Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.111.5]) ([10.125.111.5])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 12:35:43 -0800
+Message-ID: <21623130-2ef8-4420-8282-3c33f5203e1a@intel.com>
+Date: Wed, 14 Jan 2026 13:35:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260113164200.1151788-15-badal.nilawar@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 08/34] cxl/pci: Move CXL driver's RCH error handling
+ into core/ras_rch.c
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
+ ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
+ rrichter@amd.com, dan.carpenter@linaro.org,
+ PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+ Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org, vishal.l.verma@intel.com, alucerop@amd.com,
+ ira.weiny@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20260114182055.46029-1-terry.bowman@amd.com>
+ <20260114182055.46029-9-terry.bowman@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260114182055.46029-9-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 13, 2026 at 10:12:02PM +0530, Badal Nilawar wrote:
-> From: Anshuman Gupta <anshuman.gupta@intel.com>
+
+
+On 1/14/26 11:20 AM, Terry Bowman wrote:
+> Restricted CXL Host (RCH) protocol error handling uses a procedure distinct
+> from the CXL Virtual Hierarchy (VH) handling. This is because of the
+> differences in the RCH and VH topologies. Improve the maintainability and
+> add ability to enable/disable RCH handling.
 > 
-> Implement _DSM method 0Ah, as per PCI Firmware r3.3, sec 4.6.10,
-> to request auxiliary power required by the device when in D3cold state.
+> Move and combine the RCH handling code into a single block conditionally
+> compiled with the CONFIG_CXL_RCH_RAS kernel config.
 > 
-> Implementation allows only a single device below the Downstream Port to
-> request for Aux Power Limit under a given Root Port/Downstream Port
-> because it does not track and aggregate requests from all child devices
-> below the Downstream Port as required by PCI Firmware r3.3, sec 4.6.10.
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > 
-> Co-developed-by: Badal Nilawar <badal.nilawar@intel.com>
-> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
-> Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+
 > ---
-> V2(Bjorn/Rafael):
->   - Call acpi_dsm_check() to find method 0Ah supported
->   - Return retry interval to caller
-> V3(Kuppuswamy)
->   - Add NULL check for retry interval
-> V4
->   - Define enums for aux power request status (Rafael)
->   - Add Co-developed-by and clean up Signed-off-by (Kappuswamy)
->  (Bjorn)
->   - Instead of root pci device pass the pci device of driver, traverse
->     up the tree and discover _DSM
->   - Allow only function 0 of device to request aux power
->   - Allow retry_interval to be NULL
->   - Refine commit message and function description
-> V5(Rafael)
->   - Remove function 0 check and allow first caller of the given
->     downstream port (with _DSM) to requst aux power including
->     different function
->   - Squash Patch v5.02 to this patch
->   - In the logic, to allow single device to req power, use linked list
->     instead of adding extra variables to acpi device structure
->   - return positive code for no main power removal to distinguish from
->     aux power request granted
-> ---
->  drivers/pci/pci-acpi.c   | 136 +++++++++++++++++++++++++++++++++++++++
->  include/linux/pci-acpi.h |   9 +++
->  2 files changed, 145 insertions(+)
 > 
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 9369377725fa..645d3005ba50 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -1418,6 +1418,142 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
->  	ACPI_FREE(obj);
+> Changes in v13->v14:
+> - Add sign-off for Dan and Jonathan
+> - Revert inadvertent formatting of cxl_dport_map_rch_aer() (Jonathan)
+> - Remove default value for CXL_RCH_RAS (Dan)
+> - Remove unnecessary pci.h include in core.h & ras_rch.c (Jonathan)
+> - Add linux/types.h include in ras_rch.c (Jonathan)
+> - Change CONFIG_CXL_RCH_RAS -> CONFIG_CXL_RAS (Dan)
+> 
+> Changes in v12->v13:
+> - None
+> 
+> Changes v11->v12:
+> - Moved CXL_RCH_RAS Kconfig definition here from following commit.
+> 
+> Changes v10->v11:
+> - New patch
+> ---
+>  drivers/cxl/core/Makefile  |   1 +
+>  drivers/cxl/core/core.h    |  11 +---
+>  drivers/cxl/core/pci.c     | 115 -----------------------------------
+>  drivers/cxl/core/ras_rch.c | 121 +++++++++++++++++++++++++++++++++++++
+>  tools/testing/cxl/Kbuild   |   1 +
+>  5 files changed, 126 insertions(+), 123 deletions(-)
+>  create mode 100644 drivers/cxl/core/ras_rch.c
+> 
+> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> index b2930cc54f8b..b37f38d502d8 100644
+> --- a/drivers/cxl/core/Makefile
+> +++ b/drivers/cxl/core/Makefile
+> @@ -20,3 +20,4 @@ cxl_core-$(CONFIG_CXL_MCE) += mce.o
+>  cxl_core-$(CONFIG_CXL_FEATURES) += features.o
+>  cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
+>  cxl_core-$(CONFIG_CXL_RAS) += ras.o
+> +cxl_core-$(CONFIG_CXL_RAS) += ras_rch.o
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index bc818de87ccc..724361195057 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -149,6 +149,9 @@ int cxl_ras_init(void);
+>  void cxl_ras_exit(void);
+>  bool cxl_handle_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base);
+>  void cxl_handle_cor_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base);
+> +void cxl_dport_map_rch_aer(struct cxl_dport *dport);
+> +void cxl_disable_rch_root_ints(struct cxl_dport *dport);
+> +void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds);
+>  #else
+>  static inline int cxl_ras_init(void)
+>  {
+> @@ -164,14 +167,6 @@ static inline bool cxl_handle_ras(struct cxl_dev_state *cxlds, void __iomem *ras
+>  	return false;
 >  }
+>  static inline void cxl_handle_cor_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base) { }
+> -#endif /* CONFIG_CXL_RAS */
+> -
+> -/* Restricted CXL Host specific RAS functions */
+> -#ifdef CONFIG_CXL_RAS
+> -void cxl_dport_map_rch_aer(struct cxl_dport *dport);
+> -void cxl_disable_rch_root_ints(struct cxl_dport *dport);
+> -void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds);
+> -#else
+>  static inline void cxl_dport_map_rch_aer(struct cxl_dport *dport) { }
+>  static inline void cxl_disable_rch_root_ints(struct cxl_dport *dport) { }
+>  static inline void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) { }
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index e132fff80979..b838c59d7a3c 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -632,121 +632,6 @@ void read_cdat_data(struct cxl_port *port)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(read_cdat_data, "CXL");
 >  
-> +static LIST_HEAD(acpi_aux_pwr_list);
-> +static DEFINE_MUTEX(acpi_aux_pwr_lock);
+> -#ifdef CONFIG_CXL_RAS
+> -void cxl_dport_map_rch_aer(struct cxl_dport *dport)
+> -{
+> -	resource_size_t aer_phys;
+> -	struct device *host;
+> -	u16 aer_cap;
+> -
+> -	aer_cap = cxl_rcrb_to_aer(dport->dport_dev, dport->rcrb.base);
+> -	if (aer_cap) {
+> -		host = dport->reg_map.host;
+> -		aer_phys = aer_cap + dport->rcrb.base;
+> -		dport->regs.dport_aer = devm_cxl_iomap_block(host, aer_phys,
+> -						sizeof(struct aer_capability_regs));
+> -	}
+> -}
+> -
+> -void cxl_disable_rch_root_ints(struct cxl_dport *dport)
+> -{
+> -	void __iomem *aer_base = dport->regs.dport_aer;
+> -	u32 aer_cmd_mask, aer_cmd;
+> -
+> -	if (!aer_base)
+> -		return;
+> -
+> -	/*
+> -	 * Disable RCH root port command interrupts.
+> -	 * CXL 3.0 12.2.1.1 - RCH Downstream Port-detected Errors
+> -	 *
+> -	 * This sequence may not be necessary. CXL spec states disabling
+> -	 * the root cmd register's interrupts is required. But, PCI spec
+> -	 * shows these are disabled by default on reset.
+> -	 */
+> -	aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
+> -			PCI_ERR_ROOT_CMD_NONFATAL_EN |
+> -			PCI_ERR_ROOT_CMD_FATAL_EN);
+> -	aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
+> -	aer_cmd &= ~aer_cmd_mask;
+> -	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
+> -}
+> -
+> -/*
+> - * Copy the AER capability registers using 32 bit read accesses.
+> - * This is necessary because RCRB AER capability is MMIO mapped. Clear the
+> - * status after copying.
+> - *
+> - * @aer_base: base address of AER capability block in RCRB
+> - * @aer_regs: destination for copying AER capability
+> - */
+> -static bool cxl_rch_get_aer_info(void __iomem *aer_base,
+> -				 struct aer_capability_regs *aer_regs)
+> -{
+> -	int read_cnt = sizeof(struct aer_capability_regs) / sizeof(u32);
+> -	u32 *aer_regs_buf = (u32 *)aer_regs;
+> -	int n;
+> -
+> -	if (!aer_base)
+> -		return false;
+> -
+> -	/* Use readl() to guarantee 32-bit accesses */
+> -	for (n = 0; n < read_cnt; n++)
+> -		aer_regs_buf[n] = readl(aer_base + n * sizeof(u32));
+> -
+> -	writel(aer_regs->uncor_status, aer_base + PCI_ERR_UNCOR_STATUS);
+> -	writel(aer_regs->cor_status, aer_base + PCI_ERR_COR_STATUS);
+> -
+> -	return true;
+> -}
+> -
+> -/* Get AER severity. Return false if there is no error. */
+> -static bool cxl_rch_get_aer_severity(struct aer_capability_regs *aer_regs,
+> -				     int *severity)
+> -{
+> -	if (aer_regs->uncor_status & ~aer_regs->uncor_mask) {
+> -		if (aer_regs->uncor_status & PCI_ERR_ROOT_FATAL_RCV)
+> -			*severity = AER_FATAL;
+> -		else
+> -			*severity = AER_NONFATAL;
+> -		return true;
+> -	}
+> -
+> -	if (aer_regs->cor_status & ~aer_regs->cor_mask) {
+> -		*severity = AER_CORRECTABLE;
+> -		return true;
+> -	}
+> -
+> -	return false;
+> -}
+> -
+> -void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
+> -{
+> -	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+> -	struct aer_capability_regs aer_regs;
+> -	struct cxl_dport *dport;
+> -	int severity;
+> -
+> -	struct cxl_port *port __free(put_cxl_port) =
+> -		cxl_pci_find_port(pdev, &dport);
+> -	if (!port)
+> -		return;
+> -
+> -	if (!cxl_rch_get_aer_info(dport->regs.dport_aer, &aer_regs))
+> -		return;
+> -
+> -	if (!cxl_rch_get_aer_severity(&aer_regs, &severity))
+> -		return;
+> -
+> -	pci_print_aer(pdev, severity, &aer_regs);
+> -
+> -	if (severity == AER_CORRECTABLE)
+> -		cxl_handle_cor_ras(cxlds, dport->regs.ras);
+> -	else
+> -		cxl_handle_ras(cxlds, dport->regs.ras);
+> -}
+> -#endif
+> -
+>  static int cxl_flit_size(struct pci_dev *pdev)
+>  {
+>  	if (cxl_pci_flit_256(pdev))
+> diff --git a/drivers/cxl/core/ras_rch.c b/drivers/cxl/core/ras_rch.c
+> new file mode 100644
+> index 000000000000..ed58afd18ecc
+> --- /dev/null
+> +++ b/drivers/cxl/core/ras_rch.c
+> @@ -0,0 +1,121 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2025 AMD Corporation. All rights reserved. */
 > +
-> +struct aux_pwr {
-> +	u32 aux_pwr_limit;		/* aux power limit granted by platform firmware */
-> +	struct device *dev;		/* device to which aux power is granted  */
-
-Shorten these to fit in 80 columns like the rest of the file.
-
-> +	struct acpi_device *adev;	/* root port/downstream port */
-> +	struct list_head list;
-> +};
+> +#include <linux/types.h>
+> +#include <linux/aer.h>
+> +#include "cxl.h"
+> +#include "core.h"
+> +#include "cxlmem.h"
 > +
-> +enum aux_pwr_req_status {
-> +	AUX_PWR_REQ_DENIED               = 0x0,
-> +	AUX_PWR_REQ_GRANTED              = 0x1,
-> +	AUX_PWR_REQ_NO_MAIN_PWR_REMOVAL  = 0x2,
-> +	AUX_PWR_REQ_RETRY_INTERVAL_MIN   = 0x11,
-> +	AUX_PWR_REQ_RETRY_INTERVAL_MAX   = 0x1F
-
-Use lower-case hex ("0x1f") like the rest of the file.  Also below.
-
-> +};
-> +
-> +/**
-> + * pci_acpi_request_d3cold_aux_power - Request aux power while device is in D3cold
-
-Shorten or wrap to fit in 80 columns.
-
-> + * @dev: PCI device instance
-> + * @requested_mw: Requested auxiliary power in milliwatts
-> + * @retry_interval: Retry interval returned by platform to retry auxiliary
-> + *                  power request
-> + *
-> + * Request auxilary power to platform firmware, via Root Port/Switch Downstream
-> + * Port ACPI _DSM Function 0Ah, needed for the PCI device when it is in D3cold.
-> + * Evaluate the _DSM and handle the response accordingly.
-
-Drop this last sentence; I don't think it tells us anything new.
-
-> + * For Multi-Function Devices, driver for Function 0 is required to report an
-> + * aggregate power requirement covering all functions contained within the
-> + * device.
-> + *
-> + * Return: 0 Aux power request granted
-> + *	   1 No main power removal
-> + *         errno on failure.
-> + */
-> +int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_mw,
-> +				      u32 *retry_interval)
+> +void cxl_dport_map_rch_aer(struct cxl_dport *dport)
 > +{
-> +	union acpi_object in_obj = {
-> +		.integer.type = ACPI_TYPE_INTEGER,
-> +		.integer.value = requested_mw,
-> +	};
+> +	resource_size_t aer_phys;
+> +	struct device *host;
+> +	u16 aer_cap;
 > +
-> +	union acpi_object *out_obj;
-> +	int result;
-> +	struct pci_dev *bdev;
-> +	struct acpi_device *adev;
-> +	acpi_handle handle;
-> +	struct aux_pwr *apwr, *next;
-> +
-> +	if (!dev)
-> +		return -EINVAL;
-
-We talked about only allowing this for function 0:
-https://lore.kernel.org/all/20250904183046.GA1267851@bhelgaas/
-
-> +	for (bdev = dev; bdev; bdev = pci_upstream_bridge(bdev)) {
-
-I think bdev should start with pci_upstream_bridge(dev) as in the
-other patch because this _DSM is only allowed in Downstream Ports.
-
-> +		handle = ACPI_HANDLE(&bdev->dev);
-> +		if (handle &&
-> +		    acpi_check_dsm(handle, &pci_acpi_dsm_guid, 4,
-> +				   1 << DSM_PCI_D3COLD_AUX_POWER_LIMIT))
-> +			break;
-> +	}
-> +
-> +	if (!bdev)
-> +		return -ENODEV;
-> +
-> +	adev = ACPI_COMPANION(&bdev->dev);
-> +	if (!adev)
-> +		return -EINVAL;
-> +
-> +	guard(mutex)(&acpi_aux_pwr_lock);
-> +	/* Check if aux power already granted to different device */
-> +	list_for_each_entry_safe(apwr, next, &acpi_aux_pwr_list, list) {
-> +		if (apwr->adev == adev && apwr->dev != &dev->dev) {
-> +			pci_info(to_pci_dev(apwr->dev),
-> +				 "D3cold Aux Power request already granted: %u mW\n",
-> +				 apwr->aux_pwr_limit);
-> +			return -EALREADY;
-> +		}
-> +		if (apwr->adev == adev && apwr->dev == &dev->dev) {
-> +			list_del(&apwr->list);
-> +			kfree(apwr);
-> +			break;
-> +		}
-> +	}
-> +
-> +	out_obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(&bdev->dev),
-> +					  &pci_acpi_dsm_guid, 4,
-> +					  DSM_PCI_D3COLD_AUX_POWER_LIMIT,
-> +					  &in_obj, ACPI_TYPE_INTEGER);
-> +	if (!out_obj)
-> +		return -EINVAL;
-> +
-> +	result = out_obj->integer.value;
-> +	ACPI_FREE(out_obj);
-> +
-> +	if (retry_interval)
-> +		*retry_interval = 0;
-> +
-> +	switch (result) {
-> +	case AUX_PWR_REQ_DENIED:
-> +		pci_dbg(bdev, "D3cold Aux Power %u mW request denied\n",
-> +			requested_mw);
-> +		return -EINVAL;
-> +	case AUX_PWR_REQ_GRANTED:
-> +		pci_info(bdev, "D3cold Aux Power request granted: %u mW\n",
-> +			 requested_mw);
-> +		apwr = kzalloc(sizeof(*apwr), GFP_KERNEL);
-> +		if (apwr) {
-> +			apwr->aux_pwr_limit = requested_mw;
-> +			apwr->dev = &dev->dev;
-> +			apwr->adev = adev;
-> +			INIT_LIST_HEAD(&apwr->list);
-> +			list_add(&acpi_aux_pwr_list,
-> +				 &apwr->list);
-> +		}
-
-I think we leak this allocation if the device is removed.  I think the
-list idea is more complicated than aggregating would be.
-
-I think we could:
-
-  - add "aux_power_mw" in struct pci_dev
-
-  - walk the tree below bdev, accumulating aux_power_mw
-    (total_aux_power_mw += dev->aux_power_mw)
-
-  - pass "total_aux_power_mw + requested_mw" to the _DSM
-
-  - if successful, set dev->aux_power_mw = requested_mw
-
-> +		return 0;
-> +	case AUX_PWR_REQ_NO_MAIN_PWR_REMOVAL:
-> +		pci_info(bdev, "D3cold Aux Power: Main power won't be removed\n");
-> +		return 2;
-
-Kernel-doc says we return 1 for this case.
-
-> +	case AUX_PWR_REQ_RETRY_INTERVAL_MIN ... AUX_PWR_REQ_RETRY_INTERVAL_MAX:
-> +		pci_info(bdev, "D3cold Aux Power request needs retry, interval: %u seconds\n",
-> +			 result & 0xF);
-
-Lower-case hex.
-
-> +		if (retry_interval) {
-> +			*retry_interval = result & 0xF;
-> +			return -EAGAIN;
-> +		}
-> +		return -EINVAL;
-
-I think we should do:
-
-  case AUX_PWR_REQ_RETRY_INTERVAL_MIN ...  AUX_PWR_REQ_RETRY_INTERVAL_MAX:
-    result &= 0xf;
-    pci_info(bdev, "... needs retry", result);
-    if (retry_interval)
-      *retry_interval = result;
-    return -EAGAIN;
-
-I don't think it's useful to return different errors based on whether
-the caller supplied a "retry_interval" pointer.
-
-> +	default:
-> +		pci_err(bdev, "D3cold Aux Power: Reserved or unsupported response: 0x%x\n",
-> +			result);
-> +		return -EINVAL;
+> +	aer_cap = cxl_rcrb_to_aer(dport->dport_dev, dport->rcrb.base);
+> +	if (aer_cap) {
+> +		host = dport->reg_map.host;
+> +		aer_phys = aer_cap + dport->rcrb.base;
+> +		dport->regs.dport_aer =
+> +			devm_cxl_iomap_block(host, aer_phys,
+> +					     sizeof(struct aer_capability_regs));
 > +	}
 > +}
-> +EXPORT_SYMBOL_GPL(pci_acpi_request_d3cold_aux_power);
+> +
+> +void cxl_disable_rch_root_ints(struct cxl_dport *dport)
+> +{
+> +	void __iomem *aer_base = dport->regs.dport_aer;
+> +	u32 aer_cmd_mask, aer_cmd;
+> +
+> +	if (!aer_base)
+> +		return;
+> +
+> +	/*
+> +	 * Disable RCH root port command interrupts.
+> +	 * CXL 3.0 12.2.1.1 - RCH Downstream Port-detected Errors
+> +	 *
+> +	 * This sequence may not be necessary. CXL spec states disabling
+> +	 * the root cmd register's interrupts is required. But, PCI spec
+> +	 * shows these are disabled by default on reset.
+> +	 */
+> +	aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
+> +			PCI_ERR_ROOT_CMD_NONFATAL_EN |
+> +			PCI_ERR_ROOT_CMD_FATAL_EN);
+> +	aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
+> +	aer_cmd &= ~aer_cmd_mask;
+> +	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
+> +}
+> +
+> +/*
+> + * Copy the AER capability registers using 32 bit read accesses.
+> + * This is necessary because RCRB AER capability is MMIO mapped. Clear the
+> + * status after copying.
+> + *
+> + * @aer_base: base address of AER capability block in RCRB
+> + * @aer_regs: destination for copying AER capability
+> + */
+> +static bool cxl_rch_get_aer_info(void __iomem *aer_base,
+> +				 struct aer_capability_regs *aer_regs)
+> +{
+> +	int read_cnt = sizeof(struct aer_capability_regs) / sizeof(u32);
+> +	u32 *aer_regs_buf = (u32 *)aer_regs;
+> +	int n;
+> +
+> +	if (!aer_base)
+> +		return false;
+> +
+> +	/* Use readl() to guarantee 32-bit accesses */
+> +	for (n = 0; n < read_cnt; n++)
+> +		aer_regs_buf[n] = readl(aer_base + n * sizeof(u32));
+> +
+> +	writel(aer_regs->uncor_status, aer_base + PCI_ERR_UNCOR_STATUS);
+> +	writel(aer_regs->cor_status, aer_base + PCI_ERR_COR_STATUS);
+> +
+> +	return true;
+> +}
+> +
+> +/* Get AER severity. Return false if there is no error. */
+> +static bool cxl_rch_get_aer_severity(struct aer_capability_regs *aer_regs,
+> +				     int *severity)
+> +{
+> +	if (aer_regs->uncor_status & ~aer_regs->uncor_mask) {
+> +		if (aer_regs->uncor_status & PCI_ERR_ROOT_FATAL_RCV)
+> +			*severity = AER_FATAL;
+> +		else
+> +			*severity = AER_NONFATAL;
+> +		return true;
+> +	}
+> +
+> +	if (aer_regs->cor_status & ~aer_regs->cor_mask) {
+> +		*severity = AER_CORRECTABLE;
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+> +	struct aer_capability_regs aer_regs;
+> +	struct cxl_dport *dport;
+> +	int severity;
+> +
+> +	struct cxl_port *port __free(put_cxl_port) =
+> +		cxl_pci_find_port(pdev, &dport);
+> +	if (!port)
+> +		return;
+> +
+> +	if (!cxl_rch_get_aer_info(dport->regs.dport_aer, &aer_regs))
+> +		return;
+> +
+> +	if (!cxl_rch_get_aer_severity(&aer_regs, &severity))
+> +		return;
+> +
+> +	pci_print_aer(pdev, severity, &aer_regs);
+> +	if (severity == AER_CORRECTABLE)
+> +		cxl_handle_cor_ras(cxlds, dport->regs.ras);
+> +	else
+> +		cxl_handle_ras(cxlds, dport->regs.ras);
+> +}
+> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+> index b7ea66382f3b..6eceefefb0e0 100644
+> --- a/tools/testing/cxl/Kbuild
+> +++ b/tools/testing/cxl/Kbuild
+> @@ -63,6 +63,7 @@ cxl_core-$(CONFIG_CXL_MCE) += $(CXL_CORE_SRC)/mce.o
+>  cxl_core-$(CONFIG_CXL_FEATURES) += $(CXL_CORE_SRC)/features.o
+>  cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += $(CXL_CORE_SRC)/edac.o
+>  cxl_core-$(CONFIG_CXL_RAS) += $(CXL_CORE_SRC)/ras.o
+> +cxl_core-$(CONFIG_CXL_RAS) += $(CXL_CORE_SRC)/ras_rch.o
+>  cxl_core-y += config_check.o
+>  cxl_core-y += cxl_core_test.o
+>  cxl_core-y += cxl_core_exports.o
+
 
