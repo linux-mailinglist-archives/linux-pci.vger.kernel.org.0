@@ -1,105 +1,154 @@
-Return-Path: <linux-pci+bounces-44766-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44767-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46BDFD1FFE9
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 16:57:34 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A279CD200A6
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 17:04:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 32184304F157
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 15:57:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1D07A30FB138
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 15:58:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1B233A1A28;
-	Wed, 14 Jan 2026 15:57:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD31F3A1CE4;
+	Wed, 14 Jan 2026 15:58:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ciM3mmGa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ur3U5zKd"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9C93A0EBC
-	for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 15:57:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B853A1A4B;
+	Wed, 14 Jan 2026 15:58:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768406225; cv=none; b=BnnDap6M4LXElYxYtnvYosXBZzb+sjquqsrxmWyjkFMQvLtbPZCMsB6IwukqonnI/XNbD+eIklUICoDcDaJvIviD/MvNCXUbeWcOhn80rL6tUNNZ6TzRiV00asGt8JXezLiyrxpZWuyRz1QAZu11l/Q0FWWshE59SGmRnfz8e6A=
+	t=1768406296; cv=none; b=EqlJmTv+Tkqg16iFoV0gqkISplzL8K4ZkiskmBCcvty4QMGhpzSbUDq00er9apFKoAI2riDGb7jJY5JO53WoQ8wrUaMh/hAqXNfrN9UM0ifEe/nx6BFZPvaZGvOzT+1JW8sdpUsiW/w+6t/EQnwAkw2kxsY+oJEQlPzBNY+yw3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768406225; c=relaxed/simple;
-	bh=xsJHSf3/AMwJQdEYVXGOCzU9jiYbWVnUyVT7KumsBhY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PYeITRYwl5T7EcFXn9aSeO0RdDMyglQgBr9qi7RNuoO0/D2p+tVfXoeV+jFg6nk7CQwBOgP3itBqcN7r5JQ/xNpXXUTSYdUErg89SJV85lgn/yAbd0Elajgfh/HepCB/lnALsHjha5UCT6FVTKv/JHBahTQT1x3unwnGO9xvqrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ciM3mmGa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C8BDC4CEF7
-	for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 15:57:05 +0000 (UTC)
+	s=arc-20240116; t=1768406296; c=relaxed/simple;
+	bh=QanyVSWBKe+JzUOUmqB7BTbGxRlV2DYOfGGSfkoxW/s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y8oCQGimH9+dticGNnuulnDtrRP7XGP8ZhwPfuLWo3eoIbpwjrTNl7RGtCrDdDN46GxAGUyfWEV+CngHZp6zy+GX3LFWzW6P33TGHDTz6mXdFD3x9Gw4mpceDy0mT/NaXoiAgciva44KUTfl28UXz1qqWF3JS0FMRqSI2oD7a74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ur3U5zKd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7E54C2BC86;
+	Wed, 14 Jan 2026 15:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768406225;
-	bh=xsJHSf3/AMwJQdEYVXGOCzU9jiYbWVnUyVT7KumsBhY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ciM3mmGaLfb4sR3dwp0OsziDDyZMrmjtQv0yE/eWeVkMVjJ4/iDSkJgdMZLah7KNn
-	 mrV365T7U4hSIO3tf2+e84SJkaTTPI0DHyWaBigzsSndOjxhHinfBHCZQ7Cw+dNbUH
-	 3Cm3GgsF4uh60LnQwgBR7FyBfcfa9TjhtsIvOXcWE8PYDk7MhbDlm97c7t7BWqjEke
-	 av0BqCxUCmLGHnjB/lBs7CcOMZqnqbV9gdbpaUCnGJmsUV4MUxq028Ws2mio0/evFj
-	 8QgwA5/o/1QBZfV9qnd34rN/IouI1hHcGlay/WXkaVA8+NEOaBFI673UqL11pjvv+1
-	 975Y5iTV9nVQQ==
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7cfd2be567bso117647a34.2
-        for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 07:57:05 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWQD+GbwGM+uYSrKvrosTW5y9cfsakx4TCrRrmPIUfSWmZJeti82sXiZ8TPvdewUgjhZ+8pE3T+D1U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZlw20NcayPDlEByjygdv1IWBnkLa5rA00mzqGlk3mP9Ks14Vc
-	N3VLX9Qwg2yOviaYINtkSnUae5XtWS2sAEaV3zThio2aXpWTGVBm7VPdjsQ90JMsG4M/LU+EWVe
-	X1RfH+Cq21v4CoGJlBpNhx5KbIDCsXss=
-X-Received: by 2002:a05:6808:1798:b0:45a:6d11:9895 with SMTP id
- 5614622812f47-45c715f7907mr2183029b6e.64.1768406224737; Wed, 14 Jan 2026
- 07:57:04 -0800 (PST)
+	s=k20201202; t=1768406296;
+	bh=QanyVSWBKe+JzUOUmqB7BTbGxRlV2DYOfGGSfkoxW/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ur3U5zKd022GEGRb35k3dsX/tO52q0f3pgneM/wQUcB9PpHxHRTRQtfjlAQ3+qFlE
+	 ItIDvKE6ABHe/VW87R1pES/MnSr7CcPkuNs/FW7k7bqF8lNba8t5TB2khwQUMhdnRg
+	 WurWq/sGkak85C5s65HIalRX21bpmTR0attY8YyeiS8Yl2xLYHQ0KY93/3RxRt16fo
+	 WAlH4LQv8i8+uda+N6kp9oHJXHwxhKIF1QmUInreUXKEhJW97shC8W40dlEif/XBPD
+	 ZsqwZGarT1b+8buck8v7R/kyzSwQlfYl9fpgTgz0+MSVdZ1rd96IAyU9M0LriKip2F
+	 FYVUTKvMXBHsw==
+Date: Wed, 14 Jan 2026 21:27:58 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com, Rob Herring <robh@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v4 2/9] serdev: Add an API to find the serdev controller
+ associated with the devicetree node
+Message-ID: <ulj3qaurlauut76oyatdtkbo22jqsll43kzu272y2j32753ac6@gwmolgrilxeh>
+References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
+ <20260112-pci-m2-e-v4-2-eff84d2c6d26@oss.qualcomm.com>
+ <CAMRc=McDvQoqfH0Gy-wzbcEGvNCZACSACCcviwpCc4YNSpKYrw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251218-gicv5-host-acpi-v2-0-eec76cd1d40b@kernel.org>
-In-Reply-To: <20251218-gicv5-host-acpi-v2-0-eec76cd1d40b@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 14 Jan 2026 16:56:53 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gqso3q8gUZ3wPq1iG7zOBUu2cWMDZiHqCBU5dgdu_KTQ@mail.gmail.com>
-X-Gm-Features: AZwV_QjrZrLf1bCykQ-ryg-5n0xrmuSoINx75tjJllyFFfS_mnMgNK7g8MW_veM
-Message-ID: <CAJZ5v0gqso3q8gUZ3wPq1iG7zOBUu2cWMDZiHqCBU5dgdu_KTQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] irqchip/gic-v5: Code first ACPI boot support
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Robert Moore <robert.moore@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, 
-	Marc Zyngier <maz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org, 
-	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	Jose Marinho <jose.marinho@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McDvQoqfH0Gy-wzbcEGvNCZACSACCcviwpCc4YNSpKYrw@mail.gmail.com>
 
-On Thu, Dec 18, 2025 at 11:15=E2=80=AFAM Lorenzo Pieralisi
-<lpieralisi@kernel.org> wrote:
->
-> The ACPI and ACPI IORT specifications were updated to support bindings
-> required to describe GICv5 based systems.
->
-> The ACPI specification GICv5 bindings ECR [1] were approved and the
-> required changes merged in the ACPICA upstream repository[5].
->
-> The Arm IORT specification [2] has been updated to include GICv5 IWB
-> specific bindings in revision E.g.
->
-> Implement kernel code that - based on the aforementioned bindings - adds
-> support for GICv5 ACPI probing.
->
-> ACPICA changes supporting the bindings are posted with the series; they
-> were cherry-picked from the upcoming ACPICA Linuxised release patches
-> and they should _not_ be merged in any upstream branch because the
-> full set of Linuxised ACPICA changes will be subsequently posted in
-> order to be merged, I added the two ACPICA patches to make the series
-> self-contained.
+On Tue, Jan 13, 2026 at 08:54:55AM -0500, Bartosz Golaszewski wrote:
+> On Mon, 12 Jan 2026 17:26:01 +0100, Manivannan Sadhasivam via B4 Relay
+> <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> said:
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> >
+> > Add of_find_serdev_controller_by_node() API to find the serdev controller
+> > device associated with the devicetree node.
+> >
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > ---
+> >  drivers/tty/serdev/core.c | 16 ++++++++++++++++
+> >  include/linux/serdev.h    |  9 +++++++++
+> >  2 files changed, 25 insertions(+)
+> >
+> > diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> > index b33e708cb245..25382c2d63e6 100644
+> > --- a/drivers/tty/serdev/core.c
+> > +++ b/drivers/tty/serdev/core.c
+> > @@ -504,6 +504,22 @@ struct serdev_controller *serdev_controller_alloc(struct device *host,
+> >  }
+> >  EXPORT_SYMBOL_GPL(serdev_controller_alloc);
+> >
+> > +/**
+> > + * of_find_serdev_controller_by_node() - Find the serdev controller associated
+> > + *					 with the devicetree node
+> > + * @node:	Devicetree node
+> > + *
+> > + * Return: Pointer to the serdev controller associated with the node. NULL if
+> > + * the controller is not found.
+> > + */
+> 
+> Please also say that the caller is responsible for calling
+> serdev_controller_put() on the returned object.
+> 
 
-The patches in question have been included in this series:
+Ack.
 
-https://lore.kernel.org/linux-acpi/12822121.O9o76ZdvQC@rafael.j.wysocki/
+- Mani
 
-and are going to be applied shortly.
+> Bart
+> 
+> > +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
+> > +{
+> > +	struct device *dev = bus_find_device_by_of_node(&serdev_bus_type, node);
+> > +
+> > +	return (dev && dev->type == &serdev_ctrl_type) ? to_serdev_controller(dev) : NULL;
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_find_serdev_controller_by_node);
+> > +
+> >  static int of_serdev_register_devices(struct serdev_controller *ctrl)
+> >  {
+> >  	struct device_node *node;
+> > diff --git a/include/linux/serdev.h b/include/linux/serdev.h
+> > index ecde0ad3e248..db9bfaba0662 100644
+> > --- a/include/linux/serdev.h
+> > +++ b/include/linux/serdev.h
+> > @@ -333,4 +333,13 @@ static inline bool serdev_acpi_get_uart_resource(struct acpi_resource *ares,
+> >  }
+> >  #endif /* CONFIG_ACPI */
+> >
+> > +#ifdef CONFIG_OF
+> > +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node);
+> > +#else
+> > +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
+> > +{
+> > +	return NULL;
+> > +}
+> > +#endif /* CONFIG_OF */
+> > +
+> >  #endif /*_LINUX_SERDEV_H */
+> >
+> > --
+> > 2.48.1
+> >
+> >
+> >
 
-Thanks!
+-- 
+மணிவண்ணன் சதாசிவம்
 
