@@ -1,103 +1,100 @@
-Return-Path: <linux-pci+bounces-44782-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44783-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C703D20660
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 18:02:56 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD507D206A8
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 18:08:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0C3323009FE2
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 17:01:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E92A2300DC84
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 17:03:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 442AA22256B;
-	Wed, 14 Jan 2026 17:01:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 436682836AF;
+	Wed, 14 Jan 2026 17:03:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z1clwwlK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jyppVcgr"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21283155C82;
-	Wed, 14 Jan 2026 17:01:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFD527A916;
+	Wed, 14 Jan 2026 17:03:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768410061; cv=none; b=a6jalYLNiVTj6cmB4TxPMerF4OHt8KY4xLSrFp54y7l1iGmX6annueys3eK0x57HmxHZKWnDZOmgL7im8wT8nKW9ITKT3cntRxzu8x5wOODx+pZxaOrBrKU7MXYwVR55RqLdlK8d6KtFxKa8vD+zLd4EgJmsDYfuouMSvwjc/7w=
+	t=1768410197; cv=none; b=VldsaPKLKm55+zvmzCt03cmc42ahpFuR1W51vz+3Yk4gURWM7GW4UdL3TFrOSthceYkJiCLqAqiwJ8/04QRk3nyQ3ApHQHa9+y4514+cAfaxsF8SfBLGjREqFzm5eJDYlkeJeWGWlgUbGkBOZbZ9nB47S0vz+5KXXzKBHFR+Rc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768410061; c=relaxed/simple;
-	bh=+MSLC0nxsNHZ2kD3oC4yulpiHW4eZgvlDqwnh+CurQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jK1Tsahs1qxU3t6ttS5TDMXg+1LFF0znrqzfc/eU7dEE2/PaeB7Eo4MJZXY5CKo3guy6apt+VL1koUbBBRhg9zMbO87soh+IFt/ff5AnsoDpAn15fq5CNOV2ii5d0U3ZH85r64Hdy7QyJv1DhjeuguYClHT1OIEkPiXw3BNMNRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z1clwwlK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C9FFC4CEF7;
-	Wed, 14 Jan 2026 17:01:00 +0000 (UTC)
+	s=arc-20240116; t=1768410197; c=relaxed/simple;
+	bh=tbOQiaRsx985jHNtRaNVTBPCED2t5Ue5EhyntK5pH6g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GkW611NuCKJd2amRPLNH9orcup3E28mPnU0op4Hk/t+83h/oBwTYJy7DlehXIC+wNHel8CbEeNm3GtBZYiznaoGf7KDLHz9riFGrdeWUQEJNOokyVmFUmHRZjUKRuw+Xq3ArRXP6srLVnWEnd4nwa7+rhHh8qvsRRgLa0OwBU7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jyppVcgr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 719FFC4CEF7;
+	Wed, 14 Jan 2026 17:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768410060;
-	bh=+MSLC0nxsNHZ2kD3oC4yulpiHW4eZgvlDqwnh+CurQE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Z1clwwlKVg75m28YLhi2wZUpknJW9owNHuLdphOzL5cJ7W8SwNe8D3FLbzpZQwi6d
-	 CIDE12MxjnW/bGD/ifok+8a00OgtiTvXnT6/9+RYNjRHWKYW/bWAxAH+YkDnXwW7m7
-	 hIe3Pr0brIURoJnleHLKjAH12vb+yCT0CI1dg/E9cZWY6R72OwZq9xCyLvUeCcxscf
-	 hJ5Jwa9s1RfkLPdaeE9WDwMpNls56+BKsKdqwqmVy9CgkVqklPtAv1ZlWRUahSId0l
-	 CGGXn15fgfsnBExHyeZO3ZRzuRdAKcz3FUoMIQIeuqoVMufyymCb477xtcatPcvR/1
-	 S+EHC0DWxPXsA==
-Date: Wed, 14 Jan 2026 11:00:59 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <phasta@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] PCI: Remove useless WARN_ON() from devres
-Message-ID: <20260114170059.GA822278@bhelgaas>
+	s=k20201202; t=1768410196;
+	bh=tbOQiaRsx985jHNtRaNVTBPCED2t5Ue5EhyntK5pH6g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jyppVcgrGQZ1NBONlc4fpePseUDyJJ5N6Yy1rFPXWoRD9W2pnQjhQNzPNvWnOxBCb
+	 G1t0jtfLWEDR6MbsfgstatxJPWC9XvqhLnH3fCLwNktUz9dwOxOCa7QpAfAuNQL5md
+	 ygkbJjx3EBgBIXKPBS6lD39Fe9MZQhTUvRGTHu/CupCMqWIjAhmKbAJ+eB45ofOZlf
+	 zWyX1a4qZcJeYuL5gy+CdLM4Vm1Zi/TdnPhErIEZb/DgQvi51QJD+IUS+8c9oIF4pD
+	 kpAiVjPGipG1q6REbWLFgrzjvJqEfHi0+Ya+MvL5OSfEL3eMsw9DQ3jQ9FVVHrdRs0
+	 8UY5o/VIqnWUg==
+Date: Wed, 14 Jan 2026 18:03:10 +0100
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, Marc Zyngier <maz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	Jose Marinho <jose.marinho@arm.com>
+Subject: Re: [PATCH v2 0/7] irqchip/gic-v5: Code first ACPI boot support
+Message-ID: <aWfMTjukKcIlQugi@lpieralisi>
+References: <20251218-gicv5-host-acpi-v2-0-eec76cd1d40b@kernel.org>
+ <CAJZ5v0gqso3q8gUZ3wPq1iG7zOBUu2cWMDZiHqCBU5dgdu_KTQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251218092819.149665-2-phasta@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0gqso3q8gUZ3wPq1iG7zOBUu2cWMDZiHqCBU5dgdu_KTQ@mail.gmail.com>
 
-On Thu, Dec 18, 2025 at 10:28:20AM +0100, Philipp Stanner wrote:
-> PCI's devres implementation contains a WARN_ON() which served to inform
-> users relying on the legacy devres iomap table that this table does not
-> support multiple mappings per BAR.
+On Wed, Jan 14, 2026 at 04:56:53PM +0100, Rafael J. Wysocki wrote:
+> On Thu, Dec 18, 2025 at 11:15 AM Lorenzo Pieralisi
+> <lpieralisi@kernel.org> wrote:
+> >
+> > The ACPI and ACPI IORT specifications were updated to support bindings
+> > required to describe GICv5 based systems.
+> >
+> > The ACPI specification GICv5 bindings ECR [1] were approved and the
+> > required changes merged in the ACPICA upstream repository[5].
+> >
+> > The Arm IORT specification [2] has been updated to include GICv5 IWB
+> > specific bindings in revision E.g.
+> >
+> > Implement kernel code that - based on the aforementioned bindings - adds
+> > support for GICv5 ACPI probing.
+> >
+> > ACPICA changes supporting the bindings are posted with the series; they
+> > were cherry-picked from the upcoming ACPICA Linuxised release patches
+> > and they should _not_ be merged in any upstream branch because the
+> > full set of Linuxised ACPICA changes will be subsequently posted in
+> > order to be merged, I added the two ACPICA patches to make the series
+> > self-contained.
 > 
-> The WARN_ON() can be regarded as useless by now, since mapping a BAR
-> multiple times is legal behavior and old users of pcim_iomap_table(),
-> the accessor function for that table, did not break in the past PCI
-> devres cleanup. New PCI users will hopefully notice that
-> pcim_iomap_table() is deprecated and are unlikely to use it for mapping
-> the same BAR multiple times.
+> The patches in question have been included in this series:
 > 
-> Moreover, WARN_ON()s create noisy, difficult to read error messages
-> which can be more confusing than helpful, since they don't inform the
-> user about what precisely the problem is.
+> https://lore.kernel.org/linux-acpi/12822121.O9o76ZdvQC@rafael.j.wysocki/
 > 
-> Remove the WARN_ON().
-> 
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> and are going to be applied shortly.
 
-Applied to pci/misc for v6.20, thanks!
+Thanks Rafael, I will rebase the series and mark the dependency then.
 
-> ---
->  drivers/pci/devres.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-> index 9f4190501395..f075e7881c3a 100644
-> --- a/drivers/pci/devres.c
-> +++ b/drivers/pci/devres.c
-> @@ -469,9 +469,6 @@ static int pcim_add_mapping_to_legacy_table(struct pci_dev *pdev,
->  	if (!legacy_iomap_table)
->  		return -ENOMEM;
->  
-> -	/* The legacy mechanism doesn't allow for duplicate mappings. */
-> -	WARN_ON(legacy_iomap_table[bar]);
-> -
->  	legacy_iomap_table[bar] = mapping;
->  
->  	return 0;
-> -- 
-> 2.49.0
-> 
+Lorenzo
 
