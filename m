@@ -1,169 +1,167 @@
-Return-Path: <linux-pci+bounces-44698-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44699-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADF17D1C481
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 04:41:34 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F136ED1C4CC
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 04:53:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DCF8F3040D3F
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 03:41:21 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E18623003496
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 03:52:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE49D2DEA86;
-	Wed, 14 Jan 2026 03:41:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A422327FB21;
+	Wed, 14 Jan 2026 03:52:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kkyEAjf3"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="J8qxSNM4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1F62D73A6
-	for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 03:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC38729BDBA
+	for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 03:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.224
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768362077; cv=none; b=iF6sJl99XHXNWSCB8V9eQyS0v5UHZMEXLvTTvMvIeN3fPhhXFXBE+BaPXhGcLSWtg8LeO+So1kKM2ONyGtfFr8/WvGjJXq5deXSvKGXc2D4rgLdCwxElCodckCse0gX637dVC7kbNmtkAZrqYjNfMa/2oHUZKmhhSNnsOUQjXss=
+	t=1768362777; cv=none; b=kfmXikTk0McBDLBF5JoxRYnR+0w/H/nO/1lL6GM1avNsxqq1/Ts4dfiV0FoOIB/pkz/QCNcYOoez+0xS5kTTwzi+t6aKCLa6QdIVrrXLima/5oN8z3W7YQjKTxObT2vCLUJnkNVvsPhrxamhmbsS28Tu3eSiE1xLqADt9kKOSPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768362077; c=relaxed/simple;
-	bh=fuHX1gJvEHLXSbrpNZBA4M1RZiyGD+1HT2Iv1MurZ9o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xaf1QGlNa7eJXhno2LdDZs58EF0zeNKYtZst/wMAgqMtUZZhGbYbqXz4XQeGniAeeaLZ12vCladFxIS2UyQWhCUDvQ7jJngSdLVEseLGejsVmq3zOV058yoSUjyxXqSTsRuG6/tEJqbuZNqdVmGG3tigYqDB+R7uk15qSMoJS1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kkyEAjf3; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <977d29f6-4157-4fdb-b0d6-c24def482c06@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768362064;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wzuS26H8SYTScmOx3++ZwcMsS+D3jzSzvm/KUyjaJik=;
-	b=kkyEAjf3vAwmkpA6qQLnuaSZre5hBN1zivZR7feQaZvMwILYv8oANx8h+F6HDtKtMjlTGd
-	gn0lxegePRhz+XBSWXtBXaiKo9+/Gdy9/KJsL/7dx5iYjqhXvnXEZ+zWcHtH+MjVlHKQFM
-	4yb2rB8VCNXVTy1HzFsLEuwTZ+qx5q0=
-Date: Wed, 14 Jan 2026 11:40:51 +0800
+	s=arc-20240116; t=1768362777; c=relaxed/simple;
+	bh=Kw+NXyMV4si1fj1WCZmXUyva4/k6CgxKnqqeAXnLQog=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=kpZ1VvNduG+ZhCKIOe/4M0/kkjy1RdgvLvZgJ8Myfgtff21v1oP9NDo8gaEQhWzzFDZN87FWVU0Bz1zui7ZAbk5zdSL9NdTG+a1JRJuQGL6D30spyQmxO9V7SZVF/KM/MpBvf8T0MsFC1blUuVYBV/KX9TAbL/CiNm1+aLnuGnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=J8qxSNM4; arc=none smtp.client-ip=113.46.200.224
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=4gGt+Gm4s+asKlmlwjSgJ8PRcyQ7m5TX9ZiNaxnYt1U=;
+	b=J8qxSNM4G8N/heUUIA86mtDn/d4IaOnmybF6j1z0PQQVuyp5b08W3fz7pUL8OLdAB2sqmPKnE
+	8lwzxdDKeoQqYGEo592ipfKIPr1/wUfIt+ZhVD93r+KBfIClLQrn3vmABV+n59INP/zSAWv4Ljv
+	rH71FySpGSqb7LgHknPQ47U=
+Received: from mail.maildlp.com (unknown [172.19.162.92])
+	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4drXDX2hQ7z1cyQp;
+	Wed, 14 Jan 2026 11:49:32 +0800 (CST)
+Received: from kwepemk500009.china.huawei.com (unknown [7.202.194.94])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4DD1340562;
+	Wed, 14 Jan 2026 11:52:51 +0800 (CST)
+Received: from [10.67.121.161] (10.67.121.161) by
+ kwepemk500009.china.huawei.com (7.202.194.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 14 Jan 2026 11:52:50 +0800
+Message-ID: <85b11747-de25-432d-86ab-2c156f6b6976@huawei.com>
+Date: Wed, 14 Jan 2026 11:52:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 03/14] software node: Implement device_get_match_data
- fwnode callback
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- manivannan.sadhasivam@oss.qualcomm.com
-Cc: Rob Herring <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Manivannan Sadhasivam <mani@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org,
- Stephan Gerhold <stephan.gerhold@linaro.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20260110-pci-m2-e-v3-0-4faee7d0d5ae@oss.qualcomm.com>
- <20260110-pci-m2-e-v3-3-4faee7d0d5ae@oss.qualcomm.com>
- <aWSpFk9z0zpyKjr6@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: RFC about how to obtain PCIE TPH steer-tag on ARM64 platform
+To: Wei Huang <wei.huang2@amd.com>, Bjorn Helgaas <helgaas@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <Eric.VanTassell@amd.com>,
+	<bhelgaas@google.com>, <jonathan.cameron@huawei.com>,
+	<wangzhou1@hisilicon.com>, <wanghuiqiang@huawei.com>,
+	<liuyonglong@huawei.com>
+References: <0cba9df3-8fe5-47ef-929c-6da64d31bf69@huawei.com>
+ <20260113190713.GA775730@bhelgaas> <aWbJX75VdCEOBCgx@weiserver>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-In-Reply-To: <aWSpFk9z0zpyKjr6@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: fengchengwen <fengchengwen@huawei.com>
+In-Reply-To: <aWbJX75VdCEOBCgx@weiserver>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemk500009.china.huawei.com (7.202.194.94)
 
-
-
-On 2026/1/12 15:56, Andy Shevchenko wrote:
-> On Sat, Jan 10, 2026 at 12:26:21PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> 
->> Because the software node backend of the fwnode API framework lacks an
->> implementation for the .device_get_match_data function callback.
-> 
-> Maybe this is done on purpose. 
-
-
-It is a *fact* that the broken swnode lacks an implementation for the 
-.device_get_match_data stub.
-
-
-Otherwise, If it is really done *on purpose*, the maintainers of swnode
-backend probably shall document it in the source file *explicitly*.
-
-Have you thought about this aspect?
-> 
-
-If it is sure thing, then it shouldn't start with "Maybe ..."
-
-
->> This makes it difficult to use(and/or test) a few drivers that originates
->> from DT world on the non-DT platform.
-> 
-> How difficult? 
-
-The emphasis isn't on the 'difficult' word, it means 'inconvenience'
-
-> DSA implementation went to the way of taking DT overlay
-> approach. Why that one can't be applied here?
-
-
-Software node as an complement of ACPI, Therefore should do the same.
-
-
-
-DT overlay introduce extra overhead/side effects on the non-DT systems.
-
-Besides, DT overlay requires the OS distribution(such as ubuntu) has the 
-DT overlay config option selected.
-
-
-
-> 
->> Implement the .device_get_match_data fwnode callback, which helps to keep
->> the three backends of the fwnode API aligned as much as possible. This is
->> also a fundamental step to make a few drivers OF-independent truely
->> possible.
+On 1/14/2026 6:38 AM, Wei Huang wrote:
+> On Tue, Jan 13, 2026 at 01:07:13PM -0600, Bjorn Helgaas wrote:
+>> On Mon, Jan 12, 2026 at 11:01:31AM +0800, fengchengwen wrote:
+>>> Hi all,
+>>>
+>>> We want to enable PCIE TPH feature on ARM64 platform, but we encounter the
+>>> following problem:
+>>>
+>>> 1. The pcie_tph_get_cpu_st() function invokes the ACPI DSM method to
+>>>    obtain the steer-tag of the CPU. According to the definition of
+>>>    the DSM method [1], the cpu_uid should be "ACPI processor uid".
 >>
->> Device drivers or platform setup codes are expected to provide a software
->> node string property, named as "compatible". At this moment, the value of
->> this string property is being used to match against the compatible entries
->> in the of_device_id table. It can be extended in the future though.
+>>> 2. In the current implementation, the ACPI DSM method is invoked
+>>>    directly using the logical core number, which works on the x86
+>>>    platform but does not work on the ARM64 platform because the
+>>>    logical core ID is not the same as the ACPI processor ID when the
+>>>    PG exists.
+>>
+>> PG?
+>>
+>>> Because the ARM64 platform generates steer-tag based on the MPIDR
+>>> information (at least for the Kunpeng platform). Therefore, we have
+>>> two option:
+>>>
+>>> Option-1: convert logic core ID to ACPI process ID: use
+>>>           get_acpi_id_for_cpu() to get ACPI process ID in
+>>>           pcie_tph_get_cpu_st() before invoke dsm [2], and BIOS/ACPI
+>>>           use process ID to get corresponding MPIDR, and then
+>>>           generate steer-tag from MPIDR.
 > 
-> I really do not want to see this patch
+> In my opinion, if this is achievable in your BIOS/ACPI, it is clean vs. Option-2 and preferred.
 
-You can do that by dropping the maintainer-ship.
+Yes, it's achievable for out BIOS/ACPI, and we will adopt this option.
 
-Your endless, bruth-force ranting on such a straight-forward thing 
-doesn't make much sense, because that waste everybody's time.
+> 
+>>>
+>>> Option-2: convert logic core ID to MPIDR: use cpu_logical_map() to
+>>>           get MPIDR in pcie_tph_get_cpu_st() before invoke dsm, and
+>>>           BIOS/ACPI use it to generate steer-tag directly.
+> 
+> This solution requires you to change the ECN and ratify it (as suggested by Bjorn below). The implementation can also be complicated.
 
-> without very good justification
+Indeed, and it may take a long time.
 
+@Wei, I have another question:
+The cache is hierarchical, for example, L2 or L3. Does the DSM mode support the specified cache level?
+I checked the ECN doc and there are "Cache Reference" fields, but the kernel code don't enable them.
 
-Justifications has been provided over and over again.
-
-> (note, there were at least two attempts in the past to add this stuff
-
-This exactly saying that the implementation is missing.
-
->   and no-one was merged, 
-
-That's the reason why you see it at least the second time.
-
-have you studied those cases?).
+> 
+>>>
+>>> Option-1 complies with _DSM ECN, but requires BIOS/ACPI to maintain
+>>> a mapping table from acpi_process_id to MPIDR.
+>>>
+>>> Option 2 does not comply with _DSM ECN (if extension is required).
+>>> But it is easy to implement and can be extended to the DT system
+>>> (ACPI is not supported) I think.
+> 
+> If you plan to revamp it, one (wild) idea is that ST retrieval can be extended to support:
+>   1. ACPI _DSM
+>   2. DT
+>   3. Vendor specific
+> 
+> After that, your MPIDR solution can be plugged-in under (3).
+> 
+>>
+>> Sounds like this would be of interest to any OS, not just Linux.
+>>
+>> Possibly a topic for the PCI-SIG firmware working group
+>> (https://members.pcisig.com/wg/Firmware/dashboard) or the ACPI spec
+>> working group (https://uefi.org/workinggroups)?
+>>
+>>> [1] According to _DSM ECN, the input is defined as: "If the target
+>>>     is a processor, then this field represents the ACPI Processor
+>>>     UID of the processor as specified in the MADT. If the target is
+>>>     a processor container, then this field represents the ACPI
+>>>     Processor UID of the processor container as specified in the
+>>>     PPTT"
+>>>
+>>> [2] git diff about /drivers/pci/tph.c
+>>> @@ -289,6 +289,9 @@ int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type mem_type,
+>>>
+>>>         rp_acpi_handle = ACPI_HANDLE(rp->bus->bridge);
+>>>
+>>> +#ifdef CONFIG_ARM64
+>>> +       cpu_uid = get_acpi_id_for_cpu(cpu_uid);
+>>> +#endif
+>>>         if (tph_invoke_dsm(rp_acpi_handle, cpu_uid, &info) != AE_OK) {
+>>>                 *tag = 0;
+>>>                 return -EINVAL;
+>>>
+>>>
 > 
 
-The first one is not 100% correct.
 
