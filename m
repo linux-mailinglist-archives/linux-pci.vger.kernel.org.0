@@ -1,197 +1,154 @@
-Return-Path: <linux-pci+bounces-44738-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44739-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF868D1ED2A
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 13:40:25 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8EC2D1F004
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 14:13:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9EC98302080F
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 12:40:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DCB57303DD21
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jan 2026 13:10:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4414397AAE;
-	Wed, 14 Jan 2026 12:40:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E86F399A77;
+	Wed, 14 Jan 2026 13:10:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="uNacfl4B"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QSkP++GT";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y/QV6as9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEBF396D16;
-	Wed, 14 Jan 2026 12:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07413399A59
+	for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 13:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768394423; cv=none; b=babZC4rP/DHYqGUqXYzCEE7q+MMpdsFDbg4MsNB9/P/5nbm9CMskEmbLAYD9j8+/+g2b93ECn1zKA79uqj1eQAwmOJSW6hNBJR7hP5d8T5G3CodvGl/+V89GcPxuGstFk76lEh96q732F0GpxprcPveAlDhJjheH7jSSHFrF1jc=
+	t=1768396226; cv=none; b=jh2rPuzNXOvAT7Br173GCYttMr62kFE9IW6G8xK3y8bWlNNGfbdmxssJUIVI2sSvtlR/1kFBYFZBvIbkbPwBFf3HtmJhc7prMAryPd5OOFEp1vj25qO6aKJQTJG34Dn7Yda+kdxHe5seKTbIApfMqOsVdhUNDgMvxF0fGKGNfYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768394423; c=relaxed/simple;
-	bh=i3ywdlJEEbMCErXDckWbFK8qjmi5xbJlVYcN7KDYJQ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ShL2z7JoxS29v13P9xvdWB24IypYEldPHMbtcvno+csz965un7mh6xycXoM/K1iVVScLpuYQeu2HqMWmwaHJ41P5q8Y3mZ/RIzFFmZ20s6F7cnd//iV5YjWgKMnEplzjYNmmkgq6MgvH7YYwpmd99z1JHnBv9r1ZBAD9xOrDdsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=uNacfl4B; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 7194B4E41FEC;
-	Wed, 14 Jan 2026 12:40:19 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 2F36F6074A;
-	Wed, 14 Jan 2026 12:40:19 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id AE9C110B68235;
-	Wed, 14 Jan 2026 13:40:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1768394417; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=LdTB9SICd7x5Se7c+EJ+56/scU6NfThvAUtGnGGrMx4=;
-	b=uNacfl4Bs/+dFN/j5D9PlwbjgNS6nb7BgwzaR6oj2DCUMhGki9TlUQ/otRArV4T4TEPthb
-	vLECnyHHIjy9A5cLIyIKysmamaHZLz7lGf9CbftO+0yfLYGAJInMJJcocP1D42nN95FHhu
-	aYoE64ScAcn5BFZ2SnxBsUH+GiBv9fQeYg2sPyuLhoWjcTOT3cDH+pa9NU43D5fftdQd6h
-	mtCKjvOuuQbvV3ChzfQGdId8DRnDXRksF2WWqhMzKpPOb44Pj7ZhKKguWpUfIv6mOnptLC
-	urt5saAEuBgrYfeu017oRmKJVfhFd9ONDBz0VgyPVwVqmSl2jLy0Wjti0WNS1g==
-Date: Wed, 14 Jan 2026 13:40:04 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: manivannan.sadhasivam@oss.qualcomm.com, Rob Herring <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
- <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
- Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, Ilpo
- =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Mark Pearson
- <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann
- <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- linux-acpi@vger.kernel.org, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>, Sui Jingfeng <sui.jingfeng@linux.dev>
-Subject: Re: [PATCH v3 00/14] Add support for handling PCIe M.2 Key E
- connectors in devicetree
-Message-ID: <20260114134004.11023a7e@bootlin.com>
-In-Reply-To: <aWSuYd8zqCxZ9DYE@smile.fi.intel.com>
-References: <20260110-pci-m2-e-v3-0-4faee7d0d5ae@oss.qualcomm.com>
-	<aWSq_7_5kkQIv9Hc@smile.fi.intel.com>
-	<aWSuYd8zqCxZ9DYE@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1768396226; c=relaxed/simple;
+	bh=rvKojorBhGiq9oSSjlzSpqngsEZX6K1yHB2mMFTb3RU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ryxx6v0r31B2cXJ/mb7NxBTSPmMt478fQsMgNlC3ET4TrASruJ6s4lC4pxeRW1nmkaaKKZ9hP3raabqC47ssMJXLwnUQkxE1ppNTLomj8S0+P6VKHAMHFmY2U6y4R/CDABRQglw6Jk3kM6FfNre5meRplF1vaBPouC+Y3urrKj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QSkP++GT; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y/QV6as9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768396224;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GGW7KNWxKx5IGz4tEhfu2+JvNbz5fYr5dGcjHlJSJFs=;
+	b=QSkP++GTaRIEzbEr50HOkb5toNbk2rij0OHxZwyK8TQCIb44n7GhJ2b2tXl5TnwgaOIFvf
+	FsURWHuEr4mq074isH/aRgJ8+inwEPz+Ii3u3SGT8n0gxx6dT/eMvfEnJmc5eDCTT5gN0Y
+	ev6ceSfNgFY4N91hqQFc39GMhtbIYIU=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-148-i56oyYRDMYyce36fpEf6SA-1; Wed, 14 Jan 2026 08:10:22 -0500
+X-MC-Unique: i56oyYRDMYyce36fpEf6SA-1
+X-Mimecast-MFC-AGG-ID: i56oyYRDMYyce36fpEf6SA_1768396222
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-c52ab75d57cso3935377a12.1
+        for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 05:10:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1768396222; x=1769001022; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GGW7KNWxKx5IGz4tEhfu2+JvNbz5fYr5dGcjHlJSJFs=;
+        b=Y/QV6as9qodYXUxAfoCahpAxAIUgck+W47qVE3JZ1lXkU8aBzxI9P/gQKcsTmRb9kx
+         z9yVAkMBwjhBIyKpjNue2iEvC4t4zanNTwukjXfNcf+MBFtEn8zpHjeL4x6CXos5+Pho
+         Kwz339iTAbd6ppNVVxyGK3MXdyMGLlgs7t2eOfEIQj8LQtaj1G3U50BDawrSKYNNZ01u
+         ZX7kQK+pFwA8JY2hF4Syok5M725TNdZ8h8efD6CHL/aFe8EYkCH6ozjwqTOAuIJmwgYO
+         Rwm/4eHQZKDQiTJfYMP59/BniiOxqmuYn8vpmKE9TPBKbNf/emL0vBs2voUy8HKIp4KJ
+         WLow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768396222; x=1769001022;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GGW7KNWxKx5IGz4tEhfu2+JvNbz5fYr5dGcjHlJSJFs=;
+        b=sQiM2Y3gT7PZve/rT+d9mZcygmhOVc0rCr/INZJFh9XylmW5VrFe3ZpMxs9/4XQt6V
+         1Y/wo5kR7oaIAyp4UfQkXbUOK5+YYZ0BuM2Eu9sbouf+dBzx2sFJPc+UvHaEXRIVH/Jh
+         a0Xy5NCb4Wf0i5sCEQaQojZz8RnRXLGFpTypOk1qZ09i2YNqhkBX+NIocIJuuBEf7Eil
+         PsOcF6c/xftUBDObBExKTMeEzzxDucUG7r2OsoxV3GQHl/V/SU5CEaBgNcN2151HfQXj
+         7tThgZodzLQbn1gBH4RAsFn062TQ/dnjZNDEVCOlfSAhYQ7k80ubupMsk6je6lMTpPrh
+         1CyQ==
+X-Gm-Message-State: AOJu0Yy3MeOU2wTGONleUUcxV1tNvvDka4ZVdvOwzRP08/nEAakdP/Yg
+	Bn88Cg+ZRljH3DL72e0p2P801F8iO7dQZp8eUMqYgg1jtyv7ZF2LgJqyLBq5JIfi5cFXvPFRofv
+	ZJ16TqoHOhx4T+HUUN6NPei2YJb5CCGozR9q5oAja7SFAfqkfWdiUF9lpFv6alg==
+X-Gm-Gg: AY/fxX6+wkyhruzfFu1cO7iE4czpFQoZKmc6JKM+kCjNORXrLsdYU8TTnNQ5s+HjE8u
+	LNxF67stwCXQbwV6BSH6ZGCI/F7JF/aFTUpgjbY7chbQQuqpq+Ed2P/HufCqAQbLnt/wbFBzjh8
+	gAg6+jLgd/FgNlHNu0gMnT9smfBMieIM0ka4bcjK0wdkFQvrYVCKLKmGPvYo/nM3H1a605kDGzA
+	E4Oxuol5gbsPKjVreGHbtEOnv4e4DTIKJNFejwfnCSkIWC2L7aw9wR572EXBGk8Kn2ppygBFq0Z
+	gwXHo6yFHjEPf962LTDYOr8BicEuplnYOxUtMbF0VJbfSz1hmkS31qo/LkJr8UR4PuVyKWtiaD9
+	f78jKSg5r2C8U/Eqt3bqopI5qoNGR2o0am5gT
+X-Received: by 2002:a05:6a20:a10d:b0:342:d58b:561c with SMTP id adf61e73a8af0-38bed0d6f87mr2445884637.27.1768396221620;
+        Wed, 14 Jan 2026 05:10:21 -0800 (PST)
+X-Received: by 2002:a05:6a20:a10d:b0:342:d58b:561c with SMTP id adf61e73a8af0-38bed0d6f87mr2445863637.27.1768396221204;
+        Wed, 14 Jan 2026 05:10:21 -0800 (PST)
+Received: from [10.200.68.138] (nat-pool-muc-u.redhat.com. [149.14.88.27])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c4cbfc2f477sm20335a12.8.2026.01.14.05.10.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jan 2026 05:10:20 -0800 (PST)
+Message-ID: <1e57f54e6738e761ed49cfde8a7423ce141915be.camel@redhat.com>
+Subject: Re: [PATCH] PCI: Remove useless WARN_ON() from devres
+From: Philipp Stanner <pstanner@redhat.com>
+To: Philipp Stanner <phasta@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Guenter Roeck
+	 <linux@roeck-us.net>
+Date: Wed, 14 Jan 2026 14:10:10 +0100
+In-Reply-To: <20251218092819.149665-2-phasta@kernel.org>
+References: <20251218092819.149665-2-phasta@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Andy, Manivannan,
+On Thu, 2025-12-18 at 10:28 +0100, Philipp Stanner wrote:
+> PCI's devres implementation contains a WARN_ON() which served to inform
+> users relying on the legacy devres iomap table that this table does not
+> support multiple mappings per BAR.
+>=20
+> The WARN_ON() can be regarded as useless by now, since mapping a BAR
+> multiple times is legal behavior and old users of pcim_iomap_table(),
+> the accessor function for that table, did not break in the past PCI
+> devres cleanup. New PCI users will hopefully notice that
+> pcim_iomap_table() is deprecated and are unlikely to use it for mapping
+> the same BAR multiple times.
+>=20
+> Moreover, WARN_ON()s create noisy, difficult to read error messages
+> which can be more confusing than helpful, since they don't inform the
+> user about what precisely the problem is.
+>=20
+> Remove the WARN_ON().
+>=20
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
 
-On Mon, 12 Jan 2026 10:18:41 +0200
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+*ping*
 
-> +Cc: Herve (btw, any news on LAN966x support?)
+> ---
+> =C2=A0drivers/pci/devres.c | 3 ---
+> =C2=A01 file changed, 3 deletions(-)
+>=20
+> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+> index 9f4190501395..f075e7881c3a 100644
+> --- a/drivers/pci/devres.c
+> +++ b/drivers/pci/devres.c
+> @@ -469,9 +469,6 @@ static int pcim_add_mapping_to_legacy_table(struct pc=
+i_dev *pdev,
+> =C2=A0	if (!legacy_iomap_table)
+> =C2=A0		return -ENOMEM;
+> =C2=A0
+> -	/* The legacy mechanism doesn't allow for duplicate mappings. */
+> -	WARN_ON(legacy_iomap_table[bar]);
+> -
+> =C2=A0	legacy_iomap_table[bar] =3D mapping;
+> =C2=A0
+> =C2=A0	return 0;
 
-Related to LAN966x support, I am still stucked on issues related to
-fw_devlink and DT overlays [1].
-
-[1] https://lore.kernel.org/all/20260112154731.6540453b@bootlin.com/
-
-> 
-> On Mon, Jan 12, 2026 at 10:04:24AM +0200, Andy Shevchenko wrote:
-> > On Sat, Jan 10, 2026 at 12:26:18PM +0530, Manivannan Sadhasivam via B4 Relay wrote:  
-> > > Hi,
-> > > 
-> > > This series is the continuation of the series [1] that added the initial support
-> > > for the PCIe M.2 connectors. This series extends it by adding support for Key E
-> > > connectors. These connectors are used to connect the Wireless Connectivity
-> > > devices such as WiFi, BT, NFC and GNSS devices to the host machine over
-> > > interfaces such as PCIe/SDIO, USB/UART and NFC. This series adds support for
-> > > connectors that expose PCIe interface for WiFi and UART interface for BT. Other
-> > > interfaces are left for future improvements.
-
-Related to describing a connector in DT. If DT overlays are involved to described
-what is connected to this connector, some issues need to be fixed.
-
-Those issues are related to referencing an external symbol from the overlay.
-
-We, at Boolin, have been working on the topic
-
-A talk (last year at ELC Europe) gives all details about the topic an related issue:
-  https://bootlin.com/pub/conferences/2025/elce/ceresoli-hotplug-status.pdf
-  https://www.youtube.com/watch?v=C8dEQ4OzMnc
-
-Also a discussion took place after this talk:
-  https://lore.kernel.org/all/20250902105710.00512c6d@booty/
-
-Recently, I also send a RFC series to DTC in order to move forward on this symbol
-reverence topic. This series implements features emerged from the pointed out
-discussion.
-
-> > > 
-> > > Serdev device support for BT
-> > > ============================
-> > > 
-> > > Adding support for the PCIe interface was mostly straightforward and a lot
-> > > similar to the previous Key M connector. But adding UART interface has proved to
-> > > be tricky. This is mostly because of the fact UART is a non-discoverable bus,
-> > > unlike PCIe which is discoverable. So this series relied on the PCI notifier to
-> > > create the serdev device for UART/BT. This means the PCIe interface will be
-> > > brought up first and after the PCIe device enumeration, the serdev device will
-> > > be created by the pwrseq driver. This logic is necessary since the connector
-> > > driver and DT node don't describe the device, but just the connector. So to make
-> > > the connector interface Plug and Play, the connector driver uses the PCIe device
-> > > ID to identify the card and creates the serdev device. This logic could be
-> > > extended in the future to support more M.2 cards. Even if the M.2 card uses SDIO
-> > > interface for connecting WLAN, a SDIO notifier could be added to create the
-> > > serdev device.
-> > > 
-> > > Open questions
-> > > ==============
-> > > 
-> > > Though this series adds the relevant functionality for handling the M.2 Key M
-> > > connectors, there are still a few open questions exists on the design. 
-> > > 
-> > > 1. I've used the DT compatible for the serdev swnode to match the existing OF
-> > > device_id of the bluetooth driver. This avoids implementing custom serdev id
-> > > matching as implemented till v2.  
-> > 
-> > Yeah, swnodes are not designed to replace the real DT or other firmware
-> > interface. The idea of swnodes is to have them providing quirks if needed (i.e.
-> > fixing up the broken or missed FW device properties). This should not have been
-> > done this way. Please, consider another approach, e.g. DT-overlay.  
-> 
-> This is what I have in mind when replied to you:
-> 
-> https://lore.kernel.org/all/20251015071420.1173068-1-herve.codina@bootlin.com/
-> 
-> > > 2. PCIe client drivers of some M.2 WLAN cards like the Qcom QCA6390, rely on
-> > > the PCIe device DT node to extract properties such as
-> > > 'qcom,calibration-variant', 'firmware-name', etc... For those drivers, should we
-> > > add the PCIe DT node in the Root Port in conjunction with the Port node as
-> > > below?
-> > > 
-> > > pcie@0 {
-> > > 	wifi@0 {
-> > > 		compatible = "pci17cb,1103";
-> > > 		...
-> > > 		qcom,calibration-variant = "LE_X13S";
-> > > 	};
-> > > 
-> > > 	port {
-> > > 		pcie4_port0_ep: endpoint {
-> > > 			remote-endpoint = <&m2_e_pcie_ep>;
-> > > 		};
-> > > 	};
-> > > };
-
-Using mechanisms used by the LAN966x, those wifi@0 and port nodes could be added by
-a DT overlay by the PCI device driver handling the Qcom QCA6390 PCI device.
-
-Best regards,
-Hervé
 
