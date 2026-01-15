@@ -1,194 +1,259 @@
-Return-Path: <linux-pci+bounces-44943-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44944-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A30CD24D16
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 14:51:36 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12DEBD24D55
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 14:55:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E2D6D302C8E2
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 13:50:14 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 879F9300463C
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 13:55:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FCE739C64A;
-	Thu, 15 Jan 2026 13:50:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 072293A0E93;
+	Thu, 15 Jan 2026 13:55:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fScTsD0z"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="J+6zIyAL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7438D361DD1;
-	Thu, 15 Jan 2026 13:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C713A0E88
+	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 13:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768485013; cv=none; b=WjbokAONfccewjisqk4uTMGO/FWjofBYndllXa15Y31im4Ah2JRJsCwT2gztaxRjg2MHVPfv3qsoj7PsFLws4furxeiXf2ZOmvSlrUIYPkPkyxP71HaaY+y+hfseaYWceIl+j0XWwMjHzx9htIWLppUoUNw7wqbEMayZbbc2uq4=
+	t=1768485329; cv=none; b=jluC2UKBS8XDYzxNIQNvbbfnuEt2cDeD1Gnv5M9CnggLlSM6qvttFivwcNIwxBfC0u+zXNwwQ0fY2frzhYp5RCWhaXbMy/bDcc48+CT3TJOdL8BdL4NWiGVlAUr/ntH/S8VOOMz9fQ0s6lbQNAK5RJNMsHpriSL74uP1YDaqiSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768485013; c=relaxed/simple;
-	bh=9BuasZ0t33a7AsjKXVovC2XLmPpO90VhX+AWfX4/5cY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ak4XuW+uO7vzLRtpKMejai3G+hQxBfuF/b+IyZXFOVaxq/lNT+HZ8lexnYMgYUB4ZUDXtSPqMmpemN8vJ1APBF45WeHPP++yvrpOld/Ekj062xe8zt5/UTugKxcGJa4CpZAUKYQo6qrg2i/TrTuKV8ZFpyCQRDE5Ek1sKGgrFIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fScTsD0z; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768485011; x=1800021011;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9BuasZ0t33a7AsjKXVovC2XLmPpO90VhX+AWfX4/5cY=;
-  b=fScTsD0zvJleJjihxGPHylvh8WVboaYf4StEhkgPl7ErOZmx2f6adFQk
-   oI7IS+w095dA4Ez2w1FE+F8TfDAqgjzfB2len/cPAraPQBSV0jOVWO1fU
-   SEzfrme6ZGvbzW4SY3HvlGhJbm/thkDNUViyjzBWCyF/TYKJx/ylRHfWf
-   xXlflRh7iSYxBgB6hRtFyJxC4pyCzLpJ3K3AqxyPSsKUQ1j2ertnDPs/w
-   xyG71EE6xq/DG0rJtgNGVE20QFrD/LUfP9uHj/ZFY5O3M3LsJvFxJRhCf
-   LAH4QZ8ymSSYuqZxvXs/Tr1VPO7o8xIXKcGZoU5BM8VrulcmiQxhKgVN7
-   Q==;
-X-CSE-ConnectionGUID: 8xUdU+aoSGKI+152Pih5pQ==
-X-CSE-MsgGUID: Pj/iApEnT62LOk/kr1MtGw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="73641271"
-X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
-   d="scan'208";a="73641271"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 05:50:11 -0800
-X-CSE-ConnectionGUID: AZ9/3ya5TCiOyR984WpPMA==
-X-CSE-MsgGUID: AGN9oiwIQOiOpBYwKn7DfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
-   d="scan'208";a="204838423"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 15 Jan 2026 05:50:06 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vgNjg-00000000I1s-0ySb;
-	Thu, 15 Jan 2026 13:50:04 +0000
-Date: Thu, 15 Jan 2026 21:49:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: John Madieu <john.madieu.xa@bp.renesas.com>,
-	claudiu.beznea.uj@bp.renesas.com, lpieralisi@kernel.org,
-	kwilczynski@kernel.org, mani@kernel.org, geert+renesas@glider.be,
-	krzk+dt@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, robh@kernel.org,
-	bhelgaas@google.com, conor+dt@kernel.org, magnus.damm@gmail.com,
-	biju.das.jz@bp.renesas.com, linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org, john.madieu@gmail.com,
-	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: Re: [PATCH 10/16] PCI: rzg3s-host: Explicitly set class code for
- RZ/G3E compatibility
-Message-ID: <202601152104.pV9uMS76-lkp@intel.com>
-References: <20260114153337.46765-11-john.madieu.xa@bp.renesas.com>
+	s=arc-20240116; t=1768485329; c=relaxed/simple;
+	bh=rTcmnpef70Bd17FfMNPWpzLu6hWiJcl5FrvjG1iQ7kM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MdSMwUtp1dJC42z7QAjKsST2//LdSjTht7gumIZhGCf11AyFzG+dG6suNAzefN4kKucYC/FHhrHUEdPokXA2QQg5O98yTN/E3RU+GRvZQ/4/OTpbPCzNHjZqFOMSAtrhUJvHihVnpYUU74819ev3w4YKvJEBpUMnsQuXWUNFPIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=J+6zIyAL; arc=none smtp.client-ip=209.85.218.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-b8715a4d9fdso128046466b.0
+        for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 05:55:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1768485326; x=1769090126; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QrZ5+jQy92uNw0r2S0THSakmu7K1eDt7PKdDPiL1BxI=;
+        b=J+6zIyALzvkmmvHLhMbqdi5qXkwtAN+VC1tpHA0tEs+1bLX7ofpseQsFp3j1aZn/0Y
+         Kr8/6pSdIqSFRtq6dOCNTKNUW34pzyO11qlJkW5klukx7C24o3UZPn/a0QB38lbilq/5
+         6Zv1mAxaFszr5mQFlP6cXCc74pH9fDjTB1N9rF97cgEJMi2w/4RC+zelGesUPk0tQvQ0
+         lGHYm2HAvVHohvEU5POGQAznYFBVXlF1nkpfCmovGHWnA8W0LTn4jT5pmYnLODu6mMBL
+         dqkIuaFJsJST7e3se4wTS5NcuscSofSbaTZaNiAcDwMYpqzAAsVmf5sLf4UnKCd0VjfF
+         tzyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768485326; x=1769090126;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QrZ5+jQy92uNw0r2S0THSakmu7K1eDt7PKdDPiL1BxI=;
+        b=r5uimGOXhU9+uNQEucNtxA4x5ZT6F2HJM8V9VaZ5Bl5d7aRNp0ngwUSGhHNT+vM0na
+         1mxNLropInE3KhghR6rmiY0n0tdr5obx4OKyE9sStfUq2XrJvShIinDioXY+Jy2crp9J
+         h4udEzRCVU931q76JW1+zTuDhCinoh5ogVMxUabRQo15+DG0rUpvGAGnyZQEbhOpAJp3
+         S/hZkZ7JxLIKQ4anOFsS38G0XrOEvQIm7gfiRGzi6P+w5ZkL3NxspVIzxJKGZKU/S53S
+         2OD9o16fGVFQpngFSetp24AS8EWPhWG0F59rmCVRm+QJFOPAFnAIunnzbjq9XZ9wJB6k
+         lKpw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKdseEmQE4uPBZdT98ZiinkFsJ9kEAqjH27liCqjhVBD9PWVvSxkJ24Cgu63UxAOifyWKls0dCCPE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2nGSmc2iwoAyKIK4CITUsVGEl2Vnr8GTqCfTLHlINeqRfM3H9
+	Kv7n/IpXRc3yo6JTVJwnsb5iIN6i6zEzQ22jYs866gQIXaPnaZBvI5fCfBfD2YyhfPz5DK7zoOx
+	LImTjoEo=
+X-Gm-Gg: AY/fxX6OxR28zGPllVi90vvFHsHS9vW08jDgWKXcpVYOp/kT4JyfH8WIRZpPuuGeEWX
+	jfZhcjkXledjJDj3UKgGxeKWYZjAVot16IYe1QUOLeuaBXPBV0M+8f0XHSS4B4DNk3YqKWMLMsA
+	cKFOV/Y+MrR6UEkYMYdRZPH9izD9nmIWLMpdlaHe8cHbDemnf31h9sfmaSJ3ExjRp9nAWaPNPMh
+	CYfquvAd7efLU6/401LSGj5JymFS1WleP68hyLYT1oi+GrNkWg3xaJE2H6eifSSbPac8FCzUNUc
+	rlngFf4gRTjEi5CpH4QIjqI8LAsE4W1D/+Qv13axcxSCBVX1O6uMhlbBQurkAxa5JPkxu+mcH1n
+	AhozfT6BcQIm+G7sPhEAlDnBy3fpBopoUOKTdb3kSdmRojEeqPuTDNT7jqb9UjcVdarOv69NVr+
+	2csTUtlM8fN57MrVaXf/8=
+X-Received: by 2002:a17:907:3d42:b0:b76:f090:7779 with SMTP id a640c23a62f3a-b876113a251mr548317366b.33.1768485325766;
+        Thu, 15 Jan 2026 05:55:25 -0800 (PST)
+Received: from [10.78.104.246] ([46.97.176.64])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b87705a24f6sm365632466b.70.2026.01.15.05.55.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Jan 2026 05:55:24 -0800 (PST)
+Message-ID: <6c87673a-32a7-490b-a365-096f3ae63c6f@tuxon.dev>
+Date: Thu, 15 Jan 2026 15:55:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260114153337.46765-11-john.madieu.xa@bp.renesas.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/16] dt-bindings: PCI: renesas,r9a08g045s33-pcie:
+ Document RZ/G3E SoC
+To: John Madieu <john.madieu.xa@bp.renesas.com>,
+ claudiu.beznea.uj@bp.renesas.com, lpieralisi@kernel.org,
+ kwilczynski@kernel.org, mani@kernel.org, geert+renesas@glider.be,
+ krzk+dt@kernel.org
+Cc: robh@kernel.org, bhelgaas@google.com, conor+dt@kernel.org,
+ magnus.damm@gmail.com, biju.das.jz@bp.renesas.com,
+ linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org, john.madieu@gmail.com
+References: <20260114153337.46765-1-john.madieu.xa@bp.renesas.com>
+ <20260114153337.46765-6-john.madieu.xa@bp.renesas.com>
+Content-Language: en-US
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <20260114153337.46765-6-john.madieu.xa@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi John,
+Hi, John,
 
-kernel test robot noticed the following build warnings:
+On 1/14/26 17:33, John Madieu wrote:
+> Extend the existing device tree bindings for Renesas RZ/G3S PCIe
+> controller to include support for the RZ/G3E (renesas,r9a09g047e57-pcie) PCIe
+> controller. The RZ/G3E PCIe controller is similar to RZ/G3S but has some key
+> differences:
+> 
+>   - Uses a different device ID
+>   - Supports PCIe Gen3 (8.0 GT/s) link speeds
+>   - Uses a different clock naming (clkpmu vs clkl1pm)
+>   - Has a different set of interrupts, interrupt ordering, and reset signals
+> 
+> Add device tree bindings for renesas,r9a09g047e57-pcie compatible IPs.
+> 
+> Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+> ---
+>   .../bindings/pci/renesas,r9a08g045-pcie.yaml  | 243 +++++++++++++-----
+>   1 file changed, 172 insertions(+), 71 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/renesas,r9a08g045-pcie.yaml b/Documentation/devicetree/bindings/pci/renesas,r9a08g045-pcie.yaml
+> index d668782546a2..c68bc76af35d 100644
+> --- a/Documentation/devicetree/bindings/pci/renesas,r9a08g045-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/renesas,r9a08g045-pcie.yaml
+> @@ -10,85 +10,34 @@ maintainers:
+>     - Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>   
+>   description:
+> -  Renesas RZ/G3S PCIe host controller complies with PCIe Base Specification
+> -  4.0 and supports up to 5 GT/s (Gen2).
+> +  Renesas RZ/G3{E,S} PCIe host controllers comply with PCIe
+> +  Base Specification 4.0 and support up to 5 GT/s (Gen2) for RZ/G3S and
+> +  up to 8 GT/s (Gen3) for RZ/G3E.
+>   
+>   properties:
+>     compatible:
+> -    const: renesas,r9a08g045-pcie # RZ/G3S
+> +    enum:
+> +      - renesas,r9a08g045-pcie # RZ/G3S
+> +      - renesas,r9a09g047-pcie # RZ/G3E
+>   
+>     reg:
+>       maxItems: 1
+>   
+> -  interrupts:
+> -    items:
+> -      - description: System error interrupt
+> -      - description: System error on correctable error interrupt
+> -      - description: System error on non-fatal error interrupt
+> -      - description: System error on fatal error interrupt
+> -      - description: AXI error interrupt
+> -      - description: INTA interrupt
+> -      - description: INTB interrupt
+> -      - description: INTC interrupt
+> -      - description: INTD interrupt
+> -      - description: MSI interrupt
+> -      - description: Link bandwidth interrupt
+> -      - description: PME interrupt
+> -      - description: DMA interrupt
+> -      - description: PCIe event interrupt
+> -      - description: Message interrupt
+> -      - description: All interrupts
+> -
+> -  interrupt-names:
+> -    items:
+> -      - description: serr
+> -      - description: ser_cor
+> -      - description: serr_nonfatal
+> -      - description: serr_fatal
+> -      - description: axi_err
+> -      - description: inta
+> -      - description: intb
+> -      - description: intc
+> -      - description: intd
+> -      - description: msi
+> -      - description: link_bandwidth
+> -      - description: pm_pme
+> -      - description: dma
+> -      - description: pcie_evt
+> -      - description: msg
+> -      - description: all
+> +  interrupts: true
+> +
+> +  interrupt-names: true
+>   
+>     interrupt-controller: true
+>   
+>     clocks:
+> -    items:
+> -      - description: System clock
+> -      - description: PM control clock
+> +    maxItems: 2
+>   
+>     clock-names:
+> -    items:
+> -      - description: aclk
+> -      - description: pm
+> -
+> -  resets:
+> -    items:
+> -      - description: AXI2PCIe Bridge reset
+> -      - description: Data link layer/transaction layer reset
+> -      - description: Transaction layer (ACLK domain) reset
+> -      - description: Transaction layer (PCLK domain) reset
+> -      - description: Physical layer reset
+> -      - description: Configuration register reset
+> -      - description: Configuration register reset
+> -
+> -  reset-names:
+> -    items:
+> -      - description: aresetn
+> -      - description: rst_b
+> -      - description: rst_gp_b
+> -      - description: rst_ps_b
+> -      - description: rst_rsm_b
+> -      - description: rst_cfg_b
+> -      - description: rst_load_b
+> +    maxItems: 2
+> +
+> +  resets: true
+> +
+> +  reset-names: true
+>   
+>     power-domains:
+>       maxItems: 1
+> @@ -128,11 +77,12 @@ patternProperties:
+>           const: 0x1912
+>   
+>         device-id:
+> -        const: 0x0033
+> +        enum:
+> +          - 0x0033
+> +          - 0x0039
+>   
+>         clocks:
+> -        items:
+> -          - description: Reference clock
+> +        maxItems: 1
 
-[auto build test WARNING on next-20260114]
-[cannot apply to pci/next pci/for-linus geert-renesas-devel/next geert-renesas-drivers/renesas-clk linus/master v6.19-rc5 v6.19-rc4 v6.19-rc3 v6.19-rc5]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Can't this stay as is?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/John-Madieu/PCI-rzg3s-host-Fix-reset-handling-in-probe-error-path/20260114-234634
-base:   next-20260114
-patch link:    https://lore.kernel.org/r/20260114153337.46765-11-john.madieu.xa%40bp.renesas.com
-patch subject: [PATCH 10/16] PCI: rzg3s-host: Explicitly set class code for RZ/G3E compatibility
-config: powerpc64-randconfig-002-20260115 (https://download.01.org/0day-ci/archive/20260115/202601152104.pV9uMS76-lkp@intel.com/config)
-compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 9b8addffa70cee5b2acc5454712d9cf78ce45710)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260115/202601152104.pV9uMS76-lkp@intel.com/reproduce)
+>   
+>         clock-names:
+>           items:
+> @@ -142,8 +92,6 @@ patternProperties:
+>         - device_type
+>         - vendor-id
+>         - device-id
+> -      - clocks
+> -      - clock-names
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601152104.pV9uMS76-lkp@intel.com/
+Any reason this was dropped here? I see in patch 14/16 you are still using 
+clocks, clock-names for the PCIe port.
 
-All warnings (new ones prefixed by >>):
-
->> drivers/pci/controller/pcie-rzg3s-host.c:1090:11: warning: result of comparison of constant 18446744073709551615 with expression of type 'typeof (_Generic((mask), char: (unsigned char)0, unsigned char: (unsigned char)0, signed char: (unsigned char)0, unsigned short: (unsigned short)0, short: (unsigned short)0, unsigned int: (unsigned int)0, int: (unsigned int)0, unsigned long: (unsigned long)0, long: (unsigned long)0, unsigned long long: (unsigned long long)0, long long: (unsigned long long)0, default: (mask)))' (aka 'unsigned int') is always false [-Wtautological-constant-out-of-range-compare]
-    1090 |                                FIELD_PREP(mask, PCI_CLASS_BRIDGE_PCI_NORMAL));
-         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:137:3: note: expanded from macro 'FIELD_PREP'
-     137 |                 __BF_FIELD_CHECK_REG(_mask, 0ULL, "FIELD_PREP: ");      \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:79:50: note: expanded from macro '__BF_FIELD_CHECK_REG'
-      79 |         BUILD_BUG_ON_MSG(__bf_cast_unsigned(mask, mask) >               \
-         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
-      80 |                          __bf_cast_unsigned(reg, ~0ull),                \
-         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      81 |                          pfx "type of reg too small for mask")
-         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:39:58: note: expanded from macro 'BUILD_BUG_ON_MSG'
-      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-   include/linux/compiler_types.h:667:22: note: expanded from macro 'compiletime_assert'
-     667 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:655:23: note: expanded from macro '_compiletime_assert'
-     655 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:647:9: note: expanded from macro '__compiletime_assert'
-     647 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   1 warning generated.
-
-
-vim +1090 drivers/pci/controller/pcie-rzg3s-host.c
-
-  1057	
-  1058	static int rzg3s_pcie_config_init(struct rzg3s_pcie_host *host)
-  1059	{
-  1060		struct pci_host_bridge *bridge = pci_host_bridge_from_priv(host);
-  1061		u32 mask = GENMASK(31, 8);
-  1062		struct resource_entry *ft;
-  1063		struct resource *bus;
-  1064		u8 subordinate_bus;
-  1065		u8 secondary_bus;
-  1066		u8 primary_bus;
-  1067	
-  1068		ft = resource_list_first_type(&bridge->windows, IORESOURCE_BUS);
-  1069		if (!ft)
-  1070			return -ENODEV;
-  1071	
-  1072		bus = ft->res;
-  1073		primary_bus = bus->start;
-  1074		secondary_bus = bus->start + 1;
-  1075		subordinate_bus = bus->end;
-  1076	
-  1077		/* Enable access control to the CFGU */
-  1078		writel_relaxed(RZG3S_PCI_PERM_CFG_HWINIT_EN,
-  1079			       host->axi + RZG3S_PCI_PERM);
-  1080	
-  1081		/* HW manual recommends to write 0xffffffff on initialization */
-  1082		writel_relaxed(0xffffffff, host->pcie + RZG3S_PCI_CFG_BARMSK00L);
-  1083		writel_relaxed(0xffffffff, host->pcie + RZG3S_PCI_CFG_BARMSK00U);
-  1084	
-  1085		/*
-  1086		 * Explicitly program class code. RZ/G3E requires this configuration.
-  1087		 * Harmless for RZ/G3S where this matches the hardware default.
-  1088		 */
-  1089		rzg3s_pcie_update_bits(host->pcie, PCI_CLASS_REVISION, mask,
-> 1090				       FIELD_PREP(mask, PCI_CLASS_BRIDGE_PCI_NORMAL));
-  1091	
-  1092		/* Disable access control to the CFGU */
-  1093		writel_relaxed(0, host->axi + RZG3S_PCI_PERM);
-  1094	
-  1095		/* Update bus info */
-  1096		writeb_relaxed(primary_bus, host->pcie + PCI_PRIMARY_BUS);
-  1097		writeb_relaxed(secondary_bus, host->pcie + PCI_SECONDARY_BUS);
-  1098		writeb_relaxed(subordinate_bus, host->pcie + PCI_SUBORDINATE_BUS);
-  1099	
-  1100		return 0;
-  1101	}
-  1102	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thank you,
+Claudiu
 
