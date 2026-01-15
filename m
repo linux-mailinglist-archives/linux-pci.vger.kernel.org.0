@@ -1,90 +1,126 @@
-Return-Path: <linux-pci+bounces-44972-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44973-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44824D257C7
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 16:49:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id ECB4ED25857
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 16:56:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6111D300DCA9
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 15:44:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B98ED3013565
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 15:55:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F50B35503E;
-	Thu, 15 Jan 2026 15:44:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16DD639449B;
+	Thu, 15 Jan 2026 15:55:30 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E35A37E2EB;
-	Thu, 15 Jan 2026 15:44:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1252D97BE;
+	Thu, 15 Jan 2026 15:55:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768491883; cv=none; b=EN7DhvegmRcMJeJeiTlL1Wt7ab/vwNg4C2b3GMZntA0QEY9xUai/QN/g/5ww9LB2csXq6sjX+TCvwbCh9ud39pnD+2gSYvw7sJuvP6baFoYmmtCCsCduZpr8a1tnaL/kBRRDN2A37rdpjcmQi5RCMeuSHrnOClwQnTgsPdcV+xs=
+	t=1768492530; cv=none; b=rGSGp6+UCDvLsob8RkDVaWU0I2nZGubdjgw0ezB1/rjmZfrq7ZfsWs4MmVAg9qY0UdQabh5Kb1Y+6bHFvrBwCntQ60I5NaHzftHdm8cJ5w88VJEglNvRWzBpJDpWmQOmi/ogYyq5ze6K6eI8JT3A+iCzjJ13Tmc94pZw3WEqV1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768491883; c=relaxed/simple;
-	bh=ct5HMc0px1ai/fmkf2d2a4C+FXS3iFSK7KqXvdu8imU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J8bKTZoIrpmiV8rB5LEqgA+/RGNyqd5ycSU9lr0Ie7ogJtBZXBa784wlWsztzQvxdw5DAWRs2z7DNF+B/MBPpDw0oqplq99GttjbCwPV4du273ZnFbK3pL5d98YMcZhMN9Q5FW2YYb/eYwlZrIzCOPDb/ohUt5tKGs6TzaJbP+g=
+	s=arc-20240116; t=1768492530; c=relaxed/simple;
+	bh=9BccyQp5id9ZaXUaCFNfUjVe//9U9MhNJeW2s4KCTSg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=I9JAzYPDt2cHeOiAgza5+VeGTQcIkokafoysy9jqwLaLSIzA7ffh3+apNprpnxlmLvP94TjVYnof8nsN0lVdVsLbq6+eYbRAVS7+ZIlj/GEJ28aSOp+KSp/RzmnO0Du2bhxkDD/m26QSVO/8dUsCtvfJmTHg8oE1LzlQj9h5d4I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dsS2n0XYGzHnH6P;
-	Thu, 15 Jan 2026 23:44:17 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 37FE440570;
-	Thu, 15 Jan 2026 23:44:39 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 15 Jan
- 2026 15:44:38 +0000
-Date: Thu, 15 Jan 2026 15:44:36 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>, <alucerop@amd.com>,
-	<ira.weiny@intel.com>, <linux-kernel@vger.kernel.org>,
+Received: from mail.maildlp.com (unknown [172.18.224.150])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dsSHG4Jj1zJ468l;
+	Thu, 15 Jan 2026 23:55:06 +0800 (CST)
+Received: from frapema500006.china.huawei.com (unknown [7.182.19.102])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2040F40563;
+	Thu, 15 Jan 2026 23:55:23 +0800 (CST)
+Received: from frapema500006.china.huawei.com (7.182.19.102) by
+ frapema500006.china.huawei.com (7.182.19.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 15 Jan 2026 16:55:22 +0100
+Received: from frapema500006.china.huawei.com ([7.182.19.102]) by
+ frapema500006.china.huawei.com ([7.182.19.102]) with mapi id 15.02.1544.011;
+ Thu, 15 Jan 2026 16:55:21 +0100
+From: Mauro Carvalho Chehab <M.Chehab@huawei.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>, Terry Bowman
+	<terry.bowman@amd.com>
+CC: "dave@stgolabs.net" <dave@stgolabs.net>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	Shiju Jose <shiju.jose@huawei.com>, "ming.li@zohomail.com"
+	<ming.li@zohomail.com>, "mchehab+huawei@kernel.org"
+	<mchehab+huawei@kernel.org>, "Smita.KoralahalliChannabasappa@amd.com"
+	<Smita.KoralahalliChannabasappa@amd.com>, "rrichter@amd.com"
+	<rrichter@amd.com>, "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
+	"PradeepVineshReddy.Kodamati@amd.com" <PradeepVineshReddy.Kodamati@amd.com>,
+	"lukas@wunner.de" <lukas@wunner.de>, "Benjamin.Cheatham@amd.com"
+	<Benjamin.Cheatham@amd.com>, "sathyanarayanan.kuppuswamy@linux.intel.com"
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "alucerop@amd.com" <alucerop@amd.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
 	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v14 29/34] cxl/port: Unify endpoint and switch port
- lookup
-Message-ID: <20260115154436.00003d57@huawei.com>
-In-Reply-To: <20260114182055.46029-30-terry.bowman@amd.com>
+Subject: RE: [PATCH v14 14/34] PCI/AER: Report CXL or PCIe bus type in AER
+ trace logging
+Thread-Topic: [PATCH v14 14/34] PCI/AER: Report CXL or PCIe bus type in AER
+ trace logging
+Thread-Index: AQHchY5eLtwbwKSK7EavhTz2Y1BayrVTYVOA
+Date: Thu, 15 Jan 2026 15:55:21 +0000
+Message-ID: <e3d57c01a14749199b5c042b7f8e7b37@huawei.com>
 References: <20260114182055.46029-1-terry.bowman@amd.com>
-	<20260114182055.46029-30-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	<20260114182055.46029-15-terry.bowman@amd.com>
+ <20260114194539.0000662b@huawei.com>
+In-Reply-To: <20260114194539.0000662b@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Wed, 14 Jan 2026 12:20:50 -0600
-Terry Bowman <terry.bowman@amd.com> wrote:
+> > The AER service driver and aer_event tracing currently log 'PCIe Bus Ty=
+pe'
+> > for all errors. Update the driver and aer_event tracing to log 'CXL=20
+> > Bus Type' for CXL device errors.
+> >=20
+> > This requires that AER can identify and distinguish between PCIe=20
+> > errors and CXL errors.
+> >=20
+> > Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
+> > aer_get_device_error_info() and pci_print_aer().
+> >=20
+> > Update the aer_event trace routine to accept a bus type string paramete=
+r.
+> >=20
+> > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> > Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>
+> I wonder if it is worth using __print_symbolic() etc and an integer stora=
+ge rather than a string for in the tracepoints.
+> However, not really that important to me as the strings are small anyway =
+and there is no precedence of this in ras trace events.
+>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-> From: Dan Williams <dan.j.williams@intel.com>
-> 
-> In support of generic CXL protocol error handling across various 'struct
-> cxl_port' types, update find_cxl_port_by_uport() to retrieve endpoint CXL
-> port companions from endpoint PCIe device instances.
-> 
-> The end result is that upstream switch ports and endpoint ports can share
-> error handling and eventually delete the misplaced cxl_error_handlers from
-> the cxl_pci class driver.
+It would be a lot better to pass integer values instead of strings. Right n=
+ow, I'm working on a way
+to have a CI to check if Kernel + rasdaemon is doing the right thing. The i=
+dea is to inject errors
+on QEMU via QMP interface (main patches already there at QEMU tree).
 
-Should mention that you are converting to kernel-doc.
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Terry Bowman <terry.bowman@amd.com>
-> 
+By using integers, it sounds easier to veriy if everything was properly han=
+dled, as we can
+ignore __print_symbolic at rasdaemon, picking the actual values directly.
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Regards,
+Mauro
 
