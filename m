@@ -1,59 +1,61 @@
-Return-Path: <linux-pci+bounces-44974-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44975-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A7F3D259A3
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 17:08:05 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12021D25AF1
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 17:18:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4948630A8BBB
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 16:01:15 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8E42C309F747
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 16:12:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABDE829E110;
-	Thu, 15 Jan 2026 16:01:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AFEA2C11E7;
+	Thu, 15 Jan 2026 16:12:34 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066D22BE7A7;
-	Thu, 15 Jan 2026 16:01:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4013A7DFD;
+	Thu, 15 Jan 2026 16:12:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768492874; cv=none; b=AyA0NyglN++rOwAxmlxyuPWBe6U/GcweDjnM5SiAdno0X9SEnEt/URzDFHJ3vGodLk8b68LoaQPIb+aFqRJYc3D/sipa4YIcIwxYoqZzYJyzA7TZZD2SftHTTtIiFtM/nYVgg9TxUAN1LrYrOto23GiXyOpG7NJ46lIqD++kt7A=
+	t=1768493554; cv=none; b=rXKp3OBv3Wr2tiJ4eMPklGVmdQq06L1EbExyZKVWXCWgA8Relt/7OgD7YRp6zAbMsd4wYyXohxa0s74hvhvScxqIdTZVhKZIUy+ipDsHL3mVdtHAtHQySWc4xt8d9Li9/tJpRfgOezGJroj79qg96wF5P1TcvuQ0uFIFkmeZBgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768492874; c=relaxed/simple;
-	bh=o1OO85c2gUFPnlaX65hZClCSxgp04Wn+ZeLEHFnY/ss=;
+	s=arc-20240116; t=1768493554; c=relaxed/simple;
+	bh=hNov5F2LTdlNWayImHLF8ZGBkOaoIozgFIDUq31gNfo=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pz6CpmD9Xpuaj2S8n8X1OldYltA9gfL0mXulYppW512C4uV00TNPkLR1t3Acl0tNeDfWKQadooMF2LZH36jIl3P3Pqxr9WGuxBvhgggXSTxnqqCfV9qgpobhTMdH2IG4ZaMuN4Z2m0aWCj6m+hMLl1UG9HJHIUM0wvPvMLXBNaI=
+	 MIME-Version:Content-Type; b=iFshxzzEJgIMokvvg0ZmCDLRNoMrnKibLeX6oBQFh3OhskAv7TrekD+Hd/V1ggK5Rhe2/5PMdqXZiiD2pcc42U/8m4wDiizRF5t/mPg6lAFH4GGocCNuuLB1ETx7b7MNHpAceidVoWB2c2vKt713SdOMm06nSMLIDWtw+OOrMvI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dsSPx4tqszJ46ZJ;
-	Fri, 16 Jan 2026 00:00:53 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dsSft16LszHnGfT;
+	Fri, 16 Jan 2026 00:12:06 +0800 (CST)
 Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 310BB40539;
-	Fri, 16 Jan 2026 00:01:10 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 5598140563;
+	Fri, 16 Jan 2026 00:12:28 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
  (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 15 Jan
- 2026 16:01:08 +0000
-Date: Thu, 15 Jan 2026 16:01:07 +0000
+ 2026 16:12:27 +0000
+Date: Thu, 15 Jan 2026 16:12:26 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>, <alucerop@amd.com>,
-	<ira.weiny@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v14 30/34] PCI/AER: Dequeue forwarded CXL error
-Message-ID: <20260115160107.000019d3@huawei.com>
-In-Reply-To: <20260114182055.46029-31-terry.bowman@amd.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: Terry Bowman <terry.bowman@amd.com>, <dave@stgolabs.net>,
+	<alison.schofield@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <shiju.jose@huawei.com>, <ming.li@zohomail.com>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <rrichter@amd.com>,
+	<dan.carpenter@linaro.org>, <PradeepVineshReddy.Kodamati@amd.com>,
+	<lukas@wunner.de>, <Benjamin.Cheatham@amd.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+	<vishal.l.verma@intel.com>, <alucerop@amd.com>, <ira.weiny@intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v14 31/34] PCI: Introduce CXL Port protocol error
+ handlers
+Message-ID: <20260115161226.00004845@huawei.com>
+In-Reply-To: <e3fd4ada-bcbe-4d7c-9ffe-4518b68292be@intel.com>
 References: <20260114182055.46029-1-terry.bowman@amd.com>
-	<20260114182055.46029-31-terry.bowman@amd.com>
+	<20260114182055.46029-32-terry.bowman@amd.com>
+	<e3fd4ada-bcbe-4d7c-9ffe-4518b68292be@intel.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -66,70 +68,133 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
  dubpeml100005.china.huawei.com (7.214.146.113)
 
-On Wed, 14 Jan 2026 12:20:51 -0600
-Terry Bowman <terry.bowman@amd.com> wrote:
 
-> The AER driver now forwards CXL protocol errors to the CXL driver via a
-> kfifo. The CXL driver must consume these work items and initiate protocol
-> error handling while ensuring the device's RAS mappings remain valid
-> throughout processing.
+> > diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> > index 0c640b84ad70..96ce85cc0a46 100644
+> > --- a/drivers/cxl/core/ras.c
+> > +++ b/drivers/cxl/core/ras.c
+
+> > +
+> > +static pci_ers_result_t cxl_port_error_detected(struct device *dev);
+> > +
+> > +static void cxl_do_recovery(struct pci_dev *pdev)
+> > +{
+> > +	struct cxl_port *port __free(put_cxl_port) = get_cxl_port(pdev);  
+> To minimize errors, move this line to right above when you check !port. It's acceptable to do inline declaration when it comes cleanup macros. 
 > 
-> Implement cxl_proto_err_work_fn() to dequeue work items forwarded by the
-> AER service driver. Lock the parent CXL Port device to ensure the CXL
-> device's RAS registers are accessible during handling. Add pdev reference-put
-> to match reference-get in AER driver. This will ensure pdev access after
-> kfifo dequeue. These changes apply to CXL Ports and CXL Endpoints.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> DJ
+> > +	pci_ers_result_t status;
+> > +
+> > +	if (!port) {
+> > +		pci_err(pdev, "Failed to find the CXL device\n");
+> > +		return;
+> > +	}
+> > +
+> > +	status = cxl_port_error_detected(&pdev->dev);
+> > +	if (status == PCI_ERS_RESULT_PANIC)
+> > +		panic("CXL cachemem error.");
+> > +
+> > +	/*
+> > +	 * If we have native control of AER, clear error status in the device
+> > +	 * that detected the error.  If the platform retained control of AER,
+> > +	 * it is responsible for clearing this status.  In that case, the
+> > +	 * signaling device may not even be visible to the OS.
+> > +	 */
+> > +	if (pcie_aer_is_native(pdev)) {
+> > +		pcie_clear_device_status(pdev);
+> > +		pci_aer_clear_nonfatal_status(pdev);
+> > +		pci_aer_clear_fatal_status(pdev);
+> > +	}
+> > +}
 
-Few things inline.
-Thanks,
+> > +
+> >  void cxl_cor_error_detected(struct pci_dev *pdev)
+> >  {
+> >  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> > @@ -346,6 +425,24 @@ EXPORT_SYMBOL_NS_GPL(cxl_error_detected, "CXL");
+> >  
+> >  static void cxl_handle_proto_error(struct cxl_proto_err_work_data *err_info)
+> >  {
+> > +	struct pci_dev *pdev = err_info->pdev;
+> > +
+> > +	if (err_info->severity == AER_CORRECTABLE) {
+> > +
+> > +		if (!pcie_aer_is_native(pdev))
+> > +			return;
+> > +
+> > +		if (pdev->aer_cap)
+> > +			pci_clear_and_set_config_dword(pdev,
+> > +						       pdev->aer_cap + PCI_ERR_COR_STATUS,
+> > +						       0, PCI_ERR_COR_INTERNAL);
+> > +
+> > +		cxl_port_cor_error_detected(&pdev->dev);
+> > +
+> > +		pcie_clear_device_status(pdev);
+> > +	} else {
+> > +		cxl_do_recovery(pdev);
+> > +	}
 
-Jonathan
+Could flip logic to get out of here quickly in one case.
 
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index bf82880e19b4..0c640b84ad70 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -117,17 +117,6 @@ static void cxl_cper_prot_err_work_fn(struct work_struct *work)
+	if (err_info->severity != AER_CORRECTABLE) {
+		cxl_do_recovery(pdev);
+		return;
+	}
 
-> +/*
-> + * Return 'struct cxl_port *' parent CXL Port of dev
-> + *
-> + * Reference count increments returned port on success
-> + *
-> + * @pdev: Find the parent CXL Port of this device
+	if (!pci...
 
-This is a non standard type of a comment. I'd make it formal
-kernel-doc.
+just to reduce indent we don't need.  Up to you though.
+> >  }
+> >  
+> >  static void cxl_proto_err_work_fn(struct work_struct *work)
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 13dbb405dc31..b7bfefdaf990 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -2248,6 +2248,7 @@ void pcie_clear_device_status(struct pci_dev *dev)
+> >  	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &sta);
+> >  	pcie_capability_write_word(dev, PCI_EXP_DEVSTA, sta);
+> >  }
+> > +EXPORT_SYMBOL_GPL(pcie_clear_device_status);
+To me it's a little odd that we restrict this to AER
+given it's not in AER specific registers or anything like that.
 
+It only happens to be used in that code right now so I guess
+it is ok to do this anyway.
 
+> >  #endif
 
-> +
-> +static void cxl_proto_err_work_fn(struct work_struct *work)
-> +{
-> +	struct cxl_proto_err_work_data wd;
-> +
-> +	while (cxl_proto_err_kfifo_get(&wd)) {
+> > diff --git a/drivers/pci/pcie/aer_cxl_vh.c b/drivers/pci/pcie/aer_cxl_vh.c
+> > index 0f616f5fafcf..aa69e504302f 100644
+> > --- a/drivers/pci/pcie/aer_cxl_vh.c
+> > +++ b/drivers/pci/pcie/aer_cxl_vh.c
+> > @@ -34,7 +34,10 @@ bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info)
+> >  	if (!info || !info->is_cxl)
+> >  		return false;
+> >  
+> > -	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT)
+> > +	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
+> > +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT) &&
+> > +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_UPSTREAM) &&
+> > +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM))
+> >  		return false;
 
-I'm probably being slow today but where does that helper come from?
+Ah.  This fixes the earlier comment.  Maybe add a temp comment
+or similar there to say you'll handle others later.
+Also, maybe this is cleaner as a switch to avoid all those pci_pcie_type(pdev)
+(or a local variable might also work).
 
-> +		struct pci_dev *pdev __free(pci_dev_put) = wd.pdev;
-> +
-> +		if (!pdev) {
-> +			pr_err_ratelimited("NULL PCI device passed in AER-CXL KFIFO\n");
-> +			continue;
-> +		}
-> +
-> +		struct cxl_port *port __free(put_cxl_port) = get_cxl_port(pdev);
-> +		if (!port) {
-> +			pr_err_ratelimited("Failed to find parent Port device in CXL topology.\n");
-> +			continue;
-> +		}
-> +		guard(device)(&port->dev);
-> +
-> +		cxl_handle_proto_error(&wd);
-> +	}
-> +}
+	switch (pci_pcie_type(pdev)) {
+	case PCI_EXP_TYPE_ENDPOINT:
+	case PCI_EXP_TYPE_ROOT_PORT:
+	case PCI_EXP_TYPE_UPSTREAM:
+	case PCI_EXP_TYPE_DOWNSTREAM:
+		return is_aer_internal_error(info);
+	default:
+		return false;
+	}
+> >  
+> >  	return is_aer_internal_error(info);
+
 
 
