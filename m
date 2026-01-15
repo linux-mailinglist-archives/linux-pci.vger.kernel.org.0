@@ -1,100 +1,113 @@
-Return-Path: <linux-pci+bounces-44960-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44961-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDDDED253BC
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 16:17:37 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FDADD25523
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 16:26:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DA0643001013
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 15:17:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C514E304A8DF
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 15:21:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 083633AEF3D;
-	Thu, 15 Jan 2026 15:17:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD8723B8BCE;
+	Thu, 15 Jan 2026 15:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QI7srDK/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D593AE6F3;
-	Thu, 15 Jan 2026 15:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB593B8BA3;
+	Thu, 15 Jan 2026 15:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768490240; cv=none; b=XvLW2yMmBnANhP53XB6yE7a6g/4bNAhbQkK42pKO1O2GCKl43H8MVgcNObAmmJ8lPegUWOamI4Ih/VzVKrt/RRygzsFxsOvKnWb17ocJff6Rz1BZ9cTQat6wak+uD2y/Y9au8wp9R8x3zX2nL1mfqCuGlllvuUaFdMwxkuMnfZU=
+	t=1768490500; cv=none; b=qRpDCIgeAb5J3RjqtHwtCeS2QMfytcbFra1r5OHtghShM9HJ98voxWXVwHUpIf7CqgA0TrfhtVi/j1C5lWLRTcl3QVLtEA39ofIBsRl3GWlY83m8CD3m9x+9m4nUvMPLMJxIOcThi+4aBc2EVFQDbJO92t5/xgm0vnSyPED+U/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768490240; c=relaxed/simple;
-	bh=ZZ13uVnNnrGG9NKYlxXnWn1oC9kV+DTdHDEO8g2fKIo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mAHsi0NbECV1vh72xtDCsFgxv8Wh7/o4hv9/GqvTdv2UNAXBgNYNQaXw4GqKwAq5yp5GMJN7xfuTEsbC0lJmfKpODmlkoSHjvpMuEY2w+HNu1qRhvUjNz5mXNzUf4BLsAqlD+zUZHXInVv4zWKqQ177aTGs/nemZlnRlkbDxZ3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dsRR43yvWzJ46dL;
-	Thu, 15 Jan 2026 23:16:48 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 04C654056A;
-	Thu, 15 Jan 2026 23:17:05 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 15 Jan
- 2026 15:17:04 +0000
-Date: Thu, 15 Jan 2026 15:17:02 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>, <alucerop@amd.com>,
-	<ira.weiny@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v14 23/34] cxl: Map CXL Endpoint Port and CXL Switch
- Port RAS registers
-Message-ID: <20260115151702.00005a51@huawei.com>
-In-Reply-To: <20260114182055.46029-24-terry.bowman@amd.com>
-References: <20260114182055.46029-1-terry.bowman@amd.com>
-	<20260114182055.46029-24-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1768490500; c=relaxed/simple;
+	bh=Tt0EYm72yfv5arwvfEiESNjf8n0aJTfAVjQfOYQykeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BnUIeU711/vD46x0OEDCdx2d0ha+Jp2pL3PGIkmQtKlyIehpfhRb8l54BxanOsLiQDNrGx0pvfkjIGZcMlhVy7d0yDogvUrPF8E+1dwaTwA75ZcQwZqtNY38DKSesSmj1xzrlo33fU3azJirI12xqZcpjf61jq3IP90leCOxmHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QI7srDK/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17EBFC16AAE;
+	Thu, 15 Jan 2026 15:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768490498;
+	bh=Tt0EYm72yfv5arwvfEiESNjf8n0aJTfAVjQfOYQykeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QI7srDK/FhDXgZgja3pcyeu8mCCZXuUfO0oaumMkvJLpDBbxgXYV0dL86YPgf3Z0s
+	 JS5xTfYR/dI+NP0Ac+z8jTX+Sk/KoKgegd40WfIvfyr6itWJ7nlEgeQVHMtujECjAA
+	 9sLrYvJuucxJeRjo3nRQzbbwEUvzk5zZVckQfEWAMZBWPinnu4Me7RXC0Nk18jOM4Q
+	 V5xf/4JizZXKaU1UFVxvgUe241yU7L2jzNnBDn2MI9exJ8/7mF565LjjA5rAqffhq1
+	 hA1PlVxKRt1vdrt4C8Y6ZwGZAVP2V/m7QsCY3GxHieqrNSmLUdYRDlFLKmnYwh5CLb
+	 ijXqpgpnqqKoA==
+Date: Thu, 15 Jan 2026 16:21:21 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Koichiro Den <den@valinux.co.jp>, jingoohan1@gmail.com, mani@kernel.org,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org,
+	bhelgaas@google.com, vigneshr@ti.com, s-vadapalli@ti.com,
+	hongxing.zhu@nxp.com, l.stach@pengutronix.de, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+	minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+	jesper.nilsson@axis.com, heiko@sntech.de,
+	srikanth.thokala@intel.com, marek.vasut+renesas@gmail.com,
+	yoshihiro.shimoda.uh@renesas.com, geert+renesas@glider.be,
+	magnus.damm@gmail.com, christian.bruel@foss.st.com,
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+	thierry.reding@gmail.com, jonathanh@nvidia.com,
+	hayashi.kunihiko@socionext.com, mhiramat@kernel.org,
+	kishon@kernel.org, jirislaby@kernel.org, rongqianfeng@vivo.com,
+	18255117159@163.com, shawn.lin@rock-chips.com,
+	nicolas.frattaroli@collabora.com, linux.amoon@gmail.com,
+	vidyas@nvidia.com, linux-omap@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@axis.com,
+	linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v8 2/5] PCI: endpoint: Add BAR subrange mapping support
+Message-ID: <aWkF6rT0Du7iJwHh@ryzen>
+References: <20260115084928.55701-1-den@valinux.co.jp>
+ <20260115084928.55701-3-den@valinux.co.jp>
+ <aWj/Sr63+hl7CBe/@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aWj/Sr63+hl7CBe/@lizhi-Precision-Tower-5810>
 
-On Wed, 14 Jan 2026 12:20:44 -0600
-Terry Bowman <terry.bowman@amd.com> wrote:
-
-> In preparation for CXL VH (Virtual Host) topology protocol error handling,
-> add RAS capability registered mapping for all ports in a CXL VH topology.
-> This includes the RAS capabilities of Switch Upstream Ports, Switch
-> Downstream Ports, Host Bridge Ports ("upstream"), and Root Ports
-> ("downstream")
+On Thu, Jan 15, 2026 at 09:52:58AM -0500, Frank Li wrote:
+> > @@ -127,6 +150,10 @@ struct pci_epf_bar {
+> >  	size_t		mem_size;
+> >  	enum pci_barno	barno;
+> >  	int		flags;
+> > +
+> > +	/* Optional sub-range mapping */
+> > +	unsigned int	num_submap;
+> > +	struct pci_epf_bar_submap	*submap;
 > 
-> Update cxl_port_add_dport() to map the upstream RAS capability on first
-> 'dport' attach, and downstream RAS capability on each 'dport' attach.
-> Arrange for dport mappings to be released at del_dport() time.
+> struct pci_epf_bar_submap submap[] __counted_by(num_submap);
 > 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> [djbw: reword changelog, fix devm handling]
-> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> 
-One comment inline on which level we handle failures in ras setup at but
-that's already true so things aren't made worse by this.
+> Not sure if use this simplify alloc/free.
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Your suggestion changes the submap from a pointer to a flexible array
+member.
 
-I'm not particularly keen on failing to pass errors up to
-callers of devm_cxl_dport_ras_setup() which could then cleanly
-ignore them with comments saying why. However, that predates this
-anyway so a question for another day.
+A flexible array member must always be last in the struct,
+and you can only have one flexible array member per struct.
 
+Additionally, using a flexible array member requires the struct to
+always be allocated on the heap. You can't allocate a struct with a
+flexible array member on the stack.
+
+So I'm not sure that if your suggestion is something we want.
+
+
+Kind regards,
+Niklas
 
