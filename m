@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-44933-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44934-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20C18D23FEA
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 11:44:15 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84D74D24011
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 11:45:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5E798302168C
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 10:44:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 534CB300FE17
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 10:45:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1767336C0CE;
-	Thu, 15 Jan 2026 10:44:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 715F636C599;
+	Thu, 15 Jan 2026 10:45:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ov88QUlV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bzw1nZu0"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CB52236E0;
-	Thu, 15 Jan 2026 10:44:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C0036C0CC;
+	Thu, 15 Jan 2026 10:45:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768473852; cv=none; b=IxkxmouB15U6EGq/yMCPtWZ0pgKbUE7E+Uhl2z12BH70dwZqsO0UiQGT0LnL8givH+kZ4/4onZ9Khvom/JpWwlOyhKNuRXZ7+F6Nn8LIUoETmKPbmDe0ByH9JSngrZ3tSiIGFe0Agpy9xFm1gV/pW0W0gY+AwG/OJa87pqIGR7c=
+	t=1768473900; cv=none; b=qdzlAemVo7+4MCX/2IvV6t6yVALBtoJBpCpL+5BquJFmu9isMTdz3eQhZKoJiw8i6/NjsnXXCaqrl+K7n2jk51uyVQzM6TBsBCpObtK41ElBmubqgeA5FM7wwuOsrN63G3ICGng7zO5ksEbRccQIFMQZL5/n+gMOwJvu+xK+xIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768473852; c=relaxed/simple;
-	bh=Br66xhJUW6Skly14rBwfApxEJ7tEni4TvDeAZjMZJtE=;
+	s=arc-20240116; t=1768473900; c=relaxed/simple;
+	bh=KCf9/BUWQWrV3YzZSQGIBitilFEV6z7FvLz9+gF37+I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gzS01Dzt+w/mwIsjosRcxpZMYhmu9Nnv9122NHEflTumlJ/94AEnQavEBp+gpCqA5NuwEOtX7Z6BFWbBoNJlCaRzd1PFZL9REDbSHRZtZG+1TyJkuvFYofKJIT1EPpNcmytsW77UM8sf2SZwLsuPDdAxJPlqfImz0Nn+wDe2/A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ov88QUlV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A908C116D0;
-	Thu, 15 Jan 2026 10:44:03 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oex+vl1fhQmlZHLjnjUgH+5Ef382bp86X6OXITRa7IBg95eYAos71Mwob4tzCX9dAc7V+3Xyuw0xM04P8va69RY6A3CisXeR/FgKkQMbOdeUT07/W2nlfyxpJIv/ECaL4M5nYkeGweZUQmu1p3roWABM8hPbdwwtmdNX6fBnaQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bzw1nZu0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE9EAC116D0;
+	Thu, 15 Jan 2026 10:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768473851;
-	bh=Br66xhJUW6Skly14rBwfApxEJ7tEni4TvDeAZjMZJtE=;
+	s=k20201202; t=1768473899;
+	bh=KCf9/BUWQWrV3YzZSQGIBitilFEV6z7FvLz9+gF37+I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ov88QUlVwP5VS7KgIHYLlLvIrQDLR3mhM8zQZl6GbJhlysJf3FteSBdkA2m9jeqh/
-	 H2AD5M9LyhI1hYSC18Ot7nf9DydQNjXb2umVxQNypcp9I4juEvwJKEcHQ3TenBXJwb
-	 0DkDKG/KuFd31ETxC1feT8R2l7QZFSWTaAKudtj+TAHHAhHeCknpw5BaZPWv4Laup/
-	 Cw7KiBG11AGFVmOr8zv04i/Q44IMIkcte5kE4nmx2P7oFkuFbflIB106hEwHbHoOGx
-	 p7C0PKpNRlHYQCgDi73ezlfW0tIfoQjQ6sqB4Bgsg2AmkedV06SVCR+wRjC8GEcQcK
-	 5CXPG12V1QK7w==
-Date: Thu, 15 Jan 2026 16:13:53 +0530
+	b=bzw1nZu02dQejptA0JvWTI5Kzv8ZivGSWw//ar5HN7g3e3fvnK7diB8O0pmaWexh4
+	 5XojmtjQzGc+FqgbwVH2OFPPVeB906fgkmpSff5sPYhHM9sX74IQMkFXLXtpzuQfpO
+	 Pk8R5eLtUsALQjTeXVEzkQhHjDEr5iiYb4F3/cPOxl99In93iEdalxJ3MLkIBxWSLs
+	 H+RNlPsIdKmA7LfQjWgynvtJn1jEMFnR4fv0CDiviCt6UruWq6Lva0mb7fk3SP90DC
+	 JomhCfyV4tem4mdNhgWhbDBkTX7C0gcNvZ9B6aLLKSKPDPMSTV0V4oPzyFvhH5q9zu
+	 hvi8JEqsO6aag==
+Date: Thu, 15 Jan 2026 16:14:41 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Rob Herring <robh@kernel.org>
 Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
@@ -55,12 +55,12 @@ Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
 	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
 	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
 	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v4 6/9] dt-bindings: connector: m2: Add M.2 1620 LGA
- soldered down connector
-Message-ID: <7fkc5c65jxxwemd4ons44fkzhg6ppzbam24uvfahmu4d7bmr2o@4ipkh7qqcovi>
+Subject: Re: [PATCH v4 5/9] dt-bindings: connector: Add PCIe M.2 Mechanical
+ Key E connector
+Message-ID: <pfyzilu4xpggftei4th37uv7wb4gpfsntjlagctsydrrc35qci@4uyd3zog6t7j>
 References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
- <20260112-pci-m2-e-v4-6-eff84d2c6d26@oss.qualcomm.com>
- <20260113172536.GA3975461-robh@kernel.org>
+ <20260112-pci-m2-e-v4-5-eff84d2c6d26@oss.qualcomm.com>
+ <20260113171601.GB3925312-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,53 +70,71 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260113172536.GA3975461-robh@kernel.org>
+In-Reply-To: <20260113171601.GB3925312-robh@kernel.org>
 
-On Tue, Jan 13, 2026 at 11:25:36AM -0600, Rob Herring wrote:
-> On Mon, Jan 12, 2026 at 09:56:05PM +0530, Manivannan Sadhasivam wrote:
-> > Lenovo Thinkpad T14s is found to have a soldered down version of M.2 1620
-> > LGA connector. Though, there is no 1620 LGA form factor defined in the M.2
-> > spec, it looks very similar to the M.2 Key M connector. So add the
-> > "pcie-m2-1620-lga-connector" compatible with "pcie-m2-e-connector" fallback
-> > to reuse the Key M binding.
-> 
-> Key M or Key E? I'm confused.
-> 
-
-Sorry, typo due to respinning both series at a time. Key E only.
-
-- Mani
-
+On Tue, Jan 13, 2026 at 11:16:01AM -0600, Rob Herring wrote:
+> On Mon, Jan 12, 2026 at 09:56:04PM +0530, Manivannan Sadhasivam wrote:
+> > Add the devicetree binding for PCIe M.2 Mechanical Key E connector defined
+> > in the PCI Express M.2 Specification, r4.0, sec 5.1.2. This connector
+> > provides interfaces like PCIe or SDIO to attach the WiFi devices to the
+> > host machine, USB or UART+PCM interfaces to attach the Bluetooth (BT)
+> > devices. Spec also provides an optional interface to connect the UIM card,
+> > but that is not covered in this binding.
+> > 
+> > The connector provides a primary power supply of 3.3v, along with an
+> > optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating at
+> > 1.8v sideband signaling.
+> > 
+> > The connector also supplies optional signals in the form of GPIOs for fine
+> > grained power management.
 > > 
 > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 > > ---
-> >  .../devicetree/bindings/connector/pcie-m2-e-connector.yaml       | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> >  .../bindings/connector/pcie-m2-e-connector.yaml    | 154 +++++++++++++++++++++
+> >  MAINTAINERS                                        |   1 +
+> >  2 files changed, 155 insertions(+)
 > > 
 > > diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
-> > index b65b39ddfd19..9757fe92907b 100644
-> > --- a/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
+> > new file mode 100644
+> > index 000000000000..b65b39ddfd19
+> > --- /dev/null
 > > +++ b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
-> > @@ -17,7 +17,14 @@ description:
-> >  
-> >  properties:
-> >    compatible:
-> > -    const: pcie-m2-e-connector
-> > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - pcie-m2-1620-lga-connector
-> > +          - const: pcie-m2-e-connector
-> > +      - items:
-> > +          - enum:
-> > +              - pcie-m2-e-connector
-> >  
-> >    vpcie3v3-supply:
-> >      description: A phandle to the regulator for 3.3v supply.
-> > 
-> > -- 
-> > 2.48.1
-> > 
+> > @@ -0,0 +1,154 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/connector/pcie-m2-e-connector.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: PCIe M.2 Mechanical Key E Connector
+> > +
+> > +maintainers:
+> > +  - Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > +
+> > +description:
+> > +  A PCIe M.2 E connector node represents a physical PCIe M.2 Mechanical Key E
+> > +  connector. Mechanical Key E connectors are used to connect Wireless
+> > +  Connectivity devices including combinations of Wi-Fi, BT, NFC to the host
+> > +  machine over interfaces like PCIe/SDIO, USB/UART+PCM, and I2C.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: pcie-m2-e-connector
+> > +
+> > +  vpcie3v3-supply:
+> > +    description: A phandle to the regulator for 3.3v supply.
+> > +
+> > +  vpcie1v8-supply:
+> > +    description: A phandle to the regulator for VIO 1.8v supply.
+> > +
+> > +  ports:
+> 
+> Also, nodes go after all properties.
+> 
+
+Ack.
+
+- Mani
 
 -- 
 மணிவண்ணன் சதாசிவம்
