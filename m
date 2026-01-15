@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-44895-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44897-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 408F3D22CF6
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0AC0D22CF7
 	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 08:29:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B34153017E7D
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 07:29:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id AAEEC301EA27
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 07:29:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA501327C1D;
-	Thu, 15 Jan 2026 07:29:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03D9C32863B;
+	Thu, 15 Jan 2026 07:29:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="coxmmZnX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rXiTE/RL"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F30327BE7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAE8327C0C;
 	Thu, 15 Jan 2026 07:29:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768462151; cv=none; b=rNkaGIczbmvECwHFBnGlOzJPDj5Lc0oNx1vK2Q0xD88f2yGn6Q4zycSACy9SZmhs37vjRea9vpB9AScAymsA609fRjWdjIGMfl3QI7MoE71BDlCAEqPncYwvOkIVuGGqIbnOf3HwmddUawyMmQmxli4wGWdeX+KSCg7zlzph7zU=
+	t=1768462151; cv=none; b=OE6zDWaUs7F4Q4Juqdrc4fkNL/NHY1PIHGODA4bpzwxTGmPKA7YuxmP5einE2Nemu2M0ZyiiK2t/ZHJ3ITtYyE2SrzJ0wV5YWC3nWetST6CI+4T4pEJodVLYjrW0mU5GEJEoVK+fL7IB7AhlKXBoU/VUurbWIjmWLsDPLJ1TMRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1768462151; c=relaxed/simple;
-	bh=3nA72EkIdmKC4EC0a7ioMlai7D1RlpRo3JaSNfWCI+8=;
+	bh=MgclwFgqGDcrh+VR4Ax+lEszi4KoIefWcrVpxysOj1A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ISe3qbA5o4GaaUjsKFbzRbC+uQOXOUyrneK7uRx/91MyEgj112fDTEXVdKXsUY0EELtQwvcgz4c8HWSZN3TQJ2QHGKM/zg3cTBBAIZU9ZhqGmxa2fZwqkLj1VVQVwYf0csXeE6fzZ1009Fkq8cJuRv3A/BXHW47cZayZc3aFaCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=coxmmZnX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6AD2CC116D0;
+	 In-Reply-To:To:Cc; b=QjnELQw4CzKHOci3eYVvHVrnLXk3j+L8XcVqaVAXD4jzDgSR31prBktlaP3RW/cxtHWdl8VmJNLBSNrH+gzWvPvGLa5LPxjyn+ovlk2eIm5mpJLLTNJgRRxoYrvEt/HEGyS9F9gYAzqTuOC+x0tJqpZ8ptHKU6Gwu03pxOLILZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rXiTE/RL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7865AC19423;
 	Thu, 15 Jan 2026 07:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1768462151;
-	bh=3nA72EkIdmKC4EC0a7ioMlai7D1RlpRo3JaSNfWCI+8=;
+	bh=MgclwFgqGDcrh+VR4Ax+lEszi4KoIefWcrVpxysOj1A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=coxmmZnX/Ufzl6IrgZFQfUJlsE/LgSL3ez+FMHzMV9yBLYFxIxUiBbG2tYRuUdpxX
-	 /kHmFNGs1Oolm0Bh1NdVoZaBEv/xpudQBQlRsGuDe4S3JR3JE4OieZuHmEpbf8vpxC
-	 ywM7OnWF2PlB4kytQRuZDp2zU4g1WbKK5q3bBIP76Fe3uq0w1jeWio61ewEe6MWHTB
-	 28rgm1WNqGfv/L3YOd1ErlL98lfwGM7UZaBZtvOV7Gf20kY3aClqHVwkGK8epIavSK
-	 7OBw2XZSq/l3qZim1CwJMZ+nV9tQ54M3NKjWkhSVSLxXlo8wShZU2KPnRSS6D7idgj
-	 r0kPFnKtdjZAQ==
+	b=rXiTE/RL/nEccYL26vxCOYryvIrH1vZYHbhrX91W4VQywKnpzi9jZIDvnvwC7Tnq/
+	 vYIWuwwVazIvhDprmFXtfxFsIoTld6SoKgyscV2RbbphClZeNgNyrBK9xBvn+h6ZsE
+	 Th3NwO4SQoTDMXLLF+lwREGoDHfBryAaztjJ7QZuVOTONew8FwfIxM06HMToOSUhNQ
+	 5kzT+1/sSTxcZuJVK1rO9MREGCVauZlh4iDERIh50eGlPhjf0Z38oWYGsfABAFnAu2
+	 JnYk7+SVQns8JnjXqwIGU7jW8aqhCdZe+1ILUgtRTyEvftBPqGK6eQIjEBL2P+deFK
+	 axS/5O0vsbujg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DF4D3CCB8;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AFCD3CCB9;
 	Thu, 15 Jan 2026 07:29:11 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Thu, 15 Jan 2026 12:58:53 +0530
-Subject: [PATCH v5 01/15] PCI/pwrctrl: pwrseq: Rename private struct and
+Date: Thu, 15 Jan 2026 12:58:54 +0530
+Subject: [PATCH v5 02/15] PCI/pwrctrl: slot: Rename private struct and
  pointers for consistency
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260115-pci-pwrctrl-rework-v5-1-9d26da3ce903@oss.qualcomm.com>
+Message-Id: <20260115-pci-pwrctrl-rework-v5-2-9d26da3ce903@oss.qualcomm.com>
 References: <20260115-pci-pwrctrl-rework-v5-0-9d26da3ce903@oss.qualcomm.com>
 In-Reply-To: <20260115-pci-pwrctrl-rework-v5-0-9d26da3ce903@oss.qualcomm.com>
 To: Manivannan Sadhasivam <mani@kernel.org>, 
@@ -71,16 +71,16 @@ Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
  Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3529;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2784;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=jpzQnoVwEdcn0ySCaLexwQnNRM8TDWqV0v+/dcDxcw4=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpaJdByf+xDF+rD4QxhDJvBJM/UiPjdQLykBm8t
- VjC+ErqS9CJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaWiXQQAKCRBVnxHm/pHO
- 9UrPB/9loC6Qt69PW7yqKbaGOnFNC6qSQUxzzSF9zCvCMbCLVADduO5EnZOJ02KdqPefthtD8uX
- +nXOmsZ+AH/Z47dgQY2nUy34ETJpulIaP7kB5zvxnW8H2Fr+DOzHAZRc930H4aV/sY6Wi7LjCQz
- tSnZMbB8uCnL2K82/dBUxfQnJysUUzw6fglcRyJOK9Df3X6zjV0Ny+TUaUDhp38/B1QInE0RaFU
- 16Xrl3okhmBLQ6PYHq12KVxOpMolY5fIhSWTMOh/cvRXmPFrC7m3a1WW7Q7G9F4q4DnccmIVDAw
- GTPcjkB50vxtPOBQ+8ZWU92UaP+BpJx09yg4KRG/WBBWTrvH
+ bh=44NVPWUXPuZjfLmJawVYZKHEmFFDsDqRXpz45pIkiiE=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpaJdBuIQNE5ifaCycNCiMPUkxX8+/GtEeFUCk1
+ l5byjks6keJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaWiXQQAKCRBVnxHm/pHO
+ 9ZR/B/46p6o8wAxDjXi2SM97q9/E2HUBtSnn7zcX4kUMv/K8lHL4AcAN9IqScIvsv3FH0coTVpX
+ YST09swQHNq9GRC+U48qNKlXB8AWPU4GBNjXMDM9CuqQGnthgu5CLdvq7bjQJYLvH5G+rGbZtyt
+ Pyrr6+cYYVlORSUZQrdlTiEat4r5NeyHJXQi7GZ88mrcVQzXKtJGRqYgqX42iUQo5rUptIERpg6
+ 1pKuJ62+cx5ylqg+xQaxFf1O+mNFiItwYYw+h7ae/aiNPyj+hffz5qur2mDMBYwl6bvlc3+MH+P
+ amHiXxjdYqdMWBC/XwWIqTRnABJpzgc18A58ftXPcHIFzpY/
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -107,83 +107,62 @@ which makes patches hard to read:
     struct pci_pwrctrl ctx;                struct pci_pwrctrl pwrctrl;
   struct pci_pwrctrl_slot_data *slot     struct pci_pwrctrl_slot *slot
 
-Rename "struct pci_pwrctrl_pwrseq_data" to "pci_pwrctrl_pwrseq".
+Rename "struct pci_pwrctrl_slot_data" to "struct pci_pwrctrl_slot".
 
 Rename the "struct pci_pwrctrl ctx" member to "struct pci_pwrctrl pwrctrl".
-
-Rename pointers from "struct pci_pwrctrl_pwrseq_data *data" to
-"struct pci_pwrctrl_pwrseq *pwrseq".
 
 No functional change intended.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
- drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/pci/pwrctrl/slot.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c b/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-index 4e664e7b8dd2..c0d22dc3a856 100644
---- a/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-+++ b/drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c
-@@ -13,8 +13,8 @@
+diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
+index 3320494b62d8..5ddae4ae3431 100644
+--- a/drivers/pci/pwrctrl/slot.c
++++ b/drivers/pci/pwrctrl/slot.c
+@@ -13,15 +13,15 @@
+ #include <linux/regulator/consumer.h>
  #include <linux/slab.h>
- #include <linux/types.h>
  
--struct pci_pwrctrl_pwrseq_data {
+-struct pci_pwrctrl_slot_data {
 -	struct pci_pwrctrl ctx;
-+struct pci_pwrctrl_pwrseq {
++struct pci_pwrctrl_slot {
 +	struct pci_pwrctrl pwrctrl;
- 	struct pwrseq_desc *pwrseq;
+ 	struct regulator_bulk_data *supplies;
+ 	int num_supplies;
  };
  
-@@ -62,7 +62,7 @@ static void devm_pci_pwrctrl_pwrseq_power_off(void *data)
- static int pci_pwrctrl_pwrseq_probe(struct platform_device *pdev)
+ static void devm_pci_pwrctrl_slot_power_off(void *data)
  {
- 	const struct pci_pwrctrl_pwrseq_pdata *pdata;
--	struct pci_pwrctrl_pwrseq_data *data;
-+	struct pci_pwrctrl_pwrseq *pwrseq;
- 	struct device *dev = &pdev->dev;
- 	int ret;
+-	struct pci_pwrctrl_slot_data *slot = data;
++	struct pci_pwrctrl_slot *slot = data;
  
-@@ -76,28 +76,28 @@ static int pci_pwrctrl_pwrseq_probe(struct platform_device *pdev)
- 			return ret;
+ 	regulator_bulk_disable(slot->num_supplies, slot->supplies);
+ 	regulator_bulk_free(slot->num_supplies, slot->supplies);
+@@ -29,7 +29,7 @@ static void devm_pci_pwrctrl_slot_power_off(void *data)
+ 
+ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+ {
+-	struct pci_pwrctrl_slot_data *slot;
++	struct pci_pwrctrl_slot *slot;
+ 	struct device *dev = &pdev->dev;
+ 	struct clk *clk;
+ 	int ret;
+@@ -64,9 +64,9 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+ 				     "Failed to enable slot clock\n");
  	}
  
--	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
--	if (!data)
-+	pwrseq = devm_kzalloc(dev, sizeof(*pwrseq), GFP_KERNEL);
-+	if (!pwrseq)
- 		return -ENOMEM;
+-	pci_pwrctrl_init(&slot->ctx, dev);
++	pci_pwrctrl_init(&slot->pwrctrl, dev);
  
--	data->pwrseq = devm_pwrseq_get(dev, pdata->target);
--	if (IS_ERR(data->pwrseq))
--		return dev_err_probe(dev, PTR_ERR(data->pwrseq),
-+	pwrseq->pwrseq = devm_pwrseq_get(dev, pdata->target);
-+	if (IS_ERR(pwrseq->pwrseq))
-+		return dev_err_probe(dev, PTR_ERR(pwrseq->pwrseq),
- 				     "Failed to get the power sequencer\n");
- 
--	ret = pwrseq_power_on(data->pwrseq);
-+	ret = pwrseq_power_on(pwrseq->pwrseq);
+-	ret = devm_pci_pwrctrl_device_set_ready(dev, &slot->ctx);
++	ret = devm_pci_pwrctrl_device_set_ready(dev, &slot->pwrctrl);
  	if (ret)
- 		return dev_err_probe(dev, ret,
- 				     "Failed to power-on the device\n");
+ 		return dev_err_probe(dev, ret, "Failed to register pwrctrl driver\n");
  
- 	ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_pwrseq_power_off,
--				       data->pwrseq);
-+				       pwrseq->pwrseq);
- 	if (ret)
- 		return ret;
- 
--	pci_pwrctrl_init(&data->ctx, dev);
-+	pci_pwrctrl_init(&pwrseq->pwrctrl, dev);
- 
--	ret = devm_pci_pwrctrl_device_set_ready(dev, &data->ctx);
-+	ret = devm_pci_pwrctrl_device_set_ready(dev, &pwrseq->pwrctrl);
- 	if (ret)
- 		return dev_err_probe(dev, ret,
- 				     "Failed to register the pwrctrl wrapper\n");
 
 -- 
 2.48.1
