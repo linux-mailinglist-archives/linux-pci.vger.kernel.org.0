@@ -1,334 +1,308 @@
-Return-Path: <linux-pci+bounces-44955-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44956-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FC08D2506A
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 15:47:22 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44242D25199
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 15:56:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4FCE4301B331
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 14:47:00 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8DF2F301558F
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 14:53:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FC693A7DE0;
-	Thu, 15 Jan 2026 14:46:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5FEB27E076;
+	Thu, 15 Jan 2026 14:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="inRJDC6A"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013019.outbound.protection.outlook.com [40.107.159.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E73430E824;
-	Thu, 15 Jan 2026 14:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768488384; cv=none; b=CkwMcppMrh8kXYo+AKLqOaY10ty2qbTcKa2ZT4lvSlH0ks5S4EScIn7Cp3mO5PPoGNKNx0SldyZue58mrSiUSADVTi2Lbt078jNgtSxltbYy/NnxFjSQBS9kvYsDvevVEUFuCn+cipJEE6GJe8I7XFwP4mtXyas76c/spNt7m/0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768488384; c=relaxed/simple;
-	bh=fjSf15uCtdSH7MOgSSj/phoZdS/nHJ2Ms1DSWSQa6CU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QN4/TjeAtxkjwPgoPpX6FOifaOxC3FVp6jFFxRFqjz5k2yFrxhvMxbmf8e5IPBGuAWdc1jFTI8oUGjLqbDueGHxX/hS8QajOrV20/WIkR1w7d/s4v8KU744FFad9pyZ/9yEwxu0G8epnDe7MTCaIetFABg8+B87SnYmo7v3Bxpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dsQlF1GbpzHnH56;
-	Thu, 15 Jan 2026 22:45:45 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3DBE040584;
-	Thu, 15 Jan 2026 22:46:07 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 15 Jan
- 2026 14:46:06 +0000
-Date: Thu, 15 Jan 2026 14:46:05 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>, <alucerop@amd.com>,
-	<ira.weiny@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v14 19/34] cxl/port: Fix devm resource leaks around with
- dport management
-Message-ID: <20260115144605.00000666@huawei.com>
-In-Reply-To: <20260114182055.46029-20-terry.bowman@amd.com>
-References: <20260114182055.46029-1-terry.bowman@amd.com>
-	<20260114182055.46029-20-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2833033D9;
+	Thu, 15 Jan 2026 14:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768488801; cv=fail; b=Obzqpn2zKB0sMIzSfAQvagkBBLm4JoOcogHUSZ0f2RL9VweRWb+wdakzidw22G4lQ4mJQlGLsD9SLfKbSaH+Y/FFHiG7wQl9ZuABTZJqZ4/8astno0JbSbU7jDeS5v59jsCvhDbrlv8toLsxlJxwaxGa3+a30IgRpmU/KaQpU1c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768488801; c=relaxed/simple;
+	bh=ts++PFHJfafr9Vw3IMvy1wfm8p8SJzh33zNz3/MgP74=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=jolTq59GYq1hYKELu9rMXhHxhw1JS4fMlkdIzfIEBBWDKEZeavhpGcZocwfWpfLJMy25WyGwbKeTNAW7/RIGCR8D/+ifGuyjgKQiROkicaW954pzxxrZJMiQGXUKoMb+w449r0igeD2b3rymCA5CU2dqEDkVWml9vRJa6nCGqtY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=inRJDC6A; arc=fail smtp.client-ip=40.107.159.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rOIOZTQikC2k1c+oT/CBzP4MoODpdwu/TY3f3vcDPmxph+zI2RqGzphqWq/zzLWdTOcu/nZlfhFPC28HprDEO4b6B3l3WmftlRALrH3LID+NqavNYIzAtvy+VqWwwuPiaGdp6Y3FX5SoRbZdRPwBlVUM6sFuxHGIGnpn1DYlprtLg90qe3y+LyqgAIKKbXHg3UoctischuHxkMOq2ev2Xtgvb/4llRipUntCU1onu/cCdlt/HdQBWMqpbm5v1QW2wetY44DmYRJzAZW9eWm/T+/CVEq2S+Qv1wJ9aw3WBlU4cmy6rdkA85al/MNi12a5zGH7pGbQw0IEnKLRkvJHnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NwEpN3ULZ0pGo24iuVPoGe7uONTgEMh7VJlpEv+0nVE=;
+ b=Qbyc5q8spFQhNZqAcvdFzzlB4iRhZRDQOJndfG4JQhGAAGV9/byfoxyQdLzeNWPUPKafmLZB7znduvZ9qhQFVaA3T2SM4yBQqaNwQLxP2LDye3SB800+oDGtPTx/8o+8Wnu7b+FPCwdmHyrBjoQ2CfVldupsNSmXwPY2EuVBKs9HVBHaBgcmg6HChvPwJqVK9mx9KBR6Gh8KKj4AR+k6nl+YMXssaE06CgzrteFdeUpJ08Ivtq/NS8uBG39WG61/HGj9WzFCvBROFem4FCEQbrSRSaa1X95WighPzJtd2mBfxkEoGT0/t/XsY9YZA6sTR0NAfcB2shPmw1IJ304K2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NwEpN3ULZ0pGo24iuVPoGe7uONTgEMh7VJlpEv+0nVE=;
+ b=inRJDC6AHwuv1SLiT2EGfXY+yXfLtQJnYY5T7KRqwpz2A+sXIbybDXP/otA6n35YvTDvQgesDx7ekiO9U8FX+fZeX9cEfrFKgEZIzxkqgP6JQwNkQRbfKpRQhEfpVZtC4bLE2jVe5OAL5AE67q/Nja2I9B6Y8ppkuq35Zk0nSlPJR6AfYHom71LWSLiAgOhdCWa33Mbhrv/yCM4LAI+roadUXtT9QUc49cqOLUVjgChzDTpBjB0nLCCQRPKjy6r+j3ZpUmmmhAcxWWLH8MJ28z/0/esM3wFI/BKRmZedWh+rZCcmeMWghMIYCvkp8W/csjrr5+iLujV/2TyRkzxmgQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8948.eurprd04.prod.outlook.com (2603:10a6:20b:42f::17)
+ by AS8PR04MB9078.eurprd04.prod.outlook.com (2603:10a6:20b:445::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.6; Thu, 15 Jan
+ 2026 14:53:15 +0000
+Received: from AS8PR04MB8948.eurprd04.prod.outlook.com
+ ([fe80::843f:752e:60d:3e5e]) by AS8PR04MB8948.eurprd04.prod.outlook.com
+ ([fe80::843f:752e:60d:3e5e%4]) with mapi id 15.20.9499.002; Thu, 15 Jan 2026
+ 14:53:14 +0000
+Date: Thu, 15 Jan 2026 09:52:58 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Koichiro Den <den@valinux.co.jp>
+Cc: jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com,
+	cassel@kernel.org, vigneshr@ti.com, s-vadapalli@ti.com,
+	hongxing.zhu@nxp.com, l.stach@pengutronix.de, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+	minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+	jesper.nilsson@axis.com, heiko@sntech.de,
+	srikanth.thokala@intel.com, marek.vasut+renesas@gmail.com,
+	yoshihiro.shimoda.uh@renesas.com, geert+renesas@glider.be,
+	magnus.damm@gmail.com, christian.bruel@foss.st.com,
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+	thierry.reding@gmail.com, jonathanh@nvidia.com,
+	hayashi.kunihiko@socionext.com, mhiramat@kernel.org,
+	kishon@kernel.org, jirislaby@kernel.org, rongqianfeng@vivo.com,
+	18255117159@163.com, shawn.lin@rock-chips.com,
+	nicolas.frattaroli@collabora.com, linux.amoon@gmail.com,
+	vidyas@nvidia.com, linux-omap@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@axis.com,
+	linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v8 2/5] PCI: endpoint: Add BAR subrange mapping support
+Message-ID: <aWj/Sr63+hl7CBe/@lizhi-Precision-Tower-5810>
+References: <20260115084928.55701-1-den@valinux.co.jp>
+ <20260115084928.55701-3-den@valinux.co.jp>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260115084928.55701-3-den@valinux.co.jp>
+X-ClientProxiedBy: SJ0PR05CA0086.namprd05.prod.outlook.com
+ (2603:10b6:a03:332::31) To AS8PR04MB8948.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42f::17)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8948:EE_|AS8PR04MB9078:EE_
+X-MS-Office365-Filtering-Correlation-Id: d1855dd9-67f5-4be6-d9a5-08de5445cfa6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|52116014|376014|366016|19092799006|1800799024|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?5oPQsfVSg2tVwfrFS7kGEJlXFL+/D29UV0ZPSyPgHGui2OuZfIqiFNR40GGx?=
+ =?us-ascii?Q?aV8EdK14s0oOoNzvVszWTFFqADZGyRhgrgbYE0knJ7Irw4NZTp+QwOuam1fP?=
+ =?us-ascii?Q?Jtf2I3hFN7y3M38YfeFU3LToDoRrDV3tQeaKSwbvZ+IcOD2/gpPoiglqQO7r?=
+ =?us-ascii?Q?mF4Aag2LX4JUZthue29cABz+idg6Lc223QXEjRQmrzN3TCI23wN8ohsrBB+7?=
+ =?us-ascii?Q?xLzyuWiX9X5obTT7VhpiC525mS9PXte4k67fRsY9FfI7w1spB3WhWYP9q/us?=
+ =?us-ascii?Q?Kdaqi8zXpFR8MJYCDbh6RXuDm8azk/M0/LNfj9yZqNp7Qmxjxp4FIFPE9pth?=
+ =?us-ascii?Q?0MOc98fC9ZA/gXLBAahud8fnilLXJ+RuuAOl74bIKjGG3SnCJaNxL+qyDUXx?=
+ =?us-ascii?Q?R8o42x9NNcJchJBaHMhIJj2Z8V8bNPJRDV/EuxPKVjv+++jf+rj/GAirXtKf?=
+ =?us-ascii?Q?90jkMFi+yu2KdaIVl00nbIBUccc6X/l0NF4qf/+FZpBDTqwKcorVLm6WUGtx?=
+ =?us-ascii?Q?jxiilJFdskSw8xkaEc1F19BF5frwvMZeGFsNdje32rIa3+dDoCt8hTt44ot1?=
+ =?us-ascii?Q?Uz+w6GYECW2k7yXB6BcW7KZnBVlhagpdpJZ2/oY1Oo2UfOcj7yQKudKIhLLw?=
+ =?us-ascii?Q?YXoPYx1XOZbi+h7PpKpXuG+nKdJk072V3rmwswVW9DeyVnOoptfQFG77n/m+?=
+ =?us-ascii?Q?hMW5Dz6+ObwY8okgQh8A4t/cHkOmaU7ATfo73MEWqL3OoZVtb4O/NFC53UDd?=
+ =?us-ascii?Q?Anqg0KTdsa5yLUz0vy/YWhODAHuyYPuNX4bgdV4K+gVC0ra0KCL0UFngpidt?=
+ =?us-ascii?Q?2qXnc6KolDl9FdtA7dtSPhaPDYtsU9CYBqVLDAVhhgyxsa9IhSlwUfJEIblT?=
+ =?us-ascii?Q?qkWn386xA1b+LOJOuWNRp9JBAYlm8unXQ+jm5M+/04iiq+bWBFssr3AcvnZz?=
+ =?us-ascii?Q?Psgv79NVCy4q7+wHX3J9EzSAX1D5X53fETQKPel0HNzVv99oAM8N9ak9fneP?=
+ =?us-ascii?Q?2jsYyX3RTmBbzAsAsOmnWcf6lPp7v3lancoz29wh0fwXgUmjPQ/JKnjIAXb9?=
+ =?us-ascii?Q?KpKQ+sYV6B/sM1XeaNlMHzDjbNMsbfZiTR9+esHc4xfLwP1sgmelVr8HrWXh?=
+ =?us-ascii?Q?0Ulpr6mAxk5qVKn/SaZZ1Nvp0wJ2LU3Ih0GPzBmnuTSTPBf7yIcSgCnjjeHy?=
+ =?us-ascii?Q?t2S72M7yA1supVevjfPXwTpjLykm9TzDDvDZoY2UMG9QHIdSqx/MCmvMV6op?=
+ =?us-ascii?Q?iymNES2gIg//mjU1TzVwshXpcfd3EteVQdmt5NByzTfGS5SZm7h6XUAURHWv?=
+ =?us-ascii?Q?139oENR/xlFaYaKMzHRa56Ez0RIPqs/AtAcdkbVsouhyE/M3Tvonvp3tstW8?=
+ =?us-ascii?Q?ln9K0XuvckAmZrZy/AHWvTxf3Np0b9Jsw+whh81pIjLzOM2zvw8Jet3etrwu?=
+ =?us-ascii?Q?KxVODVPS9hhBJVID1v5ag2tNhOvFcGaICUO6MtNyJbK8CLMkB9Z/GmQDhF7L?=
+ =?us-ascii?Q?Inip/BOM7/UNuoNxxGV94jZV1BIWJjuseMdjWGMWtAKne2R2drBYO3Vy3WhO?=
+ =?us-ascii?Q?PgBMBpOPy0O+DLU5A9kSSDxz7em4BN4mXFtQOMqioAI2wJ7xkiYWpc+1vAL6?=
+ =?us-ascii?Q?K5nSOxfZXpRVGkE+TWV/+ic=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8948.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(376014)(366016)(19092799006)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?mGorIfuBD0t/E/vR/ZVygIBGuAo6AmKqW9zNkMrT/qxRhOkA6NpPb7j0Apx5?=
+ =?us-ascii?Q?VQQBb2zV3gUcw1hY10cR8pg9ubnXXfWqDmYQVvEOwPaTorDqsUhjkZ2IoHV1?=
+ =?us-ascii?Q?+2zjSv2k9taFabuwPPT60pVMRWRKQMYnr0ZzelUhurRACNbD4kOr16iET4DZ?=
+ =?us-ascii?Q?a990gEi45jaq/rFfEQ2n8Z0appi4uRk92lG4MeD/pXhIl+VVS8CdsrqSIe4t?=
+ =?us-ascii?Q?l4kUyZgjthLHPg55qyl0Eh6zYoNax8jU6y9DVGjU8CQ3xA5LfcTizjHIwbHu?=
+ =?us-ascii?Q?n6f2D0HeYi+0NfNUErkCy1OxER884AoM5m8ITAIItUrZTIdyZ2xSktn45l9L?=
+ =?us-ascii?Q?xFKH+vvztihhZ8SEk4PGUwo7oL6X6KigFY7oFBe/ftJZWIhFCmnkNqoJRDSb?=
+ =?us-ascii?Q?uxnYaB9X9tv4BUZQzh8zadJDl4Mw208RQEeMX0xFCcg/WktKYShkaTypMs2f?=
+ =?us-ascii?Q?n8xB5mAKAxfNkONcHq/PBjZo598wSle6MQx1h62AwtooU5g67xLQWzVPMVZb?=
+ =?us-ascii?Q?FtppfLXIhkI8/JmHWM3A4KuLvXQCkNHYITpLdese3kpyb/MDioVOSXhkiCxO?=
+ =?us-ascii?Q?4/LTnHyuJBL/FNT0HGBpQj0WlSHmlMax/LUk0sqXws+kWwFoiYTSbskG6V79?=
+ =?us-ascii?Q?QflxUIQKSPPqchvRNKxecydkdylu+1h5I8eDYazlqm9LAXg9INUJlwxrlZxZ?=
+ =?us-ascii?Q?YDfIVyV7GHwB6Fil44qG/gO3mPcPs4jtOPgVmcDpROIv4Nwmsju7EibeUDvj?=
+ =?us-ascii?Q?OwcxOz5uD144ycq951B3GfbhKdKwdgedaVTedjrj8RUIIQJCfP/r8qu7Rr7u?=
+ =?us-ascii?Q?lheqayY74VhzgHr6c79G3nif7CySa0VprmDgDREI4mBJdERl8jGsQCt7pmfW?=
+ =?us-ascii?Q?Xn3HLo7aoVN1CQid36MiAdNCbxYn0X1UEA7lXD+u8hnwZzVpxBoUrJqC1boB?=
+ =?us-ascii?Q?zs9YEkPcuFht0ZchMD1ry6RAp7L15doZZHbLDOEiv0p3UoMgQS2XR2L/eRmK?=
+ =?us-ascii?Q?yBoeSEtGzTPASTEQ2nLMH+WwnKDHC/lUDqdZRBMKMIlfoFSN+3a2dOAi0sHR?=
+ =?us-ascii?Q?HaM9oBb3IbYke5764DR3N8SL/Wy97/7UujIlKvKYPbJFaMFBCjHE3U238HGT?=
+ =?us-ascii?Q?tJG9y99TXtXmuftDaB6koSuAXFax1F59tFkMcZ3R1YNUQ7GxgcmUlcKPbfWH?=
+ =?us-ascii?Q?A/lWP8VHsZ8aqQZyIX5l21EQPtqiP/78SZBDOKMYJe0k+XWgrKS65eGg/5s2?=
+ =?us-ascii?Q?4aJzaht0JH9Y82Rn7/BQ/7L5CGpbzKLYA3qtzuihrV3Zc4iI7M+m6kkiJCWM?=
+ =?us-ascii?Q?jIt8ziJ1ZKeIXjiQhMbjP09QXt+QF46AVbCMT0JhWgg7Xx/XQiW+0t6Jk1z4?=
+ =?us-ascii?Q?LHqMfxgNuFY2x/eWNiMs/hO/wkSD3epDtkZP6NzStMqcxq0204fsXXILLTQf?=
+ =?us-ascii?Q?uNWLvKMW9DHNfnBoxpw1rlpHtVDaIzjftoamgKoINTLq0b5NaiWNLB5Jhk10?=
+ =?us-ascii?Q?cXu6qO8+cECKRbR9uVUTHiUWnkuQ0BPsm+RtXjXzm1eVHqASN/262HY0g2Bo?=
+ =?us-ascii?Q?o7pPKBqa0za2THjqgQ7W/HYYdnohY3lAC7SzNcl/Lmop/Qz10oe1kQ6jy3SF?=
+ =?us-ascii?Q?SxgDzISdGDk4Yl0WmnDB590qP8ZJF5EUKGL3TVNRv1FdIJE1XFFiD2wTbzJA?=
+ =?us-ascii?Q?l+ysdKJnUq9ea/UTIAtk6eHX75lYfWu7tbHYO04RxK2OUqtL?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1855dd9-67f5-4be6-d9a5-08de5445cfa6
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8948.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2026 14:53:14.9123
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uB0nZ/zYaCU/l+931547YwTgX5ALaF2R0xSLJ7XW0S+IqJjGXoFOLyRA2iYBEKXxXVHQbUwCt8fFSTQVTvX6uQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9078
 
-On Wed, 14 Jan 2026 12:20:40 -0600
-Terry Bowman <terry.bowman@amd.com> wrote:
-
-> From: Dan Williams <dan.j.williams@intel.com>
-> 
-> With dport addition moving out of cxl_switch_port_probe() it is no longer
-> the case that a single dport-add failure will cause all dport resources
-> to be automatically unwound.
-> 
-> devm still helps all dport resources get cleaned up when the port is
-> detached, but setup now needs to avoid leaking resources if an early exit
-> occurs during setup.
-> 
-> Convert from a "devm add" model, to an "auto remove" model that makes the
-> caller responsible for registering devm reclaim after the object is fully
-> instantiated.
-> 
-> As a side of effect of this reorganization port->nr_dports is now always
-> consistent with the number of entries in the port->dports xarray, and this
-> can stop playing games with ida_is_empty() which is unreliable as a
-> detector of whether decoders are setup. I.e. consider how
-> CONFIG_DEBUG_KOBJECT_RELEASE might wreak havoc with this approach.
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Terry Bowman <terry.bowman@amd.com>
-> 
+On Thu, Jan 15, 2026 at 05:49:25PM +0900, Koichiro Den wrote:
+> Extend the PCI endpoint core to support mapping subranges within a BAR.
+> Add an optional 'submap' field in struct pci_epf_bar so an endpoint
+> function driver can request inbound mappings that fully cover the BAR.
+>
+> Introduce a new EPC feature bit, subrange_mapping, and reject submap
+> requests from pci_epc_set_bar() unless the controller advertises both
+> subrange_mapping and dynamic_inbound_mapping features.
+>
+> The submap array describes the complete BAR layout (no overlaps and no
+> gaps are allowed to avoid exposing untranslated address ranges). This
+> provides the generic infrastructure needed to map multiple logical
+> regions into a single BAR at different offsets, without assuming a
+> controller-specific inbound address translation mechanism.
+>
+> Signed-off-by: Koichiro Den <den@valinux.co.jp>
 > ---
-> 
-> Changes in v13 -> v14:
-> - New patch
-Hi Dan, Terry,
-
-I think this needs a little reorganization to ensure we don't have
-dport and dport_add both being the same pointer for different free
-reasons.  Adding a helper and we can combine them with a clear
-hand over of ownership.
-
-Wrapping devres_remove_group() in a function that is called close_group()
-rings alarm bells.
-
-Jonathan
-
-
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index fef3aa0c6680..a05a1812bb6e 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-
-> -static struct cxl_dport *
-> -__devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
-> -		     int port_id, resource_size_t component_reg_phys,
-> -		     resource_size_t rcrb)
-> +static struct cxl_dport *__cxl_add_dport(struct cxl_port *port,
-> +					 struct device *dport_dev, int port_id,
-> +					 resource_size_t component_reg_phys,
-> +					 resource_size_t rcrb)
->  {
->  	char link_name[CXL_TARGET_STRLEN];
-> -	struct cxl_dport *dport;
-> -	struct device *host;
->  	int rc;
->  
-> -	if (is_cxl_root(port))
-> -		host = port->uport_dev;
-> -	else
-> -		host = &port->dev;
-> -
-> -	if (!host->driver) {
-> -		dev_WARN_ONCE(&port->dev, 1, "dport:%s bad devm context\n",
-> -			      dev_name(dport_dev));
-> -		return ERR_PTR(-ENXIO);
-> -	}
-> -
->  	if (snprintf(link_name, CXL_TARGET_STRLEN, "dport%d", port_id) >=
->  	    CXL_TARGET_STRLEN)
->  		return ERR_PTR(-EINVAL);
->  
-> -	dport = devm_kzalloc(host, sizeof(*dport), GFP_KERNEL);
-> +	struct cxl_dport *dport __free(kfree) =
-> +		kzalloc(sizeof(*dport), GFP_KERNEL);
->  	if (!dport)
->  		return ERR_PTR(-ENOMEM);
->  
-> @@ -1176,48 +1175,27 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
->  			&component_reg_phys);
->  
->  	cond_cxl_root_lock(port);
-> -	rc = add_dport(port, dport);
-> +	struct cxl_dport *dport_add __free(remove_dport) =
-> +		add_dport(port, dport);
-
-This pattern of having both dport and dport_add effectively
-pointing to the same pointer concerns me from a readability / maintainability
-point of view. We've often made use of helper functions to avoid doing
-this and I think that would make sense here as well.
-
-Take everything down to and including dport_add() as a helper called
-something like (naming needs work!)
-	struct dport_dev *dport __free(remove_and_free_dport) =
-		add_dport_wrapper();
-
-With the __free doing the kfree as well as remove.
-
-
->  	cond_cxl_root_unlock(port);
-> -	if (rc)
-> -		return ERR_PTR(rc);
-> -
-> -	/*
-> -	 * Setup port register if this is the first dport showed up. Having
-> -	 * a dport also means that there is at least 1 active link.
-> -	 */
-> -	if (port->nr_dports == 1 &&
-> -	    port->component_reg_phys != CXL_RESOURCE_NONE) {
-> -		rc = cxl_port_setup_regs(port, port->component_reg_phys);
-> -		if (rc) {
-> -			xa_erase(&port->dports, (unsigned long)dport->dport_dev);
-> -			return ERR_PTR(rc);
-> -		}
-> -		port->component_reg_phys = CXL_RESOURCE_NONE;
-> -	}
-> +	if (IS_ERR(dport_add))
-> +		return dport_add;
->  
-> -	get_device(dport_dev);
-> -	rc = devm_add_action_or_reset(host, cxl_dport_remove, dport);
-> -	if (rc)
-> -		return ERR_PTR(rc);
-> +	if (dev_is_pci(dport_dev))
-> +		dport->link_latency = cxl_pci_get_latency(to_pci_dev(dport_dev));
->  
->  	rc = sysfs_create_link(&port->dev.kobj, &dport_dev->kobj, link_name);
->  	if (rc)
->  		return ERR_PTR(rc);
->  
-> -	rc = devm_add_action_or_reset(host, cxl_dport_unlink, dport);
-> -	if (rc)
-> -		return ERR_PTR(rc);
-> -
-> -	if (dev_is_pci(dport_dev))
-> -		dport->link_latency = cxl_pci_get_latency(to_pci_dev(dport_dev));
-> -
->  	cxl_debugfs_create_dport_dir(dport);
->  
-> -	return dport;
-> +	retain_and_null_ptr(dport_add);
-> +	return no_free_ptr(dport);
->  }
-
-
-
+>  drivers/pci/endpoint/pci-epc-core.c |  8 ++++++++
+>  include/linux/pci-epc.h             |  4 ++++
+>  include/linux/pci-epf.h             | 27 +++++++++++++++++++++++++++
+>  3 files changed, 39 insertions(+)
+>
+> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> index ca7f19cc973a..068155819c57 100644
+> --- a/drivers/pci/endpoint/pci-epc-core.c
+> +++ b/drivers/pci/endpoint/pci-epc-core.c
+> @@ -596,6 +596,14 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  	if (!epc_features)
+>  		return -EINVAL;
+>
+> +	if (epf_bar->num_submap && !epf_bar->submap)
+> +		return -EINVAL;
 > +
-> +/*
-> + * Note: this only services dynamic removal of mid-level ports, root ports are
-> + * always removed by the platform driver (e.g. cxl_acpi). @host can be
-> + * hard-coded to &port->dev.
+> +	if (epf_bar->num_submap &&
+> +	    !(epc_features->dynamic_inbound_mapping &&
+> +	      epc_features->subrange_mapping))
+> +		return -EINVAL;
+> +
+>  	if (epc_features->bar[bar].type == BAR_RESIZABLE &&
+>  	    (epf_bar->size < SZ_1M || (u64)epf_bar->size > (SZ_128G * 1024)))
+>  		return -EINVAL;
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index 4c8516756c56..c021c7af175f 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -227,6 +227,9 @@ struct pci_epc_bar_desc {
+>   *                           inbound mappings for an already configured BAR
+>   *                           (i.e. allow calling pci_epc_set_bar() again
+>   *                           without first calling pci_epc_clear_bar())
+> + * @subrange_mapping: indicate if the EPC device can map inbound subranges for a
+> + *                    BAR. This feature depends on @dynamic_inbound_mapping
+> + *                    feature.
+>   * @msi_capable: indicate if the endpoint function has MSI capability
+>   * @msix_capable: indicate if the endpoint function has MSI-X capability
+>   * @intx_capable: indicate if the endpoint can raise INTx interrupts
+> @@ -236,6 +239,7 @@ struct pci_epc_bar_desc {
+>  struct pci_epc_features {
+>  	unsigned int	linkup_notifier : 1;
+>  	unsigned int	dynamic_inbound_mapping : 1;
+> +	unsigned int	subrange_mapping : 1;
+>  	unsigned int	msi_capable : 1;
+>  	unsigned int	msix_capable : 1;
+>  	unsigned int	intx_capable : 1;
+> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+> index 48f68c4dcfa5..46f817da6e24 100644
+> --- a/include/linux/pci-epf.h
+> +++ b/include/linux/pci-epf.h
+> @@ -110,6 +110,26 @@ struct pci_epf_driver {
+>
+>  #define to_pci_epf_driver(drv) container_of_const((drv), struct pci_epf_driver, driver)
+>
+> +/**
+> + * struct pci_epf_bar_submap - BAR subrange for inbound mapping
+> + * @phys_addr: target physical/DMA address for this subrange
+> + * @size: the size of the subrange to be mapped
+> + *
+> + * When pci_epf_bar.num_submap is >0, pci_epf_bar.submap describes the
+> + * complete BAR layout. This allows an EPC driver to program multiple
+> + * inbound translation windows for a single BAR when supported by the
+> + * controller. The array order defines the BAR layout (submap[0] at offset
+> + * 0, and each immediately follows the previous one).
+> + *
+> + * Note that the subranges:
+> + * - must be non-overlapping
+> + * - must exactly cover the BAR (i.e. no holes)
+
+It is impossible after use 'size'. It can be removed.
+
 > + */
->  static void del_dport(struct cxl_dport *dport)
->  {
->  	struct cxl_port *port = dport->port;
->  
-> -	devm_release_action(&port->dev, cxl_dport_unlink, dport);
-> -	devm_release_action(&port->dev, cxl_dport_remove, dport);
-> -	devm_kfree(&port->dev, dport);
-> +	devm_release_action(&port->dev, unlink_dport, dport);
->  }
->  
->  static void del_dports(struct cxl_port *port)
-> @@ -1597,10 +1603,24 @@ static int update_decoder_targets(struct device *dev, void *data)
->  	return 0;
->  }
->  
-> -DEFINE_FREE(del_cxl_dport, struct cxl_dport *, if (!IS_ERR_OR_NULL(_T)) del_dport(_T))
-> +static struct cxl_port *cxl_port_devres_group(struct cxl_port *port)
-> +{
-> +	if (!devres_open_group(&port->dev, port, GFP_KERNEL))
-> +		return ERR_PTR(-ENOMEM);
-> +	return port;
-> +}
-> +DEFINE_FREE(cxl_port_group_free, struct cxl_port *,
-> +	if (!IS_ERR_OR_NULL(_T)) devres_release_group(&(_T)->dev, _T))
+> +struct pci_epf_bar_submap {
+> +	dma_addr_t	phys_addr;
+> +	size_t		size;
+> +};
 > +
-> +static void cxl_port_group_close(struct cxl_port *port)
+>  /**
+>   * struct pci_epf_bar - represents the BAR of EPF device
+>   * @phys_addr: physical address that should be mapped to the BAR
+> @@ -119,6 +139,9 @@ struct pci_epf_driver {
+>   *            requirement
+>   * @barno: BAR number
+>   * @flags: flags that are set for the BAR
+> + * @num_submap: number of entries in @submap
+> + * @submap: array of subrange descriptors allocated by the caller. See
+> + *          struct pci_epf_bar_submap for the restrictions in detail.
+>   */
+>  struct pci_epf_bar {
+>  	dma_addr_t	phys_addr;
+> @@ -127,6 +150,10 @@ struct pci_epf_bar {
+>  	size_t		mem_size;
+>  	enum pci_barno	barno;
+>  	int		flags;
+> +
+> +	/* Optional sub-range mapping */
+> +	unsigned int	num_submap;
+> +	struct pci_epf_bar_submap	*submap;
 
-This feels like misleading naming and I'm not sure what intent is. 
-Would have expected it to call devres_close_group()
+struct pci_epf_bar_submap submap[] __counted_by(num_submap);
 
-> +{
-> +	devres_remove_group(&port->dev, port);
-> +}
-> +
->  static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
->  					    struct device *dport_dev)
->  {
-> +	struct cxl_dport *new_dport;
->  	struct cxl_dport *dport;
->  	int rc;
->  
-> @@ -1615,29 +1635,46 @@ static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
->  		return ERR_PTR(-EBUSY);
->  	}
->  
-> -	struct cxl_dport *new_dport __free(del_cxl_dport) =
-> -		devm_cxl_add_dport_by_dev(port, dport_dev);
-> -	if (IS_ERR(new_dport))
-> -		return new_dport;
-> -
-> -	cxl_switch_parse_cdat(new_dport);
-> +	/*
-> +	 * With the first dport arrival it is now safe to start looking at
-> +	 * component registers. Be careful to not strand resources if dport
-> +	 * creation ultimately fails.
-> +	 */
-> +	struct cxl_port *port_group __free(cxl_port_group_free) =
-> +		cxl_port_devres_group(port);
-> +	if (IS_ERR(port_group))
-> +		return ERR_CAST(port_group);
->  
-> -	if (ida_is_empty(&port->decoder_ida)) {
-> +	if (port->nr_dports == 0) {
->  		rc = devm_cxl_switch_port_decoders_setup(port);
->  		if (rc)
->  			return ERR_PTR(rc);
-> -		dev_dbg(&port->dev, "first dport%d:%s added with decoders\n",
-> -			new_dport->port_id, dev_name(dport_dev));
-> -		return no_free_ptr(new_dport);
-> +		/*
-> +		 * Note, when nr_dports returns to zero the port is unregistered
-> +		 * and triggers cleanup. I.e. no need for open-coded release
-> +		 * action on dport removal. See cxl_detach_ep() for that logic.
-> +		 */
->  	}
->  
-> +	new_dport = cxl_add_dport_by_dev(port, dport_dev);
-> +	if (IS_ERR(new_dport))
-> +		return new_dport;
-> +
-> +	rc = cxl_dport_autoremove(new_dport);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	cxl_switch_parse_cdat(new_dport);
-> +
-> +	cxl_port_group_close(no_free_ptr(port_group));
+Not sure if use this simplify alloc/free.
 
-Give name vs what it does I'm not sure how this currently works.
-
-> +
-> +	dev_dbg(&port->dev, "dport[%d] id:%d dport_dev: %s added\n",
-> +		port->nr_dports - 1, new_dport->port_id, dev_name(dport_dev));
-> +
->  	/* New dport added, update the decoder targets */
->  	device_for_each_child(&port->dev, new_dport, update_decoder_targets);
->  
-> -	dev_dbg(&port->dev, "dport%d:%s added\n", new_dport->port_id,
-> -		dev_name(dport_dev));
-> -
-> -	return no_free_ptr(new_dport);
-> +	return new_dport;
->  }
->  
->  static struct cxl_dport *devm_cxl_create_port(struct device *ep_dev,
-
-
+Frank
+>  };
+>
+>  /**
+> --
+> 2.51.0
+>
 
