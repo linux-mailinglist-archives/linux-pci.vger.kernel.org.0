@@ -1,394 +1,253 @@
-Return-Path: <linux-pci+bounces-44928-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44931-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3FF4D23BBC
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 10:54:05 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1E14D23F1B
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 11:30:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 805A230E9B34
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 09:51:32 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id D6B56301D2C5
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 10:30:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40BB235FF41;
-	Thu, 15 Jan 2026 09:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E9D336A017;
+	Thu, 15 Jan 2026 10:30:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H8XBnMfv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mTAMhOX7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CF735F8D6;
-	Thu, 15 Jan 2026 09:51:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E228435CBD3;
+	Thu, 15 Jan 2026 10:30:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768470692; cv=none; b=WD6qaRYSO72QtKPwImaXh40gyKUFmxa2IMx6Oh+088slKbfZfn6ubk7oFp+ST9XaScSlTuLVBWsB7GFqIiPC2nVq71NyweHC4xp9JwqAow3Lp+DujbumgF85Qw5f/QJUkiszMJKJ+DX0ZMUjg+vwJnuHPSb0QjFjZLjILAn2bow=
+	t=1768473017; cv=none; b=tKAKaWPtDzLLfWDH6ekuCx8t61Y6uHbowTWu7aNaYfaWsUSJYz57xfpK4/64hxNVwLpkJMuoRjpnIYWdf9GeeP0xvlLBOifSrA0px9mHesZyvIlQBQexVjxJHB9JOvUBoEfvbqSAV8u4qKTRvuGXeMoFuR3uGnYoZkAPd3kF31w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768470692; c=relaxed/simple;
-	bh=w/EtsqaZJ4DVWRdqOwQiLr5EDjpnoPNOQ5mW3z9Rnpk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JqtxrHhRLva7ACPbiJcvAirWD3hS/aMvZd+29BudPgCOTt9KyL7oE7jazlZkCQBMqu5B9zxVyBQ6xfaW6C6Ups6ARc1Z4l5ro/8DVelUczFChnxLmCo3qqnBltH7/u9N8g6Ej6G+VTa289rZQqrbdyRuDRtcDCLTCS70+aJW5G8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8XBnMfv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75D0BC19423;
-	Thu, 15 Jan 2026 09:51:28 +0000 (UTC)
+	s=arc-20240116; t=1768473017; c=relaxed/simple;
+	bh=9OCR6Ca6AuZoPX8A29sd1wcDstFialVmBPp+6yUduaA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MwaQyWOnkK1zd3moXBh8HgnnNdlNZN/MIRL/ytKl7bpNGt2pogsWqCcJSDKnK2ZLFuugdIrKKyAgctA1ErntkxOothWvUgdXmtGZGJuwn92ZkF3ok1B4vEIN6kb5kYGyplaDy95xXOfgYPmqK/cRXpUHqbEULOtNpEXpxyGV0Sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mTAMhOX7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19BA5C19424;
+	Thu, 15 Jan 2026 10:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768470691;
-	bh=w/EtsqaZJ4DVWRdqOwQiLr5EDjpnoPNOQ5mW3z9Rnpk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=H8XBnMfv4iG1vmKk7gVrjnSpgDiIwzX80k+Yrn+I7G6Hgc0ZgrMwtrP3p2cdANRZ6
-	 z9xVn/u1Z+LgZbgS+zUW3dkLcGnuFsogdttZmrYkdwEKCYF8XRAS4vXutYbYZJvG3H
-	 BDGVwkrP6GU5TZirixjWRgU8nKVVT6NZZhJ0R5iMXOwhMO23TAIBfiw6CxmW+JWRux
-	 RRb+PI5HFwEB679/MaNLeQx/7w0wfCSPF+WTt8IcWdagTcs5ckbW0rwMttINdIICLq
-	 oqX9qgIQgxyaYUkMI0b3CfuLFpo3hoKmg5Uqn4FhEwuHH2L/fpPB0euJg4xMZbA2Hj
-	 aCj2Jca4FIl9Q==
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Thu, 15 Jan 2026 10:50:52 +0100
-Subject: [PATCH v3 6/6] irqchip/gic-v5: Add ACPI IWB probing
+	s=k20201202; t=1768473016;
+	bh=9OCR6Ca6AuZoPX8A29sd1wcDstFialVmBPp+6yUduaA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mTAMhOX79uyIEiuo//R2zzN+3YTmjwS4nYW4IpuECej+biBiCCYWqIfYSrTiywVu5
+	 4Mv2zoeIBXVLG6mS5ZWToTPrCgulKM8Aeuuw0G4po4UD28tlzENYY+f01D9DOcYooQ
+	 HhQeKRPtDZoFBJOG2+zDV3rGI10hg1eeVrmn4g+WzUcV8iBdtPRnxTIL6RqDmkj6Vx
+	 TQSFDhRBo0idjQCZd+6zYxCcviJ6IjlQbzKfF/0IFdRD09Y3fXAw/5eCh1kbYRsFg7
+	 vpmCWYUiDz1B4u0EdaUbpVcl+k05DespLzg0xylLfYEd9S5w0ggDeYoUyLJw6UNRjK
+	 SqnoIoqAsAU+A==
+Message-ID: <49d82723-2389-4d6f-a07e-2b522c52bde8@kernel.org>
+Date: Thu, 15 Jan 2026 11:30:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/9] Add support for handling PCIe M.2 Key E connectors
+ in devicetree
+To: manivannan.sadhasivam@oss.qualcomm.com, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas.schier@linux.dev>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Manivannan Sadhasivam <mani@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ linux-acpi@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260115-gicv5-host-acpi-v3-6-c13a9a150388@kernel.org>
-References: <20260115-gicv5-host-acpi-v3-0-c13a9a150388@kernel.org>
-In-Reply-To: <20260115-gicv5-host-acpi-v3-0-c13a9a150388@kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
- Robert Moore <robert.moore@intel.com>, Hanjun Guo <guohanjun@huawei.com>, 
- Sudeep Holla <sudeep.holla@arm.com>, Marc Zyngier <maz@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@kernel.org>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-pci@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>
-X-Mailer: b4 0.14.3
 
-To probe an IWB in an ACPI based system it is required:
+Hi Mani,
 
-- to implement the IORT functions handling the IWB IORT node and create
-  functions to retrieve IWB firmware information
-- to augment the driver to match the DSDT ACPI "ARMH0003" device and
-  retrieve the IWB wire and trigger mask from the GSI interrupt descriptor
-  in the IWB msi_domain_ops.msi_translate() function
+On 12-Jan-26 17:25, Manivannan Sadhasivam via B4 Relay wrote:
+> Hi,
+> 
+> This series is the continuation of the series [1] that added the initial support
+> for the PCIe M.2 connectors. This series extends it by adding support for Key E
+> connectors. These connectors are used to connect the Wireless Connectivity
+> devices such as WiFi, BT, NFC and GNSS devices to the host machine over
+> interfaces such as PCIe/SDIO, USB/UART and NFC. This series adds support for
+> connectors that expose PCIe interface for WiFi and UART interface for BT. Other
+> interfaces are left for future improvements.
 
-Make the required driver changes to enable IWB probing in ACPI systems.
+Thank you for your work on this.
 
-The GICv5 GSI format requires special handling for IWB routed IRQs.
+I've tested this on a ThinkPad T14s gen 6 together with your DTS changes
+for the T14s.
 
-Add IWB GSI detection to the top level driver gic_v5_get_gsi_domain_id()
-function so that the correct IRQ domain for a GSI can be detected by
-parsing the GSI and check whether it is an IWB-backed IRQ or not.
+I started out with CONFIG_POWER_SEQUENCING_PCIE_M2=m and that does not work.
+I think it might be easiest to just change that option to a boolean option.
 
-Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Thomas Gleixner <tglx@kernel.org>
-Cc: Hanjun Guo <guohanjun@huawei.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>
----
- drivers/acpi/arm64/iort.c          | 95 ++++++++++++++++++++++++++++++++------
- drivers/irqchip/irq-gic-v5-iwb.c   | 42 +++++++++++++----
- drivers/irqchip/irq-gic-v5.c       |  4 ++
- include/linux/acpi_iort.h          |  1 +
- include/linux/irqchip/arm-gic-v5.h |  6 +++
- 5 files changed, 123 insertions(+), 25 deletions(-)
+Tested-by: Hans de Goede <johannes.goede@oss.qualcomm.com> # ThinkPad T14s gen6 (arm64)
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index ddd857f05f46..ed827b2fc437 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -264,39 +264,47 @@ static acpi_status iort_match_node_callback(struct acpi_iort_node *node,
- 	struct device *dev = context;
- 	acpi_status status = AE_NOT_FOUND;
- 
--	if (node->type == ACPI_IORT_NODE_NAMED_COMPONENT) {
-+	if (node->type == ACPI_IORT_NODE_NAMED_COMPONENT ||
-+	    node->type == ACPI_IORT_NODE_IWB) {
- 		struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER, NULL };
--		struct acpi_device *adev;
- 		struct acpi_iort_named_component *ncomp;
--		struct device *nc_dev = dev;
-+		struct acpi_iort_iwb *iwb;
-+		struct device *cdev = dev;
-+		struct acpi_device *adev;
-+		const char *device_name;
- 
- 		/*
- 		 * Walk the device tree to find a device with an
- 		 * ACPI companion; there is no point in scanning
--		 * IORT for a device matching a named component if
-+		 * IORT for a device matching a named component or IWB if
- 		 * the device does not have an ACPI companion to
- 		 * start with.
- 		 */
- 		do {
--			adev = ACPI_COMPANION(nc_dev);
-+			adev = ACPI_COMPANION(cdev);
- 			if (adev)
- 				break;
- 
--			nc_dev = nc_dev->parent;
--		} while (nc_dev);
-+			cdev = cdev->parent;
-+		} while (cdev);
- 
- 		if (!adev)
- 			goto out;
- 
- 		status = acpi_get_name(adev->handle, ACPI_FULL_PATHNAME, &buf);
- 		if (ACPI_FAILURE(status)) {
--			dev_warn(nc_dev, "Can't get device full path name\n");
-+			dev_warn(cdev, "Can't get device full path name\n");
- 			goto out;
- 		}
- 
--		ncomp = (struct acpi_iort_named_component *)node->node_data;
--		status = !strcmp(ncomp->device_name, buf.pointer) ?
--							AE_OK : AE_NOT_FOUND;
-+		if (node->type == ACPI_IORT_NODE_NAMED_COMPONENT) {
-+			ncomp = (struct acpi_iort_named_component *)node->node_data;
-+			device_name = ncomp->device_name;
-+		} else {
-+			iwb = (struct acpi_iort_iwb *)node->node_data;
-+			device_name = iwb->device_name;
-+		}
-+		status = !strcmp(device_name, buf.pointer) ?  AE_OK : AE_NOT_FOUND;
- 		acpi_os_free(buf.pointer);
- 	} else if (node->type == ACPI_IORT_NODE_PCI_ROOT_COMPLEX) {
- 		struct acpi_iort_root_complex *pci_rc;
-@@ -317,12 +325,28 @@ static acpi_status iort_match_node_callback(struct acpi_iort_node *node,
- 	return status;
- }
- 
-+static acpi_status iort_match_iwb_callback(struct acpi_iort_node *node, void *context)
-+{
-+	struct acpi_iort_iwb *iwb;
-+	u32 *id = context;
-+
-+	if (node->type != ACPI_IORT_NODE_IWB)
-+		return AE_NOT_FOUND;
-+
-+	iwb = (struct acpi_iort_iwb *)node->node_data;
-+	if (iwb->iwb_index != *id)
-+		return AE_NOT_FOUND;
-+
-+	return AE_OK;
-+}
-+
- static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
- 		       u32 *rid_out, bool check_overlap)
- {
- 	/* Single mapping does not care for input id */
- 	if (map->flags & ACPI_IORT_ID_SINGLE_MAPPING) {
- 		if (type == ACPI_IORT_NODE_NAMED_COMPONENT ||
-+		    type == ACPI_IORT_NODE_IWB		   ||
- 		    type == ACPI_IORT_NODE_PCI_ROOT_COMPLEX) {
- 			*rid_out = map->output_base;
- 			return 0;
-@@ -392,6 +416,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
- 
- 	if (map->flags & ACPI_IORT_ID_SINGLE_MAPPING) {
- 		if (node->type == ACPI_IORT_NODE_NAMED_COMPONENT ||
-+		    node->type == ACPI_IORT_NODE_IWB ||
- 		    node->type == ACPI_IORT_NODE_PCI_ROOT_COMPLEX ||
- 		    node->type == ACPI_IORT_NODE_SMMU_V3 ||
- 		    node->type == ACPI_IORT_NODE_PMCG) {
-@@ -562,9 +587,14 @@ static struct acpi_iort_node *iort_find_dev_node(struct device *dev)
- 			return node;
- 		/*
- 		 * if not, then it should be a platform device defined in
--		 * DSDT/SSDT (with Named Component node in IORT)
-+		 * DSDT/SSDT (with Named Component node in IORT) or an
-+		 * IWB device in the DSDT/SSDT.
- 		 */
--		return iort_scan_node(ACPI_IORT_NODE_NAMED_COMPONENT,
-+		node = iort_scan_node(ACPI_IORT_NODE_NAMED_COMPONENT,
-+				      iort_match_node_callback, dev);
-+		if (node)
-+			return node;
-+		return iort_scan_node(ACPI_IORT_NODE_IWB,
- 				      iort_match_node_callback, dev);
- 	}
- 
-@@ -759,6 +789,35 @@ struct irq_domain *iort_get_device_domain(struct device *dev, u32 id,
- 	return irq_find_matching_fwnode(handle, bus_token);
- }
- 
-+struct fwnode_handle *iort_iwb_handle(u32 iwb_id)
-+{
-+	struct fwnode_handle *fwnode;
-+	struct acpi_iort_node *node;
-+	struct acpi_device *device;
-+	struct acpi_iort_iwb *iwb;
-+	acpi_status status;
-+	acpi_handle handle;
-+
-+	/* find its associated IWB node */
-+	node = iort_scan_node(ACPI_IORT_NODE_IWB, iort_match_iwb_callback, &iwb_id);
-+	if (!node)
-+		return NULL;
-+
-+	iwb = (struct acpi_iort_iwb *)node->node_data;
-+	status = acpi_get_handle(NULL, iwb->device_name, &handle);
-+	if (ACPI_FAILURE(status))
-+		return NULL;
-+
-+	device = acpi_get_acpi_dev(handle);
-+	if (!device)
-+		return NULL;
-+
-+	fwnode = acpi_fwnode_handle(device);
-+	acpi_put_acpi_dev(device);
-+
-+	return fwnode;
-+}
-+
- static void iort_set_device_domain(struct device *dev,
- 				   struct acpi_iort_node *node)
- {
-@@ -819,8 +878,14 @@ static struct irq_domain *iort_get_platform_device_domain(struct device *dev)
- 	/* find its associated iort node */
- 	node = iort_scan_node(ACPI_IORT_NODE_NAMED_COMPONENT,
- 			      iort_match_node_callback, dev);
--	if (!node)
--		return NULL;
-+	if (!node) {
-+		/* find its associated iort node */
-+		node = iort_scan_node(ACPI_IORT_NODE_IWB,
-+				      iort_match_node_callback, dev);
-+
-+		if (!node)
-+			return NULL;
-+	}
- 
- 	/* then find its msi parent node */
- 	for (i = 0; i < node->mapping_count; i++) {
-diff --git a/drivers/irqchip/irq-gic-v5-iwb.c b/drivers/irqchip/irq-gic-v5-iwb.c
-index ad9fdc14d1c6..c7d5fd34d053 100644
---- a/drivers/irqchip/irq-gic-v5-iwb.c
-+++ b/drivers/irqchip/irq-gic-v5-iwb.c
-@@ -4,6 +4,7 @@
-  */
- #define pr_fmt(fmt)	"GICv5 IWB: " fmt
- 
-+#include <linux/acpi.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/msi.h>
-@@ -136,18 +137,31 @@ static int gicv5_iwb_irq_domain_translate(struct irq_domain *d, struct irq_fwspe
- 					  irq_hw_number_t *hwirq,
- 					  unsigned int *type)
- {
--	if (!is_of_node(fwspec->fwnode))
--		return -EINVAL;
-+	if (is_of_node(fwspec->fwnode)) {
- 
--	if (fwspec->param_count < 2)
--		return -EINVAL;
-+		if (fwspec->param_count < 2)
-+			return -EINVAL;
- 
--	/*
--	 * param[0] is be the wire
--	 * param[1] is the interrupt type
--	 */
--	*hwirq = fwspec->param[0];
--	*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-+		/*
-+		 * param[0] is be the wire
-+		 * param[1] is the interrupt type
-+		 */
-+		*hwirq = fwspec->param[0];
-+		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-+	}
-+
-+	if (is_acpi_device_node(fwspec->fwnode)) {
-+
-+		if (fwspec->param_count < 2)
-+			return -EINVAL;
-+
-+		/*
-+		 * Extract the wire from param[0]
-+		 * param[1] is the interrupt type
-+		 */
-+		*hwirq = FIELD_GET(GICV5_GSI_IWB_WIRE, fwspec->param[0]);
-+		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-+	}
- 
- 	return 0;
- }
-@@ -265,10 +279,18 @@ static const struct of_device_id gicv5_iwb_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, gicv5_iwb_of_match);
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id iwb_acpi_match[] = {
-+	{ "ARMH0003", 0 },
-+	{}
-+};
-+#endif
-+
- static struct platform_driver gicv5_iwb_platform_driver = {
- 	.driver = {
- 		.name			= "GICv5 IWB",
- 		.of_match_table		= gicv5_iwb_of_match,
-+		.acpi_match_table	= ACPI_PTR(iwb_acpi_match),
- 		.suppress_bind_attrs	= true,
- 	},
- 	.probe				= gicv5_iwb_device_probe,
-diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-index 23fd551c4347..da867dd2e77d 100644
---- a/drivers/irqchip/irq-gic-v5.c
-+++ b/drivers/irqchip/irq-gic-v5.c
-@@ -5,6 +5,7 @@
- 
- #define pr_fmt(fmt)	"GICv5: " fmt
- 
-+#include <linux/acpi_iort.h>
- #include <linux/cpuhotplug.h>
- #include <linux/idr.h>
- #include <linux/irqdomain.h>
-@@ -1187,6 +1188,9 @@ static struct fwnode_handle *gsi_domain_handle;
- 
- static struct fwnode_handle *gic_v5_get_gsi_domain_id(u32 gsi)
- {
-+	if (FIELD_GET(GICV5_GSI_IC_TYPE, gsi) == GICV5_GSI_IWB_TYPE)
-+		return iort_iwb_handle(FIELD_GET(GICV5_GSI_IWB_FRAME_ID, gsi));
-+
- 	return gsi_domain_handle;
- }
- 
-diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
-index 2d22268677a9..17bb3374f4ca 100644
---- a/include/linux/acpi_iort.h
-+++ b/include/linux/acpi_iort.h
-@@ -27,6 +27,7 @@ int iort_register_domain_token(int trans_id, phys_addr_t base,
- 			       struct fwnode_handle *fw_node);
- void iort_deregister_domain_token(int trans_id);
- struct fwnode_handle *iort_find_domain_token(int trans_id);
-+struct fwnode_handle *iort_iwb_handle(u32 iwb_id);
- 
- #ifdef CONFIG_ACPI_IORT
- u32 iort_msi_map_id(struct device *dev, u32 id);
-diff --git a/include/linux/irqchip/arm-gic-v5.h b/include/linux/irqchip/arm-gic-v5.h
-index 334b6986435c..3da1ad80fc9d 100644
---- a/include/linux/irqchip/arm-gic-v5.h
-+++ b/include/linux/irqchip/arm-gic-v5.h
-@@ -265,6 +265,12 @@
- 
- #define GICV5_IWB_WENABLE_STATUSR_IDLE		BIT(0)
- 
-+#define GICV5_GSI_IC_TYPE			GENMASK(31, 29)
-+#define GICV5_GSI_IWB_TYPE			0x7
-+
-+#define GICV5_GSI_IWB_FRAME_ID			GENMASK(28, 16)
-+#define GICV5_GSI_IWB_WIRE			GENMASK(15, 0)
-+
- /*
-  * Global Data structures and functions
-  */
+Regards,
 
--- 
-2.50.1
+Hans
+
+
+
+
+
+
+
+> Serdev device support for BT
+> ============================
+> 
+> Adding support for the PCIe interface was mostly straightforward and a lot
+> similar to the previous Key M connector. But adding UART interface has proved to
+> be tricky. This is mostly because of the fact UART is a non-discoverable bus,
+> unlike PCIe which is discoverable. So this series relied on the PCI notifier to
+> create the serdev device for UART/BT. This means the PCIe interface will be
+> brought up first and after the PCIe device enumeration, the serdev device will
+> be created by the pwrseq driver. This logic is necessary since the connector
+> driver and DT node don't describe the device, but just the connector. So to make
+> the connector interface Plug and Play, the connector driver uses the PCIe device
+> ID to identify the card and creates the serdev device. This logic could be
+> extended in the future to support more M.2 cards. Even if the M.2 card uses SDIO
+> interface for connecting WLAN, a SDIO notifier could be added to create the
+> serdev device.
+> 
+> Open questions
+> ==============
+> 
+> Though this series adds the relevant functionality for handling the M.2 Key M
+> connectors, there are still a few open questions exists on the design. 
+> 
+> 1. Created a dynamic 'bluetooth' node with the compatible property matching the
+> WCN7850 device and attached it to the serdev device. This allowed reusing the
+> existing OF based BT driver without much modifications.
+> 
+> 2. PCIe client drivers of some M.2 WLAN cards like the Qcom QCA6390, rely on
+> the PCIe device DT node to extract properties such as
+> 'qcom,calibration-variant', 'firmware-name', etc... For those drivers, should we
+> add the PCIe DT node in the Root Port in conjunction with the Port node as
+> below?
+> 
+> pcie@0 {
+> 	wifi@0 {
+> 		compatible = "pci17cb,1103";
+> 		...
+> 		qcom,calibration-variant = "LE_X13S";
+> 	};
+> 
+> 	port {
+> 		pcie4_port0_ep: endpoint {
+> 			remote-endpoint = <&m2_e_pcie_ep>;
+> 		};
+> 	};
+> };
+> 
+> This will also require marking the PMU supplies optional in the relevant ath
+> bindings for M.2 cards.
+> 
+> 3. Some M.2 cards require specific power up sequence like delays between
+> regulator/GPIO and such. For instance, the WCN7850 card supported in this series
+> requires 50ms delay between powering up an interface and driving it. I've just
+> hardcoded the delay in the driver, but it is a pure hack. Since the pwrseq
+> driver doesn't know anything about the device it is dealing with before powering
+> it ON, how should it handle the device specific power requirements? Should we
+> hardcode the device specific property in the connector node? But then, it will
+> no longer become a generic M.2 connector and sort of defeats the purpose of the
+> connector binding.
+> 
+> I hope to address these questions with the help of the relevant subsystem
+> maintainers and the community. 
+> 
+> Testing
+> =======
+> 
+> This series, together with the devicetree changes [2] was tested on the
+> Qualcomm X1e based Lenovo Thinkpad T14s Laptop which has the WCN7850 WLAN/BT
+> 1620 LGA card connected over PCIe and UART.
+> 
+> Dependency
+> ==========
+> 
+> This series is dependent on the M.2 Key M series [1] on top of v6.19-rc1.
+> 
+> [1] https://lore.kernel.org/linux-pci/20260107-pci-m2-v5-0-8173d8a72641@oss.qualcomm.com
+> [2] https://github.com/Mani-Sadhasivam/linux/commit/753033861360171f2af1fdd56e8985ff916e1ac2
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+> Changes in v4:
+> - Switched to dynamic OF node for serdev instead of swnode and dropped all
+>   swnode related patches
+> - Link to v3: https://lore.kernel.org/r/20260110-pci-m2-e-v3-0-4faee7d0d5ae@oss.qualcomm.com
+> 
+> Changes in v3:
+> - Switched to swnode for the serdev device and dropped the custom
+>   serdev_device_id related patches
+> - Added new swnode APIs to match the swnode with existing of_device_id
+> - Incorporated comments in the bindings patch
+> - Dropped the UIM interface from binding since it is not clear how it should get
+>   wired
+> - Incorporated comments in the pwrseq driver patch
+> - Splitted the pwrseq patch into two
+> - Added the 1620 LGA compatible with Key E fallback based on Stephan's finding
+> - Link to v2: https://lore.kernel.org/r/20251125-pci-m2-e-v2-0-32826de07cc5@oss.qualcomm.com
+> 
+> Changes in v2:
+> - Used '-' for GPIO names in the binding and removed led*-gpios properties
+> - Described the endpoint nodes for port@0 and port@1 nodes
+> - Added the OF graph port to the serial binding
+> - Fixed the hci_qca driver to return err if devm_pwrseq_get() fails
+> - Incorporated various review comments in pwrseq driver
+> - Collected Ack
+> - Link to v1: https://lore.kernel.org/r/20251112-pci-m2-e-v1-0-97413d6bf824@oss.qualcomm.com
+> 
+> ---
+> Manivannan Sadhasivam (9):
+>       serdev: Convert to_serdev_*() helpers to macros and use container_of_const()
+>       serdev: Add an API to find the serdev controller associated with the devicetree node
+>       serdev: Do not return -ENODEV from of_serdev_register_devices() if external connector is used
+>       dt-bindings: serial: Document the graph port
+>       dt-bindings: connector: Add PCIe M.2 Mechanical Key E connector
+>       dt-bindings: connector: m2: Add M.2 1620 LGA soldered down connector
+>       Bluetooth: hci_qca: Add M.2 Bluetooth device support using pwrseq
+>       power: sequencing: pcie-m2: Add support for PCIe M.2 Key E connectors
+>       power: sequencing: pcie-m2: Create serdev device for WCN7850 bluetooth
+> 
+>  .../bindings/connector/pcie-m2-e-connector.yaml    | 161 ++++++++++++
+>  .../devicetree/bindings/serial/serial.yaml         |   3 +
+>  MAINTAINERS                                        |   1 +
+>  drivers/bluetooth/hci_qca.c                        |   9 +
+>  drivers/power/sequencing/Kconfig                   |   1 +
+>  drivers/power/sequencing/pwrseq-pcie-m2.c          | 278 ++++++++++++++++++++-
+>  drivers/tty/serdev/core.c                          |  25 +-
+>  include/linux/serdev.h                             |  24 +-
+>  8 files changed, 482 insertions(+), 20 deletions(-)
+> ---
+> base-commit: cb6649f6217c0331b885cf787f1d175963e2a1d2
+> change-id: 20251112-pci-m2-e-94695ac9d657
+> prerequisite-message-id: 20251125-pci-m2-v3-0-c528042aea47@oss.qualcomm.com
+> prerequisite-patch-id: 58778d8eb97ab86008cd48fb5d28ed6cc0bbbc1b
+> prerequisite-patch-id: 2dd7d793a67f59ef6e6b5137e69436896198b965
+> prerequisite-patch-id: 8ccaa5fdd95e64e69cd942f93c26e89b827d0453
+> prerequisite-patch-id: 3d3e1bb7959ab1e140c5024acdd8655e7a7e99ef
+> 
+> Best regards,
 
 
