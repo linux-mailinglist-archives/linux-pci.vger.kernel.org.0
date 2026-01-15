@@ -1,72 +1,71 @@
-Return-Path: <linux-pci+bounces-44947-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44948-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 277ECD24EBD
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 15:24:30 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC84FD24ECC
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 15:25:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BDDC23012BE3
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 14:24:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C6D1130208DD
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 14:24:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A1393A1E6B;
-	Thu, 15 Jan 2026 14:24:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E9CC3A1E69;
+	Thu, 15 Jan 2026 14:24:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dpRM+PSG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBa1ZYUh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CE23A1E69
-	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 14:24:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB2D3A1CE5
+	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 14:24:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768487060; cv=none; b=XlF3FIu+JbasP/s6q+lxqXOefTxK8XTc6ElQKwATaRQroLLweXBuE0du0fiyJwBOMOoR9iqoZkLDjeUboVR3ZutDXTM4X4cXMRSA4gB2bz1aauX1UosbHmcyaFJwofYXR9sXtDhM9MPu6+oYP2YEP+57+L3eFzmwN8BK2U0KvpQ=
+	t=1768487087; cv=none; b=tuCROC2uDin6yFQ8Erp5+Q6wOYq4llOrnQpCT1ozdJ385oBLjbahLniyHpNNSndZD/Qls0vCEXCrIqoG00HUcuY1KZ1iWV/hDd6iUMp6DpxSH3UfP/Wkqd8X3SDBv3vEYOID2eGzyaspkrs3uwpQJxJrV4r7zehoKR+awPPbJ9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768487060; c=relaxed/simple;
-	bh=4calEypt34POw5p9b+ydat+6ZyY0coE6usshj/qabps=;
+	s=arc-20240116; t=1768487087; c=relaxed/simple;
+	bh=prm75bBUvkddetwvbxbhROV7Sxy4F8UH6DE17vgNlvU=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z4S19aDPe3NdUki+7Mg1H5Y/ukojolXKUpGvXn3If0NmFtd0OFIfwTj152yHAvmEBqq+5X5Q7JFBfGqb2kSjHqxm60FcCgHC+ETlMFaItrFnLxacCWhAsyQgPLwn2opKvetXv8hxLI+K9GBLoO5VNcZ10Pc6zb2UltJig4p8UJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dpRM+PSG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4966C2BCB0
-	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 14:24:19 +0000 (UTC)
+	 To:Cc:Content-Type; b=O6yjJZXiBeCIXGp+KeEnKwekv08trrlttt45jZETWeLwmzoQoIbSdtVNgPVb+hcrMmvT5oKyjbvZC1xaEpQ27Py2V5XgkS92Vv2nwrdUxyRsbXNTFoPPjcL8q+f28H4kise3zXRXlxY+6kWGnIkmK/Ai/fU4GRHbfdXYu0Dl1LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBa1ZYUh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7C71C116D0
+	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 14:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768487059;
-	bh=4calEypt34POw5p9b+ydat+6ZyY0coE6usshj/qabps=;
+	s=k20201202; t=1768487086;
+	bh=prm75bBUvkddetwvbxbhROV7Sxy4F8UH6DE17vgNlvU=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=dpRM+PSGBW56JY3nhZAAfzoC5x9K455BY2aKK/VXf8fQK8n/VKc2zmwn84sKPp472
-	 PtKEEuDXBffIXOUjDcLmKhZ48yUAFasewEUFunEVw5FBvyfaiEa13D7YxajH1IPpT3
-	 tKQ5jKjN/998jcyHuURSKfqG/VI52k2iGmn22Ag04uIvyKRNjI1lZ9PpNIhQkq48U8
-	 SwNO37Ahg9oyI57yZZsE+dyI7pzx+oqAFqvfFn0VYMBLBejMbHCItVpOXyyTzYUngd
-	 DpxfCkhFy2SKWYAh2FCgRrV5wF2hQPuoe39gzCqdlEIZL/wPD5rBMw7/zO8WfyouPy
-	 lscle/i778s/g==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-59b7be7496dso1071086e87.0
-        for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 06:24:19 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWLSK5S+QlkuG0QttX0bB3CybDo/kjZBZDX6Bg3TGdsSYZxoh++emSzaaAcHEDI/mmzFjqJLTiherA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXtuMipmmMrun+hxkc7ho796FRNWOS6tg1nsFbGYKXGLqY02Um
-	GOGjSlVl9iytkCZ9brkdT0pRoS5LZLal77Tc+VrLNt4ZK+bYB5PnYrUE+cF6XYQ66Ma6ieLKqwS
-	zanksnzIL/wDC7wCJUrQ4rBjEGtEdfOiBeQSGmJn8mw==
-X-Received: by 2002:a05:6512:3e28:b0:59b:6fa8:bc80 with SMTP id
- 2adb3069b0e04-59ba0f78bfamr2247715e87.32.1768487058383; Thu, 15 Jan 2026
- 06:24:18 -0800 (PST)
+	b=kBa1ZYUhsrdET57XNhhNJ39aLeU+zgI4NWtAjyWHQBaFYL4/+jQm5h64GEiemBQO2
+	 Ma5TxbuZM3Hufel24TUFPM9ClkDUZoOdc7VUh/+tfbDR5nsskTBDoluBX7BHk+DARu
+	 ym4/CXMKL/FVpGXVzhyDcCR/zoVjGj+lBzYqzG1wv8Swv44UReCQSaooV9vKV4EO6w
+	 jlErYxGAtQ+DyHmuzj99lVkW4PsZkxj+3KYCAZCs61x7XZ1xwAcb7iw4G+wjDcKhLG
+	 HwyKbCW2ipCqshfjY3Okm5yXaNulxPd1hw5wNnPTYheBCwIIKZVcVGppEqbDDdL0ZG
+	 m9hi3OrQpTrPg==
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-382fb535b73so8039991fa.0
+        for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 06:24:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU9w/HGS5d3dIscqqZYhzwKx7TDNEOtlQ/ttMyo4NE8dh85Hw05xU0rjwx7gMRRP1R+4UbK1rrav3E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlOw3qk8I4hHPEdCNg0IlgTxqHAJXVwOHcJ7qfbBN1zecIAqnv
+	KZHC27f931K9pvliINlh8jSJx5ImCI/b/L6Ic9JNvWFwOP1JDEHOkP/x0RNGcxpWbRvKdPm0U7u
+	IAKyLIN2B/eDxnhDYFCPJcUpXvsWnv6HaRDORvUYB+w==
+X-Received: by 2002:a05:651c:1443:b0:383:210a:7b35 with SMTP id
+ 38308e7fff4ca-3836078fd46mr23412681fa.36.1768487085519; Thu, 15 Jan 2026
+ 06:24:45 -0800 (PST)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 15 Jan 2026 06:24:17 -0800
+ HTTPREST; Thu, 15 Jan 2026 09:24:44 -0500
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 15 Jan 2026 06:24:17 -0800
+ HTTPREST; Thu, 15 Jan 2026 09:24:44 -0500
 From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260115-pci-pwrctrl-rework-v5-2-9d26da3ce903@oss.qualcomm.com>
+In-Reply-To: <20260115-pci-pwrctrl-rework-v5-4-9d26da3ce903@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260115-pci-pwrctrl-rework-v5-0-9d26da3ce903@oss.qualcomm.com> <20260115-pci-pwrctrl-rework-v5-2-9d26da3ce903@oss.qualcomm.com>
-Date: Thu, 15 Jan 2026 06:24:17 -0800
-X-Gmail-Original-Message-ID: <CAMRc=McHcj4CZnKvgDJW1+kJ+v8aVoB1uYKJonCHzCFrOMg+cw@mail.gmail.com>
-X-Gm-Features: AZwV_QikWfMfRv1UXaJ0zOBkJkzkPy3Cq4t9qWixHsmbz8UUoJqZHaYAuiWCPoo
-Message-ID: <CAMRc=McHcj4CZnKvgDJW1+kJ+v8aVoB1uYKJonCHzCFrOMg+cw@mail.gmail.com>
-Subject: Re: [PATCH v5 02/15] PCI/pwrctrl: slot: Rename private struct and
- pointers for consistency
+References: <20260115-pci-pwrctrl-rework-v5-0-9d26da3ce903@oss.qualcomm.com> <20260115-pci-pwrctrl-rework-v5-4-9d26da3ce903@oss.qualcomm.com>
+Date: Thu, 15 Jan 2026 09:24:44 -0500
+X-Gmail-Original-Message-ID: <CAMRc=MeGNVVsdnynfaZ2xzmnH5BY7J+h6uN_NcsGEkZ_M72Siw@mail.gmail.com>
+X-Gm-Features: AZwV_QhSqlo3D9V-01cFy2a2sAfzR08YDxZWC5KIr-GWSr6tSsU2qnVGsfYVy8Q
+Message-ID: <CAMRc=MeGNVVsdnynfaZ2xzmnH5BY7J+h6uN_NcsGEkZ_M72Siw@mail.gmail.com>
+Subject: Re: [PATCH v5 04/15] PCI/pwrctrl: tc9563: Clean up whitespace
 To: manivannan.sadhasivam@oss.qualcomm.com
 Cc: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>, 
 	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
@@ -82,32 +81,12 @@ Cc: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualco
 	Jingoo Han <jingoohan1@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 15 Jan 2026 08:28:54 +0100, Manivannan Sadhasivam via B4 Relay
+On Thu, 15 Jan 2026 08:28:56 +0100, Manivannan Sadhasivam via B4 Relay
 <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> said:
 > From: Bjorn Helgaas <bhelgaas@google.com>
 >
-> Previously the pwrseq, tc9563, and slot pwrctrl drivers used different
-> naming conventions for their private data structs and pointers to them,
-> which makes patches hard to read:
->
->   Previous names                         New names
->   ------------------------------------   ----------------------------------
->   struct pci_pwrctrl_pwrseq_data {       struct pci_pwrctrl_pwrseq {
->     struct pci_pwrctrl ctx;                struct pci_pwrctrl pwrctrl;
->   struct pci_pwrctrl_pwrseq_data *data   struct pci_pwrctrl_pwrseq *pwrseq
->
->   struct tc9563_pwrctrl_ctx {            struct pci_pwrctrl_tc9563 {
->   struct tc9563_pwrctrl_ctx *ctx         struct pci_pwrctrl_tc9563 *tc9563
->
->   struct pci_pwrctrl_slot_data {         struct pci_pwrctrl_slot {
->     struct pci_pwrctrl ctx;                struct pci_pwrctrl pwrctrl;
->   struct pci_pwrctrl_slot_data *slot     struct pci_pwrctrl_slot *slot
->
-> Rename "struct pci_pwrctrl_slot_data" to "struct pci_pwrctrl_slot".
->
-> Rename the "struct pci_pwrctrl ctx" member to "struct pci_pwrctrl pwrctrl".
->
-> No functional change intended.
+> Most of pci-pwrctrl-tc9563.c fits in 80 columns.  Wrap lines that are
+> gratuitously longer.  Whitespace changes only.
 >
 > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
