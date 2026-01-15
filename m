@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-44927-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44929-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 032EBD23B9B
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 10:53:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E3B5D23BBF
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 10:54:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0553D30BFBCC
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 09:51:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B612630EB0B4
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 09:51:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C730F35F8C7;
-	Thu, 15 Jan 2026 09:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4748F35FF55;
+	Thu, 15 Jan 2026 09:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p4jG/BSr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="imhjIHig"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925BE35EDCA;
-	Thu, 15 Jan 2026 09:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D8735F8DA;
+	Thu, 15 Jan 2026 09:51:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768470684; cv=none; b=Y/L1yUwd8OhdLDjYNW3ln0PTULgS0Qm4tbJvrFK1bl1dr4svnUqPQUldRsHIKFQrxl9z1DmrZWA5ti+PscQNB4+/adjI+9zWuEHlHVY+ncvAXlG2ZKn9V6zzQjWfvLJrBufJ1Ou9rIxaVm6XFkrBybeIgaPbyaDJdPCCYejw5vM=
+	t=1768470692; cv=none; b=WPdD8whkYBtDOUBAMyChyhGf+pLSTc6otwWPpp8Ix++UDh9YzsyUF6mZSk3GHuhv1S1rSSQ5L6UJKDun/MLZ04eUyAMVzjVtr+LwNzAr8Pc/1o0SeSiR94gHEygnR63UEXpzaKQiE/h9EpzCmBj/CzKna6cwhbKmDX5A6tYlyJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768470684; c=relaxed/simple;
-	bh=U5y6W9KU/eUjo3vcYYv+6C+tpDKsFnfaRPLMuIAuK8Y=;
+	s=arc-20240116; t=1768470692; c=relaxed/simple;
+	bh=SivqKgXw7pxzLdkxoHg1alNOYwKdrnDTSYrk0OF0ZaE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qetOMdROd8fyfCYAmpKd7U8OcdKFkRsYVhispPboYFPpc8+RxV9ymY4Q7bYLmbLJcntc9xGErPZTIVfb5l3IMMrt2696SerououvNuttqBFMkf5HgrytuOSyKYS8grH6RLgE4rPtEf6kaASpMDch6M1BhPWSkPio8FkcAW4+Gkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p4jG/BSr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA48C116D0;
-	Thu, 15 Jan 2026 09:51:20 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=ch+R5FgBKqEiHq3L4SVYVHSL6Xc2DKBU1HvbrGYGP6Xq97T61q0PtNRdEMlsyGRXT5tiHaVjqxuHPkxx4n21zhYvrUjTnOU4nOlUTG6zRZYd8B/jNfPNpaUCs3Z8SldHgZ1ZDBpela1k+X7JUlA7mt9/yCJSzfS3X1yLYiMyP1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=imhjIHig; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C167BC116D0;
+	Thu, 15 Jan 2026 09:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768470684;
-	bh=U5y6W9KU/eUjo3vcYYv+6C+tpDKsFnfaRPLMuIAuK8Y=;
+	s=k20201202; t=1768470688;
+	bh=SivqKgXw7pxzLdkxoHg1alNOYwKdrnDTSYrk0OF0ZaE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=p4jG/BSrnmHlYv4XoUqAikb5/11tHXgkVBryUAPkiRezvsd3jgSDCr269ul/FHDoL
-	 yt9x7y3/zeBH3PQtMaPjl63vQgSD4TuxkiimGTozVvQPU9J+4Ch5tXFsw0qGDj4Inl
-	 8m8N4QhNnLmW1K91/IO/DN5lBJf7/3R0b1fe4sYtV7G5R1HOV3IsHQOdSRoSdYTNKh
-	 wu8re6vdPwVII5EggULKKANY17jDJDK1mejp0SkJvBdOtpHfyl8zzpuZ1jvDBBTE55
-	 bgay7KzEPJW+Phzn8EbN5uCux7qeINMFT7weYN5AoNy2XmU/4b/CaX1TJKBpCoX/fQ
-	 p6Pwh6soPjIdw==
+	b=imhjIHig+KihtVH76ExVagwxmSs1aA5Z6eunysMTGy66Ew/SrCJ8cs+P/PdnusvZn
+	 KEGq2GLR3MpDrCzoVOi7jBVkhWhh/3dcB40kf4JTlmFPtzUzyqOduTaNcZKqcuXGrb
+	 LDVEaCQ6wKsz8uIKEg078WfZTtYeUvTAv5HOKzuP4ssF8MIJKZHB+dk8h40UpCKPTa
+	 7XkKK5zANQMIkVtg+JYkYpQ/x8PCB2bx8t/GwdH2p0S4uZhov9co1vr6VGOphTq6xH
+	 Q+xX00iBAM4kocFQWeYZNW8R7kggEnn+mIwdM7r3KNFBffWeaY9MJV1rkas1HGve7B
+	 Y0z4/84irD2HQ==
 From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Thu, 15 Jan 2026 10:50:50 +0100
-Subject: [PATCH v3 4/6] irqchip/gic-v5: Add ACPI IRS probing
+Date: Thu, 15 Jan 2026 10:50:51 +0100
+Subject: [PATCH v3 5/6] irqchip/gic-v5: Add ACPI ITS probing
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260115-gicv5-host-acpi-v3-4-c13a9a150388@kernel.org>
+Message-Id: <20260115-gicv5-host-acpi-v3-5-c13a9a150388@kernel.org>
 References: <20260115-gicv5-host-acpi-v3-0-c13a9a150388@kernel.org>
 In-Reply-To: <20260115-gicv5-host-acpi-v3-0-c13a9a150388@kernel.org>
 To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
@@ -63,421 +63,498 @@ Cc: linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev,
  linux-pci@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>
 X-Mailer: b4 0.14.3
 
-On ARM64 ACPI systems GICv5 IRSes are described in MADT sub-entries.
+On ACPI ARM64 systems the GICv5 ITS configuration and translate frames
+are described in the MADT table.
 
-Add the required plumbing to parse MADT IRS firmware table entries and
-probe the IRS components in ACPI.
+Refactor the current GICv5 ITS driver code to share common functions
+between ACPI and OF and implement ACPI probing in the GICv5 ITS driver.
 
-Augment the irqdomain_ops.translate() for PPI and SPI IRQs in order to
-provide support for their ACPI based firmware translation.
+Add iort_msi_xlate() to map a device ID and retrieve an MSI controller
+fwnode node for ACPI systems and update pci_msi_map_rid_ctlr_node() to
+use it in its ACPI code path.
 
-Implement an irqchip ACPI based callback to initialize the global GSI
-domain upon an MADT IRS detection.
-
-The IRQCHIP_ACPI_DECLARE() entry in the top level GICv5 driver is only used
-to trigger the IRS probing (ie the global GSI domain is initialized once on
-the first call on multi-IRS systems); IRS probing takes place by calling
-acpi_table_parse_madt() in the IRS sub-driver, that probes all IRSes
-in sequence.
-
-Add a new ACPI interrupt model so that it can be detected at runtime and
-distinguished from previous GIC architecture models.
+Add the required functions to IORT code for deviceID retrieval and IRQ
+domain registration and look-up so that the GICv5 ITS driver in an
+ACPI based system can be successfully probed.
 
 Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 Cc: Thomas Gleixner <tglx@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
 Cc: Marc Zyngier <maz@kernel.org>
 ---
- drivers/acpi/bus.c                 |   3 +
- drivers/irqchip/irq-gic-v5-irs.c   | 128 +++++++++++++++++++++++++++++++++++
- drivers/irqchip/irq-gic-v5.c       | 134 +++++++++++++++++++++++++++++++------
- include/linux/acpi.h               |   1 +
- include/linux/irqchip/arm-gic-v5.h |   1 +
- 5 files changed, 248 insertions(+), 19 deletions(-)
+ drivers/acpi/arm64/iort.c                |  98 ++++++++++++++++++-----
+ drivers/irqchip/irq-gic-its-msi-parent.c |  39 ++++-----
+ drivers/irqchip/irq-gic-v5-irs.c         |   7 +-
+ drivers/irqchip/irq-gic-v5-its.c         | 132 ++++++++++++++++++++++++++++++-
+ drivers/pci/msi/irqdomain.c              |   2 +
+ include/linux/acpi_iort.h                |  10 ++-
+ include/linux/irqchip/arm-gic-v5.h       |   1 +
+ 7 files changed, 244 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-index a984ccd4a2a0..e4f4059c4f1d 100644
---- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -1197,6 +1197,9 @@ static int __init acpi_bus_init_irq(void)
- 	case ACPI_IRQ_MODEL_GIC:
- 		message = "GIC";
- 		break;
-+	case ACPI_IRQ_MODEL_GIC_V5:
-+		message = "GICv5";
-+		break;
- 	case ACPI_IRQ_MODEL_PLATFORM:
- 		message = "platform specific model";
- 		break;
-diff --git a/drivers/irqchip/irq-gic-v5-irs.c b/drivers/irqchip/irq-gic-v5-irs.c
-index 7db44a91f043..a27a01f9e7a2 100644
---- a/drivers/irqchip/irq-gic-v5-irs.c
-+++ b/drivers/irqchip/irq-gic-v5-irs.c
-@@ -5,6 +5,7 @@
- 
- #define pr_fmt(fmt)	"GICv5 IRS: " fmt
- 
-+#include <linux/acpi.h>
- #include <linux/kmemleak.h>
- #include <linux/log2.h>
- #include <linux/of.h>
-@@ -833,3 +834,130 @@ int __init gicv5_irs_of_probe(struct device_node *parent)
- 
- 	return list_empty(&irs_nodes) ? -ENODEV : 0;
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index 65f0f56ad753..ddd857f05f46 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -595,45 +595,45 @@ u32 iort_msi_map_id(struct device *dev, u32 input_id)
  }
-+
-+#ifdef CONFIG_ACPI
-+
-+#define ACPI_GICV5_IRS_MEM_SIZE (SZ_64K)
-+static struct gicv5_irs_chip_data *current_irs_data __initdata;
-+static int current_irsid __initdata = -1;
-+static u8 current_iaffid_bits __initdata;
-+
-+static int __init gic_acpi_parse_iaffid(union acpi_subtable_headers *header,
-+					const unsigned long end)
-+{
-+	struct acpi_madt_generic_interrupt *gicc = (struct acpi_madt_generic_interrupt *)header;
-+	int cpu;
-+
-+	if (!(gicc->flags & (ACPI_MADT_ENABLED | ACPI_MADT_GICC_ONLINE_CAPABLE)))
-+		return 0;
-+
-+	if (gicc->irs_id != current_irsid)
-+		return 0;
-+
-+	cpu = get_logical_index(gicc->arm_mpidr);
-+
-+	if (gicc->iaffid & ~GENMASK(current_iaffid_bits - 1, 0)) {
-+		pr_warn("CPU %d iaffid 0x%x exceeds IRS iaffid bits\n", cpu, gicc->iaffid);
-+		return 0;
-+	}
-+
-+	/* Bind the IAFFID and the CPU */
-+	per_cpu(cpu_iaffid, cpu).iaffid = gicc->iaffid;
-+	per_cpu(cpu_iaffid, cpu).valid = true;
-+	pr_debug("Processed IAFFID %u for CPU%d", per_cpu(cpu_iaffid, cpu).iaffid, cpu);
-+
-+	/* We also know that the CPU is connected to this IRS */
-+	per_cpu(per_cpu_irs_data, cpu) = current_irs_data;
-+
-+	return 0;
-+}
-+
-+static int __init gicv5_irs_acpi_init_affinity(u32 irsid, struct gicv5_irs_chip_data *irs_data)
-+{
-+	u32 idr;
-+
-+	current_irsid = irsid;
-+	current_irs_data = irs_data;
-+
-+	idr = irs_readl_relaxed(irs_data, GICV5_IRS_IDR1);
-+	current_iaffid_bits = FIELD_GET(GICV5_IRS_IDR1_IAFFID_BITS, idr) + 1;
-+
-+	acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT, gic_acpi_parse_iaffid, 0);
-+
-+	return 0;
-+}
-+
-+static struct resource * __init gic_request_region(resource_size_t base, resource_size_t size,
-+						   const char *name)
-+{
-+	struct resource *r = request_mem_region(base, size, name);
-+
-+	if (!r)
-+		pr_warn_once(FW_BUG "%s region %pa has overlapping address\n", name, &base);
-+
-+	return r;
-+}
-+
-+static int __init gic_acpi_parse_madt_irs(union acpi_subtable_headers *header,
-+					  const unsigned long end)
-+{
-+	struct acpi_madt_gicv5_irs *irs = (struct acpi_madt_gicv5_irs *)header;
-+	struct gicv5_irs_chip_data *irs_data;
-+	void __iomem *irs_base;
-+	struct resource *r;
-+	int ret;
-+
-+	/* Per-IRS data structure */
-+	irs_data = kzalloc(sizeof(*irs_data), GFP_KERNEL);
-+	if (!irs_data)
-+		return -ENOMEM;
-+
-+	/* This spinlock is used for SPI config changes */
-+	raw_spin_lock_init(&irs_data->spi_config_lock);
-+
-+	r = gic_request_region(irs->config_base_address, ACPI_GICV5_IRS_MEM_SIZE, "GICv5 IRS");
-+	if (!r) {
-+		ret = -EBUSY;
-+		goto out_free;
-+	}
-+
-+	irs_base = ioremap(irs->config_base_address, ACPI_GICV5_IRS_MEM_SIZE);
-+	if (!irs_base) {
-+		pr_err("Unable to map GIC IRS registers\n");
-+		ret = -ENOMEM;
-+		goto out_release;
-+	}
-+
-+	gicv5_irs_init_bases(irs_data, irs_base, irs->flags & ACPI_MADT_IRS_NON_COHERENT);
-+
-+	gicv5_irs_acpi_init_affinity(irs->irs_id, irs_data);
-+
-+	ret = gicv5_irs_init(irs_data);
-+	if (ret)
-+		goto out_map;
-+
-+	if (irs_data->spi_range) {
-+		pr_info("%s @%llx detected SPI range [%u-%u]\n", "IRS", irs->config_base_address,
-+									irs_data->spi_min,
-+									irs_data->spi_min +
-+									irs_data->spi_range - 1);
-+	}
-+
-+	return 0;
-+
-+out_map:
-+	iounmap(irs_base);
-+out_release:
-+	release_mem_region(r->start, resource_size(r));
-+out_free:
-+	kfree(irs_data);
-+	return ret;
-+}
-+
-+int __init gicv5_irs_acpi_probe(void)
-+{
-+	acpi_table_parse_madt(ACPI_MADT_TYPE_GICV5_IRS, gic_acpi_parse_madt_irs, 0);
-+
-+	return list_empty(&irs_nodes) ? -ENODEV : 0;
-+}
-+#endif
-diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-index 41ef286c4d78..23fd551c4347 100644
---- a/drivers/irqchip/irq-gic-v5.c
-+++ b/drivers/irqchip/irq-gic-v5.c
-@@ -579,16 +579,36 @@ static __always_inline int gicv5_irq_domain_translate(struct irq_domain *d,
- 						      unsigned int *type,
- 						      const u8 hwirq_type)
+ 
+ /**
+- * iort_pmsi_get_dev_id() - Get the device id for a device
++ * iort_msi_xlate() - Map a MSI input ID for a device
+  * @dev: The device for which the mapping is to be done.
+- * @dev_id: The device ID found.
++ * @input_id: The device input ID.
++ * @fwnode: Pointer to store the fwnode.
+  *
+- * Returns: 0 for successful find a dev id, -ENODEV on error
++ * Returns: mapped MSI ID on success, input ID otherwise
++ *	    On success, the fwnode pointer is initialized to the MSI
++ *	    controller fwnode handle.
+  */
+-int iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id)
++u32 iort_msi_xlate(struct device *dev, u32 input_id, struct fwnode_handle **fwnode)
  {
--	if (!is_of_node(fwspec->fwnode))
--		return -EINVAL;
-+	unsigned int hwirq_trigger;
-+	u8 fwspec_irq_type;
+-	int i, index;
++	struct acpi_iort_its_group *its;
+ 	struct acpi_iort_node *node;
++	u32 dev_id;
  
--	if (fwspec->param_count < 3)
--		return -EINVAL;
-+	if (is_of_node(fwspec->fwnode)) {
+ 	node = iort_find_dev_node(dev);
+ 	if (!node)
+-		return -ENODEV;
++		return input_id;
  
--	if (fwspec->param[0] != hwirq_type)
--		return -EINVAL;
-+		if (fwspec->param_count < 3)
-+			return -EINVAL;
+-	index = iort_get_id_mapping_index(node);
+-	/* if there is a valid index, go get the dev_id directly */
+-	if (index >= 0) {
+-		if (iort_node_get_id(node, dev_id, index))
+-			return 0;
+-	} else {
+-		for (i = 0; i < node->mapping_count; i++) {
+-			if (iort_node_map_platform_id(node, dev_id,
+-						      IORT_MSI_TYPE, i))
+-				return 0;
+-		}
+-	}
++	node = iort_node_map_id(node, input_id, &dev_id, IORT_MSI_TYPE);
++	if (!node)
++		return input_id;
  
--	*hwirq = fwspec->param[1];
-+		fwspec_irq_type = fwspec->param[0];
+-	return -ENODEV;
++	/* Move to ITS specific data */
++	its = (struct acpi_iort_its_group *)node->node_data;
 +
-+		if (fwspec->param[0] != hwirq_type)
-+			return -EINVAL;
++	*fwnode = iort_find_domain_token(its->identifiers[0]);
 +
-+		*hwirq = fwspec->param[1];
-+		hwirq_trigger = fwspec->param[2];
-+	}
-+
-+	if (is_fwnode_irqchip(fwspec->fwnode)) {
-+
-+		if (fwspec->param_count != 2)
-+			return -EINVAL;
-+
-+		fwspec_irq_type = FIELD_GET(GICV5_HWIRQ_TYPE, fwspec->param[0]);
-+
-+		if (fwspec_irq_type != hwirq_type)
-+			return -EINVAL;
-+
-+		*hwirq = FIELD_GET(GICV5_HWIRQ_ID, fwspec->param[0]);
-+		hwirq_trigger = fwspec->param[1];
-+	}
- 
- 	switch (hwirq_type) {
- 	case GICV5_HWIRQ_TYPE_PPI:
-@@ -600,7 +620,7 @@ static __always_inline int gicv5_irq_domain_translate(struct irq_domain *d,
- 							 IRQ_TYPE_EDGE_RISING;
- 		break;
- 	case GICV5_HWIRQ_TYPE_SPI:
--		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
-+		*type = hwirq_trigger & IRQ_TYPE_SENSE_MASK;
- 		break;
- 	default:
- 		BUILD_BUG_ON(1);
-@@ -660,10 +680,18 @@ static void gicv5_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- static int gicv5_irq_ppi_domain_select(struct irq_domain *d, struct irq_fwspec *fwspec,
- 				       enum irq_domain_bus_token bus_token)
- {
-+	u32 hwirq_type;
-+
- 	if (fwspec->fwnode != d->fwnode)
- 		return 0;
- 
--	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
-+	if (is_of_node(fwspec->fwnode))
-+		hwirq_type = fwspec->param[0];
-+
-+	if (is_fwnode_irqchip(fwspec->fwnode))
-+		hwirq_type = FIELD_GET(GICV5_HWIRQ_TYPE, fwspec->param[0]);
-+
-+	if (hwirq_type != GICV5_HWIRQ_TYPE_PPI)
- 		return 0;
- 
- 	return (d == gicv5_global_data.ppi_domain);
-@@ -718,10 +746,18 @@ static int gicv5_irq_spi_domain_alloc(struct irq_domain *domain, unsigned int vi
- static int gicv5_irq_spi_domain_select(struct irq_domain *d, struct irq_fwspec *fwspec,
- 				       enum irq_domain_bus_token bus_token)
- {
-+	u32 hwirq_type;
-+
- 	if (fwspec->fwnode != d->fwnode)
- 		return 0;
- 
--	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_SPI)
-+	if (is_of_node(fwspec->fwnode))
-+		hwirq_type = fwspec->param[0];
-+
-+	if (is_fwnode_irqchip(fwspec->fwnode))
-+		hwirq_type = FIELD_GET(GICV5_HWIRQ_TYPE, fwspec->param[0]);
-+
-+	if (hwirq_type != GICV5_HWIRQ_TYPE_SPI)
- 		return 0;
- 
- 	return (d == gicv5_global_data.spi_domain);
-@@ -1082,16 +1118,12 @@ static inline void __init gic_of_setup_kvm_info(struct device_node *node)
++	return dev_id;
  }
- #endif // CONFIG_KVM
  
--static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
-+static int __init gicv5_init_common(struct fwnode_handle *parent_domain)
+-static int __maybe_unused iort_find_its_base(u32 its_id, phys_addr_t *base)
++int iort_its_translate_pa(struct fwnode_handle *node, phys_addr_t *base)
  {
--	int ret = gicv5_irs_of_probe(node);
-+	int ret = gicv5_init_domains(parent_domain);
+ 	struct iort_its_msi_chip *its_msi_chip;
+ 	int ret = -ENODEV;
+ 
+ 	spin_lock(&iort_msi_chip_lock);
+ 	list_for_each_entry(its_msi_chip, &iort_msi_chip_list, list) {
+-		if (its_msi_chip->translation_id == its_id) {
++		if (its_msi_chip->fw_node == node) {
+ 			*base = its_msi_chip->base_addr;
+ 			ret = 0;
+ 			break;
+@@ -644,6 +644,62 @@ static int __maybe_unused iort_find_its_base(u32 its_id, phys_addr_t *base)
+ 	return ret;
+ }
+ 
++static int __maybe_unused iort_find_its_base(u32 its_id, phys_addr_t *base)
++{
++	struct fwnode_handle *fwnode = iort_find_domain_token(its_id);
++
++	if (!fwnode)
++		return -ENODEV;
++
++	return iort_its_translate_pa(fwnode, base);
++}
++
++/**
++ * iort_pmsi_get_msi_info() - Get the device id and translate frame PA for a device
++ * @dev: The device for which the mapping is to be done.
++ * @dev_id: The device ID found.
++ * @pa: optional pointer to store translate frame address.
++ *
++ * Returns: 0 for successful devid and pa retrieval, -ENODEV on error
++ */
++int iort_pmsi_get_msi_info(struct device *dev, u32 *dev_id, phys_addr_t *pa)
++{
++	struct acpi_iort_node *node, *parent = NULL;
++	struct acpi_iort_its_group *its;
++	int i, index;
++
++	node = iort_find_dev_node(dev);
++	if (!node)
++		return -ENODEV;
++
++	index = iort_get_id_mapping_index(node);
++	/* if there is a valid index, go get the dev_id directly */
++	if (index >= 0) {
++		parent = iort_node_get_id(node, dev_id, index);
++	} else {
++		for (i = 0; i < node->mapping_count; i++) {
++			parent = iort_node_map_platform_id(node, dev_id,
++						      IORT_MSI_TYPE, i);
++			if (parent)
++				break;
++		}
++	}
++
++	if (!parent)
++		return -ENODEV;
++
++	if (pa) {
++		int ret;
++
++		its = (struct acpi_iort_its_group *)node->node_data;
++		ret = iort_find_its_base(its->identifiers[0], pa);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
+ /**
+  * iort_dev_find_its_id() - Find the ITS identifier for a device
+  * @dev: The device.
+diff --git a/drivers/irqchip/irq-gic-its-msi-parent.c b/drivers/irqchip/irq-gic-its-msi-parent.c
+index 4d1ad1ee005d..a832cdb2e697 100644
+--- a/drivers/irqchip/irq-gic-its-msi-parent.c
++++ b/drivers/irqchip/irq-gic-its-msi-parent.c
+@@ -19,18 +19,24 @@
+ 				 MSI_FLAG_PCI_MSIX      |	\
+ 				 MSI_FLAG_MULTI_PCI_MSI)
+ 
+-static int its_translate_frame_address(struct device_node *msi_node, phys_addr_t *pa)
++static int its_translate_frame_address(struct fwnode_handle *msi_node, phys_addr_t *pa)
+ {
+ 	struct resource res;
+ 	int ret;
+ 
+-	ret = of_property_match_string(msi_node, "reg-names", "ns-translate");
+-	if (ret < 0)
+-		return ret;
++	if (is_of_node(msi_node)) {
++		struct device_node *msi_np = to_of_node(msi_node);
+ 
+-	ret = of_address_to_resource(msi_node, ret, &res);
+-	if (ret)
+-		return ret;
++		ret = of_property_match_string(msi_np, "reg-names", "ns-translate");
++		if (ret < 0)
++			return ret;
++
++		ret = of_address_to_resource(msi_np, ret, &res);
++		if (ret)
++			return ret;
++	} else {
++		ret = iort_its_translate_pa(msi_node, &res.start);
++	}
+ 
+ 	*pa = res.start;
+ 	return 0;
+@@ -120,7 +126,7 @@ static int its_v5_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
+ 	if (!msi_node)
+ 		return -ENODEV;
+ 
+-	ret = its_translate_frame_address(to_of_node(msi_node), &pa);
++	ret = its_translate_frame_address(msi_node, &pa);
+ 	if (ret)
+ 		return -ENODEV;
+ 
+@@ -161,7 +167,7 @@ static int of_pmsi_get_msi_info(struct irq_domain *domain, struct device *dev, u
+ 				ret = -EINVAL;
+ 
+ 			if (!ret && pa)
+-				ret = its_translate_frame_address(it.node, pa);
++				ret = its_translate_frame_address(of_fwnode_handle(it.node), pa);
+ 
+ 			if (!ret)
+ 				*dev_id = args;
+@@ -176,11 +182,6 @@ static int of_pmsi_get_msi_info(struct irq_domain *domain, struct device *dev, u
+ 	return of_map_id(dev->of_node, dev->id, "msi-map", "msi-map-mask", &msi_ctrl, dev_id);
+ }
+ 
+-int __weak iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id)
+-{
+-	return -1;
+-}
+-
+ static int its_pmsi_prepare(struct irq_domain *domain, struct device *dev,
+ 			    int nvec, msi_alloc_info_t *info)
+ {
+@@ -191,7 +192,7 @@ static int its_pmsi_prepare(struct irq_domain *domain, struct device *dev,
+ 	if (dev->of_node)
+ 		ret = of_pmsi_get_msi_info(domain->parent, dev, &dev_id, NULL);
+ 	else
+-		ret = iort_pmsi_get_dev_id(dev, &dev_id);
++		ret = iort_pmsi_get_msi_info(dev, &dev_id, NULL);
  	if (ret)
  		return ret;
  
--	ret = gicv5_init_domains(of_fwnode_handle(node));
--	if (ret)
--		goto out_irs;
+@@ -214,10 +215,10 @@ static int its_v5_pmsi_prepare(struct irq_domain *domain, struct device *dev,
+ 	u32 dev_id;
+ 	int ret;
+ 
+-	if (!dev->of_node)
+-		return -ENODEV;
 -
- 	gicv5_set_cpuif_pribits();
- 	gicv5_set_cpuif_idbits();
+-	ret = of_pmsi_get_msi_info(domain->parent, dev, &dev_id, &pa);
++	if (dev->of_node)
++		ret = of_pmsi_get_msi_info(domain->parent, dev, &dev_id, &pa);
++	else
++		ret = iort_pmsi_get_msi_info(dev, &dev_id, &pa);
+ 	if (ret)
+ 		return ret;
  
-@@ -1113,18 +1145,82 @@ static int __init gicv5_of_init(struct device_node *node, struct device_node *pa
- 	gicv5_smp_init();
+diff --git a/drivers/irqchip/irq-gic-v5-irs.c b/drivers/irqchip/irq-gic-v5-irs.c
+index a27a01f9e7a2..fcd032b5e2fa 100644
+--- a/drivers/irqchip/irq-gic-v5-irs.c
++++ b/drivers/irqchip/irq-gic-v5-irs.c
+@@ -814,8 +814,11 @@ void __init gicv5_irs_its_probe(void)
+ {
+ 	struct gicv5_irs_chip_data *irs_data;
  
- 	gicv5_irs_its_probe();
--
--	gic_of_setup_kvm_info(node);
--
- 	return 0;
- 
- out_int:
- 	gicv5_cpu_disable_interrupts();
- out_dom:
- 	gicv5_free_domains();
-+	return ret;
-+}
-+
-+static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
-+{
-+	int ret = gicv5_irs_of_probe(node);
-+	if (ret)
-+		return ret;
-+
-+	ret = gicv5_init_common(of_fwnode_handle(node));
-+	if (ret)
-+		goto out_irs;
-+
-+	gic_of_setup_kvm_info(node);
-+
-+	return 0;
- out_irs:
- 	gicv5_irs_remove();
- 
- 	return ret;
+-	list_for_each_entry(irs_data, &irs_nodes, entry)
+-		gicv5_its_of_probe(to_of_node(irs_data->fwnode));
++	if (acpi_disabled)
++		list_for_each_entry(irs_data, &irs_nodes, entry)
++			gicv5_its_of_probe(to_of_node(irs_data->fwnode));
++	else
++		gicv5_its_acpi_probe();
  }
- IRQCHIP_DECLARE(gic_v5, "arm,gic-v5", gicv5_of_init);
+ 
+ int __init gicv5_irs_of_probe(struct device_node *parent)
+diff --git a/drivers/irqchip/irq-gic-v5-its.c b/drivers/irqchip/irq-gic-v5-its.c
+index 8e22134b9f48..e24ce3d9fb62 100644
+--- a/drivers/irqchip/irq-gic-v5-its.c
++++ b/drivers/irqchip/irq-gic-v5-its.c
+@@ -5,6 +5,8 @@
+ 
+ #define pr_fmt(fmt)	"GICv5 ITS: " fmt
+ 
++#include <linux/acpi.h>
++#include <linux/acpi_iort.h>
+ #include <linux/bitmap.h>
+ #include <linux/iommu.h>
+ #include <linux/init.h>
+@@ -1115,7 +1117,7 @@ static int gicv5_its_init_domain(struct gicv5_its_chip_data *its, struct irq_dom
+ }
+ 
+ static int __init gicv5_its_init_bases(void __iomem *its_base, struct fwnode_handle *handle,
+-				       struct irq_domain *parent_domain)
++				       struct irq_domain *parent_domain, bool noncoherent)
+ {
+ 	struct device_node *np = to_of_node(handle);
+ 	struct gicv5_its_chip_data *its_node;
+@@ -1208,7 +1210,8 @@ static int __init gicv5_its_init(struct device_node *node)
+ 	}
+ 
+ 	ret = gicv5_its_init_bases(its_base, of_fwnode_handle(node),
+-				   gicv5_global_data.lpi_domain);
++				   gicv5_global_data.lpi_domain,
++				   of_property_read_bool(node, "dma-noncoherent"));
+ 	if (ret)
+ 		goto out_unmap;
+ 
+@@ -1231,3 +1234,128 @@ void __init gicv5_its_of_probe(struct device_node *parent)
+ 			pr_err("Failed to init ITS %s\n", np->full_name);
+ 	}
+ }
 +
 +#ifdef CONFIG_ACPI
-+static bool __init acpi_validate_gic_table(struct acpi_subtable_header *header,
-+					   struct acpi_probe_entry *ape)
++
++#define ACPI_GICV5_ITS_MEM_SIZE (SZ_64K)
++
++static struct acpi_madt_gicv5_translator *current_its_entry __initdata;
++static struct fwnode_handle *current_its_fwnode __initdata;
++
++static int __init gic_acpi_parse_madt_its_translate(union acpi_subtable_headers *header,
++						    const unsigned long end)
 +{
-+	struct acpi_madt_gicv5_irs *irs = (struct acpi_madt_gicv5_irs *)header;
++	struct acpi_madt_gicv5_translate_frame *its_frame;
++	struct fwnode_handle *msi_dom_handle;
++	struct resource res = {};
++	int err;
 +
-+	return (irs->version == ape->driver_data);
-+}
-+
-+static struct fwnode_handle *gsi_domain_handle;
-+
-+static struct fwnode_handle *gic_v5_get_gsi_domain_id(u32 gsi)
-+{
-+	return gsi_domain_handle;
-+}
-+
-+static int __init gic_acpi_init(union acpi_subtable_headers *header, const unsigned long end)
-+{
-+	struct acpi_madt_gicv5_irs *irs = (struct acpi_madt_gicv5_irs *)header;
-+	int ret;
-+
-+	if (gsi_domain_handle)
++	its_frame = (struct acpi_madt_gicv5_translate_frame *)header;
++	if (its_frame->linked_translator_id != current_its_entry->translator_id)
 +		return 0;
 +
-+	gsi_domain_handle = irq_domain_alloc_fwnode(&irs->config_base_address);
-+	if (!gsi_domain_handle)
++	res.start = its_frame->base_address;
++	res.end = its_frame->base_address + ACPI_GICV5_ITS_MEM_SIZE - 1;
++	res.flags = IORESOURCE_MEM;
++
++	msi_dom_handle = irq_domain_alloc_parented_fwnode(&res.start, current_its_fwnode);
++	if (!msi_dom_handle) {
++		pr_err("ITS@%pa: Unable to allocate GICv5 ITS translate domain token\n",
++		       &res.start);
 +		return -ENOMEM;
++	}
 +
-+	ret = gicv5_irs_acpi_probe();
-+	if (ret)
-+		goto out_fwnode;
++	err = iort_register_domain_token(its_frame->translate_frame_id, res.start,
++					 msi_dom_handle);
++	if (err) {
++		pr_err("ITS@%pa: Unable to register GICv5 ITS domain token (ITS TRANSLATE FRAME ID %d) to IORT\n",
++		       &res.start, its_frame->translate_frame_id);
++		irq_domain_free_fwnode(msi_dom_handle);
++		return err;
++	}
 +
-+	ret = gicv5_init_common(gsi_domain_handle);
-+	if (ret)
-+		goto out_irs;
++	return 0;
++}
 +
-+	acpi_set_irq_model(ACPI_IRQ_MODEL_GIC_V5, gic_v5_get_gsi_domain_id);
++static int __init gic_acpi_free_madt_its_translate(union acpi_subtable_headers *header,
++						   const unsigned long end)
++{
++	struct acpi_madt_gicv5_translate_frame *its_frame;
++	struct fwnode_handle *msi_dom_handle;
++
++	its_frame = (struct acpi_madt_gicv5_translate_frame *)header;
++	if (its_frame->linked_translator_id != current_its_entry->translator_id)
++		return 0;
++
++	msi_dom_handle = iort_find_domain_token(its_frame->translate_frame_id);
++	if (!msi_dom_handle)
++		return 0;
++
++	iort_deregister_domain_token(its_frame->translate_frame_id);
++	irq_domain_free_fwnode(msi_dom_handle);
++
++	return 0;
++}
++
++static int __init gic_acpi_parse_madt_its(union acpi_subtable_headers *header,
++					  const unsigned long end)
++{
++	struct acpi_madt_gicv5_translator *its_entry;
++	struct fwnode_handle *dom_handle;
++	struct resource res = {};
++	void __iomem *its_base;
++	int err;
++
++	its_entry = (struct acpi_madt_gicv5_translator *)header;
++	res.start = its_entry->base_address;
++	res.end = its_entry->base_address + ACPI_GICV5_ITS_MEM_SIZE - 1;
++	res.flags = IORESOURCE_MEM;
++
++	if (!request_mem_region(res.start, resource_size(&res), "GICv5 ITS"))
++		return -EBUSY;
++
++	dom_handle = irq_domain_alloc_fwnode(&res.start);
++	if (!dom_handle) {
++		pr_err("ITS@%pa: Unable to allocate GICv5 ITS domain token\n",
++		       &res.start);
++		err = -ENOMEM;
++		goto out_rel_res;
++	}
++
++	current_its_entry = its_entry;
++	current_its_fwnode = dom_handle;
++
++	acpi_table_parse_madt(ACPI_MADT_TYPE_GICV5_ITS_TRANSLATE,
++			      gic_acpi_parse_madt_its_translate, 0);
++
++	its_base = ioremap(res.start, ACPI_GICV5_ITS_MEM_SIZE);
++	if (!its_base) {
++		err = -ENOMEM;
++		goto out_unregister;
++	}
++
++	err = gicv5_its_init_bases(its_base, dom_handle, gicv5_global_data.lpi_domain,
++				   its_entry->flags & ACPI_MADT_GICV5_ITS_NON_COHERENT);
++	if (err)
++		goto out_unmap;
 +
 +	return 0;
 +
-+out_irs:
-+	gicv5_irs_remove();
-+out_fwnode:
-+	irq_domain_free_fwnode(gsi_domain_handle);
-+	return ret;
++out_unmap:
++	iounmap(its_base);
++out_unregister:
++	acpi_table_parse_madt(ACPI_MADT_TYPE_GICV5_ITS_TRANSLATE,
++			      gic_acpi_free_madt_its_translate, 0);
++	irq_domain_free_fwnode(dom_handle);
++out_rel_res:
++	release_mem_region(res.start, resource_size(&res));
++	return err;
 +}
-+IRQCHIP_ACPI_DECLARE(gic_v5, ACPI_MADT_TYPE_GICV5_IRS,
-+		     acpi_validate_gic_table, ACPI_MADT_GIC_VERSION_V5,
-+		     gic_acpi_init);
++
++void __init gicv5_its_acpi_probe(void)
++{
++	acpi_table_parse_madt(ACPI_MADT_TYPE_GICV5_ITS, gic_acpi_parse_madt_its, 0);
++}
++#else
++void __init gicv5_its_acpi_probe(void) { }
 +#endif
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index fbf0c3a65f59..3a412dcebc29 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -107,6 +107,7 @@ enum acpi_irq_model_id {
- 	ACPI_IRQ_MODEL_IOSAPIC,
- 	ACPI_IRQ_MODEL_PLATFORM,
- 	ACPI_IRQ_MODEL_GIC,
-+	ACPI_IRQ_MODEL_GIC_V5,
- 	ACPI_IRQ_MODEL_LPIC,
- 	ACPI_IRQ_MODEL_RINTC,
- 	ACPI_IRQ_MODEL_COUNT
+diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+index 3a4038640fda..6e65f0f44112 100644
+--- a/drivers/pci/msi/irqdomain.c
++++ b/drivers/pci/msi/irqdomain.c
+@@ -401,6 +401,8 @@ u32 pci_msi_map_rid_ctlr_node(struct irq_domain *domain, struct pci_dev *pdev,
+ 		rid = of_msi_xlate(&pdev->dev, &msi_ctlr_node, rid);
+ 		if (msi_ctlr_node)
+ 			*node = of_fwnode_handle(msi_ctlr_node);
++	} else {
++		rid = iort_msi_xlate(&pdev->dev, rid, node);
+ 	}
+ 
+ 	return rid;
+diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
+index d4ed5622cf2b..2d22268677a9 100644
+--- a/include/linux/acpi_iort.h
++++ b/include/linux/acpi_iort.h
+@@ -27,12 +27,14 @@ int iort_register_domain_token(int trans_id, phys_addr_t base,
+ 			       struct fwnode_handle *fw_node);
+ void iort_deregister_domain_token(int trans_id);
+ struct fwnode_handle *iort_find_domain_token(int trans_id);
+-int iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id);
+ 
+ #ifdef CONFIG_ACPI_IORT
+ u32 iort_msi_map_id(struct device *dev, u32 id);
++u32 iort_msi_xlate(struct device *dev, u32 id, struct fwnode_handle **node);
++int iort_its_translate_pa(struct fwnode_handle *node, phys_addr_t *base);
+ struct irq_domain *iort_get_device_domain(struct device *dev, u32 id,
+ 					  enum irq_domain_bus_token bus_token);
++int iort_pmsi_get_msi_info(struct device *dev, u32 *dev_id, phys_addr_t *pa);
+ void acpi_configure_pmsi_domain(struct device *dev);
+ void iort_get_rmr_sids(struct fwnode_handle *iommu_fwnode,
+ 		       struct list_head *head);
+@@ -46,9 +48,15 @@ phys_addr_t acpi_iort_dma_get_max_cpu_address(void);
+ #else
+ static inline u32 iort_msi_map_id(struct device *dev, u32 id)
+ { return id; }
++static inline u32 iort_msi_xlate(struct device *dev, u32 id, struct fwnode_handle **node)
++{ return id; }
++static inline int iort_its_translate_pa(struct fwnode_handle *node, phys_addr_t *base)
++{ return -ENODEV; }
+ static inline struct irq_domain *iort_get_device_domain(
+ 	struct device *dev, u32 id, enum irq_domain_bus_token bus_token)
+ { return NULL; }
++static inline int iort_pmsi_get_msi_info(struct device *dev, u32 *dev_id, phys_addr_t *pa)
++{ return -ENODEV; }
+ static inline void acpi_configure_pmsi_domain(struct device *dev) { }
+ static inline
+ void iort_get_rmr_sids(struct fwnode_handle *iommu_fwnode, struct list_head *head) { }
 diff --git a/include/linux/irqchip/arm-gic-v5.h b/include/linux/irqchip/arm-gic-v5.h
-index 68ddcdb1cec5..ff5b1a4931d7 100644
+index ff5b1a4931d7..334b6986435c 100644
 --- a/include/linux/irqchip/arm-gic-v5.h
 +++ b/include/linux/irqchip/arm-gic-v5.h
-@@ -344,6 +344,7 @@ void __init gicv5_init_lpi_domain(void);
- void __init gicv5_free_lpi_domain(void);
+@@ -392,4 +392,5 @@ int gicv5_alloc_lpi(void);
+ void gicv5_free_lpi(u32 lpi);
  
- int gicv5_irs_of_probe(struct device_node *parent);
-+int gicv5_irs_acpi_probe(void);
- void gicv5_irs_remove(void);
- int gicv5_irs_enable(void);
- void gicv5_irs_its_probe(void);
+ void __init gicv5_its_of_probe(struct device_node *parent);
++void __init gicv5_its_acpi_probe(void);
+ #endif
 
 -- 
 2.50.1
