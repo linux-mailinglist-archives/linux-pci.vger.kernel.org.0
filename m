@@ -1,187 +1,139 @@
-Return-Path: <linux-pci+bounces-44980-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44981-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4223D26BA5
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 18:47:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06DB0D278DE
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 19:30:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 32B14302724C
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 17:38:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D67E532990EF
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 17:46:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96C542D780A;
-	Thu, 15 Jan 2026 17:38:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5064C3BFE5D;
+	Thu, 15 Jan 2026 17:45:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jVxGr7G6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWC1dbu/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38EE986334
-	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 17:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D88E3BF309;
+	Thu, 15 Jan 2026 17:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768498725; cv=none; b=XoOun/m86WnUdPclOT5DEIx9L2DF2s2Kv4Vl5s4b1+8RY6VtCnMMJTzofyEPF369fZPDOe3iHYf45Lk4+IEQwYAPIb0ohsbJ8hEWeeE6aylw/ktT1xu9FSYF6e97y9yDu6RiPAiYrSfBdCzY0o09s1HCH5SpI6hNdTg3ESkzgjA=
+	t=1768499150; cv=none; b=esYAIEAikXcfwVbRGrMx2sCx9VLhwaKT1PaJho7/EEF8irHj/KzV0W+HajXVnk8BcEN7ZZwDdiP1OkmMHtGVmMJjvKXSZQA2dNkPwviQyfY2wwTX5u5BH0sizLGVYIJgWsp4L8BfUOb28TdU8QXYUGTHQZ2HA3AeNCD71x0IbQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768498725; c=relaxed/simple;
-	bh=4sRXR8XrYOFTjhIfUiu2sPiafKCIC4aSYGJW5tPNZks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qRZJzd8wDvwNGEbMJFOEaGAovpRodYOe5EScd0zfBwD9jWAIcWz13S59PPJQFK1xMsSOcMKoD6l3/spNLKbSaRYle8GT+91+ZGq4QxpI/MykTWUrwd3xQk1wWAw83TrGUfxf7nfK6jy219AurqGAumS15tnH5BN07rAgA0SU0/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jVxGr7G6; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768498724; x=1800034724;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4sRXR8XrYOFTjhIfUiu2sPiafKCIC4aSYGJW5tPNZks=;
-  b=jVxGr7G6seDn58QyHYyHga+cdgdSoDFkbzseykevP37Ch811/Cp4jJIL
-   dwEdd/uc88oWegIhxMK+NnAs2i+inmj7BU3bBVuU+wlyq2px77N4Pwagu
-   Uag72a9x+4GXvVoCwLYiB9TIpfm9+hVeV0H9xw8D+41k7uB7z0O7ibgMa
-   x2SdRItv92cuSwFGGrl9Ost4Ro/3HJkdxm/1lb8tWqSmge0JKSuxamCoI
-   ClmUjfaW0uk92Xs8SjH22MsTqZxU4qgXXQbAmnPhJc7L1g9MBKfWz6/Dl
-   wtYS4cm12+HHXy29YwxzLUb+smmjX8eZ4S3eVFIYjtjIIZ5Fxt8ORiqS9
-   A==;
-X-CSE-ConnectionGUID: 4SFteXGbS42NCHW82+J7iA==
-X-CSE-MsgGUID: woVdYcklQRO0ernIfChtGA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="69977879"
-X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
-   d="scan'208";a="69977879"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 09:38:43 -0800
-X-CSE-ConnectionGUID: WMznQlqfTwSpT/G6Aw0KwA==
-X-CSE-MsgGUID: AKlyYRwzQHWVpNB+Mn5R7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
-   d="scan'208";a="228076697"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 15 Jan 2026 09:38:40 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vgRIr-00000000IzI-1tDl;
-	Thu, 15 Jan 2026 17:38:37 +0000
-Date: Fri, 16 Jan 2026 01:38:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
-	bhelgaas@google.com
-Cc: oe-kbuild-all@lists.linux.dev, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH] pci: make reset_subordinate hotplug safe
-Message-ID: <202601160154.HvY4PSd3-lkp@intel.com>
-References: <20260114185821.704089-1-kbusch@meta.com>
+	s=arc-20240116; t=1768499150; c=relaxed/simple;
+	bh=7y5GZutTT6vu6rSfOVsILzhDGRx7gArXmT4MXYQzpo8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=goLg5zEPdN6s57rQxigZ9UGygwzxnacL+TqBYIe3In3OoWCKfLildPulpwW48d0XgJ/ofbGmr1FSR20tvPh29Pa11kpCaydD3e2ZbkdLFuyQm3GTL01jdpV8srglkNnahQOMAF0VnFqoYKbVx5ScmiQ7tya8FKVwcX5rWXBIiaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWC1dbu/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB702C19423;
+	Thu, 15 Jan 2026 17:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768499149;
+	bh=7y5GZutTT6vu6rSfOVsILzhDGRx7gArXmT4MXYQzpo8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=tWC1dbu/Y+1idPEqAS5UlUBs9hUwE4kL8rLdUlTAlDVPqugW22cMaXIREhw4DiSrw
+	 tM71Sxj+O6awmq4rmBIvo/bWPZGP81H6PwSue+RIMEspcYJ3yNSo6oo8Phww1Mexnt
+	 mjr8uYWMYV86J24VaBwlzg0umPr24bfCaKOVM5htFJQd4HN6kMlBBg/JI5qgUTrw7F
+	 2RlTmdUiQFDZi2QYmlM+uLbRdkE1ct/9Rb3LZZbeAZ1ft30VKDW4Wze6Vov/PujO/N
+	 7P6pld56zIICJsX4Jae0t1lvuyzEeO1X0QZi+ogoGKdKsB27k94dKHqCcEeIcPYdOF
+	 xAUwxNGdmj5HA==
+Date: Thu, 15 Jan 2026 11:45:48 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Haakon Bugge <haakon.bugge@oracle.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Greg Kroah-Hartman <gregkh@suse.de>,
+	Kenji Kaneshige <kaneshige.kenji@jp.fujitsu.com>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI/ACPI: Confine program_hpx_type2 to the AER bits
+Message-ID: <20260115174548.GA873328@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260114185821.704089-1-kbusch@meta.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <52ED30CB-08FB-44AD-B366-AA3263236FA5@oracle.com>
 
-Hi Keith,
+On Thu, Jan 15, 2026 at 03:39:21PM +0000, Haakon Bugge wrote:
+> Thanks for the review, Bjørn!
+> ...
 
-kernel test robot noticed the following build warnings:
+> >> +	hpx->pci_exp_devctl_or &= ~(PCI_EXP_DEVCTL_RELAX_EN   |
+> >> +				    PCI_EXP_DEVCTL_PAYLOAD    |
+> >> +				    PCI_EXP_DEVCTL_EXT_TAG    |
+> >> +				    PCI_EXP_DEVCTL_PHANTOM    |
+> >> +				    PCI_EXP_DEVCTL_AUX_PME    |
+> >> +				    PCI_EXP_DEVCTL_NOSNOOP_EN |
+> >> +				    PCI_EXP_DEVCTL_READRQ     |
+> >> +				    PCI_EXP_DEVCTL_BCR_FLR);
+> >> 
+> > Instead of listing the bits we *don't* want to touch, I think we
+> > should explicitly *include* CERE, NFERE, FERE, URRE.  Maybe we should
+> > move the PCI_EXP_AER_FLAGS #define to drivers/pci/pci.h so we could
+> > use it directly, e.g.,
+> > 
+> >  hpx->pci_exp_devctl_and |= ~PCI_EXP_AER_FLAGS;
+> >  hpx->pci_exp_devctl_or &= PCI_EXP_AER_FLAGS;
+> 
+> Good idea. But what about moving it to include/uapi/linux/pci_regs.h
+> and also rename it from PCI_EXP_AER_FLAGS to PCI_EXP_DEVCTL_AER, to
+> match the convention for DEVCTL in pci_regs.h?
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.19-rc5 next-20260115]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I suggested drivers/pci/pci.h because (so far) the only need for
+PCI_EXP_AER_FLAGS is in drivers/pci, and that set of flags seems like
+an OS policy.  Most of pci_regs.h is basically translating the PCI
+spec into #defines, without any real usage or policy parts.  I'm not
+sure whether PCI_EXP_AER_FLAGS would be useful to userspace.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Keith-Busch/pci-make-reset_subordinate-hotplug-safe/20260115-030004
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20260114185821.704089-1-kbusch%40meta.com
-patch subject: [PATCH] pci: make reset_subordinate hotplug safe
-config: loongarch-randconfig-r112-20260115 (https://download.01.org/0day-ci/archive/20260116/202601160154.HvY4PSd3-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 12.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260116/202601160154.HvY4PSd3-lkp@intel.com/reproduce)
+> >> 	if (pcie_cap_has_lnkctl(dev)) {
+> >> +		u16 lnkctl;
+> >> 
+> >> -		/*
+> >> -		 * If the Root Port supports Read Completion Boundary of
+> >> -		 * 128, set RCB to 128.  Otherwise, clear it.
+> >> -		 */
+> >> -		hpx->pci_exp_lnkctl_and |= PCI_EXP_LNKCTL_RCB;
+> >> -		hpx->pci_exp_lnkctl_or &= ~PCI_EXP_LNKCTL_RCB;
+> >> -		if (pcie_root_rcb_set(dev))
+> >> -			hpx->pci_exp_lnkctl_or |= PCI_EXP_LNKCTL_RCB;
+> >> -
+> >> -		pcie_capability_clear_and_set_word(dev, PCI_EXP_LNKCTL,
+> >> -			~hpx->pci_exp_lnkctl_and, hpx->pci_exp_lnkctl_or);
+> >> +		pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnkctl);
+> >> +		if (lnkctl)
+> >> +			pci_warn(dev, "Some bits in PCIe Link Control are set: 0x%04x\n",
+> >> +				 lnkctl);
+> >> 
+> > Sorry, I wasn't clear about this.  I meant that we could log the
+> > LNKCTL AND/OR values from _HPX, not the values from PCI_EXP_LNKCTL
+> > itself.  There will definitely be bits set in PCI_EXP_LNKCTL in normal
+> > operation, which is perfectly fine.
+> > 
+> > But if pci_exp_lnkctl_and or pci_exp_lnkctl_or are non-zero, the
+> > platform is telling us to do something, and we're ignoring it.
+> > *That's* what I think we might want to know about.  pci_info() is
+> > probably sufficient; the user doesn't need to *do* anything with it, I
+> > just want it in case we need to debug an issue.
+> 
+> My bad, Yes, that makes more sense to me. And, you're OK with
+> removing the RCB tweaking as well?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601160154.HvY4PSd3-lkp@intel.com/
+Good question.  My hope is that the code here is just to make sure
+that we don't *clear* PCI_EXP_LNKCTL_RCB when we want it set but a
+type 2 record might clear it by mistake.
 
-sparse warnings: (new ones prefixed by >>)
-   drivers/pci/pci.c:1155:36: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted pci_power_t [usertype] current_state @@     got int @@
-   drivers/pci/pci.c:1155:36: sparse:     expected restricted pci_power_t [usertype] current_state
-   drivers/pci/pci.c:1155:36: sparse:     got int
-   drivers/pci/pci.c:1334:15: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted pci_power_t [assigned] [usertype] state @@     got int @@
-   drivers/pci/pci.c:1334:15: sparse:     expected restricted pci_power_t [assigned] [usertype] state
-   drivers/pci/pci.c:1334:15: sparse:     got int
-   drivers/pci/pci.c:1336:50: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:1336:69: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:1389:28: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted pci_power_t [usertype] current_state @@     got int @@
-   drivers/pci/pci.c:1389:28: sparse:     expected restricted pci_power_t [usertype] current_state
-   drivers/pci/pci.c:1389:28: sparse:     got int
-   drivers/pci/pci.c:1479:16: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:1479:35: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:1479:52: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:1479:70: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:1504:15: sparse: sparse: invalid assignment: |=
-   drivers/pci/pci.c:1504:15: sparse:    left side has type unsigned short
-   drivers/pci/pci.c:1504:15: sparse:    right side has type restricted pci_power_t
-   drivers/pci/pci.c:1516:28: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted pci_power_t [usertype] current_state @@     got int @@
-   drivers/pci/pci.c:1516:28: sparse:     expected restricted pci_power_t [usertype] current_state
-   drivers/pci/pci.c:1516:28: sparse:     got int
-   drivers/pci/pci.c:1533:13: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:1533:21: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:1535:18: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:1535:26: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:1558:13: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:1558:22: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:1863:38: sparse: sparse: array of flexible structures
-   drivers/pci/pci.c:2341:44: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:2660:60: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:2661:30: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:2832:20: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:2832:38: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:2855:49: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:2855:67: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/pci/pci.c:4454:13: sparse: sparse: invalid assignment: |=
-   drivers/pci/pci.c:4454:13: sparse:    left side has type unsigned short
-   drivers/pci/pci.c:4454:13: sparse:    right side has type restricted pci_power_t
-   drivers/pci/pci.c:4459:13: sparse: sparse: invalid assignment: |=
-   drivers/pci/pci.c:4459:13: sparse:    left side has type unsigned short
-   drivers/pci/pci.c:4459:13: sparse:    right side has type restricted pci_power_t
->> drivers/pci/pci.c:5585:5: sparse: sparse: symbol '__pci_reset_bus' was not declared. Should it be static?
-   drivers/pci/pci.c:1110:24: sparse: sparse: incorrect type in return expression (different base types) @@     expected int @@     got restricted pci_power_t [usertype] @@
-   drivers/pci/pci.c:1110:24: sparse:     expected int
-   drivers/pci/pci.c:1110:24: sparse:     got restricted pci_power_t [usertype]
-   drivers/pci/pci.c:1110:24: sparse: sparse: incorrect type in return expression (different base types) @@     expected int @@     got restricted pci_power_t [usertype] @@
-   drivers/pci/pci.c:1110:24: sparse:     expected int
-   drivers/pci/pci.c:1110:24: sparse:     got restricted pci_power_t [usertype]
+We should audit PCI_EXP_LNKCTL_RCB usage to be sure that if we remove
+this code, PCI_EXP_LNKCTL_RCB will still be set whenever it needs to
+be set.  If we rely on the existence of an _HPX type 2 record for it
+to be set, that would be completely wrong.
 
-vim +/__pci_reset_bus +5585 drivers/pci/pci.c
-
-9a3d2b9beefd5b Alex Williamson 2013-08-14  5578  
-090a3c5322e900 Alex Williamson 2013-08-08  5579  /**
-c6a44ba950d147 Sinan Kaya      2018-07-19  5580   * __pci_reset_bus - Try to reset a PCI bus
-090a3c5322e900 Alex Williamson 2013-08-08  5581   * @bus: top level PCI bus to reset
-090a3c5322e900 Alex Williamson 2013-08-08  5582   *
-61cf16d8bd38c3 Alex Williamson 2013-12-16  5583   * Same as above except return -EAGAIN if the bus cannot be locked
-090a3c5322e900 Alex Williamson 2013-08-08  5584   */
-2fa046449a82a7 Keith Busch     2024-10-25 @5585  int __pci_reset_bus(struct pci_bus *bus)
-090a3c5322e900 Alex Williamson 2013-08-08  5586  {
-090a3c5322e900 Alex Williamson 2013-08-08  5587  	int rc;
-090a3c5322e900 Alex Williamson 2013-08-08  5588  
-9bdc81ce440ec6 Amey Narkhede   2021-08-17  5589  	rc = pci_bus_reset(bus, PCI_RESET_PROBE);
-090a3c5322e900 Alex Williamson 2013-08-08  5590  	if (rc)
-090a3c5322e900 Alex Williamson 2013-08-08  5591  		return rc;
-090a3c5322e900 Alex Williamson 2013-08-08  5592  
-61cf16d8bd38c3 Alex Williamson 2013-12-16  5593  	if (pci_bus_trylock(bus)) {
-ddefc033eecf23 Alex Williamson 2019-02-18  5594  		pci_bus_save_and_disable_locked(bus);
-61cf16d8bd38c3 Alex Williamson 2013-12-16  5595  		might_sleep();
-381634cad15b71 Sinan Kaya      2018-07-19  5596  		rc = pci_bridge_secondary_bus_reset(bus->self);
-ddefc033eecf23 Alex Williamson 2019-02-18  5597  		pci_bus_restore_locked(bus);
-61cf16d8bd38c3 Alex Williamson 2013-12-16  5598  		pci_bus_unlock(bus);
-61cf16d8bd38c3 Alex Williamson 2013-12-16  5599  	} else
-61cf16d8bd38c3 Alex Williamson 2013-12-16  5600  		rc = -EAGAIN;
-090a3c5322e900 Alex Williamson 2013-08-08  5601  
-090a3c5322e900 Alex Williamson 2013-08-08  5602  	return rc;
-090a3c5322e900 Alex Williamson 2013-08-08  5603  }
-8dd7f8036c1232 Sheng Yang      2008-10-21  5604  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Bjorn
 
