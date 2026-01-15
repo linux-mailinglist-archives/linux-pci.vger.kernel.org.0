@@ -1,60 +1,60 @@
-Return-Path: <linux-pci+bounces-44910-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44911-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25142D23014
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 09:07:33 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6E0DD230D8
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 09:18:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9D7EE301D178
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 08:07:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D9523300A871
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 08:15:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DD4F1D8DFB;
-	Thu, 15 Jan 2026 08:07:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43247325726;
+	Thu, 15 Jan 2026 08:15:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ohSLYb2k"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gC1PFzxx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010026.outbound.protection.outlook.com [52.101.46.26])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011050.outbound.protection.outlook.com [40.93.194.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEBD28DB49;
-	Thu, 15 Jan 2026 08:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A5632B9A7;
+	Thu, 15 Jan 2026 08:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768464449; cv=fail; b=uJcV0tZMUImAppH4t/c7cW0gwjS/HwO7Q3VI7JSKxgwF7Fp39oo7U2SCWGRj8aFmGdg21IRxtT3LB4Vf9XWAqj819DqCQXp3fdxmMHmVJwBJb7nL6HSFnKds4DzMHY3D5k3VLV3V/E9ILpeBNYQYVjmoAmtR9QiZCl0IXMYOfkw=
+	t=1768464957; cv=fail; b=rdAVgJrgp+voSzI1xfwUFsYZjkMpy9U4LE1VxOB0dCoNjiwq9S4TEb/PPEEfeZi4+LSgZ5qUAAnMhhNBr3738yIIaL8I7f0cMKHKpb+rZ7dDfck0nexR23xV82bESqX7HhFH7XcF419uM3RrCKyExbFtyR2V/AKNVigBoYkwtQ0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768464449; c=relaxed/simple;
-	bh=WRPyxvUWCgYGF33CyvttSFM04BJbbep9xy8W77spZaA=;
+	s=arc-20240116; t=1768464957; c=relaxed/simple;
+	bh=6Lt/6KeySDBdOA7INzNlUFbjwBKFPuGPXA0TfhC3XdI=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bxtds4bYtbuAt/GyY1scTLRSB1Wv8o/JZOQWXpo5F+1yoifWfzxQ8fU5OqIFb0KOhJQYwopAZX7Zlvko1xQ5lBLFuCCKCfIOIrVjH0307+wVc1d7VFPChUReqygGR9YDazY6rbG+vrFdhf/vYvu9bYr/skrI1Squldt7wJr7Ukc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ohSLYb2k; arc=fail smtp.client-ip=52.101.46.26
+	 MIME-Version:Content-Type; b=aNimnwXsExjI5aIPKUuX/NLB1tekMqxpo6ZRdfrwhOen6QmU+7BcL16v6O/RT+cKwRFYms611H7f4LflVRXPNoDieuheV+dn9fSKXZyxFcThdw3oIIVWOx4iZk1TYFq9u77wp08PsXnN/YJnLTiYCKp2SNOHTg91JmI0ecCEIBc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gC1PFzxx; arc=fail smtp.client-ip=40.93.194.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NkrXgos8aFqYZVGLlz9yEPBzyAr3NYubdwEGO+dK/baI+LqbSAXVdu+IXtXN9D9pj7zNXhyfO8Tf1TpJOCMg444z2eenasiWUxIdX/hTZ8eM+xh11b/4WE4gR3h9DR4E1fOgvw9jfpkeoeS8N3Lf4OvaElhlRwm7oHyDTRMJEIyycpNdVXtHv8E41ev9sWqMxL27/9AwcMTguzpPhs2LnDVOqS20zA//FAd8cOB/Gu6tDWCnQNgUEBK1bhCfIN0Ox/50aM/ifvCtiTTFhmzmoicjDUZLu6mBrYbYhO733G0hOZNCbkKvipPoB4FCiN/NLwZwql0RvSkiABM6ry5eaA==
+ b=wxFqEaOp2T9+goJ76EneEGTD6FgWE52CMp04DPhxpuPYx5AzajHDRbf/apRcheoskFr2tEMruc0dJYyy6WY1mSYuifjPtXqET85aRpdfkmQTBREtXZjsIUAncQrpYMjYFXYxNHVxSrXmf/Yhg3j8JXsK0pBjSHfTkIO9Eh1jXzMZcIcFzO3sR1YXBovZCNxJ9f01qelQGnqcYOlZRVMyUDD4GZSTo7Y/ykRR4IxDZmquZgRl5zl0TVeDLyqYiNZBWJR1CefwC9v9xCyVWdgyNkssgtLRmkUtDN+2SOzbwQNNKIwMemEfMwCOAY3vDc54FfQq2QmXC36RkWdyJy1RTQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lLzm0kfkMadTwpDeXZbodg+BQZ7HWWIp1L/iNQhztjU=;
- b=mssCocBVEb2AmOwKxdneKeNU3rL7Vc2riXYlLXxcOd1HlGuVy3xifPGigXlYbgtfJmLACghil7w724RdnJw2oYxqWuzrNFublOAr9CIrsV0HRtk1rFDg5tUfFNT2y9qeHtK/G9OE0CJBXz8Jv8Uzi+lMsrDOXgpJ72zl30+J8CNXd613VEL8ETWei3Ydk6/6l7FXEg7Oa3zgBKuvYbzv6njf5BmmIrizjk2C2myr4Wfigksn/cahDeTy8wEB8G/ODgYx62cZAKLetkSrLn7oQT1MnnZrf1xd4TkPVxh1uSLYB7ay8HYgtdz+vdBdgfhQeZaFIz3/ZEcHvS2g6mHc6A==
+ bh=pqM5xLoq/2Gm8x/5T89OnM0unhZvYIfQv59xQIlrrMg=;
+ b=iIidokCBBOlU8qDcjCMP5/TNC7g5h//q/fviQOR1ZAcbLx1RuJpH72AfvTjWtPO1RGWetxLL1VoN+MKzB1Yot9m/3gW+NbpZvym4Kao1Klm1rk2n/ab3VTYcxypJyYnDWVrVrfmsqzIirztD7cTM5C63KMqubQpz2Qwy5Jx0Oj2vhN1V7AtKJWtvbM/AMDmy6J4Ba+VL4E8iCsKaCUaZ00dFo5ezmXGe1H0JBhB4Wlamqz/WS2VZluBemVkyARhcOsiPHb1BlEostoIk5D7zLjXiW7dmEktfoS75XlUJ0O55Lnf/ZxULs6mwpoZknWGcJC2P6qQ2b5HSik7rHd4S5A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=garyguo.net smtp.mailfrom=nvidia.com;
+ 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lLzm0kfkMadTwpDeXZbodg+BQZ7HWWIp1L/iNQhztjU=;
- b=ohSLYb2k7dYbzJ8aBzNvhE4ZS1gWpA4B9ew/8sENdh75G3V83bUuTTFurZCW5Ff3z6nZWnrww+rlXSb3jsYrArXTBTJmkP0xKfZiiZj0703CdaSz1yZSGIkTLIYUgohkgVbs6HcrJ5vwbx8WSTKgTwiJQEKl6JxnEqQrDE5Es0+42ZgGsKVGnVCek/OOC8ifF6hw6STdV+tGxzk0Is6PGj7dwAduB85CbUKJlDzcxAYF4hlS7S+vO/N3RPNQRvzMANZHaDNRkmmrwnyyXRWT6Flq2UaxckvO37nKakDKqnQERRXTBMiIyGSBm+0HRGxDktb/EB1d05CcnqGQ6koZ0g==
-Received: from BY1P220CA0011.NAMP220.PROD.OUTLOOK.COM (2603:10b6:a03:59d::11)
- by IA0PR12MB8905.namprd12.prod.outlook.com (2603:10b6:208:484::6) with
+ bh=pqM5xLoq/2Gm8x/5T89OnM0unhZvYIfQv59xQIlrrMg=;
+ b=gC1PFzxxCHNkq/bY1atJA2zsS6DHi2N1yAJ5aBkB9T/fGImh7J2uQk+QyrlIV9K8zM/t4ye0W2e3zEITinRVltDiFE2kwJuW+D1C+TH2TI0lgBEVbqFat6T0dkOkzNfF3rH0cFp0caNzhh5dpVohh71SWdUjAjOCXmEXnQdGJ2cxqlNIvCITA8vs3geddJdH/MfYOkcvMRQnQ+UAMWVOSqxW0GUN5ecaXHI6MgDZoS+HwkYdn/dVd6Gyn5d9CQi8f/b0/i+9HZ7PPSiRLWAJyo43LGJbk3Fg4WWdPw672XqibTA5vVMHT8zkB8YUnhSvYBOOby937+qa2dNFqsZuLg==
+Received: from CH0PR03CA0270.namprd03.prod.outlook.com (2603:10b6:610:e5::35)
+ by LV3PR12MB9096.namprd12.prod.outlook.com (2603:10b6:408:198::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.6; Thu, 15 Jan
- 2026 08:07:23 +0000
-Received: from SJ5PEPF000001F4.namprd05.prod.outlook.com
- (2603:10b6:a03:59d:cafe::90) by BY1P220CA0011.outlook.office365.com
- (2603:10b6:a03:59d::11) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.5 via Frontend Transport; Thu,
- 15 Jan 2026 08:07:25 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Thu, 15 Jan
+ 2026 08:15:48 +0000
+Received: from CH3PEPF00000011.namprd21.prod.outlook.com
+ (2603:10b6:610:e5:cafe::a7) by CH0PR03CA0270.outlook.office365.com
+ (2603:10b6:610:e5::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.6 via Frontend Transport; Thu,
+ 15 Jan 2026 08:15:47 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -62,39 +62,37 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.117.160 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
 Received: from mail.nvidia.com (216.228.117.160) by
- SJ5PEPF000001F4.mail.protection.outlook.com (10.167.242.72) with Microsoft
+ CH3PEPF00000011.mail.protection.outlook.com (10.167.244.116) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9520.1 via Frontend Transport; Thu, 15 Jan 2026 08:07:23 +0000
+ 15.20.9542.0 via Frontend Transport; Thu, 15 Jan 2026 08:15:48 +0000
 Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
  (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 15 Jan
- 2026 00:07:11 -0800
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail203.nvidia.com
+ 2026 00:15:33 -0800
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail203.nvidia.com
  (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 15 Jan
- 2026 00:07:10 -0800
-Received: from inno-thin-client (10.127.8.13) by mail.nvidia.com (10.129.68.6)
- with Microsoft SMTP Server id 15.2.2562.20 via Frontend Transport; Thu, 15
- Jan 2026 00:07:03 -0800
-Date: Thu, 15 Jan 2026 10:07:02 +0200
+ 2026 00:15:33 -0800
+Received: from inno-thin-client (10.127.8.13) by mail.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
+ Transport; Thu, 15 Jan 2026 00:15:26 -0800
+Date: Thu, 15 Jan 2026 10:15:25 +0200
 From: Zhi Wang <zhiw@nvidia.com>
-To: Gary Guo <gary@garyguo.net>
-CC: <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <dakr@kernel.org>, <aliceryhl@google.com>,
-	<bhelgaas@google.com>, <kwilczynski@kernel.org>, <ojeda@kernel.org>,
-	<alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <bjorn3_gh@protonmail.com>,
+To: <rust-for-linux@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <dakr@kernel.org>, <aliceryhl@google.com>, <bhelgaas@google.com>,
+	<kwilczynski@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+	<boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
 	<lossin@kernel.org>, <a.hindborg@kernel.org>, <tmgross@umich.edu>,
 	<markus.probst@posteo.de>, <helgaas@kernel.org>, <cjia@nvidia.com>,
 	<smitra@nvidia.com>, <ankita@nvidia.com>, <aniketa@nvidia.com>,
 	<kwankhede@nvidia.com>, <targupta@nvidia.com>, <acourbot@nvidia.com>,
-	<joelagnelf@nvidia.com>, <jhubbard@nvidia.com>, <zhiwang@kernel.org>, "Miguel
- Ojeda" <miguel.ojeda.sandonis@gmail.com>
-Subject: Re: [PATCH v8 1/5] rust: devres: style for imports
-Message-ID: <20260115100625.432482dc.zhiw@nvidia.com>
-In-Reply-To: <DFNJ3XN9ZGEC.1BS235XP021OQ@garyguo.net>
+	<joelagnelf@nvidia.com>, <jhubbard@nvidia.com>, <zhiwang@kernel.org>
+Subject: Re: [PATCH v8 4/5] rust: pci: add config space read/write support
+Message-ID: <20260115101525.7537fb9e.zhiw@nvidia.com>
+In-Reply-To: <20260113092253.220346-5-zhiw@nvidia.com>
 References: <20260113092253.220346-1-zhiw@nvidia.com>
-	<20260113092253.220346-2-zhiw@nvidia.com>
-	<DFNJ3XN9ZGEC.1BS235XP021OQ@garyguo.net>
+	<20260113092253.220346-5-zhiw@nvidia.com>
 Organization: NVIDIA
 X-Mailer: Claws Mail 4.3.1 (GTK 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
@@ -103,118 +101,330 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-NV-OnPremToCloud: ExternallySecured
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F4:EE_|IA0PR12MB8905:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0cbe3ad4-f616-4b64-5f30-08de540d1d58
+X-MS-TrafficTypeDiagnostic: CH3PEPF00000011:EE_|LV3PR12MB9096:EE_
+X-MS-Office365-Filtering-Correlation-Id: 009647a1-b6ff-4b9f-c696-08de540e4a57
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|82310400026|36860700013|7053199007;
+	BCL:0;ARA:13230040|82310400026|7416014|376014|36860700013|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?OpY8bOJ9wWWq4336/ZVzrGb/137QNpuWXecJq990+y9E+51KykEfsLY0hqFw?=
- =?us-ascii?Q?oSsWOMy6/Ypecr6NmysrPxlbc0wU6m50o5NJCKVq3bUAaucHvp+KLUTUDJnm?=
- =?us-ascii?Q?mG9bqqMHR/EW5zfPUMyO4paGXruoKEQkIxQUAzJyggYnM03ygtQS1atpzEFa?=
- =?us-ascii?Q?7m3GBljW7KveisvBfZn9J1wA+6LqnwDEF0s9HHU7m6EOAPQlVIgvqCLL75l9?=
- =?us-ascii?Q?SbIl8NZrztpYr+dXTsF+GdQjATDNZiFRDMp4yzrDQEQLh0kcSQBwQi8SMAgv?=
- =?us-ascii?Q?lUX1jujZF64WWxVOLttlIyilZ441FfkDIjz3Zs3X8z3KWeVQ5SzEIOsVTGP2?=
- =?us-ascii?Q?YAfgLQg9DqeV1p66lxkx9njF8BUG+MTkCg9mS7ZJeVqxdadxQcS65C+UtTs+?=
- =?us-ascii?Q?Z0BRi9Q0ympLhIgPS7XPO3GBQVyadec8Q9yXokcoJeWsSZI82vFdIzKBVpZz?=
- =?us-ascii?Q?AjJsDc/WbFhGR9WzykxOsQvxOqW60WqisOe98oBspRfzEgtYK1cXDfmffj3N?=
- =?us-ascii?Q?YYABzx2IVnUCA3eKmMws6sdtCzkOLVCr30eeimO2mGf8wxbf4uLyMozYiJcz?=
- =?us-ascii?Q?fD/YepsYvuUjsU3ydNUNP+xjwZhX8gm7v+0Hi0PzfSjXpmveipovhxObehWN?=
- =?us-ascii?Q?DyEPL9o+fNXzqKE7YayjOjwuDJyIhku56reDK71bTc6T4YmMKOXYXzTxi1Gr?=
- =?us-ascii?Q?//ou/Ht0/5/wly6KwxavySTm6VNUZafgMcMmAYQP5zkDBxuHRdzOHZoDwTCl?=
- =?us-ascii?Q?0TeGsN0hcQ0VRumTmpTcHFvnig6aMczOfx9YhI/yDdgy3q4ffI3DGAob9NQR?=
- =?us-ascii?Q?M7kS1N62u6es52NSIo8OUTE9U0oe2oxMn2FRPGW5J3M0SXWDvOf+rvvQXqj9?=
- =?us-ascii?Q?rf3bhq4JbfQENEwbyXkhITXdRxH1fGu83ffuN0eHaLQoSRjPzBdwUv1hQz49?=
- =?us-ascii?Q?jBQ9iB8S5+wxrWgYvku/Ehe7zO/0aELOZ+qilzx6flZs1nM0FMmbUN09T7MA?=
- =?us-ascii?Q?BBd0Tk8uMESaWZG23OwjhEzeYCpv2Z3AkARG8G+NAvEmpXmtyTQ03HrdmUbV?=
- =?us-ascii?Q?P5Yf76Kuu9FzI/4E5S6dukCwqx08sXk8Mb8cs8Mzmd9DifXYltLMn08o1oM1?=
- =?us-ascii?Q?GgW6YfLJ4FxXcOeKNFEqcmgoJq4tB+SJKqrKuaaEwpf0Yd5OZU2cA/fnISDh?=
- =?us-ascii?Q?bK92KzvpOp4kRqDYYmIYldQO6jQkHaluBI4HV/namRNbJs6GPFQWSfsCoaRQ?=
- =?us-ascii?Q?uBQVPNz4WQagJdWfKxViYUq46bdXGh/9WWBlPEZfFlD7yUoo6SrzQgZHWduz?=
- =?us-ascii?Q?gg+zbNwkLrcp0YHiEwvL5uW+WB3okonE18efy+XKJHjkKKFnKjFx39d23b8m?=
- =?us-ascii?Q?riuIV6mlDAUMPpAPsUUPIrByFfzuwkNJWRqHM0dpRLUKQmf6tpufxnQPIySf?=
- =?us-ascii?Q?sTKk97QTv3mH2qubw6EgONQWclpTNiqttRHBDJ3S2M+fzw0dTQ7qCTIox1AD?=
- =?us-ascii?Q?iyDMzL0SRRf9ugEt0iEy4cBv0kSETYnJ6PgUW18j89xxW8yF3LH5qeLoHD+L?=
- =?us-ascii?Q?Ir80+VDWlXFAS0zLm3lgSTMoQb7hpa8CEj9UqFDeSOg4qgcDppBP7YgxDs1V?=
- =?us-ascii?Q?z+LnRAH6aEmSRpC2VVNfvaKOkoUFa5yCdSwhRuOpNa5R/s8mmhX/WQBKNbzE?=
- =?us-ascii?Q?P3jiBQ=3D=3D?=
+	=?utf-8?B?S2JPV2FORk04QzNqeGk0OS95Q01lNDNqR0lMb3JVaVB1dHFObVMwbEFDZFN6?=
+ =?utf-8?B?bDdING9sdjM1YUJxaitPdWY0ZSttVVFNd0d0MmNLQk5pZ1JRMWgwTlloY0VX?=
+ =?utf-8?B?TXlnNjNvOGV5Rlh6TmxvUWM4Vm9HelZYdjVYbXZzSGZZOExCYWxuY01abFlG?=
+ =?utf-8?B?ZHZ2REh1cWdwWk1TajFENnR1Q1ZGR2E0ZWk5ai84aHRwSkcwZHdPNjQxOWhS?=
+ =?utf-8?B?U2cxVGZ6MkZOcXVNdi94L2FEK3E2R0VNTlp4eHA0UEEweHlyd082Vk5vNEg3?=
+ =?utf-8?B?R21EYTdVelJYSzJwdVhLRnc4K0N4NHVKOG5OL3J1RUIwRkdzbHpzNXN3YlJI?=
+ =?utf-8?B?WC85eTlBTTkzdU8zNUpwZ1NoRXBmeE54ZWx2TmZQd1RzM3NXMnhGWDdaYW5X?=
+ =?utf-8?B?SGRoeTJ5K3MzRDAzM0hUdjhRaUthRnR4RnVPR3VZTXM4V1NMdDZGbUJ3MEZw?=
+ =?utf-8?B?dk5LeVJKdStjcUVOZHlrWS8yaE9ubFpVSXc5c3d4aG9sV2d2RHpUSU9yVlFC?=
+ =?utf-8?B?dzhjdVczYml3aDFTUzJsdXBaMFJ4NFF2dGQvNk5XN0dIMU9HbWNSOXNVRHpZ?=
+ =?utf-8?B?a3RsSHNBRDRTN1JFOU4wZDZyNGY5ZmZDMXYwUTJxWDQ2T1grM0JlRW95ZlJi?=
+ =?utf-8?B?ZzI0d1RvV1NVQ2FWTmVUaG9PcWZNNmcrSmtoN0UxM3oySm5ZR1lYbHIzZ0Zm?=
+ =?utf-8?B?UWc1TWRuMHdWT3dCYU9TdlhYMW14RlIyRG40UTg2WjFWVmQvUnZDY3BEMkVW?=
+ =?utf-8?B?N25mSis1VEhHNUFiekwxZ1g2WUhnREtraHpGSTFYOFZNQ2U0RHZYZE1YVW11?=
+ =?utf-8?B?dnkvTk44VnFncmFNTm1GamhBWFJ0eWFrRFFSdStBN3Z0UzNnV0RDT1BZZkR4?=
+ =?utf-8?B?RlRzWHIxdlVzVHBqVHdCdjAyNUpGV0Q0dWpMc0lBT2ROcUQ0Nzc4SWRzdWlv?=
+ =?utf-8?B?SHhpck9ORGgvcHNkZS9iOWJrTS9DWjY0RmhWdi9XOWZWb3dBTGUrR3lqelh1?=
+ =?utf-8?B?UUwxNXc0L2RmWmxmQkFpV0o3SGU4VE4xUlRKTFJTNTgwNmhhSzF2MURsa0lL?=
+ =?utf-8?B?NytUbWVRcDYxOFREUmNiWTJPeDVnbGlYbXp2NXRZRTdFakVGRWNSM3BQa3RM?=
+ =?utf-8?B?d3J1RWtKUXljRmw2VDdIejNRM0g2TUZFOEx2dEFWQWs4Zkx6SzVKVXk4QXQx?=
+ =?utf-8?B?NDI0cENTbjBHRFlIYWFtTVFkbnRHSHVqbXJDejN2ZWdvV29uN2JORW1JZGRx?=
+ =?utf-8?B?Z1hqL3RJRlMrK0NuOGpMb2ppelRhTXl0Y1U1WUVlSjhvQWFJeW1NMUFoV0dx?=
+ =?utf-8?B?SjEzUjYzVUJlemd3UGVlLzJuRjVIRlNsbUo4SGVwNEJ3QVVhdmxpUVhxaXE5?=
+ =?utf-8?B?NkhDbnhWeHNZdE5EQXNoZi9PODU1eklKMVhSb3lTc1lVSGtadlY4K3l4ZVZk?=
+ =?utf-8?B?ZVlVOGdwWSt0MTRzT1BLWDZtZURXWHhVNzNYUlNQMnYrV0t3ZFBZWm5rTFdo?=
+ =?utf-8?B?UzBPL0dBdHNIaVkyWGZZeldsOU5VV2J0RTJITk9oUjFpTDN4OHpNbFh3WHpn?=
+ =?utf-8?B?Nk9SS2ZTOURRRDRvYWFnTTBXUSsxeUl5SXVoVmdJem5POUh2anl5VU8vVS92?=
+ =?utf-8?B?d0lTTXB1R1ZRQWo0bTN6RFFrNXVXV1RLencxOVZFMTZrdjI5TlN3UVJzVy90?=
+ =?utf-8?B?YnJPWGxuZW05WUFCZ2s0YThWVVUvT0JFZjJmK1B6V3R1OU9sb2RkSWRyd1J6?=
+ =?utf-8?B?QWxZM3pRSHJYcnNuRW92cms3eDRWaS9XMnNJd3RXY291a2lZTGFPd1NtbXJJ?=
+ =?utf-8?B?VG96bGgxaUdkZ1ZxU2RadGZOSWJtOXBWQkJJeituNnROa1E0ZmlQRnlVZmcx?=
+ =?utf-8?B?b0hzeXJGVi83SVhscnNZZDh4VEw0UDVRT20ycmErZUZqbytsS3dieWJoWVR0?=
+ =?utf-8?B?RUtJV0JVbGpKRnl1WjJFWW1sdld4OXlsbE1oZTZ3dFByYmYxNzl3RUlXRzZG?=
+ =?utf-8?B?WFF1azZQNGY4MkRVTU8wZm5FeFFOTVRqeDZGeVFpTVZpZGVsUlQ1VTRzeEUv?=
+ =?utf-8?B?OUhtNENwZ2I2Q1htVkJNSTNkKzFKL244emFnbGxIT0kyNEhIb0hEM3dTM3NQ?=
+ =?utf-8?B?ZWxkWXNFUjMva3UxeW1tcEpJaG5NcXN2RkJXUU82NmlvSndwUUhBWGtIYkRn?=
+ =?utf-8?B?K05TdDlDcTN6QXNUeWlQVEFIdzBmSU5MSEVmV2g4elJCNTlBWU1HQXFqQUJ2?=
+ =?utf-8?B?N25TVWU5aHNiTzVnVzE4c2h0TndRPT0=?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(82310400026)(36860700013)(7053199007);DIR:OUT;SFP:1101;
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2026 08:07:23.6487
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2026 08:15:48.5014
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cbe3ad4-f616-4b64-5f30-08de540d1d58
+X-MS-Exchange-CrossTenant-Network-Message-Id: 009647a1-b6ff-4b9f-c696-08de540e4a57
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001F4.namprd05.prod.outlook.com
+	CH3PEPF00000011.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8905
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9096
 
-On Tue, 13 Jan 2026 14:25:14 +0000
-"Gary Guo" <gary@garyguo.net> wrote:
+On Tue, 13 Jan 2026 11:22:51 +0200
+Zhi Wang <zhiw@nvidia.com> wrote:
 
-> On Tue Jan 13, 2026 at 9:22 AM GMT, Zhi Wang wrote:
-> > Convert all imports in the devres to use "kernel vertical" style. Drop
-> > unnecessary imports covered by prelude::*.
-> 
-> There doesn't appear to be any dropped import?
+Thanks, I will re-spin this today.=20
 
-Yes. It has been done by someone already during the rebase. I will update
-this.
-
-> 
-> Best,
-> Gary
-> 
-> >
-> > Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> > Signed-off-by: Zhi Wang <zhiw@nvidia.com>
-> > ---
-> >  rust/kernel/devres.rs | 16 +++++++++++++---
-> >  1 file changed, 13 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-> > index db02f8b1788d..43089511bf76 100644
-> > --- a/rust/kernel/devres.rs
-> > +++ b/rust/kernel/devres.rs
-> > @@ -254,8 +254,12 @@ pub fn device(&self) -> &Device {
-> >      /// # Examples
-> >      ///
-> >      /// ```no_run
-> > -    /// # #![cfg(CONFIG_PCI)]
-> > -    /// # use kernel::{device::Core, devres::Devres, pci};
-> > +    /// #![cfg(CONFIG_PCI)]
-> > +    /// use kernel::{
-> > +    ///     device::Core,
-> > +    ///     devres::Devres,
-> > +    ///     pci, //
-> > +    /// };
-> >      ///
-> >      /// fn from_core(dev: &pci::Device<Core>, devres:
-> > Devres<pci::Bar<0x4>>) -> Result { ///     let bar =
-> > devres.access(dev.as_ref())?; @@ -358,7 +362,13 @@ fn
-> > register_foreign<P>(dev: &Device<Bound>, data: P) -> Result /// #
-> > Examples ///
-> >  /// ```no_run
-> > -/// use kernel::{device::{Bound, Device}, devres};
-> > +/// use kernel::{
-> > +///     device::{
-> > +///         Bound,
-> > +///         Device, //
-> > +///     },
-> > +///     devres, //
-> > +/// };
-> >  ///
-> >  /// /// Registration of e.g. a class device, IRQ, etc.
-> >  /// struct Registration;
-> 
+> Drivers might need to access PCI config space for querying capability
+> structures and access the registers inside the structures.
+>=20
+> For Rust drivers need to access PCI config space, the Rust PCI
+> abstraction needs to support it in a way that upholds Rust's safety
+> principles.
+>=20
+> Introduce a `ConfigSpace` wrapper in Rust PCI abstraction to provide safe
+> accessors for PCI config space. The new type implements the `Io` trait to
+> share offset validation and bound-checking logic with others.
+>=20
+> Cc: Alexandre Courbot <acourbot@nvidia.com>
+> Cc: Danilo Krummrich <dakr@kernel.org>
+> Cc: Joel Fernandes <joelagnelf@nvidia.com>
+> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
+> ---
+>  rust/kernel/pci.rs    |  43 ++++++++++++++-
+>  rust/kernel/pci/io.rs | 118 +++++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 159 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+> index 82e128431f08..f373413e8a84 100644
+> --- a/rust/kernel/pci.rs
+> +++ b/rust/kernel/pci.rs
+> @@ -40,7 +40,10 @@
+>      ClassMask,
+>      Vendor, //
+>  };
+> -pub use self::io::Bar;
+> +pub use self::io::{
+> +    Bar,
+> +    ConfigSpace, //
+> +};
+>  pub use self::irq::{
+>      IrqType,
+>      IrqTypes,
+> @@ -331,6 +334,30 @@ fn as_raw(&self) -> *mut bindings::pci_dev {
+>      }
+>  }
+> =20
+> +/// Represents the size of a PCI configuration space.
+> +///
+> +/// PCI devices can have either a *normal* (legacy) configuration space
+> of 256 bytes, +/// or an *extended* configuration space of 4096 bytes as
+> defined in the PCI Express +/// specification.
+> +#[repr(usize)]
+> +pub enum ConfigSpaceSize {
+> +    /// 256-byte legacy PCI configuration space.
+> +    Normal =3D 256,
+> +
+> +    /// 4096-byte PCIe extended configuration space.
+> +    Extended =3D 4096,
+> +}
+> +
+> +impl ConfigSpaceSize {
+> +    /// Get the raw value of this enum.
+> +    #[inline(always)]
+> +    pub const fn as_raw(self) -> usize {
+> +        // CAST: PCI configuration space size is at most 4096 bytes, so
+> the value always fits
+> +        // within `usize` without truncation or sign change.
+> +        self as usize
+> +    }
+> +}
+> +
+>  impl Device {
+>      /// Returns the PCI vendor ID as [`Vendor`].
+>      ///
+> @@ -427,6 +454,20 @@ pub fn pci_class(&self) -> Class {
+>          // SAFETY: `self.as_raw` is a valid pointer to a `struct
+> pci_dev`. Class::from_raw(unsafe { (*self.as_raw()).class })
+>      }
+> +
+> +    /// Returns the size of configuration space.
+> +    fn cfg_size(&self) -> Result<ConfigSpaceSize> {
+> +        // SAFETY: `self.as_raw` is a valid pointer to a `struct
+> pci_dev`.
+> +        let size =3D unsafe { (*self.as_raw()).cfg_size };
+> +        match size {
+> +            256 =3D> Ok(ConfigSpaceSize::Normal),
+> +            4096 =3D> Ok(ConfigSpaceSize::Extended),
+> +            _ =3D> {
+> +                debug_assert!(false);
+> +                Err(EINVAL)
+> +            }
+> +        }
+> +    }
+>  }
+> =20
+>  impl Device<device::Core> {
+> diff --git a/rust/kernel/pci/io.rs b/rust/kernel/pci/io.rs
+> index e3377397666e..c8741f0080ec 100644
+> --- a/rust/kernel/pci/io.rs
+> +++ b/rust/kernel/pci/io.rs
+> @@ -2,12 +2,19 @@
+> =20
+>  //! PCI memory-mapped I/O infrastructure.
+> =20
+> -use super::Device;
+> +use super::{
+> +    ConfigSpaceSize,
+> +    Device, //
+> +};
+>  use crate::{
+>      bindings,
+>      device,
+>      devres::Devres,
+>      io::{
+> +        define_read,
+> +        define_write,
+> +        IoBase,
+> +        IoKnownSize,
+>          Mmio,
+>          MmioRaw, //
+>      },
+> @@ -16,6 +23,101 @@
+>  };
+>  use core::ops::Deref;
+> =20
+> +/// The PCI configuration space of a device.
+> +///
+> +/// Provides typed read and write accessors for configuration registers
+> +/// using the standard `pci_read_config_*` and `pci_write_config_*`
+> helpers. +///
+> +/// The generic const parameter `SIZE` can be used to indicate the
+> +/// maximum size of the configuration space (e.g. 256 bytes for legacy,
+> +/// 4096 bytes for extended config space).
+> +pub struct ConfigSpace<'a, const SIZE: usize =3D {
+> ConfigSpaceSize::Extended as usize }> {
+> +    pub(crate) pdev: &'a Device<device::Bound>,
+> +}
+> +
+> +/// Internal helper macros used to invoke C PCI configuration space
+> read functions. +///
+> +/// This macro is intended to be used by higher-level PCI configuration
+> space access macros +/// (define_read) and provides a unified expansion
+> for infallible vs. fallible read semantics. It +/// emits a direct call
+> into the corresponding C helper and performs the required cast to the
+> Rust +/// return type. +///
+> +/// # Parameters
+> +///
+> +/// * `$c_fn` =E2=80=93 The C function performing the PCI configuration =
+space
+> write. +/// * `$self` =E2=80=93 The I/O backend object.
+> +/// * `$ty` =E2=80=93 The type of the value to read.
+> +/// * `$addr` =E2=80=93 The PCI configuration space offset to read.
+> +///
+> +/// This macro does not perform any validation; all invariants must be
+> upheld by the higher-level +/// abstraction invoking it.
+> +macro_rules! call_config_read {
+> +    (infallible, $c_fn:ident, $self:ident, $ty:ty, $addr:expr) =3D> {{
+> +        let mut val: $ty =3D 0;
+> +        // SAFETY: By the type invariant `$self.pdev` is a valid
+> address.
+> +        // CAST: The offset is cast to `i32` because the C functions
+> expect a 32-bit signed offset
+> +        // parameter. PCI configuration space size is at most 4096
+> bytes, so the value always fits
+> +        // within `i32` without truncation or sign change.
+> +        // Return value from C function is ignored in infallible
+> accessors.
+> +        let _ret =3D unsafe { bindings::$c_fn($self.pdev.as_raw(), $addr
+> as i32, &mut val) };
+> +        val
+> +    }};
+> +}
+> +
+> +/// Internal helper macros used to invoke C PCI configuration space
+> write functions. +///
+> +/// This macro is intended to be used by higher-level PCI configuration
+> space access macros +/// (define_write) and provides a unified expansion
+> for infallible vs. fallible read semantics. It +/// emits a direct call
+> into the corresponding C helper and performs the required cast to the
+> Rust +/// return type. +///
+> +/// # Parameters
+> +///
+> +/// * `$c_fn` =E2=80=93 The C function performing the PCI configuration =
+space
+> write. +/// * `$self` =E2=80=93 The I/O backend object.
+> +/// * `$ty` =E2=80=93 The type of the written value.
+> +/// * `$addr` =E2=80=93 The configuration space offset to write.
+> +/// * `$value` =E2=80=93 The value to write.
+> +///
+> +/// This macro does not perform any validation; all invariants must be
+> upheld by the higher-level +/// abstraction invoking it.
+> +macro_rules! call_config_write {
+> +    (infallible, $c_fn:ident, $self:ident, $ty:ty, $addr:expr,
+> $value:expr) =3D> {
+> +        // SAFETY: By the type invariant `$self.pdev` is a valid
+> address.
+> +        // CAST: The offset is cast to `i32` because the C functions
+> expect a 32-bit signed offset
+> +        // parameter. PCI configuration space size is at most 4096
+> bytes, so the value always fits
+> +        // within `i32` without truncation or sign change.
+> +        // Return value from C function is ignored in infallible
+> accessors.
+> +        let _ret =3D unsafe { bindings::$c_fn($self.pdev.as_raw(), $addr
+> as i32, $value) };
+> +    };
+> +}
+> +
+> +impl<'a, const SIZE: usize> IoBase for ConfigSpace<'a, SIZE> {
+> +    const MIN_SIZE: usize =3D SIZE;
+> +
+> +    /// Returns the base address of the I/O region. It is always 0 for
+> configuration space.
+> +    #[inline]
+> +    fn addr(&self) -> usize {
+> +        0
+> +    }
+> +
+> +    /// Returns the maximum size of the configuration space.
+> +    #[inline]
+> +    fn maxsize(&self) -> usize {
+> +        self.pdev.cfg_size().map_or(0, |v| v as usize)
+> +    }
+> +}
+> +
+> +impl<'a, const SIZE: usize> IoKnownSize for ConfigSpace<'a, SIZE> {
+> +    define_read!(infallible, read8,
+> call_config_read(pci_read_config_byte) -> u8);
+> +    define_read!(infallible, read16,
+> call_config_read(pci_read_config_word) -> u16);
+> +    define_read!(infallible, read32,
+> call_config_read(pci_read_config_dword) -> u32); +
+> +    define_write!(infallible, write8,
+> call_config_write(pci_write_config_byte) <- u8);
+> +    define_write!(infallible, write16,
+> call_config_write(pci_write_config_word) <- u16);
+> +    define_write!(infallible, write32,
+> call_config_write(pci_write_config_dword) <- u32); +}
+> +
+>  /// A PCI BAR to perform I/O-Operations on.
+>  ///
+>  /// I/O backend assumes that the device is little-endian and will
+> automatically @@ -144,4 +246,18 @@ pub fn iomap_region<'a>(
+>      ) -> impl PinInit<Devres<Bar>, Error> + 'a {
+>          self.iomap_region_sized::<0>(bar, name)
+>      }
+> +
+> +    /// Return an initialized config space object.
+> +    pub fn config_space<'a>(
+> +        &'a self,
+> +    ) -> Result<ConfigSpace<'a, { ConfigSpaceSize::Normal.as_raw() }>> {
+> +        Ok(ConfigSpace { pdev: self })
+> +    }
+> +
+> +    /// Return an initialized config space object.
+> +    pub fn config_space_extended<'a>(
+> +        &'a self,
+> +    ) -> Result<ConfigSpace<'a, { ConfigSpaceSize::Extended.as_raw()
+> }>> {
+> +        Ok(ConfigSpace { pdev: self })
+> +    }
+>  }
 
 
