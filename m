@@ -1,141 +1,149 @@
-Return-Path: <linux-pci+bounces-44968-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44969-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8DA1D2562D
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 16:34:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C999FD25676
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 16:38:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 018A130ADDA2
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 15:30:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B1458300E3C8
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 15:36:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61D9A39C624;
-	Thu, 15 Jan 2026 15:30:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30207286412;
+	Thu, 15 Jan 2026 15:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYM4CjX9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7CB23EA88;
-	Thu, 15 Jan 2026 15:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0892566D3;
+	Thu, 15 Jan 2026 15:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768491021; cv=none; b=WOyNH5fQSOY6LmQSxGHWIfcXbF9oxlsRJHj0SeDiJAU7ZxMiHvwBRJLRCaDNphji9uSv+5wusm8q+V3uTAav/9bRTDV2DKS5XBjYKcTW40176NCLW7aT8EJOqKKuK+bZ7cl3HOg/kZrjWjio3DKHTGoXMAUkYUoB+PBYvRR2oyY=
+	t=1768491360; cv=none; b=kKCZg1qiTZayw3m+XW9wl+G/PhFQueRBcA/EQM7UBTUodDoFm/fOqqb+3AWcBSV6uPYtJQQwg106UAUHfjBNYNcKfwLnKfuTbYD3Uoo5yoQUSNIsELFzwtP7TODGYqGK/uUenju/EXq9msTLXGlKp6A49vyff8fvYJcU6VdJ50I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768491021; c=relaxed/simple;
-	bh=7uGObAKGwUQTt4ptgEJbuzidA/nvIM04T8WaIPCSIG0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lQ1L1KVrNaWyMbHG+HmOqzAjMz7wxOF9bos2yDc0rhD1883AoS3YhAkYHSy1y3npIdvIOUHBD8wdRiKgcklWxb3nG7W481FI8oOo2V7NcdBOYRtNYHCLCVTKz2zTrBQoC13R6ykAzj8m3+1KpWcyphQ36haujPILhb83ep5i4Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4dsRkH1M2GzJ46Q7;
-	Thu, 15 Jan 2026 23:29:59 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id A1A5040569;
-	Thu, 15 Jan 2026 23:30:15 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 15 Jan
- 2026 15:30:14 +0000
-Date: Thu, 15 Jan 2026 15:30:13 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>, <alucerop@amd.com>,
-	<ira.weiny@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v14 25/34] cxl/port: Map Port component registers before
- switchport init
-Message-ID: <20260115153013.000049eb@huawei.com>
-In-Reply-To: <20260114182055.46029-26-terry.bowman@amd.com>
-References: <20260114182055.46029-1-terry.bowman@amd.com>
-	<20260114182055.46029-26-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1768491360; c=relaxed/simple;
+	bh=ba4TWvFWpSIOZy47Mwu+Mtaoe2Sy+4tdPfiDGXoPsgY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HdGHcVGpJIj5DgzGajBgbvpJCiGCYd7hBsq8yLr1K8nu1ovgfI0lAJM2K/ZpAJj2IzaS+tsVIHbZm3tnd8IWphqzujFCPDHgZN4zzu9dkTuLK9/sggbNI4m9nCJzXi12AD1/Gj0vKcBBwVKi0yw5C0y+yHofxJEXZKy7KQSQM9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYM4CjX9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE23EC116D0;
+	Thu, 15 Jan 2026 15:35:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768491359;
+	bh=ba4TWvFWpSIOZy47Mwu+Mtaoe2Sy+4tdPfiDGXoPsgY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CYM4CjX9tlHYehK4JYmPMTSTc+H2yn9ztnTSQD1VHNDXoY8xVduFYQ+yXBwvKJcmw
+	 mODvHP41pzinHYaNSg/h03Azc4gfzgBFQ8QWv8VNtAuPdLWQLT+p/dV0OmuQUWJU+J
+	 qyc6+R42hoIVDNVBZCC5Rk4HPe6WRggwvj72CHc0vrPszPj7PBHQLEQKBHHo+cbv+9
+	 4JUSrqpmoW3eDI38d1Hit39os9PtI7mTBtWE1WeKmZsjnKQquygmSbvgmEOjDMK5eM
+	 6jgomLdWialEZcebnX3avfpLPtzf82gBm0z+2kqJTMmqzQRJr/eUW4cSokEH+nNv7Q
+	 Av4+8r8sZ6fEQ==
+Date: Thu, 15 Jan 2026 21:05:44 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Hongxing Zhu <hongxing.zhu@nxp.com>
+Cc: Frank Li <frank.li@nxp.com>, 
+	"jingoohan1@gmail.com" <jingoohan1@gmail.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, 
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>, 
+	"robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, 
+	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, 
+	"kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v8 2/2] PCI: dwc: Don't return error when wait for link
+ up in dw_pcie_resume_noirq()
+Message-ID: <egnjo4t6odkhnbcusy2daosqm37a36bu6xc25pdgr4bbli2v5j@r7cwxkwfafbj>
+References: <20260107024553.3307205-1-hongxing.zhu@nxp.com>
+ <20260107024553.3307205-3-hongxing.zhu@nxp.com>
+ <7akwvdfve5jcj2tm7jiwowkvcctsmqeslia4pulvtdgcgicp4p@h5ztwyp4h7ft>
+ <AS8PR04MB8833FD0095481ADD280363628C8FA@AS8PR04MB8833.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AS8PR04MB8833FD0095481ADD280363628C8FA@AS8PR04MB8833.eurprd04.prod.outlook.com>
 
-On Wed, 14 Jan 2026 12:20:46 -0600
-Terry Bowman <terry.bowman@amd.com> wrote:
-
-> Port HDM registers must be mapped before calling
-> devm_cxl_switch_port_decoders_setup(). Invoke a call to this function
-> in cxl_port_add_dport().
-As I read that description, there is a bisection break before this
-in that if you build up to patch 24, they won't be mapped before
-it is called.
-
-Maybe this needs squashing with an earlier patch, or if it is for
-some reason safe, then add a comment here on why.
-
+On Wed, Jan 14, 2026 at 06:46:23AM +0000, Hongxing Zhu wrote:
+> > -----Original Message-----
+> > From: Manivannan Sadhasivam <mani@kernel.org>
+> > Sent: 2026年1月13日 23:30
+> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > Cc: Frank Li <frank.li@nxp.com>; jingoohan1@gmail.com;
+> > l.stach@pengutronix.de; lpieralisi@kernel.org; kwilczynski@kernel.org;
+> > robh@kernel.org; bhelgaas@google.com; shawnguo@kernel.org;
+> > s.hauer@pengutronix.de; kernel@pengutronix.de; festevam@gmail.com;
+> > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > imx@lists.linux.dev; linux-kernel@vger.kernel.org; stable@vger.kernel.org
+> > Subject: Re: [PATCH v8 2/2] PCI: dwc: Don't return error when wait for link up
+> > in dw_pcie_resume_noirq()
+> >
+> > On Wed, Jan 07, 2026 at 10:45:53AM +0800, Richard Zhu wrote:
+> > > When waiting for the PCIe link to come up, both link up and link down
+> > > are valid results depending on the device state.
+> > >
+> > > Since the link may come up later and to get rid of the following
+> > > mis-reported PM errors. Do not return an -ETIMEDOUT error, as the
+> > > outcome has already been reported in dw_pcie_wait_for_link().
+> > >
+> > > PM error logs introduced by the -ETIMEDOUT error return.
+> > > imx6q-pcie 33800000.pcie: Phy link never came up imx6q-pcie
+> > > 33800000.pcie: PM: dpm_run_callback(): genpd_resume_noirq returns -110
+> > > imx6q-pcie 33800000.pcie: PM: failed to resume noirq: error -110
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Fixes: 4774faf854f5 ("PCI: dwc: Implement generic suspend/resume
+> > > functionality")
+> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > > Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-designware-host.c | 7 +++----
+> > >  1 file changed, 3 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > index 06cbfd9e1f1e..025e11ebd571 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > @@ -1245,10 +1245,9 @@ int dw_pcie_resume_noirq(struct dw_pcie *pci)
+> > >     if (ret)
+> > >             return ret;
+> > >
+> > > -   ret = dw_pcie_wait_for_link(pci);
+> > > -   if (ret)
+> > > -           return ret;
+> > > +   /* Ignore errors, the link may come up later */
+> > > +   dw_pcie_wait_for_link(pci);
+> >
+> > It is not safe to ignore failures during resume. Because, if a device gets
+> > removed during suspend, the link up error will be unnoticed. I've proposed a
+> > different logic in this series, which should address your issue:
+> > https://lore.kern/
+> > el.org%2Flinux-pci%2F20260107-pci-dwc-suspend-rework-v4-0-9b5f3c72df0a%
+> > 40oss.qualcomm.com%2F&data=05%7C02%7Chongxing.zhu%40nxp.com%7Cf8
+> > 79871f9d0445aa0a3c08de52b8a2c0%7C686ea1d3bc2b4c6fa92cd99c5c301635
+> > %7C0%7C0%7C639039150121991830%7CUnknown%7CTWFpbGZsb3d8eyJFbXB
+> > 0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbC
+> > IsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=PNdsT530dbRQkgYsrr99gB1cUE
+> > BLOkynvciC9tiB0Ic%3D&reserved=0
+> >
+> > Please test it out.
+> Hi Mani:
+> You're right.
+> Tested on i.MX platforms, no error return anymore. Only "Device not found" is
+>  dumped out when no endpoint device is connected. Thanks.
+> Tested-by: Richard Zhu <hongxing.zhu@nxp.com>
 > 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
->  drivers/cxl/core/port.c | 3 ++-
->  drivers/cxl/cxlpci.h    | 3 +++
->  drivers/cxl/port.c      | 5 +++++
->  3 files changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 2c4e28e7975c..3f730511f11d 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -778,7 +778,7 @@ static int cxl_setup_comp_regs(struct device *host, struct cxl_register_map *map
->  	return cxl_setup_regs(map);
->  }
->  
-> -static int cxl_port_setup_regs(struct cxl_port *port,
-> +int cxl_port_setup_regs(struct cxl_port *port,
->  			resource_size_t component_reg_phys)
->  {
->  	if (dev_is_platform(port->uport_dev))
-> @@ -786,6 +786,7 @@ static int cxl_port_setup_regs(struct cxl_port *port,
->  	return cxl_setup_comp_regs(&port->dev, &port->reg_map,
->  				   component_reg_phys);
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_port_setup_regs, "CXL");
->  
->  static int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dport,
->  				resource_size_t component_reg_phys)
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index ef4496b4e55e..532506595d0f 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -99,4 +99,7 @@ static inline void devm_cxl_port_ras_setup(struct cxl_port *port)
->  }
->  #endif
->  
-> +int cxl_port_setup_regs(struct cxl_port *port,
-> +			resource_size_t component_reg_phys);
-> +
->  #endif /* __CXL_PCI_H__ */
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index d76b4b532064..f8a33dbf8222 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -278,6 +278,11 @@ static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
->  		return ERR_CAST(port_group);
->  
->  	if (port->nr_dports == 0) {
-> +
-> +		rc = cxl_port_setup_regs(port, port->component_reg_phys);
-> +		if (rc)
-> +			return ERR_PTR(rc);
-> +
->  		rc = devm_cxl_switch_port_decoders_setup(port);
->  		if (rc)
->  			return ERR_PTR(rc);
 
+Please share the tag by replying to that series.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
