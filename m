@@ -1,233 +1,298 @@
-Return-Path: <linux-pci+bounces-44893-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44896-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D73FD22A66
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 07:52:07 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23F83D22CEB
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 08:29:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D197F3010F9B
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 06:51:44 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C9B80300CAD4
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 07:29:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8062430AD15;
-	Thu, 15 Jan 2026 06:51:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBBE4328620;
+	Thu, 15 Jan 2026 07:29:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k4QDjJlM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mQS9pw7+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B04730AD11
-	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 06:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61E9327BFA;
+	Thu, 15 Jan 2026 07:29:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768459902; cv=none; b=tTioihZPhUMrKzX0dgPqyCrUmB8He1CYrs4eWt9GbSC8UPPsO11TPZzKbpbbvQcgkAGKjVTZUAJyId5sU3SCO3n6WYFtPiLcVVheHZVq2bddgRiRuWRDCjIDb17FV6h4ssDLqIHxxvdtT1IcgGzdPudvQUW/yJpez//b8y4S+PY=
+	t=1768462151; cv=none; b=LoyeFhpNXhof2Lja6j0fhvi1fHYMTkkLWl8Z/PF3/VtVV9+tYwSIICRSTI07J1svb0FF2X7Uep1532twn6e8iRH5QFVCvsyamvGZfiBLcJUCWastXaw+SHAmI3CRSpqkzqpmaCZgBTZOj2NHHpngPqMnmIry1M9yX8cHN0wfAZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768459902; c=relaxed/simple;
-	bh=krcwkRyA/OkDlIF+vLNpkYYr7LP+cp1CUDN0vKH6hYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jqj8I15iMreyQz0UT3THpG5CafCiy+SdEhcmwfhBY27Ac2Dw+DgxkgEizgSwPG0OFUd8vSODjLI8vYvR1tz68lxf6R3s4vDomcjCIpa/tooDx1QzYDmZCUar9hZpM4GGDwidUpNz/1ragxzrxa8LTohgHxqyVNs4YdU6DySALMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k4QDjJlM; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-81345800791so364448b3a.0
-        for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 22:51:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768459898; x=1769064698; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xRSrJXNvsYHwr4VvhkeEJyLglskxUKq6CBZCDhkjpfc=;
-        b=k4QDjJlM+Q74FMoqCNocr8m7U1b9UGCwLcoe5042QNxkrnp9s6uXx3sVMEkmdmHYR1
-         8P5Ez+kpivWQk9m2Ptm503ZagfwBeF2mDStSaXZ4+BdaNmwiKCBwKlz106x3XbKiQwd0
-         VcvoHfv1WizDlUQO/FwuOzw7jVZdMJIJrvspnwSf2/fXXCfdVMBBcebVwbGRiEP2BFzt
-         f76ICDNbQw9UJSBa8ewlOGDRpvE21d0rZ2NJZnjTgk0NyYgYyTaElVrapNXXGHxD8fhP
-         wlFr/9FuPPRSMRaqr2aZGPoBoX7aj3JWP7MqNNF2FM3Y660G4gnu8HDCDEBgNGudyCMs
-         DPuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768459898; x=1769064698;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xRSrJXNvsYHwr4VvhkeEJyLglskxUKq6CBZCDhkjpfc=;
-        b=I7+rjQiTpC9+QTlZ8nWYgKX3r6rwvFmpRblM1v17wedTvIEF7kRoFd4NSdRn/DQSrB
-         58gXigiNTBVU4keh8vV1WVXXxoCdmxm6FkWfv8G1D6Qzi9CkfB48INSUgC/uc+9lx/1p
-         Liw+dhR3gdnc6KULOExpXPm9jUSAsHgdxDgjSwivIWPNi7n4atcGAFZJrGxKc6+iwVfq
-         hZay+D8Rh3TJkPqkTdxVxAzVtiv6yMDd025bzF1JNBNDZCEFtl8UaluCq3fUH5GALYri
-         gkWUXCNOmrGAY7eIDRfOvAcuzmMsmKJSBHg/OYTvE7xlnDAtWVaPiLB5Ub1WTg1d25SE
-         62aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVsAz8B8NIu4qNUq1PC352ssMIEaU3TcljW4Ta+JLGdkgBmEB8kaeuRcVvpgoEWsBouKHHllEpN6IA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/1ZILyuk9EbcrJg5AfzpusM5X4ddUs5yxSYRqQpArNnXj+Mxu
-	qB2HPfa75a0AYTGv+vimpcl/kIqIa1FNthwKkWQfKxQzbc54FOuGKfGQ
-X-Gm-Gg: AY/fxX7Wef+t3fqfsrRv+ch7ABCSItb4ys3E7g72fSsKkS1iOedEbrEVpumfToTLU6u
-	HJeo5vZ9GtKD4Fz05MQ5ojaf+dS+DQMTAPcGFyGmpVWErQiZOckESadhMl7jdi8jD8jfIV4zSef
-	Onlj6RWx4qN5ZNsyYWrvPUpSg77QSPb6CbKsVbGGAisj20JDwLqlE0QHj/S27FywNTbJ95CaesF
-	0JQ2hDSeuwqle/KeSsCY9cf7NbkDHfHVEzBJi0YxIxqnCwdETrWLuP8jWeR7p4+1htRc3jBC+2D
-	jq8BlKhYhZeoufhB/KqBXHvROVjN5F+YLFu2yv7OWEtnE7AEymv19S8+yWBfaPJDVWnDrZd7e0S
-	eMKYvbbPeeS5q5fnI23dXDOoW/0nWKZ3eAjirnx0BdrwgI+9+mW68jrgSWpu74Fai+LA18j91Xt
-	NFYvWnB6C2PCvRpSOa92sZq5T25MsV
-X-Received: by 2002:a05:6a00:4098:b0:7e8:4471:8d9 with SMTP id d2e1a72fcca58-81f81fffc7dmr4523165b3a.58.1768459897843;
-        Wed, 14 Jan 2026 22:51:37 -0800 (PST)
-Received: from DESKTOP-TIT0J8O.localdomain ([49.47.198.227])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-81f8e4b6ca9sm1452437b3a.4.2026.01.14.22.51.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 22:51:37 -0800 (PST)
-Date: Thu, 15 Jan 2026 10:50:55 +0400
-From: Ahmed Naseef <naseefkm@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [QUESTION] pci_read_bridge_bases: skip prefetch window if
- pref_window not set?
-Message-ID: <aWiOT0Q2rCMHXsIx@DESKTOP-TIT0J8O.localdomain>
-References: <aWdG/9N2C/7L5sFQ@DESKTOP-TIT0J8O.localdomain>
- <20260114175550.GA825847@bhelgaas>
+	s=arc-20240116; t=1768462151; c=relaxed/simple;
+	bh=iQMoBuu6wuN6TAp0y08sjEZPbzS3peNf2Cw/XEH/LaE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JOrFhENGJ33gGNcevrEl8PtrzcUsxz2zYiajpE0yRDy+HTx63xpj/rlWpMaGUwIsft3BuIgjbFWv+f7MQ/4jfXLw0MRNyHIjRjPnw2ghe/kt6ZrG/FijCqYqUwiWMhM5xfEEdeUkRjNY5bK7ddVSEVRmufA0/fehD6307H2w7lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mQS9pw7+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5BB26C19421;
+	Thu, 15 Jan 2026 07:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768462151;
+	bh=iQMoBuu6wuN6TAp0y08sjEZPbzS3peNf2Cw/XEH/LaE=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=mQS9pw7+GksCWUvsoefOygv7wMOEspq5EQ0MCi+KqyKXCEKDW7OjIBS8r1FDvsaYH
+	 G13A0uvgZmoRjDxzqk4mAoq1TF6RZVRghPhGMciUKToMY7CpWeZP1IJ96TF3Qf+kPI
+	 9IXFEqtxRHq+H14eVUJLka7oGecJDX4Ss0Yvqs1UMs1pGhvUlH2BTcJKbhIq82YQkM
+	 4D4WzM+e19ybHlN7w/94YcuOnw8qCp5IpA0gNiWuk7Fp3b09aZTtrEmaL9q33383JQ
+	 8t1dO3BHGx1TMJ/ZzpJaP0jrknRqGBzqOPPRuNOUYxp6NbJ2OYV7PCBeDxazIEdMBh
+	 I/Ct+G7teMhjg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B6DD3CCB3;
+	Thu, 15 Jan 2026 07:29:11 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
+Subject: [PATCH v5 00/15] PCI/pwrctrl: Major rework to integrate pwrctrl
+ devices with controller drivers
+Date: Thu, 15 Jan 2026 12:58:52 +0530
+Message-Id: <20260115-pci-pwrctrl-rework-v5-0-9d26da3ce903@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260114175550.GA825847@bhelgaas>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADSXaGkC/33RwW4CIRAG4FfZcC4bhoVh8eR7ND2wgJVUZYUVN
+ cZ3L6tp2sPaC8lPZr5JZm4k+xR8JqvmRpIvIYd4qEG+NcRuzeHT0+BqJpxxCcAFHW2g4znZKe1
+ o8ueYvqjVYNADWr5BUhvH5Dfh8kDfP2rehjzFdH3MKDD//ssVoIyq3iiOXGHfuXXMuT2ezM7G/
+ b6tD5nVwn8lDrgo8VkS0kjsBj14fCF1fySuF6WuSlY5qaG3jrnhhSR+JGTA5KIkqoROgFFGaNX
+ rBen+XGLyx1M9yPTcJBlM9nQuCtOqKdiCpslCrb5/A7PN89rGAQAA
+X-Change-ID: 20251124-pci-pwrctrl-rework-c91a6e16c2f6
+To: Manivannan Sadhasivam <mani@kernel.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Bartosz Golaszewski <brgl@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, Jingoo Han <jingoohan1@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@kernel.org>, 
+ Brian Norris <briannorris@chromium.org>, 
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+ Niklas Cassel <cassel@kernel.org>, Alex Elder <elder@riscstar.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+ Chen-Yu Tsai <wenst@chromium.org>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8206;
+ i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
+ bh=iQMoBuu6wuN6TAp0y08sjEZPbzS3peNf2Cw/XEH/LaE=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpaJc9A1FjDrjjZCP9jVS6z0jgR0fH9GU2vDOBo
+ lqYfs+AQLiJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaWiXPQAKCRBVnxHm/pHO
+ 9TbDB/wJFN3bIgwJp5qDoidFBBgKnk8NmsnVBIhAEKBykjDJA2FZvK3pIXsEmLhMzqRCLEWTcUg
+ ECtJIktoi0+ozKpJOCHFhyjEKKQjw4ePsPtBaa67Npnmnneon7PmJp1re2qTeUhCnBRcqKA4Zn8
+ 0WwOFrcJFPJemi3VIq/Kwn23Aj7Q1tsa1CGd8akO9dHm0VVhHtsTBXx4mw2ka0NjVB4I562pm/7
+ pxxnQ3mTZqL+uqKRLY6aSC5TdqafiphnITfSEu+OArsgoAV+YKk24NfWfNVY5575Tb70RylqNTq
+ 1p5avHxceCTUm4uz92jV3r7+mqGAk2ZraK1ymHqWABW50KIt
+X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@oss.qualcomm.com/default with auth_id=461
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
-On Wed, Jan 14, 2026 at 11:55:50AM -0600, Bjorn Helgaas wrote:
-> On Wed, Jan 14, 2026 at 11:34:23AM +0400, Ahmed Naseef wrote:
-> > On Tue, Jan 13, 2026 at 03:02:59PM -0600, Bjorn Helgaas wrote:
-> > > On Mon, Jan 12, 2026 at 01:41:00PM +0400, Ahmed Naseef wrote:
-> > > >   [  160.238227] mtk-pcie 1fb83000.pcie: EN7528: port1 link trained to Gen2
-> > > 
-> > > Can we look forward to a patch to add support for EN7528?
-> > 
-> > Definitely. Someone else is working on PCIe support for EN751221
-> > (same SoC family). Once everything is consolidated, we plan to submit
-> > a unified patch to drivers/pci/controller/pcie-mediatek.c.
-> 
-> Great, will watch for that!
-> 
-> > > > PCI_PREF_MEMORY_LIMIT which both return 0x0000. This results in base = 0
-> > > > and limit = 0. The condition "if (base <= limit)" evaluates to true
-> > > > (since 0 <= 0), so a bogus prefetch window [mem 0x00000000-0x000fffff pref]
-> > > > is created.
-> > > 
-> > > It's too bad we didn't log this in dmesg.  It looks like we claimed
-> > > there was a [mem 0x28100000-0x282fffff pref] window.
-> > 
-> > Should I add logging for this as part of the patch? If so, could you
-> > suggest where and what format would be appropriate?
-> 
-> Apparently there's a place where we figured out that 01:00.0 has a
-> prefetchable window at [mem 0x28100000-0x282fffff pref]:
-> 
->   [  160.546094] pci 0001:00:01.0:   bridge window [mem 0x28100000-0x282fffff pref]
-> 
-> I don't know how we figured that out if PCI_PREF_MEMORY_BASE and
-> PCI_PREF_MEMORY_LIMIT are hardwired to zero.  Another mystery worth
-> exploring.
-> 
-> In any event, it sounds like there's another place later where we make
-> a bogus [mem 0x00000000-0x000fffff pref] window?  That point, where we
-> change the window, is where I would think about adding a message.
-> 
+Hi,
 
-If my understanding of the code flow is correct (please correct me if
-I'm mistaken), the order is actually reversed - the bogus window is
-created first, then the proper assignment happens later:
+This series provides a major rework for the PCI power control (pwrctrl)
+framework to enable the pwrctrl devices to be controlled by the PCI controller
+drivers.
 
-1. pci_read_bridge_windows() tests register writability and finds
-pref_window is not supported (pref_window=0)
+Problem Statement
+=================
 
-2. Later, pci_read_bridge_bases() unconditionally calls
-pci_read_bridge_mmio_pref() with log=false. Since the registers
-return 0, we get base=0, limit=0, and (0 <= 0) creates the bogus
-window [mem 0x0-0xfffff pref]. This sets res->flags with
-IORESOURCE_PREFETCH and res->start=0, res->end=0xfffff. But because
-log=false, this is not logged to dmesg.
+Currently, the pwrctrl framework faces two major issues:
 
-3. Then pci_assign_unassigned_root_bus_resources() sizes and assigns
-bridge windows based on downstream device BAR requirements. The mt7615e
-(device 14c3:7663) has prefetchable BARs:
+1. Missing PERST# integration
+2. Inability to properly handle bus extenders such as PCIe switch devices
 
-	[  160.332147] pci 0001:01:00.0: [14c3:7663] type 00 class 0x000280 PCIe Endpoint
-	[  160.339730] pci 0001:01:00.0: BAR 0 [mem 0x00000000-0x000fffff 64bit pref]
-	[  160.346757] pci 0001:01:00.0: BAR 2 [mem 0x00000000-0x00003fff 64bit pref]
-	[  160.353833] pci 0001:01:00.0: BAR 4 [mem 0x00000000-0x00000fff 64bit pref]
+First issue arises from the disconnect between the PCI controller drivers and
+pwrctrl framework. At present, the pwrctrl framework just operates on its own
+with the help of the PCI core. The pwrctrl devices are created by the PCI core
+during initial bus scan and the pwrctrl drivers once bind, just power on the
+PCI devices during their probe(). This design conflicts with the PCI Express
+Card Electromechanical Specification requirements for PERST# timing. The reason
+is, PERST# signals are mostly handled by the controller drivers and often
+deasserted even before the pwrctrl drivers probe. According to the spec, PERST#
+should be deasserted only after power and reference clock to the device are
+stable, within predefined timing parameters.
 
- The bridge prefetch resource already has IORESOURCE_PREFETCH flag set
-from step 2. The sizing phase calculates the required window size based
-on these device BARs. Then the assignment phase allocates addresses from
-the available address space, overwriting the bogus res->start and
-res->end with proper values.
+The second issue stems from the PCI bus scan completing before pwrctrl drivers
+probe. This poses a significant problem for PCI bus extenders like switches
+because the PCI core allocates upstream bridge resources during the initial
+scan. If the upstream bridge is not hotplug capable, resources are allocated
+only for the number of downstream buses detected at scan time, which might be
+just one if the switch was not powered and enumerated at that time. Later, when
+the pwrctrl driver powers on and enumerates the switch, enumeration fails due to
+insufficient upstream bridge resources.
 
-	[  160.487241] pci 0001:00:01.0: bridge window [mem 0x28100000-0x282fffff pref]: assigned
+Proposal
+========
 
-4. Finally, pci_setup_bridge_mmio_pref() attempts to program the bridge
-registers and logs the window address. However, since the registers
-are hardwired to zero, the values won't stick.
+This series addresses both issues by introducing new individual APIs for pwrctrl
+device creation, destruction, power on, and power off operations. Controller
+drivers are expected to invoke these APIs during their probe(), remove(),
+suspend(), and resume() operations. This integration allows better coordination
+between controller drivers and the pwrctrl framework, enabling enhanced features
+such as D3Cold support.
 
-	[  160.546094] pci 0001:00:01.0:   bridge window [mem 0x28100000-0x282fffff pref]
+The original design aimed to avoid modifying controller drivers for pwrctrl
+integration. However, this approach lacked scalability because different
+controllers have varying requirements for when devices should be powered on. For
+example, controller drivers require devices to be powered on early for
+successful PHY initialization.
 
-The reason for the confusion is that step 2 (bogus window creation) has
-log=false, so it's silent in dmesg, while steps 3 and 4 log the proper
-window address. This makes it appear as if the proper window came first.
+By using these explicit APIs, controller drivers gain fine grained control over
+their associated pwrctrl devices.
 
-In contrast, the mt7603 (device 14c3:7603) on port 0 has no pref flags:
+This series modified the pcie-qcom driver (only consumer of pwrctrl framework)
+to adopt to these APIs and also removed the old pwrctrl code from PCI core. This
+could be used as a reference to add pwrctrl support for other controller drivers
+also.
 
-	pci 0000:01:00.0: [14c3:7603] type 00 class 0x028000 PCIe Endpoint
-	pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x000fffff]
+For example, to control the 3.3v supply to the PCI slot where the NVMe device is
+connected, below modifications are required:
 
-Since mt7603 has no prefetchable BAR requirements, no prefetch bridge
-window assignment is needed for that port and it works without any issues.
+Devicetree
+----------
 
-> > From: Ahmed Naseef <naseefkm@gmail.com>
-> > Subject: [PATCH] PCI: Skip bridge window reads when window is not supported
-> > 
-> > pci_read_bridge_io() and pci_read_bridge_mmio_pref() read bridge window
-> > registers unconditionally. If the registers are hardwired to zero
-> > (not implemented), both base and limit will be 0. Since (0 <= 0) is
-> > true, a bogus window [mem 0x00000000-0x000fffff] or [io 0x0000-0x0fff]
-> > gets created.
-> > 
-> > pci_read_bridge_windows() already detects unsupported windows by
-> > testing register writability and sets io_window/pref_window flags
-> > accordingly. Check these flags at the start of pci_read_bridge_io()
-> > and pci_read_bridge_mmio_pref() to skip reading registers when the
-> > window is not supported.
-> > 
-> > Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-> > Signed-off-by: Ahmed Naseef <naseefkm@gmail.com>
-> > ---
-> > 
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -351,6 +351,9 @@ static void pci_read_bridge_io(struct pc
-> >         unsigned long io_mask, io_granularity, base, limit;
-> >         struct pci_bus_region region;
-> > 
-> > +       if (!dev->io_window)
-> > +               return;
-> > +
-> >         io_mask = PCI_IO_RANGE_MASK;
-> >         io_granularity = 0x1000;
-> >         if (dev->io_window_1k) {
-> > @@ -412,6 +415,9 @@ static void pci_read_bridge_mmio_pref(st
-> >         pci_bus_addr_t base, limit;
-> >         struct pci_bus_region region;
-> > 
-> > +       if (!dev->pref_window)
-> > +               return;
-> > +
-> >         pci_read_config_word(dev, PCI_PREF_MEMORY_BASE, &mem_base_lo);
-> >         pci_read_config_word(dev, PCI_PREF_MEMORY_LIMIT, &mem_limit_lo);
-> >         base64 = (mem_base_lo & PCI_PREF_RANGE_MASK) << 16;
-> 
-> This looks good.  But I guess I would like to understand better how we
-> figured out the addresses for the prefetchable window.  Things like
-> that niggle at me.
-> 
+	// In SoC dtsi:
 
-Does above explanation clarify the flow? I'm still learning the PCI subsystem internals,
-so please let me know if any part of my understanding is incorrect.
+	pci@1bf8000 { // controller node
+		...
+		pcie1_port0: pcie@0 { // PCI Root Port node
+			compatible = "pciclass,0604"; // required for pwrctrl
+							 driver bind
+			...
+		};
+	};
+
+	// In board dts:
+
+	&pcie1_port0 {
+		reset-gpios = <&tlmm 152 GPIO_ACTIVE_LOW>; // optional
+		vpcie3v3-supply = <&vreg_nvme>; // NVMe power supply
+	};
+
+Controller driver
+-----------------
+
+	// Select PCI_PWRCTRL_SLOT in controller Kconfig
+
+	probe() {
+		...
+		// Initialize controller resources
+		pci_pwrctrl_create_devices(&pdev->dev);
+		pci_pwrctrl_power_on_devices(&pdev->dev);
+		// Deassert PERST# (optional)
+		...
+		pci_host_probe(); // Allocate host bridge and start bus scan
+	}
+
+	suspend {
+		// PME_Turn_Off broadcast
+		// Assert PERST# (optional)
+		pci_pwrctrl_power_off_devices(&pdev->dev);
+		...
+	}
+
+	resume {
+		...
+		pci_pwrctrl_power_on_devices(&pdev->dev);
+		// Deassert PERST# (optional)
+	}
+
+I will add a documentation for the pwrctrl framework in the coming days to make
+it easier to use.
+
+Testing
+=======
+
+This series is tested on the Lenovo Thinkpad T14s laptop based on Qcom X1E
+chipset and RB3Gen2 development board with TC9563 switch based on Qcom QCS6490
+chipset.
+
+**NOTE**: With this series, the controller driver may undergo multiple probe
+deferral if the pwrctrl driver was not available during the controller driver
+probe. This is pretty much required to avoid the resource allocation issue. I
+plan to replace probe deferral with blocking wait in the coming days.
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+---
+Changes in v5:
+- Incorporated cleanups from Bjorn
+- Splitted the power on/off callback changes
+- Collected tags
+- Link to v4: https://lore.kernel.org/r/20260105-pci-pwrctrl-rework-v4-0-6d41a7a49789@oss.qualcomm.com
+
+Changes in v4:
+- Used platform_device_put()
+- Changed the return value of power_off() callback to 'int'
+- Splitted patch 6 into two and reworded the commit message
+- Collected tags
+- Link to v3: https://lore.kernel.org/r/20251229-pci-pwrctrl-rework-v3-0-c7d5918cd0db@oss.qualcomm.com
+
+Changes in v3:
+- Integrated TC9563 change
+- Reworked the power_on API to properly power off the devices in error path
+- Fixed the error path in pcie-qcom.c to not destroy pwrctrl devices during
+  probe deferral
+- Rebased on top of pci/controller/dwc-qcom branch and dropped the PERST# patch
+- Added a patch for TC9563 to fix the refcount dropping for i2c adapter
+- Added patches to drop the assert_perst callback and rename the PERST# helpers in
+  pcie-qcom.c
+- Link to v2: https://lore.kernel.org/r/20251216-pci-pwrctrl-rework-v2-0-745a563b9be6@oss.qualcomm.com
+
+Changes in v2:
+- Exported of_pci_supply_present() API
+- Demoted the -EPROBE_DEFER log to dev_dbg()
+- Collected tags and rebased on top of v6.19-rc1
+- Link to v1: https://lore.kernel.org/r/20251124-pci-pwrctrl-rework-v1-0-78a72627683d@oss.qualcomm.com
+
+---
+Bjorn Helgaas (5):
+      PCI/pwrctrl: pwrseq: Rename private struct and pointers for consistency
+      PCI/pwrctrl: slot: Rename private struct and pointers for consistency
+      PCI/pwrctrl: tc9563: Clean up whitespace
+      PCI/pwrctrl: tc9563: Add local variables to reduce repetition
+      PCI/pwrctrl: tc9563: Rename private struct and pointers for consistency
+
+Krishna Chaitanya Chundru (1):
+      PCI/pwrctrl: Add APIs to create, destroy pwrctrl devices
+
+Manivannan Sadhasivam (9):
+      PCI/pwrctrl: tc9563: Use put_device() instead of i2c_put_adapter()
+      PCI/pwrctrl: slot: Factor out power on/off code to helpers
+      PCI/pwrctrl: pwrseq: Factor out power on/off code to helpers
+      PCI/pwrctrl: Add 'struct pci_pwrctrl::power_{on/off}' callbacks
+      PCI/pwrctrl: Add APIs to power on/off pwrctrl devices
+      PCI/pwrctrl: Switch to pwrctrl create, power on/off, destroy APIs
+      PCI: qcom: Drop the assert_perst() callbacks
+      PCI: Drop the assert_perst() callback
+      PCI: qcom: Rename PERST# assert/deassert helpers for uniformity
+
+ drivers/pci/bus.c                                 |  19 --
+ drivers/pci/controller/dwc/pcie-designware-host.c |   9 -
+ drivers/pci/controller/dwc/pcie-designware.h      |   9 -
+ drivers/pci/controller/dwc/pcie-qcom.c            |  55 +++--
+ drivers/pci/of.c                                  |   1 +
+ drivers/pci/probe.c                               |  59 -----
+ drivers/pci/pwrctrl/core.c                        | 259 ++++++++++++++++++++--
+ drivers/pci/pwrctrl/pci-pwrctrl-pwrseq.c          |  50 +++--
+ drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c          | 226 ++++++++++---------
+ drivers/pci/pwrctrl/slot.c                        |  60 +++--
+ drivers/pci/remove.c                              |  20 --
+ include/linux/pci-pwrctrl.h                       |  16 +-
+ include/linux/pci.h                               |   1 -
+ 13 files changed, 484 insertions(+), 300 deletions(-)
+---
+base-commit: 3e7f562e20ee87a25e104ef4fce557d39d62fa85
+change-id: 20251124-pci-pwrctrl-rework-c91a6e16c2f6
 
 Best regards,
-Ahmed Naseef
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+
+
 
