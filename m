@@ -1,187 +1,150 @@
-Return-Path: <linux-pci+bounces-44936-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44937-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FA71D241DC
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 12:18:05 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FB30D242DF
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 12:30:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0E6033093054
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 11:15:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F2EA7300F9FD
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 11:30:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90F723376A3;
-	Thu, 15 Jan 2026 11:15:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 955D3352FA5;
+	Thu, 15 Jan 2026 11:30:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nm07ZQy1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MpJQNMol"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B0A2DBF45
-	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 11:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C197936CDEC
+	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 11:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768475703; cv=none; b=k/zu6hvglviSGF4Le2uTxJIxxgezTRJkd7l3t07c2PJ0NYrQfaYB8T6madajO3dUIK2jeMwJbrdJNhbOrOkVVaJCvmsyI5c1wFilOzQvaP1kp6tdeqDykRa0wlAgqC89oDHJLtn77TPYXEY1pKfl/hd/4Vx7oqud8vRItFz5fJk=
+	t=1768476604; cv=none; b=WJxw2BwesMH60n20u6hy+8EnXAsHI8O9KxweVn0op3a8PlGbtbmYmdCobohy0E4k1iQxscxG+GUcdTX3ltz7tQSgU1HBCuJys62qz/NC9L9KSIh6RzDo6S5HL3qMbidfBNw294X4igLPFPw5uIJpYW8trSXAq1TQdCDFTZzVoWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768475703; c=relaxed/simple;
-	bh=oeFCSQd193B7M3U7GlanEaDjGvU31U3+p7TfFQNK5Po=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=aJnKr6LGiquBxeSU2DbkSbVEU0Yw/PCcUVQScr60uof2Q4rxcJrsqsVNsrBW9sy+h0zPVF8goGt+eLkmqqX/5s/OY4XGkkNn9smEvsrLTu7FbpwfVcjrh6LUINMemgLLdHbgGjHjeS+1ZlSfv2S7NBRP6LnIfXX2YUBb4cSMkJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nm07ZQy1; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20260115111452euoutp0185157814e86d15867f16658b168f691d~K40WsRH653153731537euoutp01e
-	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 11:14:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20260115111452euoutp0185157814e86d15867f16658b168f691d~K40WsRH653153731537euoutp01e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1768475692;
-	bh=ODlM0ncXnlrLvxb4ihqQBJ3CUEnwHzZLJ0VgMlXzdh8=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=nm07ZQy1IRUCTYodbBRF6jonHTbl+TsoF3782MwFWtr/OE16+IsQVG+cctI089KWa
-	 uN8qkOZguPp9PMHzAm/0yGPHACY5mk3uYJW6J8e3RXoy8o6wkz3OB9X5Bo5e9JyP/d
-	 6FsHbs3hYFZR0ryxpExac1CuhHH0EXvEqyPJAzlk=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20260115111451eucas1p145ac65c845c6cd3bcbb9bccf75993a2a~K40WSZZlf2186821868eucas1p1q;
-	Thu, 15 Jan 2026 11:14:51 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260115111450eusmtip2851be6a89c0b4f48966dc2bbc0e6c902~K40VaBTI03110431104eusmtip2c;
-	Thu, 15 Jan 2026 11:14:50 +0000 (GMT)
-Message-ID: <61e8c93c-d096-4807-b2dd-a22657f2e06a@samsung.com>
-Date: Thu, 15 Jan 2026 12:14:49 +0100
+	s=arc-20240116; t=1768476604; c=relaxed/simple;
+	bh=1x4kCfbALV/YdOTPH9CCOw9FtU7H29jvfqGwJZLYVkE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zw0ge1CWkUV73g+FMgGwoKq/vS8lDFg4G5GEIBRPhHD7zFEGmAF4YhhZzp9QJ4Fy/d1g19wEUc+7sOi++lrdVEPYARFZ8ZL/5ChYrr2VpAkwPvrlB1Wu7o+R0E+8h4vtUZSrrv4wJWGReYftDFklqFkaWDepLGONLpcXbjl+T/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MpJQNMol; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768476603; x=1800012603;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1x4kCfbALV/YdOTPH9CCOw9FtU7H29jvfqGwJZLYVkE=;
+  b=MpJQNMolRKQiCJ3h98AoyZPKg3+X1SVlY5aVj1EgpQdXXwthumOF0VFa
+   0gvCkNwPI7dOXACo+ztYkBJ1/q7BL1vQR0Y4A64bB0x6q5wgAjnb6ll6k
+   JVS9JU+uQqSu0Eeq0RF0fCZ3BYSFfBUBkG9a+pGbZxr8/n0YQbdhPhpbQ
+   kX6v1r0DDbXw/yfdqNVgOpH0Au8HvP0a+YdnhGynnk+8vS1MW+VoVKXmu
+   R6wMI9/XNeWmp3yTvo/XCGWPYc51TtX2hUtbfJRmbJzE/LEk5jSiBj5OW
+   43exgiAJQgFMZBYmbabVFE3yqxhWZXznfgLXBwUnei8j0jPYFQK9IX3eY
+   Q==;
+X-CSE-ConnectionGUID: 0BRjQf/hRnmvOP0meSPbzA==
+X-CSE-MsgGUID: i24tpJuHQaOg8lrym/o6GA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="69870236"
+X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
+   d="scan'208";a="69870236"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 03:30:02 -0800
+X-CSE-ConnectionGUID: CuJLsxEcQ6S4tw4pZcLJsA==
+X-CSE-MsgGUID: tZvE29toTfC9YBTOUBQomQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
+   d="scan'208";a="204810359"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 15 Jan 2026 03:30:00 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vgLY6-00000000Ht0-0egd;
+	Thu, 15 Jan 2026 11:29:58 +0000
+Date: Thu, 15 Jan 2026 19:29:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
+	bhelgaas@google.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH] pci: make reset_subordinate hotplug safe
+Message-ID: <202601151946.zSD1T6Tn-lkp@intel.com>
+References: <20260114185821.704089-1-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH v4] PCI/PM: Prevent runtime suspend before devices are
- fully initialized
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, "Rafael J . Wysocki"
-	<rafael@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <aWf4KyTSIocWTmXw@google.com>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260115111451eucas1p145ac65c845c6cd3bcbb9bccf75993a2a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20260114094643eucas1p1a2fdc6c35dd27741c18831b34bbed0c8
-X-EPHeader: CA
-X-CMS-RootMailID: 20260114094643eucas1p1a2fdc6c35dd27741c18831b34bbed0c8
-References: <20260106222715.GA381397@bhelgaas>
-	<CGME20260114094643eucas1p1a2fdc6c35dd27741c18831b34bbed0c8@eucas1p1.samsung.com>
-	<0e35a4e1-894a-47c1-9528-fc5ffbafd9e2@samsung.com>
-	<aWf4KyTSIocWTmXw@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260114185821.704089-1-kbusch@meta.com>
 
-Hi Brian,
+Hi Keith,
 
-On 14.01.2026 21:10, Brian Norris wrote:
-> On Wed, Jan 14, 2026 at 10:46:41AM +0100, Marek Szyprowski wrote:
->> On 06.01.2026 23:27, Bjorn Helgaas wrote:
->>> On Thu, Oct 23, 2025 at 02:09:01PM -0700, Brian Norris wrote:
->>>> Today, it's possible for a PCI device to be created and
->>>> runtime-suspended before it is fully initialized. When that happens, the
->>>> device will remain in D0, but the suspend process may save an
->>>> intermediate version of that device's state -- for example, without
->>>> appropriate BAR configuration. When the device later resumes, we'll
->>>> restore invalid PCI state and the device may not function.
->>>>
->>>> Prevent runtime suspend for PCI devices by deferring pm_runtime_enable()
->>>> until we've fully initialized the device.
-> ...
->> This patch landed recently in linux-next as commit c796513dc54e
->> ("PCI/PM: Prevent runtime suspend until devices are fully initialized").
->> In my tests I found that it sometimes causes the "pci 0000:01:00.0:
->> runtime PM trying to activate child device 0000:01:00.0 but parent
->> (0000:00:00.0) is not active" warning on Qualcomm Robotics RB5 board
->> (arch/arm64/boot/dts/qcom/qrb5165-rb5.dts). This in turn causes a
->> lockdep warning about console lock, but this is just a consequence of
->> the runtime pm warning. Reverting $subject patch on top of current
->> linux-next hides this warning.
->>
->> Here is a kernel log:
->>
->> pci 0000:01:00.0: [17cb:1101] type 00 class 0xff0000 PCIe Endpoint
->> pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x000fffff 64bit]
->> pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
->> pci 0000:01:00.0: 4.000 Gb/s available PCIe bandwidth, limited by 5.0
->> GT/s PCIe x1 link at 0000:00:00.0 (capable of 7.876 Gb/s with 8.0 GT/s
->> PCIe x1 link)
->> pci 0000:01:00.0: Adding to iommu group 13
->> pci 0000:01:00.0: ASPM: default states L0s L1
->> pcieport 0000:00:00.0: bridge window [mem 0x60400000-0x604fffff]: assigned
->> pci 0000:01:00.0: BAR 0 [mem 0x60400000-0x604fffff 64bit]: assigned
->> pci 0000:01:00.0: runtime PM trying to activate child device
->> 0000:01:00.0 but parent (0000:00:00.0) is not active
-> Thanks for the report. I'll try to look at reproducing this, or at least
-> getting a better mental model of exactly why this might fail (or,
-> "warn") this way. But if you have the time and desire to try things out
-> for me, can you give v1 a try?
->
-> https://lore.kernel.org/all/20251016155335.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid/
->
-> I'm pretty sure it would not invoke the same problem.
+kernel test robot noticed the following build warnings:
 
-Right, this one works fine.
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.19-rc5 next-20260115]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> I also suspect v3
-> might not, but I'm less sure:
->
-> https://lore.kernel.org/all/20251022141434.v3.1.I60a53c170a8596661883bd2b4ef475155c7aa72b@changeid/
-This one too, at least I was not able to reproduce any fail.
+url:    https://github.com/intel-lab-lkp/linux/commits/Keith-Busch/pci-make-reset_subordinate-hotplug-safe/20260115-030004
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20260114185821.704089-1-kbusch%40meta.com
+patch subject: [PATCH] pci: make reset_subordinate hotplug safe
+config: loongarch-allnoconfig (https://download.01.org/0day-ci/archive/20260115/202601151946.zSD1T6Tn-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 9b8addffa70cee5b2acc5454712d9cf78ce45710)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260115/202601151946.zSD1T6Tn-lkp@intel.com/reproduce)
 
->> ======================================================
->> WARNING: possible circular locking dependency detected
->> 6.19.0-rc1+ #16398 Not tainted
->> ------------------------------------------------------
->> kworker/3:0/33 is trying to acquire lock:
->> ffffcd182ff1ae98 (console_owner){..-.}-{0:0}, at:
->> console_lock_spinning_enable+0x44/0x78
->>
->> but task is already holding lock:
->> ffff0000835c5238 (&dev->power.lock/1){....}-{3:3}, at:
->> __pm_runtime_set_status+0x240/0x384
->>
->> which lock already depends on the new lock.
-> The lockdep warning is a bit messier, and I'd also have to take some
-> more time to be sure, but in principle, this sounds like a totally
-> orthogonal problem. It seems like simply performing printk() to a qcom
-> UART in the "wrong" context is enough to cause this. If so, that's
-> definitely a console/UART bug (or maybe a lockdep false positive) and
-> not a PCI/runtime-PM bug.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601151946.zSD1T6Tn-lkp@intel.com/
 
-Yes, the lockdep warning is not really a problem, it is just a 
-consequence of the printing that "runtime PM trying to activate child 
-device 0000:01:00.0 but parent (0000:00:00.0) is not active" message. 
-However that message is itself a problem imho.
+All warnings (new ones prefixed by >>):
 
->> (...)
->>
->> This looks a bit similar to the issue reported some time ago on a
->> different board:
->>
->> https://lore.kernel.org/all/6d438995-4d6d-4a21-9ad2-8a0352482d44@samsung.com/
-> Huh, yeah, the lockdep warning is rather similar looking. So that bug
-> (whether real or false positive) may have been around a while.
->
-> And the "Enabling runtime PM for inactive device with active children"
-> log is similar, but it involves a different set of devices -- now we're
-> dealing with the PCIe port and child device, whereas that report was
-> about the host bridge/controller device.
+>> drivers/pci/pci.c:5585:5: warning: no previous prototype for function '__pci_reset_bus' [-Wmissing-prototypes]
+    5585 | int __pci_reset_bus(struct pci_bus *bus)
+         |     ^
+   drivers/pci/pci.c:5585:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+    5585 | int __pci_reset_bus(struct pci_bus *bus)
+         | ^
+         | static 
+   1 warning generated.
 
-Okay, so a bit different case. At least it confirms that the lockdep 
-issue is not really a problem.
 
-Best regards
+vim +/__pci_reset_bus +5585 drivers/pci/pci.c
+
+9a3d2b9beefd5b0 Alex Williamson 2013-08-14  5578  
+090a3c5322e900f Alex Williamson 2013-08-08  5579  /**
+c6a44ba950d147e Sinan Kaya      2018-07-19  5580   * __pci_reset_bus - Try to reset a PCI bus
+090a3c5322e900f Alex Williamson 2013-08-08  5581   * @bus: top level PCI bus to reset
+090a3c5322e900f Alex Williamson 2013-08-08  5582   *
+61cf16d8bd38c3d Alex Williamson 2013-12-16  5583   * Same as above except return -EAGAIN if the bus cannot be locked
+090a3c5322e900f Alex Williamson 2013-08-08  5584   */
+2fa046449a82a7d Keith Busch     2024-10-25 @5585  int __pci_reset_bus(struct pci_bus *bus)
+090a3c5322e900f Alex Williamson 2013-08-08  5586  {
+090a3c5322e900f Alex Williamson 2013-08-08  5587  	int rc;
+090a3c5322e900f Alex Williamson 2013-08-08  5588  
+9bdc81ce440ec6e Amey Narkhede   2021-08-17  5589  	rc = pci_bus_reset(bus, PCI_RESET_PROBE);
+090a3c5322e900f Alex Williamson 2013-08-08  5590  	if (rc)
+090a3c5322e900f Alex Williamson 2013-08-08  5591  		return rc;
+090a3c5322e900f Alex Williamson 2013-08-08  5592  
+61cf16d8bd38c3d Alex Williamson 2013-12-16  5593  	if (pci_bus_trylock(bus)) {
+ddefc033eecf23f Alex Williamson 2019-02-18  5594  		pci_bus_save_and_disable_locked(bus);
+61cf16d8bd38c3d Alex Williamson 2013-12-16  5595  		might_sleep();
+381634cad15b711 Sinan Kaya      2018-07-19  5596  		rc = pci_bridge_secondary_bus_reset(bus->self);
+ddefc033eecf23f Alex Williamson 2019-02-18  5597  		pci_bus_restore_locked(bus);
+61cf16d8bd38c3d Alex Williamson 2013-12-16  5598  		pci_bus_unlock(bus);
+61cf16d8bd38c3d Alex Williamson 2013-12-16  5599  	} else
+61cf16d8bd38c3d Alex Williamson 2013-12-16  5600  		rc = -EAGAIN;
+090a3c5322e900f Alex Williamson 2013-08-08  5601  
+090a3c5322e900f Alex Williamson 2013-08-08  5602  	return rc;
+090a3c5322e900f Alex Williamson 2013-08-08  5603  }
+8dd7f8036c12329 Sheng Yang      2008-10-21  5604  
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
