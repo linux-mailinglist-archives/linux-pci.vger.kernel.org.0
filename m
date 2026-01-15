@@ -1,91 +1,121 @@
-Return-Path: <linux-pci+bounces-44912-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44913-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 449C9D233EF
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 09:48:41 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A86ED23487
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 09:53:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EA8CA301BEBB
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 08:48:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A24F430169BF
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 08:50:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D9FA33A9EC;
-	Thu, 15 Jan 2026 08:48:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1880833A708;
+	Thu, 15 Jan 2026 08:50:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="nU3esTXL"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="uP2S1HLr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11020095.outbound.protection.outlook.com [52.101.229.95])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11021104.outbound.protection.outlook.com [52.101.125.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A939622A4EB;
-	Thu, 15 Jan 2026 08:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A8022A4EB;
+	Thu, 15 Jan 2026 08:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.104
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768466914; cv=fail; b=Mdk4OoCx7tdHSLNEJWlb9gcDyacu414teMB2pgnyn6jG5VNMdmIQ2mqOylkdYuKayn1xv8NQJEYizb9czsMWGIuz7ZcuJTF5NIP48ri2nFcGuP9GBYQtv0lwB5zd9/zsqClBTKkKr937rxoQZbshnldNvPuP1PCNii1zJDGeXik=
+	t=1768467000; cv=fail; b=MTEwJIcA+AXrAqnaBcY0wxO+19uQCz7aVAaqySLnfgZ38+YFElcTzI2e+TCcwTLfEl5bnjDARxBSftZeLkM1zZl17aTfQCi6foO2Fqs7bo+YRNT8pXIqA6meOIrx5QmAwp5GK8rIgXp+vH2igrrJraoVWq5gnMZIjiOObBiWL0Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768466914; c=relaxed/simple;
-	bh=FGh9b34yNHOoSdE69E5hj8XJUaHlWIrA2aQiRoMHbcs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=gEdeUHSjDeP/TaexAlCxRmFa2rcPefA5h8ePcNxR2dt5GTipDIf/igrX/vKiHJjAygjeCyEeDBUpD9WrMUz+nb3FFqI8OZPJlOS+X7be7LacIXHaSHou3W2RdymGdZ6ssCTTDakua39Fy+m0DU9RFlV6ZbW5Obuj0Yji1YTqRMQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=nU3esTXL; arc=fail smtp.client-ip=52.101.229.95
+	s=arc-20240116; t=1768467000; c=relaxed/simple;
+	bh=Qofh8Szbv+xcIfzJbV9IgW70XflbJyj9VXv5jeZvfDo=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=WwvyZ2LD7VeGjHcDySjWvLgEQg8HeKUz6yx8KxnwgWQBRm8uSMj/zBoROBaYNqy4wbtitkWw4O0Ow3hgAPTYvFNdVf+SEao9ZIzX4+RDTvAEVu+G/x9vu3fC2oL1cdwhzd82oxDpnCgQyyuzZ+vYcSoiGe59VFpe1p3cc1eK6UE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=uP2S1HLr; arc=fail smtp.client-ip=52.101.125.104
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bCZg6MS3FpjSL0FSPnxfWk4wl9hNClJiIkuFwV9hkpG40SAsHSarYohYf2QbaxvG4XL6nLYn9mwMIVIvovcGsjQKTCnYNw2xLVcS5ZjV+L0CPuDFoli9rF4RAwcDA+AUfAy3p38tOdZTlaux8Rpkl1ggzNmJR8WRvhgAYB/RBEsYVeG7vkjcJs6SQuk2y9rDsNjfM26qwXvd1pXg4BhBC8gKV0jIEJwZNnfpzpTojlyNOexOb5hAN5GBWm6UG/Nca6VLod9+Mpf/qP3PJjLhFPTdLE8lpcvnWF4H6pJH3JI3nUvRem+Sy2nldYd0hSRzQTxrZi65AjTq+7yEPdGu4Q==
+ b=arCO1DddGImQYnRyNwbaJHBp0s5EEMXRm3xR4ivdp3dKGSb0p3vqJZ2vwPvG35dG6afHNFzGDARpQ6GMRIcTLOyC7tKcvg+y6ybYOO0Q7kpBdnqeZOaa3pgUZvqbjYyXt4mXA1EEPqpTmyjzz5PVSS/McL3xognLEkO+7Kva5pM6eQ6DU8kpCzLK7wi7qXIvnpNreHvnhgjo56pvDSVG3O4B0voGAr71sgCpdTDO+UXhVjxmIdp89iFXaHDFksCyGqRDhdfvw7X0w7OIr3GJZt/7nJWEEjA8Qj3H9IzafTxob4U+jIHFY1ERAojqjY4JopMk7iBsbdqKX7SwDsDpPw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vj6HCua9VgNVLHRLuKsELNBlr1wn7+0YzCgIrfJMghI=;
- b=x/k7PbgYqUUz/kCOqDa8F4NzE0SsGV50rE+ri0zU8GnVpAz+yjDAbKIoXwmK/QHOBjX/Xlvb4DqWW3KUNWxGyQfw2O09PKJ+JJTWuvmAJnITMzFJ6CORnDrNhhk9xTeusAYN88mrXM48WWZ23Pa/gK2dIZpovqwLpNnk8MTwBfqrPh+IXXGdYcFnjxWQQFeqgqrzdm5/2f9saJr+rInqdJyoiI1U8Kp9YTV3I6HYWJvnLHSX3dZHVuM9azC0TGrHTICS52Ok9JW5jZ0O9I0KHRGb9r92DPadggd7brHkdNN8rFTgnJsDJnhmNl+o51YSvjky+TNzmY8Md8XRlvxiVw==
+ bh=pWif8tvgR0jIXTaNInXKj+mtusXeRdBu96IsP/3SxVc=;
+ b=CRxpwwNiDvLST7xh8FjqSLNYZzNrGq895xzunT8FiqVoxHTNffxO5i8XzrWSdq7azTbGtpjPN1yWyOguyU/h6qLMGplfjTHPTqt9IFr/k6bznlK1unx9x955U3MjMceRnqWIr9Dv9A8NVVUg0yG2PytXrlR6PTiHVrazZacIhQC2Z5uKg75n1FDSl2Ciqzcuul6GKA9ulF09BTTKcDbocftyX8HzEcsvtEc5+srLWNgkdxhWsZVY66qj8fQCKzYQ+cNtqFL7S08IKPZWyVKiFfsSFIeOzktAs0efczbRAWy8I1/MlrdxWemsYvIKnSnEsyZCZtn+8doouUU7fh7Qxg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
  header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vj6HCua9VgNVLHRLuKsELNBlr1wn7+0YzCgIrfJMghI=;
- b=nU3esTXL3F6PXL0p7iFvGacMAbyb+XolAj1Bn4lFja4TsN+O0HSCEVsuPlL+h31DGhbUTzfeBx+Xt90efVQYKLouk0YdhOfDN9mC7cPxA+ozEj0h11B/FMG5R6aE7/O6fyimhlc/4yc3nlolEQt4lB0m3SpoR9A+v/fiXXbMzO8=
+ bh=pWif8tvgR0jIXTaNInXKj+mtusXeRdBu96IsP/3SxVc=;
+ b=uP2S1HLr4Nu5KsMXHG3MfSw1dTZ0Cz+HRcp1huXTT7vpWJBRy4PI2vS8fKWcICzd1AVhVdvpnm/2dkLCUEwHvaxRCmmusW3Ul83eO8Zg1Hv1+YMLIkvPkwD2WLtxt1ds8Ie51Zjcpd67MgIeMgCfuaapcA6a1gPQrEdBZpiWjXY=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=valinux.co.jp;
 Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
- by TYCP286MB2911.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:303::14) with
+ by TYRP286MB4454.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:133::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.6; Thu, 15 Jan
- 2026 08:48:28 +0000
+ 2026 08:49:55 +0000
 Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.20.9520.005; Thu, 15 Jan 2026
- 08:48:28 +0000
-Date: Thu, 15 Jan 2026 17:48:27 +0900
+ 08:49:55 +0000
 From: Koichiro Den <den@valinux.co.jp>
-To: Frank Li <Frank.li@nxp.com>
-Cc: jingoohan1@gmail.com, mani@kernel.org, lpieralisi@kernel.org, 
-	kwilczynski@kernel.org, robh@kernel.org, bhelgaas@google.com, cassel@kernel.org, 
-	vigneshr@ti.com, s-vadapalli@ti.com, hongxing.zhu@nxp.com, l.stach@pengutronix.de, 
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	festevam@gmail.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, 
-	jesper.nilsson@axis.com, heiko@sntech.de, srikanth.thokala@intel.com, 
-	marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com, geert+renesas@glider.be, 
-	magnus.damm@gmail.com, christian.bruel@foss.st.com, mcoquelin.stm32@gmail.com, 
-	alexandre.torgue@foss.st.com, thierry.reding@gmail.com, jonathanh@nvidia.com, 
-	hayashi.kunihiko@socionext.com, mhiramat@kernel.org, kishon@kernel.org, jirislaby@kernel.org, 
-	rongqianfeng@vivo.com, 18255117159@163.com, shawn.lin@rock-chips.com, 
-	nicolas.frattaroli@collabora.com, linux.amoon@gmail.com, vidyas@nvidia.com, 
-	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-arm-kernel@axis.com, linux-rockchip@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v7 5/6] PCI: dwc: ep: Support BAR subrange inbound
- mapping via Address Match Mode iATU
-Message-ID: <g4txrmmww3werfhho6t625ciqknvyhvqhndceyf6z2pqiygnlr@2pktdkpwrcas>
-References: <20260113162719.3710268-1-den@valinux.co.jp>
- <20260113162719.3710268-6-den@valinux.co.jp>
- <aWaw4M6FGYWPo1ME@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aWaw4M6FGYWPo1ME@lizhi-Precision-Tower-5810>
-X-ClientProxiedBy: TYCP286CA0297.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:3c8::20) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+To: jingoohan1@gmail.com,
+	mani@kernel.org,
+	lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	cassel@kernel.org
+Cc: vigneshr@ti.com,
+	s-vadapalli@ti.com,
+	hongxing.zhu@nxp.com,
+	l.stach@pengutronix.de,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	minghuan.Lian@nxp.com,
+	mingkai.hu@nxp.com,
+	roy.zang@nxp.com,
+	jesper.nilsson@axis.com,
+	heiko@sntech.de,
+	srikanth.thokala@intel.com,
+	marek.vasut+renesas@gmail.com,
+	yoshihiro.shimoda.uh@renesas.com,
+	geert+renesas@glider.be,
+	magnus.damm@gmail.com,
+	christian.bruel@foss.st.com,
+	mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com,
+	thierry.reding@gmail.com,
+	jonathanh@nvidia.com,
+	hayashi.kunihiko@socionext.com,
+	mhiramat@kernel.org,
+	kishon@kernel.org,
+	jirislaby@kernel.org,
+	rongqianfeng@vivo.com,
+	18255117159@163.com,
+	shawn.lin@rock-chips.com,
+	nicolas.frattaroli@collabora.com,
+	linux.amoon@gmail.com,
+	vidyas@nvidia.com,
+	Frank.Li@nxp.com,
+	linux-omap@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@axis.com,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-tegra@vger.kernel.org
+Subject: [PATCH v8 0/5] PCI: endpoint: BAR subrange mapping support
+Date: Thu, 15 Jan 2026 17:49:23 +0900
+Message-ID: <20260115084928.55701-1-den@valinux.co.jp>
+X-Mailer: git-send-email 2.51.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TY4P301CA0066.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:405:36a::19) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -94,373 +124,223 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|TYCP286MB2911:EE_
-X-MS-Office365-Filtering-Correlation-Id: caad76d8-208b-450c-bf3e-08de5412da6d
+X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|TYRP286MB4454:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0c5ccb72-0c1d-469f-d825-08de54130e59
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|10070799003|7416014|376014;
+	BCL:0;ARA:13230040|10070799003|366016|7416014|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3H7drZXyXtfDUzHWOyena2WzwVkKthZUg0H9/2TPqWhqqHr3f/c+O2a4IpOb?=
- =?us-ascii?Q?Bt57kgbRwFG27VYe1QAMOGbKcHv4/Jx9eiQFCwh8DGtjM+k8k08L4HrQLn59?=
- =?us-ascii?Q?Gf7aELhf7e1f4qF7XjaHyJBfdyzfuo/vb6eumqvmhQV1/c9KqDJ7y9CIrg+n?=
- =?us-ascii?Q?lqwPLwKiFfc4ZLr4P7Dbrg4JE4TPPaBJsBYrWsPNWw8vqfw+THCyyN1cMYs0?=
- =?us-ascii?Q?GaqVBVcUTOYnqA7OuPHBG5sE2Ks8arzQPDz957eynJXks4OIRcaplhhkW4Qd?=
- =?us-ascii?Q?lV2gLDmCHOJu+ocR0SiQtwXsG4932AMrBXEJsD7N5eCw304Fil3+RML0oBZt?=
- =?us-ascii?Q?cFYZJ+dOKM6ha7NdXq2rCVhmHI+z46zkBEwyuVyPfnCMB4ozHDVQpE/Uxr34?=
- =?us-ascii?Q?ioPaRaPQSpwSnI8wy0M+g97JVFy4SfjCGhxn9BlRvVju4sV4g3IqkO8hUhMM?=
- =?us-ascii?Q?sXVJfgf+PWOjq9MWHnzbihEGRZKOZ37JLYd1gc+SxmnysE1IF8Z0GlznDlbQ?=
- =?us-ascii?Q?tiocftZaRm1yzjnh4amlroo4PWdlkXv9Iw44be3j1YmOEChy6TE+va03M5e5?=
- =?us-ascii?Q?oHUDyYSRso1fIzPn6TR8WhcjdkaSA+EPnSV12Yd9FBwbLevz1LGQAs0204yu?=
- =?us-ascii?Q?OfB8W8Li40VDf6WijLErlLYgoI8p5B6KMgVQEm+nUvH4dVc7+KUyNFYxpj/a?=
- =?us-ascii?Q?qiL4OpCb3A1ejn009YUGPyzd/whiJpdwr+RTpnNMSWlp40ImOMKmSAerKdsf?=
- =?us-ascii?Q?jqPihf6hTTlvQRZKEMFf6+XBUXv4V8UxPaJ8od81do3yEd2QojdqMLCCbiRw?=
- =?us-ascii?Q?PseOEZnaPoIXpaD83WmlYRAyGM9hNPsoj8sHeKh0DU9Po3YvPhPNrxXLnNs2?=
- =?us-ascii?Q?oWtwHXS2gmbPSNdXcEmkOSa3Xy/o/sNPKlWsgpyZhCRvDswgruT759dXdiI9?=
- =?us-ascii?Q?3NcjYjL9rx+OZS0iXdEsVAsLlF56H/2KHxpuaf9pmnEGC2es9oFzWoD0Fqo8?=
- =?us-ascii?Q?D7iSk3XdOTVAD+T6iSh80Tl9FLowxJEXUldPDjHpBay+J0WgxMS9t6UklpT0?=
- =?us-ascii?Q?1Rp2qf4WNKIZajj4otpzgw4CWT44RLz/RTNZYFWlIIOIL8mOXr38y6cz6tDB?=
- =?us-ascii?Q?2SZ0vYRyFEcXTQy8riXqQs26WNfYVUf2LxfIMmFdg/x3xT8h+CgMNxkggvtA?=
- =?us-ascii?Q?v9wyZ9sssyrauIWbCWMLD3hZgAdJBiFjv6eaHXmE4t0SItfJDidOWtx09PJt?=
- =?us-ascii?Q?Jw4vQ4XNiUc/ioWbZL/mkGoc6VsVPbFUgJz0oqSQGzM8iu3KflgLgEuLMHZ8?=
- =?us-ascii?Q?vsSwlSOyLiMZmfs2u+Gx0NXQhnJpzxPzkJzpjubSRnqaHbiATQnGB4Lq4R3T?=
- =?us-ascii?Q?D9fQvZ3kup3Pb6KGtf++eUgIfjBjvGZGnDXhOMpxv+NBw32hCs7e06i4MFE8?=
- =?us-ascii?Q?aKSL+7+OsvUb/Z90A6OYua0SEI1qSGfhrl/+jYrV6CQfOKOubshbRw9fijTK?=
- =?us-ascii?Q?ObLDtEEXnFarNPs1xh7cb5ovCcr0aHiluq544WGvc7CDf57PJwDbL6l2FJtl?=
- =?us-ascii?Q?eDtyedf5fwXJc3etoJc=3D?=
+	=?us-ascii?Q?VYFScFXlGvAwD5kJxew1TpyYCi9Me56HWbTtlpnnIlZM+cXMEj7ZlFlexMNv?=
+ =?us-ascii?Q?wb0aTCRrlns1t9zW2wmrk+qRg2B5e86ZA/6RH0VdmJZf0JDL/h3SaBWknNSN?=
+ =?us-ascii?Q?ZSA/uWscK0thsZmH7xoDVDeQ43UcC1ZxKD++G4SIFSb8NunLy/GfPhDKasiO?=
+ =?us-ascii?Q?+NQE+f8rkSk2CwqNJ4bhHiTC7vJVtZGLLucbuKaCnzwQUeQgDDtG0jHEny4o?=
+ =?us-ascii?Q?sqygH12oh+pY0gdTXkOwy80ymc327AVAlQ6lJoOhUb2BBmqkXib8HDlop2O8?=
+ =?us-ascii?Q?1ItYDxVfCdjU7W7ZzDNK+KEkMpul1sAWW/ewmnwfKeiIatDvIHZEEpCo+gKp?=
+ =?us-ascii?Q?cuhxgdelniqS5+cLP5y6zGzl1j2w1oH1SdkWhiHtwnnzYsEsXzdHg//zf7Ys?=
+ =?us-ascii?Q?n5GSEYQF8J7RC9qFR/Itb4BiLVTkU4pp/eEgScAQStZSYOpJjit1eY4LUdDX?=
+ =?us-ascii?Q?/mQGkCWQAA59tw8mwcgPLxhrPBeBC8q83Hg9IUdxQ9Q9XVTC5faxR4B6/AQS?=
+ =?us-ascii?Q?oyC4xXcH7YDrOwvzr4jE2e/j3M2VV/yWs0UJ3Ud7bsygkp3MGMq1fzLuSkM1?=
+ =?us-ascii?Q?ADOg4ozoO802XHPZdj2qULyqGx7JG4/OOuY1QXE/nU5sWQ7SeJqrqj+5zVRx?=
+ =?us-ascii?Q?sweahqhN1g7BPzsHEk9ULUemm1sVQLu3PvBqPHfAdJLPY3pQKFmrHq3qlaXJ?=
+ =?us-ascii?Q?X249jNrRIbYqovo8mJji4oDzi5LCWh0MB93A9DOI10Vo125x4Jr2l2E4tFFz?=
+ =?us-ascii?Q?KAyz8u+/rAaJPg38KhXbtl7n1N6eb5AMwGlUJi04xP2rJ29z6E6sZNrKCTk6?=
+ =?us-ascii?Q?0xdI6MLpBAohirLjohge5lqU656BngUlr8uw5x77Zrd/OKUD2hLUx9H26t/M?=
+ =?us-ascii?Q?RPRtMPx0/Oj4Ui0ueeDGfWEi8gnn0jyTo+W+JqL3YXfh/XqEknVpcOv1ELC7?=
+ =?us-ascii?Q?pNdzYnFrsKDkTYp5D68y3csR9aPfm4z+3NjYWvcKzJoiKuTo8v4Ev1wvgiWI?=
+ =?us-ascii?Q?VxRmNRfaRf0CVg9cEWTg0a72nYMuXvX04gFSuLwjwompf1g7ivpJd50l53bX?=
+ =?us-ascii?Q?z3UBSw4KjZj4lZ+kRdEv2j+2ZLdwfuS1NxaVWehe/Oh+HwiS3iqDIrq8WrE7?=
+ =?us-ascii?Q?NBlRq2t2q2EWwRILpFPOLT0xm8b25kQS3TXoszEyBH0Rwl/9b3sbwfK3eMKl?=
+ =?us-ascii?Q?anNXYm5czAjEwoIodY+DK+PbnZ+b9GJSJci1lg/deRKN5fBq8bf4flBLGl/H?=
+ =?us-ascii?Q?OwQg8SxVQUOdrhFdzHSy+BTOPki6Gkjjy+AsZCIUpXFj/72HK7QIovTio4vh?=
+ =?us-ascii?Q?TaRZYoSGfQ4bBYkWfRYcpWPkosGzm3cm6NfS5iRpbYI1hYbX3/aZVURXTW6+?=
+ =?us-ascii?Q?QA9T/jTJd6Yzbp5uESsbtXaKJIqbEqHHqTuJUgVB0P/xs7f1HMrCUqd4lPBj?=
+ =?us-ascii?Q?X+tdrWPGXLHVMaImtf04eQQQGJi/30B7Ysrg75R9hiYILz9oeg54m/SGYInU?=
+ =?us-ascii?Q?2SZvRQpFENeNeXKTYm1UNPsIrcim5xtdNe+xb4Xa5pJBn2D41WSFz5iA3aZn?=
+ =?us-ascii?Q?ytmhjB/CianBVCJzkuM=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(7416014)(376014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?sfHGT59pOT3JP3tOX1CeUJam/r5hncWu7YSjbZhI5wYXSOznu+nF8pUARj4b?=
- =?us-ascii?Q?tx5InepPJaV6wvYp3BLklD78Wxgk19XN9u2njsoUlip2zlosJWX2CN4zDxk/?=
- =?us-ascii?Q?ZSPTpNfNXKNplc2/tnjEsIDmxGkNRsNXEqTDmQDmoSkEZznU59vk8ojuvgYe?=
- =?us-ascii?Q?b57ybEpbO8e+Ci6nsmastLdRRoYUo8gnXoYSVigyX+rM7AzQKAOaREyB4AYy?=
- =?us-ascii?Q?rDp88FTsEE24M6OR0+DdF2BxXuryDQVgMdE/sSq4Cr9bCTPIesVFwduD9Mvl?=
- =?us-ascii?Q?2dpoUXidTsLWmxTGNZLERTZMVZ1qSOJR1W+EoaU0mvrPyMbzMf1lJJMJq7dA?=
- =?us-ascii?Q?00F2I7U3DrWnIkUW13NHe1q9qBJvyV7Myi0dgZ3JLT7iFSlVOANQrF+Dg6Za?=
- =?us-ascii?Q?Y7WjXzsDcyJJIUfqg/NcmrIDfdPiLamFZoUa1TuJGdtILjWBohP5M8JrbG5n?=
- =?us-ascii?Q?PbmoBsmvTUzmpbIgv9wIugmDhqpDdICAiWyuLkLJ9QQhHJdk4323plPoYDFg?=
- =?us-ascii?Q?mDqmQntjSWqBXIH/JXCEt0ij50en+cz6qPRrowkBRR5Rw/bK+hn2xh3oPZTk?=
- =?us-ascii?Q?RONuj/B+xN6tleG/APSIuj31U900Yu/suXOJkMmFCpVaJMuBhEgcFcxLMmYp?=
- =?us-ascii?Q?TynjLn+AJMxdu4qX6MmtloU1TzSLqpQ/O3RzQ5ja1WiWEfcQIJskd/Qe5K0q?=
- =?us-ascii?Q?OH0DuJ5bePyAL8KdYlFoAOd9rjZSp8CZ9TiPjCViiI7i8ltu+3fNP5KNgysP?=
- =?us-ascii?Q?9LnzdntjLKzZx+z/TZnoE3lB/0CKAkZUYrXICjk2rH1HE7dx7n74HKPS37Xj?=
- =?us-ascii?Q?rKx93gTXyFrkYRGA11kxzKESk7UKxdOhd7J/LcW86K7fvjcOgPkEjlDPR8oA?=
- =?us-ascii?Q?vrydgiyK41RGeAKPHMUGWDauGSsBE2A5j2T3d35qTkDkILnjVwSK6kvdDt/H?=
- =?us-ascii?Q?ddTdq3DSIqvDKKpm9zS+uBufRR13qAk2zu8wBh320MOy6gfwEPzssnZG9whY?=
- =?us-ascii?Q?d4ySU4pv1V3hKE+ju7LvUxp/O8hvvPQ6WZbxqjtVeCwoX1a7KsWonDaUPs6T?=
- =?us-ascii?Q?r0I2Vb0NPKXnRDRPb1BJjHWD6cKYIzkqeucxEjehfTwIIkhCQusMkZPAX0my?=
- =?us-ascii?Q?o+cE/aAc/r3ADWdeyaqT/6Y61TkGacwgPUdF/1r2k6GXB3IF8Vb1MkJmVm+e?=
- =?us-ascii?Q?8ZsrxpWRuitjd3fzYi+VULZ8tWiLfvJElHvPAcau6bb14Ak4dCaOTBhbZlfX?=
- =?us-ascii?Q?vQ0DsPw2g1q6fwxGHZSnwm5upkNGErUJsFgtYHXBs6iX0Yr515Tw6fNyiM0K?=
- =?us-ascii?Q?X3ZtWgqCrhr0v9b4bmd556cAz9fyDvqgRAmM3+pwsnBxUVPUYLyX+3FLwulm?=
- =?us-ascii?Q?pchpOYdgMCW76Chj4set+/DtVby7cMGYeZZtvIwnDOA1viEPb2xmTIA+0vU2?=
- =?us-ascii?Q?rs+soNOmVoVjU5IpUYb6Gm3T26aLrgT44eoTkShJ1s0srYEEg7U6s72D7w+u?=
- =?us-ascii?Q?LpnjpaakUEM9fI9LWcCFVosL1wITnV0imsZd9IWiq/POznAm/5c+cCgNh4Gg?=
- =?us-ascii?Q?LwfcFWlP0mcGcJDW/37jGFu1cZAjibqiOBgVkP8MCxCgpJsZIodml8zsMqeJ?=
- =?us-ascii?Q?H27jhsDn7RH1tDK0UgtjakSqFGAJJORX46aaU7YXgGUE7igiYEAeiib6paSs?=
- =?us-ascii?Q?1V9muAYENGIsQ1ShEz0fYvo81+igyEn7+dwX2ISk5BbcYdsGQHSirEUWsygJ?=
- =?us-ascii?Q?OKfX+qxloXV0izrn/yBsJgI4vDtV2wEEcJI+ZGOWt7muVJfzBxvd?=
+	=?us-ascii?Q?F8cA5wd1lhXD/LtslCw9spRFfxG/ZNLhcsqx/3Ok5CHbegKDbchvIEIxnIgC?=
+ =?us-ascii?Q?9E/9nzHqEWSyEO1CgHC+0Wd1zS6n5FOECFspKgWkSHyAwX3GZpv1DPyKTARx?=
+ =?us-ascii?Q?08vONNg6ErQFDBgyMhNxNh7rUFvSJjucEkbgp8Zpd5KCsjnkS2U865COCSnp?=
+ =?us-ascii?Q?cAdPvQnHvsk3gXX1W/mm5ezM0O+4UYq3bV1gFJ5W4lJF+f3y1ucB2QHio0eN?=
+ =?us-ascii?Q?Aa3F0MlsRQ4G885Jcv3oGgRzUwvENWehQ2T9itTMuLH+XzjBVsg6cFx6R+UU?=
+ =?us-ascii?Q?7HBbwEXtyfyWiE4D1FO9jcTEwNWUpwrmwqaoDjnhAzj9PX32FsLRDn0KjHR9?=
+ =?us-ascii?Q?smnLNCdLZ63aDY7b5sc00/v0DZgk22BB4T8HKruqzLE6mc3LeQgTLg2pRlmw?=
+ =?us-ascii?Q?2Rm7LDio2IWw7xrGOVX6MLlxKAofVDVw8EFi8Tvf+KoPfI1Qq1Q4njXCPNCB?=
+ =?us-ascii?Q?CHZv3e13UeUZasO6Hrq/xVyEMob5IJ3D0J1Z3Q5kkBZ7TL3tuCN4RQU+wBnt?=
+ =?us-ascii?Q?zefB5VaqO5LtJ5qqjx8QBTvTPyxbUYXIoboJVvc1QBTHbj06KEef96u2v3/F?=
+ =?us-ascii?Q?qmfTaEMC0WrZ1P9gkZQsAYUs4A9ZAW91KQDcw7v2VtV0iILwuajZPMf4BflO?=
+ =?us-ascii?Q?n3NP7yVKqShaYCITERHj8BwPSe4aGAzIWZ2fnkJgZx0c882HE8UQhbFdHrC1?=
+ =?us-ascii?Q?8kzouc73Qjvt8mT59vmSnOXlKVCpaUU4fqBmMMgoR5Befp5k6pkvA11HF2n0?=
+ =?us-ascii?Q?Amdd7EuKDFB6xT7+Pu8dJ5TAkJRSRhKSceEnjVCDgUvZ/GGpEIB3N+SH8sOp?=
+ =?us-ascii?Q?at/cVWt5uv8ldkh7HJcMAC7FtyxyEAFQrb5ACGrQvgLcZZVF3gcQBtTZzj5U?=
+ =?us-ascii?Q?KgdvqN9EBiFNrkzOAr1gVeA8w7qW5wvNd1zSKD5usnkpQO0/vJeeso90Peah?=
+ =?us-ascii?Q?eKSD7BbsKlb7Gmge6yLb5/DYnOXg75pnQhgUr1d1ejrFEze6s8YAWPA7whnW?=
+ =?us-ascii?Q?KULQaBWuEVDSQSpL5xlmb/D9c3EEF4NzPZTcYb5j56b1uo479f7MKy4XKdJJ?=
+ =?us-ascii?Q?IuvuZmg17+v0BMlJSjEB04TubwVWu4adojgBjIymrZIXsj2RaS1VlgOyNkh7?=
+ =?us-ascii?Q?QjNhEcgVcbzQVFGAqC7q8RmmHPtG6HmF/HuADpMeQjOyiqtMZj8MfN9W0g9T?=
+ =?us-ascii?Q?/IeoJRbCooBQe1KDOq3CuOm5kkZlJtcan3rPaVqdIXy9DMW/frX2Rrj9newW?=
+ =?us-ascii?Q?ZaZ/TVTrF2ysCz9wDZEYhpeBzEYw22UgvLcNNvLkvuJWsPgOWB7ogZG6tgGG?=
+ =?us-ascii?Q?28MqRChzyEn6jQDIZsOwKIh05jIc1dfM1h+6cqC9bfKvFD2uPeYMa81M2ziq?=
+ =?us-ascii?Q?9XZCrunyO4nswaInKEEtItO/N/VXpp87c2Ny4djXq6AabSLM6BCPbFaukoUH?=
+ =?us-ascii?Q?OzU8I6YfmBAqQSizp+S3vfetiLC12OIRh6BYucpUXvUnfeI53ImUdIScknhB?=
+ =?us-ascii?Q?kMTgENrKU36egGqE3iz05C5YmGouyVTryJcRHI3AxKGz/3ypLFJYj24CqwtP?=
+ =?us-ascii?Q?E2VjHTfIykG+akCjU3zudzPYxJke27YrituH8crEsYYFBOTDfJEL8nnKhqAG?=
+ =?us-ascii?Q?OIoDffXRhrB4qdiarJEKnb/BZRjG9PkeHTHohgDZka5nutm5WSk8wxTZczpY?=
+ =?us-ascii?Q?WMnYB+XDqJQCER3pg7Mn845wMp5D5J07zQzzQZdW1CNCWYZZ17OMEjrXxbkN?=
+ =?us-ascii?Q?a3VFpZ4WnTQk3LjpQk043aSYaAsm0ne9x607JQnND/mUIMtBfQhT?=
 X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: caad76d8-208b-450c-bf3e-08de5412da6d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c5ccb72-0c1d-469f-d825-08de54130e59
 X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2026 08:48:28.4706
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2026 08:49:55.5628
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0gVCPRTkeOo4PAYudtqPyWFiD3ldm7YAWSQygbiwjZ1OD3znoExAGLxMrL/fGTmsLgUeIhMniy089/6Yx8cXrg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCP286MB2911
+X-MS-Exchange-CrossTenant-UserPrincipalName: k4R3BHvd+NUsw0D49GN1FRkV+VjLAuF+QUxjBN0iadtC0lwSR23GM89CjNdEs5rGBO8oXSqV0Rel/COoulsnNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYRP286MB4454
 
-On Tue, Jan 13, 2026 at 03:53:52PM -0500, Frank Li wrote:
-> On Wed, Jan 14, 2026 at 01:27:18AM +0900, Koichiro Den wrote:
-> > Extend dw_pcie_ep_set_bar() to support inbound mappings for BAR
-> > subranges using Address Match Mode IB iATU.
-> >
-> > Rename the existing BAR-match helper into dw_pcie_ep_ib_atu_bar() and
-> > introduce dw_pcie_ep_ib_atu_addr() for Address Match Mode. When
-> > use_submap is set, read the assigned BAR base address and program one
-> > inbound iATU window per subrange. Validate the submap array before
-> > programming:
-> > - each subrange is aligned to pci->region_align
-> > - subranges cover the whole BAR (no gaps and no overlaps)
-> > - subranges are sorted in ascending order by offset
-> >
-> > Track Address Match Mode mappings and tear them down on clear_bar() and
-> > on set_bar() error paths to avoid leaving half-programmed state or
-> > untranslated BAR holes.
-> >
-> > Advertise this capability by setting subrange_mapping in the EPC
-> > features returned from dw_pcie_ep_get_features().
-> >
-> > Reviewed-by: Niklas Cassel <cassel@kernel.org>
-> > Signed-off-by: Koichiro Den <den@valinux.co.jp>
-> > ---
-> >  .../pci/controller/dwc/pcie-designware-ep.c   | 230 +++++++++++++++++-
-> >  drivers/pci/controller/dwc/pcie-designware.h  |   2 +
-> >  2 files changed, 222 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > index 0e5a8d200b00..b2ea2c2c986f 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > @@ -139,9 +139,10 @@ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> >  	return 0;
-> >  }
-> >
-> > -static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
-> > -				  dma_addr_t parent_bus_addr, enum pci_barno bar,
-> > -				  size_t size)
-> > +/* BAR Match Mode inbound iATU mapping */
-> > +static int dw_pcie_ep_ib_atu_bar(struct dw_pcie_ep *ep, u8 func_no, int type,
-> > +				 dma_addr_t parent_bus_addr, enum pci_barno bar,
-> > +				 size_t size)
-> >  {
-> >  	int ret;
-> >  	u32 free_win;
-> > @@ -174,6 +175,208 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
-> >  	return 0;
-> >  }
-> >
-> ...
-> > +static int dw_pcie_ep_validate_submap(struct dw_pcie_ep *ep,
-> > +				      const struct pci_epf_bar_submap *submap,
-> > +				      unsigned int num_submap, size_t bar_size)
-> > +{
-> > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > +	u32 align = pci->region_align;
-> > +	size_t expected = 0;
-> > +	size_t size, off;
-> > +	unsigned int i;
-> > +
-> > +	if (!align || !IS_ALIGNED(bar_size, align))
-> > +		return -EINVAL;
-> > +
-> > +	/*
-> > +	 * The array is expected to be sorted by offset before calling this
-> > +	 * helper. With sorted entries, we can enforce a strict, gapless
-> > +	 * decomposition of the BAR:
-> > +	 *  - each entry has a non-zero size
-> > +	 *  - offset/size/phys_addr are aligned to pci->region_align
-> > +	 *  - each entry lies within the BAR range
-> > +	 *  - entries are contiguous (no overlaps, no holes)
-> > +	 *  - the entries exactly cover the whole BAR
-> > +	 *
-> > +	 * Note: dw_pcie_prog_inbound_atu() also checks alignment for
-> > +	 * offset/phys_addr, but validating up-front avoids partially
-> > +	 * programming iATU windows in vain.
-> > +	 */
-> > +	for (i = 0; i < num_submap; i++) {
-> > +		off = submap[i].offset;
-> > +		size = submap[i].size;
-> > +
-> > +		if (!size)
-> > +			return -EINVAL;
-> > +
-> > +		if (!IS_ALIGNED(size, align) || !IS_ALIGNED(off, align))
-> > +			return -EINVAL;
-> > +
-> > +		if (!IS_ALIGNED(submap[i].phys_addr, align))
-> > +			return -EINVAL;
-> > +
-> > +		if (off > bar_size || size > bar_size - off)
-> > +			return -EINVAL;
-> > +
-> > +		/* Enforce contiguity (no overlaps, no holes). */
-> > +		if (off != expected)
-> > +			return -EINVAL;
-> 
-> submap[i].offset is unnecessary, you can use expected += size as off.
-> code logic will be simple.
+This series proposes support for mapping subranges within a PCIe endpoint
+BAR and enables controllers to program inbound address translation for
+those subranges.
 
-Will fix this. as per my earlier response:
-https://lore.kernel.org/all/ngvqrju3bi6sugynhksxsci6rmgqevzpoijjflp2373c6uxlum@vyepxqghbzvn/
+- Patch 1/5 introduces dynamic_inbound_mapping feature bit. This can be
+  used as a safeguard to check whether a BAR can really be reconfigured
+  without clearing/resetting it.
 
-> 
-> Frank
-> > +
-> > +		expected += size;
-> > +	}
-> > +	if (expected != bar_size)
-> > +		return -EINVAL;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +/* Address Match Mode inbound iATU mapping */
-> > +static int dw_pcie_ep_ib_atu_addr(struct dw_pcie_ep *ep, u8 func_no, int type,
-> > +				  const struct pci_epf_bar *epf_bar)
-> > +{
-> > +	const struct pci_epf_bar_submap *submap = epf_bar->submap;
-> > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > +	enum pci_barno bar = epf_bar->barno;
-> > +	struct device *dev = pci->dev;
-> > +	u64 pci_addr, parent_bus_addr;
-> > +	struct dw_pcie_ib_map *new;
-> > +	u64 size, off, base;
-> > +	unsigned long flags;
-> > +	int free_win, ret;
-> > +	unsigned int i;
-> > +
-> > +	if (!epf_bar->num_submap || !submap || !epf_bar->size)
-> > +		return -EINVAL;
-> > +
-> > +	ret = dw_pcie_ep_validate_submap(ep, submap, epf_bar->num_submap,
-> > +					 epf_bar->size);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	base = dw_pcie_ep_read_bar_assigned(ep, func_no, bar, epf_bar->flags);
-> > +	if (!base) {
-> > +		dev_err(dev,
-> > +			"BAR%u not assigned, cannot set up sub-range mappings\n",
-> > +			bar);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/* Tear down any existing mappings before (re)programming. */
-> > +	dw_pcie_ep_clear_ib_maps(ep, bar);
-> > +
-> > +	for (i = 0; i < epf_bar->num_submap; i++) {
-> > +		off = submap[i].offset;
-> > +		size = submap[i].size;
-> > +		parent_bus_addr = submap[i].phys_addr;
-> > +
-> > +		if (off > (~0ULL) - base) {
-> > +			ret = -EINVAL;
-> > +			goto err;
-> > +		}
-> > +
-> > +		pci_addr = base + off;
-> > +
-> > +		new = devm_kzalloc(dev, sizeof(*new), GFP_KERNEL);
-> > +		if (!new) {
-> > +			ret = -ENOMEM;
-> > +			goto err;
-> > +		}
-> 
-> Simple alloc an array struct dw_pcie_ib_map[num_submap] should be simpler
-> than link list and alloc some small news.
+- Patch 2/5 introduces generic BAR subrange mapping support in the PCI
+  endpoint core.
 
-I'll do so in v8. Thank you for the review!
+- Patch 3/5 advertises dynamic inbound mapping support via
+  DWC_EPC_COMMON_FEATURES for all DWC-based glue drivers.
 
-Koichiro
+- Patch 4/5 adds an implementation for the DesignWare PCIe endpoint
+  controller using Address Match Mode IB iATU. It also advertises
+  subrange_mapping support via DWC_EPC_COMMON_FEATURES.
 
-> 
-> Frank
-> > +
-> > +		spin_lock_irqsave(&ep->ib_map_lock, flags);
-> > +
-> > +		free_win = find_first_zero_bit(ep->ib_window_map,
-> > +					       pci->num_ib_windows);
-> > +		if (free_win >= pci->num_ib_windows) {
-> > +			spin_unlock_irqrestore(&ep->ib_map_lock, flags);
-> > +			devm_kfree(dev, new);
-> > +			ret = -ENOSPC;
-> > +			goto err;
-> > +		}
-> > +		set_bit(free_win, ep->ib_window_map);
-> > +
-> > +		new->bar = bar;
-> > +		new->index = free_win;
-> > +		new->pci_addr = pci_addr;
-> > +		new->parent_bus_addr = parent_bus_addr;
-> > +		new->size = size;
-> > +		list_add_tail(&new->list, &ep->ib_map_list);
-> > +
-> > +		spin_unlock_irqrestore(&ep->ib_map_lock, flags);
-> > +
-> > +		ret = dw_pcie_prog_inbound_atu(pci, free_win, type,
-> > +					       parent_bus_addr, pci_addr, size);
-> > +		if (ret) {
-> > +			spin_lock_irqsave(&ep->ib_map_lock, flags);
-> > +			list_del(&new->list);
-> > +			clear_bit(free_win, ep->ib_window_map);
-> > +			spin_unlock_irqrestore(&ep->ib_map_lock, flags);
-> > +			devm_kfree(dev, new);
-> > +			goto err;
-> > +		}
-> > +	}
-> > +	return 0;
-> > +err:
-> > +	dw_pcie_ep_clear_ib_maps(ep, bar);
-> > +	return ret;
-> > +}
-> > +
-> >  static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep,
-> >  				   struct dw_pcie_ob_atu_cfg *atu)
-> >  {
-> > @@ -204,17 +407,15 @@ static void dw_pcie_ep_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> >  	enum pci_barno bar = epf_bar->barno;
-> > -	u32 atu_index = ep->bar_to_atu[bar] - 1;
-> >
-> > -	if (!ep->bar_to_atu[bar])
-> > +	if (!ep->epf_bar[bar])
-> >  		return;
-> >
-> >  	__dw_pcie_ep_reset_bar(pci, func_no, bar, epf_bar->flags);
-> >
-> > -	dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, atu_index);
-> > -	clear_bit(atu_index, ep->ib_window_map);
-> > +	dw_pcie_ep_clear_ib_maps(ep, bar);
-> > +
-> >  	ep->epf_bar[bar] = NULL;
-> > -	ep->bar_to_atu[bar] = 0;
-> >  }
-> >
-> >  static unsigned int dw_pcie_ep_get_rebar_offset(struct dw_pcie *pci,
-> > @@ -408,8 +609,12 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> >  	else
-> >  		type = PCIE_ATU_TYPE_IO;
-> >
-> > -	ret = dw_pcie_ep_inbound_atu(ep, func_no, type, epf_bar->phys_addr, bar,
-> > -				     size);
-> > +	if (epf_bar->use_submap)
-> > +		ret = dw_pcie_ep_ib_atu_addr(ep, func_no, type, epf_bar);
-> > +	else
-> > +		ret = dw_pcie_ep_ib_atu_bar(ep, func_no, type,
-> > +					    epf_bar->phys_addr, bar, size);
-> > +
-> >  	if (ret)
-> >  		return ret;
-> >
-> > @@ -638,6 +843,9 @@ dw_pcie_ep_get_features(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
-> >  	/* All DWC-based glue drivers support dynamic inbound mapping */
-> >  	features->dynamic_inbound_mapping = true;
-> >
-> > +	/* All DWC-based glue drivers support inbound subrange mapping */
-> > +	features->subrange_mapping = true;
-> > +
-> >  	return features;
-> >  }
-> >
-> > @@ -1128,6 +1336,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> >  	struct device *dev = pci->dev;
-> >
-> >  	INIT_LIST_HEAD(&ep->func_list);
-> > +	INIT_LIST_HEAD(&ep->ib_map_list);
-> > +	spin_lock_init(&ep->ib_map_lock);
-> >  	ep->msi_iatu_mapped = false;
-> >  	ep->msi_msg_addr = 0;
-> >  	ep->msi_map_size = 0;
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > index 4dda9a38d46b..969b1f32dddf 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > @@ -479,6 +479,8 @@ struct dw_pcie_ep {
-> >  	phys_addr_t		*outbound_addr;
-> >  	unsigned long		*ib_window_map;
-> >  	unsigned long		*ob_window_map;
-> > +	struct list_head	ib_map_list;
-> > +	spinlock_t		ib_map_lock;
-> >  	void __iomem		*msi_mem;
-> >  	phys_addr_t		msi_mem_phys;
-> >  	struct pci_epf_bar	*epf_bar[PCI_STD_NUM_BARS];
-> > --
-> > 2.51.0
-> >
+- Patch 5/5 updates a documentation for pci_epc_set_bar().
+
+This series is originally a spin-off from a larger RFC series posted
+earlier:
+https://lore.kernel.org/all/20251217151609.3162665-4-den@valinux.co.jp/
+The first user will likely be Remote eDMA-backed NTB transport,
+demonstrated in that RFC series.
+
+Kernel base:
+  - repo: git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
+  - branch: controller/dwc
+  - commit: 68ac85fb42cf ("PCI: dwc: Use cfg0_base as iMSI-RX target address
+                           to support 32-bit MSI devices")
+
+Changelog:
+* v7->v8 changes:
+  - Drop the explicit submap offset and use_submap fields. The submap
+    array order now defines BAR offsets (gapless decomposition). Commit
+    messages and source code documentations are adjusted accordingly.
+  - Drop the no-longer-needed dw_pcie_ib_map and add ib_atu_indexes field
+    to track iatu indexes used for teardown.
+  - Move inbound mapping teardown into dw_pcie_ep_set_bar() to cover all
+    BAR transition cases.
+  - Centralize feature bit advertisement via DWC_EPC_COMMON_FEATURES.
+  - Added a (epf_bar->num_submap && !epf_bar->submap) check in
+    pci_epc_set_bar().
+  - Note that some Reviewed-by tags are dropped, as the changes need to be
+    re-reviewed.
+
+* v6->v7 changes:
+  - Added missing check of dynamic_inbound_mapping feature bit in
+    pci_epc_set_bar() when use_submap is set true.
+  - Addressed the remaining review comments from Niklas (patch reordering,
+    splitting, and source code comment/documentation refinements).
+
+* v5->v6 changes:
+  - Added a new feature bit dynamic_inbound_mapping and set it centrally
+    in dw_pcie_ep_get_features() for all DWC-based glue drivers.
+  - Updated documentation for pci_epc_set_bar().
+  - Dropped a needless and harmful dw_pcie_ep_clear_bar() call on the error
+    path.
+  - Fixed "Bar Match Mode" to "BAR Match Mode" in a source code comment.
+
+* v4->v5 changes:
+  - Added subrange_mapping to struct pci_epc_features and enforced a
+    strict capability check in pci_epc_set_bar() (reject use_submap when
+    unsupported).
+  - Changed DWC-based glue drivers to return a mutable features pointer
+    and set subrange_mapping centrally at the DWC midlayer.
+  - Split the series into 3 patches accordingly.
+
+* v3->v4 changes:
+  - Drop unused includes that should have been removed in v3
+
+* v2->v3 changes:
+  - Remove submap copying and sorting from dw_pcie_ep_ib_atu_addr(), and
+    require callers to pass a sorted submap. The related source code
+    comments are updated accordingly.
+  - Refine source code comments and commit messages, including normalizing
+    "Address Match Mode" wording.
+  - Add const qualifiers where applicable.
+
+* v1->v2 changes:
+  - Introduced stricter submap validation: no holes/overlaps and the
+    subranges must exactly cover the whole BAR. Added
+    dw_pcie_ep_validate_submap() to enforce alignment and full-coverage
+    constraints.
+  - Enforced one-shot (all-or-nothing) submap programming to avoid leaving
+    half-programmed BAR state:
+    * Dropped incremental/overwrite logic that is no longer needed with the
+      one-shot design.
+    * Added dw_pcie_ep_clear_ib_maps() and used it from multiple places to
+      tear down BAR match / address match inbound mappings without code
+      duplication.
+  - Updated kernel source code comments and commit messages, including a
+    small refinement made along the way.
+  - Changed num_submap type to unsigned int.
+
+v7: https://lore.kernel.org/all/20260113162719.3710268-1-den@valinux.co.jp/
+v6: https://lore.kernel.org/all/20260113023715.3463724-1-den@valinux.co.jp/
+v5: https://lore.kernel.org/all/20260108172403.2629671-1-den@valinux.co.jp/
+v4: https://lore.kernel.org/all/20260108044148.2352800-1-den@valinux.co.jp/
+v3: https://lore.kernel.org/all/20260108024829.2255501-1-den@valinux.co.jp/
+v2: https://lore.kernel.org/all/20260107041358.1986701-1-den@valinux.co.jp/
+v1: https://lore.kernel.org/all/20260105080214.1254325-1-den@valinux.co.jp/
+
+
+Thank you for reviewing,
+
+
+Koichiro Den (5):
+  PCI: endpoint: Add dynamic_inbound_mapping EPC feature
+  PCI: endpoint: Add BAR subrange mapping support
+  PCI: dwc: Advertise dynamic inbound mapping support
+  PCI: dwc: ep: Support BAR subrange inbound mapping via Address Match
+    Mode iATU
+  Documentation: PCI: endpoint: Clarify pci_epc_set_bar() usage
+
+ Documentation/PCI/endpoint/pci-endpoint.rst   |  24 +++
+ drivers/pci/controller/dwc/pci-dra7xx.c       |   1 +
+ drivers/pci/controller/dwc/pci-imx6.c         |   3 +
+ drivers/pci/controller/dwc/pci-keystone.c     |   1 +
+ drivers/pci/controller/dwc/pcie-artpec6.c     |   1 +
+ .../pci/controller/dwc/pcie-designware-ep.c   | 203 +++++++++++++++++-
+ .../pci/controller/dwc/pcie-designware-plat.c |   1 +
+ drivers/pci/controller/dwc/pcie-designware.h  |   8 +
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c |   2 +
+ drivers/pci/controller/dwc/pcie-keembay.c     |   1 +
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     |   1 +
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c   |   1 +
+ drivers/pci/controller/dwc/pcie-stm32-ep.c    |   1 +
+ drivers/pci/controller/dwc/pcie-tegra194.c    |   1 +
+ drivers/pci/controller/dwc/pcie-uniphier-ep.c |   2 +
+ drivers/pci/endpoint/pci-epc-core.c           |   8 +
+ include/linux/pci-epc.h                       |   9 +
+ include/linux/pci-epf.h                       |  27 +++
+ 18 files changed, 285 insertions(+), 10 deletions(-)
+
+-- 
+2.51.0
+
 
