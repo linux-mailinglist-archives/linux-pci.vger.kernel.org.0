@@ -1,176 +1,289 @@
-Return-Path: <linux-pci+bounces-44886-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44888-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30CC3D2230D
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 03:50:52 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 745A9D22649
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 05:53:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 8C9633015F49
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 02:50:40 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E041430057EC
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 04:53:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2E5226CE2D;
-	Thu, 15 Jan 2026 02:50:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B55B9273D75;
+	Thu, 15 Jan 2026 04:53:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="ssr9zAGV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AouXW5V0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F72283FC4;
-	Thu, 15 Jan 2026 02:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D93026ED25
+	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 04:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768445435; cv=none; b=k9+ANhdkIugDYNVhwWUSS1iH6gRjIOy+d1YSfiuqrLzgfVuFqmLTSNQArCEexJynFeZPrNzLIVqYRfy6xHGH7IAOKMZ+AQYC0D7d3H/HUD8ZFkR4eaKe8wn/GS3O6DwvALzOSB0S4iO26ZADoQNeS5so97NwwOSCbJ7oKgSfgIo=
+	t=1768452829; cv=none; b=Kw5LoQs8e31UJzRuCoz243zUCA5uGLYnkFo9zm7aLXkYVvmvwd59VKBTaKfjMd41kMam/YpsQ4Mw+HGhQaZcrqNy9xSM/hkeCwbSWR6+WSiiScmStNbu32HOuLs7Gvz1lVoB9TSkM8ZTHko0e8U86xWR0SGK1ReNypmybMBcf4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768445435; c=relaxed/simple;
-	bh=o2XTS6KlZ6Uq81cKf/FQUOIG0hKImr95Un6PTnpuOOs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Sog5xusDNakteZOfCGu1roSk+oT6wWZ49NGFDFz1vlvS3rjS9okZt3RQ278cc/TzUhEbv6d8MU9ZNxt3iG2RyACRyMQbXvfM9wkjc0Ya8Bwu1GTxpEXOdQgShZp0CgC11ZcCP59+R/74cLfNBS75+/itJxKqAErVmkY/luL1Hrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=ssr9zAGV; arc=none smtp.client-ip=113.46.200.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=y90JyjgAjmVx2JNM/FVh1UCFheEA05DSbnxClbUCO/A=;
-	b=ssr9zAGVhzW/C83lf/l+3J6BUkv0lRvDoznq2M6Q4+61Zt7GvPzek0YQv3+D/cHIECPGwFmIJ
-	H/grCh0GVMKdu98Q+D5nlt6AG93/eHTzoTpPGp3+mBUcRcuQkp2x8Ml8rFPpslFGisuusP/c+oe
-	Iv7Yg0RQlIy0iYvfCxDaRc4=
-Received: from mail.maildlp.com (unknown [172.19.163.0])
-	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4ds6nd1ksVzcb42;
-	Thu, 15 Jan 2026 10:46:45 +0800 (CST)
-Received: from kwepemr500012.china.huawei.com (unknown [7.202.195.23])
-	by mail.maildlp.com (Postfix) with ESMTPS id 22C194056B;
-	Thu, 15 Jan 2026 10:50:31 +0800 (CST)
-Received: from [100.103.109.72] (100.103.109.72) by
- kwepemr500012.china.huawei.com (7.202.195.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 15 Jan 2026 10:50:30 +0800
-Message-ID: <3a045365-3cd0-408e-a366-4c81a1b60cbb@huawei.com>
-Date: Thu, 15 Jan 2026 10:50:29 +0800
+	s=arc-20240116; t=1768452829; c=relaxed/simple;
+	bh=NsSIwSGwBtRhOznHLjAj4aATQEoLSaXgDUITsrGi20s=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=fL6ekuom5YYbijSFui+Ms+rOKI6D8OF2NsuLmoyczKiB60ixH79fbHUHOXQ8QjLx93GKF/L2zVPtyqaVwNU60tgb5uiQLmf4pllhDCEwY8ivOROKfWiP7J3E89neHlPmttV0DO9E48LmuEHLxIbUQNpalwlKwlY3cupxfkd64eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AouXW5V0; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768452828; x=1799988828;
+  h=date:from:to:cc:subject:message-id;
+  bh=NsSIwSGwBtRhOznHLjAj4aATQEoLSaXgDUITsrGi20s=;
+  b=AouXW5V0xt2phQvoNWXw/wIlsL4D1x//bLenXLgin95NnJXy/8S7G2TV
+   EfhPrp7tVrYxz5v+VBAby1J9cS16pqmTZ2pt5g023Fs+m1X2LrD0uhSfF
+   /nx/83povW8aeO2X0pWipIMJODAsC8iURu/jTXVA3QEYt89k5DA06ksW0
+   uwx+i31mIoHS02ohvjmqUbEitzlsa6DLRxeA3UNROtto8E3LJoaAh96Et
+   J1nfB5MF3UV1Sy1FD/d9zZuS7rlTXioKGvYm1M+roXo45tAri3+tWeOa6
+   62gM1WgBOK4053xNo57sX8oS2zpiN+kTb51FpvM21aKZdQ9RPbLPsrMzw
+   Q==;
+X-CSE-ConnectionGUID: iBRATWTIS6ml11RFBTbSZg==
+X-CSE-MsgGUID: XPv434GxTe22H6Ev+ar0PQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="73389857"
+X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
+   d="scan'208";a="73389857"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 20:53:48 -0800
+X-CSE-ConnectionGUID: ILNZKCN3Sm2GzqrIBXEa9Q==
+X-CSE-MsgGUID: Y++jkvi4SDqTpiVPabtTlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
+   d="scan'208";a="242417475"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 14 Jan 2026 20:53:46 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vgFMd-00000000HYe-2Aet;
+	Thu, 15 Jan 2026 04:53:43 +0000
+Date: Thu, 15 Jan 2026 12:53:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:pm] BUILD SUCCESS
+ 4d982084507d663df160546c4c48066a8887ed89
+Message-ID: <202601151201.iYyS3JAm-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Fix AB-BA deadlock between aer_isr() and
- device_shutdown()
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <bhelgaas@google.com>, <okaya@kernel.org>, <keith.busch@intel.com>,
-	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<liuyongqiang13@huawei.com>
-References: <20260113185130.GA774840@bhelgaas>
-From: duziming <duziming2@huawei.com>
-In-Reply-To: <20260113185130.GA774840@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemr500012.china.huawei.com (7.202.195.23)
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pm
+branch HEAD: 4d982084507d663df160546c4c48066a8887ed89  PCI/PM: Avoid redundant delays on D3hot->D3cold
 
-在 2026/1/14 2:51, Bjorn Helgaas 写道:
-> On Fri, Jan 09, 2026 at 05:56:03PM +0800, Ziming Du wrote:
->> During system shutdown, a deadlock may occur between AER recovery process
->> and device shutdown as follows:
->>
->> The device_shutdown path holds the device_lock throughout the entire
->> process and waits for the irq handlers to complete when release nodes:
->>
->>    device_shutdown
->>      device_lock                      # A hold device_lock
->>      pci_device_shutdown
->>        pcie_port_device_remove
->>          remove_iter
->>            device_unregister
->>              device_del
->>                bus_remove_device
->>                  device_release_driver
->>                    devres_release_all
->>                      release_nodes    # B wait for irq handlers
-> Can you add the wait location to these example?  release_nodes()
-> doesn't wait itself, so I guess it must be in a dr->node.release()
-> function?
->
-> And I guess it must be related to something in the IRQ path that is
-> held while aer_isr() runs?
+elapsed time: 736m
 
-When releasing the interrupt resources, the process eventually calls 
-free_irq(), and then
+configs tested: 198
+configs skipped: 2
 
-__synchronize_irq () will be called to wait until all irq handlers have 
-finished.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->> The aer_isr path will acquire device_lock in pci_bus_reset():
->>
->>    aer_isr                            # B execute irq process
->>      aer_isr_one_error
->>        aer_process_err_devices
->>          handle_error_source
->>            pcie_do_recovery
->>            aer_root_reset
->>              pci_bus_error_reset
->>                pci_bus_reset          # A acquire device_lock
->>
->> The circular dependency causes system hang. Fix it by using
->> pci_bus_trylock() instead of pci_bus_lock() in pci_bus_reset(). When the
->> lock is unavailable, return -EAGAIN, as in similar cases.
-> pci_bus_error_reset() may use either pci_slot_reset() or
-> pci_bus_reset(), and this patch addresses only pci_bus_reset().  Is
-> the same deadlock possible in the pci_slot_reset() path?
+tested configs:
+alpha                            alldefconfig    clang-22
+alpha                             allnoconfig    gcc-15.2.0
+alpha                            allyesconfig    gcc-15.2.0
+alpha                               defconfig    gcc-15.2.0
+arc                              allmodconfig    clang-16
+arc                               allnoconfig    gcc-15.2.0
+arc                              allyesconfig    clang-22
+arc                                 defconfig    gcc-15.2.0
+arc                   randconfig-001-20260115    clang-22
+arc                   randconfig-002-20260115    clang-22
+arm                               allnoconfig    gcc-15.2.0
+arm                              allyesconfig    clang-16
+arm                                 defconfig    gcc-15.2.0
+arm                        keystone_defconfig    clang-22
+arm                            mps2_defconfig    clang-22
+arm                          pxa168_defconfig    gcc-15.2.0
+arm                          pxa3xx_defconfig    clang-22
+arm                   randconfig-001-20260115    clang-22
+arm                   randconfig-002-20260115    clang-22
+arm                   randconfig-003-20260115    clang-22
+arm                   randconfig-004-20260115    clang-22
+arm                             rpc_defconfig    clang-22
+arm                        shmobile_defconfig    gcc-15.2.0
+arm64                            allmodconfig    clang-22
+arm64                             allnoconfig    gcc-15.2.0
+arm64                               defconfig    gcc-15.2.0
+arm64                 randconfig-001-20260115    clang-22
+arm64                 randconfig-002-20260115    clang-22
+arm64                 randconfig-003-20260115    clang-22
+arm64                 randconfig-004-20260115    clang-22
+csky                             allmodconfig    gcc-15.2.0
+csky                              allnoconfig    gcc-15.2.0
+csky                                defconfig    gcc-15.2.0
+csky                  randconfig-001-20260115    clang-22
+csky                  randconfig-002-20260115    clang-22
+hexagon                          allmodconfig    gcc-15.2.0
+hexagon                           allnoconfig    gcc-15.2.0
+hexagon                             defconfig    gcc-15.2.0
+hexagon               randconfig-001-20260115    clang-22
+hexagon               randconfig-002-20260115    clang-22
+i386                             alldefconfig    clang-22
+i386                             allmodconfig    clang-20
+i386                              allnoconfig    gcc-15.2.0
+i386                             allyesconfig    clang-20
+i386        buildonly-randconfig-001-20260115    gcc-14
+i386        buildonly-randconfig-002-20260115    gcc-14
+i386        buildonly-randconfig-003-20260115    gcc-14
+i386        buildonly-randconfig-004-20260115    gcc-14
+i386        buildonly-randconfig-005-20260115    gcc-14
+i386        buildonly-randconfig-006-20260115    gcc-14
+i386                                defconfig    gcc-15.2.0
+i386                  randconfig-001-20260115    clang-20
+i386                  randconfig-002-20260115    clang-20
+i386                  randconfig-003-20260115    clang-20
+i386                  randconfig-004-20260115    clang-20
+i386                  randconfig-005-20260115    clang-20
+i386                  randconfig-006-20260115    clang-20
+i386                  randconfig-007-20260115    clang-20
+i386                  randconfig-011-20260115    gcc-14
+i386                  randconfig-012-20260115    gcc-14
+i386                  randconfig-013-20260115    gcc-14
+i386                  randconfig-014-20260115    gcc-14
+i386                  randconfig-015-20260115    gcc-14
+i386                  randconfig-016-20260115    gcc-14
+i386                  randconfig-017-20260115    gcc-14
+loongarch                        allmodconfig    clang-22
+loongarch                         allnoconfig    gcc-15.2.0
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20260115    clang-22
+loongarch             randconfig-002-20260115    clang-22
+m68k                             allmodconfig    gcc-15.2.0
+m68k                              allnoconfig    gcc-15.2.0
+m68k                             allyesconfig    clang-16
+m68k                                defconfig    clang-19
+m68k                          hp300_defconfig    clang-22
+microblaze                        allnoconfig    gcc-15.2.0
+microblaze                       allyesconfig    gcc-15.2.0
+microblaze                          defconfig    clang-19
+mips                             allmodconfig    gcc-15.2.0
+mips                              allnoconfig    gcc-15.2.0
+mips                             allyesconfig    gcc-15.2.0
+mips                          ath79_defconfig    gcc-15.2.0
+mips                           gcw0_defconfig    clang-22
+mips                       rbtx49xx_defconfig    clang-22
+nios2                            allmodconfig    clang-22
+nios2                             allnoconfig    clang-22
+nios2                               defconfig    clang-19
+nios2                 randconfig-001-20260115    clang-22
+nios2                 randconfig-002-20260115    clang-22
+openrisc                         alldefconfig    clang-22
+openrisc                         allmodconfig    clang-22
+openrisc                          allnoconfig    clang-22
+openrisc                            defconfig    gcc-15.2.0
+parisc                           allmodconfig    gcc-15.2.0
+parisc                            allnoconfig    clang-22
+parisc                           allyesconfig    clang-19
+parisc                              defconfig    gcc-15.2.0
+parisc                generic-64bit_defconfig    clang-22
+parisc                generic-64bit_defconfig    gcc-15.2.0
+parisc                randconfig-001-20260115    clang-22
+parisc                randconfig-002-20260115    clang-22
+parisc64                            defconfig    clang-19
+powerpc                    adder875_defconfig    clang-22
+powerpc                    adder875_defconfig    gcc-15.2.0
+powerpc                          allmodconfig    gcc-15.2.0
+powerpc                           allnoconfig    clang-22
+powerpc                    gamecube_defconfig    clang-22
+powerpc                     mpc512x_defconfig    clang-22
+powerpc                 mpc8313_rdb_defconfig    clang-22
+powerpc                      pasemi_defconfig    clang-22
+powerpc               randconfig-001-20260115    clang-22
+powerpc               randconfig-002-20260115    clang-22
+powerpc                      tqm8xx_defconfig    clang-22
+powerpc                 xes_mpc85xx_defconfig    gcc-15.2.0
+powerpc64             randconfig-001-20260115    clang-22
+powerpc64             randconfig-002-20260115    clang-22
+riscv                            allmodconfig    clang-22
+riscv                             allnoconfig    clang-22
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    gcc-15.2.0
+riscv                 randconfig-001-20260115    gcc-10.5.0
+riscv                 randconfig-002-20260115    gcc-10.5.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.2.0
+s390                                defconfig    gcc-15.2.0
+s390                  randconfig-001-20260115    gcc-10.5.0
+s390                  randconfig-002-20260115    gcc-10.5.0
+sh                               allmodconfig    gcc-15.2.0
+sh                                allnoconfig    clang-22
+sh                               allyesconfig    clang-19
+sh                         ap325rxa_defconfig    clang-22
+sh                                  defconfig    gcc-14
+sh                          r7785rp_defconfig    clang-22
+sh                          r7785rp_defconfig    gcc-15.2.0
+sh                    randconfig-001-20260115    gcc-10.5.0
+sh                    randconfig-002-20260115    gcc-10.5.0
+sh                           se7721_defconfig    gcc-15.2.0
+sh                           se7751_defconfig    clang-22
+sh                              ul2_defconfig    clang-22
+sparc                             allnoconfig    clang-22
+sparc                               defconfig    gcc-15.2.0
+sparc                 randconfig-001-20260115    clang-22
+sparc                 randconfig-002-20260115    clang-22
+sparc64                          allmodconfig    clang-22
+sparc64                             defconfig    gcc-14
+sparc64               randconfig-001-20260115    clang-22
+sparc64               randconfig-002-20260115    clang-22
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    gcc-15.2.0
+um                                  defconfig    gcc-14
+um                             i386_defconfig    clang-22
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20260115    clang-22
+um                    randconfig-002-20260115    clang-22
+um                           x86_64_defconfig    clang-22
+um                           x86_64_defconfig    gcc-14
+x86_64                           allmodconfig    clang-20
+x86_64                            allnoconfig    clang-22
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20260115    clang-20
+x86_64      buildonly-randconfig-002-20260115    clang-20
+x86_64      buildonly-randconfig-003-20260115    clang-20
+x86_64      buildonly-randconfig-004-20260115    clang-20
+x86_64      buildonly-randconfig-005-20260115    clang-20
+x86_64      buildonly-randconfig-006-20260115    clang-20
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20260115    clang-20
+x86_64                randconfig-002-20260115    clang-20
+x86_64                randconfig-003-20260115    clang-20
+x86_64                randconfig-004-20260115    clang-20
+x86_64                randconfig-005-20260115    clang-20
+x86_64                randconfig-006-20260115    clang-20
+x86_64                randconfig-011-20260115    clang-20
+x86_64                randconfig-012-20260115    clang-20
+x86_64                randconfig-013-20260115    clang-20
+x86_64                randconfig-014-20260115    clang-20
+x86_64                randconfig-015-20260115    clang-20
+x86_64                randconfig-016-20260115    clang-20
+x86_64                randconfig-071-20260115    gcc-14
+x86_64                randconfig-072-20260115    gcc-14
+x86_64                randconfig-073-20260115    gcc-14
+x86_64                randconfig-074-20260115    gcc-14
+x86_64                randconfig-075-20260115    gcc-14
+x86_64                randconfig-076-20260115    gcc-14
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-14
+x86_64                          rhel-9.4-func    clang-20
+x86_64                    rhel-9.4-kselftests    clang-20
+x86_64                         rhel-9.4-kunit    gcc-14
+x86_64                           rhel-9.4-ltp    gcc-14
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    clang-22
+xtensa                           allyesconfig    clang-22
+xtensa                randconfig-001-20260115    clang-22
+xtensa                randconfig-002-20260115    clang-22
 
-Looking at the code flow, I agree that there is likely a potential issue 
-here.
-
-Unfortunately, my current test environment does not support slot_reset, so
-
-I haven't been able to reproduce this specific scenario locally. It would be
-
-incredibly helpful if someone with a compatible setup could help verify 
-or reproduce this behavior.
-
->> Fixes: c4eed62a2143 ("PCI/ERR: Use slot reset if available")
->> Signed-off-by: Ziming Du <duziming2@huawei.com>
->> ---
->>   drivers/pci/pci.c | 17 ++++++++++++-----
->>   1 file changed, 12 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index 13dbb405dc31..7471bfa6f32e 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -5515,15 +5515,22 @@ static int pci_bus_reset(struct pci_bus *bus, bool probe)
->>   	if (probe)
->>   		return 0;
->>   
->> -	pci_bus_lock(bus);
->> +	/*
->> +	 * Replace blocking lock with trylock to prevent deadlock during bus reset.
->> +	 * Same as above except return -EAGAIN if the bus cannot be locked.
-> Wrap this to fit in 80 columns like the rest of the file.
->
->> +	 */
->> +	if (pci_bus_trylock(bus)) {
->>   
->> -	might_sleep();
->> +		might_sleep();
->>   
->> -	ret = pci_bridge_secondary_bus_reset(bus->self);
->> +		ret = pci_bridge_secondary_bus_reset(bus->self);
->>   
->> -	pci_bus_unlock(bus);
->> +		pci_bus_unlock(bus);
->>   
->> -	return ret;
->> +		return ret;
->> +	}
->> +
->> +	return -EAGAIN;
->>   }
->>   
->>   /**
->> -- 
->> 2.43.0
->>
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
