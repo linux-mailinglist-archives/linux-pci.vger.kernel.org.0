@@ -1,72 +1,71 @@
-Return-Path: <linux-pci+bounces-44953-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44954-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68673D24F3E
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 15:30:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0D32D24F2A
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 15:29:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D81F430996EA
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 14:27:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7FE363013EFC
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 14:29:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F8913A35C8;
-	Thu, 15 Jan 2026 14:27:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FE3D3A1E6D;
+	Thu, 15 Jan 2026 14:29:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k9z1KC8j"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z6JLwjQ5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5C93A35C7
-	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 14:27:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBAE350299
+	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 14:29:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768487258; cv=none; b=Tk13ruBM/7/R7LxQtfPBewSEqc5uAOoJgYgduvT97AOOk/lAaUEPraJGRrEUlAdAfhCHuF8ulYM6tQcK0mLQ2m16eutyjbLFTppe+4UsJ+TTNlRNvcqofd+K9iqLA1bFCbj/U8gksHvhIeiYneFbUGvTG6bpnp2oec4zUt48SOg=
+	t=1768487344; cv=none; b=RUXzeLpZBAaEfZMMXRNk5JNtOK2a0CuGKSdCf9J0SKiDXM23fPt/mtNW5I6rT6Elulso4FpUm+SuvM/iw4GRVG3MB3OJLj6NmfU4Ez9Uff6Uv8heYiwofCGDcINturNrouo+f+9VBkkQR9mJz9Fq87pGPl/CjT+0q6YZc4Exzz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768487258; c=relaxed/simple;
-	bh=jvPb3lrGzvQY4eXmn3nFfcrCHXN1JWep9zU2aZLbhWI=;
+	s=arc-20240116; t=1768487344; c=relaxed/simple;
+	bh=f7g2xb8a7bQ7d5++spiGugEdEC0YCIciYuW0HVyY+MA=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o7CdBcRY2viwxpdnSz+QfJ83R5b3H8GmPbeZxWIh066mA9qbgT7vp6+bomZuhYHGgeLgzsvy1rNGCDM/pM4c3rxw//uM50kVp06JmcGF6TT4gOQWVkxIQ3eP2YJKILY2K3JHTdd0fvv4coRdbZSMacKpsBoFtiCjr1/YLC8AFpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k9z1KC8j; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B829CC2BCB0
-	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 14:27:35 +0000 (UTC)
+	 To:Cc:Content-Type; b=KNmBKwSEF2tF31DZ1gPl7kYbpP01SZS+HyMCIctwUu/eKQfuUGPu1Nd6M+Gsi79WXtDG4hRfglLFjUFIHlhyDX0VMwSvOlSIcufA/0TIlJ7O9n7mb+OJsaqXI3cAx9wpDUndIscXMFSdsR9WgYDqr5leNouXyuusf1KVhHH7U/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z6JLwjQ5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B529C2BCB0
+	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 14:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768487255;
-	bh=jvPb3lrGzvQY4eXmn3nFfcrCHXN1JWep9zU2aZLbhWI=;
+	s=k20201202; t=1768487344;
+	bh=f7g2xb8a7bQ7d5++spiGugEdEC0YCIciYuW0HVyY+MA=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=k9z1KC8jMi/9MUCq142fQyP/tcGcUo3N7oGTRcBnIwvUCKw7Or4Q8yGZZ2hB3eyAX
-	 jaW+x0k0lqQGC2uC7LL7cP61XNAi9151Hgv6d+lQqlF/HantMAKsz+mWNbhupvUR43
-	 Kb+Xo8iDZ4kRdI+8ZHASuBMnzm12csKj7h5SG+HSrUD9ZQ2WvBlu9dGaxcn0wRfToU
-	 RnLKdMOfebvg5FkqklVJRu2yTvPxR91I3uIGVnJL956bPOHE1rzRwydGspc30L73Yt
-	 lFmNMXgpRckKzYka289y+67qnz2Vvr2NDRi+4bv45PmeS25X8WfkP/IdJ3fZw8TwdH
-	 KZP3zrlFEhCUw==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-59b7882e605so1363448e87.0
-        for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 06:27:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUESaCWj2OqAP7IXcMu585vhypzvEaE84em2B4do3IIscifjHsiJCwjLC0Xc5twps/KtSGjZG9MezM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQl6/3Snr8JJzptGhKmjXefm+LDaQD8Vy5Fy4Z/aKX/3VC5tp5
-	O1ELhFXRzpOfT7cSBo/otLLRXmSU8r+sPdizOZDNgqssEhNXNshUnzMn1vWc9StBThGd5HsOQeE
-	nFzfHN087oBbrHRm29UFc+PZciSVvdoe0F9L1bO9yEw==
-X-Received: by 2002:a05:6512:23a5:b0:59b:811f:cfb1 with SMTP id
- 2adb3069b0e04-59ba0f81f8bmr2290889e87.34.1768487254417; Thu, 15 Jan 2026
- 06:27:34 -0800 (PST)
+	b=Z6JLwjQ504l/8JKq7VjJn9GcS7wSR1nhk8gEhQZRwygyyoUNcMAV6N0La5zufZY4A
+	 QgFBejW1Rp0XIf2EX+tteChexPBc5en3mhfV/l3okluZFrPvTVyhbX3VwA0nfDRYGe
+	 hjJzyUH+7lMQwoTJiRYZtwYs5VhmZU/GnxJqQFmtFdf1Je01TGZ4l2mFU/gjwmW/Ks
+	 Ux/Vee/Op0RrpWuXLUQ5S+1DZrYEPE5KdQzna+LfCmhCHlYUOF6JyCh0d1C9fZ9Y/1
+	 ujt9SvkBRooR9sPAN2cmbNVJp72nf9cmrljs+RPiVrfIHjI+kgnFo4vM9gdOLQ92Np
+	 4L8PyXBjpylZA==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-382fb2bb83dso5566991fa.1
+        for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 06:29:03 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWk/PMF4c0dUpOhfwZFAV2mTIn+mPmhObQ2e6e74GEuFJU/6sD5Ri3EncIdaLhIUheA8xmU98D9aPw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeODFNBaOsHvrWArek/wAxILs/d0FpzGAQRfN20z8e+WnF8KRq
+	kkMdTbWFUt5/LdWQiSK4RsXwbE3+K1HkzcE94GPMQQJFLk5JTtZf52QkJY6pmKrvPCA24SMeeql
+	h9ejVF5WrV3p7CYgVCdD/kjYJnTekKzVgIrhB0U9EFg==
+X-Received: by 2002:a2e:a588:0:b0:383:18fb:fdee with SMTP id
+ 38308e7fff4ca-383607e30fbmr20861351fa.44.1768487342670; Thu, 15 Jan 2026
+ 06:29:02 -0800 (PST)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 15 Jan 2026 09:27:32 -0500
+ HTTPREST; Thu, 15 Jan 2026 09:29:01 -0500
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 15 Jan 2026 09:27:32 -0500
+ HTTPREST; Thu, 15 Jan 2026 09:29:01 -0500
 From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260115-pci-pwrctrl-rework-v5-8-9d26da3ce903@oss.qualcomm.com>
+In-Reply-To: <20260115-pci-pwrctrl-rework-v5-13-9d26da3ce903@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260115-pci-pwrctrl-rework-v5-0-9d26da3ce903@oss.qualcomm.com> <20260115-pci-pwrctrl-rework-v5-8-9d26da3ce903@oss.qualcomm.com>
-Date: Thu, 15 Jan 2026 09:27:32 -0500
-X-Gmail-Original-Message-ID: <CAMRc=Mf8okkzRAAW2m4XnGQxzTE0tJT1kmg9AvPp-4LpEXL6hA@mail.gmail.com>
-X-Gm-Features: AZwV_Qj2AXUr43FE6yjbGbv7tF91o4DACTtZ4l_6-QI5wb48h1KQ3mkWwIA-Fzk
-Message-ID: <CAMRc=Mf8okkzRAAW2m4XnGQxzTE0tJT1kmg9AvPp-4LpEXL6hA@mail.gmail.com>
-Subject: Re: [PATCH v5 08/15] PCI/pwrctrl: pwrseq: Factor out power on/off
- code to helpers
+References: <20260115-pci-pwrctrl-rework-v5-0-9d26da3ce903@oss.qualcomm.com> <20260115-pci-pwrctrl-rework-v5-13-9d26da3ce903@oss.qualcomm.com>
+Date: Thu, 15 Jan 2026 09:29:01 -0500
+X-Gmail-Original-Message-ID: <CAMRc=McOaOHAa7_A5YLdoRaRpF+mDgybt-4OTHGBBF462NebkA@mail.gmail.com>
+X-Gm-Features: AZwV_QhEH4-ZyPjnWZSZ9c8qpypyVCvzSSIk21VemLSqVCRsWi0CbODFZNlPwQg
+Message-ID: <CAMRc=McOaOHAa7_A5YLdoRaRpF+mDgybt-4OTHGBBF462NebkA@mail.gmail.com>
+Subject: Re: [PATCH v5 13/15] PCI: qcom: Drop the assert_perst() callbacks
 To: manivannan.sadhasivam@oss.qualcomm.com
 Cc: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>, 
 	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
@@ -82,13 +81,23 @@ Cc: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualco
 	Jingoo Han <jingoohan1@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 15 Jan 2026 08:29:00 +0100, Manivannan Sadhasivam via B4 Relay
+On Thu, 15 Jan 2026 08:29:05 +0100, Manivannan Sadhasivam via B4 Relay
 <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> said:
 > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 >
-> In order to allow the pwrctrl core to control the power on/off logic of the
-> pwrctrl pwrseq driver, move the power on/off code to
-> pci_pwrctrl_pwrseq_power_{off/on} helper functions.
+> Previously, the pcie-qcom driver probed first, deasserted PERST#, enabled
+> link training and scanned the bus. By the time the pwrctrl driver probe got
+> called, link training was already enabled by the controller driver.
+>
+> Thus the pwrctrl drivers had to call the .assert_perst() callback, to
+> assert PERST#, power on the needed resources, and then call the
+> .assert_perst() callback to deassert PERST#.
+>
+> Now since all pwrctrl drivers and this controller driver have been
+> converted to the new pwrctrl design where the pwrctrl drivers will first
+> power on the devices before this driver deasserts PERST# and scan the bus.
+> So there is no longer a need for .assert_perst() callback in this driver
+> and in DWC core driver. Hence, drop them.
 >
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 > ---
