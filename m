@@ -1,172 +1,137 @@
-Return-Path: <linux-pci+bounces-44883-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-44887-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A6E9D21DAB
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 01:29:28 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F39FD22322
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 03:53:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C80183008E27
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 00:29:25 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 33CDB30185EB
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jan 2026 02:53:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B114586250;
-	Thu, 15 Jan 2026 00:29:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39F1E1E834B;
+	Thu, 15 Jan 2026 02:53:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YAQBYeBB"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="O59yGBAt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m3291.qiye.163.com (mail-m3291.qiye.163.com [220.197.32.91])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5831B3D76
-	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 00:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E412617C220
+	for <linux-pci@vger.kernel.org>; Thu, 15 Jan 2026 02:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768436964; cv=none; b=M4S//ptA7xJTE9Hu/365EXmAGMBz80OK+bIl81WuTcQOL8/msc1+ZanyeX+DcgccJb0Xlj0impaHfZg2IGtTYqO7WeRXotXMujzYjHHa3MgU/pzcGmgLqmBlLYowhks9tO40NjuyLyR/Nc264gz93QLbJTf5eDWRcdNyFOnj7Sk=
+	t=1768445614; cv=none; b=mOcrm6vjIpby41lV/cQWEbaPHY/qDUUPJ3S+tlezMOeK2/Nnj6K9SEa3sESFgcK2elRHNmn7rGthTrEYuHtCT8jNCAZFjBAHi2UKIxPF/KlpoC8+IRyMVBH3CuSnVr4G3V7l2SL0EaEEoTypeBZ7+v8fDeh9XSVPgKq8zwTw1Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768436964; c=relaxed/simple;
-	bh=SVsMVXMLZfuhPiPAwanW9L8Zy3F0saKO63e8wKR3e8U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mIzMJN7Ou8dmFew5m0q5htN8aJsALVanXndm3T156oLv2sZ8KLcvwYGUPEN3MQBsfk0HlXoaTLZPfL86kDDjLrlHDoHY+HlxUnM0wc5BDtz+36/yL687yxKyp3ddm4KIgwwUyKLHJhBCslKsIdzRNrxsYldQ+7ipkD4Cllb1OPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YAQBYeBB; arc=none smtp.client-ip=74.125.82.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-2ae2eb49b4bso889052eec.0
-        for <linux-pci@vger.kernel.org>; Wed, 14 Jan 2026 16:29:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768436962; x=1769041762; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zkEkhYbrNY5/B4PnqPn1YOtnmIYmQjjEjUsVFrM5qCY=;
-        b=YAQBYeBBa4jWRQB/AkwOgdO4zX8W+LZS2bVPZy9wZ3KPWboeyIQxLzgf9kF3jduyM2
-         dIzCDM9A/wJZrqy6Bv5nCosKRLUqUvAK59qKizvpJBQ5b1e/ZwvDpjqUYgwP7f1uhF3/
-         iO/pdUXvogUcVe3/wfhlvpM/2DPenPXo5FA82lC4I5jmmBkMVIu/ouE7mZ4vBF4ac4dd
-         AJyNSOVjMLzu5aREpNSP1UrZKThlosKOiUXz7gPJR/yN+hnIroE1ppAPL+XXGM0n6qiG
-         jwkT8Q9snVZZqVtMu0XKmvwCiDu/tlG10flGb7GfrBlDmipE2IyVTsT2+EPNJKCv9RQj
-         Y1pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768436962; x=1769041762;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zkEkhYbrNY5/B4PnqPn1YOtnmIYmQjjEjUsVFrM5qCY=;
-        b=YoCpJp8LbXiAz1MQaSyw/7L3mEUrT3MQRSXafzdeOEUagSeEV6PEXdh1FalXhYyVlO
-         0/tooTro8JcKCKxYnU8OmiuH3fa8+InMMNKdmWRC5K5lSXc55O57eaaqW5Pimbgn86lQ
-         KmX0usBixHYT4GM+zy+pP31lLH8dt/PUKYtT4X7ATaXQWQmKyzmA1OjrUwaxnADaaRbX
-         CxtmKO0LH7/P5AfBzUR0ytYJ1R5cVfOAT3NdfVWRZky6ea8p2JmLERD2NFVCm69FEe34
-         lMSA0Smit5dpck0kctzsBsPMkdQpzPvIg7zyluJUOs/uqR9kx5za1Fs/xlJYy3tSYeX/
-         zBDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3ZIg2eRXDFKTxf+Vs5c6nfx3zkOWcACyZEF8vJbFRRgfAufgAzjQPHRuMwiFN2B0LSsT+ne+vMSE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxv5vT2Ywn0P+aXGTVsXrJ1L4hBn794l57tMJuKFq0hTeq2qBbl
-	bkVL7nwvrlmClvrTe2e8CMDsAz+xAztRf6nnNfk03aQrkRK2Szx35igedVyQsgD/B8g=
-X-Gm-Gg: AY/fxX5n7Gcu7rKWKtk6s2l3FQboP5pQs30VhLHt5I8xo09vLoA5LfdKrFA5/Di7UoM
-	Rq4jl4tgkxTm2DP39MMxDSkYCuQRLBqAEt3YXL9G+OGU0nTIFnZ3m63QlnrTURXx8mkWaZkbb/y
-	38R/N/4GTwHAvWIv1wGjqAaRWtI85HcvcE/J9kWKam53SqMJeg9o9HZ4HHAu1pygUa55jvPSm+I
-	OwFtNSiCAYDimn/fcowM5AgTHmLruOwK6PZtt75L3IHVaTdWONVcNEC20vxJA4o+F2V0hNQGADR
-	9ozfKSM5xHKjhZ1tveZkpKJL9pfWfd9w0yeNp8KkD9U/6EV7iQ6+ZSQtMdjS9vXZvVjPYdvUhRZ
-	Bex1GAAymXDlFxTEHXV1uSXIfdcmijLxHw9sNBoGZo3/oJAUdfADINPyTq+FQFEQI2Mj9Rgj3QY
-	S/7MSZenMIiZmrw6u8eBTQ
-X-Received: by 2002:a05:7301:410c:b0:2b4:5a2d:80c with SMTP id 5a478bee46e88-2b486c93f53mr4567821eec.11.1768436962280;
-        Wed, 14 Jan 2026 16:29:22 -0800 (PST)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b1706a55e2sm20827544eec.8.2026.01.14.16.29.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 16:29:21 -0800 (PST)
-Date: Thu, 15 Jan 2026 08:29:18 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Manivannan Sadhasivam <mani@kernel.org>, 
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Chen Wang <unicorn_wang@outlook.com>, 
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Han Gao <rabenda.cn@gmail.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>, 
-	Han Gao <gaohan@iscas.ac.cn>
-Subject: Re: [PATCH] PCI/sg2042: Avoid L0s and L1 on Sophgo 2042 PCIe Root
- Ports
-Message-ID: <aWg0uytowyzbOBMX@inochi.infowork>
-References: <20260109040756.731169-2-inochiama@gmail.com>
- <rbypcgy3laht64wrjdnpo2xgjcuriy2avmeo5kxlpqdw5mk4lk@lwyjoq5p62iq>
+	s=arc-20240116; t=1768445614; c=relaxed/simple;
+	bh=9kWBRcYqF9B0n2UtVJyLciNYJhyFDvJJtdMozxcSZvo=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JOtOU5I4E4/iktBR+ky576Mqr4GcNI3rvI7yXSMoIA1Lm9qRr9CmVXAdkwihaEONw19q2SZP5X0an3pnbCo62qEB2mKnhIxFrTrYb8wkgDv5j4roXmA1b5AG+tjSICRp8RKNjnKkwYc33bn98Y6MZQcR9YRZRJra5yupSyW5OjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=O59yGBAt; arc=none smtp.client-ip=220.197.32.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.14] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 30b01ff0a;
+	Thu, 15 Jan 2026 08:31:01 +0800 (GMT+08:00)
+Message-ID: <9c41f3c1-f3e4-4a5c-bbe6-9156a6df69b4@rock-chips.com>
+Date: Thu, 15 Jan 2026 08:30:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, Manivannan Sadhasivam <mani@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, linux-phy@lists.infradead.org,
+ Heiko Stuebner <heiko@sntech.de>, Neil Armstrong
+ <neil.armstrong@linaro.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [PATCH 3/5] phy: rockchip-snps-pcie3: Increase sram init timeout
+To: Vinod Koul <vkoul@kernel.org>
+References: <1766560210-100883-1-git-send-email-shawn.lin@rock-chips.com>
+ <1766560210-100883-4-git-send-email-shawn.lin@rock-chips.com>
+ <aWeaUG45FWtdgscG@vaman>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <aWeaUG45FWtdgscG@vaman>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <rbypcgy3laht64wrjdnpo2xgjcuriy2avmeo5kxlpqdw5mk4lk@lwyjoq5p62iq>
+X-HM-Tid: 0a9bbf1016da09cckunmf3402868502a5f
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkgdSFYfHhkaGE0eH0oYHkNWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=O59yGBAtHIuDx0oDSA+AqCLCIkTSJaKGMpEihDPZA1fm0LXj0fVO9FTuowNm5DCTfB2g312PrD01EMWZZpZbeW89SBtPtVrEF0J+xJirxfLTtQ7eUvNg3pEm1M7FzpYtGp+6OtgilKI/oQ3vjB/zSCCZMMY1GMRJ844+BDZt0nU=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=gIslVA5eTsBjIlpxhO6gDQs8srSs4OYlHc81qc0pSiY=;
+	h=date:mime-version:subject:message-id:from;
 
-On Tue, Jan 13, 2026 at 08:23:17PM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Jan 09, 2026 at 12:07:54PM +0800, Inochi Amaoto wrote:
-> > Since commit f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM
-> > states for devicetree platforms") force enable ASPM on all device tree
-> > platform, the SG2042 root port breaks as it advertises L0s and L1
-> > capabilities without supporting it.
-> > 
-> > Override the L0s and L1 Support advertised in Link Capabilities in
-> > the LINKCTL register of SG2042 Root Ports, so it doesn't try to enable
-> > those states.
-> > 
+
+在 2026/01/14 星期三 21:29, Vinod Koul 写道:
+> On 24-12-25, 15:10, Shawn Lin wrote:
+>> Per massive test, 500us is not enough for all chips, increase it
+>> to 20000us for worse case recommended.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>> ---
+>>
+>>   drivers/phy/rockchip/phy-rockchip-snps-pcie3.c | 10 +++++++---
+>>   1 file changed, 7 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c b/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
+>> index 9933cda..f5a5d0af 100644
+>> --- a/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
+>> +++ b/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
+>> @@ -19,6 +19,9 @@
+>>   #include <linux/regmap.h>
+>>   #include <linux/reset.h>
+>>   
+>> +/* Common definition */
+>> +#define RK_SRAM_INIT_TIMEOUT_US			20000
+>> +
+>>   /* Register for RK3568 */
+>>   #define GRF_PCIE30PHY_CON1			0x4
+>>   #define GRF_PCIE30PHY_CON6			0x18
+>> @@ -28,6 +31,7 @@
+>>   #define GRF_PCIE30PHY_WR_EN			(0xf << 16)
+>>   #define SRAM_INIT_DONE(reg)			(reg & BIT(14))
+>>   
+>> +
 > 
-> You need to disable L0s and L1 capabilities in LNKCAP. LNKCTL change is
-> volatile, since both PCI core and userspace can override it as long as the
-> capabilities are supported.
-> 
-> - Mani
+> why this empty line here?
 > 
 
-Good to know, I will switch to the LNKCAP.
+Oops, will fix it.
 
-Regards,
-Inochi
-
-> > Fixes: 4e27aca4881a ("riscv: sophgo: dts: add PCIe controllers for SG2042")
-> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> > Tested-by: Han Gao <gaohan@iscas.ac.cn>
-> > ---
-> > Change from original patch:
-> > 1. use driver to mask the ASPM advertisement
-> > 
-> > Separate from the folloing patch
-> > - https://lore.kernel.org/all/20251225100530.1301625-1-inochiama@gmail.com
-> > ---
-> >  drivers/pci/controller/cadence/pcie-sg2042.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/cadence/pcie-sg2042.c b/drivers/pci/controller/cadence/pcie-sg2042.c
-> > index 0c50c74d03ee..9c42e05d3c46 100644
-> > --- a/drivers/pci/controller/cadence/pcie-sg2042.c
-> > +++ b/drivers/pci/controller/cadence/pcie-sg2042.c
-> > @@ -32,6 +32,15 @@ static struct pci_ops sg2042_pcie_child_ops = {
-> >  	.write		= pci_generic_config_write,
-> >  };
-> > 
-> > +static void sg2042_pcie_disable_l0s_l1(struct cdns_pcie *pcie)
-> > +{
-> > +	u32 val;
-> > +
-> > +	val = cdns_pcie_rp_readw(pcie, CDNS_PCIE_RP_CAP_OFFSET + PCI_EXP_LNKCTL);
-> > +	val &= ~PCI_EXP_LNKCTL_ASPMC;
-> > +	cdns_pcie_rp_writew(pcie, CDNS_PCIE_RP_CAP_OFFSET + PCI_EXP_LNKCTL, val);
-> > +}
-> > +
-> >  static int sg2042_pcie_probe(struct platform_device *pdev)
-> >  {
-> >  	struct device *dev = &pdev->dev;
-> > @@ -68,6 +77,8 @@ static int sg2042_pcie_probe(struct platform_device *pdev)
-> >  		return ret;
-> >  	}
-> > 
-> > +	sg2042_pcie_disable_l0s_l1(pcie);
-> > +
-> >  	return 0;
-> >  }
-> > 
-> > --
-> > 2.52.0
-> > 
+>>   #define RK3568_BIFURCATION_LANE_0_1		BIT(0)
+>>   
+>>   /* Register for RK3588 */
+>> @@ -134,7 +138,7 @@ static int rockchip_p3phy_rk3568_calibrate(struct rockchip_p3phy_priv *priv)
+>>   	ret = regmap_read_poll_timeout(priv->phy_grf,
+>>   				       GRF_PCIE30PHY_STATUS0,
+>>   				       reg, SRAM_INIT_DONE(reg),
+>> -				       0, 500);
+>> +				       0, RK_SRAM_INIT_TIMEOUT_US);
+>>   	if (ret)
+>>   		dev_err(&priv->phy->dev, "lock failed 0x%x, check input refclk and power supply\n",
+>>   			reg);
+>> @@ -203,11 +207,11 @@ static int rockchip_p3phy_rk3588_calibrate(struct rockchip_p3phy_priv *priv)
+>>   	ret = regmap_read_poll_timeout(priv->phy_grf,
+>>   				       RK3588_PCIE3PHY_GRF_PHY0_STATUS1,
+>>   				       reg, RK3588_SRAM_INIT_DONE(reg),
+>> -				       0, 500);
+>> +				       0, RK_SRAM_INIT_TIMEOUT_US);
+>>   	ret |= regmap_read_poll_timeout(priv->phy_grf,
+>>   					RK3588_PCIE3PHY_GRF_PHY1_STATUS1,
+>>   					reg, RK3588_SRAM_INIT_DONE(reg),
+>> -					0, 500);
+>> +					0, RK_SRAM_INIT_TIMEOUT_US);
+>>   	if (ret)
+>>   		dev_err(&priv->phy->dev, "lock failed 0x%x, check input refclk and power supply\n",
+>>   			reg);
+>> -- 
+>> 2.7.4
 > 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+
 
