@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-45020-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45022-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04145D2D815
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 08:52:30 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE38FD2D8F0
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 08:56:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7B0E33009231
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 07:52:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 33F25309DE21
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 07:52:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B677285CAD;
-	Fri, 16 Jan 2026 07:52:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7E972EACF2;
+	Fri, 16 Jan 2026 07:52:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="2hBsRfUj"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="gNhT2San"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
+Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E743B1C84B8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12756224240;
 	Fri, 16 Jan 2026 07:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768549948; cv=none; b=kCui+eL78hz6ot2mby6L4dYx0+t604gHdbrdj8c+RXmn+REDzyYOWv/MyaZK8fwjb/yhtt8ky0HhbC3rcn/a1a7FhjlxSp/VzPPkRe0+WuXvcgRH4rCITORuHRyiusfJgOT+lKOOc/k7BNFgYJVHseYCZEms0Q2LUEt3rEDfpXw=
+	t=1768549949; cv=none; b=r09K8trzA0TNFQv4Ek9S9FFZlRnnXHYSjLbXm5BECbTm16nUCqR8rJD3LxAzYy4g1rdv/q1CjpI27xLREaWxKeRfJbjjdld4R9iLsFwCfQn7h5nrcUDVFL1vqnbg3n5SsAQGR1bugcNfyoJ8HOyr8c/VmK4xp5+lQrEpzCdGr/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768549948; c=relaxed/simple;
-	bh=nm0eA/yDztL9ix7zhcM5v7OQgf1tHidKRps0ydXnkLc=;
+	s=arc-20240116; t=1768549949; c=relaxed/simple;
+	bh=Ud2R8irrjHV8oKAesOvvjnfDJQcG9DLau/Q333OJ60E=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hlGdHj9HiYCXtkg8We73aPn58YWRt6Fq4TjOfOcyXHoHO003XXguSTeSbSbePomDMduPA+KEyMv2ew3beircEUUillnuWCZb9svti+shw45+9mZ6mhn22h+6MRE6hvN80gtGxwTR+Em7+qaYXdML+Qc5R9JuaaQrQQ55gP19RF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=2hBsRfUj; arc=none smtp.client-ip=113.46.200.220
+	 MIME-Version:Content-Type; b=SwJ2kyEFC8C/VTnJNA3SpoYCyIxXmMTBBAfInYEA8hq//Rl+5qWxOD8ehOUa4r/rtDL2Ih864V29yUomUnIrUFtx1gcAu5UAUSKZU+7djROj/gMPITcEaZ7GsxMfLjNzM5YC1DSS4SwDv7L0dVx+htA7qwJBzv+pR4T6UVUiGuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=gNhT2San; arc=none smtp.client-ip=113.46.200.227
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=Xdx1CNYDh2ae1MTXHIUWs+/1UyQlOBpJoTdTAzXNXzY=;
-	b=2hBsRfUj4YVCi0IoVG9f60uhEKZg4gCKaBMtZz3lhUUOtKuB5LtvLqs8guMXtBaR3zxxXGU/7
-	7WcSb8xhiA9fNl+eG8b9dOzYKjC3oHHiRDaFzAlVeM/TVIs+RrANWKdjgu5IwiUg9G4RTD2vjLi
-	ZIiV73sb3Q76fKBd7XX7dPM=
-Received: from mail.maildlp.com (unknown [172.19.163.104])
-	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4dssSN3bnnz12LJH;
+	bh=dqybSqFRGWH2S5xIK9Mjnk5ZtSwQkwEhkJIGN6a62is=;
+	b=gNhT2Sanmno83BrnYUVhut8QeP+WLWVvWvc0boguOaRphYR1j67TMTTe7ODcjv+FcHRk4iemW
+	d02a6Y+eM+UakPzFKRvV+QBU4/dSicIB5FQFuENfe6DDPLxsm+yim9glZVnviOUK2ocaPfX9wYE
+	tei1X7EotstbwX88QJeuV30=
+Received: from mail.maildlp.com (unknown [172.19.163.214])
+	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dssSN5sHJznTVR;
 	Fri, 16 Jan 2026 15:49:24 +0800 (CST)
 Received: from kwepemr500012.china.huawei.com (unknown [7.202.195.23])
-	by mail.maildlp.com (Postfix) with ESMTPS id 96ACE404AD;
+	by mail.maildlp.com (Postfix) with ESMTPS id E35734056C;
 	Fri, 16 Jan 2026 15:52:23 +0800 (CST)
 Received: from localhost.localdomain (10.50.85.180) by
  kwepemr500012.china.huawei.com (7.202.195.23) with Microsoft SMTP Server
@@ -51,9 +51,9 @@ To: <bhelgaas@google.com>, <alex@shazbot.org>, <chrisw@redhat.com>,
 	<jbarnes@virtuousgeek.org>
 CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<liuyongqiang13@huawei.com>
-Subject: [PATCH v4 3/4] PCI: Prevent overflow in proc_bus_pci_write()
-Date: Fri, 16 Jan 2026 16:17:20 +0800
-Message-ID: <20260116081723.1603603-4-duziming2@huawei.com>
+Subject: [PATCH v4 4/4] PCI: Prevent overflow in proc_bus_pci_read()
+Date: Fri, 16 Jan 2026 16:17:21 +0800
+Message-ID: <20260116081723.1603603-5-duziming2@huawei.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260116081723.1603603-1-duziming2@huawei.com>
 References: <20260116081723.1603603-1-duziming2@huawei.com>
@@ -68,56 +68,42 @@ Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
  kwepemr500012.china.huawei.com (7.202.195.23)
 
-From: Yongqiang Liu <liuyongqiang13@huawei.com>
+proc_bus_pci_read() assigns *ppos directly to an unsigned integer variable.
+For large offsets, this implicit conversion may truncate the value and
+cause reads from an incorrect position.
 
-When the value of *ppos over the INT_MAX, the pos is over set to a
-negative value which will be passed to get_user() or
-pci_user_write_config_dword(). Unexpected behavior such as a soft lockup
-will happen as follows:
+proc_bus_pci_write() explicitly validates *ppos and rejects values larger
+than INT_MAX, while proc_bus_pci_read() currently accepts them. This
+difference in position handling is unjustified.
 
- watchdog: BUG: soft lockup - CPU#0 stuck for 130s! [syz.3.109:3444]
- RIP: 0010:_raw_spin_unlock_irq+0x17/0x30
- Call Trace:
-  <TASK>
-  pci_user_write_config_dword+0x126/0x1f0
-  proc_bus_pci_write+0x273/0x470
-  proc_reg_write+0x1b6/0x280
-  do_iter_write+0x48e/0x790
-  vfs_writev+0x125/0x4a0
-  __x64_sys_pwritev+0x1e2/0x2a0
-  do_syscall_64+0x59/0x110
-  entry_SYSCALL_64_after_hwframe+0x78/0xe2
-
-Fix this by adding a non-negative check before assign *ppos to pos.
+Fix this by validating *ppos in proc_bus_pci_read() and rejecting offsets
+larger than INT_MAX before the assignment, matching proc_bus_pci_write().
 
 Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
 Signed-off-by: Ziming Du <duziming2@huawei.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/proc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pci/proc.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index 9348a0fb80847..2d51b26edbe74 100644
+index 2d51b26edbe74..f4ef7629dc78b 100644
 --- a/drivers/pci/proc.c
 +++ b/drivers/pci/proc.c
-@@ -113,10 +113,14 @@ static ssize_t proc_bus_pci_write(struct file *file, const char __user *buf,
+@@ -29,9 +29,12 @@ static ssize_t proc_bus_pci_read(struct file *file, char __user *buf,
+ 				 size_t nbytes, loff_t *ppos)
  {
- 	struct inode *ino = file_inode(file);
- 	struct pci_dev *dev = pde_data(ino);
--	int pos = *ppos;
+ 	struct pci_dev *dev = pde_data(file_inode(file));
+-	unsigned int pos = *ppos;
 +	int pos;
- 	int size = dev->cfg_size;
- 	int cnt, ret;
+ 	unsigned int cnt, size;
  
 +	if (*ppos > INT_MAX)
 +		return -EINVAL;
 +	pos = *ppos;
-+
- 	ret = security_locked_down(LOCKDOWN_PCI_ACCESS);
- 	if (ret)
- 		return ret;
+ 	/*
+ 	 * Normal users can read only the standardized portion of the
+ 	 * configuration space as several chips lock up when trying to read
 -- 
 2.43.0
 
