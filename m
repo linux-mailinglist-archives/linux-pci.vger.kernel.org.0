@@ -1,105 +1,226 @@
-Return-Path: <linux-pci+bounces-45032-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45038-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 265FFD301FA
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 12:09:44 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63BA0D302D4
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 12:14:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C5BDC3022AB0
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 11:07:29 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E686E30057EA
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 11:14:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3225D3624A4;
-	Fri, 16 Jan 2026 11:07:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BBD7364E96;
+	Fri, 16 Jan 2026 11:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BAX1SSy+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8243002D8;
-	Fri, 16 Jan 2026 11:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4103F3195E8;
+	Fri, 16 Jan 2026 11:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768561646; cv=none; b=bqmTp6vZo9EmVFC/eBcqyWXm307bXx2Vzdx93wj3MV+bBp2gj0fCgAKH5uv9AgYaFA4EbvlT66ZNBI7/F5RMP6JUm0i/apvxanXFIPH2CRbaUVoP6roYblaVT6KN83/XuvYW7DCThIE68RSif+7AusF5OtzWLaJKqaSAV/1CR5g=
+	t=1768562041; cv=none; b=Kl7pQvdYFPEd3pmG43abQ3hPhOUCzNAMl6az8wT7AhlpJKsAfpJWLf0LwffFr6G0pz1rqVUXS6YEKwJu0DaiduJVNyLVyxGdFDM0Qet2chBOwi/AwCZQVgvDD9jiSy2uLLHJQ4iDwykRD+t/q7597U/DXZ8FBN1a6Lq8iuuI0b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768561646; c=relaxed/simple;
-	bh=AbpsduDteaIk/Bb1lrutukpW64N+UV+mvGjLDmXjMo0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bKESRDqr1Lxykc4/ii1iHmTLkOPzKYfAI3VGxjaBLOxSXCnSWINM4usp3FuLrtqVvF49gJooKw1IQsVUpOrATZyw66wIyTXBse8cyJaTTTzqwLaTPNbooNyJMb8mlSwqs5rG2R8NRGg7UDJmcqHG97wfRPtcDrED1iZ6tt6ufbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from mail.andestech.com (ATCPCS34.andestech.com [10.0.1.134])
-	by Atcsqr.andestech.com with ESMTPS id 60GB2fo1031253
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
-	Fri, 16 Jan 2026 19:02:42 +0800 (+08)
-	(envelope-from randolph@andestech.com)
-Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS34.andestech.com
- (10.0.1.134) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 16 Jan
- 2026 19:02:41 +0800
-From: Randolph <randolph@andestech.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <linux-pci@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <jingoohan1@gmail.com>,
-        <mani@kernel.org>, <lpieralisi@kernel.org>, <kwilczynski@kernel.org>,
-        <robh@kernel.org>, <bhelgaas@google.com>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <alex@ghiti.fr>, <aou@eecs.berkeley.edu>,
-        <palmer@dabbelt.com>, <paul.walmsley@sifive.com>,
-        <ben717@andestech.com>, <inochiama@gmail.com>,
-        <thippeswamy.havalige@amd.com>, <namcao@linutronix.de>,
-        <shradha.t@samsung.com>, <pjw@kernel.org>,
-        <christian.bruel@foss.st.com>, <quic_wenbyao@quicinc.com>,
-        <vincent.guittot@linaro.org>, <elder@riscstar.com>,
-        <s-vadapalli@ti.com>, <randolph.sklin@gmail.com>,
-        <tim609@andestech.com>, Randolph Lin <randolph@andestech.com>
-Subject: [PATCH v10 4/4] MAINTAINERS: Add maintainers for Andes QiLai PCIe driver
-Date: Fri, 16 Jan 2026 19:02:34 +0800
-Message-ID: <20260116110234.1908263-5-randolph@andestech.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260116110234.1908263-1-randolph@andestech.com>
-References: <20260116110234.1908263-1-randolph@andestech.com>
+	s=arc-20240116; t=1768562041; c=relaxed/simple;
+	bh=7m7TLs5ms8SsBuRtmgorzV61ohfwt2E3J/DzXKAkq0s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ohpglvC1nIkj5eQTxslNNHpBhUYIV6qESx/jYOLPUk9pafLyh3xITshySB7lsRT2xXA8W9N9T/OiPo6dLP1Ouf86/mCE/xhT2v5aQVRMXRzZQessF1rRMpqwF9Bhcm4/VtKbvZxJEZquxJVqmw1n0LWiKQJfWxIvsdazhP+Zjb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BAX1SSy+; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768562040; x=1800098040;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7m7TLs5ms8SsBuRtmgorzV61ohfwt2E3J/DzXKAkq0s=;
+  b=BAX1SSy+zUHYIhkwai28utCCptRsNXOiw3G+3C6VPXfzGyKnZPerG//G
+   K9wgFn9zyjH/ziYSfo/1S/NNlFH/7cneMxGye0o1gd60OsPUc+9Skgr+s
+   3Tzn1B1fK8L5wzKbLuBI+c7DxGLujt5z6bKcC3C767DUMd8lrOt3dFMkp
+   tIHeP27sm+DgqC//TvJVQjZVWyS2LBqeDfDhBV6dOYwbgTgsVC/HbCvU1
+   PIFMmcFM71HgkWX9uDQGKb+dnfXINoGdrqC0SqCsF9LLkOgbZM51HPX5v
+   WKRHFkgQkXv3oLTyreDehQEypjZ8a+DmFKU1V1CfKnjmcAZIxQMVZmGbH
+   w==;
+X-CSE-ConnectionGUID: jbo5ZEEBSqKUgBNM2Fv9aA==
+X-CSE-MsgGUID: /XfkoD1IQjCAZYX60wbtSA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="69930619"
+X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
+   d="scan'208";a="69930619"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 03:13:59 -0800
+X-CSE-ConnectionGUID: uIPeeNCuTXKTNMh3SaLJKw==
+X-CSE-MsgGUID: 0lzYBIZ5TcqNem+zWWjj8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
+   d="scan'208";a="209713339"
+Received: from fpallare-mobl4.ger.corp.intel.com (HELO fdugast-desk.home) ([10.245.245.100])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 03:13:48 -0800
+From: Francois Dugast <francois.dugast@intel.com>
+To: intel-xe@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org,
+	Francois Dugast <francois.dugast@intel.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Felix Kuehling <Felix.Kuehling@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	David Hildenbrand <david@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Balbir Singh <balbirs@nvidia.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	=?UTF-8?q?Mika=20Penttil=C3=A4?= <mpenttil@redhat.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	linux-pci@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH v6 0/5] Enable THP support in drm_pagemap
+Date: Fri, 16 Jan 2026 12:10:15 +0100
+Message-ID: <20260116111325.1736137-1-francois.dugast@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ATCPCS33.andestech.com (10.0.1.100) To
- ATCPCS34.andestech.com (10.0.1.134)
-X-DKIM-Results: atcpcs34.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 60GB2fo1031253
 
-From: Randolph Lin <randolph@andestech.com>
+Use Balbir Singh's series for device-private THP support [1] and previous
+preparation work in drm_pagemap [2] to add 2MB/THP support in xe. This leads
+to significant performance improvements when using SVM with 2MB pages.
 
-Here add maintainer information for Andes QiLai PCIe driver.
+[1] https://lore.kernel.org/linux-mm/20251001065707.920170-1-balbirs@nvidia.com/
+[2] https://patchwork.freedesktop.org/series/151754/
 
-Signed-off-by: Randolph Lin <randolph@andestech.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+v2:
+- rebase on top of multi-device SVM
+- add drm_pagemap_cpages() with temporary patch
+- address other feedback from Matt Brost on v1
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0d044a58cbfe..a441db539d57 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19898,6 +19898,13 @@ S:	Supported
- F:	Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
- F:	drivers/pci/controller/pcie-altera.c
- 
-+PCI DRIVER FOR ANDES QILAI PCIE
-+M:	Randolph Lin <randolph@andestech.com>
-+L:	linux-pci@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pci/andestech,qilai-pcie.yaml
-+F:	drivers/pci/controller/dwc/pcie-andes-qilai.c
-+
- PCI DRIVER FOR APPLIEDMICRO XGENE
- M:	Toan Le <toan@os.amperecomputing.com>
- L:	linux-pci@vger.kernel.org
+v3:
+The major change is to remove the dependency to the mm/huge_memory
+helper migrate_device_split_page() that was called explicitely when
+a 2M buddy allocation backed by a large folio would be later reused
+for a smaller allocation (4K or 64K). Instead, the first 3 patches
+provided by Matthew Brost ensure large folios are split at the time
+of freeing.
+
+v4:
+- add order argument to folio_free callback
+- send complete series to linux-mm and MM folks as requested (Zi Yan
+  and Andrew Morton) and cover letter to anyone receiving at least
+  one of the patches (Liam R. Howlett)
+
+v5:
+- update zone_device_page_init() in patch #1 to reinitialize large
+  zone device private folios
+
+v6:
+- fix drm_pagemap change in patch #1 to allow applying to 6.19 and
+  add some comments
+
+Cc: Zi Yan <ziy@nvidia.com>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: Felix Kuehling <Felix.Kuehling@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Simona Vetter <simona@ffwll.ch>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Danilo Krummrich <dakr@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: David Hildenbrand <david@kernel.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: Balbir Singh <balbirs@nvidia.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Mika Penttilä <mpenttil@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: kvm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: amd-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-cxl@vger.kernel.org
+Cc: nvdimm@lists.linux.dev
+Cc: linux-fsdevel@vger.kernel.org
+
+Francois Dugast (3):
+  drm/pagemap: Unlock and put folios when possible
+  drm/pagemap: Add helper to access zone_device_data
+  drm/pagemap: Enable THP support for GPU memory migration
+
+Matthew Brost (2):
+  mm/zone_device: Reinitialize large zone device private folios
+  drm/pagemap: Correct cpages calculation for migrate_vma_setup
+
+ arch/powerpc/kvm/book3s_hv_uvmem.c       |   2 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_migrate.c |   2 +-
+ drivers/gpu/drm/drm_gpusvm.c             |   7 +-
+ drivers/gpu/drm/drm_pagemap.c            | 158 ++++++++++++++++++-----
+ drivers/gpu/drm/nouveau/nouveau_dmem.c   |   2 +-
+ include/drm/drm_pagemap.h                |  15 +++
+ include/linux/memremap.h                 |   9 +-
+ lib/test_hmm.c                           |   4 +-
+ mm/memremap.c                            |  35 ++++-
+ 9 files changed, 195 insertions(+), 39 deletions(-)
+
 -- 
-2.34.1
+2.43.0
 
 
