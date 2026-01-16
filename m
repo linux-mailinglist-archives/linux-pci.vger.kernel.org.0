@@ -1,234 +1,293 @@
-Return-Path: <linux-pci+bounces-45027-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45028-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4853DD2E41B
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 09:49:42 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F6C7D2E643
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 10:00:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8D60F30255BE
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 08:49:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C73B930AF9F0
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 08:57:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA28E3019C5;
-	Fri, 16 Jan 2026 08:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78A19311C32;
+	Fri, 16 Jan 2026 08:57:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="XvXqCHb7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAfYt7qP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m3277.qiye.163.com (mail-m3277.qiye.163.com [220.197.32.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8043C17;
-	Fri, 16 Jan 2026 08:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5620B2E0B71;
+	Fri, 16 Jan 2026 08:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768553359; cv=none; b=QH/Za2jt4rd1tzTG6re+2RtlA3F21F7c4K0u2TdTurlswLySjbX2tq+a6uS1Th2grcDCHRiQn/A5AlnYvifC08F/Ao/s/pb9E5DMlrOkcTS7D1qRgq2NUIYbjZTcOl84J3wb3u0921NJitydkt9LYnUCPgj/6YsAQLOu+/6gMBg=
+	t=1768553872; cv=none; b=BMdF8NnmqIANx29dCf2YLbWy48TJzfcghnJ8yxzF9DeF3mgrT7MHTPT3qmgeAFRxSUQT2jCLoC5xH4KW3iLyUO+mp4qaEiLA83oE/1x/36OUvMqnSc5drNERym0/TVMoxjMMBPNaybkSDKujYUURfZ1JPEU/vFDLcMsRg0FAyWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768553359; c=relaxed/simple;
-	bh=w4ormQANbTROoDdeCBKc3WkvgnugxLg+5E8J/LNJ4j8=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ntXZWHXabxvvHvR4OvchsskW9gb9Nx8ePSKbWNXhpAdCfLIQ2GRpBdUYRUVjUVK3MstRaabSti0E0jw9gD+0doZO4kCtk0/6UAZe2U6NEhQVW8UjUVmzXE0GErTKIdUtTnsy3pHzFM8Yg0nOx6BSM3I3FunRsntb5ZjGl2j9AXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=XvXqCHb7; arc=none smtp.client-ip=220.197.32.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.14] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 30e6775f4;
-	Fri, 16 Jan 2026 16:43:55 +0800 (GMT+08:00)
-Message-ID: <a1f7be0b-57f7-4048-8c43-d101a9c0e1a7@rock-chips.com>
-Date: Fri, 16 Jan 2026 16:43:54 +0800
+	s=arc-20240116; t=1768553872; c=relaxed/simple;
+	bh=7v+plz9W/i0/4Z95v/bM+FBpfa/Zny7st/earl5SCr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SJOmIVOaVQ/ukyY4jt6fIIkC6TgHK8P/cJnhakbelU6PLbIEgWnRzQ1InZUxSfIdBuInhId5Sx1jK3IGxpakrDsdT6swThkFHGdCnWE8Zq3DHhltPetR5dv5FaSOs070MI/QxfMLgRMsva5xEdAYCyqkXTCgE2Mcvm86YkvxCKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAfYt7qP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D29FFC19423;
+	Fri, 16 Jan 2026 08:57:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768553872;
+	bh=7v+plz9W/i0/4Z95v/bM+FBpfa/Zny7st/earl5SCr4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GAfYt7qPHFm6pJoFATSaulIIg/r37/y7bfEYEYh/bR2baX4t0JnM6LedXXX79/FHg
+	 cCJR/MHFqgavGJHfUBu2GQCttayfF+vh5qtSzE/IBvWst4pSEXxICDSBX+qAim4SZq
+	 evTKLZIQddWMP1aEbkyYB8MuZC0kZhHoIouoQcFTS7j6a6jlDCk96GyA7WycvbLVKn
+	 NG9uuFDbehQg1UP45iKK+HE7aUwX8qVxarkiS7T/F2u/a0k5X+tvesYZL213LcgxOU
+	 qVGbjf7iSN0PY5+yn9Rg9I4u8w18t2oVIhxkxNRgBq+EkK6g34LQ6+w/FJ+Wh72O8y
+	 MMzTbw/R768yw==
+Date: Fri, 16 Jan 2026 14:27:39 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com, 
+	Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	vincent.guittot@linaro.org, zhangsenchuan@eswincomputing.com, 
+	Shawn Lin <shawn.lin@rock-chips.com>, dlemoal@kernel.org
+Subject: Re: [PATCH v3 0/4] PCI: dwc: Rework the error handling of
+ dw_pcie_wait_for_link() API
+Message-ID: <ouygfgehh3evllgcibintuer6euyqrrn3otg3ets3frcd7i5wt@nnyjibcrw6ds>
+References: <20251230-pci-dwc-suspend-rework-v3-0-40cd485714f5@oss.qualcomm.com>
+ <aVezfq-8bTKczYkp@ryzen>
+ <mrm7yif2tg7trvsof3jiqbevfldkf7ckkfswtabrnkc4dlgmae@qyp4s23utlid>
+ <aV5XI_e3npXHsxk7@ryzen>
+ <aWErEbvByGrxu5s9@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, manivannan.sadhasivam@oss.qualcomm.com,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Chen-Yu Tsai <wens@kernel.org>, Brian Norris <briannorris@chromium.org>,
- Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
- Niklas Cassel <cassel@kernel.org>, Alex Elder <elder@riscstar.com>,
- Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
- Chen-Yu Tsai <wenst@chromium.org>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v4 0/8] PCI/pwrctrl: Major rework to integrate pwrctrl
- devices with controller drivers
-To: Manivannan Sadhasivam <mani@kernel.org>
-References: <20260105-pci-pwrctrl-rework-v4-0-6d41a7a49789@oss.qualcomm.com>
- <5925fd05-75fb-4e10-a022-bff5471bc317@rock-chips.com>
- <czpmvuxfdilf5onrh25tucnr2ar42stga4one2jhh4q7h3vspf@rnzgnrk47x2q>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <czpmvuxfdilf5onrh25tucnr2ar42stga4one2jhh4q7h3vspf@rnzgnrk47x2q>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9bc5f9b82b09cckunm87e668957069d3
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQk5NGlZKGBlOH09IHhofHhlWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=XvXqCHb79jKNsf8/OwfVN3lyoUTkpC3hr1wIOKhy911N7FbDXWycpYbv2Ap6aM3YX4rfhsu/xQLDlKGWUpVsVNw4KLD3tmULuTECkVSw21X/YIMjAcNlOzoAXo5XsY/MNCbty9qEy5bDSc42gazp2Zgp7IZVLXCLCzkLBpTBYdo=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=GgvurW3btzsyy7Vm2BbFBOddK6G41Q/w+3yy/baB8P8=;
-	h=date:mime-version:subject:message-id:from;
+In-Reply-To: <aWErEbvByGrxu5s9@ryzen>
 
-在 2026/01/16 星期五 16:30, Manivannan Sadhasivam 写道:
-> On Fri, Jan 16, 2026 at 04:02:38PM +0800, Shawn Lin wrote:
->>
->> 在 2026/01/05 星期一 21:55, Manivannan Sadhasivam via B4 Relay 写道:
->>> Hi,
->>>
->>> This series provides a major rework for the PCI power control (pwrctrl)
->>> framework to enable the pwrctrl devices to be controlled by the PCI controller
->>> drivers.
->>>
->>> Problem Statement
->>> =================
->>>
->>> Currently, the pwrctrl framework faces two major issues:
->>>
->>> 1. Missing PERST# integration
->>> 2. Inability to properly handle bus extenders such as PCIe switch devices
->>>
->>> First issue arises from the disconnect between the PCI controller drivers and
->>> pwrctrl framework. At present, the pwrctrl framework just operates on its own
->>> with the help of the PCI core. The pwrctrl devices are created by the PCI core
->>> during initial bus scan and the pwrctrl drivers once bind, just power on the
->>> PCI devices during their probe(). This design conflicts with the PCI Express
->>> Card Electromechanical Specification requirements for PERST# timing. The reason
->>> is, PERST# signals are mostly handled by the controller drivers and often
->>> deasserted even before the pwrctrl drivers probe. According to the spec, PERST#
->>> should be deasserted only after power and reference clock to the device are
->>> stable, within predefined timing parameters.
->>>
->>> The second issue stems from the PCI bus scan completing before pwrctrl drivers
->>> probe. This poses a significant problem for PCI bus extenders like switches
->>> because the PCI core allocates upstream bridge resources during the initial
->>> scan. If the upstream bridge is not hotplug capable, resources are allocated
->>> only for the number of downstream buses detected at scan time, which might be
->>> just one if the switch was not powered and enumerated at that time. Later, when
->>> the pwrctrl driver powers on and enumerates the switch, enumeration fails due to
->>> insufficient upstream bridge resources.
->>>
->>> Proposal
->>> ========
->>>
->>> This series addresses both issues by introducing new individual APIs for pwrctrl
->>> device creation, destruction, power on, and power off operations. Controller
->>> drivers are expected to invoke these APIs during their probe(), remove(),
->>> suspend(), and resume() operations. This integration allows better coordination
->>> between controller drivers and the pwrctrl framework, enabling enhanced features
->>> such as D3Cold support.
->>>
->>> The original design aimed to avoid modifying controller drivers for pwrctrl
->>> integration. However, this approach lacked scalability because different
->>> controllers have varying requirements for when devices should be powered on. For
->>> example, controller drivers require devices to be powered on early for
->>> successful PHY initialization.
->>>
->>> By using these explicit APIs, controller drivers gain fine grained control over
->>> their associated pwrctrl devices.
->>>
->>> This series modified the pcie-qcom driver (only consumer of pwrctrl framework)
->>> to adopt to these APIs and also removed the old pwrctrl code from PCI core. This
->>> could be used as a reference to add pwrctrl support for other controller drivers
->>> also.
->>>
->>> For example, to control the 3.3v supply to the PCI slot where the NVMe device is
->>> connected, below modifications are required:
->>>
->>> Devicetree
->>> ----------
->>>
->>> 	// In SoC dtsi:
->>>
->>> 	pci@1bf8000 { // controller node
->>> 		...
->>> 		pcie1_port0: pcie@0 { // PCI Root Port node
->>> 			compatible = "pciclass,0604"; // required for pwrctrl
->>> 							 driver bind
->>> 			...
->>> 		};
->>> 	};
->>>
->>> 	// In board dts:
->>>
->>> 	&pcie1_port0 {
->>> 		reset-gpios = <&tlmm 152 GPIO_ACTIVE_LOW>; // optional
->>> 		vpcie3v3-supply = <&vreg_nvme>; // NVMe power supply
->>> 	};
->>>
->>> Controller driver
->>> -----------------
->>>
->>> 	// Select PCI_PWRCTRL_SLOT in controller Kconfig
->>>
->>> 	probe() {
->>> 		...
->>> 		// Initialize controller resources
->>> 		pci_pwrctrl_create_devices(&pdev->dev);
->>> 		pci_pwrctrl_power_on_devices(&pdev->dev);
->>> 		// Deassert PERST# (optional)
->>> 		...
->>> 		pci_host_probe(); // Allocate host bridge and start bus scan
->>> 	}
->>>
->>> 	suspend {
->>> 		// PME_Turn_Off broadcast
->>> 		// Assert PERST# (optional)
->>> 		pci_pwrctrl_power_off_devices(&pdev->dev);
->>> 		...
->>> 	}
->>>
->>> 	resume {
->>> 		...
->>> 		pci_pwrctrl_power_on_devices(&pdev->dev);
->>> 		// Deassert PERST# (optional)
->>> 	}
->>>
->>> I will add a documentation for the pwrctrl framework in the coming days to make
->>> it easier to use.
->>>
->>
->> This series looks great.
->>
->> In practice, some PCIe devices may need to be powered down dynamically at
->> runtime. For example, users might want to disable a PCIe Wi-Fi module when
->> there's no internet usage — typically, commands like ifconfig wlan0 downonly
->> bring the interface down but leave the Wi-Fi hardware powered. Is there a
->> mechanism that would allow the Endpoint driver to leverage pwrctrl
->> dynamically to support such power management scenarios?
->>
+On Fri, Jan 09, 2026 at 05:21:37PM +0100, Niklas Cassel wrote:
+> Hello Mani,
 > 
-> Glad that you've brought it up. You are talking about the usecase similar to
-> Airplane mode in mobiles, and we at Qcom are looking into this usecase in
-> upstream.
+> On Wed, Jan 07, 2026 at 01:52:57PM +0100, Niklas Cassel wrote:
+> > On Mon, Jan 05, 2026 at 05:11:42PM +0530, Manivannan Sadhasivam wrote:
+> > > On Fri, Jan 02, 2026 at 01:01:02PM +0100, Niklas Cassel wrote:
+> > > > On Tue, Dec 30, 2025 at 08:37:31PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > >
+> > > What could be happening here is that since the endpoint is physically connected
+> > > to the bus, the receiver gets detected during Detect.Active state and LTSSM
+> > > enters the Polling state. I think the reason why it ended up staying in
+> > > Poll.Compliance could be due to (as per the spec):
+> > >
+> > > a. Not all Lanes from the predetermined set of Lanes from above have
+> > > detected an exit from Electrical Idle since entering Polling.Active.
+> > >
+> > > b. Any Lane that detected a Receiver during Detect received eight consecutive
+> > > TS1 Ordered Sets (or their complement) with the Lane and Link numbers set to
+> > > PAD, the Compliance Receive bit (bit 4 of Symbol 5) is 1b, and the Loopback bit
+> > > (bit 2 of Symbol 5) is 0b that the Compliance Receive bit (bit 4 of Symbol 5) is
+> > > set.
+> > >
+> > > So this is perfectly legal from endpoint perspective.
+> > >
+> > > > Perhaps a Kconfig or module param? Suggestions?
+> > > >
+> > >
+> > > There is a DIRECT_POLCOMP_TO_DETECT bit (bit 9) in DBI SD_CONTROL2 register.
+> > > This bit will ensure that the LTSSM will not stuck in Poll.Compliance and will
+> > > return back to Detect state. Could you set it on the EP before starting LTSSM
+> > > and see if it helps?
+> >
+> > I will test and get back to you.
 > 
-> They way to handle this would be by using runtime PM ops. Once your WiFi or a
-> NIC driver runtime suspends, it will trigger the controller driver runtime
-> suspend callback. By that time, the controller driver can see if the device is
-> active or not (checking D states), whether wakeup is requested or not and then
-> initiate the D3Cold sequence using the APIs introduced in this series.
+> Looking at the databook, it appears that the SD_CONTROL2 register only exists
+> if CX_RAS_DES_ENABLE, and the register is located in RAS_DES capability.
 > 
-> But that comes with a cost though, which is resume latency. It is generally not
-> advised to do D3Cold during runtime PM due to the latency and also device
-> lifetime issues (wearout etc...). So technically it is possible, but there are
-> challenges.
+> RK3588 implements the RAS_DES capability, so it can set that bit, but most
+> likely there are some platforms that do not.
 > 
 
-Indeed, that's a fundamental power-performance trade-off for 
-battery-powered devices.
+True.
 
-> Krishna is going to post a series that allows the pcie-qcom driver to do D3Cold
-> during system suspend with these APIs. And we do have plans to extend it to
-> Airplane mode and similar usecases in the future.
+> 
+> Anyway, I tried the following patch:
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index c30a2ed324cd..73d3d4bc1886 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -584,6 +584,7 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+> 	struct device_node *np = dev->of_node;
+> 	struct pci_host_bridge *bridge;
+> 	int ret;
+> +	int ras_cap;
+> 
+> 	raw_spin_lock_init(&pp->lock);
+> 
+> @@ -670,6 +671,15 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+> 	if (ret)
+> 		goto err_remove_edma;
+> 
+> +#define SD_CONTROL2_REG			0xa4
+> +	ras_cap = dw_pcie_find_rasdes_capability(pci);
+> +	if (ras_cap) {
+> +		u32 val;
+> +		val = dw_pcie_readl_dbi(pci, ras_cap + SD_CONTROL2_REG);
+> +		val |= BIT(9);
+> +		dw_pcie_writel_dbi(pci, ras_cap + SD_CONTROL2_REG, val);
+> +	}
+> +
+> 	if (!dw_pcie_link_up(pci)) {
+> 		ret = dw_pcie_start_link(pci);
+> 		if (ret)
+> 
+> 
+> And now, every second or third boot, LTSSM is no longer in POLL_COMPLIANCE,
+> instead of every second or third boot, LTSSM is now always in:
+> [    2.298107] rockchip-dw-pcie a40000000.pcie: Link failed to come up. LTSSM: POLL_ACTIVE
+> 
+> 
+> I did comment out goto err_stop_link if dw_pcie_wait_for_link(), so I can dump
+> LTSSM afterwards, when this happens:
+> 
+> [    2.297916] rockchip-dw-pcie a40000000.pcie: Link failed to come up. LTSSM: POLL_ACTIVE
+> 
+> Then I do:
+> 
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_QUIET (0x00)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_QUIET (0x00)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_QUIET (0x00)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_ACT (0x01)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_QUIET (0x00)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_QUIET (0x00)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_QUIET (0x00)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_QUIET (0x00)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_QUIET (0x00)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_QUIET (0x00)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_QUIET (0x00)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_QUIET (0x00)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_QUIET (0x00)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_QUIET (0x00)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_ACT (0x01)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> POLL_ACTIVE (0x02)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> DETECT_QUIET (0x00)
+> 
+> So it appears that after setting the DIRECT_POLCOMP_TO_DETECT bit,
+> instead of LTSSM being stuck in POLL_COMPLIANCE, LTSSM seems to
+> jump between DETECT_QUIET / DETECT_ACT / POLL_ACTIVE.
 > 
 
-Thanks for sharing this details.
+Thanks for testing it out. I was expecting the device to just stay in the DETECT
+states, but looks like the cycle just continues, which is also fair.
 
-> - Mani
+> 
+> And just like before, as soon as I do the configfs writes on the EP board
+> to start the link:
+> 
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> L0 (0x11)
+> # cat /sys/kernel/debug/dwc_pcie_a40000000.pcie/ltssm_status
+> L0 (0x11)
+> 
+> LTSSM transitions out of compliance, and rescan finds my device.
+> 
+> 
+> So I don't think that setting the DIRECT_POLCOMP_TO_DETECT bit will
+> help us PCIe endpoint developers to continue with the workflow where we
+> can simply do a rescan on the host after starting the link training on
+> the EP.
+>
+> Back to finding another alternative. Kconfig? module param? Suggestions?
 > 
 
+I don't like the user to control this behavior as it is just how the link
+behaves. Maybe we can allow the link to stay in POLL and print out a different
+message, and still return -ENODEV? Like,
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index c2dfadc53d04..21ce206f359b 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -774,6 +774,14 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+                    ltssm == DW_PCIE_LTSSM_DETECT_ACT) {
+                        dev_info(pci->dev, "Device not found\n");
+                        return -ENODEV;
++               /*
++                * If the link is in POLL.Compliance state, then the device is
++                * found to be connected to the bus, but it is not active i.e.,
++                * the device firmware might not yet initialized.
++                */
++               } else if (ltssm == DW_PCIE_LTSSM_POLL_COMPLIANCE) {
++                       dev_info(pci->dev, "Device found, but not active\n");
++                       return -ENODEV;
+                }
+ 
+                dev_err(pci->dev, "Link failed to come up. LTSSM: %s\n",
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
