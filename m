@@ -1,125 +1,120 @@
-Return-Path: <linux-pci+bounces-45072-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45073-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9F95D37A63
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 18:39:52 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 376E4D3848B
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 19:42:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8828D30D5CA0
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 17:35:41 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id AADCC30051B2
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 18:42:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D21633939BE;
-	Fri, 16 Jan 2026 17:35:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD5C434D3AD;
+	Fri, 16 Jan 2026 18:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="lTM1qJBy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B63233B96A;
-	Fri, 16 Jan 2026 17:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313392222D0
+	for <linux-pci@vger.kernel.org>; Fri, 16 Jan 2026 18:42:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768584940; cv=none; b=QXPHJUPrA+pLuM1/qHDR7nON1AHSHBvxJpSAWaq9b1RM5TYHPmshIO9Y3p7dfc/x4A516G0taCAW4JG1/xR/NRcylnwUAn1ZHLekwCU8ZT6JLoH4eXITAFv79K+muBBHJgkRSGo9B4q+cRtpRUnkizoEuAkXZWVNntteyzAe7s8=
+	t=1768588926; cv=none; b=G+jlrd/RvSCJwcGaClxjDj22wjQJC5dC5WiWheuXq5zoSOHL75Zrugq4gJm2dK5xx8cpkxy8+5v+cuvs6fLiSyuziL1GWSRsHsF3rbkXGbTVjzq1VHo2eDC0tPZVT6yKPmRDGT/ipp/BKzGpXSgHnPhPNFgoZV0RNJrNcR6hNUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768584940; c=relaxed/simple;
-	bh=eRYEce1Bqi1IMbyX0gjKe256Q/w/UQgKFjS+32AVKLc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KEKJApgwAhKOnI6JqOmA2xBARfTIdYjOlt9klBUWbgx5okf25wDT4GmEiC/2WBJBGdAQzXaRqx0JIqwP60meu6oOLGjAOiqcZWNA+vZtlkoUNHWpBb1IF5+pvT9K4h/JcOsADMfQ17QDC0OWjOYrOXP5tSsmfnWHAkIh9Jr7qRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D64011516;
-	Fri, 16 Jan 2026 09:35:31 -0800 (PST)
-Received: from [10.57.49.133] (unknown [10.57.49.133])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCB053F59E;
-	Fri, 16 Jan 2026 09:35:36 -0800 (PST)
-Message-ID: <d3f008bf-a9cb-43a8-807b-2ba1d6d9ff3c@arm.com>
-Date: Fri, 16 Jan 2026 17:35:34 +0000
+	s=arc-20240116; t=1768588926; c=relaxed/simple;
+	bh=A2aFqxWidasA3PmXwS6pvWfzipgU4A2kXi7BI9sz4UA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G1e3VYeOWcawYINu31SwMde/Y6PriCWSL9TqElO+9aUWrUk7NNywGUZDaimGGB8uX5Qt4YBYC1Wnd30+M0RDhgihh+wHQ/dMhQ4X/bS+BtOKwEAMOoJfJdJHb552UXMWi9Zq13sVGCCQwXa0kbNEaYr69h6NFwwf6osztbz5Jfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=lTM1qJBy; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60GG9I2U544896
+	for <linux-pci@vger.kernel.org>; Fri, 16 Jan 2026 10:42:04 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2025-q2; bh=S2L9+G1ruedPPKGUMh
+	Kwro0OTWtYLf7d1bjft8hZduY=; b=lTM1qJByTdI3u6Ax4E0mhlUurUFHeOWdar
+	hz1PGhUlJAWDKPZfD3nVZtKoRUPvLybywtkF88Xk+c5CX66Gf0A4iOekq9a2A4r1
+	/w60NK2FC4gBbJEkSn3aa0foEjOwHcFV/FAX7/GTqm/AM91BQVTVV+a6NTqKQ+b6
+	dC4CXoS9gTEMYbf5+0PT3IiKP0cqkZrP0QoPOpLDHDxDyVaExtLxNUVxf5i0Ggko
+	cZNkBTBxfYR2R2ie7lZStjXDCdrpKOi+VESrnzZglPIIP83UDSK6k+tGUdhWUnZ6
+	6ilzi6Aw6mHE4sO90N5ZAKh6sMWcKFDLqZ3gghumdsefUM95rd+g==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4bqrks99bs-4
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 16 Jan 2026 10:42:04 -0800 (PST)
+Received: from twshared17475.04.snb3.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.29; Fri, 16 Jan 2026 18:42:02 +0000
+Received: by devbig197.nha3.facebook.com (Postfix, from userid 544533)
+	id 70F4664FEFD4; Fri, 16 Jan 2026 10:41:51 -0800 (PST)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>
+CC: <alex@shazbot.org>, <lukas@wunner.de>,
+        <helgaas@kernel.org~/patches/pci-slot-locking>,
+        Keith Busch
+	<kbusch@kernel.org>
+Subject: [PATCH 1/2] pci: fix slot trylock error handling
+Date: Fri, 16 Jan 2026 10:41:49 -0800
+Message-ID: <20260116184150.3013258-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Re: imx8 PCI regression since "iommu: Get DT/ACPI
- parsing into the proper probe path"
-To: Jason Gunthorpe <jgg@nvidia.com>,
- Nicolas Cavallari <Nicolas.Cavallari@green-communications.fr>
-Cc: iommu@lists.linux.dev, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>, "Rob Herring (Arm)" <robh@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Joerg Roedel <jroedel@suse.de>,
- regressions@lists.linux.dev
-References: <a1d926f0-4cb5-4877-a4df-617902648d80@green-communications.fr>
- <eb94b379-6e0b-4beb-aaa7-413a4e7f04b9@green-communications.fr>
- <3780eb61-68e2-42ce-939e-7458cd3a63cb@green-communications.fr>
- <20260116171048.GP961588@nvidia.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260116171048.GP961588@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: owaVqYHiUOE1SbwYldV3pNHyFmTinK4K
+X-Authority-Analysis: v=2.4 cv=bf9mkePB c=1 sm=1 tr=0 ts=696a867c cx=c_pps
+ a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+ a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8
+ a=kmZ5IrMMQd9YCwZnqSMA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE2MDEzOCBTYWx0ZWRfX29REQ2Y5wPdc
+ aSIRDIyFkQKByJrBw7DiEWbS+TnIsNY0VACVT2uDd/z9NjJZu86gBU9kCbJPgvpE8cvXeNNzFKw
+ Az8rEwzxJdqZwOzTcnJcNDzGOi4osuhqeA8gtDw451F9hCiRi02xednvgKki+KJcE5Ejpv4Rhlv
+ e3HEkA98X/YRYD6AmNyPJPXXD65mRbOqYDS5H1ExhQCEOk+VOmA4s7JpwH7DT5HMcyKbubgEb7L
+ 2vhDpqw/mLvfEFtN3OUvSrtYuF0cC79dzT3tf0TxW05zOFM+R2HRsBXcNDbJSMKI+daoSugZkEQ
+ 0JsNyYSc98HR5a7+aiB9bGFYG9s2yi6yUAX399H5JTEyKWI7eyJ7WqrTaUS0WQTsWlFv1Dm/QM4
+ CowTe2nbGFiOPK6LqBpWzWUI6wm4bLVF432kGl8kn/V4Tg5l68IHhhdpvBwvq3xrHEXViaA8+nE
+ HUVOIBdvVD6MZcHGmuQ==
+X-Proofpoint-GUID: owaVqYHiUOE1SbwYldV3pNHyFmTinK4K
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-16_07,2026-01-15_02,2025-10-01_01
 
-On 2026-01-16 5:10 pm, Jason Gunthorpe wrote:
-> On Fri, Jan 16, 2026 at 05:52:36PM +0100, Nicolas Cavallari wrote:
->> I debugged it further, it seems to be mostly a PCI issue since the system
->> does not actually have an IOMMU.
->>
->> When examining changes in the PCI configuration (lspci -vvvv), the main
->> difference is that, with the patch, Access Control Services are enabled on
->> the PCI switch.
->>
->>          Capabilities: [220 v1] Access Control Services
->>                  ACSCap: SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+
->> UpstreamFwd+ EgressCtrl+ DirectTrans+
->> -               ACSCtl: SrcValid- TransBlk- ReqRedir- CmpltRedir-
->> UpstreamFwd- EgressCtrl- DirectTrans-
->> +               ACSCtl: SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
->> UpstreamFwd+ EgressCtrl- DirectTrans-
->>
->> If I manually patch the config space in sysfs and re-disable ACS on the port
->> connected to the LAN7430, I cannot reproduce the problem.  In fact,
->> disabling only ReqRedir is enough to work around the issue.
-> 
-> My guess would be your system has some kind of address alias going on?
-> 
-> Assuming you are not facing an errata, ACS generally changes the
-> routing of TLPs so if you have a DMA address that could go to two
-> different places then messing with ACS will give you different
-> behaviors.
-> 
-> In specific when you turn all those ACS settings you cannot do P2P
-> traffic anymore. If your system expects this for some reason then you
-> must use the kernel command line option to disable acs.
-> 
-> If you are just doing normal netdev stuff then it is doubtful that you
-> are doing P2P at all, so I might guess a bug in the microchip ethernet
-> driver doing a wild DMA? Stricter ACS settings cause it to AER and the
-> device cannot recover?
-> 
-> It will be hard to get the bottom of the defect without a PCI trace
-> 
-> I don't know why your bisection landed on bcb8 - the intention was
-> that pci_enable_acs() is always called, and I didn't notice an obvious
-> reason why that wouldn't happen prior to bcb8.. It is called directly
-> from pci_device_add() Maybe investigating that angle would be
-> informative..
+From: Keith Busch <kbusch@kernel.org>
 
-The difference is that bcb8 moves the pci_request_acs() call on OF 
-systems back early enough to actually have an effect - that's spent the 
-last 6 years being pretty much a no-op since 6bf6c24720d3 ("iommu/of: 
-Request ACS from the PCI core when configuring IOMMU linkage")...
+The device lock isn't held if pci_bus_trylock() fails, so the code had
+been attempting to improperly unlock it.
 
-Thanks,
-Robin.
+Fixes: a4e772898f8bf2 ("PCI: Add missing bridge lock to pci_bus_lock()")
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+---
+ drivers/pci/pci.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
->> I also read up on AER and I'm surprised that I don't see anything in dmesg
->> when the problem occurs, even through UERcvd+ start appearing on the root
->> context and AdvNonFatalErr+ appears on the switch.
-> 
-> Though UE and AdvNonFatalErr sure are weird indications for an
-> addressing error.. Is there some kind of special embedded system thing
-> going on? Vendor messages over PCI perhaps?
-> 
-> Jason
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 72d88ea95f3cc..3378221c5723a 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5494,10 +5494,8 @@ static int pci_slot_trylock(struct pci_slot *slot)
+ 		if (!dev->slot || dev->slot !=3D slot)
+ 			continue;
+ 		if (dev->subordinate) {
+-			if (!pci_bus_trylock(dev->subordinate)) {
+-				pci_dev_unlock(dev);
++			if (!pci_bus_trylock(dev->subordinate))
+ 				goto unlock;
+-			}
+ 		} else if (!pci_dev_trylock(dev))
+ 			goto unlock;
+ 	}
+--=20
+2.47.3
 
 
