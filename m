@@ -1,234 +1,364 @@
-Return-Path: <linux-pci+bounces-45016-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45017-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0389D2AAAE
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 04:21:53 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2744CD2B134
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 04:59:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 965AC304F179
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 03:21:43 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1F0A930360D0
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 03:59:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09D4526056C;
-	Fri, 16 Jan 2026 03:21:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7020B3370F7;
+	Fri, 16 Jan 2026 03:59:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cPQe3fYL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="moVrqKOX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9931118FC86;
-	Fri, 16 Jan 2026 03:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768533702; cv=fail; b=bHCmzdpcTR0xFOCvc9oWQTGSLHVoKV3uGQWCgE2zpNpZvCbZmme42J8hCuwHgHyxf03Ze4HFrLR4YwTOzVkB2J7ppfiNVI0CYyOX82LKZcCFsOjb43mchUT1JzLD3QSu4rHt13SlaX7o5dvo/lfPNbeJqJIg2ff8Hn8j/gDbpcI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768533702; c=relaxed/simple;
-	bh=bq/HGNJUIbZy1GOlTSVmmART8T5Gp7cCUNRr4DuZXEY=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=WqYJFzpHAvfp4++umqLd/lTeQjAaZ44z4w0+eu447/vb0kXTxA99IG7rkCMriDKnMwwkUNMIyaBGL2YKFnZPKtFrPtzaQRqDF3m3JYBhxYzHXnF+Jk4qUCKM7aBSzKTEdwG5Ls4rCJMalg6hNNrtUpuua+Vc8IqYREEtVYKgitM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cPQe3fYL; arc=fail smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9F2342534;
+	Fri, 16 Jan 2026 03:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768535982; cv=none; b=T/x7i9ZE+KL0DskXXN8HYzzG0KxnX/PBQKV5flBaYjLeWTpDDqqUoC4rT/lOUy3oIMyyUX62Z8Z8KLl72jAPyseo5IxD52mAg5kzesk+ALr95zPLefNA0T7BUw0PqDvby4rcCEe1OqPXol+ISZq40eT+KjoIV/peiN32UppwnUI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768535982; c=relaxed/simple;
+	bh=CmGnH7AqqI0yoJCUsFq4Tmdh1ZlRFTL2l6zzaWwnmZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d5iXdGtfmZuWDm1IfmFKiJFNLgGyjkX2/cByDhrSO8GhOnAyLTZ8WE1XY2AUsBzGoTHWnl/b1nQNlJgT7GLykTVc2GBlZdtLIvvNDuDST/yilJdwnL3XmfMUJetMNfW5yLMZP4O4nyPf+xMCA04T+Lyws+wjVINnC+M54v6fZsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=moVrqKOX; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768533701; x=1800069701;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=bq/HGNJUIbZy1GOlTSVmmART8T5Gp7cCUNRr4DuZXEY=;
-  b=cPQe3fYL0oxt975fnmRGzJL3tm9DNsrj+p4ZMLGhQPXi7ILZLSsPe2D4
-   qzw+psSZzz1ZtM/HZQOvubD2eb7RHotWfPi5cKchscoKXj1Z17y9h4Qxm
-   HBqjyXMcXhHxdfeLbziOEfV8ZPYVJwuiO8CEMUAet5Xk0BVkDN609zVT3
-   L8x+06Iv2btl4sDifRkWCBVdaqyrzHnJrqolKWF1qkaCsvhBRUMn3O219
-   VmKGs4Ot9pDXU+Kt8FprvoAnyAhQCVkuWoibfCyqsCiTurVDB3OEG0j8K
-   DhhO2tVX4PDSU5VY4jRyvkfLXeM2hcytz2b9w3Gi+yZG3eOaS1y/SYY7o
-   A==;
-X-CSE-ConnectionGUID: UgaiKCbiQxiUg+gI0xRUYw==
-X-CSE-MsgGUID: lee+1aeTTqWgtFKWOvIvKA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="80963744"
+  t=1768535979; x=1800071979;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CmGnH7AqqI0yoJCUsFq4Tmdh1ZlRFTL2l6zzaWwnmZk=;
+  b=moVrqKOXalxNfTcIE7B/EwHlZlUGZhnsoKQTqgC9vmy40T8bDjUtqvJx
+   AOy6zEaE6j+jZbimPZZdT9xQ9MU1DG/g+xlCnGcCwdvC3HmjR6wcrbp9W
+   0Qdi6iF4vfROg7bEpNd42l0eoALa9jOgHHbY4i2YPyg61J8BYQZql95CR
+   LQwQwH1GlVOY8ka6nMqZublRUENCKk/LK70LMB0xxCzgeD7YFILrlJfeM
+   Byd1JLys9Pnz4jG5vDOuvQHezyqg02prJ5wfvYUhbWUxjuJdwLNj7dhMN
+   Xy9XXdzIuralhUhvUy5ORG1c+xQPK19k/0OnUm6ZhjLwlF4+/LTlbRM3H
+   Q==;
+X-CSE-ConnectionGUID: dXAZYE+USjWQ0wkb8Gsk3w==
+X-CSE-MsgGUID: nA4Ec/UkT7yz35HtxOsOMw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="87428007"
 X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
-   d="scan'208";a="80963744"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 19:21:41 -0800
-X-CSE-ConnectionGUID: weCpPyK3SgCESSSbNMAkcg==
-X-CSE-MsgGUID: +uRGiZDjS7OIgqdc2oCK/g==
+   d="scan'208";a="87428007"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 19:59:39 -0800
+X-CSE-ConnectionGUID: bw4zyM8gTpesuT+M4QFy1Q==
+X-CSE-MsgGUID: KVT9E3iySwWcgq+yCDtZ3Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
-   d="scan'208";a="209993329"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 19:21:40 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Thu, 15 Jan 2026 19:21:39 -0800
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29 via Frontend Transport; Thu, 15 Jan 2026 19:21:39 -0800
-Received: from CH4PR04CU002.outbound.protection.outlook.com (40.107.201.1) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Thu, 15 Jan 2026 19:21:38 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lBId397HI9ywCKTgS7m/+u+A9BxaZN93Ell8lh8AAr7ki15h0//UjTa/VSQhpgDuVjdyU3FOrzADAjc0ay9N6r3bVQ/JOMPhXjQd0UplcKudMi4Q5H9AyzX0YLFyR5PQL/UfZNSZLexA8+zp0PXF9EFGIdZ8BnSPsOSCkaGrvs2Qqbi6jIp0B+kdi3CzCQIUZEY56tRzqvytPzra3zmFSvqTJnXgx/lWmmnCCt7CC2vz6Hn/5gmKJLJxlKccer0XUynsBP2XebYniKqVEuXq5tD4FNDZpDvIt2a18J5Dhg1HYod7GRTD7gode0rcbZxlI2bbZjSGLm5j3ztRBscelg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eoXH4zvfAkrigCU/9iNzMQUBpYMBK0MzDi0zGVQuIik=;
- b=yQggUrJWNWHOdDeX5JftrF4AdIytrtZe2V713wQmgLqZl9V/2wkL2+5xy7+lCNEh0oqW5plENEbwnRuARNzZmDDCSsGHYelt9xYqk66TtG5bI0+2Y5pqwKXc4636AUNcA8cY/lHhBluGjHLi5ElMVHbG/xiTM0z81jEPthmNrvCB2VKxIBjikPxEjmMULa6CcjLiW+rZmmD5kZfL2/hYglEpSw5BhliF1CO+U02ymw+l5ul2/kiUuJRlAx9zP/W+Ns+i48FqDQHpdJ/phRFLeTBEhpAbyvyXOr4nAQfrfhJWhp5Xj4sN1t3miymp98tRcFKzwkO29grvBO+apusINA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA3PR11MB8118.namprd11.prod.outlook.com (2603:10b6:806:2f1::13)
- by SA1PR11MB8812.namprd11.prod.outlook.com (2603:10b6:806:469::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.6; Fri, 16 Jan
- 2026 03:21:35 +0000
-Received: from SA3PR11MB8118.namprd11.prod.outlook.com
- ([fe80::b2e3:da3f:6ad8:e9a5]) by SA3PR11MB8118.namprd11.prod.outlook.com
- ([fe80::b2e3:da3f:6ad8:e9a5%2]) with mapi id 15.20.9520.005; Fri, 16 Jan 2026
- 03:21:35 +0000
-From: <dan.j.williams@intel.com>
-Date: Thu, 15 Jan 2026 19:21:34 -0800
-To: Terry Bowman <terry.bowman@amd.com>, <dave@stgolabs.net>,
-	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <shiju.jose@huawei.com>, <ming.li@zohomail.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <rrichter@amd.com>,
-	<dan.carpenter@linaro.org>, <PradeepVineshReddy.Kodamati@amd.com>,
-	<lukas@wunner.de>, <Benjamin.Cheatham@amd.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <linux-cxl@vger.kernel.org>,
-	<vishal.l.verma@intel.com>, <alucerop@amd.com>, <ira.weiny@intel.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<terry.bowman@amd.com>
-Message-ID: <6969aebe3dc82_875d10017@dwillia2-mobl4.notmuch>
-In-Reply-To: <20260114182055.46029-19-terry.bowman@amd.com>
-References: <20260114182055.46029-1-terry.bowman@amd.com>
- <20260114182055.46029-19-terry.bowman@amd.com>
-Subject: Re: [PATCH v14 18/34] cxl/port: Remove "enumerate dports" helpers
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR01CA0063.prod.exchangelabs.com (2603:10b6:a03:94::40)
- To SA3PR11MB8118.namprd11.prod.outlook.com (2603:10b6:806:2f1::13)
+   d="scan'208";a="228174765"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 15 Jan 2026 19:59:36 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vgazl-00000000KLq-3MS5;
+	Fri, 16 Jan 2026 03:59:33 +0000
+Date: Fri, 16 Jan 2026 11:59:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Devendra K Verma <devendra.verma@amd.com>, bhelgaas@google.com,
+	mani@kernel.org, vkoul@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, dmaengine@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com, Devendra.Verma@amd.com
+Subject: Re: [PATCH v8 2/2] dmaengine: dw-edma: Add non-LL mode
+Message-ID: <202601161151.MTsHwjVO-lkp@intel.com>
+References: <20260109120354.306048-3-devendra.verma@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR11MB8118:EE_|SA1PR11MB8812:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3db0fd4f-572f-45b8-49b2-08de54ae5a9e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|921020|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?T0xWY2xGLytHa2V3N0NxMUpOb0d5elhjU0U4MXBtRGhnN3h2bmRlaCs1SjQx?=
- =?utf-8?B?QUZrRXFDenY2RjVyVTNpT0tSL2F1bzllaFRCTGsySFpkalFqTlhXQUxBSjJo?=
- =?utf-8?B?Q3hRZVpZMWhEbzZnaTBFSHZMUitWNlJSMTNmVmNoT2xQY0hJeEdMdFNjUVQw?=
- =?utf-8?B?K3p1VTNxUURTODBxckx3ZlNTanlqRTJrYUMzV09FM2NuUE5kRkxNa3VmVjRm?=
- =?utf-8?B?QmcrSmg0VWZ0MFkvbkwrcVMvZHJESWU4MHNQRFpHRm5yak1FT2Z6ZGVrUTJu?=
- =?utf-8?B?WE9WQ2xDb2wzVUZDdkxEYmhKblA4M21uN3RpS0R6YVg5K2VISysxRStNK2VI?=
- =?utf-8?B?ajJmTzYwY3V2NThSdmthNnQ4UWI1SVFwV1V5YmZuKy8yRVlBenRrZUFYazF3?=
- =?utf-8?B?dW9URDRaSC9ZdkFQb0wzcDA5TmFrQ2tZa1R4SXg0dFZkRXdhN3VnOUZtS0VX?=
- =?utf-8?B?ZW5YaVJqRXJETU5zcVVmMjNzNmJzaHdkVnFNQ2JoZlVrTW1xenpDbmQ3d3p4?=
- =?utf-8?B?TU9Ic25MbVZvak1nK2FaR0ErS1ZiWG03R2lCZFZMM29XQmNpYWswR1EwTjg3?=
- =?utf-8?B?SkxUeHhmZzFDeXlaaHlrdzB1VDUvTkErOE1MeXhUN1I5QVNYcms4eUV4UDZ1?=
- =?utf-8?B?eDFYQzRyYTJYUzJLVXVoNXZWNE05Sk5pOUJZamtRdHk5Tks0VzZ6RWlpZ3c2?=
- =?utf-8?B?TnJyY3gwbEN2anhtSWF3UkNEaUJSVWpoVTBZMTRpa3pDeUhUQVN1cUlrUWlJ?=
- =?utf-8?B?dkJHMG53dmRUUC9RWXJmYXhkcjg2bjNsTmZkVEo0UUs2UUtyOGtxUWdYakFD?=
- =?utf-8?B?MXhiRTYyNHBHUnFqSHdPYjNSVXljUGpsOWhDa3o1aEZGYTNQbTUxUlIvU2VF?=
- =?utf-8?B?ZnJKWExPQ2l4SEFsYVA4ZUk5QldQdFhuaU9zVHFRck1LZ2FSQ29Yem5aUFB3?=
- =?utf-8?B?WDVLSkRRY0xPSXRtSHNxWnVyRjBJV2xSMnpYaVlJTnQ4Q2VhSmdPYW45QnN6?=
- =?utf-8?B?YWo3cTE5YkVhT0pCRmlqajZXMk9VRVdYQUFNdS9IWmVMRDJvNmhoUk1KTysy?=
- =?utf-8?B?YjU1ZnlrYXAyUDRtVnphOXJVQXNyd3FOT0tPajVxNU5zM2RDTVN0ZzF1c25h?=
- =?utf-8?B?dmZEV2o3b1Q2aUZYN29DVE9wYWRHSG8wUDVIazN0L1dYdjcwd0pWbFlTbFcw?=
- =?utf-8?B?bXkzSjFndG4xSXBjTXJHWlFaaEkveWNJaEk1RkxZeWlSTlJ4RWJLbGRqR2lE?=
- =?utf-8?B?T256cVZENDI0YkxzTVlGWDB1QldWRVRPTE5saE5KdGNyMFZlL05HRnBQdVZr?=
- =?utf-8?B?WXF5UVc0RE5WbCsyMTBFd3labE12MWsvYWtFVUp4OVVzV0UvMU9XZm9YTnFq?=
- =?utf-8?B?eUZNV3ZBelhWSk9LUDNkV0JyNEpSNDVOcURQczhuOWJjd3FyVStXVE5FV29H?=
- =?utf-8?B?aVR1T2tEWmRCNGNvbk4reDQzRzhnaElYYWVFLzFtcVFTcjFlNGNEV0hhL3li?=
- =?utf-8?B?d3NUVUFVZzhxSTlFdGVOUm5KMHBuVCsrUWNtSHNzdVl4NzVlS1M3K2U2Ully?=
- =?utf-8?B?ekxiUS9LVWVHRExJN0tTL2padXZTUkZrVnk5bnpTaDBhVTlEZjJWUDRWcVZQ?=
- =?utf-8?B?UVp3Z0pZQ1hJbTNzTEhvSnUycDFmMkdZQW1HM3laZnF5eDd5bjd1QXlrRlh3?=
- =?utf-8?B?aVpMOFBmc0lwZW5JcVAvNDQwWTVzWHFrcWMwTlNQRHJXY3oxRWFXbVlxSUM5?=
- =?utf-8?B?U2lRbEhnS2l3TGJsdTB1K3RVVHlpN2dYMUpoYUxBVndrTWs4Rmw0LzFCT0dl?=
- =?utf-8?B?M2JMbEtuYTFDK3FlelNsQUdjelBQRGtLcW9yS1BrUFBiMXhSSUxqeUFjdFVW?=
- =?utf-8?B?U0M1NE9pRE5pZXp1QS9QUjFZU2NxN1A1aVNTa2dUYk1sSnp0ZTkrSjRZSlBt?=
- =?utf-8?B?eGpZMEpRYmJ1bUU0YmovbWJnc0tzMVpiZnIzVFpvTHZxR3A5VTBQTE5zdW1U?=
- =?utf-8?B?OEM0U3JwM05lem5NWUlRRTlKeTNJaE5vNThnRGgya3htNmxsa0tjVUtCOUtG?=
- =?utf-8?B?ekdab0tkQWsrdTNwYmJpSFNJcnpQd1c0QU1rU3p2ODkySjh3eHExbTJ4T1FG?=
- =?utf-8?B?YkcrZ21lRnpjNXppUExZazQ3V3VTMkd6S1dyQlh5K2dhQnBWQ3lsbkQ4d1Vu?=
- =?utf-8?B?anc9PQ==?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB8118.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(921020)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MHVZMDlhTUdCc1NhZG5jNlZFcU5vVGFuZUJxV3FTQVUrRlNOMVFxZG9sZDlv?=
- =?utf-8?B?dUgyR3dFRmxBRjZ1ZS9EeEcxQ0FLQ3ZjeDhiWTRSOHcxZHhkNENuNDZLU2kx?=
- =?utf-8?B?V2kxbzdXSjI1aFVFVUNrcDV2UnRGUG1aeHB6bndPU2xlWnNmMHVVYWp3V21D?=
- =?utf-8?B?Q0ZBNkgzU3hCbnp3MGRDOUY1MVlFK2kvOTVzRi82SGthcWcra2cyN0VnbUpi?=
- =?utf-8?B?YlFQM2NDY01DZ3F0U3dtQWkyWVNuUjcvYlNBWlpQWmNNRmUrNGlxeFJTZXB2?=
- =?utf-8?B?Ni9tdnZ3V1pJZ2x5WUcxTC84UE5BZXpQdlk5bW11TGc3UEV0R3B4blVCRmk4?=
- =?utf-8?B?V3Jmdmwvd0trY3B2ZHJrcHkxRHBJYUNiWTB1ZDhQM2l3VDVxTzZMWjYxYm93?=
- =?utf-8?B?VE9QbkxieGVJQmdRNHRLVElzaWJHdjdHQmhrSTFYcWpEV1N2eno1eHo5bTNI?=
- =?utf-8?B?aTNuYzVwL1c5QVZEL203aHQwb2Q2K1dNTDl1MlQ4T1l0L0hqZ3RhNHlKV0dF?=
- =?utf-8?B?L25rZFo3c1BodkZEcW9kUEo1OVRkVHRGK3RMMnZYMmxZeE9RRkZYZmxWc2Z2?=
- =?utf-8?B?WEQyRnhvVFdRWlV0YStZdnA2TkhTalBiMUtwMDRuNC9XUmR4MXFKaElLK1FT?=
- =?utf-8?B?SWFCL2Vrbkh2VWwrTExZYnlxbGVjeGhJT1lidHVWb3RwQnZCWTFXU2oxTDVJ?=
- =?utf-8?B?Y2RkVjE3UmNNeTJSdko2RDlGT1Fvd2dEYzV0SzRoYmVCeHh6d0o4L0NqTVdu?=
- =?utf-8?B?M3QvR2M3a0pxTm92QkFZQittT09PMVpiN2ZCSlhaMjJkY0pwNmZCV1ZueVE0?=
- =?utf-8?B?TE4vcHBLY0duUlMyTjJqaHBCL1JDUVVOSkI0S2ZQc2djLzBiWWlVRGsxa080?=
- =?utf-8?B?VDJWQ0JUbU9obzVNanZhTFRLTWhVTzh2UnJ0K1JpNVZjd3lBNmxkQ21Pa1Jq?=
- =?utf-8?B?WEtNN0IwTDNKcWJqRHp0QTNsVkxUZVFnUXFmc2x5ZTlpM25mYWFRZVVRQ25t?=
- =?utf-8?B?aTM2ampSYjNqUU5BTGZFbCs5SUE0Wjh5N3lqMHVyRVhPbGdRZTVvU1VqWCt5?=
- =?utf-8?B?MXdBcm0yOG9SNkZLenNTUHNlWmxHTVR0a1VXZ3cxY2llQ1Iwa2h1Z0VEb1BR?=
- =?utf-8?B?QjQ0MGZPSldsUTlpNmgyNDM1ZTN6WkNIcGx5YjNUZG1WMzNoR29mL0ZYek9F?=
- =?utf-8?B?K3B2MUFUQjFzaVpkczVidHhrVENqcS9ac0dGS29IcDFmcDBtWW5nczdjdlJi?=
- =?utf-8?B?TmhUS1dlTEkyV25SalU4eXhRL2NYakhtaHYzWkRsdTBjOGlnelhmM2lXNS9Q?=
- =?utf-8?B?SjBpSlJ1c0EwZmVyWndSVHgwbC9BUTFsZGpiQzI4MmNuVUcza3llR0ZaNTB3?=
- =?utf-8?B?K08yRGh2N0xvRHpHc0pMbUh0NFhpakdicEFOeng2VFlUWm1udEhRdk1YTXRh?=
- =?utf-8?B?NjR5TU1YVzZKbGE1RGcrQmE1Y3BveWFWZkgxUlg5YXVFNjZHeDd5bTJucUNP?=
- =?utf-8?B?ZVgrellocDJpMllPbGk0akl6VmhjbTAycXdSVnpjUVZCck5ZQjh4UDQwM2lH?=
- =?utf-8?B?NDB4ZWlVRmR1b3gvb3FKZVQ1K3cvRGN1K3k2bHNXZWpEaUQzOWpjb3orZG1n?=
- =?utf-8?B?Ty9za0tpbWJEV3dhWGdFL2FTc1hyYy91U2JxK09sUjBVb3FSQ0MydnI3NHJi?=
- =?utf-8?B?eDJyVzcvblI0QXdkd0gwMzlJTzNWOUUwaWpGc1k5WkgxbzZtYVlqVldLT0dp?=
- =?utf-8?B?YzdJd0IvbXV1NTdoait3b3lUZVJtSUhIMVNRWGE0Y3JXai9NMkU0VjFZdUxq?=
- =?utf-8?B?M2h4aUc1MWFiQkh3Zm5pMkZHbHVTRmlKWm1TUzNLd05OR2pIL1hWaERTM0Uw?=
- =?utf-8?B?OHlZd1R2Nm5qT1hqTlJwSVNhdTlLNEdyRm51czlNTUZRaUxESURSN21hSkQ2?=
- =?utf-8?B?cTBxNHpYVjhVZFFZME1PNkVqTFZ6ZTA1S0Ewb2F2WUtlalFheFB4NzZzN01t?=
- =?utf-8?B?N3Z4aEZCOGdqRUszVjArT1RKS2FGK2dJZXBCRngyWjViWGZ2ZTluY1BwTG5y?=
- =?utf-8?B?RGYvWkwwTVRzUFlhWFp5d2t1UHRlYzdmL3lOdmNOd1FRWXdEZnB1WmYwdllI?=
- =?utf-8?B?WGpOZnJQeVJKYjhTbWVkdDFKUnZaeWo5RkN1MXMwMU1jNE54VG5rZ3RZOFI5?=
- =?utf-8?B?a1Nnd0tZeFR3cHR6UmtOUkJKWklSelJGYmVua2d2aTNPcWRVVWdJeisraG1V?=
- =?utf-8?B?T216Z0JFdzN2NlErNDdCblZFOHI2dlVqVlNwYjFVZk9yOVlDOVlkMkhxSEdK?=
- =?utf-8?B?b2RGK2ZTREN1azJDeE1OZ0FFQ0pLWUpZbVV6Z3UvbllwNkppd3ZFd1ZFYlM3?=
- =?utf-8?Q?xf64JS2bctIX3RsQ=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3db0fd4f-572f-45b8-49b2-08de54ae5a9e
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB8118.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2026 03:21:35.5822
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OYhdTE33f5n4wp7GavnK7MOOtiukGzpLjm7GDW3psmJXlnltpjIffPiceXk8c3x6emh65kZIMeYcx3odGBw2S3adqmcUDfyS/IccJRGwiyY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8812
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260109120354.306048-3-devendra.verma@amd.com>
 
-Terry Bowman wrote:
-> From: Dan Williams <dan.j.williams@intel.com>
-> 
-> Now that cxl_switch_port_probe() no longer walks potential dports, because
-> they are enumerated dynamically on descendant endpoint arrival, remove the
-> dead code.
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Terry Bowman <terry.bowman@amd.com>
+Hi Devendra,
 
-Terry, the reference patch I sent was based on 6.18-rc4. That means it
-was missing this change:
+kernel test robot noticed the following build errors:
 
-   3f5b8f7f34f6 cxl/port: Remove devm_cxl_port_enumerate_dports()
+[auto build test ERROR on v6.19-rc4]
+[also build test ERROR on linus/master next-20260115]
+[cannot apply to vkoul-dmaengine/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-This cxl_walk_context move, which was not part of my original patch,
-also does not appear to be needed, so this patch can simply be dropped.
+url:    https://github.com/intel-lab-lkp/linux/commits/Devendra-K-Verma/dmaengine-dw-edma-Add-AMD-MDB-Endpoint-Support/20260109-200654
+base:   v6.19-rc4
+patch link:    https://lore.kernel.org/r/20260109120354.306048-3-devendra.verma%40amd.com
+patch subject: [PATCH v8 2/2] dmaengine: dw-edma: Add non-LL mode
+config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20260116/202601161151.MTsHwjVO-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 15.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260116/202601161151.MTsHwjVO-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601161151.MTsHwjVO-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/dma/dw-edma/dw-edma-pcie.c: In function 'dw_edma_pcie_probe':
+>> drivers/dma/dw-edma/dw-edma-pcie.c:348:51: error: 'DW_PCIE_AMD_MDB_INVALID_ADDR' undeclared (first use in this function); did you mean 'DW_PCIE_XILINX_MDB_INVALID_ADDR'?
+     348 |                 if (vsec_data->devmem_phys_off == DW_PCIE_AMD_MDB_INVALID_ADDR)
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                                   DW_PCIE_XILINX_MDB_INVALID_ADDR
+   drivers/dma/dw-edma/dw-edma-pcie.c:348:51: note: each undeclared identifier is reported only once for each function it appears in
+>> drivers/dma/dw-edma/dw-edma-pcie.c:358:56: error: 'DW_PCIE_XILINX_LL_OFF_GAP' undeclared (first use in this function); did you mean 'DW_PCIE_XILINX_MDB_LL_OFF_GAP'?
+     358 |                                                        DW_PCIE_XILINX_LL_OFF_GAP,
+         |                                                        ^~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                                        DW_PCIE_XILINX_MDB_LL_OFF_GAP
+>> drivers/dma/dw-edma/dw-edma-pcie.c:359:56: error: 'DW_PCIE_XILINX_LL_SIZE' undeclared (first use in this function); did you mean 'DW_PCIE_XILINX_MDB_LL_SIZE'?
+     359 |                                                        DW_PCIE_XILINX_LL_SIZE,
+         |                                                        ^~~~~~~~~~~~~~~~~~~~~~
+         |                                                        DW_PCIE_XILINX_MDB_LL_SIZE
+>> drivers/dma/dw-edma/dw-edma-pcie.c:360:56: error: 'DW_PCIE_XILINX_DT_OFF_GAP' undeclared (first use in this function); did you mean 'DW_PCIE_XILINX_MDB_DT_OFF_GAP'?
+     360 |                                                        DW_PCIE_XILINX_DT_OFF_GAP,
+         |                                                        ^~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                                        DW_PCIE_XILINX_MDB_DT_OFF_GAP
+>> drivers/dma/dw-edma/dw-edma-pcie.c:361:56: error: 'DW_PCIE_XILINX_DT_SIZE' undeclared (first use in this function); did you mean 'DW_PCIE_XILINX_MDB_DT_SIZE'?
+     361 |                                                        DW_PCIE_XILINX_DT_SIZE);
+         |                                                        ^~~~~~~~~~~~~~~~~~~~~~
+         |                                                        DW_PCIE_XILINX_MDB_DT_SIZE
+
+
+vim +348 drivers/dma/dw-edma/dw-edma-pcie.c
+
+   309	
+   310	static int dw_edma_pcie_probe(struct pci_dev *pdev,
+   311				      const struct pci_device_id *pid)
+   312	{
+   313		struct dw_edma_pcie_data *pdata = (void *)pid->driver_data;
+   314		struct dw_edma_pcie_data *vsec_data __free(kfree) = NULL;
+   315		struct device *dev = &pdev->dev;
+   316		struct dw_edma_chip *chip;
+   317		int err, nr_irqs;
+   318		int i, mask;
+   319		bool non_ll = false;
+   320	
+   321		vsec_data = kmalloc(sizeof(*vsec_data), GFP_KERNEL);
+   322		if (!vsec_data)
+   323			return -ENOMEM;
+   324	
+   325		/* Enable PCI device */
+   326		err = pcim_enable_device(pdev);
+   327		if (err) {
+   328			pci_err(pdev, "enabling device failed\n");
+   329			return err;
+   330		}
+   331	
+   332		memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
+   333	
+   334		/*
+   335		 * Tries to find if exists a PCIe Vendor-Specific Extended Capability
+   336		 * for the DMA, if one exists, then reconfigures it.
+   337		 */
+   338		dw_edma_pcie_get_synopsys_dma_data(pdev, vsec_data);
+   339		dw_edma_pcie_get_xilinx_dma_data(pdev, vsec_data);
+   340	
+   341		if (pdev->vendor == PCI_VENDOR_ID_XILINX) {
+   342			/*
+   343			 * There is no valid address found for the LL memory
+   344			 * space on the device side. In the absence of LL base
+   345			 * address use the non-LL mode or simple mode supported by
+   346			 * the HDMA IP.
+   347			 */
+ > 348			if (vsec_data->devmem_phys_off == DW_PCIE_AMD_MDB_INVALID_ADDR)
+   349				non_ll = true;
+   350	
+   351			/*
+   352			 * Configure the channel LL and data blocks if number of
+   353			 * channels enabled in VSEC capability are more than the
+   354			 * channels configured in xilinx_mdb_data.
+   355			 */
+   356			if (!non_ll)
+   357				dw_edma_set_chan_region_offset(vsec_data, BAR_2, 0,
+ > 358							       DW_PCIE_XILINX_LL_OFF_GAP,
+ > 359							       DW_PCIE_XILINX_LL_SIZE,
+ > 360							       DW_PCIE_XILINX_DT_OFF_GAP,
+ > 361							       DW_PCIE_XILINX_DT_SIZE);
+   362		}
+   363	
+   364		/* Mapping PCI BAR regions */
+   365		mask = BIT(vsec_data->rg.bar);
+   366		for (i = 0; i < vsec_data->wr_ch_cnt; i++) {
+   367			mask |= BIT(vsec_data->ll_wr[i].bar);
+   368			mask |= BIT(vsec_data->dt_wr[i].bar);
+   369		}
+   370		for (i = 0; i < vsec_data->rd_ch_cnt; i++) {
+   371			mask |= BIT(vsec_data->ll_rd[i].bar);
+   372			mask |= BIT(vsec_data->dt_rd[i].bar);
+   373		}
+   374		err = pcim_iomap_regions(pdev, mask, pci_name(pdev));
+   375		if (err) {
+   376			pci_err(pdev, "eDMA BAR I/O remapping failed\n");
+   377			return err;
+   378		}
+   379	
+   380		pci_set_master(pdev);
+   381	
+   382		/* DMA configuration */
+   383		err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+   384		if (err) {
+   385			pci_err(pdev, "DMA mask 64 set failed\n");
+   386			return err;
+   387		}
+   388	
+   389		/* Data structure allocation */
+   390		chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+   391		if (!chip)
+   392			return -ENOMEM;
+   393	
+   394		/* IRQs allocation */
+   395		nr_irqs = pci_alloc_irq_vectors(pdev, 1, vsec_data->irqs,
+   396						PCI_IRQ_MSI | PCI_IRQ_MSIX);
+   397		if (nr_irqs < 1) {
+   398			pci_err(pdev, "fail to alloc IRQ vector (number of IRQs=%u)\n",
+   399				nr_irqs);
+   400			return -EPERM;
+   401		}
+   402	
+   403		/* Data structure initialization */
+   404		chip->dev = dev;
+   405	
+   406		chip->mf = vsec_data->mf;
+   407		chip->nr_irqs = nr_irqs;
+   408		chip->ops = &dw_edma_pcie_plat_ops;
+   409		chip->non_ll = non_ll;
+   410	
+   411		chip->ll_wr_cnt = vsec_data->wr_ch_cnt;
+   412		chip->ll_rd_cnt = vsec_data->rd_ch_cnt;
+   413	
+   414		chip->reg_base = pcim_iomap_table(pdev)[vsec_data->rg.bar];
+   415		if (!chip->reg_base)
+   416			return -ENOMEM;
+   417	
+   418		for (i = 0; i < chip->ll_wr_cnt && !non_ll; i++) {
+   419			struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
+   420			struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
+   421			struct dw_edma_block *ll_block = &vsec_data->ll_wr[i];
+   422			struct dw_edma_block *dt_block = &vsec_data->dt_wr[i];
+   423	
+   424			ll_region->vaddr.io = pcim_iomap_table(pdev)[ll_block->bar];
+   425			if (!ll_region->vaddr.io)
+   426				return -ENOMEM;
+   427	
+   428			ll_region->vaddr.io += ll_block->off;
+   429			ll_region->paddr = dw_edma_get_phys_addr(pdev, vsec_data,
+   430								 ll_block->bar);
+   431			ll_region->paddr += ll_block->off;
+   432			ll_region->sz = ll_block->sz;
+   433	
+   434			dt_region->vaddr.io = pcim_iomap_table(pdev)[dt_block->bar];
+   435			if (!dt_region->vaddr.io)
+   436				return -ENOMEM;
+   437	
+   438			dt_region->vaddr.io += dt_block->off;
+   439			dt_region->paddr = dw_edma_get_phys_addr(pdev, vsec_data,
+   440								 dt_block->bar);
+   441			dt_region->paddr += dt_block->off;
+   442			dt_region->sz = dt_block->sz;
+   443		}
+   444	
+   445		for (i = 0; i < chip->ll_rd_cnt && !non_ll; i++) {
+   446			struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
+   447			struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
+   448			struct dw_edma_block *ll_block = &vsec_data->ll_rd[i];
+   449			struct dw_edma_block *dt_block = &vsec_data->dt_rd[i];
+   450	
+   451			ll_region->vaddr.io = pcim_iomap_table(pdev)[ll_block->bar];
+   452			if (!ll_region->vaddr.io)
+   453				return -ENOMEM;
+   454	
+   455			ll_region->vaddr.io += ll_block->off;
+   456			ll_region->paddr = dw_edma_get_phys_addr(pdev, vsec_data,
+   457								 ll_block->bar);
+   458			ll_region->paddr += ll_block->off;
+   459			ll_region->sz = ll_block->sz;
+   460	
+   461			dt_region->vaddr.io = pcim_iomap_table(pdev)[dt_block->bar];
+   462			if (!dt_region->vaddr.io)
+   463				return -ENOMEM;
+   464	
+   465			dt_region->vaddr.io += dt_block->off;
+   466			dt_region->paddr = dw_edma_get_phys_addr(pdev, vsec_data,
+   467								 dt_block->bar);
+   468			dt_region->paddr += dt_block->off;
+   469			dt_region->sz = dt_block->sz;
+   470		}
+   471	
+   472		/* Debug info */
+   473		if (chip->mf == EDMA_MF_EDMA_LEGACY)
+   474			pci_dbg(pdev, "Version:\teDMA Port Logic (0x%x)\n", chip->mf);
+   475		else if (chip->mf == EDMA_MF_EDMA_UNROLL)
+   476			pci_dbg(pdev, "Version:\teDMA Unroll (0x%x)\n", chip->mf);
+   477		else if (chip->mf == EDMA_MF_HDMA_COMPAT)
+   478			pci_dbg(pdev, "Version:\tHDMA Compatible (0x%x)\n", chip->mf);
+   479		else if (chip->mf == EDMA_MF_HDMA_NATIVE)
+   480			pci_dbg(pdev, "Version:\tHDMA Native (0x%x)\n", chip->mf);
+   481		else
+   482			pci_dbg(pdev, "Version:\tUnknown (0x%x)\n", chip->mf);
+   483	
+   484		pci_dbg(pdev, "Registers:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p)\n",
+   485			vsec_data->rg.bar, vsec_data->rg.off, vsec_data->rg.sz,
+   486			chip->reg_base);
+   487	
+   488	
+   489		for (i = 0; i < chip->ll_wr_cnt; i++) {
+   490			pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+   491				i, vsec_data->ll_wr[i].bar,
+   492				vsec_data->ll_wr[i].off, chip->ll_region_wr[i].sz,
+   493				chip->ll_region_wr[i].vaddr.io, &chip->ll_region_wr[i].paddr);
+   494	
+   495			pci_dbg(pdev, "Data:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+   496				i, vsec_data->dt_wr[i].bar,
+   497				vsec_data->dt_wr[i].off, chip->dt_region_wr[i].sz,
+   498				chip->dt_region_wr[i].vaddr.io, &chip->dt_region_wr[i].paddr);
+   499		}
+   500	
+   501		for (i = 0; i < chip->ll_rd_cnt; i++) {
+   502			pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+   503				i, vsec_data->ll_rd[i].bar,
+   504				vsec_data->ll_rd[i].off, chip->ll_region_rd[i].sz,
+   505				chip->ll_region_rd[i].vaddr.io, &chip->ll_region_rd[i].paddr);
+   506	
+   507			pci_dbg(pdev, "Data:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+   508				i, vsec_data->dt_rd[i].bar,
+   509				vsec_data->dt_rd[i].off, chip->dt_region_rd[i].sz,
+   510				chip->dt_region_rd[i].vaddr.io, &chip->dt_region_rd[i].paddr);
+   511		}
+   512	
+   513		pci_dbg(pdev, "Nr. IRQs:\t%u\n", chip->nr_irqs);
+   514	
+   515		/* Validating if PCI interrupts were enabled */
+   516		if (!pci_dev_msi_enabled(pdev)) {
+   517			pci_err(pdev, "enable interrupt failed\n");
+   518			return -EPERM;
+   519		}
+   520	
+   521		/* Starting eDMA driver */
+   522		err = dw_edma_probe(chip);
+   523		if (err) {
+   524			pci_err(pdev, "eDMA probe failed\n");
+   525			return err;
+   526		}
+   527	
+   528		/* Saving data structure reference */
+   529		pci_set_drvdata(pdev, chip);
+   530	
+   531		return 0;
+   532	}
+   533	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
