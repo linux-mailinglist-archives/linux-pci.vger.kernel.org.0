@@ -1,170 +1,127 @@
-Return-Path: <linux-pci+bounces-45048-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45049-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8278BD31CF9
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 14:28:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C958D320E0
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 14:46:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6E0A03027E35
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 13:25:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B41B230A1EA1
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jan 2026 13:40:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03F1A265CC2;
-	Fri, 16 Jan 2026 13:25:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49C2428135D;
+	Fri, 16 Jan 2026 13:40:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HZ2AXBWZ";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="F9xADq5j"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qwL4k5gU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDC5267AF2
-	for <linux-pci@vger.kernel.org>; Fri, 16 Jan 2026 13:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A54E18024;
+	Fri, 16 Jan 2026 13:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768569937; cv=none; b=GSAfNlUE+7TUesNOcrKt0DFot6pV22PBgXThQ7GXNPMa0UKYbvSsZcD2ovRyfdGBJVur6s0lkPhg5Ki0R4B8cMGgGIEj3rcWjZjJZ02eRnMgmq1/8fxbX2vu2r5Elaa+MHZztoJcD3nr654etDby5wVcqtyAr/bvwmzpIc1Ve7Y=
+	t=1768570844; cv=none; b=d1u/ea1wOUWu6silRm7/2g1Btn59SONiS86bmqCYeTmB/orPF8moyLtLoCfEf4p6nkB/NXvxfVpiFQ3/gYw9oVFLGneJfWlZk0KUJDwIBzzbjgivlHY1uwif15bskBPm8L3TfcE1RwyG9EQiMFMVZLMaxE4rAorpdZwhvzGBQr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768569937; c=relaxed/simple;
-	bh=wO65puuOPV8mWj29LAskYkY/c5gM/i22JAIZF9FnHbs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Kks+z/HOqpec/Owf4sxmOexkliDRFaQAniAODSnuzKrFTJNIsW7ey5QmJBQ/u+A6qV3XWHxSei1Wh1jBumZzBSSr2FY7hV4W6brifZ12NeTAnuYgHpqeMLk1CUrZiJPoshP+PG5+eQu4VkjOYp1PREw3mw0mHMfPJ2CjIUQ/mp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HZ2AXBWZ; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=F9xADq5j; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60G8819c3714113
-	for <linux-pci@vger.kernel.org>; Fri, 16 Jan 2026 13:25:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	m89N69Feqk6zBGnS3QVDdgrPq5aK1zZ5zVjNDPweqnc=; b=HZ2AXBWZU2kpQLpg
-	NN45Nz7tAuSugBM+AmURkwVJ+Ce0J4zqgjUA6vcTngFHSqFWQOb7VjIj4elT60UJ
-	T2858fH4KE6QF6iTedIVXqGZ26zIYjlOqc7SFV8mlALgpNQChe0rctK/g+GzxeFy
-	jhKL58fXv8wevGPWBemkLGp8dj6z6u8EcMY+FSdcB1ZXAJu4JtQrxXzvj+TZlUmi
-	ddOFS1QkOTd3kfJLWrKUAVJIWFv6nJDG2lNEs+Cg5aY2ILOvx0h0jME3ZrQvEVN7
-	CQ+Md5gzBeiy6KPsMcXdsv+am0YPX9vHyxI3C57+7J4t3R72BnLO/PRNcuae8Vzo
-	CYK3bA==
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bq96paa2r-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 16 Jan 2026 13:25:35 +0000 (GMT)
-Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-b471737e673so2834388a12.1
-        for <linux-pci@vger.kernel.org>; Fri, 16 Jan 2026 05:25:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1768569935; x=1769174735; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m89N69Feqk6zBGnS3QVDdgrPq5aK1zZ5zVjNDPweqnc=;
-        b=F9xADq5jCfCKcEhE2KeCPQ8B6+yi2fsbPQx0kn3luZ5Oo08ZibU8a05bx5DvBhSiaO
-         2BACObJIBr/ihbHVqZAIFNyLQU0TmJXcrRND/1sz09fo8FFNhCYkyizuvQgNmROVmN8u
-         lwub6Lk/Yt9WUGbzB6G07LEuk3Ntrs6I2kekPihiZsA40woqXx83S1dAOuqaHSdmODkD
-         dw+Nv6g84j0B7/6Y2bertsuii8oFjUwjXtkP7bn1Deo+YYp3mVQy04/eG/kDPCHr+4ot
-         WcDmQZ0Rne2Y3+Immt31XHtBqeT8mJPJCBnTNyEQFioT7VmbKsPfOJLVsTk/W0UIsj4P
-         2N6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768569935; x=1769174735;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=m89N69Feqk6zBGnS3QVDdgrPq5aK1zZ5zVjNDPweqnc=;
-        b=syd6nkzxYZamVsJeXYi1H7Hdz8HTBmagbRdFZesaA4F6b8xvAFIXTGQv+ssRT/YCyO
-         wpUXU2TASCnWCuj7v0PAQd8ZSgw8nBc5LEmvZ/pNBWsWhF2a7nkDWMiWJ4r7gF05DanF
-         1z0EETocxaFPVvkRMzvrsKNDHrcOYpE2jYDmzp3zBnbFQmurJkdjgQW3BZIOuWJA458t
-         SuwlkIzmJsCBqgWIDA4g5Ur0pjhczUuyztFTEIxckAvKuhEF8Ff4yZBzoWpoNwz7jfrK
-         IBvld/Qh1D+a/9SlNBSxY1mAOZB7Vcgf9CkUjU8tz91Y7+5UgyGvX/ZIJ5AgOnbTAhUW
-         CdoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVaimBjx8a6Qk9VR69RMdCkRQijnlLoNqldGDmsYrwzGpavVEfbYcoFP6yKVIGgJwxi/ycPDHLxtAk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXrNvynFtdORCOphUgOKz1Un8GGShZrx4sIcIkK0EKnczwIt8v
-	14v67vYT/CRrkoPC6TXaYg36iAZyzAtSS5Q+w6nyblsU7okKWhfMOE8BXxwbVcYeqTpTnRVK2VC
-	6Hb2znxVBQ7XdcBWjQIm18rUXPjr+nZzDgm7Tok41yGj8UguFfZQmqjbx3kMlLh0=
-X-Gm-Gg: AY/fxX67Zj11AqQEtWIfVX1prDwQOlV1/JpGnxNw114K+YwliPCS3CjHBjXsZMawbMt
-	Wxt/dXPrEourGUSe5UrS2cnuw+k4OWl/cMZ9vqNpyx3tKv6Bl3YIHI+s0jAaH/on7Jqb2ilrkMO
-	5C9eCv+PwRcVzJze4EPPsrwuk1PstyhKYn/C+kCkMALWY1tZqAph5bf+E5q9tFLQZOcN2/iDMfN
-	22/4RXjHtWwECnb3SwS0VA8pjEPZuubB6TXqvNhhi5rik+oe3QFtzRekOfzITz/CZO6lA8YDEub
-	r1hvfi8w1NxMJtAS8BuCfzsvGs6ScxB68IHJZQQw3Av20mWrHz2qd/KkCYPvKNyJbKRNhnEERcp
-	XINIg
-X-Received: by 2002:a05:6a20:3945:b0:38b:ebaa:c167 with SMTP id adf61e73a8af0-38e00c2ef84mr2544608637.20.1768569935116;
-        Fri, 16 Jan 2026 05:25:35 -0800 (PST)
-X-Received: by 2002:a05:6a20:3945:b0:38b:ebaa:c167 with SMTP id adf61e73a8af0-38e00c2ef84mr2544564637.20.1768569934560;
-        Fri, 16 Jan 2026 05:25:34 -0800 (PST)
-Received: from work.lan ([2409:4091:a0f4:6806:6031:39cd:c600:2b20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-81fa108b252sm2138072b3a.7.2026.01.16.05.25.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jan 2026 05:25:33 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-X-Google-Original-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Wenbin Yao <wenbin.yao@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, konrad.dybcio@oss.qualcomm.com,
-        qiang.yu@oss.qualcomm.com,
-        Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <20250825-glymur_pcie5-v3-0-5c1d1730c16f@oss.qualcomm.com>
-References: <20250825-glymur_pcie5-v3-0-5c1d1730c16f@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH v3 0/4] PCI: qcom: Add support for Glymur PCIe
- Gen5x4
-Message-Id: <176856992835.23711.2150005271893614146.b4-ty@kernel.org>
-Date: Fri, 16 Jan 2026 18:55:28 +0530
+	s=arc-20240116; t=1768570844; c=relaxed/simple;
+	bh=fCHwtUylD84VHplIZPR2LQOpdCnM2nE5JBdeiTmxPHI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MWzUe0oKNh1qQVkxjALUAimGNOaWqB3Zidjpk4oZ5m/AE9hzC0H0r6nex8urVlxi+JABObDshL2odZa7pwZ5R/AL163FQvwi9rvTGQO8BduryjnCrynS8pxv8AeHVb/M274AXTfEXm6L6qEqNxFzzFK283Y70p1ngfourVv4rGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qwL4k5gU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55824C19425;
+	Fri, 16 Jan 2026 13:40:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768570843;
+	bh=fCHwtUylD84VHplIZPR2LQOpdCnM2nE5JBdeiTmxPHI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qwL4k5gUdYEUZMUPazAQBwXZGGYgiNHAgVl5CfC/jGFmU6thYsbVy3pia8tsp8PKY
+	 v3peGIbDevJUXpuxXLPrNrXv1bCAlWMRt3xWP1XTu/vLPm4fZXRxkNXDkY+avIX/Ci
+	 RSGPusbCF1EbF93RpOuW3WoLYMKQgYsaIoXgiVqPW++0hYoYCKt0QNTZ/vhFphwiEx
+	 yfks5AvrlEmMcB5/kybqQGCn4H/nphIUxmd1RbJatjkxu3yPJ25LqACAFtHSOfLdOX
+	 uPoi5WKZoiK1oXFHYtpf9MFg/6pd+KV6TjhVwElT2M19J7Li5/u8hIMjDLHUdtLyWJ
+	 RCEw5uWwl0Z1g==
+Date: Fri, 16 Jan 2026 14:40:36 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Sean Anderson <sean.anderson@seco.com>,
+	manivannan.sadhasivam@oss.qualcomm.com,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Chen-Yu Tsai <wens@kernel.org>,
+	Brian Norris <briannorris@chromium.org>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Alex Elder <elder@riscstar.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Chen-Yu Tsai <wenst@chromium.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v4 0/8] PCI/pwrctrl: Major rework to integrate pwrctrl
+ devices with controller drivers
+Message-ID: <aWo_kP170j7r4q1a@ryzen>
+References: <20260105-pci-pwrctrl-rework-v4-0-6d41a7a49789@oss.qualcomm.com>
+ <0da0295a-4acb-430e-ae1a-e144f07418d0@seco.com>
+ <6iqn3pmk7jb7j6cvmuv6ggs6xkd6ouz6klzhzdekrlzpbgxcua@ebskaj25jukl>
+ <ef5d5fdc-be08-4859-a625-cdd1ae0c46c2@seco.com>
+ <55cqkglbgji7tz34hk7aishyq3wal3oba5hy2yfvdbnkugadyg@56yh35kcgtwf>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE2MDA5NCBTYWx0ZWRfX1Cw2R6Ld9fwT
- IZ8Lg+aWk9n12aD659cLuPy6xZZL8IwXu2QVILNQoUnYYtToiuAUnA1wNbAKD22C4Ekr9x0GR41
- H7Uqgc22PEmOj2OAprb2T+Uqm8BnVubVEIFHgST+AlRNVRWWjy9WtxyMbKk/nC7atLtjAl+Bnwr
- A/sz4Wfi8g837uFe+N+CUt5yOrueKkO4wrrFwG896+zurzfLJEytP+ndSkP+hhlv2akUHOOtJKi
- x8FVLeLjXv7225xU+tdSlL28JskJrhxqD7A+gaeZsARa0DvaIGz90+xStxn0gvjDOKBh12BtA01
- CN5PSzgIBAlLCv5vmOuOYZRTDGoL3RF8EB0dE4RjffGyMEbi7GIFwuLq4M7M90uhMbc4QPEGPfI
- fgfq971p3Rvtm+sRntkajmwH8I3mBjNrpVVT3g3EnW+zTD8UNmURQFuLvRf4RzAxwO5cbF8QUyp
- mPeKso1JrbU9DSZ+oiQ==
-X-Authority-Analysis: v=2.4 cv=M7ZA6iws c=1 sm=1 tr=0 ts=696a3c4f cx=c_pps
- a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=extm9pdXzRddJ-xlDaQA:9 a=QEXdDO2ut3YA:10
- a=_Vgx9l1VpLgwpw_dHYaR:22
-X-Proofpoint-GUID: K0e5XrNlT15FGOxh2680AIyNcv0xUOwa
-X-Proofpoint-ORIG-GUID: K0e5XrNlT15FGOxh2680AIyNcv0xUOwa
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-16_05,2026-01-15_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 malwarescore=0 suspectscore=0 adultscore=0 spamscore=0
- phishscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2601160094
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <55cqkglbgji7tz34hk7aishyq3wal3oba5hy2yfvdbnkugadyg@56yh35kcgtwf>
 
-
-On Mon, 25 Aug 2025 23:01:46 -0700, Wenbin Yao wrote:
-> Glymur is the next generation compute SoC of Qualcomm. This patch series
-> aims to add support for the fifth PCIe instance on it. The fifth PCIe
-> instance on Glymur has a Gen5 4-lane PHY. Patch [1/4] documents PHY as a
-> separate compatible and Patch [2/4] documents controller as a separate
-> compatible. Patch [3/4] describles the new PCS offsets in a dedicated
-> header file. Patch [4/4] adds configuration and compatible for PHY.
+On Fri, Jan 16, 2026 at 11:54:26AM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Jan 15, 2026 at 02:26:32PM -0500, Sean Anderson wrote:
+> > > 
+> > > Not at all. We cannot model PERST# as a GPIO in all the cases. Some drivers
+> > > implement PERST# as a set of MMIO operations in the Root Complex MMIO space and
+> > > that space belongs to the controller driver.
+> > 
+> > That's what I mean. Implement a GPIO driver with one GPIO and perform
+> > the MMIO operations as requested.
+> > 
+> > Or we can invert things and add a reset op to pci_ops. If present then
+> > call it, and if absent use the PERST GPIO on the bridge.
+> > 
 > 
-> [...]
+> Having a callback for controlling the PERST# will work for the addressing the
+> PERST# issue, but it won't solve the PCIe switch issue we were talking above.
+> And this API design will fix both the problems.
+> 
+> But even in this callback design, you need to have modifications in the existing
+> controller drivers to integrate pwrctrl. So how that is different from calling
+> just two (or one unified API for create/power_on)?
 
-Applied, thanks!
+FWIW, I do think that it is a good idea to create a reset op to pci_ops
+that will implement PERST# assertion/deassertion.
 
-[2/4] dt-bindings: PCI: qcom: Document the Glymur PCIe Controller
-      commit: e74887035fba99ead63235740908debeb1326dad
+Right now, it is a mess, with various drivers doing this at various
+different places.
 
-Best regards,
--- 
-Manivannan Sadhasivam <mani@kernel.org>
+Having a specific callback, the driver implement it however they want
+GPIO, MMIO, whatever, and it could even be called by (in case of DWC,
+the host_init, by pwrctrl, or potentially by the PCI core itself before
+enumerating the bus.
 
+If we don't do something about it now, the problem will just get worse
+with time. Yes, it will take time before all drivers have migrated and
+been tested to have a dedicated PERST# reset op, but for the long term
+maintainability, I think it is something that we should do.
+
+I also know that some drivers have some loops with retry logic, where
+they might go down in link speed, but right now I don't see why those
+drivers shouldn't be able to keep that retry logic just because we
+add a dedicated PERST# callback.
+
+
+All that said, that would be a separate endeavor and can be implemented
+later.
+
+
+Kind regards,
+Niklas
 
