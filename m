@@ -1,252 +1,209 @@
-Return-Path: <linux-pci+bounces-45089-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-45090-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B05A2D38DEF
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Jan 2026 11:59:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 56A5CD38DF8
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Jan 2026 12:03:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 65AA030081A9
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Jan 2026 10:59:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 29299301A70E
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Jan 2026 11:03:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA1443009EC;
-	Sat, 17 Jan 2026 10:59:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96B8C30E827;
+	Sat, 17 Jan 2026 11:03:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iLuebbYb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CM7IEuum"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C09F2FF675
-	for <linux-pci@vger.kernel.org>; Sat, 17 Jan 2026 10:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642DB1B4156;
+	Sat, 17 Jan 2026 11:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768647596; cv=none; b=RZ2P7fHRsx/uphw+Z3YSMcBc+VnkJcV2t37tLofb+pzsYqJ1jswsSI4WqaL994WUt513ddwp0udeTJK0k17ct1t9FwFjb71A4CutE/zMh6ne16QC3akOm4FOcG+eR0+sURxFS7xr4W8r1xoSFZoil6Fv1J3A/iXV/iV1nvakGpQ=
+	t=1768647805; cv=none; b=EZ3xITPauzyQcuI8gxFlYo6e7jsb2GDouKUZ4lK12V2sbzVRjMhV6ezdCEfRHUIKRdSnraZF4T40uHfYUVtLFRomHs9yhBtB6W144vIy5iyx3/v7E3YAJjwiVFW4dQmk/U79dZX902h4Le/8hnyEkiVn/lpkHj8fLgFOCtrF2Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768647596; c=relaxed/simple;
-	bh=FEhUr+gg3Z/DC8N2exXwtuDfYFWLE2kjEIAh7UADZAw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ANMAZQEbePLVHs6nzvyq4FVdZfqetZW1BtbB+A6h2R75wWYsp8+vjI7Z6Ufd3kAfGGaxBd/dZQfkBsHE70yGJZAgSnRkaD0PHIGCdMpgCDaQUvogzIqUlYBxA8km1SjJFVoHSGGmBS4Zc59zTCGnq+krA86MieM4sbm0VuDtr18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iLuebbYb; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768647595; x=1800183595;
-  h=date:from:to:cc:subject:message-id;
-  bh=FEhUr+gg3Z/DC8N2exXwtuDfYFWLE2kjEIAh7UADZAw=;
-  b=iLuebbYbfeqibGooUjq3OydjvCC+n4dsglHnPotwJZ53/R59Fr7ZdiGq
-   fmoMI4Ta9WzRR6c5rcYUbj7zmmvSFf/9z0KcJdNpwCXHt88Q6vyWMtm7N
-   E9CN5kEeYS7Ll7FU1ShnY7c9ISJB2b680RrbmS6M4MkCwm/8A7nPRmWVs
-   BHmrkU/8q0qqVjvk1FeDJycFvac5K9jzpj02EAENJvEcTh2XhzQKTqWXD
-   miCWG92jydXFvlNmxw80q804YYt1ksOQAXuTHIuuN7+eJ4Lnnvz6f1bf+
-   uDLACLGkCVffrLY1lxHNkNp/4/QaDDSR6uadGttIqW/6z8uW6AzAjjJPv
-   g==;
-X-CSE-ConnectionGUID: oBnVhJWCTky+6/4PTA1cXw==
-X-CSE-MsgGUID: dz3sm5uxT/eZAbOQT17V4A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11673"; a="69839214"
-X-IronPort-AV: E=Sophos;i="6.21,233,1763452800"; 
-   d="scan'208";a="69839214"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2026 02:59:54 -0800
-X-CSE-ConnectionGUID: mHnFqvvRQEi71ONAT/KYzA==
-X-CSE-MsgGUID: jXHnCPYGQhqOoHkJqnam3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,233,1763452800"; 
-   d="scan'208";a="205484258"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 17 Jan 2026 02:59:52 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vh421-00000000LmS-3sYo;
-	Sat, 17 Jan 2026 10:59:49 +0000
-Date: Sat, 17 Jan 2026 18:59:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:pwrctrl] BUILD SUCCESS
- 8822f062e59a4daf070cb58666cec30b63db2d3b
-Message-ID: <202601171839.uggGSzab-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1768647805; c=relaxed/simple;
+	bh=O+duQ4JNA7Nott7rAhBuH0I1nT89hCgeyNw0mpwEzjg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ou5AvrVShVD7jFeJqk1PeFcyR82evMc5VBpS7MDKXVHg2F9OmCpkDx29SFp4azqCSgCEOVJvqQAtrKfpcre9LATS9fhUvx5mojuxaLG2zRKMKDLwT/3qSNyY7GTehjZto3c+P/P2qmlA+GWUxC4xmkLG6Wb6MYaP969uqc/4Yow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CM7IEuum; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B213C4CEF7;
+	Sat, 17 Jan 2026 11:03:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768647805;
+	bh=O+duQ4JNA7Nott7rAhBuH0I1nT89hCgeyNw0mpwEzjg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CM7IEuumCuUr8tQUn1mAa4brRyWwMxEit3KmPILt6x24ftoLF98QlqWD5qfVxIR/r
+	 cHrq2Uu+a46tPnQs+qKfKkWpXfb6Ql5sciUqUPASd9K/XM9CjkaJbepmQ9U6aj2jIr
+	 3Y5AWv6plm78hBx7NmUyVSJxTyeVEaXn4B3/5ULcT3j7Sq7NJZ1kWtl/wa2qEJxquW
+	 v1ewSD7+Ee05NqQg9++H3A74uX4sMuDnVIz/YxWP2mwF0WpwaNp/ERXIuCjIxCZXxs
+	 qnSpVTY5KwIKiflyZiodClza/H/dMqzzFXeNASuTK8FT8lDjhXcWAUDADrTV20u8DS
+	 wXdSRp5nOVZFg==
+Date: Sat, 17 Jan 2026 16:33:09 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	Chaitanya Kulkarni <kch@nvidia.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S. Miller" <davem@davemloft.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Koichiro Den <den@valinux.co.jp>, Niklas Cassel <cassel@kernel.org>, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, 
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
+Subject: Re: [PATCH v3 8/9] PCI: epf-mhi: Use dmaengine_prep_config_single()
+ to simplify code
+Message-ID: <lsvjhgxkpk3drbu4nvika5rj7yvc3dqvu6fhibj4nlsuq7fulx@odbkesxm377n>
+References: <20260105-dma_prep_config-v3-0-a8480362fd42@nxp.com>
+ <20260105-dma_prep_config-v3-8-a8480362fd42@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260105-dma_prep_config-v3-8-a8480362fd42@nxp.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pwrctrl
-branch HEAD: 8822f062e59a4daf070cb58666cec30b63db2d3b  PCI: qcom: Rename PERST# assert/deassert helpers for uniformity
+On Mon, Jan 05, 2026 at 05:46:58PM -0500, Frank Li wrote:
+> Use dmaengine_prep_config_single() to simplify
+> pci_epf_mhi_edma_read[_sync]() and pci_epf_mhi_edma_write[_sync]().
+> 
+> No functional change.
+> 
+> Tested-by: Niklas Cassel <cassel@kernel.org>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-elapsed time: 926m
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 
-configs tested: 161
-configs skipped: 3
+- Mani
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> ---
+> Keep mutex lock because sync with other function.
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c | 52 +++++++++-------------------
+>  1 file changed, 16 insertions(+), 36 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> index 6643a88c7a0ce38161bc6253c09d29f1c36ba394..0bf51fd467395182161555f83aa78f3839e36773 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> @@ -328,12 +328,6 @@ static int pci_epf_mhi_edma_read(struct mhi_ep_cntrl *mhi_cntrl,
+>  	config.direction = DMA_DEV_TO_MEM;
+>  	config.src_addr = buf_info->host_addr;
+>  
+> -	ret = dmaengine_slave_config(chan, &config);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to configure DMA channel\n");
+> -		goto err_unlock;
+> -	}
+> -
+>  	dst_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
+>  				  DMA_FROM_DEVICE);
+>  	ret = dma_mapping_error(dma_dev, dst_addr);
+> @@ -342,9 +336,10 @@ static int pci_epf_mhi_edma_read(struct mhi_ep_cntrl *mhi_cntrl,
+>  		goto err_unlock;
+>  	}
+>  
+> -	desc = dmaengine_prep_slave_single(chan, dst_addr, buf_info->size,
+> -					   DMA_DEV_TO_MEM,
+> -					   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
+> +	desc = dmaengine_prep_config_single(chan, dst_addr, buf_info->size,
+> +					    DMA_DEV_TO_MEM,
+> +					    DMA_CTRL_ACK | DMA_PREP_INTERRUPT,
+> +					    &config);
+>  	if (!desc) {
+>  		dev_err(dev, "Failed to prepare DMA\n");
+>  		ret = -EIO;
+> @@ -399,12 +394,6 @@ static int pci_epf_mhi_edma_write(struct mhi_ep_cntrl *mhi_cntrl,
+>  	config.direction = DMA_MEM_TO_DEV;
+>  	config.dst_addr = buf_info->host_addr;
+>  
+> -	ret = dmaengine_slave_config(chan, &config);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to configure DMA channel\n");
+> -		goto err_unlock;
+> -	}
+> -
+>  	src_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
+>  				  DMA_TO_DEVICE);
+>  	ret = dma_mapping_error(dma_dev, src_addr);
+> @@ -413,9 +402,10 @@ static int pci_epf_mhi_edma_write(struct mhi_ep_cntrl *mhi_cntrl,
+>  		goto err_unlock;
+>  	}
+>  
+> -	desc = dmaengine_prep_slave_single(chan, src_addr, buf_info->size,
+> -					   DMA_MEM_TO_DEV,
+> -					   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
+> +	desc = dmaengine_prep_config_single(chan, src_addr, buf_info->size,
+> +					    DMA_MEM_TO_DEV,
+> +					    DMA_CTRL_ACK | DMA_PREP_INTERRUPT,
+> +					    &config);
+>  	if (!desc) {
+>  		dev_err(dev, "Failed to prepare DMA\n");
+>  		ret = -EIO;
+> @@ -502,12 +492,6 @@ static int pci_epf_mhi_edma_read_async(struct mhi_ep_cntrl *mhi_cntrl,
+>  	config.direction = DMA_DEV_TO_MEM;
+>  	config.src_addr = buf_info->host_addr;
+>  
+> -	ret = dmaengine_slave_config(chan, &config);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to configure DMA channel\n");
+> -		goto err_unlock;
+> -	}
+> -
+>  	dst_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
+>  				  DMA_FROM_DEVICE);
+>  	ret = dma_mapping_error(dma_dev, dst_addr);
+> @@ -516,9 +500,10 @@ static int pci_epf_mhi_edma_read_async(struct mhi_ep_cntrl *mhi_cntrl,
+>  		goto err_unlock;
+>  	}
+>  
+> -	desc = dmaengine_prep_slave_single(chan, dst_addr, buf_info->size,
+> -					   DMA_DEV_TO_MEM,
+> -					   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
+> +	desc = dmaengine_prep_config_single(chan, dst_addr, buf_info->size,
+> +					    DMA_DEV_TO_MEM,
+> +					    DMA_CTRL_ACK | DMA_PREP_INTERRUPT,
+> +					    &config);
+>  	if (!desc) {
+>  		dev_err(dev, "Failed to prepare DMA\n");
+>  		ret = -EIO;
+> @@ -581,12 +566,6 @@ static int pci_epf_mhi_edma_write_async(struct mhi_ep_cntrl *mhi_cntrl,
+>  	config.direction = DMA_MEM_TO_DEV;
+>  	config.dst_addr = buf_info->host_addr;
+>  
+> -	ret = dmaengine_slave_config(chan, &config);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to configure DMA channel\n");
+> -		goto err_unlock;
+> -	}
+> -
+>  	src_addr = dma_map_single(dma_dev, buf_info->dev_addr, buf_info->size,
+>  				  DMA_TO_DEVICE);
+>  	ret = dma_mapping_error(dma_dev, src_addr);
+> @@ -595,9 +574,10 @@ static int pci_epf_mhi_edma_write_async(struct mhi_ep_cntrl *mhi_cntrl,
+>  		goto err_unlock;
+>  	}
+>  
+> -	desc = dmaengine_prep_slave_single(chan, src_addr, buf_info->size,
+> -					   DMA_MEM_TO_DEV,
+> -					   DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
+> +	desc = dmaengine_prep_config_single(chan, src_addr, buf_info->size,
+> +					    DMA_MEM_TO_DEV,
+> +					    DMA_CTRL_ACK | DMA_PREP_INTERRUPT,
+> +					    &config);
+>  	if (!desc) {
+>  		dev_err(dev, "Failed to prepare DMA\n");
+>  		ret = -EIO;
+> 
+> -- 
+> 2.34.1
+> 
 
-tested configs:
-alpha                             allnoconfig    gcc-15.2.0
-alpha                            allyesconfig    gcc-15.2.0
-alpha                               defconfig    gcc-15.2.0
-arc                              allmodconfig    gcc-15.2.0
-arc                               allnoconfig    gcc-15.2.0
-arc                              allyesconfig    gcc-15.2.0
-arc                                 defconfig    gcc-15.2.0
-arc                   randconfig-001-20260117    gcc-8.5.0
-arc                   randconfig-002-20260117    gcc-9.5.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.2.0
-arm                           imxrt_defconfig    clang-22
-arm                   randconfig-001-20260117    clang-20
-arm                   randconfig-002-20260117    gcc-8.5.0
-arm                   randconfig-003-20260117    gcc-8.5.0
-arm                   randconfig-004-20260117    gcc-12.5.0
-arm64                            alldefconfig    gcc-15.2.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.2.0
-arm64                 randconfig-001-20260117    gcc-15.2.0
-arm64                 randconfig-002-20260117    clang-22
-arm64                 randconfig-003-20260117    clang-18
-arm64                 randconfig-004-20260117    clang-22
-csky                             allmodconfig    gcc-15.2.0
-csky                              allnoconfig    gcc-15.2.0
-csky                  randconfig-001-20260117    gcc-12.5.0
-csky                  randconfig-002-20260117    gcc-15.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon               randconfig-001-20260117    clang-22
-hexagon               randconfig-002-20260117    clang-22
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20260117    clang-20
-i386        buildonly-randconfig-002-20260117    gcc-13
-i386        buildonly-randconfig-003-20260117    gcc-13
-i386        buildonly-randconfig-004-20260117    clang-20
-i386        buildonly-randconfig-005-20260117    gcc-13
-i386        buildonly-randconfig-006-20260117    clang-20
-i386                  randconfig-001-20260117    gcc-13
-i386                  randconfig-002-20260117    gcc-14
-i386                  randconfig-003-20260117    clang-20
-i386                  randconfig-004-20260117    gcc-14
-i386                  randconfig-005-20260117    clang-20
-i386                  randconfig-006-20260117    clang-20
-i386                  randconfig-007-20260117    clang-20
-i386                  randconfig-011-20260117    clang-20
-i386                  randconfig-012-20260117    gcc-14
-i386                  randconfig-013-20260117    gcc-14
-i386                  randconfig-014-20260117    gcc-14
-i386                  randconfig-015-20260117    gcc-12
-i386                  randconfig-016-20260117    clang-20
-i386                  randconfig-017-20260117    gcc-14
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20260117    clang-20
-loongarch             randconfig-002-20260117    clang-22
-m68k                             allmodconfig    gcc-15.2.0
-m68k                              allnoconfig    gcc-15.2.0
-m68k                             allyesconfig    gcc-15.2.0
-m68k                                defconfig    gcc-15.2.0
-microblaze                        allnoconfig    gcc-15.2.0
-microblaze                       allyesconfig    gcc-15.2.0
-microblaze                          defconfig    gcc-15.2.0
-mips                             allmodconfig    gcc-15.2.0
-mips                              allnoconfig    gcc-15.2.0
-mips                             allyesconfig    gcc-15.2.0
-mips                         bigsur_defconfig    gcc-15.2.0
-mips                      maltaaprp_defconfig    clang-22
-nios2                            allmodconfig    gcc-11.5.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20260117    gcc-8.5.0
-nios2                 randconfig-002-20260117    gcc-11.5.0
-openrisc                         allmodconfig    gcc-15.2.0
-openrisc                          allnoconfig    gcc-15.2.0
-openrisc                            defconfig    gcc-15.2.0
-parisc                           allmodconfig    gcc-15.2.0
-parisc                            allnoconfig    gcc-15.2.0
-parisc                           allyesconfig    gcc-15.2.0
-parisc                              defconfig    gcc-15.2.0
-parisc                randconfig-001-20260117    gcc-12.5.0
-parisc                randconfig-002-20260117    gcc-15.2.0
-parisc64                            defconfig    gcc-15.2.0
-powerpc                          allmodconfig    gcc-15.2.0
-powerpc                           allnoconfig    gcc-15.2.0
-powerpc               randconfig-001-20260117    gcc-8.5.0
-powerpc               randconfig-002-20260117    clang-22
-powerpc                    socrates_defconfig    gcc-15.2.0
-powerpc                     tqm8540_defconfig    gcc-15.2.0
-powerpc64             randconfig-001-20260117    clang-22
-powerpc64             randconfig-002-20260117    gcc-8.5.0
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20260117    clang-22
-riscv                 randconfig-002-20260117    clang-17
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.2.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20260117    clang-22
-s390                  randconfig-002-20260117    clang-22
-sh                               allmodconfig    gcc-15.2.0
-sh                                allnoconfig    gcc-15.2.0
-sh                               allyesconfig    gcc-15.2.0
-sh                                  defconfig    gcc-15.2.0
-sh                    randconfig-001-20260117    gcc-10.5.0
-sh                    randconfig-002-20260117    gcc-15.2.0
-sparc                             allnoconfig    gcc-15.2.0
-sparc                               defconfig    gcc-15.2.0
-sparc                 randconfig-001-20260117    gcc-8.5.0
-sparc                 randconfig-002-20260117    gcc-8.5.0
-sparc64                          allmodconfig    clang-22
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20260117    gcc-14.3.0
-sparc64               randconfig-002-20260117    gcc-15.2.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260117    clang-22
-um                    randconfig-002-20260117    clang-22
-um                           x86_64_defconfig    clang-22
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20260117    clang-20
-x86_64      buildonly-randconfig-002-20260117    clang-20
-x86_64      buildonly-randconfig-003-20260117    clang-20
-x86_64      buildonly-randconfig-004-20260117    clang-20
-x86_64      buildonly-randconfig-005-20260117    clang-20
-x86_64      buildonly-randconfig-006-20260117    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20260117    clang-20
-x86_64                randconfig-002-20260117    clang-20
-x86_64                randconfig-003-20260117    clang-20
-x86_64                randconfig-004-20260117    clang-20
-x86_64                randconfig-005-20260117    gcc-12
-x86_64                randconfig-006-20260117    gcc-14
-x86_64                randconfig-011-20260117    clang-20
-x86_64                randconfig-012-20260117    clang-20
-x86_64                randconfig-013-20260117    clang-20
-x86_64                randconfig-014-20260117    clang-20
-x86_64                randconfig-015-20260117    gcc-14
-x86_64                randconfig-016-20260117    clang-20
-x86_64                randconfig-071-20260117    clang-20
-x86_64                randconfig-072-20260117    gcc-13
-x86_64                randconfig-073-20260117    clang-20
-x86_64                randconfig-074-20260117    clang-20
-x86_64                randconfig-075-20260117    clang-20
-x86_64                randconfig-076-20260117    clang-20
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.2.0
-xtensa                          iss_defconfig    gcc-15.2.0
-xtensa                randconfig-001-20260117    gcc-10.5.0
-xtensa                randconfig-002-20260117    gcc-13.4.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-- 
+மணிவண்ணன் சதாசிவம்
 
